@@ -450,10 +450,17 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		}
 		return null;
 	}
+	
+	public void flush(){
+		this.getManagedBean().setFinancialBankBranch(null);
+		this.getManagedBean().setAccountNo(null);
+		this.getManagedBean().setFactoringBankName(null);
+	}
     
 	public SelectItem[] retrieveFinancialOrgList() throws NamingException {
 		SelectItem[] items = null;
 		IFinancialOrgSO financialOrgSO;
+		flush();
 		try {
 			int i = 1;
 			financialOrgSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IFinancialOrgSO.class);
@@ -473,94 +480,85 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		return items;
 	}
 
-	public SelectItem[] retrieveFinancialBranchOrgById() throws NamingException {
-		SelectItem[] items = null;
-		IFinancialOrgSO financialOrgSO;
+   public void reset(){ 
+	   
+	   SelectItem[] items = null;
+	   IFinancialOrgSO financialOrgSO;
+	   flush();
 		try {
 			int i = 1;
 			financialOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IFinancialOrgSO.class);
 			FinancialOrgReqDTO reqDTO = new FinancialOrgReqDTO();
-			List<PmFinancialBranch> list = new ArrayList<PmFinancialBranch>();
 			if (this.getManagedBean().getFactoring().getFinancialOrg().getFinancialOrgId() != null) {
 				reqDTO.setFinancialOrgId(this.getManagedBean().getFactoring().getFinancialOrg().getFinancialOrgId());
 				FinancialOrgResDTO resDTO = financialOrgSO.retrieveFinancialOrgById(reqDTO);
-				list = resDTO.getPmFinancialOrg().getPmFinancialBranchs();
-			}
-			items = new SelectItem[list.size() + 1];
-			items[0] = new SelectItem(null, "- Select One -");
-			for (PmFinancialBranch pmFinancialBranch : list) {
-				items[i++] = new SelectItem(pmFinancialBranch.getFinancialBranchId(), pmFinancialBranch.getBranchName());
-			}
-		} finally {
+				
+				if(resDTO.getPmFinancialOrg().getPmFinancialBranchs() != null && resDTO.getPmFinancialOrg().getPmFinancialBranchs().size() > 0){
+					List<PmFinancialBranch> list = resDTO.getPmFinancialOrg().getPmFinancialBranchs();
+					items = new SelectItem[list.size() + 1];
+					items[0] = new SelectItem(null, "- Select One -");
+					for (PmFinancialBranch pmFinancialBranch : list) {
+						items[i++] = new SelectItem(pmFinancialBranch.getFinancialBranchId(), pmFinancialBranch.getBranchName());
+					}this.getManagedBean().setFinancialBankBranch(items);
+				
+				}else{
+					   List<PmFinancialAcc> accList = resDTO.getPmFinancialOrg().getPmFinancialAccs();
+					   for(PmFinancialAcc financialAcc : accList) {
+						 if(financialAcc.getEffDate().before(new Date()) && (financialAcc.getExpDate()==null || financialAcc.getExpDate().after(new Date()))){
+							getManagedBean().setAccountNo(financialAcc.getAccountNo());
+							getManagedBean().setFactoringBankName(financialAcc.getPmPaymentBankOrg().getFinOrgName());
+							for(PmAddressType pmAddressType : financialAcc.getPmPaymentBankOrg().getPmAddressTypes()) {
+							   if(pmAddressType.getAddressType().equalsIgnoreCase(AddressType.BILLING_ADDRESS.value())) {
+								  getManagedBean().setFactoringBankAddress(getFullAddress(pmAddressType.getPmAddress()));
+								  break;
+								}
+						    }
+					    }
+				     }
+			    }
+		    }
+		  }catch(Exception ex){
+			  ex.printStackTrace();
+		  }
+		
+		 finally{
 			financialOrgSO = null;
-		}
-		return items;
-	}
-
-	public String getPaymentBankName() {
-		IFinancialOrgSO financialOrgSO;
-		Date today = new Date();
+		 }
+   }
+   
+   public void resetBranch(){
+	   
+	   IFinancialOrgSO financialOrgSO;
 		try {
-			if (this.getManagedBean().getFactoring().getFinancialOrg().getFinancialOrgId() != null) {
+			if (getManagedBean().getFactoring().getPmFinancialBranch().getFinancialBranchId() != null) {
 				financialOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IFinancialOrgSO.class);
 				FinancialOrgReqDTO reqDTO = new FinancialOrgReqDTO();
 				reqDTO.setFinancialOrgId(this.getManagedBean().getFactoring().getFinancialOrg().getFinancialOrgId());
 				FinancialOrgResDTO resDTO = financialOrgSO.retrieveFinancialOrgById(reqDTO);
-				if (getManagedBean().getFactoring().getPmFinancialBranch().getFinancialBranchId()==null) {
-					List<PmFinancialAcc> list = resDTO.getPmFinancialOrg().getPmFinancialAccs();
-					PmFinancialAcc pmObj = null;
-					for (PmFinancialAcc financialAcc : list) {
-						if (financialAcc.getEffDate().before(today) && (financialAcc.getExpDate()==null || financialAcc.getExpDate().after(today))) {
-							pmObj = financialAcc;
-							break;
-						}
-					}
-					if(pmObj!=null) {
-						getManagedBean().setAccountNo(pmObj.getAccountNo());
-						getManagedBean().setFactoringBankName(pmObj.getPmPaymentBankOrg().getFinOrgName());
-						for(PmAddressType pmAddressType : pmObj.getPmPaymentBankOrg().getPmAddressTypes()) {
+				List<PmFinancialBranch> list = resDTO.getPmFinancialOrg().getPmFinancialBranchs();
+		        for(PmFinancialBranch pmFinancialBranch : list) {
+			      if(pmFinancialBranch.getFinancialBranchId().equals(getManagedBean().getFactoring().getPmFinancialBranch().getFinancialBranchId())) {
+				  for (PmFinancialAcc financialAcc : pmFinancialBranch.getPmFinancialAccs()) {
+					if(financialAcc.getEffDate().before(new Date()) && (financialAcc.getExpDate()==null || financialAcc.getExpDate().after(new Date()))) {
+						getManagedBean().setAccountNo(financialAcc.getAccountNo());
+						getManagedBean().setFactoringBankName(financialAcc.getPmPaymentBankOrg().getFinOrgName());
+						for(PmAddressType pmAddressType : financialAcc.getPmPaymentBankOrg().getPmAddressTypes()) {
 							if(pmAddressType.getAddressType().equalsIgnoreCase(AddressType.BILLING_ADDRESS.value())) {
 								getManagedBean().setFactoringBankAddress(getFullAddress(pmAddressType.getPmAddress()));
 								break;
 							}
-						}
-						return pmObj.getPmPaymentBankOrg().getFinOrgName();
-					}
-				} else {
-					List<PmFinancialBranch> list = resDTO.getPmFinancialOrg().getPmFinancialBranchs();
-					PmFinancialAcc pmObj = null;
-					for (PmFinancialBranch pmFinancialBranch : list) {
-						if (pmFinancialBranch.getFinancialBranchId().equals(getManagedBean().getFactoring().getPmFinancialBranch().getFinancialBranchId())) {
-							for (PmFinancialAcc financialAcc : pmFinancialBranch.getPmFinancialAccs()) {
-								if (financialAcc.getEffDate().before(today) && (financialAcc.getExpDate()==null || financialAcc.getExpDate().after(today))) {
-									pmObj = financialAcc;
-									break;
-								}
-							}
-							break;
-						}
-					}
-					getManagedBean().setAccountNo(pmObj.getAccountNo());
-					getManagedBean().setFactoringBankName(pmObj.getPmPaymentBankOrg().getFinOrgName());
-					for(PmAddressType pmAddressType : pmObj.getPmPaymentBankOrg().getPmAddressTypes()) {
-						if(pmAddressType.getAddressType().equalsIgnoreCase(AddressType.BILLING_ADDRESS.value())) {
-							getManagedBean().setFactoringBankAddress(getFullAddress(pmAddressType.getPmAddress()));
-							break;
-						}
-					}					
-					return pmObj.getPmPaymentBankOrg().getFinOrgName();
-				}
-			}
-		} finally {
+					     }
+				      }
+			        }
+			      }
+		        }
+			 }
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}finally{
 			financialOrgSO = null;
 		}
-		return "";
-	}
-
-   public void reset(){ 
-	   this.getManagedBean().setAccountNo(null);
-   }
-   
+    }
 	public void changeLoaActionListener() {
 		IContractSO contractSO = null;
 		try {

@@ -11,6 +11,7 @@ import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.persistence.entity.ct.CtAttachment;
@@ -67,6 +68,8 @@ public class SupplierManagedBean extends BaseManagedBean {
 	
 	private Map<Long, String> factoringCompMap;
 	private Map<String, SmSupplierBank> supplierBankAccountMap;
+	
+	private SelectItem[] financialBankBranch;
 	
 	public SupplierManagedBean(){
 		
@@ -318,6 +321,14 @@ public class SupplierManagedBean extends BaseManagedBean {
 
 	public void setAccountNo(String accountNo) {
 		this.accountNo = accountNo;
+	}
+
+	public SelectItem[] getFinancialBankBranch() {
+		return financialBankBranch;
+	}
+
+	public void setFinancialBankBranch(SelectItem[] financialBankBranch) {
+		this.financialBankBranch = financialBankBranch;
 	}
 	
 }
