@@ -23,7 +23,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
-import my.ep.constants.FlProcessNameConst;
+import my.ep.constants.FLProcessNameConst;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.common.address.AddressReqDTO;
@@ -40,6 +40,8 @@ import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.common.PmAddress;
+import my.ep.persistence.entity.pm.common.PmContact;
+import my.ep.persistence.entity.pm.common.PmFinancialBranch;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.type.pm.AddressType;
 import my.ep.util.MessageUtils;
@@ -253,7 +255,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			reqDTO.setTaskId(taskId);
 			BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
 			Object obj = res.getPojo();
-			if (res.getProcessName().equalsIgnoreCase(FlProcessNameConst.STOP_FULFILMENT_REQUEST_PROCESS_NAME)){
+			if (res.getProcessName().equalsIgnoreCase(FLProcessNameConst.STOP_FULFILMENT_REQUEST_PROCESS_NAME)){
 				IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentOrderSO.class);
 				FLStopFullfillmentDataType stopFlData = (FLStopFullfillmentDataType)obj;
 				FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
@@ -317,7 +319,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			Object obj = res.getPojo();
 			if(null==res.getProcessName() || res.getProcessName().equalsIgnoreCase("")){
 				System.out.println("Process name is NUll");
-			} else if (FlProcessNameConst.STOP_FULFILMENT_REQUEST_PROCESS_NAME.equalsIgnoreCase(res.getProcessName())) {
+			} else if (FLProcessNameConst.STOP_FULFILMENT_REQUEST_PROCESS_NAME.equalsIgnoreCase(res.getProcessName())) {
 				FLStopFullfillmentDataType stopFlData = (FLStopFullfillmentDataType)obj;
 				FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
 				//flReqDTO.setFlOrderId(stopFlData.getFullfillmentRequestId());
@@ -447,7 +449,9 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 		public void getFactoringCompanyDtl(){
 			if(getManagedBean().getFulfilmentOrder().getPmFinancialOrg() == null){
 				getManagedBean().getFulfilmentOrder().setPmFinancialOrg(new PmFinancialOrg());
+				getManagedBean().getFulfilmentOrder().setPmFinancialBranch(new PmFinancialBranch());
 			}
+			
 			
 			IFinancialOrgSO financialOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IFinancialOrgSO.class);
 			FinancialOrgReqDTO reqDTO = new FinancialOrgReqDTO();
@@ -461,10 +465,20 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			Long financialOrgId = (Long) e.getComponent().getAttributes().get("value");
 			AddressReqDTO reqDTO = new AddressReqDTO();
 			reqDTO.setFinancialOrgId(financialOrgId);
-			reqDTO.setAddressType(AddressType.BILLING_ADDRESS.toString());
+			reqDTO.setAddressType(AddressType.BILLING_ADDRESS.value());
 			
 			AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
-			getManagedBean().setSupplierAddress(combineAddress(resDTO.getAddressTypeList().get(0).getPmAddress()));
+			if(!resDTO.getAddressTypeList().isEmpty()){
+				getManagedBean().setSupplierAddress(combineAddress(resDTO.getAddressTypeList().get(0).getPmAddress()));
+				getManagedBean().setPhoneNo(resDTO.getAddressTypeList().get(0).getPmAddress().getPhoneNo());
+				getManagedBean().setFaxNo(resDTO.getAddressTypeList().get(0).getPmAddress().getFaxNo());
+				if(!resDTO.getAddressTypeList().get(0).getPmContacts().isEmpty() ){
+					PmContact pmContact = resDTO.getAddressTypeList().get(0).getPmContacts().get(0);
+					getManagedBean().setContactPerson(pmContact.getContactName());
+					getManagedBean().setContactEmail(pmContact.getEmail());
+					getManagedBean().setContactPhoneNo(pmContact.getPhoneNo());
+				}
+			}
 			
 			IFinancialOrgSO financialOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IFinancialOrgSO.class); 
 			FinancialOrgReqDTO financialOrgReqDTO = new FinancialOrgReqDTO();
@@ -473,11 +487,20 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			if(financialOrgResDTO.getPmFinancialOrg().getPmFinancialBranchs() != null && !financialOrgResDTO.getPmFinancialOrg().getPmFinancialBranchs().isEmpty()){
 				getManagedBean().setFactoringBranchList(financialOrgResDTO.getPmFinancialOrg().getPmFinancialBranchs());
 			}
-		
 		}
 
 		private String combineAddress(PmAddress address) {
-			String fullAddress = address.getAddress1() + ", " + address.getAddress2()+ ", " +address.getAddress3()+ ", " +address.getAddress4();
+			String appendComa = ", ";
+			String fullAddress = address.getAddress1();
+			if(address.getAddress2() != null){
+				fullAddress = appendComa+address.getAddress2();
+			}
+			if(address.getAddress3() != null){
+				fullAddress = appendComa+address.getAddress3();
+			}
+			if(address.getAddress4() != null){
+				fullAddress = appendComa+address.getAddress4();
+			}
 			return fullAddress;
 		}
 		
@@ -489,7 +512,20 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			reqDTO.setAddressType(AddressType.BILLING_ADDRESS.toString());
 			
 			AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
-			getManagedBean().setSupplierAddress(combineAddress(resDTO.getAddressTypeList().get(0).getPmAddress()));
+			if(!resDTO.getAddressTypeList().isEmpty()){
+				getManagedBean().setSupplierAddress(combineAddress(resDTO.getAddressTypeList().get(0).getPmAddress()));
+				
+				getManagedBean().setPhoneNo(resDTO.getAddressTypeList().get(0).getPmAddress().getPhoneNo());
+				getManagedBean().setFaxNo(resDTO.getAddressTypeList().get(0).getPmAddress().getFaxNo());
+				if(resDTO.getAddressTypeList().get(0).getPmContacts() != null ){
+					PmContact pmContact = resDTO.getAddressTypeList().get(0).getPmContacts().get(0);
+					getManagedBean().setContactPerson(pmContact.getContactName());
+					getManagedBean().setContactEmail(pmContact.getEmail());
+					getManagedBean().setContactPhoneNo(pmContact.getPhoneNo());
+				}
+				
+			}
+			
 		}
 		public String getPortletTitle() {
 			String portletTitle = " Fulfilment Document Maintenance";

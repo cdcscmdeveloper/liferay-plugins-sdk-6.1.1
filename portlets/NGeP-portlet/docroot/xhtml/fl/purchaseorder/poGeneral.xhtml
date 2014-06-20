@@ -208,12 +208,12 @@
 				<tr>
 					<td style="width: 117px;"><p:outputLabel
 							value="#{lbl['lbl.fl.supp.fact.branch']}" /></td>
-					<td><p:selectOneMenu id="factoringBranch" 
+					<td><p:selectOneMenu id="factoringBranch" disabled="#{empty flOrderBB.managedBean.factoringBranchList}"
 					value="#{flOrderBB.managedBean.fulfilmentOrder.pmFinancialBranch.financialBranchId}" style="width: 325px;margin-bottom:5px;">
 							<f:selectItem itemLabel="-- Select -- " itemValue="" />
 							<f:selectItems var="factoringBranch"
 							value="#{flOrderBB.managedBean.factoringBranchList}"
-							itemLabel="#{factoringBranch.finOrgName}"
+							itemLabel="#{factoringBranch.branchName}"
 							itemValue="#{factoringBranch.financialBranchId}" />
 						<p:ajax event="change"
 							listener="#{flOrderBB.getSelectedFactoringBranchDtl}"
@@ -234,11 +234,11 @@
 							<tr>
 								<td style="width: 25px;"><p:inputText size="15"
 										disabled="true"
-										value="#{flOrderBB.managedBean.flRequest.flSupplierDtl.phoneNo}" /></td>
+										value="#{flOrderBB.managedBean.phoneNo}" /></td>
 								<td style="width: 65px;"><p:outputLabel
 										value="#{lbl['lbl.fl.supp.faxno']}" /></td>
 								<td><p:inputText size="19" disabled="true"
-										value="#{flOrderBB.managedBean.flRequest.flSupplierDtl.faxNo}" /></td>
+										value="#{flOrderBB.managedBean.faxNo}" /></td>
 							</tr>
 						</table></td>
 				</tr>
@@ -246,18 +246,18 @@
 					<td><p:outputLabel
 							value="#{lbl['lbl.fl.del.ord.contact.person']}" /></td>
 					<td><p:inputText disabled="true" size="50"
-							value="#{flOrderBB.managedBean.flRequest.flSupplierDtl.contactPerson}" /></td>
+							value="#{flOrderBB.managedBean.contactPerson}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel
 							value="#{lbl['lbl.fl.del.ord.contact.email']}" /></td>
 					<td><p:inputText disabled="true" size="50"
-							value="#{flOrderBB.managedBean.flRequest.flSupplierDtl.contactEmail}" /></td>
+							value="#{flOrderBB.managedBean.contactEmail}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.del.ord.contact.no']}" /></td>
 					<td><p:inputText disabled="true" size="25"
-							value="#{flOrderBB.managedBean.flRequest.flSupplierDtl.contactPhoneNo}" /></td>
+							value="#{flOrderBB.managedBean.contactPhoneNo}" /></td>
 				</tr>
 			</table>
 		</p:panel>

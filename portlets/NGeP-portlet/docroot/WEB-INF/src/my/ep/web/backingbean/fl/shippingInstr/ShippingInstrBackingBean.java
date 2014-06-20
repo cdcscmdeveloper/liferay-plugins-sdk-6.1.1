@@ -15,7 +15,7 @@ import my.ep.biz.service.fl.request.IShippingInstructionSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
-import my.ep.constants.FlProcessNameConst;
+import my.ep.constants.FLProcessNameConst;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
@@ -134,17 +134,17 @@ public class ShippingInstrBackingBean extends BaseBackingBean<ShippingInstrManag
 
 		flReqDTO.setSelectedApprovers(coObj.getApproverList());
 
-		if(res.getTaskName().equalsIgnoreCase(FlProcessNameConst.REVISE_SI_HT) || res.getTaskName().equalsIgnoreCase(FlProcessNameConst.REVIEW_SI_HT)){
+		if(res.getTaskName().equalsIgnoreCase(FLProcessNameConst.REVISE_SI_HT) || res.getTaskName().equalsIgnoreCase(FLProcessNameConst.REVIEW_SI_HT)){
 			resDTO = shippingSO.retrieveShippingInstruction(flReqDTO);
 		}else{
 			resDTO = requestSO.retrieveFulfilmentRequest(flReqDTO);
 		}
-		if(res.getTaskName().equalsIgnoreCase(FlProcessNameConst.REVISE_SI_HT)|| res.getTaskName().equalsIgnoreCase(FlProcessNameConst.REVIEW_SI_HT)){
+		if(res.getTaskName().equalsIgnoreCase(FLProcessNameConst.REVISE_SI_HT)|| res.getTaskName().equalsIgnoreCase(FLProcessNameConst.REVIEW_SI_HT)){
 			getManagedBean().setShippingInstr(resDTO.getShippingInstr());
 			getManagedBean().setFlRequest(resDTO.getShippingInstr().getFlFulfilmentRequest());
 			getManagedBean().setTaskId(taskId);
 			getManagedBean().setOutComes(res.getAction());
-		}else if (res.getTaskName().equalsIgnoreCase(FlProcessNameConst.CREATE_SI_HT)){
+		}else if (res.getTaskName().equalsIgnoreCase(FLProcessNameConst.CREATE_SI_HT)){
 			FlShippingInstr flSi = new FlShippingInstr();
 			flSi.setFlFulfilmentRequest(resDTO.getFlFulfilmentRequest());
 			IContractSO contractSO = (IContractSO)BusinessDelegate.getInstance().getServiceObject("ct",IContractSO.class);

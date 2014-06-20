@@ -19,7 +19,7 @@ import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.ct.ContractConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constants.CTProcessNameConst;
-import my.ep.constants.FlProcessNameConst;
+import my.ep.constants.FLProcessNameConst;
 import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
@@ -101,39 +101,39 @@ public class BPMTaskListBackingBean extends
 		temp.put(CTProcessNameConst.BANK_ACCOUNT_CHANGE_PROCESS_NAME+CTProcessNameConst.REVIEW_CB_REQUEST_HT_NAME, "change-bank-account");
 
 		//Fulfilment Management - Start
-		temp.put(FlProcessNameConst.CONTRACT_REQ_INITIATION_PROCESS_NAME+FlProcessNameConst.SUBMIT_CR_HT, "contract-request");
-		temp.put(FlProcessNameConst.CONTRACT_REQ_CREATION_PROCESS_NAME+FlProcessNameConst.REVIEW_CR_HT, "contract-request");
-		temp.put(FlProcessNameConst.CONTRACT_REQ_CREATION_PROCESS_NAME+FlProcessNameConst.REVISE_CR_HT, "contract-request");
-		temp.put(FlProcessNameConst.CONTRACT_REQ_CREATION_PROCESS_NAME+FlProcessNameConst.CREATE_NORMAL_CO_HT, "contract-request");
-		temp.put(FlProcessNameConst.MTO_CONTRACT_REQ_CREATION_PROCESS_NAME+FlProcessNameConst.REVISE_MTO_CR_HT, "contract-request");
-		temp.put(FlProcessNameConst.MTO_CONTRACT_REQ_CREATION_PROCESS_NAME+FlProcessNameConst.REVIEW_MTO_CR_HT, "contract-request");
-		temp.put(FlProcessNameConst.CONTRACT_REQ_CREATION_PROCESS_NAME+FlProcessNameConst.CREATE_CO_HT, "contract-request");
-		temp.put(FlProcessNameConst.CONTRACT_REQ_CREATION_PROCESS_NAME+FlProcessNameConst.CREATE_NEW_CO_HT, "contract-request");
-		temp.put(FlProcessNameConst.MTO_CONTRACT_REQ_CREATION_PROCESS_NAME+FlProcessNameConst.INTIATE_MTO_CR_HT, "contract-request");
-		temp.put(FlProcessNameConst.CONTRACT_REQ_INITIATION_PROCESS_NAME+FlProcessNameConst.CREATE_NEW_CO_HT, "contract-request");
-		temp.put(FlProcessNameConst.CONTRACT_REQ_INITIATION_PROCESS_NAME+FlProcessNameConst.CREATE_NORMAL_CO_HT, "contract-request");
-		temp.put(FlProcessNameConst.MTO_CONTRACT_REQ_CREATION_PROCESS_NAME+FlProcessNameConst.CREATE_NEW_MTO_CO_HT, "contract-request");
+		temp.put(FLProcessNameConst.CONTRACT_REQ_INITIATION_PROCESS_NAME+FLProcessNameConst.SUBMIT_CR_HT, "contract-request");
+		temp.put(FLProcessNameConst.CONTRACT_REQ_CREATION_PROCESS_NAME+FLProcessNameConst.REVIEW_CR_HT, "contract-request");
+		temp.put(FLProcessNameConst.CONTRACT_REQ_CREATION_PROCESS_NAME+FLProcessNameConst.REVISE_CR_HT, "contract-request");
+		temp.put(FLProcessNameConst.CONTRACT_REQ_CREATION_PROCESS_NAME+FLProcessNameConst.CREATE_NORMAL_CO_HT, "contract-request");
+		temp.put(FLProcessNameConst.MTO_CONTRACT_REQ_CREATION_PROCESS_NAME+FLProcessNameConst.REVISE_MTO_CR_HT, "contract-request");
+		temp.put(FLProcessNameConst.MTO_CONTRACT_REQ_CREATION_PROCESS_NAME+FLProcessNameConst.REVIEW_MTO_CR_HT, "contract-request");
+		temp.put(FLProcessNameConst.CONTRACT_REQ_CREATION_PROCESS_NAME+FLProcessNameConst.CREATE_CO_HT, "contract-request");
+		temp.put(FLProcessNameConst.CONTRACT_REQ_CREATION_PROCESS_NAME+FLProcessNameConst.CREATE_NEW_CO_HT, "contract-request");
+		temp.put(FLProcessNameConst.MTO_CONTRACT_REQ_CREATION_PROCESS_NAME+FLProcessNameConst.INTIATE_MTO_CR_HT, "contract-request");
+		temp.put(FLProcessNameConst.CONTRACT_REQ_INITIATION_PROCESS_NAME+FLProcessNameConst.CREATE_NEW_CO_HT, "contract-request");
+		temp.put(FLProcessNameConst.CONTRACT_REQ_INITIATION_PROCESS_NAME+FLProcessNameConst.CREATE_NORMAL_CO_HT, "contract-request");
+		temp.put(FLProcessNameConst.MTO_CONTRACT_REQ_CREATION_PROCESS_NAME+FLProcessNameConst.CREATE_NEW_MTO_CO_HT, "contract-request");
 
-		temp.put(FlProcessNameConst.MTO_CONTRACT_REQ_CREATION_PROCESS_NAME+FlProcessNameConst.CREATE_SI_HT, "shipping-instruction");
-		temp.put(FlProcessNameConst.MTO_CONTRACT_REQ_CREATION_PROCESS_NAME+FlProcessNameConst.REVIEW_SI_HT, "shipping-instruction");
-		temp.put(FlProcessNameConst.MTO_CONTRACT_REQ_CREATION_PROCESS_NAME+FlProcessNameConst.REVISE_SI_HT, "shipping-instruction");
+		temp.put(FLProcessNameConst.MTO_CONTRACT_REQ_CREATION_PROCESS_NAME+FLProcessNameConst.CREATE_SI_HT, "shipping-instruction");
+		temp.put(FLProcessNameConst.MTO_CONTRACT_REQ_CREATION_PROCESS_NAME+FLProcessNameConst.REVIEW_SI_HT, "shipping-instruction");
+		temp.put(FLProcessNameConst.MTO_CONTRACT_REQ_CREATION_PROCESS_NAME+FLProcessNameConst.REVISE_SI_HT, "shipping-instruction");
 
-		temp.put(FlProcessNameConst.MTO_CONTRACT_REQ_CREATION_PROCESS_NAME+FlProcessNameConst.MTO_CO_ACK_HT, "contract-order");
-		temp.put(FlProcessNameConst.CONTRACT_REQ_CREATION_PROCESS_NAME+FlProcessNameConst.CO_ACK_HT, "contract-order");
+		temp.put(FLProcessNameConst.MTO_CONTRACT_REQ_CREATION_PROCESS_NAME+FLProcessNameConst.MTO_CO_ACK_HT, "contract-order");
+		temp.put(FLProcessNameConst.CONTRACT_REQ_CREATION_PROCESS_NAME+FLProcessNameConst.CO_ACK_HT, "contract-order");
 
-		temp.put(FlProcessNameConst.INVOICE_AND_PAYMENT_CREATION_PROCESS_NAME+FlProcessNameConst.CREATE_INVOICE, "invoice");
-		temp.put(FlProcessNameConst.INVOICE_AND_PAYMENT_CREATION_PROCESS_NAME+FlProcessNameConst.PERFORM_PAYMNET_MATCH_HT, "payment-match");
+		temp.put(FLProcessNameConst.INVOICE_AND_PAYMENT_CREATION_PROCESS_NAME+FLProcessNameConst.CREATE_INVOICE, "invoice");
+		temp.put(FLProcessNameConst.INVOICE_AND_PAYMENT_CREATION_PROCESS_NAME+FLProcessNameConst.PERFORM_PAYMNET_MATCH_HT, "payment-match");
 
-		temp.put(FlProcessNameConst.DELIVERY_ORDER_FULFILMENT_PROCESS_NAME, "fulfilment-received-note");
-		temp.put(FlProcessNameConst.DAN_GENERATION_PROCESS_NAME, "debit-adjustment-note");
-		temp.put(FlProcessNameConst.STOP_FULFILMENT_REQUEST_PROCESS_NAME, "contract-order");
+		temp.put(FLProcessNameConst.DELIVERY_ORDER_FULFILMENT_PROCESS_NAME, "fulfilment-received-note");
+		temp.put(FLProcessNameConst.DAN_GENERATION_PROCESS_NAME, "debit-adjustment-note");
+		temp.put(FLProcessNameConst.STOP_FULFILMENT_REQUEST_PROCESS_NAME, "contract-order");
 
-		temp.put(FlProcessNameConst.PURCHASE_REQ_INITIATION_PROCESS_NAME+FlProcessNameConst.SUBMIT_PR_HT, "purchase-request");
-		temp.put(FlProcessNameConst.PURCHASE_REQ_CREATION_PROCESS_NAME+FlProcessNameConst.CREATE_PR_HT, "purchase-request");
-		temp.put(FlProcessNameConst.PURCHASE_REQ_CREATION_PROCESS_NAME+FlProcessNameConst.REVIEW_PR_HT, "purchase-request");
-		temp.put(FlProcessNameConst.PURCHASE_REQ_CREATION_PROCESS_NAME+FlProcessNameConst.REVISE_PR_HT, "purchase-request");
-		temp.put(FlProcessNameConst.PURCHASE_REQ_CREATION_PROCESS_NAME+FlProcessNameConst.PR_ACK_HT, "purchase-order");
-		temp.put(FlProcessNameConst.PURCHASE_REQ_CREATION_PROCESS_NAME+FlProcessNameConst.REVIEW_REJECTED_PO_HT, "purchase-order");
+		temp.put(FLProcessNameConst.PURCHASE_REQ_INITIATION_PROCESS_NAME+FLProcessNameConst.SUBMIT_PR_HT, "purchase-request");
+		temp.put(FLProcessNameConst.PURCHASE_REQ_CREATION_PROCESS_NAME+FLProcessNameConst.CREATE_PR_HT, "purchase-request");
+		temp.put(FLProcessNameConst.PURCHASE_REQ_CREATION_PROCESS_NAME+FLProcessNameConst.REVIEW_PR_HT, "purchase-request");
+		temp.put(FLProcessNameConst.PURCHASE_REQ_CREATION_PROCESS_NAME+FLProcessNameConst.REVISE_PR_HT, "purchase-request");
+		temp.put(FLProcessNameConst.PURCHASE_REQ_CREATION_PROCESS_NAME+FLProcessNameConst.PR_ACK_HT, "purchase-order");
+		temp.put(FLProcessNameConst.PURCHASE_REQ_CREATION_PROCESS_NAME+FLProcessNameConst.REVIEW_REJECTED_PO_HT, "purchase-order");
 
 				
 		//Added for qt..
