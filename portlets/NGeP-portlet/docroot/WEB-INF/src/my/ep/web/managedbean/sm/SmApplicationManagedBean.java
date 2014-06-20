@@ -14,6 +14,7 @@ import my.ep.persistence.entity.pm.common.PmCertBody;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
+import my.ep.persistence.entity.pm.common.PmEduField;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmState;
@@ -250,6 +251,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	private SmApplSupportDoc supportDoc;
 	// Address fields for all the forms
+	private List<PmEduField> eduFieldList;
 	private List<PmCountry> countryLs;
 	private List<PmState> basicCompanyStates;
 	private List<PmDistrict> basicCompanyDistricts;
@@ -2003,6 +2005,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setCurrentPageType(String currentPageType) {
 		this.currentPageType = currentPageType;
+	}
+
+	public List<PmEduField> getEduFieldList() {
+		return eduFieldList;
+	}
+
+	public void setEduFieldList(List<PmEduField> eduFieldList) {
+		this.eduFieldList = eduFieldList;
 	}
 
 }

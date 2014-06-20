@@ -23,6 +23,7 @@ import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.document.IDocumentSO;
+import my.ep.biz.service.pm.common.educationfield.IEducationFieldSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
@@ -52,6 +53,8 @@ import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
 import my.ep.dto.pm.common.document.DocumentReqDTO;
 import my.ep.dto.pm.common.document.DocumentResDTO;
+import my.ep.dto.pm.common.educationfield.EducationFieldReqDTO;
+import my.ep.dto.pm.common.educationfield.EducationFieldResDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
@@ -87,6 +90,7 @@ import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDocument;
+import my.ep.persistence.entity.pm.common.PmEduField;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
@@ -224,6 +228,7 @@ public class SmApplicationBackingBean extends
 			retrieveUomList();
 			retrieveRejectReasonList();
 			retrieveRegistrationStatusList();
+			retrieveEduFieldList();
 		}
 		SmAppl smAppl = new SmAppl();
 		SmSupplier smApplSupplier = new SmSupplier();
@@ -382,9 +387,11 @@ public class SmApplicationBackingBean extends
 			}
 
 			calcPersonnelListCount();
-			calculateCapital();
+			// calculateCapital();
 			calculateBumiPercentageTotals();
 			updateSmAppl(applicationType, "", "");
+			getManagedBean().setCurrentPageType(
+					SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC);
 			if (smAppl.getSmFacilities() != null
 					&& smAppl.getSmFacilities().isEmpty()
 					&& !smAppl.getApplType().equalsIgnoreCase(
@@ -411,8 +418,7 @@ public class SmApplicationBackingBean extends
 				setApplicationFailities(smAppl.getSmFacilities());
 				// TODO
 			}
-			getManagedBean().setCurrentPageType(
-					SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC);
+
 			return setNavigationForAppl(applicationType);
 
 			/*
@@ -602,13 +608,7 @@ public class SmApplicationBackingBean extends
 
 	public void updateSmAppl(String applType, String currentPageType,
 			String outputPageType) {
-		System.out.println("******* Current Page Before **** "
-				+ currentPageType);
-		System.out
-				.println("******* Current page before in managed bean ********"
-						+ getManagedBean().getCurrentPageType());
-		System.out.println("********** Output Page before ***********"
-				+ outputPageType);
+
 		testUpdateSmAppl(applType, currentPageType, outputPageType, false);
 		System.out
 				.println("******* Current page AFTER in managed bean ********"
@@ -645,11 +645,20 @@ public class SmApplicationBackingBean extends
 			}
 			if (valid) {
 				// Save or update to DB
+				if (outputPageType
+						.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)) {
+					System.out.println("********* Values is capital *******");
+					calculateCapital();
+					System.out.println("**** Data to db *******"
+							+ this.getManagedBean().getSmAppl()
+									.getSmCompanyBasic().getBumiPercent());
+				}
 				MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
 				reqDto.setSmAppl(this.getManagedBean().getSmAppl());
 				MofRegistrationResDTO resDTO = mofRegistrationSO
 						.updateApplication(reqDto);
 				getManagedBean().setCurrentPageType(outputPageType);
+
 			} else {
 				getManagedBean().setTabActiveIndex(currentTab);
 				getManagedBean().getSmAppl().setCurrentActiveTab(currentTab);
@@ -933,6 +942,16 @@ public class SmApplicationBackingBean extends
 							|| this.getManagedBean().getSmAppl()
 									.getSmFacilities().get(i).getFacilityType()
 									.equalsIgnoreCase("H")) {
+						System.out
+								.println("***** Date from the basicCompanyFacility ****"
+										+ this.getManagedBean()
+												.getBasicCompanyFacility()
+												.getPurchaseDate());
+						System.out
+								.println("***** Price  from the basicCompanyFacility ****"
+										+ this.getManagedBean()
+												.getBasicCompanyFacility()
+												.getPurchasePrice());
 						this.getManagedBean()
 								.getSmAppl()
 								.getSmFacilities()
@@ -946,8 +965,10 @@ public class SmApplicationBackingBean extends
 			int validStfCont = 0;
 			for (SmStaffTotal stfTl : getManagedBean().getSmAppl()
 					.getSmStaffTotals()) {
-				if (stfTl.getTotalBumi() > 0 || stfTl.getTotalForeigner() > 0
-						|| stfTl.getTotalNonBumi() > 0) {
+				if (stfTl.getTotalBumi().compareTo(new BigDecimal(0)) > 0
+						|| stfTl.getTotalForeigner().compareTo(
+								new BigDecimal(0)) > 0
+						|| stfTl.getTotalNonBumi().compareTo(new BigDecimal(0)) > 0) {
 					validStfCont = validStfCont + 1;
 					break;
 				}
@@ -1770,6 +1791,15 @@ public class SmApplicationBackingBean extends
 			getManagedBean().getSmAppl().getSmCompanyExperiences()
 					.add(getManagedBean().getSelectedCompanyExperience());
 		}
+		if (getManagedBean().getSmAppl().getSupplierType()
+				.equals(SupplierManagementConst.STYPE_CONSULTANT)) {
+			RequestContext.getCurrentInstance().execute("contDialog.hide()");
+		}
+		if (getManagedBean().getSmAppl().getSupplierType()
+				.equals(SupplierManagementConst.STYPE_CONTRACTOR)) {
+			RequestContext.getCurrentInstance().execute("contDialog.hide()");
+		}
+
 	}
 
 	public void assignSelCompanyExperience(SmCompanyExperience consultantBean) {
@@ -2679,6 +2709,7 @@ public class SmApplicationBackingBean extends
 		System.out.println(">>>>>> Add Academic Qualification >>>>>>>>>>>>>>>"
 				+ isShrHldr);
 		SmStaffAcademic aca = new SmStaffAcademic();
+		aca.setPmEduField(new PmEduField());
 		if (isShrHldr) {
 			aca.setSmPersonnel(getManagedBean().getSelectedShareHolder());
 			getManagedBean().getSelectedShareHolder().getSmStaffAcademics()
@@ -4088,29 +4119,28 @@ public class SmApplicationBackingBean extends
 		SmAppl app = getManagedBean().getSmAppl();
 		if (supplierType.equals(SupplierManagementConst.STYPE_CONTRACTOR)) {
 			SmStaffTotal stf = new SmStaffTotal();
-			stf.setRevNo(new BigDecimal(1));
-			stf.setStaffCategory("C");
-			stf.setSmAppl(app);
-			staffList.add(stf);
+			staffList.add(setDefaultStaffValues(stf, app, "C"));
 		} else if (supplierType
 				.equals(SupplierManagementConst.STYPE_CONSULTANT)) {
 			SmStaffTotal stf1 = new SmStaffTotal();
-			stf1.setStaffCategory("P");
-			stf1.setSmAppl(app);
-			stf1.setRevNo(new BigDecimal(1));
-			staffList.add(stf1);
+			staffList.add(setDefaultStaffValues(stf1, app, "P"));
 			SmStaffTotal stf2 = new SmStaffTotal();
-			stf2.setStaffCategory("S");
-			stf2.setSmAppl(app);
-			stf2.setRevNo(new BigDecimal(1));
-			staffList.add(stf2);
+			staffList.add(setDefaultStaffValues(stf2, app, "S"));
 			SmStaffTotal stf3 = new SmStaffTotal();
-			stf3.setStaffCategory("L");
-			stf3.setSmAppl(app);
-			stf3.setRevNo(new BigDecimal(1));
-			staffList.add(stf3);
+			staffList.add(setDefaultStaffValues(stf3, app, "L"));
 		}
 		return staffList;
+	}
+
+	private SmStaffTotal setDefaultStaffValues(SmStaffTotal stf, SmAppl app,
+			String category) {
+		stf.setRevNo(new BigDecimal(1));
+		stf.setTotalBumi(new BigDecimal(0));
+		stf.setTotalNonBumi(new BigDecimal(0));
+		stf.setTotalForeigner(new BigDecimal(0));
+		stf.setStaffCategory(category);
+		stf.setSmAppl(app);
+		return stf;
 	}
 
 	private void retrievePmCountryList() {
@@ -4119,6 +4149,15 @@ public class SmApplicationBackingBean extends
 		CountryResDTO resDTO = reqSO.retrieveCountryList();
 
 		this.getManagedBean().setCountryLs(resDTO.getCountryList());
+	}
+
+	private void retrieveEduFieldList() {
+		EducationFieldReqDTO reqDTO = new EducationFieldReqDTO();
+		IEducationFieldSO reqSO = (IEducationFieldSO) BusinessDelegate
+				.getInstance().getServiceObject("pm", IEducationFieldSO.class);
+		EducationFieldResDTO resDTO = reqSO.retrieveEducationFieldList(reqDTO);
+
+		this.getManagedBean().setEduFieldList(resDTO.getEduFieldList());
 	}
 
 	private void saveSmRemarks(SmRemark remarks) {
@@ -5429,7 +5468,7 @@ public class SmApplicationBackingBean extends
 							getManagedBean().getSmAppl().getSmCompanyBasic()
 									.getAuthorizedCapital()) <= 0) {
 				BigDecimal mul = new BigDecimal(100);
-
+				System.out.println(" *** Intial Calc ***** ");
 				if (getManagedBean().getSmAppl().getSmCompanyBasic()
 						.getPaidUpCapital().compareTo(new BigDecimal(0)) > 0) {
 					getManagedBean()
@@ -5447,6 +5486,11 @@ public class SmApplicationBackingBean extends
 													RoundingMode.HALF_UP)
 											.multiply(mul)
 											.setScale(2, RoundingMode.HALF_UP));
+					System.out
+							.println("******* First Value of  setBumiPercent "
+									+ getManagedBean().getSmAppl()
+											.getSmCompanyBasic()
+											.getBumiPercent());
 
 					getManagedBean()
 							.getSmAppl()
@@ -5718,25 +5762,25 @@ public class SmApplicationBackingBean extends
 			if (stf.getStaffCategory().equalsIgnoreCase("C")
 					|| stf.getStaffCategory().equalsIgnoreCase("L")) {
 				getManagedBean().getPersonCalc().setStfBumiActCnt(
-						stf.getTotalBumi());
+						stf.getTotalBumi().intValue());
 				getManagedBean().getPersonCalc().setStfFrgActCnt(
-						stf.getTotalForeigner());
+						stf.getTotalForeigner().intValue());
 				getManagedBean().getPersonCalc().setStfNonBumiActCnt(
-						stf.getTotalNonBumi());
+						stf.getTotalNonBumi().intValueExact());
 			} else if (stf.getStaffCategory().equalsIgnoreCase("P")) {
 				getManagedBean().getPersonCalc().setProfBumiActCnt(
-						stf.getTotalBumi());
+						stf.getTotalBumi().intValue());
 				getManagedBean().getPersonCalc().setProfFrgActCnt(
-						stf.getTotalForeigner());
+						stf.getTotalForeigner().intValue());
 				getManagedBean().getPersonCalc().setProfNonBumiActCnt(
-						stf.getTotalNonBumi());
+						stf.getTotalNonBumi().intValue());
 			} else if (stf.getStaffCategory().equalsIgnoreCase("S")) {
 				getManagedBean().getPersonCalc().setSemiBumiActCnt(
-						stf.getTotalBumi());
+						stf.getTotalBumi().intValue());
 				getManagedBean().getPersonCalc().setSemiFrgActCnt(
-						stf.getTotalForeigner());
+						stf.getTotalForeigner().intValue());
 				getManagedBean().getPersonCalc().setSemiNonBumiActCnt(
-						stf.getTotalNonBumi());
+						stf.getTotalNonBumi().intValue());
 			}
 		}
 	}
