@@ -92,6 +92,7 @@ import my.ep.web.vo.ExtensionCodeVO;
 import my.ep.web.vo.PricingVO;
 
 import org.apache.commons.lang.SerializationUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.apache.poi.ss.usermodel.Cell;
@@ -2858,6 +2859,27 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			this.getManagedBean().getSelectViewItems().remove(index);
 			this.getManagedBean().getSelectedSupplierItemList().remove(index);
 		}
+
+	}
+	
+	
+	
+	
+	public void preRenderSupplierCatalogue() {
+
+		
+		this.getManagedBean().setSearchDataModel(null);
+		this.getManagedBean().setItemNameFilterBean(null);
+		this.getManagedBean().setSupplierNameFilterBean(null);
+		this.getManagedBean().setContractNoFilterBean(null);
+		this.getManagedBean().setCircularNoFilterBean(null);
+		this.getManagedBean().setMofNoFilterBean(null);
+		this.getManagedBean().setEpNoFilterBean(null);
+		this.getManagedBean().setBizRegNoFilterBean(null);
+
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, "supplierItemView");
 
 	}
 
