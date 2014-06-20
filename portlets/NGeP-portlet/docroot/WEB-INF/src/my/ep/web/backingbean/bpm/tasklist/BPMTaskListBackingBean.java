@@ -137,21 +137,21 @@ public class BPMTaskListBackingBean extends
 
 				
 		//Added for qt..
-		temp.put(SCProcessNameConst.QUATATION_TENDER_CREATION +SCProcessNameConst.PREPARE_SPECIFICATION , "businessowner");
-		temp.put(SCProcessNameConst.QUATATION_TENDER_CREATION +SCProcessNameConst.CONSOLIDATE_SPECIFICATION , "businessowner");
-		temp.put(SCProcessNameConst.QUATATION_TENDER_CREATION +SCProcessNameConst.SPECIFICATION_APPROVAL , "businessowner");
-		temp.put(SCProcessNameConst.QUATATION_TENDER_CREATION +SCProcessNameConst.PREPARE_QT_DETAILS , "qtdetails");
-		temp.put(SCProcessNameConst.SOURCING_APPROVAL +SCProcessNameConst.BDG_APPROVAL , "qtapprovals");
-		temp.put(SCProcessNameConst.BPK_APPROVAL_PROCESS +SCProcessNameConst.BPK_APPROVAL , "qtapprovals");
-		temp.put(SCProcessNameConst.SCORING_PREPARATION_PROCESS +SCProcessNameConst.PREPARE_SCORING ,"specpreparation");
-		temp.put(SCProcessNameConst.SCORING_PREPARATION_PROCESS +SCProcessNameConst.FINALISE_SCORING ,"specpreparation");
-		temp.put(SCProcessNameConst.SCORING_PREPARATION_PROCESS +SCProcessNameConst.ENDORSE_SCORING ,"specpreparation");
-		temp.put(SCProcessNameConst.SCORING_PREPARATION_PROCESS +SCProcessNameConst.SIGN_OFF_SCORING ,"specpreparation");
-		temp.put(SCProcessNameConst.BDG_APPROVAL_PROCESS +SCProcessNameConst.REVISE_BDG_APPROVAL , "qtdetails");
-		temp.put(SCProcessNameConst.BPK_APPROVAL_PROCESS +SCProcessNameConst.REVISE_BPK_APPROVAL , "qtapprovals");
-		temp.put(SCProcessNameConst.QUATATION_TENDER_CREATION +SCProcessNameConst.QT_PREPARE_SCHEDULE , "qtdetails");
-		temp.put(SCProcessNameConst.COMMITTE_APPROVAL_PROCESS +SCProcessNameConst.APPROVE_COMMITTE , "qtapprovals");
-		temp.put(SCProcessNameConst.COMMITTE_APPROVAL_PROCESS +SCProcessNameConst.REVISE_COMMITTE , "qtdetails");
+		temp.put(SCProcessNameConst.QUOTATION_TENDER_PROCESS_NAME +SCProcessNameConst.PREPARE_SPECIFICATION , "businessowner");
+		temp.put(SCProcessNameConst.QUOTATION_TENDER_PROCESS_NAME +SCProcessNameConst.CONSOLIDATE_SPECIFICATION , "businessowner");
+		temp.put(SCProcessNameConst.QUOTATION_TENDER_PROCESS_NAME +SCProcessNameConst.SPECIFICATION_APPROVAL , "businessowner");
+		temp.put(SCProcessNameConst.QUOTATION_TENDER_PROCESS_NAME +SCProcessNameConst.PREPARE_QT_DETAILS , "qtdetails");
+		temp.put(SCProcessNameConst.SOURCING_APPROVAL_PROCESS_NAME +SCProcessNameConst.APPROVE_BUDGET , "qtapprovals");
+		temp.put(SCProcessNameConst.BPK_APPROVAL_PROCESS_NAME +SCProcessNameConst.APPROVE_BPK , "qtapprovals");
+		temp.put(SCProcessNameConst.SCORING_PREPARATION_PROCESS_NAME +SCProcessNameConst.UPDATE_SCORING ,"specpreparation");
+		temp.put(SCProcessNameConst.SCORING_PREPARATION_PROCESS_NAME +SCProcessNameConst.FINALISE_SCORING ,"specpreparation");
+		temp.put(SCProcessNameConst.SCORING_PREPARATION_PROCESS_NAME +SCProcessNameConst.ENDORSE_SCORING ,"specpreparation");
+		temp.put(SCProcessNameConst.SCORING_PREPARATION_PROCESS_NAME +SCProcessNameConst.SIGNOFF_SCORING ,"specpreparation");
+		//temp.put(SCProcessNameConst.BDG_APPROVAL_PROCESS +SCProcessNameConst.REVISE_BDG_APPROVAL , "qtdetails");
+		temp.put(SCProcessNameConst.BPK_APPROVAL_PROCESS_NAME +SCProcessNameConst.REVISE_BPK , "qtapprovals");
+		temp.put(SCProcessNameConst.QUOTATION_TENDER_PROCESS_NAME +SCProcessNameConst.PREPARE_QT_SCHEDULE , "qtdetails");
+		temp.put(SCProcessNameConst.COMMITTEE_APPROVAL_PROCESS_NAME +SCProcessNameConst.APPROVE_COMMITTEE , "qtapprovals");
+		temp.put(SCProcessNameConst.COMMITTEE_APPROVAL_PROCESS_NAME +SCProcessNameConst.REVISE_COMMITTEE , "qtdetails");
 		
 
 		this.getManagedBean().setBpmMap(temp);
