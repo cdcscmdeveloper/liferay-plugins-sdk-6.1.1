@@ -163,7 +163,7 @@
 			<p:ajax event="rowSelect" update=":form:delAddr" />
 			<ac:paginator for="delAddr" />
 			<p:column selectionMode="multiple" style="width:2%;text-align:center" />
-			<p:column headerText="Address">
+			<p:column headerText="Address" style="white-space:normal;">
 				<h:outputText
 					value="#{purchaseRequestBackingBean.getFullAddress(delAddr.pmAddress)}"
 					escape="false" />
