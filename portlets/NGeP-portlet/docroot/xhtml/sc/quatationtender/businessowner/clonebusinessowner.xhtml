@@ -8,22 +8,22 @@
 
 	<p:dialog id="cloneBusinessOwner" header="Clone Business Owner"
 		widgetVar="cloneBusinessOwner" width="950" height="600" position="top">
-		<p:panel header="#{lbl['lbl.so.business.owner.search']}"
-			toggleable="true" id="searchpnlid" styleClass="cloneAddMember">
+		<p:panel header="#{lbl['lbl.so.searchbtn']}" toggleable="true"
+			id="searchpnlid" styleClass="cloneAddMember">
 			<table>
 				<tr>
 					<td><p:outputLabel
 							value="#{lbl['lbl.sc.committe.clone.title']}" /></td>
 					<td colspan="3"><p:inputText
 							value="#{qTBusinessOwnerBackingBean.managedBean.cloneQtnTenderSearchBean.qtTitle}"
-							size="92" /></td>
+							size="92" maxlength="100" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel
 							value="#{lbl['lbl.sc.committe.clone.qtntender']}" /></td>
 					<td><p:inputText
 							value="#{qTBusinessOwnerBackingBean.managedBean.cloneQtnTenderSearchBean.qtNo}"
-							size="30" /></td>
+							size="30" maxlength="21" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel
@@ -37,15 +37,22 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.so.creatdtfrom']}" /></td>
-					<td><p:calendar
+					<td><p:calendar id="crdateFrm" showOn="button"
 							value="#{qTBusinessOwnerBackingBean.managedBean.cloneQtnTenderSearchBean.fromCreatedDate}"
-							size="30" showOn="button" /></td>
+							size="30" readonlyInput="true">
+							<p:ajax event="dateSelect" update="createdtTo" />
+						</p:calendar></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.so.creatdtto']}" /></td>
-					<td><p:calendar
+					<td><p:calendar id="createdtTo" showOn="button"
 							value="#{qTBusinessOwnerBackingBean.managedBean.cloneQtnTenderSearchBean.toCreatedDate}"
-							size="30" showOn="button" /></td>
+							mindate="#{qTBusinessOwnerBackingBean.managedBean.cloneQtnTenderSearchBean.fromCreatedDate}"
+							size="30" readonlyInput="true">
+							<f:attribute name="startDate"
+								value="#{qTBusinessOwnerBackingBean.managedBean.cloneQtnTenderSearchBean.fromCreatedDate}" />
+							<f:validator validatorId="dateRangeValidator" />
+						</p:calendar></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel
@@ -94,7 +101,7 @@
 
 				<p:column headerText="#{lbl['lbl.so.procmode']}">
 					<h:outputText
-						value="#{qTBusinessOwnerBackingBean.getParameterDesc(ParameterTypeConst.scProcurementMode, scQt.procurementMode)}" />
+						value="#{qTBusinessOwnerBackingBean.getParameterDesc(scQt.procurementMode)}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.so.crtdt']}">

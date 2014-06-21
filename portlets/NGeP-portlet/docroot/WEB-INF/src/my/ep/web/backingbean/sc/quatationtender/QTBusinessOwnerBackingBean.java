@@ -314,7 +314,7 @@ public class QTBusinessOwnerBackingBean extends
 			if (!StringUtils.isBlank(procurementMode)) {
 				SearchFilterBean bean = new SearchFilterBean();
 				bean.setAndOr(SearchCondition.CONDITION_OR.value());
-				bean.setSearchField(QTConstants.PROCUREMENT_MODE);
+				bean.setSearchField("scQt.procurementMode.parameterCode");
 				bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
 				bean.setSearchValue(procurementMode);
 				searchFilterBean.add(bean);
@@ -613,13 +613,12 @@ public class QTBusinessOwnerBackingBean extends
 
 	public void resetClone() {
 		debugLogger("resetClone");
-		this.getManagedBean().setTitle(null);
-		this.getManagedBean().setQtNo(null);
-		this.getManagedBean().setProcurementMode(null);
-		this.getManagedBean().setCreatedDtFrom(null);
-		this.getManagedBean().setCreatedDtTo(null);
-		this.getManagedBean().setStatus(null);
-
+		this.getManagedBean().getCloneQtnTenderSearchBean().setQtTitle(null);
+		this.getManagedBean().getCloneQtnTenderSearchBean().setQtNo(null);
+		this.getManagedBean().getCloneQtnTenderSearchBean().setProcurementMode(null);
+		this.getManagedBean().getCloneQtnTenderSearchBean().setFromCreatedDate(null);
+		this.getManagedBean().getCloneQtnTenderSearchBean().setToCreatedDate(null);
+		this.getManagedBean().getCloneQtnTenderSearchBean().setQtStatus(null);
 	}
 
 	public void processChecked(AjaxBehaviorEvent event) {
