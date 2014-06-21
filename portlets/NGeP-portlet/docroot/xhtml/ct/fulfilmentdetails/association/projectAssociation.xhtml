@@ -30,7 +30,7 @@
 
          
         <p:outputLabel  value="#{lbl['lbl.ct.asearch.sname']}"  />
-        <p:inputText id="sName" style="width:170px;" label="#{lbl['lbl.ct.asearch.sname']}"
+        <p:inputText id="sName" style="width:170px;" label="#{lbl['lbl.ct.asearch.sname']}" maxlength="100"
            value="#{associationBackingBean.managedBean.ctSupplierName}"/>
          
         <h:outputLabel value="#{lbl['lbl.ct.asearch.cstart']}"  />
@@ -41,7 +41,7 @@
           value="#{associationBackingBean.managedBean.ctDateEnd}"  pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
        
         <p:outputLabel value="#{lbl['lbl.ct.asearch.pcno']}"/>
-        <p:inputText  id="ProdName"  style="width:170px;" label="#{lbl['lbl.ct.asearch.pcno']}"
+        <p:inputText  id="ProdName"  style="width:170px;" label="#{lbl['lbl.ct.asearch.pcno']}" maxlength="30"
            value="#{associationBackingBean.managedBean.ctProductCode}" />
       </h:panelGrid>
       <div class="ppRightBtn"> 
