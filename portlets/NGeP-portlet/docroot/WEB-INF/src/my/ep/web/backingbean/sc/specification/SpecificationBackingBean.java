@@ -92,6 +92,7 @@ import my.ep.dto.sc.specification.SpecificationReqDTO;
 import my.ep.dto.sc.specification.SpecificationResDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
+import my.ep.exception.EpException;
 import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
@@ -242,10 +243,8 @@ public class SpecificationBackingBean extends
 	private List<ScQtLocCriteria> getQuoteZones(List<TreeNode> treeNodes,
 			ScQtSupplierCriteria supplierCriteria) {
 		List<ScQtLocCriteria> results = new ArrayList<ScQtLocCriteria>();
-
 		for (TreeNode treeNode : treeNodes) {
 			List<TreeNode> stateNodes = treeNode.getChildren();
-
 			for (TreeNode treeNode2 : stateNodes) {
 				List<TreeNode> district = treeNode2.getChildren();
 				if (null != district && !district.isEmpty()) {
@@ -298,9 +297,9 @@ public class SpecificationBackingBean extends
 
 	private List<TplSpecZoneDtl> getZoneBusinessOwnerLocations(
 			List<TreeNode> treeNodes, TplSpecZoneDtl zoneDtl) {
-		List<TplSpecZoneLoc> results = new ArrayList<TplSpecZoneLoc>();
-		List<TplSpecZoneDtl> zoneList = new ArrayList<TplSpecZoneDtl>();
 
+		List<TplSpecZoneDtl> zoneList = new ArrayList<TplSpecZoneDtl>();
+		List<TplSpecZoneLoc> results = null;
 		for (TreeNode treeNode : treeNodes) {
 
 			List<TreeNode> zoneNodes = treeNode.getChildren();
@@ -309,6 +308,7 @@ public class SpecificationBackingBean extends
 			// TplSpecZoneDtl zoneDtl=new TplSpecZoneDtl();
 			zoneDtl = (TplSpecZoneDtl) zoneNodes.get(0).getData();
 			for (TreeNode treeNode1 : zoneNodes) {
+				results = new ArrayList<TplSpecZoneLoc>();
 				List<TreeNode> stateNodes = treeNode1.getChildren();
 
 				for (TreeNode treeNode2 : stateNodes) {
@@ -415,10 +415,18 @@ public class SpecificationBackingBean extends
 				resDTo = detailSO.saveQTDtl(reqDTO);
 			}
 
-			if (resDTo.isSuccessful()) {
+			if (null != resDTo && resDTo.isSuccessful()) {
 				ScQt scQt = resDTo.getQtDetail();
 				this.getManagedBean().setScQt(scQt);
-
+				this.getManagedBean().setSupplierCriteria(
+						scQt.getScQtSupplierCriteria());
+				if ("O".equalsIgnoreCase(scQt.getQtType())) {
+					this.getManagedBean().setSuppCriteriaopenList(
+							scQt.getScQtCategorys());
+				} else {
+					this.getManagedBean().setSuppCriteriarestrictedList(
+							scQt.getScQtCategorys());
+				}
 				FacesContext.getCurrentInstance().addMessage(
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
@@ -697,27 +705,24 @@ public class SpecificationBackingBean extends
 
 		try {
 			ScQtDoc technicalScqtDoc = this.getManagedBean().getScqtDoc();
-
 			ScQtCheckList techChecklist = technicalScqtDoc.getScQtCheckList();
 			if (null == techChecklist.getPmStatus()) {
 				PmStatus status = new PmStatus();
 				status.setStatusId(62702L);
-				techChecklist.setPmStatus(status);
+				technicalScqtDoc.getScQtCheckList().setPmStatus(status);
 			} else {
 				PmStatus status = techChecklist.getPmStatus();
 				status.setStatusId(62702L);
-				techChecklist.setPmStatus(status);
+				technicalScqtDoc.getScQtCheckList().setPmStatus(status);
 			}
 			saveTempleateSpecDtls(technicalScqtDoc, "1");
 
 			ScQtDoc finanicalScQtDoc = constructQtDocByType(
 					technicalScqtDoc.getTplSpecMaster(), "2");
 
-			ScQtCheckList finChecklist = finanicalScQtDoc.getScQtCheckList();
 			PmStatus status = new PmStatus();
 			status.setStatusId(62702L);
-			finChecklist.setPmStatus(status);
-
+			finanicalScQtDoc.getScQtCheckList().setPmStatus(status);
 			finanicalScQtDoc.getTplSpecMaster().setSpecMasterId(null);
 			finanicalScQtDoc.getTplSpecMaster().setChangedDate(null);
 			saveTempleateSpecDtls(finanicalScQtDoc, "2");
@@ -2028,8 +2033,30 @@ public class SpecificationBackingBean extends
 		return result;
 	}
 
+	/**
+	 * Method to edit the zones By BO..
+	 * 
+	 * @param rootZoneLocation
+	 * @param index
+	 */
 	public void editZoneLocation(TreeNode rootZoneLocation, int index) {
 		List<ScQtLocCriteria> locationDTOs = getLocations(rootZoneLocation);
+		Long locationLevel = this.getManagedBean().getScQt()
+				.getZoneLocationLevel().getParameterId();
+		if (locationLevel == null) {
+			locationLevel = 121L;
+		}
+
+		List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.LOCATION_LEVEL);
+		String locationLevelCode = null;
+		for (PmParameterDesc paramDesc : localParamDesc) {
+
+			if (paramDesc.getPmParameter().getParameterId()
+					.equals(locationLevel)) {
+				locationLevelCode = paramDesc.getCodeName();
+				break;
+			}
+		}
 
 		// ScQuoteZone zone = getZone(rootZoneLocation);
 		List<PmState> states = SourcingLocationHelper
@@ -2043,8 +2070,7 @@ public class SpecificationBackingBean extends
 		getManagedBean().setRootLocationTree(
 				LocationSingleton.getInstance().buildLocationPopupTree(1L,
 						states, districts, divisions, cities,
-						ParameterConst.LOCATION_LEVEL_DISTRICT,
-						ScQtLocCriteria.class));
+						locationLevelCode, ScQtLocCriteria.class));
 		int i = index;
 
 		this.getManagedBean().setIndex(i);
@@ -2368,32 +2394,29 @@ public class SpecificationBackingBean extends
 
 	}
 
-	public QuationTenderReqDTO prepareSpecReq() {
+	/**
+	 * Method to construct spec details to save...
+	 * 
+	 * @return
+	 */
+	private QuationTenderReqDTO prepareSpecReq() {
 		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 
 		// ScQtSpec scqtSpec = this.getManagedBean().getScQtSpec();
 		ScQt scQt = this.getManagedBean().getScQt();
 		// scQt.setItemType("P");
 		if (scQt.getEstimatedAmount().intValue() < 20000) {
-			FacesContext
-					.getCurrentInstance()
-					.addMessage(
-							null,
-							new FacesMessage(
-									FacesMessage.SEVERITY_ERROR,
-									null,
-									MessageUtils
-											.getMessage(
-													MessageConst.ERROR_100022,
-													new String[] { "Amount Must Be Greater Then 20000", },
-													MessageUtils.BUNDLE_COMMON_MESSAGES,
-													new FacesScopes()
-															.getUserLocale())));
+			throw new EpException(MessageConst.ERROR_100022);
+			/*
+			 * FacesContext .getCurrentInstance() .addMessage( null, new
+			 * FacesMessage( FacesMessage.SEVERITY_ERROR, null, MessageUtils
+			 * .getMessage( MessageConst.ERROR_100022, new String[] {
+			 * "Amount Must Be Greater Then 20000", },
+			 * MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes()
+			 * .getUserLocale())));
+			 */
 		}
-		PmParameter parameter = scQt.getPmProcurementCategory();
-		if (null == parameter || null == parameter.getParameterId()) {
-			scQt.setPmProcurementCategory(null);
-		}
+		
 		if (!scQt.isPanel()) {
 			System.out.println("====panel no save===");
 			if (!scQt.isZonal()) {
@@ -2408,7 +2431,8 @@ public class SpecificationBackingBean extends
 				ScQtSupplierCriteria qtSupplierCriteria = this.getManagedBean()
 						.getSupplierCriteria();
 
-				qtSupplierCriteria.setQtZoneCriterias(null);
+				this.getManagedBean().getSupplierCriteria()
+						.setQtZoneCriterias(null);
 				if (null != qtSupplierCriteria
 						&& null != qtSupplierCriteria.getLocationLevel()
 						&& null == qtSupplierCriteria.getLocationLevel()
@@ -2494,118 +2518,34 @@ public class SpecificationBackingBean extends
 
 			}
 
-			if (null == scQt.getScQtSupplierCriteria()) {
-				this.getManagedBean().getSupplierCriteria()
-						.setScQt(this.getManagedBean().getScQt());
-				setUserDetails(this.getManagedBean().getSupplierCriteria());
-				scQt.setScQtSupplierCriteria(this.getManagedBean()
-						.getSupplierCriteria());
-			}
+			this.getManagedBean().getSupplierCriteria()
+					.setScQt(this.getManagedBean().getScQt());
+			setUserDetails(this.getManagedBean().getSupplierCriteria());
+			scQt.setScQtSupplierCriteria(this.getManagedBean()
+					.getSupplierCriteria());
 
-			List<ScQtCategory> categoryList = new ArrayList<ScQtCategory>();
 			if ("O".equalsIgnoreCase(scQt.getQtType())) {
+
 				List<ScQtCategory> openList = this.getManagedBean()
 						.getSuppCriteriaopenList();
-
-				if (openList != null && !openList.isEmpty()) {
-
-					for (ScQtCategory scQtCategory : openList) {
-
-						scQtCategory.setPmCategoryL1(scQtCategory
-								.getPmCategoryL3().getPmCategoryL2()
-								.getPmCategoryL1());
-						scQtCategory.setPmCategoryL2(scQtCategory
-								.getPmCategoryL3().getPmCategoryL2());
-						scQtCategory.setScQt(this.getManagedBean().getScQt());
-						setUserDetails(scQtCategory);
-						categoryList.add(scQtCategory);
-
-					}
-					if (null == scQt.getScQtCategorys()
-							|| scQt.getScQtCategorys().isEmpty()) {
-
-						scQt.setScQtCategorys(categoryList);
-					}
-				} else {
-
-					FacesContext
-							.getCurrentInstance()
-							.addMessage(
-									null,
-									new FacesMessage(
-											FacesMessage.SEVERITY_ERROR,
-											null,
-											MessageUtils
-													.getMessage(
-															MessageConst.ERROR_100022,
-															new String[] { "Category Code ", },
-															MessageUtils.BUNDLE_COMMON_MESSAGES,
-															new FacesScopes()
-																	.getUserLocale())));
-				}
+				updateCategoryCodesToQt(openList, scQt);
 			}
 
-			if ("R".equalsIgnoreCase(scQt.getQtType())) {
-
-				List<ScQtCategory> restrictedList = this.getManagedBean()
+			else if ("R".equalsIgnoreCase(scQt.getQtType())) {
+				List<ScQtCategory> openList = this.getManagedBean()
 						.getSuppCriteriarestrictedList();
-				if (restrictedList != null && !restrictedList.isEmpty()) {
-
-					for (ScQtCategory scQtCategory : restrictedList) {
-
-						scQtCategory.setPmCategoryL1(scQtCategory
-								.getPmCategoryL3().getPmCategoryL2()
-								.getPmCategoryL1());
-						scQtCategory.setPmCategoryL2(scQtCategory
-								.getPmCategoryL3().getPmCategoryL2());
-						scQtCategory.setScQt(this.getManagedBean().getScQt());
-						setUserDetails(scQtCategory);
-						categoryList.add(scQtCategory);
-
-					}
-					if (null == scQt.getScQtCategorys()
-							|| scQt.getScQtCategorys().isEmpty()) {
-						scQt.setScQtCategorys(categoryList);
-					}
-				} else {
-					FacesContext
-							.getCurrentInstance()
-							.addMessage(
-									null,
-									new FacesMessage(
-											FacesMessage.SEVERITY_ERROR,
-											null,
-											MessageUtils
-													.getMessage(
-															MessageConst.ERROR_100022,
-															new String[] { "Category Code ", },
-															MessageUtils.BUNDLE_COMMON_MESSAGES,
-															new FacesScopes()
-																	.getUserLocale())));
-				}
+				updateCategoryCodesToQt(openList, this.getManagedBean()
+						.getScQt());
 
 			}
 		} else {
 			System.out.println("====panel yes save===");
 			if (null == scQt.getScQtSupplierCriteria()) {
 
-				if (null == this.getManagedBean().getSupplierCriteria()) {
-					this.getManagedBean().setSupplierCriteria(
-							new ScQtSupplierCriteria());
-				}
-
-				if (null == this.getManagedBean().getSupplierCriteria()
-						.getQtZoneCriterias()) {
-					this.getManagedBean().getSupplierCriteria()
-							.setQtZoneCriterias(new ScQtZoneCriteria());
-				}
-
 				if (null != this.getManagedBean().getCtPanelZones()
 						&& !this.getManagedBean().getCtPanelZones().isEmpty()) {
-
 					ScQtZoneCriteria zoneCriteria = this.getManagedBean()
 							.getSupplierCriteria().getQtZoneCriterias();
-
 					zoneCriteria.setScQtSupplierCriteria(this.getManagedBean()
 							.getSupplierCriteria());
 					setUserDetails(zoneCriteria);
@@ -2631,7 +2571,6 @@ public class SpecificationBackingBean extends
 				setUserDetails(this.getManagedBean().getSupplierCriteria());
 				scQt.setScQtSupplierCriteria(this.getManagedBean()
 						.getSupplierCriteria());
-				scQt.setFulfilmentType(null);
 				scQt.setZoneLocationLevel(null);
 				this.getManagedBean().getSupplierCriteria()
 						.setLocationLevel(null);
@@ -2694,7 +2633,7 @@ public class SpecificationBackingBean extends
 				getManagedBean().setScQt(tenderResDTO.getQtDetail());
 
 				if (null == tenderResDTO.getQtSupplierCriteria()) {
-					System.out.println("===supplier criteria null object==");
+
 					ScQtSupplierCriteria qtSupplierCriteria = new ScQtSupplierCriteria();
 					qtSupplierCriteria
 							.setQtZoneCriterias(new ScQtZoneCriteria());
@@ -8180,39 +8119,33 @@ public class SpecificationBackingBean extends
 			String docType) {
 		ScQtDoc scqtDocDest = new ScQtDoc();
 		setUserDetails(scqtDocDest);
-
-		try {
-			PmStatus status = specMaster.getStatus();
-			if (null == status) {
-				status = new PmStatus();
-			}
-			status.setStatusId(60550L);
-			specMaster.setStatus(status);
-			scqtDocDest.setTplSpecMaster(specMaster);
-
-			scqtDocDest.setTplDocMaster(null);
-			ScQtCheckList checkList = new ScQtCheckList();
-			checkList.setDocCategory(docType);
-
-			PmParameter parameter = new PmParameter();
-			parameter.setParameterId(185L);
-			PmParameter action = new PmParameter();
-			action.setParameterId(689L);
-			checkList.setChecklistSeq(1);
-			// PmStatus status = new PmStatus();
-			// status.setStatusId(1l);
-			// checkList.setPmStatus(status);
-			checkList.setScQtDoc(scqtDocDest);
-			checkList.setScoringReq(true);
-			checkList.setAction(action);
-			checkList.setScQt(this.getManagedBean().getScQt());
-			checkList.setDefinationType(parameter);
-			scqtDocDest.setScQtCheckList(checkList);
-			setUserDetails(checkList);
-
-		} finally {
-
+		PmStatus status = specMaster.getStatus();
+		if (null == status) {
+			status = new PmStatus();
 		}
+		status.setStatusId(60550L);
+		specMaster.setStatus(status);
+		scqtDocDest.setTplSpecMaster(specMaster);
+
+		scqtDocDest.setTplDocMaster(null);
+		ScQtCheckList checkList = new ScQtCheckList();
+		checkList.setDocCategory(docType);
+
+		PmParameter parameter = new PmParameter();
+		parameter.setParameterId(185L);
+		PmParameter action = new PmParameter();
+		action.setParameterId(689L);
+		checkList.setChecklistSeq(1);
+		// PmStatus status = new PmStatus();
+		// status.setStatusId(1l);
+		// checkList.setPmStatus(status);
+		checkList.setScQtDoc(scqtDocDest);
+		checkList.setScoringReq(true);
+		checkList.setAction(action);
+		checkList.setScQt(this.getManagedBean().getScQt());
+		checkList.setDefinationType(parameter);
+		scqtDocDest.setScQtCheckList(checkList);
+		setUserDetails(checkList);
 		return scqtDocDest;
 	}
 
@@ -8583,29 +8516,21 @@ public class SpecificationBackingBean extends
 
 	}
 
-	public QTTemplateDocResDTO saveTempleateSpecDtls(ScQtDoc scQtDoc,
+	private QTTemplateDocResDTO saveTempleateSpecDtls(ScQtDoc qtDoc,
 			String specType) {
 		IQTTemplateSO qtTemplateSO = null;
-		IStatusSO statussO = null;
+
 		IOrgProfileSO ProfileSo = null;
 		QTTemplateDocReqDTO docReqDTO = new QTTemplateDocReqDTO();
 		QTTemplateDocResDTO resDTO = new QTTemplateDocResDTO();
+		ScQtDoc scQtDoc = qtDoc;
 		try {
 			if (null == scQtDoc) {
 				scQtDoc = this.getManagedBean().getScqtDoc();
-				ScQtCheckList checkList = scQtDoc.getScQtCheckList();
 				PmStatus status = new PmStatus();
 				status.setStatusId(60550L);
-				checkList.setPmStatus(status);
+				scQtDoc.getScQtCheckList().setPmStatus(status);
 			}
-
-			statussO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
-
-			StatusReqDTO statusreq = new StatusReqDTO();
-			statusreq.setStatusId(1l);
-			StatusResDTO statusres = statussO
-					.retrieveStatusByStatusId(statusreq);
 
 			ProfileSo = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
@@ -8617,8 +8542,6 @@ public class SpecificationBackingBean extends
 			PmParameter parameter = scQtDoc.getTplSpecMaster()
 					.getTemplateTypeCode();
 			parameter.setParameterId(146L);
-
-			ScQtDoc scQtDOc = scQtDoc;
 			TplSpecMaster specMaster = scQtDoc.getTplSpecMaster();
 
 			scQtDoc.getScQtCheckList().setTitle(specMaster.getSpecName());
@@ -8628,12 +8551,10 @@ public class SpecificationBackingBean extends
 					date.getTime());
 			if ("1".equalsIgnoreCase(specType)) {
 
-				TemplateSpecBackingBean specBB = new TemplateSpecBackingBean();
-
 				List<TplSpecQuestion> questions = getManagedBean()
 						.getTemplateSpecBean().getSpecMaster()
 						.getTplSpecQuestions();
-				;
+
 				// TplSpecQuestion queston = questions.remove(0);
 				List<TplSpecQuestion> questions1 = new ArrayList<TplSpecQuestion>();
 
@@ -8706,18 +8627,17 @@ public class SpecificationBackingBean extends
 			specMaster.setRecordStatus(true);
 			setUserDetails(specMaster);
 
-			scQtDOc.setScQt(this.getManagedBean().getScQt());
+			scQtDoc.setScQt(this.getManagedBean().getScQt());
 
 			// scQtDOc.setScQtCheckList(checkList);
-			scQtDOc.setTplSpecMaster(specMaster);
+			scQtDoc.setTplSpecMaster(specMaster);
 
-			docReqDTO.setScQtDoc(scQtDOc);
+			docReqDTO.setScQtDoc(scQtDoc);
 			qtTemplateSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTTemplateSO.class);
 
 			resDTO = qtTemplateSO.saveOrUpdateTemplateDoc(docReqDTO);
 
-			return resDTO;
 		} catch (IllegalAccessException | InstantiationException
 				| InvocationTargetException | NoSuchMethodException e) {
 			// TODO Auto-generated catch block
@@ -8760,4 +8680,44 @@ public class SpecificationBackingBean extends
 		return items;
 	}
 
+	/**
+	 * To delete the selected TreeNode from list..
+	 */
+	public void deleteTreeNode() {
+		TreeNode selectedTreeNode = this.getManagedBean().getSelectedTreeNode();
+		TplSpecZoneDtl zoneDtls = (TplSpecZoneDtl) selectedTreeNode
+				.getChildren().get(0).getData();
+		if (null != selectedTreeNode) {
+			List<TreeNode> zoneTrees = this.getManagedBean()
+					.getZoneGeneralTrees();
+			for (TreeNode node : zoneTrees) {
+				if (zoneDtls.getZoneName().equalsIgnoreCase(
+						((TplSpecZoneDtl) node.getChildren().get(0).getData())
+								.getZoneName())) {
+					zoneTrees.remove(node);
+					break;
+				}
+			}
+			this.getManagedBean().setZoneGeneralTrees(zoneTrees);
+		} else {
+			throw new EpException(MessageConst.ERROR_715006);
+		}
+	}
+
+	private void updateCategoryCodesToQt(List<ScQtCategory> categories,
+			ScQt scQt) {
+		if (null != categories) {
+			for (ScQtCategory category : categories) {
+				category.setPmCategoryL1(category.getPmCategoryL3()
+						.getPmCategoryL2().getPmCategoryL1());
+				category.setPmCategoryL2(category.getPmCategoryL3()
+						.getPmCategoryL2());
+				category.setScQt(scQt);
+				setUserDetails(category);
+			}
+			scQt.setScQtCategorys(categories);
+		} else {
+			throw new EpException(MessageConst.ERROR_100022);
+		}
+	}
 }

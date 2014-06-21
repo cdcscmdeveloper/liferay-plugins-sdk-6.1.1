@@ -319,6 +319,8 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private CtPanelSupplier ctpanelSupplier;
 	private ScQtRemark contractremark;
 	
+	//Added By Sagar.. for Delete funcationality..
+	private TreeNode selectedTreeNode;
 
 	public SpecificationManagedBean() {
 		// deliveryLocBean.add(new BriefingZoneBean(1,"South",
@@ -3633,6 +3635,14 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	 */
 	public void setContractremark(ScQtRemark contractremark) {
 		this.contractremark = contractremark;
+	}
+
+	public TreeNode getSelectedTreeNode() {
+		return selectedTreeNode;
+	}
+
+	public void setSelectedTreeNode(TreeNode selectedTreeNode) {
+		this.selectedTreeNode = selectedTreeNode;
 	}
 
 	

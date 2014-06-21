@@ -1866,6 +1866,8 @@ public class LocationSingleton {
 
 			List<PmState> states = new ArrayList<PmState>();
 			List<PmDivision> divisions = new ArrayList<PmDivision>();
+			List<PmDistrict> districts = new ArrayList<PmDistrict>();
+			
 			TreeNode stateNode = null;
 			TreeNode divisonNode = null;
 			// List<TreeNode> locations = new ArrayList<TreeNode>();
@@ -1878,14 +1880,15 @@ public class LocationSingleton {
 				}
 				PmDivision division = locCriteria.getPmDivision();
 
-				if (division != null) {
+				if (null != division && !divisions.contains(division)) {
 					divisonNode = new DefaultTreeNode(QTConstants.NODE_DIVISION, locCriteria,
 							stateNode);
+					divisions.add(division);
 
 				}
 				PmDistrict pmDistrict = locCriteria.getPmDistrict();
 
-				if (pmDistrict != null) {
+				if (null != pmDistrict && !districts.contains(pmDistrict)) {
 					if (divisonNode == null) {
 						new DefaultTreeNode(QTConstants.NODE_DISTRICT, locCriteria, stateNode);
 
@@ -1894,6 +1897,7 @@ public class LocationSingleton {
 								divisonNode);
 
 					}
+					districts.add(pmDistrict);
 				}
 				states.add(pmState);
 			}
