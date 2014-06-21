@@ -78,110 +78,145 @@
 						<td><p:outputLabel value="* Landlord's Name" /></td>
 						<td><p:inputText id="landlordName"
 								value="#{backingBean.managedBean.basicCompanyFacility.ownerName}"
-								size="35" required="true" /> <p:message id="landlordNameMsg"
+								size="35" required="true"  label="Landlord's Name"/> <p:message id="landlordNameMsg"
 								for="landlordName" showSummary="true" showDetail="false"
 								display="icon" /></td>
 						<td><p:outputLabel value="* Monthly Rental (RM.)" /></td>
 						<td><p:inputText id="rental"
 								value="#{backingBean.managedBean.basicCompanyFacility.rentalRate}"
-								size="35" required="true">
+								size="35" required="true" label="Monthly Rental ">
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 							</p:inputText> <p:message id="rentalMsg" for="rental" showSummary="true"
 								showDetail="false" display="icon" /></td>
 					</tr>
 					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sm.companyaddress']}" /></td>
-						<td><p:inputText id="companyAdd1" size="35" colspan="3"
-								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.address1}" />
-							<p:message id="companyAdd1Msg" for="companyAdd1"
-								showSummary="true" showDetail="false" display="icon" /></td>
-					</tr>
-					<tr>
-						<td></td>
-						<td><p:inputText size="35" colspan="3"
-								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.address2}" /></td>
-					</tr>
-					<tr>
-						<td></td>
-						<td><p:inputText size="35" colspan="3"
-								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.address3}" /></td>
-					</tr>
-					<tr>
-						<td></td>
-						<td><p:inputText size="35" colspan="3"
-								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.address4}" /></td>
-						<td><p:outputLabel value="* #{lbl['lbl.sm.country']}" /></td>
-						<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
-								id="companyCntry"
-								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.pmCountry.countryId}"
-								required="true">
-								<f:selectItem itemLabel="---Select---" itemValue="" />
-								<f:selectItems var="basicCountry"
-									value="#{backingBean.managedBean.countryLs}"
-									itemValue="#{basicCountry.countryId}"
-									itemLabel="#{basicCountry.countryName}" />
-								<p:ajax event="change"
-									listener="#{backingBean.populateStatesByCountry(backingBean.managedBean.basicCompanyFacility.smAddress.pmCountry.countryId, 
+						<td style="vertical-align: top;"><p:outputLabel
+								value="#{lbl['lbl.sm.companyaddress']}"
+								style="padding-top :5px;" /></td>
+						<td>
+							<table style="width: 100%">
+								<tr>
+									<td><p:inputText id="companyAdd1" size="35"
+											value="#{backingBean.managedBean.basicCompanyFacility.smAddress.address1}" />
+										<p:message id="companyAdd1Msg" for="companyAdd1"
+											showSummary="true" showDetail="false" display="icon" /></td>
+								</tr>
+								<tr>
+									<td><p:inputText size="35"
+											value="#{backingBean.managedBean.basicCompanyFacility.smAddress.address2}" /></td>
+								</tr>
+								<tr>
+									<td><p:inputText size="35"
+											value="#{backingBean.managedBean.basicCompanyFacility.smAddress.address3}" /></td>
+								</tr>
+								<tr>
+									<td><p:inputText size="35"
+											value="#{backingBean.managedBean.basicCompanyFacility.smAddress.address4}" /></td>
+								</tr>
+							</table>
+						</td>
+						<td>
+							<TABLE style="width: 100%; height: 100px;">
+								<tr>
+									<td><p:outputLabel value="* #{lbl['lbl.sm.country']}" /></td>
+								</tr>
+								<tr>
+
+									<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
+								</tr>
+								<tr>
+									<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
+								</tr>
+								<tr>
+									<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
+								</tr>
+							</TABLE>
+						</td>
+						<td>
+							<TABLE style="width: 100%">
+								<tr>
+									<td><p:selectOneMenu
+											style="width: 207px;margin-bottom: 5px;" id="companyCntry"
+											value="#{backingBean.managedBean.basicCompanyFacility.smAddress.pmCountry.countryId}"
+											required="true" label="#{lbl['lbl.sm.country']}">
+											<f:selectItem itemLabel="---Select---" itemValue="" />
+											<f:selectItems var="basicCountry"
+												value="#{backingBean.managedBean.countryLs}"
+												itemValue="#{basicCountry.countryId}"
+												itemLabel="#{basicCountry.countryName}" />
+											<p:ajax event="change"
+												listener="#{backingBean.populateStatesByCountry(backingBean.managedBean.basicCompanyFacility.smAddress.pmCountry.countryId, 
 								SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL,
 								backingBean.managedBean.basicCompanyFacility.smAddress.pmState,
 								backingBean.managedBean.basicCompanyFacility.smAddress.pmDistrict,
 								backingBean.managedBean.basicCompanyFacility.smAddress.pmCity)}"
-									update="basicOffFacState,basicOffFacDist,basicOffFacCity" />
-							</p:selectOneMenu> <p:message id="cmpnyCntryNameMsg" for="companyCntry"
-								showSummary="true" showDetail="false" display="icon" /></td>
+												update="basicOffFacState,basicOffFacDist,basicOffFacCity" />
+										</p:selectOneMenu> <p:message id="cmpnyCntryNameMsg" for="companyCntry"
+											showSummary="true" showDetail="false" display="icon" /></td>
+								</tr>
+								<tr>
 
-					</tr>
-
-					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
-						<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
-								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.pmState.stateId}"
-								id="basicOffFacState" required="true">
-								<f:selectItem itemLabel="---Select---" itemValue="" />
-								<f:selectItems var="offState"
-									value="#{backingBean.managedBean.basicOffFacStates}"
-									itemValue="#{offState.stateId}"
-									itemLabel="#{offState.stateName}" />
-								<p:ajax event="change"
-									listener="#{backingBean.populateDistrictsByState(backingBean.managedBean.basicCompanyFacility.smAddress.pmState.stateId, 
+									<td><p:selectOneMenu
+											style="width: 207px;margin-bottom: 5px;"
+											value="#{backingBean.managedBean.basicCompanyFacility.smAddress.pmState.stateId}"
+											id="basicOffFacState" required="true"
+											label="#{lbl['lbl.sm.state']}">
+											<f:selectItem itemLabel="---Select---" itemValue="" />
+											<f:selectItems var="offState"
+												value="#{backingBean.managedBean.basicOffFacStates}"
+												itemValue="#{offState.stateId}"
+												itemLabel="#{offState.stateName}" />
+											<p:ajax event="change"
+												listener="#{backingBean.populateDistrictsByState(backingBean.managedBean.basicCompanyFacility.smAddress.pmState.stateId, 
 								SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL,
 								backingBean.managedBean.basicCompanyFacility.smAddress.pmDistrict,
 								backingBean.managedBean.basicCompanyFacility.smAddress.pmCity)}"
-									update="basicOffFacDist,basicOffFacCity" />
+												update="basicOffFacDist,basicOffFacCity" />
 
-							</p:selectOneMenu> <p:message id="basicOffFacStateMsg" for="basicOffFacState"
-								showSummary="true" showDetail="false" display="icon" /></td>
-						<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
-						<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
-								id="basicOffFacDist" required="true"
-								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.pmDistrict.districtId}">
-								<f:selectItem itemLabel="---Select---" itemValue="" />
-								<f:selectItems var="offDist"
-									value="#{backingBean.managedBean.basicOffFacDistricts}"
-									itemValue="#{offDist.districtId}"
-									itemLabel="#{offDist.districtName}" />
-								<p:ajax event="change"
-									listener="#{backingBean.populateCitiesByDistrict(backingBean.managedBean.basicCompanyFacility.smAddress.pmDistrict.districtId, 
+										</p:selectOneMenu> <p:message id="basicOffFacStateMsg" for="basicOffFacState"
+											showSummary="true" showDetail="false" display="icon" /></td>
+								</tr>
+								<tr>
+									<td><p:selectOneMenu
+											style="width: 207px;margin-bottom: 5px;" id="basicOffFacDist"
+											required="true" label="#{lbl['lbl.sm.district']}"
+											value="#{backingBean.managedBean.basicCompanyFacility.smAddress.pmDistrict.districtId}">
+											<f:selectItem itemLabel="---Select---" itemValue="" />
+											<f:selectItems var="offDist"
+												value="#{backingBean.managedBean.basicOffFacDistricts}"
+												itemValue="#{offDist.districtId}"
+												itemLabel="#{offDist.districtName}" />
+											<p:ajax event="change"
+												listener="#{backingBean.populateCitiesByDistrict(backingBean.managedBean.basicCompanyFacility.smAddress.pmDistrict.districtId, 
 								SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL,
 								backingBean.managedBean.basicCompanyFacility.smAddress.pmCity)}"
-									update="basicOffFacCity" />
-							</p:selectOneMenu> <p:message id="basicOffFacDistMsg" for="basicOffFacDist"
-								showSummary="true" showDetail="false" display="icon" /></td>
+												update="basicOffFacCity" />
+										</p:selectOneMenu> <p:message id="basicOffFacDistMsg" for="basicOffFacDist"
+											showSummary="true" showDetail="false" display="icon" /></td>
 
+								</tr>
+								<tr>
+									<td><p:selectOneMenu
+											style="width: 207px;margin-bottom: 5px;" id="basicOffFacCity"
+											required="true" label="#{lbl['lbl.sm.towncity']}"
+											value="#{backingBean.managedBean.basicCompanyFacility.smAddress.pmCity.cityId}">
+											<f:selectItem itemLabel="---Select---" itemValue="" />
+											<f:selectItems var="offCity"
+												value="#{backingBean.managedBean.basicOffFacCities}"
+												itemValue="#{offCity.cityId}"
+												itemLabel="#{offCity.cityName}" />
+										</p:selectOneMenu> <p:message id="basicOffFacCityMsg" for="basicOffFacCity"
+											showSummary="true" showDetail="false" display="icon" /></td>
+								</tr>
+							</TABLE>
+						</td>
 					</tr>
 
+
+
 					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
-						<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
-								id="basicOffFacCity" required="true"
-								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.pmCity.cityId}">
-								<f:selectItem itemLabel="---Select---" itemValue="" />
-								<f:selectItems var="offCity"
-									value="#{backingBean.managedBean.basicOffFacCities}"
-									itemValue="#{offCity.cityId}" itemLabel="#{offCity.cityName}" />
-							</p:selectOneMenu> <p:message id="basicOffFacCityMsg" for="basicOffFacCity"
-								showSummary="true" showDetail="false" display="icon" /></td>
+
 						<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
 						<td><p:inputText size="35"
 								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.postcode}" /></td>

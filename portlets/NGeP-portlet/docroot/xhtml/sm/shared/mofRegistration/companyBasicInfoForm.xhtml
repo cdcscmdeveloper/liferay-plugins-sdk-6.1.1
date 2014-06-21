@@ -126,8 +126,8 @@
 					<td>
 						<TABLE style="width: 100%">
 							<tr>
-								<td><p:selectOneMenu
-										style="width: 207px;margin-bottom: 5px;"
+								<td><p:selectOneMenu label="#{lbl['lbl.sm.country']}"
+										style="width: 207px;margin-bottom: 5px;" required="true"
 										value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCountry.countryId}">
 										<f:selectItem itemLabel="---Select---" itemValue="" />
 										<f:selectItems var="basicCountry"
@@ -143,6 +143,7 @@
 
 								<td><p:selectOneMenu
 										style="width: 207px;margin-bottom: 5px;" id="basicComState"
+										required="true" label="#{lbl['lbl.sm.state']}"
 										value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState.stateId}">
 										<f:selectItem itemLabel="---Select---" itemValue="" />
 										<f:selectItems var="basicState"
@@ -160,6 +161,7 @@
 							<tr>
 								<td><p:selectOneMenu
 										style="width: 207px;margin-bottom: 5px;" id="basicCompDist"
+										required="true" label="#{lbl['lbl.sm.district']}"
 										value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmDistrict.districtId}">
 										<f:selectItem itemLabel="---Select---" itemValue="" />
 										<f:selectItems var="dist"
@@ -177,6 +179,7 @@
 							<tr>
 								<td><p:selectOneMenu
 										style="width: 207px;margin-bottom: 5px;" id="basicCompCity"
+										required="true" label="#{lbl['lbl.sm.towncity']}"
 										value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCity.cityId}">
 										<f:selectItem itemLabel="---Select---" itemValue="" />
 										<f:selectItems var="city"
