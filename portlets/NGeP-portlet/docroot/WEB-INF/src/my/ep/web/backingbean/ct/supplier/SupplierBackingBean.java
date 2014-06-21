@@ -69,6 +69,7 @@ import my.ep.jaxb.ct.factoring.CTFactoringDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtContractVer;
+import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.dtl.CtContractValue;
 import my.ep.persistence.entity.ct.factoring.CtFactoring;
 import my.ep.persistence.entity.pm.common.PmAddressType;
@@ -331,14 +332,25 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 				throw new EpException(MessageConst.ERROR_750000);
 			}
 			
-			//TODO should block user from submit if the original current version still in pending process status
+			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
+				 CtRemark remark = getManagedBean().getRemarkList().get(0);
+				 if(remark.getRemark().equalsIgnoreCase(null) || remark.getRemark().equalsIgnoreCase("")){
+					 throw new EpException(MessageConst.INFO_100022, new String[]{"Remarks"});
+				 }
+		      }
 
 			ContractReqDTO reqDTO = new ContractReqDTO();
 			reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken());
 			reqDTO.setOutcome(action);
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
-			reqDTO.setSupplierPmUser(getFacesScopes().getUserSessionBean());
 			reqDTO.setUserRole(getUserRole());
+			if(reqDTO.getUserRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value()) || 
+					reqDTO.getUserRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.value()) ||
+					reqDTO.getUserRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_USER.value()) || 
+					reqDTO.getUserRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_ADMIN.value())) {
+				reqDTO.setSupplierPmUser(getFacesScopes().getUserSessionBean());
+			}
+			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,	IContractSO.class);
 
 			reqDTO.setCtContract(getManagedBean().getCtContract());
