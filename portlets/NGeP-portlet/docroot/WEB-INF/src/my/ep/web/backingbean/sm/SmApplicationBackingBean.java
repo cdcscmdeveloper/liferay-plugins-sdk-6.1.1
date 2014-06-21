@@ -273,6 +273,11 @@ public class SmApplicationBackingBean extends
 					}
 
 					smAppl = resDto.getSmAppl();
+					smAppl.setSupportingDocMode("O");
+					if (smAppl.getApplType().equalsIgnoreCase(
+							ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
+						smAppl.setSmSupplierBanks(new ArrayList<SmSupplierBank>());
+					}
 					System.out
 							.println("****** After retrieve the appl is ********"
 									+ smAppl.getApplId()
@@ -290,11 +295,6 @@ public class SmApplicationBackingBean extends
 			}
 
 			getManagedBean().setSmSupplier(smApplSupplier);
-
-			if (!fromBpm) {
-				// TODO remove this hard coded data and make dynamic later
-				getManagedBean().getSmAppl().setSupportingDocMode("O");
-			}
 
 			assignSupplierBusinessType(getManagedBean().getSmSupplier());
 
@@ -1204,7 +1204,8 @@ public class SmApplicationBackingBean extends
 						.getSmSupplierCategories()) {
 					if (category.getPmCategoryL3().getCategoryL3Code()
 							.equalsIgnoreCase("99")) {
-						if (category.getOtherDesc().isEmpty()) {
+						if (category.getOtherDesc() != null
+								&& category.getOtherDesc().isEmpty()) {
 							validSave = false;
 							setNavigationBackToCurrentPage();
 							throw new EpException(MessageConst.ERROR_722514);
