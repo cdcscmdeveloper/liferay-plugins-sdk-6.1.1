@@ -2,6 +2,7 @@ package my.ep.web.backingbean.fl.po;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -39,7 +40,6 @@ import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
-import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmContact;
 import my.ep.persistence.entity.pm.common.PmFinancialBranch;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
@@ -463,69 +463,91 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 		public void getSelectedFactoringCompDtl(AjaxBehaviorEvent e){
 			IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
 			Long financialOrgId = (Long) e.getComponent().getAttributes().get("value");
-			AddressReqDTO reqDTO = new AddressReqDTO();
-			reqDTO.setFinancialOrgId(financialOrgId);
-			reqDTO.setAddressType(AddressType.BILLING_ADDRESS.value());
 			
-			AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
-			if(!resDTO.getAddressTypeList().isEmpty()){
-				getManagedBean().setSupplierAddress(combineAddress(resDTO.getAddressTypeList().get(0).getPmAddress()));
-				getManagedBean().setPhoneNo(resDTO.getAddressTypeList().get(0).getPmAddress().getPhoneNo());
-				getManagedBean().setFaxNo(resDTO.getAddressTypeList().get(0).getPmAddress().getFaxNo());
-				if(!resDTO.getAddressTypeList().get(0).getPmContacts().isEmpty() ){
-					PmContact pmContact = resDTO.getAddressTypeList().get(0).getPmContacts().get(0);
-					getManagedBean().setContactPerson(pmContact.getContactName());
-					getManagedBean().setContactEmail(pmContact.getEmail());
-					getManagedBean().setContactPhoneNo(pmContact.getPhoneNo());
+			getManagedBean().getFulfilmentOrder().getPmFinancialBranch().setFinancialBranchId(null);
+			getManagedBean().setFactoringBranchList(new ArrayList<PmFinancialBranch>());
+			getManagedBean().setSupplierAddress(null);
+			getManagedBean().setPhoneNo(null);
+			getManagedBean().setFaxNo(null);
+			getManagedBean().setContactPerson(null);
+			getManagedBean().setContactEmail(null);
+			getManagedBean().setContactPhoneNo(null);
+			
+			if(financialOrgId!=null) {
+				AddressReqDTO reqDTO = new AddressReqDTO();
+				reqDTO.setFinancialOrgId(financialOrgId);
+				reqDTO.setAddressType(AddressType.BILLING_ADDRESS.value());
+				
+				AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
+				if(!resDTO.getAddressTypeList().isEmpty()){
+					getManagedBean().setSupplierAddress(getFullAddress(resDTO.getAddressTypeList().get(0).getPmAddress()));
+					getManagedBean().setPhoneNo(resDTO.getAddressTypeList().get(0).getPmAddress().getPhoneNo());
+					getManagedBean().setFaxNo(resDTO.getAddressTypeList().get(0).getPmAddress().getFaxNo());
+					if(!resDTO.getAddressTypeList().get(0).getPmContacts().isEmpty() ){
+						PmContact pmContact = resDTO.getAddressTypeList().get(0).getPmContacts().get(0);
+						getManagedBean().setContactPerson(pmContact.getContactName());
+						getManagedBean().setContactEmail(pmContact.getEmail());
+						getManagedBean().setContactPhoneNo(pmContact.getPhoneNo());
+					}
+				}
+				
+				IFinancialOrgSO financialOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IFinancialOrgSO.class); 
+				FinancialOrgReqDTO financialOrgReqDTO = new FinancialOrgReqDTO();
+				financialOrgReqDTO.setFinancialOrgId(financialOrgId);
+				FinancialOrgResDTO financialOrgResDTO = financialOrgSO.retrieveFinancialOrgById(financialOrgReqDTO);
+				if(financialOrgResDTO.getPmFinancialOrg().getPmFinancialBranchs() != null && !financialOrgResDTO.getPmFinancialOrg().getPmFinancialBranchs().isEmpty()){
+					getManagedBean().setFactoringBranchList(financialOrgResDTO.getPmFinancialOrg().getPmFinancialBranchs());
 				}
 			}
-			
-			IFinancialOrgSO financialOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IFinancialOrgSO.class); 
-			FinancialOrgReqDTO financialOrgReqDTO = new FinancialOrgReqDTO();
-			financialOrgReqDTO.setFinancialOrgId(financialOrgId);
-			FinancialOrgResDTO financialOrgResDTO = financialOrgSO.retrieveFinancialOrgById(financialOrgReqDTO);
-			if(financialOrgResDTO.getPmFinancialOrg().getPmFinancialBranchs() != null && !financialOrgResDTO.getPmFinancialOrg().getPmFinancialBranchs().isEmpty()){
-				getManagedBean().setFactoringBranchList(financialOrgResDTO.getPmFinancialOrg().getPmFinancialBranchs());
-			}
-		}
-
-		private String combineAddress(PmAddress address) {
-			String appendComa = ", ";
-			String fullAddress = address.getAddress1();
-			if(address.getAddress2() != null){
-				fullAddress = appendComa+address.getAddress2();
-			}
-			if(address.getAddress3() != null){
-				fullAddress = appendComa+address.getAddress3();
-			}
-			if(address.getAddress4() != null){
-				fullAddress = appendComa+address.getAddress4();
-			}
-			return fullAddress;
 		}
 		
 		public void getSelectedFactoringBranchDtl(AjaxBehaviorEvent e){
 			IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
 			Long financialBranchId = (Long) e.getComponent().getAttributes().get("value");
-			AddressReqDTO reqDTO = new AddressReqDTO();
-			reqDTO.setFinancialBranchId(financialBranchId);
-			reqDTO.setAddressType(AddressType.BILLING_ADDRESS.toString());
 			
-			AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
-			if(!resDTO.getAddressTypeList().isEmpty()){
-				getManagedBean().setSupplierAddress(combineAddress(resDTO.getAddressTypeList().get(0).getPmAddress()));
+			getManagedBean().setSupplierAddress(null);
+			getManagedBean().setPhoneNo(null);
+			getManagedBean().setFaxNo(null);
+			getManagedBean().setContactPerson(null);
+			getManagedBean().setContactEmail(null);
+			getManagedBean().setContactPhoneNo(null);
+			
+			if(financialBranchId!=null) {
+				AddressReqDTO reqDTO = new AddressReqDTO();
+				reqDTO.setFinancialBranchId(financialBranchId);
+				reqDTO.setAddressType(AddressType.BILLING_ADDRESS.toString());
 				
-				getManagedBean().setPhoneNo(resDTO.getAddressTypeList().get(0).getPmAddress().getPhoneNo());
-				getManagedBean().setFaxNo(resDTO.getAddressTypeList().get(0).getPmAddress().getFaxNo());
-				if(resDTO.getAddressTypeList().get(0).getPmContacts() != null ){
-					PmContact pmContact = resDTO.getAddressTypeList().get(0).getPmContacts().get(0);
-					getManagedBean().setContactPerson(pmContact.getContactName());
-					getManagedBean().setContactEmail(pmContact.getEmail());
-					getManagedBean().setContactPhoneNo(pmContact.getPhoneNo());
+				AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
+				if(!resDTO.getAddressTypeList().isEmpty()){
+					getManagedBean().setSupplierAddress(getFullAddress(resDTO.getAddressTypeList().get(0).getPmAddress()));
+					
+					getManagedBean().setPhoneNo(resDTO.getAddressTypeList().get(0).getPmAddress().getPhoneNo());
+					getManagedBean().setFaxNo(resDTO.getAddressTypeList().get(0).getPmAddress().getFaxNo());
+					if(resDTO.getAddressTypeList().get(0).getPmContacts() != null ){
+						PmContact pmContact = resDTO.getAddressTypeList().get(0).getPmContacts().get(0);
+						getManagedBean().setContactPerson(pmContact.getContactName());
+						getManagedBean().setContactEmail(pmContact.getEmail());
+						getManagedBean().setContactPhoneNo(pmContact.getPhoneNo());
+					}
 				}
+			} else { //reset back to HQ info
+				AddressReqDTO reqDTO = new AddressReqDTO();
+				reqDTO.setFinancialOrgId(getManagedBean().getFulfilmentOrder().getPmFinancialOrg().getFinancialOrgId());
+				reqDTO.setAddressType(AddressType.BILLING_ADDRESS.value());
 				
+				AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
+				if(!resDTO.getAddressTypeList().isEmpty()){
+					getManagedBean().setSupplierAddress(getFullAddress(resDTO.getAddressTypeList().get(0).getPmAddress()));
+					getManagedBean().setPhoneNo(resDTO.getAddressTypeList().get(0).getPmAddress().getPhoneNo());
+					getManagedBean().setFaxNo(resDTO.getAddressTypeList().get(0).getPmAddress().getFaxNo());
+					if(!resDTO.getAddressTypeList().get(0).getPmContacts().isEmpty() ){
+						PmContact pmContact = resDTO.getAddressTypeList().get(0).getPmContacts().get(0);
+						getManagedBean().setContactPerson(pmContact.getContactName());
+						getManagedBean().setContactEmail(pmContact.getEmail());
+						getManagedBean().setContactPhoneNo(pmContact.getPhoneNo());
+					}
+				}				
 			}
-			
 		}
 		public String getPortletTitle() {
 			String portletTitle = " Fulfilment Document Maintenance";
