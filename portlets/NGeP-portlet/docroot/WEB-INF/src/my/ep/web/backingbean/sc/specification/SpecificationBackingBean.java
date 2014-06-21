@@ -2736,6 +2736,36 @@ public class SpecificationBackingBean extends
 
 		this.getManagedBean().getScQt().setQtType(type);
 	}
+	
+	public void changeZones(AjaxBehaviorEvent event){
+		boolean zone = (boolean) event.getComponent().getAttributes()
+				.get("value");
+		if(zone){
+			if(null==this.getManagedBean().getScQt().getZoneLocationLevel()){
+				this.getManagedBean().getScQt().setZoneLocationLevel(new PmParameter());
+			}
+			if(null==this.getManagedBean().getSupplierCriteria()){
+				this.getManagedBean().setSupplierCriteria(new ScQtSupplierCriteria());
+			}
+			if(null==this.getManagedBean().getSupplierCriteria().getQtZoneCriterias()){
+				this.getManagedBean().getSupplierCriteria().setQtZoneCriterias(new ScQtZoneCriteria());
+			}
+			
+		}
+		else{
+			
+			if(null==this.getManagedBean().getSupplierCriteria()){
+				this.getManagedBean().setSupplierCriteria(new ScQtSupplierCriteria());
+			}
+			
+			if (null == this.getManagedBean().getSupplierCriteria()
+					.getLocationLevel()) {
+				this.getManagedBean().getSupplierCriteria()
+						.setLocationLevel(new PmParameter());
+			}
+		}
+		
+	}
 
 	public void typeChange(AjaxBehaviorEvent event) {
 		Long type = (Long) event.getComponent().getAttributes().get("value");
