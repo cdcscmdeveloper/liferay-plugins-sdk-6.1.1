@@ -43,13 +43,7 @@
 
 				</p:tabMenu></td>
 			<td width="80%;">
-			<div align="right">
-
-					<p:commandButton value="Save" update="@all"
-						action="#{specificationBackingBean.saveSpecificationDtls}"
-						icon="ui-icon-save" />
-
-				</div> <c:if
+			 <c:if
 					test="#{specificationBackingBean.managedBean.activeIndex eq '0'}">
 
 					<ui:include src="specificationBusinessOwner.xhtml"></ui:include>

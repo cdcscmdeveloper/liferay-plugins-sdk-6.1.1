@@ -19,7 +19,7 @@
 		<p:dataTable id="restrictedPnlId" var="cateGory"
 			value="#{specificationBackingBean.managedBean.suppCriteriarestrictedList}"
 			selection="#{specificationBackingBean.managedBean.suppCriteriarestrictedBoSelectList}"
-			rowIndexVar="index">
+			rowIndexVar="index" rowKey="#{cateGory}">
 			
 			<p:column selectionMode="multiple" style="width:2%"></p:column>
 
