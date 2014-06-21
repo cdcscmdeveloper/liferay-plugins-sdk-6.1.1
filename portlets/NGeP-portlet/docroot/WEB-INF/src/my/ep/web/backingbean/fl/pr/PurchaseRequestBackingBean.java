@@ -296,11 +296,11 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		try {
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)){
-				if(null==getManagedBean().getApproverModel().getTarget() || getManagedBean().getApproverModel().getTarget().isEmpty()) {
-					throw new EpException(MessageConst.ERROR_750017);
-				}
 				if(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses().size()==0) {
 					throw new EpException(MessageConst.ERROR_100023, new String[]{"Delivery Address"});
+				}				
+				if(null==getManagedBean().getApproverModel().getTarget() || getManagedBean().getApproverModel().getTarget().isEmpty()) {
+					throw new EpException(MessageConst.ERROR_750017);
 				}
 			} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)){
 				if(flBB.getManagedBean().getRemarkList().get(0).getRemark()==null || flBB.getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
@@ -676,7 +676,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		PurchaseRequestReqDTO reqDTO = new PurchaseRequestReqDTO();
 		reqDTO.setRequestSupplierItemId(flItemAddr.getScSupplierItemPrice().getScRequestSupplierItem().getRequestSupplierItemId());
 		reqDTO.setPriceType(flItemAddr.getScSupplierItemPrice().getPriceType());
-		Map<Long, FlFulfilmentItem> flItemMap = new HashMap<Long, FlFulfilmentItem>();
 		  
 		if(null == flItemAddr.getOrderedQty()){
 			flItemAddr.setOrderedAmt(new BigDecimal("0"));
@@ -691,28 +690,34 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			if(flItemAddr.getFlFulfilmentItem()!=null) {
 				flItemAddr.getFlFulfilmentItem().setUnitPrice(flItemAddr.getUnitPrice());
 			} else {
-				FlFulfilmentItem fulfilmentItem = new FlFulfilmentItem();
-				fulfilmentItem.setFlFulfilmentRequest(getManagedBean().getFulfilmentRequest());
-				fulfilmentItem.setChargeLineSeq(1);
-				fulfilmentItem.setItemType(flItemAddr.getItemType());
-				fulfilmentItem.setCmItem(flItemAddr.getCmItem());
-				fulfilmentItem.setPmVotFund(flItemAddr.getPmVotFund());
-				fulfilmentItem.setAssetInd(flItemAddr.getAssetInd());
-				fulfilmentItem.setPmGlAccount(flItemAddr.getPmGlAccount());
-				fulfilmentItem.setPmPrgActivity(flItemAddr.getPmPrgActivity());
-				fulfilmentItem.setPmSubSetia(flItemAddr.getPmSubSetia());
-				fulfilmentItem.setUnitPrice(flItemAddr.getUnitPrice());
-			    flItemAddr.setFlFulfilmentItem(fulfilmentItem);
-
-			    if(flItemMap.get(flItemAddr.getFlFulfilmentItem().getCmItem().getItemId()) ==  null){
-			    	getManagedBean().getFulfilmentRequest().getFlFulfilmentItems().add(flItemAddr.getFlFulfilmentItem());
-			    	for(FlFulfilmentItem item : getManagedBean().getFulfilmentRequest().getFlFulfilmentItems()){
-			    		if(item.getFlFulfilmentItemAddr() == null){
-			    			item.setFlFulfilmentItemAddr(new ArrayList<FlFulfilmentItemAddr>());
-			    		}
-			    		item.getFlFulfilmentItemAddr().add(flItemAddr);
-			    	}
-			    	flItemMap.put(flItemAddr.getFlFulfilmentItem().getCmItem().getItemId(), flItemAddr.getFlFulfilmentItem());
+				FlFulfilmentItem fulfilmentItem = null;
+				String key = flItemAddr.getCmItem().getItemId() + flItemAddr.getUnitPrice().doubleValue() + "";
+			    if(!getManagedBean().getFlItemMap().containsKey(key)) {
+					fulfilmentItem = new FlFulfilmentItem();
+					fulfilmentItem.setFlFulfilmentRequest(getManagedBean().getFulfilmentRequest());
+					fulfilmentItem.setChargeLineSeq(1);
+					fulfilmentItem.setItemType(flItemAddr.getItemType());
+					fulfilmentItem.setCmItem(flItemAddr.getCmItem());
+					fulfilmentItem.setPmVotFund(flItemAddr.getPmVotFund());
+					fulfilmentItem.setAssetInd(flItemAddr.getAssetInd());
+					fulfilmentItem.setPmGlAccount(flItemAddr.getPmGlAccount());
+					fulfilmentItem.setPmPrgActivity(flItemAddr.getPmPrgActivity());
+					fulfilmentItem.setPmSubSetia(flItemAddr.getPmSubSetia());
+					fulfilmentItem.setUnitPrice(flItemAddr.getUnitPrice());
+				    flItemAddr.setFlFulfilmentItem(fulfilmentItem);
+				    getManagedBean().getFlItemMap().put(key, flItemAddr.getFlFulfilmentItem());
+			    } else {
+			    	fulfilmentItem = getManagedBean().getFlItemMap().get(key);
+					fulfilmentItem.setUnitPrice(flItemAddr.getUnitPrice());
+				    flItemAddr.setFlFulfilmentItem(fulfilmentItem);
+			    }
+			    
+			    if(!fulfilmentItem.getFlFulfilmentItemAddr().contains(flItemAddr)) {
+			    	fulfilmentItem.getFlFulfilmentItemAddr().add(flItemAddr);
+			    }
+			    
+			    if(!getManagedBean().getFulfilmentRequest().getFlFulfilmentItems().contains(fulfilmentItem)) {
+			    	getManagedBean().getFulfilmentRequest().getFlFulfilmentItems().add(fulfilmentItem);
 			    }
 			}
 		}
@@ -996,7 +1001,16 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	}
 	
 	public void receivingOfficerList(FlDeliveryAddress flDelAddress){
-		AddressResDTO resDTO=getReceivingOfficerList(flDelAddress.getPmAddress().getAddressId(),AddressType.RECEIVING_OFFICER_ADDRESS.value());
+		Long addressId = flDelAddress.getPmAddress().getAddressId();
+		if(flDelAddress.getReceivingGrp()!=null && flDelAddress.getReceivingGrp().getAddressTypeId()!=null) { // in case of Manual address
+			IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
+			AddressReqDTO reqDTO = new AddressReqDTO();
+			reqDTO.setAddressTypeId(flDelAddress.getReceivingGrp().getAddressTypeId());
+			AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
+			
+			addressId = resDTO.getAddressTypeList().get(0).getPmAddress().getAddressId();
+		}
+		AddressResDTO resDTO=getReceivingOfficerList(addressId, AddressType.RECEIVING_OFFICER_ADDRESS.value());
 		getManagedBean().setReceivingOffList(resDTO.getAddressTypeList());
 	}
 	
@@ -1627,6 +1641,9 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	
 	private void setManualAddressList(){
 		Map<Long, List<PmAddressType>> addressTypeMap = new HashMap<Long, List<PmAddressType>>();
+		if(getManagedBean().getAddressTypesList()==null || getManagedBean().getAddressTypesList().size()==0) {
+			flDeliveryAddrList();
+		}
 		for(PmAddressType addressType : getManagedBean().getAddressTypesList()){
 			Long key = addressType.getPmAddress().getPmDistrict().getDistrictId();
 			if(!addressTypeMap.containsKey(key)){

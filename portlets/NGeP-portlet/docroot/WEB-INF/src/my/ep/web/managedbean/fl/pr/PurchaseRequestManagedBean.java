@@ -134,7 +134,7 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private BigDecimal subTotal;
 	private FlFulfilmentItemAddr selectedItemAddr;
 	
-	private HashMap<Long, FlFulfilmentItem> flItemMap;
+	private HashMap<String, FlFulfilmentItem> flItemMap;
 	private HashMap<Long, ScRequestNoteDtl> flReqNoteMap;
 	private Map<Long, List<PmAddressType>> manualAddressMap;
 	
@@ -870,9 +870,9 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	/**
 	 * @return the flItemMap
 	 */
-	public HashMap<Long, FlFulfilmentItem> getFlItemMap() {
+	public HashMap<String, FlFulfilmentItem> getFlItemMap() {
 		if(flItemMap == null){
-			setFlItemMap(new HashMap<Long, FlFulfilmentItem>());
+			setFlItemMap(new HashMap<String, FlFulfilmentItem>());
 		}
 		return flItemMap;
 	}
@@ -881,7 +881,7 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	/**
 	 * @param flItemMap the flItemMap to set
 	 */
-	public void setFlItemMap(HashMap<Long, FlFulfilmentItem> flItemMap) {
+	public void setFlItemMap(HashMap<String, FlFulfilmentItem> flItemMap) {
 		this.flItemMap = flItemMap;
 	}
 
