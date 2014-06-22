@@ -59,7 +59,6 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     private boolean itemCheck; // For checking item whether service or product
     private SelectItem[] justDropdown; // justification drop down
     private SelectItem[] priceTypes; // price type drop down for add to cart
-    private SelectItem[] rnPriceTypes; // price type drop down for request note
     private String processName;
     private String requestNoteStatus;
     private boolean required = Boolean.FALSE;
@@ -68,7 +67,6 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     private String justificationType;
     private String procurementType;
     private String priceType;
-    
     
     // BPM Task
     private SCDirectPurchaseDataType directPurchaseDataType;
@@ -439,18 +437,7 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	public void setRequestNoteItems(List<ScRequestItem> requestNoteItems) {
 		this.requestNoteItems = requestNoteItems;
 	}
-	/**
-	 * @return the rnPriceTypes
-	 */
-	public SelectItem[] getRnPriceTypes() {
-		return rnPriceTypes;
-	}
-	/**
-	 * @param rnPriceTypes the rnPriceTypes to set
-	 */
-	public void setRnPriceTypes(SelectItem[] rnPriceTypes) {
-		this.rnPriceTypes = rnPriceTypes;
-	}
+	
 	/**
 	 * @return the required
 	 */
@@ -511,7 +498,7 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	public void setPriceType(String priceType) {
 		this.priceType = priceType;
 	}
-	
+
 	
 	
 }
