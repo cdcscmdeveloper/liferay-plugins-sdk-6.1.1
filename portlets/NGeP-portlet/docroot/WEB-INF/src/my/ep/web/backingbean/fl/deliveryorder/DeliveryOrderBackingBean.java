@@ -296,6 +296,7 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 			
 			getManagedBean().setFulfilmentRequest(flOrder.getFlFulfilmentRequest());
 			getManagedBean().setFulfilmentOrder(flOrder);
+			getManagedBean().setDocType(flOrder.getFlFulfilmentRequest().getDocType());
 			
 			if(getManagedBean().getFulfilmentOrder().getPmFinancialBranch()!=null) {
 				AddressReqDTO addReqDTO = new AddressReqDTO();

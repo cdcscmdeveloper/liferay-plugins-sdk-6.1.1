@@ -18,7 +18,7 @@
 			</p:column>
 			<p:column selectionMode="multiple" rowspan="2" width="5%" />
 
-			<p:column headerText="Delivery Address" width="10"
+			<p:column headerText="Delivery Address" width="10" style="white-space:normal;" 
 				styleClass="fixed-size">
 				<h:outputText rendered="#{doDelAddress.addressType !=null}"
 					value="#{doDelAddress.addressType.pmAddress.address1}, #{doDelAddress.addressType.pmAddress.address2}, #{doDelAddress.addressType.pmAddress.address3}, #{doDelAddress.addressType.pmAddress.address4}" />
@@ -49,63 +49,66 @@
 					value="#{doDelAddress.flFulfilmentItemAddr}" lazy="true"
 					rowIndexVar="index" rowKey="#{flItem}"
 					styleClass="itemsSelectedPanel show-column-names">
-					<p:column headerText="Item Code">
+					<p:column headerText="Item Code" style="white-space:normal;" >
 						<h:outputText
 							value="#{doItems.scRequestItem.cmItem.extensionCode}" />
 					</p:column>
-					<p:column headerText="Item Name">
+					<p:column headerText="Item Name" style="white-space:normal;" >
 						<h:outputText value="#{doItems.scRequestItem.itemName}"
 							rendered="#{createDOBackingBean.managedBean.docType eq 'PR'}" />
 						<h:outputText value="#{doItems.scRequestItem.itemName}"
 							rendered="#{createDOBackingBean.managedBean.docType eq 'CR'}" />
 					</p:column>
 					<p:column headerText="UOM">
-						<h:outputText />
+						<h:outputText value="#{doItems.scRequestItem.uom.uomName}" />
 					</p:column>
-					<p:column headerText="Unit Price &lt;br /&gt; (RM)">
-						<h:outputText disabled="true" value="#{doItems.unitPrice}"
-							style="text-align:right">
-							<f:convertNumber pattern="#,#00.00" />
+					<p:column headerText="Unit Price &lt;br /&gt; (RM)" style="text-align:right">
+						<h:outputText disabled="true" value="#{doItems.unitPrice}" >
+							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</h:outputText>
 					</p:column>
-					<p:column headerText="Ordered &lt;br /&gt; Qty.">
-						<h:outputText value="#{doItems.orderedQty}"
-							style="text-align:right" />
+					<p:column headerText="Ordered &lt;br /&gt; Qty." style="text-align:right">
+						<h:outputText value="#{doItems.orderedQty}"	>
+							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, doItems.scRequestItem.uom.uomCode)}" />
+						</h:outputText>
 					</p:column>
-					<p:column headerText="Remaining &lt;br /&gt; Qty.">
-						<h:outputText value="#{doItems.orderedQty}"
-							style="text-align:right" />
+					<p:column headerText="Remaining &lt;br /&gt; Qty." style="text-align:right">
+						<h:outputText value="#{doItems.orderedQty}" >
+							 <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, doItems.scRequestItem.uom.uomCode)}" />
+						</h:outputText>
 					</p:column>
-					<p:column headerText="Delivery &lt;br /&gt; Qty.">
-						<p:inputText value="#{doItems.deliveredQty}" size="5"
-							rendered="#{createDOBackingBean.getParameterDesc(doItems.scRequestItem.itemType) eq 'Product' and createDOBackingBean.managedBean.docType eq 'PR' }">
+					<p:column headerText="Delivery &lt;br /&gt; Qty." style="text-align:right">
+						<p:inputText value="#{doItems.deliveredQty}" size="5" styleClass="colFloatRight"
+							rendered="#{doItems.itemType.parameterCode eq ParameterConst.itemTypeProduct and createDOBackingBean.managedBean.docType eq 'PR' }">
 							<p:ajax event="blur" update="delAmountTxt" process="@this"
 								listener="#{createDOBackingBean.retrieveDelAmount(doItems)}" />
+							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, doItems.scRequestItem.uom.uomCode)}" />	
 						</p:inputText>   
-						<h:outputText value="#{doItems.deliveredAmt}" size="5"
-							rendered="#{createDOBackingBean.managedBean.docProcess eq 'DO'}">
+						<h:outputText value="#{doItems.deliveredAmt}" size="5" rendered="#{createDOBackingBean.managedBean.docProcess eq 'DO'}">
+							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, doItems.scRequestItem.uom.uomCode)}" />
 						</h:outputText>
-						<p:inputText value="#{doItems.deliveredQty}" size="5"
-							rendered="#{createDOBackingBean.getParameterDesc(doItems.scRequestItem.itemType) eq 'Service' and doItems.orderedQty > 1 and createDOBackingBean.managedBean.docType eq 'PR' }">
-							<p:ajax event="blur" update="delAmountTxt" process="@this"
-								listener="#{createDOBackingBean.retrieveDelAmount(doItems)}" />
+						<p:inputText value="#{doItems.deliveredQty}" size="5" styleClass="colFloatRight"
+							rendered="#{doItems.itemType.parameterCode eq ParameterConst.itemTypeService and doItems.orderedQty > 1 and createDOBackingBean.managedBean.docType eq 'PR' }">
+							<p:ajax event="blur" update="delAmountTxt" process="@this" listener="#{createDOBackingBean.retrieveDelAmount(doItems)}" />
+							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, doItems.scRequestItem.uom.uomCode)}" />
 						</p:inputText>
-						<p:inputText value="#{doItems.deliveredQty}" disabled="true"
-							rendered="#{createDOBackingBean.getParameterDesc(doItems.scRequestItem.itemType) eq 'Service' and doItems.orderedQty == 1 and createDOBackingBean.managedBean.docType eq 'PR' }" />
-						<p:inputText value="#{doItems.deliveredQty}" size="5"
-							rendered="#{createDOBackingBean.managedBean.docType eq 'CR'}">
-							<p:ajax event="blur" update="delAmountTxt" process="@this"
-								listener="#{createDOBackingBean.retrieveDelAmount(doItems)}" />
+						<p:inputText value="#{doItems.deliveredQty}" disabled="true" styleClass="colFloatRight"
+							rendered="#{doItems.itemType.parameterCode eq ParameterConst.itemTypeService and doItems.orderedQty == 1 and createDOBackingBean.managedBean.docType eq 'PR' }" >
+							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, doItems.scRequestItem.uom.uomCode)}" />
+						</p:inputText>
+						<p:inputText value="#{doItems.deliveredQty}" size="5"  styleClass="colFloatRight" rendered="#{createDOBackingBean.managedBean.docType eq 'CR'}">
+							<p:ajax event="blur" update="delAmountTxt" process="@this" listener="#{createDOBackingBean.retrieveDelAmount(doItems)}" />
+							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, doItems.scRequestItem.uom.uomCode)}" />	
 						</p:inputText>
 					</p:column>
-					<p:column headerText="Delivery &lt;br /&gt; Amt.(RM)">
+					<p:column headerText="Delivery &lt;br /&gt; Amt.(RM)" style="text-align:right">
 						<h:panelGroup id="delAmountTxt">
 							<h:outputText value="#{doItems.deliveredAmt}" disabled="true"
-								rendered="#{createDOBackingBean.getParameterDesc(doItems.scRequestItem.itemType) eq 'Product'}">
+								rendered="#{doItems.itemType.parameterCode eq ParameterConst.itemTypeProduct}">
 								<f:convertNumber pattern="#,#00.00" />
 							</h:outputText>
 							<p:inputText value="#{doItems.deliveredAmt}" size="5"
-								rendered="#{createDOBackingBean.getParameterDesc(doItems.scRequestItem.itemType) eq 'Service'}">
+								rendered="#{doItems.itemType.parameterCode eq ParameterConst.itemTypeService}">
 								<f:convertNumber pattern="#,#00.00" />
 							</p:inputText>
 							<h:outputText value="#{doItems.deliveredAmt}" size="5"
@@ -115,14 +118,20 @@
 
 						</h:panelGroup>
 					</p:column>
-					<p:column headerText="Ordered &lt;br /&gt; Amt.(RM)">
-						<h:outputText value="#{doItems.orderedAmt}" />
+					<p:column headerText="Ordered &lt;br /&gt; Amt.(RM)" style="text-align:right">
+						<h:outputText value="#{doItems.orderedAmt}" >
+							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</h:outputText>
 					</p:column>
-					<p:column headerText="Received &lt;br /&gt; Qty.">
-						<h:outputText value="#{doItems.receivedQty}" />
+					<p:column headerText="Received &lt;br /&gt; Qty." style="text-align:right">
+						<h:outputText value="#{doItems.receivedQty}" >
+							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, doItems.scRequestItem.uom.uomCode)}" />
+						</h:outputText>						
 					</p:column>
-					<p:column headerText="Rejected &lt;br /&gt; Qty.">
-						<h:outputText value="#{doItems.receivedQty}" />
+					<p:column headerText="Rejected &lt;br /&gt; Qty." style="text-align:right">
+						<h:outputText value="#{doItems.receivedQty}" >
+							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, doItems.scRequestItem.uom.uomCode)}" />
+						</h:outputText>						
 					</p:column>
 				</p:dataTable>
 
