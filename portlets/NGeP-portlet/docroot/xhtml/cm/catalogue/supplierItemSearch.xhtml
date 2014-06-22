@@ -93,7 +93,8 @@
 
 						<div style="text-align: right;">
 							<p:commandButton value="Search" icon="ui-icon-search"
-								update="searchViewId ,btnId ">
+								update="searchViewId"
+								oncomplete="updateCatButtons();">
 								<f:param name="unspscCode" value="#{unspscCode}" />
 							</p:commandButton>
 						</div>
@@ -104,7 +105,8 @@
 				<tr>
 					<td width="70%" style="vertical-align: top;"><p:panel
 							style="width: 100%;" header="SEARCH RESULTS" toggleable="true">
-							
+						 <p:remoteCommand name="updateCatButtons" partialSubmit="true" process="@this" update="btnId" />
+						 	
                          <h:panelGroup id="btnId">
 							<div style="text-align: right;">
 								<p:commandButton action="#{catalogueBackingBean.navigateContractRequest()}" rendered="#{unspscCodeBackingBean.requisitioner}"
@@ -118,7 +120,7 @@
 									value="#{lbl['lbl.cm.compare']} ( #{fn:length(catalogueBackingBean.managedBean.selectViewItems)} )"
 									disabled="#{2 > fn:length(catalogueBackingBean.managedBean.selectViewItems)}" />
 							</div>
-							</h:panelGroup>
+						</h:panelGroup>
 							<h:panelGroup id="searchViewId">
 
 								<p:dataTable lazy="true"
