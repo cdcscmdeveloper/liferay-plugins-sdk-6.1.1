@@ -101,6 +101,7 @@
 		    <portlet id="Review Purchase In Default"></portlet>
 		    <portlet id="Review Simple Quote"></portlet>
 		    <portlet id="Review Supplier View"></portlet>
+		    <portlet id="scRequestNoteSearch" />
 		</category>
 
 		<!-- Fulfilment Start Added by Giri -->

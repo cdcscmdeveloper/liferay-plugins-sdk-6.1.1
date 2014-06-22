@@ -1,0 +1,102 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<ui:define name="contentSection">
+		
+		<p:panel header="#{lbl['lbl.sc.search']}">
+	     	<table style="width:100%">
+	     	<tr>
+				<td class="TableFieldLeft" style="width:20%">
+					<p:outputLabel value="#{lbl['lbl.sc.request.note.req.note.no']}" />
+				</td>
+				<td class="TableFieldRight">
+					<p:inputText style="width:280px" value="#{requestNoteBackingBean.managedBean.searchReqNoteNo}" />
+				</td>
+			</tr>
+			<tr>
+				<td class="TableFieldLeft" style="width:20%">
+					<p:outputLabel value="#{lbl['lbl.sc.request.note.header.method']}" />
+				</td>
+				<td class="TableFieldRight">
+					<p:selectOneMenu style="width:289px" value="#{requestNoteBackingBean.managedBean.searchSrcMethod}">
+						<f:selectItems value="#{requestNoteBackingBean.getDropdownCodeValues(ParameterTypeConst.sourceMethod)}" />
+					</p:selectOneMenu>
+				</td>
+			</tr>
+			<tr>
+				<td class="TableFieldLeft" style="width:20%">
+					<p:outputLabel value="#{lbl['lbl.sc.request.note.ptj.name']}" />
+				</td>
+				<td class="TableFieldRight">
+					
+				</td>
+			</tr>
+			<tr>
+				<td class="TableFieldLeft" style="width:20%">
+					<p:outputLabel value="#{lbl['lbl.sc.status']}" />
+				</td>
+				<td class="TableFieldRight">
+					
+				</td>
+			</tr>
+		    <tr>
+				<td colspan="2" class="ppRightBtn">
+					<p:commandButton value="#{lbl['lbl.btn.search']}" 
+						icon="ui-icon-search" 
+						action="#{requestNoteBackingBean.searchAction}"
+						update="reqNoteTbl" />
+						
+					<p:commandButton value="#{lbl['lbl.btn.reset']}" 
+						action="#{requestNoteBackingBean.resetAction}" update="@form"
+						icon="ui-icon-reset" resetValues="true" partialSubmit="true"
+						process="@this" />
+								
+				</td>
+			</tr>
+		    </table>
+    	</p:panel>
+        
+		<p:panel header="#{lbl['lbl.sc.search.result']}">
+			<p:dataTable id="reqNoteTbl" var="scRequestNote" rowIndexVar="index" 
+				value="#{requestNoteBackingBean.managedBean.reqNoteDataModel}" 
+				lazy="true">
+			
+				<ac:paginator for="reqNoteTbl" />
+				
+				<p:column style="width:15%" headerText="#{lbl['lbl.sc.request.note.req.note.no']}">
+					#{scRequestNote.requestNoteNo}
+				</p:column>
+					
+				<p:column style="width:10%" headerText="#{lbl['lbl.sc.request.note.header.method']}">
+					#{requestNoteBackingBean.getParameterDesc(ParameterTypeConst.sourceMethod, scRequestNote.sourceMethod)}
+				</p:column>
+					
+				<p:column headerText="#{lbl['lbl.sc.request.note.ptj.name']}">
+					#{scRequestNote.pmOrgProfile.orgName}
+				</p:column>
+				
+				<p:column style="width:15%" headerText="#{lbl['lbl.sc.created.by']}">
+					#{scRequestNote.createdUser.userName}
+				</p:column>
+					
+				<p:column style="width:15%" headerText="#{lbl['lbl.sc.status']}">
+					
+				</p:column>
+				
+				<p:column style="width:8%" headerText="#{lbl['lbl.sc.action']}">
+					<p:commandLink action="#{requestNoteBackingBean.editRequestNote(scRequestNote)}"
+						partialSubmit="true" process="@this">
+						<p:graphicImage library="ep/images/design" name="edit.png"
+							value="/resources/ep/images/design/edit.png" />
+					</p:commandLink>
+				</p:column>
+			</p:dataTable>
+		</p:panel>
+	</ui:define>
+</ui:composition>

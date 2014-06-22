@@ -10,7 +10,14 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
+import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.sc.directpurchase.IDirectPurchaseSO;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
+import my.ep.dto.sc.directpurchase.RequestNoteResDTO;
 import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -21,8 +28,13 @@ import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteRemark;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestSupplierItem;
 import my.ep.persistence.entity.sc.directpurchase.ScSupplierItemPrice;
+import my.ep.type.aut.SearchOperator;
+import my.ep.web.bean.paginator.IPagingDataModel;
+import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.apache.commons.lang.StringUtils;
 import org.primefaces.model.DualListModel;
 /**
  * 
@@ -70,6 +82,11 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     
     // BPM Task
     private SCDirectPurchaseDataType directPurchaseDataType;
+    
+    // For Search Request Note
+    private String searchReqNoteNo;
+    private String searchSrcMethod;
+    private IPagingDataModel<ScRequestNote> reqNoteDataModel = new RequestNotePagingDataModel();
     
     public RequestNoteManagedBean() {
     	PmParameter pmParameter = new PmParameter();
@@ -499,6 +516,90 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 		this.priceType = priceType;
 	}
 
+	/**
+	 * @return the searchReqNoteNo
+	 */
+	public String getSearchReqNoteNo() {
+		return searchReqNoteNo;
+	}
 	
+	/**
+	 * @param searchReqNoteNo the searchReqNoteNo to set
+	 */
+	public void setSearchReqNoteNo(String searchReqNoteNo) {
+		this.searchReqNoteNo = searchReqNoteNo;
+	}
+	
+	/**
+	 * @return the searchSrcMethod
+	 */
+	public String getSearchSrcMethod() {
+		return searchSrcMethod;
+	}
+	
+	/**
+	 * @param searchSrcMethod the searchSrcMethod to set
+	 */
+	public void setSearchSrcMethod(String searchSrcMethod) {
+		this.searchSrcMethod = searchSrcMethod;
+	}
+	
+	/**
+	 * @return the reqNoteDataModel
+	 */
+	public IPagingDataModel<ScRequestNote> getReqNoteDataModel() {
+		return reqNoteDataModel;
+	}
+	
+	/**
+	 * @param reqNoteDataModel the reqNoteDataModel to set
+	 */
+	public void setReqNoteDataModel(IPagingDataModel<ScRequestNote> reqNoteDataModel) {
+		this.reqNoteDataModel = reqNoteDataModel;
+	}
+
+	private class RequestNotePagingDataModel extends PagingDataModel<ScRequestNote> {
+		private static final long serialVersionUID = 1L;
+
+		public RequestNotePagingDataModel() {
+			super("reqNoteTbl");
+		}
+
+		@Override
+		public ISearchResultBean<ScRequestNote> pageChangeListener(ISearchBean<ScRequestNote> searchBean) {
+			IDirectPurchaseSO directPurchaseSO;
+			try {
+				directPurchaseSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
+				
+				if(StringUtils.isNotBlank(getSearchReqNoteNo())) {
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean("requestNoteNo",
+									SearchOperator.OPERATOR_EQUALS.value(),
+									getSearchReqNoteNo()));
+				}
+				
+				if(StringUtils.isNotBlank(getSearchSrcMethod())) {
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean("sourceMethod",
+									SearchOperator.OPERATOR_EQUALS.value(),
+									getSearchSrcMethod()));
+				}
+				
+				RequestNoteReqDTO reqDTO = new RequestNoteReqDTO();
+				reqDTO.setRequestNoteSearchBean(searchBean);
+				
+				RequestNoteResDTO resDTO = directPurchaseSO.searchRequestNoteList(reqDTO);
+				
+				if(resDTO.isSuccessful()) {
+					return resDTO.getRequestNoteResultBean();
+				}
+			} finally {
+				directPurchaseSO = null;
+			}
+			
+			return null;
+		}
+	}	
 	
 }
