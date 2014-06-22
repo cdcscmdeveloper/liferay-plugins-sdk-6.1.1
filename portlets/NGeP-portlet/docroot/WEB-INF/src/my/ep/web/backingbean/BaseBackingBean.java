@@ -16,12 +16,17 @@ import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
+import my.ep.constant.MessageConst;
+import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmAddress;
+import my.ep.util.MessageUtils;
+import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.AddressUtils;
 import my.ep.web.util.EpPortletUtil;
@@ -534,8 +539,24 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		genFile(uploadDir, file.getContents());
 
 	}
+
 	
-	
+	/**
+	 * @param messageCode
+	 * @param docType
+	 * @param docTypeCode
+	 * @param docNo
+	 */
+	public void successMessage(String messageCode, String docType, String docTypeCode, String docNo){
+		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+				FacesMessage.SEVERITY_INFO, null, 
+				MessageUtils.getMessage(messageCode, 
+						new String[]{getParameterDesc(docType, docTypeCode), docNo}, 
+						MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);	
+	}
+
 	public void genFile(String uploadDir, byte[] content){
 
 
