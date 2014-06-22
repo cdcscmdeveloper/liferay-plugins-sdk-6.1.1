@@ -242,7 +242,17 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		}
     }*/
 	
-	public <ENTITY_CLASS> void deleteRowAction(List<ENTITY_CLASS> list, List<ENTITY_CLASS> toBeRemovedList) {
+	public <ENTITY_CLASS> void deleteRowAction(List<ENTITY_CLASS> list, ENTITY_CLASS toBeRemoved) {
+		if (log.isDebugEnabled()) {
+			log.debug("deleteRowAction");
+		}
+		
+		if (list != null && toBeRemoved != null) {
+			list.remove(toBeRemoved);	
+		}
+	}
+	
+	public <ENTITY_CLASS> void deleteRowsAction(List<ENTITY_CLASS> list, List<ENTITY_CLASS> toBeRemovedList) {
 		if (log.isDebugEnabled()) {
 			log.debug("deleteRowAction");
 		}
@@ -539,7 +549,6 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		genFile(uploadDir, file.getContents());
 
 	}
-
 	
 	/**
 	 * @param messageCode

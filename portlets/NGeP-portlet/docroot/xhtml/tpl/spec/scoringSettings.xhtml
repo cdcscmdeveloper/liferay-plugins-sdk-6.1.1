@@ -137,7 +137,7 @@
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				process="@this, scoringTbl" partialSubmit="true"
 				icon="ui-icon-delete"
-				action="#{templateSpecBackingBean.deleteRowAction(templateSpecBean.selectedSpecQuestion.tplSpecScorings, templateSpecBean.selectedScoringList)}"
+				action="#{templateSpecBackingBean.deleteRowsAction(templateSpecBean.selectedSpecQuestion.tplSpecScorings, templateSpecBean.selectedScoringList)}"
 				update="scoringTbl"
 				rendered="#{!isCompliance}" />
 		</div>
