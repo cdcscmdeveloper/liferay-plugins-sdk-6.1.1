@@ -178,6 +178,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	}
 
 	public String proceedToFirstUserRegistration() {
+		log.info("****proceedToFirstUserRegistration******");
 		if(this.getManagedBean().getSmSupp().getSmSupplierBusinesses().size() < 1){
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, "At least one Nature of Business is required.", ""));
@@ -771,7 +772,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		
 		this.getManagedBean().setSuppBusinessNature(new SmSupplierBusiness());	
 		this.getManagedBean().getSuppBusinessNature().setPmBusinessNature(new PmBusinessNature());
-		
+	
 		log.info("---------Supplier Type-----------"
 				+ this.getManagedBean().getSmAppl().getSupplierType());
 		
@@ -807,31 +808,36 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		try {
 			SelectItem[] items = getDropdownCodeValues("SBT");
 			for(SelectItem selectItem : items) {
-				if(this.getManagedBean().getApplType().equals(SupplierManagementConst.ACC_BASIC)){
+				if(!this.getManagedBean().getSmSupp().isBrandNew()){
 					itemList.add(selectItem);
-				}else if(this.getManagedBean().getApplType().equals(SupplierManagementConst.ACC_MOF) && 
-						this.getManagedBean().getSmAppl().getSupplierType() != null){
-					if(this.getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.STYPE_CONTRACTOR)){
-						//System.out.println("****IS CONTRACTOR*****");
-
-						if(selectItem.getValue() == null || !selectItem.getValue().equals("A")){
-							//System.out.println("****IS not NULL or A*****" + selectItem.getValue());
-							itemList.add(selectItem);
-						}
-					}else if(this.getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.STYPE_CONSULTANT)){
-						//System.out.println("****IS CONSULTANT*************"); 
-						if(selectItem.getValue() == null || (!selectItem.getValue().equals("K") 
-								&& !selectItem.getValue().equals("L") && !selectItem.getValue().equals("M"))){ 
-							itemList.add(selectItem);
-						}
-					}
-				}else if(this.getManagedBean().getSmAppl().getSupplierType() == null && this.getManagedBean().getApplType().equals(SupplierManagementConst.ACC_MOF)){
-					if(selectItem.getValue() == null){	
+				}else{
+					if(this.getManagedBean().getApplType().equals(SupplierManagementConst.ACC_BASIC)){
 						itemList.add(selectItem);
-					}
-				}		
-			}
+					}else if(this.getManagedBean().getApplType().equals(SupplierManagementConst.ACC_MOF) && 
+							this.getManagedBean().getSmAppl().getSupplierType() != null){
+						if(this.getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.STYPE_CONTRACTOR)){
+							//System.out.println("****IS CONTRACTOR*****");
 
+							if(selectItem.getValue() == null || !selectItem.getValue().equals("A")){
+								//System.out.println("****IS not NULL or A*****" + selectItem.getValue());
+								itemList.add(selectItem);
+							}
+						}else if(this.getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.STYPE_CONSULTANT)){
+							//System.out.println("****IS CONSULTANT*************"); 
+							if(selectItem.getValue() == null || (!selectItem.getValue().equals("K") 
+									&& !selectItem.getValue().equals("L") && !selectItem.getValue().equals("M"))){ 
+								itemList.add(selectItem);
+							}
+						}
+					}else if(this.getManagedBean().getSmAppl().getSupplierType() == null && this.getManagedBean().getApplType().equals(SupplierManagementConst.ACC_MOF)){
+						if(selectItem.getValue() == null){	
+							itemList.add(selectItem);
+						}
+					}
+				}
+			}
+			
+			System.out.println("------------->" + itemList.size());
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(),e.getMessage()));
@@ -925,14 +931,13 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	}
 
 	public void resetSessionData() {
-
 		this.getManagedBean().setApplType(SupplierManagementConst.ACC_MOF);
 //		this.getManagedBean().setAgreeTC(false);
 		this.getManagedBean().setSmSupp(null);
 		this.getManagedBean().setSmAppl(null);
 		resetBusinessNatureSelection();
 	}
-	
+
 //	public void verifyIC(){
 //		log.info("--------verifyIC-----------");
 //		MyIdentityReqDTO reqDTO = new MyIdentityReqDTO();
