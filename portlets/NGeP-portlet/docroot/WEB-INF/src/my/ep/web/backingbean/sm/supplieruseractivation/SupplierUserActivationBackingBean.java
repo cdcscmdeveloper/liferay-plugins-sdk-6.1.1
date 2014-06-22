@@ -41,15 +41,10 @@ public class SupplierUserActivationBackingBean extends
 
 	private String tempPassword;
 	
+	private String password;
+	private String confirmPassword;
+	
 		
-	public String getTempPassword() {
-		return tempPassword;
-	}
-
-	public void setTempPassword(String tempPassword) {
-		this.tempPassword = tempPassword;
-	}
-
 	public SupplierUserActivationBackingBean(){
 		if (MDC.get(LogKey.USER_ID) == null) {
 			MDC.put(LogKey.USER_ID, 1L);
@@ -126,18 +121,21 @@ public class SupplierUserActivationBackingBean extends
 			String supplierId = String.valueOf(this.getManagedBean().getSmPersonnel().getSmAppl().getSmSupplier().getSupplierId());
 			String encrpKeyStr = this.getManagedBean().getEncrpKeyStr();
 			
-			System.out.println("****temp pass***" + this.getTempPassword());
-			System.out.println("****pr***" + personnelId);
-			System.out.println("****suppid***" + supplierId);
+			log.info("****activation key***" + this.getTempPassword());
+			log.info("****pr***" + personnelId);
+			log.info("****suppid***" + supplierId);
+			log.info("****password***" + password);
+			log.info("****confirm password***" + confirmPassword);
+			
 			
 			String keyStr = supplierId + personnelId + this.getTempPassword();
 			String hashStr = SmCommonUtil.hashString(keyStr);
 			
-			System.out.println("****hashStr***" + hashStr);
-			System.out.println("****EcrypgtStr***" + this.getManagedBean().getEncrpKeyStr());
+			log.info("****hashStr***" + hashStr);
+			log.info("****EcrypgtStr***" + this.getManagedBean().getEncrpKeyStr());
 			
 			if(hashStr.equals(encrpKeyStr)){
-				System.out.println("**********Valid HASH***********");
+				log.debug("**********Valid HASH***********");
 				
 				//Check whether profile is exist in PmOrgProfile
 				OrgProfileReqDTO orgReqDTO = new OrgProfileReqDTO();
@@ -147,35 +145,44 @@ public class SupplierUserActivationBackingBean extends
 				
 				if(orgResDTO.getPmOrgProfile() != null){
 					//create PmUser only
-					System.out.println("--------Org Progile in not null------" + orgResDTO.getPmOrgProfile());
-				}else{
-					//Create PmOrgProfile and PmUser
-					SupplierUserActivationReqDTO reqDTO = new SupplierUserActivationReqDTO();
-					reqDTO.setSmPersonnel(this.getManagedBean().getSmPersonnel());
-					ISupplierUserActivationSO reqSO = (ISupplierUserActivationSO) BusinessDelegate.getInstance().getServiceObject("sm", ISupplierUserActivationSO.class);
-					System.out.println("*******>Personnel add - " + this.getManagedBean().getSmPersonnel().getSmAppl().getSmSupplier().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmState());
-					SupplierUserActivationResDTO resDTO = reqSO.createPmProfile(reqDTO);
-//					SupplierUserActivationResDTO resDTO = new SupplierUserActivationResDTO();
-//					resDTO.setSuccessful(true);
-					if(resDTO.isSuccessful()){
-						this.getManagedBean().setValidActivation(false);
-						this.getManagedBean().setSmPersonnel(null);
-						return navigateToAck();
-//						SpkiReqDTO spkiReqDTO = new SpkiReqDTO();
-//						spkiReqDTO.setSmPersonnel(this.getManagedBean().getSmPersonnel());
-//						ISpkiSO spkiReqSO = (ISpkiSO) BusinessDelegate.getInstance().getServiceObject("sm", ISpkiSO.class);
-//						SpkiResDTO spkiResDTO = spkiReqSO.requestCertificate(spkiReqDTO);
-						
-//						FacesContext.getCurrentInstance().addMessage(
-//								null,
-//								new FacesMessage(FacesMessage.SEVERITY_INFO,
-//										"Your account has been created successfully.", ""));
-					}else{
-						errorMsg("PM Creation Error.");
+					log.info("--------Org Progile in not null------" + orgResDTO.getPmOrgProfile());
+				} else {
+					
+					if(password.equals(confirmPassword)) {
+						//Create PmOrgProfile and PmUser
+						SupplierUserActivationReqDTO reqDTO = new SupplierUserActivationReqDTO();					
+						reqDTO.setSmPersonnel(this.getManagedBean().getSmPersonnel());
+						reqDTO.setPassword(password);
+	//					reqDTO.setConfirmPassword(confirmPassword);
+						System.out.println("Proceed to create user.............................");
+						ISupplierUserActivationSO reqSO = (ISupplierUserActivationSO) BusinessDelegate.getInstance().getServiceObject("sm", ISupplierUserActivationSO.class);
+						log.info("*******>Personnel add - " + this.getManagedBean().getSmPersonnel().getSmAppl().getSmSupplier().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmState());
+						SupplierUserActivationResDTO resDTO = reqSO.createPmProfile(reqDTO);
+	//					SupplierUserActivationResDTO resDTO = new SupplierUserActivationResDTO();
+	//					resDTO.setSuccessful(true);
+						if(resDTO.isSuccessful()){
+							this.getManagedBean().setValidActivation(false);
+							this.getManagedBean().setSmPersonnel(null);
+							return navigateToAck();
+	//						SpkiReqDTO spkiReqDTO = new SpkiReqDTO();
+	//						spkiReqDTO.setSmPersonnel(this.getManagedBean().getSmPersonnel());
+	//						ISpkiSO spkiReqSO = (ISpkiSO) BusinessDelegate.getInstance().getServiceObject("sm", ISpkiSO.class);
+	//						SpkiResDTO spkiResDTO = spkiReqSO.requestCertificate(spkiReqDTO);
+							
+	//						FacesContext.getCurrentInstance().addMessage(
+	//								null,
+	//								new FacesMessage(FacesMessage.SEVERITY_INFO,
+	//										"Your account has been created successfully.", ""));
+						}else{
+							errorMsg("PM Creation Error.");
+						}
+					} else {
+						errorMsg("Invalid Password.");
 					}
 				}
 			}else{
-				errorMsg("Invalid Temporary Password.");
+				log.info("Invalid Activation Key.");
+				errorMsg("Invalid Activation Key.");
 			}
 		} else {
 			errorMsg("Invalid Request.");
@@ -187,7 +194,7 @@ public class SupplierUserActivationBackingBean extends
 	public void errorMsg(String errMsg){
 		FacesContext.getCurrentInstance().addMessage(
 				null,
-				new FacesMessage(FacesMessage.SEVERITY_ERROR,errMsg, ""));
+				new FacesMessage(FacesMessage.SEVERITY_ERROR,errMsg, errMsg));
 	}
 	
 	public String navigateToAck(){
@@ -207,4 +214,29 @@ public class SupplierUserActivationBackingBean extends
 		String url = server + SupplierManagementConst.LOGIN_URL;
 		return url;
 	}
+
+	public String getTempPassword() {
+		return tempPassword;
+	}
+
+	public void setTempPassword(String tempPassword) {
+		this.tempPassword = tempPassword;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getConfirmPassword() {
+		return confirmPassword;
+	}
+
+	public void setConfirmPassword(String confirmPassword) {
+		this.confirmPassword = confirmPassword;
+	}
+	
 }
