@@ -194,8 +194,6 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 				scPurchaseInDefault.setApprovalUsers(createTargetApprover(scPurchaseInDefault));
 				// WorkFlow Status 
 				scPurchaseInDefault.setWorkFlowStatuses(null);
-				// remarks
-				//scPurchaseInDefault.setRemarks(initializeRemarks(scPurchaseInDefault));
 				
 				if(getManagedBean().getAttachments() != null){
 					scPurchaseInDefault.setScPurchaseInDefaultAttachment(getManagedBean().getAttachments().get(0));
@@ -211,22 +209,17 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 				PurchaseInDefaultResDTO resDTO = purchaseInDefaultSO.submitPurchaseInDefault(reqDTO);
 				if (resDTO.isSuccessful()) {
 					ScPurchaseInDefault purchaseInDefault = resDTO.getPurchaseInDefaultDtl();
-					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
-							FacesMessage.SEVERITY_INFO, 
-							null,
-							MessageUtils.getMessage(MessageConst.INFO_700006, 
-									new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT),purchaseInDefault.getPurchaseInDefaultNo()},  
-									MessageUtils.BUNDLE_COMMON_MESSAGES, 
-									new FacesScopes().getUserLocale())));
+					 successMessage(MessageConst.INFO_700006, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT, purchaseInDefault.getPurchaseInDefaultNo());
 					// clear pid data
 					super.renewSesionObject();
-					return CommonUIConst.ACKNOWLEDGE_PAGE;
+					
 				} else {
 					throw new EpException("Failed.");
 				}
 			} finally {
 				purchaseInDefaultSO = null;
 			}
+			return null;
 		}
 		
 		public void sendNotificationEmail(){
@@ -299,23 +292,12 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 				   if(BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)){
 					   // notification mail
 					   this.sendNotificationEmail();
-					   FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
-							   FacesMessage.SEVERITY_INFO, null, 
-							   MessageUtils.getMessage(MessageConst.INFO_700005, 
-									   new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT),getManagedBean().getPurchaseInDefault().getPurchaseInDefaultNo()}, 
-									   MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
-					   FacesContext fc = FacesContext.getCurrentInstance();
-					   fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);	   	
-
+					   successMessage(MessageConst.INFO_700005, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT, getManagedBean().getPurchaseInDefault().getPurchaseInDefaultNo());
+					
 				   } else if(BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)){
-					   FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
-							   FacesMessage.SEVERITY_INFO, null, 
-							   MessageUtils.getMessage(MessageConst.INFO_700008, 
-									   new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT),getManagedBean().getPurchaseInDefault().getPurchaseInDefaultNo()}, 
-									   MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
-					   FacesContext fc = FacesContext.getCurrentInstance();
-					   fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);	   	
+					   successMessage(MessageConst.INFO_700008, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT, getManagedBean().getPurchaseInDefault().getPurchaseInDefaultNo());
 				   }
+				   
 			   } else {
 				   throw new EpException("Failed.");
 			   }
@@ -594,11 +576,6 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 			   }
 			   // remarks
 			   purchaseInDefault.setRemarks(initializeRemarks(purchaseInDefault));
-
-			   if(purchaseInDefault.getScPurchaseInDefaultAttachment() != null){
-				   purchaseInDefault.getScPurchaseInDefaultAttachment().setUser(purchaseInDefault.getScPurchaseInDefaultAttachment().getCreatedUser());
-				 }
-			   
 			   List<ScPurchaseInDefaultAttachment> attachments = new ArrayList<ScPurchaseInDefaultAttachment>();
 			   ScPurchaseInDefaultAttachment attachment = purchaseInDefault.getScPurchaseInDefaultAttachment();
 			   attachment.setUser(facesScopes.getUserSessionBean());

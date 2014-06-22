@@ -406,17 +406,11 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 				 PrInquiryResDTO prInquiryResDTO = prInquirySO.submitPrInquiry(reqDTO);
 				 if (prInquiryResDTO.isSuccessful()) {
 					 ScPrInquiry scPrInquiry = prInquiryResDTO.getPrInquiryDetail();
-					 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
-							 FacesMessage.SEVERITY_INFO, 
-							 null,
-							 MessageUtils.getMessage(MessageConst.INFO_700026, 
-									 new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_INQUIRY),scPrInquiry.getPrInquiryNo()},
-									 MessageUtils.BUNDLE_COMMON_MESSAGES, 
-									 new FacesScopes().getUserLocale())));
+					 successMessage(MessageConst.INFO_700026,ParameterTypeConst.DOCUMENT_TYPES,
+								ParameterConst.DOCTYPE_PURCHASE_INQUIRY,scPrInquiry.getPrInquiryNo());
 						// clear data
 						super.renewSesionObject();
-					 FacesContext fc = FacesContext.getCurrentInstance();
-					 fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
+					
 				 } else{
 					 throw new EpException("Failed.");
 				 }
@@ -433,9 +427,6 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 		  */	
 	  public String submitPrInquiryPrice(String outcome){
 		   IPrInquirySO prInquirySO = (IPrInquirySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPrInquirySO.class);
-		   IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
-					.getServiceObject(IBpmSO.class);
-		   if(StringUtils.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT,outcome)){
 			   //call prInquirySO submitPrice method
 			   PrInquiryReqDTO reqDTO = new PrInquiryReqDTO();
 			   ScPrInquiry prInquiry = getManagedBean().getScPrInquiry();
@@ -452,51 +443,17 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 			   FacesScopes facesScopes = new FacesScopes();
 			   String token = facesScopes.getBPMAuthenticationCtxToken();
 			   reqDTO.setToken(token);
+			   reqDTO.setOutcome(outcome);
 			   reqDTO.setTaskId(getManagedBean().getTaskId());
 			   PrInquiryResDTO resDTO = prInquirySO.submitPrInquiryPrice(reqDTO);
 			   if(resDTO.isSuccessful()){
 				 ScPrInquiry scPrInquiry = resDTO.getPrInquiryDetail();
-				 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
-						 FacesMessage.SEVERITY_INFO, null,
-						 MessageUtils.getMessage(MessageConst.INFO_700026, 
-							new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_INQUIRY),scPrInquiry.getPrInquiryNo()},
-						    MessageUtils.BUNDLE_COMMON_MESSAGES, 
-							new FacesScopes().getUserLocale())));
+				 successMessage(MessageConst.INFO_700026,ParameterTypeConst.DOCUMENT_TYPES,
+							ParameterConst.DOCTYPE_PURCHASE_INQUIRY,scPrInquiry.getPrInquiryNo());
 					// clear data
 					super.renewSesionObject();
-				 FacesContext fc = FacesContext.getCurrentInstance();
-				 fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE); 
 			   }else{
 					throw new EpException("Failed.");
-			   }
-		   }else{
-			   BpmRequestDTO reqBpm = new BpmRequestDTO();
-				FacesScopes facesScopes = new FacesScopes();
-				String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
-				try {
-					reqBpm.setTaskId(getManagedBean().getTaskId());
-					reqBpm.setOutcome(outcome);
-					if (null != ctxToken) {
-						reqBpm.setCtxToken(ctxToken);
-						BpmResponseDTO resBpm = bpmSO.updateTask(reqBpm);
-						boolean result = resBpm != null ? resBpm.isSuccessful() : false;
-					if (result) {
-						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
-								FacesMessage.SEVERITY_INFO, 
-								null,
-								MessageUtils.getMessage(MessageConst.INFO_700010, 
-										new String[]{"Purchase Inquiry",getManagedBean().getScPrInquiry().getPrInquiryNo()}, 
-										MessageUtils.BUNDLE_COMMON_MESSAGES, 
-										new FacesScopes().getUserLocale())));
-						FacesContext fc = FacesContext.getCurrentInstance();
-						fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE); 
-					} else{
-						throw new EpException("Failed.");
-					}
-					}
-				} finally {
-					bpmSO = null;
-				}
 		   }
 		return null;
 	  }
@@ -606,12 +563,12 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 	}
 	
 	public	String	requisitionerAction(String action){
+		ScPrInquiry prInquiry = getManagedBean().getScPrInquiry();
 		if(StringUtils.equalsIgnoreCase("PROCESSED",action)){
 			//redirect to requestNote screen
 			IParameterSO parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 			ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
 			RequestNoteReqDTO	reqDTO	=	new RequestNoteReqDTO();
-			ScPrInquiry prInquiry = getManagedBean().getScPrInquiry();
 			
 			// checking wheather stock available or not
 			if(prInquiry.getIsStockAvailable().equals(1)){
@@ -683,37 +640,32 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 			} else {
 				throw new EpException("Out of stock.");
 			}
-		}else {
-			//cancel BPM task
-			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
-					.getServiceObject(IBpmSO.class);
-			BpmRequestDTO reqBpm = new BpmRequestDTO();
+		} else {
+
+			IPrInquirySO prInquirySO = (IPrInquirySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPrInquirySO.class);
+			PrInquiryReqDTO reqDTO = new PrInquiryReqDTO();
+			if(prInquiry.getRemarks() != null ){
+				for (int i = 0; i < prInquiry.getRemarks().size(); i++) {
+					ScPRIRemark remark = prInquiry.getRemarks().get(i);
+					if(StringUtils.isBlank(remark.getRemark())){
+						prInquiry.getRemarks().remove(remark);
+					}	
+				} 
+			}
+
+			reqDTO.setPrInquiryDetail(prInquiry);
 			FacesScopes facesScopes = new FacesScopes();
-			String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
-			try {
-				reqBpm.setTaskId(getManagedBean().getTaskId());
-				//TODO : change to cancel later
-				reqBpm.setOutcome(action);
-				if (null != ctxToken) {
-					reqBpm.setCtxToken(ctxToken);
-					BpmResponseDTO resBpm = bpmSO.updateTask(reqBpm);
-					boolean result = resBpm != null ? resBpm.isSuccessful() : false;
-					if(result){
-						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
-								FacesMessage.SEVERITY_INFO, 
-								null,
-								MessageUtils.getMessage(MessageConst.INFO_700010, 
-										new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_INQUIRY),getManagedBean().getScPrInquiry().getPrInquiryNo()},
-										MessageUtils.BUNDLE_COMMON_MESSAGES, 
-										new FacesScopes().getUserLocale())));
-						FacesContext fc = FacesContext.getCurrentInstance();
-						fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
-					} else{
-						throw new EpException("Failed.");
-					}
-				}
-			} finally {
-				bpmSO = null;
+			String token = facesScopes.getBPMAuthenticationCtxToken();
+			reqDTO.setToken(token);
+			reqDTO.setOutcome(action);
+			reqDTO.setTaskId(getManagedBean().getTaskId());
+			PrInquiryResDTO resDTO = prInquirySO.submitPrInquiryPrice(reqDTO);
+
+			if(resDTO.isSuccessful()){
+				 successMessage(MessageConst.INFO_700010,ParameterTypeConst.DOCUMENT_TYPES,
+							ParameterConst.DOCTYPE_PURCHASE_INQUIRY,getManagedBean().getScPrInquiry().getPrInquiryNo());
+			} else{
+				throw new EpException("Failed.");
 			}
 			return null;
 		}
