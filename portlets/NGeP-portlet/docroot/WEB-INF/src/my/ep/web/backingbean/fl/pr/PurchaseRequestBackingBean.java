@@ -473,6 +473,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			}
 		}
 		getManagedBean().setAddressTypesList(new ArrayList<PmAddressType>());
+		selectAddrEvent();
 	}
 	public void updateManualDeliveryAddrDt() {
 		if(null== getManagedBean().getFlManulaAddress().getPmAddress() ||  getManagedBean().getFlManulaAddress().isEditable()){
@@ -495,6 +496,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		deliveryAddr.setReceivingGrp(getManagedBean().getFlManulaAddress().getReceivingGrp());
 		getManagedBean().setSelectedDelAddr(deliveryAddr);
 		getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses().add(deliveryAddr);
+		selectAddrEvent();
 		
 		// add to cart validation
 		RequestContext.getCurrentInstance().execute("addManualDeliveryAddr.hide()");
