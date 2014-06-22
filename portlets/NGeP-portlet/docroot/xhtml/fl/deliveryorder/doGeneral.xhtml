@@ -11,40 +11,37 @@
 				<td style="width: 138px;"><p:outputLabel
 						value="#{lbl['lbl.fl.ministry']}" /></td>
 				<td><p:inputText size="50" id="ministry"
-						value="#{createDOBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.parentOrgProfile.parentOrgProfile.orgName}"
-						disabled="true" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.jabatan']}" /></td>
-				<td><p:inputText size="50" id="issuedJabatan"
-						value="#{createDOBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.orgName}"
+						value="#{createDOBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.parentOrgProfile.orgName}"
 						disabled="true" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.prepared.ptj']}" /></td>
 				<td><p:inputText size="5" id="preparedOrgProfileId" disabled="true"
-						value="#{createDOBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgProfileId}" />
+						value="#{createDOBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.pmOrgValidity.orgCode}" />
 					<p:spacer width="5" /> <p:inputText size="39" disabled="true"
 						value="#{createDOBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgName}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /></td>
 				<td><p:inputText size="5" id="issuedOrgProfileId" disabled="true"
-						value="#{createDOBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.orgProfileId}" />
+						value="#{createDOBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.pmOrgValidity.orgCode}" />
 					<p:spacer width="5" /> <p:inputText size="39" disabled="true"
 						value="#{createDOBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.orgName}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.charge.ptj']}" /></td>
 				<td><p:inputText size="5" disabled="true"
-						value="#{createDOBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile.orgProfileId}" />
-					<p:spacer width="5" /> <p:inputText id="chargedPtj" size="39"
-						disabled="true"></p:inputText></td>
+						value="#{createDOBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile.pmOrgValidity.orgCode}" />
+					<p:spacer width="5" /> <p:inputText id="chargedPtj" size="39" disabled="true"
+						value="#{createDOBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile.orgName}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.accounting.ofc']}" /></td>
-				<td><p:inputText size="5" disabled="true" /> <p:spacer
-						width="5" /> <p:inputText size="39" disabled="true" /></td>
+				<td><p:inputText size="5" disabled="true"
+						value="#{createDOBackingBean.managedBean.fulfilmentRequest.agOffice.officeCode}" />
+					<p:spacer width="5" /> <p:inputText size="39" disabled="true"
+						value="#{createDOBackingBean.managedBean.fulfilmentRequest.agOffice.officeName}" />
+				</td>
 			</tr>
 		</table>
 	</p:panel>
@@ -170,14 +167,19 @@
 			<tr>
 				<td style="width: 136px;"><p:outputLabel
 						value="#{lbl['lbl.fl.supp.fact.com']}" /></td>
-				<td><p:inputText disabled="true" size="50" /></td>
+				<td><p:inputText disabled="true" value="#{createDOBackingBean.managedBean.fulfilmentOrder.pmFinancialOrg.finOrgName}" size="50" /></td>
 			</tr>
+			<tr>
+				<td style="width: 136px;"><p:outputLabel
+						value="#{lbl['lbl.fl.supp.fact.branch']}" /></td>
+				<td><p:inputText disabled="true" value="#{createDOBackingBean.managedBean.fulfilmentOrder.pmFinancialBranch.branchName}" size="50" /></td>
+			</tr>			
 			<tr>
 				<td valign="top"><p:outputLabel
 						value="#{lbl['lbl.fl.supp.address']}" /></td>
 				<td><p:inputTextarea cols="50" rows="8" disabled="true"
 						style=" margin-bottom:5px;"
-						value="#{createDOBackingBean.getFullAddress(createDOBackingBean.managedBean.fulfilmentRequest.flSupplierDtl.smAddress)}" /></td>
+						value="#{createDOBackingBean.managedBean.factoringAddress}" /></td>
 			</tr>
 			<tr>
 				<td style="width: 100px;"><p:outputLabel
@@ -185,26 +187,26 @@
 				<td><table style="width: 100%">
 						<tr>
 							<td style="width: 25px;"><p:inputText size="15"
-									disabled="true" value="#{createDOBackingBean.managedBean.fulfilmentRequest.flSupplierDtl.phoneNo}" /></td>
+									disabled="true" value="#{createDOBackingBean.managedBean.phoneNo}" /></td>
 							<td style="width: 65px;"><p:outputLabel
 									value="#{lbl['lbl.fl.supp.faxno']}" /></td>
-							<td><p:inputText size="19" disabled="true" value="#{createDOBackingBean.managedBean.fulfilmentRequest.flSupplierDtl.faxNo}" /></td>
+							<td><p:inputText size="19" disabled="true" value="#{createDOBackingBean.managedBean.faxNo}" /></td>
 						</tr>
 					</table></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.del.ord.contact.person']}" /></td>
-				<td><p:inputText disabled="true" size="50" value="#{createDOBackingBean.managedBean.fulfilmentRequest.flSupplierDtl.contactPerson}"/></td>
+				<td><p:inputText disabled="true" size="50" value="#{createDOBackingBean.managedBean.contactPerson}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.del.ord.contact.email']}" /></td>
-				<td><p:inputText disabled="true" size="50" value="#{createDOBackingBean.managedBean.fulfilmentRequest.flSupplierDtl.contactEmail}"/></td>
+				<td><p:inputText disabled="true" size="50" value="#{createDOBackingBean.managedBean.contactEmail}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.del.ord.contact.no']}" /></td>
-				<td><p:inputText disabled="true" size="25" value="#{createDOBackingBean.managedBean.fulfilmentRequest.flSupplierDtl.contactPhoneNo}"/></td>
+				<td><p:inputText disabled="true" size="25" value="#{createDOBackingBean.managedBean.contactPhoneNo}"/></td>
 			</tr>
 		</table>
 	</p:panel>

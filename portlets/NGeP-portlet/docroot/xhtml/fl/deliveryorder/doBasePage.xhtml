@@ -20,8 +20,12 @@
 						icon="ui-icon-back" oncomplete="window.history.back();" /></td>
 				<c:if test="#{empty createDOBackingBean.managedBean.buttonVal}">
 
-					<td colspan="4" style="text-align: right"><p:commandButton
-							value="SUBMIT" ajax='false'
+					<td colspan="4" style="text-align: right">
+						<p:commandButton styleClass="ui-button" icon="ui-icon-save"
+							value="Save" ajax='false'
+							action="#{createDOBackingBean.createDeliveryOrder('SAVE')}" />						
+						<p:commandButton styleClass="ui-button" icon="ui-icon-submit"
+							value="Submit" ajax='false'
 							action="#{createDOBackingBean.createDeliveryOrder('SUBMIT')}" />
 						<p:commandButton value="STOP DELIVERY" icon="ui-icon-cancel"
 							rendered="#{createDOBackingBean.managedBean.statusDesc eq 'Pending Partial Fulfilment'}"

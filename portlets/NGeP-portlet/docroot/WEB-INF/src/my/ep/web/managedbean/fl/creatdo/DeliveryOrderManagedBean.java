@@ -3,7 +3,6 @@
  */
 package my.ep.web.managedbean.fl.creatdo;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -19,10 +18,10 @@ import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmOrgAddress;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-//import my.ep.persistence.entity.pm.common.PmMaksud;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.apache.log4j.Logger;
+//import my.ep.persistence.entity.pm.common.PmMaksud;
 
 /**
  * Managed Bean for Create Purchase Order
@@ -84,6 +83,13 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	
 	//tab menu
 	private int selectedTabIndex;
+	
+	private String factoringAddress;
+	private String phoneNo;
+	private String faxNo;
+	private String contactEmail;
+	private String contactPerson;
+	private String contactPhoneNo;
 
 	/**
 	 * @return the itemSelectedForCal
@@ -609,6 +615,54 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	 */
 	public void setSupplierDoRef(String supplierDoRef) {
 		this.supplierDoRef = supplierDoRef;
+	}
+
+	public String getFactoringAddress() {
+		return factoringAddress;
+	}
+
+	public void setFactoringAddress(String factoringAddress) {
+		this.factoringAddress = factoringAddress;
+	}
+
+	public String getPhoneNo() {
+		return phoneNo;
+	}
+
+	public void setPhoneNo(String phoneNo) {
+		this.phoneNo = phoneNo;
+	}
+
+	public String getFaxNo() {
+		return faxNo;
+	}
+
+	public void setFaxNo(String faxNo) {
+		this.faxNo = faxNo;
+	}
+
+	public String getContactEmail() {
+		return contactEmail;
+	}
+
+	public void setContactEmail(String contactEmail) {
+		this.contactEmail = contactEmail;
+	}
+
+	public String getContactPerson() {
+		return contactPerson;
+	}
+
+	public void setContactPerson(String contactPerson) {
+		this.contactPerson = contactPerson;
+	}
+
+	public String getContactPhoneNo() {
+		return contactPhoneNo;
+	}
+
+	public void setContactPhoneNo(String contactPhoneNo) {
+		this.contactPhoneNo = contactPhoneNo;
 	}
 	
 }
