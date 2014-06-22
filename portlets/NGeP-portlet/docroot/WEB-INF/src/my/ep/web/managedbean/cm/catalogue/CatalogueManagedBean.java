@@ -165,7 +165,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	
 	private List<VCmSupplierItem> tempSupplierList;
 	private List<VCmSupplierItem> ctRequestList;
-	private boolean simpleQuoteFlag; // enable or disable simple quote in search catalogue	
+	private boolean simpleQuoteFlag = true; // enable or disable simple quote in search catalogue	
 	private boolean displayCatalogue = false;
 	
 	private Date currentDate = new Date();
