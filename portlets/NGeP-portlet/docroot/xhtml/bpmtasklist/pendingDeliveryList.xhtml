@@ -49,15 +49,14 @@
 				<f:facet name="header">
 					#{lbl['lbl.fl.del.order.ptj.name']}
 				</f:facet>
-				#{order.flFulfilmentRequest.issuedOrgProfile.parentOrgProfile.orgName}
+				#{order.flFulfilmentRequest.preparedOrgProfile.orgName}
 			</p:column>
 			<p:column width="12%;">
 				<f:facet name="header">
 					#{lbl['lbl.fl.del.order.created.date']}
 				</f:facet>
 				<h:outputText value="#{order.createdDate}">
-					<f:convertDateTime
-						pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+       				<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
 				</h:outputText>
 
 			</p:column>
