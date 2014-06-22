@@ -274,7 +274,7 @@
 					<!-- <property name="columnWidth" value="150" /> -->
 				</bean>
 				<bean class="my.ep.web.bean.LovColumnBean">
-					<property name="columnName" value="orgName" />
+					<property name="columnName" value="pmOrgValidity.orgName" />
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
 					<property name="bundleKey" value="lbl.fl.pm.org.name" />
