@@ -393,6 +393,13 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			getSupplierBranchesList(resDTO.getFlFulfilmentRequest().getSmSupplier().getSmAppl().getSmSupplierBranches());
 		}
 		
+		for(FlFulfilmentItem flItem : getManagedBean().getFulfilmentRequest().getFlFulfilmentItems()) { 
+			String key = flItem.getCmItem().getItemId() + flItem.getUnitPrice().doubleValue() + "";
+		    if(!getManagedBean().getFlItemMap().containsKey(key)) {
+			    getManagedBean().getFlItemMap().put(key, flItem);
+		    }
+		}
+		
 		//initialize all the COA map
 		getVotFundList(getManagedBean().getFulfilmentRequest().getIssuedOrgProfile().getOrgProfileId());
 	}
@@ -712,6 +719,11 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			    	fulfilmentItem = getManagedBean().getFlItemMap().get(key);
 					fulfilmentItem.setUnitPrice(flItemAddr.getUnitPrice());
 				    flItemAddr.setFlFulfilmentItem(fulfilmentItem);
+				    flItemAddr.setPmVotFund(fulfilmentItem.getPmVotFund());
+				    flItemAddr.setAssetInd(fulfilmentItem.getAssetInd());
+				    flItemAddr.setPmGlAccount(fulfilmentItem.getPmGlAccount());
+				    flItemAddr.setPmPrgActivity(fulfilmentItem.getPmPrgActivity());
+				    flItemAddr.setPmSubSetia(fulfilmentItem.getPmSubSetia());
 			    }
 			    
 			    if(!fulfilmentItem.getFlFulfilmentItemAddr().contains(flItemAddr)) {
