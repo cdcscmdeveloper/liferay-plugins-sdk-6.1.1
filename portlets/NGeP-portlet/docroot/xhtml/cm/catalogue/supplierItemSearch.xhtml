@@ -93,26 +93,23 @@
 
 						<div style="text-align: right;">
 							<p:commandButton value="Search" icon="ui-icon-search"
-								action="#{catalogueBackingBean.managedBean.searchCatalogue}"
-								update="@([id$=SupplierItemDtlId])">
+								update="searchViewId ,btnId ">
 								<f:param name="unspscCode" value="#{unspscCode}" />
-
 							</p:commandButton>
-
 						</div>
 					</p:panel></td>
 			</tr>
 		</table>
-		<h:panelGroup id="SupplierItemDtlId">
 			<table style="width: 100%;">
 				<tr>
 					<td width="70%" style="vertical-align: top;"><p:panel
 							style="width: 100%;" header="SEARCH RESULTS" toggleable="true">
-
+							
+                         <h:panelGroup id="btnId">
 							<div style="text-align: right;">
 								<p:commandButton action="#{catalogueBackingBean.navigateContractRequest()}" rendered="#{unspscCodeBackingBean.requisitioner}"
 									value="CR ( #{fn:length(catalogueBackingBean.managedBean.ctRequestList)} ) "></p:commandButton>
-								<p:commandButton value="#{lbl['lbl.sc.sq']}" rendered="#{unspscCodeBackingBean.requisitioner}"
+								<p:commandButton value="#{lbl['lbl.sc.sq']}" rendered="#{unspscCodeBackingBean.requisitioner}" id="simpleQuoteId"
 									action="#{simpleQuoteBackingBean.simpleQuoteAction(simpleQuoteBackingBean.managedBean.cmSupplierItem.supplierItemId , false , null)}"
 									disabled="#{catalogueBackingBean.managedBean.simpleQuoteFlag}" />
 
@@ -121,7 +118,7 @@
 									value="#{lbl['lbl.cm.compare']} ( #{fn:length(catalogueBackingBean.managedBean.selectViewItems)} )"
 									disabled="#{2 > fn:length(catalogueBackingBean.managedBean.selectViewItems)}" />
 							</div>
-							
+							</h:panelGroup>
 							<h:panelGroup id="searchViewId">
 
 								<p:dataTable lazy="true"
@@ -191,16 +188,15 @@
 
 									<p:column headerText="Action" width="2%"
 										rendered="#{unspscCodeBackingBean.requisitioner}">
-										<p:commandLink disabled="#{!supplierItem.atcRequired}"
+										<p:commandLink disabled="#{!supplierItem.atcRequired}" 
 											action="#{requestNoteBackingBean.addToCart(supplierItem.docId)}"
-											process="@this" update="@([id$=addToCartId])"
+											update="addToCartId"
 											oncomplete="addToCartPopup.show();return false;"
-											partialSubmit="true"
 											rendered="#{supplierItem.contractNo == null and supplierItem.circularNo == null }">
 											<p:graphicImage library="ep/images/design"
 												name="cart_full.png" id="addToCartId" />
 										</p:commandLink>
-										<p:tooltip for="addToCartId"
+										<p:tooltip for="addToCartId" 
 											value="#{lbl['lbl.sc.add.to.cart']}" showEffect="fade"
 											hideEffect="fade" />
 										<p:commandButton value="#{lbl['lbl.sc.purchase.in.default']}"
@@ -317,7 +313,6 @@
 				</tr>
 
 			</table>
-		</h:panelGroup>
 
 		<!-- <p:dialog id="wishListDialog" widgetVar="wishListPopUp" width="500px"
 			modal="true">

@@ -192,7 +192,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		private static final long serialVersionUID = 1L;
 
 		public SearchPagingDataModel() {
-			super("");
+			super("supplierItemID");
 			// TODO Auto-generated constructor stub
 		}
 
@@ -329,7 +329,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 
 	public void searchCatalogue(){
-		searchDataModel.reloadData();
+		//searchDataModel.reloadData();
 	}
 
 
