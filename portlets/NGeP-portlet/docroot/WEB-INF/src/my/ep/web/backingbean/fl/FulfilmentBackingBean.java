@@ -193,22 +193,23 @@ public class FulfilmentBackingBean extends
 	}
 
 	public void openAttachmentPage(FlDeliveryAddress fldelAddress) {
-		System.out.println("del address::: "
-				+ fldelAddress.getDeliveryAddressId());
-		if (!fldelAddress.getAttachmentList().isEmpty()) {
-			fldelAddress.getAttachmentList().get(0).getFileName();
-		}
-		if (!fldelAddress.getRemarkList().isEmpty()) {
-			fldelAddress.getRemarkList().get(0).getRemark();
-
-		} else {
-			List<FlRemark> remarks = new ArrayList();
-			remarks.add(new FlRemark());
+		if(fldelAddress.getRemarkList().isEmpty()) {
+			FacesScopes facesScopes = new FacesScopes();
+			
+			FlRemark flRemark = new FlRemark();
+			flRemark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+			flRemark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+			flRemark.setChangedBy(flRemark.getCreatedBy());
+			flRemark.setChangedDate(flRemark.getCreatedDate());
+			flRemark.setUserId(facesScopes.getUserSessionBean().getLoginId());
+			flRemark.setCreatedUsername(facesScopes.getUserSessionBean().getUserName());
+			
+			List<FlRemark> remarks = new ArrayList<FlRemark>();
+			remarks.add(flRemark);
 			fldelAddress.setRemarkList(remarks);
 		}
 		getManagedBean().setRemarkList(fldelAddress.getRemarkList());
 		getManagedBean().setAttachmentList(fldelAddress.getAttachmentList());
-
 	}
 
 }

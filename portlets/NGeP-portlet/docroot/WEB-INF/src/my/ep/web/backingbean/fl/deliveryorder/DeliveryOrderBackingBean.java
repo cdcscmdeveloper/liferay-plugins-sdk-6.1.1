@@ -15,24 +15,21 @@ import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.fl.order.IDeliveryOrderSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
-import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
-import my.ep.dto.pm.common.address.AddressReqDTO;
-import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.fl.order.FlDelOrderItem;
 import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
 import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
+import my.ep.persistence.entity.fl.order.FlTempDoAddr;
+import my.ep.persistence.entity.fl.order.FlTempDoItem;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
-import my.ep.persistence.entity.pm.common.PmContact;
-import my.ep.type.pm.AddressType;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
@@ -206,28 +203,33 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 	}
 	// this method do validations for items with Delivery Address,Delivery order and Delivery Amount
 	private void checkItemsWithDoAddress(String actionName) {
-		// TODO Auto-generated method stub
-		getManagedBean().getSelectedDelAddressList().size();
-		if(getManagedBean().getSelectedDelAddressList().size()==0){
+		boolean anyAddressSelected = false;
+		for(FlDeliveryAddress selectedDelAddress  :getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
+			if(selectedDelAddress.getFlTempDoAddr().isSelected()) {
+				anyAddressSelected = true;
+				break;
+			}
+		}
+		
+		if(!anyAddressSelected){
 			throw new EpException(" Select Deliver Address .");
 		}else{
 			if(!"UPDATE".equalsIgnoreCase(actionName)){
-				for(FlDeliveryAddress selectedDelAddress  :getManagedBean().getSelectedDelAddressList()){
-					for(FlFulfilmentItemAddr itemAddress: selectedDelAddress.getFlFulfilmentItemAddr()){
-						System.out.println("Item Name is ::: "+itemAddress.getScRequestItem().getItemType());
-						System.out.println("Doc type is ::: "+getManagedBean().getDocType());
-						itemAddress.getDeliveredQty();
-						itemAddress.getDeliveredAmt();
-						if(null==itemAddress.getDeliveredAmt()){
-							throw new EpException(" Del Qty and Del Amout is Required .");
+				for(FlDeliveryAddress selectedDelAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
+					if(selectedDelAddress.getFlTempDoAddr().isSelected()) {
+						for(FlFulfilmentItemAddr itemAddress: selectedDelAddress.getFlFulfilmentItemAddr()){
+							System.out.println("Item Name is ::: "+itemAddress.getScRequestItem().getItemType());
+							System.out.println("Doc type is ::: "+getManagedBean().getDocType());
+							itemAddress.getDeliveredQty();
+							itemAddress.getDeliveredAmt();
+							if(null==itemAddress.getDeliveredAmt()){
+								throw new EpException(" Del Qty and Del Amout is Required .");
+							}
 						}
 					}
 				}
-				
 			}
-			
 		}
-		
 	}
 
 	public void stopDelivery() {
@@ -258,9 +260,6 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 			orderItem.setDeliveredAmt(new BigDecimal(orderItem.getFlFulfilmentItemAddr().getUnitPrice().intValue() * orderItem.getDeliveredQty().intValue()));
 		}
 	}
-	public void onAddressSelect(){
-		getManagedBean().getSelectedDelAddressList().size();
-	}
 	
 	public void selectItemEvent() {
 		getManagedBean().setSelectedItemRowCalList(new ArrayList<FlFulfilmentItemAddr>());
@@ -289,51 +288,26 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		System.out.println("orderId :" + orderId);
 		if(orderId != null){
 			IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
-			IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			reqDTO.setFlOrderId(Long.parseLong(orderId));
 			FlFulfilmentOrder flOrder = orderSO.retrieveFulfilmentOrderById(reqDTO).getFlOrder();
 			
+			// initialize FlTempDoAddr if null
+			for(FlDeliveryAddress deliveryAddress : flOrder.getFlFulfilmentRequest().getFlDeliveryAddresses()) {
+				if(deliveryAddress.getFlTempDoAddr()==null) {
+					deliveryAddress.setFlTempDoAddr(new FlTempDoAddr());
+				}
+				for(FlFulfilmentItemAddr itemAddr : deliveryAddress.getFlFulfilmentItemAddr()) {
+					if(itemAddr.getFlTempDoItem()==null) {
+						itemAddr.setFlTempDoItem(new FlTempDoItem());
+					}
+				}
+			}
+			
+			getManagedBean().setSelectedTabIndex(0);
 			getManagedBean().setFulfilmentRequest(flOrder.getFlFulfilmentRequest());
 			getManagedBean().setFulfilmentOrder(flOrder);
 			getManagedBean().setDocType(flOrder.getFlFulfilmentRequest().getDocType());
-			
-			if(getManagedBean().getFulfilmentOrder().getPmFinancialBranch()!=null) {
-				AddressReqDTO addReqDTO = new AddressReqDTO();
-				addReqDTO.setFinancialBranchId(getManagedBean().getFulfilmentOrder().getPmFinancialBranch().getFinancialBranchId());
-				addReqDTO.setAddressType(AddressType.BILLING_ADDRESS.toString());
-				
-				AddressResDTO resDTO = addressSO.retrieveAddressTypeList(addReqDTO);
-				if(!resDTO.getAddressTypeList().isEmpty()){
-					getManagedBean().setFactoringAddress(getFullAddress(resDTO.getAddressTypeList().get(0).getPmAddress()));
-					
-					getManagedBean().setPhoneNo(resDTO.getAddressTypeList().get(0).getPmAddress().getPhoneNo());
-					getManagedBean().setFaxNo(resDTO.getAddressTypeList().get(0).getPmAddress().getFaxNo());
-					if(resDTO.getAddressTypeList().get(0).getPmContacts() != null ){
-						PmContact pmContact = resDTO.getAddressTypeList().get(0).getPmContacts().get(0);
-						getManagedBean().setContactPerson(pmContact.getContactName());
-						getManagedBean().setContactEmail(pmContact.getEmail());
-						getManagedBean().setContactPhoneNo(pmContact.getPhoneNo());
-					}
-				}
-			} else { //reset back to HQ info
-				AddressReqDTO addReqDTO = new AddressReqDTO();
-				addReqDTO.setFinancialOrgId(getManagedBean().getFulfilmentOrder().getPmFinancialOrg().getFinancialOrgId());
-				addReqDTO.setAddressType(AddressType.BILLING_ADDRESS.value());
-				
-				AddressResDTO resDTO = addressSO.retrieveAddressTypeList(addReqDTO);
-				if(!resDTO.getAddressTypeList().isEmpty()){
-					getManagedBean().setFactoringAddress(getFullAddress(resDTO.getAddressTypeList().get(0).getPmAddress()));
-					getManagedBean().setPhoneNo(resDTO.getAddressTypeList().get(0).getPmAddress().getPhoneNo());
-					getManagedBean().setFaxNo(resDTO.getAddressTypeList().get(0).getPmAddress().getFaxNo());
-					if(!resDTO.getAddressTypeList().get(0).getPmContacts().isEmpty() ){
-						PmContact pmContact = resDTO.getAddressTypeList().get(0).getPmContacts().get(0);
-						getManagedBean().setContactPerson(pmContact.getContactName());
-						getManagedBean().setContactEmail(pmContact.getEmail());
-						getManagedBean().setContactPhoneNo(pmContact.getPhoneNo());
-					}
-				}				
-			}
 		}
 		getManagedBean().getFulfilmentRequest();
 	}

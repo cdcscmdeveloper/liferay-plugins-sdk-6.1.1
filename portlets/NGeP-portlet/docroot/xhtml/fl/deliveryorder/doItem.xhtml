@@ -9,36 +9,41 @@
 		<p:dataTable id="doDelAddress" var="doDelAddress"
 			styleClass="orderSummaryChange hide-column-names "
 			rowIndexVar="index"
-			selection="#{createDOBackingBean.managedBean.selectedDelAddressList}"
 			rowKey="#{doDelAddress}"
 			value="#{createDOBackingBean.managedBean.fulfilmentRequest.flDeliveryAddresses}">
 			<ac:paginator for="doDelAddress" />
 			<p:column style="width:2%">
 				<p:rowToggler />
 			</p:column>
-			<p:column selectionMode="multiple" rowspan="2" width="5%" />
-
+			<p:column rowspan="2" width="5%" >
+				<p:selectBooleanCheckbox value="#{doDelAddress.flTempDoAddr.selected}" />
+			</p:column>
 			<p:column headerText="Delivery Address" width="10" style="white-space:normal;" 
 				styleClass="fixed-size">
 				<h:outputText rendered="#{doDelAddress.addressType !=null}"
-					value="#{doDelAddress.addressType.pmAddress.address1}, #{doDelAddress.addressType.pmAddress.address2}, #{doDelAddress.addressType.pmAddress.address3}, #{doDelAddress.addressType.pmAddress.address4}" />
+					value="#{createDOBackingBean.getFullAddress(doDelAddress.addressType.pmAddress)}" />
 				<h:outputText rendered="#{doDelAddress.addressType eq null}"
-					value="#{doDelAddress.pmAddress.address1}, #{doDelAddress.pmAddress.address2}, #{doDelAddress.pmAddress.address3}, #{doDelAddress.pmAddress.address4}" />
+					value="#{createDOBackingBean.getFullAddress(doDelAddress.pmAddress)}" />
 			</p:column>
 			<p:column style="width:2%">
 				<h:outputText value="Delivery Start / End" />
 				<p:spacer width="4" />
-				<p:inputText size="7" disabled="true" />
+				<p:inputText size="7" disabled="true" value="#{doDelAddress.startDate}" >
+					<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				</p:inputText>
 				<p:spacer width="4" />
-				<p:inputText size="7" disabled="true" />
+				<p:inputText size="7" disabled="true" value="#{doDelAddress.endDate}" >
+					<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				</p:inputText>
 			</p:column>
 			<p:column>
-				<h:outputText value="* Supplier DO.No." />
+				<h:outputText value="Supplier DO. No." />
 				<p:spacer width="4" />
-				<p:inputText size="9" value="#{createDOBackingBean.managedBean.supplierDoRef}"></p:inputText>
+				<p:inputText size="9" value="#{doDelAddress.flTempDoAddr.supplierDoRef}"></p:inputText>
 				<p:commandLink oncomplete="addRemarks.show();"
 					action="#{fulfilmentBackingBean.openAttachmentPage(doDelAddress)}"
 					update=":form:addRemarmAttachmentDialog">
+					<f:setPropertyActionListener target="#{createDOBackingBean.managedBean.selectedDelAddr}" value="#{doDelAddress}" />
 					<p:graphicImage library="ep/images/design" name="attach.png"
 						value="/resources/ep/images/design/attach.png"
 						title="Remark and Attachment" />
@@ -49,10 +54,6 @@
 					value="#{doDelAddress.flFulfilmentItemAddr}" lazy="true"
 					rowIndexVar="index" rowKey="#{flItem}"
 					styleClass="itemsSelectedPanel show-column-names">
-					<p:column headerText="Item Code" style="white-space:normal;" >
-						<h:outputText
-							value="#{doItems.scRequestItem.cmItem.extensionCode}" />
-					</p:column>
 					<p:column headerText="Item Name" style="white-space:normal;" >
 						<h:outputText value="#{doItems.scRequestItem.itemName}"
 							rendered="#{createDOBackingBean.managedBean.docType eq 'PR'}" />
@@ -84,7 +85,7 @@
 								listener="#{createDOBackingBean.retrieveDelAmount(doItems)}" />
 							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, doItems.scRequestItem.uom.uomCode)}" />	
 						</p:inputText>   
-						<h:outputText value="#{doItems.deliveredAmt}" size="5" rendered="#{createDOBackingBean.managedBean.docProcess eq 'DO'}">
+						<h:outputText value="#{doItems.deliveredQty}" size="5" rendered="#{createDOBackingBean.managedBean.docProcess eq 'DO'}">
 							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, doItems.scRequestItem.uom.uomCode)}" />
 						</h:outputText>
 						<p:inputText value="#{doItems.deliveredQty}" size="5" styleClass="colFloatRight"
@@ -105,15 +106,15 @@
 						<h:panelGroup id="delAmountTxt">
 							<h:outputText value="#{doItems.deliveredAmt}" disabled="true"
 								rendered="#{doItems.itemType.parameterCode eq ParameterConst.itemTypeProduct}">
-								<f:convertNumber pattern="#,#00.00" />
+								<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 							</h:outputText>
 							<p:inputText value="#{doItems.deliveredAmt}" size="5"
 								rendered="#{doItems.itemType.parameterCode eq ParameterConst.itemTypeService}">
-								<f:convertNumber pattern="#,#00.00" />
+								<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 							</p:inputText>
 							<h:outputText value="#{doItems.deliveredAmt}" size="5"
 								rendered="#{createDOBackingBean.managedBean.docType eq 'CR'}">
-								<f:convertNumber pattern="#,#00.00" />
+								<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 							</h:outputText>
 
 						</h:panelGroup>
@@ -128,6 +129,11 @@
 							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, doItems.scRequestItem.uom.uomCode)}" />
 						</h:outputText>						
 					</p:column>
+					<p:column headerText="Received &lt;br /&gt; Amt.(RM)" style="text-align:right" >
+						<h:outputText value="#{doItems.receivedAmt}" >
+							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</h:outputText>	
+					</p:column>					
 					<p:column headerText="Rejected &lt;br /&gt; Qty." style="text-align:right">
 						<h:outputText value="#{doItems.receivedQty}" >
 							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, doItems.scRequestItem.uom.uomCode)}" />
@@ -141,23 +147,29 @@
 	</p:panel>
 	<p:dialog id="addRemarmAttachmentDialog" header="Remarks"
 		widgetVar="addRemarks" showEffect="fade" hideEffect="fade"
-		modal="true" height="450" width="900" resizable="false">
+		modal="true" height="350" width="900" resizable="false">
 		<table>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.address']}" />
+				<td valign="top"><p:outputLabel value="#{lbl['lbl.fl.delivery.address']}" />
 				</td>
-				<td><p:inputTextarea cols="50" rows="6"
-						style=" margin-bottom:5px;" disabled="true" /></td>
+				<td>
+					<p:inputTextarea cols="50" rows="3" style=" margin-bottom:5px;" disabled="true" rendered="#{createDOBackingBean.managedBean.selectedDelAddr.addressType !=null}"
+						value="#{createDOBackingBean.getFullAddress(createDOBackingBean.managedBean.selectedDelAddr.addressType.pmAddress)}" />
+					<p:inputTextarea cols="50" rows="3" style=" margin-bottom:5px;" disabled="true" rendered="#{createDOBackingBean.managedBean.selectedDelAddr.addressType eq null}"
+						value="#{createDOBackingBean.getFullAddress(createDOBackingBean.managedBean.selectedDelAddr.pmAddress)}" />
+				</td>					
 			</tr>
 		</table>
 		<p:panel header="#{lbl['lbl.fl.remark.attachment']}" toggleable="true">
 			<table style="width: 100%">
 				<tr>
 					<ui:param name="deliverAddress" value="#{doDelAddress}"></ui:param>
-					<td width="50%" valign="top"><ui:include
-							src="/xhtml/fl/shared/remark.xhtml" /></td>
-					<td width="50%" valign="top"><ui:include
-							src="/xhtml/fl/shared/attachment.xhtml" /></td>
+					<td width="50%" valign="top">
+						<ui:include	src="/xhtml/fl/shared/remark.xhtml" />
+					</td>
+					<td width="50%" valign="top">
+						<ui:include src="/xhtml/fl/shared/attachment.xhtml" />
+					</td>
 				</tr>
 			</table>
 		</p:panel>
