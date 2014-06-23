@@ -97,6 +97,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private CtContract ctContract = new CtContract();
 	private List <CtContract> contractList;
 	private CtContract selectedContract;
+	private TreeNode contractListTree;
 
 	//getSI
 	private FlShippingInstr shippingInstr;
@@ -1583,6 +1584,22 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setPmUser(PmUser pmUser) {
 		this.pmUser = pmUser;
+	}
+
+
+	/**
+	 * @return the contractListTree
+	 */
+	public TreeNode getContractListTree() {
+		return contractListTree;
+	}
+
+
+	/**
+	 * @param contractListTree the contractListTree to set
+	 */
+	public void setContractListTree(TreeNode contractListTree) {
+		this.contractListTree = contractListTree;
 	}
 
 

@@ -32,12 +32,14 @@
 			</p:column>
 			<p:column headerText="Start Effective">
 				<h:outputText value="#{data.startEffective}">
-					<f:convertDateTime type="date" pattern="MMM-yyyy" />
+					<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</h:outputText>
 			</p:column>
 			<p:column headerText="End Effective">
 				<h:outputText value="#{data.endEffective}" >
-				<f:convertDateTime type="date" pattern="MMM-yyyy" />
+			<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</h:outputText>
 			</p:column>
 			<p:column headerText="Action">
@@ -49,7 +51,65 @@
 				</p:commandLink>
 
 			</p:column>
+			
 		</p:dataTable>
+		
+		
+		<p:treeTable id="ctListTree" var="contractTreeNode"
+			styleClass="chargeLineChange"
+			value="#{contractRequestBackingBean.managedBean.contractListTree}">
+			<p:column headerText="Contract No">
+				<h:outputText
+					value="#{contractTreeNode.contractNo}" />
+			</p:column>
+			<p:column headerText="Schedule/Phase No">
+				<h:outputText value="#{contractTreeNode.scheduleNo}" />
+			</p:column>
+			<p:column headerText="Circular">
+				<h:outputText value="#{contractTreeNode.circularNo}" />
+			</p:column>
+			<p:column headerText="Period(Start))" >
+				<h:outputText value="#{contractTreeNode.startEffective}" >
+				<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				</h:outputText>
+			</p:column>
+			<p:column headerText="Period(End))">
+				<h:outputText value="#{contractTreeNode.endEffective}" >
+				<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				</h:outputText>
+			</p:column>
+			<p:column headerText="Fulfilment Type" >
+				<h:outputText value="#{contractRequestBackingBean.getParameterDesc(contractTreeNode.fulfilmentType)}" >
+				</h:outputText>
+			</p:column>
+			<p:column headerText="Contract type" >
+				<h:outputText value="#{contractRequestBackingBean.getParameterDesc(contractTreeNode.contractType)}" >
+				</h:outputText>
+			</p:column>
+			<p:column headerText="Business Reg. No." >
+				<h:outputText value="#{contractTreeNode.businessRegNo}" >
+				</h:outputText>
+			</p:column>
+			<p:column headerText="MOF No." >
+				<h:outputText value="#{contractTreeNode.mofNo}" >
+				</h:outputText>
+			</p:column>
+			<p:column headerText="Supplier Name" >
+				<h:outputText value="#{contractTreeNode.supplierName}" >
+				</h:outputText>
+			</p:column>
+			<p:column headerText="Action">
+				<p:commandLink id="crBasepageLink1" rendered="#{contractTreeNode.fulfilmentType.parameterCode ne ParameterConst.fulfilmentTypeScheduled}"
+					onclick="procure([{name:'contractId',value:'#{contractTreeNode.contractId}'},{name:'scheduleNo',value:'#{contractTreeNode.scheduleNo}'}])">
+					<p:graphicImage library="ep/images/design" name="revise.png"
+						value="/resources/ep/images/design/revise.png"
+						title="Contract Request" />
+				</p:commandLink>
+			</p:column>
+		</p:treeTable>
+		
 		<p:remoteCommand name="procure" action="#{contractRequestBackingBean.procureContract}" />
 	</ui:define>
 </ui:composition>

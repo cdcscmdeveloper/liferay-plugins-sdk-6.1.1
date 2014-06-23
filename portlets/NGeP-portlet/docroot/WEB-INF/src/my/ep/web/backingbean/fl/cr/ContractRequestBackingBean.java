@@ -75,6 +75,7 @@ import my.ep.exception.EpException;
 import my.ep.jaxb.fl.codata.FLContractOrderDataType;
 import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.ct.CtContract;
+import my.ep.persistence.entity.ct.VCtActiveContract;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.CtAgencyAddress;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
@@ -114,9 +115,11 @@ import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.fl.cr.ContractRequestManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.vo.CtActiveContractVO;
 
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
+import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.TreeNode;
 
@@ -187,14 +190,17 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			getManagedBean().getFlRequest().setFlFulfilmentItems(new ArrayList<FlFulfilmentItem>());
 		}
 		if(getManagedBean().getActiveContractList()==null) {
-			IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct", IContractSO.class);
+			IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			ContractReqDTO ctReqDTO = new ContractReqDTO();
-			List<Long> orgProfileIdList = new ArrayList<Long>();
-			//TODO please pass the correrct ptj list 
-			orgProfileIdList.add(4L);
-			ctReqDTO.setOrgProfileIdList(orgProfileIdList);			
+			UserReqDTO reqDTO = new UserReqDTO();
+			reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+			UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
+			ctReqDTO.setOrgProfileId(resDTO.getUserOrgList().get(0).getPmOrgProfile().getParentOrgProfile().getOrgProfileId());
 			ContractResDTO ctResDTO = contractSO.retrieveActiveContractList(ctReqDTO);
 			getManagedBean().setActiveContractList(ctResDTO.getActiveContractList());
+			
+			populateContractListTree();
 		}
 
 //		if (getManagedBean().getApproverModel() == null && isRequisitioner()) {
@@ -247,7 +253,10 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		getManagedBean().setTermDays("Days");
 		//get this lists for manual Address dropdowns
 		retrieveCountryList();
+		
 	}
+
+	
 
 	public String submitAction(String action) {
 		IFulfilmentRequestSO iFulfilmentRequestSO = null;
@@ -1771,5 +1780,33 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	 */
 	public void setDisPmPrgActivity(Long disPmPrgActivity) {
 		this.disPmPrgActivity = disPmPrgActivity;
+	}
+	
+	private void populateContractListTree() {
+		Map<Long, TreeNode> contractTree = new HashMap<Long, TreeNode>();
+
+		TreeNode root = getManagedBean().getContractListTree();
+		root = new DefaultTreeNode("root", null);
+		TreeNode parent = null;
+		TreeNode child = null;
+		
+		for(VCtActiveContract vCtActiveContract : getManagedBean().getActiveContractList()){
+			if(contractTree.containsKey(vCtActiveContract.getContract().getContractId())){
+				parent = contractTree.get(vCtActiveContract.getContract().getContractId());
+				child = new DefaultTreeNode(
+						new CtActiveContractVO("",vCtActiveContract.getScheduleNo(),"",vCtActiveContract.getPeriodStart(),vCtActiveContract.getPeriodEnd(),null,null,"","","",vCtActiveContract.getContract().getContractId()),parent);
+			}else{
+				parent = new DefaultTreeNode(
+						new CtActiveContractVO(vCtActiveContract.getContractNo(),"",vCtActiveContract.getCircularNo(),vCtActiveContract.getStartEffective(),vCtActiveContract.getEndEffective(),vCtActiveContract.getFulfilmentType(),vCtActiveContract.getContractType(),vCtActiveContract.getBusinessRegno(),vCtActiveContract.getMofNo(),vCtActiveContract.getSupplierName(),vCtActiveContract.getContract().getContractId()),root);
+				if(vCtActiveContract.getFulfilmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)){
+					child = new DefaultTreeNode(
+							new CtActiveContractVO("",vCtActiveContract.getScheduleNo(),"",vCtActiveContract.getPeriodStart(),vCtActiveContract.getPeriodEnd(),null,null,"","","",vCtActiveContract.getContract().getContractId()),parent);
+				}
+				
+				contractTree.put(vCtActiveContract.getContract().getContractId(),parent);
+			}
+		}
+		getManagedBean().setContractListTree(root);
+		
 	}
 }
