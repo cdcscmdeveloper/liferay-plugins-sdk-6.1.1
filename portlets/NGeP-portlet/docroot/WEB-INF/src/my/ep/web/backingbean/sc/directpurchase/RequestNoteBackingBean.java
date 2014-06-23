@@ -136,11 +136,12 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 	 * saveAction method to save request note details
 	 * return String
 	 */
-	public String saveAction() {
+	public String saveAction(String outcome) {
 		IStatusSO iStatusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 		IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
 		ScRequestNote requestNote = getManagedBean().getRequestNote();
+		RequestNoteResDTO requestNoteResDTO = null;
     try {
 		if (this.getManagedBean().getRequestNoteDtls() != null && getManagedBean().getRequestNoteDtls().size() > 0) {
 			requestNote.setRequestNoteDtls(this.getManagedBean().getRequestNoteDtls());
@@ -168,7 +169,10 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		//requestNote.setRemarks(initializeRemarks(requestNote));
 		requestNoteReqDTO.setRequestNote(requestNote);
 		requestNote.setSourceMethod(ParameterConst.REQUEST_NOTE_SQ);
-	    requestNote.setPmOrgProfile(ptjNameEvent());
+		
+		if(requestNote.getPmOrgProfile().getOrgProfileId() == null){
+			requestNote.setPmOrgProfile(ptjNameEvent());
+		}
 	    
 	    if(requestNote.getRemarks() != null ){
 	    	for (int i = 0; i < requestNote.getRemarks().size(); i++) {
@@ -179,14 +183,21 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 	    	} 
 	    }
 	    
-		requestNoteReqDTO.setRequestNote(requestNote);
-		// when save need to set submit in the reqDTO to false
-		requestNoteReqDTO.setSubmit(Boolean.FALSE);
-		FacesScopes face = new FacesScopes();
+	    requestNoteReqDTO.setRequestNote(requestNote);
+	    FacesScopes face = new FacesScopes();
 		String token = face.getBPMAuthenticationCtxToken();
-		requestNoteReqDTO.setToken(token);
-		requestNoteReqDTO.setTaskId(getManagedBean().getTaskId());
-		RequestNoteResDTO requestNoteResDTO = directPurchaseSO.saveRequestNote(requestNoteReqDTO);
+	    if(outcome.isEmpty()){
+	    	requestNoteReqDTO.setSubmit(Boolean.FALSE);
+			requestNoteReqDTO.setToken(token);
+			requestNoteReqDTO.setTaskId(getManagedBean().getTaskId());
+		    requestNoteResDTO = directPurchaseSO.saveRequestNote(requestNoteReqDTO);
+		    
+	     } else if(outcome.equalsIgnoreCase("Save")){
+	    	 requestNoteReqDTO.setTaskId(getManagedBean().getTaskId());
+	    	 requestNoteReqDTO.setToken(token);
+	    	 requestNoteReqDTO.setOutcome("");
+	    	 requestNoteResDTO = directPurchaseSO.updateRequestNote(requestNoteReqDTO);
+	     }
 		if (requestNoteResDTO.isSuccessful()) {
 			ScRequestNote scRequestNote = requestNoteResDTO.getRequestNoteDetail();
 			successMessage(MessageConst.INFO_700025,ParameterTypeConst.DOCUMENT_TYPES,
@@ -249,7 +260,6 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 
 			// Remarks
 			requestNote.setRemarks(initializeRemarks(requestNote));
-			//requestNoteReqDTO.setRequestNote(requestNote);
 			if (getManagedBean().getSourceMethod().equalsIgnoreCase(ParameterConst.METHOD_SQ)) {
 				requestNote.setSourceMethod(ParameterConst.REQUEST_NOTE_SQ);
 			} else {
@@ -878,7 +888,12 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 	    if(cmSupplierItem.getLeadTime() != null){
 	    	 scRequestNoteDtl.setDeliverTerm(cmSupplierItem.getLeadTime().intValue());
 	    }
-
+        
+	    // validating suppliers
+	    RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
+	    requestNoteReqDTO.setRequestNoteDtl(scRequestNoteDtl);
+	    directPurchaseSO.validateNumberOfSupplier(requestNoteReqDTO);
+	    
 		//TODO have to compare duplicate items in request note
 		if (getManagedBean().getRequestNoteDtls().isEmpty()){
 			getManagedBean().getRequestNoteDtls().add(scRequestNoteDtl);

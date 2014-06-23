@@ -602,7 +602,6 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 					requestNoteBackingBean.getManagedBean().setRequestSupplierItem(requestNoteDtls.get(0).getScRequestSupplierItem());
 				}
 				
-				initializeRemarks(prInquiry);
 				requestNoteBackingBean.getManagedBean().setRequestSupplierItem(requestNote.getRequestNoteDtls().get(0).getScRequestSupplierItem());
 				IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 				FacesScopes facesScopes = new FacesScopes();
@@ -618,8 +617,7 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 				requestNoteBackingBean.getManagedBean().setRequestNoteDtls(requestNoteDtls);
 				requestNoteBackingBean.getManagedBean().setSourceMethod(ParameterConst.METHOD_SC);
 				requestNoteBackingBean.getManagedBean().setTaskId(getManagedBean().getTaskId());
-				requestNoteBackingBean.getManagedBean().getRequestNote().setPmOrgProfile(getManagedBean().getPmOrgProfile());
-				requestNoteBackingBean.getManagedBean().setOrgProfile(getManagedBean().getPmOrgProfile());
+				//requestNoteBackingBean.getManagedBean().getRequestNote().setPmOrgProfile(getManagedBean().getPmOrgProfile());
 				requestNoteBackingBean.getManagedBean().setOrgProfile(getManagedBean().getPmOrgProfile());
 				requestNoteBackingBean.getManagedBean().setOrgProfileId(getManagedBean().getPmOrgProfile().getOrgProfileId());
 				
@@ -677,7 +675,6 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
  public void preRenderView() {
 	 HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 	 HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
-	 IStatusSO iStatusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 	 String taskId = originalServletRequest.getParameter("taskId");
 	 if (StringUtils.isNotBlank(taskId)) {
 		 this.getManagedBean().setTaskId(taskId);
@@ -694,49 +691,46 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 		 Object obj = res.getPojo();
 		 SCDirectPurchaseDataType directPurchaseDataType = (SCDirectPurchaseDataType) obj;
 		 String	dpMode	=	directPurchaseDataType.getDpMode();
-		 if(ParameterConst.REQUEST_NOTE_PRI.equalsIgnoreCase(dpMode)){ 
-				//Purchase Inquiry
-				IPrInquirySO prInquirySO = (IPrInquirySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPrInquirySO.class);
-				PrInquiryReqDTO prInquiryReqDTO = new PrInquiryReqDTO();
-				Long prInquiryID = Long.valueOf(directPurchaseDataType.getDpId());
-				prInquiryReqDTO.setPrInquiryId(prInquiryID);
-				prInquiryReqDTO.setFetchSubEntity(true);
-				PrInquiryResDTO prInquiryResDTO = prInquirySO.getPrInquiry(prInquiryReqDTO);
-		        ScPrInquiry  prInquiry = prInquiryResDTO.getPrInquiryDetail();
-		        // remarks
-		        prInquiry.setRemarks(initializeRemarks(prInquiry));
-		        
-				if(prInquiry.getScRequestSupplierItems() != null && prInquiry.getScRequestSupplierItems().size()>0 ){
-					ScRequestSupplierItem requestSupplierItem = prInquiry.getScRequestSupplierItems().get(0);
-					ScSupplierItemPrice itemPrice =requestSupplierItem.getSupplierItemPrices().get(0);
-					ScRequestNoteDtl requestNoteDtl = requestSupplierItem.getScRequestNoteDtl().get(0);
-					requestSupplierItem.setSupplierItemPrice(itemPrice);
-					getManagedBean().setPmOrgProfile(requestSupplierItem.getRequestNoteItem().getRequestNote().getPmOrgProfile());
-					getManagedBean().setSelectedPtj(requestSupplierItem.getRequestNoteItem().getRequestNote().getPmOrgProfile());
-					getManagedBean().setRequestNoteDtl(requestNoteDtl);
-					prInquiry.setRequestSupplierItem(requestSupplierItem);
-					prInquiry.setDayToResponse(ParameterConst.PIQ_RESP_DAYS); // by default days
-					
-					List<String> priceTypes= new ArrayList<String>();
-					priceTypes.add(itemPrice.getPricing().getPricingType());
-					getManagedBean().setPriceType(itemPrice.getPricing().getPricingType());
-					getManagedBean().setPriceTypes(getPriceTypeDropdownValues(ParameterTypeConst.PRICE_TYPE, priceTypes));
-				}
-				getManagedBean().setTaskId(taskId);
-				getManagedBean().setProcessName(res.getProcessName());
-				getManagedBean().setOutComes(res.getAction());
-				getManagedBean().setStockAvailable(prInquiry.getIsStockAvailable());
-				getManagedBean().setScPrInquiry(prInquiry);
-				initializeRemarks(prInquiry);
-				//initialInformation(new ScRequestNote());
-				getCurrentStatus(res.getDocStatus().longValue()); 
-			    FacesContext fc = FacesContext.getCurrentInstance();
-				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "prInquiryMain");
-			
-			}
+		 //Purchase Inquiry
+		 IPrInquirySO prInquirySO = (IPrInquirySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPrInquirySO.class);
+		 PrInquiryReqDTO prInquiryReqDTO = new PrInquiryReqDTO();
+		 Long prInquiryID = Long.valueOf(directPurchaseDataType.getDpId());
+		 prInquiryReqDTO.setPrInquiryId(prInquiryID);
+		 prInquiryReqDTO.setFetchSubEntity(true);
+		 PrInquiryResDTO prInquiryResDTO = prInquirySO.getPrInquiry(prInquiryReqDTO);
+		 ScPrInquiry  prInquiry = prInquiryResDTO.getPrInquiryDetail();
+		 // remarks
+		 prInquiry.setRemarks(initializeRemarks(prInquiry));
+
+		 if(prInquiry.getScRequestSupplierItems() != null && prInquiry.getScRequestSupplierItems().size()>0 ){
+			 ScRequestSupplierItem requestSupplierItem = prInquiry.getScRequestSupplierItems().get(0);
+			 ScSupplierItemPrice itemPrice =requestSupplierItem.getSupplierItemPrices().get(0);
+			 ScRequestNoteDtl requestNoteDtl = requestSupplierItem.getScRequestNoteDtl().get(0);
+			 requestSupplierItem.setSupplierItemPrice(itemPrice);
+			 getManagedBean().setPmOrgProfile(requestSupplierItem.getRequestNoteItem().getRequestNote().getPmOrgProfile());
+			 getManagedBean().setSelectedPtj(requestSupplierItem.getRequestNoteItem().getRequestNote().getPmOrgProfile());
+			 getManagedBean().setRequestNoteDtl(requestNoteDtl);
+			 prInquiry.setRequestSupplierItem(requestSupplierItem);
+			 prInquiry.setDayToResponse(ParameterConst.PIQ_RESP_DAYS); // by default days
+
+			 List<String> priceTypes= new ArrayList<String>();
+			 priceTypes.add(itemPrice.getPricing().getPricingType());
+			 getManagedBean().setPriceType(itemPrice.getPricing().getPricingType());
+			 getManagedBean().setPriceTypes(getPriceTypeDropdownValues(ParameterTypeConst.PRICE_TYPE, priceTypes));
+		 }
+		 getManagedBean().setTaskId(taskId);
+		 getManagedBean().setProcessName(res.getProcessName());
+		 getManagedBean().setOutComes(res.getAction());
+		 getManagedBean().setStockAvailable(prInquiry.getIsStockAvailable());
+		 getManagedBean().setScPrInquiry(prInquiry);
+		 initializeRemarks(prInquiry);
+		 //initialInformation(new ScRequestNote());
+		 getCurrentStatus(res.getDocStatus().longValue()); 
+		 FacesContext fc = FacesContext.getCurrentInstance();
+		 fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "prInquiryMain");
 	 }	
  }
-	
+
 	/**
 	 * Page navigation to catalogue search page in Purchase inquiry
 	 */
