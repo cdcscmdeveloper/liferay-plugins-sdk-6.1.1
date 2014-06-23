@@ -105,7 +105,7 @@
 			<p:column
 				headerText="#{lbl['lbl.sc.spec.circular.bo.circular.type']}"
 				style="width:15%">
-				<h:outputText value="#{circular.ctCircular.circularType}"></h:outputText>
+				<h:outputText value="#{specificationBackingBean.getParameterDesc(ParameterTypeConst.documentTypes, circular.docType)}"></h:outputText>
 			</p:column>
 
 
@@ -131,7 +131,7 @@
 	</p:panel>
 	<h:panelGroup id="panelItemGroupList">
 		<ui:fragment
-			rendered="#{specificationBackingBean.managedBean.circularType eq 'PCR'}">
+			rendered="#{specificationBackingBean.managedBean.circularType eq 'PQ'}">
 			<p:panel header="#{lbl['lbl.sc.spec.panel.item.list']}"
 				toggleable="true">
 
