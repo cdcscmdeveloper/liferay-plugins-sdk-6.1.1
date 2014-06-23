@@ -193,7 +193,7 @@ public class FulfilmentBackingBean extends
 	}
 
 	public void openAttachmentPage(FlDeliveryAddress fldelAddress) {
-		if(fldelAddress.getRemarkList().isEmpty()) {
+		if(fldelAddress.getRemarkList().isEmpty() || !compareUserName(fldelAddress.getRemarkList().get(0).getUserId())) {
 			FacesScopes facesScopes = new FacesScopes();
 			
 			FlRemark flRemark = new FlRemark();
@@ -204,11 +204,11 @@ public class FulfilmentBackingBean extends
 			flRemark.setUserId(facesScopes.getUserSessionBean().getLoginId());
 			flRemark.setCreatedUsername(facesScopes.getUserSessionBean().getUserName());
 			
-			List<FlRemark> remarks = new ArrayList<FlRemark>();
-			remarks.add(flRemark);
-			fldelAddress.setRemarkList(remarks);
+			getManagedBean().setRemarkList(fldelAddress.getRemarkList());
+			getManagedBean().getRemarkList().add(0, flRemark);
+		} else {
+			getManagedBean().setRemarkList(fldelAddress.getRemarkList());
 		}
-		getManagedBean().setRemarkList(fldelAddress.getRemarkList());
 		getManagedBean().setAttachmentList(fldelAddress.getAttachmentList());
 	}
 
