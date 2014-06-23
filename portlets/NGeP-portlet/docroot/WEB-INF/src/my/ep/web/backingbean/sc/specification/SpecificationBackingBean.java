@@ -8072,7 +8072,17 @@ public class SpecificationBackingBean extends
 
 		FacesContext fc = FacesContext.getCurrentInstance();
 		String taskName = res.getTaskName();
-		if (SCProcessNameConst.PREPARE_SPECIFICATION.equalsIgnoreCase(taskName)) {
+		this.getManagedBean().setTaskId(taskId);
+		this.getManagedBean().setTaskName(taskName);
+		if (SCProcessNameConst.PREPARE_SPECIFICATION.equalsIgnoreCase(taskName)
+				|| SCProcessNameConst.CONSOLIDATE_SPECIFICATION
+						.equalsIgnoreCase(taskName)
+				|| SCProcessNameConst.SPECIFICATION_APPROVAL
+						.equalsIgnoreCase(taskName)) {
+			if (SCProcessNameConst.SPECIFICATION_APPROVAL
+					.equalsIgnoreCase(taskName)) {
+				this.getManagedBean().setActiveIndex(4);
+			}
 			ScQt scQt = this.getManagedBean().getScQt();
 			if (null == scQt.getEstimatedAmount()) {
 				this.getManagedBean().getScQt().setPanel(true);
@@ -8097,31 +8107,6 @@ public class SpecificationBackingBean extends
 								QTConstants.BO_SPEC_CREATION_PAGE);
 			}
 
-		} else if (SCProcessNameConst.CONSOLIDATE_SPECIFICATION
-				.equalsIgnoreCase(taskName)) {
-			ScQt scQt = this.getManagedBean().getScQt();
-			if (null == scQt.getEstimatedAmount()) {
-				this.getManagedBean().getScQt().setPanel(true);
-				this.getManagedBean().getScQt().setOpenFor("A");
-				this.getManagedBean().getScQt()
-						.setPmProcurementCategory(new PmParameter());
-			}
-
-			if (null == scQt.getZoneLocationLevel()) {
-				this.getManagedBean().getScQt()
-						.setZoneLocationLevel(new PmParameter());
-			}
-			if (this.getManagedBean().getScQt().isPanel()) {
-				fc.getApplication()
-						.getNavigationHandler()
-						.handleNavigation(fc, null,
-								QTConstants.BUSINESS_OWNER_SPEC_PREPARATION);
-			} else {
-				fc.getApplication()
-						.getNavigationHandler()
-						.handleNavigation(fc, null,
-								QTConstants.BO_SPEC_CREATION_PAGE);
-			}
 		} else {
 			if (this.getManagedBean().getScQt().getFulfilmentType() == null) {
 
@@ -8131,7 +8116,7 @@ public class SpecificationBackingBean extends
 			fc.getApplication()
 					.getNavigationHandler()
 					.handleNavigation(fc, null,
-							QTConstants.SPECIFICICATON_PREPARATION);
+							QTConstants.SPECIFICICATON_COMM_PREPARATION);
 		}
 
 	}

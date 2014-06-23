@@ -321,6 +321,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	
 	//Added By Sagar.. for Delete funcationality..
 	private TreeNode selectedTreeNode;
+	private String taskName;
 
 	public SpecificationManagedBean() {
 		// deliveryLocBean.add(new BriefingZoneBean(1,"South",
@@ -3643,6 +3644,14 @@ public class SpecificationManagedBean extends BaseManagedBean {
 
 	public void setSelectedTreeNode(TreeNode selectedTreeNode) {
 		this.selectedTreeNode = selectedTreeNode;
+	}
+
+	public String getTaskName() {
+		return taskName;
+	}
+
+	public void setTaskName(String taskName) {
+		this.taskName = taskName;
 	}
 
 	

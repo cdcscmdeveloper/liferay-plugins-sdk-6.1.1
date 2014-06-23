@@ -93,7 +93,7 @@ public interface QTConstants {
 	
 	//S2 bpm page redirect urls
 	public static final String BUSINESS_OWNER_SPEC_PREPARATION="/xhtml/sc/specification/specificationview.xhtml";
-	public static final String SPECIFICICATON_PREPARATION="/xhtml/sc/specification/specificationCommitteeView.xhtml";
+	public static final String SPECIFICICATON_COMM_PREPARATION="/xhtml/sc/specification/specificationCommitteeView.xhtml";
 	public static final String BO_SPEC_CREATION_PAGE="/xhtml/sc/specification/specificationCreation.xhtml";
 	
 	//Constants for TreeNode construction..
