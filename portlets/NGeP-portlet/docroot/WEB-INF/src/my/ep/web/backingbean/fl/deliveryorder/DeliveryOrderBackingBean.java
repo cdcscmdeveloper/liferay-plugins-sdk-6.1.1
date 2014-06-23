@@ -30,10 +30,10 @@ import my.ep.persistence.entity.fl.order.FlTempDoItem;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.backingbean.fl.FulfilmentBackingBean;
-import my.ep.web.constant.BpmOutcomeConst;
+import my.ep.constant.BpmOutcomeConst;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.fl.creatdo.DeliveryOrderManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -80,10 +80,22 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		}
 	}
 
+	private String getUserRole() {		
+		if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())) 
+			return RoleCode.MOF_SUPPLIER_ADMIN.value();
+		else if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value()))
+			return RoleCode.MOF_SUPPLIER_USER.value();
+		else if(getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value()))
+			return RoleCode.BASIC_SUPPLIER_ADMIN.value();
+		else if(getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value()))
+			return RoleCode.BASIC_SUPPLIER_USER.value();
+		else 
+			return null;
+	}
+	
 	public String createDeliveryOrder(String action) {
 		String token = getFacesScopes().getBPMAuthenticationCtxToken();
 		IDeliveryOrderSO deliveryOrderSO = null;
-		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		try {
 			String actionName = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("actionName");
 			Long flOrderId;
@@ -94,65 +106,59 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 			}
 			
 			// do validation for selected address have items with delmount and delQty or not....
-			checkItemsWithDoAddress(actionName);
+			if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
+				checkItemsWithDoAddress(actionName);
+			}
 			
-			Long fulfilmentOrderId = Long.valueOf(flOrderId);
-			log.info("fulfilmentOrderId::: "+fulfilmentOrderId);
-			String  statusId = this.getManagedBean().getStatusId();
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			FulfilmentResDTO resDTO = new FulfilmentResDTO();
 			
-			for(FlDeliveryAddress flDeliveryAddress:getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
-				/*flDeliveryAddress.getAttachmentList().size();
-				if(!flDeliveryAddress.getAttachmentList().isEmpty()){
-					flDeliveryAddress.getAttachmentList().get(0).getFileName();
-				}*/
-				FlDeliveryOrder flDeliveryOrder = new FlDeliveryOrder();
-				if(null == getManagedBean().getSupplierDoRef()){
-					//TODO
-					// do valudation
-				}else{
-					flDeliveryOrder.setSupplierDoRef(getManagedBean().getSupplierDoRef());
+			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+				for(FlDeliveryAddress flDeliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
+					if(flDeliveryAddress.getFlTempDoAddr().isSelected()) {
+						FlDeliveryOrder flDeliveryOrder = new FlDeliveryOrder();
+						flDeliveryOrder.setSupplierDoRef(flDeliveryAddress.getFlTempDoAddr().getSupplierDoRef());
+						flDeliveryOrder.setEstStartDate(new Timestamp(System.currentTimeMillis()));
+						flDeliveryOrder.setFlRequest(getManagedBean().getFulfilmentRequest());
+						flDeliveryOrder.setFlFulfilmentOrder(getManagedBean().getFulfilmentOrder());
+						flDeliveryOrder.setFlDeliveryAddress(flDeliveryAddress);
+						flDeliveryOrder.setRemarkList(flDeliveryAddress.getRemarkList());
+						flDeliveryOrder.setAttachmentList(flDeliveryAddress.getAttachmentList());
+						
+						//FlDelOrderItem
+						ArrayList<FlDelOrderItem> delOrderList= new ArrayList<FlDelOrderItem>();
+						for(FlFulfilmentItemAddr itemAddress : flDeliveryAddress.getFlFulfilmentItemAddr()){
+							FlDelOrderItem flDelOrderItem = new FlDelOrderItem();
+							flDelOrderItem.setFlDeliveryOrder(flDeliveryOrder);
+							flDelOrderItem.setFlFulfilmentItemAddr(itemAddress);
+							flDelOrderItem.setFlItem(itemAddress.getFlFulfilmentItem());
+							flDelOrderItem.setDeliveredQty(itemAddress.getDeliveredQty());
+							flDelOrderItem.setDeliveredAmt(itemAddress.getDeliveredAmt());
+							delOrderList.add(flDelOrderItem);
+						}
+						flDeliveryOrder.setFlDelOrderItem(delOrderList);
+						reqDTO.getDeliveryOrdersList().add(flDeliveryOrder);
+					}
 				}
-				
-				flDeliveryOrder.setEstStartDate(new Timestamp(System.currentTimeMillis()));
-				flDeliveryOrder.setFlRequest(getManagedBean().getFulfilmentRequest());
-				flDeliveryOrder.setFlDeliveryAddress(flDeliveryAddress);
-				//FlDelOrderItem
-				ArrayList<FlDelOrderItem> delOrderList= new ArrayList<FlDelOrderItem>();
-				for(FlFulfilmentItemAddr itemAddress:flDeliveryAddress.getFlFulfilmentItemAddr()){
-					FlDelOrderItem flDelOrderItem= new FlDelOrderItem();
-					flDelOrderItem.setDeliveredAmt(itemAddress.getDeliveredAmt());
-					flDelOrderItem.setDeliveredQty(itemAddress.getDeliveredQty());
-					flDelOrderItem.setFlDeliveryOrder(flDeliveryOrder);
-					flDelOrderItem.setFlFulfilmentItemAddr(itemAddress);
-					flDelOrderItem.setFlItem(itemAddress.getFlFulfilmentItem());
-					delOrderList.add(flDelOrderItem);
-					
+			} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
+				for(FlDeliveryAddress flDeliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
+					flDeliveryAddress.getFlTempDoAddr().setFlDeliveryAddress(flDeliveryAddress);
+					for(FlFulfilmentItemAddr itemAddress : flDeliveryAddress.getFlFulfilmentItemAddr()){
+						itemAddress.getFlTempDoItem().setFlFulfilmentItemAddr(itemAddress);
+						itemAddress.getFlTempDoItem().setDeliveryQty(itemAddress.getDeliveredQty());
+						itemAddress.getFlTempDoItem().setDeliveryAmt(itemAddress.getDeliveredAmt());
+					}
 				}
-				flDeliveryOrder.setFlDelOrderItem(delOrderList);
-				reqDTO.getDeliveryOrdersList().add(flDeliveryOrder);
-				
-				reqDTO.setFlAttachmentList(flDeliveryAddress.getAttachmentList());
-				if(!flDeliveryAddress.getRemarkList().isEmpty()){
-					reqDTO.setFlRemark(flDeliveryAddress.getRemarkList().get(0));
-				}
-				
-				
 			}
 			
-			deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject("fl",IDeliveryOrderSO.class);
-			/*if(getManagedBean().getDocType().equalsIgnoreCase("CR")){
-				System.out.println("--CR calculateDelAmt--");
-				calculateDelAmt(flDeliveryOrder);
-			}*/
+			deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IDeliveryOrderSO.class);
 			
-			reqDTO.setFulfilmentOrderId(fulfilmentOrderId);
-			reqDTO.setStatusId(statusId);
-			//reqDTO.setFlDeliveryOrder(flDeliveryOrder);
+			reqDTO.setFulfilmentOrderId(Long.valueOf(flOrderId));
 			reqDTO.setFulfilmentOrder(getManagedBean().getFulfilmentOrder());
+			reqDTO.setFlFulfilmentRequest(getManagedBean().getFulfilmentRequest());
 			reqDTO.setOutcome(action);
 			reqDTO.setToken(token);
+			reqDTO.setUserRole(getUserRole());
 			if("UPDATE".equalsIgnoreCase(action)){
 				reqDTO.setPmUser(getManagedBean().getPmUser());
 				if(null == getManagedBean().getSupplierDoRef()){
@@ -169,38 +175,52 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 			}
 			if(resDTO.isSuccessful()) {
 				String messageId = MessageConst.INFO_700043;
-				/*
-				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
-					messageId = MessageConst.INFO_700043;
-				} else if(action.equalsIgnoreCase("UPDATE")) {
-					messageId = MessageConst.INFO_700047;
-				} */
+				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
+					messageId = MessageConst.INFO_700004;
+				}
 				
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
-						FacesMessage.SEVERITY_INFO, 
-						null,
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,	null,
 						MessageUtils.getMessage(messageId, 
-								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_REQUEST), getManagedBean().getFulfilmentOrder().getDocNo()}, 
+								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_DELIVERY_ORDER), getManagedBean().getFulfilmentOrder().getDocNo()}, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, 
 								new FacesScopes().getUserLocale())));
 			}
 			if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
 				renewSesionObject();
 				return CommonUIConst.ACKNOWLEDGE_PAGE;
-			}	
-			else {
-				throw new EpException("Failed.");
+			} else {
+				setDeliveryOrder(resDTO);
 			}
-			
-		} catch (Exception e) {
-			log.error("Exception>>", e);
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		} finally {
 			deliveryOrderSO = null;
 		}
 		return null;
 	}
+	
+	private void setDeliveryOrder(FulfilmentResDTO resDTO) {
+		FlFulfilmentOrder flOrder = resDTO.getFlOrder();
+		
+		// initialize FlTempDoAddr if null
+		for(FlDeliveryAddress deliveryAddress : flOrder.getFlFulfilmentRequest().getFlDeliveryAddresses()) {
+			if(deliveryAddress.getFlTempDoAddr()==null) {
+				deliveryAddress.setFlTempDoAddr(new FlTempDoAddr());
+			}
+			for(FlFulfilmentItemAddr itemAddr : deliveryAddress.getFlFulfilmentItemAddr()) {
+				if(itemAddr.getFlTempDoItem()==null) {
+					itemAddr.setFlTempDoItem(new FlTempDoItem());
+				} else {
+					itemAddr.setDeliveredQty(itemAddr.getFlTempDoItem().getDeliveryQty());
+					itemAddr.setDeliveredAmt(itemAddr.getFlTempDoItem().getDeliveryAmt());
+				}
+			}
+		}
+		
+		getManagedBean().setSelectedTabIndex(0);
+		getManagedBean().setFulfilmentRequest(flOrder.getFlFulfilmentRequest());
+		getManagedBean().setFulfilmentOrder(flOrder);
+		getManagedBean().setDocType(flOrder.getFlFulfilmentRequest().getDocType());
+	}
+	
 	// this method do validations for items with Delivery Address,Delivery order and Delivery Amount
 	private void checkItemsWithDoAddress(String actionName) {
 		boolean anyAddressSelected = false;
@@ -211,21 +231,29 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 			}
 		}
 		
+		double totalDeliveryQty = 0;
+		double totalDeliveryAmount = 0;
 		if(!anyAddressSelected){
-			throw new EpException(" Select Deliver Address .");
+			throw new EpException(MessageConst.ERROR_100050, new String[]{"Delivery Address"});
 		}else{
 			if(!"UPDATE".equalsIgnoreCase(actionName)){
 				for(FlDeliveryAddress selectedDelAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
 					if(selectedDelAddress.getFlTempDoAddr().isSelected()) {
-						for(FlFulfilmentItemAddr itemAddress: selectedDelAddress.getFlFulfilmentItemAddr()){
-							System.out.println("Item Name is ::: "+itemAddress.getScRequestItem().getItemType());
-							System.out.println("Doc type is ::: "+getManagedBean().getDocType());
-							itemAddress.getDeliveredQty();
-							itemAddress.getDeliveredAmt();
-							if(null==itemAddress.getDeliveredAmt()){
-								throw new EpException(" Del Qty and Del Amout is Required .");
-							}
+						if(selectedDelAddress.getFlTempDoAddr().getSupplierDoRef()==null || selectedDelAddress.getFlTempDoAddr().getSupplierDoRef().length()==0) {
+							throw new EpException(MessageConst.ERROR_100051, new String[]{"Supplier DO. No.","Delivery Address "+getFullAddress(selectedDelAddress.getPmAddress())});
 						}
+						totalDeliveryQty = 0;
+						totalDeliveryAmount = 0;
+						for(FlFulfilmentItemAddr itemAddress: selectedDelAddress.getFlFulfilmentItemAddr()){
+							totalDeliveryQty = totalDeliveryQty + itemAddress.getDeliveredQty().doubleValue();
+							totalDeliveryAmount = totalDeliveryAmount + itemAddress.getDeliveredAmt().doubleValue();
+						}
+						if(totalDeliveryQty==0) {
+							throw new EpException(MessageConst.ERROR_740008, new String[]{"Total Delivery Quantity",getFullAddress(selectedDelAddress.getPmAddress())});
+						}
+						if(totalDeliveryAmount==0) {
+							throw new EpException(MessageConst.ERROR_740008, new String[]{"Total Delivery Amount",getFullAddress(selectedDelAddress.getPmAddress())});
+						}						
 					}
 				}
 			}
@@ -278,9 +306,16 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		
 		unitPriceCal=itemAddress.getUnitPrice();
 		delQtyCal= itemAddress.getDeliveredQty();
+		
+		if(delQtyCal.add(itemAddress.getReceivedQty()).doubleValue()>itemAddress.getOrderedQty().doubleValue()) {
+			itemAddress.setDeliveredQty(new BigDecimal(0));
+			throw new EpException(MessageConst.ERROR_100032, new String[]{"Delivery Quantity","Remaining Quantity"});
+		}
+		
 		delAmtCal = unitPriceCal.multiply(delQtyCal);
 		itemAddress.setDeliveredAmt(delAmtCal);
 	}
+	
 	public void preRenderView() {
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
@@ -290,28 +325,11 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 			IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			reqDTO.setFlOrderId(Long.parseLong(orderId));
-			FlFulfilmentOrder flOrder = orderSO.retrieveFulfilmentOrderById(reqDTO).getFlOrder();
-			
-			// initialize FlTempDoAddr if null
-			for(FlDeliveryAddress deliveryAddress : flOrder.getFlFulfilmentRequest().getFlDeliveryAddresses()) {
-				if(deliveryAddress.getFlTempDoAddr()==null) {
-					deliveryAddress.setFlTempDoAddr(new FlTempDoAddr());
-				}
-				for(FlFulfilmentItemAddr itemAddr : deliveryAddress.getFlFulfilmentItemAddr()) {
-					if(itemAddr.getFlTempDoItem()==null) {
-						itemAddr.setFlTempDoItem(new FlTempDoItem());
-					}
-				}
-			}
-			
-			getManagedBean().setSelectedTabIndex(0);
-			getManagedBean().setFulfilmentRequest(flOrder.getFlFulfilmentRequest());
-			getManagedBean().setFulfilmentOrder(flOrder);
-			getManagedBean().setDocType(flOrder.getFlFulfilmentRequest().getDocType());
+			FulfilmentResDTO resDTO = orderSO.retrieveFulfilmentOrderById(reqDTO);
+			setDeliveryOrder(resDTO);
 		}
 		getManagedBean().getFulfilmentRequest();
 	}
-
 
 	/**
 	 * @return the amountSectionItemRow
