@@ -18,14 +18,14 @@
 			<tr>
 				<td style="width: 40%"><h:outputLabel
 						value="#{lbl['lbl.sc.spec.circular.name']}"></h:outputLabel></td>
-				<td><h:inputText style="margin-bottom:5px;" maxlength="200"
+				<td><p:inputText style="margin-bottom:5px;" maxlength="200"
 						size="100"
 						value="#{specificationBackingBean.managedBean.circularName}" /></td>
 			</tr>
 			<tr>
 				<td style="width: 40%"><h:outputLabel
 						value="#{lbl['lbl.sc.spec.circular.bo.item.name']}"></h:outputLabel></td>
-				<td><h:inputText maxlength="100"
+				<td><p:inputText maxlength="100"
 						value="#{specificationBackingBean.managedBean.itemName}"
 						size="100" /></td>
 			</tr>
@@ -35,9 +35,9 @@
 	<div align="right">
 		<p:commandButton value="#{lbl['lbl.sc.tpl.btn.search']}"
 			action="#{specificationBackingBean.searchCircularList}"
-			update="circularList" icon="ui-icon-search" />
+			update="circularList,panelItemGroupList" icon="ui-icon-search" />
 		<p:commandButton value="#{lbl['lbl.sc.eva.btn.reset']}"
-			action="#{specificationBackingBean.resetCircular}" update="circular"
+			action="#{specificationBackingBean.resetCircular}" update="circular,panelItemGroupList"
 			icon="ui-icon-reset" resetValues="true" partialSubmit="true"
 			process="@this" />
 	</div>
@@ -51,7 +51,7 @@
 			value="#{specificationBackingBean.searchCircular}"
 			rowKey="#{circular}" rowIndexVar="index" lazy="true">
 			<ac:paginator for="circularList"></ac:paginator>
-			<p:ajax event="rowSelectRadio"
+			<p:ajax event="rowSelectRadio" process="@this"
 				listener="#{specificationBackingBean.circularListSelect}"
 				update=":form:panelItemGroupList"></p:ajax>
 			<p:columnGroup>

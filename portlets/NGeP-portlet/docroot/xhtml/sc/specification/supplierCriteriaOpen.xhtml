@@ -135,8 +135,11 @@
 							</p:inputText></td>
 					</tr>
 					<tr>
-						<td style="width: 94px"><p:outputLabel value="#{lbl['lbl.sc.spec.zone.location.level']}" /></td>
-						<td><p:selectOneMenu id="locLevels"
+						<td style="width:145px"><p:outputLabel value="#{lbl['lbl.sc.spec.zone.location.level']}" />
+						<p:outputLabel
+							value="*" styleClass="mandatory" />
+						</td>
+						<td><p:selectOneMenu id="locLevels" required="true"  label="#{lbl['lbl.sc.spec.zone.location.level']}"
 								value="#{specificationBackingBean.managedBean.supplierCriteria.locationLevel.parameterId}"
 								style="width: 178px;">
 
@@ -144,7 +147,9 @@
 									value="#{specificationBackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel)}" />
 								<p:ajax event="change"
 									listener="#{specificationBackingBean.selectLocation}"></p:ajax>
-							</p:selectOneMenu></td>
+							</p:selectOneMenu>
+							<p:message id="withOutzone" for="locLevels" display="icon" ></p:message>
+							</td>
 					</tr>
 				</table>
 			</p:panel>
