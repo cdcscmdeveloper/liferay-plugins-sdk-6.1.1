@@ -2868,14 +2868,14 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	public void preRenderSupplierCatalogue() {
 
 		
-		
-		this.getManagedBean().setItemNameFilterBean(new SearchFilterBean());
-		this.getManagedBean().setSupplierNameFilterBean(new SearchFilterBean());
-		this.getManagedBean().setContractNoFilterBean(new SearchFilterBean());
-		this.getManagedBean().setCircularNoFilterBean(new SearchFilterBean());
-		this.getManagedBean().setMofNoFilterBean(new SearchFilterBean());
-		this.getManagedBean().setEpNoFilterBean(new SearchFilterBean());
-		this.getManagedBean().setBizRegNoFilterBean(new SearchFilterBean());
+		this.getManagedBean().setItemNameFilterBean(new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value()));
+		this.getManagedBean().setItemCodeFilterBean(new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value()));
+		this.getManagedBean().setSupplierNameFilterBean(new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value()));
+		this.getManagedBean().setContractNoFilterBean( new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value()));
+		this.getManagedBean().setCircularNoFilterBean(new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value()));
+		this.getManagedBean().setMofNoFilterBean(new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value()));
+		this.getManagedBean().setEpNoFilterBean(new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value()));
+		this.getManagedBean().setBizRegNoFilterBean(new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value()));
 
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
