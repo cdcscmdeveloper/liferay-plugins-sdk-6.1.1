@@ -13,7 +13,7 @@
 			<h:outputText value="#{lbl['lbl.sc.spec.category.code']}" />
 		</f:facet>
 
-		<p:dataTable id="openPnlId" var="cateGory"
+		<p:dataTable id="openPnlId" var="cateGory" widgetVar="categoryCodes"
 			value="#{specificationBackingBean.managedBean.suppCriteriaopenList}"
 			rowIndexVar="index" styleClass="openPnlId"
 			selection="#{specificationBackingBean.managedBean.suppCriteriaopenSelectList}"
@@ -64,8 +64,8 @@
 		</p:dataTable>
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
-				process="@this" partialSubmit="true" update="openPnlId"
-				icon="ui-icon-add"
+				process="@this"  update="openPnlId"
+				icon="ui-icon-add" 
 				actionListener="#{specificationBackingBean.addNewCategoryAction}" />
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
 				icon="ui-icon-delete" process="@this,openPnlId" partialSubmit="true"

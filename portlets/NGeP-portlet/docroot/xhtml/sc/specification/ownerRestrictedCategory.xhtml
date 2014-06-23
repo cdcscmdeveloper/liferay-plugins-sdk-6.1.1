@@ -16,7 +16,7 @@
 			<h:outputText value="#{lbl['lbl.sc.spec.category.code']}" />
 		</f:facet>
 
-		<p:dataTable id="restrictedPnlId" var="cateGory"
+		<p:dataTable id="restrictedPnlId" var="cateGory" widgetVar="restricedCodes"
 			value="#{specificationBackingBean.managedBean.suppCriteriarestrictedList}"
 			selection="#{specificationBackingBean.managedBean.suppCriteriarestrictedBoSelectList}"
 			rowIndexVar="index" rowKey="#{cateGory}">
