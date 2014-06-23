@@ -33,7 +33,7 @@
 						update="@form" />
 						
 					<c:if
-						test="#{specificationBackingBean.managedBean.scQt.specApprovalReq eq 'true'}">
+						test="#{specificationBackingBean.managedBean.scQt.specApprovalReq eq 'true' and specificationBackingBean.managedBean.taskName eq 'Specification Approval' }">
 
 					<p:menuitem value="#{lbl['lbl.sc.spec.approval']}" 
 					actionListener="#{specificationBackingBean.retriveApprovalRemarks}"
