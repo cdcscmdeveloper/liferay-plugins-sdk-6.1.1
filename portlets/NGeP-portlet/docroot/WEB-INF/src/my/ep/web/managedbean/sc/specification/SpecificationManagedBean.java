@@ -39,6 +39,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtScoreSetting;
 import my.ep.persistence.entity.sc.quationtender.ScQtScoreWeightage;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScRemark;
+import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.web.backingbean.sc.specification.BankingBean;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
@@ -324,7 +325,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	//Added By Sagar.. for Delete funcationality..
 	private TreeNode selectedTreeNode;
 	private String taskName;
-
+private TplSpecMaster specMaster;
 	public SpecificationManagedBean() {
 		// deliveryLocBean.add(new BriefingZoneBean(1,"South",
 		// deliveryLoc,deleteDeliveryList));
