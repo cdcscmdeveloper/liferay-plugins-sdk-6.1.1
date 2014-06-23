@@ -13,6 +13,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -1254,7 +1255,22 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		}
 	}
-   public void selectOneCheckboxSelect(AjaxBehaviorEvent e){
+	
+	public void extendStartEndDate(){
+		
+		if(this.getManagedBean().getCircularVer().getExtPeriod() > 0){
+			this.getManagedBean().getCircularVer().setExtendStartDate(this.getManagedBean().getCircularVer().getStartDate());
+			Calendar cal = Calendar.getInstance();
+	        cal.setTime(new Date());
+	        cal.add(Calendar.MONTH, this.getManagedBean().getCircularVer().getExtPeriod()); 
+	        this.getManagedBean().getCircularVer().setExtendEndDate( cal.getTime());
+		}else{
+			this.getManagedBean().getCircularVer().setExtendStartDate(null);
+			this.getManagedBean().getCircularVer().setExtendEndDate(null);
+		}
+	}
+	
+    public void selectOneCheckboxSelect(AjaxBehaviorEvent e){
 		
 		if((boolean) e.getComponent().getAttributes().get("value")){
 			getManagedBean().setButtonHideActive(false);

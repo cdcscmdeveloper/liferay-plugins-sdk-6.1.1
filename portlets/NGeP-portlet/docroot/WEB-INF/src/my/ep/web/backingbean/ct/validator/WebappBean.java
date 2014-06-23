@@ -69,11 +69,24 @@ public class WebappBean {
           }
         }
     }
+    
+    public void checkPhoneNumber(FacesContext ctx, UIComponent fieldName, Object obj){
+       
+       String inputValue=(String)obj;
+       if(inputValue == null || inputValue.equalsIgnoreCase(""))
+    	   return;
+       String errMsg="Invalid phone number";
+       String pattern = "\\d{10}";
+       if(!inputValue.matches(pattern)){
+           throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "", errMsg));
+       }
+    }
 
     public void checkEmail(FacesContext ctx, UIComponent fieldName, Object obj){
         String inputValue=(String)obj;
-        inputValue=inputValue==null? "":inputValue;
-        String errMsg="invalid email format";
+        if(inputValue == null || inputValue.equalsIgnoreCase(""))
+        	return;
+        String errMsg="Invalid email format";
         String pattern="[\\w\\.-]*[a-zA-Z0-9_]@[\\w\\.-]*[a-zA-Z0-9]\\.[a-zA-Z][a-zA-Z\\.]*[a-zA-Z]";//[a-zA-Z]=alphabet; [\\d]or[0-9]=number; $=line end follows;
 
         if(!inputValue.matches(pattern)){

@@ -27,10 +27,18 @@
 				<p:inputText value="#{data.address}" style="width:250px;" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.ct.pc.cemail']}">
-				<p:inputText value="#{data.email}" style="width:120px;" />
+			   <h:panelGrid columns="2">
+				<p:inputText id="email" value="#{data.email}" style="width:120px;" 
+				 validator="#{webappBean.checkEmail}" label="#{lbl['lbl.ct.pc.cemail']}" />
+				 <p:message for="email" display="icon"/>
+			   </h:panelGrid>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.ct.pc.pno']}">
-				<p:inputText value="#{data.phoneNo}" style="width:120px;" />
+			   <h:panelGrid columns="2">
+				<p:inputText id="phoneNo" value="#{data.phoneNo}" style="width:120px;"
+				  validator="#{webappBean.checkPhoneNumber}" label="#{lbl['lbl.ct.pc.pno']}" />
+				<p:message for="phoneNo" display="icon"/>
+			   </h:panelGrid>
 			</p:column>
 		</p:dataTable>
 		<p:spacer height="2" />

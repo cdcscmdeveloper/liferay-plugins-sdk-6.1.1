@@ -8,16 +8,34 @@
 	
 	<table style="width: 100%" >
 			<tr>
-				<td style="width: 15%;" ><h:outputLabel value="#{lbl['lbl.ct.cc.cno']}" /></td>
-				<td><p:inputText value="#{centralContractBackingBean.managedBean.circularVer.circularNo}" style="width:170px;"/></td>
-				<td rowspan="2" valign="top" style="width: 15%;"><p:outputLabel  value="#{lbl['lbl.ct.cc.cname']}" /></td>
-				<td rowspan="2"><p:inputTextarea rows="3"
-						style="width:170px; margin-bottom:5px;"
+				<td style="width: 15%;" >
+				  <p:outputLabel value="#{lbl['lbl.ct.cc.cno']}" />
+				  <p:outputLabel value="*" styleClass="mandatory" />
+				</td>
+				<td> <h:panelGrid columns="2">
+				  <p:inputText id="circularNo" style="width:170px;" label="#{lbl['lbl.ct.cc.cno']}"
+				     required="true"  value="#{centralContractBackingBean.managedBean.circularVer.circularNo}"/>
+				      <p:message for="circularNo" display="icon"/>
+				    </h:panelGrid>
+				    </td>
+				<td rowspan="2" valign="top" style="width: 15%;">
+				<p:outputLabel  value="#{lbl['lbl.ct.cc.cname']}" />
+				<p:outputLabel value="*" styleClass="mandatory" />
+				</td>
+				<td rowspan="2">
+				 <h:panelGrid columns="3">
+				<p:inputTextarea id="cName" rows="3" label="#{lbl['lbl.ct.cc.cname']}" 
+						style="width:170px; margin-bottom:5px;" required="true"
 						value="#{centralContractBackingBean.managedBean.circularVer.name}" />
+						<p:spacer width="5"/>
+					 <p:message for="cName" display="icon"/>
+			    </h:panelGrid>
 				</td>
 			</tr>
 			<tr>
-				<td><h:outputLabel value="#{lbl['lbl.ct.cc.frno']}" /></td>
+				<td>
+				  <h:outputLabel value="#{lbl['lbl.ct.cc.frno']}" />
+				</td>
 				<td><p:inputText  style="width:170px;"
 						value="#{centralContractBackingBean.managedBean.circularVer.circularFileRefNo}" /></td>
 			</tr>
@@ -35,24 +53,39 @@
 			
 			<tr>
 		    <td>
-		      <h:outputLabel value="Extension Period" />
-		        </td>
+		      <p:outputLabel value="Extension Period" /></td>
 		    <td><h:panelGrid columns="3"  style="margin-top:5px;">
-		           <p:inputText value="#{centralContractBackingBean.managedBean.circularVer.extendPeriod}" style="width:100px;"/>
+		           <p:inputText id="extendPeriod"  style="text-align:right;width:130px;" 
+		              label="Extension Period" value="#{centralContractBackingBean.managedBean.circularVer.extendPeriod}">
+		             <p:ajax event="blur" process="@this" 
+				        listener="#{centralContractBackingBean.extendStartEndDate()}" update=":form:popupButtonCal5,:form:popupButtonCal6"></p:ajax>
+		           </p:inputText>
 		           <p:spacer width="2" /> 
-		           <p:outputLabel value="Months"/></h:panelGrid></td>
-		     <td><p:outputLabel value="#{lbl['lbl.ct.cc.upload']}" /></td>
+		           <p:outputLabel value="Months"/>
+		        </h:panelGrid>
+		     </td>
+		     <td><p:outputLabel value="#{lbl['lbl.ct.cc.upload']}" />
+		         <p:outputLabel value="*" styleClass="mandatory" />
+		     </td>
 		    <td><h:commandLink value="#{centralContractBackingBean.managedBean.circularVer.circularFileName}" styleClass="blue_font" 
 				action="#{centralContractBackingBean.downloadFile(1)}" /></td>
 		  </tr>
 		  
 		  <tr>
-		    <td> <h:outputLabel value="Extension Start Date" /></td>
-		    <td><p:calendar size="24" value="#{centralContractBackingBean.managedBean.circularVer.extendStartDate}" 
-		       readonlyInput="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" id="popupButtonCal5" showOn="button" /></td>
-		    <td><h:outputLabel value="Extension End Date" /></td>
-		    <td><p:calendar size="24" value="#{centralContractBackingBean.managedBean.circularVer.extendEndDate}" 
-				readonlyInput="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" id="popupButtonCal6" showOn="button" /></td>
+		    <td> <p:outputLabel value="Extension Start Date" /> </td>
+		    <td>
+		    <p:calendar value="#{centralContractBackingBean.managedBean.circularVer.extendStartDate}" label="Extension Start Date"
+		       disabled="true" size="24" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" id="popupButtonCal5" showOn="button">
+		    </p:calendar>
+		     
+		       </td>
+		  
+		    <td><p:outputLabel value="Extension End Date" /></td>
+		    <td>
+		      <p:calendar size="24" value="#{centralContractBackingBean.managedBean.circularVer.extendEndDate}" 
+				disabled="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" id="popupButtonCal6" showOn="button">
+			  </p:calendar>
+		    </td>
 		  </tr>  
 	</table>
 </ui:composition>

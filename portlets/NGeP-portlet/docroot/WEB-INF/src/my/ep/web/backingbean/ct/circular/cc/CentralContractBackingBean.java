@@ -15,6 +15,7 @@ import java.sql.Timestamp;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -931,5 +932,19 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		}
-	}	
+	}
+	
+	public void extendStartEndDate(){
+		
+		if(this.getManagedBean().getCircularVer().getExtPeriod() > 0){
+			this.getManagedBean().getCircularVer().setExtendStartDate(this.getManagedBean().getCircularVer().getStartDate());
+		    Calendar cal = Calendar.getInstance();
+	        cal.setTime(new Date());
+	        cal.add(Calendar.MONTH, this.getManagedBean().getCircularVer().getExtPeriod()); 
+	        this.getManagedBean().getCircularVer().setExtendEndDate( cal.getTime());
+		}else{
+			this.getManagedBean().getCircularVer().setExtendStartDate(null);
+			this.getManagedBean().getCircularVer().setExtendEndDate(null);
+		}
+	}
 }

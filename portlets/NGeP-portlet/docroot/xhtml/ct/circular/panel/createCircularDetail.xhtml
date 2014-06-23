@@ -12,7 +12,8 @@
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
 				<td style="width: 200px">
-					<p:inputText id="circularNoTxt" style="width:190px;" label="#{lbl['lbl.ct.cc.cno']}" required="true" maxlength="50"
+					<p:inputText id="circularNoTxt" style="width:190px; margin-top:2px;" label="#{lbl['lbl.ct.cc.cno']}"
+					 required="true" maxlength="50"
 						value="#{panelBackingBean.managedBean.circularVer.circularNo}"/>
 				</td>
 				<td>
@@ -23,7 +24,7 @@
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
 				<td rowspan="2" style="width: 180px">
-					<p:inputTextarea id="circularNameTxt" rows="3" style="width:190px; margin-bottom:0px;" maxlength="200" required="true" 
+					<p:inputTextarea id="circularNameTxt" rows="3" style="width:190px;" maxlength="200" required="true" 
 						label="#{lbl['lbl.ct.cc.cname']}" value="#{panelBackingBean.managedBean.circularVer.name}" />
 				</td>
 				<td>
@@ -43,7 +44,9 @@
 			   <td>
 			   		<p:calendar value="#{panelBackingBean.managedBean.circularVer.startDate}" id="popupButtonCal" 
 			   			pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
-			       		size="22" showOn="button" required="true" readonlyInput="true" label="#{lbl['lbl.ct.cc.csdate']}" /> 
+			       		size="22" showOn="button" required="true" readonlyInput="true" label="#{lbl['lbl.ct.cc.csdate']}">
+			       	 <p:ajax event="dateSelect" update="popupButtonCal1" />
+			       	</p:calendar> 
 			   </td>
 				<td>
 					<p:message for="popupButtonCal" display="icon" />
@@ -55,7 +58,11 @@
 			   <td>
 			   		<p:calendar value="#{panelBackingBean.managedBean.circularVer.endDate}" id="popupButtonCal1" 
 			   			pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
-			         	size="22" showOn="button" required="true" readonlyInput="true" label="#{lbl['lbl.ct.cc.cedate']}" />
+			         	mindate="#{panelBackingBean.managedBean.circularVer.startDate}" size="22" 
+			         	showOn="button" required="true" readonlyInput="true" label="#{lbl['lbl.ct.cc.cedate']}">
+			         	 <f:attribute name="extendStartDate" value="#{panelBackingBean.managedBean.circularVer.startDate}" />
+                         <f:validator validatorId="primeDateRangeValidator" />
+			         	</p:calendar>
 			    </td>
 				<td>
 					<p:message for="popupButtonCal1" display="icon" />
