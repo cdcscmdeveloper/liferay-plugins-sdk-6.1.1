@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -157,6 +156,7 @@ import my.ep.web.sc.quationtender.common.QTConstants;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
+import my.ep.web.util.pp.common.CommonMethod;
 import my.ep.web.util.sc.helper.LocationSingleton;
 import my.ep.web.util.sc.helper.SourcingLocationHelper;
 
@@ -404,16 +404,9 @@ public class SpecificationBackingBean extends
 			QuationTenderReqDTO reqDTO = prepareSpecReq();
 			detailSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-			QuationTenderResDTO resDTo = null;
-			List<FacesMessage> messages = new ArrayList<FacesMessage>();
-			for (Iterator<FacesMessage> iter = FacesContext
-					.getCurrentInstance().getMessages(); iter.hasNext();) {
-				messages.add(iter.next());
-				// iter.remove();
-			}
-			if (messages.size() == 0) {
-				resDTo = detailSO.saveQTDtl(reqDTO);
-			}
+			QuationTenderResDTO resDTo =
+
+			detailSO.saveQTDtl(reqDTO);
 
 			if (null != resDTo && resDTo.isSuccessful()) {
 				ScQt scQt = resDTo.getQtDetail();
@@ -521,6 +514,12 @@ public class SpecificationBackingBean extends
 		getManagedBean().setCirCularNo("");
 		getManagedBean().setCircularName("");
 		getManagedBean().setItemName("");
+		this.getManagedBean().setPanelItemList(new ArrayList<CtPanelItem>());
+		this.getManagedBean().setCtPanelItem(null);
+		this.getManagedBean().setCircularExpDate(new Date());
+		this.getManagedBean().setCirCularNo(null);
+		this.getManagedBean().setCircularName(null);
+		this.getManagedBean().setCircularType(null);
 	}
 
 	public String backAction() {
@@ -890,13 +889,12 @@ public class SpecificationBackingBean extends
 					if (isNotNullOREmpty(tenderResDTO.getZoneDetails())) {
 						for (TplSpecZoneDtl zoneDtl : tenderResDTO
 								.getZoneDetails()) {
-							
+
 							ctPanelZone.add(zoneDtl.getPanelZone());
-							
+
 						}
 					}
 					if (null != ctPanelZone && !ctPanelZone.isEmpty()) {
-						
 
 						getManagedBean().getCtZoneSuppliers().add(
 								LocationSingleton.getInstance()
@@ -2437,7 +2435,11 @@ public class SpecificationBackingBean extends
 		ScQt scQt = this.getManagedBean().getScQt();
 		// scQt.setItemType("P");
 		if (scQt.getEstimatedAmount().intValue() < 20000) {
-			throw new EpException(MessageConst.ERROR_100022);
+			String amount = CommonMethod
+					.getMessageCommon("lbl.sc.spec.est.price");
+			throw new EpException(MessageConst.INFO_100022,
+					new String[] { amount + "Must be Greater Than 20000" });
+			// throw new EpException(MessageConst.ERROR_100022);
 			/*
 			 * FacesContext .getCurrentInstance() .addMessage( null, new
 			 * FacesMessage( FacesMessage.SEVERITY_ERROR, null, MessageUtils
@@ -2449,7 +2451,7 @@ public class SpecificationBackingBean extends
 		}
 
 		if (!scQt.isPanel()) {
-			
+
 			if (!scQt.isZonal()) {
 				scQt.setZoneLocationLevel(null);
 				List<ScQtLocCriteria> locCriteria = (List<ScQtLocCriteria>) getQuoteZones(
@@ -2468,23 +2470,22 @@ public class SpecificationBackingBean extends
 						&& null != qtSupplierCriteria.getLocationLevel()
 						&& null == qtSupplierCriteria.getLocationLevel()
 								.getParameterId()) {
+					String locationLevel = CommonMethod
+							.getMessageCommon("lbl.sc.spec.zone.location.level");
+					throw new EpException(MessageConst.INFO_100022,
+							new String[] { locationLevel });
 
 					// qtSupplierCriteria.setLocationLevel(null);
-					throw new EpException(MessageConst.ERROR_100022);
-					/*FacesContext
-							.getCurrentInstance()
-							.addMessage(
-									null,
-									new FacesMessage(
-											FacesMessage.SEVERITY_ERROR,
-											null,
-											MessageUtils
-													.getMessage(
-															MessageConst.ERROR_100022,
-															new String[] { "Location Level", },
-															MessageUtils.BUNDLE_COMMON_MESSAGES,
-															new FacesScopes()
-																	.getUserLocale())));*/
+					// throw new EpException(MessageConst.ERROR_100022);
+
+					/*
+					 * FacesContext .getCurrentInstance() .addMessage( null, new
+					 * FacesMessage( FacesMessage.SEVERITY_ERROR, null,
+					 * MessageUtils .getMessage( MessageConst.ERROR_100022, new
+					 * String[] { "Location Level", },
+					 * MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes()
+					 * .getUserLocale())));
+					 */
 				}
 
 			} else {
@@ -2514,21 +2515,19 @@ public class SpecificationBackingBean extends
 				}
 
 				else {
-					throw new EpException(MessageConst.ERROR_100022);
-					/*FacesContext
-							.getCurrentInstance()
-							.addMessage(
-									null,
-									new FacesMessage(
-											FacesMessage.SEVERITY_ERROR,
-											null,
-											MessageUtils
-													.getMessage(
-															MessageConst.ERROR_100022,
-															new String[] { "Zone Location", },
-															MessageUtils.BUNDLE_COMMON_MESSAGES,
-															new FacesScopes()
-																	.getUserLocale())));*/
+
+					throw new EpException(MessageConst.INFO_100022,
+							new String[] { "ADD At Least One Zone" });
+
+					// throw new EpException(MessageConst.ERROR_100022);
+					/*
+					 * FacesContext .getCurrentInstance() .addMessage( null, new
+					 * FacesMessage( FacesMessage.SEVERITY_ERROR, null,
+					 * MessageUtils .getMessage( MessageConst.ERROR_100022, new
+					 * String[] { "Zone Location", },
+					 * MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes()
+					 * .getUserLocale())));
+					 */
 				}
 				this.getManagedBean().getSupplierCriteria()
 						.setScQtLocCriteria(null);
@@ -2538,21 +2537,20 @@ public class SpecificationBackingBean extends
 							.setLocationLevel(scQt.getZoneLocationLevel());
 				} else {
 					// scQt.setZoneLocationLevel(null);
-					/*FacesContext
-							.getCurrentInstance()
-							.addMessage(
-									null,
-									new FacesMessage(
-											FacesMessage.SEVERITY_ERROR,
-											null,
-											MessageUtils
-													.getMessage(
-															MessageConst.ERROR_100022,
-															new String[] { "Location Level", },
-															MessageUtils.BUNDLE_COMMON_MESSAGES,
-															new FacesScopes()
-																	.getUserLocale())));*/
-					throw new EpException(MessageConst.ERROR_100022);
+					/*
+					 * FacesContext .getCurrentInstance() .addMessage( null, new
+					 * FacesMessage( FacesMessage.SEVERITY_ERROR, null,
+					 * MessageUtils .getMessage( MessageConst.ERROR_100022, new
+					 * String[] { "Location Level", },
+					 * MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes()
+					 * .getUserLocale())));
+					 */
+					String locationLevel = CommonMethod
+							.getMessageCommon("lbl.sc.spec.zone.location.list");
+					throw new EpException(MessageConst.INFO_100022,
+							new String[] { locationLevel });
+
+					// throw new EpException(MessageConst.ERROR_100022);
 				}
 
 			}
@@ -2578,7 +2576,6 @@ public class SpecificationBackingBean extends
 
 			}
 		} else {
-			
 
 			if (null != this.getManagedBean().getCtPanelZones()
 					&& !this.getManagedBean().getCtPanelZones().isEmpty()) {
@@ -2647,8 +2644,10 @@ public class SpecificationBackingBean extends
 			Date d = new Date();
 			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 			this.getManagedBean().setApprovalDate(sdf.format(d));
+		
 
 			if (getManagedBean().getScQt() == null) {
+				searchCircularList();
 				// this.getManagedBean().setApprovalList(getAppDetails());
 				// retriveSpecdetails(1366L);
 				// retriveSpecdetails(1426L);
@@ -2699,11 +2698,11 @@ public class SpecificationBackingBean extends
 				}
 				if (this.getManagedBean().getZoneGeneralTrees().isEmpty()) {
 					if (tenderResDTO.getQtDetail().isZonal()) {
-						
+
 						if (isNotNullOREmpty(tenderResDTO.getZoneDetails())) {
 							for (TplSpecZoneDtl zone : tenderResDTO
 									.getZoneDetails()) {
-								
+
 								getManagedBean()
 										.getZoneGeneralTrees()
 										.add(LocationSingleton
@@ -2736,35 +2735,39 @@ public class SpecificationBackingBean extends
 
 		this.getManagedBean().getScQt().setQtType(type);
 	}
-	
-	public void changeZones(AjaxBehaviorEvent event){
+
+	public void changeZones(AjaxBehaviorEvent event) {
 		boolean zone = (boolean) event.getComponent().getAttributes()
 				.get("value");
-		if(zone){
-			if(null==this.getManagedBean().getScQt().getZoneLocationLevel()){
-				this.getManagedBean().getScQt().setZoneLocationLevel(new PmParameter());
+		if (zone) {
+			if (null == this.getManagedBean().getScQt().getZoneLocationLevel()) {
+				this.getManagedBean().getScQt()
+						.setZoneLocationLevel(new PmParameter());
 			}
-			if(null==this.getManagedBean().getSupplierCriteria()){
-				this.getManagedBean().setSupplierCriteria(new ScQtSupplierCriteria());
+			if (null == this.getManagedBean().getSupplierCriteria()) {
+				this.getManagedBean().setSupplierCriteria(
+						new ScQtSupplierCriteria());
 			}
-			if(null==this.getManagedBean().getSupplierCriteria().getQtZoneCriterias()){
-				this.getManagedBean().getSupplierCriteria().setQtZoneCriterias(new ScQtZoneCriteria());
+			if (null == this.getManagedBean().getSupplierCriteria()
+					.getQtZoneCriterias()) {
+				this.getManagedBean().getSupplierCriteria()
+						.setQtZoneCriterias(new ScQtZoneCriteria());
 			}
-			
-		}
-		else{
-			
-			if(null==this.getManagedBean().getSupplierCriteria()){
-				this.getManagedBean().setSupplierCriteria(new ScQtSupplierCriteria());
+
+		} else {
+
+			if (null == this.getManagedBean().getSupplierCriteria()) {
+				this.getManagedBean().setSupplierCriteria(
+						new ScQtSupplierCriteria());
 			}
-			
+
 			if (null == this.getManagedBean().getSupplierCriteria()
 					.getLocationLevel()) {
 				this.getManagedBean().getSupplierCriteria()
 						.setLocationLevel(new PmParameter());
 			}
 		}
-		
+
 	}
 
 	public void typeChange(AjaxBehaviorEvent event) {
@@ -7696,6 +7699,13 @@ public class SpecificationBackingBean extends
 
 	public void searchCircularList() {
 		searchCircular.reloadData();
+		this.getManagedBean().setPanelItemList(new ArrayList<CtPanelItem>());
+		this.getManagedBean().setCtPanelItem(null);
+		this.getManagedBean().setCircularExpDate(new Date());
+		this.getManagedBean().setCirCularNo(null);
+		this.getManagedBean().setCircularName(null);
+		this.getManagedBean().setCircularType(null);
+
 	}
 
 	private class SearchCircularPagingDataModel extends
@@ -7747,7 +7757,8 @@ public class SpecificationBackingBean extends
 					circularBean.setSearchValue(getManagedBean().getItemName());
 					searchBean.getDataFilterBeans().add(circularBean);
 				}
-
+			
+               
 				circularReqDTO.setCircularVerSearchBean(searchBean);
 
 				circularSO = EpEjbBusinessDelegate.getInstance()
@@ -8736,6 +8747,12 @@ public class SpecificationBackingBean extends
 		}
 		return items;
 	}
+	
+	
+	public void selctZonalTree(NodeSelectEvent event){
+	TreeNode node=	event.getTreeNode();
+	this.getManagedBean().setSelectedTreeNode(node);
+	}
 
 	/**
 	 * To delete the selected TreeNode from list..
@@ -8774,7 +8791,11 @@ public class SpecificationBackingBean extends
 			}
 			scQt.setScQtCategorys(categories);
 		} else {
-			throw new EpException(MessageConst.ERROR_100022);
+			String category = CommonMethod
+					.getMessageCommon("lbl.sc.spec.category.code");
+			throw new EpException(MessageConst.INFO_100022,
+					new String[] { category });
+			// throw new EpException(MessageConst.ERROR_100022);
 		}
 	}
 }
