@@ -4613,6 +4613,7 @@ label > span.ui-button-text {
 }
 
 .header-info {
+	background-color: #EBEDEC;
 	padding: 5px;
 }
 
@@ -4623,7 +4624,7 @@ label > span.ui-button-text {
 .header-info-text {
 	font-weight: normal;
 	text-align: left;
-	vertical-align: top;
+	vertical-align: center;
 }
 
 .compulsary-field label {
