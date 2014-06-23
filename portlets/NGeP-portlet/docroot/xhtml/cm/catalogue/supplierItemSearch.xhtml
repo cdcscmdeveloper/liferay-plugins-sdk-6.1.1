@@ -98,8 +98,8 @@
 								<f:param name="unspscCode" value="#{unspscCode}" />
 							</p:commandButton>
 							<p:commandButton value="#{lbl['lbl.ct.search.btn.reset']}" icon="ui-icon-reset"
-								
-								update="@([id$=supplierItemViewID])">
+								action="#{catalogueBackingBean.resetCatalogueSearch}"
+								update="supplierItemViewID">
 							</p:commandButton>
 						</div>
 					</p:panel></td>

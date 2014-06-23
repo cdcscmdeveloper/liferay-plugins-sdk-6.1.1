@@ -4999,5 +4999,19 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			e.printStackTrace();
 		}
 	}
+	
+	public void resetCatalogueSearch() {
+		this.getManagedBean().getItemNameFilterBean().setSearchValue("");
+		this.getManagedBean().getItemCodeFilterBean().setSearchValue("");
+		this.getManagedBean().getSupplierNameFilterBean().setSearchValue("");
+		this.getManagedBean().getBizRegNoFilterBean().setSearchValue("");
+		this.getManagedBean().getEpNoFilterBean().setSearchValue("");
+		this.getManagedBean().getMofNoFilterBean().setSearchValue("");
+		this.getManagedBean().getContractNoFilterBean().setSearchValue("");
+		this.getManagedBean().getCircularNoFilterBean().setSearchValue("");
+		this.getManagedBean().setStateId(new long[0]);
+		this.getManagedBean().setDistrictList(null);
+	}
+
 
 }
