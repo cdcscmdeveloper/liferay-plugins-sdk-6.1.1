@@ -26,11 +26,19 @@
 				</p:selectBooleanCheckbox>
 			</p:column>
 			<p:column headerText="Delivery Address" style="white-space:normal;">
+				<p:commandLink oncomplete="addManualDeliveryAddr.show();"
+					action="#{purchaseRequestBackingBean.editManualAddress(address)}"
+					update=":form:addManualDelAddrDialog,@(.orderSummaryChange)"
+					style="padding-right:5px" rendered="#{address.checkManualAddress}">
+					<p:graphicImage library="ep/images/design" name="edit.png"
+						value="/resources/ep/images/design/edit.png" />
+				</p:commandLink>
 				<h:outputText rendered="#{address.addressType != null}"
 					value="#{purchaseRequestBackingBean.getFullAddress(address.addressType.pmAddress)}" />
 				<h:outputText rendered="#{address.addressType eq null}"
 					value="#{purchaseRequestBackingBean.getFullAddress(address.pmAddress)}" />
 			</p:column>
+			
 
 			<p:column headerText="Delivery Term (Days)">
 				<p:outputLabel style="text-align:right"
@@ -56,15 +64,6 @@
 					<p:graphicImage library="ep/images/design" name="register.png"
 						value="/resources/ep/images/design/register.png"
 						title="Recv Officer List" />
-				</p:commandLink>
-			</p:column>
-			<p:column rendered="#{address.checkManualAddress}">
-				<p:commandLink oncomplete="addManualDeliveryAddr.show();"
-					action="#{purchaseRequestBackingBean.editManualAddress(address)}"
-					update=":form:addManualDelAddrDialog,@(.orderSummaryChange)"
-					style="padding-right:5px">
-					<p:graphicImage library="ep/images/design" name="edit.png"
-						value="/resources/ep/images/design/edit.png" />
 				</p:commandLink>
 			</p:column>
 		</p:dataTable>
