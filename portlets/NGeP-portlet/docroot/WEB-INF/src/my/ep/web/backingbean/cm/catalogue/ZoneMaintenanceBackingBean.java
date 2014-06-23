@@ -1,23 +1,17 @@
 package my.ep.web.backingbean.cm.catalogue;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
-import javax.faces.model.SelectItem;
-
 import org.primefaces.model.TreeNode;
 
 import my.ep.biz.service.cm.catalogue.IZoneMaintenanceSO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.division.IDivisionSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
-import my.ep.biz.service.sm.registration.IRegistrationSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.MessageConst;
 import my.ep.dto.cm.catalogue.ZoneMaintenanceReqDTO;
@@ -28,8 +22,6 @@ import my.ep.dto.pm.common.division.DivisionReqDTO;
 import my.ep.dto.pm.common.division.DivisionResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
-import my.ep.dto.sm.registration.RegistrationReqDTO;
-import my.ep.dto.sm.registration.RegistrationResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
@@ -247,10 +239,10 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 	}
 	
 	public void addNewZone() {
-		
+		getManagedBean().setSelectedSupplierZone(new CmSupplierZone());
 		getManagedBean().getSelectedSupplierZone().setSuppZoneName(null);
-		showZonePopup();
-		
+		getManagedBean().setRootZoneTree(
+				CmSupplierZoneSingleton.getInstance().buildCmSupplierZoneTree(1L, null, null, null));
 	}
 	
 	/**
