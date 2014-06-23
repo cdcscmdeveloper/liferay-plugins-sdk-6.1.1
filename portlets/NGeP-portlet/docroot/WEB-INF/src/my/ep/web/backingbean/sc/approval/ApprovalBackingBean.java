@@ -291,22 +291,21 @@ public class ApprovalBackingBean extends
 		QuationTenderResDTO tenderResDTO = detailSO.retriveQTDetails(qtReqDto);
 		// ApprovalBackingBean approvalBackingBean = new ApprovalBackingBean();
 		this.getManagedBean().setQt(tenderResDTO.getQtDetail());
-		if (SCProcessNameConst.BDG_APPROVAL.equalsIgnoreCase(taskName)) {
+		if (SCProcessNameConst.APPROVE_BUDGET.equalsIgnoreCase(taskName)) {
 			this.getManagedBean().setApprovalType(
 					ApprovalCategory.BUDGET_APPROVAL.dispalyName());
 			ScQtApproval approval = getApproval(qtId, "BUD");
 			this.getManagedBean().setScQtApproval(approval);
-		} else if (SCProcessNameConst.BPK_APPROVAL.equalsIgnoreCase(taskName)) {
+		} else if (SCProcessNameConst.APPROVE_BPK.equalsIgnoreCase(taskName)) {
 			this.getManagedBean().setApprovalType(
 					ApprovalCategory.BPK_APPROVAL.dispalyName());
 			ScQtApproval approval = getApproval(qtId, "BPK");
-		} else if (SCProcessNameConst.REVISE_BPK_APPROVAL
-				.equalsIgnoreCase(taskName)) {
+		} else if (SCProcessNameConst.REVISE_BPK.equalsIgnoreCase(taskName)) {
 			this.getManagedBean().setApprovalType(
 					ApprovalCategory.BPK_APPROVAL.dispalyName());
 			ScQtApproval approval = getApproval(qtId, "BPK");
 
-		} else if (SCProcessNameConst.APPROVE_COMMITTE
+		} else if (SCProcessNameConst.APPROVE_COMMITTEE
 				.equalsIgnoreCase(taskName)) {
 			// QTCommitteBackingBean backingBean= new QTCommitteBackingBean();
 			this.getManagedBean().setApprovalType(
@@ -428,11 +427,12 @@ public class ApprovalBackingBean extends
 		for (ScQtCommittee scQtCommittee : qtCommittees) {
 			if (!"BO".equalsIgnoreCase(scQtCommittee.getScCommittee()
 					.getCommitteeType().getParameterCode())) {
-				TabBean bean = new TabBean(CommitteType.getValue(scQtCommittee
-						.getScCommittee().getCommitteeType().getParameterCode()),
+				TabBean bean = new TabBean(
+						CommitteType.getValue(scQtCommittee.getScCommittee()
+								.getCommitteeType().getParameterCode()),
 						getCommitteeTypeDtl(scQtCommittee.getScCommittee()
-								.getCommitteeType().getParameterCode(), scQtCommittee.getScQt()
-								.getQtId()));
+								.getCommitteeType().getParameterCode(),
+								scQtCommittee.getScQt().getQtId()));
 				committeTabs.add(bean);
 			}
 		}
