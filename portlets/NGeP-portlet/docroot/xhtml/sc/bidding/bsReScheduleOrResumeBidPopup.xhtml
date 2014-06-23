@@ -11,64 +11,61 @@
 		<table>
 
 			<tr>
-				<TD><p:outputLabel
-						value="#{lbl['lbl.sc.bidding.bm.bs.pop2.rsb.Action']}" /></TD>
-				<TD><p:selectOneRadio></p:selectOneRadio> </TD>
-				<TD></TD>
-				<TD></TD>
+				<TD><p:outputLabel value="#{lbl['lbl.sc.action']}" /></TD>
+				<TD colspan="3"><p:selectOneRadio id="bidAction"
+						value="#{biddingBB.managedBean.bidAction.actionType}">
+
+						<f:selectItem itemLabel="Resume Bid" itemValue="R"></f:selectItem>
+						<f:selectItem itemLabel="Re-Bidding" itemValue="B"></f:selectItem>
+
+					</p:selectOneRadio></TD>
+
 			</tr>
 			<tr>
-				<TD><p:outputLabel
-						value="#{lbl['lbl.sc.bidding.bm.bs.pop2.rsb.originalBS']}" /></TD>
+				<TD><p:outputLabel value="#{lbl['lbl.sc.original.bid.start']}" /></TD>
 				<TD><p:inputText id="bidStartTime"
-						value="#{biddingBB.managedBean.bidStartTime}" size="20"
-						disabled="true" /></TD>
-				<TD><p:outputLabel
-						value="#{lbl['lbl.sc.bidding.bm.bs.pop2.rsb.originalBE']}" /></TD>
+						value="#{biddingBB.managedBean.bidAction.scBidSchedule.startDate}"
+						size="20" disabled="true" /></TD>
+				<TD><p:outputLabel value="#{lbl['lbl.sc.original.bid.end']}" /></TD>
 				<TD><p:inputText id="bidEndTime"
-						value="#{biddingBB.managedBean.bidEndTime}" size="20" disabled="true" 
-						 /></TD>
+						value="#{biddingBB.managedBean.bidAction.scBidSchedule.endDate}"
+						size="20" disabled="true" /></TD>
 			</tr>
 			<tr>
-				<TD><p:outputLabel
-						value="#{lbl['lbl.sc.bidding.bm.bs.pop2.rsb.bidPT']}" /></TD>
-				<TD><p:inputText id="remainingTime"
-						value="#{biddingBB.managedBean.bidPausedTime}" size="20" disabled="true"
+				<TD><p:outputLabel value="#{lbl['lbl.sc.bid.paused.time']}" /></TD>
+				<TD><p:inputText id="bidPausedTime"
+						value="#{biddingBB.managedBean.bidAction.createdDate}" size="20"
 						disabled="true" /></TD>
-				<TD><p:outputLabel
-						value="#{lbl['lbl.sc.bidding.bm.bs.pop2.rsb.remainTime']}" /></TD>
-				<TD><p:inputText id="remainingTime"
-						value="#{biddingBB.managedBean.remainingTime}" size="20" disabled="true"
-						 /></TD>
+				<TD><p:outputLabel value="#{lbl['lbl.sc.remaining.time']}" /></TD>
+				<TD><p:inputText id="remainTime"
+						value="#{biddingBB.managedBean.bidAction.remainingTime}" size="20"
+						disabled="true" /></TD>
 			</tr>
 			<tr>
-				<TD><p:outputLabel
-						value="#{lbl['lbl.sc.bidding.bm.bs.pop2.rsb.newBS']}" /></TD>
+				<TD><p:outputLabel value="#{lbl['lbl.sc.new.bidding.start']}" /></TD>
 				<TD><p:inputText id="newBidStart"
-						value="#{biddingBB.managedBean.newBidStart}" size="20"
+						value="#{biddingBB.managedBean.bidAction.newStartDate}" size="20"
 						disabled="true" /></TD>
-				<TD><p:outputLabel
-						value="#{lbl['lbl.sc.bidding.bm.bs.pop2.rsb.newBE']}" /></TD>
+				<TD><p:outputLabel value="#{lbl['lbl.sc.new.bidding.end']}" /></TD>
 				<TD><p:inputText id="newBidEnd"
-						value="#{biddingBB.managedBean.newBidEnd}" size="20" disabled="true"
-						 /></TD>
+						value="#{biddingBB.managedBean.bidAction.newEndDate}" size="20"
+						disabled="true" /></TD>
 			</tr>
 			<tr>
-				<TD><p:outputLabel
-						value="#{lbl['lbl.sc.bidding.bm.bs.pop2.rsb.newBD']}" /></TD>
-				<TD><p:inputTextArea id="newBidDuration"
-						value="#{biddingBB.managedBean.newBidDuration}" size="20"
+				<TD><p:outputLabel value="#{lbl['lbl.sc.new.bid.duration']}" /></TD>
+				<TD><p:inputText id="newBidDuration"
+						value="#{biddingBB.managedBean.bidAction.remainingTime}" size="20"
 						disabled="true" /></TD>
 				<TD></TD>
 				<TD></TD>
 			</tr>
 			<tr>
-				<TD><p:outputLabel
-						value="#{lbl['lbl.sc.bidding.bm.bs.pop2.rsb.nTs']}" /></TD>
-				<TD colspan="3"><p:inputTextArea id="supplierNotes"
-						value="#{biddingBB.managedBean.supplierNotes}" size="200"
+				<TD><p:outputLabel value="#{lbl['lbl.sc.notes.to.supplier']}" /></TD>
+				<TD colspan="3"><p:inputTextarea
+						id="reBidOrResumeSupplierNotes"
+						value="#{biddingBB.managedBean.bidAction.remark}" size="200"
 						maxLength="1000" /></TD>
-				
+
 			</tr>
 
 		</table>
@@ -76,11 +73,12 @@
 	</div>
 	<div>
 
-		<p:commandButton value="#{lbl['lbl.sc.bidding.bm.bs.pop2.rsb.ok']}"
-			icon="ui-icon-ok" />
+		<p:commandButton value="#{lbl['lbl.btn.ok']}" icon="ui-icon-ok"
+			action="#{biddingBB.reScheduleOrReBidAction()}"
+			onComplete="bidRescheduleOrResume.close();" />
 
-		<p:commandButton value="#{lbl['lbl.sc.bidding.bm.bs.pop2.rsb.cancel']}"
-			icon="ui-icon-cancel" />
+		<p:commandButton value="#{lbl['lbl.btn.cancel']}"
+			icon="ui-icon-cancel" onClick="bidRescheduleOrResume.close();" />
 	</div>
 
 </ui:composition>
