@@ -11,7 +11,7 @@
 				   	action="#{requestNoteBackingBean.saveAction}" update="@([id$=requestNoteId])"/>
 
 				<p:commandButton value="#{lbl['lbl.sc.common.submit']}" update="@([id$=requestNoteId])"
-					icon="ui-icon-submit"  action="#{requestNoteBackingBean.submitAction('SUBMIT')}"/>
+					icon="ui-icon-submit"  action="#{requestNoteBackingBean.submitAction('')}"/>
 	    </c:if>
 	    </div>
 	    <div>
@@ -19,11 +19,16 @@
 				<table style="width:100%">
 					<tr>
 						<td align="right">
-								<c:forEach items="#{requestNoteBackingBean.managedBean.outComes}" var="action">
-								
-								<c:if test="${action == 'SUBMIT'}">
-									<p:commandButton value="#{lbl['lbl.sc.common.save']}" icon="ui-icon-save" action="#{requestNoteBackingBean.saveAction}"
+							  <c:if
+									test="#{requestNoteBackingBean.managedBean.requestNoteStatus eq 'Pending Approval' or requestNoteBackingBean.managedBean.requestNoteStatus eq 'Pending Submission'}">
+                                   <p:commandButton value="#{lbl['lbl.sc.common.save']}" icon="ui-icon-save" action="#{requestNoteBackingBean.saveAction}"
 										update="@([id$=requestNoteId])" />
+
+								</c:if>
+								
+								<c:forEach items="#{requestNoteBackingBean.managedBean.outComes}" var="action">
+
+								<c:if test="${action == 'SUBMIT'}">
 									<ui:param name="iconVar" value="ui-icon-submit" />
 								</c:if>
 
@@ -37,7 +42,6 @@
 								</c:if>
 								<c:if test="${action == 'APPROVE'}">
 									<ui:param name="iconVar" value="ui-icon-approve" />
-
 								</c:if>
 								<c:if test="${action == 'ACCEPT'}">
 									<ui:param name="iconVar" value="ui-icon-approve" />
@@ -47,7 +51,7 @@
 								<p:commandButton value="#{action}" process="@this" partialSubmit="true"
 									rendered="#{!unspscCodeBackingBean.isRequisitioner()}"
 									styleClass="ui-button" icon="#{iconVar}"
-									actionListener="#{requestNoteBackingBean.updateBpmTask(action)}" />
+									actionListener="#{requestNoteBackingBean.approverAction(action)}" />
 
 								<p:commandButton value="#{action}" process="@all" update="@form"
 									rendered="#{unspscCodeBackingBean.isRequisitioner()}"

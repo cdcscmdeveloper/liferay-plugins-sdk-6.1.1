@@ -133,7 +133,7 @@
 						<h:outputText value="#{lbl['lbl.sc.request.note.rec.suppier']}" />
 					</f:facet>
 				
-				   <p:selectOneMenu value="#{requestNoteDtl.scRequestSupplierItem.smSupplier.supplierId}" 
+				   <p:selectOneMenu value="#{requestNoteDtl.scRequestSupplierItem.supplierItemId}" 
 				        id="recSupplier" label="#{lbl['lbl.sc.request.note.rec.suppier']}"
 				        style="width:120px;" required="true">  
 					   <f:selectItem itemLabel="-Select One-" itemValue="#{null}" />
@@ -141,6 +141,10 @@
 							value="#{requestNoteDtl.requestItem.supplierItems}" 
 							var="supplierItem" itemLabel="#{supplierItem.smSupplier.companyName}"
 							itemValue="#{supplierItem.smSupplier.supplierId}"></f:selectItems>
+							
+							<p:ajax event="change" update="priceType" partialSubmit="true"
+									process="@this"
+									listener="#{requestNoteBackingBean.supplierLister(requestNoteDtl.scRequestSupplierItem.supplierItemId ,requestNoteDtl,requestNoteDtl.requestItem.supplierItems)}" />
 					</p:selectOneMenu>
 					<p:message id="recSupplierMsg" for="recSupplier" display="icon" />
 				</p:column>
@@ -156,10 +160,10 @@
 						value="#{requestNoteDtl.priceType.parameterId}">
 						 <f:selectItem itemLabel="-Select One-" itemValue="#{null}" />
 						<f:selectItems
-							value="#{requestNoteDtl.scRequestSupplierItem.supplierItemPrices}"
-							var="supplierItemPrice"
-							itemLabel="#{requestNoteBackingBean.getParameterDesc(ParameterTypeConst.priceType,supplierItemPrice.priceType.parameterCode)}"
-							itemValue="#{supplierItemPrice.priceType.parameterId}" />
+							value="#{requestNoteBackingBean.getPriceTypeByPrice(requestNoteDtl.scRequestSupplierItem.supplierItemPrices)}"
+							var="pmParameter"
+							itemLabel="#{requestNoteBackingBean.getParameterDesc(ParameterTypeConst.priceType,pmParameter.parameterCode)}"
+							itemValue="#{pmParameter.parameterId}" />
 					</p:selectOneMenu>
 					<p:message id="priceTypeMsg" for="priceType" display="icon" />
 				</p:column>
@@ -278,7 +282,7 @@
 					</p:selectOneMenu>
 					<p:spacer width="5px;"/>
 					<p:commandButton value="#{lbl['lbl.sc.action.apply.btn']}"
-						process="@form " icon="ui-icon-submit"
+						process="@this requestListDataTable " icon="ui-icon-submit"
 						actionListener="#{requestNoteBackingBean.applyForRequestNote}"
 						update="@([id$=requestListDataTable])" />
               </p:column>
