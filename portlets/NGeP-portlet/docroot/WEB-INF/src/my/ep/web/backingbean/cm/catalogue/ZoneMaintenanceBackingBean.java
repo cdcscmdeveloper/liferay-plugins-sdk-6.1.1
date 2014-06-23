@@ -250,6 +250,13 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 		 */
 	}
 	
+	public void addNewZone() {
+		
+		getManagedBean().getSelectedSupplierZone().setSuppZoneName(null);
+		showZonePopup();
+		
+	}
+	
 	/**
     * showZonePopup method for zone popup
     */

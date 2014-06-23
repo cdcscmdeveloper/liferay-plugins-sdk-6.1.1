@@ -71,7 +71,7 @@
 			<p:commandButton value="#{lbl['lbl.ct.ded.btn.add']}" process="@this" 
 			     update="@([id$=zonePopupPanel])" partialSubmit="true" 
 				 oncomplete="ZL.show();" 
-				 actionListener="#{zoneMaintenanceBackingBean.showZonePopup}" icon="ui-icon-add"/>
+				 actionListener="#{zoneMaintenanceBackingBean.addNewZone}" icon="ui-icon-add"/>
 		</div>	
 		
 		<p:dialog header="ZL" widgetVar="ZL" modal="true"
