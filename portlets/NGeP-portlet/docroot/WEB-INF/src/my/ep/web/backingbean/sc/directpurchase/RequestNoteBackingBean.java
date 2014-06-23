@@ -278,7 +278,6 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 				requestNoteReqDTO.setSubmit(Boolean.TRUE);
 				requestNoteResDTO = directPurchaseSO.saveRequestNote(requestNoteReqDTO);
 			} else {
-				requestNoteReqDTO = new RequestNoteReqDTO();
 				requestNoteReqDTO.setTaskId(getManagedBean().getTaskId());
 				requestNoteReqDTO.setToken(ctxToken);
 				requestNoteReqDTO.setOutcome(outcome);
@@ -890,7 +889,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			}
 			if (itemIds.size() > 0) {
 				if(itemIds.contains(scRequestNoteDtl.getScRequestSupplierItem().getSupplierItemPrice().getPricing().getCmSupplierItem().getCmItem().getItemId())){
-					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, 
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, 
 							null,
 							MessageUtils.getMessage(MessageConst.INFO_700027, 
 									new String[]{scRequestNoteDtl.getScRequestSupplierItem().getSupplierItemPrice().getPricing().getCmSupplierItem().getCmItem().getItemName()}, 
@@ -924,9 +923,18 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 	}
 
 	public List<PmParameter>  getPriceTypeByPrice(List<ScSupplierItemPrice> supplierItemPrices) {
+		IParameterSO parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+		ParameterReqDTO reqDTO = new ParameterReqDTO();
 		List<Long> checkIds = new ArrayList<Long>();
 		List<PmParameter> params = new ArrayList<PmParameter>();
 		for (ScSupplierItemPrice scSupplierItemPrice : supplierItemPrices) {
+			if(scSupplierItemPrice.getPriceType().getParameterId() != null){
+				reqDTO.setParameterType(ParameterTypeConst.PRICE_TYPE);
+				reqDTO.setParameterCode(scSupplierItemPrice.getPriceType().getParameterCode());
+				ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
+				scSupplierItemPrice.setPriceType(resDTO.getPmParameter());
+			}
+
 			if(!checkIds.contains(scSupplierItemPrice.getPriceType().getParameterId())){
 				checkIds.add(scSupplierItemPrice.getPriceType().getParameterId());
 				params.add(scSupplierItemPrice.getPriceType());
@@ -934,7 +942,6 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		}
 		return params;
 	}
-			
 
 	/**
 	 * Event for procurement type  drop down in Add to Cart

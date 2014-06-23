@@ -7,12 +7,12 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<ui:define name="contentSection">
-	<p:messages showDetail="true" autoUpdate="true" closable="true" severity="error, info ,warn" />
 	<ac:title value="#{lbl['lbl.sc.request.note']}"/>
+	<p:messages showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
 	<p:panel id="requestNoteId">
-	 <p:spacer height="5px"/>
 			 <ui:include
 				src="/xhtml/sc/directpurchase/common/commonReqNoteButtons.xhtml" /> 
+	  <p:spacer height="5px"/>
 			<table style="border: 0px; align: center;" width="100%">
 				<tr>
 					<td>
