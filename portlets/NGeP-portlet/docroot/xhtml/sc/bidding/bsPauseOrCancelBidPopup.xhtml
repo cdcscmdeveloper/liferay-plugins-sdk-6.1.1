@@ -11,16 +11,14 @@
 		<table>
 
 			<tr>
-				<TD><p:outputLabel
-						value="#{lbl['lbl.sc.bidding.bm.bs.pop1.pcb.remainingTime']}" /></TD>
-				<TD><p:inputText id="remainingTime"
-						value="#{biddingBB.managedBean.remainingTime}" size="20"
+				<TD><p:outputLabel value="#{lbl['lbl.sc.remaining.time']}" /></TD>
+				<TD><p:inputText id="bidPauseOrCancelRemainingTime"
+						value="#{biddingBB.managedBean.bidAction.remainingTime}" size="20"
 						disabled="true" /></TD>
-				<TD><p:outputLabel
-						value="#{lbl['lbl.sc.bidding.bm.bs.pop1.pcb.nos']}" /></TD>
-				<TD><p:inputTextarea id="supplierNotes"
-						value="#{biddingBB.managedBean.supplierNotes}" size="200" maxlength="1000"
-						 /></TD>
+				<TD><p:outputLabel value="#{lbl['lbl.sc.notes.to.supplier']}" /></TD>
+				<TD><p:inputTextarea id="bidPauseOrCancelsupplierNotes"
+						value="#{biddingBB.managedBean.bidAction.remark}" size="200"
+						maxlength="200" /></TD>
 			</tr>
 
 		</table>
@@ -28,11 +26,13 @@
 	</div>
 	<div>
 
-		<p:commandButton value="#{lbl['lbl.sc.bidding.bm.bs.pop1.pcb.btn.ok']}"
-			icon="ui-icon-ok" />
+		<p:commandButton value="#{lbl['lbl.btn.ok']}"
+			action="#{biddingBB.pauseBidAction}" icon="ui-icon-ok"
+			onclick="pauseOrCancelBid.close();" />
 
-		<p:commandButton value="#{lbl['lbl.sc.bidding.bm.bs.pop1.pcb.btn.cancel']}"
-			icon="ui-icon-cancel" />
+		<p:commandButton value="#{lbl['lbl.btn.cancel']}"
+			action="#{biddingBB.cancelBidAction}" icon="ui-icon-cancel"
+			onclick="pauseOrCancelBid.close();" />
 	</div>
 
 </ui:composition>
