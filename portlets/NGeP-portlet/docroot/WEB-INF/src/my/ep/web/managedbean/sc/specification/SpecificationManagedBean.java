@@ -13,6 +13,7 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
@@ -318,6 +319,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private List<CtPanelZone> ctPanelZones;
 	private CtPanelSupplier ctpanelSupplier;
 	private ScQtRemark contractremark;
+	private CtCircularVer circularVer;
 	
 	//Added By Sagar.. for Delete funcationality..
 	private TreeNode selectedTreeNode;
@@ -3646,13 +3648,35 @@ public class SpecificationManagedBean extends BaseManagedBean {
 		this.selectedTreeNode = selectedTreeNode;
 	}
 
+	/**
+	 * @return the circularVer
+	 */
+	public CtCircularVer getCircularVer() {
+		return circularVer;
+	}
+
+	/**
+	 * @param circularVer the circularVer to set
+	 */
+	public void setCircularVer(CtCircularVer circularVer) {
+		this.circularVer = circularVer;
+	}
+
+	/**
+	 * @return the taskName
+	 */
 	public String getTaskName() {
 		return taskName;
 	}
 
+	/**
+	 * @param taskName the taskName to set
+	 */
 	public void setTaskName(String taskName) {
 		this.taskName = taskName;
 	}
+
+	
 
 	
 
