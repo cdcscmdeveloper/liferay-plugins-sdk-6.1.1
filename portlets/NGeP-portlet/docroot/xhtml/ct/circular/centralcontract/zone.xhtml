@@ -18,10 +18,10 @@
 						<p:ajax event="rowSelect" update=":form:tabview:circularZoneDtlPnl,:form:tabview:deleteZoneBtn" 
 							listener="#{centralContractBackingBean.selectZoneEvent()}" />
 						<p:column headerText="#{lbl['lbl.ct.pc.zone.name']}" style="width:250px;" >
-							<p:inputText value="#{data.name}" style="width:250px;" />
+							<p:inputText value="#{data.name}" style="width:250px;" maxlength="100" />
 						</p:column>
 						<p:column headerText="Delivery Term (days)" style="width:150px;" >
-							<p:inputText value="#{data.deliveryTerm}" />
+							<p:inputText value="#{data.deliveryTerm}" maxlength="4" label="Delivery Term (days)" />
 						</p:column>						
 					</p:dataTable>
 					<p:spacer height="2" />

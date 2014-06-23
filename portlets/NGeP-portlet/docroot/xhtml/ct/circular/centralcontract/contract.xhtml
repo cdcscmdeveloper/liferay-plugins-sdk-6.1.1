@@ -63,17 +63,17 @@
 		           listener="#{centralContractBackingBean.setZoneListener()}"/>
 			       <p:column headerText="Item Name" style="width:450px;"><h:outputText value="#{itemVar.ctContractItem.itemName}" style="width:450px;" /></p:column>
 			       <p:column headerText="Minimum Order Qty." style="width:150px;" >
-			       		<p:inputText styleClass="colFloatRight" value="#{itemVar.minimumOrderQty}" maxlength="14" >
+			       		<p:inputText styleClass="colFloatRight" value="#{itemVar.minimumOrderQty}" maxlength="14" label="Minimum Order Qty.">
 							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, itemVar.ctContractItem.uom.uomCode)}" />			       		
 			       		</p:inputText> 
 			       </p:column>	
 			       <p:column headerText="Nilai Pesanan Minimum (RM)" > 
-			       		<p:inputText styleClass="colFloatRight" value="#{itemVar.minimumOrderAmt}" maxlength="19" >
+			       		<p:inputText styleClass="colFloatRight" value="#{itemVar.minimumOrderAmt}" maxlength="19" label="Nilai Pesanan Minimum (RM)">
 							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />			       		
 			       		</p:inputText>   
 			       </p:column>
-			       <p:column headerText="Had Pembelian Luar Kontrak" style="width:150px;">
-			       		<p:inputText styleClass="colFloatRight" value="#{itemVar.maxProcureAmt}" maxlength="19">
+			       <p:column headerText="Had Pembelian Luar Kontrak (RM)" style="width:150px;">
+			       		<p:inputText styleClass="colFloatRight" value="#{itemVar.maxProcureAmt}" maxlength="19" label="Had Pembelian Luar Kontrak (RM)">
 							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />			       		
 			       		</p:inputText>
 			       </p:column>	
@@ -158,10 +158,10 @@
 		<p:panel id="listOfContract">
 			<h:panelGrid columns="6">
 				<h:outputText value="Contract No."/>
-				<p:inputText id="contractNo" value="#{centralContractBackingBean.managedBean.searchContractNo}" />
+				<p:inputText id="contractNo" value="#{centralContractBackingBean.managedBean.searchContractNo}" maxlength="17" />
 				<p:spacer width="10" />
 				<h:outputText value="Contract Name"/>
-				<p:inputText id="contractName" value="#{centralContractBackingBean.managedBean.searchContractName}" />
+				<p:inputText id="contractName" value="#{centralContractBackingBean.managedBean.searchContractName}" maxlength="1000" />
 				<p:commandButton value="Search" process="contractDlg,contractNo,contractName"
 					icon="ui-icon-search" update="contractDt"
 					actionListener="#{centralContractBackingBean.searchContract()}"  />

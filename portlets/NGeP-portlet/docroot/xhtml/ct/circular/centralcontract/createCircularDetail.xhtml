@@ -13,7 +13,7 @@
 				</td>
 				<td style="width: 200px">
 					<p:inputText id="circularNoTxt" style="width:190px;" required="true" label="#{lbl['lbl.ct.cc.cno']}"
-						value="#{centralContractBackingBean.managedBean.circularVer.circularNo}" />
+						value="#{centralContractBackingBean.managedBean.circularVer.circularNo}" maxlength="50" />
 				</td>
 				<td>
 					<p:message for="circularNoTxt" display="icon" />
@@ -24,7 +24,7 @@
 				</td>
 				<td rowspan="2" style="width: 180px">
 					<p:inputTextarea id="circularNameTxt" rows="3" style="width:180px; margin-bottom:5px;" label="#{lbl['lbl.ct.cc.cname']}"
-						required="true" value="#{centralContractBackingBean.managedBean.circularVer.name}" />
+						required="true" value="#{centralContractBackingBean.managedBean.circularVer.name}" maxlength="200" />
 				</td>
 				<td>
 					<p:message for="circularNameTxt" display="icon" />	
@@ -33,7 +33,7 @@
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.ct.cc.frno']}" /></td>
 				<td><p:inputText  style="width:190px;"
-						value="#{centralContractBackingBean.managedBean.circularVer.circularFileRefNo}" /></td>
+						value="#{centralContractBackingBean.managedBean.circularVer.circularFileRefNo}" maxlength="50" /></td>
 			</tr>
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.ct.cc.csdate']}" /></td>

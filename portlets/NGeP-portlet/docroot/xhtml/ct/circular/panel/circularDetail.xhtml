@@ -21,21 +21,21 @@
 			<ac:paginator for="contactPersonDt" />
 			<p:column selectionMode="multiple" style="width:3%" />
 			<p:column headerText="#{lbl['lbl.ct.pc.cperson']}">
-				<p:inputText value="#{data.name}" style="width:150px;" />
+				<p:inputText value="#{data.name}" style="width:150px;" maxlength="20" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.ct.pc.caddress']}">
-				<p:inputText value="#{data.address}" style="width:250px;" />
+				<p:inputText value="#{data.address}" style="width:250px;" maxlength="200" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.ct.pc.cemail']}">
 			   <h:panelGrid columns="2">
-				<p:inputText id="email" value="#{data.email}" style="width:120px;" 
+				<p:inputText id="email" value="#{data.email}" style="width:120px;" maxlength="100"
 				 validator="#{webappBean.checkEmail}" label="#{lbl['lbl.ct.pc.cemail']}" />
 				 <p:message for="email" display="icon"/>
 			   </h:panelGrid>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.ct.pc.pno']}">
 			   <h:panelGrid columns="2">
-				<p:inputText id="phoneNo" value="#{data.phoneNo}" style="width:120px;"
+				<p:inputText id="phoneNo" value="#{data.phoneNo}" style="width:120px;" maxlength="100"
 				  validator="#{webappBean.checkPhoneNumber}" label="#{lbl['lbl.ct.pc.pno']}" />
 				<p:message for="phoneNo" display="icon"/>
 			   </h:panelGrid>
