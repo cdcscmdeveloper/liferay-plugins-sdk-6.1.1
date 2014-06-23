@@ -11,6 +11,14 @@
 	
 		<ui:include src="/xhtml/sc/supplierFinalization/suppFinalizationHeader.xhtml"></ui:include>
 		
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.btn.submit']}" 
+					process="@all"
+					partialSubmit="true"
+					action="#{suppFinalizationBackingBean.submitSuppFinalization}"
+					icon="ui-icon-submit" />
+		</div>	
+		
 		<p:tabView id="tab" dynamic="true" cache="true" orientation="top">
 			<p:ajax event="tabChange" listener="#{suppFinalizationBackingBean.onTabMenuChangeAction}" immediate="true" />
 		

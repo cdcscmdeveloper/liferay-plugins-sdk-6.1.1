@@ -18,7 +18,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeetingAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtReport;
 import my.ep.persistence.entity.sm.SmSupplier;
-import my.ep.persistence.entity.tpl.spec.TplSpecZone;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.sc.quationtender.common.QTConstants;
@@ -66,6 +65,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private String reEvaluateReqFor;
 	private String reqSpecChanges;
 	private String recommendBy = ParameterConst.RECOMMEND_BY_SINGLE_AWARD;
+	private String recommendByItem = ParameterConst.RECOMMEND_BY_SINGLE_AWARD;
 	private String selectionMode = QTConstants.SF_SINGLE;
 	private String awardSupplier; 
 	
@@ -74,6 +74,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private boolean isReEvaluate;
 	private boolean isRePublish;
 	private boolean isForward;
+	private boolean isForwardToBpk = false;
 	private boolean isSingleAward;
 	private boolean isMultipleAward;
 	private boolean isOnlineBidding;
@@ -801,6 +802,34 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	 */
 	public void setRecommendedSupplier(ScQtEvaluationResult recommendedSupplier) {
 		this.recommendedSupplier = recommendedSupplier;
+	}
+
+	/**
+	 * @return the recommendByItem
+	 */
+	public String getRecommendByItem() {
+		return recommendByItem;
+	}
+
+	/**
+	 * @param recommendByItem the recommendByItem to set
+	 */
+	public void setRecommendByItem(String recommendByItem) {
+		this.recommendByItem = recommendByItem;
+	}
+
+	/**
+	 * @return the isForwardToBpk
+	 */
+	public boolean isForwardToBpk() {
+		return isForwardToBpk;
+	}
+
+	/**
+	 * @param isForwardToBpk the isForwardToBpk to set
+	 */
+	public void setForwardToBpk(boolean isForwardToBpk) {
+		this.isForwardToBpk = isForwardToBpk;
 	}
 	
 	

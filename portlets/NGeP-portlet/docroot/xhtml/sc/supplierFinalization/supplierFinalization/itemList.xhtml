@@ -14,6 +14,22 @@
 			selection="#{suppFinalizationBackingBean.managedBean.selectedItemList}"
 			rowKey="#{item.requestNoteItemId}" rowIndexVar="rowIndex">
 			<ac:paginator for="itemListTbl" />
+			
+			<p:ajax event="rowSelect" 
+				listener="#{suppFinalizationBackingBean.selectItemEvent}"
+				update=":form:tab:supplierListTblMultiple" />
+				
+			<p:ajax event="rowSelectCheckbox" 
+				listener="#{suppFinalizationBackingBean.selectItemEvent}"
+				update=":form:tab:supplierListTblMultiple" />
+				
+			<p:ajax event="rowUnselect"
+				listener="#{suppFinalizationBackingBean.unselectItemEvent}"
+				update=":form:tab:supplierListTblMultiple"></p:ajax>
+				
+			<p:ajax event="rowUnselectCheckbox"
+				listener="#{suppFinalizationBackingBean.unselectItemEvent}"
+				update=":form:tab:supplierListTblMultiple"></p:ajax>
 
 			<p:column selectionMode="multiple" style="width:2%" /> 
 			<p:column headerText="#{lbl['lbl.sc.item']}">
@@ -34,15 +50,17 @@
 
 			<p:column headerText="#{lbl['lbl.sc.recommend.by']}">
 				<h:column>
-					<p:selectOneMenu id="awardSupplier" value="#{suppFinalizationBackingBean.managedBean.awardSupplier}">
-						<f:selectItems value="#{suppFinalizationBackingBean.getRecommendByDropDown()}" />
-						<p:ajax event="change" update=":form:tab:itemListTbl" listener="#{suppFinalizationBackingBean.awardSupplierEvent}" process="@this" />
+					<p:selectOneMenu id="recommendByItem" value="#{item.recommendStr}">
+						<f:selectItems value="#{suppFinalizationBackingBean.getItemRecommendByDropDown()}" />
+						<p:ajax event="change" 
+							update="@([id$=selectedSupplierListTbl#{rowIndex}]), @([id$=quantity#{rowIndex}])"
+							listener="#{suppFinalizationBackingBean.itemRecommendByEvent(item)}"/>
 	   				</p:selectOneMenu>	
 				</h:column>
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sc.recommended.supplier']}">
-				<p:dataTable id="selectedSupplierListTbl" var="supplier"
+				<p:dataTable id="selectedSupplierListTbl#{rowIndex}" var="supplier"
 					value="#{item.awardSupplierList}"
 					rowKey="#{supplier.supplierId}" rowIndexVar="rowIndex">
 					
@@ -51,7 +69,7 @@
 							action="#{suppFinalizationBackingBean.supplier}"
 							oncomplete="suppDtlWidgetVar.show();">
 							<f:setPropertyActionListener value="#{supplier}" target="#{suppFinalizationBackingBean.managedBean.shortlistedSupplier}" />
-							<h:outputText value="#{supplier.companyName}" />
+							<h:outputText value="#{supplier.scQtProposal.scQtSupplier.smSupplier.companyName}" />
 						</p:commandLink>
 					</p:column>
 					
@@ -59,7 +77,13 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.quantity']}">
-				<h:inputText value=""/>
+				<p:outputPanel id="quantity#{rowIndex}">
+					<h:inputText value="#{item.quantity}" 
+						rendered="#{item.tplSpecQuestion.clPriceTypeCode == ParameterConst.priceTypeStandard and item.recommendStr == ParameterConst.recommendByMultipleAward}"/>
+				
+					<h:outputText value="#{item.quantity}" 
+						rendered="#{item.tplSpecQuestion.clPriceTypeCode == ParameterConst.priceTypeStandard and item.recommendStr != ParameterConst.recommendByMultipleAward}"/>
+				</p:outputPanel>
 			</p:column>
 		</p:dataTable>
 		
@@ -71,15 +95,17 @@
 			</h:column>
 			<h:column>
 				<p:selectOneMenu id="awardSupplier" value="#{suppFinalizationBackingBean.managedBean.awardSupplier}">
+					<f:selectItem itemLabel="#{lbl['lbl.btn.select']}" itemValue="" />
 					<f:selectItems value="#{suppFinalizationBackingBean.getAwardSupplierListDropDown()}" />
+					<p:ajax event="change" listener="#{suppFinalizationBackingBean.selectSupplierDropDownEvent}" process="@this" />
 	   			</p:selectOneMenu>
 				
 				<p:commandButton value="#{lbl['lbl.btn.apply']}" 
 					process="@this"
 					partialSubmit="true"
-					action="#{suppFinalizationBackingBean.awardSupplierEvent}"
+					action="#{suppFinalizationBackingBean.awardSupplierEvent}" 
 					icon="ui-icon-check" 
-					update=":form:tab:itemListTbl:selectedSupplierListTbl"/>
+					update=":form:tab:itemListTbl, :form:tab:supplierListTblMultiple"/>
 			</h:column>
 			
 		</h:panelGrid>

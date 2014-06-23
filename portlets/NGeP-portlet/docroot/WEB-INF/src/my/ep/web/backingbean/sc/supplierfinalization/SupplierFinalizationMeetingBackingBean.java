@@ -25,6 +25,7 @@ import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTMeetingSO;
+import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
@@ -61,14 +62,17 @@ import my.ep.persistence.entity.sc.quationtender.ScRemark;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
-import my.ep.web.managedbean.sc.evaluation.EvaluationMeetingManagedBean;
+import my.ep.web.constant.CommonUIConst;
+import my.ep.web.managedbean.sc.supplierfinalization.SupplierFinalizationMeetingManagedBean;
 import my.ep.web.sc.quationtender.common.QTConstants;
 import my.ep.web.type.sc.quationtender.SelectionType;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pp.common.CommonMethod;
 
 import org.apache.commons.lang.StringUtils;
 import org.primefaces.event.SelectEvent;
@@ -81,7 +85,7 @@ import org.primefaces.event.SelectEvent;
 @ManagedBean(name = "suppFinalMeetingBackingBean")
 @RequestScoped
 public class SupplierFinalizationMeetingBackingBean extends
-		SourcingBaseBackingBean<EvaluationMeetingManagedBean> {
+		SourcingBaseBackingBean<SupplierFinalizationMeetingManagedBean> {
 
 	public SupplierFinalizationMeetingBackingBean() {
 		/*
@@ -173,20 +177,24 @@ public class SupplierFinalizationMeetingBackingBean extends
 				}
 
 				this.getManagedBean().setScQtCommittee(committee);
+				List<ScQtCommitteRemarks> remarks = committee
+						.getQtCommitteRemarks();
+				if (remarks == null) {
+					remarks = new ArrayList<ScQtCommitteRemarks>();
+				}
 
-				if (committee.getQtCommitteRemarks() != null) {
-					for (ScRemark remark : resDTO.getQtCommittee()
-							.getQtCommitteRemarks()) {
+				if (remarks != null && !remarks.isEmpty()) {
+					for (ScRemark remark : remarks) {
 						ScQtCommitteRemarks qtRemark = (ScQtCommitteRemarks) remark;
 						qtRemarkList.add(qtRemark);
 					}
 					this.getManagedBean().setQtCommitteeRemarks(qtRemarkList);
 				}
 				initializeRemarks();
+				
+				this.getManagedBean().setScQt(committee.getScQt());
 			//}
 
-		} catch (Exception e) {
-			//e.printStackTrace();
 		} finally {
 			meetingSO = null;
 		}
@@ -521,8 +529,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO,
-							"Evaluation Meeting Saved Successfully",
-							""));
+							"Evaluation Meeting Saved Successfully", ""));
 		} catch (Exception e) {
 			System.out.println("this is error");
 			e.printStackTrace();
@@ -536,10 +543,6 @@ public class SupplierFinalizationMeetingBackingBean extends
 		}
 	}
 	
-	public String submitAction() {
-		return "/xhtml/sc/supplierFinalization/suppFinalizationMenu.xhtml";
-	}
-
 	public void existingCommitteeSearchAction() {
 		// debugLogger("existingCommitteeSearchAction");
 		UserReqDTO userReqDTO = new UserReqDTO();
@@ -751,10 +754,11 @@ public class SupplierFinalizationMeetingBackingBean extends
 		for (ScCommitteeMember scCommitteeMember : cloneCommitteeList) {
 			scCommitteeMember.setScCommittee(this.getManagedBean()
 					.getScQtCommittee().getScCommittee());
-			scCommitteeMember.setCreatedBy(1L);
-			scCommitteeMember.setChangedBy(1L);
-			scCommitteeMember.setCreatedDate(new Timestamp(System
-					.currentTimeMillis()));
+			setUserDetails(scCommitteeMember);
+			//scCommitteeMember.setCreatedBy(1L);
+			//scCommitteeMember.setChangedBy(1L);
+			//scCommitteeMember.setCreatedDate(new Timestamp(System
+				//	.currentTimeMillis()));
 			ScQtCommitteeActivity activity = new ScQtCommitteeActivity();
 			activity.setScQtCommittee(this.getManagedBean().getScQtCommittee());
 			activity.setScCommitteeMember(scCommitteeMember);
@@ -796,6 +800,26 @@ public class SupplierFinalizationMeetingBackingBean extends
 		} catch (Exception e) {
 
 		}
+	}
+	
+	public void submitAction() {
+		String variable1 = getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION) + " " + getManagedBean().getScQt().getQtNo();
+		String variable2 = CommonMethod.getMessageCommon("lbl.sc.meeting.confirmation");
+		commonMessageAcknowledmentPage(MessageConst.INFO_700026, variable1, variable2);
+	}
+	
+	private void commonMessageAcknowledmentPage(String messageId, String variable1, String variable2){
+		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+			FacesMessage.SEVERITY_INFO, 
+			null,
+			MessageUtils.getMessage(messageId, 
+					new String[]{variable1, variable2}, 
+					MessageUtils.BUNDLE_COMMON_MESSAGES, 
+					new FacesScopes().getUserLocale())));
+		 // clear data
+		super.renewSesionObject();
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
 	}
 
 }
