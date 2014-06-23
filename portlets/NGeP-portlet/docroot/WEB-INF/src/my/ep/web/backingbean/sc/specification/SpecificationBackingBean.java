@@ -479,7 +479,7 @@ public class SpecificationBackingBean extends
 		if (!this.getManagedBean().getScQt().isPanel()) {
 			return "specificationCreation.xhtml?faces-redirect=true";
 		} else if (this.getManagedBean().getScQt().isPanel()
-				&& "PCR".equalsIgnoreCase(this.getManagedBean()
+				&& "PQ".equalsIgnoreCase(this.getManagedBean()
 						.getCircularType())
 				&& "Specific".equalsIgnoreCase(this.getManagedBean()
 						.getPanelItemCategory())
@@ -491,7 +491,7 @@ public class SpecificationBackingBean extends
 		}
 
 		else if (this.getManagedBean().getScQt().isPanel()
-				&& "CCR".equalsIgnoreCase(this.getManagedBean()
+				&& "CQ".equalsIgnoreCase(this.getManagedBean()
 						.getCircularType())) {
 
 			FacesScopes facesScopes = new FacesScopes();
@@ -2650,7 +2650,7 @@ public class SpecificationBackingBean extends
 				searchCircularList();
 				// this.getManagedBean().setApprovalList(getAppDetails());
 				// retriveSpecdetails(1366L);
-				// retriveSpecdetails(1426L);
+				//retriveSpecdetails(1426L);
 			}
 
 		} finally {
@@ -2671,6 +2671,7 @@ public class SpecificationBackingBean extends
 			tenderResDTO = QtDetailsSO.retriveQTDetails(tenderReqDTO);
 			if (tenderResDTO.getQtDetail() != null) {
 				getManagedBean().setScQt(tenderResDTO.getQtDetail());
+				
 
 				if (null == tenderResDTO.getQtSupplierCriteria()) {
 
@@ -7490,7 +7491,7 @@ public class SpecificationBackingBean extends
 			this.getManagedBean().setCirCularNo(circular.getCircularNo());
 			this.getManagedBean().setCircularName(circular.getName());
 			this.getManagedBean().setCircularType(
-					circular.getCtCircular().getCircularType());
+					circular.getDocType());
 
 			// this.getManagedBean().setCircularType(getParameterDesc(circular.getCtPanelItems().get(0).getItemCategoryId()));
 			// System.out.println("=======circular type==="+
@@ -7702,8 +7703,8 @@ public class SpecificationBackingBean extends
 		this.getManagedBean().setPanelItemList(new ArrayList<CtPanelItem>());
 		this.getManagedBean().setCtPanelItem(null);
 		this.getManagedBean().setCircularExpDate(new Date());
-		this.getManagedBean().setCirCularNo(null);
-		this.getManagedBean().setCircularName(null);
+		//this.getManagedBean().setCirCularNo(null);
+		//this.getManagedBean().setCircularName(null);
 		this.getManagedBean().setCircularType(null);
 
 	}
