@@ -127,39 +127,35 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 	
 	public void deleteCmSupplierZones(){
 		IZoneMaintenanceSO zoneMaintenanceSO = null;
-		try {
-			zoneMaintenanceSO = (IZoneMaintenanceSO) BusinessDelegate
+		
+		zoneMaintenanceSO = (IZoneMaintenanceSO) BusinessDelegate
 					.getInstance().getServiceObject("cm", IZoneMaintenanceSO.class);
-			ZoneMaintenanceReqDTO reqDTO = new ZoneMaintenanceReqDTO();
+		ZoneMaintenanceReqDTO reqDTO = new ZoneMaintenanceReqDTO();
 			
-			reqDTO.setCmSupplierZoneList(getManagedBean().getDeletedCmSupplierZoneList());
+		reqDTO.setCmSupplierZoneList(getManagedBean().getDeletedCmSupplierZoneList());
 			
-			ZoneMaintenanceResDTO resDTO = zoneMaintenanceSO.delete(reqDTO);
+		ZoneMaintenanceResDTO resDTO = zoneMaintenanceSO.delete(reqDTO);
 			
-			if (resDTO.isSuccessful()) {
+		getManagedBean().setZoneTrees(CmSupplierZoneSingleton.getInstance().buildZoneSDTree(this.getManagedBean().getCmSupplierZoneList()));
+
+		if (resDTO.isSuccessful()) {
 			
-				System.out.println("SuccessMMMMMMMMMMMMMMMMM");
-				
-				/*FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO,
-								"Records deleted successfully.", ""));*/
-				throw new EpException(MessageConst.INFO_711002);
-			}
-         
-		} catch (Exception ex) {
+			System.out.println("SuccessMMMMMMMMMMMMMMMMM");
 			
+			/*FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO,
+							"Records deleted successfully.", ""));*/
+			throw new EpException(MessageConst.INFO_711002);
+		} else {
 			System.out.println("Not SuccessMMMMMMMMMMMMMMMMM");
 			/*FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR,
 							"Sorry We are unable to process.", ""));*/
 			throw new EpException(MessageConst.ERROR_716001);
-		} finally {
-			zoneMaintenanceSO = null;
 		}
 		
-		getManagedBean().setZoneTrees(CmSupplierZoneSingleton.getInstance().buildZoneSDTree(this.getManagedBean().getCmSupplierZoneList()));
 	}
 	
 	/**
