@@ -43,6 +43,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.web.backingbean.sc.specification.BankingBean;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
+import my.ep.web.bean.sc.quatationtender.CtCircularSearchBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -100,7 +101,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private List<SelectItem> approvalList;
 	private String evaluationType;
 	private ScQt scQt;
-	
+
 	private List<PmDocument> stageTwoTechComplianceList;
 	private List<PmDocument> stageTwoTechComplianceSelect;
 	private List<PmDocument> stageTwoFinComplianceList;
@@ -180,7 +181,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	// private List<CtCircularZone> ctZoneSelectList;
 	private TreeNode ctZoneTrees;
 	private TreeNode[] ctZoneTreeSelectedNodes;
-	private List<TreeNode> ctZoneSuppliers=new  ArrayList<TreeNode>();
+	private List<TreeNode> ctZoneSuppliers = new ArrayList<TreeNode>();
 
 	private List<CtPanelSupplier> ctZoneSupplierList;
 
@@ -321,11 +322,12 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private CtPanelSupplier ctpanelSupplier;
 	private ScQtRemark contractremark;
 	private CtCircularVer circularVer;
-	
-	//Added By Sagar.. for Delete funcationality..
+
+	// Added By Sagar.. for Delete funcationality..
 	private TreeNode selectedTreeNode;
 	private String taskName;
-private TplSpecMaster specMaster;
+	private CtCircularSearchBean ctSearchBean = new CtCircularSearchBean();
+
 	public SpecificationManagedBean() {
 		// deliveryLocBean.add(new BriefingZoneBean(1,"South",
 		// deliveryLoc,deleteDeliveryList));
@@ -715,8 +717,6 @@ private TplSpecMaster specMaster;
 	public void setEvaluationType(String evaluationType) {
 		this.evaluationType = evaluationType;
 	}
-
-	
 
 	/**
 	 * @return the s1TechSelect
@@ -1800,8 +1800,6 @@ private TplSpecMaster specMaster;
 		this.templateSpecBean = templateSpecBean;
 	}
 
-	
-
 	/**
 	 * @return the circularType
 	 */
@@ -1816,7 +1814,6 @@ private TplSpecMaster specMaster;
 	public void setCircularType(String circularType) {
 		this.circularType = circularType;
 	}
-
 
 	/**
 	 * @return the index
@@ -2214,8 +2211,6 @@ private TplSpecMaster specMaster;
 	public void setCtZoneTreeSelectedNodes(TreeNode[] ctZoneTreeSelectedNodes) {
 		this.ctZoneTreeSelectedNodes = ctZoneTreeSelectedNodes;
 	}
-
-	
 
 	/**
 	 * @return the yearList
@@ -3522,7 +3517,8 @@ private TplSpecMaster specMaster;
 	}
 
 	/**
-	 * @param ctPanelItem the ctPanelItem to set
+	 * @param ctPanelItem
+	 *            the ctPanelItem to set
 	 */
 	public void setCtPanelItem(CtPanelItem ctPanelItem) {
 		this.ctPanelItem = ctPanelItem;
@@ -3536,7 +3532,8 @@ private TplSpecMaster specMaster;
 	}
 
 	/**
-	 * @param suppCriteriarestrictedBoSelectList the suppCriteriarestrictedBoSelectList to set
+	 * @param suppCriteriarestrictedBoSelectList
+	 *            the suppCriteriarestrictedBoSelectList to set
 	 */
 	public void setSuppCriteriarestrictedBoSelectList(
 			List<ScQtCategory> suppCriteriarestrictedBoSelectList) {
@@ -3551,7 +3548,8 @@ private TplSpecMaster specMaster;
 	}
 
 	/**
-	 * @param required the required to set
+	 * @param required
+	 *            the required to set
 	 */
 	public void setRequired(boolean required) {
 		this.required = required;
@@ -3565,7 +3563,8 @@ private TplSpecMaster specMaster;
 	}
 
 	/**
-	 * @param ctZoneSuppliers the ctZoneSuppliers to set
+	 * @param ctZoneSuppliers
+	 *            the ctZoneSuppliers to set
 	 */
 	public void setCtZoneSuppliers(List<TreeNode> ctZoneSuppliers) {
 		this.ctZoneSuppliers = ctZoneSuppliers;
@@ -3579,7 +3578,8 @@ private TplSpecMaster specMaster;
 	}
 
 	/**
-	 * @param panelZoneSelect the panelZoneSelect to set
+	 * @param panelZoneSelect
+	 *            the panelZoneSelect to set
 	 */
 	public void setPanelZoneSelect(CtPanelZone panelZoneSelect) {
 		this.panelZoneSelect = panelZoneSelect;
@@ -3593,7 +3593,8 @@ private TplSpecMaster specMaster;
 	}
 
 	/**
-	 * @param ctPanelZones the ctPanelZones to set
+	 * @param ctPanelZones
+	 *            the ctPanelZones to set
 	 */
 	public void setCtPanelZones(List<CtPanelZone> ctPanelZones) {
 		this.ctPanelZones = ctPanelZones;
@@ -3607,7 +3608,8 @@ private TplSpecMaster specMaster;
 	}
 
 	/**
-	 * @param ctpanelSupplier the ctpanelSupplier to set
+	 * @param ctpanelSupplier
+	 *            the ctpanelSupplier to set
 	 */
 	public void setCtpanelSupplier(CtPanelSupplier ctpanelSupplier) {
 		this.ctpanelSupplier = ctpanelSupplier;
@@ -3621,7 +3623,8 @@ private TplSpecMaster specMaster;
 	}
 
 	/**
-	 * @param circularExpDate the circularExpDate to set
+	 * @param circularExpDate
+	 *            the circularExpDate to set
 	 */
 	public void setCircularExpDate(Date circularExpDate) {
 		this.circularExpDate = circularExpDate;
@@ -3635,7 +3638,8 @@ private TplSpecMaster specMaster;
 	}
 
 	/**
-	 * @param contractremark the contractremark to set
+	 * @param contractremark
+	 *            the contractremark to set
 	 */
 	public void setContractremark(ScQtRemark contractremark) {
 		this.contractremark = contractremark;
@@ -3657,7 +3661,8 @@ private TplSpecMaster specMaster;
 	}
 
 	/**
-	 * @param circularVer the circularVer to set
+	 * @param circularVer
+	 *            the circularVer to set
 	 */
 	public void setCircularVer(CtCircularVer circularVer) {
 		this.circularVer = circularVer;
@@ -3671,14 +3676,19 @@ private TplSpecMaster specMaster;
 	}
 
 	/**
-	 * @param taskName the taskName to set
+	 * @param taskName
+	 *            the taskName to set
 	 */
 	public void setTaskName(String taskName) {
 		this.taskName = taskName;
 	}
 
-	
+	public CtCircularSearchBean getCtSearchBean() {
+		return ctSearchBean;
+	}
 
-	
+	public void setCtSearchBean(CtCircularSearchBean ctSearchBean) {
+		this.ctSearchBean = ctSearchBean;
+	}
 
 }

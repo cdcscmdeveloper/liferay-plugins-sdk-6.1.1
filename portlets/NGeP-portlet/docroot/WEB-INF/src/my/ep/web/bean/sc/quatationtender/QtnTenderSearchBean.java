@@ -1,8 +1,9 @@
 package my.ep.web.bean.sc.quatationtender;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class QtnTenderSearchBean {
+public class QtnTenderSearchBean implements Serializable {
 	private String qtNo;
 	private String procurementMode;
 	private String qtTitle;

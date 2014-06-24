@@ -150,6 +150,7 @@ import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
+import my.ep.web.bean.sc.quatationtender.CtCircularSearchBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.sc.specification.SpecificationManagedBean;
@@ -519,9 +520,7 @@ public class SpecificationBackingBean extends
 	}
 
 	public void resetCircular() {
-		getManagedBean().setCirCularNo("");
-		getManagedBean().setCircularName("");
-		getManagedBean().setItemName("");
+		getManagedBean().setCtSearchBean(new CtCircularSearchBean());
 	}
 
 	public String backAction() {
@@ -7782,35 +7781,34 @@ public class SpecificationBackingBean extends
 			try {
 				CircularReqDTO circularReqDTO = new CircularReqDTO();
 
-				if (getManagedBean().getCirCularNo() != null
-						&& !"".equalsIgnoreCase(getManagedBean()
-								.getCirCularNo())) {
+				if (getManagedBean().getCtSearchBean().getCirCularNo() != null
+						&& !"".equalsIgnoreCase(getManagedBean().getCtSearchBean().getCirCularNo())) {
 					SearchFilterBean circularBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_EQUALS.value());
 					circularBean.setSearchField("circularNo");
-					circularBean.setSearchValue(getManagedBean()
+					circularBean.setSearchValue(getManagedBean().getCtSearchBean()
 							.getCirCularNo());
 					searchBean.getDataFilterBeans().add(circularBean);
 
 				}
 
-				if (getManagedBean().getCircularName() != null
-						&& !"".equalsIgnoreCase(getManagedBean()
+				if (getManagedBean().getCtSearchBean().getCircularName() != null
+						&& !"".equalsIgnoreCase(getManagedBean().getCtSearchBean()
 								.getCircularName())) {
 					SearchFilterBean circularBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_EQUALS.value());
 					circularBean.setSearchField("name");
-					circularBean.setSearchValue(getManagedBean()
+					circularBean.setSearchValue(getManagedBean().getCtSearchBean()
 							.getCircularName());
 					searchBean.getDataFilterBeans().add(circularBean);
 				}
 
-				if (getManagedBean().getItemName() != null
-						&& !"".equalsIgnoreCase(getManagedBean().getItemName())) {
+				if (getManagedBean().getCtSearchBean().getItemName() != null
+						&& !"".equalsIgnoreCase(getManagedBean().getCtSearchBean().getItemName())) {
 					SearchFilterBean circularBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_EQUALS.value());
 					circularBean.setSearchField("ctPanelItems.itemName");
-					circularBean.setSearchValue(getManagedBean().getItemName());
+					circularBean.setSearchValue(getManagedBean().getCtSearchBean().getItemName());
 					searchBean.getDataFilterBeans().add(circularBean);
 				}
 
