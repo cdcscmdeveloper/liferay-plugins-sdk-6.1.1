@@ -94,6 +94,7 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 	}
 	
 	public String createDeliveryOrder(String action) {
+		FacesScopes facesScopes = new FacesScopes();
 		String token = getFacesScopes().getBPMAuthenticationCtxToken();
 		IDeliveryOrderSO deliveryOrderSO = null;
 		try {
@@ -171,6 +172,7 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 				resDTO = deliveryOrderSO.deliveryOrderModification(reqDTO);
 			}
 			else{
+				reqDTO.setPmUser(facesScopes.getUserSessionBean());
 				resDTO = deliveryOrderSO.saveDeliveryOrder(reqDTO);
 			}
 			if(resDTO.isSuccessful()) {
