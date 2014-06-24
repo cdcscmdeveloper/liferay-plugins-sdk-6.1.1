@@ -13,7 +13,7 @@
 		</f:facet>
 		<p:dataTable id="businessownerId"
 			value="#{qTBusinessOwnerBackingBean.managedBean.scCommitteeMemberList}"
-			var="businessowner" rowIndexVar="index" editable="true"
+			var="businessowner" rowIndexVar="index" 
 			rowKey="#{businessowner}"
 			selection="#{qTBusinessOwnerBackingBean.managedBean.selectScCommitteMember}">
 
@@ -101,7 +101,7 @@
 						label="#{lbl['lbl.so.ministry.spec.secretary']}" required="true"
 						value="#{qTBusinessOwnerBackingBean.managedBean.qt.ministrySpecSecrataryId.userId}"
 						style="width: 178px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="-- Select --" itemValue="#{null}" />
+						<f:selectItem itemLabel="#{lbl['lbl.btn.select']}" itemValue="#{null}" />
 						<f:selectItems
 							value="#{qTBusinessOwnerBackingBean.managedBean.comitteeUserName}"
 							var="appName" itemLabel="#{appName.userName}"
