@@ -11,7 +11,7 @@
 
 	<h:panelGroup id="supplierItemViewID">
 
-		<p:messages showDetail="true" autoUpdate="true" closable="true" showSummary="true"></p:messages>
+		<p:messages id="catSrchMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 
 		<table style="width: 100%">
 			<tr>
@@ -149,7 +149,7 @@
 
 									<p:column headerText="#{lbl['lbl.cm.image']}" width="80px;">
 										<p:graphicImage value="/images/#{supplierItem.imagePath}"
-											height="80" width="80" />
+											height="80" width="80" rendered="false" />
 
 
 
@@ -196,8 +196,7 @@
 										rendered="#{unspscCodeBackingBean.requisitioner}">
 										<p:commandLink disabled="#{!supplierItem.atcRequired}" 
 											action="#{requestNoteBackingBean.addToCart(supplierItem.docId)}"
-											update="addToCartId"
-											oncomplete="addToCartPopup.show();return false;"
+											update="@([id$=addToCartPopup])"
 											rendered="#{supplierItem.contractNo == null and supplierItem.circularNo == null }">
 											<p:graphicImage library="ep/images/design"
 												name="cart_full.png" id="addToCartId" />
@@ -276,9 +275,9 @@
 															<tr>
 																<td width="100%" style="text-align: center;"><p:commandLink
 																		action="#{requestNoteBackingBean.addToCart(supplierItem.docId)}"
-																		process="@this" update="@([id$=addToCartId])"
-																		oncomplete="addToCartPopup.show();return false;"
+																		process="@this" 
 																		partialSubmit="true"
+																		update="@([id$=addToCartPopup])"
 																		rendered="#{supplierItem.contractNo == null and supplierItem.circularNo == null }">
 																		<p:graphicImage library="ep/images/design"
 																			name="cart_full.png" id="addToCartId" />

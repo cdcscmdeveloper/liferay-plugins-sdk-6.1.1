@@ -126,8 +126,19 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		getManagedBean().getReqNoteDataModel().reloadData();
 	}
 	
+	public void resetAction() {
+		getManagedBean().setSearchReqNoteNo(null);
+		getManagedBean().setSearchSrcMethod(null);
+	}
+	
 	public String editRequestNote(ScRequestNote scRequestNote) {
 		retrieveRequestNoteDetails(scRequestNote.getRequestNoteId());
+		
+		scRequestNote = getManagedBean().getRequestNote();
+		
+		if (scRequestNote.getWorkFlowStatuses() != null && scRequestNote.getWorkFlowStatuses().size() > 0) {
+			getCurrentStatus(scRequestNote.getWorkFlowStatuses().iterator().next().getPmStatus().getStatusId());	
+		}
 		
 		return "commonRequestNote";
 	}
@@ -596,12 +607,13 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			ScSupplierItemPrice supplierItemPrice = createSupplierItemPrice(requestSupplierItem, cmPricings.get(0));
 			
 			requestSupplierItem.setSupplierItemPrice(supplierItemPrice);
-			getManagedBean().setRequestSupplierItem(requestSupplierItem);
 			
 			ParameterResDTO resDTO; 
 			 // TODO check supplier is government seller or not 
 			  ScRequestNoteDtl requestNoteDtl =  getManagedBean().getRequestNoteDtl();
-			  if(cmSupplierItem.getSmSupplier().getPmOrgProfile().isGovtSeller()){
+			  if(cmSupplierItem.getSmSupplier().getPmOrgProfile() != null &&
+				cmSupplierItem.getSmSupplier().getPmOrgProfile().isGovtSeller()){
+				 
 				  reqDTO = new ParameterReqDTO();
 				  reqDTO.setParameterType(ParameterTypeConst.PROCUREMENT_TYPE);
 				  reqDTO.setParameterCode(ParameterConst.PROC_TYPE_G2G);
@@ -631,10 +643,15 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 				getManagedBean().setRequired(Boolean.TRUE);
 				// TODO PriceType drop down list in request note
 			}
+		} else {
+			// TODO - remove after catalogue team had add the filtering in view.
+			throw new EpException("Price not found");
 		}
+		// set request supplier item.
+		getManagedBean().setRequestSupplierItem(requestSupplierItem);
+		
 		getCurrentStatus(DPStatusConstants.RN_PENDING_SUBMISSION);
 		// update item details data table
-		RequestContext.getCurrentInstance().update("addToCartId");
 		RequestContext.getCurrentInstance().execute("addToCartPopup.show();");
 	}
 	

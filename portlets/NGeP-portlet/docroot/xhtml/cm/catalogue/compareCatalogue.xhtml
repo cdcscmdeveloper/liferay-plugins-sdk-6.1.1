@@ -9,6 +9,7 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 
 	<ui:define name="contentSection">
+		<p:messages id="catCmpMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 
 		<h:panelGroup id="compareCatalogueId">
 
@@ -65,8 +66,9 @@
 								</p:commandLink> 
 								
 								<p:commandLink actionListener="#{requestNoteBackingBean.addToCart(supplierItem.supplierItemId)}" 
-								    process="@this" update="@([id$=addToCartId])"
-									oncomplete="addToCartPopup.show();return false;" partialSubmit="true" 
+								    partialSubmit="true"
+								    process="@this" 
+								    update="@([id$=addToCartPopup])"
 									rendered="#{unspscCodeBackingBean.requisitioner}"
 									disabled="#{catalogueBackingBean.managedBean.contractedExist}">
 									<p:graphicImage library="ep/images/design" name="cart_full.png" />
