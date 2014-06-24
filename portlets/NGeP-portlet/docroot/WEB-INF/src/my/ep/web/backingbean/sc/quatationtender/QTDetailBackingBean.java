@@ -582,9 +582,11 @@ public class QTDetailBackingBean extends
 			this.getManagedBean().setQt(selectedScQt);
 			if (QTStatusConst.ASSIGN_BO.equals(selectedScQt.getQtStatus()
 					.getStatusId())) {
-				ScQtCommittee committee = getQtCommiteDtlsByQtIdNType("BO",
-
-				selectedScQt.getQtId());
+				ScQtCommittee committee = getQtCommiteDtlsByQtIdNType("BO",selectedScQt.getQtId());
+				
+				List<ScQtCommittee> qtCommittee= new ArrayList<ScQtCommittee>();
+				qtCommittee.add(committee);
+				selectedScQt.setScQtCommittees(qtCommittee);
 				this.getManagedBean().setScQtCommittee(committee);
 
 				this.getManagedBean().setScCommitteeMemberList(
