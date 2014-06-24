@@ -25,7 +25,7 @@
 				<h:outputLabel value="#{lbl['lbl.ct.cc.frno']}" />
 				<p:inputText value="#{centralContractBackingBean.managedBean.searchFileRefNo}" style="width:200px;" maxlength="50" />					
 				<p:outputLabel for="status" value="#{lbl['lbl.ct.status']}" />
-				<p:selectOneMenu id="status" value="#{centralContractBackingBean.managedBean.searchStatusId}" style="width:200px;">
+				<p:selectOneMenu id="status" value="#{centralContractBackingBean.managedBean.searchStatusId}" style="width:210px;">
 					<f:selectItems value="#{centralContractBackingBean.getStatusDropdown()}" />
 				</p:selectOneMenu>
 			</h:panelGrid>		
