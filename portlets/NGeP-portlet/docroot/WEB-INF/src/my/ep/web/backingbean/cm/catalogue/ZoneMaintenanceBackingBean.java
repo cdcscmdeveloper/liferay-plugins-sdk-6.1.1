@@ -282,7 +282,7 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 		List<Long> selectedDistricts = new ArrayList<Long>();
 		List<Long> selectedDivisions = new ArrayList<Long>();
 		for(TreeNode selectedNode : selectedNodes) {
-			if(selectedNode.getType().equals("state")) {
+			if(selectedNode.getType().equals("state") && selectedNode.getChildren() == null) {
 				CmSupplierZoneStateDistrictDTO stateNodeDto = (CmSupplierZoneStateDistrictDTO) selectedNode.getData();
 				if(stateNodeDto.getState() != null){
 					selectedStates.add(stateNodeDto.getState().getStateId());
