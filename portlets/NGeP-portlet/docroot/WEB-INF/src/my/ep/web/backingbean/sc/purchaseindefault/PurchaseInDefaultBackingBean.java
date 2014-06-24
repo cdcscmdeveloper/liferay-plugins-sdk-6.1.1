@@ -15,7 +15,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
@@ -75,11 +74,9 @@ import my.ep.persistence.logging.LogKey;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
-import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpNtfBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
-import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.sc.directpurchase.PurchaseInDefaultManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
@@ -555,49 +552,44 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 		   this.getManagedBean().setProcessName(res.getProcessName());
 		   Object obj = res.getPojo();
 		   SCDirectPurchaseDataType directPurchaseDataType = (SCDirectPurchaseDataType) obj;
-		   String	dpMode	=	directPurchaseDataType.getDpMode();
-		   if(ParameterConst.REQUEST_NOTE_PID.equalsIgnoreCase(dpMode)){ 
-			   // Purchase In Default	
-			   IPurchaseInDefaultSO purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
-			   PurchaseInDefaultReqDTO purchaseInDefaultReqDTO = new PurchaseInDefaultReqDTO();
-			   Long pidID = Long.valueOf(directPurchaseDataType.getDpId());
-			   purchaseInDefaultReqDTO.setPurchaseInDefaultId(pidID);
-			   purchaseInDefaultReqDTO.setFetchSubEntity(true);
-			   PurchaseInDefaultResDTO purchaseInDefaultResDTO = purchaseInDefaultSO.getPurchaseInDefault(purchaseInDefaultReqDTO);
-			   ScPurchaseInDefault purchaseInDefault = purchaseInDefaultResDTO.getPurchaseInDefaultDtl();
-			   if(purchaseInDefault.getContractedItem() != null){
-				   CtContractItem contractItem = purchaseInDefault.getContractedItem();
-				   IContractItemSO contractItemSO	=	(IContractItemSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractItemSO.class);
-				   ContractItemReqDTO contractItemReqDTO = new ContractItemReqDTO();
-				   contractItemReqDTO.setContractItemId(contractItem.getContractItemId());
-				   ContractItemResDTO ConIresDTO = contractItemSO.getContractItem(contractItemReqDTO);
-				   contractItem	=	ConIresDTO.getCtContractItem();
-				   purchaseInDefault.setContractedItem(contractItem);
-			   }
-			   // remarks
-			   purchaseInDefault.setRemarks(initializeRemarks(purchaseInDefault));
-			   List<ScPurchaseInDefaultAttachment> attachments = new ArrayList<ScPurchaseInDefaultAttachment>();
-			   ScPurchaseInDefaultAttachment attachment = purchaseInDefault.getScPurchaseInDefaultAttachment();
-			   attachment.setUser(facesScopes.getUserSessionBean());
-			   attachment.setChangedDate(new Timestamp(System.currentTimeMillis()));
-			   attachments.add(attachment);
-			   getManagedBean().setTaskId(taskId);
-			   getManagedBean().setProcessName(res.getProcessName());
-			   getManagedBean().setOutComes(res.getAction());
-			   getManagedBean().setPurchaseInDefault(purchaseInDefault);
-			   getManagedBean().setSelectedPmOrgProfile(purchaseInDefault.getPmOrgProfile());
-			   getManagedBean().setPmOrgProfile(purchaseInDefault.getPmOrgProfile());
-			   getManagedBean().setAttachments(attachments);
-			   getCurrentStatus(res.getDocStatus().longValue()); 
-
-			   initialInformation(purchaseInDefault);
-			   retrieveReasonDescListByCategory();
-			   justificationTypeEvent();
-			   FacesContext fc = FacesContext.getCurrentInstance();
-			   fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "purchaseInDefaultMain");
+		   // Purchase In Default	
+		   IPurchaseInDefaultSO purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
+		   PurchaseInDefaultReqDTO purchaseInDefaultReqDTO = new PurchaseInDefaultReqDTO();
+		   Long pidID = Long.valueOf(directPurchaseDataType.getDpId());
+		   purchaseInDefaultReqDTO.setPurchaseInDefaultId(pidID);
+		   purchaseInDefaultReqDTO.setFetchSubEntity(true);
+		   PurchaseInDefaultResDTO purchaseInDefaultResDTO = purchaseInDefaultSO.getPurchaseInDefault(purchaseInDefaultReqDTO);
+		   ScPurchaseInDefault purchaseInDefault = purchaseInDefaultResDTO.getPurchaseInDefaultDtl();
+		   if(purchaseInDefault.getContractedItem() != null){
+			   CtContractItem contractItem = purchaseInDefault.getContractedItem();
+			   IContractItemSO contractItemSO	=	(IContractItemSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractItemSO.class);
+			   ContractItemReqDTO contractItemReqDTO = new ContractItemReqDTO();
+			   contractItemReqDTO.setContractItemId(contractItem.getContractItemId());
+			   ContractItemResDTO ConIresDTO = contractItemSO.getContractItem(contractItemReqDTO);
+			   contractItem	=	ConIresDTO.getCtContractItem();
+			   purchaseInDefault.setContractedItem(contractItem);
 		   }
-	   }	
-   }
+		   // remarks
+		   purchaseInDefault.setRemarks(initializeRemarks(purchaseInDefault));
+		   List<ScPurchaseInDefaultAttachment> attachments = new ArrayList<ScPurchaseInDefaultAttachment>();
+		   ScPurchaseInDefaultAttachment attachment = purchaseInDefault.getScPurchaseInDefaultAttachment();
+		   attachments.add(attachment);
+		   getManagedBean().setTaskId(taskId);
+		   getManagedBean().setProcessName(res.getProcessName());
+		   getManagedBean().setOutComes(res.getAction());
+		   getManagedBean().setPurchaseInDefault(purchaseInDefault);
+		   getManagedBean().setSelectedPmOrgProfile(purchaseInDefault.getPmOrgProfile());
+		   getManagedBean().setPmOrgProfile(purchaseInDefault.getPmOrgProfile());
+		   getManagedBean().setAttachments(attachments);
+		   getCurrentStatus(res.getDocStatus().longValue()); 
+
+		   initialInformation(purchaseInDefault);
+		   retrieveReasonDescListByCategory();
+		   justificationTypeEvent();
+		   FacesContext fc = FacesContext.getCurrentInstance();
+		   fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "purchaseInDefaultMain");
+	   }
+   }	
 	 
    /**
     * downloadFile method for file download in pid
