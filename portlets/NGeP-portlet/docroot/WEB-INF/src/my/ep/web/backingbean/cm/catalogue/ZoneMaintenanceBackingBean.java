@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+
 import org.primefaces.model.TreeNode;
 
 import my.ep.biz.service.cm.catalogue.IZoneMaintenanceSO;
@@ -32,6 +35,7 @@ import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.cm.catalogue.ZoneMaintenanceManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -137,7 +141,12 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 		if (resDTO.isSuccessful()) {
 			System.out.println("SuccessMMMMMMMMMMMMMMMMM");
 			showZonePopup();
-			throw new EpException(MessageConst.INFO_711001);
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+					FacesMessage.SEVERITY_INFO, null, 
+					MessageUtils.getMessage(MessageConst.INFO_711001, 
+							new String[]{""+1}, 
+							MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
+			return null;
 		} else {
 			System.out.println("Not SuccessMMMMMMMMMMMMMMMMM");
 			zoneMaintenanceSO = null;
