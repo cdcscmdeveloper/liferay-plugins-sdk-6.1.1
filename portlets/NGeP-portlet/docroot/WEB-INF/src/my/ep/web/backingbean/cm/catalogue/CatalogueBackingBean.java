@@ -1422,7 +1422,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		
 		StringBuilder uploadDir = new StringBuilder();
 		
-		uploadDir.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.UPLOAD_URL)).append("/ngep/cm");
+		uploadDir.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.UPLOAD_URL)).append("ngep/cm");
 		
 		System.out.println("uploadDir***"+uploadDir);
 		// String tempDir = "C://image//test//";
@@ -1454,6 +1454,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	public void genImage(CmImage imageObj) {
 
 		try {
+			log.info("genImage getEpNo = "+this.getManagedBean().getSelectedMaintainItem().getSmSupplier().getEpNo());
 			 String check = imageObj.getTempPath() + "/" + this.getManagedBean().getSelectedMaintainItem().getSmSupplier().getEpNo();
 			 File dir = new File(check);
 			  
