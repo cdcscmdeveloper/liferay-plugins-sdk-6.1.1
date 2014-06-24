@@ -52,11 +52,13 @@ import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
+import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.tpl.TemplateSpecConst;
+import my.ep.constants.BpmConstants;
 import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.ct.circular.CircularDetailReqDTO;
 import my.ep.dto.ct.circular.CircularDetailResDTO;
@@ -6844,8 +6846,12 @@ public class SpecificationBackingBean extends
 	}
 
 	public String updateBpmTask(String action) {
-		System.out.println("Succeesfully update the task");
-		QuationTenderReqDTO spReqDTO = prepareSpecReq();
+		QuationTenderReqDTO spReqDTO=null;
+		if(BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action) || BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)){
+			spReqDTO = prepareSpecChirPersonRequest();
+		}else{
+		 spReqDTO = prepareSpecReq();
+		}
 		spReqDTO.setOutcome(action);
 		spReqDTO.setTaskId(this.getManagedBean().getTaskId());
 		spReqDTO.setPayLoad(this.getManagedBean().getSpecificationDataType());
@@ -6863,8 +6869,8 @@ public class SpecificationBackingBean extends
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 								MessageUtils.getMessage(
-										MessageConst.INFO_700026,
-										new String[] { "Specification For ",
+										getMessgeConstant(action),
+										new String[] {"Specification Creation For ",
 												qt.getQtNo() },
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
@@ -8153,6 +8159,7 @@ public class SpecificationBackingBean extends
 						.equalsIgnoreCase(taskName)) {
 			if (SCProcessNameConst.SPECIFICATION_APPROVAL
 					.equalsIgnoreCase(taskName)) {
+				retriveApprovalRemarks();
 				this.getManagedBean().setActiveIndex(4);
 			}
 			ScQt scQt = this.getManagedBean().getScQt();
@@ -8639,7 +8646,7 @@ public class SpecificationBackingBean extends
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 								MessageUtils.getMessage(
 										getMessgeConstant(action),
-										new String[] { "Specification",
+										new String[] { "Specification Preparation And Scoring For",
 												qt.getQtNo() },
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
@@ -8996,5 +9003,24 @@ public class SpecificationBackingBean extends
 		// scQtDOc.setScQtCheckList(checkList);
 		scQtDoc.setTplSpecMaster(specMaster);
 		return scQtDoc;
+	}
+	
+	private QuationTenderReqDTO prepareSpecChirPersonRequest(){
+		QuationTenderReqDTO tenderReqDTO =  new QuationTenderReqDTO();
+		List<ScQtRemark> remarks = this.getManagedBean().getScQtRemarksList();
+		if(null != remarks){
+			for(int i=0;i<remarks.size();i++){
+				String userRemark = remarks.get(i).getRemark();
+				if(null == userRemark || "".equals(userRemark)){
+					remarks.remove(i);
+				}
+			}
+		}
+		ScQt scQt=this.getManagedBean().getScQt();
+		if(null != remarks){
+			scQt.setScQtRemarks(remarks);
+		}
+		tenderReqDTO.setQtdetail(scQt);
+		return tenderReqDTO;
 	}
 }
