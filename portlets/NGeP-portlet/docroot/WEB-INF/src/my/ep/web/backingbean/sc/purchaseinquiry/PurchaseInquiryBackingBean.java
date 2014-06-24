@@ -226,6 +226,7 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 		  scPrInquiry.setRequestSupplierItem(requestSupplierItem);
 		  getManagedBean().setScPrInquiry(scPrInquiry);
 		  requestNoteDtl.setRequestItem(requestItem);
+		  requestNoteDtl.setScRequestSupplierItem(requestSupplierItem);
 		  getManagedBean().setRequestNoteDtl(requestNoteDtl);
 		  requestSupplierItem.setRequestNoteItem(requestItem);
 		  getManagedBean().setScRequestSupplierItem(requestSupplierItem);
@@ -330,11 +331,10 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 		    	FacesScopes facesScopes = new FacesScopes();
 		    	ScPrInquiry prInquiry = getManagedBean().getScPrInquiry();
 
-
 		    	List<ScRequestNoteDtl> requestNoteDtls =  new  ArrayList<ScRequestNoteDtl>();
 		    	ScRequestNoteDtl requestNoteDtl = getManagedBean().getRequestNoteDtl();
 		    	ScRequestNote	requestNote	=	new ScRequestNote();
-		    	requestNote.setPmOrgProfile(getManagedBean().getPmOrgProfile());
+		    	//requestNote.setPmOrgProfile(getManagedBean().getPmOrgProfile()).
 		    	requestNote.setRequestNoteNo(directPurchaseSO.generateRequestNoteNo());
 		    	requestNote.setSourceMethod(ParameterConst.REQUEST_NOTE_PRI);
 		    	requestNoteDtl.setScRequestNote(requestNote);
@@ -617,10 +617,9 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 				requestNoteBackingBean.getManagedBean().setRequestNoteDtls(requestNoteDtls);
 				requestNoteBackingBean.getManagedBean().setSourceMethod(ParameterConst.METHOD_SC);
 				requestNoteBackingBean.getManagedBean().setTaskId(getManagedBean().getTaskId());
-				//requestNoteBackingBean.getManagedBean().getRequestNote().setPmOrgProfile(getManagedBean().getPmOrgProfile());
+				
 				requestNoteBackingBean.getManagedBean().setOrgProfile(getManagedBean().getPmOrgProfile());
 				requestNoteBackingBean.getManagedBean().setOrgProfileId(getManagedBean().getPmOrgProfile().getOrgProfileId());
-				
 				ScRequestNoteDtl scRequestNoteDtl = new ScRequestNoteDtl();
 				parameterReqDTO = new ParameterReqDTO();
 				parameterReqDTO.setParameterType(ParameterTypeConst.FULFILMENT_TYPE);
@@ -639,7 +638,6 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 				throw new EpException("Out of stock.");
 			}
 		} else {
-
 			IPrInquirySO prInquirySO = (IPrInquirySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPrInquirySO.class);
 			PrInquiryReqDTO reqDTO = new PrInquiryReqDTO();
 			if(prInquiry.getRemarks() != null ){
@@ -690,7 +688,6 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 		 this.getManagedBean().setProcessName(res.getProcessName());
 		 Object obj = res.getPojo();
 		 SCDirectPurchaseDataType directPurchaseDataType = (SCDirectPurchaseDataType) obj;
-		 String	dpMode	=	directPurchaseDataType.getDpMode();
 		 //Purchase Inquiry
 		 IPrInquirySO prInquirySO = (IPrInquirySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPrInquirySO.class);
 		 PrInquiryReqDTO prInquiryReqDTO = new PrInquiryReqDTO();
