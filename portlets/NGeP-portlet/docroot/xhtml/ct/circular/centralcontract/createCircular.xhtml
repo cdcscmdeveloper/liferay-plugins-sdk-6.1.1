@@ -21,11 +21,8 @@
 			<ac:paginator for="contactPersonDt" />
 			<p:column selectionMode="multiple" style="width:3%" />
 			<p:column headerText="#{lbl['lbl.ct.pc.cperson']}">
-			  <h:panelGrid columns="2">
 				<p:inputText id="cperson" value="#{data.name}" maxlength="20"
-				   style="width:150px;" required="true" label="#{lbl['lbl.ct.pc.cperson']}" />
-				  <p:message for="cperson" display="icon"/>
-			  </h:panelGrid>  
+				   style="width:150px;" label="#{lbl['lbl.ct.pc.cperson']}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.ct.pc.caddress']}">
 				<p:inputText value="#{data.address}" style="width:250px;" maxlength="200" />

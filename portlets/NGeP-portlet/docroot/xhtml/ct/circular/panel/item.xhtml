@@ -47,8 +47,14 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 				     saveObject="panelBackingBean.managedBean.circularVer.ctPanelItems[#{index}].pmUom">
 			      </ac:lov>
 			  </p:column>
-			  <p:column headerText="Min. Order Qty" style="white-space:pre-line;width:5%;"><p:inputText value="#{data.minimumOrderQty}" style="width:90%;text-align:right;" label="Min. Order Qty"/></p:column>
-			  <p:column headerText="Had Pembelian Luar Kontrak" style="white-space:pre-line;width:7%;"><p:inputText value="#{data.maxProcureAmt}" style="width:90%;text-align:right;" label="Had Pembelian Luar Kontrak" /></p:column>
+			  <p:column headerText="Min. Order Qty" style="white-space:pre-line;width:5%;">
+			  <p:inputText value="#{data.minimumOrderQty}" style="width:90%;text-align:right;" label="Min. Order Qty">
+			     <f:convertNumber pattern="#,###.00" /> </p:inputText>
+			  </p:column>
+			  <p:column headerText="Had Pembelian Luar Kontrak" style="white-space:pre-line;width:7%;">
+			    <p:inputText value="#{data.maxProcureAmt}" style="width:90%;text-align:right;" label="Had Pembelian Luar Kontrak">
+			       <f:convertNumber pattern="#,###.00" /></p:inputText>
+			    </p:column>
 			  <p:column headerText="Direct Nego" style="white-space:pre-line;width:5%;"><p:selectBooleanCheckbox value="#{data.directNego}" /></p:column>			
 			  <p:column headerText="Direct Purchase" style="white-space:pre-line;width:6%;"><p:selectBooleanCheckbox value="#{data.directPurchase}" /></p:column>	
 			  <p:column headerText="Quotation /Tender" style="white-space:pre-line;width:6%;"><p:selectBooleanCheckbox value="#{data.qt}" /></p:column>
