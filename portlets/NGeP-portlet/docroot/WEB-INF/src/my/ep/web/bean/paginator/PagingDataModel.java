@@ -39,6 +39,7 @@ public abstract class PagingDataModel<T> extends LazyDataModel<T> implements IPa
 	private static Logger log = Logger.getLogger(PagingDataModel.class);
 	
 	private boolean firstLoad;
+	private boolean defaultFirstLoad;
 	private int pageNo;
 	private String componentId;
 	private String sortField;
@@ -61,15 +62,16 @@ public abstract class PagingDataModel<T> extends LazyDataModel<T> implements IPa
 	 * 
 	 * @param componentId
 	 * 		the component id
-	 * @param firstLoad
+	 * @param defaultFirstLoad
 	 * 		the first load flag - default is false.
 	 */
-	public PagingDataModel(String componentId, boolean firstLoad) {
+	public PagingDataModel(String componentId, boolean defaultFirstLoad) {
 		if (StringUtils.isBlank(componentId)) {
 			throw new IllegalArgumentException("Invalid componentId.");
 		}
 		this.componentId = componentId;
-		this.firstLoad = firstLoad;
+		this.defaultFirstLoad = defaultFirstLoad;
+		this.firstLoad = defaultFirstLoad;
 	}
 
 	/*
@@ -114,8 +116,6 @@ public abstract class PagingDataModel<T> extends LazyDataModel<T> implements IPa
 	public final List<T> load(int first, int pageSize, String sortField,
 			SortOrder sortOrder, Map<String, String> filters) {
 		debugLogger("load");
-		
-		System.out.println("firstLoad: " + firstLoad);
 		
 		int pageNo = (int)(first / pageSize) + 1;
 		ISearchResultBean<T> resultBean = null;
@@ -168,7 +168,7 @@ public abstract class PagingDataModel<T> extends LazyDataModel<T> implements IPa
 	public final void resetData() {
 		debugLogger("resetData");
 		
-		firstLoad = false;
+		firstLoad = defaultFirstLoad;
 		
 		reloadData();
 	}
