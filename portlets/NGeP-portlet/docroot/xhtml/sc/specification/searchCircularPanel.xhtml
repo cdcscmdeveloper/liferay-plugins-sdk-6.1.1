@@ -49,7 +49,7 @@
 
 		<p:dataTable id="circularList" var="circular" style="width:100%"
 			value="#{specificationBackingBean.searchCircular}"
-			rowKey="#{circular}" rowIndexVar="index" lazy="true">
+			rowKey="#{circular.circularVerId}" rowIndexVar="index" lazy="true" selection="#{specificationBackingBean.managedBean.circularVer}" >
 			<ac:paginator for="circularList"></ac:paginator>
 			<p:ajax event="rowSelectRadio" process="@this"
 				listener="#{specificationBackingBean.circularListSelect}"

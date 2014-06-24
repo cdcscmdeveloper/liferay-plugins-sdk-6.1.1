@@ -31,17 +31,18 @@
 
 						<p:ajax event="blur" process="@this" partialSubmit="true"
 							listener="#{specificationBackingBean.setProcurementMode(specificationBackingBean.managedBean.scQt)}"></p:ajax>
-						<f:convertNumber
-							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					</p:inputText> <p:message id="priceMsg" for="estPrice" display="icon" /></td>
+						<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" maxIntegerDigits="14"></ac:validateNumber>
+					
+					</p:inputText>
+					 <p:message id="priceMsg" for="estPrice" display="icon" /></td>
 
 			</tr>
 
 			<tr>
 
 				<td><h:outputLabel value=" #{lbl['lbl.sc.spec.justification']}" /></td>
-				<td colspan="3"><p:inputTextarea rows="2" cols="143"
-						maxlength="200"
+				<td colspan="3"><p:inputTextarea rows="2" cols="143" maxlength="200"
+						
 						value="#{specificationBackingBean.managedBean.scQt.justificationRemark}"></p:inputTextarea></td>
 
 			</tr>
@@ -131,7 +132,6 @@
 								value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 
 							<p:ajax event="change" partialSubmit="true"
-								listener="#{specificationBackingBean.changeZones}"
 								update="generalLocationList" process="@this"></p:ajax>
 						</p:selectOneRadio></td>
 				</ui:fragment>
@@ -161,11 +161,9 @@
 			rendered="#{(specificationBackingBean.managedBean.scQt.panel eq 'No' and specificationBackingBean.managedBean.scQt.zonal !='false')}">
 			<table style="width: 100%">
 				<tr>
-					<td style="width: 145px"><p:outputLabel
-							value="#{lbl['lbl.sc.spec.zone.location.level']}" /> <p:outputLabel
-							value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu id="locationLevels" required="true"
-							label="#{lbl['lbl.sc.spec.zone.location.level']}"
+					<td style="width: 100px"><p:outputLabel
+							value="#{lbl['lbl.sc.spec.zone.location.level']}" /></td>
+					<td><p:selectOneMenu id="locationLevels"
 							value="#{specificationBackingBean.managedBean.scQt.zoneLocationLevel.parameterId}"
 							style="width: 178px;">
 
@@ -173,8 +171,7 @@
 								value="#{specificationBackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel)}" />
 							<p:ajax event="change"
 								listener="#{specificationBackingBean.selectLocation}"></p:ajax>
-						</p:selectOneMenu> <p:message id="withzone" for="locationLevels" display="icon"></p:message>
-					</td>
+						</p:selectOneMenu></td>
 				</tr>
 			</table>
 		</p:panel>
@@ -182,14 +179,11 @@
 		<p:panel
 			rendered="#{specificationBackingBean.managedBean.scQt.panel eq 'No' and specificationBackingBean.managedBean.scQt.zonal !='false'}">
 			<h:panelGrid width="100%">
-				<p:dataTable id="zoneGeneralDataTable" widgetVar="withZone"
+				<p:dataTable id="zoneGeneralDataTable"
 					value="#{specificationBackingBean.managedBean.zoneGeneralTrees}"
-					var="zoneTree" style="width:100%" rowIndexVar="index"
-					selection="#{specificationBackingBean.managedBean.selectedTreeNode}">
+					var="zoneTree" style="width:100%" rowIndexVar="index">
 					<p:column headerText="Location" style="width:90%">
-						<p:tree value="#{zoneTree}" var="location" selectionMode="single">
-						<p:ajax event="select" 
-						listener="#{specificationBackingBean.selctZonalTree}" />
+						<p:tree value="#{zoneTree}" var="location">
 
 							<p:treeNode type="zone">
 								<h:outputText value="#{location.zoneName}" />
@@ -227,13 +221,11 @@
 			<div align="right" style="width: 100%">
 				<p:commandButton value="#{lbl['lbl.ct.ded.btn.add']}"
 					process="@this" update="@([id$=zonePopupGeneral])"
-					oncomplete="ZoneGeneral.show();" 
+					oncomplete="ZoneGeneral.show();"
 					actionListener="#{specificationBackingBean.showGeneralZoneLocationPopup}"
 					icon="ui-icon-add" />
 				<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
-					process="@this" partialSubmit="true" update="zoneGeneralDataTable"
-					icon="ui-icon-delete"
-					action="#{specificationBackingBean.deleteTreeNode}" />
+					icon="ui-icon-delete" />
 			</div>
 		</p:panel>
 	</h:panelGroup>
@@ -283,7 +275,7 @@
 
 		<p:commandButton
 			value="#{lbl['lbl.ss.simple.quote.purchase.btn.cancel']}"
-			style="float:right;" onclick="ZoneGeneral.hide();" oncomplete="withZone.paginator.endLink.click();"
+			style="float:right;" onclick="ZoneGeneral.hide();"
 			icon="ui-icon-cancel" />
 			&#160;&#160;
 		<p:commandButton value="#{lbl['lbl.ss.simple.quote.purchase.btn.ok']}"
