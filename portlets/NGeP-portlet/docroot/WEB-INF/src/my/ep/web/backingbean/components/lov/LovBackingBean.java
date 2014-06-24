@@ -82,7 +82,7 @@ public class LovBackingBean implements Serializable {
 		private static final long serialVersionUID = 1L;
 
 		public SearchPagingDataModel() {
-			super("lovTb");
+			super("lovTb", true);
 		}
 		
 		@Override

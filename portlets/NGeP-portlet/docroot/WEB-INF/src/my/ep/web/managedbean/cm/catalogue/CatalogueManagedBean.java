@@ -329,7 +329,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 
 	public void searchCatalogue(){
-		//searchDataModel.reloadData();
+		searchDataModel.reloadData();
 	}
 
 

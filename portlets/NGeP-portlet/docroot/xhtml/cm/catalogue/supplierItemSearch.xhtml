@@ -93,6 +93,7 @@
 
 						<div style="text-align: right;">
 							<p:commandButton value="Search" icon="ui-icon-search"
+								action="#{catalogueBackingBean.managedBean.searchCatalogue}"
 								update="searchViewId"
 								oncomplete="updateCatButtons();">
 								<f:param name="unspscCode" value="#{unspscCode}" />

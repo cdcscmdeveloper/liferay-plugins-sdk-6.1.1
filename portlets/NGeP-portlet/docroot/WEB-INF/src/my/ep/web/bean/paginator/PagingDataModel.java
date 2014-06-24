@@ -1,3 +1,6 @@
+/**
+ * Copyright © 2013 Archisoft. All rights reserved.
+ */
 package my.ep.web.bean.paginator;
 
 import java.util.ArrayList;
@@ -11,6 +14,7 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchOrderBean;
+import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.web.util.EpPortletUtil;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.SecurityFilterUtil;
@@ -25,6 +29,7 @@ import org.primefaces.model.SortOrder;
  * The data model for Lazy loaded DataTable from database.
  * 
  * @author Kenny
+ * @since 24.06.2014
  *
  * @param <T>
  * 		the object type of the data.
@@ -33,14 +38,38 @@ public abstract class PagingDataModel<T> extends LazyDataModel<T> implements IPa
 	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(PagingDataModel.class);
 	
+	private boolean firstLoad;
 	private int pageNo;
 	private String componentId;
 	private String sortField;
 	private SortOrder sortOrder;
 	private ISearchBean<T> searchBean;
 
+	/**
+	 * PagingDataModel Contructor
+	 * 
+	 * @param componentId
+	 * 		the component id
+	 */
 	public PagingDataModel(String componentId) {
+		// TODO - temporary set first load default as true.
+		this(componentId, true);
+	}
+	
+	/**
+	 * PagingDataModel Contructor
+	 * 
+	 * @param componentId
+	 * 		the component id
+	 * @param firstLoad
+	 * 		the first load flag - default is false.
+	 */
+	public PagingDataModel(String componentId, boolean firstLoad) {
+		if (StringUtils.isBlank(componentId)) {
+			throw new IllegalArgumentException("Invalid componentId.");
+		}
 		this.componentId = componentId;
+		this.firstLoad = firstLoad;
 	}
 
 	/*
@@ -86,15 +115,25 @@ public abstract class PagingDataModel<T> extends LazyDataModel<T> implements IPa
 			SortOrder sortOrder, Map<String, String> filters) {
 		debugLogger("load");
 		
+		System.out.println("firstLoad: " + firstLoad);
+		
 		int pageNo = (int)(first / pageSize) + 1;
+		ISearchResultBean<T> resultBean = null;
 		
 		this.pageNo = pageNo;
 		this.sortField = sortField;
 		this.sortOrder = sortOrder;
 		super.setPageSize(pageSize);
 		
-		this.searchBean = createSearchBean();
-		ISearchResultBean<T> resultBean = pageChangeListener(searchBean);
+		if (firstLoad) {
+			this.searchBean = createSearchBean();
+			
+			resultBean = pageChangeListener(searchBean);
+		}  else {
+			firstLoad = true;
+			
+			resultBean = new SearchResultBean<T>();
+		}
 		
 		return updatePagingResults(resultBean);
 	}
@@ -116,8 +155,22 @@ public abstract class PagingDataModel<T> extends LazyDataModel<T> implements IPa
 			DataTable dataTable = (DataTable)component;
 			
 			dataTable.reset();
-			dataTable.loadLazyData();
+			//dataTable.loadLazyData();
 		}
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see my.ep.web.bean.paginator.IPagingDataModel#resetData()
+	 */
+	@Override
+	public final void resetData() {
+		debugLogger("resetData");
+		
+		firstLoad = false;
+		
+		reloadData();
 	}
 	
 	/**

@@ -10,9 +10,14 @@ import my.ep.biz.bean.search.ISearchResultBean;
 
 public interface IPagingDataModel<T> {
 	/**
-	 * Reset and reload the data from database.
+	 * Reload the data from database.
 	 */
 	public void reloadData();
+	
+	/**
+	 * Reset and the data from database.
+	 */
+	public void resetData();
 	
 	/**
 	 * Create search bean by data model.
