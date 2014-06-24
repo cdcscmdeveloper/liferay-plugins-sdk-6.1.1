@@ -114,7 +114,11 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 					.getInstance().getServiceObject("cm", IZoneMaintenanceSO.class);
 		ZoneMaintenanceReqDTO reqDTO = new ZoneMaintenanceReqDTO();
 		reqDTO.setCmSupplierZoneList(getManagedBean().getDeletedCmSupplierZoneList());
-		ZoneMaintenanceResDTO resDTO = zoneMaintenanceSO.delete(reqDTO);
+		ZoneMaintenanceResDTO resDTO = new ZoneMaintenanceResDTO(); 
+		if(getManagedBean().getDeletedCmSupplierZoneList().size() > 0)
+			resDTO = zoneMaintenanceSO.delete(reqDTO);
+		else 
+			resDTO.setSuccessful(true);
 		getManagedBean().setZoneTrees(CmSupplierZoneSingleton.getInstance().buildZoneSDTree(this.getManagedBean().getCmSupplierZoneList()));
 		if (resDTO.isSuccessful()) {
 			System.out.println("SuccessMMMMMMMMMMMMMMMMM");
@@ -137,7 +141,11 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 		ZoneMaintenanceReqDTO reqDTO = new ZoneMaintenanceReqDTO();
 		reqDTO.setCmSupplierZoneList(getManagedBean().getCmSupplierZoneList());
 		System.out.println("Current Size:" + getManagedBean().getCmSupplierZoneList().size());
-		ZoneMaintenanceResDTO resDTO = zoneMaintenanceSO.save(reqDTO);
+		ZoneMaintenanceResDTO resDTO = new ZoneMaintenanceResDTO();
+		if(getManagedBean().getCmSupplierZoneList().size() > 0)
+			resDTO = zoneMaintenanceSO.save(reqDTO);
+		else 
+			resDTO.setSuccessful(true);
 		if (resDTO.isSuccessful()) {
 			System.out.println("SuccessMMMMMMMMMMMMMMMMM");
 			showZonePopup();
