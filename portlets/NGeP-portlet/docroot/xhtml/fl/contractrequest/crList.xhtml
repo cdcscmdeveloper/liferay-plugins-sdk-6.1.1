@@ -11,49 +11,6 @@
 	<ui:define name="resourceSection">
 	</ui:define>
 	<ui:define name="contentSection">
-		<p:dataTable id="contractListTable" var="data" lazy="true"
-			value="#{contractRequestBackingBean.managedBean.activeContractList}">
-			<ac:paginator for="contractListTable" />
-			<p:column headerText="Contract No.">
-				<h:outputText value="#{data.contractNo}" />
-			</p:column>
-			<p:column headerText="Circular No.">
-				<h:outputText value="#{data.circularNo}" />
-			</p:column>
-			<p:column headerText="Contract Type">
-				<h:outputText value="#{contractRequestBackingBean.getParameterDesc(data.contractType)}" />
-			</p:column>
-			<p:column headerText="Fulfilment Type">
-				<h:outputText value="#{contractRequestBackingBean.getParameterDesc(data.fulfilmentType)}" />
-			</p:column>
-			<p:column headerText="Supplier Name">
-				<h:outputText value="#{data.supplierName}">
-				</h:outputText>
-			</p:column>
-			<p:column headerText="Start Effective">
-				<h:outputText value="#{data.startEffective}">
-					<f:convertDateTime
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-				</h:outputText>
-			</p:column>
-			<p:column headerText="End Effective">
-				<h:outputText value="#{data.endEffective}" >
-			<f:convertDateTime
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-				</h:outputText>
-			</p:column>
-			<p:column headerText="Action">
-				<p:commandLink id="crBasepageLink"
-					onclick="procure([{name:'contractId',value:'#{data.contract.contractId}'}])">
-					<p:graphicImage library="ep/images/design" name="revise.png"
-						value="/resources/ep/images/design/revise.png"
-						title="Contract Request" />
-				</p:commandLink>
-
-			</p:column>
-			
-		</p:dataTable>
-		
 		
 		<p:treeTable id="ctListTree" var="contractTreeNode"
 			styleClass="chargeLineChange"
@@ -101,7 +58,7 @@
 				</h:outputText>
 			</p:column>
 			<p:column headerText="Action">
-				<p:commandLink id="crBasepageLink1" rendered="#{contractTreeNode.fulfilmentType.parameterCode ne ParameterConst.fulfilmentTypeScheduled}"
+				<p:commandLink id="crBasepageLink" rendered="#{contractTreeNode.fulfilmentType.parameterCode ne ParameterConst.fulfilmentTypeScheduled}"
 					onclick="procure([{name:'contractId',value:'#{contractTreeNode.contractId}'},{name:'scheduleNo',value:'#{contractTreeNode.scheduleNo}'}])">
 					<p:graphicImage library="ep/images/design" name="revise.png"
 						value="/resources/ep/images/design/revise.png"
