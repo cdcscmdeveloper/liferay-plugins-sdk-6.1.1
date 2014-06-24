@@ -851,7 +851,7 @@ public class SpecificationBackingBean extends
 		}
 	}
 
-	public String retriveBusinessOwnerQualificationCriteri() {
+	public void retriveBusinessOwnerQualificationCriteri() {
 		IQTDetailSO QtDetailsSO;
 		this.getManagedBean().setActiveIndex(1);
 
@@ -938,7 +938,7 @@ public class SpecificationBackingBean extends
 		} finally {
 			QtDetailsSO = null;
 		}
-		return "specificationCreation.xhtml";
+		
 	}
 
 	public void retriveTechnicalSpecification() {
@@ -1125,6 +1125,7 @@ public class SpecificationBackingBean extends
 	public void retriveTechnicalCheckList() {
 		IQTSpecSO specSo = null;
 		SpecificationResDTO resDTO = null;
+		this.getManagedBean().setActiveIndex(3);
 		try {
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 			specSo = BusinessDelegate.getInstance().getServiceObject(
@@ -1190,6 +1191,7 @@ public class SpecificationBackingBean extends
 	public void retriveFinancialCheckList() {
 		IQTSpecSO specSo = null;
 		SpecificationResDTO resDTO = null;
+		this.getManagedBean().setActiveIndex(4);
 		try {
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 			specSo = BusinessDelegate.getInstance().getServiceObject(
@@ -1251,8 +1253,9 @@ public class SpecificationBackingBean extends
 
 	public String retriveTechnicalScoring() {
 		IQTSpecSO specSo = null;
+		this.getManagedBean().setActiveIndex(5);
 		try {
-			this.getManagedBean().setTabActiveIndex(4);
+			
 			List<ScQtCheckList> checklist = this.getManagedBean()
 					.getScQtCheckSt2techProposal();
 			if (checklist == null) {
@@ -1352,6 +1355,7 @@ public class SpecificationBackingBean extends
 
 	public String retriveFinancialScoring() {
 		IQTSpecSO specSo = null;
+		this.getManagedBean().setActiveIndex(6);
 		try {
 			List<ScQtCheckList> checklist = this.getManagedBean()
 					.getScQtCheckSt2financeProposalList();
@@ -1520,6 +1524,7 @@ public class SpecificationBackingBean extends
 
 	public String retriveRecommendationDetails() {
 		IQTSpecSO specSo = null;
+		this.getManagedBean().setActiveIndex(7);
 		try {
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
@@ -1587,6 +1592,7 @@ public class SpecificationBackingBean extends
 
 	public void retriveFulfilmentDtls() {
 		IQTSpecSO specSo = null;
+		this.getManagedBean().setActiveIndex(8);
 		try {
 			this.getManagedBean().getScQt().setScheduleType("F");
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
@@ -1838,6 +1844,7 @@ public class SpecificationBackingBean extends
 
 	public void retriveDeliveryDetails() {
 		IQTSpecSO specSo = null;
+		this.getManagedBean().setActiveIndex(9);
 		try {
 			retriveStateList();
 			retriveMinistryList();
@@ -2011,6 +2018,7 @@ public class SpecificationBackingBean extends
 	public void retriveCommitteeEndorsment() {
 		ICommitteSO committeSO = null;
 		CommitteResDTO resDTO = null;
+		this.getManagedBean().setActiveIndex(10);
 		try {
 			CommitteReqDTO reqDTO = new CommitteReqDTO();
 			committeSO = BusinessDelegate.getInstance().getServiceObject(
@@ -2714,7 +2722,7 @@ public class SpecificationBackingBean extends
 		}
 	}
 
-	public String retriveSpecdetails(Long qtId) {
+	public void retriveSpecdetails(Long qtId) {
 		IQTDetailSO QtDetailsSO;
 
 		try {
@@ -2776,7 +2784,7 @@ public class SpecificationBackingBean extends
 		} finally {
 			QtDetailsSO = null;
 		}
-		return "specificationCreation.xhtml";
+		
 	}
 
 	public void tierEvent(AjaxBehaviorEvent event) {
