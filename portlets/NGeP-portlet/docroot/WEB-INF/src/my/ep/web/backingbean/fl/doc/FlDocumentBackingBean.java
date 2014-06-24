@@ -300,13 +300,10 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			reqDTO.setFlOrderId(Long.valueOf(flDocId));
 			FulfilmentResDTO resDTO=fulfilmentOrderSO.retrieveFulfilmentOrder(reqDTO);
 			FulfilmentOrderBackingBean flOrderBB=new FulfilmentOrderBackingBean();
-			Long flReqId=resDTO.getFlOrder().getFlFulfilmentRequest().getFulfilmentReqId();
-			reqDTO.setFlRequestId(flReqId);
-			FulfilmentResDTO resFlDTO = fulfilmentRequestSO.retrieveFulfilmentRequest(reqDTO);
 			flOrderBB.getManagedBean().setButtonVal(buttonVal);
-			flOrderBB.getManagedBean().setFlRequest(resFlDTO.getFlFulfilmentRequest());
+			flOrderBB.getManagedBean().setFlRequest(resDTO.getFlOrder().getFlFulfilmentRequest());
 			flOrderBB.getManagedBean().setPmUser(reqDTO.getPmUser());
-			if(resFlDTO.getFlFulfilmentRequest().getFlFulfilmentOrder().isFactored()){
+			if(resDTO.getFlOrder().isFactored()){
 				flOrderBB.getManagedBean().setRemoveFactoring(true);
 			}
 			
@@ -578,7 +575,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 	}
 	public boolean isFlFulfilmentApprover() {
 		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes.hasRoleUser(RoleCode.APPROVER.value());
+		return facesScopes.hasRoleUser(RoleCode.FL_APPROVER.value());
 	}
 	public boolean isFlFulfilmentSupplier() {
 		FacesScopes facesScopes = new FacesScopes();

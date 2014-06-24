@@ -20,6 +20,7 @@ import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
+import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -49,7 +50,6 @@ import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
 import my.ep.web.backingbean.fl.deliveryorder.DeliveryOrderBackingBean;
-import my.ep.web.constant.BpmOutcomeConst;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.fl.po.FulfilmentOrderManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -120,7 +120,14 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			reqDTO.setContractOrder(getManagedBean().isContractRequest());
 			reqDTO.setFulfilmentOrder(getManagedBean().getFulfilmentOrder());
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
-			FulfilmentResDTO resDTO = fulfilmentOrderSO.acknowledgeFulfillmentOrder(reqDTO);
+			FulfilmentResDTO resDTO = null;
+			if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
+				resDTO = fulfilmentOrderSO.acknowledgeFulfillmentOrder(reqDTO);
+			}else{
+				reqDTO.setFulfilmentOrder(flRequest.getFlFulfilmentOrder());
+				resDTO = fulfilmentOrderSO.cancelFulfillmentOrder(reqDTO);
+			}
+			
 			if(resDTO.isSuccessful()) {
 				String messageId = MessageConst.INFO_700011;
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
