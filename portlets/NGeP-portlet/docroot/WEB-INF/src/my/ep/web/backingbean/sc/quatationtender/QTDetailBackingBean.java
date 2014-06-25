@@ -579,7 +579,7 @@ public class QTDetailBackingBean extends
 			QuationTenderResDTO resDTO = detailSO.retriveQTDetails(reqDTO);
 			ScQt selectedScQt = resDTO.getQtDetail();
 			this.getManagedBean().setQt(selectedScQt);
-			if (QTStatusConst.ASSIGN_BO.equals(selectedScQt.getQtStatus()
+			if (QTStatusConst.QT_PENDING_APPOINT_BO.equals(selectedScQt.getQtStatus()
 					.getStatusId())) {
 				ScQtCommittee committee = getQtCommiteDtlsByQtIdNType("BO",
 						selectedScQt.getQtId());
