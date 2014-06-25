@@ -717,6 +717,10 @@ public class QTBusinessOwnerBackingBean extends
 					new String[] { "Business Owner", });
 
 		}
+		//Code to set the QtCommitte N Memembers to ScQt
+		List<ScQtCommittee> qtCommittees = new ArrayList<ScQtCommittee>();		
+		qtCommittees.add(this.getManagedBean().getScQtCommittee());
+		scQt.setScQtCommittees(qtCommittees);
 
 		// Constructing reqDto
 		QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
