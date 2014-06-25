@@ -5,7 +5,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel header="Business Network" toggleable="true">
+	<p:panel header="#{lbl['lbl.sm.busNtw.panHdr']}" toggleable="true">
 		<table style="width: 250px">
 			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 				<tr>
@@ -17,7 +17,7 @@
 								listener="#{backingBean.changeVerifySection(backingBean.managedBean.poSecReview.trnsNetworkVerified)}" />
 						</p:selectBooleanCheckbox></td>
 					<td valign="top"><h:outputText
-							value=" Section Verified By PO: "
+							value="#{lbl['lbl.sm.sectionPoVerf']}"
 							title="For PO to highlight the verified section " /></td>
 
 				</tr>
@@ -32,7 +32,7 @@
 								listener="#{backingBean.changeVerifySection(backingBean.managedBean.apprvrSecReview.trnsNetworkVerified)}" />
 						</p:selectBooleanCheckbox></td>
 					<td valign="top"><h:outputText
-							value=" Section Verified By Approver: "
+							value="#{lbl['lbl.sm.sectionApprVerf']}"
 							title="For Approver to highlight the verified section " /></td>
 				</tr>
 			</p:outputPanel>
@@ -49,32 +49,34 @@
 					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
 							value="#{backingBean.managedBean.smAppl.smCompanyBasic.withFederal}" /></td>
 					<td valign="middle" width="150px;"><h:outputText
-							value="Federal Government " /></td>
+							value="#{lbl['lbl.sm.busNtw.fdrGov']}" /></td>
 
 					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
 							value="#{backingBean.managedBean.smAppl.smCompanyBasic.withState}" /></td>
 					<td valign="middle" width="150px;"><h:outputText
-							value="State Government" /></td>
+							value="#{lbl['lbl.sm.busNtw.stateGov']}" /></td>
 
 					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
 							value="#{backingBean.managedBean.smAppl.smCompanyBasic.withStatutory}" /></td>
 					<td valign="middle" width="150px;"><h:outputText
-							value="Statutory Bodies " /></td>
+							value="#{lbl['lbl.sm.busNtw.statBody']}" /></td>
 
 					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
 							value="#{backingBean.managedBean.smAppl.smCompanyBasic.withGlc}" /></td>
-					<td valign="middle" width="100px;"><h:outputText value=" GLC " /></td>
+					<td valign="middle" width="100px;"><h:outputText
+							value="#{lbl['lbl.sm.busNtw.glc']}" /></td>
 
 					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
 							value="#{backingBean.managedBean.smAppl.smCompanyBasic.withOthers}" /></td>
-					<td valign="middle"><h:outputText value=" Others " /></td>
+					<td valign="middle"><h:outputText
+							value="#{lbl['lbl.sm.busNtw.others']}" /></td>
 				</tr>
 			</table>
 			<br />
 			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 				<table style="width: 50%">
 					<tr>
-						<td><p:outputLabel value="PO Remarks" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" cols="41"
 								value="#{backingBean.managedBean.poSecReview.trnsNetworkRemark}" /></td>
 					</tr>
@@ -83,11 +85,11 @@
 			<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
 				<table style="width: 100%">
 					<tr>
-						<td><p:outputLabel value="PO Remarks" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" readonly="true"
 								disabled="true" cols="41"
 								value="#{backingBean.managedBean.poSecReview.trnsNetworkRemark}" /></td>
-						<td><p:outputLabel value="Approver Remarks" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" cols="41"
 								value="#{backingBean.managedBean.apprvrSecReview.trnsNetworkRemark}" /></td>
 

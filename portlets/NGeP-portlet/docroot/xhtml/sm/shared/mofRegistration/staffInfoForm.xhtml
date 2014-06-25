@@ -6,7 +6,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel header="Staff Information" toggleable="true">
+	<p:panel  header="#{lbl['lbl.sm.panHdr.stfInfo']}" toggleable="true">
 		<table style="width: 250px">
 			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 				<tr>
@@ -97,7 +97,7 @@
 				<table style="width: 50%">
 					<tr>
 						<td style="padding-left: 38px;"><p:outputLabel
-								value="PO Remarks" /></td>
+								value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" cols="41"
 								value="#{backingBean.managedBean.poSecReview.staffRemark}" /></td>
 					</tr>

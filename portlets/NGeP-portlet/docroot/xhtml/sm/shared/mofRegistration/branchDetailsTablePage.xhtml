@@ -7,13 +7,13 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<table style="width: 100%">
 		<tr>
-			<td><p:outputLabel value="* Branch Name" /></td>
+			<td><p:outputLabel value="* #{lbl['lbl.sm.branch.branchName']}" /></td>
 			<td><p:inputText
 					value="#{backingBean.managedBean.selectedBranch.branchName}"
 					size="35" /></td>
 		</tr>
 		<tr>
-			<td><p:outputLabel value="* Address" /></td>
+			<td><p:outputLabel value="* #{lbl['lbl.sm.companyaddress']}" /></td>
 			<td><p:inputText
 					value="#{backingBean.managedBean.selectedBranch.smAddress.address1}"
 					size="35" /></td>
@@ -114,18 +114,23 @@
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
 			<td><p:inputText label="#{lbl['lbl.sm.phoneno']}"
+					id="branchPhoneNo"
 					value="#{backingBean.managedBean.selectedBranch.phoneNo}" size="35"
 					maxlength="20">
-					<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
-				</p:inputText></td>
+					
+				</p:inputText>
+				<p:message id="branchPhoneNoMsg" for="branchPhoneNo"
+					showSummary="true" showDetail="false" display="icon" /></td>
 		</tr>
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.sm.faxno']}" /></td>
-			<td><p:inputText label="#{lbl['lbl.sm.faxno']}"
+			<td><p:inputText label="#{lbl['lbl.sm.faxno']}" id="branchFaxNo"
 					value="#{backingBean.managedBean.selectedBranch.faxNo}" size="35"
 					maxlength="20">
-					<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
-				</p:inputText></td>
+					
+				</p:inputText>
+				<p:message id="branchFaxNoMsg" for="branchFaxNo" showSummary="true"
+					showDetail="false" display="icon" /></td>
 		</tr>
 
 	</table>

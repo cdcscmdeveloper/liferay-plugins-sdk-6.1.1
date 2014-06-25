@@ -6,7 +6,8 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel header="Company Information" toggleable="true" id="basHdPan">
+	<p:panel header="#{lbl['lbl.sm.panHdr.comBasic']}" toggleable="true"
+		id="basHdPan">
 		<table style="width: 250px">
 			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 				<tr>
@@ -89,8 +90,10 @@
 					<td>
 						<table style="width: 100%">
 							<tr>
-								<td><p:inputText size="35"
-										value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address1}" /></td>
+								<td><p:inputText size="35" required="true" id="smSupAddr1"
+										value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address1}" />
+									<p:message id="smSupAddr1Msg" for="smSupAddr1"
+										showSummary="true" showDetail="false" display="icon" /></td>
 							</tr>
 							<tr>
 								<td><p:inputText size="35"
@@ -128,6 +131,7 @@
 							<tr>
 								<td><p:selectOneMenu label="#{lbl['lbl.sm.country']}"
 										style="width: 207px;margin-bottom: 5px;" required="true"
+										id="smSupCont"
 										value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCountry.countryId}">
 										<f:selectItem itemLabel="---Select---" itemValue="" />
 										<f:selectItems var="basicCountry"
@@ -137,7 +141,8 @@
 										<p:ajax event="change"
 											listener="#{backingBean.populateStatesByCountry(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCountry.countryId,SupplierManagementConst.SM_BASIC_INFO_PANEL,backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState,backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmDistrict,backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCity)}"
 											update="basicComState,basicCompDist,basicCompCity" />
-									</p:selectOneMenu></td>
+									</p:selectOneMenu> <p:message id="smSupContMsg" for="smSupCont"
+										showSummary="true" showDetail="false" display="icon" /></td>
 							</tr>
 							<tr>
 
@@ -156,7 +161,8 @@
 											backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmDistrict,
 											backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCity)}"
 											update="basicCompDist,basicCompCity" />
-									</p:selectOneMenu></td>
+									</p:selectOneMenu> <p:message id="basicComStateMsg" for="basicComState"
+										showSummary="true" showDetail="false" display="icon" /></td>
 							</tr>
 							<tr>
 								<td><p:selectOneMenu
@@ -173,7 +179,8 @@
 								SupplierManagementConst.SM_BASIC_INFO_PANEL,
 								backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCity)}"
 											update="basicCompCity" />
-									</p:selectOneMenu></td>
+									</p:selectOneMenu> <p:message id="basicCompDistMsg" for="basicCompDist"
+										showSummary="true" showDetail="false" display="icon" /></td>
 
 							</tr>
 							<tr>
@@ -185,7 +192,8 @@
 										<f:selectItems var="city"
 											value="#{backingBean.managedBean.basicCompanyCities}"
 											itemValue="#{city.cityId}" itemLabel="#{city.cityName}" />
-									</p:selectOneMenu></td>
+									</p:selectOneMenu> <p:message id="basicCompCityMsg" for="basicCompCity"
+										showSummary="true" showDetail="false" display="icon" /></td>
 							</tr>
 						</TABLE>
 					</td>
@@ -238,7 +246,7 @@
 				<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 
 					<tr>
-						<td><p:outputLabel value="PO Remarks" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
 						<td colspan="3"><p:inputTextarea autoResize="true" cols="41"
 								value="#{backingBean.managedBean.poSecReview.basicRemark}" /></td>
 					</tr>

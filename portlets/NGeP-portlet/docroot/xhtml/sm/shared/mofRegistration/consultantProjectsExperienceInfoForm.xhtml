@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="Company Experience Project" toggleable="true">
+	<p:panel header="#{lbl['lbl.sm.projDtls.panHdr']}" toggleable="true">
 		<table style="width: 250px">
 			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 				<tr>
@@ -18,7 +18,7 @@
 								listener="#{backingBean.changeVerifySection(backingBean.managedBean.poSecReview.experienceVerified)}" />
 						</p:selectBooleanCheckbox></td>
 					<td valign="top"><h:outputText
-							value=" Section Verified By PO: "
+							value="#{lbl['lbl.sm.sectionPoVerf']}"
 							title="For PO to highlight the verified section " /></td>
 
 				</tr>
@@ -33,7 +33,7 @@
 								listener="#{backingBean.changeVerifySection(backingBean.managedBean.apprvrSecReview.experienceVerified)}" />
 						</p:selectBooleanCheckbox></td>
 					<td valign="top"><h:outputText
-							value=" Section Verified By Approver: "
+							value="#{lbl['lbl.sm.sectionApprVerf']}"
 							title="For Approver to highlight the verified section " /></td>
 				</tr>
 			</p:outputPanel>
@@ -50,30 +50,30 @@
 				<ac:paginator for="consDt" />
 				<p:column selectionMode="multiple" width="5%" />
 
-				<p:column headerText="Project Title">
+				<p:column headerText="#{lbl['lbl.sm.projDtls.projTitle']}">
 					<h:outputText value="#{consBean.title}" />
 				</p:column>
 
-				<p:column headerText="Project Value">
+				<p:column headerText="#{lbl['lbl.sm.projDtls.projVal']}">
 					<h:outputText value="#{consBean.contractValue}" />
 				</p:column>
 
-				<p:column headerText="Procurement Date">
+				<p:column headerText="#{lbl['lbl.sm.projDtls.procDate']}">
 					<h:outputText value="#{consBean.procurementDate}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</h:outputText>
 				</p:column>
 
-				<p:column headerText=" Work Progress">
-					<h:outputText value="In Progress"
-						rendered="#{contrBean.progressStatus eq 'P'}" />
-					<h:outputText value="Success"
-						rendered="#{contrBean.progressStatus eq 'S'}" />
-					<h:outputText value="Fail"
-						rendered="#{contrBean.progressStatus eq 'F'}" />
+				<p:column headerText="#{lbl['lbl.sm.projDtls.workProgress']}">
+					<h:outputText value="#{lbl['lbl.sm.projDtls.inProgress']}"
+						rendered="#{consBean.progressStatus eq 'P'}" />
+					<h:outputText value="#{lbl['lbl.sm.projDtls.success']}"
+						rendered="#{consBean.progressStatus eq 'S'}" />
+					<h:outputText value="#{lbl['lbl.sm.projDtls.fail']}"
+						rendered="#{consBean.progressStatus eq 'F'}" />
 				</p:column>
-				<p:column headerText="Action">
+				<p:column headerText="#{lbl['lbl.sm.label.action']}">
 					<p:commandLink
 						action="#{backingBean.assignSelCompanyExperience(consBean)}"
 						update=":form:tt:consDialog">
@@ -85,10 +85,10 @@
 			</p:dataTable>
 			<p:spacer height="2px;" />
 			<div align="right">
-				<p:commandButton value="Add"
+				<p:commandButton value="#{lbl['lbl.sm.button.add']}"
 					action="#{backingBean.assignNewCompanyExperience}"
 					update=":form:tt:consDialog" />
-				<p:commandButton value="Delete "
+				<p:commandButton value="#{lbl['lbl.sm.button.delete']} "
 					action="#{backingBean.deleteSelectedCompanyExperiences}"
 					update=":form:tt:consDt" />
 
@@ -97,7 +97,7 @@
 			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 				<table style="width: 50%">
 					<tr>
-						<td><p:outputLabel value="PO Remarks" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" cols="41"
 								value="#{backingBean.managedBean.poSecReview.experienceRemark}" /></td>
 					</tr>
@@ -106,11 +106,11 @@
 			<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
 				<table style="width: 100%">
 					<tr>
-						<td><p:outputLabel value="PO Remarks" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" readonly="true"
 								disabled="true" cols="41"
 								value="#{backingBean.managedBean.poSecReview.experienceRemark}" /></td>
-						<td><p:outputLabel value="Approver Remarks" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" cols="41"
 								value="#{backingBean.managedBean.apprvrSecReview.experienceRemark}" /></td>
 
@@ -119,9 +119,9 @@
 			</p:outputPanel>
 		</p:panel>
 	</p:panel>
-	<p:dialog header="Project Information" widgetVar="consDialog"
-		id="consDialog" resizable="false" showEffect="fade" hideEffect="fade"
-		modal="true" width="500px">
+	<p:dialog header="#{lbl['lbl.sm.projDtls.projDiaHdr']}"
+		widgetVar="consDialog" id="consDialog" resizable="false"
+		showEffect="fade" hideEffect="fade" modal="true" width="500px">
 		<p:messages id="consultPrjMsg" showSummary="true" showDetail="false"
 			autoUpdate="true" closable="true" />
 		<table style="width: 100%">
@@ -130,52 +130,61 @@
 
 					<table style="width: 100%">
 						<tr>
-							<td><p:outputLabel value="* Project Name" /></td>
+							<td><p:outputLabel
+									value="* #{lbl['lbl.sm.projDtls.projTitle']}" /></td>
 							<td><p:inputText
 									value="#{backingBean.managedBean.selectedCompanyExperience.title}"
 									size="35" /></td>
 						</tr>
 						<tr>
-							<td><p:outputLabel value="* Project Done For" /></td>
+							<td><p:outputLabel
+									value="* #{lbl['lbl.sm.projDtls.doneFor']}" /></td>
 							<td><p:selectOneRadio>
 									<f:selectItem itemLabel="Fedral Govt" itemValue="F" />
 									<f:selectItem itemLabel="Non-Fedral Govt" itemValue="N" />
 								</p:selectOneRadio></td>
 						</tr>
 						<tr>
-							<td><p:outputLabel value="* Project Ref NO." /></td>
+							<td><p:outputLabel value="* #{lbl['lbl.sm.projDtls.refNo']}" /></td>
 							<td><p:inputText
 									value="#{backingBean.managedBean.selectedCompanyExperience.refNo}"
 									size="35" maxlength="20" /></td>
 						</tr>
 						<tr>
-							<td><p:outputLabel value="* Project Location" /></td>
+							<td><p:outputLabel
+									value="* #{lbl['lbl.sm.projDtls.projLoc']}" /></td>
 							<td><p:inputText
 									value="#{backingBean.managedBean.selectedCompanyExperience.projectLocation}"
 									size="35" maxlength="30" /></td>
 						</tr>
 						<tr>
-							<td><p:outputLabel value="* Client's Name" /></td>
+							<td><p:outputLabel
+									value="* #{lbl['lbl.sm.projDtls.clientName']}" /></td>
 							<td><p:inputText
 									value="#{backingBean.managedBean.selectedCompanyExperience.clientName}"
 									size="35" /></td>
 						</tr>
 						<tr>
-							<td><p:outputLabel value="* Project Cost (RM.)" /></td>
-							<td><p:inputText label="Project Cost (RM.)"
+							<td><p:outputLabel
+									value="* #{lbl['lbl.sm.projDtls.projCost']}" /></td>
+							<td><p:inputText label="#{lbl['lbl.sm.projDtls.projCost']}"
+									id="consultantProjCost"
 									value="#{backingBean.managedBean.selectedCompanyExperience.contractValue}"
 									size="35">
 
-								</p:inputText></td>
+								</p:inputText> <p:message id="consultantProjCostMsg" for="consultantProjCost"
+									showSummary="true" showDetail="false" display="icon" /></td>
 						</tr>
 						<tr>
-							<td><p:outputLabel value="* Service Provided" /></td>
+							<td><p:outputLabel
+									value="* #{lbl['lbl.sm.projDtls.serviceProvide']} " /></td>
 							<td><p:inputTextarea
 									value="#{backingBean.managedBean.selectedCompanyExperience.workServiceDesc}"
 									cols="36" style="margin-bottom:5px;" /></td>
 						</tr>
 						<tr>
-							<td><p:outputLabel value="* Work Progress" /></td>
+							<td><p:outputLabel
+									value="* #{lbl['lbl.sm.projDtls.workProgress']}" /></td>
 							<td><p:selectOneRadio
 									value="#{backingBean.managedBean.selectedCompanyExperience.progressStatus}">
 									<f:selectItem itemLabel="In Progress" itemValue="P" />
@@ -184,24 +193,29 @@
 								</p:selectOneRadio></td>
 						</tr>
 						<tr>
-							<td><p:outputLabel value="* Consultant Fee (RM.)" /></td>
-							<td><p:inputText label=" Consultant Fee (RM.)"
+							<td><p:outputLabel
+									value="* #{lbl['lbl.sm.projDtls.consultFee']}" /></td>
+							<td><p:inputText id="consultantProjConsultFee"
+									label=" #{lbl['lbl.sm.projDtls.consultFee']}"
 									value="#{backingBean.managedBean.selectedCompanyExperience.consultantFee}"
 									size="35">
 
-								</p:inputText></td>
+								</p:inputText> <p:message id="consultantProjConsultFeeMsg"
+									for="consultantProjConsultFee" showSummary="true"
+									showDetail="false" display="icon" /></td>
 						</tr>
 						<tr>
-							<td><p:outputLabel value="* Appointment Date" /></td>
+							<td><p:outputLabel
+									value="* #{lbl['lbl.sm.projDtls.apptDate']}" /></td>
 							<td><p:calendar showOn="button" id="consultProjAppDate"
-									navigator="true" display="inline"
+									navigator="true" display="inline" readonlyInput="true"
 									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 									yearRange="c-99:c+0"
 									value="#{backingBean.managedBean.selectedCompanyExperience.procurementDate}" /></td>
 						</tr>
 						<tr>
-							<td><p:outputLabel value="
-										* Main Category" /></td>
+							<td><p:outputLabel
+									value="* #{lbl['lbl.sm.projDtls.mainCat']}" /></td>
 							<td><p:selectOneMenu
 									value="#{backingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats[0].pmCategoryL1.categoryL1Id}"
 									style="width: 207px;margin-bottom: 5px;">
@@ -220,7 +234,8 @@
 
 						</tr>
 						<tr>
-							<td><p:outputLabel value="* Sub Category" /></td>
+							<td><p:outputLabel
+									value="* #{lbl['lbl.sm.projDtls.subCat']}" /></td>
 							<td><p:selectOneMenu
 									value="#{backingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats[0].pmCategoryL2.categoryL2Id}"
 									id="conslChild" style="width: 207px;margin-bottom: 5px;">
@@ -235,7 +250,8 @@
 								</p:selectOneMenu></td>
 						</tr>
 						<tr>
-							<td><p:outputLabel value="* Sub Category Division" /></td>
+							<td><p:outputLabel
+									value="* #{lbl['lbl.sm.projDtls.subCatDiv']}" /></td>
 							<td><p:selectOneMenu
 									value="#{backingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats[0].pmCategoryL3.categoryL3Id}"
 									id="conslSubChild" style="width: 207px;margin-bottom: 5px;">
@@ -255,11 +271,14 @@
 		<br />
 
 		<div align="right">
-			<p:commandButton value="Save"
+			<p:commandButton value="#{lbl['lbl.sm.button.save']}"
 				actionListener="#{backingBean.addOrUpdateCompanyExperienceToSmAppl}"
 				update=":form:tt:consDt" />
-			<p:commandButton value="Cancel" onclick="consDialog.hide();"
-				immediate="true" />
+
+			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}" type="reset"
+				immediate="true" update=":form:tt:contDialog"
+				onclick="consDialog.hide();">
+			</p:commandButton>
 		</div>
 
 	</p:dialog>

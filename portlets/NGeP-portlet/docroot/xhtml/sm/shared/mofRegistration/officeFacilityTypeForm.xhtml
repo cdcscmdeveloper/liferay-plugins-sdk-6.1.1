@@ -5,7 +5,8 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel header="Office Facility Type " id="ofp" toggleable="true">
+	<p:panel header="#{lbl['lbl.sm.panHdr.offFacility']}" id="ofp"
+		toggleable="true">
 		<table style="width: 250px">
 			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 				<tr>
@@ -17,7 +18,7 @@
 								listener="#{backingBean.changeVerifySection(backingBean.managedBean.poSecReview.officeFacilityVerfied)}" />
 						</p:selectBooleanCheckbox></td>
 					<td valign="top"><h:outputText
-							value=" Section Verified By PO: "
+							value="#{lbl['lbl.sm.sectionPoVerf']}"
 							title="For PO to highlight the verified section " /></td>
 
 				</tr>
@@ -32,7 +33,7 @@
 								listener="#{backingBean.changeVerifySection(backingBean.managedBean.apprvrSecReview.officeFacilityVerfied)}" />
 						</p:selectBooleanCheckbox></td>
 					<td valign="top"><h:outputText
-							value=" Section Verified By Approver: "
+							value="#{lbl['lbl.sm.sectionApprVerf']}"
 							title="For Approver to highlight the verified section " /></td>
 				</tr>
 			</p:outputPanel>
@@ -46,9 +47,10 @@
 			<table style="width: 100%">
 
 				<tr>
-					<td width="134px;"><p:outputLabel value="Ownership Type" /></td>
+					<td width="134px;"><p:outputLabel
+							value="#{lbl['lbl.sm.facility.ownerType']}" /></td>
 					<td style="width: 100px; padding-bottom: 2px;"><p:selectOneRadio
-							id="ownTypeId" label="OwnerShip Type"
+							id="ownTypeId" label="#{lbl['lbl.sm.facility.ownerType']}"
 							value="#{backingBean.managedBean.basicCompanyFacility.ownershipType}"
 							required="true">
 							<f:selectItem itemLabel="Own" itemValue="O" />
@@ -65,7 +67,8 @@
 				rendered="#{backingBean.managedBean.basicCompanyFacility.ownershipType eq 'R'}">
 				<table style="width: 100%">
 					<tr>
-						<td width="134px;"><p:outputLabel value="Facility Type" /></td>
+						<td width="134px;"><p:outputLabel
+								value="#{lbl['lbl.sm.facility.facilityType']}" /></td>
 						<td colspan="3" style="padding-bottom: 4px;"><p:selectOneRadio
 								value="#{backingBean.managedBean.basicCompanyFacility.facilityType}">
 								<f:selectItem itemLabel="Home Office" itemValue="H" />
@@ -75,16 +78,20 @@
 
 					</tr>
 					<tr>
-						<td><p:outputLabel value="* Landlord's Name" /></td>
+						<td><p:outputLabel
+								value="* #{lbl['lbl.sm.facility.landLordName']}" /></td>
 						<td><p:inputText id="landlordName"
 								value="#{backingBean.managedBean.basicCompanyFacility.ownerName}"
-								size="35" required="true"  label="Landlord's Name"/> <p:message id="landlordNameMsg"
-								for="landlordName" showSummary="true" showDetail="false"
-								display="icon" /></td>
-						<td><p:outputLabel value="* Monthly Rental (RM.)" /></td>
+								size="35" required="true"
+								label="#{lbl['lbl.sm.facility.landLordName']}" /> <p:message
+								id="landlordNameMsg" for="landlordName" showSummary="true"
+								showDetail="false" display="icon" /></td>
+						<td><p:outputLabel
+								value="* #{lbl['lbl.sm.facility.monthRent']}" /></td>
 						<td><p:inputText id="rental"
 								value="#{backingBean.managedBean.basicCompanyFacility.rentalRate}"
-								size="35" required="true" label="Monthly Rental ">
+								size="35" required="true"
+								label="#{lbl['lbl.sm.facility.monthRent']}">
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 							</p:inputText> <p:message id="rentalMsg" for="rental" showSummary="true"
@@ -224,7 +231,7 @@
 					<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 
 						<tr>
-							<td><p:outputLabel value="PO Remarks" /></td>
+							<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
 							<td colspan="3"><p:inputTextarea autoResize="true" cols="41"
 									value="#{backingBean.managedBean.poSecReview.officeFacilityRemark}" /></td>
 						</tr>
@@ -233,11 +240,11 @@
 					<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
 
 						<tr>
-							<td><p:outputLabel value="PO Remarks" /></td>
+							<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
 							<td><p:inputTextarea autoResize="true" readonly="true"
 									disabled="true" cols="41"
 									value="#{backingBean.managedBean.poSecReview.officeFacilityRemark}" /></td>
-							<td><p:outputLabel value="Approver Remarks" /></td>
+							<td><p:outputLabel value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
 							<td><p:inputTextarea autoResize="true" cols="41"
 									value="#{backingBean.managedBean.apprvrSecReview.officeFacilityRemark}" /></td>
 
@@ -250,7 +257,8 @@
 				rendered="#{backingBean.managedBean.basicCompanyFacility.ownershipType eq 'O'}">
 				<table style="width: 100%">
 					<tr>
-						<td width="134px;"><p:outputLabel value="Facility Type" /></td>
+						<td width="134px;"><p:outputLabel
+								value="#{lbl['lbl.sm.facility.facilityType']}" /></td>
 						<td colspan="3" style="padding-bottom: 4px;"><p:selectOneRadio
 								value="#{backingBean.managedBean.basicCompanyFacility.facilityType}">
 								<f:selectItem itemLabel="Home Office" itemValue="H" />
@@ -260,19 +268,22 @@
 
 					</tr>
 					<tr>
-						<td width="134px;"><p:outputLabel value="* Owner Name" /></td>
+						<td width="134px;"><p:outputLabel
+								value="* #{lbl['lbl.sm.facility.ownerName']}" /></td>
 						<td colspan="3"><p:inputText id="fcltyOwnerName"
-								label="OwnerName"
+								label="#{lbl['lbl.sm.facility.ownerName']}"
 								value="#{backingBean.managedBean.basicCompanyFacility.ownerName}"
 								size="35" required="true" /> <p:message id="fcltyOwnerNameMsg"
 								for="fcltyOwnerName" showSummary="true" showDetail="false"
 								display="icon" /></td>
 					</tr>
 					<tr>
-						<td width="134px;"><p:outputLabel value="* Purchase Date" /></td>
+						<td width="134px;"><p:outputLabel
+								value="* #{lbl['lbl.sm.facility.purchaseDate']}" /></td>
 						<td colspan="3" style="padding-bottom: 3px;"><p:calendar
 								showOn="button" id="purchaseDate" navigator="true"
-								display="inline" label="Purchase Date"
+								readonlyInput="true" display="inline"
+								label="#{lbl['lbl.sm.facility.purchaseDate']}"
 								value="#{backingBean.managedBean.basicCompanyFacility.purchaseDate}"
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 								required="true" yearRange="c-99:c+0">
@@ -280,9 +291,10 @@
 								showSummary="true" showDetail="false" display="icon" /></td>
 					</tr>
 					<tr>
-						<td width="134px;"><p:outputLabel value="* Purchase Price " /></td>
+						<td width="134px;"><p:outputLabel
+								value="* #{lbl['lbl.sm.facility.purchasePrice']}" /></td>
 						<td colspan="3"><p:inputText size="35" id="purchasePrice"
-								label="Purchase Price"
+								label="#{lbl['lbl.sm.facility.purchasePrice']}"
 								value="#{backingBean.managedBean.basicCompanyFacility.purchasePrice}"
 								required="true">
 								<f:convertNumber
@@ -294,7 +306,7 @@
 					<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 
 						<tr>
-							<td><p:outputLabel value="PO Remarks" /></td>
+							<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
 							<td colspan="3"><p:inputTextarea autoResize="true" cols="41" /></td>
 						</tr>
 
@@ -302,10 +314,10 @@
 					<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
 
 						<tr>
-							<td><p:outputLabel value="PO Remarks" /></td>
+							<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
 							<td><p:inputTextarea autoResize="true" readonly="true"
 									disabled="true" cols="41" /></td>
-							<td><p:outputLabel value="Approver Remarks" /></td>
+							<td><p:outputLabel value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
 							<td><p:inputTextarea autoResize="true" cols="41" /></td>
 
 						</tr>
