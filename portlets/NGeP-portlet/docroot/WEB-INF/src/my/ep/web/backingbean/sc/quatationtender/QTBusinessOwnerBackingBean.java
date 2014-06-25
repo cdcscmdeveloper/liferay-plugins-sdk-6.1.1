@@ -824,7 +824,7 @@ public class QTBusinessOwnerBackingBean extends
 				qtCommitte.getScCommittee().getScCommitteeMembers());
 		this.getManagedBean().setCommitteMember(new ScCommitteeMember());
 		PmStatus qtStatus = new PmStatus();
-		qtStatus.setStatusId(QTStatusConst.ASSIGN_BO);
+		qtStatus.setStatusId(QTStatusConst.QT_PENDING_APPOINT_BO);
 		scQt.setQtStatus(qtStatus);
 		scQt.setQtNo(dto.getQtNo());
 		this.getManagedBean().setQt(scQt);
