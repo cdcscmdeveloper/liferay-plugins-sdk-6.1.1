@@ -30,6 +30,7 @@
 
 		</div>
 		<div class="clear"></div>
+		<p:spacer height="50"></p:spacer>
 		<!-- 	<ui:include src="/xhtml/sc/main/templateMaintenanceheader.xhtml"></ui:include> -->
 		<p:panel header="#{lbl['lbl.sc.tpl.head.section']}" toggleable="true"
 			style="width:100%;">
@@ -37,9 +38,9 @@
 
 			<table>
 				<tr>
-					<td><h:outputLabel value="#{lbl['lbl.sc.tpl.main.title']}"></h:outputLabel>
+					<td valign="top"><h:outputLabel value="#{lbl['lbl.sc.tpl.main.title']}"></h:outputLabel>
 					</td>
-					<td colspan="3"><p:inputTextarea rows="2" cols="95" style="margin-bottom:5px;"
+					<td colspan="3"><p:inputTextarea rows="2" cols="95" style="margin-bottom:5px;" maxlength="200"
 							value="#{specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.specName}" /></td>
 				</tr>
 

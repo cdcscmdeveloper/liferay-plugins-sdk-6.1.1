@@ -7,26 +7,28 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	
-		<p:dialog widgetVar="createCommitteeSpec" modal="true" width="1000"
+
+	<p:dialog widgetVar="createCommitteeSpec" modal="true" width="1000"
 		height="500">
 
 		<p:panel header="#{lbl['lbl.sc.tpl.search']}">
-			
+
 			<table>
 				<tr>
-					<td style="width: 150px;">
-					<h:outputLabel value="#{lbl['lbl.sc.spec.template.spec.standard.template']}" />
-					<p:outputLabel value="*" styleClass="mandatory" />
-					</td>
-					<td><p:selectOneRadio
+					<td style="width: 150px;"><p:outputLabel
+							value="#{lbl['lbl.sc.spec.template.spec.standard.template']}" />
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td><p:selectOneRadio required="true"
+							label="#{lbl['lbl.sc.spec.template.spec.standard.template']}"
+							id="committeetempSpecStandardTemplate"
 							value="#{specificationBackingBean.managedBean.standardTemplate}">
 							<f:selectItem itemLabel="Yes" itemValue="ST"></f:selectItem>
 							<f:selectItem itemLabel="No" itemValue="SC"></f:selectItem>
 							<p:ajax event="change"
 								listener="#{specificationBackingBean.templateChange}"
 								update="cretaeupdate,listUpdate"></p:ajax>
-						</p:selectOneRadio></td>
+						</p:selectOneRadio> <p:message id="committeestrdTemplate"
+							for="committeetempSpecStandardTemplate" display="icon"></td>
 				</tr>
 			</table>
 
@@ -35,13 +37,17 @@
 					rendered="#{specificationBackingBean.managedBean.standardTemplate eq 'ST'}">
 					<table>
 						<tr>
-							<td style="width: 150px;"><h:outputLabel
-									value="#{lbl['lbl.sc.tpl.search.item']}"></h:outputLabel></td>
+							<td style="width: 150px;"><p:outputLabel
+									value="#{lbl['lbl.sc.tpl.search.item']}"></p:outputLabel> <p:outputLabel
+									value="*" styleClass="mandatory" /></td>
 							<td><p:selectOneMenu style="margin-bottom:5px;"
+									required="true" label="#{lbl['lbl.sc.tpl.search.item']}"
+									id="standardCommitteeItemType"
 									value="#{specificationBackingBean.managedBean.searchItemTypeId}">
 									<f:selectItems
 										value="#{specificationBackingBean.getDropdownValues(ParameterTypeConst.scItemType)}" />
-								</p:selectOneMenu></td>
+								</p:selectOneMenu> <p:message id="strdTemplateItemType"
+									for="standardCommitteeItemType" display="icon"></p:message></td>
 						</tr>
 					</table>
 				</ui:fragment>
@@ -52,21 +58,25 @@
 							<td style="width: 115px;"><h:outputLabel
 									value="#{lbl['lbl.sc.tpl.search.item']}"></h:outputLabel></td>
 							<td><p:selectOneMenu style="margin-bottom:5px;"
+									required="true" label="#{lbl['lbl.sc.tpl.search.item']}"
+									id="sourcingCommitteeItemType"
 									value="#{specificationBackingBean.managedBean.searchItemTypeId}">
 									<f:selectItems
 										value="#{specificationBackingBean.getDropdownValues(ParameterTypeConst.scItemType)}" />
-								</p:selectOneMenu></td>
+								</p:selectOneMenu> <p:message id="sourcingTemplateItemType"
+									for="sourcingCommitteeItemType" display="icon"></td>
 						</tr>
 						<tr>
 							<td style="width: 115px;"><h:outputLabel
 									value="#{lbl['lbl.sc.tpl.search.title']}"></h:outputLabel></td>
-							<td><h:inputText size="100" style="margin-bottom:5px;" maxlength="200"
+							<td><p:inputText size="100" style="margin-bottom:5px;"
+									maxlength="200"
 									value="#{specificationBackingBean.managedBean.specName}" /></td>
 						</tr>
 						<tr>
 							<td style="width: 115px;"><h:outputLabel
 									value="#{lbl['lbl.sc.tpl.search.qtn.no']}"></h:outputLabel></td>
-							<td><p:inputText style="margin-bottom:5px;" maxlength="21" 
+							<td><p:inputText style="margin-bottom:5px;" maxlength="21"
 									value="#{specificationBackingBean.managedBean.qtNum}" /></td>
 						</tr>
 						<tr>
@@ -85,10 +95,9 @@
 				<p:commandButton value="#{lbl['lbl.sc.tpl.btn.search']}"
 					action="#{specificationBackingBean.searchScqtDocAction}"
 					update="createList" icon="ui-icon-search" />
-					<p:commandButton value="#{lbl['lbl.sc.eva.btn.reset']}"
-		
-			icon="ui-icon-reset" resetValues="true" partialSubmit="true"
-			process="@this" />
+				<p:commandButton value="#{lbl['lbl.sc.eva.btn.reset']}"
+					icon="ui-icon-reset" resetValues="true" partialSubmit="true"
+					process="@this" />
 			</div>
 
 		</p:panel>
@@ -107,10 +116,12 @@
 						<h:outputText value="#{tplSpecMaster.specName}"></h:outputText>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.tpl.search.spec']}">
-						<h:outputText value="#{specificationBackingBean.getParameterDesc(tplSpecMaster.specTypeCode)}" />
+						<h:outputText
+							value="#{specificationBackingBean.getParameterDesc(tplSpecMaster.specTypeCode)}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.tpl.search.item']}">
-						<h:outputText value="#{specificationBackingBean.getParameterDesc(tplSpecMaster.itemTypeCode)}"/>
+						<h:outputText
+							value="#{specificationBackingBean.getParameterDesc(tplSpecMaster.itemTypeCode)}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.tpl.search.procure.category']}">
 						<h:outputText
@@ -120,14 +131,18 @@
 						<h:outputText value="#{tplSpecMaster.scQtDocs.scQt.qtNo}" />
 					</p:column> -->
 					<p:column headerText="#{lbl['lbl.sc.tpl.search.action']}">
-						<ui:fragment rendered="#{specificationBackingBean.managedBean.standardTemplate eq 'ST'}">
-					<p:commandButton value="Create" action="#{specificationBackingBean.createCommitteeTemplateSpec(tplSpecMaster)}" oncomplete="createCommitteeSpec.hide();" icon="ui-icon-add"></p:commandButton>
-					</ui:fragment>
-					<ui:fragment rendered="#{specificationBackingBean.managedBean.standardTemplate eq 'SC'}">
-						<p:commandButton value="#{lbl['lbl.sc.tpl.search.btn.clone']}"
-							action="#{specificationBackingBean.createCommitteeTemplateSpec(tplSpecMaster)}"
-							oncomplete="createCommitteeSpec.hide();" icon="ui-icon-clone"></p:commandButton>
-							</ui:fragment>
+						<ui:fragment
+							rendered="#{specificationBackingBean.managedBean.standardTemplate eq 'ST'}">
+							<p:commandButton value="Create"
+								action="#{specificationBackingBean.createCommitteeTemplateSpec(tplSpecMaster)}"
+								oncomplete="createCommitteeSpec.hide();" icon="ui-icon-add"></p:commandButton>
+						</ui:fragment>
+						<ui:fragment
+							rendered="#{specificationBackingBean.managedBean.standardTemplate eq 'SC'}">
+							<p:commandButton value="#{lbl['lbl.sc.tpl.search.btn.clone']}"
+								action="#{specificationBackingBean.createCommitteeTemplateSpec(tplSpecMaster)}"
+								oncomplete="createCommitteeSpec.hide();" icon="ui-icon-clone"></p:commandButton>
+						</ui:fragment>
 					</p:column>
 
 				</p:dataTable>
