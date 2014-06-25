@@ -242,11 +242,15 @@ public class TemplateDocBackingBean extends
 	}
 	
 	
-	public String goToMaint() {       
+	public String goToMaint(TplDocMaster selTemplate) {       
 		
 		ITemplateDocSO templateSO = (ITemplateDocSO) BusinessDelegate
 				.getInstance().getServiceObject("cc", ITemplateDocSO.class);
 		TemplateDocReqDTO reqDTO1 = new TemplateDocReqDTO();
+		
+//		if(getManagedBean().getSelectedTemplate() == null){
+			getManagedBean().setSelectedTemplate(selTemplate);
+//		}
 		
 		System.out.println("==============>>>>>>>>>>>>>>>> " + getManagedBean().getSelectedTemplate());
 		
@@ -596,6 +600,7 @@ public void destroyWorld(ActionEvent actionEvent){
 	}
 
 	public String backAction() {
+		getManagedBean().setSelectedTemplate(null);
 		return "templateDocSearch";
 	}
 	

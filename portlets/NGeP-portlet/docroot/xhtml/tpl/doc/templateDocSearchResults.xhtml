@@ -15,8 +15,6 @@
 							value="#{templateDocBackingBean.managedBean.templateSearchList}" 
 							var="tplMasterObj" rowKey="#{tplMasterObj.docMasterId}"  selection="#{templateDocBackingBean.managedBean.selectedTemplate}" 
 							 width="100%" editable="true">
-							   <p:ajax event="rowEdit" listener="#{templateDocBackingBean.goToMaint}" />  
-							   <p:ajax event="rowEditCancel"></p:ajax>
 							   <p:columnGroup type="header">
 								<p:row>
 									<p:column rowspan="1" headerText="Title"></p:column>
@@ -40,7 +38,7 @@
 								
 							</p:column>
 							<p:column>
-                                <p:commandLink action="#{templateDocBackingBean.goToMaint}">
+                                <p:commandLink action="#{templateDocBackingBean.goToMaint(tplMasterObj)}">
                                       <p:graphicImage library="ep/images/design/edit.png" 
                                        value="/resources/ep/images/design/edit.png" update="resultID" />
                                 </p:commandLink>
