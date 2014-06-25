@@ -2770,7 +2770,7 @@ public class SpecificationBackingBean extends
 				searchCircularList();
 				// this.getManagedBean().setApprovalList(getAppDetails());
 				// retriveSpecdetails(1366L);
-				retriveSpecdetails(1426L);
+				//retriveSpecdetails(1426L);
 			}
 
 		} finally {
