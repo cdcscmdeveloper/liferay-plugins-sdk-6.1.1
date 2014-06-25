@@ -715,15 +715,18 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			// this.getManagedBean().getSmBusinessAdd().getPmState().getStateId();
 			List<PmDistrict> districtLs = this.retrievePmDistrictList(this.getManagedBean().getSmBusinessAdd().getPmState().getStateId());
 			this.getManagedBean().setBusinessDistrictLs(districtLs);
+			this.getManagedBean().setBusinessCityLs(new ArrayList<PmCity>());
 		} else if (typeAdd.equals("residential")) {
 			List<PmDistrict> districtLs = this.retrievePmDistrictList(this.getManagedBean().getSmResAdd().getPmState().getStateId());
 			this.getManagedBean().setResidentialDistrictLs(districtLs);
+			this.getManagedBean().setResidentialCityLs(new ArrayList<PmCity>());
 		} else if (typeAdd.equals("permenant")) {
 			log.info("------------permenant----------------"
 					+ this.getManagedBean().getSmPermenantAdd().getPmState()
 					.getStateId());
 			List<PmDistrict> districtLs = this.retrievePmDistrictList(this.getManagedBean().getSmPermenantAdd().getPmState().getStateId());
 			this.getManagedBean().setPermenantDistrictLs(districtLs);
+			this.getManagedBean().setPermenantCityLs(new ArrayList<PmCity>());
 
 			log.info("------permenant LS-------------"
 					+ this.getManagedBean().getPermenantDistrictLs().size());

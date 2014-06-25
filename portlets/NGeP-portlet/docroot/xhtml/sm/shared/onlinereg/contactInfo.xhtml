@@ -111,21 +111,25 @@
 						for="conPostCode" display="icon" /></td>
 			</tr>
 
-
-
 			<tr>
-				<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
-				<td class="tdContent"><p:inputText size="40" id="txtPhoneNoId"  label="#{lbl['lbl.sm.phnNo']}"
-						value="#{registrationBackingBean.managedBean.smPersonnel.phoneNo}" />
-<!-- 						<p:message id="txtPhoneNoIdMsg" for="txtPhoneNoId" display="icon" /> -->
+				<td class="tdTitle"><p:outputLabel
+						value="#{lbl['lbl.sm.phoneno']}" /></td>
+				<td class="tdContent"><p:inputText id="txtPhoneNoId" size="40"
+						maxlength="20"
+						label="#{lbl['lbl.sm.phnNo']}"
+						value="#{registrationBackingBean.managedBean.smPersonnel.phoneNo}">
+						<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
+					</p:inputText>
+					<p:message id="txtPhoneNoIdMsg" for="txtPhoneNoId" display="icon" />
 				</td>
 
 
 				<td class="tdTitle"><p:outputLabel
 						value="* #{lbl['lbl.sm.mobilenumber']}" /></td>
-				<td class="tdContent"><p:inputText size="40" id="txtMobileNoId" required="true" label="#{lbl['lbl.sm.mobilenumber']}"
+				<td class="tdContent"><p:inputText size="40" id="txtMobileNoId"
+						required="true" label="#{lbl['lbl.sm.mobilenumber']}"
 						value="#{registrationBackingBean.managedBean.smPersonnel.mobileNo}" />
-						<p:message id="txtMobileNoIdMsg" for="txtMobileNoId" display="icon" /></td>
+					<p:message id="txtMobileNoIdMsg" for="txtMobileNoId" display="icon" /></td>
 			</tr>
 
 			<tr>

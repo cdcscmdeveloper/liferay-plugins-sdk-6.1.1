@@ -139,7 +139,7 @@
 							itemValue="#{state.stateId}" itemLabel="#{state.stateName}" />
 						<p:ajax event="change"
 							listener="#{registrationBackingBean.populateDistrictByAddType('business')}"
-							update="busDistrict" />
+							update="busDistrict busCity" />
 					</p:selectOneMenu> <p:message id="busStateMsg" for="busState" display="icon" /></td>
 			</tr>
 
@@ -199,13 +199,20 @@
 						value="* #{lbl['lbl.sm.telno']}" /></td>
 				<td class="tdContent"><p:inputText id="telNoId" required="true" label="#{lbl['lbl.sm.telno']}"
 						value="#{registrationBackingBean.managedBean.smAppl.smCompanyBasic.phoneNo}"
-						size="40" maxlength="14" />
+						size="40" maxlength="20" >
+						<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
+					</p:inputText>
 						<p:message id="telNoIdMsg" for="telNoId" display="icon" /></td>
 				<td class="tdTitle"><p:outputLabel
 						value="#{lbl['lbl.sm.faxno']}" /></td>
-				<td class="tdContent"><p:inputText id="faxNoId"
+				<td class="tdContent">
+					<p:inputText id="faxNoId"
 						value="#{registrationBackingBean.managedBean.smAppl.smCompanyBasic.faxNo}"
-						size="40" maxlength="14" /></td>
+						size="40" maxlength="20" label="#{lbl['lbl.sm.faxno']}">
+						<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
+					</p:inputText>
+					<p:message id="txtfaxNoIdMsg" for="faxNoId" display="icon" />
+				</td>
 			</tr>
 		</table>
 	</p:panel>
