@@ -1541,6 +1541,7 @@ public class SmApplicationBackingBean extends
 			getManagedBean().getSmAppl().getSmSupplierBranches()
 					.add(getManagedBean().getSelectedBranch());
 		}
+		RequestContext.getCurrentInstance().execute("banchDialog.hide()");
 	}
 
 	public void assignSelBranch(SmSupplierBranch branchBean, int index) {
@@ -1616,6 +1617,7 @@ public class SmApplicationBackingBean extends
 			getManagedBean().getSmAppl().getSmAssociateCompanies()
 					.add(getManagedBean().getSelectedAssocCompany());
 		}
+		RequestContext.getCurrentInstance().execute("assocDialog.hide()");
 	}
 
 	public void assignSelAssoc(SmAssociateCompany assocBean) {
@@ -1794,7 +1796,7 @@ public class SmApplicationBackingBean extends
 		}
 		if (getManagedBean().getSmAppl().getSupplierType()
 				.equals(SupplierManagementConst.STYPE_CONSULTANT)) {
-			RequestContext.getCurrentInstance().execute("contDialog.hide()");
+			RequestContext.getCurrentInstance().execute("consDialog.hide()");
 		}
 		if (getManagedBean().getSmAppl().getSupplierType()
 				.equals(SupplierManagementConst.STYPE_CONTRACTOR)) {
@@ -2503,6 +2505,8 @@ public class SmApplicationBackingBean extends
 		// 1) {
 		// validShrHldr = validateAuthPersonLimit();
 		// }
+		getManagedBean().getSelectedShareHolder().setSmAppl(
+				getManagedBean().getSmAppl());
 		if (validShrHldr) {
 			if (getManagedBean().getSmAppl().getSmPersonnels()
 					.contains(getManagedBean().getSelectedShareHolder())) {
@@ -2531,7 +2535,10 @@ public class SmApplicationBackingBean extends
 			IMofRegistrationSO mofRegistrationSO = null;
 
 			try {
-				System.out.println("updating personnel into database");
+				System.out
+						.println("***** updating Share holder  into database with app id **** "
+								+ getManagedBean().getSelectedShareHolder()
+										.getSmAppl().getApplId());
 				mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
 						.getInstance().getServiceObject("sm",
 								IMofRegistrationSO.class);
@@ -2955,6 +2962,8 @@ public class SmApplicationBackingBean extends
 		// {
 		// validPer = validateAuthPersonLimit();
 		// }
+		getManagedBean().getSelectedPersonnel().setSmAppl(
+				getManagedBean().getSmAppl());
 		validPer = checkValidUser(getManagedBean().getSelectedPersonnel());
 		if (validPer) {
 			if (getManagedBean().getSmAppl().getSmPersonnels()
@@ -2979,7 +2988,10 @@ public class SmApplicationBackingBean extends
 			IMofRegistrationSO mofRegistrationSO = null;
 
 			try {
-				System.out.println("updating personnel into database");
+				System.out
+						.println("***** updating Personnel  into database with app id **** "
+								+ getManagedBean().getSelectedPersonnel()
+										.getSmAppl().getApplId());
 				mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
 						.getInstance().getServiceObject("sm",
 								IMofRegistrationSO.class);
