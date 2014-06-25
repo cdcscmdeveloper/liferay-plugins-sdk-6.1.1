@@ -564,8 +564,8 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			remark.setChangedBy(remark.getCreatedBy());
 			remark.setCreatedUser(facesScopes.getUserSessionBean());
-			if (scRequestNote.getRemarks() != null && !scRequestNote.getRemarks().isEmpty()) {
-			   remark.setRemark(scRequestNote.getRemarks().get(0).getRemark());
+			if (getManagedBean().getRequestNote().getRemarks() != null && !getManagedBean().getRequestNote().getRemarks().isEmpty()) {
+				remark.setRemark(getManagedBean().getRequestNote().getRemarks().get(0).getRemark());
 			} 
 			PmStatus status = new PmStatus();
 			status.setStatusId(DPStatusConstants.RN_PENDING_SUBMISSION);
