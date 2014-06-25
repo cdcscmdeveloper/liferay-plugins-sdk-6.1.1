@@ -10,7 +10,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
@@ -29,7 +28,6 @@ import my.ep.biz.service.sc.directpurchase.IPrInquirySO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
-import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -67,12 +65,10 @@ import my.ep.persistence.entity.sc.directpurchase.ScSupplierItemPrice;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.pm.OrganizationType;
-import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
 import my.ep.web.backingbean.sc.directpurchase.RequestNoteBackingBean;
-import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.sc.purchaseinquiry.PurchaseInquiryManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
@@ -334,7 +330,6 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 		    	List<ScRequestNoteDtl> requestNoteDtls =  new  ArrayList<ScRequestNoteDtl>();
 		    	ScRequestNoteDtl requestNoteDtl = getManagedBean().getRequestNoteDtl();
 		    	ScRequestNote	requestNote	=	new ScRequestNote();
-		    	//requestNote.setPmOrgProfile(getManagedBean().getPmOrgProfile()).
 		    	requestNote.setRequestNoteNo(directPurchaseSO.generateRequestNoteNo());
 		    	requestNote.setSourceMethod(ParameterConst.REQUEST_NOTE_PRI);
 		    	requestNoteDtl.setScRequestNote(requestNote);
@@ -593,8 +588,15 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 						parameterReqDTO.setParameterCode(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
 						ParameterResDTO parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
 						scRequestNoteDtl.setFulfillmentType(parameterResDTO.getPmParameter());
-						scRequestNoteDtl.setDeliverTermType(ParameterConst.SQ_DURATION_DAY);
-						scRequestNoteDtl.setAssignedUser(new PmUser());
+						
+						if(scRequestNoteDtl.getDeliverTermType() == null){
+							scRequestNoteDtl.setDeliverTermType(ParameterConst.SQ_DURATION_DAY);
+						}
+						
+						if(scRequestNoteDtl.getAssignedUser() == null){
+							scRequestNoteDtl.setAssignedUser(new PmUser());
+						}
+						scRequestNoteDtl.getScRequestSupplierItem().setSupplierItemId(scRequestNoteDtl.getScRequestSupplierItem().getSmSupplier().getSupplierId());
 						requestNoteBackingBean.getManagedBean().setJustificationType(scRequestNoteDtl.getJustificationType());
 						requestNoteBackingBean.getManagedBean().setProcurementType(scRequestNoteDtl.getProcurementType().getParameterCode());
 						requestNoteDtls.add(scRequestNoteDtl);
@@ -612,7 +614,7 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 				BpmResponseDTO res = bpmSO.getTaskDetails(reqBPMDTO);
 				requestNoteBackingBean.getManagedBean().setOutComes(res.getAction());
 
-				requestNote.setRemarks(requestNoteBackingBean.initializeRemarks(new ScRequestNote()));
+				requestNote.setRemarks(requestNoteBackingBean.initializeRemarks(requestNote));
 				requestNoteBackingBean.getManagedBean().setRequestNote(requestNote);
 				requestNoteBackingBean.getManagedBean().setRequestNoteDtls(requestNoteDtls);
 				requestNoteBackingBean.getManagedBean().setSourceMethod(ParameterConst.METHOD_SC);
@@ -628,7 +630,7 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 				
 				scRequestNoteDtl.setFulfillmentType(parameterResDTO.getPmParameter());
 				requestNoteBackingBean.fulfilmentTypeEvent(scRequestNoteDtl);
-				requestNoteBackingBean.initialInformation(new ScRequestNote());
+				requestNoteBackingBean.initialInformation(requestNote);
 				requestNoteBackingBean.getCurrentStatus(DPStatusConstants.RN_PENDING_SUBMISSION);
 				requestNoteBackingBean.populateUserDivisionList();
 				requestNoteBackingBean.getManagedBean().setFulfillmentType(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
@@ -782,7 +784,6 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 	private ScSupplierItemPrice		createSupplierItemPrice(ScRequestSupplierItem	scRequestSupplierItem, CmPricing pricing){
 		ScSupplierItemPrice	result	=	new ScSupplierItemPrice();
 		result.setScRequestSupplierItem(scRequestSupplierItem);
-		result.setItemPrice(new BigDecimal(0.0));
 		result.setPricing(pricing);
 		return result;
 	}
