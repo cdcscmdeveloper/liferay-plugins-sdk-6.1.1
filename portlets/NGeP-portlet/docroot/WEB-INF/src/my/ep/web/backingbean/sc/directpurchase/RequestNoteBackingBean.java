@@ -180,7 +180,9 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		if(requestNote.getPmOrgProfile().getOrgProfileId() == null){
 			requestNote.setPmOrgProfile(ptjNameEvent());
 		}
-	    
+		
+		// Remarks
+		requestNote.setRemarks(initializeRemarks(requestNote));
 	    if(requestNote.getRemarks() != null ){
 	    	for (int i = 0; i < requestNote.getRemarks().size(); i++) {
 	    		ScRequestNoteRemark remark = requestNote.getRemarks().get(i);
