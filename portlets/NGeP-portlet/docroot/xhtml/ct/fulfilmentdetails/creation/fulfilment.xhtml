@@ -13,6 +13,18 @@
       .top-aligned-columns td{ vertical-align: top;}
       #dlgDel .ui-dialog .ui-dialog-titlebar {
          display:none !important;}
+         .columnWidth150 {
+	        width: 130px;
+	        vertical-align: top;
+	        text-align: right;
+         }
+          .columnWidth200 {
+	        width: 200px;
+         }
+         
+            .columnWidth300 {
+	        width: 320px;
+         }
     </style> 
 		<p:panel>
 			<f:event listener="#{contractDetailsBackingBean.preRenderView}"  type="preRenderView"  />	
@@ -22,9 +34,9 @@
 		    <ui:include src="fulfilmentHeader.xhtml" />	
 		</p:panel>
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
-		  <tr>
-			<td width="20%" valign="top" class="sidemenutd">
-				<p:tabMenu id="menuTabId" styleClass="sidemenu"   
+		   <tr>
+			<td width="20%;" style="vertical-align: baseline;">
+				<p:tabMenu id="menuTabId" styleClass="sidemenu" style="display : table-caption;" 
 					activeIndex="#{contractDetailsBackingBean.managedBean.selectedTabIndex}">
 				          <p:menuitem value="#{lbl['lbl.ct.menu.fd']}" update=":form" 
 				            rendered="#{contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeCentral}"
@@ -157,7 +169,7 @@
 					     
 		    </p:tabMenu>
 			</td>
-			<td width="80%">
+			<td width="80%;">
 			      <p:outputPanel rendered="#{contractDetailsBackingBean.managedBean.selectedTabIndex == 0}">
 				   <p:outputPanel rendered="#{contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}">
 		 	          <ui:include src="/xhtml/ct/fulfilmentdetails/shared/fulfilmentDetails.xhtml"/>
