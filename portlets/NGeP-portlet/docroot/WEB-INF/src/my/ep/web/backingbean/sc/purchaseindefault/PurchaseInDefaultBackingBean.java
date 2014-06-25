@@ -257,12 +257,14 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 
 
    public void approverAction(String outcome) {
-	   IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 	   IPurchaseInDefaultSO purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
 	   try {
+		  
 		   PurchaseInDefaultReqDTO reqDTO = new PurchaseInDefaultReqDTO();
 		   ScPurchaseInDefault scPurchaseInDefault = getManagedBean().getPurchaseInDefault();
-		   if(!BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome) || !BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)){
+		   // remarks
+		   scPurchaseInDefault.setRemarks(initializeRemarks(scPurchaseInDefault));
+		   if(!BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)){
 			   if(scPurchaseInDefault.getRemarks() != null ){
 				   for (int i = 0; i < scPurchaseInDefault.getRemarks().size(); i++) {
 					   ScPIDRemark remark = scPurchaseInDefault.getRemarks().get(i);
@@ -273,35 +275,26 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 			   }
 		   }
 		   reqDTO.setPurchaseInDefaultDtl(scPurchaseInDefault);
-		   PurchaseInDefaultResDTO resDTO = purchaseInDefaultSO.savePurchaseInDefaultAfterSubmit(reqDTO);
-		 if(resDTO.isSuccessful()){
-			 BpmRequestDTO reqBpm = new BpmRequestDTO();
-			 FacesScopes facesScopes = new FacesScopes();
-			 String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
-			 reqBpm.setTaskId(getManagedBean().getTaskId());
-			 reqBpm.setOutcome(outcome);
-			 if (null != ctxToken) {
-				 reqBpm.setCtxToken(ctxToken);
-				 BpmResponseDTO resBpm = bpmSO.updateTask(reqBpm);
-				 boolean result = resBpm != null ? resBpm.isSuccessful() : false;
-			   if(result){
-				   if(BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)){
-					   // notification mail
-					   this.sendNotificationEmail();
-					   successMessage(MessageConst.INFO_700005, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT, getManagedBean().getPurchaseInDefault().getPurchaseInDefaultNo());
-					
-				   } else if(BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)){
-					   successMessage(MessageConst.INFO_700008, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT, getManagedBean().getPurchaseInDefault().getPurchaseInDefaultNo());
-				   }
-				   
-			   } else {
-				   throw new EpException("Failed.");
+		   FacesScopes facesScopes = new FacesScopes();
+		   String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
+		   reqDTO.setToken(ctxToken);
+		   reqDTO.setTaskId(getManagedBean().getTaskId());
+		   reqDTO.setOutcome(outcome);
+		   PurchaseInDefaultResDTO resDTO = purchaseInDefaultSO.updatePurchaseInDefault(reqDTO);
+			 
+		   if(resDTO.isSuccessful()){
+			   if(BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)){
+				   successMessage(MessageConst.INFO_700005, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT, getManagedBean().getPurchaseInDefault().getPurchaseInDefaultNo());
+
+			   } else if(BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)){
+				   successMessage(MessageConst.INFO_700008, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT, getManagedBean().getPurchaseInDefault().getPurchaseInDefaultNo());
 			   }
-		   }
+
+		   } else {
+			   throw new EpException("Failed.");
 		   }
 		   
 	   } finally {
-		   bpmSO = null;
 		   purchaseInDefaultSO = null;
 	   }
    } 
