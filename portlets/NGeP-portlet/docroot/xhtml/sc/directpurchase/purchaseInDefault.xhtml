@@ -225,7 +225,8 @@
 					</td>
 				  </tr>
 				   <tr><td></td>
-					   <td><p:inputTextarea style="width:350px;" value="#{remarkVar.remark}" maxlength="1000" label="Remarks" rendered="#{remarkIndex==0}" id="remark" required="true"/>
+					   <td><p:inputTextarea style="width:350px;" value="#{remarkVar.remark}" maxlength="1000" label="Remarks" rendered="#{remarkIndex==0}" id="remark" 
+					          required="#{purchaseInDefaultBackingBean.managedBean.pidStatus eq 'Pending Submission'}"/>
 						   <h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}"  style="display: inline-block; width:220px;word-wrap: break-word;" />
 					  </td>
 					  <td style="vertical-align: top;padding-right: 1px;text-align: right;"> 

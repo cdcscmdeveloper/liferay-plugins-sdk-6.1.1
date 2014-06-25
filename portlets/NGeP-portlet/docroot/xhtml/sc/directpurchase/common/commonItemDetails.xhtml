@@ -289,6 +289,7 @@
 					<p:commandButton value="#{lbl['lbl.sc.action.apply.btn']}"
 					    partialSubmit="true" icon="ui-icon-submit" process="@this glb_panel_request_list"
 						action="#{requestNoteBackingBean.applyForRequestNote}"
+						disabled="#{requestNoteBackingBean.managedBean.requestNoteStatus eq 'Pending Approval'}"
 						update="@([id$=requestListDataTable])" />
               </p:column>
                

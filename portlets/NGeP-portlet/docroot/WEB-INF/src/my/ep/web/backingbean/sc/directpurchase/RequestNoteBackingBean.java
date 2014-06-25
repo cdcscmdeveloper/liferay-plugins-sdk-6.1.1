@@ -430,14 +430,17 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		ScRequestNote requestNote = getManagedBean().getRequestNote();
 		try {
 			requestNote.setRemarks(initializeRemarks(requestNote));
-			if(requestNote.getRemarks() != null ){
-				for (int i = 0; i < requestNote.getRemarks().size(); i++) {
-					ScRequestNoteRemark remark = requestNote.getRemarks().get(i);
-					if(StringUtils.isBlank(remark.getRemark())){
-						requestNote.getRemarks().remove(remark);
-					}	
-				} 
+			if(!BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome) || !BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)){
+				if(requestNote.getRemarks() != null ){
+					for (int i = 0; i < requestNote.getRemarks().size(); i++) {
+						ScRequestNoteRemark remark = requestNote.getRemarks().get(i);
+						if(StringUtils.isBlank(remark.getRemark())){
+							requestNote.getRemarks().remove(remark);
+						}	
+					} 
+				}
 			}
+			
 			FacesScopes facesScopes = new FacesScopes();
 			String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
 			    requestNoteReqDTO.setRequestNote(requestNote);
@@ -561,8 +564,8 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			remark.setChangedBy(remark.getCreatedBy());
 			remark.setCreatedUser(facesScopes.getUserSessionBean());
-			if (getManagedBean().getRequestNote().getRemarks() != null && !getManagedBean().getRequestNote().getRemarks().isEmpty()) {
-			   remark.setRemark(getManagedBean().getRequestNote().getRemarks().get(0).getRemark());
+			if (scRequestNote.getRemarks() != null && !scRequestNote.getRemarks().isEmpty()) {
+			   remark.setRemark(scRequestNote.getRemarks().get(0).getRemark());
 			} 
 			PmStatus status = new PmStatus();
 			status.setStatusId(DPStatusConstants.RN_PENDING_SUBMISSION);

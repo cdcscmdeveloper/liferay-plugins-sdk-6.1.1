@@ -262,17 +262,16 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 	   try {
 		   PurchaseInDefaultReqDTO reqDTO = new PurchaseInDefaultReqDTO();
 		   ScPurchaseInDefault scPurchaseInDefault = getManagedBean().getPurchaseInDefault();
-		   scPurchaseInDefault.setRecordStatus(Boolean.TRUE);
-
-		   if(scPurchaseInDefault.getRemarks() != null ){
-			   for (int i = 0; i < scPurchaseInDefault.getRemarks().size(); i++) {
-				   ScPIDRemark remark = scPurchaseInDefault.getRemarks().get(i);
-				   if(StringUtils.isBlank(remark.getRemark())){
-					   scPurchaseInDefault.getRemarks().remove(remark);
-				   }	
-			   } 
+		   if(!BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome) || !BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)){
+			   if(scPurchaseInDefault.getRemarks() != null ){
+				   for (int i = 0; i < scPurchaseInDefault.getRemarks().size(); i++) {
+					   ScPIDRemark remark = scPurchaseInDefault.getRemarks().get(i);
+					   if(StringUtils.isBlank(remark.getRemark())){
+						   scPurchaseInDefault.getRemarks().remove(remark);
+					   }	
+				   } 
+			   }
 		   }
-
 		   reqDTO.setPurchaseInDefaultDtl(scPurchaseInDefault);
 		   PurchaseInDefaultResDTO resDTO = purchaseInDefaultSO.savePurchaseInDefaultAfterSubmit(reqDTO);
 		 if(resDTO.isSuccessful()){
