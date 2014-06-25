@@ -64,8 +64,7 @@
 		</p:dataTable>
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
-				process="@this"  update="openPnlId"
-				icon="ui-icon-add" 
+				process="@this" update="openPnlId" icon="ui-icon-add"
 				actionListener="#{specificationBackingBean.addNewCategoryAction}" />
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
 				icon="ui-icon-delete" process="@this,openPnlId" partialSubmit="true"
@@ -107,7 +106,9 @@
 						rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000'}"
 						value="#{specificationBackingBean.managedBean.supplierCriteria.minPaidUpCapital}"
 						style="margin-right:5px;text-align:right;">
-						<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" maxIntegerDigits="14"></ac:validateNumber>
+						<ac:validateNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}"
+							maxIntegerDigits="14"></ac:validateNumber>
 					</p:inputText></td>
 			</tr>
 
@@ -134,11 +135,11 @@
 							</p:inputText></td>
 					</tr>
 					<tr>
-						<td style="width:145px"><p:outputLabel value="#{lbl['lbl.sc.spec.zone.location.level']}" />
-						<p:outputLabel
-							value="*" styleClass="mandatory" />
-						</td>
-						<td><p:selectOneMenu id="locLevels" required="true"  label="#{lbl['lbl.sc.spec.zone.location.level']}"
+						<td style="width: 145px"><p:outputLabel
+								value="#{lbl['lbl.sc.spec.zone.location.level']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
+						<td><p:selectOneMenu id="locLevels" required="true"
+								label="#{lbl['lbl.sc.spec.zone.location.level']}"
 								value="#{specificationBackingBean.managedBean.supplierCriteria.locationLevel.parameterId}"
 								style="width: 178px;">
 
@@ -146,9 +147,8 @@
 									value="#{specificationBackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel)}" />
 								<p:ajax event="change"
 									listener="#{specificationBackingBean.selectLocation}"></p:ajax>
-							</p:selectOneMenu>
-							<p:message id="withOutzone" for="locLevels" display="icon" ></p:message>
-							</td>
+							</p:selectOneMenu> <p:message id="withOutzone" for="locLevels" display="icon"></p:message>
+						</td>
 					</tr>
 				</table>
 			</p:panel>
@@ -158,9 +158,12 @@
 				<h:panelGrid width="100%">
 					<p:dataTable id="zoneLocationDataTable"
 						value="#{specificationBackingBean.managedBean.zoneTrees}"
-						var="zoneTree" style="width:100%" rowIndexVar="index">
+						var="zoneTree" style="width:100%" rowIndexVar="index"
+						selection="#{specificationBackingBean.managedBean.supplierSelectedTreeNode}">
 						<p:column headerText="Location" style="width:90%">
-							<p:tree value="#{zoneTree}" var="location">
+							<p:tree value="#{zoneTree}" var="location" selectionMode="single">
+								<p:ajax event="select"
+									listener="#{specificationBackingBean.selctSupplierCriteriaTree}" />
 								<p:treeNode type="state">
 									<h:outputText value="#{location.pmState.stateName}" />
 								</p:treeNode>
@@ -193,7 +196,8 @@
 						actionListener="#{specificationBackingBean.showZoneLocationPopup}"
 						icon="ui-icon-add" />
 					<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
-						icon="ui-icon-delete" />
+						update="zoneLocationDataTable" icon="ui-icon-delete"
+						action="#{specificationBackingBean.deleteSupplierQualificationTreeNode}" />
 				</div>
 			</p:panel>
 
@@ -213,7 +217,8 @@
 					</tr>
 
 					<tr>
-						<td style="width: 94px"><p:outputLabel value="#{lbl['lbl.sc.spec.zone.location.level']}" /></td>
+						<td style="width: 94px"><p:outputLabel
+								value="#{lbl['lbl.sc.spec.zone.location.level']}" /></td>
 						<td><p:selectOneMenu id="locZoneLevels" disabled="true"
 								value="#{specificationBackingBean.managedBean.scQt.zoneLocationLevel.parameterId}"
 								style="width: 178px;">
@@ -265,9 +270,10 @@
 			</p:panel>
 
 
-			<p:dialog  widgetVar="ZoneLocation" modal="true" width="600"
+			<p:dialog widgetVar="ZoneLocation" modal="true" width="600"
 				position="top" height="400">
-				<p:panel id="zonePopupPanel" header="#{lbl['lbl.sc.spec.zone.add.location']}">
+				<p:panel id="zonePopupPanel"
+					header="#{lbl['lbl.sc.spec.zone.add.location']}">
 					<table styleClass="noBorders tr,noBorders td">
 						<TR>
 
@@ -316,7 +322,8 @@
 
 
 
-	<p:panel header="#{lbl['lbl.sc.spec.supplier.criteria.qual.suppliers']}">
+	<p:panel
+		header="#{lbl['lbl.sc.spec.supplier.criteria.qual.suppliers']}">
 		<table>
 			<tr>
 				<td style="width: 150px"><p:outputLabel

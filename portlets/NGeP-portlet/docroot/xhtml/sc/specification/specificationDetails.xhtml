@@ -74,45 +74,39 @@
 						readonly="true" disabled="true" /></td>
 				<td><h:outputLabel
 						value="#{lbl['lbl.sc.spec.requir.tech.eval']}" /></td>
-				<!-- update=":form:businessSpecId:recommendationid" -->
-				<td><p:selectOneRadio id="techEvaluation" required="true"
-						label="#{lbl['lbl.sc.spec.requir.tech.eval']}"
-						value="#{specificationBackingBean.managedBean.scQt.techEvaluationReq}">
-						<f:selectItems
-							value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
-						<p:ajax event="change" process="@this" partialSubmit="true"
-							update="specDetails"></p:ajax>
-					</p:selectOneRadio> <p:message id="reqTechEval" for="techEvaluation" display="icon"></p:message>
-				</td>
+
+				<td><p:inputText
+						value="#{specificationBackingBean.managedBean.scQt.techEvaluationReq}"
+						readonly="true" disabled="true"></p:inputText></td>
 			</tr>
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.sc.spec.max.proposal']}" /></td>
 				<td><p:inputText id="proposalId" required="true" size="30"
-						label="#{lbl['lbl.sc.spec.max.proposal']}"
+						label="#{lbl['lbl.sc.spec.max.proposal']}" maxlength="1"
 						value="#{specificationBackingBean.managedBean.scQt.maxProposal}"
 						style="text-align:right;"></p:inputText> <p:message
 						id="maxProposal" for="proposalId" display="icon"></p:message></td>
 			</tr>
 			<tr>
-				<td><h:outputLabel value="* #{lbl['lbl.sc.spec.ful.type']}" /></td>
+				<td><p:outputLabel value=" #{lbl['lbl.sc.spec.ful.type']}" />
+				<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
+				</td>
 				<td><p:selectOneMenu required="true" id="fulfilId"
 						label="#{lbl['lbl.sc.spec.ful.type']}"
 						value="#{specificationBackingBean.managedBean.scQt.fulfilmentType.parameterId}"
 						style="width: 178px;margin-bottom: 5px;">
-						<!-- <f:selectItem itemLabel="One-Off" itemValue="1" />
-				<f:selectItem itemLabel="Periodic(As and When Basis)" itemValue="2" />
-				<f:selectItem itemLabel="Periodic(Schedule)" itemValue="3" /> -->
-						<!-- update="progressive,frequency,businessSpecId" -->
+
 						<f:selectItems
 							value="#{specificationBackingBean.getDropdownValues(ParameterTypeConst.fulfilmentType)}" />
-						<p:ajax event="change" process="@this" partialSubmit="true"
-							update="progressive,frequency,businessSpecId"
+						<p:ajax event="change" process="@this" partialSubmit="true" update="@form"
 							listener="#{specificationBackingBean.fulfilmentChange}"></p:ajax>
 					</p:selectOneMenu> <p:message id="fulfilType" for="fulfilId" display="icon"></p:message>
 				</td>
-				<td><h:outputLabel
-						value="*#{lbl['lbl.sc.spec.complete.period']}" escape="false" /></td>
-				<td><p:inputText id="contract" required="true" size="30"
+				<td><p:outputLabel
+						value="*#{lbl['lbl.sc.spec.complete.period']}" escape="false" />
+						<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
+						</td>
+				<td><p:inputText id="contract" required="true" size="30" maxlength="3"
 						label="#{lbl['lbl.sc.spec.complete.period']}"
 						value="#{specificationBackingBean.managedBean.scQt.contractDuration}"
 						style="text-align:right;" /> <h:outputText value="(Month)" /> <p:message

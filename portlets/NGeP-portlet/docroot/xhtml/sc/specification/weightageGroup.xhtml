@@ -52,23 +52,25 @@
 
 	</p:panel>
  -->
-	<p:panel header="#{lbl['lbl.sc.spec.tech.score.setting']}" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.spec.tech.score.setting']}"
+		toggleable="true">
 
 
 
-		<h:panelGrid columns="4">
+		<table>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.spec.tech.weightage']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td><p:selectOneRadio required="true"
+						label="#{lbl['lbl.sc.spec.tech.weightage']}" id="techWeightage"
+						value="#{specificationBackingBean.managedBean.technicalScoreSetting.weightageReq}">
+						<f:selectItems
+							value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+						<p:ajax event="change" update="technicalWeigtage"></p:ajax>
+					</p:selectOneRadio> <p:message id="techScoring" for="techWeightage" display="icon"></p:message></td>
+			</tr>
 
-
-			<h:outputText value="#{lbl['lbl.sc.spec.tech.weightage']}" />
-			<p:spacer width="10"></p:spacer>
-			<p:selectOneRadio
-				value="#{specificationBackingBean.managedBean.technicalScoreSetting.weightageReq}">
-				<f:selectItem itemLabel="Yes" itemValue="true" />
-				<f:selectItem itemLabel="No" itemValue="false" />
-				<p:ajax event="change" update="technicalWeigtage"></p:ajax>
-			</p:selectOneRadio>
-			
-		</h:panelGrid>
+		</table>
 
 		<p:dataTable id="technicalWeigtage" var="tech"
 			value="#{specificationBackingBean.managedBean.technicalScoring}"
@@ -78,30 +80,34 @@
 			<!-- <p:column selectionMode="multiple" style="text-align:center;" /> -->
 
 			<p:column headerText="#{lbl['lbl.sc.spec.stage.title']}"
-				style="width:50%;">
+				style="width:50%;white-space: normal;">
 				<h:outputText value="#{tech.title}" size="50" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.spec.stage2.score']}"
-				style="width:20%;">
+			<p:column style="width:20%;">
+				<f:facet name="header">
+					<h:outputText value="* " styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.sc.spec.stage2.score']}" />
+				</f:facet>
 				<h:outputText value="#{tech.qtScoreWeightage.score}"
 					rendered="#{tech.qtScoreWeightage.score!='0'}" />
 				<p:inputText value="#{tech.qtScoreWeightage.score}"
-					style="text-align:right"
+					id="techScoreWeight" required="true" maxlength="18"
+					label="#{lbl['lbl.sc.spec.stage2.score']}" style="text-align:right"
 					rendered="#{tech.qtScoreWeightage.score=='0'}">
 					<p:ajax event="blur" process="@this"
-						listener="#{specificationBackingBean.techScoreSum}"
-						update=":form:businessSpecId:addpoints" />
+						listener="#{specificationBackingBean.techScoreSum}" update="@form" />
 				</p:inputText>
+				<p:message id="techScoreId" for="techScoreWeight" display="icon"></p:message>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.weight.weight']}"
 				style="width:20%;">
-				<p:inputText value="#{tech.qtScoreWeightage.weightage}"
+				<p:inputText value="#{tech.qtScoreWeightage.weightage}" maxlength="5"
 					style="text-align:right"
 					rendered="#{specificationBackingBean.managedBean.technicalScoreSetting.weightageReq ne 'false'}">
 					<p:ajax event="blur" process="@this"
 						listener="#{specificationBackingBean.techWeightageSum}"
-						update=":form:businessSpecId:addpoints" />
+						update="@form" />
 				</p:inputText>
 			</p:column>
 
@@ -116,10 +122,11 @@
 		<h:panelGroup id="addpoints">
 			<table>
 				<tr>
-					<td style="width:149px;"><h:outputText
+					<td style="width: 149px;"><h:outputText
 							value="#{lbl['lbl.sc.spec.net.total.points']} " /></td>
 
-					<td><p:inputText readonly="true" disabled="true" style="text-align:right"
+					<td><p:inputText readonly="true" disabled="true"
+							style="text-align:right"
 							value="#{specificationBackingBean.managedBean.techPoints}"></p:inputText></td>
 				</tr>
 
@@ -127,7 +134,8 @@
 				<tr>
 					<td><h:outputText
 							value="#{lbl['lbl.sc.spec.total.weightage']}" /></td>
-					<td><p:inputText readonly="true" disabled="true" style="text-align:right"
+					<td><p:inputText readonly="true" disabled="true"
+							style="text-align:right"
 							value="#{specificationBackingBean.managedBean.technicalWeightageScore}"></p:inputText></td>
 				</tr>
 
@@ -142,8 +150,9 @@
 
 		<table>
 			<tr>
-				<td><h:outputText value=" #{lbl['lbl.sc.spec.qual.present.demo']}" /></td>
-				<td><p:inputText style="text-align:right"
+				<td><h:outputText
+						value=" #{lbl['lbl.sc.spec.qual.present.demo']}" /></td>
+				<td><p:inputText style="text-align:right" maxlength="5"
 						value="#{specificationBackingBean.managedBean.demoScoreSetting.passingScore}"></p:inputText>
 					<p:spacer width="5"></p:spacer> <h:outputText value="/100 " /></td>
 			</tr>
@@ -152,8 +161,9 @@
 
 
 			<tr>
-				<td><h:outputText value="#{lbl['lbl.sc.spec.recommendation.technical']}" /></td>
-				<td><p:inputText style="text-align:right"
+				<td><h:outputText
+						value="#{lbl['lbl.sc.spec.recommendation.technical']}" /></td>
+				<td><p:inputText style="text-align:right" maxlength="5"
 						value="#{specificationBackingBean.managedBean.technicalScoreSetting.passingScore}"></p:inputText>
 					<p:spacer width="5"></p:spacer> <h:outputText value="/100 " /></td>
 			</tr>

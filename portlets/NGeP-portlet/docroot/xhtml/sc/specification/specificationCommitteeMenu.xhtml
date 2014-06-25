@@ -6,98 +6,132 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 
-	<!-- 	<ui:fragment
-		rendered="#{specificationBackingBean.managedBean.businessOwner eq 'B'}"> -->
+	<table border="0" cellspacing="0" cellpadding="0" width="100%">
+		<tr>
+			<td width="20%;" style="vertical-align: baseline;"><p:tabMenu
+					id="specCommitteeId"
+					activeIndex="#{specificationBackingBean.managedBean.activeIndex}"
+					styleClass="sidemenu" style="display : table-caption;">
 
-	<!--  <ui:include src="/xhtml/sc/specification/companyExperience.xhtml" />  -->
-	<!-- <ui:include src="/xhtml/sc/main/createTemplate.xhtml"></ui:include> -->
-	<ui:include src="/xhtml/sc/main/createCommitteeTemplate.xhtml"></ui:include>
-	<p:tabView dynamic="true" cache="true" orientation="left"
-		id="businessSpecId"
-		activeIndex="#{specificationBackingBean.managedBean.activeIndex}">
-		<p:ajax event="tabChange" update="@([id$=recommendationid])"
-			listener="#{specificationBackingBean.onTabChangeAction}" />
+					<p:menuitem value="#{lbl['lbl.sc.spec.general']}" update="@form"
+						action="#{specificationBackingBean.retriveSpecdetails(null)}" />
+					<p:menuitem value="#{lbl['lbl.sc.spec.supplier.qual.criteraia']}"
+						action="#{specificationBackingBean.retriveBusinessOwnerQualificationCriteri}"
+						update="@form" />
 
+					<c:if
+						test="#{specificationBackingBean.managedBean.scQt.evaluationType eq '1'}">
+						<p:menuitem value="#{lbl['lbl.sc.spec.prepare.specification']}"
+							actionListener="#{specificationBackingBean.retriveTechnicalSpecification}"
+							update="@form" />
+					</c:if>
 
-
-
-
-
-
-
-
-
-		<p:tab title="#{lbl['lbl.sc.spec.general']}">
-			<ui:include src="specificationDetails.xhtml"></ui:include>
-		</p:tab>
-
-
-
-		<p:tab title="#{lbl['lbl.sc.spec.supplier.qual.criteraia']}">
-			<ui:include src="SupplierCommitteeQualificationCriteria.xhtml"></ui:include>
-		</p:tab>
-
-		<p:tab title="#{lbl['lbl.sc.spec.prepare.specification']}"
-			rendered="#{specificationBackingBean.managedBean.scQt.evaluationType eq '1'}">
-			<ui:include src="prepareSpecification.xhtml"></ui:include>
-		</p:tab>
-
-		<p:tab title="#{lbl['lbl.sc.spec.tech.check.list']}"
-			rendered="#{specificationBackingBean.managedBean.scQt.evaluationType eq '2'}">
-			<ui:include src="technicalChecklist.xhtml"></ui:include>
-			<ui:include src="stageTwoTechnical.xhtml" />
-			<!-- <ui:include src="/xhtml/sc/specification/technicalEmployeeList.xhtml" /> -->
-
-
-		</p:tab>
+					<c:if
+						test="#{specificationBackingBean.managedBean.scQt.evaluationType eq '2'}">
+						<p:menuitem value="#{lbl['lbl.sc.spec.tech.check.list']}"
+							actionListener="#{specificationBackingBean.retriveTechnicalCheckList}"
+							update="@form" />
+					</c:if>
 
 
 
-		<p:tab title="#{lbl['lbl.sc.spec.finance.check.list']}">
-			<ui:include src="financialChecklist.xhtml"></ui:include>
-			<ui:include src="stageTwoFinancial.xhtml" />
+					<p:menuitem value="#{lbl['lbl.sc.spec.finance.check.list']}"
+						actionListener="#{specificationBackingBean.retriveFinancialCheckList}"
+						update="@form" />
 
 
-		</p:tab>
-
-		<p:tab title="#{lbl['lbl.sc.spec.tech.scoring']}"
-			rendered="#{specificationBackingBean.managedBean.scQt.evaluationType eq '2'}">
-			<ui:include src="weightageGroup.xhtml" />
-		</p:tab>
-
-
-		<p:tab title="#{lbl['lbl.sc.spec.financial.scoring']}">
-			<ui:include src="financialScoring.xhtml" />
-		</p:tab>
-
-		<p:tab title="#{lbl['lbl.sc.spec.recommendation']}">
-
-			<ui:include src="recomondation.xhtml" />
-
-			<!--  <ui:include src="/xhtml/sc/specification/recommendationWithoutTechnical.xhtml" />  -->
-
-		</p:tab>
+					<c:if
+						test="#{specificationBackingBean.managedBean.scQt.evaluationType eq '2'}">
+						<p:menuitem value="#{lbl['lbl.sc.spec.tech.scoring']}"
+							actionListener="#{specificationBackingBean.retriveTechnicalScoring}"
+							update="@form" />
+					</c:if>
 
 
-		<p:tab title="#{lbl['lbl.sc.spec.ful.schedule']}"
-			rendered="#{specificationBackingBean.managedBean.fulfilmentType eq '117' or specificationBackingBean.managedBean.fulfilmentType eq '118'}">
-			<ui:include src="schedule.xhtml" />
-		</p:tab>
+					<p:menuitem value="#{lbl['lbl.sc.spec.financial.scoring']}"
+						actionListener="#{specificationBackingBean.retriveFinancialScoring}"
+						update="@form" />
 
 
-		<p:tab title="#{lbl['lbl.sc.spec.delivery.service.address']}">
-			<ui:include src="deliveryAddress.xhtml" />
-		</p:tab>
+					<p:menuitem value="#{lbl['lbl.sc.spec.recommendation']}"
+						actionListener="#{specificationBackingBean.retriveRecommendationDetails}"
+						update="@form" />
+
+					<c:if
+						test="#{specificationBackingBean.managedBean.fulfilmentType eq '117' or specificationBackingBean.managedBean.fulfilmentType eq '118'}">
+						<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}"
+							actionListener="#{specificationBackingBean.retriveFulfilmentDtls}"
+							update="@form" />
+					</c:if>
+
+					<p:menuitem value="#{lbl['lbl.sc.spec.delivery.service.address']}"
+						actionListener="#{specificationBackingBean.retriveDeliveryDetails}"
+						update="@form" />
 
 
-		<p:tab title="#{lbl['lbl.sc.spec.committee.endorse']}">
-			<ui:include src="specificationSignoff.xhtml" />
-			<ui:include src="reminderpopup.xhtml" />
-		</p:tab>
+					<p:menuitem value="#{lbl['lbl.sc.spec.committee.endorse']}"
+						update="@form" />
 
+				</p:tabMenu></td>
+			<td width="80%;"><c:if
+					test="#{specificationBackingBean.managedBean.activeIndex eq '0'}">
 
+					<ui:include src="specificationDetails.xhtml"></ui:include>
 
+				</c:if> <c:if
+					test="#{specificationBackingBean.managedBean.activeIndex eq '1'}">
 
-	</p:tabView>
-	<!-- </ui:fragment> -->
+					<ui:include src="SupplierCommitteeQualificationCriteria.xhtml"></ui:include>
+				</c:if> <c:if
+					test="#{specificationBackingBean.managedBean.activeIndex eq '10'}">
+					<ui:fragment
+						rendered="#{specificationBackingBean.managedBean.scQt.evaluationType eq '1'}">
+						<ui:include src="prepareSpecification.xhtml"></ui:include>
+					</ui:fragment>
+
+				</c:if> <c:if
+					test="#{specificationBackingBean.managedBean.activeIndex eq '2'}">
+					<ui:fragment
+						rendered="#{specificationBackingBean.managedBean.scQt.evaluationType eq '2'}">
+						<ui:include src="technicalChecklist.xhtml"></ui:include>
+					</ui:fragment>
+
+				</c:if> <c:if
+					test="#{specificationBackingBean.managedBean.activeIndex eq '3'}">
+
+					<ui:include src="financialChecklist.xhtml"></ui:include>
+				</c:if> <c:if
+					test="#{specificationBackingBean.managedBean.activeIndex eq '4'}">
+					<ui:fragment
+						rendered="#{specificationBackingBean.managedBean.scQt.evaluationType eq '2'}">
+						<ui:include src="weightageGroup.xhtml" />
+					</ui:fragment>
+
+				</c:if> <c:if
+					test="#{specificationBackingBean.managedBean.activeIndex eq '5'}">
+
+					<ui:include src="financialScoring.xhtml" />
+				</c:if> <c:if
+					test="#{specificationBackingBean.managedBean.activeIndex eq '6'}">
+
+					<ui:include src="recomondation.xhtml" />
+				</c:if> <c:if
+					test="#{specificationBackingBean.managedBean.activeIndex eq '7'}">
+
+					<ui:fragment
+						rendered="#{specificationBackingBean.managedBean.fulfilmentType eq '117' or specificationBackingBean.managedBean.fulfilmentType eq '118'}">
+
+						<ui:include src="schedule.xhtml" />
+					</ui:fragment>
+				</c:if> <c:if
+					test="#{specificationBackingBean.managedBean.activeIndex eq '8'}">
+
+					<ui:include src="deliveryAddress.xhtml" />
+				</c:if> <c:if
+					test="#{specificationBackingBean.managedBean.activeIndex eq '9'}">
+
+					<ui:include src="specificationSignoff.xhtml" />
+				</c:if></td>
+		</tr>
+	</table>
 </ui:composition>

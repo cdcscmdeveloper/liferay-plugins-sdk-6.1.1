@@ -21,13 +21,21 @@
 
 			<p:column style="text-align:left;"
 				rendered="#{stageTwofunctional.manditory ==true}" />
-			<p:column headerText="#{lbl['lbl.sc.spec.stage.title']}"
-				style="width:30%">
+			<p:column 
+				style="width:30%;white-space: normal;">
+				
+				<f:facet name="header">
+					<h:outputText value="* " styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.sc.spec.stage.title']}" />
+				</f:facet>
 				<ui:fragment rendered="#{stageTwofunctional.title !=null}">
 					<h:outputText value="#{stageTwofunctional.title}" size="50" />
 				</ui:fragment>
 				<ui:fragment rendered="#{stageTwofunctional.title ==null}">
-					<p:inputText value="#{stageTwofunctional.title}" size="50"></p:inputText>
+					<p:inputText value="#{stageTwofunctional.title}" size="50" maxlength="100"
+					required="true" id="finChecklistTitle"
+						label="#{lbl['lbl.sc.spec.stage.title']}"></p:inputText>
+					<p:message id="finChecklistId" for="finChecklistTitle" display="icon"></p:message>
 				</ui:fragment>
 
 			</p:column>
@@ -64,11 +72,10 @@
 						<f:selectItem itemLabel="View" itemValue="8" />
 						<f:selectItem itemLabel="Online Submit" itemValue="9" />
 						<p:ajax event="change" process="@this" partialSubmit="true"
-						update=":form:businessSpecId:financeProposaltwo"	></p:ajax>
+						update="financeProposaltwo"	></p:ajax>
 					</p:selectOneMenu>
 				</ui:fragment>
-				
-				<h:outputText value="Online Submit"
+								<h:outputText value="Online Submit"
 					rendered="#{index lt specificationBackingBean.managedBean.scQtCheckSt2financeProposalList.size()-1 and stageTwofunctional.action.parameterId eq '9'}" />
 					
 					<h:outputText value="View"
@@ -144,7 +151,7 @@
 				process="@this,financeProposaltwo" partialSubmit="true"
 				oncomplete="financialChecklist.paginator.endLink.click();"
 				action="#{specificationBackingBean.stageTwoFiProposalAdd}"
-				update="financeProposaltwo" icon="ui-icon-add" />
+				update="@all,financeProposaltwo" icon="ui-icon-add" />
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
 				icon="ui-icon-delete"
 				action="#{specificationBackingBean.deleteS2Fin}"
@@ -154,6 +161,6 @@
 
 
 		</div>
-
+<ui:include src="stageTwoFinancial.xhtml" />
 	</p:panel>
 </ui:composition>

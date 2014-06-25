@@ -46,9 +46,16 @@
 					value="#{specificationBackingBean.managedBean.scheduleList}">
 					<ac:paginator for="frequencySchedule" />
 
-					<p:column headerText="#{lbl['lbl.sc.spec.schedule.no']}"
-						style="width:40%">
-						<p:inputText value="#{frequency.scheduleNo}"></p:inputText>
+					<p:column style="width:40%">
+
+						<f:facet name="header">
+							<h:outputText value="* " styleClass="mandatory" />
+							<h:outputText value="#{lbl['lbl.sc.spec.schedule.no']}" />
+						</f:facet>
+						<p:inputText value="#{frequency.scheduleNo}" required="true"
+							maxlength="3" label="#{lbl['lbl.sc.spec.schedule.no']}"
+							id="scheduleNum"></p:inputText>
+						<p:message id="freqScheduledid" for="scheduleNum" display="icon"></p:message>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.spec.start.month']}"
 						style="width:25%">
@@ -76,8 +83,7 @@
 						<p:selectOneMenu value="#{frequency.endMonth}">
 
 							<f:selectItems value="#{specificationBackingBean.yearDetails}"></f:selectItems>
-							<p:ajax event="change"
-								update=":form:businessSpecId:frequencySchedule"
+							<p:ajax event="change" update="frequencySchedule"
 								listener="#{specificationBackingBean.calculateSchedulePercentage(frequency)}"></p:ajax>
 						</p:selectOneMenu>
 
@@ -127,13 +133,26 @@
 					value="#{specificationBackingBean.managedBean.progressivePaymentList}">
 					<ac:paginator for="progressivePayment" />
 
-					<p:column headerText="#{lbl['lbl.sc.spec.phase']}"
-						style="width:20%">
-						<p:inputText value="#{payment.phaseNo}" />
+					<p:column style="width:20%">
+						<f:facet name="header">
+							<h:outputText value="* " styleClass="mandatory" />
+							<h:outputText value="#{lbl['lbl.sc.spec.phase']}" />
+						</f:facet>
+						<p:inputText value="#{payment.phaseNo}" required="true"
+							label="#{lbl['lbl.sc.spec.phase']}" id="progressivePhase"
+							maxlength="3" />
+						<p:message id="phaseNumId" for="progressivePhase" display="icon"></p:message>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sc.spec.description']}"
-						style="width:30%">
-						<p:inputText value="#{payment.phaseDesc}"></p:inputText>
+					<p:column style="width:30%">
+						<f:facet name="header">
+							<h:outputText value="* " styleClass="mandatory" />
+							<h:outputText value="#{lbl['lbl.sc.spec.description']}" />
+						</f:facet>
+						<p:inputText value="#{payment.phaseDesc}" maxlength="50"
+							required="true" id="progressivePhasedesc"
+							label="#{lbl['lbl.sc.spec.description']}"></p:inputText>
+						<p:message id="phaseDescId" for="progressivePhasedesc"
+							display="icon"></p:message>
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sc.spec.stage2.score.from']}"
@@ -146,7 +165,8 @@
 						</p:selectOneMenu>
 
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sc.spec.freq.schedule.end.year']}" style="width:15%">
+					<p:column headerText="#{lbl['lbl.sc.spec.freq.schedule.end.year']}"
+						style="width:15%">
 						<!-- <p:selectOneMenu value="#{payment.fromDate}">
 
 						</p:selectOneMenu> -->
@@ -164,15 +184,21 @@
 						</p:selectOneMenu>
 
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sc.spec.freq.schedule.end.year']}" style="width:15%">
+					<p:column headerText="#{lbl['lbl.sc.spec.freq.schedule.end.year']}"
+						style="width:15%">
 						<!-- <p:selectOneMenu value="#{payment.toDate}">
 
 						</p:selectOneMenu> -->
 						<p:inputText value="#{payment.endYear}" disabled="true"></p:inputText>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sc.spec.weight.percent']}"
-						style="width:10%">
-						<p:inputText value="#{payment.percentage}"></p:inputText>
+					<p:column style="width:10%">
+						<f:facet name="header">
+							<h:outputText value="* " styleClass="mandatory" />
+							<h:outputText value="#{lbl['lbl.sc.spec.weight.percent']}" />
+						</f:facet>
+						<p:inputText value="#{payment.percentage}" required="true" id="progressivePercentage"
+							label="#{lbl['lbl.sc.spec.weight.percent']}" maxlength="18"></p:inputText>
+							<p:message id="pahsePercentage" for="progressivePercentage" display="icon"></p:message>
 					</p:column>
 
 

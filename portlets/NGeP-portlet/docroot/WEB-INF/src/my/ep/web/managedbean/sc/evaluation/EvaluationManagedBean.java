@@ -1,12 +1,15 @@
 package my.ep.web.managedbean.sc.evaluation;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
+import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScEvaluationResult;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
@@ -19,6 +22,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResult;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeetingAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklist;
+import my.ep.persistence.entity.sc.quationtender.ScQtScoreOfferPrice;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPAssetLiability;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPBankStmt;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPCashOnHand;
@@ -30,6 +34,9 @@ import my.ep.persistence.entity.sc.supplierproposal.ScQtSampleItem;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtSampleLable;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
+import my.ep.web.backingbean.sc.evaluation.SummaryZoneBaen;
+import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -65,9 +72,9 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private int tabActiveIndex;
 
 	private ScQtCommitteeActivity commiteeActivity;
-	private ScQt scqt;
+	
 	// OC,EC,TEC,FEC
-	private String committeeType = "TEC";
+	private String committeeType = "FEC";
 	private List<ScQtEvaluationResult> manuals1SupplierList;
 	// private List<ScQtProposalLabel> manualProposalLabel;
 	// private List<ScQtManualEvaluation> manualEvaluateList;
@@ -96,6 +103,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private List<ScQtCommitteRemarks> qtCommitteeRemarks;
 	private int complianceActiveIndex;
 	private int prepareActiveIndex;
+	private int presentationDemoActiveIndex;
 	private List<ScQtSampleLable> complianceSampleLblsupplier;
 	private ScQtSampleLable scQtSampleLbl;
 	private List<ScQtSampleItem> complianceSampleItemList;
@@ -140,6 +148,48 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private List<ScQtPRPBankStmt> bankStmtList;
 	private List<ScQtPRPAssetLiability> assetList;
 	private List<ScQtProposalScore> techGovProposalScore;
+	private List<ScQtProposalScore> techPrivateProposalScore;
+	private List<ScQtProposalScore> techSampleProposalScore;
+	private List<ScQtProposalScore> techStaffProposalScore;
+	private List<ScQtProposalScore> techNoOfEmployeeProposalScore;
+	private List<ScQtProposalScore> finGovProposalScore;
+	private List<ScQtProposalScore> finPrivateProposalScore;
+	private List<ScQtProposalScore> finbankStmtProposalScore;
+	private List<ScQtProposalScore> finCreditFacilityProposalScore;
+	private List<ScQtProposalScore> finCashOnHandProposalScore;
+	private List<ScQtProposalScore> finAssetLiabilityProposalScore;
+	private List<ScQtProposalScore> finPaidUpCapitalProposalScore;
+	
+	private List<ScQtEvaluationResult> evaluationSummaryQualSuppliers;
+	private List<ScQtEvaluationResult> evaluationSummaryDisQualSuppliers;
+	
+	private List<ScRequestItem> summaryItemList;
+	private ScRequestItem singlesummaryItemList;
+	private List<ScQtEvaluationResult> itemSummaryQualSuppliers;
+	private List<ScQtEvaluationResult> itemSummaryDisQualSuppliers;
+	private int itemTotQualSuppliers;
+	private int itemTotDisQualSuppliers;
+	
+	private int evaTotQualifiedSuppliers;
+	private int evaTotDisQualifiedSuppliers;
+	private List<SummaryZoneBaen> summaryZoneBean;
+	private List<SummaryZoneBaen> summaryItemZoneBean;
+	
+	private List<TplSpecZoneDtl> tplSpecZoneDtls;
+	
+	private TplSpecZoneDtl selectedZone;
+	
+	private List<ScQtProposalChecklist> presentationDemoSupplierList;
+	
+	private List<ScQtProposalChecklist> finSpecSupplierList;
+	
+	private ScQtScoreOfferPrice offerPricePackage;
+	private ScQtScoreOfferPrice offerPriceItem;
+	private List<SummaryZoneBaen> finSpecZoneBean;
+	private List<ScCommitteeMember> endorscommitteeMemberList;
+	
+	
+	private BigDecimal bankTotalAmt;
 
 	private TemplateSpecBean templateSpecBean = new TemplateSpecBean();
 
@@ -478,20 +528,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.commiteeActivity = commiteeActivity;
 	}
 
-	/**
-	 * @return the scqt
-	 */
-	public ScQt getScqt() {
-		return scqt;
-	}
-
-	/**
-	 * @param scqt
-	 *            the scqt to set
-	 */
-	public void setScqt(ScQt scqt) {
-		this.scqt = scqt;
-	}
+	
 
 	/**
 	 * @return the committeeType
@@ -1569,6 +1606,487 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	public void setTechGovProposalScore(List<ScQtProposalScore> techGovProposalScore) {
 		this.techGovProposalScore = techGovProposalScore;
 	}
+
+	/**
+	 * @return the techPrivateProposalScore
+	 */
+	public List<ScQtProposalScore> getTechPrivateProposalScore() {
+		return techPrivateProposalScore;
+	}
+
+	/**
+	 * @param techPrivateProposalScore the techPrivateProposalScore to set
+	 */
+	public void setTechPrivateProposalScore(
+			List<ScQtProposalScore> techPrivateProposalScore) {
+		this.techPrivateProposalScore = techPrivateProposalScore;
+	}
+
+	/**
+	 * @return the techSampleProposalScore
+	 */
+	public List<ScQtProposalScore> getTechSampleProposalScore() {
+		return techSampleProposalScore;
+	}
+
+	/**
+	 * @param techSampleProposalScore the techSampleProposalScore to set
+	 */
+	public void setTechSampleProposalScore(
+			List<ScQtProposalScore> techSampleProposalScore) {
+		this.techSampleProposalScore = techSampleProposalScore;
+	}
+
+	/**
+	 * @return the techStaffProposalScore
+	 */
+	public List<ScQtProposalScore> getTechStaffProposalScore() {
+		return techStaffProposalScore;
+	}
+
+	/**
+	 * @param techStaffProposalScore the techStaffProposalScore to set
+	 */
+	public void setTechStaffProposalScore(
+			List<ScQtProposalScore> techStaffProposalScore) {
+		this.techStaffProposalScore = techStaffProposalScore;
+	}
+
+	/**
+	 * @return the techNoOfEmployeeProposalScore
+	 */
+	public List<ScQtProposalScore> getTechNoOfEmployeeProposalScore() {
+		return techNoOfEmployeeProposalScore;
+	}
+
+	/**
+	 * @param techNoOfEmployeeProposalScore the techNoOfEmployeeProposalScore to set
+	 */
+	public void setTechNoOfEmployeeProposalScore(
+			List<ScQtProposalScore> techNoOfEmployeeProposalScore) {
+		this.techNoOfEmployeeProposalScore = techNoOfEmployeeProposalScore;
+	}
+
+	/**
+	 * @return the finGovProposalScore
+	 */
+	public List<ScQtProposalScore> getFinGovProposalScore() {
+		return finGovProposalScore;
+	}
+
+	/**
+	 * @param finGovProposalScore the finGovProposalScore to set
+	 */
+	public void setFinGovProposalScore(List<ScQtProposalScore> finGovProposalScore) {
+		this.finGovProposalScore = finGovProposalScore;
+	}
+
+	/**
+	 * @return the finPrivateProposalScore
+	 */
+	public List<ScQtProposalScore> getFinPrivateProposalScore() {
+		return finPrivateProposalScore;
+	}
+
+	/**
+	 * @param finPrivateProposalScore the finPrivateProposalScore to set
+	 */
+	public void setFinPrivateProposalScore(
+			List<ScQtProposalScore> finPrivateProposalScore) {
+		this.finPrivateProposalScore = finPrivateProposalScore;
+	}
+
+	/**
+	 * @return the finbankStmtProposalScore
+	 */
+	public List<ScQtProposalScore> getFinbankStmtProposalScore() {
+		return finbankStmtProposalScore;
+	}
+
+	/**
+	 * @param finbankStmtProposalScore the finbankStmtProposalScore to set
+	 */
+	public void setFinbankStmtProposalScore(
+			List<ScQtProposalScore> finbankStmtProposalScore) {
+		this.finbankStmtProposalScore = finbankStmtProposalScore;
+	}
+
+	/**
+	 * @return the finCreditFacilityProposalScore
+	 */
+	public List<ScQtProposalScore> getFinCreditFacilityProposalScore() {
+		return finCreditFacilityProposalScore;
+	}
+
+	/**
+	 * @param finCreditFacilityProposalScore the finCreditFacilityProposalScore to set
+	 */
+	public void setFinCreditFacilityProposalScore(
+			List<ScQtProposalScore> finCreditFacilityProposalScore) {
+		this.finCreditFacilityProposalScore = finCreditFacilityProposalScore;
+	}
+
+	/**
+	 * @return the finCashOnHandProposalScore
+	 */
+	public List<ScQtProposalScore> getFinCashOnHandProposalScore() {
+		return finCashOnHandProposalScore;
+	}
+
+	/**
+	 * @param finCashOnHandProposalScore the finCashOnHandProposalScore to set
+	 */
+	public void setFinCashOnHandProposalScore(
+			List<ScQtProposalScore> finCashOnHandProposalScore) {
+		this.finCashOnHandProposalScore = finCashOnHandProposalScore;
+	}
+
+	/**
+	 * @return the finAssetLiabilityProposalScore
+	 */
+	public List<ScQtProposalScore> getFinAssetLiabilityProposalScore() {
+		return finAssetLiabilityProposalScore;
+	}
+
+	/**
+	 * @param finAssetLiabilityProposalScore the finAssetLiabilityProposalScore to set
+	 */
+	public void setFinAssetLiabilityProposalScore(
+			List<ScQtProposalScore> finAssetLiabilityProposalScore) {
+		this.finAssetLiabilityProposalScore = finAssetLiabilityProposalScore;
+	}
+
+	/**
+	 * @return the finPaidUpCapitalProposalScore
+	 */
+	public List<ScQtProposalScore> getFinPaidUpCapitalProposalScore() {
+		return finPaidUpCapitalProposalScore;
+	}
+
+	/**
+	 * @param finPaidUpCapitalProposalScore the finPaidUpCapitalProposalScore to set
+	 */
+	public void setFinPaidUpCapitalProposalScore(
+			List<ScQtProposalScore> finPaidUpCapitalProposalScore) {
+		this.finPaidUpCapitalProposalScore = finPaidUpCapitalProposalScore;
+	}
+
+	/**
+	 * @return the bankTotalAmt
+	 */
+	public BigDecimal getBankTotalAmt() {
+		return bankTotalAmt;
+	}
+
+	/**
+	 * @param bankTotalAmt the bankTotalAmt to set
+	 */
+	public void setBankTotalAmt(BigDecimal bankTotalAmt) {
+		this.bankTotalAmt = bankTotalAmt;
+	}
+
+	/**
+	 * @return the evaluationSummaryQualSuppliers
+	 */
+	public List<ScQtEvaluationResult> getEvaluationSummaryQualSuppliers() {
+		return evaluationSummaryQualSuppliers;
+	}
+
+	/**
+	 * @param evaluationSummaryQualSuppliers the evaluationSummaryQualSuppliers to set
+	 */
+	public void setEvaluationSummaryQualSuppliers(
+			List<ScQtEvaluationResult> evaluationSummaryQualSuppliers) {
+		this.evaluationSummaryQualSuppliers = evaluationSummaryQualSuppliers;
+	}
+
+	/**
+	 * @return the evaluationSummaryDisQualSuppliers
+	 */
+	public List<ScQtEvaluationResult> getEvaluationSummaryDisQualSuppliers() {
+		return evaluationSummaryDisQualSuppliers;
+	}
+
+	/**
+	 * @param evaluationSummaryDisQualSuppliers the evaluationSummaryDisQualSuppliers to set
+	 */
+	public void setEvaluationSummaryDisQualSuppliers(
+			List<ScQtEvaluationResult> evaluationSummaryDisQualSuppliers) {
+		this.evaluationSummaryDisQualSuppliers = evaluationSummaryDisQualSuppliers;
+	}
+
+	/**
+	 * @return the evaTotQualifiedSuppliers
+	 */
+	public int getEvaTotQualifiedSuppliers() {
+		return evaTotQualifiedSuppliers;
+	}
+
+	/**
+	 * @param evaTotQualifiedSuppliers the evaTotQualifiedSuppliers to set
+	 */
+	public void setEvaTotQualifiedSuppliers(int evaTotQualifiedSuppliers) {
+		this.evaTotQualifiedSuppliers = evaTotQualifiedSuppliers;
+	}
+
+	/**
+	 * @return the evaTotDisQualifiedSuppliers
+	 */
+	public int getEvaTotDisQualifiedSuppliers() {
+		return evaTotDisQualifiedSuppliers;
+	}
+
+	/**
+	 * @param evaTotDisQualifiedSuppliers the evaTotDisQualifiedSuppliers to set
+	 */
+	public void setEvaTotDisQualifiedSuppliers(int evaTotDisQualifiedSuppliers) {
+		this.evaTotDisQualifiedSuppliers = evaTotDisQualifiedSuppliers;
+	}
+
+	/**
+	 * @return the summaryItemList
+	 */
+	public List<ScRequestItem> getSummaryItemList() {
+		return summaryItemList;
+	}
+
+	/**
+	 * @param summaryItemList the summaryItemList to set
+	 */
+	public void setSummaryItemList(List<ScRequestItem> summaryItemList) {
+		this.summaryItemList = summaryItemList;
+	}
+
+	/**
+	 * @return the itemSummaryQualSuppliers
+	 */
+	public List<ScQtEvaluationResult> getItemSummaryQualSuppliers() {
+		return itemSummaryQualSuppliers;
+	}
+
+	/**
+	 * @param itemSummaryQualSuppliers the itemSummaryQualSuppliers to set
+	 */
+	public void setItemSummaryQualSuppliers(
+			List<ScQtEvaluationResult> itemSummaryQualSuppliers) {
+		this.itemSummaryQualSuppliers = itemSummaryQualSuppliers;
+	}
+
+	/**
+	 * @return the itemSummaryDisQualSuppliers
+	 */
+	public List<ScQtEvaluationResult> getItemSummaryDisQualSuppliers() {
+		return itemSummaryDisQualSuppliers;
+	}
+
+	/**
+	 * @param itemSummaryDisQualSuppliers the itemSummaryDisQualSuppliers to set
+	 */
+	public void setItemSummaryDisQualSuppliers(
+			List<ScQtEvaluationResult> itemSummaryDisQualSuppliers) {
+		this.itemSummaryDisQualSuppliers = itemSummaryDisQualSuppliers;
+	}
+
+	/**
+	 * @return the itemTotQualSuppliers
+	 */
+	public int getItemTotQualSuppliers() {
+		return itemTotQualSuppliers;
+	}
+
+	/**
+	 * @param itemTotQualSuppliers the itemTotQualSuppliers to set
+	 */
+	public void setItemTotQualSuppliers(int itemTotQualSuppliers) {
+		this.itemTotQualSuppliers = itemTotQualSuppliers;
+	}
+
+	/**
+	 * @return the itemTotDisQualSuppliers
+	 */
+	public int getItemTotDisQualSuppliers() {
+		return itemTotDisQualSuppliers;
+	}
+
+	/**
+	 * @param itemTotDisQualSuppliers the itemTotDisQualSuppliers to set
+	 */
+	public void setItemTotDisQualSuppliers(int itemTotDisQualSuppliers) {
+		this.itemTotDisQualSuppliers = itemTotDisQualSuppliers;
+	}
+
+	/**
+	 * @return the singlesummaryItemList
+	 */
+	public ScRequestItem getSinglesummaryItemList() {
+		return singlesummaryItemList;
+	}
+
+	/**
+	 * @param singlesummaryItemList the singlesummaryItemList to set
+	 */
+	public void setSinglesummaryItemList(ScRequestItem singlesummaryItemList) {
+		this.singlesummaryItemList = singlesummaryItemList;
+	}
+
+	/**
+	 * @return the summaryZoneBean
+	 */
+	public List<SummaryZoneBaen> getSummaryZoneBean() {
+		return summaryZoneBean;
+	}
+
+	/**
+	 * @param summaryZoneBean the summaryZoneBean to set
+	 */
+	public void setSummaryZoneBean(List<SummaryZoneBaen> summaryZoneBean) {
+		this.summaryZoneBean = summaryZoneBean;
+	}
+
+	/**
+	 * @return the summaryItemZoneBean
+	 */
+	public List<SummaryZoneBaen> getSummaryItemZoneBean() {
+		return summaryItemZoneBean;
+	}
+
+	/**
+	 * @param summaryItemZoneBean the summaryItemZoneBean to set
+	 */
+	public void setSummaryItemZoneBean(List<SummaryZoneBaen> summaryItemZoneBean) {
+		this.summaryItemZoneBean = summaryItemZoneBean;
+	}
+
+	/**
+	 * @return the tplSpecZoneDtls
+	 */
+	public List<TplSpecZoneDtl> getTplSpecZoneDtls() {
+		return tplSpecZoneDtls;
+	}
+
+	/**
+	 * @param tplSpecZoneDtls the tplSpecZoneDtls to set
+	 */
+	public void setTplSpecZoneDtls(List<TplSpecZoneDtl> tplSpecZoneDtls) {
+		this.tplSpecZoneDtls = tplSpecZoneDtls;
+	}
+
+	/**
+	 * @return the selectedZone
+	 */
+	public TplSpecZoneDtl getSelectedZone() {
+		return selectedZone;
+	}
+
+	/**
+	 * @param selectedZone the selectedZone to set
+	 */
+	public void setSelectedZone(TplSpecZoneDtl selectedZone) {
+		this.selectedZone = selectedZone;
+	}
+
+	/**
+	 * @return the presentationDemoActiveIndex
+	 */
+	public int getPresentationDemoActiveIndex() {
+		return presentationDemoActiveIndex;
+	}
+
+	/**
+	 * @param presentationDemoActiveIndex the presentationDemoActiveIndex to set
+	 */
+	public void setPresentationDemoActiveIndex(int presentationDemoActiveIndex) {
+		this.presentationDemoActiveIndex = presentationDemoActiveIndex;
+	}
+
+	/**
+	 * @return the presentationDemoSupplierList
+	 */
+	public List<ScQtProposalChecklist> getPresentationDemoSupplierList() {
+		return presentationDemoSupplierList;
+	}
+
+	/**
+	 * @param presentationDemoSupplierList the presentationDemoSupplierList to set
+	 */
+	public void setPresentationDemoSupplierList(
+			List<ScQtProposalChecklist> presentationDemoSupplierList) {
+		this.presentationDemoSupplierList = presentationDemoSupplierList;
+	}
+
+	/**
+	 * @return the finSpecSupplierList
+	 */
+	public List<ScQtProposalChecklist> getFinSpecSupplierList() {
+		return finSpecSupplierList;
+	}
+
+	/**
+	 * @param finSpecSupplierList the finSpecSupplierList to set
+	 */
+	public void setFinSpecSupplierList(
+			List<ScQtProposalChecklist> finSpecSupplierList) {
+		this.finSpecSupplierList = finSpecSupplierList;
+	}
+
+	/**
+	 * @return the offerPricePackage
+	 */
+	public ScQtScoreOfferPrice getOfferPricePackage() {
+		return offerPricePackage;
+	}
+
+	/**
+	 * @param offerPricePackage the offerPricePackage to set
+	 */
+	public void setOfferPricePackage(ScQtScoreOfferPrice offerPricePackage) {
+		this.offerPricePackage = offerPricePackage;
+	}
+
+	/**
+	 * @return the offerPriceItem
+	 */
+	public ScQtScoreOfferPrice getOfferPriceItem() {
+		return offerPriceItem;
+	}
+
+	/**
+	 * @param offerPriceItem the offerPriceItem to set
+	 */
+	public void setOfferPriceItem(ScQtScoreOfferPrice offerPriceItem) {
+		this.offerPriceItem = offerPriceItem;
+	}
+
+	/**
+	 * @return the finSpecZoneBean
+	 */
+	public List<SummaryZoneBaen> getFinSpecZoneBean() {
+		return finSpecZoneBean;
+	}
+
+	/**
+	 * @param finSpecZoneBean the finSpecZoneBean to set
+	 */
+	public void setFinSpecZoneBean(List<SummaryZoneBaen> finSpecZoneBean) {
+		this.finSpecZoneBean = finSpecZoneBean;
+	}
+
+	/**
+	 * @return the endorscommitteeMemberList
+	 */
+	public List<ScCommitteeMember> getEndorscommitteeMemberList() {
+		return endorscommitteeMemberList;
+	}
+
+	/**
+	 * @param endorscommitteeMemberList the endorscommitteeMemberList to set
+	 */
+	public void setEndorscommitteeMemberList(
+			List<ScCommitteeMember> endorscommitteeMemberList) {
+		this.endorscommitteeMemberList = endorscommitteeMemberList;
+	}
+
+	
 
 	
 	

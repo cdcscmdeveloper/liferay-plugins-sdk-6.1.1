@@ -9,7 +9,8 @@
 	<p:panel id="techCommitteeChecklist"
 		header="#{lbl['lbl.sc.spec.tech.check.list']}" toggleable="true">
 
-		<p:dataTable id="stageTwotechProposal" var="stageTwoTechnical" widgetVar="technicalChecklist"
+		<p:dataTable id="stageTwotechProposal" var="stageTwoTechnical"
+			widgetVar="technicalChecklist"
 			value="#{specificationBackingBean.managedBean.scQtCheckSt2techProposal}"
 			style="width:100%" rowIndexVar="index"
 			selection="#{specificationBackingBean.managedBean.s2TechSelect}"
@@ -22,11 +23,16 @@
 				rendered="#{stageTwoTechnical.manditory =='true'}" />
 
 
-			<p:column headerText="#{lbl['lbl.sc.spec.stage.title']}"
-				style="width:30%">
+			<p:column style="width:30%;white-space: normal;">
 
+				<f:facet name="header">
+					<h:outputText value="* " styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.sc.spec.stage.title']}" />
+				</f:facet>
 				<ui:fragment rendered="#{stageTwoTechnical.title == null}">
-					<p:inputText value="#{stageTwoTechnical.title}" size="50"></p:inputText>
+					<p:inputText required="true" id="techChecklistTitle"
+						label="#{lbl['lbl.sc.spec.stage.title']}" value="#{stageTwoTechnical.title}" size="50" maxlength="100"></p:inputText>
+						<p:message id="techChecklistId" for="techChecklistTitle" display="icon"></p:message>
 				</ui:fragment>
 
 				<ui:fragment rendered="#{stageTwoTechnical.title != null}">
@@ -34,6 +40,8 @@
 				</ui:fragment>
 
 			</p:column>
+
+
 			<p:column headerText="#{lbl['lbl.sc.spec.stage.type']}"
 				style="width:20%">
 
@@ -63,10 +71,10 @@
 					rendered="#{index lt specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 and stageTwoTechnical.definationType.parameterId=='2'}"></h:outputText>
 
 
-			
+
 				<ui:fragment
 					rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 and stageTwoTechnical.title == null}">
-				
+
 					<p:selectOneMenu
 						value="#{stageTwoTechnical.definationType.parameterId}">
 						<f:selectItem itemLabel="Select One" itemValue="#{null}" />
@@ -83,13 +91,14 @@
 			<p:column headerText="#{lbl['lbl.sc.spec.supplier.action']}"
 				style="width:10%">
 				<!--  <h:panelGroup id="supplier">  -->
-				<ui:fragment rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 and stageTwoTechnical.title == null}">
+				<ui:fragment
+					rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 and stageTwoTechnical.title == null}">
 					<p:selectOneMenu styleClass="sample#{index}"
 						value="#{stageTwoTechnical.action.parameterId}">
 						<f:selectItems
 							value="#{specificationBackingBean.managedBean.technicalChecklistAction}" />
 						<p:ajax event="change" process="@this"
-							update=":form:businessSpecId:stageTwotechProposal"
+							update="stageTwotechProposal"
 							listener="#{specificationBackingBean.checklistActionChange}"></p:ajax>
 					</p:selectOneMenu>
 				</ui:fragment>
@@ -116,7 +125,8 @@
 
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.spec.stage2.score.head']}" style="width:10%">
+			<p:column headerText="#{lbl['lbl.sc.spec.stage2.score.head']}"
+				style="width:10%">
 				<p:selectBooleanCheckbox styleClass="action#{index}"
 					value="#{stageTwoTechnical.scoringReq}" disabled="true"
 					rendered="#{stageTwoTechnical.action.parameterId  ne '9'}">
@@ -140,7 +150,8 @@
 				style="width:30%">
 				<ui:include src="/xhtml/sc/specification/upload.xhtml" />
 				<!-- <h:panelGroup id="document"> rendered="#{stageTwoTechnical.definationType.parameterId eq '184'}"-->
-				<p:commandLink oncomplete="uploadDlg.show();return false;" styleClass="sample#{index}"
+				<p:commandLink oncomplete="uploadDlg.show();return false;"
+					styleClass="sample#{index}"
 					rendered="#{stageTwoTechnical.definationType.parameterId eq '184'}"
 					update="stageTwotechProposal">
 					<p:graphicImage library="ep/images/design" name="upload.png"
@@ -156,8 +167,9 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.stage.action']}"
 				style="width:10%">
-				
-				<p:commandLink  rendered="#{stageTwoTechnical.definationType.parameterId eq '185' or stageTwoTechnical.definationType.parameterId eq '187' or stageTwoTechnical.definationType.parameterId eq '188'}"
+
+				<p:commandLink
+					rendered="#{stageTwoTechnical.definationType.parameterId eq '185' or stageTwoTechnical.definationType.parameterId eq '187' or stageTwoTechnical.definationType.parameterId eq '188'}"
 					action="#{specificationBackingBean.technicalChecklistEditAction(index,stageTwoTechnical)}">
 
 					<p:graphicImage library="ep/images/design" name="edit.png"
@@ -181,9 +193,10 @@
 				icon="ui-icon-add" />
 
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
-				process="@this,stageTwotechProposal" oncomplete="technicalChecklist.paginator.endLink.click();"
+				process="@this,stageTwotechProposal"
+				oncomplete="technicalChecklist.paginator.endLink.click();"
 				action="#{specificationBackingBean.stageTwoTechnicalAddProposal}"
-				update="stageTwotechProposal" icon="ui-icon-add" />
+				update="@all,stageTwotechProposal" icon="ui-icon-add" />
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
 				icon="ui-icon-delete"
 				action="#{specificationBackingBean.deleteS2Tech}"
@@ -191,7 +204,7 @@
 
 		</div>
 
-
+		<ui:include src="stageTwoTechnical.xhtml" />
 	</p:panel>
 
 
