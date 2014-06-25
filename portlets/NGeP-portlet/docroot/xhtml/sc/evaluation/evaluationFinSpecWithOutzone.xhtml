@@ -1,0 +1,50 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<ui:define name="resourceSection">
+	</ui:define>
+
+
+	<ui:define name="contentSection">
+
+		<div>
+			<p:commandButton value="#{lbl['lbl.sc.spec.back']}"
+				style="float:left;" icon="ui-icon-back"
+				action="#{evaluationBackingBean.evaluationBackaction}" />
+
+		</div>
+
+		<p:panel>
+			<table>
+				<tr>
+					<td><h:outputLabel value="#{lbl['lbl.sc.spec.asset.title']}"></h:outputLabel></td>
+					<td><p:inputTextarea
+							value="#{evaluationBackingBean.managedBean.scQtChecklist.title}"
+							rows="2" cols="150" disabled="true"></p:inputTextarea></td>
+				</tr>
+			</table>
+		</p:panel>
+
+
+		<p:panel>
+		
+		<ui:param name="finSpecsupplierList" value="#{evaluationBackingBean.managedBean.finSpecSupplierList}"></ui:param>
+		<ui:param name="finSpecofferPrice" value="#{evaluationBackingBean.managedBean.offerPricePackage}"></ui:param>
+		<ui:param name="finSpecSupplierId" value="finSpecSupplierWithOutzone"></ui:param>
+            
+			<ui:include
+				src="/xhtml/sc/evaluation/finSpecSupplierOfferPriceList.xhtml"></ui:include>
+
+
+		</p:panel>
+
+
+
+	</ui:define>
+</ui:composition>

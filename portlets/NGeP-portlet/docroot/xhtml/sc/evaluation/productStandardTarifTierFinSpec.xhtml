@@ -63,9 +63,9 @@
 
 
 
-		<ac:templateSpec
+		 <ac:templateSpec
 			templateSpecBean="#{evaluationBackingBean.managedBean.templateSpecBean}" />
-
+ 
 
 		<p:panel header="Scoring Offered Price" toggleable="true">
 			<p:panelGrid style="margin-top:5px;width:100%;">
@@ -84,20 +84,24 @@
 				<p:row>
 					<p:column style="font-weight: bold;">By Item</p:column>
 					<p:column style="font-weight: bold;">
-						<h:outputText style="text-align:right;" />
+						<h:outputText style="text-align:right;"
+							value="#{evaluationBackingBean.managedBean.offerPriceItem.fromVariance}" />
 					</p:column>
 
 					<p:column colspan="1" style="font-weight: bold;">
-						<h:outputText style="text-align:right;" />
+						<h:outputText style="text-align:right;"
+							value="#{evaluationBackingBean.managedBean.offerPriceItem.toVariance}" />
+					</p:column>
+					<p:column colspan="1" style="font-weight: bold;">
+						<h:outputText style="text-align:right;"
+							value="#{evaluationBackingBean.managedBean.offerPriceItem.belowScore}" />
 					</p:column>
 					<p:column colspan="1" style="font-weight: bold;">
 						<h:outputText style="text-align:right;" />
 					</p:column>
 					<p:column colspan="1" style="font-weight: bold;">
-						<h:outputText style="text-align:right;" />
-					</p:column>
-					<p:column colspan="1" style="font-weight: bold;">
-						<h:outputText style="text-align:right;" />
+						<h:outputText style="text-align:right;"
+							value="#{evaluationBackingBean.managedBean.offerPriceItem.aboveScore}" />
 					</p:column>
 				</p:row>
 			</p:panelGrid>

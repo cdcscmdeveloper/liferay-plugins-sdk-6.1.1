@@ -12,9 +12,10 @@
 	<p:panel header="#{lbl['lbl.sc.eva.compliance.sum.qul.sup']}"
 		toggleable="true">
 
-		<p:dataTable var="prefQualSupplier" id="prefQualSupplierId"
-			editable="true" rowIndexVar="index" rowKey="#{qualifiedSupplier}">
-			<ac:paginator for="prefQualSupplierId" />
+		<p:dataTable var="prefQualSupplier" id="#{qualifiedPreferenceListId}"
+			value="#{qualifiedPreferenceList}"
+			editable="true" rowIndexVar="index" rowKey="#{qualifiedPreferenceListId}">
+			<ac:paginator for="#{qualifiedPreferenceList}" />
 
 
 
@@ -22,15 +23,17 @@
 			<p:column headerText="#{lbl['lbl.sc.eva.summary.pref.ranking']}"
 				style="width:10%">
 
-				<h:outputText></h:outputText>
-
-
+				<h:outputText
+					value="#{prefQualSupplier.evaluationResultDtls[0].evalRank}"></h:outputText>
 			</p:column>
+
+
+
 
 			<p:column headerText="#{lbl['lbl.sc.eva.compliance.sum.sup.code']}"
 				style="width:10%">
 
-				<h:outputText></h:outputText>
+				<h:outputText value="#{prefQualSupplier.scQtProposal.supplierNo}"></h:outputText>
 
 
 			</p:column>
@@ -38,7 +41,7 @@
 			<p:column headerText="#{lbl['lbl.sc.eva.summary.pref.bumi.status']}"
 				style="width:20%">
 
-				<h:outputText></h:outputText>
+				<h:outputText value="#{summaryqualSup.scQtProposal.supplierNo}"></h:outputText>
 
 
 			</p:column>
@@ -46,7 +49,8 @@
 			<p:column headerText="#{lbl['lbl.sc.eva.summary.pref.price.diff']}"
 				style="width:20%">
 
-				<h:outputText></h:outputText>
+				<h:outputText
+					value="#{summaryqualSup.scQtProposal.proposalAmount.proposalAmt}"></h:outputText>
 
 
 			</p:column>
@@ -54,7 +58,8 @@
 			<p:column headerText="#{lbl['lbl.sc.eva.summary.pref.diff']}"
 				style="width:15%">
 
-				<h:outputText></h:outputText>
+				<h:outputText
+					value="#{summaryqualSup.scQtProposal.proposalAmount.percentageDifference}"></h:outputText>
 
 
 			</p:column>
@@ -62,7 +67,8 @@
 			<p:column headerText="#{lbl['lbl.sc.eva.summary.pref.margin']}"
 				style="width:25%">
 
-				<h:outputText></h:outputText>
+				<h:outputText
+					value="#{summaryqualSup.scQtProposal.proposalAmount.preferenceMargin}"></h:outputText>
 
 
 			</p:column>
@@ -79,7 +85,8 @@
 			<tr>
 				<td><h:outputLabel
 						value="#{lbl['lbl.sc.eva.compliance.sum.total.sup']}" /></td>
-				<td><p:inputText readonly="true" disabled="true"></p:inputText></td>
+				<td><p:inputText readonly="true" disabled="true"
+						value="#{evaluationBackingBean.managedBean.evaTotQualifiedSuppliers}"></p:inputText></td>
 			</tr>
 
 		</table>
@@ -90,15 +97,17 @@
 	<p:panel header="#{lbl['lbl.sc.eva.compliance.sum.dis.qul.sup']}"
 		toggleable="true">
 
-		<p:dataTable var="disQualifiedSupplier" id="prefDisQualSupId"
+		<p:dataTable var="disQualifiedSupplier" id="#{disQualifiedPreferenceListId}"
+			value="#{disQualifiedPreferenceList}"
 			editable="true" rowIndexVar="index" rowKey="#{disQualifiedSupplier}">
-			<ac:paginator for="prefDisQualSupId" />
+			<ac:paginator for="#{disQualifiedPreferenceListId}" />
 
 
 			<p:column headerText="#{lbl['lbl.sc.eva.compliance.sum.sup.code']}"
 				style="width:15%">
 
-				<h:outputText></h:outputText>
+				<h:outputText
+					value="#{disQualifiedSupplier.scQtProposal.supplierNo}"></h:outputText>
 
 
 			</p:column>
@@ -106,7 +115,8 @@
 			<p:column headerText="#{lbl['lbl.sc.eva.summary.pref.bumi.status']}"
 				style="width:25%">
 
-				<h:outputText></h:outputText>
+				<h:outputText
+					value="#{disQualifiedSupplier.scQtProposal.supplierNo}"></h:outputText>
 
 
 			</p:column>
@@ -114,7 +124,8 @@
 			<p:column headerText="#{lbl['lbl.sc.eva.summary.pref.price.diff']}"
 				style="width:20%">
 
-				<h:outputText></h:outputText>
+				<h:outputText
+					value="#{disQualifiedSupplier.scQtProposal.proposalAmount.proposalAmt}"></h:outputText>
 
 
 			</p:column>
@@ -122,7 +133,8 @@
 			<p:column headerText="#{lbl['lbl.sc.eva.summary.pref.diff']}"
 				style="width:15%">
 
-				<h:outputText></h:outputText>
+				<h:outputText
+					value="#{disQualifiedSupplier.scQtProposal.proposalAmount.percentageDifference}"></h:outputText>
 
 
 			</p:column>
@@ -130,7 +142,8 @@
 			<p:column headerText="#{lbl['lbl.sc.eva.summary.pref.margin']}"
 				style="width:25%">
 
-				<h:outputText></h:outputText>
+				<h:outputText
+					value="#{disQualifiedSupplier.scQtProposal.proposalAmount.preferenceMargin}"></h:outputText>
 
 
 			</p:column>
@@ -147,7 +160,8 @@
 			<tr>
 				<td><h:outputLabel
 						value="#{lbl['lbl.sc.eva.compliance.sum.total.sup']}" /></td>
-				<td><p:inputText readonly="true" disabled="true"></p:inputText></td>
+				<td><p:inputText readonly="true" disabled="true"
+						value="#{evaluationBackingBean.managedBean.evaTotDisQualifiedSuppliers}"></p:inputText></td>
 			</tr>
 
 		</table>

@@ -9,93 +9,118 @@
 
 
 	<p:panel header="#{lbl['lbl.sc.eva.smpl.item.list']}" toggleable="true">
-		<p:dataTable var="summaryItem" id="summaryItemId" editable="true"
-			rowIndexVar="index"  rowKey="#{summaryItem}">
-			<ac:paginator for="summaryItemId" />
 
+		<p:dataTable var="summaryItem" id="#{itemListId}" editable="true"
+			value="#{itemList}"
+			selection="#{evaluationBackingBean.managedBean.singlesummaryItemList}"
+			selectionMode="single" rowIndexVar="index"
+			rowKey="#{summaryItem.requestNoteItemId}">
+			<ac:paginator for="#{itemListId}" />
 
-			<p:column headerText="#{lbl['lbl.sc.eva.summary.item']}" style="width:35%">
+			<p:ajax event="rowSelect" update="@form"
+				listener="#{evaluationBackingBean.summaryItemSelect}"></p:ajax>
+			<p:column headerText="#{lbl['lbl.sc.eva.summary.item']}"
+				style="width:35%">
 
-
+				<h:outputText value="#{summaryItem.tplSpecQuestion.clItem}"></h:outputText>
 
 			</p:column>
 		</p:dataTable>
 	</p:panel>
 
 
+	<h:panelGroup>
+
+		<p:panel header="#{lbl['lbl.sc.eva.compliance.sum.qul.sup']}"
+			toggleable="true">
+
+			<p:dataTable var="summaryqualSup" id="#{qualifiedSupplierItemId}"
+				value="#{evaluationBackingBean.managedBean.itemSummaryQualSuppliers}"
+				editable="true" rowIndexVar="index" rowKey="#{summaryqualSup}">
 
 
-	<p:panel header="#{lbl['lbl.sc.eva.compliance.sum.qul.sup']}"
-		toggleable="true">
+                 <ac:paginator for="#{qualifiedSupplierItemId}"></ac:paginator>
 
-		<p:dataTable var="summaryqualSup" id="summaryItemQualified"
-			editable="true" rowIndexVar="index" 
-			rowKey="#{summaryqualSup}">
-			<ac:paginator for="summaryItemQualified" />
+				<p:column headerText="#{lbl['lbl.sc.eva.summary.ranking']}">
 
-
-			<p:column headerText="#{lbl['lbl.sc.eva.compliance.sum.sup.code']}"
-				style="width:30%">
-
-				<p:inputText size="70"></p:inputText>
+					<h:outputText
+						value="#{summaryqualSup.evaluationResultDtls[0].evalRank}"></h:outputText>
+				</p:column>
 
 
-			</p:column>
+				<p:column headerText="#{lbl['lbl.sc.eva.compliance.sum.sup.code']}"
+					style="width:30%">
+
+					<h:outputText value="#{summaryqualSup.scQtProposal.supplierNo}"></h:outputText>
 
 
-		</p:dataTable>
+				</p:column>
 
 
-	</p:panel>
+				<p:column headerText="#{lbl['lbl.sc.eva.fin.spec.tot.score']}">
+					<h:outputText
+						value="#{summaryqualSup.evaluationResultDtls[0].totalScore}"></h:outputText>
+				</p:column>
 
-	<p:panel>
-		<table>
-
-			<tr>
-				<td><h:outputLabel
-						value="#{lbl['lbl.sc.eva.compliance.sum.total.sup']}" /></td>
-				<td><p:inputText readonly="true" disabled="true"></p:inputText></td>
-			</tr>
-
-		</table>
-	</p:panel>
+			</p:dataTable>
 
 
+		</p:panel>
 
-	<p:panel header="#{lbl['lbl.sc.eva.compliance.sum.dis.qul.sup']}"
-		toggleable="true">
+		<p:panel>
+			<table>
 
-		<p:dataTable var="disQualifiedSupplier" id="summaryItemDisQual"
-			editable="true" rowIndexVar="index" 
-			rowKey="#{disQualifiedSupplier}">
-			<ac:paginator for="summaryItemDisQual" />
+				<tr>
+					<td><h:outputLabel
+							value="#{lbl['lbl.sc.eva.compliance.sum.total.sup']}" /></td>
+					<td><p:inputText readonly="true" disabled="true"
+							value="#{evaluationBackingBean.managedBean.itemTotQualSuppliers}"></p:inputText></td>
+				</tr>
+
+			</table>
+		</p:panel>
+</h:panelGroup>
+
+<h:panelGroup>
+		<p:panel header="#{lbl['lbl.sc.eva.compliance.sum.dis.qul.sup']}"
+			toggleable="true">
+
+			<p:dataTable var="disQualifiedSupplier" id="#{disQualifiedSupplierItemId}"
+				value="#{evaluationBackingBean.managedBean.itemSummaryDisQualSuppliers}"
+				editable="true" rowIndexVar="index" rowKey="#{disQualifiedSupplier}">
+
+                <ac:paginator for="#{disQualifiedSupplierItemId}"></ac:paginator>
+
+				<p:column headerText="#{lbl['lbl.sc.eva.compliance.sum.sup.code']}"
+					style="width:30%">
+
+					<h:outputText
+						value="#{disQualifiedSupplier.scQtProposal.supplierNo}"></h:outputText>
+
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.eva.fin.spec.tot.score']}">
+					<h:outputText
+						value="#{disQualifiedSupplier.evaluationResultDtls[0].totalScore}"></h:outputText>
+				</p:column>
 
 
-			<p:column headerText="#{lbl['lbl.sc.eva.compliance.sum.sup.code']}"
-				style="width:30%">
-
-				<p:inputText size="70"></p:inputText>
+			</p:dataTable>
 
 
-			</p:column>
+		</p:panel>
 
+		<p:panel>
+			<table>
 
-		</p:dataTable>
+				<tr>
+					<td><h:outputLabel
+							value="#{lbl['lbl.sc.eva.compliance.sum.total.sup']}" /></td>
+					<td><p:inputText readonly="true" disabled="true"
+							value="#{evaluationBackingBean.managedBean.itemTotDisQualSuppliers}"></p:inputText></td>
+				</tr>
 
-
-	</p:panel>
-
-	<p:panel>
-		<table>
-
-			<tr>
-				<td><h:outputLabel
-						value="#{lbl['lbl.sc.eva.compliance.sum.total.sup']}" /></td>
-				<td><p:inputText readonly="true" disabled="true"></p:inputText></td>
-			</tr>
-
-		</table>
-	</p:panel>
-
-
+			</table>
+		</p:panel>
+		</h:panelGroup>
 </ui:composition>

@@ -13,18 +13,18 @@
 		toggleable="true">
 		
 		<p:dataTable id="evaluationSignOff" var="signOffMember"
-			value="#{evaluationBackingBean.managedBean.signOffMemberList}"
+			value="#{evaluationBackingBean.managedBean.endorscommitteeMemberList}"
 			rowKey="#{signOffMember}" rowIndexVar="index">
 
 			<ac:paginator for="evaluationSignOff" />
 
 			<p:column headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.name']}"
 				style="width:35%">
-				<h:outputText value="#{signOffMember.scCommitteeMember.memberName}"></h:outputText>
+				<h:outputText value="#{memberName}"></h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.idn.no']}"
 				style="width:35%">
-				<h:outputText value="#{signOffMember.scCommitteeMember.memberName}"></h:outputText>
+				<h:outputText value="#{memberName}"></h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.eva.committee.role']}"
 				style="width:20%">

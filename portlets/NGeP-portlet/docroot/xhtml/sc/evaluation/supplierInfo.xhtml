@@ -16,10 +16,12 @@
 
 		<div>
 			<p:commandButton value="#{lbl['lbl.sc.spec.back']}"
-				style="float:right;" />
+				icon="ui-icon-back" style="float:left;"
+				action="#{evaluationBackingBean.evaluationBackaction}" />
 
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
-				style="float:right;" icon="ui-icon-save" />
+				style="float:right;" icon="ui-icon-save"
+				action="#{evaluationBackingBean.saveFinSupplierInfoDtls}" />
 
 
 

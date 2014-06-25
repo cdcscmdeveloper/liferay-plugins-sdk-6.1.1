@@ -20,7 +20,7 @@
 
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
 				style="float:right;" icon="ui-icon-save"
-				action="#{evaluationBackingBean.saveComplianceSample}" />
+				action="#{evaluationBackingBean.saveFinCashOnHandDtls}" />
 		</div>
 
 		<p:panel>
@@ -95,12 +95,15 @@
 
 			<table>
 				<c:forEach
-					items="#{evaluationBackingBean.managedBean.techGovProposalScore}"
+					items="#{evaluationBackingBean.managedBean.finCashOnHandProposalScore}"
 					var="action">
 					<tr>
 						<td><h:outputText value="#{lbl['lbl.sc.spec.total.cash']}" /></td>
 						<td style="width: 200px;"><p:inputText readonly="true"
-								value="#{action.criteriaValue}" disabled="true"></p:inputText></td>
+								value="#{action.criteriaValue}" disabled="true">
+								<f:convertNumber
+									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+								</p:inputText></td>
 						<td><h:outputText value="#{lbl['lbl.sc.eva.auto.score']}"
 								rendered="#{evaluationBackingBean.managedBean.checklistScoreType eq '1'}" /></td>
 						<td><p:inputText readonly="true" disabled="true"

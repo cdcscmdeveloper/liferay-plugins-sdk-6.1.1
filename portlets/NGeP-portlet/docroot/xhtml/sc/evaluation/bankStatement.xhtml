@@ -20,7 +20,7 @@
 
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
 				style="float:right;" icon="ui-icon-save"
-				action="#{evaluationBackingBean.saveComplianceSample}" />
+				action="#{evaluationBackingBean.saveFinBankStmtDtls}" />
 		</div>
 
 		<p:panel>
@@ -89,28 +89,37 @@
 
 
 			<table>
-			<c:forEach
-					items="#{evaluationBackingBean.managedBean.techGovProposalScore}"
+				<c:forEach
+					items="#{evaluationBackingBean.managedBean.finbankStmtProposalScore}"
 					var="action">
-				<tr>
-					<td><h:outputText value="#{lbl['lbl.sc.eva.bank.total']}" /></td>
-					<td><p:inputText readonly="true" disabled="true"></p:inputText></td>
-				</tr>
-				<tr>
-					<td><h:outputText
-							value="#{lbl['lbl.sc.eva.avg.bank.statements']}" /></td>
-					<td style="width: 200px;"><p:inputText readonly="true" value="#{action.criteriaValue}"
-							disabled="true"></p:inputText></td>
-					<td><h:outputText value="#{lbl['lbl.sc.eva.auto.score']}"
-							rendered="#{evaluationBackingBean.managedBean.checklistScoreType eq '1'}" /></td>
-					<td><p:inputText readonly="true" disabled="true" value="#{action.autoScore}"
-							rendered="#{evaluationBackingBean.managedBean.checklistScoreType eq '1'}"></p:inputText></td>
-					<td><h:outputText value="#{lbl['lbl.sc.eva.s1.user.score']}"
-							rendered="#{evaluationBackingBean.managedBean.checklistScoreType eq '2'}" /></td>
-					<td><p:inputText value="#{action.userScore}"
-							rendered="#{evaluationBackingBean.managedBean.checklistScoreType eq '2'}"></p:inputText></td>
-				</tr>
-</c:forEach>
+					<tr>
+						<td><h:outputText value="#{lbl['lbl.sc.eva.bank.total']}" /></td>
+						<td><p:inputText readonly="true"
+								value="#{evaluationBackingBean.managedBean.bankTotalAmt}"
+								disabled="true">
+								<f:convertNumber
+									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+							</p:inputText></td>
+					</tr>
+					<tr>
+						<td><h:outputText
+								value="#{lbl['lbl.sc.eva.avg.bank.statements']}" /></td>
+						<td style="width: 200px;"><p:inputText readonly="true"
+								value="#{action.criteriaValue}" disabled="true">
+								<f:convertNumber
+									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+							</p:inputText></td>
+						<td><h:outputText value="#{lbl['lbl.sc.eva.auto.score']}"
+								rendered="#{evaluationBackingBean.managedBean.checklistScoreType eq '1'}" /></td>
+						<td><p:inputText readonly="true" disabled="true"
+								value="#{action.autoScore}"
+								rendered="#{evaluationBackingBean.managedBean.checklistScoreType eq '1'}"></p:inputText></td>
+						<td><h:outputText value="#{lbl['lbl.sc.eva.s1.user.score']}"
+								rendered="#{evaluationBackingBean.managedBean.checklistScoreType eq '2'}" /></td>
+						<td><p:inputText value="#{action.userScore}"
+								rendered="#{evaluationBackingBean.managedBean.checklistScoreType eq '2'}"></p:inputText></td>
+					</tr>
+				</c:forEach>
 
 			</table>
 

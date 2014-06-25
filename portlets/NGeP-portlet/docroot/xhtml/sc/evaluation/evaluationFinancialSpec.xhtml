@@ -32,90 +32,28 @@
 		</p:panel>
 
 
-		<p:panel header="#{lbl['lbl.sc.eva.comp.sup.list']}" toggleable="true">
+		<p:panel>
+			<p:tabView var="zones" dynamic="true" cache="true" orientation="left"
+				value="#{evaluationBackingBean.managedBean.finSpecZoneBean}">
+				<p:ajax event="tabChange"
+					listener="#{evaluationBackingBean.specTabChange}" />
+				<p:tab title="#{zones.tplSpecZoneDtl.zoneName}">
+					<ui:param name="finSpecsupplierList"
+						value="#{zones.finSpecSupplierList}"></ui:param>
+					<ui:param name="finSpecofferPrice"
+						value="#{zones.offerPrice}"></ui:param>
+					<ui:param name="finSpecSupplierId"
+						value="withZone#{zones.tplSpecZoneDtl.zoneName}"></ui:param>
 
-			<p:dataTable var="finSpec" id="finSpecId" editable="true" value="#{evaluationBackingBean.managedBean.complianceTechnicalProposalCheckList}"
-				rowIndexVar="index" style="width:100%" rowKey="#{finSpec}">
-				<ac:paginator for="finSpecId" />
+					<ui:include
+						src="/xhtml/sc/evaluation/finSpecSupplierOfferPriceList.xhtml"></ui:include>
+				</p:tab>
 
-
-				<p:column headerText="#{lbl['lbl.sc.eva.comp.sup.code']}"
-					style="width:20%">
-
-						<h:outputText value="#{finSpec.scQtProposal.supplierNo}"></h:outputText>
-
-
-				</p:column>
-				<p:column headerText="Total Amount&lt;br /&gt;(Package)(RM)"
-					style="width:25%">
-						<h:outputText value="#{finSpec.scQtProposal.supplierNo}"></h:outputText>
-
-				</p:column>
-
-				<p:column headerText="#{lbl['lbl.sc.eva.diff.varience']}" style="width:20%">
-
-				</p:column>
-
-				<p:column headerText="#{lbl['lbl.sc.eva.fin.spec.tot.score']}" style="width:20%">
-                       <h:outputText  value="#{finSpec.totalScore}"></h:outputText>
-				</p:column>
-
-				<p:column headerText="#{lbl['lbl.sc.eva.compliance.fin.action']}"
-					style="width:15%">
-
-					<p:commandButton value="#{lbl['lbl.sc.eva.btn.evaluate']}" process="@this" action="#{evaluationBackingBean.othersFinancialEvaluate(finSpec)}"
-						partialSubmit="true" />
-				</p:column>
-			</p:dataTable>
-		</p:panel>
-
-
-
-		<p:panel header="#{lbl['lbl.sc.eva.score.offer.price']}">
-			<table>
-				<tr>
-					<td><h:outputLabel value="#{lbl['lbl.sc.eva.est.price']}"></h:outputLabel></td>
-					<td><p:inputText disabled="true"></p:inputText></td>
-				</tr>
-			</table>
-			<p:panelGrid style="margin-top:5px;width:100%;">
-				<f:facet name="header">
-
-					<p:row>
-						<p:column colspan="1">#{lbl['lbl.sc.eva.offer.price']}</p:column>
-						<p:column colspan="1">#{lbl['lbl.sc.eva.from.varience']}</p:column>
-						<p:column colspan="1">#{lbl['lbl.sc.eva.to.varience']}</p:column>
-						<p:column>#{lbl['lbl.sc.eva.below.varience']}</p:column>
-						<p:column>#{lbl['lbl.sc.eva.within.varience']}</p:column>
-						<p:column>#{lbl['lbl.sc.eva.above.varience']}</p:column>
-					</p:row>
-				</f:facet>
-				<p:row>
-					<p:column style="font-weight: bold;">#{lbl['lbl.sc.eva.by.package']}</p:column>
-					<p:column style="font-weight: bold;">
-
-						<h:outputText></h:outputText>
-					</p:column>
-
-					<p:column colspan="1" style="font-weight: bold;">
-						<h:outputText></h:outputText>
-					</p:column>
-					<p:column colspan="1" style="font-weight: bold;">
-						<h:outputText></h:outputText>
-					</p:column>
-					<p:column colspan="1" style="font-weight: bold;">
-						<h:outputText></h:outputText>
-					</p:column>
-					<p:column colspan="1" style="font-weight: bold;">
-						<h:outputText></h:outputText>
-					</p:column>
-				</p:row>
-
-
-			</p:panelGrid>
-
+			</p:tabView>
 
 		</p:panel>
+
+
 
 	</ui:define>
 </ui:composition>

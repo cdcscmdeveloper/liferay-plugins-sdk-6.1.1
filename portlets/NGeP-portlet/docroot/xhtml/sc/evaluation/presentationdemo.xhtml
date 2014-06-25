@@ -7,55 +7,92 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	<p:dialog header="#{lbl['lbl.sc.eva.present.demo.head']}" widgetVar="evaluationPresentation" modal="true"
-	dynamic="true"	width="400" height="300" >
-		<p:panel id="presentationDemo" header="#{lbl['lbl.sc.eva.present.demo.head']}"
-			toggleable="true" >
+	<ui:define name="resourceSection">
+	</ui:define>
 
-			<h:panelGrid columns="2" >
 
-				<h:outputLabel value="#{lbl['lbl.sc.eva.s1.manual.supplier']}"></h:outputLabel>
 
-				<p:inputText value="#{evaluationBackingBean.managedBean.scQtEvaluationResult.scQtProposal.supplierNo}" readonly="true" disabled="true"></p:inputText>
 
-				<h:outputLabel value="#{lbl['lbl.sc.eva.present.document']}" />
+	<div>
 
-              <h:panelGroup>
+
+		<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
+			style="float:right;" icon="ui-icon-save" />
+	</div>
+
+
+<p:spacer height="25"></p:spacer>
+
+	<p:panel header="#{lbl['lbl.sc.eva.comp.sup.list']}" toggleable="true">
+
+		<p:dataTable var="demoSupplier" id="demoSupplierId" editable="true"
+		value="#{evaluationBackingBean.managedBean.presentationDemoSupplierList}"
+			rowIndexVar="index"  rowKey="#{demoSupplier}">
+			<ac:paginator for="complianceTechnicalSupplier" />
+
+
+			<p:column headerText="#{lbl['lbl.sc.eva.comp.sup.code']}"
+				style="width:30%">
+
+				<h:outputText value="#{demoSupplier.scQtProposal.supplierNo}"></h:outputText>
+
+
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.eva.comp.document']}"
+				style="width:15%">
+				<h:outputText></h:outputText>
+
+			</p:column>
+
+
+
+			<p:column headerText="#{lbl['lbl.sc.eva.user.scores']}"
+				style="width:15%">
+				<p:inputText value="#{demoSupplier.proposalScore[0].userScore}"></p:inputText>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.eva.comp.remark']}"
+				style="width:40%">
+				<p:inputTextarea rows="2" cols="40" value="#{demoSupplier.remark}"></p:inputTextarea>
+			</p:column>
+		</p:dataTable>
+	</p:panel>
+
+
+
+<p:panel header="#{lbl['lbl.sc.eva.report.eva.report']}">
+		<h:panelGrid columns="2">
+
+			<p:outputLabel value="#{lbl['lbl.sc.eva.report.attachment']}"></p:outputLabel>
+
+			<h:panelGroup>
+
+				
+				<p:commandButton onclick="presntDemoDlg.show();return false;" ajax="false" process="@this" partialSubmit="true"
+					icon="iconAttachment" update="presentDemoFile" 
+					value="Attach file(s)" actionListener="#{evaluationBackingBean.reportUpload}"/>
+
+			</h:panelGroup>
 			
-							<p:commandButton oncomplete="uploadDlg.show();"
-                    icon="iconAttachment" 
-                             value="Attach file(s)" partialSubmit="true" process="@this"/>
-						<p:spacer width="10" height="5" />
-				<h:outputText id="requestDocument"
-					value="#{evaluationBackingBean.managedBean.fileName}"></h:outputText>	
-					</h:panelGroup>
-					<h:outputLabel value="#{lbl['lbl.sc.eva.s1.manual.remarks']}" />
-                   <p:inputTextarea rows="3" cols="30" autoResize="false"></p:inputTextarea>
-
-			</h:panelGrid>
-
-
 			
+			<h:panelGrid columns="3" id="presentDemoRemove">
 
-		
+			<p:spacer width="40"></p:spacer>
+			<p:outputLabel id="presefile"
+				value="#{evaluationBackingBean.managedBean.fileName}"></p:outputLabel>
+			<p:commandLink actionListener="#{evaluationBackingBean.removeFile}"
+				process="@this,presentDemoRemove" update="presentDemoRemove" partialSubmit="true"
+				style="width:40%;">
+				<p:graphicImage library="ep/images/design" name="delete.png"
+					value="/resources/ep/images/design/delete.png" />
 
-		</p:panel>
+			</p:commandLink>
 
-		<div align="left">
-			<p:commandButton value="#{lbl['lbl.sc.eva.btn.close']}"
-				style="float:right;"  icon="ui-icon-cancel" oncomplete="evaluationPresentation.hide();"></p:commandButton>
-
-			<p:commandButton value="#{lbl['lbl.sc.eva.btn.save']}"
-				style="float:right;" oncomplete="evaluationPresentation.hide();"
-			action="#{evaluationBackingBean.presentationDemoSaveAction}"	 icon="ui-icon-save"></p:commandButton>
+		</h:panelGrid>
+		</h:panelGrid>
 
 
-		</div>
-		
-		
-		
-	</p:dialog>
-	
-	
-	
+
+	</p:panel>
+
 </ui:composition>

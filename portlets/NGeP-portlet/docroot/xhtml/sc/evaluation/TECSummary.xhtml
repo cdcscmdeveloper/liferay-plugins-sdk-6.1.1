@@ -1,0 +1,115 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+
+
+	<div align="right">
+
+		<p:commandButton value="#{lbl['lbl.sc.eva.btn.save']}"
+			style="float:right;"
+			action="#{evaluationBackingBean.saveMeetingDtls}" icon="ui-icon-save" />
+	</div>
+
+	<p:spacer height="40"></p:spacer>
+
+	<p:panel header="#{lbl['lbl.sc.eva.compliance.sum.qul.sup']}"
+		toggleable="true">
+
+		<p:dataTable var="qualifiedSupplier" id="oneTierQualifiedSupplier"
+			editable="true" rowIndexVar="index" style="width: 1000px;"
+			value="#{evaluationBackingBean.managedBean.evaluationSummaryQualSuppliers}"
+			rowKey="#{qualifiedSupplier}">
+			<ac:paginator for="oneTierQualifiedSupplier" />
+
+			<p:column headerText="#{lbl['lbl.sc.eva.summary.ranking']}">
+
+				<h:outputText
+					value="#{qualifiedSupplier.evaluationResultDtls[0].evalRank}"></h:outputText>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.eva.compliance.sum.sup.code']}">
+
+				<h:outputText value="#{qualifiedSupplier.scQtProposal.supplierNo}"></h:outputText>
+
+
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.eva.fin.spec.tot.score']}">
+				<h:outputText
+					value="#{qualifiedSupplier.evaluationResultDtls[0].totalScore}"></h:outputText>
+			</p:column>
+
+
+
+		</p:dataTable>
+
+
+	</p:panel>
+
+	<p:panel>
+		<table>
+
+			<tr>
+				<td><h:outputLabel
+						value="#{lbl['lbl.sc.eva.compliance.sum.total.sup']}" /></td>
+				<td><p:inputText readonly="true" disabled="true"
+						value="#{evaluationBackingBean.managedBean.evaTotQualifiedSuppliers}"></p:inputText></td>
+			</tr>
+
+		</table>
+	</p:panel>
+
+
+
+	<p:panel header="#{lbl['lbl.sc.eva.compliance.sum.dis.qul.sup']}"
+		toggleable="true">
+
+		<p:dataTable var="disQualifiedSupplier"
+			value="#{evaluationBackingBean.managedBean.evaluationSummaryDisQualSuppliers}"
+			id="oneTierDisQualifiedSupplier" editable="true" rowIndexVar="index"
+			style="width: 1000px;" rowKey="#{disQualifiedSupplier}">
+			<ac:paginator for="oneTierDisQualifiedSupplier" />
+
+
+
+
+
+			<p:column headerText="#{lbl['lbl.sc.eva.compliance.sum.sup.code']}">
+
+				<h:outputText
+					value="#{disQualifiedSupplier.scQtProposal.supplierNo}"></h:outputText>
+
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.eva.fin.spec.tot.score']}">
+				<h:outputText
+					value="#{disQualifiedSupplier.evaluationResultDtls[0].totalScore}"></h:outputText>
+
+			</p:column>
+
+
+		</p:dataTable>
+
+
+	</p:panel>
+
+	<p:panel>
+		<table>
+
+			<tr>
+				<td><h:outputLabel
+						value="#{lbl['lbl.sc.eva.compliance.sum.total.sup']}" /></td>
+				<td><p:inputText readonly="true" disabled="true"
+						value="#{evaluationBackingBean.managedBean.evaTotDisQualifiedSuppliers}"></p:inputText></td>
+			</tr>
+
+		</table>
+	</p:panel>
+
+
+</ui:composition>

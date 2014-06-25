@@ -10,7 +10,7 @@
 
 	<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
-			<td width="20%;" style="vertical-align: baseline;"><p:tabMenu 
+			<td width="20%;" style="vertical-align: baseline;"><p:tabMenu
 					activeIndex="#{evaluationBackingBean.managedBean.evaluatioStageActiveIndex}"
 					styleClass="sidemenu" style="display : table-caption;">
 
@@ -20,7 +20,7 @@
 					<p:menuitem value="#{lbl['lbl.sc.eva.compliance.stg.fin']}"
 						action="#{evaluationBackingBean.retriveFinancialEvaluationStage}"
 						update="@form" />
-					<p:menuitem value="#{lbl['lbl.sc.eva.compliance.stg.summary']}" 
+					<p:menuitem value="#{lbl['lbl.sc.eva.compliance.stg.summary']}"
 						action="#{evaluationBackingBean.retriveSummaryEvaluationStage}"
 						update="@form" />
 
@@ -35,10 +35,19 @@
 					test="#{evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '1'}">
 
 					<ui:include src="financialEvaluation.xhtml"></ui:include>
-				</c:if> <c:if 
+				</c:if> <c:if
 					test="#{evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '2'}">
+					
+					<ui:fragment
+						rendered="#{evaluationBackingBean.managedBean.committeeType ne 'TEC'}">
+						<ui:include src="FinancialEvaluationCommitteeSummary.xhtml" />
 
-					<ui:include src="FinancialEvaluationCommitteeSummary.xhtml"></ui:include>
+					</ui:fragment>
+					<ui:fragment
+						rendered="#{evaluationBackingBean.managedBean.committeeType eq 'TEC'}">
+						<ui:include src="TECSummary.xhtml" />
+
+					</ui:fragment>
 				</c:if></td>
 		</tr>
 	</table>
@@ -55,7 +64,7 @@
 
 
 					<p:commandButton value="#{lbl['lbl.sm.next']}"
-						actionListener="#{evaluationBackingBean.setTabValue('2','4')}"
+						actionListener="#{evaluationBackingBean.setTabValue('2','3')}"
 						action="#{evaluationBackingBean.updateSmAppl}" icon="ui-icon-next"
 						iconPos="right" update=":form" />
 

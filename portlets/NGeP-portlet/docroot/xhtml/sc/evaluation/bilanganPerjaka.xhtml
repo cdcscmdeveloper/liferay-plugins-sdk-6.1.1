@@ -20,7 +20,7 @@
 
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
 				style="float:right;" icon="ui-icon-save"
-				action="#{evaluationBackingBean.saveComplianceSample}" />
+				action="#{evaluationBackingBean.saveTechNoOfEmployeeDtls}" />
 		</div>
 
 		<p:panel>
@@ -80,7 +80,7 @@
 
 			<table>
 				<c:forEach
-					items="#{evaluationBackingBean.managedBean.techGovProposalScore}"
+					items="#{evaluationBackingBean.managedBean.techNoOfEmployeeProposalScore}"
 					var="action">
 					<tr>
 						<td><h:outputText value="#{lbl['lbl.sc.eva.tot.employees']}" /></td>

@@ -10,7 +10,7 @@
 	<ui:define name="contentSection">
 
 		<p:commandButton value="#{lbl['lbl.sc.eva.btn.generate']}"
-			style="float:right;" icon="ui-icon-evaluate" />
+			style="float:right;" icon="ui-icon-evaluate" action="#{evaluationBackingBean.generateEvaluationStage}"/>
 		<p:commandButton value="#{lbl['lbl.sc.eva.btn.submit']}"
 			style="float:right;" icon="ui-icon-submit" />
      <p:spacer height="25"></p:spacer>
@@ -34,6 +34,12 @@
 		<c:if test="#{evaluationBackingBean.managedBean.tabActiveIndex eq 2}">
 
 			<ui:include src="evaluationStage.xhtml" />
+		</c:if>
+		
+		
+		<c:if test="#{evaluationBackingBean.managedBean.tabActiveIndex eq 3}">
+
+			<ui:include src="presentationDemoStage.xhtml" />
 		</c:if>
 
 

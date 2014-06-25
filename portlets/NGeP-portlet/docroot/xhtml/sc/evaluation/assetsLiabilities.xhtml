@@ -20,7 +20,7 @@
 
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
 				style="float:right;" icon="ui-icon-save"
-				action="#{evaluationBackingBean.saveComplianceSample}" />
+				action="#{evaluationBackingBean.saveFinAssetLiabilityDtls}" />
 		</div>
 
 		<p:panel>
@@ -88,9 +88,9 @@
 
 		<h:panelGrid columns="2">
 			<h:outputLabel value="#{lbl['lbl.sc.spec.asset.tot.current.assets']}"></h:outputLabel>
-			<p:inputText></p:inputText>
+			<p:inputText readonly="true" disabled="true"></p:inputText>
 			<h:outputLabel value="#{lbl['lbl.sc.spec.asst.tot.fix.assets']}"></h:outputLabel>
-			<p:inputText></p:inputText>
+			<p:inputText readonly="true" disabled="true"></p:inputText>
 		</h:panelGrid>
 
 
@@ -123,9 +123,9 @@
 
 		<h:panelGrid columns="2">
 			<h:outputLabel value="#{lbl['lbl.sc.spec.liabilitie.tot.cur']}"></h:outputLabel>
-			<p:inputText></p:inputText>
+			<p:inputText readonly="true" disabled="true"></p:inputText>
 			<h:outputLabel value="#{lbl['lbl.sc.spec.liabilitie.tot.fix']}"></h:outputLabel>
-			<p:inputText></p:inputText>
+			<p:inputText readonly="true" disabled="true"></p:inputText>
 		</h:panelGrid>
 
 
@@ -180,7 +180,7 @@
 			</p:panelGrid>
 			<table>
 			<c:forEach
-					items="#{evaluationBackingBean.managedBean.techGovProposalScore}"
+					items="#{evaluationBackingBean.managedBean.finAssetLiabilityProposalScore}"
 					var="action">
 				<tr>
 					<td><h:outputText value="#{lbl['lbl.sc.eva.auto.score']}"
