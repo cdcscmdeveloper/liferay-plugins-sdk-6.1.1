@@ -53,7 +53,7 @@
 								</c:if>
 
 								<!-- TODO later on should check base on the work flow status instead of check the Pr Inquiry -->
-								<p:commandButton value="#{action}" process="@all" partialSubmit="true"
+								<p:commandButton value="#{action}" process="@form" partialSubmit="true"
 									rendered="#{!unspscCodeBackingBean.isRequisitioner()}"
 									styleClass="ui-button" icon="#{iconVar}"
 									actionListener="#{requestNoteBackingBean.approverAction(action)}" />

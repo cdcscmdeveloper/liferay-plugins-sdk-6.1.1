@@ -17,7 +17,7 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 			 style="float:left;" action="#{purchaseInDefaultBackingBean.backToPervious}" />
 					 
 		  <p:commandButton value="#{lbl['lbl.sc.common.submit']}" action="#{purchaseInDefaultBackingBean.submitPurchaseInDefault()}"
-			 icon="ui-icon-submit" update="mailPanel" rendered="#{purchaseInDefaultBackingBean.managedBean.pidBtnFlag}"/>
+			 icon="ui-icon-submit" update="mailPanel" process="@all" rendered="#{purchaseInDefaultBackingBean.managedBean.pidBtnFlag}"/>
 	    </c:if>
 	    
 	     <table>
