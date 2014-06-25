@@ -468,6 +468,13 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		if(getManagedBean().getCircularVer().getCtCircularContracts().size()==0) {
 			throw new EpException(MessageConst.ERROR_100023, new String[]{"Contract List"});
 		}
+		else {
+			for (CtCircularContract circularContract: getManagedBean().getCircularVer().getCtCircularContracts()) {
+				if(circularContract.getCtCircularItems().size() == 0) {
+					throw new EpException(MessageConst.ERROR_100023, new String[]{"Contract Item List"});
+				}
+			}
+		}
 
 		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
 			if(getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
