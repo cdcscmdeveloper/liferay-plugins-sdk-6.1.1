@@ -85,8 +85,7 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	public Map<Long, List<FlFulfilmentItemAddr>> processChargeLineItems(){
 		Map<Long, List<FlFulfilmentItemAddr>> chargeLineItemsMap=new HashMap<Long, List<FlFulfilmentItemAddr>>();
 			if(null !=this.getFulfilmentRequest().getFlDeliveryAddresses()){
-				for(FlDeliveryAddress  deliveryAddress :this.getFulfilmentRequest().getFlDeliveryAddresses()){
-					//getManagedBean().getInvoice().getFlFulfilmentOrder().getFlFulfilmentRequest().getFlDeliveryAddresses();
+				for(FlDeliveryAddress  deliveryAddress :this.getInvoice().getFlFulfilmentOrder().getFlFulfilmentRequest().getFlDeliveryAddresses()){	
 					if(null!=deliveryAddress.getFlFulfilmentItemAddr()){
 						for(FlFulfilmentItemAddr itemAddress:deliveryAddress.getFlFulfilmentItemAddr()){
 							itemAddress.setChargeOrderedAmt(itemAddress.getOrderedAmt());
@@ -98,9 +97,7 @@ public class InvoiceManagedBean extends BaseManagedBean {
 							if(null==itemAddress.getChargeInvAmt()){
 								itemAddress.setChargeInvAmt(itemAddress.getReceivedAmt());
 							}
-							
 							itemAddress.setChargeUnitPrice(itemAddress.getUnitPrice());
-							
 							if(chargeLineItemsMap.containsKey(itemAddress.getScRequestItem().getRequestNoteItemId())){
 								//code for calculating duplicate charge line order amount and quantity for same unit price 
 								//Condition for checking unit price same.
@@ -121,7 +118,6 @@ public class InvoiceManagedBean extends BaseManagedBean {
 								if(notContained){
 									chargeLineItemsMap.get(itemAddress.getScRequestItem().getRequestNoteItemId()).add(itemAddress);
 								}
-								
 							} else {
 								List<FlFulfilmentItemAddr> itemAddressList=new ArrayList<FlFulfilmentItemAddr>();
 								itemAddressList.add(itemAddress);
@@ -171,10 +167,7 @@ public class InvoiceManagedBean extends BaseManagedBean {
 				setInvAmtGrandTotal(grandTotalInvAmt);
 			}
 			//this.getInvoice().setInvoiceAmtOri(totalReceiveAmt);
-			
 		}
-	
-		
 	}
 	
 	private FlFulfilmentItemAddr getFulfilmentItemAddress(
@@ -189,7 +182,6 @@ public class InvoiceManagedBean extends BaseManagedBean {
 		itemAddress.setScRequestItem(new ScRequestItem());
 		itemAddress.setParent(true);
 		itemAddress.getScRequestItem().setRequestNoteItemId(flFulfilmentItemAddr.getScRequestItem().getRequestNoteItemId());
-		
 		itemAddress.getScRequestItem().setItemType(flFulfilmentItemAddr.getScRequestItem().getItemType());
 		itemAddress.getScRequestItem().setItemName(flFulfilmentItemAddr.getScRequestItem().getItemName());
 		itemAddress.setUnitPrice(flFulfilmentItemAddr.getUnitPrice());
