@@ -39,7 +39,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQtScoreSetting;
 import my.ep.persistence.entity.sc.quationtender.ScQtScoreWeightage;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScRemark;
-import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.web.backingbean.sc.specification.BankingBean;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
@@ -327,6 +326,8 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private TreeNode selectedTreeNode;
 	private String taskName;
 	private CtCircularSearchBean ctSearchBean = new CtCircularSearchBean();
+	private List<SelectItem> evaluationTypeItem;
+	private TreeNode supplierSelectedTreeNode;
 
 	public SpecificationManagedBean() {
 		// deliveryLocBean.add(new BriefingZoneBean(1,"South",
@@ -3689,6 +3690,34 @@ public class SpecificationManagedBean extends BaseManagedBean {
 
 	public void setCtSearchBean(CtCircularSearchBean ctSearchBean) {
 		this.ctSearchBean = ctSearchBean;
+	}
+
+	/**
+	 * @return the evaluationTypeItem
+	 */
+	public List<SelectItem> getEvaluationTypeItem() {
+		return evaluationTypeItem;
+	}
+
+	/**
+	 * @param evaluationTypeItem the evaluationTypeItem to set
+	 */
+	public void setEvaluationTypeItem(List<SelectItem> evaluationTypeItem) {
+		this.evaluationTypeItem = evaluationTypeItem;
+	}
+
+	/**
+	 * @return the supplierSelectedTreeNode
+	 */
+	public TreeNode getSupplierSelectedTreeNode() {
+		return supplierSelectedTreeNode;
+	}
+
+	/**
+	 * @param supplierSelectedTreeNode the supplierSelectedTreeNode to set
+	 */
+	public void setSupplierSelectedTreeNode(TreeNode supplierSelectedTreeNode) {
+		this.supplierSelectedTreeNode = supplierSelectedTreeNode;
 	}
 
 }
