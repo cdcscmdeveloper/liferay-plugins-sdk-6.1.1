@@ -50,7 +50,6 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
-import org.primefaces.event.TabChangeEvent;
 import org.primefaces.model.TreeNode;
 
 import com.liferay.portal.util.PortalUtil;
@@ -148,7 +147,6 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 					   if(null==subData.getChargeRecalledQty()){
 						   //recallQty=recallQty.add(new BigDecimal(0));
 						   subData.setChargeRecalledQty(new BigDecimal(0));
-						   
 					   }
 					   recallQty=recallQty.add(subData.getChargeRecalledQty());
 					   orderAmount=orderAmount.add(subData.getChargeOrderedAmt());
@@ -156,7 +154,6 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 					   if(null==subData.getChargeRecalledAmt()){
 						   //recallQty=recallQty.add(new BigDecimal(0));
 						   subData.setChargeRecalledAmt(new BigDecimal(0));
-						   
 					   }
 					   recallAmount=recallAmount.add(subData.getChargeRecalledAmt());
 					   invoiceAmount=invoiceAmount.add(subData.getChargeInvAmt());
