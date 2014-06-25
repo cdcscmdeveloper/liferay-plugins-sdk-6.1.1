@@ -21,7 +21,7 @@
 				<f:facet name="header">
 					#{lbl['lbl.cm.price']}
 				</f:facet>
-				<p:inputText value="#{price.price}" size="10">
+				<p:inputText value="#{price.price}" size="10" disabled="#{price.standardDisabled}">
 					<p:ajax event="keyup" update="pTErrorLink" />
 					<p:ajax event="change"
 						listener="#{catalogueBackingBean.validatePromotionTierDates(rowIndex)}"

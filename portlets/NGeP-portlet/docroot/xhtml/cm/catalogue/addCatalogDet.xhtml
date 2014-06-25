@@ -39,7 +39,7 @@
 		closable="true" showSummary="true"></p:messages>
 	<p:outputPanel id="addCatDet">
 
-		<div style="text-align: right;">
+		<div style="text-align: right; min-height: 40px;">
 
 			<h:panelGroup
 				rendered="#{unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.supplierAdmin or unspscCodeBackingBean.allSupplier}">
@@ -57,11 +57,11 @@
 					icon="ui-icon-cancel"
 					action="#{catalogueBackingBean.cancelToMaintenanceFile()}"></p:commandButton>
 
-				<p:commandButton value="#{lbl['lbl.cm.back']}" icon="ui-icon-back" rendered="#{!catalogueBackingBean.managedBean.displayCatalogue}"
-					action="#{catalogueBackingBean.cancelToSupplierItemSearch()}"
-					immediate="true"></p:commandButton>
-
-
+				<div style="float: left; clear: both;">
+					<p:commandButton value="#{lbl['lbl.cm.back']}" icon="ui-icon-back" rendered="#{!catalogueBackingBean.managedBean.displayCatalogue}"
+						action="#{catalogueBackingBean.cancelToSupplierItemSearch()}">
+					</p:commandButton>
+				</div>
 			</h:panelGroup>
 
 
@@ -113,7 +113,7 @@
 								rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) == 0 }">
 
 								<img src="/NGeP-portlet/images/noImage.jpg"
-									style="height: 150px; left: 0px !important;" />
+									style="height: 100%; left: 0px !important;" />
 
 							</h:panelGroup>
 

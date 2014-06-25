@@ -710,10 +710,20 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
 
 		this.getManagedBean().setDisplayCatalogue(false);
+		
 		System.out.println("*****************end********************");
 
 		this.getManagedBean().setSelectedMaintainItem(
 				resDTO.getSupplierItemList().get(0));
+		
+		//allow view only
+		for(CmTierPricing a : this.getManagedBean().getSelectedMaintainItem().getCmTierPricings()){
+			a.setStandardDisabled(true);
+			a.setDisplayAction(false);
+		}
+		for(CmPromotionTierPricing a : this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings()){
+			a.setStandardDisabled(true);
+		}
 
 		return "addCatalogView?faces-redirect=true";
 	}
