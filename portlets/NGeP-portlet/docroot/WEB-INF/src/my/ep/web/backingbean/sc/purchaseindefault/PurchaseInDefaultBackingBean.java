@@ -259,7 +259,6 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
    public void approverAction(String outcome) {
 	   IPurchaseInDefaultSO purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
 	   try {
-		  
 		   PurchaseInDefaultReqDTO reqDTO = new PurchaseInDefaultReqDTO();
 		   ScPurchaseInDefault scPurchaseInDefault = getManagedBean().getPurchaseInDefault();
 		   // remarks
@@ -355,13 +354,6 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
    public void  getCurrentStatus(Long statusId) {
 	   if (statusId != null) {
 		   getManagedBean().setPidStatus(getStatusDescById(statusId));
-		   if(getStatusDescById(statusId).equalsIgnoreCase(ParameterConst.PID_PENDING_SUBMISSION)){
-			   //getManagedBean().setRequisitionerFlag(true);
-			   getManagedBean().setApproverFlag(false);
-		   } else	 if(getStatusDescById(statusId).equalsIgnoreCase(ParameterConst.PID_PENDING_VERIFICATION)){
-			   //getManagedBean().setRequisitionerFlag(true);
-			   getManagedBean().setApproverFlag(true);
-		   }
 	   }
    }   
    /**

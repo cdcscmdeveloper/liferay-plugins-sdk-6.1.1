@@ -1295,7 +1295,6 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 				purchaseInDefaultBackingBean.getManagedBean().setAttachments(attachments);
 				
 				// disable all for pid view
-				purchaseInDefaultBackingBean.getManagedBean().setApproverFlag(Boolean.TRUE);
 				purchaseInDefaultBackingBean.getManagedBean().setPidBtnFlag(Boolean.FALSE);
 				
 				// TODO current page url for page navigation from pid to request note

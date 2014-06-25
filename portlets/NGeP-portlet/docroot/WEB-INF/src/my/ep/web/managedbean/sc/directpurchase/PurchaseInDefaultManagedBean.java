@@ -50,8 +50,6 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean{
 	private List<ScPurchaseInDefaultAttachment> attachments;
 	private String processName;
 	private String pidStatus;
-	private boolean requisitionerFlag;
-	private boolean approverFlag;
 	private String pageNavToRequestNote;
 	
 	private List<PmOrgProfile> ptjDropdown;
@@ -239,35 +237,7 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean{
 	public void setPidStatus(String pidStatus) {
 		this.pidStatus = pidStatus;
 	}
-
-	/**
-	 * @return the requisitionerFlag
-	 */
-	public boolean isRequisitionerFlag() {
-		return requisitionerFlag;
-	}
-
-	/**
-	 * @param requisitionerFlag the requisitionerFlag to set
-	 */
-	public void setRequisitionerFlag(boolean requisitionerFlag) {
-		this.requisitionerFlag = requisitionerFlag;
-	}
-
-	/**
-	 * @return the approverFlag
-	 */
-	public boolean isApproverFlag() {
-		return approverFlag;
-	}
-
-	/**
-	 * @param approverFlag the approverFlag to set
-	 */
-	public void setApproverFlag(boolean approverFlag) {
-		this.approverFlag = approverFlag;
-	}
-
+	
 	/**
 	 * @return the ptjDropdown
 	 */

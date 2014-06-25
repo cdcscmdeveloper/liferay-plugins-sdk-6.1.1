@@ -140,7 +140,8 @@
 				<p:inputText value="#{itemPrice.unitPrice}" style="text-align:right;" 
 				     size="30"  required="true" maxlength="19"
 				     id="unitPrice" label="#{lbl['lbl.sc.purchase.in.default.unit.price']}"
-				     disabled="#{purchaseInDefaultBackingBean.managedBean.approverFlag}">
+				     disabled="#{purchaseInDefaultBackingBean.managedBean.pidStatus eq 'Pending Verification' or 
+                       purchaseInDefaultBackingBean.managedBean.pidStatus eq 'Pending Approval'}"> 
 				      <f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}"/>
 				   </p:inputText>
@@ -166,7 +167,8 @@
 							<tr>
 								<td><p:selectOneMenu id="justId"
 										label="#{lbl['lbl.sc.purchase.in.default.just']}"
-										disabled="#{purchaseInDefaultBackingBean.managedBean.approverFlag}"
+										disabled="#{purchaseInDefaultBackingBean.managedBean.pidStatus eq 'Pending Verification' or 
+                                                purchaseInDefaultBackingBean.managedBean.pidStatus eq 'Pending Approval'}"
 										required="true"
 										value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.reasonType}"
 										style="margin-bottom: 5px;">
@@ -199,7 +201,8 @@
 			       label="#{lbl['lbl.sc.purchase.in.default.order.qty']}" 
 			       value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.quantity}" 
 			       styleClass="ppRightBtn" size="42"  
-			       disabled="#{purchaseInDefaultBackingBean.managedBean.approverFlag}">
+			       disabled="#{purchaseInDefaultBackingBean.managedBean.pidStatus eq 'Pending Verification' or 
+                       purchaseInDefaultBackingBean.managedBean.pidStatus eq 'Pending Approval'}">
 				 </p:inputText> <p:message id="ordqtyMsg" for="ordqty" display="icon" /></td>
 			</tr>
 		</table>
@@ -246,7 +249,8 @@
 			     <p:outputLabel value="#{lbl['lbl.sc.purchase.in.default.attachment']}"/><p:outputLabel value="*" styleClass="mandatory" /></td>
 			<td class="TableFieldRight">
 			     <p:commandButton  oncomplete="uploadDlg.show();return false;" icon="iconAttachment"  update="attachmentId"
-				 disabled="#{purchaseInDefaultBackingBean.managedBean.approverFlag}" value="Attach file(s)" />
+				   disabled="#{purchaseInDefaultBackingBean.managedBean.pidStatus eq 'Pending Verification' or 
+                       purchaseInDefaultBackingBean.managedBean.pidStatus eq 'Pending Approval'}" value="Attach file(s)" />
 		  </td>
 		</tr>
 		 <tr><td/>
@@ -265,7 +269,9 @@
 				 </tr>
 				 <tr>
 					<td><h:commandLink value="#{attachFile.fileName}" styleClass="blue_font"  action="#{purchaseInDefaultBackingBean.downloadFile(attachFile.filePath)}"/>
-						<p:commandLink action="#{purchaseInDefaultBackingBean.deleteUploadFile}" immediate="true"  update="attachId"  disabled="#{purchaseInDefaultBackingBean.managedBean.approverFlag}">
+						<p:commandLink action="#{purchaseInDefaultBackingBean.deleteUploadFile}" immediate="true"  update="attachId"  
+						disabled="#{purchaseInDefaultBackingBean.managedBean.pidStatus eq 'Pending Verification' or 
+                            purchaseInDefaultBackingBean.managedBean.pidStatus eq 'Pending Approval'}">
 			   			<h:graphicImage library="ep/images/design" name="trash.png" styleClass="tasklist_title1"/>
 			 	 		</p:commandLink>
 			 	  </td>
@@ -291,7 +297,8 @@
 				<td style="width: 250px;">
 				      <p:pickList id="approver"
 						label="#{lbl['lbl.sc.approve.list']}"
-						disabled="#{purchaseInDefaultBackingBean.managedBean.approverFlag}"
+						disabled="#{purchaseInDefaultBackingBean.managedBean.pidStatus eq 'Pending Verification' or 
+                         purchaseInDefaultBackingBean.managedBean.pidStatus eq 'Pending Approval'}"
 						value="#{purchaseInDefaultBackingBean.managedBean.approvalUsers}"
 						var="approverUser" showTargetControls="true" required="true"
 						itemLabel="#{approverUser.userName}" itemValue="#{approverUser}"
