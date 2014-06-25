@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
@@ -35,12 +36,16 @@ public class PublicCatalogueManagedBean extends BaseManagedBean {
 	private String itemName;
 	private List <CmUnspsc> familyList;
 	private List <CmSupplierItem> catalogueList;
-	private List <CmUnspsc> popularFamilyList;
+	private List <CmUnspsc> popularCommodityList;
 	private boolean frontPage = true;
 	private BigDecimal priceForm;
 	private BigDecimal priceTo;
 	private String familyCode;
 	private List<String> familyCodeList;
+	private List<SelectItem> brandCriteria;
+	private Long brandId;
+	private boolean keyWord = true;
+	private String unspscTitle;
 	
 	
 
@@ -188,16 +193,6 @@ public class PublicCatalogueManagedBean extends BaseManagedBean {
 	}
 
 
-	public List<CmUnspsc> getPopularFamilyList() {
-		if(popularFamilyList==null)
-			popularFamilyList = new ArrayList<CmUnspsc>();
-		return popularFamilyList;
-	}
-
-
-	public void setPopularFamilyList(List<CmUnspsc> popularFamilyList) {
-		this.popularFamilyList = popularFamilyList;
-	}
 
 
 	public boolean isFrontPage() {
@@ -251,9 +246,65 @@ public class PublicCatalogueManagedBean extends BaseManagedBean {
 	public void setFamilyCodeList(List<String> familyCodeList) {
 		this.familyCodeList = familyCodeList;
 	}
-	
-	
 
+
+	public List<CmUnspsc> getPopularCommodityList() {
+		if(popularCommodityList==null)
+			popularCommodityList = new ArrayList<CmUnspsc>();
+		return popularCommodityList;
+	}
+
+
+	public void setPopularCommodityList(List<CmUnspsc> popularCommodityList) {
+		this.popularCommodityList = popularCommodityList;
+	}
+
+
+	public List<SelectItem> getBrandCriteria() {
+		if (brandCriteria == null)
+			brandCriteria = new ArrayList<SelectItem>();
+		return brandCriteria;
+	}
+
+
+	public void setBrandCriteria(List<SelectItem> brandCriteria) {
+		this.brandCriteria = brandCriteria;
+	}
+
+
+	public Long getBrandId() {
+		return brandId;
+	}
+
+
+	public void setBrandId(Long brandId) {
+		this.brandId = brandId;
+	}
+
+
+	public boolean isKeyWord() {
+		return keyWord;
+	}
+
+
+	public void setKeyWord(boolean keyWord) {
+		this.keyWord = keyWord;
+	}
+
+
+	public String getUnspscTitle() {
+		return unspscTitle;
+	}
+
+
+	public void setUnspscTitle(String unspscTitle) {
+		this.unspscTitle = unspscTitle;
+	}
+
+	
+	
+	
+	
 	
 	
 

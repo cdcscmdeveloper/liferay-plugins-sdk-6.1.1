@@ -30,24 +30,27 @@
 					</tr>
 				</table>
 
+
+				<div style="border: 2px solid #CFD62A; margin-top: 5px;"></div>
+
 				<h:panelGroup id="frontPageId"
 					rendered="#{pCatalogueBackingBean.managedBean.frontPage}">
 
-					<p:panel header="Popular UNSPSC Categories in Family level"
+					<p:panel header="Popular UNSPSC Categories in Commodity level"
 						style="margin-top:10px;" toggleable="true">
 
 
 
 
 						<p:dataGrid columns="4" rows="4" styleClass="publicCatGridCol"
-							value="#{pCatalogueBackingBean.managedBean.popularFamilyList}"
+							value="#{pCatalogueBackingBean.managedBean.popularCommodityList}"
 							var="popular">
 							<table>
 								<tr>
 									<td>#{popular.unspscTitle}</td>
 								</tr>
 								<tr>
-									<td><p:commandLink value="More...."
+									<td><p:commandLink value=">> Details"
 											action="#{pCatalogueBackingBean.searchCatalogueByFamilyLevel(popular)}"
 											update=":form"></p:commandLink></td>
 								</tr>
@@ -67,9 +70,10 @@
 						<tr style="vertical-align: top;">
 							<td width="30%">
 
-								<table style="width: 100%;">
+								<table style="width: 90%;">
 									<tr>
-										<td><p:outputLabel value="Categories"
+										<td style="border-bottom: 1px solid #CFD62A;"><p:outputLabel
+												value="Categories"
 												style="font-weight:bold;padding-bottom: 10px;float:left;" /></td>
 									</tr>
 									<tr style="padding-top: 10px;">
@@ -84,26 +88,68 @@
 												</table>
 											</ui:repeat></td>
 									</tr>
-									<tr>
-										<td><p:outputLabel value="Price Range"
-												style="font-weight:bold;padding-bottom: 10px;float:left;" /></td>
+									<tr height="50px;">
+										<td><h:panelGroup style="width:100%;"
+												rendered="#{!(fn:length(pCatalogueBackingBean.managedBean.familyList) > 1) }">
+
+												<table style="width: 100%;">
+													<tr height="50px;">
+														<td style="border-bottom: 1px solid #CFD62A;"><p:outputLabel
+																style="font-weight:bold;float:left;"
+																value="#{lbl['lbl.cm.brand']}"></p:outputLabel></td>
+													</tr>
+
+													<tr height="50px;">
+														<td><p:selectOneMenu
+																value="#{pCatalogueBackingBean.managedBean.brandId}"
+																style="width:278px;">
+																<f:selectItem itemLabel="Select One" itemValue="0" />
+																<f:selectItems
+																	value="#{pCatalogueBackingBean.managedBean.brandCriteria}" />
+															</p:selectOneMenu></td>
+													</tr>
+
+												</table>
+
+											</h:panelGroup></td>
 									</tr>
-									<tr>
+
+
+									<tr height="50px;">
+										<td style="border-bottom: 1px solid #CFD62A;"><p:outputLabel
+												value="Price Range" style="font-weight:bold;float:left;" /></td>
+									</tr>
+									<tr height="50px;">
 										<td>RM <p:inputText
 												value="#{pCatalogueBackingBean.managedBean.priceForm}"
 												size="15" /> - RM <p:inputText
 												value="#{pCatalogueBackingBean.managedBean.priceTo}"
-												size="15" /> <p:commandButton value="Go"
-												action="#{pCatalogueBackingBean.searchCatalogueByPrice()}"
-												update=":form" />
+												size="15" />
 										</td>
+									</tr>
+									<tr>
+										<td><p:commandButton value="Go"
+												action="#{pCatalogueBackingBean.searchCatalogueByPrice()}"
+												update=":form" /></td>
 									</tr>
 
 								</table>
 
 
 							</td>
-							<td width="70%"><p:dataGrid columns="3" rows="9"
+							<td width="70%"><p:outputLabel
+									rendered="#{pCatalogueBackingBean.managedBean.keyWord}"
+									style="font-weight:bold;float:left;"
+									value="#{fn:length(pCatalogueBackingBean.managedBean.catalogueList)} items found for #{pCatalogueBackingBean.managedBean.itemName}"></p:outputLabel>
+
+								<p:outputLabel
+									rendered="#{!pCatalogueBackingBean.managedBean.keyWord}"
+									style="font-weight:bold;float:left;"
+									value="#{fn:length(pCatalogueBackingBean.managedBean.catalogueList)} items found for #{pCatalogueBackingBean.managedBean.unspscTitle}"></p:outputLabel>
+
+
+
+								<p:dataGrid columns="3" rows="9"
 									value="#{pCatalogueBackingBean.managedBean.catalogueList}"
 									id="catalogueGridViewID" var="supplierItem">
 									<ac:paginator for="catalogueGridViewID"></ac:paginator>

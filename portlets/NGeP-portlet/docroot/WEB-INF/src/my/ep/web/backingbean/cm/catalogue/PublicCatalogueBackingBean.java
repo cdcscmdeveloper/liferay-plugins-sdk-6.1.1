@@ -7,6 +7,7 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
 
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.cm.codification.ICodificationSO;
@@ -14,6 +15,7 @@ import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
 import my.ep.dto.cm.codification.CodificationReqDTO;
 import my.ep.dto.cm.codification.CodificationResDTO;
+import my.ep.persistence.entity.cm.catalog.CmBrand;
 import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
@@ -59,7 +61,7 @@ public class PublicCatalogueBackingBean extends BaseBackingBean<PublicCatalogueM
 		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 		CodificationReqDTO codeReqDTO = new CodificationReqDTO();
 
-		this.getManagedBean().setPopularFamilyList(null);
+		this.getManagedBean().setPopularCommodityList(null);
 		CatalogueResDTO resDTO = catalogueSO.findPopularFamily(reqDTO);
 
 
@@ -68,14 +70,14 @@ public class PublicCatalogueBackingBean extends BaseBackingBean<PublicCatalogueM
 
 				Object[] obj = (Object[]) resDTO.getList().get(i);
 
-				String familyCode = (String)obj[0] + "0000";
+				String commodityCode = (String)obj[0];
 
-				System.out.println("*********familyCode**********"+familyCode);
-				codeReqDTO.setUnspscCode(familyCode);
+				System.out.println("*********commodityCode**********"+commodityCode);
+				codeReqDTO.setUnspscCode(commodityCode);
 
 				CodificationResDTO codeResDTO =  codeSO.searchUnspscObj(codeReqDTO);
 
-				this.getManagedBean().getPopularFamilyList().add(codeResDTO.getUnspscObj());
+				this.getManagedBean().getPopularCommodityList().add(codeResDTO.getUnspscObj());
 			}
 		}
 
@@ -94,6 +96,7 @@ public class PublicCatalogueBackingBean extends BaseBackingBean<PublicCatalogueM
 		this.getManagedBean().setFamilyList(null);
 		this.getManagedBean().setFrontPage(false);
 		this.getManagedBean().setFamilyCodeList(null);
+		this.getManagedBean().setKeyWord(true);
 		try {
 
 
@@ -107,18 +110,14 @@ public class PublicCatalogueBackingBean extends BaseBackingBean<PublicCatalogueM
 			for(CmSupplierItem cat: resDTO.getPublicCatalogueResultBean().getResultList()){
 
 
-				classCode = UnspscCodeBackingBean.getParentCode(new Long(cat.getCmItem().getCmUnspsc().getUnspscCode()));
 
-
-
-				familyCode = UnspscCodeBackingBean.getParentCode(new Long(classCode));
 
 				if(itemNames!=null && itemNames.size()>0){
-					if(!itemNames.contains(familyCode)){
-						itemNames.add(familyCode);
+					if(!itemNames.contains(cat.getCmItem().getCmUnspsc().getUnspscCode())){
+						itemNames.add(cat.getCmItem().getCmUnspsc().getUnspscCode());
 					}
 				}else{
-					itemNames.add(familyCode);
+					itemNames.add(cat.getCmItem().getCmUnspsc().getUnspscCode());
 				}
 
 			}
@@ -134,13 +133,13 @@ public class PublicCatalogueBackingBean extends BaseBackingBean<PublicCatalogueM
 				CodificationResDTO codeResDTO = codificationSO.searchUnspscObj(codeReqDTO);
 
 				this.getManagedBean().getFamilyList().add(codeResDTO.getUnspscObj());
-				
+
 				if(code!=null && code.trim().length()>0){
-					String subString = code.substring(0, 4);
-					 this.getManagedBean().getFamilyCodeList().add(subString);
+
+					this.getManagedBean().getFamilyCodeList().add(code);
 				}
-				
-				
+
+
 
 			}
 
@@ -163,18 +162,18 @@ public class PublicCatalogueBackingBean extends BaseBackingBean<PublicCatalogueM
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "publicCatalogueView");
 	}
 
-	
-	
+
+
 	public void searchCatalogueByPrice(){
 
 		ICatalogueSO catalogueSO = (ICatalogueSO)BusinessDelegate.getInstance().getServiceObject("cm",ICatalogueSO.class);
 		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 		this.getManagedBean().setFrontPage(false);
 		this.getManagedBean().setCatalogueList(null);
-		
+
 		String subString = "";
 
-		
+
 		System.out.println("getFamilyCode:"+this.getManagedBean().getFamilyCode());
 
 		reqDTO.getSubStringFamilyCode().add(this.getManagedBean().getFamilyCode());
@@ -186,7 +185,17 @@ public class PublicCatalogueBackingBean extends BaseBackingBean<PublicCatalogueM
 		if(this.getManagedBean().getPriceTo()!=null && this.getManagedBean().getPriceTo().compareTo(new BigDecimal("0.00"))>0){
 			reqDTO.setPriceTo(this.getManagedBean().getPriceTo());
 		}
+		
+		
+		if(this.getManagedBean().getBrandId()!=null){
+			if(!this.getManagedBean().getBrandId().equals(new Long (0))){
+				System.out.println("brand selected");
+				
+				reqDTO.setBrandId(this.getManagedBean().getBrandId());
+			}
+		}
 
+		
 		CatalogueResDTO resDTO = catalogueSO.findPubCatalogueByFamilyLevel(reqDTO);
 
 		System.out.println("***********************"+resDTO.getViewPublicSuppItemResultBean().getResultList());
@@ -197,21 +206,25 @@ public class PublicCatalogueBackingBean extends BaseBackingBean<PublicCatalogueM
 		}
 
 	}
-	
 
 
-	public void searchCatalogueByFamilyLevel(CmUnspsc family){
+
+	public void searchCatalogueByFamilyLevel(CmUnspsc commodity){
 
 		ICatalogueSO catalogueSO = (ICatalogueSO)BusinessDelegate.getInstance().getServiceObject("cm",ICatalogueSO.class);
 		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 		this.getManagedBean().setFrontPage(false);
 		this.getManagedBean().setCatalogueList(null);
-		System.out.println("getUnspscCode******"+family.getUnspscCode());
+		System.out.println("getUnspscCode******"+commodity.getUnspscCode());
 		String subString = "";
+		
+		this.getManagedBean().setKeyWord(false);
+		this.getManagedBean().setUnspscTitle(commodity.getUnspscTitle());
+		
 
-		if(family.getUnspscCode()!=null && family.getUnspscCode().trim().length()>0){
-			 subString = family.getUnspscCode().substring(0, 4);
-			 this.getManagedBean().setFamilyCode(subString);
+		if(commodity.getUnspscCode()!=null && commodity.getUnspscCode().trim().length()>0){
+
+			this.getManagedBean().setFamilyCode(commodity.getUnspscCode());
 		}
 		System.out.println("getFamilyCode:"+this.getManagedBean().getFamilyCode());
 
@@ -224,6 +237,17 @@ public class PublicCatalogueBackingBean extends BaseBackingBean<PublicCatalogueM
 		if(this.getManagedBean().getPriceTo()!=null && this.getManagedBean().getPriceTo().compareTo(new BigDecimal("0.00"))>0){
 			reqDTO.setPriceTo(this.getManagedBean().getPriceTo());
 		}
+
+		System.out.println("getCmBrand:"+commodity.getCmBrand().size());
+
+		for (CmBrand brand : commodity.getCmBrand()) {
+			System.out.println("getBrandName:"+brand.getBrandName());
+			this.getManagedBean()
+			.getBrandCriteria()
+			.add(new SelectItem(brand.getBrandId(), brand
+					.getBrandName()));
+		}
+
 
 		CatalogueResDTO resDTO = catalogueSO.findPubCatalogueByFamilyLevel(reqDTO);
 
@@ -236,7 +260,7 @@ public class PublicCatalogueBackingBean extends BaseBackingBean<PublicCatalogueM
 
 
 		this.getManagedBean().setFamilyList(null);
-		this.getManagedBean().getFamilyList().add(family);
+		this.getManagedBean().getFamilyList().add(commodity);
 
 	}
 
