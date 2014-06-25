@@ -125,6 +125,8 @@ public class BPMTaskListBackingBean extends
 		temp.put(FLProcessNameConst.INVOICE_AND_PAYMENT_CREATION_PROCESS_NAME+FLProcessNameConst.PERFORM_PAYMNET_MATCH_HT, "payment-match");
 
 		temp.put(FLProcessNameConst.DELIVERY_ORDER_FULFILMENT_PROCESS_NAME, "fulfilment-received-note");
+		temp.put(FLProcessNameConst.FRN_CANCELLATION_PROCESS_NAME, "fulfilment-received-note");
+		temp.put(FLProcessNameConst.DELIVERY_ORDER_FL_INITIATION_PROCESS_NAME, "delivery-order");
 		temp.put(FLProcessNameConst.DAN_GENERATION_PROCESS_NAME, "debit-adjustment-note");
 		temp.put(FLProcessNameConst.STOP_FULFILMENT_REQUEST_PROCESS_NAME, "contract-order");
 

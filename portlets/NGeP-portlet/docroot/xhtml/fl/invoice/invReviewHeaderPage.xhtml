@@ -16,11 +16,11 @@
 				<td><p:outputLabel value="#{lbl['lbl.fl.rev.hed.ptj.name']} " />
 				</td>
 				<td class="header-info-text">
-					#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.flFulfilmentRequest.preparedOrgProfile.orgName}
+					#{invoiceBackingBean.managedBean.invoice.flRequest.preparedOrgProfile.orgName}
 				</td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.status']} " /></td>
 				<td class="header-info-text">
-					#{invoiceBackingBean.getStatusDescById(invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.flFulfilmentRequest.status.statusId)}
+					#{invoiceBackingBean.getStatusDescById(invoiceBackingBean.managedBean.invoice.status.statusId)}
 				</td>
 			</tr>
 		</table>

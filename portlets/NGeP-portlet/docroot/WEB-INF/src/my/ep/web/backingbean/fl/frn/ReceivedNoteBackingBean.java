@@ -20,14 +20,17 @@ import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.MessageConst;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constants.FLProcessNameConst;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.fl.frndata.FLFulFillmentRecievedNoteDataType;
+import my.ep.jaxb.fl.maintenace.cancel.dofulfillment.FLDOFulfillmentCancelReqType;
 import my.ep.persistence.entity.fl.frn.FlFulfilmentNote;
 import my.ep.persistence.entity.fl.frn.FlFulfilmentNoteItem;
 import my.ep.persistence.entity.fl.order.FlDelOrderItem;
@@ -88,7 +91,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			
 			reqDTO.setToken(token);
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
-			if("UPDATE".equalsIgnoreCase(action)){
+			if("UPDATE".equalsIgnoreCase(action) || "CANCEL".equalsIgnoreCase(action)){
 				//TODO
 				// check Actual Received Date shouldnt be empty
 				 reqDTO.setPmUser(getManagedBean().getPmUser());
@@ -148,48 +151,93 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			FulfilmentResDTO resDTO = new FulfilmentResDTO();
-			IDeliveryOrderSO deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject("fl",IDeliveryOrderSO.class);
-			FLFulFillmentRecievedNoteDataType fulFillmentRecievedNoteDataType = (FLFulFillmentRecievedNoteDataType)obj;
-			reqDTO.setDeliveryOrderId(fulFillmentRecievedNoteDataType.getDoId());
-			resDTO = deliveryOrderSO.retrieveDeliveryOrderById(reqDTO);
-			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
-			flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
-			
-			getManagedBean().setFulfilmentRequest(resDTO.getFlDeliveryOrder().getFlRequest());
-			//getManagedBean().setFulfilmentRequest(delOrderResDTO.getFlDeliveryOrder().getFlFulfilmentOrder().getFlFulfilmentRequest());
-			getManagedBean().setDeliveryOrderId(fulFillmentRecievedNoteDataType.getDoId());
-			getManagedBean().setTaskId(taskId);
-			getManagedBean().setOutComes(res.getAction());
-			System.out.println("Doc type in FRN::: "+resDTO.getFlDeliveryOrder().getFlRequest().getDocType());
-			getManagedBean().setDocType(resDTO.getFlDeliveryOrder().getFlRequest().getDocType());
-			
-			//combineSupAddress(resDTO.getFlDeliveryOrder().getFlRequest());
-			getManagedBean().getFulfilmentNote().setFlDeliveryOrder(resDTO.getFlDeliveryOrder());
-			List<FlFulfilmentNoteItem> noteItemList=new ArrayList<FlFulfilmentNoteItem>();
-			int i = 0;
-			for (FlDelOrderItem delOrderItem : resDTO.getFlDeliveryOrder().getFlDelOrderItem()){
-				FlFulfilmentNoteItem noteItem=new FlFulfilmentNoteItem();
-				noteItem.setFlDelOrderItem(delOrderItem);
-				noteItem.setFlFulfilmentNote(getManagedBean().getFulfilmentNote());
-				noteItem.setFlItem(delOrderItem.getFlItem());
-				if(i == 0){
-					getManagedBean().setSelectedItem(noteItem);
-				}
-				i++;
-				noteItemList.add(noteItem);
-				//getManagedBean().getFulfilmentNoteItem().setFlDelOrderItem(delOrderItem);
-				//getManagedBean().getFulfilmentNoteItem().setFlFulfilmentNote(getManagedBean().getFulfilmentNote());
-			}
-			//Add noteItemList to Managed Bean List.
-			getManagedBean().getFulfilmentNote().setFlFulfilmentNoteItem(noteItemList);
-			getManagedBean().getFulfilmentNoteItem();
-			getManagedBean().getFulfilmentNote().setFlRequest(resDTO.getFlDeliveryOrder().getFlRequest());
-			/*if(getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem() == null){
+			IDeliveryOrderSO deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IDeliveryOrderSO.class);
+			if(res.getProcessName().equalsIgnoreCase(FLProcessNameConst.FRN_CANCELLATION_PROCESS_NAME)){
+				FLDOFulfillmentCancelReqType fulfillmentCancelReqType = (FLDOFulfillmentCancelReqType)obj;
+				reqDTO.setDeliveryOrderId(fulfillmentCancelReqType.getDoId());
+				resDTO = deliveryOrderSO.retrieveDeliveryOrderById(reqDTO);
+				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+				flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
 				
-			}*/
-			//getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem().add(getManagedBean().getFulfilmentNoteItem());
-			
+				getManagedBean().setFulfilmentRequest(resDTO.getFlDeliveryOrder().getFlRequest());
+				//getManagedBean().setFulfilmentRequest(delOrderResDTO.getFlDeliveryOrder().getFlFulfilmentOrder().getFlFulfilmentRequest());
+				getManagedBean().setDeliveryOrderId(fulfillmentCancelReqType.getDoId());
+				getManagedBean().setTaskId(taskId);
+				getManagedBean().setOutComes(res.getAction());
+				System.out.println("Doc type in FRN::: "+resDTO.getFlDeliveryOrder().getFlRequest().getDocType());
+				getManagedBean().setDocType(resDTO.getFlDeliveryOrder().getFlRequest().getDocType());
+				
+				//combineSupAddress(resDTO.getFlDeliveryOrder().getFlRequest());
+				getManagedBean().getFulfilmentNote().setFlDeliveryOrder(resDTO.getFlDeliveryOrder());
+				List<FlFulfilmentNoteItem> noteItemList=new ArrayList<FlFulfilmentNoteItem>();
+				int i = 0;
+				for (FlDelOrderItem delOrderItem : resDTO.getFlDeliveryOrder().getFlDelOrderItem()){
+					FlFulfilmentNoteItem noteItem=new FlFulfilmentNoteItem();
+					noteItem.setFlDelOrderItem(delOrderItem);
+					noteItem.setFlFulfilmentNote(getManagedBean().getFulfilmentNote());
+					noteItem.setFlItem(delOrderItem.getFlItem());
+					if(i == 0){
+						getManagedBean().setSelectedItem(noteItem);
+					}
+					i++;
+					noteItemList.add(noteItem);
+					//getManagedBean().getFulfilmentNoteItem().setFlDelOrderItem(delOrderItem);
+					//getManagedBean().getFulfilmentNoteItem().setFlFulfilmentNote(getManagedBean().getFulfilmentNote());
+				}
+				//Add noteItemList to Managed Bean List.
+				getManagedBean().getFulfilmentNote().setFlFulfilmentNoteItem(noteItemList);
+				getManagedBean().getFulfilmentNoteItem();
+				getManagedBean().getFulfilmentNote().setFlRequest(resDTO.getFlDeliveryOrder().getFlRequest());
+				/*if(getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem() == null){
+					
+				}*/
+				//getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem().add(getManagedBean().getFulfilmentNoteItem());
+				
 
+			}else{
+				FLFulFillmentRecievedNoteDataType fulFillmentRecievedNoteDataType = (FLFulFillmentRecievedNoteDataType)obj;
+				reqDTO.setDeliveryOrderId(fulFillmentRecievedNoteDataType.getDoId());
+				resDTO = deliveryOrderSO.retrieveDeliveryOrderById(reqDTO);
+				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+				flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
+				
+				getManagedBean().setFulfilmentRequest(resDTO.getFlDeliveryOrder().getFlRequest());
+				//getManagedBean().setFulfilmentRequest(delOrderResDTO.getFlDeliveryOrder().getFlFulfilmentOrder().getFlFulfilmentRequest());
+				getManagedBean().setDeliveryOrderId(fulFillmentRecievedNoteDataType.getDoId());
+				getManagedBean().setTaskId(taskId);
+				getManagedBean().setOutComes(res.getAction());
+				System.out.println("Doc type in FRN::: "+resDTO.getFlDeliveryOrder().getFlRequest().getDocType());
+				getManagedBean().setDocType(resDTO.getFlDeliveryOrder().getFlRequest().getDocType());
+				
+				//combineSupAddress(resDTO.getFlDeliveryOrder().getFlRequest());
+				getManagedBean().getFulfilmentNote().setFlDeliveryOrder(resDTO.getFlDeliveryOrder());
+				List<FlFulfilmentNoteItem> noteItemList=new ArrayList<FlFulfilmentNoteItem>();
+				int i = 0;
+				for (FlDelOrderItem delOrderItem : resDTO.getFlDeliveryOrder().getFlDelOrderItem()){
+					FlFulfilmentNoteItem noteItem=new FlFulfilmentNoteItem();
+					noteItem.setFlDelOrderItem(delOrderItem);
+					noteItem.setFlFulfilmentNote(getManagedBean().getFulfilmentNote());
+					noteItem.setFlItem(delOrderItem.getFlItem());
+					if(i == 0){
+						getManagedBean().setSelectedItem(noteItem);
+					}
+					i++;
+					noteItemList.add(noteItem);
+					//getManagedBean().getFulfilmentNoteItem().setFlDelOrderItem(delOrderItem);
+					//getManagedBean().getFulfilmentNoteItem().setFlFulfilmentNote(getManagedBean().getFulfilmentNote());
+				}
+				//Add noteItemList to Managed Bean List.
+				getManagedBean().getFulfilmentNote().setFlFulfilmentNoteItem(noteItemList);
+				getManagedBean().getFulfilmentNoteItem();
+				getManagedBean().getFulfilmentNote().setFlRequest(resDTO.getFlDeliveryOrder().getFlRequest());
+				/*if(getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem() == null){
+					
+				}*/
+				//getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem().add(getManagedBean().getFulfilmentNoteItem());
+				
+
+			}
+			
 		}
 	}
 	
