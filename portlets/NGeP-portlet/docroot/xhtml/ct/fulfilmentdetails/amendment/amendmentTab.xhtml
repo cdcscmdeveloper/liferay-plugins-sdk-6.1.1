@@ -94,84 +94,81 @@
 					               
 					    
 					           <p:menuitem value="#{lbl['lbl.ct.menu.item']}" update=":form"  action="#{amendmentBackingBean.setSelectedTabValue(2)}"
-					             rendered="#{!amendmentBackingBean.managedBean.ctContract.zonalPricing and (andamendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or 
+					             rendered="#{!amendmentBackingBean.managedBean.ctContract.zonalPricing and (amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or 
 			                     amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange)}"/>
 					          
 					           <p:menuitem value="#{lbl['lbl.ct.amend.spAprlAP201']}" update=":form" action="#{amendmentBackingBean.setSelectedTabValue(3)}"
 					              rendered="#{amendmentBackingBean.managedBean.bpkSaSkApprover and !amendmentBackingBean.managedBean.ctContract.zonalPricing
-					              and (andamendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or  amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange)}" />
+					              and (amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or  amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange)}" />
 					         
 					           <p:menuitem value="#{lbl['lbl.ct.amend.loaDtl']}" update=":form" action="#{amendmentBackingBean.setSelectedTabValue(3)}"
 					             rendered="#{amendmentBackingBean.managedBean.prepareLOA and !amendmentBackingBean.managedBean.ctContract.zonalPricing 
-					             and (andamendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or 
+					             and (amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or 
 			                     amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange)}" />
 					           
 					           <p:menuitem value="#{lbl['lbl.ct.amend.perfBond']}" update=":form"  action="#{amendmentBackingBean.setSelectedTabValue(4)}"
 					             rendered="#{amendmentBackingBean.managedBean.prepareLOA and !amendmentBackingBean.managedBean.ctContract.zonalPricing 
-					               and (andamendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or 
+					               and (amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or 
 			                       amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange)}" />
 					          
 					           <p:menuitem value="#{lbl['lbl.ct.amend.letterOfAcc']}" update=":form"  action="#{amendmentBackingBean.setSelectedTabValue(5)}"
 					              rendered="#{amendmentBackingBean.managedBean.prepareLOA and !amendmentBackingBean.managedBean.ctContract.zonalPricing 
-					             and (andamendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or 
+					             and (amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or 
 			                     amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange)}"/>
 			                     
 					           <p:menuitem value="#{lbl['lbl.ct.amend.decision']}" update=":form" action="#{amendmentBackingBean.setSelectedTabValue(6)}"
 					             rendered="#{amendmentBackingBean.managedBean.prepareLOA and amendmentBackingBean.managedBean.decisionPbQcLOA and 
-					              !amendmentBackingBean.managedBean.ctContract.zonalPricing and (andamendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or 
+					              !amendmentBackingBean.managedBean.ctContract.zonalPricing and (amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or 
 			                     amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange)}"/> 
 					          
 					           <p:menuitem value="#{lbl['lbl.ct.amend.meetingDtl']}" update=":form" action="#{amendmentBackingBean.setSelectedTabValue(3)}"
 					              rendered="#{amendmentBackingBean.managedBean.pbConfirmMeeting and 
-					              !amendmentBackingBean.managedBean.ctContract.zonalPricing and (andamendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or 
+					              !amendmentBackingBean.managedBean.ctContract.zonalPricing and (amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or 
 			                     amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange)}"/>   
 					           
 					           <p:menuitem value="#{lbl['lbl.ct.amend.decision']}" update=":form" action="#{amendmentBackingBean.setSelectedTabValue(4)}"
 					             rendered="#{amendmentBackingBean.managedBean.signUpdateDecision and 
-					              !amendmentBackingBean.managedBean.ctContract.zonalPricing and (andamendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or 
+					              !amendmentBackingBean.managedBean.ctContract.zonalPricing and (amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or 
 			                     amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange)}"/>  
 					          
 					           <p:menuitem value="#{lbl['lbl.ct.amend.decision']}" update=":form" action="#{amendmentBackingBean.setSelectedTabValue(5)}"
 					             rendered="#{amendmentBackingBean.managedBean.signOffDecision and 
-					              !amendmentBackingBean.managedBean.ctContract.zonalPricing and (andamendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or 
+					              !amendmentBackingBean.managedBean.ctContract.zonalPricing and (amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or 
 			                     amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange)}"/>   
 					   
 			                  <p:menuitem value="#{lbl['lbl.ct.amend.spAprlAP201']}" update=":form" action="#{amendmentBackingBean.setSelectedTabValue(2)}" 
-					            rendered="#{amendmentBackingBean.managedBean.bpkSaSkApprover and !amendmentBackingBean.managedBean.ctContract.zonalPricing and (!andamendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or 
-			                  !amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange)}"/>
+					            rendered="#{amendmentBackingBean.managedBean.bpkSaSkApprover and !(amendmentBackingBean.managedBean.ctContract.zonalPricing and (amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or 
+			                     amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange))}"/>
 					         
 					           <p:menuitem value="#{lbl['lbl.ct.amend.loaDtl']}" update=":form" action="#{amendmentBackingBean.setSelectedTabValue(2)}"
-					            rendered="#{amendmentBackingBean.managedBean.prepareLOA and !amendmentBackingBean.managedBean.ctContract.zonalPricing and (!andamendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or 
-			                  !amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange)}"/>
+					            rendered="#{amendmentBackingBean.managedBean.prepareLOA and !(amendmentBackingBean.managedBean.ctContract.zonalPricing and (amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or 
+			                      amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange))}"/>
 					          
 					           <p:menuitem value="#{lbl['lbl.ct.amend.perfBond']}" update=":form"  action="#{amendmentBackingBean.setSelectedTabValue(3)}"
-					             rendered="#{amendmentBackingBean.managedBean.prepareLOA and !amendmentBackingBean.managedBean.ctContract.zonalPricing and (!andamendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or 
-			                     !amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange)}"/>
+					             rendered="#{amendmentBackingBean.managedBean.prepareLOA and !(amendmentBackingBean.managedBean.ctContract.zonalPricing and (amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or 
+			                      amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange))}"/>
 					        
 					           <p:menuitem value="#{lbl['lbl.ct.amend.letterOfAcc']}" update=":form" action="#{amendmentBackingBean.setSelectedTabValue(4)}"
-					              rendered="#{amendmentBackingBean.managedBean.prepareLOA and !amendmentBackingBean.managedBean.ctContract.zonalPricing and 
-					              (!andamendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or 
-			                  !amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange)}"/>
+					              rendered="#{amendmentBackingBean.managedBean.prepareLOA and !(amendmentBackingBean.managedBean.ctContract.zonalPricing and 
+					              (amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange))}"/>
 					          
 					           <p:menuitem value="#{lbl['lbl.ct.amend.decision']}" update=":form" action="#{amendmentBackingBean.setSelectedTabValue(5)}" 
 					              rendered="#{amendmentBackingBean.managedBean.prepareLOA and amendmentBackingBean.managedBean.decisionPbQcLOA and
-					               !amendmentBackingBean.managedBean.ctContract.zonalPricing and
-					               (!andamendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or 
-			                  !amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange)}"/> 
+					               !(amendmentBackingBean.managedBean.ctContract.zonalPricing and (amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or 
+			                         amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange))}"/> 
 					         
 					          <p:menuitem value="#{lbl['lbl.ct.amend.meetingDtl']}" update=":form" action="#{amendmentBackingBean.setSelectedTabValue(2)}"
-					           rendered="#{amendmentBackingBean.managedBean.pbConfirmMeeting and !amendmentBackingBean.managedBean.ctContract.zonalPricing and
-					               (!andamendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or 
-			                  !amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange)}"/> 
+					           rendered="#{amendmentBackingBean.managedBean.pbConfirmMeeting and !(amendmentBackingBean.managedBean.ctContract.zonalPricing and
+					               (amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange))}"/> 
                                
                                <p:menuitem value="#{lbl['lbl.ct.amend.decision']}" update=":form" action="#{amendmentBackingBean.setSelectedTabValue(3)}"
-					             rendered="#{amendmentBackingBean.managedBean.signUpdateDecision and !amendmentBackingBean.managedBean.ctContract.zonalPricing and
-					               (!andamendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or 
-			                     !amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange)}"/>   
+					             rendered="#{amendmentBackingBean.managedBean.signUpdateDecision and !(amendmentBackingBean.managedBean.ctContract.zonalPricing and
+					               (amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or 
+			                        amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange))}"/>   
 			                   <p:menuitem value="#{lbl['lbl.ct.amend.decision']}" update=":form" action="#{amendmentBackingBean.setSelectedTabValue(5)}"
-					              rendered="#{amendmentBackingBean.managedBean.signOffDecision and !amendmentBackingBean.managedBean.ctContract.zonalPricing and
-					               (!andamendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or 
-			                     !amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange)}"/>   
+					              rendered="#{amendmentBackingBean.managedBean.signOffDecision and !(amendmentBackingBean.managedBean.ctContract.zonalPricing and
+					               (amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or 
+			                        amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange))}"/>   
 					     
 			          
 					    <p:menuitem value="#{lbl['lbl.ct.amend.loaDtl']}" update=":form" action="#{amendmentBackingBean.setSelectedTabValue(0)}"
@@ -196,20 +193,21 @@
 					<ui:include src="amendmentDetails.xhtml" />
 				</p:outputPanel>
 	
-				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.selectedTabIndex == 2 and amendmentBackingBean.managedBean.ctContract.zonalPricing 
-				        and amendmentBackingBean.managedBean.ackFA == null}">
+				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.selectedTabIndex == 2 and amendmentBackingBean.managedBean.ackFA == null
+				        and amendmentBackingBean.managedBean.ctContract.zonalPricing and !amendmentBackingBean.managedBean.pbConfirmMeeting}">
 					<ui:include src="zone.xhtml" />
 				</p:outputPanel>
 				
-				<p:outputPanel rendered="#{(amendmentBackingBean.managedBean.selectedTabIndex ==  2 and !amendmentBackingBean.managedBean.ctContract.zonalPricing) 
+				<p:outputPanel rendered="#{(amendmentBackingBean.managedBean.selectedTabIndex ==  2 and !amendmentBackingBean.managedBean.ctContract.zonalPricing
+				 and !amendmentBackingBean.managedBean.pbConfirmMeeting) 
 				or (amendmentBackingBean.managedBean.selectedTabIndex ==  3 and  amendmentBackingBean.managedBean.ctContract.zonalPricing)}">
 					<ui:include src="item.xhtml" />
 				</p:outputPanel>
 				
 				<p:outputPanel rendered="#{((amendmentBackingBean.managedBean.selectedTabIndex == 4 and amendmentBackingBean.managedBean.ctContract.zonalPricing) or 
 				 (amendmentBackingBean.managedBean.selectedTabIndex ==3 and !amendmentBackingBean.managedBean.ctContract.zonalPricing)
-				  or (amendmentBackingBean.managedBean.selectedTabIndex ==2 and !amendmentBackingBean.managedBean.ctContract.zonalPricing and
-				   (!andamendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or !amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange))) and 
+				  or (amendmentBackingBean.managedBean.selectedTabIndex ==2 and !(amendmentBackingBean.managedBean.ctContract.zonalPricing and
+				   (amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange)))) and 
 				   amendmentBackingBean.managedBean.bpkSaSkApprover}">
 					<ui:include src="bpk/approvalOfAP201.xhtml"/>
 				</p:outputPanel>
@@ -218,8 +216,8 @@
 				
 				<p:outputPanel rendered="#{(((amendmentBackingBean.managedBean.selectedTabIndex == 4 and amendmentBackingBean.managedBean.ctContract.zonalPricing) or 
 				 (amendmentBackingBean.managedBean.selectedTabIndex ==3 and !amendmentBackingBean.managedBean.ctContract.zonalPricing)
-				  or (amendmentBackingBean.managedBean.selectedTabIndex ==2 and !amendmentBackingBean.managedBean.ctContract.zonalPricing and
-				   (!andamendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or !amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange))) and 
+				  or (amendmentBackingBean.managedBean.selectedTabIndex ==2 and !(amendmentBackingBean.managedBean.ctContract.zonalPricing and
+				   (amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange)))) and 
 				   (amendmentBackingBean.managedBean.prepareLOA)) or 
 				   (amendmentBackingBean.managedBean.selectedTabIndex == 0 and amendmentBackingBean.managedBean.ackFA == 'Ack')}">
 					<ui:include src="supplier/supplierforloa.xhtml" />
@@ -232,16 +230,16 @@
 			    
 			    <p:outputPanel rendered="#{((amendmentBackingBean.managedBean.selectedTabIndex == 5 and amendmentBackingBean.managedBean.ctContract.zonalPricing) or 
 				 (amendmentBackingBean.managedBean.selectedTabIndex ==4 and !amendmentBackingBean.managedBean.ctContract.zonalPricing)
-				  or (amendmentBackingBean.managedBean.selectedTabIndex ==3 and !amendmentBackingBean.managedBean.ctContract.zonalPricing and
-				   (!andamendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or !amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange))) and 
+				  or (amendmentBackingBean.managedBean.selectedTabIndex ==3 and !(amendmentBackingBean.managedBean.ctContract.zonalPricing and
+				   (amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange)))) and 
 				   (amendmentBackingBean.managedBean.prepareLOA)}">
 					<ui:include src="loaBondDetails.xhtml" />
 			    </p:outputPanel>
 			    
 			    <p:outputPanel rendered="#{((amendmentBackingBean.managedBean.selectedTabIndex == 6 and amendmentBackingBean.managedBean.ctContract.zonalPricing) or 
 				 (amendmentBackingBean.managedBean.selectedTabIndex ==5 and !amendmentBackingBean.managedBean.ctContract.zonalPricing)
-				  or (amendmentBackingBean.managedBean.selectedTabIndex ==4 and !amendmentBackingBean.managedBean.ctContract.zonalPricing and
-				   (!andamendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or !amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange))) and 
+				  or (amendmentBackingBean.managedBean.selectedTabIndex ==4 and !(amendmentBackingBean.managedBean.ctContract.zonalPricing and
+				   (amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange)))) and 
 				   (amendmentBackingBean.managedBean.prepareLOA and amendmentBackingBean.managedBean.letterOfAcceptance)}">
 					<ui:include src="letterOfAcceptance.xhtml" />
 			    </p:outputPanel>
@@ -257,29 +255,29 @@
 				
 				<p:outputPanel rendered="#{((amendmentBackingBean.managedBean.selectedTabIndex == 4 and amendmentBackingBean.managedBean.ctContract.zonalPricing) or 
 				 (amendmentBackingBean.managedBean.selectedTabIndex ==3 and !amendmentBackingBean.managedBean.ctContract.zonalPricing)
-				  or (amendmentBackingBean.managedBean.selectedTabIndex ==2 and !amendmentBackingBean.managedBean.ctContract.zonalPricing and
-				   (!andamendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or !amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange))) and 
+				  or (amendmentBackingBean.managedBean.selectedTabIndex ==2 and !(amendmentBackingBean.managedBean.ctContract.zonalPricing and
+				   (amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange)))) and 
 				   (amendmentBackingBean.managedBean.pbConfirmMeeting)}">
 					<ui:include src="pbqcc/meeting.xhtml"/>
 				</p:outputPanel>
 				
 				<p:outputPanel rendered="#{(((amendmentBackingBean.managedBean.selectedTabIndex == 5 and amendmentBackingBean.managedBean.ctContract.zonalPricing) or 
 				 (amendmentBackingBean.managedBean.selectedTabIndex ==4 and !amendmentBackingBean.managedBean.ctContract.zonalPricing)
-				  or (amendmentBackingBean.managedBean.selectedTabIndex ==3 and !amendmentBackingBean.managedBean.ctContract.zonalPricing and
-				   (!andamendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or !amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange))) and 
+				  or (amendmentBackingBean.managedBean.selectedTabIndex ==3 and (amendmentBackingBean.managedBean.ctContract.zonalPricing and
+				   (amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange)))) and 
 				   (amendmentBackingBean.managedBean.signUpdateDecision)) or (((amendmentBackingBean.managedBean.selectedTabIndex == 7 and amendmentBackingBean.managedBean.ctContract.zonalPricing) or 
 				 (amendmentBackingBean.managedBean.selectedTabIndex ==6 and !amendmentBackingBean.managedBean.ctContract.zonalPricing)
 				  or (amendmentBackingBean.managedBean.selectedTabIndex ==5 and !amendmentBackingBean.managedBean.ctContract.zonalPricing and
-				   (!andamendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or !amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange))) and 
+				   (!amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or !amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange))) and 
 				   (amendmentBackingBean.managedBean.prepareLOA and amendmentBackingBean.managedBean.decisionPbQcLOA)) }">
 					<ui:include src="pbqcc/signOffpbqcc.xhtml"/>
 				</p:outputPanel>
 				
 				<p:outputPanel rendered="#{((amendmentBackingBean.managedBean.selectedTabIndex == 5 and amendmentBackingBean.managedBean.ctContract.zonalPricing) or 
 				 (amendmentBackingBean.managedBean.selectedTabIndex ==4 and !amendmentBackingBean.managedBean.ctContract.zonalPricing)
-				  or (amendmentBackingBean.managedBean.selectedTabIndex ==3 and !amendmentBackingBean.managedBean.ctContract.zonalPricing and
-				   (!andamendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or !amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange))) and 
-				   (amendmentBackingBean.managedBean.signOffDecision)}">
+				  or (amendmentBackingBean.managedBean.selectedTabIndex ==3 and !(amendmentBackingBean.managedBean.ctContract.zonalPricing and
+				   (amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange)))) and 
+				     amendmentBackingBean.managedBean.signOffDecision}">
 					<ui:include src="pbqcc/signOffMember.xhtml"/>
 				</p:outputPanel>
 			</td>

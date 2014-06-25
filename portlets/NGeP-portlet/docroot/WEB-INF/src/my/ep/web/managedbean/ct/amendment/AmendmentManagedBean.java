@@ -49,7 +49,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private String processName;
 	
 	private boolean pbConfirmMeeting;
-	private boolean memberSignOff = true;
+	private boolean memberSignOff;
 	private boolean letterOfAcceptance;
 	private boolean bpkSaSkApprover;
 	private boolean prepareLOA;
