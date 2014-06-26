@@ -70,6 +70,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.RowEditEvent;
 import org.primefaces.event.SelectEvent;
@@ -91,6 +92,8 @@ public class QTBusinessOwnerBackingBean extends
 		}
 		log.info(message);
 	}
+
+	private boolean flag;
 
 	public QTBusinessOwnerBackingBean() {
 
@@ -409,7 +412,7 @@ public class QTBusinessOwnerBackingBean extends
 		ScCommittee scCommittee = this.getManagedBean().getScQtCommittee()
 				.getScCommittee();
 
-		ScQt scQt = this.getManagedBean().getQt();
+		//ScQt scQt = this.getManagedBean().getQt();
 
 		// BO
 		ParameterResDTO parameterResDTO;
@@ -426,7 +429,7 @@ public class QTBusinessOwnerBackingBean extends
 		StatusResDTO statusResDTO = statusSO
 				.retrieveStatusByStatusId(statusReqDTO);
 		PmStatus status = statusResDTO.getPmStatus();
-		scQt.setQtStatus(status);
+		//scQt.setQtStatus(status);
 
 		List<ScCommitteeMember> memberList = getManagedBean()
 				.getScCommitteeMemberList();
@@ -448,7 +451,7 @@ public class QTBusinessOwnerBackingBean extends
 			member.setEmail(getManagedBean().getCommitteMember().getEmail());
 			member.setMemberRole("M");
 			member.setAccessRight("E");
-			member.setPmOrgProfile(scQt.getPmOrgProfile());
+			member.setPmOrgProfile(this.getManagedBean().getQt().getPmOrgProfile());
 
 			PmUser user = new PmUser();
 			user.setUserName(member.getMemberName());
@@ -550,7 +553,7 @@ public class QTBusinessOwnerBackingBean extends
 				committeeMember.setGrade(user.getGrade());
 				committeeMember.setPNP(user.isPMP());
 				committeeMember.setPmUser(user);
-				committeeMember.setPmOrgProfile(scQt.getPmOrgProfile());
+				committeeMember.setPmOrgProfile(this.getManagedBean().getQt().getPmOrgProfile());
 				/*
 				 * committeeMember.setPmOrgProfile(user.getPmUserOrgs().get(0)
 				 * .getPmOrgProfile());
@@ -590,6 +593,7 @@ public class QTBusinessOwnerBackingBean extends
 		scQtCommittee.setScCommittee(scCommittee);
 		this.getManagedBean().setScQtCommittee(scQtCommittee);
 
+		//this.getManagedBean().setQt(scQt);
 		// BO validation
 		RequestContext.getCurrentInstance().execute("newbusinessowner.hide()");
 	}
@@ -652,14 +656,12 @@ public class QTBusinessOwnerBackingBean extends
 
 		try {
 			detailSO = getDetailSO();
-
 			QuationTenderReqDTO quationTenderReqDTO = prepareBOInfo();
+			quationTenderReqDTO.setDocType(QTConstants.DOCTYPE_QT);
 			QuationTenderResDTO quationTenderResDTO = new QuationTenderResDTO();
-
 			quationTenderResDTO = (QuationTenderResDTO) detailSO
-					.saveQTDtl(quationTenderReqDTO);
+					.saveQTDtl(quationTenderReqDTO);			
 			this.getManagedBean().setQt(quationTenderResDTO.getQtDetail());
-
 			if (quationTenderResDTO.isSuccessful()) {
 				ScQt scQt = quationTenderResDTO.getQtDetail();
 				FacesContext
@@ -706,19 +708,15 @@ public class QTBusinessOwnerBackingBean extends
 				&& !this.getManagedBean().getScCommitteeMemberList().isEmpty()) {
 
 			if (!isConsolidate(this.getManagedBean().getScCommitteeMemberList())) {
-
 				throw new EpException(MessageConst.ERROR_100022,
 						new String[] { "Consolidate", });
-
 			}
-
 		} else {
 			throw new EpException(MessageConst.ERROR_100022,
 					new String[] { "Business Owner", });
-
 		}
-		//Code to set the QtCommitte N Memembers to ScQt
-		List<ScQtCommittee> qtCommittees = new ArrayList<ScQtCommittee>();		
+		// Code to set the QtCommitte N Memembers to ScQt
+		List<ScQtCommittee> qtCommittees = new ArrayList<ScQtCommittee>();
 		qtCommittees.add(this.getManagedBean().getScQtCommittee());
 		scQt.setScQtCommittees(qtCommittees);
 
@@ -801,6 +799,7 @@ public class QTBusinessOwnerBackingBean extends
 	}
 
 	public String createBusinessOwner() {
+		
 		ScQt scQt = new ScQt();
 		// ScQt scQt = this.getManagedBean().getQt();
 
@@ -832,7 +831,7 @@ public class QTBusinessOwnerBackingBean extends
 		scQt.setQtStatus(qtStatus);
 		scQt.setQtNo(dto.getQtNo());
 		this.getManagedBean().setQt(scQt);
-
+		
 		return "/xhtml/sc/quatationtender/businessowner/businessownercreation.xhtml"
 				+ "?faces-redirect=true";
 	}
@@ -881,7 +880,8 @@ public class QTBusinessOwnerBackingBean extends
 		}
 	}
 
-	public boolean getConsolidateSelectAll() {
+	public void getConsolidateSelectAll() {
+
 		int selectedCount = 0;
 		List<ScCommitteeMember> scCommitteeMemberList = getManagedBean()
 				.getScCommitteeMemberList();
@@ -892,10 +892,34 @@ public class QTBusinessOwnerBackingBean extends
 					selectedCount++;
 				}
 			}
-
-			return scCommitteeMemberList.size() == selectedCount;
-		} else {
-			return false;
+			flag = scCommitteeMemberList.size() == selectedCount;
 		}
 	}
+
+	public void selectAll(AjaxBehaviorEvent event) {
+		boolean flag = ((SelectBooleanCheckbox) event.getSource()).isSelected();
+
+		List<ScCommitteeMember> scCommitteeMemberList = getManagedBean()
+				.getScCommitteeMemberList();
+
+		if (scCommitteeMemberList != null) {
+			for (ScCommitteeMember committeeMember : scCommitteeMemberList) {
+				if (flag) {
+					committeeMember.setSelected(true);
+				} else {
+					committeeMember.setSelected(false);
+				}
+			}
+		}
+
+	}
+
+	public boolean isFlag() {
+		return flag;
+	}
+
+	public void setFlag(boolean flag) {
+		this.flag = flag;
+	}
+
 }
