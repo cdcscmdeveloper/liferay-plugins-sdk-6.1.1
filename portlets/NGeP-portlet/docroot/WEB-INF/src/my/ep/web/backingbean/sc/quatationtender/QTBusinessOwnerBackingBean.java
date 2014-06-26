@@ -367,6 +367,17 @@ public class QTBusinessOwnerBackingBean extends
 	public void addCloneCommitteeMembersAction() {
 		debugLogger("addCloneCommitteeMembersAction");
 		List<String> itemIds = new ArrayList<String>();
+		List<ScCommitteeMember> members = getManagedBean()
+				.getSelectedCommitteMemebers();
+		if (null != members) {
+			for (ScCommitteeMember committeeMember : members) {
+				if (committeeMember.isConsolidate()) {
+					this.getManagedBean().setSelectScCommitteMember(
+							committeeMember);
+					break;
+				}
+			}
+		}
 		if (getManagedBean().getScCommitteeMemberList().isEmpty()) {
 			getManagedBean().setScCommitteeMemberList(
 					getManagedBean().getSelectedCommitteMemebers());
@@ -402,38 +413,20 @@ public class QTBusinessOwnerBackingBean extends
 
 	public void okBusinessOwnerAction() {
 		debugLogger("okBusinessOwnerAction");
-		IUserSO iUserSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-		IParameterSO parameterSO = BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IParameterSO.class);
-		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IOrgProfileSO.class);
-		IStatusSO statusSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
+
 		UserReqDTO userReqDTO = new UserReqDTO();
 		ScCommittee scCommittee = this.getManagedBean().getScQtCommittee()
 				.getScCommittee();
 
-		//ScQt scQt = this.getManagedBean().getQt();
-
-		// BO
-		ParameterResDTO parameterResDTO;
-		ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
-		parameterReqDTO.setParameterType(ParameterTypeConst.SC_COMMITTEE_TYPE);
-		parameterReqDTO
-				.setParameterCode(ParameterConst.COMMITTEE_TYPE_BUSINESS_OWNER);
-		parameterResDTO = parameterSO
-				.retrieveParameterByTypeAndCode(parameterReqDTO);
+		// ScQt scQt = this.getManagedBean().getQt();
 
 		// Setting the pm status for New User
 		StatusReqDTO statusReqDTO = new StatusReqDTO();
 		statusReqDTO.setStatusId(60730L);
-		StatusResDTO statusResDTO = statusSO
-				.retrieveStatusByStatusId(statusReqDTO);
+		StatusResDTO statusResDTO = getStatusSO().retrieveStatusByStatusId(
+				statusReqDTO);
 		PmStatus status = statusResDTO.getPmStatus();
-		//scQt.setQtStatus(status);
+		// scQt.setQtStatus(status);
 
 		List<ScCommitteeMember> memberList = getManagedBean()
 				.getScCommitteeMemberList();
@@ -455,7 +448,8 @@ public class QTBusinessOwnerBackingBean extends
 			member.setEmail(getManagedBean().getCommitteMember().getEmail());
 			member.setMemberRole("M");
 			member.setAccessRight("E");
-			member.setPmOrgProfile(this.getManagedBean().getQt().getPmOrgProfile());
+			member.setPmOrgProfile(this.getManagedBean().getQt()
+					.getPmOrgProfile());
 
 			PmUser user = new PmUser();
 			user.setUserName(member.getMemberName());
@@ -467,12 +461,12 @@ public class QTBusinessOwnerBackingBean extends
 			user.setEmail(member.getEmail());
 
 			// Identification Code
-			// ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
+			ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
 			parameterReqDTO
 					.setParameterType(ParameterTypeConst.IDENTIFICATION_TYPES);
 			parameterReqDTO
 					.setParameterCode(ParameterConst.IDENTIFICATION_TYPES_IC);
-			PmParameter identificationCode = parameterSO
+			PmParameter identificationCode = getParameterSO()
 					.retrieveParameterByTypeAndCode(parameterReqDTO)
 					.getPmParameter();
 			user.setIdentificationCode(identificationCode);
@@ -497,7 +491,7 @@ public class QTBusinessOwnerBackingBean extends
 			userOrg.setPmUser(user);
 			OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
 			orgProfileReqDTO.setOrgType(ParameterConst.ORG_TYPE_MINISTRY);
-			PmOrgProfile pmOrgProfile = orgProfileSO
+			PmOrgProfile pmOrgProfile = getOrgProfileSO()
 					.retrieveOrgProfileListByOrgType(orgProfileReqDTO)
 					.getOrgProfileList().iterator().next();
 			userOrg.setPmOrgProfile(pmOrgProfile);
@@ -531,7 +525,7 @@ public class QTBusinessOwnerBackingBean extends
 			userReqDTO.setOrgType(OrganizationType.OTHERS.value());
 
 			userReqDTO.setPmUser(user);
-			UserResDTO resDTO = iUserSO.saveUser(userReqDTO);
+			UserResDTO resDTO = getUserSO().saveUser(userReqDTO);
 			System.out.println("done");
 			member.setPmUser(resDTO.getPmUser());
 
@@ -557,7 +551,8 @@ public class QTBusinessOwnerBackingBean extends
 				committeeMember.setGrade(user.getGrade());
 				committeeMember.setPNP(user.isPMP());
 				committeeMember.setPmUser(user);
-				committeeMember.setPmOrgProfile(this.getManagedBean().getQt().getPmOrgProfile());
+				committeeMember.setPmOrgProfile(this.getManagedBean().getQt()
+						.getPmOrgProfile());
 				/*
 				 * committeeMember.setPmOrgProfile(user.getPmUserOrgs().get(0)
 				 * .getPmOrgProfile());
@@ -592,12 +587,8 @@ public class QTBusinessOwnerBackingBean extends
 		for (ScCommitteeMember scCommitteeMember : memberList) {
 			scCommitteeMember.setScCommittee(scCommittee);
 		}
-		scCommittee.setCommitteeType(parameterResDTO.getPmParameter());
-		ScQtCommittee scQtCommittee = this.getManagedBean().getScQtCommittee();
-		scQtCommittee.setScCommittee(scCommittee);
-		this.getManagedBean().setScQtCommittee(scQtCommittee);
 
-		//this.getManagedBean().setQt(scQt);
+		// this.getManagedBean().setQt(scQt);
 		// BO validation
 		RequestContext.getCurrentInstance().execute("newbusinessowner.hide()");
 	}
@@ -657,17 +648,21 @@ public class QTBusinessOwnerBackingBean extends
 	 */
 	public String saveBusinessOwnerAction() {
 		IQTDetailSO detailSO;
-
 		try {
 			detailSO = getDetailSO();
 			QuationTenderReqDTO quationTenderReqDTO = prepareBOInfo();
 			quationTenderReqDTO.setDocType(QTConstants.DOCTYPE_QT);
 			QuationTenderResDTO quationTenderResDTO = new QuationTenderResDTO();
 			quationTenderResDTO = (QuationTenderResDTO) detailSO
-					.saveQTDtl(quationTenderReqDTO);			
-			this.getManagedBean().setQt(quationTenderResDTO.getQtDetail());
+					.saveQTDtl(quationTenderReqDTO);
 			if (quationTenderResDTO.isSuccessful()) {
+				// TODO Need to think to move to finally block...
+				// To renew the session..
+				renewSesionObject();
+				getMinistrySpecificationSecretaryList();
 				ScQt scQt = quationTenderResDTO.getQtDetail();
+				QTDetailBackingBean detailBackingBean = new QTDetailBackingBean();
+				detailBackingBean.editAction(scQt);
 				FacesContext
 						.getCurrentInstance()
 						.addMessage(
@@ -748,33 +743,23 @@ public class QTBusinessOwnerBackingBean extends
 
 	public String submitBusinessOwnerAction() {
 		IQTDetailSO detailSO;
+		QuationTenderResDTO quationTenderResDTO = null;
 		try {
 			detailSO = getDetailSO();
 
 			QuationTenderReqDTO quationTenderReqDTO = prepareBOInfo();
-			QuationTenderResDTO quationTenderResDTO = new QuationTenderResDTO();
 
-			List<FacesMessage> messages = new ArrayList<FacesMessage>();
-			for (Iterator<FacesMessage> iter = FacesContext
-					.getCurrentInstance().getMessages(); iter.hasNext();) {
-				messages.add(iter.next());
-				// iter.remove();
-			}
-			if (messages.size() == 0) {
-				FacesScopes facesScopes = new FacesScopes();
-				String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
-				quationTenderReqDTO.setToken(ctxToken);
-				quationTenderReqDTO
-						.setTaskId(this.getManagedBean().getTaskId());
-				quationTenderReqDTO.setPayLoad(this.getManagedBean()
-						.getQuotationTenderDataType());
-
-				quationTenderResDTO = detailSO.submitQT(quationTenderReqDTO);
-			}
-
+			FacesScopes facesScopes = new FacesScopes();
+			String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
+			quationTenderReqDTO.setToken(ctxToken);
+			quationTenderReqDTO.setTaskId(this.getManagedBean().getTaskId());
+			quationTenderReqDTO.setPayLoad(this.getManagedBean()
+					.getQuotationTenderDataType());
+			quationTenderResDTO = detailSO.submitQT(quationTenderReqDTO);
+			// To renew the session object..
+			renewSesionObject();
 			if (quationTenderResDTO.isSuccessful()) {
 				ScQt scQt = quationTenderResDTO.getQtDetail();
-
 				FacesContext
 						.getCurrentInstance()
 						.addMessage(
@@ -803,7 +788,7 @@ public class QTBusinessOwnerBackingBean extends
 	}
 
 	public String createBusinessOwner() {
-		
+
 		ScQt scQt = new ScQt();
 		// ScQt scQt = this.getManagedBean().getQt();
 
@@ -825,6 +810,13 @@ public class QTBusinessOwnerBackingBean extends
 		committeStatus.setStatusId(60200l);
 		committee.setCommitteStatus(committeStatus);
 		committee.setScCommitteeMembers(new ArrayList<ScCommitteeMember>());
+		ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
+		parameterReqDTO.setParameterType(ParameterTypeConst.SC_COMMITTEE_TYPE);
+		parameterReqDTO
+				.setParameterCode(ParameterConst.COMMITTEE_TYPE_BUSINESS_OWNER);
+		ParameterResDTO parameterResDTO = getParameterSO()
+				.retrieveParameterByTypeAndCode(parameterReqDTO);
+		committee.setCommitteeType(parameterResDTO.getPmParameter());
 		qtCommitte.setScCommittee(committee);
 		this.getManagedBean().setScQtCommittee(qtCommitte);
 		this.getManagedBean().setScCommitteeMemberList(
@@ -835,7 +827,7 @@ public class QTBusinessOwnerBackingBean extends
 		scQt.setQtStatus(qtStatus);
 		scQt.setQtNo(dto.getQtNo());
 		this.getManagedBean().setQt(scQt);
-		
+
 		return "/xhtml/sc/quatationtender/businessowner/businessownercreation.xhtml"
 				+ "?faces-redirect=true";
 	}
@@ -926,4 +918,23 @@ public class QTBusinessOwnerBackingBean extends
 		this.flag = flag;
 	}
 
+	private IUserSO getUserSO() {
+		return BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+	}
+
+	private IParameterSO getParameterSO() {
+		return BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+	}
+
+	private IOrgProfileSO getOrgProfileSO() {
+		return BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+	}
+
+	private IStatusSO getStatusSO() {
+		return BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
+	}
 }
