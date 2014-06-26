@@ -12,10 +12,12 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
+import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.fl.invoice.IInvoiceSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
+import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -25,6 +27,7 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
+import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.fl.invoice.FLInvoiceDataType;
 import my.ep.persistence.entity.ct.CtContract;
@@ -37,8 +40,10 @@ import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -422,5 +427,43 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 	 */
 	public void setClassName(String className) {
 		this.className = className;
+	}
+	
+	public List<SelectItem> getPopulateBankAccountList() {
+		ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,ISupplierSearchSO.class);
+		List<SelectItem> populateBankAccountList = new ArrayList<SelectItem>();
+		SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
+		
+		
+		if (this.getManagedBean().getInvoice() != null) {
+				if(this.getManagedBean().getInvoice().getFlRequest().getFlSupplierDtl().getBranchName() != null ){
+//					supplierSearchReqDTO.setBranchName(getManagedBean().getInvoice().getFlRequest().getFlSupplierDtl().getBranchName());
+//					supplierSearchReqDTO.setSupplierId(getManagedBean().getInvoice().getFlRequest().getSmSupplier().getSupplierId());
+//					supplierSearchSO.retrieveSmSupplierBankBySupplierBranchName (supplierSearchReqDTO)
+				}
+			
+			
+			if (this.getManagedBean().getInvoice().getFlRequest().getSmSupplier().getSmAppl().getSmSupplierBanks() != null
+					&& this.getManagedBean().getInvoice().getFlRequest().getSmSupplier().getSmAppl().getSmSupplierBanks().size() > 0) {
+				List<SmSupplierBank> supplierBank = this.getManagedBean().getInvoice().getFlRequest().getSmSupplier().getSmAppl().getSmSupplierBanks();
+				for (SmSupplierBank obj : supplierBank) {
+					populateBankAccountList.add(new SelectItem(obj.getAccountNo(), obj.getAccountNo()));
+					if(!getManagedBean().getSupplierBankAccountMap().containsKey(obj.getAccountNo())) {
+						getManagedBean().getSupplierBankAccountMap().put(obj.getAccountNo(), obj);
+					}
+				}
+			}
+		}
+		return populateBankAccountList;
+	}
+	
+	public void bankInfoActionListener() {
+		SmSupplierBank supplierBank = getManagedBean().getSupplierBankAccountMap().get(getManagedBean().getInvoice().getAccountNo());
+		
+		getManagedBean().getInvoice().setPaymentBank(new PmFinancialOrg());
+		
+		if(supplierBank!=null) {
+			getManagedBean().getInvoice().setPaymentBank(supplierBank.getPmFinancialOrg());
+		}
 	}
 }

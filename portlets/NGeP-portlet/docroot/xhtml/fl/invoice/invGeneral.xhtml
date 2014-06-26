@@ -83,7 +83,7 @@
 			</tr>
 		</table>
 	</p:panel>
-	<p:panel header="SUPPLIER DETAIL" toggleable="true">
+	<p:panel header="SUPPLIER DETAIL" toggleable="true" id="suppDetPnl">
 		<table>
 			<tr>
 				<td style="width: 100px;"><p:outputLabel
@@ -97,18 +97,24 @@
 							<td><p:inputText size="15" disabled="true" /></td>
 						</tr>
 					</table></td>
-				<td style="width: 140px;"><p:outputLabel
-						value="#{lbl['lbl.fl.payment.bank.name']}" /></td>
-				<td><p:inputText size="40" /></td>
+				<td style="width: 100px;"><p:outputLabel
+						value="#{lbl['lbl.fl.bank.acc.no']}" /></td>
+				<td><p:selectOneMenu id="accountId" required="true" style="width:210px;margin-bottom: 5px;" label="#{lbl['lbl.fl.payment.bank.name']}"
+                value="#{invoiceBackingBean.managedBean.invoice.accountNo}">
+			     <f:selectItem itemLabel="-Select One-" itemValue="#{null}"/>
+			     <f:selectItems value="#{invoiceBackingBean.populateBankAccountList}"/>
+			     <p:ajax event="change" process="@this"  update="suppDetPnl"
+			      listener="#{invoiceBackingBean.bankInfoActionListener}"/>
+		   </p:selectOneMenu>
+		   <p:message for="accountId" display="icon"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.name']}" /></td>
 				<td><p:inputText size="45" disabled="true"
 						value="#{invoiceBackingBean.managedBean.invoice.flRequest.flSupplierDtl.supplierName}" /></td>
-				<td style="width: 100px;"><p:outputLabel
-						value="#{lbl['lbl.fl.bank.acc.no']}" /></td>
-				<td><p:inputText size="40"
-						value="#{invoiceBackingBean.managedBean.invoice.accountNo}" /></td>
+				<td style="width: 140px;"><p:outputLabel value="#{lbl['lbl.fl.payment.bank.name']}" /></td>
+				<td><p:inputText size="45" disabled="true"
+						value="#{invoiceBackingBean.managedBean.invoice.paymentBank.finOrgName}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.branch']}" /></td>

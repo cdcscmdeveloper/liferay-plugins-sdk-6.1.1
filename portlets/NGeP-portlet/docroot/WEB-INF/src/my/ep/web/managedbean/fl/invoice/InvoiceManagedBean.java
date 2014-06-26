@@ -13,11 +13,6 @@ import java.util.Map.Entry;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
-import org.primefaces.model.DefaultTreeNode;
-import org.primefaces.model.TreeNode;
-
-import my.ep.persistence.entity.cm.catalog.CmItem;
-import my.ep.persistence.entity.fl.adjust.FlAdjustment;
 import my.ep.persistence.entity.fl.payment.FlInvoice;
 import my.ep.persistence.entity.fl.payment.FlInvoiceItem;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
@@ -25,7 +20,11 @@ import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
+import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.web.managedbean.BaseManagedBean;
+
+import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.TreeNode;
 
 /**
  * Managed Bean for invoice
@@ -53,6 +52,7 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	
 	private String factoringCheck="false";
 	private String docType;
+	private Map<String, SmSupplierBank> supplierBankAccountMap;
 	
 	// Inv Items
 	private TreeNode chargeLineItemRoot ;
@@ -446,5 +446,21 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	 */
 	public void setPmUser(PmUser pmUser) {
 		this.pmUser = pmUser;
+	}
+	/**
+	 * @return the supplierBankAccountMap
+	 */
+	public Map<String, SmSupplierBank> getSupplierBankAccountMap() {
+		if(supplierBankAccountMap==null) {
+			supplierBankAccountMap = new HashMap<String, SmSupplierBank>();
+		}
+		return supplierBankAccountMap;
+	}
+	/**
+	 * @param supplierBankAccountMap the supplierBankAccountMap to set
+	 */
+	public void setSupplierBankAccountMap(
+			Map<String, SmSupplierBank> supplierBankAccountMap) {
+		this.supplierBankAccountMap = supplierBankAccountMap;
 	}
 }
