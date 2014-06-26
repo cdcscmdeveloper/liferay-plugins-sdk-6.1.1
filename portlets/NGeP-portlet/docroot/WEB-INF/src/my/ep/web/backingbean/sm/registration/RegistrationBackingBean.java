@@ -181,19 +181,19 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		log.info("****proceedToFirstUserRegistration******");
 		if(this.getManagedBean().getSmSupp().getSmSupplierBusinesses().size() < 1){
 			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "At least one Nature of Business is required.", ""));
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "At least one Nature of Business is required.", "At least one Nature of Business is required."));
 			return null;
 		}
 		
 		if(this.getManagedBean().getSmAppl().getSmSupplierBanks().size() < 1){
 			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "At least one Bank Account is required.", ""));
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "At least one Bank Account is required.", "At least one Bank Account is required."));
 			return null;
 		}
 		
 		if(checkExistingBusinessRegNo()){
 			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Business Registration No is exist.", ""));
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Business Registration No is exist.", "Business Registration No is exist."));
 			return null;
 		}
 		
@@ -249,14 +249,14 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		if(!smSupp.getBusinessType().equals(SupplierManagementConst.INDIVIDUAL_FLAG)){
 			if(this.getManagedBean().getSmSupp().getSmSupplierBusinesses().size() < 1){
 				FacesContext.getCurrentInstance().addMessage(null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, "At least one Nature of Business is required.", ""));
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, "At least one Nature of Business is required.", "At least one Nature of Business is required."));
 				return null;
 			}
 		}
 		
 		if(smAppl.getSmSupplierBanks().size() < 1){
 			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "At least one Bank Account is required.", ""));
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "At least one Bank Account is required.", "At least one Bank Account is required."));
 			return null;
 		}
 		
@@ -266,14 +266,14 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		
 		if(isExistEmailInPmUser(this.getManagedBean().getSmPersonnel().getEmail())){
 			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Email Address already exist.", ""));
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Email Address already exist.", "Email Address already exist."));
 			return null;
 		}
 		
 		String loginID = smSupp.getBusinessType().equals(SupplierManagementConst.INDIVIDUAL_FLAG) ? smSupp.getRegNo() : this.getManagedBean().getSmPersonnel().getIdentificationNo();
 		if(isExistUserByIdentificationNo(loginID)){
 			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Login ID already exist.", ""));
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Login ID already exist.", "Login ID already exist."));
 			return null;
 		}
 		
@@ -396,7 +396,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
 					FacesMessage.SEVERITY_INFO,
 					"Successful Registered.<br />An activation information has been sent to your email. You need to activate your account within 7 days.",
-					""));
+					"Successful Registered.<br />An activation information has been sent to your email. You need to activate your account within 7 days."));
 			this.getManagedBean().setSmAppl(null);
 			this.getManagedBean().setSmSupp(null);
 			return "/xhtml/sm/onlinereg/outputMsg";
@@ -411,13 +411,13 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	public String updateOnlineAccount() {
 		if(this.getManagedBean().getSmSupp().getSmSupplierBusinesses().size() < 1){
 			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "At least one Nature of Business is required.", ""));
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "At least one Nature of Business is required.", "At least one Nature of Business is required."));
 			return "";
 		}
 
 		if(this.getManagedBean().getSmAppl().getSmSupplierBanks().size() < 1){
 			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "At least one Bank Account is required.", ""));
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "At least one Bank Account is required.", "At least one Bank Account is required."));
 			return "";
 		}
 
@@ -444,11 +444,11 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO,
-							"Your account has been updated successfully.", ""));
+							"Your account has been updated successfully.", "Your account has been updated successfully."));
 			return "/xhtml/sm/onlinereg/outputMsg";
 		} else {
 			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", ""));
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Error"));
 			return "";
 		}
 	}
@@ -919,13 +919,13 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			System.out.println("*********suppBank.getPmFinancialOrg().getFinancialOrgId()****" + suppBank.getPmFinancialOrg().getFinOrgName());
 			if(suppBank.getPmFinancialOrg().getFinancialOrgId() == null){
 				FacesContext.getCurrentInstance().addMessage(null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, "Bank name is required.", ""));
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, "Bank name is required.", "Bank name is required."));
 				return false;
 			}
 			
 			if(suppBank.getAccountNo() == null || suppBank.getAccountNo() == ""){
 				FacesContext.getCurrentInstance().addMessage(null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, "Bank account no. is required", ""));
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, "Bank account no. is required", "Bank account no. is required"));
 				return false;
 			}
 		}
