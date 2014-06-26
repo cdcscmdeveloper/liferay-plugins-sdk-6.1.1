@@ -13,6 +13,9 @@
 
 
 	<ui:define name="contentSection">
+	
+	<p:messages id="financialPaidUpCapitalsScore" autoUpdate="true"
+			showDetail="true" showSummary="false" closable="true"></p:messages>
 
 		<div>
 			<p:commandButton value="Back" style="float:left;" icon="ui-icon-back"
@@ -75,9 +78,12 @@
 				rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '2'}">
 				<table>
 					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sc.spec.max.score']}"></p:outputLabel></td>
-						<td><p:inputText
+						<td><p:outputLabel value="#{lbl['lbl.sc.spec.max.score']}"></p:outputLabel>
+						<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
+						</td>
+						<td><p:inputText maxlength="18" required="true" label="#{lbl['lbl.sc.spec.max.score']}" id="finpaidUpScore"
 								value="#{specificationBackingBean.managedBean.scQtCheckListScore.score}"></p:inputText>
+								<p:message id="finpaidUpMaxScore" for="finpaidUpScore" display="icon"></p:message>
 						</td>
 					</tr>
 				</table>

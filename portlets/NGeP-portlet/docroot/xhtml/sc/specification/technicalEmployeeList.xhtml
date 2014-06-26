@@ -13,28 +13,32 @@
 
 
 	<ui:define name="contentSection">
-
+		<p:messages id="TechnicalEmployeeList" autoUpdate="true"
+			showDetail="true" showSummary="false" closable="true"></p:messages>
 		<div>
 			<p:commandButton value="Back" style="float:left;" icon="ui-icon-back"
 				action="#{specificationBackingBean.committeeBackAction}" />
-		
+
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
-				style="float:right;" icon="ui-icon-save" actionListener="#{specificationBackingBean.acceptTechnicalScore}"/>
+				style="float:right;" icon="ui-icon-save"
+				actionListener="#{specificationBackingBean.acceptTechnicalScore}" />
 
 
 
 		</div>
-		
+
 		<p:panel>
 			<table>
 				<tr>
 					<td><h:outputLabel value="#{lbl['lbl.sc.spec.stage.title']}"></h:outputLabel></td>
-					<td><p:inputTextarea value="#{specificationBackingBean.managedBean.scQtChecklist.title}" disabled="true" rows="2" cols="150"></p:inputTextarea></td>
+					<td><p:inputTextarea
+							value="#{specificationBackingBean.managedBean.scQtChecklist.title}"
+							disabled="true" rows="2" cols="150"></p:inputTextarea></td>
 				</tr>
 			</table>
 		</p:panel>
 		<p:panel header="#{lbl['lbl.sc.spec.tech.employee.list']}"
-			toggleable="true" >
+			toggleable="true">
 
 			<p:dataTable id="techEmployeeList" var="techEmployee"
 				rowIndexVar="index">
@@ -64,59 +68,64 @@
 		</p:panel>
 		<h:panelGrid columns="2">
 			<h:outputLabel value="#{lbl['lbl.sc.spec.total.staff']}"></h:outputLabel>
-			<p:inputText></p:inputText>
+			<p:inputText readonly="true"></p:inputText>
 		</h:panelGrid>
-		
+
 		<p:panel>
 			<h:panelGrid columns="2">
 				<p:outputLabel value="#{lbl['lbl.sc.spec.asset.score.type']}"></p:outputLabel>
-				<p:selectOneMenu value="#{specificationBackingBean.managedBean.checklistScoreType}">
+				<p:selectOneMenu
+					value="#{specificationBackingBean.managedBean.checklistScoreType}">
 					<f:selectItem itemLabel="Auto" itemValue="1"></f:selectItem>
 					<f:selectItem itemLabel="User" itemValue="2"></f:selectItem>
-					<p:ajax event="change"
-						update="employeelist"
+					<p:ajax event="change" update="employeelist"
 						listener="#{specificationBackingBean.scoreTypeChange}"></p:ajax>
 				</p:selectOneMenu>
 			</h:panelGrid>
 		</p:panel>
 		<h:panelGroup id="employeelist">
-		<p:panel rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '1'}">
+			<p:panel
+				rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '1'}">
 
-		<ui:param name="scoringPnlGroupId" value="totalStaffId" />
-		<h:panelGroup id="totalStaffGroupId">
-			<ui:param name="scoringList"
-				value="#{specificationBackingBean.managedBean.technicalStaffScore}" />
-				<ui:param name="selectionList"
+				<ui:param name="scoringPnlGroupId" value="totalStaffId" />
+				<h:panelGroup id="totalStaffGroupId">
+					<ui:param name="scoringList"
+						value="#{specificationBackingBean.managedBean.technicalStaffScore}" />
+					<ui:param name="selectionList"
 						value="#{specificationBackingBean.managedBean.technicalStaffSelectList}" />
-			<ui:param name="componentName" value="Staff" />
-			<ui:param name="scoringPnlId" value="staffId" />
-			<ui:param name="scoringPnlName"
-				value="#{lbl['lbl.sc.spec.score.tot.tech.staff']}"></ui:param>
-			<ui:include src="/xhtml/sc/specification/scoring.xhtml"></ui:include>
-			<div align="right">
-				<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
-					process="@this,#{scoringPnlId}" partialSubmit="true"
-					oncomplete="scoreWidget.paginator.endLink.click();"
-					update="#{scoringPnlId}" icon="ui-icon-add" actionListener="#{specificationBackingBean.addTechnicalStaffScoring}"/>
-				<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
+					<ui:param name="componentName" value="Staff" />
+					<ui:param name="scoringPnlId" value="staffId" />
+					<ui:param name="scoringPnlName"
+						value="#{lbl['lbl.sc.spec.score.tot.tech.staff']}"></ui:param>
+					<ui:include src="/xhtml/sc/specification/scoring.xhtml"></ui:include>
+					<div align="right">
+						<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
+							process="@this,#{scoringPnlId}" partialSubmit="true"
+							oncomplete="scoreWidget.paginator.endLink.click();"
+							update="#{scoringPnlId}" icon="ui-icon-add"
+							actionListener="#{specificationBackingBean.addTechnicalStaffScoring}" />
+						<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
 							icon="ui-icon-delete"
 							action="#{specificationBackingBean.deleteScoring}"
 							update="#{scoringPnlId}" />
-			</div>
-		</h:panelGroup>
-         </p:panel>
-		<p:panel header="#{lbl['lbl.sc.spec.score.tot.tech.staff']}" rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '2'}">
-		<table>
-		<tr>
-		<td>
-		<p:outputLabel value="#{lbl['lbl.sc.spec.max.score']}"></p:outputLabel>
-		</td>
-		<td>
-		<p:inputText value="#{specificationBackingBean.managedBean.scQtCheckListScore.score}"></p:inputText>
-		</td>
-		</tr>
-		</table>
-		</p:panel>
+					</div>
+				</h:panelGroup>
+			</p:panel>
+			<p:panel header="#{lbl['lbl.sc.spec.score.tot.tech.staff']}"
+				rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '2'}">
+				<table>
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sc.spec.max.score']}"></p:outputLabel>
+							<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
+						</td>
+						<td><p:inputText maxlength="18" required="true"
+								label="#{lbl['lbl.sc.spec.max.score']}" id="techEmployeeListScore"
+								value="#{specificationBackingBean.managedBean.scQtCheckListScore.score}"></p:inputText>
+							<p:message id="employeeListId" for="techEmployeeListScore"
+								display="icon"></p:message></td>
+					</tr>
+				</table>
+			</p:panel>
 		</h:panelGroup>
 
 

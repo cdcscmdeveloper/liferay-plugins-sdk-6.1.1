@@ -13,9 +13,11 @@
 
 
 	<ui:define name="contentSection">
-
+		<p:messages id="TotalEmployees" showDetail="true" showSummary="false"
+			autoUpdate="true" closable="true"></p:messages>
 		<div>
-			<p:commandButton value="#{lbl['lbl.sc.spec.back']}" style="float:left;" icon="ui-icon-back"
+			<p:commandButton value="#{lbl['lbl.sc.spec.back']}"
+				style="float:left;" icon="ui-icon-back"
 				action="#{specificationBackingBean.committeeBackAction}" />
 
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
@@ -29,13 +31,17 @@
 			<table>
 				<tr>
 					<td><h:outputLabel value="#{lbl['lbl.sc.spec.stage.title']}"></h:outputLabel></td>
-					<td><p:inputTextarea value="#{specificationBackingBean.managedBean.scQtChecklist.title}" disabled="true" rows="2" cols="150"></p:inputTextarea></td>
+					<td><p:inputTextarea
+							value="#{specificationBackingBean.managedBean.scQtChecklist.title}"
+							disabled="true" rows="2" cols="150"></p:inputTextarea></td>
 				</tr>
 			</table>
 		</p:panel>
-		<p:panel header="#{lbl['lbl.sc.spec.total.num.employees']}" toggleable="true">
+		<p:panel header="#{lbl['lbl.sc.spec.total.num.employees']}"
+			toggleable="true">
 			<h:panelGrid>
-				<p:selectOneRadio value="#{specificationBackingBean.managedBean.scQtChecklist.scQtCheckListValue.allEmployee}">
+				<p:selectOneRadio
+					value="#{specificationBackingBean.managedBean.scQtChecklist.scQtCheckListValue.allEmployee}">
 					<f:selectItem itemLabel="Employees Involves In This Project"
 						itemValue="0"></f:selectItem>
 					<f:selectItem itemLabel="All Employees" itemValue="1"></f:selectItem>
@@ -46,7 +52,7 @@
 
 			<h:panelGrid columns="2">
 				<h:outputLabel value="#{lbl['lbl.sc.spec.total.employees']}"></h:outputLabel>
-				<p:inputText></p:inputText>
+				<p:inputText readonly="true"></p:inputText>
 			</h:panelGrid>
 		</p:panel>
 
@@ -69,11 +75,12 @@
 				<h:panelGroup id="totalEmployeesGroupId">
 					<ui:param name="scoringList"
 						value="#{specificationBackingBean.managedBean.totalEmployeeScore}" />
-						<ui:param name="selectionList"
+					<ui:param name="selectionList"
 						value="#{specificationBackingBean.managedBean.totalEmployeeSelectList}" />
 					<ui:param name="componentName" value="Employees" />
 					<ui:param name="scoringPnlId" value="employessId" />
-					<ui:param name="scoringPnlName" value="#{lbl['lbl.sc.spec.score.tot.employees']}"></ui:param>
+					<ui:param name="scoringPnlName"
+						value="#{lbl['lbl.sc.spec.score.tot.employees']}"></ui:param>
 					<ui:include src="/xhtml/sc/specification/scoring.xhtml"></ui:include>
 					<div align="right">
 						<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
@@ -92,9 +99,12 @@
 				rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '2'}">
 				<table>
 					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sc.spec.max.score']}"></p:outputLabel></td>
-						<td><p:inputText
+						<td><p:outputLabel value="#{lbl['lbl.sc.spec.max.score']}"></p:outputLabel>
+						<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
+						</td>
+						<td><p:inputText id="totalEmployeesScore" required="true" label="#{lbl['lbl.sc.spec.max.score']}"
 								value="#{specificationBackingBean.managedBean.scQtCheckListScore.score}"></p:inputText>
+								<p:message id="techTotalEmployee" for="totalEmployeesScore" display="icon"></p:message>
 						</td>
 					</tr>
 				</table>

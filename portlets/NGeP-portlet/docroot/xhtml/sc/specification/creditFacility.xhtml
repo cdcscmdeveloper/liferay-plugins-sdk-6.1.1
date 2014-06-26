@@ -1,5 +1,5 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
@@ -11,107 +11,119 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	<ui:define name="resourceSection">
 	</ui:define>
 
-	
+
 	<ui:define name="contentSection">
-	
+		<p:messages id="financialCreditFacility" autoUpdate="true"
+			showDetail="true" showSummary="false" closable="true"></p:messages>
 		<div>
-		<p:commandButton value="#{lbl['lbl.sc.spec.back']}" style="float:left;" icon="ui-icon-back"
+			<p:commandButton value="#{lbl['lbl.sc.spec.back']}"
+				style="float:left;" icon="ui-icon-back"
 				action="#{specificationBackingBean.committeeBackAction}" />
-	
-				<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
-				style="float:right;"
-				icon="ui-icon-save" actionListener="#{specificationBackingBean.acceptCreditScore}"/>
-				
-				
+
+			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
+				style="float:right;" icon="ui-icon-save"
+				actionListener="#{specificationBackingBean.acceptCreditScore}" />
+
+
 
 		</div>
-		
+
 		<p:panel>
-	<table>
-	<tr>
-	<td><h:outputLabel value="#{lbl['lbl.sc.spec.asset.title']}"></h:outputLabel>
-	</td>
-		<td><p:inputText value="#{specificationBackingBean.managedBean.scQtChecklist.title}" disabled="true"></p:inputText>
-	</td>
-	</tr>
-	</table>
-	</p:panel>
-		<p:panel header="#{lbl['lbl.sc.spec.credit.facility']}" toggleable="true">
-				<p:dataTable id="credit" rowIndexVar="index"
-			var="experience" rowKey="#{experience}" >
-			<ac:paginator for="credit"></ac:paginator>
-			<!-- <p:column  selectionMode="multiple" style="width:2px;"></p:column> -->
+			<table>
+				<tr>
+					<td><h:outputLabel value="#{lbl['lbl.sc.spec.asset.title']}"></h:outputLabel>
+					</td>
+					<td><p:inputText
+							value="#{specificationBackingBean.managedBean.scQtChecklist.title}"
+							disabled="true"></p:inputText></td>
+				</tr>
+			</table>
+		</p:panel>
+		<p:panel header="#{lbl['lbl.sc.spec.credit.facility']}"
+			toggleable="true">
+			<p:dataTable id="credit" rowIndexVar="index" var="experience"
+				rowKey="#{experience}">
+				<ac:paginator for="credit"></ac:paginator>
+				<!-- <p:column  selectionMode="multiple" style="width:2px;"></p:column> -->
 				<p:column headerText="#{lbl['lbl.sc.spec.bank.name']}">
-				<p:inputText></p:inputText>
+					<p:inputText></p:inputText>
 				</p:column>
-				
+
 				<p:column headerText="#{lbl['lbl.sc.spec.address']}">
-				<p:inputText ></p:inputText>
+					<p:inputText></p:inputText>
 				</p:column>
-				
+
 				<p:column headerText="#{lbl['lbl.sc.spec.credit.type']}">
-				<p:inputText ></p:inputText>
+					<p:inputText></p:inputText>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.spec.amount']}">
-				<p:inputText ></p:inputText>
+					<p:inputText></p:inputText>
 				</p:column>
 			</p:dataTable>
-		
+
 		</p:panel>
-		
+
 		<h:panelGrid columns="2">
-		<h:outputLabel value="#{lbl['lbl.sc.spec.total.credit']}"></h:outputLabel>
-		<p:inputText></p:inputText>
+			<h:outputLabel value="#{lbl['lbl.sc.spec.total.credit']}"></h:outputLabel>
+			<p:inputText readonly="true"></p:inputText>
 		</h:panelGrid>
-		
+
 		<p:panel>
 			<h:panelGrid columns="2">
 				<p:outputLabel value="#{lbl['lbl.sc.spec.asset.score.type']}"></p:outputLabel>
-				<p:selectOneMenu value="#{specificationBackingBean.managedBean.checklistScoreType}">
+				<p:selectOneMenu
+					value="#{specificationBackingBean.managedBean.checklistScoreType}">
 					<f:selectItem itemLabel="Auto" itemValue="1"></f:selectItem>
 					<f:selectItem itemLabel="User" itemValue="2"></f:selectItem>
-					<p:ajax event="change"
-						update="creditFacility"
+					<p:ajax event="change" update="creditFacility"
 						listener="#{specificationBackingBean.scoreTypeChange}"></p:ajax>
 				</p:selectOneMenu>
 			</h:panelGrid>
 		</p:panel>
 		<h:panelGroup id="creditFacility">
-		<p:panel rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '1'}">
-		
-		<ui:param name="scoringPnlGroupId" value="contractorGroupId" />
-		<h:panelGroup id="creditFacilityGroupId">
-			<ui:param name="scoringList" value="#{specificationBackingBean.managedBean.creditFacility}" />
-			<ui:param name="selectionList"
-						value="#{specificationBackingBean.managedBean.creditfacilitySelectList}" />
-			<ui:param name="componentName" value="creditFacility"/>
-			<ui:param name="scoringPnlId" value="creditFacilityId" />
-			<ui:param name="scoringPnlName" value="#{lbl['lbl.sc.spec.score.total.credit.facility']}"></ui:param>
-			<ui:include src="/xhtml/sc/specification/scoring.xhtml"></ui:include>
-			<div align="right">
-				<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
-					process="@this,#{scoringPnlId}" partialSubmit="true"
-					actionListener="#{specificationBackingBean.creditFacilityScore}"
-					update="#{scoringPnlId}" icon="ui-icon-add" />
-				<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
-					icon="ui-icon-delete" action="#{specificationBackingBean.deleteScoring}" update="#{scoringPnlId}"/>
+			<p:panel
+				rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '1'}">
 
-			</div>
-		</h:panelGroup>
-		
-		</p:panel>
-		<p:panel header="#{lbl['lbl.sc.spec.score.total.credit.facility']}" rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '2'}">
-		<table>
-		<tr>
-		<td>
-		<p:outputLabel value="#{lbl['lbl.sc.spec.max.score']}"></p:outputLabel>
-		</td>
-		<td>
-		<p:inputText value="#{specificationBackingBean.managedBean.scQtCheckListScore.score}"></p:inputText>
-		</td>
-		</tr>
-		</table>
-		</p:panel>
+				<ui:param name="scoringPnlGroupId" value="contractorGroupId" />
+				<h:panelGroup id="creditFacilityGroupId">
+					<ui:param name="scoringList"
+						value="#{specificationBackingBean.managedBean.creditFacility}" />
+					<ui:param name="selectionList"
+						value="#{specificationBackingBean.managedBean.creditfacilitySelectList}" />
+					<ui:param name="componentName" value="creditFacility" />
+					<ui:param name="scoringPnlId" value="creditFacilityId" />
+					<ui:param name="scoringPnlName"
+						value="#{lbl['lbl.sc.spec.score.total.credit.facility']}"></ui:param>
+					<ui:include src="/xhtml/sc/specification/scoring.xhtml"></ui:include>
+					<div align="right">
+						<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
+							process="@this,#{scoringPnlId}" partialSubmit="true"
+							actionListener="#{specificationBackingBean.creditFacilityScore}"
+							update="#{scoringPnlId}" icon="ui-icon-add" />
+						<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
+							icon="ui-icon-delete"
+							action="#{specificationBackingBean.deleteScoring}"
+							update="#{scoringPnlId}" />
+
+					</div>
+				</h:panelGroup>
+
+			</p:panel>
+			<p:panel header="#{lbl['lbl.sc.spec.score.total.credit.facility']}"
+				rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '2'}">
+				<table>
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sc.spec.max.score']}"></p:outputLabel>
+						<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
+						</td>
+						<td><p:inputText maxlength="18" id="creditFacilityScore"
+								label="#{lbl['lbl.sc.spec.max.score']}" required="true"
+								value="#{specificationBackingBean.managedBean.scQtCheckListScore.score}"></p:inputText>
+							<p:message id="finCreditfacilityMaxScore"
+								for="creditFacilityScore" display="icon"></p:message></td>
+					</tr>
+				</table>
+			</p:panel>
 		</h:panelGroup>
 
 		<!-- <p:commandButton value="#{lbl['lbl.sc.spec.btn.tech.close']}"

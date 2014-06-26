@@ -13,9 +13,11 @@
 
 
 	<ui:define name="contentSection">
-
+		<p:messages id="financialAssetsLiabilitysScore" autoUpdate="true"
+			showDetail="true" showSummary="false" closable="true"></p:messages>
 		<div>
-			<p:commandButton value="#{lbl['lbl.sc.spec.back']}" style="float:left;" icon="ui-icon-back"
+			<p:commandButton value="#{lbl['lbl.sc.spec.back']}"
+				style="float:left;" icon="ui-icon-back"
 				action="#{specificationBackingBean.committeeBackAction}" />
 
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
@@ -29,11 +31,14 @@
 			<table>
 				<tr>
 					<td><h:outputLabel value="#{lbl['lbl.sc.spec.asset.title']}"></h:outputLabel></td>
-					<td><p:inputTextarea value="#{specificationBackingBean.managedBean.scQtChecklist.title}" disabled="true" rows="2" cols="150"></p:inputTextarea></td>
+					<td><p:inputTextarea
+							value="#{specificationBackingBean.managedBean.scQtChecklist.title}"
+							disabled="true" rows="2" cols="150"></p:inputTextarea></td>
 				</tr>
 			</table>
 
-			<p:panel header="#{lbl['lbl.sc.spec.asset.assets']}" toggleable="true">
+			<p:panel header="#{lbl['lbl.sc.spec.asset.assets']}"
+				toggleable="true">
 				<p:dataTable id="assetsCode" rowIndexVar="index" var="factory">
 					<ac:paginator for="assetsCode"></ac:paginator>
 
@@ -66,7 +71,8 @@
 			</p:panel>
 
 			<h:panelGrid columns="2">
-				<h:outputLabel value="#{lbl['lbl.sc.spec.asset.tot.current.assets']}"></h:outputLabel>
+				<h:outputLabel
+					value="#{lbl['lbl.sc.spec.asset.tot.current.assets']}"></h:outputLabel>
 				<p:inputText></p:inputText>
 				<h:outputLabel value="#{lbl['lbl.sc.spec.asst.tot.fix.assets']}"></h:outputLabel>
 				<p:inputText></p:inputText>
@@ -115,7 +121,8 @@
 
 
 		</p:panel>
-		<p:panel header="#{lbl['lbl.sc.spec.asset.summary']}" toggleable="true">
+		<p:panel header="#{lbl['lbl.sc.spec.asset.summary']}"
+			toggleable="true">
 
 			<p:panelGrid style="margin-top:20px;width:100%;">
 				<f:facet name="header">
@@ -186,12 +193,13 @@
 				<h:panelGroup id="assetsGroupId">
 					<ui:param name="scoringList"
 						value="#{specificationBackingBean.managedBean.assetScore}" />
-						<ui:param name="selectionList"
+					<ui:param name="selectionList"
 						value="#{specificationBackingBean.managedBean.assetLiabilitySelectList}" />
-						
+
 					<ui:param name="componentName" value="Assets" />
 					<ui:param name="scoringPnlId" value="assetId" />
-					<ui:param name="scoringPnlName" value="#{lbl['lbl.sc.spec.asset.score.net.amount']}"></ui:param>
+					<ui:param name="scoringPnlName"
+						value="#{lbl['lbl.sc.spec.asset.score.net.amount']}"></ui:param>
 					<ui:include src="/xhtml/sc/specification/scoring.xhtml"></ui:include>
 					<div align="right">
 						<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
@@ -211,10 +219,14 @@
 				rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '2'}">
 				<table>
 					<tr>
-						<td><p:outputLabel value="Max.Score"></p:outputLabel></td>
-						<td><p:inputText
-								value="#{specificationBackingBean.managedBean.scQtCheckListScore.score}"></p:inputText>
+						<td><p:outputLabel value="#{lbl['lbl.sc.spec.max.score']}"></p:outputLabel>
+							<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
 						</td>
+						<td><p:inputText id="finAssetsLiaScore" required="true"
+								label="#{lbl['lbl.sc.spec.max.score']}" maxlength="18"
+								value="#{specificationBackingBean.managedBean.scQtCheckListScore.score}"></p:inputText>
+							<p:message id="finAssetLiabilityMaxScore" for="finAssetsLiaScore"
+								display="icon"></p:message></td>
 					</tr>
 				</table>
 			</p:panel>

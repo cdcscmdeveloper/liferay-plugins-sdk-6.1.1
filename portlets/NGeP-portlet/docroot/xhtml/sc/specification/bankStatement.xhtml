@@ -13,9 +13,12 @@
 
 
 	<ui:define name="contentSection">
+		<p:messages id="BankStatementScoring" autoUpdate="true"
+			showDetail="true" showSummary="false" closable="true"></p:messages>
 
 		<div>
-			<p:commandButton value="#{lbl['lbl.sc.spec.back']}" style="float:left;" icon="ui-icon-back"
+			<p:commandButton value="#{lbl['lbl.sc.spec.back']}"
+				style="float:left;" icon="ui-icon-back"
 				action="#{specificationBackingBean.committeeBackAction}" />
 
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
@@ -29,7 +32,9 @@
 			<table>
 				<tr>
 					<td><h:outputLabel value="#{lbl['lbl.sc.spec.asset.title']}"></h:outputLabel></td>
-					<td><p:inputTextarea value="#{specificationBackingBean.managedBean.scQtChecklist.title}" disabled="true" rows="2" cols="150"></p:inputTextarea></td>
+					<td><p:inputTextarea
+							value="#{specificationBackingBean.managedBean.scQtChecklist.title}"
+							disabled="true" rows="2" cols="150"></p:inputTextarea></td>
 				</tr>
 			</table>
 		</p:panel>
@@ -37,22 +42,25 @@
 			toggleable="true">
 			<table>
 				<tr>
-					<td><h:outputLabel value="* #{lbl['lbl.sc.spec.from.month']}"></h:outputLabel></td>
-					<td><p:selectOneMenu 
+					<td><p:outputLabel value=" #{lbl['lbl.sc.spec.from.month']}"></p:outputLabel>
+						<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel></td>
+					<td><p:selectOneMenu
 							value="#{specificationBackingBean.managedBean.fromMonth}">
 
 							<f:selectItems value="#{specificationBackingBean.yearDetails}"></f:selectItems>
 							<p:ajax event="change"
 								update="toDetailsUpdate,bankInfo,amountdetails"
 								listener="#{specificationBackingBean.fromChange}"></p:ajax>
-						</p:selectOneMenu> <p:selectOneMenu value="#{specificationBackingBean.managedBean.startYear}">
+						</p:selectOneMenu> <p:selectOneMenu
+							value="#{specificationBackingBean.managedBean.startYear}">
 
 							<f:selectItem itemLabel="2014" itemValue="2014">
 							</f:selectItem>
 						</p:selectOneMenu></td>
 
-					<td style="width: 40%"><h:outputLabel
-							value="* #{lbl['lbl.sc.spec.to.month']}"></h:outputLabel></td>
+					<td style="width: 40%"><p:outputLabel
+							value="#{lbl['lbl.sc.spec.to.month']}"></p:outputLabel> <p:outputLabel
+							value="*" styleClass="mandatory"></p:outputLabel></td>
 					<td><h:panelGroup id="toDetailsUpdate">
 							<p:selectOneMenu style="margin-bottom:5px;" readOnly="true"
 								value="#{specificationBackingBean.managedBean.toMonth}">
@@ -62,7 +70,8 @@
 									listener="#{specificationBackingBean. toChange}"></p:ajax>
 
 							</p:selectOneMenu>
-							<p:selectOneMenu readOnly="true" value="#{specificationBackingBean.managedBean.endYear}">
+							<p:selectOneMenu readOnly="true"
+								value="#{specificationBackingBean.managedBean.endYear}">
 
 								<f:selectItem itemLabel="2014" itemValue="2014">
 								</f:selectItem>
@@ -102,60 +111,64 @@
 					value="#{specificationBackingBean.managedBean.totalAmountAvg}"></p:inputText>
 			</h:panelGrid>
 		</h:panelGroup>
-		
+
 		<p:panel>
 			<h:panelGrid columns="2">
 				<p:outputLabel value="#{lbl['lbl.sc.spec.asset.score.type']}"></p:outputLabel>
-				<p:selectOneMenu value="#{specificationBackingBean.managedBean.checklistScoreType}">
+				<p:selectOneMenu
+					value="#{specificationBackingBean.managedBean.checklistScoreType}">
 					<f:selectItem itemLabel="Auto" itemValue="1"></f:selectItem>
 					<f:selectItem itemLabel="User" itemValue="2"></f:selectItem>
-					<p:ajax event="change"
-						update="bankDetails"
+					<p:ajax event="change" update="bankDetails"
 						listener="#{specificationBackingBean.scoreTypeChange}"></p:ajax>
 				</p:selectOneMenu>
 			</h:panelGrid>
 		</p:panel>
 		<h:panelGroup id="bankDetails">
-		<p:panel rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '1'}">
+			<p:panel
+				rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '1'}">
 
-		<ui:param name="scoringPnlGroupId" value="contractorGroupId" />
-		<h:panelGroup id="bankGroupId">
-			<ui:param name="scoringList"
-				value="#{specificationBackingBean.managedBean.bankStamentScore}" />
-				<ui:param name="selectionList"
+				<ui:param name="scoringPnlGroupId" value="contractorGroupId" />
+				<h:panelGroup id="bankGroupId">
+					<ui:param name="scoringList"
+						value="#{specificationBackingBean.managedBean.bankStamentScore}" />
+					<ui:param name="selectionList"
 						value="#{specificationBackingBean.managedBean.bankSelectList}" />
-			<ui:param name="componentName" value="bankStatememt" />
-			<ui:param name="scoringPnlId" value="bankStatememtId" />
-			<ui:param name="scoringPnlName"
-				value="#{lbl['lbl.sc.spec.score.avg.bank.statement']}"></ui:param>
-			<ui:include src="/xhtml/sc/specification/scoring.xhtml"></ui:include>
-			<div align="right">
-				<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
-					process="@this,#{scoringPnlId}" partialSubmit="true"
-					oncomplete="scoreWidget.paginator.endLink.click();"
-					actionListener="#{specificationBackingBean.addBankStatement}"
-					update="#{scoringPnlId}" icon="ui-icon-add" />
-				<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
-					icon="ui-icon-delete"
-					action="#{specificationBackingBean.deleteScoring}"
-					update="#{scoringPnlId}" />
+					<ui:param name="componentName" value="bankStatememt" />
+					<ui:param name="scoringPnlId" value="bankStatememtId" />
+					<ui:param name="scoringPnlName"
+						value="#{lbl['lbl.sc.spec.score.avg.bank.statement']}"></ui:param>
+					<ui:include src="/xhtml/sc/specification/scoring.xhtml"></ui:include>
+					<div align="right">
+						<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
+							process="@this,#{scoringPnlId}" partialSubmit="true"
+							oncomplete="scoreWidget.paginator.endLink.click();"
+							actionListener="#{specificationBackingBean.addBankStatement}"
+							update="#{scoringPnlId}" icon="ui-icon-add" />
+						<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
+							icon="ui-icon-delete"
+							action="#{specificationBackingBean.deleteScoring}"
+							update="#{scoringPnlId}" />
 
-			</div>
-		</h:panelGroup>
-		
-              </p:panel>
-		<p:panel header="#{lbl['lbl.sc.spec.score.avg.bank.statement']}" rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '2'}">
-		<table>
-		<tr>
-		<td>
-		<p:outputLabel value="#{lbl['lbl.sc.spec.max.score']}"></p:outputLabel>
-		</td>
-		<td>
-		<p:inputText value="#{specificationBackingBean.managedBean.scQtCheckListScore.score}"></p:inputText>
-		</td>
-		</tr>
-		</table>
-		</p:panel>
+					</div>
+				</h:panelGroup>
+
+			</p:panel>
+			<p:panel header="#{lbl['lbl.sc.spec.score.avg.bank.statement']}"
+				rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '2'}">
+				<table>
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sc.spec.max.score']}"></p:outputLabel>
+							<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
+						</td>
+						<td><p:inputText id="bankStmtMaxScore" required="true"
+								label="#{lbl['lbl.sc.spec.max.score']}" maxlength="18"
+								value="#{specificationBackingBean.managedBean.scQtCheckListScore.score}"></p:inputText>
+							<p:message id="bkStmtMaxScoreId" for="bankStmtMaxScore"
+								display="icon"></p:message></td>
+					</tr>
+				</table>
+			</p:panel>
 		</h:panelGroup>
 
 		<!-- <p:commandButton value="Cancel" style="float:right;"
