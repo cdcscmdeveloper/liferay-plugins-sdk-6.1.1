@@ -155,6 +155,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 				getManagedBean().getFlRequisitioner();
 				isFlFulfilmentApprover();
 				isFlFulfilmentRecevingOfficer();
+				isFlFulfilmentApprover();
 				if(getManagedBean().getSearchOrderType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER) && isFlFulfilmentRequisitioner()) {
 					if(isFlFulfilmentRecevingOfficer()){
 						flDocTypes.add(ParameterConst.DOCTYPE_CONTRACT_REQUEST);

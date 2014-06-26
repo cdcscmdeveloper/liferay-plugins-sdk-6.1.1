@@ -136,18 +136,18 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.name']}" /></td>
 				<td><p:inputText disabled="true" size="50"
-						value="#{flOrderBB.managedBean.flRequest.ctContract.smSupplier.companyName}" /></td>
+						value="#{flOrderBB.managedBean.flRequest.ctContract.latestContractVer.ctContractValue.supplierName}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.branch']}" /></td>
-				<td><p:inputText disabled="true" size="50" /></td>
+				<td><p:inputText disabled="true" size="50" value="#{flOrderBB.managedBean.flRequest.ctContract.latestContractVer.ctContractValue.supplierBranch}"/></td>
 			</tr>
 			<tr>
 				<td valign="top"><p:outputLabel
 						value="#{lbl['lbl.fl.supp.address']}" /></td>
 				<td><p:inputTextarea cols="50" rows="8" disabled="true"
 						style=" margin-bottom:5px;"
-						value="#{flOrderBB.managedBean.supplierAddress}" /></td>
+						value="#{flOrderBB.getFullAddress(flOrderBB.managedBean.flRequest.ctContract.latestContractVer.ctContractValue.supplierAddress)}" /></td>
 			</tr>
 			<tr>
 				<td style="width: 100px;"><p:outputLabel
@@ -156,27 +156,27 @@
 						<tr>
 							<td style="width: 25px;"><p:inputText size="15"
 									disabled="true"
-									value="#{flOrderBB.managedBean.flRequest.flSupplierDtl.phoneNo}" /></td>
+									value="#{flOrderBB.managedBean.flRequest.ctContract.latestContractVer.ctContractValue.supplierPhoneNo}" /></td>
 							<td style="width: 65px;"><p:outputLabel
 									value="#{lbl['lbl.fl.supp.faxno']}" /></td>
 							<td><p:inputText size="20" disabled="true"
-									value="#{flOrderBB.managedBean.flRequest.flSupplierDtl.faxNo}" /></td>
+									value="#{flOrderBB.managedBean.flRequest.ctContract.latestContractVer.ctContractValue.supplierFaxNo}" /></td>
 						</tr>
 					</table></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.del.ord.contact.person']}" /></td>
-				<td><p:inputText disabled="true" size="50" value="#{flOrderBB.managedBean.flRequest.flSupplierDtl.contactPerson}"/></td>
+				<td><p:inputText disabled="true" size="50" value="#{flOrderBB.managedBean.flRequest.ctContract.latestContractVer.ctContractValue.supplierContact}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.del.ord.contact.email']}" /></td>
-				<td><p:inputText disabled="true" size="50" value="#{flOrderBB.managedBean.flRequest.flSupplierDtl.contactEmail}"/></td>
+				<td><p:inputText disabled="true" size="50" value="#{flOrderBB.managedBean.flRequest.ctContract.latestContractVer.ctContractValue.supplierEmail}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.del.ord.contact.no']}" /></td>
-				<td><p:inputText disabled="true" size="15" value="#{flOrderBB.managedBean.flRequest.flSupplierDtl.contactPhoneNo}"/></td>
+				<td><p:inputText disabled="true" size="15" value="#{flOrderBB.managedBean.flRequest.ctContract.latestContractVer.ctContractValue.supplierFaxNo}"/></td>
 			</tr>
 		</table>
 	</p:panel>

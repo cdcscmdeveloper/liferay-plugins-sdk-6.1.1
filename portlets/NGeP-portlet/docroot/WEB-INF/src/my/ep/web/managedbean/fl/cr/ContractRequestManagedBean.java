@@ -34,6 +34,7 @@ import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
+import my.ep.persistence.entity.pm.common.PmGlAccount;
 import my.ep.persistence.entity.pm.common.PmPrgActivity;
 import my.ep.persistence.entity.pm.common.PmProject;
 import my.ep.persistence.entity.pm.common.PmSetia;
@@ -73,10 +74,11 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private DualListModel<String> approverModel;
 	private FlFulfilmentItem selectedItemRow;
 	private HashMap<String, PmUserGroupUser> approverMap;
-	private HashMap<Long, FlFulfilmentItem> flItemMap;
+	private HashMap<String, FlFulfilmentItem> flItemMap;
 	private BigDecimal subTotal;
 	private FlFulfilmentItemAddr selectedItemAddr;
 	private FlDeliveryAddress flManualAddress;
+	private List<SelectItem> supplierBranchesList;
 
 	private List <FlFulfilmentItemAddr>  selectedItemsRows;
 	private PmOrgProfile pmOrgProfile;
@@ -91,8 +93,6 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private Long contractId;
 	private Long testOrg;
 	
-	
-	
 	//getcontract
 	private CtContract ctContract = new CtContract();
 	private List <CtContract> contractList;
@@ -101,9 +101,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 
 	//getSI
 	private FlShippingInstr shippingInstr;
-
 	private boolean selectedRowFlg;
-
 	private String tempLogin; //TODO: temp and to be removed
 
 	//doc search
@@ -145,19 +143,26 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private List<PmSubSetia> subSetiaList;
 	private List<PmPrgActivity> prgActivityList;
 	private List<SelectItem> manualAddrList;
+	private List<PmGlAccount> glAccountList;
 		
 	// set chargeline for selected items
 	private String votFundCode;
+	private String assetIndCode;
+	private String glAccountCode;
 	private String projectCode;
 	private String setiaCode;
 	private String subSetiaCode;
 	private String prgActivityCode;
+	private String votFundType;
 		
 	private Long votFundId;
+	private Long assetIndId;
+	private Long glAccountId;
 	private Long projectId;
 	private Long setiaId;
 	private Long subSetiaId;
 	private Long prgActivityId;
+	private String financingTypeCode;
 	
 	private boolean deleteButtonHide;
 	
@@ -203,11 +208,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 			if(null !=this.getFlRequest().getFlDeliveryAddresses()){
 				for(FlDeliveryAddress  deliveryAddress :this.getFlRequest().getFlDeliveryAddresses()){
 					if(null!=deliveryAddress.getFlFulfilmentItemAddr()){
-						//System.out.println("11111111111111111111111111111111111     "+deliveryAddress.getAddressType().getPmAddress().getAddressId());
-						
 						for(FlFulfilmentItemAddr itemAddress:deliveryAddress.getFlFulfilmentItemAddr()){
-							//System.out.println("777777777777   "+itemAddress.getCmItem().getExtensionCode());
-							
 							itemAddress.setChargeOrderedAmt(itemAddress.getOrderedAmt());
 							itemAddress.setChargeOrderedQty(itemAddress.getOrderedQty());
 							itemAddress.setChargeUnitPrice(itemAddress.getUnitPrice());
@@ -251,7 +252,6 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 			FlFulfilmentItemAddr flItemAddress=getFulfilmentItemAddress(itemAddress.get(0));
 			if(null!=flItemAddress){
 				//Do create New Item Address and copy the first element data manually.
-				
 				TreeNode childItemNode=new DefaultTreeNode(flItemAddress.getScRequestItem().getRequestNoteItemId().toString(),flItemAddress,chargeLineItemRoot);
 				BigDecimal totalOrderAmt=new BigDecimal(0);
 				for(FlFulfilmentItemAddr itemAddr:itemAddress){
@@ -262,10 +262,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 				grandTotalOrderAmt=grandTotalOrderAmt.add(totalOrderAmt);
 				setOrderedAmtGrandTotal(grandTotalOrderAmt);
 			}
-			
 		}
-	
-		
 	}
 	
 	private FlFulfilmentItemAddr getFulfilmentItemAddress(
@@ -280,9 +277,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		itemAddress.setScRequestItem(new ScRequestItem());
 		itemAddress.setParent(true);
 		itemAddress.getScRequestItem().setRequestNoteItemId(flFulfilmentItemAddr.getScRequestItem().getRequestNoteItemId());
-		
 		itemAddress.getScRequestItem().setItemType(flFulfilmentItemAddr.getScRequestItem().getItemType());
-		System.out.println("item code::9999999999999999 : "+flFulfilmentItemAddr.getCmItem().getExtensionCode());
 		if(null==itemAddress.getCmItem()){
 			itemAddress.setCmItem(new CmItem());
 		}
@@ -291,12 +286,9 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		itemAddress.setUnitPrice(flFulfilmentItemAddr.getUnitPrice());
 		itemAddress.setOrderedQty(flFulfilmentItemAddr.getOrderedQty());
 		itemAddress.setOrderedAmt(flFulfilmentItemAddr.getOrderedAmt());
-		/*if("N".equalsIgnoreCase(flFulfilmentItemAddr.getCoaValue()) || null==flFulfilmentItemAddr.getCoaValue()){
-			itemAddress.setCoaValue("N");
-		}*/
 		if(null !=flFulfilmentItemAddr.getPmVotFund()){
 			if(null !=flFulfilmentItemAddr.getPmVotFund().getVotFundId()){
-			itemAddress.setCoaValue("Y");
+				itemAddress.setCoaValue("Y");
 			}
 		}else{
 			itemAddress.setCoaValue("N");
@@ -623,9 +615,9 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	/**
 	 * @return the flItemMap
 	 */
-	public HashMap<Long, FlFulfilmentItem> getFlItemMap() {
+	public HashMap<String, FlFulfilmentItem> getFlItemMap() {
 		if(flItemMap == null){
-			setFlItemMap(new HashMap<Long, FlFulfilmentItem>());
+			setFlItemMap(new HashMap<String, FlFulfilmentItem>());
 		}
 		return flItemMap;
 	}
@@ -634,7 +626,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	/**
 	 * @param flItemMap the flItemMap to set
 	 */
-	public void setFlItemMap(HashMap<Long, FlFulfilmentItem> flItemMap) {
+	public void setFlItemMap(HashMap<String, FlFulfilmentItem> flItemMap) {
 		this.flItemMap = flItemMap;
 	}
 
@@ -1588,18 +1580,130 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 
 
 	/**
-	 * @return the contractListTree
+	 * @return the glAccountList
 	 */
-	public TreeNode getContractListTree() {
-		return contractListTree;
+	public List<PmGlAccount> getGlAccountList() {
+		return glAccountList;
 	}
 
 
 	/**
-	 * @param contractListTree the contractListTree to set
+	 * @param glAccountList the glAccountList to set
 	 */
-	public void setContractListTree(TreeNode contractListTree) {
-		this.contractListTree = contractListTree;
+	public void setGlAccountList(List<PmGlAccount> glAccountList) {
+		this.glAccountList = glAccountList;
+	}
+
+
+	/**
+	 * @return the votFundType
+	 */
+	public String getVotFundType() {
+		return votFundType;
+	}
+
+
+	/**
+	 * @param votFundType the votFundType to set
+	 */
+	public void setVotFundType(String votFundType) {
+		this.votFundType = votFundType;
+	}
+
+
+	/**
+	 * @return the assetIndCode
+	 */
+	public String getAssetIndCode() {
+		return assetIndCode;
+	}
+
+
+	/**
+	 * @param assetIndCode the assetIndCode to set
+	 */
+	public void setAssetIndCode(String assetIndCode) {
+		this.assetIndCode = assetIndCode;
+	}
+
+
+	/**
+	 * @return the glAccountCode
+	 */
+	public String getGlAccountCode() {
+		return glAccountCode;
+	}
+
+
+	/**
+	 * @param glAccountCode the glAccountCode to set
+	 */
+	public void setGlAccountCode(String glAccountCode) {
+		this.glAccountCode = glAccountCode;
+	}
+
+
+	/**
+	 * @return the assetIndId
+	 */
+	public Long getAssetIndId() {
+		return assetIndId;
+	}
+
+
+	/**
+	 * @param assetIndId the assetIndId to set
+	 */
+	public void setAssetIndId(Long assetIndId) {
+		this.assetIndId = assetIndId;
+	}
+
+
+	/**
+	 * @return the glAccountId
+	 */
+	public Long getGlAccountId() {
+		return glAccountId;
+	}
+
+
+	/**
+	 * @param glAccountId the glAccountId to set
+	 */
+	public void setGlAccountId(Long glAccountId) {
+		this.glAccountId = glAccountId;
+	}
+
+
+	/**
+	 * @return the financingTypeCode
+	 */
+	public String getFinancingTypeCode() {
+		return financingTypeCode;
+	}
+
+
+	/**
+	 * @param financingTypeCode the financingTypeCode to set
+	 */
+	public void setFinancingTypeCode(String financingTypeCode) {
+		this.financingTypeCode = financingTypeCode;
+	}
+
+
+	/**
+	 * @return the supplierBranchesList
+	 */
+	public List<SelectItem> getSupplierBranchesList() {
+		return supplierBranchesList;
+	}
+
+
+	/**
+	 * @param supplierBranchesList the supplierBranchesList to set
+	 */
+	public void setSupplierBranchesList(List<SelectItem> supplierBranchesList) {
+		this.supplierBranchesList = supplierBranchesList;
 	}
 
 
@@ -1617,5 +1721,22 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	public void setAddressManualTypesList(List<PmAddressType> addressManualTypesList) {
 		this.addressManualTypesList = addressManualTypesList;
 	}*/
+	/**
+	 * @return the contractListTree
+	 */
+	public TreeNode getContractListTree() {
+		return contractListTree;
+	}
+
+
+	/**
+	 * @param contractListTree the contractListTree to set
+	 */
+	public void setContractListTree(TreeNode contractListTree) {
+		this.contractListTree = contractListTree;
+	}
+
+
+	
 
 }

@@ -5,22 +5,33 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-
-
 	<p:panel id="delAddrPanel" header="DELIVERY ITEM DETAILS"
 		toggleable="true">
-
 		<p:dataTable id="addressDataTable" var="address"
 			value="#{contractRequestBackingBean.managedBean.flRequest.flDeliveryAddresses}"
 			rowIndexVar="index"
 			selection="#{contractRequestBackingBean.managedBean.selectedDelAddr}"
+			selectionMode="single" 
 			rowKey="#{address}" lazy="true">
 			<ac:paginator for="addressDataTable" />
-			<p:ajax event="rowSelectRadio"
-				update=":form:itemDetPanel,:form:deleteAddrBtn"
-				listener="#{contractRequestBackingBean.selectAddrEvent()}" />
-			<p:column selectionMode="single" width="5%" />
-			<p:column headerText="Delivery Address">
+			<p:ajax event="rowSelect"
+				update=":form:itemDetPanelGroup,:form:deleteAddrBtn" />
+			<p:column>
+				<p:selectBooleanCheckbox value="#{address.selectedAddressRowDelete}"
+					styleClass="myCustomChekBox">
+					<p:ajax event="change"
+						update=":form:deleteAddrBtn,addressDataTable,@(.orderSummaryChange)"
+						listener="#{contractRequestBackingBean.selectOneCheckboxSelect}"></p:ajax>
+				</p:selectBooleanCheckbox>
+			</p:column>	
+			<p:column headerText="Delivery Address" style="white-space:normal;">
+				<p:commandLink oncomplete="addManualDeliveryAddr.show();"
+					action="#{contractRequestBackingBean.editManualAddress(address)}"
+					update=":form:addManualDelAddrDialog,@(.orderSummaryChange)"
+					style="padding-right:5px" rendered="#{address.checkManualAddress}">
+					<p:graphicImage library="ep/images/design" name="edit.png"
+						value="/resources/ep/images/design/edit.png" />
+				</p:commandLink>
 				<h:outputText rendered="#{address.addressType != null}"
 					value="#{address.addressType.pmAddress.address1}, #{address.addressType.pmAddress.address2}, #{address.addressType.pmAddress.address3}, #{address.addressType.pmAddress.address4}" />
 				<h:outputText rendered="#{address.addressType eq null}"
@@ -50,16 +61,6 @@
 						title="Recv Officer List" />
 				</p:commandLink>
 			</p:column>
-
-			<p:commandLink rendered="#{address.checkManualAddress}"
-				oncomplete="addManualDeliveryAddr.show();"
-				action="#{contractRequestBackingBean.editManualAddress(address)}"
-				update=":form:addManualDelAddrDialog"
-				style="padding-right:5px">
-				<p:graphicImage library="ep/images/design" name="edit.png"
-					value="/resources/ep/images/design/edit.png" />
-			</p:commandLink>
-
 		</p:dataTable>
 		<p:spacer height="2px"></p:spacer>
 		<div style="width: 100%; text-align: right">
@@ -70,14 +71,18 @@
 			<p:commandButton value="Manual Address" icon="ui-icon-add"
 				action="#{contractRequestBackingBean.flManualDeliveryAddr}"
 				update="delAddr,@(.orderSummaryChange) " process="@this,delAddr"
-				oncomplete="addManualDeliveryAddr.show();" />
+				oncomplete="addManualDeliveryAddr.show();" >
+				<f:setPropertyActionListener
+					target="#{contractRequestBackingBean.managedBean.required}"
+					value="true" />
+					</p:commandButton>
 			<p:commandButton id="deleteAddrBtn" value="Delete"
 				icon="ui-icon-delete" onsuccess="delAddrDlg.show()" process="@this"
-				disabled="#{contractRequestBackingBean.managedBean.selectedDelAddr == null}">
+				update=":form:deleteAddrBtn,addressDataTable,@(.orderSummaryChange)"
+				disabled="#{contractRequestBackingBean.managedBean.deleteButtonHide}">
 			</p:commandButton>
 
 		</div>
-
 		<p:confirmDialog message="Do you want to delete the record?"
 			severity="alert" widgetVar="delAddrDlg" closable="true"
 			appendToBody="true" header="Delete Confirmation">
@@ -85,17 +90,14 @@
 				<p:commandButton value="Yes" icon="ui-icon-accept"
 					partialSubmit="true"
 					action="#{contractRequestBackingBean.removeAddRow()}"
-					update=":form:deleteAddrBtn,:form:itemDataTable,addressDataTable"
+					update=":form:deleteAddrBtn,itemDetPanelGroup,addressDataTable,@(.orderSummaryChange)"
 					oncomplete="delAddrDlg.hide();" />
 				<p:commandButton value="No" icon="ui-icon-reject"
 					onclick="delAddrDlg.hide()" type="button" />
 			</h:panelGrid>
 		</p:confirmDialog>
-
 		<p:spacer height="20" />
-
-		<h:panelGroup id="itemDetPanel">
-
+		<h:panelGroup id="itemDetPanelGroup">
 			<p:dataTable id="itemDataTable" var="item" lazy="true"
 				rowIndexVar="index" rowKey="#{item}"
 				value="#{contractRequestBackingBean.managedBean.selectedDelAddr.flFulfilmentItemAddr}"
@@ -106,8 +108,6 @@
 				<p:column headerText="Item Name">
 					<h:outputText value="#{item.scRequestItem.itemName}" />
 				</p:column>
-
-
 				<p:column headerText="Unit Price (MYR)">
 					<p:inputText value="#{item.unitPrice}" disabled="true"
 						style="text-align:right"></p:inputText>
@@ -137,7 +137,6 @@
 					rendered="#{not empty contractRequestBackingBean.managedBean.selectedDelAddr}"
 					action="#{contractRequestBackingBean.removeItemRow}"
 					update="itemDataTable" partialSubmit="true" />
-
 			</div>
 		</h:panelGroup>
 	</p:panel>
@@ -145,26 +144,18 @@
 	<p:dialog id="addDelAddrDialog" header="Add Delivery Address"
 		widgetVar="addDeliveryAddr" showEffect="fade" hideEffect="fade"
 		modal="true" height="450" width="600" resizable="false">
-
 		<p:dataTable id="delAddr" var="delAddr"
 			value="#{contractRequestBackingBean.managedBean.addressTypesList}"
 			rowKey="#{delAddr}"
 			selection="#{contractRequestBackingBean.managedBean.selectedCtAddrTypeList}">
-
 			<ac:paginator for="delAddr" />
-			<p:columnGroup type="header">
-				<p:row>
-					<p:column rowspan="1" headerText=""></p:column>
-					<p:column rowspan="1" headerText="Address"></p:column>
-				</p:row>
-			</p:columnGroup>
-			<p:column selectionMode="multiple" />
-			<p:column>
+			<p:column selectionMode="multiple" style="width:2%;text-align:center" />
+			<p:column headerText="Address" style="white-space:normal;">
 				<h:outputText
-					value="#{delAddr.addressType.pmAddress.address1}, #{delAddr.addressType.pmAddress.address2}, 
-									#{delAddr.addressType.pmAddress.address3}, #{delAddr.addressType.pmAddress.address4}"
+					value="#{contractRequestBackingBean.getFullAddress(delAddr.addressType.pmAddress)}"
 					escape="false" />
 			</p:column>
+			
 		</p:dataTable>
 		<p:spacer height="2px"></p:spacer>
 		<div style="width: 100%; text-align: right">
@@ -173,19 +164,16 @@
 				oncomplete="addDeliveryAddr.hide();" update="addressDataTable">
 			</p:commandButton>
 		</div>
-
-
 	</p:dialog>
 	<p:dialog id="addContractedItemDialog" header="Add Contract Items"
 		widgetVar="addItems" showEffect="fade" hideEffect="fade" modal="true"
 		height="450" width="600" resizable="false">
-
 		<p:dataTable id="contractedItemDt" var="contractedItem"
 			value="#{contractRequestBackingBean.managedBean.contractedItemList}"
 			rowKey="#{contractedItem.contractItemId}"
 			selection="#{contractRequestBackingBean.managedBean.selectedContractedItemList}">
-			<p:ajax event="rowSelect"
-				update=":form:addContractedItemDialog" process="@this" />
+			<p:ajax event="rowSelect" update=":form:addContractedItemDialog"
+				process="@this" />
 			<ac:paginator for="contractedItemDt" />
 			<p:columnGroup type="header">
 				<p:row>
@@ -212,9 +200,7 @@
 				process="@this,contractedItemDt">
 			</p:commandButton>
 		</div>
-
 	</p:dialog>
-
 	<p:panel header="#{lbl['lbl.fl.remark.attachment']}" toggleable="true">
 		<table style="width: 100%">
 			<tr>
@@ -229,16 +215,18 @@
 		widgetVar="addManualDeliveryAddr" showEffect="fade" hideEffect="fade"
 		visible="#{facesContext.validationFailed}" modal="true" width="900px"
 		height="350px" resizable="false">
-		<p:ajax event="close" listener="#{contractRequestBackingBean.closeListener}" update="addManualDelAddrDialog"/>
+		<p:ajax event="close"
+			listener="#{contractRequestBackingBean.closeListener}"
+			update="addManualDelAddrDialog" />
 		<p:panel id="addManualDelAddrPnl">
-			<p:messages id="manualAddrMessages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
+			<p:messages id="manualAddrMessages" showDetail="true"
+				autoUpdate="true" closable="true" showSummary="false" />
 			<table style="width: 100%">
 				<tr>
-					<td width="120">
-							<p:outputLabel value="Country" />
-							<h:outputLabel value="*" styleClass="mandatory" />
-					</td>
-					<td width="220"><p:selectOneMenu id="manCountry" required="#{contractRequestBackingBean.managedBean.required}"
+					<td width="120"><p:outputLabel value="Country" /> <h:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td width="220"><p:selectOneMenu id="manCountry"
+							required="#{contractRequestBackingBean.managedBean.required}"
 							label="Country"
 							value="#{contractRequestBackingBean.managedBean.flManulaAddress.pmAddress.pmCountry.countryId}"
 							style="width: 212px;margin-bottom: 5px;">
@@ -250,14 +238,12 @@
 							<p:ajax event="change"
 								listener="#{contractRequestBackingBean.retrieveStateList}"
 								update="manState" />
-						</p:selectOneMenu>
-					</td>
-					<td>
-						<p:message for="manCountry" display="icon" />
-					</td>
-					<td width="150"><p:outputLabel value="State" /><p:outputLabel value="*" styleClass="mandatory" /></td>
-					<td width="220">
-						<p:selectOneMenu id="manState" required="#{contractRequestBackingBean.managedBean.required}"
+						</p:selectOneMenu></td>
+					<td><p:message for="manCountry" display="icon" /></td>
+					<td width="150"><p:outputLabel value="State" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td width="220"><p:selectOneMenu id="manState"
+							required="#{contractRequestBackingBean.managedBean.required}"
 							label="State"
 							value="#{contractRequestBackingBean.managedBean.flManulaAddress.pmAddress.pmState.stateId}"
 							style="width: 207px;margin-bottom: 5px;">
@@ -269,26 +255,18 @@
 							<p:ajax event="change"
 								listener="#{contractRequestBackingBean.retrieveDivisionList}"
 								update="manDivison,manDistrict" />
-							<p:ajax event="change"
-							listener="#{contractRequestBackingBean.retrieveDistrictList}"
-							update="manDistrict" />	
-						</p:selectOneMenu>
-					</td>
-					<td>
-						<p:message for="manState" display="icon" />					
-					</td>
+						</p:selectOneMenu></td>
+					<td><p:message for="manState" display="icon" /></td>
 				</tr>
 				<tr>
-					<td>
-						<p:outputLabel value="Address Line 1" /><p:outputLabel value="*" styleClass="mandatory" /></td>
-					<td><p:inputText id="address1" label="Address Line 1" maxlength="255"
+					<td><p:outputLabel value="Address Line 1" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td><p:inputText id="address1" label="Address Line 1"
+							maxlength="255"
 							required="#{contractRequestBackingBean.managedBean.required}"
 							value="#{contractRequestBackingBean.managedBean.flManulaAddress.pmAddress.address1}"
-							size="35" />
-					</td>
-					<td>
-						<p:message for="address1" display="icon" />
-					</td>
+							size="35" /></td>
+					<td><p:message for="address1" display="icon" /></td>
 					<td><p:outputLabel value="Divison" /></td>
 					<td><p:selectOneMenu id="manDivison"
 							value="#{contractRequestBackingBean.managedBean.flManulaAddress.pmAddress.pmDivision.divisionId}"
@@ -299,20 +277,21 @@
 								itemValue="#{divisionList.divisionId}"
 								itemLabel="#{divisionList.divisionName}" />
 							<p:ajax event="change"
-								listener="#{contractRequestBackingBean.retrieveDistrictListByDivisonId}"
+								listener="#{contractRequestBackingBean.retrieveDistrictList}"
 								update="manDistrict" />
 						</p:selectOneMenu></td>
 					<td></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Line 2" /></td>
-					<td><p:inputText maxlength="255" 
+					<td><p:inputText maxlength="255"
 							value="#{contractRequestBackingBean.managedBean.flManulaAddress.pmAddress.address2}"
 							size="35" /></td>
 					<td></td>
-					<td>
-						<p:outputLabel value="District" /><p:outputLabel value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu id="manDistrict" required="#{contractRequestBackingBean.managedBean.required}"
+					<td><p:outputLabel value="District" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td><p:selectOneMenu id="manDistrict"
+							required="#{contractRequestBackingBean.managedBean.required}"
 							label="District"
 							value="#{contractRequestBackingBean.managedBean.flManulaAddress.pmAddress.pmDistrict.districtId}"
 							style="width: 207px;margin-bottom: 5px;">
@@ -327,8 +306,7 @@
 							<p:ajax event="change"
 								listener="#{contractRequestBackingBean.retrieveDeliveryAddressList}"
 								update="manAddress" />
-						</p:selectOneMenu>
-					</td>
+						</p:selectOneMenu></td>
 					<td><p:message for="manDistrict" display="icon" /></td>
 				</tr>
 				<tr>
@@ -337,17 +315,18 @@
 							value="#{contractRequestBackingBean.managedBean.flManulaAddress.pmAddress.address3}"
 							size="35" /></td>
 					<td></td>
-					<td>
-						<p:outputLabel value="City/Town" /><p:outputLabel value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu id="manCity" required="#{contractRequestBackingBean.managedBean.required}" label="City"
-							value="#{contractRequestBackingBean.managedBean.flManulaAddress.pmAddress.pmCity.cityCode}"
+					<td><p:outputLabel value="City/Town" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td><p:selectOneMenu id="manCity"
+							required="#{contractRequestBackingBean.managedBean.required}"
+							label="City"
+							value="#{contractRequestBackingBean.managedBean.flManulaAddress.pmAddress.pmCity.cityId}"
 							style="width: 207px;margin-bottom: 5px;">
 							<f:selectItem itemLabel="-- Select -- " itemValue="" />
 							<f:selectItems var="cityList"
 								value="#{contractRequestBackingBean.managedBean.cityList}"
 								itemLabel="#{cityList.cityName}" itemValue="#{cityList.cityId}" />
-						</p:selectOneMenu>
-					</td>
+						</p:selectOneMenu></td>
 					<td><p:message for="manCity" display="icon" /></td>
 				</tr>
 				<tr>
@@ -355,81 +334,84 @@
 					<td><p:inputText maxlength="255"
 							value="#{contractRequestBackingBean.managedBean.flManulaAddress.pmAddress.address4}"
 							size="35" /></td>
-					<td></td>		
-					<td>
-						<p:outputLabel value="Postal Code" /><p:outputLabel value="*" styleClass="mandatory" /></td>
-					<td><p:inputText id="postCode" required="#{contractRequestBackingBean.managedBean.required}"
+					<td></td>
+					<td><p:outputLabel value="Postal Code" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td><p:inputText id="postCode"
+							required="#{contractRequestBackingBean.managedBean.required}"
 							label="Post Code" maxlength="10"
 							value="#{contractRequestBackingBean.managedBean.flManulaAddress.pmAddress.postcode}"
-							size="34" />
-					</td>
-					<td><p:message for="postCode" display="icon" /></td>	
+							size="34" ><f:validateRegex pattern="^-?\d*(\.\d+)?$" /></p:inputText></td>
+							<td><p:message for="postCode" display="icon" /></td>
 				</tr>
 				<tr>
-					<td>
-						<p:outputLabel value="Address Name" /></td>
-					<td><p:inputText size="35" id="contactPerson" maxlength="255" 
+					<td><p:outputLabel value="Address Name" /></td>
+					<td><p:inputText size="35" id="contactPerson" maxlength="255"
 							value="#{contractRequestBackingBean.managedBean.flManulaAddress.pmAddress.addressName}"
-							label="Address Name" />
-					</td>
-					<td></td>	
-					<td>
-						<p:outputLabel value="Delivery Address" /><p:outputLabel value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu id="manAddress" label="Manual Address" required="#{contractRequestBackingBean.managedBean.required}"
+							label="Address Name" /></td>
+					<td></td>
+					<td><p:outputLabel value="Delivery Address" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+							<!-- required="#{contractRequestBackingBean.managedBean.required}" -->
+					<td><p:selectOneMenu id="manAddress" label="Manual Address"
 							value="#{contractRequestBackingBean.managedBean.flManulaAddress.receivingGrp.addressTypeId}"
 							style="width: 207px;margin-bottom: 5px;">
 							<f:selectItem itemLabel="-- Select -- " itemValue="" />
 							<f:selectItems var="delAddByDistrict"
 								value="#{contractRequestBackingBean.managedBean.manualAddrList}" />
-	
-						</p:selectOneMenu>
-					</td>
-					<td><p:message for="manAddress" display="icon" /></td>	
+						</p:selectOneMenu></td>
+					<td><p:message for="manAddress" display="icon" /></td>
 				</tr>
 				<tr>
-					<td>
-						<p:outputLabel value="Email" /><p:outputLabel value="*" styleClass="mandatory" /></td>
-					<td><p:inputText id="email" required="#{contractRequestBackingBean.managedBean.required}" label="Email" maxlength="80"
+					<td><p:outputLabel value="Email" /> <p:outputLabel value="*"
+							styleClass="mandatory" /></td>
+					<td><p:inputText id="email"
+							required="#{contractRequestBackingBean.managedBean.required}"
+							label="Email" maxlength="80"
 							value="#{contractRequestBackingBean.managedBean.flManulaAddress.pmAddress.email}"
-							size="35" />
-					</td>
+							size="35" /></td>
 					<td><p:message for="email" display="icon" /></td>
 				</tr>
 				<tr>
-					<td>
-						<p:outputLabel value="Tel.No." /><p:outputLabel value="*" styleClass="mandatory" /></td>
-					<td><p:inputText id="telNo" required="#{contractRequestBackingBean.managedBean.required}" label="Tel No" maxlength="20"
+					<td><p:outputLabel value="Tel.No." /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td><p:inputText id="telNo"
+							required="#{contractRequestBackingBean.managedBean.required}"
+							label="Tel No" maxlength="20"
 							value="#{contractRequestBackingBean.managedBean.flManulaAddress.pmAddress.phoneNo}"
-							size="35" />
-					</td>
+							size="35" > <f:validateRegex pattern="^-?\d*(\.\d+)?$" /></p:inputText>
+							</td>
 					<td><p:message for="telNo" display="icon" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Fax.No." /></td>
-					<td><p:inputText maxlength="20"
+					<td><p:inputText maxlength="20" id="faxNo"
 							value="#{contractRequestBackingBean.managedBean.flManulaAddress.pmAddress.faxNo}"
-							size="35" /></td>
+							size="35" ><f:validateRegex pattern="^-?\d*(\.\d+)?$" /></p:inputText></td>
+							<td><p:message for="faxNo" display="icon" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Mobile.No." /></td>
-					<td><p:inputText maxlength="20"
+					<td><p:inputText maxlength="20" id="mobileNo"
 							value="#{contractRequestBackingBean.managedBean.flManulaAddress.pmAddress.mobileNo}"
-							size="35" required="false" /></td>
+							size="35" required="false" ><f:validateRegex pattern="^-?\d*(\.\d+)?$" /></p:inputText></td>
+							<td><p:message for="mobileNo" display="icon" /></td>
 				</tr>
 			</table>
 		</p:panel>
 		<p:spacer height="2px"></p:spacer>
 		<div style="width: 100%; text-align: right">
-			<p:commandButton value="Ok" icon="ui-icon-accept" process="@this addManualDelAddrDialog"
+			<p:commandButton value="Ok" icon="ui-icon-accept"
+				process="@this addManualDelAddrDialog"
 				action="#{contractRequestBackingBean.updateManualDeliveryAddrDt}"
 				update="addManualDelAddrPnl,addressDataTable,@(.orderSummaryChange)">
 			</p:commandButton>
-			<p:commandButton value="Cancel" icon="ui-icon-cancel" process="@this" 
-				action="#{contractRequestBackingBean.closeListener}" partialSubmit="true" >
+			<p:commandButton value="Cancel" icon="ui-icon-cancel" process="@this"
+				action="#{contractRequestBackingBean.closeListener}"
+				partialSubmit="true">
 			</p:commandButton>
 		</div>
 	</p:dialog>
-	
 	<p:dialog id="addReceivingOfficerDialog" header="RECEIVING OFFICER"
 		widgetVar="addOfficer" showEffect="fade" hideEffect="fade"
 		modal="true" height="250" width="600" resizable="false">
@@ -441,10 +423,10 @@
 				<h:outputText value="#{receivingOfficer.pmUser.userName}" />
 			</p:column>
 			<p:column headerText="Tel. No.">
-				<h:outputText value="#{receivingOfficer.pmUser.phoneNo}"/>
+				<h:outputText value="#{receivingOfficer.pmUser.phoneNo}" />
 			</p:column>
 			<p:column headerText="Email">
-				<h:outputText value="#{receivingOfficer.pmUser.email}"/>
+				<h:outputText value="#{receivingOfficer.pmUser.email}" />
 			</p:column>
 		</p:dataTable>
 		<p:spacer height="2px"></p:spacer>
