@@ -78,7 +78,7 @@
 							itemValue="#{state.stateId}" itemLabel="#{state.stateName}" />
 						<p:ajax event="change"
 							listener="#{registrationBackingBean.populateDistrictByAddType('permenant')}"
-							update="cmbPermDistrict" />
+							update="cmbPermDistrict cmbPermCity" />
 					</p:selectOneMenu> <p:message id="cmbPermStateMsg" for="cmbPermState" display="icon" /></td>
 			</tr>
 
