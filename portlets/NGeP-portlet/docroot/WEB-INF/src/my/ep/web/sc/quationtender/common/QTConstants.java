@@ -104,4 +104,11 @@ public interface QTConstants {
 	public static final String NODE_DISTRICT="district";
 	public static final String NODE_CITY="city";
 	
+	public static final String DOCTYPE_QT = "QT";
+	public static final String DOCTYPE_PREPARE_SPEC = "PS";
+	public static final String DOCTYPE_BSV="BSV";
+	public static final String DOCTYPE_PROPOSAL="PR";
+	public static final String DOCTYPE_OPENING_COMMITTE="OC";
+	public static final String DOCTYPE_EVAL_COMMITTE="EC";
+	
 }
