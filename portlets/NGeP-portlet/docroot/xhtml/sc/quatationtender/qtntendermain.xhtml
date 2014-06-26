@@ -24,7 +24,7 @@
 					size="29" maxlength="21" />
 
 				<h:outputLabel value="#{lbl['lbl.so.procmode']}" />
-				<p:selectOneMenu
+				<p:selectOneMenu id="procurementid"
 					value="#{qTDetailBB.managedBean.qtnTenderSearchBean.procurementMode}"
 					style="width: 178px;margin-bottom: 5px;">
 					<f:selectItems
@@ -154,16 +154,16 @@
 
 				</p:dataTable>
 			</h:panelGroup>
-
 			<br />
-
-
 			<table border="0" cellspacing="0" cellpadding="0" width="100%">
 				<tr>
-					<td width="100%"><h:outputLabel value="Select PTJ" /></td>
+					<td width="100%"><h:outputLabel
+							value="#{lbl['lbl.sc.select.ptj']}" /> <p:outputLabel value="*"
+							styleClass="mandatory" /></td>
 					<td class="ppRightBtn" style="white-space: nowrap;"><p:selectOneMenu
 							value="#{qTDetailBB.managedBean.qt.pmOrgProfile.orgProfileId}">
-							<f:selectItem itemLabel="-Select One-" itemValue="null" />
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+								itemValue="null" />
 							<f:selectItems value="#{qTDetailBB.managedBean.userDivisionList}"
 								var="pmOrgProfile"
 								itemLabel="#{pmOrgProfile.orgCode} - #{pmOrgProfile.orgName}"
@@ -177,7 +177,6 @@
 					</td>
 				</tr>
 			</table>
-
 			<br />
 			<br />
 		</p:panel>

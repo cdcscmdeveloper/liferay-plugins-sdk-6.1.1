@@ -123,6 +123,10 @@ public class QTBusinessOwnerBackingBean extends
 		 * .getScCommitteeMemberList(); if (committeMemebersList == null) {
 		 * committeMemebersList = new ArrayList<ScCommitteeMember>(); }
 		 */
+		// Search Criteria
+		getManagedBean().setName(null);
+		getManagedBean().setIdentificationType(null);
+		getManagedBean().setIdentificationNo(null);
 		getManagedBean().setExternalUsers(null);
 		getManagedBean().setSelectedPmUser(null);
 		if (getManagedBean().getCommitteMember() == null) {
