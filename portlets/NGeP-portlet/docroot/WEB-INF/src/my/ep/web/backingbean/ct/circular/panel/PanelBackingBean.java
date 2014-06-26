@@ -560,9 +560,9 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	}
 	
 	private void validateCircular(String outcome) {
-		//if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
 			if(getManagedBean().getCircularVer().getCircularFileName()==null) {
-				throw new EpException("100022", new String[]{"Circular Letter"});
+				throw new EpException(MessageConst.ERROR_100022, new String[]{"Circular Letter"});
 			}
 			
 			if(getManagedBean().getCircularVer().getCtContactPersons().size()==0) {
@@ -574,6 +574,22 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			}
 			else {
 				for (CtPanelItem panelItem: getManagedBean().getCircularVer().getCtPanelItems()) {
+					if(panelItem.getPanelCoverageId().getParameterId()==null) {
+						throw new EpException(MessageConst.ERROR_100022, new String[]{"Panel Coverage"});
+					}
+					
+					if(panelItem.getItemCategoryId().getParameterId()==null) {
+						throw new EpException(MessageConst.ERROR_100022, new String[]{"Item Category"});
+					}
+					
+					if(panelItem.getItemName().length()==0) {
+						throw new EpException(MessageConst.ERROR_100022, new String[]{"Item Name"});
+					}
+					
+					if(panelItem.getPmUom().getUomId()==null) {
+						throw new EpException(MessageConst.ERROR_100022, new String[]{"UOM"});
+					}
+					
 					if(getItemGeneralCode(panelItem.getPanelCoverageId().getParameterId()).equalsIgnoreCase(
 							ParameterConst.CIRCULAR_PANEL_COVERAGE_ZONE) && panelItem.getCtPanelZones().size()==0) {
 						throw new EpException(MessageConst.ERROR_100023, new String[]{"Zone"});
@@ -586,9 +602,9 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			}
 			
 			if(getManagedBean().getApproverModel().getTarget().size()==0) {
-				throw new EpException("100022", new String[]{"Selected approver(s)"});
+				throw new EpException(MessageConst.ERROR_100022, new String[]{"Selected approver(s)"});
 			}
-		//}
+		}
 		
 		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 			if(getManagedBean().getCircularVer().getCircularRemarks().get(0).getRemark().length()==0 &&
