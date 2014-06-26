@@ -12,16 +12,18 @@
 	<ui:define name="contentSection">
 
 		<ac:title value="Catalogue Search" />
-		
-		
-		<p:messages id="publicCatMesId" autoUpdate="true" closable="true" showSummary="true" ></p:messages>
+
+
+		<p:messages id="publicCatMesId" autoUpdate="true" closable="true"
+			showSummary="true"></p:messages>
 
 		<p:tabView id="catalogueTabId">
 			<p:tab title="Keyword Search">
 				<table style="width: 100%; margin-top: 8px;">
 					<tr>
 						<td style="width: 20%;"><p:autoComplete size="120"
-								required="true" id="itemNameId" requiredMessage="Item name is Required"
+								required="true" id="itemNameId"
+								requiredMessage="Item name is Required"
 								value="#{pCatalogueBackingBean.managedBean.itemName}"
 								completeMethod="#{pCatalogueBackingBean.autoCompleteItemName}"
 								maxResults="15" dropdown="false" /> <p:watermark
@@ -56,8 +58,8 @@
 								</tr>
 								<tr>
 									<td><p:commandLink value=">> Details"
-											action="#{pCatalogueBackingBean.searchCatalogueByFamilyLevel(popular)}" process="@this"
-											update=":form"></p:commandLink></td>
+											action="#{pCatalogueBackingBean.searchCatalogueByFamilyLevel(popular)}"
+											process="@this" update=":form"></p:commandLink></td>
 								</tr>
 							</table>
 
@@ -85,10 +87,15 @@
 										<td style="padding-top: 8px; padding-bottom: 8px;"><ui:repeat
 												var="family"
 												value="#{pCatalogueBackingBean.managedBean.familyList}">
-												<table>
+												<table style="width:100%;">
 													<tr>
-														<td><p:commandLink value="#{family.unspscTitle}" process="@this"
+														<td width="90%"><p:commandLink value="#{family.unspscTitle}"
+																process="@this"
 																action="#{pCatalogueBackingBean.searchCatalogueByFamilyLevel(family)}"
+																update=":form" /></td>
+														<td width="10%"><p:commandLink value="X" rendered="#{!(fn:length(pCatalogueBackingBean.managedBean.familyList) > 1) }"
+																process="@this"
+																action="#{pCatalogueBackingBean.backToList()}"
 																update=":form" /></td>
 													</tr>
 												</table>
@@ -140,7 +147,8 @@
 										<td style="text-align: right;"><p:commandButton
 												value="Reset" process=":form:catalogueTabId:resultpl"
 												action="#{pCatalogueBackingBean.resetCatalogue()}"
-												update=":form" /> <p:commandButton value="Go" process=":form:catalogueTabId:resultpl"
+												update=":form" /> <p:commandButton value="Go"
+												process=":form:catalogueTabId:resultpl"
 												action="#{pCatalogueBackingBean.searchCatalogueByPrice()}"
 												update=":form" /></td>
 									</tr>
@@ -184,9 +192,9 @@
 												</h:panelGroup></td>
 										</tr>
 										<tr>
-											<td style="text-align: center;"><p:commandLink 
-													action="#{pCatalogueBackingBean.navigateToSupplierItemDet(supplierItem)}" process="@this"
-													value="#{supplierItem.cmItem.itemName}" /></td>
+											<td style="text-align: center;"><p:commandLink
+													action="#{pCatalogueBackingBean.navigateToSupplierItemDet(supplierItem)}"
+													process="@this" value="#{supplierItem.cmItem.itemName}" /></td>
 										</tr>
 										<tr>
 											<td style="text-align: center;">RM <h:outputText
