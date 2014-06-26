@@ -56,6 +56,7 @@ import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.common.uom.UomResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
+import my.ep.exception.EpException;
 import my.ep.persistence.entity.cm.catalog.CmBrand;
 import my.ep.persistence.entity.cm.catalog.CmColor;
 import my.ep.persistence.entity.cm.catalog.CmImage;
@@ -4859,13 +4860,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}
 
 		if (flag) {
-			FacesContext facesContext = FacesContext.getCurrentInstance();
-			facesContext.addMessage(null, new FacesMessage(
-					FacesMessage.SEVERITY_ERROR,
-					"This item does not belong to Contract No." + contractNo,
-					""));
-
-			return "supplierItemView";
+			throw new EpException(MessageConst.ERROR_740009, new String[]{contractNo});
 		} else {
 			System.out.println("size:"
 					+ this.getManagedBean().getTempSupplierList().size());
