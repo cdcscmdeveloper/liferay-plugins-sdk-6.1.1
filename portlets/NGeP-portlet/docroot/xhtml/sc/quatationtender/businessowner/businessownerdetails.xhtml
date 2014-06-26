@@ -25,11 +25,12 @@
 			<p:column style="width:2%">
 				<f:facet name="header">
 					<p:selectBooleanCheckbox id="selAllChk"
-						value1="#{qTBusinessOwnerBackingBean.consolidateSelectAll}">
+						value="#{qTBusinessOwnerBackingBean.flag}">
+						<p:ajax  update="businessownerId" listener="#{qTBusinessOwnerBackingBean.selectAll}"></p:ajax>
 					</p:selectBooleanCheckbox>
 				</f:facet>
 				<p:selectBooleanCheckbox value="#{businessowner.selected}">
-					<p:ajax update="selAllChk" />
+					<p:ajax update="businessownerId" listener="#{qTBusinessOwnerBackingBean.getConsolidateSelectAll}"/>
 				</p:selectBooleanCheckbox>
 			</p:column>
 
