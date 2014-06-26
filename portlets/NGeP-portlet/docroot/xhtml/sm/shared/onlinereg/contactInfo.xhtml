@@ -42,7 +42,7 @@
 							itemValue="#{resState.stateId}" itemLabel="#{resState.stateName}" />
 						<p:ajax event="change"
 							listener="#{registrationBackingBean.populateDistrictByAddType('residential')}"
-							update="cmbResDistrict" />
+							update="cmbResDistrict cmbResCity" />
 					</p:selectOneMenu> <p:message id="cmbResStateMsg" for="cmbResState" display="icon" />
 				</td>
 			</tr>
