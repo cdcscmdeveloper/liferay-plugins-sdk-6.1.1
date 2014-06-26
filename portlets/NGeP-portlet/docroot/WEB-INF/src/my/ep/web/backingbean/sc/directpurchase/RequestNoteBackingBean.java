@@ -432,7 +432,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		ScRequestNote requestNote = getManagedBean().getRequestNote();
 		try {
 			requestNote.setRemarks(initializeRemarks(requestNote));
-			if(!BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome) || !BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)){
+			if(!(BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome) || BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome))){
 				if(requestNote.getRemarks() != null ){
 					for (int i = 0; i < requestNote.getRemarks().size(); i++) {
 						ScRequestNoteRemark remark = requestNote.getRemarks().get(i);
