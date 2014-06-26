@@ -98,6 +98,8 @@ public class BPMTaskListBackingBean extends
 		temp.put(CTProcessNameConst.CONTRACT_AMENDMENT_PROCESS_NAME+ParameterConst.DOCTYPE_CONTRACT_UPDATE, "fulfilment-details");
 		temp.put(CTProcessNameConst.CONTRACT_TERMINATION_PROCESS_NAME, "contract-termination");
 		temp.put(CTProcessNameConst.AGREEMENT_CREATION_PROCESS_NAME, "contract-agreement");
+		temp.put(CTProcessNameConst.AGREEMENT_INITIATION_PROCESS_NAME, "contract-agreement");
+		
 		temp.put(CTProcessNameConst.BANK_ACCOUNT_CHANGE_PROCESS_NAME+CTProcessNameConst.REVIEW_CB_REQUEST_HT_NAME, "change-bank-account");
 
 		//Fulfilment Management - Start
