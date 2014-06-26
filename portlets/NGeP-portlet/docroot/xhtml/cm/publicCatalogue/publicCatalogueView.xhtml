@@ -11,17 +11,22 @@
 
 	<ui:define name="contentSection">
 
+		<ac:title value="Catalogue Search" />
+		
+		
+		<p:messages id="publicCatMesId" autoUpdate="true" closable="true" showSummary="true" ></p:messages>
 
 		<p:tabView id="catalogueTabId">
 			<p:tab title="Keyword Search">
-				<table style="width: 100%; margin-top: 5px;">
+				<table style="width: 100%; margin-top: 8px;">
 					<tr>
 						<td style="width: 20%;"><p:autoComplete size="120"
-								id="itemNameId"
+								required="true" id="itemNameId" requiredMessage="Item name is Required"
 								value="#{pCatalogueBackingBean.managedBean.itemName}"
 								completeMethod="#{pCatalogueBackingBean.autoCompleteItemName}"
 								maxResults="15" dropdown="false" /> <p:watermark
-								for="itemNameId" value="Search By Item Name Keywords"></p:watermark></td>
+								for="itemNameId"
+								value="Search by item name keywords. Eg, Personal computer"></p:watermark></td>
 						<td style="padding-left: 5px;"><p:commandLink title="Search"
 								update=":form" action="#{pCatalogueBackingBean.searchCatalogue}">
 								<p:graphicImage value="/resources/ep/images/design/search.png"></p:graphicImage>
@@ -37,7 +42,7 @@
 					rendered="#{pCatalogueBackingBean.managedBean.frontPage}">
 
 					<p:panel header="Popular UNSPSC Categories in Commodity level"
-						style="margin-top:10px;" toggleable="true">
+						style="margin-top:10px;">
 
 
 
@@ -51,7 +56,7 @@
 								</tr>
 								<tr>
 									<td><p:commandLink value=">> Details"
-											action="#{pCatalogueBackingBean.searchCatalogueByFamilyLevel(popular)}"
+											action="#{pCatalogueBackingBean.searchCatalogueByFamilyLevel(popular)}" process="@this"
 											update=":form"></p:commandLink></td>
 								</tr>
 							</table>
@@ -74,32 +79,34 @@
 									<tr>
 										<td style="border-bottom: 1px solid #CFD62A;"><p:outputLabel
 												value="Categories"
-												style="font-weight:bold;padding-bottom: 10px;float:left;" /></td>
+												style="font-weight:bold;padding-bottom: 10px;float:left;font-size:15px;" /></td>
 									</tr>
-									<tr style="padding-top: 10px;">
-										<td><ui:repeat var="family"
+									<tr>
+										<td style="padding-top: 8px; padding-bottom: 8px;"><ui:repeat
+												var="family"
 												value="#{pCatalogueBackingBean.managedBean.familyList}">
 												<table>
 													<tr>
-														<td><p:commandLink value="#{family.unspscTitle}"
+														<td><p:commandLink value="#{family.unspscTitle}" process="@this"
 																action="#{pCatalogueBackingBean.searchCatalogueByFamilyLevel(family)}"
 																update=":form" /></td>
 													</tr>
 												</table>
 											</ui:repeat></td>
 									</tr>
-									<tr height="50px;">
+									<tr height="30px;">
 										<td><h:panelGroup style="width:100%;"
 												rendered="#{!(fn:length(pCatalogueBackingBean.managedBean.familyList) > 1) }">
 
 												<table style="width: 100%;">
-													<tr height="50px;">
-														<td style="border-bottom: 1px solid #CFD62A;"><p:outputLabel
-																style="font-weight:bold;float:left;"
+													<tr height="30px;">
+														<td
+															style="border-bottom: 1px solid #CFD62A; border-top: 1px solid #CFD62A;"><p:outputLabel
+																style="font-weight:bold;float:left;font-size:15px;"
 																value="#{lbl['lbl.cm.brand']}"></p:outputLabel></td>
 													</tr>
 
-													<tr height="50px;">
+													<tr height="40px;">
 														<td><p:selectOneMenu
 																value="#{pCatalogueBackingBean.managedBean.brandId}"
 																style="width:278px;">
@@ -115,20 +122,25 @@
 									</tr>
 
 
-									<tr height="50px;">
-										<td style="border-bottom: 1px solid #CFD62A;"><p:outputLabel
-												value="Price Range" style="font-weight:bold;float:left;" /></td>
+									<tr height="30px;">
+										<td
+											style="border-bottom: 1px solid #CFD62A; border-top: 1px solid #CFD62A;"><p:outputLabel
+												value="Price Range"
+												style="font-weight:bold;float:left;font-size:15px;" /></td>
 									</tr>
-									<tr height="50px;">
+									<tr height="40px;">
 										<td>RM <p:inputText
 												value="#{pCatalogueBackingBean.managedBean.priceForm}"
-												size="15" /> - RM <p:inputText
+												size="10" /> - RM <p:inputText
 												value="#{pCatalogueBackingBean.managedBean.priceTo}"
-												size="15" />
+												size="10" />
 										</td>
 									</tr>
 									<tr>
-										<td><p:commandButton value="Go"
+										<td style="text-align: right;"><p:commandButton
+												value="Reset" process=":form:catalogueTabId:resultpl"
+												action="#{pCatalogueBackingBean.resetCatalogue()}"
+												update=":form" /> <p:commandButton value="Go" process=":form:catalogueTabId:resultpl"
 												action="#{pCatalogueBackingBean.searchCatalogueByPrice()}"
 												update=":form" /></td>
 									</tr>
@@ -139,12 +151,12 @@
 							</td>
 							<td width="70%"><p:outputLabel
 									rendered="#{pCatalogueBackingBean.managedBean.keyWord}"
-									style="font-weight:bold;float:left;"
+									style="font-weight:bold;float:left;font-size:16px;"
 									value="#{fn:length(pCatalogueBackingBean.managedBean.catalogueList)} items found for #{pCatalogueBackingBean.managedBean.itemName}"></p:outputLabel>
 
 								<p:outputLabel
 									rendered="#{!pCatalogueBackingBean.managedBean.keyWord}"
-									style="font-weight:bold;float:left;"
+									style="font-weight:bold;float:left;font-size:16px;"
 									value="#{fn:length(pCatalogueBackingBean.managedBean.catalogueList)} items found for #{pCatalogueBackingBean.managedBean.unspscTitle}"></p:outputLabel>
 
 
@@ -156,7 +168,7 @@
 
 									<table>
 										<tr>
-											<td><h:panelGroup
+											<td style="text-align: center;"><h:panelGroup
 													rendered="#{fn:length(supplierItem.cmImages) == 0 }">
 
 													<img src="/NGeP-portlet/images/noImage.jpg"
@@ -172,8 +184,13 @@
 												</h:panelGroup></td>
 										</tr>
 										<tr>
-											<td><h:outputText
+											<td style="text-align: center;"><p:commandLink 
+													action="#{pCatalogueBackingBean.navigateToSupplierItemDet(supplierItem)}" process="@this"
 													value="#{supplierItem.cmItem.itemName}" /></td>
+										</tr>
+										<tr>
+											<td style="text-align: center;">RM <h:outputText
+													value="#{supplierItem.cmStandardPricing.price}" /></td>
 										</tr>
 									</table>
 
