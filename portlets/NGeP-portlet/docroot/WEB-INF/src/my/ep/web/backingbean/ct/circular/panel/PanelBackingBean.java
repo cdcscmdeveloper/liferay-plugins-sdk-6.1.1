@@ -495,14 +495,19 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		try {
 			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,ICircularSO.class);
 			
-			if(isBPKApprover()) {
-				if(getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
-					throw new EpException("100022", new String[]{"Remark"});
+			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+				if(getManagedBean().getCancelCircularReq().getCtCancelCircularList().size()==0) {
+					throw new EpException(MessageConst.ERROR_100023, new String[]{"Circular(s) to be cancel"});
+				}
+				
+				if(getManagedBean().getApproverModel().getTarget().size()==0) {
+					throw new EpException(MessageConst.ERROR_100022, new String[]{"Selected approver(s)"});
 				}
 			}
-			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
-				if(getManagedBean().getApproverModel().getTarget().size()==0) {
-					throw new EpException("100022", new String[]{"Selected approver(s)"});
+			
+			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
+				if(getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
+					throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
 				}
 			}
 			
@@ -833,6 +838,10 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
         		cancelCircular = new CtCancelCircular();
         		cancelCircular.setCircularVer(circularVer);
         		cancelCircularList.add(cancelCircular);
+        		for(CtCancelCircular ctCancelCircular : getManagedBean().getCancelCircularReq().getCtCancelCircularList()) {
+        			if(ctCancelCircular.getCircularVer().getCircularVerId().equals(circularVer.getCircularVerId()))
+        				cancelCircularList.remove(cancelCircular);
+        		}
         	}
         	if(getManagedBean().getCancelCircularReq()==null) {
         		getManagedBean().setCancelCircularReq(new CtCancelCircularReq());
