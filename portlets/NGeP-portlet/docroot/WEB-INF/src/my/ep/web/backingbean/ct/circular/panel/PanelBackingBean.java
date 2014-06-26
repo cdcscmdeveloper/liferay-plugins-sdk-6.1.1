@@ -318,7 +318,8 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	
 	public void searchActiveCircularVer(ActionEvent event) {
 		ICircularSO circularSO = null;
-		try { 
+		try {
+			getManagedBean().setSelectedCircularVerList(null);
 			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
 
 			CircularReqDTO reqDTO = new CircularReqDTO();

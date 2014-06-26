@@ -30,11 +30,7 @@
 		</p:dataTable>
 		<p:spacer height="2" />
 		<div class="ppRightBtn"> 
-			<p:commandButton value="Add" icon="ui-icon-add" actionListener="#{panelBackingBean.searchActiveCircularVer}" update="circularVerDt" oncomplete="activeCircularDlg.show();" >
-					<f:setPropertyActionListener
-						value="#{panelBackingBean.managedBean.circularDocType == ContractConst.circularDocTypePanel ? CtStatusConst.pqApproved : CtStatusConst.cqApproved}"
-						target="#{panelBackingBean.managedBean.searchStatusId}" />
-				</p:commandButton>
+			<p:commandButton value="Add" icon="ui-icon-add" actionListener="#{panelBackingBean.searchActiveCircularVer}" update="circularVerDt" oncomplete="activeCircularDlg.show();" />
 			<p:commandButton value="Delete" process="@this" partialSubmit="true" icon="ui-icon-delete" onclick="delCancelCircular.show()"/>				
 		</div>				
 		</p:outputPanel>	
