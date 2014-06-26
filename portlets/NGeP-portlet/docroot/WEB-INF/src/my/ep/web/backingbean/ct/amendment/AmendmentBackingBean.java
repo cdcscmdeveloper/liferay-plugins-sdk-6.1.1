@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 import java.net.URL;
 import java.net.URLConnection;
 import java.sql.Timestamp;
+import java.text.DecimalFormat;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -38,10 +39,18 @@ import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import jxl.Workbook;
+import jxl.write.Label;
+import jxl.write.WritableCellFormat;
+import jxl.write.WritableSheet;
+import jxl.write.WritableWorkbook;
+import jxl.write.WriteException;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.IContractSO;
+import my.ep.biz.service.ct.dtl.IContractItemSO;
+import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.ct.tpl.IContractTemplateSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -63,6 +72,10 @@ import my.ep.constants.CTProcessNameConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
+import my.ep.dto.ct.dtl.ContractItemReqDTO;
+import my.ep.dto.ct.dtl.ContractItemResDTO;
+import my.ep.dto.ct.maintain.ContractAmendmentReqDTO;
+import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
 import my.ep.dto.ct.tpl.ContractTemplateReqDTO;
 import my.ep.dto.ct.tpl.ContractTemplateResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
@@ -87,6 +100,7 @@ import my.ep.persistence.entity.ct.amend.CtAmendment;
 import my.ep.persistence.entity.ct.amend.CtCommitteeMember;
 import my.ep.persistence.entity.ct.dtl.CtMeeting;
 import my.ep.persistence.entity.ct.dtl.CtPerformanceBond;
+import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.ct.dtl.item.CtItemCeilingQty;
 import my.ep.persistence.entity.ct.dtl.item.CtItemMaxQty;
@@ -116,6 +130,7 @@ import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.backingbean.ct.LocationDTO;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.ct.amendment.AmendmentManagedBean;
+import my.ep.web.util.CommonUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -787,7 +802,11 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				filePath = tempDir + "/AmendmentIntegrityPactPage.docx";
 				fileName = "AmendmentIntegrityPactPage.docx";
 			} else if(ContractConst.TEMPLATE_JUDUAL_HARGA.equalsIgnoreCase(parameterCode)){
-				
+				formJudualHargaExcel();
+				filePath = tempDir + "/AmendmentJudualHargaPage.xls";
+				fileName = "AmendmentJudualHargaPage.xls";
+				downloadFile(filePath, fileName);
+				return;
 			} else if(ContractConst.TEMPLATE_FORMAT_BON_PELAKSANAAN.equalsIgnoreCase(parameterCode)){
 				
 			}
@@ -837,7 +856,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	public void downloadAll(){
 		log.debug("Inside downloadAll()");
 		IContractTemplateSO contractTemplateSO = null;
-		String filePath1, filePath2, filePath3;
+		String filePath1, filePath2, filePath3, filePath4;
 		String tempDir = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/docDownload");
 		String content;
 		try{
@@ -865,7 +884,10 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			filePath3 = tempDir + "/AmendmentIntegrityPactPage.docx";
 			converthtmlToDocFile(content, filePath3);
 			
-			File[] all = {new File(filePath1), new File(filePath2), new File(filePath3)};   
+			filePath4 = tempDir + "/AmendmentJudualHargaPage.xls";
+			formJudualHargaExcel();
+			
+			File[] all = {new File(filePath1), new File(filePath2), new File(filePath3), new File(filePath4)};   
 			File zipFile = new File(tempDir + "/amendment.zip");
 			try {
 				zipFile.createNewFile();
@@ -916,6 +938,91 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
  			e.printStackTrace();
  		}
 	 	log.debug("Exit converthtmlToDocFile(..)");
+	}
+	
+	private void formJudualHargaExcel(){
+		log.debug("Enter formJudualHargaExcel()");
+		String tempDir = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/docDownload");
+		CommonUtils commonUtils = new CommonUtils();
+		DecimalFormat nf = new DecimalFormat(commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
+		String filePath = tempDir + "/AmendmentJudualHargaPage.xls";
+		File file = new File(filePath);
+		
+		try {
+			WritableWorkbook itemExcel = Workbook.createWorkbook(file);
+			WritableSheet sheet = itemExcel.createSheet("sheet", 0);
+			WritableCellFormat format = new WritableCellFormat();
+			format.setWrap(true);
+			int indexRow=0, indexCol=0;
+			sheet.setColumnView(indexCol, 7);
+			sheet.addCell(new Label(indexCol++, indexRow, "Zone"));
+			sheet.setColumnView(indexCol, 15);
+			sheet.addCell(new Label(indexCol++, indexRow, "Item"));
+			sheet.setColumnView(indexCol, 15);
+			sheet.addCell(new Label(indexCol++, indexRow, "Specification"));
+			sheet.setColumnView(indexCol, 8);
+			sheet.addCell(new Label(indexCol++, indexRow, "UOM"));
+			sheet.setColumnView(indexCol, 10);
+			sheet.addCell(new Label(indexCol++, indexRow, "Quantity"));
+			sheet.setColumnView(indexCol, 10);
+			sheet.addCell(new Label(indexCol++, indexRow, "From Qty."));
+			sheet.setColumnView(indexCol, 8);
+			sheet.addCell(new Label(indexCol++, indexRow, "To Qty."));
+			sheet.setColumnView(indexCol, 12);
+			sheet.addCell(new Label(indexCol++, indexRow, "Sub Sequence"));
+			//Label header8 = new Label(indexCol++, indexRow, "Delivery Term");
+			sheet.setColumnView(indexCol, 14);
+			sheet.addCell(new Label(indexCol++, indexRow, "Unit Price(RM)"));
+			sheet.setColumnView(indexCol, 15);
+			sheet.addCell( new Label(indexCol++, indexRow, "Total Amount(RM)"));
+			//Label header11 = new Label(10, 0, "Ranking");
+			
+			ContractAmendmentReqDTO reqDto = new ContractAmendmentReqDTO();
+			reqDto.setContractVerId(this.getManagedBean().getContractVer().getContractVerId());
+			IContractAmendmentSO amendSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractAmendmentSO.class);
+			ContractAmendmentResDTO resDto = amendSO.getProductList(reqDto);
+			List<CtContractItem> items = resDto.getCtContractItems();
+			
+			for(CtContractItem item : items){
+				indexRow++; indexCol=0;
+				IContractItemSO contractItemSO = (IContractItemSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractItemSO.class);
+				ContractItemReqDTO reqDTO = new ContractItemReqDTO();
+				reqDTO.setContractItemId(item.getContractItemId());
+				reqDTO.setEffDate(this.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());
+				ContractItemResDTO resDTO = contractItemSO.getMaxQuantity(reqDTO);
+				CtItemMaxQty ctItemMaxQty = resDTO.getCtItemMaxQuantity();
+				
+				for(CtItemPrice price : item.getCtItemPrices()){
+					sheet.addCell(new Label(indexCol++, indexRow, null == price.getCtContractZone() ? "N/A" : price.getCtContractZone().getZoneName(), format));
+				}
+				sheet.addCell(new Label(indexCol++, indexRow, item.getItemName(), format));
+				sheet.addCell(new Label(indexCol++, indexRow, item.getScRequestItem().getTplSpecQuestion().getClSpecDetail(), format));//specification
+				sheet.addCell(new Label(indexCol++, indexRow, item.getUom().getUomName(), format));
+				sheet.addCell(new Label(indexCol++, indexRow, ctItemMaxQty.getMaxQuantity()+"", format));
+				
+				for(CtItemPrice price : item.getCtItemPrices()){
+					sheet.addCell(new Label(indexCol++, indexRow, price.getFromQty() == null ? "N/A": price.getFromQty() + "", format));
+					sheet.addCell(new Label(indexCol++, indexRow, price.getToQty() == null ? "N/A" : price.getToQty() + "", format));
+					sheet.addCell(new Label(indexCol++, indexRow, price.getSubSequence() == null ? "N/A" : price.getSubSequence() + "", format));
+					/*String delveryTerm = "";
+					for(CtContractZone zone : item.getCtContractVer().getCtContractZones()){
+						delveryTerm = delveryTerm + zone.getDeliveryTerm() + " ";
+					}
+					sheet.addCell(new Label(indexCol++, indexRow, delveryTerm));*/
+					sheet.addCell(new Label(indexCol++, indexRow, nf.format(price.getUnitPrice().byteValue()) + "", format));
+					if(null != price.getUnitPrice() && null != ctItemMaxQty.getMaxQuantity()){
+						sheet.addCell(new Label(indexCol++, indexRow, price.getUnitPrice().multiply(ctItemMaxQty.getMaxQuantity())+"", format));
+					} else {
+						sheet.addCell(new Label(indexCol++, indexRow, "N/A"));
+					}
+				}
+			}
+			itemExcel.write();
+			itemExcel.close();
+		} catch (IOException | WriteException e) {
+			e.printStackTrace();
+		}
+		log.debug("Exit formJudualHargaExcel()");
 	}
 	
 	private String getContent(String content, String parameterCode){
@@ -972,7 +1079,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			content = sub.replace(content);
 		} else if(ContractConst.TEMPLATE_RINGKASAN_KONTRAK.equalsIgnoreCase(parameterCode)) {
 			valuesMap.put("FILE_NO", getManagedBean().getCtContract().getQuotationTender().getFileNo());
-			valuesMap.put("SOURCING_NO",  getManagedBean().getCtContract().getLoa().getFileExtNo());
+			valuesMap.put("SOURCING_NO", getManagedBean().getCtContract().getLoa().getFileExtNo());
 			valuesMap.put("SOURCING_TITLE",  getManagedBean().getCtContract().getLoa().getTitle());
 			valuesMap.put("SUCCESSFUL_SUPPLIER_NAME", getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getSupplierName());
 			valuesMap.put("CONTRACT_VALUE",  getManagedBean().getContractVer().getCtContractValue().getContractAmount()+"");
@@ -982,13 +1089,20 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
 			parameterReqDTO.setParameterId(getManagedBean().getCtContract().getFulfillmentType().getParameterId());
 			valuesMap.put("FULFILLMENT_TYPE", parameterSO.retrieveParameterById(parameterReqDTO).getPmParameter().getPmParameterType().getParameterName());
-			valuesMap.put("REFER_ATTACHMENT", "");
-			valuesMap.put("DEDUCTION_TYPES", "");
+			valuesMap.put("REFER_ATTACHMENT", "Refer Attachment");
+			for(CtDeduction deduction : getManagedBean().getContractVer().getCtDeductions()){
+				if(deduction.getDeductionType().getParameterCode().equals(ParameterConst.DEDUCTION_TYPE_FIXED_DEPOSIT)){
+					valuesMap.put("DEDUCTION_AMOUNT", deduction.getAmount()+"");
+				}else{
+					valuesMap.put("DEDUCTION_AMOUNT", "");
+				}
+			}
 			valuesMap.put("MONTHS", getManagedBean().getContractVer().getCtContractValue().getContractPeriod()+"");
 			valuesMap.put("EFF_START_DATE", df.format(getManagedBean().getContractVer().getCtContractValue().getEffDate()));
 			valuesMap.put("EFF_END_DATE", df.format(getManagedBean().getContractVer().getCtContractValue().getExpDate()));
 			if(getManagedBean().getContractVer().getCtAmendment().isContractExtend()){
-				valuesMap.put("AMEND_EFF_EXP_DATE", df.format(getManagedBean().getContractVer().getCtAmendment().getExtendStartDate()) + " " + df.format(getManagedBean().getContractVer().getCtAmendment().getExtendEndDate()));
+				valuesMap.put("AMEND_EFF_EXP_DATE", df.format(getManagedBean().getContractVer().getCtAmendment().getExtendStartDate()) 
+						+ " " + df.format(getManagedBean().getContractVer().getCtAmendment().getExtendEndDate()));
 			}else {
 				valuesMap.put("AMEND_EFF_EXP_DATE", "");
 			}
