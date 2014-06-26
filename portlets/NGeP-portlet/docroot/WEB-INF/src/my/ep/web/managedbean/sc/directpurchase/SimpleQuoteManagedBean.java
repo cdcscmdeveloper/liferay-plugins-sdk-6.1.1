@@ -2,7 +2,6 @@
  * Copyright © 2013 Archisoft. All rights reserved.
  */
 package my.ep.web.managedbean.sc.directpurchase;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -112,11 +111,7 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 
 	private IPagingDataModel<ScQuote> searchQuoteDataModel;
 	private	String	procurementType;
-	private	boolean	panel;
-	private boolean zonal;
     private boolean zoneFlag;
-    private boolean saveBtnFlag= Boolean.TRUE;
-
 	// search criteria for popup clone item spec
 	private	String searchQuoteNo;
 	private String searchProcType;
@@ -173,7 +168,7 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 		private static final long serialVersionUID = 1L;
 
 		public ScQuotePagingDataModel() {
-			super("");
+			super("scQuoteDataModel");
 		}
 
 		@Override
@@ -1267,30 +1262,7 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	public void setSmSupplier(SmSupplier smSupplier) {
 		this.smSupplier = smSupplier;
 	}
-	/**
-	 * @return the panel
-	 */
-	public boolean isPanel() {
-		return panel;
-	}
-	/**
-	 * @param panel the panel to set
-	 */
-	public void setPanel(boolean panel) {
-		this.panel = panel;
-	}
-	/**
-	 * @return the zonal
-	 */
-	public boolean isZonal() {
-		return zonal;
-	}
-	/**
-	 * @param zonal the zonal to set
-	 */
-	public void setZonal(boolean zonal) {
-		this.zonal = zonal;
-	}
+	
 	/**
 	 * @return the selectedTabIndex
 	 */
@@ -1315,17 +1287,4 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	public void setCompareSuppliers(List<SmSupplier> compareSuppliers) {
 		this.compareSuppliers = compareSuppliers;
 	}
-	/**
-	 * @return the saveBtnFlag
-	 */
-	public boolean isSaveBtnFlag() {
-		return saveBtnFlag;
-	}
-	/**
-	 * @param saveBtnFlag the saveBtnFlag to set
-	 */
-	public void setSaveBtnFlag(boolean saveBtnFlag) {
-		this.saveBtnFlag = saveBtnFlag;
-	}
-	
 }

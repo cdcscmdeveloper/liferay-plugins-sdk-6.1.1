@@ -10,7 +10,7 @@
 			  <p:commandButton immediate="true" value="#{lbl['lbl.sc.common.back']}" icon="ui-icon-back" partialSubmit="true" process="@this"
 				style="float:left;" action="#{simpleQuoteBackingBean.backToPervious}"/>
 			<p:commandButton value="#{lbl['lbl.sc.common.submit']}"  action="#{simpleQuoteBackingBean.submitSimpleQuote}"
-			   style="float:right;" icon="ui-icon-submit" update="@form"/>
+			   style="float:right;" icon="ui-icon-submit" update="@form" process="@all"/>
 	    </c:if>
 	     <table>
 			<tr>

@@ -135,7 +135,7 @@
 				
 				   <p:selectOneMenu value="#{requestNoteDtl.scRequestSupplierItem.supplierItemId}" 
 				        id="recSupplier" label="#{lbl['lbl.sc.request.note.rec.suppier']}"
-				        style="width:120px;" required="true" disabled="#{requestNoteBackingBean.managedBean.requestNoteStatus eq 'Pending Approval'}">  
+				        style="width:120px;" required="true">  
 					   <f:selectItem itemLabel="-Select One-" itemValue="#{null}" />
 					   <f:selectItems
 							value="#{requestNoteDtl.requestItem.supplierItems}" 
@@ -155,7 +155,7 @@
 						<h:outputText value="#{lbl['lbl.sc.request.note.price.type']}" />
 					</f:facet>
 				
-					<p:selectOneMenu id="priceType"  disabled="#{requestNoteBackingBean.managedBean.requestNoteStatus eq 'Pending Approval'}"
+					<p:selectOneMenu id="priceType" 
 						required="true" label="#{lbl['lbl.sc.request.note.price.type']}"
 						value="#{requestNoteDtl.priceType.parameterId}">
 						 <f:selectItem itemLabel="-Select One-" itemValue="#{null}" />
@@ -221,7 +221,6 @@
 					</f:facet>
 					<p:selectOneMenu value="#{requestNoteDtl.assignedUser.userId}" style="width:120px;" 
 					   id="prepareBy" label="#{lbl['lbl.sc.request.note.loa.prepare.by']}" 
-					   disabled="#{requestNoteBackingBean.managedBean.requestNoteStatus eq 'Pending Approval'}"
 					   required="true">  
 					   <f:selectItem itemLabel="-Select One-" itemValue="#{null}" />
 					   <f:selectItems
@@ -237,15 +236,13 @@
 						<h:outputText value="* " styleClass="mandatory" />
 						<h:outputText value="#{lbl['lbl.sc.request.note.delivery.term']}" />
 					</f:facet>
-					<p:inputText style="width:25px;text-align:right;" required="true"  
-					   disabled="#{requestNoteBackingBean.managedBean.requestNoteStatus eq 'Pending Approval'}"
+					<p:inputText style="width:25px;text-align:right;"
 					   label="#{lbl['lbl.sc.request.note.delivery.term']}"
-					   size="6" maxlength="4"  validatorMessage="Delivery Term : must be '4' digits only!" 
-					   id="deliveryTerm" value="#{requestNoteDtl.deliverTerm}">
+					   size="6" maxlength="4"
+					   id="deliveryTerm" value="#{requestNoteDtl.deliverTerm}" required="true">
 					   </p:inputText>
 					<p:selectOneMenu  style="width:75px;" required="true" id="deliveryType" 
 					    label="Delivery Term Type"
-					    disabled="#{requestNoteBackingBean.managedBean.requestNoteStatus eq 'Pending Approval'}"
 						value="#{requestNoteDtl.deliverTermType}">
 						<f:selectItems value="#{requestNoteBackingBean.getDropdownCodeValues(ParameterTypeConst.deliveryTerm)}"/>
 					</p:selectOneMenu>
@@ -289,7 +286,6 @@
 					<p:commandButton value="#{lbl['lbl.sc.action.apply.btn']}"
 					    partialSubmit="true" icon="ui-icon-submit" process="@this glb_panel_request_list"
 						action="#{requestNoteBackingBean.applyForRequestNote}"
-						disabled="#{requestNoteBackingBean.managedBean.requestNoteStatus eq 'Pending Approval'}"
 						update="@([id$=requestListDataTable])" />
               </p:column>
                

@@ -330,7 +330,7 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 		    	ScRequestNoteDtl requestNoteDtl = getManagedBean().getRequestNoteDtl();
 		    	ScRequestNote	requestNote	=	new ScRequestNote();
 		    	requestNote.setRequestNoteNo(directPurchaseSO.generateRequestNoteNo());
-		    	requestNote.setSourceMethod(ParameterConst.REQUEST_NOTE_PRI);
+		    	requestNote.setSourceMethod(ParameterConst.REQUEST_NOTE_SC);
 		    	requestNoteDtl.setScRequestNote(requestNote);
 		    	requestNoteDtl.setAssignedUser(facesScopes.getUserSessionBean());
 		    	

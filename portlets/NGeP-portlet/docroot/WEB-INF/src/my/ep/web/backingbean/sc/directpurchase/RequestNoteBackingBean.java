@@ -180,7 +180,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 	     workFlowStatus.setCurrent(Boolean.TRUE);
 	     //workFlowStatuses.add(workFlowStatus);
 	     requestNote.setWorkFlowStatuses(workFlowStatuses);
-		requestNote.setSourceMethod(ParameterConst.REQUEST_NOTE_SQ);
+		requestNote.setSourceMethod(ParameterConst.REQUEST_NOTE_SC);
 		
 		if(requestNote.getPmOrgProfile().getOrgProfileId() == null){
 			requestNote.setPmOrgProfile(ptjNameEvent());
@@ -563,10 +563,9 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		if(results == null){
 			results = new ArrayList<ScRequestNoteRemark>();
 		} 
-		ScRequestNoteRemark remark = new ScRequestNoteRemark();
 		if (results.size() == 0
 				|| !compareUserName(results.get(0).getCreatedUser().getLoginId())) {
-			 remark = new ScRequestNoteRemark();
+			ScRequestNoteRemark  remark = new ScRequestNoteRemark();
 			remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
 			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			remark.setChangedBy(remark.getCreatedBy());

@@ -283,8 +283,11 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 			 
 		   if(resDTO.isSuccessful()){
 			   if(BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)){
-				   successMessage(MessageConst.INFO_700005, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT, getManagedBean().getPurchaseInDefault().getPurchaseInDefaultNo());
-
+				   if(getManagedBean().getPidStatus().equalsIgnoreCase(ParameterConst.PID_PENDING_VERIFICATION)){
+					   successMessage(MessageConst.INFO_700005, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT, getManagedBean().getPurchaseInDefault().getPurchaseInDefaultNo()); 
+				   } else  if(getManagedBean().getPidStatus().equalsIgnoreCase(ParameterConst.PID_PENDING_APPROVAL)){
+					   successMessage(MessageConst.INFO_700007, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT, getManagedBean().getPurchaseInDefault().getPurchaseInDefaultNo());
+				   }
 			   } else if(BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)){
 				   successMessage(MessageConst.INFO_700008, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT, getManagedBean().getPurchaseInDefault().getPurchaseInDefaultNo());
 			   }

@@ -36,7 +36,7 @@
 				<td style="width: 150px;"><p:outputLabel
 						value="#{lbl['lbl.sc.sq.gen.info.panel']}" /></td>
 				<td><p:selectOneRadio id="panel" required="true" 
-				         value="#{simpleQuoteBackingBean.managedBean.panel}" 
+				         value="#{simpleQuoteBackingBean.managedBean.scQuote.panel}" 
 				         label="#{lbl['lbl.sc.sq.gen.info.panel']}" disabled="true">
 						<f:selectItems
 							value="#{simpleQuoteBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
@@ -109,7 +109,7 @@
 				<p:outputLabel value="#{lbl['lbl.sc.sq.gen.info.zonal']}" /> <p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td>
 					<p:selectOneRadio id="zonal" required="true"
-				         value="#{simpleQuoteBackingBean.managedBean.zonal}" 
+				         value="#{simpleQuoteBackingBean.managedBean.scQuote.zonal}" 
 				         label="#{lbl['lbl.sc.sq.gen.info.zonal']}" disabled="false">
 						<f:selectItems
 							value="#{simpleQuoteBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
@@ -134,8 +134,8 @@
 				<td>
 					<table>
 						<tr>
-						  <td>
-						   <p:calendar showOn="button" id="startDate" binding="#{StartDate}" required="true"
+						 <td> 
+							<p:calendar showOn="button" id="startDate" binding="#{StartDate}" required="true"
 									label="#{lbl['lbl.sc.sq.gen.info.start.date']}"
 									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}"
 									value="#{simpleQuoteBackingBean.managedBean.scQuote.startDate}">
@@ -143,7 +143,7 @@
 										listener="#{simpleQuoteBackingBean.calcDuration(simpleQuoteBackingBean.managedBean.duration)}" />
 									<f:validator validatorId="dateRangeValidator" />
 							</p:calendar></td>
-						 <td><p:message id="startDateMsg" for="startDate" display="icon" /></td>
+							<td><p:message id="startDateMsg" for="startDate" display="icon" /></td>
 						</tr>
 					</table>
 				</td>
@@ -158,7 +158,7 @@
                        <p:ajax event="dateSelect" update="@([id$=messageId])"  process="@this durationId"
 					          listener="#{simpleQuoteBackingBean.calcDuration(simpleQuoteBackingBean.managedBean.duration)}"/>
 				    </p:calendar>
-				</td>
+				    </td>
 			</tr>
 			<tr>
 				<td style="width: 150px;">
@@ -179,15 +179,15 @@
 		<tr>
 			<td class="TableFieldLeft" width="12%"></td>
 			<td class="TableFieldRight">
-				<p:dataGrid id="catatan" value="#{simpleQuoteBackingBean.managedBean.remarks}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
+				<p:dataGrid id="catatan" value="#{simpleQuoteBackingBean.managedBean.scQuote.remarks}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
 					<table>
 						<tr>
 							<td rowspan="2" style="vertical-align: top;" align="left">
-								<h:graphicImage value="#{simpleQuoteBackingBean.userImagePath(remarkVar.user.loginId)}" height="30" width="30" />
+								<h:graphicImage value="#{simpleQuoteBackingBean.userImagePath(remarkVar.createdUser.loginId)}" height="30" width="30" />
 							</td>
 							<td width="5"></td>
 							<td>
-								<h:outputText value="#{remarkVar.user.userName}"/>,
+								<h:outputText value="#{remarkVar.createdUser.userName}"/>,
 								<h:outputText id="remarkDate" value="#{remarkVar.createdDate}">
 									<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 								</h:outputText>
@@ -196,8 +196,8 @@
 						<tr>
 							<td></td>
 							<td>
-								<p:inputTextarea style="width:350px;" id="remarks" label="Remarks" maxlength="1000" value="#{remarkVar.remark}" rendered="#{remarkVar.remark eq '' or remarkVar.remark eq null}"  required="true"/>
-								<h:outputText value="#{remarkVar.remark}" rendered="#{remarkVar.remark ne '' and remarkVar.remark ne null}"  style="display: inline-block; width:220px;word-wrap: break-word;" />
+								<p:inputTextarea style="width:350px;" id="remarks" label="Remarks" maxlength="1000" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}"  required="true"/>
+								<h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}"  style="display: inline-block; width:220px;word-wrap: break-word;" />
 							</td>
 							 <td style="vertical-align: top;padding-right: 1px;text-align: right;">  
 							    <p:message id="remarksMsg" for="remarks" display="icon" /></td>
