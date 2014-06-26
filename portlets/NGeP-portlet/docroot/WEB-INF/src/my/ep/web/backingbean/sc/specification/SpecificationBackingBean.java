@@ -886,12 +886,12 @@ public class SpecificationBackingBean extends
 
 				this.getManagedBean().setSupplierCriteria(
 						tenderResDTO.getQtDetail().getScQtSupplierCriteria());
-				/*
-				 * if(
-				 * this.getManagedBean().getSupplierCriteria().getLocationLevel
-				 * ()==null){
-				 * this.getManagedBean().getSupplierCriteria().setLocationLevel
-				 * (new PmParameter()); }
+				
+				/*  if(
+				  this.getManagedBean().getSupplierCriteria().getLocationLevel
+				  ()==null){
+				  this.getManagedBean().getSupplierCriteria().setLocationLevel
+				  (new PmParameter()); }
 				 */
 
 				if (this.getManagedBean().getZoneTrees() != null
@@ -2767,7 +2767,7 @@ public class SpecificationBackingBean extends
 			this.getManagedBean().setApprovalDate(sdf.format(d));
 
 			if (getManagedBean().getScQt() == null) {
-				searchCircularList();
+				//searchCircularList();
 				// this.getManagedBean().setApprovalList(getAppDetails());
 				// retriveSpecdetails(1366L);
 				//retriveSpecdetails(1426L);
@@ -2791,15 +2791,15 @@ public class SpecificationBackingBean extends
 			tenderResDTO = QtDetailsSO.retriveQTDetails(tenderReqDTO);
 			if (tenderResDTO.getQtDetail() != null) {
 				getManagedBean().setScQt(tenderResDTO.getQtDetail());
-				/*
-				 * if(getManagedBean().getScQt().getZoneLocationLevel()==null){
-				 * getManagedBean().getScQt().setZoneLocationLevel(new
-				 * PmParameter()); }
-				 * 
-				 * if(getManagedBean().getScQt().getFulfilmentType()==null){
-				 * getManagedBean().getScQt().setFulfilmentType(new
-				 * PmParameter()); }
-				 */
+				
+				/*  if(getManagedBean().getScQt().getZoneLocationLevel()==null){
+				  getManagedBean().getScQt().setZoneLocationLevel(new
+				  PmParameter()); }
+				  
+				  if(getManagedBean().getScQt().getFulfilmentType()==null){
+				  getManagedBean().getScQt().setFulfilmentType(new
+				  PmParameter()); }*/
+				 
 
 				if (null == tenderResDTO.getQtSupplierCriteria()) {
 
@@ -5743,7 +5743,7 @@ public class SpecificationBackingBean extends
 
 					score.setScoreType(new BigDecimal(this.getManagedBean()
 							.getChecklistScoreType()));
-					scoreOfYears.setCriteriaType(15);
+					score.setCriteriaType(15);
 
 					setUserDetails(scoreOfYears);
 					int index = nonFederalScore.indexOf(score);
@@ -5766,8 +5766,8 @@ public class SpecificationBackingBean extends
 								.getTechnicalChecklistScoring();
 					}
 					score.setScoreType(new BigDecimal(this.getManagedBean()
-							.getChecklistScoreType()));
-					scoreOfYears.setCriteriaType(16);
+							.getCompanyScoreType()));
+					score.setCriteriaType(16);
 
 					setUserDetails(scoreOfYears);
 					int index = scoreYears.indexOf(score);
