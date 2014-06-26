@@ -4,6 +4,7 @@
 package my.ep.web.managedbean.sc.directpurchase;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -12,6 +13,7 @@ import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.sc.directpurchase.IDirectPurchaseSO;
 import my.ep.constant.ModuleCodeConst;
@@ -22,6 +24,7 @@ import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
@@ -86,6 +89,10 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     // For Search Request Note
     private String searchReqNoteNo;
     private String searchSrcMethod;
+    private Date searchCreatedDateFrom;
+    private Date searchCreatedDateTo;
+    private List<Long> searchStatuses;
+    private List<PmStatusDesc> statusDescs;
     private IPagingDataModel<ScRequestNote> reqNoteDataModel = new RequestNotePagingDataModel();
     
     public RequestNoteManagedBean() {
@@ -545,6 +552,54 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	}
 	
 	/**
+	 * @return the searchCreatedDateFrom
+	 */
+	public Date getSearchCreatedDateFrom() {
+		return searchCreatedDateFrom;
+	}
+	/**
+	 * @param searchCreatedDateFrom the searchCreatedDateFrom to set
+	 */
+	public void setSearchCreatedDateFrom(Date searchCreatedDateFrom) {
+		this.searchCreatedDateFrom = searchCreatedDateFrom;
+	}
+	/**
+	 * @return the searchCreatedDateTo
+	 */
+	public Date getSearchCreatedDateTo() {
+		return searchCreatedDateTo;
+	}
+	/**
+	 * @param searchCreatedDateTo the searchCreatedDateTo to set
+	 */
+	public void setSearchCreatedDateTo(Date searchCreatedDateTo) {
+		this.searchCreatedDateTo = searchCreatedDateTo;
+	}
+	/**
+	 * @return the searchStatuses
+	 */
+	public List<Long> getSearchStatuses() {
+		return searchStatuses;
+	}
+	/**
+	 * @param searchStatuses the searchStatuses to set
+	 */
+	public void setSearchStatuses(List<Long> searchStatuses) {
+		this.searchStatuses = searchStatuses;
+	}
+	/**
+	 * @return the statusDescs
+	 */
+	public List<PmStatusDesc> getStatusDescs() {
+		return statusDescs;
+	}
+	/**
+	 * @param statusDescs the statusDescs to set
+	 */
+	public void setStatusDescs(List<PmStatusDesc> statusDescs) {
+		this.statusDescs = statusDescs;
+	}
+	/**
 	 * @return the reqNoteDataModel
 	 */
 	public IPagingDataModel<ScRequestNote> getReqNoteDataModel() {
@@ -584,6 +639,28 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 							new SearchFilterBean("sourceMethod",
 									SearchOperator.OPERATOR_EQUALS.value(),
 									getSearchSrcMethod()));
+				}
+				
+				List<Long> searchStatuses = getSearchStatuses();
+				if(searchStatuses != null && searchStatuses.size() > 0) {
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean("workFlowStatuses.pmStatus.statusId",
+									SearchOperator.OPERATOR_IN.value(),
+									searchStatuses));
+					
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean("workFlowStatuses.current",
+									SearchOperator.OPERATOR_EQUALS.value(),
+									true));
+				}
+				
+				if(getSearchCreatedDateFrom() != null && getSearchCreatedDateTo() != null) {
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean("createdDate",
+									SearchOperator.OPERATOR_BETWEEN.value(),
+									new SearchBetweenValue<Date>(
+											getSearchCreatedDateFrom(), 
+											getSearchCreatedDateTo())));
 				}
 				
 				RequestNoteReqDTO reqDTO = new RequestNoteReqDTO();

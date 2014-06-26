@@ -1,5 +1,6 @@
 <ui:composition
 	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
@@ -8,58 +9,85 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
+		<p:messages id="rnSrchMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 		
-		<p:panel header="#{lbl['lbl.sc.search']}">
-	     	<table style="width:100%">
+		<p:panel header="#{lbl['lbl.sc.search']}" rendered1="false">
+	     	<table border="0" cellspacing="0" cellpadding="0" width="100%">
 	     	<tr>
-				<td class="TableFieldLeft" style="width:20%">
+				<td class="TableFieldLeft">
 					<p:outputLabel value="#{lbl['lbl.sc.request.note.req.note.no']}" />
 				</td>
-				<td class="TableFieldRight">
-					<p:inputText style="width:280px" value="#{requestNoteBackingBean.managedBean.searchReqNoteNo}" />
+				<td class="TableFieldRight" colspan="3">
+					<p:inputText value="#{requestNoteBackingBean.managedBean.searchReqNoteNo}" size="30" />
+				</td>
+				<td width="5%" class="TableFieldLeft" rowspan="4">
+					<p:outputLabel value="#{lbl['lbl.sc.status']}" />
+				</td>
+				<td width="25%" class="TableFieldRight" rowspan="4">
+					<p:selectManyMenu id="rnStatus"
+						style="height:125px;width: 200px;"
+						value="#{requestNoteBackingBean.managedBean.searchStatuses}" > 
+						
+						<f:selectItems
+							value="#{requestNoteBackingBean.statusDescList}"
+							var="pmStatusDesc" itemLabel="#{pmStatusDesc.statusName}"
+							itemValue="#{pmStatusDesc.pmStatus.statusId}">
+						</f:selectItems>
+					</p:selectManyMenu>
 				</td>
 			</tr>
 			<tr>
-				<td class="TableFieldLeft" style="width:20%">
+				<td class="TableFieldLeft">
 					<p:outputLabel value="#{lbl['lbl.sc.request.note.header.method']}" />
 				</td>
-				<td class="TableFieldRight">
-					<p:selectOneMenu style="width:289px" value="#{requestNoteBackingBean.managedBean.searchSrcMethod}">
+				<td class="TableFieldRight" colspan="3">
+					<p:selectOneMenu style="width:180px" value="#{requestNoteBackingBean.managedBean.searchSrcMethod}">
 						<f:selectItems value="#{requestNoteBackingBean.getDropdownCodeValues(ParameterTypeConst.sourceMethod)}" />
 					</p:selectOneMenu>
 				</td>
 			</tr>
 			<tr>
-				<td class="TableFieldLeft" style="width:20%">
-					<p:outputLabel value="#{lbl['lbl.sc.request.note.ptj.name']}" />
+				<td width="20%">
+					<h:outputLabel value="#{lbl['lbl.so.created.date.from']}" />
 				</td>
-				<td class="TableFieldRight">
-					
+				<td width="20%">
+					<p:calendar
+						value="#{requestNoteBackingBean.managedBean.searchCreatedDateFrom}"
+						id="crdateFrom" showOn="button" size="25" readonlyInput="true"
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+						<p:ajax event="dateSelect" update="crdateTo" />
+					</p:calendar>
+				</td>
+				<td width="10%">
+					<h:outputLabel value="#{lbl['lbl.sc.created.date.to']}" />
+				</td>
+				<td width="20%">
+					<p:calendar id="crdateTo" showOn="button"
+						value="#{requestNoteBackingBean.managedBean.searchCreatedDateTo}"
+						mindate="#{requestNoteBackingBean.managedBean.searchCreatedDateFrom}"
+						size="25" readonlyInput="true"
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</td>
 			</tr>
-			<tr>
-				<td class="TableFieldLeft" style="width:20%">
-					<p:outputLabel value="#{lbl['lbl.sc.status']}" />
-				</td>
-				<td class="TableFieldRight">
-					
-				</td>
-			</tr>
-		    <tr>
-				<td colspan="2" class="ppRightBtn">
-					<p:commandButton value="#{lbl['lbl.btn.search']}" 
-						icon="ui-icon-search" 
-						action="#{requestNoteBackingBean.searchAction}"
-						update="reqNoteTbl" />
-						
-					<p:commandButton value="#{lbl['lbl.btn.reset']}" 
-						action="#{requestNoteBackingBean.resetAction}" update="@form"
-						icon="ui-icon-reset" resetValues="true" partialSubmit="true"
-						process="@this" />
-								
+			<tr height="65px" valign="top">
+				<td colspan="4">
 				</td>
 			</tr>
 		    </table>
+		    
+		    <br />
+		    
+		    <div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.search']}" 
+					icon="ui-icon-search" 
+					action="#{requestNoteBackingBean.searchAction}"
+					update="reqNoteTbl" />
+					
+				<p:commandButton value="#{lbl['lbl.btn.reset']}" 
+					action="#{requestNoteBackingBean.resetAction}" update="@form"
+					icon="ui-icon-reset" resetValues="true" partialSubmit="true"
+					process="@this" />					
+			</div>
     	</p:panel>
         
 		<p:panel header="#{lbl['lbl.sc.search.result']}">
@@ -69,27 +97,29 @@
 			
 				<ac:paginator for="reqNoteTbl" />
 				
-				<p:column style="width:15%" headerText="#{lbl['lbl.sc.request.note.req.note.no']}">
+				<p:column style="width:20%" headerText="#{lbl['lbl.sc.request.note.req.note.no']}">
 					#{scRequestNote.requestNoteNo}
 				</p:column>
 					
-				<p:column style="width:10%" headerText="#{lbl['lbl.sc.request.note.header.method']}">
+				<p:column style="width:15%" headerText="#{lbl['lbl.sc.request.note.header.method']}">
 					#{requestNoteBackingBean.getParameterDesc(ParameterTypeConst.sourceMethod, scRequestNote.sourceMethod)}
 				</p:column>
-					
-				<p:column headerText="#{lbl['lbl.sc.request.note.ptj.name']}">
-					#{scRequestNote.pmOrgProfile.orgName}
+				
+				<p:column style="width:20%" headerText="#{lbl['lbl.sc.status']}">
+					#{requestNoteBackingBean.getStatusDescById(scRequestNote.pmStatus.statusId)}
 				</p:column>
 				
-				<p:column style="width:15%" headerText="#{lbl['lbl.sc.created.by']}">
+				<p:column style="width:20%" headerText="#{lbl['lbl.sc.created.by']}">
 					#{scRequestNote.createdUser.userName}
 				</p:column>
-					
-				<p:column style="width:15%" headerText="#{lbl['lbl.sc.status']}">
-					
+				
+				<p:column style="width:15%" headerText="#{lbl['lbl.sc.created.date']}">
+					<h:outputText value="#{scRequestNote.createdDate}">
+						<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</h:outputText>
 				</p:column>
 				
-				<p:column style="width:8%" headerText="#{lbl['lbl.sc.action']}">
+				<p:column style="width:10%" headerText="#{lbl['lbl.sc.action']}">
 					<p:commandLink action="#{requestNoteBackingBean.editRequestNote(scRequestNote)}"
 						partialSubmit="true" process="@this">
 						<p:graphicImage library="ep/images/design" name="edit.png"

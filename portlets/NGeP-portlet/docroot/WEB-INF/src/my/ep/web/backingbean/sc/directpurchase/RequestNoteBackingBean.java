@@ -62,6 +62,7 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sc.directpurchase.ScPIDRemark;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefault;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefaultAttachment;
@@ -129,6 +130,10 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 	public void resetAction() {
 		getManagedBean().setSearchReqNoteNo(null);
 		getManagedBean().setSearchSrcMethod(null);
+		getManagedBean().setSearchCreatedDateFrom(null);
+		getManagedBean().setSearchCreatedDateTo(null);
+		getManagedBean().setSearchStatuses(null);
+		getManagedBean().getReqNoteDataModel().resetData();
 	}
 	
 	public String editRequestNote(ScRequestNote scRequestNote) {
@@ -1353,6 +1358,37 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			log.debug(message);
 		}
 		log.info(message);
+	}
+	
+	public List<PmStatusDesc> getStatusDescList() {
+		List<PmStatusDesc> statusDescs = getManagedBean().getStatusDescs();
+		
+		if (statusDescs == null || statusDescs.size() == 0) {
+			IStatusSO statusSO = null;
+			
+			try {
+				statusSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
+				
+				String languageCode = new FacesScopes().getUserLocale().getLanguage();
+				
+				StatusReqDTO reqDTO = new StatusReqDTO();
+				reqDTO.setModuleCode(ModuleCodeConst.SUPPLIER_SELECTION.toUpperCase());
+				reqDTO.setDocType(ParameterConst.DOCTYPE_REQUEST_NOTE);
+				reqDTO.setLanguageCode(languageCode);
+
+				StatusResDTO resDTO = statusSO.retrieveStatusDescList(reqDTO);
+				if(resDTO.isSuccessful()) {
+					statusDescs = resDTO.getStatusDescList();
+					
+					getManagedBean().setStatusDescs(statusDescs);
+				}
+			} finally {
+				statusSO = null;
+			}	
+		}
+		
+		return statusDescs;
 	}
 
 }
