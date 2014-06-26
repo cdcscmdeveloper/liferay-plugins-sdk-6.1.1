@@ -56,6 +56,7 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	
 	private String docType;
 	private String supplierAddress;
+	private boolean frnCancellationProcess;
 	
 	private int selectedTabIndex;
 	private PmUser pmUser;
@@ -314,6 +315,20 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	 */
 	public void setPmUser(PmUser pmUser) {
 		this.pmUser = pmUser;
+	}
+
+	/**
+	 * @return the frnCancellationProcess
+	 */
+	public boolean isFrnCancellationProcess() {
+		return frnCancellationProcess;
+	}
+
+	/**
+	 * @param frnCancellationProcess the frnCancellationProcess to set
+	 */
+	public void setFrnCancellationProcess(boolean frnCancellationProcess) {
+		this.frnCancellationProcess = frnCancellationProcess;
 	}
 
 

@@ -91,6 +91,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			
 			reqDTO.setToken(token);
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
+			reqDTO.setFrnCancellationProcess(getManagedBean().isFrnCancellationProcess());
 			if("UPDATE".equalsIgnoreCase(action) || "CANCEL".equalsIgnoreCase(action)){
 				//TODO
 				// check Actual Received Date shouldnt be empty
@@ -192,7 +193,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 					
 				}*/
 				//getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem().add(getManagedBean().getFulfilmentNoteItem());
-				
+				getManagedBean().setFrnCancellationProcess(true);
 
 			}else{
 				FLFulFillmentRecievedNoteDataType fulFillmentRecievedNoteDataType = (FLFulFillmentRecievedNoteDataType)obj;
