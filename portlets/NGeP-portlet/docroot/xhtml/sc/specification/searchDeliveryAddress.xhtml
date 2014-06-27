@@ -10,40 +10,21 @@
 	<p:dialog header="#{lbl['lbl.sc.spec.search.delivery.address']}"
 		position="top" widgetVar="deliveryAddress" modal="true" width="800"
 		height="500">
+		<p:messages id="committeeDeliveryAddress" showDetail="true"
+			autoUpdate="true" closable="true" showSummary="false" />
 		<p:panel id="searDelivery" header="Search " toggleable="true">
 			<table>
+
 				<tr>
-					<td><h:outputLabel
-							value="#{lbl['lbl.sc.spec.search.delivery.address.state']}" /></td>
-					<td><p:selectOneMenu style="width:200px;margin-bottom:5px;"
-							value="#{specificationBackingBean.managedBean.stateId}">
-							<f:selectItem itemLabel="Select One" itemValue="#{null}"></f:selectItem>
-							<f:selectItems
-								value="#{specificationBackingBean.managedBean.stateList}"
-								var="state" itemLabel="#{state.stateName}"
-								itemValue="#{state.stateId}"></f:selectItems>
-							<p:ajax event="change" process="@this" partialSubmit="true"
-								update="districtId"
-								listener="#{specificationBackingBean.districtBystate}"></p:ajax>
-						</p:selectOneMenu></td>
-					<td style="width: 200px;"><h:outputLabel
-							value="#{lbl['lbl.sc.spec.search.delivery.address.district']}" /></td>
-					<td><p:selectOneMenu id="districtId" style="width:200px;"
-							value="#{specificationBackingBean.managedBean.districtId}">
-							<f:selectItem itemLabel="Select One" itemValue="#{null}"></f:selectItem>
-							<f:selectItems
-								value="#{specificationBackingBean.managedBean.districtList}"
-								var="district" itemLabel="#{district.districtName}"
-								itemValue="#{district.districtId}"></f:selectItems>
-						</p:selectOneMenu></td>
-				</tr>
-				<tr>
-					<td><h:outputLabel
-							value="*#{lbl['lbl.sc.spec.search.delivery.address.ministry']}" /></td>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sc.spec.search.delivery.address.ministry']}" />
+						<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel></td>
 					<td colspan="3"><p:selectOneMenu
-							style="width:400px;margin-bottom:5px;"
+							required="#{specificationBackingBean.managedBean.required}"
+							label="#{lbl['lbl.sc.spec.search.delivery.address.ministry']}"
+							id="committeeMinistryId" style="width:500px;margin-bottom:5px;"
 							value="#{specificationBackingBean.managedBean.ministryId}">
-							<f:selectItem itemLabel="Select One" itemValue="#{null}"></f:selectItem>
+							<f:selectItem itemLabel="--Select One--" itemValue="#{null}"></f:selectItem>
 							<f:selectItems
 								value="#{specificationBackingBean.managedBean.ministryList}"
 								var="orgProfile" itemLabel="#{orgProfile.orgName}"
@@ -51,15 +32,16 @@
 							<p:ajax event="change" process="@this" partialSubmit="true"
 								update="departMent"
 								listener="#{specificationBackingBean.dePartMentByMinistry}"></p:ajax>
-						</p:selectOneMenu></td>
+						</p:selectOneMenu> <p:message id="ministryCommitteeid" for="committeeMinistryId"
+							display="icon"></p:message></td>
 				</tr>
 				<tr>
 					<td><h:outputLabel
-							value="*#{lbl['lbl.sc.spec.search.delivery.address.jabatan']}" /></td>
+							value="#{lbl['lbl.sc.spec.search.delivery.address.jabatan']}" /></td>
 					<td colspan="3"><p:selectOneMenu id="departMent"
-							style="width:400px;margin-bottom:5px;"
+							style="width:500px;margin-bottom:5px;"
 							value="#{specificationBackingBean.managedBean.departmentId}">
-							<f:selectItem itemLabel="Select One" itemValue="#{null}"></f:selectItem>
+							<f:selectItem itemLabel="--Select One--" itemValue="#{null}"></f:selectItem>
 							<f:selectItems
 								value="#{specificationBackingBean.managedBean.departmentList}"
 								var="orgProfile" itemLabel="#{orgProfile.orgName}"
@@ -70,10 +52,11 @@
 						</p:selectOneMenu></td>
 				</tr>
 				<tr>
-					<td><h:outputLabel value="*#{lbl['lbl.sc.spec.delivery.ptj']}" /></td>
-					<td colspan="3"><p:selectOneMenu id="ptj" style="width:400px;"
+					<td><h:outputLabel value="#{lbl['lbl.sc.spec.delivery.ptj']}" /></td>
+					<td colspan="3"><p:selectOneMenu id="ptj"
+							style="width:500px;margin-bottom:5px;"
 							value="#{specificationBackingBean.managedBean.ptjId}">
-							<f:selectItem itemLabel="Select One" itemValue="#{null}"></f:selectItem>
+							<f:selectItem itemLabel="--Select One--" itemValue="#{null}"></f:selectItem>
 							<f:selectItems
 								value="#{specificationBackingBean.managedBean.ptjtList}"
 								var="orgProfile" itemLabel="#{orgProfile.orgName}"
@@ -81,6 +64,35 @@
 
 						</p:selectOneMenu></td>
 				</tr>
+
+				<tr>
+					<td><h:outputLabel
+							value="#{lbl['lbl.sc.spec.search.delivery.address.state']}" /></td>
+					<td><p:selectOneMenu style="width:200px;margin-bottom:5px;"
+							value="#{specificationBackingBean.managedBean.stateId}">
+							<f:selectItem itemLabel="--Select One--" itemValue="#{null}"></f:selectItem>
+							<f:selectItems
+								value="#{specificationBackingBean.managedBean.stateList}"
+								var="state" itemLabel="#{state.stateName}"
+								itemValue="#{state.stateId}"></f:selectItems>
+							<p:ajax event="change" process="@this" partialSubmit="true"
+								update="districtId"
+								listener="#{specificationBackingBean.districtBystate}"></p:ajax>
+						</p:selectOneMenu></td>
+					<td style="width: 100px;"><h:outputLabel
+							value="#{lbl['lbl.sc.spec.search.delivery.address.district']}" /></td>
+					<td><p:selectOneMenu id="districtId" style="width:200px;"
+							value="#{specificationBackingBean.managedBean.districtId}">
+							<f:selectItem itemLabel="--Select One--" itemValue="#{null}"></f:selectItem>
+							<f:selectItems
+								value="#{specificationBackingBean.managedBean.districtList}"
+								var="district" itemLabel="#{district.districtName}"
+								itemValue="#{district.districtId}"></f:selectItems>
+							<p:ajax event="change" process="@this" partialSubmit="true"
+								listener="#{specificationBackingBean.districtCode}"></p:ajax>
+						</p:selectOneMenu></td>
+				</tr>
+
 			</table>
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.sc.tpl.btn.search']}"
@@ -88,7 +100,7 @@
 					update="deliveryAddress" icon="ui-icon-search" />
 				<p:commandButton value="#{lbl['lbl.sc.eva.btn.reset']}"
 					icon="ui-icon-reset" resetValues="true" partialSubmit="true"
-					process="@this"
+					process="@this" update="searDelivery"
 					action="#{specificationBackingBean.deliveryAddressReset}" />
 			</div>
 		</p:panel>
@@ -123,6 +135,7 @@
 			oncomplete="deliveryService.paginator.endLink.click();"
 			actionListener="#{specificationBackingBean.deliveryAccept}"></p:commandButton>
 
-
+		<p:ajax event="close"
+			listener="#{specificationBackingBean.closeListener}" />
 	</p:dialog>
 </ui:composition>

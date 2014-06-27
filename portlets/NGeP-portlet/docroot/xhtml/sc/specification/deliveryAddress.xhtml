@@ -7,39 +7,52 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel>
-	<ui:include src="searchDeliveryAddress.xhtml"></ui:include>
+		<ui:include src="searchDeliveryAddress.xhtml"></ui:include>
 		<ui:fragment
 			rendered="#{specificationBackingBean.managedBean.scQt.zonal ne 'false'}">
 			<p:accordionPanel id="accordpnllist" dynamic="true"
 				value="#{specificationBackingBean.managedBean.deliveryLocBean}"
 				var="zonePnlList">
-			
-				<p:tab  title="#{zonePnlList.tplSpecZoneDtl.zoneName}" >
-				<ui:param name="deliveryList" value="#{zonePnlList.deliveryLocList}"></ui:param>
-				<ui:param name="selectDeliveryList" value="#{specificationBackingBean.managedBean.selectDeliveryList}"></ui:param>
-			<!-- 	<ui:param name="pjtDelivered" value="#{zonePnlList.zoneName}"></ui:param> -->
+
+				<p:tab title="#{zonePnlList.tplSpecZoneDtl.zoneName}">
+					<ui:param name="deliveryList"
+						value="#{zonePnlList.deliveryLocList}"></ui:param>
+					<ui:param name="selectDeliveryList"
+						value="#{specificationBackingBean.managedBean.selectDeliveryList}"></ui:param>
+					<!-- 	<ui:param name="pjtDelivered" value="#{zonePnlList.zoneName}"></ui:param> -->
 					<ui:include src="deliveryAddressinclude.xhtml"></ui:include>
 					<div align="right">
-			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
-				process="@this" partialSubmit="true" icon="ui-icon-add" update="searDelivery" 	actionListener="#{specificationBackingBean.deliveryList(zonePnlList.tplSpecZoneDtl)}" onclick="deliveryAddress.show();" />
-			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
-				icon="ui-icon-delete" process="@this,pjtDelivered" partialSubmit="true" update="pjtDelivered" actionListener="#{specificationBackingBean.deleteDeliveryZone(zonePnlList.tplSpecZoneDtl)}"/>
+						<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
+							process="@this" partialSubmit="true" icon="ui-icon-add"
+							update="searDelivery"
+							actionListener="#{specificationBackingBean.deliveryList(zonePnlList.tplSpecZoneDtl)}"
+							onclick="deliveryAddress.show();" />
+						<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
+							icon="ui-icon-delete" process="@this,pjtDelivered"
+							partialSubmit="true" update="pjtDelivered"
+							actionListener="#{specificationBackingBean.deleteDeliveryZone(zonePnlList.tplSpecZoneDtl)}" />
 
-		</div>
+					</div>
 				</p:tab>
 			</p:accordionPanel>
 		</ui:fragment>
 
 		<ui:fragment
 			rendered="#{specificationBackingBean.managedBean.scQt.zonal eq 'false'}">
-            	<ui:param name="deliveryList" value="#{specificationBackingBean.managedBean.deliveryNonZoneList}"></ui:param>
+			<ui:param name="deliveryList"
+				value="#{specificationBackingBean.managedBean.deliveryNonZoneList}"></ui:param>
+			<ui:param name="selectDeliveryList"
+				value="#{specificationBackingBean.managedBean.selectDeliveryList}"></ui:param>
 			<ui:include src="deliveryAddressinclude.xhtml"></ui:include>
 			<div align="right">
-            <p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
-				process="@this" partialSubmit="true" icon="ui-icon-add" update="searDelivery" oncomplete="deliveryAddress.show();" />
-			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
-				icon="ui-icon-delete" />
-             </div>
+				<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
+					process="@this" partialSubmit="true" icon="ui-icon-add"
+					update="searDelivery" oncomplete="deliveryAddress.show();" />
+				<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
+					update="pjtDelivered" process="@this,pjtDelivered" partialSubmit="true"
+					icon="ui-icon-delete"
+					actionListener="#{specificationBackingBean.deleteDeliveryDtls}" />
+			</div>
 		</ui:fragment>
 
 	</p:panel>

@@ -7,54 +7,52 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	<p:dialog  widgetVar="reminder" modal="true"
-		width="600" height="250">
-		<p:panel header="#{lbl['lbl.sc.spec.reminder']}" toggleable="true">
+	<p:dialog header="#{lbl['lbl.sc.spec.reminder']}" widgetVar="reminder"
+		modal="true" width="600" height="250" position="top">
+		<p:panel id="signOffreminder">
 			<p:dataTable id="specificationReminder" var="reminderpopup"
 				editable="true">
 				<ac:paginator for="specificationReminder" />
-				<p:column headerText="#{lbl['lbl.sc.spec.reminder.name']}" style="width:100%">
+				<p:column headerText="#{lbl['lbl.sc.spec.reminder.name']}"
+					style="width:100%">
 					<h:outputText value="readOnly"></h:outputText>
 				</p:column>
 
 			</p:dataTable>
-	
-			<h:panelGrid styleClass="noBorders tr,noBorders td" columns="2">
+
+			<table>
+
+				<tr>
+					<td><h:outputLabel
+							value="#{lbl['lbl.sc.spec.committee.subject']}" /></td>
+
+					<td><p:inputText size="75" maxlength="100"
+							value="#{specificationBackingBean.managedBean.subject}"></p:inputText></td>
+				</tr>
+				<tr>
+					<td><h:outputLabel
+							value="#{lbl['lbl.sc.spec.committee.message']}" /></td>
+
+					<td><p:inputTextarea rows="5" cols="75" maxlength="1000"
+							value="#{specificationBackingBean.managedBean.message}"></p:inputTextarea>
+					</td>
+				</tr>
+			</table>
 
 
-				<h:outputLabel value="#{lbl['lbl.sc.spec.committee.subject']}" />
 
-				<p:inputText size="50"></p:inputText>
 
-				<h:outputLabel value="#{lbl['lbl.sc.spec.committee.message']}" />
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.cancel']}"
+					style="float:right;" onclick="reminder.hide();"
+					icon="ui-icon-cancel"></p:commandButton>
 
-				<p:inputTextarea rows="5" cols="50"></p:inputTextarea>
-
-			</h:panelGrid>
+				<p:commandButton value="#{lbl['lbl.btn.submit']}"
+					partialSubmit="true" process="@this,signOffreminder"
+					actionListener="#{specificationBackingBean.secretarySubmitTask}"
+					style="float:right;" onclick="reminder.hide();"
+					icon="ui-icon-submit"></p:commandButton>
+			</div>
 		</p:panel>
-		
-			<p:panel header="#{lbl['lbl.sc.spec.reminder.sign.off']}" toggleable="true">
-		
-	
-			<h:panelGrid styleClass="noBorders tr,noBorders td" columns="2">
-
-
-				<h:outputLabel value="#{lbl['lbl.sc.spec.pin.no']}" />
-
-				<p:inputText size="50"></p:inputText>
-
-			
-
-			</h:panelGrid>
-		</p:panel>
-		
-		<div align="right">
-			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.cancel']}" style="float:right;"
-				onclick="reminder.hide();" icon="ui-icon-cancel"></p:commandButton>
-
-			<p:commandButton value="#{lbl['lbl.sc.spec.committee.btn.send']}" style="float:right;"
-				onclick="reminder.hide();" icon="ui-icon-mail"></p:commandButton>
-		</div>
-
 	</p:dialog>
 </ui:composition>
