@@ -334,15 +334,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private TreeNode supplierSelectedTreeNode;
 
 	public SpecificationManagedBean() {
-		// deliveryLocBean.add(new BriefingZoneBean(1,"South",
-		// deliveryLoc,deleteDeliveryList));
-		// deliveryLocBean.add(new BriefingZoneBean(2,"North",
-		// deliveryLoc,deleteDeliveryList));
-		// deliveryLocBean.add(new BriefingZoneBean(3,"East",
-		// deliveryLoc,deleteDeliveryList));
-		// deliveryLocBean.add(new BriefingZoneBean(4,"West",
-		// deliveryLoc,deleteDeliveryList));
-
+		
 	}
 
 	/**
