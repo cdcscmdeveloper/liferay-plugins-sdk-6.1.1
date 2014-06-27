@@ -434,6 +434,11 @@ public class SpecificationBackingBean extends
 		}
 	}
 
+	public void secretarySubmitTask() {
+		
+
+	}
+
 	public void saveSpecificationCommitteeDtls() {
 		IQTDetailSO detailSO;
 		try {
@@ -867,15 +872,7 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().setSupplierCriteria(
 						tenderResDTO.getQtDetail().getScQtSupplierCriteria());
 
-				/*
-				 * if(
-				 * this.getManagedBean().getSupplierCriteria().getLocationLevel
-				 * ()==null){
-				 * this.getManagedBean().getSupplierCriteria().setLocationLevel
-				 * (new PmParameter()); }
-				 */
-
-			/*	if (this.getManagedBean().getSupplierCriteria()
+				/*if (this.getManagedBean().getSupplierCriteria()
 						.getLocationLevel() == null) {
 					this.getManagedBean().getSupplierCriteria()
 							.setLocationLevel(new PmParameter());
@@ -1197,7 +1194,7 @@ public class SpecificationBackingBean extends
 					.getEvaluationType())) {
 				this.getManagedBean().setActiveIndex(3);
 			}
-			
+
 			if ("2".equalsIgnoreCase(this.getManagedBean().getScQt()
 					.getEvaluationType())) {
 				this.getManagedBean().setActiveIndex(3);
@@ -1339,7 +1336,7 @@ public class SpecificationBackingBean extends
 				int score = 0;
 				float addScore = 0;
 				for (ScQtCheckList list : checklist) {
-					if(null==list.getQtScoreWeightage()){
+					if (null == list.getQtScoreWeightage()) {
 						list.setQtScoreWeightage(new ScQtScoreWeightage());
 					}
 
@@ -1348,7 +1345,7 @@ public class SpecificationBackingBean extends
 
 					}
 					setUserDetails(list.getQtScoreWeightage());
-					
+
 					addScore = addScore
 							+ list.getQtScoreWeightage().getScore().intValue();
 					score = (int) addScore;
@@ -1374,7 +1371,7 @@ public class SpecificationBackingBean extends
 					.getEvaluationType())) {
 				this.getManagedBean().setActiveIndex(4);
 			}
-			
+
 			if ("2".equalsIgnoreCase(this.getManagedBean().getScQt()
 					.getEvaluationType())) {
 				this.getManagedBean().setActiveIndex(5);
@@ -1433,17 +1430,16 @@ public class SpecificationBackingBean extends
 				// String localTitle="";
 				StringBuffer sb = new StringBuffer();
 				for (ScQtCheckList list : checklist) {
-					if(null==list.getQtScoreWeightage()){
+					if (null == list.getQtScoreWeightage()) {
 						list.setQtScoreWeightage(new ScQtScoreWeightage());
 					}
-
 
 					if (list.getQtScoreWeightage().getScore() == null) {
 						list.getQtScoreWeightage().setScore(new BigDecimal(0));
 					}
-					
+
 					setUserDetails(list.getQtScoreWeightage());
-				
+
 					addScore = addScore
 							+ list.getQtScoreWeightage().getScore().intValue();
 
@@ -1555,7 +1551,7 @@ public class SpecificationBackingBean extends
 					.getEvaluationType())) {
 				this.getManagedBean().setActiveIndex(5);
 			}
-			
+
 			if ("2".equalsIgnoreCase(this.getManagedBean().getScQt()
 					.getEvaluationType())) {
 				this.getManagedBean().setActiveIndex(6);
@@ -1632,7 +1628,7 @@ public class SpecificationBackingBean extends
 					.getEvaluationType())) {
 				this.getManagedBean().setActiveIndex(7);
 			}
-			
+
 			if ("2".equalsIgnoreCase(this.getManagedBean().getScQt()
 					.getEvaluationType())) {
 				this.getManagedBean().setActiveIndex(8);
@@ -1893,7 +1889,7 @@ public class SpecificationBackingBean extends
 					.getEvaluationType())) {
 				this.getManagedBean().setActiveIndex(6);
 			}
-			
+
 			if ("2".equalsIgnoreCase(this.getManagedBean().getScQt()
 					.getEvaluationType())) {
 				this.getManagedBean().setActiveIndex(7);
@@ -2001,6 +1997,30 @@ public class SpecificationBackingBean extends
 
 	}
 
+	public void districtCode(AjaxBehaviorEvent event) {
+		try {
+			Long districtId = (Long) event.getComponent().getAttributes()
+					.get("value");
+			if (null != districtId) {
+				List<PmDistrict> districtList = this.getManagedBean()
+						.getDistrictList();
+				for (PmDistrict district : districtList) {
+					if (district.getDistrictId().equals(districtId)) {
+						this.getManagedBean().setDistrictCode(
+								district.getDistrictCode());
+
+					}
+
+				}
+
+			}
+
+		} finally {
+
+		}
+
+	}
+
 	public void retriveMinistryList() {
 		IOrgProfileSO orgProfileSO = null;
 		try {
@@ -2076,7 +2096,7 @@ public class SpecificationBackingBean extends
 					.getEvaluationType())) {
 				this.getManagedBean().setActiveIndex(8);
 			}
-			
+
 			if ("2".equalsIgnoreCase(this.getManagedBean().getScQt()
 					.getEvaluationType())) {
 				this.getManagedBean().setActiveIndex(9);
@@ -2554,15 +2574,7 @@ public class SpecificationBackingBean extends
 					.getMessageCommon("lbl.sc.spec.est.price");
 			throw new EpException(MessageConst.INFO_100022,
 					new String[] { amount + "Must be Greater Than 20000" });
-			// throw new EpException(MessageConst.ERROR_100022);
-			/*
-			 * FacesContext .getCurrentInstance() .addMessage( null, new
-			 * FacesMessage( FacesMessage.SEVERITY_ERROR, null, MessageUtils
-			 * .getMessage( MessageConst.ERROR_100022, new String[] {
-			 * "Amount Must Be Greater Then 20000", },
-			 * MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes()
-			 * .getUserLocale())));
-			 */
+			
 		}
 
 		if (!scQt.isPanel()) {
@@ -2585,31 +2597,9 @@ public class SpecificationBackingBean extends
 						&& null != qtSupplierCriteria.getLocationLevel()
 						&& null == qtSupplierCriteria.getLocationLevel()
 								.getParameterId()) {
-					String locationLevel = CommonMethod
-							.getMessageCommon("lbl.sc.spec.zone.location.level");
-					throw new EpException(MessageConst.INFO_100022,
-							new String[] { locationLevel });
-
-					// qtSupplierCriteria.setLocationLevel(null);
-					// throw new EpException(MessageConst.ERROR_100022);
-					/*
-					 * FacesContext .getCurrentInstance() .addMessage( null, new
-					 * FacesMessage( FacesMessage.SEVERITY_ERROR, null,
-					 * MessageUtils .getMessage( MessageConst.ERROR_100022, new
-					 * String[] { "Location Level", },
-					 * MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes()
-					 * .getUserLocale())));
-					 */
-					// throw new EpException(MessageConst.ERROR_100022);
-
-					/*
-					 * FacesContext .getCurrentInstance() .addMessage( null, new
-					 * FacesMessage( FacesMessage.SEVERITY_ERROR, null,
-					 * MessageUtils .getMessage( MessageConst.ERROR_100022, new
-					 * String[] { "Location Level", },
-					 * MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes()
-					 * .getUserLocale())));
-					 */
+					qtSupplierCriteria.setLocationLevel(null);
+					
+				
 				}
 
 			} else {
@@ -2639,28 +2629,12 @@ public class SpecificationBackingBean extends
 				}
 
 				else {
-					// throw new EpException(MessageConst.ERROR_100022);
-					/*
-					 * FacesContext .getCurrentInstance() .addMessage( null, new
-					 * FacesMessage( FacesMessage.SEVERITY_ERROR, null,
-					 * MessageUtils .getMessage( MessageConst.ERROR_100022, new
-					 * String[] { "Zone Location", },
-					 * MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes()
-					 * .getUserLocale())));
-					 */
+					
 
 					throw new EpException(MessageConst.INFO_100022,
 							new String[] { "ADD At Least One Zone" });
 
-					// throw new EpException(MessageConst.ERROR_100022);
-					/*
-					 * FacesContext .getCurrentInstance() .addMessage( null, new
-					 * FacesMessage( FacesMessage.SEVERITY_ERROR, null,
-					 * MessageUtils .getMessage( MessageConst.ERROR_100022, new
-					 * String[] { "Zone Location", },
-					 * MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes()
-					 * .getUserLocale())));
-					 */
+					
 				}
 				this.getManagedBean().getSupplierCriteria()
 						.setScQtLocCriteria(null);
@@ -2669,30 +2643,8 @@ public class SpecificationBackingBean extends
 					this.getManagedBean().getSupplierCriteria()
 							.setLocationLevel(scQt.getZoneLocationLevel());
 				} else {
-					// scQt.setZoneLocationLevel(null);
-					/*
-					 * FacesContext .getCurrentInstance() .addMessage( null, new
-					 * FacesMessage( FacesMessage.SEVERITY_ERROR, null,
-					 * MessageUtils .getMessage( MessageConst.ERROR_100022, new
-					 * String[] { "Location Level", },
-					 * MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes()
-					 * .getUserLocale())));
-					 */
-					// throw new EpException(MessageConst.ERROR_100022);
-					/*
-					 * FacesContext .getCurrentInstance() .addMessage( null, new
-					 * FacesMessage( FacesMessage.SEVERITY_ERROR, null,
-					 * MessageUtils .getMessage( MessageConst.ERROR_100022, new
-					 * String[] { "Location Level", },
-					 * MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes()
-					 * .getUserLocale())));
-					 */
-					String locationLevel = CommonMethod
-							.getMessageCommon("lbl.sc.spec.zone.location.list");
-					throw new EpException(MessageConst.INFO_100022,
-							new String[] { locationLevel });
-
-					// throw new EpException(MessageConst.ERROR_100022);
+					 scQt.setZoneLocationLevel(null);
+				     
 				}
 
 			}
@@ -2814,6 +2766,7 @@ public class SpecificationBackingBean extends
 			tenderResDTO = QtDetailsSO.retriveQTDetails(tenderReqDTO);
 			if (tenderResDTO.getQtDetail() != null) {
 				getManagedBean().setScQt(tenderResDTO.getQtDetail());
+
 
 				if (null == tenderResDTO.getQtSupplierCriteria()) {
 
@@ -4860,7 +4813,7 @@ public class SpecificationBackingBean extends
 
 	public void deliveryAddressReset() {
 		try {
-			getManagedBean().setStateCode(null);
+			getManagedBean().setStateId(null);
 			getManagedBean().setDistrictId(null);
 			getManagedBean().setMinistryId(null);
 			getManagedBean().setDepartmentId(null);
@@ -4905,7 +4858,7 @@ public class SpecificationBackingBean extends
 						}
 						for (PmAddressType addressType : deliveryList) {
 							ScQtDeliveryLoc loc = new ScQtDeliveryLoc();
-							loc.setPmAddress(addressType.getPmAddress());
+							// loc.setPmAddress(addressType.getPmAddress());
 							String address1 = addressType.getPmAddress()
 									.getAddress1();
 							String address2 = addressType.getPmAddress()
@@ -4918,6 +4871,7 @@ public class SpecificationBackingBean extends
 									+ address3 + "," + address4;
 							loc.setDeliveryAddress(address);
 							// loc.setPmOrgProfile(addressType.getPmOrgProfile());
+							loc.setPmAddressType(addressType);
 							loc.setTplSpecZoneDtl(this.getManagedBean()
 									.getTplSpecZoneDtl());
 							loc.setScQt(this.getManagedBean().getScQt());
@@ -4946,7 +4900,7 @@ public class SpecificationBackingBean extends
 				}
 				for (PmAddressType addressType : deliveryList) {
 					ScQtDeliveryLoc loc = new ScQtDeliveryLoc();
-					loc.setPmAddress(addressType.getPmAddress());
+					loc.setPmAddressType(addressType);
 					String address1 = addressType.getPmAddress().getAddress1();
 					String address2 = addressType.getPmAddress().getAddress2();
 					String address3 = addressType.getPmAddress().getAddress3();
@@ -4954,6 +4908,7 @@ public class SpecificationBackingBean extends
 					String address = address1 + "," + address2 + "," + address3
 							+ "," + address4;
 					loc.setDeliveryAddress(address);
+					loc.setPmAddressType(addressType);
 					// loc.setPmOrgProfile(addressType.getPmOrgProfile());
 					loc.setTplSpecZoneDtl(null);
 					loc.setScQt(this.getManagedBean().getScQt());
@@ -4995,6 +4950,31 @@ public class SpecificationBackingBean extends
 			}
 		}
 
+	}
+
+	public void deleteDeliveryDtls() {
+		try {
+			List<ScQtDeliveryLoc> nonzone = this.getManagedBean()
+					.getDeliveryNonZoneList();
+			if (null == nonzone) {
+				nonzone = new ArrayList<ScQtDeliveryLoc>();
+			}
+			List<ScQtDeliveryLoc> selectdeliveryList = this.getManagedBean()
+					.getSelectDeliveryList();
+
+			if (nonzone.size() == selectdeliveryList.size()) {
+
+				nonzone.clear();
+
+			} else {
+
+				for (ScQtDeliveryLoc delLoc : selectdeliveryList) {
+					nonzone.remove(delLoc);
+				}
+			}
+		} finally {
+
+		}
 	}
 
 	public void stageTwoFincompilenceList() {
@@ -8136,15 +8116,14 @@ public class SpecificationBackingBean extends
 				ISearchBean<PmAddressType> searchBean) {
 			IAddressSO addressSO;
 			AddressResDTO resDto;
-			System.out.println("============search bean state code====="
-					+ getManagedBean().getStateCode());
+			
 			try {
 				// SearchBean<PmAddressType> searchBean2=searchBean;
 				AddressReqDTO addressReqDTO = new AddressReqDTO();
 				addressReqDTO
 						.setSearchAddressBean(new SearchBean<PmAddressType>());
 				if (getManagedBean().getStateCode() != null
-						&& !getManagedBean().getStateCode().endsWith("")) {
+						&& !"".equalsIgnoreCase(getManagedBean().getStateCode())) {
 					SearchFilterBean stateSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_EQUALS.value());
 					stateSearchBean
@@ -8154,13 +8133,14 @@ public class SpecificationBackingBean extends
 					searchBean.getDataFilterBeans().add(stateSearchBean);
 				}
 
-				if (getManagedBean().getDistrictId() != null) {
+				if (getManagedBean().getDistrictCode() != null
+						&& !"".equals(getManagedBean().getDistrictCode())) {
 					SearchFilterBean districtSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_EQUALS.value());
 					districtSearchBean
-							.setSearchField("pmAddress.pmDistrict.districtId");
+							.setSearchField("pmAddress.pmDistrict.districtCode");
 					districtSearchBean.setSearchValue(getManagedBean()
-							.getDistrictId());
+							.getDistrictCode());
 					searchBean.getDataFilterBeans().add(districtSearchBean);
 				}
 
@@ -8197,7 +8177,7 @@ public class SpecificationBackingBean extends
 						ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
 				resDto = addressSO.searchDeliveryAddress(addressReqDTO);
 
-				if (resDto != null) {
+				if (resDto != null && !resDto.getSearchAddressResultBean().getResultList().isEmpty()) {
 					/*
 					 * System.out.println("======display list size====" +
 					 * resDto.getSearchAddressResultBean()
@@ -8211,7 +8191,6 @@ public class SpecificationBackingBean extends
 			}
 			return null;
 		}
-
 	}
 
 	/**
