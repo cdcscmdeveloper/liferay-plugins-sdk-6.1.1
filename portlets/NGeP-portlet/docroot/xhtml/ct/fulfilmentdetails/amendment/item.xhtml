@@ -36,7 +36,7 @@
 					<p:inputText size="10" value="#{data.newMaxQuantity}" disabled="true" styleClass="ppRightBtn" >
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, data.uom.uomCode)}" />					
 					</p:inputText>
-					<p:commandLink update="@([id$=dlgItemMaxQty])" oncomplete="dlgItemMaxQty.show();return false;">
+					<p:commandLink update=":form:dlgItemMaxQty,itemTable" oncomplete="dlgItemMaxQty.show();return false;">
 						<f:setPropertyActionListener value="#{data}" target="#{amendmentBackingBean.managedBean.selectedItem}" />
 						<p:graphicImage library="ep/images/design" name="edit.png" value="/resources/ep/images/design/edit.png" title="Edit" />
 					</p:commandLink>
