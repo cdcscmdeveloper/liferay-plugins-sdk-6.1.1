@@ -10,7 +10,8 @@
 
 		<table style="width: 100%" border="0">
 			<tr>
-				<td valign="top"><h:outputLabel value="Title" /></td>
+				<td valign="top" style="width: 250px;"><h:outputLabel
+						value="#{lbl['lbl.sc.spec.stage.title']}s" /></td>
 				<td colspan="3"><p:inputTextarea readonly="true" rows="2"
 						cols="143" style="margin-bottom:5px;"
 						value="#{specificationBackingBean.managedBean.scQt.qtTitle}"
@@ -34,13 +35,13 @@
 						label="#{lbl['lbl.sc.spec.est.price']}" maxlength="18"
 						value="#{specificationBackingBean.managedBean.scQt.estimatedAmount}">
 
-						<p:ajax event="blur" process="@this" partialSubmit="true" update="@form"
-							
+						<p:ajax event="blur" process="@this" partialSubmit="true"
+							update="@form"
 							listener="#{specificationBackingBean.setProcurementMode(specificationBackingBean.managedBean.scQt)}"></p:ajax>
-						 <ac:validateNumber
+						<ac:validateNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}"
-							maxIntegerDigits="14"></ac:validateNumber> 
- 
+							maxIntegerDigits="14"></ac:validateNumber>
+
 					</p:inputText> <p:message id="priceMsg" for="estPrice" display="icon" /></td>
 
 			</tr>
@@ -187,9 +188,11 @@
 			rendered="#{(specificationBackingBean.managedBean.scQt.panel eq 'No' and specificationBackingBean.managedBean.scQt.zonal !='false')}">
 			<table style="width: 100%">
 				<tr>
-					<td style="width: 100px"><p:outputLabel
-							value="#{lbl['lbl.sc.spec.zone.location.level']}" /></td>
-					<td><p:selectOneMenu id="locationLevels"
+					<td style="width: 150px"><p:outputLabel
+							value="#{lbl['lbl.sc.spec.zone.location.level']}" /> <p:outputLabel
+							value="*" styleClass="mandatory"></p:outputLabel></td>
+					<td><p:selectOneMenu id="locationLevels" required="true"
+							label="#{lbl['lbl.sc.spec.zone.location.level']}"
 							value="#{specificationBackingBean.managedBean.scQt.zoneLocationLevel.parameterId}"
 							style="width: 178px;">
 
@@ -197,7 +200,8 @@
 								value="#{specificationBackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel)}" />
 							<p:ajax event="change"
 								listener="#{specificationBackingBean.selectLocation}"></p:ajax>
-						</p:selectOneMenu></td>
+						</p:selectOneMenu> <p:message id="withzone" for="locationLevels" display="icon"></p:message>
+					</td>
 				</tr>
 			</table>
 		</p:panel>
@@ -208,11 +212,12 @@
 				<p:dataTable id="zoneGeneralDataTable"
 					value="#{specificationBackingBean.managedBean.zoneGeneralTrees}"
 					var="zoneTree" style="width:100%" rowIndexVar="index"
-					selection="#{specificationBackingBean.managedBean.selectedTreeNode}" selectionMode="single" rowKey="#{zoneTree}">
-					
+					selection="#{specificationBackingBean.managedBean.selectedTreeNode}"
+					selectionMode="single" rowKey="#{zoneTree}">
+
 					<p:column headerText="Location" style="width:90%">
-						<p:tree value="#{zoneTree}" var="location" >
-                          
+						<p:tree value="#{zoneTree}" var="location">
+
 							<p:treeNode type="zone">
 								<h:outputText value="#{location.zoneName}" />
 							</p:treeNode>
@@ -253,8 +258,9 @@
 					actionListener="#{specificationBackingBean.showGeneralZoneLocationPopup}"
 					icon="ui-icon-add" />
 				<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
-					icon="ui-icon-delete" 
-					action="#{specificationBackingBean.deleteTreeNode}" update="zoneGeneralDataTable" />
+					icon="ui-icon-delete"
+					action="#{specificationBackingBean.deleteTreeNode}"
+					update="zoneGeneralDataTable" />
 			</div>
 		</p:panel>
 	</h:panelGroup>
