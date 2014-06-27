@@ -171,6 +171,7 @@ import org.primefaces.event.SelectEvent;
 import org.primefaces.event.TabChangeEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
+import org.springframework.aop.ThrowsAdvice;
 
 import com.liferay.portal.util.PortalUtil;
 
@@ -886,13 +887,12 @@ public class SpecificationBackingBean extends
 
 				this.getManagedBean().setSupplierCriteria(
 						tenderResDTO.getQtDetail().getScQtSupplierCriteria());
-				
-				/*  if(
-				  this.getManagedBean().getSupplierCriteria().getLocationLevel
-				  ()==null){
-				  this.getManagedBean().getSupplierCriteria().setLocationLevel
-				  (new PmParameter()); }
-				 */
+
+			/*	if (this.getManagedBean().getSupplierCriteria()
+						.getLocationLevel() == null) {
+					this.getManagedBean().getSupplierCriteria()
+							.setLocationLevel(new PmParameter());
+				}*/
 
 				if (this.getManagedBean().getZoneTrees() != null
 						&& this.getManagedBean().getZoneTrees().size() == 0) {
@@ -1206,6 +1206,11 @@ public class SpecificationBackingBean extends
 		SpecificationResDTO resDTO = null;
 
 		try {
+			if ("1".equalsIgnoreCase(this.getManagedBean().getScQt()
+					.getEvaluationType())) {
+				this.getManagedBean().setActiveIndex(3);
+			}
+			
 			if ("2".equalsIgnoreCase(this.getManagedBean().getScQt()
 					.getEvaluationType())) {
 				this.getManagedBean().setActiveIndex(3);
@@ -1347,15 +1352,16 @@ public class SpecificationBackingBean extends
 				int score = 0;
 				float addScore = 0;
 				for (ScQtCheckList list : checklist) {
+					if(null==list.getQtScoreWeightage()){
+						list.setQtScoreWeightage(new ScQtScoreWeightage());
+					}
 
 					if (list.getQtScoreWeightage().getScore() == null) {
 						list.getQtScoreWeightage().setScore(new BigDecimal(0));
 
 					}
-					list.getQtScoreWeightage().setChangedBy(1L);
-					list.getQtScoreWeightage().setCreatedBy(1L);
-					list.getQtScoreWeightage().setCreatedDate(
-							new Timestamp(System.currentTimeMillis()));
+					setUserDetails(list.getQtScoreWeightage());
+					
 					addScore = addScore
 							+ list.getQtScoreWeightage().getScore().intValue();
 					score = (int) addScore;
@@ -1377,6 +1383,11 @@ public class SpecificationBackingBean extends
 		IQTSpecSO specSo = null;
 
 		try {
+			if ("1".equalsIgnoreCase(this.getManagedBean().getScQt()
+					.getEvaluationType())) {
+				this.getManagedBean().setActiveIndex(4);
+			}
+			
 			if ("2".equalsIgnoreCase(this.getManagedBean().getScQt()
 					.getEvaluationType())) {
 				this.getManagedBean().setActiveIndex(5);
@@ -1435,14 +1446,17 @@ public class SpecificationBackingBean extends
 				// String localTitle="";
 				StringBuffer sb = new StringBuffer();
 				for (ScQtCheckList list : checklist) {
+					if(null==list.getQtScoreWeightage()){
+						list.setQtScoreWeightage(new ScQtScoreWeightage());
+					}
+
 
 					if (list.getQtScoreWeightage().getScore() == null) {
 						list.getQtScoreWeightage().setScore(new BigDecimal(0));
 					}
-					list.getQtScoreWeightage().setChangedBy(1L);
-					list.getQtScoreWeightage().setCreatedBy(1L);
-					list.getQtScoreWeightage().setCreatedDate(
-							new Timestamp(System.currentTimeMillis()));
+					
+					setUserDetails(list.getQtScoreWeightage());
+				
 					addScore = addScore
 							+ list.getQtScoreWeightage().getScore().intValue();
 
@@ -1550,6 +1564,11 @@ public class SpecificationBackingBean extends
 		IQTSpecSO specSo = null;
 
 		try {
+			if ("1".equalsIgnoreCase(this.getManagedBean().getScQt()
+					.getEvaluationType())) {
+				this.getManagedBean().setActiveIndex(5);
+			}
+			
 			if ("2".equalsIgnoreCase(this.getManagedBean().getScQt()
 					.getEvaluationType())) {
 				this.getManagedBean().setActiveIndex(6);
@@ -1622,9 +1641,14 @@ public class SpecificationBackingBean extends
 		IQTSpecSO specSo = null;
 
 		try {
-			if ("2".equalsIgnoreCase(this.getManagedBean().getScQt()
+			if ("1".equalsIgnoreCase(this.getManagedBean().getScQt()
 					.getEvaluationType())) {
 				this.getManagedBean().setActiveIndex(7);
+			}
+			
+			if ("2".equalsIgnoreCase(this.getManagedBean().getScQt()
+					.getEvaluationType())) {
+				this.getManagedBean().setActiveIndex(8);
 			}
 			this.getManagedBean().getScQt().setScheduleType("F");
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
@@ -1878,9 +1902,14 @@ public class SpecificationBackingBean extends
 		IQTSpecSO specSo = null;
 
 		try {
+			if ("1".equalsIgnoreCase(this.getManagedBean().getScQt()
+					.getEvaluationType())) {
+				this.getManagedBean().setActiveIndex(6);
+			}
+			
 			if ("2".equalsIgnoreCase(this.getManagedBean().getScQt()
 					.getEvaluationType())) {
-				this.getManagedBean().setActiveIndex(8);
+				this.getManagedBean().setActiveIndex(7);
 			}
 			retriveStateList();
 			retriveMinistryList();
@@ -2056,6 +2085,11 @@ public class SpecificationBackingBean extends
 		CommitteResDTO resDTO = null;
 
 		try {
+			if ("1".equalsIgnoreCase(this.getManagedBean().getScQt()
+					.getEvaluationType())) {
+				this.getManagedBean().setActiveIndex(8);
+			}
+			
 			if ("2".equalsIgnoreCase(this.getManagedBean().getScQt()
 					.getEvaluationType())) {
 				this.getManagedBean().setActiveIndex(9);
@@ -2148,8 +2182,8 @@ public class SpecificationBackingBean extends
 	 */
 	public void editZoneLocation(TreeNode rootZoneLocation, int index) {
 		List<ScQtLocCriteria> locationDTOs = getLocations(rootZoneLocation);
-		Long locationLevel = this.getManagedBean().getSupplierCriteria().getLocationLevel()
-				.getParameterId();
+		Long locationLevel = this.getManagedBean().getSupplierCriteria()
+				.getLocationLevel().getParameterId();
 		if (locationLevel == null) {
 			locationLevel = 121L;
 		}
@@ -2191,8 +2225,8 @@ public class SpecificationBackingBean extends
 		List<TplSpecZoneLoc> locationDTOs = getZoneLocations(rootZoneLocation);
 
 		TplSpecZoneDtl zone = getZone(rootZoneLocation);
-		Long locationLevel = this.getManagedBean().getScQt().getZoneLocationLevel()
-				.getParameterId();
+		Long locationLevel = this.getManagedBean().getScQt()
+				.getZoneLocationLevel().getParameterId();
 		if (locationLevel == null) {
 			locationLevel = 121L;
 		}
@@ -2767,7 +2801,7 @@ public class SpecificationBackingBean extends
 			this.getManagedBean().setApprovalDate(sdf.format(d));
 
 			if (getManagedBean().getScQt() == null) {
-				//searchCircularList();
+				// searchCircularList();
 				// this.getManagedBean().setApprovalList(getAppDetails());
 				// retriveSpecdetails(1366L);
 				//retriveSpecdetails(1426L);
@@ -2791,15 +2825,16 @@ public class SpecificationBackingBean extends
 			tenderResDTO = QtDetailsSO.retriveQTDetails(tenderReqDTO);
 			if (tenderResDTO.getQtDetail() != null) {
 				getManagedBean().setScQt(tenderResDTO.getQtDetail());
-				
-				/*  if(getManagedBean().getScQt().getZoneLocationLevel()==null){
-				  getManagedBean().getScQt().setZoneLocationLevel(new
-				  PmParameter()); }
-				  
-				  if(getManagedBean().getScQt().getFulfilmentType()==null){
-				  getManagedBean().getScQt().setFulfilmentType(new
-				  PmParameter()); }*/
-				 
+
+			/*	if (getManagedBean().getScQt().getZoneLocationLevel() == null) {
+					getManagedBean().getScQt().setZoneLocationLevel(
+							new PmParameter());
+				}
+
+				if (getManagedBean().getScQt().getFulfilmentType() == null) {
+					getManagedBean().getScQt().setFulfilmentType(
+							new PmParameter());
+				}*/
 
 				if (null == tenderResDTO.getQtSupplierCriteria()) {
 
@@ -2904,26 +2939,26 @@ public class SpecificationBackingBean extends
 
 		try {
 			List<SelectItem> selectItems = new ArrayList<SelectItem>();
-			if (type == 1) {
-				selectItems.add(new SelectItem(0, "--Select One--"));
+			if (type == 684) {
+				selectItems.add(new SelectItem(null, "--Select One--"));
 				this.getManagedBean().setTechnicalChecklistAction(null);
 
-				selectItems.add(new SelectItem(5, "Manual"));
+				selectItems.add(new SelectItem(691, "Manual Submission"));
 				this.getManagedBean().setTechnicalChecklistAction(selectItems);
 			}
 			if (type == 184) {
 
 				this.getManagedBean().setTechnicalChecklistAction(null);
-				selectItems.add(new SelectItem(0, "--Select One--"));
-				selectItems.add(new SelectItem(8, "View"));
-				selectItems.add(new SelectItem(9, "Online Submit"));
+				selectItems.add(new SelectItem(null, "--Select One--"));
+				selectItems.add(new SelectItem(688, "View"));
+				selectItems.add(new SelectItem(690, "Online Submission"));
 				this.getManagedBean().setTechnicalChecklistAction(selectItems);
 			}
-			if (type == 2) {
+			if (type == 685) {
 
 				this.getManagedBean().setTechnicalChecklistAction(null);
-				selectItems.add(new SelectItem(0, "--Select One--"));
-				selectItems.add(new SelectItem(7, "Presentation/Demo"));
+				selectItems.add(new SelectItem(null, "--Select One--"));
+				selectItems.add(new SelectItem(692, "Presentation/Demo"));
 				this.getManagedBean().setTechnicalChecklistAction(selectItems);
 			}
 		} finally {
@@ -3931,6 +3966,35 @@ public class SpecificationBackingBean extends
 
 	}
 
+	public void compareChecklistScore(int index,
+			List<ScQtCheckListScore> checklistScore) {
+		try {
+
+			if (checklistScore.size() > 1) {
+				ScQtCheckListScore current = checklistScore.get(index);
+
+				ScQtCheckListScore previous = checklistScore.get(index - 1);
+
+				if (current.getRangeFrom().intValue() > previous.getRangeTo()
+						.intValue()
+						&& current.getRangeTo().intValue() > current
+								.getRangeFrom().intValue()) {
+
+				} else {
+					throw new EpException(
+							MessageConst.INFO_100022,
+							new String[] { "You Can't Provide Numbers In between"
+									+ previous.getRangeFrom()
+									+ " and "
+									+ previous.getRangeTo() });
+				}
+
+			}
+		} finally {
+
+		}
+	}
+
 	public String technicalSpecEditAction(ScQtCheckList checklist) {
 
 		IQTTemplateSO qtTemplateSO;
@@ -4078,7 +4142,7 @@ public class SpecificationBackingBean extends
 		} finally {
 			qtTemplateSO = null;
 		}
-		return "/xhtml/sc/main/financialCommitteeTemplate.xhtml?faces-redirect=true";
+		return "/xhtml/sc/main/committeeTechnicalEditAction.xhtml?faces-redirect=true";
 	}
 
 	public String cloneAction(ScQtDoc scqtDoc) {
@@ -4999,6 +5063,7 @@ public class SpecificationBackingBean extends
 
 			}
 			ScQtCheckListScore score = createCheckList();
+			score.setCriteriaType(10);
 
 			checkListScore.add(score);
 			this.getManagedBean().setCheckListScore(checkListScore);
@@ -5059,6 +5124,7 @@ public class SpecificationBackingBean extends
 
 			}
 			ScQtCheckListScore score = createCheckList();
+			score.setCriteriaType(21);
 
 			checkListScore.add(score);
 			this.getManagedBean().setTotalEmployeeScore(checkListScore);
@@ -5079,6 +5145,7 @@ public class SpecificationBackingBean extends
 
 			}
 			ScQtCheckListScore score = createCheckList();
+			score.setCriteriaType(20);
 
 			checkListScore.add(score);
 			this.getManagedBean().setTechnicalStaffScore(checkListScore);
@@ -5099,6 +5166,7 @@ public class SpecificationBackingBean extends
 
 			}
 			ScQtCheckListScore score = createCheckList();
+			score.setCriteriaType(70);
 
 			checkListScore.add(score);
 			this.getManagedBean().setPaidUpCapitalScore(checkListScore);
@@ -5119,6 +5187,7 @@ public class SpecificationBackingBean extends
 
 			}
 			ScQtCheckListScore score = createCheckList();
+			score.setCriteriaType(11);
 
 			checkListScore.add(score);
 			this.getManagedBean().setScoringForYears(checkListScore);
@@ -5139,6 +5208,7 @@ public class SpecificationBackingBean extends
 
 			}
 			ScQtCheckListScore score = createCheckList();
+			score.setCriteriaType(12);
 
 			checkListScore.add(score);
 			this.getManagedBean().setContractAmount(checkListScore);
@@ -5159,6 +5229,7 @@ public class SpecificationBackingBean extends
 
 			}
 			ScQtCheckListScore score = createCheckList();
+			score.setCriteriaType(16);
 
 			checkListScore.add(score);
 			this.getManagedBean().setNonFederalScoreyears(checkListScore);
@@ -5179,6 +5250,7 @@ public class SpecificationBackingBean extends
 
 			}
 			ScQtCheckListScore score = createCheckList();
+			score.setCriteriaType(17);
 
 			checkListScore.add(score);
 			this.getManagedBean().setNonFederalContractScore(checkListScore);
@@ -5199,6 +5271,7 @@ public class SpecificationBackingBean extends
 
 			}
 			ScQtCheckListScore score = createCheckList();
+			score.setCriteriaType(15);
 
 			checkListScore.add(score);
 			this.getManagedBean().setNonFederalScore(checkListScore);
@@ -5219,6 +5292,7 @@ public class SpecificationBackingBean extends
 
 			}
 			ScQtCheckListScore score = createCheckList();
+			score.setCriteriaType(50);
 
 			checkListScore.add(score);
 			this.getManagedBean().setBankStamentScore(checkListScore);
@@ -5239,6 +5313,7 @@ public class SpecificationBackingBean extends
 
 			}
 			ScQtCheckListScore score = createCheckList();
+			score.setCriteriaType(51);
 
 			checkListScore.add(score);
 			this.getManagedBean().setCreditFacility(checkListScore);
@@ -5259,6 +5334,7 @@ public class SpecificationBackingBean extends
 
 			}
 			ScQtCheckListScore score = createCheckList();
+			score.setCriteriaType(52);
 
 			checkListScore.add(score);
 			this.getManagedBean().setScoringCash(checkListScore);
@@ -5279,6 +5355,7 @@ public class SpecificationBackingBean extends
 
 			}
 			ScQtCheckListScore score = createCheckList();
+			score.setCriteriaType(60);
 
 			checkListScore.add(score);
 			this.getManagedBean().setAssetScore(checkListScore);
@@ -8963,27 +9040,27 @@ public class SpecificationBackingBean extends
 		}
 	}
 
-	
-	
 	public void selctSupplierCriteriaTree(NodeSelectEvent event) {
 		TreeNode node = event.getTreeNode();
 		this.getManagedBean().setSelectedTreeNode(node);
 	}
-	
+
 	/**
 	 * To delete the selected TreeNode from list..
 	 */
 	public void deleteSupplierQualificationTreeNode() {
 		TreeNode selectedTreeNode = this.getManagedBean().getSelectedTreeNode();
-		ScQtLocCriteria locCriteria = (ScQtLocCriteria) selectedTreeNode.getChildren();
-				
+		ScQtLocCriteria locCriteria = (ScQtLocCriteria) selectedTreeNode
+				.getChildren();
+
 		if (null != selectedTreeNode) {
-			List<TreeNode> zoneTrees = this.getManagedBean()
-					.getZoneTrees();
+			List<TreeNode> zoneTrees = this.getManagedBean().getZoneTrees();
 			for (TreeNode node : zoneTrees) {
-				if (locCriteria.getPmState().getStateId().equals(
-						((ScQtLocCriteria) node.getChildren().get(0).getData())
-								.getPmState().getStateId())) {
+				if (locCriteria
+						.getPmState()
+						.getStateId()
+						.equals(((ScQtLocCriteria) node.getChildren().get(0)
+								.getData()).getPmState().getStateId())) {
 					zoneTrees.remove(node);
 					break;
 				}
@@ -8996,9 +9073,9 @@ public class SpecificationBackingBean extends
 
 	private void updateCategoryCodesToQt(List<ScQtCategory> categories,
 			ScQt scQt) {
-	
+
 		if (null != categories && !categories.isEmpty()) {
-		
+
 			for (ScQtCategory category : categories) {
 				category.setPmCategoryL1(category.getPmCategoryL3()
 						.getPmCategoryL2().getPmCategoryL1());
@@ -9009,12 +9086,12 @@ public class SpecificationBackingBean extends
 			}
 			scQt.setScQtCategorys(categories);
 		} else {
-			
+
 			String category = CommonMethod
 					.getMessageCommon("lbl.sc.spec.category.code");
 			throw new EpException(MessageConst.INFO_100022,
 					new String[] { category });
-			
+
 		}
 	}
 
