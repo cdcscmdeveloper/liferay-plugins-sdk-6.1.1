@@ -15,6 +15,8 @@
 		
 		<ui:include src="loaHeader.xhtml" />
 		
+		<ui:param name="isDocTypeQuotation" value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.docType == ParameterConst.doctypeQuotation}" />
+		
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
 			<td width="20%" valign="top">
@@ -28,56 +30,76 @@
 					<p:menuitem value="#{lbl['lbl.sc.loiloa.award.details']}" update="@form">
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="1" />
 					</p:menuitem>
-					<p:menuitem value="#{lbl['lbl.sc.loiloa.deduction.payment']}" update="@form">
+					<p:menuitem value="#{lbl['lbl.sc.deduction.payment']}" update="@form">
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="2" />
 					</p:menuitem>
-					<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}" update="@form">
+					<p:menuitem value="#{lbl['lbl.sc.loiloa.payment.details']}" update="@form">
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="3" />
 					</p:menuitem>
-					<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.perform.bond']}" update="@form">
+					<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}" update="@form" rendered="#{isDocTypeQuotation}">	
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="4" />
 					</p:menuitem>
-					<p:menuitem value="#{lbl['lbl.sc.loiloa.letter.of.acceptance']}" update="@form">
+					<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.perform.bond']}" update="@form" rendered="#{isDocTypeQuotation}">
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="5" />
 					</p:menuitem>
+					<p:menuitem value="#{lbl['lbl.sc.loiloa.letter.of.acceptance']}" update="@form">
+						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="4" />
+					</p:menuitem>
 					<p:menuitem value="#{lbl['lbl.sc.loiloa.approve.details']}" update="@form">
-						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="6" />
+						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="5" />
 					</p:menuitem>
 				</p:tabMenu>
 			</td>
 			<td width="80%">
-				<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == 0}">
-					<ui:include src="loaDetailsMenu.xhtml" />
-				</c:if>
-	
-				<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == 1}">
-					<ui:include src="loaAwardDetailsMenu.xhtml" />
-				</c:if>
-				
-				<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == 2}">
+				<h:panelGroup id="menuContent">
+					<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == 0}">
+						<ui:include src="loaDetailsMenu.xhtml" />
+					</c:if>
+		
+					<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == 1}">
+						<ui:include src="loaAwardDetailsMenu.xhtml" />
+					</c:if>
 					
-				</c:if>
-				
-				<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == 3}">
+					<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == 2}">
+						<ui:include src="loaDeductionPaymentMenu.xhtml" />
+					</c:if>
 					
-				</c:if>
-			
-				<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == 4}">
-					<!-- <ui:include src="loaPerformanceBondMenu.xhtml" /> -->
-				</c:if>
+					<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == 3}">
+						<ui:include src="loaPaymentDetailsMenu.xhtml" />	
+					</c:if>
 				
-				<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == 5}">
+					<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == 4}">
+						
+					</c:if>
 					
-				</c:if>
-				
-				<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == 6}">
+					<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == 5}">
+						
+					</c:if>
 					
-				</c:if>
-				
-				<!-- <ui:include src="loaPaymentDetailsMenu.xhtml" /> -->
+					<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == 4}">
+						<ui:include src="loaLetterOfAcceptance.xhtml" />
+					</c:if>
+					
+					<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == 5}">
+						
+					</c:if>
+				</h:panelGroup>
 			</td>
 		</tr>
 		</table>
+		
+		<p:dialog id="attachmentPopup" widgetVar="attachmentPopupDlg" 
+			modal="true" resizable="false" width="700px" height="200" styleClass="pop_up_top" 
+			header="#{lbl['lbl.txt.choose.files']}">
+			
+			<p:fileUpload style="display:inline;"
+				fileUploadListener="#{lOADetailBackingBean.handleFileUpload}"
+				mode="advanced" id="uploadattachment"
+				allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
+				invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
+				update="menuContent" oncomplete="attachmentPopupDlg.hide()">
+			</p:fileUpload>
+		</p:dialog>
 
 	</ui:define>
 </ui:composition>

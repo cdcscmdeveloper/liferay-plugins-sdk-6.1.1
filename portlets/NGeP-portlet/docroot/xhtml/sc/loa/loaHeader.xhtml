@@ -8,25 +8,23 @@
 	<div align="left" class="header-info">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
-			<td>
+			<td width="10%">
 				<h:outputLabel value="#{lbl['lbl.sc.loiloa.loa.no']}" />
 			</td>
-			<td>
-				<p:inputText value="#{lOADetailBackingBean.managedBean.scLoa.loaNo}"
-					disabled="true" size="25"/>
+			<td class="header-info-text" width="15%">
+				#{lOADetailBackingBean.managedBean.scLoa.loaNo}
 			</td>
-			<td>
+			<td width="10%">
 				<h:outputLabel value="#{lbl['lbl.sc.ptj']}" />
 			</td>
-			<td>
-				<p:inputText value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.pmOrgProfile.orgName}" 
-					disabled="true" size="80" />
+			<td class="header-info-text" width="35%">
+				#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.pmOrgProfile.orgName}
 			</td>
-			<td>
+			<td width="10%">
 				<h:outputLabel value="#{lbl['lbl.sc.status']}" />
 			</td>
-			<td>
-				<p:inputText value1="#{lOADetailBackingBean.getStatusDescById(lOADetailBackingBean.managedBean.scLoa.workFlowStatuses[0].statusId)}" disabled="true" size="30" />
+			<td class="header-info-text" width="20%">
+				<h:outputText value="#{lOADetailBackingBean.getStatusDescById(lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId)}" />
 			</td>
 		</tr>
 		</table>

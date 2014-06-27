@@ -5,114 +5,60 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<ui:param name="isSupplierAckStatus" value="#{lOADetailBackingBean.managedBean.scLoa.scLoaWorkFlowStatuses[0].pmStatus.statusId == QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT}" />
 
-	<p:panel header="#{lbl['lbl.sc.loiloa.loa.supp.pay.info']}"
-		toggleable="true">
-		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
-			columns="2" columnClasses="columnWidth20">
-			<h:column>
+	<p:panel header="#{lbl['lbl.sc.loiloa.payment.details']}" toggleable="true">
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+		<tr>
+			<td width="18%">
 				<h:outputLabel value="#{lbl['lbl.sc.loiloa.loa.acc.no']}" />
-			</h:column>
-			<h:column>
+				<p:outputLabel value="*" styleClass="mandatory" rendered1="#{isSupplierAckStatus}" />
+			</td>
+			<td width="82%">
 				<p:selectOneMenu
-					value="#{lOADetailBackingBean.managedBean.scQtSpec.approverName}"
-					style="width: 178px;margin-bottom: 5px;">
+					value="#{lOADetailBackingBean.managedBean.selectedBankId}"
+					style="width: 280px;margin-bottom: 5px;"
+					rendered1="#{isSupplierAckStatus}">
 					<f:selectItem itemLabel="-- Select -- " itemValue="" />
-					<f:selectItem itemLabel="" itemValue="1" />
+					<f:selectItems
+						value="#{lOADetailBackingBean.managedBean.bankList}"
+						var="smSupplierBank" 
+						itemValue="#{smSupplierBank.supplierBankId}" itemLabel="#{smSupplierBank.accountNo}" />
+					<p:ajax event="change"
+						listener="#{lOADetailBackingBean.handleBankDetailsChanged}"
+						partialSubmit="true" process="@this" update="bankName, bankBranch, bankAddress" />
 				</p:selectOneMenu>
-			</h:column>
-			<h:column>
+				<p:inputText value="#{lOADetailBackingBean.managedBean.scLoa.bankAccNo}" disabled="true" size="50"
+					rendered1="#{!isSupplierAckStatus}" />
+			</td>
+		</tr>
+		<tr>
+			<td>
 				<h:outputLabel value="#{lbl['lbl.sc.loiloa.loa.bank.name']}" />
-			</h:column>
-			<h:column>
-				<p:inputText value="" disabled="true" size="30" />
-			</h:column>
-			<h:column>
+			</td>
+			<td>
+				<p:inputText id="bankName" value="#{lOADetailBackingBean.managedBean.scLoa.bankName}" disabled="true" size="50" />
+			</td>
+		</tr>
+		<tr>
+			<td>
 				<h:outputLabel value="#{lbl['lbl.sc.loiloa.loa.bank.branch']}" />
-			</h:column>
-			<h:column>
-				<p:inputText value="" disabled="true" size="30" />
-			</h:column>
-			<h:column>
+			</td>
+			<td>
+				<p:inputText id="bankBranch" value="#{lOADetailBackingBean.managedBean.scLoa.bankBranch}" disabled="true" size="50" />
+			</td>
+		</tr>
+		<tr>
+			<td valign="top">
 				<h:outputLabel value="#{lbl['lbl.sc.loiloa.loa.bank.addr']}" />
-			</h:column>
-			<h:column>
-				<p:inputTextarea id="bondAddrText" cols="30" rows="5" value=""
+			</td>
+			<td>
+				<p:inputTextarea id="bankAddress" cols="50" rows="5" 
+					value="#{lOADetailBackingBean.getSupplierAddress(lOADetailBackingBean.managedBean.scLoa.bankAddress)}"
 					style=" margin-bottom:5px;" disabled="true" />
-			</h:column>
-		</h:panelGrid>
-	</p:panel>
-
-	<p:panel header="#{lbl['lbl.sc.loiloa.deduction.payment']}" toggleable="true"
-		id="deductID">
-
-		<p:commandLink value="#{lbl['lbl.sc.loiloa.deduction.payment']}"></p:commandLink>
-
-
-		<p:dataTable id="deducttbl" var="deductList"
-			value="#{lOADetailBackingBean.managedBean.scQtDeductionList}"
-			selection="#{lOADetailBackingBean.managedBean.selectedScQtDeduction}"
-			rowKey="#{deductList}" selectionMode="single">
-
-			<p:ajax event="rowSelect" update=":form:tt:deductclause" />
-
-			<ac:paginator for="deductpayments" />
-
-			<p:column headerText="#{lbl['lbl.sc.loiloa.deduction.type']}">
-				<h:outputText value="#{deductList.deductionType.code}" />
-			</p:column>
-
-			<p:column headerText="#{lbl['lbl.sc.loiloa.deduction.description']}">
-				<h:outputText value="Purchase Request" />
-			</p:column>
-
-			<p:column headerText="#{lbl['lbl.sc.loiloa.deduction.percentage']}">
-				<h:outputText value="Percentage" />
-			</p:column>
-
-			<p:column headerText="#{lbl['lbl.sc.loiloa.loa.amt']}">
-				<h:outputText value="#{deductList.deductionAmount}" />
-			</p:column>
-
-		</p:dataTable>
-		<p:spacer height="30px" />
-		<p:commandLink value="#{lbl['lbl.sc.loiloa.deduction.clause']}" />
-		<p:dataTable
-			value="#{lOADetailBackingBean.managedBean.selectedScQtDeduction.scQtDeductionClauses}"
-			id="deductclause" var="dclauseList" rowKey="#{dclauseList}"
-			rowIndexVar="rowIndex" rows="10">
-
-			<ac:paginator for="deductId" />
-			
-			<p:column selectionMode="multiple" style="width:2%" />
-			
-			<!-- <p:column headerText="#{lbl['lbl.sc.loiloa.deduction.clause']}">
-				<h:outputText value="" />
-			</p:column> -->
-
-			<p:column headerText="#{lbl['lbl.sc.loiloa.deduction.description']}">
-				<h:outputText value="Percentage" />
-			</p:column>
-
-			<p:column headerText="#{lbl['lbl.sc.loiloa.action']}">
-				<p:commandLink>
-					<p:graphicImage library="ep/images/design" name="edit.png"
-						value="/resources/ep/images/design/edit.png" />
-				</p:commandLink>
-			</p:column>
-
-		</p:dataTable>
-		<p:panelGrid columns="2" style="width:100%;"
-			styleClass="noBorders tr,noBorders td">
-			<f:facet name="footer">
-				<div align="right">
-					<p:commandButton value="#{lbl['lbl.sc.loiloa.add']}"
-						process="@this" partialSubmit="true" icon="ui-icon-add" />
-					<p:commandButton value="#{lbl['lbl.sc.loiloa.delete']}"
-						process="@this" partialSubmit="true" icon="ui-icon-delete" />
-				</div>
-			</f:facet>
-		</p:panelGrid>
-
+			</td>
+		</tr>
+		</table>
 	</p:panel>
 </ui:composition>

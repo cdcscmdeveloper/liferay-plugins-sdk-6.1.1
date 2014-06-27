@@ -16,9 +16,6 @@ import my.ep.dto.sc.directpurchase.PurchaseRequestReqDTO;
 import my.ep.dto.sc.directpurchase.PurchaseRequestResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseRequest;
-import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
-import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
-import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.managedbean.sc.loa.DpLOAManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -45,28 +42,6 @@ public class DpLOABackingBean extends
 		if (log.isDebugEnabled()) {
 			log.debug(message);
 		}
-	}
-	
-	public String createLOAAction(ScPurchaseRequest purchaseRequest) {
-		debugLogger("createLOAAction");
-		
-		ScLoiLoa scLoiLoa = new ScLoiLoa();
-		ScRequestNoteDtl requestNoteDtl = purchaseRequest.getRequestNoteDtls().iterator().next();
-		SmSupplier supplier = requestNoteDtl.getScRequestSupplierItem().getSmSupplier();
-		
-		scLoiLoa.setDocType("RN");
-		scLoiLoa.setDocId(purchaseRequest.getPurchaseRequestId());
-		scLoiLoa.setPmOrgProfile(getManagedBean().getScRequestNote().getPmOrgProfile());
-		
-		populateSupplierInfo(scLoiLoa, supplier);
-		
-		return new LOADetailBackingBean().createLOAAction(scLoiLoa);
-	}
-	
-	public String editLOAAction(ScPurchaseRequest purchaseRequest) {
-		debugLogger("editLOAAction");
-		
-		return null;
 	}
 
 	/**
@@ -104,11 +79,5 @@ public class DpLOABackingBean extends
 		} finally {
 			purchaseRequestSO = null;
 		}
-	}
-
-	private void populateSupplierInfo(ScLoiLoa scLoiLoa, SmSupplier supplier) {
-		scLoiLoa.setSmSupplier(supplier);
-		scLoiLoa.setSupplierName(supplier.getCompanyName());
-		//scLoiLoa.setMofNumber(supplier.getSmMofAccounts().iterator().next());
 	}
 }

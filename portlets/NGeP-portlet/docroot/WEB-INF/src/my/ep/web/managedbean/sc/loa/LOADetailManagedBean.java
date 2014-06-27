@@ -10,8 +10,8 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCurrency;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
-import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
+import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
 import my.ep.persistence.entity.sc.loaloi.ScPerformanceBond;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
@@ -20,6 +20,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalRanking;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommendDtl;
 import my.ep.persistence.entity.sm.SmPersonnel;
+import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -37,7 +38,6 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	public String approvalDate;
 
 	private ScQtProposalRanking scQtProposalRanking;
-	private List<SmSupplierBranch> branchsList;
 	
 	public String address;
 	private String status;
@@ -50,26 +50,25 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	private PmCurrency pmCurrency;
 
 	private List<SelectItem> selectItemList;
-
-	private List<ScQtDeduction> scQtDeductionList;
-	private ScQtDeduction selectedScQtDeduction;
 	
-	private List<ScQtDeductionClause> scQtDeductionClauses;
-	private List<ScQtDeductionClause> selectedDeductionClauses;
 	private double percentageBond;
 	private int bondAmount;
 	private String bondPercentage;
 	private List<PmUser>  approverName; // Drop down Listing for Approver Names
 	
 	private int selectedTabIndex;
+	private Long selectedBankId;
 	private String selectedSupplierBranchName;
 	private String selectedContractAgency;
-	private ScRequestNote scRequestNote;
 	private ScQtFinalization scQtFinalization;
 	private ScLoa scLoa;
 	private SmPersonnel supplierHQPersonnel;
 	private ScLoaWitness loaAgencyWitness;
 	private ScLoaWitness loaSupplierWitness;
+	private ScQtDeduction selectedScQtDeduction;
+	private ScLoaReport selectedScLoaReport;
+	private List<ScLoaReport> selectedScLoaReports;
+	private List<ScQtDeductionClause> selectedDeductionClauses;
 	private List<ScQtRecommendDtl> scQtRecommendDtls;
 	
 	// Selection list - LOA Details.
@@ -77,6 +76,8 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	private List<PmOrgProfile> agencyProfileList;
 	private List<PmUser> contractAdminList;
 	private List<PmUser> contractSignerList;
+	private List<SmSupplierBranch> branchsList;
+	private List<SmSupplierBank> bankList;
 	
 	public LOADetailManagedBean() {
 	}
@@ -135,6 +136,20 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	 */
 	public void setBranchsList(List<SmSupplierBranch> branchsList) {
 		this.branchsList = branchsList;
+	}
+
+	/**
+	 * @return the bankList
+	 */
+	public List<SmSupplierBank> getBankList() {
+		return bankList;
+	}
+
+	/**
+	 * @param bankList the bankList to set
+	 */
+	public void setBankList(List<SmSupplierBank> bankList) {
+		this.bankList = bankList;
 	}
 
 	/**
@@ -236,20 +251,6 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the scQtDeductionList
-	 */
-	public List<ScQtDeduction> getScQtDeductionList() {
-		return scQtDeductionList;
-	}
-
-	/**
-	 * @param scQtDeductionList the scQtDeductionList to set
-	 */
-	public void setScQtDeductionList(List<ScQtDeduction> scQtDeductionList) {
-		this.scQtDeductionList = scQtDeductionList;
-	}
-
-	/**
 	 * @return the selectedScQtDeduction
 	 */
 	public ScQtDeduction getSelectedScQtDeduction() {
@@ -264,18 +265,31 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the scQtDeductionClauses
+	 * @return the selectedScLoaReport
 	 */
-	public List<ScQtDeductionClause> getScQtDeductionClauses() {
-		return scQtDeductionClauses;
+	public ScLoaReport getSelectedScLoaReport() {
+		return selectedScLoaReport;
 	}
 
 	/**
-	 * @param scQtDeductionClauses the scQtDeductionClauses to set
+	 * @param selectedScLoaReport the selectedScLoaReport to set
 	 */
-	public void setScQtDeductionClauses(
-			List<ScQtDeductionClause> scQtDeductionClauses) {
-		this.scQtDeductionClauses = scQtDeductionClauses;
+	public void setSelectedScLoaReport(ScLoaReport selectedScLoaReport) {
+		this.selectedScLoaReport = selectedScLoaReport;
+	}
+
+	/**
+	 * @return the selectedScLoaReports
+	 */
+	public List<ScLoaReport> getSelectedScLoaReports() {
+		return selectedScLoaReports;
+	}
+
+	/**
+	 * @param selectedScLoaReports the selectedScLoaReports to set
+	 */
+	public void setSelectedScLoaReports(List<ScLoaReport> selectedScLoaReports) {
+		this.selectedScLoaReports = selectedScLoaReports;
 	}
 
 	/**
@@ -364,6 +378,20 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * @return the selectedBankId
+	 */
+	public Long getSelectedBankId() {
+		return selectedBankId;
+	}
+
+	/**
+	 * @param selectedBankId the selectedBankId to set
+	 */
+	public void setSelectedBankId(Long selectedBankId) {
+		this.selectedBankId = selectedBankId;
+	}
+
+	/**
 	 * @return the selectedSupplierBranchName
 	 */
 	public String getSelectedSupplierBranchName() {
@@ -389,20 +417,6 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectedContractAgency(String selectedContractAgency) {
 		this.selectedContractAgency = selectedContractAgency;
-	}
-
-	/**
-	 * @return the scRequestNote
-	 */
-	public ScRequestNote getScRequestNote() {
-		return scRequestNote;
-	}
-
-	/**
-	 * @param scRequestNote the scRequestNote to set
-	 */
-	public void setScRequestNote(ScRequestNote scRequestNote) {
-		this.scRequestNote = scRequestNote;
 	}
 
 	/**
