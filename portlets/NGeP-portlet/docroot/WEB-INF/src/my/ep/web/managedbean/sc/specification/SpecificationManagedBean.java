@@ -321,6 +321,10 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private CtPanelSupplier ctpanelSupplier;
 	private ScQtRemark contractremark;
 	private CtCircularVer circularVer;
+	private String subject;
+	private String message;
+	private String chairPersonPinNum;
+	
 
 	// Added By Sagar.. for Delete funcationality..
 	private TreeNode selectedTreeNode;
@@ -3718,6 +3722,48 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	 */
 	public void setSupplierSelectedTreeNode(TreeNode supplierSelectedTreeNode) {
 		this.supplierSelectedTreeNode = supplierSelectedTreeNode;
+	}
+
+	/**
+	 * @return the subject
+	 */
+	public String getSubject() {
+		return subject;
+	}
+
+	/**
+	 * @param subject the subject to set
+	 */
+	public void setSubject(String subject) {
+		this.subject = subject;
+	}
+
+	/**
+	 * @return the message
+	 */
+	public String getMessage() {
+		return message;
+	}
+
+	/**
+	 * @param message the message to set
+	 */
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+	/**
+	 * @return the chairPersonPinNum
+	 */
+	public String getChairPersonPinNum() {
+		return chairPersonPinNum;
+	}
+
+	/**
+	 * @param chairPersonPinNum the chairPersonPinNum to set
+	 */
+	public void setChairPersonPinNum(String chairPersonPinNum) {
+		this.chairPersonPinNum = chairPersonPinNum;
 	}
 
 }
