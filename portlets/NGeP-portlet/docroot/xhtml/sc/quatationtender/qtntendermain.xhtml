@@ -161,9 +161,10 @@
 							value="#{lbl['lbl.sc.select.ptj']}" /> <p:outputLabel value="*"
 							styleClass="mandatory" /></td>
 					<td class="ppRightBtn" style="white-space: nowrap;"><p:selectOneMenu
+							id="ptjselect" required="true"
+							label="#{lbl['lbl.sc.select.ptj']}"
 							value="#{qTDetailBB.managedBean.qt.pmOrgProfile.orgProfileId}">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
-								itemValue="null" />
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems value="#{qTDetailBB.managedBean.userDivisionList}"
 								var="pmOrgProfile"
 								itemLabel="#{pmOrgProfile.orgCode} - #{pmOrgProfile.orgName}"

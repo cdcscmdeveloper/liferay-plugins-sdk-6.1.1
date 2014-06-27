@@ -403,12 +403,18 @@ public class QTBusinessOwnerBackingBean extends
 
 	public void cloneBusinessOwnerPopupAction() {
 		debugLogger("cloneBusinessOwnerPopupAction");
-
-		// getManagedBean().setSelectedCloneBusinessTender(new ScQt());
-		// getManagedBean().setCloneCommitteMemebers(new
-		// ArrayList<ScCommitteeMember>());
-		getManagedBean().setSelectedCommitteMemebers(
-				new ArrayList<ScCommitteeMember>());
+		
+		getManagedBean().getCloneQtnTenderSearchBean().setQtTitle(null);
+		getManagedBean().getCloneQtnTenderSearchBean().setQtNo(null);
+		getManagedBean().getCloneQtnTenderSearchBean().setProcurementMode(null);
+		getManagedBean().getCloneQtnTenderSearchBean().setFromCreatedDate(null);
+		getManagedBean().getCloneQtnTenderSearchBean().setToCreatedDate(null);
+		getManagedBean().getCloneQtnTenderSearchBean().setQtStatus(null);
+		//getManagedBean().setSelectedCloneBusinessTender(new ScQt());
+		getManagedBean().setCloneCommitteMemebers(null);
+		getManagedBean().setCloneBusinessTenderList(null);
+		/*getManagedBean().setSelectedCommitteMemebers(
+				new ArrayList<ScCommitteeMember>());*/
 	}
 
 	public void okBusinessOwnerAction() {

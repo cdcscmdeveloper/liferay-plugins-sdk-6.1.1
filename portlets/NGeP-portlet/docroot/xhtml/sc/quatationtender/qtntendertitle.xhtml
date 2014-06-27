@@ -133,6 +133,7 @@
 				icon="ui-icon-add" rendered="#{qTDetailBB.managedBean.editable}">
 			</p:commandButton>
 			<p:commandButton value="#{lbl['lbl.so.delete']}"
+				actionListener="#{qTDetailBB.deleteGoSoDoAction}" update="gosodoList"
 				icon="ui-icon-delete" rendered="#{qTDetailBB.managedBean.editable}" />
 		</div>
 	</p:panel>

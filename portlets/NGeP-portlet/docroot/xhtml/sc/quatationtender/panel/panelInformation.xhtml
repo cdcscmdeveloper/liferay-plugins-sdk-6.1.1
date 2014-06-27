@@ -58,28 +58,35 @@
 				<h:outputText value="#{panelItem.itemName}" />
 			</p:column>
 
-			<p:column headerText="Specification" style="width:10%;">
-				<h:outputText value="#{panelItem.itemName}" />
+			<p:column headerText="#{lbl['lbl.tpl.spec.content.specification']}"
+				style="width:10%;">
+				<h:outputText value="#{panelItem.specification}" />
 			</p:column>
 
-			<p:column headerText="Item Category" style="width:10%;">
-				<h:outputText value="#{panelItem.itemName}" />
+			<p:column headerText="#{lbl['lbl.sc.spec.panel.item.category']}"
+				style="width:10%;">
+				<h:outputText
+					value="#{qTSupplierQulCriteriaBackingBean.getParameterDesc(panelItem.itemCategoryId)}" />
 			</p:column>
 
-			<p:column headerText="Panel Coverage" style="width:10%;">
-				<h:outputText value="#{panelItem.itemName}" />
+			<p:column headerText="#{lbl['lbl.sc.spec.panel.coverage']}"
+				style="width:10%;">
+				<h:outputText
+					value="#{qTSupplierQulCriteriaBackingBean.getParameterDesc(panelItem.panelCoverageId)}" />
 			</p:column>
 
-			<p:column headerText="UOM" style="width:10%;">
-				<h:outputText value="#{panelItem.itemName}" />
+			<p:column headerText="#{lbl['lbl.tpl.spec.content.uom']}"
+				style="width:10%;">
+				<h:outputText value="#{panelItem.pmUom.uomId}" />
 			</p:column>
 
-			<p:column headerText="Min. Order Qty" style="width:10%;">
-				<h:outputText value="#{panelItem.itemName}" />
+			<p:column headerText="#{lbl['lbl.sc.spec.min.order.quantity']}"
+				style="width:10%;">
+				<h:outputText value="#{panelItem.minimumOrderQty}" />
 			</p:column>
 
-			<p:column headerText="Had Pembelian Luar Kontrak" style="width:10%;">
-				<h:outputText value="#{panelItem.itemName}" />
+			<p:column headerText="#{lbl['lbl.sc.spec.luar.contract']}"
+				style="width:10%;">
 			</p:column>
 
 		</p:dataTable>
