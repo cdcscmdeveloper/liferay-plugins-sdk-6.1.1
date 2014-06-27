@@ -57,7 +57,6 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.tpl.TemplateSpecConst;
-import my.ep.constants.BpmConstants;
 import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.ct.circular.CircularDetailReqDTO;
 import my.ep.dto.ct.circular.CircularDetailResDTO;
@@ -4451,95 +4450,6 @@ public class SpecificationBackingBean extends
 		return additionProposalst1;
 	}
 
-	public void stageOneAdditionalAdd() {
-
-		try {
-			List<ScQtCheckList> st1additionalList = getManagedBean()
-					.getScQtCheckSt1techAdditionalProposalList();
-
-			if (null == st1additionalList) {
-				st1additionalList = new ArrayList<ScQtCheckList>();
-			}
-
-			ScQtCheckList additionProposalst1 = createSpecList("1");
-			additionProposalst1.setDocCategory("2");
-			// additionProposalst1.setEvaluationStage("1");
-			// additionProposalst1.setChecklistType("UP");
-			st1additionalList.add(additionProposalst1);
-			// mediumCarsModel = new CarDataModel(st1additionalList);
-			this.getManagedBean().setScQtCheckSt1techAdditionalProposalList(
-					st1additionalList);
-		} finally {
-
-		}
-	}
-
-	public void stageOneFiProposalAdd() {
-
-		try {
-			List<ScQtCheckList> st1financeproposalList = getManagedBean()
-					.getScQtCheckSt1financeProposalList();
-			if (null == st1financeproposalList) {
-				st1financeproposalList = new ArrayList<ScQtCheckList>();
-
-			}
-
-			ScQtCheckList st1financeproposalList1 = createSpecList("1");
-			// st1financeproposalList1.setDocType("3");
-			// st1financeproposalList1.setEvaluationStage("1");
-			// st1financeproposalList1.setChecklistType("UP");
-			st1financeproposalList.add(st1financeproposalList1);
-			this.getManagedBean().setScQtCheckSt1financeProposalList(
-					st1financeproposalList);
-		} finally {
-
-		}
-	}
-
-	public void stageOneFiAdditioalProposalAdd() {
-
-		try {
-			List<ScQtCheckList> st1financeAdditionalproposalList = getManagedBean()
-					.getScQtCheckSt1financeAdditionalProposalList();
-			if (null == st1financeAdditionalproposalList) {
-				st1financeAdditionalproposalList = new ArrayList<ScQtCheckList>();
-
-			}
-
-			ScQtCheckList st1financeAdditionalproposalList1 = createSpecList("1");
-			// st1financeAdditionalproposalList1.setDocType("4");
-			// st1financeAdditionalproposalList1.setEvaluationStage("1");
-			// st1financeAdditionalproposalList1.setChecklistType("UP");
-			st1financeAdditionalproposalList
-					.add(st1financeAdditionalproposalList1);
-			this.getManagedBean().setScQtCheckSt1financeAdditionalProposalList(
-					st1financeAdditionalproposalList);
-		} finally {
-
-		}
-	}
-
-	public void stageTwoAdditionalAdd() {
-		try {
-			List<ScQtCheckList> st2additionalList = getManagedBean()
-					.getScQtCheckSt2techAdditionalProposalList();
-			if (null == st2additionalList) {
-				st2additionalList = new ArrayList<ScQtCheckList>();
-
-			}
-
-			ScQtCheckList additionProposalst2 = createSpecList("2");
-			// additionProposalst2.setDocType("2");
-			// additionProposalst2.setEvaluationStage("2");
-			// additionProposalst2.setChecklistType("UP");
-			st2additionalList.add(additionProposalst2);
-			this.getManagedBean().setScQtCheckSt2techAdditionalProposalList(
-					st2additionalList);
-
-		} finally {
-
-		}
-	}
 
 	public void stageTwoFiProposalAdd() {
 		IStatusSO statussO;
@@ -4587,27 +4497,7 @@ public class SpecificationBackingBean extends
 		}
 	}
 
-	public void stageTwoFiAdditioalProposalAdd() {
-		try {
-			List<ScQtCheckList> st2financeAdditionalproposalList = getManagedBean()
-					.getScQtCheckSt2financeAdditionalProposalList();
-			if (null == st2financeAdditionalproposalList) {
-				st2financeAdditionalproposalList = new ArrayList<ScQtCheckList>();
-
-			}
-
-			ScQtCheckList st2financeAdditionalproposalList1 = createSpecList("2");
-			// st2financeAdditionalproposalList1.setDocType("4");
-			// st2financeAdditionalproposalList1.setEvaluationStage("2");
-			// st2financeAdditionalproposalList1.setChecklistType("UP");
-			st2financeAdditionalproposalList
-					.add(st2financeAdditionalproposalList1);
-			this.getManagedBean().setScQtCheckSt2financeAdditionalProposalList(
-					st2financeAdditionalproposalList);
-		} finally {
-
-		}
-	}
+	
 
 	public void stageTwoTechProposal() {
 
@@ -4703,20 +4593,7 @@ public class SpecificationBackingBean extends
 		}
 	}
 
-	public void stageTwotechproposal(AjaxBehaviorEvent e) {
-
-		try {
-			String dropdown = (String) e.getComponent().getAttributes()
-					.get("value");
-			List<ScQtCheckList> compilance = this.getManagedBean()
-					.getScQtCheckSt2techProposal();
-
-			setSelctValue(dropdown);
-		} finally {
-
-		}
-		// this.getManagedBean().getScQtChecklist().setChecklistType(dropdown);
-	}
+	
 
 	public void stageTwoFinanceCheckList() {
 		IStatusSO statussO;
@@ -4837,15 +4714,7 @@ public class SpecificationBackingBean extends
 					.getDeliveryLocBean();
 			if (this.getManagedBean().getScQt().isZonal() == true) {
 				for (BriefingZoneBean deliverybean : zoneBean) {
-					/*
-					 * if(deliverybean.getTplSpecZoneDtl()==null){
-					 * deliverybean.setTplSpecZoneDtl(new TplSpecZoneDtl()); }
-					 * if(deliverybean.getTplSpecZoneDtl().getZoneName()==null){
-					 * deliverybean.getTplSpecZoneDtl().setZoneName(""); }
-					 * if(this.getManagedBean().getTplSpecZoneDtl()==null){
-					 * this.getManagedBean().setTplSpecZoneDtl(new
-					 * TplSpecZoneDtl()); }
-					 */
+					
 					if (deliverybean
 							.getTplSpecZoneDtl()
 							.getZoneName()
@@ -7227,61 +7096,7 @@ public class SpecificationBackingBean extends
 		this.getManagedBean().setCtpanelSupplier(panelSupplier);
 	}
 
-	public void deleteS1Tech() {
-		List<ScQtCheckList> s1Technical = this.getManagedBean()
-				.getScQtCheckSt1techProposal();
-
-		List<ScQtCheckList> selectTenical = this.getManagedBean()
-				.getS1TechSelect();
-
-		if (s1Technical.size() == selectTenical.size()) {
-			s1Technical.clear();
-		} else {
-			for (ScQtCheckList checkList : selectTenical)
-				s1Technical.remove(checkList);
-		}
-
-	}
-
-	public void deleteS1TechAdd() {
-		List<ScQtCheckList> s1TechnicalAdd = getManagedBean()
-				.getScQtCheckSt1techAdditionalProposalList();
-		List<ScQtCheckList> selectTenicalAdd = getManagedBean()
-				.getS1TechAddSelect();
-		if (s1TechnicalAdd.size() == selectTenicalAdd.size()) {
-			s1TechnicalAdd.clear();
-		} else {
-			for (ScQtCheckList checkList : selectTenicalAdd)
-				s1TechnicalAdd.remove(checkList);
-		}
-
-	}
-
-	public void deleteS1Fin() {
-		List<ScQtCheckList> s1Fin = getManagedBean()
-				.getScQtCheckSt1financeProposalList();
-		List<ScQtCheckList> selectFin = getManagedBean().getS1FinSelect();
-		if (s1Fin.size() == selectFin.size()) {
-			s1Fin.clear();
-		} else {
-			for (ScQtCheckList checkList : selectFin)
-				s1Fin.remove(checkList);
-		}
-
-	}
-
-	public void deleteS1FinAdd() {
-		List<ScQtCheckList> s1FinAdd = getManagedBean()
-				.getScQtCheckSt1financeAdditionalProposalList();
-		List<ScQtCheckList> selectFinAdd = getManagedBean().getS1FinAddSelect();
-		if (s1FinAdd.size() == selectFinAdd.size()) {
-			s1FinAdd.clear();
-		} else {
-			for (ScQtCheckList checkList : selectFinAdd)
-				s1FinAdd.remove(checkList);
-		}
-
-	}
+	
 
 	public void deleteS2Tech() {
 		List<ScQtCheckList> s2Technical = getManagedBean()
@@ -7298,19 +7113,7 @@ public class SpecificationBackingBean extends
 
 	}
 
-	public void deleteS2TechAdd() {
-		List<ScQtCheckList> s2TechnicalAdd = getManagedBean()
-				.getScQtCheckSt2techAdditionalProposalList();
-		List<ScQtCheckList> selects2TenicalAdd = getManagedBean()
-				.getS2TechAddSelect();
-		if (s2TechnicalAdd.size() == selects2TenicalAdd.size()) {
-			s2TechnicalAdd.clear();
-		} else {
-			for (ScQtCheckList checkList : selects2TenicalAdd)
-				s2TechnicalAdd.remove(checkList);
-		}
-
-	}
+	
 
 	public void deleteS2Fin() {
 		List<ScQtCheckList> s2Fin = getManagedBean()
@@ -7325,19 +7128,7 @@ public class SpecificationBackingBean extends
 
 	}
 
-	public void deleteS2FinAdd() {
-		List<ScQtCheckList> s2FinAdd = getManagedBean()
-				.getScQtCheckSt2financeAdditionalProposalList();
-		List<ScQtCheckList> selects2FinAdd = getManagedBean()
-				.getS2FinAddSelect();
-		if (s2FinAdd.size() == selects2FinAdd.size()) {
-			s2FinAdd.clear();
-		} else {
-			for (ScQtCheckList checkList : selects2FinAdd)
-				s2FinAdd.remove(checkList);
-		}
-
-	}
+	
 
 	public void deleteScoring() {
 		try {
