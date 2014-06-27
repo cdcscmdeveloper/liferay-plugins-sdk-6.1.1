@@ -10,7 +10,8 @@
 	<p:panel header="#{lbl['lbl.sc.spec.finance.check.list']}"
 		toggleable="true">
 
-		<p:dataTable id="financeProposaltwo" var="stageTwofunctional" widgetVar="financialChecklist"
+		<p:dataTable id="financeProposaltwo" var="stageTwofunctional"
+			widgetVar="financialChecklist"
 			value="#{specificationBackingBean.managedBean.scQtCheckSt2financeProposalList}"
 			style="width:100%" rowIndexVar="index"
 			selection="#{specificationBackingBean.managedBean.s2FinSelect}"
@@ -21,9 +22,8 @@
 
 			<p:column style="text-align:left;"
 				rendered="#{stageTwofunctional.manditory ==true}" />
-			<p:column 
-				style="width:30%;white-space: normal;">
-				
+			<p:column style="width:30%;white-space: normal;">
+
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.sc.spec.stage.title']}" />
@@ -32,10 +32,11 @@
 					<h:outputText value="#{stageTwofunctional.title}" size="50" />
 				</ui:fragment>
 				<ui:fragment rendered="#{stageTwofunctional.title ==null}">
-					<p:inputText value="#{stageTwofunctional.title}" size="50" maxlength="100"
-					required="true" id="finChecklistTitle"
+					<p:inputText value="#{stageTwofunctional.title}" size="50"
+						maxlength="100" required="true" id="finChecklistTitle"
 						label="#{lbl['lbl.sc.spec.stage.title']}"></p:inputText>
-					<p:message id="finChecklistId" for="finChecklistTitle" display="icon"></p:message>
+					<p:message id="finChecklistId" for="finChecklistTitle"
+						display="icon"></p:message>
 				</ui:fragment>
 
 			</p:column>
@@ -64,38 +65,39 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.supplier.action']}"
 				style="width:10%">
-				
+
 				<ui:fragment
 					rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2financeProposalList.size()-1 and stageTwofunctional.title ==null}">
 					<p:selectOneMenu value="#{stageTwofunctional.action.parameterId}">
-						<f:selectItem itemLabel="Select One" itemValue="0" />
-						<f:selectItem itemLabel="View" itemValue="8" />
-						<f:selectItem itemLabel="Online Submit" itemValue="9" />
+						<f:selectItem itemLabel="--Select One--" itemValue="#{null}" />
+						<f:selectItem itemLabel="View" itemValue="688" />
+						<f:selectItem itemLabel="Online Submission" itemValue="690" />
 						<p:ajax event="change" process="@this" partialSubmit="true"
-						update="financeProposaltwo"	></p:ajax>
+							update="financeProposaltwo"></p:ajax>
 					</p:selectOneMenu>
 				</ui:fragment>
-								<h:outputText value="Online Submit"
-					rendered="#{index lt specificationBackingBean.managedBean.scQtCheckSt2financeProposalList.size()-1 and stageTwofunctional.action.parameterId eq '9'}" />
-					
-					<h:outputText value="View"
-					rendered="#{index lt specificationBackingBean.managedBean.scQtCheckSt2financeProposalList.size()-1 and stageTwofunctional.action.parameterId eq '8'}" />
-				
-				
-					<!-- <h:outputText value="Online Submit"
+				<h:outputText value="Online Submission"
+					rendered="#{index lt specificationBackingBean.managedBean.scQtCheckSt2financeProposalList.size()-1 and stageTwofunctional.action.parameterId eq '690'}" />
+
+				<h:outputText value="View"
+					rendered="#{index lt specificationBackingBean.managedBean.scQtCheckSt2financeProposalList.size()-1 and stageTwofunctional.action.parameterId eq '688'}" />
+
+
+				<!-- <h:outputText value="Online Submit"
 						rendered="#{stageTwofunctional.action.parameterId eq '9'}"></h:outputText>
 					<h:outputText value="View"
 						rendered="#{stageTwofunctional.action.parameterId eq '8'}"></h:outputText> -->
-				
+
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.spec.stage2.score.head']}" style="width:10%">
-				<p:selectBooleanCheckbox  value="#{stageTwofunctional.scoringReq}"
+			<p:column headerText="#{lbl['lbl.sc.spec.stage2.score.head']}"
+				style="width:10%">
+				<p:selectBooleanCheckbox value="#{stageTwofunctional.scoringReq}"
 					disabled="true"
-					rendered="#{stageTwofunctional.action.parameterId ne '9' }">
+					rendered="#{stageTwofunctional.action.parameterId ne '690' }">
 
 				</p:selectBooleanCheckbox>
-				<p:selectBooleanCheckbox  value="#{stageTwofunctional.scoringReq}"
-					rendered="#{stageTwofunctional.action.parameterId eq '9'}">
+				<p:selectBooleanCheckbox value="#{stageTwofunctional.scoringReq}"
+					rendered="#{stageTwofunctional.action.parameterId eq '690'}">
 
 				</p:selectBooleanCheckbox>
 			</p:column>
@@ -161,6 +163,6 @@
 
 
 		</div>
-<ui:include src="stageTwoFinancial.xhtml" />
+		<ui:include src="stageTwoFinancial.xhtml" />
 	</p:panel>
 </ui:composition>

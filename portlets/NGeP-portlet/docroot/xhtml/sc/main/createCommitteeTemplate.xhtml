@@ -10,8 +10,11 @@
 
 	<p:dialog widgetVar="createCommitteeSpec" modal="true" width="1000"
 		height="500">
+		<p:messages id="specCommitteecreateTemplate" showDetail="true"
+			autoUpdate="true" closable="true" showSummary="false" />
 
-		<p:panel header="#{lbl['lbl.sc.tpl.search']}">
+		<p:panel id="commiteeCreationSpec"
+			header="#{lbl['lbl.sc.tpl.search']}">
 
 			<table>
 				<tr>
@@ -28,7 +31,8 @@
 								listener="#{specificationBackingBean.templateChange}"
 								update="cretaeupdate,listUpdate"></p:ajax>
 						</p:selectOneRadio> <p:message id="committeestrdTemplate"
-							for="committeetempSpecStandardTemplate" display="icon"></td>
+							for="committeetempSpecStandardTemplate" display="icon">
+						</p:message></td>
 				</tr>
 			</table>
 
@@ -41,7 +45,7 @@
 									value="#{lbl['lbl.sc.tpl.search.item']}"></p:outputLabel> <p:outputLabel
 									value="*" styleClass="mandatory" /></td>
 							<td><p:selectOneMenu style="margin-bottom:5px;"
-									required="true" label="#{lbl['lbl.sc.tpl.search.item']}"
+									required="#{specificationBackingBean.managedBean.required}" label="#{lbl['lbl.sc.tpl.search.item']}"
 									id="standardCommitteeItemType"
 									value="#{specificationBackingBean.managedBean.searchItemTypeId}">
 									<f:selectItems
@@ -58,13 +62,14 @@
 							<td style="width: 115px;"><h:outputLabel
 									value="#{lbl['lbl.sc.tpl.search.item']}"></h:outputLabel></td>
 							<td><p:selectOneMenu style="margin-bottom:5px;"
-									required="true" label="#{lbl['lbl.sc.tpl.search.item']}"
+									required="#{specificationBackingBean.managedBean.required}" label="#{lbl['lbl.sc.tpl.search.item']}"
 									id="sourcingCommitteeItemType"
 									value="#{specificationBackingBean.managedBean.searchItemTypeId}">
 									<f:selectItems
 										value="#{specificationBackingBean.getDropdownValues(ParameterTypeConst.scItemType)}" />
 								</p:selectOneMenu> <p:message id="sourcingTemplateItemType"
-									for="sourcingCommitteeItemType" display="icon"></td>
+									for="sourcingCommitteeItemType" display="icon">
+								</p:message></td>
 						</tr>
 						<tr>
 							<td style="width: 115px;"><h:outputLabel
@@ -94,10 +99,12 @@
 			<div align="right" style="width: 70%;">
 				<p:commandButton value="#{lbl['lbl.sc.tpl.btn.search']}"
 					action="#{specificationBackingBean.searchScqtDocAction}"
-					update="createList" icon="ui-icon-search" />
+					process="@this commiteeCreationSpec"
+					update="commiteeCreationSpec,createList" icon="ui-icon-search" />
 				<p:commandButton value="#{lbl['lbl.sc.eva.btn.reset']}"
 					icon="ui-icon-reset" resetValues="true" partialSubmit="true"
-					process="@this" />
+					update="commiteeCreationSpec" process="@this"
+					action="#{specificationBackingBean.resetTemplate}" />
 			</div>
 
 		</p:panel>
@@ -150,5 +157,6 @@
 
 
 		</p:panel>
+		  <p:ajax event="close" listener="#{specificationBackingBean.closeListener}" />
 	</p:dialog>
 </ui:composition>

@@ -10,7 +10,7 @@
 	<ui:define name="resourceSection">
 	</ui:define>
 
-	<p:messages id="templateMaintenancemessages" showDetail="true"
+	<p:messages id="templateMaintenancemessages" showDetail="true" showSummary="false"
 		autoUpdate="true" closable="true" />
 	<ui:define name="contentSection">
 
@@ -65,7 +65,9 @@
 					<td><p:inputText disabled="true"
 							value="#{specificationBackingBean.getStatusDescById(specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.status.statusId)}"></p:inputText></td>
 							<td><h:outputLabel value="#{lbl['lbl.sc.spec.item.weightage']}" /></td>
-					<td><p:inputText value="#{specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.weightageReq}" disabled="true" readonly="true"></td>
+					<td><p:inputText value="#{specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.weightageReq}" disabled="true" readonly="true">
+					</p:inputText>
+					</td>
 				</tr>
 			</table>
 

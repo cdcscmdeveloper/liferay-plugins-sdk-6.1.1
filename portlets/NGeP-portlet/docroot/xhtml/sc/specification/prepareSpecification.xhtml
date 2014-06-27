@@ -12,7 +12,7 @@
 
 		<p:dataTable id="financialSpecification" var="financialSpec"
 			style="width:100%" rowIndexVar="index"
-			value="#{specificationBackingBean.managedBean.financialSpecList}"
+			value="#{specificationBackingBean.managedBean.technicalSpecList}"
 			rowKey="#{financialSpec}">
 			<ac:paginator for="financialSpecification" />
 
@@ -22,7 +22,7 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.spec.status']}" style="width:20%">
-				<h:outputText value="Pending" size="50"></h:outputText>
+				<h:outputText value="#{specificationBackingBean.getStatusDescById(financialSpec.pmStatus.statusId)}" size="50"></h:outputText>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.created.by']}" style="width:20%">
@@ -32,7 +32,7 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.stage.action']}"
 				style="width:10%">
-				<p:commandLink
+				<p:commandLink process="@this" partialSubmit="true"
 					action="#{specificationBackingBean.committeeSpecEditAction(financialSpec)}">
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png" />
@@ -53,7 +53,7 @@
 
 		</div>
 
-
+		<ui:include src="/xhtml/sc/main/createCommitteeTemplate.xhtml"></ui:include>
 	</p:panel>
 
 </ui:composition>

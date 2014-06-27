@@ -135,7 +135,7 @@
 								process="@this,#{scoringPnlId}" partialSubmit="true"
 								oncomplete="scoreWidget.paginator.endLink.click();"
 								actionListener="#{specificationBackingBean.addScoring}"
-								update=":form:#{scoringPnlId}" icon="ui-icon-add" />
+								update="#{scoringPnlId}" icon="ui-icon-add" />
 							<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
 								icon="ui-icon-delete"
 								action="#{specificationBackingBean.deleteScoring}"
@@ -195,7 +195,7 @@
 								process="@this,#{scoringPnlId}" partialSubmit="true"
 								oncomplete="scoreWidget.paginator.endLink.click();"
 								actionListener="#{specificationBackingBean.addScoringyears}"
-								update=":form:#{scoringPnlId}" icon="ui-icon-add" />
+								update="#{scoringPnlId}" icon="ui-icon-add" />
 							<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
 								icon="ui-icon-delete"
 								action="#{specificationBackingBean.deleteScoring}"

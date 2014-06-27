@@ -82,6 +82,7 @@
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.sc.spec.max.proposal']}" /></td>
 				<td><p:inputText id="proposalId" required="true" size="30"
+						disabled="#{specificationBackingBean.managedBean.scQt.pmProcurementCategory.parameterCode ne 'CHE'}"
 						label="#{lbl['lbl.sc.spec.max.proposal']}" maxlength="1"
 						value="#{specificationBackingBean.managedBean.scQt.maxProposal}"
 						style="text-align:right;"></p:inputText> <p:message
@@ -89,8 +90,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value=" #{lbl['lbl.sc.spec.ful.type']}" />
-				<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
-				</td>
+					<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel></td>
 				<td><p:selectOneMenu required="true" id="fulfilId"
 						label="#{lbl['lbl.sc.spec.ful.type']}"
 						value="#{specificationBackingBean.managedBean.scQt.fulfilmentType.parameterId}"
@@ -98,16 +98,16 @@
 
 						<f:selectItems
 							value="#{specificationBackingBean.getDropdownValues(ParameterTypeConst.fulfilmentType)}" />
-						<p:ajax event="change" process="@this" partialSubmit="true" update="@form"
+						<p:ajax event="change" process="@this" partialSubmit="true"
+							update="@form"
 							listener="#{specificationBackingBean.fulfilmentChange}"></p:ajax>
 					</p:selectOneMenu> <p:message id="fulfilType" for="fulfilId" display="icon"></p:message>
 				</td>
 				<td><p:outputLabel
-						value="*#{lbl['lbl.sc.spec.complete.period']}" escape="false" />
-						<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
-						</td>
-				<td><p:inputText id="contract" required="true" size="30" maxlength="3"
-						label="#{lbl['lbl.sc.spec.complete.period']}"
+						value="#{lbl['lbl.sc.spec.complete.period']}" escape="false" />
+					<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel></td>
+				<td><p:inputText id="contract" required="true" size="30"
+						maxlength="3" label="#{lbl['lbl.sc.spec.complete.period']}"
 						value="#{specificationBackingBean.managedBean.scQt.contractDuration}"
 						style="text-align:right;" /> <h:outputText value="(Month)" /> <p:message
 						id="completion" for="contract" display="icon"></p:message></td>
