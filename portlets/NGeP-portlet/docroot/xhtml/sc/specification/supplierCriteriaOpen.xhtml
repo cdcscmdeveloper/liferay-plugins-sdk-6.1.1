@@ -158,12 +158,10 @@
 				<h:panelGrid width="100%">
 					<p:dataTable id="zoneLocationDataTable"
 						value="#{specificationBackingBean.managedBean.zoneTrees}"
-						var="zoneTree" style="width:100%" rowIndexVar="index"
-						selection="#{specificationBackingBean.managedBean.supplierSelectedTreeNode}">
+						var="zoneTree" style="width:100%" rowIndexVar="index" rowKey="#{zoneTree}"
+						selection="#{specificationBackingBean.managedBean.supplierSelectedTreeNode}" selectionMode="single" >
 						<p:column headerText="Location" style="width:90%">
-							<p:tree value="#{zoneTree}" var="location" selectionMode="single">
-								<p:ajax event="select"
-									listener="#{specificationBackingBean.selctSupplierCriteriaTree}" />
+							<p:tree value="#{zoneTree}" var="location" >
 								<p:treeNode type="state">
 									<h:outputText value="#{location.pmState.stateName}" />
 								</p:treeNode>

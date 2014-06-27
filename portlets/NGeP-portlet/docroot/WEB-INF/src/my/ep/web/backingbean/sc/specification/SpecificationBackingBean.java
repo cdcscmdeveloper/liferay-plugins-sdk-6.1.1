@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -171,7 +170,6 @@ import org.primefaces.event.SelectEvent;
 import org.primefaces.event.TabChangeEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
-import org.springframework.aop.ThrowsAdvice;
 
 import com.liferay.portal.util.PortalUtil;
 
@@ -410,28 +408,15 @@ public class SpecificationBackingBean extends
 			detailSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 			QuationTenderResDTO resDTo = null;
-			List<FacesMessage> messages = new ArrayList<FacesMessage>();
-			for (Iterator<FacesMessage> iter = FacesContext
-					.getCurrentInstance().getMessages(); iter.hasNext();) {
-				messages.add(iter.next());
-				// iter.remove();
-			}
-			if (messages.size() == 0) {
-				resDTo = detailSO.saveQTDtl(reqDTO);
-			}
+
+			resDTo = detailSO.saveQTDtl(reqDTO);
 
 			if (null != resDTo && resDTo.isSuccessful()) {
 				ScQt scQt = resDTo.getQtDetail();
-				this.getManagedBean().setScQt(scQt);
-				this.getManagedBean().setSupplierCriteria(
-						scQt.getScQtSupplierCriteria());
-				if ("O".equalsIgnoreCase(scQt.getQtType())) {
-					this.getManagedBean().setSuppCriteriaopenList(
-							scQt.getScQtCategorys());
-				} else {
-					this.getManagedBean().setSuppCriteriarestrictedList(
-							scQt.getScQtCategorys());
-				}
+				// renew the session..
+				renewSesionObject();
+				// Method to load the updated info upon saving the data..
+				loadPrepareSpecDetails(scQt.getQtId());
 				FacesContext.getCurrentInstance().addMessage(
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
@@ -797,42 +782,36 @@ public class SpecificationBackingBean extends
 
 	}
 
-	public void onTabChangeAction(TabChangeEvent event) {
-		String tabTitle = event.getTab().getTitle();
+	/**
+	 * To reload the data after saving...
+	 */
+	public void loadPrepareSpecDetails(Long qtId) {
 
-		if (tabTitle.equalsIgnoreCase("General")) {
-			// retriveSpecdetails(this.getManagedBean().getScQt().getQtId());
-		} else if (tabTitle.equalsIgnoreCase("Supplier Qualification Criteria")) {
-			retriveBusinessOwnerQualificationCriteri();
-		} else if (tabTitle.equalsIgnoreCase("Prepare Specification")) {
-			retriveFinancialSpecification();
-		}
+		retriveSpecdetails(qtId);
 
-		else if (tabTitle.equalsIgnoreCase("Technical Checklist")) {
-			retriveTechnicalCheckList();
+		retriveBusinessOwnerQualificationCriteri();
+		retriveTechnicalCheckList();
+		retriveFinancialSpecification();
 
-		} else if (tabTitle.equalsIgnoreCase("Financial Checklist")) {
-			retriveFinancialCheckList();
-
-		} else if (tabTitle.equalsIgnoreCase("Technical Scoring")) {
-			retriveTechnicalScoring();
-		} else if (tabTitle.equalsIgnoreCase("Financial Scoring")) {
-			retriveFinancialScoring();
-		} else if (tabTitle.equalsIgnoreCase("Recommendation")) {
-			retriveRecommendationDetails();
-		} else if (tabTitle.equalsIgnoreCase("Fulfilment Schedule")) {
-			retriveFulfilmentDtls();
-		}
-
-		else if (tabTitle.equalsIgnoreCase("Delivery/Service Address")) {
-			retriveDeliveryDetails();
-		}
-
-		else if (tabTitle.equalsIgnoreCase("Committee Endorsement")) {
-
-			retriveCommitteeEndorsment();
-		}
-
+		/*
+		 * retriveFinancialCheckList();
+		 * 
+		 * 
+		 * retriveTechnicalScoring();
+		 * 
+		 * retriveFinancialScoring();
+		 * 
+		 * retriveRecommendationDetails();
+		 * 
+		 * retriveFulfilmentDtls();
+		 * 
+		 * 
+		 * 
+		 * retriveDeliveryDetails();
+		 * 
+		 * 
+		 * retriveCommitteeEndorsment();
+		 */
 	}
 
 	public void businessOwnerTabChange(TabChangeEvent event) {
@@ -887,6 +866,14 @@ public class SpecificationBackingBean extends
 
 				this.getManagedBean().setSupplierCriteria(
 						tenderResDTO.getQtDetail().getScQtSupplierCriteria());
+
+				/*
+				 * if(
+				 * this.getManagedBean().getSupplierCriteria().getLocationLevel
+				 * ()==null){
+				 * this.getManagedBean().getSupplierCriteria().setLocationLevel
+				 * (new PmParameter()); }
+				 */
 
 			/*	if (this.getManagedBean().getSupplierCriteria()
 						.getLocationLevel() == null) {
@@ -2821,20 +2808,12 @@ public class SpecificationBackingBean extends
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 			QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
 			tenderReqDTO.setQtId(qtId);
+			tenderReqDTO.setDocType(QTConstants.DOCTYPE_PREPARE_SPEC);
 			QuationTenderResDTO tenderResDTO = new QuationTenderResDTO();
+
 			tenderResDTO = QtDetailsSO.retriveQTDetails(tenderReqDTO);
 			if (tenderResDTO.getQtDetail() != null) {
 				getManagedBean().setScQt(tenderResDTO.getQtDetail());
-
-			/*	if (getManagedBean().getScQt().getZoneLocationLevel() == null) {
-					getManagedBean().getScQt().setZoneLocationLevel(
-							new PmParameter());
-				}
-
-				if (getManagedBean().getScQt().getFulfilmentType() == null) {
-					getManagedBean().getScQt().setFulfilmentType(
-							new PmParameter());
-				}*/
 
 				if (null == tenderResDTO.getQtSupplierCriteria()) {
 
@@ -7035,7 +7014,8 @@ public class SpecificationBackingBean extends
 			QuationTenderResDTO resDTO = detailSO.updateBPMAction(spReqDTO);
 			if (resDTO.isSuccessful()) {
 				ScQt qt = resDTO.getQtDetail();
-
+				// Code to renew the session Object..
+				renewSesionObject();
 				FacesContext.getCurrentInstance().addMessage(
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
@@ -8309,10 +8289,10 @@ public class SpecificationBackingBean extends
 
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 				.getServiceObject(IBpmSO.class);
-		// TODO
+
 		FacesScopes facesScopes = new FacesScopes();
 		String ctx = facesScopes.getBPMAuthenticationCtxToken();
-		// String ctx = bpmSO.authenticate("roslan", "welcome1");
+
 		BpmRequestDTO reqDTO = new BpmRequestDTO();
 		reqDTO.setCtxToken(ctx);
 		reqDTO.setTaskId(taskId);
@@ -9011,16 +8991,14 @@ public class SpecificationBackingBean extends
 		return items;
 	}
 
-	public void selctZonalTree(NodeSelectEvent event) {
-		TreeNode node = event.getTreeNode();
-		this.getManagedBean().setSelectedTreeNode(node);
-	}
-
 	/**
 	 * To delete the selected TreeNode from list..
 	 */
 	public void deleteTreeNode() {
 		TreeNode selectedTreeNode = this.getManagedBean().getSelectedTreeNode();
+		if (null == selectedTreeNode) {
+			throw new EpException("Please select At least one Zone");
+		}
 		TplSpecZoneDtl zoneDtls = (TplSpecZoneDtl) selectedTreeNode
 				.getChildren().get(0).getData();
 		if (null != selectedTreeNode) {
@@ -9035,40 +9013,15 @@ public class SpecificationBackingBean extends
 				}
 			}
 			this.getManagedBean().setZoneGeneralTrees(zoneTrees);
-		} else {
-			throw new EpException(MessageConst.ERROR_715006);
 		}
-	}
-
-	public void selctSupplierCriteriaTree(NodeSelectEvent event) {
-		TreeNode node = event.getTreeNode();
-		this.getManagedBean().setSelectedTreeNode(node);
 	}
 
 	/**
 	 * To delete the selected TreeNode from list..
 	 */
 	public void deleteSupplierQualificationTreeNode() {
-		TreeNode selectedTreeNode = this.getManagedBean().getSelectedTreeNode();
-		ScQtLocCriteria locCriteria = (ScQtLocCriteria) selectedTreeNode
-				.getChildren();
 
-		if (null != selectedTreeNode) {
-			List<TreeNode> zoneTrees = this.getManagedBean().getZoneTrees();
-			for (TreeNode node : zoneTrees) {
-				if (locCriteria
-						.getPmState()
-						.getStateId()
-						.equals(((ScQtLocCriteria) node.getChildren().get(0)
-								.getData()).getPmState().getStateId())) {
-					zoneTrees.remove(node);
-					break;
-				}
-			}
-			this.getManagedBean().setZoneGeneralTrees(zoneTrees);
-		} else {
-			throw new EpException(MessageConst.ERROR_715006);
-		}
+		this.getManagedBean().setZoneTrees(new ArrayList<TreeNode>());
 	}
 
 	private void updateCategoryCodesToQt(List<ScQtCategory> categories,
