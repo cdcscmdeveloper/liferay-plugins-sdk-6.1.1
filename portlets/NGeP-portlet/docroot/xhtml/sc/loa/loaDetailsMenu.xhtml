@@ -7,19 +7,31 @@
 
 	<p:panel header="#{lbl['lbl.sc.loiloa.supp.details']}" toggleable="true">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+		<c:if test="#{!isDocTypeQuotation}">
 		<tr>
 			<td>
-				<p:outputLabel value="#{lbl['lbl.sc.loiloa.mofno']}" />
+				<p:outputLabel value="#{lbl['lbl.sc.ep.no']}" />
 			</td>
 			<td colspan="3">
 				<p:inputText size="50"
-					value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.mofNumber}"
+					value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.epNo}"
+					disabled="true" />
+			</td>
+		</tr>
+		</c:if>
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.sc.mof.no']}" />
+			</td>
+			<td colspan="3">
+				<p:inputText size="50"
+					value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.mofNo}"
 					disabled="true" />
 			</td>
 		</tr>
 		<tr>
 			<td>
-				<p:outputLabel value="#{lbl['lbl.sc.loiloa.supp.name']}" />
+				<p:outputLabel value="#{lbl['lbl.sc.supplier.name']}" />
 			</td>
 			<td colspan="3">
 				<p:inputText size="50"

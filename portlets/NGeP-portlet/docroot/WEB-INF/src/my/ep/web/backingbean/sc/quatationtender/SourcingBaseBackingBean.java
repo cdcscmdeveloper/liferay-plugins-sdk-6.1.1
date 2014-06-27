@@ -4,6 +4,7 @@
 package my.ep.web.backingbean.sc.quatationtender;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -16,6 +17,8 @@ import java.net.URLConnection;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -153,6 +156,14 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 	}
 	
+	protected <ATTACHMENT extends ScAttachment>  File downloadFile(ATTACHMENT scAttachment) throws IOException {
+		if (scAttachment != null && StringUtils.isNotBlank(scAttachment.getFileName())) {
+			return downloadFile(scAttachment.getFilePath(), scAttachment.getFileName());	
+		}
+		
+		return null;
+	}
+	
 	public File downloadFile(String filePath, String fileName) throws IOException {
 		System.out.println("Inside downloadFile(..)");
 		PortletResponse  portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();  
@@ -189,6 +200,53 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		//use to upload back to database
 		File file = new File(filePath);
 		return file;
+	}
+	
+	protected <ATTACHMENT extends ScAttachment> void downloadAllFiles(String zipFileName, List<ATTACHMENT> scAttachments) throws IOException {
+		List<File> files = new ArrayList<File>();
+		
+		for (ScAttachment scAttachment : scAttachments) {
+			if (null != scAttachment && StringUtils.isNotBlank(scAttachment.getFilePath())) {
+				files.add(new File(scAttachment.getFilePath(), scAttachment.getFileName()));
+			}
+		}
+
+		PortletResponse portalresponse = (PortletResponse) FacesContext
+				.getCurrentInstance().getExternalContext().getResponse();
+		HttpServletResponse response = PortalUtil
+				.getHttpServletResponse(portalresponse);
+		response.setContentType("Content-type: text/zip");
+		response.setHeader("Content-Disposition",
+				"attachment; filename=" + zipFileName + ".zip");
+
+		ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(
+				response.getOutputStream()));
+		for (File file : files) {
+			zos.putNextEntry(new ZipEntry(file.getName()));
+
+			// Get the file
+			FileInputStream fis = null;
+			try {
+				fis = new FileInputStream(file);
+			} catch (FileNotFoundException fnfe) {
+				zos.write(("ERROR: Could not find file " + file.getName())
+						.getBytes());
+				zos.closeEntry();
+				continue;
+			}
+			BufferedInputStream fif = new BufferedInputStream(fis);
+			// Write the contents of the file
+			int data = 0;
+			while ((data = fif.read()) != -1) {
+				zos.write(data);
+			}
+			fif.close();
+			zos.closeEntry();
+		}
+		zos.close();
+		response.flushBuffer();
+		
+		FacesContext.getCurrentInstance().responseComplete();
 	}
 	
 	public void converthtmlToDocFile(String content, String filePath){

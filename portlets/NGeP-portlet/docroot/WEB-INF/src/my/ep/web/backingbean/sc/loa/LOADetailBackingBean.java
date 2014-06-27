@@ -584,13 +584,15 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 			scLoa.setAckDueDate(DateUtils.addDays(scLoa.getIssueDate(), 14));
 			log.info("Response Due Date : " + scLoa.getAckDueDate());
 			
-			List<ScLoaWorkFlowStatus> workFlowStatuses = new ArrayList<ScLoaWorkFlowStatus>();
-			ScLoaWorkFlowStatus workFlowStatus = new ScLoaWorkFlowStatus();
-			workFlowStatus.setScLoa(scLoa);
-			workFlowStatus.setPmStatus(scLoa.getPmStatus());
-			workFlowStatus.setCurrent(true);
-			workFlowStatuses.add(workFlowStatus);
-			scLoa.setScLoaWorkFlowStatuses(workFlowStatuses);
+			if (scLoa.isBrandNew()) {
+				List<ScLoaWorkFlowStatus> workFlowStatuses = new ArrayList<ScLoaWorkFlowStatus>();
+				ScLoaWorkFlowStatus workFlowStatus = new ScLoaWorkFlowStatus();
+				workFlowStatus.setScLoa(scLoa);
+				workFlowStatus.setPmStatus(scLoa.getPmStatus());
+				workFlowStatus.setCurrent(true);
+				workFlowStatuses.add(workFlowStatus);
+				scLoa.setScLoaWorkFlowStatuses(workFlowStatuses);	
+			}
 
 			reqDTO.setScLoa(scLoa);
 
