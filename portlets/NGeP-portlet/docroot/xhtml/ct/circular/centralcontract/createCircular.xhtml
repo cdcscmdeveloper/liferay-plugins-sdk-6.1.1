@@ -66,20 +66,35 @@
 			<ac:paginator for="exemptedOrgDt" />
 			<p:column selectionMode="multiple" style="width:3%" />
 			<p:column headerText="Ministry">
-				<ac:lov id="ministryId" lovId="PM_ORG_PROFILE" size="50"
-					headerText="Ministry Lov" 
-					saveObject="centralContractBackingBean.managedBean.circularVer.ctExemptedOrgs[#{index}].orgProfile"
-					value="#{data.orgProfile.orgName}"
-					conditionField="orgTypeCode.parameterCode^#{ParameterConst.orgTypeMinistry}|recordStatus^1" /> 					
+				#{data.orgProfile.orgName}
 			</p:column>
 		</p:dataTable>
-		<p:spacer height="2" />
-		<div class="ppRightBtn"> 
-			<p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" partialSubmit="true" icon="ui-icon-add"
-				action="#{centralContractBackingBean.addExemptedOrg()}" update="exemptedOrgDt" />
-			<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this" partialSubmit="true" icon="ui-icon-delete" onsuccess="delExemptedOrgDlg.show()"/>				
-		</div>
-		
+		<p:spacer height="2" />		
+		<div>
+			<table style="width: 100%">
+				<tr><td class="TableFieldLeft" width="80%"></td>
+			 	<td>
+			   	<table><tr>
+			   		<td>
+		   			<ac:lov id="ministryId" lovId="PM_ORG_PROFILE"
+						postUpdateListener="centralContractBackingBean.addExemptedOrg(centralContractBackingBean.managedBean.orgProfiles)"
+						headerText="Ministry" 
+						buttonLabel="Add"
+						buttonIcon="ui-icon-add" 
+						selectionMode="multiple"
+						saveObject="centralContractBackingBean.managedBean.orgProfiles"
+						conditionField="orgTypeCode.parameterCode^#{ParameterConst.orgTypeMinistry}|recordStatus^1" update="@form" />
+					</td>
+					<td>
+					  <p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this" 
+						  partialSubmit="true" icon="ui-icon-delete" 
+						  onsuccess="delExemptedOrgDlg.show()"/>
+					</td>
+					</tr></table>
+				</td>
+			    </tr>
+			</table>
+		 </div>
 		<p:dialog id="delExemptedOrgDlg" header="#{lbl['lbl.ct.dialong.cofirm.header']}" resizable="false"
 		    styleClass="screen-title" widgetVar="delExemptedOrgDlg"  modal="true" width="350" height="95">  
             <h:panelGrid columns="3">

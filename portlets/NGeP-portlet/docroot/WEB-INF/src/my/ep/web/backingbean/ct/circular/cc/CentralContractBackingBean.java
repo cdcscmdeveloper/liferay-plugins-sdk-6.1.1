@@ -889,12 +889,16 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		}
 	}	
 	
-	public void addExemptedOrg(){
+	public void addExemptedOrg(List<PmOrgProfile> orgProfiles){
 		log.info("CentralContractBackingBean.addExemptedOrg()");
 		try {
-			CtExemptedOrg ctExemptedOrg = new CtExemptedOrg();
-			ctExemptedOrg.setOrgProfile(new PmOrgProfile());
-	        getManagedBean().getCircularVer().getCtExemptedOrgs().add(ctExemptedOrg);
+			if (orgProfiles != null){
+			   for (PmOrgProfile orgProfile : orgProfiles) {
+				   CtExemptedOrg ctExemptedOrg = new CtExemptedOrg();
+				   ctExemptedOrg.setOrgProfile(orgProfile);
+				   getManagedBean().getCircularVer().getCtExemptedOrgs().add(ctExemptedOrg);
+				}
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));

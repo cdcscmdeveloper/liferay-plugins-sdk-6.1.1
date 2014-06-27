@@ -24,6 +24,7 @@ import my.ep.persistence.entity.ct.circular.dtl.CtContactPerson;
 import my.ep.persistence.entity.ct.circular.dtl.CtExemptedOrg;
 import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
 import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -82,7 +83,7 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	private List<CtRemark> remarkList;
 	private List<CtAttachment> attachmentList;
 	private TreeNode centralZoneTrees;
-	
+	private List<PmOrgProfile> orgProfiles; 
 	private int selectedTabIndex;
 	
 	private List<CtContractZone> contractItemZones;
@@ -321,4 +322,10 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	public void setAction(String action) {
 		this.action = action;
 	}
+	public List<PmOrgProfile> getOrgProfiles() {
+		return orgProfiles;
+	}
+	public void setOrgProfiles(List<PmOrgProfile> orgProfiles) {
+		this.orgProfiles = orgProfiles;
+	}	
 }
