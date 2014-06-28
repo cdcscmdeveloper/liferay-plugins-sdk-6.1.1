@@ -110,5 +110,8 @@ public interface QTConstants {
 	public static final String DOCTYPE_PROPOSAL="PR";
 	public static final String DOCTYPE_OPENING_COMMITTE="OC";
 	public static final String DOCTYPE_EVAL_COMMITTE="EC";
+	public static final String DOCTYPE_SPEC_COMMITTE="SC";
+	public static final String EVALUATION_ONE_TIER="1";
+	public static final String EVALUATION_TWO_TIER="2";
 	
 }
