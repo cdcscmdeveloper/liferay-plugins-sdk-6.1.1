@@ -74,6 +74,14 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	
 	private PmUser pmUser;
 	
+	//getSuplier address details
+	private String supplierAddress;
+	private String phoneNo;
+	private String faxNo;
+	private String contactEmail;
+	private String contactPerson;
+	private String contactPhoneNo;
+	
 	
 	private FlFulfilmentRequest fulfilmentRequest;
 	
@@ -462,5 +470,77 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	public void setSupplierBankAccountMap(
 			Map<String, SmSupplierBank> supplierBankAccountMap) {
 		this.supplierBankAccountMap = supplierBankAccountMap;
+	}
+	/**
+	 * @return the supplierAddress
+	 */
+	public String getSupplierAddress() {
+		return supplierAddress;
+	}
+	/**
+	 * @param supplierAddress the supplierAddress to set
+	 */
+	public void setSupplierAddress(String supplierAddress) {
+		this.supplierAddress = supplierAddress;
+	}
+	/**
+	 * @return the phoneNo
+	 */
+	public String getPhoneNo() {
+		return phoneNo;
+	}
+	/**
+	 * @param phoneNo the phoneNo to set
+	 */
+	public void setPhoneNo(String phoneNo) {
+		this.phoneNo = phoneNo;
+	}
+	/**
+	 * @return the faxNo
+	 */
+	public String getFaxNo() {
+		return faxNo;
+	}
+	/**
+	 * @param faxNo the faxNo to set
+	 */
+	public void setFaxNo(String faxNo) {
+		this.faxNo = faxNo;
+	}
+	/**
+	 * @return the contactEmail
+	 */
+	public String getContactEmail() {
+		return contactEmail;
+	}
+	/**
+	 * @param contactEmail the contactEmail to set
+	 */
+	public void setContactEmail(String contactEmail) {
+		this.contactEmail = contactEmail;
+	}
+	/**
+	 * @return the contactPerson
+	 */
+	public String getContactPerson() {
+		return contactPerson;
+	}
+	/**
+	 * @param contactPerson the contactPerson to set
+	 */
+	public void setContactPerson(String contactPerson) {
+		this.contactPerson = contactPerson;
+	}
+	/**
+	 * @return the contactPhoneNo
+	 */
+	public String getContactPhoneNo() {
+		return contactPhoneNo;
+	}
+	/**
+	 * @param contactPhoneNo the contactPhoneNo to set
+	 */
+	public void setContactPhoneNo(String contactPhoneNo) {
+		this.contactPhoneNo = contactPhoneNo;
 	}
 }

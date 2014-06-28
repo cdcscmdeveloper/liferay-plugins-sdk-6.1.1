@@ -10,19 +10,25 @@
 		<table>
 			<tr>
 				<td style="width:139px"><p:outputLabel value="#{lbl['lbl.fl.new.inv.amt']}" /></td>
-				<td><p:inputText size="35" value="#{invoiceBackingBean.managedBean.invoice.invoiceAmtOri}"  disabled="true" /></td>
+				<td><p:inputText size="35" value="#{invoiceBackingBean.managedBean.invoice.invoiceAmtOri}"  disabled="true" style="text-align:right">
+				<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" /></p:inputText></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.service.fee']}" /></td>
-				<td><p:inputText size="35" value="#{invoiceBackingBean.managedBean.serviceCharge}" disabled="true" /></td>
+				<td><p:inputText size="35" value="#{invoiceBackingBean.managedBean.serviceCharge}" disabled="true" style="text-align:right"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.fee.amt']}" /></td>
-				<td><p:inputText size="35" disabled="true" value="#{invoiceBackingBean.managedBean.invoice.feeAmt}" /></td>
+				<td><p:inputText size="35" disabled="true" value="#{invoiceBackingBean.managedBean.invoice.feeAmt}"  style="text-align:right">
+				<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" /></p:inputText></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.amt.to.supplier']}" /></td>
-				<td><p:inputText size="35" disabled="true" value="#{invoiceBackingBean.managedBean.invoice.supplierOrFactorAmt}" /></td>
+				<td><p:inputText size="35" disabled="true" value="#{invoiceBackingBean.managedBean.invoice.supplierOrFactorAmt}" style="text-align:right"><f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+							</p:inputText></td>
 			</tr>
 		</table>
 	</p:panel>

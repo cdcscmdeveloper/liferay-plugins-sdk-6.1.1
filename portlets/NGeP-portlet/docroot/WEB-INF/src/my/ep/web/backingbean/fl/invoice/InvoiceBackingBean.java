@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.fl.invoice.IInvoiceSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
+import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
@@ -27,6 +28,8 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
+import my.ep.dto.pm.common.address.AddressReqDTO;
+import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.fl.invoice.FLInvoiceDataType;
@@ -40,10 +43,12 @@ import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.common.PmContact;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
+import my.ep.type.pm.AddressType;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -248,6 +253,12 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			bpmReqDTO.setTaskId(taskId);
 			BpmResponseDTO res = bpmSO.getTaskDetails(bpmReqDTO);
 			Object obj = res.getPojo();
+			String[] outcome = new String[res.getAction().length + 1];
+			outcome[0] = BpmOutcomeConst.BPM_SAVE;
+			int i = 1;
+			for (String action : res.getAction()) {
+				outcome[i++] = action;
+			}
 
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			FulfilmentResDTO resDTO = new FulfilmentResDTO();
@@ -265,20 +276,19 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			getManagedBean().setDocType(resDTO.getFlFulfilmentRequest().getDocType());
 			
 			getManagedBean().setTaskId(taskId);
-			getManagedBean().setOutComes(res.getAction());
+			getManagedBean().setOutComes(outcome);
 			
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());//TODO remove comment after remark is fix
 //			getManagedBean().getInvoice().getFlFulfilmentOrder().setFlFulfilmentRequest(resDTO.getFlFulfilmentRequest());
 			getManagedBean().getInvoice().setFlFulfilmentOrder(resDTO.getFlFulfilmentRequest().getFlFulfilmentOrder());
+			resDTO.getFlFulfilmentRequest().getFlSupplierDtl().getContactMobileNo();
 			getManagedBean().getInvoice().setFlRequest(resDTO.getFlFulfilmentRequest());
 			reqDTO.setFlOrderId(paymentObj.getFlOrderId());
 			getManagedBean().getInvoice().setStatus(invoiceSO.retrieveInvoiceStatus(reqDTO).getPmStatus());
-			
-			//if(!"retrieveAmount".equals(actionMethod)){
-				//getManagedBean().populateChargeLineData();
-//			}
-			
+			if(getManagedBean().getInvoice().getFlFulfilmentOrder().isFactored()){
+				getFactoringBranchDtl(); 
+			}
 		}
 	}
 	public void factoringChecked(AjaxBehaviorEvent e) {
@@ -328,12 +338,6 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		}
 	}
 	
-	public void updateNewInvoiceAmt(FlFulfilmentItemAddr invItem){
-//		System.out.println("getItemAmtNew: "+invItem.getItemAmtNew());
-//		invItem.setItemAmtOri(new BigDecimal(invItem.getItemAmtNew().doubleValue()));
-	}
-	
-
 	public void retrieveInvTotalAmount(FlFulfilmentItemAddr itemAddr){
 	   TreeNode root= getManagedBean().getChargeLineItemRoot();
 	   for(TreeNode childNode:root.getChildren()){
@@ -376,13 +380,10 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		   getManagedBean().setServiceCharge("0.4");
 		   BigDecimal serviceFee=new BigDecimal(0.4);
 		   BigDecimal percentage=new BigDecimal(100);
-		   BigDecimal invMulty=new BigDecimal(0.4);
-		   BigDecimal feeAmount=new BigDecimal(0.4);
+		   BigDecimal invMulty=new BigDecimal(0.0);
+		   BigDecimal feeAmount=new BigDecimal(0.0);
 		   invMulty=invoiceTotalAmount.multiply(serviceFee);
-		   System.out.println("invMulty::: "+invMulty);
 		   feeAmount=invMulty.divide(percentage);
-		   System.out.println("feeAmount::: "+feeAmount);
-		  
 		   getManagedBean().getInvoice().setFeeAmt(feeAmount);
 		   getManagedBean().getInvoice().setSupplierOrFactorAmt(invoiceTotalAmount.subtract(feeAmount));
 		  // getManagedBean().getInvoice().setInvoiceAmtNew(feeAmount);
@@ -399,35 +400,8 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			calInvSummary();
 		}
 	}
-	/*private String actionMethod="";
-	
-	*//**
-	 * @return the actionMethod
-	 *//*
-	public String getActionMethod() {
-		return actionMethod;
-	}
 
-	*//**
-	 * @param actionMethod the actionMethod to set
-	 *//*
-	public void setActionMethod(String actionMethod) {
-		this.actionMethod = actionMethod;
-	}*/
 
-	/**
-	 * @return the className
-	 */
-	public String getClassName() {
-		return className;
-	}
-
-	/**
-	 * @param className the className to set
-	 */
-	public void setClassName(String className) {
-		this.className = className;
-	}
 	
 	public List<SelectItem> getPopulateBankAccountList() {
 		ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,ISupplierSearchSO.class);
@@ -465,5 +439,66 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		if(supplierBank!=null) {
 			getManagedBean().getInvoice().setPaymentBank(supplierBank.getPmFinancialOrg());
 		}
+	}
+	public void getFactoringBranchDtl(){
+		IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
+		Long financialBranchId = getManagedBean().getInvoice().getFlFulfilmentOrder().getPmFinancialBranch().getFinancialBranchId();
+		getManagedBean().setSupplierAddress(null);
+		getManagedBean().setPhoneNo(null);
+		getManagedBean().setFaxNo(null);
+		getManagedBean().setContactPerson(null);
+		getManagedBean().setContactEmail(null);
+		getManagedBean().setContactPhoneNo(null);
+		
+		if(financialBranchId!=null) {
+			AddressReqDTO reqDTO = new AddressReqDTO();
+			reqDTO.setFinancialBranchId(financialBranchId);
+			reqDTO.setAddressType(AddressType.BILLING_ADDRESS.toString());
+			
+			AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
+			if(!resDTO.getAddressTypeList().isEmpty()){
+				getManagedBean().setSupplierAddress(getFullAddress(resDTO.getAddressTypeList().get(0).getPmAddress()));
+				
+				getManagedBean().setPhoneNo(resDTO.getAddressTypeList().get(0).getPmAddress().getPhoneNo());
+				getManagedBean().setFaxNo(resDTO.getAddressTypeList().get(0).getPmAddress().getFaxNo());
+				if(resDTO.getAddressTypeList().get(0).getPmContacts() != null ){
+					PmContact pmContact = resDTO.getAddressTypeList().get(0).getPmContacts().get(0);
+					getManagedBean().setContactPerson(pmContact.getContactName());
+					getManagedBean().setContactEmail(pmContact.getEmail());
+					getManagedBean().setContactPhoneNo(pmContact.getPhoneNo());
+				}
+			}
+		} else { //reset back to HQ info
+			AddressReqDTO reqDTO = new AddressReqDTO();
+			reqDTO.setFinancialOrgId(getManagedBean().getInvoice().getFlFulfilmentOrder().getPmFinancialOrg().getFinancialOrgId());
+			reqDTO.setAddressType(AddressType.BILLING_ADDRESS.value());
+			
+			AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
+			if(!resDTO.getAddressTypeList().isEmpty()){
+				getManagedBean().setSupplierAddress(getFullAddress(resDTO.getAddressTypeList().get(0).getPmAddress()));
+				getManagedBean().setPhoneNo(resDTO.getAddressTypeList().get(0).getPmAddress().getPhoneNo());
+				getManagedBean().setFaxNo(resDTO.getAddressTypeList().get(0).getPmAddress().getFaxNo());
+				if(!resDTO.getAddressTypeList().get(0).getPmContacts().isEmpty() ){
+					PmContact pmContact = resDTO.getAddressTypeList().get(0).getPmContacts().get(0);
+					getManagedBean().setContactPerson(pmContact.getContactName());
+					getManagedBean().setContactEmail(pmContact.getEmail());
+					getManagedBean().setContactPhoneNo(pmContact.getPhoneNo());
+				}
+			}				
+		}
+	}
+	
+	/**
+	 * @return the className
+	 */
+	public String getClassName() {
+		return className;
+	}
+
+	/**
+	 * @param className the className to set
+	 */
+	public void setClassName(String className) {
+		this.className = className;
 	}
 }
