@@ -18,8 +18,11 @@ import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.fl.invoice.IInvoiceSO;
 import my.ep.biz.service.fl.payment.IPaymentMatchSO;
+import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.glaccount.IGlAccountSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.biz.service.pm.common.programactivity.IProgramActivitySO;
+import my.ep.biz.service.pm.common.projectsetia.IProjectSetiaSO;
 import my.ep.biz.service.pm.common.votfund.IVotFundSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
@@ -30,8 +33,14 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
+import my.ep.dto.pm.common.address.AddressReqDTO;
+import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
+import my.ep.dto.pm.common.programactivity.ProgramActivityReqDTO;
+import my.ep.dto.pm.common.programactivity.ProgramActivityResDTO;
+import my.ep.dto.pm.common.projectsetia.ProjectSetiaReqDTO;
+import my.ep.dto.pm.common.projectsetia.ProjectSetiaResDTO;
 import my.ep.dto.pm.common.votfund.VotFundReqDTO;
 import my.ep.dto.pm.common.votfund.VotFundResDTO;
 import my.ep.exception.EpException;
@@ -44,7 +53,14 @@ import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
+import my.ep.persistence.entity.pm.common.PmContact;
 import my.ep.persistence.entity.pm.common.PmGlAccount;
+import my.ep.persistence.entity.pm.common.PmPrgActivity;
+import my.ep.persistence.entity.pm.common.PmProject;
+import my.ep.persistence.entity.pm.common.PmSetia;
+import my.ep.persistence.entity.pm.common.PmSubSetia;
+import my.ep.persistence.entity.pm.common.PmVotFund;
+import my.ep.type.pm.AddressType;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -56,7 +72,6 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
-import org.primefaces.event.TabChangeEvent;
 import org.primefaces.model.TreeNode;
 
 import com.liferay.portal.util.PortalUtil;
@@ -73,11 +88,13 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 
 	private static Logger log = Logger.getLogger(PaymentMatchBackingBean.class);
 	private String className="@(.myPmClassName)";
-	private static Map<Long, String> votFundCodeMap = new HashMap<Long, String>();
-	private static Map<Long, String> progmActivityCodeMap = new HashMap<Long, String>();
-	private static Map<Long, String> projectCodeMap = new HashMap<Long, String>();
-	private static Map<Long, String> setiaCodeMap = new HashMap<Long, String>();
-	private static Map<Long, String> subSetiaCodeMap = new HashMap<Long, String>();
+	
+	private static Map<Long, PmVotFund> votFundCodeMap = new HashMap<Long, PmVotFund>();
+	private static Map<Long, PmGlAccount> glAccountCodeMap = new HashMap<Long, PmGlAccount>();
+	private static Map<Long, PmPrgActivity> progmActivityCodeMap = new HashMap<Long, PmPrgActivity>();
+	private static Map<Long, PmProject> projectCodeMap = new HashMap<Long, PmProject>();
+	private static Map<Long, PmSetia> setiaCodeMap = new HashMap<Long, PmSetia>();
+	private static Map<Long, PmSubSetia> subSetiaCodeMap = new HashMap<Long, PmSubSetia>();
 	
 	/**
 	 * @return the className
@@ -205,12 +222,19 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			reqDTO.setTaskId(taskId);
 			BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
 			Object obj = res.getPojo();
+			String[] outcome = new String[res.getAction().length + 1];
+			outcome[0] = BpmOutcomeConst.BPM_SAVE;
+			int i = 1;
+			for (String action : res.getAction()) {
+				outcome[i++] = action;
+			}
 
 			FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
 			FulfilmentResDTO resDTO = new FulfilmentResDTO();
 			FLPaymentInstructionDataType paymentObj = (FLPaymentInstructionDataType)obj;
 			flReqDTO.setFlOrderId(paymentObj.getFlOrderId());
 			IInvoiceSO invoiceSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject("fl",IInvoiceSO.class);
+			IPaymentMatchSO paymentMatchSO = (IPaymentMatchSO) BusinessDelegate.getInstance().getServiceObject("fl",IPaymentMatchSO.class);
 			resDTO = invoiceSO.retrieveInvoiceByFlOrderId(flReqDTO);
 			FlPaymentAdvice paymentAdvice = new FlPaymentAdvice();
 			paymentAdvice.setFlInvoice(resDTO.getInvoice());
@@ -226,7 +250,7 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 
 			getManagedBean().setPaymentAdvice(paymentAdvice);
 			getManagedBean().setTaskId(taskId);
-			getManagedBean().setOutComes(res.getAction());
+			getManagedBean().setOutComes(outcome);
 			ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
 			parameterReqDTO.setParameterType(ParameterTypeConst.DEDUCTION_TYPE);
 			parameterReqDTO.setParameterCode(ParameterConst.TRANSACTION_FEE);
@@ -265,54 +289,63 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			deductPaymentAmt=getManagedBean().getPaymentAdvice().getFlInvoice().getInvoiceAmtNew().subtract(calPaymentAmt);
 			getManagedBean().getPaymentAdvice().setPaymentAmt(deductPaymentAmt);
 			
+			getManagedBean().getPaymentAdvice().setStatus(paymentMatchSO.retrievePaymentMatchStatus(flReqDTO).getPmStatus());
+			if(getManagedBean().getPaymentAdvice().getFlInvoice().getFlFulfilmentOrder().isFactored()){
+				getFactoringBranchDtl(); 
+			}
+			
 		}
 		getManagedBean().getPaymentAdvice();
 	}
 	
-	/*public void combineSupAddress(FlFulfilmentRequest fulfilmentRequest){
-	    	
-	    StringBuilder address = new StringBuilder();
-	    String strSpace = " ";
-	    if(null != fulfilmentRequest.getSupplierBranch()){
-	    	if(null != fulfilmentRequest.getSupplierBranch().getSmAddress()){
-	    		if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress1() ){
-	    	    	address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress1());
-	    	    	address.append(strSpace);
-	    	    	
-	    	    }if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress2()){
-	    	    	address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress2());
-	    	    	address.append(strSpace);
-	    	    	
-	    	    }if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress3() ){
-	    	    	address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress3());
-	    	    	address.append(strSpace);
-	    	    	
-	    	    }if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress4()){
-	    	    	address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress4());
-	    	    	address.append(strSpace);
-	    	    		
-	    	    }if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getPmDistrict().getDistrictName()){
-	    	    	address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getPmDistrict().getDistrictName());
-	    	    	address.append(strSpace);
-	    	    	
-	    	    }if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getPmState().getStateName()){
-	    	    	address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getPmState().getStateName());
-	    	    	address.append(strSpace);
-	    	    	
-	    	    }if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getPmCountry().getCountryName()){
-	    	    	address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getPmCountry().getCountryName());
-	    	    	address.append("\n");
-	    	    }if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getPostcode()){
-	    	    	address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getPostcode());
-	    	    }
-	    	    if(null != address.toString()){
-	    	    	System.out.println("addresss     "+address.toString());
-	    	    }
-	    	}
-	    }	
-	    	
-	    	this.getManagedBean().setSupplierAddress(address.toString());
-	}*/
+	public void getFactoringBranchDtl(){
+		IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
+		Long financialBranchId = getManagedBean().getPaymentAdvice().getFlInvoice().getFlFulfilmentOrder().getPmFinancialBranch().getFinancialBranchId();
+		
+		getManagedBean().setSupplierAddress(null);
+		getManagedBean().setPhoneNo(null);
+		getManagedBean().setFaxNo(null);
+		getManagedBean().setContactPerson(null);
+		getManagedBean().setContactEmail(null);
+		getManagedBean().setContactPhoneNo(null);
+		
+		if(financialBranchId!=null) {
+			AddressReqDTO reqDTO = new AddressReqDTO();
+			reqDTO.setFinancialBranchId(financialBranchId);
+			reqDTO.setAddressType(AddressType.BILLING_ADDRESS.toString());
+			
+			AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
+			if(!resDTO.getAddressTypeList().isEmpty()){
+				getManagedBean().setSupplierAddress(getFullAddress(resDTO.getAddressTypeList().get(0).getPmAddress()));
+				
+				getManagedBean().setPhoneNo(resDTO.getAddressTypeList().get(0).getPmAddress().getPhoneNo());
+				getManagedBean().setFaxNo(resDTO.getAddressTypeList().get(0).getPmAddress().getFaxNo());
+				if(resDTO.getAddressTypeList().get(0).getPmContacts() != null ){
+					PmContact pmContact = resDTO.getAddressTypeList().get(0).getPmContacts().get(0);
+					getManagedBean().setContactPerson(pmContact.getContactName());
+					getManagedBean().setContactEmail(pmContact.getEmail());
+					getManagedBean().setContactPhoneNo(pmContact.getPhoneNo());
+				}
+			}
+		} else { //reset back to HQ info
+			AddressReqDTO reqDTO = new AddressReqDTO();
+			reqDTO.setFinancialOrgId( getManagedBean().getPaymentAdvice().getFlInvoice().getFlFulfilmentOrder().getPmFinancialOrg().getFinancialOrgId());
+			reqDTO.setAddressType(AddressType.BILLING_ADDRESS.value());
+			
+			AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
+			if(!resDTO.getAddressTypeList().isEmpty()){
+				getManagedBean().setSupplierAddress(getFullAddress(resDTO.getAddressTypeList().get(0).getPmAddress()));
+				getManagedBean().setPhoneNo(resDTO.getAddressTypeList().get(0).getPmAddress().getPhoneNo());
+				getManagedBean().setFaxNo(resDTO.getAddressTypeList().get(0).getPmAddress().getFaxNo());
+				if(!resDTO.getAddressTypeList().get(0).getPmContacts().isEmpty() ){
+					PmContact pmContact = resDTO.getAddressTypeList().get(0).getPmContacts().get(0);
+					getManagedBean().setContactPerson(pmContact.getContactName());
+					getManagedBean().setContactEmail(pmContact.getEmail());
+					getManagedBean().setContactPhoneNo(pmContact.getPhoneNo());
+				}
+			}				
+		}
+	}
 	public void onTabChange(int selectedTabIndex){
 		if(selectedTabIndex==1){
 			getManagedBean().populateChargeLineData();	
@@ -338,36 +371,78 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 	} 
 	public void onNodeSelect() {
 		TreeNode selectedNode=getManagedBean().getSelectedNode();
-			if(null!=selectedNode){
-				for(TreeNode children:selectedNode.getChildren()){
-					FlFulfilmentItemAddr childData=((FlFulfilmentItemAddr)children.getData());
-						if(null !=childData.getPmVotFund()){
-							//do it for others
-							String votFundCode=getVotFundCodeById(childData.getPmVotFund().getVotFundId());
-							getManagedBean().setVotFundCode(votFundCode);
-							String progActvCode=getprogActivityCodeById(childData.getPmPrgActivity().getPrgActivityId());
-							getManagedBean().setPrgActivityCode(progActvCode);
-							String projectCode=getProjectCodeById(childData.getPmSubSetia().getPmSetia().getPmProject().getProjectId());
-							getManagedBean().setProjectCode(projectCode);
-							String setiaCode=getSetiaCodeById((childData.getPmSubSetia().getPmSetia().getSetiaId()));
-							getManagedBean().setSetiaCode(setiaCode);
-							String subSetiaCode=getSubSetiaCodeById((childData.getPmSubSetia().getSubSetiaId()));
-							getManagedBean().setSubSetiaCode((subSetiaCode));
-								
-						}else{
-							getManagedBean().setVotFundCode("");
-							getManagedBean().setPrgActivityCode("");
-							getManagedBean().setProjectCode("");
-							getManagedBean().setSetiaCode("");
-							getManagedBean().setSubSetiaCode((""));
-								
+		onNodeUnSelect();
+		if(null!=selectedNode){
+			for(TreeNode children:selectedNode.getChildren()){
+				FlFulfilmentItemAddr childData=((FlFulfilmentItemAddr)children.getData());
+				if(null !=childData.getPmVotFund()){
+					String votFundCode = votFundCodeMap.get(childData.getPmVotFund().getVotFundId()).getVotFundCode();
+					getManagedBean().setVotFundCode(votFundCode);
+				}
+				
+				if(childData.getAssetInd()!=null) {
+					getManagedBean().setAssetIndCode(childData.getAssetInd().getParameterCode());
+				}
+					
+				if(childData.getPmGlAccount()!=null) {
+					String glAccountCode = glAccountCodeMap.get(childData.getPmGlAccount().getGlAccountId()).getGlAccCode();
+					getManagedBean().setGlAccountCode(glAccountCode);
+				}
+				
+				if(childData.getPmPrgActivity()!=null) {
+					if(progmActivityCodeMap.size()==0) {
+						IProgramActivitySO programActivitySO = (IProgramActivitySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IProgramActivitySO.class);
+						ProgramActivityReqDTO reqDTO = new ProgramActivityReqDTO();
+						reqDTO.setVotFundId(childData.getPmVotFund().getVotFundId());
+						ProgramActivityResDTO resDTO = programActivitySO.retrieveProgramActivityList(reqDTO);
+						
+						for (PmPrgActivity pmPrgActivity : resDTO.getPrgActivityList()) {
+							progmActivityCodeMap.put(pmPrgActivity.getPrgActivityId(), pmPrgActivity);
 						}
-							
-							
 					}
+					String progActvCode = progmActivityCodeMap.get(childData.getPmPrgActivity().getPrgActivityId()).getPrgActivityCode();
+					getManagedBean().setPrgActivityCode(progActvCode);
+				}
+				
+				if(childData.getPmSubSetia()!=null) {
+					if(subSetiaCodeMap.size()==0) {
+						IProjectSetiaSO projectSetiaSO = (IProjectSetiaSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IProjectSetiaSO.class);
+						ProjectSetiaReqDTO reqDTO = new ProjectSetiaReqDTO();
+						reqDTO.setSetiaId(childData.getPmSubSetia().getPmSetia().getSetiaId());
+						ProjectSetiaResDTO resDTO = projectSetiaSO.retrieveSubSetiaList(reqDTO);
+						for (PmSubSetia pmSubSetia : resDTO.getSubSetiaList()) {
+							subSetiaCodeMap.put(pmSubSetia.getSubSetiaId(), pmSubSetia);
+						}						
+					}
+					String subSetiaCode = subSetiaCodeMap.get(childData.getPmSubSetia().getSubSetiaId()).getSubSetiaCode();
+					getManagedBean().setSubSetiaCode((subSetiaCode));
+					
+					if(childData.getPmSubSetia().getPmSetia()!=null) {
+						//String setiaCode = setiaCodeMap.get(childData.getPmSubSetia().getPmSetia().getSetiaId()).getSetiaCode();
+						getManagedBean().setSetiaCode(childData.getPmSubSetia().getPmSetia().getSetiaCode());
+						
+						if(childData.getPmSubSetia().getPmSetia().getPmProject()!=null) {
+//							String projectCode = projectCodeMap.get(childData.getPmSubSetia().getPmSetia().getPmProject().getProjectId()).getProjectCode();
+							getManagedBean().setProjectCode(childData.getPmSubSetia().getPmSetia().getPmProject().getProjectCode());
+						}
+					}
+					getManagedBean().setFinancingTypeCode(subSetiaCodeMap.get(childData.getPmSubSetia().getSubSetiaId()).getFinancingType().getParameterCode());
+				}
 			}
 		}
-	//get chargeline code by ID
+	}
+	
+	public void onNodeUnSelect() {
+		getManagedBean().setVotFundCode("");
+		getManagedBean().setAssetIndCode("");
+		getManagedBean().setGlAccountCode("");
+		getManagedBean().setPrgActivityCode("");
+		getManagedBean().setProjectCode("");
+		getManagedBean().setSetiaCode("");
+		getManagedBean().setSubSetiaCode("");
+		getManagedBean().setFinancingTypeCode("");		
+	}
+	/*//get chargeline code by ID
 		
 	public String getVotFundCodeById(Long votFundId) {
 		return votFundCodeMap.get(votFundId);
@@ -383,68 +458,8 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 	}
 	public String getSubSetiaCodeById(Long subSetiaId) {
 		return subSetiaCodeMap.get(subSetiaId);
-	}
-		/**
-		 * @return the votFundCodeMap
-		 */
-	public static Map<Long, String> getVotFundCodeMap() {
-		return votFundCodeMap;
-	}
-		/**
-		 * @param votFundCodeMap the votFundCodeMap to set
-		 */
-	public static void setVotFundCodeMap(Map<Long, String> votFundCodeMap) {
-		PaymentMatchBackingBean.votFundCodeMap = votFundCodeMap;
-	}
-		/**
-		 * @return the progmActivityCodeMap
-		 */
-	public static Map<Long, String> getProgmActivityCodeMap() {
-		return progmActivityCodeMap;
-	}
-		/**
-		 * @param progmActivityCodeMap the progmActivityCodeMap to set
-		 */
-	public static void setProgmActivityCodeMap(
-		Map<Long, String> progmActivityCodeMap) {
-		PaymentMatchBackingBean.progmActivityCodeMap = progmActivityCodeMap;
-	}
-		/**
-		 * @return the projectCodeMap
-		 */
-	public static Map<Long, String> getProjectCodeMap() {
-		return projectCodeMap;
-	}
-		/**
-		 * @param projectCodeMap the projectCodeMap to set
-		 */
-	public static void setProjectCodeMap(Map<Long, String> projectCodeMap) {
-		PaymentMatchBackingBean.projectCodeMap = projectCodeMap;
-	}
-		/**
-		 * @return the setiaCodeMap
-		 */
-	public static Map<Long, String> getSetiaCodeMap() {
-			return setiaCodeMap;
-	}
-		/**
-		 * @param setiaCodeMap the setiaCodeMap to set
-		 */
-	public static void setSetiaCodeMap(Map<Long, String> setiaCodeMap) {
-		PaymentMatchBackingBean.setiaCodeMap = setiaCodeMap;
-	}
-		/**
-		 * @return the subSetiaCodeMap
-		 */
-	public static Map<Long, String> getSubSetiaCodeMap() {
-		return subSetiaCodeMap;
-	}
-		/**
-		 * @param subSetiaCodeMap the subSetiaCodeMap to set
-		 */
-	public static void setSubSetiaCodeMap(Map<Long, String> subSetiaCodeMap) {
-		PaymentMatchBackingBean.subSetiaCodeMap = subSetiaCodeMap;
-	}
+	}*/
+	
 	
 	public FulfilmentResDTO getPaymentAdviseByPaymentAdviseId(Long paymentAdviseId){
 		IPaymentMatchSO paymentMatchSO = (IPaymentMatchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IPaymentMatchSO.class);
@@ -453,5 +468,78 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		FulfilmentResDTO resDTO = paymentMatchSO.retrievePaymentAdviseByPaymentId(reqDTO);
 		resDTO.getPaymentAdvice();//this is the payment advise object
 		return resDTO;
+	}
+	/**
+	 * @return the votFundCodeMap
+	 */
+	public static Map<Long, PmVotFund> getVotFundCodeMap() {
+		return votFundCodeMap;
+	}
+	/**
+	 * @param votFundCodeMap the votFundCodeMap to set
+	 */
+	public static void setVotFundCodeMap(Map<Long, PmVotFund> votFundCodeMap) {
+		PaymentMatchBackingBean.votFundCodeMap = votFundCodeMap;
+	}
+	/**
+	 * @return the glAccountCodeMap
+	 */
+	public static Map<Long, PmGlAccount> getGlAccountCodeMap() {
+		return glAccountCodeMap;
+	}
+	/**
+	 * @param glAccountCodeMap the glAccountCodeMap to set
+	 */
+	public static void setGlAccountCodeMap(Map<Long, PmGlAccount> glAccountCodeMap) {
+		PaymentMatchBackingBean.glAccountCodeMap = glAccountCodeMap;
+	}
+	/**
+	 * @return the progmActivityCodeMap
+	 */
+	public static Map<Long, PmPrgActivity> getProgmActivityCodeMap() {
+		return progmActivityCodeMap;
+	}
+	/**
+	 * @param progmActivityCodeMap the progmActivityCodeMap to set
+	 */
+	public static void setProgmActivityCodeMap(
+			Map<Long, PmPrgActivity> progmActivityCodeMap) {
+		PaymentMatchBackingBean.progmActivityCodeMap = progmActivityCodeMap;
+	}
+	/**
+	 * @return the projectCodeMap
+	 */
+	public static Map<Long, PmProject> getProjectCodeMap() {
+		return projectCodeMap;
+	}
+	/**
+	 * @param projectCodeMap the projectCodeMap to set
+	 */
+	public static void setProjectCodeMap(Map<Long, PmProject> projectCodeMap) {
+		PaymentMatchBackingBean.projectCodeMap = projectCodeMap;
+	}
+	/**
+	 * @return the setiaCodeMap
+	 */
+	public static Map<Long, PmSetia> getSetiaCodeMap() {
+		return setiaCodeMap;
+	}
+	/**
+	 * @param setiaCodeMap the setiaCodeMap to set
+	 */
+	public static void setSetiaCodeMap(Map<Long, PmSetia> setiaCodeMap) {
+		PaymentMatchBackingBean.setiaCodeMap = setiaCodeMap;
+	}
+	/**
+	 * @return the subSetiaCodeMap
+	 */
+	public static Map<Long, PmSubSetia> getSubSetiaCodeMap() {
+		return subSetiaCodeMap;
+	}
+	/**
+	 * @param subSetiaCodeMap the subSetiaCodeMap to set
+	 */
+	public static void setSubSetiaCodeMap(Map<Long, PmSubSetia> subSetiaCodeMap) {
+		PaymentMatchBackingBean.subSetiaCodeMap = subSetiaCodeMap;
 	}
 }

@@ -9,7 +9,7 @@
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.fl.po.co.no']} " /></td>
 				<td class="header-info-text">
-					#{paymentMatchBackingBean.managedBean.paymentAdvice.paymentAdviceNo}
+					#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flFulfilmentOrder.docNo}
 				</td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.inv.no']} " /></td>
 				<td class="header-info-text">
@@ -21,7 +21,7 @@
 				</td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.status']} " /></td>
 				<td class="header-info-text">
-					#{paymentMatchBackingBean.getStatusDescById(paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flFulfilmentOrder.flFulfilmentRequest.status.statusId)}
+					#{paymentMatchBackingBean.getStatusDescById(paymentMatchBackingBean.managedBean.paymentAdvice.status.statusId)}
 				</td>
 			</tr>
 		</table>

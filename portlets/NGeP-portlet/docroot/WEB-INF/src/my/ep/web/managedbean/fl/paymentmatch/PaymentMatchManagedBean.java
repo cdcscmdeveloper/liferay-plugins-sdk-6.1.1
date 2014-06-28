@@ -42,18 +42,29 @@ public class PaymentMatchManagedBean extends BaseManagedBean{
 	// for Deduction panel display	
 	private String docType;
 	
-	//getSuplier address details
-	private String supplierAddress;
 	
 	private TreeNode chargeLineItemRoot ;
 	private TreeNode selectedNode;
 	
 	// set chargeline for selected items
-	private String votFundCode;
-	private String projectCode;
-	private String setiaCode;
-	private String subSetiaCode;
-	private String prgActivityCode;
+	// set chargeline for selected items
+		private String votFundCode;
+		private String assetIndCode;
+		private String glAccountCode;
+		private String projectCode;
+		private String setiaCode;
+		private String subSetiaCode;
+		private String prgActivityCode;
+		private String votFundType;
+		
+		private Long votFundId;
+		private Long assetIndId;
+		private Long glAccountId;
+		private Long projectId;
+		private Long setiaId;
+		private Long subSetiaId;
+		private Long prgActivityId;
+		private String financingTypeCode;
 		
 	
 	private FlFulfilmentRequest fulfilmentRequest;
@@ -67,6 +78,14 @@ public class PaymentMatchManagedBean extends BaseManagedBean{
 	
 	private String buttonVal;
 	private PmUser pmUser;
+	
+	//getSuplier address details
+	private String supplierAddress;
+	private String phoneNo;
+	private String faxNo;
+	private String contactEmail;
+	private String contactPerson;
+	private String contactPhoneNo;
 	
 	//tab menu
 	private int selectedTabIndex;
@@ -417,5 +436,197 @@ public class PaymentMatchManagedBean extends BaseManagedBean{
 	 */
 	public void setPmUser(PmUser pmUser) {
 		this.pmUser = pmUser;
+	}
+	/**
+	 * @return the phoneNo
+	 */
+	public String getPhoneNo() {
+		return phoneNo;
+	}
+	/**
+	 * @param phoneNo the phoneNo to set
+	 */
+	public void setPhoneNo(String phoneNo) {
+		this.phoneNo = phoneNo;
+	}
+	/**
+	 * @return the faxNo
+	 */
+	public String getFaxNo() {
+		return faxNo;
+	}
+	/**
+	 * @param faxNo the faxNo to set
+	 */
+	public void setFaxNo(String faxNo) {
+		this.faxNo = faxNo;
+	}
+	/**
+	 * @return the contactEmail
+	 */
+	public String getContactEmail() {
+		return contactEmail;
+	}
+	/**
+	 * @param contactEmail the contactEmail to set
+	 */
+	public void setContactEmail(String contactEmail) {
+		this.contactEmail = contactEmail;
+	}
+	/**
+	 * @return the contactPerson
+	 */
+	public String getContactPerson() {
+		return contactPerson;
+	}
+	/**
+	 * @param contactPerson the contactPerson to set
+	 */
+	public void setContactPerson(String contactPerson) {
+		this.contactPerson = contactPerson;
+	}
+	/**
+	 * @return the contactPhoneNo
+	 */
+	public String getContactPhoneNo() {
+		return contactPhoneNo;
+	}
+	/**
+	 * @param contactPhoneNo the contactPhoneNo to set
+	 */
+	public void setContactPhoneNo(String contactPhoneNo) {
+		this.contactPhoneNo = contactPhoneNo;
+	}
+	/**
+	 * @return the assetIndCode
+	 */
+	public String getAssetIndCode() {
+		return assetIndCode;
+	}
+	/**
+	 * @param assetIndCode the assetIndCode to set
+	 */
+	public void setAssetIndCode(String assetIndCode) {
+		this.assetIndCode = assetIndCode;
+	}
+	/**
+	 * @return the glAccountCode
+	 */
+	public String getGlAccountCode() {
+		return glAccountCode;
+	}
+	/**
+	 * @param glAccountCode the glAccountCode to set
+	 */
+	public void setGlAccountCode(String glAccountCode) {
+		this.glAccountCode = glAccountCode;
+	}
+	/**
+	 * @return the votFundType
+	 */
+	public String getVotFundType() {
+		return votFundType;
+	}
+	/**
+	 * @param votFundType the votFundType to set
+	 */
+	public void setVotFundType(String votFundType) {
+		this.votFundType = votFundType;
+	}
+	/**
+	 * @return the votFundId
+	 */
+	public Long getVotFundId() {
+		return votFundId;
+	}
+	/**
+	 * @param votFundId the votFundId to set
+	 */
+	public void setVotFundId(Long votFundId) {
+		this.votFundId = votFundId;
+	}
+	/**
+	 * @return the assetIndId
+	 */
+	public Long getAssetIndId() {
+		return assetIndId;
+	}
+	/**
+	 * @param assetIndId the assetIndId to set
+	 */
+	public void setAssetIndId(Long assetIndId) {
+		this.assetIndId = assetIndId;
+	}
+	/**
+	 * @return the glAccountId
+	 */
+	public Long getGlAccountId() {
+		return glAccountId;
+	}
+	/**
+	 * @param glAccountId the glAccountId to set
+	 */
+	public void setGlAccountId(Long glAccountId) {
+		this.glAccountId = glAccountId;
+	}
+	/**
+	 * @return the projectId
+	 */
+	public Long getProjectId() {
+		return projectId;
+	}
+	/**
+	 * @param projectId the projectId to set
+	 */
+	public void setProjectId(Long projectId) {
+		this.projectId = projectId;
+	}
+	/**
+	 * @return the setiaId
+	 */
+	public Long getSetiaId() {
+		return setiaId;
+	}
+	/**
+	 * @param setiaId the setiaId to set
+	 */
+	public void setSetiaId(Long setiaId) {
+		this.setiaId = setiaId;
+	}
+	/**
+	 * @return the subSetiaId
+	 */
+	public Long getSubSetiaId() {
+		return subSetiaId;
+	}
+	/**
+	 * @param subSetiaId the subSetiaId to set
+	 */
+	public void setSubSetiaId(Long subSetiaId) {
+		this.subSetiaId = subSetiaId;
+	}
+	/**
+	 * @return the prgActivityId
+	 */
+	public Long getPrgActivityId() {
+		return prgActivityId;
+	}
+	/**
+	 * @param prgActivityId the prgActivityId to set
+	 */
+	public void setPrgActivityId(Long prgActivityId) {
+		this.prgActivityId = prgActivityId;
+	}
+	/**
+	 * @return the financingTypeCode
+	 */
+	public String getFinancingTypeCode() {
+		return financingTypeCode;
+	}
+	/**
+	 * @param financingTypeCode the financingTypeCode to set
+	 */
+	public void setFinancingTypeCode(String financingTypeCode) {
+		this.financingTypeCode = financingTypeCode;
 	}
 }

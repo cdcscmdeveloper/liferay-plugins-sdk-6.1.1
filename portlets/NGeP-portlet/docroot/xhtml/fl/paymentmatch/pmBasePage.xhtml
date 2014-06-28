@@ -5,7 +5,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 
 	<ui:define name="resourceSection">
 	</ui:define>
@@ -26,8 +27,11 @@
 				<td colspan="4" style="text-align: right;"><ui:repeat
 						var="bpmAction"
 						value="#{paymentMatchBackingBean.managedBean.outComes}">
-						<p:commandButton value="#{bpmAction}"
-							action="#{paymentMatchBackingBean.submitAction(bpmAction)}" />
+						<p:commandButton value="#{bpmAction}" update="@form" 
+							action="#{paymentMatchBackingBean.submitAction(bpmAction)}" 
+							styleClass="ui-button"
+							icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
+							/>
 					</ui:repeat></td>
 			</tr>
 		</table>
