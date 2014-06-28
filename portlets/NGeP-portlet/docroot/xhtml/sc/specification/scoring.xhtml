@@ -19,7 +19,7 @@
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.sc.spec.stage2.score.from']}" />
 				</f:facet>
-				<p:inputText id="#{scoringPnlId}_fromRange"
+				<p:inputText id="#{scoringPnlId}_fromRange" style="text-align:right"
 					label="#{lbl['lbl.sc.spec.stage2.score.from']}" required="true"
 					value="#{checkListScoring.rangeFrom}" maxlength="18">
 					<p:ajax event="blur" process="@this" partialSubmit="true" />
@@ -32,7 +32,7 @@
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.sc.spec.stage2.score.to']}" />
 				</f:facet>
-				<p:inputText id="#{scoringPnlId}_toRange" required="true"
+				<p:inputText id="#{scoringPnlId}_toRange" required="true" style="text-align:right"
 					label="#{lbl['lbl.sc.spec.stage2.score.to']}"
 					value="#{checkListScoring.rangeTo}" maxlength="18">
 					<p:ajax event="blur" process="@this" partialSubmit="true"
@@ -46,7 +46,7 @@
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.sc.spec.stage2.score']}" />
 				</f:facet>
-				<p:inputText id="#{scoringPnlId}_toScore"
+				<p:inputText id="#{scoringPnlId}_toScore" style="text-align:right"
 					label="#{lbl['lbl.sc.spec.stage2.score']}" required="true"
 					value="#{checkListScoring.score}" maxlength="18"></p:inputText>
 				<p:message id="#{scoringPnlId}_Score" for="#{scoringPnlId}_toScore"

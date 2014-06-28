@@ -81,11 +81,12 @@
 			</tr>
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.sc.spec.max.proposal']}" /></td>
-				<td><p:inputText id="proposalId" required="true" size="30"
+				<td><p:inputMask id="proposalId" required="true" size="30" mask="9" placeHolder=""
 						disabled="#{specificationBackingBean.managedBean.scQt.pmProcurementCategory.parameterCode ne 'CHE'}"
 						label="#{lbl['lbl.sc.spec.max.proposal']}" maxlength="1"
 						value="#{specificationBackingBean.managedBean.scQt.maxProposal}"
-						style="text-align:right;"></p:inputText> <p:message
+						style="text-align:right;">
+						</p:inputMask> <p:message
 						id="maxProposal" for="proposalId" display="icon"></p:message></td>
 			</tr>
 			<tr>
@@ -104,13 +105,14 @@
 					</p:selectOneMenu> <p:message id="fulfilType" for="fulfilId" display="icon"></p:message>
 				</td>
 				<td><p:outputLabel
-						value="#{lbl['lbl.sc.spec.complete.period']}" escape="false" />
-					<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel></td>
-				<td><p:inputText id="contract" required="true" size="30"
+						value="#{lbl['lbl.sc.spec.complete.period']}" escape="false" /> <p:outputLabel
+						value="*" styleClass="mandatory"></p:outputLabel></td>
+				<td><p:inputMask id="contract" required="true" size="30" mask="9?99" placeHolder=""
 						maxlength="3" label="#{lbl['lbl.sc.spec.complete.period']}"
 						value="#{specificationBackingBean.managedBean.scQt.contractDuration}"
-						style="text-align:right;" /> <h:outputText value="(Month)" /> <p:message
-						id="completion" for="contract" display="icon"></p:message></td>
+						style="text-align:right;">
+					</p:inputMask> <h:outputText value="(Month)" /> <p:message id="completion"
+						for="contract" display="icon"></p:message></td>
 			</tr>
 		</table>
 	</p:panel>
@@ -142,7 +144,7 @@
 					<p:tree value="#{zoneTree}" var="location">
 
 						<p:treeNode type="zone">
-							<h:outputText value="#{location.tplSpecZoneDtl.zoneName}" />
+							<h:outputText value="#{location.zoneName}" />
 						</p:treeNode>
 
 						<p:treeNode type="state">
