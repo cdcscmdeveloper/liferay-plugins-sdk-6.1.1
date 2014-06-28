@@ -1080,7 +1080,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		} else if(ContractConst.TEMPLATE_RINGKASAN_KONTRAK.equalsIgnoreCase(parameterCode)) {
 			valuesMap.put("FILE_NO", getManagedBean().getCtContract().getQuotationTender().getFileNo());
 			valuesMap.put("SOURCING_NO", getManagedBean().getCtContract().getLoa().getFileExtNo());
-			valuesMap.put("SOURCING_TITLE",  getManagedBean().getCtContract().getLoa().getTitle());
+			valuesMap.put("SOURCING_TITLE",  getManagedBean().getCtContract().getLoa().getScLoiLoa().getTitle());
 			valuesMap.put("SUCCESSFUL_SUPPLIER_NAME", getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getSupplierName());
 			valuesMap.put("CONTRACT_VALUE",  getManagedBean().getContractVer().getCtContractValue().getContractAmount()+"");
 			double contractValue = this.getManagedBean().getContractVer().getCtAmendment().getAdditionalAmount().doubleValue() + this.getManagedBean().getContractVer().getCtContractValue().getContractAmount().doubleValue();
