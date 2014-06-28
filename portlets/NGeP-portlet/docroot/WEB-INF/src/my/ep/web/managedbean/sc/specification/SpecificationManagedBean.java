@@ -39,6 +39,8 @@ import my.ep.persistence.entity.sc.quationtender.ScQtScoreSetting;
 import my.ep.persistence.entity.sc.quationtender.ScQtScoreWeightage;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScRemark;
+import my.ep.persistence.entity.sm.SmAddress;
+import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.web.backingbean.sc.specification.BankingBean;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
@@ -332,6 +334,11 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private CtCircularSearchBean ctSearchBean = new CtCircularSearchBean();
 	private List<SelectItem> evaluationTypeItem;
 	private TreeNode supplierSelectedTreeNode;
+	private SmPersonnel personnel;
+	private String supplierBranch;
+	private SmAddress supplierAddress;
+	private String supplierContact;
+	private String supplierEmail;
 
 	public SpecificationManagedBean() {
 		
@@ -3756,6 +3763,76 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	 */
 	public void setChairPersonPinNum(String chairPersonPinNum) {
 		this.chairPersonPinNum = chairPersonPinNum;
+	}
+
+	/**
+	 * @return the personnel
+	 */
+	public SmPersonnel getPersonnel() {
+		return personnel;
+	}
+
+	/**
+	 * @param personnel the personnel to set
+	 */
+	public void setPersonnel(SmPersonnel personnel) {
+		this.personnel = personnel;
+	}
+
+	/**
+	 * @return the supplierBranch
+	 */
+	public String getSupplierBranch() {
+		return supplierBranch;
+	}
+
+	/**
+	 * @param supplierBranch the supplierBranch to set
+	 */
+	public void setSupplierBranch(String supplierBranch) {
+		this.supplierBranch = supplierBranch;
+	}
+
+	/**
+	 * @return the supplierAddress
+	 */
+	public SmAddress getSupplierAddress() {
+		return supplierAddress;
+	}
+
+	/**
+	 * @param supplierAddress the supplierAddress to set
+	 */
+	public void setSupplierAddress(SmAddress supplierAddress) {
+		this.supplierAddress = supplierAddress;
+	}
+
+	/**
+	 * @return the supplierContact
+	 */
+	public String getSupplierContact() {
+		return supplierContact;
+	}
+
+	/**
+	 * @param supplierContact the supplierContact to set
+	 */
+	public void setSupplierContact(String supplierContact) {
+		this.supplierContact = supplierContact;
+	}
+
+	/**
+	 * @return the supplierEmail
+	 */
+	public String getSupplierEmail() {
+		return supplierEmail;
+	}
+
+	/**
+	 * @param supplierEmail the supplierEmail to set
+	 */
+	public void setSupplierEmail(String supplierEmail) {
+		this.supplierEmail = supplierEmail;
 	}
 
 }

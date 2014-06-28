@@ -3,6 +3,8 @@
  */
 package my.ep.web.backingbean.sc.specification;
 
+
+
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -134,12 +136,16 @@ import my.ep.persistence.entity.sc.quationtender.ScQtScoreWeightage;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtZoneCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScRemark;
+import my.ep.persistence.entity.sm.SmCompanyAddress;
+import my.ep.persistence.entity.sm.SmCompanyBasic;
+import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
@@ -434,7 +440,6 @@ public class SpecificationBackingBean extends
 	}
 
 	public void secretarySubmitTask() {
-		
 
 	}
 
@@ -871,11 +876,12 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().setSupplierCriteria(
 						tenderResDTO.getQtDetail().getScQtSupplierCriteria());
 
-				/*if (this.getManagedBean().getSupplierCriteria()
-						.getLocationLevel() == null) {
-					this.getManagedBean().getSupplierCriteria()
-							.setLocationLevel(new PmParameter());
-				}*/
+				/*
+				 * if (this.getManagedBean().getSupplierCriteria()
+				 * .getLocationLevel() == null) {
+				 * this.getManagedBean().getSupplierCriteria()
+				 * .setLocationLevel(new PmParameter()); }
+				 */
 
 				if (this.getManagedBean().getZoneTrees() != null
 						&& this.getManagedBean().getZoneTrees().size() == 0) {
@@ -916,6 +922,7 @@ public class SpecificationBackingBean extends
 
 						}
 					}
+
 					if (null != ctPanelZone && !ctPanelZone.isEmpty()) {
 
 						getManagedBean().getCtZoneSuppliers().add(
@@ -925,6 +932,8 @@ public class SpecificationBackingBean extends
 					}
 				}
 
+			} else {
+				retriveZonesByCircularNo();
 			}
 
 		} finally {
@@ -2573,7 +2582,7 @@ public class SpecificationBackingBean extends
 					.getMessageCommon("lbl.sc.spec.est.price");
 			throw new EpException(MessageConst.INFO_100022,
 					new String[] { amount + "Must be Greater Than 20000" });
-			
+
 		}
 
 		if (!scQt.isPanel()) {
@@ -2597,8 +2606,7 @@ public class SpecificationBackingBean extends
 						&& null == qtSupplierCriteria.getLocationLevel()
 								.getParameterId()) {
 					qtSupplierCriteria.setLocationLevel(null);
-					
-				
+
 				}
 
 			} else {
@@ -2628,12 +2636,10 @@ public class SpecificationBackingBean extends
 				}
 
 				else {
-					
 
 					throw new EpException(MessageConst.INFO_100022,
 							new String[] { "ADD At Least One Zone" });
 
-					
 				}
 				this.getManagedBean().getSupplierCriteria()
 						.setScQtLocCriteria(null);
@@ -2642,8 +2648,8 @@ public class SpecificationBackingBean extends
 					this.getManagedBean().getSupplierCriteria()
 							.setLocationLevel(scQt.getZoneLocationLevel());
 				} else {
-					 scQt.setZoneLocationLevel(null);
-				     
+					scQt.setZoneLocationLevel(null);
+
 				}
 
 			}
@@ -2742,7 +2748,7 @@ public class SpecificationBackingBean extends
 				// searchCircularList();
 				// this.getManagedBean().setApprovalList(getAppDetails());
 				// retriveSpecdetails(1366L);
-				//retriveSpecdetails(1426L);
+				// retriveSpecdetails(1426L);
 			}
 
 		} finally {
@@ -2765,7 +2771,6 @@ public class SpecificationBackingBean extends
 			tenderResDTO = QtDetailsSO.retriveQTDetails(tenderReqDTO);
 			if (tenderResDTO.getQtDetail() != null) {
 				getManagedBean().setScQt(tenderResDTO.getQtDetail());
-
 
 				if (null == tenderResDTO.getQtSupplierCriteria()) {
 
@@ -4450,7 +4455,6 @@ public class SpecificationBackingBean extends
 		return additionProposalst1;
 	}
 
-
 	public void stageTwoFiProposalAdd() {
 		IStatusSO statussO;
 
@@ -4496,8 +4500,6 @@ public class SpecificationBackingBean extends
 			statussO = null;
 		}
 	}
-
-	
 
 	public void stageTwoTechProposal() {
 
@@ -4592,8 +4594,6 @@ public class SpecificationBackingBean extends
 			statussO = null;
 		}
 	}
-
-	
 
 	public void stageTwoFinanceCheckList() {
 		IStatusSO statussO;
@@ -4714,7 +4714,7 @@ public class SpecificationBackingBean extends
 					.getDeliveryLocBean();
 			if (this.getManagedBean().getScQt().isZonal() == true) {
 				for (BriefingZoneBean deliverybean : zoneBean) {
-					
+
 					if (deliverybean
 							.getTplSpecZoneDtl()
 							.getZoneName()
@@ -6965,6 +6965,13 @@ public class SpecificationBackingBean extends
 	 * } } catch (Exception e) { e.printStackTrace(); } }
 	 */
 
+	public void paneltabChange(TabChangeEvent event) {
+		if ("Supplier List".equalsIgnoreCase(event.getTab().getTitle())) {
+			// retriveZonesByCircularNo();
+		}
+
+	}
+
 	public void retriveZonesByCircularNo() {
 		try {
 			this.getManagedBean().getSelectpanelItem();
@@ -6979,10 +6986,21 @@ public class SpecificationBackingBean extends
 					.retrievePanelZonesByPanelItem(reqDTO);
 
 			if (isNotNullOREmpty(resDTO.getCtPanelZones())) {
+				if (null != getManagedBean().getCtZoneSuppliers()
+						&& getManagedBean().getCtZoneSuppliers().size() == 0) {
+					this.getManagedBean().setCtPanelZones(
+							resDTO.getCtPanelZones());
+					getManagedBean().getCtZoneSuppliers().add(
+							LocationSingleton.getInstance()
+									.constuctPanelTreeNodes(
+											resDTO.getCtPanelZones()));
+				}
 
-				getManagedBean().setCtZoneTrees(
-						LocationSingleton.getInstance().constuctPanelTreeNodes(
-								resDTO.getCtPanelZones()));
+				/*
+				 * getManagedBean().setCtZoneTrees(
+				 * LocationSingleton.getInstance().constuctPanelTreeNodes(
+				 * resDTO.getCtPanelZones()));
+				 */
 
 			}
 
@@ -7081,22 +7099,55 @@ public class SpecificationBackingBean extends
 						IPanelSupplierSO.class);
 		PanelSupplierResDTO resDTO = panelSupplierSO
 				.retrieveSupplierByZone(reqDTO);
-		if (null != resDTO.getPanelSuppliers()
-				&& !resDTO.getPanelSuppliers().isEmpty()) {
-			this.getManagedBean().setTotalSuppliers(
-					resDTO.getPanelSuppliers().size());
-			this.getManagedBean().setCtZoneSupplierList(
-					resDTO.getPanelSuppliers());
+
+		List<CtPanelSupplier> suppliers = resDTO.getPanelSuppliers();
+		if (null == suppliers) {
+			suppliers = new ArrayList<CtPanelSupplier>();
 		}
+
+		this.getManagedBean().setTotalSuppliers(suppliers.size());
+
+		this.getManagedBean().setCtZoneSupplierList(suppliers);
 
 	}
 
 	public void retriveSupplierDtls(CtPanelSupplier panelSupplier) {
 
 		this.getManagedBean().setCtpanelSupplier(panelSupplier);
-	}
+		
+      List<SmPersonnel> list = panelSupplier.getSupplier().getSmAppl().getSmPersonnels();
+      if(null!=list){
+		
+		for (SmPersonnel smPersonnel : list) {
+			getManagedBean().setPersonnel(smPersonnel);
+		}
+		SmPersonnel supplierHQPersonnel = this.getManagedBean().getPersonnel();
+		//SmAppl appll=	supplierHQPersonnel.getSmAppl();
+		
+		SmCompanyBasic smCompanyBasic =  panelSupplier.getSupplier().getSmAppl().getSmCompanyBasic();
+		
+		//System.out.println("INcomeTax No : " + smCompanyBasic.getIncomeTaxNo());
+		if(null!=smCompanyBasic){
+			if(null!=smCompanyBasic.getSmCompanyAddresses()){
+		for (SmCompanyAddress smCompanyAddress : smCompanyBasic.getSmCompanyAddresses()) {
+			if(null!=smCompanyAddress)
+			if (AddressType.CONTACT_ADDRESS.value().equals(smCompanyAddress.getAddressType())) {
+				
 
-	
+				getManagedBean().setSupplierBranch("HQ");
+				getManagedBean().setSupplierAddress(smCompanyAddress.getSmAddress());
+				getManagedBean().setSupplierContact(supplierHQPersonnel.getName());
+				getManagedBean().setSupplierEmail(supplierHQPersonnel.getEmail());
+				break;
+			}
+		}
+		}
+		}
+      }
+		
+
+		
+	}
 
 	public void deleteS2Tech() {
 		List<ScQtCheckList> s2Technical = getManagedBean()
@@ -7113,8 +7164,6 @@ public class SpecificationBackingBean extends
 
 	}
 
-	
-
 	public void deleteS2Fin() {
 		List<ScQtCheckList> s2Fin = getManagedBean()
 				.getScQtCheckSt2financeProposalList();
@@ -7127,8 +7176,6 @@ public class SpecificationBackingBean extends
 		}
 
 	}
-
-	
 
 	public void deleteScoring() {
 		try {
@@ -7500,15 +7547,13 @@ public class SpecificationBackingBean extends
 		CtPanelItem ctPanelItem = (CtPanelItem) selectEvent.getObject();
 		List<CtPanelItem> panelList = this.getManagedBean()
 				.getSelectpanelItem();
-		if (panelList == null) {
-			panelList = new ArrayList<CtPanelItem>();
-		}
+
+		panelList = new ArrayList<CtPanelItem>();
+
 		this.getManagedBean().setPanelItemCategory(
 				getParameterDesc(ctPanelItem.getItemCategoryId()));
-		if (null != panelList && panelList.isEmpty()) {
 
-			panelList.add(ctPanelItem);
-		}
+		panelList.add(ctPanelItem);
 		this.getManagedBean().setSelectpanelItem(panelList);
 
 	}
@@ -7907,7 +7952,7 @@ public class SpecificationBackingBean extends
 				ISearchBean<PmAddressType> searchBean) {
 			IAddressSO addressSO;
 			AddressResDTO resDto;
-			
+
 			try {
 				// SearchBean<PmAddressType> searchBean2=searchBean;
 				AddressReqDTO addressReqDTO = new AddressReqDTO();
@@ -7968,7 +8013,9 @@ public class SpecificationBackingBean extends
 						ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
 				resDto = addressSO.searchDeliveryAddress(addressReqDTO);
 
-				if (resDto != null && !resDto.getSearchAddressResultBean().getResultList().isEmpty()) {
+				if (resDto != null
+						&& !resDto.getSearchAddressResultBean().getResultList()
+								.isEmpty()) {
 					/*
 					 * System.out.println("======display list size====" +
 					 * resDto.getSearchAddressResultBean()

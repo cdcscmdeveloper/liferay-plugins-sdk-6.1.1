@@ -15,14 +15,15 @@
 			value="#{specificationBackingBean.managedBean.ctZoneSuppliers}"
 			var="Zones" rowIndexVar="index"
 			selection="#{specificationBackingBean.managedBean.panelZoneSelect}"
-			dynamic="true">
+			dynamic="true" >
 
 
 			<p:column headerText="#{lbl['lbl.sc.spec.supplier.zone']}"
 				style="width:90%">
 				<p:tree value="#{Zones}" var="location" selectionMode="single">
-					<p:ajax event="select" update=":form:paneltabView:totalSupplier"
+					<p:ajax event="select"  update="@([id$=totalSupplier])" process="@this" partialSubmit="true"
 						listener="#{specificationBackingBean.retriveZoneBySupplier}" />
+						
 					<p:treeNode type="zone">
 						<h:outputText value="#{location.name}" />
 					</p:treeNode>
@@ -37,12 +38,7 @@
 		</p:dataTable>
 
 
-		<div align="right">
-			<p:commandButton oncomplete="ctZone.show();" update="ctZonedetails"
-				actionListener="#{specificationBackingBean.retriveZonesByCircularNo}"
-				value="#{lbl['lbl.ct.ded.btn.add']}" process="@this"
-				icon="ui-icon-add"></p:commandButton>
-		</div>
+		
 	</p:panel>
 	<!-- <ui:include src="/xhtml/sc/specification/supplierZoneSelect.xhtml"  -->
 	<ui:include src="supplierlist.xhtml" />

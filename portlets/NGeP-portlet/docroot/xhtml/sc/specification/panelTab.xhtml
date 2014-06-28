@@ -8,6 +8,7 @@
 	<p:panel>
 
 		<p:tabView id="paneltabView" dynamic="true">
+		<p:ajax event="tabChange" listener="#{specificationBackingBean.paneltabChange}"></p:ajax>
 
 			<p:tab id="tab1" title="#{lbl['lbl.sc.spec.panel.information']}"
 				styleClass="noBorders tr,noBorders td">

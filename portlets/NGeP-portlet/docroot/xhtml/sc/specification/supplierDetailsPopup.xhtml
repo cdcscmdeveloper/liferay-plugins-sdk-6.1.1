@@ -72,27 +72,35 @@
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.spec.supplier.branch']}" /></td>
-				<td><p:inputText size="30" readonly="true" disabled="true" /></td>
+				<td><p:inputText size="30" readonly="true" disabled="true"
+						value="#{specificationBackingBean.managedBean.supplierBranch}" /></td>
 			</tr>
 			<tr>
 				<td valign="top"><p:outputLabel
 						value="#{lbl['lbl.sc.spec.supplier.address']}" /></td>
 				<td><p:inputTextarea rows="3" cols="32" readonly="true"
+						value="#{specificationBackingBean.managedBean.supplierAddress.address1}"
 						disabled="true" style=" margin-bottom:5px;" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.spec.supplier.contact.person']}" /></td>
-				<td><p:inputText size="30" readonly="true" disabled="true" /></td>
+				<td><p:inputText
+						value="#{specificationBackingBean.managedBean.supplierContact}"
+						size="30" readonly="true" disabled="true" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.spec.supplier.designation']}" /></td>
-				<td><p:inputText size="30" readonly="true" disabled="true" /></td>
+				<td><p:inputText
+						value="#{specificationBackingBean.managedBean.personnel.designation}"
+						size="30" readonly="true" disabled="true" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.spec.email']}" /></td>
-				<td><p:inputText size="30" readonly="true" disabled="true" /></td>
+				<td><p:inputText
+						value="#{specificationBackingBean.managedBean.supplierEmail}"
+						size="30" readonly="true" disabled="true" /></td>
 			</tr>
 		</table>
 

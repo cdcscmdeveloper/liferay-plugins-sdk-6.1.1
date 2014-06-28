@@ -7,8 +7,11 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	<p:dialog header="#{lbl['lbl.sc.spec.supplier.zone']}" widgetVar="ctZone" modal="true" width="400"
-		height="500" position="top">
+	<p:dialog header="#{lbl['lbl.sc.spec.supplier.zone']}"
+		widgetVar="ctZone" width="400" height="500" position="top"
+		style="border:0px;">
+
+		
 		<p:panel id="ctZonedetails">
 
 			<p:tree id="ctZones"
@@ -25,13 +28,15 @@
 				<p:treeNode type="district">
 					<h:outputText value="#{ctZones.districtId.districtName}" />
 				</p:treeNode>
-         </p:tree>
+			</p:tree>
 		</p:panel>
 		<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.cancel']}"
 			style="float:right;" onclick="ctZone.hide();" icon="ui-icon-cancel"></p:commandButton>
 		<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.ok']}"
 			style="float:right;" process="@all" partialSubmit="true"
-			update="ctZoneList" actionListener="#{specificationBackingBean.updateContractZoneLocation}" oncomplete="ctZone.hide();" icon="ui-icon-accept"></p:commandButton>
+			update="ctZoneList"
+			actionListener="#{specificationBackingBean.updateContractZoneLocation}"
+			oncomplete="ctZone.hide();" icon="ui-icon-accept"></p:commandButton>
 
 
 	</p:dialog>
