@@ -38,10 +38,10 @@
 						<p:ajax event="blur" process="@this" partialSubmit="true"
 							update="@form"
 							listener="#{specificationBackingBean.setProcurementMode(specificationBackingBean.managedBean.scQt)}"></p:ajax>
-						<ac:validateNumber
+						 <ac:validateNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}"
-							maxIntegerDigits="14"></ac:validateNumber>
-
+							maxIntegerDigits="14"></ac:validateNumber> 
+ 
 					</p:inputText> <p:message id="priceMsg" for="estPrice" display="icon" /></td>
 
 			</tr>
@@ -154,12 +154,11 @@
 					<td><h:outputLabel value="Zone/Location" /></td>
 					<td><p:selectOneRadio
 							value="#{specificationBackingBean.managedBean.scQt.zonal}">
-
 							<f:selectItems
 								value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 
 							<p:ajax event="change" partialSubmit="true"
-								update="generalLocationList" process="@this"></p:ajax>
+								update="generalLocationList" process="@this" listener="#{specificationBackingBean.zoneRadioChange}"></p:ajax>
 						</p:selectOneRadio></td>
 				</ui:fragment>
 			</tr>
@@ -216,8 +215,8 @@
 					selectionMode="single" rowKey="#{zoneTree}">
 
 					<p:column headerText="Location" style="width:90%">
-						<p:tree value="#{zoneTree}" var="location">
-
+						<p:tree value="#{zoneTree}" var="location" >
+                          
 							<p:treeNode type="zone">
 								<h:outputText value="#{location.zoneName}" />
 							</p:treeNode>
@@ -258,9 +257,8 @@
 					actionListener="#{specificationBackingBean.showGeneralZoneLocationPopup}"
 					icon="ui-icon-add" />
 				<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
-					icon="ui-icon-delete"
-					action="#{specificationBackingBean.deleteTreeNode}"
-					update="zoneGeneralDataTable" />
+					icon="ui-icon-delete" 
+					action="#{specificationBackingBean.deleteTreeNode}" update="zoneGeneralDataTable" />
 			</div>
 		</p:panel>
 	</h:panelGroup>

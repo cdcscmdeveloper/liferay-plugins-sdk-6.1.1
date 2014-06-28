@@ -88,9 +88,9 @@
 							<h:outputLabel value="#{lbl['lbl.so.allstate']}"
 								style="width : 80px" />
 							<p:selectBooleanCheckbox disabled="true"
-								value="#{specificationBackingBean.managedBean.supplierCriteria.allState}">
+								value="#{specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState}">
 								<f:selectItem
-									itemValue="#{specificationBackingBean.managedBean.supplierCriteria.allState}"></f:selectItem>
+									itemValue="#{specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState}"></f:selectItem>
 								<p:ajax update="supplierallStae"
 									listener="#{specificationBackingBean.stateChange}" />
 							</p:selectBooleanCheckbox>
@@ -104,7 +104,7 @@
 						rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000'}" /></td>
 				<td><p:inputText size="30" maxlength="18"
 						rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000'}"
-						value="#{specificationBackingBean.managedBean.supplierCriteria.minPaidUpCapital}"
+						value="#{specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.minPaidUpCapital}"
 						style="margin-right:5px;text-align:right;">
 						<ac:validateNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}"
@@ -122,13 +122,13 @@
 
 
 			<p:panel header="#{lbl['lbl.sc.spec.location.list.paidup.capital']}"
-				rendered="#{((specificationBackingBean.managedBean.scQt.estimatedAmount le '500000' and specificationBackingBean.managedBean.supplierCriteria.allState=='false' and specificationBackingBean.managedBean.scQt.zonal =='false') or (specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.supplierCriteria.allState=='false'  and specificationBackingBean.managedBean.scQt.zonal =='false') or (specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.supplierCriteria.allState=='false'  and specificationBackingBean.managedBean.scQt.zonal))}">
+				rendered="#{((specificationBackingBean.managedBean.scQt.estimatedAmount le '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false' and specificationBackingBean.managedBean.scQt.zonal =='false') or (specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false'  and specificationBackingBean.managedBean.scQt.zonal =='false') or (specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false'  and specificationBackingBean.managedBean.scQt.zonal))}">
 				<table style="width: 100%">
 					<tr>
 						<td style="width: 150px"><p:outputLabel
 								value="#{lbl['lbl.so.paidup']}" /></td>
 						<td><p:inputText size="30" maxlength="18"
-								value="#{specificationBackingBean.managedBean.supplierCriteria.minPaidUpCapital}"
+								value="#{specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.minPaidUpCapital}"
 								style="margin-right:5px;text-align:right;">
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -140,7 +140,7 @@
 								value="*" styleClass="mandatory" /></td>
 						<td><p:selectOneMenu id="locLevels" required="true"
 								label="#{lbl['lbl.sc.spec.zone.location.level']}"
-								value="#{specificationBackingBean.managedBean.supplierCriteria.locationLevel.parameterId}"
+								value="#{specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.locationLevel.parameterId}"
 								style="width: 178px;">
 
 								<f:selectItems
@@ -154,7 +154,7 @@
 			</p:panel>
 
 			<p:panel
-				rendered="#{((specificationBackingBean.managedBean.scQt.estimatedAmount le '500000' and specificationBackingBean.managedBean.supplierCriteria.allState=='false' and !specificationBackingBean.managedBean.scQt.zonal) or (specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.supplierCriteria.allState=='false'  and specificationBackingBean.managedBean.scQt.zonal =='false') or (specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.supplierCriteria.allState=='false'  and specificationBackingBean.managedBean.scQt.zonal))}">
+				rendered="#{((specificationBackingBean.managedBean.scQt.estimatedAmount le '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false' and !specificationBackingBean.managedBean.scQt.zonal) or (specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false'  and specificationBackingBean.managedBean.scQt.zonal =='false') or (specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false'  and specificationBackingBean.managedBean.scQt.zonal))}">
 				<h:panelGrid width="100%">
 					<p:dataTable id="zoneLocationDataTable"
 						value="#{specificationBackingBean.managedBean.zoneTrees}"
@@ -201,13 +201,13 @@
 
 
 			<p:panel header="#{lbl['lbl.sc.spec.location.list.paidup.capital']}"
-				rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount le '500000' and specificationBackingBean.managedBean.supplierCriteria.allState=='false' and specificationBackingBean.managedBean.scQt.zonal}">
+				rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount le '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false' and specificationBackingBean.managedBean.scQt.zonal}">
 				<table style="width: 100%">
 					<tr>
 						<td style="width: 150px"><p:outputLabel
 								value="#{lbl['lbl.so.paidup']}" /></td>
 						<td><p:inputText size="30" maxlength="18"
-								value="#{specificationBackingBean.managedBean.supplierCriteria.minPaidUpCapital}"
+								value="#{specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.minPaidUpCapital}"
 								style="margin-right:5px;text-align:right;">
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -232,7 +232,7 @@
 
 
 			<p:panel
-				rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount le '500000' and specificationBackingBean.managedBean.supplierCriteria.allState=='false' and specificationBackingBean.managedBean.scQt.zonal}">
+				rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount le '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false' and specificationBackingBean.managedBean.scQt.zonal}">
 				<h:panelGrid width="100%">
 					<p:dataTable id="zoneyesDataTable"
 						value="#{specificationBackingBean.managedBean.zoneGeneralTrees}"
