@@ -3,7 +3,6 @@
  */
 package my.ep.web.managedbean.fl.frn;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -17,6 +16,7 @@ import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmOrgAddress;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmCriteriaDesc;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.apache.log4j.Logger;
@@ -60,6 +60,7 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	
 	private int selectedTabIndex;
 	private PmUser pmUser;
+	private List<PmCriteriaDesc> criteriaDescList;
 	
 	/**
 	 * @return the flRemark
@@ -329,6 +330,20 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	 */
 	public void setFrnCancellationProcess(boolean frnCancellationProcess) {
 		this.frnCancellationProcess = frnCancellationProcess;
+	}
+
+	/**
+	 * @return the criteriaDescList
+	 */
+	public List<PmCriteriaDesc> getCriteriaDescList() {
+		return criteriaDescList;
+	}
+
+	/**
+	 * @param criteriaDescList the criteriaDescList to set
+	 */
+	public void setCriteriaDescList(List<PmCriteriaDesc> criteriaDescList) {
+		this.criteriaDescList = criteriaDescList;
 	}
 
 

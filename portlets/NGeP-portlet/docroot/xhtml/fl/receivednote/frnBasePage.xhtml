@@ -57,12 +57,12 @@
 								target="#{receivedNoteBackingBean.managedBean.selectedTabIndex}"
 								value="0" />
 						</p:menuitem>
-						<p:menuitem value="Item and Remarks" update="@form">
+						<p:menuitem value="FRN Item" update="@form">
 							<f:setPropertyActionListener
 								target="#{receivedNoteBackingBean.managedBean.selectedTabIndex}"
 								value="1" />
 						</p:menuitem>
-						<p:menuitem value="Supplier Evaluation" update="@form">
+						<p:menuitem value="Evaluation" update="@form" actionListener="#{receivedNoteBackingBean.onTabChange(2)}">
 							<f:setPropertyActionListener
 								target="#{receivedNoteBackingBean.managedBean.selectedTabIndex}"
 								value="2" />

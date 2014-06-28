@@ -11,108 +11,92 @@
 		<p:dataTable id="frnItemDt" var="item" width="100%"
 			value="#{receivedNoteBackingBean.managedBean.fulfilmentNote.flFulfilmentNoteItem}"
 			selection="#{receivedNoteBackingBean.managedBean.selectedItem}"
-			rowIndexVar="index"
-			selectionMode="single" rowKey="#{item}" lazy="true">
-			<p:ajax event="rowSelect"
-				update=":form:selectedItemSection"
-				/>
+			rowIndexVar="index" selectionMode="single" rowKey="#{item}"
+			lazy="true">
+			<p:ajax event="rowSelect" update=":form:selectedItemSection" />
 			<ac:paginator for="itemDataTable" />
 			<p:column headerText="Item Code">
-				<h:outputText value="#{item.flItem.cmItem.extensionCode}"
-					rendered="#{receivedNoteBackingBean.managedBean.docType eq 'PR'}" />
-				<h:outputText
-					rendered="#{receivedNoteBackingBean.managedBean.docType eq 'CR'}" />
+				<h:outputText value="#{item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.cmItem.extensionCode}" />
 			</p:column>
-			<p:column headerText="Item Name">
-				<p:outputLabel value="#{item.flDelOrderItem.flItem.cmItem.itemName}"
-					rendered="#{receivedNoteBackingBean.managedBean.docType eq 'PR'}" />
-				<p:outputLabel value="#{item.flDelOrderItem.flItem.cmItem.itemName}"
-					rendered="#{receivedNoteBackingBean.managedBean.docType eq 'CR'}" />
+			<p:column headerText="Item Name" style="white-space:normal;">
+				<p:outputLabel
+					value="#{item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.itemName}" />
 			</p:column>
-			<p:column headerText="UOM">
-				<h:outputText
-					value="">
+
+			<p:column headerText="UOM" style="text-align:right">
+				<h:outputText value="#{item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.uom.uomName}">
 				</h:outputText>
 			</p:column>
-			<p:column headerText="Unit Price (MYR)">
-				<h:outputText
+			<p:column headerText="Unit Price &lt;br /&gt;(MYR)" style="text-align:right">
+				<h:outputText styleClass="colFloatRight"
 					value="#{item.flDelOrderItem.flFulfilmentItemAddr.unitPrice}">
 					<f:convertNumber pattern="#,##0.00" />
 				</h:outputText>
 			</p:column>
-			<p:column headerText="Delivered Qty.">
-				<h:outputText value="#{item.flDelOrderItem.deliveredQty}" />
+			<p:column headerText="Delivered &lt;br /&gt; Qty." style="text-align:right">
+				<h:outputText styleClass="colFloatRight" value="#{item.flDelOrderItem.deliveredQty}" />
 			</p:column>
-			<p:column headerText="Delivered Amt.(RM)">
+			<p:column headerText="Delivered &lt;br /&gt; Amt.(RM)" style="text-align:right">
 				<h:panelGroup id="delAmountTxt">
-					<h:outputText value="#{item.flDelOrderItem.deliveredAmt}">
+					<h:outputText  styleClass="colFloatRight" value="#{item.flDelOrderItem.deliveredAmt}">
 						<f:convertNumber pattern="#,#00.00" />
 					</h:outputText>
-					<p:inputText value="#{item.flDelOrderItem.deliveredAmt}"
-					rendered="#{receivedNoteBackingBean.managedBean.docType eq 'CR'}">
+					<p:inputText styleClass="colFloatRight" value="#{item.flDelOrderItem.deliveredAmt}"
+						rendered="#{receivedNoteBackingBean.managedBean.docType eq 'CR'}">
 						<f:convertNumber pattern="#,#00.00" />
 					</p:inputText>
 				</h:panelGroup>
 			</p:column>
-			<p:column headerText="Received Qty." >
-				<p:inputText value="#{item.receivedQty}" 
+			<p:column headerText="Received &lt;br /&gt; Qty." style="text-align:right">
+				<p:inputText styleClass="colFloatRight" value="#{item.receivedQty}"
 					rendered="#{receivedNoteBackingBean.getParameterDesc(item.flItem.itemType) eq 'Product' and receivedNoteBackingBean.managedBean.docType eq 'PR'}">
-					<p:ajax update="receivedAmt" listener="#{receivedNoteBackingBean.retrieveReceivedAmt(item)}"></p:ajax>
-					</p:inputText>
+					<p:ajax update="receivedAmt"
+						listener="#{receivedNoteBackingBean.retrieveReceivedAmt(item)}"></p:ajax>
+				</p:inputText>
 				<h:outputText
 					rendered="#{receivedNoteBackingBean.getParameterDesc(item.flItem.itemType) eq 'Service' and receivedNoteBackingBean.managedBean.docType eq 'PR'}"
-					value="#{item.receivedQty}" />
+					value="#{item.receivedQty}" styleClass="colFloatRight"/>
 				<p:inputText value="#{item.receivedQty}"
-				rendered="#{receivedNoteBackingBean.managedBean.docType eq 'CR'}"/>
+					rendered="#{receivedNoteBackingBean.managedBean.docType eq 'CR'}" />
 			</p:column>
-			<p:column headerText="Received Amt.(RM)">
-				<p:inputText
+			<p:column headerText="Received &lt;br /&gt; Amt.(RM)" style="text-align:right">
+				<p:inputText styleClass="colFloatRight"
 					rendered="#{receivedNoteBackingBean.getParameterDesc(item.flItem.itemType) eq 'Service'}"
 					value="#{item.receivedAmt}">
 					<f:convertNumber pattern="#,#00.00" />
 				</p:inputText>
-				<h:outputText id="receivedAmt"
-					value="#{item.receivedAmt}"
+				<h:outputText id="receivedAmt" value="#{item.receivedAmt}" styleClass="colFloatRight"
 					rendered="#{receivedNoteBackingBean.getParameterDesc(item.flItem.itemType) eq 'Product'}">
 					<f:convertNumber pattern="#,##0.00" />
 				</h:outputText>
-				<h:outputText
-					value="#{item.receivedAmt}"
+				<h:outputText value="#{item.receivedAmt}" styleClass="colFloatRight"
 					rendered="#{receivedNoteBackingBean.managedBean.docType eq 'CR'}">
 					<f:convertNumber pattern="#,#00.00" />
 				</h:outputText>
 			</p:column>
-						<p:column headerText="Ordered Qty.">
-				<h:outputText
+			<p:column headerText="Ordered Qty." style="text-align:right">
+				<h:outputText styleClass="colFloatRight"
 					value="#{item.flDelOrderItem.flFulfilmentItemAddr.orderedQty}" />
 			</p:column>
-			<p:column headerText="Ordered Amt.(RM)">
-				<h:outputText
+			<p:column headerText="Ordered &lt;br /&gt; Amt.(RM)" style="text-align:right">
+				<h:outputText styleClass="colFloatRight"
 					value="#{item.flDelOrderItem.flFulfilmentItemAddr.orderedAmt}">
 					<f:convertNumber pattern="#,#00.00" />
 				</h:outputText>
 			</p:column>
 		</p:dataTable>
-		
-		<h:panelGroup styleClass="selectedItemSection" id="selectedItemSection">
+		<p:spacer height="50"/>
+		<h:panelGroup styleClass="selectedItemSection"
+			id="selectedItemSection">
 			<table style="width: 100%">
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.txt.remarks']}"
 							style="margin-bottom:15px;" /></td>
-					<td><p:inputTextarea cols="40" value="#{receivedNoteBackingBean.managedBean.selectedItem.rejectionRemark}" /> </td>
+					<td><p:inputTextarea cols="40"
+							value="#{receivedNoteBackingBean.managedBean.selectedItem.rejectionRemark}" />
+					</td>
 				</tr>
 			</table>
 		</h:panelGroup>
-	</p:panel>
-
-	<p:panel header="#{lbl['lbl.fl.remark.attachment']}" toggleable="true">
-		<table style="width: 100%">
-			<tr>
-				<td width="50%" valign="top"><ui:include
-						src="/xhtml/fl/shared/remark.xhtml" /></td>
-				<td width="50%" valign="top"><ui:include
-						src="/xhtml/fl/shared/attachment.xhtml" /></td>
-			</tr>
-		</table>
 	</p:panel>
 </ui:composition>

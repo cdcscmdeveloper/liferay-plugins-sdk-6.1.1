@@ -37,7 +37,9 @@ import my.ep.jaxb.fl.frndata.FLFulFillmentRecievedNoteDataType;
 import my.ep.jaxb.fl.maintenace.cancel.dofulfillment.FLDOFulfillmentCancelReqType;
 import my.ep.persistence.entity.fl.frn.FlFulfilmentNote;
 import my.ep.persistence.entity.fl.frn.FlFulfilmentNoteItem;
+import my.ep.persistence.entity.fl.frn.FlSupplierEvaluation;
 import my.ep.persistence.entity.fl.order.FlDelOrderItem;
+import my.ep.persistence.entity.pm.common.PmCriteriaDesc;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -62,6 +64,21 @@ import com.liferay.portal.util.PortalUtil;
 @RequestScoped
 public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManagedBean> {
 	private static Logger log = Logger.getLogger(ReceivedNoteBackingBean.class);
+	private String className="@(.myFrnEvalClassName)";
+	/**
+	 * @return the className
+	 */
+	public String getClassName() {
+		return className;
+	}
+
+	/**
+	 * @param className the className to set
+	 */
+	public void setClassName(String className) {
+		this.className = className;
+	}
+
 	/**
 	 * get faces scopes
 	 * @return FacesScopes
@@ -139,6 +156,9 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 		//		String loginId = originalServletRequest.getParameter("loginId");
 		System.out.println("taskId:" + taskId);
 		//		System.out.println("loginId:" + loginId);
+		IReceivedNoteSO receivedNoteSO = (IReceivedNoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IReceivedNoteSO.class);
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
 		if(taskId != null){
 
 			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
@@ -147,14 +167,11 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			BpmRequestDTO bpmRequestDTO = new BpmRequestDTO();
 			FacesScopes facesScopes = new FacesScopes();
 			String token = facesScopes.getBPMAuthenticationCtxToken();
-
 			bpmRequestDTO.setCtxToken(ctx);
 			bpmRequestDTO.setTaskId(taskId);
 			BpmResponseDTO res = bpmSO.getTaskDetails(bpmRequestDTO);
 			Object obj = res.getPojo();
 
-			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-			FulfilmentResDTO resDTO = new FulfilmentResDTO();
 			IDeliveryOrderSO deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IDeliveryOrderSO.class);
 			if(res.getProcessName().equalsIgnoreCase(FLProcessNameConst.FRN_CANCELLATION_PROCESS_NAME)){
 				FLDOFulfillmentCancelReqType fulfillmentCancelReqType = (FLDOFulfillmentCancelReqType)obj;
@@ -234,6 +251,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 				getManagedBean().getFulfilmentNote().setFlFulfilmentNoteItem(noteItemList);
 				getManagedBean().getFulfilmentNoteItem();
 				getManagedBean().getFulfilmentNote().setFlRequest(resDTO.getFlDeliveryOrder().getFlRequest());
+				getManagedBean().getFulfilmentNote().setStatus(receivedNoteSO.retrieveReceivedNoteStatus(reqDTO).getPmStatus());
 				/*if(getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem() == null){
 					
 				}*/
@@ -241,6 +259,8 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 				
 
 			}
+			reqDTO.setDeliveryOrderId(getManagedBean().getFulfilmentNote().getFlDeliveryOrder().getDeliveryOrderId());
+			getManagedBean().getFulfilmentNote().setStatus(receivedNoteSO.retrieveReceivedNoteStatus(reqDTO).getPmStatus());
 			
 		}
 	}
@@ -305,13 +325,45 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 				receivedAmt = item.getReceivedQty().multiply(item.getFlDelOrderItem().getFlFulfilmentItemAddr().getUnitPrice());
 			}
 			item.setReceivedAmt(receivedAmt);
-		}
-	 
+	}
+	 public void onTabChange(int selectedTabIndex){
+			if(selectedTabIndex==2){
+				retrieveCriteriaList();
+				setClassName("@(.myFrnEvalClassName)");
+			}
+	}
 	 public void retrieveCriteriaList(){
 		 ICriteriaSO criteriaSO = (ICriteriaSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICriteriaSO.class);
 		 CriteriaReqDTO reqDTO = new CriteriaReqDTO();
 		 reqDTO.setLanguageCode(CommonConstants.DEFAULT_LANGUAGE_CODE);
 		 CriteriaResDTO resDTO = criteriaSO.retrieveCriteriaDescList(reqDTO);
+		 //If Evaluation Empty
+		 if(null==getManagedBean().getFulfilmentNote().getFlSupplierEvaluation()){
+			 getManagedBean().getFulfilmentNote().setFlSupplierEvaluation(new ArrayList<FlSupplierEvaluation>());
+		 }
+		 //Add Evaluation list based on the creiterias addded.
+		 List<FlSupplierEvaluation> addedCreiteriaList=new ArrayList<FlSupplierEvaluation>();
+		 for(PmCriteriaDesc pmCriteriaDesc : resDTO.getCriteriaDescList()){
+			
+			 boolean existed=false;
+			 for(FlSupplierEvaluation evaluation:getManagedBean().getFulfilmentNote().getFlSupplierEvaluation()){
+				 if(pmCriteriaDesc.getPmCriteria().getCriteriaId().equals(evaluation.getPmCriteria().getCriteriaId())){
+					 existed=true;
+					 break;
+				 }
+			 }
+			 if(!existed){
+				 FlSupplierEvaluation evaluationCriteria=new FlSupplierEvaluation();
+				 evaluationCriteria.setPmCriteria(pmCriteriaDesc.getPmCriteria());
+				 evaluationCriteria.setFlFulfilmentNote( getManagedBean().getFulfilmentNote());
+				 addedCreiteriaList.add(evaluationCriteria);
+			 }
+			 
+		 }
+		 if(!addedCreiteriaList.isEmpty()){
+			 getManagedBean().getFulfilmentNote().getFlSupplierEvaluation().addAll(addedCreiteriaList);
+		 }
+		 //getManagedBean().setCriteriaDescList(resDTO.getCriteriaDescList());
 		 resDTO.getCriteriaDescList();
-	 }
+	 } 
 }
