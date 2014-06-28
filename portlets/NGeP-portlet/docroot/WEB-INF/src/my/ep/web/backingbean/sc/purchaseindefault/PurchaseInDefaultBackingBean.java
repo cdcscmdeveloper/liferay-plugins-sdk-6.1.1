@@ -163,7 +163,6 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 			workFlowStatus.setPurchaseInDefault(scPurchaseInDefault);
 			//wflowStatus.add(workFlowStatus);
 			scPurchaseInDefault.setWorkFlowStatuses(wflowStatus);
-	
 			getCurrentStatus(status.getStatusId());  
 			getManagedBean().setPurchaseInDefault(scPurchaseInDefault);
 			//initialInformation(scPurchaseInDefault);
@@ -364,11 +363,11 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
     */
    public void justificationTypeEvent() {
 	   log.info("justificationTypeEvent : "+getManagedBean().getPurchaseInDefault().getReasonType()); 
-	   if(getManagedBean().getPurchaseInDefault().getReasonType() !=null){
-		   if (getManagedBean().getPurchaseInDefault().getReasonType().equalsIgnoreCase(ParameterConst.PID_CP) || getManagedBean().getPurchaseInDefault().getReasonType().equalsIgnoreCase(ParameterConst.PID_SS)) {
+	   if(getManagedBean().getPurchaseInDefault().getReasonType().getReasonCode() !=null){
+		   if (getManagedBean().getPurchaseInDefault().getReasonType().getReasonCode().equalsIgnoreCase(ParameterConst.PID_CP) || getManagedBean().getPurchaseInDefault().getReasonType().getReasonCode().equalsIgnoreCase(ParameterConst.PID_SS)) {
 			   getManagedBean().setVisibleOrderQty(Boolean.FALSE);
 
-		   } else if (getManagedBean().getPurchaseInDefault().getReasonType().equalsIgnoreCase(ParameterConst.PID_RI) || getManagedBean().getPurchaseInDefault().getReasonType().equalsIgnoreCase(ParameterConst.PID_EQ) ) {
+		   } else if (getManagedBean().getPurchaseInDefault().getReasonType().getReasonCode().equalsIgnoreCase(ParameterConst.PID_RI) || getManagedBean().getPurchaseInDefault().getReasonType().getReasonCode().equalsIgnoreCase(ParameterConst.PID_EQ) ) {
 			   getManagedBean().setVisibleOrderQty(Boolean.TRUE);
 
 		   } else {
@@ -441,10 +440,13 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
    public void retrieveReasonDescListByCategory () {
 	   ReasonReqDTO reqDTO = new ReasonReqDTO();
 	   reqDTO.setReasonCategory(ReasonCategory.PID_JUSTIFICATION.value());
-	   reqDTO.setLanguage("en");
+	   reqDTO.setLanguage("BM");
 	   IReasonSO reasonSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IReasonSO.class);
 	   ReasonResDTO resDTO = reasonSO.retrieveReasonDescListByCategory(reqDTO);
 	   getManagedBean().setJustifications(getDropdownCodeValues(resDTO.getReasonDescList()));
+	   
+	   // by default value as cheaper price
+	   getManagedBean().getPurchaseInDefault().setReasonType(resDTO.getReasonDescList().get(0).getPmReason());
    }
 
    public SelectItem[] getDropdownCodeValues(List<PmReasonDesc> list) {

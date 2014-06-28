@@ -98,7 +98,7 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     public RequestNoteManagedBean() {
     	PmParameter pmParameter = new PmParameter();
 		requestNoteDtl.setProcurementType(pmParameter);
-		requestNoteDtl.setFulfillmentType(pmParameter);
+		requestNoteDtl.setFulfilmentType(pmParameter);
 		requestNoteDtl.setPriceType(pmParameter);
     	ScRequestItem requestItem = new ScRequestItem();
     	ScSupplierItemPrice itemPrice = new ScSupplierItemPrice();

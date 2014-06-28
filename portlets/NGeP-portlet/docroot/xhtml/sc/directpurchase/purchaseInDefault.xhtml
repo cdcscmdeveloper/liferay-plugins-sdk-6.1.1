@@ -170,12 +170,13 @@
 										disabled="#{purchaseInDefaultBackingBean.managedBean.pidStatus eq 'Pending Verification' or 
                                                 purchaseInDefaultBackingBean.managedBean.pidStatus eq 'Pending Approval'}"
 										required="true"
-										value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.reasonType}"
+										value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.reasonType.reasonCode}"
 										style="margin-bottom: 5px;">
 										<f:selectItems
 											value="#{purchaseInDefaultBackingBean.managedBean.justifications}" />
-											
-										<p:ajax event="change" update="reqDtlId" process="@this , orderQty" 
+
+										<p:ajax event="change" update="@([id$=reqDtlId])"
+											partialSubmit="true" process="@this"
 											listener="#{purchaseInDefaultBackingBean.justificationTypeEvent}" />
 									</p:selectOneMenu> <p:commandLink style="text-align:left">
 										<p:graphicImage

@@ -15,7 +15,6 @@ import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.sc.directpurchase.ScPIDRemark;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefault;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefaultAttachment;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
@@ -57,8 +56,6 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean{
 	private PmOrgProfile selectedPmOrgProfile = new PmOrgProfile();
     
 	public PurchaseInDefaultManagedBean() {
-		List<ScPIDRemark> remarks = new ArrayList<ScPIDRemark>();
-		   purchaseInDefault.setRemarks(remarks);
 	}
 	
 	public ScPurchaseInDefault getPurchaseInDefault() {

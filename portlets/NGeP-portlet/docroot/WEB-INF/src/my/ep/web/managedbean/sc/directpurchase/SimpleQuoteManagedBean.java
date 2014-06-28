@@ -149,8 +149,6 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	private boolean serviceFlag;
 	private SmSupplier smSupplier;
 	private int selectedTabIndex;
-	
-	private List<ScSQRemark> remarks = new ArrayList<ScSQRemark>();
 	private String quoteNo;
 
 	public SimpleQuoteManagedBean() {
@@ -1226,18 +1224,7 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	public void setZoneFlag(boolean zoneFlag) {
 		this.zoneFlag = zoneFlag;
 	}
-	/**
-	 * @return the remarks
-	 */
-	public List<ScSQRemark> getRemarks() {
-		return remarks;
-	}
-	/**
-	 * @param remarks the remarks to set
-	 */
-	public void setRemarks(List<ScSQRemark> remarks) {
-		this.remarks = remarks;
-	}
+
 	/**
 	 * @return the quoteNo
 	 */

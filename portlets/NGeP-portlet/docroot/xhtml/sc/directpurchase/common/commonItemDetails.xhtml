@@ -210,7 +210,7 @@
 				</p:column>
 				
 			    <p:column headerText="#{lbl['lbl.sc.request.note.fulfill.type']}"  style="width:10%;">
-					<p:inputText value="#{requestNoteBackingBean.getParameterDesc(ParameterTypeConst.fulfilmentType ,requestNoteDtl.fulfillmentType.parameterCode)}" 
+					<p:inputText value="#{requestNoteBackingBean.getParameterDesc(ParameterTypeConst.fulfilmentType ,requestNoteDtl.fulfilmentType.parameterCode)}" 
 					   disabled="true" size="4" />
 				</p:column>
 				
@@ -243,8 +243,8 @@
 					   </p:inputText>
 					<p:selectOneMenu  style="width:75px;" required="true" id="deliveryType" 
 					    label="Delivery Term Type"
-						value="#{requestNoteDtl.deliverTermType}">
-						<f:selectItems value="#{requestNoteBackingBean.getDropdownCodeValues(ParameterTypeConst.deliveryTerm)}"/>
+						value="#{requestNoteDtl.deliverTermType.parameterId}">
+						<f:selectItems value="#{requestNoteBackingBean.getDropdownValues(ParameterTypeConst.deliveryTerm)}"/>
 					</p:selectOneMenu>
 					  <p:message id="deliveryTermMsg" for="deliveryTerm" display="icon" />
 					  <p:message id="deliveryTypeMsg" for="deliveryType" display="icon" />
