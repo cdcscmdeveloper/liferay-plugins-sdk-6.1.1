@@ -3,7 +3,6 @@ package my.ep.web.backingbean.sc.quatationtender;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -433,10 +432,11 @@ public class QTBusinessOwnerBackingBean extends
 				statusReqDTO);
 		PmStatus status = statusResDTO.getPmStatus();
 		// scQt.setQtStatus(status);
+		PmParameter parameter = new PmParameter();
+		parameter.setParameterId(585l);
 
 		List<ScCommitteeMember> memberList = getManagedBean()
 				.getScCommitteeMemberList();
-
 		if (null == memberList) {
 			memberList = new ArrayList<ScCommitteeMember>();
 		}
@@ -452,7 +452,8 @@ public class QTBusinessOwnerBackingBean extends
 					.getDesignation());
 			member.setPNP(getManagedBean().getCommitteMember().isPNP());
 			member.setEmail(getManagedBean().getCommitteMember().getEmail());
-			member.setMemberRole("M");
+			member.setMemberRole(parameter);
+			//member.setMemberRole("M");
 			member.setAccessRight("E");
 			member.setPmOrgProfile(this.getManagedBean().getQt()
 					.getPmOrgProfile());
@@ -559,11 +560,7 @@ public class QTBusinessOwnerBackingBean extends
 				committeeMember.setPmUser(user);
 				committeeMember.setPmOrgProfile(this.getManagedBean().getQt()
 						.getPmOrgProfile());
-				/*
-				 * committeeMember.setPmOrgProfile(user.getPmUserOrgs().get(0)
-				 * .getPmOrgProfile());
-				 */
-				committeeMember.setMemberRole("M");
+				committeeMember.setMemberRole(parameter);
 				committeeMember.setAccessRight("E");
 
 				if (this.getManagedBean().getScCommitteeMemberList().isEmpty()) {
