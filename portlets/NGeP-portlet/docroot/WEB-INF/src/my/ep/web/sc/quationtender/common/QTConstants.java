@@ -114,4 +114,9 @@ public interface QTConstants {
 	public static final String EVALUATION_ONE_TIER="1";
 	public static final String EVALUATION_TWO_TIER="2";
 	
+	public static final int QUOTAION_VALUE=20000;
+	public static final String OPEN_TYPE="O";
+	public static final String RESTRICTED_TYPE="R";
+	
+	
 }
