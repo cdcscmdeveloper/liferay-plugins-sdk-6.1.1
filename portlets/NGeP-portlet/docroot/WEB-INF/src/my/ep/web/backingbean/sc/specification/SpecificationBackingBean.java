@@ -414,7 +414,22 @@ public class SpecificationBackingBean extends
 	}
 
 	public void secretarySubmitTask() {
+		ICommitteSO committeSO = null;
+		CommitteResDTO resDTO = null;
+		try {
+			CommitteReqDTO reqDTO = new CommitteReqDTO();
+			committeSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
+			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+			reqDTO.setCommitteeType(QTConstants.DOCTYPE_SPEC_COMMITTE);
 
+			reqDTO.setSubject(this.getManagedBean().getSubject());
+			reqDTO.setBodyText(this.getManagedBean().getMessage());
+			committeSO.sendCommitteEndorseNotification(reqDTO);
+
+		} finally {
+
+		}
 	}
 
 	public void saveSpecificationCommitteeDtls() {
@@ -426,6 +441,10 @@ public class SpecificationBackingBean extends
 			QuationTenderResDTO resDTo = detailSO.saveQTDtl(reqDTO);
 			if (resDTo.isSuccessful()) {
 				ScQt scQt = resDTo.getQtDetail();
+				// renew the session..
+				renewSesionObject();
+				// Method to load the updated info upon saving the data..
+				loadPrepareSpecCommitteeDetails(scQt.getQtId(), QTConstants.DOCTYPE_QT);
 				FacesContext.getCurrentInstance().addMessage(
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
@@ -795,6 +814,34 @@ public class SpecificationBackingBean extends
 		 * retriveCommitteeEndorsment();
 		 */
 	}
+	
+	
+	/**
+	 * To reload the data after saving...
+	 */
+	public void loadPrepareSpecCommitteeDetails(Long qtId,String docType) {
+
+		retriveSpecdetails(qtId,docType);
+
+		retriveBusinessOwnerQualificationCriteri();
+		if (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(this
+				.getManagedBean().getScQt().getEvaluationType())) {
+			retriveTechnicalSpecification();
+		}
+		if (QTConstants.EVALUATION_TWO_TIER.equalsIgnoreCase(this
+				.getManagedBean().getScQt().getEvaluationType())) {
+			retriveTechnicalCheckList();
+			retriveTechnicalScoring();
+		}
+		retriveFinancialCheckList();
+		retriveFinancialScoring();
+		retriveRecommendationDetails();
+		retriveFulfilmentDtls();
+		retriveDeliveryDetails();
+		retriveCommitteeEndorsment();
+
+	}
+
 
 	public void businessOwnerTabChange(TabChangeEvent event) {
 		String tabTitle = event.getTab().getTitle();
