@@ -22,6 +22,7 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.exception.EpException;
+import my.ep.persistence.entity.fl.frn.FlFulfilmentNoteItem;
 import my.ep.persistence.entity.fl.order.FlDelOrderItem;
 import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
 import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
@@ -333,6 +334,18 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		getManagedBean().getFulfilmentRequest();
 	}
 
+	public void retrieveRejectionData(FlFulfilmentItemAddr flFulfilmentItemAddr) {
+		getManagedBean().setRejectionList(new ArrayList<FlFulfilmentNoteItem>());
+		for(FlDelOrderItem delOrderItem : flFulfilmentItemAddr.getFlDelOrderItems()) {
+			for(FlFulfilmentNoteItem frnItem : delOrderItem.getFlFulfilmentNoteItem()) {
+				if(frnItem.getRejectedQty().doubleValue()>0 || frnItem.getRejectedAmt().doubleValue()>0) {
+					getManagedBean().getRejectionList().add(frnItem);
+				}
+			}
+		}
+	}
+	
+	
 	/**
 	 * @return the amountSectionItemRow
 	 */

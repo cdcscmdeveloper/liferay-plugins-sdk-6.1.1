@@ -8,11 +8,11 @@
 	<p:panel header="REQUEST DETAIL" toggleable="true">
 		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.ministry']}" /></td>
-				<td><p:inputText size="50" id="ministry"
+				<td style="width: 130px;"><p:outputLabel value="#{lbl['lbl.fl.ministry']}" /></td>
+				<td style="width: 350px;"><p:inputText size="50" id="ministry"
 						value="#{receivedNoteBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.parentOrgProfile.parentOrgProfile.orgName}"
 						disabled="true" /></td>
-				<td rowspan="3" valign="top"><p:outputLabel
+				<td style="width: 150px;" rowspan="3" valign="top"><p:outputLabel
 						value="#{lbl['lbl.fl.title']}" /></td>
 				<td rowspan="3"><p:inputTextarea cols="50" rows="4"
 						maxlength="500"
@@ -52,7 +52,7 @@
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.del.ord.requisitioner']}" /></td>
 				<td><p:inputText size="50"
-						value="#{receivedNoteBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgName}"
+						value="#{receivedNoteBackingBean.managedBean.fulfilmentRequest.requistioner.userName}"
 						disabled="true" /></td>
 			</tr>
 		</table>
@@ -60,14 +60,14 @@
 	<p:panel header="DELIVERY ADDRESS" toggleable="true">
 		<table style="width: 100%">
 			<tr>
-				<td style="width: 109px;" rowspan="3" valign="top"><p:outputLabel
+				<td style="width: 130px;" rowspan="3" valign="top"><p:outputLabel
 						value="#{lbl['lbl.fl.supp.address']}" /></td>
-				<td style="width: 50px;" rowspan="3"><p:inputTextarea
+				<td style="width: 350px;" rowspan="3"><p:inputTextarea
 						id="delAddrText1" cols="50" rows="4" maxlength="500"
 						style=" margin-bottom:5px;" disabled="true"
 						value="#{receivedNoteBackingBean.getFullAddress(receivedNoteBackingBean.managedBean.fulfilmentNote.flRequest.flSupplierDtl.smAddress)}" />
 				</td>
-				<td style="width: 149px;"><p:outputLabel
+				<td style="width: 150px;"><p:outputLabel
 						value="#{lbl['lbl.fl.frn.prepare.date']}" /></td>
 
 				<td><p:inputText size="25" disabled="true" /></td>
@@ -80,18 +80,19 @@
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.frn.act.received.date']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td><p:calendar mode="popup" showOn="button" id="receivedDate" title="ReceivedDate" required="true"
+				<td style="width: 170px;"><p:calendar mode="popup" showOn="button" id="receivedDate" label="#{lbl['lbl.fl.frn.act.received.date']}" required="true"
 						value="#{receivedNoteBackingBean.managedBean.fulfilmentNote.receivedDate}"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
-					</p:calendar><p:message for="receivedDate" display="icon" /></td>
+					</p:calendar>
+				</td>
+				<td><p:message for="receivedDate" display="icon" /></td>
 			</tr>
-
 		</table>
 	</p:panel>
 	<p:panel header="SUPPLIER DETAIL" toggleable="true">
 		<table style="width: 100%">
 			<tr>
-				<td style="width: 107px;"><p:outputLabel
+				<td style="width: 130px;"><p:outputLabel
 						value="#{lbl['lbl.fl.supp.ep.no']}" /></td>
 				<td><table style="width: 100%">
 						<tr>

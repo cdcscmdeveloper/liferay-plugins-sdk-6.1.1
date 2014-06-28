@@ -5,7 +5,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions" >
 
 	<ui:define name="resourceSection">
 	</ui:define>
@@ -13,16 +14,14 @@
 	<ui:define name="contentSection">
 		<f:event listener="#{receivedNoteBackingBean.preRenderView}"
 			type="preRenderView" />
-		<p:messages id="messages" showDetail="true" autoUpdate="true"
-			closable="true" severity="error, info" />
+		<p:messages id="messages" showDetail="true" autoUpdate="true" showSummary="false" closable="true" severity="error, info" />
 		<table style="width: 100%;">
 			<tr>
 				<td colspan="4" style="text-align: right"><ui:repeat
 						var="bpmAction"
 						value="#{receivedNoteBackingBean.managedBean.outComes}">
-						<p:commandButton value="#{bpmAction}" ajax='false'
-							action="#{receivedNoteBackingBean.submitAction(bpmAction)}"
-							process="@this" />
+						<p:commandButton value="#{bpmAction}" update="@form" styleClass="ui-button" icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
+							action="#{receivedNoteBackingBean.submitAction(bpmAction)}" />
 					</ui:repeat></td>
 			</tr>
 		</table>
@@ -62,7 +61,7 @@
 								target="#{receivedNoteBackingBean.managedBean.selectedTabIndex}"
 								value="1" />
 						</p:menuitem>
-						<p:menuitem value="Evaluation" update="@form" actionListener="#{receivedNoteBackingBean.onTabChange(2)}">
+						<p:menuitem value="Evaluation" update="@form">
 							<f:setPropertyActionListener
 								target="#{receivedNoteBackingBean.managedBean.selectedTabIndex}"
 								value="2" />

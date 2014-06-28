@@ -15,7 +15,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.fl.frn.IReceivedNoteSO;
 import my.ep.biz.service.fl.order.IDeliveryOrderSO;
-import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.criteria.ICriteriaSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
@@ -24,12 +23,9 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
-import my.ep.constants.CommonConstants;
 import my.ep.constants.FLProcessNameConst;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
-import my.ep.dto.pm.authorization.user.UserReqDTO;
-import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.criteria.CriteriaReqDTO;
 import my.ep.dto.pm.common.criteria.CriteriaResDTO;
 import my.ep.exception.EpException;
@@ -39,6 +35,7 @@ import my.ep.persistence.entity.fl.frn.FlFulfilmentNote;
 import my.ep.persistence.entity.fl.frn.FlFulfilmentNoteItem;
 import my.ep.persistence.entity.fl.frn.FlSupplierEvaluation;
 import my.ep.persistence.entity.fl.order.FlDelOrderItem;
+import my.ep.persistence.entity.pm.common.PmCriteria;
 import my.ep.persistence.entity.pm.common.PmCriteriaDesc;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
@@ -93,53 +90,43 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();
 		try {
+			validateFulfilmentNote();
+			
 			String token = getFacesScopes().getBPMAuthenticationCtxToken();
-			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			FlFulfilmentNote fulfilmentNote = getManagedBean().getFulfilmentNote();
-			receivedNoteSO = (IReceivedNoteSO) BusinessDelegate.getInstance().getServiceObject("fl",IReceivedNoteSO.class);
-			System.out.println("getReceivedQty: "+getManagedBean().getFulfilmentNoteItem().getReceivedQty());
-			getUserProfiles(reqDTO);
-			//fulfilmentNote.setFlRequest(getManagedBean().getFulfilmentRequest());
+			receivedNoteSO = (IReceivedNoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IReceivedNoteSO.class);
+			
+			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			reqDTO.setFulfilmentNote(fulfilmentNote);
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setOutcome(action);
 			reqDTO.setDeliveryOrderId(getManagedBean().getDeliveryOrderId());
 			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
-			if(!flBB.getManagedBean().getRemarkList().isEmpty()){
-				reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
-			}
+			reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
 			
 			reqDTO.setToken(token);
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 			reqDTO.setFrnCancellationProcess(getManagedBean().isFrnCancellationProcess());
-			if("UPDATE".equalsIgnoreCase(action) || "CANCEL".equalsIgnoreCase(action)){
-				//TODO
-				// check Actual Received Date shouldnt be empty
-				 reqDTO.setPmUser(getManagedBean().getPmUser());
-				 resDTO = receivedNoteSO.receiveNoteModification(reqDTO);
-			}else{
+			if ("UPDATE".equalsIgnoreCase(action) || "CANCEL".equalsIgnoreCase(action)) {
+				reqDTO.setPmUser(getManagedBean().getPmUser());
+				resDTO = receivedNoteSO.receiveNoteModification(reqDTO);
+			} else {
 				resDTO = receivedNoteSO.saveReceivedNote(reqDTO);
 			}
 			
 			if(resDTO.isSuccessful()) {
 				String messageId = MessageConst.INFO_700011;
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
-						FacesMessage.SEVERITY_INFO, 
-						null,
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 						MessageUtils.getMessage(messageId, 
-								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_REQUEST), getManagedBean().getFulfilmentNote().getFulfilmentNoteNo()}, 
+								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_FULFILMENT_NOTE), resDTO.getFulfilmentNoteNo()}, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, 
 								new FacesScopes().getUserLocale())));
 				if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
 					renewSesionObject();
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
-				}	
-				else {
-					throw new EpException("Failed.");
-				}
+				} 
 			}
-			
-		}  finally {
+		} finally {
 			receivedNoteSO = null;
 		}
 		return null;
@@ -202,17 +189,10 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 					}
 					i++;
 					noteItemList.add(noteItem);
-					//getManagedBean().getFulfilmentNoteItem().setFlDelOrderItem(delOrderItem);
-					//getManagedBean().getFulfilmentNoteItem().setFlFulfilmentNote(getManagedBean().getFulfilmentNote());
 				}
 				//Add noteItemList to Managed Bean List.
 				getManagedBean().getFulfilmentNote().setFlFulfilmentNoteItem(noteItemList);
-				getManagedBean().getFulfilmentNoteItem();
 				getManagedBean().getFulfilmentNote().setFlRequest(resDTO.getFlDeliveryOrder().getFlRequest());
-				/*if(getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem() == null){
-					
-				}*/
-				//getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem().add(getManagedBean().getFulfilmentNoteItem());
 				getManagedBean().setFrnCancellationProcess(true);
 
 			}else{
@@ -223,14 +203,12 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 				flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
 				
 				getManagedBean().setFulfilmentRequest(resDTO.getFlDeliveryOrder().getFlRequest());
-				//getManagedBean().setFulfilmentRequest(delOrderResDTO.getFlDeliveryOrder().getFlFulfilmentOrder().getFlFulfilmentRequest());
 				getManagedBean().setDeliveryOrderId(fulFillmentRecievedNoteDataType.getDoId());
 				getManagedBean().setTaskId(taskId);
 				getManagedBean().setOutComes(res.getAction());
 				System.out.println("Doc type in FRN::: "+resDTO.getFlDeliveryOrder().getFlRequest().getDocType());
 				getManagedBean().setDocType(resDTO.getFlDeliveryOrder().getFlRequest().getDocType());
 				
-				//combineSupAddress(resDTO.getFlDeliveryOrder().getFlRequest());
 				getManagedBean().getFulfilmentNote().setFlDeliveryOrder(resDTO.getFlDeliveryOrder());
 				List<FlFulfilmentNoteItem> noteItemList=new ArrayList<FlFulfilmentNoteItem>();
 				int i = 0;
@@ -244,126 +222,77 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 					}
 					i++;
 					noteItemList.add(noteItem);
-					//getManagedBean().getFulfilmentNoteItem().setFlDelOrderItem(delOrderItem);
-					//getManagedBean().getFulfilmentNoteItem().setFlFulfilmentNote(getManagedBean().getFulfilmentNote());
 				}
 				//Add noteItemList to Managed Bean List.
 				getManagedBean().getFulfilmentNote().setFlFulfilmentNoteItem(noteItemList);
-				getManagedBean().getFulfilmentNoteItem();
 				getManagedBean().getFulfilmentNote().setFlRequest(resDTO.getFlDeliveryOrder().getFlRequest());
 				getManagedBean().getFulfilmentNote().setStatus(receivedNoteSO.retrieveReceivedNoteStatus(reqDTO).getPmStatus());
-				/*if(getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem() == null){
-					
-				}*/
-				//getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem().add(getManagedBean().getFulfilmentNoteItem());
-				
-
 			}
+			getManagedBean().setSelectedTabIndex(0);
 			reqDTO.setDeliveryOrderId(getManagedBean().getFulfilmentNote().getFlDeliveryOrder().getDeliveryOrderId());
 			getManagedBean().getFulfilmentNote().setStatus(receivedNoteSO.retrieveReceivedNoteStatus(reqDTO).getPmStatus());
 			
+			// Set evaluation
+			if(getManagedBean().getFulfilmentNote().getFlSupplierEvaluation().size()==0) {
+				retrieveCriteriaList();
+			}
 		}
 	}
 	
-	public void getUserProfiles(FulfilmentReqDTO reqDTO){
-		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject("pm",IUserSO.class);
-		UserReqDTO userReqDTO = new UserReqDTO();
-		userReqDTO.setLoginId(getFacesScopes().getUserSessionBean().getLoginId());
-		UserResDTO userResDTO = userSO.retrieveUserByLoginId(userReqDTO);
-		reqDTO.setPmUser(userResDTO.getPmUser());
+	public void retrieveReceivedAmt(FlFulfilmentNoteItem item) {
+		if(item.getReceivedQty().doubleValue() > item.getFlDelOrderItem().getDeliveredQty().doubleValue()) {
+			item.setReceivedQty(new BigDecimal(0));
+			throw new EpException(MessageConst.ERROR_100032, new String[]{"Received Quantity","Delivery Quantity"});
+		}
+		BigDecimal receivedAmt = item.getReceivedQty().multiply(item.getFlDelOrderItem().getFlFulfilmentItemAddr().getUnitPrice());
+		item.setReceivedAmt(receivedAmt);
+	}
+	 
+	private void retrieveCriteriaList() {
+		ICriteriaSO criteriaSO = (ICriteriaSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICriteriaSO.class);
+		CriteriaReqDTO reqDTO = new CriteriaReqDTO();
+		reqDTO.setLanguageCode(getFacesScopes().getUserLocale().getLanguage());
+		CriteriaResDTO resDTO = criteriaSO.retrieveCriteriaDescList(reqDTO);
+
+		for (PmCriteriaDesc pmCriteriaDesc : resDTO.getCriteriaDescList()) {
+			FlSupplierEvaluation evaluationCriteria = new FlSupplierEvaluation();
+			evaluationCriteria.setPmCriteria(pmCriteriaDesc.getPmCriteria());
+			evaluationCriteria.setFlFulfilmentNote(getManagedBean().getFulfilmentNote());
+			getManagedBean().getFulfilmentNote().getFlSupplierEvaluation().add(evaluationCriteria);
+		}
 	}
 	
-	/* public void combineSupAddress(FlFulfilmentRequest fulfilmentRequest){
-	    	
-	    	StringBuilder address = new StringBuilder();
-	    	String strSpace = " ";
-	    	if(null != fulfilmentRequest.getSupplierBranch()){
-	    		if(null != fulfilmentRequest.getSupplierBranch().getSmAddress()){
-	    			if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress1() ){
-	    	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress1());
-	    	    		address.append(strSpace);
-	    	    	
-	    	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress2()){
-	    	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress2());
-	    	    		address.append(strSpace);
-	    	    	
-	    	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress3() ){
-	    	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress3());
-	    	    		address.append(strSpace);
-	    	    	
-	    	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress4()){
-	    	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress4());
-	    	    		address.append(strSpace);
-	    	    		
-	    	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getPmDistrict().getDistrictName()){
-	    	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getPmDistrict().getDistrictName());
-	    	    		address.append(strSpace);
-	    	    	
-	    	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getPmState().getStateName()){
-	    	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getPmState().getStateName());
-	    	    		address.append(strSpace);
-	    	    	
-	    	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getPmCountry().getCountryName()){
-	    	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getPmCountry().getCountryName());
-	    	    		address.append("\n");
-	    	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getPostcode()){
-	    	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getPostcode());
-	    	    	}
-	    	    	if(null != address.toString()){
-	    	    		System.out.println("addresss     "+address.toString());
-	    	    	}
-	    			
-	    		}
-	    	}	
-	    	
-	    	this.getManagedBean().setSupplierAddress(address.toString());
-	    }*/
-	 
-	 public void retrieveReceivedAmt(FlFulfilmentNoteItem item) {
-			BigDecimal receivedAmt = new BigDecimal(0);
-			if(null != item.getReceivedQty()){
-				receivedAmt = item.getReceivedQty().multiply(item.getFlDelOrderItem().getFlFulfilmentItemAddr().getUnitPrice());
-			}
-			item.setReceivedAmt(receivedAmt);
+	public String getCriteriaDesc(PmCriteria pmCriteria) {
+		ICriteriaSO criteriaSO = (ICriteriaSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICriteriaSO.class);
+		CriteriaReqDTO reqDTO = new CriteriaReqDTO();
+		reqDTO.setLanguageCode(getFacesScopes().getUserLocale().getLanguage());
+		reqDTO.setCriteriaId(pmCriteria.getCriteriaId());
+		CriteriaResDTO resDTO = criteriaSO.retrieveCriteriaDescById(reqDTO);
+		return resDTO.getPmCriteriaDesc().getCriteria();
 	}
-	 public void onTabChange(int selectedTabIndex){
-			if(selectedTabIndex==2){
-				retrieveCriteriaList();
-				setClassName("@(.myFrnEvalClassName)");
+	
+	private void validateFulfilmentNote() {
+		if(getManagedBean().getFulfilmentNote().getReceivedDate()==null) {
+			throw new EpException(MessageConst.ERROR_100022, new String[]{"Actual Received Date"});
+		}
+		for(FlSupplierEvaluation supplierEvaluation : getManagedBean().getFulfilmentNote().getFlSupplierEvaluation()) {
+			if(supplierEvaluation.getScore()==null) {
+				throw new EpException(MessageConst.ERROR_100051, new String[]{"Score",getCriteriaDesc(supplierEvaluation.getPmCriteria())});
 			}
+		}
+		for(FlFulfilmentNoteItem frnItem : getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem()) {
+			if(frnItem.getReceivedQty().doubleValue() < frnItem.getFlDelOrderItem().getDeliveredQty().doubleValue()) {
+				frnItem.setRejectedQty(frnItem.getFlDelOrderItem().getDeliveredQty().subtract(frnItem.getReceivedQty()));
+				if(frnItem.getRejectionRemark()==null || frnItem.getRejectionRemark().length()==0) {
+					throw new EpException(MessageConst.ERROR_100051, new String[]{"Remark",frnItem.getFlDelOrderItem().getFlFulfilmentItemAddr().getScRequestItem().getItemName()});
+				}
+			}
+			if(frnItem.getReceivedAmt().doubleValue() < frnItem.getFlDelOrderItem().getDeliveredAmt().doubleValue()) {
+				frnItem.setRejectedAmt(frnItem.getFlDelOrderItem().getDeliveredAmt().subtract(frnItem.getReceivedAmt()));
+				if(frnItem.getRejectionRemark()==null || frnItem.getRejectionRemark().length()==0) {
+					throw new EpException(MessageConst.ERROR_100051, new String[]{"Remark",frnItem.getFlDelOrderItem().getFlFulfilmentItemAddr().getScRequestItem().getItemName()});
+				}
+			}			
+		}
 	}
-	 public void retrieveCriteriaList(){
-		 ICriteriaSO criteriaSO = (ICriteriaSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICriteriaSO.class);
-		 CriteriaReqDTO reqDTO = new CriteriaReqDTO();
-		 reqDTO.setLanguageCode(CommonConstants.DEFAULT_LANGUAGE_CODE);
-		 CriteriaResDTO resDTO = criteriaSO.retrieveCriteriaDescList(reqDTO);
-		 //If Evaluation Empty
-		 if(null==getManagedBean().getFulfilmentNote().getFlSupplierEvaluation()){
-			 getManagedBean().getFulfilmentNote().setFlSupplierEvaluation(new ArrayList<FlSupplierEvaluation>());
-		 }
-		 //Add Evaluation list based on the creiterias addded.
-		 List<FlSupplierEvaluation> addedCreiteriaList=new ArrayList<FlSupplierEvaluation>();
-		 for(PmCriteriaDesc pmCriteriaDesc : resDTO.getCriteriaDescList()){
-			
-			 boolean existed=false;
-			 for(FlSupplierEvaluation evaluation:getManagedBean().getFulfilmentNote().getFlSupplierEvaluation()){
-				 if(pmCriteriaDesc.getPmCriteria().getCriteriaId().equals(evaluation.getPmCriteria().getCriteriaId())){
-					 existed=true;
-					 break;
-				 }
-			 }
-			 if(!existed){
-				 FlSupplierEvaluation evaluationCriteria=new FlSupplierEvaluation();
-				 evaluationCriteria.setPmCriteria(pmCriteriaDesc.getPmCriteria());
-				 evaluationCriteria.setFlFulfilmentNote( getManagedBean().getFulfilmentNote());
-				 addedCreiteriaList.add(evaluationCriteria);
-			 }
-			 
-		 }
-		 if(!addedCreiteriaList.isEmpty()){
-			 getManagedBean().getFulfilmentNote().getFlSupplierEvaluation().addAll(addedCreiteriaList);
-		 }
-		 //getManagedBean().setCriteriaDescList(resDTO.getCriteriaDescList());
-		 resDTO.getCriteriaDescList();
-	 } 
 }

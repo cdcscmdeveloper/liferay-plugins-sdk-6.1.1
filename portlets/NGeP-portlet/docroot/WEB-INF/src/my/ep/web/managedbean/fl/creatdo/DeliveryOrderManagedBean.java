@@ -3,6 +3,7 @@
  */
 package my.ep.web.managedbean.fl.creatdo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -10,6 +11,7 @@ import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
+import my.ep.persistence.entity.fl.frn.FlFulfilmentNoteItem;
 import my.ep.persistence.entity.fl.order.FlDelOrderItem;
 import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
 import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
@@ -69,6 +71,7 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	private List <FlFulfilmentItemAddr>selectedItemRowList;
 	private FlFulfilmentItemAddr selectedItemAmountSection;
 	private List <FlFulfilmentItemAddr>selectedItemRowCalList;
+	private List<FlFulfilmentNoteItem> rejectionList;
 	
 	private String itemSelectedForCal; 
 	private int delQtyCal;
@@ -592,6 +595,17 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	 */
 	public void setSupplierDoRef(String supplierDoRef) {
 		this.supplierDoRef = supplierDoRef;
+	}
+
+	public List<FlFulfilmentNoteItem> getRejectionList() {
+		if(rejectionList==null) {
+			rejectionList = new ArrayList<FlFulfilmentNoteItem>();
+		}
+		return rejectionList;
+	}
+
+	public void setRejectionList(List<FlFulfilmentNoteItem> rejectionList) {
+		this.rejectionList = rejectionList;
 	}
 	
 }

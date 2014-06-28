@@ -39,7 +39,7 @@
 			<p:column>
 				<h:outputText value="Supplier DO. No." />
 				<p:spacer width="4" />
-				<p:inputText size="9" value="#{doDelAddress.flTempDoAddr.supplierDoRef}"></p:inputText>
+				<p:inputText size="9" maxlength="30" value="#{doDelAddress.flTempDoAddr.supplierDoRef}"></p:inputText>
 				<p:commandLink oncomplete="addRemarks.show();"
 					action="#{fulfilmentBackingBean.openAttachmentPage(doDelAddress)}"
 					update=":form:addRemarmAttachmentDialog">
@@ -80,7 +80,7 @@
 					</p:column>
 					<p:column headerText="Delivery &lt;br /&gt; Qty." style="text-align:right">
 						<h:panelGroup id="delQtyTxt">
-							<p:inputText value="#{doItems.deliveredQty}" size="5" styleClass="colFloatRight"
+							<p:inputText value="#{doItems.deliveredQty}" size="5" styleClass="colFloatRight" maxlength="14"
 								rendered="#{doItems.itemType.parameterCode eq ParameterConst.itemTypeProduct and createDOBackingBean.managedBean.docType eq 'PR' }">
 								<p:ajax event="blur" update="delQtyTxt,delAmountTxt" process="@this" listener="#{createDOBackingBean.retrieveDelAmount(doItems)}" />
 								<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, doItems.scRequestItem.uom.uomCode)}" />	
@@ -109,7 +109,7 @@
 								rendered="#{doItems.itemType.parameterCode eq ParameterConst.itemTypeProduct}">
 								<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 							</h:outputText>
-							<p:inputText value="#{doItems.deliveredAmt}" size="5"
+							<p:inputText value="#{doItems.deliveredAmt}" size="5" maxlength="15"
 								rendered="#{doItems.itemType.parameterCode eq ParameterConst.itemTypeService}">
 								<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 							</p:inputText>
@@ -136,9 +136,14 @@
 						</h:outputText>	
 					</p:column>					
 					<p:column headerText="Rejected &lt;br /&gt; Qty." style="text-align:right">
-						<h:outputText value="#{doItems.receivedQty}" >
+						<h:outputText value="#{doItems.rejectedQty}" >
 							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, doItems.scRequestItem.uom.uomCode)}" />
-						</h:outputText>						
+						</h:outputText>
+						<p:commandLink oncomplete="rejectionDialog.show();" rendered="#{doItems.rejectedQty > 0}"
+							action="#{createDOBackingBean.retrieveRejectionData(doItems)}" update=":form:rejectionDialog">
+							<f:setPropertyActionListener target="#{createDOBackingBean.managedBean.selectedItemRow}" value="#{doItems}" />
+							<p:graphicImage library="ep/images/design" name="document.png" value="/resources/ep/images/design/document.png"  />
+						</p:commandLink>												
 					</p:column>
 				</p:dataTable>
 
@@ -184,4 +189,37 @@
 			</p:commandButton>
 		</div>
 	</p:dialog>
+	
+	<p:dialog id="rejectionDialog" header="Rejection History" widgetVar="rejectionDialog" showEffect="fade" hideEffect="fade"
+		modal="true" height="350" width="800" resizable="false">
+		<table>
+			<tr>
+				<td><p:outputLabel value="Item Code" /></td>
+				<td><p:inputText disabled="true" value="#{createDOBackingBean.managedBean.selectedItemRow.scRequestItem.cmItem.extensionCode}" /> </td>
+				<td width="10"></td>
+				<td><p:outputLabel value="Item Name" /></td>
+				<td><p:inputText disabled="true" style="width: 400px;" value="#{createDOBackingBean.managedBean.selectedItemRow.scRequestItem.itemName}" /> </td>					
+			</tr>
+		</table>
+		<p:dataTable id="rejectionHistoryDt" var="frnItem" rowIndexVar="index" rowKey="#{frnItem}"
+			value="#{createDOBackingBean.managedBean.rejectionList}">
+			<ac:paginator for="rejectionHistoryDt" />
+			<p:column headerText="Del. Order No." >
+				<h:outputText value="#{frnItem.flDelOrderItem.flDeliveryOrder.deliveryOrderNo}" />
+			</p:column>
+			<p:column headerText="Remarks" style="white-space:normal;" >
+				<h:outputText value="#{frnItem.rejectionRemark}" />
+			</p:column>			
+			<p:column headerText="Rejected Qty." style="text-align:right;" >
+				<h:outputText value="#{frnItem.rejectedQty}" >
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, frnItem.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.uom.uomCode)}" />
+				</h:outputText>
+			</p:column>	
+			<p:column headerText="Amount (RM)" style="text-align:right;">
+				<h:outputText value="#{frnItem.rejectedAmt}" >
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+			</p:column>							
+		</p:dataTable>		
+	</p:dialog>	
 </ui:composition>

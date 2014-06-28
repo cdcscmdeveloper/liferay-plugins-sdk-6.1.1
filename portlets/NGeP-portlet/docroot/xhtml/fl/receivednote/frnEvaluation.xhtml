@@ -10,7 +10,7 @@
 		<br />
 		<table style="width: 100%">
 			<tr>
-				<td style="width: 110px;"><p:outputLabel
+				<td style="width: 150px;"><p:outputLabel
 						value="#{lbl['lbl.txt.business.reg.no']}" /></td>
 				<td><table style="width: 100%">
 						<tr>
@@ -19,7 +19,7 @@
 									disabled="true" /></td>
 							<td style="width: 109px;"><p:outputLabel
 									value="#{lbl['lbl.fl.supp.mof.no']}" /></td>
-							<td><p:inputText size="32"
+							<td><p:inputText size="23"
 									value="#{receivedNoteBackingBean.managedBean.fulfilmentRequest.smSupplier.smMofAccounts[0].mofNo}"
 									disabled="true" /></td>
 						</tr>
@@ -31,21 +31,26 @@
 						value="#{receivedNoteBackingBean.managedBean.fulfilmentNote.flRequest.flSupplierDtl.supplierName}" /></td>
 			</tr>
 		</table>
-		<p:dataTable id="suppEvalutionDt" var="suppEvalution"
-			rowKey="#{suppEvalution}"
+		<p:dataTable id="suppEvalutionDt" var="suppEvalution" rowKey="#{suppEvalution}"
 			value="#{receivedNoteBackingBean.managedBean.fulfilmentNote.flSupplierEvaluation}">
 			<ac:paginator for="suppEvalutionDt" />
 			<p:column headerText="Criteria">
-				<h:outputText value="#{suppEvalution.pmCriteria.pmCriteriaDescs[0].criteria}" />
+				<h:outputText value="#{receivedNoteBackingBean.getCriteriaDesc(suppEvalution.pmCriteria)}" />
 			</p:column>
-			<p:column headerText="Score" style="text-align:right">
-				<p:inputText value="#{suppEvalution.score}" styleClass="colFloatRight" id="score"
-					title="Score" required="true" />
+			<p:column headerText="* Score" style="text-align:right">
+				<p:inputText value="#{suppEvalution.score}" maxlength="1" styleClass="colFloatRight" id="score" label="Score" required="true" />
 				<p:message for="score" display="icon" />
 			</p:column>
 			<p:column headerText="Remarks">
-				<p:inputText value="#{suppEvalution.remark}"/>
+				<p:inputText value="#{suppEvalution.remark}" maxlength="255" style="width:450px" />
 			</p:column>
 		</p:dataTable>
+		<p:spacer height="20" />
+		<table>
+			<tr><td><b>Rating Scale</b></td></tr>
+			<tr><td>1 - 2 Non Satisfactory</td></tr>
+			<tr><td>3 - 4 Satisfactory</td></tr>
+			<tr><td>5     Very Satisfactory</td></tr>
+		</table>
 	</p:panel>
 </ui:composition>

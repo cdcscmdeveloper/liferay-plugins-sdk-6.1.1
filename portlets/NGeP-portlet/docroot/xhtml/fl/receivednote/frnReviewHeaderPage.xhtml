@@ -16,7 +16,8 @@
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.rev.hed.frn.rec.note.no']} " /></td>
 				<td class="header-info-text">
-					#{receivedNoteBackingBean.managedBean.fulfilmentNote.fulfilmentNoteNo}</td>
+					#{receivedNoteBackingBean.managedBean.fulfilmentNote.fulfilmentNoteNo == null ? '-- System Generated --':receivedNoteBackingBean.managedBean.fulfilmentNote.fulfilmentNoteNo}
+				</td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.rev.hed.ptj.name']} " />
 				</td>
 				<td class="header-info-text">
