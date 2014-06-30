@@ -88,7 +88,7 @@
 				<td rowspan="4" valign="top" style="width: 115px;"><p:outputLabel
 						value="#{lbl['lbl.fl.pm.payment.desc']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td rowspan="4"><p:inputTextarea cols="50" rows="6"
+				<td rowspan="4"><p:inputTextarea cols="50" rows="6" maxlength="255"
 						style=" margin-bottom:5px;" id="paymentDesc" label="PaymentDescription" required="true"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.description}" /><p:message for="paymentDesc" display="icon" /></td>
 				<td style="width: 100px;"><p:outputLabel
@@ -101,12 +101,12 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.pm.payment.date']}" /></td>
-				<td><p:inputText size="25" disabled="true">
+				<td><p:inputText size="25" disabled="true" value="#{paymentMatchBackingBean.managedBean.paymentAdvice.paymentDate}" >
 					</p:inputText></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.pm.payment.ref']}" /></td>
-				<td><p:inputText size="12" disabled="true" /></td>
+				<td><p:inputText size="12" disabled="true" value="#{paymentMatchBackingBean.managedBean.paymentAdvice.paymentRefNo}" /></td>
 			</tr>
 		</table>
 	</p:panel>

@@ -110,7 +110,7 @@
 							size="9" disabled="true" /> </td>
 					<td><p:outputLabel value="#{lbl['lbl.fl.charge.asset.ind']}" /></td>
 					<td><p:inputText
-							size="9" disabled="true" /></td>
+							size="9" disabled="true" value="#{paymentMatchBackingBean.managedBean.glAccountCode}"/></td>
 					<td><p:outputLabel
 							value="#{lbl['lbl.fl.charge.asset.gosodo']}" /></td>
 					<td><p:inputText
@@ -139,7 +139,7 @@
 							size="9" disabled="true" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.fl.charge.cp']}"
 							style="margin-bottom:15px;" /></td>
-					<td><p:inputText
+					<td><p:inputText value="#{paymentMatchBackingBean.getParameterDesc(ParameterTypeConst.financingType,paymentMatchBackingBean.managedBean.financingTypeCode)}"
 							size="9" disabled="true" /></td>
 
 				</tr>
