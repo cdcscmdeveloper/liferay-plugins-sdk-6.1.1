@@ -24,6 +24,7 @@ import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.fl.FulfilmentReqDTO;
@@ -44,8 +45,8 @@ import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmContact;
-import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.type.pm.AddressType;
@@ -183,9 +184,6 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			getManagedBean().getInvoice().setFlInvoiceItem(invoiceItemList);
 			
 			reqDTO.setInvoice(invoice);
-			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
-				action = "";
-			}
 			reqDTO.setOutcome(action);
 			reqDTO.setTaskId(getManagedBean().getTaskId());
 			System.out.println("getManagedBean().isDan(): "+getManagedBean().isDan());
@@ -214,15 +212,12 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 						FacesMessage.SEVERITY_INFO, 
 						null,
 						MessageUtils.getMessage(messageId, 
-								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_REQUEST), getManagedBean().getInvoice().getInvoiceNo()}, 
+								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_INVOICE), resDTO.getInvoiceNo()}, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, 
 								new FacesScopes().getUserLocale())));
 				if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
 					renewSesionObject();
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
-				}	
-				else {
-					throw new EpException("Failed.");
 				}
 			}
 			
@@ -264,11 +259,16 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			FulfilmentResDTO resDTO = new FulfilmentResDTO();
 			FLInvoiceDataType paymentObj = (FLInvoiceDataType)obj;
 			IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
-			//resDTO = invoiceSO.retrieveInvoice(flReqDTO);//if save button are exist
-			if(getManagedBean().getInvoice() == null){
+			
+			reqDTO.setFlOrderId(paymentObj.getFlOrderId());
+			resDTO = invoiceSO.retrieveInvoiceByFlOrderId(reqDTO);//if save button are exist
+			if(resDTO.getInvoice() == null){
 				getManagedBean().setInvoice(new FlInvoice());
 				getManagedBean().getInvoice().setFlInvoiceItem(new ArrayList<FlInvoiceItem>());
+			} else {
+				getManagedBean().setInvoice(resDTO.getInvoice());
 			}
+			
 			getManagedBean().setChargeLineItemRoot(null);
 			reqDTO.setFlRequestId(paymentObj.getFlRequestId());
 			resDTO = fulfilmentSO.retrieveFulfilmentRequest(reqDTO);
@@ -289,8 +289,16 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			if(getManagedBean().getInvoice().getFlFulfilmentOrder().isFactored()){
 				getFactoringBranchDtl(); 
 			}
+			
+			getManagedBean().setSelectedTabIndex(0);
+			if(getManagedBean().getInvoice().getStatus()==null) {
+				PmStatus pmStatus = new PmStatus();
+				pmStatus.setStatusId(FulfilmentStatusConst.IN_PENDING_INVOICE);
+				getManagedBean().getInvoice().setStatus(pmStatus);
+			}			
 		}
 	}
+	
 	public void factoringChecked(AjaxBehaviorEvent e) {
 		System.out.println("====enter process checked====");
 		// String dueDate = (String) ((UIOutput)e.getSource()).getValue();
@@ -340,6 +348,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 	
 	public void retrieveInvTotalAmount(FlFulfilmentItemAddr itemAddr){
 	   TreeNode root= getManagedBean().getChargeLineItemRoot();
+	   BigDecimal totalInvoiceAmt = new BigDecimal(0);
 	   for(TreeNode childNode:root.getChildren()){
 		   FlFulfilmentItemAddr data= (FlFulfilmentItemAddr)childNode.getData();
 		   BigDecimal invoiceTotalAmount=new BigDecimal(0);
@@ -354,13 +363,12 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 				   invoiceAmount=invoiceAmount.add(subData.getChargeInvAmt());
 			   }
 			   data.setChargeInvAmt(invoiceAmount);
-			   // do for inv Summary
-			  
+			   totalInvoiceAmt = totalInvoiceAmt.add(invoiceAmount);			  
 		   }
 	   }
-	   //canInvSummary();
-		
+	   getManagedBean().setInvAmtGrandTotal(totalInvoiceAmt);
 	}
+	
 	public void calInvSummary(){
 		if(null==getManagedBean().getChargeLineItemRoot()){
 			getManagedBean().populateChargeLineData();
@@ -433,9 +441,6 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 	
 	public void bankInfoActionListener() {
 		SmSupplierBank supplierBank = getManagedBean().getSupplierBankAccountMap().get(getManagedBean().getInvoice().getAccountNo());
-		
-		getManagedBean().getInvoice().setPaymentBank(new PmFinancialOrg());
-		
 		if(supplierBank!=null) {
 			getManagedBean().getInvoice().setPaymentBank(supplierBank.getPmFinancialOrg());
 		}

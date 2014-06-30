@@ -5,24 +5,6 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	<table>
-		<tr>
-			<td><p:outputLabel
-					value="For iteration1 - generate DAN Testing Purpose: " /></td>
-			<td><p:selectBooleanCheckbox
-					value="#{invoiceBackingBean.managedBean.dan}">
-					<p:ajax listener="#{invoiceBackingBean.test}" process="@this"></p:ajax>
-				</p:selectBooleanCheckbox></td>
-		</tr>
-		<tr>
-			<td><p:outputLabel
-					value="For interation1 - update DAN Testing Purpose: " /></td>
-			<td><p:selectBooleanCheckbox
-					value="#{invoiceBackingBean.managedBean.updateDan}">
-					<p:ajax listener="#{invoiceBackingBean.test}" process="@this"></p:ajax>
-				</p:selectBooleanCheckbox></td>
-		</tr>
-	</table>
 	<p:panel header="REQUEST DETAILS" toggleable="true">
 		<table>
 			<tr>
@@ -31,9 +13,9 @@
 				<td><p:inputText size="45"
 						value="#{invoiceBackingBean.managedBean.invoice.flRequest.issuedOrgProfile.parentOrgProfile.parentOrgProfile.orgName}"
 						disabled="true" /></td>
-				<td rowspan="3" valign="top" style="width: 140px;"><p:outputLabel
+				<td rowspan="2" valign="top" style="width: 140px;"><p:outputLabel
 						value="#{lbl['lbl.fl.title']}" /></td>
-				<td rowspan="3" colspan="3"><p:inputTextarea cols="40" rows="3"
+				<td rowspan="2" colspan="3"><p:inputTextarea cols="40" rows="2"
 						style=" margin-bottom:5px;"
 						value="#{invoiceBackingBean.managedBean.invoice.flRequest.title}"
 						disabled="true" /></td>
@@ -41,9 +23,9 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.prepared.ptj']}" /></td>
 				<td colspan="3"><p:inputText size="5" disabled="true"
-						value="#{invoiceBackingBean.managedBean.invoice.flRequest.preparedOrgProfile.orgProfileId}" />
-					<p:spacer width="5" /> <p:inputText size="34"
-						value="#{invoiceBackingBean.managedBean.invoice.flRequest.preparedOrgProfile eq null ? '' : invoiceBackingBean.managedBean.invoice.flRequest.preparedOrgProfile.orgName}"
+						value="#{invoiceBackingBean.managedBean.invoice.flRequest.preparedOrgProfile.pmOrgValidity.orgCode}" />
+					<p:spacer width="5" /> <p:inputText size="31"
+						value="#{invoiceBackingBean.managedBean.invoice.flRequest.preparedOrgProfile.orgName}"
 						disabled="true" /></td>
 			</tr>
 			<tr>
@@ -51,14 +33,14 @@
 				<td><p:inputText size="45"
 						value="#{invoiceBackingBean.managedBean.invoice.flRequest.requistioner.userName}"
 						disabled="true" /></td>
+				<td><h:outputLabel value="#{lbl['lbl.fl.factored']}" /></td>
+				<td><p:selectBooleanCheckbox disabled="true"
+						value="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factored}"></p:selectBooleanCheckbox></td>						
 			</tr>
 			<tr>			
 				<td><p:outputLabel value="#{lbl['lbl.fl.inv.contract.no']}" rendered="#{invoiceBackingBean.managedBean.invoice.flRequest.docType eq 'CR'}" /></td>
 				<td><p:commandLink value="ContractNo" rendered="#{invoiceBackingBean.managedBean.invoice.flRequest.docType eq 'CR'}">
 					</p:commandLink></td>
-				<td><h:outputLabel value="#{lbl['lbl.fl.factored']}" /></td>
-				<td><p:selectBooleanCheckbox disabled="true"
-						value="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factored}"></p:selectBooleanCheckbox></td>
 			</tr>
 		</table>
 	</p:panel>
@@ -69,11 +51,11 @@
 						value="#{lbl['lbl.fl.supp.ep.no']}" /></td>
 				<td><table style="width: 100%">
 						<tr>
-							<td style="width: 25px;"><p:inputText size="15"
+							<td style="width: 25px;"><p:inputText size="15" value="#{invoiceBackingBean.managedBean.invoice.flRequest.smSupplier.regNo}"
 									disabled="true" /></td>
 							<td style="width: 65px;"><p:outputLabel
 									value="#{lbl['lbl.fl.supp.mof.no']}" /></td>
-							<td><p:inputText size="15" disabled="true" /></td>
+							<td><p:inputText size="9" value="#{invoiceBackingBean.managedBean.invoice.flRequest.smSupplier.smMofAccounts[0].mofNo}" disabled="true" /></td>
 						</tr>
 					</table></td>
 				<td style="width: 100px;"><p:outputLabel
@@ -81,16 +63,13 @@
 						rendered="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factored eq 'false'}" />
 					<p:outputLabel value="*" styleClass="mandatory"
 						rendered="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factored eq 'false'}" /></td>
-				<td><p:selectOneMenu id="accountId" label="AccountNo"
-						required="true"
+				<td><p:selectOneMenu id="accountId" label="AccountNo" required="true"
 						rendered="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factored eq 'false'}"
 						style="width:210px;margin-bottom: 5px;"
 						value="#{invoiceBackingBean.managedBean.invoice.accountNo}">
 						<f:selectItem itemLabel="-Select One-" itemValue="#{null}" />
-						<f:selectItems
-							value="#{invoiceBackingBean.populateBankAccountList}" />
-						<p:ajax event="change" process="@this"
-							update="suppDetPnl,suppName"
+						<f:selectItems value="#{invoiceBackingBean.populateBankAccountList}" />
+						<p:ajax event="change" update="suppBankName"
 							listener="#{invoiceBackingBean.bankInfoActionListener}" />
 					</p:selectOneMenu> <p:message for="accountId" display="icon" /></td>
 			</tr>
@@ -101,7 +80,7 @@
 				<td style="width: 140px;"><p:outputLabel
 						rendered="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factored eq 'false'}"
 						value="#{lbl['lbl.fl.payment.bank.name']}" /></td>
-				<td><p:inputText size="45" disabled="true"
+				<td><p:inputText size="45" disabled="true" id="suppBankName"
 						rendered="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factored eq 'false'}"
 						value="#{invoiceBackingBean.managedBean.invoice.paymentBank.finOrgName}" /></td>
 			</tr>
@@ -113,7 +92,7 @@
 			<tr>
 				<td valign="top" style="width: 137px;"><p:outputLabel
 						value="Address" /></td>
-				<td><p:inputTextarea rows="5" cols="45"
+				<td><p:inputTextarea rows="5" cols="47"
 						style="margin-bottom:5px;" disabled="true"
 						value="#{invoiceBackingBean.getFullAddress(invoiceBackingBean.managedBean.invoice.flRequest.flSupplierDtl.smAddress)}" /></td>
 			</tr>
@@ -122,12 +101,12 @@
 						value="#{lbl['lbl.fl.supp.telno']}" /></td>
 				<td><table style="width: 100%">
 						<tr>
-							<td style="width: 25px;"><p:inputText size="15"
+							<td style="width: 25px;"><p:inputText size="13"
 									disabled="true"
 									value="#{invoiceBackingBean.managedBean.invoice.flRequest.flSupplierDtl.phoneNo}" /></td>
 							<td style="width: 65px;"><p:outputLabel
 									value="#{lbl['lbl.fl.supp.faxno']}" /></td>
-							<td><p:inputText size="15" disabled="true"
+							<td><p:inputText size="11" disabled="true"
 									value="#{invoiceBackingBean.managedBean.invoice.flRequest.flSupplierDtl.faxNo}" /></td>
 						</tr>
 					</table></td>

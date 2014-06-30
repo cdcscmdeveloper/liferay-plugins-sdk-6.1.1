@@ -41,7 +41,7 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private FlInvoice invoice = new FlInvoice();
+	private FlInvoice invoice;
 	private FlInvoiceItem invItem = new FlInvoiceItem();
 	
 	private String DocProcess;
@@ -158,10 +158,10 @@ public class InvoiceManagedBean extends BaseManagedBean {
 				BigDecimal totalInvAmt=new BigDecimal(0);
 				for(FlFulfilmentItemAddr itemAddr:itemAddress){
 					new DefaultTreeNode(itemAddr.getScRequestItem().getRequestNoteItemId().toString(),itemAddr,childItemNode);
-					totalOrderAmt=totalOrderAmt.add(itemAddr.getChargeOrderedAmt());
-					totalReceiveAmt=totalReceiveAmt.add(itemAddr.getChargeReceivedAmt());
+					totalOrderAmt=totalOrderAmt.add(itemAddr.getOrderedAmt());
+					totalReceiveAmt=totalReceiveAmt.add(itemAddr.getReceivedAmt());
 					//totalRecallAmt=totalRecallAmt.add(itemAddr.getChargeRecalledAmt());
-					totalInvAmt=totalInvAmt.add(itemAddr.getChargeReceivedAmt());
+					totalInvAmt=totalInvAmt.add(itemAddr.getReceivedAmt());
 				}
 				flItemAddress.setChargeOrderedAmt(totalOrderAmt);
 				flItemAddress.setChargeReceivedAmt(totalReceiveAmt);
@@ -197,6 +197,7 @@ public class InvoiceManagedBean extends BaseManagedBean {
 		itemAddress.setOrderedAmt(flFulfilmentItemAddr.getOrderedAmt());
 		itemAddress.setReceivedQty(flFulfilmentItemAddr.getReceivedQty());
 		itemAddress.setReceivedAmt(flFulfilmentItemAddr.getReceivedAmt());
+		itemAddress.setScRequestItem(flFulfilmentItemAddr.getScRequestItem());
 		//itemAddress.setRecalledAmt(flFulfilmentItemAddr.getRecalledAmt());
 		//itemAddress.setRecalledQty(flFulfilmentItemAddr.getRecalledQty());
 		/*if("N".equalsIgnoreCase(flFulfilmentItemAddr.getCoaValue()) || null==flFulfilmentItemAddr.getCoaValue()){
