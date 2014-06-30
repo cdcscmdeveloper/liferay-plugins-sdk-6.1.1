@@ -926,7 +926,8 @@ public class SpecificationBackingBean extends
 										.constuctPanelTreeNodes(ctPanelZone));
 
 					}
-				}else {
+				}
+				else if(scQt.isPanel() && !scQt.isZonal()){
 					retriveZonesByCircularNo();
 
 			} 
