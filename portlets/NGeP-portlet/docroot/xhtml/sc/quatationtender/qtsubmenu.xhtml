@@ -13,7 +13,7 @@
 					activeIndex="#{qTDetailBB.managedBean.activeIndex}"
 					style="display : table-caption;">
 					<p:menuitem value="#{lbl['lbl.qt.qtdetails']}"
-						action="#{qTDetailBB.retrieveQuationTenderDetails(null)}"
+						action="#{qTDetailBB.retrieveQuationTenderDetails(qTDetailBB.managedBean.qt.qtId)}"
 						update="@form" />
 					<p:menuitem value="#{lbl['lbl.so.committee.appointment']}"
 						action="#{qTDetailBB.retrieveCommitteeAppointmentTabDtl}"

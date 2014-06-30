@@ -43,10 +43,11 @@
 				style="width: 15%">
 				<ui:fragment rendered="#{committeeapprover.PNP}">
 					<h:outputText value="Chairperson"
-						rendered="#{committeeapprover.memberRole eq 'C'}" />
+						rendered="#{committeeapprover.memberRole.parameterId == '583'}" />
 				</ui:fragment>
 				<ui:fragment rendered="#{!committeeapprover.PNP}">
-					<p:selectOneMenu value="#{committeeapprover.memberRole}"
+					<p:selectOneMenu
+						value="#{committeeapprover.memberRole.parameterId}"
 						style="width: 110px;margin-bottom: 5px;">
 						<f:selectItems
 							value="#{approvalBackingBean.managedBean.roleTypes}" />
