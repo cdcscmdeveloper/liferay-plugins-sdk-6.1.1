@@ -44,7 +44,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 
 	private String assignment = "ALL";
 	
-	private String docType = "ALL";
+	private String docType = "";
 
 	private int showIndex = 0;
 	
@@ -193,8 +193,11 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				BpmRequestDTO reqDTO = new BpmRequestDTO();
 				reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
 				reqDTO.setOffset(calculateFinalOffSet(getPageNo()));
-				reqDTO.setState("ASSIGNED"); // TODO : ADD filter for state and
-												// set do variable
+				reqDTO.setState("ASSIGNED"); // TODO : ADD filter for state and set do variable
+//				if(!getDocType().isEmpty()){
+				  reqDTO.setDocType(getDocType());
+//				}
+												
 				reqDTO.setViewBy(getViewBy());
 				reqDTO.setAssignment(getAssignment());
 				reqDTO.setCtxToken(token);
