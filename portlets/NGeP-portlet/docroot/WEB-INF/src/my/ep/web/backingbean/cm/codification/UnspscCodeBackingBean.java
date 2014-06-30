@@ -1105,12 +1105,12 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 	}
 
-	public void submitToBPM(){
+	public String submitToBPM(){
 		FacesContext facesContext = FacesContext.getCurrentInstance();
 		if(this.getManagedBean().getRequestExtCodeList()==null || this.getManagedBean().getRequestExtCodeList().isEmpty()){
 			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,null, MessageUtils.getMessage(MessageConst.ERROR_715004,
 					MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
-			return;
+			return null;
 		}
 
 
@@ -1144,6 +1144,8 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 		facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,null, MessageUtils.getMessage(MessageConst.INFO_710001,
 				MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
+		
+		return "extensionSearch";
 
 	}
 
@@ -1154,9 +1156,6 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		CodificationResDTO resDTO = null;
 
 		if(!this.getManagedBean().getRequestExtCode().isRequestType()){
-
-
-			System.out.println("getSelectedType().getTypeId()"+this.getManagedBean().getSelectedType().getTypeId());
 
 			this.getManagedBean().getRequestExtCode().setTypeName(this.getManagedBean().getSelectedType().getTypeName());
 			this.getManagedBean().getRequestExtCode().setTypeId(this.getManagedBean().getSelectedType().getTypeId());
@@ -1172,15 +1171,12 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 		if(!this.getManagedBean().getRequestExtCode().isRequestColor()){
 
-
 			this.getManagedBean().getRequestExtCode().setColorName(this.getManagedBean().getSelectedColor().getColorName());
 			this.getManagedBean().getRequestExtCode().setColorId(this.getManagedBean().getSelectedColor().getColorId());
 
 		}
 
 		if(!this.getManagedBean().getRequestExtCode().isRequestMeasurement()){
-
-
 
 			this.getManagedBean().getRequestExtCode().setMeasurementId(this.getManagedBean().getSelectedMeasurement().getMeasurementId());
 			this.getManagedBean().getRequestExtCode().setMeasurementName(this.getManagedBean().getSelectedMeasurement().getMeasurementName());
@@ -1865,6 +1861,8 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 		System.out.println("query:::::::::::::::::::::::::::::: " + query);
 		List<CmType> suggestions = new ArrayList<CmType>();  
+		
+		log.info("this.getManagedBean().getTypeList() = "+this.getManagedBean().getTypeList().size());
 
 		for(CmType type: this.getManagedBean().getTypeList()){
 			if(type.getTypeName().startsWith(query)){
