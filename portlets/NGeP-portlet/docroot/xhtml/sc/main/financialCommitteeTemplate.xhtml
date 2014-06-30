@@ -10,7 +10,7 @@
 	<ui:define name="resourceSection">
 	</ui:define>
 
-	<p:messages id="templateMaintenancemessages" showDetail="true" showSummary="false"
+	<p:messages id="committeeFinancialmessages" showDetail="true" showSummary="false"
 		autoUpdate="true" closable="true" />
 	<ui:define name="contentSection">
 
@@ -23,7 +23,7 @@
 				style="float:right;" icon="ui-icon-cancel"
 				action="#{specificationBackingBean.committeeBackAction}"></p:commandButton>
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
-				style="float:right;"
+				style="float:right;" update="@all"
 				action="#{specificationBackingBean.saveEditTemplateSpec}"
 				icon="ui-icon-save" />
 
