@@ -32,7 +32,6 @@ import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
-import my.ep.exception.EpException;
 import my.ep.jaxb.fl.invoice.FLInvoiceDataType;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
@@ -50,6 +49,7 @@ import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.type.pm.AddressType;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -137,51 +137,6 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 				getManagedBean().populateChargeLineData();
 				calInvSummary();
 			}
-			TreeNode root= getManagedBean().getChargeLineItemRoot();
-			List<FlInvoiceItem> invoiceItemList=new ArrayList<FlInvoiceItem>();
-			   for(TreeNode childNode:root.getChildren()){
-				   FlInvoiceItem invoiceItem=new FlInvoiceItem();
-				   
-				   BigDecimal orderedQty=new BigDecimal(0);
-				   BigDecimal receivedQty=new BigDecimal(0);
-				   BigDecimal recallQty=new BigDecimal(0);
-				   BigDecimal orderAmount=new BigDecimal(0);
-				   BigDecimal receivedAmount=new BigDecimal(0);
-				   BigDecimal recallAmount=new BigDecimal(0);
-				   BigDecimal invoiceAmount=new BigDecimal(0);
-				   FlFulfilmentItem flItem=null;
-				   for(TreeNode subNode:childNode.getChildren()){
-					   FlFulfilmentItemAddr subData=(FlFulfilmentItemAddr)subNode.getData();
-					   flItem=subData.getFlFulfilmentItem();
-					   orderedQty= orderedQty.add(subData.getChargeOrderedQty());
-					   receivedQty=receivedQty.add(subData.getChargeReceivedQty());
-					   if(null==subData.getChargeRecalledQty()){
-						   //recallQty=recallQty.add(new BigDecimal(0));
-						   subData.setChargeRecalledQty(new BigDecimal(0));
-					   }
-					   recallQty=recallQty.add(subData.getChargeRecalledQty());
-					   orderAmount=orderAmount.add(subData.getChargeOrderedAmt());
-					   receivedAmount=receivedAmount.add(subData.getChargeReceivedAmt());
-					   if(null==subData.getChargeRecalledAmt()){
-						   //recallQty=recallQty.add(new BigDecimal(0));
-						   subData.setChargeRecalledAmt(new BigDecimal(0));
-					   }
-					   recallAmount=recallAmount.add(subData.getChargeRecalledAmt());
-					   invoiceAmount=invoiceAmount.add(subData.getChargeInvAmt());
-				   }
-				   invoiceItem.setOrderedQty(orderedQty);
-				   invoiceItem.setReceivedQty(receivedQty);
-				   invoiceItem.setRecalledQty(recallQty);
-				   invoiceItem.setOrderedAmt(orderAmount);
-				   invoiceItem.setReceivedAmt(receivedAmount);
-				   invoiceItem.setRecalledAmt(recallAmount);
-				   invoiceItem.setInvAmt(invoiceAmount);
-				   invoiceItem.setFlFulfilmentItem(flItem);
-				   invoiceItem.setFlInvoice(invoice);
-				   invoiceItemList.add(invoiceItem);
-			   }
-			   
-			getManagedBean().getInvoice().setFlInvoiceItem(invoiceItemList);
 			
 			reqDTO.setInvoice(invoice);
 			reqDTO.setOutcome(action);
@@ -191,11 +146,10 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			reqDTO.setUpdateDan(getManagedBean().isUpdateDan());
 			reqDTO.setToken(token);
 			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
-			if(!flBB.getManagedBean().getRemarkList().isEmpty()){
-				reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
-			}
+			reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
 			
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
+			reqDTO.setUserRole(getUserRole());
 			if("UPDATE".equalsIgnoreCase(action)){
 				reqDTO.setPmUser(getManagedBean().getPmUser());
 				if(null != getManagedBean().getInvoice().getSupplierInvoiceRef()){
@@ -208,6 +162,9 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			}
 			if(resDTO.isSuccessful()) {
 				String messageId = MessageConst.INFO_700026;
+				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
+					messageId = MessageConst.INFO_700004;
+				}
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
 						FacesMessage.SEVERITY_INFO, 
 						null,
@@ -218,13 +175,31 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 				if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
 					renewSesionObject();
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
+				} else {
+					getManagedBean().setInvoice(resDTO.getInvoice());
+					flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
+					if(getManagedBean().getInvoice().getFlFulfilmentOrder().isFactored()){
+						getFactoringBranchDtl(); 
+					}
 				}
 			}
-			
 		}finally {
 			invoiceSO = null;
 		}
 		return null;
+	}
+	
+	private String getUserRole() {		
+		if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())) 
+			return RoleCode.MOF_SUPPLIER_ADMIN.value();
+		else if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value()))
+			return RoleCode.MOF_SUPPLIER_USER.value();
+		else if(getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value()))
+			return RoleCode.BASIC_SUPPLIER_ADMIN.value();
+		else if(getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value()))
+			return RoleCode.BASIC_SUPPLIER_USER.value();
+		else 
+			return null;
 	}
 
 	public void test(){
@@ -262,30 +237,26 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			
 			reqDTO.setFlOrderId(paymentObj.getFlOrderId());
 			resDTO = invoiceSO.retrieveInvoiceByFlOrderId(reqDTO);//if save button are exist
+			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+			flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
+			
 			if(resDTO.getInvoice() == null){
 				getManagedBean().setInvoice(new FlInvoice());
 				getManagedBean().getInvoice().setFlInvoiceItem(new ArrayList<FlInvoiceItem>());
+				reqDTO.setFlRequestId(paymentObj.getFlRequestId());
+				resDTO = fulfilmentSO.retrieveFulfilmentRequest(reqDTO);
+				getInvoiceTable(resDTO);				
 			} else {
 				getManagedBean().setInvoice(resDTO.getInvoice());
 			}
 			
 			getManagedBean().setChargeLineItemRoot(null);
-			reqDTO.setFlRequestId(paymentObj.getFlRequestId());
-			resDTO = fulfilmentSO.retrieveFulfilmentRequest(reqDTO);
-			getInvoiceTable(resDTO);
 			getManagedBean().setDocType(resDTO.getFlFulfilmentRequest().getDocType());
-			
 			getManagedBean().setTaskId(taskId);
 			getManagedBean().setOutComes(outcome);
 			
-			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
-			flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());//TODO remove comment after remark is fix
-//			getManagedBean().getInvoice().getFlFulfilmentOrder().setFlFulfilmentRequest(resDTO.getFlFulfilmentRequest());
 			getManagedBean().getInvoice().setFlFulfilmentOrder(resDTO.getFlFulfilmentRequest().getFlFulfilmentOrder());
-			resDTO.getFlFulfilmentRequest().getFlSupplierDtl().getContactMobileNo();
 			getManagedBean().getInvoice().setFlRequest(resDTO.getFlFulfilmentRequest());
-			reqDTO.setFlOrderId(paymentObj.getFlOrderId());
-			getManagedBean().getInvoice().setStatus(invoiceSO.retrieveInvoiceStatus(reqDTO).getPmStatus());
 			if(getManagedBean().getInvoice().getFlFulfilmentOrder().isFactored()){
 				getFactoringBranchDtl(); 
 			}
@@ -308,7 +279,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 
 	}
 	
-	public void getInvoiceTable(FulfilmentResDTO resDTO){
+	private void getInvoiceTable(FulfilmentResDTO resDTO){
 		for(FlFulfilmentItem item : resDTO.getFlFulfilmentRequest().getFlFulfilmentItems()){
 			FlInvoiceItem invoiceItem = new FlInvoiceItem();
 			BigDecimal sumOrderedQty = new BigDecimal(0);
@@ -327,7 +298,6 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 					for(FlStopInstrItem stopInstrItem : itemAddr.getStopInstrItems()){
 						sumRecalledQty = sumRecalledQty.add(stopInstrItem.getRecalledQty());
 						sumRecalledAmt = sumRecalledAmt.add(stopInstrItem.getRecalledAmt());
-						
 					}
 				}
 			}
@@ -338,63 +308,53 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			invoiceItem.setReceivedQty(sumReceivedQty);
 			invoiceItem.setReceivedAmt(sumReceivedAmt);
 			invoiceItem.setInvAmt(sumReceivedAmt);
-			if(null == getManagedBean().getInvoice().getFlInvoiceItem()){
-				getManagedBean().getInvoice().setFlInvoiceItem(new ArrayList<FlInvoiceItem>());
-				
-			}
 			getManagedBean().getInvoice().getFlInvoiceItem().add(invoiceItem);
 		}
 	}
 	
-	public void retrieveInvTotalAmount(FlFulfilmentItemAddr itemAddr){
-	   TreeNode root= getManagedBean().getChargeLineItemRoot();
+	public void retrieveInvTotalAmount(FlInvoiceItem flInvoiceItem){
 	   BigDecimal totalInvoiceAmt = new BigDecimal(0);
-	   for(TreeNode childNode:root.getChildren()){
-		   FlFulfilmentItemAddr data= (FlFulfilmentItemAddr)childNode.getData();
+	   for(TreeNode childNode : getManagedBean().getChargeLineItemRoot().getChildren()){
+		   FlInvoiceItem data= (FlInvoiceItem) childNode.getData();
 		   BigDecimal invoiceTotalAmount=new BigDecimal(0);
-		   data.getChargeInvAmt();
-		   invoiceTotalAmount=invoiceTotalAmount.add( data.getChargeInvAmt());
+		   invoiceTotalAmount=invoiceTotalAmount.add(data.getInvAmt());
 		   
-		   //Comarision item address using unique identifier.
-		   if(itemAddr.getScRequestItem().getRequestNoteItemId() == data.getScRequestItem().getRequestNoteItemId()){
+		   if(flInvoiceItem.getFlFulfilmentItem().getCmItem().getItemId().longValue() == data.getFlFulfilmentItem().getCmItem().getItemId().longValue()){
 			   BigDecimal invoiceAmount=new BigDecimal(0);
 			   for(TreeNode subNode:childNode.getChildren()){
-				   FlFulfilmentItemAddr subData=(FlFulfilmentItemAddr)subNode.getData();
-				   invoiceAmount=invoiceAmount.add(subData.getChargeInvAmt());
+				   FlInvoiceItem subData=(FlInvoiceItem)subNode.getData();
+				   invoiceAmount=invoiceAmount.add(subData.getInvAmt());
 			   }
-			   data.setChargeInvAmt(invoiceAmount);
+			   data.setInvAmt(invoiceAmount);
 			   totalInvoiceAmt = totalInvoiceAmt.add(invoiceAmount);			  
 		   }
 	   }
 	   getManagedBean().setInvAmtGrandTotal(totalInvoiceAmt);
 	}
 	
-	public void calInvSummary(){
-		if(null==getManagedBean().getChargeLineItemRoot()){
+	public void calInvSummary() {
+		if (null == getManagedBean().getChargeLineItemRoot()) {
 			getManagedBean().populateChargeLineData();
 		}
-		TreeNode root= getManagedBean().getChargeLineItemRoot();
-		 BigDecimal invoiceTotalAmount=new BigDecimal(0);
-		 BigDecimal orderTotalAmount=new BigDecimal(0);
-		   for(TreeNode childNode:root.getChildren()){
-			   FlFulfilmentItemAddr data= (FlFulfilmentItemAddr)childNode.getData();
-			   data.getChargeInvAmt();
-			   invoiceTotalAmount=invoiceTotalAmount.add( data.getChargeInvAmt());
-			   orderTotalAmount =orderTotalAmount.add(data.getChargeOrderedAmt());
-		   }
-		   System.out.println("invoiceTotalAmount::: "+invoiceTotalAmount);
-		   getManagedBean().getInvoice().setInvoiceAmtOri(orderTotalAmount);
-		   getManagedBean().getInvoice().setInvoiceAmtNew(invoiceTotalAmount);
-		   getManagedBean().setServiceCharge("0.4");
-		   BigDecimal serviceFee=new BigDecimal(0.4);
-		   BigDecimal percentage=new BigDecimal(100);
-		   BigDecimal invMulty=new BigDecimal(0.0);
-		   BigDecimal feeAmount=new BigDecimal(0.0);
-		   invMulty=invoiceTotalAmount.multiply(serviceFee);
-		   feeAmount=invMulty.divide(percentage);
-		   getManagedBean().getInvoice().setFeeAmt(feeAmount);
-		   getManagedBean().getInvoice().setSupplierOrFactorAmt(invoiceTotalAmount.subtract(feeAmount));
-		  // getManagedBean().getInvoice().setInvoiceAmtNew(feeAmount);
+		TreeNode root = getManagedBean().getChargeLineItemRoot();
+		BigDecimal invoiceTotalAmount = new BigDecimal(0);
+		BigDecimal orderTotalAmount = new BigDecimal(0);
+		for (TreeNode childNode : root.getChildren()) {
+			FlInvoiceItem data = (FlInvoiceItem) childNode.getData();
+			invoiceTotalAmount = invoiceTotalAmount.add(data.getInvAmt());
+			orderTotalAmount = orderTotalAmount.add(data.getOrderedAmt());
+		}
+		getManagedBean().getInvoice().setInvoiceAmtOri(orderTotalAmount);
+		getManagedBean().getInvoice().setInvoiceAmtNew(invoiceTotalAmount);
+		getManagedBean().setServiceCharge("0.4");
+		BigDecimal serviceFee = new BigDecimal(0.4);
+		BigDecimal percentage = new BigDecimal(100);
+		BigDecimal invMulty = new BigDecimal(0.0);
+		BigDecimal feeAmount = new BigDecimal(0.0);
+		invMulty = invoiceTotalAmount.multiply(serviceFee);
+		feeAmount = invMulty.divide(percentage);
+		getManagedBean().getInvoice().setFeeAmt(feeAmount);
+		getManagedBean().getInvoice().setSupplierOrFactorAmt(invoiceTotalAmount.subtract(feeAmount));
 	}
 	
 	public void onTabChange(int selectedTabIndex){

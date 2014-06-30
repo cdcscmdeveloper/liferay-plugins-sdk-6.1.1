@@ -15,11 +15,9 @@ import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.fl.payment.FlInvoice;
 import my.ep.persistence.entity.fl.payment.FlInvoiceItem;
-import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -36,9 +34,6 @@ import org.primefaces.model.TreeNode;
 @SessionScoped
 public class InvoiceManagedBean extends BaseManagedBean {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
 	private FlInvoice invoice;
@@ -57,11 +52,9 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	// Inv Items
 	private TreeNode chargeLineItemRoot ;
 	private FlFulfilmentItemAddr chargeLineSelectedItemAddress;
-	//private  List<TreeNode> selectedNodes;
 	private TreeNode[] selectedNodes;
 	private TreeNode selectedNode;
 	private FlFulfilmentItemAddr selectedItemChargeSection;
-	//private Long pmPrjSetia;
 	
 	//grand total
 	private BigDecimal orderedAmtGrandTotal ;
@@ -82,136 +75,56 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	private String contactPerson;
 	private String contactPhoneNo;
 	
-	
 	private FlFulfilmentRequest fulfilmentRequest;
 	
 	public void populateChargeLineData(){
-		 this.chargeLineItemRoot = new DefaultTreeNode("root", null);
-			Map<Long, List<FlFulfilmentItemAddr>> chargeLineItemsMap=processChargeLineItems();
-			prepareChargeLineTreeNode(chargeLineItemsMap,chargeLineItemRoot);
-	}
-	public Map<Long, List<FlFulfilmentItemAddr>> processChargeLineItems(){
-		Map<Long, List<FlFulfilmentItemAddr>> chargeLineItemsMap=new HashMap<Long, List<FlFulfilmentItemAddr>>();
-			if(null !=this.getFulfilmentRequest().getFlDeliveryAddresses()){
-				for(FlDeliveryAddress  deliveryAddress :this.getInvoice().getFlFulfilmentOrder().getFlFulfilmentRequest().getFlDeliveryAddresses()){	
-					if(null!=deliveryAddress.getFlFulfilmentItemAddr()){
-						for(FlFulfilmentItemAddr itemAddress:deliveryAddress.getFlFulfilmentItemAddr()){
-							itemAddress.setChargeOrderedAmt(itemAddress.getOrderedAmt());
-							itemAddress.setChargeOrderedQty(itemAddress.getOrderedQty());
-							itemAddress.setChargeReceivedAmt(itemAddress.getReceivedAmt());
-							itemAddress.setChargeReceivedQty(itemAddress.getReceivedQty());
-							//itemAddress.setChargeRecalledAmt(itemAddress.getRecalledAmt());
-							//itemAddress.setChargeRecalledQty(itemAddress.getRecalledQty());
-							if(null==itemAddress.getChargeInvAmt()){
-								itemAddress.setChargeInvAmt(itemAddress.getReceivedAmt());
-							}
-							itemAddress.setChargeUnitPrice(itemAddress.getUnitPrice());
-							if(chargeLineItemsMap.containsKey(itemAddress.getScRequestItem().getRequestNoteItemId())){
-								//code for calculating duplicate charge line order amount and quantity for same unit price 
-								//Condition for checking unit price same.
-								boolean notContained=true;
-								for(FlFulfilmentItemAddr containedItem:chargeLineItemsMap.get(itemAddress.getScRequestItem().getRequestNoteItemId())){
-									if(containedItem.getChargeUnitPrice().equals(itemAddress.getUnitPrice())){
-										//BigDecimal chargeOrderedAmt=containedItem.getChargeOrderedAmt();
-										containedItem.setChargeOrderedAmt( containedItem.getChargeOrderedAmt().add(itemAddress.getOrderedAmt()));
-										containedItem.setChargeOrderedQty(containedItem.getChargeOrderedQty().add(itemAddress.getOrderedQty()));
-										containedItem.setChargeReceivedAmt(containedItem.getChargeReceivedAmt().add(itemAddress.getReceivedAmt()));
-										containedItem.setChargeReceivedQty(containedItem.getChargeReceivedQty().add(itemAddress.getReceivedQty()));
-										//containedItem.setChargeRecalledAmt(containedItem.getChargeRecalledAmt().add(itemAddress.getRecalledAmt()));
-										//containedItem.setChargeRecalledQty(containedItem.getChargeRecalledQty().add(itemAddress.getRecalledQty()));
-										containedItem.setChargeInvAmt(containedItem.getChargeInvAmt().add(itemAddress.getChargeInvAmt()));
-										notContained=false;
-									}
-								}
-								if(notContained){
-									chargeLineItemsMap.get(itemAddress.getScRequestItem().getRequestNoteItemId()).add(itemAddress);
-								}
-							} else {
-								List<FlFulfilmentItemAddr> itemAddressList=new ArrayList<FlFulfilmentItemAddr>();
-								itemAddressList.add(itemAddress);
-								//Copy order amount ,qty to charge line fields and set.
-								chargeLineItemsMap.put(itemAddress.getScRequestItem().getRequestNoteItemId(),itemAddressList);
-							}
-						}
-					}
-				}
+		this.chargeLineItemRoot = new DefaultTreeNode("root", null);
+		
+		Map<Long, List<FlInvoiceItem>> invoiceItemsMap = new HashMap<Long, List<FlInvoiceItem>>();
+		List<FlInvoiceItem> flInvoiceItemList = null;
+		for (FlInvoiceItem flInvoiceItem : invoice.getFlInvoiceItem()) {
+			if (invoiceItemsMap.containsKey(flInvoiceItem.getFlFulfilmentItem().getCmItem().getItemId())) {
+				flInvoiceItemList = invoiceItemsMap.get(flInvoiceItem.getFlFulfilmentItem().getCmItem().getItemId());
+			} else {
+				flInvoiceItemList = new ArrayList<FlInvoiceItem>();
 			}
-			return chargeLineItemsMap;
-		}
-	
-	
-	private void prepareChargeLineTreeNode(
-			Map<Long, List<FlFulfilmentItemAddr>> chargeLineItemsMap,TreeNode chargeLineItemRoot) {
-		BigDecimal grandTotalOrderAmt=new BigDecimal(0);
-		BigDecimal grandTotalReceivedAmt=new BigDecimal(0);
-		BigDecimal grandTotalInvAmt=new BigDecimal(0);
-		for(Entry<Long, List<FlFulfilmentItemAddr>> itemEntry:chargeLineItemsMap.entrySet()){
-			List<FlFulfilmentItemAddr> itemAddress=itemEntry.getValue();
-			FlFulfilmentItemAddr flItemAddress=getFulfilmentItemAddress(itemAddress.get(0));
-			if(null!=flItemAddress){
-				//Do create New Item Address and copy the first element data manually.
-				
-				TreeNode childItemNode=new DefaultTreeNode(flItemAddress.getScRequestItem().getRequestNoteItemId().toString(),flItemAddress,chargeLineItemRoot);
-				BigDecimal totalOrderAmt=new BigDecimal(0);
-				BigDecimal totalReceiveAmt=new BigDecimal(0);
-				BigDecimal totalRecallAmt=new BigDecimal(0);
-				BigDecimal totalInvAmt=new BigDecimal(0);
-				for(FlFulfilmentItemAddr itemAddr:itemAddress){
-					new DefaultTreeNode(itemAddr.getScRequestItem().getRequestNoteItemId().toString(),itemAddr,childItemNode);
-					totalOrderAmt=totalOrderAmt.add(itemAddr.getOrderedAmt());
-					totalReceiveAmt=totalReceiveAmt.add(itemAddr.getReceivedAmt());
-					//totalRecallAmt=totalRecallAmt.add(itemAddr.getChargeRecalledAmt());
-					totalInvAmt=totalInvAmt.add(itemAddr.getReceivedAmt());
-				}
-				flItemAddress.setChargeOrderedAmt(totalOrderAmt);
-				flItemAddress.setChargeReceivedAmt(totalReceiveAmt);
-				flItemAddress.setChargeRecalledAmt(totalRecallAmt);
-				flItemAddress.setChargeInvAmt(totalReceiveAmt);
-				grandTotalOrderAmt=grandTotalOrderAmt.add(totalOrderAmt);
-				setOrderedAmtGrandTotal(grandTotalOrderAmt);
-				grandTotalReceivedAmt=grandTotalReceivedAmt.add(totalReceiveAmt);
-				setReceivedAmtGrandTotal(grandTotalReceivedAmt);
-				grandTotalInvAmt=grandTotalInvAmt.add(totalReceiveAmt);
-				setInvAmtGrandTotal(grandTotalInvAmt);
-			}
-			//this.getInvoice().setInvoiceAmtOri(totalReceiveAmt);
-		}
-	}
-	
-	private FlFulfilmentItemAddr getFulfilmentItemAddress(
-			FlFulfilmentItemAddr flFulfilmentItemAddr) {
-		FlFulfilmentItemAddr itemAddress = new FlFulfilmentItemAddr();
-		// Do Convertions
-
-		//itemAddress.setFlFulfilmentItem(new FlFulfilmentItem());
-		//itemAddress.getFlFulfilmentItem().setScRequestNoteDtl(new ScRequestNoteDtl());
-		//itemAddress.getFlFulfilmentItem().getScRequestNoteDtl().setScRequestSupplierItem(new ScRequestSupplierItem());
-		//itemAddress.getFlFulfilmentItem().getScRequestNoteDtl().getScRequestSupplierItem().setRequestNoteItem(new ScRequestItem());
-		itemAddress.setScRequestItem(new ScRequestItem());
-		itemAddress.setParent(true);
-		itemAddress.getScRequestItem().setRequestNoteItemId(flFulfilmentItemAddr.getScRequestItem().getRequestNoteItemId());
-		itemAddress.getScRequestItem().setItemType(flFulfilmentItemAddr.getScRequestItem().getItemType());
-		itemAddress.getScRequestItem().setItemName(flFulfilmentItemAddr.getScRequestItem().getItemName());
-		itemAddress.setUnitPrice(flFulfilmentItemAddr.getUnitPrice());
-		itemAddress.setOrderedQty(flFulfilmentItemAddr.getOrderedQty());
-		itemAddress.setOrderedAmt(flFulfilmentItemAddr.getOrderedAmt());
-		itemAddress.setReceivedQty(flFulfilmentItemAddr.getReceivedQty());
-		itemAddress.setReceivedAmt(flFulfilmentItemAddr.getReceivedAmt());
-		itemAddress.setScRequestItem(flFulfilmentItemAddr.getScRequestItem());
-		//itemAddress.setRecalledAmt(flFulfilmentItemAddr.getRecalledAmt());
-		//itemAddress.setRecalledQty(flFulfilmentItemAddr.getRecalledQty());
-		/*if("N".equalsIgnoreCase(flFulfilmentItemAddr.getCoaValue()) || null==flFulfilmentItemAddr.getCoaValue()){
-			itemAddress.setCoaValue("N");
-		}*/
-		if(null !=flFulfilmentItemAddr.getPmVotFund()){
-			if(null !=flFulfilmentItemAddr.getPmVotFund().getVotFundId()){
-			itemAddress.setCoaValue("Y");
-			}
-		}else{
-			itemAddress.setCoaValue("N");
+			flInvoiceItemList.add(flInvoiceItem);
+			invoiceItemsMap.put(flInvoiceItem.getFlFulfilmentItem().getCmItem().getItemId(), flInvoiceItemList);
 		}
 		
-		return itemAddress;
+		BigDecimal grandTotalOrderAmt = new BigDecimal(0);
+		BigDecimal grandTotalReceivedAmt = new BigDecimal(0);
+		BigDecimal grandTotalInvAmt = new BigDecimal(0);
+		for(Entry<Long, List<FlInvoiceItem>> itemEntry : invoiceItemsMap.entrySet()){
+			List<FlInvoiceItem> invoiceItems = itemEntry.getValue();
+			FlInvoiceItem flInvoiceItem = (FlInvoiceItem) invoiceItems.get(0).cloneEntity(); // parent entity, no need stored in DB.
+			flInvoiceItem.setParent(true);
+			TreeNode childItemNode = new DefaultTreeNode(flInvoiceItem.getFlFulfilmentItem().getCmItem().getItemId().toString(), flInvoiceItem, chargeLineItemRoot);
+			
+			BigDecimal totalOrderAmt = new BigDecimal(0);
+			BigDecimal totalReceiveAmt = new BigDecimal(0);
+			BigDecimal totalRecallAmt = new BigDecimal(0);
+			BigDecimal totalInvAmt = new BigDecimal(0);
+			for(FlInvoiceItem chargeLineItem : invoiceItems) {
+				new DefaultTreeNode(chargeLineItem.getFlFulfilmentItem().getCmItem().getItemId().toString(),chargeLineItem,childItemNode);
+				totalOrderAmt=totalOrderAmt.add(chargeLineItem.getOrderedAmt());
+				totalReceiveAmt=totalReceiveAmt.add(chargeLineItem.getReceivedAmt());
+				totalRecallAmt=totalRecallAmt.add(chargeLineItem.getRecalledAmt());
+				totalInvAmt=totalInvAmt.add(chargeLineItem.getInvAmt());
+			}			
+
+			flInvoiceItem.setOrderedAmt(totalOrderAmt);
+			flInvoiceItem.setReceivedAmt(totalReceiveAmt);
+			flInvoiceItem.setRecalledAmt(totalRecallAmt);
+			flInvoiceItem.setInvAmt(totalInvAmt);
+			
+			grandTotalOrderAmt = grandTotalOrderAmt.add(totalOrderAmt);
+			grandTotalReceivedAmt = grandTotalReceivedAmt.add(totalReceiveAmt);
+			grandTotalInvAmt = grandTotalInvAmt.add(totalInvAmt);
+		}
+		setOrderedAmtGrandTotal(grandTotalOrderAmt);
+		setReceivedAmtGrandTotal(grandTotalReceivedAmt);
+		setInvAmtGrandTotal(grandTotalInvAmt);
 	}
 	
 	/**
