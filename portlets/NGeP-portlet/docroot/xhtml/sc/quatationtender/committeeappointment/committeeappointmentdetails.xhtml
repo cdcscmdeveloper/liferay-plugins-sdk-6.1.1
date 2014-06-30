@@ -19,7 +19,9 @@
 		</table>
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.so.clonebtn']}"
-				onclick="screen2.show();" process="@this" icon="ui-icon-clone" />
+				actionListener="#{qTCommitteBackingBean.cloneCommitteePopupAction}"
+				oncomplete="screen2.show();" process="@this" icon="ui-icon-clone"
+				update="@(.cloneCommitteMember)" />
 		</div>
 
 		<ui:include src="committeeappointmenttabList.xhtml" />

@@ -45,10 +45,7 @@
 				rowKey="#{bankstmt}" rowIndexVar="rowIndex">
 
 				<p:column headerText="#{lbl['lbl.sc.sp.month']}">
-					<h:outputText value="#{bankstmt.stmtDate}">
-						<f:convertDateTime
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</h:outputText>
+					<h:outputText value="#{bankstmt.month}" />
 
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.sp.amount']}">

@@ -48,7 +48,7 @@
 			<p:column headerText="#{lbl['lbl.sc.spec.category.type']}"
 				style="width:20%">
 				<h:outputText
-					value="#{restrcitedCateGory.pmCategoryL3.categoryTypeCode.parameterId}" />
+					value="#{qTSupplierQulCriteriaBackingBean.getParameterDesc(restrcitedCateGory.pmCategoryL3.categoryTypeCode)}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.so.mandatory']}">

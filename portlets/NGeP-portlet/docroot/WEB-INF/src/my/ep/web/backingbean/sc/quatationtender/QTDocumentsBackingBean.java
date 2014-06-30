@@ -509,12 +509,12 @@ public class QTDocumentsBackingBean extends
 		IQTTemplateSO qtTemplateSO = null;
 		try {
 			QTTemplateDocReqDTO qtTemplateReqDTO = new QTTemplateDocReqDTO();
+			//List<ScQtDoc> qtDocList = this.getManagedBean().getScQtDocs();
 			ScQtDoc qtDoc = this.getManagedBean().getQtDoc();
-			/*ScQtCheckList checklist = this.getManagedBean().getQtDoc()
-					.getScQtCheckList();*/
-			//checklist.setTitle(qtDoc.getTplSpecMaster().getSpecName());
-			qtTemplateReqDTO.setScQtDoc(qtDoc);
-			qtTemplateReqDTO.getScQtDoc().getTplDocMaster().setCategoryId(1l);
+			qtDoc.getTplDocMaster().setCategoryId(1l);
+			List<ScQtDoc> docs = new ArrayList<ScQtDoc>();
+			docs.add(qtDoc);
+			qtTemplateReqDTO.setScQtDoc(docs);
 			qtTemplateSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTTemplateSO.class);
 

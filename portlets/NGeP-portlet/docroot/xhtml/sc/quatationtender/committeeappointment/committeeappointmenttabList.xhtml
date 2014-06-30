@@ -32,7 +32,7 @@
 						value="#{committeeApproval.scQtCommittee.scCommittee}" />
 
 					<ui:param name="selectedMembersList"
-						value="#{qTCommitteBackingBean.managedBean.selectedCommitteMemebers}" />
+						value="#{committeeApproval.members}" />
 
 					<ui:include src="specificationCommitteeDetails.xhtml" />
 
@@ -44,14 +44,13 @@
 							update="@(.scAddMember)" icon="ui-icon-add" />
 
 						<p:commandButton value="#{lbl['lbl.so.delete']}"
-							icon="ui-icon-delete"
-							action="#{qTCommitteBackingBean.deleteSpecificationCommittee}"
+							actionListener="#{qTCommitteBackingBean.deleteSpecificationCommittee}"
 							update="specificationcommitteeid" />
 
 						<p:commandButton value="#{lbl['lbl.so.clone.to.tec']}"
-							process="@this"
+							process="@this" update="specificationcommitteeid"
 							rendered="#{committeeApproval.titleName eq 'Specification Committee'}"
-							action="#{qTCommitteBackingBean.addCloneToTecDtl(committeeApproval.scQtCommittee)}" />
+							action="#{qTCommitteBackingBean.addCloneToTecDtl(committeeApproval.scQtCommittee.scCommittee)}" />
 					</div>
 				</ui:fragment>
 

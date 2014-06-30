@@ -34,6 +34,7 @@ import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
+import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
@@ -48,10 +49,14 @@ import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierZone;
+import my.ep.persistence.entity.sm.SmCompanyAddress;
+import my.ep.persistence.entity.sm.SmCompanyBasic;
+import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.AddressType;
 import my.ep.web.backingbean.sc.directpurchase.LocationDTO;
 import my.ep.web.managedbean.sc.quationtender.Node;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
@@ -125,27 +130,33 @@ public class QTSupplierQulCriteriaBackingBean extends
 				.getSuppCriteriarestrictedList();
 		if (scQtCategories == null) {
 			scQtCategories = new ArrayList<ScQtCategory>();
-			this.getManagedBean().setSuppCriteriarestrictedList(scQtCategories);
+			
 		}
 		ScQtCategory category = new ScQtCategory();
 		category.setPmCategoryL1(new PmCategoryL1());
 		category.setPmCategoryL2(new PmCategoryL2());
 		category.setPmCategoryL3(new PmCategoryL3());
 		scQtCategories.add(category);
+		this.getManagedBean().setSuppCriteriarestrictedList(scQtCategories);
 	}
 
 	public void deleteRestrictedCategoryAction() {
 		debugLogger("deleteRestrictedCategoryAction");
-		List<ScQtCategory> categoriesList = getManagedBean()
+		List<ScQtCategory> restrictedList = this.getManagedBean()
 				.getSuppCriteriarestrictedList();
-		List<ScQtCategory> selectedcategoriesList = getManagedBean()
+		if (null == restrictedList) {
+			restrictedList = new ArrayList<ScQtCategory>();
+		}
+		List<ScQtCategory> restrictedSelectList = this.getManagedBean()
 				.getSelectedRestrictedCategoryList();
-		if (categoriesList.size() == selectedcategoriesList.size()) {
-			categoriesList.clear();
+		if (null == restrictedSelectList) {
+			restrictedSelectList = new ArrayList<ScQtCategory>();
+		}
+		if (restrictedList.size() == restrictedSelectList.size()) {
+			restrictedList.clear();
 		} else {
-			for (ScQtCategory scQtCategory : selectedcategoriesList) {
-				categoriesList.remove(scQtCategory);
-			}
+			for (ScQtCategory category : restrictedSelectList)
+				restrictedList.remove(category);
 		}
 	}
 
@@ -1050,24 +1061,17 @@ public class QTSupplierQulCriteriaBackingBean extends
 	}
 
 	public void retriveZoneBySupplier(NodeSelectEvent event) {
-		/*
-		 * CtCircularZone circularZone = (CtCircularZone) event.getTreeNode()
-		 * .getData();
-		 */
+		CtPanelZone ctPanelzone = (CtPanelZone) event.getTreeNode().getData();
 		PanelSupplierReqDTO reqDTO = new PanelSupplierReqDTO();
-		/*
-		 * System.out.println("====ctzone id===" +
-		 * circularZone.getCircularZoneId());
-		 */
-		reqDTO.setCircularZoneId(1L);
+		reqDTO.setCircularZoneId(ctPanelzone.getPanelZoneId());
 		IPanelSupplierSO panelSupplierSO = (IPanelSupplierSO) BusinessDelegate
 				.getInstance().getServiceObject(
 						ModuleCodeConst.CONTRACT_MANAGEMENT,
 						IPanelSupplierSO.class);
 		PanelSupplierResDTO resDTO = panelSupplierSO
 				.retrieveSupplierByZone(reqDTO);
-		if (resDTO.getPanelSuppliers() != null) {
-			System.out.println(resDTO.getPanelSuppliers());
+		if (null != resDTO.getPanelSuppliers()
+				&& !resDTO.getPanelSuppliers().isEmpty()) {
 			this.getManagedBean().setTotalSupplier(
 					resDTO.getPanelSuppliers().size());
 			this.getManagedBean().setCtZoneSupplierList(
@@ -1083,5 +1087,27 @@ public class QTSupplierQulCriteriaBackingBean extends
 
 	public void showSupplierDetails() {
 		debugLogger("showSupplierDetails");
+		
+		ScQtSupplier qtSupplier = this.getManagedBean().getScQtSupplier();
+		List<SmPersonnel> list = qtSupplier.getSmSupplier().getSmAppl().getSmPersonnels();
+		
+		for (SmPersonnel smPersonnel : list) {
+			getManagedBean().setPersonnel(smPersonnel);
+		}
+		SmPersonnel supplierHQPersonnel = this.getManagedBean().getPersonnel();
+		SmCompanyBasic smCompanyBasic = supplierHQPersonnel.getSmAppl().getSmCompanyBasic();
+		
+		//System.out.println("INcomeTax No : " + smCompanyBasic.getIncomeTaxNo());
+		for (SmCompanyAddress smCompanyAddress : smCompanyBasic.getSmCompanyAddresses()) {
+			if (AddressType.CONTACT_ADDRESS.value().equals(smCompanyAddress.getAddressType())) {
+				log.info("found hq address");
+
+				getManagedBean().setSupplierBranch("HQ");
+				getManagedBean().setSupplierAddress(smCompanyAddress.getSmAddress());
+				getManagedBean().setSupplierContact(supplierHQPersonnel.getName());
+				getManagedBean().setSupplierEmail(supplierHQPersonnel.getEmail());
+				break;
+			}
+		}
 	}
 }

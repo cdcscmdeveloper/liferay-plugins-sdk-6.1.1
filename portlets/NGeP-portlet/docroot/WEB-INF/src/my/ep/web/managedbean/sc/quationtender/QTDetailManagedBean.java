@@ -61,7 +61,9 @@ import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScRemark;
+import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmMofAccount;
+import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.pm.RoleCode;
@@ -170,7 +172,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private TreeNode[] selectedNodes;
 	private TreeNode[] selectedLocNodes;
 	private TreeNode[] selectedAddrNodes;
-	private TreeNode ctZoneSuppliers;
+	private List<TreeNode> ctZoneSuppliers=new  ArrayList<TreeNode>();
 
 	private List<CtPanelSupplier> ctZoneSupplierList;
 
@@ -207,6 +209,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private String circularName;
 	private String itemName;
 	private String circularCoverage;
+	private Date circularExpDate;
 
 	// For Restricted Tender Search Criteria
 	private String supplierName;
@@ -221,6 +224,13 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<SmSupplier> selectedSupplierList;
 	private List<ScQtSupplier> qtSupplierList;
 	private List<ScQtSupplier> selectedQtSupplierList;
+	private List<SmPersonnel> smPersonnelsList;
+	private SmPersonnel personnel;
+
+	private String supplierBranch;
+	private String supplierContact;
+	private String supplierEmail;
+	private SmAddress supplierAddress;
 
 	// supplier Qualification Criteria List and variables
 	private List<ScQtCategory> suppCriteriarestrictedList;
@@ -318,6 +328,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private Date createdDt;
 	private String selectedCommitte;
 	private TreeNode searchcommitteeNode;
+	private TreeNode selectSearchcommitteeNode;
 	private String evaluationType = "2";
 
 	private ScQt selectedCloneTender;
@@ -1792,6 +1803,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.searchcommitteeNode = searchcommitteeNode;
 	}
 
+	public TreeNode getSelectSearchcommitteeNode() {
+		return selectSearchcommitteeNode;
+	}
+
+	public void setSelectSearchcommitteeNode(TreeNode selectSearchcommitteeNode) {
+		this.selectSearchcommitteeNode = selectSearchcommitteeNode;
+	}
+
 	public String getCommitteNo() {
 		return committeNo;
 	}
@@ -1897,11 +1916,11 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.zonesList = zonesList;
 	}
 
-	public TreeNode getCtZoneSuppliers() {
+	public List<TreeNode> getCtZoneSuppliers() {
 		return ctZoneSuppliers;
 	}
 
-	public void setCtZoneSuppliers(TreeNode ctZoneSuppliers) {
+	public void setCtZoneSuppliers(List<TreeNode> ctZoneSuppliers) {
 		this.ctZoneSuppliers = ctZoneSuppliers;
 	}
 
@@ -2290,6 +2309,62 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setPmAddress(PmAddress pmAddress) {
 		this.pmAddress = pmAddress;
+	}
+
+	public String getSupplierBranch() {
+		return supplierBranch;
+	}
+
+	public void setSupplierBranch(String supplierBranch) {
+		this.supplierBranch = supplierBranch;
+	}
+
+	public String getSupplierContact() {
+		return supplierContact;
+	}
+
+	public void setSupplierContact(String supplierContact) {
+		this.supplierContact = supplierContact;
+	}
+
+	public String getSupplierEmail() {
+		return supplierEmail;
+	}
+
+	public void setSupplierEmail(String supplierEmail) {
+		this.supplierEmail = supplierEmail;
+	}
+
+	public SmAddress getSupplierAddress() {
+		return supplierAddress;
+	}
+
+	public void setSupplierAddress(SmAddress supplierAddress) {
+		this.supplierAddress = supplierAddress;
+	}
+
+	public List<SmPersonnel> getSmPersonnelsList() {
+		return smPersonnelsList;
+	}
+
+	public void setSmPersonnelsList(List<SmPersonnel> smPersonnelsList) {
+		this.smPersonnelsList = smPersonnelsList;
+	}
+
+	public SmPersonnel getPersonnel() {
+		return personnel;
+	}
+
+	public void setPersonnel(SmPersonnel personnel) {
+		this.personnel = personnel;
+	}
+
+	public Date getCircularExpDate() {
+		return circularExpDate;
+	}
+
+	public void setCircularExpDate(Date circularExpDate) {
+		this.circularExpDate = circularExpDate;
 	}
 
 }

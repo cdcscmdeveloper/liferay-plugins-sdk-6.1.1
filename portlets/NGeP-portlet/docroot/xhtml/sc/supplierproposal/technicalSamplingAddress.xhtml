@@ -120,7 +120,7 @@
 				value="#{supplierProposalDetailBackingBean.managedBean.scQtSampleItemList}"
 				styleClass="sampleitemdtl" rowKey="#{sampleitemdtl}">
 				<p:column headerText="#{lbl['lbl.sc.sp.item']}">
-					<h:outputText />
+					<h:outputText value="#{sampleitemdtl.scRequestItem.tplSpecQuestion.clItem}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.sp.extensionno']}">
 					<h:outputText value="#{sampleitemdtl.subLableNo}" />

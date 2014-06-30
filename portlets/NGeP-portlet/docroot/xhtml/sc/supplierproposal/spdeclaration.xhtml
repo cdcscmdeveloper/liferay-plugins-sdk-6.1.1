@@ -7,6 +7,12 @@
 
 	<p:panel header="#{lbl['lbl.sc.sp.header.integrity']}"
 		toggleable="true">
-		
+		<p:selectBooleanCheckbox style="margin-right: 5px;" />
+		<h:outputLabel value="#{lbl['lbl.sc.sp.integrity.note']}" />
 	</p:panel>
+	<p:panel header="#{lbl['lbl.sc.sp.others']}" toggleable="true">
+		<p:selectBooleanCheckbox style="margin-right: 5px;" />
+		<p:outputLabel value="#{lbl['lbl.sc.sp.others.note']}" />
+	</p:panel>
+
 </ui:composition>

@@ -3,6 +3,7 @@ package my.ep.web.bean.sc.quatationtender;
 import java.util.List;
 
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
+import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproverSettings;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
@@ -19,12 +20,14 @@ public class TabBean {
 	private List<ScQtApproval> scQtApprovalList;
 	private ScQtCommittee scQtCommittee;
 
+	private List<ScCommitteeMember> members;
+
 	public TabBean(String titleName, ScQtApproval scQtApproval,
 			DualListModel<ScQtApproverSettings> budgetApprovalUsers) {
 		this.titleName = titleName;
 		this.scQtApproval = scQtApproval;
 		this.budgetApprovalUsers = budgetApprovalUsers;
-		
+
 	}
 
 	public TabBean(String titleName, ScQtApproval scQtApproval) {
@@ -36,12 +39,12 @@ public class TabBean {
 		this.titleName = titleName;
 		this.scCommittee = scCommittee;
 	}
-	
+
 	public TabBean(String titleName, List<ScQtApproval> scQtApprovalList) {
 		this.titleName = titleName;
 		this.scQtApprovalList = scQtApprovalList;
 	}
-	
+
 	public TabBean(String titleName, ScQtCommittee scQtCommittee) {
 		this.titleName = titleName;
 		this.scQtCommittee = scQtCommittee;
@@ -83,7 +86,8 @@ public class TabBean {
 		return budgetApprovalUsers;
 	}
 
-	public void setBudgetApprovalUsers(DualListModel<ScQtApproverSettings> budgetApprovalUsers) {
+	public void setBudgetApprovalUsers(
+			DualListModel<ScQtApproverSettings> budgetApprovalUsers) {
 		this.budgetApprovalUsers = budgetApprovalUsers;
 	}
 
@@ -91,7 +95,8 @@ public class TabBean {
 		return selectedApproverList;
 	}
 
-	public void setSelectedApproverList(List<ScQtApproverSettings> selectedApproverList) {
+	public void setSelectedApproverList(
+			List<ScQtApproverSettings> selectedApproverList) {
 		this.selectedApproverList = selectedApproverList;
 	}
 
@@ -109,6 +114,14 @@ public class TabBean {
 
 	public void setScQtCommittee(ScQtCommittee scQtCommittee) {
 		this.scQtCommittee = scQtCommittee;
+	}
+
+	public List<ScCommitteeMember> getMembers() {
+		return members;
+	}
+
+	public void setMembers(List<ScCommitteeMember> members) {
+		this.members = members;
 	}
 
 }
