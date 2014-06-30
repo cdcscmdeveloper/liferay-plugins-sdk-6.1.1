@@ -38,6 +38,7 @@ import my.ep.jaxb.fl.podata.FLPurchaseOrderDataType;
 import my.ep.jaxb.fl.stopfullfillmentdata.FLStopFullfillmentDataType;
 import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
 import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
+import my.ep.persistence.entity.fl.order.FlTempDoAddr;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
@@ -216,6 +217,11 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 		getManagedBean().setFulfilmentOrder(getManagedBean().getSelectedFlOrder());
 
 		DeliveryOrderBackingBean doMB = new DeliveryOrderBackingBean();
+		for(FlDeliveryAddress delAddr : resDTO.getFlFulfilmentRequest().getFlDeliveryAddresses()){
+			if(null == delAddr.getFlTempDoAddr()){
+				delAddr.setFlTempDoAddr(new FlTempDoAddr());
+			}
+		}
 		doMB.getManagedBean().setFulfilmentRequest(resDTO.getFlFulfilmentRequest());
 		doMB.getManagedBean().setDocType(resDTO.getFlFulfilmentRequest().getDocType());
 		doMB.getManagedBean().setStatusDesc(statusDesc);
