@@ -19,10 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import my.ep.biz.service.fl.invoice.IInvoiceSO;
 import my.ep.biz.service.fl.payment.IPaymentMatchSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
-import my.ep.biz.service.pm.common.glaccount.IGlAccountSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
-import my.ep.biz.service.pm.common.programactivity.IProgramActivitySO;
-import my.ep.biz.service.pm.common.projectsetia.IProjectSetiaSO;
 import my.ep.biz.service.pm.common.votfund.IVotFundSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
@@ -37,13 +34,8 @@ import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
-import my.ep.dto.pm.common.programactivity.ProgramActivityReqDTO;
-import my.ep.dto.pm.common.programactivity.ProgramActivityResDTO;
-import my.ep.dto.pm.common.projectsetia.ProjectSetiaReqDTO;
-import my.ep.dto.pm.common.projectsetia.ProjectSetiaResDTO;
 import my.ep.dto.pm.common.votfund.VotFundReqDTO;
 import my.ep.dto.pm.common.votfund.VotFundResDTO;
-import my.ep.exception.EpException;
 import my.ep.jaxb.fl.payment.instruction.FLPaymentInstructionDataType;
 import my.ep.persistence.entity.fl.payment.FlInvoiceItem;
 import my.ep.persistence.entity.fl.payment.FlPaymentAdvice;
@@ -122,7 +114,6 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			getManagedBean().setFulfilmentRequest(new FlFulfilmentRequest());
 			getManagedBean().getFulfilmentRequest().setFlDeliveryAddresses(new ArrayList<FlDeliveryAddress>());
 		}
-		//getManagedBean().populateChargeLineData();
 	}
 	
 
@@ -161,9 +152,6 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			paymentSO = (IPaymentMatchSO) BusinessDelegate.getInstance().getServiceObject("fl",IPaymentMatchSO.class);
 			reqDTO.setPaymentAdvice(paymentAdvice);
 			
-			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
-				action = "";
-			}
 			reqDTO.setOutcome(action);
 			reqDTO.setTaskId(getManagedBean().getTaskId());
 			reqDTO.setToken(token);
@@ -178,23 +166,14 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 						FacesMessage.SEVERITY_INFO, 
 						null,
 						MessageUtils.getMessage(messageId, 
-								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_REQUEST), getManagedBean().getPaymentAdvice().getPaymentAdviceNo()}, 
+								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_INVOICE), resDTO.getPaymentAdvice().getPaymentAdviceNo()}, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, 
 								new FacesScopes().getUserLocale())));
+				if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
+					renewSesionObject();
+					return CommonUIConst.ACKNOWLEDGE_PAGE;
+				}
 			}
-			if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
-				renewSesionObject();
-				return CommonUIConst.ACKNOWLEDGE_PAGE;
-			}	
-			else {
-				throw new EpException("Failed.");
-			}
-			
-			
-		} catch (Exception e) {
-			log.error("Exception>>", e);
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		}finally {
 			paymentSO = null;
 		}
@@ -210,14 +189,12 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		System.out.println("taskId:" + taskId);
 		IParameterSO parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IParameterSO.class);
 		IVotFundSO votFundSO = (IVotFundSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IVotFundSO.class);
-		IGlAccountSO glAccountSO = (IGlAccountSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IGlAccountSO.class);
 		if(taskId != null){
 
 			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 					.getServiceObject(IBpmSO.class);
 			String ctx = getFacesScopes().getBPMAuthenticationCtxToken();
 			BpmRequestDTO reqDTO = new BpmRequestDTO();
-
 			reqDTO.setCtxToken(ctx);
 			reqDTO.setTaskId(taskId);
 			BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
@@ -317,7 +294,6 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
 			if(!resDTO.getAddressTypeList().isEmpty()){
 				getManagedBean().setSupplierAddress(getFullAddress(resDTO.getAddressTypeList().get(0).getPmAddress()));
-				
 				getManagedBean().setPhoneNo(resDTO.getAddressTypeList().get(0).getPmAddress().getPhoneNo());
 				getManagedBean().setFaxNo(resDTO.getAddressTypeList().get(0).getPmAddress().getFaxNo());
 				if(resDTO.getAddressTypeList().get(0).getPmContacts() != null ){
@@ -353,7 +329,7 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		}
 		if(selectedTabIndex==3){
 			calPmSummary();
-			setClassName("@(.pmSummaryTabId)");
+			setClassName("@(.pmSummaryPnlClass)");
 		}
 	}
 	
@@ -376,57 +352,33 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			for(TreeNode children:selectedNode.getChildren()){
 				FlFulfilmentItemAddr childData=((FlFulfilmentItemAddr)children.getData());
 				if(null !=childData.getPmVotFund()){
-					String votFundCode = votFundCodeMap.get(childData.getPmVotFund().getVotFundId()).getVotFundCode();
+					String votFundCode = childData.getPmVotFund().getVotFundCode();
 					getManagedBean().setVotFundCode(votFundCode);
 				}
-				
 				if(childData.getAssetInd()!=null) {
 					getManagedBean().setAssetIndCode(childData.getAssetInd().getParameterCode());
 				}
-					
 				if(childData.getPmGlAccount()!=null) {
-					String glAccountCode = glAccountCodeMap.get(childData.getPmGlAccount().getGlAccountId()).getGlAccCode();
+					String glAccountCode = childData.getPmGlAccount().getGlAccCode();
 					getManagedBean().setGlAccountCode(glAccountCode);
 				}
-				
 				if(childData.getPmPrgActivity()!=null) {
-					if(progmActivityCodeMap.size()==0) {
-						IProgramActivitySO programActivitySO = (IProgramActivitySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IProgramActivitySO.class);
-						ProgramActivityReqDTO reqDTO = new ProgramActivityReqDTO();
-						reqDTO.setVotFundId(childData.getPmVotFund().getVotFundId());
-						ProgramActivityResDTO resDTO = programActivitySO.retrieveProgramActivityList(reqDTO);
-						
-						for (PmPrgActivity pmPrgActivity : resDTO.getPrgActivityList()) {
-							progmActivityCodeMap.put(pmPrgActivity.getPrgActivityId(), pmPrgActivity);
-						}
-					}
-					String progActvCode = progmActivityCodeMap.get(childData.getPmPrgActivity().getPrgActivityId()).getPrgActivityCode();
+					String progActvCode = childData.getPmPrgActivity().getPrgActivityCode();
 					getManagedBean().setPrgActivityCode(progActvCode);
 				}
-				
 				if(childData.getPmSubSetia()!=null) {
-					if(subSetiaCodeMap.size()==0) {
-						IProjectSetiaSO projectSetiaSO = (IProjectSetiaSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IProjectSetiaSO.class);
-						ProjectSetiaReqDTO reqDTO = new ProjectSetiaReqDTO();
-						reqDTO.setSetiaId(childData.getPmSubSetia().getPmSetia().getSetiaId());
-						ProjectSetiaResDTO resDTO = projectSetiaSO.retrieveSubSetiaList(reqDTO);
-						for (PmSubSetia pmSubSetia : resDTO.getSubSetiaList()) {
-							subSetiaCodeMap.put(pmSubSetia.getSubSetiaId(), pmSubSetia);
-						}						
-					}
-					String subSetiaCode = subSetiaCodeMap.get(childData.getPmSubSetia().getSubSetiaId()).getSubSetiaCode();
+					String subSetiaCode = childData.getPmSubSetia().getSubSetiaCode();
 					getManagedBean().setSubSetiaCode((subSetiaCode));
 					
 					if(childData.getPmSubSetia().getPmSetia()!=null) {
-						//String setiaCode = setiaCodeMap.get(childData.getPmSubSetia().getPmSetia().getSetiaId()).getSetiaCode();
 						getManagedBean().setSetiaCode(childData.getPmSubSetia().getPmSetia().getSetiaCode());
 						
 						if(childData.getPmSubSetia().getPmSetia().getPmProject()!=null) {
-//							String projectCode = projectCodeMap.get(childData.getPmSubSetia().getPmSetia().getPmProject().getProjectId()).getProjectCode();
 							getManagedBean().setProjectCode(childData.getPmSubSetia().getPmSetia().getPmProject().getProjectCode());
 						}
 					}
-					getManagedBean().setFinancingTypeCode(subSetiaCodeMap.get(childData.getPmSubSetia().getSubSetiaId()).getFinancingType().getParameterCode());
+					getManagedBean().setFinancingTypeCode(childData.getPmSubSetia().getFinancingType().getParameterCode());
+							
 				}
 			}
 		}
@@ -442,24 +394,6 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		getManagedBean().setSubSetiaCode("");
 		getManagedBean().setFinancingTypeCode("");		
 	}
-	/*//get chargeline code by ID
-		
-	public String getVotFundCodeById(Long votFundId) {
-		return votFundCodeMap.get(votFundId);
-	}
-	public String getprogActivityCodeById(Long progActvId) {
-		return progmActivityCodeMap.get(progActvId);
-	}
-	public String getProjectCodeById(Long projectId) {
-		return projectCodeMap.get(projectId);
-	}
-	public String getSetiaCodeById(Long setiaId) {
-		return setiaCodeMap.get(setiaId);
-	}
-	public String getSubSetiaCodeById(Long subSetiaId) {
-		return subSetiaCodeMap.get(subSetiaId);
-	}*/
-	
 	
 	public FulfilmentResDTO getPaymentAdviseByPaymentAdviseId(Long paymentAdviseId){
 		IPaymentMatchSO paymentMatchSO = (IPaymentMatchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IPaymentMatchSO.class);

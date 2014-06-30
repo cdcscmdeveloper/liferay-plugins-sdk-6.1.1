@@ -47,7 +47,6 @@ public class PaymentMatchManagedBean extends BaseManagedBean{
 	private TreeNode selectedNode;
 	
 	// set chargeline for selected items
-	// set chargeline for selected items
 		private String votFundCode;
 		private String assetIndCode;
 		private String glAccountCode;
@@ -109,9 +108,7 @@ public class PaymentMatchManagedBean extends BaseManagedBean{
 							if(null==itemAddress.getChargeInvAmt()){
 								itemAddress.setChargeInvAmt(itemAddress.getReceivedAmt());
 							}
-							
 							itemAddress.setChargeUnitPrice(itemAddress.getUnitPrice());
-							
 							if(chargeLineItemsMap.containsKey(itemAddress.getScRequestItem().getRequestNoteItemId())){
 								//code for calculating duplicate charge line order amount and quantity for same unit price 
 								//Condition for checking unit price same.
@@ -129,7 +126,6 @@ public class PaymentMatchManagedBean extends BaseManagedBean{
 								if(notContained){
 									chargeLineItemsMap.get(itemAddress.getScRequestItem().getRequestNoteItemId()).add(itemAddress);
 								}
-								
 							} else {
 								List<FlFulfilmentItemAddr> itemAddressList=new ArrayList<FlFulfilmentItemAddr>();
 								itemAddressList.add(itemAddress);
@@ -154,7 +150,6 @@ public class PaymentMatchManagedBean extends BaseManagedBean{
 			FlFulfilmentItemAddr flItemAddress=getFulfilmentItemAddress(itemAddress.get(0));
 			if(null!=flItemAddress){
 				//Do create New Item Address and copy the first element data manually.
-				
 				TreeNode childItemNode=new DefaultTreeNode(flItemAddress.getScRequestItem().getRequestNoteItemId().toString(),flItemAddress,chargeLineItemRoot);
 				BigDecimal totalOrderAmt=new BigDecimal(0);
 				BigDecimal totalReceiveAmt=new BigDecimal(0);
@@ -179,19 +174,15 @@ public class PaymentMatchManagedBean extends BaseManagedBean{
 				setInvAmtGrandTotal(grandTotalInvAmt);
 			}
 		}
-	
-		
 	}
 	
 	private FlFulfilmentItemAddr getFulfilmentItemAddress(
 			FlFulfilmentItemAddr flFulfilmentItemAddr) {
 		FlFulfilmentItemAddr itemAddress = new FlFulfilmentItemAddr();
 		// Do Convertions
-
 		itemAddress.setScRequestItem(new ScRequestItem());
 		itemAddress.setParent(true);
 		itemAddress.getScRequestItem().setRequestNoteItemId(flFulfilmentItemAddr.getScRequestItem().getRequestNoteItemId());
-		
 		itemAddress.getScRequestItem().setItemType(flFulfilmentItemAddr.getScRequestItem().getItemType());
 		itemAddress.getScRequestItem().setItemName(flFulfilmentItemAddr.getScRequestItem().getItemName());
 		itemAddress.setUnitPrice(flFulfilmentItemAddr.getUnitPrice());
@@ -199,7 +190,6 @@ public class PaymentMatchManagedBean extends BaseManagedBean{
 		itemAddress.setOrderedAmt(flFulfilmentItemAddr.getOrderedAmt());
 		itemAddress.setReceivedQty(flFulfilmentItemAddr.getReceivedQty());
 		itemAddress.setReceivedAmt(flFulfilmentItemAddr.getReceivedAmt());
-		
 		return itemAddress;
 	}
 	
