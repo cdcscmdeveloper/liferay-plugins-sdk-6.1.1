@@ -118,6 +118,9 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			}
 			reqDTO.setStopRequestId(getManagedBean().getStopRequestId());
 			reqDTO.setContractOrder(getManagedBean().isContractRequest());
+			if(getManagedBean().getFactoringCheck().equalsIgnoreCase("true")) {
+				getManagedBean().getFulfilmentOrder().setFactored(true);
+			}
 			reqDTO.setFulfilmentOrder(getManagedBean().getFulfilmentOrder());
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 			FulfilmentResDTO resDTO = null;
