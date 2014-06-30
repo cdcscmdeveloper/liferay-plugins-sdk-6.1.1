@@ -64,14 +64,16 @@
 					<p:outputLabel value="*" styleClass="mandatory"
 						rendered="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factored eq 'false'}" /></td>
 				<td><p:selectOneMenu id="accountId" label="AccountNo" required="true"
-						rendered="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factored eq 'false'}"
+						rendered="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factored eq 'false' and invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.docType eq 'PO'}"
 						style="width:210px;margin-bottom: 5px;"
 						value="#{invoiceBackingBean.managedBean.invoice.accountNo}">
 						<f:selectItem itemLabel="-Select One-" itemValue="#{null}" />
 						<f:selectItems value="#{invoiceBackingBean.populateBankAccountList}" />
 						<p:ajax event="change" update="suppBankName"
 							listener="#{invoiceBackingBean.bankInfoActionListener}" />
-					</p:selectOneMenu> <p:message for="accountId" display="icon" /></td>
+					</p:selectOneMenu> <p:message for="accountId" display="icon" />
+					 <p:inputText disabled="true" rendered="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.docType eq 'CO'}"
+		   			value=""></p:inputText></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.name']}" /></td>
