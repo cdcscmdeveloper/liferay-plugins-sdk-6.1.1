@@ -144,21 +144,21 @@
 		<table>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.fact.com']}" /></td>
-				<td><p:inputText size="45" disabled="true" /></td>
+				<td><p:inputText size="45" disabled="true" value="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.pmFinancialOrg.finOrgName}" /></td>
 				<td style="width: 133px;"><p:outputLabel
 						value="#{lbl['lbl.fl.payment.bank.name']}" /></td>
-				<td><p:inputText size="45" disabled="true" /></td>
+				<td><p:inputText size="45" disabled="true" value="#{invoiceBackingBean.managedBean.invoice.paymentBank.finOrgName}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.factoring.branch']}" /></td>
-				<td><p:inputText size="45" disabled="true" /></td>
+				<td><p:inputText size="45" disabled="true" value="#{invoiceBackingBean.managedBean.branchName}" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.bank.acc.no']}" /></td>
-				<td><p:inputText size="45" disabled="true" /></td>
+				<td><p:inputText size="45" disabled="true" value="#{invoiceBackingBean.managedBean.invoice.accountNo}" /></td>
 			</tr>
 			<tr>
 				<td valign="top" style="width: 137px;"><p:outputLabel
 						value="Address" /></td>
-				<td><p:inputTextarea cols="45" rows="5"
+				<td><p:inputTextarea cols="47" rows="5"
 						value="#{invoiceBackingBean.managedBean.supplierAddress}"
 						style="margin-bottom:5px;" disabled="true" /></td>
 			</tr>
@@ -167,12 +167,12 @@
 						value="#{lbl['lbl.fl.supp.telno']}" /></td>
 				<td><table style="width: 100%">
 						<tr>
-							<td style="width: 25px;"><p:inputText size="15"
+							<td style="width: 25px;"><p:inputText size="13"
 									disabled="true"
 									value="#{invoiceBackingBean.managedBean.phoneNo}" /></td>
 							<td style="width: 65px;"><p:outputLabel
 									value="#{lbl['lbl.fl.supp.faxno']}" /></td>
-							<td><p:inputText size="15" disabled="true"
+							<td><p:inputText size="11" disabled="true"
 									value="#{invoiceBackingBean.managedBean.faxNo}" /></td>
 						</tr>
 					</table></td>

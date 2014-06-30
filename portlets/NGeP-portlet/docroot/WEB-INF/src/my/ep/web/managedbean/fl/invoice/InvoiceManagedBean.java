@@ -68,6 +68,7 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	private PmUser pmUser;
 	
 	//getSuplier address details
+	private String branchName;
 	private String supplierAddress;
 	private String phoneNo;
 	private String faxNo;
@@ -456,5 +457,13 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	 */
 	public void setContactPhoneNo(String contactPhoneNo) {
 		this.contactPhoneNo = contactPhoneNo;
+	}
+
+	public String getBranchName() {
+		return branchName;
+	}
+
+	public void setBranchName(String branchName) {
+		this.branchName = branchName;
 	}
 }

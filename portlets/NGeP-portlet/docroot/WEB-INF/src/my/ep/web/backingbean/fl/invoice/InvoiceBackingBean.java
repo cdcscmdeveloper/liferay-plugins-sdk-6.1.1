@@ -5,6 +5,7 @@ package my.ep.web.backingbean.fl.invoice;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -33,20 +34,16 @@ import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.jaxb.fl.invoice.FLInvoiceDataType;
-import my.ep.persistence.entity.ct.CtContract;
-import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
+import my.ep.persistence.entity.fl.FlAttachment;
+import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.order.FlStopInstrItem;
 import my.ep.persistence.entity.fl.payment.FlInvoice;
 import my.ep.persistence.entity.fl.payment.FlInvoiceItem;
-import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
-import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
-import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmContact;
-import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmFinancialAcc;
 import my.ep.persistence.entity.pm.common.PmStatus;
-import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode;
@@ -88,38 +85,6 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 	}
 
 	public InvoiceBackingBean(){
-		if (getManagedBean().getFulfilmentRequest() == null) {
-			getManagedBean().setFulfilmentRequest(new FlFulfilmentRequest());
-			getManagedBean().getFulfilmentRequest().setIssuedOrgProfile(new PmOrgProfile());
-			getManagedBean().getFulfilmentRequest().getIssuedOrgProfile().setOrgProfileId(1L);
-			getManagedBean().getFulfilmentRequest().setChargeOrgProfile(new PmOrgProfile());
-			getManagedBean().getFulfilmentRequest().getChargeOrgProfile().setOrgProfileId(1L);
-			//getManagedBean().getFulfilmentRequest().setReceivedOrgProfile(new PmOrgProfile());
-			//getManagedBean().getFulfilmentRequest().getReceivedOrgProfile().setOrgProfileId(1L);
-			getManagedBean().getFulfilmentRequest().setSmSupplier(new SmSupplier());
-			getManagedBean().getFulfilmentRequest().getSmSupplier().setSupplierId(1L);
-			getManagedBean().getFulfilmentRequest().setFlDeliveryAddresses(new ArrayList<FlDeliveryAddress>());
-			getManagedBean().getFulfilmentRequest().setFlFulfilmentItems(new ArrayList<FlFulfilmentItem>());
-			getManagedBean().getFulfilmentRequest().setCtContract(new CtContract());
-			getManagedBean().getFulfilmentRequest().getCtContract().setContractType(new PmParameter());
-			getManagedBean().getFulfilmentRequest().getCtContract().setFulfillmentType(new PmParameter());
-		}
-		if (getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses() == null) {
-			getManagedBean().getFulfilmentRequest().setFlDeliveryAddresses(new ArrayList<FlDeliveryAddress>());
-			
-		}
-		if(null==getManagedBean().getInvoice()){
-			getManagedBean().setInvoice(new FlInvoice());
-		}
-		if(null==getManagedBean().getInvoice().getFlFulfilmentOrder()){
-			getManagedBean().getInvoice().setFlFulfilmentOrder(new FlFulfilmentOrder());
-		}
-		if(null==getManagedBean().getInvoice().getFlFulfilmentOrder().getFlFulfilmentRequest()){
-			getManagedBean().getInvoice().getFlFulfilmentOrder().setFlFulfilmentRequest(new FlFulfilmentRequest());
-		}
-		if(null==getManagedBean().getInvoice().getFlFulfilmentOrder().getFlFulfilmentRequest().getFlDeliveryAddresses()){
-			getManagedBean().getInvoice().getFlFulfilmentOrder().getFlFulfilmentRequest().setFlDeliveryAddresses(new ArrayList<FlDeliveryAddress>());
-		}
 	}
 
 	public String submitAction(String action) {
@@ -238,16 +203,17 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			reqDTO.setFlOrderId(paymentObj.getFlOrderId());
 			resDTO = invoiceSO.retrieveInvoiceByFlOrderId(reqDTO);//if save button are exist
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
-			flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
 			
 			if(resDTO.getInvoice() == null){
 				getManagedBean().setInvoice(new FlInvoice());
 				getManagedBean().getInvoice().setFlInvoiceItem(new ArrayList<FlInvoiceItem>());
 				reqDTO.setFlRequestId(paymentObj.getFlRequestId());
 				resDTO = fulfilmentSO.retrieveFulfilmentRequest(reqDTO);
+				flBB.initializeRemarkAndAttachement(new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 				getInvoiceTable(resDTO);				
 			} else {
 				getManagedBean().setInvoice(resDTO.getInvoice());
+				flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
 			}
 			
 			getManagedBean().setChargeLineItemRoot(null);
@@ -282,6 +248,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 	private void getInvoiceTable(FulfilmentResDTO resDTO){
 		for(FlFulfilmentItem item : resDTO.getFlFulfilmentRequest().getFlFulfilmentItems()){
 			FlInvoiceItem invoiceItem = new FlInvoiceItem();
+			invoiceItem.setFlInvoice(getManagedBean().getInvoice());
 			BigDecimal sumOrderedQty = new BigDecimal(0);
 			BigDecimal sumOrderedAmt = new BigDecimal(0);
 			BigDecimal sumRecalledQty = new BigDecimal(0);
@@ -407,7 +374,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 	}
 	public void getFactoringBranchDtl(){
 		IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
-		Long financialBranchId = getManagedBean().getInvoice().getFlFulfilmentOrder().getPmFinancialBranch().getFinancialBranchId();
+		getManagedBean().setBranchName(null);
 		getManagedBean().setSupplierAddress(null);
 		getManagedBean().setPhoneNo(null);
 		getManagedBean().setFaxNo(null);
@@ -415,9 +382,10 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		getManagedBean().setContactEmail(null);
 		getManagedBean().setContactPhoneNo(null);
 		
-		if(financialBranchId!=null) {
+		if(getManagedBean().getInvoice().getFlFulfilmentOrder().getPmFinancialBranch()!=null && getManagedBean().getInvoice().getFlFulfilmentOrder().getPmFinancialBranch().getFinancialBranchId()!=null) {
+			getManagedBean().setBranchName(getManagedBean().getInvoice().getFlFulfilmentOrder().getPmFinancialBranch().getBranchName());
 			AddressReqDTO reqDTO = new AddressReqDTO();
-			reqDTO.setFinancialBranchId(financialBranchId);
+			reqDTO.setFinancialBranchId(getManagedBean().getInvoice().getFlFulfilmentOrder().getPmFinancialBranch().getFinancialBranchId());
 			reqDTO.setAddressType(AddressType.BILLING_ADDRESS.toString());
 			
 			AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
@@ -433,6 +401,13 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 					getManagedBean().setContactPhoneNo(pmContact.getPhoneNo());
 				}
 			}
+			for (PmFinancialAcc financialAcc : getManagedBean().getInvoice().getFlFulfilmentOrder().getPmFinancialBranch().getPmFinancialAccs()) {
+				if(financialAcc.getEffDate().before(new Date()) && (financialAcc.getExpDate()==null || financialAcc.getExpDate().after(new Date()))) {
+					getManagedBean().getInvoice().setAccountNo(financialAcc.getAccountNo());
+					getManagedBean().getInvoice().setPaymentBank(financialAcc.getPmPaymentBankOrg());
+					break;
+				}
+	        }
 		} else { //reset back to HQ info
 			AddressReqDTO reqDTO = new AddressReqDTO();
 			reqDTO.setFinancialOrgId(getManagedBean().getInvoice().getFlFulfilmentOrder().getPmFinancialOrg().getFinancialOrgId());
@@ -449,7 +424,15 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 					getManagedBean().setContactEmail(pmContact.getEmail());
 					getManagedBean().setContactPhoneNo(pmContact.getPhoneNo());
 				}
-			}				
+			}
+			
+			for (PmFinancialAcc financialAcc : getManagedBean().getInvoice().getFlFulfilmentOrder().getPmFinancialOrg().getPmFinancialAccs()) {
+				if(financialAcc.getEffDate().before(new Date()) && (financialAcc.getExpDate()==null || financialAcc.getExpDate().after(new Date()))) {
+					getManagedBean().getInvoice().setAccountNo(financialAcc.getAccountNo());
+					getManagedBean().getInvoice().setPaymentBank(financialAcc.getPmPaymentBankOrg());
+					break;
+				}
+	        }
 		}
 	}
 	
