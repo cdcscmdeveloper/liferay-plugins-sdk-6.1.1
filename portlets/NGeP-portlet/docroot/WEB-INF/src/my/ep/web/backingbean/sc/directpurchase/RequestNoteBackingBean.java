@@ -1,5 +1,4 @@
 /**
- *
  * Copyright © 2013 Archisoft. All rights reserved.
  */
 package my.ep.web.backingbean.sc.directpurchase;
@@ -48,7 +47,7 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sc.directpurchase.PurchaseInDefaultReqDTO;
 import my.ep.dto.sc.directpurchase.PurchaseInDefaultResDTO;
-import my.ep.dto.sc.directpurchase.PurchaseRequestReqDTO;
+import my.ep.dto.sc.directpurchase.PurchaseRequestOSBReqDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteResDTO;
 import my.ep.exception.EpException;
@@ -459,9 +458,10 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			if (requestNoteResDTO.isSuccessful()) {
 				if(BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)){
 					IPurchaseRequestSO purchaseReqSO = (IPurchaseRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseRequestSO.class);
-					PurchaseRequestReqDTO reqDTO = new PurchaseRequestReqDTO();
+					PurchaseRequestOSBReqDTO reqDTO = new PurchaseRequestOSBReqDTO();
 					reqDTO.setRequestNoteId(getManagedBean().getRequestNote().getRequestNoteId());
-					purchaseReqSO.approvalRequestNote(reqDTO);
+					reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
+					purchaseReqSO.splitPurchaseRequest(reqDTO);
 					successMessage(MessageConst.INFO_700007, ParameterTypeConst.DOCUMENT_TYPES,
 							ParameterConst.DOCTYPE_REQUEST_NOTE, getManagedBean().getRequestNote().getRequestNoteNo());
 
