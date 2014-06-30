@@ -14,6 +14,7 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.sc.directpurchase.ScPRIRemark;
 import my.ep.persistence.entity.sc.directpurchase.ScPrInquiry;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
@@ -60,6 +61,7 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	public PurchaseInquiryManagedBean() {
 		List<ScPRIRemark> remarks = new ArrayList<ScPRIRemark>();
 		scPrInquiry.setRemarks(remarks);
+		requestNoteDtl.setJustificationType(new PmParameter());
 	}
 	
 	/**

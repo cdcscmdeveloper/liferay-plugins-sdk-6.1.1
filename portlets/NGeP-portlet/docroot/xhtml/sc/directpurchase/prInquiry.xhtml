@@ -197,7 +197,7 @@
 							 <td style="width: 250px">
 							     <p:outputLabel value="#{lbl['lbl.sc.justification']}" /></td>
 							 <td> <p:selectOneMenu style="width: 120px;margin-bottom: 5px;" 
-									value="#{purchaseInquiryBackingBean.managedBean.requestNoteDtl.justificationType}">
+									value="#{purchaseInquiryBackingBean.managedBean.requestNoteDtl.justificationType.parameterCode}">
 								   <f:selectItems
 										value="#{purchaseInquiryBackingBean.managedBean.justDropdown}" />
 									<p:ajax event="change" update="justiId" 

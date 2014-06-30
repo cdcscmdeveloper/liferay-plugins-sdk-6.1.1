@@ -334,12 +334,27 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 		    	requestNoteDtl.setScRequestNote(requestNote);
 		    	requestNoteDtl.setAssignedUser(facesScopes.getUserSessionBean());
 		    	
+		    	// proc type
 		    	parameterReqDTO = new ParameterReqDTO();
 		    	parameterReqDTO.setParameterType(ParameterTypeConst.PROCUREMENT_TYPE);
 		    	parameterReqDTO.setParameterCode(requestNoteDtl.getProcurementType().getParameterCode());
 		    	resDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
 			    requestNoteDtl.setProcurementType(resDTO.getPmParameter());
+			   
+			    // justification type
+			    parameterReqDTO = new ParameterReqDTO();
+			    if (requestNoteDtl.getProcurementType().getParameterCode()
+						.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)) {
+			    	parameterReqDTO.setParameterType(ParameterTypeConst.JUSTIFICATION_TYPE_ADHOC);
+				} else if (requestNoteDtl.getProcurementType().getParameterCode()
+						.equalsIgnoreCase(ParameterConst.PROC_TYPE_EMERGENCY)) {
+					parameterReqDTO.setParameterType(ParameterTypeConst.JUSTIFICATION_TYPE_EMERGENCY);
+				}
+			    parameterReqDTO.setParameterCode( requestNoteDtl.getJustificationType().getParameterCode());
+			    resDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
+			    requestNoteDtl.setJustificationType(resDTO.getPmParameter());
 		    	
+			    // price type
 		    	if (getManagedBean().getPriceType() != null) {
 		    		parameterReqDTO = new ParameterReqDTO();
 		    		parameterReqDTO.setParameterType(ParameterTypeConst.PRICE_TYPE);
