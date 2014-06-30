@@ -229,7 +229,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 		<p:outputLabel rendered="#{panelBackingBean.managedBean.selectedPanelItems != null and !panelBackingBean.managedBean.selectionOfZone}" value="#{lbl['lbl.ct.pc.sublabel.itemsupplier']}" style="float:left; font-weight:bold; padding-top:25px;"/>
 		<h:panelGroup rendered="#{(panelBackingBean.managedBean.selectedPanelZone != null and panelBackingBean.managedBean.selectionOfZone) or
 		 (panelBackingBean.managedBean.selectedPanelItems != null and !panelBackingBean.managedBean.selectionOfZone)}">
-			<br/>
+			<br/><br/>
 			<p:dataTable id="itemSupplierDt" var="supVar" 
 			value="#{panelBackingBean.managedBean.selectionOfZone ? panelBackingBean.managedBean.selectedPanelZone.ctPanelSuppliers : panelBackingBean.managedBean.selectedPanelItems.ctPanelSuppliers}"
 		    selectionMode="single" selection="#{panelBackingBean.managedBean.selectedPanelSupplier}" rowKey="#{supVar}" rowIndexVar="index">

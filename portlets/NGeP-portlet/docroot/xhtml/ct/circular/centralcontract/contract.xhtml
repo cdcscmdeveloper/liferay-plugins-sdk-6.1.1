@@ -93,7 +93,7 @@
 		  <h:panelGroup rendered="#{centralContractBackingBean.managedBean.selectedCircularItem != null
 		     and centralContractBackingBean.managedBean.chkItemZone}">
 		     <p:outputLabel value="#{lbl['lbl.ct.cc.sublabel.zone']}" style="float:left; font-weight:bold; padding-top:25px;"/>
-		     <br/>
+		     <br/><br/>
 		     <p:dataTable id="circularItemZoneDt" var="dataZone" value="#{centralContractBackingBean.managedBean.contractItemZones}"
 		       lazy="true" selection="#{centralContractBackingBean.managedBean.selectedZoneItems}" 
 		       selectionMode="single" rowKey="#{dataZone}" rowIndexVar="index">
@@ -119,7 +119,7 @@
 		    and centralContractBackingBean.managedBean.selectedCircularItem.ctContractItem.ctItemPrices.size() > 0}">
 		   <p:outputLabel value="#{(centralContractBackingBean.managedBean.selectedCircularItem != null
 		     and centralContractBackingBean.managedBean.chkItemZone)?lbl['lbl.ct.cc.sublabel.zoneprice']:lbl['lbl.ct.cc.sublabel.itemprice']}" style="float:left; font-weight:bold; padding-top:25px;"/>
-		   <br/>
+		   <br/><br/>
 		   <p:dataTable id="circularItemZonePriceDt" var="priceVar" 
 		   value="#{centralContractBackingBean.getItemPrice()}">
 		   <ac:paginator for="circularItemZonePriceDt" />
