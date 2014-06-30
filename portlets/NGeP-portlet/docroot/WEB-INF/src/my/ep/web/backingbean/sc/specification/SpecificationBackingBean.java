@@ -926,10 +926,10 @@ public class SpecificationBackingBean extends
 										.constuctPanelTreeNodes(ctPanelZone));
 
 					}
-				}
+				}else {
+					retriveZonesByCircularNo();
 
-			} else {
-				retriveZonesByCircularNo();
+			} 
 			}
 
 		} finally {
