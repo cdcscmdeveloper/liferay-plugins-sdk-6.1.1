@@ -15,6 +15,7 @@ import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefault;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefaultAttachment;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
@@ -54,6 +55,7 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean{
 	private List<PmOrgProfile> ptjDropdown;
 	private PmOrgProfile pmOrgProfile = new PmOrgProfile();
 	private PmOrgProfile selectedPmOrgProfile = new PmOrgProfile();
+	private PmReason pmReason;
     
 	public PurchaseInDefaultManagedBean() {
 	}
@@ -304,4 +306,20 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean{
 	public void setPidBtnFlag(boolean pidBtnFlag) {
 		this.pidBtnFlag = pidBtnFlag;
 	}
+
+	/**
+	 * @return the pmReason
+	 */
+	public PmReason getPmReason() {
+		return pmReason;
+	}
+
+	/**
+	 * @param pmReason the pmReason to set
+	 */
+	public void setPmReason(PmReason pmReason) {
+		this.pmReason = pmReason;
+	}
+	
+	
 }
