@@ -20,8 +20,8 @@
 			<p:row>
 				<p:column width="100%" style="text-align:right">
 					<p:commandButton value="#{lbl['lbl.cm.zm.save']}"
-					process="@this, zoneDetailsDataTable" partialSubmit="true" update="@([id$=zmMsgs]), @([id$=zoneDetailsDataTable])"
-		     action="#{zoneMaintenanceBackingBean.saveCmSupplierZones}"
+					process="@this, zoneDetailsDataTable" partialSubmit="true" update="@([id$=zmMsgs]), @([id$=zoneDetailsDataTable]), @([id$=zonePopupPanel])"
+		     actionListener="#{zoneMaintenanceBackingBean.saveCmSupplierZones}"
 						style="float:right;" icon="ui-icon-save" />
 	
 				</p:column>
@@ -57,7 +57,7 @@
 						<p:graphicImage library="ep/images/design" name="edit.png"
 							value="/resources/ep/images/design/edit.png" />
 					</p:commandLink>
-					<p:commandLink process="@all" update="zoneDetailsDataTable, @([id$=zmMsgs])"
+					<p:commandLink process="@this" update="zoneDetailsDataTable, @([id$=zmMsgs])"
 					     actionListener="#{zoneMaintenanceBackingBean.deleteTreeNodes(zoneTree)}">
 						<p:graphicImage library="ep/images/design" name="trash.png"
 							value="/resources/ep/images/design/trash.png" />
@@ -79,10 +79,12 @@
 			<h:panelGroup id="zonePopupPanel">
 				<table styleClass="noBorders tr,noBorders td" >
 					<TR>
-						<TD width="20%" valign="top"><p:outputLabel value="Zone Name"></p:outputLabel>
+						<TD width="20%" valign="top"><p:outputLabel value="*Zone Name"></p:outputLabel>
 						</TD>
 						<TD width="80%"><p:inputText id="zoneNameId"
-								value="#{zoneMaintenanceBackingBean.managedBean.selectedSupplierZone.suppZoneName}" ></p:inputText>
+								value="#{zoneMaintenanceBackingBean.managedBean.selectedSupplierZone.suppZoneName}" >
+								<p:ajax event="keyup" update=":form:zoneAddButton"></p:ajax>
+								</p:inputText>
 						</TD>
 					</TR>
 					<TR>
@@ -110,8 +112,8 @@
 					</TR>
 				</table>
 			</h:panelGroup>
-			<p:commandButton
-					value="#{lbl['lbl.cm.zm.btn.ok']}"
+			<p:commandButton id="zoneAddButton"
+					value="#{lbl['lbl.cm.zm.btn.ok']}" disabled="#{zoneMaintenanceBackingBean.managedBean.selectedSupplierZone.suppZoneName.length() eq 0}"
 					style="float:right;" onclick="ZL.hide();" process="@all ,zoneNameId"
 					update="@this, zonePopupPanel" partialSubmit="true"
 					actionListener="#{zoneMaintenanceBackingBean.updateZoneListOnPopUpClose}">

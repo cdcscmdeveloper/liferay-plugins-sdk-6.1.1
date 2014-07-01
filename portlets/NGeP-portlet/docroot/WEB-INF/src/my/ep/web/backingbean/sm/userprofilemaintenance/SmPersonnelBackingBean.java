@@ -63,7 +63,7 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		this.getManagedBean().setSearchEPRole(null);
 		this.getManagedBean().setSearchUsername(null);
 		
-		searchPersonnel(null, null, null);
+//		searchPersonnel(null, null, null);
 	}
 
 	
@@ -133,7 +133,7 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		
 	}
 	
-	public void searchPersonnel(String username, String ePRole, String companyRole){
+/*	public void searchPersonnel(String username, String ePRole, String companyRole){
 
 		IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate
 				.getInstance().getServiceObject("sm", IPersonnelSO.class);
@@ -170,7 +170,7 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		
 		this.getManagedBean().setPersonnelList(smPersonnelList);
 		
-	}
+	}*/
 	
 	public void initializeLists(){
 		

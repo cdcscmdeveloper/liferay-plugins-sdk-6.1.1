@@ -248,6 +248,8 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 	
 	public void updateZoneListOnPopUpClose(){
 		CmSupplierZone selZone = getManagedBean().getSelectedSupplierZone();
+		if(selZone.getSuppZoneName().isEmpty())
+			throw new EpException(MessageConst.ERROR_716003);
 		if(selZone.getSuppZoneId() == 0 && !getManagedBean().getCmSupplierZoneList().contains(selZone)){
 			selZone = new CmSupplierZone();
 			selZone.setSuppZoneName(getManagedBean().getSelectedSupplierZone().getSuppZoneName());

@@ -7,14 +7,25 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
-import my.ep.persistence.entity.pm.common.PmCity;
-import my.ep.persistence.entity.pm.common.PmCountry;
-import my.ep.persistence.entity.pm.common.PmDistrict;
-import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.sm.personnel.IPersonnelSO;
+import my.ep.biz.service.sm.search.ISupplierSearchSO;
+import my.ep.dto.sm.personnel.PersonnelReqDTO;
+import my.ep.dto.sm.personnel.PersonnelResDTO;
+import my.ep.dto.sm.search.SupplierSearchReqDTO;
+import my.ep.dto.sm.search.SupplierSearchResDTO;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmPersonnel;
-import my.ep.persistence.entity.sm.SmPersonnelAddress;
+import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.type.aut.SearchOperator;
+import my.ep.web.bean.paginator.IPagingDataModel;
+import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.util.FacesScopes;
+import my.ep.web.util.lookupservice.BusinessDelegate;
 
 @ManagedBean(name = "smPersonnelMB")
 @SessionScoped
@@ -74,6 +85,70 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	private List<SelectItem> permAddDistrictList;
 	
 	private List<SelectItem> permAddCityList;
+
+	private IPagingDataModel<SmPersonnel> smPersonnelDataModel2 = new SmPersonnelPagingDataModel();
+	
+	
+	  
+	public SmPersonnelManagedBean() {
+		// TODO Auto-generated constructor stub
+		super();
+	}
+	
+	private class SmPersonnelPagingDataModel extends PagingDataModel<SmPersonnel> {
+		private static final long serialVersionUID = 1L;
+
+		public SmPersonnelPagingDataModel() {
+			super("smPersonnelDataModelId");
+		}
+
+		@Override
+		protected ISearchResultBean<SmPersonnel> pageChangeListener(ISearchBean<SmPersonnel> searchBean) {
+			try {
+				
+				
+/*				SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
+				PmUser pmUser = new FacesScopes().getUserSessionBean();
+				supplierSearchReqDTO.setUserId(pmUser.getUserId());
+
+				ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
+						.getInstance().getServiceObject("sm",
+								ISupplierSearchSO.class);
+				SupplierSearchResDTO smResDTO = supplierSearchSO
+						.retriveSupplierProfiles(supplierSearchReqDTO);
+				SmSupplier smSupp = (SmSupplier) smResDTO.getResultBean().getResultList()
+						.get(0);
+*/
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("smAppl.smSupplier.supplierId",SearchOperator.OPERATOR_EQUALS.value(),getUpdateSmPersonnel().getSmAppl().getSmSupplier().getSupplierId()));
+				
+				if(getSearchUsername() !=null) {
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("name",SearchOperator.OPERATOR_LIKE.value(),getSearchUsername()));
+				}
+
+				if(getSearchEPRole() !=null) {
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("epRole",SearchOperator.OPERATOR_LIKE.value(),getSearchEPRole()));
+				}
+
+				PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+				reqDTO.setSearchPersonnelBean(searchBean);
+
+				IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate
+						.getInstance().getServiceObject("sm", IPersonnelSO.class);
+				PersonnelResDTO resDTO = smPersonnelSO.retrievePersonnelBySearchCriteria(reqDTO);
+
+				if(resDTO.isSuccessful()) {
+					return resDTO.getSearchPersonnelResultBean();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+	}
+	
+	public void searchSmPersonnel(){
+		smPersonnelDataModel2.reloadData();
+	}
 
 	public String getSearchEPRole() {
 		return searchEPRole;
@@ -289,4 +364,15 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 		this.permAddCityList = permAddCityList;
 	}
 
+	public IPagingDataModel<SmPersonnel> getSmPersonnelDataModel2() {
+		return smPersonnelDataModel2;
+	}
+
+	public void setSmPersonnelDataModel2(
+			IPagingDataModel<SmPersonnel> smPersonnelDataModel2) {
+		this.smPersonnelDataModel2 = smPersonnelDataModel2;
+	}
+
+	
+	
 }

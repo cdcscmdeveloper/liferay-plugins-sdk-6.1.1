@@ -8,7 +8,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
 	<ui:define name="contentSection">
@@ -39,8 +40,8 @@
 		</table>
 		
 		<div align="right">		
-			<p:commandButton value="Search" action="#{smPersonnelBackingBean.searchPersonnel(smPersonnelBackingBean.managedBean.searchUsername,smPersonnelBackingBean.managedBean.searchEPRole,smPersonnelBackingBean.managedBean.searchCompanyRole)}" ajax="false"
-				update="searchProfile" icon="ui-icon-search" />
+			<p:commandButton value="Search" action="#{smPersonnelBackingBean.managedBean.searchSmPersonnel}"
+				update="smPersonnelDataModelId" icon="ui-icon-search" />
   		</div>
 	
 	</p:panel>
@@ -48,8 +49,12 @@
 	<h:panelGrid id="search" style="width:100%;">
 	 
 	<p:panel header="Results" toggleable="true">
-	<p:dataTable id="searchProfile" value="#{smPersonnelBackingBean.managedBean.personnelList}" var="personnel" editable="true" style="word-wrap: break-word;table-layout: fixed;">
- 
+ 		
+ 	<p:dataTable id="smPersonnelDataModelId" lazy="true"
+					value="#{smPersonnelBackingBean.managedBean.smPersonnelDataModel2}" var="personnel"
+					rowKey="#{personnel}"
+					rowIndexVar="index">
+		<ac:paginator for="smPersonnelDataModelId" />
        <p:column headerText="#{lbl['lbl.sm.userprofile.num']}" > 
         <h:outputText value="" /> 
        </p:column>
