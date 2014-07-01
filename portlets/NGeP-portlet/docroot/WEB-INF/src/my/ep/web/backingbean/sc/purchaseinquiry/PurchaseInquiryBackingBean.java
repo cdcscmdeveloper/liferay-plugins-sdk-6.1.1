@@ -350,9 +350,12 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 						.equalsIgnoreCase(ParameterConst.PROC_TYPE_EMERGENCY)) {
 					parameterReqDTO.setParameterType(ParameterTypeConst.JUSTIFICATION_TYPE_EMERGENCY);
 				}
-			    parameterReqDTO.setParameterCode( requestNoteDtl.getJustificationType().getParameterCode());
-			    resDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
-			    requestNoteDtl.setJustificationType(resDTO.getPmParameter());
+			    
+			    if(requestNoteDtl.getJustificationType().getParameterCode() != null && !requestNoteDtl.getJustificationType().getParameterCode().isEmpty()){
+			    	 parameterReqDTO.setParameterCode(requestNoteDtl.getJustificationType().getParameterCode());
+					    resDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
+					    requestNoteDtl.setJustificationType(resDTO.getPmParameter());
+			    }
 		    	
 			    // price type
 		    	if (getManagedBean().getPriceType() != null) {
