@@ -192,9 +192,12 @@
 										value="*" styleClass="mandatory" /></td>
 								<td colspan="3"><p:inputText id="email1" required="true"
 										label="#{lbl['lbl.sc.committe.addscreen.email']}"
+										validatorMessage="#{qTCommitteBackingBean.managedBean.committeMember.email} is not valid"
 										value="#{qTCommitteBackingBean.managedBean.committeMember.email}"
-										size="30" maxlength="80" /> <p:message id="email1Msg"
-										for="email1" display="icon" /></td>
+										size="30" maxlength="80">
+										<f:validateRegex
+											pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
+									</p:inputText> <p:message id="email1Msg" for="email1" display="icon" /></td>
 							</tr>
 							<tr>
 								<td><p:outputLabel
@@ -202,10 +205,10 @@
 										value="*" styleClass="mandatory" /></td>
 								<td colspan="3"><p:selectOneMenu id="role" required="true"
 										label="#{lbl['lbl.sc.committe.addscreen.role']}"
-										value="#{qTCommitteBackingBean.managedBean.committeMember.memberRole}"
+										value="#{qTCommitteBackingBean.managedBean.committeMember.memberRole.parameterId}"
 										style="width: 178px;margin-bottom: 5px;">
 										<f:selectItems
-											value="#{qTCommitteBackingBean.getDropdownCodeValues(ParameterTypeConst.committeeRole)}" />
+											value="#{qTCommitteBackingBean.getDropdownValues(ParameterTypeConst.committeeRole)}" />
 									</p:selectOneMenu> <p:message id="roleMsg" for="role" display="icon" /></td>
 							</tr>
 						</table>

@@ -57,11 +57,13 @@
 		</p:dataTable>
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.so.addbtn']}" process="@this"
-				partialSubmit="true" update="openPnlId" icon="ui-icon-add"
+				update="openPnlId" icon="ui-icon-add"
 				actionListener="#{qTSupplierQulCriteriaBackingBean.addNewCategoryAction}" />
 
 			<p:commandButton value="#{lbl['lbl.so.delete']}"
-				icon="ui-icon-delete" update="openPnlId" />
+				icon="ui-icon-delete" process="@this,openPnlId" partialSubmit="true"
+				action="#{qTSupplierQulCriteriaBackingBean.deleteCategoryCodes}"
+				update="openPnlId" />
 		</div>
 		<ac:lovPopup />
 	</p:panel>
@@ -74,61 +76,79 @@
 						<h:panelGrid border="0" cellpadding="0" cellspacing="0"
 							columns="2" columnClasses="columnWidth20"
 							style="margin-left: 26px;"
-							rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount gt '500000'}">
+							rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000'}">
 							<h:outputLabel value="#{lbl['lbl.so.allstate']}"
-								style="width: 80px" />
-
+								style="width : 80px" />
 							<p:selectBooleanCheckbox disabled="true"
-								value="#{qTSupplierQulCriteriaBackingBean.managedBean.supplierCriteria.allState}">
+								value="#{specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState}">
 								<f:selectItem
-									itemValue="#{qTSupplierQulCriteriaBackingBean.managedBean.supplierCriteria.allState}" />
+									itemValue="#{specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState}"></f:selectItem>
 								<p:ajax update="supplierallStae"
-									listener="#{qTSupplierQulCriteriaBackingBean.stateChange}" />
+									listener="#{specificationBackingBean.stateChange}" />
 							</p:selectBooleanCheckbox>
 						</h:panelGrid>
 					</h:panelGroup></td>
 				<td></td>
+			</tr>
+			<tr>
+				<td style="width: 150px"><p:outputLabel
+						value="#{lbl['lbl.so.paidup']}"
+						rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount gt '500000'}" /></td>
+				<td><p:inputText size="30" maxlength="18"
+						rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount gt '500000'}"
+						value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.minPaidUpCapital}"
+						style="margin-right:5px;text-align:right;">
+						<ac:validateNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}"
+							maxIntegerDigits="14"></ac:validateNumber>
+					</p:inputText></td>
 			</tr>
 		</table>
 	</p:panel>
 
 	<p:panel>
 		<h:panelGroup id="supplierallStae">
-			<p:panel
-				header="#{lbl['lbl.so.location.list']} / #{lbl['lbl.so.paidup.capital']}"
-				rendered="#{((qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount le '500000' and qTSupplierQulCriteriaBackingBean.managedBean.supplierCriteria.allState=='false' and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal =='false') or (qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount gt '500000' and qTSupplierQulCriteriaBackingBean.managedBean.supplierCriteria.allState=='false'  and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal =='false') or (qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount gt '500000' and qTSupplierQulCriteriaBackingBean.managedBean.supplierCriteria.allState=='false'  and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal !='false'))}">
+			<p:panel header="#{lbl['lbl.sc.spec.location.list.paidup.capital']}"
+				rendered="#{((qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount le '500000' and qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState=='false' and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal =='false') or (qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount gt '500000' and qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState=='false'  and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal =='false') or (qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount gt '500000' and qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState=='false' and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal))}">
 				<table style="width: 100%">
 					<tr>
-						<td style="width: 160px"><p:outputLabel
+						<td style="width: 150px"><p:outputLabel
 								value="#{lbl['lbl.so.paidup']}" /></td>
-						<td><p:inputText
-								value="#{qTSupplierQulCriteriaBackingBean.managedBean.supplierCriteria.minPaidUpCapital}"
-								size="30" style="text-align:right" maxlength="18">
+						<td><p:inputText size="30" maxlength="18"
+								value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.minPaidUpCapital}"
+								style="margin-right:5px;text-align:right;">
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 							</p:inputText></td>
 					</tr>
 					<tr>
-						<td style="width: 94px"><p:outputLabel
-								value="#{lbl['lbl.so.location.level']}" /></td>
-						<td><p:selectOneMenu id="locLevels"
-								value="#{qTSupplierQulCriteriaBackingBean.managedBean.supplierCriteria.locationLevel.parameterId}"
+						<td style="width: 145px"><p:outputLabel
+								value="#{lbl['lbl.sc.spec.zone.location.level']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
+						<td><p:selectOneMenu id="locLevels" required="true"
+								label="#{lbl['lbl.sc.spec.zone.location.level']}"
+								value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.locationLevel.parameterId}"
 								style="width: 178px;">
+
 								<f:selectItems
-									value="#{qTSupplierQulCriteriaBackingBean.getDropdownValues(ParameterTypeConst.locationLevel)}" />
+									value="#{specificationBackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel)}" />
 								<p:ajax event="change"
-									listener="#{qTSupplierQulCriteriaBackingBean.selectLocation}" />
-							</p:selectOneMenu></td>
+									listener="#{qTSupplierQulCriteriaBackingBean.selectLocation}"></p:ajax>
+							</p:selectOneMenu> <p:message id="withOutzone" for="locLevels" display="icon"></p:message>
+						</td>
 					</tr>
 				</table>
 			</p:panel>
 			<p:panel
-				rendered="#{((qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount le '500000' and qTSupplierQulCriteriaBackingBean.managedBean.supplierCriteria.allState=='false' and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal =='false') or (qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount gt '500000' and qTSupplierQulCriteriaBackingBean.managedBean.supplierCriteria.allState=='false'  and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal =='false') or (qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount gt '500000' and qTSupplierQulCriteriaBackingBean.managedBean.supplierCriteria.allState=='false'  and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal !='false'))}">
+				rendered="#{((qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount le '500000' and qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState=='false' and !qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal) or (qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount gt '500000' and qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState=='false' and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal =='false') or (qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount gt '500000' and qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState=='false'  and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal))}">
 				<h:panelGrid width="100%">
 					<p:dataTable id="zoneLocationDataTable"
 						value="#{qTSupplierQulCriteriaBackingBean.managedBean.zoneTrees}"
-						var="zoneTree" style="width:100%" rowIndexVar="index">
-						<p:column headerText="Location">
+						var="zoneTree" style="width:100%" rowIndexVar="index"
+						rowKey="#{zoneTree}"
+						selection="#{qTSupplierQulCriteriaBackingBean.managedBean.supplierSelectedTreeNode}"
+						selectionMode="single">
+						<p:column headerText="Location" style="width:90%">
 							<p:tree value="#{zoneTree}" var="location">
 								<p:treeNode type="state">
 									<h:outputText value="#{location.pmState.stateName}" />
@@ -139,9 +159,11 @@
 								<p:treeNode type="district">
 									<h:outputText value="#{location.pmDistrict.districtName}" />
 								</p:treeNode>
+
 							</p:tree>
 						</p:column>
-						<p:column headerText="Action">
+
+						<p:column headerText="Action" style="width:10%">
 							<p:commandLink
 								actionListener="#{qTSupplierQulCriteriaBackingBean.editZoneLocation(zoneTree,index)}"
 								process="@this" update="@([id$=zonePopupPanel])"
@@ -150,52 +172,55 @@
 									value="/resources/ep/images/design/edit.png" />
 							</p:commandLink>
 						</p:column>
+
 					</p:dataTable>
 				</h:panelGrid>
-				<div align="right" style="width: 100%">
+				<div align="right">
 					<p:commandButton value="#{lbl['lbl.ct.ded.btn.add']}"
 						process="@this" update="@([id$=zonePopupPanel])"
 						oncomplete="ZoneLocation.show();"
 						actionListener="#{qTSupplierQulCriteriaBackingBean.showZoneLocationPopup}"
 						icon="ui-icon-add" />
 					<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
-						icon="ui-icon-delete" />
+						update="zoneLocationDataTable" icon="ui-icon-delete"
+						action="#{qTSupplierQulCriteriaBackingBean.deleteSupplierQualificationTreeNode}" />
 				</div>
 			</p:panel>
 
-			<p:panel
-				header="#{lbl['lbl.so.location.list']} / #{lbl['lbl.so.paidup.capital']}"
-				rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount le '500000' and qTSupplierQulCriteriaBackingBean.managedBean.supplierCriteria.allState=='false' and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal}">
+			<p:panel header="#{lbl['lbl.sc.spec.location.list.paidup.capital']}"
+				rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount le '500000' and qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState=='false' and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal}">
 				<table style="width: 100%">
 					<tr>
-						<td style="width: 160px"><p:outputLabel
+						<td style="width: 150px"><p:outputLabel
 								value="#{lbl['lbl.so.paidup']}" /></td>
-						<td><p:inputText
-								value="#{qTSupplierQulCriteriaBackingBean.managedBean.supplierCriteria.minPaidUpCapital}"
-								size="30" style="text-align:right" maxlength="18">
+						<td><p:inputText size="30" maxlength="18"
+								value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.minPaidUpCapital}"
+								style="margin-right:5px;text-align:right;">
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 							</p:inputText></td>
 					</tr>
+
 					<tr>
 						<td style="width: 94px"><p:outputLabel
-								value="#{lbl['lbl.so.location.level']}" /></td>
+								value="#{lbl['lbl.sc.spec.zone.location.level']}" /></td>
 						<td><p:selectOneMenu id="locZoneLevels" disabled="true"
 								value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.zoneLocationLevel.parameterId}"
 								style="width: 178px;">
 
 								<f:selectItems
-									value="#{qTSupplierQulCriteriaBackingBean.getDropdownValues(ParameterTypeConst.locationLevel)}" />
+									value="#{qTSupplierQulCriteriaBackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel)}" />
 								<p:ajax event="change"
-									listener="#{qTSupplierQulCriteriaBackingBean.selectLocation}" />
+									listener="#{qTSupplierQulCriteriaBackingBean.selectLocation}"></p:ajax>
 							</p:selectOneMenu></td>
 					</tr>
 				</table>
 			</p:panel>
+
 			<p:panel
 				rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount le '500000' and qTSupplierQulCriteriaBackingBean.managedBean.supplierCriteria.allState=='false' and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal}">
 				<h:panelGrid width="100%">
-					<p:dataTable id="zoneyesDataTable"
+					<p:dataTable id="zoneYesDatatbl"
 						value="#{qTSupplierQulCriteriaBackingBean.managedBean.zoneGeneralTrees}"
 						var="zoneTree" style="width:100%" rowIndexVar="index">
 						<p:column headerText="Location">
@@ -220,12 +245,13 @@
 				</h:panelGrid>
 			</p:panel>
 
-			<p:dialog header="" widgetVar="ZoneLocation" modal="true" width="600"
+			<p:dialog widgetVar="ZoneLocation" modal="true" width="600"
 				position="top" height="400">
-				<p:panel id="zonePopupPanel" header="ADD LOCATION">
+				<p:panel id="zonePopupPanel"
+					header="#{lbl['lbl.sc.spec.zone.add.location']}">
 					<table styleClass="noBorders tr,noBorders td">
-						<tr>
-							<td width="80%"><p:panel></p:panel>
+						<TR>
+							<TD width="80%"><p:panel></p:panel>
 								<div style="height: 300px; overflow-y: scroll;">
 									<p:tree id="treeZoneLocationPopup"
 										value="#{qTSupplierQulCriteriaBackingBean.managedBean.rootLocationTree}"
@@ -245,8 +271,8 @@
 											<h:outputText value="#{pmCity.cityName}" />
 										</p:treeNode>
 									</p:tree>
-								</div></td>
-						</tr>
+								</div></TD>
+						</TR>
 					</table>
 				</p:panel>
 				<p:commandButton
@@ -261,12 +287,13 @@
 					action="#{qTSupplierQulCriteriaBackingBean.updateZoneLocation}"
 					icon="ui-icon-accept">
 				</p:commandButton>
-
 			</p:dialog>
+
 		</h:panelGroup>
 	</p:panel>
-	<p:panel header="Qualified Supplier" toggleable="true">
-		<table style="width: 100%">
+	<p:panel
+		header="#{lbl['lbl.sc.spec.supplier.criteria.qual.suppliers']}">
+		<table>
 			<tr>
 				<td style="width: 117px"><p:outputLabel
 						value="#{lbl['lbl.so.totalsup']}" /></td>

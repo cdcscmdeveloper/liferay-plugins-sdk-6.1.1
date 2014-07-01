@@ -72,6 +72,7 @@ import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
 import my.ep.web.bean.sc.quatationtender.TabBean;
+import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.type.sc.quationtender.CloneAll;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -216,6 +217,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private String mofAccountNo;
 	private BigDecimal minPaidUpCapital;
 
+	private TreeNode supplierSelectedTreeNode;
+	
 	private int totalSearchSupplier;
 	private int totalSupplier;
 	private TreeNode searchPanelSuppliersNode;
@@ -383,6 +386,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	// Document
 	private ScQtCheckList scQtChecklist;
+	private TemplateSpecBean templateSpecBean = new TemplateSpecBean();
 
 	// Delivery Location
 	private List<ScQtDeliveryLoc> deliveryLocList;
@@ -2365,6 +2369,22 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setCircularExpDate(Date circularExpDate) {
 		this.circularExpDate = circularExpDate;
+	}
+
+	public TreeNode getSupplierSelectedTreeNode() {
+		return supplierSelectedTreeNode;
+	}
+
+	public void setSupplierSelectedTreeNode(TreeNode supplierSelectedTreeNode) {
+		this.supplierSelectedTreeNode = supplierSelectedTreeNode;
+	}
+
+	public TemplateSpecBean getTemplateSpecBean() {
+		return templateSpecBean;
+	}
+
+	public void setTemplateSpecBean(TemplateSpecBean templateSpecBean) {
+		this.templateSpecBean = templateSpecBean;
 	}
 
 }

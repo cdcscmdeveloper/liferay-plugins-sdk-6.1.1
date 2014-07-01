@@ -2,6 +2,7 @@ package my.ep.web.backingbean.sc.quatationtender;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +17,7 @@ import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
+import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -42,12 +44,14 @@ import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.authorization.PmUserPreference;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmAddressType;
+import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
+import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
@@ -292,7 +296,30 @@ public class QTCommitteBackingBean extends
 				bean.setSearchValue(qtNumber);
 				searchFilterBean.add(bean);
 			}
+			
+			String procurementMode = qtnTenderSearchBean.getProcurementMode();
+			if (!StringUtils.isBlank(procurementMode)) {
+				SearchFilterBean bean = new SearchFilterBean();
+				bean.setAndOr(SearchCondition.CONDITION_OR.value());
+				bean.setSearchField("procurementMode.parameterCode");
+				bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+				bean.setSearchValue(procurementMode);
+				searchFilterBean.add(bean);
+			}
 
+			Date fromCreatedDate = qtnTenderSearchBean.getFromCreatedDate();
+			Date toCreatedDate = qtnTenderSearchBean.getToCreatedDate();
+			if (null != fromCreatedDate || toCreatedDate != null) {
+				SearchFilterBean bean = new SearchFilterBean();
+				bean.setSearchField(QTConstants.CREATED_DATE);
+				bean.setSearchOperator(SearchOperator.OPERATOR_BETWEEN.value());
+
+				SearchBetweenValue<Date> betweenVal = new SearchBetweenValue<Date>(
+						fromCreatedDate, toCreatedDate);
+
+				bean.setSearchValue(betweenVal);
+				searchFilterBean.add(bean);
+			}
 			// Adding search filterbeans to searchbean.
 			qtSearchBean.getDataFilterBeans().addAll(searchFilterBean);
 			reqDTO.setQtSearchBean(qtSearchBean);
@@ -399,7 +426,7 @@ public class QTCommitteBackingBean extends
 
 		} else if (SelectionType.New.value().equalsIgnoreCase(
 				getManagedBean().getCommitteMember().getUserSelection())) {
-			//getManagedBean().getCommitteMember().setExternalUser(true);
+			getManagedBean().getCommitteMember().setMemberRole(new PmParameter());
 
 		}
 	}
@@ -465,8 +492,6 @@ public class QTCommitteBackingBean extends
 						IOrgProfileSO.class);
 		UserReqDTO userReqDTO = new UserReqDTO();
 		
-		PmParameter parameter = new PmParameter();
-		
 		ScCommittee scCommittee = this.getManagedBean().getScQtCommittee().getScCommittee();
 		ScQt scQt = this.getManagedBean().getQt();
 		List<ScCommitteeMember> memberList = getManagedBean().getScQtCommittee().getScCommittee()
@@ -486,8 +511,7 @@ public class QTCommitteBackingBean extends
 					.getDesignation());
 			member.setPNP(getManagedBean().getCommitteMember().isPNP());
 			member.setEmail(getManagedBean().getCommitteMember().getEmail());
-			parameter.setParameterId(585l);
-			member.setMemberRole(parameter);
+			member.setMemberRole(getManagedBean().getCommitteMember().getMemberRole());
 			member.setAccessRight("E");
 			member.setPmOrgProfile(scQt.getPmOrgProfile());
 			
@@ -513,6 +537,9 @@ public class QTCommitteBackingBean extends
 					.getPmParameter();
 			user.setIdentificationCode(identificationCode);
 			
+			PmCountry pmCountry = new PmCountry();
+			pmCountry.setCountryId(1L);
+			user.setPmCountry(pmCountry);
 			// pmUser.setPmAddressTypes(null);
 
 			// User Notification
@@ -590,6 +617,7 @@ public class QTCommitteBackingBean extends
 				committeeMember.setPmOrgProfile(scQt.getPmOrgProfile());
 				
 				if(committeeMember.isPNP() == true) {
+					PmParameter parameter = user.getMemberRole();
 					parameter.setParameterId(583l);
 					committeeMember.setMemberRole(parameter);
 				} else {

@@ -17,14 +17,14 @@
 							value="#{lbl['lbl.sc.committe.clone.title']}" /></td>
 					<td colspan="3"><p:inputText
 							value="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.qtTitle}"
-							size="92" /></td>
+							size="92" maxlength="100" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel
 							value="#{lbl['lbl.sc.committe.clone.qtntender']}" /></td>
 					<td><p:inputText
 							value="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.qtNo}"
-							size="30" /></td>
+							size="30" maxlength="21" /></td>
 					<td />
 					<td />
 				</tr>
@@ -110,7 +110,7 @@
 
 				<p:column headerText="#{lbl['lbl.so.procmode']}">
 					<h:outputText
-						value="#{qTCommitteBackingBean.getParameterDesc(ParameterTypeConst.scProcurementMode, scQt.procurementMode)}" />
+						value="#{qTCommitteBackingBean.getParameterDesc(scQt.procurementMode)}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.so.crtdt']}">
