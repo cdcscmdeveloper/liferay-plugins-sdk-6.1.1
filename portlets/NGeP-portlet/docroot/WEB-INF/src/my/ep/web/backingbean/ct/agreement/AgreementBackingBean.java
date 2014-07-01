@@ -194,8 +194,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IAgreementSO.class);
 			
 			ContractAgreementResDTO resDTO = new ContractAgreementResDTO();
-			String agrrementType = dataType.getAgreementType()==null? "":dataType.getAgreementType();
-			if (agrrementType.equalsIgnoreCase("supplemental")) {
+			if (dataType.getAgreementType() != null && dataType.getAgreementType().equalsIgnoreCase("supplemental")) {
 				ctReqDTO.setDocType(ParameterConst.DOCTYPE_SUPPLEMENTAL_AGREEMENT);
 				getManagedBean().setAgreementType(dataType.getAgreementType());
 				if (dataType.getAgreementId().intValue() == 0) {

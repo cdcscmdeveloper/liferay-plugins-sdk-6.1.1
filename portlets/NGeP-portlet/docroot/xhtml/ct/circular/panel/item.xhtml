@@ -239,7 +239,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 				<c:if test="#{panelBackingBean.managedBean.selectionOfZone}">
 				   <ac:lov id="loaSupId"  lovId="SM_SUPPLIER" headerText="Supplier List" 
 					   saveObject="panelBackingBean.managedBean.selectedPanelZone.ctPanelSuppliers[#{index}].supplier"
-					   value="#{supVar.supplier.companyName}" update="@([id$=itemSupplier])" >
+					   value="#{supVar.supplier.companyName}" update="@form" >
 				   </ac:lov>
 				  </c:if>
 				  <c:if test="#{!panelBackingBean.managedBean.selectionOfZone}">

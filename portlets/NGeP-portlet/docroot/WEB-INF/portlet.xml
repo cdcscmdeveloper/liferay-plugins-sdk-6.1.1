@@ -302,7 +302,7 @@
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/ct/circular/centralcontract/circularBase.xhtml</value>
+			<value>/xhtml/ct/circular/centralcontract/preRenderCircularBase.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -334,7 +334,7 @@
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/ct/circular/centralcontract/search.xhtml</value>
+			<value>/xhtml/ct/circular/centralcontract/preRenderSearch.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -366,7 +366,7 @@
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/ct/circular/panel/circularBase.xhtml</value>
+			<value>/xhtml/ct/circular/panel/preRenderCircularBase.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -398,7 +398,7 @@
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/ct/circular/panel/search.xhtml</value>
+			<value>/xhtml/ct/circular/panel/preRenderSearch.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -430,7 +430,7 @@
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/ct/circular/panel/cancelCircularBase.xhtml</value>
+			<value>/xhtml/ct/circular/panel/preRenderCancelCircularBase.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>

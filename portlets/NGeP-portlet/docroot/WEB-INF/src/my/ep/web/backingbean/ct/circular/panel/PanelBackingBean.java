@@ -153,6 +153,20 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		return new FacesScopes();
 	}
 	
+	public void preRenderCircular() {
+		renewSesionObject();
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, "circularBase.xhtml?faces-redirect=true");
+	}
+	
+	public void preRenderSearch() {
+		renewSesionObject();
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, "search.xhtml?faces-redirect=true");
+	}
+	
 	public void preRenderView() {
 		ICircularSO circularSO = null;
 		try {
@@ -224,6 +238,13 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		} finally {
 			circularSO = null;
 		}
+	}
+	
+	public void preRenderCancelCircular() {
+		renewSesionObject();
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, "cancelCircularBase.xhtml?faces-redirect=true");
 	}
 	
 	public void preRenderViewCancelReq() {
@@ -305,6 +326,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		this.getManagedBean().setSearchItemName(null);
 		this.getManagedBean().setSearchStartDate(null);
 		this.getManagedBean().setSearchEndDate(null);
+		this.getManagedBean().setSearchStatusId(null);
 	}
 	
 	public void searchCircularVer() {
@@ -461,6 +483,8 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 					String messageId = MessageConst.INFO_700005;
 					if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 						messageId = MessageConst.INFO_700025;
+					} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
+						messageId = MessageConst.INFO_700009;
 					} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 						messageId = MessageConst.INFO_700007;
 					} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
@@ -471,12 +495,13 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 						MessageUtils.getMessage(messageId, new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, this.getManagedBean().getCircularVer().getDocType()), 
 								this.getManagedBean().getCircularVer().getCircularNo()}, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-			    if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId()==null)) { 				  
+			    if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 				  
 					renewSesionObject();
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
 				}else{
 			        getManagedBean().setCircularVer(resDTO.getCircularVer());
 					getManagedBean().setCircular(resDTO.getCircularVer().getCtCircular());
+					getManagedBean().setUpdateAction(false);
 					initializeRemarks();
 					ContractBackingBean ctBB = new ContractBackingBean();
 					ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
@@ -566,7 +591,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	}
 	
 	private void validateCircular(String outcome) {
-		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+		//if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
 			if(getManagedBean().getCircularVer().getCircularFileName()==null) {
 				throw new EpException(MessageConst.ERROR_100022, new String[]{"Circular Letter"});
 			}
@@ -597,8 +622,17 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 					}
 					
 					if(getItemGeneralCode(panelItem.getPanelCoverageId().getParameterId()).equalsIgnoreCase(
-							ParameterConst.CIRCULAR_PANEL_COVERAGE_ZONE) && panelItem.getCtPanelZones().size()==0) {
-						throw new EpException(MessageConst.ERROR_100023, new String[]{"Zone"});
+							ParameterConst.CIRCULAR_PANEL_COVERAGE_ZONE)) {
+						if(panelItem.getCtPanelZones().size()==0) {
+							throw new EpException(MessageConst.ERROR_100023, new String[]{"Zone"});
+						}
+						else {
+							for (CtPanelZone panelZone: panelItem.getCtPanelZones()) {
+								if(panelZone.getName().length()==0) {
+									throw new EpException(MessageConst.ERROR_100022, new String[]{"Zone Name"});
+								}
+							}
+						}
 					}
 					
 					if(panelItem.getCtPanelSuppliers().size()==0) {
@@ -610,7 +644,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			if(getManagedBean().getApproverModel().getTarget().size()==0) {
 				throw new EpException(MessageConst.ERROR_100022, new String[]{"Selected approver(s)"});
 			}
-		}
+		//}
 		
 		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 			if(getManagedBean().getCircularVer().getCircularRemarks().get(0).getRemark().length()==0 &&
@@ -968,12 +1002,15 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			this.getManagedBean().setSelectedPanelZone(null);
 			this.getManagedBean().setSelectedTabIndex(0);
 			getManagedBean().setAction(action);
-			if(action.equalsIgnoreCase("view")) {
+			if(action.equalsIgnoreCase("view") || action.equalsIgnoreCase("save")) {
 				resDTO = circularSO.retrieveCircularVerById(reqDTO);
 				getManagedBean().setCircular(resDTO.getCircularVer().getCtCircular());
 				getManagedBean().setCircularVer(resDTO.getCircularVer());
 				getManagedBean().setUpdateAction(false);
-				getManagedBean().setOutComes(new String[]{});
+				if (action.equalsIgnoreCase("view"))
+					getManagedBean().setOutComes(new String[]{});
+				else
+					getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
 			} else if(action.equalsIgnoreCase("update")) {
 				reqDTO.setUpdateAction(true);
 				resDTO = circularSO.retrieveCircularVerById(reqDTO);					
@@ -997,7 +1034,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			ContractBackingBean ctBB = new ContractBackingBean();
 			ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 			
-			return "circularBase?faces-redirect=true";
+			return "circularBase.xhtml?faces-redirect=true";
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));

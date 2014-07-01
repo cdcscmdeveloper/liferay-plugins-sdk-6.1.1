@@ -55,6 +55,7 @@
 		 <h:panelGroup rendered="#{centralContractBackingBean.managedBean.selectedCircularContract != null and
 		   centralContractBackingBean.managedBean.selectedCircularContract.ctCircularItems.size() > 0}">
 		  <p:outputLabel value="#{lbl['lbl.ct.cc.sublabel.item']}" style="float:left; font-weight:bold; padding-top:5px;"/>
+		  <div style="clear:both" />
 		  <p:dataTable id="circularItemDt" var="itemVar" 
 		      value="#{centralContractBackingBean.managedBean.selectedCircularContract.ctCircularItems}"
 		      lazy="true" selectionMode="single" selection="#{centralContractBackingBean.managedBean.selectedCircularItem}" rowKey="#{itemVar}">
