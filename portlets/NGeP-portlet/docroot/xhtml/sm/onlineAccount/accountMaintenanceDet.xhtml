@@ -16,7 +16,7 @@
 		<p:outputPanel id="outPnlRegForm">
 			<c:choose>
 				<c:when
-					test="${registrationBackingBean.managedBean.smSupp.businessType == '13'}">
+					test="${registrationBackingBean.managedBean.smSupp.businessType == SupplierManagementConst.INDIVIDUAL_FLAG}">
 					<ui:include src="/xhtml/sm/shared/onlinereg/individualregform.xhtml" />
 				</c:when>
 
