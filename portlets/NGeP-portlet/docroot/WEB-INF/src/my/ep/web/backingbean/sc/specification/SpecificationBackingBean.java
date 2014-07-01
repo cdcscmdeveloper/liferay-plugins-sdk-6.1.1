@@ -444,7 +444,8 @@ public class SpecificationBackingBean extends
 				// renew the session..
 				renewSesionObject();
 				// Method to load the updated info upon saving the data..
-				loadPrepareSpecCommitteeDetails(scQt.getQtId(), QTConstants.DOCTYPE_QT);
+				loadPrepareSpecCommitteeDetails(scQt.getQtId(),
+						QTConstants.DOCTYPE_QT);
 				FacesContext.getCurrentInstance().addMessage(
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
@@ -814,14 +815,13 @@ public class SpecificationBackingBean extends
 		 * retriveCommitteeEndorsment();
 		 */
 	}
-	
-	
+
 	/**
 	 * To reload the data after saving...
 	 */
-	public void loadPrepareSpecCommitteeDetails(Long qtId,String docType) {
+	public void loadPrepareSpecCommitteeDetails(Long qtId, String docType) {
 
-		retriveSpecdetails(qtId,docType);
+		retriveSpecdetails(qtId, docType);
 
 		retriveBusinessOwnerQualificationCriteri();
 		if (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(this
@@ -842,7 +842,6 @@ public class SpecificationBackingBean extends
 		this.getManagedBean().setActiveIndex(0);
 
 	}
-
 
 	public void businessOwnerTabChange(TabChangeEvent event) {
 		String tabTitle = event.getTab().getTitle();
@@ -927,11 +926,10 @@ public class SpecificationBackingBean extends
 										.constuctPanelTreeNodes(ctPanelZone));
 
 					}
-				}
-				else if(scQt.isPanel() && !scQt.isZonal()){
+				} else if (scQt.isPanel() && !scQt.isZonal()) {
 					retriveZonesByCircularNo();
 
-			} 
+				}
 			}
 
 		} finally {
@@ -1638,7 +1636,7 @@ public class SpecificationBackingBean extends
 					.getEvaluationType())) {
 				this.getManagedBean().setActiveIndex(8);
 			}
-			this.getManagedBean().getScQt().setScheduleType("F");
+
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 			specSo = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
@@ -2567,6 +2565,7 @@ public class SpecificationBackingBean extends
 		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 		ScQt scQt = this.getManagedBean().getScQt();
 		scQt.setMaxProposal(1);
+		scQt.setScheduleType("F");
 		if (scQt.getEstimatedAmount().intValue() < QTConstants.QUOTAION_VALUE) {
 			String amount = CommonMethod
 					.getMessageCommon("lbl.sc.spec.est.price");
