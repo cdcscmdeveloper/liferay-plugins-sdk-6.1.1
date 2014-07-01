@@ -5,9 +5,10 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:ac="http://ac.my/jsf/composite/cc">
-    <ui:define name="contentSection">
+	xmlns:ac="http://ac.my/jsf/composite/cc" >
+	<ui:define name="contentSection">
     <style>
       .column-align-center { text-align: center !important;}
     </style> 
@@ -25,43 +26,49 @@
       </h:panelGrid>
      </p:panel>
      <p:panel id="searchResulId" header="#{lbl['lbl.ct.tpl.result']}" toggleable="true" toggleSpeed="500">
-        <p:dataTable id="dataTable" var="data" value="#{contractTemplateBackingBean.managedBean.ctTemplatesList}" rowIndexVar="index"
-	     widgetVar="dataTableObj" lazy="false" dynamic="true" rowKey="#{data}" 
-	     selection="#{contractTemplateBackingBean.selectedTemplates}">
+     <h:panelGrid style="width:100%;">
+        <p:dataTable id="dataTable" var="data" value="#{contractTemplateBackingBean.managedBean.ctTemplatesList}" 
+	     lazy="false" dynamic="true" rowKey="#{data}" selection="#{contractTemplateBackingBean.selectedTemplates}">
 		 <ac:paginator for="dataTable"/>
-		 <p:columnGroup type="header"> 
-		 <p:row> 
-		    <p:column headerText="Select"   /> 
-			<p:column headerText="#{lbl['lbl.ct.tpl.table.name']}"   /> 
-			<p:column headerText="#{lbl['lbl.ct.tpl.table.cby']}" /> 	
-			<p:column headerText="#{lbl['lbl.ct.tpl.table.cdate']}" /> 
-			<p:column headerText="#{lbl['lbl.ct.tpl.table.action']}" styleClass="column-align-center" /> 		
-		  </p:row>						
-		  </p:columnGroup>
 		    <p:column selectionMode="multiple" style="width:18px;"/>
-		  <p:column><h:outputText value="#{data.name}" /></p:column>
-		  <p:column><h:outputText value="#{data.createdBy}" /></p:column>	
-		  <p:column><h:outputText value="#{data.createdDate}" /></p:column>	
-		  <p:column styleClass="column-align-center">
-		  <p:commandLink action="#{contractTemplateBackingBean.gotoEditPage}" ajax="false" process="@form">
-			 <f:setPropertyActionListener target="#{contractTemplateBackingBean.managedBean.ctTemplate}" value="#{data}" />
-			 <p:graphicImage library="ep/images/design" name="edit.png" value="/resources/ep/images/design/edit.png" title="Edit" />
-		  </p:commandLink>
-		  </p:column> 
-		  </p:dataTable>
-		  <p:confirmDialog message="Do you want to delete the record?" closable="true" appendToBody="true" 
-			header="Delete Confirmation" severity="alert" widgetVar="confirmation">
-            <h:panelGrid columns="2">
-			<p:commandButton value="Yes" icon="ui-icon-accept" update="dataTable" partialSubmit="true" process="@form"
-				onclick="confirmation.hide();" actionListener="#{contractTemplateBackingBean.deleteTemplate()}" />
-			<p:commandButton value="No" icon="ui-icon-reject" onclick="confirmation.hide()" type="button" />
-			</h:panelGrid>
-			</p:confirmDialog>
-		  <div class="ppRightBtn"> 
-		       <p:commandButton action="#{contractTemplateBackingBean.gotoAddPage}"  value="Add" icon="ui-icon-add" ajax="false"/>
+			<p:column headerText="#{lbl['lbl.ct.tpl.table.name']}" style="width:50%;">
+			   <h:outputText value="#{data.name}" />
+			</p:column> 
+			<p:column headerText="#{lbl['lbl.ct.tpl.table.cby']}" style="width:20%;">
+			   <h:outputText value="#{contractTemplateBackingBean.retriveUserName(data.createdBy)}" />
+			</p:column> 	
+			<p:column headerText="#{lbl['lbl.ct.tpl.table.cdate']}" style="width:20%;">
+			   <h:outputText value="#{data.createdDate}" />
+			</p:column> 
+			<p:column styleClass="column-align-center" style="width:8%;"
+			   headerText="#{lbl['lbl.ct.tpl.table.action']}">
+			   <p:commandLink action="#{contractTemplateBackingBean.gotoEditPage}" ajax="false" process="@form">
+			      <f:setPropertyActionListener target="#{contractTemplateBackingBean.managedBean.ctTemplate}" value="#{data}" />
+			      <p:graphicImage library="ep/images/design" name="edit.png" value="/resources/ep/images/design/edit.png" title="Edit" />
+		       </p:commandLink>
+			 </p:column> 		
+	    </p:dataTable>
+	   </h:panelGrid>
+		<div class="ppRightBtn"> 
+		    <p:commandButton action="#{contractTemplateBackingBean.gotoAddPage}"  value="Add" icon="ui-icon-add" ajax="false"/>
 		       <p:spacer width="1"/>
-               <p:commandButton value="Delete" partialSubmit="true" process="@form" onsuccess="confirmation.show()" icon="ui-icon-delete" ></p:commandButton>
+             <p:commandButton value="Delete" partialSubmit="true" process="@form" onsuccess="dlgDel.show()" icon="ui-icon-delete" />
+		 </div>
+		  <p:dialog id="dlgDel" widgetVar="dlgDel" header="#{lbl['lbl.ct.dialong.cofirm.header']}" styleClass="screen-title"  
+               resizable="false" modal="true" width="350" height="95">  
+           <h:panelGrid columns="3">
+            <p:graphicImage library="ep/images/design" name="exclamation.png"
+			   value="/resources/ep/images/design/exclamation.png" styleClass="ui-icon-complain"></p:graphicImage>
+			   <p:spacer width="10"/>
+             <p:inputTextarea value="Are you sure you want to delete this record?"  rows="2" cols="48" 
+                 styleClass="ui-inputtextarea"></p:inputTextarea>
+           </h:panelGrid>
+           <div class="ppRightBtn">
+		     <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.yes']}" icon="ui-icon-accept" update=":form:dataTable" process="@form" 
+				actionListener="#{contractTemplateBackingBean.deleteTemplate()}" onclick="dlgDel.hide();"/>
+			  <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.no']}" icon="ui-icon-reject" onclick="dlgDel.hide();" type="button" />
 		   </div>
+        </p:dialog>  
 		 </p:panel>
        </ui:define>
 </ui:composition>

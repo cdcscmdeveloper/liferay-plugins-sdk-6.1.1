@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<p:panel id="fd" header="#{lbl['lbl.ct.panel.name']}" toggleable="true" collapsed="false" toggleSpeed="500">
 		<h:panelGrid columns="2" style="width:100%;" styleClass="top-aligned-columns">
-		   <h:panelGrid columns="4" style="width:100%;" columnClasses="columnWidth15,columnWidth20,columnWidth20,columnWidth20">
+		   <h:panelGrid columns="4" style="width:100%;" columnClasses="columnWidth15,columnWidth30,columnWidth15,columnWidth30">
 		      <p:outputLabel id="cno" value="#{lbl['lbl.ct.cno']}" />
 		      <h:commandLink value="#{agreementBackingBean.managedBean.ctContract.contractNo}" styleClass="blue_font"/>
 			  <p:outputLabel id="physicalNo" value="#{lbl['lbl.ct.physicalNo']}" />
@@ -47,7 +47,7 @@
 		    <h:panelGrid>
 			<p:inputTextarea id="contractName"
 				value="#{agreementBackingBean.managedBean.ctContract.contractName}"
-				required="false" rows="3" cols="31" disabled="true" style="margin-bottom: 5px;"
+				required="false" rows="3" cols="31" disabled="true" style="width:170px;margin-bottom: 5px;"
 				autoResize="false" />	
 			</h:panelGrid>	
 			<p:outputLabel id="astatus1" value="#{lbl['lbl.ct.ag.agstatus']}" rendered="#{agreementBackingBean.managedBean.ctContract.agreement and 
@@ -106,7 +106,7 @@
 	     </h:panelGroup>
 	  <h:panelGrid columns="1">
 	    <p:inputTextarea id="justificationLbl" value="#{agreementBackingBean.managedBean.contractVer.ctContractValue.justification}"
-		  rows="4" cols="113" disabled="true" required="true" autoResize="false"></p:inputTextarea>	
+		  rows="4" style="width:640px;"  disabled="true" required="true" autoResize="false"></p:inputTextarea>	
 	  </h:panelGrid>		
     </h:panelGrid> 
   </p:outputPanel>

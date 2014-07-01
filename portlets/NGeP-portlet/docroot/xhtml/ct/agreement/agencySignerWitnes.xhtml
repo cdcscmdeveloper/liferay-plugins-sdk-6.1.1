@@ -17,15 +17,17 @@
 		   <p:outputLabel value="#{agreementBackingBean.managedBean.ctContract.ownerOrgProfile.parentOrgProfile.orgName}"/>
 		 </p:column>
          <p:column style="width:25%;" headerText="#{lbl['lbl.ct.ag.ptj']}">
-            <p:selectOneMenu id="ptj" value="#{data.orgProfile.orgProfileId}"  style="width:95%" >
+            <p:selectOneMenu id="ptj" value="#{data.orgProfile.orgProfileId}"  style="width:320px;" label="PTJ name" >
               <f:selectItems value="#{agreementBackingBean.getPtjCodeName(agreementBackingBean.managedBean.ctContract.ownerOrgProfile.parentOrgProfile.orgProfileId)}"/>
-              <p:ajax event="change" update="contractSigner" process="@this"/> 
+            <p:ajax event="change" update="contractSigner" process="@this"/> 
             </p:selectOneMenu>
          </p:column>
-         <p:column style="width:15%;" headerText="#{lbl['lbl.ct.ag.csigner']}">
-           <p:selectOneMenu id="contractSigner" value="#{data.officer.userId}"  style="width:95%;">
+         <p:column style="width:15%;" headerText="#{lbl['lbl.ct.ag.csigner']}" styleClass="companyHeaderGrid">
+           <p:selectOneMenu id="contractSigner"
+              value="#{data.officer.userId}"  style="width:180px;" label="#{lbl['lbl.ct.ag.csigner']}">
               <f:selectItems value="#{agreementBackingBean.getContractSignerDropdown(data)}"/>
-              <p:ajax event="change" update="agOfId,agOfPosition" process="@this" listener="#{agreementBackingBean.setUserValueAgency(data,data.officer.userId)}"/> 
+              <p:ajax event="change" update="agOfId,agOfPosition" process="@this" 
+                 listener="#{agreementBackingBean.setUserValueAgency(data,data.officer.userId)}"/> 
            </p:selectOneMenu>
          </p:column>  
          <p:column style="width:10%; white-space:normal;" headerText="#{lbl['lbl.ct.ag.icno']}">
@@ -37,9 +39,10 @@
        </p:dataTable>
      </h:panelGrid>
       <div class="ppRightBtn"> 
-		  <p:commandButton value="#{lbl['lbl.btn.add']}" process="@form"  action="#{agreementBackingBean.addAgencySignerParty()}" 
-		     icon="ui-icon-add" update="AgSignerTable"/>
-		  <p:commandButton value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete" process="@form" onsuccess="dlgAgSignerDel.show()"/>
+		  <p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" 
+		    action="#{agreementBackingBean.addAgencySignerParty()}" icon="ui-icon-add" update="AgSignerTable"/>
+		  <p:commandButton value="#{lbl['lbl.btn.delete']}"
+		     icon="ui-icon-delete" process="@form" onsuccess="dlgAgSignerDel.show()"/>
 	  </div>
 	   <p:dialog id="dlgAgSignerDel" widgetVar="dlgAgSignerDel" header="Delete Confirmation" styleClass="screen-title"  
            resizable="false" modal="true" width="350" height="95">  
@@ -90,8 +93,8 @@
               styleClass="ui-inputtextarea"></p:inputTextarea>
            </h:panelGrid>
            <div class="ppRightBtn">
-		     <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.yes']}" icon="ui-icon-accept" update="AgWitnessTable" process="@form" 
-				actionListener="#{agreementBackingBean.deleteAgencyWitnes()}" onclick="dlgAgWitnessDel.hide();"/>
+		     <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.yes']}" icon="ui-icon-accept" process="@form"
+		      update="AgWitnessTable" actionListener="#{agreementBackingBean.deleteAgencyWitnes()}" onclick="dlgAgWitnessDel.hide();"/>
 			  <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.no']}" icon="ui-icon-reject" onclick="dlgAgWitnessDel.hide();" type="button" />
 		   </div>
         </p:dialog>  

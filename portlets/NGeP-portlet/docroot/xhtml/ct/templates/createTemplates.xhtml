@@ -9,15 +9,15 @@
     <ui:define name="contentSection">
       <h:form id="form">  
 	     <p:panel id="ctTemplate" header="#{lbl['lbl.ct.tpl.name']}" toggleable="true"  toggleSpeed="500">
-            <h:panelGrid columns="2">
+            <h:panelGrid columns="2" columnClasses="columnWidth15">
                <p:outputLabel value="#{lbl['lbl.ct.tpl.name']}"/>
-               <p:inputText value="#{contractTemplateBackingBean.managedBean.ctTemplate.name}" style="width:250px;"/>
+               <p:inputText value="#{contractTemplateBackingBean.managedBean.ctTemplate.name}" style="width:500px;"/>
                <h:panelGroup>
 			     <div style="height: 220px; vertical-align: top">
                <p:outputLabel value="#{lbl['lbl.ct.tpl.content']}"/>  
                </div>
                </h:panelGroup>
-                 <p:editor id="editor" value="#{contractTemplateBackingBean.editorValue}" width="800" height="600" />
+                 <p:editor id="editor" value="#{contractTemplateBackingBean.editorValue}" width="1020" height="400" />
               </h:panelGrid>
               <div class="ppRightBtn"> 
 			      <p:commandButton id="submitButton" value="Submit"  action="#{contractTemplateBackingBean.createTemplate()}" icon="ui-icon-submit" />
