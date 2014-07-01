@@ -365,9 +365,18 @@ public class QTBusinessOwnerBackingBean extends
 
 	public void addCloneCommitteeMembersAction() {
 		debugLogger("addCloneCommitteeMembersAction");
+		ScCommittee scCommittee = this.getManagedBean().getScQtCommittee()
+				.getScCommittee();
+		List<ScCommitteeMember> memberList = getManagedBean()
+				.getScCommitteeMemberList();
+		if (null == memberList) {
+			memberList = new ArrayList<ScCommitteeMember>();
+		}
+		
 		List<String> itemIds = new ArrayList<String>();
 		List<ScCommitteeMember> members = getManagedBean()
 				.getSelectedCommitteMemebers();
+		
 		if (null != members) {
 			for (ScCommitteeMember committeeMember : members) {
 				if (committeeMember.isConsolidate()) {
@@ -378,8 +387,9 @@ public class QTBusinessOwnerBackingBean extends
 			}
 		}
 		if (getManagedBean().getScCommitteeMemberList().isEmpty()) {
-			getManagedBean().setScCommitteeMemberList(
-					getManagedBean().getSelectedCommitteMemebers());
+			memberList.addAll(getManagedBean().getSelectedCommitteMemebers());
+			/*getManagedBean().setScCommitteeMemberList(
+					getManagedBean().getSelectedCommitteMemebers());*/
 		} else {
 			for (ScCommitteeMember committee : this.getManagedBean()
 					.getScCommitteeMemberList()) {
@@ -391,11 +401,19 @@ public class QTBusinessOwnerBackingBean extends
 					if (itemIds.contains(committees.getIcPassport())) {
 
 					} else {
-						getManagedBean().getScCommitteeMemberList().add(committees);
+						memberList.add(committees);
+						this.getManagedBean().setScCommitteeMemberList(memberList);
 					}
 				}
 			}
-
+		}
+		
+		scCommittee.setScCommitteeMembers(memberList);
+		PmStatus committeStatus = new PmStatus();
+		committeStatus.setStatusId(60202l);
+		scCommittee.setCommitteStatus(committeStatus);
+		for (ScCommitteeMember scCommitteeMember : memberList) {
+			scCommitteeMember.setScCommittee(scCommittee);
 		}
 	}
 
