@@ -284,7 +284,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 		
 		// validate user's email existence at Liferay. 
-		try {
+/*		try {
 			if(UserLocalServiceUtil.getUserByEmailAddress(Long.valueOf(getCompanyId()), this.getManagedBean().getSmPersonnel().getEmail()) != null) {
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, "Email Address already exist.", "Email Address already exist."));
@@ -310,7 +310,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), e.getMessage()));
-		}
+		}*/
 		
 		
 		if (smAppl.getApplType().equals(SupplierManagementConst.ACC_BASIC)) {
