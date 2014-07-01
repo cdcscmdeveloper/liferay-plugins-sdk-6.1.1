@@ -84,7 +84,7 @@
 						 <td style="width: 150px">
 						     <p:outputLabel value="#{lbl['lbl.sc.sq.gen.info.just']}" /></td>
 						 <td> <p:selectOneMenu style="width: 120px;margin-bottom: 5px;"
-								value="#{simpleQuoteBackingBean.managedBean.scQuote.justificationType}">
+								value="#{simpleQuoteBackingBean.managedBean.scQuote.justificationType.parameterCode}">
 							   <f:selectItems
 									value="#{simpleQuoteBackingBean.managedBean.justDropdown}" />
 								<p:ajax event="change" update="justId" 

@@ -35,10 +35,7 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 			</td>
 			<td width="80%">
 			<p:panel id="menuId">
-			  <div align="right">
-					  <p:commandButton value="#{lbl['lbl.sc.common.save']}" icon="ui-icon-save" 
-					    action="#{simpleQuoteBackingBean.saveSimpleQuote}" update="@form" process="@all"/>
-			   </div>
+			
 				<c:if test="#{simpleQuoteBackingBean.managedBean.selectedTabIndex == 0}">
 				    <ui:include src="/xhtml/sc/directpurchase/simpleQuoteGenInfo.xhtml" />
 				</c:if>

@@ -18,11 +18,10 @@
 	    <h:panelGrid width="100%" style="margin-top:20px">
 			<p:dataTable id="zoneLocationDataTable" 
 			        value="#{simpleQuoteBackingBean.managedBean.zoneTrees}" var="zoneTree"
-			        rowIndexVar="index">
+			        selection="#{simpleQuoteBackingBean.managedBean.selectedTreeNode}"
+			        rowIndexVar="index" selectionMode="single" rowKey="#{zoneTree}">
 				 <p:column headerText="Location">
-					<p:tree value="#{zoneTree}" var="location" id="treeid"
-						selection="#{simpleQuoteBackingBean.managedBean.selectedNodes}"
-						selectionMode="checkbox">
+					<p:tree value="#{zoneTree}" var="location" id="treeid">
 						<p:treeNode type="zone">
 							<h:outputText value="#{location.zoneName}" />
 						</p:treeNode>
@@ -55,7 +54,7 @@
 			 
           <p:commandButton value="#{lbl['lbl.sc.sq.supp.criteria.delete.btn']}" 
 		     process="@all, zoneLocationDataTable" partialSubmit="true"
-		     action="#{simpleQuoteBackingBean.deleteTreeNodes}"
+		     action="#{simpleQuoteBackingBean.deleteZoneTreeNode}"
 		     update="zoneLocationDataTable" icon="ui-icon-delete"/> 			 
 			 
 		</div>

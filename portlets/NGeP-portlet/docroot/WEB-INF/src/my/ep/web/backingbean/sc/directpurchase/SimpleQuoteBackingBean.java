@@ -63,6 +63,7 @@ import my.ep.persistence.entity.pm.common.PmBusinessNature;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
@@ -97,7 +98,6 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.sc.directpurchase.SimpleQuoteManagedBean;
-import my.ep.web.sc.quationtender.common.QTConstants;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -109,7 +109,6 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
-import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
 import com.liferay.portal.kernel.util.WebKeys;
@@ -275,9 +274,6 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 				}
 				quote.setRequestNote(requestNote);
 			}
-
-			
-			
 			if(quote.getProcurementType() == null){
 				parameterReqDTO.setParameterType(ParameterTypeConst.PROCUREMENT_TYPE);
 				parameterReqDTO.setParameterCode(getManagedBean().getProcurementType());
@@ -285,8 +281,38 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 				quote.setProcurementType(resDTO.getPmParameter());
 			}
 			
+			if(getManagedBean().getLocationLevel() != null){
+				parameterReqDTO = new ParameterReqDTO();
+				parameterReqDTO.setParameterType(ParameterTypeConst.LOCATION_LEVEL);
+				parameterReqDTO.setParameterCode(getManagedBean().getLocationLevel());
+				ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
+				quote.setProcurementType(resDTO.getPmParameter());
+			}
+			
 			if(quote.getQuoteNo()  == null){
 				quote.setQuoteNo(getManagedBean().getQuoteNo());
+			}
+			
+			// justification type
+			parameterReqDTO = new ParameterReqDTO();
+			if (quote.getProcurementType().getParameterCode()
+					.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)) {
+				parameterReqDTO.setParameterType(ParameterTypeConst.JUSTIFICATION_TYPE_ADHOC);
+				if(quote.getJustificationType().getParameterCode() != null){
+					parameterReqDTO.setParameterCode(quote.getJustificationType().getParameterCode());
+					ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
+					quote.setJustificationType(resDTO.getPmParameter());
+				}
+			} else if (quote.getProcurementType().getParameterCode()
+					.equalsIgnoreCase(ParameterConst.PROC_TYPE_EMERGENCY)) {
+				parameterReqDTO.setParameterType(ParameterTypeConst.JUSTIFICATION_TYPE_EMERGENCY);
+				if(quote.getJustificationType().getParameterCode() != null){
+					parameterReqDTO.setParameterCode(quote.getJustificationType().getParameterCode());
+					ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
+					quote.setJustificationType(resDTO.getPmParameter());
+				}
+			} else {
+				quote.setJustificationType(null);
 			}
 			
 			// zone details
@@ -296,55 +322,82 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			
 			//by location
 			if(!getManagedBean().getLocationTrees().isEmpty()){
-				quote.setLocationStateCriterias(getLocationStateCriterias(getManagedBean().getLocationTrees(), quote));
-				quote.setLocationDivisionCriterias(getLocationDivisionCriterias(getManagedBean().getLocationTrees(), quote));
-				quote.setLocationDistrictCriterias(getLocationDistrictCriterias(getManagedBean().getLocationTrees(), quote));
+
+				if(quote.getLocationStateCriterias() == null || quote.getLocationStateCriterias().isEmpty()){
+					quote.setLocationStateCriterias(getLocationStateCriterias(getManagedBean().getLocationTrees(), quote));	
+				}
+				if(quote.getLocationDivisionCriterias() == null || quote.getLocationDivisionCriterias().isEmpty()){
+					quote.setLocationDivisionCriterias(getLocationDivisionCriterias(getManagedBean().getLocationTrees(), quote));
+				}
+				if(quote.getLocationDistrictCriterias() == null || quote.getLocationDistrictCriterias().isEmpty()){
+					quote.setLocationDistrictCriterias(getLocationDistrictCriterias(getManagedBean().getLocationTrees(), quote));
+				}
 			}
 
 			// by business nature
 			if(getManagedBean().getBusinessNatureCriterias() != null){
-				quote.setBusinessNatureCriterias(getBusinessNatureCriterias(getManagedBean().getBusinessNatureCriterias(), quote));
+				for (ScBusinessNatureQuoteCriteria natureQuoteCriteria : getManagedBean().getBusinessNatureCriterias()) {
+					if(natureQuoteCriteria.getQuoteCriteriaId() == null){
+						quote.getBusinessNatureCriterias().add(natureQuoteCriteria);
+					}
+				}
 			}
-			
-			
+
 			List<ScQuoteSupplier> suppliers = new ArrayList<ScQuoteSupplier>();
 			// by supplier 
 			if(getManagedBean().getSupplierList() != null){
-				suppliers.addAll(getManagedBean().getSupplierList());
+				quote.setScQuoteSuppliers(getManagedBean().getSupplierList());
 			}
 			// panel item
 			if(getManagedBean().getPanelSuppliers() != null){
-				suppliers.addAll(getManagedBean().getPanelSuppliers());
+				//suppliers.addAll(getManagedBean().getPanelSuppliers());
 			}
 			// govt sellers
 			if(getManagedBean().getGovtSellers() != null){
-				suppliers.addAll(getManagedBean().getGovtSellers());
+				//suppliers.addAll(getManagedBean().getGovtSellers());
 			}
 			if(suppliers != null){
-				quote.setScQuoteSuppliers(suppliers);
+				//quote.setScQuoteSuppliers(suppliers);
 			}
+			
 			// remarks
 			quote.setRemarks(initializeRemarks(quote));
+			quote.setWorkflowStatuses(null);
+		
 			// tpl spec - product
 			if(getManagedBean().getProductTemplateSpecBean().getSpecMaster() != null){
-				List<ScQuoteDoc> quoteDocs = new ArrayList<ScQuoteDoc>();
-				ScQuoteDoc quoteDoc = new ScQuoteDoc();
+				List<ScQuoteDoc> quoteDocs = quote.getQuoteDocs();
+				if(quote.getQuoteDocs() == null){
+					quoteDocs = new ArrayList<ScQuoteDoc>();
+				}
 				if(getManagedBean().getProductTemplateSpecBean().getSpecMaster().getSpecMasterId() != null){
-					quoteDoc.setSpecMaster(getManagedBean().getProductTemplateSpecBean().getSpecMaster());
-					quoteDoc.setQuote(getManagedBean().getScQuote());
-					quoteDocs.add(quoteDoc);
-					quote.setQuoteDocs(quoteDocs);
+					for (ScQuoteDoc scQuoteDoc : quoteDocs) {
+						if(scQuoteDoc.getQuoteDocId() == null){
+							ScQuoteDoc quoteDoc = new ScQuoteDoc();
+							quoteDoc.setSpecMaster(getManagedBean().getProductTemplateSpecBean().getSpecMaster());
+							quoteDoc.setQuote(getManagedBean().getScQuote());
+							quoteDocs.add(quoteDoc);
+							quote.setQuoteDocs(quoteDocs);
+						}
+					}
 				}
 			}
 			// tpl spec - service
 			if(getManagedBean().getServiceTemplateSpecBean().getSpecMaster() != null){
-				List<ScQuoteDoc> quoteDocs = new ArrayList<ScQuoteDoc>();
-				ScQuoteDoc quoteDoc = new ScQuoteDoc();
+				List<ScQuoteDoc> quoteDocs = quote.getQuoteDocs();
+				if(quote.getQuoteDocs() == null){
+					quoteDocs = new ArrayList<ScQuoteDoc>();
+				}
 				if(getManagedBean().getServiceTemplateSpecBean().getSpecMaster().getSpecMasterId() != null){
-					quoteDoc.setSpecMaster(getManagedBean().getServiceTemplateSpecBean().getSpecMaster());
-					quoteDoc.setQuote(getManagedBean().getScQuote());
-					quoteDocs.add(quoteDoc);
-					quote.setQuoteDocs(quoteDocs);
+					for (ScQuoteDoc scQuoteDoc : quoteDocs) {
+						if(scQuoteDoc.getQuoteDocId() == null){
+							ScQuoteDoc quoteDoc = new ScQuoteDoc();
+							quoteDoc.setSpecMaster(getManagedBean().getServiceTemplateSpecBean().getSpecMaster());
+							quoteDoc.setQuote(getManagedBean().getScQuote());
+							quoteDocs.add(quoteDoc);
+							quote.setQuoteDocs(quoteDocs);
+						}
+					}
 				}
 			}
 			FacesScopes facesScopes = new FacesScopes();
@@ -376,102 +429,160 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 	public String submitSimpleQuote() {
 		debugLogger("submitSimpleQuote");
 		IQuoteSO quoteSO = null;
-		ScRequestNote requestNote;
-		List<ScQuoteDoc> quoteDocs = null;
 		try {
-			quoteSO = (IQuoteSO) BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-							IQuoteSO.class);
+			quoteSO = (IQuoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQuoteSO.class);
 			QuoteReqDTO reqDTO = new QuoteReqDTO();
 			IParameterSO parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 			IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
 			ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
 			ScQuote quote = getManagedBean().getScQuote();
-			List<ScQuoteSupplier> suppliers = quote.getScQuoteSuppliers();
-			parameterReqDTO.setParameterType(ParameterTypeConst.PROCUREMENT_TYPE);
-			parameterReqDTO.setParameterCode(getManagedBean().getProcurementType());
-			ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
-			quote.setProcurementType(resDTO.getPmParameter());
-            quote.setQuoteNo(getManagedBean().getQuoteNo());
-			ScRequestItem requestItem = new ScRequestItem();
-			List<ScRequestItem> requestItems = new ArrayList<ScRequestItem>();
-			requestItems.add(requestItem);
-			quote.setRequestItems(requestItems);
 			
+			if(quote.getRequestItems() == null){
+				List<ScRequestItem> requestItems = new ArrayList<ScRequestItem>();
+				ScRequestItem requestItem = new ScRequestItem();
+				requestItem.setQuote(quote);
+				requestItems.add(requestItem);
+				quote.setRequestItems(requestItems);
+			}
 			if(quote.getRequestNote() == null){
-				requestNote = new ScRequestNote();
+				ScRequestNote requestNote = new ScRequestNote();
 				requestNote.setRequestNoteNo(directPurchaseSO.generateRequestNoteNo());
 				requestNote.setSourceMethod(ParameterConst.REQUEST_NOTE_SQ);
 				requestNote.setWorkFlowStatuses(null);
-				requestNote.setPmOrgProfile(ptjNameEvent());
 				requestNote.setQuote(quote);
+				if(requestNote.getPmOrgProfile() == null){
+					requestNote.setPmOrgProfile(ptjNameEvent());
+				}
 				quote.setRequestNote(requestNote);
 			}
-			quote.setWorkflowStatuses(null);
+			
+			if(quote.getProcurementType() == null){
+				parameterReqDTO.setParameterType(ParameterTypeConst.PROCUREMENT_TYPE);
+				parameterReqDTO.setParameterCode(getManagedBean().getProcurementType());
+				ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
+				quote.setProcurementType(resDTO.getPmParameter());
+			}
+			
+			if(getManagedBean().getLocationLevel() != null){
+				parameterReqDTO = new ParameterReqDTO();
+				parameterReqDTO.setParameterType(ParameterTypeConst.LOCATION_LEVEL);
+				parameterReqDTO.setParameterCode(getManagedBean().getLocationLevel());
+				ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
+				quote.setProcurementType(resDTO.getPmParameter());
+			}
+			
+			if(quote.getQuoteNo()  == null){
+				quote.setQuoteNo(getManagedBean().getQuoteNo());
+			}
+			
+			// justification type
+			parameterReqDTO = new ParameterReqDTO();
+			if (quote.getProcurementType().getParameterCode()
+					.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)) {
+				parameterReqDTO.setParameterType(ParameterTypeConst.JUSTIFICATION_TYPE_ADHOC);
+				if(quote.getJustificationType().getParameterCode() != null){
+					parameterReqDTO.setParameterCode(quote.getJustificationType().getParameterCode());
+					ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
+					quote.setJustificationType(resDTO.getPmParameter());
+				}
+			} else if (quote.getProcurementType().getParameterCode()
+					.equalsIgnoreCase(ParameterConst.PROC_TYPE_EMERGENCY)) {
+				parameterReqDTO.setParameterType(ParameterTypeConst.JUSTIFICATION_TYPE_EMERGENCY);
+				if(quote.getJustificationType().getParameterCode() != null){
+					parameterReqDTO.setParameterCode(quote.getJustificationType().getParameterCode());
+					ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
+					quote.setJustificationType(resDTO.getPmParameter());
+				}
+			} else{
+				quote.setJustificationType(null);
+			}
 			
 			// zone details
 			if(!getManagedBean().getZoneTrees().isEmpty()){
 				quote.setQuoteZone(getQuoteZones(getManagedBean().getZoneTrees()));
 			}
-
+			
 			//by location
 			if(!getManagedBean().getLocationTrees().isEmpty()){
-				quote.setLocationStateCriterias(getLocationStateCriterias(getManagedBean().getLocationTrees(), quote));
-				quote.setLocationDivisionCriterias(getLocationDivisionCriterias(getManagedBean().getLocationTrees(), quote));
-				quote.setLocationDistrictCriterias(getLocationDistrictCriterias(getManagedBean().getLocationTrees(), quote));
-			}
 
-			// by business nature
-			if(getManagedBean().getBusinessNatureCriterias() !=null){
-				if(quote.getBusinessNatureCriterias() == null || quote.getBusinessNatureCriterias().isEmpty()){
-					quote.setBusinessNatureCriterias(getBusinessNatureCriterias(getManagedBean().getBusinessNatureCriterias(), quote));
+				if(quote.getLocationStateCriterias() == null || quote.getLocationStateCriterias().isEmpty()){
+					quote.setLocationStateCriterias(getLocationStateCriterias(getManagedBean().getLocationTrees(), quote));	
+				}
+				if(quote.getLocationDivisionCriterias() == null || quote.getLocationDivisionCriterias().isEmpty()){
+					quote.setLocationDivisionCriterias(getLocationDivisionCriterias(getManagedBean().getLocationTrees(), quote));
+				}
+				if(quote.getLocationDistrictCriterias() == null || quote.getLocationDistrictCriterias().isEmpty()){
+					quote.setLocationDistrictCriterias(getLocationDistrictCriterias(getManagedBean().getLocationTrees(), quote));
 				}
 			}
 
+			// by business nature
+			if(getManagedBean().getBusinessNatureCriterias() != null){
+				for (ScBusinessNatureQuoteCriteria natureQuoteCriteria : getManagedBean().getBusinessNatureCriterias()) {
+					if(natureQuoteCriteria.getQuoteCriteriaId() == null){
+						natureQuoteCriteria.setQuote(quote);
+						quote.getBusinessNatureCriterias().add(natureQuoteCriteria);
+					}
+				}
+			}
+
+			List<ScQuoteSupplier> suppliers = new ArrayList<ScQuoteSupplier>();
 			// by supplier 
 			if(getManagedBean().getSupplierList() != null){
-				suppliers.addAll(getManagedBean().getSupplierList());
+				quote.setScQuoteSuppliers(getManagedBean().getSupplierList());
 			}
+			
 			// panel item
 			if(getManagedBean().getPanelSuppliers() != null){
-				suppliers.addAll(getManagedBean().getPanelSuppliers());
+				//suppliers.addAll(getManagedBean().getPanelSuppliers());
 			}
 			// govt sellers
 			if(getManagedBean().getGovtSellers() != null){
-				suppliers.addAll(getManagedBean().getGovtSellers());
+				//suppliers.addAll(getManagedBean().getGovtSellers());
 			}
 			if(suppliers != null){
-				System.out.println("suppliers size " + suppliers.size());
-				quote.setScQuoteSuppliers(suppliers);
+				//quote.setScQuoteSuppliers(suppliers);
 			}
-			//remarks
-			quote.setRemarks(initializeRemarks(quote));
 			
+			// remarks
+			quote.setRemarks(initializeRemarks(quote));
+			quote.setWorkflowStatuses(null);
+		
 			// tpl spec - product
 			if(getManagedBean().getProductTemplateSpecBean().getSpecMaster() != null){
+				List<ScQuoteDoc> quoteDocs = quote.getQuoteDocs();
+				if(quote.getQuoteDocs() == null){
+					quoteDocs = new ArrayList<ScQuoteDoc>();
+				}
 				if(getManagedBean().getProductTemplateSpecBean().getSpecMaster().getSpecMasterId() != null){
-					if(quote.getQuoteDocs() == null){
-						quoteDocs = new ArrayList<ScQuoteDoc>();
-						ScQuoteDoc quoteDoc  = new ScQuoteDoc();
-						quoteDoc.setSpecMaster(getManagedBean().getProductTemplateSpecBean().getSpecMaster());
-						quoteDoc.setQuote(getManagedBean().getScQuote());
-						quoteDocs.add(quoteDoc);
-						quote.setQuoteDocs(quoteDocs);	
+					for (ScQuoteDoc scQuoteDoc : quoteDocs) {
+						if(scQuoteDoc.getQuoteDocId() == null){
+							ScQuoteDoc quoteDoc = new ScQuoteDoc();
+							quoteDoc.setSpecMaster(getManagedBean().getProductTemplateSpecBean().getSpecMaster());
+							quoteDoc.setQuote(getManagedBean().getScQuote());
+							quoteDocs.add(quoteDoc);
+							quote.setQuoteDocs(quoteDocs);
+						}
 					}
 				}
 			}
 			// tpl spec - service
 			if(getManagedBean().getServiceTemplateSpecBean().getSpecMaster() != null){
-				if(quote.getQuoteDocs() != null && !quote.getQuoteDocs().isEmpty() && quote.getQuoteDocs().size() >0){
-					if(quote.getQuoteDocs() == null){
+				List<ScQuoteDoc> quoteDocs = quote.getQuoteDocs();
+				if(quote.getQuoteDocs() == null){
 					quoteDocs = new ArrayList<ScQuoteDoc>();
-					ScQuoteDoc quoteDoc  = new ScQuoteDoc();
-					quoteDoc.setSpecMaster(getManagedBean().getServiceTemplateSpecBean().getSpecMaster());
-					quoteDoc.setQuote(getManagedBean().getScQuote());
-					quoteDocs.add(quoteDoc);
-					quote.setQuoteDocs(quoteDocs);	
 				}
-			  }	
+				if(getManagedBean().getServiceTemplateSpecBean().getSpecMaster().getSpecMasterId() != null){
+					for (ScQuoteDoc scQuoteDoc : quoteDocs) {
+						if(scQuoteDoc.getQuoteDocId() == null){
+							ScQuoteDoc quoteDoc = new ScQuoteDoc();
+							quoteDoc.setSpecMaster(getManagedBean().getServiceTemplateSpecBean().getSpecMaster());
+							quoteDoc.setQuote(getManagedBean().getScQuote());
+							quoteDocs.add(quoteDoc);
+							quote.setQuoteDocs(quoteDocs);
+						}
+					}
+				}
 			}
 			
 			FacesScopes facesScopes = new FacesScopes();
@@ -496,95 +607,40 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 		return null;
 	}
 	
-	/**
-	 *  updateBpmTask method to submit simple quote details and update task by supplier in SQ
-	 */	
- public String updateBpmTask(String outcome){
-	 IQuoteSO quoteSO = (IQuoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQuoteSO.class);
-	   if(StringUtils.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT,outcome)){
-		   QuoteReqDTO reqDTO = new QuoteReqDTO();
-		   reqDTO.setQuoteBidDtl(getManagedBean().getScQuote());
-		   FacesScopes facesScopes = new FacesScopes();
-		   String token = facesScopes.getBPMAuthenticationCtxToken();
-		   reqDTO.setToken(token);
-		   reqDTO.setTaskId(getManagedBean().getTaskId());
-		   QuoteResDTO resDTO = quoteSO.saveQuoteDtl(reqDTO);
-		   if(resDTO.isSuccessful()){
-			 ScQuote scQuote = resDTO.getQuoteBidDtl();
-			 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
-					 FacesMessage.SEVERITY_INFO, null,
-					 MessageUtils.getMessage(MessageConst.INFO_700026, 
-						new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_SIMPLE_QUOTE),scQuote.getQuoteNo()},
-					    MessageUtils.BUNDLE_COMMON_MESSAGES, 
-						new FacesScopes().getUserLocale())));
-			 FacesContext fc = FacesContext.getCurrentInstance();
-			 fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE); 
-		   }else{
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR,
-							"Sorry We are unable to process.", ""));
+	   public void approverAction(String outcome) {
+		   IQuoteSO quoteSO = (IQuoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQuoteSO.class);
+		   try {
+			   QuoteReqDTO reqDTO = new QuoteReqDTO();
+			   reqDTO.setQuoteBidDtl(getManagedBean().getScQuote());
+			   FacesScopes facesScopes = new FacesScopes();
+			   String token = facesScopes.getBPMAuthenticationCtxToken();
+			   reqDTO.setToken(token);
+			   reqDTO.setOutcome(outcome);
+			   reqDTO.setTaskId(getManagedBean().getTaskId());
+			   QuoteResDTO resDTO = quoteSO.updateSimpleQuote(reqDTO);
+
+			   if(resDTO.isSuccessful()){
+				   if(BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)){
+					   successMessage(MessageConst.INFO_700009, ParameterTypeConst.DOCUMENT_TYPES,  ParameterConst.DOCTYPE_SIMPLE_QUOTE, getManagedBean().getScQuote().getQuoteNo());
+
+				   } else if(BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome)){
+					   successMessage(MessageConst.INFO_700011, ParameterTypeConst.DOCUMENT_TYPES,  ParameterConst.DOCTYPE_SIMPLE_QUOTE, getManagedBean().getScQuote().getQuoteNo());
+
+				   } else if(BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)){
+					   successMessage(MessageConst.INFO_700008, ParameterTypeConst.DOCUMENT_TYPES,  ParameterConst.DOCTYPE_SIMPLE_QUOTE, getManagedBean().getScQuote().getQuoteNo());
+
+				   }else if(BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome)){
+					   successMessage(MessageConst.INFO_700010, ParameterTypeConst.DOCUMENT_TYPES,  ParameterConst.DOCTYPE_SIMPLE_QUOTE, getManagedBean().getScQuote().getQuoteNo());
+				   }
+			   } else {
+				   throw new EpException("Failed.");
+			   }
+
+		   } finally {
+			   quoteSO = null;
 		   }
-	   }else{
-		   IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
-					.getServiceObject(IBpmSO.class);
-			BpmRequestDTO reqBpm = new BpmRequestDTO();
-			FacesScopes facesScopes = new FacesScopes();
-			String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
-			try {
-				reqBpm.setTaskId(getManagedBean().getTaskId());
-				reqBpm.setOutcome(outcome);
-				if (null != ctxToken) {
-					reqBpm.setCtxToken(ctxToken);
-					BpmResponseDTO resBpm = bpmSO.updateTask(reqBpm);
-					boolean result = resBpm != null ? resBpm.isSuccessful() : Boolean.FALSE;
-					if (result) {
-						 if(BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)){
-							FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
-									FacesMessage.SEVERITY_INFO, null, 
-									MessageUtils.getMessage(MessageConst.INFO_700009, 
-											new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_SIMPLE_QUOTE),getManagedBean().getScQuote().getQuoteNo()}, 
-											MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
-							FacesContext fc = FacesContext.getCurrentInstance();
-							fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
+	   } 
 
-						} else if(BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome)){
-							FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
-									FacesMessage.SEVERITY_INFO, null, 
-									MessageUtils.getMessage(MessageConst.INFO_700011, 
-											new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_SIMPLE_QUOTE),getManagedBean().getScQuote().getQuoteNo()}, 
-											MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
-							FacesContext fc = FacesContext.getCurrentInstance();
-							fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);	   	
-
-						} else if(BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)){
-							FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
-									FacesMessage.SEVERITY_INFO, null, 
-									MessageUtils.getMessage(MessageConst.INFO_700008, 
-											new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_SIMPLE_QUOTE),getManagedBean().getScQuote().getQuoteNo()}, 
-											MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
-							FacesContext fc = FacesContext.getCurrentInstance();
-							fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);	   	
-						}else if(BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome)){
-							FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
-									FacesMessage.SEVERITY_INFO, null, 
-									MessageUtils.getMessage(MessageConst.INFO_700010, 
-											new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_SIMPLE_QUOTE),getManagedBean().getScQuote().getQuoteNo()}, 
-											MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
-							FacesContext fc = FacesContext.getCurrentInstance();
-							fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);	   	
-						}
-					} else {
-						throw new EpException("Failed.");
-					}
-				}
-			}  finally {
-				bpmSO = null;
-			}
-	   }
-	return null;
- }
-	
 	
 	 public void byLocAndBusinessEvent() {
 		 debugLogger("byBusinessEvent");
@@ -674,6 +730,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			.setJustDropdown(
 					getDropdownCodeValues(ParameterTypeConst.JUSTIFICATION_TYPE_EMERGENCY));
 		}
+		getManagedBean().getScQuote().setJustificationType(new PmParameter());
 		
 	}
 	
@@ -1139,22 +1196,61 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 		}
 		return scGovEPNoCriterias;
 	}
-	 
-	 public void deleteTreeNodes() {
-		    debugLogger("deleteTreeNodes");
-			if (getManagedBean().getSelectedNodes().length >= 0 && getManagedBean().getSelectedNodes() != null ) {
-				for (TreeNode selectedNode : getManagedBean().getSelectedNodes()) {
-					
-					for (TreeNode treeNode : getManagedBean().getZoneTrees()) {
-						if(treeNode.equals(selectedNode)){
-							 List<TreeNode>	treeNodes =	getManagedBean().getZoneTrees();
-							 treeNodes.remove(selectedNode);
-							 getManagedBean().setZoneTrees(treeNodes);
-						}
-					}
+	/**
+	 * To delete the selected TreeNode from the zone
+	 */
+	public void deleteZoneTreeNode() {
+		TreeNode selectedTreeNode = this.getManagedBean().getSelectedTreeNode();
+		if (null == selectedTreeNode) {
+			throw new EpException("Please select At least one Zone");
+		}
+		TplSpecZoneDtl zoneDtls = (TplSpecZoneDtl) selectedTreeNode
+				.getChildren().get(0).getData();
+		if (null != selectedTreeNode) {
+			List<TreeNode> zoneTrees = this.getManagedBean()
+					.getZoneTrees();
+			for (TreeNode node : zoneTrees) {
+				if (zoneDtls.getZoneName().equalsIgnoreCase(
+						((TplSpecZoneDtl) node.getChildren().get(0).getData())
+						.getZoneName())) {
+					zoneTrees.remove(node);
+					break;
 				}
 			}
-		  }	
+			this.getManagedBean().setZoneTrees(zoneTrees);
+		}
+	}
+	
+	/**
+	 * To delete the selected TreeNode from the location
+	 */
+	public void deleteLocationTreeNode() {
+		TreeNode selectedTreeNode = this.getManagedBean().getSelectedTreeNode();
+		if (null == selectedTreeNode) {
+			throw new EpException("Please select At least one state");
+		}
+		TplSpecZoneLoc zoneLoc = (TplSpecZoneLoc) selectedTreeNode
+				.getChildren().get(0).getData();
+		if (null != selectedTreeNode) {
+			List<TreeNode> locTrees = this.getManagedBean()
+					.getLocationTrees();
+			for (TreeNode node : locTrees) {
+				if (zoneLoc == (((TplSpecZoneLoc) node.getChildren().get(0).getData()))) {
+					locTrees.remove(node);
+					break;
+				}
+			}
+			this.getManagedBean().setLocationTrees(locTrees);
+		}
+	}
+
+
+	
+	
+	
+	
+	 
+	 
 	 
 	public SelectItem[] getPriceTypeDropdownValues(String parameterType,
 			List<String> priceTypes) {
@@ -1428,14 +1524,19 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 	
 	public void supplierListListener(List<SmSupplier> suppliers){
 		debugLogger("supplierListListener");
-		List<ScQuoteSupplier> supplierList = new ArrayList<ScQuoteSupplier>();
+		List<ScQuoteSupplier> supplierList = getManagedBean().getScQuote().getScQuoteSuppliers();
+		if(supplierList == null){
+			supplierList = new ArrayList<ScQuoteSupplier>();
+		}
+
+		// adding suppliers from add to cart compare
 		if(!getManagedBean().getCompareSuppliers().isEmpty() &&getManagedBean().getCompareSuppliers().size()>0){
 			suppliers.addAll(getManagedBean().getCompareSuppliers());
 		}
-		
+
 		if (suppliers != null){
-		   for (SmSupplier supplier : suppliers) {
-			   ScQuoteSupplier quoteSupplier = new ScQuoteSupplier();
+			for (SmSupplier supplier : suppliers) {
+				ScQuoteSupplier quoteSupplier = new ScQuoteSupplier();
 				quoteSupplier.setSmSupplier(supplier);
 				quoteSupplier.setQuote(getManagedBean().getScQuote());
 				supplierList.add(quoteSupplier);
@@ -1446,11 +1547,16 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 	
 	public void businessNatureListener(List<PmBusinessNature> businessNatures){
 		debugLogger("businessNatureListener");
-		List<ScBusinessNatureQuoteCriteria> natureQuoteCriterias = new ArrayList<ScBusinessNatureQuoteCriteria>();
+		
+		List<ScBusinessNatureQuoteCriteria> natureQuoteCriterias = getManagedBean().getScQuote().getBusinessNatureCriterias();
+		if(natureQuoteCriterias == null){
+			natureQuoteCriterias = new ArrayList<ScBusinessNatureQuoteCriteria>();
+		}
 		if (businessNatures != null){
 		   for (PmBusinessNature busiNature : businessNatures) {
 			   ScBusinessNatureQuoteCriteria natureQuoteCriteria = new ScBusinessNatureQuoteCriteria();
 			   natureQuoteCriteria.setPmBusinessNature(busiNature);
+			   natureQuoteCriteria.setQuote(getManagedBean().getScQuote());
 			   natureQuoteCriterias.add(natureQuoteCriteria);
 			}
 		   getManagedBean().setBusinessNatureCriterias(natureQuoteCriterias);
@@ -1651,8 +1757,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 					if(scQuote.getQuoteZone().getTplSpecZoneDtls() != null && scQuote.getQuoteZone().getTplSpecZoneDtls().size() >0){
 						for (TplSpecZoneDtl tplSpecZoneDtl : scQuote.getQuoteZone().getTplSpecZoneDtls() ) {
 							if(tplSpecZoneDtl.getTplSpecZoneLocs() != null && tplSpecZoneDtl.getTplSpecZoneLocs().size()>0){
-									getManagedBean().getZoneTrees().add(
-											constuctTreeNode(tplSpecZoneDtl.getTplSpecZoneLocs()));
+									getManagedBean().getZoneTrees().add(LocationSingleton.getInstance().constuctTreeNode(tplSpecZoneDtl, tplSpecZoneDtl.getTplSpecZoneLocs()));
 							}
 						}
 					}
@@ -1708,9 +1813,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 				// business nature details
 				List<PmBusinessNature>	businessNatures = new ArrayList<PmBusinessNature>();
 				if(scQuote.getBusinessNatureCriterias() !=null && scQuote.getBusinessNatureCriterias().size() > 0){
-					for (ScBusinessNatureQuoteCriteria natureQuoteCriteria : scQuote.getBusinessNatureCriterias()) {
-						businessNatures.add(natureQuoteCriteria.getPmBusinessNature());
-					}
+					getManagedBean().setBusinessNatureCriterias(scQuote.getBusinessNatureCriterias());
 				}
 
 				if(businessNatures !=null && businessNatures.size() > 0){
@@ -1718,8 +1821,8 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 				}
 
 				// supplier list
-				if(scQuote.getScQuoteSuppliers() != null && !scQuote.getScQuoteSuppliers().isEmpty() && scQuote.getScQuoteSuppliers().size() > 0){
-					getManagedBean().getSupplierList().addAll(scQuote.getScQuoteSuppliers());
+				if(scQuote.getScQuoteSuppliers() != null && scQuote.getScQuoteSuppliers().size() > 0){
+					getManagedBean().setSupplierList(scQuote.getScQuoteSuppliers());
 				}
 
 				initializeRemarks(scQuote);
@@ -1813,49 +1916,6 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "commonRequestNote");
 			}
 		}
-	}
-	
-	
-	
-	public TreeNode constuctTreeNode(List<TplSpecZoneLoc> specLocs) {
-		TreeNode root = new DefaultTreeNode(QTConstants.NODE_ROOT, null);
-		if (specLocs != null) {
-
-			List<PmState> states = new ArrayList<PmState>();
-			List<PmDivision> divisions = new ArrayList<PmDivision>();
-			TreeNode stateNode = null;
-			TreeNode divisonNode = null;
-			// List<TreeNode> locations = new ArrayList<TreeNode>();
-			for (TplSpecLoc locCriteria : specLocs) {
-				PmState pmState = locCriteria.getPmState();
-
-				if (null != pmState && !states.contains(pmState)) {
-					stateNode = new DefaultTreeNode(QTConstants.NODE_STATE, locCriteria, root);
-					// locations.add(root);
-				}
-				PmDivision division = locCriteria.getPmDivision();
-
-				if (division != null) {
-					divisonNode = new DefaultTreeNode(QTConstants.NODE_DIVISION, locCriteria,
-							stateNode);
-
-				}
-				PmDistrict pmDistrict = locCriteria.getPmDistrict();
-
-				if (pmDistrict != null) {
-					if (divisonNode == null) {
-						new DefaultTreeNode(QTConstants.NODE_DISTRICT, locCriteria, stateNode);
-
-					} else {
-						new DefaultTreeNode(QTConstants.NODE_DISTRICT, locCriteria,
-								divisonNode);
-
-					}
-				}
-				states.add(pmState);
-			}
-		}
-		return root;
 	}
 	
 	/**

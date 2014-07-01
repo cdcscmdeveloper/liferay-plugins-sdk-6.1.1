@@ -583,7 +583,7 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 			RequestNoteReqDTO	reqDTO	=	new RequestNoteReqDTO();
 			
 			// checking wheather stock available or not
-			if(prInquiry.getIsStockAvailable().equals(1)){
+			if(prInquiry.getIsStockAvailable().equals(ParameterConst.PI_STOCK_AVAILABILITY)){
 				ScRequestNote	requestNote	=	prInquiry.getScRequestSupplierItems().get(0).getRequestNoteItem().getRequestNote();
 				reqDTO.setRequestNoteId(requestNote.getRequestNoteId());
 				IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
@@ -605,36 +605,28 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 						parameterReqDTO.setParameterCode(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
 						ParameterResDTO parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
 						scRequestNoteDtl.setFulfilmentType(parameterResDTO.getPmParameter());
+
 						if(scRequestNoteDtl.getDeliverTermType() == null){
 							parameterReqDTO = new ParameterReqDTO();
 							parameterReqDTO.setParameterType(ParameterTypeConst.DELIVERY_TERM);
 							parameterReqDTO.setParameterCode(ParameterConst.SQ_DURATION_DAY);
-							 parameterResDTO  = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
+							parameterResDTO  = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
 							scRequestNoteDtl.setDeliverTermType(parameterResDTO.getPmParameter());
 						}
-						
+
 						if(scRequestNoteDtl.getAssignedUser() == null){
 							scRequestNoteDtl.setAssignedUser(new PmUser());
 						}
 						scRequestNoteDtl.getScRequestSupplierItem().setSupplierItemId(scRequestNoteDtl.getScRequestSupplierItem().getSmSupplier().getSupplierId());
-						
-						if (scRequestNoteDtl.getProcurementType().getParameterCode()
-								.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)) {
-							parameterReqDTO = new ParameterReqDTO();
-							parameterReqDTO.setParameterType(ParameterTypeConst.JUSTIFICATION_TYPE_ADHOC);
-							parameterReqDTO.setParameterCode(getManagedBean().getJustificationType());
-							parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
-							requestNoteBackingBean.getManagedBean().setJustificationType(parameterReqDTO.getParameterCode());
-						} else if (scRequestNoteDtl.getProcurementType().getParameterCode()
-								.equalsIgnoreCase(ParameterConst.PROC_TYPE_EMERGENCY)) {
-							parameterReqDTO = new ParameterReqDTO();
-							parameterReqDTO.setParameterType(ParameterTypeConst.JUSTIFICATION_TYPE_EMERGENCY);
-							parameterReqDTO.setParameterCode(getManagedBean().getJustificationType());
-							parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
-							requestNoteBackingBean.getManagedBean().setJustificationType(parameterReqDTO.getParameterCode());
+
+						if (scRequestNoteDtl.getJustificationType() != null){
+							requestNoteBackingBean.getManagedBean().setJustificationType(scRequestNoteDtl.getProcurementType().getParameterCode());
 						}
-						
-						
+
+						if (scRequestNoteDtl.getJustification() != null){
+							requestNoteBackingBean.getManagedBean().setJustification(scRequestNoteDtl.getJustification());
+						}
+
 						requestNoteBackingBean.getManagedBean().setProcurementType(scRequestNoteDtl.getProcurementType().getParameterCode());
 						requestNoteDtls.add(scRequestNoteDtl);
 					}

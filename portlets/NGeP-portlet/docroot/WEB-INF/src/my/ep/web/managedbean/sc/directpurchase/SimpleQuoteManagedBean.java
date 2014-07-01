@@ -32,7 +32,6 @@ import my.ep.persistence.entity.sc.directpurchase.ScQuote;
 import my.ep.persistence.entity.sc.directpurchase.ScQuoteSupplier;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
-import my.ep.persistence.entity.sc.directpurchase.ScSQRemark;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -92,6 +91,7 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	private	List<TreeNode>	selectedZoneTree	=	new ArrayList<TreeNode>();
 	private	TreeNode	rootZoneTree;
 	private TreeNode[] selectedNodes;
+	private TreeNode selectedTreeNode;
 	private int zoneIndex = -1;
 
 	private	String	locZoneName;
@@ -1274,4 +1274,18 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	public void setCompareSuppliers(List<SmSupplier> compareSuppliers) {
 		this.compareSuppliers = compareSuppliers;
 	}
+	/**
+	 * @return the selectedTreeNode
+	 */
+	public TreeNode getSelectedTreeNode() {
+		return selectedTreeNode;
+	}
+	/**
+	 * @param selectedTreeNode the selectedTreeNode to set
+	 */
+	public void setSelectedTreeNode(TreeNode selectedTreeNode) {
+		this.selectedTreeNode = selectedTreeNode;
+	}
+	
+	
 }
