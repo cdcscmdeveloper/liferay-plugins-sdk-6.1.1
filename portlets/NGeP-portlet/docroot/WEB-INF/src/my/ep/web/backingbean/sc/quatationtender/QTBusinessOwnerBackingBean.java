@@ -323,7 +323,7 @@ public class QTBusinessOwnerBackingBean extends
 			if (!StringUtils.isBlank(procurementMode)) {
 				SearchFilterBean bean = new SearchFilterBean();
 				bean.setAndOr(SearchCondition.CONDITION_OR.value());
-				bean.setSearchField("scQt.procurementMode.parameterCode");
+				bean.setSearchField("procurementMode.parameterCode");
 				bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
 				bean.setSearchValue(procurementMode);
 				searchFilterBean.add(bean);
@@ -391,8 +391,7 @@ public class QTBusinessOwnerBackingBean extends
 					if (itemIds.contains(committees.getIcPassport())) {
 
 					} else {
-						getManagedBean().getScCommitteeMemberList().addAll(
-								getManagedBean().getSelectedCommitteMemebers());
+						getManagedBean().getScCommitteeMemberList().add(committees);
 					}
 				}
 			}
