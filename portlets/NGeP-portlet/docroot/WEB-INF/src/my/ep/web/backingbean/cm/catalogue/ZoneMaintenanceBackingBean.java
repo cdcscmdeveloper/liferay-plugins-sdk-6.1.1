@@ -50,14 +50,15 @@ public class ZoneMaintenanceBackingBean extends
 BaseBackingBean<ZoneMaintenanceManagedBean> {
 
 	public ZoneMaintenanceBackingBean() {
-
+		System.out.println("********************ZoneMaintenanceBackingBean Constructor***************");
+		getManagedBean().setCurrentSupplier(getCurrentUserSupplier());
+		showZonePopup();
+		getManagedBean().setSelectedSupplierZone(null);
 	}
 
 	@PostConstruct
 	public void init() {
-		getManagedBean().setCurrentSupplier(getCurrentUserSupplier());
-		showZonePopup();
-		getManagedBean().setSelectedSupplierZone(null);
+		System.out.println("********************ZoneMaintenanceBackingBean PostConstruct method***************");
 	}
 
 	private CmSupplierZone getZone(TreeNode zoneLocation) {
@@ -132,6 +133,7 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 	 * saveCmSupplierZone method
 	 */
 	public String saveCmSupplierZones() {
+		System.out.println("********************ZoneMaintenanceBackingBean saveCmSupplierZones***************");
 		/* First delete any records that are to be deleted */
 		if(getManagedBean().getDeletedCmSupplierZoneList() != null)
 			deleteCmSupplierZones();
@@ -185,6 +187,7 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 	}
 	
 	public void addNewZone() {
+		System.out.println("********************ZoneMaintenanceBackingBean addNewZone***************");
 		getManagedBean().setSelectedSupplierZone(new CmSupplierZone());
 		getManagedBean().getSelectedSupplierZone().setSuppZoneName(null);
 		getManagedBean().setRootZoneTree(
@@ -247,6 +250,7 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 	}
 	
 	public void updateZoneListOnPopUpClose(){
+		System.out.println("********************ZoneMaintenanceBackingBean updateZoneListOnPopUpClose***************");
 		CmSupplierZone selZone = getManagedBean().getSelectedSupplierZone();
 		if(selZone.getSuppZoneName().isEmpty())
 			throw new EpException(MessageConst.ERROR_716003);
