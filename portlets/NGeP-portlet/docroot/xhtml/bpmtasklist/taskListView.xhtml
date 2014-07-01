@@ -10,29 +10,15 @@
 	<ui:define name="contentSection">
 
 		<h:panelGroup id="tasksListViewId">
-			<p:tabMenu id="taskListTabId" orientation="left"
-				activeIndex="#{bpmTasklistBackingBean.managedBean.showIndex}">
 
-				<p:menuitem value="#{lbl['lbl.bpm.my.tasks']}"
-					action="#{bpmTasklistBackingBean.goToMyTasks(0)}" update="@form" />
-				<p:menuitem id="catItemApprMenu" value="#{lbl['lbl.bpm.catalogue.item.approval']}"
-					action="#{bpmTasklistBackingBean.goToMyTasks(1)}" update="@form" />
-				<p:menuitem id="pendingDelListMenu" value="#{lbl['lbl.bpm.pending.delivery.list']}"
-					action="#{bpmTasklistBackingBean.goToMyTasks(2)}" update="@form" />
-			</p:tabMenu>
+			<div style="float: left;">
+				<h:outputLabel styleClass="screen-title"
+					value="#{lbl['lbl.bpm.my.tasks']}"></h:outputLabel>
+			</div>
+			<br />
+			<div class="clear"></div>
+			<ui:include src="taskListTable.xhtml" />
 
-			<c:choose>
-
-				<c:when test="#{bpmTasklistBackingBean.managedBean.showIndex == 0}">
-					<ui:include src="taskListTable.xhtml" />
-				</c:when>
-				<c:when test="#{bpmTasklistBackingBean.managedBean.showIndex == 1}">
-					<ui:include src="../cm/catalogue/catalogueTaskListDetail.xhtml" />
-				</c:when>
-				<c:when test="#{bpmTasklistBackingBean.managedBean.showIndex == 2}">
-					<ui:include src="pendingDeliveryList.xhtml" />
-				</c:when>
-			</c:choose>
 		</h:panelGroup>
 
 

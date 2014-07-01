@@ -14,7 +14,7 @@
  </script>
 	<h:panelGroup id="taskListID">
 
-  <div class="tabmenu-button-wrapper">
+  <div>
   
 		<div style="text-align: left; margin-right: 2px; float: right;">
 			<p:commandButton action="#{bpmTasklistBackingBean.refreshTaskList}"
@@ -44,7 +44,7 @@
 		   <div style="text-align: left; margin-right:8px;margin-top:8px; float: right;">
 
 			<p:selectOneMenu id="docTypeId" style="width: 150px;" value="#{bpmTasklistBackingBean.managedBean.docType}">
-			<f:selectItem itemLabel="#{lbl['lbl.bpm.all']}" itemValue="ALL"></f:selectItem>
+			<f:selectItem itemLabel="#{lbl['lbl.bpm.all']}" itemValue=""></f:selectItem>
 			 <f:selectItems value="#{bpmTasklistBackingBean.getRadioButtonCodeValuesBySearchBean(ParameterTypeConst.documentTypes, bpmTasklistBackingBean.docTypeSearchBean)}" />
 				<p:ajax event="change"
 					onstart="resetPaginator()"
@@ -75,7 +75,7 @@
 		<div style="text-align: left; margin-right:2px;margin-top:10px; float: right;">
 			<p:outputLabel value="#{lbl['lbl.bpm.assignment']} : " />
 		</div>
-		<div style="text-align: left;float: left;margin-top: 10px;margin-left: 8px;">
+		<div style="text-align: left;float: left;margin-top: 15px;">
 		  <p:outputLabel value="#{lbl['lbl.bpm.task.list.head.text']}" />
 		</div>
 
