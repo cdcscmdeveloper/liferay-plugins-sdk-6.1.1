@@ -24,12 +24,12 @@
 					<div align="right">
 						<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
 							process="@this" partialSubmit="true" icon="ui-icon-add"
-							update="searDelivery"
+							update=":form:searDelivery"
 							actionListener="#{specificationBackingBean.deliveryList(zonePnlList.tplSpecZoneDtl)}"
 							onclick="deliveryAddress.show();" />
 						<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
 							icon="ui-icon-delete" process="@this,pjtDelivered"
-							partialSubmit="true" update="pjtDelivered"
+							partialSubmit="true" update=":form:pjtDelivered"
 							actionListener="#{specificationBackingBean.deleteDeliveryZone(zonePnlList.tplSpecZoneDtl)}" />
 
 					</div>
@@ -47,9 +47,9 @@
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
 					process="@this" partialSubmit="true" icon="ui-icon-add"
-					update="searDelivery" oncomplete="deliveryAddress.show();" />
+					update=":form:searDelivery" oncomplete="deliveryAddress.show();" />
 				<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
-					update="pjtDelivered" process="@this,pjtDelivered" partialSubmit="true"
+					update=":form:pjtDelivered" process="@this,pjtDelivered" partialSubmit="true"
 					icon="ui-icon-delete"
 					actionListener="#{specificationBackingBean.deleteDeliveryDtls}" />
 			</div>
