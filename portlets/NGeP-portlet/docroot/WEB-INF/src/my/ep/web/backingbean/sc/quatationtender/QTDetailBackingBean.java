@@ -666,7 +666,7 @@ public class QTDetailBackingBean extends
 
 				this.getManagedBean().setGoList(resDTO.getGoList());
 
-				selectedScQt.setFileNo(scQt.getQtNo());
+				//selectedScQt.setFileNo(scQt.getQtNo());
 				this.getManagedBean().setQt(selectedScQt);
 				if (getManagedBean().getQt().getEstimatedAmount() != null) {
 					if (getManagedBean().getQt().getEstimatedAmount()
@@ -1107,7 +1107,7 @@ public class QTDetailBackingBean extends
 			if (!StringUtils.isBlank(procurementMode)) {
 				SearchFilterBean bean = new SearchFilterBean();
 				bean.setAndOr(SearchCondition.CONDITION_OR.value());
-				bean.setSearchField("scQt.procurementMode.parameterCode");
+				bean.setSearchField("procurementMode.parameterCode");
 				bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
 				bean.setSearchValue(procurementMode);
 				searchFilterBean.add(bean);
