@@ -168,6 +168,9 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 			//initialInformation(scPurchaseInDefault);
 			populatePtjDropDownList();
 			retrieveReasonDescListByCategory();
+			/// by default value as cheaper price
+			getManagedBean().getPurchaseInDefault().setReasonType(getManagedBean().getPmReason());	
+			
 			return "purchaseInDefaultMain";
 		}	
 		 
@@ -444,9 +447,7 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 	   IReasonSO reasonSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IReasonSO.class);
 	   ReasonResDTO resDTO = reasonSO.retrieveReasonDescListByCategory(reqDTO);
 	   getManagedBean().setJustifications(getDropdownCodeValues(resDTO.getReasonDescList()));
-	   
-	   // by default value as cheaper price
-	   getManagedBean().getPurchaseInDefault().setReasonType(resDTO.getReasonDescList().get(0).getPmReason());
+	   getManagedBean().setPmReason(resDTO.getReasonDescList().get(0).getPmReason());
    }
 
    public SelectItem[] getDropdownCodeValues(List<PmReasonDesc> list) {
