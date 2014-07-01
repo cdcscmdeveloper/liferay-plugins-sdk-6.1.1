@@ -343,16 +343,18 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		List<SelectItem> populateBankAccountList = new ArrayList<SelectItem>();
 		SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
 		
-		
 		if (this.getManagedBean().getInvoice() != null) {
-				if(this.getManagedBean().getInvoice().getFlRequest().getFlSupplierDtl().getBranchName() != null ){
-//					supplierSearchReqDTO.setBranchName(getManagedBean().getInvoice().getFlRequest().getFlSupplierDtl().getBranchName());
-//					supplierSearchReqDTO.setSupplierId(getManagedBean().getInvoice().getFlRequest().getSmSupplier().getSupplierId());
-//					supplierSearchSO.retrieveSmSupplierBankBySupplierBranchName (supplierSearchReqDTO)
+			if(this.getManagedBean().getInvoice().getFlRequest().getFlSupplierDtl().getBranchName() != null ){
+				supplierSearchReqDTO.setBranchName(getManagedBean().getInvoice().getFlRequest().getFlSupplierDtl().getBranchName());
+				supplierSearchReqDTO.setSupplierId(getManagedBean().getInvoice().getFlRequest().getSmSupplier().getSupplierId());
+				SupplierSearchResDTO resDTO = supplierSearchSO.retrieveSupplierBranchBanksByBranchName (supplierSearchReqDTO);
+				for (SmSupplierBank obj : resDTO.getSmSupplierBankList()) {
+					populateBankAccountList.add(new SelectItem(obj.getAccountNo(), obj.getAccountNo()));
+					if(!getManagedBean().getSupplierBankAccountMap().containsKey(obj.getAccountNo())) {
+						getManagedBean().getSupplierBankAccountMap().put(obj.getAccountNo(), obj);
+					}
 				}
-			
-			
-			if (this.getManagedBean().getInvoice().getFlRequest().getSmSupplier().getSmAppl().getSmSupplierBanks() != null
+			}else if (this.getManagedBean().getInvoice().getFlRequest().getSmSupplier().getSmAppl().getSmSupplierBanks() != null
 					&& this.getManagedBean().getInvoice().getFlRequest().getSmSupplier().getSmAppl().getSmSupplierBanks().size() > 0) {
 				List<SmSupplierBank> supplierBank = this.getManagedBean().getInvoice().getFlRequest().getSmSupplier().getSmAppl().getSmSupplierBanks();
 				for (SmSupplierBank obj : supplierBank) {

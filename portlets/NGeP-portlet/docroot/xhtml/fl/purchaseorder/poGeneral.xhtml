@@ -256,6 +256,40 @@
 			</table>
 		</p:panel>
 	</h:panelGroup>
+	<h:panelGroup>
+		<p:panel header="STOP INSTRUCTION REASON" toggleable="true" id="stopInstructionPnl"
+			rendered="#{flOrderBB.managedBean.buttonVal eq 'Stop Fulfilment'}">
+			<table style="width: 100%">
+				<tr>
+					<td style="width: 100px;"><p:outputLabel
+						value="Reason"/>
+					<p:outputLabel value="*" styleClass="mandatory"/></td>
+				<td><p:selectOneMenu id="reasonId" label="Reason" required="true"
+						style="width:288px;margin-bottom: 5px;"
+						value="#{flOrderBB.managedBean.stopIns.pmReason.reasonCode}">
+						<f:selectItem itemLabel="-Select One-" itemValue="#{null}" />
+						<f:selectItems value="#{flOrderBB.populateReasonList}" var="reason"
+							itemLabel="#{reason.reasonDesc}"
+							itemValue="#{reason.pmReason.reasonCode}"/>
+						<p:ajax event="change" update="otherId"/>
+					</p:selectOneMenu> <p:message for="reasonId" display="icon" />
+					</td>
+					<td style="width: 117px;"><p:outputLabel
+							value="Submission Date" /></td>
+					<td><p:inputText value="#{flOrderBB.managedBean.stopIns.createdDate}" disabled="true">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+							</p:inputText> </td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Others" /></td>
+					<td><p:inputText size="50" value="#{flOrderBB.managedBean.stopIns.reasonDesc}" id="otherId" 
+					disabled="#{flOrderBB.managedBean.stopIns.pmReason.reasonCode ne 'OTHERS'}" /></td>
+				</tr>
+			</table>
+		</p:panel>
+	</h:panelGroup>
+	
 	<p:panel header="#{lbl['lbl.fl.remark.attachment']}" toggleable="true">
 		<table style="width: 100%">
 			<tr>

@@ -11,20 +11,24 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
+import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
+import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.fl.FulfilmentConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constants.CommonConstants;
 import my.ep.constants.FLProcessNameConst;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
@@ -32,12 +36,15 @@ import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
+import my.ep.dto.pm.common.reason.ReasonReqDTO;
+import my.ep.dto.pm.common.reason.ReasonResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.fl.codata.FLContractOrderDataType;
 import my.ep.jaxb.fl.podata.FLPurchaseOrderDataType;
 import my.ep.jaxb.fl.stopfullfillmentdata.FLStopFullfillmentDataType;
 import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
 import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
+import my.ep.persistence.entity.fl.order.FlStopInstr;
 import my.ep.persistence.entity.fl.order.FlTempDoAddr;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
@@ -45,7 +52,10 @@ import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.common.PmContact;
 import my.ep.persistence.entity.pm.common.PmFinancialBranch;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
+import my.ep.persistence.entity.pm.common.PmReason;
+import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.type.pm.AddressType;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -97,7 +107,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 //			SmSupplier smSupplier = new SmSupplier();
 //			smSupplier.setSupplierId(1L);
 //			flRequest.setSmSupplier(smSupplier);
-			fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentOrderSO.class);
+			fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
 			reqDTO.setFlFulfilmentRequest(flRequest);
 
 			if(getManagedBean().isContractRequest() == Boolean.TRUE){
@@ -124,9 +134,17 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			}
 			reqDTO.setFulfilmentOrder(getManagedBean().getFulfilmentOrder());
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
+			
 			FulfilmentResDTO resDTO = null;
-			if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
+			if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL) && !action.equalsIgnoreCase(FulfilmentConst.STOP_FULFILMENT)){
 				resDTO = fulfilmentOrderSO.acknowledgeFulfillmentOrder(reqDTO);
+			}else if(action.equalsIgnoreCase(FulfilmentConst.STOP_FULFILMENT)){
+				if(isFlFulfilmentApprover()) {
+					reqDTO.setApprover(Boolean.TRUE);
+				}
+				reqDTO.setStopIns(getManagedBean().getStopIns());
+				System.out.println("getReasonCode: "+getManagedBean().getStopIns().getPmReason().getReasonCode());
+				resDTO = fulfilmentOrderSO.stopFulfilment(reqDTO);
 			}else{
 				reqDTO.setFulfilmentOrder(flRequest.getFlFulfilmentOrder());
 				resDTO = fulfilmentOrderSO.cancelFulfillmentOrder(reqDTO);
@@ -229,19 +247,6 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 		//combineSupAddress(resDTO.getFlFulfilmentRequest());
 
 		return NAV_TO_CREATE_DO;
-
-	}
-
-	public void stopDelivery() {
-		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-		Long orderId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("orderId"));
-		IFulfilmentOrderSO flOrderSO = BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentOrderSO.class);
-		FulfilmentReqDTO flDTO = new FulfilmentReqDTO();
-		flDTO.setFlOrderId(orderId);
-		getManagedBean().setFulfilmentOrder(flOrderSO.retrieveFulfilmentOrder(flDTO).getFlOrder());
-		reqDTO.setFulfilmentOrder(getManagedBean().getFulfilmentOrder());
-		//		IFulfilmentOrderSO flOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentOrderSO.class);
-		flOrderSO.stopDeliveryWSDL(reqDTO);
 
 	}
 
@@ -572,4 +577,34 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			}
 			return portletTitle;
 		}
+		
+		public List<SelectItem> getPopulateReasonList() {
+			IReasonSO reasonSO = (IReasonSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IReasonSO.class);
+			
+			List<SelectItem> populateReasonList = new ArrayList<SelectItem>();
+			
+			ReasonReqDTO reqDTO = new ReasonReqDTO();
+			reqDTO.setLanguage(CommonConstants.DEFAULT_LANGUAGE_CODE);//temp for testing purposes will set back after gustia got the proper data
+			reqDTO.setReasonCode(ParameterConst.FULFILMENT_REASON_CODE);
+			ReasonResDTO resDTO = reasonSO.retrieveReasonDescListByCategory(reqDTO);
+			getManagedBean().setReasonDescs(resDTO.getReasonDescList());
+			List<PmReasonDesc> reasonDescs = resDTO.getReasonDescList();
+			for (PmReasonDesc obj : reasonDescs) {
+				populateReasonList.add(new SelectItem(obj.getPmReason().getReasonCode(), obj.getReasonDesc()));
+			}
+			
+			if(getManagedBean().getStopIns() == null){
+				getManagedBean().setStopIns(new FlStopInstr());
+				getManagedBean().getStopIns().setPmReason(new PmReason());
+			}
+			
+			return populateReasonList;
+		}
+		
+		public boolean isFlFulfilmentApprover() {
+			FacesScopes facesScopes = new FacesScopes();
+			return facesScopes.hasRoleUser(RoleCode.FL_APPROVER.value());
+		}
+
+	
 }

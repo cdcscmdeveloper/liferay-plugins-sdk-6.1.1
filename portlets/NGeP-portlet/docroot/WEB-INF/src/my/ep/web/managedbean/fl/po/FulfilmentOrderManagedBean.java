@@ -13,12 +13,14 @@ import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
 import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
+import my.ep.persistence.entity.fl.order.FlStopInstr;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmFinancialBranch;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
+import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.primefaces.model.DualListModel;
@@ -51,12 +53,15 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	private FlDeliveryAddress selectedDelAddr;
 	private FlDeliveryAddress selectedAddrRow;
 	private FlFulfilmentOrder selectedFlOrder;
+	private FlStopInstr stopIns;
+	
 	private List<FlDeliveryAddress> selectedDelAddrList;
 	private List<FlFulfilmentOrder> pendingDoList;
 	private List<FlDeliveryAddress>deliveryAddressList;
 	private List<FlDeliveryOrder>deliveryOrderStatusList;
 	private List<PmFinancialOrg> pmFinancialOrgs;
 	private List<PmFinancialBranch> factoringBranchList;
+	private List<PmReasonDesc> reasonDescs;
 	
 	private List<FlFulfilmentItem> flItemList;
 	private DualListModel<String> approverModel;
@@ -79,6 +84,7 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	private boolean removeFactoring;
 	private int selectedTabIndex;
 	private PmUser pmUser;
+	private String flApprover;
 	
 	
 
@@ -601,6 +607,48 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	 */
 	public void setContactPhoneNo(String contactPhoneNo) {
 		this.contactPhoneNo = contactPhoneNo;
+	}
+
+	/**
+	 * @return the stopIns
+	 */
+	public FlStopInstr getStopIns() {
+		return stopIns;
+	}
+
+	/**
+	 * @param stopIns the stopIns to set
+	 */
+	public void setStopIns(FlStopInstr stopIns) {
+		this.stopIns = stopIns;
+	}
+
+	/**
+	 * @return the reasonDescs
+	 */
+	public List<PmReasonDesc> getReasonDescs() {
+		return reasonDescs;
+	}
+
+	/**
+	 * @param reasonDescs the reasonDescs to set
+	 */
+	public void setReasonDescs(List<PmReasonDesc> reasonDescs) {
+		this.reasonDescs = reasonDescs;
+	}
+
+	/**
+	 * @return the flApprover
+	 */
+	public String getFlApprover() {
+		return flApprover;
+	}
+
+	/**
+	 * @param flApprover the flApprover to set
+	 */
+	public void setFlApprover(String flApprover) {
+		this.flApprover = flApprover;
 	}
 
 }

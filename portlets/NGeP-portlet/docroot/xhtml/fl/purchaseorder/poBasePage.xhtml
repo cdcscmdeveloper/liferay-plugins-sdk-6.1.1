@@ -50,6 +50,13 @@
 							<f:param name="actionName" value="CANCEL" />
 						</p:commandButton></td>
 				</c:if>
+				<c:if test='#{flOrderBB.managedBean.buttonVal eq "Stop Fulfilment"}'>
+					<td colspan="4" style="text-align: right"><p:commandButton
+							value="STOP FULFILMENT"
+							action="#{flOrderBB.fulfillmentOrderAction('STOP FULFILMENT')}">
+							<f:param name="actionName" value="STOP" />
+						</p:commandButton></td>
+				</c:if>
 				<c:if test='#{flOrderBB.managedBean.buttonVal eq "Submit"}'>
 					<td colspan="4" style="text-align: right"><p:commandButton
 							value="SUBMIT"

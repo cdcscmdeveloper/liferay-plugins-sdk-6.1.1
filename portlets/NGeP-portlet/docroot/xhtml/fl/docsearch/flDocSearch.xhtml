@@ -206,6 +206,13 @@
 							value="/resources/ep/images/design/terminate.png"
 							title="Factoring Company Removal" />
 					</p:commandLink>
+					<p:spacer width="7" />
+					<p:commandLink rendered="#{flDocument.docType == 'PO' or flDocument.docType == 'CO'}"
+						onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'Stop Fulfilment'}])">
+						<p:graphicImage library="ep/images/design" name="terminate.png"
+							value="/resources/ep/images/design/terminate.png"
+							title="Stop Fulfilment" />
+					</p:commandLink>
 
 				</p:column>
 
