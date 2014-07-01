@@ -839,6 +839,7 @@ public class SpecificationBackingBean extends
 		retriveFulfilmentDtls();
 		retriveDeliveryDetails();
 		retriveCommitteeEndorsment();
+		this.getManagedBean().setActiveIndex(0);
 
 	}
 
@@ -2565,6 +2566,7 @@ public class SpecificationBackingBean extends
 	private QuationTenderReqDTO prepareSpecReq() {
 		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 		ScQt scQt = this.getManagedBean().getScQt();
+		scQt.setMaxProposal(1);
 		if (scQt.getEstimatedAmount().intValue() < QTConstants.QUOTAION_VALUE) {
 			String amount = CommonMethod
 					.getMessageCommon("lbl.sc.spec.est.price");
@@ -8093,6 +8095,13 @@ public class SpecificationBackingBean extends
 	private QuationTenderReqDTO constructSpecCommitteDtls() {
 		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 		ScQt scQt = this.getManagedBean().getScQt();
+		if(scQt.getMaxProposal()>3){
+			String maxproposal = CommonMethod
+					.getMessageCommon("lbl.sc.spec.max.proposal");
+			throw new EpException(MessageConst.INFO_100022,
+					new String[] { maxproposal + "is not greater than 3" });
+			
+		}
 
 		List<ScQtCheckList> localChecklist = new ArrayList<ScQtCheckList>();
 		List<ScQtCheckList> techCheckList = this.getManagedBean()
@@ -8838,15 +8847,6 @@ public class SpecificationBackingBean extends
 	 */
 	private String getDocTypeByTaskName(String taskName) {
 		String DOC_TYPE = QTConstants.DOCTYPE_QT;
-		if (SCProcessNameConst.PREPARE_SPECIFICATION.equalsIgnoreCase(taskName)
-				|| SCProcessNameConst.CONSOLIDATE_SPECIFICATION
-						.equalsIgnoreCase(taskName)
-				|| SCProcessNameConst.SPECIFICATION_APPROVAL
-						.equalsIgnoreCase(taskName)) {
-			DOC_TYPE = QTConstants.DOCTYPE_QT;
-		} else {
-			DOC_TYPE = QTConstants.DOCTYPE_PREPARE_SPEC;
-		}
 		return DOC_TYPE;
 	}
 
