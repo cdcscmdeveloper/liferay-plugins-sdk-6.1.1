@@ -110,6 +110,7 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 	  }
 	
 	public void deleteCmSupplierZones(){
+		System.out.println("********************ZoneMaintenanceBackingBean deleteCmSupplierZones***************");
 		IZoneMaintenanceSO zoneMaintenanceSO = null;
 		zoneMaintenanceSO = (IZoneMaintenanceSO) BusinessDelegate
 					.getInstance().getServiceObject("cm", IZoneMaintenanceSO.class);
