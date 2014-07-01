@@ -4977,3 +4977,41 @@ table.rptTbl {
 	
 	width: 25% !important;
 }
+
+
+.horizontal_dotted_line{
+  border: 1px dashed;
+  border-style: none none dashed;
+  width: 900px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  padding-right: 50px;
+}
+
+.row_separator_dotted_line{
+  border: 1px dashed;
+  border-style: none none dashed;
+  width: 800px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  padding-left: 30px;
+  
+}
+
+.horizontal_line{
+  height : 2px;
+  border-style: none none solid;
+  width: 900px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+.summary-title{
+	color : black;
+	text-align : left;
+	font-size: 15px;
+	font-weight: bold;
+	padding-left: 40px;
+	margin-top: 15px;
+    margin-bottom: 15px;
+}
+
