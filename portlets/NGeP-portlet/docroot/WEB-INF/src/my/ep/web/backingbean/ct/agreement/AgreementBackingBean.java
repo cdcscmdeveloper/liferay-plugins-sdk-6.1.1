@@ -163,7 +163,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 			String taskId = originalServletRequest.getParameter("taskId");
 			if(taskId==null) 
-				return;
+			return;
 		
 			FacesScopes face = new FacesScopes();
 			String token =face.getBPMAuthenticationCtxToken();
@@ -194,7 +194,8 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IAgreementSO.class);
 			
 			ContractAgreementResDTO resDTO = new ContractAgreementResDTO();
-			if (dataType.getAgreementType().equalsIgnoreCase("supplemental")) {
+			String agrrementType = dataType.getAgreementType()==null? "":dataType.getAgreementType();
+			if (agrrementType.equalsIgnoreCase("supplemental")) {
 				ctReqDTO.setDocType(ParameterConst.DOCTYPE_SUPPLEMENTAL_AGREEMENT);
 				getManagedBean().setAgreementType(dataType.getAgreementType());
 				if (dataType.getAgreementId().intValue() == 0) {
@@ -306,7 +307,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	    	
 	    	ContractAgreementReqDTO reqDTO = new ContractAgreementReqDTO();
 			String token = getFacesScopes().getBPMAuthenticationCtxToken();
-			agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject("ct", IAgreementSO.class);
+			agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IAgreementSO.class);
 			if(getManagedBean().getAgreementType().equalsIgnoreCase("supplemental")) {
 				reqDTO.setAgreementType("supplemental");
 				reqDTO.setDocType(ParameterConst.DOCTYPE_SUPPLEMENTAL_AGREEMENT);
@@ -385,7 +386,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		try {
 			reqDTO = new ContractAgreementReqDTO();
 			String token = getFacesScopes().getBPMAuthenticationCtxToken();
-			agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject("ct", IAgreementSO.class);
+			agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IAgreementSO.class);
 		//	this.getManagedBean().getAgreement().setCtAmendment(this.getManagedBean().getCtContract().getLatestContractVer().getCtAmendment());
 		//	this.getManagedBean().getAgreement().setCtAgreementAppendixs(this.getManagedBean().getAppendixList());
 		//	this.getManagedBean().getAgreement().setCtContract(this.getManagedBean().getCtContract());
@@ -420,7 +421,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
     	SelectItem[] items = null;     
 		try{
 		   int i = 1;
-		   IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject("pm", IOrgProfileSO.class);
+		   IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 		   OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 		   reqDTO.setOrgType(OrganizationType.DIVISION.value());
 			 
@@ -459,7 +460,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 					//reqDTO.setOrgProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getParentOrgProfile().getOrgProfileId());
 				}
 				//TODO Please remove this. Temporary to get out list of user.
-				reqDTO.setOrgProfileId(1003L);
+				reqDTO.setOrgProfileId(1753L);
 			}
 			UserResDTO resDTO = userSO.retrieveUserListByRole(reqDTO);
 			List<PmUser> list = resDTO.getUserList();
@@ -1208,5 +1209,4 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	public void setSelectedSupplierSigner(CtAgreementParty[] selectedSupplierSigner) {
 		this.selectedSupplierSigner = selectedSupplierSigner;
 	}
-	
 }

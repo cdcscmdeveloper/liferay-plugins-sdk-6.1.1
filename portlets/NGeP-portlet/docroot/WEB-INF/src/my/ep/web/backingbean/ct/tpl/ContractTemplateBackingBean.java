@@ -16,9 +16,14 @@ import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.tpl.IContractTemplateSO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.ct.tpl.ContractTemplateReqDTO;
 import my.ep.dto.ct.tpl.ContractTemplateResDTO;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.persistence.entity.ct.template.CtTemplate;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.ct.tpl.ContractTemplateManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -58,16 +63,18 @@ public class ContractTemplateBackingBean extends BaseBackingBean<ContractTemplat
     	 
     	 IContractTemplateSO contractTemplateSO = null;
 		 try{
-			   ContractTemplateReqDTO reqDTO = new ContractTemplateReqDTO();
-		       CtTemplate ctTemplate = this.getManagedBean().getCtTemplate();
+		  
+			 ContractTemplateReqDTO reqDTO = new ContractTemplateReqDTO();
+		     CtTemplate ctTemplate = this.getManagedBean().getCtTemplate();
 			
-		       String value = this.getEditorValue();
-		       byte[] content = value.getBytes();
-		       ctTemplate.setContent(content);
+		     String value = this.getEditorValue();
+		     byte[] content = value.getBytes();
+		     ctTemplate.setContent(content);
 		       
-		       contractTemplateSO = (IContractTemplateSO)BusinessDelegate.getInstance().getServiceObject("ct",IContractTemplateSO.class);
-		       reqDTO.setCtTemplate(ctTemplate);
-		       ContractTemplateResDTO resDTO = contractTemplateSO.createTemplate(reqDTO);
+		     contractTemplateSO = (IContractTemplateSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractTemplateSO.class);
+		     reqDTO.setCtTemplate(ctTemplate);
+		     ContractTemplateResDTO resDTO = contractTemplateSO.createTemplate(reqDTO);
+		    
 		       if(resDTO.isSuccessful()) {
 					log.info("Record saved successfully");
 					FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,"Record saved successfully.","Save ContractTemplate Name : "+ 
@@ -94,7 +101,7 @@ public class ContractTemplateBackingBean extends BaseBackingBean<ContractTemplat
 		       byte[] content = value.getBytes();
 		       this.getManagedBean().getCtTemplate().setContent(content);
 		       
-		       contractTemplateSO = (IContractTemplateSO)BusinessDelegate.getInstance().getServiceObject("ct",IContractTemplateSO.class);
+		       contractTemplateSO = (IContractTemplateSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractTemplateSO.class);
 		       reqDTO.setCtTemplate(this.getManagedBean().getCtTemplate());
 		       contractTemplateSO.updateTemplate(reqDTO);
 	           
@@ -117,7 +124,7 @@ public class ContractTemplateBackingBean extends BaseBackingBean<ContractTemplat
 			 this.getManagedBean().getSearchFilterBean().setSearchValue(this.getSearchValue());
 			 SearchFilterBean searchFilterBean = this.getManagedBean().getSearchFilterBean();	
 			
-			 contractTemplateSO = (IContractTemplateSO)BusinessDelegate.getInstance().getServiceObject("ct",IContractTemplateSO.class);
+			 contractTemplateSO = (IContractTemplateSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractTemplateSO.class);
 			 ContractTemplateReqDTO reqDTO = new ContractTemplateReqDTO();
 			 reqDTO.setTemplatesSearchBean(super.createSearchBean(CtTemplate.class, "dataTable"));
 			 
@@ -142,7 +149,7 @@ public class ContractTemplateBackingBean extends BaseBackingBean<ContractTemplat
 			
 			try {
 				 reqDTO = new ContractTemplateReqDTO();
-				 contractTemplateSO = (IContractTemplateSO)BusinessDelegate.getInstance().getServiceObject("ct",IContractTemplateSO.class);
+				 contractTemplateSO = (IContractTemplateSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractTemplateSO.class);
 					
 				 for(int i = 0; i < selectedTemplates.length; i++) {
 					 CtTemplate ctTemplate  = selectedTemplates[i];   
@@ -191,6 +198,26 @@ public class ContractTemplateBackingBean extends BaseBackingBean<ContractTemplat
 			  e.printStackTrace();
 		  }
 	   return decoded;
+	}
+	
+	public String retriveUserName(Long userId){
+		IUserSO userSo=null;
+		String userName="";
+		try{
+			userSo = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			UserReqDTO reqDTo=new UserReqDTO();
+			reqDTo.setUserId(userId);
+			UserResDTO resDTO=userSo.retrieveUserByUserId(reqDTo);
+			if(resDTO.isSuccessful()==true){
+			PmUser user=resDTO.getPmUser();
+			userName=user.getUserName();
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return userName;
 	}
 
 	public String gotoAddPage() {
