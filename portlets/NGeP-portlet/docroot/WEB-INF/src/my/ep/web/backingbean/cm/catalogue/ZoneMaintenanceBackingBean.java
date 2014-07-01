@@ -250,6 +250,14 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 		CmSupplierZone selZone = getManagedBean().getSelectedSupplierZone();
 		if(selZone.getSuppZoneName().isEmpty())
 			throw new EpException(MessageConst.ERROR_716003);
+		else{
+			for(CmSupplierZone zone : getManagedBean().getCmSupplierZoneList()){
+				if(selZone.getSuppZoneName().equalsIgnoreCase(zone.getSuppZoneName())){
+					throw new EpException(MessageConst.ERROR_716004);
+				}
+			}
+		}
+			
 		if(selZone.getSuppZoneId() == 0 && !getManagedBean().getCmSupplierZoneList().contains(selZone)){
 			selZone = new CmSupplierZone();
 			selZone.setSuppZoneName(getManagedBean().getSelectedSupplierZone().getSuppZoneName());
