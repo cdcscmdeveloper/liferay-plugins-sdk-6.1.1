@@ -30,9 +30,16 @@ import javax.xml.bind.JAXBException;
 
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.tpl.doc.ITemplateDocSO;
+import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.dto.pm.common.parameter.ParameterReqDTO;
+import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.tpl.doc.TemplateDocReqDTO;
 import my.ep.dto.tpl.doc.TemplateDocResDTO;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.tpl.TplCategory;
 import my.ep.persistence.entity.tpl.doc.TplDocMaster;
 import my.ep.persistence.entity.tpl.doc.TplDocSection;
@@ -96,13 +103,15 @@ public class TemplateDocBackingBean extends
 
 		}
 		if (this.getManagedBean().getTemplateProcessTypeList() == null) {
-			SelectItem[] procesCodes = getDropdownValues("TDP");
+			SelectItem[] procesCodes = getDropdownCodeValues(ParameterTypeConst.TPL_DOC_PROCESS_TYPE);
 			/*if(procesCodes !=null){
 				List<SelectItem>procesCode=Arrays.asList(procesCodes);*/
 			this.getManagedBean().setTemplateProcessTypeList(procesCodes);
 			
 		}
 		
+		getManagedBean().setCategoryId(null);
+		getManagedBean().setProcessType(null);
 
 	}
 
@@ -248,9 +257,7 @@ public class TemplateDocBackingBean extends
 				.getInstance().getServiceObject("cc", ITemplateDocSO.class);
 		TemplateDocReqDTO reqDTO1 = new TemplateDocReqDTO();
 		
-//		if(getManagedBean().getSelectedTemplate() == null){
-			getManagedBean().setSelectedTemplate(selTemplate);
-//		}
+		getManagedBean().setSelectedTemplate(selTemplate);
 		
 		System.out.println("==============>>>>>>>>>>>>>>>> " + getManagedBean().getSelectedTemplate());
 		
@@ -274,6 +281,8 @@ public class TemplateDocBackingBean extends
 //		TplDocMaster tplDocMaster = new TplDocMaster();
 //		TemplateDocReqDTO reqDTO = new TemplateDocReqDTO();
 //		reqDTO.setTplDocMaster(this.getManagedBean().getSelectedTemplate());
+		getManagedBean().setProcessType(selTemplate.getProcessTypeCode().getParameterCode());
+
 		return NAV_TO_MAINT;
 	}
 
@@ -404,8 +413,8 @@ public void destroyWorld(ActionEvent actionEvent){
 		save("newDraft");
 	}
 
-	public void saveAction() {
-		save("update");
+	public String saveAction() {
+		return save("update");
 	}
 
 	private TplDocSection cloneObj(TplDocSection obj) {
@@ -575,6 +584,28 @@ public void destroyWorld(ActionEvent actionEvent){
 				}
 			}
 			tplDocMaster.setDeletedCollection(deletedSectionList);
+			
+			IParameterSO parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+			ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
+			parameterReqDTO.setParameterType(ParameterTypeConst.TPL_DOC_PROCESS_TYPE);
+			if(getManagedBean().getProcessType().equalsIgnoreCase(ParameterConst.TPL_DOC_PROCESS_TYPE_STANDARD))
+				parameterReqDTO.setParameterCode(ParameterConst.TPL_DOC_PROCESS_TYPE_STANDARD);
+			else if(getManagedBean().getProcessType().equalsIgnoreCase(ParameterConst.TPL_DOC_PROCESS_TYPE_SOURCING))
+				parameterReqDTO.setParameterCode(ParameterConst.TPL_DOC_PROCESS_TYPE_SOURCING);
+			else if(getManagedBean().getProcessType().equalsIgnoreCase(ParameterConst.TPL_DOC_PROCESS_TYPE_CONTRACT))
+				parameterReqDTO.setParameterCode(ParameterConst.TPL_DOC_PROCESS_TYPE_CONTRACT);
+			else
+				parameterReqDTO.setParameterCode(null);
+			
+			ParameterResDTO parameterResDTO = new ParameterResDTO();
+			if(parameterReqDTO.getParameterCode() != null){
+				parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
+				tplDocMaster.setProcessTypeCode(parameterResDTO.getPmParameter());
+			} else {
+				tplDocMaster.setProcessTypeCode(new PmParameter());
+			}
+			   
+			
 
 			ITemplateDocSO templateSO = (ITemplateDocSO) BusinessDelegate
 					.getInstance().getServiceObject("cc", ITemplateDocSO.class);

@@ -340,6 +340,8 @@ public class TemplateDocManagedBean extends BaseManagedBean {
 
 
 	public String getProcessType() {
+		if(processType == null)
+			processType = "";
 		return processType;
 	}
 
