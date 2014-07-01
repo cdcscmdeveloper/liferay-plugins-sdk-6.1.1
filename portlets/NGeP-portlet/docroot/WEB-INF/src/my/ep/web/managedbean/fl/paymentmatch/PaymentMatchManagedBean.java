@@ -85,6 +85,7 @@ public class PaymentMatchManagedBean extends BaseManagedBean{
 	private String contactEmail;
 	private String contactPerson;
 	private String contactPhoneNo;
+	private String branchName;
 	
 	//tab menu
 	private int selectedTabIndex;
@@ -618,5 +619,17 @@ public class PaymentMatchManagedBean extends BaseManagedBean{
 	 */
 	public void setFinancingTypeCode(String financingTypeCode) {
 		this.financingTypeCode = financingTypeCode;
+	}
+	/**
+	 * @return the branchName
+	 */
+	public String getBranchName() {
+		return branchName;
+	}
+	/**
+	 * @param branchName the branchName to set
+	 */
+	public void setBranchName(String branchName) {
+		this.branchName = branchName;
 	}
 }
