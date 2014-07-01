@@ -7,16 +7,14 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel id="deductionPanel" header="DEDUCTIONS" toggleable="true">
-		<p:dataTable id="deductionDataTable" var="deduction"
-			rowIndexVar="index" selectionMode="multiple" rowKey="#{deduction}"
-			lazy="true">
+		<p:dataTable id="deductionDataTable" var="deduction" value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flPaymentDeduction}"
+			rowIndexVar="index" selectionMode="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flFulfilmentOrder.docType == ParameterConst.doctypeContractOrder?'multiple':'single'}" rowKey="#{deduction}" lazy="true">
 			<ac:paginator for="deductionDataTable" />
-
 			<p:column headerText="Type">
-				<h:outputText />
+				<h:outputText value="#{paymentMatchBackingBean.getParameterDesc(deduction.deductionType)}" />
 			</p:column>
 			<p:column headerText="Description">
-				<h:outputText style="text-align:right" />
+				<h:outputText value="#{deduction.deductionDesc}" />
 			</p:column>
 			<p:column headerText="Clauses">
 				<h:outputText style="text-align:right">
@@ -26,18 +24,19 @@
 				<h:outputText style="text-align:right" />
 			</p:column>
 			<p:column headerText="GOSODO">
-				<h:outputText style="text-align:right" />
+				<h:outputText value="#{deduction.pmGlAccount.glAccCode}" />
 			</p:column>
 			<p:column headerText="Amount (RM)">
-				<h:outputText style="text-align:right" />
+				<h:outputText style="text-align:right" value="#{deduction.deductionAmt}" >
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
 			</p:column>
 		</p:dataTable>
 		<p:spacer height="2px"></p:spacer>
 		<div style="width: 100%; text-align: right">
-			<p:commandButton value="Add" icon="ui-icon-add" />
-			<p:commandButton id="deleteDeductionBtn" value="Delete"
-				icon="ui-icon-delete">
+			<p:commandButton rendered="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flFulfilmentOrder.docType == ParameterConst.doctypeContractOrder}" value="Add" icon="ui-icon-add" />
+			<p:commandButton rendered="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flFulfilmentOrder.docType == ParameterConst.doctypeContractOrder}" id="deleteDeductionBtn" value="Delete" icon="ui-icon-delete">
 			</p:commandButton>
 		</div>
-		</p:panel>
+	</p:panel>
 </ui:composition>

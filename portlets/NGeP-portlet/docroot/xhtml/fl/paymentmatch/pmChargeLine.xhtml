@@ -21,76 +21,57 @@
 					value="#{chargeLineNode.scRequestItem.cmItem.extensionCode}"
 					rendered="#{chargeLineNode.parent == 'true'}" />
 			</p:column>
-			<p:column headerText="Item Name">
+			<p:column headerText="Item Name" style="white-space:normal;">
 				<h:outputText value="#{chargeLineNode.scRequestItem.itemName}"
 					rendered="#{chargeLineNode.parent == 'true'}" />
 			</p:column>
 			<p:column headerText="UOM">
-				<h:outputText value="Unit"
+				<h:outputText value="#{chargeLineNode.scRequestItem.uom.uomName}"
 					rendered="#{chargeLineNode.parent == 'true'}" />
 			</p:column>
 			<p:column headerText="Unit &lt;br /&gt; Price (RM)" style="text-align:right">
 				<h:outputText value="#{chargeLineNode.unitPrice}"
 					rendered="#{chargeLineNode.parent == 'false'}">
-					<f:convertNumber
-						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
 			<p:column headerText="Ordered &lt;br /&gt; Qty." style="text-align:right">
-				<h:outputText value="#{chargeLineNode.chargeOrderedQty}"
-					rendered="#{chargeLineNode.parent == 'false'}">
-					<f:convertNumber
-						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+				<h:outputText value="#{chargeLineNode.chargeOrderedQty}" rendered="#{chargeLineNode.parent == 'false'}">
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, chargeLineNode.scRequestItem.uom.uomCode)}" />
 				</h:outputText>
 			</p:column>
 			<p:column headerText="Received &lt;br /&gt; Qty." style="text-align:right">
-				<h:outputText value="#{chargeLineNode.chargeReceivedQty}"
-					rendered="#{chargeLineNode.parent == 'false'}">
-					<f:convertNumber
-						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+				<h:outputText value="#{chargeLineNode.chargeReceivedQty}" rendered="#{chargeLineNode.parent == 'false'}">
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, chargeLineNode.scRequestItem.uom.uomCode)}" />
 				</h:outputText>
 			</p:column>
 			<p:column headerText="Recalled &lt;br /&gt; Qty." style="text-align:right">
-				<h:outputText 
-					rendered="#{chargeLineNode.parent == 'false'}">
-					<f:convertNumber
-						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+				<h:outputText value="#{chargeLineNode.chargeRecalledQty}" rendered="#{chargeLineNode.parent == 'false'}">		
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, chargeLineNode.scRequestItem.uom.uomCode)}" />
 				</h:outputText>
 			</p:column>
 			<p:column headerText="Ordered &lt;br /&gt; Amt.(RM)" style="text-align:right">
-				<h:outputText value="#{chargeLineNode.chargeOrderedAmt}"
-					rendered="#{chargeLineNode.parent == 'true'}">
-					<f:convertNumber
-						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				<h:outputText value="#{chargeLineNode.chargeOrderedAmt}" rendered="#{chargeLineNode.parent == 'true'}">
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
-				<h:outputText value="#{chargeLineNode.chargeOrderedAmt}"
-					rendered="#{chargeLineNode.parent == 'false'}">
-					<f:convertNumber
-						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				<h:outputText value="#{chargeLineNode.chargeOrderedAmt}" rendered="#{chargeLineNode.parent == 'false'}">
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
 			<p:column headerText="Received &lt;br /&gt; Amt.(RM)" style="text-align:right">
-				<h:outputText value="#{chargeLineNode.chargeReceivedAmt}"
-					rendered="#{chargeLineNode.parent == 'true'}">
-					<f:convertNumber
-						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				<h:outputText value="#{chargeLineNode.chargeReceivedAmt}" rendered="#{chargeLineNode.parent == 'true'}">
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
-				<h:outputText value="#{chargeLineNode.chargeReceivedAmt}"
-					rendered="#{chargeLineNode.parent == 'false'}">
-					<f:convertNumber
-						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				<h:outputText value="#{chargeLineNode.chargeReceivedAmt}" rendered="#{chargeLineNode.parent == 'false'}">
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
 			<p:column headerText="Invoice &lt;br /&gt; Amt.(RM)" style="text-align:right">
-				<h:outputText value="#{chargeLineNode.chargeInvAmt}" id="invSumAmountTxt"
-					rendered="#{chargeLineNode.parent == 'true'}">
-					<f:convertNumber
-						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				<h:outputText value="#{chargeLineNode.chargeInvAmt}" id="invSumAmountTxt" rendered="#{chargeLineNode.parent == 'true'}">
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
-				<h:outputText  value="#{chargeLineNode.chargeInvAmt}" style="text-align:right;"  
-					rendered="#{chargeLineNode.parent == 'false'}">
-					<f:convertNumber
-						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				<h:outputText  value="#{chargeLineNode.chargeInvAmt}" style="text-align:right;" rendered="#{chargeLineNode.parent == 'false'}">
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
 			<p:column headerText="DAN &lt;br /&gt; Amt.(RM)" style="text-align:right">

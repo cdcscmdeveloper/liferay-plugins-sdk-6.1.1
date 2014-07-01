@@ -14,9 +14,8 @@
 	<ui:define name="contentSection">
 		<f:event listener="#{paymentMatchBackingBean.preRenderView}"
 			type="preRenderView" />
-		<p:messages id="messages" showDetail="true" autoUpdate="true"
+		<p:messages id="messages" showDetail="true" autoUpdate="true" showSummary="false"
 			closable="true" severity="error, info" />
-		<ui:include src="/xhtml/fl/paymentmatch/pmReviewHeaderPage.xhtml" />
 		<table style="width: 100%;">
 			<tr>
 				<td colspan="4" style="text-align: right;"><ui:repeat
@@ -29,6 +28,7 @@
 					</ui:repeat></td>
 			</tr>
 		</table>
+		<ui:include src="/xhtml/fl/paymentmatch/pmReviewHeaderPage.xhtml" />		
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
 				<td width="20%" valign="top" class="sidemenutd"><p:tabMenu

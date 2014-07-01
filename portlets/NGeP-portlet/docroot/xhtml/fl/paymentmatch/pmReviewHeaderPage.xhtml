@@ -11,9 +11,10 @@
 				<td class="header-info-text">
 					#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flFulfilmentOrder.docNo}
 				</td>
-				<td><p:outputLabel value="#{lbl['lbl.fl.inv.no']} " /></td>
+				<td><p:outputLabel value="Payment Advice No." /></td>
 				<td class="header-info-text">
-					#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.invoiceNo}</td>
+					#{paymentMatchBackingBean.managedBean.paymentAdvice.paymentAdviceNo == null ? '-- System Generated --':paymentMatchBackingBean.managedBean.paymentAdvice.paymentAdviceNo}
+				</td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.rev.hed.ptj.name']} " />
 				</td>
 				<td class="header-info-text">
