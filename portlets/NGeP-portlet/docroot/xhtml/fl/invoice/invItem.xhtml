@@ -20,7 +20,7 @@
 					rendered="#{chargeLineNode.parent == 'true'}" />
 			</p:column>
 			<p:column headerText="UOM">
-				<h:outputText value="Unit"
+				<h:outputText value="#{chargeLineNode.flFulfilmentItem.flFulfilmentItemAddr[0].scRequestItem.uom.uomName}"
 					rendered="#{chargeLineNode.parent == 'true'}" />
 			</p:column>
 			<p:column headerText="Unit &lt;br /&gt; Price (RM)" style="text-align:right">
