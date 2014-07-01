@@ -6,7 +6,7 @@
 	
     <ui:define name="contentSection">
 		<p:panel id="acknowledge" header="#{lbl['lbl.acknowledgement.title']}">
-			<p:messages id="ackMsg" showDetail="true" autoUpdate="true" severity="info" />
+			<p:messages id="ackMsg" showDetail="true" showSummary="false" autoUpdate="true" severity="info" />
 			
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.sm.login']}" icon="ui-icon-evaluate" action="#{supplierUserActivationBackingBean.naviToLogin}" />
