@@ -21,6 +21,7 @@ import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.sm.registration.IRegistrationSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
+import my.ep.constant.EpPropertiesConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.businessnature.BusinessNatureReqDTO;
@@ -61,6 +62,7 @@ import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.persistence.entity.sm.SmSupplierCert;
 import my.ep.persistence.entity.sm.SmSupplierOwner;
 import my.ep.persistence.logging.LogKey;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.registration.RegistrationManagedBean;
@@ -70,6 +72,10 @@ import my.ep.web.util.sm.helper.SmCommonUtil;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
+
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.service.UserLocalServiceUtil;
 //import my.ep.util.lookupservice.EpNtfBusinessDelegate;
 
 @ManagedBean(name = "registrationBackingBean")
@@ -276,6 +282,36 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Login ID already exist.", "Login ID already exist."));
 			return null;
 		}
+		
+		// validate user's email existence at Liferay. 
+		try {
+			if(UserLocalServiceUtil.getUserByEmailAddress(Long.valueOf(getCompanyId()), this.getManagedBean().getSmPersonnel().getEmail()) != null) {
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, "Email Address already exist.", "Email Address already exist."));
+				return null;
+			}
+			if(UserLocalServiceUtil.getUserByScreenName(Long.valueOf(getCompanyId()), this.getManagedBean().getSmPersonnel().getIdentificationNo()) != null) {
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, "Login ID already exist.", "Login ID already exist."));
+				return null;
+			}
+		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), e.getMessage()));
+		} catch (PortalException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), e.getMessage()));
+		} catch (SystemException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), e.getMessage()));
+		}
+		
 		
 		if (smAppl.getApplType().equals(SupplierManagementConst.ACC_BASIC)) {
 			smAppl.setSupplierType(SupplierManagementConst.STYPE_BASIC);
@@ -941,6 +977,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		resetBusinessNatureSelection();
 	}
 
+	public String getCompanyId() {
+		return EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_COMPANY_ID);
+	}
+	
 //	public void verifyIC(){
 //		log.info("--------verifyIC-----------");
 //		MyIdentityReqDTO reqDTO = new MyIdentityReqDTO();
@@ -953,5 +993,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 //		log.info("-----Response PostCode---------" + resDTO.getPermanentAddrPostCode());
 //		
 //	}
+	
+	
 	
 }
