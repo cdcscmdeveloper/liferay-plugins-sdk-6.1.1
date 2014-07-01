@@ -5,7 +5,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel header="Capital / Equity Status" toggleable="true">
+	<p:panel header="#{lbl['lbl.sm.equiStatus.panHdr']}" toggleable="true">
 		<table style="width: 250px">
 			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 				<tr>
@@ -17,7 +17,7 @@
 								listener="#{backingBean.changeVerifySection(backingBean.managedBean.poSecReview.captialVerified)}" />
 						</p:selectBooleanCheckbox></td>
 					<td valign="top"><h:outputText
-							value=" Section Verified By PO: "
+							value="#{lbl['lbl.sm.sectionPoVerf']}"
 							title="For PO to highlight the verified section " /></td>
 
 				</tr>
@@ -32,7 +32,7 @@
 								listener="#{backingBean.changeVerifySection(backingBean.managedBean.apprvrSecReview.captialVerified)}" />
 						</p:selectBooleanCheckbox></td>
 					<td valign="top"><h:outputText
-							value=" Section Verified By Approver: "
+							value="#{lbl['lbl.sm.sectionApprVerf']}"
 							title="For Approver to highlight the verified section " /></td>
 				</tr>
 			</p:outputPanel>
@@ -44,7 +44,8 @@
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.captialVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.captialVerified : false)}" />
 			<table style="width: 100%">
 				<tr>
-					<td><p:outputLabel value="* Authorized Capital (RM.)" /></td>
+					<td><p:outputLabel
+							value="* #{lbl['lbl.sm.equiStatus.authCap']}" /></td>
 					<td style="width: 58%;"><p:inputText id="authCapAmt"
 							title="This field is applicable for companies of type ROC Only"
 							size="10"
@@ -57,7 +58,8 @@
 						</p:inputText> <p:message id="authCapAmtMsg" for="authCapAmt" showSummary="true"
 							showDetail="false" display="icon" /></td>
 
-					<td><p:outputLabel value="* Paid-Up Capital (RM.)" /></td>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sm.equiStatus.paidUpCap']}" /></td>
 					<td><p:inputText
 							title="This field is applicable for companies of type ROC Only"
 							size="10"
@@ -70,12 +72,14 @@
 				<tr>
 					<c:if
 						test="#{backingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT}">
-						<td><p:outputLabel value="Accumulated Capital (RM.)" /></td>
+						<td><p:outputLabel
+								value="#{lbl['lbl.sm.equiStatus.accumCap']}" /></td>
 						<td><p:inputText
 								title="This field is applicable and 
 						data is auto populated for companies other than ROC"
 								readonly="true" size="10" disabled="true" /></td>
-						<td><p:outputLabel value="Accumulated Share (RM.)" /></td>
+						<td><p:outputLabel
+								value="#{lbl['lbl.sm.equiStatus.accumShr']}" /></td>
 						<td><p:inputText
 								title="This field is applicable and 
 						data is auto populated for companies other than ROC"
@@ -89,14 +93,14 @@
 							<p:panelGrid styleClass="tablePanel">
 								<f:facet name="header">
 									<p:row>
-										<p:column>Composition of Capital Distribution</p:column>
+										<p:column>#{lbl['lbl.sm.equiStatus.compTabHdr']}</p:column>
 										<!-- <p:column>NO. Of Members</p:column> -->
-										<p:column>Value (MYR)</p:column>
+										<p:column>#{lbl['lbl.sm.equiStatus.valTabHdr']}</p:column>
 										<p:column>%</p:column>
 									</p:row>
 								</f:facet>
 								<p:row>
-									<p:column>Bumiputera</p:column>
+									<p:column>#{lbl['lbl.sm.equiStatus.bumi']}</p:column>
 
 									<p:column>
 										<p:inputText id="bumiAmt"
@@ -117,7 +121,7 @@
 									</p:column>
 								</p:row>
 								<p:row>
-									<p:column>Non Bumiputera</p:column>
+									<p:column>#{lbl['lbl.sm.equiStatus.nonBumi']} </p:column>
 
 									<p:column>
 										<p:inputText id="nomBumAmt"
@@ -138,7 +142,7 @@
 									</p:column>
 								</p:row>
 								<p:row>
-									<p:column>Non - Malaysian</p:column>
+									<p:column>#{lbl['lbl.sm.equiStatus.nonMy']}</p:column>
 									<p:column>
 										<p:inputText
 											value="#{backingBean.managedBean.smAppl.smCompanyBasic.foreignerEquity}"
@@ -159,7 +163,7 @@
 									</p:column>
 								</p:row>
 								<p:row>
-									<p:column>Equity Government / UT Agency</p:column>
+									<p:column>#{lbl['lbl.sm.equiStatus.utAgency']}</p:column>
 
 									<p:column>
 										<p:inputText
@@ -181,7 +185,7 @@
 									</p:column>
 								</p:row>
 								<p:row>
-									<p:column>Government equity</p:column>
+									<p:column>#{lbl['lbl.sm.equiStatus.govtEquity']}</p:column>
 
 									<p:column>
 										<p:inputText
@@ -203,7 +207,7 @@
 									</p:column>
 								</p:row>
 								<p:row>
-									<p:column>Foreign Company</p:column>
+									<p:column>#{lbl['lbl.sm.equiStatus.frgComp']}</p:column>
 
 									<p:column>
 										<p:inputText
@@ -225,7 +229,7 @@
 									</p:column>
 								</p:row>
 								<p:row>
-									<p:column>Local Company</p:column>
+									<p:column>#{lbl['lbl.sm.equiStatus.lclComp']}</p:column>
 
 									<p:column>
 										<p:inputText
@@ -260,7 +264,7 @@
 			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 				<table style="width: 50%">
 					<tr>
-						<td><p:outputLabel value="PO Remarks" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" cols="41"
 								value="#{backingBean.managedBean.poSecReview.capitalRemark}" /></td>
 					</tr>
@@ -269,11 +273,11 @@
 			<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
 				<table style="width: 100%">
 					<tr>
-						<td><p:outputLabel value="PO Remarks" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" readonly="true"
 								disabled="true" cols="41"
 								value="#{backingBean.managedBean.poSecReview.capitalRemark}" /></td>
-						<td><p:outputLabel value="Approver Remarks" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" cols="41"
 								value="#{backingBean.managedBean.apprvrSecReview.capitalRemark}" /></td>
 

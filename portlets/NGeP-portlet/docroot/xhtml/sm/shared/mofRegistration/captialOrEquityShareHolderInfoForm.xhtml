@@ -7,9 +7,8 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<h:panelGroup id="shrHolderPanGroup">
-		<p:panel header="Capital / Equity Shareholders ( Personnel)"
-			toggleable="true"
-			rendered="#{backingBean.managedBean.businessTypeVal eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_DEFAULT or backingBean.managedBean.businessTypeVal eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT}">
+		<p:panel header="#{lbl['lbl.sm.shrHldrInfo.panHdr']}"
+			toggleable="true">
 			<table style="width: 250px">
 				<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 					<tr>
@@ -21,7 +20,7 @@
 									listener="#{backingBean.changeVerifySection(backingBean.managedBean.poSecReview.shareholderVerifed)}" />
 							</p:selectBooleanCheckbox></td>
 						<td valign="top"><h:outputText
-								value=" Section Verified By PO: "
+								value="#{lbl['lbl.sm.sectionPoVerf']}"
 								title="For PO to highlight the verified section " /></td>
 
 					</tr>
@@ -36,7 +35,7 @@
 									listener="#{backingBean.changeVerifySection(backingBean.managedBean.apprvrSecReview.shareholderVerifed)}" />
 							</p:selectBooleanCheckbox></td>
 						<td valign="top"><h:outputText
-								value=" Section Verified By Approver: "
+								value="#{lbl['lbl.sm.sectionApprVerf']}"
 								title="For Approver to highlight the verified section " /></td>
 					</tr>
 				</p:outputPanel>
@@ -54,52 +53,44 @@
 					<p:column selectionMode="multiple" width="5%" />
 
 
-					<p:column headerText="Name">
+					<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.name']}">
 						<h:outputText value="#{shareBean.name}" />
 					</p:column>
-					<p:column headerText="Identification Num">
+					<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.idNo']}">
 						<h:outputText value="#{shareBean.identificationNo}" />
 					</p:column>
-					<p:column headerText="Share Holding(%)">
+					<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.shrPerc']}">
 						<h:outputText value="#{shareBean.sharePercentage}">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</h:outputText>
 					</p:column>
-					<p:column headerText="Value (RM.)">
+					<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.shrVal']}">
 						<h:outputText value="#{shareBean.shareAmt}">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</h:outputText>
 					</p:column>
-					<p:column headerText="Equity Owner?">
+					<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.equiOwnr']}">
 						<h:outputText value="Yes" />
 					</p:column>
-					<p:column headerText="Action">
-						<p:commandLink oncomplete="shareHolderDialog.show();"
+					<p:column headerText="#{lbl['lbl.sm.label.action']}">
+						<p:commandLink
 							action="#{backingBean.assignSelShareHolder(shareBean)}"
-							update=":form:tt:shareHolderDialog" style="padding-right:5px;">
+							update=":form" style="padding-right:5px;">
 							<p:graphicImage library="ep/images/design" name="edit.png"
 								value="/resources/ep/images/design/edit.png" />
 						</p:commandLink>
-						<p:commandLink oncomplete="shareHolderAddrDialog.show();"
-							action="#{backingBean.assignSelShareHolderAddress(shareBean)}"
-							update=":form:tt:shareHolderAddrDialog" id="shrAddrLnk">
-							<p:graphicImage library="ep/images/design" name="register.png"
-								value="/resources/ep/images/design/register.png" />
-						</p:commandLink>
-						<p:tooltip for="shrAddrLnk">
-							<h:outputText value="Address Details" />
-						</p:tooltip>
+
 					</p:column>
 				</p:dataTable>
 
 				<p:spacer height="2px;" />
 				<div align="right">
-					<p:commandButton value="Add" oncomplete="shareHolderDialog.show();"
-						action="#{backingBean.assignNewShareHolder}"
-						update=":form:tt:shareHolderDialog" />
-					<p:commandButton value="Delete"
+					<p:commandButton value="#{lbl['lbl.sm.button.add']}"
+						action="#{backingBean.assignNewShareHolder(SupplierManagementConst.PERSONNEL_TYPE_EQUITY)}"
+						update=":form" />
+					<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
 						action="#{backingBean.deleteSelectedShareHolders}"
 						update=":form:tt:shrPerDt" />
 				</div>
@@ -107,7 +98,7 @@
 				<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 					<table style="width: 50%">
 						<tr>
-							<td><p:outputLabel value="PO Remarks" /></td>
+							<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
 							<td><p:inputTextarea autoResize="true" cols="41"
 									value="#{backingBean.managedBean.poSecReview.shareholderRemark}" /></td>
 						</tr>
@@ -116,11 +107,11 @@
 				<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
 					<table style="width: 100%">
 						<tr>
-							<td><p:outputLabel value="PO Remarks" /></td>
+							<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
 							<td><p:inputTextarea autoResize="true" readonly="true"
 									disabled="true" cols="41"
 									value="#{backingBean.managedBean.poSecReview.shareholderRemark}" /></td>
-							<td><p:outputLabel value="Approver Remarks" /></td>
+							<td><p:outputLabel value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
 							<td><p:inputTextarea autoResize="true" cols="41"
 									value="#{backingBean.managedBean.apprvrSecReview.shareholderRemark}" /></td>
 
@@ -130,36 +121,7 @@
 			</p:panel>
 		</p:panel>
 	</h:panelGroup>
-	<p:dialog width="1050px" height="500px"
-		header="Share Holder Information" widgetVar="shareHolderDialog"
-		resizable="false" showEffect="fade" hideEffect="fade" modal="true"
-		id="shareHolderDialog">
 
-		<ui:include
-			src="/xhtml/sm/shared/mofRegistration/shareHolderInfoPopUpForm.xhtml" />
-		<div align="right" style="padding-top: 10px;">
-			<p:commandButton value="Save"
-				action="#{backingBean.addOrUpdateShareHolderToSmAppl('captialInfo')}"
-				update=":form:tt:shrHolderPanGroup" />
-			<p:commandButton value="Cancel" onclick="shareHolderDialog.hide();"
-				immediate="true" />
-		</div>
-	</p:dialog>
-	<p:dialog width="1050px" height="500px"
-		header="Share Holder Address Information"
-		widgetVar="shareHolderAddrDialog" resizable="false" showEffect="fade"
-		hideEffect="fade" modal="true" id="shareHolderAddrDialog">
 
-		<ui:include
-			src="/xhtml/sm/shared/mofRegistration/shareHolderAddressInfoPopUpForm.xhtml" />
-		<div align="right">
-			<p:commandButton value="Save"
-				oncomplete="shareHolderAddrDialog.hide();"
-				update=":form:tt:shrHolderPanGroup"
-				action="#{backingBean.addOrUpdateShareHolderAddress(backingBean.managedBean.addrUpdatePersonnel)}" />
-			<p:commandButton value="Cancel"
-				onclick="shareHolderAddrDialog.hide();" />
-		</div>
-	</p:dialog>
 
 </ui:composition>

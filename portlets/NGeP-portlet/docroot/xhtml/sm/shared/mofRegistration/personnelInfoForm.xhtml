@@ -298,7 +298,7 @@
 					blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.personnelVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.personnelVerified : false)}" />
 				<p:dataTable var="person"
 					value="#{backingBean.managedBean.smAppl.smPersonnels}"
-					selection="#{backingBean.managedBean.selectedPersonnels}"
+					selection="#{backingBean.managedBean.selectedShareHolders}"
 					rowKey="#{person}" rowIndexVar="index" id="personDt">
 					<ac:paginator for="personDt" />
 					<p:column selectionMode="multiple" width="5%" />
@@ -328,47 +328,26 @@
 							rendered="#{person.softcertFlg eq '0'}" />
 					</p:column>
 					<p:column headerText="Action">
-						<p:commandLink rendered="#{!person.equityOwner}"
-							action="#{backingBean.assignSelPersonnel(person)}"
-							oncomplete="directorDialog.show();" style="padding-right:5px;"
-							update=":form:tt:directorDialog">
-							<p:graphicImage library="ep/images/design" name="edit.png"
-								value="/resources/ep/images/design/edit.png" />
-						</p:commandLink>
-
-
-						<p:commandLink oncomplete="perShareHolderDialog.show();"
-							rendered="#{person.equityOwner}"
+						<p:commandLink
 							action="#{backingBean.assignSelShareHolder(person)}"
-							update=":form:tt:perShareHolderDialog" style="padding-right:5px;">
+							update=":form" style="padding-right:5px;">
 							<p:graphicImage library="ep/images/design" name="edit.png"
 								value="/resources/ep/images/design/edit.png" />
 						</p:commandLink>
-						<p:commandLink oncomplete="perShareHolderAddrDialog.show();"
-							id="PerShrAddrLnk"
-							action="#{backingBean.assignSelShareHolderAddress(person)}"
-							update=":form:tt:perShareHolderAddrDialog">
-							<p:graphicImage library="ep/images/design" name="register.png"
-								value="/resources/ep/images/design/register.png" />
-						</p:commandLink>
-						<p:tooltip for="PerShrAddrLnk">
-							<h:outputText value="Address Details" />
-						</p:tooltip>
+
 					</p:column>
 
 				</p:dataTable>
 				<p:spacer height="2px;" />
 				<div align="right">
 					<p:commandButton value="Add Management / Staff"
-						action="#{backingBean.assignNewPersonnel(SupplierManagementConst.PERSONNEL_TYPE_STAFF)}"
-						oncomplete="directorDialog.show();"
-						update=":form:tt:directorDialog" />
+						action="#{backingBean.assignNewShareHolder(SupplierManagementConst.PERSONNEL_TYPE_STAFF)}"
+						update=":form" />
 					<p:commandButton value="Add Director/Higher Management"
-						action="#{backingBean.assignNewPersonnel(SupplierManagementConst.PERSONNEL_TYPE_DIRECTOR)}"
-						oncomplete="directorDialog.show();"
-						update=":form:tt:directorDialog" />
+						action="#{backingBean.assignNewShareHolder(SupplierManagementConst.PERSONNEL_TYPE_DIRECTOR)}"
+						update=":form" />
 					<p:commandButton value="Delete"
-						action="#{backingBean.deleteSelectedPersonnel}"
+						action="#{backingBean.deleteSelectedShareHolders}"
 						update=":form:tt:personDt , :form:tt:stfSummaryPan" />
 				</div>
 				<p:panel id="persBranMapInfo">
@@ -421,54 +400,4 @@
 		</p:panel>
 	</h:panelGroup>
 
-
-	<p:dialog width="1050px" height="500px" header="Personnel Information"
-		widgetVar="directorDialog" resizable="false" showEffect="fade"
-		hideEffect="fade" modal="true" id="directorDialog">
-
-		<ui:include
-			src="/xhtml/sm/shared/mofRegistration/personnelHigherMngmtInfoPopUpForm.xhtml" />
-		<div align="right">
-			<p:commandButton value="Save"
-				action="#{backingBean.addOrUpdatePersonnelToSmAppl}"
-				update=":form:tt:perDataPanGroup" />
-			<p:commandButton value="Cancel" onclick="directorDialog.hide();"
-				immediate="true" />
-		</div>
-	</p:dialog>
-
-
-	<p:dialog width="1050px" height="500px"
-		header="Share Holder Information" widgetVar="perShareHolderDialog"
-		resizable="false" showEffect="fade" hideEffect="fade" modal="true"
-		id="perShareHolderDialog">
-
-		<ui:include
-			src="/xhtml/sm/shared/mofRegistration/personnel_ShareHolderInfoPopUpForm.xhtml" />
-		<div align="right">
-			<p:commandButton value="Save"
-				action="#{backingBean.addOrUpdateShareHolderToSmAppl('personnelInfo')}"
-				update=":form:tt:perDataPanGroup" />
-			<p:commandButton value="Cancel"
-				onclick="perShareHolderDialog.hide();" immediate="true" />
-		</div>
-	</p:dialog>
-
-	<p:dialog width="1050px" height="500px"
-		header="Share Holder Address Information"
-		widgetVar="perShareHolderAddrDialog" resizable="false"
-		showEffect="fade" hideEffect="fade" modal="true"
-		id="perShareHolderAddrDialog">
-
-		<ui:include
-			src="/xhtml/sm/shared/mofRegistration/personnel_ShareHolderAddressInfoPopUpForm.xhtml" />
-		<div align="right">
-			<p:commandButton value="Save"
-				action="#{backingBean.addOrUpdateShareHolderAddress(backingBean.managedBean.addrUpdatePersonnel)}"
-				oncomplete="perShareHolderAddrDialog.hide();"
-				update=":form:tt:personDt,:form:tt:perBrDt" />
-			<p:commandButton value="Cancel"
-				onclick="perShareHolderAddrDialog.hide();" />
-		</div>
-	</p:dialog>
 </ui:composition>

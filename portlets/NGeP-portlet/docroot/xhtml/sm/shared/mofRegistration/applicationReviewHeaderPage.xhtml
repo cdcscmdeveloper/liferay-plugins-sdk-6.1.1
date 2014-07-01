@@ -46,7 +46,8 @@
 	</table>
 	<br />
 	<table style="width: 250px;">
-		<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
+		<p:outputPanel
+			rendered="#{backingBean.managedBean.poUser and !backingBean.managedBean.redirectToPersonPage}">
 			<tr>
 				<td width="10px" style="padding: 0px 2px 0px 7px;"><p:selectBooleanCheckbox
 						value="#{backingBean.managedBean.poSecReview.verifiedAll}">
@@ -59,7 +60,8 @@
 
 			</tr>
 		</p:outputPanel>
-		<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
+		<p:outputPanel
+			rendered="#{backingBean.managedBean.approverUser and !backingBean.managedBean.redirectToPersonPage}">
 			<tr>
 				<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
 						value="#{backingBean.managedBean.apprvrSecReview.verifiedAll}">
