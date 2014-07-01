@@ -63,6 +63,7 @@ import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.directpurchase.ScPIDApprovalUser;
@@ -169,7 +170,10 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 			populatePtjDropDownList();
 			retrieveReasonDescListByCategory();
 			/// by default value as cheaper price
-			getManagedBean().getPurchaseInDefault().setReasonType(getManagedBean().getPmReason());	
+			
+			PmReason reason = new PmReason();
+			reason.setReasonCode(ParameterConst.PID_CP);
+			getManagedBean().getPurchaseInDefault().setReasonType(reason);
 			
 			return "purchaseInDefaultMain";
 		}	
@@ -184,6 +188,8 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 			try {
 				purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
 				PurchaseInDefaultReqDTO reqDTO = new PurchaseInDefaultReqDTO();
+				 IReasonSO reasonSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IReasonSO.class);
+				  ReasonReqDTO reasonReqDTO = new ReasonReqDTO();
 				ScPurchaseInDefault scPurchaseInDefault = getManagedBean().getPurchaseInDefault();
 				scPurchaseInDefault.setRecordStatus(Boolean.TRUE);
 				scPurchaseInDefault.setCreatedDate(DateUtils.getCurrentDate());
@@ -200,6 +206,19 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 				if(scPurchaseInDefault.getContractedItem().getCtContractVer().getCtContract().getContractType() != null){
 					reqDTO.setContractType(getParameterDesc(scPurchaseInDefault.getContractedItem().getCtContractVer().getCtContract().getContractType()).toUpperCase());
 				}
+                
+				// justification
+				if(scPurchaseInDefault.getReasonType().getReasonCode() != null){
+					reasonReqDTO.setReasonCategory(ReasonCategory.PID_JUSTIFICATION.value());
+					reasonReqDTO.setLanguage("BM");
+					ReasonResDTO resDTO = reasonSO.retrieveReasonDescListByCategory(reasonReqDTO);
+					for (PmReasonDesc reasonDesc : resDTO.getReasonDescList()) {
+						if(scPurchaseInDefault.getReasonType().getReasonCode().equalsIgnoreCase(reasonDesc.getPmReason().getReasonCode())){
+							scPurchaseInDefault.setReasonType(reasonDesc.getPmReason());
+						}
+					}
+				}
+
 				reqDTO.setPurchaseInDefaultDtl(scPurchaseInDefault);
 				//Hoa: add token authenticate to support BPM
 				FacesScopes facesScopes = new FacesScopes();
