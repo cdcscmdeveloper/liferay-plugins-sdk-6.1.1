@@ -1087,10 +1087,13 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	
 	public void setCtPanelZoneListner(CtPanelItem panelItem){
 		this.getManagedBean().setSelectedPanelItems(panelItem);
-	 	if(getItemGeneralCode(panelItem.getPanelCoverageId().getParameterId()).equalsIgnoreCase(ParameterConst.CIRCULAR_PANEL_COVERAGE_ZONE)){
+	 	if(getItemGeneralCode(this.getManagedBean().getSelectedPanelItems().getPanelCoverageId().getParameterId()).equalsIgnoreCase(ParameterConst.CIRCULAR_PANEL_COVERAGE_ZONE)){
 	 		this.getManagedBean().setSelectedPanelZone(null);
 			this.getManagedBean().setSelectionOfZone(true);
-		}else if(getItemGeneralCode(panelItem.getPanelCoverageId().getParameterId()).equalsIgnoreCase(ParameterConst.CIRCULAR_PANEL_COVERAGE_ALL)){
+			if(this.getManagedBean().getSelectedPanelItems().getLocationLevelId() == null){
+				this.getManagedBean().getSelectedPanelItems().setLocationLevelId(new PmParameter());
+			}
+		}else if(getItemGeneralCode(this.getManagedBean().getSelectedPanelItems().getPanelCoverageId().getParameterId()).equalsIgnoreCase(ParameterConst.CIRCULAR_PANEL_COVERAGE_ALL)){
 			this.getManagedBean().setSelectionOfZone(false);
 		}else{
 			this.getManagedBean().setSelectionOfZone(false);
