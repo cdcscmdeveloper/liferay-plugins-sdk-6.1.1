@@ -98,6 +98,7 @@ public class SupplierManagementConst {
 
 	public static final String PERSONNEL_TYPE_DIRECTOR = "DIR";
 	public static final String PERSONNEL_TYPE_STAFF = "STF";
+	public static final String PERSONNEL_TYPE_EQUITY = "EQUI";
 
 	// Basic Registration && Account Maintenance
 	public static final String INDIVIDUAL_FLAG = "A";
@@ -544,6 +545,10 @@ public class SupplierManagementConst {
 
 	public String getSM_APPL_PAGE_TYPE_APPRDEC() {
 		return SM_APPL_PAGE_TYPE_APPRDEC;
+	}
+
+	public String getPERSONNEL_TYPE_EQUITY() {
+		return PERSONNEL_TYPE_EQUITY;
 	}
 
 }

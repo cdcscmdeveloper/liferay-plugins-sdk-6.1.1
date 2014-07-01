@@ -159,9 +159,15 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private SmPersonnel selectedShareHolder;
 
 	private List<SmStaffExperience> selectedShrHldrJobFunctions;
+	private SmStaffExperience selectedJobFunction;
 	private List<SmAssociationBody> selectedShrHldrProfBodies;
+	private SmAssociationBody selectedStfPrfBdy;
 	private List<SmRelatedCompany> selectedShrHldrRelatedCompanies;
+	private SmRelatedCompany selectedRelatedCompany;
 	private List<SmStaffAcademic> selectedShrHldrAcademics;
+	private SmStaffAcademic selectedStaffAcademic;
+
+	private boolean valueReqd;
 
 	private SmPersonnelAddress shareHolderPermAddr;
 
@@ -189,16 +195,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private String supplierRemarks;
 
 	private String businessTypeVal;
-
-	// private SmPersonnelAddress personnelPermAddr;
-	//
-	// private SmPersonnelAddress personnelMailAddr;
-	//
-	// private SmPersonnelAddress personnelOffAddr;
-	//
-	// private SmPersonnelAddress personnelResdAddr;
-
-	// private SmStaffAcademic personnelAcademics;
+	private String personnelInfoHeader;
 	// Bank Info
 	private Long[] chequeSingPerId;
 
@@ -348,6 +345,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	private String currentPageType;
 
+	private boolean redirectToPersonPage;
+
 	public SmApplicationManagedBean() {
 		System.out.println("******** Enter Managed Bean *******888");
 		// TODO Checking the user role
@@ -380,6 +379,9 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 			System.out.println("  *** LOGGED IN USER IS SUPPLIER ****");
 		} else {
 			System.out.println("  *** UNKNOWN USER ****");
+		}
+		if (sc.getUserScreenName().equalsIgnoreCase("user026")) {
+			setPoUser(true);
 		}
 		// if(sc.getUserScreenName().equalsIgnoreCase("user011")){
 		// setSupplierUser(true);
@@ -622,6 +624,12 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		// setdefault panel names
 		equiPerCapTotal = new BigDecimal(0);
 		equiCompCapTotal = new BigDecimal(0);
+		selectedJobFunction = new SmStaffExperience();
+		selectedRelatedCompany = new SmRelatedCompany();
+		selectedStaffAcademic = new SmStaffAcademic();
+		selectedStaffAcademic.setPmEduField(new PmEduField());
+		selectedStfPrfBdy = new SmAssociationBody();
+		selectedStfPrfBdy.setPmCertBody(new PmCertBody());
 		System.out.println(" ********* END MANAGED BEAN CREATION ****** ");
 	}
 
@@ -2013,6 +2021,63 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setEduFieldList(List<PmEduField> eduFieldList) {
 		this.eduFieldList = eduFieldList;
+	}
+
+	public boolean isRedirectToPersonPage() {
+		return redirectToPersonPage;
+	}
+
+	public void setRedirectToPersonPage(boolean redirectToPersonPage) {
+		this.redirectToPersonPage = redirectToPersonPage;
+	}
+
+	public String getPersonnelInfoHeader() {
+		return personnelInfoHeader;
+	}
+
+	public void setPersonnelInfoHeader(String personnelInfoHeader) {
+		this.personnelInfoHeader = personnelInfoHeader;
+	}
+
+	public SmStaffExperience getSelectedJobFunction() {
+		return selectedJobFunction;
+	}
+
+	public void setSelectedJobFunction(SmStaffExperience selectedJobFunction) {
+		this.selectedJobFunction = selectedJobFunction;
+	}
+
+	public SmRelatedCompany getSelectedRelatedCompany() {
+		return selectedRelatedCompany;
+	}
+
+	public void setSelectedRelatedCompany(
+			SmRelatedCompany selectedRelatedCompany) {
+		this.selectedRelatedCompany = selectedRelatedCompany;
+	}
+
+	public boolean isValueReqd() {
+		return valueReqd;
+	}
+
+	public void setValueReqd(boolean valueReqd) {
+		this.valueReqd = valueReqd;
+	}
+
+	public SmStaffAcademic getSelectedStaffAcademic() {
+		return selectedStaffAcademic;
+	}
+
+	public void setSelectedStaffAcademic(SmStaffAcademic selectedStaffAcademic) {
+		this.selectedStaffAcademic = selectedStaffAcademic;
+	}
+
+	public SmAssociationBody getSelectedStfPrfBdy() {
+		return selectedStfPrfBdy;
+	}
+
+	public void setSelectedStfPrfBdy(SmAssociationBody selectedStfPrfBdy) {
+		this.selectedStfPrfBdy = selectedStfPrfBdy;
 	}
 
 }
