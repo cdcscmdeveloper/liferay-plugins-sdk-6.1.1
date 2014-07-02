@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import my.ep.biz.service.fl.invoice.IInvoiceSO;
 import my.ep.biz.service.fl.payment.IPaymentMatchSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
+import my.ep.biz.service.pm.common.glaccount.IGlAccountSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.votfund.IVotFundSO;
 import my.ep.bpm.dto.BpmRequestDTO;
@@ -34,6 +35,8 @@ import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
+import my.ep.dto.pm.common.glaccount.GlAccountReqDTO;
+import my.ep.dto.pm.common.glaccount.GlAccountResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.votfund.VotFundReqDTO;
@@ -235,6 +238,7 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 	private FlPaymentAdvice initializePaymentAdvice(FulfilmentResDTO resDTO) {
 		IParameterSO parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IParameterSO.class);
 		IVotFundSO votFundSO = (IVotFundSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IVotFundSO.class);
+		IGlAccountSO glAccountSO = (IGlAccountSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IGlAccountSO.class);
 		
 		FlPaymentAdvice paymentAdvice = new FlPaymentAdvice();
 		paymentAdvice.setFlInvoice(resDTO.getInvoice());
@@ -259,7 +263,11 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		paymentDeduction.setPmVotFund(votFundResDTO.getPmVotFund());
 		//TODO should have a fixed GL Account
 		//paymentDeduction.setPmGlAccount(new PmGlAccount());
-		paymentDeduction.setPmGlAccount(resDTO.getInvoice().getFlRequest().getIssuedOrgProfile().getPmPtjGroup().getPmGlAccounts().get(0));
+		GlAccountReqDTO glAccountReqDTO = new GlAccountReqDTO();
+		glAccountReqDTO.setPtjGroupId(resDTO.getInvoice().getFlRequest().getIssuedOrgProfile().getPmPtjGroup().getPtjGroupId());
+		GlAccountResDTO glAccountResDTO = glAccountSO.retrieveGlAccountList(glAccountReqDTO);
+		paymentDeduction.setPmGlAccount(glAccountResDTO.getGlAccountList().get(0));
+		
 		paymentAdvice.setFlPaymentDeduction(new ArrayList<FlPaymentDeduction>());
 		paymentAdvice.getFlPaymentDeduction().add(paymentDeduction);
 		
