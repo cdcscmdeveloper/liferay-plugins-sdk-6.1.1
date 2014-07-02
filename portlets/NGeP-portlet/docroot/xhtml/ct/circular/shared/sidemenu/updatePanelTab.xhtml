@@ -18,19 +18,19 @@
     </div>
 	</p:panel>
 	<p:tabView id="tabview" orientation="left" >
-	<p:tab id="updateTab" title="Update Panel Circular" >
+	<p:tab id="updateTab" title="#{lbl['lbl.ct.pc.updatepc']}" >
        <ui:include src="/xhtml/ct/circular/panel/updateCircular.xhtml"/> 
     </p:tab> 
-	 <p:tab id="zoneDetails" title="Zone Details" >
+	 <p:tab id="zoneDetails" title="#{lbl['lbl.ct.pc.panel.zone']}" >
        <ui:include src="/xhtml/ct/circular/panel/zone.xhtml"/>
      </p:tab> 
-     <p:tab id="itemDetails" title="Item Details" >
+     <p:tab id="itemDetails" title="#{lbl['lbl.ct.pc.panel.item']}" >
        <ui:include src="/xhtml/ct/circular/panel/item.xhtml"/>
      </p:tab> 
-   <p:tab id="approverSetting" title="Approver Setting" >
+   <p:tab id="approverSetting" title="#{lbl['lbl.ct.set.aprsetting']}" >
        <ui:include src="/xhtml/ct/circular/panel/approverSetting.xhtml"/>
        </p:tab> 
-	 <p:tab id="remakrs" title="Remarks And Attachements" >
+	 <p:tab id="remakrs" title="#{lbl['lbl.ct.remarksnattachements']}" >
        <ui:include src="/xhtml/ct/circular/panel/attachements.xhtml"/>
        </p:tab>  
 	</p:tabView>
