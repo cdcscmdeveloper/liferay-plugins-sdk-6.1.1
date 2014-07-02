@@ -143,6 +143,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	    }
 	   
 	   if(ctBB == null){
+		   ctBB = new ContractBackingBean();
 		   ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());	
 	   }
 	}
@@ -1079,31 +1080,32 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		try {
 			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			UserReqDTO reqDTO = new UserReqDTO();
-
+			reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+			
+			UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
+			reqDTO.setOrgProfileId(resDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId());
+			
 			if(getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
 				reqDTO.setRoleCode(RoleCode.CT_APPROVER.value());
-//				reqDTO.setOrgProfileId(getFacesScopes().getUserSessionBean().getPmUserOrgs().get(0).getPmOrgProfile().getOrgProfileId());
-				// TODO hardcode to get the value, should remove after have real data
-				reqDTO.setOrgProfileId(1003L);
 			} else { // Central Contract	
 				reqDTO.setRoleCode(RoleCode.BPK_APPROVER.value());
-				reqDTO.setOrgType(getFacesScopes().getUserSessionBean().getPmUserOrgs().get(0).getPmOrgProfile().getOrgTypeCode().getParameterCode());
-				// TODO hardcode to get the value, should remove after have real data
-				reqDTO.setOrgType("RSH");
 			}
 
-			UserResDTO resDTO = userSO.retrieveUserListByRole(reqDTO);
+			resDTO = userSO.retrieveUserListByRole(reqDTO);
 			List<PmUser> list = resDTO.getUserList();
 			
 			for (PmUser user : list) {
 				sourceList.add(user.getUserName());
 				getManagedBean().getUserMap().put(user.getUserName(), user);
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
 		} finally {
 			userSO = null;
 		}
 		return sourceList;
-	}
+	}	
 	
     public void setUserValueAgency(CtAgreementParty ctParty,Long userId){
 		for(CtAgreementParty party : this.getManagedBean().getCtAgencySigner()){
