@@ -7,6 +7,8 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions" 
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
+
+	<p:panel id="cancelCcrPnl" header="#{lbl['lbl.ct.cc.ctobecancele']}" toggleable="true" toggleSpeed="500" >
 	<p:panel id="cancelCcrPnl" header="Circular(s) to be cancel" toggleable="true" toggleSpeed="500" >
 		<p:selectOneMenu value="#{panelBackingBean.managedBean.circularDocType}" 
 			disabled="#{fn:length(panelBackingBean.managedBean.cancelCircularReq.ctCancelCircularList) > 0}" 
@@ -30,35 +32,35 @@
 		</p:dataTable>
 		<p:spacer height="2" />
 		<div class="ppRightBtn"> 
-			<p:commandButton value="Add" icon="ui-icon-add" actionListener="#{panelBackingBean.searchActiveCircularVer}" update="circularVerDt" oncomplete="activeCircularDlg.show();" />
-			<p:commandButton value="Delete" process="@this" partialSubmit="true" icon="ui-icon-delete" onclick="delCancelCircular.show()"/>				
+			<p:commandButton value="#{lbl['lbl.btn.add']}" icon="ui-icon-add" actionListener="#{panelBackingBean.searchActiveCircularVer}" update="circularVerDt" oncomplete="activeCircularDlg.show();" />
+			<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this" partialSubmit="true" icon="ui-icon-delete" onclick="delCancelCircular.show()"/>				
 		</div>				
 		</p:outputPanel>	
-		<p:dialog id="activeCircularDlg" header="Active Circulars" widgetVar="activeCircularDlg" modal="true" width="700" height="350">
+		<p:dialog id="activeCircularDlg" header="#{lbl['lbl.ct.cc.acirculars']}" widgetVar="activeCircularDlg" modal="true" width="700" height="350">
 			<p:panel id="circular">
 				<p:dataTable id="circularVerDt" var="data" lazy="true" rowKey="#{data.circularVerId}" 
 					selection="#{panelBackingBean.managedBean.selectedCircularVerList}"
 					value="#{panelBackingBean.managedBean.circularVerList}" >
 					<ac:paginator for="circularVerDt" />
 					<p:column selectionMode="multiple" style="width:3%" />
-					<p:column headerText="Circular No.">
+					<p:column headerText="#{lbl['lbl.ct.cc.cno']}">
 						<h:outputText value="#{data.circularNo}" />
 					</p:column>
-					<p:column headerText="Circular Name">
+					<p:column headerText="#{lbl['lbl.ct.cc.cname']}">
 						<h:outputText value="#{data.name}" />
 					</p:column>									
 				</p:dataTable>
 				<f:facet name="footer">
 					<div class="ppRightBtn"> 
-						<p:commandButton value="Select" process="@form" action="#{panelBackingBean.selectActiveCirculars()}"
+						<p:commandButton value="#{lbl['lbl.btn.select']}" process="@form" action="#{panelBackingBean.selectActiveCirculars()}"
 							update="cancelCcrDt cancelCcrPnl" onclick="activeCircularDlg.hide();" />
-						<p:commandButton value="Cancel" type="button" ajax="false" onclick="activeCircularDlg.hide();" />
+						<p:commandButton value="#{lbl['lbl.btn.cancel']}" type="button" ajax="false" onclick="activeCircularDlg.hide();" />
 					</div>
 				</f:facet>
 			</p:panel>
 		</p:dialog>	
 		 <p:dialog id="delCancelCircular" widgetVar="delCancelCircular" 
-		   header="Delete Confirmation" styleClass="screen-title" resizable="false" modal="true" width="350" height="95">  
+		   header="#{lbl['lbl.ct.dialong.cofirm.header']}" styleClass="screen-title" resizable="false" modal="true" width="350" height="95">  
            <h:panelGrid columns="3">
                <p:graphicImage library="ep/images/design" name="exclamation.png"
 			      value="/resources/ep/images/design/exclamation.png" styleClass="ui-icon-complain"/>
@@ -68,8 +70,8 @@
            </h:panelGrid>
            <div class="ppRightBtn">
 		     <p:commandButton icon="ui-icon-accept" update=":form:cancelCcrDt,:form:cancelCcrPnl" process="@all"
-		        value="Yes" actionListener="#{panelBackingBean.deleteCancelReqCircular()}" onclick="delCancelCircular.hide();"/>
-			 <p:commandButton value="No" icon="ui-icon-reject" onclick="delCancelCircular.hide();" type="button" />
+		        value="#{lbl['lbl.ct.dialong.cofirm.yes']}" actionListener="#{panelBackingBean.deleteCancelReqCircular()}" onclick="delCancelCircular.hide();"/>
+			 <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.no']}" icon="ui-icon-reject" onclick="delCancelCircular.hide();" type="button" />
 		  </div>
         </p:dialog>  		
 	</p:panel>
