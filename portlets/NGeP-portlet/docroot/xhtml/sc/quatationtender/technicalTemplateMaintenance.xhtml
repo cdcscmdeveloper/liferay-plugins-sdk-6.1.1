@@ -1,0 +1,59 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<ui:define name="resourceSection">
+	</ui:define>
+
+	<ui:define name="contentSection">
+
+		<div>
+			<p:commandButton value="#{lbl['lbl.sc.spec.back']}"
+				style="float:left;" icon="ui-icon-back"
+				action="#{qTDetailBB.searchQtBackAction}" />
+		</div>
+		<p:spacer height="5" />
+		<p:panel header="#{lbl['lbl.sc.tpl.head.section']}" toggleable="true"
+			style="width:100%;">
+			<table>
+				<tr>
+					<td valign="top"><h:outputLabel
+							value="#{lbl['lbl.sc.tpl.main.title']}" /></td>
+					<td colspan="3"><p:inputTextarea rows="2" cols="95"
+							style="margin-bottom:5px;" maxlength="200"
+							value="#{qTDetailBB.managedBean.qtDoc.tplSpecMaster.specName}" /></td>
+				</tr>
+				<tr>
+					<td><h:outputLabel value="#{lbl['lbl.sc.tpl.search.item']}" /></td>
+					<td><p:inputText disabled="true" size="30"
+							value="#{qTDetailBB.getParameterDesc(qTDetailBB.managedBean.qtDoc.tplSpecMaster.itemTypeCode)}" /></td>
+					<td><h:outputLabel value="#{lbl['lbl.sc.tpl.search.spec']}" /></td>
+					<td><p:inputText disabled="true" size="30"
+							value="#{qTDetailBB.getParameterDesc(qTDetailBB.managedBean.qtDoc.tplSpecMaster.specTypeCode)}" /></td>
+				</tr>
+				<tr>
+					<td><h:outputLabel value="#{lbl['lbl.sc.spec.local.goods']}" /></td>
+					<td><p:selectOneRadio id="estimated">
+							<f:selectItems
+								value="#{qTDetailBB.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+						</p:selectOneRadio></td>
+				</tr>
+				<tr>
+					<td><h:outputLabel
+							value="#{lbl['lbl.sc.spec.template.status']}" /></td>
+					<td><p:inputText disabled="true"
+							value="#{qTDetailBB.getStatusDescById(qTDetailBB.managedBean.qtDoc.tplSpecMaster.status.statusId)}" /></td>
+				</tr>
+			</table>
+		</p:panel>
+
+		<ac:templateSpec
+			templateSpecBean="#{qTDetailBB.managedBean.templateSpecBean}" />
+
+	</ui:define>
+</ui:composition>

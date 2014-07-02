@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
@@ -29,6 +30,7 @@ import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
+import my.ep.biz.service.sc.quationtender.IQTTemplateSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -37,6 +39,7 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.QTStatusConst;
+import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -51,6 +54,8 @@ import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
 import my.ep.dto.sc.quationtender.BriefingReqDTO;
 import my.ep.dto.sc.quationtender.BriefingResDTO;
+import my.ep.dto.sc.quationtender.QTTemplateDocReqDTO;
+import my.ep.dto.sc.quationtender.QTTemplateDocResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sc.specification.SpecificationReqDTO;
@@ -64,7 +69,6 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmDistrict;
-import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmDo;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmGo;
@@ -110,11 +114,13 @@ import my.ep.type.sc.CommitteType;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
 import my.ep.web.bean.sc.quatationtender.TabBean;
+import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.sc.quationtender.common.QTConstants;
@@ -122,7 +128,6 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sc.helper.LocationSingleton;
-import my.ep.web.util.sc.helper.SourcingLocationHelper;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -315,7 +320,8 @@ public class QTDetailBackingBean extends
 
 			if (quationTenderResDTO.isSuccessful()) {
 				ScQt scQt = quationTenderResDTO.getQtDetail();
-
+				// renew the session..
+				renewSesionObject();
 				FacesContext
 						.getCurrentInstance()
 						.addMessage(
@@ -638,27 +644,10 @@ public class QTDetailBackingBean extends
 					if (resDTO.getQtDetail().isZonal()) {
 						if (isNotNullOREmpty(resDTO.getZoneDetails())) {
 							for (TplSpecZoneDtl zone : resDTO.getZoneDetails()) {
-								List<PmState> states = SourcingLocationHelper
-										.getStateFromZoneLocationDTOs(zone
-												.getTplSpecZoneLocs());
-
-								List<PmDivision> divisions = SourcingLocationHelper
-										.getDivisionFromZoneLocationDTOs(zone
-												.getTplSpecZoneLocs());
-								List<PmDistrict> districts = SourcingLocationHelper
-										.getDistrictFromZoneLocationDTOs(zone
-												.getTplSpecZoneLocs());
-
-								List<PmCity> cities = SourcingLocationHelper
-										.getCityFromZoneLocationDTOs(zone
-												.getTplSpecZoneLocs());
-
 								getManagedBean().getZoneGeneralTrees().add(
 										LocationSingleton.getInstance()
-												.buildGeneralZoneTree(zone,
-														states, districts,
-														divisions, cities));
-
+												.constuctTreeNode(zone,
+														zone.getTplSpecZoneLocs()));
 							}
 						}
 					}
@@ -1155,7 +1144,16 @@ public class QTDetailBackingBean extends
 				bean.setSearchValue(betweenVal);
 				searchFilterBean.add(bean);
 			}
-			// Need to add status
+			
+			String status = qtnTenderSearchBean.getQtStatus();
+			if (!StringUtils.isBlank(status)) {
+				SearchFilterBean bean = new SearchFilterBean();
+				bean.setAndOr(SearchCondition.CONDITION_OR.value());
+				bean.setSearchField("scQtStatus.pmStatus.statusId");
+				bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+				bean.setSearchValue(status);
+				searchFilterBean.add(bean);
+			}
 
 			// Adding search filterbeans to searchbean.
 			qtSearchBean.getDataFilterBeans().addAll(searchFilterBean);
@@ -2194,7 +2192,7 @@ public class QTDetailBackingBean extends
 				reqDTO.setQtSearchBean(searchBean);
 
 				QuationTenderResDTO resDTO = detailSO.getQuationTenders(reqDTO);
-
+				
 				return resDTO.getQtResultBean();
 			} finally {
 				detailSO = null;
@@ -2427,29 +2425,11 @@ public class QTDetailBackingBean extends
 					if (this.getManagedBean().getZoneGeneralTrees().isEmpty()) {
 						if (tenderResDTO.getQtDetail().isZonal()) {
 							if (isNotNullOREmpty(tenderResDTO.getZoneDetails())) {
-								for (TplSpecZoneDtl zone : tenderResDTO
-										.getZoneDetails()) {
-									List<PmState> states = SourcingLocationHelper
-											.getStateFromZoneLocationDTOs(zone
-													.getTplSpecZoneLocs());
-
-									List<PmDivision> divisions = SourcingLocationHelper
-											.getDivisionFromZoneLocationDTOs(zone
-													.getTplSpecZoneLocs());
-									List<PmDistrict> districts = SourcingLocationHelper
-											.getDistrictFromZoneLocationDTOs(zone
-													.getTplSpecZoneLocs());
-
-									List<PmCity> cities = SourcingLocationHelper
-											.getCityFromZoneLocationDTOs(zone
-													.getTplSpecZoneLocs());
-
+								for (TplSpecZoneDtl zone : tenderResDTO.getZoneDetails()) {
 									getManagedBean().getZoneGeneralTrees().add(
 											LocationSingleton.getInstance()
-													.buildGeneralZoneTree(zone,
-															states, districts,
-															divisions, cities));
-
+													.constuctTreeNode(zone,
+															zone.getTplSpecZoneLocs()));
 								}
 							}
 
@@ -2617,4 +2597,82 @@ public class QTDetailBackingBean extends
 				selectedApprovers);
 	}
 
+	public String technicalSpecEditAction(ScQtCheckList checklist) {
+
+		this.getManagedBean().setQtDoc(checklist.getScQtDoc());
+
+		TemplateSpecBackingBean specBB = new TemplateSpecBackingBean();
+		TemplateSpecBean templateSpecBean = getManagedBean()
+				.getTemplateSpecBean();
+
+		templateSpecBean.setSpecMaster(checklist.getScQtDoc()
+				.getTplSpecMaster());
+
+		templateSpecBean
+				.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);
+
+		specBB.retrieveTemplateSpecMaster(templateSpecBean);
+
+		return "/xhtml/sc/quatationtender/technicalTemplateMaintenance.xhtml?faces-redirect=true";
+
+	}
+	
+	public String financialSpecEditAction(ScQtCheckList checklist) {
+
+		IQTTemplateSO qtTemplateSO;
+		try {
+
+			QTTemplateDocResDTO resDto = null;
+
+			this.getManagedBean().setQtDoc(checklist.getScQtDoc());
+
+			QTTemplateDocReqDTO docReqDTO = new QTTemplateDocReqDTO();
+
+			docReqDTO.setCheckListId(checklist.getQtChecklistId());
+			qtTemplateSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTTemplateSO.class);
+
+			resDto = qtTemplateSO
+					.retriveTemplateDocDetailsByCheckListId(docReqDTO);
+
+			TemplateSpecBackingBean specBB = new TemplateSpecBackingBean();
+			TemplateSpecBean templateSpecBean = getManagedBean()
+					.getTemplateSpecBean();
+
+			templateSpecBean.setSpecMaster(resDto.getScQtCheckList()
+					.getScQtDoc().getTplSpecMaster());
+
+			templateSpecBean
+					.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);
+
+			specBB.retrieveTemplateSpecMaster(templateSpecBean);
+
+			this.getManagedBean()
+					.getQtDoc()
+					.setTplSpecMaster(
+							resDto.getScQtCheckList().getScQtDoc()
+									.getTplSpecMaster());
+
+			this.getManagedBean().setQtDoc(
+					resDto.getScQtCheckList().getScQtDoc());
+
+		} finally {
+			qtTemplateSO = null;
+		}
+		return "/xhtml/sc/main/financialTemplate.xhtml?faces-redirect=true";
+	}
+	
+	public SelectItem[] getProcurementModeDropdownValues(){
+		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+		List<String> recommendList = new ArrayList<String>();
+		recommendList.add(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO);
+		recommendList.add(ParameterConst.SC_PROCUREMENT_MODE_DIRECT_PURCHASE);
+		
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("pmParameter.parameterCode",
+						SearchOperator.OPERATOR_NOT_IN.value(), recommendList));
+		
+		SelectItem[] items = getDropdownCodeValuesBySearchBean(ParameterTypeConst.SC_PROCUREMENT_MODE, searchBean);
+		return items;
+    }
 }

@@ -33,7 +33,7 @@
 							value="#{qTBusinessOwnerBackingBean.managedBean.cloneQtnTenderSearchBean.procurementMode}"
 							style="width: 178px;margin-bottom: 5px;">
 							<f:selectItems
-								value="#{qTBusinessOwnerBackingBean.getDropdownCodeValues(ParameterTypeConst.scProcurementMode)}" />
+								value="#{qTBusinessOwnerBackingBean.getProcurementModeDropdownValues()}" />
 						</p:selectOneMenu></td>
 				</tr>
 				<tr>
@@ -60,9 +60,8 @@
 							value="#{lbl['lbl.sc.committe.clone.comstatus']}" /></td>
 					<td><p:selectOneMenu style="width: 178px;margin-bottom: 5px;"
 							value="#{qTBusinessOwnerBackingBean.managedBean.cloneQtnTenderSearchBean.qtStatus}">
-							<f:selectItem itemLabel="Select One" itemValue="" />
-							<f:selectItem itemLabel="Active" itemValue="1" />
-							<f:selectItem itemLabel="Non-Active" itemValue="2" />
+							<f:selectItems
+								value="#{qTDetailBB.getStatusDropdownValues('SC', 'QT')}" />
 						</p:selectOneMenu></td>
 					<td />
 					<td />
@@ -114,7 +113,7 @@
 
 				<p:column headerText="#{lbl['lbl.so.bo.status']}">
 					<h:outputText
-						value="#{scQt.qtStatus.pmStatus.pmStatusDescs[0].statusName}" />
+						value="#{qTBusinessOwnerBackingBean.getStatusDescById(scQt.qtStatus.statusId)}" />
 				</p:column>
 			</p:dataTable>
 		</p:panel>

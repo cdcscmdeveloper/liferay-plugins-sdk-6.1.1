@@ -211,10 +211,8 @@
 					action="#{qTBusinessOwnerBackingBean.okBusinessOwnerAction}"
 					ajax="true" icon="ui-icon-check" update="businessownerId, bopanel" />
 
-				<p:commandButton value="#{lbl['lbl.so.cancelbtn']}"
-					action="#{qTBusinessOwnerBackingBean.cancelCommitteAction}"
-					oncomplete="newbusinessowner.hide();" update="businessownerId"
-					icon="ui-icon-cancel" />
+				<p:commandButton value="#{lbl['lbl.so.cancelbtn']}" process="@this"
+					oncomplete="newbusinessowner.hide();" icon="ui-icon-cancel" />
 			</div>
 		</p:panel>
 	</p:dialog>
