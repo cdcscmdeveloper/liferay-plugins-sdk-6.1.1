@@ -585,7 +585,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			
 			ReasonReqDTO reqDTO = new ReasonReqDTO();
 			reqDTO.setLanguage(CommonConstants.DEFAULT_LANGUAGE_CODE);//temp for testing purposes will set back after gustia got the proper data
-			reqDTO.setReasonCode(ParameterConst.FULFILMENT_REASON_CODE);
+			reqDTO.setReasonCategory(ParameterConst.FULFILMENT_REASON_CODE);
 			ReasonResDTO resDTO = reasonSO.retrieveReasonDescListByCategory(reqDTO);
 			getManagedBean().setReasonDescs(resDTO.getReasonDescList());
 			List<PmReasonDesc> reasonDescs = resDTO.getReasonDescList();
