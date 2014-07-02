@@ -28,7 +28,7 @@
 					value="#{qTDetailBB.managedBean.qtnTenderSearchBean.procurementMode}"
 					style="width: 178px;margin-bottom: 5px;">
 					<f:selectItems
-						value="#{qTDetailBB.getDropdownCodeValues(ParameterTypeConst.scProcurementMode)}" />
+						value="#{qTDetailBB.getProcurementModeDropdownValues()}" />
 				</p:selectOneMenu>
 
 				<h:outputLabel value="#{lbl['lbl.so.creatdtfrom']}" />
@@ -148,6 +148,12 @@
 							<f:convertDateTime
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</h:outputText>
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.so.bo.status']}"
+						style="width:150px;">
+						<h:outputText
+							value="#{qTDetailBB.getStatusDescById(scQt.qtStatus.statusId)}" />
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.so.action']}" style="width:6%">
