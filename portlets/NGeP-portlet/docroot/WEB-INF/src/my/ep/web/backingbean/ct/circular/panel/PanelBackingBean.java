@@ -1016,9 +1016,10 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			CircularReqDTO reqDTO = new CircularReqDTO();
 			reqDTO.setCircularVerId(circularVerId);
 			CircularResDTO resDTO = null;
+			getManagedBean().setSelectionOfZone(false);
 			getManagedBean().setSelectedPanelItems(null);
-			this.getManagedBean().setSelectedPanelZone(null);
-			this.getManagedBean().setSelectedTabIndex(0);
+			getManagedBean().setSelectedPanelZone(null);
+			getManagedBean().setSelectedTabIndex(0);
 			getManagedBean().setAction(action);
 			if(action.equalsIgnoreCase("view") || action.equalsIgnoreCase("save")) {
 				resDTO = circularSO.retrieveCircularVerById(reqDTO);
