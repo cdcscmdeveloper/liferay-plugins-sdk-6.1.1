@@ -88,7 +88,10 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.prepared.date']}" /></td>
-				<td><p:inputText size="20" value=" " disabled="true" /></td>
+				<td><p:inputText size="20" disabled="true" value="#{flOrderBB.managedBean.fulfilmentOrder.createdDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</p:inputText></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.period']}" /></td>
@@ -98,8 +101,12 @@
 						value="#{lbl['lbl.fl.zonal']}" /> <h:selectBooleanCheckbox
 						disabled="true" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.submission.date']}" /></td>
-				<td><p:inputText size="25" disabled="true">
-					</p:inputText></td>
+				<td><p:inputText size="25" disabled="true"
+					value="#{flOrderBB.managedBean.fulfilmentOrder.submissionDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</p:inputText>
+					</td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.start.delivery.date']}" /></td>
