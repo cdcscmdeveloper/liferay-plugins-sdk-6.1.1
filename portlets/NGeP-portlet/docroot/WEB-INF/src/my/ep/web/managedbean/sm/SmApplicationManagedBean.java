@@ -168,6 +168,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private SmStaffAcademic selectedStaffAcademic;
 
 	private boolean valueReqd;
+	
+	private boolean showParentMsg;
 
 	private SmPersonnelAddress shareHolderPermAddr;
 
@@ -380,9 +382,9 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		} else {
 			System.out.println("  *** UNKNOWN USER ****");
 		}
-		if (sc.getUserScreenName().equalsIgnoreCase("user026")) {
-			setPoUser(true);
-		}
+		// if (sc.getUserScreenName().equalsIgnoreCase("user026")) {
+		// setPoUser(true);
+		// }
 		// if(sc.getUserScreenName().equalsIgnoreCase("user011")){
 		// setSupplierUser(true);
 		// }else if(sc.getUserScreenName().equalsIgnoreCase("user027")){
@@ -2078,6 +2080,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setSelectedStfPrfBdy(SmAssociationBody selectedStfPrfBdy) {
 		this.selectedStfPrfBdy = selectedStfPrfBdy;
+	}
+
+	public boolean isShowParentMsg() {
+		return showParentMsg;
+	}
+
+	public void setShowParentMsg(boolean showParentMsg) {
+		this.showParentMsg = showParentMsg;
 	}
 
 }

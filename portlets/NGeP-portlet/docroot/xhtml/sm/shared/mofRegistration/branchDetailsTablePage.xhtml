@@ -8,38 +8,47 @@
 	<table style="width: 100%">
 		<tr>
 			<td><p:outputLabel value="* #{lbl['lbl.sm.branch.branchName']}" /></td>
-			<td><p:inputText
+			<td><p:inputText required="#{backingBean.managedBean.valueReqd}"
+					label=" #{lbl['lbl.sm.branch.branchName']}" id="supBranchName"
+					maxlength="100"
 					value="#{backingBean.managedBean.selectedBranch.branchName}"
-					size="35" /></td>
+					size="35" /> <p:message id="supBranchNameMsg" for="supBranchName"
+					showSummary="true" showDetail="false" display="icon" /></td>
 		</tr>
 		<tr>
 			<td><p:outputLabel value="* #{lbl['lbl.sm.companyaddress']}" /></td>
-			<td><p:inputText
+			<td><p:inputText required="#{backingBean.managedBean.valueReqd}"
+					label="#{lbl['lbl.sm.companyaddress']}" id="supBrnAddr"
+					maxlength="35"
 					value="#{backingBean.managedBean.selectedBranch.smAddress.address1}"
-					size="35" /></td>
+					size="35" />
+				<p:message id="supBrnAddrMsg" for="supBrnAddr" showSummary="true"
+					showDetail="false" display="icon" /></td>
 		</tr>
 
 		<tr>
 			<td></td>
-			<td><p:inputText
+			<td><p:inputText maxlength="35"
 					value="#{backingBean.managedBean.selectedBranch.smAddress.address2}"
 					size="35" /></td>
 		</tr>
 		<tr>
 			<td></td>
-			<td><p:inputText
+			<td><p:inputText maxlength="35"
 					value="#{backingBean.managedBean.selectedBranch.smAddress.address3}"
 					size="35" /></td>
 		</tr>
 		<tr>
 			<td></td>
-			<td><p:inputText
+			<td><p:inputText maxlength="35"
 					value="#{backingBean.managedBean.selectedBranch.smAddress.address4}"
 					size="35" /></td>
 		</tr>
 		<tr>
 			<td><p:outputLabel value="*#{lbl['lbl.sm.country']}" /></td>
 			<td><p:selectOneMenu
+					required="#{backingBean.managedBean.valueReqd}"
+					label="#{lbl['lbl.sm.country']}" id="supBrnCntry"
 					value="#{backingBean.managedBean.selectedBranch.smAddress.pmCountry.countryId}"
 					style="width: 207px;margin-bottom: 5px;">
 					<f:selectItem itemLabel="---Select---" itemValue="" />
@@ -54,12 +63,16 @@
 								backingBean.managedBean.selectedBranch.smAddress.pmDistrict,
 								backingBean.managedBean.selectedBranch.smAddress.pmCity)}"
 						update="branchState,branchDist,branchCity" />
-				</p:selectOneMenu></td>
+				</p:selectOneMenu>
+				<p:message id="supBrnCntryMsg" for="supBrnCntry" showSummary="true"
+					showDetail="false" display="icon" /></td>
 		</tr>
 
 		<tr>
-			<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
+			<td><p:outputLabel value="*#{lbl['lbl.sm.state']}" /></td>
 			<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+					required="#{backingBean.managedBean.valueReqd}"
+					label="#{lbl['lbl.sm.state']}"
 					value="#{backingBean.managedBean.selectedBranch.smAddress.pmState.stateId}"
 					id="branchState">
 					<f:selectItem itemLabel="---Select---" itemValue="" />
@@ -73,13 +86,16 @@
 								backingBean.managedBean.selectedBranch.smAddress.pmCity)}"
 						update="branchDist,branchCity" />
 
-				</p:selectOneMenu></td>
+				</p:selectOneMenu>
+				<p:message id="branchStateMsg" for="branchState" showSummary="true"
+					showDetail="false" display="icon" /></td>
 		</tr>
 
 		<tr>
-			<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
+			<td><p:outputLabel value="*#{lbl['lbl.sm.district']}" /></td>
 			<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
-					id="branchDist"
+					id="branchDist" required="#{backingBean.managedBean.valueReqd}"
+					label="#{lbl['lbl.sm.district']}"
 					value="#{backingBean.managedBean.selectedBranch.smAddress.pmDistrict.districtId}">
 					<f:selectItem itemLabel="---Select---" itemValue="" />
 					<f:selectItems var="brnDist"
@@ -91,19 +107,24 @@
 								SupplierManagementConst.SM_BRANCH_PANEL,
 								backingBean.managedBean.selectedBranch.smAddress.pmCity)}"
 						update="branchCity" />
-				</p:selectOneMenu></td>
+				</p:selectOneMenu>
+				<p:message id="branchDistMsg" for="branchDist" showSummary="true"
+					showDetail="false" display="icon" /></td>
 		</tr>
 		<tr>
-			<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
+			<td><p:outputLabel value="*#{lbl['lbl.sm.towncity']}" /></td>
 			<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
-					id="branchCity"
+					id="branchCity" required="#{backingBean.managedBean.valueReqd}"
+					label="#{lbl['lbl.sm.towncity']}"
 					value="#{backingBean.managedBean.selectedBranch.smAddress.pmCity.cityId}">
 					<f:selectItem itemLabel="---Select---" itemValue="" />
 					<f:selectItems var="branchCity"
 						value="#{backingBean.managedBean.branchCompanyCities}"
 						itemValue="#{branchCity.cityId}"
 						itemLabel="#{branchCity.cityName}" />
-				</p:selectOneMenu></td>
+				</p:selectOneMenu>
+				<p:message id="branchCityMsg" for="branchCity" showSummary="true"
+					showDetail="false" display="icon" /></td>
 		</tr>
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
@@ -115,21 +136,21 @@
 			<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
 			<td><p:inputText label="#{lbl['lbl.sm.phoneno']}"
 					id="branchPhoneNo"
+					validatorMessage="#{lbl['lbl.sm.phoneno']} - #{lbl['lbl.sm.invalidNo']}"
 					value="#{backingBean.managedBean.selectedBranch.phoneNo}" size="35"
-					maxlength="20">
-					
-				</p:inputText>
-				<p:message id="branchPhoneNoMsg" for="branchPhoneNo"
+					maxlength="12">
+					<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
+				</p:inputText> <p:message id="branchPhoneNoMsg" for="branchPhoneNo"
 					showSummary="true" showDetail="false" display="icon" /></td>
 		</tr>
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.sm.faxno']}" /></td>
 			<td><p:inputText label="#{lbl['lbl.sm.faxno']}" id="branchFaxNo"
+					validatorMessage="#{lbl['lbl.sm.faxno']} - #{lbl['lbl.sm.invalidNo']}"
 					value="#{backingBean.managedBean.selectedBranch.faxNo}" size="35"
-					maxlength="20">
-					
-				</p:inputText>
-				<p:message id="branchFaxNoMsg" for="branchFaxNo" showSummary="true"
+					maxlength="12">
+					<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
+				</p:inputText> <p:message id="branchFaxNoMsg" for="branchFaxNo" showSummary="true"
 					showDetail="false" display="icon" /></td>
 		</tr>
 

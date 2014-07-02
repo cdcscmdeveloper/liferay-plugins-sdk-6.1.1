@@ -91,20 +91,21 @@
 						<table style="width: 100%">
 							<tr>
 								<td><p:inputText size="35" required="true" id="smSupAddr1"
+										maxlength="35"
 										value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address1}" />
 									<p:message id="smSupAddr1Msg" for="smSupAddr1"
 										showSummary="true" showDetail="false" display="icon" /></td>
 							</tr>
 							<tr>
-								<td><p:inputText size="35"
+								<td><p:inputText size="35" maxlength="35"
 										value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address2}" /></td>
 							</tr>
 							<tr>
-								<td><p:inputText size="35"
+								<td><p:inputText size="35" maxlength="35"
 										value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address3}" /></td>
 							</tr>
 							<tr>
-								<td><p:inputText size="35"
+								<td><p:inputText size="35" maxlength="35"
 										value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address4}" /></td>
 							</tr>
 						</table>
@@ -222,16 +223,18 @@
 					<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
 					<td><p:inputText size="35" id="basPhnNum"
 							label="#{lbl['lbl.sm.phoneno']}"
+							validatorMessage="#{lbl['lbl.sm.phoneno']} - #{lbl['lbl.sm.invalidNo']}"
 							value="#{backingBean.managedBean.smAppl.smCompanyBasic.phoneNo}"
-							maxlength="20">
+							maxlength="12">
 							<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
 						</p:inputText> <p:message id="basPhnNumMsg" for="basPhnNum" showSummary="true"
 							showDetail="false" display="icon" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.sm.faxno']}" /></td>
 					<td><p:inputText size="35" id="basFaxNum"
 							label="#{lbl['lbl.sm.faxno']}"
+							validatorMessage="#{lbl['lbl.sm.faxno']} - #{lbl['lbl.sm.invalidNo']}"
 							value="#{backingBean.managedBean.smAppl.smCompanyBasic.faxNo}"
-							maxlength="20">
+							maxlength="12">
 							<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
 						</p:inputText> <p:message id="basFaxNumMsg" for="basFaxNum" showSummary="true"
 							showDetail="false" display="icon" /></td>

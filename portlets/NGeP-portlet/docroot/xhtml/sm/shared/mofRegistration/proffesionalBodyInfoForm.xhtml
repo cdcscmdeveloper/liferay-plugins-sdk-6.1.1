@@ -66,7 +66,7 @@
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.label.action']}">
 					<p:commandLink action="#{backingBean.assignSelAssocBody(profBean)}"
-						oncomplete="profDialog.show();" update=":form:tt:profPop">
+						partialSubmit="true" process="@this" update=":form:tt:profPop">
 						<p:graphicImage library="ep/images/design" name="edit.png"
 							value="/resources/ep/images/design/edit.png"
 							style="margin-right:2px;" />
@@ -76,11 +76,11 @@
 			<p:spacer height="2px;" />
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.sm.button.add']}"
-					action="#{backingBean.assignNewAssocBody}"
-					oncomplete="profDialog.show();" update=":form:tt:profPop" />
+					action="#{backingBean.assignNewAssocBody}" partialSubmit="true"
+					process="@this" update=":form:tt:profPop" />
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
 					action="#{backingBean.deleteSelectedAssocBodies}"
-					update=":form:tt:profDt" />
+					partialSubmit="true" process="profInfPan" update=":form:tt:profDt" />
 
 			</div>
 			<br />
@@ -112,22 +112,26 @@
 	<p:dialog width="500px"
 		header="#{lbl['lbl.sm.profBody.profBodDiaHdr']}"
 		widgetVar="profDialog" resizable="false" showEffect="fade"
-		hideEffect="fade" modal="true" id="profPop">
+		hideEffect="fade" modal="true" id="profPop" closable="false">
 		<!-- <p:panel header="profificate Details"> -->
-
+		<p:messages id="profDialogInfoMsg" showSummary="false"
+			showDetail="true" autoUpdate="true" closable="true" />
 		<table style="width: 100%">
 
 
 			<tr>
 				<td><p:outputLabel value="* #{lbl['lbl.sm.profBody.profBody']}" /></td>
 				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+						required="#{backingBean.managedBean.valueReqd}"
+						label="#{lbl['lbl.sm.profBody.profBody']}" id="profBodyBdy"
 						value="#{backingBean.managedBean.selectedAssocBody.pmCertBody.certBodyId}">
-						<f:selectItem itemLabel="-- Select  -- " itemValue="0" />
+						<f:selectItem itemLabel="-- Select  -- " itemValue="" />
 						<f:selectItems var="profBody"
 							value="#{backingBean.managedBean.profBodyLs}"
 							itemValue="#{profBody.certBodyId}"
 							itemLabel="#{profBody.bodyName}" />
-					</p:selectOneMenu></td>
+					</p:selectOneMenu> <p:message id="profBodyBdyMsg" for="profBodyBdy"
+						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 
 			<tr>
@@ -140,16 +144,23 @@
 						value="
 						* #{lbl['lbl.sm.profBody.regNo']}" /></td>
 				<td><p:inputText size="35"
+						required="#{backingBean.managedBean.valueReqd}"
+						label="#{lbl['lbl.sm.profBody.regNo']}" id="profBodyRegNo"
 						value="#{backingBean.managedBean.selectedAssocBody.regNo}"
-						maxlength="20" /></td>
+						maxlength="20" /> <p:message id="profBodyRegNoMsg"
+						for="profBodyRegNo" showSummary="true" showDetail="false"
+						display="icon" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* #{lbl['lbl.sm.profBody.expDate']}" /></td>
 				<td><p:calendar showOn="button" navigator="true"
-						display="inline"
+						display="inline" required="#{backingBean.managedBean.valueReqd}"
+						label="#{lbl['lbl.sm.profBody.expDate']}" id="profBodyExpDate"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-						yearRange="c-99:c+0" readonlyInput="true"
-						value="#{backingBean.managedBean.selectedAssocBody.expDate}" /></td>
+						yearRange="-99:+0" readonlyInput="true"
+						value="#{backingBean.managedBean.selectedAssocBody.expDate}" /> <p:message
+						id="profBodyExpDateMsg" for="profBodyExpDate" showSummary="true"
+						showDetail="false" display="icon" /></td>
 			</tr>
 
 		</table>
@@ -159,9 +170,10 @@
 			<p:commandButton value="#{lbl['lbl.sm.button.save']}"
 				action="#{backingBean.addOrUpdateAssocBodiesToSmAppl}"
 				partialSubmit="true" process="profPop"
-				oncomplete="profDialog.hide();" update=":form:tt:profDt" />
+				update=":form:tt:profDt, @([id$=Msg])" />
 			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
-				onclick="profDialog.hide();" immediate="true" />
+				action="#{backingBean.cancelSelProfBody}" partialSubmit="true"
+				process="@this" />
 		</div>
 
 	</p:dialog>

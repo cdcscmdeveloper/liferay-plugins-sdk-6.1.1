@@ -48,7 +48,7 @@
 
 				<tr>
 					<td width="134px;"><p:outputLabel
-							value="#{lbl['lbl.sm.facility.ownerType']}" /></td>
+							value="* #{lbl['lbl.sm.facility.ownerType']}" /></td>
 					<td style="width: 100px; padding-bottom: 2px;"><p:selectOneRadio
 							id="ownTypeId" label="#{lbl['lbl.sm.facility.ownerType']}"
 							value="#{backingBean.managedBean.basicCompanyFacility.ownershipType}"
@@ -82,7 +82,7 @@
 								value="* #{lbl['lbl.sm.facility.landLordName']}" /></td>
 						<td><p:inputText id="landlordName"
 								value="#{backingBean.managedBean.basicCompanyFacility.ownerName}"
-								size="35" required="true"
+								size="35" required="true" maxlength="50"
 								label="#{lbl['lbl.sm.facility.landLordName']}" /> <p:message
 								id="landlordNameMsg" for="landlordName" showSummary="true"
 								showDetail="false" display="icon" /></td>
@@ -104,21 +104,21 @@
 						<td>
 							<table style="width: 100%">
 								<tr>
-									<td><p:inputText id="companyAdd1" size="35"
+									<td><p:inputText id="companyAdd1" size="35" maxlength="35"
 											value="#{backingBean.managedBean.basicCompanyFacility.smAddress.address1}" />
 										<p:message id="companyAdd1Msg" for="companyAdd1"
 											showSummary="true" showDetail="false" display="icon" /></td>
 								</tr>
 								<tr>
-									<td><p:inputText size="35"
+									<td><p:inputText size="35" maxlength="35"
 											value="#{backingBean.managedBean.basicCompanyFacility.smAddress.address2}" /></td>
 								</tr>
 								<tr>
-									<td><p:inputText size="35"
+									<td><p:inputText size="35" maxlength="35"
 											value="#{backingBean.managedBean.basicCompanyFacility.smAddress.address3}" /></td>
 								</tr>
 								<tr>
-									<td><p:inputText size="35"
+									<td><p:inputText size="35" maxlength="35"
 											value="#{backingBean.managedBean.basicCompanyFacility.smAddress.address4}" /></td>
 								</tr>
 							</table>
@@ -225,7 +225,7 @@
 					<tr>
 
 						<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
-						<td><p:inputText size="35"
+						<td><p:inputText size="35" maxlength="10"
 								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.postcode}" /></td>
 					</tr>
 					<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
@@ -271,7 +271,7 @@
 						<td width="134px;"><p:outputLabel
 								value="* #{lbl['lbl.sm.facility.ownerName']}" /></td>
 						<td colspan="3"><p:inputText id="fcltyOwnerName"
-								label="#{lbl['lbl.sm.facility.ownerName']}"
+								label="#{lbl['lbl.sm.facility.ownerName']}" maxlength="50"
 								value="#{backingBean.managedBean.basicCompanyFacility.ownerName}"
 								size="35" required="true" /> <p:message id="fcltyOwnerNameMsg"
 								for="fcltyOwnerName" showSummary="true" showDetail="false"

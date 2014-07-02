@@ -216,6 +216,8 @@ public class SmApplicationBackingBean extends
 
 	public String proceedToApplication(String applicationType, boolean fromBpm,
 			SmAppl appl, SmSupplier supp) {
+		getManagedBean().setRedirectToPersonPage(false);
+		assignValReqdToFalse();
 		System.out
 				.println("**** ENTER Create Application Type Of  *************"
 						+ applicationType + "Application type = >>"
@@ -1549,23 +1551,21 @@ public class SmApplicationBackingBean extends
 			getManagedBean().getSmAppl().getSmSupplierBranches()
 					.add(getManagedBean().getSelectedBranch());
 		}
+		assignValReqdToFalse();
 		RequestContext.getCurrentInstance().execute("banchDialog.hide()");
 	}
 
 	public void assignSelBranch(SmSupplierBranch branchBean, int index) {
-		System.out.println("****** Edit Index **********" + index);
+
 		getManagedBean()
 				.setSelectedBranchPrev(
 						getManagedBean().getSmAppl().getSmSupplierBranches()
 								.get(index));
 		getManagedBean().setSelectedBranchIndex(index);
-		System.out.println("***** Before *****"
-				+ getManagedBean().getSelectedBranchPrev().getSmAddress()
-						.getAddress1());
+
 		getManagedBean().setSelectedBranch(branchBean);
-		System.out.println("***** After *****"
-				+ getManagedBean().getSelectedBranchPrev().getSmAddress()
-						.getAddress1());
+		assignValReqdToTrue();
+		RequestContext.getCurrentInstance().execute("banchDialog.show()");
 
 	}
 
@@ -1578,21 +1578,14 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setBranchCompanyStates(
 				retrievePmStateList(getManagedBean().getSelectedBranch()
 						.getSmAddress().getPmCountry().getCountryId()));
+		assignValReqdToTrue();
+		RequestContext.getCurrentInstance().execute("banchDialog.show()");
 	}
 
 	public void assignCancelBranchBean() {
-		if (!getManagedBean().getSmAppl().getSmSupplierBranches().isEmpty()) {
-			System.out.println("******** Into cancel *******"
-					+ getManagedBean().getSelectedBranchPrev().getSmAddress()
-							.getAddress1() + " **** For Index ********"
-					+ getManagedBean().getSelectedBranchIndex());
-			getManagedBean()
-					.getSmAppl()
-					.getSmSupplierBranches()
-					.set(getManagedBean().getSelectedBranchIndex(),
-							getManagedBean().getSelectedBranchPrev());
-		}
-		assignNewBranchBean();
+		assignValReqdToFalse();
+		RequestContext.getCurrentInstance().reset(":form:tt:banchDialog");
+		RequestContext.getCurrentInstance().execute("banchDialog.hide()");
 	}
 
 	public void deleteSelectedBranches() {
@@ -1666,12 +1659,18 @@ public class SmApplicationBackingBean extends
 	public void addOrUpdateCertsToSmAppl() throws ParseException {
 		getManagedBean().getSelectedCert().setSmAppl(
 				getManagedBean().getSmAppl());
+		if (getManagedBean().getSelectedCert().getCertEndDate() != null
+				&& getManagedBean()
+						.getSelectedCert()
+						.getCertStartDate()
+						.compareTo(
+								getManagedBean().getSelectedCert()
+										.getCertEndDate()) >= 0) {
+			throw new EpException(MessageConst.ERROR_722530);
+		}
 		if (getManagedBean().getSmAppl().getSmSupplierCerts()
 				.contains(getManagedBean().getSelectedCert())) {
-
-			System.out.println(" **** THIS IS AN UPDATE Certs******");
 		} else {
-			System.out.println(" **** THIS IS AN SAVE NEW Certs******");
 			getManagedBean().getSmAppl().getSmSupplierCerts()
 					.add(getManagedBean().getSelectedCert());
 		}
@@ -1681,6 +1680,14 @@ public class SmApplicationBackingBean extends
 
 	public void assignSelCert(SmSupplierCert certBean) {
 		getManagedBean().setSelectedCert(certBean);
+		assignValReqdToTrue();
+		RequestContext.getCurrentInstance().execute("certDialog.show()");
+	}
+
+	public void cancelSupplierCertAction() {
+		assignValReqdToFalse();
+		RequestContext.getCurrentInstance().reset(":form:tt:certPop");
+		RequestContext.getCurrentInstance().execute("certDialog.hide()");
 	}
 
 	public void assignNewCert() {
@@ -1689,13 +1696,11 @@ public class SmApplicationBackingBean extends
 		cert.setRevNo(1);
 		getManagedBean().setSelectedCert(cert);
 		cert.setSmAppl(getManagedBean().getSmAppl());
+		assignValReqdToTrue();
+		RequestContext.getCurrentInstance().execute("certDialog.show()");
 	}
 
 	public void deleteSelectedCerts() {
-		System.out.println("******** Before delete ******"
-				+ getManagedBean().getSmAppl().getSmSupplierCerts().size());
-		System.out.println("*** Delete Certs ******* "
-				+ getManagedBean().getSelectedCertList().size());
 		if (getManagedBean().getSelectedCertList().size() > 0) {
 			for (SmSupplierCert cert : getManagedBean().getSelectedCertList()) {
 				getManagedBean().getSmAppl().getSmSupplierCerts().remove(cert);
@@ -1705,8 +1710,6 @@ public class SmApplicationBackingBean extends
 			System.out
 					.println(" ******** NO Record selected please select atleast one ");
 		}
-		System.out.println("******** After delete ******"
-				+ getManagedBean().getSmAppl().getSmSupplierCerts().size());
 	}
 
 	// -- Process Certss End
@@ -1729,10 +1732,20 @@ public class SmApplicationBackingBean extends
 			getManagedBean().getSmAppl().getSmAssociationBodies()
 					.add(getManagedBean().getSelectedAssocBody());
 		}
+		assignValReqdToFalse();
+		RequestContext.getCurrentInstance().execute("profDialog.hide()");
+	}
+
+	public void cancelSelProfBody() {
+		assignValReqdToFalse();
+		RequestContext.getCurrentInstance().reset(":form:tt:profPop");
+		RequestContext.getCurrentInstance().execute("profDialog.hide()");
 	}
 
 	public void assignSelAssocBody(SmAssociationBody assocBean) {
 		getManagedBean().setSelectedAssocBody(assocBean);
+		assignValReqdToTrue();
+		RequestContext.getCurrentInstance().execute("profDialog.show()");
 	}
 
 	public void assignNewAssocBody() {
@@ -1740,6 +1753,8 @@ public class SmApplicationBackingBean extends
 		assocBean.setPmCertBody(new PmCertBody());
 		assocBean.setRevNo(1);
 		getManagedBean().setSelectedAssocBody(assocBean);
+		assignValReqdToTrue();
+		RequestContext.getCurrentInstance().execute("profDialog.show()");
 	}
 
 	public void deleteSelectedAssocBodies() {
@@ -3885,6 +3900,11 @@ public class SmApplicationBackingBean extends
 					.getSupplierId());
 			reqDTO.setAppType(this.getManagedBean().getSmAppl().getApplType());
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
+			reqDTO.setLocation(getManagedBean().getSmAppl().getSmCompanyBasic()
+					.getSmCompanyAddresses().get(0).getSmAddress().getPmState()
+					.getStateName().toUpperCase());
+			reqDTO.setSupplierType(this.getManagedBean().getSmAppl()
+					.getSupplierType().toUpperCase());
 			// reqDTO.setUserName(new FacesScopes().getUserScreenName());
 			reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
 
@@ -6316,6 +6336,10 @@ public class SmApplicationBackingBean extends
 
 	private boolean updateSmSupplierInfo(String applType) {
 		try {
+			getManagedBean().setSmSupplier(
+					retriveSupplierById(
+							getManagedBean().getSmSupplier().getSupplierId())
+							.getSmSupplier());
 			getManagedBean().getSmSupplier().setSmAppl(
 					getManagedBean().getSmAppl());
 			if (applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
@@ -6560,10 +6584,12 @@ public class SmApplicationBackingBean extends
 	}
 
 	private void assignValReqdToTrue() {
+		getManagedBean().setShowParentMsg(false);
 		getManagedBean().setValueReqd(true);
 	}
 
 	private void assignValReqdToFalse() {
+		getManagedBean().setShowParentMsg(true);
 		getManagedBean().setValueReqd(false);
 	}
 }

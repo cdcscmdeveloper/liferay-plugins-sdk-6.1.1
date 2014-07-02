@@ -38,8 +38,9 @@
 				<td><p:inputText label="#{lbl['lbl.sm.person.icNum']}"
 						required="true" id="equiPerIcNum"
 						value="#{backingBean.managedBean.selectedShareHolder.identificationNo}"
-						size="35" maxlength="15"/> <p:message id="equiPerIcNumMsg" for="equiPerIcNum"
-						showSummary="true" showDetail="false" display="icon" /></td>
+						size="35" maxlength="15" /> <p:message id="equiPerIcNumMsg"
+						for="equiPerIcNum" showSummary="true" showDetail="false"
+						display="icon" /></td>
 				<!-- <td><p:outputLabel value="* Race" title="For Malaysian Only" /></td>
 				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="Select One" itemValue="1" />
@@ -403,8 +404,9 @@
 						required="#{backingBean.managedBean.valueReqd}" label="Company"
 						id="equiJbFnInfCmpName"
 						value="#{backingBean.managedBean.selectedJobFunction.companyName}" />
-					<p:message id="equiJbFnInfCmpNameMsg" for="equiJbFnInfCmpName"
-						showSummary="true" showDetail="false" display="icon" /></td>
+					<p:message id="equiJbFnInfCmpNameMsg"
+						for=":form:tt:equiJbFnInfCmpName" showSummary="true"
+						showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* Designation" /></td>
@@ -412,7 +414,7 @@
 						required="#{backingBean.managedBean.valueReqd}"
 						label="Designation" id="equiJbFnInfDesg"
 						value="#{backingBean.managedBean.selectedJobFunction.designation}" />
-					<p:message id="equiJbFnInfDesgMsg" for="equiJbFnInfDesg"
+					<p:message id="equiJbFnInfDesgMsg" for=":form:tt:equiJbFnInfDesg"
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
@@ -423,8 +425,9 @@
 						value="#{backingBean.managedBean.selectedJobFunction.fromYear}"
 						maxlength="4" label="Year From" mask="9999">
 						<f:validateLongRange minimum="1950" maximum="2050" />
-					</p:inputMask> <p:message id="equiJbFnInfYrFrmMsg" for="equiJbFnInfYrFrm"
-						showSummary="true" showDetail="false" display="icon" /></td>
+					</p:inputMask> <p:message id="equiJbFnInfYrFrmMsg"
+						for=":form:tt:equiJbFnInfYrFrm" showSummary="true"
+						showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* Year To" /></td>
@@ -434,7 +437,7 @@
 						value="#{backingBean.managedBean.selectedJobFunction.toYear}"
 						maxlength="4" mask="9999">
 						<f:validateLongRange minimum="1950" maximum="2050" />
-					</p:inputMask> <p:message id="equiJbFnInfYrToMsg" for="equiJbFnInfYrTo"
+					</p:inputMask> <p:message id="equiJbFnInfYrToMsg" for=":form:tt:equiJbFnInfYrTo"
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 		</table>
@@ -442,7 +445,8 @@
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.sm.button.save']}"
 				action="#{backingBean.addOrUpdateJobFunctions}" type="submit"
-				partialSubmit="true" process="equiJobFunctionInfo" update="shrJfdt" />
+				partialSubmit="true" process="equiJobFunctionInfo"
+				update="shrJfdt,@([id$=Msg])" />
 			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
 				action="#{backingBean.cancelJobFunctions}" partialSubmit="true"
 				process="@this">
@@ -577,7 +581,8 @@
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.sm.button.save']}"
 				action="#{backingBean.addOrUpdateRelatedCompanies}" type="submit"
-				partialSubmit="true" process="equiRelCompInfo" update="shrRelCom" />
+				partialSubmit="true" process="equiRelCompInfo"
+				update="shrRelCom, @([id$=Msg])" />
 			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
 				partialSubmit="true" process="@this"
 				action="#{backingBean.cancelShrHldrRelatedCompanies}">
@@ -676,7 +681,7 @@
 			<p:commandButton value="#{lbl['lbl.sm.button.save']}"
 				action="#{backingBean.addOrUpdateShrHldrProfBody}" type="submit"
 				partialSubmit="true" process="equiShrProfBeanInfo"
-				update="shrProfDt" />
+				update="shrProfDt, @([id$=Msg])" />
 			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
 				partialSubmit="true" process="@this"
 				action="#{backingBean.cancelShrHldrProfBody}">
@@ -804,7 +809,8 @@
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.sm.button.save']}"
 				action="#{backingBean.addOrUpdateShrHldrAcademic}" type="submit"
-				partialSubmit="true" process="equiAcadInfo" update="shrAqdt" />
+				partialSubmit="true" process="equiAcadInfo"
+				update="shrAqdt, @([id$=Msg])" />
 			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
 				partialSubmit="true" process="@this"
 				action="#{backingBean.cancelShrHldrAcademic}">

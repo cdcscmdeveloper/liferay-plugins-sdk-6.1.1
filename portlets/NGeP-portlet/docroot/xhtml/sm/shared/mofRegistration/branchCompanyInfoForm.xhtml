@@ -63,8 +63,8 @@
 						value="#{branchBean.smAddress.address1},#{branchBean.smAddress.address2}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.label.action']}">
-					<p:commandLink id="selectButton" update=":form:tt:display"
-						oncomplete="banchDialog.show();"
+					<p:commandLink id="selectButton" update=":form:tt:banchDialog"
+						partialSubmit="true" process="@this"
 						action="#{backingBean.assignSelBranch(branchBean,index)}">
 						<p:graphicImage library="ep/images/design" name="edit.png"
 							value="/resources/ep/images/design/edit.png"
@@ -77,9 +77,10 @@
 			<p:spacer height="2px;" />
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.sm.button.add']}"
-					action="#{backingBean.assignNewBranchBean}"
-					oncomplete="banchDialog.show();" update=":form:tt:display" />
+					action="#{backingBean.assignNewBranchBean}" partialSubmit="true"
+					process="@this" update=":form:tt:banchDialog" />
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}  "
+					partialSubmit="true" process="brnInfPan"
 					action="#{backingBean.deleteSelectedBranches}" update=":form:tt:dt" />
 
 			</div>
@@ -109,10 +110,11 @@
 			</p:outputPanel>
 		</p:panel>
 	</p:panel>
-	<p:dialog width="450px" header="#{lbl['lbl.sm.branch.branchDiaHdr']}"
-		widgetVar="banchDialog" id="display" resizable="false"
-		showEffect="fade" hideEffect="fade" modal="true" closable="false">
-		<p:messages id="suppBranchMsg" showSummary="true" showDetail="true"
+	<p:dialog width="450px" height="430px"
+		header="#{lbl['lbl.sm.branch.branchDiaHdr']}" widgetVar="banchDialog"
+		id="banchDialog" resizable="false" showEffect="fade" hideEffect="fade"
+		modal="true" closable="false">
+		<p:messages id="suppBranchMsg" showSummary="false" showDetail="true"
 			autoUpdate="true" closable="true" />
 		<ui:fragment
 			rendered="#{backingBean.managedBean.smAppl.supplierType eq 'K' or backingBean.managedBean.smAppl.supplierType eq 'J'}">
@@ -122,62 +124,16 @@
 			rendered="#{backingBean.managedBean.smAppl.supplierType eq 'MKM'}">
 			<ui:include src="branchDetailsTablePageConsultant.xhtml" />
 		</p:panel>
-		<p:panel header="Point Of Contact"
-			rendered="#{backingBean.managedBean.smAppl.supplierType eq 'MKM'}"
-			toggleable="true">
-			<table style="width: 100%">
 
-				<tr>
-					<td><p:outputLabel value="* Name" /></td>
-					<td><p:inputText size="35" /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="* Position" /></td>
-					<td><p:inputText size="35" /></td>
-				</tr>
-
-				<tr>
-					<td><p:outputLabel value="* Nationality" /></td>
-					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;">
-							<f:selectItem itemLabel="-- Select One--" itemValue="1" />
-							<f:selectItem itemLabel="Malaysian" itemValue="2" />
-							<f:selectItem itemLabel="Chinese" itemValue="3" />
-							<f:selectItem itemLabel="Indian" itemValue="4" />
-						</p:selectOneMenu></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="* IC/Pspt No." /></td>
-					<td><p:inputText
-							value="#{backingBean.managedBean.selectedPersonnel.identificationNo}"
-							size="35" /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value=" Bumi " title="For Malaysian Only" /></td>
-					<td><p:selectOneRadio>
-							<f:selectItem itemLabel="Yes" itemValue="1" />
-							<f:selectItem itemLabel="No" itemValue="0" />
-						</p:selectOneRadio></td>
-				</tr>
-
-				<tr>
-					<td><p:outputLabel value="Qualification"
-							title="For Malaysian Only" /></td>
-					<td><p:selectOneMenu>
-							<f:selectItem itemLabel="-- Others--" itemValue="1" />
-							<f:selectItem itemLabel="Graduate" itemValue="1" />
-							<f:selectItem itemLabel="Post Graduate" itemValue="1" />
-						</p:selectOneMenu></td>
-				</tr>
-
-			</table>
-		</p:panel>
 		<br />
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.sm.button.save']}"
 				action="#{backingBean.addOrUpdateBranchToSmAppl}" type="submit"
-				partialSubmit="true" process="display" update=":form:tt:dt" />
+				partialSubmit="true" process="banchDialog"
+				update=":form:tt:dt,@([id$=Msg])" />
 			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
-				oncomplete="banchDialog.hide();" immediate="true" />
+				partialSubmit="true" process="@this"
+				action="#{backingBean.assignCancelBranchBean}" />
 		</div>
 	</p:dialog>
 </ui:composition>
