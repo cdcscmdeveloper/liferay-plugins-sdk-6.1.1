@@ -17,9 +17,13 @@
 		   <p:column headerText="UOM">
 		     <p:outputLabel value="#{data.uom.uomName}" style="float:left;"/> </p:column>        
 		   <p:column headerText="Minimum Order Qty." style="text-align: right;">
-		     <p:outputLabel value="#{data.minimumOrderQty}"/></p:column>   
+		     <h:outputText value="#{data.minimumOrderQty}">
+		         <f:convertNumber pattern="#,###.00" />
+		     </h:outputText></p:column>   
 		   <p:column headerText="Maximum Qty." style="text-align: right;">
-		     <p:outputLabel value="#{data.maxProcureAmt}"/></p:column>     
+		     <h:outputText value="#{data.maxProcureAmt}">
+		         <f:convertNumber pattern="#,###.00" />
+		     </h:outputText></p:column>     
 		   <p:column headerText="Type Of Goods">
 		     <h:outputLabel value="#{contractDetailsBackingBean.getParameterDesc(data.itemOrigin)}"
 		       rendered="#{data.itemOrigin.parameterCode eq 'Local'}" style="float:left;"/>

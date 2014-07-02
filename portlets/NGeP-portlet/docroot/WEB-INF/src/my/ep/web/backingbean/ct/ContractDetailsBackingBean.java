@@ -192,10 +192,10 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		try {
 			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			UserReqDTO reqDTO = new UserReqDTO();
-			reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+			//reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
 			
-			UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
-			reqDTO.setOrgProfileId(resDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId());
+			//UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
+			//reqDTO.setOrgProfileId(resDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId());
 			
 			if(getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
 				reqDTO.setRoleCode(RoleCode.CT_APPROVER.value());
@@ -203,7 +203,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 				reqDTO.setRoleCode(RoleCode.BPK_APPROVER.value());
 			}
 
-			resDTO = userSO.retrieveUserListByRole(reqDTO);
+			UserResDTO resDTO = userSO.retrieveUserListByRole(reqDTO);
 			List<PmUser> list = resDTO.getUserList();
 			
 			for (PmUser user : list) {
