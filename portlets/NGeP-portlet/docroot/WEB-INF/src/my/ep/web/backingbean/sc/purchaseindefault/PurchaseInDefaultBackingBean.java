@@ -40,6 +40,7 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.DPStatusConstants;
+import my.ep.constant.sc.SourcingConstants;
 import my.ep.dto.ct.dtl.ContractItemReqDTO;
 import my.ep.dto.ct.dtl.ContractItemResDTO;
 import my.ep.dto.ct.supplier.PanelSupplierReqDTO;
@@ -140,7 +141,7 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 			}else if(vCmSupplierItem.getCircularNo() !=null){
 				// panel item 
 				PanelSupplierReqDTO reqDTO = new PanelSupplierReqDTO();
-				reqDTO.setItemId(vCmSupplierItem.getDocId());
+				reqDTO.setPanelItemId(vCmSupplierItem.getDocId());
 				PanelSupplierResDTO resDTO= panelSupplierSO.retrievePanelItem(reqDTO);
 				if(resDTO.getCtPanelItem()!=null) {
 					scPurchaseInDefault.setPanelItem(resDTO.getCtPanelItem());
@@ -203,10 +204,7 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 				if(getManagedBean().getAttachments() != null){
 					scPurchaseInDefault.setScPurchaseInDefaultAttachment(getManagedBean().getAttachments().get(0));
 				}
-				if(scPurchaseInDefault.getContractedItem().getCtContractVer().getCtContract().getContractType() != null){
-					reqDTO.setContractType(getParameterDesc(scPurchaseInDefault.getContractedItem().getCtContractVer().getCtContract().getContractType()).toUpperCase());
-				}
-                
+				
 				// justification
 				if(scPurchaseInDefault.getReasonType().getReasonCode() != null){
 					reasonReqDTO.setReasonCategory(ReasonCategory.PID_JUSTIFICATION.value());
@@ -218,7 +216,22 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 						}
 					}
 				}
-
+				
+				if(scPurchaseInDefault.getContractedItem() != null) {
+					if(scPurchaseInDefault.getContractedItem().getCtContractVer().getCtContract().getContractType() != null){
+						if(scPurchaseInDefault.getContractedItem().getCtContractVer().getCtContract().
+								getContractType().getParameterCode().equals(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+							reqDTO.setContractType(SourcingConstants.PID_TYPE_MINISTRY);
+						}
+						else if(scPurchaseInDefault.getContractedItem().getCtContractVer().getCtContract().
+								getContractType().getParameterCode().equals(ParameterConst.CONTRACT_TYPE_CENTRAL)){
+							reqDTO.setContractType(SourcingConstants.PID_TYPE_CENTRAL);
+						}
+					}
+				}
+				else if(scPurchaseInDefault.getPanelItem() != null) {
+					reqDTO.setContractType(SourcingConstants.PID_TYPE_PANEL);
+				}
 				reqDTO.setPurchaseInDefaultDtl(scPurchaseInDefault);
 				//Hoa: add token authenticate to support BPM
 				FacesScopes facesScopes = new FacesScopes();
@@ -384,7 +397,7 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
     * Event for justification type drop down in pid
     */
    public void justificationTypeEvent() {
-	   log.info("justificationTypeEvent : "+getManagedBean().getPurchaseInDefault().getReasonType()); 
+	   log.info("justificationTypeEvent : "+getManagedBean().getPurchaseInDefault().getReasonType().getReasonId()); 
 	   if(getManagedBean().getPurchaseInDefault().getReasonType().getReasonCode() !=null){
 		   if (getManagedBean().getPurchaseInDefault().getReasonType().getReasonCode().equalsIgnoreCase(ParameterConst.PID_CP) || getManagedBean().getPurchaseInDefault().getReasonType().getReasonCode().equalsIgnoreCase(ParameterConst.PID_SS)) {
 			   getManagedBean().setVisibleOrderQty(Boolean.FALSE);
