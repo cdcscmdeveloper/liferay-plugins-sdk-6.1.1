@@ -432,7 +432,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 					//reqDTO.setOrgProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getParentOrgProfile().getOrgProfileId());
 				}
 				//TODO Please remove this. Temporary to get out list of user.
-				reqDTO.setOrgProfileId(1753L);
+				//reqDTO.setOrgProfileId(1753L);
 			}
 			UserResDTO resDTO = userSO.retrieveUserListByRole(reqDTO);
 			List<PmUser> list = resDTO.getUserList();
