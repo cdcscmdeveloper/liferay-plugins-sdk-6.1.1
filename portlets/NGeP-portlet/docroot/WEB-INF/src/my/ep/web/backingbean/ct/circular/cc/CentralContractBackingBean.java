@@ -421,6 +421,11 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 				if(resDTO.isSuccessful()) {
 					if(resDTO.getCircularVerResultBean() != null && resDTO.getCircularVerResultBean().getResultList() != null) {
 						for(CtCircularVer circularVer : resDTO.getCircularVerResultBean().getResultList()) {
+							CircularReqDTO circularReqDTO = new CircularReqDTO();
+							circularReqDTO.setCircularId(circularVer.getCtCircular().getCircularId());
+							circularVer.getCtCircular().setLatestCircularVer(
+									circularSO.getLatestCircularVer(circularReqDTO).getCircularVer());
+							
 							if(circularVer.getCtCircular().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_CANCELLED) {
 								PmStatus cancelStatus = new PmStatus();
 								cancelStatus.setStatusId(0L);
@@ -868,6 +873,10 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			}
 		 this.getManagedBean().setCentralZoneTrees(rootLocationTree);
 	  }
+   
+   public String backAction() {
+		return "search.xhtml?faces-redirect=true";
+	}
    
    public void searchReset(){
 		this.getManagedBean().setSearchCircularNo(null);

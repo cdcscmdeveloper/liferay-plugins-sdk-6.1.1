@@ -318,6 +318,10 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		}		
 	}
 	
+	public String backAction() {
+		return "search.xhtml?faces-redirect=true";
+	}
+	
 	public void searchReset(){
 		this.getManagedBean().setSearchCircularNo(null);
 		this.getManagedBean().setSearchCircularName(null);
@@ -408,6 +412,11 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				if(resDTO.isSuccessful()) {
 					if(resDTO.getCircularVerResultBean() != null && resDTO.getCircularVerResultBean().getResultList() != null) {
 						for(CtCircularVer circularVer : resDTO.getCircularVerResultBean().getResultList()) {
+							CircularReqDTO circularReqDTO = new CircularReqDTO();
+							circularReqDTO.setCircularId(circularVer.getCtCircular().getCircularId());
+							circularVer.getCtCircular().setLatestCircularVer(
+									circularSO.getLatestCircularVer(circularReqDTO).getCircularVer());
+							
 							if(circularVer.getCtCircular().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_CANCELLED) {
 								PmStatus cancelStatus = new PmStatus();
 								cancelStatus.setStatusId(0L);
@@ -623,6 +632,10 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 					
 					if(getItemGeneralCode(panelItem.getPanelCoverageId().getParameterId()).equalsIgnoreCase(
 							ParameterConst.CIRCULAR_PANEL_COVERAGE_ZONE)) {
+						if(panelItem.getLocationLevelId().getParameterId()==null) {
+							throw new EpException(MessageConst.ERROR_100022, new String[]{"Location Level"});
+						}
+						
 						if(panelItem.getCtPanelZones().size()==0) {
 							throw new EpException(MessageConst.ERROR_100023, new String[]{"Zone"});
 						}
@@ -631,12 +644,17 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 								if(panelZone.getName().length()==0) {
 									throw new EpException(MessageConst.ERROR_100022, new String[]{"Zone Name"});
 								}
+								
+								if(panelZone.getCtPanelSuppliers().size()==0) {
+									throw new EpException(MessageConst.ERROR_100023, new String[]{"Supplier"});
+								}
 							}
 						}
 					}
-					
-					if(panelItem.getCtPanelSuppliers().size()==0) {
-						throw new EpException(MessageConst.ERROR_100023, new String[]{"Supplier"});
+					else {					
+						if(panelItem.getCtPanelSuppliers().size()==0) {
+							throw new EpException(MessageConst.ERROR_100023, new String[]{"Supplier"});
+						}
 					}
 				}
 			}
