@@ -10,10 +10,10 @@
 	<ui:define name="resourceSection">
 	</ui:define>
 
-	<p:messages id="committeeFinancialmessages" showDetail="true" showSummary="false"
-		autoUpdate="true" closable="true" />
-	<ui:define name="contentSection">
 
+	<ui:define name="contentSection">
+	<p:messages id="committeeFinancialmessages" showDetail="true" showSummary="false"
+		autoUpdate="true" closable="true" severity="error, info"/>
 		<div>
 			<p:commandButton value="#{lbl['lbl.sc.spec.back']}" style="float:left;" icon="ui-icon-back"
 				action="#{specificationBackingBean.committeeBackAction}" />

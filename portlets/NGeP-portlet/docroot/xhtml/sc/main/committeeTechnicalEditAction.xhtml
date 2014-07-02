@@ -10,20 +10,25 @@
 	<ui:define name="resourceSection">
 	</ui:define>
 
-	<p:messages id="committeeTechmessages" showDetail="true" showSummary="false"
-		autoUpdate="true" closable="true" />
-	<ui:define name="contentSection">
 
+	<ui:define name="contentSection">
+		<p:messages id="committeeTechmessages" showDetail="true"
+			showSummary="false" autoUpdate="true" closable="true"
+			severity="error, info" />
 		<div>
-			<p:commandButton value="#{lbl['lbl.sc.spec.back']}" style="float:left;" icon="ui-icon-back"
+			<p:commandButton value="#{lbl['lbl.sc.spec.back']}"
+				style="float:left;" icon="ui-icon-back"
 				action="#{specificationBackingBean.committeeBackAction}" />
-		
-			
+
+
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.cancel']}"
-				style="float:right;" icon="ui-icon-cancel" action="#{specificationBackingBean.committeeBackAction}"></p:commandButton>
-				<p:commandButton value="#{lbl['lbl.sc.spec.btn.complete']}" style="float:right;" icon="ui-icon-check"
-				action="#{specificationBackingBean.completeTemplateSpec('sc')}" update="@all"/>
-				<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
+				style="float:right;" icon="ui-icon-cancel"
+				action="#{specificationBackingBean.committeeBackAction}"></p:commandButton>
+			<p:commandButton value="#{lbl['lbl.sc.spec.btn.complete']}"
+				style="float:right;" icon="ui-icon-check"
+				action="#{specificationBackingBean.completeTemplateSpec('sc')}"
+				update="@all" />
+			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
 				style="float:right;" update="@all"
 				action="#{specificationBackingBean.saveEditTemplateSpec}"
 				icon="ui-icon-save" />
@@ -37,9 +42,10 @@
 
 			<table>
 				<tr>
-					<td valign="top"><h:outputLabel value="#{lbl['lbl.sc.tpl.main.title']}"></h:outputLabel>
-					</td>
-					<td colspan="3"><p:inputTextarea rows="2" cols="95" style="margin-bottom:5px;" maxlength="200"
+					<td valign="top"><h:outputLabel
+							value="#{lbl['lbl.sc.tpl.main.title']}"></h:outputLabel></td>
+					<td colspan="3"><p:inputTextarea rows="2" cols="95"
+							style="margin-bottom:5px;" maxlength="200"
 							value="#{specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.specName}" /></td>
 				</tr>
 
@@ -48,7 +54,7 @@
 					<td><p:inputText disabled="true" size="30"
 							value="#{specificationBackingBean.getParameterDesc(specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.itemTypeCode)}" /></td>
 					<td><h:outputLabel value="#{lbl['lbl.sc.tpl.search.spec']}" /></td>
-					<td><p:inputText  disabled="true" size="30"
+					<td><p:inputText disabled="true" size="30"
 							value="#{specificationBackingBean.getParameterDesc(specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.specTypeCode)}" /></td>
 
 				</tr>
@@ -61,14 +67,17 @@
 								value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 						</p:selectOneRadio></td>
 				</tr>
-				
+
 				<tr>
 
-					<td><h:outputLabel value="#{lbl['lbl.sc.spec.template.status']}" /></td>
+					<td><h:outputLabel
+							value="#{lbl['lbl.sc.spec.template.status']}" /></td>
 					<td><p:inputText disabled="true"
 							value="#{specificationBackingBean.getStatusDescById(specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.status.statusId)}"></p:inputText></td>
-							<td><h:outputLabel value="#{lbl['lbl.sc.spec.item.weightage']}" /></td>
-					<td><p:selectOneRadio value="#{specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.weightageReq}">
+					<td><h:outputLabel
+							value="#{lbl['lbl.sc.spec.item.weightage']}" /></td>
+					<td><p:selectOneRadio
+							value="#{specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.weightageReq}">
 							<f:selectItems
 								value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 						</p:selectOneRadio></td>

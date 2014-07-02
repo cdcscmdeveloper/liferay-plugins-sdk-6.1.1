@@ -10,10 +10,11 @@
 	<ui:define name="resourceSection">
 	</ui:define>
 
-	<p:messages id="businessOwnerTechmessages" showDetail="true" showSummary="false"
-		autoUpdate="true" closable="true" />
-	<ui:define name="contentSection">
 
+	<ui:define name="contentSection">
+		<p:messages id="businessOwnerTechmessages" showDetail="true"
+			showSummary="false" autoUpdate="true" closable="true"
+			severity="error, info" />
 		<div>
 			<p:commandButton value="#{lbl['lbl.sc.spec.back']}"
 				style="float:left;" icon="ui-icon-back"
@@ -40,8 +41,8 @@
 
 			<table>
 				<tr>
-					<td valign="top"><h:outputLabel value="#{lbl['lbl.sc.tpl.main.title']}"></h:outputLabel>
-					</td>
+					<td valign="top"><h:outputLabel
+							value="#{lbl['lbl.sc.tpl.main.title']}"></h:outputLabel></td>
 					<td colspan="3"><p:inputTextarea rows="2" cols="95"
 							style="margin-bottom:5px;" maxlength="200"
 							value="#{specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.specName}" /></td>
