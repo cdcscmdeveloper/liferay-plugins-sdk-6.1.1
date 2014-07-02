@@ -50,12 +50,12 @@
 		 <p:commandButton value="Delete" icon="ui-icon-delete" process="@form" onsuccess="confirmation.show()"/>
 	   </div>
 	   <p:confirmDialog message="Do you want to delete the record?" closable="true" 
-	      appendToBody="true" header="Delete Confirmation" severity="alert" widgetVar="confirmation">
+	      appendToBody="true" header="#{lbl['lbl.ct.dialong.cofirm.header']}" severity="alert" widgetVar="confirmation">
           <h:panelGrid columns="2">
-			<p:commandButton value="Yes" icon="ui-icon-accept" update=":form" 
+			<p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.yes']}" icon="ui-icon-accept" update=":form" 
 			  process="@form" action="#{agreementBackingBean.deleteAppendix()}"
 				onclick="confirmation.hide();"/>
-			<p:commandButton value="No" icon="ui-icon-reject" onclick="confirmation.hide()" type="button" />
+			<p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.no']}" icon="ui-icon-reject" onclick="confirmation.hide()" type="button" />
 		  </h:panelGrid>
 	   </p:confirmDialog>
 	</p:panel>	    	  
