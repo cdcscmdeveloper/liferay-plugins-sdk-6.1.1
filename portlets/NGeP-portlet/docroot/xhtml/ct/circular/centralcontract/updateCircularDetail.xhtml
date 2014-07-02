@@ -52,15 +52,15 @@
 			
 			<tr>
 		    <td>
-		      <p:outputLabel value="Extension Period" /></td>
+		      <p:outputLabel value="#{lbl['lbl.ct.pc.extperiod']}" /></td>
 		    <td><h:panelGrid columns="3"  style="margin-top:5px;">
 		           <p:inputText id="extendPeriod"  style="text-align:right;width:130px;" 
-		              label="Extension Period" value="#{centralContractBackingBean.managedBean.circularVer.extendPeriod}">
+		              label="#{lbl['lbl.ct.pc.extperiod']}" value="#{centralContractBackingBean.managedBean.circularVer.extendPeriod}">
 		             <p:ajax event="blur" process="@this" 
 				        listener="#{centralContractBackingBean.extendStartEndDate()}" update=":form:popupButtonCal5,:form:popupButtonCal6"></p:ajax>
 		           </p:inputText>
 		           <p:spacer width="2" /> 
-		           <p:outputLabel value="Months"/>
+		           <p:outputLabel value="#{lbl['lbl.ct.pc.months']}"/>
 		        </h:panelGrid>
 		     </td>
 		     <td><p:outputLabel value="#{lbl['lbl.ct.cc.upload']}" />
@@ -71,15 +71,15 @@
 		  </tr>
 		  
 		  <tr>
-		    <td> <p:outputLabel value="Extension Start Date" /> </td>
+		    <td> <p:outputLabel value="#{lbl['lbl.ct.pc.extstartdt']}" /> </td>
 		    <td>
-		    <p:calendar value="#{centralContractBackingBean.managedBean.circularVer.extendStartDate}" label="Extension Start Date"
+		    <p:calendar value="#{centralContractBackingBean.managedBean.circularVer.extendStartDate}" label="#{lbl['lbl.ct.pc.extstartdt']}"
 		       disabled="true" size="24" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" id="popupButtonCal5" showOn="button">
 		    </p:calendar>
 		     
 		       </td>
 		  
-		    <td><p:outputLabel value="Extension End Date" /></td>
+		    <td><p:outputLabel value="#{lbl['lbl.ct.pc.extenddt']}" /></td>
 		    <td>
 		      <p:calendar size="24" value="#{centralContractBackingBean.managedBean.circularVer.extendEndDate}" 
 				disabled="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" id="popupButtonCal6" showOn="button">
