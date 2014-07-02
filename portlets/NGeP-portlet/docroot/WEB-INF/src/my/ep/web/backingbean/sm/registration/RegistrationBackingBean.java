@@ -72,10 +72,7 @@ import my.ep.web.util.sm.helper.SmCommonUtil;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
-
-import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.service.UserLocalServiceUtil;
+import org.primefaces.context.RequestContext;
 //import my.ep.util.lookupservice.EpNtfBusinessDelegate;
 
 @ManagedBean(name = "registrationBackingBean")
@@ -523,12 +520,42 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	public void addSupplierBusinessNature(){
 		//log.info("----------addSupplierBusiness Nature--------------" + bizNatureL5Map.size());
 		log.info("----------addSupplierBusiness Nature--------------" + this.getManagedBean().getSuppBusinessNature().getPmBusinessNature().getBusinessNatureId());
+		String invalidMsg = "Duplicate Nature of Business being added to the list.";
 		
 		PmBusinessNature bizNatObj = (PmBusinessNature) bizNatureL5Map.get(this.getManagedBean().getSuppBusinessNature().getPmBusinessNature().getBusinessNatureId());
 		log.info("**********bizNatObj***********"+bizNatObj.getBusinessNatureId());
-		this.getManagedBean().getSuppBusinessNature().setPmBusinessNature(bizNatObj);
-		this.getManagedBean().getSmSupp().getSmSupplierBusinesses().add(this.getManagedBean().getSuppBusinessNature());
-		//resetBusinessNatureSelection();
+		
+		//Validate Nature of Business
+		if(validateNatureBusiness(this.getManagedBean().getSmSupp().getSmSupplierBusinesses(), bizNatObj, true)){
+			this.getManagedBean().getSuppBusinessNature().setPmBusinessNature(bizNatObj);
+			this.getManagedBean().getSmSupp().getSmSupplierBusinesses().add(this.getManagedBean().getSuppBusinessNature());
+			RequestContext.getCurrentInstance().execute("bizDlg.hide()");
+		}else{
+			FacesContext.getCurrentInstance().addMessage("messageDialog",new FacesMessage(
+					FacesMessage.SEVERITY_ERROR, "Nature Of Business.", invalidMsg));	
+		}
+
+	}
+	/**
+	 * validation for duplicate nature of business
+	 * @param natureBusinesses
+	 * @param bizNatObj
+	 * @param isNew
+	 * @return boolean
+	 */
+	private boolean validateNatureBusiness(List<SmSupplierBusiness>natureBusinesses, PmBusinessNature bizNatObj, boolean isNew){
+		boolean isValid = true;
+		int repeat = 0;
+		//Validate selected Nature of Business
+		for(SmSupplierBusiness bn: natureBusinesses){
+			if(bizNatObj.getBusinessNatureId().equals(bn.getPmBusinessNature().getBusinessNatureId())){
+				repeat++;
+			}
+		}
+		if((isNew && repeat>=1) || (!isNew && repeat>1)){
+			isValid = false;
+		}
+		return isValid;
 	}
 	
 	public void removeBusinessNature() {
@@ -575,30 +602,62 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	}
 	
 	
-	public void updateBusinessNature(){
+	public void updateBusinessNature(PmBusinessNature pmBizNat){
 		log.info("---------updateBusinessNature-------------");
+		String invalidMsg = "Duplicate Nature of Business being added to the list.";
+		if(pmBizNat!=null){
+			//Validate Nature of Business
+			if(validateNatureBusiness(this.getManagedBean().getSmSupp().getSmSupplierBusinesses(), pmBizNat, false)){
+				bizNatureL5Map.put(pmBizNat.getBusinessNatureId(), pmBizNat); // to replace the existing object
+				RequestContext.getCurrentInstance().execute("bizDlg.hide()");
+			}else{
+				FacesContext.getCurrentInstance().addMessage("messageDialog",new FacesMessage(
+						FacesMessage.SEVERITY_ERROR, "Nature Of Business.", invalidMsg));	
+			}
+		}
 	}
 	
 	public void businessLvlOnChange(String bizLvl){
 		switch (bizLvl) {
 			case "20" : 
-				this.getManagedBean().setBusinessNatureL2(retrieveBusinessNatureByLevelParent(bizLvl,this.getManagedBean().getBizIdL1()));
+				this.getManagedBean().setBusinessNatureL2(new ArrayList<PmBusinessNature>());
 				this.getManagedBean().setBusinessNatureL3(new ArrayList<PmBusinessNature>());
 				this.getManagedBean().setBusinessNatureL4(new ArrayList<PmBusinessNature>());
 				this.getManagedBean().setBusinessNatureL5(new ArrayList<PmBusinessNature>());
+				this.getManagedBean().setBizIdL2(null);
+				this.getManagedBean().setBizIdL3(null);
+				this.getManagedBean().setBizIdL4(null);
+				this.getManagedBean().getSuppBusinessNature().getPmBusinessNature().setBusinessNatureId(null);
+				if(this.getManagedBean().getBizIdL1()!=null){
+					this.getManagedBean().setBusinessNatureL2(retrieveBusinessNatureByLevelParent(bizLvl,this.getManagedBean().getBizIdL1()));
+				}
 			break;
-			case "30" : 
-				this.getManagedBean().setBusinessNatureL3(retrieveBusinessNatureByLevelParent(bizLvl,this.getManagedBean().getBizIdL2()));
+			case "30" :
+				this.getManagedBean().setBusinessNatureL3(new ArrayList<PmBusinessNature>());
 				this.getManagedBean().setBusinessNatureL4(new ArrayList<PmBusinessNature>());
 				this.getManagedBean().setBusinessNatureL5(new ArrayList<PmBusinessNature>());
+				this.getManagedBean().setBizIdL3(null);
+				this.getManagedBean().setBizIdL4(null);
+				this.getManagedBean().getSuppBusinessNature().getPmBusinessNature().setBusinessNatureId(null);
+				if(this.getManagedBean().getBizIdL2()!=null){
+					this.getManagedBean().setBusinessNatureL3(retrieveBusinessNatureByLevelParent(bizLvl,this.getManagedBean().getBizIdL2()));
+				}
 			break;
 			case "40" : 
-				this.getManagedBean().setBusinessNatureL4(retrieveBusinessNatureByLevelParent(bizLvl,this.getManagedBean().getBizIdL3()));
+				this.getManagedBean().setBusinessNatureL4(new ArrayList<PmBusinessNature>());
 				this.getManagedBean().setBusinessNatureL5(new ArrayList<PmBusinessNature>());
+				this.getManagedBean().setBizIdL4(null);
+				this.getManagedBean().getSuppBusinessNature().getPmBusinessNature().setBusinessNatureId(null);
+				if(this.getManagedBean().getBizIdL3()!=null){
+					this.getManagedBean().setBusinessNatureL4(retrieveBusinessNatureByLevelParent(bizLvl,this.getManagedBean().getBizIdL3()));
+				}
 			break;
-			
 			case "50" : 
-				this.getManagedBean().setBusinessNatureL5(retrieveBusinessNatureByLevelParent(bizLvl,this.getManagedBean().getBizIdL4()));
+				this.getManagedBean().setBusinessNatureL5(new ArrayList<PmBusinessNature>());
+				this.getManagedBean().getSuppBusinessNature().getPmBusinessNature().setBusinessNatureId(null);
+				if(this.getManagedBean().getBizIdL4()!=null){
+					this.getManagedBean().setBusinessNatureL5(retrieveBusinessNatureByLevelParent(bizLvl,this.getManagedBean().getBizIdL4()));
+				}
 			break;
 		}
 	}
