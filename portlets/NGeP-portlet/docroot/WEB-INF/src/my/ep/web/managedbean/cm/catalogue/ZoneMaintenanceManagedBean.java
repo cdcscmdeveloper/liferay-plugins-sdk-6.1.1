@@ -20,10 +20,6 @@ import my.ep.web.managedbean.BaseManagedBean;
 @SessionScoped
 public class ZoneMaintenanceManagedBean extends BaseManagedBean {
 
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	private String state;
@@ -82,6 +78,10 @@ public class ZoneMaintenanceManagedBean extends BaseManagedBean {
 
 	private SmSupplier currentSupplier;
 	
+	public ZoneMaintenanceManagedBean() {
+		super();
+	}
+
 	public String getState() {
 		return state;
 	}
