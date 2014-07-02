@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<p:panel id="fd" header="#{lbl['lbl.ct.panel.name']}" toggleable="true" collapsed="false" toggleSpeed="500">
 		<h:panelGrid columns="2" style="width:100%;" styleClass="top-aligned-columns">
-		    <h:panelGrid columns="4" style="width:800px;" columnClasses="columnWidth150,columnWidth300,columnWidth150,columnWidth200">
+		    <h:panelGrid columns="4" style="width:800px;" columnClasses="columnWidth150,columnWidth200,columnWidth150,columnWidth200">
 		      <p:outputLabel id="cno" value="#{lbl['lbl.ct.cno']}" />
 			  <p:inputText for="cno"  disabled="true" style="width:170px;" 
 			     maxlength="17" value="#{contractDetailsBackingBean.managedBean.ctContract.contractNo}" />
@@ -99,18 +99,17 @@
 		   </h:panelGrid>		
 	    </h:panelGrid>
 	</h:panelGrid>
-	<p:outputPanel id="justificationPanel">
-	 <h:panelGrid columns="2" style="width:100%;" columnClasses="columnWidth15" 
-	    rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt or 
+	<p:outputPanel id="justificationPanel"  rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt or 
 	       contractDetailsBackingBean.managedBean.contractVer.ctContractValue.concession}">
+	 <h:panelGrid columns="2" style="width:800px;">
          <h:panelGroup>
-		    <div style="height:70px; vertical-align:top;">
+		    <div style="height:70px; width:157px; vertical-align:top;">
 			   <p:outputLabel id="justificationLbls" value="#{lbl['lbl.ct.justification']}" />
 		    </div>
 	     </h:panelGroup>
 	  <h:panelGrid columns="1">
 	    <p:inputTextarea id="justificationLbl" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.justification}"
-		  rows="4" style="width:650px;" cols="113" disabled="false" maxlength="200" validator="#{webappBean.checkSpaces}" label="#{lbl['lbl.ct.justification']}"
+		  rows="4" style="width:570px;" disabled="false" maxlength="200" validator="#{webappBean.checkSpaces}" label="#{lbl['lbl.ct.justification']}"
 		  required="true" autoResize="false">
 		   <p:ajax oncomplete="$('.ui-state-error').removeClass('ui-state-error');" update="justificationPanel"/></p:inputTextarea>
 		   <p:message for="justificationLbl" display="icon"/>	
