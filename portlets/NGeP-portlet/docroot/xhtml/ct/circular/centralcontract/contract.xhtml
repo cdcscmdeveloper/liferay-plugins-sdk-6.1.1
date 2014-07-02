@@ -30,13 +30,13 @@
 		 </p:dataTable>
 		 <p:spacer height="2" />
 		 <div class="ppRightBtn"> 
-			<p:commandButton value="Add" process="@form" partialSubmit="true" icon="ui-icon-add" oncomplete="contractDlg.show();" 
+			<p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" partialSubmit="true" icon="ui-icon-add" oncomplete="contractDlg.show();" 
 				actionListener="#{centralContractBackingBean.addCircularContractListener()}" update="contractDlg" />
-			<p:commandButton id="deleteContractBtn" value="Delete" process="@this" partialSubmit="true" icon="ui-icon-delete"
+			<p:commandButton id="deleteContractBtn" value="#{lbl['lbl.btn.delete']}" process="@this" partialSubmit="true" icon="ui-icon-delete"
 				disabled="#{centralContractBackingBean.managedBean.selectedCircularContract == null}" onsuccess="delCtContractDlg.show()"/>				
 		</div>
-		
-		<p:dialog id="delCtContractDlg" header="Delete Confirmation" resizable="false"
+
+		<p:dialog id="delCtContractDlg" header="#{lbl['lbl.ct.dialong.cofirm.header']}" resizable="false"
 		    styleClass="screen-title" widgetVar="delCtContractDlg"  modal="true" width="350" height="95">  
             <h:panelGrid columns="3">
               <p:graphicImage library="ep/images/design" name="exclamation.png" value="/resources/ep/images/design/exclamation.png" styleClass="ui-icon-complain"/>
@@ -44,9 +44,9 @@
               <p:inputTextarea styleClass="ui-inputtextarea" rows="2" cols="48" value="Are you sure you want to delete this record?"/>
            </h:panelGrid>
            <div class="ppRightBtn">
-		     <p:commandButton value="Yes" icon="ui-icon-accept" update="@([id$=contractListPnl])"
+		     <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.yes']}" icon="ui-icon-accept" update="@([id$=contractListPnl])"
 		       process="@all" actionListener="#{centralContractBackingBean.deleteCircularContract()}" onclick="delCtContractDlg.hide();"/>
-			 <p:commandButton value="No" icon="ui-icon-reject" onclick="delCtContractDlg.hide();" type="button" />
+			 <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.no']}" icon="ui-icon-reject" onclick="delCtContractDlg.hide();" type="button" />
 		   </div>
         </p:dialog>  
 		
@@ -62,7 +62,7 @@
 		      <ac:paginator for="circularItemDt" />
 		        <p:ajax event="rowSelect"  update="@([id$=circularZonePanel],[id$=circularPricePanel])" process="@this"
 		           listener="#{centralContractBackingBean.setZoneListener()}"/>
-			       <p:column headerText="Item Name" style="width:450px;"><h:outputText value="#{itemVar.ctContractItem.itemName}" style="width:450px;" /></p:column>
+			       <p:column headerText="#{lbl['lbl.ct.pc.item.name']}" style="width:450px;"><h:outputText value="#{itemVar.ctContractItem.itemName}" style="width:450px;" /></p:column>
 			       <p:column headerText="Minimum Order Qty." style="width:150px;" >
 			       		<p:inputText styleClass="colFloatRight" value="#{itemVar.minimumOrderQty}" maxlength="14" label="Minimum Order Qty.">
 							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, itemVar.ctContractItem.uom.uomCode)}" />			       		
@@ -78,7 +78,7 @@
 							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />			       		
 			       		</p:inputText>
 			       </p:column>	
-			       <p:column headerText="Status">
+			       <p:column headerText="#{lbl['lbl.ct.status']}">
 			     	<p:selectOneMenu  value="#{itemVar.recordStatusFlg}" 
 			     	disabled="#{!centralContractBackingBean.managedBean.updateAction}" style="width:70px;">
 				        <f:selectItem itemValue="0" itemLabel="Inactive" />
@@ -102,7 +102,7 @@
 		       <p:ajax event="rowSelect" update="@([id$=circularPricePanel])"  process="@this"
 		           listener="#{centralContractBackingBean.setPriceListener()}"/>
 		           <p:column headerText="Zone" style="width:60%;"><h:outputText value="#{dataZone.zoneName}" style="width:50%;" /> </p:column>	
-			    	 <p:column headerText="Action" style="width:40%;"> 
+			    	 <p:column headerText="#{lbl['lbl.ct.action']}" style="width:40%;"> 
 			    	 <p:commandLink update="@([id$=itemZoneId])"
 			         oncomplete="itemZoneDlg.show();" immediate="true">
 			          <p:graphicImage library="ep/images/design" name="document.png"
@@ -157,15 +157,15 @@
 	</p:outputPanel>
 	</p:dialog>
 		
-   <p:dialog id="contractDlg" header="Contract List" widgetVar="contractDlg" modal="true" width="750" height="400">
+   <p:dialog id="contractDlg" header="#{lbl['lbl.ct.cc.ct']}" widgetVar="contractDlg" modal="true" width="750" height="400">
 		<p:panel id="listOfContract">
 			<h:panelGrid columns="6">
-				<h:outputText value="Contract No."/>
+				<h:outputText value="#{lbl['lbl.ct.cno']}"/>
 				<p:inputText id="contractNo" value="#{centralContractBackingBean.managedBean.searchContractNo}" maxlength="17" />
 				<p:spacer width="10" />
-				<h:outputText value="Contract Name"/>
+				<h:outputText value="#{lbl['lbl.ct.search.table.cname']}"/>
 				<p:inputText id="contractName" value="#{centralContractBackingBean.managedBean.searchContractName}" maxlength="1000" />
-				<p:commandButton value="Search" process="contractDlg,contractNo,contractName"
+				<p:commandButton value="#{lbl['lbl.btn.search']}" process="contractDlg,contractNo,contractName"
 					icon="ui-icon-search" update="contractDt"
 					actionListener="#{centralContractBackingBean.searchContract()}"  />
 			</h:panelGrid>
@@ -180,7 +180,7 @@
 				 <p:column headerText="#{lbl['lbl.ct.cc.phyCno']}" >
 				<h:outputText value="#{data.contractPhysicalNo}" />
 			 </p:column>
-			 <p:column headerText="Contract No">
+			 <p:column headerText="#{lbl['lbl.ct.search.table.cno']}">
 					<h:outputText value="#{data.contractNo}" />
 				</p:column>
 			 <p:column headerText="#{lbl['lbl.ct.cc.sup']}" >
@@ -189,10 +189,10 @@
 			</p:dataTable>
 			<p:spacer height="2" />
 			<div class="ppRightBtn"> 
-				<p:commandButton value="Select" process="contractDlg" icon="ui-icon-accept"
+				<p:commandButton value="#{lbl['lbl.btn.select']}" process="contractDlg" icon="ui-icon-accept"
 					action="#{centralContractBackingBean.addSelectedContract}"
 					update="centralContractDt" onclick="contractDlg.hide();" />
-				<p:commandButton value="Cancel" icon="ui-icon-cancel" type="button" ajax="false" onclick="contractDlg.hide();" />
+				<p:commandButton value="#{lbl['lbl.btn.cancel']}" icon="ui-icon-cancel" type="button" ajax="false" onclick="contractDlg.hide();" />
 			</div>	
 		</p:panel>
 	</p:dialog>
