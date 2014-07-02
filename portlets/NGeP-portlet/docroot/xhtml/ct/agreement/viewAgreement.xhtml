@@ -31,11 +31,11 @@
 			<p:outputLabel value="#{lbl['lbl.ct.dperiod']}" />
 			<h:panelGrid columns="2">
 				<p:inputText size="8" value="#{agreementBackingBean.managedBean.ctContract.latestContractVer.ctContractValue.deliveryTerm}" />
-				<p:outputLabel value="Days" />
+				<p:outputLabel value="#{lbl['lbl.ct.days']}" />
 			</h:panelGrid>
 			 <h:panelGroup>
 		      <div style="height: 30px; vertical-align: top;">
-			  <p:outputLabel for="contractName" value="Contract Title" />
+			  <p:outputLabel for="contractName" value="#{lbl['lbl.ct.ctitle']}" />
 			</div>
 			</h:panelGroup>
 			 <h:panelGrid>
@@ -61,13 +61,13 @@
          <p:commandLink>  
           <p:outputLabel value="2348-5674874" style="float:left;"/>  
          </p:commandLink> 
-       <p:outputLabel value="Final Agreement" />  
+       <p:outputLabel value="#{lbl['lbl.ct.final.ag']}" />  
        <p:selectBooleanCheckbox   disabled="false"/> 
        <p:outputLabel value="Warning Letter"/>  
        <p:commandLink>  
        <p:outputLabel value="SyarikatCBP_Warn.doc" style="float:left; hight:20px;" />  
        </p:commandLink> 
-       <p:outputLabel value="Circular No"  />  
+       <p:outputLabel value="#{lbl['lbl.ct.circularNo']}"  />  
        <p:commandLink>  
           <p:outputLabel value="CR-2013-PTJ-0001"  style="float:left;hight:20px;" />  
        </p:commandLink> 
@@ -77,7 +77,7 @@
        </p:commandLink> 
        <f:verbatim></f:verbatim>
        <f:verbatim></f:verbatim>
-       <p:outputLabel value="Termination Notice" />  
+       <p:outputLabel value="#{lbl['lbl.ct.tr.termination.notice']}" />  
        <p:commandLink  sajax="false">  
           <p:outputLabel value="SyarikatCBP_termination.doc" style="float:left;hight:20px;"  />  
        </p:commandLink> 
