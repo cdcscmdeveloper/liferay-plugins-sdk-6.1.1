@@ -15,8 +15,8 @@
 		<p:dataTable value="#{flOrderBB.managedBean.pendingDoList}" sortMode="multiple"
 			var="pending" id="pendingTable" rowIndexVar="rowIndex" width="100%">
 			<ac:paginator for="pendingTable" />
-			<p:column headerText="Order Number" sortBy="#{pending.fulfilmentOrderId}">
-				<p:commandLink value="#{pending.fulfilmentOrderId}"
+			<p:column headerText="Order Number">
+				<p:commandLink value="#{pending.docNo}"
 					action="#{flOrderBB.navigateToFlOrder(rowIndex)}">
 					<f:setPropertyActionListener
 						target="#{flOrderBB.managedBean.selectedFlOrder}"
@@ -30,6 +30,9 @@
 			<p:column headerText="Title">
 				<h:outputText value="#{pending.flFulfilmentRequest.title}" />
 			</p:column>
+			<p:column headerText="#{lbl['lbl.fl.del.order.ptj.name']}">
+				<h:outputText value="#{pending.flFulfilmentRequest.preparedOrgProfile.orgName}" />
+			</p:column>			
 			<p:column headerText="Created Date">
 				<h:outputText value="#{pending.createdDate}">
 					<f:convertDateTime pattern="dd-MM-yyyy HH:mm" />
