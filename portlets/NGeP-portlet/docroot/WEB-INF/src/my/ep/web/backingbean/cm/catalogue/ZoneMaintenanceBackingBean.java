@@ -6,6 +6,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.RequestScoped;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
@@ -51,9 +52,6 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 
 	public ZoneMaintenanceBackingBean() {
 		System.out.println("********************ZoneMaintenanceBackingBean Constructor***************");
-		getManagedBean().setCurrentSupplier(getCurrentUserSupplier());
-		showZonePopup();
-		getManagedBean().setSelectedSupplierZone(null);
 	}
 
 	@PostConstruct
@@ -61,6 +59,16 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 		System.out.println("********************ZoneMaintenanceBackingBean PostConstruct method***************");
 	}
 
+	public void preRenderZoneView(){
+		System.out.println("********************ZoneMaintenanceBackingBean PreRender***************");
+		getManagedBean().setCurrentSupplier(getCurrentUserSupplier());
+		showZonePopup();
+		getManagedBean().setSelectedSupplierZone(null);
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, "cmSupplierZoneMaintenance");
+	}
+	
 	private CmSupplierZone getZone(TreeNode zoneLocation) {
 		CmSupplierZone result = null;
 		if (zoneLocation.getData() instanceof CmSupplierZoneStateDistrictDTO) {
@@ -211,10 +219,10 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 			this.getManagedBean().setCmSupplierZoneList(new ArrayList<CmSupplierZone>());
 		}
 			this.getManagedBean().setDeletedCmSupplierZoneList(null);
-			getManagedBean().setZoneTrees(CmSupplierZoneSingleton.getInstance().buildZoneSDTree(this.getManagedBean().getCmSupplierZoneList()));
-			getManagedBean().setRootZoneTree(
+			this.getManagedBean().setZoneTrees(CmSupplierZoneSingleton.getInstance().buildZoneSDTree(this.getManagedBean().getCmSupplierZoneList()));
+			this.getManagedBean().setRootZoneTree(
 					CmSupplierZoneSingleton.getInstance().buildCmSupplierZoneTree(1L, null, null, null));
-			getManagedBean().setZoneName(null);
+			this.getManagedBean().setZoneName(null);
 	}
 		
 	
