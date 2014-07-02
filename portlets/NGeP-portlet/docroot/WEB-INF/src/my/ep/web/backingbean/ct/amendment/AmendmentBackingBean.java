@@ -91,6 +91,7 @@ import my.ep.dto.pm.common.document.DocumentResDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
+import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.exception.EpException;
@@ -956,10 +957,18 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		ContractAmendmentReqDTO reqDto = new ContractAmendmentReqDTO();
 		reqDto.setContractVerId(this.getManagedBean().getContractVer().getContractVerId());
 		IContractAmendmentSO amendSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractAmendmentSO.class);
-		ContractAmendmentResDTO resDto = amendSO.getProductList(reqDto);
-		List<CtContractItem> productList = resDto.getCtContractItems();
-		resDto = amendSO.getServiceList(reqDto);
-		List<CtContractItem> serviceList = resDto.getCtContractItems();
+		IParameterSO parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+		ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
+		parameterReqDTO.setParameterCode(ParameterConst.ITEM_TYPE_PRODUCT);
+		parameterReqDTO.setParameterType(ParameterTypeConst.SC_ITEM_TYPE);
+		ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
+		ContractAmendmentResDTO resDto = amendSO.getProductList(reqDto, resDTO.getPmParameter().getParameterId());
+		List<CtItemPrice> productList = resDto.getItemPrices();
+		
+		parameterReqDTO.setParameterCode(ParameterConst.ITEM_TYPE_SERVICE);
+		resDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
+		resDto = amendSO.getServiceList(reqDto, resDTO.getPmParameter().getParameterId());
+		List<CtItemPrice> serviceList = resDto.getItemPrices();
 		
 		try {
 			WritableWorkbook itemExcel = Workbook.createWorkbook(file);
@@ -1005,110 +1014,88 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				productSheet.addCell( new Label(indexCol++, indexRow, "Effective Date", formatLeftBold));
 				productSheet.setColumnView(indexCol, 15);
 				productSheet.addCell( new Label(indexCol++, indexRow, "Expire Date", formatLeftBold));
-				int itmPriceUpdated = 0;
 				
-				for(CtContractItem item : productList){
+				for(CtItemPrice price : productList){
 					IContractItemSO contractItemSO = (IContractItemSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractItemSO.class);
 					ContractItemReqDTO reqDTO = new ContractItemReqDTO();
-					reqDTO.setContractItemId(item.getContractItemId());
+					reqDTO.setContractItemId(price.getCtContractItem().getContractItemId());
 					reqDTO.setEffDate(this.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());
-					ContractItemResDTO resDTO = contractItemSO.getMaxQuantity(reqDTO);
-					CtItemMaxQty ctItemMaxQty = resDTO.getCtItemMaxQuantity();
+					ContractItemResDTO contractResDTO = contractItemSO.getMaxQuantity(reqDTO);
+					CtItemMaxQty ctItemMaxQty = contractResDTO.getCtItemMaxQuantity();
 					
 					indexRow++; indexCol=0;
-					for(CtItemPrice price : item.getCtItemPrices()){
-						int temp = 0;
-						for(CtContractItem itemPrice : productList){
-							if(item.getItemType().getParameterId() == itemPrice.getItemType().getParameterId() && itmPriceUpdated == temp){
-								productSheet.addCell(new Label(indexCol++, indexRow, null == price.getCtContractZone() ? "N/A" : price.getCtContractZone().getZoneName(), formatRight));
-								break;
-							}
-							temp++;
-						}
-					}
-					itmPriceUpdated++;
-					productSheet.addCell(new Label(indexCol++, indexRow, item.getItemName(), formatRight));
-					productSheet.addCell(new Label(indexCol++, indexRow, item.getScRequestItem().getTplSpecQuestion().getClSpecDetail(), formatRight));//specification
-					productSheet.addCell(new Label(indexCol++, indexRow, item.getUom().getUomName(), formatRight));
+					productSheet.addCell(new Label(indexCol++, indexRow, null == price.getCtContractZone() ? "N/A" : price.getCtContractZone().getZoneName(), formatRight));
+					productSheet.addCell(new Label(indexCol++, indexRow, price.getCtContractItem().getItemName(), formatRight));
+					productSheet.addCell(new Label(indexCol++, indexRow, null == price.getCtContractItem().getScRequestItem().getTplSpecQuestion() ? 
+							"N/A" : price.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClSpecDetail(), formatRight));//specification
+					productSheet.addCell(new Label(indexCol++, indexRow, price.getCtContractItem().getUom().getUomName(), formatRight));
 					productSheet.addCell(new Label(indexCol++, indexRow, ctItemMaxQty.getMaxQuantity()+"", formatLeft));
 					
-					for(CtItemPrice price : item.getCtItemPrices()){
-						productSheet.addCell(new Label(indexCol++, indexRow, price.getFromQty() == null ? "N/A": price.getFromQty() + "", formatLeft));
-						productSheet.addCell(new Label(indexCol++, indexRow, price.getToQty() == null ? "N/A" : price.getToQty() + "", formatLeft));
-						productSheet.addCell(new Label(indexCol++, indexRow, price.getSubSequence() == null ? "N/A" : price.getSubSequence() + "", formatLeft));
-						/*String delveryTerm = "";
-						for(CtContractZone zone : item.getCtContractVer().getCtContractZones()){
-							delveryTerm = delveryTerm + zone.getDeliveryTerm() + " ";
-						}
-						sheet.addCell(new Label(indexCol++, indexRow, delveryTerm));*/
-						productSheet.addCell(new Label(indexCol++, indexRow, nf.format(price.getUnitPrice().longValue()) + "", formatLeft));
-						if(null != price.getUnitPrice() && null != ctItemMaxQty.getMaxQuantity()){
-							productSheet.addCell(new Label(indexCol++, indexRow, price.getUnitPrice().multiply(ctItemMaxQty.getMaxQuantity())+"", formatLeft));
-						} else {
-							productSheet.addCell(new Label(indexCol++, indexRow, "N/A"));
-						}
-						productSheet.addCell(new Label(indexCol++, indexRow, price.getEffDate() + "", formatRight));
-						productSheet.addCell(new Label(indexCol++, indexRow, price.getExpDate() + "", formatRight));
-						break;
+					productSheet.addCell(new Label(indexCol++, indexRow, price.getFromQty() == null ? "N/A": price.getFromQty() + "", formatLeft));
+					productSheet.addCell(new Label(indexCol++, indexRow, price.getToQty() == null ? "N/A" : price.getToQty() + "", formatLeft));
+					productSheet.addCell(new Label(indexCol++, indexRow, price.getSubSequence() == null ? "N/A" : price.getSubSequence() + "", formatLeft));
+					/*String delveryTerm = "";
+					for(CtContractZone zone : item.getCtContractVer().getCtContractZones()){
+						delveryTerm = delveryTerm + zone.getDeliveryTerm() + " ";
 					}
+					sheet.addCell(new Label(indexCol++, indexRow, delveryTerm));*/
+					productSheet.addCell(new Label(indexCol++, indexRow, nf.format(price.getUnitPrice().longValue()) + "", formatLeft));
+					if(null != price.getUnitPrice() && null != ctItemMaxQty.getMaxQuantity()){
+						productSheet.addCell(new Label(indexCol++, indexRow, price.getUnitPrice().multiply(ctItemMaxQty.getMaxQuantity())+"", formatLeft));
+					} else {
+						productSheet.addCell(new Label(indexCol++, indexRow, "N/A"));
+					}
+					productSheet.addCell(new Label(indexCol++, indexRow, price.getEffDate() + "", formatRight));
+					productSheet.addCell(new Label(indexCol++, indexRow, price.getExpDate() + "", formatRight));
 				}
 			}
+			
 			if(serviceList.size() > 0){
 				ServiceSheet = itemExcel.createSheet("ServiceSheet", 2);
 				int indexRow2=0, indexCol2=0;
-				ServiceSheet.setColumnView(indexCol2, 20);
+				ServiceSheet.setColumnView(indexCol2, 25);
 				ServiceSheet.addCell(new Label(indexCol2++, indexRow2, "Item", formatLeftBold));
-				ServiceSheet.setColumnView(indexCol2, 20);
+				ServiceSheet.setColumnView(indexCol2, 25);
 				ServiceSheet.addCell(new Label(indexCol2++, indexRow2, "Specification", formatLeftBold));
 				//ServiceSheet.setColumnView(indexCol2, 10);
 				//ServiceSheet.addCell(new Label(indexCol2++, indexRow2, "Fulfilment Type", formatLeftBold));
 				ServiceSheet.setColumnView(indexCol2, 10);
 				ServiceSheet.addCell(new Label(indexCol2++, indexRow2, "UOM", formatLeftBold));
-				ServiceSheet.setColumnView(indexCol2, 10);
+				ServiceSheet.setColumnView(indexCol2, 15);
 				ServiceSheet.addCell(new Label(indexCol2++, indexRow2, "Frequency per UOM", formatLeftBold));
-				ServiceSheet.setColumnView(indexCol2, 10);
+				ServiceSheet.setColumnView(indexCol2, 15);
 				ServiceSheet.addCell(new Label(indexCol2++, indexRow2, "No. UOM per day", formatLeftBold));
-				ServiceSheet.setColumnView(indexCol2, 10);
+				ServiceSheet.setColumnView(indexCol2, 15);
 				ServiceSheet.addCell(new Label(indexCol2++, indexRow2, "No. UOM per month", formatLeftBold));
-				ServiceSheet.setColumnView(indexCol2, 10);
+				ServiceSheet.setColumnView(indexCol2, 15);
 				ServiceSheet.addCell(new Label(indexCol2++, indexRow2, "Duration (Month)", formatLeftBold));
 				ServiceSheet.setColumnView(indexCol2, 10);
 				ServiceSheet.addCell(new Label(indexCol2++, indexRow2, "Quantity", formatLeftBold));
 				//ServiceSheet.setColumnView(indexCol2, 10);
 				//ServiceSheet.addCell(new Label(indexCol2++, indexRow2, "Estimated Value (RM)", formatLeftBold));
-				ServiceSheet.setColumnView(indexCol2, 10);
+				ServiceSheet.setColumnView(indexCol2, 15);
 				ServiceSheet.addCell(new Label(indexCol2++, indexRow2, "Unit Price (RM)", formatLeftBold));
-				ServiceSheet.setColumnView(indexCol2, 10);
+				ServiceSheet.setColumnView(indexCol2, 15);
 				ServiceSheet.addCell(new Label(indexCol2++, indexRow2, "Total Amount (RM)", formatLeftBold));
-				int itmPriceUpdated = 0;
 				
-				for(CtContractItem item : serviceList){
+				for(CtItemPrice price : serviceList){
 					indexRow2++; indexCol2=0;
-					ServiceSheet.addCell(new Label(indexCol2++, indexRow2, item.getItemName(), formatRight));
-					ServiceSheet.addCell(new Label(indexCol2++, indexRow2, item.getScRequestItem().getTplSpecQuestion().getClSpecDetail(), formatRight));//specification
-					ServiceSheet.addCell(new Label(indexCol2++, indexRow2, item.getScRequestItem().getTplSpecQuestion().getClUom().getUomName(), formatRight));
-					ServiceSheet.addCell(new Label(indexCol2++, indexRow2, null == item.getScRequestItem().getTplSpecQuestion().getClUomFrequency() ? 
-							"N/A" : item.getScRequestItem().getTplSpecQuestion().getClUomFrequency().toString(), formatRight));
-					ServiceSheet.addCell(new Label(indexCol2++, indexRow2, null == item.getScRequestItem().getTplSpecQuestion().getClUomPerDay() ? 
-							"N/A" : item.getScRequestItem().getTplSpecQuestion().getClUomPerDay().toString(), formatRight));
-					ServiceSheet.addCell(new Label(indexCol2++, indexRow2, null == item.getScRequestItem().getTplSpecQuestion().getClUomPerMonth() ?
-							"N/A" : item.getScRequestItem().getTplSpecQuestion().getClUomPerMonth().toString(), formatRight));
-					ServiceSheet.addCell(new Label(indexCol2++, indexRow2, null == item.getScRequestItem().getTplSpecQuestion().getClDurationMonth()?
-							"N/A" : item.getScRequestItem().getTplSpecQuestion().getClDurationMonth().toString(), formatRight));
-					ServiceSheet.addCell(new Label(indexCol2++, indexRow2, null == item.getScRequestItem().getTplSpecQuestion().getClQuantity() ?
-							"N/A" : item.getScRequestItem().getTplSpecQuestion().getClQuantity().toString(), formatRight));
-					for(CtItemPrice price : item.getCtItemPrices()){
-						int temp = 0;
-						for(CtContractItem itemPrice : productList){
-							if(item.getItemType().getParameterId() == itemPrice.getItemType().getParameterId() && itmPriceUpdated == temp){
-								productSheet.addCell(new Label(indexCol2++, indexRow2, null == price.getCtContractZone() ? "N/A" : price.getCtContractZone().getZoneName(), formatRight));
-								break;
-							}
-							temp++;
-						}
-						ServiceSheet.addCell(new Label(indexCol2++, indexRow2, price.getUnitPrice().toString(), formatRight));
-						ServiceSheet.addCell(new Label(indexCol2++, indexRow2, price.getUnitPrice().multiply(item.getScRequestItem().getTplSpecQuestion().getClQuantity())+"", formatRight));
-					}
+					ServiceSheet.addCell(new Label(indexCol2++, indexRow2, price.getCtContractItem().getItemName(), formatRight));
+					ServiceSheet.addCell(new Label(indexCol2++, indexRow2, price.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClSpecDetail(), formatRight));//specification
+					ServiceSheet.addCell(new Label(indexCol2++, indexRow2, price.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClUom().getUomName(), formatRight));
+					ServiceSheet.addCell(new Label(indexCol2++, indexRow2, null == price.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClUomFrequency() ? 
+							"N/A" : price.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClUomFrequency().toString(), formatRight));
+					ServiceSheet.addCell(new Label(indexCol2++, indexRow2, null == price.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClUomPerDay() ? 
+							"N/A" : price.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClUomPerDay().toString(), formatRight));
+					ServiceSheet.addCell(new Label(indexCol2++, indexRow2, null == price.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClUomPerMonth() ?
+							"N/A" : price.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClUomPerMonth().toString(), formatRight));
+					ServiceSheet.addCell(new Label(indexCol2++, indexRow2, null == price.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClDurationMonth()?
+							"N/A" : price.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClDurationMonth().toString(), formatRight));
+					ServiceSheet.addCell(new Label(indexCol2++, indexRow2, null == price.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClQuantity() ?
+							"N/A" : price.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClQuantity().toString(), formatLeft));
+								ServiceSheet.addCell(new Label(indexCol2++, indexRow2,  price.getUnitPrice().toString(), formatLeft));
+						//ServiceSheet.addCell(new Label(indexCol2++, indexRow2, price.getUnitPrice().toString(), formatRight));
+					ServiceSheet.addCell(new Label(indexCol2++, indexRow2, price.getUnitPrice().multiply(price.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClQuantity())+"", formatLeft));
 				}
 			}
 			
