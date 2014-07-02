@@ -598,8 +598,6 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 	 */
 	public void addToCart(Long cmSupplierItemId) {
 		log.info("addToCart");
-		IParameterSO parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-		ParameterReqDTO reqDTO = new ParameterReqDTO();
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT, ICatalogueSO.class);
 		CatalogueReqDTO catReqDTO = new CatalogueReqDTO();
 		System.out.println("cmSupplierItemId:" + cmSupplierItemId);
@@ -613,32 +611,19 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			cmSupplierItem.setCmPricings(cmPricings);
 			ScRequestItem requestItem = createRequestItem(cmSupplierItem);
 
-		    requestSupplierItem = createScRequestSupplierItem(requestItem, cmSupplierItem.getSmSupplier(), cmPricings);
+			requestSupplierItem = createScRequestSupplierItem(requestItem, cmSupplierItem.getSmSupplier(), cmPricings);
 			ScSupplierItemPrice supplierItemPrice = createSupplierItemPrice(requestSupplierItem, cmPricings.get(0));
 			requestSupplierItem.setSupplierItemPrice(supplierItemPrice);
 			requestSupplierItem.setSupplierItemId(cmSupplierItem.getSmSupplier().getSupplierId());
-			
-			ParameterResDTO resDTO; 
-			 // TODO check supplier is government seller or not 
-			  ScRequestNoteDtl requestNoteDtl =  getManagedBean().getRequestNoteDtl();
-			  if(cmSupplierItem.getSmSupplier().getPmOrgProfile() != null &&
-				cmSupplierItem.getSmSupplier().getPmOrgProfile().isGovtSeller()){
-				 
-				  reqDTO = new ParameterReqDTO();
-				  reqDTO.setParameterType(ParameterTypeConst.PROCUREMENT_TYPE);
-				  reqDTO.setParameterCode(ParameterConst.PROC_TYPE_G2G);
-				   resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
-				  requestNoteDtl.setProcurementType(resDTO.getPmParameter());
-				  getManagedBean().setProcurementType(ParameterConst.PROC_TYPE_G2G);
-			  } else {
-				  reqDTO = new ParameterReqDTO();
-				  reqDTO.setParameterType(ParameterTypeConst.PROCUREMENT_TYPE);
-				  reqDTO.setParameterCode(ParameterConst.PROC_TYPE_NORMAL);
-				   resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
-				  requestNoteDtl.setProcurementType(resDTO.getPmParameter());
-				  getManagedBean().setProcurementType(ParameterConst.PROC_TYPE_NORMAL);
-			  }
-			
+
+			// TODO check supplier is government seller or not 
+			if(cmSupplierItem.getSmSupplier().getPmOrgProfile() != null &&
+					cmSupplierItem.getSmSupplier().getPmOrgProfile().isGovtSeller()){
+				getManagedBean().setProcurementType(ParameterConst.PROC_TYPE_G2G);
+
+			} else {
+				getManagedBean().setProcurementType(ParameterConst.PROC_TYPE_NORMAL);
+			}
 			if (cmSupplierItem.getCmPricings() != null
 					&& cmSupplierItem.getCmPricings().size() > 0) {
 				List<String> priceTypes = new ArrayList<String>();
