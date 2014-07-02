@@ -263,42 +263,6 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		}
 	}
 
-	public String stopDelivery() {
-		FulfilmentResDTO resDTO = new FulfilmentResDTO();
-		IFulfilmentOrderSO flOrderSO = BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentOrderSO.class);
-		try{
-			Long flOrderId;
-			flOrderId=getManagedBean().getFulfilmentOrder().getFulfilmentOrderId();
-			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-			//Long orderId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("orderId"));
-			
-			FulfilmentReqDTO flDTO = new FulfilmentReqDTO();
-			flDTO.setFlOrderId(flOrderId);
-			getManagedBean().setFulfilmentOrder(flOrderSO.retrieveFulfilmentOrder(flDTO).getFlOrder());
-			reqDTO.setFulfilmentOrder(getManagedBean().getFulfilmentOrder());
-			resDTO=flOrderSO.stopDeliveryWSDL(reqDTO);
-			if(resDTO.isSuccessful()) {
-				String messageId = MessageConst.INFO_700026;
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
-						FacesMessage.SEVERITY_INFO, 
-						null,
-						MessageUtils.getMessage(messageId, 
-								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_INVOICE), resDTO.getFlStopInstr().getStopInstrNo()}, 
-								MessageUtils.BUNDLE_COMMON_MESSAGES, 
-								new FacesScopes().getUserLocale())));
-				
-					return CommonUIConst.ACKNOWLEDGE_PAGE;
-				
-			}
-		}
-		finally{
-			flOrderSO = null;
-			
-		}
-		return null;
-				
-	}
-	
 	public void delAddrList(){
 		IFulfilmentOrderSO flOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject("fl", IFulfilmentOrderSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
