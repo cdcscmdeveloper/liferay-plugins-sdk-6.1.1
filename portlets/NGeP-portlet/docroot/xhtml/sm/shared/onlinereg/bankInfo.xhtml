@@ -37,7 +37,11 @@
 					</p:tooltip>
 				</f:facet>
 			
-				<p:inputText id="bankAccNoId" value="#{bankInfo.accountNo}" />
+				<p:inputText id="bankAccNoId" value="#{bankInfo.accountNo}" maxlength="20"  
+					validatorMessage="#{bankInfo.accountNo} is number.">
+					<f:validateRegex pattern="^\d*$" />
+				</p:inputText>
+				<p:message id="bankAccNoIdMsg" for="bankAccNoId" display="icon" />
 			</p:column>
 		</p:dataTable>
 
