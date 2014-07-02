@@ -3741,7 +3741,8 @@ public class SmApplicationBackingBean extends
 	}
 
 	public String saveApplicationAsDraft(String applType, String currentPageType) {
-		System.out.println("****** Save As Draft **********" + currentPageType + currentTab);
+		System.out.println("****** Save As Draft **********" + currentPageType
+				+ currentTab);
 		boolean valid = false;
 		try {
 			valid = validateBeforeSave(applType, currentPageType);
@@ -4359,9 +4360,8 @@ public class SmApplicationBackingBean extends
 		IReasonSO reqSO = (IReasonSO) BusinessDelegate.getInstance()
 				.getServiceObject("pm", IReasonSO.class);
 		ReasonReqDTO reqDTO = new ReasonReqDTO();
-//		reqDTO.setReasonCategory(ReasonCategory.SUPPLIER_REJECTION_REASON
-//				.value());
-		reqDTO.setReasonCategory(1l);
+		reqDTO.setReasonCategory(ReasonCategory.SUPPLIER_REJECTION_REASON
+				.value());
 		reqDTO.setLanguage(new FacesScopes().getUserLocale().getLanguage());
 		ReasonResDTO resDTO = reqSO.retrieveReasonDescListByCategory(reqDTO);
 		System.out.println(" *** Reject List ****** "
