@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.fl.order.IDeliveryOrderSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
+import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -34,7 +35,6 @@ import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.constant.BpmOutcomeConst;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.fl.creatdo.DeliveryOrderManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -180,13 +180,22 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 				String messageId = MessageConst.INFO_700043;
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 					messageId = MessageConst.INFO_700004;
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,	null,
+							MessageUtils.getMessage(messageId, 
+									new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_DELIVERY_ORDER), getManagedBean().getFulfilmentOrder().getDocNo()}, 
+									MessageUtils.BUNDLE_COMMON_MESSAGES, 
+									new FacesScopes().getUserLocale())));
+				} else {
+					messageId = MessageConst.INFO_700043;
+					String message = "";
+					for(String deliveryOrderNo : resDTO.getDeliveryOrderNoList()) {
+						message = MessageUtils.getMessage(messageId, 
+								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_DELIVERY_ORDER), deliveryOrderNo}, 
+								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale());
+						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,	null, message));
+					}
+					
 				}
-				
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,	null,
-						MessageUtils.getMessage(messageId, 
-								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_DELIVERY_ORDER), getManagedBean().getFulfilmentOrder().getDocNo()}, 
-								MessageUtils.BUNDLE_COMMON_MESSAGES, 
-								new FacesScopes().getUserLocale())));
 			}
 			if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
 				renewSesionObject();
