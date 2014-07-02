@@ -536,11 +536,7 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 	public void procurementTypeEvent() {
 		log.info("procurementTypeEvent");
 		if (getManagedBean().getRequestNoteDtl().getProcurementType().getParameterCode()
-				.equalsIgnoreCase(ParameterConst.PROC_TYPE_NORMAL)) {
-			getManagedBean().setProcTypeOption(false);
-			getManagedBean().setJustTypeOption(false);
-
-		} else if (getManagedBean().getRequestNoteDtl().getProcurementType()
+				.equalsIgnoreCase(ParameterConst.PROC_TYPE_NORMAL) || getManagedBean().getRequestNoteDtl().getProcurementType()
 				.getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
 			getManagedBean().setProcTypeOption(false);
 			getManagedBean().setJustTypeOption(false);

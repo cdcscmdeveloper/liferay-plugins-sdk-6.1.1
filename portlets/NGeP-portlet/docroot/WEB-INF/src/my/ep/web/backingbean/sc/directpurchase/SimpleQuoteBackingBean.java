@@ -217,11 +217,11 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 		// TODO check flag for panel item or non contract item
 		if(itemPanelFlag){
 			scQuote.setPanel(Boolean.TRUE);
-			scQuote.setZonal(Boolean.TRUE);
-			scQuote.setMultipleQuote(Boolean.TRUE);
+			scQuote.setZonal(Boolean.FALSE);
+			scQuote.setMultipleQuote(Boolean.FALSE);
 		} else {
 			scQuote.setPanel(Boolean.FALSE);
-			//getManagedBean().setZonal(Boolean.FALSE);
+			scQuote.setZonal(Boolean.TRUE);
 			scQuote.setMultipleQuote(Boolean.TRUE);
 		}
 		
@@ -231,7 +231,12 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 		scQuote.setRemarks(initializeRemarks(scQuote));
 		this.getManagedBean().setProcurementType(ParameterConst.PROC_TYPE_NORMAL);
 		this.getManagedBean().setScQuote(scQuote);
-
+		
+		// adding suppliers from catalogue compare page
+		if(!getManagedBean().getCompareSuppliers().isEmpty() &&getManagedBean().getCompareSuppliers().size()>0){
+			supplierListListener(getManagedBean().getCompareSuppliers());
+		}
+		
 		getManagedBean().setLocLevelDropdown(getLocationLevelDropdown());
 		// location level by default - district 
 		getManagedBean().setLocationLevel(ParameterConst.LOCATION_LEVEL_DISTRICT);
@@ -342,24 +347,24 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 					}
 				}
 			}
-
-			List<ScQuoteSupplier> suppliers = new ArrayList<ScQuoteSupplier>();
+			
 			// by supplier 
+			List<ScQuoteSupplier> suppliers = new ArrayList<ScQuoteSupplier>();
 			if(getManagedBean().getSupplierList() != null){
-				quote.setScQuoteSuppliers(getManagedBean().getSupplierList());
+				suppliers.addAll(getManagedBean().getSupplierList());
 			}
 			// panel item
 			if(getManagedBean().getPanelSuppliers() != null){
-				//suppliers.addAll(getManagedBean().getPanelSuppliers());
+				suppliers.addAll(getManagedBean().getPanelSuppliers());
 			}
 			// govt sellers
 			if(getManagedBean().getGovtSellers() != null){
-				//suppliers.addAll(getManagedBean().getGovtSellers());
+				suppliers.addAll(getManagedBean().getGovtSellers());
 			}
 			if(suppliers != null){
-				//quote.setScQuoteSuppliers(suppliers);
+				quote.setScQuoteSuppliers(suppliers);
 			}
-			
+
 			// remarks
 			quote.setRemarks(initializeRemarks(quote));
 			quote.setWorkflowStatuses(null);
@@ -525,7 +530,6 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 					}
 				}
 			}
-
 			List<ScQuoteSupplier> suppliers = new ArrayList<ScQuoteSupplier>();
 			// by supplier 
 			if(getManagedBean().getSupplierList() != null){
@@ -584,7 +588,6 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 					}
 				}
 			}
-			
 			FacesScopes facesScopes = new FacesScopes();
 			String token = facesScopes.getBPMAuthenticationCtxToken();
 			reqDTO.setToken(token);
@@ -594,7 +597,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			QuoteResDTO quoteResDTO = quoteSO.saveQuoteDtl(reqDTO);
 			if (quoteResDTO.isSuccessful()) {
 				ScQuote scQuote = quoteResDTO.getQuoteBidDtl();
-				successMessage(MessageConst.INFO_700005,ParameterTypeConst.DOCUMENT_TYPES,
+				successMessage(MessageConst.INFO_700026,ParameterTypeConst.DOCUMENT_TYPES,
 						ParameterConst.DOCTYPE_SIMPLE_QUOTE,scQuote.getQuoteNo());
 				 // clear SQ data
 				 super.renewSesionObject();
@@ -699,26 +702,19 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			getManagedBean().setLocAndBusinessFlag(Boolean.FALSE);
 			getManagedBean().setG2GFlag(Boolean.FALSE);
 			getManagedBean().setByBusinessNature(Boolean.FALSE);
-
-		}else {
-			getManagedBean().setLocAndBusinessFlag(Boolean.TRUE);
-			getManagedBean().setG2GFlag(Boolean.FALSE);
-			getManagedBean().setByBusinessNature(Boolean.FALSE);
 		}
 
 		if (getManagedBean().getProcurementType()
-				.equalsIgnoreCase(ParameterConst.PROC_TYPE_NORMAL)) {
-			getManagedBean().setProcTypeOption(Boolean.FALSE);
-			getManagedBean().setJustTypeOption(Boolean.FALSE);
-
-		} else if (getManagedBean().getProcurementType()
+				.equalsIgnoreCase(ParameterConst.PROC_TYPE_NORMAL) || getManagedBean().getProcurementType()
 				.equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
 			getManagedBean().setProcTypeOption(Boolean.FALSE);
 			getManagedBean().setJustTypeOption(Boolean.FALSE);
+			getManagedBean().setG2GFlag(Boolean.FALSE);
 
-		} else if (getManagedBean().getProcurementType()
+		}  else if (getManagedBean().getProcurementType()
 				.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)) {
 			getManagedBean().setProcTypeOption(Boolean.TRUE);
+			getManagedBean().setG2GFlag(Boolean.FALSE);
 			getManagedBean()
 			.setJustDropdown(
 					getDropdownCodeValues(ParameterTypeConst.JUSTIFICATION_TYPE_ADHOC));
@@ -726,6 +722,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 		} else if (getManagedBean().getProcurementType()
 				.equalsIgnoreCase(ParameterConst.PROC_TYPE_EMERGENCY)) {
 			getManagedBean().setProcTypeOption(Boolean.TRUE);
+			getManagedBean().setG2GFlag(Boolean.FALSE);
 			getManagedBean()
 			.setJustDropdown(
 					getDropdownCodeValues(ParameterTypeConst.JUSTIFICATION_TYPE_EMERGENCY));
@@ -1528,12 +1525,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 		if(supplierList == null){
 			supplierList = new ArrayList<ScQuoteSupplier>();
 		}
-
-		// adding suppliers from add to cart compare
-		if(!getManagedBean().getCompareSuppliers().isEmpty() &&getManagedBean().getCompareSuppliers().size()>0){
-			suppliers.addAll(getManagedBean().getCompareSuppliers());
-		}
-
+		
 		if (suppliers != null){
 			for (SmSupplier supplier : suppliers) {
 				ScQuoteSupplier quoteSupplier = new ScQuoteSupplier();
@@ -1547,7 +1539,6 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 	
 	public void businessNatureListener(List<PmBusinessNature> businessNatures){
 		debugLogger("businessNatureListener");
-		
 		List<ScBusinessNatureQuoteCriteria> natureQuoteCriterias = getManagedBean().getScQuote().getBusinessNatureCriterias();
 		if(natureQuoteCriterias == null){
 			natureQuoteCriterias = new ArrayList<ScBusinessNatureQuoteCriteria>();
@@ -1565,21 +1556,27 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 	
 	public void govtSellerListener(List<PmOrgProfile> orgProfiles){
 		debugLogger("govtSellerListener");
-		List<ScQuoteSupplier> scQuoteSuppliers = new ArrayList<ScQuoteSupplier>();
+		List<ScQuoteSupplier> govtSuppliers = getManagedBean().getGovtSellers();
+		if(govtSuppliers == null){
+			govtSuppliers = new ArrayList<ScQuoteSupplier>();
+		}
 		if (orgProfiles != null){
 		   for (PmOrgProfile orgProfile : orgProfiles) {
 			   ScQuoteSupplier scQuoteSupplier = new ScQuoteSupplier();
 			   scQuoteSupplier.setSmSupplier(orgProfile.getSmSupplier());
 			   scQuoteSupplier.setQuote(getManagedBean().getScQuote());
-			   scQuoteSuppliers.add(scQuoteSupplier);
+			   govtSuppliers.add(scQuoteSupplier);
 			}
-		   getManagedBean().setGovtSellers(scQuoteSuppliers);
+		   getManagedBean().setGovtSellers(govtSuppliers);
 		}
 	}
 
 	public void panelItemListener(List<CtPanelSupplier>	ctPanelSuppliers){
 		debugLogger("panelItemListener");
-		List<ScQuoteSupplier> panelSuppliers = new ArrayList<ScQuoteSupplier>();
+		List<ScQuoteSupplier> panelSuppliers = getManagedBean().getPanelSuppliers();
+		if(panelSuppliers == null){
+			panelSuppliers = new ArrayList<ScQuoteSupplier>();
+		}
 		
 		if (ctPanelSuppliers != null){
 			for (CtPanelSupplier panelSupplier : ctPanelSuppliers) {

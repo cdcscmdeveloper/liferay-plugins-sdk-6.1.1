@@ -1004,14 +1004,10 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 	public void procurementTypeEvent() {
 		log.info("procurementTypeEvent"); 
 		if (getManagedBean().getProcurementType()
-				.equalsIgnoreCase(ParameterConst.PROC_TYPE_NORMAL)) {
+				.equalsIgnoreCase(ParameterConst.PROC_TYPE_NORMAL) || getManagedBean().getProcurementType().equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
 			getManagedBean().setProcTypeOption(Boolean.FALSE);
 			getManagedBean().setJustTypeOption(Boolean.FALSE);
 			
-		} else if (getManagedBean().getProcurementType().equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
-			getManagedBean().setProcTypeOption(Boolean.FALSE);
-			getManagedBean().setJustTypeOption(Boolean.FALSE);
-		
 		} else if (getManagedBean().getProcurementType()
 				.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)) {
 			getManagedBean().setProcTypeOption(Boolean.TRUE);
