@@ -27,7 +27,6 @@ import java.util.zip.Deflater;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -133,6 +132,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	private CtAgreementParty[] selectedAgencySigner;
 	private CtAgreementParty[] selectedSupplierWitnes;
 	private CtAgreementParty[] selectedSupplierSigner;
+	ContractBackingBean ctBB = null;
 
 	public AgreementBackingBean(){
 	   if(this.getManagedBean().getAction() == null) {
@@ -141,23 +141,21 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	   if(getManagedBean().getUserMap().size()==0) {
 			 initializeApproverList();
 	    }
+	   
+	   if(ctBB == null){
+		   ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());	
+	   }
 	}
 	
 	private FacesScopes getFacesScopes(){
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes;
 	}
-	
-	@PostConstruct
-	public void init(){
-		
-		ContractBackingBean ctBB = new ContractBackingBean();
-		ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());	
-	 }
-	
+
 	public void preRenderView() throws NamingException {
 		IContractSO contractSO = null;
 		IAgreementSO agreementSO = null;
+	
 		try {
 			HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 			HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
@@ -194,88 +192,101 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IAgreementSO.class);
 			
 			ContractAgreementResDTO resDTO = new ContractAgreementResDTO();
-			if (dataType.getAgreementType() != null && dataType.getAgreementType().equalsIgnoreCase("supplemental")) {
+			String agrrementType = dataType.getAgreementType()==null? "":dataType.getAgreementType();
+			getManagedBean().setAgreementType(agrrementType);
+			
+			if(getManagedBean().getAgreementType() != null && getManagedBean().getAgreementType().equalsIgnoreCase(ContractConst.SUP_AGREEMENT)) {
 				ctReqDTO.setDocType(ParameterConst.DOCTYPE_SUPPLEMENTAL_AGREEMENT);
-				getManagedBean().setAgreementType(dataType.getAgreementType());
-				if (dataType.getAgreementId().intValue() == 0) {
-					ContractReqDTO conReqDTO = new ContractReqDTO();
-					conReqDTO.setContractVerId(new Long(dataType.getDocId()));
-					contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
-					ContractResDTO conResDTO = contractSO.retrieveContractVer(conReqDTO);
-					
-					ctReqDTO.setCtContractVer(conResDTO.getCtContractVer());
-					resDTO = agreementSO.setSupplementalAgreement(ctReqDTO);
-					
-					getManagedBean().setContractVer(conResDTO.getCtContractVer());
-				} else {
-					resDTO = agreementSO.retrieveAgreement(ctReqDTO);
+				
+				if(dataType.getAgreementId().intValue() == 0) {
+					 ContractReqDTO conReqDTO = new ContractReqDTO();
+					 conReqDTO.setContractVerId(new Long(dataType.getDocId()));
+					 contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+					 ContractResDTO conResDTO = contractSO.retrieveContractVer(conReqDTO);
+					 ctReqDTO.setCtContractVer(conResDTO.getCtContractVer());
+					 resDTO = agreementSO.setSupplementalAgreement(ctReqDTO);
+					 getManagedBean().setContractVer(conResDTO.getCtContractVer());
+				}else{
+					 resDTO = agreementSO.retrieveAgreement(ctReqDTO);
 				}
-			} else {
+			}else{
 				ctReqDTO.setDocType(ParameterConst.DOCTYPE_AGREEMENT);
 				resDTO = agreementSO.retrieveAgreement(ctReqDTO);
-			}
+		    }
+			
 			setCtAgreementDetails(resDTO);
-
 		 	if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.UPLOAD_SIGNED_STAMPED_FINAL_AGREEMENT)){
 				getManagedBean().setUploadStampedAndSignedPage(true);
 				getManagedBean().setUploadFinalAgreement(true);
-			} else if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.PRINT_FINALIST_AGREEMENT_HT_NAME)) {
+			}else if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.PRINT_FINALIST_AGREEMENT_HT_NAME)) {
 				getManagedBean().setUploadFinalAgreement(true);
 			}
- 			FacesContext fc = FacesContext.getCurrentInstance();
+ 			
+		 	FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null,  ContractManagementConst.NAV_TO_CONTRACT_AGREEMENT);   
-		} finally {
+		
+		}
+		catch(Exception ex){
+			ex.printStackTrace();
+		
+		}finally{
 			contractSO = null;
 			agreementSO = null;
 		}
     }
 	
 	private void setCtAgreementDetails(ContractAgreementResDTO resDTO) throws NamingException {
-		if (resDTO.getAgreement() != null) {
+		if(resDTO.getAgreement() != null) {
+			
 			getManagedBean().setCtAgreement(resDTO.getAgreement());
 			getManagedBean().setCtContract(resDTO.getAgreement().getCtContract());
-			if(getManagedBean().getContractVer()==null) {
-				getManagedBean().setContractVer(resDTO.getAgreement().getCtContract().getCurrentContractVer());
-			}
-			if (this.getManagedBean().getCtContract().getFulfillmentType() == null) {
-				this.getManagedBean().getCtContract().setFulfillmentType(new PmParameter());
-			}
+			
+			if(getManagedBean().getContractVer()==null) 
+			   getManagedBean().setContractVer(resDTO.getAgreement().getCtContract().getCurrentContractVer());
+			
+			if(this.getManagedBean().getCtContract().getFulfillmentType() == null) 
+			   this.getManagedBean().getCtContract().setFulfillmentType(new PmParameter());
 
 			this.getManagedBean().setRemarkList(resDTO.getCtRemarks());
 			this.getManagedBean().setAttachmentList(resDTO.getCtAttachments());
 
-			if (this.getManagedBean().getCtAgencySigner().size() > 0)
-				this.getManagedBean().getCtAgencySigner().clear();
+			if(this.getManagedBean().getCtAgencySigner().size() > 0)
+			   this.getManagedBean().getCtAgencySigner().clear();
 
-			if (this.getManagedBean().getCtSupplierSigner().size() > 0)
-				this.getManagedBean().getCtSupplierSigner().clear();
+			if(this.getManagedBean().getCtSupplierSigner().size() > 0)
+			   this.getManagedBean().getCtSupplierSigner().clear();
 
-			if (this.getManagedBean().getCtSignAgencyWitness().size() > 0)
-				this.getManagedBean().getCtSignAgencyWitness().clear();
+			if(this.getManagedBean().getCtSignAgencyWitness().size() > 0)
+			   this.getManagedBean().getCtSignAgencyWitness().clear();
 
-			if (this.getManagedBean().getCtSupplierWitness().size() > 0)
-				this.getManagedBean().getCtSupplierWitness().clear();
+			if(this.getManagedBean().getCtSupplierWitness().size() > 0)
+			   this.getManagedBean().getCtSupplierWitness().clear();
 
-			for (CtAgreementParty ctAgreementParty : getManagedBean().getCtAgreement().getCtSignParties()) {
-				if (ctAgreementParty.getAgreementPartyType().getParameterId().equals(retrieveParameterByCodeType(ParameterTypeConst.AGREEMENT_PARTY_TYPE, ParameterTypeConst.AGREEMENT_AGENCY_SIGNER).getParameterId())) {
+			for(CtAgreementParty ctAgreementParty : getManagedBean().getCtAgreement().getCtSignParties()){
+				if(ctAgreementParty.getAgreementPartyType().getParameterId().
+				    equals(retrieveParameterByCodeType(ParameterTypeConst.AGREEMENT_PARTY_TYPE, ParameterTypeConst.AGREEMENT_AGENCY_SIGNER).getParameterId())) {
+				
 					if(ctAgreementParty.getOrgProfile()==null) {
 					   ctAgreementParty.setOrgProfile(new PmOrgProfile());
 					}
+					
 					if(ctAgreementParty.getOrgProfile().getParentOrgProfile() == null){
 					   ctAgreementParty.getOrgProfile().setParentOrgProfile(new PmOrgProfile());
-					}					
-					this.getManagedBean().getCtAgencySigner().add(ctAgreementParty);
-				} else if (ctAgreementParty.getAgreementPartyType().getParameterId().equals(retrieveParameterByCodeType(ParameterTypeConst.AGREEMENT_PARTY_TYPE,ParameterTypeConst.AGREEMENT_AGENCY_WITNESS).getParameterId())) {
+					}this.getManagedBean().getCtAgencySigner().add(ctAgreementParty);
+				
+			   }else if(ctAgreementParty.getAgreementPartyType().getParameterId().equals(retrieveParameterByCodeType(ParameterTypeConst.AGREEMENT_PARTY_TYPE,ParameterTypeConst.AGREEMENT_AGENCY_WITNESS).getParameterId())) {
 					this.getManagedBean().getCtSignAgencyWitness().add(ctAgreementParty);
-				} else if (ctAgreementParty.getAgreementPartyType().getParameterId().equals(retrieveParameterByCodeType(ParameterTypeConst.AGREEMENT_PARTY_TYPE,ParameterTypeConst.AGREEMENT_SUPPLIER_SIGNER).getParameterId())) {
+				
+			   } else if (ctAgreementParty.getAgreementPartyType().getParameterId().equals(retrieveParameterByCodeType(ParameterTypeConst.AGREEMENT_PARTY_TYPE,ParameterTypeConst.AGREEMENT_SUPPLIER_SIGNER).getParameterId())) {
 					this.getManagedBean().getCtSupplierSigner().add(ctAgreementParty);
-				} else {
+				
+			   } else {
 					this.getManagedBean().getCtSupplierWitness().add(ctAgreementParty);				
 				}
 			}
-		} else {
+		 }else{
 			getManagedBean().setCtAgreement(new CtAgreement());
-		}
+		 }
 
 		this.getManagedBean().getApproverModel().setSource(getAvailableApproverList());
 		if (resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0) {
@@ -284,7 +295,6 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		}
 
 		initializeRemarks();
-		ContractBackingBean ctBB = new ContractBackingBean();
 		ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 	}
 	
@@ -307,11 +317,11 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	    	ContractAgreementReqDTO reqDTO = new ContractAgreementReqDTO();
 			String token = getFacesScopes().getBPMAuthenticationCtxToken();
 			agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IAgreementSO.class);
-			if(getManagedBean().getAgreementType().equalsIgnoreCase("supplemental")) {
-				reqDTO.setAgreementType("supplemental");
+			if(getManagedBean().getAgreementType().equalsIgnoreCase(ContractConst.SUP_AGREEMENT)) {
+				reqDTO.setAgreementType(ContractConst.SUP_AGREEMENT);
 				reqDTO.setDocType(ParameterConst.DOCTYPE_SUPPLEMENTAL_AGREEMENT);
 			} else {
-			    reqDTO.setAgreementType("agreement");
+			    reqDTO.setAgreementType(ContractConst.AGREEMENT);
 			    reqDTO.setDocType(ParameterConst.DOCTYPE_AGREEMENT);
 			}
 			
@@ -376,43 +386,6 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			agreementSO = null;
 		}
 		return null;	
-	}
-
-	public String createSupAgreement(String action) {
-		log.debug("Inside createSupAgreement(.)");
-		IAgreementSO agreementSO = null;
-		ContractAgreementReqDTO reqDTO = null;
-		try {
-			reqDTO = new ContractAgreementReqDTO();
-			String token = getFacesScopes().getBPMAuthenticationCtxToken();
-			agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IAgreementSO.class);
-		//	this.getManagedBean().getAgreement().setCtAmendment(this.getManagedBean().getCtContract().getLatestContractVer().getCtAmendment());
-		//	this.getManagedBean().getAgreement().setCtAgreementAppendixs(this.getManagedBean().getAppendixList());
-		//	this.getManagedBean().getAgreement().setCtContract(this.getManagedBean().getCtContract());
-		//	reqDTO.setAgreement(this.getManagedBean().getAgreement());
-			reqDTO.setTaskId(this.getManagedBean().getTaskId());
-			reqDTO.setOutcome(action);
-			reqDTO.setToken(token);
-			reqDTO.setAgreementType(this.getManagedBean().getAgreementType());
-			ContractAgreementResDTO resDTO = agreementSO.saveAgreement(reqDTO);
-			
-			if (resDTO.isSuccessful()) {
-				log.info("Record saved successfully1");
-				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,"Record saved successfully.","Agreement Name. : "+ this.getManagedBean().getCtContract().getContractId()));
-				renewSesionObject();
-				return "/xhtml/shared/acknowledge.xhtml";
-			} else {
-				throw new EpException("Failed.");
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),"Agreement save failed."));
-		} finally {
-			agreementSO = null;
-			reqDTO = null;
-		}
-		log.debug("Exit createSupAgreement(.)");
-		return null;
 	}
     
     public SelectItem[] getPtjCodeName(Long ministryId){

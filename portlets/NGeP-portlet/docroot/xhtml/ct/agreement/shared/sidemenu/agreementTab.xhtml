@@ -12,10 +12,10 @@
 		.column-align-center {
 			text-align: center !important;
 		}
-		
 		.top-aligned-columns td {
 			vertical-align: top;
 		}
+		
 		</style>
 		<p:panel>
 		    <f:event listener="#{agreementBackingBean.preRenderView}" type="preRenderView" />
@@ -35,11 +35,16 @@
 					<p:menuitem value="Signing Agreement" update="@form">
 						<f:setPropertyActionListener target="#{agreementBackingBean.managedBean.selectedTabIndex}" value="1" />
 					</p:menuitem>
-					<p:menuitem value="Signed Details" update="@form">
+					<p:menuitem value="Signed Details" update="@form" rendered="#{agreementBackingBean.managedBean.uploadStampedAndSignedPage}">
 						<f:setPropertyActionListener target="#{agreementBackingBean.managedBean.selectedTabIndex}" value="2" />
 					</p:menuitem>
-					 <p:menuitem value="Approver Setting" update="@form" rendered="#{!agreementBackingBean.isApprover()}">
+					 <p:menuitem value="Approver Setting" update="@form"
+					    rendered="#{!agreementBackingBean.isApprover() and agreementBackingBean.managedBean.uploadStampedAndSignedPage}">
 						<f:setPropertyActionListener target="#{agreementBackingBean.managedBean.selectedTabIndex}" value="3" />
+					</p:menuitem>
+					 <p:menuitem value="Approver Setting" update="@form" 
+					    rendered="#{!agreementBackingBean.isApprover() and !agreementBackingBean.managedBean.uploadStampedAndSignedPage}">
+						<f:setPropertyActionListener target="#{agreementBackingBean.managedBean.selectedTabIndex}" value="2" />
 					</p:menuitem>
 				</p:tabMenu>
 			</td>
@@ -55,11 +60,12 @@
 				    <ui:include src="/xhtml/ct/agreement/supplierSignerWitnes.xhtml" />
 				</p:outputPanel>
 	
-				 <p:outputPanel rendered="#{agreementBackingBean.managedBean.selectedTabIndex == 2}">
+				 <p:outputPanel rendered="#{agreementBackingBean.managedBean.selectedTabIndex == 2 and agreementBackingBean.managedBean.uploadStampedAndSignedPage}">
 					<ui:include src="/xhtml/ct/agreement/uploadDocument.xhtml" />
 			     </p:outputPanel>
 				
-				 <p:outputPanel rendered="#{agreementBackingBean.managedBean.selectedTabIndex == 3 and !agreementBackingBean.isApprover()}">
+				 <p:outputPanel rendered="#{(agreementBackingBean.managedBean.selectedTabIndex == 3 and agreementBackingBean.managedBean.uploadStampedAndSignedPage)
+				  or (agreementBackingBean.managedBean.selectedTabIndex == 2 and !agreementBackingBean.managedBean.uploadStampedAndSignedPage) and !agreementBackingBean.isApprover()}">
 					<ui:include src="/xhtml/ct/agreement/approverSetting.xhtml" />
 				</p:outputPanel>
 				
