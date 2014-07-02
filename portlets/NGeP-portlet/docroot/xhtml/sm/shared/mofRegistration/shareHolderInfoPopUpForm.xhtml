@@ -52,7 +52,7 @@
 						display="inline" required="true" readonlyInput="true"
 						label="#{lbl['lbl.sm.person.dob']}" id="equiPerDob"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-						yearRange="c-99:c+0"
+						yearRange="-99:+0"
 						value="#{backingBean.managedBean.selectedShareHolder.birthDate}" />
 					<p:message id="equiPerDobMsg" for="equiPerDob" showSummary="true"
 						showDetail="false" display="icon" /></td>
@@ -390,12 +390,12 @@
 				process="equiShrHldrJbFnc" />
 		</div>
 	</p:panel>
-	<p:dialog width="360px" height="200px" header="Job Function Details "
+	<p:dialog width="400px" height="200px" header="Job Function Details "
 		id="equiJobFunctionInfo" widgetVar="equiJobFunctionInfo"
 		closable="false" resizable="false" showEffect="fade" hideEffect="fade"
 		modal="true">
-		<p:messages id="equiJobFunctionInfoMsg" showSummary="true"
-			showDetail="false" autoUpdate="true" closable="true" />
+		<p:messages id="equiJobFunctionInfoMsg" showSummary="false"
+			showDetail="true" autoUpdate="true" closable="true" />
 		<table style="width: 100%">
 			<tr>
 				<td><p:outputLabel value="* Company" /></td>
@@ -421,9 +421,10 @@
 						size="35" required="#{backingBean.managedBean.valueReqd}"
 						id="equiJbFnInfYrFrm"
 						value="#{backingBean.managedBean.selectedJobFunction.fromYear}"
-						maxlength="4" label="Year From" mask="9999" /> <p:message
-						id="equiJbFnInfYrFrmMsg" for="equiJbFnInfYrFrm" showSummary="true"
-						showDetail="false" display="icon" /></td>
+						maxlength="4" label="Year From" mask="9999">
+						<f:validateLongRange minimum="1950" maximum="2050" />
+					</p:inputMask> <p:message id="equiJbFnInfYrFrmMsg" for="equiJbFnInfYrFrm"
+						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* Year To" /></td>
@@ -431,9 +432,10 @@
 						required="#{backingBean.managedBean.valueReqd}" label="Year To"
 						id="equiJbFnInfYrTo"
 						value="#{backingBean.managedBean.selectedJobFunction.toYear}"
-						maxlength="4" mask="9999" /> <p:message id="equiJbFnInfYrToMsg"
-						for="equiJbFnInfYrTo" showSummary="true" showDetail="false"
-						display="icon" /></td>
+						maxlength="4" mask="9999">
+						<f:validateLongRange minimum="1950" maximum="2050" />
+					</p:inputMask> <p:message id="equiJbFnInfYrToMsg" for="equiJbFnInfYrTo"
+						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 		</table>
 		<br />
@@ -507,8 +509,8 @@
 		header="Related Company Details " id="equiRelCompInfo"
 		widgetVar="equiRelCompInfo" resizable="false" showEffect="fade"
 		hideEffect="fade" modal="true">
-		<p:messages id="equiRelCompInfoMsg" showSummary="true"
-			showDetail="false" autoUpdate="true" closable="true" />
+		<p:messages id="equiRelCompInfoMsg" showSummary="false"
+			showDetail="true" autoUpdate="true" closable="true" />
 		<table style="width: 100%">
 			<tr>
 				<td><p:outputLabel value="* Company Name" /></td>
@@ -628,8 +630,8 @@
 		header="Professional Body Details" id="equiShrProfBeanInfo"
 		widgetVar="equiShrProfBeanInfo" resizable="false" showEffect="fade"
 		hideEffect="fade" modal="true">
-		<p:messages id="equiShrProfBeanInfoMsg" showSummary="true"
-			showDetail="false" autoUpdate="true" closable="true" />
+		<p:messages id="equiShrProfBeanInfoMsg" showSummary="false"
+			showDetail="true" autoUpdate="true" closable="true" />
 		<table style="width: 100%">
 			<tr>
 				<td><p:outputLabel value="* Professionl Body" /></td>
@@ -662,7 +664,7 @@
 						id="equiPrfBdyEndDt"
 						required="#{backingBean.managedBean.valueReqd}"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-						yearRange="c-99:c+0"
+						yearRange="-99:+0"
 						value="#{backingBean.managedBean.selectedStfPrfBdy.expDate}" /> <p:message
 						id="equiPrfBdyEndDtMsg" for="equiPrfBdyEndDt" showSummary="true"
 						showDetail="false" display="icon" /></td>
@@ -742,7 +744,7 @@
 		header="Staff Academics Details" id="equiAcadInfo"
 		widgetVar="equiAcadInfo" resizable="false" showEffect="fade"
 		hideEffect="fade" modal="true">
-		<p:messages id="equiAcadInfoMsg" showSummary="true" showDetail="false"
+		<p:messages id="equiAcadInfoMsg" showSummary="false" showDetail="true"
 			autoUpdate="true" closable="true" />
 		<table style="width: 100%">
 			<tr>
@@ -751,7 +753,9 @@
 						required="#{backingBean.managedBean.valueReqd}" label="Year"
 						id="equiStfAcaYr" placeHolder=""
 						value="#{backingBean.managedBean.selectedStaffAcademic.year}"
-						size="35" /> <p:message id="equiStfAcaYrMsg" for="equiStfAcaYr"
+						size="35">
+						<f:validateLongRange minimum="1950" maximum="2050" />
+					</p:inputMask> <p:message id="equiStfAcaYrMsg" for="equiStfAcaYr"
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>

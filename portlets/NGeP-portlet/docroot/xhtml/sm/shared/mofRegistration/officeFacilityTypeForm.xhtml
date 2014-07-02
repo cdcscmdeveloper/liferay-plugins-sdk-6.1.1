@@ -286,7 +286,7 @@
 								label="#{lbl['lbl.sm.facility.purchaseDate']}"
 								value="#{backingBean.managedBean.basicCompanyFacility.purchaseDate}"
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-								required="true" yearRange="c-99:c+0">
+								required="true" yearRange="-99:+0">
 							</p:calendar> <p:message id="purchaseDateMsg" for="purchaseDate"
 								showSummary="true" showDetail="false" display="icon" /></td>
 					</tr>
