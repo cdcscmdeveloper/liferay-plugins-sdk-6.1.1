@@ -339,6 +339,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private SmAddress supplierAddress;
 	private String supplierContact;
 	private String supplierEmail;
+	private CtCircularVer ctCircularVer;
 
 	public SpecificationManagedBean() {
 		
@@ -3833,6 +3834,20 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	 */
 	public void setSupplierEmail(String supplierEmail) {
 		this.supplierEmail = supplierEmail;
+	}
+
+	/**
+	 * @return the ctCircularVer
+	 */
+	public CtCircularVer getCtCircularVer() {
+		return ctCircularVer;
+	}
+
+	/**
+	 * @param ctCircularVer the ctCircularVer to set
+	 */
+	public void setCtCircularVer(CtCircularVer ctCircularVer) {
+		this.ctCircularVer = ctCircularVer;
 	}
 
 }
