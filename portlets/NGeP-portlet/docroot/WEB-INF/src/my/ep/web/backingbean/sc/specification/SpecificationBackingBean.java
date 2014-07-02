@@ -3,6 +3,7 @@
  */
 package my.ep.web.backingbean.sc.specification;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -7336,6 +7337,7 @@ public class SpecificationBackingBean extends
 		try {
 			CircularDetailReqDTO reqDTO = new CircularDetailReqDTO();
 			CtCircularVer circular = (CtCircularVer) selectEvent.getObject();
+			this.getManagedBean().setCtCircularVer(circular);
 
 			circularDetailSO = (ICircularDetailSO) EpEjbBusinessDelegate
 					.getInstance().getServiceObject("ct",
@@ -8094,12 +8096,12 @@ public class SpecificationBackingBean extends
 	private QuationTenderReqDTO constructSpecCommitteDtls() {
 		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 		ScQt scQt = this.getManagedBean().getScQt();
-		if(scQt.getMaxProposal()>3){
+		if (scQt.getMaxProposal() > 3) {
 			String maxproposal = CommonMethod
 					.getMessageCommon("lbl.sc.spec.max.proposal");
 			throw new EpException(MessageConst.INFO_100022,
 					new String[] { maxproposal + "is not greater than 3" });
-			
+
 		}
 
 		List<ScQtCheckList> localChecklist = new ArrayList<ScQtCheckList>();
@@ -8885,5 +8887,17 @@ public class SpecificationBackingBean extends
 		scQt.setScQtSupplierCriteria(supplierCriteria);
 		this.getManagedBean().setScQt(scQt);
 
+	}
+
+	public void downloadCircularDtls() {
+	
+		try {
+			downloadFile(this.getManagedBean().getCtCircularVer()
+					.getCircularFileName(), this.getManagedBean()
+					.getCtCircularVer().getCircularFilePath());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
