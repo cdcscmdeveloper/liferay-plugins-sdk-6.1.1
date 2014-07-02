@@ -83,7 +83,7 @@
 		  <p:commandButton value="#{lbl['lbl.btn.delete']}" 
 		    icon="ui-icon-delete" process="@form" onsuccess="dlgAgWitnessDel.show()"/>
 	  </div>
-	   <p:dialog id="dlgAgWitnessDel" widgetVar="dlgAgWitnessDel" header="Delete Confirmation" 
+	   <p:dialog id="dlgAgWitnessDel" widgetVar="dlgAgWitnessDel" header="#{lbl['lbl.ct.dialong.cofirm.header']}" 
 	      styleClass="screen-title" resizable="false" modal="true" width="350" height="95">  
             <h:panelGrid columns="3">
               <p:graphicImage library="ep/images/design" name="exclamation.png"

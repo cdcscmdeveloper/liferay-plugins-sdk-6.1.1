@@ -32,12 +32,14 @@
                     <p:menuitem value="Create Agreement" update="@form">
 						<f:setPropertyActionListener target="#{agreementBackingBean.managedBean.selectedTabIndex}" value="0" />
 					</p:menuitem>
-					<p:menuitem value="Signing Agreement" update="@form">
+					<p:menuitem value="#{lbl['lbl.ct.ag.signingag']}" update="@form">
 						<f:setPropertyActionListener target="#{agreementBackingBean.managedBean.selectedTabIndex}" value="1" />
 					</p:menuitem>
+					<p:menuitem value="#{lbl['lbl.ct.ag.signeddtls']}" update="@form">
 					<p:menuitem value="Signed Details" update="@form" rendered="#{agreementBackingBean.managedBean.uploadStampedAndSignedPage}">
 						<f:setPropertyActionListener target="#{agreementBackingBean.managedBean.selectedTabIndex}" value="2" />
 					</p:menuitem>
+					 <p:menuitem value="#{lbl['lbl.ct.set.aprsetting']}" update="@form" rendered="#{!agreementBackingBean.isApprover()}">
 					 <p:menuitem value="Approver Setting" update="@form"
 					    rendered="#{!agreementBackingBean.isApprover() and agreementBackingBean.managedBean.uploadStampedAndSignedPage}">
 						<f:setPropertyActionListener target="#{agreementBackingBean.managedBean.selectedTabIndex}" value="3" />
