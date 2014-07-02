@@ -55,21 +55,21 @@
 	  
 	   <h:panelGrid columns="4" style="width:100%;" columnClasses="columnWidth15">
 	     
-         <p:outputLabel value="Title / Name" />  
+         <p:outputLabel value="#{lbl['lbl.ct.amend.txt.name']}" />  
          <p:inputText  value="#{agreementBackingBean.managedBean.ctAgreement.ctAmendment.title}" style="width:170px;" disabled="true" />
-         <p:outputLabel value="File Ref No."/>  
+         <p:outputLabel value="#{lbl['lbl.ct.amend.txt.frno']}"/>  
          <p:inputText value="#{agreementBackingBean.managedBean.ctAgreement.ctAmendment.fileRefNo}" style="width:170px;" disabled="true" /> 
       
 	     <h:panelGroup>
 		   <div style="height: 40px; vertical-align: top;">
-		      <p:outputLabel for="amendmentD" value="Description" />
+		      <p:outputLabel for="amendmentD" value="#{lbl['ct.lbl.amend.desc']}" />
 		   </div>
 		 </h:panelGroup>
 		 <h:panelGrid>
 		    <p:inputTextarea id="amendmentD" value="#{agreementBackingBean.managedBean.ctAgreement.ctAmendment.description}"  disabled="true" rows="3" cols="31"  autoResize="false" />
 		 </h:panelGrid>
 
-         <p:outputLabel value="Amendment Effective Date" />  
+         <p:outputLabel value="#{lbl['ct.lbl.amend.amendeffdate']}" />  
          <p:inputText value="#{agreementBackingBean.managedBean.ctAgreement.ctAmendment.amendmentEffDate}" style="width:170px;"  disabled="true" >
          	<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
          </p:inputText>

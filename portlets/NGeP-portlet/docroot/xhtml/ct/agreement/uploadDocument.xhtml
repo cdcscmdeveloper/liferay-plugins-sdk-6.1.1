@@ -10,7 +10,7 @@
 		<h:panelGrid style="width:100%" columns="2"	columnClasses="columnWidth15">
 			<h:panelGrid columns="2">
 				<p:outputLabel value="*" styleClass="mandatory" />
-				<p:outputLabel value="Signed Date" />
+				<p:outputLabel value="#{lbl['lbl.ct.sdate']}" />
 			</h:panelGrid>
 			<h:panelGrid columns="2">
 				<p:calendar	value="#{agreementBackingBean.managedBean.ctAgreement.signedDate}" id="popupButtonCal4" 
@@ -20,14 +20,14 @@
 			</h:panelGrid>
 			<h:panelGrid columns="2">
 				<p:outputLabel value="*" styleClass="mandatory" />
-				<p:outputLabel value="Signed Page" />
+				<p:outputLabel value="#{lbl['lbl.ct.signedpg']}" />
 			</h:panelGrid>
 			<h:panelGrid columns="2">
 				<h:panelGroup id="upAgrSignedPagePg">
 					<p:commandButton
 						oncomplete="upAgrSignedPageDlg.show();return false;"
 						icon="iconAttachment" update="upAgrSignedPagePg"
-						value="Upload Document" />
+						value="#{lbl['lbl.btn.upload.doc']}" />
 					<h:commandLink
 						value="#{agreementBackingBean.managedBean.ctContract.currentAgreement.signedPageName}"
 						rendered="#{agreementBackingBean.managedBean.ctContract.currentAgreement.signedPageName != null}"
@@ -37,14 +37,14 @@
 			</h:panelGrid>
 			<h:panelGrid columns="2">
 				<p:outputLabel value="*" styleClass="mandatory" />
-				<p:outputLabel value="Stamped Page" />
+				<p:outputLabel value="#{lbl['lbl.ct.stampedpg']}" />
 			</h:panelGrid>
 			<h:panelGrid columns="2">
 				<h:panelGroup id="upStampedPagePg">
 					<p:commandButton
 						oncomplete="upStampedPageDlg.show();return false;"
 						icon="iconAttachment" update="upStampedPagePg"
-						value="Upload Document" />
+						value="#{lbl['lbl.btn.upload.doc']}" />
 					<h:commandLink
 						value="#{agreementBackingBean.managedBean.ctContract.currentAgreement.stampedPageName}"
 						rendered="#{agreementBackingBean.managedBean.ctContract.currentAgreement.stampedPageName != null}"

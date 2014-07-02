@@ -13,8 +13,8 @@
 	  <table style="width:100%;">
 	    <tr>
 	    	<td class="ppRightBtn">
-	    	    <p:commandButton value="Download"  action="#{agreementBackingBean.downloadFile(agreementBackingBean.managedBean.filePath)}"  ajax="false"  styleClass="ui-button" icon="ui-icon-#{fn:toLowerCase(download)}" />
-			 	<p:commandButton value="Closed" ajax="false" onclick="window.close()" styleClass="ui-button" icon="ui-icon-#{fn:toLowerCase(closed)}"/>			
+	    	    <p:commandButton value="#{lbl['lbl.ct.download']}"  action="#{agreementBackingBean.downloadFile(agreementBackingBean.managedBean.filePath)}"  ajax="false"  styleClass="ui-button" icon="ui-icon-#{fn:toLowerCase(download)}" />
+			 	<p:commandButton value="#{lbl['lbl.ct.closed']}" ajax="false" onclick="window.close()" styleClass="ui-button" icon="ui-icon-#{fn:toLowerCase(closed)}"/>			
 	    	</td>
 	    </tr>
 	   </table>
@@ -63,7 +63,7 @@
 				</tr>
 			</table>	    			  	
 	</p:panel> 
-	<p:panel header="Templates Documents" toggleable="true"  toggleSpeed="500">
+	<p:panel header="#{lbl['lbl.ct.templatedocs']}" toggleable="true"  toggleSpeed="500">
       <p:growl life="5000" autoUpdate="true" />  
          <h:panelGrid>  
             <h:outputLabel value="#{agreementBackingBean.blobToStr(agreementBackingBean.managedBean.ctTemplates.content)}" title="Name" />    
