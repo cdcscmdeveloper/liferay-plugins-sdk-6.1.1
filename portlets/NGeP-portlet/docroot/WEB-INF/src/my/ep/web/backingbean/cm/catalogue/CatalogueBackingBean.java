@@ -701,21 +701,19 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 		System.out.println("getDocId" + supplierItem.getDocId());
 
-		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
-				.getInstance().getServiceObject("cm", ICatalogueSO.class);
+		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
 
 		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
-
 		reqDTO.setDocId(supplierItem.getDocId());
 
-		CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
-
+		CatalogueResDTO resDTO = null;
+		resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
 		this.getManagedBean().setDisplayCatalogue(false);
+		this.getManagedBean().setSelectedMaintainItem(resDTO.getSupplierItemList().get(0));
 		
-		System.out.println("*****************end********************");
-
-		this.getManagedBean().setSelectedMaintainItem(
-				resDTO.getSupplierItemList().get(0));
+		reqDTO.setSupplierId(resDTO.getSupplierItemList().get(0).getSmSupplier().getSupplierId());
+		resDTO = catalogueSO.retrieveSupplierZoneBySuppId(reqDTO);
+		this.getManagedBean().setSupplierZoneList(resDTO.getSupplierZoneLs());
 		
 		//allow view only
 		for(CmTierPricing a : this.getManagedBean().getSelectedMaintainItem().getCmTierPricings()){
@@ -725,6 +723,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		for(CmPromotionTierPricing a : this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings()){
 			a.setStandardDisabled(true);
 		}
+		System.out.println("*****************end********************");
 
 		return "addCatalogView?faces-redirect=true";
 	}
