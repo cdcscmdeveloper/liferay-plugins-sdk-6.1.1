@@ -27,8 +27,8 @@
 						<p:commandButton styleClass="ui-button" icon="ui-icon-submit"
 							value="Submit" ajax='false'
 							action="#{createDOBackingBean.createDeliveryOrder('SUBMIT')}" />
-						<p:commandButton value="STOP DELIVERY" icon="ui-icon-cancel"
-							rendered="#{createDOBackingBean.managedBean.statusDesc eq 'Pending Partial Fulfilment'}"
+						<p:commandButton value="STOP DELIVERY" icon="ui-icon-cancel" 
+							rendered="#{false and createDOBackingBean.managedBean.statusDesc eq 'Pending Partial Fulfilment'}"
 							action="#{createDOBackingBean.stopDelivery}" immediate="true" />
 					</td>
 				</c:if>
