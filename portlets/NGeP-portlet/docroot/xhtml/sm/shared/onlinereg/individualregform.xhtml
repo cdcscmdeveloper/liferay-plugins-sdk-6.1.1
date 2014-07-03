@@ -29,7 +29,7 @@
 				<td class="tdContent"><p:inputMask id="individualRegNoId"
 						required="true" label="#{lbl['lbl.sm.individual.newicno']}"
 						value="#{registrationBackingBean.managedBean.smSupp.regNo}"
-						size="40" mask="999999999999"
+						size="40" mask="999999999999" maxlength="20"
 						disabled="#{!registrationBackingBean.managedBean.smSupp.brandNew}" />
 					&#160; <p:graphicImage id="uidti" library="ep/images/design"
 						name="tooltips.png" /> <p:tooltip id="uidtt" for="uidti">
@@ -41,7 +41,7 @@
 			<tr>
 				<td class="tdTitle"><p:outputLabel
 						value="* #{lbl['lbl.sm.individual.nameasperic']}" /></td>
-				<td class="tdContent"><p:inputText size="40"
+				<td class="tdContent"><p:inputText size="40" maxlength="100"
 						id="individualNameId" required="true"
 						label="#{lbl['lbl.sm.individual.nameasperic']}"
 						value="#{registrationBackingBean.managedBean.smAppl.smCompanyBasic.companyName}" />
@@ -60,7 +60,7 @@
 						value="* #{lbl['lbl.sm.permenantaddress']}" /></td>
 				<td class="tdContent"><p:inputText size="40" 
 						required="true" label="#{lbl['lbl.sm.permenantaddress']}"
-						id="txtPermAdd1"
+						id="txtPermAdd1" maxlength="35"
 						value="#{registrationBackingBean.managedBean.smPermenantAdd.address1}" />
 					&#160; <p:graphicImage id="addti" library="ep/images/design"
 						name="tooltips.png" /> <p:tooltip id="addtt" for="addti">
@@ -85,7 +85,7 @@
 			<tr>
 				<td></td>
 				<td class="tdContent"><p:inputText size="40"
-						id="txtPermAdd2"
+						id="txtPermAdd2" maxlength="35"
 						value="#{registrationBackingBean.managedBean.smPermenantAdd.address2}" /></td>
 
 				<td class="tdTitle"><p:outputLabel
@@ -107,7 +107,7 @@
 			<tr>
 				<td></td>
 				<td class="tdContent"><p:inputText size="40"
-						id="txtPermAdd3"
+						id="txtPermAdd3" maxlength="35"
 						value="#{registrationBackingBean.managedBean.smPermenantAdd.address3}" /></td>
 
 				<td class="tdTitle"><p:outputLabel
@@ -125,12 +125,12 @@
 			<tr>
 				<td></td>
 				<td class="tdContent"><p:inputText size="40" 
-						id="txtPermAdd4"
+						id="txtPermAdd4" maxlength="35"
 						value="#{registrationBackingBean.managedBean.smPermenantAdd.address4}" /></td>
 
 				<td class="tdTitle"><p:outputLabel
 						value="* #{lbl['lbl.sm.postcode']}" /></td>
-				<td class="tdContent"><p:inputText size="40" required="true"
+				<td class="tdContent"><p:inputText size="40" required="true" maxlength="10"
 						label="#{lbl['lbl.sm.postcode']}" id="txtPermPostcode"
 						value="#{registrationBackingBean.managedBean.smPermenantAdd.postcode}" />
 					<p:message id="txtPermPostcodeMsg" for="txtPermPostcode"

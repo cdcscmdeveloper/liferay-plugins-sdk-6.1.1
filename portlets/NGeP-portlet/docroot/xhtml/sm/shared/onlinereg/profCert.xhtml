@@ -13,7 +13,7 @@
 			<!-- 				<ac:paginator for="dt" /> -->
 			<p:column selectionMode="multiple" style="width:2%" />
 			<p:column headerText="Certificate Name">
-				<p:inputText value="#{suppCert.certName}" />
+				<p:inputText value="#{suppCert.certName}" maxlength="50" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sm.prof.certificationbody']}">
@@ -36,7 +36,7 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sm.prof.rating']}">
-				<p:inputText value="#{suppCert.certScore}" />
+				<p:inputText value="#{suppCert.certScore}" maxlength="30"/>
 			</p:column>
 		</p:dataTable>
 

@@ -10,7 +10,7 @@
 			<tr>
 				<td class="tdTitle"><p:outputLabel
 						value="* #{lbl['lbl.sm.businessregno']}" /></td>
-				<td class="tdContent"><p:inputText id="regNo" required="true"
+				<td class="tdContent"><p:inputText id="regNo" required="true" maxlength="20"
 						value="#{registrationBackingBean.managedBean.smSupp.regNo}"
 						disabled="#{!registrationBackingBean.managedBean.smSupp.brandNew}"
 						size="40" label="#{lbl['lbl.sm.businessregno']}" />
@@ -25,7 +25,7 @@
 				<td class="tdTitle"><p:outputLabel value="* #{lbl['lbl.sm.ownername']}" /></td>
 				<td class="tdContent"><p:inputText id="ownerNameId" required="true" label="#{lbl['lbl.sm.ownername']}"
 						value="#{registrationBackingBean.managedBean.smSuppOwner.ownerName}"
-						size="40" />
+						size="40" maxlength="50"/>
 					&#160;
 					<p:graphicImage id="ownNmti" library="ep/images/design" name="tooltips.png" />
 					<p:tooltip id="ownNmtt" for="ownNmti">
@@ -52,7 +52,7 @@
 						value="* #{lbl['lbl.sm.identificationno']}" /></td>
 				<td class="tdContent"><p:inputMask id="txtIdNumber" required="true" label="#{lbl['lbl.sm.identificationno']}"
 						value="#{registrationBackingBean.managedBean.smSuppOwner.identificationNo}"
-						size="30" placeHolder=""
+						size="30" maxlength="15" placeHolder=""
 						mask="#{registrationBackingBean.managedBean.suppOwnerIdMask}" />
 					&#160;
 					<p:graphicImage id="icti" library="ep/images/design" name="tooltips.png" />
@@ -72,7 +72,7 @@
 				<!-- 						<f:validateRegex pattern="[a-zA-Z\.\'\-_]{1,40}" /> -->
 				<!-- 					</p:inputText> -->
 				<td class="tdContent"><p:inputText required="true"
-						label="#{lbl['lbl.sm.companyname']}"
+						label="#{lbl['lbl.sm.companyname']}" maxlength="100"
 						value="#{registrationBackingBean.managedBean.smAppl.smCompanyBasic.companyName}"
 						size="40" id="companyNameId" /> <p:message id="companyNameIdMsg"
 						for="companyNameId" display="icon" /></td>
@@ -103,7 +103,7 @@
 				<td class="tdTitle"><p:outputLabel
 						value="* #{lbl['lbl.sm.companyaddress']}" /></td>
 				<td class="tdContent" ><p:inputText size="40"
-						id="compAdd1" required="true"
+						id="compAdd1" required="true" maxlength="35"
 						label="#{lbl['lbl.sm.companyaddress']}"
 						value="#{registrationBackingBean.managedBean.smBusinessAdd.address1}" />
 					<p:message id="compAdd1Msg" for="compAdd1" display="icon" /></td>
@@ -127,7 +127,7 @@
 			<tr>
 				<td></td>
 				<td class="tdContent"><p:inputText size="40"
-						id="compAdd2"
+						id="compAdd2" maxlength="35"
 						value="#{registrationBackingBean.managedBean.smBusinessAdd.address2}" /></td>
 
 				<td class="tdTitle"><p:outputLabel
@@ -149,7 +149,7 @@
 			<tr>
 				<td></td>
 				<td class="tdContent"><p:inputText size="40"
-						id="compAdd3"
+						id="compAdd3" maxlength="35"
 						value="#{registrationBackingBean.managedBean.smBusinessAdd.address3}" /></td>
 
 				<td class="tdTitle"><p:outputLabel
@@ -171,7 +171,7 @@
 			<tr>
 				<td></td>
 				<td class="tdContent" ><p:inputText size="40"
-						id="compAdd4"
+						id="compAdd4" maxlength="35"
 						value="#{registrationBackingBean.managedBean.smBusinessAdd.address4}" /></td>
 
 				<td class="tdTitle"><p:outputLabel
