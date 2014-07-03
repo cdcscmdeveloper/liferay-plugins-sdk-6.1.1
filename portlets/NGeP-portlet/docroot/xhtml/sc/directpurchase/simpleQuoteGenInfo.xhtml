@@ -135,13 +135,15 @@
 					<table>
 						<tr>
 						 <td> 
-							<p:calendar showOn="button" id="startDate" binding="#{StartDate}" required="true"
-									label="#{lbl['lbl.sc.sq.gen.info.start.date']}"
+							<p:calendar showOn="button" id="startDate" binding="#{StartDate}"  
+							        mindate="#{simpleQuoteBackingBean.managedBean.today}"
+							        required="true"
+									label="#{lbl['lbl.sc.sq.gen.info.start.date']}" 
+									readonlyInput="true"
 									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}"
 									value="#{simpleQuoteBackingBean.managedBean.scQuote.startDate}">
 									<p:ajax event="dateSelect" update="durationId ,endDate" process="@this durationId"
 										listener="#{simpleQuoteBackingBean.calcDuration(simpleQuoteBackingBean.managedBean.duration)}" />
-									<f:validator validatorId="dateRangeValidator" />
 							</p:calendar></td>
 							<td><p:message id="startDateMsg" for="startDate" display="icon" /></td>
 						</tr>
@@ -150,13 +152,11 @@
 			
 				<td style="width: 150px;">
 				 <p:outputLabel value="#{lbl['lbl.sc.sq.gen.info.end.date']}" /> <p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td><p:calendar showOn="button" id="endDate"  
+				<td><p:calendar showOn="button" id="endDate"   
+				       mindate="#{simpleQuoteBackingBean.managedBean.scQuote.startDate}"
+				       readonlyInput="true"  required="true"
 				       pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" 
 				       value="#{simpleQuoteBackingBean.managedBean.scQuote.endDate}">
-				      <f:attribute name="startDate" value="#{simpleQuoteBackingBean.managedBean.scQuote.startDate}" />
-                      <f:validator validatorId="dateRangeValidator" />
-                       <p:ajax event="dateSelect" update="@([id$=messageId])"  process="@this durationId"
-					          listener="#{simpleQuoteBackingBean.calcDuration(simpleQuoteBackingBean.managedBean.duration)}"/>
 				    </p:calendar>
 				    </td>
 			</tr>
@@ -196,7 +196,7 @@
 						<tr>
 							<td></td>
 							<td>
-								<p:inputTextarea style="width:350px;" id="remarks" label="Remarks" maxlength="1000" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}"  required="true"/>
+								<p:inputTextarea style="width:350px;" id="remarks" label="Remarks" maxlength="1000" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}"/>
 								<h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}"  style="display: inline-block; width:220px;word-wrap: break-word;" />
 							</td>
 							 <td style="vertical-align: top;padding-right: 1px;text-align: right;">  

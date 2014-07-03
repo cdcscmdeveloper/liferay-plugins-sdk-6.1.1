@@ -51,7 +51,7 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.order.qty']}" /></td>
-					<td><p:inputText size="33" styleClass="ppRightBtn"  label="#{lbl['lbl.sc.order.qty']}" maxlength="14" id="oderQtyId" required="true"
+					<td><p:inputText size="33" styleClass="ppRightBtn"  label="#{lbl['lbl.sc.order.qty']}" maxlength="14" id="oderQtyId" required="#{requestNoteBackingBean.managedBean.required}"
 					       validatorMessage="Order Qty : must be a decimal number between 0.0 and 9999999999.999"
 							value="#{requestNoteBackingBean.managedBean.requestSupplierItem.requestNoteItem.quantity}">
 						</p:inputText><p:message id="oderQtyMsg" for="oderQtyId" display="icon" /></td>
@@ -81,7 +81,7 @@
 					   <p:outputLabel value="*" styleClass="mandatory" /></td>
 					<td><p:selectOneRadio style="margin-bottom: 5px;"
 							id="procType" label="#{lbl['lbl.sc.procurement.type']}"
-							disabled="#{requestNoteBackingBean.managedBean.requestNoteDtl.procurementType eq 'G'}"
+							disabled="#{requestNoteBackingBean.managedBean.procurementType eq 'G'}"
 							value="#{requestNoteBackingBean.managedBean.procurementType}"
 							required="#{requestNoteBackingBean.managedBean.required}">
 							<f:selectItems
@@ -131,7 +131,7 @@
 						icon="ui-icon-submit" update="addToCartId"/>
 						
 					<p:commandButton value="#{lbl['lbl.sc.cancel']}" process="@this"
-						action="#{requestNoteBackingBean.closeListener}" icon="ui-icon-close" oncomplete="addToCartPopup.hide();"
+						action="#{requestNoteBackingBean.closeListener}" icon="ui-icon-cancel" oncomplete="addToCartPopup.hide();"
 						partialSubmit="true" />
 				</p:column>
 			</p:row>

@@ -137,6 +137,7 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 				ContractItemResDTO contractItemResDTO = contractItemSO.getContractItem(contractItemReqDTO);
 				if(contractItemResDTO.getCtContractItem()!=null) {
 					scPurchaseInDefault.setContractedItem(contractItemResDTO.getCtContractItem());
+					getManagedBean().setCheckContractItem(Boolean.TRUE);
 				}
 			}else if(vCmSupplierItem.getCircularNo() !=null){
 				// panel item 
@@ -145,6 +146,7 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 				PanelSupplierResDTO resDTO= panelSupplierSO.retrievePanelItem(reqDTO);
 				if(resDTO.getCtPanelItem()!=null) {
 					scPurchaseInDefault.setPanelItem(resDTO.getCtPanelItem());
+					getManagedBean().setCheckContractItem(Boolean.FALSE);
 				}
 			}
 			// initializing remarks
@@ -582,15 +584,22 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 		   purchaseInDefaultReqDTO.setFetchSubEntity(true);
 		   PurchaseInDefaultResDTO purchaseInDefaultResDTO = purchaseInDefaultSO.getPurchaseInDefault(purchaseInDefaultReqDTO);
 		   ScPurchaseInDefault purchaseInDefault = purchaseInDefaultResDTO.getPurchaseInDefaultDtl();
+		   // contract item
 		   if(purchaseInDefault.getContractedItem() != null){
-			   CtContractItem contractItem = purchaseInDefault.getContractedItem();
+			  CtContractItem contractItem = purchaseInDefault.getContractedItem();
 			   IContractItemSO contractItemSO	=	(IContractItemSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractItemSO.class);
 			   ContractItemReqDTO contractItemReqDTO = new ContractItemReqDTO();
 			   contractItemReqDTO.setContractItemId(contractItem.getContractItemId());
 			   ContractItemResDTO ConIresDTO = contractItemSO.getContractItem(contractItemReqDTO);
 			   contractItem	=	ConIresDTO.getCtContractItem();
 			   purchaseInDefault.setContractedItem(contractItem);
+			   getManagedBean().setCheckContractItem(Boolean.TRUE);
 		   }
+		   // panel item
+		   if(purchaseInDefault.getPanelItem() !=null){
+			   getManagedBean().setCheckContractItem(Boolean.FALSE);
+		   }
+		   
 		   // remarks
 		   purchaseInDefault.setRemarks(initializeRemarks(purchaseInDefault));
 		   List<ScPurchaseInDefaultAttachment> attachments = new ArrayList<ScPurchaseInDefaultAttachment>();

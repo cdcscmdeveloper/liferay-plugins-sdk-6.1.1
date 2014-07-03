@@ -128,12 +128,19 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 			  List<CmPricing> pricings = catResDTO.getPriceLs();
 			  cmSupplierItem.setCmPricings(pricings);
 			  this.getManagedBean().setSupplierItem(cmSupplierItem);
-			  supplierItemPrice.setPricing(cmSupplierItem.getCmPricings().get(0));
+			  
+			  if(cmSupplierItem.getCmPricings() != null && cmSupplierItem.getCmPricings() .size() > 0){
+				  supplierItemPrice.setPricing(cmSupplierItem.getCmPricings().get(0));
+				} else {
+					throw new EpException("Price not found");
+				}
+			  
 			  requestSupplierItem.setSmSupplier(cmSupplierItem.getSmSupplier());
 			  supplierItemPrice.setScRequestSupplierItem(requestSupplierItem);
 			  requestSupplierItem.setSupplierItemPrice(supplierItemPrice);
 			  requestSupplierItem.setRequestNoteItem(scRequestItem);
 		  }
+		  
 		  // WorkFlow Status
 		  List<ScPRIWorkFlowStatus> workFlowStatuses =  new  ArrayList<ScPRIWorkFlowStatus>();
 		  ScPRIWorkFlowStatus workFlowStatus = new ScPRIWorkFlowStatus();

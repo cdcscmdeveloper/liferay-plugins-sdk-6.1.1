@@ -777,12 +777,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 	 */
 	public String backToPervious() {
 		log.info("add item");
-		IParameterSO parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-		ParameterReqDTO reqDTO = new ParameterReqDTO();
-		reqDTO.setParameterType(ParameterTypeConst.PROCUREMENT_TYPE);
-		reqDTO.setParameterCode(ParameterConst.PROC_TYPE_NORMAL);
-		ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
-		getManagedBean().getRequestNoteDtl().setProcurementType(resDTO.getPmParameter());
+		getManagedBean().setProcurementType(ParameterConst.PROC_TYPE_NORMAL);
 		ScRequestSupplierItem requestSupplierItem = new ScRequestSupplierItem();
 		ScRequestItem requestItem = new ScRequestItem();
     	requestSupplierItem.setRequestNoteItem(requestItem);
@@ -791,7 +786,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		getManagedBean().setProcurementType(null);
 		getManagedBean().setJustification(null);
 		getManagedBean().setJustificationType(null);
-        RequestContext.getCurrentInstance().update("addToCartId");
+        getManagedBean().setProcTypeOption(Boolean.FALSE);
 		
 		return "catalogueSearch";
 	}

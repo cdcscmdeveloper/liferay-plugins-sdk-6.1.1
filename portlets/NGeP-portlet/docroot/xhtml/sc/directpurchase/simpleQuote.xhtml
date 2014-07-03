@@ -18,23 +18,23 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 					activeIndex="#{simpleQuoteBackingBean.managedBean.selectedTabIndex}"
 					style="display : table-caption;">
                       
-					<p:menuitem value="#{lbl['lbl.sc.sq.tab.title.gen.info']}" update="menuId">
+					<p:menuitem value="#{lbl['lbl.sc.sq.tab.title.gen.info']}" update="tabMenuId">
 						<f:setPropertyActionListener target="#{simpleQuoteBackingBean.managedBean.selectedTabIndex}" value="0" />
 					</p:menuitem>
-					<p:menuitem value="#{lbl['lbl.sc.sq.tab.title.zone']}" update="menuId" disabled="#{simpleQuoteBackingBean.managedBean.zoneFlag}">
+					<p:menuitem value="#{lbl['lbl.sc.sq.tab.title.zone']}" update="tabMenuId" disabled="#{!simpleQuoteBackingBean.managedBean.scQuote.zonal}">
 						<f:setPropertyActionListener target="#{simpleQuoteBackingBean.managedBean.selectedTabIndex}" value="1" />
 					</p:menuitem>
-					<p:menuitem value="#{lbl['lbl.sc.sq.tab.title.item.list']}" update="menuId">
+					<p:menuitem value="#{lbl['lbl.sc.sq.tab.title.item.list']}" update="tabMenuId">
 						<f:setPropertyActionListener target="#{simpleQuoteBackingBean.managedBean.selectedTabIndex}" value="2" />
 					</p:menuitem>
-					<p:menuitem value="#{lbl['lbl.sc.sq.tab.title.supp.criteria.list']}" id="suppCriteriaId" update="menuId" action="#{simpleQuoteBackingBean.tabEvent}">
+					<p:menuitem value="#{lbl['lbl.sc.sq.tab.title.supp.criteria.list']}" id="suppCriteriaId" update="tabMenuId" action="#{simpleQuoteBackingBean.tabEvent}">
 						<f:setPropertyActionListener target="#{simpleQuoteBackingBean.managedBean.selectedTabIndex}" value="3" />
 					</p:menuitem>
 					
 				</p:tabMenu>
 			</td>
 			<td width="80%">
-			<p:panel id="menuId">
+			<p:panel id="tabMenuId">
 			
 				<c:if test="#{simpleQuoteBackingBean.managedBean.selectedTabIndex == 0}">
 				    <ui:include src="/xhtml/sc/directpurchase/simpleQuoteGenInfo.xhtml" />

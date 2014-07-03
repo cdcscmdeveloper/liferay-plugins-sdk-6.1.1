@@ -111,7 +111,6 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 
 	private IPagingDataModel<ScQuote> searchQuoteDataModel;
 	private	String	procurementType;
-    private boolean zoneFlag;
 	// search criteria for popup clone item spec
 	private	String searchQuoteNo;
 	private String searchProcType;
@@ -150,6 +149,7 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	private SmSupplier smSupplier;
 	private int selectedTabIndex;
 	private String quoteNo;
+	private Date  today = new Date();
 
 	public SimpleQuoteManagedBean() {
 		super();
@@ -1213,19 +1213,6 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 		this.serviceFlag = serviceFlag;
 	}
 	/**
-	 * @return the zoneFlag
-	 */
-	public boolean isZoneFlag() {
-		return zoneFlag;
-	}
-	/**
-	 * @param zoneFlag the zoneFlag to set
-	 */
-	public void setZoneFlag(boolean zoneFlag) {
-		this.zoneFlag = zoneFlag;
-	}
-
-	/**
 	 * @return the quoteNo
 	 */
 	public String getQuoteNo() {
@@ -1285,6 +1272,18 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	 */
 	public void setSelectedTreeNode(TreeNode selectedTreeNode) {
 		this.selectedTreeNode = selectedTreeNode;
+	}
+	/**
+	 * @return the today
+	 */
+	public Date getToday() {
+		return today;
+	}
+	/**
+	 * @param today the today to set
+	 */
+	public void setToday(Date today) {
+		this.today = today;
 	}
 	
 	

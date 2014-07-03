@@ -56,6 +56,8 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean{
 	private PmOrgProfile pmOrgProfile = new PmOrgProfile();
 	private PmOrgProfile selectedPmOrgProfile = new PmOrgProfile();
 	private PmReason pmReason;
+	
+	private boolean checkContractItem;
     
 	public PurchaseInDefaultManagedBean() {
 	}
@@ -320,6 +322,19 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean{
 	public void setPmReason(PmReason pmReason) {
 		this.pmReason = pmReason;
 	}
-	
-	
+
+	/**
+	 * @return the checkContractItem
+	 */
+	public boolean isCheckContractItem() {
+		return checkContractItem;
+	}
+
+	/**
+	 * @param checkContractItem the checkContractItem to set
+	 */
+	public void setCheckContractItem(boolean checkContractItem) {
+		this.checkContractItem = checkContractItem;
+	}
+
 }
