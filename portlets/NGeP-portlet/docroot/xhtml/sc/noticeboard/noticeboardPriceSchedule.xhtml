@@ -63,29 +63,25 @@
 					value="#{noticeBoardBackingBean.managedBean.scQt.qtTitle}"
 					readonly="true" />
 
-
 			</h:panelGrid>
+			<c:if test="#{!noticeBoardBackingBean.managedBean.scQt.zonal}">
+				<ui:include src="/xhtml/sc/noticeboard/offerpricesuppliers.xhtml"></ui:include>
+			</c:if>
+			<c:if test="#{noticeBoardBackingBean.managedBean.scQt.zonal}">
+				<p:tabView var="zones" dynamic="true" cache="true"
+					orientation="left"
+					value="#{noticeBoardBackingBean.managedBean.zones}">
+					<p:ajax event="tabChange"
+						listener="#{noticeBoardBackingBean.offeredPriceTabChange}"></p:ajax>
+					<p:tab title="#{zones.zoneName}">
+
+						<ui:include src="/xhtml/sc/noticeboard/offerpricesuppliers.xhtml"></ui:include>
+
+					</p:tab>
 
 
-			<p:panel header="Supplier List" toggleable="true">
-				<p:dataTable id="supplierPriceDtls"
-					value="#{noticeBoardBackingBean.managedBean.categoryList}"
-					var="catCode" rowKey="#{catCode.qtCategoryId}" rowIndexVar="index">
-					<ac:paginator for="supplierPriceDtls"></ac:paginator>
-
-					<p:column headerText="#{lbl['lbl.qt.nb.supplierno']}">
-						<h:outputText value="" />
-					</p:column>
-
-					<p:column headerText="#{lbl['lbl.qt.nb.offeredprice']}">
-						<h:outputText value="" />
-					</p:column>
-
-
-
-				</p:dataTable>
-
-			</p:panel>
+				</p:tabView>
+			</c:if>
 		</p:panel>
 
 	</ui:define>

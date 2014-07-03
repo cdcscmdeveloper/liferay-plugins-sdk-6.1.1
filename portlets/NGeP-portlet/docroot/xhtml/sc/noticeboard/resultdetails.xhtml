@@ -9,18 +9,18 @@
 		<p:dataTable id="nbsearchresults"
 				value="#{noticeBoardBackingBean.qtDataModel}"
 				lazy="true"
-				styleClass="nbsrhresultsStyleClass"
+				styleClass="nbsrhresultsStyleClass" style="width:100%;"
 				var="scqt" rows="20">
 				
 				<ac:paginator for="nbsearchresults" />
 				
-				<p:column headerText="Title">
+				<p:column headerText="Title" style="width:75px;">
 					<p:commandLink style="margin-right:20px;"
-						action="#{noticeBoardBackingBean.qtnTenderDetails(scqt)}">
+						action="#{noticeBoardBackingBean.retrieveQTDetails(scqt)}">
 						<h:outputText value="#{scqt.qtTitle}" />
 					</p:commandLink>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.notice.board.ptj']}" style="width:150px;">
+				<p:column headerText="#{lbl['lbl.sc.notice.board.ptj']}" style="width:75px;">
 					<h:outputText value="#{scqt.pmOrgProfile.orgName}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.notice.board.pdate']}"
@@ -59,7 +59,7 @@
 					<c:if
 						test="#{noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusPublish or noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusChanges }">
 						<p:commandLink id="chkQualIcon"
-							action="#{noticeBoardBackingBean.gotoSupplierQualificationCriteria}">
+							action="#{noticeBoardBackingBean.gotoSupplierQualificationCriteria(scqt)}">
 							<p:graphicImage library="ep/images/design" name="tick.png"
 								value="/resources/ep/images/design/tick.png" />
 						</p:commandLink>

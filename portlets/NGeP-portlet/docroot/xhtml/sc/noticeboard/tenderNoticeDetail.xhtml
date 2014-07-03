@@ -12,9 +12,10 @@
 	<ui:define name="contentSection">
 		<ac:title value="#{lbl[noticeBoardBackingBean.managedBean.scQt.procurementMode == ParameterConst.procurementModeQuotation ? 'lbl.sc.notice.board.quotation.notice' : 'lbl.sc.notice.board.tender.notice']}" />
 		
+		<div style="">
 		<p:commandButton value="#{lbl['lbl.sc.notice.board.backbtn']}"
 				icon="ui-icon-back" action="#{noticeBoardBackingBean.backBtn}" />
-		<br />
+		</div>
 		
 		<p:panel 
 			header="#{lbl[noticeBoardBackingBean.managedBean.scQt.procurementMode == ParameterConst.procurementModeQuotation ? 'lbl.sc.notice.board.quotation.details' : 'lbl.sc.notice.board.tender.details']}" toggleable="true">
@@ -106,11 +107,38 @@
 
 		<ui:include src="noticeboardLocationPopUp.xhtml"></ui:include>
 		<c:if test="#{!noticeBoardBackingBean.managedBean.scQt.zonal}">
+		<ui:param name="bsvDetails" value="#{noticeBoardBackingBean.managedBean.normalBsvBean}"></ui:param>
 			<ui:include src="qtlocationbriefingdtls.xhtml"></ui:include>
 		</c:if>
 		<c:if test="#{noticeBoardBackingBean.managedBean.scQt.zonal}">
 			<ui:include src="nbZones.xhtml"></ui:include>
 		</c:if>
+		
+		<p:panel header="#{lbl['lbl.qt.nb.contactPersonDtl']}"
+		toggleable="true">
+
+		<p:dataTable var="contactPerson"
+			value="#{noticeBoardBackingBean.managedBean.contactPersons}"
+			styleClass="test" rows="20">
+
+			<p:column headerText="#{lbl['lbl.qt.nb.name']}">
+				<h:outputText value="#{contactPerson.name}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.qt.nb.telNo']}" style="width:100px;">
+				<h:outputText value="#{contactPerson.phoneNo}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.qt.nb.faxNo']}" style="width:120px;">
+				<h:outputText value="#{contactPerson.faxNo}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.qt.nb.email']}" style="width:120px;">
+				<h:outputText value="#{contactPerson.email}" />
+			</p:column>
+
+
+		</p:dataTable>
+
+	</p:panel>
 		
 			<p:panel header="Document List" toggleable="true">
 		<p:dataTable var="document" id="doctbl" 

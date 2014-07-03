@@ -5,41 +5,61 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-
+	<p:messages id="supplierQualification" showDetail="true"
+		showSummary="false" autoUpdate="true" closable="true" />
 	<p:panel header="Check Supplier Qualification" toggleable="true">
-		<h:panelGrid columns="3">
-			<h:outputLabel value="MOF No"></h:outputLabel>
-			<p:inputText value="#{noticeBoardBackingBean.mofNo}"></p:inputText>
 
-			<p:commandButton value="Check" icon="ui-icon-check"
-				action="#{noticeBoardBackingBean.checkSupplierQulificationStatus}"
-				update="supplierQulification">
+		<table>
 
-			</p:commandButton>
-		</h:panelGrid>
+			<tr>
+				<td><h:outputLabel value="#{lbl['lbl.sc.mof.no']}"></h:outputLabel>
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td><p:inputText value="#{noticeBoardBackingBean.mofNo}"
+						required="true"></p:inputText></td>
+				<td><p:commandButton value="Check" icon="ui-icon-check"
+						action="#{noticeBoardBackingBean.checkSupplierQulificationStatus}"
+						update="qualificationCriteria">
+					</p:commandButton></td>
+			</tr>
+		</table>
+
 	</p:panel>
 
-	<p:panel header="Supplier Qualification Status">
-
-		<p:dataTable id="supplierQulification" var="scqt" styleClass="test"
-			rows="20">
+	<p:panel id="qualificationCriteria"
+		header="#{lbl['lbl.sc.spec.supplier.qual.criteraia']}"
+		style="margin-bottom:5px;" toggleable="true">
+		<p:dataTable id="supplierQulification"
+			value="#{noticeBoardBackingBean.managedBean.qualificationBean}"
+			var="qulificationBean" styleClass="test" rows="20">
 
 			<p:column headerText="Criteria">
-				<h:outputText value="Test" />
+				<h:outputText value="#{qulificationBean.criteria}" />
 			</p:column>
 			<p:column headerText="Requirement" style="width:100px;">
-				<h:outputText value="011-525-45689" />
+				<h:outputText
+					value="#{fn:replace(qulificationBean.qtRequirement,':','&lt;/br&gt;')}"
+					size="50" escape="false"
+					style="width:100px; height:100px !important;" />
 			</p:column>
 
 			<p:column headerText="Qualification Status" style="width:120px;">
-				<h:outputText value="123-234-4567" />
+				<h:outputText value="#{qulificationBean.supplierStatus}" />
 			</p:column>
 
 		</p:dataTable>
 
+
+
 	</p:panel>
+	<div style="text-align: center;">
+		<h:outputText value="You Are Qualified To Participate"
+			style="font-size:18px;"
+			rendered="#{noticeBoardBackingBean.managedBean.qualified}"></h:outputText>
 
-
+		<h:outputText value="You Are Not Qualified To Participate"
+			style="font-size:18px;"
+			rendered="#{!noticeBoardBackingBean.managedBean.qualified}"></h:outputText>
+	</div>
 
 
 </ui:composition>

@@ -59,7 +59,7 @@
 
 		</p:panel>
 	</c:if>
-	<c:if test="#{!bsvAttendanceBackingBean.managedBean.scQtBsv.sameBsv}">
+	<c:if test="#{!bsvDetails.scQtBsv.sameBsv}">
 
 		<p:panel header="#{lbl['lbl.qt.nb.briefDtl']}" toggleable="true">
 			<h:outputText value="* All Attandence required for Briefing">
