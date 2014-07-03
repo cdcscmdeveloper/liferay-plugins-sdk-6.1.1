@@ -11,11 +11,11 @@
 				value="#{amendmentBackingBean.managedBean.contractVer.ctAgencies}"  rowKey="#{data}" >
 				<ac:paginator for="tableAgencyDetails" />
 				<p:column selectionMode="multiple" style="width:18px;" />
-				<p:column headerText="Ministry">
+				<p:column headerText="#{lbl['lbl.ct.ministry']}">
 					<h:outputText
 						value="#{data.orgProfile.parentOrgProfile.orgCode} - #{data.orgProfile.parentOrgProfile.orgName}" />
 				</p:column>
-				<p:column headerText="PTJ">
+				<p:column headerText="#{lbl['lbl.ct.agn.ptj']}">
 					<h:outputText
 						value="#{data.orgProfile.orgCode} - #{data.orgProfile.orgName}" />
 				</p:column>

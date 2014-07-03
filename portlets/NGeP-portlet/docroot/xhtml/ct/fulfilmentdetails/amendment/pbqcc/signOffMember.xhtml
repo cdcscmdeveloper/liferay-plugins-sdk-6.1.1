@@ -6,9 +6,9 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
-    <p:panel id="memberPanel" header="Meeting Decision Details" toggleable="true"  toggleSpeed="500">
+    <p:panel id="memberPanel" header="#{lbl['ct.lbl.amend.meetingdtls']}" toggleable="true"  toggleSpeed="500">
       <h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth20">
-         <p:outputLabel value="Decision"/>
+         <p:outputLabel value="#{lbl['lbl.ct.amend.decision']}"/>
         <p:selectOneMenu value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.pbQcApproved}" 
             style="width:180px;margin-bottom: 4px;" disabled="true" >
                <f:selectItem itemLabel="-Select One-" itemValue=""/>
@@ -17,7 +17,7 @@
 		 </p:selectOneMenu>
 		 <h:panelGroup>
             <div style="height: 60px; vertical-align:top;">
-                <p:outputLabel for="justificationMember" value="Justification" />
+                <p:outputLabel for="justificationMember" value="#{lbl['lbl.ct.ament.justification']}" />
             </div>
           </h:panelGroup>
           <h:panelGrid>
@@ -25,13 +25,13 @@
                  value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.pbqcJustification}"
                 rows="4" cols="31" maxlength="200"  autoResize="false" style="margin-bottom: 4px;" />
           </h:panelGrid>
-           <p:outputLabel value="Date Of Meeting"/>    
+           <p:outputLabel value="#{lbl['lbl.ct.amend.dtofmeeting']}"/>    
            <p:calendar value="#{amendmentBackingBean.meetingDate(amendmentBackingBean.managedBean.contractVer.ctAmendment.ctMeetings)}" 
                size="29" id="calMemMeeting" showOn="button" disabled="true" style="margin-bottom: 4px;"
                pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/> 
 		   <h:panelGroup>
             <div style="height: 80px; vertical-align:top;">
-                <p:outputLabel for="memberLocation" value="Location of Meeting" />
+                <p:outputLabel for="memberLocation" value="#{lbl['lbl.ct.amend.locofmeeting']}" />
             </div>
           </h:panelGroup>
           <h:panelGrid>
@@ -39,7 +39,7 @@
                  value="#{amendmentBackingBean.meetingLocation(amendmentBackingBean.managedBean.contractVer.ctAmendment.ctMeetings)}"
                 rows="4" cols="31"   maxlength="200"  autoResize="false" style="margin-bottom: 4px;" />
           </h:panelGrid> 
-        <p:outputLabel value="List of Committee Members" />
+        <p:outputLabel value="#{lbl['lbl.ct.amend.listcommmembers']}" />
          <p:dataTable id="memberTable" var="data" 
             value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.ctCommitteeMembers}">
              <ac:paginator for="decisionTable" />
