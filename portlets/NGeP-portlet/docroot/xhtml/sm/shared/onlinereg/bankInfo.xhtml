@@ -38,7 +38,7 @@
 				</f:facet>
 			
 				<p:inputText id="bankAccNoId" value="#{bankInfo.accountNo}" maxlength="20"  
-					validatorMessage="#{bankInfo.accountNo} is number.">
+					validatorMessage="#{lbl['lbl.sm.bankaccnumber']} is number.">
 					<f:validateRegex pattern="^\d*$" />
 				</p:inputText>
 				<p:message id="bankAccNoIdMsg" for="bankAccNoId" display="icon" />
