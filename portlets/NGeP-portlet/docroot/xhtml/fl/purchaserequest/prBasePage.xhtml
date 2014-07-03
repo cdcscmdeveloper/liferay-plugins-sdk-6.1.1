@@ -52,8 +52,7 @@
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
 				<td width="20%" valign="top" class="sidemenutd">
-					<p:tabMenu styleClass="sidemenu" style="display : table-caption;"
-						activeIndex="#{purchaseRequestBackingBean.managedBean.selectedTabIndex}" >
+					<p:tabMenu styleClass="sidemenu" activeIndex="#{purchaseRequestBackingBean.managedBean.selectedTabIndex}" >
 						<p:menuitem value="General"	update="@form">
 							<f:setPropertyActionListener target="#{purchaseRequestBackingBean.managedBean.selectedTabIndex}" value="0" />
 						</p:menuitem>
