@@ -18,7 +18,7 @@
 					'#{flOrderBB.getPortletTitle()}');
 		</script>
 		<f:event listener="#{flOrderBB.preRenderViewPR}" type="preRenderView" />
-		<p:messages id="messages" showDetail="true" autoUpdate="true"
+		<p:messages id="messages" showDetail="true" autoUpdate="true" showSummary="false"
 			closable="true" severity="error, info" />
 		<table style="width: 100%;">
 			<tr>
@@ -31,7 +31,14 @@
 							icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
 							action="#{flOrderBB.fulfillmentOrderAction(bpmAction)}"
 							process="@this" />
-					</ui:repeat></td>
+					</ui:repeat>
+					<c:if test='#{flOrderBB.managedBean.buttonVal eq "Stop Fulfilment"}'>
+						<p:commandButton value="STOP FULFILMENT" icon="ui-icon-terminate" 
+							action="#{flOrderBB.fulfillmentOrderAction('STOP FULFILMENT')}">
+							<f:param name="actionName" value="STOP" />
+						</p:commandButton>
+					</c:if>					
+				</td>
 			</tr>
 		</table>
 		<table style="width: 100%;">
@@ -48,13 +55,6 @@
 							value="CANCEL"
 							action="#{flOrderBB.fulfillmentOrderAction('CANCEL')}">
 							<f:param name="actionName" value="CANCEL" />
-						</p:commandButton></td>
-				</c:if>
-				<c:if test='#{flOrderBB.managedBean.buttonVal eq "Stop Fulfilment"}'>
-					<td colspan="4" style="text-align: right"><p:commandButton
-							value="STOP FULFILMENT"
-							action="#{flOrderBB.fulfillmentOrderAction('STOP FULFILMENT')}">
-							<f:param name="actionName" value="STOP" />
 						</p:commandButton></td>
 				</c:if>
 				<c:if test='#{flOrderBB.managedBean.buttonVal eq "Submit"}'>

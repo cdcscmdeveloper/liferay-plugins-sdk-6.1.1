@@ -92,7 +92,7 @@
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.factored']} " /></td>
-				<td><p:selectOneRadio
+				<td><p:selectOneRadio disabled="#{flOrderBB.managedBean.buttonVal!=null}" 
 						value="#{flOrderBB.managedBean.factoringCheck}">
 						<f:selectItem itemLabel="Yes" itemValue="true" />
 						<f:selectItem itemLabel="No" itemValue="false" />
@@ -264,7 +264,7 @@
 					<td style="width: 100px;"><p:outputLabel
 						value="Reason"/>
 					<p:outputLabel value="*" styleClass="mandatory"/></td>
-				<td><p:selectOneMenu id="reasonId" label="Reason" required="true"
+				<td style="width: 295px;"><p:selectOneMenu id="reasonId" label="Reason" required="true"
 						style="width:288px;margin-bottom: 5px;"
 						value="#{flOrderBB.managedBean.stopIns.pmReason.reasonCode}">
 						<f:selectItem itemLabel="-Select One-" itemValue="#{null}" />
@@ -272,9 +272,10 @@
 							itemLabel="#{reason.reasonDesc}"
 							itemValue="#{reason.pmReason.reasonCode}"/>
 						<p:ajax event="change" update="otherId"/>
-					</p:selectOneMenu> <p:message for="reasonId" display="icon" />
+					</p:selectOneMenu> 
 					</td>
-					<td style="width: 117px;"><p:outputLabel
+					<td><p:message for="reasonId" display="icon" /></td>
+					<td style="width: 257px;"><p:outputLabel
 							value="Submission Date" /></td>
 					<td><p:inputText value="#{flOrderBB.managedBean.stopIns.createdDate}" disabled="true">
 						<f:convertDateTime

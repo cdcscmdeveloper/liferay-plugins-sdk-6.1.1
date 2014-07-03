@@ -152,16 +152,24 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			
 			if(resDTO.isSuccessful()) {
 				String messageId = MessageConst.INFO_700011;
+				String documentType = ParameterConst.DOCTYPE_PURCHASE_REQUEST;
+				String docNo = getManagedBean().getFulfilmentOrder().getDocNo();
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 					messageId = MessageConst.INFO_700008;
+				} else if(action.equalsIgnoreCase(FulfilmentConst.STOP_FULFILMENT)) {
+					documentType = ParameterConst.DOCTYPE_STOP_DELIVERY;
+					docNo = resDTO.getFlStopInstr().getStopInstrNo();
+					if(reqDTO.isApprover()) {
+						messageId = MessageConst.INFO_700026;
+					} else {
+						messageId = MessageConst.INFO_700005;
+					}
 				}
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
-						FacesMessage.SEVERITY_INFO, 
-						null,
+						FacesMessage.SEVERITY_INFO, null,
 						MessageUtils.getMessage(messageId, 
-								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_REQUEST), getManagedBean().getFulfilmentOrder().getDocNo()}, 
-								MessageUtils.BUNDLE_COMMON_MESSAGES, 
-								new FacesScopes().getUserLocale())));
+								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, documentType), docNo}, 
+								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 			}
 			if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
 				renewSesionObject();
