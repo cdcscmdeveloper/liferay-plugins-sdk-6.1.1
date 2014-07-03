@@ -5,73 +5,64 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	<p:panel id="itemId" header="#{lbl['lbl.ct.susp.panel.item.name']}"
-		toggleable="true" toggleSpeed="500">
-		<p:dataTable id="itemTable" var="data" value="#{suspensionBackingBean.managedBean.contractVer.ctContractItems}"
+	<p:panel id="itemId" toggleable="true" 
+	   toggleSpeed="500" header="#{lbl['lbl.ct.susp.panel.item.name']}" >
+		<p:dataTable id="itemTable" var="data" 
+		    value="#{suspensionBackingBean.managedBean.contractVer.ctContractItems}"
 			widgetVar="ctItemsTable" filteredValue="#{suspensionBackingBean.managedBean.ctItemFilter}">
 			<ac:paginator for="itemTable" />
 			<p:column style="width:20%;" headerText="#{lbl['lbl.ct.susp.tbl.item.type']}">
-				<p:outputLabel value="#{suspensionBackingBean.getParameterDesc(data.itemType)}" style="float:left;" />
+				<p:outputLabel style="float:left;" 
+				   value="#{suspensionBackingBean.getParameterDesc(data.itemType)}" />
 			</p:column>
-			<p:column id="modelColumn" filterBy="#{data.itemName}" headerText="#{lbl['lbl.ct.susp.tbl.item.name']}"
-				filterMatchMode="contains" style="width:40%;"> <p:outputLabel value="#{data.itemName}" style="float:left;width:55%;" />
+			<p:column id="modelColumn" filterBy="#{data.itemName}" style="width:40%;"
+			    headerText="#{lbl['lbl.ct.susp.tbl.item.name']}" filterMatchMode="contains"> 
+			    <p:outputLabel value="#{data.itemName}" style="float:left;width:55%;"/>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.ct.susp.tbl.item.efdate']}" style="width:15%;">
 			   <h:panelGroup rendered="#{data.recordStatus}">
-			      <p:calendar value="#{data.effDate}" size="15" id="effDateActive" showOn="button"
-			           disabled="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
-			    </h:panelGroup>
-			    <h:panelGroup id="effDateItemId" rendered="#{!data.recordStatus}">
-			      <p:calendar value="#{data.effDate}" size="15" id="effDateInActive" showOn="button" readonlyInput="true"
-			           disabled="false" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
-			           <p:ajax event="dateSelect" update="itemTable" process="@this" listener="#{suspensionBackingBean.validateItemDate(data)}"/> 
+			      <p:calendar id="effDateActive" value="#{data.effDate}" readonlyInput="true" 
+			        size="15" showOn="button" disabled="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
+			   </h:panelGroup>
+			   <h:panelGroup id="effDateItemId" rendered="#{!data.recordStatus}">
+			      <p:calendar value="#{data.effDate}" size="15" id="effDateInActive" showOn="button" 
+			        readonlyInput="true" disabled="false" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
+			        <p:ajax event="dateSelect" update="itemTable" 
+			          process="@this" listener="#{suspensionBackingBean.validateItemDate(data)}"/> 
 			      </p:calendar>
-			       <p:spacer width="5"/>
-                    <p:commandLink id="curDateId" process="@this" onclick="dlgItemDateValidation.show(); return false;" 
-		               styleClass="column-align-center" rendered="#{data.dateLessThanCurDate}">
-		               <p:graphicImage library="ep/images/design" name="exclamation.png" style="margin-bottom: -5px;" 
-			             value="/resources/ep/images/design/exclamation.png" styleClass="ui-icon-complain"></p:graphicImage>
-		           </p:commandLink>
+			      <p:spacer width="5"/>
+                  <p:graphicImage id="curDateId" style="margin-bottom: -5px;" 
+                     rendered="#{data.dateLessThanCurDate}" library="ep/images/design" 
+                     name="reject.png" value="/resources/ep/images/design/reject.png" styleClass="ui-icon-reject"/>
+                  <p:tooltip for="curDateId" showEffect="fade" value="#{lbl['lbl.ct.sus.curdate.validation']}"/> 
 			    </h:panelGroup>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.ct.susp.tbl.item.expdate']}" style="width:15%;">
-			  <h:panelGroup rendered="#{data.recordStatus}">
-			      <p:calendar value="#{data.expDate}" size="15" id="expDateActive" showOn="button"
-			           disabled="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
+			   <h:panelGroup rendered="#{data.recordStatus}">
+			      <p:calendar id="expDateActive" value="#{data.expDate}" size="15" 
+			         showOn="button" disabled="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
 			    </h:panelGroup>
 			    <h:panelGroup id="expDateItemId" rendered="#{!data.recordStatus}">
-			      <p:calendar value="#{data.expDate}" size="15" id="expDateInActive" showOn="button" readonlyInput="true"
-			         disabled="false" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
-                    <p:ajax event="dateSelect" update="itemTable" process="@this" listener="#{suspensionBackingBean.validateItemDate(data)}"/> 
+			      <p:calendar value="#{data.expDate}" size="15" id="expDateInActive" disabled="false" 
+			        showOn="button" readonlyInput="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
+                    <p:ajax event="dateSelect" update="itemTable"
+                      process="@this" listener="#{suspensionBackingBean.validateItemDate(data)}"/> 
 			      </p:calendar>
 			      <p:spacer width="5"/>
-                    <p:commandLink id="validateAction" process="@this" onclick="dlgItemDateValidation.show(); return false;" 
-		               styleClass="column-align-center" rendered="#{data.validateScheduleDate}">
-		               <p:graphicImage library="ep/images/design" name="exclamation.png" style="margin-bottom: -5px;" 
-			             value="/resources/ep/images/design/exclamation.png" styleClass="ui-icon-complain"></p:graphicImage>
-		           </p:commandLink>
-			    </h:panelGroup>
+                  <p:graphicImage id="validateAction" library="ep/images/design" 
+                     name="reject.png" style="margin-bottom: -5px;" styleClass="ui-icon-reject"  
+			         value="/resources/ep/images/design/reject.png" rendered="#{data.validateScheduleDate}"/>
+			      <p:tooltip for="validateAction" showEffect="fade" value="#{lbl['lbl.ct.sus.expdate.validation']}"/> 
+			   </h:panelGroup>
 			</p:column>
 			<p:column style="width:10%;" headerText="Status">
-				<p:selectOneMenu value="#{data.recordStatusFlg}"
-				   footerText="equals" filterMatchMode="equals" style="width:85px;">
-				    <f:selectItems value="#{suspensionBackingBean.getItemStatusDropdown()}"/>
-					<p:ajax event="change" process="@form" update=":form:itemId" 
-					  listener="#{suspensionBackingBean.setSuspensionStatusValue(data)}" />
-				</p:selectOneMenu>
+			  <p:selectOneMenu value="#{data.recordStatusFlg}"
+				 footerText="equals" filterMatchMode="equals" style="width:85px;">
+				 <f:selectItems value="#{suspensionBackingBean.getItemStatusDropdown()}"/>
+				 <p:ajax event="change" process="@form" update=":form:itemId" 
+				   listener="#{suspensionBackingBean.setSuspensionStatusValue(data)}" />
+			  </p:selectOneMenu>
 			</p:column>
 		</p:dataTable>
-		<p:dialog id="dlgItemDateValidation" widgetVar="dlgItemDateValidation" header="Error List" styleClass="screen-title"  
-            resizable="false" modal="true" width="350" height="95">  
-             <h:panelGrid columns="3">
-                <p:graphicImage library="ep/images/design" name="exclamation.png"
-			      value="/resources/ep/images/design/exclamation.png" styleClass="ui-icon-complain"></p:graphicImage>
-			    <p:spacer width="10"/>
-                <p:inputTextarea value="Please enter correct effective and expiry date?"  rows="2" cols="48" styleClass="ui-inputtextarea"></p:inputTextarea>
-            </h:panelGrid>
-            <div class="ppRightBtn">
-		      <p:commandButton value="Ok" icon="ui-icon-ok" onclick="dlgItemDateValidation.hide();" type="button" />
-		   </div>
-         </p:dialog>    	
 	</p:panel>
 </ui:composition>

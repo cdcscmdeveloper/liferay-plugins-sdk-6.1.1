@@ -7,70 +7,56 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
 	<p:panel id="agencyDetailsId" header="#{lbl['lbl.ct.susp.panel.agency.name']}"  toggleable="true"  toggleSpeed="500">
-      <p:dataTable id="agencyDetailsTable" var="data"  
-        value="#{suspensionBackingBean.managedBean.contractVer.ctAgencies}" lazy="false">
-		 <ac:paginator for="agencyDetailsTable"/>
-		   <p:column headerText="Ministry" style="width:20%;">
-				<h:outputText value="#{data.orgProfile.parentOrgProfile.orgName}"/>
-			 </p:column>
-			 <p:column headerText="PTJ" style="width:40%;">
-				<h:outputText  value="#{data.orgProfile.orgName}"/>
-			 </p:column>
-			 <p:column headerText="#{lbl['lbl.ct.susp.tbl.agency.efdate']}" style="width:15%;">
-			    <h:panelGroup rendered="#{data.recordStatusFlg == 1}">
-			      <p:calendar value="#{data.effDate}" size="15" id="effDateActive" showOn="button"
-			           disabled="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
-			    </h:panelGroup>
-			    <h:panelGroup id="effDateId" rendered="#{data.recordStatusFlg == 0}">
-			      <p:calendar value="#{data.effDate}" size="15" id="effDateInActive" showOn="button" readonlyInput="true"
-			           disabled="false" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
-			           <p:ajax event="dateSelect" update="agencyDetailsTable" process="@this" listener="#{suspensionBackingBean.validateAgencyDate(data)}"/> 
-			      </p:calendar>
-			       <p:commandLink id="curDateIdAgency" process="@this" onclick="dlgItemDateValidation.show(); return false;" 
-		               styleClass="column-align-center" rendered="#{data.dateLessThanCurDate}">
-		               <p:graphicImage library="ep/images/design" name="exclamation.png" style="margin-bottom: -5px;" 
-			             value="/resources/ep/images/design/exclamation.png" styleClass="ui-icon-complain"></p:graphicImage>
-		           </p:commandLink>
-			    </h:panelGroup>
-			 </p:column> 	
-			 <p:column headerText="#{lbl['lbl.ct.susp.tbl.agency.expdate']}" style="width:15%;">
-			    <h:panelGroup rendered="#{data.recordStatusFlg == 1}">
-			      <p:calendar value="#{data.expDate}" size="15" id="expDateActive" showOn="button"
-			           disabled="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
-			    </h:panelGroup>
-			    <h:panelGroup id="expDateId" rendered="#{data.recordStatusFlg == 0}">
-			      <p:calendar value="#{data.expDate}" size="15" id="expDateInActive" showOn="button" readonlyInput="true"
-			         disabled="false" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
-                    <p:ajax event="dateSelect" update="agencyDetailsTable" process="@this" listener="#{suspensionBackingBean.validateAgencyDate(data)}"/> 
-			      </p:calendar>
-			      <p:spacer width="5"/>
-                    <p:commandLink id="validateActions" process="@this" onclick="dlgDateValidation.show(); return false;" 
-		               styleClass="column-align-center" rendered="#{data.validateScheduleDate}">
-		               <p:graphicImage library="ep/images/design" name="exclamation.png" style="margin-bottom: -5px;" 
-			             value="/resources/ep/images/design/exclamation.png" styleClass="ui-icon-complain"></p:graphicImage>
-		           </p:commandLink>
-			    </h:panelGroup>
-			 </p:column> 	
-			 <p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%;">
+      <p:dataTable id="agencyDetailsTable" var="data" lazy="false"
+        value="#{suspensionBackingBean.managedBean.contractVer.ctAgencies}">
+		<ac:paginator for="agencyDetailsTable"/>
+		<p:column headerText="Ministry" style="width:20%;">
+		  <h:outputText value="#{data.orgProfile.parentOrgProfile.orgName}"/>
+	    </p:column>
+	    <p:column headerText="PTJ" style="width:40%;">
+			<h:outputText  value="#{data.orgProfile.orgName}"/>
+		</p:column>
+		<p:column headerText="#{lbl['lbl.ct.susp.tbl.agency.efdate']}" style="width:15%;">
+		   <h:panelGroup rendered="#{data.recordStatusFlg == 1}">
+			  <p:calendar id="effDateActive" value="#{data.effDate}" size="15" 
+			    showOn="button" disabled="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
+		   </h:panelGroup>
+		   <h:panelGroup id="effDateId" rendered="#{data.recordStatusFlg == 0}">
+			 <p:calendar id="effDateInActive"  value="#{data.effDate}" size="15" showOn="button" 
+			    readonlyInput="true" disabled="false" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
+			    <p:ajax event="dateSelect" update="agencyDetailsTable" process="@this" listener="#{suspensionBackingBean.validateAgencyDate(data)}"/> 
+			 </p:calendar>
+			 <p:graphicImage id="curDateIdAgency" library="ep/images/design" 
+			    style="margin-bottom: -5px;" value="/resources/ep/images/design/reject.png"
+			    name="reject.png"  styleClass="ui-icon-reject" rendered="#{data.dateLessThanCurDate}"></p:graphicImage>
+		       <p:tooltip for="curDateIdAgency" showEffect="fade" value="#{lbl['lbl.ct.sus.curdate.validation']}"/>
+		    </h:panelGroup>
+		 </p:column> 	
+	     <p:column headerText="#{lbl['lbl.ct.susp.tbl.agency.expdate']}" style="width:15%;">
+			<h:panelGroup rendered="#{data.recordStatusFlg == 1}">
+			   <p:calendar  id="expDateActive" value="#{data.expDate}" size="15" 
+			      showOn="button" disabled="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
+			</h:panelGroup>
+			<h:panelGroup id="expDateId" rendered="#{data.recordStatusFlg == 0}">
+			   <p:calendar id="expDateInActive" value="#{data.expDate}" size="15" showOn="button" 
+			      readonlyInput="true" disabled="false" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
+                  <p:ajax event="dateSelect" update="agencyDetailsTable" 
+                    process="@this" listener="#{suspensionBackingBean.validateAgencyDate(data)}"/> 
+			   </p:calendar>
+			   <p:spacer width="5"/>
+               <p:graphicImage id="validateAgnActions" library="ep/images/design" 
+                 name="reject.png" style="margin-bottom: -5px;" styleClass="ui-icon-reject" 
+                  value="/resources/ep/images/design/reject.png" rendered="#{data.validateScheduleDate}"/>
+                <p:tooltip for="validateAgnActions" showEffect="fade" value="#{lbl['lbl.ct.sus.expdate.validation']}"/> 
+		    </h:panelGroup>
+	     </p:column> 	
+		 <p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%;">
 			  <p:selectOneMenu value="#{data.recordStatusFlg}" style="width:85px;">
 			    <f:selectItem itemValue="0" itemLabel="Inactive" />
 				<f:selectItem itemValue="1" itemLabel="Active" />
 				<p:ajax event="change" process="@form" update=":form:agencyDetailsId" />
 			   </p:selectOneMenu>	
-			 </p:column> 			
+	     </p:column> 			
 	   </p:dataTable>
-	   
-	    <p:dialog id="dlgDateValidation" widgetVar="dlgDateValidation" header="Error List" styleClass="screen-title"  
-            resizable="false" modal="true" width="350" height="95">  
-             <h:panelGrid columns="3">
-                <p:graphicImage library="ep/images/design" name="exclamation.png"
-			      value="/resources/ep/images/design/exclamation.png" styleClass="ui-icon-complain"></p:graphicImage>
-			    <p:spacer width="10"/>
-                <p:inputTextarea value="Please enter correct effective and expiry date?"  rows="2" cols="48" styleClass="ui-inputtextarea"></p:inputTextarea>
-            </h:panelGrid>
-            <div class="ppRightBtn">
-		      <p:commandButton value="#{lbl['lbl.btn.ok']}" icon="ui-icon-ok" onclick="dlgDateValidation.hide();" type="button" />
-		   </div>
-         </p:dialog>    	
       </p:panel>                
 </ui:composition>
