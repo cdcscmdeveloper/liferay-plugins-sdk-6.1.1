@@ -21,49 +21,49 @@
 			header="#{lbl[noticeBoardBackingBean.managedBean.scQt.procurementMode == ParameterConst.procurementModeQuotation ? 'lbl.sc.notice.board.quotation.details' : 'lbl.sc.notice.board.tender.details']}" toggleable="true">
 			
 			<h:panelGrid columns="2" columnClasses="columnWidth20,columnWidth30">
-				<h:outputLabel value="#{lbl['lbl.qt.nb.title']}"></h:outputLabel>
+				<h:outputText value="#{lbl['lbl.qt.nb.title']}"></h:outputText>
 				<h:outputText
 					value="#{noticeBoardBackingBean.managedBean.scQt.qtTitle}"></h:outputText>
-				<h:outputLabel value="#{lbl['lbl.so.qtnno']}"></h:outputLabel>
+				<h:outputText value="#{lbl['lbl.so.qtnno']}"></h:outputText>
 				<h:outputText
 					value="#{noticeBoardBackingBean.managedBean.scQt.qtNo}"></h:outputText>
-				<h:outputLabel value="#{lbl['lbl.sc.notice.board.ministry']}"></h:outputLabel>
+				<h:outputText value="#{lbl['lbl.sc.notice.board.ministry']}"></h:outputText>
 				<h:outputText
 					value="#{noticeBoardBackingBean.managedBean.scQt.pmOrgProfile.parentOrgProfile.parentOrgProfile.orgTypeCode.parameterCode}"></h:outputText>
-				<h:outputLabel value="#{lbl['lbl.sc.notice.board.jabatan']}"></h:outputLabel>
+				<h:outputText value="#{lbl['lbl.sc.notice.board.jabatan']}"></h:outputText>
 				<h:outputText
 					value="#{noticeBoardBackingBean.managedBean.scQt.pmOrgProfile.parentOrgProfile.orgTypeCode.parameterCode}"></h:outputText>
-				<h:outputLabel value="#{lbl['lbl.sc.notice.board.ptj']}"></h:outputLabel>
+				<h:outputText value="#{lbl['lbl.sc.notice.board.ptj']}"></h:outputText>
 				<h:outputText
 					value="#{noticeBoardBackingBean.managedBean.scQt.pmOrgProfile.orgTypeCode.parameterCode}"></h:outputText>
-				<h:outputLabel value="#{lbl['lbl.sc.notice.board.npdate']}"></h:outputLabel>
+				<h:outputText value="#{lbl['lbl.sc.notice.board.npdate']}"></h:outputText>
 				<h:outputText
 					value="#{noticeBoardBackingBean.managedBean.scQt.publishDate}">
 					<f:convertDateTime pattern="dd/MM/yyyy" />
 				</h:outputText>
-				<h:outputLabel value="#{lbl['lbl.sc.notice.board.publish.period']}"></h:outputLabel>
+				<h:outputText value="#{lbl['lbl.sc.notice.board.publish.period']}"></h:outputText>
 				<h:outputText
 					value="#{noticeBoardBackingBean.managedBean.scQt.publishPeriod}"></h:outputText>
-				<h:outputLabel value="#{lbl['lbl.sc.notice.board.clsdate']}"></h:outputLabel>
+				<h:outputText value="#{lbl['lbl.sc.notice.board.clsdate']}"></h:outputText>
 				<h:outputText
 					value="#{noticeBoardBackingBean.managedBean.scQt.closingDate}">
 					<f:convertDateTime pattern="dd/MM/yyyy" />
 				</h:outputText>
-				<h:outputLabel value="#{lbl['lbl.qt.nb.proposalValidity']}"></h:outputLabel>
+				<h:outputText value="#{lbl['lbl.qt.nb.proposalValidity']}"></h:outputText>
 				<h:outputText
 					value="#{noticeBoardBackingBean.managedBean.scQt.qtValidityPeriod}"></h:outputText>
-				<h:outputLabel value="#{lbl['lbl.qt.nb.proposalValidityUntil']}"></h:outputLabel>
+				<h:outputText value="#{lbl['lbl.qt.nb.proposalValidityUntil']}"></h:outputText>
 				<h:outputText></h:outputText>
-				<h:outputLabel value="#{lbl['lbl.sc.spec.evaluation.type']}"></h:outputLabel>
+				<h:outputText value="#{lbl['lbl.sc.spec.evaluation.type']}"></h:outputText>
 				
 			</h:panelGrid>
 		</p:panel>
 		<p:panel header="#{lbl['lbl.qt.supplierqulificationcriteria']}">
 			<h:panelGrid columns="2" columnClasses="columnWidth20,columnWidth30">
-				<h:outputLabel value="#{lbl['lbl.qt.nb.supplierStatus']}"></h:outputLabel>
+				<h:outputText value="#{lbl['lbl.qt.nb.supplierStatus']}"></h:outputText>
 				<h:outputText
 					value="#{noticeBoardBackingBean.managedBean.scQt.zonal}"></h:outputText>
-				<h:outputLabel value="#{lbl['lbl.qt.nb.minPaidUpCaptial']}"></h:outputLabel>
+				<h:outputText value="#{lbl['lbl.qt.nb.minPaidUpCaptial']}"></h:outputText>
 				<h:outputText
 					value="#{noticeBoardBackingBean.managedBean.scQt.scQtSupplierCriteria.minPaidUpCapital}"></h:outputText>
 			</h:panelGrid>
