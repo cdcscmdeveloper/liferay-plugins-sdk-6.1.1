@@ -41,6 +41,7 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
+import my.ep.exception.EpException;
 import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
 import my.ep.jaxb.sc.sitevisitproposaldata.SCSiteVisitProposalDataType;
 import my.ep.persistence.entity.BaseEntity;
@@ -48,6 +49,7 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sc.quationtender.ScAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScRemark;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.type.pm.OrganizationType;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
@@ -121,10 +123,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		String fileName = file.getFileName();
 		byte[] fileBytes = file.getContents();
 		Timestamp date = new Timestamp(System.currentTimeMillis());
-
-		attachment.setCreatedBy(1L);
+		PmUser createdUser = new FacesScopes().getUserSessionBean();
+		
+		attachment.setCreatedBy(createdUser.getUserId());
 		attachment.setCreatedDate(date);
-		attachment.setChangedBy(1L);
+		attachment.setChangedBy(createdUser.getUserId());
+		attachment.setCreatedUser(createdUser);
 
 		attachment.setFileName(fileName);
 		attachment.setFileDesc("File uploded");
@@ -156,12 +160,44 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 	}
 	
-	protected <ATTACHMENT extends ScAttachment>  File downloadFile(ATTACHMENT scAttachment) throws IOException {
+	/**
+	 * determineIcon for displaying image icon
+	 */
+	public <ATTACHMENT extends ScAttachment> String determineIcon(ATTACHMENT attachment) {
+		String imageFileName = "icon_file_default.png";
+		String ext = "";
+
+		if (attachment != null) {
+			String fileName = attachment.getFileName();
+
+			if (fileName != null) {
+				int mid = fileName.lastIndexOf(".");
+				ext = fileName.substring(mid + 1, fileName.length());
+			}
+
+			if ("doc".equals(ext) || "docx".equals(ext)) {
+				imageFileName = "icon_doc.png";
+			} else if ("pdf".equals(ext)) {
+				imageFileName = "icon_pdf.png";
+			} else if ("xls".equals(ext) || "xlsx".equals(ext)
+					|| "csv".equals(ext)) {
+				imageFileName = "icon_exel.png";
+			} else if ("jpg".equals(ext) || "bmp".equals(ext)
+					|| "png".equals(ext) || "gif".equals(ext)) {
+				imageFileName = "icon_image.png";
+			} else if ("txt".equals(ext)) {
+				imageFileName = "icon_txt.png";
+			}
+		}
+		return imageFileName;
+	}
+	
+	public <ATTACHMENT extends ScAttachment> File downloadFile(ATTACHMENT scAttachment) throws IOException {
 		if (scAttachment != null && StringUtils.isNotBlank(scAttachment.getFileName())) {
 			return downloadFile(scAttachment.getFilePath(), scAttachment.getFileName());	
+		} else {
+			throw new EpException("Attachment not found.");
 		}
-		
-		return null;
 	}
 	
 	public File downloadFile(String filePath, String fileName) throws IOException {
@@ -207,7 +243,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		
 		for (ScAttachment scAttachment : scAttachments) {
 			if (null != scAttachment && StringUtils.isNotBlank(scAttachment.getFilePath())) {
-				files.add(new File(scAttachment.getFilePath(), scAttachment.getFileName()));
+				files.add(new File(scAttachment.getFilePath()));
 			}
 		}
 
@@ -461,5 +497,45 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 		
 		return address.toString();
+	}
+	
+	protected <PARENT_ENTITY extends BaseEntity, REMARK_CLASS extends ScRemark> List<REMARK_CLASS> initializeRemarks(
+			PARENT_ENTITY parent, List<REMARK_CLASS> scRemarks, Class<REMARK_CLASS> clazz) {
+		
+		try {
+			if (scRemarks == null) {
+				scRemarks = new ArrayList<REMARK_CLASS>();
+			}
+			
+			FacesScopes facesScopes = new FacesScopes();
+			if (scRemarks.size() == 0 || !compareUserName(scRemarks.get(0).getCreatedUser().getLoginId())) {
+				REMARK_CLASS remark = clazz.newInstance();
+				remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+				remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+				remark.setChangedBy(remark.getCreatedBy());
+				remark.setCreatedUser(facesScopes.getUserSessionBean());
+				remark.setParent(parent);
+				
+				scRemarks.add(0, remark);
+			}
+			
+			return scRemarks;	
+		} catch (InstantiationException ie) {
+			throw new EpException(ie.getMessage());
+		} catch (IllegalAccessException ia) {
+			throw new EpException(ia.getMessage());
+		}
+	}
+	
+	protected <REMARK_CLASS extends ScRemark> List<REMARK_CLASS> finalizeRemarks(List<REMARK_CLASS> scRemarks) {
+		if (scRemarks != null && scRemarks.size() > 0) {
+			ScRemark scRemark = scRemarks.get(0);
+			
+			if (StringUtils.isBlank(scRemark.getRemark())) {
+				scRemarks.remove(0);
+			}
+		}
+		
+		return scRemarks;
 	}
 }
