@@ -48,12 +48,12 @@ public class DateRangeValidator implements Validator {
 						.convertStringToDate(CommonConstants.DEFAULT_DATE_FORMAT, sdate);
 				Date endDate = DateUtils.convertStringToDate(CommonConstants.DEFAULT_DATE_FORMAT, edate);
 				
-				if (currentDate.after(startDate)) {
+				/*if (currentDate.after(startDate)) {
 					FacesContext.getCurrentInstance().addMessage(
 							null,
 							new FacesMessage(FacesMessage.SEVERITY_ERROR,
 									"start date must be after current date.", ""));
-				}
+				}*/
 			
 				if (endDate.before(startDate)) {
 					FacesContext.getCurrentInstance().addMessage(
