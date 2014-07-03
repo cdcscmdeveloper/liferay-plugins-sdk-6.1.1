@@ -165,6 +165,9 @@ public class BPMTaskListBackingBean extends
 		String viewBy = "";
 //		this.getManagedBean().setViewBy("ALL");
 //		this.getManagedBean().setAssignment("ALL");
+		FacesScopes facesScope = new FacesScopes();
+		
+      	System.out.println("............facesScope.getRequestScope(docTypeId)="+facesScope.getRequestScope("docTypeId"));
 		try{
 //			 retrieveWorklistItems("ASSIGNED",this.getManagedBean().getViewBy(), this.getManagedBean().getAssignment());
 		
@@ -292,7 +295,8 @@ public class BPMTaskListBackingBean extends
 	public void filterViewbyNAssignment() {
 		System.out.println(">>>>>>>>>>>>>>>filterViewbyNAssignment<<<<<<<<<<<<<<<<<");
 		System.out.println("this.getManagedBean().getViewBy()"+this.getManagedBean().getViewBy());
-		System.out.println("this.getManagedBean().getViewBy()"+this.getManagedBean().getAssignment());
+		System.out.println("this.getManagedBean().getAssignment()"+this.getManagedBean().getAssignment());
+		System.out.println("this.getManagedBean().getDocType()="+this.getManagedBean().getDocType());
 //		retrieveWorklistItems("ASSIGNED",this.getManagedBean().getViewBy(), this.getManagedBean().getAssignment());
 //		this.getManagedBean().getTaskListDataModel().setPageNo(1);
 	
@@ -349,20 +353,20 @@ public class BPMTaskListBackingBean extends
 	}
    
  
-	public String goToMyTasks(int showIndex){
+	public String goToMyTasks(){
 		System.out.println(">>>>>>>>>>goToMyTasks<<<<<<<<<<");
-		System.out.println(">>>>>showIndex = "+showIndex);
-		this.getManagedBean().setShowIndex(showIndex);
+//		System.out.println(">>>>>showIndex = "+showIndex);
+//		this.getManagedBean().setShowIndex(showIndex);
 		
-		if(showIndex == 0){
+//		if(showIndex == 0){
 		//set filters to default for MyTasks
 		this.getManagedBean().setViewBy("ALL");
 		this.getManagedBean().setAssignment("ALL");
-		}
-		if(showIndex == 2){
-			
-			this.getManagedBean().setFlFulfilmentOrderList(retrievePendingDeliverylist());
-		}
+//		}
+//		if(showIndex == 2){
+//			
+//			this.getManagedBean().setFlFulfilmentOrderList(retrievePendingDeliverylist());
+//		}
 
 	
 		return "taskListview";

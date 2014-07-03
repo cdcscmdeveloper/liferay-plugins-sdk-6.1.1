@@ -4984,7 +4984,6 @@ table.rptTbl {
   width: 900px;
   margin-top: 15px;
   margin-bottom: 15px;
-  padding-right: 50px;
 }
 
 .row_separator_dotted_line{
@@ -5014,6 +5013,3 @@ table.rptTbl {
     margin-bottom: 15px;
 }
 
-.ui-messages-info {
-	height : auto;
-}
