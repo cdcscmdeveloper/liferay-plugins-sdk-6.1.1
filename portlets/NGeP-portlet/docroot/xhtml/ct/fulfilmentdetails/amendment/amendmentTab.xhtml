@@ -36,8 +36,7 @@
 		  <tr>
 			<td width="20%" valign="top" class="sidemenutd">
 				<p:tabMenu  styleClass="sidemenu"
-					activeIndex="#{amendmentBackingBean.managedBean.selectedTabIndex}"
-					style="display : table-caption;">
+					activeIndex="#{amendmentBackingBean.managedBean.selectedTabIndex}">
 					  <p:menuitem value="#{lbl['lbl.ct.menu.fd']}" update=":form" action="#{amendmentBackingBean.setSelectedTabValue(0)}"
 					           rendered="#{amendmentBackingBean.managedBean.ackFA == null}"/>
 					     
