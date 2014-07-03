@@ -143,6 +143,20 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes;
 	}
+	
+	public void preRenderChangeBankAccount() {
+		renewSesionObject();
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, "changeBankAccount.xhtml?faces-redirect=true");
+	}
+	
+	public void preRenderRequestFactoring() {
+		renewSesionObject();
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, "requestOfFactoring.xhtml?faces-redirect=true");
+	}
     
 	public void preRenderView() {
 		IContractSupplierSO contractSupplierSO;
