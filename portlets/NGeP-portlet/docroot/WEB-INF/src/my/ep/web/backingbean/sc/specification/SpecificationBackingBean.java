@@ -5182,7 +5182,8 @@ public class SpecificationBackingBean extends
 				ScQtSchedule schedule = new ScQtSchedule();
 				schedule.setStartYear(String.valueOf(year));
 				schedule.setEndYear(String.valueOf(year));
-
+                 PmParameter parameter=new PmParameter();
+                 schedule.setScheduleType(parameter);
 				setUserDetails(schedule);
 				freqSchedule.add(schedule);
 			}
@@ -8244,7 +8245,7 @@ public class SpecificationBackingBean extends
 						+ schedule.getEndYear();
 				// System.out.println("======display schedule No==="+schedule.getScheduleNo());
 				schedule.setScheduleNo(schedule.getScheduleNo());
-				schedule.setScheduleType(1);
+				
 				try {
 					schedule.setFromDate(df.parse(fromdate));
 					schedule.setToDate(df.parse(toDate));
