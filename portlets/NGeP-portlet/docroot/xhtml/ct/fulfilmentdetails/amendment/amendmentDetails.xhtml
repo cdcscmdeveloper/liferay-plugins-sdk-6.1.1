@@ -86,18 +86,18 @@
 				</div>
 			</h:panelGroup>
 			<h:panelGrid columns="2">
-				<p:inputTextarea id="txtdesc" rows="5" cols="103" required="true" label="#{lbl['lbl.ct.amend.txt.desc']}"
+				<p:inputTextarea id="txtdesc" rows="5"  required="true" label="#{lbl['lbl.ct.amend.txt.desc']}"
 					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.description}"
-					style="margin-bottom: 5px;" />
+					style="width:530px;margin-bottom: 5px;" />
 				<p:message for="txtdesc" display="icon" />	
 			</h:panelGrid>
 		</h:panelGrid>
-		<h:panelGrid columns="6" style="width:75%" columnClasses="columnWidth20">
+		<h:panelGrid columns="6" style="width:100%" columnClasses="columnWidth15">
 			<h:outputLabel value="#{lbl['lbl.ct.amend.txt.ceperiod']}"
 				rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.contractExtend}" />
 			<h:panelGrid columns="3"
 				rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.contractExtend}">
-				<p:selectOneMenu id="ceperiod" style="width:20px;"
+				<p:selectOneMenu id="ceperiod" style="width:80px;"
 					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.extendPeriod}" >
 					<p:ajax event="change" update="extStartDate, extEndDate" listener="#{amendmentBackingBean.onExtensionPeriodChanged}" />
 					<f:selectItem itemLabel="3" itemValue="3" />
@@ -124,7 +124,7 @@
 			</p:inputText>
 			<h:panelGrid columns="2" rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or
 		          amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange or
-		          amendmentBackingBean.managedBean.contractVer.ctAmendment.valueChange}" >
+		          amendmentBackingBean.managedBean.contractVer.ctAmendment.valueChange}" style="float:right;" >
 				<p:outputLabel value="*" styleClass="mandatory" />
 				<p:outputLabel value="#{lbl['lbl.ct.amend.txt.avalue']}" />
 			</h:panelGrid>
@@ -144,7 +144,7 @@
 		          amendmentBackingBean.managedBean.contractVer.ctAmendment.valueChange}" />
 			<p:inputText id="addValue"
 				value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.contractAmount}"
-				styleClass="ppRightBtn" style="width:90px;" disabled="true"
+				styleClass="ppRightBtn" style="width:78px;" disabled="true"
 				rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or
 		          amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange or
 		          amendmentBackingBean.managedBean.contractVer.ctAmendment.valueChange}">
@@ -154,7 +154,7 @@
 		          amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange or
 		          amendmentBackingBean.managedBean.contractVer.ctAmendment.valueChange or 
 		          amendmentBackingBean.managedBean.contractVer.ctAmendment.clauseChange) and 
-		          !amendmentBackingBean.managedBean.contractVer.ctAmendment.contractExtend}" >
+		          !amendmentBackingBean.managedBean.contractVer.ctAmendment.contractExtend}"  style="float:right;">
 				<p:outputLabel value="*" styleClass="mandatory" />
 				<p:outputLabel value="#{lbl['lbl.ct.amend.txt.effdate']}" style="float:left;" />
 			</h:panelGrid>
@@ -163,9 +163,9 @@
 		          amendmentBackingBean.managedBean.contractVer.ctAmendment.valueChange or 
 		          amendmentBackingBean.managedBean.contractVer.ctAmendment.clauseChange) and 
 		          !amendmentBackingBean.managedBean.contractVer.ctAmendment.contractExtend}" >
-				<p:calendar size="10" style="float:left;" id="edateCal1" showOn="button" required="true" label="#{lbl['lbl.ct.amend.txt.effdate']}"
-					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
-					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentEffDate}" />
+				<p:calendar size="10" style="float:left;" id="edateCal1" showOn="button"  readonlyInput="true"
+				required="true" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
+				  label="#{lbl['lbl.ct.amend.txt.effdate']}" value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentEffDate}" />
 				<p:message for="edateCal1" display="icon" />	
 			</h:panelGrid>
 		</h:panelGrid>
@@ -179,9 +179,8 @@
 				</div>
 			</h:panelGroup>
 			<h:panelGrid id="contractHistory" columns="1">
-				<p:dataTable id="dataTableHistory" var="data" value="#{amendmentBackingBean.managedBean.amendHistoryList}"
-					lazy="false" widgetVar="dataTableObj" dynamic="true" paginator="true" paginatorPosition="bottom" 
-	                paginatorAlwaysVisible="false" emptyMessage="No Records!">
+				<p:dataTable id="dataTableHistory" var="data"  lazy="false" 
+				     dynamic="true" value="#{amendmentBackingBean.managedBean.amendHistoryList}">
 	                <ac:paginator for="dataTableHistory" />
 					<p:columnGroup type="header">
 						<p:row>

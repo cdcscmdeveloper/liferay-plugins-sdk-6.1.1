@@ -12,7 +12,7 @@
 				rowKey="#{data}" selectionMode="single"	selection="#{amendmentBackingBean.managedBean.selectedItem}"
 				lazy="true" widgetVar="ctItemsTable">
 				<ac:paginator for="itemTable" />
-				<p:ajax event="rowSelect" update="@([id$=changeField])" />
+				<p:ajax event="rowSelect" update=":form:changeField" />
 				<p:column headerText="#{lbl['lbl.ct.susp.tbl.item.name']}" style="width:45%;">
 					<p:outputLabel value="#{data.itemName}"	style="float:left;width:55%;" />
 				</p:column>
@@ -36,16 +36,18 @@
 					<p:inputText size="10" value="#{data.newMaxQuantity}" disabled="true" styleClass="ppRightBtn" >
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, data.uom.uomCode)}" />					
 					</p:inputText>
+					<p:spacer width="5"/>
 					<p:commandLink update=":form:dlgItemMaxQty,itemTable" oncomplete="dlgItemMaxQty.show();return false;">
 						<f:setPropertyActionListener value="#{data}" target="#{amendmentBackingBean.managedBean.selectedItem}" />
-						<p:graphicImage library="ep/images/design" name="edit.png" value="/resources/ep/images/design/edit.png" title="Edit" />
+						<p:graphicImage library="ep/images/design" name="edit.png" value="/resources/ep/images/design/edit.png" title="Edit" style="margin-bottom: -4px;"  />
 					</p:commandLink>
 				</p:column>
 			</p:dataTable>
-			<p:dialog id="dlgItemMaxQty" widgetVar="dlgItemMaxQty" header="Edit Maximum Quantity" styleClass="screen-title" resizable="false" modal="true" width="420" height="250">
+			<p:dialog id="dlgItemMaxQty" widgetVar="dlgItemMaxQty" header="Edit Maximum Quantity" styleClass="screen-title" resizable="false" modal="true" width="420" height="200">
 				<h:panelGrid columns="1">
 					<p:outputLabel value="Item Name : #{amendmentBackingBean.managedBean.selectedItem.itemName}" />
 				</h:panelGrid>
+				<p:spacer  height="5"/>
 				<p:dataTable id="ctItemMaxQtyTable" var="data" value="#{amendmentBackingBean.managedBean.selectedItem.ctItemMaxQties}"
 					rowKey="#{data}" lazy="true" widgetVar="ctItemMaxQtyTable">
 					<ac:paginator for="ctItemMaxQtyTable" />
@@ -80,6 +82,7 @@
 						</p:commandLink>
 					</p:column>					
 				</p:dataTable>
+				<p:spacer height="10"/>
 				<div class="ppRightBtn">
 					<p:commandButton value="OK" icon="ui-icon-accept" update="itemTable" process="@form"
 						action="#{amendmentBackingBean.setNewMaxQty()}" onclick="dlgItemMaxQty.hide();" />
@@ -144,10 +147,12 @@
 						<p:outputLabel value="#{data.toQty}" styleClass="ppRightBtn" />
 					</p:column>
 					<p:column headerText="Price (MYR)" style="width:10%;">
+					  <h:panelGroup style="float:right;" rendered="#{data.changePrice}">
 						<p:inputText value="#{data.unitPrice}" styleClass="ppRightBtn"
-							style="width:100px;" rendered="#{data.changePrice}">
+							style="width:100px;" >
 							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</p:inputText>
+						</h:panelGroup>
 						<h:outputText value="#{data.unitPrice}" style="float:right;"
 							rendered="#{!data.changePrice}">
 							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -261,7 +266,7 @@
 				value="#{amendmentBackingBean.getContractItemByType(ParameterConst.itemTypeService)}"
 				selection="#{amendmentBackingBean.managedBean.selectedItem}" >
 				<ac:paginator for="serviceTable" />
-				<p:ajax event="rowSelect" update="@([id$=showServicePrice])" />
+				<p:ajax event="rowSelect" update=":form:showServicePrice" />
 				<p:column headerText="Item Name">
 					<p:outputLabel value="#{data.itemName}" style="float:left;" />
 				</p:column>
