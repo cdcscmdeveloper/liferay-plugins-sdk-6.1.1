@@ -156,6 +156,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 				isFlFulfilmentApprover();
 				isFlFulfilmentRecevingOfficer();
 				isFlFulfilmentApprover();
+				isFlFulfilmentSupplier();
 				if(getManagedBean().getSearchOrderType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER) && isFlFulfilmentRequisitioner()) {
 					if(isFlFulfilmentRecevingOfficer()){
 						flDocTypes.add(ParameterConst.DOCTYPE_CONTRACT_REQUEST);
@@ -194,12 +195,11 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 						flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_ORDER);
 					}
 				}else if(getManagedBean().getSearchOrderType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER) && isFlFulfilmentSupplier()) {
+					flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_ORDER);
 					flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
 					flDocTypes.add(ParameterConst.DOCTYPE_INVOICE);
 				}else if(getManagedBean().getSearchOrderType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER) && isFlFulfilmentSupplier()) {
-					flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
-					flDocTypes.add(ParameterConst.DOCTYPE_INVOICE);
-				}else if(getManagedBean().getSearchOrderType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER) && isFlFulfilmentSupplier()) {
+					flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_ORDER);
 					flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
 					flDocTypes.add(ParameterConst.DOCTYPE_INVOICE);
 				}else if(getManagedBean().getSearchOrderType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER) && isFlFulfilmentRecevingOfficer()) {
@@ -568,7 +568,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 	}
 	public boolean isFlFulfilmentSupplier() {
 		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value());
+		return facesScopes.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value()) || facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value()) || facesScopes.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value()) || facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value());
 	}
 	public boolean isFlFulfilmentRecevingOfficer() {
 		FacesScopes facesScopes = new FacesScopes();
