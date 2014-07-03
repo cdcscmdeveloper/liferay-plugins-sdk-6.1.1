@@ -6,17 +6,21 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 
-	<p:dialog header="Location Details" widgetVar="popupLoc" modal="true"  dynamic="true" styleClass="locationdtls">
-		<p:panel toggleable="true" header="Location Details">
+	<p:dialog header="#{lbl['lbl.sc.spec.panel.location.details']}" widgetVar="popupLoc" modal="true"
+		dynamic="true" styleClass="locationdtls">
+
 		<h:panelGrid columns="2" style="width:100%;"
-				styleClass="noBorders tr,noBorders td" columnClasses="columnWidth20">
-				<h:outputLabel value="Location" />
-				<p:inputText value="#{noticeBoardBackingBean.managedBean.location}" readonly="true"/> 
-				
-				<h:outputLabel value="Address" />
-				<p:inputTextarea value="#{noticeBoardBackingBean.managedBean.address}" readonly="true" cols="50" rows="2"/> 
-			</h:panelGrid>			
-			
-		</p:panel>
+			styleClass="noBorders tr,noBorders td" columnClasses="columnWidth20">
+			<h:outputLabel value="Location" />
+			<p:inputText value="#{noticeBoardBackingBean.managedBean.location}"
+				readonly="true" />
+
+			<h:outputLabel value="Address" />
+			<p:inputTextarea
+				value="#{noticeBoardBackingBean.managedBean.address}"
+				readonly="true" cols="50" rows="2" />
+		</h:panelGrid>
+
+
 	</p:dialog>
 </ui:composition>

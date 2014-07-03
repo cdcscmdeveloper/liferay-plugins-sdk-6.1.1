@@ -7,87 +7,93 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<p:panel>
 		<p:dataTable id="nbsearchresults"
-				value="#{noticeBoardBackingBean.qtDataModel}"
-				lazy="true"
-				styleClass="nbsrhresultsStyleClass" style="width:100%;"
-				var="scqt" rows="20">
-				
-				<ac:paginator for="nbsearchresults" />
-				
-				<p:column headerText="Title" style="width:75px;">
-					<p:commandLink style="margin-right:20px;"
-						action="#{noticeBoardBackingBean.retrieveQTDetails(scqt)}">
-						<h:outputText value="#{scqt.qtTitle}" />
-					</p:commandLink>
-				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.notice.board.ptj']}" style="width:75px;">
-					<h:outputText value="#{scqt.pmOrgProfile.orgName}" />
-				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.notice.board.pdate']}"
-					style="width:75px">
-					<h:outputText value="#{scqt.publishDate}">
-						<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</h:outputText>
-				</p:column>
+			value="#{noticeBoardBackingBean.qtDataModel}" lazy="true"
+			styleClass="nbsrhresultsStyleClass" style="width:100%" var="scqt"
+			rows="20">
 
-				<p:column headerText="#{lbl['lbl.sc.notice.board.clsdate']}"
-					style="width:75px">
-					<h:outputText value="#{scqt.closingDate}">
-						<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</h:outputText>
-				</p:column>
-					<p:column headerText="#{lbl['lbl.qt.nb.countdowndays']}"
-						style="width:81px; white-space:normal; text-align:right;" rendered="#{noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusPublish or noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusChanges}">
+			<ac:paginator for="nbsearchresults" />
+
+			<p:column headerText="Title" style="width:30%;white-space: normal;">
+				<p:commandLink style="margin-right:20px;"
+					action="#{noticeBoardBackingBean.retrieveQTDetails(scqt)}">
+					<h:outputText value="#{scqt.qtTitle}" />
+				</p:commandLink>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.notice.board.ptj']}"
+				style="width:30%;white-space: normal;">
+				<h:outputText value="#{scqt.pmOrgProfile.orgName}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.notice.board.pdate']}"
+				style="width:7%;">
+				<h:outputText value="#{scqt.publishDate}">
+					<f:convertDateTime
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				</h:outputText>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.notice.board.clsdate']}"
+				style="width:7%;">
+				<h:outputText value="#{scqt.closingDate}">
+					<f:convertDateTime
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				</h:outputText>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.qt.nb.countdowndays']}"
+				style="width:10%; white-space:normal; text-align:right;"
+				rendered="#{noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusPublish or noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusChanges}">
 						#{noticeBoardBackingBean.getClosingDays(scqt.closingDate)}
 					</p:column>
-				
-					<p:column headerText="#{lbl['lbl.sc.notice.board.view.bsv']}"
-						style="width:50px; white-space:normal;" rendered="#{noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusPublish or noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusChanges }">
-						<h:outputText
-							value="#{(scqt.bsvRequired eq '1')?lbl['lbl.ct.dialong.cofirm.no']:lbl['lbl.ct.dialong.cofirm.yes']}" />
+
+			<p:column headerText="#{lbl['lbl.sc.notice.board.view.bsv']}"
+				style="width:3%; white-space:normal; text-align:right;"
+				rendered="#{noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusPublish or noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusChanges }">
+				<h:outputText
+					value="#{(scqt.bsvRequired eq '1')?lbl['lbl.ct.dialong.cofirm.no']:lbl['lbl.ct.dialong.cofirm.yes']}" />
 						&#160;
 						<p:commandLink id="supRegIcon"
-							action="#{noticeBoardBackingBean.gotoSupplierRegistration(scqt)}" rendered="#{scqt.bsvRequired}">
-							<p:graphicImage library="ep/images/design" name="register.png"
-								value="/resources/ep/images/design/register.png" />
-						</p:commandLink>
-						<p:tooltip for="supRegIcon" value="#{lbl['lbl.sc.notice.board.self.reg']}" />
-					</p:column>
-				
-				<p:column headerText="#{lbl['lbl.ss.item.detail.action']}"
-					style="width:40px">
-					<c:if
-						test="#{noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusPublish or noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusChanges }">
-						<p:commandLink id="chkQualIcon"
-							action="#{noticeBoardBackingBean.gotoSupplierQualificationCriteria(scqt)}">
-							<p:graphicImage library="ep/images/design" name="tick.png"
-								value="/resources/ep/images/design/tick.png" />
-						</p:commandLink>
-						<p:tooltip for="chkQualIcon" value="#{lbl['lbl.sc.notice.board.check.supplier.qualification']}" />
-						<p:commandLink id="downloadIcon">
-							<p:graphicImage library="ep/images/design" name="download.png"
-								value="/resources/ep/images/design/download.png" />
-						</p:commandLink>
-						<p:tooltip for="downloadIcon" value="#{lbl['lbl.sc.notice.board.download.quotation.tender.documents']}" />
-					</c:if>
-					<c:if
-						test="#{noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusClosed}">
-						<p:commandLink
-							action="#{noticeBoardBackingBean.showPriceSchedules(scqt)}"
-							>
-							<h:outputText value="Price Schedule"></h:outputText>
-						</p:commandLink>
-					</c:if>
-					<c:if
-						test="#{noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusAwarded}">
-						<p:commandLink
-							action="#{noticeBoardBackingBean.showPriceSchedules(scqt)}"
-							oncomplete="popupPriceSchedule.show()" update="@(.priceschedule)">
-							<h:outputText value="View Awarded List"></h:outputText>
-						</p:commandLink>
-					</c:if>
-				</p:column>
+					action="#{noticeBoardBackingBean.gotoSupplierRegistration(scqt)}"
+					rendered="#{scqt.bsvRequired}">
+					<p:graphicImage library="ep/images/design" name="register.png"
+						value="/resources/ep/images/design/register.png" />
+				</p:commandLink>
+				<p:tooltip for="supRegIcon"
+					value="#{lbl['lbl.sc.notice.board.self.reg']}" />
+			</p:column>
 
-			</p:dataTable>
+			<p:column headerText="#{lbl['lbl.ss.item.detail.action']}"
+				style="width:3%; white-space:normal; text-align:right;">
+				<ui:fragment
+					rendered="#{noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusPublish or noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusChanges }">
+					<p:commandLink id="chkQualIcon"
+						action="#{noticeBoardBackingBean.gotoSupplierQualificationCriteria(scqt)}">
+						<p:graphicImage library="ep/images/design" name="tick.png"
+							value="/resources/ep/images/design/tick.png" />
+					</p:commandLink>
+					<p:tooltip for="chkQualIcon"
+						value="#{lbl['lbl.sc.notice.board.check.supplier.qualification']}" />
+					<p:commandLink id="downloadIcon">
+						<p:graphicImage library="ep/images/design" name="download.png"
+							value="/resources/ep/images/design/download.png" />
+					</p:commandLink>
+					<p:tooltip for="downloadIcon"
+						value="#{lbl['lbl.sc.notice.board.download.quotation.tender.documents']}" />
+				</ui:fragment>
+				<ui:fragment
+					rendered="#{noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusClosed}">
+					<p:commandLink
+						action="#{noticeBoardBackingBean.showPriceSchedules(scqt)}">
+						<h:outputText value="Price Schedule"></h:outputText>
+					</p:commandLink>
+				</ui:fragment>
+				<ui:fragment
+					rendered="#{noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusAwarded}">
+					<p:commandLink
+						action="#{noticeBoardBackingBean.showAwardDetails(scqt)}">
+						<h:outputText value="View Awarded List"></h:outputText>
+					</p:commandLink>
+				</ui:fragment>
+			</p:column>
+
+		</p:dataTable>
 	</p:panel>
 </ui:composition>

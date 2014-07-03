@@ -1,0 +1,89 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<ui:define name="contentSection">
+		<ac:title value="Award Supplier" />
+		<p:panel>
+			<p:panelGrid style="width:100%;"
+				styleClass="noBorders tr,noBorders td">
+				<p:row>
+					<p:column width="100%" style="text-align:left">
+						<p:commandButton value="#{lbl['lbl.sc.notice.board.backbtn']}"
+							icon="ui-icon-back" action="#{noticeBoardBackingBean.backBtn}"
+							style="float:left;" />
+					</p:column>
+
+				</p:row>
+			</p:panelGrid>
+		</p:panel>
+		<p:panel header="#{lbl['lbl.qt.nb.pricingheader']}" toggleable="true">
+			<h:panelGrid border="0" width="100%" columns="2"
+				columnClasses="columnWidth20">
+
+				<h:outputText value="#{lbl['lbl.qt.nb.ministry']}"></h:outputText>
+				<h:outputText
+					value="#{noticeBoardBackingBean.managedBean.scQt.pmOrgProfile.parentOrgProfile.parentOrgProfile.orgName}"
+					readonly="true" />
+
+				<h:outputText value="#{lbl['lbl.qt.nb.jabatan']}"></h:outputText>
+				<h:outputText
+					value="#{noticeBoardBackingBean.managedBean.scQt.pmOrgProfile.parentOrgProfile.orgName}"
+					readonly="true" />
+
+				<h:outputText value="#{lbl['lbl.qt.nb.ptj']}"></h:outputText>
+				<h:outputText
+					value="#{noticeBoardBackingBean.managedBean.scQt.pmOrgProfile.orgName}"
+					readonly="true" />
+
+
+				<h:outputText value="#{lbl['lbl.qt.nb.qtNo']}"></h:outputText>
+				<h:outputText
+					value="#{noticeBoardBackingBean.managedBean.scQt.qtNo}"
+					readonly="true" />
+
+				<h:outputText value="#{lbl['lbl.qt.nb.closingDate']}"></h:outputText>
+				<h:outputText
+					value="#{noticeBoardBackingBean.managedBean.scQt.closingDate}"
+					readonly="true">
+					<f:convertDateTime pattern="dd/MM/yyyy" />
+				</h:outputText>
+
+				<h:outputText value="#{lbl['lbl.qt.nb.openingdate']} " />
+				<h:outputText value="" readonly="true" />
+
+				<h:outputText value="#{lbl['lbl.qt.nb.title']}">
+				</h:outputText>
+				<h:outputText
+					value="#{noticeBoardBackingBean.managedBean.scQt.qtTitle}"
+					readonly="true" />
+
+			</h:panelGrid>
+			
+			<c:if test="#{!noticeBoardBackingBean.managedBean.scQt.finalization.recommendedType}">
+				<ui:include src="/xhtml/sc/noticeboard/awarddetails.xhtml"></ui:include>
+			</c:if>
+			<c:if test="#{noticeBoardBackingBean.managedBean.scQt.zonal}">
+				<p:tabView var="zones" dynamic="true" cache="true"
+					orientation="left"
+					value="#{noticeBoardBackingBean.managedBean.zones}">
+					<p:ajax event="tabChange"
+						listener="#{noticeBoardBackingBean.offeredPriceTabChange}"></p:ajax>
+					<p:tab title="#{zones.zoneName}">
+					
+						<ui:include src="/xhtml/sc/noticeboard/awarddetails.xhtml"></ui:include>
+
+					</p:tab>
+
+
+				</p:tabView>
+			</c:if>
+		</p:panel>
+
+	</ui:define>
+</ui:composition>

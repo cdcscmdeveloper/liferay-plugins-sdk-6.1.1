@@ -49,17 +49,17 @@
 		</p:dataTable>
 
 
+		<div style="text-align: center;">
+			<h:outputText value="You Are Qualified To Participate"
+				style="font-size:18px;"
+				rendered="#{noticeBoardBackingBean.managedBean.qualified}"></h:outputText>
 
+			<h:outputText value="You Are Not Qualified To Participate"
+				style="font-size:18px;"
+				rendered="#{!noticeBoardBackingBean.managedBean.qualified}"></h:outputText>
+		</div>
 	</p:panel>
-	<div style="text-align: center;">
-		<h:outputText value="You Are Qualified To Participate"
-			style="font-size:18px;"
-			rendered="#{noticeBoardBackingBean.managedBean.qualified}"></h:outputText>
 
-		<h:outputText value="You Are Not Qualified To Participate"
-			style="font-size:18px;"
-			rendered="#{!noticeBoardBackingBean.managedBean.qualified}"></h:outputText>
-	</div>
 
 
 </ui:composition>

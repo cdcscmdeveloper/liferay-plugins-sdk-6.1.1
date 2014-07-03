@@ -30,32 +30,35 @@
 
 		</p:panelGrid>
 
-		<c:if test="${!noticeBoardBackingBean.managedBean.scQt.zonal}">
+		<ui:fragment rendered="#{!noticeBoardBackingBean.managedBean.scQt.zonal}">
 			<ui:param name="bsvDetails"
 				value="#{noticeBoardBackingBean.managedBean.normalBsvBean}"></ui:param>
 			<ui:include src="/xhtml/sc/noticeboard/supplierregdtls.xhtml"></ui:include>
 			<ui:include
 				src="/xhtml/sc/noticeboard/noticeboardLocationPopUp.xhtml"></ui:include>
-		</c:if>
+		</ui:fragment>
 
-		<c:if test="${noticeBoardBackingBean.managedBean.scQt.zonal}">
+		<ui:fragment rendered="#{noticeBoardBackingBean.managedBean.scQt.zonal}">
 
-			<p:tabView var="zones" orientation="left" dynamic="true" cache="true"
+			<p:tabView var="zones" orientation="left"
 				value="#{noticeBoardBackingBean.managedBean.zoneBean}">
+				
+					<p:tab title="#{zones.tplSpecZoneDtl.zoneName}">
+						<ui:param name="bsvDetails" value="#{zones}"></ui:param>
+						<!-- <ui:param name="bsvSelectedDtls"
+							value="#{zones.selectedBriefingDtls}"></ui:param>
+						<ui:param name="siteVisitSelectedDtls"
+							value="#{zones.selectedSiteVisitDtls}"></ui:param> -->
 
-				<p:tab title="#{zones.tplSpecZoneDtl.zoneName}">
-					<ui:param name="bsvDetails" value="#{zones}"></ui:param>
-					<ui:param name="bsvSelectedDtls"
-						value="#{noticeBoardBackingBean.managedBean.selectedBriefingDtls}"></ui:param>
-					<ui:param name="siteVisitSelectedDtls"
-						value="#{noticeBoardBackingBean.managedBean.selectedsiteVisitDtls}"></ui:param>
-					<ui:include src="/xhtml/sc/noticeboard/supplierregdtls.xhtml"></ui:include>
-				</p:tab>
 
+						<ui:include src="/xhtml/sc/noticeboard/supplierregdtls.xhtml"></ui:include>
+					</p:tab>
+				
 
 			</p:tabView>
+			</ui:fragment>
 			<ui:include
 				src="/xhtml/sc/noticeboard/noticeboardLocationPopUp.xhtml"></ui:include>
-		</c:if>
+		
 	</ui:define>
 </ui:composition>
