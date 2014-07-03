@@ -42,7 +42,7 @@
 
 				<p:dataTable id="frequencySchedule" var="frequency"
 					rendered="#{specificationBackingBean.managedBean.scQt.fulfilmentType.parameterId eq '117' and  specificationBackingBean.managedBean.scQt.scheduleType eq 'F'}"
-					style="width:100%" rowIndexVar="index"
+					rowIndexVar="index"
 					value="#{specificationBackingBean.managedBean.scheduleList}">
 					<ac:paginator for="frequencySchedule" />
 
@@ -58,7 +58,7 @@
 						<p:message id="freqScheduledid" for="scheduleNum" display="icon"></p:message>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.spec.start.month']}"
-						style="width:25%">
+						style="width:10%">
 						<p:selectOneMenu value="#{frequency.startMonth}">
 
 							<f:selectItems value="#{specificationBackingBean.yearDetails}"></f:selectItems>
@@ -102,6 +102,27 @@
 						<h:outputText id="scheduleDetails"
 							value="#{frequency.totalMonths}"></h:outputText>
 					</p:column>
+
+					<p:column style="width:15%">
+
+						<f:facet name="header">
+							<h:outputText value="* " styleClass="mandatory" />
+							<h:outputText value="#{lbl['lbl.ct.sched.stype']}" />
+						</f:facet>
+
+						<p:selectOneMenu required="true" id="scheduledTypeId"
+							label="#{lbl['lbl.ct.sched.stype']}"
+							value="#{frequency.scheduleType.parameterId}">
+
+							<f:selectItems
+								value="#{specificationBackingBean.getDropdownValues(ParameterTypeConst.scheduleType)}" />
+							<p:message id="freqScheduledTypeId" for="scheduledTypeId"
+								display="icon"></p:message>
+
+						</p:selectOneMenu>
+
+					</p:column>
+
 				</p:dataTable>
 
 				<p:spacer height="20"></p:spacer>
@@ -129,7 +150,7 @@
 
 				<p:commandLink value="#{lbl['lbl.sc.spec.progressive.payment']}"></p:commandLink>
 				<p:dataTable id="progressivePayment" var="payment"
-					style="width:100%" rowIndexVar="index"
+					rowIndexVar="index"
 					value="#{specificationBackingBean.managedBean.progressivePaymentList}">
 					<ac:paginator for="progressivePayment" />
 
@@ -196,9 +217,11 @@
 							<h:outputText value="* " styleClass="mandatory" />
 							<h:outputText value="#{lbl['lbl.sc.spec.weight.percent']}" />
 						</f:facet>
-						<p:inputText value="#{payment.percentage}" required="true" id="progressivePercentage"
+						<p:inputText value="#{payment.percentage}" required="true"
+							id="progressivePercentage"
 							label="#{lbl['lbl.sc.spec.weight.percent']}" maxlength="18"></p:inputText>
-							<p:message id="pahsePercentage" for="progressivePercentage" display="icon"></p:message>
+						<p:message id="pahsePercentage" for="progressivePercentage"
+							display="icon"></p:message>
 					</p:column>
 
 
