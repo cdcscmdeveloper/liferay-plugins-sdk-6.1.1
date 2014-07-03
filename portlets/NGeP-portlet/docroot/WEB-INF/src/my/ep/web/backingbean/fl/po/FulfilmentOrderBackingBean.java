@@ -186,12 +186,16 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 
 	public FulfilmentResDTO retrievePendingDo() {
 		IFulfilmentOrderSO filmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject("fl", IFulfilmentOrderSO.class);
-		FulfilmentResDTO resDTO = new FulfilmentResDTO();
-		List<FlFulfilmentOrder> pendingDoList = filmentOrderSO.getPendingDoList();
+		
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+		
+		FulfilmentResDTO resDTO = filmentOrderSO.getPendingDoList(reqDTO);
+		List<FlFulfilmentOrder> pendingDoList = resDTO.getFulfilmentOrderList();
 		this.getManagedBean().setPendingDoList(pendingDoList);
 		return resDTO;
-
 	}
+	
 	public FulfilmentResDTO getDeliveryAddress() {
 		IFulfilmentOrderSO filmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject("fl", IFulfilmentOrderSO.class);
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();
