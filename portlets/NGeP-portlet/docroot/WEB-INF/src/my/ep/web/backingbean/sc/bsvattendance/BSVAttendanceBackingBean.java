@@ -175,6 +175,7 @@ public class BSVAttendanceBackingBean extends
 		try {
 			qTBriefingSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTBriefingSO.class);
+			this.getManagedBean().setBriefingRegistrationList(null);
 
 			if (briefing != null) {
 
@@ -269,16 +270,16 @@ public class BSVAttendanceBackingBean extends
 			List<ScQtBsvDtl> briefingDetails = new ArrayList<ScQtBsvDtl>();
 			ScQtBsvDtl scQtBrief = getManagedBean().getScQtBriefing();
 			for (ScQtBsvRegistration registration : this.getManagedBean()
-					.getBriefingRegistrationList()) {				
+					.getBriefingRegistrationList()) {
 				List<ScQtBsvAttendance> bsvAttandance = registration
 						.getBsvAttendance();
-			boolean flag =	isOneAuthorizedPersonal(bsvAttandance);
-			
-					if (!flag) {
-						throw new EpException(MessageConst.ERROR_760043,
-								new String[] { "1" });
-					}
-				
+				boolean flag = isOneAuthorizedPersonal(bsvAttandance);
+
+				if (!flag) {
+					throw new EpException(MessageConst.ERROR_760043,
+							new String[] { "1" });
+				}
+
 			}
 			scQtBrief.setQtBsvRegistrations(this.getManagedBean()
 					.getBriefingRegistrationList());
@@ -328,10 +329,11 @@ public class BSVAttendanceBackingBean extends
 	/**
 	 * @param bsvAttandance
 	 */
-	private boolean isOneAuthorizedPersonal(List<ScQtBsvAttendance> bsvAttandance) {
-		
-		for(ScQtBsvAttendance attendance : bsvAttandance){
-			if(attendance.isAuthorized() && attendance.isAttended()){
+	private boolean isOneAuthorizedPersonal(
+			List<ScQtBsvAttendance> bsvAttandance) {
+
+		for (ScQtBsvAttendance attendance : bsvAttandance) {
+			if (attendance.isAuthorized() && attendance.isAttended()) {
 				return true;
 			}
 		}
@@ -522,7 +524,6 @@ public class BSVAttendanceBackingBean extends
 		this.getManagedBean().setAddress(briefing.getAddress().getAddress1());
 	}
 
-
 	public void initializeRemarks(ScQtBsv bsv) {
 
 		List<ScQtBSVRemark> bsvRemarks = new ArrayList<ScQtBSVRemark>();
@@ -573,6 +574,7 @@ public class BSVAttendanceBackingBean extends
 
 		}
 	}
+
 	/**
 	 * Method to delete the registrations
 	 */

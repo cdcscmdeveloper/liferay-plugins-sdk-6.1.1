@@ -5,19 +5,24 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.biz.bean.sc.SupplierQualificationBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
+import my.ep.persistence.entity.sc.quationtender.ScQtBsvAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
+import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalAmount;
 import my.ep.persistence.entity.sm.SmMofAccount;
+import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
+import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.bean.sc.quatationtender.NoticeBoardSearchDataBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -38,7 +43,7 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	private Integer tabIndex = 0;
 
 	public ISearchBean<ScQt> searchBean;
-
+	
 	private ScQt scQt;
 
 	// TODO: need to remove above fields...
@@ -108,19 +113,30 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	private String address;
 	private String location;
 
-	private SmMofAccount mofAccount;
+	private List<SmMofAccount> mofAccounts;
 
 	private SmSupplier smSupplier;
 	private String selectedTab = ParameterConst.NOTICE_BOARD_STATUS_PUBLISH;
 
-	private ScQtBsvDtl[] selectedBriefingDtls;
-	private ScQtBsvDtl[] selectedsiteVisitDtls;
+	private List<ScQtBsvDtl> selectedBriefingDtls;
+	private List<ScQtBsvDtl> selectedsiteVisitDtls;
 	private List<TplSpecZoneDtl> zones;
 
 	private List<PmOrgProfile>ptjList;
 	private ScQtBsv bsv;
 	
 	private List<ScQtCheckList> docuements;
+	private List<SupplierQualificationBean> qualificationBean;
+	private boolean qualified;
+
+	private List<BriefingZoneBean> zoneBean;
+
+	private BriefingZoneBean normalBsvBean;
+	private List<ScQtProposalAmount> proposalAmts;
+	private String mofNumber;
+	private List<ScQtBsvAttendance> attendanceList;
+	
+	private List<ScQtBsvAttendance> selectedBsvAttandance;
 	
 	public NoticeBoardManagedBean() {
 		// scQt = new ScQt();
@@ -457,14 +473,7 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 		this.location = location;
 	}
 
-	public SmMofAccount getMofAccount() {
-		return mofAccount;
-	}
-
-	public void setMofAccount(SmMofAccount mofAccount) {
-		this.mofAccount = mofAccount;
-	}
-
+	
 	public SmSupplier getSmSupplier() {
 		return smSupplier;
 	}
@@ -487,21 +496,7 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 		this.selectedTab = selectedTab;
 	}
 
-	public ScQtBsvDtl[] getSelectedBriefingDtls() {
-		return selectedBriefingDtls;
-	}
-
-	public void setSelectedBriefingDtls(ScQtBsvDtl[] selectedBriefingDtls) {
-		this.selectedBriefingDtls = selectedBriefingDtls;
-	}
-
-	public ScQtBsvDtl[] getSelectedsiteVisitDtls() {
-		return selectedsiteVisitDtls;
-	}
-
-	public void setSelectedsiteVisitDtls(ScQtBsvDtl[] selectedsiteVisitDtls) {
-		this.selectedsiteVisitDtls = selectedsiteVisitDtls;
-	}
+	
 
 	public String getQtNo() {
 		return qtNo;
@@ -565,6 +560,98 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 
 	public void setDocuements(List<ScQtCheckList> docuements) {
 		this.docuements = docuements;
+	}
+
+	public List<SupplierQualificationBean> getQualificationBean() {
+		return qualificationBean;
+	}
+
+	public void setQualificationBean(
+			List<SupplierQualificationBean> qualificationBean) {
+		this.qualificationBean = qualificationBean;
+	}
+
+	
+	public List<BriefingZoneBean> getZoneBean() {
+		return zoneBean;
+	}
+
+	public void setZoneBean(List<BriefingZoneBean> zoneBean) {
+		this.zoneBean = zoneBean;
+	}
+
+	public BriefingZoneBean getNormalBsvBean() {
+		return normalBsvBean;
+	}
+
+	public void setNormalBsvBean(BriefingZoneBean normalBsvBean) {
+		this.normalBsvBean = normalBsvBean;
+	}
+
+	public List<ScQtProposalAmount> getProposalAmts() {
+		return proposalAmts;
+	}
+
+	public void setProposalAmts(List<ScQtProposalAmount> proposalAmts) {
+		this.proposalAmts = proposalAmts;
+	}
+
+	public List<SmMofAccount> getMofAccounts() {
+		return mofAccounts;
+	}
+
+	public void setMofAccounts(List<SmMofAccount> mofAccounts) {
+		this.mofAccounts = mofAccounts;
+	}
+
+	public String getMofNumber() {
+		return mofNumber;
+	}
+
+	public void setMofNumber(String mofNumber) {
+		this.mofNumber = mofNumber;
+	}
+
+	public List<ScQtBsvAttendance> getAttendanceList() {
+		return attendanceList;
+	}
+
+	public void setAttendanceList(List<ScQtBsvAttendance> attendanceList) {
+		this.attendanceList = attendanceList;
+	}
+
+	public boolean isQualified() {
+		return qualified;
+	}
+
+	public void setQualified(boolean qualified) {
+		this.qualified = qualified;
+	}
+
+	
+	public List<ScQtBsvDtl> getSelectedBriefingDtls() {
+		return selectedBriefingDtls;
+	}
+
+	public void setSelectedBriefingDtls(List<ScQtBsvDtl> selectedBriefingDtls) {
+		this.selectedBriefingDtls = selectedBriefingDtls;
+	}
+
+	public List<ScQtBsvDtl> getSelectedsiteVisitDtls() {
+		return selectedsiteVisitDtls;
+	}
+
+	public void setSelectedsiteVisitDtls(List<ScQtBsvDtl> selectedsiteVisitDtls) {
+		this.selectedsiteVisitDtls = selectedsiteVisitDtls;
+	}
+
+	public List<ScQtBsvAttendance> getSelectedBsvAttandance() {
+		return selectedBsvAttandance;
+	}
+
+	public void setSelectedBsvAttandance(
+			List<ScQtBsvAttendance> selectedBsvAttandance) {
+		this.selectedBsvAttandance = selectedBsvAttandance;
 	}
 
 }
