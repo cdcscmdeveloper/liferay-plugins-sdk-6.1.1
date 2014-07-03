@@ -12,7 +12,7 @@
 		<p:dataTable id="stageTwotechProposal" var="stageTwoTechnical"
 			widgetVar="technicalChecklist"
 			value="#{specificationBackingBean.managedBean.scQtCheckSt2techProposal}"
-			style="width:100%" rowIndexVar="index"
+			rowIndexVar="index"
 			selection="#{specificationBackingBean.managedBean.s2TechSelect}"
 			rowKey="#{stageTwoTechnical}">
 			<ac:paginator for="stageTwotechProposal" />
@@ -31,8 +31,10 @@
 				</f:facet>
 				<ui:fragment rendered="#{stageTwoTechnical.title == null}">
 					<p:inputText required="true" id="techChecklistTitle"
-						label="#{lbl['lbl.sc.spec.stage.title']}" value="#{stageTwoTechnical.title}" size="50" maxlength="100"></p:inputText>
-						<p:message id="techChecklistId" for="techChecklistTitle" display="icon"></p:message>
+						label="#{lbl['lbl.sc.spec.stage.title']}"
+						value="#{stageTwoTechnical.title}" size="50" maxlength="100"></p:inputText>
+					<p:message id="techChecklistId" for="techChecklistTitle"
+						display="icon"></p:message>
 				</ui:fragment>
 
 				<ui:fragment rendered="#{stageTwoTechnical.title != null}">
@@ -207,6 +209,6 @@
 		<ui:include src="stageTwoTechnical.xhtml" />
 	</p:panel>
 
-<ui:include src="/xhtml/sc/main/createCommitteeTemplate.xhtml"></ui:include>
+	<ui:include src="/xhtml/sc/main/createCommitteeTemplate.xhtml"></ui:include>
 
 </ui:composition>
