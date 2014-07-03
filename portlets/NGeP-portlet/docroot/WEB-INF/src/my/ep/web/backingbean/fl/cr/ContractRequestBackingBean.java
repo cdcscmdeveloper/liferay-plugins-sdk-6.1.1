@@ -790,8 +790,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				getManagedBean().getApproverModel().getSource().removeAll(resDTO.getSelectedApproverList());
 			}
 			
-			getManagedBean().setMinistryName(resDTO.getFlFulfilmentRequest().getIssuedOrgProfile().getParentOrgProfile().getParentOrgProfile()
-							.getOrgName());
+			getManagedBean().setMinistryName(resDTO.getFlFulfilmentRequest().getIssuedOrgProfile().getParentOrgProfile().getOrgName());
 			if(getManagedBean().getFlManualAddress() == null){
 				getManagedBean().setFlManualAddress(new FlDeliveryAddress());
 				getManagedBean().getFlManualAddress().setDeliveryAddressId(1L);
@@ -847,7 +846,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			getManagedBean().getFlManualAddress().getPmAddress().setPmCountry(new PmCountry());
 			getManagedBean().getFlManualAddress().getPmAddress().getPmCountry().setCountryId(1L);
 			getManagedBean().getFlManualAddress().getPmAddress().setPmState(new PmState());
-			getManagedBean().getFlManualAddress().getPmAddress().setPmState(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractZones().get(0).getCtContractZoneDtls().get(0).getState());
+			//getManagedBean().getFlManualAddress().getPmAddress().setPmState(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractZones().get(0).getCtContractZoneDtls().get(0).getState());
 			getManagedBean().getFlManualAddress().getPmAddress().setPmDistrict(new PmDistrict());
 			getManagedBean().getFlManualAddress().getPmAddress().getPmDistrict().setDistrictId(1L);
 			getManagedBean().getFlManualAddress().getPmAddress().setPmCity(new PmCity());

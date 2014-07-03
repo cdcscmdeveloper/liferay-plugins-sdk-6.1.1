@@ -14,7 +14,6 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -74,10 +73,12 @@ public class FulfilmentBackingBean extends
 		String fileName = file.getFileName();
 		byte[] fileBytes = file.getContents();
 		Timestamp date = new Timestamp(System.currentTimeMillis());
-
-		attachment.setCreatedBy(1L);
+		FacesScopes facesScopes = new FacesScopes();
+		
+		attachment.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+		attachment.setCreatedUsername(facesScopes.getUserSessionBean().getUserName());
 		attachment.setCreatedDate(date);
-		attachment.setChangedBy(1L);
+		attachment.setChangedBy(attachment.getCreatedBy());
 
 		attachment.setFileName(fileName);
 		attachment.setFileDescription("File uploded for Fulfilment Req Order");
@@ -212,4 +213,14 @@ public class FulfilmentBackingBean extends
 		getManagedBean().setAttachmentList(fldelAddress.getAttachmentList());
 	}
 
+	@Override
+	public boolean compareUserName(String username){
+		FacesScopes facesScopes = new FacesScopes();
+		if(username.equals(facesScopes.getUserSessionBean().getUserName())) {
+			return true;
+		} else {
+			return false;
+		}
+	}	
+	
 }
