@@ -688,6 +688,7 @@ public class SmApplicationBackingBean extends
 		finally {
 			isError = retriveLatestApplAfterUpdate(currentPageType);
 			mofRegistrationSO = null;
+			assignValReqdToFalse();
 		}
 		return isError;
 	}
@@ -1674,7 +1675,7 @@ public class SmApplicationBackingBean extends
 			getManagedBean().getSmAppl().getSmSupplierCerts()
 					.add(getManagedBean().getSelectedCert());
 		}
-
+		assignValReqdToFalse();
 		RequestContext.getCurrentInstance().execute("certDialog.hide()");
 	}
 
