@@ -21,6 +21,7 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.object.IObjectSO;
@@ -1146,16 +1147,20 @@ public class QTDetailBackingBean extends
 			}
 			
 			String status = qtnTenderSearchBean.getQtStatus();
-			if (!StringUtils.isBlank(status)) {
-				SearchFilterBean bean = new SearchFilterBean();
-				bean.setAndOr(SearchCondition.CONDITION_OR.value());
-				bean.setSearchField("scQtStatus.pmStatus.statusId");
-				bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
-				bean.setSearchValue(status);
-				searchFilterBean.add(bean);
+			if (!StringUtils.isBlank(status)) {				
+				qtSearchBean.getDataFilterBeans().add(
+						new SearchFilterBean("scQtStatus.pmStatus.statusId",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								status));				
+				qtSearchBean.getDataFilterBeans().add(
+						new SearchFilterBean("scQtStatus.current",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								true));
+				
 			}
 
 			// Adding search filterbeans to searchbean.
+			
 			qtSearchBean.getDataFilterBeans().addAll(searchFilterBean);
 		}
 	}
