@@ -20,6 +20,7 @@ import my.ep.dto.sm.supplieruseractivation.SupplierUserActivationResDTO;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.logging.LogKey;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.CommonUIConst;
@@ -157,7 +158,12 @@ public class SupplierUserActivationBackingBean extends
 						System.out.println("Proceed to create user.............................");
 						ISupplierUserActivationSO reqSO = (ISupplierUserActivationSO) BusinessDelegate.getInstance().getServiceObject("sm", ISupplierUserActivationSO.class);
 						log.info("*******>Personnel add - " + this.getManagedBean().getSmPersonnel().getSmAppl().getSmSupplier().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmState());
-						SupplierUserActivationResDTO resDTO = reqSO.createPmProfile(reqDTO);
+						SupplierUserActivationResDTO resDTO = new SupplierUserActivationResDTO();
+						
+						if(reqDTO.getSmPersonnel().getEpRole() == RoleCode.BASIC_SUPPLIER_USER.value() || reqDTO.getSmPersonnel().getEpRole() == RoleCode.CM_USER.value())
+							resDTO = reqSO.createPmProfileForPersonnel(reqDTO);
+						else
+							resDTO = reqSO.createPmProfile(reqDTO);
 	//					SupplierUserActivationResDTO resDTO = new SupplierUserActivationResDTO();
 	//					resDTO.setSuccessful(true);
 						if(resDTO.isSuccessful()){

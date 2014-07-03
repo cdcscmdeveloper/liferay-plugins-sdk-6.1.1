@@ -25,9 +25,8 @@
 				<td style="float: left; padding-top: 5px;"><p:outputLabel value="User eP Role" /></td>
 				<td ><p:selectOneMenu id="userEPRole" value="#{smPersonnelBackingBean.managedBean.searchEPRole}" style="width: 207px; margin-bottom: 5px;">
 						<f:selectItem itemLabel="-- Select One--" itemValue="" />
-						<f:selectItem itemLabel="Supplier Admin" itemValue="A" />
-						<f:selectItem itemLabel="Supplier User" itemValue="U" />
-						<f:selectItem itemLabel="Catalog User" itemValue="C" />
+						<f:selectItem itemLabel="Supplier User" itemValue="A" />
+						<f:selectItem itemLabel="Catalog User" itemValue="A" />
 					</p:selectOneMenu></td>
 			</tr>
 			<!-- <tr>
@@ -40,8 +39,11 @@
 		</table>
 		
 		<div align="right">		
-			<p:commandButton value="Search" action="#{smPersonnelBackingBean.managedBean.searchSmPersonnel}"
+			<p:commandButton value="#{lbl['lbl.btn.search']}" action="#{smPersonnelBackingBean.managedBean.searchSmPersonnel}"
 				update="smPersonnelDataModelId" icon="ui-icon-search" />
+			<p:commandButton value="#{lbl['lbl.btn.reset']}" icon="ui-icon-reset"
+								action="#{smPersonnelBackingBean.resetSmPersonnelSearch}"
+								update="searchSmUserProfile"/>
   		</div>
 	
 	</p:panel>
@@ -109,7 +111,7 @@
 	
 	<p:panel>
 	<h:panelGrid columns="2" style="width:100%;" styleClass="noBorders tr,noBorders td">
-      <p:commandButton value="Add New User (Basic Acct)" oncomplete="confirmDialog.show();" style="float:right;" icon="ui-icon-add">
+      <p:commandButton value="Add New User" oncomplete="confirmDialog.show();" style="float:right;" icon="ui-icon-add">
 	  </p:commandButton>
 	  
 	   	
@@ -122,7 +124,7 @@
 	     <table>
 	    	<tr>
 	    	<td>
-	    	<p:outputLabel value="Add new Login/Online user for Basic account. Maximum 3 users can be added. Do you wish to continue?" />
+	    	<p:outputLabel value="Add new Login/Online user for Basic account. Maximum 4 users can be added as Supplier Basic User. Do you wish to continue?" />
 	    	</td>
 	    	</tr>
 	    	<tr>

@@ -19,6 +19,7 @@ import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmPersonnel;
+import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -66,9 +67,9 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 
 	private SmPersonnel newSmPersonnel;
 	
-	private SmAddress newSmPersonnelMailingAddress;
+	private SmPersonnelAddress newSmPersonnelMailingAddress;
 	
-	private SmAddress newSmPersonnelPermanentAddress;
+	private SmPersonnelAddress newSmPersonnelPermanentAddress;
 	
 	private List<SelectItem> mailAddCountryList;
 	
@@ -88,7 +89,7 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 
 	private IPagingDataModel<SmPersonnel> smPersonnelDataModel2 = new SmPersonnelPagingDataModel();
 	
-	
+	private boolean disableRole;
 	  
 	public SmPersonnelManagedBean() {
 		// TODO Auto-generated constructor stub
@@ -282,21 +283,21 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 		this.newSmPersonnel = newSmPersonnel;
 	}
 
-	public SmAddress getNewSmPersonnelMailingAddress() {
+	public SmPersonnelAddress getNewSmPersonnelMailingAddress() {
 		return newSmPersonnelMailingAddress;
 	}
 
 	public void setNewSmPersonnelMailingAddress(
-			SmAddress newSmPersonnelMailingAddress) {
+			SmPersonnelAddress newSmPersonnelMailingAddress) {
 		this.newSmPersonnelMailingAddress = newSmPersonnelMailingAddress;
 	}
 
-	public SmAddress getNewSmPersonnelPermanentAddress() {
+	public SmPersonnelAddress getNewSmPersonnelPermanentAddress() {
 		return newSmPersonnelPermanentAddress;
 	}
 
 	public void setNewSmPersonnelPermanentAddress(
-			SmAddress newSmPersonnelPermanentAddress) {
+			SmPersonnelAddress newSmPersonnelPermanentAddress) {
 		this.newSmPersonnelPermanentAddress = newSmPersonnelPermanentAddress;
 	}
 
@@ -371,6 +372,14 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	public void setSmPersonnelDataModel2(
 			IPagingDataModel<SmPersonnel> smPersonnelDataModel2) {
 		this.smPersonnelDataModel2 = smPersonnelDataModel2;
+	}
+
+	public boolean isDisableRole() {
+		return disableRole;
+	}
+
+	public void setDisableRole(boolean disableRole) {
+		this.disableRole = disableRole;
 	}
 
 	
