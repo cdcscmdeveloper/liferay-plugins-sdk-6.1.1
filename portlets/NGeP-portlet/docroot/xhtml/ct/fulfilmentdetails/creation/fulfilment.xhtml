@@ -40,7 +40,7 @@
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		   <tr>
 			<td width="20%;" style="vertical-align: baseline;">
-				<p:tabMenu id="menuTabId" styleClass="sidemenu" style="display : table-caption;" 
+				<p:tabMenu id="menuTabId" styleClass="sidemenu"
 					activeIndex="#{contractDetailsBackingBean.managedBean.selectedTabIndex}">
 				          <p:menuitem value="#{lbl['lbl.ct.menu.fd']}" update=":form" 
 				            rendered="#{contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeCentral}"
@@ -206,7 +206,6 @@
 					<ui:include src="/xhtml/ct/fulfilmentdetails/shared/centralItem.xhtml" />
 				</p:outputPanel>
 				
-
 				<p:outputPanel rendered="#{contractDetailsBackingBean.managedBean.selectedTabIndex == 4 and
 				  contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}">
 					<ui:include src="/xhtml/ct/fulfilmentdetails/shared/deduction.xhtml" />
