@@ -16,9 +16,7 @@ import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
 import my.ep.persistence.entity.sc.loaloi.ScPerformanceBond;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
-import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalRanking;
-import my.ep.persistence.entity.sc.quationtender.ScQtRecommendDtl;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
@@ -54,22 +52,21 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	private double percentageBond;
 	private int bondAmount;
 	private String bondPercentage;
-	private List<PmUser>  approverName; // Drop down Listing for Approver Names
 	
 	private int selectedTabIndex;
 	private Long selectedBankId;
 	private String selectedSupplierBranchName;
 	private String selectedContractAgency;
-	private ScQtFinalization scQtFinalization;
+	private String attachmentDocType;
 	private ScLoa scLoa;
 	private SmPersonnel supplierHQPersonnel;
 	private ScLoaWitness loaAgencyWitness;
 	private ScLoaWitness loaSupplierWitness;
 	private ScQtDeduction selectedScQtDeduction;
 	private ScLoaReport selectedScLoaReport;
+	private PmUser approverUser;
 	private List<ScLoaReport> selectedScLoaReports;
 	private List<ScQtDeductionClause> selectedDeductionClauses;
-	private List<ScQtRecommendDtl> scQtRecommendDtls;
 	
 	// Selection list - LOA Details.
 	private List<PmParameterDesc> agencyList;
@@ -78,6 +75,7 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	private List<PmUser> contractSignerList;
 	private List<SmSupplierBranch> branchsList;
 	private List<SmSupplierBank> bankList;
+	private List<PmUser> approverList;
 	
 	public LOADetailManagedBean() {
 	}
@@ -265,6 +263,20 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * @return the approverUser
+	 */
+	public PmUser getApproverUser() {
+		return approverUser;
+	}
+
+	/**
+	 * @param approverUser the approverUser to set
+	 */
+	public void setApproverUser(PmUser approverUser) {
+		this.approverUser = approverUser;
+	}
+
+	/**
 	 * @return the selectedScLoaReport
 	 */
 	public ScLoaReport getSelectedScLoaReport() {
@@ -350,17 +362,17 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the approverName
+	 * @return the approverList
 	 */
-	public List<PmUser> getApproverName() {
-		return approverName;
+	public List<PmUser> getApproverList() {
+		return approverList;
 	}
 
 	/**
-	 * @param approverName the approverName to set
+	 * @param approverList the approverList to set
 	 */
-	public void setApproverName(List<PmUser> approverName) {
-		this.approverName = approverName;
+	public void setApproverList(List<PmUser> approverList) {
+		this.approverList = approverList;
 	}
 
 	/**
@@ -375,6 +387,20 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectedTabIndex(int selectedTabIndex) {
 		this.selectedTabIndex = selectedTabIndex;
+	}
+
+	/**
+	 * @return the attachmentDocType
+	 */
+	public String getAttachmentDocType() {
+		return attachmentDocType;
+	}
+
+	/**
+	 * @param attachmentDocType the attachmentDocType to set
+	 */
+	public void setAttachmentDocType(String attachmentDocType) {
+		this.attachmentDocType = attachmentDocType;
 	}
 
 	/**
@@ -417,20 +443,6 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectedContractAgency(String selectedContractAgency) {
 		this.selectedContractAgency = selectedContractAgency;
-	}
-
-	/**
-	 * @return the scQtFinalization
-	 */
-	public ScQtFinalization getScQtFinalization() {
-		return scQtFinalization;
-	}
-
-	/**
-	 * @param scQtFinalization the scQtFinalization to set
-	 */
-	public void setScQtFinalization(ScQtFinalization scQtFinalization) {
-		this.scQtFinalization = scQtFinalization;
 	}
 
 	/**
@@ -487,20 +499,6 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	 */
 	public void setLoaSupplierWitness(ScLoaWitness loaSupplierWitness) {
 		this.loaSupplierWitness = loaSupplierWitness;
-	}
-
-	/**
-	 * @return the scQtRecommendDtls
-	 */
-	public List<ScQtRecommendDtl> getScQtRecommendDtls() {
-		return scQtRecommendDtls;
-	}
-
-	/**
-	 * @param scQtRecommendDtls the scQtRecommendDtls to set
-	 */
-	public void setScQtRecommendDtls(List<ScQtRecommendDtl> scQtRecommendDtls) {
-		this.scQtRecommendDtls = scQtRecommendDtls;
 	}
 
 	/**

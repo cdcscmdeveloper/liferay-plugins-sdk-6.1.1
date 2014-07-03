@@ -5,6 +5,8 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<ui:param name="isPendingSubmissionStatus" value="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_SUBMISSION}" />
 
 	<p:panel header="#{lbl['lbl.sc.loiloa.loa.contents']}" toggleable="true">
 		<p:dataTable id="contentsTbl" widgetVar="contentsTblWidget" var="scLoaReport"
@@ -30,21 +32,24 @@
 					<h:outputText value="#{scLoaReport.scLoaReportAttachment.fileName}" />
 					<p:commandButton oncomplete="attachmentPopupDlg.show();"
 						value="#{lbl['lbl.txt.attachment']}" icon="ui-icon-attachment"
-						partialSubmit="true" process="@this">
+						partialSubmit="true" process="@this" update="@([id$=attachmentPopup])">
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedScLoaReport}" value="#{scLoaReport}" />
+						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.attachmentDocType}" value="LAR" />
 					</p:commandButton>
 				</ui:fragment>
 			</p:column>
 
 			<p:column style="width:10%;" headerText="#{lbl['lbl.sc.download']}">				
 				<p:commandButton id="download" icon="ui-icon-download" style="background-color:transparent !important; border:0px none;"
+					ajax="false"
 					action="#{lOADetailBackingBean.downloadReport(scLoaReport)}"
 					rendered="#{scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload ? !empty scLoaReport.scLoaReportAttachment.fileName : true}" />
 			</p:column>
 		</p:dataTable>
 		
 		<div class="ppRightBtn">
-			<p:commandButton icon="ui-icon-download" value="#{lbl['lbl.btn.download.all']}"	
+			<p:commandButton icon="ui-icon-download" value="#{lbl['lbl.btn.download.all']}"
+				ajax="false"	
 				action="#{lOADetailBackingBean.downloadAllReports}" />
 				
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
@@ -56,8 +61,67 @@
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				process="@this, contentsTbl" partialSubmit="true"
 				icon="ui-icon-delete"
-				action="#{templateSpecBackingBean.deleteRowsAction(lOADetailBackingBean.managedBean.scLoa.scLoaReports, lOADetailBackingBean.managedBean.selectedScLoaReports)}"
+				action="#{lOADetailBackingBean.deleteRowsAction(lOADetailBackingBean.managedBean.scLoa.scLoaReports, lOADetailBackingBean.managedBean.selectedScLoaReports)}"
 				update="contentsTbl" />
 		</div>
+	</p:panel>
+	
+	<p:panel header="#{lbl['lbl.sc.loiloa.letter.of.acceptance']}" toggleable="true">
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+		<tr>
+			<td class="TableFieldLeft" width="24%">
+				<h:outputLabel value="#{lbl['lbl.txt.attachment']}" />
+			</td>
+			<td class="TableFieldRight">
+				<p:commandButton oncomplete="attachmentPopupDlg.show();return false;" icon="iconAttachment"
+					partialSubmit="true" process="@this" update="@([id$=attachmentPopup])" 
+					value="#{lbl['lbl.txt.attach.file']}">
+					<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.attachmentDocType}" value="#{ParameterConst.doctypeLetterOfAward}" />
+				</p:commandButton>
+			</td>
+		</tr>
+		<tr>
+			<td />
+			<td>
+				<h:panelGroup id="attachFilesPG">
+					<table border="0" cellspacing="0" cellpadding="0" width="100%">
+					<tr>
+						<td width="5%" rowspan="2">
+							<h:graphicImage library="ep/images/design"
+								name="#{lOADetailBackingBean.determineIcon(lOADetailBackingBean.managedBean.scLoa.scLoaAttachment)}"
+								height="30" width="30"
+								rendered="#{!empty lOADetailBackingBean.managedBean.scLoa.scLoaAttachment}" />
+						</td>
+						<td width="5"></td>
+						<td>
+							<h:outputText value="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment.createdUser.userName}" />,
+							<h:outputText value="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment.createdDate}">
+								<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+							</h:outputText>
+						</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>
+							<h:commandLink value="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment.fileName}"
+								styleClass="blue_font"
+								action="#{lOADetailBackingBean.downloadFile(lOADetailBackingBean.managedBean.scLoa.scLoaAttachment)}" />
+							<p:spacer width="5" />
+							<p:commandLink
+								immediate="true"
+								rendered="#{isPendingSubmissionStatus and !empty lOADetailBackingBean.managedBean.scLoa.scLoaAttachment}"
+								update="attachFilesPG">
+								<h:graphicImage library="ep/images/design"
+									name="icon_trash.png" styleClass="tasklist_title1" />
+									
+								<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.scLoa.scLoaAttachment}" value="#{null}" />
+							</p:commandLink>
+						</td>
+					</tr>
+					</table>
+				</h:panelGroup>
+			</td>
+		</tr>
+		</table>
 	</p:panel>
 </ui:composition>

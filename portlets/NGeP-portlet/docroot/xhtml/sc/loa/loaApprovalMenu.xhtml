@@ -1,0 +1,126 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<p:panel header="#{lbl['lbl.sc.loiloa.loa.contract.signer.dtl']}"
+		toggleable="true">
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+		<tr>
+			<td width="18%">
+				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.contract.signer']}" />
+				<p:outputLabel value="*" styleClass="mandatory" />
+			</td>
+			<td width="82%">
+				<p:selectOneMenu id="contractSigner" 
+					value="#{lOADetailBackingBean.managedBean.scLoa.contractSigner.userId}"
+					style="width: 280px;margin-bottom: 5px;"
+					required="true"
+					label="#{lbl['lbl.sc.loiloa.loa.contract.signer']}">
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
+					<f:selectItems value="#{lOADetailBackingBean.managedBean.contractSignerList}"
+						var="contractUser" itemLabel="#{contractUser.userName}"
+						itemValue="#{contractUser.userId}" />
+				</p:selectOneMenu>
+				<p:message id="contractSignerMsg" for="contractSigner" display="icon" />
+			</td>
+		</tr>
+		</table>
+	</p:panel>
+
+	<p:panel header="#{lbl['lbl.sc.loiloa.request.for.approval']}" toggleable="true">
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+		<tr>
+			<td width="18%">
+				<p:outputLabel value="#{lbl['lbl.sc.loiloa.appr.req']}" />
+			</td>
+			<td width="82%">
+				<p:selectOneRadio id="approvalReq"
+					value="#{lOADetailBackingBean.managedBean.scLoa.approvalReq}"
+					required="true"
+					label="#{lbl['lbl.sc.loiloa.loa.appr.req']}">
+					<f:selectItems value="#{lOADetailBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+					<p:ajax event="change" update="approver" />
+				</p:selectOneRadio>
+				<p:message id="approvalReqMsg" for="approvalReq" display="icon" />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loi.approver']}" />
+			</td>
+			<td>
+				<p:selectOneMenu id="approver"
+					value="#{lOADetailBackingBean.managedBean.approverUser.userId}"
+					disabled="#{!lOADetailBackingBean.managedBean.scLoa.approvalReq}"
+					style="width: 280px;margin-bottom: 5px;">
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
+					<f:selectItems
+						value="#{lOADetailBackingBean.managedBean.approverList}"
+						var="pmUser" itemLabel="#{pmUser.userName}"
+						itemValue="#{pmUser.userId}" />
+				</p:selectOneMenu>
+			</td>
+		</tr>
+		</table>
+	</p:panel>
+	
+	<p:panel header="#{lbl['lbl.txt.remarks']}" toggleable="true">
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+		<tr>
+			<td width="10%"></td>
+			<td width="90%">
+				<p:dataGrid value="#{lOADetailBackingBean.managedBean.scLoa.scLoaRemarks}" var="scLoaRemark" rowIndexVar="rowIndex" columns="1" >
+					<table border="0" cellspacing="0" cellpadding="0" width="100%">
+					<tr>
+						<td rowspan="2" style="vertical-align: top;" align="left">
+							<h:graphicImage value="#{ctBackingBean.userImagePath(scLoaRemark.createdUser.loginId)}" height="30" width="30" />
+						</td>
+						<td width="5"></td>
+						<td>
+							<h:outputText value="#{scLoaRemark.createdUser.userName}"/>,
+							<h:outputText id="remarkDate" value="#{scLoaRemark.createdDate}">
+								<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+							</h:outputText>
+						</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>
+							<p:inputTextarea style="width:350px;" id="remarks" value="#{scLoaRemark.remark}" rendered="#{scLoaRemark.brandNew}"  maxlength="1000"/>
+							<h:outputText value="#{scLoaRemark.remark}" rendered="#{!scLoaRemark.brandNew}" style="display: inline-block; width:350px;word-wrap: break-word;"/>
+						</td>
+					</tr>
+					</table>
+				</p:dataGrid>
+			</td>
+		</tr>
+		</table>
+	</p:panel>
+	
+	<p:panel header="#{lbl['lbl.sc.qt.history']}" toggleable="true">
+		<p:dataTable id="apprHistTbl" var="scLoaApproval"
+			value="#{lOADetailBackingBean.managedBean.scLoa.scLoaApprovals}">
+			
+			<ac:paginator for="apprHistTbl" />
+			
+			<p:column headerText="#{lbl['lbl.sc.qt.appby']}" style="width:40%">
+				#{scLoaApproval.approver.userName}
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sc.qt.status']}" style="width:35%">
+				
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.qt.date']}" style="width:25%">
+				<h:outputText value="#{scLoaApproval.approverActionDate}">
+					<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				</h:outputText>
+			</p:column>
+		</p:dataTable>
+	</p:panel>
+	
+</ui:composition>

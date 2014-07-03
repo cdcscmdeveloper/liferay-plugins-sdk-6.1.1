@@ -81,7 +81,7 @@
 					</c:if>
 					
 					<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == 5}">
-						
+						<ui:include src="loaApprovalMenu.xhtml" />
 					</c:if>
 				</h:panelGroup>
 			</td>
@@ -92,13 +92,26 @@
 			modal="true" resizable="false" width="700px" height="200" styleClass="pop_up_top" 
 			header="#{lbl['lbl.txt.choose.files']}">
 			
-			<p:fileUpload style="display:inline;"
-				fileUploadListener="#{lOADetailBackingBean.handleFileUpload}"
-				mode="advanced" id="uploadattachment"
-				allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
-				invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
-				update="menuContent" oncomplete="attachmentPopupDlg.hide()">
-			</p:fileUpload>
+			<p:ajax event="close" />
+			
+			<c:if test="#{lOADetailBackingBean.managedBean.attachmentDocType != ParameterConst.doctypeLetterOfAward}">
+				<p:fileUpload style="display:inline;"
+					fileUploadListener="#{lOADetailBackingBean.handleFileUpload}"
+					mode="advanced" id="uploadattachment"
+					allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
+					invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
+					update="menuContent" oncomplete="attachmentPopupDlg.hide()">
+				</p:fileUpload>
+			</c:if>
+			<c:if test="#{lOADetailBackingBean.managedBean.attachmentDocType == ParameterConst.doctypeLetterOfAward}">
+				<p:fileUpload style="display:inline;"
+					fileUploadListener="#{lOADetailBackingBean.handleFileUpload}"
+					mode="advanced" id="uploadattachment"
+					allowTypes="/(\.|\/)(pdf)$/"
+					invalidFileMessage="Only PDF files are accepted"
+					update="menuContent" oncomplete="attachmentPopupDlg.hide()">
+				</p:fileUpload>
+			</c:if>
 		</p:dialog>
 
 	</ui:define>

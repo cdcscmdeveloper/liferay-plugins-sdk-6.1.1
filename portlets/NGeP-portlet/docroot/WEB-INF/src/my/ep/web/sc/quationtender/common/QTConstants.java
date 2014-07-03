@@ -19,6 +19,7 @@ public interface QTConstants {
 	
 	public static final String MAINTANANCE_PAGE="quatationtendercreation";
 	public static final String BO_MAINTANANCE_PAGE="/xhtml/sc/quatationtender/businessowner/businessownercreation.xhtml";
+	public static final String DP_LOA_PAGE = "dploalist";
 	
 	public static final String CREATE_COMMITTE = "committeemaintanancepage";
 	
@@ -117,8 +118,6 @@ public interface QTConstants {
 	public static final int QUOTAION_VALUE=20000;
 	public static final String OPEN_TYPE="O";
 	public static final String RESTRICTED_TYPE="R";
-	
-	
 	
 	
 }

@@ -23,6 +23,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.sc.QTStatusConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -41,12 +42,15 @@ import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
+import my.ep.persistence.entity.sc.loaloi.ScLoaApproval;
+import my.ep.persistence.entity.sc.loaloi.ScLoaAttachment;
+import my.ep.persistence.entity.sc.loaloi.ScLoaRemark;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReportAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWorkFlowStatus;
-import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
 import my.ep.persistence.entity.sc.loaloi.ScPerformanceBond;
+import my.ep.persistence.entity.sc.quationtender.ScAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
@@ -124,93 +128,117 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 			reqDTO.setLanguageCode(language);
 
 			AwardSupplierResDTO resDTO = qtAwardSO.retrieveLOADtl(reqDTO);
-			scLoa = resDTO.getScLoa();
 			
-			getManagedBean().setScLoa(scLoa);
-			
-			getManagedBean().setScQtFinalization(resDTO.getScQtFinalization());
-			
-			getManagedBean().setSupplierHQPersonnel(resDTO.getSupplierHQPersonnel());
-			getManagedBean().setBranchsList(resDTO.getSmSupplierBranchs());
-			getManagedBean().setBankList(resDTO.getSmSupplierBanks());
-			
-			handleBranchDetailsChanged();
-			
-			if (scLoa.getContractType().getParameterId() != null) {
-				contractTypeChanged();	
-			}
-			
-			ScLoaWitness loaAgencyWitness = null;
-			for (ScLoaWitness scLoaWitness : scLoa.getScLoaWitnesses()) {
-				if (scLoaWitness.getPartyType() == 'O') {
-					loaAgencyWitness = scLoaWitness;
-				}
-			}
-			getManagedBean().setLoaAgencyWitness(loaAgencyWitness);
-
-			//getManagedBean().getScLoa().setContractPTJProfile(orgProfile);
-
-			/*getManagedBean().getScLoa().setSmSupplier(
-					getManagedBean().getScQtEvaluationResult()
-							.getScQtProposal()
-							.getScQtSupplier().getSmSupplier());*/
-
-			/*getManagedBean().getScLoa().setSupplierName(
-					getManagedBean().getScQtProposalRanking()
-							.getScQtProposalEvaluate().getScQtProposal()
-							.getScQtSupplier().getSmSupplier()
-							.getSupplierName());*/
-
-		/*	getManagedBean().getScLoa().setDocType(
-					LoiLoaDocType.DOCTYPE_QUOTATION_TENDER.value());
-			getManagedBean().getScLoa().setDocId(id);*/
-
-			/*getManagedBean().getScLoa().setLoaType("Standard");
-			getManagedBean().getScLoa().setLoaDuration(14);
-			getManagedBean().getScLoa().setBondDuration(30);
-			getManagedBean().getScLoa().setLoaNo("12345");
-			getManagedBean().getScLoa().setLoaAmount(
-					new BigDecimal(1000000));*/
-			//getManagedBean().getScLoa().setMtoDuration(14);
-
-			getManagedBean().setScQtRecommendDtls(resDTO.getScQtRecommendDtls());
-			
-			getManagedBean().setContractSignerList(resDTO.getContractSignerList());
-
-			/*branch.setSmAppl(getManagedBean().getScQtProposalRanking()
-					.getScQtProposalEvaluate().getScQtProposal()
-					.getScQtSupplier().getSmSupplier().getSmAppl());*/
-
-			//TODO
-			/*if (getManagedBean().getScLoa().getLoaAmt().intValue() > 500000) {
-				getManagedBean().setBondPercentage("5%");
-				getManagedBean().setPercentageBond(0.05);
-				System.out.println("Bond Percentage : "
-						+ getManagedBean().getPercentageBond());
-			} else if (getManagedBean().getScLoa().getLoaAmt()
-					.intValue() > 200000
-					&& getManagedBean().getScLoa().getLoaAmt()
-							.intValue() < 500000) {
-				getManagedBean().setBondPercentage("2.5%");
-				getManagedBean().setPercentageBond(0.025);
-				System.out.println("Bond Percentage : "
-						+ getManagedBean().getPercentageBond());
-			}*/
-
-			
-/*
-			int amt = (int) (((getManagedBean().getScLoa().getLoaAmount()
-					.intValue() / getManagedBean().getQt().getScQtSpec()
-					.getContractDuration().intValue()) * 12) * getManagedBean()
-					.getPercentageBond());*/
-
-		//	getManagedBean().setBondAmount(amt);
+			populateLOADetails(resDTO);
 			
 		} finally {
 			qtAwardSO = null;
 		}
-		
+				
 		return QTConstants.LOA_PAGE;
+	}
+	
+	private void populateLOADetails(AwardSupplierResDTO resDTO) {
+		ScLoa scLoa = resDTO.getScLoa();
+		
+		getManagedBean().setScLoa(scLoa);
+		
+		// Supplier Branch
+		getManagedBean().setSelectedSupplierBranchName(scLoa.getSupplierBranch());
+		getManagedBean().setSupplierHQPersonnel(resDTO.getSupplierHQPersonnel());
+		getManagedBean().setBranchsList(resDTO.getSmSupplierBranchs());
+		if (scLoa.isBrandNew()) {
+			handleBranchDetailsChanged();	
+		}
+		
+		// Supplier Bank Account
+		getManagedBean().setBankList(resDTO.getSmSupplierBanks());
+		if (!scLoa.isBrandNew()) {
+			getManagedBean().setSelectedBankId(getSelectedBankIdByScLoa(scLoa));	
+		}
+		
+		if (scLoa.getContractType().getParameterId() != null) {
+			contractTypeChanged();	
+		}
+		
+		// Agency & Supplier Witness
+		ScLoaWitness loaAgencyWitness = null;
+		ScLoaWitness loaSupplierWitness = null;
+		for (ScLoaWitness scLoaWitness : scLoa.getScLoaWitnesses()) {
+			String partyType = scLoaWitness.getPartyType();
+			
+			if (ParameterConst.WITNESS_PARTY_TYPE_AGENCY.equals(partyType)) {
+				loaAgencyWitness = scLoaWitness;
+			} else if (ParameterConst.WITNESS_PARTY_TYPE_SUPPLIER.equals(partyType)) {
+				loaSupplierWitness = scLoaWitness;
+			}
+		}
+		getManagedBean().setLoaAgencyWitness(loaAgencyWitness);
+		getManagedBean().setLoaSupplierWitness(loaSupplierWitness);
+
+		//getManagedBean().getScLoa().setContractPTJProfile(orgProfile);
+
+		/*getManagedBean().getScLoa().setSmSupplier(
+				getManagedBean().getScQtEvaluationResult()
+						.getScQtProposal()
+						.getScQtSupplier().getSmSupplier());*/
+
+		/*getManagedBean().getScLoa().setSupplierName(
+				getManagedBean().getScQtProposalRanking()
+						.getScQtProposalEvaluate().getScQtProposal()
+						.getScQtSupplier().getSmSupplier()
+						.getSupplierName());*/
+
+	/*	getManagedBean().getScLoa().setDocType(
+				LoiLoaDocType.DOCTYPE_QUOTATION_TENDER.value());
+		getManagedBean().getScLoa().setDocId(id);*/
+
+		/*getManagedBean().getScLoa().setLoaType("Standard");
+		getManagedBean().getScLoa().setLoaDuration(14);
+		getManagedBean().getScLoa().setBondDuration(30);
+		getManagedBean().getScLoa().setLoaNo("12345");
+		getManagedBean().getScLoa().setLoaAmount(
+				new BigDecimal(1000000));*/
+		//getManagedBean().getScLoa().setMtoDuration(14);
+		
+		getManagedBean().setContractSignerList(resDTO.getContractSignerList());
+		
+		// Approver
+		getManagedBean().setApproverUser(new PmUser());
+		getManagedBean().setApproverList(resDTO.getApproverList());
+		
+		// Remarks
+		scLoa.setScLoaRemarks(initializeRemarks(
+				scLoa, scLoa.getScLoaRemarks(), ScLoaRemark.class));
+
+		/*branch.setSmAppl(getManagedBean().getScQtProposalRanking()
+				.getScQtProposalEvaluate().getScQtProposal()
+				.getScQtSupplier().getSmSupplier().getSmAppl());*/
+
+		//TODO
+		/*if (getManagedBean().getScLoa().getLoaAmt().intValue() > 500000) {
+			getManagedBean().setBondPercentage("5%");
+			getManagedBean().setPercentageBond(0.05);
+			System.out.println("Bond Percentage : "
+					+ getManagedBean().getPercentageBond());
+		} else if (getManagedBean().getScLoa().getLoaAmt()
+				.intValue() > 200000
+				&& getManagedBean().getScLoa().getLoaAmt()
+						.intValue() < 500000) {
+			getManagedBean().setBondPercentage("2.5%");
+			getManagedBean().setPercentageBond(0.025);
+			System.out.println("Bond Percentage : "
+					+ getManagedBean().getPercentageBond());
+		}*/
+
+		
+/*
+		int amt = (int) (((getManagedBean().getScLoa().getLoaAmount()
+				.intValue() / getManagedBean().getQt().getScQtSpec()
+				.getContractDuration().intValue()) * 12) * getManagedBean()
+				.getPercentageBond());*/
+
+	//	getManagedBean().setBondAmount(amt);
 	}
 	
 	public void deductionTypeChange(ScQtDeduction scQtDeduction) {
@@ -245,6 +273,7 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 		}
 		
 		ScQtDeduction scQtDeduction = new ScQtDeduction();
+		scQtDeduction.setScLoa(scLoa);
 		scQtDeduction.setDeductionType(new PmParameter());
 		
 		scQtDeductions.add(scQtDeduction);
@@ -265,7 +294,7 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 		}
 		
 		ScQtDeductionClause scQtDeductionClause = new ScQtDeductionClause();
-		scQtDeductionClause.setScQtDeduction(getManagedBean().getSelectedScQtDeduction());
+		scQtDeductionClause.setScQtDeduction(selectedScQtDeduction);
 		scQtDeductionClauses.add(scQtDeductionClause);
 	}
 	
@@ -304,18 +333,45 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 	
 	public void handleFileUpload(FileUploadEvent event) {
 		if (event.getFile() != null) {
-			FacesScopes facesScopes = new FacesScopes();
-			ScLoaReport selectedScLoaReport = this.getManagedBean().getSelectedScLoaReport();
-			ScLoaReportAttachment attachment = selectedScLoaReport.getScLoaReportAttachment();
-			if (null == attachment) {
-				attachment = new ScLoaReportAttachment();
-				attachment.setScLoaReport(selectedScLoaReport);
+			String attachmentDocType = getManagedBean().getAttachmentDocType();
+			ScAttachment scAttachment = null;
+			
+			if (ParameterConst.DOCTYPE_LETTER_OF_AWARD.equals(attachmentDocType)) {
+				ScLoa scLoa = this.getManagedBean().getScLoa();
+				ScLoaAttachment scLoaAttachment = scLoa.getScLoaAttachment();
+				if (null == scLoaAttachment) {
+					scLoaAttachment = new ScLoaAttachment();
+					scLoaAttachment.setScLoa(scLoa);
+					
+					scLoa.setScLoaAttachment(scLoaAttachment);
+				}
+				
+				scAttachment = scLoaAttachment;
+				
+			} else {
+				ScLoaReport selectedScLoaReport = this.getManagedBean().getSelectedScLoaReport();
+				ScLoaReportAttachment scLoaReportAttachment = selectedScLoaReport.getScLoaReportAttachment();
+				if (null == scLoaReportAttachment) {
+					scLoaReportAttachment = new ScLoaReportAttachment();
+					scLoaReportAttachment.setScLoaReport(selectedScLoaReport);
+					
+					selectedScLoaReport.setScLoaReportAttachment(scLoaReportAttachment);
+				}
+				
+				scAttachment = scLoaReportAttachment; 
 			}
-			attachment.setUser(facesScopes.getUserSessionBean());
 			
-			uploadAttachment(event.getFile(), attachment);
-			
-			selectedScLoaReport.setScLoaReportAttachment(attachment);
+			uploadAttachment(event.getFile(), scAttachment);
+		}
+	}
+	
+	public String getAllowFileTypes() {
+		String attachmentDocType = getManagedBean().getAttachmentDocType();
+		
+		if (ParameterConst.DOCTYPE_LETTER_OF_AWARD.equals(attachmentDocType)) {
+			return "pdf";
+		} else {
+			return "gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv";	
 		}
 	}
 	
@@ -324,13 +380,23 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 		
 		ScLoaReportAttachment scLoaReportAttachment = scLoaReport.getScLoaReportAttachment();
 		
-		String definitionType = scLoaReport.getDefinationType().getParameterCode();
-		
-		if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED.equals(definitionType)) {
-			// TODO - generate documents
+		if (scLoaReportAttachment == null) {
+			scLoaReportAttachment = generateDocumentAttachment(scLoaReport);
 		}
 		
 		downloadFile(scLoaReportAttachment);	
+	}
+	
+	private ScLoaReportAttachment generateDocumentAttachment(ScLoaReport scLoaReport) {
+		String definitionType = scLoaReport.getDefinationType().getParameterCode();
+		ScLoaReportAttachment scLoaReportAttachment = null;
+		
+		if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED.equals(definitionType)) {
+			// TODO - generate documents
+			
+		}
+		
+		return scLoaReportAttachment;
 	}
 	
 	public void downloadAllReports() throws IOException {
@@ -340,10 +406,16 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 		List<ScLoaReportAttachment> scAttachments = new ArrayList<ScLoaReportAttachment>();
 		
 		for (ScLoaReport scLoaReport : scLoaReports) {
-			scAttachments.add(scLoaReport.getScLoaReportAttachment());
+			ScLoaReportAttachment scLoaReportAttachment = scLoaReport.getScLoaReportAttachment();
+			
+			if (scLoaReportAttachment == null) {
+				scLoaReportAttachment = generateDocumentAttachment(scLoaReport);
+			}
+			
+			scAttachments.add(scLoaReportAttachment);
 		}
 		
-		downloadAllFiles("NGep-LOA-Report", scAttachments);
+		downloadAllFiles("NGeP-LOA-Report", scAttachments);
 	}
 	
 	public List<TplSpecZoneDtl> getZoneList() {
@@ -363,66 +435,6 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 		} finally {
 			specZoneLocSO = null;
 		}
-	}
-	
-	public String editLOAAction1(ScLoiLoa scLoiLoa) {
-		debugLogger("editLOAAction");
-		
-		IQTAwardSO qtAwardSO = null;
-		List<SmSupplierBranch> bList = new ArrayList<SmSupplierBranch>();
-		try {
-			String language = new FacesScopes().getUserLocale().getLanguage();
-
-			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
-			
-			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
-			reqDTO.setScLoiLoa(scLoiLoa);
-			reqDTO.setLanguageCode(language);
-
-			AwardSupplierResDTO resDTO = qtAwardSO.retrieveLOADtl(reqDTO);
-
-			ScLoa scLoa = resDTO.getScLoa();
-			
-			getManagedBean().setScLoa(scLoa);
-			
-			getManagedBean().setScQtRecommendDtls(resDTO.getScQtRecommendDtls());
-			
-			getManagedBean().setContractSignerList(resDTO.getContractSignerList());
-
-			
-			/*if (getManagedBean().getScLoa().getLoaAmount().intValue() > 500000) {
-				getManagedBean().setBondPercentage("5%");
-				getManagedBean().setPercentageBond(0.05);
-				System.out.println("Bond Percentage : "
-						+ getManagedBean().getPercentageBond());
-			} else if (getManagedBean().getScLoa().getLoaAmount()
-					.intValue() > 200000
-					&& getManagedBean().getScLoa().getLoaAmount()
-							.intValue() < 500000) {
-				getManagedBean().setBondPercentage("2.5%");
-				getManagedBean().setPercentageBond(0.025);
-				System.out.println("Bond Percentage : "
-						+ getManagedBean().getPercentageBond());
-			}
-*/
-			
-		/*	int amt = (int) (((getManagedBean().getScLoa().getLoaAmount()
-					.intValue() / getManagedBean().getQt().getScQtSpec()
-					.getContractDuration().intValue()) * 12) * getManagedBean()
-					.getPercentageBond());*/
-
-			
-			//getManagedBean().setBondAmount(amt);
-			
-			//TODO
-			retrieveBondDtls(getManagedBean().getScLoa());
-			
-		} finally {
-			qtAwardSO = null;
-		}
-		
-		return QTConstants.LOA_PAGE;
 	}
 
 	/**
@@ -498,7 +510,7 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 		ScLoa scLoa = this.getManagedBean().getScLoa();
 		String selectedSupplierBranchName = this.getManagedBean().getSelectedSupplierBranchName();
 		
-		if (selectedSupplierBranchName == null) {
+		if (selectedSupplierBranchName == null || "HQ".equals(selectedSupplierBranchName)) {
 			SmPersonnel supplierHQPersonnel = this.getManagedBean().getSupplierHQPersonnel();
 			SmCompanyBasic smCompanyBasic = supplierHQPersonnel.getSmAppl().getSmCompanyBasic();
 			
@@ -561,6 +573,113 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 			}
 		}
 	}
+	
+	private Long getSelectedBankIdByScLoa(ScLoa scLoa) {
+		Long selectedBankId = null;
+		SupplierBankFK loaSupplierBankFK = new SupplierBankFK(scLoa);
+		List<SmSupplierBank> bankList = this.getManagedBean().getBankList();
+		
+		for (SmSupplierBank supplierBank : bankList) {
+			if (new SupplierBankFK(supplierBank).equals(loaSupplierBankFK)) {
+				log.info("found supplier bank");
+				
+				selectedBankId = supplierBank.getSupplierBankId();
+				
+				break;
+			}
+		}
+		
+		return selectedBankId;
+	}
+	
+	private class SupplierBankFK {
+		private String accountNo;
+		private String bankName;
+		private String bankBranch;
+		
+		public SupplierBankFK(SmSupplierBank smSupplierBank) {
+			this.accountNo = smSupplierBank.getAccountNo();
+			this.bankName = smSupplierBank.getPmFinancialOrg().getFinOrgName();
+			this.bankBranch = smSupplierBank.getBankBranch();
+		}
+		
+		public SupplierBankFK(ScLoa scLoa) {
+			this.accountNo = scLoa.getBankAccNo();
+			this.bankName = scLoa.getBankName();
+			this.bankBranch = scLoa.getBankBranch();
+		}
+		
+		public boolean equals(SupplierBankFK other) {
+			return getPK(this).equals(getPK(other));
+		}
+
+		public int hashCode() {
+			int result = 3;
+			
+			if (this.getAccountNo() != null) {
+				result = 31 * result + this.getAccountNo().hashCode();	
+			}
+			
+			if (this.getBankName() != null) {
+				result = 31 * result + this.getBankName().hashCode();
+			}
+			
+			if (this.getBankBranch() != null) {
+				result = 31 * result + this.getBankBranch().hashCode();
+			}
+			
+			return result;
+		}
+
+		/**
+		 * @return the accountNo
+		 */
+		public String getAccountNo() {
+			return accountNo;
+		}
+
+		/**
+		 * @param accountNo the accountNo to set
+		 */
+		public void setAccountNo(String accountNo) {
+			this.accountNo = accountNo;
+		}
+
+		/**
+		 * @return the bankName
+		 */
+		public String getBankName() {
+			return bankName;
+		}
+
+		/**
+		 * @param bankName the bankName to set
+		 */
+		public void setBankName(String bankName) {
+			this.bankName = bankName;
+		}
+
+		/**
+		 * @return the bankBranch
+		 */
+		public String getBankBranch() {
+			return bankBranch;
+		}
+
+		/**
+		 * @param bankBranch the bankBranch to set
+		 */
+		public void setBankBranch(String bankBranch) {
+			this.bankBranch = bankBranch;
+		}
+		
+		private String getPK(SupplierBankFK fk) {
+			return new StringBuilder(fk.getAccountNo() != null ? fk.getAccountNo() : "")
+				.append("_").append(fk.getBankName() != null ? fk.getBankName() : "")
+				.append("_").append(fk.getBankBranch() != null ? fk.getBankBranch() : "").toString();
+		}
+		
+	}
 
 	/**
 	 * Method to save the LOA details
@@ -579,7 +698,6 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 			ScLoa scLoa = this.getManagedBean().getScLoa();
 			scLoa.setIssueDate(new Date());
 
-			// Date date = new Date();
 			log.info("Issue Date : " + scLoa.getIssueDate());
 			scLoa.setAckDueDate(DateUtils.addDays(scLoa.getIssueDate(), 14));
 			log.info("Response Due Date : " + scLoa.getAckDueDate());
@@ -593,14 +711,33 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 				workFlowStatuses.add(workFlowStatus);
 				scLoa.setScLoaWorkFlowStatuses(workFlowStatuses);	
 			}
+			
+			if (scLoa.isApprovalReq() && scLoa.getPmStatus().getStatusId() == QTStatusConst.LOA_PENDING_SUBMISSION) {
+				PmUser approverUser = getManagedBean().getApproverUser();
+				System.out.println("approverUser.getUserId():" + approverUser.getUserId());
+				if (approverUser.getUserId() != null) {
+					List<ScLoaApproval> scLoaApprovals = scLoa.getScLoaApprovals();
+					
+					if (scLoaApprovals == null || scLoaApprovals.size() == 0) {
+						scLoaApprovals = new ArrayList<ScLoaApproval>();
+						
+						ScLoaApproval scLoaApproval = new ScLoaApproval();
+						scLoaApproval.setScLoa(scLoa);
+						scLoaApproval.setApprover(approverUser);
+						scLoaApprovals.add(scLoaApproval);
+						
+						scLoa.setScLoaApprovals(scLoaApprovals);
+					}
+				}
+			}
+			
+			scLoa.setScLoaRemarks(finalizeRemarks(scLoa.getScLoaRemarks()));
 
 			reqDTO.setScLoa(scLoa);
 
 			AwardSupplierResDTO resDTO = qtAwardSO.saveLOADtl(reqDTO);
 			
-			scLoa = resDTO.getScLoa();
-
-			this.getManagedBean().setScLoa(scLoa);
+			editLOAAction(resDTO.getScLoa());
 
 			FacesContext.getCurrentInstance().addMessage(
 					null,

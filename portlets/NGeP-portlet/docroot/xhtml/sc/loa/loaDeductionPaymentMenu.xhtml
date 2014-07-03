@@ -73,7 +73,7 @@
 			</p:dataTable>
 			
 			<div class="ppRightBtn">
-				<h:panelGroup rendered="#{lOADetailBackingBean.managedBean.selectedScQtDeduction.deductionType.parameterCode eq deductionTypeOthers}">
+				<h:panelGroup rendered="#{!empty lOADetailBackingBean.managedBean.selectedScQtDeduction and lOADetailBackingBean.managedBean.selectedScQtDeduction.deductionType.parameterCode eq ParameterConst.deductionTypeOthers}">
 					<p:commandButton value="#{lbl['lbl.btn.add']}"
 						process="@this, deductClauseTbl" partialSubmit="true"
 						action="#{lOADetailBackingBean.addDeductionClauseAction}"
