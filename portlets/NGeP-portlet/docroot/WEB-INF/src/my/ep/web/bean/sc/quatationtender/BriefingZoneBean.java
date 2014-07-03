@@ -21,6 +21,8 @@ public class BriefingZoneBean {
 	private List<ScQtDeliveryLoc> selectDeliveryList;
 	public int id;
 	private ScQtBsv scQtBsv;
+	private List<ScQtBsvDtl> selectedBriefingDtls;
+	private List<ScQtBsvDtl> selectedSiteVisitDtls;
 
 	/**
 	 * @param zoneName
@@ -108,6 +110,22 @@ public class BriefingZoneBean {
 
 	public void setScQtBsv(ScQtBsv scQtBsv) {
 		this.scQtBsv = scQtBsv;
+	}
+
+	public List<ScQtBsvDtl> getSelectedBriefingDtls() {
+		return selectedBriefingDtls;
+	}
+
+	public void setSelectedBriefingDtls(List<ScQtBsvDtl> selectedBriefingDtls) {
+		this.selectedBriefingDtls = selectedBriefingDtls;
+	}
+
+	public List<ScQtBsvDtl> getSelectedSiteVisitDtls() {
+		return selectedSiteVisitDtls;
+	}
+
+	public void setSelectedSiteVisitDtls(List<ScQtBsvDtl> selectedSiteVisitDtls) {
+		this.selectedSiteVisitDtls = selectedSiteVisitDtls;
 	}
 
 }
