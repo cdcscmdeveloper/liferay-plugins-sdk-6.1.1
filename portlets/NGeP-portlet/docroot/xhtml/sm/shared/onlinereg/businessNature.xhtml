@@ -117,6 +117,7 @@
 					<tr>
 						<td><p:outputLabel value="L5" /></td>
 						<td><p:selectOneMenu id="bizNatL5" style="width:600px;"
+								valueChangeListener="#{registrationBackingBean.bizNatChangeListener}"
 								value="#{registrationBackingBean.managedBean.suppBusinessNature.pmBusinessNature.businessNatureId}">
 								<f:selectItem itemLabel="---Select---" itemValue="" />
 								<f:selectItems
@@ -124,6 +125,7 @@
 									var="bsNatureL5" itemValue="#{bsNatureL5.businessNatureId}"
 									itemLabel="#{bsNatureL5.levelName}" />
 								<p:ajax event="change" update="btnBizAddSave" />
+								
 							</p:selectOneMenu></td>
 					</tr>
 				</table>
@@ -134,8 +136,8 @@
 					<c:when
 						test="#{!registrationBackingBean.managedBean.suppBusinessNature.pmBusinessNature.brandNew}">
 						<p:commandButton id="btnBizAddSave" value="#{lbl['lbl.btn.save']}" 
-							update="natureBusinessId,outPnlNatBiz" immediate="true"
-							action="#{registrationBackingBean.updateBusinessNature(registrationBackingBean.managedBean.suppBusinessNature.pmBusinessNature)}" />
+							update="natureBusinessId,suppBizNatureId,outPnlNatBiz" immediate="true"
+							action="#{registrationBackingBean.updateBusinessNature()}" />
 					</c:when>
 
 					<c:otherwise>

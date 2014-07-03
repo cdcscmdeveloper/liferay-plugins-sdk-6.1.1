@@ -1,5 +1,6 @@
 package my.ep.web.backingbean.sm.registration;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,6 +10,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -522,15 +524,16 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		log.info("----------addSupplierBusiness Nature--------------" + this.getManagedBean().getSuppBusinessNature().getPmBusinessNature().getBusinessNatureId());
 		String invalidMsg = "Duplicate Nature of Business being added to the list.";
 		
-		PmBusinessNature bizNatObj = (PmBusinessNature) bizNatureL5Map.get(this.getManagedBean().getSuppBusinessNature().getPmBusinessNature().getBusinessNatureId());
-		log.info("**********bizNatObj***********"+bizNatObj.getBusinessNatureId());
-		
-		//Validate Nature of Business
-		if(validateNatureBusiness(this.getManagedBean().getSmSupp().getSmSupplierBusinesses(), bizNatObj, true)){
+		//validate nature of business
+		if(validateNatureBusiness(this.getManagedBean().getSmSupp().getSmSupplierBusinesses(), this.getManagedBean().getSuppBusinessNature().getPmBusinessNature().getBusinessNatureId(), true)){
+			//retrieve object and set object
+			PmBusinessNature bizNatObj = (PmBusinessNature) bizNatureL5Map.get(this.getManagedBean().getSuppBusinessNature().getPmBusinessNature().getBusinessNatureId());
+			log.info("**********retrieve bizNatObj***********"+bizNatObj.getBusinessNatureId());
 			this.getManagedBean().getSuppBusinessNature().setPmBusinessNature(bizNatObj);
 			this.getManagedBean().getSmSupp().getSmSupplierBusinesses().add(this.getManagedBean().getSuppBusinessNature());
 			RequestContext.getCurrentInstance().execute("bizDlg.hide()");
 		}else{
+			//show error message on dialog
 			FacesContext.getCurrentInstance().addMessage("messageDialog",new FacesMessage(
 					FacesMessage.SEVERITY_ERROR, "Nature Of Business.", invalidMsg));	
 		}
@@ -543,17 +546,30 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	 * @param isNew
 	 * @return boolean
 	 */
-	private boolean validateNatureBusiness(List<SmSupplierBusiness>natureBusinesses, PmBusinessNature bizNatObj, boolean isNew){
+	private boolean validateNatureBusiness(List<SmSupplierBusiness>natureBusinesses, Long bizId, boolean isNew){
 		boolean isValid = true;
-		int repeat = 0;
 		//Validate selected Nature of Business
 		for(SmSupplierBusiness bn: natureBusinesses){
-			if(bizNatObj.getBusinessNatureId().equals(bn.getPmBusinessNature().getBusinessNatureId())){
-				repeat++;
+			if(isNew){
+				if(bizId.equals(bn.getPmBusinessNature().getBusinessNatureId())){
+					isValid = false;
+					break;
+				}
+			}else{
+				//compare with current object (compare old value with new value)
+				if(bn.getPmBusinessNature().getTempBusinessNatureId()!=null && bn.getPmBusinessNature().getTempBusinessNatureId()!=0L){
+					if(bizId.equals(bn.getPmBusinessNature().getTempBusinessNatureId())){
+						isValid = false;
+						break;
+					}
+				}else{
+					//compare with object in list
+					if(bizId.equals(bn.getPmBusinessNature().getBusinessNatureId())){
+						isValid = false;
+						break;
+					}
+				}
 			}
-		}
-		if((isNew && repeat>=1) || (!isNew && repeat>1)){
-			isValid = false;
 		}
 		return isValid;
 	}
@@ -602,18 +618,45 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	}
 	
 	
-	public void updateBusinessNature(PmBusinessNature pmBizNat){
+	public void updateBusinessNature(){
 		log.info("---------updateBusinessNature-------------");
 		String invalidMsg = "Duplicate Nature of Business being added to the list.";
-		if(pmBizNat!=null){
-			//Validate Nature of Business
-			if(validateNatureBusiness(this.getManagedBean().getSmSupp().getSmSupplierBusinesses(), pmBizNat, false)){
-				bizNatureL5Map.put(pmBizNat.getBusinessNatureId(), pmBizNat); // to replace the existing object
-				RequestContext.getCurrentInstance().execute("bizDlg.hide()");
+		
+		if(this.getManagedBean().getSuppBusinessNature().getPmBusinessNature().getBusinessNatureId()!=null){
+			//validate for value changed
+			if(this.getManagedBean().getSuppBusinessNature().getPmBusinessNature().getTempBusinessNatureId()!=null 
+					&& !this.getManagedBean().getSuppBusinessNature().getPmBusinessNature().getBusinessNatureId().equals(this.getManagedBean().getSuppBusinessNature().getPmBusinessNature().getTempBusinessNatureId())){
+				//validate selected nature of business
+				if(validateNatureBusiness(this.getManagedBean().getSmSupp().getSmSupplierBusinesses(), this.getManagedBean().getSuppBusinessNature().getPmBusinessNature().getBusinessNatureId(), false)){ //TODO
+					//retrieve new obj and replace old obj
+					PmBusinessNature bizNatObj = (PmBusinessNature) bizNatureL5Map.get(this.getManagedBean().getSuppBusinessNature().getPmBusinessNature().getBusinessNatureId());
+					this.getManagedBean().getSuppBusinessNature().setPmBusinessNature(bizNatObj);
+					RequestContext.getCurrentInstance().execute("bizDlg.hide()");
+				}else{
+					//show error msg on dialog
+					this.getManagedBean().getSuppBusinessNature().getPmBusinessNature().setBusinessNatureId(this.getManagedBean().getSuppBusinessNature().getPmBusinessNature().getTempBusinessNatureId()); // reset
+					FacesContext.getCurrentInstance().addMessage("messageDialog",new FacesMessage(
+							FacesMessage.SEVERITY_ERROR, "Nature Of Business.", invalidMsg));	
+				}
 			}else{
-				FacesContext.getCurrentInstance().addMessage("messageDialog",new FacesMessage(
-						FacesMessage.SEVERITY_ERROR, "Nature Of Business.", invalidMsg));	
+				//close dialog for no changes
+				RequestContext.getCurrentInstance().execute("bizDlg.hide()");
 			}
+			
+		}
+	}
+	
+	/**
+	 * business nature change listener 
+	 * @param event
+	 */
+	public void bizNatChangeListener(ValueChangeEvent event){
+		log.info("---------bizNatChangeListener---------0");
+		Object oldValueObj = event.getOldValue();
+	    Long oldValue = oldValueObj!=null ? (Long)oldValueObj : new Long(0);
+		if(oldValue!=0L){
+			//hold the old value for validation purpose
+			this.getManagedBean().getSuppBusinessNature().getPmBusinessNature().setTempBusinessNatureId(oldValue);
 		}
 	}
 	
