@@ -95,7 +95,7 @@
 						size="40" id="incomeTaxId" maxlength="30" validatorMessage="#{lbl['lbl.sm.incometaxno']} is alphanumeric ">
 							<f:validateRegex pattern="^[a-zA-Z0-9]*$" />
 						</p:inputText>
-				<p:message for="regNo" display="icon" /></td>
+					<p:message id="incomeTaxIdMsg" for="incomeTaxId" display="icon" /></td>
 				<td></td>
 			</tr>
 
@@ -212,7 +212,7 @@
 				<td class="tdContent">
 					<p:inputText id="faxNoId"
 						value="#{registrationBackingBean.managedBean.smAppl.smCompanyBasic.faxNo}"
-						size="40" maxlength="20" label="#{lbl['lbl.sm.faxno']}"
+						size="40" maxlength="14" label="#{lbl['lbl.sm.faxno']}"
 						validatorMessage="#{lbl['lbl.sm.faxno']} - #{lbl['lbl.sm.invalidNo']}">
 						<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
 					</p:inputText>
