@@ -985,6 +985,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			formatLeft.setAlignment(Alignment.LEFT);
 			formatRight.setWrap(true);
 			formatLeft.setAlignment(Alignment.RIGHT);
+			SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 			
 			if(productList.size() > 0){
 				productSheet = itemExcel.createSheet("ProductSheet", 1);
@@ -1041,12 +1042,12 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 					sheet.addCell(new Label(indexCol++, indexRow, delveryTerm));*/
 					productSheet.addCell(new Label(indexCol++, indexRow, nf.format(price.getUnitPrice().longValue()) + "", formatLeft));
 					if(null != price.getUnitPrice() && null != ctItemMaxQty.getMaxQuantity()){
-						productSheet.addCell(new Label(indexCol++, indexRow, price.getUnitPrice().multiply(ctItemMaxQty.getMaxQuantity())+"", formatLeft));
+						productSheet.addCell(new Label(indexCol++, indexRow, price.getUnitPrice().multiply(ctItemMaxQty.getMaxQuantity()).toString(), formatLeft));
 					} else {
 						productSheet.addCell(new Label(indexCol++, indexRow, "N/A"));
 					}
-					productSheet.addCell(new Label(indexCol++, indexRow, price.getEffDate() + "", formatRight));
-					productSheet.addCell(new Label(indexCol++, indexRow, price.getExpDate() + "", formatRight));
+					productSheet.addCell(new Label(indexCol++, indexRow, df.format(price.getEffDate()), formatRight));
+					productSheet.addCell(new Label(indexCol++, indexRow, df.format(price.getExpDate()), formatRight));
 				}
 			}
 			
@@ -1077,6 +1078,10 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				ServiceSheet.addCell(new Label(indexCol2++, indexRow2, "Unit Price (RM)", formatLeftBold));
 				ServiceSheet.setColumnView(indexCol2, 15);
 				ServiceSheet.addCell(new Label(indexCol2++, indexRow2, "Total Amount (RM)", formatLeftBold));
+				ServiceSheet.setColumnView(indexCol2, 15);
+				ServiceSheet.addCell( new Label(indexCol2++, indexRow2, "Effective Date", formatLeftBold));
+				ServiceSheet.setColumnView(indexCol2, 15);
+				ServiceSheet.addCell( new Label(indexCol2++, indexRow2, "Expire Date", formatLeftBold));
 				
 				for(CtItemPrice price : serviceList){
 					indexRow2++; indexCol2=0;
@@ -1095,7 +1100,9 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 							"N/A" : price.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClQuantity().toString(), formatLeft));
 								ServiceSheet.addCell(new Label(indexCol2++, indexRow2,  price.getUnitPrice().toString(), formatLeft));
 						//ServiceSheet.addCell(new Label(indexCol2++, indexRow2, price.getUnitPrice().toString(), formatRight));
-					ServiceSheet.addCell(new Label(indexCol2++, indexRow2, price.getUnitPrice().multiply(price.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClQuantity())+"", formatLeft));
+					ServiceSheet.addCell(new Label(indexCol2++, indexRow2, price.getUnitPrice().multiply(price.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClQuantity()).toString(), formatLeft));
+					ServiceSheet.addCell(new Label(indexCol2++, indexRow2, df.format(price.getEffDate()), formatLeft));
+					ServiceSheet.addCell(new Label(indexCol2++, indexRow2, df.format(price.getExpDate()), formatLeft));
 				}
 			}
 			
