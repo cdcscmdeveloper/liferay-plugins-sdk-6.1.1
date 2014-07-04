@@ -7,11 +7,25 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel header="Award List" toggleable="true">
-		<ui:fragment rendered="#{noticeBoardBackingBean.managedBean.scQt.finalization.recommendedType eq 'I'}">
-
+		<ui:fragment
+			rendered="#{noticeBoardBackingBean.managedBean.scQt.finalization.recommendedType eq 'I'}">
+			<p:panelGrid columns="2" border="0" cellpadding="0" cellspacing="0">
+				<p:outputLabel value="Award Type"></p:outputLabel>
+				<h:outputText
+					value="#{noticeBoardBackingBean.managedBean.scQt.finalization.recommendedType}"></h:outputText>
+				
+			</p:panelGrid>
 		</ui:fragment>
-		<ui:fragment rendered="#{noticeBoardBackingBean.managedBean.scQt.finalization.recommendedType eq 'P'}">
-			
+		<ui:fragment
+			rendered="#{noticeBoardBackingBean.managedBean.scQt.finalization.recommendedType eq 'P'}">
+			<p:panelGrid columns="2" border="0" cellpadding="0" cellspacing="0">
+				<p:outputLabel value="Award Type"></p:outputLabel>
+				<h:outputText
+					value="#{noticeBoardBackingBean.managedBean.scQt.finalization.recommendedType}"></h:outputText>
+
+				<p:outputLabel value="Supplier Name"></p:outputLabel>
+				<h:outputText value=""></h:outputText>
+			</p:panelGrid>
 		</ui:fragment>
 	</p:panel>
 </ui:composition>

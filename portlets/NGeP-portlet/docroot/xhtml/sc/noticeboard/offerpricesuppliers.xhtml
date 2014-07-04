@@ -8,17 +8,17 @@
 
 	<p:panel header="Supplier List" toggleable="true">
 		<p:dataTable id="supplierPriceDtls"
-			value="#{noticeBoardBackingBean.managedBean.proposalAmts}"
-			var="proposalAmt" rowKey="#{proposalAmt}" rowIndexVar="index">
+			value="#{noticeBoardBackingBean.managedBean.qualificationBean}"
+			var="supplierBean" >
 			<ac:paginator for="supplierPriceDtls"></ac:paginator>
 
 			<p:column headerText="#{lbl['lbl.qt.nb.supplierno']}">
 				<h:outputText
-					value="#{proposalAmt.scQtProposal.scQtSupplier.qtSupplierId}" />
+					value="#{supplierBean.supplierId}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.qt.nb.offeredprice']}">
-				<h:outputText value="#{proposalAmt.proposalAmt}" />
+				<h:outputText value="#{supplierBean.offeredPrice}" />
 			</p:column>
 
 

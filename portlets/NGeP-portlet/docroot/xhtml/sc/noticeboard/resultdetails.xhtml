@@ -24,7 +24,7 @@
 				<h:outputText value="#{scqt.pmOrgProfile.orgName}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.notice.board.pdate']}"
-				style="width:7%;">
+				style="width:6%;">
 				<h:outputText value="#{scqt.publishDate}">
 					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
@@ -32,20 +32,20 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.notice.board.clsdate']}"
-				style="width:7%;">
+				style="width:6%;">
 				<h:outputText value="#{scqt.closingDate}">
 					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.qt.nb.countdowndays']}"
-				style="width:10%; white-space:normal; text-align:right;"
+				style="width:8%; white-space:normal; text-align:right;"
 				rendered="#{noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusPublish or noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusChanges}">
 						#{noticeBoardBackingBean.getClosingDays(scqt.closingDate)}
 					</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.notice.board.view.bsv']}"
-				style="width:3%; white-space:normal; text-align:right;"
+				style="width:7%; white-space:normal; text-align:right;"
 				rendered="#{noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusPublish or noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusChanges }">
 				<h:outputText
 					value="#{(scqt.bsvRequired eq '1')?lbl['lbl.ct.dialong.cofirm.no']:lbl['lbl.ct.dialong.cofirm.yes']}" />
