@@ -13,7 +13,7 @@
 		<p:dataTable id="financeProposaltwo" var="stageTwofunctional"
 			widgetVar="financialChecklist"
 			value="#{specificationBackingBean.managedBean.scQtCheckSt2financeProposalList}"
-			 rowIndexVar="index"
+			rowIndexVar="index"
 			selection="#{specificationBackingBean.managedBean.s2FinSelect}"
 			rowKey="#{stageTwofunctional}">
 			<ac:paginator for="financeProposaltwo" />
@@ -45,7 +45,7 @@
 				style="width:20%">
 
 
-				<h:outputText value="Specification"
+				<h:outputText value="Template Specification"
 					rendered="#{stageTwofunctional.definationType.parameterId=='185'}"></h:outputText>
 
 
@@ -76,12 +76,21 @@
 							update="financeProposaltwo"></p:ajax>
 					</p:selectOneMenu>
 				</ui:fragment>
-				<h:outputText value="Online Submission"
-					rendered="#{index lt specificationBackingBean.managedBean.scQtCheckSt2financeProposalList.size()-1 and stageTwofunctional.action.parameterId eq '690'}" />
+				<ui:fragment rendered="#{stageTwofunctional.qtChecklistId==null}">
+					<h:outputText value="Online Submission"
+						rendered="#{index lt specificationBackingBean.managedBean.scQtCheckSt2financeProposalList.size()-1 and stageTwofunctional.action.parameterId eq '690'}" />
 
-				<h:outputText value="View"
-					rendered="#{index lt specificationBackingBean.managedBean.scQtCheckSt2financeProposalList.size()-1 and stageTwofunctional.action.parameterId eq '688'}" />
+					<h:outputText value="View"
+						rendered="#{index lt specificationBackingBean.managedBean.scQtCheckSt2financeProposalList.size()-1 and stageTwofunctional.action.parameterId eq '688'}" />
+				</ui:fragment>
 
+				<ui:fragment rendered="#{stageTwofunctional.qtChecklistId!=null}">
+					<h:outputText
+						value="#{specificationBackingBean.getParameterDesc(stageTwofunctional.action)}"
+						rendered="#{stageTwoTechnical.action.parameterId eq '688' or stageTwoTechnical.action.parameterId eq '690' or stageTwoTechnical.action.parameterId eq '689' }"></h:outputText>
+
+
+				</ui:fragment>
 
 				<!-- <h:outputText value="Online Submit"
 						rendered="#{stageTwofunctional.action.parameterId eq '9'}"></h:outputText>
@@ -110,7 +119,7 @@
 
 			<p:column headerText="#{lbl['lbl.sc.spec.stage.document']}"
 				style="width:30%">
-				<ui:include src="/xhtml/sc/specification/upload.xhtml" />
+				
 				<p:commandLink oncomplete="uploadS1Fin.show();return false;"
 					update="financeProposaltwo"
 					rendered="#{stageTwofunctional.definationType.parameterId=='184'}">

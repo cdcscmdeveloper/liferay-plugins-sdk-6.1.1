@@ -46,36 +46,35 @@
 
 			<p:column headerText="#{lbl['lbl.sc.spec.stage.type']}"
 				style="width:10%">
-
-				<h:outputText value="Specification"
-					rendered="#{stageTwoTechnical.definationType.parameterId=='185'}"></h:outputText>
-
-
-				<h:outputText value="System Defined"
-					rendered="#{stageTwoTechnical.definationType.parameterId=='187'}"></h:outputText>
+				<ui:fragment rendered="#{stageTwoTechnical.qtChecklistId!=null}">
+					<h:outputText
+						value="#{specificationBackingBean.getParameterDesc(stageTwoTechnical.definationType)}"
+						rendered="#{stageTwoTechnical.definationType.parameterId=='185' or stageTwoTechnical.definationType.parameterId=='187' or stageTwoTechnical.definationType.parameterId=='188' or stageTwoTechnical.definationType.parameterId=='184' or stageTwoTechnical.definationType.parameterId=='684' or stageTwoTechnical.definationType.parameterId=='685'}"></h:outputText>
 
 
-				<h:outputText value="Upload"
-					rendered="#{index lt specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 and stageTwoTechnical.definationType.parameterId=='184'}"></h:outputText>
-
-
-				<h:outputText value="Web Form"
-					rendered="#{stageTwoTechnical.definationType.parameterId=='188'}"></h:outputText>
+				</ui:fragment>
 
 
 
 
-				<h:outputText value="Sample"
-					rendered="#{index lt specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 and stageTwoTechnical.definationType.parameterId=='684'}"></h:outputText>
+
+				<ui:fragment rendered="#{stageTwoTechnical.qtChecklistId==null}">
+
+					<h:outputText value="Upload"
+						rendered="#{index lt specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 and stageTwoTechnical.definationType.parameterId=='184'}"></h:outputText>
+
+					<h:outputText value="Sample"
+						rendered="#{index lt specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 and stageTwoTechnical.definationType.parameterId=='684'}"></h:outputText>
 
 
-				<h:outputText value="Presentation/Demo"
-					rendered="#{index lt specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 and stageTwoTechnical.definationType.parameterId=='685'}"></h:outputText>
+					<h:outputText value="Presentation/Demo"
+						rendered="#{index lt specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 and stageTwoTechnical.definationType.parameterId=='685'}"></h:outputText>
 
-
+				</ui:fragment>
 
 				<ui:fragment
 					rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 and stageTwoTechnical.title == null}">
+
 
 					<p:selectOneMenu style="width:100px;"
 						value="#{stageTwoTechnical.definationType.parameterId}">
@@ -105,25 +104,30 @@
 					</p:selectOneMenu>
 				</ui:fragment>
 
-
-				<h:outputText value="Manual Submission"
-					rendered="#{index lt specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 and stageTwoTechnical.action.parameterId eq '691'}"></h:outputText>
-
-
-				<h:outputText value="View"
-					rendered="#{index lt specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 and stageTwoTechnical.action.parameterId eq '688'}"></h:outputText>
+				<ui:fragment rendered="#{stageTwoTechnical.qtChecklistId==null}">
+					<h:outputText value="Manual Submission"
+						rendered="#{index lt specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 and stageTwoTechnical.action.parameterId eq '691'}"></h:outputText>
 
 
-				<h:outputText value="Online Submission"
-					rendered="#{index lt specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 and stageTwoTechnical.action.parameterId eq '690'}"></h:outputText>
+					<h:outputText value="View"
+						rendered="#{index lt specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 and stageTwoTechnical.action.parameterId eq '688'}"></h:outputText>
 
 
-				<h:outputText value="Presentation/Demo"
-					rendered="#{index lt specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 and stageTwoTechnical.action.parameterId eq '692'}"></h:outputText>
+					<h:outputText value="Online Submission"
+						rendered="#{index lt specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 and stageTwoTechnical.action.parameterId eq '690'}"></h:outputText>
 
 
+					<h:outputText value="Presentation/Demo"
+						rendered="#{index lt specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 and stageTwoTechnical.action.parameterId eq '692'}"></h:outputText>
+				</ui:fragment>
+
+				<ui:fragment rendered="#{stageTwoTechnical.qtChecklistId!=null}">
+					<h:outputText
+						value="#{specificationBackingBean.getParameterDesc(stageTwoTechnical.action)}"
+						rendered="#{stageTwoTechnical.action.parameterId eq '691' or stageTwoTechnical.action.parameterId eq '688' or stageTwoTechnical.action.parameterId eq '690' or stageTwoTechnical.action.parameterId eq '692'  or stageTwoTechnical.action.parameterId eq '689' }"></h:outputText>
 
 
+				</ui:fragment>
 
 			</p:column>
 
@@ -150,7 +154,7 @@
 
 			<p:column headerText="#{lbl['lbl.sc.spec.stage.document']}"
 				style="width:20%">
-				<ui:include src="/xhtml/sc/specification/upload.xhtml" />
+			
 				<!-- <h:panelGroup id="document"> rendered="#{stageTwoTechnical.definationType.parameterId eq '184'}"-->
 				<p:commandLink oncomplete="uploadDlg.show();return false;"
 					styleClass="sample#{index}"
