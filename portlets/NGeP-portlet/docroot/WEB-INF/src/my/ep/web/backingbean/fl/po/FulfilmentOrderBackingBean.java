@@ -192,16 +192,17 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 		return null;
 	}
 
-	public FulfilmentResDTO retrievePendingDo() {
-		IFulfilmentOrderSO filmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject("fl", IFulfilmentOrderSO.class);
-		
-		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-		reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
-		
-		FulfilmentResDTO resDTO = filmentOrderSO.getPendingDoList(reqDTO);
-		List<FlFulfilmentOrder> pendingDoList = resDTO.getFulfilmentOrderList();
-		this.getManagedBean().setPendingDoList(pendingDoList);
-		return resDTO;
+	private void retrievePendingDo() {
+		if(isFlFulfilmentSupplier()) {
+			IFulfilmentOrderSO filmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject("fl", IFulfilmentOrderSO.class);
+			
+			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+			reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+			
+			FulfilmentResDTO resDTO = filmentOrderSO.getPendingDoList(reqDTO);
+			List<FlFulfilmentOrder> pendingDoList = resDTO.getFulfilmentOrderList();
+			this.getManagedBean().setPendingDoList(pendingDoList);
+		}
 	}
 	
 	public FulfilmentResDTO getDeliveryAddress() {
@@ -355,7 +356,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			} else if (FLProcessNameConst.STOP_FULFILMENT_REQUEST_PROCESS_NAME.equalsIgnoreCase(res.getProcessName())) {
 				FLStopFullfillmentDataType stopFlData = (FLStopFullfillmentDataType)obj;
 				FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
-				//flReqDTO.setFlOrderId(stopFlData.getFullfillmentRequestId());
+				flReqDTO.setFlOrderId(stopFlData.getOrderId());
 				
 				FulfilmentResDTO resDTO = getFulfilmentOrderSO().retrieveFulfilmentOrderById(flReqDTO);
 				getManagedBean().setStopRequestId(stopFlData.getStopRequestId().longValue());
@@ -616,6 +617,11 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 		public boolean isFlFulfilmentApprover() {
 			FacesScopes facesScopes = new FacesScopes();
 			return facesScopes.hasRoleUser(RoleCode.FL_APPROVER.value());
+		}
+		
+		private boolean isFlFulfilmentSupplier() {
+			FacesScopes facesScopes = new FacesScopes();
+			return facesScopes.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value()) || facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value()) || facesScopes.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value()) || facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value());
 		}
 
 	

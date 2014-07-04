@@ -14,16 +14,14 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.bpm.dto.BpmRequestDTO;
-import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
-import my.ep.constant.ct.ContractConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constants.CTProcessNameConst;
 import my.ep.constants.FLProcessNameConst;
 import my.ep.constants.SCProcessNameConst;
+import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
-import my.ep.jaxb.ct.circular.CTCircularContractDataType;
 import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
@@ -377,8 +375,11 @@ public class BPMTaskListBackingBean extends
 		IFulfilmentOrderSO fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance()
 				.getServiceObject("fl", IFulfilmentOrderSO.class);
 
+		FacesScopes facesScope = new FacesScopes();
 		
-		List<FlFulfilmentOrder> flFulFilmentOrderList = fulfilmentOrderSO.getPendingDoList();
+		FulfilmentReqDTO fulfilmentReqDTO = new FulfilmentReqDTO();
+		fulfilmentReqDTO.setUserId(facesScope.getUserSessionBean().getUserId());
+		List<FlFulfilmentOrder> flFulFilmentOrderList = fulfilmentOrderSO.getPendingDoList(fulfilmentReqDTO).getFulfilmentOrderList();
 
 			return flFulFilmentOrderList;
 	}
