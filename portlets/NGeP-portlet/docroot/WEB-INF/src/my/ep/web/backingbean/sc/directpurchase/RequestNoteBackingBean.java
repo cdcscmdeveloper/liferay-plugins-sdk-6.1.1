@@ -19,13 +19,13 @@ import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.cm.catalogue.IViewSupplierItemSO;
+import my.ep.biz.service.osb.sc.IPurchaseRequestOsbSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.directpurchase.IDirectPurchaseSO;
 import my.ep.biz.service.sc.directpurchase.IPurchaseInDefaultSO;
-import my.ep.biz.service.sc.directpurchase.IPurchaseRequestSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -55,6 +55,8 @@ import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
 import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
+import my.ep.persistence.entity.cm.catalog.CmSupplierZone;
+import my.ep.persistence.entity.cm.catalog.CmSupplierZoneDTL;
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -65,6 +67,7 @@ import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sc.directpurchase.ScPIDRemark;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefault;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefaultAttachment;
+import my.ep.persistence.entity.sc.directpurchase.ScQuoteZone;
 import my.ep.persistence.entity.sc.directpurchase.ScRNWorkFlowStatus;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
@@ -74,6 +77,8 @@ import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteRemark;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestSupplierItem;
 import my.ep.persistence.entity.sc.directpurchase.ScSupplierItemPrice;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
@@ -457,7 +462,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			
 			if (requestNoteResDTO.isSuccessful()) {
 				if(BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)){
-					IPurchaseRequestSO purchaseReqSO = (IPurchaseRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseRequestSO.class);
+					IPurchaseRequestOsbSO purchaseReqSO = (IPurchaseRequestOsbSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseRequestOsbSO.class);
 					PurchaseRequestOSBReqDTO reqDTO = new PurchaseRequestOSBReqDTO();
 					reqDTO.setRequestNoteId(getManagedBean().getRequestNote().getRequestNoteId());
 					reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
@@ -715,6 +720,29 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		result.setToQty(pricing.getToQty());
 		
 		return result;
+	}
+	
+	private TplSpecZoneDtl createSpecZone(CmSupplierZone supplierZone) {
+		TplSpecZoneDtl specZoneDtl = null;
+		if(supplierZone != null) {
+			if(supplierZone.getCmSupplierZoneDtls() != null) {
+				specZoneDtl = new TplSpecZoneDtl();
+				specZoneDtl.setZoneName(supplierZone.getSuppZoneName());
+				ScQuoteZone specZone = new ScQuoteZone();
+				List<TplSpecZoneLoc> zoneLocs = new ArrayList<TplSpecZoneLoc>();
+				for(CmSupplierZoneDTL zoneDtl : supplierZone.getCmSupplierZoneDtls()) {
+					TplSpecZoneLoc specZoneLoc = new TplSpecZoneLoc();
+					specZoneLoc.setPmDistrict(zoneDtl.getPmDistrict());
+					specZoneLoc.setPmState(zoneDtl.getPmState());
+					specZoneLoc.setPmDivision(zoneDtl.getPmDivision());
+					specZoneLoc.setTplSpecZoneDtl(specZoneDtl);
+					zoneLocs.add(specZoneLoc);
+				}
+				specZoneDtl.setTplSpecZone(specZone);
+				specZoneDtl.setTplSpecZoneLocs(zoneLocs);
+			}
+		}
+		return specZoneDtl;
 	}
 	
 	public SelectItem[] getPriceTypeDropdownValues(String parameterType,
