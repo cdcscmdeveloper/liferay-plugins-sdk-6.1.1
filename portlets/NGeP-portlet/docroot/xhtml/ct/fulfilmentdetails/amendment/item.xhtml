@@ -148,9 +148,8 @@
 						<p:outputLabel value="#{data.toQty}" styleClass="ppRightBtn" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.item.table1.price.price']}" style="width:10%;">
-					<p:column headerText="Price (MYR)" style="width:10%;">
 					  <h:panelGroup style="float:right;" rendered="#{data.changePrice}">
-						<p:inputText value="#{data.unitPrice}" styleClass="ppRightBtn" style="width:100px;" >
+					   	<p:inputText value="#{data.unitPrice}" styleClass="ppRightBtn" style="width:100px;">
 							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</p:inputText>
 						</h:panelGroup>
@@ -200,7 +199,7 @@
 			</p:outputPanel>
 			<h:panelGrid columns="1" style="width:100%" rendered="#{amendmentBackingBean.managedBean.selectedItem!=null and
 			 		(amendmentBackingBean.managedBean.showItem == ParameterConst.itemDisplayTypeCeilQty)
-			 		and and amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange}">
+			 		and amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange}">
 				<p:dataTable id="ceilingTable" var="data" lazy="true" rowKey="#{data}"
 					value="#{amendmentBackingBean.managedBean.selectedItem.ctItemCeilingQties}" >
 					<ac:paginator for="ceilingTable" />
