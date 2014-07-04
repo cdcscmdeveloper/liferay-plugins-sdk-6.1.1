@@ -23,7 +23,7 @@
 				rendered="#{stageTwoTechnical.manditory =='true'}" />
 
 
-			<p:column style="width:30%;white-space: normal;">
+			<p:column style="width:20%;white-space: normal;">
 
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
@@ -32,20 +32,20 @@
 				<ui:fragment rendered="#{stageTwoTechnical.title == null}">
 					<p:inputText required="true" id="techChecklistTitle"
 						label="#{lbl['lbl.sc.spec.stage.title']}"
-						value="#{stageTwoTechnical.title}" size="50" maxlength="100"></p:inputText>
+						value="#{stageTwoTechnical.title}" size="30" maxlength="100"></p:inputText>
 					<p:message id="techChecklistId" for="techChecklistTitle"
 						display="icon"></p:message>
 				</ui:fragment>
 
 				<ui:fragment rendered="#{stageTwoTechnical.title != null}">
-					<h:outputText value="#{stageTwoTechnical.title}" size="50"></h:outputText>
+					<h:outputText value="#{stageTwoTechnical.title}" size="30"></h:outputText>
 				</ui:fragment>
 
 			</p:column>
 
 
 			<p:column headerText="#{lbl['lbl.sc.spec.stage.type']}"
-				style="width:20%">
+				style="width:10%">
 
 				<h:outputText value="Specification"
 					rendered="#{stageTwoTechnical.definationType.parameterId=='185'}"></h:outputText>
@@ -91,7 +91,7 @@
 
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.supplier.action']}"
-				style="width:10%">
+				style="width:8%">
 				<!--  <h:panelGroup id="supplier">  -->
 				<ui:fragment
 					rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 and stageTwoTechnical.title == null}">
@@ -149,7 +149,7 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.spec.stage.document']}"
-				style="width:30%">
+				style="width:20%">
 				<ui:include src="/xhtml/sc/specification/upload.xhtml" />
 				<!-- <h:panelGroup id="document"> rendered="#{stageTwoTechnical.definationType.parameterId eq '184'}"-->
 				<p:commandLink oncomplete="uploadDlg.show();return false;"

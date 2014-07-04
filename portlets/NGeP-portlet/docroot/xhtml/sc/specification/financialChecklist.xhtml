@@ -29,10 +29,10 @@
 					<h:outputText value="#{lbl['lbl.sc.spec.stage.title']}" />
 				</f:facet>
 				<ui:fragment rendered="#{stageTwofunctional.title !=null}">
-					<h:outputText value="#{stageTwofunctional.title}" size="50" />
+					<h:outputText value="#{stageTwofunctional.title}" size="30" />
 				</ui:fragment>
 				<ui:fragment rendered="#{stageTwofunctional.title ==null}">
-					<p:inputText value="#{stageTwofunctional.title}" size="50"
+					<p:inputText value="#{stageTwofunctional.title}" size="30"
 						maxlength="100" required="true" id="finChecklistTitle"
 						label="#{lbl['lbl.sc.spec.stage.title']}"></p:inputText>
 					<p:message id="finChecklistId" for="finChecklistTitle"
