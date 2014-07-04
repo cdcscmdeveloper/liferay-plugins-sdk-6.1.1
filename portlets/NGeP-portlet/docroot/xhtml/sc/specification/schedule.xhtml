@@ -53,7 +53,7 @@
 							<h:outputText value="#{lbl['lbl.sc.spec.schedule.no']}" />
 						</f:facet>
 						<p:inputText value="#{frequency.scheduleNo}" required="true"
-							maxlength="3" label="#{lbl['lbl.sc.spec.schedule.no']}"
+							maxlength="3" label="#{lbl['lbl.sc.spec.schedule.no']}" size="5"
 							id="scheduleNum"></p:inputText>
 						<p:message id="freqScheduledid" for="scheduleNum" display="icon"></p:message>
 					</p:column>
@@ -74,7 +74,7 @@
 						<!-- <p:selectOneMenu value="#{frequency.startYear}">
 
 					</p:selectOneMenu> -->
-						<p:inputText value="#{frequency.startYear}" disabled="true"></p:inputText>
+						<p:inputText value="#{frequency.startYear}" disabled="true" size="5"></p:inputText>
 
 					</p:column>
 
@@ -93,7 +93,7 @@
 						<!-- <p:selectOneMenu value="#{frequency.endYear}">
 
 					</p:selectOneMenu> -->
-						<p:inputText value="#{frequency.endYear}" disabled="true"></p:inputText>
+						<p:inputText value="#{frequency.endYear}" disabled="true" size="5"></p:inputText>
 
 					</p:column>
 					<p:column
@@ -110,7 +110,7 @@
 							<h:outputText value="#{lbl['lbl.ct.sched.stype']}" />
 						</f:facet>
 
-						<p:selectOneMenu style="width:100px;" required="true" id="scheduledTypeId"
+						<p:selectOneMenu style="width:120px;" required="true" id="scheduledTypeId"
 							label="#{lbl['lbl.ct.sched.stype']}"
 							value="#{frequency.scheduleType.parameterId}">
 
@@ -161,7 +161,7 @@
 						</f:facet>
 						<p:inputText value="#{payment.phaseNo}" required="true"
 							label="#{lbl['lbl.sc.spec.phase']}" id="progressivePhase"
-							maxlength="3" />
+							maxlength="3" size="5"/>
 						<p:message id="phaseNumId" for="progressivePhase" display="icon"></p:message>
 					</p:column>
 					<p:column style="width:30%">
@@ -170,7 +170,7 @@
 							<h:outputText value="#{lbl['lbl.sc.spec.description']}" />
 						</f:facet>
 						<p:inputText value="#{payment.phaseDesc}" maxlength="50"
-							required="true" id="progressivePhasedesc"
+							required="true" id="progressivePhasedesc" size="25"
 							label="#{lbl['lbl.sc.spec.description']}"></p:inputText>
 						<p:message id="phaseDescId" for="progressivePhasedesc"
 							display="icon"></p:message>
@@ -191,7 +191,7 @@
 						<!-- <p:selectOneMenu value="#{payment.fromDate}">
 
 						</p:selectOneMenu> -->
-						<p:inputText value="	#{payment.startYear}" disabled="true"></p:inputText>
+						<p:inputText value="	#{payment.startYear}" disabled="true" size="5"></p:inputText>
 
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.spec.stage2.score.to']}"
@@ -210,7 +210,7 @@
 						<!-- <p:selectOneMenu value="#{payment.toDate}">
 
 						</p:selectOneMenu> -->
-						<p:inputText value="#{payment.endYear}" disabled="true"></p:inputText>
+						<p:inputText value="#{payment.endYear}" disabled="true" size="5"></p:inputText>
 					</p:column>
 					<p:column style="width:10%">
 						<f:facet name="header">
@@ -218,7 +218,7 @@
 							<h:outputText value="#{lbl['lbl.sc.spec.weight.percent']}" />
 						</f:facet>
 						<p:inputText value="#{payment.percentage}" required="true"
-							id="progressivePercentage"
+							id="progressivePercentage" size="20"
 							label="#{lbl['lbl.sc.spec.weight.percent']}" maxlength="18"></p:inputText>
 						<p:message id="pahsePercentage" for="progressivePercentage"
 							display="icon"></p:message>
