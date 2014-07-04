@@ -46,6 +46,7 @@
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.certVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.certVerified : false)}" />
 
 			<p:dataTable var="certBean" editable="true"
+				widgetVar="suppCertDtWidVar"
 				value="#{backingBean.managedBean.smAppl.smSupplierCerts}"
 				selection="#{backingBean.managedBean.selectedCertList}"
 				rowKey="#{certBean}" rowIndexVar="index" id="certDt">
@@ -126,11 +127,12 @@
 		id="certPop" closable="false">
 		<p:messages id="suppCertInfoMsg" showSummary="false" showDetail="true"
 			autoUpdate="true" closable="true" />
-		
+
 
 		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value="* #{lbl['lbl.sm.cert.certType']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.cert.certType']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
 						required="#{backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sm.cert.certType']}"
@@ -141,7 +143,8 @@
 						showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="*#{lbl['lbl.sm.cert.certBody']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.cert.certBody']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
 						id="certBody" required="#{backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sm.cert.certBody']}"
@@ -156,7 +159,8 @@
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="* #{lbl['lbl.sm.cert.certName']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.cert.certName']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
 				<td><p:inputText id="certName"
 						required="#{backingBean.managedBean.valueReqd}"
 						label=" #{lbl['lbl.sm.cert.certName']}"
@@ -165,7 +169,8 @@
 						showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="* #{lbl['lbl.sm.cert.strtDate']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.cert.strtDate']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:calendar id="stDate" showOn="button" navigator="true"
 						display="inline" required="#{backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sm.cert.strtDate']}"
@@ -196,11 +201,11 @@
 			</tr>
 
 		</table>
-		
+
 		<br />
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.sm.button.save']}"
-				action="#{backingBean.addOrUpdateCertsToSmAppl}"
+				id="certSaveBtn" action="#{backingBean.addOrUpdateCertsToSmAppl}"
 				partialSubmit="true" process="certPop"
 				update=":form:tt:certDt, @([id$=Msg])" />
 			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"

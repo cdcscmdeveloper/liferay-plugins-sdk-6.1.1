@@ -48,7 +48,8 @@
 
 				<tr>
 					<td width="134px;"><p:outputLabel
-							value="* #{lbl['lbl.sm.facility.ownerType']}" /></td>
+							value="#{lbl['lbl.sm.facility.ownerType']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
 					<td style="width: 100px; padding-bottom: 2px;"><p:selectOneRadio
 							id="ownTypeId" label="#{lbl['lbl.sm.facility.ownerType']}"
 							value="#{backingBean.managedBean.basicCompanyFacility.ownershipType}"
@@ -68,18 +69,23 @@
 				<table style="width: 100%">
 					<tr>
 						<td width="134px;"><p:outputLabel
-								value="#{lbl['lbl.sm.facility.facilityType']}" /></td>
+								value="#{lbl['lbl.sm.facility.facilityType']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
 						<td colspan="3" style="padding-bottom: 4px;"><p:selectOneRadio
-								value="#{backingBean.managedBean.basicCompanyFacility.facilityType}">
+								id="rentedFacTypeId"
+								value="#{backingBean.managedBean.basicCompanyFacility.facilityType}"
+								required="true" label="#{lbl['lbl.sm.facility.facilityType']}">
 								<f:selectItem itemLabel="Home Office" itemValue="H" />
 								<f:selectItem itemLabel="Business Office" itemValue="B" />
 
-							</p:selectOneRadio></td>
+							</p:selectOneRadio> <p:message id="rentedFacTypeIdMsg" for="rentedFacTypeId"
+								showSummary="true" showDetail="false" display="icon" /></td>
 
 					</tr>
 					<tr>
 						<td><p:outputLabel
-								value="* #{lbl['lbl.sm.facility.landLordName']}" /></td>
+								value="#{lbl['lbl.sm.facility.landLordName']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
 						<td><p:inputText id="landlordName"
 								value="#{backingBean.managedBean.basicCompanyFacility.ownerName}"
 								size="35" required="true" maxlength="50"
@@ -87,7 +93,8 @@
 								id="landlordNameMsg" for="landlordName" showSummary="true"
 								showDetail="false" display="icon" /></td>
 						<td><p:outputLabel
-								value="* #{lbl['lbl.sm.facility.monthRent']}" /></td>
+								value="#{lbl['lbl.sm.facility.monthRent']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
 						<td><p:inputText id="rental"
 								value="#{backingBean.managedBean.basicCompanyFacility.rentalRate}"
 								size="35" required="true"
@@ -100,11 +107,13 @@
 					<tr>
 						<td style="vertical-align: top;"><p:outputLabel
 								value="#{lbl['lbl.sm.companyaddress']}"
-								style="padding-top :5px;" /></td>
+								style="padding-top :5px;" /> <p:outputLabel value="*"
+								styleClass="mandatory" /></td>
 						<td>
 							<table style="width: 100%">
 								<tr>
 									<td><p:inputText id="companyAdd1" size="35" maxlength="35"
+											required="true"
 											value="#{backingBean.managedBean.basicCompanyFacility.smAddress.address1}" />
 										<p:message id="companyAdd1Msg" for="companyAdd1"
 											showSummary="true" showDetail="false" display="icon" /></td>
@@ -126,17 +135,21 @@
 						<td>
 							<TABLE style="width: 100%; height: 100px;">
 								<tr>
-									<td><p:outputLabel value="* #{lbl['lbl.sm.country']}" /></td>
+									<td><p:outputLabel value="#{lbl['lbl.sm.country']}" /> <p:outputLabel
+											value="*" styleClass="mandatory" /></td>
 								</tr>
 								<tr>
 
-									<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
+									<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /> <p:outputLabel
+											value="*" styleClass="mandatory" /></td>
 								</tr>
 								<tr>
-									<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
+									<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /> <p:outputLabel
+											value="*" styleClass="mandatory" /></td>
 								</tr>
 								<tr>
-									<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
+									<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /> <p:outputLabel
+											value="*" styleClass="mandatory" /></td>
 								</tr>
 							</TABLE>
 						</td>
@@ -258,18 +271,23 @@
 				<table style="width: 100%">
 					<tr>
 						<td width="134px;"><p:outputLabel
-								value="#{lbl['lbl.sm.facility.facilityType']}" /></td>
+								value="#{lbl['lbl.sm.facility.facilityType']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
 						<td colspan="3" style="padding-bottom: 4px;"><p:selectOneRadio
+								required="true" id="ownedFacTypeId"
+								label="#{lbl['lbl.sm.facility.facilityType']}"
 								value="#{backingBean.managedBean.basicCompanyFacility.facilityType}">
 								<f:selectItem itemLabel="Home Office" itemValue="H" />
 								<f:selectItem itemLabel="Business Office" itemValue="B" />
 
-							</p:selectOneRadio></td>
+							</p:selectOneRadio> <p:message id="ownedFacTypeIdMsg" for="ownedFacTypeId"
+								showSummary="true" showDetail="false" display="icon" /></td>
 
 					</tr>
 					<tr>
 						<td width="134px;"><p:outputLabel
-								value="* #{lbl['lbl.sm.facility.ownerName']}" /></td>
+								value="#{lbl['lbl.sm.facility.ownerName']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
 						<td colspan="3"><p:inputText id="fcltyOwnerName"
 								label="#{lbl['lbl.sm.facility.ownerName']}" maxlength="50"
 								value="#{backingBean.managedBean.basicCompanyFacility.ownerName}"
@@ -279,7 +297,8 @@
 					</tr>
 					<tr>
 						<td width="134px;"><p:outputLabel
-								value="* #{lbl['lbl.sm.facility.purchaseDate']}" /></td>
+								value="#{lbl['lbl.sm.facility.purchaseDate']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
 						<td colspan="3" style="padding-bottom: 3px;"><p:calendar
 								showOn="button" id="purchaseDate" navigator="true"
 								readonlyInput="true" display="inline"
@@ -292,7 +311,8 @@
 					</tr>
 					<tr>
 						<td width="134px;"><p:outputLabel
-								value="* #{lbl['lbl.sm.facility.purchasePrice']}" /></td>
+								value="#{lbl['lbl.sm.facility.purchasePrice']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
 						<td colspan="3"><p:inputText size="35" id="purchasePrice"
 								label="#{lbl['lbl.sm.facility.purchasePrice']}"
 								value="#{backingBean.managedBean.basicCompanyFacility.purchasePrice}"

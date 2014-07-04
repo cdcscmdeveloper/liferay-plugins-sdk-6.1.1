@@ -45,7 +45,7 @@
 				<p:blockUI block=":form:tt:shrInfPan" widgetVar="buiPoShr"
 					id="poShrBlc"
 					blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.shareholderVerifed : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.shareholderVerifed : false)}" />
-				<p:dataTable var="shareBean"
+				<p:dataTable var="shareBean" widgetVar="suppCapShrHldrDtWidVar"
 					value="#{backingBean.managedBean.smapplShareHolders}"
 					selection="#{backingBean.managedBean.selectedShareHolders}"
 					rowKey="#{shareBean}" rowIndexVar="index" id="shrPerDt">

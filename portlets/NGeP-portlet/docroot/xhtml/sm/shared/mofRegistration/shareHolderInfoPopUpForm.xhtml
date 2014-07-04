@@ -10,14 +10,15 @@
 		id="equiPerDtlPan">
 		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value="* #{lbl['lbl.sm.person.name']}" /></td>
-				<td><p:inputText id="equiPerNam"
+				<td><p:outputLabel value="#{lbl['lbl.sm.person.name']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:inputText id="equiPerNam" maxlength="50"
 						label="#{lbl['lbl.sm.person.name']}" required="true"
 						value="#{backingBean.managedBean.selectedShareHolder.name}"
 						size="35" /> <p:message id="equiPerNamMsg" for="equiPerNam"
 						showSummary="true" showDetail="false" display="icon" /></td>
-				<td><p:outputLabel
-						value="* #{lbl['lbl.sm.person.nationality']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.person.nationality']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu
 						label="#{lbl['lbl.sm.person.nationality']}" id="equiPerNational"
 						required="true"
@@ -33,22 +34,59 @@
 
 			</tr>
 			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.identificationtype']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td><p:selectOneMenu id="equiPerIdenType" required="true"
+						label="#{lbl['lbl.sm.identificationtype']}"
+						value="#{backingBean.managedBean.selectedShareHolder.identificationTypeId}"
+						style="width:200px">
+						<f:selectItems value="#{backingBean.getDropdownValues('ID')}" />
+						<p:ajax event="change" partialSubmit="true" process="@this"
+							listener="#{backingBean.assignPersonIdentType}"
+							update="equiPerDtlIdenTypePan,equiPerDtlIdenTypeLblPan" />
+					</p:selectOneMenu> <p:message id="equiPerIdenTypeMsg" for="equiPerIdenType"
+						showSummary="true" showDetail="false" display="icon" /></td>
 
-				<td><p:outputLabel value="* #{lbl['lbl.sm.person.icNum']}" /></td>
-				<td><p:inputText label="#{lbl['lbl.sm.person.icNum']}"
-						required="true" id="equiPerIcNum"
-						value="#{backingBean.managedBean.selectedShareHolder.identificationNo}"
-						size="35" maxlength="15" /> <p:message id="equiPerIcNumMsg"
-						for="equiPerIcNum" showSummary="true" showDetail="false"
-						display="icon" /></td>
-				<!-- <td><p:outputLabel value="* Race" title="For Malaysian Only" /></td>
-				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="Select One" itemValue="1" />
-						<f:selectItem itemLabel="Melayu" itemValue="M" />
-						<f:selectItem itemLabel="Chinese" itemValue="C" />
-						<f:selectItem itemLabel="Indian" itemValue="I" />
-					</p:selectOneMenu></td> -->
-				<td><p:outputLabel value="* #{lbl['lbl.sm.person.dob']}" /></td>
+				<td><p:outputPanel id="equiPerDtlIdenTypeLblPan">
+						<p:outputLabel value="#{lbl['lbl.sm.person.icNum']}"
+							id="equiPerIcNumLbl"
+							rendered="#{backingBean.managedBean.selectedShareHolder.identificationType.parameterCode eq 'I'}" />
+						<p:outputLabel value="#{lbl['lbl.sm.person.psptNum']}"
+							id="equiPerPsptNumLbl"
+							rendered="#{backingBean.managedBean.selectedShareHolder.identificationType.parameterCode eq 'P'}" />
+						<p:outputLabel value="#{lbl['lbl.sm.person.armyNum']}"
+							id="equiPerArmyNumLbl"
+							rendered="#{backingBean.managedBean.selectedShareHolder.identificationType.parameterCode eq 'A'}" />
+						<p:outputLabel value="*" styleClass="mandatory"
+							rendered="#{backingBean.managedBean.selectedShareHolder.identificationType.parameterCode eq 'I' or backingBean.managedBean.selectedShareHolder.identificationType.parameterCode eq 'A' or backingBean.managedBean.selectedShareHolder.identificationType.parameterCode eq 'P'}" />
+					</p:outputPanel></td>
+
+				<td><p:outputPanel id="equiPerDtlIdenTypePan">
+						<p:inputText label="#{lbl['lbl.sm.person.icNum']}" required="true"
+							id="equiPerIcNum"
+							rendered="#{backingBean.managedBean.selectedShareHolder.identificationType.parameterCode eq 'I'}"
+							value="#{backingBean.managedBean.selectedShareHolder.identificationNo}"
+							size="35" maxlength="12"
+							validatorMessage="#{lbl['lbl.sm.person.icNum']} - #{lbl['lbl.sm.invalidNo']}">
+							<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
+						</p:inputText>
+						<p:message id="equiPerIcNumMsg" for="equiPerIcNum"
+							showSummary="true" showDetail="false" display="icon" />
+						<p:inputText label="#{lbl['lbl.sm.person.psptNum']}"
+							required="true" id="equiPerPasptNum"
+							rendered="#{backingBean.managedBean.selectedShareHolder.identificationType.parameterCode eq 'P' or backingBean.managedBean.selectedShareHolder.identificationType.parameterCode eq 'A'}"
+							value="#{backingBean.managedBean.selectedShareHolder.identificationNo}"
+							size="35" maxlength="12">
+						</p:inputText>
+						<p:message id="equiPerPasptNumMsg" for="equiPerPasptNum"
+							showSummary="true" showDetail="false" display="icon" />
+					</p:outputPanel></td>
+
+
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.person.dob']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
 				<td><p:calendar showOn="button" navigator="true"
 						display="inline" required="true" readonlyInput="true"
 						label="#{lbl['lbl.sm.person.dob']}" id="equiPerDob"
@@ -57,12 +95,7 @@
 						value="#{backingBean.managedBean.selectedShareHolder.birthDate}" />
 					<p:message id="equiPerDobMsg" for="equiPerDob" showSummary="true"
 						showDetail="false" display="icon" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.person.designation']}" /></td>
-				<td><p:inputText label="#{lbl['lbl.sm.person.designation']}"
-						value="#{backingBean.managedBean.selectedShareHolder.designation}"
-						size="35" /></td>
+
 				<c:choose>
 					<c:when
 						test="#{backingBean.managedBean.selectedShareHolder.equityOwner}">
@@ -114,7 +147,8 @@
 								<c:choose>
 									<c:when
 										test="#{backingBean.managedBean.smAppl.supplierType eq 'K'}">
-										<td><p:outputLabel value="#{lbl['lbl.sm.person.role']}" /></td>
+										<td><p:outputLabel value="#{lbl['lbl.sm.person.role']}" />
+											<p:outputLabel value="*" styleClass="mandatory" /></td>
 										<td>
 											<table>
 												<tr>
@@ -133,7 +167,8 @@
 										</td>
 									</c:when>
 									<c:otherwise>
-										<td><p:outputLabel value="#{lbl['lbl.sm.person.role']}" /></td>
+										<td><p:outputLabel value="#{lbl['lbl.sm.person.role']}" />
+											<p:outputLabel value="*" styleClass="mandatory" /></td>
 										<td>
 											<table>
 												<tr>
@@ -159,20 +194,13 @@
 					</c:otherwise>
 				</c:choose>
 			</tr>
-			<!--<tr>
-
-				 <td><p:outputLabel value="* Branch Associated" /></td>
-				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;">
-						<f:selectItem itemLabel=" Select One" itemValue="" />
-						<f:selectItems
-							value="#{backingBean.managedBean.smAppl.smSupplierBranches}"
-							var="supBean" itemLabel="#{supBean.branchName}"
-							itemValue="#{supBean.supplierBranchId}" />
-					</p:selectOneMenu></td>
- 
-			</tr>-->
 
 			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.person.designation']}" /></td>
+				<td><p:inputText label="#{lbl['lbl.sm.person.designation']}"
+						maxlength="30"
+						value="#{backingBean.managedBean.selectedShareHolder.designation}"
+						size="35" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.sm.person.epfNo']}" /></td>
 				<td><p:inputText title="For Malaysian Only" maxlength="10"
 						label="#{lbl['lbl.sm.person.epfNo']}"
@@ -182,19 +210,22 @@
 						<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
 					</p:inputText> <p:message id="equiEpfNoMsg" for="equiEpfNo" showSummary="true"
 						showDetail="false" display="icon" /></td>
-				<td><p:outputLabel value="* #{lbl['lbl.sm.person.exp']}" /></td>
+
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.person.exp']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
 				<td><p:inputText label="#{lbl['lbl.sm.person.exp']}"
 						id="equiExper" required="true"
 						value="#{backingBean.managedBean.selectedShareHolder.workExperienceYear}"
 						size="35" maxlength="2">
-						<f:validateLongRange />
+						<f:validateLongRange minimum="0" maximum="99" />
 					</p:inputText> <p:message id="equiExperMsg" for="equiExper" showSummary="true"
 						showDetail="false" display="icon" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="* #{lbl['lbl.sm.person.email']} " /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.person.email']} " /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
 				<td><p:inputText label="#{lbl['lbl.sm.person.email']}"
-						id="equiEmail" required="true"
+						id="equiEmail" required="true" maxlength="80"
 						validatorMessage="#{lbl['lbl.sm.person.email']} - #{lbl['lbl.sm.invalidEmail']}"
 						value="#{backingBean.managedBean.selectedShareHolder.email}"
 						size="35">
@@ -202,6 +233,10 @@
 							pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
 					</p:inputText> <p:message id="equiEmailMsg" for="equiEmail" showSummary="true"
 						showDetail="false" display="icon" /></td>
+
+
+			</tr>
+			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.mobileNo']}" /></td>
 				<td><p:inputText size="35" maxlength="12"
 						value="#{backingBean.managedBean.selectedShareHolder.mobileNo}"
@@ -210,9 +245,6 @@
 						<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
 					</p:inputText> <p:message id="equiPerMobMsg" for="equiPerMob" showSummary="true"
 						showDetail="false" display="icon" /></td>
-
-			</tr>
-			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
 				<td><p:inputText size="35" maxlength="12"
 						value="#{backingBean.managedBean.selectedShareHolder.phoneNo}"
@@ -221,7 +253,9 @@
 						<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
 					</p:inputText> <p:message id="equiPerPhnNoMsg" for="equiPerPhnNo"
 						showSummary="true" showDetail="false" display="icon" /></td>
+			</tr>
 
+			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.faxno']}" /></td>
 				<td><p:inputText size="35" maxlength="12"
 						validatorMessage="#{lbl['lbl.sm.faxno']} - #{lbl['lbl.sm.invalidNo']}"
@@ -230,9 +264,6 @@
 						<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
 					</p:inputText> <p:message id="equiPerFaxNoMsg" for="equiPerFaxNo"
 						showSummary="true" showDetail="false" display="icon" /></td>
-			</tr>
-
-			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.person.bumi']}"
 						title="For Malaysian Only" /></td>
 				<td><p:selectOneRadio
@@ -240,9 +271,11 @@
 						<f:selectItem itemLabel="Yes" itemValue="1" />
 						<f:selectItem itemLabel="No" itemValue="0" />
 					</p:selectOneRadio></td>
+			</tr>
+			<tr>
 				<td><p:outputLabel value=" #{lbl['lbl.sm.person.religion']}"
 						title="For Malaysian Only" /></td>
-				<td><p:selectOneRadio
+				<td colspan="3"><p:selectOneRadio
 						value="#{backingBean.managedBean.selectedShareHolder.muslimFlg}">
 						<f:selectItem itemLabel="Islam" itemValue="1" />
 						<f:selectItem itemLabel="Non-Islam" itemValue="0" />
@@ -307,7 +340,8 @@
 		<table style="width: 100%">
 			<tr>
 				<td style="width: 13%;"><p:outputLabel
-						value="*#{lbl['lbl.sm.person.shrAmt']}" /></td>
+						value="#{lbl['lbl.sm.person.shrAmt']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
 				<td style="padding-right: 42px;"><p:inputText
 						label="#{lbl['lbl.sm.person.shrAmt']}" id="equiShrDetAmt"
 						value="#{backingBean.managedBean.selectedShareHolder.shareAmt}"
@@ -336,7 +370,7 @@
 	</p:panel>
 
 	<p:panel header="Job Function" toggleable="true" id="equiShrHldrJbFnc">
-		<p:dataTable id="shrJfdt"
+		<p:dataTable id="shrJfdt" widgetVar="suppPrsnJobFunDtWidVar"
 			value="#{backingBean.managedBean.selectedShareHolder.smStaffExperiences}"
 			var="jf"
 			selection="#{backingBean.managedBean.selectedShrHldrJobFunctions}"
@@ -399,18 +433,20 @@
 			showDetail="true" autoUpdate="true" closable="true" />
 		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value="* Company" /></td>
+				<td><p:outputLabel value=" Company" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
 				<td><p:inputText size="35"
 						required="#{backingBean.managedBean.valueReqd}" label="Company"
-						id="equiJbFnInfCmpName"
+						id="equiJbFnInfCmpName" maxlength="100"
 						value="#{backingBean.managedBean.selectedJobFunction.companyName}" />
 					<p:message id="equiJbFnInfCmpNameMsg"
 						for=":form:tt:equiJbFnInfCmpName" showSummary="true"
 						showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="* Designation" /></td>
-				<td><p:inputText size="35"
+				<td><p:outputLabel value=" Designation" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:inputText size="35" maxlength="250"
 						required="#{backingBean.managedBean.valueReqd}"
 						label="Designation" id="equiJbFnInfDesg"
 						value="#{backingBean.managedBean.selectedJobFunction.designation}" />
@@ -418,35 +454,36 @@
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="* Year From" /></td>
-				<td><p:inputMask placeHolder="" style="margin-bottom : 5px;"
-						size="35" required="#{backingBean.managedBean.valueReqd}"
+				<td><p:outputLabel value=" Year From" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:inputText style="margin-bottom : 5px;" size="35"
+						required="#{backingBean.managedBean.valueReqd}"
 						id="equiJbFnInfYrFrm"
 						value="#{backingBean.managedBean.selectedJobFunction.fromYear}"
-						maxlength="4" label="Year From" mask="9999">
+						maxlength="4" label="Year From">
 						<f:validateLongRange minimum="1950" maximum="2050" />
-					</p:inputMask> <p:message id="equiJbFnInfYrFrmMsg"
+					</p:inputText> <p:message id="equiJbFnInfYrFrmMsg"
 						for=":form:tt:equiJbFnInfYrFrm" showSummary="true"
 						showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="* Year To" /></td>
-				<td><p:inputMask placeHolder="" size="35"
+				<td><p:outputLabel value="Year To" /> <p:outputLabel value="*"
+						styleClass="mandatory" /></td>
+				<td><p:inputText size="35"
 						required="#{backingBean.managedBean.valueReqd}" label="Year To"
 						id="equiJbFnInfYrTo"
 						value="#{backingBean.managedBean.selectedJobFunction.toYear}"
-						maxlength="4" mask="9999">
+						maxlength="4">
 						<f:validateLongRange minimum="1950" maximum="2050" />
-					</p:inputMask> <p:message id="equiJbFnInfYrToMsg" for=":form:tt:equiJbFnInfYrTo"
+					</p:inputText> <p:message id="equiJbFnInfYrToMsg" for=":form:tt:equiJbFnInfYrTo"
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 		</table>
 		<br />
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.sm.button.save']}"
-				action="#{backingBean.addOrUpdateJobFunctions}" type="submit"
-				partialSubmit="true" process="equiJobFunctionInfo"
-				update="shrJfdt,@([id$=Msg])" />
+				action="#{backingBean.addOrUpdateJobFunctions}" partialSubmit="true"
+				process="equiJobFunctionInfo" update="shrJfdt,@([id$=Msg])" />
 			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
 				action="#{backingBean.cancelJobFunctions}" partialSubmit="true"
 				process="@this">
@@ -458,7 +495,7 @@
 
 		<p:dataTable id="shrRelCom"
 			value="#{backingBean.managedBean.selectedShareHolder.smRelatedCompanies}"
-			var="relCom"
+			var="relCom" widgetVar="suppPrsnRelComDtWidVar"
 			selection="#{backingBean.managedBean.selectedShrHldrRelatedCompanies}"
 			rowIndexVar="rowIndex" rowKey="#{relCom}">
 			<ac:paginator for="shrRelCom" />
@@ -517,8 +554,9 @@
 			showDetail="true" autoUpdate="true" closable="true" />
 		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value="* Company Name" /></td>
-				<td><p:inputText
+				<td><p:outputLabel value="Company Name" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:inputText maxlength="100"
 						required="#{backingBean.managedBean.valueReqd}"
 						label="Company Name" id="equiRlCmpInfCompName"
 						value="#{backingBean.managedBean.selectedRelatedCompany.companyName}"
@@ -527,7 +565,8 @@
 						display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="* Reg NO." /></td>
+				<td><p:outputLabel value="Reg NO." /> <p:outputLabel value="*"
+						styleClass="mandatory" /></td>
 				<td><p:inputText
 						required="#{backingBean.managedBean.valueReqd}" label="Reg NO."
 						id="equiRlCmpInfRegNo"
@@ -537,8 +576,9 @@
 						display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="* Designation" /></td>
-				<td><p:inputText
+				<td><p:outputLabel value="Designation" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:inputText maxlength="30"
 						required="#{backingBean.managedBean.valueReqd}"
 						label="Designation" id="equiRlCmpInfDesg"
 						value="#{backingBean.managedBean.selectedRelatedCompany.designation}"
@@ -547,7 +587,8 @@
 						display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="* Shareholding Total(RM.)" /></td>
+				<td><p:outputLabel value="Shareholding Total(RM.)" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
 				<td><p:inputText label="Shareholding Total(RM.)"
 						required="#{backingBean.managedBean.valueReqd}"
 						id="equiRlCmpInfShrAmt"
@@ -559,10 +600,11 @@
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="* Shareholding (%)" /></td>
+				<td><p:outputLabel value=" Shareholding (%)" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
 				<td><p:inputText label="Shareholding (%)"
 						required="#{backingBean.managedBean.valueReqd}"
-						id="equiRlCmpInfShrPerc"
+						id="equiRlCmpInfShrPerc" maxlength="2"
 						value="#{backingBean.managedBean.selectedRelatedCompany.sharePercentage}"
 						size="35">
 						<f:convertNumber
@@ -591,7 +633,7 @@
 	</p:dialog>
 	<p:panel header="Professional Body" toggleable="true"
 		id="equiShrPfBdyPan">
-		<p:dataTable var="profBean"
+		<p:dataTable var="profBean" widgetVar="suppPrsnProfBdyDtWidVar"
 			value="#{backingBean.managedBean.selectedShareHolder.smAssociationBodies}"
 			selection="#{backingBean.managedBean.selectedShrHldrProfBodies}"
 			rowKey="#{profBean}" rowIndexVar="index" id="shrProfDt">
@@ -639,7 +681,8 @@
 			showDetail="true" autoUpdate="true" closable="true" />
 		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value="* Professionl Body" /></td>
+				<td><p:outputLabel value="Professionl Body" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
 						required="#{backingBean.managedBean.valueReqd}"
 						label="Professionl Body" id="equiStfPrdBdyLbl"
@@ -653,7 +696,8 @@
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="* Reg No." /></td>
+				<td><p:outputLabel value="Reg No." /> <p:outputLabel value="*"
+						styleClass="mandatory" /></td>
 				<td><p:inputText
 						required="#{backingBean.managedBean.valueReqd}" label="Reg No."
 						id="equiPrfBdyRegNo"
@@ -663,7 +707,8 @@
 						display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="* End Date." /></td>
+				<td><p:outputLabel value="End Date." /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
 				<td><p:calendar showOn="button" navigator="true"
 						display="inline" readonlyInput="true" label="End Date."
 						id="equiPrfBdyEndDt"
@@ -693,7 +738,7 @@
 
 		<p:dataTable id="shrAqdt"
 			value="#{backingBean.managedBean.selectedShareHolder.smStaffAcademics}"
-			var="aq"
+			var="aq" widgetVar="suppPrsnAcadDtWidVar"
 			selection="#{backingBean.managedBean.selectedShrHldrAcademics}"
 			rowIndexVar="rowIndex" rowKey="#{aq}">
 			<ac:paginator for="shrAqdt" />
@@ -753,28 +798,31 @@
 			autoUpdate="true" closable="true" />
 		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value="* Year" /></td>
-				<td><p:inputMask mask="9999" style="margin-bottom : 5px;"
+				<td><p:outputLabel value="Year" /> <p:outputLabel value="*"
+						styleClass="mandatory" /></td>
+				<td><p:inputText style="margin-bottom : 5px;" maxlength="4"
 						required="#{backingBean.managedBean.valueReqd}" label="Year"
-						id="equiStfAcaYr" placeHolder=""
+						id="equiStfAcaYr"
 						value="#{backingBean.managedBean.selectedStaffAcademic.year}"
 						size="35">
 						<f:validateLongRange minimum="1950" maximum="2050" />
-					</p:inputMask> <p:message id="equiStfAcaYrMsg" for="equiStfAcaYr"
+					</p:inputText> <p:message id="equiStfAcaYrMsg" for="equiStfAcaYr"
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="* Institute" /></td>
+				<td><p:outputLabel value="Institute" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
 				<td><p:inputText
 						required="#{backingBean.managedBean.valueReqd}" label="Institute"
-						id="equiStfAcaInst"
+						id="equiStfAcaInst" maxlength="50"
 						value="#{backingBean.managedBean.selectedStaffAcademic.instituteName}"
 						size="35" /> <p:message id="equiStfAcaInstMsg"
 						for="equiStfAcaInst" showSummary="true" showDetail="false"
 						display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="* Qualification Level" /></td>
+				<td><p:outputLabel value="Qualification Level" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
 						required="#{backingBean.managedBean.valueReqd}"
 						label="Qualification Level" id="equiStfAcaQl"
@@ -784,7 +832,8 @@
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="* Education Field" /></td>
+				<td><p:outputLabel value="Education Field" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
 						required="#{backingBean.managedBean.valueReqd}"
 						label="Education Field" id="equiStfAcaEduFld"
@@ -800,7 +849,7 @@
 
 			<tr>
 				<td><p:outputLabel value="Major In" /></td>
-				<td><p:inputText
+				<td><p:inputText maxlength="50"
 						value="#{backingBean.managedBean.selectedStaffAcademic.fieldMajor}"
 						size="35" /></td>
 			</tr>

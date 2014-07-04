@@ -46,7 +46,7 @@
 				id="poBrnBlc"
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.branchVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.branchVerified : false)}" />
 
-			<p:dataTable var="branchBean" id="dt"
+			<p:dataTable var="branchBean" id="dt" widgetVar="suppBrnachDtWidVar"
 				value="#{backingBean.managedBean.smAppl.smSupplierBranches}"
 				selection="#{backingBean.managedBean.selectedBranches}"
 				rowKey="#{branchBean}" rowIndexVar="index">
@@ -128,7 +128,8 @@
 		<br />
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.sm.button.save']}"
-				action="#{backingBean.addOrUpdateBranchToSmAppl}" type="submit"
+				id="branchPopUpSaveBtn"
+				action="#{backingBean.addOrUpdateBranchToSmAppl}"
 				partialSubmit="true" process="banchDialog"
 				update=":form:tt:dt,@([id$=Msg])" />
 			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"

@@ -56,7 +56,7 @@
 							value="#{backingBean.managedBean.smAppl.applNo}" size="35" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="* #{lbl['lbl.sm.regtype']}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.regtype']}" /></td>
 					<td><p:inputText disabled="true" readonly="true"
 							value="#{backingBean.managedBean.smSupplier.businessType}"
 							size="35" /> <!-- rendered="#{backingBean.managedBean.smSupplier.businessType == 1}" />
@@ -66,17 +66,17 @@
 						value="ROS - PERKONGSIAN"
 						rendered="#{backingBean.managedBean.smSupplier.businessType == 3}" /> -->
 					</td>
-					<td><p:outputLabel value="* #{lbl['lbl.sm.rocNo']}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.rocNo']}" /></td>
 					<td><p:inputText
 							value="#{backingBean.managedBean.smSupplier.regNo}"
 							disabled="true" readonly="true" size="35" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="* #{lbl['lbl.sm.taxRefNo']}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.taxRefNo']}" /></td>
 					<td><p:inputText
 							value="#{backingBean.managedBean.smAppl.smCompanyBasic.incomeTaxNo}"
 							disabled="true" readonly="true" size="35" maxlength="20" /></td>
-					<td><p:outputLabel value="* #{lbl['lbl.sm.estdate']}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.estdate']}" /></td>
 					<td><p:inputText
 							value="#{backingBean.managedBean.smSupplier.establishDate}"
 							readonly="true" size="35">
@@ -86,7 +86,9 @@
 				</tr>
 				<tr>
 					<td style="vertical-align: top;"><p:outputLabel
-							value="#{lbl['lbl.sm.companyaddress']}" style="padding-top :5px;" /></td>
+							value="#{lbl['lbl.sm.companyaddress']}" style="padding-top :5px;" />
+						<p:outputLabel value="*" styleClass="mandatory"
+							style="padding-top :5px;" /></td>
 					<td>
 						<table style="width: 100%">
 							<tr>
@@ -113,17 +115,21 @@
 					<td>
 						<TABLE style="width: 100%; height: 100px;">
 							<tr>
-								<td><p:outputLabel value="* #{lbl['lbl.sm.country']}" /></td>
+								<td><p:outputLabel value="#{lbl['lbl.sm.country']}" /> <p:outputLabel
+										value="*" styleClass="mandatory" /></td>
 							</tr>
 							<tr>
 
-								<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
+								<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /> <p:outputLabel
+										value="*" styleClass="mandatory" /></td>
 							</tr>
 							<tr>
-								<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
+								<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /> <p:outputLabel
+										value="*" styleClass="mandatory" /></td>
 							</tr>
 							<tr>
-								<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
+								<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /> <p:outputLabel
+										value="*" styleClass="mandatory" /></td>
 							</tr>
 						</TABLE>
 					</td>
@@ -205,7 +211,8 @@
 					<td><p:inputText size="35"
 							value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.postcode}"
 							maxlength="10" /></td>
-					<td><p:outputLabel value="* #{lbl['lbl.sm.annualRev']}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.annualRev']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
 					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
 							value="#{backingBean.managedBean.smAppl.smCompanyBasic.annualRevenue}">
 							<f:selectItem itemLabel="-- Select -- " itemValue="" />

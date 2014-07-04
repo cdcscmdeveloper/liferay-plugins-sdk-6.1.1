@@ -1546,18 +1546,27 @@ public class SmApplicationBackingBean extends
 		if (getManagedBean().getSmAppl().getSmSupplierBranches()
 				.contains(getManagedBean().getSelectedBranch())) {
 
-			System.out.println(" **** THIS IS AN UPDATE For Branches******"
-					+ getManagedBean().getSelectedBranch().getPhoneNo());
+			// TODO if any validation reqd for branch info
 		} else {
 			getManagedBean().getSmAppl().getSmSupplierBranches()
 					.add(getManagedBean().getSelectedBranch());
+			RequestContext.getCurrentInstance().execute(
+					"suppBrnachDtWidVar.paginator.endLink.click()");
 		}
 		assignValReqdToFalse();
 		RequestContext.getCurrentInstance().execute("banchDialog.hide()");
 	}
 
 	public void assignSelBranch(SmSupplierBranch branchBean, int index) {
-
+		populateStatesByCountry(branchBean.getSmAddress().getPmCountry()
+				.getCountryId(), SupplierManagementConst.SM_BRANCH_PANEL,
+				new PmState(), new PmDistrict(), new PmCity());
+		populateDistrictsByState(branchBean.getSmAddress().getPmState()
+				.getStateId(), SupplierManagementConst.SM_BRANCH_PANEL,
+				new PmDistrict(), new PmCity());
+		populateCitiesByDistrict(branchBean.getSmAddress().getPmDistrict()
+				.getDistrictId(), SupplierManagementConst.SM_BRANCH_PANEL,
+				new PmCity());
 		getManagedBean()
 				.setSelectedBranchPrev(
 						getManagedBean().getSmAppl().getSmSupplierBranches()
@@ -1579,6 +1588,8 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setBranchCompanyStates(
 				retrievePmStateList(getManagedBean().getSelectedBranch()
 						.getSmAddress().getPmCountry().getCountryId()));
+		getManagedBean().setBranchCompanyDistricts(new ArrayList<PmDistrict>());
+		getManagedBean().setBranchCompanyCities(new ArrayList<PmCity>());
 		assignValReqdToTrue();
 		RequestContext.getCurrentInstance().execute("banchDialog.show()");
 	}
@@ -1613,17 +1624,37 @@ public class SmApplicationBackingBean extends
 
 		if (getManagedBean().getSmAppl().getSmAssociateCompanies()
 				.contains(getManagedBean().getSelectedAssocCompany())) {
-
-			System.out.println(" **** THIS IS AN UPDATE Assoc Companies******");
+			// TODO if any validation reqd for assoc companies
 		} else {
 			getManagedBean().getSmAppl().getSmAssociateCompanies()
 					.add(getManagedBean().getSelectedAssocCompany());
+			RequestContext.getCurrentInstance().execute(
+					"assocDtWidVar.paginator.endLink.click()");
 		}
+		assignValReqdToFalse();
+		RequestContext.getCurrentInstance().execute("assocDialog.hide()");
+	}
+
+	public void cancelAssocCompanyFuntion() {
+		assignValReqdToFalse();
+		RequestContext.getCurrentInstance().reset(":form:tt:asDisp");
 		RequestContext.getCurrentInstance().execute("assocDialog.hide()");
 	}
 
 	public void assignSelAssoc(SmAssociateCompany assocBean) {
+		populateStatesByCountry(assocBean.getSmAddress().getPmCountry()
+				.getCountryId(),
+				SupplierManagementConst.SM_ASSOC_COMPANY_PANEL, new PmState(),
+				new PmDistrict(), new PmCity());
+		populateDistrictsByState(assocBean.getSmAddress().getPmState()
+				.getStateId(), SupplierManagementConst.SM_ASSOC_COMPANY_PANEL,
+				new PmDistrict(), new PmCity());
+		populateCitiesByDistrict(assocBean.getSmAddress().getPmDistrict()
+				.getDistrictId(),
+				SupplierManagementConst.SM_ASSOC_COMPANY_PANEL, new PmCity());
 		getManagedBean().setSelectedAssocCompany(assocBean);
+		assignValReqdToTrue();
+		RequestContext.getCurrentInstance().execute("assocDialog.show()");
 	}
 
 	public void assignNewAssocBean() {
@@ -1636,6 +1667,10 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setAssocCompanyStates(
 				retrievePmStateList(getManagedBean().getSelectedAssocCompany()
 						.getSmAddress().getPmCountry().getCountryId()));
+		getManagedBean().setAssocCompanyDistricts(new ArrayList<PmDistrict>());
+		getManagedBean().setAssocCompanyCities(new ArrayList<PmCity>());
+		assignValReqdToTrue();
+		RequestContext.getCurrentInstance().execute("assocDialog.show()");
 	}
 
 	public void deleteSelectedAssocCompanies() {
@@ -1671,9 +1706,12 @@ public class SmApplicationBackingBean extends
 		}
 		if (getManagedBean().getSmAppl().getSmSupplierCerts()
 				.contains(getManagedBean().getSelectedCert())) {
+			// TODO if any validations for edit reqd
 		} else {
 			getManagedBean().getSmAppl().getSmSupplierCerts()
 					.add(getManagedBean().getSelectedCert());
+			RequestContext.getCurrentInstance().execute(
+					"suppCertDtWidVar.paginator.endLink.click()");
 		}
 		assignValReqdToFalse();
 		RequestContext.getCurrentInstance().execute("certDialog.hide()");
@@ -1721,17 +1759,12 @@ public class SmApplicationBackingBean extends
 		if (getManagedBean().getSmAppl().getSmAssociationBodies()
 				.contains(getManagedBean().getSelectedAssocBody())) {
 
-			System.out.println(" **** THIS IS AN UPDATE Certs******");
+			// TODO if any validation reqd for edit
 		} else {
-			System.out
-					.println(" **** THIS IS AN SAVE NEW Association Body******"
-							+ getManagedBean().getSelectedAssocBody()
-									.getRevNo()
-							+ " *** Sample id *** "
-							+ getManagedBean().getSelectedAssocBody()
-									.getPmCertBody().getCertBodyId());
 			getManagedBean().getSmAppl().getSmAssociationBodies()
 					.add(getManagedBean().getSelectedAssocBody());
+			RequestContext.getCurrentInstance().execute(
+					"suppProfBodyDtWidVar.paginator.endLink.click()");
 		}
 		assignValReqdToFalse();
 		RequestContext.getCurrentInstance().execute("profDialog.hide()");
@@ -1787,17 +1820,25 @@ public class SmApplicationBackingBean extends
 		}
 		if (getManagedBean().getSmAppl().getSmCompanyExperiences()
 				.contains(getManagedBean().getSelectedCompanyExperience())) {
-
-			System.out
-					.println(" **** THIS IS AN UPDATE FOR Consultant Prjs******");
+			// TODO if any validation reqd for branch info
 		} else {
 			System.out
 					.println(" **** THIS IS AN ADD FOR Consultant Prjs******");
 			getManagedBean().getSmAppl().getSmCompanyExperiences()
 					.add(getManagedBean().getSelectedCompanyExperience());
+			if (getManagedBean().getSmAppl().getSupplierType()
+					.equals(SupplierManagementConst.STYPE_CONSULTANT)) {
+				RequestContext.getCurrentInstance().execute(
+						"suppCnstlExpDtWidVar.paginator.endLink.click()");
+			} else {
+				RequestContext.getCurrentInstance().execute(
+						"suppContrExpDtWidVar.paginator.endLink.click()");
+			}
 		}
+		assignValReqdToFalse();
 		if (getManagedBean().getSmAppl().getSupplierType()
 				.equals(SupplierManagementConst.STYPE_CONSULTANT)) {
+
 			RequestContext.getCurrentInstance().execute("consDialog.hide()");
 		}
 		if (getManagedBean().getSmAppl().getSupplierType()
@@ -1807,8 +1848,32 @@ public class SmApplicationBackingBean extends
 
 	}
 
+	public void cancelCompExpFunctions() {
+		assignValReqdToFalse();
+		if (getManagedBean().getSmAppl().getSupplierType()
+				.equals(SupplierManagementConst.STYPE_CONSULTANT)) {
+			RequestContext.getCurrentInstance().reset(":form:tt:consDialog");
+			RequestContext.getCurrentInstance().execute("consDialog.hide()");
+		} else {
+
+			RequestContext.getCurrentInstance().reset(":form:tt:contDialog");
+			RequestContext.getCurrentInstance().execute("contDialog.hide()");
+
+		}
+	}
+
 	public void assignSelCompanyExperience(SmCompanyExperience consultantBean) {
 		getManagedBean().setSelectedCompanyExperience(consultantBean);
+		assignValReqdToTrue();
+		if (consultantBean.getSmCompanyExperienceCats() != null
+				&& !consultantBean.getSmCompanyExperienceCats().isEmpty()) {
+			populateChildCategoryByParent(consultantBean
+					.getSmCompanyExperienceCats().get(0).getPmCategoryL1()
+					.getCategoryL1Id(), new PmCategoryL2(), new PmCategoryL3());
+			populateSubChildCategoryByChild(consultantBean
+					.getSmCompanyExperienceCats().get(0).getPmCategoryL2()
+					.getCategoryL2Id(), new PmCategoryL3());
+		}
 		if (getManagedBean().getSmAppl().getSupplierType()
 				.equals(SupplierManagementConst.STYPE_CONSULTANT)) {
 			RequestContext.getCurrentInstance().execute("consDialog.show()");
@@ -1842,6 +1907,7 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setSelectedCompanyExperience(exp);
 
 		resetChildCatList();
+		assignValReqdToTrue();
 		if (getManagedBean().getSmAppl().getSupplierType()
 				.equals(SupplierManagementConst.STYPE_CONSULTANT)) {
 			RequestContext.getCurrentInstance().execute("consDialog.show()");
@@ -1854,9 +1920,6 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void deleteSelectedCompanyExperiences() {
-
-		System.out.println("*** Delete Exps ******* "
-				+ getManagedBean().getSelectedCompanyExperiences().size());
 		if (getManagedBean().getSelectedCompanyExperiences().size() > 0) {
 			for (SmCompanyExperience exp : getManagedBean()
 					.getSelectedCompanyExperiences()) {
@@ -2474,13 +2537,11 @@ public class SmApplicationBackingBean extends
 				&& getManagedBean().getSelectedShareHolder()
 						.getWorkExperienceYear() < 5
 				&& getManagedBean().getSelectedShareHolder().isEquityOwner()) {
-			System.out
-					.println(" ******* This is a failure condition ********* "
-							+ getManagedBean().getSelectedShareHolder()
-									.getWorkExperienceYear());
+
 			validShrHldr = false;
 			throw new EpException(MessageConst.ERROR_722518);
 		}
+
 		validShrHldr = checkValidUser(getManagedBean().getSelectedShareHolder());
 		// if (getManagedBean().getSelectedShareHolder().getAuthorizedFlg() ==
 		// 1) {
@@ -2503,23 +2564,21 @@ public class SmApplicationBackingBean extends
 										getManagedBean()
 												.getSelectedShareHolder()),
 								getManagedBean().getSelectedShareHolder());
-				// if
-				// (getManagedBean().getSelectedShareHolder().isEquityOwner()) {
-				// getManagedBean().getSmapplShareHolders().set(
-				// getManagedBean().getSmapplShareHolders().indexOf(
-				// getManagedBean().getSelectedShareHolder()),
-				// getManagedBean().getSelectedShareHolder());
-				// }
+
 				System.out.println(" **** THIS IS AN UPDATE Personnel ******");
 			} else {
-
+				if (getManagedBean().getSelectedShareHolder().isEquityOwner()) {
+					RequestContext.getCurrentInstance().execute(
+							"suppCapShrHldrDtWidVar.paginator.endLink.click()");
+				} else {
+					RequestContext
+							.getCurrentInstance()
+							.execute(
+									"suppPersonnelInfoDtWidVar.paginator.endLink.click()");
+				}
 				getManagedBean().getSmAppl().getSmPersonnels()
 						.add(getManagedBean().getSelectedShareHolder());
-				// if
-				// (getManagedBean().getSelectedShareHolder().isEquityOwner()) {
-				// getManagedBean().getSmapplShareHolders().add(
-				// getManagedBean().getSelectedShareHolder());
-				// }
+
 			}
 			saveOrUpdateAppl();
 			if (fromPage.equalsIgnoreCase("captialInfo")) {
@@ -2559,15 +2618,68 @@ public class SmApplicationBackingBean extends
 
 	public void backFromPersonnelPage() {
 		System.out.println("*** Back to perssonel page ******");
+		if (getManagedBean().getSmAppl().getSmPersonnels()
+				.contains(getManagedBean().getSelectedShareHolder())) {
+
+			System.out.println("**** Personnel Obej **** "
+					+ getManagedBean().getSelectedPersonnel()
+							.getIdentificationTypeId()
+					+ "Addr == "
+					+ getManagedBean().getSelectedPersonnel()
+							.getSmPersonnelAddresses().get(0).getSmAddress()
+							.getAddress2());
+
+			System.out.println("**** Sm IC type Current **** "
+					+ getManagedBean().getSelectedShareHolder()
+							.getIdentificationTypeId()
+					+ "Addr == "
+					+ getManagedBean().getSelectedShareHolder()
+							.getSmPersonnelAddresses().get(0).getSmAddress()
+							.getAddress2());
+			// TODO reset few values that could have been already submit by
+			// partial submit on ajax functions
+			SmPersonnel per = getManagedBean().getSelectedPersonnel();
+			getManagedBean().getSelectedShareHolder().setIdentificationTypeId(
+					per.getIdentificationTypeId());
+			getManagedBean().getSelectedShareHolder().setIdentificationType(
+					per.getIdentificationType());
+			getManagedBean().getSelectedShareHolder().setIdentificationNo(
+					per.getIdentificationNo());
+			getManagedBean().getSelectedShareHolder().setSmPersonnelAddresses(
+					per.getSmPersonnelAddresses());
+
+			System.out.println("**** Value finally after reset **** "
+					+ getManagedBean().getSelectedShareHolder()
+							.getIdentificationTypeId()
+					+ "Addr == "
+					+ getManagedBean().getSelectedShareHolder()
+							.getSmPersonnelAddresses().get(0).getSmAddress()
+							.getAddress2());
+		}
 		getManagedBean().setRedirectToPersonPage(false);
 		RequestContext.getCurrentInstance().reset(":form:tt:shareHolderDialog");
 	}
 
 	public void assignSelShareHolder(SmPersonnel shareHolderBean) {
+
 		if (shareHolderBean.getAuthorizedFlg() == 1) {
 			getManagedBean().setAuthPerCount(0);
 		} else {
 			getManagedBean().setAuthPerCount(getAuthUserCount());
+		}
+		if (shareHolderBean.getPmCountry() == null) {
+			shareHolderBean.setPmCountry(new PmCountry());
+		}
+		if (getManagedBean().getSelectedShareHolder().getIdentificationTypeId() != null) {
+			getManagedBean().getSelectedShareHolder()
+					.setIdentificationType(
+							retrievePmParameterById(getManagedBean()
+									.getSelectedShareHolder()
+									.getIdentificationTypeId()));
+		}
+		if (getManagedBean().getSelectedShareHolder().getIdentificationType() == null) {
+			getManagedBean().getSelectedShareHolder().setIdentificationType(
+					new PmParameter());
 		}
 		if (shareHolderBean.isEquityOwner()) {
 			getManagedBean().setPersonnelInfoHeader("Share Holder Information");
@@ -2586,15 +2698,20 @@ public class SmApplicationBackingBean extends
 		assignSelShareHolderAddress(shareHolderBean);
 		getManagedBean().setSelectedShareHolder(shareHolderBean);
 		getManagedBean().setRedirectToPersonPage(true);
+		// TODO use this object to reset some values on back button click
+		SmPersonnel per = new SmPersonnel();
+		per.setIdentificationTypeId(shareHolderBean.getIdentificationTypeId());
+		per.setIdentificationType(shareHolderBean.getIdentificationType());
+		per.setIdentificationNo(shareHolderBean.getIdentificationNo());
+		per.setSmPersonnelAddresses(shareHolderBean.getSmPersonnelAddresses());
+		getManagedBean().setSelectedPersonnel(per);
+
 	}
 
 	public void addOrUpdateShareHolderAddress(SmPersonnel shareHolderBean)
 			throws ParseException {
 		if (shareHolderBean.getSmPersonnelAddresses().isEmpty()) {
-			System.out.println("******** Empty list ********"
-					+ shareHolderBean.getName() + " *** Id ***"
-					+ shareHolderBean.getPersonnelId() + " ** Is Equity ****"
-					+ shareHolderBean.isEquityOwner());
+
 			shareHolderBean.getSmPersonnelAddresses().add(
 					getManagedBean().getShareHolderResdAddr());
 			shareHolderBean.getSmPersonnelAddresses().add(
@@ -2605,9 +2722,7 @@ public class SmApplicationBackingBean extends
 					getManagedBean().getShareHolderMailAddr());
 			getManagedBean().setSelectedShareHolder(shareHolderBean);
 		} else {
-			System.out
-					.println("******** Exisiting Share holders address **********"
-							+ shareHolderBean.getName());
+
 			for (SmPersonnelAddress addr : shareHolderBean
 					.getSmPersonnelAddresses()) {
 				if (addr.getAddressType().equalsIgnoreCase(
@@ -2745,21 +2860,26 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void addOrUpdateJobFunctions() {
-		System.out
-				.println("******* getManagedBean().getSelectedShareHolder() **********"
-						+ getManagedBean().getSelectedShareHolder().getName());
+
+		if (getManagedBean()
+				.getSelectedJobFunction()
+				.getFromYear()
+				.compareTo(
+						getManagedBean().getSelectedJobFunction().getToYear()) > 0) {
+			throw new EpException(MessageConst.ERROR_722531);
+
+		}
 		if (getManagedBean().getSelectedShareHolder().getSmStaffExperiences()
 				.contains(getManagedBean().getSelectedJobFunction())) {
-
-			System.out
-					.println(" **** THIS IS AN UPDATE FOR Sm job function Prjs******");
+			// TODO if any validation reqd for edit
 		} else {
-			System.out
-					.println(" **** THIS IS AN ADD FOR Consultant Prjs******");
+			RequestContext.getCurrentInstance().execute(
+					"suppPrsnJobFunDtWidVar.paginator.endLink.click()");
 			getManagedBean().getSelectedShareHolder().getSmStaffExperiences()
 					.add(getManagedBean().getSelectedJobFunction());
 		}
 		assignValReqdToFalse();
+
 		RequestContext.getCurrentInstance().execute(
 				"equiJobFunctionInfo.hide()");
 
@@ -2813,12 +2933,12 @@ public class SmApplicationBackingBean extends
 		if (getManagedBean().getSelectedShareHolder().getSmRelatedCompanies()
 				.contains(getManagedBean().getSelectedRelatedCompany())) {
 
-			System.out
-					.println(" **** THIS IS AN UPDATE FOR Sm related function Prjs******");
+			// TODO if any validation reqd for edit
 		} else {
-			System.out.println(" **** THIS IS AN ADD FOR Relate Company******");
 			getManagedBean().getSelectedShareHolder().getSmRelatedCompanies()
 					.add(getManagedBean().getSelectedRelatedCompany());
+			RequestContext.getCurrentInstance().execute(
+					"suppPrsnRelComDtWidVar.paginator.endLink.click()");
 		}
 		assignValReqdToFalse();
 		RequestContext.getCurrentInstance().execute("equiRelCompInfo.hide()");
@@ -2900,14 +3020,13 @@ public class SmApplicationBackingBean extends
 		}
 		if (getManagedBean().getSelectedShareHolder().getSmStaffAcademics()
 				.contains(getManagedBean().getSelectedStaffAcademic())) {
-
-			System.out
-					.println(" **** THIS IS AN UPDATE FOR getSelectedStaffAcademic******");
+			// TODO if any validation reqd for edit
 		} else {
-			System.out
-					.println(" **** THIS IS AN ADD FOR getSelectedStaffAcademic******");
+
 			getManagedBean().getSelectedShareHolder().getSmStaffAcademics()
 					.add(getManagedBean().getSelectedStaffAcademic());
+			RequestContext.getCurrentInstance().execute(
+					"suppPrsnAcadDtWidVar.paginator.endLink.click()");
 		}
 		assignValReqdToFalse();
 		RequestContext.getCurrentInstance().execute("equiAcadInfo.hide()");
@@ -2957,13 +3076,12 @@ public class SmApplicationBackingBean extends
 		if (getManagedBean().getSelectedShareHolder().getSmAssociationBodies()
 				.contains(getManagedBean().getSelectedStfPrfBdy())) {
 
-			System.out
-					.println(" **** THIS IS AN UPDATE FOR addOrUpdateShrHldrProfBody******");
+			// TODO if any validation reqd for edit
 		} else {
-			System.out
-					.println(" **** THIS IS AN ADD FOR addOrUpdateShrHldrProfBody******");
 			getManagedBean().getSelectedShareHolder().getSmAssociationBodies()
 					.add(getManagedBean().getSelectedStfPrfBdy());
+			RequestContext.getCurrentInstance().execute(
+					"suppPrsnProfBdyDtWidVar.paginator.endLink.click()");
 		}
 		assignValReqdToFalse();
 		RequestContext.getCurrentInstance().execute(
@@ -2985,6 +3103,28 @@ public class SmApplicationBackingBean extends
 					.println(" ******** NO Record selected please select atleast one ");
 		}
 
+	}
+
+	public void assignPersonIdentType(AjaxBehaviorEvent e) {
+		System.out.println("***** The selected value of IC type is --- "
+				+ getManagedBean().getSelectedShareHolder()
+						.getIdentificationTypeId());
+		// getManagedBean().getSelectedShareHolder().setIdentificationNo("");
+		if (getManagedBean().getSelectedShareHolder().getIdentificationTypeId() != null) {
+			getManagedBean().getSelectedShareHolder()
+					.setIdentificationType(
+							retrievePmParameterById(getManagedBean()
+									.getSelectedShareHolder()
+									.getIdentificationTypeId()));
+			if (getManagedBean().getSelectedShareHolder()
+					.getIdentificationType() == null) {
+				getManagedBean().getSelectedShareHolder()
+						.setIdentificationType(new PmParameter());
+			}
+		} else {
+			getManagedBean().getSelectedShareHolder().setIdentificationType(
+					new PmParameter());
+		}
 	}
 
 	public void setMailingAddrSameAsPerm(AjaxBehaviorEvent e) {
@@ -3085,18 +3225,26 @@ public class SmApplicationBackingBean extends
 		defStates = retrievePmStateList(perm.getSmAddress().getPmCountry()
 				.getCountryId());
 		if (shareHolderBean.getSmPersonnelAddresses().isEmpty()) {
-			System.out.println("******** New Address fields ********"
-					+ shareHolderBean.getName());
 
-			// TODO remove if necessary
-
+			// TODO reset to defualt values for a new record
 			getManagedBean().setShrHldrPermStates(defStates);
+			getManagedBean().setShrHldrPermDistricts(
+					new ArrayList<PmDistrict>());
+			getManagedBean().setShrHldrPermCities(new ArrayList<PmCity>());
 			getManagedBean().setShrHldrMailStates(defStates);
+			getManagedBean().setShrHldrMailDistricts(
+					new ArrayList<PmDistrict>());
+			getManagedBean().setShrHldrMailCities(new ArrayList<PmCity>());
 			getManagedBean().setShrHldrResdStates(defStates);
+			getManagedBean().setShrHldrResdDistricts(
+					new ArrayList<PmDistrict>());
+			getManagedBean().setShrHldrResdCities(new ArrayList<PmCity>());
 			getManagedBean().setShrHldrOffStates(defStates);
+			getManagedBean()
+					.setShrHldrOffDistricts(new ArrayList<PmDistrict>());
+			getManagedBean().setShrHldrOffCities(new ArrayList<PmCity>());
 
 		} else {
-			System.out.println("******* Already contains address ***********");
 			for (SmPersonnelAddress addr : shareHolderBean
 					.getSmPersonnelAddresses()) {
 				if (addr.getAddressType().equalsIgnoreCase(
@@ -5194,6 +5342,7 @@ public class SmApplicationBackingBean extends
 		shr.setBumiFlg(1);
 		shr.setMuslimFlg(1);
 		shr.setPmCountry(new PmCountry());
+		shr.setIdentificationType(new PmParameter());
 		shr.setSmPersonnelAddresses(new ArrayList<SmPersonnelAddress>());
 		// shr.setSmPersonnelBranches(new ArrayList<SmPersonnelBranch>());
 		// SmPersonnelBranch pbr = new SmPersonnelBranch();
@@ -5669,6 +5818,14 @@ public class SmApplicationBackingBean extends
 
 	private boolean checkValidUser(SmPersonnel pers) {
 		boolean validUser = true;
+		if (pers.getIdentificationType().getParameterCode()
+				.equalsIgnoreCase("I")) {
+			if (pers.getIdentificationNo().length() != 12) {
+				validUser = false;
+				throw new EpException(MessageConst.ERROR_722532,
+						new String[] { pers.getIdentificationNo() });
+			}
+		}
 		for (SmPersonnel per : getManagedBean().getSmAppl().getSmPersonnels()) {
 			if (pers.getPersonnelId() == null && pers.equals(per)) {
 				System.out.println("****** Same obj before save ");

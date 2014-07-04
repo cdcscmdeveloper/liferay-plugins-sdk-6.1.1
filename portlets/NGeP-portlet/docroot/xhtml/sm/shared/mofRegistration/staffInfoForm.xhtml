@@ -6,7 +6,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel  header="#{lbl['lbl.sm.panHdr.stfInfo']}" toggleable="true">
+	<p:panel header="#{lbl['lbl.sm.panHdr.stfInfo']}" toggleable="true">
 		<table style="width: 250px">
 			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 				<tr>
@@ -58,20 +58,23 @@
 								value="#{lbl['lbl.sm.staff.clericalStaff']}"
 								rendered="#{staff.staffCategory eq 'L'}" /></td>
 						<td width="50px"><p:outputLabel
-								value="* #{lbl['lbl.sm.staff.bumi']}" /></td>
+								value="#{lbl['lbl.sm.staff.bumi']}" /> <p:outputLabel value="*"
+								styleClass="mandatory" /></td>
 						<td width="55px"><p:inputText size="4" id="bumiStf"
 								value="#{staff.totalBumi}" maxlength="4"
-								style="min-width: 0px !important;" label="Bumi Staff"
-								required="true">
+								style="min-width: 0px !important;"
+								label="#{lbl['lbl.sm.staff.bumi']}" required="true">
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 							</p:inputText></td>
 						<td width="95px"><p:message for="bumiStf" showDetail="false"
 								showSummary="true" display="icon" /></td>
 						<td width="80px"><p:outputLabel
-								value="* #{lbl['lbl.sm.staff.nonBumi']}" /></td>
+								value="#{lbl['lbl.sm.staff.nonBumi']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
 						<td width="55px"><p:inputText size="4" id="nonBumStf"
-								style="min-width: 0px !important;" label="Non Bumi Staff"
+								style="min-width: 0px !important;"
+								label="#{lbl['lbl.sm.staff.nonBumi']}"
 								value="#{staff.totalNonBumi}" maxlength="4" required="true">
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
@@ -79,10 +82,12 @@
 						<td width="95px"><p:message for="nonBumStf"
 								showDetail="false" showSummary="true" display="icon" /></td>
 						<td width="80px"><p:outputLabel
-								value="* #{lbl['lbl.sm.staff.frgnr']}" /></td>
+								value="#{lbl['lbl.sm.staff.frgnr']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
 						<td width="55px"><p:inputText id="frgStf" size="4"
-								value="#{staff.totalForeigner}" label="Foriegn Staff"
-								maxlength="4" style="min-width: 0px !important;" required="true">
+								value="#{staff.totalForeigner}"
+								label="#{lbl['lbl.sm.staff.frgnr']}" maxlength="4"
+								style="min-width: 0px !important;" required="true">
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 							</p:inputText></td>

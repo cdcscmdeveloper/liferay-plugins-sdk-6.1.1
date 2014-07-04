@@ -43,7 +43,7 @@
 			<p:blockUI block=":form:tt:contrInfPan" widgetVar="buiPoContr"
 				id="poContrBlc"
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.experienceVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.experienceVerified : false)}" />
-			<p:dataTable var="contrBean"
+			<p:dataTable var="contrBean" widgetVar="suppContrExpDtWidVar"
 				value="#{backingBean.managedBean.smAppl.smCompanyExperiences}"
 				selection="#{backingBean.managedBean.selectedCompanyExperiences}"
 				rowKey="#{contrBean}" rowIndexVar="index" id="contDt">
@@ -74,7 +74,7 @@
 						rendered="#{contrBean.progressStatus eq 'F'}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.label.action']}">
-					<p:commandLink
+					<p:commandLink partialSubmit="true" process="@this"
 						action="#{backingBean.assignSelCompanyExperience(contrBean)}"
 						update=":form:tt:contDialog">
 						<p:graphicImage library="ep/images/design" name="edit.png"
@@ -86,8 +86,9 @@
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.sm.button.add']}"
 					action="#{backingBean.assignNewCompanyExperience}"
-					update=":form:tt:contDialog" />
+					partialSubmit="true" process="@this" update=":form:tt:contDialog" />
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']} "
+					partialSubmit="true" process="contrInfPan"
 					action="#{backingBean.deleteSelectedCompanyExperiences}"
 					update=":form:tt:contDt" />
 
@@ -120,7 +121,8 @@
 	</p:panel>
 	<p:dialog header="#{lbl['lbl.sm.projDtls.projDiaHdr']}"
 		widgetVar="contDialog" resizable="false" showEffect="fade"
-		hideEffect="fade" modal="true" id="contDialog" width="500px">
+		closable="false" hideEffect="fade" modal="true" id="contDialog"
+		width="500px" height="500px">
 		<p:messages id="contractPrjMsg" showSummary="true" showDetail="false"
 			autoUpdate="true" closable="true" />
 		<table style="width: 100%">
@@ -130,73 +132,104 @@
 					<table style="width: 100%">
 						<tr>
 							<td><p:outputLabel
-									value="* #{lbl['lbl.sm.projDtls.projTitle']}" /></td>
-							<td><p:inputText
+									value="#{lbl['lbl.sm.projDtls.projTitle']}" /> <p:outputLabel
+									value="*" styleClass="mandatory" /></td>
+							<td><p:inputText maxlength="100"
+									required="#{backingBean.managedBean.valueReqd}"
+									label="#{lbl['lbl.sm.projDtls.projTitle']}" id="supCntrPrjTtl"
 									value="#{backingBean.managedBean.selectedCompanyExperience.title}"
-									size="35" /></td>
+									size="35" /> <p:message id="supCntrPrjTtlMsg"
+									for="supCntrPrjTtl" showSummary="true" showDetail="false"
+									display="icon" /></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel
-									value="* #{lbl['lbl.sm.projDtls.doneFor']}" /></td>
-							<td><p:selectOneRadio>
-									<f:selectItem itemLabel="Fedral Govt" itemValue="F" />
-									<f:selectItem itemLabel="Non-Fedral Govt" itemValue="N" />
-								</p:selectOneRadio></td>
-						</tr>
-						<tr>
-							<td><p:outputLabel
-									value="* #{lbl['lbl.sm.projDtls.contrVal']}" /></td>
+									value="#{lbl['lbl.sm.projDtls.contrVal']}" /> <p:outputLabel
+									value="*" styleClass="mandatory" /></td>
 
 							<td><p:inputText label="#{lbl['lbl.sm.projDtls.contrVal']}"
 									id="contractorContractVal"
+									required="#{backingBean.managedBean.valueReqd}"
 									value="#{backingBean.managedBean.selectedCompanyExperience.contractValue}"
 									size="35">
-
+									<f:convertNumber
+										pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 								</p:inputText> <p:message id="contractorContractValMsg"
 									for="contractorContractVal" showSummary="true"
 									showDetail="false" display="icon" /></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel
-									value="* #{lbl['lbl.sm.projDtls.procMode']}" /></td>
+									value="#{lbl['lbl.sm.projDtls.procMode']}" /> <p:outputLabel
+									value="*" styleClass="mandatory" /></td>
 							<td><p:selectOneMenu
+									required="#{backingBean.managedBean.valueReqd}"
+									label="#{lbl['lbl.sm.projDtls.procMode']}" id="supCntrPrcMod"
 									value="#{backingBean.managedBean.selectedCompanyExperience.procurementModeId}"
 									style="width: 207px;margin-bottom: 5px;">
 									<f:selectItems value="#{backingBean.getDropdownValues('PM')}" />
-								</p:selectOneMenu></td>
-						</tr>
-
-						<tr>
-							<td><p:outputLabel
-									value="* #{lbl['lbl.sm.projDtls.statBody']}" /></td>
-							<td><p:inputTextarea
-									value="#{backingBean.managedBean.selectedCompanyExperience.clientName}"
-									cols="36" /></td>
+								</p:selectOneMenu> <p:message id="supCntrPrcModMsg" for="supCntrPrcMod"
+									showSummary="true" showDetail="false" display="icon" /></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel
-									value="* #{lbl['lbl.sm.projDtls.workProgress']}" /></td>
+									value=" #{lbl['lbl.sm.projDtls.doneFor']}" /></td>
 							<td><p:selectOneRadio
-									value="#{backingBean.managedBean.selectedCompanyExperience.progressStatus}">
-									<f:selectItem itemLabel="In Progress" itemValue="P" />
-									<f:selectItem itemLabel="Success" itemValue="S" />
-									<f:selectItem itemLabel="Fail" itemValue="F" />
+									value="#{backingBean.managedBean.selectedCompanyExperience.clientType}">
+									<f:selectItem itemLabel="Fedral Govt" itemValue="F" />
+									<f:selectItem itemLabel="Others" itemValue="O" />
 								</p:selectOneRadio></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel
-									value="* #{lbl['lbl.sm.projDtls.procDate']}" /></td>
+									value="#{lbl['lbl.sm.projDtls.statBody']}" /> <p:outputLabel
+									value="*" styleClass="mandatory" /></td>
+							<td><p:inputTextarea maxlength="100"
+									required="#{backingBean.managedBean.valueReqd}"
+									label="#{lbl['lbl.sm.projDtls.statBody']}" id="supCntrStuBdy"
+									value="#{backingBean.managedBean.selectedCompanyExperience.clientName}"
+									cols="36" /> <p:message id="supCntrStuBdyMsg"
+									for="supCntrStuBdy" showSummary="true" showDetail="false"
+									display="icon" /></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel
+									value="#{lbl['lbl.sm.projDtls.workProgress']}" /> <p:outputLabel
+									value="*" styleClass="mandatory" /></td>
+							<td><p:selectOneRadio
+									required="#{backingBean.managedBean.valueReqd}"
+									label="#{lbl['lbl.sm.projDtls.workProgress']}"
+									id="supCntrPrgSts"
+									value="#{backingBean.managedBean.selectedCompanyExperience.progressStatus}">
+									<f:selectItem itemLabel="In Progress" itemValue="P" />
+									<f:selectItem itemLabel="Success" itemValue="S" />
+									<f:selectItem itemLabel="Fail" itemValue="F" />
+								</p:selectOneRadio> <p:message id="supCntrPrgStsMsg" for="supCntrPrgSts"
+									showSummary="true" showDetail="false" display="icon" /></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel
+									value="#{lbl['lbl.sm.projDtls.procDate']}" /> <p:outputLabel
+									value="*" styleClass="mandatory" /></td>
 							<td><p:calendar showOn="button" navigator="true"
 									display="inline" readonlyInput="true"
+									required="#{backingBean.managedBean.valueReqd}"
+									label="#{lbl['lbl.sm.projDtls.procDate']}" id="supCntrPrcDate"
 									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 									yearRange="-99:+0"
-									value="#{backingBean.managedBean.selectedCompanyExperience.procurementDate}" /></td>
+									value="#{backingBean.managedBean.selectedCompanyExperience.procurementDate}" />
+								<p:message id="supCntrPrcDateMsg" for="supCntrPrcDate"
+									showSummary="true" showDetail="false" display="icon" /></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel
 									value="
-										* #{lbl['lbl.sm.projDtls.mainCat']}" /></td>
+										#{lbl['lbl.sm.projDtls.mainCat']}" /> <p:outputLabel
+									value="*" styleClass="mandatory" /></td>
 							<td><p:selectOneMenu
+									required="#{backingBean.managedBean.valueReqd}"
+									label="#{lbl['lbl.sm.projDtls.mainCat']}"
+									id="supCntrMainCatCode"
 									value="#{backingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats[0].pmCategoryL1.categoryL1Id}"
 									style="width: 207px;margin-bottom: 5px;">
 									<f:selectItem itemLabel="-- Select  -- " itemValue="" />
@@ -209,14 +242,17 @@
 								backingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats[0].pmCategoryL2,
 								backingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats[0].pmCategoryL3)}"
 										update="contrChild,contrSubChild" />
-								</p:selectOneMenu></td>
+								</p:selectOneMenu> <p:message id="supCntrMainCatCodeMsg" for="supCntrMainCatCode"
+									showSummary="true" showDetail="false" display="icon" /></td>
 
 
 						</tr>
 						<tr>
-							<td><p:outputLabel
-									value="* #{lbl['lbl.sm.projDtls.subCat']}" /></td>
+							<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.subCat']}" />
+								<p:outputLabel value="*" styleClass="mandatory" /></td>
 							<td><p:selectOneMenu
+									required="#{backingBean.managedBean.valueReqd}"
+									label="#{lbl['lbl.sm.projDtls.subCat']}"
 									value="#{backingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats[0].pmCategoryL2.categoryL2Id}"
 									id="contrChild" style="width: 207px;margin-bottom: 5px;">
 									<f:selectItem itemLabel=" -- Select  -- " itemValue="" />
@@ -227,12 +263,16 @@
 									<p:ajax event="change"
 										listener="#{backingBean.populateSubChildCategoryByChild(backingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats[0].pmCategoryL2.categoryL2Id,backingBean.managedBean.selectedCategory.pmCategoryL3)}"
 										update="contrSubChild" />
-								</p:selectOneMenu></td>
+								</p:selectOneMenu> <p:message id="contrChildMsg" for="contrChild"
+									showSummary="true" showDetail="false" display="icon" /></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel
-									value="* #{lbl['lbl.sm.projDtls.subCatDiv']}" /></td>
+									value="#{lbl['lbl.sm.projDtls.subCatDiv']}" />
+								<p:outputLabel value="*" styleClass="mandatory" /></td>
 							<td><p:selectOneMenu
+									required="#{backingBean.managedBean.valueReqd}"
+									label="#{lbl['lbl.sm.projDtls.subCatDiv']}"
 									value="#{backingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats[0].pmCategoryL3.categoryL3Id}"
 									id="contrSubChild" style="width: 207px;margin-bottom: 5px;">
 									<f:selectItem itemLabel=" -- Select  --  " itemValue="" />
@@ -240,7 +280,8 @@
 										value="#{backingBean.managedBean.supplierSubChildCatList}"
 										var="contrSubChild" itemLabel="#{contrSubChild.categoryName}"
 										itemValue="#{contrSubChild.categoryL3Id}" />
-								</p:selectOneMenu></td>
+								</p:selectOneMenu> <p:message id="contrSubChildMsg" for="contrSubChild"
+									showSummary="true" showDetail="false" display="icon" /></td>
 						</tr>
 
 
@@ -252,11 +293,13 @@
 
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.sm.button.save']}"
+				id="contractProjPopUpSaveBtn"
 				action="#{backingBean.addOrUpdateCompanyExperienceToSmAppl}"
-				update=":form:tt:contDt" />
-			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}" type="reset"
-				immediate="true" update=":form:tt:contDialog"
-				onclick="contDialog.hide();">
+				update=":form:tt:contDt, @([id$=Msg])" partialSubmit="true"
+				process="contDialog" />
+			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
+				partialSubmit="true" process="@this"
+				action="#{backingBean.cancelCompExpFunctions}">
 			</p:commandButton>
 		</div>
 

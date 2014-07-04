@@ -16,9 +16,11 @@
 											value="#{lbl['lbl.sm.person.permAddr']} " /></b></u></td>
 						</tr>
 						<tr>
-							<td><p:outputLabel value="* #{lbl['lbl.sm.companyaddress']}" /></td>
+							<td><p:outputLabel value="#{lbl['lbl.sm.person.permAddr']}" />
+								<p:outputLabel value="*" styleClass="mandatory" /></td>
 							<td><p:inputText id="equiPersPermAddrLine"
-									label="#{lbl['lbl.sm.companyaddress']}" required="true"
+									label="#{lbl['lbl.sm.person.permAddr']}" required="true"
+									maxlength="35"
 									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.address1}"
 									size="35" /> <p:message id="equiPersPermAddrLineMsg"
 									for="equiPersPermAddrLine" showSummary="true"
@@ -27,25 +29,27 @@
 
 						<tr>
 							<td></td>
-							<td><p:inputText
+							<td><p:inputText maxlength="35"
 									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.address2}"
 									size="35" /></td>
 						</tr>
 						<tr>
 							<td></td>
-							<td><p:inputText
+							<td><p:inputText maxlength="35"
 									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.address3}"
 									size="35" /></td>
 						</tr>
 						<tr>
 							<td></td>
-							<td><p:inputText
+							<td><p:inputText maxlength="35"
 									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.address4}"
 									size="35" /></td>
 						</tr>
 						<tr>
-							<td><p:outputLabel value="*#{lbl['lbl.sm.country']}" /></td>
-							<td><p:selectOneMenu label="#{lbl['lbl.sm.country']}"
+							<td><p:outputLabel value="#{lbl['lbl.sm.country']}" /> <p:outputLabel
+									value="*" styleClass="mandatory" /></td>
+							<td><p:selectOneMenu
+									label="#{lbl['lbl.sm.person.permAddr']} - #{lbl['lbl.sm.country']}"
 									required="true" id="equiPersPermCntry"
 									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmCountry.countryId}"
 									style="width: 207px;margin-bottom: 5px;">
@@ -66,8 +70,10 @@
 						</tr>
 
 						<tr>
-							<td><p:outputLabel value="*#{lbl['lbl.sm.state']}" /></td>
-							<td><p:selectOneMenu label="#{lbl['lbl.sm.state']}"
+							<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /> <p:outputLabel
+									value="*" styleClass="mandatory" /></td>
+							<td><p:selectOneMenu
+									label="#{lbl['lbl.sm.person.permAddr']} - #{lbl['lbl.sm.state']}"
 									required="true" style="width: 207px;margin-bottom: 5px;"
 									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmState.stateId}"
 									id="shrPermState">
@@ -88,8 +94,10 @@
 						</tr>
 
 						<tr>
-							<td><p:outputLabel value="*#{lbl['lbl.sm.district']}" /></td>
-							<td><p:selectOneMenu label="#{lbl['lbl.sm.district']}"
+							<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /> <p:outputLabel
+									value="*" styleClass="mandatory" /></td>
+							<td><p:selectOneMenu
+									label="#{lbl['lbl.sm.person.permAddr']} - #{lbl['lbl.sm.district']}"
 									required="true" style="width: 207px;margin-bottom: 5px;"
 									id="shrPermDist"
 									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmDistrict.districtId}">
@@ -107,8 +115,10 @@
 									showSummary="true" showDetail="false" display="icon" /></td>
 						</tr>
 						<tr>
-							<td><p:outputLabel value="*#{lbl['lbl.sm.towncity']}" /></td>
-							<td><p:selectOneMenu label="#{lbl['lbl.sm.towncity']}"
+							<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /> <p:outputLabel
+									value="*" styleClass="mandatory" /></td>
+							<td><p:selectOneMenu
+									label="#{lbl['lbl.sm.person.permAddr']} - #{lbl['lbl.sm.towncity']}"
 									required="true" style="width: 207px;margin-bottom: 5px;"
 									id="shrPermCity"
 									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmCity.cityId}">
@@ -122,7 +132,7 @@
 						</tr>
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
-							<td><p:inputText
+							<td><p:inputText maxlength="10"
 									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.postcode}"
 									size="35" /></td>
 						</tr>
@@ -148,9 +158,10 @@
 								</table></td>
 						</tr>
 						<tr>
-							<td><p:outputLabel value="* #{lbl['lbl.sm.companyaddress']}" /></td>
-							<td><p:inputText id="equiPersMailAddrLine"
-									label="#{lbl['lbl.sm.companyaddress']}"
+							<td><p:outputLabel value="#{lbl['lbl.sm.person.mailAddr']}" />
+								<p:outputLabel value="*" styleClass="mandatory" /></td>
+							<td><p:inputText id="equiPersMailAddrLine" maxlength="35"
+									label="#{lbl['lbl.sm.person.mailAddr']}"
 									required="#{!backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
 									readonly="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
 									disabled="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
@@ -162,7 +173,7 @@
 
 						<tr>
 							<td></td>
-							<td><p:inputText
+							<td><p:inputText maxlength="35"
 									readonly="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
 									disabled="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
 									value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.address2}"
@@ -170,7 +181,7 @@
 						</tr>
 						<tr>
 							<td></td>
-							<td><p:inputText
+							<td><p:inputText maxlength="35"
 									readonly="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
 									disabled="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
 									value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.address3}"
@@ -178,15 +189,17 @@
 						</tr>
 						<tr>
 							<td></td>
-							<td><p:inputText
+							<td><p:inputText maxlength="35"
 									readonly="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
 									disabled="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
 									value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.address4}"
 									size="35" /></td>
 						</tr>
 						<tr>
-							<td><p:outputLabel value="*#{lbl['lbl.sm.country']}" /></td>
-							<td><p:selectOneMenu label="#{lbl['lbl.sm.country']}"
+							<td><p:outputLabel value="#{lbl['lbl.sm.country']}" /> <p:outputLabel
+									value="*" styleClass="mandatory" /></td>
+							<td><p:selectOneMenu
+									label="#{lbl['lbl.sm.person.mailAddr']} - #{lbl['lbl.sm.country']}"
 									required="#{!backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
 									id="equiPerMailCntry"
 									disabled="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
@@ -209,8 +222,10 @@
 						</tr>
 
 						<tr>
-							<td><p:outputLabel value="*#{lbl['lbl.sm.state']}" /></td>
-							<td><p:selectOneMenu label="#{lbl['lbl.sm.state']}"
+							<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /> <p:outputLabel
+									value="*" styleClass="mandatory" /></td>
+							<td><p:selectOneMenu
+									label="#{lbl['lbl.sm.person.mailAddr']} - #{lbl['lbl.sm.state']}"
 									disabled="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
 									required="#{!backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
 									style="width: 207px;margin-bottom: 5px;"
@@ -233,8 +248,10 @@
 						</tr>
 
 						<tr>
-							<td><p:outputLabel value="*#{lbl['lbl.sm.district']}" /></td>
-							<td><p:selectOneMenu label="#{lbl['lbl.sm.district']}"
+							<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /> <p:outputLabel
+									value="*" styleClass="mandatory" /></td>
+							<td><p:selectOneMenu
+									label="#{lbl['lbl.sm.person.mailAddr']} - #{lbl['lbl.sm.district']}"
 									disabled="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
 									required="#{!backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
 									style="width: 207px;margin-bottom: 5px;" id="shrMailDist"
@@ -253,8 +270,10 @@
 									showSummary="true" showDetail="false" display="icon" /></td>
 						</tr>
 						<tr>
-							<td><p:outputLabel value="*#{lbl['lbl.sm.towncity']}" /></td>
-							<td><p:selectOneMenu label="#{lbl['lbl.sm.towncity']}"
+							<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /> <p:outputLabel
+									value="*" styleClass="mandatory" /></td>
+							<td><p:selectOneMenu
+									label="#{lbl['lbl.sm.person.mailAddr']} - #{lbl['lbl.sm.towncity']}"
 									disabled="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
 									required="#{!backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
 									style="width: 207px;margin-bottom: 5px;" id="shrMailCity"
@@ -269,7 +288,7 @@
 						</tr>
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
-							<td><p:inputText
+							<td><p:inputText maxlength="10"
 									disabled="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
 									readonly="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
 									value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.postcode}"
@@ -304,9 +323,10 @@
 								</table></td>
 						</tr>
 						<tr>
-							<td><p:outputLabel value="*#{lbl['lbl.sm.companyaddress']}" /></td>
-							<td><p:inputText id="equiPersResiAddrLine"
-									label="#{lbl['lbl.sm.companyaddress']}"
+							<td><p:outputLabel value="#{lbl['lbl.sm.person.resiAddr']}" />
+								<p:outputLabel value="*" styleClass="mandatory" /></td>
+							<td><p:inputText id="equiPersResiAddrLine" maxlength="35"
+									label="#{lbl['lbl.sm.person.resiAddr']}"
 									required="#{!backingBean.managedBean.shareHolderResdAddr.sameAsPerm}"
 									readonly="#{backingBean.managedBean.shareHolderResdAddr.sameAsPerm}"
 									disabled="#{backingBean.managedBean.shareHolderResdAddr.sameAsPerm}"
@@ -318,7 +338,7 @@
 
 						<tr>
 							<td></td>
-							<td><p:inputText
+							<td><p:inputText maxlength="35"
 									readonly="#{backingBean.managedBean.shareHolderResdAddr.sameAsPerm}"
 									disabled="#{backingBean.managedBean.shareHolderResdAddr.sameAsPerm}"
 									value="#{backingBean.managedBean.shareHolderResdAddr.smAddress.address2}"
@@ -326,7 +346,7 @@
 						</tr>
 						<tr>
 							<td></td>
-							<td><p:inputText
+							<td><p:inputText maxlength="35"
 									readonly="#{backingBean.managedBean.shareHolderResdAddr.sameAsPerm}"
 									disabled="#{backingBean.managedBean.shareHolderResdAddr.sameAsPerm}"
 									value="#{backingBean.managedBean.shareHolderResdAddr.smAddress.address3}"
@@ -334,15 +354,17 @@
 						</tr>
 						<tr>
 							<td></td>
-							<td><p:inputText
+							<td><p:inputText maxlength="35"
 									readonly="#{backingBean.managedBean.shareHolderResdAddr.sameAsPerm}"
 									disabled="#{backingBean.managedBean.shareHolderResdAddr.sameAsPerm}"
 									value="#{backingBean.managedBean.shareHolderResdAddr.smAddress.address4}"
 									size="35" /></td>
 						</tr>
 						<tr>
-							<td><p:outputLabel value="*#{lbl['lbl.sm.country']}" /></td>
-							<td><p:selectOneMenu label="#{lbl['lbl.sm.country']}"
+							<td><p:outputLabel value="#{lbl['lbl.sm.country']}" /> <p:outputLabel
+									value="*" styleClass="mandatory" /></td>
+							<td><p:selectOneMenu
+									label="#{lbl['lbl.sm.person.resiAddr']} - #{lbl['lbl.sm.country']}"
 									required="#{!backingBean.managedBean.shareHolderResdAddr.sameAsPerm}"
 									disabled="#{backingBean.managedBean.shareHolderResdAddr.sameAsPerm}"
 									id="equiPersResiCntry"
@@ -365,8 +387,10 @@
 						</tr>
 
 						<tr>
-							<td><p:outputLabel value="*#{lbl['lbl.sm.state']}" /></td>
-							<td><p:selectOneMenu label="#{lbl['lbl.sm.state']}"
+							<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /> <p:outputLabel
+									value="*" styleClass="mandatory" /></td>
+							<td><p:selectOneMenu
+									label="#{lbl['lbl.sm.person.resiAddr']} - #{lbl['lbl.sm.state']}"
 									required="#{!backingBean.managedBean.shareHolderResdAddr.sameAsPerm}"
 									disabled="#{backingBean.managedBean.shareHolderResdAddr.sameAsPerm}"
 									style="width: 207px;margin-bottom: 5px;"
@@ -389,8 +413,10 @@
 						</tr>
 
 						<tr>
-							<td><p:outputLabel value="*#{lbl['lbl.sm.district']}" /></td>
-							<td><p:selectOneMenu label="#{lbl['lbl.sm.district']}"
+							<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /> <p:outputLabel
+									value="*" styleClass="mandatory" /></td>
+							<td><p:selectOneMenu
+									label="#{lbl['lbl.sm.person.resiAddr']} - #{lbl['lbl.sm.district']}"
 									required="#{!backingBean.managedBean.shareHolderResdAddr.sameAsPerm}"
 									disabled="#{backingBean.managedBean.shareHolderResdAddr.sameAsPerm}"
 									style="width: 207px;margin-bottom: 5px;" id="shrResDist"
@@ -409,8 +435,10 @@
 									showSummary="true" showDetail="false" display="icon" /></td>
 						</tr>
 						<tr>
-							<td><p:outputLabel value="*#{lbl['lbl.sm.towncity']}" /></td>
-							<td><p:selectOneMenu label="#{lbl['lbl.sm.towncity']}"
+							<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /> <p:outputLabel
+									value="*" styleClass="mandatory" /></td>
+							<td><p:selectOneMenu
+									label="#{lbl['lbl.sm.person.resiAddr']} - #{lbl['lbl.sm.towncity']}"
 									required="#{!backingBean.managedBean.shareHolderResdAddr.sameAsPerm}"
 									disabled="#{backingBean.managedBean.shareHolderResdAddr.sameAsPerm}"
 									style="width: 207px;margin-bottom: 5px;" id="shrResCity"
@@ -425,7 +453,7 @@
 						</tr>
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
-							<td><p:inputText
+							<td><p:inputText maxlength="10"
 									disabled="#{backingBean.managedBean.shareHolderResdAddr.sameAsPerm}"
 									readonly="#{backingBean.managedBean.shareHolderResdAddr.sameAsPerm}"
 									value="#{backingBean.managedBean.shareHolderResdAddr.smAddress.postcode}"
@@ -453,9 +481,11 @@
 								</table></td>
 						</tr>
 						<tr>
-							<td><p:outputLabel value="*#{lbl['lbl.sm.companyaddress']}" /></td>
-							<td><p:inputText id="equiPersOffcAddrLine"
-									label="#{lbl['lbl.sm.companyaddress']}"
+							<td width="191px"><p:outputLabel
+									value="#{lbl['lbl.sm.person.offAddr']}" /> <p:outputLabel
+									value="*" styleClass="mandatory" /></td>
+							<td><p:inputText id="equiPersOffcAddrLine" maxlength="35"
+									label="#{lbl['lbl.sm.person.offAddr']}"
 									required="#{!backingBean.managedBean.shareHolderOffAddr.sameAsPerm}"
 									disabled="#{backingBean.managedBean.shareHolderOffAddr.sameAsPerm}"
 									readonly="#{backingBean.managedBean.shareHolderOffAddr.sameAsPerm}"
@@ -467,7 +497,7 @@
 
 						<tr>
 							<td></td>
-							<td><p:inputText
+							<td><p:inputText maxlength="35"
 									disabled="#{backingBean.managedBean.shareHolderOffAddr.sameAsPerm}"
 									readonly="#{backingBean.managedBean.shareHolderOffAddr.sameAsPerm}"
 									value="#{backingBean.managedBean.shareHolderOffAddr.smAddress.address2}"
@@ -475,7 +505,7 @@
 						</tr>
 						<tr>
 							<td></td>
-							<td><p:inputText
+							<td><p:inputText maxlength="35"
 									disabled="#{backingBean.managedBean.shareHolderOffAddr.sameAsPerm}"
 									readonly="#{backingBean.managedBean.shareHolderOffAddr.sameAsPerm}"
 									value="#{backingBean.managedBean.shareHolderOffAddr.smAddress.address3}"
@@ -483,16 +513,17 @@
 						</tr>
 						<tr>
 							<td></td>
-							<td><p:inputText
+							<td><p:inputText maxlength="35"
 									disabled="#{backingBean.managedBean.shareHolderOffAddr.sameAsPerm}"
 									readonly="#{backingBean.managedBean.shareHolderOffAddr.sameAsPerm}"
 									value="#{backingBean.managedBean.shareHolderOffAddr.smAddress.address4}"
 									size="35" /></td>
 						</tr>
 						<tr>
-							<td><p:outputLabel value="*#{lbl['lbl.sm.country']}" /></td>
+							<td><p:outputLabel value="#{lbl['lbl.sm.country']}" />
+								<p:outputLabel value="*" styleClass="mandatory" /></td>
 							<td><p:selectOneMenu id="equiPersOffcCntry"
-									label="#{lbl['lbl.sm.country']}"
+									label="#{lbl['lbl.sm.person.offAddr']} - #{lbl['lbl.sm.country']}"
 									required="#{!backingBean.managedBean.shareHolderOffAddr.sameAsPerm}"
 									disabled="#{backingBean.managedBean.shareHolderOffAddr.sameAsPerm}"
 									value="#{backingBean.managedBean.shareHolderOffAddr.smAddress.pmCountry.countryId}"
@@ -514,8 +545,10 @@
 						</tr>
 
 						<tr>
-							<td><p:outputLabel value="*#{lbl['lbl.sm.state']}" /></td>
-							<td><p:selectOneMenu label="#{lbl['lbl.sm.state']}"
+							<td><p:outputLabel value="#{lbl['lbl.sm.state']}" />
+								<p:outputLabel value="*" styleClass="mandatory" /></td>
+							<td><p:selectOneMenu
+									label="#{lbl['lbl.sm.person.offAddr']} - #{lbl['lbl.sm.state']}"
 									required="#{!backingBean.managedBean.shareHolderOffAddr.sameAsPerm}"
 									disabled="#{backingBean.managedBean.shareHolderOffAddr.sameAsPerm}"
 									style="width: 207px;margin-bottom: 5px;"
@@ -538,8 +571,10 @@
 						</tr>
 
 						<tr>
-							<td><p:outputLabel value="*#{lbl['lbl.sm.district']}" /></td>
-							<td><p:selectOneMenu label="#{lbl['lbl.sm.district']}"
+							<td><p:outputLabel value="#{lbl['lbl.sm.district']}" />
+								<p:outputLabel value="*" styleClass="mandatory" /></td>
+							<td><p:selectOneMenu
+									label="#{lbl['lbl.sm.person.offAddr']} - #{lbl['lbl.sm.district']}"
 									required="#{!backingBean.managedBean.shareHolderOffAddr.sameAsPerm}"
 									disabled="#{backingBean.managedBean.shareHolderOffAddr.sameAsPerm}"
 									style="width: 207px;margin-bottom: 5px;" id="shrOffDist"
@@ -558,8 +593,10 @@
 									showSummary="true" showDetail="false" display="icon" /></td>
 						</tr>
 						<tr>
-							<td><p:outputLabel value="*#{lbl['lbl.sm.towncity']}" /></td>
-							<td><p:selectOneMenu label="#{lbl['lbl.sm.towncity']}"
+							<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" />
+								<p:outputLabel value="*" styleClass="mandatory" /></td>
+							<td><p:selectOneMenu
+									label="#{lbl['lbl.sm.person.offAddr']} -#{lbl['lbl.sm.towncity']}"
 									required="#{!backingBean.managedBean.shareHolderOffAddr.sameAsPerm}"
 									disabled="#{backingBean.managedBean.shareHolderOffAddr.sameAsPerm}"
 									style="width: 207px;margin-bottom: 5px;" id="shrOffCity"
@@ -573,7 +610,7 @@
 						</tr>
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
-							<td><p:inputText
+							<td><p:inputText maxlength="10"
 									disabled="#{backingBean.managedBean.shareHolderOffAddr.sameAsPerm}"
 									readonly="#{backingBean.managedBean.shareHolderOffAddr.sameAsPerm}"
 									value="#{backingBean.managedBean.shareHolderOffAddr.smAddress.postcode}"

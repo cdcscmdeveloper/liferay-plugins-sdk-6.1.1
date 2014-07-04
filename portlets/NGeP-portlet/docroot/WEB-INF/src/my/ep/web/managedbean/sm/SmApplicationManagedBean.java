@@ -16,6 +16,7 @@ import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmEduField;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
@@ -348,6 +349,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private String currentPageType;
 
 	private boolean redirectToPersonPage;
+	
+	private PmParameter perIdTypeParam;
 
 	public SmApplicationManagedBean() {
 		System.out.println("******** Enter Managed Bean *******888");
@@ -632,6 +635,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		selectedStaffAcademic.setPmEduField(new PmEduField());
 		selectedStfPrfBdy = new SmAssociationBody();
 		selectedStfPrfBdy.setPmCertBody(new PmCertBody());
+		perIdTypeParam = new PmParameter();
 		System.out.println(" ********* END MANAGED BEAN CREATION ****** ");
 	}
 
@@ -2088,6 +2092,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setShowParentMsg(boolean showParentMsg) {
 		this.showParentMsg = showParentMsg;
+	}
+
+	public PmParameter getPerIdTypeParam() {
+		return perIdTypeParam;
+	}
+
+	public void setPerIdTypeParam(PmParameter perIdTypeParam) {
+		this.perIdTypeParam = perIdTypeParam;
 	}
 
 }

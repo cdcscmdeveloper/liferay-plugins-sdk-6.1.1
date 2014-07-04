@@ -296,7 +296,7 @@
 				<p:blockUI block=":form:tt:persInfPan" widgetVar="buiPoPers"
 					id="poPersBlc"
 					blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.personnelVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.personnelVerified : false)}" />
-				<p:dataTable var="person"
+				<p:dataTable var="person" widgetVar="suppPersonnelInfoDtWidVar"
 					value="#{backingBean.managedBean.smAppl.smPersonnels}"
 					selection="#{backingBean.managedBean.selectedShareHolders}"
 					rowKey="#{person}" rowIndexVar="index" id="personDt">

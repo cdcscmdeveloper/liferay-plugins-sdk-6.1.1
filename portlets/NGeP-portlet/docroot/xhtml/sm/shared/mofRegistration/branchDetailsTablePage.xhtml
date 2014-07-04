@@ -7,7 +7,8 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<table style="width: 100%">
 		<tr>
-			<td><p:outputLabel value="* #{lbl['lbl.sm.branch.branchName']}" /></td>
+			<td><p:outputLabel value="#{lbl['lbl.sm.branch.branchName']}" />
+				<p:outputLabel value="*" styleClass="mandatory" /></td>
 			<td><p:inputText required="#{backingBean.managedBean.valueReqd}"
 					label=" #{lbl['lbl.sm.branch.branchName']}" id="supBranchName"
 					maxlength="100"
@@ -16,14 +17,14 @@
 					showSummary="true" showDetail="false" display="icon" /></td>
 		</tr>
 		<tr>
-			<td><p:outputLabel value="* #{lbl['lbl.sm.companyaddress']}" /></td>
+			<td><p:outputLabel value="#{lbl['lbl.sm.companyaddress']}" /> <p:outputLabel
+					value="*" styleClass="mandatory" /></td>
 			<td><p:inputText required="#{backingBean.managedBean.valueReqd}"
 					label="#{lbl['lbl.sm.companyaddress']}" id="supBrnAddr"
 					maxlength="35"
 					value="#{backingBean.managedBean.selectedBranch.smAddress.address1}"
-					size="35" />
-				<p:message id="supBrnAddrMsg" for="supBrnAddr" showSummary="true"
-					showDetail="false" display="icon" /></td>
+					size="35" /> <p:message id="supBrnAddrMsg" for="supBrnAddr"
+					showSummary="true" showDetail="false" display="icon" /></td>
 		</tr>
 
 		<tr>
@@ -45,7 +46,8 @@
 					size="35" /></td>
 		</tr>
 		<tr>
-			<td><p:outputLabel value="*#{lbl['lbl.sm.country']}" /></td>
+			<td><p:outputLabel value="#{lbl['lbl.sm.country']}" /> <p:outputLabel
+					value="*" styleClass="mandatory" /></td>
 			<td><p:selectOneMenu
 					required="#{backingBean.managedBean.valueReqd}"
 					label="#{lbl['lbl.sm.country']}" id="supBrnCntry"
@@ -63,13 +65,13 @@
 								backingBean.managedBean.selectedBranch.smAddress.pmDistrict,
 								backingBean.managedBean.selectedBranch.smAddress.pmCity)}"
 						update="branchState,branchDist,branchCity" />
-				</p:selectOneMenu>
-				<p:message id="supBrnCntryMsg" for="supBrnCntry" showSummary="true"
+				</p:selectOneMenu> <p:message id="supBrnCntryMsg" for="supBrnCntry" showSummary="true"
 					showDetail="false" display="icon" /></td>
 		</tr>
 
 		<tr>
-			<td><p:outputLabel value="*#{lbl['lbl.sm.state']}" /></td>
+			<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /> <p:outputLabel
+					value="*" styleClass="mandatory" /></td>
 			<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
 					required="#{backingBean.managedBean.valueReqd}"
 					label="#{lbl['lbl.sm.state']}"
@@ -86,13 +88,13 @@
 								backingBean.managedBean.selectedBranch.smAddress.pmCity)}"
 						update="branchDist,branchCity" />
 
-				</p:selectOneMenu>
-				<p:message id="branchStateMsg" for="branchState" showSummary="true"
+				</p:selectOneMenu> <p:message id="branchStateMsg" for="branchState" showSummary="true"
 					showDetail="false" display="icon" /></td>
 		</tr>
 
 		<tr>
-			<td><p:outputLabel value="*#{lbl['lbl.sm.district']}" /></td>
+			<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /> <p:outputLabel
+					value="*" styleClass="mandatory" /></td>
 			<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
 					id="branchDist" required="#{backingBean.managedBean.valueReqd}"
 					label="#{lbl['lbl.sm.district']}"
@@ -107,12 +109,12 @@
 								SupplierManagementConst.SM_BRANCH_PANEL,
 								backingBean.managedBean.selectedBranch.smAddress.pmCity)}"
 						update="branchCity" />
-				</p:selectOneMenu>
-				<p:message id="branchDistMsg" for="branchDist" showSummary="true"
+				</p:selectOneMenu> <p:message id="branchDistMsg" for="branchDist" showSummary="true"
 					showDetail="false" display="icon" /></td>
 		</tr>
 		<tr>
-			<td><p:outputLabel value="*#{lbl['lbl.sm.towncity']}" /></td>
+			<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" />
+				<p:outputLabel value="*" styleClass="mandatory" /></td>
 			<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
 					id="branchCity" required="#{backingBean.managedBean.valueReqd}"
 					label="#{lbl['lbl.sm.towncity']}"
@@ -122,8 +124,7 @@
 						value="#{backingBean.managedBean.branchCompanyCities}"
 						itemValue="#{branchCity.cityId}"
 						itemLabel="#{branchCity.cityName}" />
-				</p:selectOneMenu>
-				<p:message id="branchCityMsg" for="branchCity" showSummary="true"
+				</p:selectOneMenu> <p:message id="branchCityMsg" for="branchCity" showSummary="true"
 					showDetail="false" display="icon" /></td>
 		</tr>
 		<tr>

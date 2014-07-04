@@ -45,7 +45,7 @@
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.assocBodyVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.assocBodyVerified : false)}" />
 
 
-			<p:dataTable var="profBean"
+			<p:dataTable var="profBean" widgetVar="suppProfBodyDtWidVar"
 				value="#{backingBean.managedBean.smAppl.smAssociationBodies}"
 				selection="#{backingBean.managedBean.selectedAssocBodyList}"
 				rowKey="#{profBean}" rowIndexVar="index" id="profDt">
@@ -120,7 +120,8 @@
 
 
 			<tr>
-				<td><p:outputLabel value="* #{lbl['lbl.sm.profBody.profBody']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.profBody.profBody']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
 						required="#{backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sm.profBody.profBody']}" id="profBodyBdy"
@@ -142,7 +143,8 @@
 			<tr>
 				<td><p:outputLabel
 						value="
-						* #{lbl['lbl.sm.profBody.regNo']}" /></td>
+						#{lbl['lbl.sm.profBody.regNo']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
 				<td><p:inputText size="35"
 						required="#{backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sm.profBody.regNo']}" id="profBodyRegNo"
@@ -152,7 +154,8 @@
 						display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="* #{lbl['lbl.sm.profBody.expDate']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.profBody.expDate']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:calendar showOn="button" navigator="true"
 						display="inline" required="#{backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sm.profBody.expDate']}" id="profBodyExpDate"
@@ -169,7 +172,7 @@
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.sm.button.save']}"
 				action="#{backingBean.addOrUpdateAssocBodiesToSmAppl}"
-				partialSubmit="true" process="profPop"
+				partialSubmit="true" process="profPop" id="suppProfBodyPopUpSaveBtn"
 				update=":form:tt:profDt, @([id$=Msg])" />
 			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
 				action="#{backingBean.cancelSelProfBody}" partialSubmit="true"

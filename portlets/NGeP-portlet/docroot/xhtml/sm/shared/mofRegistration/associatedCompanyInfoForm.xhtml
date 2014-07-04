@@ -45,7 +45,7 @@
 				id="poAssocBlc"
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.associateVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.associateVerified : false)}" />
 
-			<p:dataTable var="assocBean"
+			<p:dataTable var="assocBean" widgetVar="assocDtWidVar"
 				value="#{backingBean.managedBean.smAppl.smAssociateCompanies}"
 				selection="#{backingBean.managedBean.selectedAssocCompanies}"
 				rowKey="#{assocBean}" rowIndexVar="index" id="asoc">
@@ -64,7 +64,7 @@
 				<p:column headerText="#{lbl['lbl.sm.label.action']}">
 					<p:commandLink update=":form:tt:asDisp"
 						action="#{backingBean.assignSelAssoc(assocBean)}"
-						oncomplete="assocDialog.show();">
+						partialSubmit="true" process="@this">
 						<p:graphicImage library="ep/images/design" name="edit.png"
 							value="/resources/ep/images/design/edit.png"
 							style="margin-right:2px;" />
@@ -77,11 +77,11 @@
 			<p:spacer height="2px;" />
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.sm.button.add']}"
-					action="#{backingBean.assignNewAssocBean}"
-					oncomplete="assocDialog.show();" update=":form:tt:asDisp" />
+					action="#{backingBean.assignNewAssocBean}" partialSubmit="true"
+					process="@this" update=":form:tt:asDisp" />
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']} "
 					action="#{backingBean.deleteSelectedAssocCompanies}"
-					update=":form:tt:asoc" />
+					partialSubmit="true" process="assocInfPan" update=":form:tt:asoc" />
 
 			</div>
 			<br />
@@ -110,26 +110,37 @@
 			</p:outputPanel>
 		</p:panel>
 	</p:panel>
-	<p:dialog width="500px" height="435px"
+	<p:dialog width="500px" height="435px" closable="false"
 		header="#{lbl['lbl.sm.assocCmpny.assocDiaHdr']}" id="asDisp"
 		widgetVar="assocDialog" resizable="false" showEffect="fade"
 		hideEffect="fade" modal="true">
 		<!-- <p:panel header="Associated Company Details"> -->
-		<p:messages id="suppAssocCompMsg" showSummary="true" showDetail="true"
-			autoUpdate="true" closable="true" />
+		<p:messages id="suppAssocCompMessage" showSummary="false"
+			showDetail="true" autoUpdate="true" closable="true" />
 		<table style="width: 100%">
 			<tr>
 				<td><p:outputLabel
-						value="*#{lbl['lbl.sm.assocCmpny.companyName']} " /></td>
-				<td><p:inputText
+						value="#{lbl['lbl.sm.assocCmpny.companyName']} " /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:inputText maxlength="100"
+						required="#{backingBean.managedBean.valueReqd}"
+						label="#{lbl['lbl.sm.assocCmpny.companyName']}"
+						id="asocCompCmpName"
 						value="#{backingBean.managedBean.selectedAssocCompany.companyName}"
-						size="35" /></td>
+						size="35" /> <p:message id="asocCompCmpNameMsg"
+						for="asocCompCmpName" showSummary="true" showDetail="false"
+						display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="* #{lbl['lbl.sm.assocCmpny.regNo']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.assocCmpny.regNo']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:inputText
+						required="#{backingBean.managedBean.valueReqd}"
+						label=" #{lbl['lbl.sm.assocCmpny.regNo']}" id="asocRegNo"
 						value="#{backingBean.managedBean.selectedAssocCompany.regNo}"
-						size="35" maxlength="20" /></td>
+						size="35" maxlength="20" /> <p:message id="asocRegNoMsg"
+						for="asocRegNo" showSummary="true" showDetail="false"
+						display="icon" /></td>
 			</tr>
 			<!-- <tr>
 				<td><p:outputLabel value="* MOF NO." /></td>
@@ -141,41 +152,53 @@
 				<!-- 	<td><p:outputLabel value="Share Holding *" /></td>
 					<td><p:inputText /> <p:outputLabel value="%" /></td> -->
 				<td><p:outputLabel
-						value="#{lbl['lbl.sm.assocCmpny.shrHolding']} " /></td>
+						value="#{lbl['lbl.sm.assocCmpny.shrHolding']} " /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneRadio id="shopt"
+						required="#{backingBean.managedBean.valueReqd}"
+						label=" #{lbl['lbl.sm.assocCmpny.shrHolding']}"
 						value="#{backingBean.managedBean.selectedAssocCompany.isShareholding}">
 						<f:selectItem itemLabel="Yes" itemValue="1" />
 						<f:selectItem itemLabel="No" itemValue="0" />
-					</p:selectOneRadio></td>
+					</p:selectOneRadio> <p:message id="asocCmpShrHdrMsg" for="shopt" showSummary="true"
+						showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="* #{lbl['lbl.sm.companyaddress']}" /></td>
-				<td><p:inputText
+				<td><p:outputLabel value="#{lbl['lbl.sm.companyaddress']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td><p:inputText maxlength="35"
+						required="#{backingBean.managedBean.valueReqd}"
+						label="#{lbl['lbl.sm.companyaddress']}" id="assocCompCmpAddr"
 						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.address1}"
-						size="35" /></td>
+						size="35" /> <p:message id="assocCompCmpAddrMsg"
+						for="assocCompCmpAddr" showSummary="true" showDetail="false"
+						display="icon" /></td>
 			</tr>
 
 			<tr>
 				<td></td>
-				<td><p:inputText
+				<td><p:inputText maxlength="35"
 						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.address2}"
 						size="35" /></td>
 			</tr>
 			<tr>
 				<td></td>
-				<td><p:inputText
+				<td><p:inputText maxlength="35"
 						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.address3}"
 						size="35" /></td>
 			</tr>
 			<tr>
 				<td></td>
-				<td><p:inputText
+				<td><p:inputText maxlength="35"
 						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.address4}"
 						size="35" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="*#{lbl['lbl.sm.country']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.country']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu
+						required="#{backingBean.managedBean.valueReqd}"
+						label="#{lbl['lbl.sm.country']}" id="asocCompCntrId"
 						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.pmCountry.countryId}"
 						style="width: 207px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="---Select---" itemValue="" />
@@ -190,12 +213,16 @@
 								backingBean.managedBean.selectedAssocCompany.smAddress.pmDistrict,
 								backingBean.managedBean.selectedAssocCompany.smAddress.pmCity)}"
 							update="assocState,assocDist,assocCity" />
-					</p:selectOneMenu></td>
+					</p:selectOneMenu> <p:message id="asocCompCntrIdMsg" for="asocCompCntrId"
+						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+						required="#{backingBean.managedBean.valueReqd}"
+						label="#{lbl['lbl.sm.state']}"
 						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.pmState.stateId}"
 						id="assocState">
 						<f:selectItem itemLabel="---Select---" itemValue="" />
@@ -209,14 +236,17 @@
 								backingBean.managedBean.selectedAssocCompany.smAddress.pmCity)}"
 							update="assocDist,assocCity" />
 
-					</p:selectOneMenu></td>
+					</p:selectOneMenu> <p:message id="assocStateMsg" for="assocState" showSummary="true"
+						showDetail="false" display="icon" /></td>
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
 
 				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
-						id="assocDist"
+						id="assocDist" required="#{backingBean.managedBean.valueReqd}"
+						label="#{lbl['lbl.sm.district']}"
 						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.pmDistrict.districtId}">
 						<f:selectItem itemLabel="---Select---" itemValue="" />
 						<f:selectItems var="assDist"
@@ -228,18 +258,22 @@
 								SupplierManagementConst.SM_ASSOC_COMPANY_PANEL,
 								backingBean.managedBean.selectedAssocCompany.smAddress.pmCity)}"
 							update="assocCity" />
-					</p:selectOneMenu></td>
+					</p:selectOneMenu> <p:message id="assocDistMsg" for="assocDist" showSummary="true"
+						showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
-						id="assocCity"
+						id="assocCity" required="#{backingBean.managedBean.valueReqd}"
+						label="#{lbl['lbl.sm.towncity']}"
 						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.pmCity.cityId}">
 						<f:selectItem itemLabel="---Select---" itemValue="" />
 						<f:selectItems var="assCity"
 							value="#{backingBean.managedBean.assocCompanyCities}"
 							itemValue="#{assCity.cityId}" itemLabel="#{assCity.cityName}" />
-					</p:selectOneMenu></td>
+					</p:selectOneMenu> <p:message id="assocCityMsg" for="assocCity" showSummary="true"
+						showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
@@ -252,7 +286,9 @@
 				<td><p:inputText label="#{lbl['lbl.sm.phoneno']}"
 						id="assocCompanyPhnNo"
 						value="#{backingBean.managedBean.selectedAssocCompany.phoneNo}"
-						size="35" maxlength="20">
+						validatorMessage="#{lbl['lbl.sm.phoneno']} - #{lbl['lbl.sm.invalidNo']}"
+						size="35" maxlength="12">
+						<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
 					</p:inputText> <p:message id="assocCompanyPhnNoMsg" for="assocCompanyPhnNo"
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
@@ -261,7 +297,9 @@
 				<td><p:inputText label="#{lbl['lbl.sm.faxno']}"
 						id="assocCompanyFaxNo"
 						value="#{backingBean.managedBean.selectedAssocCompany.faxNo}"
-						size="35" maxlength="20">
+						validatorMessage="#{lbl['lbl.sm.faxno']} - #{lbl['lbl.sm.invalidNo']}"
+						size="35" maxlength="12">
+						<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
 					</p:inputText> <p:message id="assocCompanyFaxNoMsg" for="assocCompanyFaxNo"
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
@@ -271,10 +309,13 @@
 		<br />
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.sm.button.save']}"
-				action="#{backingBean.addOrUpdateAssocToSmAppl}" type="submit"
-				partialSubmit="true" process="asDisp" update=":form:tt:asoc" />
+				id="assocCompPopUpSaveBtn"
+				action="#{backingBean.addOrUpdateAssocToSmAppl}"
+				partialSubmit="true" process="asDisp"
+				update=":form:tt:asoc, @([id$=Msg])" />
 			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
-				onclick="assocDialog.hide();" immediate="true" />
+				partialSubmit="true" process="@this"
+				action="#{backingBean.cancelAssocCompanyFuntion}" />
 		</div>
 	</p:dialog>
 </ui:composition>
