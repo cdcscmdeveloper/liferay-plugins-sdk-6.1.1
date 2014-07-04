@@ -203,6 +203,7 @@
 				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.selectedTabIndex == 1 
 				    and amendmentBackingBean.managedBean.ackFA == null}">
 					<ui:include src="amendmentDetails.xhtml" />
+					<ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" />
 				</p:outputPanel>
 	
 				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.selectedTabIndex == 2 and amendmentBackingBean.managedBean.ackFA == null

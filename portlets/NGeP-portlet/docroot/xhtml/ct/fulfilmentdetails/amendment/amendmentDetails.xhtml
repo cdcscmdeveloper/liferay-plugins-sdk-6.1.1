@@ -41,7 +41,7 @@
 			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox disabled="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange}"
 					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.valueChange}"  >
-					<p:ajax event="change"  update="@([id$=amend])" process="@form" /> 
+					<p:ajax event="change"  update=":form:amend" process="@form" /> 
 					</p:selectBooleanCheckbox>
 				<p:spacer width="2" />
 				<p:outputLabel value="#{lbl['lbl.ct.amend.chConValue']}" />
@@ -50,7 +50,7 @@
 			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox
 					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.clauseChange}" >
-					<p:ajax event="change"  update="@([id$=amend])" process="@form"/> 
+					<p:ajax event="change"  update=":form:amend" process="@form"/> 
 				</p:selectBooleanCheckbox>
 				<p:spacer width="2" />
 				<p:outputLabel value="#{lbl['lbl.ct.amend.chClause']}"  />
@@ -198,47 +198,4 @@
 			</h:panelGrid>
 		</h:panelGrid>
 	</p:panel>
-	<p:panel header="#{lbl['lbl.ct.remarks']}" toggleable="true">
-		<table style="width: 100%">
-			<tr>
-				<td width="50%" valign="top">
-					<table style="width: 100%">
-		<tr>
-			<td class="TableFieldLeft" width="24%"><h:outputLabel value="Remark" /></td>
-			<td class="TableFieldRight">
-				<p:dataGrid value="#{ctBackingBean.managedBean.remarkList}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
-					<table>
-						<tr>
-							<td rowspan="2" valign="top">
-								<h:graphicImage value="#{ctBackingBean.userImagePath(remarkVar.createdUser.loginId)}" height="30" width="30" />
-							</td>
-							<td width="5"></td>
-							<td>
-								<h:outputText value="#{remarkVar.createdUser.userName}"></h:outputText>,
-								<h:outputText value="#{remarkVar.changedDate}">
-									<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
-								</h:outputText>
-							</td>
-						</tr>
-						<tr>
-							<td></td>
-							<td>
-								<h:inputTextarea cols="40" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" maxlength="1000" /> 
-								<h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}" style="display: inline-block; width:220px;word-wrap: break-word;" />
-							</td>
-						</tr>
-					</table>
-				</p:dataGrid>
-			</td>
-		</tr>
-	</table>    						
-				</td>
-				<td width="50%" valign="top">
-				  
-				</td>
-			</tr>
-		</table>
-		
-	</p:panel>		
-	
 </ui:composition>

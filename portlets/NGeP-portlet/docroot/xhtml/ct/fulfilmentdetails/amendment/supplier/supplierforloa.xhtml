@@ -20,8 +20,7 @@
 			<h:panelGrid>
 				<p:inputTextarea id="address" disabled="true"
 					value="#{amendmentBackingBean.getFullAddress(amendmentBackingBean.managedBean.contractVer.ctContractValue.supplierAddress)}"
-					rows="4" cols="31" maxlength="200" autoResize="false"
-					style="margin-bottom: 5px;" />
+					rows="4" style="width:170px;margin-bottom: 5px;" maxlength="200" autoResize="false"/>
 			</h:panelGrid>
 			<p:outputLabel value="Contact Person" />
 			<p:inputText style="width:170px;" disabled="true" value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.supplierContact}" />

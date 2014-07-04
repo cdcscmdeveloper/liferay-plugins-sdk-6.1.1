@@ -6,32 +6,87 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<p:panel id="witnessDetails" header="#{amendmentBackingBean.managedBean.witnessHeader}" toggleable="true" toggleSpeed="500">
 		<h:panelGrid columns="2" style="width:75%" columnClasses="columnWidth30">
-			<p:outputLabel value="*Full Name" />
-			<p:inputText style="width:170px;" value="#{amendmentBackingBean.managedBean.scLoaWitness.witnessName}" />
-			<p:outputLabel value="*IC No." />
-			<p:inputText style="width:170px;" value="#{amendmentBackingBean.managedBean.scLoaWitness.identificationNo}" />
-			<p:outputLabel value="*Designation" />
-			<p:inputText style="width:170px;" value="#{amendmentBackingBean.managedBean.scLoaWitness.designation}" />
+		   
+		    <h:panelGrid columns="2" style="float:right;">
+			    <p:outputLabel value="*" styleClass="mandatory" />
+			    <p:outputLabel value="Full Name" />
+		    </h:panelGrid>
+		    <h:panelGrid columns="2">
+			   <p:inputText id="fullName"  required="true" label="Full Name"
+			        value="#{amendmentBackingBean.managedBean.scLoaWitness.witnessName}"  style="width:170px;"/>
+			    <p:message for="fullName" display="icon"/>
+			</h:panelGrid>
+		    
+		    <h:panelGrid columns="2" style="float:right;">
+			    <p:outputLabel value="*" styleClass="mandatory" />
+			    <p:outputLabel value="IC No." />
+            </h:panelGrid>
+            <h:panelGrid columns="2">
+			   <p:inputText id="icNo"  style="width:170px;" required="true" label="IC No"
+			       value="#{amendmentBackingBean.managedBean.scLoaWitness.identificationNo}" />
+			   <p:message for="icNo"  display="icon"/>
+			</h:panelGrid>
+			
+			<h:panelGrid columns="2" style="float:right;">
+			    <p:outputLabel value="*" styleClass="mandatory" />
+			    <p:outputLabel value="Designation" />
+			</h:panelGrid>
+			<h:panelGrid columns="2">
+			    <p:inputText id="designation" style="width:170px;"  required="true"
+			        value="#{amendmentBackingBean.managedBean.scLoaWitness.designation}"  label="Designation"/>
+			    <p:message for="designation" display="icon"/>
+			</h:panelGrid>
+			
 			<h:panelGroup>
 				<div style="height: 75px; vertical-align: top;">
 					<p:outputLabel for="agencyAddress" value="Address " />
 				</div>
 			</h:panelGroup>
 			<h:panelGrid columns="2" style="width:100%;" columnClasses="columnWidth20,columnWidth20">
-				<p:inputTextarea id="agencyAddress" value="#{amendmentBackingBean.managedBean.scLoaWitness.address}"
-					rows="4" cols="31" maxlength="200" autoResize="false"
-					style="margin-bottom: 5px;" />
-				<h:panelGrid columns="2" columnClasses="columnWidth30,columnWidth30">
-					<p:outputLabel value="*Tell No" />
-					<p:inputText style="width:170px;" value="#{amendmentBackingBean.managedBean.scLoaWitness.phoneNo}" />
-					<p:outputLabel value="*Fax No." />
-					<p:inputText style="width:170px;" value="#{amendmentBackingBean.managedBean.scLoaWitness.faxNo}" />
-					<p:outputLabel value="*Mobile No" />
-					<p:inputText style="width:170px;" value="#{amendmentBackingBean.managedBean.scLoaWitness.mobileNo}" />
+				 <p:inputTextarea id="agencyAddress" 	rows="4" style="width:170px;margin-bottom: 5px;" 
+				   value="#{amendmentBackingBean.managedBean.scLoaWitness.address}"  maxlength="200" autoResize="false" />
+				   <h:panelGrid columns="2" columnClasses="columnWidth30,columnWidth30">
+				  
+				        <h:panelGrid columns="2" style="float:right;">
+			                 <p:outputLabel value="*" styleClass="mandatory" />
+				         	 <p:outputLabel value="Tell No" />
+				        </h:panelGrid>
+				        <h:panelGrid columns="2">
+					         <p:inputText id="tellNo" style="width:150px;" required="true"   label="Tell No"
+					             value="#{amendmentBackingBean.managedBean.scLoaWitness.phoneNo}"  />
+					         <p:message for="tellNo" display="icon"/>
+					    </h:panelGrid>
+					    
+			  	       <h:panelGrid columns="2" style="float:right;">
+			                <p:outputLabel value="*" styleClass="mandatory" />
+					        <p:outputLabel value="Fax No." />
+			           </h:panelGrid>
+			           <h:panelGrid columns="2">
+					        <p:inputText id="faxNo" style="width:150px;" required="true"  label="Fax No"
+					            value="#{amendmentBackingBean.managedBean.scLoaWitness.faxNo}"   />
+					        <p:message for="faxNo" display="icon"/>
+					   </h:panelGrid>
+					   
+				       <h:panelGrid columns="2" style="float:right;">
+			              <p:outputLabel value="*" styleClass="mandatory" />
+				  	      <p:outputLabel value="Mobile No" />
+				  	   </h:panelGrid>
+				        <h:panelGrid columns="2">
+					       <p:inputText id="mobileNo" style="width:150px;"  required="true"  label="Mobile No" 
+					           value="#{amendmentBackingBean.managedBean.scLoaWitness.mobileNo}" />
+					       <p:message for="mobileNo" display="icon"/>
+					   </h:panelGrid>
 				</h:panelGrid>
 			</h:panelGrid>
-			<p:outputLabel value="*Email" />
-			<p:inputText style="width:170px;" value="#{amendmentBackingBean.managedBean.scLoaWitness.email}" />
+			<h:panelGrid columns="2" style="float:right;">
+			    <p:outputLabel value="*" styleClass="mandatory" />
+			      <p:outputLabel value="Email" />
+			 </h:panelGrid>
+			 <h:panelGrid columns="2">
+			     <p:inputText  id="email" style="width:170px;" required="true"   label="Email" 
+			        value="#{amendmentBackingBean.managedBean.scLoaWitness.email}"/>
+			      <p:message for="email" display="icon"/>
+		     </h:panelGrid>
 		</h:panelGrid>
 	</p:panel>
 </ui:composition>
