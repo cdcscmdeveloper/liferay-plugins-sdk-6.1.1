@@ -683,7 +683,7 @@ public class NoticeBoardBackingBean extends
 			if (resDTO.getScQt().isZonal()) {
 				this.getManagedBean().setZones(resDTO.getZones());
 			} else {
-				this.getManagedBean().setProposalAmts(resDTO.getProposalAmts());
+				this.getManagedBean().setQualificationBean(resDTO.getQualificationBean());
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -700,6 +700,7 @@ public class NoticeBoardBackingBean extends
 	}
 
 	public void checkSupplierQulificationStatus() {
+		this.getManagedBean().setQualificationBean(null);
 		String mofNo = getMofNo();
 		IQTNoticeBoardSO boardSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
@@ -1059,7 +1060,7 @@ public class NoticeBoardBackingBean extends
 		} else if (searchDataBean.getPassDays() != null) {
 			searchFilterBean.setSearchOperator(SearchOperator.OPERATOR_EQUALS
 					.value());
-			searchFilterBean.setSearchValue(DateUtils.minusDays(new Date(),
+			searchFilterBean.setSearchValue(DateUtils.addDays(new Date(),
 					searchDataBean.getPassDays()));
 		} else if (searchDataBean.getFromDate() != null
 				&& searchDataBean.getToDate() != null) {
@@ -1108,7 +1109,7 @@ public class NoticeBoardBackingBean extends
 
 		// this.getManagedBean().setScQt(resDTO.getScQt());
 
-		this.getManagedBean().setProposalAmts(resDTO.getProposalAmts());
+		this.getManagedBean().setQualificationBean(resDTO.getQualificationBean());
 
 	}
 

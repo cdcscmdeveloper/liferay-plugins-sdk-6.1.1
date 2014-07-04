@@ -71,7 +71,7 @@ public class BSVAttendanceBackingBean extends
 
 	public BSVAttendanceBackingBean() {
 		if (getManagedBean().getScQt() == null) {
-			retrieveBriefingSiteVisitList(146L);
+			retrieveBriefingSiteVisitList(960L);
 		}
 	}
 
@@ -218,7 +218,7 @@ public class BSVAttendanceBackingBean extends
 					.getZoneBean();
 			for (BriefingZoneBean briefingZoneBean : zoneBean) {
 				if (!isAllBsvsComplete(briefingZoneBean)) {
-					throw new EpException("");
+					throw new EpException("All Bsv Status should be Complate");
 				}
 			}
 
