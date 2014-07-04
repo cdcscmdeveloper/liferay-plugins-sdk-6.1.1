@@ -801,7 +801,14 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 				if(reqDTO.getTemplateName().equalsIgnoreCase(ContractConst.TEMPLATE_FACTORING_CLAUSE_CA)) {
 					valuesMap.put("CONTRAT_ADMIN_NAME", getFacesScopes().getUserSessionBean().getUserName());
 					valuesMap.put("CONTRACT_ADMIN_DESIGNATION", getFacesScopes().getUserSessionBean().getDesignation());
-					String jabatanMinistry = getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getOrgName() + " / " + getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getParentOrgProfile().getOrgName();
+					String jabatanMinistry = null;
+						if(getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile()==null) {
+							jabatanMinistry = getManagedBean().getCtContract().getOwnerOrgProfile().getOrgName();
+						}
+						else {
+							jabatanMinistry = getManagedBean().getCtContract().getOwnerOrgProfile().getOrgName() + " / " + getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getOrgName();
+						}
+								
 					valuesMap.put("JABATAN_MINISTRY", jabatanMinistry);
 					if(getManagedBean().getCtContract().getContractPhysicalNo()==null) {
 						valuesMap.put("CONTRACT_PHYSICAL_NO",getManagedBean().getCtContract().getContractNo());
