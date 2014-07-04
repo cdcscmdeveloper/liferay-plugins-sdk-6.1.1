@@ -323,11 +323,11 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		    if(getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa()!=null) {
 		    	for(ScLoaWitness scLoaWitness : getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaWitnesses()) {
 		    		if((res.getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME) || 
-		    				res.getTaskName().equalsIgnoreCase(CTProcessNameConst.VERIFY_FA_HT_NAME)) && scLoaWitness.getPartyType()=='A') {
+		    				res.getTaskName().equalsIgnoreCase(CTProcessNameConst.VERIFY_FA_HT_NAME)) && scLoaWitness.getPartyType().equalsIgnoreCase("A")) {
 		    			getManagedBean().setScLoaWitness(scLoaWitness);
 		    			break;
 		    		} 
-		    		if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME) && scLoaWitness.getPartyType()=='S') {
+		    		if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME) && scLoaWitness.getPartyType().equalsIgnoreCase("S")) {
 		    			getManagedBean().setScLoaWitness(scLoaWitness);
 		    			break;
 		    		}		    		
