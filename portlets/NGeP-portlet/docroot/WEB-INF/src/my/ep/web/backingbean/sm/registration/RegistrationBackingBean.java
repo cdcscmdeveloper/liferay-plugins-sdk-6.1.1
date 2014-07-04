@@ -1,6 +1,5 @@
 package my.ep.web.backingbean.sm.registration;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +23,7 @@ import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.sm.registration.IRegistrationSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.EpPropertiesConst;
+import my.ep.constant.MessageConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.businessnature.BusinessNatureReqDTO;
@@ -42,6 +42,7 @@ import my.ep.dto.sm.registration.RegistrationReqDTO;
 import my.ep.dto.sm.registration.RegistrationResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
+import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmBusinessNature;
 import my.ep.persistence.entity.pm.common.PmCertBody;
@@ -65,6 +66,7 @@ import my.ep.persistence.entity.sm.SmSupplierCert;
 import my.ep.persistence.entity.sm.SmSupplierOwner;
 import my.ep.persistence.logging.LogKey;
 import my.ep.util.EpPropertiesUtils;
+import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.registration.RegistrationManagedBean;
@@ -185,21 +187,18 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	public String proceedToFirstUserRegistration() {
 		log.info("****proceedToFirstUserRegistration******");
 		if(this.getManagedBean().getSmSupp().getSmSupplierBusinesses().size() < 1){
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "At least one Nature of Business is required.", "At least one Nature of Business is required."));
-			return null;
+			throw new EpException(MessageConst.ERROR_721001);
+
 		}
 		
 		if(this.getManagedBean().getSmAppl().getSmSupplierBanks().size() < 1){
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "At least one Bank Account is required.", "At least one Bank Account is required."));
-			return null;
+			throw new EpException(MessageConst.ERROR_721002);
+
 		}
 		
 		if(checkExistingBusinessRegNo()){
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Business Registration No is exist.", "Business Registration No is exist."));
-			return null;
+			throw new EpException(MessageConst.ERROR_721003);
+
 		}
 		
 		if(!validateBankInfo()){
@@ -253,16 +252,12 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		
 		if(!smSupp.getBusinessType().equals(SupplierManagementConst.INDIVIDUAL_FLAG)){
 			if(this.getManagedBean().getSmSupp().getSmSupplierBusinesses().size() < 1){
-				FacesContext.getCurrentInstance().addMessage(null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, "At least one Nature of Business is required.", "At least one Nature of Business is required."));
-				return null;
+				throw new EpException(MessageConst.ERROR_721001);
 			}
 		}
 		
 		if(smAppl.getSmSupplierBanks().size() < 1){
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "At least one Bank Account is required.", "At least one Bank Account is required."));
-			return null;
+			throw new EpException(MessageConst.ERROR_721002);
 		}
 		
 		if(!validateBankInfo()){
@@ -270,16 +265,14 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 		
 		if(isExistEmailInPmUser(this.getManagedBean().getSmPersonnel().getEmail())){
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Email Address already exist.", "Email Address already exist."));
-			return null;
+			throw new EpException(MessageConst.ERROR_721004);
+
 		}
 		
 		String loginID = smSupp.getBusinessType().equals(SupplierManagementConst.INDIVIDUAL_FLAG) ? smSupp.getRegNo() : this.getManagedBean().getSmPersonnel().getIdentificationNo();
 		if(isExistUserByIdentificationNo(loginID)){
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Login ID already exist.", "Login ID already exist."));
-			return null;
+			throw new EpException(MessageConst.ERROR_721005);
+
 		}
 		
 		// validate user's email existence at Liferay. 
@@ -432,30 +425,24 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			//this.sendActivationEmail(resSmPersonnel);
 			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
 					FacesMessage.SEVERITY_INFO,
-					"Successful Registered.<br />An activation information has been sent to your email. You need to activate your account within 7 days.",
-					"Successful Registered.<br />An activation information has been sent to your email. You need to activate your account within 7 days."));
+					null,
+					MessageUtils.getMessage(MessageConst.INFO_721002, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 			this.getManagedBean().setSmAppl(null);
 			this.getManagedBean().setSmSupp(null);
 			return "/xhtml/sm/onlinereg/outputMsg";
 		} else {
 			log.info("-------------------Error SubmitRegistration----------------");
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", ""));
-			return "";
+			throw new EpException(MessageConst.ERROR_721006);
 		}
 	}
 
 	public String updateOnlineAccount() {
 		if(this.getManagedBean().getSmSupp().getSmSupplierBusinesses().size() < 1){
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "At least one Nature of Business is required.", "At least one Nature of Business is required."));
-			return "";
+			throw new EpException(MessageConst.ERROR_721001);
 		}
 
 		if(this.getManagedBean().getSmAppl().getSmSupplierBanks().size() < 1){
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "At least one Bank Account is required.", "At least one Bank Account is required."));
-			return "";
+			throw new EpException(MessageConst.ERROR_721002);
 		}
 
 		log.info("--------------------updateOnlineAccount----------------");
@@ -478,15 +465,13 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		RegistrationResDTO resDTO = reqSO.updateOnlineAcc(reqDTO);
 
 		if (resDTO.isSuccessful()) {
-			FacesContext.getCurrentInstance().addMessage(
+			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
+					FacesMessage.SEVERITY_INFO,
 					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO,
-							"Your account has been updated successfully.", "Your account has been updated successfully."));
+					MessageUtils.getMessage(MessageConst.INFO_721003, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 			return "/xhtml/sm/onlinereg/outputMsg";
 		} else {
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Error"));
-			return "";
+			throw new EpException(MessageConst.ERROR_721006);
 		}
 	}
 
@@ -524,7 +509,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	public void addSupplierBusinessNature(){
 		//log.info("----------addSupplierBusiness Nature--------------" + bizNatureL5Map.size());
 		log.info("----------addSupplierBusiness Nature--------------" + this.getManagedBean().getSuppBusinessNature().getPmBusinessNature().getBusinessNatureId());
-		String invalidMsg = "Duplicate Nature of Business being added to the list.";
 		
 		//validate nature of business
 		if(validateNatureBusiness(this.getManagedBean().getSmSupp().getSmSupplierBusinesses(), this.getManagedBean().getSuppBusinessNature().getPmBusinessNature().getBusinessNatureId(), true)){
@@ -536,8 +520,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			RequestContext.getCurrentInstance().execute("bizDlg.hide()");
 		}else{
 			//show error message on dialog
-			FacesContext.getCurrentInstance().addMessage("messageDialog",new FacesMessage(
-					FacesMessage.SEVERITY_ERROR, "Nature Of Business.", invalidMsg));	
+			throw new EpException(MessageConst.ERROR_721007);
+	
 		}
 
 	}
@@ -629,7 +613,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			if(this.getManagedBean().getSuppBusinessNature().getPmBusinessNature().getTempBusinessNatureId()!=null 
 					&& !this.getManagedBean().getSuppBusinessNature().getPmBusinessNature().getBusinessNatureId().equals(this.getManagedBean().getSuppBusinessNature().getPmBusinessNature().getTempBusinessNatureId())){
 				//validate selected nature of business
-				if(validateNatureBusiness(this.getManagedBean().getSmSupp().getSmSupplierBusinesses(), this.getManagedBean().getSuppBusinessNature().getPmBusinessNature().getBusinessNatureId(), false)){ //TODO
+				if(validateNatureBusiness(this.getManagedBean().getSmSupp().getSmSupplierBusinesses(), this.getManagedBean().getSuppBusinessNature().getPmBusinessNature().getBusinessNatureId(), false)){ 
 					//retrieve new obj and replace old obj
 					PmBusinessNature bizNatObj = (PmBusinessNature) bizNatureL5Map.get(this.getManagedBean().getSuppBusinessNature().getPmBusinessNature().getBusinessNatureId());
 					this.getManagedBean().getSuppBusinessNature().setPmBusinessNature(bizNatObj);
@@ -637,8 +621,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				}else{
 					//show error msg on dialog
 					this.getManagedBean().getSuppBusinessNature().getPmBusinessNature().setBusinessNatureId(this.getManagedBean().getSuppBusinessNature().getPmBusinessNature().getTempBusinessNatureId()); // reset
-					FacesContext.getCurrentInstance().addMessage("messageDialog",new FacesMessage(
-							FacesMessage.SEVERITY_ERROR, "Nature Of Business.", invalidMsg));	
+					throw new EpException(MessageConst.ERROR_721007);
+
 				}
 			}else{
 				//close dialog for no changes
@@ -904,8 +888,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		
 		ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject("sm", ISupplierSearchSO.class);
 		SupplierSearchResDTO smResDTO =supplierSearchSO.retriveSupplierProfiles(supplierSearchReqDTO);
-		SmSupplier smSupp = (SmSupplier)smResDTO.getResultBean().getResultList().get(0);
-		log.info("-------smResDTO-------" + smSupp.getSupplierId());
+		SmSupplier smSupp = (SmSupplier)smResDTO.getResultBean().getResultList().get(0); 
+		log.info("-------smResDTO-------" + smSupp.getSupplierId()); 
 		
 		RegistrationReqDTO reqDTO = new RegistrationReqDTO();
 		reqDTO.setSupplierId(smSupp.getSupplierId());
@@ -987,7 +971,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			System.out.println("------------->" + itemList.size());
 		} catch (Exception e) {
 			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(),e.getMessage()));
+			throw new EpException(MessageConst.ERROR_721010, new String[]{e.toString(), e.getMessage()});
+
+
 		}
 		
 		return itemList.toArray(new SelectItem[itemList.size()]);
@@ -1062,15 +1048,11 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		for(SmSupplierBank suppBank : this.getManagedBean().getSmAppl().getSmSupplierBanks()){
 			System.out.println("*********suppBank.getPmFinancialOrg().getFinancialOrgId()****" + suppBank.getPmFinancialOrg().getFinOrgName());
 			if(suppBank.getPmFinancialOrg().getFinancialOrgId() == null){
-				FacesContext.getCurrentInstance().addMessage(null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, "Bank name is required.", "Bank name is required."));
-				return false;
+				throw new EpException(MessageConst.ERROR_721008);
 			}
 			
 			if(suppBank.getAccountNo() == null || suppBank.getAccountNo() == ""){
-				FacesContext.getCurrentInstance().addMessage(null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, "Bank account no. is required", "Bank account no. is required"));
-				return false;
+				throw new EpException(MessageConst.ERROR_721009);
 			}
 		}
 		
