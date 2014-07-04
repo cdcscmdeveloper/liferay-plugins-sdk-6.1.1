@@ -1365,7 +1365,10 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 					addDupObj.setSubSequence(ctItemPrice.getSubSequence());
 					addDupObj.setUnitPrice(ctItemPrice.getUnitPrice());
 					addDupObj.setEffDate(getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());
-					addDupObj.setExpDate(ctItemPrice.getExpDate());
+					if(getManagedBean().getContractVer().getCtAmendment().isContractExtend())
+				     	addDupObj.setExpDate(getManagedBean().getContractVer().getCtAmendment().getExtendEndDate());
+					else
+					  addDupObj.setExpDate(ctItemPrice.getExpDate());
 					if (ctItemPrice.getCtContractZone() != null) {
 						addDupObj.setCtContractZone(ctItemPrice.getCtContractZone());
 					}
@@ -1401,6 +1404,9 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				if (ceilingQty.equals(this.getManagedBean().getCtItemCeilingQtys())) {
 					addDupObj.setCeilingQuantity(ceilingQty.getCeilingQuantity());
 					addDupObj.setEffDate(getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());
+					if(getManagedBean().getContractVer().getCtAmendment().isContractExtend())
+				     	addDupObj.setExpDate(getManagedBean().getContractVer().getCtAmendment().getExtendEndDate());
+					else
 					addDupObj.setExpDate(ceilingQty.getExpDate());
 					if (ceilingQty.getCtAgency() != null) {
 						addDupObj.setCtAgency(ceilingQty.getCtAgency());
@@ -1437,7 +1443,10 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				if (ctItemMaxQty.equals(getManagedBean().getCtItemMaxQty())) {
 					addDupObj.setMaxQuantity(ctItemMaxQty.getMaxQuantity());
 					addDupObj.setEffDate(getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());
-					addDupObj.setExpDate(ctItemMaxQty.getExpDate());
+					if(getManagedBean().getContractVer().getCtAmendment().isContractExtend())
+				     	addDupObj.setExpDate(getManagedBean().getContractVer().getCtAmendment().getExtendEndDate());
+					else
+						addDupObj.setExpDate(ctItemMaxQty.getExpDate());
 					if (ctItemMaxQty.getCtContractItem() != null) {
 						addDupObj.setCtContractItem(ctItemMaxQty.getCtContractItem());
 					}
