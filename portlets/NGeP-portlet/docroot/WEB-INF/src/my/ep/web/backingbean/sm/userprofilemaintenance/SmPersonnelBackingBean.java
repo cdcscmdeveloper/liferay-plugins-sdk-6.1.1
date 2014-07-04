@@ -61,8 +61,8 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 
 	public void preRenderSmPersonnel(){
 		System.out.println("********************SmPersonnelBackingBean PreRender***************");
-		initUserPersonnelInfo();
-		initializeUpdateLists();
+//		initUserPersonnelInfo();
+//		initializeUpdateLists();
 		
 		this.getManagedBean().setSearchCompanyRole(null);
 		this.getManagedBean().setSearchEPRole(null);
