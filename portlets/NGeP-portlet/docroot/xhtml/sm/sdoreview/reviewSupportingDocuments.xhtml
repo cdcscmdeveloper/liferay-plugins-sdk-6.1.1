@@ -9,8 +9,8 @@
 
 	<ui:define name="contentSection">
 		<div align="right">
-			<p:commandButton value="Inquiry" id="btnInquiryId" action="#{sdoReviewBackingBean.showSdoActionDialog(SupplierManagementConst.BPM_INQUIRY)}" />
-			<p:commandButton value="Verify" id="btnSubmitId" action="#{sdoReviewBackingBean.showSdoActionDialog(SupplierManagementConst.BPM_VERIFY)}" />
+			<p:commandButton value="#{lbl['lbl.sm.supportingdoc.inquiry']}" id="btnInquiryId" action="#{sdoReviewBackingBean.showSdoActionDialog(SupplierManagementConst.BPM_INQUIRY)}" />
+			<p:commandButton value="#{lbl['lbl.sm.supportingdoc.verify']}" id="btnSubmitId" action="#{sdoReviewBackingBean.showSdoActionDialog(SupplierManagementConst.BPM_VERIFY)}" />
 		</div>
 
 		<p:outputPanel id="resOutPanelId">
@@ -47,7 +47,7 @@
 
 		<p:dialog header="#{lbl['lbl.sm.supportingdoc.inquiry']}" widgetVar="inquiryDlg" modal="true"
 			height="300" width="525">
-			<p:messages id="inquiryMessageId"  autoUpdate="true" />
+			<p:messages id="inquiryMessageId"  showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 			<table>
 				<tr>
 					<td>#{lbl['lbl.sm.supportingdoc.subject']} :</td>
@@ -64,18 +64,18 @@
 			</table>
 			<br />
 			<div align="right">
-				<p:commandButton value="Submit" action="#{sdoReviewBackingBean.submitSDOReviewAction(SupplierManagementConst.BPM_INQUIRY)}"></p:commandButton>
-				<p:commandButton value="Cancel" onclick="inquiryDlg.hide();"></p:commandButton>
+				<p:commandButton value="#{lbl['lbl.btn.submit']}" action="#{sdoReviewBackingBean.submitSDOReviewAction(SupplierManagementConst.BPM_INQUIRY)}"></p:commandButton>
+				<p:commandButton value="#{lbl['lbl.btn.cancel']}" onclick="inquiryDlg.hide();"></p:commandButton>
 			</div>
 		</p:dialog>
 
 		<p:dialog widgetVar="submissionDlg" modal="true" height="300"
 			width="580">
 			<p:panel header="#{lbl['lbl.sm.remark']}">
-				<p:messages id="submissionMessageId" autoUpdate="true" />
+				<p:messages id="submissionMessageId" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 				<table>
 					<tr>
-						<td class="tdTitle"><p:outputLabel value="Receive Date" /></td>
+						<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.receivedate']}" /></td>
 						<td class="tdContent"><p:calendar id="receiveCalId"
 								navigator="true" label="#{lbl['lbl.sm.receivedate']}"
 								value="#{sdoReviewBackingBean.managedBean.smAppl.sdoReceivedDate}"
@@ -85,7 +85,7 @@
 					</tr>
 
 					<tr>
-						<td class="tdTitle"><p:outputLabel value="Remarks" /></td>
+						<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.remark']}" /></td>
 						<td class="tdContent">
 						<p:inputTextarea id="remarkId" rows="6"
 								cols="80" label="#{lbl['lbl.sm.remark']}"
@@ -95,10 +95,10 @@
 				</table>
 
 				<div align="right">
-					<p:commandButton value="Submit"
+					<p:commandButton value="#{lbl['lbl.btn.submit']}"
 						action="#{sdoReviewBackingBean.submitSDOReviewAction(SupplierManagementConst.BPM_VERIFY)}"
 						update="@([id$=Msg])"></p:commandButton>
-					<p:commandButton value="Cancel" onclick="submissionDlg.hide();"></p:commandButton>
+					<p:commandButton value="#{lbl['lbl.btn.cancel']}" onclick="submissionDlg.hide();"></p:commandButton>
 				</div>
 				<br />
 			</p:panel>

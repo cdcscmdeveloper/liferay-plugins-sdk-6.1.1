@@ -187,7 +187,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	public String proceedToFirstUserRegistration() {
 		log.info("****proceedToFirstUserRegistration******");
 		if(this.getManagedBean().getSmSupp().getSmSupplierBusinesses().size() < 1){
-			throw new EpException(MessageConst.ERROR_721001);
+			throw new EpException(MessageConst.ERROR_721011);
 
 		}
 		
@@ -252,7 +252,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		
 		if(!smSupp.getBusinessType().equals(SupplierManagementConst.INDIVIDUAL_FLAG)){
 			if(this.getManagedBean().getSmSupp().getSmSupplierBusinesses().size() < 1){
-				throw new EpException(MessageConst.ERROR_721001);
+				throw new EpException(MessageConst.ERROR_721011);
 			}
 		}
 		
@@ -426,7 +426,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
 					FacesMessage.SEVERITY_INFO,
 					null,
-					MessageUtils.getMessage(MessageConst.INFO_721002, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+					MessageUtils.getMessage(MessageConst.INFO_721012, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 			this.getManagedBean().setSmAppl(null);
 			this.getManagedBean().setSmSupp(null);
 			return "/xhtml/sm/onlinereg/outputMsg";
@@ -438,7 +438,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 
 	public String updateOnlineAccount() {
 		if(this.getManagedBean().getSmSupp().getSmSupplierBusinesses().size() < 1){
-			throw new EpException(MessageConst.ERROR_721001);
+			throw new EpException(MessageConst.ERROR_721011);
 		}
 
 		if(this.getManagedBean().getSmAppl().getSmSupplierBanks().size() < 1){
@@ -468,7 +468,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
 					FacesMessage.SEVERITY_INFO,
 					null,
-					MessageUtils.getMessage(MessageConst.INFO_721003, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+					MessageUtils.getMessage(MessageConst.INFO_721013, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 			return "/xhtml/sm/onlinereg/outputMsg";
 		} else {
 			throw new EpException(MessageConst.ERROR_721006);

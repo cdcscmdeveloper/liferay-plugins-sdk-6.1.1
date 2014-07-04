@@ -53,7 +53,7 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 	public void viewSupportingDocument() {
 		//this.getManagedBean().setAppId(1006);
 		log.info("----------appID------------"+ this.getManagedBean().getAppId());
-		//this.getManagedBean().setAppId(1009);
+//		this.getManagedBean().setAppId(1542); //TODO
 		SdoReviewReqDTO reqDTO = new SdoReviewReqDTO();
 		ISdoReviewSO reqSO = (ISdoReviewSO) BusinessDelegate.getInstance().getServiceObject("sm", ISdoReviewSO.class);
 		reqDTO.setApplId(this.getManagedBean().getAppId());
@@ -92,41 +92,26 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 			if(resAction.equalsIgnoreCase(SupplierManagementConst.BPM_INQUIRY)){
 				if(this.getManagedBean().getSmApplInquiry().getInquirySubject() == null 
 						|| this.getManagedBean().getSmApplInquiry().getInquirySubject() == ""){ 
-//					FacesContext.getCurrentInstance().addMessage(null,
-//							new FacesMessage(FacesMessage.SEVERITY_ERROR,
-//									"Please enter subject", ""));
-					
-
 					RequestContext.getCurrentInstance().update("inquiryMessageId");
-					throw new EpException(MessageConst.ERROR_000001);
-					//return null;
+					throw new EpException(MessageConst.ERROR_721104);
 				}
 
 				if(this.getManagedBean().getSmApplInquiry().getInquiryText() == null 
 						|| this.getManagedBean().getSmApplInquiry().getInquiryText() == ""){
-					FacesContext.getCurrentInstance().addMessage(null,
-							new FacesMessage(FacesMessage.SEVERITY_ERROR,
-									"Please enter Inquiry", ""));
 					RequestContext.getCurrentInstance().update("inquiryMessageId");
-					return null;
+					throw new EpException(MessageConst.ERROR_721105);
+
 				}
 			} else if(resAction.equalsIgnoreCase(SupplierManagementConst.BPM_VERIFY)){
 				if(this.getManagedBean().getSmAppl().getSdoReceivedDate() == null 
 						|| this.getManagedBean().getSmAppl().getSdoReceivedDate().equals("")){ 
-					FacesContext.getCurrentInstance().addMessage(null,
-							new FacesMessage(FacesMessage.SEVERITY_ERROR,
-									"Please insert received date", ""));
-
 					RequestContext.getCurrentInstance().update("submissionMessageId");
-					return null;
+					throw new EpException(MessageConst.ERROR_721106);
 				}
 
 				if(this.getManagedBean().getSmRemark().getRemark()== null || this.getManagedBean().getSmRemark().getRemark() == ""){
-					FacesContext.getCurrentInstance().addMessage(null,
-							new FacesMessage(FacesMessage.SEVERITY_ERROR,
-									"Please insert remark", ""));
 					RequestContext.getCurrentInstance().update("submissionMessageId");
-					return null;
+					throw new EpException(MessageConst.ERROR_721107);
 				}
 
 			}
@@ -170,11 +155,10 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 //									"Application has been updated successfully", ""));
 					return navigateToAck();
 				} else {
-					FacesContext.getCurrentInstance().addMessage(null,
-							new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", ""));
+					throw new EpException(MessageConst.ERROR_721109);
 				}
 			}catch(Exception ex){
-				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR,"Failed to process.", ""));
+				throw new EpException(MessageConst.ERROR_721108);
 			}
 		}
 		return null;
