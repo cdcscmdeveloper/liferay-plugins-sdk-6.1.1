@@ -602,6 +602,14 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			FacesScopes facesScopes = new FacesScopes();
 			return facesScopes.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value()) || facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value()) || facesScopes.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value()) || facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value());
 		}
+		public void onTabChange(int selectedTabIndex){
+			if(selectedTabIndex==1){
+				if(null==getManagedBean().getChargeLineItemRoot()){
+					 getManagedBean().populateChargeLineData();
+				}
+			//setClassName("@(.invItemPnlClass)");
+			}
+		}
 
 	
 }

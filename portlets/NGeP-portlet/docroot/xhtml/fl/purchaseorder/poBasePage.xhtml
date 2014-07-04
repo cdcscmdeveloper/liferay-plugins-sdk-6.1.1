@@ -18,12 +18,13 @@
 					'#{flOrderBB.getPortletTitle()}');
 		</script>
 		<f:event listener="#{flOrderBB.preRenderViewPR}" type="preRenderView" />
-		<p:messages id="messages" showDetail="true" autoUpdate="true" showSummary="false"
-			closable="true" severity="error, info" />
+		<p:messages id="messages" showDetail="true" autoUpdate="true"
+			showSummary="false" closable="true" severity="error, info" />
 		<table style="width: 100%;">
 			<tr>
 				<td><p:commandButton value="Back" immediate="true"
-						icon="ui-icon-back" oncomplete="window.history.back();" rendered="#{flOrderBB.managedBean.taskId==null}" /></td>
+						icon="ui-icon-back" oncomplete="window.history.back();"
+						rendered="#{flOrderBB.managedBean.taskId==null}" /></td>
 				<td colspan="4" style="text-align: right"><ui:repeat
 						var="bpmAction" value="#{flOrderBB.managedBean.outComes}">
 						<p:commandButton value="#{bpmAction}" ajax='false'
@@ -31,14 +32,13 @@
 							icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
 							action="#{flOrderBB.fulfillmentOrderAction(bpmAction)}"
 							process="@this" />
-					</ui:repeat>
-					<c:if test='#{flOrderBB.managedBean.buttonVal eq "Stop Fulfilment"}'>
-						<p:commandButton value="STOP FULFILMENT" icon="ui-icon-terminate" 
+					</ui:repeat> <c:if
+						test='#{flOrderBB.managedBean.buttonVal eq "Stop Fulfilment"}'>
+						<p:commandButton value="STOP FULFILMENT" icon="ui-icon-terminate"
 							action="#{flOrderBB.fulfillmentOrderAction('STOP FULFILMENT')}">
 							<f:param name="actionName" value="STOP" />
 						</p:commandButton>
-					</c:if>					
-				</td>
+					</c:if></td>
 			</tr>
 		</table>
 		<table style="width: 100%;">
@@ -70,23 +70,45 @@
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
 				<td width="20%" valign="top" class="sidemenutd"><p:tabMenu
-						styleClass="sidemenu" activeIndex="#{flOrderBB.managedBean.selectedTabIndex}">
+						styleClass="sidemenu"
+						activeIndex="#{flOrderBB.managedBean.selectedTabIndex}">
 						<p:menuitem value="General" update="@form">
 							<f:setPropertyActionListener
 								target="#{flOrderBB.managedBean.selectedTabIndex}" value="0" />
 						</p:menuitem>
-						<p:menuitem value="Order Summary" update="@form">
-							<f:setPropertyActionListener
-								target="#{flOrderBB.managedBean.selectedTabIndex}" value="1" />
-						</p:menuitem>
+						<c:if test="#{empty flOrderBB.managedBean.buttonVal}">
+							<p:menuitem value="Order Summary" update="@form"
+								actionListener="#{flOrderBB.onTabChange(1)}">
+								<f:setPropertyActionListener
+									target="#{flOrderBB.managedBean.selectedTabIndex}" value="1" />
+							</p:menuitem>
+						</c:if>
+						<c:if test="#{not empty flOrderBB.managedBean.buttonVal}">
+							<p:menuitem value="Charge Line Summary" update="@form"
+								actionListener="#{flOrderBB.onTabChange(1)}">
+								<f:setPropertyActionListener
+									target="#{flOrderBB.managedBean.selectedTabIndex}" value="1" />
+							</p:menuitem>
+						</c:if>
 					</p:tabMenu></td>
-				<td width="80%"><p:outputPanel
-						rendered="#{flOrderBB.managedBean.selectedTabIndex == 0}">
-						<ui:include src="poGeneral.xhtml" />
-					</p:outputPanel> <p:outputPanel
-						rendered="#{flOrderBB.managedBean.selectedTabIndex == 1}">
-						<ui:include src="poItem.xhtml" />
-					</p:outputPanel></td>
+				<c:if test="#{empty flOrderBB.managedBean.buttonVal}">
+					<td width="80%"><p:outputPanel
+							rendered="#{flOrderBB.managedBean.selectedTabIndex == 0}">
+							<ui:include src="poGeneral.xhtml" />
+						</p:outputPanel> <p:outputPanel
+							rendered="#{flOrderBB.managedBean.selectedTabIndex == 1}">
+							<ui:include src="poItem.xhtml" />
+						</p:outputPanel></td>
+				</c:if>
+				<c:if test="#{not empty flOrderBB.managedBean.buttonVal}">
+					<td width="80%"><p:outputPanel
+							rendered="#{flOrderBB.managedBean.selectedTabIndex == 0}">
+							<ui:include src="siGeneral.xhtml" />
+						</p:outputPanel> <p:outputPanel
+							rendered="#{flOrderBB.managedBean.selectedTabIndex == 1}">
+							<ui:include src="siItem.xhtml" />
+						</p:outputPanel></td>
+				</c:if>
 			</tr>
 		</table>
 	</ui:define>

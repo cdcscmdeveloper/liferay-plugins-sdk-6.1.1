@@ -1,9 +1,11 @@
 package my.ep.web.managedbean.fl.po;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -16,6 +18,7 @@ import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
 import my.ep.persistence.entity.fl.order.FlStopInstr;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
+import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmFinancialBranch;
@@ -23,7 +26,9 @@ import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.web.managedbean.BaseManagedBean;
 
+import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.DualListModel;
+import org.primefaces.model.TreeNode;
 
 @ManagedBean(name = "flOrderManagedBean")
 @SessionScoped
@@ -85,8 +90,45 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	private int selectedTabIndex;
 	private PmUser pmUser;
 	private String flApprover;
+	private TreeNode chargeLineItemRoot ;
+	private FlFulfilmentItemAddr stopInstr;
 	
 	
+	public void populateChargeLineData(){
+		this.chargeLineItemRoot = new DefaultTreeNode("root", null);
+		
+		Map<Long, List<FlFulfilmentItemAddr>> siItemsMap = new HashMap<Long, List<FlFulfilmentItemAddr>>();
+		List<FlFulfilmentItemAddr> flStopInstrItemList = null;
+		for (FlDeliveryAddress flDelAddress :this.getFlRequest().getFlDeliveryAddresses()) {
+			for (FlFulfilmentItemAddr flStopInstrItem : flDelAddress.getFlFulfilmentItemAddr()) {
+				if (siItemsMap.containsKey(flStopInstrItem.getFlFulfilmentItem().getCmItem().getItemId())) {
+					flStopInstrItemList = siItemsMap.get(flStopInstrItem.getFlFulfilmentItem().getCmItem().getItemId());
+				} else {
+					flStopInstrItemList = new ArrayList<FlFulfilmentItemAddr>();
+				}
+				flStopInstrItemList.add(flStopInstrItem);
+				siItemsMap.put(flStopInstrItem.getFlFulfilmentItem().getCmItem().getItemId(), flStopInstrItemList);
+			}
+			
+		}
+		for(Entry<Long, List<FlFulfilmentItemAddr>> itemEntry : siItemsMap.entrySet()){
+			List<FlFulfilmentItemAddr> stopInstrItems = itemEntry.getValue();
+			FlFulfilmentItemAddr flsiItem = (FlFulfilmentItemAddr) stopInstrItems.get(0).cloneEntity(); // parent entity, no need stored in DB.
+			flsiItem.setParent(true);
+			TreeNode childItemNode = new DefaultTreeNode(flsiItem.getFlFulfilmentItem().getCmItem().getItemId().toString(), flsiItem, chargeLineItemRoot);
+			
+			BigDecimal totalOrderAmt = new BigDecimal(0);
+			BigDecimal totalReceiveAmt = new BigDecimal(0);
+			
+			for(FlFulfilmentItemAddr chargeLineItem : stopInstrItems) {
+				new DefaultTreeNode(chargeLineItem.getFlFulfilmentItem().getCmItem().getItemId().toString(),chargeLineItem,childItemNode);
+				totalOrderAmt=totalOrderAmt.add(chargeLineItem.getOrderedAmt());
+				totalReceiveAmt=totalReceiveAmt.add(chargeLineItem.getReceivedAmt());
+			}			
+			flsiItem.setOrderedAmt(totalOrderAmt);
+			flsiItem.setReceivedAmt(totalReceiveAmt);
+		}
+	}
 
 	public String getTaskName() {
 		return taskName;
@@ -649,6 +691,42 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	 */
 	public void setFlApprover(String flApprover) {
 		this.flApprover = flApprover;
+	}
+
+
+
+	/**
+	 * @return the chargeLineItemRoot
+	 */
+	public TreeNode getChargeLineItemRoot() {
+		return chargeLineItemRoot;
+	}
+
+
+
+	/**
+	 * @param chargeLineItemRoot the chargeLineItemRoot to set
+	 */
+	public void setChargeLineItemRoot(TreeNode chargeLineItemRoot) {
+		this.chargeLineItemRoot = chargeLineItemRoot;
+	}
+
+
+
+	/**
+	 * @return the stopInstr
+	 */
+	public FlFulfilmentItemAddr getStopInstr() {
+		return stopInstr;
+	}
+
+
+
+	/**
+	 * @param stopInstr the stopInstr to set
+	 */
+	public void setStopInstr(FlFulfilmentItemAddr stopInstr) {
+		this.stopInstr = stopInstr;
 	}
 
 }
