@@ -125,7 +125,6 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 	public String navigateToUpdateUserPage(String personnelId){
 		System.out.println("********************SmPersonnelBackingBean navigateToUpdateUserPage***************");
 		getPersonnelInfoById(personnelId);
-		initializeLists();
 		return "basicSmUser";
 	}
 	
@@ -357,7 +356,7 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		
 		List<SmPersonnelAddress> smPAList = new ArrayList<SmPersonnelAddress>();
 		
-		if(smPersonnel.getSmPersonnelAddresses() != null){
+		if(smPersonnel.getSmPersonnelAddresses() != null && smPersonnel.getSmPersonnelAddresses().size() > 0){
 			
 			smPersonnel.getSmPersonnelAddresses().size();
 			smPAList.addAll(smPersonnel.getSmPersonnelAddresses()); 
@@ -368,6 +367,7 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 					this.getManagedBean().setBasicSmPersonnelPermanentAddress(smPA);
 				}
 			}
+			initializeLists();
 		} else {
 			
 			SmAddress s1 = new SmAddress();
