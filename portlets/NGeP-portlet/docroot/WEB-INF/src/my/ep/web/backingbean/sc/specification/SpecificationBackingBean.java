@@ -2193,7 +2193,7 @@ public class SpecificationBackingBean extends
 	 */
 	public void editZoneLocation(TreeNode rootZoneLocation, int index) {
 		List<ScQtLocCriteria> locationDTOs = getLocations(rootZoneLocation);
-		Long locationLevel = this.getManagedBean().getSupplierCriteria()
+		Long locationLevel = this.getManagedBean().getScQt().getScQtSupplierCriteria()
 				.getLocationLevel().getParameterId();
 		if (locationLevel == null) {
 			locationLevel = 121L;
