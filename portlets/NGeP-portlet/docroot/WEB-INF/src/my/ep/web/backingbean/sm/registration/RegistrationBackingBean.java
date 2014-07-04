@@ -319,11 +319,13 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		if (smSupp.getBusinessType().equals(SupplierManagementConst.INDIVIDUAL_FLAG)) {
 			PmCountry indNationality = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
 			smSupp.setServiceCategory(SupplierManagementConst.SPECIAL_SERVICE); //DEFAULT for Individual
-			smSuppOwner.setIdentificationType(SupplierManagementConst.BASIC_IND_IDENT_TYPE);
+//			smSuppOwner.setIdentificationType(SupplierManagementConst.BASIC_IND_IDENT_TYPE);
+			smSuppOwner.setIdentificationTypeId(SupplierManagementConst.BASIC_IND_IDENT_TYPE_ID);
 			smSuppOwner.setOwnerName(smAppl.getSmCompanyBasic().getCompanyName());
 			smSuppOwner.setIdentificationNo(smSupp.getRegNo());
 			smPersonnel.setName(smAppl.getSmCompanyBasic().getCompanyName());
-			smPersonnel.setIdentificationTypeId(SupplierManagementConst.BASIC_IND_IDENT_TYPE);
+//			smPersonnel.setIdentificationTypeId(SupplierManagementConst.BASIC_IND_IDENT_TYPE);
+			smPersonnel.setIdentificationTypeId(SupplierManagementConst.BASIC_IND_IDENT_TYPE_ID);
 			smPersonnel.setIdentificationNo(smSupp.getRegNo());
 			smPersonnel.setPmCountry(indNationality);
 			this.getManagedBean().setSmBusinessAdd(this.getManagedBean().getSmPermenantAdd());
@@ -716,11 +718,15 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	}
 
 	public void suppOwnerIdTypeOnChange() {
-		if (this.getManagedBean().getSmSuppOwner().getIdentificationType().equals("I")) {
-			this.getManagedBean().setSuppOwnerIdMask(newICMasking);
-		} else {
-			this.getManagedBean().setSuppOwnerIdMask("");
-		}
+//		if (this.getManagedBean().getSmSuppOwner().getIdentificationType().equals("I")) {
+		System.out.println("this.getManagedBean().getSmSuppOwner().getIdentificationTypeId(): " + this.getManagedBean().getSmSuppOwner().getIdentificationTypeId());
+//		if (this.getManagedBean().getSmSuppOwner().getIdentificationTypeId() == 88) {
+//			System.out.println(">>>>>>>>>>>>>>>>>>>>>");
+//			this.getManagedBean().setSuppOwnerIdMask(newICMasking);
+//		} else {
+//			System.out.println("<<<<<<<<<<<<<<<<<<<<<<");
+//			this.getManagedBean().setSuppOwnerIdMask("");
+//		}
 	}
 
 	private void retrievePmCountryList() {
@@ -1095,7 +1101,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 //		log.info("-----Response PostCode---------" + resDTO.getPermanentAddrPostCode());
 //		
 //	}
-	
-	
+	public SelectItem[] getIdDropdownValues() {
+		return getDropdownCodeValues("ID");
+	}
 	
 }

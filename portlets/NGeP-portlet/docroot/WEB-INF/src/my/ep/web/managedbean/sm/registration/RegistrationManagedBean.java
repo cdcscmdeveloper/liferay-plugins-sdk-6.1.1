@@ -178,6 +178,8 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	}
 
 	public SmPersonnel getSmPersonnel() {
+		if(smPersonnel == null)
+			smPersonnel = new SmPersonnel();
 		return smPersonnel;
 	}
 
@@ -186,6 +188,9 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	}
 
 	public SmSupplierOwner getSmSuppOwner() {
+		if(smSuppOwner == null) {
+			smSuppOwner = new SmSupplierOwner();
+		}
 		return smSuppOwner;
 	}
 

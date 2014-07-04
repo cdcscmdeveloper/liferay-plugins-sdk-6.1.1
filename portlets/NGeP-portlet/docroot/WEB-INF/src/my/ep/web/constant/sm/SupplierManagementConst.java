@@ -119,6 +119,7 @@ public class SupplierManagementConst {
 	public static final int REG_SOFTCERT = 0;
 	public static final int REG_BUMI = 0;
 	public static final String BASIC_IND_IDENT_TYPE = "I";
+	public static final Long BASIC_IND_IDENT_TYPE_ID = 88L;
 	public static final String SPECIAL_SERVICE_CODE = "ISS";
 	public static final String PROF_SERVICE_CODE = "IPS";
 
