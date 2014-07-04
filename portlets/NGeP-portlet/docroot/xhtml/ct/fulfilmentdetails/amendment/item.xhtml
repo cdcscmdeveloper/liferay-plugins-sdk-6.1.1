@@ -117,7 +117,8 @@
 				</p:selectOneMenu>
 			</h:panelGrid>
 			<p:outputPanel style="width:100%" rendered="#{(amendmentBackingBean.managedBean.selectedItem!=null and 
-				amendmentBackingBean.managedBean.showItem == ParameterConst.itemDisplayTypePrice)}">
+				amendmentBackingBean.managedBean.showItem == ParameterConst.itemDisplayTypePrice)
+				and amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange}">
 				<p:dataTable id="itemPriceTable" var="data" rowKey="#{data}" lazy="true"
 					value="#{amendmentBackingBean.managedBean.selectedItem.ctItemPrices}" >
 					<ac:paginator for="itemPriceTable" />
@@ -146,17 +147,14 @@
 					  		amendmentBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeZonalTariff}">
 						<p:outputLabel value="#{data.toQty}" styleClass="ppRightBtn" />
 					</p:column>
-<<<<<<< item.xhtml
 					<p:column headerText="#{lbl['lbl.ct.item.table1.price.price']}" style="width:10%;">
 					<p:column headerText="Price (MYR)" style="width:10%;">
 					  <h:panelGroup style="float:right;" rendered="#{data.changePrice}">
-						<p:inputText value="#{data.unitPrice}" styleClass="ppRightBtn"
-							style="width:100px;" >
+						<p:inputText value="#{data.unitPrice}" styleClass="ppRightBtn" style="width:100px;" >
 							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</p:inputText>
 						</h:panelGroup>
-						<h:outputText value="#{data.unitPrice}" style="float:right;"
-							rendered="#{!data.changePrice}">
+						<h:outputText value="#{data.unitPrice}" style="float:right;" rendered="#{!data.changePrice}">
 							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</h:outputText>
 					</p:column>
@@ -201,7 +199,8 @@
 				</p:dialog>
 			</p:outputPanel>
 			<h:panelGrid columns="1" style="width:100%" rendered="#{amendmentBackingBean.managedBean.selectedItem!=null and
-			 		(amendmentBackingBean.managedBean.showItem == ParameterConst.itemDisplayTypeCeilQty)}">
+			 		(amendmentBackingBean.managedBean.showItem == ParameterConst.itemDisplayTypeCeilQty)
+			 		and and amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange}">
 				<p:dataTable id="ceilingTable" var="data" lazy="true" rowKey="#{data}"
 					value="#{amendmentBackingBean.managedBean.selectedItem.ctItemCeilingQties}" >
 					<ac:paginator for="ceilingTable" />
@@ -212,9 +211,11 @@
 						<p:outputLabel style="float:left;" value="#{data.ctAgency.orgProfile.orgName}" />
 					</p:column>
 					<p:column headerText="Ceiling Quantity" style="width:10%;">
-						<p:inputText value="#{data.ceilingQuantity}" styleClass="ppRightBtn" style="width:100px;" rendered="#{data.changeCeilQuantity}">
+					     <h:panelGroup style="float:right;" rendered="#{data.changeCeilQuantity}">
+						  <p:inputText value="#{data.ceilingQuantity}" styleClass="ppRightBtn" style="width:100px;">
 							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, data.ctContractItem.uom.uomCode)}" />
 						</p:inputText>
+						</h:panelGroup>
 						<h:outputText value="#{data.ceilingQuantity}" style="float:right;" rendered="#{!data.changeCeilQuantity}">
 							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, data.ctContractItem.uom.uomCode)}" />
 						</h:outputText>
@@ -294,12 +295,12 @@
 						<p:outputLabel value="#{data.ctContractZone.zoneName}" style="float:left;" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.item.table1.price.price']}" style="width:10%;">
-						<p:inputText value="#{data.unitPrice}" styleClass="ppRightBtn"
-							style="width:100px;" rendered="#{data.changePrice}">
+					     <h:panelGroup style="float:right;"  rendered="#{data.changePrice}">
+					    	<p:inputText value="#{data.unitPrice}" styleClass="ppRightBtn" style="width:100px;">
 							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</p:inputText>
-						<h:outputText value="#{data.unitPrice}" style="float:right;"
-							rendered="#{!data.changePrice}">
+					</h:panelGroup>
+						<h:outputText value="#{data.unitPrice}" style="float:right;" rendered="#{!data.changePrice}">
 							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</h:outputText>
 					</p:column>
