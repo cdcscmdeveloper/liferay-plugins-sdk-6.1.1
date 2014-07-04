@@ -5,32 +5,58 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 
 	<ui:define name="resourceSection">
 	</ui:define>
 
 	<ui:define name="contentSection">
-	<f:event listener="#{danBackingBean.preRenderView}" type="preRenderView" />	
-	<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
-	<ui:include src="/xhtml/fl/invoice/adjustment/danHeaderPage.xhtml" />
+		<f:event listener="#{danBackingBean.preRenderView}"
+			type="preRenderView" />
+		<p:messages id="messages" showDetail="true" autoUpdate="true"
+			closable="true" severity="error, info" />
+
 		<table style="width: 100%;">
 			<tr>
+				<td><p:commandButton value="Back" immediate="true"
+						rendered="#{danBackingBean.managedBean.taskId==null}"
+						icon="ui-icon-back" oncomplete="window.history.back();" /></td>
 				<td colspan="4" style="text-align: right"><ui:repeat
 						var="bpmAction" value="#{danBackingBean.managedBean.outComes}">
-						<p:commandButton value="#{bpmAction}"
-							action="#{danBackingBean.submitAction(bpmAction)}"
-							process="@this" />
+						<p:commandButton value="#{bpmAction}" update="@form"
+							styleClass="ui-button"
+							icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
+							action="#{danBackingBean.submitAction(bpmAction)}" />
 					</ui:repeat></td>
 			</tr>
 		</table>
-		<p:tabView id="tt" orientation="left" widgetVar="tt">
-			<p:tab title="General">
-				<ui:include src="danGeneral.xhtml" />
-			</p:tab>
-			<p:tab title="Charge Line Summary">
-				<ui:include src="danChargeLine.xhtml" />
-			</p:tab>
-		</p:tabView>
+		<ui:include src="/xhtml/fl/invoice/adjustment/danHeaderPage.xhtml" />
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+			<tr>
+				<td width="20%" valign="top" class="sidemenutd"><p:tabMenu
+						styleClass="sidemenu" 
+						activeIndex="#{danBackingBean.managedBean.selectedTabIndex}">
+						<p:menuitem value="General" update="@form" >
+							<f:setPropertyActionListener
+								target="#{danBackingBean.managedBean.selectedTabIndex}"
+								value="0" />
+						</p:menuitem>
+						<p:menuitem value="Charge Line Summary" update="@form" >
+							<f:setPropertyActionListener
+								target="#{danBackingBean.managedBean.selectedTabIndex}"
+								value="1" />
+						</p:menuitem>
+
+					</p:tabMenu></td>
+				<td width="80%"><p:outputPanel
+						rendered="#{danBackingBean.managedBean.selectedTabIndex == 0}">
+						<ui:include src="danGeneral.xhtml" />
+					</p:outputPanel> <p:outputPanel
+						rendered="#{danBackingBean.managedBean.selectedTabIndex == 1}">
+						<ui:include src="danChargeLine.xhtml" />
+					</p:outputPanel></td>
+			</tr>
+		</table>
 	</ui:define>
 </ui:composition>
