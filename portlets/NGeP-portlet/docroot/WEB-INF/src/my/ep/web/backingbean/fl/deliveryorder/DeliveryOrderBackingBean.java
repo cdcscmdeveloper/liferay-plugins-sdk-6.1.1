@@ -209,7 +209,7 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		return null;
 	}
 	
-	private void setDeliveryOrder(FulfilmentResDTO resDTO) {
+	public void setDeliveryOrder(FulfilmentResDTO resDTO) {
 		FlFulfilmentOrder flOrder = resDTO.getFlOrder();
 		
 		// initialize FlTempDoAddr if null

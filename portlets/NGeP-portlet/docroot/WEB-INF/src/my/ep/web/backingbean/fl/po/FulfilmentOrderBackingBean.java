@@ -45,7 +45,6 @@ import my.ep.jaxb.fl.stopfullfillmentdata.FLStopFullfillmentDataType;
 import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
 import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
 import my.ep.persistence.entity.fl.order.FlStopInstr;
-import my.ep.persistence.entity.fl.order.FlTempDoAddr;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
@@ -233,34 +232,14 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 	}
 
 	public String navigateToFlOrder(int index) {
-		//System.out.println("getSelectedFlOrder: "+getManagedBean().getSelectedFlOrder().getFulfilmentOrderId());
-		//		this.getManagedBean().setFulfilmentOrder(this.getManagedBean().getPendingDoList().get(index));
-		String statusDesc = FacesContext.getCurrentInstance().getExternalContext()
-				.getRequestParameterMap().get("status");
-		//System.out.println("Status:::: "+statusDesc);
-		FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
-		FulfilmentResDTO resDTO = new FulfilmentResDTO();
-		flReqDTO.setFlRequestId(getManagedBean().getSelectedFlOrder().getFlFulfilmentRequest().getFulfilmentReqId());
-		IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentRequestSO.class);
-		resDTO = fulfilmentSO.retrieveFulfilmentRequest(flReqDTO);
-		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
-		flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
-		getManagedBean().setFulfilmentOrder(getManagedBean().getSelectedFlOrder());
-
+		IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		reqDTO.setFlOrderId(getManagedBean().getSelectedFlOrder().getFulfilmentOrderId());
+		FulfilmentResDTO resDTO = orderSO.retrieveFulfilmentOrderById(reqDTO);
+		
 		DeliveryOrderBackingBean doMB = new DeliveryOrderBackingBean();
-		for(FlDeliveryAddress delAddr : resDTO.getFlFulfilmentRequest().getFlDeliveryAddresses()){
-			if(null == delAddr.getFlTempDoAddr()){
-				delAddr.setFlTempDoAddr(new FlTempDoAddr());
-			}
-		}
-		doMB.getManagedBean().setFulfilmentRequest(resDTO.getFlFulfilmentRequest());
-		doMB.getManagedBean().setDocType(resDTO.getFlFulfilmentRequest().getDocType());
-		doMB.getManagedBean().setStatusDesc(statusDesc);
-		doMB.getManagedBean().setFulfilmentOrder(getManagedBean().getSelectedFlOrder());
-		//combineSupAddress(resDTO.getFlFulfilmentRequest());
-
+		doMB.setDeliveryOrder(resDTO);
 		return NAV_TO_CREATE_DO;
-
 	}
 
 	public void selectedAddrRow(){
