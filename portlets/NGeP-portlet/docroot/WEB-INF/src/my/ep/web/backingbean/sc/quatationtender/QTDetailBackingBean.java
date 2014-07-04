@@ -21,7 +21,6 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.object.IObjectSO;
@@ -61,6 +60,7 @@ import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sc.specification.SpecificationReqDTO;
 import my.ep.dto.sc.specification.SpecificationResDTO;
+import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
@@ -631,7 +631,7 @@ public class QTDetailBackingBean extends
 				REDIRECT_PAGE = QTConstants.BO_MAINTANANCE_PAGE;
 			} else {
 				getManagedBean().setQt(resDTO.getQtDetail());
-				if (getManagedBean().getSupplierCriteria() == null) {
+				/*if (getManagedBean().getSupplierCriteria() == null) {
 					ScQtSupplierCriteria criteria = new ScQtSupplierCriteria();
 					criteria.setQtZoneCriterias(new ScQtZoneCriteria());
 					getManagedBean().setSupplierCriteria(
@@ -640,7 +640,7 @@ public class QTDetailBackingBean extends
 				if (getManagedBean().getQt().getZoneLocationLevel() == null) {
 					getManagedBean().getQt().setZoneLocationLevel(
 							new PmParameter());
-				}
+				}*/
 				if (this.getManagedBean().getZoneGeneralTrees().isEmpty()) {
 					if (resDTO.getQtDetail().isZonal()) {
 						if (isNotNullOREmpty(resDTO.getZoneDetails())) {
@@ -1170,7 +1170,9 @@ public class QTDetailBackingBean extends
 	 */
 	public void retriveFinancialSpecification() {
 		debugLogger("retriveFinancialSpecification");
-		this.getManagedBean().setActiveIndex(5);
+		if(getManagedBean().getQt().getQtStatus().getStatusId() < 60002) {
+			this.getManagedBean().setActiveIndex(5);
+		}
 		IQTSpecSO specSO;
 		SpecificationResDTO resDto;
 		try {
@@ -1211,7 +1213,10 @@ public class QTDetailBackingBean extends
 	 */
 	public void retriveTechnicalSpecification() {
 		debugLogger("retriveTechnicalSpecification");
-		this.getManagedBean().setActiveIndex(4);
+		
+		if(getManagedBean().getQt().getQtStatus().getStatusId() < 60002) {
+			this.getManagedBean().setActiveIndex(4);
+		}
 		IQTSpecSO specSO;
 		SpecificationResDTO resDto;
 
@@ -1252,7 +1257,13 @@ public class QTDetailBackingBean extends
 	 */
 	public void retrieveBriefingSitevisitTabDtl() {
 		debugLogger("retrieveBriefingSitevisitTabDtl");
-		this.getManagedBean().setActiveIndex(6);
+		
+		if(getManagedBean().getQt().getQtStatus().getStatusId() > 60002) {
+			this.getManagedBean().setActiveIndex(4);
+		} else {
+			this.getManagedBean().setActiveIndex(6);
+		}
+		
 		if (getManagedBean().getQtBriefing() == null) {
 			getManagedBean().setQtBriefing(new ScQtBsvDtl());
 			getManagedBean().getQtBriefing().setAddress(new PmAddress());
@@ -1638,7 +1649,10 @@ public class QTDetailBackingBean extends
 	 */
 	public void retrieveDeductionPaymentTabDtl() {
 		debugLogger("retrieveDeductionPaymentTabDtl");
-		this.getManagedBean().setActiveIndex(8);
+		if(getManagedBean().getQt().getQtStatus().getStatusId() > 60002) {
+			this.getManagedBean().setActiveIndex(6);
+		}
+		
 		if (getManagedBean().getScQtDeductionList() == null) {
 			IQTDetailSO detailSO;
 			try {
@@ -1928,7 +1942,13 @@ public class QTDetailBackingBean extends
 					}
 				}
 				ScQt scQt = tenderResDTO.getQtDetail();
+				
 				this.getManagedBean().setQt(scQt);
+				if (null == scQt.getScQtSupplierCriteria()) {
+					this.getManagedBean().setSupplierCriteria(new ScQtSupplierCriteria());
+				} else {
+					this.getManagedBean().setSupplierCriteria(scQt.getScQtSupplierCriteria());
+				}
 				if (!scQt.isZonal() && !scQt.isPanel()) {
 					List<ScQtLocCriteria> locCriteria = new ArrayList<ScQtLocCriteria>();
 					if (null != tenderResDTO.getLocationDetails()) {
@@ -1971,7 +1991,12 @@ public class QTDetailBackingBean extends
 
 	public void retrieveScheduleTabDtl() {
 		debugLogger("retrieveScheduleTabDtl");
-		this.getManagedBean().setActiveIndex(7);
+		if(getManagedBean().getQt().getQtStatus().getStatusId() > 60002) {
+			this.getManagedBean().setActiveIndex(5);
+		} else {
+			this.getManagedBean().setActiveIndex(7);
+		}
+		
 		if (getManagedBean().getScQtSampleSubmission() == null) {
 			getManagedBean()
 					.setScQtSampleSubmission(new ScQtSampleSubmission());
@@ -2051,7 +2076,10 @@ public class QTDetailBackingBean extends
 
 	public void retrieveDocumentTabDtl() {
 		debugLogger("retrieveDocumentTabDtl");
-		this.getManagedBean().setActiveIndex(9);
+		if(getManagedBean().getQt().getQtStatus().getStatusId() > 60002) {
+			this.getManagedBean().setActiveIndex(7);
+		}
+		
 		if (getManagedBean().getScQtChecklists() == null) {
 			IQTSpecSO iqtSpecSO;
 			try {
@@ -2093,7 +2121,9 @@ public class QTDetailBackingBean extends
 
 	public void retrieveActivitiesTabDtl() {
 		debugLogger("retrieveActivitiesTabDtl");
-		this.getManagedBean().setActiveIndex(10);
+		if(getManagedBean().getQt().getQtStatus().getStatusId() > 60002) {
+			this.getManagedBean().setActiveIndex(8);
+		}
 	}
 
 	/*
@@ -2400,7 +2430,6 @@ public class QTDetailBackingBean extends
 	public String searchQtBackAction() {
 		debugLogger("searchQtBackAction");
 		return "/xhtml/sc/quatationtender/qtntendermain.xhtml?faces-redirect=true";
-
 	}
 
 	public void retrieveQuationTenderDetails(Long qtId) {
@@ -2413,35 +2442,38 @@ public class QTDetailBackingBean extends
 			QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
 			tenderReqDTO.setQtId(qtId);
 			QuationTenderResDTO tenderResDTO = new QuationTenderResDTO();
-			tenderResDTO = QtDetailsSO.retriveQTDetails(tenderReqDTO);
-			if (tenderResDTO.getQtDetail() != null) {
+			if(getManagedBean().getQt().getQtId()==null) {
+				tenderResDTO = QtDetailsSO.retriveQTDetails(tenderReqDTO);
 				if (tenderResDTO.getQtDetail() != null) {
-					getManagedBean().setQt(tenderResDTO.getQtDetail());
-					if (null == tenderResDTO.getQtSupplierCriteria()) {
-						ScQtSupplierCriteria qtSupplierCriteria = new ScQtSupplierCriteria();
-						qtSupplierCriteria
-								.setQtZoneCriterias(new ScQtZoneCriteria());
-						this.getManagedBean().setSupplierCriteria(
-								qtSupplierCriteria);
-					} else {
-						this.getManagedBean().setSupplierCriteria(
-								tenderResDTO.getQtSupplierCriteria());
-					}
-					if (this.getManagedBean().getZoneGeneralTrees().isEmpty()) {
-						if (tenderResDTO.getQtDetail().isZonal()) {
-							if (isNotNullOREmpty(tenderResDTO.getZoneDetails())) {
-								for (TplSpecZoneDtl zone : tenderResDTO.getZoneDetails()) {
-									getManagedBean().getZoneGeneralTrees().add(
-											LocationSingleton.getInstance()
-													.constuctTreeNode(zone,
-															zone.getTplSpecZoneLocs()));
+					if (tenderResDTO.getQtDetail() != null) {
+						getManagedBean().setQt(tenderResDTO.getQtDetail());
+						/*if (null == tenderResDTO.getQtSupplierCriteria()) {
+							ScQtSupplierCriteria qtSupplierCriteria = new ScQtSupplierCriteria();
+							qtSupplierCriteria
+									.setQtZoneCriterias(new ScQtZoneCriteria());
+							this.getManagedBean().setSupplierCriteria(
+									qtSupplierCriteria);
+						} else {
+							this.getManagedBean().setSupplierCriteria(
+									tenderResDTO.getQtSupplierCriteria());
+						}*/
+						if (this.getManagedBean().getZoneGeneralTrees().isEmpty()) {
+							if (tenderResDTO.getQtDetail().isZonal()) {
+								if (isNotNullOREmpty(tenderResDTO.getZoneDetails())) {
+									for (TplSpecZoneDtl zone : tenderResDTO.getZoneDetails()) {
+										getManagedBean().getZoneGeneralTrees().add(
+												LocationSingleton.getInstance()
+														.constuctTreeNode(zone,
+																zone.getTplSpecZoneLocs()));
+									}
 								}
-							}
 
+							}
 						}
 					}
 				}
 			}
+			
 		}
 
 		finally {
@@ -2622,6 +2654,11 @@ public class QTDetailBackingBean extends
 
 	}
 	
+	public String technicalSpecBackAction() {
+		debugLogger("technicalSpecBackAction");
+		return "/xhtml/sc/quatationtender/qttechnicalchecklist.xhtml?faces-redirect=true";
+	}
+	
 	public String financialSpecEditAction(ScQtCheckList checklist) {
 
 		IQTTemplateSO qtTemplateSO;
@@ -2664,7 +2701,12 @@ public class QTDetailBackingBean extends
 		} finally {
 			qtTemplateSO = null;
 		}
-		return "/xhtml/sc/main/financialTemplate.xhtml?faces-redirect=true";
+		return "/xhtml/sc/quatationtender/financialTemplateMaintenance.xhtml?faces-redirect=true";
+	}
+	
+	public String financialSpecBackAction() {
+		debugLogger("financialSpecBackAction");
+		return "/xhtml/sc/quatationtender/qtfinancialchecklist.xhtml?faces-redirect=true";
 	}
 	
 	public SelectItem[] getProcurementModeDropdownValues(){

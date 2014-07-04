@@ -173,7 +173,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private TreeNode[] selectedNodes;
 	private TreeNode[] selectedLocNodes;
 	private TreeNode[] selectedAddrNodes;
-	private List<TreeNode> ctZoneSuppliers=new  ArrayList<TreeNode>();
+	private List<TreeNode> ctZoneSuppliers = new ArrayList<TreeNode>();
 
 	private List<CtPanelSupplier> ctZoneSupplierList;
 
@@ -218,7 +218,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private BigDecimal minPaidUpCapital;
 
 	private TreeNode supplierSelectedTreeNode;
-	
+
 	private int totalSearchSupplier;
 	private int totalSupplier;
 	private TreeNode searchPanelSuppliersNode;
@@ -370,6 +370,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private ScQtBsv scQtBriefing;
 	private ScQtBsv scQtSitevisit;
 	private ScQtBSVRemark scQtBSVRemark;
+	private boolean required = false;
 
 	// Schedule & Contact Information
 	private List<ScQtContactPerson> pmuserContactpersonList;
@@ -2385,6 +2386,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setTemplateSpecBean(TemplateSpecBean templateSpecBean) {
 		this.templateSpecBean = templateSpecBean;
+	}
+
+	public boolean isRequired() {
+		return required;
+	}
+
+	public void setRequired(boolean required) {
+		this.required = required;
 	}
 
 }

@@ -216,6 +216,7 @@ public class QTBriefingSiteVisitBackingBean extends
 
 	public void addZoneBriefingDetails(String briefingZoneName) {
 		debugLogger("addBriefingDetails");
+		this.getManagedBean().setRequired(true);
 		ScQtBsvDtl bsvDtl = new ScQtBsvDtl();
 		bsvDtl.setBsvType("B");
 		bsvDtl.setAddress(new PmAddress());
@@ -230,6 +231,7 @@ public class QTBriefingSiteVisitBackingBean extends
 
 	public void addZoneSiteDetails(String sitevisitZoneName) {
 		debugLogger("addZoneSiteDetails");
+		this.getManagedBean().setRequired(true);
 		ScQtBsvDtl bsvDtl = new ScQtBsvDtl();
 		bsvDtl.setBsvType("S");
 		bsvDtl.setAddress(new PmAddress());
@@ -244,7 +246,7 @@ public class QTBriefingSiteVisitBackingBean extends
 
 	public void addToBriefingListByZone() {
 		debugLogger("addToBriefingListByZone");
-
+		this.getManagedBean().setRequired(false);
 		ScQtBsvDtl selectedBriefing = this.getManagedBean().getQtBriefing();
 
 		AddressReqDTO reqDTO = new AddressReqDTO();
@@ -295,6 +297,7 @@ public class QTBriefingSiteVisitBackingBean extends
 
 	public void addToSitevisitListByZone() {
 		debugLogger("addToSitevisitListByZone");
+		this.getManagedBean().setRequired(false);
 		ScQtBsvDtl selectedSiteBriefing = this.getManagedBean()
 				.getQtSiteBriefing();
 
@@ -351,6 +354,7 @@ public class QTBriefingSiteVisitBackingBean extends
 
 	public void addBriefingDetails() {
 		debugLogger("addBriefingDetails");
+		this.getManagedBean().setRequired(true);
 		ScQtBsvDtl bsvDtl = new ScQtBsvDtl();
 		bsvDtl.setBsvType("B");
 		bsvDtl.setAddress(new PmAddress());
@@ -365,6 +369,7 @@ public class QTBriefingSiteVisitBackingBean extends
 
 	public void addSiteDetails() {
 		debugLogger("addSiteDetails");
+		this.getManagedBean().setRequired(true);
 		ScQtBsvDtl bsvDtl = new ScQtBsvDtl();
 		bsvDtl.setBsvType("S");
 		bsvDtl.setAddress(new PmAddress());
@@ -393,6 +398,7 @@ public class QTBriefingSiteVisitBackingBean extends
 
 	public void addToBriefingList() {
 		debugLogger("addToBriefingList");
+		this.getManagedBean().setRequired(false);
 		List<ScQtBsvDtl> brefings = this.getManagedBean().getBriefings();
 		ScQtBsvDtl selectedBrefing = this.getManagedBean().getQtBriefing();
 
@@ -434,6 +440,7 @@ public class QTBriefingSiteVisitBackingBean extends
 
 	public void addToSiteBriefingList() {
 		debugLogger("addToSiteBriefingList");
+		this.getManagedBean().setRequired(false);
 		List<ScQtBsvDtl> siteBriefings = this.getManagedBean()
 				.getSiteBriefings();
 		ScQtBsvDtl selectedSiteBriefing = this.getManagedBean()
