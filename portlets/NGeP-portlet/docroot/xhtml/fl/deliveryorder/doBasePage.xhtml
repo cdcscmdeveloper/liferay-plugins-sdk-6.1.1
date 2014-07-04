@@ -71,6 +71,7 @@
 						</p:menuitem>
 
 					</p:tabMenu></td>
+					<c:if test="#{empty createDOBackingBean.managedBean.buttonVal}">
 				<td width="80%"><p:outputPanel
 						rendered="#{createDOBackingBean.managedBean.selectedTabIndex == 0}">
 						<ui:include src="doGeneral.xhtml" />
@@ -78,6 +79,17 @@
 						rendered="#{createDOBackingBean.managedBean.selectedTabIndex == 1}">
 						<ui:include src="doItem.xhtml" />
 					</p:outputPanel></td>
+					</c:if>
+					<c:if test="#{not empty createDOBackingBean.managedBean.buttonVal}">
+					<td width="80%"><p:outputPanel
+						rendered="#{createDOBackingBean.managedBean.selectedTabIndex == 0}">
+						<ui:include src="doMaintenenceGeneral.xhtml" />
+					</p:outputPanel> <p:outputPanel
+						rendered="#{createDOBackingBean.managedBean.selectedTabIndex == 1}">
+						<ui:include src="doMaintenenceItem.xhtml" />
+					</p:outputPanel></td>
+					</c:if>
+					
 			</tr>
 		</table>
 	</ui:define>
