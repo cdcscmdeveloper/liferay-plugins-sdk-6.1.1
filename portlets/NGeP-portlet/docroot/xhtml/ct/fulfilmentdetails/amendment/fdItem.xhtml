@@ -12,15 +12,15 @@
               	selectionMode="single" selection="#{contractDetailsBackingBean.managedBean.selectedItem}" lazy="true" >
                	<ac:paginator for="itemTable"/>
                	<p:ajax event="rowSelect" update=":form:tabview:changeField"  />
-		     	   <p:column headerText="Item Name">
+		     	   <p:column headerText="#{lbl['lbl.ct.item.table.name']}">
 		     	      <p:outputLabel value="#{data.itemName}" style="float:left;"/> </p:column>       
-		     	   <p:column headerText="UOM">
+		     	   <p:column headerText="#{lbl['lbl.ct.item.table.uom']}">
 		     	      <p:outputLabel value="#{data.uom.uomName}" style="float:left;"/> </p:column>        
-		     	   <p:column headerText="Minimum Order Qty." style="text-align: right;">
+		     	   <p:column headerText="#{lbl['lbl.ct.item.minodrqty']}" style="text-align: right;">
 		     	     <p:outputLabel value="#{data.minimumOrderQty}"/></p:column>   
-		     	   <p:column headerText="Maximum Qty." style="text-align: right;">
+		     	   <p:column headerText="#{lbl['lbl.ct.item.maxqty']}" style="text-align: right;">
 		     		 <p:outputLabel value="#{data.maxProcureAmount}"/></p:column>     
-		     	   <p:column headerText="Type Of Goods">
+		     	   <p:column headerText="#{lbl['lbl.ct.item.typeofgoods']}">
 		     		  <p:outputLabel value="#{contractDetailsBackingBean.getParameterDesc(data.itemOrigin)}" 
 		     		    style="float:left;" />
 		     	   </p:column>              
@@ -42,19 +42,19 @@
 		    <p:dataTable id="itemPriceTable" var="data" value="#{contractDetailsBackingBean.managedBean.selectedItem.ctItemPrices}"
 			   rowKey="#{data}" lazy="true" >
 			   <ac:paginator for="itemPriceTable"/>
-			   <p:column headerText="Zone"><p:outputLabel value="#{data.ctContractZone.zoneName}" style="float:left;" /></p:column>       
-			   <p:column headerText="From Qty." style="text-align: right;">
+			   <p:column headerText="#{lbl['lbl.ct.menu.zone']}"><p:outputLabel value="#{data.ctContractZone.zoneName}" style="float:left;" /></p:column>       
+			   <p:column headerText="#{lbl['lbl.ct.item.fromqty']}" style="text-align: right;">
 				  <p:outputLabel value="#{data.tierFrom}"/>
 			   </p:column>       
-			   <p:column headerText="To Qty." style="text-align: right;">
+			   <p:column headerText="#{lbl['lbl.ct.item.toqty']}" style="text-align: right;">
 				  <p:outputLabel value="#{data.tierTo}"/>
 			   </p:column>              
-			   <p:column headerText="Price (MYR)" style="text-align: right;"><p:outputLabel value="#{data.unitPrice}"/></p:column>            
-			   <p:column headerText="Effective Date">
+			   <p:column headerText="#{lbl['lbl.ct.item.table1.price.price']}" style="text-align: right;"><p:outputLabel value="#{data.unitPrice}"/></p:column>            
+			   <p:column headerText="#{lbl['lbl.ct.item.table1.price.efdate']}">
 				  <p:calendar style="width:130px;" value="#{data.effDate}" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" 
 				  disabled="true" />
 			   </p:column>       
-			   <p:column headerText="Expiry Date">
+			   <p:column headerText="#{lbl['lbl.ct.item.table1.price.edate']}">
 				  <p:calendar style="width:130px;" value="#{data.expDate}" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
 				   disabled="true"  />
 			   </p:column>       
@@ -66,19 +66,19 @@
 			 <p:dataTable id="ceilingTable" var="data" value="#{contractDetailsBackingBean.managedBean.selectedItem.ctItemCeilingQties}"
 				rowKey="#{data}" lazy="true" >
 				<ac:paginator for="ceilingTable"/>
-				<p:column headerText="Ministry Name">
+				<p:column headerText="#{lbl['lbl.ct.ministry']}">
 				   <p:outputLabel value="#{data.ctAgency.orgProfile.parentOrgProfile.orgName}" style="float:left;" />
 				</p:column>      
-				<p:column headerText="PTJ Name">
+				<p:column headerText="#{lbl['lbl.ct.ptj.name']}">
 				  <p:outputLabel value="#{data.ctAgency.orgProfile.orgName}" style="float:left;" />
 				</p:column>              
-				<p:column headerText="Ceiling Quantity" style="text-align: right;">
+				<p:column headerText="#{lbl['lbl.ct.item.table2.ceil.quan']}" style="text-align: right;">
 					<p:inputText style="width:70px;" value="#{data.ceilingQuantity}" />
 				</p:column>            
-				<p:column headerText="Effective Date">
+				<p:column headerText="#{lbl['lbl.ct.item.table1.price.efdate']}">
 				   <p:calendar style="width:130px;" value="#{data.effDate}" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" disabled="true" />
 				</p:column>       
-				<p:column headerText="Expiry Date">
+				<p:column headerText="#{lbl['lbl.ct.item.table1.price.edate']}">
 				   <p:calendar style="width:130px;" value="#{data.expDate}" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" disabled="true" />
 				</p:column>           
 			  </p:dataTable>
@@ -91,10 +91,10 @@
            selectionMode="single" selection="#{contractDetailsBackingBean.managedBean.selectedServiceItem}" lazy="true" >
            <ac:paginator for="serviceTable"/>
               <p:ajax event="rowSelect" update=":form:tabview:showServicePrice"/>
-		      <p:column headerText="Item Name"><p:outputLabel value="#{data.itemName}" style="float:left;"/></p:column>       
-		      <p:column headerText="UOM"><p:outputLabel value="#{data.uom.uomName}" style="float:left;"/></p:column>        
-		      <p:column headerText="Minimum Order Qty." style="text-align: right;"><p:outputLabel value="#{data.minimumOrderQty}"/></p:column>               
-		      <p:column headerText="UOM Per Month"  style="text-align: right;">
+		      <p:column headerText="#{lbl['lbl.ct.susp.tbl.item.name']}"><p:outputLabel value="#{data.itemName}" style="float:left;"/></p:column>       
+		      <p:column headerText="#{lbl['lbl.ct.item.table.uom']}"><p:outputLabel value="#{data.uom.uomName}" style="float:left;"/></p:column>        
+		      <p:column headerText="#{lbl['lbl.ct.item.minodrqty']}" style="text-align: right;"><p:outputLabel value="#{data.minimumOrderQty}"/></p:column>               
+		      <p:column headerText="#{lbl['lbl.ct.item.uompermonth']}"  style="text-align: right;">
 		     	<p:outputLabel value="#{data.uomPerMonth}"/>
 		      </p:column>  
     		</p:dataTable> 
@@ -106,11 +106,11 @@
 			 rowKey="#{data}" lazy="true" >
 			 <ac:paginator for="servicePriceTable"/>
 			 <p:column headerText="Zone"><p:outputLabel value="#{data.ctContractZone.zoneName}" style="float:left;" /></p:column>                   
-			 <p:column headerText="Price (MYR)" style="text-align: right;"><p:outputLabel value="#{data.unitPrice}"/></p:column>            
-			 <p:column headerText="Effective Date">
+			 <p:column headerText="#{lbl['lbl.ct.item.table1.price.price']}" style="text-align: right;"><p:outputLabel value="#{data.unitPrice}"/></p:column>            
+			 <p:column headerText="#{lbl['lbl.ct.item.table1.price.efdate']}">
 				<p:calendar style="width:130px;" value="#{data.effDate}" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" disabled="true" />
 			 </p:column>       
-			 <p:column headerText="Expiry Date">
+			 <p:column headerText="#{lbl['lbl.ct.item.table1.price.edate']}">
 			   <p:calendar style="width:130px;" value="#{data.expDate}" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" disabled="true"  />
 			 </p:column>       
 		</p:dataTable>
