@@ -495,6 +495,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			pmUSer.setLoginId(this.getManagedBean().getCircularAdmin());
 			reqDTO.setCircularAdmin(pmUSer);
 			reqDTO.setUserRole(getUserRole());
+			reqDTO.setLanguageCode(getFacesScopes().getUserLocale().getLanguage());
 			if(isBPKApprover()) {
 				circularVer.setApprover(getFacesScopes().getUserSessionBean());
 				circularVer.setApprovedDate(new Date());
