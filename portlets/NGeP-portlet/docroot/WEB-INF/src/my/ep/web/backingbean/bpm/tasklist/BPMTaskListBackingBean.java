@@ -344,11 +344,6 @@ public class BPMTaskListBackingBean extends
 		this.getManagedBean().getTaskListDataModel().reloadData();
 //		retrieveWorklistItems("ASSIGNED",this.getManagedBean().getViewBy(), this.getManagedBean().getAssignment());
 	}
-	
-   public void refreshPendingDeliveryList(){
-	   
-	   this.getManagedBean().setFlFulfilmentOrderList(retrievePendingDeliverylist());
-	}
    
  
 	public String goToMyTasks(){
@@ -370,20 +365,7 @@ public class BPMTaskListBackingBean extends
 		return "taskListview";
 	}
 	
-	public List<FlFulfilmentOrder> retrievePendingDeliverylist() {
-		System.out.println(">>>>>>>>>>retrievePendingDeliverylist<<<<<<<<<<");
-		IFulfilmentOrderSO fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance()
-				.getServiceObject("fl", IFulfilmentOrderSO.class);
-
-		FacesScopes facesScope = new FacesScopes();
-		
-		FulfilmentReqDTO fulfilmentReqDTO = new FulfilmentReqDTO();
-		fulfilmentReqDTO.setUserId(facesScope.getUserSessionBean().getUserId());
-		List<FlFulfilmentOrder> flFulFilmentOrderList = fulfilmentOrderSO.getPendingDoList(fulfilmentReqDTO).getFulfilmentOrderList();
-
-			return flFulFilmentOrderList;
-	}
-
+	
 	public ISearchBean<PmParameterDesc> getDocTypeSearchBean() {
 		if (this.docTypeSearchBean == null) {
 			this.docTypeSearchBean = super.createSearchBean(PmParameterDesc.class, "docTypeId");
