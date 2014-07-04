@@ -2587,6 +2587,12 @@ public class SpecificationBackingBean extends
 							locCriteria);
 
 				}
+				 else {
+
+						throw new EpException(MessageConst.INFO_100022,
+								new String[] { "ADD At Least One Location level" });
+
+					}
 
 				if (null != qtSupplierCriteria
 						&& null != qtSupplierCriteria.getLocationLevel()
