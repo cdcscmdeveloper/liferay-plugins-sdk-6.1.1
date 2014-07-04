@@ -12,12 +12,12 @@
 			<redirect />
 		</navigation-case>
 		<navigation-case>
-			<from-outcome>returnToSmUserManagementHome</from-outcome>
+			<from-outcome>smUserManagementHome</from-outcome>
 			<to-view-id>/xhtml/sm/userProfileMaintenance/userProfileSearch.xhtml</to-view-id>
 			<redirect />
 		</navigation-case>
 		<navigation-case>
-			<from-outcome>addNewSmUser</from-outcome>
+			<from-outcome>basicSmUser</from-outcome>
 			<to-view-id>/xhtml/sm/userProfileMaintenance/basicUserProfile.xhtml</to-view-id>
 			<redirect />
 		</navigation-case>

@@ -56,28 +56,31 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 	private static Logger log = Logger.getLogger(SmPersonnelBackingBean.class);
 	
 	public SmPersonnelBackingBean(){
-
+		System.out.println("********************SmPersonnelBackingBean Constructor***************");
 	}
 
-	@PostConstruct
-	public void init() {
-		
+	public void preRenderSmPersonnel(){
+		System.out.println("********************SmPersonnelBackingBean PreRender***************");
 		initUserPersonnelInfo();
 		initializeUpdateLists();
 		
 		this.getManagedBean().setSearchCompanyRole(null);
 		this.getManagedBean().setSearchEPRole(null);
 		this.getManagedBean().setSearchUsername(null);
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, "smUserManagementHome");
 	}
-
 	
 	public void resetSmPersonnelSearch() {
+		System.out.println("********************SmPersonnelBackingBean resetSmPersonnelSearch***************");
 		this.getManagedBean().setSearchCompanyRole(null);
 		this.getManagedBean().setSearchEPRole(null);
 		this.getManagedBean().setSearchUsername(null);
 	}
 	
 	public String navigateToAddNewUserPage(){  
+		System.out.println("********************SmPersonnelBackingBean navigateToAddNewUserPage***************");
 		removeEPRole();
 		SmPersonnel smPersonnel = new SmPersonnel();
 		smPersonnel.setPmCountry(new PmCountry());
@@ -104,12 +107,12 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		permPersonnelAddress.setSmAddress(permAddress);
 		permPersonnelAddress.setSmPersonnel(smPersonnel);
 
-		getManagedBean().setNewSmPersonnelMailingAddress(mailPersonnelAddress);
-		getManagedBean().setNewSmPersonnelPermanentAddress(permPersonnelAddress);
+		getManagedBean().setBasicSmPersonnelMailingAddress(mailPersonnelAddress);
+		getManagedBean().setBasicSmPersonnelPermanentAddress(permPersonnelAddress);
 
-		getManagedBean().setNewSmPersonnel(smPersonnel);
+		getManagedBean().setBasicSmPersonnel(smPersonnel);
 
-		return "addNewSmUser";
+		return "basicSmUser";
 	}
 
 	public void initUserPersonnelInfo(){
@@ -120,14 +123,15 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 	
 	
 	public String navigateToUpdateUserPage(String personnelId){
-			getPersonnelById(personnelId);
-			initializeLists();
-			return "editSmPersonnel";
+		System.out.println("********************SmPersonnelBackingBean navigateToUpdateUserPage***************");
+		getPersonnelInfoById(personnelId);
+		initializeLists();
+		return "basicSmUser";
 	}
 	
 	public String cancel(){
 
-		return "returnToSmUserManagementHome";
+		return "smUserManagementHome";
 
 	}
 	
@@ -136,25 +140,27 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 	}
 	
 	public void initializeLists(){
-		
+
+		System.out.println("********************SmPersonnelBackingBean initializeLists***************");
 		getCountryList();
 
-		if(getManagedBean().getEditSmPersonnelMailingAddress().getPmCountry() != null){
-			getManagedBean().setStateList(getStateList(getManagedBean().getEditSmPersonnelMailingAddress().getPmCountry().getCountryId()));
+		if(getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress().getPmCountry() != null){
+			getManagedBean().setStateList(getStateList(getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress().getPmCountry().getCountryId()));
 		}
 		
-		if(getManagedBean().getEditSmPersonnelMailingAddress().getPmState() != null){
-			getManagedBean().setDistrictList(getDistrictList(getManagedBean().getEditSmPersonnelMailingAddress().getPmState().getStateId()));
+		if(getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress().getPmState() != null){
+			getManagedBean().setDistrictList(getDistrictList(getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress().getPmState().getStateId()));
 		}
 		
-		if(getManagedBean().getEditSmPersonnelMailingAddress().getPmDistrict() != null){
-			getManagedBean().setCityList(getCityList(getManagedBean().getEditSmPersonnelMailingAddress().getPmDistrict().getDistrictId()));
+		if(getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress().getPmDistrict() != null){
+			getManagedBean().setCityList(getCityList(getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress().getPmDistrict().getDistrictId()));
 		}
 
 	}
 	
 	public void initializeUpdateLists(){
-		
+
+		System.out.println("********************SmPersonnelBackingBean initializeUpdateLists***************");
 		getCountryList();
 
 		if(getManagedBean().getUpdateSmPersonnelMailingAddress().getPmCountry() != null){
@@ -334,8 +340,9 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		}
 	}
 	
-	public void getPersonnelById(String personnelId){
+	public void getPersonnelInfoById(String personnelId){
 		
+		System.out.println("********************SmPersonnelBackingBean getPersonnelInfoById***************");
 		IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate
 				.getInstance().getServiceObject("sm", IPersonnelSO.class);
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
@@ -346,7 +353,7 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		
 		SmPersonnel smPersonnel = resDTO.getSmPersonnel();
 		
-		this.getManagedBean().setEditSmPersonnel(smPersonnel);
+		this.getManagedBean().setBasicSmPersonnel(smPersonnel);
 		
 		if(smPersonnel.getSmPersonnelAddresses() != null){
 			List<SmPersonnelAddress> smPAList = new ArrayList<SmPersonnelAddress>();
@@ -355,9 +362,9 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 			smPAList.addAll(smPersonnel.getSmPersonnelAddresses()); 
 			for(SmPersonnelAddress smPA : smPAList){
 				if(smPA.getAddressType().equalsIgnoreCase("M")){
-					this.getManagedBean().setEditSmPersonnelMailingAddress(smPA.getSmAddress());
+					this.getManagedBean().setBasicSmPersonnelMailingAddress(smPA);
 				} else if(smPA.getAddressType().equalsIgnoreCase("P")){
-					this.getManagedBean().setEditSmPersonnelPermanentAddress(smPA.getSmAddress());
+					this.getManagedBean().setBasicSmPersonnelPermanentAddress(smPA);
 				}
 			}
 		}
@@ -428,13 +435,38 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		return returnMsg;
 	}
 	
+	public String save(){
+		
+		String returnValue = null;
+		if(getManagedBean().getBasicSmPersonnel().getPersonnelId() == null){
+			returnValue = saveNewUser(getManagedBean().getBasicSmPersonnel());
+		} else {
+			returnValue = saveUser(getManagedBean().getBasicSmPersonnel());
+		}
+			return returnValue;
+	}
+
+	public String saveUser(SmPersonnel smPersonnel){
+		validatePersonnelBeforeSave(smPersonnel);
+		IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate
+				.getInstance().getServiceObject("sm", IPersonnelSO.class);
+		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+		reqDTO.setSmPersonnel(smPersonnel);
+		PersonnelResDTO resDTO = smPersonnelSO.savePersonnelRecord(reqDTO);
+		System.out.println("Result:" + resDTO.isSuccessful());
+		if(resDTO.isSuccessful())
+			return "acknowledge.xhtml";
+		else 
+			return null;
+	}
+	
 	public String saveNewUser(SmPersonnel smPersonnel){
 		
 			validatePersonnelBeforeSave(smPersonnel);
 		
-			SmAddress s1 = getManagedBean().getNewSmPersonnelMailingAddress().getSmAddress();
+			SmAddress s1 = getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress();
 			
-			SmAddress s2 = getManagedBean().getNewSmPersonnelPermanentAddress().getSmAddress();
+			SmAddress s2 = getManagedBean().getBasicSmPersonnelPermanentAddress().getSmAddress();
 			
 /*			Construct Mailing Address Object			*/
 
@@ -522,8 +554,8 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 
 			List<SmPersonnelAddress> smPersonnelAddresses = new ArrayList<SmPersonnelAddress>();
 			
-			smPersonnelAddresses.add(getManagedBean().getNewSmPersonnelPermanentAddress());
-			smPersonnelAddresses.add(getManagedBean().getNewSmPersonnelMailingAddress());
+			smPersonnelAddresses.add(getManagedBean().getBasicSmPersonnelPermanentAddress());
+			smPersonnelAddresses.add(getManagedBean().getBasicSmPersonnelMailingAddress());
 			
 			smPersonnel.setSmPersonnelAddresses(smPersonnelAddresses);
 			
@@ -553,8 +585,6 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 			System.out.println("Result:" + resDTO.isSuccessful());
 			
 			if(resDTO.isSuccessful()){
-				
-				
 				return "acknowledge.xhtml";
 			}
 			else 
@@ -613,13 +643,13 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 	
 	public void assignAccountPrivilege(AjaxBehaviorEvent e) {
 		System.out.println("**** Enter Account privilege ******");
-		if (getManagedBean().getNewSmPersonnel().getAuthorizedFlg() == 0) {
-			getManagedBean().getNewSmPersonnel().setSoftcertFlg(0);
-			getManagedBean().getNewSmPersonnel().setContractSignerFlg(0);
+		if (getManagedBean().getBasicSmPersonnel().getAuthorizedFlg() == 0) {
+			getManagedBean().getBasicSmPersonnel().setSoftcertFlg(0);
+			getManagedBean().getBasicSmPersonnel().setContractSignerFlg(0);
 		}
 
-		if (getManagedBean().getNewSmPersonnel().getSoftcertFlg() == 0) {
-			getManagedBean().getNewSmPersonnel().setContractSignerFlg(0);
+		if (getManagedBean().getBasicSmPersonnel().getSoftcertFlg() == 0) {
+			getManagedBean().getBasicSmPersonnel().setContractSignerFlg(0);
 		}
 	}
 	

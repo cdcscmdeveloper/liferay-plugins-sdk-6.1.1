@@ -65,11 +65,11 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	
 	private List<SelectItem> cityList;
 
-	private SmPersonnel newSmPersonnel;
+	private SmPersonnel basicSmPersonnel;
 	
-	private SmPersonnelAddress newSmPersonnelMailingAddress;
+	private SmPersonnelAddress basicSmPersonnelMailingAddress;
 	
-	private SmPersonnelAddress newSmPersonnelPermanentAddress;
+	private SmPersonnelAddress basicSmPersonnelPermanentAddress;
 	
 	private List<SelectItem> mailAddCountryList;
 	
@@ -275,30 +275,30 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 		this.cityList = cityList;
 	}
 
-	public SmPersonnel getNewSmPersonnel() {
-		return newSmPersonnel;
+	public SmPersonnel getBasicSmPersonnel() {
+		return basicSmPersonnel;
 	}
 
-	public void setNewSmPersonnel(SmPersonnel newSmPersonnel) {
-		this.newSmPersonnel = newSmPersonnel;
+	public void setBasicSmPersonnel(SmPersonnel basicSmPersonnel) {
+		this.basicSmPersonnel = basicSmPersonnel;
 	}
 
-	public SmPersonnelAddress getNewSmPersonnelMailingAddress() {
-		return newSmPersonnelMailingAddress;
+	public SmPersonnelAddress getBasicSmPersonnelMailingAddress() {
+		return basicSmPersonnelMailingAddress;
 	}
 
-	public void setNewSmPersonnelMailingAddress(
-			SmPersonnelAddress newSmPersonnelMailingAddress) {
-		this.newSmPersonnelMailingAddress = newSmPersonnelMailingAddress;
+	public void setBasicSmPersonnelMailingAddress(
+			SmPersonnelAddress basicSmPersonnelMailingAddress) {
+		this.basicSmPersonnelMailingAddress = basicSmPersonnelMailingAddress;
 	}
 
-	public SmPersonnelAddress getNewSmPersonnelPermanentAddress() {
-		return newSmPersonnelPermanentAddress;
+	public SmPersonnelAddress getBasicSmPersonnelPermanentAddress() {
+		return basicSmPersonnelPermanentAddress;
 	}
 
-	public void setNewSmPersonnelPermanentAddress(
-			SmPersonnelAddress newSmPersonnelPermanentAddress) {
-		this.newSmPersonnelPermanentAddress = newSmPersonnelPermanentAddress;
+	public void setBasicSmPersonnelPermanentAddress(
+			SmPersonnelAddress basicSmPersonnelPermanentAddress) {
+		this.basicSmPersonnelPermanentAddress = basicSmPersonnelPermanentAddress;
 	}
 
 	public List<SelectItem> getMailAddCountryList() {
