@@ -110,7 +110,6 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	private TemplateSpecBean serviceTemplateSpecBean = new TemplateSpecBean();
 
 	private IPagingDataModel<ScQuote> searchQuoteDataModel;
-	private	String	procurementType;
 	// search criteria for popup clone item spec
 	private	String searchQuoteNo;
 	private String searchProcType;
@@ -145,7 +144,6 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	
 	// supplier view
 	private boolean productFlag;
-	private boolean serviceFlag;
 	private SmSupplier smSupplier;
 	private int selectedTabIndex;
 	private String quoteNo;
@@ -183,7 +181,7 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 				}
 
 				if(getSearchProcType() !=null) {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("procurementType",SearchOperator.OPERATOR_EQUALS.value(),getSearchProcType()));
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("procurementType.parameterCode",SearchOperator.OPERATOR_EQUALS.value(),getSearchProcType()));
 				}
 
 				if (getSearchFromCreatedDate() != null
@@ -917,19 +915,6 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 		this.searchQuoteDataModel = searchQuoteDataModel;
 	}
 
-	/**
-	 * @return the procurementType
-	 */
-	public String getProcurementType() {
-		return procurementType;
-	}
-
-	/**
-	 * @param procurementType the procurementType to set
-	 */
-	public void setProcurementType(String procurementType) {
-		this.procurementType = procurementType;
-	}
 
 	/**
 	 * @return the searchQuoteNo
@@ -1199,18 +1184,6 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	 */
 	public void setProductFlag(boolean productFlag) {
 		this.productFlag = productFlag;
-	}
-	/**
-	 * @return the serviceFlag
-	 */
-	public boolean isServiceFlag() {
-		return serviceFlag;
-	}
-	/**
-	 * @param serviceFlag the serviceFlag to set
-	 */
-	public void setServiceFlag(boolean serviceFlag) {
-		this.serviceFlag = serviceFlag;
 	}
 	/**
 	 * @return the quoteNo

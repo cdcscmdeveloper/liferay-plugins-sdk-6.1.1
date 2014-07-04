@@ -67,7 +67,7 @@
 				<td><p:selectOneRadio style="margin-bottom: 5px;"  
 				        id="procurementType" required="true"
 				        label="#{lbl['lbl.sc.sq.gen.info.proc.type']}"
-						value="#{simpleQuoteBackingBean.managedBean.procurementType}">
+						value="#{simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode}">
 						<f:selectItems
 							value="#{simpleQuoteBackingBean.getRadioButtonCodeValues(ParameterTypeConst.procurementType)}" />
 							<p:ajax event="change" update="@([id$=justId])" 
