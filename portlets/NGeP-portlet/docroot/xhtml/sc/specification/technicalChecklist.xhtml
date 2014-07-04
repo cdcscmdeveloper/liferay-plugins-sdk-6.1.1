@@ -77,7 +77,7 @@
 				<ui:fragment
 					rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 and stageTwoTechnical.title == null}">
 
-					<p:selectOneMenu
+					<p:selectOneMenu style="width:100px;"
 						value="#{stageTwoTechnical.definationType.parameterId}">
 						<f:selectItem itemLabel="--Select One--" itemValue="#{null}" />
 						<f:selectItem itemLabel="Sample" itemValue="684" />
@@ -95,7 +95,7 @@
 				<!--  <h:panelGroup id="supplier">  -->
 				<ui:fragment
 					rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 and stageTwoTechnical.title == null}">
-					<p:selectOneMenu styleClass="sample#{index}"
+					<p:selectOneMenu styleClass="sample#{index}" style="width:100px;"
 						value="#{stageTwoTechnical.action.parameterId}">
 						<f:selectItems
 							value="#{specificationBackingBean.managedBean.technicalChecklistAction}" />
