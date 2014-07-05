@@ -198,10 +198,10 @@
 				<div class="clear"></div>
 				<div style="text-align: right;">
 					<p:commandButton value="Request Extension"
-						rendered="#{unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.supplierAdmin or unspscCodeBackingBean.allSupplier}"
+						rendered="#{unspscCodeBackingBean.allSupplier}"
 						action="#{unspscCodeBackingBean.requestExtensionCode}" />
 					<p:commandButton value="Add" icon="ui-icon-add"
-						rendered="#{unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.supplierAdmin or unspscCodeBackingBean.allSupplier}"
+						rendered="#{unspscCodeBackingBean.allSupplier}"
 						action="#{catalogueBackingBean.addToMaintain()}" />
 				</div>
 
