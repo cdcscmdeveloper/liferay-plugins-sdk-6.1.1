@@ -697,6 +697,7 @@ public class SpecificationBackingBean extends
 
 	public String completeTemplateSpec(String processName) {
 		List<ScQtDoc> qtDocs = new ArrayList<ScQtDoc>();
+		IQTSpecSO specSo = null;
 		try {
 			ScQtDoc technicalScqtDoc = this.getManagedBean().getScqtDoc();
 			ScQtCheckList techChecklist = technicalScqtDoc.getScQtCheckList();
@@ -705,31 +706,74 @@ public class SpecificationBackingBean extends
 				status.setStatusId(62702L);
 				technicalScqtDoc.getScQtCheckList().setPmStatus(status);
 			} else {
-				PmStatus status = techChecklist.getPmStatus();
+				PmStatus status = new PmStatus();
 				status.setStatusId(62702L);
 				technicalScqtDoc.getScQtCheckList().setPmStatus(status);
 			}
 
 			ScQtDoc techDoc = constructQtDocByType(technicalScqtDoc, "1");
+
 			qtDocs.add(techDoc);
 			/*
 			 * QTTemplateDocResDTO resDTO = saveTempleateSpecDtls(
 			 * technicalScqtDoc, "1"); ScQtDoc qtTemplateDoc =
 			 * resDTO.getScQtDoc();
 			 */
+
 			TplSpecMaster specMaster = null;
 			try {
-				specMaster = (TplSpecMaster) BeanUtils
-						.cloneBean(technicalScqtDoc.getTplSpecMaster());
+				ISearchResultBean<ScQtCheckList> checklist = retriveChecklistByIdAndTitle(techDoc
+						.getTplSpecMaster().getSpecName());
+				
+				if (null != checklist.getResultList()
+						&& checklist.getResultList().isEmpty()) {
+					specMaster = (TplSpecMaster) BeanUtils
+							.cloneBean(technicalScqtDoc.getTplSpecMaster());
 
-				ScQtDoc finanicalScQtDoc = constructQtDocByType(specMaster, "2");
-				PmStatus status = new PmStatus();
-				status.setStatusId(62702L);
-				finanicalScQtDoc.getScQtCheckList().setPmStatus(status);
-				finanicalScQtDoc.getTplSpecMaster().setSpecMasterId(null);
-				finanicalScQtDoc.getTplSpecMaster().setChangedDate(null);
-				ScQtDoc finDoc = constructQtDocByType(finanicalScQtDoc, "2");
-				qtDocs.add(finDoc);
+					ScQtDoc finanicalScQtDoc = constructQtDocByType(specMaster,
+							"2");
+					PmStatus status = new PmStatus();
+					status.setStatusId(62702L);
+					finanicalScQtDoc.getScQtCheckList().setPmStatus(status);
+					finanicalScQtDoc.getTplSpecMaster().setSpecMasterId(null);
+					finanicalScQtDoc.getTplSpecMaster().setChangedDate(null);
+					ScQtDoc finDoc = constructQtDocByType(finanicalScQtDoc, "2");
+					qtDocs.add(finDoc);
+				} else {
+					for (ScQtCheckList finchecklist : checklist.getResultList()) {
+						ScQtDoc doc = finchecklist.getScQtDoc();
+						doc.getTplSpecMaster().setSpecName(
+								techDoc.getTplSpecMaster().getSpecName());
+
+						List<TplSpecQuestion> questions = getManagedBean()
+								.getTemplateSpecBean().getSpecMaster()
+								.getTplSpecQuestions();
+
+						// TplSpecQuestion queston = questions.remove(0);
+						List<TplSpecQuestion> questions1 = new ArrayList<TplSpecQuestion>();
+
+						questions1.addAll(questions);
+						List<TplSpecQuestion> questions2 = new ArrayList<TplSpecQuestion>();
+						for (TplSpecQuestion tpl : questions1) {
+
+							// TplSpecQuestion tpl2 = new TplSpecQuestion();
+							if ("I".equalsIgnoreCase(tpl.getQuestionType())) {
+
+								questions2.add(tpl);
+
+							}
+						}
+
+						doc.getTplSpecMaster().setTplSpecQuestions(questions2);
+
+						finchecklist.setTitle(techDoc.getTplSpecMaster()
+								.getSpecName());
+
+						doc.setScQtCheckList(finchecklist);
+						qtDocs.add(doc);
+
+					}
+				}
 
 			} catch (IllegalAccessException | InstantiationException
 					| InvocationTargetException | NoSuchMethodException e) {
@@ -737,6 +781,7 @@ public class SpecificationBackingBean extends
 				e.printStackTrace();
 			}
 			QTTemplateDocReqDTO docReqDTO = new QTTemplateDocReqDTO();
+
 			docReqDTO.setScQtDoc(qtDocs);
 
 			// docReqDTO.setScQtDoc(scQtDoc);
@@ -759,6 +804,46 @@ public class SpecificationBackingBean extends
 
 		}
 
+	}
+
+	private ISearchResultBean<ScQtCheckList> retriveChecklistByIdAndTitle(
+			String title) {
+		IQTSpecSO specSo = null;
+		SpecificationResDTO resDTo = null;
+		try {
+			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
+			SearchBean<ScQtCheckList> searchBean = new SearchBean<ScQtCheckList>();
+			UserResDTO resDto = null;
+			String doccategory = "2";
+			SearchFilterBean usernameSearchBean = new SearchFilterBean(
+					SearchOperator.OPERATOR_EQUALS.value());
+			usernameSearchBean.setSearchField("scQt.qtId");
+			usernameSearchBean.setSearchValue(getManagedBean().getScQt()
+					.getQtId());
+			searchBean.getDataFilterBeans().add(usernameSearchBean);
+
+			SearchFilterBean idNoSearchBean = new SearchFilterBean(
+					SearchOperator.OPERATOR_EQUALS.value());
+			idNoSearchBean.setSearchField("title");
+			idNoSearchBean.setSearchValue(title);
+			searchBean.getDataFilterBeans().add(idNoSearchBean);
+
+			SearchFilterBean specType = new SearchFilterBean(
+					SearchOperator.OPERATOR_EQUALS.value());
+			specType.setSearchField("docCategory");
+			specType.setSearchValue(doccategory);
+			searchBean.getDataFilterBeans().add(specType);
+
+			reqDTO.setTitleSearchChecklistBean(searchBean);
+
+			specSo = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+			resDTo = specSo.retrieveChecklistByIdAndTitle(reqDTO);
+
+		} finally {
+
+		}
+		return resDTo.getSpecResultBean();
 	}
 
 	public String saveTemplateSpec(ScQtDoc scQtDoc, String specType,
@@ -2193,8 +2278,8 @@ public class SpecificationBackingBean extends
 	 */
 	public void editZoneLocation(TreeNode rootZoneLocation, int index) {
 		List<ScQtLocCriteria> locationDTOs = getLocations(rootZoneLocation);
-		Long locationLevel = this.getManagedBean().getScQt().getScQtSupplierCriteria()
-				.getLocationLevel().getParameterId();
+		Long locationLevel = this.getManagedBean().getScQt()
+				.getScQtSupplierCriteria().getLocationLevel().getParameterId();
 		if (locationLevel == null) {
 			locationLevel = 121L;
 		}
@@ -2502,8 +2587,8 @@ public class SpecificationBackingBean extends
 			scoreList = new ArrayList<ScQtCheckListScore>();
 		}
 		ScQtCheckListScore score = new ScQtCheckListScore();
-		score.setRangeFrom(this.getManagedBean().getFromPrice().floatValue());
-		score.setRangeTo(this.getManagedBean().getToPrice().floatValue());
+		score.setRangeFrom(this.getManagedBean().getFromPrice());
+		score.setRangeTo(this.getManagedBean().getToPrice());
 		// score.setPercentFrom(new BigDecimal(this.getManagedBean()
 		// .getFromJulat()));
 		// score.setPercentTo(new
@@ -2586,13 +2671,12 @@ public class SpecificationBackingBean extends
 					scQt.getScQtSupplierCriteria().setScQtLocCriteria(
 							locCriteria);
 
+				} else {
+
+					throw new EpException(MessageConst.INFO_100022,
+							new String[] { "ADD At Least One Location level" });
+
 				}
-				 else {
-
-						throw new EpException(MessageConst.INFO_100022,
-								new String[] { "ADD At Least One Location level" });
-
-					}
 
 				if (null != qtSupplierCriteria
 						&& null != qtSupplierCriteria.getLocationLevel()
@@ -5188,8 +5272,8 @@ public class SpecificationBackingBean extends
 				ScQtSchedule schedule = new ScQtSchedule();
 				schedule.setStartYear(String.valueOf(year));
 				schedule.setEndYear(String.valueOf(year));
-                 PmParameter parameter=new PmParameter();
-                 schedule.setScheduleType(parameter);
+				PmParameter parameter = new PmParameter();
+				schedule.setScheduleType(parameter);
 				setUserDetails(schedule);
 				freqSchedule.add(schedule);
 			}
@@ -8251,7 +8335,7 @@ public class SpecificationBackingBean extends
 						+ schedule.getEndYear();
 				// System.out.println("======display schedule No==="+schedule.getScheduleNo());
 				schedule.setScheduleNo(schedule.getScheduleNo());
-				
+
 				try {
 					schedule.setFromDate(df.parse(fromdate));
 					schedule.setToDate(df.parse(toDate));
@@ -8708,6 +8792,7 @@ public class SpecificationBackingBean extends
 		if (null == scQtDoc) {
 			scQtDoc = this.getManagedBean().getScqtDoc();
 			PmStatus status = new PmStatus();
+
 			status.setStatusId(60550L);
 			scQtDoc.getScQtCheckList().setPmStatus(status);
 		}
@@ -8760,7 +8845,8 @@ public class SpecificationBackingBean extends
 				}
 			}
 			specMaster.setTplSpecQuestions(questions2);
-			PmParameter pmParameter = new PmParameter();
+
+			PmParameter pmParameter = specMaster.getSpecTypeCode();
 			pmParameter.setParameterId(125l);
 			specMaster.setSpecTypeCode(pmParameter);
 
@@ -8805,6 +8891,7 @@ public class SpecificationBackingBean extends
 			PmParameter pmParameter = new PmParameter();
 			pmParameter.setParameterId(126l);
 			specMaster.setSpecTypeCode(pmParameter);
+
 		}
 
 		specMaster.setTemplateTypeCode(parameter);
@@ -8897,7 +8984,7 @@ public class SpecificationBackingBean extends
 	}
 
 	public void downloadCircularDtls() {
-	
+
 		try {
 			downloadFile(this.getManagedBean().getCtCircularVer()
 					.getCircularFileName(), this.getManagedBean()
