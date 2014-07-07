@@ -847,6 +847,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			this.getManagedBean().setBusinessDistrictLs(districtLs);
 			this.getManagedBean().setBusinessCityLs(new ArrayList<PmCity>());
 		} else if (typeAdd.equals("residential")) {
+			log.info("------------residential----------------");
 			List<PmDistrict> districtLs = this.retrievePmDistrictList(this.getManagedBean().getSmResAdd().getPmState().getStateId());
 			this.getManagedBean().setResidentialDistrictLs(districtLs);
 			this.getManagedBean().setResidentialCityLs(new ArrayList<PmCity>());
@@ -1133,4 +1134,27 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			identityType.put(pmDesc.getPmParameter().getParameterId(), pmDesc.getPmParameter());
 		}
 	}
+	
+	/**
+	 * update correspondence address based on "same address" value
+	 */
+	public void updateCorrespondenceAddress(){
+		log.info("----updateCorrespondenceAddress----");
+		if(this.getManagedBean().isSameAddress()){
+			SmAddress smPermAdd = this.getManagedBean().getSmPermenantAdd();
+			this.getManagedBean().setSmResAdd(smPermAdd);
+			this.getManagedBean().getSmResAdd().getPmState().setStateId(smPermAdd.getPmState().getStateId());
+			populateDistrictByAddType("residential");
+			this.getManagedBean().getSmResAdd().getPmDistrict().setDistrictId(smPermAdd.getPmDistrict().getDistrictId());
+			populateCityByAddType("residential");
+			this.getManagedBean().getSmResAdd().getPmCity().setCityId(smPermAdd.getPmCity().getCityId());
+		}else{
+			this.getManagedBean().setSmResAdd(new SmAddress());
+			this.getManagedBean().getSmResAdd().setPmState(new PmState());
+			this.getManagedBean().getSmResAdd().setPmDistrict(new PmDistrict());
+			this.getManagedBean().getSmResAdd().setPmCity(new PmCity());
+		}
+	}
 }
+
+
