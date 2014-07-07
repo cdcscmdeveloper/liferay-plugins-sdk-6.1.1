@@ -50,6 +50,13 @@
 		<managed-bean-class>my.ep.web.util.EpPortletUtil</managed-bean-class>
 		<managed-bean-scope>application</managed-bean-scope>
 	</managed-bean>
+	
+	<managed-bean>
+		<description>Date Util class</description>
+		<managed-bean-name>DateUtils</managed-bean-name>
+		<managed-bean-class>my.ep.web.util.DateUtils</managed-bean-class>
+		<managed-bean-scope>application</managed-bean-scope>
+	</managed-bean>
 
 	<render-kit>
 		<renderer>

@@ -1,0 +1,185 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:panel header="#{lbl['lbl.sc.loiloa.supp.details']}" toggleable="true">
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+		<c:if test="#{!isDocTypeQuotation}">
+		<tr>
+			<td width="18%">
+				<p:outputLabel value="#{lbl['lbl.sc.ep.no']}" />
+			</td>
+			<td width="82%">
+				<p:inputText size="50"
+					value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.epNo}"
+					disabled="true" />
+			</td>
+		</tr>
+		</c:if>
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.sc.mof.no']}" />
+			</td>
+			<td>
+				<p:inputText size="50"
+					value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.mofNo}"
+					disabled="true" />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.sc.supplier.name']}" />
+			</td>
+			<td>
+				<p:inputText size="50"
+					value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.supplierName}"
+					disabled="true" />
+				<p:spacer width="5" />
+				<p:commandLink oncomplete="suppDetailsPopup.show();return false;"
+					update="@([id$=suppDetailsPopup])">
+					
+					<p:graphicImage library="ep/images/design" name="evaluate.png" title="#{lbl['lbl.sc.view.companyinfo']}" style="vertical-align:middle" />
+					
+					<f:setPropertyActionListener value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.smSupplier}" 
+						target="#{supplierDetailBackingBean.managedBean.smSupplier}" />
+				</p:commandLink>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.sc.loiloa.branch']}" />
+			</td>
+			<td>
+				<p:inputText id="branch" size="50"
+					value="#{lOADetailBackingBean.managedBean.selectedSupplierBranchName}"
+					disabled="true" />
+			</td>
+		</tr>
+		</table>
+	</p:panel>
+
+	<ui:include src="/xhtml/sc/loa/loarequest/loaPaymentDetailsMenu.xhtml" />
+	
+	<p:panel header="#{lbl['lbl.sc.loiloa.supplier.witness.detail']}" toggleable="true">
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.sc.loiloa.witness.full.name']}" />
+				<p:outputLabel value="*" styleClass="mandatory" />
+			</td>
+			<td colspan="3">
+				<p:inputText id="witnessName" size="50"
+					value="#{lOADetailBackingBean.managedBean.loaSupplierWitness.witnessName}"
+					required="true"
+					label="#{lbl['lbl.sc.loiloa.witness.full.name']}"
+					maxlength="50" />
+				<p:message id="witnessNameMsg" for="witnessName" display="icon" />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.sc.loiloa.witness.ic.no']}" />
+				<p:outputLabel value="*" styleClass="mandatory" />
+			</td>
+			<td colspan="3">
+				<p:inputText id="identificationNo" size="50"
+					value="#{lOADetailBackingBean.managedBean.loaSupplierWitness.identificationNo}"
+					required="true"
+					label="#{lbl['lbl.sc.loiloa.witness.ic.no']}"
+					maxlength="15" />
+				<p:message id="identificationNoMsg" for="identificationNo" display="icon" />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.sc.loiloa.witness.designation']}" />
+				<p:outputLabel value="*" styleClass="mandatory" />
+			</td>
+			<td colspan="3">
+				<p:inputText id="designation" size="50"
+					value="#{lOADetailBackingBean.managedBean.loaSupplierWitness.designation}"
+					required="true"
+					maxlength="30"
+					label="#{lbl['lbl.sc.loiloa.witness.designation']}" />
+				<p:message id="designationMsg" for="designation" display="icon" />
+			</td>
+		</tr>
+		<tr>
+			<td rowspan="3" valign="top" width="18%">
+				<p:outputLabel value="#{lbl['lbl.sc.loiloa.address']}" />
+				<p:outputLabel value="*" styleClass="mandatory" />
+			</td>
+			<td rowspan="3" width="32%">
+				<p:inputTextarea id="address"
+					cols="50" rows="5"
+					value="#{lOADetailBackingBean.managedBean.loaSupplierWitness.address}"
+					style=" margin-bottom:5px;"
+					required="true"
+					maxlength="200"
+					label="#{lbl['lbl.sc.loiloa.address']}" />
+				<p:message id="addressMsg" for="address" display="icon" />
+			</td>
+			<td width="18%">
+				<p:outputLabel value="#{lbl['lbl.sc.loiloa.tel.no']}" />
+				<p:outputLabel value="*" styleClass="mandatory" />
+			</td>
+			<td width="32%">
+				<p:inputText id="phoneNo" size="30"
+					value="#{lOADetailBackingBean.managedBean.loaSupplierWitness.phoneNo}"
+					required="true"
+					maxlength="20"
+					label="#{lbl['lbl.sc.loiloa.tel.no']}" />
+				<p:message id="phoneNoMsg" for="phoneNo" display="icon" />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.sc.loiloa.fax.no']}" />
+				<p:outputLabel value="*" styleClass="mandatory" />
+			</td>
+			<td>
+				<p:inputText id="faxNo" size="30"
+					value="#{lOADetailBackingBean.managedBean.loaSupplierWitness.faxNo}"
+					required="true"
+					maxlength="20"
+					label="#{lbl['lbl.sc.loiloa.fax.no']}" />
+				<p:message id="faxNoMsg" for="faxNo" display="icon" />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.sc.loiloa.mobile.no']}" />
+				<p:outputLabel value="*" styleClass="mandatory" />
+			</td>
+			<td>
+				<p:inputText id="mobileNo" size="30"
+					value="#{lOADetailBackingBean.managedBean.loaSupplierWitness.mobileNo}"
+					required="true"
+					maxlength="20"
+					label="#{lbl['lbl.sc.loiloa.mobile.no']}" />
+				<p:message id="mobileNoMsg" for="mobileNo" display="icon" />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.sc.loiloa.email']}" />
+				<p:outputLabel value="*" styleClass="mandatory" />
+			</td>
+			<td colspan="3">
+				<p:inputText id="email" size="50" style=" margin-bottom:5px;"
+					value="#{lOADetailBackingBean.managedBean.loaSupplierWitness.email}"
+					required="true"
+					maxlength="80"
+					label="#{lbl['lbl.sc.loiloa.email']}" />
+				<p:message id="emailMsg" for="email" display="icon" />
+			</td>
+		</tr>
+		</table>
+	</p:panel>
+	
+	<ui:include src="/xhtml/sc/common/supplierDetailsPopup.xhtml" />
+	
+</ui:composition>

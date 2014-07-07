@@ -9,22 +9,22 @@
 		<div align="left" class="header-info">
 			<table border="0" cellspacing="0" cellpadding="0" width="100%">
 				<tr>
-					<td>
+					<td width="10%">
 						<h:outputLabel value="#{lbl['lbl.sc.request.note.req.note.no']}" />
 					</td>
-					<td>
-						<p:inputText value="#{dpLOABackingBean.managedBean.scRequestNote.requestNoteNo}" disabled="true" size="25" />
+					<td class="header-info-text" width="15%">
+						#{dpLOABackingBean.managedBean.scRequestNote.requestNoteNo}
 					</td>
-					<td>
+					<td width="10%">
 						<h:outputLabel value="#{lbl['lbl.sc.ptj']}" /></td>
-					<td>
-						<p:inputText value="#{dpLOABackingBean.managedBean.scRequestNote.pmOrgProfile.orgName}" disabled="true" size="80" />
+					<td class="header-info-text" width="35%">
+						#{dpLOABackingBean.managedBean.scRequestNote.pmOrgProfile.orgName}
 					</td>
-					<td>
+					<td width="10%">
 						<h:outputLabel value="#{lbl['lbl.sc.status']}" />
 					</td>
-					<td>
-						<p:inputText value1="#{dpLOABackingBean.getStatusDescById(dpLOABackingBean.managedBean.scRequestNote.workFlowStatuses[0].statusId)}" disabled="true" size="30" />
+					<td class="header-info-text" width="20%">
+						<h:outputText value1="#{dpLOABackingBean.getStatusDescById(dpLOABackingBean.managedBean.scRequestNote.workFlowStatuses[0].statusId)}" disabled="true" size="30" />
 					</td>
 				</tr>
 			</table>

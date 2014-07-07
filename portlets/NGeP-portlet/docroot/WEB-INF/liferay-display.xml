@@ -70,6 +70,8 @@
 			<portlet id="scProposal" />
 			<portlet id="scLoiList" />
 			<portlet id="scDpLoaList" />
+			<portlet id="scLoaReview" />
+			<portlet id="scLoaSupplierResponse" />
 			<portlet id="scEvaluation Stage2" />
 			<portlet id="scEvaluation Stage1" />
 			<portlet id="Evaluation Meeting" />

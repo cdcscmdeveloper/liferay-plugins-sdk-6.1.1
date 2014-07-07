@@ -16,6 +16,8 @@
 		<ui:include src="loaHeader.xhtml" />
 		
 		<ui:param name="isDocTypeQuotation" value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.docType == ParameterConst.doctypeQuotation}" />
+		<ui:param name="isPendingSubmissionStatus" value="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_SUBMISSION}" />
+		<ui:param name="isAfterSupplierResponseStatus" value="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId > QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT}" />
 		
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
@@ -33,7 +35,7 @@
 					<p:menuitem value="#{lbl['lbl.sc.deduction.payment']}" update="@form">
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="2" />
 					</p:menuitem>
-					<p:menuitem value="#{lbl['lbl.sc.loiloa.payment.details']}" update="@form">
+					<p:menuitem value="#{lbl['lbl.sc.loiloa.payment.details']}" update="@form" disabled="#{!isAfterSupplierResponseStatus}">
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="3" />
 					</p:menuitem>
 					<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}" update="@form" rendered="#{isDocTypeQuotation}">	

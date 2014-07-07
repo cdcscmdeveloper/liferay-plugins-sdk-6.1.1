@@ -6,11 +6,14 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
+import org.primefaces.model.StreamedContent;
+
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCurrency;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
+import my.ep.persistence.entity.sc.loaloi.ScLoaApproval;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
 import my.ep.persistence.entity.sc.loaloi.ScPerformanceBond;
@@ -55,6 +58,8 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	
 	private int selectedTabIndex;
 	private Long selectedBankId;
+	private boolean agreeWithTermsConditions;
+	private String termsConditions;
 	private String selectedSupplierBranchName;
 	private String selectedContractAgency;
 	private String attachmentDocType;
@@ -65,6 +70,8 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	private ScQtDeduction selectedScQtDeduction;
 	private ScLoaReport selectedScLoaReport;
 	private PmUser approverUser;
+	private ScLoaApproval scLoaApproval;
+	private StreamedContent loaStreamContent;
 	private List<ScLoaReport> selectedScLoaReports;
 	private List<ScQtDeductionClause> selectedDeductionClauses;
 	
@@ -277,6 +284,34 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * @return the scLoaApproval
+	 */
+	public ScLoaApproval getScLoaApproval() {
+		return scLoaApproval;
+	}
+
+	/**
+	 * @param scLoaApproval the scLoaApproval to set
+	 */
+	public void setScLoaApproval(ScLoaApproval scLoaApproval) {
+		this.scLoaApproval = scLoaApproval;
+	}
+
+	/**
+	 * @return the loaStreamContent
+	 */
+	public StreamedContent getLoaStreamContent() {
+		return loaStreamContent;
+	}
+
+	/**
+	 * @param loaStreamContent the loaStreamContent to set
+	 */
+	public void setLoaStreamContent(StreamedContent loaStreamContent) {
+		this.loaStreamContent = loaStreamContent;
+	}
+
+	/**
 	 * @return the selectedScLoaReport
 	 */
 	public ScLoaReport getSelectedScLoaReport() {
@@ -387,6 +422,34 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectedTabIndex(int selectedTabIndex) {
 		this.selectedTabIndex = selectedTabIndex;
+	}
+
+	/**
+	 * @return the agreeWithTermsConditions
+	 */
+	public boolean isAgreeWithTermsConditions() {
+		return agreeWithTermsConditions;
+	}
+
+	/**
+	 * @param agreeWithTermsConditions the agreeWithTermsConditions to set
+	 */
+	public void setAgreeWithTermsConditions(boolean agreeWithTermsConditions) {
+		this.agreeWithTermsConditions = agreeWithTermsConditions;
+	}
+
+	/**
+	 * @return the termsConditions
+	 */
+	public String getTermsConditions() {
+		return termsConditions;
+	}
+
+	/**
+	 * @param termsConditions the termsConditions to set
+	 */
+	public void setTermsConditions(String termsConditions) {
+		this.termsConditions = termsConditions;
 	}
 
 	/**

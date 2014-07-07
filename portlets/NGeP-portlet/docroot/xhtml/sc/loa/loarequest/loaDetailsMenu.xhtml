@@ -163,7 +163,7 @@
 				</p:inputText>	
 				<p:spacer width="8px" />
 				<p:inputText styleClass="ppNumericAlign"
-					value1="#{lOADetailBackingBean.managedBean.scLoa.loaDuration}"
+					value="#{!empty lOADetailBackingBean.managedBean.scLoa.ackDueDate ? DateUtils.getDaysDifference(DateUtils.getCurrentDateWithoutTime(), lOADetailBackingBean.managedBean.scLoa.ackDueDate) : ''}"
 					disabled="true" size="8" />
 				#{lbl['lbl.sc.days']}
 			</td>
@@ -264,7 +264,7 @@
 							var="pmOrgProfile" itemLabel="#{pmOrgProfile.orgName}"
 							itemValue="#{pmOrgProfile.orgProfileId}" />
 						<p:ajax event="change" 
-							listener="#{lOADetailBackingBean.contractAdminChanged()}"
+							listener="#{lOADetailBackingBean.contractAgencyChanged()}"
 							partialSubmit="true" process="@this"
 							update="contractAdmin" />
 					</p:selectOneMenu>
@@ -314,7 +314,7 @@
 							var="pmuser" itemLabel="#{pmuser.userName}"
 							itemValue="#{pmuser.userId}" />
 						<p:ajax event="change"
-							listener="#{lOADetailBackingBean.handleContractPTJ}"
+							listener="#{lOADetailBackingBean.contractAdminChanged()}"
 							partialSubmit="true" process="@this" update="@this" />
 					</p:selectOneMenu>
 					<p:message id="contractAdminMsg" for="contractAdmin" display="icon" />
@@ -331,7 +331,7 @@
 				<p:outputLabel value="#{lbl[lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode == ParameterConst.fulfilmentTypeOneOff ? 'lbl.sc.loiloa.loa.comp.period' : 'lbl.sc.loiloa.loa.cont.period']}" />
 			</td>
 			<td colspan="3">
-				<p:inputText
+				<p:inputText styleClass="ppNumericAlign"
 					value="#{lOADetailBackingBean.managedBean.scLoa.contractDuration}"
 					disabled="true" size="30" />
 			</td>
@@ -348,6 +348,7 @@
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
 					showOn="button"
 					value="#{lOADetailBackingBean.managedBean.scLoa.contractEffDate}"
+					mindate="#{DateUtils.getCurrentDateWithoutTime()}"
 					required="true"
 					label="#{lbl[lbleffDate]}"
 					size="25">
@@ -395,35 +396,35 @@
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
 			<td>
-				<p:outputLabel value="#{lbl['lbl.sc.loiloa.agency.witness.full.name']}" />
+				<p:outputLabel value="#{lbl['lbl.sc.loiloa.witness.full.name']}" />
 				<p:outputLabel value="*" styleClass="mandatory" />
 			</td>
 			<td colspan="3">
 				<p:inputText id="witnessName" size="50"
 					value="#{lOADetailBackingBean.managedBean.loaAgencyWitness.witnessName}"
 					required="true"
-					label="#{lbl['lbl.sc.loiloa.agency.witness.full.name']}"
+					label="#{lbl['lbl.sc.loiloa.witness.full.name']}"
 					maxlength="50" />
 				<p:message id="witnessNameMsg" for="witnessName" display="icon" />
 			</td>
 		</tr>
 		<tr>
 			<td>
-				<p:outputLabel value="#{lbl['lbl.sc.loiloa.agency.witness.ic.no']}" />
+				<p:outputLabel value="#{lbl['lbl.sc.loiloa.witness.ic.no']}" />
 				<p:outputLabel value="*" styleClass="mandatory" />
 			</td>
 			<td colspan="3">
 				<p:inputText id="identificationNo" size="50"
 					value="#{lOADetailBackingBean.managedBean.loaAgencyWitness.identificationNo}"
 					required="true"
-					label="#{lbl['lbl.sc.loiloa.agency.witness.ic.no']}"
+					label="#{lbl['lbl.sc.loiloa.witness.ic.no']}"
 					maxlength="15" />
 				<p:message id="identificationNoMsg" for="identificationNo" display="icon" />
 			</td>
 		</tr>
 		<tr>
 			<td>
-				<p:outputLabel value="#{lbl['lbl.sc.loiloa.agency.witness.designation']}" />
+				<p:outputLabel value="#{lbl['lbl.sc.loiloa.witness.designation']}" />
 				<p:outputLabel value="*" styleClass="mandatory" />
 			</td>
 			<td colspan="3">
@@ -431,7 +432,7 @@
 					value="#{lOADetailBackingBean.managedBean.loaAgencyWitness.designation}"
 					required="true"
 					maxlength="30"
-					label="#{lbl['lbl.sc.loiloa.agency.witness.designation']}" />
+					label="#{lbl['lbl.sc.loiloa.witness.designation']}" />
 				<p:message id="designationMsg" for="designation" display="icon" />
 			</td>
 		</tr>

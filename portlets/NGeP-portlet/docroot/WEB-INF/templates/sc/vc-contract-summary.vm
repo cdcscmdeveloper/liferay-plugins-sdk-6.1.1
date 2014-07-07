@@ -1,0 +1,36 @@
+<html>
+<head>
+	<style>
+		@page { size: A4 portrait;}
+		@page { @bottom-center { content: element(footer) }}
+				
+		.footer {
+			display: block; text-align: center;
+			position: running(footer);
+		}
+		
+	</style>
+</head>
+<body>
+
+Terma-terma yang dipersetujui sebagai sebahagian dari terma terma kontrak
+<br />
+<ol type="I">
+	<li>No Rujukan: $fileNo $docNo</li>
+	<li>Skop / Tajuk: $title</li>
+	<li>Pembekal: $supplierName</li>
+	<li>Nilai Kontrak: $loaAmt</li>
+	<li>Jenis Pemenuhan: $fulfilmentType</li>
+	<li>Jadual Penghantaran: Refer Attachment</li>
+	<li>Potongan Pembayaran: $deductionTypes</li>
+	<li>Tempoh Kontrak: $contractDuration Month(s)
+		<br />
+		$contractEffDate to $contractExpDate
+	</li>
+	<li>Nilai Bon Pelaksanaan: $bondAmt</li>
+	<li>Spesifikasi Tugas / Skop Kerja: Refer Attachment</li>
+	<li>Cara Pembayaran: Secara Elektronik iaitu menggunakan Sistem eperolehan (eP)</li>
+	<li>Lain-lain Terma: Refer Attachment</li>
+</ol>
+</body>
+</html>

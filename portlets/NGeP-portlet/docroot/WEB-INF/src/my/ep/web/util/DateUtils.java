@@ -24,6 +24,16 @@ public class DateUtils {
 		return new Timestamp(System.currentTimeMillis());
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
+	public	static	String	getLast2DigitOfYear(){
+		Calendar c1 = Calendar.getInstance();
+		String	year	=	String.valueOf(c1.get(Calendar.YEAR));
+		return year.substring(2);
+	}
+	
 	/*
 	 * Getting a java.util.Date Object without time
 	 */

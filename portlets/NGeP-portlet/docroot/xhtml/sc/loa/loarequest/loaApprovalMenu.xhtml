@@ -62,6 +62,10 @@
 						value="#{lOADetailBackingBean.managedBean.approverList}"
 						var="pmUser" itemLabel="#{pmUser.userName}"
 						itemValue="#{pmUser.userId}" />
+					<p:ajax event="change"
+						listener="#{lOADetailBackingBean.approverChanged()}"
+						partialSubmit="true" process="@this"
+						update="@this" />
 				</p:selectOneMenu>
 			</td>
 		</tr>
@@ -103,7 +107,7 @@
 	
 	<p:panel header="#{lbl['lbl.sc.qt.history']}" toggleable="true">
 		<p:dataTable id="apprHistTbl" var="scLoaApproval"
-			value="#{lOADetailBackingBean.managedBean.scLoa.scLoaApprovals}">
+			value="#{lOADetailBackingBean.managedBean.scLoaApproval}">
 			
 			<ac:paginator for="apprHistTbl" />
 			
@@ -112,7 +116,7 @@
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sc.qt.status']}" style="width:35%">
-				
+				Approved
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.qt.date']}" style="width:25%">

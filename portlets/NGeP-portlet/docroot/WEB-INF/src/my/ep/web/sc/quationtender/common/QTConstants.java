@@ -19,7 +19,6 @@ public interface QTConstants {
 	
 	public static final String MAINTANANCE_PAGE="quatationtendercreation";
 	public static final String BO_MAINTANANCE_PAGE="/xhtml/sc/quatationtender/businessowner/businessownercreation.xhtml";
-	public static final String DP_LOA_PAGE = "dploalist";
 	
 	public static final String CREATE_COMMITTE = "committeemaintanancepage";
 	
@@ -53,7 +52,9 @@ public interface QTConstants {
 	public static final String PP_MODULE="pp";
 
 	public static final String LOI_PAGE = "loidetailspage";
-	public static final String LOA_PAGE = "loaDetailsMaint";
+	public static final String DP_LOA_LIST_PAGE = "dpLoaList";
+	public static final String LOA_PAGE = "/xhtml/sc/loa/loarequest/loaDetailsMaint.xhtml";
+	public static final String SUPPLIER_LOA_PAGE = "loaSupplierMaint.xhtml";
 	
 	public static final String SC_LOI_TAB="LOI";
 	public static final String SC_AWARD_TAB="Award Details";

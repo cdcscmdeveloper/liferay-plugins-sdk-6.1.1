@@ -24,7 +24,7 @@
 				<h:outputLabel value="#{lbl['lbl.sc.status']}" />
 			</td>
 			<td class="header-info-text" width="20%">
-				<h:outputText value="#{lOADetailBackingBean.getStatusDescById(lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId)}" />
+				#{lOADetailBackingBean.getStatusDescById(lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId)}
 			</td>
 		</tr>
 		</table>
