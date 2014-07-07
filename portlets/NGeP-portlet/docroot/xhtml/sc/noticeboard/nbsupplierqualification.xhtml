@@ -13,19 +13,20 @@
 
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.sc.mof.no']}"></h:outputLabel>
-					<p:outputLabel value="*" styleClass="mandatory" /></td>
+					</td>
 				<td><p:inputText value="#{noticeBoardBackingBean.mofNo}"
-						required="true"></p:inputText></td>
+						></p:inputText></td>
 				<td><p:commandButton value="Check" icon="ui-icon-check"
 						action="#{noticeBoardBackingBean.checkSupplierQulificationStatus}"
-						update="qualificationCriteria">
+						update="table-wrapper">
 					</p:commandButton></td>
 			</tr>
 		</table>
 
 	</p:panel>
 
-	<p:panel id="qualificationCriteria"
+<h:panelGroup id="table-wrapper" >
+	<p:panel id="qualificationCriteria" rendered="#{noticeBoardBackingBean.visible}"
 		header="#{lbl['lbl.sc.spec.supplier.qual.criteraia']}"
 		style="margin-bottom:5px;" toggleable="true">
 		<p:dataTable id="supplierQulification"
@@ -41,7 +42,7 @@
 					size="50" escape="false"
 					style="width:100px; height:100px !important;" />
 			</p:column>
-
+			
 			<p:column headerText="Qualification Status" style="width:120px;">
 				<h:outputText value="#{qulificationBean.supplierStatus}" />
 			</p:column>
@@ -50,15 +51,16 @@
 
 
 		<div style="text-align: center;">
-			<h:outputText value="You Are Qualified To Participate"
+			<h:outputText value="#{lbl['lbl.nb.supplier.criteria.qualify']}"
 				style="font-size:18px;"
 				rendered="#{noticeBoardBackingBean.managedBean.qualified}"></h:outputText>
 
-			<h:outputText value="You Are Not Qualified To Participate"
+			<h:outputText value="#{lbl['lbl.nb.supplier.criteria.disqualify']}"
 				style="font-size:18px;"
 				rendered="#{!noticeBoardBackingBean.managedBean.qualified}"></h:outputText>
 		</div>
 	</p:panel>
+	</h:panelGroup>
 
 
 

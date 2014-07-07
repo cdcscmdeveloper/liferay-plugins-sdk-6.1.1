@@ -123,14 +123,15 @@
 					</p:column>
 					
 					<p:column rendered="#{!noticeBoardBackingBean.managedBean.showPubDate}">
-								<p:calendar showOn="button"
+								<p:calendar showOn="button" readonlyInput="true"  id="pubFromDt"
 									value="#{noticeBoardBackingBean.managedBean.publishSearchDataBean.fromDate}"
 									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" size="10">
+								<p:ajax event="dateSelect" update="pubToDt" />
 								</p:calendar>
 
-								<p:calendar showOn="button"
+								<p:calendar showOn="button" readonlyInput="true" id="pubToDt" 
 									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" size="10"
-									value="#{noticeBoardBackingBean.managedBean.publishSearchDataBean.toDate}">
+									value="#{noticeBoardBackingBean.managedBean.publishSearchDataBean.toDate}" mindate="#{noticeBoardBackingBean.managedBean.publishSearchDataBean.fromDate}">
 								</p:calendar>
 					</p:column>
 
@@ -331,10 +332,14 @@
 				<h:panelGrid columns="2" width="100%" columnClasses="nbColumnHeight">
 					<h:outputText value="#{lbl['lbl.qt.nb.fromtodate']}" />
 					<p:column>
-						<p:calendar showOn="button"
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" size="10"></p:calendar>
-						<p:calendar showOn="button"
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" size="10"></p:calendar>
+						<p:calendar id="clsFromDt" showOn="button" value="#{noticeBoardBackingBean.managedBean.clsDataBean.fromDate}" readonlyInput="true"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" size="10">
+							<p:ajax event="dateSelect" update="clsToDt" />
+							</p:calendar>
+						<p:calendar id="clsToDt" showOn="button" value="#{noticeBoardBackingBean.managedBean.clsDataBean.toDate}" readonlyInput="true"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" size="10" mindate="#{noticeBoardBackingBean.managedBean.clsDataBean.fromDate}">
+							
+							</p:calendar>
 					</p:column>
 				</h:panelGrid>
 
@@ -350,7 +355,7 @@
 					</p:commandButton>
 				<p:commandButton value="#{lbl['lbl.btn.reset']}" icon="ui-icon-reset"
 					update="nbpanel" process="@this"
-					actionListener="#{noticeBoardBackingBean.reset}">
+					action="#{noticeBoardBackingBean.reset}">
 				</p:commandButton>
 		  	</td>
 		  </tr>

@@ -9,8 +9,9 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
-		<ac:title value="#{lbl[noticeBoardBackingBean.managedBean.scQt.procurementMode == ParameterConst.procurementModeQuotation ? 'lbl.sc.notice.board.quotation.notice' : 'lbl.sc.notice.board.tender.notice']}" />
-		<div class="clear"></div>		
+		<ac:title
+			value="#{lbl[noticeBoardBackingBean.managedBean.scQt.procurementMode == ParameterConst.procurementModeQuotation ? 'lbl.sc.notice.board.quotation.notice' : 'lbl.sc.notice.board.tender.notice']}" />
+		<div class="clear"></div>
 		<p:panel>
 			<p:panelGrid style="width:100%;"
 				styleClass="noBorders tr,noBorders td">
@@ -24,16 +25,17 @@
 				</p:row>
 			</p:panelGrid>
 		</p:panel>
-		
-		<p:panel 
-			header="#{lbl[noticeBoardBackingBean.managedBean.scQt.procurementMode == ParameterConst.procurementModeQuotation ? 'lbl.sc.notice.board.quotation.details' : 'lbl.sc.notice.board.tender.details']}" toggleable="true">
-			
+
+		<p:panel
+			header="#{lbl[noticeBoardBackingBean.managedBean.scQt.procurementMode == ParameterConst.procurementModeQuotation ? 'lbl.sc.notice.board.quotation.details' : 'lbl.sc.notice.board.tender.details']}"
+			toggleable="true">
+
 			<h:panelGrid border="0" width="100%" columns="2"
 				columnClasses="columnWidth20">
 				<h:outputLabel value="#{lbl['lbl.qt.nb.title']}"></h:outputLabel>
 				<h:outputText
 					value="#{noticeBoardBackingBean.managedBean.scQt.qtTitle}"></h:outputText>
-				<h:outputLabel value="#{lbl['lbl.so.qtnno']}" ></h:outputLabel>
+				<h:outputLabel value="#{lbl['lbl.so.qtnno']}"></h:outputLabel>
 				<h:outputText
 					value="#{noticeBoardBackingBean.managedBean.scQt.qtNo}"></h:outputText>
 				<h:outputLabel value="#{lbl['lbl.sc.notice.board.ministry']}"></h:outputLabel>
@@ -45,10 +47,12 @@
 				<h:outputLabel value="#{lbl['lbl.sc.notice.board.ptj']}"></h:outputLabel>
 				<h:outputText
 					value="#{noticeBoardBackingBean.managedBean.scQt.pmOrgProfile.orgTypeCode.parameterCode}"></h:outputText>
-				<h:outputLabel value="#{lbl['lbl.sc.notice.board.npdate']}" ></h:outputLabel>
+				<h:outputLabel value="#{lbl['lbl.sc.notice.board.npdate']}"></h:outputLabel>
 				<h:outputText
 					value="#{noticeBoardBackingBean.managedBean.scQt.publishDate}">
-					<f:convertDateTime pattern="dd/MM/yyyy" />
+					<f:convertDateTime
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+			
 				</h:outputText>
 				<h:outputLabel value="#{lbl['lbl.sc.notice.board.publish.period']}"></h:outputLabel>
 				<h:outputText
@@ -56,18 +60,22 @@
 				<h:outputLabel value="#{lbl['lbl.sc.notice.board.clsdate']}"></h:outputLabel>
 				<h:outputText
 					value="#{noticeBoardBackingBean.managedBean.scQt.closingDate}">
-					<f:convertDateTime pattern="dd/MM/yyyy" />
-				</h:outputText>
+					<f:convertDateTime
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+			</h:outputText>
 				<h:outputLabel value="#{lbl['lbl.qt.nb.proposalValidity']}"></h:outputLabel>
 				<h:outputText
 					value="#{noticeBoardBackingBean.managedBean.scQt.qtValidityPeriod}"></h:outputText>
 				<h:outputLabel value="#{lbl['lbl.qt.nb.proposalValidityUntil']}"></h:outputLabel>
-				<h:outputText value="#{noticeBoardBackingBean.managedBean.scQt.qtValidityPeriod}"></h:outputText>
+				<h:outputText
+					value="#{noticeBoardBackingBean.managedBean.scQt.qtValidityPeriod}"></h:outputText>
 				<h:outputLabel value="#{lbl['lbl.sc.spec.evaluation.type']}"></h:outputLabel>
-				<h:outputText value="#{noticeBoardBackingBean.managedBean.scQt.evaluationType}"></h:outputText>
+				<h:outputText
+					value="#{noticeBoardBackingBean.managedBean.scQt.evaluationType}"></h:outputText>
 			</h:panelGrid>
 		</p:panel>
-		<p:panel header="#{lbl['lbl.qt.supplierqulificationcriteria']}" toggleable="true">
+		<p:panel header="#{lbl['lbl.qt.supplierqulificationcriteria']}"
+			toggleable="true">
 			<h:panelGrid border="0" width="100%" columns="2"
 				columnClasses="columnWidth20">
 				<h:outputLabel value="#{lbl['lbl.qt.nb.supplierStatus']}"></h:outputLabel>
@@ -78,7 +86,8 @@
 					value="#{noticeBoardBackingBean.managedBean.scQt.scQtSupplierCriteria.minPaidUpCapital}"></h:outputText>
 			</h:panelGrid>
 		</p:panel>
-		<p:panel header="#{lbl['lbl.qt.nb.categoryCodeList']}" toggleable="true">
+		<p:panel header="#{lbl['lbl.qt.nb.categoryCodeList']}"
+			toggleable="true">
 
 			<p:dataTable
 				value="#{noticeBoardBackingBean.managedBean.categoryList}"
@@ -87,24 +96,20 @@
 				<ac:paginator for="restrcatcode" />
 
 				<p:column headerText="#{lbl['lbl.so.category']}">
-					
-					<h:outputText value="#{scQtCategory.pmCategoryL3.categoryName}"
-						/>
+
+					<h:outputText value="#{scQtCategory.pmCategoryL3.categoryL3Code}" />
 				</p:column>
-				<p:column headerText="Main-Category" >
-				<h:outputText value="#{scQtCategory.pmCategoryL1.categoryName}"
-						/>
+				<p:column headerText="Main-Category">
+					<h:outputText value="#{scQtCategory.pmCategoryL1.categoryName}" />
 				</p:column>
-				<p:column headerText="Sub-Category" >
-				<h:outputText value="#{scQtCategory.pmCategoryL2.categoryName}"
-						/></p:column>
-				<p:column headerText="Sub-Category Division" >
-				<h:outputText value="#{scQtCategory.pmCategoryL3.categoryName}"
-						/>
+				<p:column headerText="Sub-Category">
+					<h:outputText value="#{scQtCategory.pmCategoryL2.categoryName}" />
 				</p:column>
-				<p:column headerText="Category Type" >
-				<h:outputText value="#{scQtCategory.pmCategoryL3.categoryName}"
-						/>
+				<p:column headerText="Sub-Category Division">
+					<h:outputText value="#{scQtCategory.pmCategoryL3.categoryName}" />
+				</p:column>
+				<p:column headerText="Category Type">
+					<h:outputText value="#{noticeBoardBackingBean.getParameterDesc(scQtCategory.pmCategoryL3.categoryTypeCode)}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.so.mandatory']}"
 					style="width: 150px;">
@@ -117,76 +122,79 @@
 
 		<ui:include src="noticeboardLocationPopUp.xhtml"></ui:include>
 		<c:if test="#{!noticeBoardBackingBean.managedBean.scQt.zonal}">
-		<ui:param name="bsvDetails" value="#{noticeBoardBackingBean.managedBean.normalBsvBean}"></ui:param>
+			<ui:param name="bsvDetails"
+				value="#{noticeBoardBackingBean.managedBean.normalBsvBean}"></ui:param>
 			<ui:include src="qtlocationbriefingdtls.xhtml"></ui:include>
 		</c:if>
 		<c:if test="#{noticeBoardBackingBean.managedBean.scQt.zonal}">
 			<ui:include src="nbZones.xhtml"></ui:include>
 		</c:if>
-		
+
 		<p:panel header="#{lbl['lbl.qt.nb.contactPersonDtl']}"
-		toggleable="true">
+			toggleable="true">
 
-		<p:dataTable var="contactPerson"
-			value="#{noticeBoardBackingBean.managedBean.contactPersons}"
-			styleClass="test" rows="20">
+			<p:dataTable var="contactPerson"
+				value="#{noticeBoardBackingBean.managedBean.contactPersons}"
+				styleClass="test" rows="20">
 
-			<p:column headerText="#{lbl['lbl.qt.nb.name']}">
-				<h:outputText value="#{contactPerson.name}" />
-			</p:column>
-			<p:column headerText="#{lbl['lbl.qt.nb.telNo']}" style="width:100px;">
-				<h:outputText value="#{contactPerson.phoneNo}" />
-			</p:column>
+				<p:column headerText="#{lbl['lbl.qt.nb.name']}">
+					<h:outputText value="#{contactPerson.name}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.qt.nb.telNo']}"
+					style="width:100px;">
+					<h:outputText value="#{contactPerson.phoneNo}" />
+				</p:column>
 
-			<p:column headerText="#{lbl['lbl.qt.nb.faxNo']}" style="width:120px;">
-				<h:outputText value="#{contactPerson.faxNo}" />
-			</p:column>
-			<p:column headerText="#{lbl['lbl.qt.nb.email']}" style="width:120px;">
-				<h:outputText value="#{contactPerson.email}" />
-			</p:column>
+				<p:column headerText="#{lbl['lbl.qt.nb.faxNo']}"
+					style="width:120px;">
+					<h:outputText value="#{contactPerson.faxNo}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.qt.nb.email']}"
+					style="width:120px;">
+					<h:outputText value="#{contactPerson.email}" />
+				</p:column>
 
 
-		</p:dataTable>
+			</p:dataTable>
 
-	</p:panel>
-		
+		</p:panel>
+
 		<p:panel header="Document List" toggleable="true">
-		<p:dataTable var="document" id="doctbl" 
-			value="#{noticeBoardBackingBean.managedBean.docuements}"			
-			styleClass="documentslist" >
+			<p:dataTable var="document" id="doctbl"
+				value="#{noticeBoardBackingBean.managedBean.docuements}"
+				styleClass="documentslist">
 
-			<ac:paginator for="doctbl" />
-			
-			<p:column headerText="#{lbl['lbl.so.title']}" >
+				<ac:paginator for="doctbl" />
 
-				<h:outputText value="#{document.title}"
-					rendered="#{document.brandNew eq false}" />
+				<p:column headerText="#{lbl['lbl.so.title']}">
 
-				
-			</p:column>
+					<h:outputText value="#{document.title}"
+						rendered="#{document.brandNew eq false}" />
 
-					
-			<p:column headerText="#{lbl['lbl.so.action']}" style="width:10%">
-				
-				<p:commandLink
-					action="#{noticeBoardBackingBean.downloadDocumentFile(document)}"
-					update="doctbl">
-					<p:graphicImage library="ep/images/design" name="download.png"
-						value="/resources/ep/images/design/download.png"
-						/>
-				</p:commandLink>
 
-			</p:column>
+				</p:column>
 
-		</p:dataTable>
-		<p:spacer height="20px" />
-		<div align="right">
-			<p:commandButton ajax="false" value="Download All"
-				actionListener="#{noticeBoardBackingBean.documentDownLoadZipFile(noticeBoardBackingBean.managedBean.documents)}" />
-			
-		</div>
 
-	</p:panel>
+				<p:column headerText="#{lbl['lbl.so.action']}" style="width:10%">
+
+					<p:commandLink
+						action="#{noticeBoardBackingBean.downloadDocumentFile(document)}"
+						update="doctbl">
+						<p:graphicImage library="ep/images/design" name="download.png"
+							value="/resources/ep/images/design/download.png" />
+					</p:commandLink>
+
+				</p:column>
+
+			</p:dataTable>
+			<p:spacer height="20px" />
+			<div align="right">
+				<p:commandButton ajax="false" value="Download All"
+					actionListener="#{noticeBoardBackingBean.documentDownLoadZipFile(noticeBoardBackingBean.managedBean.documents)}" />
+
+			</div>
+
+		</p:panel>
 
 	</ui:define>
 </ui:composition>
