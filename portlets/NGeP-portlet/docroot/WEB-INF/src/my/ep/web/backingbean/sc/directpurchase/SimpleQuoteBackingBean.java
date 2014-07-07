@@ -595,7 +595,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			} 
 			if (quoteResDTO.isSuccessful()) {
 				ScQuote scQuote = quoteResDTO.getQuoteBidDtl();
-				if(BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)){
+				if(BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome) || outcome.isEmpty()){
 					successMessage(MessageConst.INFO_700026,ParameterTypeConst.DOCUMENT_TYPES,ParameterConst.DOCTYPE_SIMPLE_QUOTE,scQuote.getQuoteNo());
 				} else  if(BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome)){
 					successMessage(MessageConst.INFO_700010,ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_SIMPLE_QUOTE,scQuote.getQuoteNo());
