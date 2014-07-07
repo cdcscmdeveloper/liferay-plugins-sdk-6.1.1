@@ -722,11 +722,9 @@ public class SpecificationBackingBean extends
 
 			TplSpecMaster specMaster = null;
 			try {
-				ISearchResultBean<ScQtCheckList> checklist = retriveChecklistByIdAndTitle(techDoc
-						.getTplSpecMaster().getSpecName());
 				
-				if (null != checklist.getResultList()
-						&& checklist.getResultList().isEmpty()) {
+
+				if (null == this.getManagedBean().getFinspecChecklist()) {
 					specMaster = (TplSpecMaster) BeanUtils
 							.cloneBean(technicalScqtDoc.getTplSpecMaster());
 
@@ -740,7 +738,8 @@ public class SpecificationBackingBean extends
 					ScQtDoc finDoc = constructQtDocByType(finanicalScQtDoc, "2");
 					qtDocs.add(finDoc);
 				} else {
-					for (ScQtCheckList finchecklist : checklist.getResultList()) {
+					for (ScQtCheckList finchecklist : this.getManagedBean()
+							.getFinspecChecklist()) {
 						ScQtDoc doc = finchecklist.getScQtDoc();
 						doc.getTplSpecMaster().setSpecName(
 								techDoc.getTplSpecMaster().getSpecName());
@@ -765,7 +764,7 @@ public class SpecificationBackingBean extends
 						}
 
 						doc.getTplSpecMaster().setTplSpecQuestions(questions2);
-
+						finchecklist.setTitle(null);
 						finchecklist.setTitle(techDoc.getTplSpecMaster()
 								.getSpecName());
 
@@ -3972,6 +3971,15 @@ public class SpecificationBackingBean extends
 
 		this.getManagedBean().setScqtDoc(checklist.getScQtDoc());
 
+		ISearchResultBean<ScQtCheckList> finchecklist = retriveChecklistByIdAndTitle(checklist
+				.getTitle());
+
+		if (null != finchecklist.getResultList()
+				&& !finchecklist.getResultList().isEmpty()) {
+			this.getManagedBean().setFinspecChecklist(
+					finchecklist.getResultList());
+		}
+
 		TemplateSpecBackingBean specBB = new TemplateSpecBackingBean();
 		TemplateSpecBean templateSpecBean = getManagedBean()
 				.getTemplateSpecBean();
@@ -4046,6 +4054,14 @@ public class SpecificationBackingBean extends
 			QTTemplateDocResDTO resDto = null;
 
 			this.getManagedBean().setScqtDoc(checklist.getScQtDoc());
+			ISearchResultBean<ScQtCheckList> finchecklist = retriveChecklistByIdAndTitle(checklist
+					.getTitle());
+
+			if (null != finchecklist.getResultList()
+					&& !finchecklist.getResultList().isEmpty()) {
+				this.getManagedBean().setFinspecChecklist(
+						finchecklist.getResultList());
+			}
 
 			QTTemplateDocReqDTO docReqDTO = new QTTemplateDocReqDTO();
 
