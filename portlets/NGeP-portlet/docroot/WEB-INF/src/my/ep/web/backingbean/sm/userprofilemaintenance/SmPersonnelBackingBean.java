@@ -109,9 +109,8 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 
 		getManagedBean().setBasicSmPersonnelMailingAddress(mailPersonnelAddress);
 		getManagedBean().setBasicSmPersonnelPermanentAddress(permPersonnelAddress);
-
 		getManagedBean().setBasicSmPersonnel(smPersonnel);
-
+		getCountryList();
 		return "basicSmUser";
 	}
 
@@ -143,18 +142,10 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		System.out.println("********************SmPersonnelBackingBean initializeLists***************");
 		getCountryList();
 
-		if(getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress().getPmCountry() != null){
-			getManagedBean().setStateList(getStateList(getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress().getPmCountry().getCountryId()));
+		if(getManagedBean().getBasicSmPersonnel().getSmPersonnelAddresses() != null && getManagedBean().getBasicSmPersonnel().getSmPersonnelAddresses().size() > 0){
+			updateMailAddLists(getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress().getPmCountry().getCountryId().toString(), getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress().getPmState().getStateId().toString(), getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress().getPmDistrict().getDistrictId().toString());
+			updatePermAddLists(getManagedBean().getBasicSmPersonnelPermanentAddress().getSmAddress().getPmCountry().getCountryId().toString(), getManagedBean().getBasicSmPersonnelPermanentAddress().getSmAddress().getPmState().getStateId().toString(), getManagedBean().getBasicSmPersonnelPermanentAddress().getSmAddress().getPmDistrict().getDistrictId().toString());
 		}
-		
-		if(getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress().getPmState() != null){
-			getManagedBean().setDistrictList(getDistrictList(getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress().getPmState().getStateId()));
-		}
-		
-		if(getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress().getPmDistrict() != null){
-			getManagedBean().setCityList(getCityList(getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress().getPmDistrict().getDistrictId()));
-		}
-
 	}
 	
 	public void initializeUpdateLists(){
@@ -407,6 +398,8 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 			smPersonnelAddresses.add(getManagedBean().getBasicSmPersonnelMailingAddress());
 			smPersonnel.setSmPersonnelAddresses(smPersonnelAddresses);
 			
+			getCountryList();
+			
 			reqCountryDTO = new CountryReqDTO();
 			reqCountryDTO.setCountryId(1L);
 			resCountryDTO = countrySO.retrieveCountryById(reqCountryDTO);
@@ -610,7 +603,7 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 			reqCountryDTO = new CountryReqDTO();
 			reqCountryDTO.setCountryId(1L);
 			resCountryDTO = countrySO.retrieveCountryById(reqCountryDTO);
-			newCountry = resCountryDTO.getPmCountry();
+			newCountry = resCountryDTO.getPmCountry();                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
 			smPersonnel.setPmCountry(newCountry);
 			
 			IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate
