@@ -118,6 +118,8 @@ public interface QTConstants {
 	public static final int QUOTAION_VALUE=20000;
 	public static final String OPEN_TYPE="O";
 	public static final String RESTRICTED_TYPE="R";
+	public static final String PRESENTATION_DEMO="PD";
+	
 	
 	
 }
