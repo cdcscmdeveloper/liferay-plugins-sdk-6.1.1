@@ -37,6 +37,8 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	 */
 	private static final long serialVersionUID = 2739463536376846067L;
 	
+	private Long defaultCountryId;
+	
 	private String searchEPRole;
 	
 	private String searchCompanyRole;
@@ -149,6 +151,14 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	
 	public void searchSmPersonnel(){
 		smPersonnelDataModel2.reloadData();
+	}
+
+	public Long getDefaultCountryId() {
+		return defaultCountryId;
+	}
+
+	public void setDefaultCountryId(Long defaultCountryId) {
+		this.defaultCountryId = defaultCountryId;
 	}
 
 	public String getSearchEPRole() {

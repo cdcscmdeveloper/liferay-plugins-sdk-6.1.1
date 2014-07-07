@@ -63,7 +63,13 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		System.out.println("********************SmPersonnelBackingBean PreRender***************");
 		initUserPersonnelInfo();
 //		initializeUpdateLists();
-		
+
+		CountryReqDTO reqDTO = new CountryReqDTO();
+		reqDTO.setCountryCode("MY");
+		ICountrySO reqSO = (ICountrySO) BusinessDelegate.getInstance().getServiceObject("pm",ICountrySO.class);
+		CountryResDTO resDTO = reqSO.retrieveCountryByCode(reqDTO);
+		getManagedBean().setDefaultCountryId(resDTO.getPmCountry().getCountryId());
+
 		this.getManagedBean().setSearchCompanyRole(null);
 		this.getManagedBean().setSearchEPRole(null);
 		this.getManagedBean().setSearchUsername(null);
@@ -329,7 +335,35 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 			getManagedBean().setPermAddCityList(getCityList(Long.valueOf(districtId)));
 		}
 	}
-	
+
+	public void setMailingAddrSameAsPerm(AjaxBehaviorEvent e) {
+		if (getManagedBean().getBasicSmPersonnelMailingAddress().isSameAsPerm()) {
+			System.out.println("********* Duplicate Mail Addr ***********");
+			getManagedBean().getBasicSmPersonnelMailingAddress().setSmAddress(getManagedBean().getBasicSmPersonnelPermanentAddress().getSmAddress());
+		} else {
+			System.out.println("*********** Not same Addr ************** ");
+			getManagedBean().getBasicSmPersonnelMailingAddress().setSmAddress(
+					setDefaultAddr());
+		}
+
+	}
+
+	private SmAddress setDefaultAddr() {
+		SmAddress addr = new SmAddress();
+		PmCountry cntry = new PmCountry();
+		CountryReqDTO reqDTO = new CountryReqDTO();
+		reqDTO.setCountryCode("MY");
+		ICountrySO reqSO = (ICountrySO) BusinessDelegate.getInstance().getServiceObject("pm",ICountrySO.class);
+		CountryResDTO resDTO = reqSO.retrieveCountryByCode(reqDTO);
+		cntry = resDTO.getPmCountry();
+		addr.setPmCity(new PmCity());
+		addr.setPmCountry(cntry);
+		addr.setPmState(new PmState());
+		addr.setPmDistrict(new PmDistrict());
+
+		return addr;
+	}
+
 	public void getPersonnelInfoById(String personnelId){
 		
 		System.out.println("********************SmPersonnelBackingBean getPersonnelInfoById***************");
@@ -367,7 +401,7 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 /*			Construct Mailing Address Object			*/
 			ICountrySO countrySO = (ICountrySO)BusinessDelegate.getInstance().getServiceObject("pm",ICountrySO.class);
 			CountryReqDTO reqCountryDTO = new CountryReqDTO();
-			reqCountryDTO.setCountryId(1L);
+			reqCountryDTO.setCountryId(getManagedBean().getDefaultCountryId());
 			CountryResDTO resCountryDTO = countrySO.retrieveCountryById(reqCountryDTO);
 			s1.setPmCountry(resCountryDTO.getPmCountry());
 			s1.setPmState(new PmState());
@@ -376,7 +410,7 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 
 /*			Construct Permanent Address Object			*/
 			reqCountryDTO = new CountryReqDTO();
-			reqCountryDTO.setCountryId(1L);
+			reqCountryDTO.setCountryId(getManagedBean().getDefaultCountryId());
 			resCountryDTO = countrySO.retrieveCountryById(reqCountryDTO);
 			s2.setPmCountry(resCountryDTO.getPmCountry());
 			s2.setPmState(new PmState());
@@ -401,7 +435,7 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 			getCountryList();
 			
 			reqCountryDTO = new CountryReqDTO();
-			reqCountryDTO.setCountryId(1L);
+			reqCountryDTO.setCountryId(getManagedBean().getDefaultCountryId());
 			resCountryDTO = countrySO.retrieveCountryById(reqCountryDTO);
 			smPersonnel.setPmCountry(resCountryDTO.getPmCountry());
 		}
@@ -601,7 +635,7 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 //			smPersonnel.setSoftcertFlg(1);
 			
 			reqCountryDTO = new CountryReqDTO();
-			reqCountryDTO.setCountryId(1L);
+			reqCountryDTO.setCountryId(getManagedBean().getDefaultCountryId());
 			resCountryDTO = countrySO.retrieveCountryById(reqCountryDTO);
 			newCountry = resCountryDTO.getPmCountry();                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
 			smPersonnel.setPmCountry(newCountry);
