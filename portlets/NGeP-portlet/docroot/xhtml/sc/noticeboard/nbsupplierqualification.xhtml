@@ -18,32 +18,32 @@
 						></p:inputText></td>
 				<td><p:commandButton value="Check" icon="ui-icon-check"
 						action="#{noticeBoardBackingBean.checkSupplierQulificationStatus}"
-						update="table-wrapper">
+						update="@form,table-wrapper">
 					</p:commandButton></td>
 			</tr>
 		</table>
 
 	</p:panel>
 
-<h:panelGroup id="table-wrapper" >
-	<p:panel id="qualificationCriteria" rendered="#{noticeBoardBackingBean.visible}"
+<h:panelGroup id="table-wrapper" rendered="#{noticeBoardBackingBean.visible}">
+	<p:panel id="qualificationCriteria" 
 		header="#{lbl['lbl.sc.spec.supplier.qual.criteraia']}"
 		style="margin-bottom:5px;" toggleable="true">
 		<p:dataTable id="supplierQulification"
 			value="#{noticeBoardBackingBean.managedBean.qualificationBean}"
-			var="qulificationBean" styleClass="test" rows="20">
+			var="qulificationBean" styleClass="test" tyle="width:70%;">
 
-			<p:column headerText="Criteria">
+			<p:column headerText="Criteria" style="width:30%;">
 				<h:outputText value="#{qulificationBean.criteria}" />
 			</p:column>
-			<p:column headerText="Requirement" style="width:100px;">
+			<p:column headerText="Requirement" style="width:50%;">
 				<h:outputText
 					value="#{fn:replace(qulificationBean.qtRequirement,':','&lt;/br&gt;')}"
 					size="50" escape="false"
-					style="width:100px; height:100px !important;" />
+					 />
 			</p:column>
 			
-			<p:column headerText="Qualification Status" style="width:120px;">
+			<p:column headerText="Qualification Status" style="width:20%;">
 				<h:outputText value="#{qulificationBean.supplierStatus}" />
 			</p:column>
 

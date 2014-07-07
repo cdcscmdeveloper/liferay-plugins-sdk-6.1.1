@@ -24,18 +24,18 @@
 				<h:outputText value="#{scqt.pmOrgProfile.orgName}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.notice.board.pdate']}"
-				style="width:6%;">
+				style="width:6%;white-space: normal;">
 				<h:outputText value="#{scqt.publishDate}">
 					<f:convertDateTime
-						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
 				</h:outputText>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.notice.board.clsdate']}"
-				style="width:6%;">
+				style="width:6%;white-space: normal;">
 				<h:outputText value="#{scqt.closingDate}">
 					<f:convertDateTime
-						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
 				</h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.qt.nb.countdowndays']}"

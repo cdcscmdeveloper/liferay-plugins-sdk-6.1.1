@@ -717,13 +717,16 @@ public class NoticeBoardBackingBean extends
 	}
 
 	public void checkSupplierQulificationStatus() {
-		this.getManagedBean().setQualificationBean(null);		
+		this.getManagedBean().setQualificationBean(null);
 		String mofNo = getMofNo();
-		if(null == mofNo || "".equalsIgnoreCase(mofNo)){
+
+		if (null == mofNo || "".equalsIgnoreCase(mofNo)) {
+			setVisible(false);
 			throw new EpException("Mof No should not be Null or Empty");
 		}
-		this.getManagedBean().setQualified(true);
 		setVisible(true);
+		this.getManagedBean().setQualified(true);
+
 		IQTNoticeBoardSO boardSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 						IQTNoticeBoardSO.class);
@@ -745,7 +748,7 @@ public class NoticeBoardBackingBean extends
 			}
 
 		}
-		
+
 	}
 
 	/**
@@ -989,8 +992,9 @@ public class NoticeBoardBackingBean extends
 				}
 
 				// Filter By - Location
-				TreeNode locationRootNode = getManagedBean().getLocationSelectedNode();
-						
+				TreeNode locationRootNode = getManagedBean()
+						.getLocationSelectedNode();
+
 				if (locationRootNode != null) {
 					TreeNode treeNode = locationRootNode;
 
@@ -1318,4 +1322,5 @@ public class NoticeBoardBackingBean extends
 	public void setVisible(boolean visible) {
 		this.visible = visible;
 	}
+
 }

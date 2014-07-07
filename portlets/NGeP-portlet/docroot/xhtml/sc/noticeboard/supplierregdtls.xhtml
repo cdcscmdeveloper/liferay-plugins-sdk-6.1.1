@@ -21,7 +21,10 @@
 					</p:column>
 					<p:column headerText="#{lbl['lbl.qt.nb.dateTime']}"
 						style="width:100px;">
-						<h:outputText value="#{brfsitdtl.bsvDate}" />
+						<h:outputText value="#{brfsitdtl.bsvDate}" >
+						<f:convertDateTime
+						pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+						</h:outputText>
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.qt.nb.location']}"
@@ -61,7 +64,10 @@
 					</p:column>
 					<p:column headerText="#{lbl['lbl.qt.nb.dateTime']}"
 						style="width:100px;">
-						<h:outputText value="#{brfsitdtl.bsvDate}" />
+						<h:outputText value="#{brfsitdtl.bsvDate}" >
+						<f:convertDateTime
+						pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+						</h:outputText>
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.qt.nb.location']}"
@@ -100,7 +106,10 @@
 					</p:column>
 					<p:column headerText="#{lbl['lbl.qt.nb.dateTime']}"
 						style="width:100px;">
-						<h:outputText value="#{sitevisitDtls.bsvDate}" />
+						<h:outputText value="#{sitevisitDtls.bsvDate}" >
+						<f:convertDateTime
+						pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+						</h:outputText>
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.qt.nb.location']}"

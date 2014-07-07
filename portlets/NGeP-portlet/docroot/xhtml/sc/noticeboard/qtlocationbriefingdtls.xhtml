@@ -45,7 +45,8 @@
 				<p:column headerText="#{lbl['lbl.qt.nb.dateTime']}"
 					style="width:25px">
 					<h:outputText value="#{brfsitdtl.bsvDate}">
-						<f:convertDateTime pattern="#{PPConst.dateDisplayPattern}" />
+						<f:convertDateTime
+						pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
 					</h:outputText>
 				</p:column>
 
@@ -89,7 +90,8 @@
 				<p:column headerText="#{lbl['lbl.qt.nb.dateTime']}"
 					style="width:25px;">
 					<h:outputText value="#{brfsitdtl.bsvDate}">
-						<f:convertDateTime pattern="#{PPConst.dateDisplayPattern}" />
+						<f:convertDateTime
+						pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
 					</h:outputText>
 				</p:column>
 
@@ -129,7 +131,8 @@
 				<p:column headerText="#{lbl['lbl.qt.nb.dateTime']}"
 					style="width:25px;">
 					<h:outputText value="#{sitevisitDtls.bsvDate}">
-						<f:convertDateTime pattern="#{PPConst.dateDisplayPattern}" />
+						<f:convertDateTime
+						pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
 					</h:outputText>
 				</p:column>
 

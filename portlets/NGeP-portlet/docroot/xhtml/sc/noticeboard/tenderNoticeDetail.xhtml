@@ -40,19 +40,19 @@
 					value="#{noticeBoardBackingBean.managedBean.scQt.qtNo}"></h:outputText>
 				<h:outputLabel value="#{lbl['lbl.sc.notice.board.ministry']}"></h:outputLabel>
 				<h:outputText
-					value="#{noticeBoardBackingBean.managedBean.scQt.pmOrgProfile.parentOrgProfile.parentOrgProfile.orgTypeCode.parameterCode}"></h:outputText>
+					value="#{noticeBoardBackingBean.getParameterDesc(noticeBoardBackingBean.managedBean.scQt.pmOrgProfile.parentOrgProfile.parentOrgProfile.orgTypeCode)}"></h:outputText>
 				<h:outputLabel value="#{lbl['lbl.sc.notice.board.jabatan']}"></h:outputLabel>
 				<h:outputText
-					value="#{noticeBoardBackingBean.managedBean.scQt.pmOrgProfile.parentOrgProfile.orgTypeCode.parameterCode}"></h:outputText>
+					value="#{noticeBoardBackingBean.getParameterDesc(noticeBoardBackingBean.managedBean.scQt.pmOrgProfile.parentOrgProfile.orgTypeCode)}"></h:outputText>
 				<h:outputLabel value="#{lbl['lbl.sc.notice.board.ptj']}"></h:outputLabel>
 				<h:outputText
-					value="#{noticeBoardBackingBean.managedBean.scQt.pmOrgProfile.orgTypeCode.parameterCode}"></h:outputText>
+					value="#{noticeBoardBackingBean.getParameterDesc(noticeBoardBackingBean.managedBean.scQt.pmOrgProfile.orgTypeCode)}"></h:outputText>
 				<h:outputLabel value="#{lbl['lbl.sc.notice.board.npdate']}"></h:outputLabel>
 				<h:outputText
 					value="#{noticeBoardBackingBean.managedBean.scQt.publishDate}">
 					<f:convertDateTime
-						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-			
+						pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+
 				</h:outputText>
 				<h:outputLabel value="#{lbl['lbl.sc.notice.board.publish.period']}"></h:outputLabel>
 				<h:outputText
@@ -61,8 +61,8 @@
 				<h:outputText
 					value="#{noticeBoardBackingBean.managedBean.scQt.closingDate}">
 					<f:convertDateTime
-						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-			</h:outputText>
+						pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+				</h:outputText>
 				<h:outputLabel value="#{lbl['lbl.qt.nb.proposalValidity']}"></h:outputLabel>
 				<h:outputText
 					value="#{noticeBoardBackingBean.managedBean.scQt.qtValidityPeriod}"></h:outputText>
@@ -70,8 +70,12 @@
 				<h:outputText
 					value="#{noticeBoardBackingBean.managedBean.scQt.qtValidityPeriod}"></h:outputText>
 				<h:outputLabel value="#{lbl['lbl.sc.spec.evaluation.type']}"></h:outputLabel>
-				<h:outputText
-					value="#{noticeBoardBackingBean.managedBean.scQt.evaluationType}"></h:outputText>
+
+				<h:outputText value="One Tier"
+					rendered="#{noticeBoardBackingBean.managedBean.scQt.evaluationType eq '1'}"></h:outputText>
+				<h:outputText value="Two Tier"
+					rendered="#{noticeBoardBackingBean.managedBean.scQt.evaluationType eq '2'}"></h:outputText>
+
 			</h:panelGrid>
 		</p:panel>
 		<p:panel header="#{lbl['lbl.qt.supplierqulificationcriteria']}"
@@ -79,8 +83,10 @@
 			<h:panelGrid border="0" width="100%" columns="2"
 				columnClasses="columnWidth20">
 				<h:outputLabel value="#{lbl['lbl.qt.nb.supplierStatus']}"></h:outputLabel>
-				<h:outputText
-					value="#{noticeBoardBackingBean.managedBean.scQt.zonal}"></h:outputText>
+				<h:outputText value="All"
+					rendered="#{noticeBoardBackingBean.managedBean.scQt.openFor eq 'A'}"></h:outputText>
+					<h:outputText value="Bumiputra"
+					rendered="#{noticeBoardBackingBean.managedBean.scQt.openFor eq 'B'}"></h:outputText>
 				<h:outputLabel value="#{lbl['lbl.qt.nb.minPaidUpCaptial']}"></h:outputLabel>
 				<h:outputText
 					value="#{noticeBoardBackingBean.managedBean.scQt.scQtSupplierCriteria.minPaidUpCapital}"></h:outputText>
@@ -109,7 +115,8 @@
 					<h:outputText value="#{scQtCategory.pmCategoryL3.categoryName}" />
 				</p:column>
 				<p:column headerText="Category Type">
-					<h:outputText value="#{noticeBoardBackingBean.getParameterDesc(scQtCategory.pmCategoryL3.categoryTypeCode)}" />
+					<h:outputText
+						value="#{noticeBoardBackingBean.getParameterDesc(scQtCategory.pmCategoryL3.categoryTypeCode)}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.so.mandatory']}"
 					style="width: 150px;">
