@@ -145,9 +145,9 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	// supplier view
 	private boolean productFlag;
 	private SmSupplier smSupplier;
-	private int selectedTabIndex;
 	private String quoteNo;
 	private Date  today = new Date();
+	private int tabActiveIndex = 0;
 
 	public SimpleQuoteManagedBean() {
 		super();
@@ -1211,18 +1211,6 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	}
 	
 	/**
-	 * @return the selectedTabIndex
-	 */
-	public int getSelectedTabIndex() {
-		return selectedTabIndex;
-	}
-	/**
-	 * @param selectedTabIndex the selectedTabIndex to set
-	 */
-	public void setSelectedTabIndex(int selectedTabIndex) {
-		this.selectedTabIndex = selectedTabIndex;
-	}
-	/**
 	 * @return the compareSuppliers
 	 */
 	public List<SmSupplier> getCompareSuppliers() {
@@ -1257,6 +1245,18 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	 */
 	public void setToday(Date today) {
 		this.today = today;
+	}
+	/**
+	 * @return the tabActiveIndex
+	 */
+	public int getTabActiveIndex() {
+		return tabActiveIndex;
+	}
+	/**
+	 * @param tabActiveIndex the tabActiveIndex to set
+	 */
+	public void setTabActiveIndex(int tabActiveIndex) {
+		this.tabActiveIndex = tabActiveIndex;
 	}
 	
 	

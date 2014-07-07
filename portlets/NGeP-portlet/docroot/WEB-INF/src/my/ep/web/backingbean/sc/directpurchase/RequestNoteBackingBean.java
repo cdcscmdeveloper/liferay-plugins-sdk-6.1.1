@@ -210,7 +210,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			requestNoteReqDTO.setTaskId(getManagedBean().getTaskId());
 		    requestNoteResDTO = directPurchaseSO.saveRequestNote(requestNoteReqDTO);
 		    
-	     } else if(BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(outcome)){
+	     } else if(BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(outcome) || BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome)){
 	    	 requestNoteReqDTO.setTaskId(getManagedBean().getTaskId());
 	    	 requestNoteReqDTO.setToken(token);
 	    	 requestNoteReqDTO.setOutcome("");
@@ -325,6 +325,8 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 					successMessage(MessageConst.INFO_700005,ParameterTypeConst.DOCUMENT_TYPES,
 							ParameterConst.DOCTYPE_REQUEST_NOTE,getManagedBean().getRequestNote().getRequestNoteNo());
 				} 
+				// clear data
+				super.renewSesionObject();
 			} else{
 				throw new EpException("Failed.");
 			}
@@ -392,8 +394,13 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 						scRequestSupplierItem.setSupplierItemPrice(scRequestSupplierItem.getSupplierItemPrices().get(0));
 						scRequestSupplierItem.setSupplierItemId(scRequestSupplierItem.getSmSupplier().getSupplierId());
 						scRequestNoteDtl.setScRequestSupplierItem(scRequestSupplierItem);
-						getManagedBean().setJustificationType(scRequestNoteDtl.getJustificationType().getParameterCode());
-						getManagedBean().setProcurementType(scRequestNoteDtl.getProcurementType().getParameterCode());
+						
+						if(scRequestNoteDtl.getJustificationType() != null){
+							getManagedBean().setJustificationType(scRequestNoteDtl.getJustificationType().getParameterCode());
+						}
+						if(scRequestNoteDtl.getProcurementType().getParameterCode() != null){
+							getManagedBean().setProcurementType(scRequestNoteDtl.getProcurementType().getParameterCode());
+						}
 						getManagedBean().setJustification(scRequestNoteDtl.getJustification());
 					}
 					requestNoteDtls.add(scRequestNoteDtl);
@@ -422,15 +429,11 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		   getManagedBean().setOrgProfileId(requestNote.getPmOrgProfile().getOrgProfileId());
 		   initialInformation(requestNote);
 		   fulfilmentTypeEvent(requestNote.getRequestNoteDtls().get(0));
-		   
-		   getManagedBean().setJustificationType(requestNote.getRequestNoteDtls().get(0).getJustificationType().getParameterCode());
-		   getManagedBean().setProcurementType(requestNote.getRequestNoteDtls().get(0).getProcurementType().getParameterCode());
-		   getManagedBean().setJustification(requestNote.getRequestNoteDtls().get(0).getJustification());		
+			
 		} finally {
 			directPurchaseSO = null;
 			parameterSO = null;
 		}
-		
 	}
 	
 	 public void approverAction(String outcome) {
@@ -925,6 +928,9 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			reqDTO.setParameterCode(getManagedBean().getJustificationType());
 		    resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
 			scRequestNoteDtl.setJustificationType(resDTO.getPmParameter());
+			
+		} else{
+			scRequestNoteDtl.setJustificationType(null);
 		}
 		
 		scRequestNoteDtl.setJustification(getManagedBean().getJustification());

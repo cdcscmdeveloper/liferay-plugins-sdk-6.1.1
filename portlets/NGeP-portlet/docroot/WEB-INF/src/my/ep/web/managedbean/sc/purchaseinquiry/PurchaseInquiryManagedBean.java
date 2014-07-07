@@ -61,7 +61,6 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	public PurchaseInquiryManagedBean() {
 		List<ScPRIRemark> remarks = new ArrayList<ScPRIRemark>();
 		scPrInquiry.setRemarks(remarks);
-		requestNoteDtl.setJustificationType(new PmParameter());
 	}
 	
 	/**

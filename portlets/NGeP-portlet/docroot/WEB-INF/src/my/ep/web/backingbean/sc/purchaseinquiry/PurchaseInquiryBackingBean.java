@@ -52,6 +52,7 @@ import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.directpurchase.ScPRIRemark;
 import my.ep.persistence.entity.sc.directpurchase.ScPRIWorkFlowStatus;
@@ -110,8 +111,6 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 	  */
 	  public String prInquiryAction(CmSupplierItem  cmSupplierItem){
 		  debugLogger("prInquiryAction");
-		  IParameterSO parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-		  ParameterReqDTO reqDTO = new ParameterReqDTO();
 		  ScRequestSupplierItem requestSupplierItem = getManagedBean().getScRequestSupplierItem();
 		  ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT, ICatalogueSO.class);
 		  IStatusSO iStatusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
@@ -165,18 +164,15 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 		  scPrInquiry.setRemarks(initializeRemarks(scPrInquiry));
 		  // TODO check supplier is government seller or not 
 		  ScRequestNoteDtl requestNoteDtl =  getManagedBean().getRequestNoteDtl();
+		  PmParameter pmParameter = new PmParameter();
+		  requestNoteDtl.setJustificationType(pmParameter);
 		  if(cmSupplierItem.getSmSupplier().getPmOrgProfile().isGovtSeller()){
-			  reqDTO = new ParameterReqDTO();
-			  reqDTO.setParameterType(ParameterTypeConst.PROCUREMENT_TYPE);
-			  reqDTO.setParameterCode(ParameterConst.PROC_TYPE_G2G);
-			  ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
-			  requestNoteDtl.setProcurementType(resDTO.getPmParameter());
+			  pmParameter.setParameterCode(ParameterConst.PROC_TYPE_G2G);
+			  requestNoteDtl.setProcurementType(pmParameter);
 		  } else {
-			  reqDTO = new ParameterReqDTO();
-			  reqDTO.setParameterType(ParameterTypeConst.PROCUREMENT_TYPE);
-			  reqDTO.setParameterCode(ParameterConst.PROC_TYPE_NORMAL);
-			  ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
-			  requestNoteDtl.setProcurementType(resDTO.getPmParameter());
+			  pmParameter.setParameterCode(ParameterConst.PROC_TYPE_NORMAL);
+			  requestNoteDtl.setProcurementType(pmParameter);
+			  requestNoteDtl.setProcurementType(pmParameter);
 		  }
 		  
 		  List<CmPricing>  cmPricings = new ArrayList<CmPricing>();
@@ -347,22 +343,29 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 		    	parameterReqDTO.setParameterCode(requestNoteDtl.getProcurementType().getParameterCode());
 		    	resDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
 			    requestNoteDtl.setProcurementType(resDTO.getPmParameter());
-			   
+			    
 			    // justification type
-			    parameterReqDTO = new ParameterReqDTO();
-			    if (requestNoteDtl.getProcurementType().getParameterCode()
+				parameterReqDTO = new ParameterReqDTO();
+				if (requestNoteDtl.getProcurementType().getParameterCode()
 						.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)) {
-			    	parameterReqDTO.setParameterType(ParameterTypeConst.JUSTIFICATION_TYPE_ADHOC);
+					parameterReqDTO.setParameterType(ParameterTypeConst.JUSTIFICATION_TYPE_ADHOC);
+					if(requestNoteDtl.getJustificationType().getParameterCode() != null){
+						parameterReqDTO.setParameterCode(requestNoteDtl.getJustificationType().getParameterCode());
+						resDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
+						requestNoteDtl.setJustificationType(resDTO.getPmParameter());
+					}
 				} else if (requestNoteDtl.getProcurementType().getParameterCode()
 						.equalsIgnoreCase(ParameterConst.PROC_TYPE_EMERGENCY)) {
 					parameterReqDTO.setParameterType(ParameterTypeConst.JUSTIFICATION_TYPE_EMERGENCY);
+					if(requestNoteDtl.getJustificationType().getParameterCode() != null){
+						parameterReqDTO.setParameterCode(requestNoteDtl.getJustificationType().getParameterCode());
+						resDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
+						requestNoteDtl.setJustificationType(resDTO.getPmParameter());
+					}
+				} else {
+					requestNoteDtl.setJustificationType(null);
 				}
 			    
-			    if(requestNoteDtl.getJustificationType().getParameterCode() != null && !requestNoteDtl.getJustificationType().getParameterCode().isEmpty()){
-			    	 parameterReqDTO.setParameterCode(requestNoteDtl.getJustificationType().getParameterCode());
-					    resDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
-					    requestNoteDtl.setJustificationType(resDTO.getPmParameter());
-			    }
 		    	
 			    // price type
 		    	if (getManagedBean().getPriceType() != null) {
@@ -545,19 +548,19 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 		if (getManagedBean().getRequestNoteDtl().getProcurementType().getParameterCode()
 				.equalsIgnoreCase(ParameterConst.PROC_TYPE_NORMAL) || getManagedBean().getRequestNoteDtl().getProcurementType()
 				.getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
-			getManagedBean().setProcTypeOption(false);
-			getManagedBean().setJustTypeOption(false);
+			getManagedBean().setProcTypeOption(Boolean.FALSE);
+			getManagedBean().setJustTypeOption(Boolean.FALSE);
 
 		} else if (getManagedBean().getRequestNoteDtl().getProcurementType()
 				.getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)) {
-			getManagedBean().setProcTypeOption(true);
+			getManagedBean().setProcTypeOption(Boolean.TRUE);
 			getManagedBean()
 					.setJustDropdown(
 							getDropdownCodeValues(ParameterTypeConst.JUSTIFICATION_TYPE_ADHOC));
 
 		} else if (getManagedBean().getRequestNoteDtl().getProcurementType()
 				.getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_EMERGENCY)) {
-			getManagedBean().setProcTypeOption(true);
+			getManagedBean().setProcTypeOption(Boolean.TRUE);
 			getManagedBean()
 					.setJustDropdown(
 							getDropdownCodeValues(ParameterTypeConst.JUSTIFICATION_TYPE_EMERGENCY));
@@ -571,9 +574,9 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 		log.info("justificationTypeEvent");
 		if (getManagedBean().getRequestNoteDtl().getJustificationType().getParameterCode()
 				.equalsIgnoreCase(ParameterTypeConst.JUSTIFICATION_TYPE_OTHER)) {
-			getManagedBean().setJustTypeOption(true);
+			getManagedBean().setJustTypeOption(Boolean.TRUE);
 		} else {
-			getManagedBean().setJustTypeOption(false);
+			getManagedBean().setJustTypeOption(Boolean.FALSE);
 		}
 	}
 	
