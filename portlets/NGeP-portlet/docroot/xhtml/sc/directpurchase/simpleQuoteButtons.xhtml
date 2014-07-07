@@ -11,10 +11,10 @@
 				style="float:left;" action="#{simpleQuoteBackingBean.backToPervious}"/>
 				
 		      <p:commandButton value="#{lbl['lbl.sc.common.save']}" icon="ui-icon-save" 
-					    action="#{simpleQuoteBackingBean.saveSimpleQuote('')}" process="@all"/>
+					    action="#{simpleQuoteBackingBean.saveSimpleQuote('')}" process="@all" update="@form"/>
 				
 			 <p:commandButton value="#{lbl['lbl.sc.common.submit']}"  action="#{simpleQuoteBackingBean.submitSimpleQuote('')}"
-			   style="float:right;" icon="ui-icon-submit" process="@all"/>
+			   style="float:right;" icon="ui-icon-submit" process="@all" update="@form" />
 	    </c:if>
 	     <table>
 			   <tr>

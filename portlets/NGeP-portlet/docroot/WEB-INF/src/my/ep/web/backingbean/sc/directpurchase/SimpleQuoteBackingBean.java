@@ -486,13 +486,25 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			if (quote.getProcurementType().getParameterCode()
 					.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)) {
 				parameterReqDTO.setParameterType(ParameterTypeConst.JUSTIFICATION_TYPE_ADHOC);
-				parameterReqDTO.setParameterCode(quote.getJustificationType().getParameterCode());
+				
+				if(quote.getJustificationType().getParameterCode() !=null){
+					parameterReqDTO.setParameterCode(quote.getJustificationType().getParameterCode());
+				} else{
+					throw new EpException("Justification is madatory.");
+				}
+				
 				resDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
 				quote.setJustificationType(resDTO.getPmParameter());
 			} else if (quote.getProcurementType().getParameterCode()
 					.equalsIgnoreCase(ParameterConst.PROC_TYPE_EMERGENCY)) {
 				parameterReqDTO.setParameterType(ParameterTypeConst.JUSTIFICATION_TYPE_EMERGENCY);
-				parameterReqDTO.setParameterCode(quote.getJustificationType().getParameterCode());
+				
+				if(quote.getJustificationType().getParameterCode() !=null){
+					parameterReqDTO.setParameterCode(quote.getJustificationType().getParameterCode());
+				} else{
+					throw new EpException("Justification is madatory.");
+				}
+				
 				resDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
 				quote.setJustificationType(resDTO.getPmParameter());
 
@@ -1250,14 +1262,14 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 	 */
 	public void justificationTypeEvent() {
 		debugLogger("justificationTypeEvent");
-		if(getManagedBean().getScQuote().getJustificationType() !=null){
+		/*if(getManagedBean().getScQuote().getJustificationType().getParameterCode() != null){
 			if (getManagedBean().getScQuote().getJustificationType().getParameterCode()
 					.equalsIgnoreCase(ParameterTypeConst.JUSTIFICATION_TYPE_OTHER)) {
 				getManagedBean().setJustTypeOption(Boolean.TRUE);
 			} else {
 				getManagedBean().setJustTypeOption(Boolean.FALSE);
 			}
-		}
+		}*/
 	}
 
 	/**

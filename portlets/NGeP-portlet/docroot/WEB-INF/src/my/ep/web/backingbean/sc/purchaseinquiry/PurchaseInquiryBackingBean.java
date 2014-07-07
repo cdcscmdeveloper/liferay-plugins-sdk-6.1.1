@@ -575,12 +575,12 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 	 */
 	public void justificationTypeEvent() {
 		log.info("justificationTypeEvent");
-		if (getManagedBean().getRequestNoteDtl().getJustificationType().getParameterCode()
+		/*if (getManagedBean().getRequestNoteDtl().getJustificationType().getParameterCode()
 				.equalsIgnoreCase(ParameterTypeConst.JUSTIFICATION_TYPE_OTHER)) {
 			getManagedBean().setJustTypeOption(Boolean.TRUE);
 		} else {
 			getManagedBean().setJustTypeOption(Boolean.FALSE);
-		}
+		}*/
 	}
 	
 	public	String	requisitionerAction(String action){

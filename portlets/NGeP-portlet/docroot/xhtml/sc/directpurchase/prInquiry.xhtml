@@ -196,13 +196,15 @@
 						   <ui:fragment rendered="#{purchaseInquiryBackingBean.managedBean.procTypeOption}">
 							 <td style="width: 250px">
 							     <p:outputLabel value="#{lbl['lbl.sc.justification']}" /></td>
-							 <td> <p:selectOneMenu style="width: 120px;margin-bottom: 5px;" 
-									value="#{purchaseInquiryBackingBean.managedBean.requestNoteDtl.justificationType.parameterCode}">
+							 <td> <p:selectOneMenu style="width: 120px;margin-bottom: 5px;" id="justificationId" label="#{lbl['lbl.sc.justification']}"
+							         required="#{purchaseInquiryBackingBean.managedBean.requestNoteDtl.procurementType.parameterCode eq 'A' or 
+						              purchaseInquiryBackingBean.managedBean.requestNoteDtl.procurementType.parameterCode eq 'E'}"
+									  value="#{purchaseInquiryBackingBean.managedBean.requestNoteDtl.justificationType.parameterCode}">
 								   <f:selectItems
 										value="#{purchaseInquiryBackingBean.managedBean.justDropdown}" />
 									<p:ajax event="change" update="justiId" 
 										listener="#{purchaseInquiryBackingBean.justificationTypeEvent}" process="@this" />
-								</p:selectOneMenu> </td>
+								</p:selectOneMenu> <p:message id="justTypeMsg" for="justificationId" display="icon" /></td>
 								
 				    	 </ui:fragment>
 					   </tr>
@@ -210,8 +212,12 @@
 					    <ui:fragment rendered="#{purchaseInquiryBackingBean.managedBean.procTypeOption}">
 						 <td style="vertical-align:top; text-align:left;"><p:outputLabel
 								value="#{lbl['lbl.sc.price.inquiry.just.rmks']}" /></td>
-						 <td colspan="4"><p:inputTextarea value="#{purchaseInquiryBackingBean.managedBean.requestNoteDtl.justification}"
-								rows="4" cols="122" style="margin-bottom: 5px;" /></td>
+						 <td colspan="4">
+						    <p:inputTextarea value="#{purchaseInquiryBackingBean.managedBean.requestNoteDtl.justification}"
+						        id="justificationRmk" label="#{lbl['lbl.sc.price.inquiry.just.rmks']}"
+						        required="#{purchaseInquiryBackingBean.managedBean.requestNoteDtl.procurementType.parameterCode eq 'A' or 
+						             purchaseInquiryBackingBean.managedBean.requestNoteDtl.procurementType.parameterCode eq 'E'}"   
+								rows="4" cols="122" style="margin-bottom: 5px;" /><p:message id="justRmksMsg" for="justificationRmk" display="icon" /></td>
 						</ui:fragment>
 					   </tr>
 					   

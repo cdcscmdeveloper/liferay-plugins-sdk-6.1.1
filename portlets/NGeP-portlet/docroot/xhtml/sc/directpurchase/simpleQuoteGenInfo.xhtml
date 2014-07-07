@@ -83,13 +83,16 @@
 					   <ui:fragment rendered="#{simpleQuoteBackingBean.managedBean.procTypeOption}">
 						 <td style="width: 150px">
 						     <p:outputLabel value="#{lbl['lbl.sc.sq.gen.info.just']}" /></td>
-						 <td> <p:selectOneMenu style="width: 120px;margin-bottom: 5px;"
+						 <td> <p:selectOneMenu style="width: 120px;margin-bottom: 5px;" id="justificationId" label="#{lbl['lbl.sc.sq.gen.info.just']}"
+						       required="#{simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode eq 'A' or 
+						             simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode eq 'E'}"
 								value="#{simpleQuoteBackingBean.managedBean.scQuote.justificationType.parameterCode}">
 							   <f:selectItems
 									value="#{simpleQuoteBackingBean.managedBean.justDropdown}" />
 								<p:ajax event="change" update="justId" 
 									listener="#{simpleQuoteBackingBean.justificationTypeEvent}" process="@this" />
 							</p:selectOneMenu> 
+								<p:message id="justTypeMsg" for="justificationId" display="icon" />
 							</td>
 			    	</ui:fragment>
 				</tr>
@@ -98,7 +101,10 @@
 					<td style="vertical-align:top; text-align:left;"><p:outputLabel
 							value="#{lbl['lbl.sc.just.rmks']}" /></td>
 					<td colspan="4"><p:inputTextarea value="#{simpleQuoteBackingBean.managedBean.scQuote.justificationRemark}"
-							rows="3" cols="122" style="margin-bottom: 5px;" /></td>
+					          id="justificationRmk" label="#{lbl['lbl.sc.just.rmks']}"
+					          required="#{simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode eq 'A' or 
+						             simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode eq 'E'}"
+							rows="3" cols="122" style="margin-bottom: 5px;" /> <p:message id="justRmksMsg" for="justificationRmk" display="icon" /></td>
 				 </ui:fragment>
 			    </tr>
 				</table>
@@ -120,7 +126,7 @@
 			<tr>
 				<td style="width: 150px;"><p:outputLabel
 						value="#{lbl['lbl.sc.sq.gen.info.duration']}" /></td>
-				<td><p:inputText id="durationId" size="6" label="#{lbl['lbl.sc.sq.gen.info.duration']}"  maxlength="3"
+				<td><p:inputText id="durationId" size="6" label="#{lbl['lbl.sc.sq.gen.info.duration']}"  maxlength="3" 
 				      value="#{simpleQuoteBackingBean.managedBean.duration}" 
 				      style="text-align:right;">
 				</p:inputText>
@@ -166,9 +172,9 @@
 				<td><p:selectOneRadio id="noOfQuote" label="#{lbl['lbl.sc.sq.gen.info.no.of.quote']}" required="true"
 				      value="#{simpleQuoteBackingBean.managedBean.scQuote.multipleQuote}">
 						<f:selectItem itemLabel="#{lbl['lbl.sc.sq.gen.info.single']}"
-							itemValue="true" />
-						<f:selectItem itemLabel="#{lbl['lbl.sc.sq.gen.info.multiple']}"
 							itemValue="false" />
+						<f:selectItem itemLabel="#{lbl['lbl.sc.sq.gen.info.multiple']}"
+							itemValue="true" />
 					</p:selectOneRadio><p:message id="noofquoteMsg" for="noOfQuote" display="icon" /> </td>
 			</tr>
 		</table>

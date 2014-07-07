@@ -210,7 +210,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			requestNoteReqDTO.setTaskId(getManagedBean().getTaskId());
 		    requestNoteResDTO = directPurchaseSO.saveRequestNote(requestNoteReqDTO);
 		    
-	     } else if(BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(outcome) || BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome)){
+	     } else if(BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(outcome)){
 	    	 requestNoteReqDTO.setTaskId(getManagedBean().getTaskId());
 	    	 requestNoteReqDTO.setToken(token);
 	    	 requestNoteReqDTO.setOutcome("");
@@ -317,14 +317,10 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 					successMessage(MessageConst.INFO_700010,ParameterTypeConst.DOCUMENT_TYPES,
 							ParameterConst.DOCTYPE_REQUEST_NOTE,getManagedBean().getRequestNote().getRequestNoteNo());
 
-				} else if(BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)){
+				} else if(BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome) || outcome.isEmpty()){
 					successMessage(MessageConst.INFO_700005,ParameterTypeConst.DOCUMENT_TYPES,
 							ParameterConst.DOCTYPE_REQUEST_NOTE,getManagedBean().getRequestNote().getRequestNoteNo());
-					
-				} else if(outcome.isEmpty()){
-					successMessage(MessageConst.INFO_700005,ParameterTypeConst.DOCUMENT_TYPES,
-							ParameterConst.DOCTYPE_REQUEST_NOTE,getManagedBean().getRequestNote().getRequestNoteNo());
-				} 
+				}	
 				// clear data
 				super.renewSesionObject();
 			} else{
@@ -1067,13 +1063,13 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 	 * Event for justification type drop down in Add to Cart
 	 */
 	public void justificationTypeEvent() {
-		log.info("justificationTypeEvent"); 
-		if (getManagedBean().getJustificationType()
+		log.info("justificationTypeEvent");
+		/*if (getManagedBean().getJustificationType()
 				.equalsIgnoreCase(ParameterTypeConst.JUSTIFICATION_TYPE_OTHER)) {
 			getManagedBean().setJustTypeOption(true);
 		} else {
 			getManagedBean().setJustTypeOption(false);
-		}
+		}*/
 	}
 	
 	/**
