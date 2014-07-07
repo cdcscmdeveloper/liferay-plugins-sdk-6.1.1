@@ -103,36 +103,25 @@
 			<table style="width: 100%; margin-top: 10px;">
 				<tr style="height: 30px;">
 					<td rowspan="10">
-
-
-
-
+					
 						<div id="slides" style="width: 250px;">
-
-							<h:panelGroup
-								rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) == 0 }">
-
-								<img src="/NGeP-portlet/images/noImage.jpg"
-									style="height: 100%; left: 0px !important;" />
-
+							<h:panelGroup rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) == 0 }">
+								<img src="/NGeP-portlet/images/noImage.jpg" style="height: 100%; left: 0px !important;" />
 							</h:panelGroup>
 
-							<h:panelGroup
-								rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) > 0 }">
-								<ui:repeat var="cmImage"
-									value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmImages}">
-									<img src="/NGeP-portlet/image?imageName=#{cmImage.imageName}" 
-										style="height: 150px; left: 0px !important;" />
+							<h:panelGroup rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) > 0 }">
+								<ui:repeat var="cmImage" value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmImages}">
+									<img src="/NGeP-portlet/image?imageName=#{cmImage.imageName}" style="height: 150px; left: 0px !important;" />
 								</ui:repeat>
 							</h:panelGroup>
-
-						</div> <p:commandLink style="margin-left: 200px;padding-right: 10px;"
+						</div> 
+						<p:commandLink style="margin-left: 200px;padding-right: 10px;"
 							title="Upload"
 							rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus != 'P' and catalogueBackingBean.managedBean.displayCatalogue}"
 							onclick="imageDialog.show()">
-							<p:graphicImage value="/resources/ep/images/design/upload.png"
-								style="margin-top:10px;"></p:graphicImage>
-						</p:commandLink> <p:commandLink
+							<p:graphicImage value="/resources/ep/images/design/upload.png" style="margin-top:10px;"></p:graphicImage>
+						</p:commandLink> 
+						<p:commandLink
 							rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus != 'P' and catalogueBackingBean.managedBean.displayCatalogue}"
 							title="Delete" oncomplete="deleteImage.show()">
 							<p:graphicImage value="/resources/ep/images/design/trash.png"></p:graphicImage>
@@ -143,14 +132,9 @@
 					<td><p:inputText readonly="true" size="35"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.extensionCode}"></p:inputText></td>
 					<td><p:outputLabel value="#{lbl['lbl.cm.item.name']}" /></td>
-					<td><p:inputTextarea readonly="true"
-							style="width: 195px !important;"
+					<td><p:inputTextarea readonly="true" style="width: 195px !important;"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.itemName}"></p:inputTextarea></td>
-
 				</tr>
-
-
-
 
 				<tr style="height: 30px;">
 
