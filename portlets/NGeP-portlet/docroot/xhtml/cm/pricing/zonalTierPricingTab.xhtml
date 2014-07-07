@@ -22,8 +22,7 @@
 				<f:facet name="header">
 					Zone Name
 				</f:facet>
-				<p:selectOneMenu value="#{tier.cmSupplierZone.suppZoneId}"
-					style="width: 128px;">
+				<p:selectOneMenu value="#{tier.cmSupplierZone.suppZoneId}" disabled="true" style="width: 128px;">
 					<f:selectItem itemLabel="Select One" itemValue="0" />
 					<f:selectItems
 						value="#{catalogueBackingBean.managedBean.supplierZoneList}"

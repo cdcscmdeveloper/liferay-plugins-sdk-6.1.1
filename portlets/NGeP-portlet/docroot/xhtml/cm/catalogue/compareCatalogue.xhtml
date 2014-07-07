@@ -29,9 +29,16 @@
 					value="#{catalogueBackingBean.managedBean.selectedSupplierItemList}" var="supplierItem" columns="4" rows="4" 
 					paginatorPosition="bottom" paginatorTemplate="{PageLinks} ">
 					<table>
-						<tr>
+						<tr style="height:85px">
 							<td colspan="5">
-							<p:graphicImage value="/images/noImage.jpg" height="80px"></p:graphicImage>
+							<h:panelGroup rendered="#{fn:length(supplierItem.cmImages) == 0 }">
+								<p:graphicImage value="/images/noImage.jpg" height="80px"></p:graphicImage>
+							</h:panelGroup>
+							
+							<h:panelGroup rendered="#{fn:length(supplierItem.cmImages) > 0 }">
+								<p:graphicImage value="/image?imageName=#{supplierItem.smSupplier.epNo}/#{supplierItem.cmImages[0].imageName}" height="80px"></p:graphicImage>
+							</h:panelGroup>
+							
 							<ui:remove>
 							<p:graphicImage value="/resources/ep/images/product/computer/879949914_125.jpg" height="80px"></p:graphicImage>
 							</ui:remove>
@@ -129,42 +136,41 @@
 						<ui:include src="/xhtml/cm/pricing/pricingTab.xhtml" />
 					</p:tab>
 					
-					<p:tab title="Promotion"
+					<p:tab title="#{lbl['lbl.cm.promotion']}"
 						rendered="#{catalogueBackingBean.managedBean.supplierItemObj.cmPromotionPricing.price > 0}">
 						<ui:include src="/xhtml/cm/pricing/promotionPricingTab.xhtml"></ui:include>
-
 					</p:tab>
 					
 					<p:tab title="#{lbl['lbl.cm.tier']}"
 						rendered="#{fn:length(catalogueBackingBean.managedBean.supplierItemObj.cmTierPricings) > 0}">
 						<ui:include src="/xhtml/cm/pricing/pricingTierTab.xhtml" />
 					</p:tab>
+					
 					<p:tab title="#{lbl['lbl.cm.promotion.tier']}"
 						rendered="#{fn:length(catalogueBackingBean.managedBean.supplierItemObj.cmPromotionTierPricings) > 0}">
 						<ui:include src="/xhtml/cm/pricing/pricingPromotionTierTab.xhtml" />
 					</p:tab>
-					<p:tab title="Zonal Standard"
+					
+					<p:tab title="#{lbl['lbl.cm.zonal.standard']}"
 						rendered="#{fn:length(catalogueBackingBean.managedBean.supplierItemObj.zStdPrices) > 0}">
 						<ui:include src="/xhtml/cm/pricing/zonalStandardPricingTab.xhtml"></ui:include>
-
 					</p:tab>
-					<p:tab title="Zonal Promotion"
+					
+					<p:tab title="#{lbl['lbl.cm.zonal.promotion']}"
 						rendered="#{fn:length(catalogueBackingBean.managedBean.supplierItemObj.cmZonalPromotionPricings) > 0}">
 						<ui:include src="/xhtml/cm/pricing/zonalPromotionPricingTab.xhtml"></ui:include>
-
 					</p:tab>
 
-					<p:tab title="Zonal Tier"
+					<p:tab title="#{lbl['lbl.cm.zonal.tier']}"
 						rendered="#{fn:length(catalogueBackingBean.managedBean.supplierItemObj.cmZonalTierPricings) > 0}">
 						<ui:include src="/xhtml/cm/pricing/zonalTierPricingTab.xhtml"></ui:include>
-
 					</p:tab>
-					<p:tab title="Zonal Promotion Tier"
+					
+					<p:tab title="#{lbl['lbl.cm.zonal.promotion.tier']}"
 						rendered="#{fn:length(catalogueBackingBean.managedBean.supplierItemObj.cmZonalPromotionTierPricings) > 0}">
-						<ui:include
-							src="/xhtml/cm/pricing/zonalPromotionTierPricingTab.xhtml"></ui:include>
-
+						<ui:include src="/xhtml/cm/pricing/zonalPromotionTierPricingTab.xhtml"></ui:include>
 					</p:tab>
+					
 				</p:tabView>
 
 			</p:dialog>

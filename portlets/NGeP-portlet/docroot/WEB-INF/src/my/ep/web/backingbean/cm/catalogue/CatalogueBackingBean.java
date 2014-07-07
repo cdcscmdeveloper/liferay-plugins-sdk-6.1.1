@@ -3120,7 +3120,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				.getInstance().getServiceObject("cm", ICatalogueSO.class);
 
 		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
-		reqDTO.setSupplierId(new Long(1));
+		reqDTO.setSupplierId(item.getSmSupplier().getSupplierId());
 		CatalogueResDTO resDTO = catalogueSO.retrieveSupplierZoneBySuppId(reqDTO);
 		System.out.println("size:" + resDTO.getSupplierZoneLs().size());
 		this.getManagedBean().setSupplierZoneList(resDTO.getSupplierZoneLs());
