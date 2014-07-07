@@ -4,6 +4,7 @@
 package my.ep.web.backingbean.ct.circular.cc;
 
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -92,6 +93,8 @@ import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.CommonUIConst;
+import my.ep.web.format.AttachmentDateFormat;
+import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.ct.circular.cc.CentralContractManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -117,6 +120,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	
 	private static Logger log = Logger.getLogger(CentralContractBackingBean.class);
 	private IPagingDataModel<CtCircularVer> circularVerPagingDataModel = new CircularVerPagingDataModel();
+	private String fileDirectory = CommonConstants.BASE_FILE_DIR+"/CT/Circulars/"+ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR;
 	
 	public CentralContractBackingBean(){
 		if(getManagedBean().getOutComes()==null) {
@@ -126,7 +130,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			status.setStatusId(ContractStatusConst.CQ_PENDING_SUBMISSION);
 			getManagedBean().getCircularVer().setStatus(status);
 			initializeRemarks();
-			ContractBackingBean ctBB = new ContractBackingBean();
+			ContractBackingBean ctBB = new ContractBackingBean(fileDirectory);
 			ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 		}
 		
@@ -209,7 +213,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			this.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
 			
 			initializeRemarks();
-			ContractBackingBean ctBB = new ContractBackingBean();
+			ContractBackingBean ctBB = new ContractBackingBean(fileDirectory);
 		    ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
 		    
 						
@@ -529,7 +533,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 					getManagedBean().setCircular(resDTO.getCircularVer().getCtCircular());
 					getManagedBean().setUpdateAction(false);
 					initializeRemarks();
-					ContractBackingBean ctBB = new ContractBackingBean();
+					ContractBackingBean ctBB = new ContractBackingBean(fileDirectory);
 					ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
 				}
 			  }else {
@@ -585,7 +589,13 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 
 	public void fileUpload(FileUploadEvent event) throws Exception {
 		UploadedFile item = event.getFile();
-		String filePath = "C:/projects/uploads/"+item.getFileName();
+		AttachmentFormat attachmentFormat = new AttachmentDateFormat();
+		
+		String filePath = fileDirectory;
+		File file = new File(filePath);
+		file.mkdirs();
+		filePath = filePath + "/" + attachmentFormat.format(item.getFileName(), null);
+		
 		FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
 	    fileOuputStream.write(item.getContents());
 	    fileOuputStream.close();
@@ -668,7 +678,8 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			getManagedBean().setRemarkList(resDTO.getRemarkList());
 			getManagedBean().setAttachmentList(resDTO.getAttachmentList());		
 			
-			ContractBackingBean ctBB = new ContractBackingBean();
+			initializeRemarks();
+			ContractBackingBean ctBB = new ContractBackingBean(fileDirectory);
 			ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 			
 			return "circularBase.xhtml?faces-redirect=true";
@@ -744,8 +755,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	}
 
 	private void initializeRemarks() {
-		initiateRemark(getManagedBean().getCircularVer().getZoneRemarks());
-		initiateRemark(getManagedBean().getCircularVer().getItemRemarks());
+		initiateRemark(getManagedBean().getCircularVer().getContractRemarks());
 	}
 	
 	private void initiateRemark(List<CtRemark> remarks) {
@@ -986,5 +996,13 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			this.getManagedBean().getCircularVer().setExtendStartDate(null);
 			this.getManagedBean().getCircularVer().setExtendEndDate(null);
 		}
+	}
+
+	public String getFileDirectory() {
+		return fileDirectory;
+	}
+
+	public void setFileDirectory(String fileDirectory) {
+		this.fileDirectory = fileDirectory;
 	}
 }
