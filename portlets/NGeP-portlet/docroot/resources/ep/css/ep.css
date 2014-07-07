@@ -4084,6 +4084,13 @@ important
 	border-radius:0px;
 	height:16px !important;
 }
+
+.ui-icon-play {
+	background-image: url(#{ resource [ 'ep/images/design:play.png' ]}) !important;
+	background-position:center;
+	border-radius:0px;
+	height:16px !important;
+}
 /*--------------------------       End Custom Icons    ------------------------------ */
 
 /*--------------------------       Custom CSS          ------------------------------ */
