@@ -75,7 +75,7 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		this.getManagedBean().setSearchUsername(null);
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, "smUserManagementHome");
+				.handleNavigation(fc, null, "userProfileSearch.xhtml");
 	}
 	
 	public void resetSmPersonnelSearch() {
@@ -117,7 +117,7 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		getManagedBean().setBasicSmPersonnelPermanentAddress(permPersonnelAddress);
 		getManagedBean().setBasicSmPersonnel(smPersonnel);
 		getCountryList();
-		return "basicSmUser";
+		return "basicUserProfile.xhtml";
 	}
 
 	public void initUserPersonnelInfo(){
@@ -130,12 +130,12 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 	public String navigateToUpdateUserPage(String personnelId){
 		System.out.println("********************SmPersonnelBackingBean navigateToUpdateUserPage***************");
 		getPersonnelInfoById(personnelId);
-		return "basicSmUser";
+		return "basicUserProfile.xhtml";
 	}
 	
 	public String cancel(){
 
-		return "smUserManagementHome";
+		return "userProfileSearch.xhtml";
 
 	}
 	
