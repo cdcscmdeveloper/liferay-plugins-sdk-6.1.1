@@ -5015,6 +5015,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		this.getManagedBean().setStateId(new long[0]);
 		this.getManagedBean().setDistrictList(null);
 		this.getManagedBean().setSimpleQuoteFlag(true);
+		this.getManagedBean().setCtRequestList(null);
+		this.getManagedBean().setSelectViewItems(null);
 		
 		this.getManagedBean().getSearchDataModel().resetData();
 	}
