@@ -65,9 +65,9 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private FlDeliveryAddress selectedAddrRow;
 	private FlDeliveryAddress selectedDelAddr;
 	private boolean checkPtjFlg = true;
-	private List<CtAgencyAddress> addressTypesList; 
+	private List<PmAddressType> addressTypesList; 
 	private List<PmAddressType> selectedPmAddrTypeList;
-	private List<CtAgencyAddress> selectedCtAddrTypeList;
+	private List<PmAddressType> selectedAddrTypeList;
 	private List<CtContractItem> contractedItemList;
 	private List<CtContractItem> selectedContractedItemList;
 	private List<VCtActiveContract> activeContractList; 
@@ -92,6 +92,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private Long docStatusId;
 	private Long contractId;
 	private Long testOrg;
+	private String orgProfileIds;
 	
 	//getcontract
 	private CtContract ctContract = new CtContract();
@@ -165,9 +166,10 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private String financingTypeCode;
 	
 	private boolean deleteButtonHide;
+	private boolean zonal;
 	
-	//temp
 	private String termDays;
+	private int deliveryTerm;
 	
 	// for Manual Address
 	private List<PmCountry> countryList;
@@ -180,7 +182,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private int selectedTabIndex;
 	// manual address
 	private boolean required;
-	private Map<Long, List<CtAgencyAddress>> manualAddressMap;
+	private Map<Long, List<PmAddressType>> manualAddressMap;
 	private List<PmAddressType> manualAddressList;
 	//private List<PmAddressType> addressManualTypesList;
 	private PmUser pmUser;
@@ -803,39 +805,6 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setPmUserOrg(PmUserOrg pmUserOrg) {
 		this.pmUserOrg = pmUserOrg;
-	}
-
-
-	/**
-	 * @return the addressTypesList
-	 */
-	public List<CtAgencyAddress> getAddressTypesList() {
-		return addressTypesList;
-	}
-
-
-	/**
-	 * @param addressTypesList the addressTypesList to set
-	 */
-	public void setAddressTypesList(List<CtAgencyAddress> addressTypesList) {
-		this.addressTypesList = addressTypesList;
-	}
-
-
-	/**
-	 * @return the selectedCtAddrTypeList
-	 */
-	public List<CtAgencyAddress> getSelectedCtAddrTypeList() {
-		return selectedCtAddrTypeList;
-	}
-
-
-	/**
-	 * @param selectedCtAddrTypeList the selectedCtAddrTypeList to set
-	 */
-	public void setSelectedCtAddrTypeList(
-			List<CtAgencyAddress> selectedCtAddrTypeList) {
-		this.selectedCtAddrTypeList = selectedCtAddrTypeList;
 	}
 
 
@@ -1532,38 +1501,6 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 
 
 	/**
-	 * @return the manualAddressMap
-	 */
-	public Map<Long, List<CtAgencyAddress>> getManualAddressMap() {
-		return manualAddressMap;
-	}
-
-
-	/**
-	 * @param manualAddressMap the manualAddressMap to set
-	 */
-	public void setManualAddressMap(Map<Long, List<CtAgencyAddress>> manualAddressMap) {
-		this.manualAddressMap = manualAddressMap;
-	}
-
-
-	/**
-	 * @return the manualAddressList
-	 */
-	public List<PmAddressType> getManualAddressList() {
-		return manualAddressList;
-	}
-
-
-	/**
-	 * @param manualAddressList the manualAddressList to set
-	 */
-	public void setManualAddressList(List<PmAddressType> manualAddressList) {
-		this.manualAddressList = manualAddressList;
-	}
-
-
-	/**
 	 * @return the pmUser
 	 */
 	public PmUser getPmUser() {
@@ -1737,6 +1674,116 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	}
 
 
-	
+	/**
+	 * @return the deliveryTerm
+	 */
+	public int getDeliveryTerm() {
+		return deliveryTerm;
+	}
+
+
+	/**
+	 * @param deliveryTerm the deliveryTerm to set
+	 */
+	public void setDeliveryTerm(int deliveryTerm) {
+		this.deliveryTerm = deliveryTerm;
+	}
+
+
+	/**
+	 * @return the zonal
+	 */
+	public boolean isZonal() {
+		return zonal;
+	}
+
+
+	/**
+	 * @param zonal the zonal to set
+	 */
+	public void setZonal(boolean zonal) {
+		this.zonal = zonal;
+	}
+
+
+	/**
+	 * @return the manualAddressList
+	 */
+	public List<PmAddressType> getManualAddressList() {
+		return manualAddressList;
+	}
+
+
+	/**
+	 * @param manualAddressList the manualAddressList to set
+	 */
+	public void setManualAddressList(List<PmAddressType> manualAddressList) {
+		this.manualAddressList = manualAddressList;
+	}
+
+
+	/**
+	 * @return the orgProfileIds
+	 */
+	public String getOrgProfileIds() {
+		return orgProfileIds;
+	}
+
+
+	/**
+	 * @param orgProfileIds the orgProfileIds to set
+	 */
+	public void setOrgProfileIds(String orgProfileIds) {
+		this.orgProfileIds = orgProfileIds;
+	}
+
+
+	/**
+	 * @return the addressTypesList
+	 */
+	public List<PmAddressType> getAddressTypesList() {
+		return addressTypesList;
+	}
+
+
+	/**
+	 * @param addressTypesList the addressTypesList to set
+	 */
+	public void setAddressTypesList(List<PmAddressType> addressTypesList) {
+		this.addressTypesList = addressTypesList;
+	}
+
+
+	/**
+	 * @return the manualAddressMap
+	 */
+	public Map<Long, List<PmAddressType>> getManualAddressMap() {
+		return manualAddressMap;
+	}
+
+
+	/**
+	 * @param manualAddressMap the manualAddressMap to set
+	 */
+	public void setManualAddressMap(Map<Long, List<PmAddressType>> manualAddressMap) {
+		this.manualAddressMap = manualAddressMap;
+	}
+
+
+	/**
+	 * @return the selectedAddrTypeList
+	 */
+	public List<PmAddressType> getSelectedAddrTypeList() {
+		return selectedAddrTypeList;
+	}
+
+
+	/**
+	 * @param selectedAddrTypeList the selectedAddrTypeList to set
+	 */
+	public void setSelectedAddrTypeList(List<PmAddressType> selectedAddrTypeList) {
+		this.selectedAddrTypeList = selectedAddrTypeList;
+	}
+
 
 }

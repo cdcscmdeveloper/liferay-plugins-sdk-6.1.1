@@ -71,23 +71,24 @@
 				<td rowspan="3" valign="top" style="width: 130px;"><p:outputLabel
 						value="#{lbl['lbl.fl.title']}" /> <p:outputLabel value="*"
 						styleClass="mandatory" /></td>
-				<td rowspan="3"><p:inputTextarea cols="50" rows="4" id="title"
+				<td rowspan="3" style="width:290px"><p:inputTextarea cols="50" rows="4" id="title"
 						maxlength="500" style=" margin-bottom:5px;" label="Title"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.title}"
-						required="true" /> <p:message for="title" display="icon" /></td>
+						required="true" /></td>
+						<td><p:message for="title" display="icon" /></td>
 				<td style="width: 120px;"><p:outputLabel
 						value="#{lbl['lbl.fl.procurement.type']}" /></td>
 				<td><p:inputText size="25" disabled="true"
 						value="#{purchaseRequestBackingBean.getParameterDesc(purchaseRequestBackingBean.managedBean.fulfilmentRequest.procurementType)}" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.financial.year']}" /></td>
+				<td colspan="2"><p:outputLabel value="#{lbl['lbl.fl.financial.year']}" /></td>
 				<td><p:inputText size="25"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.financialYear}"
 						disabled="true" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.prepared.date']}" /></td>
+				<td colspan="2"><p:outputLabel value="#{lbl['lbl.fl.prepared.date']}" /></td>
 				<td><p:inputText size="25" disabled="true"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.createdDate}">
 						<f:convertDateTime
@@ -102,7 +103,7 @@
 					<p:spacer width="5" /> <p:inputText size="2"
 						value="#{purchaseRequestBackingBean.getParameterDesc(purchaseRequestBackingBean.managedBean.fulfilmentRequest.pmUom)}"
 						disabled="true" /></td>
-				<td><p:outputLabel value="#{lbl['lbl.fl.submission.date']}" /></td>
+				<td colspan="2"><p:outputLabel value="#{lbl['lbl.fl.submission.date']}" /></td>
 				<td><p:inputText size="25" disabled="true"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.submissionDate}">
 						<f:convertDateTime

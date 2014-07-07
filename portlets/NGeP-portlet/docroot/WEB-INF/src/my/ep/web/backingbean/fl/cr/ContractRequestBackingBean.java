@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -23,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.dtl.IContractItemSO;
+import my.ep.biz.service.ct.dtl.IContractZoneSO;
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
@@ -48,6 +51,8 @@ import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.ct.dtl.ContractItemReqDTO;
 import my.ep.dto.ct.dtl.ContractItemResDTO;
+import my.ep.dto.ct.dtl.ContractZoneReqDTO;
+import my.ep.dto.ct.dtl.ContractZoneResDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentReqDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
@@ -80,7 +85,7 @@ import my.ep.jaxb.fl.codata.FLContractOrderDataType;
 import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.VCtActiveContract;
-import my.ep.persistence.entity.ct.dtl.CtAgencyAddress;
+import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
@@ -94,7 +99,6 @@ import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
-import my.ep.persistence.entity.pm.common.PmAgOffice;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
@@ -110,7 +114,6 @@ import my.ep.persistence.entity.pm.common.PmVotFund;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.type.pm.AddressType;
-import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.type.pm.VotFundType;
 import my.ep.util.MessageUtils;
@@ -260,13 +263,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			getManagedBean().getFlRequest().getChargeOrgProfile().setPmOrgValidity(new PmOrgValidity());
 			
 		}
-		//addContractedItems();
-		//TODO
-		getVotFundList(4L);
-		//TODO
-		getManagedBean().setTermDays("Days");
-		//get this lists for manual Address dropdowns
-		retrieveCountryList();
 		getManagedBean().setDeleteButtonHide(true);
 	}
 
@@ -286,17 +282,18 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			if(isRequisitioner()) {
 				reqDTO.setRequisitioner(Boolean.TRUE);
 			}
-			flRequest.setFinancialYear(2014);
-			PmOrgProfile pmorgProfile = new PmOrgProfile();
-			pmorgProfile.setOrgProfileId(4L);
-			flRequest.setChargeOrgProfile(pmorgProfile);
-			flRequest.setIssuedOrgProfile(pmorgProfile);
-			flRequest.setPreparedOrgProfile(pmorgProfile);
-			flRequest.setCreatedOrgProfile(pmorgProfile);
-			PmAgOffice agOffice = new  PmAgOffice();
+			flRequest.setFinancialYear(Calendar.getInstance().get(Calendar.YEAR));
+//			PmOrgProfile pmorgProfile = new PmOrgProfile();
+//			pmorgProfile.setOrgProfileId(4L);
+//			flRequest.setChargeOrgProfile(pmorgProfile);
+//			flRequest.setIssuedOrgProfile(pmorgProfile);
+//			flRequest.setPreparedOrgProfile(pmorgProfile);
+//			flRequest.setCreatedOrgProfile(pmorgProfile);
+//			PmAgOffice agOffice = new  PmAgOffice();
 			//TODO
-			agOffice.setAgOfficeId(1L);
-			flRequest.setAgOffice(agOffice);
+//			agOffice.setAgOfficeId(1L);
+//			flRequest.setAgOffice(agOffice);
+			
 			//TODO waiting for sm api to check the current date against the suppleir exp date.
 //			flRequest.getCtContract().getSmSupplier().getSmMofAccounts();
 			//checkCeilingAmount(flRequest);
@@ -490,14 +487,14 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	 * @param flDeliveryAddresses list of delivery addresses.
 	 * @return returns true if selected delivery address is already added,otherwise false.
 	 */
-	private boolean isDeliveryAddressContains(CtAgencyAddress addrType,
+	private boolean isDeliveryAddressContains(PmAddressType addrType,
 			List<FlDeliveryAddress> flDeliveryAddresses) {
 		boolean isContains=false;
 		if(null==flDeliveryAddresses|| flDeliveryAddresses.isEmpty()){
 			return false;
 		}
 		for(FlDeliveryAddress flAddress:flDeliveryAddresses){
-			if(addrType.getAddressType().getAddressTypeId()==flAddress.getAddressType().getAddressTypeId()){
+			if(addrType.getPmAddress().getAddressId()==flAddress.getPmAddress().getAddressId()){
 				isContains=true;
 			}
 		}
@@ -507,10 +504,12 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	public void flDeliveryAddrList() {
 		ContractAmendmentReqDTO ctReqDTO = new ContractAmendmentReqDTO();
 		ctReqDTO.setCtContract(getManagedBean().getFlRequest().getCtContract());
+		ctReqDTO.setOrgProfileId(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId());
 		IContractAmendmentSO ctAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractAmendmentSO.class);
 		ContractAmendmentResDTO resDTO = ctAmendmentSO.getActiveLocation(ctReqDTO);
-		System.out.println("address List::: "+resDTO.getAgencyAddressList().size());
-		getManagedBean().setAddressTypesList(resDTO.getAgencyAddressList());
+		System.out.println("address List::: "+resDTO.getAddressTypeList().size());
+		
+		getManagedBean().setAddressTypesList(resDTO.getAddressTypeList());
 	}
 	
 	public void flManualDeliveryAddr() {
@@ -538,38 +537,72 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		if(getManagedBean().getAddressTypesList()==null) {
 			ContractAmendmentReqDTO ctReqDTO = new ContractAmendmentReqDTO();
 			ctReqDTO.setCtContract(getManagedBean().getFlRequest().getCtContract());
-			IContractAmendmentSO ctAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject("ct",IContractAmendmentSO.class);
-			ContractAmendmentResDTO respDTO = ctAmendmentSO.getActiveLocation(ctReqDTO);
-			System.out.println("address List::: "+respDTO.getAgencyAddressList().size());
-			getManagedBean().setAddressTypesList(respDTO.getAgencyAddressList());
+			ctReqDTO.setOrgProfileId(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId());
+			IContractAmendmentSO ctAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractAmendmentSO.class);
+			ContractAmendmentResDTO ctAmendmentResDTO = ctAmendmentSO.getActiveLocation(ctReqDTO);
+			System.out.println("address List::: "+ctAmendmentResDTO.getAddressTypeList().size());
+			getManagedBean().setAddressTypesList(ctAmendmentResDTO.getAddressTypeList());
 		}
 		if(getManagedBean().getManualAddressMap() == null || getManagedBean().getManualAddressMap().size() == 0){
 			setManualAddressList();
 		}		
 	}
 	public void updateDeliveryAddrDt() {
-		if (null == getManagedBean().getSelectedCtAddrTypeList()
-				|| getManagedBean().getSelectedCtAddrTypeList().isEmpty()) {
+		if (null == getManagedBean().getSelectedAddrTypeList()
+				|| getManagedBean().getSelectedAddrTypeList().isEmpty()) {
 			return;
 		}
 		IParameterSO parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IParameterSO.class);
+		IContractZoneSO contractZoneSO = (IContractZoneSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractZoneSO.class);
 		ParameterReqDTO paramReqDTO = new ParameterReqDTO();
 		FlDeliveryAddress deliveryAddr = null;
 		int i = 0;
-		for (CtAgencyAddress addrType : getManagedBean().getSelectedCtAddrTypeList()) {
+		for (PmAddressType addrType : getManagedBean().getSelectedAddrTypeList()) {
 			//Validate to eliminate duplicate address. 
 			boolean isAddressContains = isDeliveryAddressContains(addrType,
 					getManagedBean().getFlRequest()
 							.getFlDeliveryAddresses());
 			if (!isAddressContains) {
 				deliveryAddr = new FlDeliveryAddress();
-				deliveryAddr.setFlFulfilmentRequest(getManagedBean().getFlRequest());
-				deliveryAddr.setAddressType(addrType.getAddressType());
-				//deliveryAddr.setPmAddress(addrType.getAddressType().getPmAddress());
-				paramReqDTO.setParameterId(574L);
-				deliveryAddr.setPmUom(parameterSO.retrieveParameterById(paramReqDTO).getPmParameter());
-				deliveryAddr.setDeliveryTerm(10);
-				deliveryAddr.setReceivingGrp(addrType.getAddressType());
+				if(getManagedBean().getFlRequest().getCtContract().isZonalPricing()){
+					getManagedBean().setZonal(true);
+					ContractZoneReqDTO zoneReqDTO = new ContractZoneReqDTO();
+					zoneReqDTO.setPmAddress(addrType.getPmAddress());
+					zoneReqDTO.setCtContract(getManagedBean().getFlRequest().getCtContract());
+					ContractZoneResDTO zoneResDTO = contractZoneSO.getDeliveryTermByAddress(zoneReqDTO);
+					
+					deliveryAddr.setFlFulfilmentRequest(getManagedBean().getFlRequest());
+					deliveryAddr.setAddressType(addrType);
+					paramReqDTO.setParameterId(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getDeliveryTermUom().getParameterId());
+					deliveryAddr.setPmUom(zoneResDTO.getDeliveryTermUom());
+					deliveryAddr.setDeliveryTerm(zoneResDTO.getDeliveryTerm());
+					deliveryAddr.setStartDate(new Timestamp(System.currentTimeMillis()));
+					
+					Date startDate = deliveryAddr.getStartDate();
+					int deliveryTerm = deliveryAddr.getDeliveryTerm();
+					if(deliveryAddr.getPmUom().getParameterCode().equalsIgnoreCase(ParameterConst.DELIVERY_TERM_DAYS)){
+						Calendar calendar = Calendar.getInstance();
+						calendar.setTime(startDate);
+						calendar.add(Calendar.DATE, deliveryTerm);
+						deliveryAddr.setEndDate(calendar.getTime());
+					}else if(deliveryAddr.getPmUom().getParameterCode().equalsIgnoreCase(ParameterConst.DELIVERY_TERM_MONTHS)){
+						Calendar calendar = Calendar.getInstance();
+						calendar.setTime(startDate);
+						calendar.add(Calendar.MONTH, deliveryTerm);
+						deliveryAddr.setEndDate(calendar.getTime());
+					}
+					
+				}else{
+					deliveryAddr.setStartDate(getManagedBean().getFlRequest().getStartDate());
+					deliveryAddr.setEndDate(getManagedBean().getFlRequest().getEndDate());
+					deliveryAddr.setFlFulfilmentRequest(getManagedBean().getFlRequest());
+					deliveryAddr.setAddressType(addrType);
+					paramReqDTO.setParameterId(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getDeliveryTermUom().getParameterId());
+					deliveryAddr.setPmUom(parameterSO.retrieveParameterById(paramReqDTO).getPmParameter());
+					deliveryAddr.setDeliveryTerm(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getDeliveryTerm());
+					deliveryAddr.setReceivingGrp(addrType);
+				}
+				deliveryAddr.setPmAddress(addrType.getPmAddress());
 				if(i==0) {
 					getManagedBean().setSelectedDelAddr(deliveryAddr);
 				}
@@ -577,15 +610,14 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				if (null == getManagedBean().getFlRequest().getFlDeliveryAddresses()) {
 					getManagedBean().getFlRequest().setFlDeliveryAddresses(new ArrayList<FlDeliveryAddress>());
 				}
+				
 				getManagedBean().getFlRequest().getFlDeliveryAddresses().add(deliveryAddr);
 			}	
 		}
-		getManagedBean().setAddressTypesList(new ArrayList<CtAgencyAddress>());
+		getManagedBean().setAddressTypesList(new ArrayList<PmAddressType>());
 	}
 	public void updateManualDeliveryAddrDt() {
-		IParameterSO parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IParameterSO.class);
-		ParameterReqDTO paramReqDTO = new ParameterReqDTO();
-		
+		IContractZoneSO contractZoneSO = (IContractZoneSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractZoneSO.class);
 		if(null== getManagedBean().getFlManulaAddress().getPmAddress() ||  getManagedBean().getFlManulaAddress().isEditable()){
 			return;
 		}
@@ -597,13 +629,35 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		deliveryAddr.setPmAddress(manualAddr);
 		//deliveryAddr.setAddressType(manualAddr);
 		deliveryAddr.setCheckManualAddress(true);
-		deliveryAddr.setStartDate(new Timestamp(System.currentTimeMillis()));
-		deliveryAddr.setEndDate(new Timestamp(System.currentTimeMillis()));
-		//TODO
-		paramReqDTO.setParameterId(574L);
-		deliveryAddr.setPmUom(parameterSO.retrieveParameterById(paramReqDTO).getPmParameter());
-		//TODO
-		deliveryAddr.setDeliveryTerm(10);
+		if(getManagedBean().getFlRequest().getCtContract().isZonalPricing()){
+			ContractZoneReqDTO zoneReqDTO = new ContractZoneReqDTO();
+			zoneReqDTO.setPmAddress(manualAddr);
+			zoneReqDTO.setCtContract(getManagedBean().getFlRequest().getCtContract());
+			ContractZoneResDTO zoneResDTO = contractZoneSO.getDeliveryTermByAddress(zoneReqDTO);
+			deliveryAddr.setPmUom(zoneResDTO.getDeliveryTermUom());
+			deliveryAddr.setDeliveryTerm(zoneResDTO.getDeliveryTerm());
+			deliveryAddr.setStartDate(new Timestamp(System.currentTimeMillis()));
+			
+			Date startDate = deliveryAddr.getStartDate();
+			int deliveryTerm = deliveryAddr.getDeliveryTerm();
+			if(deliveryAddr.getPmUom().getParameterCode().equalsIgnoreCase(ParameterConst.DELIVERY_TERM_DAYS)){
+				Calendar calendar = Calendar.getInstance();
+				calendar.setTime(startDate);
+				calendar.add(Calendar.DATE, deliveryTerm);
+				deliveryAddr.setEndDate(calendar.getTime());
+			}else if(deliveryAddr.getPmUom().getParameterCode().equalsIgnoreCase(ParameterConst.DELIVERY_TERM_MONTHS)){
+				Calendar calendar = Calendar.getInstance();
+				calendar.setTime(startDate);
+				calendar.add(Calendar.MONTH, deliveryTerm);
+				deliveryAddr.setEndDate(calendar.getTime());
+			}
+		}else{
+			deliveryAddr.setStartDate(getManagedBean().getFlRequest().getStartDate());
+			deliveryAddr.setEndDate(getManagedBean().getFlRequest().getEndDate());
+			deliveryAddr.setPmUom(getManagedBean().getFlRequest().getPmUom());
+			deliveryAddr.setDeliveryTerm(getManagedBean().getFlRequest().getDeliveryTerm());
+		}
+		deliveryAddr.setReceivingGrp(getManagedBean().getFlManulaAddress().getReceivingGrp());
 		getManagedBean().setSelectedDelAddr(deliveryAddr);
 		getManagedBean().getFlRequest().getFlDeliveryAddresses().add(deliveryAddr);
 		
@@ -808,6 +862,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				getManagedBean().getFlManualAddress().getPmAddress().getPmDivision().setDivisionId(1L);
 			}
 		}else if(contractId != null){
+			FacesScopes facesScopes = new FacesScopes();
 			getManagedBean().setContractId(Long.parseLong(contractId));
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			IContractSO contractSO = BusinessDelegate.getInstance().getServiceObject("ct", IContractSO.class);
@@ -817,6 +872,23 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			getManagedBean().getFlRequest().setCtContract(contractResDTO.getContract());
 			getManagedBean().getFlRequest().setScheduleNo(scheduleNo);
 			getManagedBean().getFlRequest().setSmSupplier(contractResDTO.getContract().getSmSupplier());
+			
+			for(CtAgency agency : getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtAgencies()){
+				
+				if(agency == getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtAgencies().get(0)){
+					getManagedBean().setOrgProfileIds(agency.getOrgProfile().getOrgProfileId().toString());
+				}else{
+					getManagedBean().setOrgProfileIds(getManagedBean().getOrgProfileIds() + "," +agency.getOrgProfile().getOrgProfileId().toString());
+				}
+				
+			}
+			IUserSO profileSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			UserReqDTO userReqDTO = new UserReqDTO();
+			userReqDTO.setUserId(facesScopes.getUserSessionBean().getUserId());
+			UserResDTO userResDTO = profileSO.retrieveUserOrgListByUserId(userReqDTO);
+			getManagedBean().getFlRequest().setPreparedOrgProfile(userResDTO.getUserOrgList().get(0).getPmOrgProfile());
+			getManagedBean().getFlRequest().setChargeOrgProfile(userResDTO.getUserOrgList().get(0).getPmOrgProfile());
+			getManagedBean().getFlRequest().setIssuedOrgProfile(userResDTO.getUserOrgList().get(0).getPmOrgProfile());
 			//TODO
 			/*if(contractResDTO.getContract().getSmSupplierBranch() != null){
 				getManagedBean().getFlRequest().setSupplierBranch(contractResDTO.getContract().getSmSupplierBranch());
@@ -836,7 +908,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 //				
 //			}
 		}
-		getManagedBean().setTestOrg(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtAgencies().get(0).getOrgProfile().getOrgProfileId());
 		
 		if(getManagedBean().getFlRequest().getCtContract().isZonalPricing()){
 			getManagedBean().setFlManualAddress(new FlDeliveryAddress());
@@ -1147,16 +1218,19 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		
 	}
 	private void setManualAddressList(){
-		Map<Long, List<CtAgencyAddress>> addressTypeMap = new HashMap<Long, List<CtAgencyAddress>>();
-		for(CtAgencyAddress addressType : getManagedBean().getAddressTypesList()){
-			Long key = addressType.getAddressType().getPmAddress().getPmDistrict().getDistrictId();
+		Map<Long, List<PmAddressType>> addressTypeMap = new HashMap<Long, List<PmAddressType>>();
+		if(getManagedBean().getAddressTypesList()==null || getManagedBean().getAddressTypesList().size()==0) {
+			flDeliveryAddrList();
+		}
+		for(PmAddressType addressType : getManagedBean().getAddressTypesList()){
+			Long key = addressType.getPmAddress().getPmDistrict().getDistrictId();
 			if(!addressTypeMap.containsKey(key)){
-				addressTypeMap.put(key, new ArrayList<CtAgencyAddress>());
+				addressTypeMap.put(key, new ArrayList<PmAddressType>());
 			}
 			addressTypeMap.get(key).add(addressType);
 		}
 		getManagedBean().setManualAddressMap(addressTypeMap);
-	}
+}
 	 public void combineSupAddress(FlFulfilmentRequest fulfilmentRequest){
 	    	
 	    	StringBuilder address = new StringBuilder();
@@ -1206,16 +1280,17 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	    }
 	
 	public void receivingOfficerList(FlDeliveryAddress flDelAddress){
-		Long addressId = flDelAddress.getAddressType().getPmAddress().getAddressId();
+		Long addressId = flDelAddress.getPmAddress().getAddressId();
 		if(flDelAddress.getReceivingGrp()!=null && flDelAddress.getReceivingGrp().getAddressTypeId()!=null) { // in case of Manual address
 			ContractAmendmentReqDTO ctReqDTO = new ContractAmendmentReqDTO();
 			ctReqDTO.setCtContract(getManagedBean().getFlRequest().getCtContract());
+			ctReqDTO.setOrgProfileId(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId());
 			IContractAmendmentSO ctAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractAmendmentSO.class);
 			ContractAmendmentResDTO resDTO = ctAmendmentSO.getActiveLocation(ctReqDTO);
-			System.out.println("address List::: "+resDTO.getAgencyAddressList().size());
-			getManagedBean().setAddressTypesList(resDTO.getAgencyAddressList());
+			System.out.println("address List::: "+resDTO.getAddressTypeList().size());
+			getManagedBean().setAddressTypesList(resDTO.getAddressTypeList());
 			
-			addressId = resDTO.getAgencyAddressList().get(0).getAddressType().getPmAddress().getAddressId();
+			addressId = resDTO.getAddressTypeList().get(0).getPmAddress().getAddressId();
 		}
 		AddressResDTO resDTO=getReceivingOfficerList(addressId, AddressType.RECEIVING_OFFICER_ADDRESS.value());
 		getManagedBean().setReceivingOffList(resDTO.getAddressTypeList());
@@ -1284,7 +1359,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	}
 	public void retrieveDeliveryAddressList(AjaxBehaviorEvent e) {
 		Long districtId = (Long) e.getComponent().getAttributes().get("value");
-		//getManagedBean().setManualAddressList(getManagedBean().getManualAddressMap().get(districtId));
+		getManagedBean().setManualAddressList(getManagedBean().getManualAddressMap().get(districtId));
 		
 		List<SelectItem> manualAddrList = new ArrayList<SelectItem>();
 		if(getManagedBean().getManualAddressList()!=null) {
@@ -1300,7 +1375,12 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			getManagedBean().setVotFundCode(null);
 			getManagedBean().populateChargeLineData();	
 			setClassName("@(.crChargeLinePnlClass)");
-			getVotFundList(4L);
+			getVotFundList(getManagedBean().getFlRequest().getIssuedOrgProfile().getOrgProfileId());
+		}
+		if(selectedTabIndex==1){
+			if(getManagedBean().getSelectedDelAddr()==null) { 
+				retrieveCountryList();
+			}
 		}
 	}
 	public void onNodeSelect() {
@@ -1931,6 +2011,51 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		}
 		getManagedBean().setContractListTree(root);
 		
+	}
+	
+	public void updateDeliveryDate() {
+		Date startDate = getManagedBean().getFlRequest().getStartDate();
+		int deliveryTerm = 0;
+		String uomCode = "";
+		deliveryTerm = getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getDeliveryTerm();
+		
+		uomCode = getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getDeliveryTermUom().getParameterCode();
+		if(uomCode.equalsIgnoreCase(ParameterConst.DELIVERY_TERM_DAYS)){
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(startDate);
+			calendar.add(Calendar.DATE, deliveryTerm);
+			getManagedBean().getFlRequest().setEndDate(calendar.getTime());
+		}else if(uomCode.equalsIgnoreCase(ParameterConst.DELIVERY_TERM_MONTHS)){
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(startDate);
+			calendar.add(Calendar.MONTH, deliveryTerm);
+			getManagedBean().getFlRequest().setEndDate(calendar.getTime());
+		}
+		
+		
+		//update delivery address
+		for(FlDeliveryAddress flDeliveryAddress : getManagedBean().getFlRequest().getFlDeliveryAddresses()) {
+			flDeliveryAddress.setStartDate(getManagedBean().getFlRequest().getStartDate());
+			flDeliveryAddress.setEndDate(getManagedBean().getFlRequest().getEndDate());
+		}
+	}
+	
+	public void updateDeliveryAddrDate() {
+		Date startDate = getManagedBean().getSelectedDelAddr().getStartDate();
+		int deliveryTerm = 0;
+		deliveryTerm = getManagedBean().getSelectedDelAddr().getDeliveryTerm();
+		
+		if(getManagedBean().getSelectedDelAddr().getPmUom().getParameterCode().equalsIgnoreCase(ParameterConst.DELIVERY_TERM_DAYS)){
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(startDate);
+			calendar.add(Calendar.DATE, deliveryTerm);
+			getManagedBean().getSelectedDelAddr().setEndDate(calendar.getTime());
+		}else if(getManagedBean().getSelectedDelAddr().getPmUom().getParameterCode().equalsIgnoreCase(ParameterConst.DELIVERY_TERM_MONTHS)){
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(startDate);
+			calendar.add(Calendar.MONTH, deliveryTerm);
+			getManagedBean().getSelectedDelAddr().setEndDate(calendar.getTime());
+		}
 	}
 	
 }

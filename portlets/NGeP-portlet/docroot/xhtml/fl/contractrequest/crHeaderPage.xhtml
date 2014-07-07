@@ -22,7 +22,7 @@
 				</td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.status']} " /></td>
 				<td class="header-info-text">
-					#{contractRequestBackingBean.getStatusDescById(40500)}
+					#{contractRequestBackingBean.getStatusDescById(contractRequestBackingBean.managedBean.flRequest.status.statusId)}
 				</td>
 			</tr>
 		</table>

@@ -253,10 +253,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			getManagedBean().getFlManulaAddress().getPmAddress().setPmCountry(new PmCountry());
 			getManagedBean().getFlManulaAddress().getPmAddress().getPmCountry().setCountryId(1L);
 		}
-		/*if(null == getManagedBean().getSelectedItemChargeSection()){
-			getManagedBean().setSelectedItemChargeSection(new FlFulfilmentItemAddr());
-			
-		}*/
 		
 		if(isFlFulfilmentRequisitioner()) {
 			FacesScopes facesScopes = new FacesScopes();
@@ -266,26 +262,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		if(getManagedBean().getUserGroupMap()==null && isFlFulfilmentRequisitioner()) {
 			initializeApproverGroup();
 		}
-		
-		//ge
-		getManagedBean().setTermDays("Days");
-	
-		//retrieveRequestNoteList();
-//		addPurchsedItems();
-		
-		//get this lists for manual Address dropdowns
-		retrieveCountryList();
-		
-		
-		//getUserProfiles();
-		
-		//chargeline dropdown
-		
-//		getVotFundList(4L);
-		
-		
-		// get AG Officer details
-		//getAgAccount(4L);
 		
 		getManagedBean().setDeleteButtonHide(true);
 	}
@@ -1839,6 +1815,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		if(selectedTabIndex==1){
 			if(getManagedBean().getSelectedDelAddr()==null) { 
 				addPurchsedItems();
+				retrieveCountryList();
 			}
 		}
 	}

@@ -5,18 +5,6 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	<table>
-		<tr>
-			<td><p:outputLabel value="Is Mto: " /></td>
-			<td><p:selectBooleanCheckbox
-					value="#{contractRequestBackingBean.managedBean.mto}" /></td>
-		</tr>
-		<tr>
-			<td><p:outputLabel value="Have Imported Items: " /></td>
-			<td><p:selectBooleanCheckbox
-					value="#{contractRequestBackingBean.managedBean.importedItems}" /></td>
-		</tr>
-	</table>
 	<p:panel header="AGENCY DETAILS" toggleable="true" id="flDetails">
 		<table style="width: 100%">
 			<tr>
@@ -35,8 +23,8 @@
 						lovId="PM_ORG_PROFILE" headerText="PreparedPtj Lov"
 						saveObject="contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile"
 						value="#{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.orgName}"
-						size="39" update=":form:preparedOrgProfileId,:form:crHeaderPagePnl" readonly="true"
-						conditionField="orgProfileId^#{contractRequestBackingBean.managedBean.testOrg}">
+						size="39" update=":form:preparedOrgProfileId" readonly="true"
+						conditionField="parentOrgProfile.orgProfileId^#{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.parentOrgProfile.orgProfileId}|orgProfileId^#{contractRequestBackingBean.managedBean.orgProfileIds}^9">
 					</ac:lov></td>
 			</tr>
 			<tr>
@@ -80,10 +68,11 @@
 				<td rowspan="3" valign="top" style="width: 138px;"><p:outputLabel
 						value="#{lbl['lbl.fl.title']}" /> <p:outputLabel value="*"
 						styleClass="mandatory" /></td>
-				<td rowspan="3"><p:inputTextarea cols="50" rows="4" id="title"
+				<td rowspan="3" style="width:290px"><p:inputTextarea cols="50" rows="4" id="title"
 						maxlength="500" style=" margin-bottom:5px;" label="Title"
 						value="#{contractRequestBackingBean.managedBean.flRequest.title}"
-						required="true" /> <p:message for="title" display="icon" /></td>
+						required="true" /> </td>
+						<td><p:message for="title" display="icon" /></td>
 				<td style="width: 120px;"><p:outputLabel
 						value="#{lbl['lbl.fl.contract.type']}" /></td>
 				<td><p:inputText size="20"
@@ -91,12 +80,12 @@
 						disabled="true" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.financial.year']}" /></td>
+				<td colspan="2"><p:outputLabel value="#{lbl['lbl.fl.financial.year']}" /></td>
 				<td><p:inputText size="20" disabled="true"
 						value="#{contractRequestBackingBean.managedBean.flRequest.financialYear}" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.prepared.date']}" /></td>
+				<td colspan="2"><p:outputLabel value="#{lbl['lbl.fl.prepared.date']}" /></td>
 				<td><p:inputText size="20" disabled="true"
 						value="#{contractRequestBackingBean.managedBean.flRequest.createdDate}">
 						<f:convertDateTime
@@ -105,14 +94,23 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.period']}" /></td>
-				<td><p:inputText size="12" disabled="true" value="10" /> <p:spacer
-						width="5" /> <p:inputText size="2" value="Days" disabled="true" />
+				<td><p:inputText size="12" disabled="true"
+						value="#{contractRequestBackingBean.managedBean.flRequest.ctContract.latestContractVer.ctContractValue.deliveryTerm}"
+						rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing eq false}" />
+					<p:spacer width="5" /> <p:inputText size="2"
+						value="#{contractRequestBackingBean.getParameterDesc(contractRequestBackingBean.managedBean.flRequest.ctContract.latestContractVer.ctContractValue.deliveryTermUom)}"
+						disabled="true"
+						rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing eq false}" />
+					<p:inputText size="12" disabled="true"
+						value=""
+						rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing}" />
+					<p:spacer width="5" /> <p:inputText size="2" value="" disabled="true" rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing}"/>
 					<p:spacer width="5" /> <h:outputText
 						value="#{lbl['lbl.fl.zonal']}" /> <p:selectBooleanCheckbox
 						value="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing}"
 						disabled="true" /></td>
 
-				<td><p:outputLabel value="#{lbl['lbl.fl.submission.date']}" /></td>
+				<td colspan="2"><p:outputLabel value="#{lbl['lbl.fl.submission.date']}" /></td>
 				<td><p:inputText size="20" disabled="true" 	value="#{contractRequestBackingBean.managedBean.flRequest.submissionDate}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
@@ -121,22 +119,25 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.start.delivery.date']}" /></td>
-				<td><p:calendar mode="popup" showOn="button"
+				<td><p:calendar mode="popup" showOn="button" disabled="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing}" readonlyInput="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing}"
 						value="#{contractRequestBackingBean.managedBean.flRequest.startDate}"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+						<p:ajax event="dateSelect"
+							listener="#{contractRequestBackingBean.updateDeliveryDate}"
+							update="delEndDate" />
 					</p:calendar></td>
-				<td><p:outputLabel value="#{lbl['lbl.fl.cr.mto']}" /></td>
+				<td colspan="2"><p:outputLabel value="#{lbl['lbl.fl.cr.mto']}" /></td>
 				<td><p:selectBooleanCheckbox
 						value="#{contractRequestBackingBean.managedBean.flRequest.ctContract.mto}"
 						disabled="true" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.end.delivery.date']}" /></td>
-				<td><p:calendar mode="popup" showOn="button"
+				<td><p:calendar mode="popup" showOn="button" disabled="true" readonlyInput="true" id="delEndDate"
 						value="#{contractRequestBackingBean.managedBean.flRequest.endDate}"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 					</p:calendar></td>
-				<td><p:outputLabel value="#{lbl['lbl.fl.cr.factored']}" /></td>
+				<td colspan="2"><p:outputLabel value="#{lbl['lbl.fl.cr.factored']}" /></td>
 				<td><p:selectBooleanCheckbox disabled="true"
 						value="#{contractRequestBackingBean.managedBean.flRequest.ctContract.factored}" /></td>
 			</tr>
