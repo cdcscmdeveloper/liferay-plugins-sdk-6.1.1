@@ -452,6 +452,9 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 			   //call prInquirySO submitPrice method
 			   PrInquiryReqDTO reqDTO = new PrInquiryReqDTO();
 			   ScPrInquiry prInquiry = getManagedBean().getScPrInquiry();
+			   
+			   //remarks 
+			   prInquiry.setRemarks(initializeRemarks(prInquiry));
 			   if(prInquiry.getRemarks() != null ){
 				   for (int i = 0; i < prInquiry.getRemarks().size(); i++) {
 					   ScPRIRemark remark = prInquiry.getRemarks().get(i);
