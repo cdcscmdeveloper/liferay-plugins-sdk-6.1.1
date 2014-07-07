@@ -541,8 +541,10 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
             }  
             
             getZoneObjDetails();
-            convertScheduleDate();
-            convertProgressiveScheduleDate();
+            if(getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+            	convertScheduleDate();
+            	convertProgressiveScheduleDate();
+            }
             
             reqDTO.setCtContract(this.getManagedBean().getContractVer().getCtContract());
             CtContractVer ctContractVer = this.getManagedBean().getContractVer();
