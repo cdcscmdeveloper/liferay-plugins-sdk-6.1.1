@@ -1,11 +1,14 @@
-package my.ep.web.backingbean.sc.loiloa;
+/**
+ * Copyright © 2013 Archisoft. All rights reserved.
+ */
 
+package my.ep.web.backingbean.sc.loiloa;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -17,6 +20,7 @@ import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.sc.DPStatusConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -33,6 +37,8 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
+import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
+import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteRemark;
 import my.ep.persistence.entity.sc.loaloi.ScLoi;
 import my.ep.persistence.entity.sc.loaloi.ScLoiNegoLocation;
 import my.ep.persistence.entity.sc.loaloi.ScLoiTerm;
@@ -47,7 +53,7 @@ import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.type.sc.LoiLoaDocType;
 import my.ep.type.sc.TermType;
-import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.managedbean.sc.loiloa.LOIDetailManagedBean;
 import my.ep.web.sc.quationtender.common.QTConstants;
 import my.ep.web.util.FacesScopes;
@@ -61,27 +67,138 @@ import org.apache.log4j.Logger;
  */
 @ManagedBean(name = "lOIDetailBackingBean")
 @RequestScoped
-public class LOIDetailBackingBean extends BaseBackingBean<LOIDetailManagedBean> {
+public class LOIDetailBackingBean extends SourcingBaseBackingBean<LOIDetailManagedBean> {
 	public static Logger log = EpLogger
 			.getLogger(LOIDetailBackingBean.class);
 
 	public LOIDetailBackingBean() {
 		log.info("inside LOIDetailBackingBean constructor");
-
-	//	getManagedBean().setScQtSpec(new ScQtSpec());
+		loiDetailsAction();
+		populateUserMinistryList();
+		initializeRemarks(new ScRequestNote());
+		getApproverNames();
 	}
-
-	private void debugLogger(Object message) {
-		if (log.isDebugEnabled()) {
-			log.debug(message);
+	
+	public void loiDetailsAction() {
+		debugLogger("loiDetailsAction");
+		IQTAwardSO qtAwardSO = null;
+		try {
+			
+			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
+			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+			reqDTO.setDocType(LoiLoaDocType.DOCTYPE_QUOTATION_TENDER.value());
+			reqDTO.setDocId(1450L);
+			reqDTO.setOrgProfileId(32950L);
+			
+			AwardSupplierResDTO resDTO = qtAwardSO.retrievePendingLoiList(reqDTO);
+			getManagedBean().setScQtFinalization(resDTO.getScQtFinalization());
+			//getManagedBean().setRecommend(resDTO.getScQtRecommends().get(0));
+			getManagedBean().setScQtRecommendDtls(resDTO.getScQtRecommendDtls());
+            getManagedBean().setLoiLoas(resDTO.getLoiLoas());
+            
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							"SuccessFully Saved", "LOI"));
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							ex.toString(), ex.getMessage()));
 		}
-		log.info(message);
 	}
+	
+	
+	
+	/**
+	 * to get ptj drop down Listing
+	 */
+	private void populateUserMinistryList() {
+		debugLogger("populateUserMinistryList");
+		PmUser user = new FacesScopes().getUserSessionBean();
+		if (user != null) {
+			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+			reqDTO.setUserId(user.getUserId());
+			reqDTO.setOrgType(OrganizationType.DIVISION.value());
 
-	@PostConstruct
-	public void init() {
+			IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IOrgProfileSO.class);
+			OrgProfileResDTO resDTO = orgProfileSO
+					.retrieveOrgProfileListByOrgType(reqDTO);
+
+			List<PmOrgProfile> ptjList = resDTO.getOrgProfileList();
+			System.out.println("Ptj List" + ptjList.size());
+			getManagedBean().setPtjList(ptjList);
+		}
 	}
-
+	
+	
+	public void ptjNameEvent() {
+		if (getManagedBean().getOrgProfileId() != null) {
+			for (PmOrgProfile orgProfile : getManagedBean()
+					.getPtjList()) {
+				if (orgProfile.getOrgProfileId().equals(
+						getManagedBean().getOrgProfileId())) {
+					getManagedBean().setPmOrgProfile(orgProfile);
+				}
+			}
+		}
+	}
+	
+	public void tabMenuListener(Integer selectedTabIndex) {
+		debugLogger("tabMenuListener");
+		System.out.println("SelectedTabIndex :"+ getManagedBean().getSelectedTabIndex());
+		if(selectedTabIndex.equals(0)){
+			getManagedBean().setSelectedTabIndex(0);
+		} else if(selectedTabIndex.equals(1)){
+			getManagedBean().setSelectedTabIndex(1);
+		} else if(selectedTabIndex.equals(2)){
+			getManagedBean().setSelectedTabIndex(2);
+		} else if(selectedTabIndex.equals(3)){
+			getManagedBean().setSelectedTabIndex(3);
+		}
+	}
+	
+   
+	/**
+	 * Initializing remarks in loi approval
+	 */
+	public List<ScRequestNoteRemark> initializeRemarks(ScRequestNote requestNote) {
+		IStatusSO iStatusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
+		FacesScopes facesScopes = new FacesScopes();
+		List<ScRequestNoteRemark> results =   requestNote.getRemarks();
+		if(results == null){
+			results = new ArrayList<ScRequestNoteRemark>();
+		} 
+		if (results.size() == 0
+				|| !compareUserName(results.get(0).getCreatedUser().getLoginId())) {
+			ScRequestNoteRemark remark = new ScRequestNoteRemark();
+			remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+			remark.setChangedBy(remark.getCreatedBy());
+			remark.setCreatedUser(facesScopes.getUserSessionBean());
+			remark.setRemark("");
+			PmStatus status = new PmStatus();
+			status.setStatusId(DPStatusConstants.PRI_PENDING_SUBMISSION);
+		    StatusReqDTO statusReqDTO = new StatusReqDTO();
+		    if (status != null) {
+		     statusReqDTO.setStatusId(status.getStatusId());
+		     StatusResDTO statusResDTO = iStatusSO.retrieveStatusByStatusId(statusReqDTO);
+		     remark.setPmStatus(statusResDTO.getPmStatus());
+		    }
+		    remark.setPmStatus(status);
+		    remark.setRequestNote(requestNote);
+		    results.add(0, remark);
+		}
+		getManagedBean().setRemarks(results);
+		return results;
+	}
+	
+	
+	
 	/**
 	 * getting Approver drop down listing
 	 */
@@ -291,12 +408,12 @@ public class LOIDetailBackingBean extends BaseBackingBean<LOIDetailManagedBean> 
 				OrgProfileResDTO resDTO = orgProfileSO
 						.retrieveOrgProfileListByOrgType(reqDTO);
 
-				this.getManagedBean().setUserDivisionList(
-						resDTO.getOrgProfileList());
+				/*this.getManagedBean().setUserDivisionList(
+						resDTO.getOrgProfileList());*/
 			}
 		} else {
-			this.getManagedBean().setUserDivisionList(
-					new ArrayList<PmOrgProfile>());
+			/*this.getManagedBean().setUserDivisionList(
+					new ArrayList<PmOrgProfile>());*/
 		}
 
 		this.getManagedBean().getQt().getPmOrgProfile().setOrgProfileId(null);
@@ -477,6 +594,10 @@ public class LOIDetailBackingBean extends BaseBackingBean<LOIDetailManagedBean> 
 		}
 		return QTConstants.LOI_PAGE;
 	}
+	
+	public String createLOI(){
+		return "loiDetailsMain";
+	}
 
 	/**
 	 * 
@@ -634,4 +755,13 @@ public class LOIDetailBackingBean extends BaseBackingBean<LOIDetailManagedBean> 
 							ex.toString(), ex.getMessage()));
 		}
 	}
+	
+	private void debugLogger(Object message) {
+		if (log.isDebugEnabled()) {
+			log.debug(message);
+		}
+		log.info(message);
+	}
+
+	
 }

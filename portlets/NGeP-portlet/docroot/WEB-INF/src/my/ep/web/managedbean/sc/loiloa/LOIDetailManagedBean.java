@@ -1,22 +1,34 @@
 package my.ep.web.managedbean.sc.loiloa;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
+import org.primefaces.model.DualListModel;
+
+import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.sc.directpurchase.ScPrInquiry;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
+import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteRemark;
+import my.ep.persistence.entity.sc.directpurchase.ScRequestSupplierItem;
 import my.ep.persistence.entity.sc.loaloi.ScLoi;
+import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoiNegoLocation;
 import my.ep.persistence.entity.sc.loaloi.ScLoiTerm;
 import my.ep.persistence.entity.sc.loaloi.ScTermDesc;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResult;
+import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalRanking;
+import my.ep.persistence.entity.sc.quationtender.ScQtRecommend;
+import my.ep.persistence.entity.sc.quationtender.ScQtRecommendDtl;
 import my.ep.persistence.entity.sm.SmMofAccount;
+import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -38,6 +50,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	private ScLoi scLoi;
 	private SmSupplier smSupplier;
 	private SmMofAccount smMofAccount;
+	
+	private int selectedTabIndex;
 
 	
 	private ScLoiNegoLocation scNegoLocation;
@@ -52,24 +66,37 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	private PmUser pmUser;
 	private ScQtProposalRanking scQtProposalRanking;
 	private List<SmSupplierBranch> branchsList;
-	
 	private ScQtEvaluationResult scQtEvaluationResult;
 	
 	private String status;
 	public String reqApprove;
 	public String Address;
-
 	
 	private List<ScRequestItem> scQtItemList;
-	
 	private List<PmOrgProfile> userMinistryList;
 	private List<PmOrgProfile> userDepartmentList;
-	private List<PmOrgProfile> userDivisionList;
 
 	private SmSupplierBranch smSupplierBranch;
 	private String branchName;
 	private List<SelectItem> selectItemList;
 	private List<PmUser>  approverNames; // Drop down Listing for Approver Names
+	
+	private ScQtFinalization scQtFinalization;
+	private List<ScQtRecommend> scQtRecommends= new ArrayList<ScQtRecommend>();
+	private ScQtRecommend recommend = new ScQtRecommend();
+	private List<ScQtRecommendDtl> scQtRecommendDtls = new ArrayList<ScQtRecommendDtl>();
+	private List<ScLoiLoa> loiLoas = new ArrayList<ScLoiLoa>();
+	private List<ScLoi> lois = new ArrayList<ScLoi>();
+	
+	private Long orgProfileId;
+	private PmOrgProfile pmOrgProfile = new PmOrgProfile();
+	private PmOrgProfile selectedPtj = new PmOrgProfile();
+	private List<PmOrgProfile> ptjList;
+	
+	// temp
+	private List<ScRequestNoteRemark>  remarks = new ArrayList<ScRequestNoteRemark>();
+	
+	
 	
 	/**
 	 * @return the scQtEvaluationResult
@@ -198,19 +225,6 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 		this.userDepartmentList = userDepartmentList;
 	}
 
-	/**
-	 * @return the userDivisionList
-	 */
-	public List<PmOrgProfile> getUserDivisionList() {
-		return userDivisionList;
-	}
-
-	/**
-	 * @param userDivisionList the userDivisionList to set
-	 */
-	public void setUserDivisionList(List<PmOrgProfile> userDivisionList) {
-		this.userDivisionList = userDivisionList;
-	}
 
 	/**
 	 * @return the scQtItemList
@@ -225,8 +239,6 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	public void setScQtItemList(List<ScRequestItem> scQtItemList) {
 		this.scQtItemList = scQtItemList;
 	}
-
-
 
 	/**
 	 * @return the scTermDesc
@@ -496,8 +508,6 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 		this.approvalDate = approvalDate;
 	}
 
-	
-
 	/**
 	 * @return the qt
 	 */
@@ -513,4 +523,178 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 		this.qt = qt;
 	}
 
+	/**
+	 * @return the selectedTabIndex
+	 */
+	public int getSelectedTabIndex() {
+		return selectedTabIndex;
+	}
+
+	/**
+	 * @param selectedTabIndex the selectedTabIndex to set
+	 */
+	public void setSelectedTabIndex(int selectedTabIndex) {
+		this.selectedTabIndex = selectedTabIndex;
+	}
+
+	/**
+	 * @return the scQtFinalization
+	 */
+	public ScQtFinalization getScQtFinalization() {
+		return scQtFinalization;
+	}
+
+	/**
+	 * @param scQtFinalization the scQtFinalization to set
+	 */
+	public void setScQtFinalization(ScQtFinalization scQtFinalization) {
+		this.scQtFinalization = scQtFinalization;
+	}
+
+	/**
+	 * @return the scQtRecommends
+	 */
+	public List<ScQtRecommend> getScQtRecommends() {
+		return scQtRecommends;
+	}
+
+	/**
+	 * @param scQtRecommends the scQtRecommends to set
+	 */
+	public void setScQtRecommends(List<ScQtRecommend> scQtRecommends) {
+		this.scQtRecommends = scQtRecommends;
+	}
+
+	/**
+	 * @return the scQtRecommendDtls
+	 */
+	public List<ScQtRecommendDtl> getScQtRecommendDtls() {
+		return scQtRecommendDtls;
+	}
+
+	/**
+	 * @param scQtRecommendDtls the scQtRecommendDtls to set
+	 */
+	public void setScQtRecommendDtls(List<ScQtRecommendDtl> scQtRecommendDtls) {
+		this.scQtRecommendDtls = scQtRecommendDtls;
+	}
+
+	/**
+	 * @return the serialversionuid
+	 */
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	/**
+	 * @return the loiLoas
+	 */
+	public List<ScLoiLoa> getLoiLoas() {
+		return loiLoas;
+	}
+
+	/**
+	 * @param loiLoas the loiLoas to set
+	 */
+	public void setLoiLoas(List<ScLoiLoa> loiLoas) {
+		this.loiLoas = loiLoas;
+	}
+
+	/**
+	 * @return the lois
+	 */
+	public List<ScLoi> getLois() {
+		return lois;
+	}
+
+	/**
+	 * @param lois the lois to set
+	 */
+	public void setLois(List<ScLoi> lois) {
+		this.lois = lois;
+	}
+
+	/**
+	 * @return the recommend
+	 */
+	public ScQtRecommend getRecommend() {
+		return recommend;
+	}
+
+	/**
+	 * @param recommend the recommend to set
+	 */
+	public void setRecommend(ScQtRecommend recommend) {
+		this.recommend = recommend;
+	}
+
+	/**
+	 * @return the pmOrgProfile
+	 */
+	public PmOrgProfile getPmOrgProfile() {
+		return pmOrgProfile;
+	}
+
+	/**
+	 * @param pmOrgProfile the pmOrgProfile to set
+	 */
+	public void setPmOrgProfile(PmOrgProfile pmOrgProfile) {
+		this.pmOrgProfile = pmOrgProfile;
+	}
+
+	/**
+	 * @return the selectedPtj
+	 */
+	public PmOrgProfile getSelectedPtj() {
+		return selectedPtj;
+	}
+
+	/**
+	 * @param selectedPtj the selectedPtj to set
+	 */
+	public void setSelectedPtj(PmOrgProfile selectedPtj) {
+		this.selectedPtj = selectedPtj;
+	}
+
+	/**
+	 * @return the ptjList
+	 */
+	public List<PmOrgProfile> getPtjList() {
+		return ptjList;
+	}
+
+	/**
+	 * @param ptjList the ptjList to set
+	 */
+	public void setPtjList(List<PmOrgProfile> ptjList) {
+		this.ptjList = ptjList;
+	}
+
+	/**
+	 * @return the orgProfileId
+	 */
+	public Long getOrgProfileId() {
+		return orgProfileId;
+	}
+
+	/**
+	 * @param orgProfileId the orgProfileId to set
+	 */
+	public void setOrgProfileId(Long orgProfileId) {
+		this.orgProfileId = orgProfileId;
+	}
+
+	/**
+	 * @return the remarks
+	 */
+	public List<ScRequestNoteRemark> getRemarks() {
+		return remarks;
+	}
+
+	/**
+	 * @param remarks the remarks to set
+	 */
+	public void setRemarks(List<ScRequestNoteRemark> remarks) {
+		this.remarks = remarks;
+	}
 }

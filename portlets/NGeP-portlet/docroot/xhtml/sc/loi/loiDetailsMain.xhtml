@@ -16,62 +16,47 @@
 		
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
-			<td width="20%" valign="top">
+			<td width="20%" valign="top" class="sidemenutd">
 				<p:tabMenu styleClass="sidemenu"
 					activeIndex="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
 					style="display : table-caption;">
 
-					<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.details']}" update="@form">
-						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="0" />
-					</p:menuitem>
-					<p:menuitem value="#{lbl['lbl.sc.loiloa.award.details']}" update="@form">
-						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="1" />
-					</p:menuitem>
-					<p:menuitem value="#{lbl['lbl.sc.loiloa.deduction.payment']}" update="@form">
-						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="2" />
-					</p:menuitem>
-					<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}" update="@form">
-						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="3" />
-					</p:menuitem>
-					<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.perform.bond']}" update="@form">
-						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="4" />
-					</p:menuitem>
-					<p:menuitem value="#{lbl['lbl.sc.loiloa.letter.of.acceptance']}" update="@form">
-						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="5" />
-					</p:menuitem>
-					<p:menuitem value="#{lbl['lbl.sc.loiloa.approve.details']}" update="@form">
-						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="6" />
-					</p:menuitem>
-				</p:tabMenu>
+						<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.details']}"
+							update="@form"
+							action="#{lOIDetailBackingBean.tabMenuListener('0')}" />
+
+						<p:menuitem value="#{lbl['lbl.sc.loiloa.award.details']}"
+							update="@form"
+							action="#{lOIDetailBackingBean.tabMenuListener('1')}" />
+
+						<p:menuitem value="#{lbl['lbl.sc.loiloa.nego.details']}"
+							update="@form"
+							action="#{lOIDetailBackingBean.tabMenuListener('2')}" />
+
+						<p:menuitem value="#{lbl['lbl.sc.loiloa.approve.details']}"
+							update="@form"
+							action="#{lOIDetailBackingBean.tabMenuListener('3')}" />
+					</p:tabMenu>
 			</td>
 			<td width="80%">
-				<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == 0}">
+				<c:if test="#{lOIDetailBackingBean.managedBean.selectedTabIndex eq '0'}">
 					<ui:include src="loiDetailsMenu.xhtml" />
 				</c:if>
 	
-				<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == 1}">
+				<c:if test="#{lOIDetailBackingBean.managedBean.selectedTabIndex eq '1'}">
 					<ui:include src="loiAwardDetailsMenu.xhtml" />
 				</c:if>
 				
-				<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == 2}">
+				<c:if test="#{lOIDetailBackingBean.managedBean.selectedTabIndex eq '2'}">
+					<ui:include src="loiNegotiationDetailsMenu.xhtml" />
+				
 				</c:if>
 				
-				<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == 3}">
-				</c:if>
-			
-				<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == 4}">
-				</c:if>
-				
-				<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == 5}">
-					
-				</c:if>
-				
-				<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == 6}">
-				    <ui:include src="approvalMenu.xhtml" />
+				<c:if test="#{lOIDetailBackingBean.managedBean.selectedTabIndex eq '3'}">
+				    <ui:include src="loiApprovalMenu.xhtml" />
 				</c:if>
 			</td>
 		</tr>
 		</table>
-
 	</ui:define>
 </ui:composition>
