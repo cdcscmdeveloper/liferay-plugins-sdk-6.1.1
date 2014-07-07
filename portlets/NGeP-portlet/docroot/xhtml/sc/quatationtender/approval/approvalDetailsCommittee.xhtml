@@ -12,7 +12,8 @@
 			editable="true" rowKey="#{committeerequestdetails}" style="width:50%">
 
 			<p:column headerText="#{lbl['lbl.sc.qt.type.reqdtls']}">
-				<h:outputText value="#{committeerequestdetails.approvalType.parameterCode}" />
+				<h:outputText
+					value="#{committeerequestdetails.approvalType.parameterCode}" />
 			</p:column>
 		</p:dataTable>
 	</p:panel>
@@ -23,8 +24,8 @@
 		<div style="width: 100%">
 			<p:pickList id="committeeapproverid" value="#{commiteList}"
 				var="approverUser" showTargetControls="true"
-				itemLabel="#{approverUser.approver.userName}" itemValue="#{approverUser}"
-				converter="approverPickListConverter">
+				itemLabel="#{approverUser.approver.userName}"
+				itemValue="#{approverUser}" converter="approverPickListConverter">
 				<f:facet name="sourceCaption">Available </f:facet>
 				<f:facet name="targetCaption">Selected</f:facet>
 			</p:pickList>
@@ -68,9 +69,10 @@
 					<table style="width: 150px;">
 						<tr>
 							<td colspan="2"><p:commandButton
-									oncomplete="committeeAttachDlg.show();return false;"
-									icon="iconAttachment" update="uploadsfileids"
-									value="Attach Files">
+									oncomplete="committeeAttachDlg.show()" icon="iconAttachment"
+									update="@([id$=attachDlgids])" value="Attach Files">
+									<f:setPropertyActionListener value="#{commiteApproverCategory}"
+										target="#{approvalBackingBean.managedBean.scQtApproval}" />
 								</p:commandButton></td>
 						</tr>
 						<tr>
@@ -122,19 +124,5 @@
 			</p:column>
 		</p:dataTable>
 	</p:panel>
-
-	<p:dialog id="attachDlgids" widgetVar="committeeAttachDlg" modal="true"
-		dynamic="true" hideEffect="explode" resizable="false" width="700px"
-		height="200" styleClass="pop_up_top"
-		header="#{lbl['lbl.bpm.choose.file']}">
-		<p:ajax event="close" />
-		<p:fileUpload style="display:inline;"
-			fileUploadListener="#{approvalBackingBean.handleFileUpload}"
-			mode="advanced" id="dialoguploadids"
-			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
-			invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
-			update="uploadsfileids" oncomplete="committeeAttachDlg.hide()">
-		</p:fileUpload>
-	</p:dialog>
 
 </ui:composition>

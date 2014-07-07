@@ -44,7 +44,10 @@
 				</ui:fragment>
 				<ui:fragment
 					rendered="#{approvalCategory.titleName eq 'BPK Approval'}">
-
+					
+					<ui:param name="bpkApproverCategory"
+						value="#{approvalCategory.scQtApproval}" />
+						
 					<ui:param name="approvalDtlsList"
 						value="#{approvalCategory.scQtApproval.scQtApprovalDtls}" />
 
@@ -62,6 +65,9 @@
 
 					<ui:param name="commiteList"
 						value="#{approvalCategory.budgetApprovalUsers}" />
+						
+					<ui:param name="commiteApproverCategory"
+						value="#{approvalCategory.scQtApproval}" />
 
 					<ui:param name="committeeApprovalRemarkList"
 						value="#{approvalCategory.scQtApproval.scQtApprovalRemarks}" />

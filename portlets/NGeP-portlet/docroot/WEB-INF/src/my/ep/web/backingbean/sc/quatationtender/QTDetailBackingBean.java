@@ -60,7 +60,6 @@ import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sc.specification.SpecificationReqDTO;
 import my.ep.dto.sc.specification.SpecificationResDTO;
-import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
@@ -323,6 +322,7 @@ public class QTDetailBackingBean extends
 				ScQt scQt = quationTenderResDTO.getQtDetail();
 				// renew the session..
 				renewSesionObject();
+				//loadPrepareQtDetails(scQt.getQtId());
 				FacesContext
 						.getCurrentInstance()
 						.addMessage(
@@ -347,6 +347,18 @@ public class QTDetailBackingBean extends
 		}
 		return null;
 	}
+
+	/**
+	 * To reload the data after saving...
+	 */
+	/*private void loadPrepareQtDetails(Long qtId) {
+		// TODO Auto-generated method stub
+		retrieveQuationTenderDetails(qtId);
+		retrieveCommitteeAppointmentTabDtl();
+		retrieveSuppQualificationTabDtl();
+		retrieveApprovalTabDtl();
+		getManagedBean().setSubTabIndex(0);
+	}*/
 
 	public String submitQTDetailsAction() {
 		IQTDetailSO detailSO;
@@ -893,6 +905,7 @@ public class QTDetailBackingBean extends
 			getManagedBean().getScQtBsv().setScQt(getManagedBean().getQt());
 			List<ScQtBsv> scQtBsvs = new ArrayList<ScQtBsv>();
 			scQtBsvs.add(this.getManagedBean().getScQtBsv());
+			scQt.setBsvRequired(true);
 			scQt.setScQtBriefings(scQtBsvs);
 		} else {
 			List<ScQtBsvDtl> selectedBriefList = getManagedBean()
@@ -933,6 +946,7 @@ public class QTDetailBackingBean extends
 				getManagedBean().getScQtBsv().setScQt(getManagedBean().getQt());
 				List<ScQtBsv> scQtBsvs = new ArrayList<ScQtBsv>();
 				scQtBsvs.add(this.getManagedBean().getScQtBsv());
+				scQt.setBsvRequired(true);
 				scQt.setScQtBriefings(scQtBsvs);
 			}
 		}
@@ -987,6 +1001,7 @@ public class QTDetailBackingBean extends
 			for (ScQtDeduction scQtDeduction : deductionList) {
 				scQtDeduction.setScQtDeductionClauses(getManagedBean()
 						.getScQtDeductionClauses());
+				scQtDeduction.setScQt(getManagedBean().getQt());
 			}
 			scQt.setScQtDeductions(deductionList);
 		}
@@ -1808,7 +1823,7 @@ public class QTDetailBackingBean extends
 			List<TabBean> tabBeans = new ArrayList<TabBean>();
 			if (requiredApproval != null) {
 				for (ScQtApproval qtApproval : requiredApproval) {
-
+					
 					qtApproval.setApprovalType(ApprovalCategory
 							.getDisplayName(qtApproval.getApprovalCategory()
 									.getParameterId()));

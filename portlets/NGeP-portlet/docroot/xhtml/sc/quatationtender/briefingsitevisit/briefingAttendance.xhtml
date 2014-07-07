@@ -7,23 +7,33 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	<ui:define name="resourceSection">
-	</ui:define>
+	<ui:define name="titleSection">
+	</ui:define>>
 
 	<ui:define name="contentSection">
 
-		<div>
-			<p:commandButton value="Back" style="float:left;" icon="ui-icon-back"
-				action="#{qTBriefingSiteVisitBackingBean.briefingBackAction}" />
-		</div>
+		<p:panel>
+			<p:panelGrid style="width:100%;"
+				styleClass="noBorders tr,noBorders td">
+				<p:row>
+					<p:column width="100%" style="text-align:left">
+						<p:commandButton value="Back" style="float:left;"
+							icon="ui-icon-back"
+							action="#{qTBriefingSiteVisitBackingBean.briefingBackAction}" />
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+		</p:panel>
 
 		<p:panel>
 			<table>
 				<tr>
 					<td style="width: 120px;"><h:outputLabel value="Briefing" /></td>
-					<td><p:inputText disabled="true" size="30" /></td>
+					<td><p:inputText disabled="true" size="30"
+							value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.bsvDesc}" /></td>
 					<td style="width: 400px;"><h:outputLabel value="Date/Time" /></td>
-					<td><p:inputText disabled="true" size="30" /></td>
+					<td><p:inputText disabled="true" size="30"
+							value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.bsvDate}" /></td>
 				</tr>
 			</table>
 		</p:panel>
@@ -34,44 +44,46 @@
 				value="#{qTBriefingSiteVisitBackingBean.managedBean.briefingRegistrationList}"
 				selection="#{qTBriefingSiteVisitBackingBean.managedBean.selectedbriefRegistration}"
 				rowKey="#{scQtBriefReg}" selectionMode="single" rowIndexVar="index">
-
 				<p:ajax event="rowSelect"
 					listener="#{qTBriefingSiteVisitBackingBean.onRowSelect}"
 					update=":form:attendanceDetailstbl" />
 
 				<p:column headerText="#{lbl['lbl.sc.bsv.attendance.mof.regno']}">
-					<c:if test="${scQtBriefReg.brandNew}">
-						<ac:lov id="test" lovId="SM_SUPPLIER" headerText="MOF NO"
-							saveObject="qTBriefingSiteVisitBackingBean.managedBean.briefingRegistrationList[#{index}].scQtBriefReg.smSupplier"
-							value="#{scQtBriefReg.smSupplier.smMofAccounts[0].mofNo}">
-						</ac:lov>
-					</c:if>
-					<h:outputText rendered="#{!scQtBriefReg.brandNew}"
-						value="#{scQtBriefReg.smSupplier.smMofAccounts[0].mofNo}" />
+					<h:outputText
+						value="#{scQtBriefReg.supplier.smMofAccounts[0].mofNo}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.bsv.attendance.supp.name']}">
-					<p:inputText value="#{scQtBriefReg.smSupplier.companyName}"
-						rendered="#{scQtBriefReg.brandNew}" />
-
-					<h:outputText value="#{scQtBriefReg.smSupplier.companyName}"
-						rendered="#{!scQtBriefReg.brandNew}" />
+					<h:outputText value="#{scQtBriefReg.supplier.companyName}" />
 				</p:column>
 			</p:dataTable>
 
-			<div align="right">
-				<p:commandButton value="#{lbl['lbl.sc.bsv.attendance.add']}"
-					process="@this" partialSubmit="true" update="complisttbl"
-					action="#{qTBriefingSiteVisitBackingBean.addSupplierDetails}"
-					icon="ui-icon-add" />
-
-				<p:commandButton value="#{lbl['lbl.sc.action.delete']}"
-					process="@this,complisttbl" partialSubmit="true"
-					update="complisttbl"
-					action="#{qTBriefingSiteVisitBackingBean.deleteSupplierDetails}"
-					icon="ui-icon-delete" />
+			<div>
+				<table style="width: 100%">
+					<tr>
+						<td class="TableFieldLeft" width="80%"></td>
+						<td>
+							<table>
+								<tr>
+									<td class="TableFieldLeft"><ac:lov id="supplier"
+											lovId="SM_SUPPLIER_MOFNO"
+											postUpdateListener="qTBriefingSiteVisitBackingBean.bsvRegistationListner(qTBriefingSiteVisitBackingBean.managedBean.mofAccounts)"
+											headerText="Supplier MOF No Lov" buttonLabel="Add"
+											buttonIcon="ui-icon-add" selectionMode="multiple"
+											saveObject="qTBriefingSiteVisitBackingBean.managedBean.mofAccounts"
+											update="@form" /></td>
+									<td><p:commandButton
+											value="#{lbl['lbl.sc.action.delete']}"
+											process="@this,complisttbl" partialSubmit="true"
+											update="complisttbl"
+											action="#{qTBriefingSiteVisitBackingBean.deleteSupplierDetails}"
+											icon="ui-icon-delete" /></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
 			</div>
-
 		</p:panel>
 
 		<p:panel header="Supplier Attendence List" toggleable="true"
@@ -80,9 +92,14 @@
 				value="#{qTBriefingSiteVisitBackingBean.managedBean.briefingAttendanceList}"
 				rows="10" rowKey="#{scQtBriefAttendace}" rowIndexVar="rowIndex"
 				selection="#{qTBriefingSiteVisitBackingBean.managedBean.selectedbriefRegistration.scQtBriefingAttendances}">
+
 				<p:columnGroup type="header">
 					<p:row>
 						<p:column headerText="#{lbl['lbl.sc.bsv.attendance.name']}">
+
+						</p:column>
+						<p:column
+							headerText="#{lbl['lbl.sc.bsv.attendance.authorizedperson']}">
 
 						</p:column>
 
@@ -95,28 +112,72 @@
 
 						</p:column>
 
+
 						<p:column headerText="#{lbl['lbl.sc.bsv.attendance.email']}">
 
 						</p:column>
 
-						<p:column headerText="Attendance" style="width:6%">
+						<p:column headerText="#{lbl['lbl.qt.bsc.attendance']}">
+
 						</p:column>
 					</p:row>
 				</p:columnGroup>
-				<p:column>
-					<h:outputText value="#{scQtBriefAttendace.name}" />
-				</p:column>
-				<p:column>
-					<h:outputText value="#{scQtBriefAttendace.icPassport}" />
-				</p:column>
-				<p:column>
-					<h:outputText value="#{scQtBriefAttendace.contactNo}" />
-				</p:column>
-				<p:column>
-					<h:outputText value="#{scQtBriefAttendace.email}" />
-				</p:column>
-				<p:column selectionMode="multiple" style="width:5%" />
+				<c:if test="#{scQtBriefAttendace.authorized}">
+					<p:column>
+						<h:outputText value="#{scQtBriefAttendace.name}" />
+					</p:column>
+					<p:column>
+						<h:outputLabel
+							value="#{scQtBriefAttendace.authorized ? 'Yes': 'No'}" />
+					</p:column>
+					<p:column>
+						<h:outputText value="#{scQtBriefAttendace.icPassPort}" />
+					</p:column>
+					<p:column>
+						<h:outputText value="#{scQtBriefAttendace.contactNo}" />
+					</p:column>
+					<p:column>
+						<h:outputText value="#{scQtBriefAttendace.email}" />
+					</p:column>
+					<p:column>
+						<p:selectBooleanCheckbox value="#{scQtBriefAttendace.attended}" />
+					</p:column>
+				</c:if>
+				<c:if test="#{!scQtBriefAttendace.authorized}">
+
+					<p:column>
+						<h:inputText value="#{scQtBriefAttendace.name}" />
+					</p:column>
+					<p:column>
+						<h:outputLabel
+							value="#{scQtBriefAttendace.authorized ? 'Yes': 'No'}" />
+					</p:column>
+					<p:column>
+						<h:inputText value="#{scQtBriefAttendace.icPassPort}" />
+					</p:column>
+					<p:column>
+						<h:inputText value="#{scQtBriefAttendace.contactNo}" />
+					</p:column>
+					<p:column>
+						<h:inputText value="#{scQtBriefAttendace.email}" />
+					</p:column>
+					<p:column>
+						<p:selectBooleanCheckbox value="#{scQtBriefAttendace.attended}" />
+					</p:column>
+				</c:if>
 			</p:dataTable>
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.sc.bsv.attendance.add']}"
+					process="@this,attendanceDetailstbl" partialSubmit="true"
+					update="attendanceDetailstbl"
+					action="#{qTBriefingSiteVisitBackingBean.addAttendanceForBSV}"
+					icon="ui-icon-add" />
+				<p:commandButton value="#{lbl['lbl.sc.action.delete']}"
+					process="@this,attendanceDetailstbl" partialSubmit="true"
+					update="attendanceDetailstbl"
+					action="#{qTBriefingSiteVisitBackingBean.deleteBsvAttandances}"
+					icon="ui-icon-delete" />
+			</div>
 		</p:panel>
 
 	</ui:define>

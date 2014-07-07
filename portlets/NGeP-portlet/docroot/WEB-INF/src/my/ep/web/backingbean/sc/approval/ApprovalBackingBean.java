@@ -33,6 +33,7 @@ import my.ep.dto.sc.committe.CommitteResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
@@ -79,6 +80,10 @@ public class ApprovalBackingBean extends
 	public ApprovalBackingBean() {
 		if (this.getManagedBean().getScQtApproval() == null) {
 			this.getManagedBean().setScQtApproval(new ScQtApproval());
+		}
+		
+		if (this.getManagedBean().getScQtApproval().getApprovalCategory() == null) {
+			this.getManagedBean().getScQtApproval().setApprovalCategory(new PmParameter());
 		}
 
 		initializeRemark(new ArrayList<ScQtApprovalRemark>());

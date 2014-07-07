@@ -10,11 +10,11 @@
 	<p:panel header="Schedule" toggleable="true">
 		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value="* #{lbl['lbl.so.noticepublish']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.so.noticepublish']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
 				<td><p:calendar label="#{lbl['lbl.so.noticepublish']}"
-						required="true"
 						value="#{qTScheduleDetailBackingBean.managedBean.qt.publishDate}"
-						id="noticePublish"
+						id="noticePublish" required="true"
 						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button" />
 					<h:inputText value="12:00PM" disabled="true" size="06" /> <p:message
 						id="noticePublishMsg" for="noticePublish" display="icon" /></td>
@@ -36,11 +36,11 @@
 						size="06" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="* #{lbl['lbl.so.sampleclosingdate']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.so.sampleclosingdate']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:calendar label="#{lbl['lbl.so.sampleclosingdate']}"
-						required="true"
 						value="#{qTScheduleDetailBackingBean.managedBean.qt.proposalStartDate}"
-						id="proposalPreparation"
+						id="proposalPreparation" required="true"
 						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
 						disabled="#{!qTDetailBB.managedBean.editable}" showOn="button" />
 					<h:inputText value="12:00PM" disabled="true" size="06" /> <p:message

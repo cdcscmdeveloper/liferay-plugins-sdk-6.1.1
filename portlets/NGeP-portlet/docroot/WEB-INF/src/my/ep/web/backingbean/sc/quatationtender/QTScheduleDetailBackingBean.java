@@ -43,9 +43,6 @@ import org.apache.log4j.Logger;
 public class QTScheduleDetailBackingBean extends
 		SourcingBaseBackingBean<QTDetailManagedBean> {
 
-	// private static final String NAV_TO_BSV_ATTENDANCE_PAGE =
-	// "/xhtml/sc/quatationtender/briefingsitevisit/briefingAttendance.xhtml";
-
 	private static final Logger log = EpLogger
 			.getLogger(QTScheduleDetailBackingBean.class);
 
@@ -67,90 +64,29 @@ public class QTScheduleDetailBackingBean extends
 	}
 
 	public QTScheduleDetailBackingBean() {
-		/*
-		 * ScQtBriefing briefing = new ScQtBriefing();
-		 * 
-		 * briefing.setPmAddress(new PmAddress());
-		 * briefing.getPmAddress().setPmCountry(new PmCountry());
-		 * briefing.getPmAddress().setPmState(new PmState());
-		 * briefing.getPmAddress().setPmDistrict(new PmDistrict());
-		 * briefing.getPmAddress().setPmCity(new PmCity()); //
-		 * briefing.setScQtZoneCriteria(new ScQtZoneCriteria());
-		 * this.getManagedBean().setQtBriefing(briefing);
-		 * 
-		 * ScQtBriefing siteBriefing = new ScQtBriefing();
-		 * siteBriefing.setPmAddress(new PmAddress());
-		 * siteBriefing.getPmAddress().setPmCountry(new PmCountry());
-		 * siteBriefing.getPmAddress().setPmState(new PmState());
-		 * siteBriefing.getPmAddress().setPmDistrict(new PmDistrict());
-		 * siteBriefing.getPmAddress().setPmCity(new PmCity()); //
-		 * siteBriefing.setScQtZoneCriteria(new ScQtZoneCriteria());
-		 * this.getManagedBean().setQtSiteBriefing(siteBriefing);
-		 */
-
-		/*
-		 * List<TreeNode> list = getManagedBean().getZoneTrees(); for (TreeNode
-		 * treeNode : list) { System.out.println("Tree Node : " +
-		 * treeNode.getData()); if (treeNode.getChildCount() != 0) {
-		 * treeNode.getChildren().clear(); } }
-		 * this.getManagedBean().setTreeNodesList(list);
-		 */
-
-		// getManagedBean().getQt().setZonal(false);
-
-		// getManagedBean().getQtCriteria().setMultiLocality(false);
-
-		// Briefing Zone Bean
-		/*
-		 * List<BriefingZoneBean> briefingZoneBeans = getManagedBean()
-		 * .getBriefingZoneBean();
-		 * 
-		 * if (null == briefingZoneBeans) { briefingZoneBeans = new
-		 * ArrayList<BriefingZoneBean>(); }
-		 */
-
-		/*
-		 * List<ScQtBriefing> test1 = getManagedBean().getTest(); if(null ==
-		 * test1) { test1 = new ArrayList<ScQtBriefing>(); } test1.add(new
-		 * ScQtBriefing()); System.out.println("Size : " + test1.size());
-		 * getManagedBean().setTest(test1);
-		 */
-
-		/*
-		 * if (this.getManagedBean().getQt() == null) {
-		 * this.getManagedBean().setQt(new ScQt()); }
-		 */
-
 		if (this.getManagedBean().getScQtSampleSubmission().getAddress() == null) {
 			this.getManagedBean().getScQtSampleSubmission()
 					.setAddress(new PmAddress());
 		}
-
 		if (this.getManagedBean().getScQtSampleSubmission().getAddress()
 				.getPmState() == null) {
 			this.getManagedBean().getScQtSampleSubmission().getAddress()
 					.setPmState(new PmState());
 		}
-
 		if (this.getManagedBean().getScQtSampleSubmission().getAddress()
 				.getPmDistrict() == null) {
 			this.getManagedBean().getScQtSampleSubmission().getAddress()
 					.setPmDistrict(new PmDistrict());
 		}
-
 		if (this.getManagedBean().getScQtSampleSubmission().getAddress()
 				.getPmCity() == null) {
 			this.getManagedBean().getScQtSampleSubmission().getAddress()
 					.setPmCity(new PmCity());
 		}
-
 		retrievePmStateList();
 		getDeskOfficerAdminAssistant();
 	}
 
-	/**
-	 * 
-	 */
 	public void retrievePmStateList() {
 		debugLogger("retrievePmStateList");
 		StateReqDTO reqDTO = new StateReqDTO();
@@ -160,21 +96,12 @@ public class QTScheduleDetailBackingBean extends
 						IStateSO.class);
 		StateResDTO resDTO = reqSO.retriveStatesListByCountryID(reqDTO);
 		List<PmState> list = resDTO.getStateList();
-		System.out.println("list: " + list.size());
-		for (PmState pmState : list) {
-			System.out.println(pmState.getStateId() + "|"
-					+ pmState.getStateCode() + "|" + pmState.getStateName());
-		}
 		this.getManagedBean().setStates(list);
-		System.out.println("State Id : "
-				+ this.getManagedBean().getStates().get(0).getStateId());
 	}
 
 	public void retrievePmDistrictList(AjaxBehaviorEvent event) {
 		debugLogger("retrievePmDistrictList");
 		Long stateId = (Long) event.getComponent().getAttributes().get("value");
-		// PmState state = (PmState) event.getBehavior();
-		System.out.println("State Id : " + stateId);
 		DistrictReqDTO reqDTO = new DistrictReqDTO();
 		reqDTO.setStateId(stateId);
 		IDistrictSO reqSO = (IDistrictSO) BusinessDelegate.getInstance()
@@ -187,7 +114,6 @@ public class QTScheduleDetailBackingBean extends
 	public void retrievePmCityList(AjaxBehaviorEvent event) {
 		Long districtId = (Long) event.getComponent().getAttributes()
 				.get("value");
-		System.out.println("District Id : " + districtId);
 		CityReqDTO reqDTO = new CityReqDTO();
 		reqDTO.setDistrictId(districtId);
 		ICitySO reqSO = (ICitySO) BusinessDelegate.getInstance()
@@ -209,23 +135,6 @@ public class QTScheduleDetailBackingBean extends
 		getManagedBean().setDeskOfficerAdmin(deskOfficer);
 
 	}
-
-	/*
-	 * public void addZoneContactPerson(String briefingZoneName) {
-	 * debugLogger("addZoneContactPerson");
-	 * getManagedBean().setBriefingZoneName(briefingZoneName); ScQtContactPerson
-	 * contactperson = new ScQtContactPerson(); List<BriefingZoneBean> beans =
-	 * getManagedBean().getBriefingZoneBean(); for (BriefingZoneBean
-	 * briefingZoneBean : beans) { if
-	 * (briefingZoneBean.getZoneName().equalsIgnoreCase(
-	 * this.getManagedBean().getBriefingZoneName())) { List<ScQtContactPerson>
-	 * contactList = briefingZoneBean .getContactPersonsList(); if (null ==
-	 * contactList) { contactList = new ArrayList<ScQtContactPerson>(); } for
-	 * (ScQtContactPerson scQtContactPerson : contactList) {
-	 * scQtContactPerson.setBrandNew(false); } System.out.println("list size : "
-	 * + contactList.size()); contactList.add(contactperson);
-	 * briefingZoneBean.setContactPersonsList(contactList); } } }
-	 */
 
 	public void addContactPerson() {
 		debugLogger("addContactPerson");
@@ -277,22 +186,7 @@ public class QTScheduleDetailBackingBean extends
 	public void addDeskOfficerAdminAssistant() {
 		debugLogger("addDeskOfficerAdminAssistant");
 		ScQtContactPerson contactPerson = new ScQtContactPerson();
-		
-		//getManagedBean().setQtContactPerson(contactPerson);
-		/*PmUser pmUser = new PmUser();
 		try {
-			List<PmUser> usersList = this.getManagedBean().getPmUsersList();
-			if (null == usersList) {
-				usersList = new ArrayList<PmUser>();
-			}
-			for (PmUser user : usersList) {
-				user.setBrandNew(false);
-				usersList.add(pmUser);
-			this.getManagedBean().setPmUsersList(usersList);
-			}*/
-			
-		try {
-			
 			List<ScQtContactPerson> contactList = this.getManagedBean()
 					.getPmuserContactpersonList();
 			if (null == contactList) {
@@ -306,11 +200,6 @@ public class QTScheduleDetailBackingBean extends
 			}
 			contactList.add(contactPerson);
 			this.getManagedBean().setPmuserContactpersonList(contactList);
-			
-			/*if(this.getManagedBean().getPmuserContactpersonList()== null){
-				this.getManagedBean().setPmuserContactpersonList(new ArrayList());
-			}
-			this.getManagedBean().getPmuserContactpersonList().add(contactPerson);*/
 		} catch (Exception e) {
 			throw new IllegalArgumentException();
 		}
@@ -318,9 +207,10 @@ public class QTScheduleDetailBackingBean extends
 
 	public void deleteDeskOfficerAdminAssistant() {
 		debugLogger("deleteDeskOfficerAdminAssistant");
-		List<ScQtContactPerson> contactList = this.getManagedBean().getPmuserContactpersonList();
-		List<ScQtContactPerson> selectedContactList = this.getManagedBean().getSelectedpmuserContactpersonList();
-		
+		List<ScQtContactPerson> contactList = this.getManagedBean()
+				.getPmuserContactpersonList();
+		List<ScQtContactPerson> selectedContactList = this.getManagedBean()
+				.getSelectedpmuserContactpersonList();
 		if (contactList.size() == selectedContactList.size()) {
 			contactList.clear();
 		} else {
@@ -341,20 +231,22 @@ public class QTScheduleDetailBackingBean extends
 		debugLogger("okSubmission");
 		List<ScQtSampleSubmission> list = getManagedBean()
 				.getScQtSampleSubmissionList();
-		PmAddress address = getManagedBean().getPmAddress();
+		PmAddress pmAddress = getManagedBean().getPmAddress();
+		String address1 = pmAddress.getAddress1();
+		String address2 = pmAddress.getAddress2();
+		String address3 = pmAddress.getAddress3();
+		String address4 = pmAddress.getAddress4();
+		String address = address1 + "," + address2 + "," + address3 + ","
+				+ address4;
+		log.info("PmAddress : " + address);
 		if (null == list) {
 			list = new ArrayList<ScQtSampleSubmission>();
 		}
-
 		for (ScQtSampleSubmission scQtSampleSubmission : list) {
-			scQtSampleSubmission.setAddress(address);
+			scQtSampleSubmission.setAddress(pmAddress);
 			int index = list.indexOf(scQtSampleSubmission);
 			list.set(index, scQtSampleSubmission);
 		}
-		// if (null != selectedSubmission) {
-		// list.add(selectedSubmission);
-		// }
 		this.getManagedBean().setScQtSampleSubmissionList(list);
 	}
-
 }

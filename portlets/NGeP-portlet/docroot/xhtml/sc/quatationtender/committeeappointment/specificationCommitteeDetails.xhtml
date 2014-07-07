@@ -20,10 +20,10 @@
 			</tr>
 		</table>
 		<p:spacer height="2" />
-		<p:dataTable id="specificationcommitteeid"
+		<p:dataTable id="specificationcommitteeid" styleClass="clonetecid"
 			value="#{committe.scCommitteeMembers}" var="specificationcommittee"
 			rowIndexVar="index" rowKey="#{specificationcommittee}"
-			selection="#{selectedMembersList}">
+			selection="#{qTCommitteBackingBean.managedBean.selectedCommitteMemebers}">
 
 			<p:column selectionMode="multiple" style="width:2%" />
 

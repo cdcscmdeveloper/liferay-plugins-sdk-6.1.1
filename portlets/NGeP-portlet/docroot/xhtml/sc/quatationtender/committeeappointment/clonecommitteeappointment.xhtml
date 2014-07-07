@@ -69,9 +69,8 @@
 							value="#{lbl['lbl.sc.committe.clone.comstatus']}" /></td>
 					<td><p:selectOneMenu style="width: 178px;margin-bottom: 5px;"
 							value="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.qtStatus}">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-							<f:selectItem itemLabel="Active" itemValue="1" />
-							<f:selectItem itemLabel="Non-Active" itemValue="2" />
+							<f:selectItems
+								value="#{qTDetailBB.getStatusDropdownValues('SC', 'QT')}" />
 						</p:selectOneMenu></td>
 					<td />
 					<td />
@@ -80,8 +79,8 @@
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.search']}"
 					icon="ui-icon-search"
-					action="#{qTCommitteBackingBean.cloneSearchCommitteAction}"
-					update="@(.cloneResults)" partialSubmit="true" process="@parent" />
+					action="#{qTCommitteBackingBean.cloneSearchQtAction}"
+					update="clonesearchCommitteid" process="@this, clonesearchpnlid" />
 				<p:commandButton value="#{lbl['lbl.so.reset']}"
 					action="#{qTCommitteBackingBean.resetClone}"
 					update="clonesearchpnlid" icon="ui-icon-reset" resetValues="true"
@@ -90,9 +89,9 @@
 		</p:panel>
 		<p:panel header="#{lbl['lbl.so.qtlist']}" toggleable="true">
 			<p:dataTable id="clonesearchCommitteid"
-				value="#{qTCommitteBackingBean.managedBean.cloneTenderList}"
+				value="#{qTCommitteBackingBean.managedBean.cloneSearchQTDataModel}"
 				selection="#{qTCommitteBackingBean.managedBean.selectedCloneTender}"
-				rowKey="#{scQt}" selectionMode="single" var="scQt"
+				rowKey="#{scQt}" selectionMode="single" var="scQt" lazy="true"
 				styleClass="cloneResults">
 
 				<ac:paginator for="clonesearchCommitteid" />
@@ -122,8 +121,9 @@
 
 				<p:column headerText="#{lbl['lbl.so.bo.status']}">
 					<h:outputText
-						value="#{scQt.qtStatus.pmStatus.pmStatusDescs[0].statusName}" />
+						value="#{qTCommitteBackingBean.getStatusDescById(scQt.qtStatus.statusId)}" />
 				</p:column>
+
 			</p:dataTable>
 		</p:panel>
 		<p:spacer height="2" />
@@ -132,17 +132,13 @@
 
 			<p:treeTable id="committeeTbl" var="committeeNode"
 				value="#{qTCommitteBackingBean.managedBean.searchcommitteeNode}"
-				selection="#{qTCommitteBackingBean.managedBean.selectSearchcommitteeNode}">
+				selection="#{qTCommitteBackingBean.managedBean.selectSearchcommitteeNode}"
+				selectionMode="checkbox">
 
-				<p:column selectionMode="multiple" style="width:2%" />
 				<p:column headerText="#{lbl['lbl.so.bo.name']}">
-					<p:selectBooleanCheckbox value="#{committeeNode.selected}"
-						rendered="#{committeeNode.type == 'committee'}" />
 					<h:outputText
 						value="#{committeeNode.object.committeeType.parameterCode}"
 						rendered="#{committeeNode.type == 'committee'}" />
-					<p:selectBooleanCheckbox value="#{committeeNode.selected}"
-						rendered="#{committeeNode.type == 'scCommitteeMember'}" />
 					<h:outputText value="#{committeeNode.object.memberName}"
 						rendered="#{committeeNode.type == 'scCommitteeMember'}" />
 				</p:column>

@@ -83,7 +83,8 @@
 				<c:if test="#{!qTDetailBB.managedBean.qt.brandNew}">
 					<p:selectOneMenu value="#{gosodo.pmGo.goId}"
 						rendered="#{rowIndex eq qTDetailBB.managedBean.qt.scQtGosodoBudgets.size()-1}">
-						<f:selectItem itemLabel="Select One" itemValue="#{null}" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+							itemValue="#{null}" />
 						<f:selectItems value="#{qTDetailBB.goList}" var="go"
 							itemLabel="#{go.goCode}" itemValue="#{go.goId}" />
 						<p:ajax event="change"
@@ -101,7 +102,8 @@
 				<c:if test="#{!qTDetailBB.managedBean.qt.brandNew}">
 					<p:selectOneMenu id="solist" value="#{gosodo.pmSo.soId}"
 						rendered="#{rowIndex eq qTDetailBB.managedBean.qt.scQtGosodoBudgets.size()-1}">
-						<f:selectItem itemLabel="Select One" itemValue="#{null}" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+							itemValue="#{null}" />
 						<f:selectItems value="#{qTDetailBB.managedBean.soList}" var="so"
 							itemLabel="#{so.soCode}" itemValue="#{so.soId}" />
 						<p:ajax event="change"
@@ -133,8 +135,9 @@
 				icon="ui-icon-add" rendered="#{qTDetailBB.managedBean.editable}">
 			</p:commandButton>
 			<p:commandButton value="#{lbl['lbl.so.delete']}"
-				actionListener="#{qTDetailBB.deleteGoSoDoAction}" update="gosodoList"
-				icon="ui-icon-delete" rendered="#{qTDetailBB.managedBean.editable}" />
+				actionListener="#{qTDetailBB.deleteGoSoDoAction}"
+				update="gosodoList" icon="ui-icon-delete"
+				rendered="#{qTDetailBB.managedBean.editable}" />
 		</div>
 	</p:panel>
 </ui:composition>

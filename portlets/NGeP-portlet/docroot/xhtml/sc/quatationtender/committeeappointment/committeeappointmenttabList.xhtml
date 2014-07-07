@@ -9,7 +9,7 @@
 
 		<ui:include src="addspecificationcommittee.xhtml" />
 
-		<p:tabView id="tabView" orientation="top" var="committeeApproval"
+		<p:tabView id="tabView" orientation="top" var="committeeApproval" cache="false"
 			activeIndex="#{qTCommitteBackingBean.managedBean.subTabIndex}"
 			value="#{qTCommitteBackingBean.managedBean.scCommitteeMemberTabList}">
 
@@ -31,9 +31,6 @@
 					<ui:param name="committe"
 						value="#{committeeApproval.scQtCommittee.scCommittee}" />
 
-					<ui:param name="selectedMembersList"
-						value="#{committeeApproval.members}" />
-
 					<ui:include src="specificationCommitteeDetails.xhtml" />
 
 					<div class="ppRightBtn">
@@ -43,14 +40,14 @@
 							oncomplete="newspecificationcommittee.show();"
 							update="@(.scAddMember)" icon="ui-icon-add" />
 
-						<p:commandButton value="#{lbl['lbl.so.delete']}"
+						<p:commandButton value="#{lbl['lbl.so.delete']}" process="@this, specificationcommitteeid"
 							actionListener="#{qTCommitteBackingBean.deleteSpecificationCommittee}"
-							update="specificationcommitteeid" />
+							update="specificationcommitteeid" icon="ui-icon-delete" />
 
 						<p:commandButton value="#{lbl['lbl.so.clone.to.tec']}"
-							process="@this" update="specificationcommitteeid"
-							rendered="#{committeeApproval.titleName eq 'Specification Committee'}"
-							action="#{qTCommitteBackingBean.addCloneToTecDtl(committeeApproval.scQtCommittee.scCommittee)}" />
+							process="@this, specificationcommitteeid" update="@(.clonetecid)"
+							rendered="#{committeeApproval.titleName eq 'Specification Committee' and qTDetailBB.managedBean.qt.evaluationType eq 2}"
+							action="#{qTCommitteBackingBean.addCloneToTecDtl}" icon="ui-icon-add"/>
 					</div>
 				</ui:fragment>
 

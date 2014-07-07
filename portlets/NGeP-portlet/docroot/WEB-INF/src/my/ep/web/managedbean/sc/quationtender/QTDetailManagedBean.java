@@ -331,7 +331,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private Date createdDt;
 	private String selectedCommitte;
 	private TreeNode searchcommitteeNode;
-	private TreeNode selectSearchcommitteeNode;
+	private TreeNode[] selectSearchcommitteeNode;
 	private String evaluationType = "2";
 
 	private ScQt selectedCloneTender;
@@ -371,6 +371,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private ScQtBsv scQtSitevisit;
 	private ScQtBSVRemark scQtBSVRemark;
 	private boolean required = false;
+	private List<ScQtBsvAttendance> briefingAttendanceList;
+	private ScQtBsvAttendance scQtBriefingAttendance;
 
 	// Schedule & Contact Information
 	private List<ScQtContactPerson> pmuserContactpersonList;
@@ -1808,11 +1810,11 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.searchcommitteeNode = searchcommitteeNode;
 	}
 
-	public TreeNode getSelectSearchcommitteeNode() {
+	public TreeNode[] getSelectSearchcommitteeNode() {
 		return selectSearchcommitteeNode;
 	}
 
-	public void setSelectSearchcommitteeNode(TreeNode selectSearchcommitteeNode) {
+	public void setSelectSearchcommitteeNode(TreeNode[] selectSearchcommitteeNode) {
 		this.selectSearchcommitteeNode = selectSearchcommitteeNode;
 	}
 
@@ -2394,6 +2396,23 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setRequired(boolean required) {
 		this.required = required;
+	}
+
+	public List<ScQtBsvAttendance> getBriefingAttendanceList() {
+		return briefingAttendanceList;
+	}
+
+	public void setBriefingAttendanceList(
+			List<ScQtBsvAttendance> briefingAttendanceList) {
+		this.briefingAttendanceList = briefingAttendanceList;
+	}
+
+	public ScQtBsvAttendance getScQtBriefingAttendance() {
+		return scQtBriefingAttendance;
+	}
+
+	public void setScQtBriefingAttendance(ScQtBsvAttendance scQtBriefingAttendance) {
+		this.scQtBriefingAttendance = scQtBriefingAttendance;
 	}
 
 }

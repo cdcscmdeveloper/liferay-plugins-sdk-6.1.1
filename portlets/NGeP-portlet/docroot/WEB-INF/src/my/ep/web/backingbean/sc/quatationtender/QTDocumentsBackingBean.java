@@ -512,7 +512,20 @@ public class QTDocumentsBackingBean extends
 			QTTemplateDocReqDTO qtTemplateReqDTO = new QTTemplateDocReqDTO();
 			//List<ScQtDoc> qtDocList = this.getManagedBean().getScQtDocs();
 			ScQtDoc qtDoc = this.getManagedBean().getQtDoc();
+			ScQtCheckList checklist = this.getManagedBean().getQtDoc()
+					.getScQtCheckList();
+			checklist.setTitle("ssqqqq");
+			qtDoc.setScQtCheckList(checklist);
 			qtDoc.getTplDocMaster().setCategoryId(1l);
+			PmParameter processType = new PmParameter();
+			processType.setParameterId(1145l);
+			qtDoc.getTplDocMaster().setProcessTypeCode(processType);
+			PmParameter templateType = new PmParameter();
+			templateType.setParameterId(124l);
+			qtDoc.getTplDocMaster().setTemplateTypeCode(templateType);
+			qtDoc.getTplDocMaster().setDocName("sssss");
+			qtDoc.getTplDocMaster().setTemplateStatus('F');
+			qtDoc.getTplDocMaster().setPmStatus(1l);
 			List<ScQtDoc> docs = new ArrayList<ScQtDoc>();
 			docs.add(qtDoc);
 			qtTemplateReqDTO.setScQtDoc(docs);
