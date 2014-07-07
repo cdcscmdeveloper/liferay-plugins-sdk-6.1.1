@@ -117,8 +117,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 
 	public String proceedToCompanyInfo() {
 		if (this.getManagedBean().getSmSupp() == null) {
-			
 			log.info("-------RegistrationBackingBean is NUll-------------");
+			//default to malaysia
+			PmCountry defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
+
 			this.getManagedBean().setSmSupp(new SmSupplier());
 
 			SmSupplier smSupp = this.getManagedBean().getSmSupp();
@@ -134,34 +136,29 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			smAppl.setSmPersonnels(new ArrayList<SmPersonnel>());
 			smAppl.setSmSupplierBanks(new ArrayList<SmSupplierBank>());
 			this.getManagedBean().setSmPersonnel(new SmPersonnel());
-			this.getManagedBean().getSmPersonnel().setPmCountry(new PmCountry());
+//			this.getManagedBean().getSmPersonnel().setPmCountry(new PmCountry());
+			this.getManagedBean().getSmPersonnel().setPmCountry(defaultCountry);
 			
 			this.getManagedBean().setSmBusinessAdd(new SmAddress());
 			this.getManagedBean().getSmBusinessAdd().setPmCountry(new PmCountry());
-			
-			// this block of code is to default Country Dropdown to Malaysia
-			ICountrySO countrySO = (ICountrySO) BusinessDelegate.getInstance()
-					.getServiceObject("pm", ICountrySO.class);
-			CountryReqDTO cReqDTO = new CountryReqDTO();
-			cReqDTO.setCountryCode("MY");
-			CountryResDTO cResDTO = countrySO.retrieveCountryByCode(cReqDTO);
-			this.getManagedBean().getSmBusinessAdd().getPmCountry().setCountryId(cResDTO.getPmCountry().getCountryId());
-			
-//			this.getManagedBean().getSmBusinessAdd().getPmCountry().setCountryId(1L);			
+//			this.getManagedBean().getSmBusinessAdd().getPmCountry().setCountryId(1L);
+			this.getManagedBean().getSmBusinessAdd().setPmCountry(defaultCountry);
 			this.getManagedBean().getSmBusinessAdd().setPmState(new PmState());
 			this.getManagedBean().getSmBusinessAdd().setPmDistrict(new PmDistrict());
 			this.getManagedBean().getSmBusinessAdd().setPmCity(new PmCity());
 
 			this.getManagedBean().setSmResAdd(new SmAddress());
 			this.getManagedBean().getSmResAdd().setPmCountry(new PmCountry());
-			this.getManagedBean().getSmResAdd().getPmCountry().setCountryId(1L);
+//			this.getManagedBean().getSmResAdd().getPmCountry().setCountryId(1L);
+			this.getManagedBean().getSmResAdd().setPmCountry(defaultCountry);
 			this.getManagedBean().getSmResAdd().setPmState(new PmState());
 			this.getManagedBean().getSmResAdd().setPmDistrict(new PmDistrict());
 			this.getManagedBean().getSmResAdd().setPmCity(new PmCity());
 
 			this.getManagedBean().setSmPermenantAdd(new SmAddress());
 			this.getManagedBean().getSmPermenantAdd().setPmCountry(new PmCountry());
-			this.getManagedBean().getSmPermenantAdd().getPmCountry().setCountryId(1L);
+//			this.getManagedBean().getSmPermenantAdd().getPmCountry().setCountryId(1L);
+			this.getManagedBean().getSmPermenantAdd().setPmCountry(defaultCountry);
 			this.getManagedBean().getSmPermenantAdd().setPmState(new PmState());
 			this.getManagedBean().getSmPermenantAdd().setPmDistrict(new PmDistrict());
 			this.getManagedBean().getSmPermenantAdd().setPmCity(new PmCity());
@@ -182,7 +179,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			this.retrieveBusinessNatureL5Map();
 			this.getManagedBean().setSuppBusinessNature(new SmSupplierBusiness());	
 			this.getManagedBean().getSuppBusinessNature().setPmBusinessNature(new PmBusinessNature());
-
+			
 			log.info("**********permenant"+ this.getManagedBean().getPermenantStateLs().size());
 			log.info("**********residential" + this.getManagedBean().getResidentialStateLs().size());
 		}
