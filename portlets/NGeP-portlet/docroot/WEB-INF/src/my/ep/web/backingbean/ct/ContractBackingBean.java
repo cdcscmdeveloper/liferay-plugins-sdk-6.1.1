@@ -4,6 +4,7 @@
 package my.ep.web.backingbean.ct;
 
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -20,9 +21,12 @@ import javax.faces.context.FacesContext;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletResponse;
 
+import my.ep.constants.CommonConstants;
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.format.AttachmentDateFormat;
+import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.ct.ContractManagedBean;
 import my.ep.web.util.FacesScopes;
 
@@ -44,6 +48,12 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	
 	public ContractBackingBean() {
 		log.debug("ContractBackingBean.constructor()");
+		getManagedBean().setFileDirectory(CommonConstants.BASE_FILE_DIR+"/temp");
+	}
+	
+	public ContractBackingBean(String fileDirectory) {
+		log.debug("ContractBackingBean.constructor(fileDirectory)");
+		getManagedBean().setFileDirectory(fileDirectory);
 	}
 	
 	public void initializeRemarkAndAttachement(List<CtRemark> remarkList, List<CtAttachment> attachmentList) {
@@ -130,9 +140,15 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	
 	public void fileUpload(FileUploadEvent event) throws Exception {
 		FacesScopes facesScopes = new FacesScopes();
+		AttachmentFormat attachmentFormat = new AttachmentDateFormat();
 		
 		UploadedFile item = event.getFile();
-		String filePath = "C:/projects/uploads/"+item.getFileName();
+		
+		String filePath = getManagedBean().getFileDirectory();
+		File file = new File(filePath);
+		file.mkdirs();
+		filePath = filePath + "/" + attachmentFormat.format(item.getFileName(), null);
+		
 		FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
 	    fileOuputStream.write(item.getContents());
 	    fileOuputStream.close();

@@ -25,6 +25,7 @@ public class ContractManagedBean extends BaseManagedBean{
 
 	private static final long serialVersionUID = 1L;
 	
+	private String fileDirectory;
 	private List<CtRemark> remarkList;
 	private List<CtAttachment> attachmentList;
 	
@@ -45,6 +46,12 @@ public class ContractManagedBean extends BaseManagedBean{
 	}
 	public void setAttachmentList(List<CtAttachment> attachmentList) {
 		this.attachmentList = attachmentList;
+	}
+	public String getFileDirectory() {
+		return fileDirectory;
+	}
+	public void setFileDirectory(String fileDirectory) {
+		this.fileDirectory = fileDirectory;
 	}
 	
 }
