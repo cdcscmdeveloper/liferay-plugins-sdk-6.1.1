@@ -1180,8 +1180,8 @@ public class SpecificationBackingBean extends
 			PmParameter procurementCategory = scQt.getPmProcurementCategory();
 			if (null != procurementCategory
 					&& null != procurementCategory.getParameterId()) {
-				this.getManagedBean().setProcuremntCategory(
-						getParameterDesc(procurementCategory));
+				this.getManagedBean().setProcuremntCategory(procurementCategory.getParameterCode());
+						
 			}
 
 			/*
@@ -1221,6 +1221,7 @@ public class SpecificationBackingBean extends
 			reqDTO.setCheckListTypeCode(ParameterConst.DOCUMENT_CATEGORY_TECHNICAL_CHECKLIST);
 			procurementCategoryCode(this.getManagedBean().getScQt());
 			// this.getManagedBean().getProcuremntCategory();
+			
 			reqDTO.setProcurementCatCode(this.getManagedBean()
 					.getProcuremntCategory());
 			List<ScQtCheckList> checkListList = new ArrayList<ScQtCheckList>();
@@ -1230,7 +1231,7 @@ public class SpecificationBackingBean extends
 						&& resDTO.getDocumentResultBean().size() > 0) {
 					// List<PmDocument>
 					// document=(List<PmDocument>)resDTO.getDocumentResultBean().get(0);
-
+				
 					for (PmDocument pmDoc : resDTO.getDocumentResultBean()) {
 						ScQtCheckList checkList = new ScQtCheckList();
 						checkList.setTitle(pmDoc.getDocName());
