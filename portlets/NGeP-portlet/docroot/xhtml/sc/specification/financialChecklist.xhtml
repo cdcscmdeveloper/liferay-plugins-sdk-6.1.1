@@ -68,7 +68,7 @@
 
 				<ui:fragment
 					rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2financeProposalList.size()-1 and stageTwofunctional.title ==null}">
-					<p:selectOneMenu value="#{stageTwofunctional.action.parameterId}">
+					<p:selectOneMenu value="#{stageTwofunctional.action.parameterId}" style="width:100px;">
 						<f:selectItem itemLabel="--Select One--" itemValue="#{null}" />
 						<f:selectItem itemLabel="View" itemValue="688" />
 						<f:selectItem itemLabel="Online Submission" itemValue="690" />
