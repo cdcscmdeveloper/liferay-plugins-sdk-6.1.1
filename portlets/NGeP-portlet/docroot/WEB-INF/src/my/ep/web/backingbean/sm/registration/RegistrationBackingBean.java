@@ -31,6 +31,7 @@ import my.ep.dto.pm.common.businessnature.BusinessNatureResDTO;
 import my.ep.dto.pm.common.certbody.CertBodyResDTO;
 import my.ep.dto.pm.common.city.CityReqDTO;
 import my.ep.dto.pm.common.city.CityResDTO;
+import my.ep.dto.pm.common.country.CountryReqDTO;
 import my.ep.dto.pm.common.country.CountryResDTO;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
@@ -137,7 +138,16 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			
 			this.getManagedBean().setSmBusinessAdd(new SmAddress());
 			this.getManagedBean().getSmBusinessAdd().setPmCountry(new PmCountry());
-			this.getManagedBean().getSmBusinessAdd().getPmCountry().setCountryId(1L);
+			
+			// this block of code is to default Country Dropdown to Malaysia
+			ICountrySO countrySO = (ICountrySO) BusinessDelegate.getInstance()
+					.getServiceObject("pm", ICountrySO.class);
+			CountryReqDTO cReqDTO = new CountryReqDTO();
+			cReqDTO.setCountryCode("MY");
+			CountryResDTO cResDTO = countrySO.retrieveCountryByCode(cReqDTO);
+			this.getManagedBean().getSmBusinessAdd().getPmCountry().setCountryId(cResDTO.getPmCountry().getCountryId());
+			
+//			this.getManagedBean().getSmBusinessAdd().getPmCountry().setCountryId(1L);			
 			this.getManagedBean().getSmBusinessAdd().setPmState(new PmState());
 			this.getManagedBean().getSmBusinessAdd().setPmDistrict(new PmDistrict());
 			this.getManagedBean().getSmBusinessAdd().setPmCity(new PmCity());
