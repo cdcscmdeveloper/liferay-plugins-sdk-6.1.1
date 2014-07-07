@@ -22,6 +22,8 @@ public class ZoneMaintenanceManagedBean extends BaseManagedBean {
 
 	private static final long serialVersionUID = 1L;
 
+	private Long defaultCountryId;
+	
 	private String state;
 	
 	private String district;
@@ -80,6 +82,14 @@ public class ZoneMaintenanceManagedBean extends BaseManagedBean {
 	
 	public ZoneMaintenanceManagedBean() {
 		super();
+	}
+
+	public Long getDefaultCountryId() {
+		return defaultCountryId;
+	}
+
+	public void setDefaultCountryId(Long defaultCountryId) {
+		this.defaultCountryId = defaultCountryId;
 	}
 
 	public String getState() {
