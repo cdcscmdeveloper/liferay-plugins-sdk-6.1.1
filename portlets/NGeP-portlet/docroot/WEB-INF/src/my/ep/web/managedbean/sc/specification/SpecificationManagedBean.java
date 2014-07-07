@@ -340,6 +340,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private String supplierContact;
 	private String supplierEmail;
 	private CtCircularVer ctCircularVer;
+	private List<ScQtCheckList>  finspecChecklist;
 
 	public SpecificationManagedBean() {
 		
@@ -3848,6 +3849,20 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	 */
 	public void setCtCircularVer(CtCircularVer ctCircularVer) {
 		this.ctCircularVer = ctCircularVer;
+	}
+
+	/**
+	 * @return the finspecChecklist
+	 */
+	public List<ScQtCheckList> getFinspecChecklist() {
+		return finspecChecklist;
+	}
+
+	/**
+	 * @param finspecChecklist the finspecChecklist to set
+	 */
+	public void setFinspecChecklist(List<ScQtCheckList> finspecChecklist) {
+		this.finspecChecklist = finspecChecklist;
 	}
 
 }
