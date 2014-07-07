@@ -77,7 +77,7 @@
 					</td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sc.procurement.type']}" /> 
+					<td><p:outputLabel value="#{lbl['lbl.sc.procurement.type']}"  /> 
 					   <p:outputLabel value="*" styleClass="mandatory" /></td>
 					<td><p:selectOneRadio style="margin-bottom: 5px;"
 							id="procType" label="#{lbl['lbl.sc.procurement.type']}"
@@ -86,46 +86,33 @@
 							required="#{requestNoteBackingBean.managedBean.required}">
 							<f:selectItems
 								value="#{requestNoteBackingBean.getRadioButtonCodeValues(ParameterTypeConst.procurementType)}" />
-							<p:ajax event="change" update="justiId"
+							<p:ajax event="change" update="addToCartId"
 								listener="#{requestNoteBackingBean.procurementTypeEvent}"
 								process="@this" />
 						</p:selectOneRadio> <p:message id="procTypeMsg" for="procType" display="icon" /></td>
 				</tr>
+				
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sc.sq.gen.info.just']}" rendered="#{requestNoteBackingBean.managedBean.procTypeOption}" /></td>
+					<td><p:selectOneMenu style="margin-bottom: 5px;" rendered="#{requestNoteBackingBean.managedBean.procTypeOption}"
+							id="justificationId" label="#{lbl['lbl.sc.justification']}"
+							required="#{requestNoteBackingBean.managedBean.justRequired}"
+							value="#{requestNoteBackingBean.managedBean.justificationType}">
+							<f:selectItems
+								value="#{requestNoteBackingBean.managedBean.justDropdown}" />
+						</p:selectOneMenu> <p:message id="justTypeMsg" for="justificationId" display="icon" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sc.just.rmks']}" rendered="#{requestNoteBackingBean.managedBean.procTypeOption}" /></td>
+					<td><p:inputTextarea id="justificationRmk" rendered="#{requestNoteBackingBean.managedBean.procTypeOption}"
+							label="#{lbl['lbl.sc.just.rmks']}"
+							required="#{requestNoteBackingBean.managedBean.justRequired}"
+							value="#{requestNoteBackingBean.managedBean.justification}"
+							rows="4" cols="65" style="margin-bottom: 5px;" /> <p:message
+							id="justRmksMsg" for="justificationRmk" display="icon" /></td>
+				</tr>
 			</table>
 			
-			<p:outputPanel id="justiId">
-				<table style="width: 94.5%">
-					<tr>
-						<ui:fragment
-							rendered="#{requestNoteBackingBean.managedBean.procTypeOption}">
-							<td><p:outputLabel value="#{lbl['lbl.sc.justification']}" /></td>
-							<td><p:selectOneMenu style="margin-bottom: 5px;"
-							        id="justificationId" label="#{lbl['lbl.sc.justification']}"
-									required="#{requestNoteBackingBean.managedBean.procurementType eq 'A' or 
-						             requestNoteBackingBean.managedBean.procurementType eq 'E'}"
-									value="#{requestNoteBackingBean.managedBean.justificationType}">
-									<f:selectItems
-										value="#{requestNoteBackingBean.managedBean.justDropdown}" />
-									<p:ajax event="change" update="justiId"
-										listener="#{requestNoteBackingBean.justificationTypeEvent}"
-										process="@this" />
-								</p:selectOneMenu> <p:message id="justTypeMsg" for="justificationId" display="icon" /></td>
-						</ui:fragment>
-					</tr>
-					<tr>
-						<ui:fragment
-							rendered="#{requestNoteBackingBean.managedBean.procTypeOption}">
-							<td style="vertical-align: top; text-align: left; width: 200px;"><p:outputLabel
-									value="#{lbl['lbl.sc.just.rmks']}" /></td>
-							<td><p:inputTextarea id="justificationRmk" label="#{lbl['lbl.sc.just.rmks']}"
-									required="#{requestNoteBackingBean.managedBean.procurementType eq 'A' or 
-						            requestNoteBackingBean.managedBean.procurementType eq 'E'}"
-									value="#{requestNoteBackingBean.managedBean.justification}"
-									rows="4" cols="65" style="margin-bottom: 5px;" /> <p:message id="justRmksMsg" for="justificationRmk" display="icon" /></td>
-						</ui:fragment>
-					</tr>
-				</table>
-			</p:outputPanel>
 	</p:panel>
 		<p:panelGrid styleClass="noBorders tr,noBorders td">
 			<p:row>

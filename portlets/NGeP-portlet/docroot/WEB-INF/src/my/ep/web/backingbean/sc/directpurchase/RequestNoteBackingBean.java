@@ -649,6 +649,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		// set request supplier item.
 		getManagedBean().setRequestSupplierItem(requestSupplierItem);
 		
+		getManagedBean().setJustRequired(Boolean.FALSE);
 		getCurrentStatus(DPStatusConstants.RN_PENDING_SUBMISSION);
 		// update item details data table
 		RequestContext.getCurrentInstance().execute("addToCartPopup.show();");
@@ -996,6 +997,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		// add to cart validation
 		RequestContext.getCurrentInstance().execute("addToCartPopup.hide()");
 		getManagedBean().setRequired(Boolean.FALSE);
+		getManagedBean().setJustRequired(Boolean.FALSE);
 		
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "commonRequestNote");
@@ -1032,16 +1034,19 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 				.equalsIgnoreCase(ParameterConst.PROC_TYPE_NORMAL) || getManagedBean().getProcurementType().equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
 			getManagedBean().setProcTypeOption(Boolean.FALSE);
 			getManagedBean().setJustTypeOption(Boolean.FALSE);
+			   getManagedBean().setJustRequired(Boolean.FALSE);
 			
 		} else if (getManagedBean().getProcurementType()
 				.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)) {
 			getManagedBean().setProcTypeOption(Boolean.TRUE);
 		    getManagedBean().setJustDropdown(getDropdownCodeValues(ParameterTypeConst.JUSTIFICATION_TYPE_ADHOC));
+		    getManagedBean().setJustRequired(Boolean.TRUE);
 			
 		} else if (getManagedBean().getProcurementType()
 				.equalsIgnoreCase(ParameterConst.PROC_TYPE_EMERGENCY)) {
             getManagedBean().setProcTypeOption(Boolean.TRUE);
             getManagedBean().setJustDropdown(getDropdownCodeValues(ParameterTypeConst.JUSTIFICATION_TYPE_EMERGENCY));
+            getManagedBean().setJustRequired(Boolean.TRUE);
 		}
 	}
 	
@@ -1356,6 +1361,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		// add to cart validation
 		RequestContext.getCurrentInstance().execute("addToCartPopup.hide()");
 		getManagedBean().setRequired(Boolean.FALSE);
+		getManagedBean().setJustRequired(Boolean.FALSE);
 	}
 	
 	

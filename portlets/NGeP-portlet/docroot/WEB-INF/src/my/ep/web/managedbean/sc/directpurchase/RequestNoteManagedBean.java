@@ -77,6 +77,8 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     private String processName;
     private String requestNoteStatus;
     private boolean required = Boolean.FALSE;
+    private boolean justRequired = Boolean.FALSE;
+    
     
     private String justification;
     private String justificationType;
@@ -677,6 +679,20 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 			
 			return null;
 		}
+	}
+
+	/**
+	 * @return the justRequired
+	 */
+	public boolean isJustRequired() {
+		return justRequired;
+	}
+	/**
+	 * @param justRequired the justRequired to set
+	 */
+	public void setJustRequired(boolean justRequired) {
+		this.justRequired = justRequired;
 	}	
+	
 	
 }
