@@ -121,7 +121,7 @@
 								rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) > 0 }">
 								<ui:repeat var="cmImage"
 									value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmImages}">
-									<img src="/NGeP-portlet/images/#{cmImage.imageName}"
+									<img src="/NGeP-portlet/image?imageName=#{cmImage.imageName}" 
 										style="height: 150px; left: 0px !important;" />
 								</ui:repeat>
 							</h:panelGroup>

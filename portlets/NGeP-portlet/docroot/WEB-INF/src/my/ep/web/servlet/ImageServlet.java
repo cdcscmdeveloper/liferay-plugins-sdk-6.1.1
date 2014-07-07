@@ -11,6 +11,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import my.ep.constant.EpPropertiesConst;
+import my.ep.util.EpPropertiesUtils;
+
 import org.apache.commons.lang.StringUtils;
 //
 //import my.ep.biz.service.cat.catalogue.ICatalogueSO;
@@ -29,9 +32,18 @@ public class ImageServlet extends HttpServlet {
 			throws ServletException, IOException {
 		
 		String filename = (StringUtils.isNotBlank(request.getParameter("imageName"))) ? request.getParameter("imageName") : null;
-		String tempDir = System.getProperty("java.io.tmpdir");
+//		String epNo = (StringUtils.isNotBlank(request.getParameter("en"))) ? request.getParameter("en") : null;
+//		String tempDir = System.getProperty("java.io.tmpdir");
+		
+		StringBuilder uploadDir = new StringBuilder();
+		uploadDir.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.UPLOAD_URL)).append("ngep/cm");
 
-		File file = new File(tempDir + filename);
+		String imageUrl = uploadDir + "/" + filename;
+		System.out.println("imageUrl: " + imageUrl);
+		
+		File file = new File(imageUrl);
+//		System.out.println("file: " + file.getAbsolutePath());
+		
 		byte[] b = new byte[(int) file.length()];
 		
 		try {
