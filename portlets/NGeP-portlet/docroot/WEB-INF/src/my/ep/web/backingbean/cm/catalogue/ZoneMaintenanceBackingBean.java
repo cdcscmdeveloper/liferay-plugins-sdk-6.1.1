@@ -13,6 +13,7 @@ import javax.faces.context.FacesContext;
 import org.primefaces.model.TreeNode;
 
 import my.ep.biz.service.cm.catalogue.IZoneMaintenanceSO;
+import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.division.IDivisionSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
@@ -20,6 +21,8 @@ import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.MessageConst;
 import my.ep.dto.cm.catalogue.ZoneMaintenanceReqDTO;
 import my.ep.dto.cm.catalogue.ZoneMaintenanceResDTO;
+import my.ep.dto.pm.common.country.CountryReqDTO;
+import my.ep.dto.pm.common.country.CountryResDTO;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
 import my.ep.dto.pm.common.division.DivisionReqDTO;
@@ -54,19 +57,21 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 		System.out.println("********************ZoneMaintenanceBackingBean Constructor***************");
 	}
 
-	@PostConstruct
-	public void init() {
-		System.out.println("********************ZoneMaintenanceBackingBean PostConstruct method***************");
-	}
-
 	public void preRenderZoneView(){
 		System.out.println("********************ZoneMaintenanceBackingBean PreRender***************");
 		getManagedBean().setCurrentSupplier(getCurrentUserSupplier());
 		showZonePopup();
 		getManagedBean().setSelectedSupplierZone(null);
+		CountryReqDTO reqDTO = new CountryReqDTO();
+		reqDTO.setCountryCode("MY");
+		ICountrySO reqSO = (ICountrySO) BusinessDelegate.getInstance().getServiceObject("pm",ICountrySO.class);
+		CountryResDTO resDTO = reqSO.retrieveCountryByCode(reqDTO);
+		getManagedBean().setDefaultCountryId(resDTO.getPmCountry().getCountryId());
+		
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, "cmSupplierZoneMaintenance");
+
 	}
 	
 	private CmSupplierZone getZone(TreeNode zoneLocation) {
@@ -183,7 +188,7 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 		List<PmDistrict> districts = SourcingZoneDetailHelper
 				.getDistrictFromDetailDTOs(detailDTOs);
 		getManagedBean().setRootZoneTree(
-				CmSupplierZoneSingleton.getInstance().buildTree(1L,	states, districts, divisions));
+				CmSupplierZoneSingleton.getInstance().buildTree(getManagedBean().getDefaultCountryId(),	states, districts, divisions));
 		int i = zoneIndex;
 		this.getManagedBean().setZoneIndex(i);
 		getManagedBean().setZoneTrees(CmSupplierZoneSingleton.getInstance().buildZoneSDTree(this.getManagedBean().getCmSupplierZoneList()));
@@ -200,7 +205,7 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 		getManagedBean().setSelectedSupplierZone(new CmSupplierZone());
 		getManagedBean().getSelectedSupplierZone().setSuppZoneName(null);
 		getManagedBean().setRootZoneTree(
-				CmSupplierZoneSingleton.getInstance().buildCmSupplierZoneTree(1L, null, null, null));
+				CmSupplierZoneSingleton.getInstance().buildCmSupplierZoneTree(getManagedBean().getDefaultCountryId(), null, null, null));
 	}
 	
 	/**
@@ -221,7 +226,7 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 			this.getManagedBean().setDeletedCmSupplierZoneList(null);
 			this.getManagedBean().setZoneTrees(CmSupplierZoneSingleton.getInstance().buildZoneSDTree(this.getManagedBean().getCmSupplierZoneList()));
 			this.getManagedBean().setRootZoneTree(
-					CmSupplierZoneSingleton.getInstance().buildCmSupplierZoneTree(1L, null, null, null));
+					CmSupplierZoneSingleton.getInstance().buildCmSupplierZoneTree(getManagedBean().getDefaultCountryId(), null, null, null));
 			this.getManagedBean().setZoneName(null);
 	}
 		
