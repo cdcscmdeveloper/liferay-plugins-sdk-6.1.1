@@ -4,6 +4,7 @@
 package my.ep.web.backingbean.ct.circular.panel;
 
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -48,6 +49,7 @@ import my.ep.constant.ct.ContractConst;
 import my.ep.constant.ct.ContractStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.circular.CircularReqDTO;
 import my.ep.dto.ct.circular.CircularResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -91,6 +93,8 @@ import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.CommonUIConst;
+import my.ep.web.format.AttachmentDateFormat;
+import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.ct.circular.panel.PanelManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -116,8 +120,8 @@ import com.liferay.portal.util.PortalUtil;
 public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	
 	private static Logger log = Logger.getLogger(PanelBackingBean.class);
-	
 	private IPagingDataModel<CtCircularVer> circularVerPagingDataModel = new CircularVerPagingDataModel();
+	private String fileDirectory = CommonConstants.BASE_FILE_DIR+"/CT/Circulars/"+ParameterConst.DOCTYPE_PANEL_CIRCULAR;
 	
 	public PanelBackingBean(){
 		if(getManagedBean().getOutComes()==null) {
@@ -130,7 +134,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			getManagedBean().getCancelCircularReq().setStatus(status);
 			
 			initializeRemarks();
-			ContractBackingBean ctBB = new ContractBackingBean();
+			ContractBackingBean ctBB = new ContractBackingBean(fileDirectory);
 			ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 		}
 		
@@ -229,7 +233,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			getManagedBean().setCircularVer(resDTO.getCircularVer());
 			
 			initializeRemarks();
-			ContractBackingBean ctBB = new ContractBackingBean();
+			ContractBackingBean ctBB = new ContractBackingBean(fileDirectory);
 			ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 			
 		} catch (Exception e) {
@@ -307,7 +311,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 
 			
 			initializeRemarks();
-			ContractBackingBean ctBB = new ContractBackingBean();
+			ContractBackingBean ctBB = new ContractBackingBean(fileDirectory);
 			ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 			
 		} catch (Exception e) {
@@ -513,7 +517,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 					getManagedBean().setCircular(resDTO.getCircularVer().getCtCircular());
 					getManagedBean().setUpdateAction(false);
 					initializeRemarks();
-					ContractBackingBean ctBB = new ContractBackingBean();
+					ContractBackingBean ctBB = new ContractBackingBean(fileDirectory);
 					ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
 				}
 			}
@@ -1051,7 +1055,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			getManagedBean().setAttachmentList(resDTO.getAttachmentList());
 			
 			initializeRemarks();
-			ContractBackingBean ctBB = new ContractBackingBean();
+			ContractBackingBean ctBB = new ContractBackingBean(fileDirectory);
 			ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 			
 			return "circularBase.xhtml?faces-redirect=true";
@@ -1066,7 +1070,13 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	
 	public void fileUpload(FileUploadEvent event) throws Exception {
 		UploadedFile item = event.getFile();
-		String filePath = "C:/projects/uploads/"+item.getFileName();
+		AttachmentFormat attachmentFormat = new AttachmentDateFormat();
+		
+		String filePath = fileDirectory;
+		File file = new File(filePath);
+		file.mkdirs();
+		filePath = filePath + "/" + attachmentFormat.format(item.getFileName(), null);
+		
 		FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
 	    fileOuputStream.write(item.getContents());
 	    fileOuputStream.close();
