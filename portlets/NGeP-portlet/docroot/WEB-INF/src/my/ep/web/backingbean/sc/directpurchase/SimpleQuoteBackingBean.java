@@ -1250,11 +1250,13 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 	 */
 	public void justificationTypeEvent() {
 		debugLogger("justificationTypeEvent");
-		if (getManagedBean().getScQuote().getJustificationType().getParameterCode()
-				.equalsIgnoreCase(ParameterTypeConst.JUSTIFICATION_TYPE_OTHER)) {
-			getManagedBean().setJustTypeOption(Boolean.TRUE);
-		} else {
-			getManagedBean().setJustTypeOption(Boolean.FALSE);
+		if(getManagedBean().getScQuote().getJustificationType() !=null){
+			if (getManagedBean().getScQuote().getJustificationType().getParameterCode()
+					.equalsIgnoreCase(ParameterTypeConst.JUSTIFICATION_TYPE_OTHER)) {
+				getManagedBean().setJustTypeOption(Boolean.TRUE);
+			} else {
+				getManagedBean().setJustTypeOption(Boolean.FALSE);
+			}
 		}
 	}
 
