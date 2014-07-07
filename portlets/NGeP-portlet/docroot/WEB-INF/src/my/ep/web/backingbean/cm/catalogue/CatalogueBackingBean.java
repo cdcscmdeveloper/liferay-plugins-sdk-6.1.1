@@ -93,7 +93,6 @@ import my.ep.web.vo.ExtensionCodeVO;
 import my.ep.web.vo.PricingVO;
 
 import org.apache.commons.lang.SerializationUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.apache.poi.ss.usermodel.Cell;
@@ -1423,22 +1422,18 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		this.statusFilterBean = statusFilterBean;
 	}
 
-	public void imageUpload(FileUploadEvent event) throws Exception {
+	public void imageUpload(FileUploadEvent event)  {
 
 		// String tempDir = System.getenv("windir");
 
-		String tempDir = FacesContext.getCurrentInstance().getExternalContext()
-				.getRealPath("/images");
+		String tempDir = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/images");
+		log.info("tempDir = "+tempDir);
 		
 		StringBuilder uploadDir = new StringBuilder();
-		
 		uploadDir.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.UPLOAD_URL)).append("ngep/cm");
-		
-		System.out.println("uploadDir***"+uploadDir);
-		// String tempDir = "C://image//test//";
-		///ngep/cm/<ep_no>/<filenames>
-		UploadedFile item = event.getFile();
+		log.info("uploadDir***"+uploadDir);
 
+		UploadedFile item = event.getFile();
 		CmImage catImage = new CmImage();
 		catImage.setImage(item.getContents());
 		catImage.setImageName(item.getFileName());
@@ -1446,18 +1441,14 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		catImage.setImageType("jpg");
 		catImage.setImagePath(item.getFileName());
 		catImage.setTempPath(uploadDir.toString());
-
 		log.info("catImage.TempPath()" + catImage.getTempPath());
 
 		// render for display
-		this.getManagedBean().getSelectedMaintainItem().getCmImages()
-				.add(catImage);// getCatalogImages().add(this.getManagedBean().getImageObj());
+		this.getManagedBean().getSelectedMaintainItem().getCmImages().add(catImage);
+		// getCatalogImages().add(this.getManagedBean().getImageObj());
 
 		genImage(catImage);
-
-		log.info("size:"
-				+ this.getManagedBean().getSelectedMaintainItem().getCmImages()
-						.size());
+		log.info("size:"+ this.getManagedBean().getSelectedMaintainItem().getCmImages().size());
 
 	}
 
@@ -1468,18 +1459,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			 String check = imageObj.getTempPath() + "/" + this.getManagedBean().getSelectedMaintainItem().getSmSupplier().getEpNo();
 			 File dir = new File(check);
 			  
-			 System.out.println(" dir.exists()"+ dir.exists());
+			 log.info(" dir.exists()"+ dir.exists());
 			  
-			 if(dir.exists()){
-			  
-			  }else{ //dir.mkdirs(); boolean wasDirecotyMade = dir.mkdirs();
-				  dir.mkdirs();
-			 }
+			 if(dir.exists()){}
+			 else{dir.mkdirs();}
 			 
-
-			BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(
-					new FileOutputStream(check + "/" + imageObj.getImageName()));
-
+			BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(new FileOutputStream(check + "/" + imageObj.getImageName()));
 			bufferedOutputStream.write(imageObj.getImage());
 
 			if (bufferedOutputStream != null) {
@@ -3100,8 +3085,21 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	}
 
 	public String cancelToSupplierItemSearch() {
+		
+		/*log.info("testing");
+		ICatalogueSO a = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
+		CatalogueResDTO resDTO = new CatalogueResDTO();
+		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
+		
+		reqDTO.setSupplierItemId(new Long("261"));
+		resDTO = a.findActivePricing(reqDTO);
+		
+		log.info("resDTO.getPriceLs().size() = "+resDTO.getPriceLs().size());
+		log.info("resDTO.getPriceLs().getPricingId() = "+resDTO.getPriceLs().get(0).getPricingId());
+		log.info("resDTO.getPriceLs().get(0).getCmSupplierZone().getSuppZoneId() = "+resDTO.getPriceLs().get(0).getCmSupplierZone().getSuppZoneId());
+		log.info("resDTO.getPriceLs().get(0).getCmSupplierZone().getCmSupplierZoneDtls().get(0).getSuppZoneDtlId() = "+resDTO.getPriceLs().get(0).getCmSupplierZone().getCmSupplierZoneDtls().get(0).getSuppZoneDtlId());
 
-		return "supplierItemView";
+		*/return "supplierItemView";
 	}
 
 	public void enableRemark() {
@@ -3172,7 +3170,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	public void refreshImage() {
 
-		System.out.println("********refreshImage*********");
+		log.info("********refreshImage*********");
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication()
 				.getNavigationHandler()

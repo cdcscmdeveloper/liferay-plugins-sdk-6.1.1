@@ -15,6 +15,7 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.cm.catalogue.IViewSupplierItemSO;
+import my.ep.constant.EpPropertiesConst;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
 import my.ep.persistence.entity.cm.catalog.CmFavoriteSupplier;
@@ -37,7 +38,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.vo.AdvanceSearchVO;
 import my.ep.web.vo.PricingVO;
-
+import my.ep.util.EpPropertiesUtils;
 import org.apache.commons.lang.StringUtils;
 
 @ManagedBean(name = "catalogueMB")
@@ -186,6 +187,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private SearchFilterBean catTypeFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
 
 	private IPagingDataModel<VCmSupplierItem> searchDataModel = new SearchPagingDataModel();
+	private String uploadDir = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.UPLOAD_URL);
 	
 	private class SearchPagingDataModel extends PagingDataModel<VCmSupplierItem> {
 
@@ -1313,6 +1315,16 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 	public void setCurrentDate(Date currentDate) {
 		this.currentDate = currentDate;
+	}
+
+
+	public String getUploadDir() {
+		return uploadDir;
+	}
+
+
+	public void setUploadDir(String uploadDir) {
+		this.uploadDir = uploadDir;
 	}
 
 	
