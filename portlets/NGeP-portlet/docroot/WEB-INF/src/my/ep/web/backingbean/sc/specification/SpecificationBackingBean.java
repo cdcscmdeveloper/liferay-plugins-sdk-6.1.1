@@ -8215,7 +8215,8 @@ public class SpecificationBackingBean extends
 				.getScQtCheckSt2techProposal();
 		if (techCheckList != null && !techCheckList.isEmpty()) {
 			for (ScQtCheckList checkList : techCheckList) {
-				if (685 == checkList.getDefinationType().getParameterId()) {
+				if (QTConstants.PRESENTATION_DEMO.equalsIgnoreCase(checkList
+						.getDefinationType().getParameterCode())) {
 					scQt.setDemoRequired(true);
 				}
 			}
