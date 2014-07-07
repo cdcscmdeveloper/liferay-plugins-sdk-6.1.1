@@ -1114,7 +1114,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	public void personnelIdTypeChange(){
 		PmParameter pmParameter = (PmParameter) identityType.get(this.getManagedBean().getSmPersonnel().getIdentificationTypeId());
 		this.getManagedBean().getSmPersonnel().setIdentificationType(pmParameter);
-		if (ParameterConst.IDENTIFICATION_TYPES_IC.equals(this.getManagedBean().getSmSuppOwner().getIdentificationType().getParameterCode())) {
+		if (ParameterConst.IDENTIFICATION_TYPES_IC.equals(this.getManagedBean().getSmPersonnel().getIdentificationType().getParameterCode())) {
 			this.getManagedBean().setPersonnelIdMask(newICMasking);
 		} else {
 			this.getManagedBean().setPersonnelIdMask("");
