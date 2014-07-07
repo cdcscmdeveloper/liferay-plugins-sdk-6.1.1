@@ -92,6 +92,7 @@ import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
@@ -134,7 +135,6 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	private static final String PROCESS_TERMINATE_PAGE = "/xhtml/ct/fulfilmentdetails/termination/terminationTab.xhtml?faces-redirect=true";
 	private static final String PROCESS_SUSPEND_PAGE = "/xhtml/ct/fulfilmentdetails/suspension/suspendTab.xhtml?faces-redirect=true";
 	private static final String PROCESS_AMEND_PAGE = "/xhtml/ct/fulfilmentdetails/amendment/amendmentTab.xhtml?faces-redirect=true";
-	private static final String PROCESS_VIEW_PAGE = "/xhtml/ct/fulfilmentdetails/creation/fulfilment.xhtml?faces-redirect=true";
 	private static final String CONTRACT_PAGE = "/xhtml/ct/fulfilmentdetails/creation/fulfilment.xhtml?faces-redirect=true";
 	private static final String TERMINATE_HISTORY_PAGE = "/xhtml/ct/fulfilmentdetails/termination/terminationHistory.xhtml?faces-redirect=true";
 	
@@ -395,7 +395,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		List<SmCompanyAddress> smCompanyAddresses = new ArrayList<SmCompanyAddress>();
 		smCompanyAddresses = this.getManagedBean().getCtContract().getSmSupplier().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses();
 		for(SmCompanyAddress address : smCompanyAddresses) {
-			if(address.getAddressType().equalsIgnoreCase("C")) { // C-Company Address, M-Mailing Address
+			if(address.getAddressType().equalsIgnoreCase(AddressType.CONTACT_ADDRESS.value())) { // C-Company Address, M-Mailing Address
 				smAddress = address.getSmAddress();
 			}
 		}
@@ -1393,7 +1393,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	    ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
 	    setValidateContractField(resDTO);  
 	    this.getManagedBean().setViewContract(true);
-		return PROCESS_VIEW_PAGE;
+		return CONTRACT_PAGE;
 	}
 	
 	public String gotoUpdatePage(){

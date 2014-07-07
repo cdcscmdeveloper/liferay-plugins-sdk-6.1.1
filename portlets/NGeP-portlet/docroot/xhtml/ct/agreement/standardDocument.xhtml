@@ -31,14 +31,14 @@
 					headerText="#{lbl['lbl.ct.ag.table.action']}">
 					<h:panelGroup rendered="#{data.contentType.parameterCode == ParameterConst.agreementTemplateDoc}">
 					 <p:commandLink process="@this" partialSubmit="true"
-							action="#{agreementBackingBean.openNewWindow(data)}">
+							action="#{agreementBackingBean.downloadTemplateDoc(data)}">
 							<p:graphicImage library="ep/images/design" name="download.png"
 								value="/resources/ep/images/design/download.png"
 								title="File Download" />
 						</p:commandLink>
 						<p:spacer width="2"/>
 					   <p:commandLink
-							action="#{agreementBackingBean.openNewWindow(data)}">
+							action="#{agreementBackingBean.gotoTemplateDoc(data)}">
 							<p:graphicImage library="ep/images/design" name="document.png"
 								value="/resources/ep/images/design/document.png"
 								title="View Document" />

@@ -14,7 +14,7 @@
 				<ui:repeat var="outcome" value="#{agreementBackingBean.managedBean.action}">
 					<p:commandButton value="#{outcome}" ajax="false" process="@form"
 						styleClass="ui-button" icon="ui-icon-#{fn:toLowerCase(outcome)}"
-						  action="#{agreementBackingBean.createAgreement(outcome)}" />
+						  action="#{agreementBackingBean.saveAgreement(outcome)}" />
 				</ui:repeat>
 			</td>
 		</tr>

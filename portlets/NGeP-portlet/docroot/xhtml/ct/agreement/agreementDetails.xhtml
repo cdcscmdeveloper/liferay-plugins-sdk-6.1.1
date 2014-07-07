@@ -8,10 +8,20 @@
 		<h:panelGrid columns="2" style="width:100%;" styleClass="top-aligned-columns">
 		   <h:panelGrid columns="4" style="width:100%;" columnClasses="columnWidth15,columnWidth30,columnWidth15,columnWidth30">
 		      <p:outputLabel id="cno" value="#{lbl['lbl.ct.cno']}" />
-		      <h:commandLink value="#{agreementBackingBean.managedBean.ctContract.contractNo}" styleClass="blue_font"/>
-			  <p:outputLabel id="physicalNo" value="#{lbl['lbl.ct.physicalNo']}" />
-		 	  <p:inputText for="physicalNo" value="#{agreementBackingBean.managedBean.ctContract.contractPhysicalNo}" style="width:170px;" />				
-		      <p:outputLabel id="effectiveDate" value="#{lbl['lbl.ct.effectiveDate']}" />
+		      <p:commandLink value="#{agreementBackingBean.managedBean.ctContract.contractNo}" styleClass="blue_font"
+		     		action="#{agreementBackingBean.gotoContractView}" >
+					<f:param name="contractVerId" value="#{agreementBackingBean.managedBean.ctContract.currentContractVer.contractVerId}" />
+		      </p:commandLink>
+			  <h:panelGrid columns="2" style="float:right;">
+				<p:outputLabel value="*" styleClass="mandatory" />
+				<p:outputLabel id="physicalNo" value="#{lbl['lbl.ct.physicalNo']}" />
+			  </h:panelGrid> 
+			  <h:panelGrid columns="2">
+		    	<p:inputText id="contractPhysicalNo" for="physicalNo" value="#{agreementBackingBean.managedBean.ctContract.contractPhysicalNo}" style="width:170px;" 
+		    		maxlength="30"  required="true" label="#{lbl['lbl.ct.physicalNo']}" />
+		     	<p:message for="contractPhysicalNo" display="icon"/>
+		 	  </h:panelGrid>
+		 	  <p:outputLabel id="effectiveDate" value="#{lbl['lbl.ct.effectiveDate']}" />
 			  <p:inputText for="effectiveDate" style="width:170px;" disabled="true"
 				value="#{agreementBackingBean.convertTime(agreementBackingBean.managedBean.contractVer.ctContractValue.effDate)}" />
 			  <p:outputLabel id="edate" value="#{lbl['lbl.ct.edate']}" />

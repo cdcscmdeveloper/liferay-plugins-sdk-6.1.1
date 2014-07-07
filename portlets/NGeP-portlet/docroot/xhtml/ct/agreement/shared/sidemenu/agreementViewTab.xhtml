@@ -19,7 +19,7 @@
 	    			<td><p:commandButton value="#{lbl['ct.btn.back']}" immediate="true" icon="ui-icon-back" oncomplete="window.history.back();" /></td>
 	    			<td class="ppRightBtn">
 			  			 <ui:repeat var="outcome" value="#{agreementBackingBean.managedBean.action}">
-			              <p:commandButton value="#{outcome}" process="@form" styleClass="ui-button" action="#{agreementBackingBean.createAgreement(outcome)}" />
+			              <p:commandButton value="#{outcome}" process="@form" styleClass="ui-button" action="#{agreementBackingBean.saveAgreement(outcome)}" />
 		            </ui:repeat>    			
 	    			</td>
 	    		</tr>
