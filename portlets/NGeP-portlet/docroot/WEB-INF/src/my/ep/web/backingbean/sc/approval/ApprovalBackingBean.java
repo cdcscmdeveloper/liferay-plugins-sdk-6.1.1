@@ -1,5 +1,7 @@
 package my.ep.web.backingbean.sc.approval;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -189,7 +191,7 @@ public class ApprovalBackingBean extends
 		this.activeTabName = activeTabName;
 	}
 
-	public void handleFileUpload(FileUploadEvent event) {
+	public void handleFileUpload(FileUploadEvent event) throws FileNotFoundException, IOException {
 
 		FacesScopes facesScopes = new FacesScopes();
 		List<ScQtApprovalAttachment> attachments = new ArrayList<ScQtApprovalAttachment>();
@@ -200,6 +202,8 @@ public class ApprovalBackingBean extends
 			if (null == attachment) {
 				attachment = new ScQtApprovalAttachment();
 				attachment.setScQtApproval(scQtApproval);
+				attachment.setDocNo(scQtApproval.getScQt().getQtNo());
+				attachment.setPrefixFileName(scQtApproval.getApprovalCategory().getParameterCode());
 			}
 			attachment.setUser(facesScopes.getUserSessionBean());
 			attachment
@@ -483,7 +487,7 @@ public class ApprovalBackingBean extends
 		return "/xhtml/sc/quatationtender/Approver/approverMain.xhtml?faces-redirect=true";
 	}
 
-	public void handleFileAttachment(FileUploadEvent event) {
+	public void handleFileAttachment(FileUploadEvent event) throws FileNotFoundException, IOException {
 		FacesScopes facesScopes = new FacesScopes();
 		if (event.getFile() != null) {
 			ScQtApproval scQtApproval = this.getManagedBean().getScQtApproval();
@@ -492,6 +496,8 @@ public class ApprovalBackingBean extends
 			if (null == attachment) {
 				attachment = new ScQtApprovalAttachment();
 				attachment.setScQtApproval(scQtApproval);
+				attachment.setDocNo(scQtApproval.getScQt().getQtNo());
+				attachment.setPrefixFileName(scQtApproval.getApprovalCategory().getParameterCode());
 			}
 			attachment.setUser(facesScopes.getUserSessionBean());
 			attachment

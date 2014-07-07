@@ -132,7 +132,7 @@ public class QTDocumentsBackingBean extends
 		this.getManagedBean().setScQtChecklists(qtCheckLists);
 	}
 
-	public void handleFileAttachment(FileUploadEvent event) {
+	public void handleFileAttachment(FileUploadEvent event) throws FileNotFoundException, IOException {
 		debugLogger("handleFileAttachment");
 		FacesScopes facesScopes = new FacesScopes();
 		if (event.getFile() != null) {
@@ -143,6 +143,7 @@ public class QTDocumentsBackingBean extends
 			if (null == attachment) {
 				attachment = new ScQtCheckListAttachment();
 				attachment.setScQtCheckList(scQtCheckList);
+				attachment.setDocNo(scQtCheckList.getScQt().getQtNo());
 			}
 			attachment.setUser(facesScopes.getUserSessionBean());
 			attachment

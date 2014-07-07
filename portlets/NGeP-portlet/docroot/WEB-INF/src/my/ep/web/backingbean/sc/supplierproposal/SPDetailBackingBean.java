@@ -3,6 +3,7 @@ package my.ep.web.backingbean.sc.supplierproposal;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -659,7 +660,7 @@ public class SPDetailBackingBean extends
 		}
 	}
 
-	public void handleFileUpload(FileUploadEvent event) {
+	public void handleFileUpload(FileUploadEvent event) throws FileNotFoundException, IOException {
 		debugLogger("handleFileUpload");
 		FacesScopes facesScopes = new FacesScopes();
 		if (event.getFile() != null) {
@@ -670,6 +671,8 @@ public class SPDetailBackingBean extends
 			if (null == attachment) {
 				attachment = new ScQtProposalChecklistAttachment();
 				attachment.setScQtProposalChecklist(scQtProposalChecklist);
+				attachment.setDocNo(scQtProposalChecklist.getScQtCheckList().getScQt().getQtNo());
+				attachment.setPrefixFileName(scQtProposalChecklist.getScQtProposal().getProposalNo());
 			}
 			attachment.setUser(facesScopes.getUserSessionBean());
 			attachment

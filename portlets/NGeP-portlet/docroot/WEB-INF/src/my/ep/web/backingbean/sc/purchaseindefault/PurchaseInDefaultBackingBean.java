@@ -6,6 +6,7 @@ package my.ep.web.backingbean.sc.purchaseindefault;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -418,7 +419,7 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
    /**
     *  handleFileUpload event for file upload in pid
     */
-   public void handleFileUpload(FileUploadEvent event) {
+   public void handleFileUpload(FileUploadEvent event) throws FileNotFoundException, IOException {
 	   debugLogger("handleFileUpload");
 	   FacesScopes facesScopes = new FacesScopes();
 	   List<ScPurchaseInDefaultAttachment> attachments = new ArrayList<ScPurchaseInDefaultAttachment>();
@@ -428,7 +429,9 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 		   if (null == attachment) {
 			   attachment = new ScPurchaseInDefaultAttachment();
 			   attachment.setScPurchaseInDefault(purchaseInDefault);
+			   attachment.setDocNo(purchaseInDefault.getPurchaseInDefaultNo());
 		   }
+		   
 		   attachment.setChangedDate(new Timestamp(System.currentTimeMillis()));
 		   attachment.setCreatedUser(facesScopes.getUserSessionBean());
 		  

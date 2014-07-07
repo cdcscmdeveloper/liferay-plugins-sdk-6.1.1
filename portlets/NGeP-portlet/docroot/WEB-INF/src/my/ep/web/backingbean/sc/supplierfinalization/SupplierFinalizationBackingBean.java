@@ -2,6 +2,7 @@ package my.ep.web.backingbean.sc.supplierfinalization;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -592,7 +593,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		}
 	}
 	
-	public void uploadFileAttachment(UploadedFile file, PmDocument pmDocument){
+	public void uploadFileAttachment(UploadedFile file, PmDocument pmDocument) throws FileNotFoundException, IOException {
 		debugLogger("handleFileAttachment");
 		
 		ScQtReport scQtReport = new ScQtReport();
@@ -609,6 +610,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		
 		ScQtRptBriefingPaperAttachment attachment = new ScQtRptBriefingPaperAttachment();
 		attachment.setScQtReport(scQtReport);
+		attachment.setDocNo(scQtReport.getScQt().getQtNo());
 		attachment.setUser(getFacesScopes().getUserSessionBean());
 		attachment.setChangedDate(new Timestamp(System.currentTimeMillis()));
 		

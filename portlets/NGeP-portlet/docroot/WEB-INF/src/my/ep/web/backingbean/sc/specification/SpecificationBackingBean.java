@@ -3,6 +3,7 @@
  */
 package my.ep.web.backingbean.sc.specification;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
@@ -6759,7 +6760,7 @@ public class SpecificationBackingBean extends
 		return getManagedBean().getYearList();
 	}
 
-	public void handleFileUpload(FileUploadEvent event) {
+	public void handleFileUpload(FileUploadEvent event) throws FileNotFoundException, IOException {
 
 		ScQtCheckList scQtChecklist = this.getManagedBean().getScQtChecklist();
 
@@ -6772,6 +6773,7 @@ public class SpecificationBackingBean extends
 		if (null == attachment) {
 			attachment = new ScQtCheckListAttachment();
 			attachment.setScQtCheckList(scQtChecklist);
+			attachment.setDocNo(scQtChecklist.getScQt().getQtNo());
 		}
 		uploadAttachment(event.getFile(), attachment);
 

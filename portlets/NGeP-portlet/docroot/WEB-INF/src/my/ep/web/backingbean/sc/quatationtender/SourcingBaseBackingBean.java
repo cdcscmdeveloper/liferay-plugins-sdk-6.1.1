@@ -5,6 +5,8 @@ package my.ep.web.backingbean.sc.quatationtender;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -14,6 +16,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.ByteBuffer;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,13 +45,18 @@ import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.exception.EpException;
+import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
 import my.ep.jaxb.sc.sitevisitproposaldata.SCSiteVisitProposalDataType;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.sc.loaloi.ScLoaReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQtCheckListAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklistAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScQtRptBriefingPaperAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScRemark;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.type.pm.OrganizationType;
@@ -56,11 +64,16 @@ import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.sc.approval.ApprovalBackingBean;
 import my.ep.web.backingbean.sc.supplierproposal.SPDetailBackingBean;
+import my.ep.web.format.AttachmentDateFormat;
+import my.ep.web.format.AttachmentDefaultFormat;
+import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.docx4j.jaxb.Context;
 import org.docx4j.openpackaging.contenttype.ContentType;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
@@ -70,6 +83,8 @@ import org.docx4j.openpackaging.parts.PartName;
 import org.docx4j.openpackaging.parts.WordprocessingML.AlternativeFormatInputPart;
 import org.docx4j.relationships.Relationship;
 import org.docx4j.wml.CTAltChunk;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 import org.primefaces.model.UploadedFile;
 
 import com.liferay.portal.util.PortalUtil;
@@ -80,6 +95,8 @@ import com.liferay.portal.util.PortalUtil;
  */
 public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		extends BaseBackingBean<T> {
+	
+	public static Logger log = EpLogger.getLogger(SourcingBaseBackingBean.class);
 	
 	protected static final String DELIMITER_ADDRESS = ",";
 	
@@ -119,9 +136,28 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return userList;
 	}
 
-	protected void uploadAttachment(UploadedFile file, ScAttachment attachment) {
+	protected void uploadAttachment(UploadedFile file, ScAttachment attachment) throws FileNotFoundException, IOException {
 		String fileName = file.getFileName();
 		byte[] fileBytes = file.getContents();
+		
+		attachment.setFileName(fileName);
+		attachment.setFileDesc("File uploded");
+		
+		populateAttachmentDetails(attachment);
+		
+		FileOutputStream fos;
+		
+		fos = new FileOutputStream(attachment.getFilePath());
+		fos.write(fileBytes);
+		fos.close();
+		
+		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO,
+				"The file was uploaded successfully.", null);
+		
+		FacesContext.getCurrentInstance().addMessage(null, message);
+	}
+	
+	protected void populateAttachmentDetails(ScAttachment attachment) throws FileNotFoundException, IOException {
 		Timestamp date = new Timestamp(System.currentTimeMillis());
 		PmUser createdUser = new FacesScopes().getUserSessionBean();
 		
@@ -129,34 +165,69 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		attachment.setCreatedDate(date);
 		attachment.setChangedBy(createdUser.getUserId());
 		attachment.setCreatedUser(createdUser);
-
-		attachment.setFileName(fileName);
-		attachment.setFileDesc("File uploded");
-		File theDir = new File("\\upload\\");
-
+		
+		StringBuilder filePath = new StringBuilder("\\ngep");
+		File theDir = new File(filePath.toString());
 		// if the directory does not exist, create it
 		if (!theDir.exists()) {
-
 			theDir.mkdir();
-			System.out.println("creating directory: " + theDir);
 		}
-		attachment.setFilePath(theDir + "\\" + fileName);
-		System.out.println("=======get File path===="
+		
+		filePath.append("\\");
+		filePath.append(DateUtils.getLast2DigitOfYear());
+		theDir = new File(filePath.toString());
+		// if the directory does not exist, create it
+		if (!theDir.exists()) {
+			theDir.mkdir();
+		}
+		
+		filePath.append("\\");
+		filePath.append(ModuleCodeConst.SUPPLIER_SELECTION.toUpperCase());
+		theDir = new File(filePath.toString());
+		// if the directory does not exist, create it
+		if (!theDir.exists()) {
+			theDir.mkdir();
+		}
+		
+		filePath.append("\\");
+		filePath.append(attachment.getDocNo());
+		theDir = new File(filePath.toString());
+		// if the directory does not exist, create it
+		if (!theDir.exists()) {
+			theDir.mkdir();
+		}
+		
+		filePath.append("\\");
+		filePath.append(attachment.getDocType());
+		theDir = new File(filePath.toString());
+		// if the directory does not exist, create it
+		if (!theDir.exists()) {
+			theDir.mkdir();
+		}
+		
+		AttachmentFormat scFormat = getAttachmentFormat(attachment);
+		String formatedFileName = scFormat.format(
+				attachment.getFileName(), attachment.getPrefixFileName());
+		
+		filePath.append("\\");
+		filePath.append(formatedFileName);
+		
+		attachment.setFilePath(filePath.toString());
+		
+		log.info("=======get File path===="
 				+ attachment.getFilePath());
-		FileOutputStream fos;
-		try {
-			fos = new FileOutputStream(theDir + "\\" + fileName);
-			fos.write(fileBytes);
-			fos.close();
-			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO,
-					"The file was uploaded successfully.", null);
-			FacesContext.getCurrentInstance().addMessage(null, message);
+	}
+	
+	private AttachmentFormat getAttachmentFormat(ScAttachment scAttachment) {
+		if (scAttachment instanceof ScLoaReportAttachment ||
+			scAttachment instanceof ScQtCheckListAttachment ||
+			scAttachment instanceof ScQtProposalChecklistAttachment ||
+			scAttachment instanceof ScQtRptBriefingPaperAttachment) {
 			
-			//FileHelper.getInstance().uploadFile("\\attachment\\sc\\", fileName, null, null, fileBytes);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+			return new AttachmentDateFormat(); 
+		} else {
+			
+			return new AttachmentDefaultFormat();
 		}
 	}
 	
@@ -201,7 +272,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	}
 	
 	public File downloadFile(String filePath, String fileName) throws IOException {
-		System.out.println("Inside downloadFile(..)");
+		log.info("Inside downloadFile(..)");
 		PortletResponse  portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();  
 		HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
 
@@ -286,7 +357,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	}
 	
 	public void converthtmlToDocFile(String content, String filePath){
-		System.out.println("Inside converthtmlToDocFile(..)");
+		log.info("Inside converthtmlToDocFile(..)");
 		WordprocessingMLPackage wordMLPackage;
 	 	try {
 	 		wordMLPackage = WordprocessingMLPackage.createPackage();
@@ -305,7 +376,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 	}catch (Docx4JException e) {
  			e.printStackTrace();
  		}
-	 	System.out.println("Exit converthtmlToDocFile(..)");
+	 	log.info("Exit converthtmlToDocFile(..)");
 	}
 
 	public void preRenderView() {
@@ -537,5 +608,58 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 		
 		return scRemarks;
+	}
+	
+	@SuppressWarnings("unchecked")
+	protected <BPM_DATA_TYPE> BPM_DATA_TYPE getBpmTaskDetails(Class<BPM_DATA_TYPE> clazz) {
+		FacesScopes facesScopes = new FacesScopes();
+		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(facesScopes.getRequest());
+		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
+		
+		String taskId = originalServletRequest.getParameter("taskId");
+		
+		IBpmSO bpmSO;
+		
+		try {
+			bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+			
+			BpmRequestDTO reqDTO = new BpmRequestDTO();
+			reqDTO.setCtxToken(facesScopes.getBPMAuthenticationCtxToken());
+			reqDTO.setTaskId(taskId);
+			
+			BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
+			
+			this.renewSesionObject();
+			this.getManagedBean().setTaskId(taskId);
+			this.getManagedBean().setOutComes(res.getAction());
+			
+			return (BPM_DATA_TYPE)res.getPojo();
+			
+		} finally {
+			bpmSO = null;
+		}
+	}
+	
+	protected <ATTACHMENT extends ScAttachment> StreamedContent getAttachmentStreamContent(ATTACHMENT scAttachment, String contentType) throws IOException {
+		File file = new File(scAttachment.getFilePath());
+		ByteArrayOutputStream tmpOut = new ByteArrayOutputStream();
+        FileInputStream in = new FileInputStream(file);
+        byte[] buf = new byte[512];
+        int len;
+        while (true) {
+            len = in.read(buf);
+            if (len == -1) {
+                break;
+            }
+            tmpOut.write(buf, 0, len);
+        }
+        in.close();
+        tmpOut.close();
+        ByteBuffer bb = ByteBuffer.wrap(tmpOut.toByteArray(), 0,
+                                        tmpOut.size());
+
+        ByteArrayInputStream stream = new ByteArrayInputStream(bb.array());
+		
+		return new DefaultStreamedContent(stream, contentType);
 	}
 }
