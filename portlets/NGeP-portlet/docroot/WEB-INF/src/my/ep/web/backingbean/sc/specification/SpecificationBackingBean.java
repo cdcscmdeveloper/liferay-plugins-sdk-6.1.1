@@ -722,7 +722,6 @@ public class SpecificationBackingBean extends
 
 			TplSpecMaster specMaster = null;
 			try {
-				
 
 				if (null == this.getManagedBean().getFinspecChecklist()) {
 					specMaster = (TplSpecMaster) BeanUtils
@@ -8215,6 +8214,11 @@ public class SpecificationBackingBean extends
 		List<ScQtCheckList> techCheckList = this.getManagedBean()
 				.getScQtCheckSt2techProposal();
 		if (techCheckList != null && !techCheckList.isEmpty()) {
+			for (ScQtCheckList checkList : techCheckList) {
+				if (685 == checkList.getDefinationType().getParameterId()) {
+					scQt.setDemoRequired(true);
+				}
+			}
 			localChecklist.addAll(techCheckList);
 			scQt.setScQtChecklists(localChecklist);
 		}
