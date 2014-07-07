@@ -55,17 +55,19 @@
 					<td class="tdContent">
 					<p:selectOneMenu id="cmbUsrIdenType" required="true" label="#{lbl['lbl.sm.identificationtype']}"
 							value="#{registrationBackingBean.managedBean.smPersonnel.identificationTypeId}">
-							<f:selectItem itemLabel="---Select---" itemValue="" />
-							<f:selectItem itemLabel="New NRIC" itemValue="88" />
-							<f:selectItem itemLabel="Passport" itemValue="89" />
+							<f:selectItems value="#{registrationBackingBean.pmIdTypeDropdownValues()}" />
+							<p:ajax event="change" update="txtIdNumber"
+								listener="#{registrationBackingBean.personnelIdTypeChange}" />
 						</p:selectOneMenu>
 						<p:message id="cmbUsrIdenTypeMsg" for="cmbUsrIdenType" display="icon" /></td>
 
 					<td class="tdTitle"><p:outputLabel
 							value="* #{lbl['lbl.sm.identificationno']}" /></td>
-					<td class="tdContent"><p:inputText id="txtIdNumber" required="true" label="#{lbl['lbl.sm.identificationno']}"
+					<td class="tdContent">
+						<p:inputMask id="txtIdNumber" required="true" label="#{lbl['lbl.sm.identificationno']}"
 							value="#{registrationBackingBean.managedBean.smPersonnel.identificationNo}"
-							size="40" />
+							size="40"
+							mask="#{registrationBackingBean.managedBean.personnelIdMask}" />
 						&#160;
 						<p:graphicImage id="uidti" library="ep/images/design" name="tooltips.png" />
 						<p:tooltip id="uidtt" for="uidti">

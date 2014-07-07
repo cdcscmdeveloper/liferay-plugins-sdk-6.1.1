@@ -63,6 +63,7 @@ public class RegistrationManagedBean extends BaseManagedBean {
 
 	private String applType;
 	private String suppOwnerIdMask;
+	private String personnelIdMask;
 	private List<PmParameterDesc> businessTypeLs;
 	private List<PmFinancialOrg> financialOrgLs;
 	private List<PmCertBody> profCertBodyLs;
@@ -284,6 +285,14 @@ public class RegistrationManagedBean extends BaseManagedBean {
 
 	public void setSuppOwnerIdMask(String suppOwnerIdMask) {
 		this.suppOwnerIdMask = suppOwnerIdMask;
+	}
+
+	public String getPersonnelIdMask() {
+		return personnelIdMask;
+	}
+
+	public void setPersonnelIdMask(String personnelIdMask) {
+		this.personnelIdMask = personnelIdMask;
 	}
 
 	public List<PmParameterDesc> getBusinessTypeLs() {

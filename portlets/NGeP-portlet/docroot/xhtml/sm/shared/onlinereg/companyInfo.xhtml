@@ -41,12 +41,10 @@
 				<td class="tdContent">
 					<p:selectOneMenu id="cmbUsrIdenType" required="true" label="#{lbl['lbl.sm.identificationtype']}"
 						value="#{registrationBackingBean.managedBean.smSuppOwner.identificationTypeId}"
-						style="width:200px">
-						<f:selectItem itemLabel="---Select---" itemValue="" />
-						<f:selectItem itemLabel="New NRIC" itemValue="88" />
-						<f:selectItem itemLabel="Passport" itemValue="89" />
+						style="width:200px" >
+						<f:selectItems value="#{registrationBackingBean.pmIdTypeDropdownValues()}" />
 						<p:ajax event="change" update="txtIdNumber"
-							listener="#{registrationBackingBean.suppOwnerIdTypeOnChange}" />
+							listener="#{registrationBackingBean.suppOwnerIdTypeChange}" />
 					</p:selectOneMenu>
 					
 					<p:message id="cmbUsrIdenTypeMsg" for="cmbUsrIdenType" display="icon" /></td>
@@ -54,11 +52,10 @@
 				<td class="tdTitle"><p:outputLabel
 						value="* #{lbl['lbl.sm.identificationno']}" /></td>
 				<td class="tdContent">
-					<p:inputText id="txtIdNumber" required="true" label="#{lbl['lbl.sm.identificationno']}"
+					<p:inputMask id="txtIdNumber" required="true" label="#{lbl['lbl.sm.identificationno']}"
 						value="#{registrationBackingBean.managedBean.smSuppOwner.identificationNo}"
-						size="30" maxlength="15" >
-						<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
-					</p:inputText>
+						size="30"
+						mask="#{registrationBackingBean.managedBean.suppOwnerIdMask}" />
 					&#160;
 					<p:graphicImage id="icti" library="ep/images/design" name="tooltips.png" />
 					<p:tooltip id="ictt" for="icti">

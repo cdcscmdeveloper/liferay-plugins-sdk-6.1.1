@@ -24,6 +24,8 @@ import my.ep.biz.service.sm.registration.IRegistrationSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
+import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.businessnature.BusinessNatureReqDTO;
@@ -31,7 +33,6 @@ import my.ep.dto.pm.common.businessnature.BusinessNatureResDTO;
 import my.ep.dto.pm.common.certbody.CertBodyResDTO;
 import my.ep.dto.pm.common.city.CityReqDTO;
 import my.ep.dto.pm.common.city.CityResDTO;
-import my.ep.dto.pm.common.country.CountryReqDTO;
 import my.ep.dto.pm.common.country.CountryResDTO;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
@@ -51,6 +52,7 @@ import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
@@ -73,6 +75,7 @@ import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.registration.RegistrationManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 
 import org.apache.log4j.Logger;
@@ -94,6 +97,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	
 	private static String defaultAccPurpose = "R";
 	private static Map<Long, Object> bizNatureL5Map;
+	private static Map<Long, Object> identityType;
 
 	public RegistrationBackingBean() {
 //		if (MDC.get(LogKey.USER_ID) == null) {
@@ -177,6 +181,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			//this.getManagedBean().setSuppBusinessNature(new SmSupplierBusiness());
 			this.getManagedBean().setBusinessNatureL1(this.retrieveBusinessNatureByLevelParent("10",0));
 			this.retrieveBusinessNatureL5Map();
+			this.retrieveIdentityTypeMap();
 			this.getManagedBean().setSuppBusinessNature(new SmSupplierBusiness());	
 			this.getManagedBean().getSuppBusinessNature().setPmBusinessNature(new PmBusinessNature());
 			
@@ -708,17 +713,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 	}
 
-	public void suppOwnerIdTypeOnChange() {
-//		if (this.getManagedBean().getSmSuppOwner().getIdentificationType().equals("I")) {
-		System.out.println("this.getManagedBean().getSmSuppOwner().getIdentificationTypeId(): " + this.getManagedBean().getSmSuppOwner().getIdentificationTypeId());
-//		if (this.getManagedBean().getSmSuppOwner().getIdentificationTypeId() == 88) {
-//			System.out.println(">>>>>>>>>>>>>>>>>>>>>");
-//			this.getManagedBean().setSuppOwnerIdMask(newICMasking);
-//		} else {
-//			System.out.println("<<<<<<<<<<<<<<<<<<<<<<");
-//			this.getManagedBean().setSuppOwnerIdMask("");
-//		}
-	}
+
 
 	private void retrievePmCountryList() {
 		ICountrySO reqSO = (ICountrySO) BusinessDelegate.getInstance()
@@ -934,6 +929,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		this.retrievePmCountryList();
 		this.retrieveFinancialOrgList();
 		this.retrieveBusinessNatureL5Map();
+		retrieveIdentityTypeMap();
 		this.getManagedBean().setBusinessNatureL1(this.retrieveBusinessNatureByLevelParent("10",0));
 		
 		FacesContext fc = FacesContext.getCurrentInstance();
@@ -1090,8 +1086,51 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 //		log.info("-----Response PostCode---------" + resDTO.getPermanentAddrPostCode());
 //		
 //	}
-	public SelectItem[] getIdDropdownValues() {
-		return getDropdownCodeValues("ID");
+	
+	/**
+	 * retrieve identity type from PM
+	 * @return SelectItem[]
+	 */
+	public SelectItem[] pmIdTypeDropdownValues() {
+		return getDropdownValues(ParameterTypeConst.IDENTIFICATION_TYPES);
 	}
 	
+	/**
+	 * set supplier owner mask based on selected id type
+	 */
+	public void suppOwnerIdTypeChange(){
+		PmParameter pmParameter = (PmParameter) identityType.get(this.getManagedBean().getSmSuppOwner().getIdentificationTypeId());
+		this.getManagedBean().getSmSuppOwner().setIdentificationType(pmParameter);
+		if (ParameterConst.IDENTIFICATION_TYPES_IC.equals(this.getManagedBean().getSmSuppOwner().getIdentificationType().getParameterCode())) {
+			this.getManagedBean().setSuppOwnerIdMask(newICMasking);
+		} else {
+			this.getManagedBean().setSuppOwnerIdMask("");
+		}
+	}
+
+	/**
+	 * set personnel id mask based on selected id type
+	 */
+	public void personnelIdTypeChange(){
+		PmParameter pmParameter = (PmParameter) identityType.get(this.getManagedBean().getSmPersonnel().getIdentificationTypeId());
+		this.getManagedBean().getSmPersonnel().setIdentificationType(pmParameter);
+		if (ParameterConst.IDENTIFICATION_TYPES_IC.equals(this.getManagedBean().getSmSuppOwner().getIdentificationType().getParameterCode())) {
+			this.getManagedBean().setPersonnelIdMask(newICMasking);
+		} else {
+			this.getManagedBean().setPersonnelIdMask("");
+		}
+	}
+	
+	/**
+	 * retrieve all identity type into mapper
+	 */
+	public void retrieveIdentityTypeMap(){
+		List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance()
+				.getParameterDescList(ParameterTypeConst.IDENTIFICATION_TYPES);
+		
+		identityType = new HashMap<Long,Object>();
+		for(PmParameterDesc pmDesc: parameterDescs){
+			identityType.put(pmDesc.getPmParameter().getParameterId(), pmDesc.getPmParameter());
+		}
+	}
 }
