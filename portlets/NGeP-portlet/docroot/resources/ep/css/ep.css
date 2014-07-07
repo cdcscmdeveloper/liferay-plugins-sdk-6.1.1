@@ -5020,3 +5020,6 @@ table.rptTbl {
     margin-bottom: 15px;
 }
 
+.ui-messages-info {
+	height : auto;
+}
