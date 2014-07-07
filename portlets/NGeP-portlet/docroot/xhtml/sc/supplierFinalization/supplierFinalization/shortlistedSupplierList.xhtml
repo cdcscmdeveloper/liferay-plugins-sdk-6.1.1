@@ -33,8 +33,16 @@
 			selection="#{suppFinalizationBackingBean.managedBean.recommendedSupplier}"
 			editable="true" rowIndexVar="index" style="width:100%"
 			rowKey="#{shortlistedSupp}"
-			rendered="#{suppFinalizationBackingBean.managedBean.selectionMode == 'single' and !suppFinalizationBackingBean.managedBean.itemize}">
+			rendered="#{suppFinalizationBackingBean.managedBean.selectionMode == 'single'}">
 			<ac:paginator for="supplierListTblSingle" />
+			
+			<p:ajax event="rowSelect"
+				listener="#{suppFinalizationBackingBean.selectSupplierEvent}"
+				update=":form:tab:itemListTbl" />
+				
+			<p:ajax event="rowEdit"
+				listener="#{suppFinalizationBackingBean.selectSupplierEvent}"
+				update=":form:tab:itemListTbl" />
 			
 			<p:columnGroup type="header">
 	        	<p:row>
@@ -116,7 +124,7 @@
 			selection="#{suppFinalizationBackingBean.managedBean.recommendedSupplierList}"
 			editable="true" rowIndexVar="index" style="width:100%"
 			rowKey="#{shortlistedSupp}"
-			rendered="#{suppFinalizationBackingBean.managedBean.selectionMode == 'multiple' and suppFinalizationBackingBean.managedBean.itemize}">
+			rendered="#{suppFinalizationBackingBean.managedBean.selectionMode == 'multiple'}">
 			<ac:paginator for="supplierListTblMultiple" />
 			
 			<p:ajax event="rowSelect"
