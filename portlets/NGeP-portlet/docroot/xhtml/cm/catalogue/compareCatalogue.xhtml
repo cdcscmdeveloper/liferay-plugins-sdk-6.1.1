@@ -18,33 +18,24 @@
 					action="#{catalogueBackingBean.backToPervious()}" process="@this"></p:commandButton>
 			</div>
 
-
-			<h:panelGrid columns="2" style="width:100%;"
-				columnClasses="comparelabelCss compareValueCss">
-
-
-				
-				<ui:repeat var="label"
-					value="#{catalogueBackingBean.managedBean.compareLabel}">
+			<h:panelGrid columns="2" style="width:100%;" columnClasses="comparelabelCss compareValueCss">
+				<ui:repeat var="label" value="#{catalogueBackingBean.managedBean.compareLabel}">
 					<p:panel styleClass="comparePanelLabel">
 						<h:outputLabel value="#{label}" />
 					</p:panel>
 				</ui:repeat>
 
-
-
-				<p:dataGrid id="compareDataList" rowIndexVar="compareKey"
-					paginator="true" styleClass="datagridfloat" 
-					value="#{catalogueBackingBean.managedBean.selectedSupplierItemList}"
-					var="supplierItem" columns="4" rows="4" paginatorPosition="bottom"
-					paginatorTemplate="{PageLinks} ">
-
-
+				<p:dataGrid id="compareDataList" rowIndexVar="compareKey" paginator="true" styleClass="datagridfloat" 
+					value="#{catalogueBackingBean.managedBean.selectedSupplierItemList}" var="supplierItem" columns="4" rows="4" 
+					paginatorPosition="bottom" paginatorTemplate="{PageLinks} ">
 					<table>
-
 						<tr>
-							<td colspan="5"><p:graphicImage
-									value="/resources/ep/images/product/computer/879949914_125.jpg" height="80px"></p:graphicImage></td>
+							<td colspan="5">
+							<p:graphicImage value="/images/noImage.jpg" height="80px"></p:graphicImage>
+							<ui:remove>
+							<p:graphicImage value="/resources/ep/images/product/computer/879949914_125.jpg" height="80px"></p:graphicImage>
+							</ui:remove>
+							</td>
 						</tr>
 						<tr height="31px"
 							style="border-bottom: 2px solid #FFFFFF !important;">
@@ -61,8 +52,7 @@
 								<p:commandLink
 									rendered="#{unspscCodeBackingBean.requisitioner}"
 									disabled="#{catalogueBackingBean.managedBean.contractedExist}">
-									<p:graphicImage
-										value="/resources/ep/images/design/icon_txt.png" height="15px"></p:graphicImage>
+									<p:graphicImage value="/resources/ep/images/design/icon_txt.png" height="15px"></p:graphicImage>
 								</p:commandLink> 
 								
 								<p:commandLink actionListener="#{requestNoteBackingBean.addToCart(supplierItem.supplierItemId)}" 
@@ -98,7 +88,7 @@
 									value="View All Prices"
 									action="#{catalogueBackingBean.popUpPricing(supplierItem)}"
 									oncomplete="morePrice.show()"
-									update=":form:catalogueViewPricingId"></p:commandLink>&#160;
+									update=":form:morePrice"></p:commandLink>&#160;
 							</td>
 						</tr>
 						<tr height="31px"
@@ -132,10 +122,9 @@
 
 			</h:panelGrid>
 
-			<p:dialog id="morePrice" widgetVar="morePrice" modal="true"
-				header="More Price" width="800" height="250">
+			<p:dialog id="morePrice" widgetVar="morePrice" modal="true" header="More Price" width="800" height="250">
 
-				<p:tabView id="catalogueViewPricingId">
+				<p:tabView id="catalogueViewPricingId" activeIndex="#{catalogueBackingBean.managedBean.tabActiveIndex}">
 					<p:tab title="Normal">
 						<ui:include src="/xhtml/cm/pricing/pricingTab.xhtml" />
 					</p:tab>

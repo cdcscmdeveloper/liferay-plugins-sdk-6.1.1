@@ -2733,24 +2733,20 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 		for (VCmSupplierItem view : this.getManagedBean().getSelectViewItems()) {
 
-			ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
-					.getInstance().getServiceObject("cm", ICatalogueSO.class);
+			ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
 
 			CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 			System.out.println("view.getDocId()" + view.getDocId());
 			reqDTO.setDocId(view.getDocId());
 
-			CatalogueResDTO resDTO = catalogueSO
-					.searchSupplierItemByStatus(reqDTO);
+			CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
 
 			System.out.println("*****************end********************");
 
-			this.getManagedBean().getSelectedSupplierItemList()
-					.add(resDTO.getSupplierItemList().get(0));
+			this.getManagedBean().getSelectedSupplierItemList().add(resDTO.getSupplierItemList().get(0));
 		}
 
-		for (VCmSupplierItem view : this.getManagedBean()
-				.getViewSupplierItemList()) {
+		for (VCmSupplierItem view : this.getManagedBean().getViewSupplierItemList()) {
 
 			if (view.getContractNo() != null || view.getCircularNo() != null) {
 				this.getManagedBean().setContractedExist(true);
@@ -3124,17 +3120,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				.getInstance().getServiceObject("cm", ICatalogueSO.class);
 
 		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
-
 		reqDTO.setSupplierId(new Long(1));
-
-		CatalogueResDTO resDTO = catalogueSO
-				.retrieveSupplierZoneBySuppId(reqDTO);
-
+		CatalogueResDTO resDTO = catalogueSO.retrieveSupplierZoneBySuppId(reqDTO);
 		System.out.println("size:" + resDTO.getSupplierZoneLs().size());
-
 		this.getManagedBean().setSupplierZoneList(resDTO.getSupplierZoneLs());
-
 		this.getManagedBean().setSupplierItemObj(item);
+		this.getManagedBean().setTabActiveIndex(0);
 	}
 
 	public void findDistrict() {
