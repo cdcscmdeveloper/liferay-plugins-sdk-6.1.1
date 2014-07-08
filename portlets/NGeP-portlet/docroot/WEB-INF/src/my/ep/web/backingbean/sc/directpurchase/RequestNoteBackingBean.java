@@ -13,10 +13,10 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
-import javax.faces.validator.ValidatorException;
 import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
 
+import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.cm.catalogue.IViewSupplierItemSO;
 import my.ep.biz.service.osb.sc.IPurchaseRequestOsbSO;
@@ -624,10 +624,14 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			if(cmSupplierItem.getSmSupplier().getPmOrgProfile() != null &&
 					cmSupplierItem.getSmSupplier().getPmOrgProfile().isGovtSeller()){
 				getManagedBean().setProcurementType(ParameterConst.PROC_TYPE_G2G);
+				getManagedBean().setProcurementType(ParameterConst.PROC_TYPE_G2G);
+				getManagedBean().setProcurementTypes(getRadioButtonCodeValues(ParameterTypeConst.PROCUREMENT_TYPE , Boolean.TRUE));
 
 			} else {
 				getManagedBean().setProcurementType(ParameterConst.PROC_TYPE_NORMAL);
+				getManagedBean().setProcurementTypes(getRadioButtonCodeValues(ParameterTypeConst.PROCUREMENT_TYPE , Boolean.FALSE));
 			}
+			
 			if (cmSupplierItem.getCmPricings() != null
 					&& cmSupplierItem.getCmPricings().size() > 0) {
 				List<String> priceTypes = new ArrayList<String>();
@@ -1364,30 +1368,68 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		getManagedBean().setJustRequired(Boolean.FALSE);
 	}
 	
-	
-	public void validateOrderQty(BigDecimal orderQty){
-		if (orderQty != null) {
-			try {
-				Double.parseDouble(orderQty.toString());
-			} catch (NumberFormatException ex) {
-				throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR,
-						"Error", "Order Qty : must be a decimal number between 0.0 and 9999999.99999"));
-			}
-		} 
-	}
-	
-	
-	public void supplierLister(Long supplierId , ScRequestNoteDtl requestNoteDtl , List<ScRequestSupplierItem> supplierItems) {
+	public void supplierLister(Long supplierId ,Long priceTypeId ,ScRequestNoteDtl requestNoteDtl , List<ScRequestSupplierItem> supplierItems) {
 		debugLogger("supplierLister");
 		for (ScRequestSupplierItem scRequestSupplierItem : supplierItems) {
 			if(scRequestSupplierItem.getSmSupplier().getSupplierId().equals(supplierId)){
+				if(priceTypeId !=null){
+
+					if(scRequestSupplierItem.getSupplierItemPrices()!= null && scRequestSupplierItem.getSupplierItemPrices().size()>0){
+
+						for (ScSupplierItemPrice scSupplierItemPrice : scRequestSupplierItem.getSupplierItemPrices()) {
+							if(scSupplierItemPrice.getPriceType().getParameterId().equals(priceTypeId)){
+								scRequestSupplierItem.setSupplierItemPrice(scSupplierItemPrice);
+								break;
+							}
+						}
+					}
+				} else{
+					requestNoteDtl.getPriceType().setParameterId(null);
+				}
 				requestNoteDtl.setScRequestSupplierItem(scRequestSupplierItem);
 				break;
 			}
 		}
-		requestNoteDtl.getPriceType().setParameterId(null);
 	}
+	
+	/**
+	 * Get parameter code select items by parameter type for radio buttons.
+	 * 
+	 * @param parameterType
+	 * 			the parameter type
+	 * @return array of SelectItem
+	 */
+	public SelectItem[] getRadioButtonCodeValues(String parameterType , boolean g2gSeller) {
+		return getRadioButtonCodeValuesBySearchBean(parameterType, null , g2gSeller);
+	}
+	
+	public SelectItem[] getRadioButtonCodeValuesBySearchBean(String parameterType, ISearchBean<PmParameterDesc> searchBean , boolean g2gSeller) {
+		SelectItem[] items = null;
+		List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance()
+				.getParameterDescListBySearchBean(parameterType, searchBean);
 
+		items = new SelectItem[parameterDescs.size()];
+		int i = 0;
+		for(PmParameterDesc parameterDesc : parameterDescs) {
+			if(g2gSeller){
+				if(parameterDesc.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)){
+					items[i] = new SelectItem(parameterDesc.getPmParameter().getParameterCode(), parameterDesc.getCodeName() , null , !g2gSeller );
+				} else {
+					items[i] = new SelectItem(parameterDesc.getPmParameter().getParameterCode(), parameterDesc.getCodeName() , null , g2gSeller);
+				}
+			} else{
+
+				if(parameterDesc.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)){
+					items[i] = new SelectItem(parameterDesc.getPmParameter().getParameterCode(), parameterDesc.getCodeName() , null , !g2gSeller);
+				} else{
+					items[i] = new SelectItem(parameterDesc.getPmParameter().getParameterCode(), parameterDesc.getCodeName() , null , g2gSeller);
+				}
+			}
+			
+			i++;
+		}
+		return items;
+	}
 	
 	
 	public String cancel() {

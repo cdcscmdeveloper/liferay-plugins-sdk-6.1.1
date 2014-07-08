@@ -144,7 +144,7 @@
 							
 							<p:ajax event="change" update="priceType" partialSubmit="true"
 									process="@this"
-									listener="#{requestNoteBackingBean.supplierLister(requestNoteDtl.scRequestSupplierItem.supplierItemId ,requestNoteDtl,requestNoteDtl.requestItem.supplierItems)}" />
+									listener="#{requestNoteBackingBean.supplierLister(requestNoteDtl.scRequestSupplierItem.supplierItemId, null, requestNoteDtl,requestNoteDtl.requestItem.supplierItems)}" />
 					</p:selectOneMenu>
 					<p:message id="recSupplierMsg" for="recSupplier" display="icon" />
 				</p:column>
@@ -164,11 +164,16 @@
 							var="pmParameter"
 							itemLabel="#{requestNoteBackingBean.getParameterDesc(ParameterTypeConst.priceType,pmParameter.parameterCode)}"
 							itemValue="#{pmParameter.parameterId}" />
+							
+							<p:ajax event="change" update="offerPriceId" partialSubmit="true"
+									process="@this"
+									listener="#{requestNoteBackingBean.supplierLister(requestNoteDtl.scRequestSupplierItem.supplierItemId ,requestNoteDtl.priceType.parameterId ,requestNoteDtl,requestNoteDtl.requestItem.supplierItems)}" />
 					</p:selectOneMenu>
 					<p:message id="priceTypeMsg" for="priceType" display="icon" />
 				</p:column>
 				
 			    <p:column headerText="#{lbl['lbl.sc.request.note.price.offered']}"  style="width:10%;text-align:right">
+			    <h:panelGroup id="offerPriceId">
 					<ui:fragment
 						rendered="#{requestNoteDtl.scRequestSupplierItem.supplierItemPrice.priceType.parameterCode eq ParameterConst.priceTypeStandard}">
 						<h:outputText
@@ -198,7 +203,7 @@
 					</ui:fragment>
 					
 					<ui:fragment
-						rendered="#{requestNoteDtl.scRequestSupplierItem.supplierItemPrice.priceType ne ParameterConst.priceTypeStandard}}">
+						rendered="#{requestNoteDtl.scRequestSupplierItem.supplierItemPrice.priceType ne ParameterConst.priceTypePromotion}}">
 						<p:commandLink partialSubmit="true"
 							update=":form:pricingPopup"
 							actionListener="#{requestNoteBackingBean.showReqNotePopUps(requestNoteDtl)}"
@@ -207,6 +212,7 @@
 								height="15px" width="15px" />
 						</p:commandLink>
 					</ui:fragment>
+					</h:panelGroup>
 				</p:column>
 				
 			    <p:column headerText="#{lbl['lbl.sc.request.note.fulfill.type']}"  style="width:10%;">
