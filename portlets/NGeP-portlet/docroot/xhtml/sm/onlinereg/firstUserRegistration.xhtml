@@ -64,10 +64,9 @@
 					<td class="tdTitle"><p:outputLabel
 							value="* #{lbl['lbl.sm.identificationno']}" /></td>
 					<td class="tdContent">
-						<p:inputMask id="txtIdNumber" required="true" label="#{lbl['lbl.sm.identificationno']}"
+						<p:inputText id="txtIdNumber" required="true" label="#{lbl['lbl.sm.identificationno']}"
 							value="#{registrationBackingBean.managedBean.smPersonnel.identificationNo}"
-							size="40"
-							mask="#{registrationBackingBean.managedBean.personnelIdMask}" />
+							size="40" />
 						&#160;
 						<p:graphicImage id="uidti" library="ep/images/design" name="tooltips.png" />
 						<p:tooltip id="uidtt" for="uidti">

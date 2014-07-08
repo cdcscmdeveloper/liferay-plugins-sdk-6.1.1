@@ -52,10 +52,11 @@
 				<td class="tdTitle"><p:outputLabel
 						value="* #{lbl['lbl.sm.identificationno']}" /></td>
 				<td class="tdContent">
-					<p:inputMask id="txtIdNumber" required="true" label="#{lbl['lbl.sm.identificationno']}"
+					<p:inputText id="txtIdNumber" required="true" label="#{lbl['lbl.sm.identificationno']}"
 						value="#{registrationBackingBean.managedBean.smSuppOwner.identificationNo}"
-						size="30"
-						mask="#{registrationBackingBean.managedBean.suppOwnerIdMask}" />
+						size="30" maxlength="15" >
+						<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
+					</p:inputText>
 					&#160;
 					<p:graphicImage id="icti" library="ep/images/design" name="tooltips.png" />
 					<p:tooltip id="ictt" for="icti">
