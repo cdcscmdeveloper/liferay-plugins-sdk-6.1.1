@@ -25,8 +25,8 @@
 				<td style="float: left; padding-top: 5px;"><p:outputLabel value="User eP Role" /></td>
 				<td ><p:selectOneMenu id="userEPRole" value="#{smPersonnelBackingBean.managedBean.searchEPRole}" style="width: 207px; margin-bottom: 5px;">
 						<f:selectItem itemLabel="-- Select One--" itemValue="" />
-						<f:selectItem itemLabel="Supplier User" itemValue="A" />
-						<f:selectItem itemLabel="Catalog User" itemValue="A" />
+						<f:selectItem itemLabel="Supplier User" itemValue="U" />
+						<f:selectItem itemLabel="Catalog User" itemValue="C" />
 					</p:selectOneMenu></td>
 			</tr>
 			<!-- <tr>
@@ -130,7 +130,7 @@
 	    	<tr>
 			<td>
 				<div align="center">
-				<p:commandButton value="Yes" onclick="confirmDialog.hide();" ajax="false" 
+				<p:commandButton value="Yes" onclick="confirmDialog.hide();"
 				action="#{smPersonnelBackingBean.navigateToAddNewUserPage}"/>
 				<p:commandButton value="No" onclick="confirmDialog.hide();"/>
 				</div>

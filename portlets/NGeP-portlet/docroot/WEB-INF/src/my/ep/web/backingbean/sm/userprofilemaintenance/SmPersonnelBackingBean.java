@@ -16,6 +16,7 @@ import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
+import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.constant.MessageConst;
@@ -27,6 +28,8 @@ import my.ep.dto.pm.common.country.CountryReqDTO;
 import my.ep.dto.pm.common.country.CountryResDTO;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
+import my.ep.dto.pm.common.parameter.ParameterReqDTO;
+import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
@@ -36,6 +39,7 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmPersonnel;
@@ -731,4 +735,38 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		else
 			getManagedBean().setDisableRole(true);
 	}
+	
+	public void assignPersonIdentType(AjaxBehaviorEvent e) {
+		System.out.println("***** The selected value of IC type is --- "
+				+ getManagedBean().getBasicSmPersonnel()
+						.getIdentificationTypeId());
+		// getManagedBean().getSelectedShareHolder().setIdentificationNo("");
+		if (getManagedBean().getBasicSmPersonnel().getIdentificationTypeId() != null) {
+			getManagedBean().getBasicSmPersonnel()
+					.setIdentificationType(
+							retrievePmParameterById(getManagedBean()
+									.getBasicSmPersonnel()
+									.getIdentificationTypeId()));
+			if (getManagedBean().getBasicSmPersonnel()
+					.getIdentificationType() == null) {
+				getManagedBean().getBasicSmPersonnel()
+						.setIdentificationType(new PmParameter());
+			}
+		} else {
+			getManagedBean().getBasicSmPersonnel().setIdentificationType(
+					new PmParameter());
+		}
+	}
+	
+	private PmParameter retrievePmParameterById(Long paramId) {
+		IParameterSO reqSO = (IParameterSO) BusinessDelegate.getInstance()
+				.getServiceObject("pm", IParameterSO.class);
+		ParameterReqDTO reqDTO = new ParameterReqDTO();
+		reqDTO.setParameterId(paramId);
+		ParameterResDTO resDTO = reqSO.retrieveParameterById(reqDTO);
+
+		return resDTO.getPmParameter();
+	}
+
+
 }

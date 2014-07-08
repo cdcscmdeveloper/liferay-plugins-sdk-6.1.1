@@ -147,6 +147,39 @@ public class SupplierUserActivationBackingBean extends
 				if(orgResDTO.getPmOrgProfile() != null){
 					//create PmUser only
 					log.info("--------Org Progile in not null------" + orgResDTO.getPmOrgProfile());
+					SupplierUserActivationReqDTO reqDTO = new SupplierUserActivationReqDTO();					
+					reqDTO.setSmPersonnel(this.getManagedBean().getSmPersonnel());
+					reqDTO.setPassword(password);
+//					reqDTO.setConfirmPassword(confirmPassword);
+					System.out.println("Proceed to create user.............................");
+					ISupplierUserActivationSO reqSO = (ISupplierUserActivationSO) BusinessDelegate.getInstance().getServiceObject("sm", ISupplierUserActivationSO.class);
+					log.info("*******>Personnel add - " + this.getManagedBean().getSmPersonnel().getSmAppl().getSmSupplier().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmState());
+					SupplierUserActivationResDTO resDTO = new SupplierUserActivationResDTO();
+					
+					if(reqDTO.getSmPersonnel().getEpRole().equalsIgnoreCase("U")){
+						reqDTO.getSmPersonnel().setEpRole(RoleCode.BASIC_SUPPLIER_USER.value());
+					} else if(reqDTO.getSmPersonnel().getEpRole().equalsIgnoreCase("C")){
+						reqDTO.getSmPersonnel().setEpRole(RoleCode.CM_USER.value());
+					}
+					
+					if(reqDTO.getSmPersonnel().getEpRole() == RoleCode.BASIC_SUPPLIER_USER.value() || reqDTO.getSmPersonnel().getEpRole() == RoleCode.CM_USER.value())
+						resDTO = reqSO.createPmProfileForPersonnel(reqDTO);
+					if(resDTO.isSuccessful()){
+						this.getManagedBean().setValidActivation(false);
+						this.getManagedBean().setSmPersonnel(null);
+						return navigateToAck();
+//						SpkiReqDTO spkiReqDTO = new SpkiReqDTO();
+//						spkiReqDTO.setSmPersonnel(this.getManagedBean().getSmPersonnel());
+//						ISpkiSO spkiReqSO = (ISpkiSO) BusinessDelegate.getInstance().getServiceObject("sm", ISpkiSO.class);
+//						SpkiResDTO spkiResDTO = spkiReqSO.requestCertificate(spkiReqDTO);
+						
+//						FacesContext.getCurrentInstance().addMessage(
+//								null,
+//								new FacesMessage(FacesMessage.SEVERITY_INFO,
+//										"Your account has been created successfully.", ""));
+					}else{
+						errorMsg("PM Creation Error.");
+					}
 				} else {
 					
 					if(password.equals(confirmPassword)) {
@@ -160,10 +193,7 @@ public class SupplierUserActivationBackingBean extends
 						log.info("*******>Personnel add - " + this.getManagedBean().getSmPersonnel().getSmAppl().getSmSupplier().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmState());
 						SupplierUserActivationResDTO resDTO = new SupplierUserActivationResDTO();
 						
-						if(reqDTO.getSmPersonnel().getEpRole() == RoleCode.BASIC_SUPPLIER_USER.value() || reqDTO.getSmPersonnel().getEpRole() == RoleCode.CM_USER.value())
-							resDTO = reqSO.createPmProfileForPersonnel(reqDTO);
-						else
-							resDTO = reqSO.createPmProfile(reqDTO);
+						resDTO = reqSO.createPmProfile(reqDTO);
 	//					SupplierUserActivationResDTO resDTO = new SupplierUserActivationResDTO();
 	//					resDTO.setSuccessful(true);
 						if(resDTO.isSuccessful()){
