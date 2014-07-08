@@ -74,11 +74,11 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     private boolean itemCheck; // For checking item whether service or product
     private SelectItem[] justDropdown; // justification drop down
     private SelectItem[] priceTypes; // price type drop down for add to cart
+    private SelectItem[] procurementTypes; // for procuremment type dropdown
     private String processName;
     private String requestNoteStatus;
     private boolean required = Boolean.FALSE;
     private boolean justRequired = Boolean.FALSE;
-    
     
     private String justification;
     private String justificationType;
@@ -692,7 +692,18 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	 */
 	public void setJustRequired(boolean justRequired) {
 		this.justRequired = justRequired;
-	}	
-	
+	}
+	/**
+	 * @return the procurementTypes
+	 */
+	public SelectItem[] getProcurementTypes() {
+		return procurementTypes;
+	}
+	/**
+	 * @param procurementTypes the procurementTypes to set
+	 */
+	public void setProcurementTypes(SelectItem[] procurementTypes) {
+		this.procurementTypes = procurementTypes;
+	}
 	
 }

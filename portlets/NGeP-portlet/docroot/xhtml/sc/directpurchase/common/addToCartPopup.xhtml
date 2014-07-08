@@ -81,35 +81,34 @@
 					   <p:outputLabel value="*" styleClass="mandatory" /></td>
 					<td><p:selectOneRadio style="margin-bottom: 5px;"
 							id="procType" label="#{lbl['lbl.sc.procurement.type']}"
-							disabled="#{requestNoteBackingBean.managedBean.procurementType eq 'G'}"
 							value="#{requestNoteBackingBean.managedBean.procurementType}"
 							required="#{requestNoteBackingBean.managedBean.required}">
 							<f:selectItems
-								value="#{requestNoteBackingBean.getRadioButtonCodeValues(ParameterTypeConst.procurementType)}" />
-							<p:ajax event="change" update="addToCartId"
+								value="#{requestNoteBackingBean.managedBean.procurementTypes}" />
+							<p:ajax event="change" update="justLabel ,justValue ,justRmksLabel,justRmksValue"
 								listener="#{requestNoteBackingBean.procurementTypeEvent}"
 								process="@this" />
 						</p:selectOneRadio> <p:message id="procTypeMsg" for="procType" display="icon" /></td>
 				</tr>
 				
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sc.sq.gen.info.just']}" rendered="#{requestNoteBackingBean.managedBean.procTypeOption}" /></td>
-					<td><p:selectOneMenu style="margin-bottom: 5px;" rendered="#{requestNoteBackingBean.managedBean.procTypeOption}"
+					<td><h:panelGroup id="justLabel"> <p:outputLabel value="#{lbl['lbl.sc.sq.gen.info.just']}" rendered="#{requestNoteBackingBean.managedBean.procTypeOption}" /> </h:panelGroup></td>
+					<td><h:panelGroup id="justValue"><p:selectOneMenu style="margin-bottom: 5px;" rendered="#{requestNoteBackingBean.managedBean.procTypeOption}"
 							id="justificationId" label="#{lbl['lbl.sc.justification']}"
 							required="#{requestNoteBackingBean.managedBean.justRequired}"
 							value="#{requestNoteBackingBean.managedBean.justificationType}">
 							<f:selectItems
 								value="#{requestNoteBackingBean.managedBean.justDropdown}" />
-						</p:selectOneMenu> <p:message id="justTypeMsg" for="justificationId" display="icon" /></td>
+						</p:selectOneMenu> <p:message id="justTypeMsg" for="justificationId" display="icon" /></h:panelGroup></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sc.just.rmks']}" rendered="#{requestNoteBackingBean.managedBean.procTypeOption}" /></td>
-					<td><p:inputTextarea id="justificationRmk" rendered="#{requestNoteBackingBean.managedBean.procTypeOption}"
-							label="#{lbl['lbl.sc.just.rmks']}"
+					<td><h:panelGroup id="justRmksLabel"><p:outputLabel value="#{lbl['lbl.sc.just.rmks']}" rendered="#{requestNoteBackingBean.managedBean.procTypeOption}" /></h:panelGroup></td>
+					<td><h:panelGroup id="justRmksValue"><p:inputTextarea id="justificationRmk" rendered="#{requestNoteBackingBean.managedBean.procTypeOption}"
+							label="#{lbl['lbl.sc.just.rmks']}" maxlength="100"
 							required="#{requestNoteBackingBean.managedBean.justRequired}"
 							value="#{requestNoteBackingBean.managedBean.justification}"
 							rows="4" cols="65" style="margin-bottom: 5px;" /> <p:message
-							id="justRmksMsg" for="justificationRmk" display="icon" /></td>
+							id="justRmksMsg" for="justificationRmk" display="icon" /></h:panelGroup></td>
 				</tr>
 			</table>
 			

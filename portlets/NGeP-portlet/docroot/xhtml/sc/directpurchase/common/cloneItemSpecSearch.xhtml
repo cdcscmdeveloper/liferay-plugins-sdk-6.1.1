@@ -38,11 +38,13 @@
 		<tr>
 			<td style="width: 200px;"><p:outputLabel value="#{lbl['lbl.sc.sq.clone.item.spec.created.date.from']}" /></td>
 			<td><p:calendar showOn="button"  pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" value="#{simpleQuoteBackingBean.managedBean.searchFromCreatedDate}">
+				<p:ajax event="dateSelect" update="toDate"/>
 				</p:calendar>
 			 </td>
 			
 			<td style="width: 200px;"><p:outputLabel value="#{lbl['lbl.sc.sq.clone.item.spec.created.date.to']}" /></td>
-			<td><p:calendar showOn="button"  pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" value="#{simpleQuoteBackingBean.managedBean.searchToCreatedDate}">
+			<td><p:calendar showOn="button"  mindate="#{simpleQuoteBackingBean.managedBean.searchFromCreatedDate}" id="toDate"
+			      pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" value="#{simpleQuoteBackingBean.managedBean.searchToCreatedDate}">
 				</p:calendar>
 			</td>
 	    </tr>	

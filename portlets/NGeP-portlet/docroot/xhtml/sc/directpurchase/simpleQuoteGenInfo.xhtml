@@ -101,7 +101,7 @@
 					<td style="vertical-align:top; text-align:left;"><p:outputLabel
 							value="#{lbl['lbl.sc.just.rmks']}" /></td>
 					<td colspan="4"><p:inputTextarea value="#{simpleQuoteBackingBean.managedBean.scQuote.justificationRemark}"
-					          id="justificationRmk" label="#{lbl['lbl.sc.just.rmks']}"
+					          id="justificationRmk" label="#{lbl['lbl.sc.just.rmks']}" maxlength="100"
 					          required="#{simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode eq 'A' or 
 						             simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode eq 'E'}"
 							rows="3" cols="122" style="margin-bottom: 5px;" /> <p:message id="justRmksMsg" for="justificationRmk" display="icon" /></td>
@@ -141,7 +141,7 @@
 					<table>
 						<tr>
 						 <td> 
-							<p:calendar showOn="button" id="startDate" binding="#{StartDate}"  
+							<p:calendar showOn="button" id="startDate" 
 							        mindate="#{simpleQuoteBackingBean.managedBean.today}"
 							        required="true"
 									label="#{lbl['lbl.sc.sq.gen.info.start.date']}" 
