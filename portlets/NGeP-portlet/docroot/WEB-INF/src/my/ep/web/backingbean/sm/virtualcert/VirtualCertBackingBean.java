@@ -66,8 +66,8 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 	public void viewVirtualCert(){
 		SmSupplier supp = getSmSupplier();
 		QuestionnaireBackingBean quesBackingBean = new QuestionnaireBackingBean();
-		String xhtml = "/xhtml/sm/virtualcert/virtualCertView.xhtml";
-		quesBackingBean.validateQuestionnaire(supp.getSmAppl().getApplId(), xhtml);
+		String xhtml = "/xhtml/sm/virtualcert/virtualCertDet.xhtml";
+		
 		//SmSupplier smSupplier = null;
 		try {
 			IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
@@ -90,14 +90,19 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 					this.getManagedBean().getMofAccountLs().add(mofAcc);
 				}
 			}
-			
+//			FacesContext fc = FacesContext.getCurrentInstance();
+//			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, xhtml);
+			quesBackingBean.validateQuestionnaire(supp.getSmAppl().getApplId(), xhtml);
 		} catch(Exception ex){
 			System.out.println("viewVirtualCert ex:" + ex.getMessage());
 		}
+		
 	}
 	
-	public void generatePdf(Long applId) throws Exception {
-		System.out.println("******generatePdf>>>");
+	public void generatePdf() throws Exception {
+		Long applId = getSmSupplier().getSmAppl().getApplId();
+		
+		System.out.println("******generatePdf>>>" + applId);
 		IMofRegistrationSO mofRegistrationSO = null;
 //		SmAppl smAppl = null;
 		tmpPath = System.getProperty("java.io.tmpdir");
@@ -123,6 +128,7 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 		// replace value in velocity template
 		String coverHtml = getCoverHtmlFromVelocity(smSupplier);
 		String contentHtml = getContentHtmlFromVelocity(smSupplier);
+		String lampiranBHtml = getLampiranBFromVelocity();
 		
 		String timeStamp = String.valueOf((new Date()).getTime());
 		String suppId = smSupplier.getSupplierId().toString();
@@ -149,6 +155,7 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 //        InputStream inputContent = new FileInputStream(fContent);
         list.add(new FileInputStream(fCover));
         list.add(new FileInputStream(fContent));
+        list.add(new FileInputStream(new File(FacesContext.getCurrentInstance().getExternalContext().getRealPath("/WEB-INF/templates/lampiranB.pdf"))));
 		
         String latestFile = tmpPath + "Mof_" + suppId + "_" + timeStamp + ".pdf";
         OutputStream combined = new FileOutputStream(new File(latestFile));
@@ -157,7 +164,9 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
         combined.close();
         fCover.delete();
         fContent.delete();
-
+        downloadFile(latestFile);
+        
+        /* temporary disabled
         try{
         	File afile =new File(latestFile);
 
@@ -172,7 +181,7 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 
         }catch(Exception e){
         	e.printStackTrace();
-        }
+        }*/
 
         
 	}
@@ -384,6 +393,27 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
     	return output.toString();
     }
     
+	public String getLampiranBFromVelocity()  throws Exception {
+		String myTemplatePath = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/WEB-INF/templates");
+
+		Properties p = new Properties();
+		p.setProperty( "file.resource.loader.path", myTemplatePath);
+		Velocity.init(p);
+
+		Template template = Velocity.getTemplate( "vc-lampiran-b.vm" );
+
+		log.info("template: " + template);
+
+		VelocityContext context = new VelocityContext();
+
+		StringWriter output = new StringWriter();
+
+		template.merge(context, output);
+		log.debug("html output: " + output);
+
+		return output.toString();
+	}
+    
 	public void generatePdf(OutputStream baos, String html) throws Exception {
 		
 /*		Document document = new Document(PageSize.A4);
@@ -492,5 +522,6 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 			System.out.println("download exception>>>>" + ex.getMessage());
 		}
 	}
+	
 }
 
