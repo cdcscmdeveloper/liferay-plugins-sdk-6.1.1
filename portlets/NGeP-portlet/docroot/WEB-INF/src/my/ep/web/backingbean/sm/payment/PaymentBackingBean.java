@@ -402,18 +402,18 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 			System.out.println("curlIPN: "+ ex.getMessage());
 		}
 		
-//		System.out.println("orderId: " + orderId);
-//		System.out.println("tranID: " + tranID);
-//		System.out.println("status:" + status);
-//		System.out.println("domain:" + domain);
-//		System.out.println("amount :" + amount);
-//		System.out.println("currency:" + currency);
-//		System.out.println("appcode: " + appcode);
-//		System.out.println("paydate:" + paydate);
-//		System.out.println("skey:" + skey);
-//		System.out.println("error_code:" + errorCode);
-//		System.out.println("error_desc:" + errorDesc);
-		//System.out.println("channel:" + channel);
+		System.out.println("orderId: " + orderId);
+		System.out.println("tranID: " + tranID);
+		System.out.println("status:" + status);
+		System.out.println("domain:" + domain);
+		System.out.println("amount :" + amount);
+		System.out.println("currency:" + currency);
+		System.out.println("appcode: " + appcode);
+		System.out.println("paydate:" + paydate);
+		System.out.println("skey:" + skey);
+		System.out.println("error_code:" + errorCode);
+		System.out.println("error_desc:" + errorDesc);
+		System.out.println("channel:" + channel);
 		
 		//To verify the data integrity sending by MOLPay
 		String key0 = SmCommonUtil.md5(tranID + orderId + status + domain + amount + currency);
@@ -421,7 +421,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 		
 		System.out.println("SKey>>>>" + skey);
 		System.out.println("Key1>>>>" + key1);
-//		if(skey.equals(key1)){
+		if(skey.equals(key1)){
 			System.out.println("SKey & Key1 Are Match>>>>");
 			IPaymentSO reqSO = (IPaymentSO) BusinessDelegate.getInstance().getServiceObject("sm", IPaymentSO.class);
 			PaymentReqDTO reqDTO = new PaymentReqDTO();
@@ -495,14 +495,14 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 			}else{
 				showPaymentResponse(SupplierManagementConst.PAYMENT_INVALID_RES);
 			}
-//		}else{
-//			showPaymentResponse(SupplierManagementConst.PAYMENT_INVALID_RES);
-////			FacesContext fc = FacesContext.getCurrentInstance();
-////			fc.addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR,null,MessageUtils.getMessage(MessageConst.ERROR_721021,
-////					MessageUtils.BUNDLE_COMMON_MESSAGES,
-////					new FacesScopes().getUserLocale())));
-////			fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/payment/paymentError.xhtml");			
-//		}
+		}else{
+			showPaymentResponse(SupplierManagementConst.PAYMENT_INVALID_RES);
+//			FacesContext fc = FacesContext.getCurrentInstance();
+//			fc.addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR,null,MessageUtils.getMessage(MessageConst.ERROR_721021,
+//					MessageUtils.BUNDLE_COMMON_MESSAGES,
+//					new FacesScopes().getUserLocale())));
+//			fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/payment/paymentError.xhtml");			
+		}
 		
 //		return "paymentAcknowledge";
 	}

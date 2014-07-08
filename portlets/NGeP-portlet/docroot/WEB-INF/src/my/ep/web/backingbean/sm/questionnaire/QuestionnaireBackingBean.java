@@ -74,9 +74,9 @@ public class QuestionnaireBackingBean extends BaseBackingBean<QuestionnaireManag
 	public static Logger log = Logger.getLogger(QuestionnaireBackingBean.class);
 
 	public QuestionnaireBackingBean() {
-		if (MDC.get(LogKey.USER_ID) == null) {
-			MDC.put(LogKey.USER_ID, 1L);
-		}
+//		if (MDC.get(LogKey.USER_ID) == null) {
+//			MDC.put(LogKey.USER_ID, 1L);
+//		}
 	}
 
 	/*
