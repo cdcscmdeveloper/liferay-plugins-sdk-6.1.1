@@ -1,0 +1,125 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<p:panel header="CONTRACT OWNER" toggleable="true">
+		<table>
+			<tr>
+				<td style="width: 139px"><p:outputLabel
+						value="#{lbl['lbl.fl.ministry']}" /></td>
+				<td><p:inputText size="50"
+						value="#{invoiceBackingBean.managedBean.invoice.flRequest.issuedOrgProfile.parentOrgProfile.orgName}"
+						disabled="true" /></td>
+				<td style="width: 139px"><p:outputLabel value="#{lbl['lbl.fl.ap59.phys.contr.no']}" /></td>
+				<td><p:inputText size="40" disabled="true" /></td>
+			</tr>
+			<tr>
+				<td style="width: 139px"><p:outputLabel
+						value="#{lbl['lbl.fl.ap59.ptj']}" /></td>
+				<td><p:inputText size="50" disabled="true" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.ap59.phys.loa.no']}" /></td>
+				<td><p:inputText size="40" disabled="true" /></td>
+			</tr>
+			<tr>
+				<td style="width: 139px"><p:outputLabel
+						value="#{lbl['lbl.fl.ap59.supp.name']}" /></td>
+				<td><p:inputText size="50" disabled="true" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.ap59.loa.no']}" /></td>
+				<td><p:inputText size="40" disabled="true" /></td>
+			</tr>
+			<tr>
+				<td valign="top" style="width: 137px;"><p:outputLabel
+						value="#{lbl['lbl.fl.ap59.contr.title']}" /></td>
+				<td><p:inputTextarea rows="4" cols="50"
+						style="margin-bottom:5px;" disabled="true" /></td>
+			</tr>
+		</table>
+	</p:panel>
+	<p:panel header="CONTRACT ORDER" toggleable="true" id="suppDetPnl">
+		<table>
+			<tr>
+				<td style="width: 139px"><p:outputLabel
+						value="#{lbl['lbl.fl.ministry']}" /></td>
+				<td><p:inputText size="50" disabled="true" /></td>
+				<td style="width: 139px"><p:outputLabel value="#{lbl['lbl.fl.ap59.ord.date']}" /></td>
+				<td><p:inputText size="40" disabled="true" /></td>
+			</tr>
+			<tr>
+				<td style="width: 139px"><p:outputLabel
+						value="#{lbl['lbl.fl.ap59.ptj']}" /></td>
+				<td><p:inputText size="50" disabled="true" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.ap59.ord.amt']}" /></td>
+				<td><p:inputText size="40" disabled="true" /></td>
+			</tr>
+			<tr>
+				<td valign="top" style="width: 137px;"><p:outputLabel
+						value="#{lbl['lbl.fl.ap59.ord.title']}" /></td>
+				<td><p:inputTextarea rows="4" cols="50"
+						style="margin-bottom:5px;" disabled="true" /></td>
+			</tr>
+
+		</table>
+	</p:panel>
+	<p:panel header="INVOICE SUMMARY" toggleable="true">
+		<table>
+			<tr>
+				<td style="width: 139px"><p:outputLabel
+						value="#{lbl['lbl.fl.new.inv.amt']}" /></td>
+				<td><p:inputText size="35"
+						value="#{invoiceBackingBean.managedBean.invoice.invoiceAmtNew}"
+						disabled="true" style="text-align:right">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</p:inputText></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.service.fee']}" /></td>
+				<td><p:inputText size="35"
+						value="#{invoiceBackingBean.managedBean.serviceCharge}"
+						disabled="true" style="text-align:right" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.fee.amt']}" /></td>
+				<td><p:inputText size="35" disabled="true"
+						value="#{invoiceBackingBean.managedBean.invoice.feeAmt}"
+						style="text-align:right">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</p:inputText></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.amt.to.supplier']}" /></td>
+				<td><p:inputText size="35" disabled="true"
+						value="#{invoiceBackingBean.managedBean.invoice.supplierOrFactorAmt}"
+						style="text-align:right">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</p:inputText></td>
+			</tr>
+		</table>
+	</p:panel>
+	<p:panel header="BPK DECISION" toggleable="true">
+		<table style="width: 100%">
+			<tr>
+				<td style="width: 139px"><p:outputLabel
+						value="#{lbl['lbl.fl.ap59.decision']}" /></td>
+				<td><p:selectOneMenu style="margin-bottom:15px;">
+						<f:selectItem itemLabel="-- Select -- " itemValue="" />
+					</p:selectOneMenu></td>
+			</tr>
+		</table>
+	</p:panel>
+	<p:panel header="#{lbl['lbl.fl.remark.attachment']}" toggleable="true">
+		<table style="width: 100%">
+			<tr>
+				<td width="50%" valign="top"><ui:include
+						src="/xhtml/fl/shared/remark.xhtml" /></td>
+				<td width="50%" valign="top"><ui:include
+						src="/xhtml/fl/shared/attachment.xhtml" /></td>
+			</tr>
+		</table>
+	</p:panel>
+</ui:composition>

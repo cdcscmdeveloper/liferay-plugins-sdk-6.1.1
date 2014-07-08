@@ -1,0 +1,50 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+	<ui:define name="resourceSection">
+	</ui:define>
+	<ui:define name="contentSection">
+		<f:event listener="#{invoiceBackingBean.preRenderView}"
+			type="preRenderView" />
+		<p:messages id="messages" showDetail="true" autoUpdate="true"
+			showSummary="false" closable="true" severity="error, info" />
+		<table style="width: 100%">
+			<tr>
+				<td><p:commandButton value="Back" immediate="true"
+						rendered="#{invoiceBackingBean.managedBean.taskId==null}"
+						icon="ui-icon-back" oncomplete="window.history.back();" /></td>
+				<td colspan="4" style="text-align: right;"><p:commandButton
+						value="SUBMIT"
+						action="#{invoiceBackingBean.submitAction('SUBMIT')}"
+						icon="ui-icon-submit">
+						<f:param name="actionName" value="SUBMIT" />
+					</p:commandButton>
+					</td>
+			</tr>
+		</table>
+		<ui:include src="/xhtml/fl/invoice/ap59/ap59ReviewHeaderPage.xhtml" />
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+			<tr>
+				<td width="20%" valign="top" class="sidemenutd"><p:tabMenu
+						styleClass="sidemenu"
+						activeIndex="#{invoiceBackingBean.managedBean.selectedTabIndex}">
+						<p:menuitem value="General" update="@form">
+							<f:setPropertyActionListener
+								target="#{invoiceBackingBean.managedBean.selectedTabIndex}"
+								value="0" />
+						</p:menuitem>
+					</p:tabMenu></td>
+				<td width="80%"><p:outputPanel
+						rendered="#{invoiceBackingBean.managedBean.selectedTabIndex == 0}">
+						<ui:include src="ap59General.xhtml" />
+					</p:outputPanel></td>
+			</tr>
+		</table>
+	</ui:define>
+</ui:composition>
