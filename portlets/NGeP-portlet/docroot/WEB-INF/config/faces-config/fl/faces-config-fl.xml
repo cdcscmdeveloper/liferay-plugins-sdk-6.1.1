@@ -51,6 +51,11 @@
 			<to-view-id>/xhtml/fl/receivednote/frnBasePage.xhtml</to-view-id>
 			<redirect />
 		</navigation-case>
+		<navigation-case>
+			<from-outcome>stopInstr</from-outcome>
+			<to-view-id>/xhtml/fl/stopInstruction/siBasePage.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>		
 	</navigation-rule>
 </faces-config>
 
