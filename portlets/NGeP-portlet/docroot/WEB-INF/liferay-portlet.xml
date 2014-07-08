@@ -1473,6 +1473,42 @@
 			<header-portlet-css>/css/ep/main.css</header-portlet-css>
 			<css-class-wrapper>sc-requestnote-search-portlet</css-class-wrapper>
 		</portlet>
+		<portlet>
+			<portlet-name>pmRejectionReason</portlet-name>
+			<icon>/icon.png</icon>
+			<instanceable>false</instanceable>
+			<header-portlet-css>/css/main.css</header-portlet-css>
+			<footer-portlet-javascript>
+				/js/main.js
+			</footer-portlet-javascript>
+			<css-class-wrapper>
+				pmRejectionreason-portlet
+			</css-class-wrapper>
+		</portlet>
+		<portlet>
+			<portlet-name>pmSupportingDocument</portlet-name>
+			<icon>/icon.png</icon>
+			<instanceable>false</instanceable>
+			<header-portlet-css>/css/main.css</header-portlet-css>
+			<footer-portlet-javascript>
+				/js/main.js
+			</footer-portlet-javascript>
+			<css-class-wrapper>
+				pmSupportingdocument-portlet
+			</css-class-wrapper>
+		</portlet>
+		<portlet>
+			<portlet-name>pmTaskAssignment</portlet-name>
+			<icon>/icon.png</icon>
+			<instanceable>false</instanceable>
+			<header-portlet-css>/css/main.css</header-portlet-css>
+			<footer-portlet-javascript>
+				/js/main.js
+			</footer-portlet-javascript>
+			<css-class-wrapper>
+				pmTaskAssignment-portlet
+			</css-class-wrapper>
+		</portlet>
 		<role-mapper>
 		<role-name>administrator</role-name>
 		<role-link>Administrator</role-link>

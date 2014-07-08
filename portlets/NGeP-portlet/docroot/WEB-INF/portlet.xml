@@ -4939,5 +4939,109 @@
 				<role-name>user</role-name>
 			</security-role-ref>
 		</portlet>
-
+		<portlet>
+			<portlet-name>pmRejectionReason</portlet-name>
+			<display-name>Rejection Reason</display-name>
+			<portlet-class>
+				org.portletfaces.bridge.GenericFacesPortlet
+			</portlet-class>
+			<init-param>
+				<name>javax.portlet.faces.defaultViewId.view</name>
+				<value>
+					/xhtml/pm/rejectionreason/rejectionReason.xhtml
+				</value>
+			</init-param>
+			<expiration-cache>0</expiration-cache>
+			<supports>
+				<mime-type>text/html</mime-type>
+				<portlet-mode>view</portlet-mode>
+			</supports>
+			<portlet-info>
+				<title>Rejection Reason</title>
+				<short-title>Rejection Reason</short-title>
+				<keywords></keywords>
+			</portlet-info>
+			<security-role-ref>
+				<role-name>administrator</role-name>
+			</security-role-ref>
+			<security-role-ref>
+				<role-name>guest</role-name>
+			</security-role-ref>
+			<security-role-ref>
+				<role-name>power-user</role-name>
+			</security-role-ref>
+			<security-role-ref>
+				<role-name>user</role-name>
+			</security-role-ref>
+		</portlet>
+		<portlet>
+			<portlet-name>pmSupportingDocument</portlet-name>
+			<display-name>Supporting Document</display-name>
+			<portlet-class>
+				org.portletfaces.bridge.GenericFacesPortlet
+			</portlet-class>
+			<init-param>
+				<name>javax.portlet.faces.defaultViewId.view</name>
+				<value>
+					/xhtml/pm/supportingdocument/supportingDocument.xhtml
+				</value>
+			</init-param>
+			<expiration-cache>0</expiration-cache>
+			<supports>
+				<mime-type>text/html</mime-type>
+				<portlet-mode>view</portlet-mode>
+			</supports>
+			<portlet-info>
+				<title>Supporting Document</title>
+				<short-title>Supporting Document</short-title>
+				<keywords></keywords>
+			</portlet-info>
+			<security-role-ref>
+				<role-name>administrator</role-name>
+			</security-role-ref>
+			<security-role-ref>
+				<role-name>guest</role-name>
+			</security-role-ref>
+			<security-role-ref>
+				<role-name>power-user</role-name>
+			</security-role-ref>
+			<security-role-ref>
+				<role-name>user</role-name>
+			</security-role-ref>
+		</portlet>
+		<portlet>
+			<portlet-name>pmTaskAssignment</portlet-name>
+			<display-name>Task Assignment</display-name>
+			<portlet-class>
+				org.portletfaces.bridge.GenericFacesPortlet
+			</portlet-class>
+			<init-param>
+				<name>javax.portlet.faces.defaultViewId.view</name>
+				<value>
+					/xhtml/pm/taskassignment/taskAssignment.xhtml
+				</value>
+			</init-param>
+			<expiration-cache>0</expiration-cache>
+			<supports>
+				<mime-type>text/html</mime-type>
+				<portlet-mode>view</portlet-mode>
+			</supports>
+			<portlet-info>
+				<title>Task Assignment</title>
+				<short-title>Task Assignment</short-title>
+				<keywords></keywords>
+			</portlet-info>
+			<security-role-ref>
+				<role-name>administrator</role-name>
+			</security-role-ref>
+			<security-role-ref>
+				<role-name>guest</role-name>
+			</security-role-ref>
+			<security-role-ref>
+				<role-name>power-user</role-name>
+			</security-role-ref>
+			<security-role-ref>
+				<role-name>user</role-name>
+			</security-role-ref>
+		</portlet>
 </portlet-app>

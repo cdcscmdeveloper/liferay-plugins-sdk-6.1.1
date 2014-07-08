@@ -35,7 +35,10 @@
 			<portlet id="pmZone"></portlet>	
 			<portlet id="pmNotifications"></portlet>				
 			<portlet id="quickLinks"></portlet>	
-			<portlet id="pmUserProfilePersonalization"></portlet>		
+			<portlet id="pmUserProfilePersonalization"></portlet>
+			<portlet id="pmRejectionReason"></portlet>
+			<portlet id="pmSupportingDocument"></portlet>			
+			<portlet id="pmTaskAssignment"></portlet>				
 		</category>
 		<!-- Profile Management - END -->		
 
