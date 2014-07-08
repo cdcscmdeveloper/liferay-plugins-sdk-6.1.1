@@ -3181,7 +3181,7 @@ public class SpecificationBackingBean extends
 	public String technicalChecklistEditAction(int index,
 			ScQtCheckList checkList) {
 		IQTSpecSO specSo = null;
-		SpecificationResDTO resDTO = null;
+		SpecificationResDTO resDTO = new SpecificationResDTO();
 
 		try {
 			this.getManagedBean().setIndex(index);
@@ -3220,6 +3220,7 @@ public class SpecificationBackingBean extends
 						setUserDetails(checkListValue);
 						checkListValue.setScQtCheckList(checkList);
 						checkList.setScQtCheckListValue(checkListValue);
+						this.getManagedBean().setScQtChecklist(checkList);
 						this.getManagedBean().setCheckListScore(
 								new ArrayList<ScQtCheckListScore>());
 						this.getManagedBean().setScoringForYears(
@@ -3294,6 +3295,7 @@ public class SpecificationBackingBean extends
 
 						checkListValue.setScQtCheckList(checkList);
 						checkList.setScQtCheckListValue(checkListValue);
+						this.getManagedBean().setScQtChecklist(checkList);
 						this.getManagedBean().setNonFederalScore(
 								new ArrayList<ScQtCheckListScore>());
 						this.getManagedBean().setNonFederalScoreyears(
@@ -3428,6 +3430,7 @@ public class SpecificationBackingBean extends
 						ScQtCheckListValue checkListValue = new ScQtCheckListValue();
 						setUserDetails(checkListValue);
 						checkListValue.setScQtCheckList(checkList);
+						this.getManagedBean().setScQtChecklist(checkList);
 						checkList.setScQtCheckListValue(checkListValue);
 						this.getManagedBean().setTechnicalStaffScore(
 								new ArrayList<ScQtCheckListScore>());
@@ -3481,6 +3484,7 @@ public class SpecificationBackingBean extends
 
 						checkListValue.setScQtCheckList(checkList);
 						checkList.setScQtCheckListValue(checkListValue);
+						this.getManagedBean().setScQtChecklist(checkList);
 						this.getManagedBean().setTotalEmployeeScore(
 								new ArrayList<ScQtCheckListScore>());
 
@@ -3535,7 +3539,7 @@ public class SpecificationBackingBean extends
 	public String financialChecklistEditAction(int index,
 			ScQtCheckList checkList) {
 		IQTSpecSO specSo = null;
-		SpecificationResDTO resDTO = null;
+		SpecificationResDTO resDTO = new SpecificationResDTO();
 
 		try {
 			this.getManagedBean().setIndex(index);
@@ -3573,6 +3577,7 @@ public class SpecificationBackingBean extends
 						setUserDetails(checkListValue);
 						checkListValue.setScQtCheckList(checkList);
 						checkList.setScQtCheckListValue(checkListValue);
+						this.getManagedBean().setScQtChecklist(checkList);
 						this.getManagedBean().setContractAmount(
 								new ArrayList<ScQtCheckListScore>());
 
@@ -3623,6 +3628,7 @@ public class SpecificationBackingBean extends
 						setUserDetails(checkListValue);
 						checkListValue.setScQtCheckList(checkList);
 						checkList.setScQtCheckListValue(checkListValue);
+						this.getManagedBean().setScQtChecklist(checkList);
 						this.getManagedBean().setNonFederalContractScore(
 								new ArrayList<ScQtCheckListScore>());
 
@@ -3677,6 +3683,7 @@ public class SpecificationBackingBean extends
 
 						checkListValue.setScQtCheckList(checkList);
 						checkList.setScQtCheckListValue(checkListValue);
+						this.getManagedBean().setScQtChecklist(checkList);
 						this.getManagedBean().setCreditFacility(
 								new ArrayList<ScQtCheckListScore>());
 
@@ -3729,6 +3736,7 @@ public class SpecificationBackingBean extends
 
 						checkListValue.setScQtCheckList(checkList);
 						checkList.setScQtCheckListValue(checkListValue);
+						this.getManagedBean().setScQtChecklist(checkList);
 						this.getManagedBean().setScoringCash(
 								new ArrayList<ScQtCheckListScore>());
 
@@ -3783,6 +3791,7 @@ public class SpecificationBackingBean extends
 
 						checkListValue.setScQtCheckList(checkList);
 						checkList.setScQtCheckListValue(checkListValue);
+						this.getManagedBean().setScQtChecklist(checkList);
 						this.getManagedBean().setBankStamentScore(
 								new ArrayList<ScQtCheckListScore>());
 
@@ -3835,6 +3844,7 @@ public class SpecificationBackingBean extends
 						setUserDetails(checkListValue);
 
 						checkListValue.setScQtCheckList(checkList);
+						this.getManagedBean().setScQtChecklist(checkList);
 						checkList.setScQtCheckListValue(checkListValue);
 						this.getManagedBean().setAssetScore(
 								new ArrayList<ScQtCheckListScore>());
@@ -3890,6 +3900,7 @@ public class SpecificationBackingBean extends
 
 						checkListValue.setScQtCheckList(checkList);
 						checkList.setScQtCheckListValue(checkListValue);
+						this.getManagedBean().setScQtChecklist(checkList);
 						this.getManagedBean().setPaidUpCapitalScore(
 								new ArrayList<ScQtCheckListScore>());
 
