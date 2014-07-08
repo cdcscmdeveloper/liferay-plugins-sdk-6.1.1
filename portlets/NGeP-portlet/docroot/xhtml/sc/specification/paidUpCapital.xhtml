@@ -22,12 +22,13 @@
 				action="#{specificationBackingBean.committeeBackAction}" />
 
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
-				style="float:right;" icon="ui-icon-save"
+				style="float:right;" icon="ui-icon-save" 
 				actionListener="#{specificationBackingBean.acceptPaidUpScore}" />
 
 
 
 		</div>
+		<p:spacer height="50"></p:spacer>
 		<p:panel header="#{lbl['lbl.sc.spec.paid.up.capital']}" toggleable="true">
 			<h:panelGrid columns="2">
 				<h:outputLabel value="#{lbl['lbl.sc.spec.paid.up.capital.ringgit']}"></h:outputLabel>
