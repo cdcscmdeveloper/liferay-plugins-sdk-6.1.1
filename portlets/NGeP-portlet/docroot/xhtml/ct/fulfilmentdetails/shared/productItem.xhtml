@@ -42,7 +42,7 @@
 		    <h:outputLabel for="show" value="Show" style="width:50px;"/>  
 		      <p:selectOneMenu id="show" value="#{contractDetailsBackingBean.managedBean.showItem}" style="width:200px;">
 		         <f:selectItems value="#{contractDetailsBackingBean.getDropdownCodeValues(ParameterTypeConst.itemDisplayType)}" />
-		         <p:ajax event="change" update="@([id$=changeField])" listener="#{contractDetailsBackingBean.changeField}" process="@this"/>  
+		         <p:ajax event="change" update=":form:changeField" listener="#{contractDetailsBackingBean.changeField}" process="@this"/>  
 			  </p:selectOneMenu>         
 		  </h:panelGrid>
 		  <p:spacer height="20"/>
