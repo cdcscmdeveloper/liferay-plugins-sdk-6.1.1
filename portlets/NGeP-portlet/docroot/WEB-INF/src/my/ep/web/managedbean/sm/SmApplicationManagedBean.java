@@ -169,7 +169,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private SmStaffAcademic selectedStaffAcademic;
 
 	private boolean valueReqd;
-	
+
 	private boolean showParentMsg;
 
 	private SmPersonnelAddress shareHolderPermAddr;
@@ -349,8 +349,10 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private String currentPageType;
 
 	private boolean redirectToPersonPage;
-	
+
 	private PmParameter perIdTypeParam;
+
+	private String facilityType;
 
 	public SmApplicationManagedBean() {
 		System.out.println("******** Enter Managed Bean *******888");
@@ -477,25 +479,10 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		selectedPersJobFunctions = new ArrayList<SmStaffExperience>();
 		selectedPersProfBodies = new ArrayList<SmAssociationBody>();
 		selectedPersRelatedCompanies = new ArrayList<SmRelatedCompany>();
-		// personnelMailAddr = new SmPersonnelAddress();
-		// personnelMailAddr.setSmAddress(defaultAddr);
-		// personnelPermAddr = new SmPersonnelAddress();
-		// personnelPermAddr.setSmAddress(defaultAddr);
-		// personnelResdAddr = new SmPersonnelAddress();
-		// personnelResdAddr.setSmAddress(defaultAddr);
-		// personnelOffAddr = new SmPersonnelAddress();
-		// personnelOffAddr.setSmAddress(defaultAddr);
 
 		selectedPersonnel
 				.setSmPersonnelAddresses(new ArrayList<SmPersonnelAddress>());
-		// selectedPersonnel.getSmPersonnelAddresses().add(shareHolderMailAddr);
-		// selectedPersonnel.getSmPersonnelAddresses().add(shareHolderPermAddr);
-		// selectedPersonnel.setSmStaffAcademics(new
-		// ArrayList<SmStaffAcademic>());
-		// personnelAcademics = new SmStaffAcademic();
-		// selectedPersonnel.getSmStaffAcademics().add(personnelAcademics);
 
-		//
 		selectedFactoryFacility = new SmFacility();
 		selectedFactoryFacility.setSmAddress(defaultAddr);
 		selectedFactoryFacilities = new ArrayList<SmFacility>();
@@ -535,89 +522,12 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		selectedCategory.setPmCategoryL2(new PmCategoryL2());
 		selectedCategory.setPmCategoryL3(new PmCategoryL3());
 		// Dummy data start
-		PmCategoryL3 sch1 = new PmCategoryL3();
-		sch1.setCategoryName("Child 1.1.1");
-		sch1.setCategoryL3Code("1");
-		PmCategoryL3 sch2 = new PmCategoryL3();
-		sch2.setCategoryName("Child 1.1.2");
-		sch2.setCategoryL3Code("2");
-
-		PmCategoryL3 sch3 = new PmCategoryL3();
-		sch3.setCategoryName("Child 1.2.1");
-		sch3.setCategoryL3Code("3");
-		PmCategoryL3 sch4 = new PmCategoryL3();
-		sch4.setCategoryName("Child 1.2.2");
-		sch4.setCategoryL3Code("4");
-
-		PmCategoryL3 sch5 = new PmCategoryL3();
-		sch5.setCategoryName("Child 2.1.1");
-		sch5.setCategoryL3Code("5");
-		PmCategoryL3 sch6 = new PmCategoryL3();
-		sch6.setCategoryName("Child 2.1.2");
-		sch6.setCategoryL3Code("6");
-
-		PmCategoryL3 sch7 = new PmCategoryL3();
-		sch7.setCategoryName("Child 2.2.1");
-		sch7.setCategoryL3Code("7");
-		PmCategoryL3 sch8 = new PmCategoryL3();
-		sch8.setCategoryName("Child 2.2.2");
-		sch8.setCategoryL3Code("8");
-
-		List<PmCategoryL3> c1list = new ArrayList<PmCategoryL3>();
-		c1list.add(sch1);
-		c1list.add(sch2);
-		List<PmCategoryL3> c2list = new ArrayList<PmCategoryL3>();
-		c2list.add(sch3);
-		c2list.add(sch4);
-		List<PmCategoryL3> c3list = new ArrayList<PmCategoryL3>();
-		c3list.add(sch5);
-		c3list.add(sch6);
-		List<PmCategoryL3> c4list = new ArrayList<PmCategoryL3>();
-		c4list.add(sch7);
-		c4list.add(sch8);
-
-		PmCategoryL2 ch1 = new PmCategoryL2();
-		ch1.setCategoryName("Child 1.1");
-		ch1.setCategoryL2Code("1");
-		ch1.setPmCategoryL3s(c1list);
-
-		PmCategoryL2 ch2 = new PmCategoryL2();
-		ch2.setCategoryName("Child 1.2");
-		ch2.setCategoryL2Code("2");
-		ch2.setPmCategoryL3s(c2list);
-
-		PmCategoryL2 ch3 = new PmCategoryL2();
-		ch3.setCategoryName("Child 2.1");
-		ch3.setCategoryL2Code("3");
-		ch3.setPmCategoryL3s(c3list);
-
-		PmCategoryL2 ch4 = new PmCategoryL2();
-		ch4.setCategoryName("Child 2.2");
-		ch4.setCategoryL2Code("4");
-		ch4.setPmCategoryL3s(c4list);
-
-		List<PmCategoryL2> p1list = new ArrayList<PmCategoryL2>();
-		p1list.add(ch1);
-		p1list.add(ch2);
-		List<PmCategoryL2> p2list = new ArrayList<PmCategoryL2>();
-		p2list.add(ch3);
-		p2list.add(ch4);
-
-		PmCategoryL1 p1 = new PmCategoryL1();
-		p1.setCategoryName("Parent1");
-		p1.setCategoryL1Code("1");
-		p1.setPmCategoryL2s(p1list);
-
-		PmCategoryL1 p2 = new PmCategoryL1();
-		p2.setCategoryName("Parent2");
-		p2.setCategoryL1Code("2");
-		p2.setPmCategoryL2s(p2list);
 
 		// Dummy data end
 
-		defaultParentCatList = new ArrayList<PmCategoryL1>();
-		defaultParentCatList.add(p1);
-		defaultParentCatList.add(p2);
+		// defaultParentCatList = new ArrayList<PmCategoryL1>();
+		// defaultParentCatList.add(p1);
+		// defaultParentCatList.add(p2);
 
 		supplierParentCatList = new ArrayList<PmCategoryL1>();
 		supplierChildCatList = new ArrayList<PmCategoryL2>();
@@ -2100,6 +2010,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setPerIdTypeParam(PmParameter perIdTypeParam) {
 		this.perIdTypeParam = perIdTypeParam;
+	}
+
+	public String getFacilityType() {
+		return facilityType;
+	}
+
+	public void setFacilityType(String facilityType) {
+		this.facilityType = facilityType;
 	}
 
 }
