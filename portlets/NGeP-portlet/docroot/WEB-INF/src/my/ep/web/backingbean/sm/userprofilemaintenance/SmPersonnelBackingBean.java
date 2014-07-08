@@ -91,7 +91,8 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 	
 	public String navigateToAddNewUserPage(){  
 		System.out.println("********************SmPersonnelBackingBean navigateToAddNewUserPage***************");
-		removeEPRole();
+//		removeEPRole();
+		getManagedBean().setDisableRole(false);
 		SmPersonnel smPersonnel = new SmPersonnel();
 		smPersonnel.setPmCountry(new PmCountry());
 
@@ -343,7 +344,8 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 	public void setMailingAddrSameAsPerm(AjaxBehaviorEvent e) {
 		if (getManagedBean().getBasicSmPersonnelMailingAddress().isSameAsPerm()) {
 			System.out.println("********* Duplicate Mail Addr ***********");
-			getManagedBean().getBasicSmPersonnelMailingAddress().setSmAddress(getManagedBean().getBasicSmPersonnelPermanentAddress().getSmAddress());
+			this.getManagedBean().getBasicSmPersonnelMailingAddress().setSmAddress(this.getManagedBean().getBasicSmPersonnelPermanentAddress().getSmAddress());
+			updateMailAddLists(this.getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress().getPmCountry().getCountryId().toString(), this.getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress().getPmState().getStateId().toString(), this.getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress().getPmDistrict().getDistrictId().toString());
 		} else {
 			System.out.println("*********** Not same Addr ************** ");
 			getManagedBean().getBasicSmPersonnelMailingAddress().setSmAddress(
@@ -729,11 +731,20 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 	}
 	
 	public void removeEPRole(){
-		int smUserListSize = getManagedBean().getSmPersonnelDataModel2().getList().size();
+		int smUserListSize = 0;
+		if(getManagedBean().getSmPersonnelDataModel2().getList() != null)
+			smUserListSize = getManagedBean().getSmPersonnelDataModel2().getList().size();
 		if(smUserListSize < 4)
 			getManagedBean().setDisableRole(false);
 		else
 			getManagedBean().setDisableRole(true);
+	}
+	
+	public void displayPrivileges(){
+		if(getManagedBean().getBasicSmPersonnel().getEpRole().equalsIgnoreCase("U"))
+			getManagedBean().setRenderPrivilegesPanel(true);
+		else
+			getManagedBean().setRenderPrivilegesPanel(false);
 	}
 	
 	public void assignPersonIdentType(AjaxBehaviorEvent e) {
