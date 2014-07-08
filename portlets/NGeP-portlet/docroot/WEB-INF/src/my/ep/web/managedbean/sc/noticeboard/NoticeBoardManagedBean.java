@@ -138,6 +138,7 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	
 	private List<ScQtBsvAttendance> selectedBsvAttandance;
 	
+	
 	public NoticeBoardManagedBean() {
 		// scQt = new ScQt();
 		// selectedScQt = new ScQt();
@@ -653,5 +654,7 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 			List<ScQtBsvAttendance> selectedBsvAttandance) {
 		this.selectedBsvAttandance = selectedBsvAttandance;
 	}
+
+	
 
 }

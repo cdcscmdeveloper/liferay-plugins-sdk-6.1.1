@@ -347,7 +347,6 @@ public class BSVAttendanceBackingBean extends
 				.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter("taskId");
 		this.getManagedBean().setTaskId(taskId);
-
 		log.info("taskId : " + taskId);
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 				.getServiceObject(IBpmSO.class);
@@ -371,7 +370,7 @@ public class BSVAttendanceBackingBean extends
 				.retriveQTDetails(tenderReqDTO);
 		QTDetailBackingBean detailBackingBean = new QTDetailBackingBean();
 		detailBackingBean.getManagedBean().setQt(tenderResDTO.getQtDetail());
-		populateParentOrgProfile(tenderResDTO.getQtDetail());
+		//populateParentOrgProfile(tenderResDTO.getQtDetail());
 		retrieveBriefingSiteVisitList(siteVisitDatatype.getQtId().longValue());
 
 		FacesContext fc = FacesContext.getCurrentInstance();

@@ -723,10 +723,8 @@ public class NoticeBoardBackingBean extends
 		if (null == mofNo || "".equalsIgnoreCase(mofNo)) {
 			setVisible(false);
 			throw new EpException("Mof No should not be Null or Empty");
-		}
-		setVisible(true);
+		}				
 		this.getManagedBean().setQualified(true);
-
 		IQTNoticeBoardSO boardSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 						IQTNoticeBoardSO.class);
@@ -748,7 +746,8 @@ public class NoticeBoardBackingBean extends
 			}
 
 		}
-
+		setVisible(true);
+		
 	}
 
 	/**
