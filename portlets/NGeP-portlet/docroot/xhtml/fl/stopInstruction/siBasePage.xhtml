@@ -1,0 +1,62 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="resourceSection">
+	</ui:define>
+
+	<ui:define name="contentSection">
+		<f:event listener="#{stopInstrBB.preRenderView}" type="preRenderView" />
+		<p:messages id="messages" showDetail="true" autoUpdate="true" showSummary="false" closable="true" severity="error, info" />
+		<table style="width: 100%;">
+			<tr>
+				<td>
+					<p:commandButton value="Back" immediate="true" icon="ui-icon-back" action="/xhtml/fl/docsearch/flDocSearch.xhtml"
+						rendered="#{stopInstrBB.managedBean.taskId==null}" />
+				</td>
+				<td colspan="4" style="text-align: right">
+					<ui:repeat var="bpmAction" value="#{stopInstrBB.managedBean.outComes}">
+						<p:commandButton value="#{bpmAction}" ajax='false' styleClass="ui-button"
+							icon="ui-icon-#{fn:toLowerCase(bpmAction)}" process="@this"
+							action="#{stopInstrBB.saveStopInstruction(bpmAction)}"  />
+					</ui:repeat> 
+					<c:if test='#{stopInstrBB.managedBean.stopInstr.brandNew}'>
+						<p:commandButton value="STOP FULFILMENT" icon="ui-icon-terminate"
+							action="#{stopInstrBB.saveStopInstruction('STOP FULFILMENT')}">
+						</p:commandButton>
+					</c:if>
+				</td>
+			</tr>
+		</table>
+		<ui:include src="siHeaderPage.xhtml" />
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+			<tr>
+				<td width="20%" valign="top" class="sidemenutd">
+					<p:tabMenu styleClass="sidemenu"
+						activeIndex="#{stopInstrBB.managedBean.selectedTabIndex}">
+						<p:menuitem value="General" update="@form">
+							<f:setPropertyActionListener target="#{stopInstrBB.managedBean.selectedTabIndex}" value="0" />
+						</p:menuitem>
+						<p:menuitem value="Charge Line Summary" update="@form" actionListener="#{stopInstrBB.onTabChange(1)}">
+							<f:setPropertyActionListener target="#{stopInstrBB.managedBean.selectedTabIndex}" value="1" />
+						</p:menuitem>
+					</p:tabMenu>
+				</td>
+				<td width="80%">
+					<p:outputPanel rendered="#{stopInstrBB.managedBean.selectedTabIndex == 0}">
+						<ui:include src="siGeneral.xhtml" />
+					</p:outputPanel> 
+					<p:outputPanel rendered="#{stopInstrBB.managedBean.selectedTabIndex == 1}">
+						<ui:include src="siItem.xhtml" />
+					</p:outputPanel>
+				</td>
+			</tr>
+		</table>
+	</ui:define>
+</ui:composition>
