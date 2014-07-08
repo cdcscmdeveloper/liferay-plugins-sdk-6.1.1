@@ -48,7 +48,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	
 	public ContractBackingBean() {
 		log.debug("ContractBackingBean.constructor()");
-		getManagedBean().setFileDirectory(CommonConstants.BASE_FILE_DIR+"/temp");
+		if(getManagedBean().getFileDirectory()==null) {
+			getManagedBean().setFileDirectory(CommonConstants.BASE_FILE_DIR+"/temp");
+		}
 	}
 	
 	public ContractBackingBean(String fileDirectory) {

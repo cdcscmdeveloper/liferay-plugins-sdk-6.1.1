@@ -12,6 +12,8 @@ import java.util.Map;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.constant.pm.ParameterConst;
+import my.ep.constants.CommonConstants;
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.circular.CtCancelCircularReq;
@@ -92,6 +94,8 @@ public class PanelManagedBean extends BaseManagedBean {
 	private Long panelCoverageId;
 	
 	private int selectedTabIndex;
+	
+	private String fileDirectory = CommonConstants.BASE_FILE_DIR+"/CT/Circulars/"+ParameterConst.DOCTYPE_PANEL_CIRCULAR;
 	
 	public CtCircular getCircular() {
 		return circular;
@@ -449,5 +453,13 @@ public class PanelManagedBean extends BaseManagedBean {
 
 	public void setAction(String action) {
 		this.action = action;
+	}
+
+	public String getFileDirectory() {
+		return fileDirectory;
+	}
+
+	public void setFileDirectory(String fileDirectory) {
+		this.fileDirectory = fileDirectory;
 	}
 }

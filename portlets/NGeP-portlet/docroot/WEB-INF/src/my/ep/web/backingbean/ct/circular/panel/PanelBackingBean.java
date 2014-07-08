@@ -121,7 +121,6 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	
 	private static Logger log = Logger.getLogger(PanelBackingBean.class);
 	private IPagingDataModel<CtCircularVer> circularVerPagingDataModel = new CircularVerPagingDataModel();
-	private String fileDirectory = CommonConstants.BASE_FILE_DIR+"/CT/Circulars/"+ParameterConst.DOCTYPE_PANEL_CIRCULAR;
 	
 	public PanelBackingBean(){
 		if(getManagedBean().getOutComes()==null) {
@@ -131,10 +130,12 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			PmStatus status = new PmStatus();
 			status.setStatusId(ContractStatusConst.PQ_PENDING_SUBMISSION);
 			getManagedBean().getCircularVer().setStatus(status);
+			status = new PmStatus();
+			status.setStatusId(ContractStatusConst.CR_PENDING_SUBMISSION);
 			getManagedBean().getCancelCircularReq().setStatus(status);
 			
 			initializeRemarks();
-			ContractBackingBean ctBB = new ContractBackingBean(fileDirectory);
+			ContractBackingBean ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
 			ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 		}
 		
@@ -159,9 +160,9 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	
 	public void preRenderCircular() {
 		renewSesionObject();
+		getManagedBean().setFileDirectory(CommonConstants.BASE_FILE_DIR+"/CT/Circulars/"+ParameterConst.DOCTYPE_PANEL_CIRCULAR);
 		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, "circularBase.xhtml?faces-redirect=true");
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "circularBase.xhtml?faces-redirect=true");
 	}
 	
 	public void preRenderSearch() {
@@ -232,8 +233,9 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			getManagedBean().setCircular(resDTO.getCircularVer().getCtCircular());
 			getManagedBean().setCircularVer(resDTO.getCircularVer());
 			
+			getManagedBean().setFileDirectory(CommonConstants.BASE_FILE_DIR+"/CT/Circulars/"+ParameterConst.DOCTYPE_PANEL_CIRCULAR);
 			initializeRemarks();
-			ContractBackingBean ctBB = new ContractBackingBean(fileDirectory);
+			ContractBackingBean ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
 			ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 			
 		} catch (Exception e) {
@@ -246,9 +248,9 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	
 	public void preRenderCancelCircular() {
 		renewSesionObject();
+		getManagedBean().setFileDirectory(CommonConstants.BASE_FILE_DIR+"/CT/Circulars/"+ParameterConst.DOCTYPE_CANCEL_CIRCULAR_REQUEST);
 		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, "cancelCircularBase.xhtml?faces-redirect=true");
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "cancelCircularBase.xhtml?faces-redirect=true");
 	}
 	
 	public void preRenderViewCancelReq() {
@@ -308,10 +310,10 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			} else {
 				getManagedBean().setCircularDocType(ContractConst.CIRCULAR_DOC_TYPE_PANEL);
 			}
-
+			getManagedBean().setFileDirectory(CommonConstants.BASE_FILE_DIR+"/CT/Circulars/"+ParameterConst.DOCTYPE_CANCEL_CIRCULAR_REQUEST);
 			
 			initializeRemarks();
-			ContractBackingBean ctBB = new ContractBackingBean(fileDirectory);
+			ContractBackingBean ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
 			ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 			
 		} catch (Exception e) {
@@ -517,7 +519,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 					getManagedBean().setCircular(resDTO.getCircularVer().getCtCircular());
 					getManagedBean().setUpdateAction(false);
 					initializeRemarks();
-					ContractBackingBean ctBB = new ContractBackingBean(fileDirectory);
+					ContractBackingBean ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
 					ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
 				}
 			}
@@ -1054,8 +1056,9 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			getManagedBean().setRemarkList(resDTO.getRemarkList());
 			getManagedBean().setAttachmentList(resDTO.getAttachmentList());
 			
+			getManagedBean().setFileDirectory(CommonConstants.BASE_FILE_DIR+"/CT/Circulars/"+getManagedBean().getCircularVer().getDocType());
 			initializeRemarks();
-			ContractBackingBean ctBB = new ContractBackingBean(fileDirectory);
+			ContractBackingBean ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
 			ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 			
 			return "circularBase.xhtml?faces-redirect=true";
@@ -1072,7 +1075,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		UploadedFile item = event.getFile();
 		AttachmentFormat attachmentFormat = new AttachmentDateFormat();
 		
-		String filePath = fileDirectory;
+		String filePath = getManagedBean().getFileDirectory();
 		File file = new File(filePath);
 		file.mkdirs();
 		filePath = filePath + "/" + attachmentFormat.format(item.getFileName(), null);
