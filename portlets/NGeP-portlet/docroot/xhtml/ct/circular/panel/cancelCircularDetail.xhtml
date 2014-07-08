@@ -9,7 +9,6 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
 
 	<p:panel id="cancelCcrPnl" header="#{lbl['lbl.ct.cc.ctobecancele']}" toggleable="true" toggleSpeed="500" >
-	<p:panel id="cancelCcrPnl" header="Circular(s) to be cancel" toggleable="true" toggleSpeed="500" >
 		<p:selectOneMenu value="#{panelBackingBean.managedBean.circularDocType}" 
 			disabled="#{fn:length(panelBackingBean.managedBean.cancelCircularReq.ctCancelCircularList) > 0}" 
 			rendered="#{!panelBackingBean.isBPKApprover()}" >
