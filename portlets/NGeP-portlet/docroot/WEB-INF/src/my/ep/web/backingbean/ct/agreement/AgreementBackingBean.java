@@ -412,7 +412,8 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		}
 		else {
 			for(CtAgreementParty agencySigner : getManagedBean().getCtAgencySigner()) {
-				if(agencySigner.getOrgProfile().getOrgProfileId()==null) {
+				if(getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getOrgProfileId() != null &&
+						agencySigner.getOrgProfile().getOrgProfileId()==null) {
 					throw new EpException(MessageConst.ERROR_100022, new String[]{"PTJ"});
 				}				
 				if(agencySigner.getOfficer().getUserId()==null) {
@@ -509,7 +510,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 						agreementParty.getOrgProfile().getParentOrgProfile().getOrgProfileId()!=null) { // Department
 					reqDTO.setOrgProfileId(agreementParty.getOrgProfile().getParentOrgProfile().getOrgProfileId());
 				} else { // default to ministry
-					//reqDTO.setOrgProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getParentOrgProfile().getOrgProfileId());
+					reqDTO.setOrgProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());
 				}
 			}
 			UserResDTO resDTO = userSO.retrieveUserListByRole(reqDTO);
@@ -1096,8 +1097,12 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 				
 		if(getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())) 
 			return RoleCode.MIN_CONTRACT_ADMIN.value();
-		else if(getFacesScopes().hasRoleUser(RoleCode.APPROVER.value()))
-			return RoleCode.APPROVER.value();
+		else if(getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value()))
+			return RoleCode.CT_APPROVER.value();
+		else if(getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())) 
+			return RoleCode.BPK_CCA.value();
+		else if(getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value()))
+			return RoleCode.BPK_APPROVER.value();
 		else 
 			return null;
 	 }

@@ -14,14 +14,17 @@
 		 <ac:paginator for="AgSignerTable"/>
 		 <p:column selectionMode="multiple" style="width:2%"/>  
 		 <p:column style="width:15%; white-space:normal;"  headerText="#{lbl['lbl.ct.ag.ministry']}" 
-		   rendered="#{agreementBackingBean.managedBean.ctContract.ownerOrgProfile.parentOrgProfile != null}" >
+		   rendered="#{agreementBackingBean.managedBean.ctContract.ownerOrgProfile.parentOrgProfile.orgProfileId != null}" >
 		   <p:outputLabel value="#{agreementBackingBean.managedBean.ctContract.ownerOrgProfile.parentOrgProfile.orgName}"/>
 		 </p:column>
          <p:column style="width:25%;" headerText="#{lbl['lbl.ct.ag.ptj']}">
-            <p:selectOneMenu id="ptj" value="#{data.orgProfile.orgProfileId}"  style="width:320px;" label="#{lbl['lbl.ct.ag.view.ct.ptj']}" >
+            <p:selectOneMenu id="ptj" value="#{data.orgProfile.orgProfileId}"  style="width:320px;" label="#{lbl['lbl.ct.ag.view.ct.ptj']}" 
+            	rendered="#{agreementBackingBean.managedBean.ctContract.ownerOrgProfile.parentOrgProfile.orgProfileId != null}" >
               <f:selectItems value="#{agreementBackingBean.getPtjCodeName()}"/>
             <p:ajax event="change" update="contractSigner" process="@this"/> 
             </p:selectOneMenu>
+            <p:outputLabel value="#{agreementBackingBean.managedBean.ctContract.ownerOrgProfile.orgName}"
+            	rendered="#{agreementBackingBean.managedBean.ctContract.ownerOrgProfile.parentOrgProfile.orgProfileId == null}" style="float:left;" />
          </p:column>
          <p:column style="width:15%;" headerText="#{lbl['lbl.ct.ag.csigner']}" styleClass="companyHeaderGrid">
            <p:selectOneMenu id="contractSigner"
