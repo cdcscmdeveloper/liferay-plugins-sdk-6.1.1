@@ -16,6 +16,9 @@ import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
+import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.fl.invoice.IInvoiceSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
@@ -42,16 +45,21 @@ import my.ep.persistence.entity.fl.payment.FlInvoice;
 import my.ep.persistence.entity.fl.payment.FlInvoiceItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmContact;
 import my.ep.persistence.entity.pm.common.PmFinancialAcc;
 import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
+import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
+import my.ep.web.bean.paginator.IPagingDataModel;
+import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.BpmOutcomeConst;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.fl.invoice.InvoiceManagedBean;
@@ -76,6 +84,9 @@ import com.liferay.portal.util.PortalUtil;
 public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 	private static Logger log = Logger.getLogger(InvoiceBackingBean.class);
 	private String className="@(.myInvClassName)";
+	private IPagingDataModel<FlInvoice> flInvoiceDataModel = new FlInvoicePagingDataModel();
+
+	
 	/**
 	 * get faces scopes
 	 * @return FacesScopes
@@ -452,4 +463,68 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 	public void setClassName(String className) {
 		this.className = className;
 	}
+	
+	public void searchDocument(){
+		flInvoiceDataModel.reloadData();
+	}
+	
+	private class FlInvoicePagingDataModel extends PagingDataModel<FlInvoice> {
+		private static final long serialVersionUID = 1L;
+
+		public FlInvoicePagingDataModel() {
+			super("flInvoiceListDt");
+		}
+		
+		@Override
+	public ISearchResultBean<FlInvoice> pageChangeListener(ISearchBean<FlInvoice> searchBean) {
+		if (log.isDebugEnabled()) {
+			log.debug("pageChangeListener");
+		}
+		try {
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("ap59Status.statusId",SearchOperator.OPERATOR_EQUALS.value(),FulfilmentStatusConst.AP59_PENDING_AP59_DECISION));
+			
+			if(getManagedBean().getLoaNo()!=null) {
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("flRequest.ctContract.loa.loaNo",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getLoaNo()));
+			}
+			if(getManagedBean().getContractNo()!=null) {
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("flRequest.ctContract.contractNo",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getContractNo()));
+			}
+			if(getManagedBean().getTitle()!=null) {
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("flRequest.title",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getTitle()));
+			}
+			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+			reqDTO.setSearchBean(searchBean);
+			
+			IInvoiceSO invoiceSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IInvoiceSO.class);
+			FulfilmentResDTO resDTO = invoiceSO.searchAP59(reqDTO);
+			if(resDTO.isSuccessful()) {
+				return resDTO.getResultBean();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+}
+
+	/**
+	 * @return the flInvoiceDataModel
+	 */
+	public IPagingDataModel<FlInvoice> getFlInvoiceDataModel() {
+		return flInvoiceDataModel;
+	}
+
+	/**
+	 * @param flInvoiceDataModel the flInvoiceDataModel to set
+	 */
+	public void setFlInvoiceDataModel(IPagingDataModel<FlInvoice> flInvoiceDataModel) {
+		this.flInvoiceDataModel = flInvoiceDataModel;
+	}
+	
+	public void searchReset(){
+		this.getManagedBean().setTitle(null);
+		this.getManagedBean().setContractNo(null);
+		this.getManagedBean().setLoaNo(null);
+	}
+	
 }

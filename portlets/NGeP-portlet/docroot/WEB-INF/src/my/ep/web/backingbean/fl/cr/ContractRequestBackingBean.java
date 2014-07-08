@@ -267,7 +267,9 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	}
 
 	public String submitAction(String action) throws Exception {
+		FacesScopes facesScopes = new FacesScopes();
 		IFulfilmentRequestSO iFulfilmentRequestSO = null;
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		try {
 			String token = getFacesScopes().getBPMAuthenticationCtxToken();
@@ -287,6 +289,15 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 //			flRequest.getCtContract().getSmSupplier().getSmMofAccounts();
 			//checkCeilingAmount(flRequest);
 			//checkCeilingQty(flRequest);
+			if(isRequisitioner()){
+				System.out.println("getManagedBean().getApproverModel().getTarget(): "+getManagedBean().getApproverModel().getTarget());
+				reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
+				reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());
+				UserReqDTO userReqDTO = new UserReqDTO();
+				userReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+				UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
+				flRequest.setCreatedOrgProfile(userResDTO.getUserOrgList().get(0).getPmOrgProfile());
+			}
 			reqDTO.setFlFulfilmentRequest(flRequest);
 			reqDTO.setContractRequest(Boolean.TRUE);
 			reqDTO.setMto(getManagedBean().isMto());
@@ -299,12 +310,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			reqDTO.setApproverMap(getManagedBean().getApproverMap());
 			reqDTO.setPmUserOrg(getManagedBean().getPmUserOrg());
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
-			if(isRequisitioner()){
-				System.out.println("getManagedBean().getApproverModel().getTarget(): "+getManagedBean().getApproverModel().getTarget());
-				reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
-				reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());
-				///reqDTO.setLoginId(user.getLoginId());
-			}
+			
 
 			iFulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentRequestSO.class);
 			FulfilmentResDTO resDTO = iFulfilmentRequestSO.saveFulfillmentRequest(reqDTO);
@@ -589,7 +595,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 					paramReqDTO.setParameterId(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getDeliveryTermUom().getParameterId());
 					deliveryAddr.setPmUom(parameterSO.retrieveParameterById(paramReqDTO).getPmParameter());
 					deliveryAddr.setDeliveryTerm(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getDeliveryTerm());
-					deliveryAddr.setReceivingGrp(addrType);
+//					deliveryAddr.setReceivingGrp(addrType);
 				}
 				deliveryAddr.setPmAddress(addrType.getPmAddress());
 				if(i==0) {
@@ -735,7 +741,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		IUserSO userSO = null;
 		try {
 			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
-					"pm", IUserSO.class);
+					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 
 			PmUser user = getFacesScopes().getUserSessionBean();
 

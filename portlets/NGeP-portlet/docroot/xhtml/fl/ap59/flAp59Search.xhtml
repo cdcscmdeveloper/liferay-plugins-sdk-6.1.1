@@ -24,7 +24,7 @@
 				<h:panelGrid columns="4" columnClasses="cmWidth1">
 					<p:outputLabel value="#{lbl['lbl.fl.ap59.contr.no']}"
 						style="width: 125px;" />
-					<p:inputText size="40"></p:inputText>
+					<p:inputText size="40" value="#{invoiceBackingBean.managedBean.contractNo}"></p:inputText>
 					<p:outputLabel value="#{lbl['lbl.fl.ap59.phys.contr.no']}"
 						style="padding-left: 50px;" />
 					<p:inputText size="40"></p:inputText>
@@ -34,7 +34,7 @@
 				<h:panelGrid columns="4" columnClasses="cmWidth1">
 					<p:outputLabel value="#{lbl['lbl.fl.ap59.loa.no']}"
 						style="width: 125px;" />
-					<p:inputText size="40"></p:inputText>
+					<p:inputText size="40" value="#{invoiceBackingBean.managedBean.loaNo}"></p:inputText>
 					<p:outputLabel value="#{lbl['lbl.fl.ap59.phys.loa.no']}"
 						style="padding-left: 71px;" />
 					<p:inputText size="40"></p:inputText>
@@ -44,7 +44,7 @@
 				<h:panelGrid columns="4" columnClasses="cmWidth1">
 					<p:outputLabel value="#{lbl['lbl.fl.ap59.contr.title']}"
 						style="width: 125px;" />
-					<p:inputText size="80"></p:inputText>
+					<p:inputText size="80" value="#{invoiceBackingBean.managedBean.title}"></p:inputText>
 				</h:panelGrid>
 			</h:panelGroup>
 
@@ -57,24 +57,26 @@
 
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lblfl.doc.search.btn.search']}"
-					 icon="ui-icon-search" update="resultPanel" />
+					 icon="ui-icon-search" update="resultPanel" action="#{invoiceBackingBean.searchDocument}"/>
 				<p:commandButton value="#{lbl['lblfl.doc.search.btn.reset']}"
-					 icon="ui-icon-reset" update=":form" />
+					 icon="ui-icon-reset" update=":form" action="#{invoiceBackingBean.searchReset}"/>
 			</div>
 		</p:panel>
 		<p:panel id="resultPanel" header="RESULT" toggleable="true">
-			<p:dataTable lazy="true" rowIndexVar="rowIndex" width="100%">
-				<ac:paginator for="flDocListDt" />
+			<p:dataTable lazy="true"  width="100%" id="flInvoiceListDt"
+			value="#{invoiceBackingBean.flInvoiceDataModel}" 
+				var="flInvoice">
+				<ac:paginator for="flInvoiceListDt" />
 				<p:column
 					headerText="#{lbl['lbl.fl.ap59.search.datatable.contr.ord.no']}">
-					<h:outputText />
+					<h:outputText value="#{flInvoice.flRequest.flFulfilmentOrder.docNo}"/>
 				</p:column>
 				<p:column
 					headerText="#{lbl['lbl.fl.ap59.search.datatable.contr.no']}">
-					<h:outputText value="#{flDocument.docNo}" />
+					<h:outputText value="#{flInvoice.flRequest.ctContract.contractNo}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.fl.ap59.search.datatable.loa.no']}">
-					<h:outputText />
+					<h:outputText value="#{flInvoice.flRequest.ctContract.loa.loaNo}"/>
 				</p:column>
 				<p:column
 					headerText="#{lbl['lbl.fl.ap59.search.datatable.contr.own.ptj']}">
@@ -85,7 +87,7 @@
 					<h:outputText />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.fl.ap59.search.datatable.supp']}">
-					<h:outputText />
+					<h:outputText value="#{flInvoice.flRequest.smSupplier.companyName}"/>
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.fl.ap59.search.datatable.action']}"

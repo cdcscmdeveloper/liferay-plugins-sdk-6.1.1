@@ -41,6 +41,9 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	
 	private String DocProcess;
 	private String buttonVal;
+	private String contractNo;
+	private String loaNo;
+	private String title;
 	
 	private boolean isDan = false;
 	private boolean isUpdateDan = false;
@@ -465,5 +468,47 @@ public class InvoiceManagedBean extends BaseManagedBean {
 
 	public void setBranchName(String branchName) {
 		this.branchName = branchName;
+	}
+
+	/**
+	 * @return the contractNo
+	 */
+	public String getContractNo() {
+		return contractNo;
+	}
+
+	/**
+	 * @param contractNo the contractNo to set
+	 */
+	public void setContractNo(String contractNo) {
+		this.contractNo = contractNo;
+	}
+
+	/**
+	 * @return the loaNo
+	 */
+	public String getLoaNo() {
+		return loaNo;
+	}
+
+	/**
+	 * @param loaNo the loaNo to set
+	 */
+	public void setLoaNo(String loaNo) {
+		this.loaNo = loaNo;
+	}
+
+	/**
+	 * @return the title
+	 */
+	public String getTitle() {
+		return title;
+	}
+
+	/**
+	 * @param title the title to set
+	 */
+	public void setTitle(String title) {
+		this.title = title;
 	}
 }
