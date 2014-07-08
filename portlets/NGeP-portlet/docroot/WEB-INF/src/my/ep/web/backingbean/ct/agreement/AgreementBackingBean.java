@@ -162,6 +162,13 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes;
 	}
+	
+	public void preRenderAgreement() {
+		renewSesionObject();
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, "agreementTab.xhtml?faces-redirect=true");
+	}
 
 	public void preRenderView() throws NamingException {
 		IContractSO contractSO = null;
@@ -352,9 +359,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			if (resDTO.isSuccessful()) {
 				log.info("Record saved successfully");
 				String messageId = MessageConst.INFO_700026;
-				if(getManagedBean().getTaskName()!=null && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPLOAD_SIGNED_STAMPED_FINAL_AGREEMENT)) {
-					messageId = MessageConst.INFO_700026;
-				} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
 					messageId = MessageConst.INFO_700005;
 				} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 					messageId = MessageConst.INFO_700025;
@@ -394,17 +399,23 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			}
 		}
 		
+		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+			if(getManagedBean().getApproverModel().getTarget().size()==0) {
+				throw new EpException(MessageConst.ERROR_100022, new String[]{"Selected approver(s)"});
+			}
+		}
+		
     	if(getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PRINT_FINALIST_AGREEMENT_HT_NAME)) {
     		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_PRINT) && getManagedBean().getCtAgreement().getFileName()==null) {
     			throw new EpException(MessageConst.ERROR_100022, new String[]{"Attachment for Finalist Agreement"});
     		}
     	} else if(getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPLOAD_SIGNED_STAMPED_FINAL_AGREEMENT)) {
-    		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getCtAgreement().getSignedPageName()==null) {
+    		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_COMPLETE) && getManagedBean().getCtAgreement().getSignedPageName()==null) {
     			throw new EpException(MessageConst.ERROR_100022, new String[]{"Attachment for Agreement Signed Page"});
     		}
-    		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getCtAgreement().getStampedPageName()==null) {
+    		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_COMPLETE) && getManagedBean().getCtAgreement().getStampedPageName()==null) {
     			throw new EpException(MessageConst.ERROR_100022, new String[]{"Attachment for Agreement Stamped Page"});
-    		}	    		
+    		}
     	}
     	
 		if(getManagedBean().getCtAgencySigner().size()==0) {
@@ -412,7 +423,8 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		}
 		else {
 			for(CtAgreementParty agencySigner : getManagedBean().getCtAgencySigner()) {
-				if(getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getOrgProfileId() != null &&
+				if(getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile() != null &&
+						getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getOrgProfileId() != null &&
 						agencySigner.getOrgProfile().getOrgProfileId()==null) {
 					throw new EpException(MessageConst.ERROR_100022, new String[]{"PTJ"});
 				}				
@@ -444,7 +456,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		}
 		else {
 			for(CtAgreementParty supplierSigner : getManagedBean().getCtSupplierSigner()) {
-				if(supplierSigner.getOfficer().getUserId()==null) {
+				if(supplierSigner.getOfficerName()==null) {
 					throw new EpException(MessageConst.ERROR_100022, new String[]{"Contract Signer of Supplier"});
 				}
 			}
@@ -928,41 +940,6 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		
 		return templateDocUrl;
 	}
-	
-	public void downloadUploadFile() throws IOException {
-		PortletResponse  portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();  
-		HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
-		
-		String fileName = null;
-		String filePath = null;
-		/*fileName = this.getManagedBean().getCtAgreement().getFileName() ;
-		filePath = this.getManagedBean().getCtAgreement().getFilePath();*/
-		
-		res.setHeader( "Content-Disposition", "attachment; filename=\"" + fileName + "\"" );//
-		res.setHeader( "Content-Transfer-Encoding", "binary" );
-		res.setContentType("application/octet-stream");
-		res.flushBuffer();
-		OutputStream out = res.getOutputStream();   
-		if(filePath!=null) {
-			InputStream input = null;
-			try {
-				URLConnection uc = new URL(filePath).openConnection();
-				input = new BufferedInputStream(uc.getInputStream()); 
-			} catch (Exception e) {
-				// Cannot open connection, maybe local file
-				input = new FileInputStream(filePath);
-			}
-			byte[] buffer = new byte[4096];
-			int bytesRead;
-			while ((bytesRead = input.read( buffer )) != -1){ 
-				out.write( buffer, 0, bytesRead ); buffer = new byte[4096]; 
-			}
-			input.close();			
-		}
-		out.flush();
-		out.close(); 
-		FacesContext.getCurrentInstance().responseComplete();
-	}	
 	
 	 public PmParameter retrieveParameterByCodeType(String parameterType, String parameterCode) throws NamingException {
 			
