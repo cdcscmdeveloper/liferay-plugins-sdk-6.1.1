@@ -6,9 +6,9 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="Dockyard Details" toggleable="true">
+	<p:panel header="Dockyard Details" toggleable="true" id="smDocDtPanel">
 
-		<p:dataTable var="doc"
+		<p:dataTable var="doc" widgetVar="smFacilityDockDtWidVar"
 			value="#{backingBean.managedBean.applDockyardFacilities}"
 			selection="#{backingBean.managedBean.selectedDockyardFacilities}"
 			rowKey="#{doc}" rowIndexVar="index" id="docDt">
@@ -24,8 +24,8 @@
 					value="#{doc.smAddress.address1},#{doc.smAddress.address2},#{doc.smAddress.address3}" />
 			</p:column>
 			<p:column headerText="Action">
-				<p:commandLink oncomplete="dockYardDialog.show();"
-					action="#{backingBean.assignSelDockyard(doc)}"
+				<p:commandLink action="#{backingBean.assignSelDockyard(doc)}"
+					process="@this" partialSubmit="true"
 					update=":form:tt:dockYardDialog" style="padding-right:5px">
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png" />
@@ -35,56 +35,72 @@
 		</p:dataTable>
 		<p:spacer height="2px;" />
 		<div align="right">
-			<p:commandButton value="Add " oncomplete="dockYardDialog.show();"
+			<p:commandButton value="Add " process="@this" partialSubmit="true"
 				action="#{backingBean.assignNewDockyardBean}"
 				update=":form:tt:dockYardDialog" />
-			<p:commandButton value="Delete "
-				action="#{backingBean.deleteSelectedDocks}" update=":form:tt:docDt" />
+			<p:commandButton value="Delete " process="smDocDtPanel"
+				partialSubmit="true" action="#{backingBean.deleteSelectedDocks}"
+				update=":form:tt:docDt" />
 		</div>
 		<br />
 	</p:panel>
 	<p:dialog width="500px" height="500px" header="Dockyard Information"
 		widgetVar="dockYardDialog" resizable="false" showEffect="fade"
-		hideEffect="fade" modal="true" id="dockYardDialog">
+		closable="false" hideEffect="fade" modal="true" id="dockYardDialog">
+		<p:messages id="dockYardDialogMsg" showSummary="false"
+			showDetail="true" autoUpdate="true" closable="true" />
 		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value="* Facility Type" /></td>
-				<td><p:inputText value="Dockyard" readonly="true"
+				<td><p:outputLabel value="Facility Type" /></td>
+				<td><p:inputText
+						value="#{backingBean.managedBean.facilityType}" readonly="true"
 						disabled="true" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="* Name" /></td>
+				<td><p:outputLabel value="Name" /> <p:outputLabel value="*"
+						styleClass="mandatory" /></td>
 				<td><p:inputText size="35"
-						value="#{backingBean.managedBean.selectedDockyardFacility.facilityName}" /></td>
+						required="#{backingBean.managedBean.valueReqd}" label="Name"
+						maxlength="50" id="smFacDockName"
+						value="#{backingBean.managedBean.selectedDockyardFacility.facilityName}" />
+					<p:message id="smFacDockNameMsg" for="smFacDockName"
+						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="* Address" /></td>
+				<td><p:outputLabel value="Address" /> <p:outputLabel value="*"
+						styleClass="mandatory" /></td>
 				<td><p:inputText
+						required="#{backingBean.managedBean.valueReqd}" label="Address"
+						maxlength="35" id="smDocAddr"
 						value="#{backingBean.managedBean.selectedDockyardFacility.smAddress.address1}"
-						size="35" /></td>
+						size="35" /> <p:message id="smDocAddrMsg" for="smDocAddr"
+						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 
 			<tr>
 				<td></td>
-				<td><p:inputText
+				<td><p:inputText maxlength="35"
 						value="#{backingBean.managedBean.selectedDockyardFacility.smAddress.address2}"
 						size="35" /></td>
 			</tr>
 			<tr>
 				<td></td>
-				<td><p:inputText
+				<td><p:inputText maxlength="35"
 						value="#{backingBean.managedBean.selectedDockyardFacility.smAddress.address3}"
 						size="35" /></td>
 			</tr>
 			<tr>
 				<td></td>
-				<td><p:inputText
+				<td><p:inputText maxlength="35"
 						value="#{backingBean.managedBean.selectedDockyardFacility.smAddress.address4}"
 						size="35" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="*#{lbl['lbl.sm.country']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.country']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu
+						required="#{backingBean.managedBean.valueReqd}"
+						label="#{lbl['lbl.sm.country']}" id="smDockContry"
 						value="#{backingBean.managedBean.selectedDockyardFacility.smAddress.pmCountry.countryId}"
 						style="width: 207px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="---Select---" itemValue="" />
@@ -99,12 +115,16 @@
 								backingBean.managedBean.selectedDockyardFacility.smAddress.pmDistrict,
 								backingBean.managedBean.selectedDockyardFacility.smAddress.pmCity)}"
 							update="dockyardState,dockyardDist,dockyardCity" />
-					</p:selectOneMenu></td>
+					</p:selectOneMenu> <p:message id="smDockContryMsg" for="smDockContry"
+						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+						required="#{backingBean.managedBean.valueReqd}"
+						label="#{lbl['lbl.sm.state']}"
 						value="#{backingBean.managedBean.selectedDockyardFacility.smAddress.pmState.stateId}"
 						id="dockyardState">
 						<f:selectItem itemLabel="---Select---" itemValue="" />
@@ -119,13 +139,16 @@
 								backingBean.managedBean.selectedDockyardFacility.smAddress.pmCity)}"
 							update="dockyardDist,dockyardCity" />
 
-					</p:selectOneMenu></td>
+					</p:selectOneMenu> <p:message id="dockyardStateMsg" for="dockyardState"
+						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
-						id="dockyardDist"
+						id="dockyardDist" required="#{backingBean.managedBean.valueReqd}"
+						label="#{lbl['lbl.sm.district']}"
 						value="#{backingBean.managedBean.selectedDockyardFacility.smAddress.pmDistrict.districtId}">
 						<f:selectItem itemLabel="---Select---" itemValue="" />
 						<f:selectItems var="dockyardDist"
@@ -137,19 +160,23 @@
 								SupplierManagementConst.SM_DOCKYARD_FACILITY_PANEL,
 								backingBean.managedBean.selectedDockyardFacility.smAddress.pmCity)}"
 							update="dockyardCity" />
-					</p:selectOneMenu></td>
+					</p:selectOneMenu> <p:message id="dockyardDistMsg" for="dockyardDist"
+						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
-						id="dockyardCity"
+						id="dockyardCity" required="#{backingBean.managedBean.valueReqd}"
+						label="#{lbl['lbl.sm.towncity']}"
 						value="#{backingBean.managedBean.selectedDockyardFacility.smAddress.pmCity.cityId}">
 						<f:selectItem itemLabel="---Select---" itemValue="" />
 						<f:selectItems var="dockyardCity"
 							value="#{backingBean.managedBean.dockFacilityCities}"
 							itemValue="#{dockyardCity.cityId}"
 							itemLabel="#{dockyardCity.cityName}" />
-					</p:selectOneMenu></td>
+					</p:selectOneMenu> <p:message id="dockyardCityMsg" for="dockyardCity"
+						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
@@ -158,80 +185,105 @@
 						size="35" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Phone NO." /></td>
-				<td><p:inputText value=" --TBC--" size="35" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="Fax NO." /></td>
-				<td><p:inputText value=" --TBC--" size="35" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="*Area(Sq Ft) *" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
 				<td><p:inputText
-						value="#{backingBean.managedBean.selectedDockyardFacility.areaSquareFeet}"
-						size="35" /></td>
+						value="#{backingBean.managedBean.selectedDockyardFacility.phoneNo}"
+						size="35" maxlength="12" label="#{lbl['lbl.sm.phoneno']}"
+						id="smDockPhnNo"
+						validatorMessage="#{lbl['lbl.sm.phoneno']} - #{lbl['lbl.sm.invalidNo']}">
+						<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
+					</p:inputText> <p:message id="smDockPhnNoMsg" for="smDockPhnNo"
+						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Ownership Type" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.faxno']}" /></td>
+				<td><p:inputText
+						value="#{backingBean.managedBean.selectedDockyardFacility.faxNo}"
+						size="35" maxlength="12" label="#{lbl['lbl.sm.faxno']}"
+						id="smDockFaxNo"
+						validatorMessage="#{lbl['lbl.sm.faxno']} - #{lbl['lbl.sm.invalidNo']}">
+						<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
+					</p:inputText> <p:message id="smDockFaxNoMsg" for="smDockFaxNo"
+						showSummary="true" showDetail="false" display="icon" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="Area(Sq Ft)" /></td>
+				<td><p:inputText id="smDockAreaSq"
+						value="#{backingBean.managedBean.selectedDockyardFacility.areaSquareFeet}"
+						size="35">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</p:inputText> <p:message id="smDockAreaSqMsg" for="smDockAreaSq"
+						showSummary="true" showDetail="false" display="icon" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="Ownership Type" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneRadio
+						required="#{backingBean.managedBean.valueReqd}"
+						label="OwnerShip Type" id="smDockOwnerType"
 						value="#{backingBean.managedBean.selectedDockyardFacility.ownershipType}">
 						<f:selectItem itemLabel="Rent " itemValue="R" />
 						<f:selectItem itemLabel="Own" itemValue="O" />
 						<p:ajax event="change" listener="#{backingBean.dockOwnerTypeSel}"
 							update="docPan,docPanLbl" />
-					</p:selectOneRadio></td>
+					</p:selectOneRadio> <p:message id="smDockOwnerTypeMsg" for="smDockOwnerType"
+						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
 				<td><p:outputPanel id="docPanLbl">
-						<p:outputLabel value="* Price (RM.)"
+						<p:outputLabel value="Price (RM.)"
 							rendered="#{backingBean.managedBean.selectedDockyardFacility.ownershipType eq 'O'}" />
-						<p:outputLabel value="* Rent (RM.)"
+						<p:outputLabel value="Rent (RM.)"
 							rendered="#{backingBean.managedBean.selectedDockyardFacility.ownershipType eq 'R'}" />
 					</p:outputPanel></td>
 				<td><p:outputPanel id="docPan">
 						<ui:fragment
 							rendered="#{backingBean.managedBean.selectedDockyardFacility.ownershipType eq 'O'}">
-							<p:inputText
+							<p:inputText id="smDocPrice" label="Price (RM.)"
 								value="#{backingBean.managedBean.selectedDockyardFacility.purchasePrice}"
-								size="20" />
+								size="20">
+								<f:convertNumber
+									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+							</p:inputText>
+							<p:message id="smDocPriceMsg" for="smDocPrice" showSummary="true"
+								showDetail="false" display="icon" />
 						</ui:fragment>
 						<ui:fragment
 							rendered="#{backingBean.managedBean.selectedDockyardFacility.ownershipType eq 'R'}">
-							<p:inputText
+							<p:inputText id="smDocRent" label="Rent (RM.)"
 								value="#{backingBean.managedBean.selectedDockyardFacility.rentalRate}"
-								size="20" />
+								size="20">
+								<f:convertNumber
+									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+							</p:inputText>
+							<p:message id="smDocRentMsg" for="smDocRent" showSummary="true"
+								showDetail="false" display="icon" />
 						</ui:fragment>
 					</p:outputPanel></td>
 			</tr>
 
 			<tr>
 				<td><p:outputLabel value="
-								Owner Name *" /></td>
-				<td><p:inputText
+								Owner Name" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:inputText id="smDockOwnerName"
+						required="#{backingBean.managedBean.valueReqd}" label="Owner Name"
 						value="#{backingBean.managedBean.selectedDockyardFacility.ownerName}"
-						size="35" /></td>
+						size="35" /> <p:message id="smDockOwnerNameMsg"
+						for="smDockOwnerName" showSummary="true" showDetail="false"
+						display="icon" /></td>
 			</tr>
-			<tr>
-				<td><p:outputLabel value="*Associated Category" /></td>
 
-				<td><p:selectManyMenu showCheckbox="true"
-						style="width : 150px;">
-						<f:selectItems
-							value="#{backingBean.managedBean.smAppl.smSupplierCategories}"
-							var="catBean"
-							itemLabel="#{catBean.pmCategoryL3.categoryL3Code} -  #{catBean.pmCategoryL3.categoryName}"
-							itemValue="#{catBean.supplierCategoryId}" />
-					</p:selectManyMenu></td>
-
-			</tr>
 		</table>
 		<br />
 		<div align="right">
 			<p:commandButton value="Save"
-				action="#{backingBean.addOrUpdateDockYardToSmAppl}" type="submit"
+				action="#{backingBean.addOrUpdateDockYardToSmAppl}"
 				partialSubmit="true" process="dockYardDialog"
-				oncomplete="dockYardDialog.hide();" update=":form:tt:docDt" />
-			<p:commandButton value="Cancel" onclick="dockYardDialog.hide();" />
+				update=":form:tt:docDt, @([id$=Msg])" />
+			<p:commandButton value="Cancel" process="@this" partialSubmit="true"
+				action="#{backingBean.cancelDockyardSaveorUpdate}" />
 		</div>
 	</p:dialog>
 </ui:composition>

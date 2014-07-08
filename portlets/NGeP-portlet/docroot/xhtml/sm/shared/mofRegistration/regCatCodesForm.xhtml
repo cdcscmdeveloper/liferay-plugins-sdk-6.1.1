@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header=" Category Codes" toggleable="true">
+	<p:panel header="#{lbl['lbl.sm.catCodes.panHdr']}" toggleable="true">
 		<table style="width: 250px">
 			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 				<tr>
@@ -18,7 +18,7 @@
 								listener="#{backingBean.changeVerifySection(backingBean.managedBean.poSecReview.categoryVerified)}" />
 						</p:selectBooleanCheckbox></td>
 					<td valign="top"><h:outputText
-							value=" Section Verified By PO: "
+							value="#{lbl['lbl.sm.sectionPoVerf']}"
 							title="For PO to highlight the verified section " /></td>
 
 				</tr>
@@ -33,7 +33,7 @@
 								listener="#{backingBean.changeVerifySection(backingBean.managedBean.apprvrSecReview.categoryVerified)}" />
 						</p:selectBooleanCheckbox></td>
 					<td valign="top"><h:outputText
-							value=" Section Verified By Approver: "
+							value="#{lbl['lbl.sm.sectionApprVerf']}"
 							title="For Approver to highlight the verified section " /></td>
 				</tr>
 			</p:outputPanel>
@@ -45,7 +45,7 @@
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.categoryVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.categoryVerified : false)}" />
 			<table>
 				<tr>
-					<td><p:outputLabel value="Category Type" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.catCodes.catType']}" /></td>
 					<td><p:selectOneRadio
 							value="#{backingBean.managedBean.smAppl.applCategoryType}">
 							<f:selectItem itemLabel="Normal" itemValue="N" />
@@ -68,7 +68,7 @@
 			<br />
 			<h:inputHidden
 				value="#{backingBean.managedBean.smAppl.supportingDocMode}" />
-			<p:dataTable var="catBean"
+			<p:dataTable var="catBean" widgetVar="smCatCodesNonRenewApplDtWidVar"
 				value="#{backingBean.managedBean.smAppl.smSupplierCategories}"
 				rowKey="#{catBean.supplierCategoryId}" rowIndexVar="index"
 				id="catDt"
@@ -77,12 +77,14 @@
 				<p:columnGroup type="header">
 
 					<p:row>
-						<p:column headerText="Category" />
-						<p:column headerText="Other Description" />
-						<p:column headerText="Category Type" />
-						<p:column headerText="PO Action"
-							rendered="#{backingBean.managedBean.poUser or backingBean.managedBean.approverUser}" />
-						<p:column headerText="Remarks"
+						<p:column headerText="#{lbl['lbl.sm.catCodes.cate']}" />
+						<p:column headerText="#{lbl['lbl.sm.catCodes.othDesc']}" />
+						<p:column headerText="#{lbl['lbl.sm.catCodes.catType']}" />
+						<p:column headerText="#{lbl['lbl.sm.catCodes.poAct']}"
+							rendered="#{backingBean.managedBean.poUser}" />
+						<p:column headerText="#{lbl['lbl.sm.catCodes.appAct']}"
+							rendered="#{backingBean.managedBean.approverUser}" />
+						<p:column headerText="#{lbl['lbl.sm.catCodes.remark']}"
 							rendered="#{backingBean.managedBean.poUser or backingBean.managedBean.approverUser}" />
 					</p:row>
 				</p:columnGroup>
@@ -97,18 +99,26 @@
 						value="#{catBean.pmCategoryL3.categoryL3Code} -  #{catBean.pmCategoryL3.categoryName}" />
 				</p:column>
 				<p:column>
-					<p:inputTextarea id="otherDesc" label="Other Description" value="#{catBean.otherDesc}" required="true" rendered="#{catBean.pmCategoryL3.categoryL3Code eq 99}"/>
-					<p:message for="otherDesc" showDetail="false" showSummary="true" display="icon" />
+					<p:inputTextarea id="otherDesc"
+						label="#{lbl['lbl.sm.catCodes.othDesc']}"
+						value="#{catBean.otherDesc}" required="true"
+						rendered="#{catBean.pmCategoryL3.categoryL3Code eq 99}" />
+					<p:message for="otherDesc" showDetail="false" showSummary="true"
+						display="icon" />
 				</p:column>
 				<p:column>
-					<h:outputText value="Normal" rendered="#{!catBean.specialCategory}" />
-					<h:outputText value="Special" rendered="#{catBean.specialCategory}" />
+					<h:outputText value="#{lbl['lbl.sm.catCodes.norm']}"
+						rendered="#{!catBean.specialCategory}" />
+					<h:outputText value="#{lbl['lbl.sm.catCodes.spl']}"
+						rendered="#{catBean.specialCategory}" />
 				</p:column>
 				<p:column rendered="#{backingBean.managedBean.poUser}">
 					<p:selectOneRadio layout="pageDirection" id="catPoAppr"
 						value="#{catBean.poDecFlg}">
-						<f:selectItem itemLabel="Approve" itemValue="1" />
-						<f:selectItem itemLabel="Reject" itemValue="0" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.apprv']}"
+							itemValue="1" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.reject']}"
+							itemValue="0" />
 					</p:selectOneRadio>
 				</p:column>
 				<p:column rendered="#{backingBean.managedBean.poUser}">
@@ -117,8 +127,10 @@
 				<p:column rendered="#{backingBean.managedBean.approverUser}">
 					<p:selectOneRadio layout="pageDirection" id="catApprvrAppr"
 						value="#{catBean.apprvrDecFlg}">
-						<f:selectItem itemLabel="Approve" itemValue="1" />
-						<f:selectItem itemLabel="Reject" itemValue="0" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.apprv']}"
+							itemValue="1" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.reject']}"
+							itemValue="0" />
 					</p:selectOneRadio>
 				</p:column>
 				<p:column rendered="#{backingBean.managedBean.approverUser}">
@@ -126,7 +138,7 @@
 				</p:column>
 			</p:dataTable>
 			<p:spacer height="2px;" />
-			<p:dataTable var="catBeanR"
+			<p:dataTable var="catBeanR" widgetVar="smCatCodesRenewApplDtWidVar"
 				value="#{backingBean.managedBean.smAppl.smSupplierCategories}"
 				rowKey="#{catBeanR}" rowIndexVar="index" id="catDtR"
 				rendered="#{backingBean.managedBean.smAppl.applType eq 'R'}"
@@ -136,13 +148,15 @@
 
 					<p:row>
 						<p:column selectionMode="multiple" style="width:2%" />
-						<p:column headerText="Category" />
-						<p:column headerText="Other Description" />
-						<p:column headerText="Category Type" />
-						<p:column headerText="PO Action"
+						<p:column headerText="#{lbl['lbl.sm.catCodes.cate']}" />
+						<p:column headerText="#{lbl['lbl.sm.catCodes.othDesc']}" />
+						<p:column headerText="#{lbl['lbl.sm.catCodes.catType']}" />
+						<p:column headerText="#{lbl['lbl.sm.catCodes.poAct']}"
 							rendered="#{backingBean.managedBean.poUser}" />
-						<p:column headerText="Remarks"
-							rendered="#{backingBean.managedBean.poUser}" />
+						<p:column headerText="#{lbl['lbl.sm.catCodes.appAct']}"
+							rendered="#{backingBean.managedBean.approverUser}" />
+						<p:column headerText="#{lbl['lbl.sm.catCodes.remark']}"
+							rendered="#{backingBean.managedBean.poUser or backingBean.managedBean.approverUser}" />
 					</p:row>
 				</p:columnGroup>
 				<p:column selectionMode="multiple" style="width:2%" />
@@ -157,19 +171,25 @@
 						value="#{catBeanR.pmCategoryL3.categoryL3Code} -  #{catBeanR.pmCategoryL3.categoryName}" />
 				</p:column>
 				<p:column>
-					<p:inputTextarea id="otherDescR" label="Other Description" value="#{catBeanR.otherDesc}" required="true" rendered="#{catBeanR.pmCategoryL3.categoryL3Code eq 99}"/>
-					<p:message for="otherDescR" showDetail="false" showSummary="true" display="icon" />
+					<p:inputTextarea id="otherDescR"
+						label="#{lbl['lbl.sm.catCodes.othDesc']}"
+						value="#{catBeanR.otherDesc}" required="true"
+						rendered="#{catBeanR.pmCategoryL3.categoryL3Code eq 99}" />
+					<p:message for="otherDescR" showDetail="false" showSummary="true"
+						display="icon" />
 				</p:column>
 				<p:column>
-					<h:outputText value="Normal"
+					<h:outputText value="#{lbl['lbl.sm.catCodes.norm']}"
 						rendered="#{!catBeanR.specialCategory}" />
-					<h:outputText value="Special"
+					<h:outputText value="#{lbl['lbl.sm.catCodes.spl']}"
 						rendered="#{catBeanR.specialCategory}" />
 				</p:column>
 				<p:column rendered="#{backingBean.managedBean.poUser}">
 					<p:selectOneRadio layout="pageDirection" id="catPoApprR">
-						<f:selectItem itemLabel="Approve" itemValue="true" />
-						<f:selectItem itemLabel="Reject" itemValue="false" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.apprv']}"
+							itemValue="true" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.reject']}"
+							itemValue="false" />
 					</p:selectOneRadio>
 				</p:column>
 				<p:column rendered="#{backingBean.managedBean.poUser}">
@@ -178,8 +198,10 @@
 				<p:column rendered="#{backingBean.managedBean.approverUser}">
 					<p:selectOneRadio layout="pageDirection" id="catApprvrAppr"
 						value="#{catBean.apprvrDecFlg}">
-						<f:selectItem itemLabel="Approve" itemValue="1" />
-						<f:selectItem itemLabel="Reject" itemValue="0" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.apprv']}"
+							itemValue="1" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.reject']}"
+							itemValue="0" />
 					</p:selectOneRadio>
 				</p:column>
 				<p:column rendered="#{backingBean.managedBean.approverUser}">
@@ -189,14 +211,15 @@
 			<p:spacer height="2px;" />
 
 			<div align="right">
-				<p:commandButton value="Add"
-					action="#{backingBean.assignNewCategoryCode}"
-					update=":form:tt:regCatDialog, :form:tt:catDtR"
+				<p:commandButton value="#{lbl['lbl.sm.button.add']}"
+					action="#{backingBean.assignNewCategoryCode}" partialSubmit="true"
+					process="@this" update=":form:tt:regCatDialog"
 					disabled="#{backingBean.managedBean.smAppl.applCategoryType == null}" />
 
-				<p:commandButton value="Delete"
+				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
 					action="#{backingBean.deleteSelectedCategoryCodes}"
-					update=":form:tt:catDtR"
+					update=":form:tt:catDtR" partialSubmit="true"
+					process="catCodeInfPan"
 					rendered="#{(backingBean.managedBean.smAppl.applType == 'R')}" />
 			</div>
 
@@ -204,7 +227,7 @@
 			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 				<table style="width: 50%">
 					<tr>
-						<td><p:outputLabel value="PO Remarks" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" cols="41"
 								value="#{backingBean.managedBean.poSecReview.categoryRemark}" /></td>
 					</tr>
@@ -213,11 +236,11 @@
 			<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
 				<table style="width: 100%">
 					<tr>
-						<td><p:outputLabel value="PO Remarks" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" readonly="true"
 								disabled="true" cols="41"
 								value="#{backingBean.managedBean.poSecReview.categoryRemark}" /></td>
-						<td><p:outputLabel value="Approver Remarks" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" cols="41"
 								value="#{backingBean.managedBean.apprvrSecReview.categoryRemark}" /></td>
 
@@ -227,19 +250,21 @@
 		</p:panel>
 	</p:panel>
 
-	<p:dialog width="750px" header="Category Code Information"
+	<p:dialog width="750px" header="#{lbl['lbl.sm.catCodes.diaHdr']}"
 		widgetVar="regCatDialog" resizable="false" showEffect="fade"
-		hideEffect="fade" modal="true" id="regCatDialog">
+		closable="false" hideEffect="fade" modal="true" id="regCatDialog">
 
 		<p:outputPanel id="catPanel">
-			<p:messages id="regCatCodeMsg" showSummary="true" showDetail="true"
+			<p:messages id="regCatCodeMsg" showSummary="false" showDetail="true"
 				autoUpdate="true" closable="true" />
 			<table style="width: 100%">
 
 				<tr>
-					<td><p:outputLabel value="
-										* Main Category" /></td>
-					<td><p:selectOneMenu
+					<td><p:outputLabel value="#{lbl['lbl.sm.catCodes.mainCat']}" />
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td><p:selectOneMenu id="supCatParCat"
+							required="#{backingBean.managedBean.valueReqd}"
+							label="#{lbl['lbl.sm.catCodes.mainCat']}"
 							value="#{backingBean.managedBean.selectedCategory.pmCategoryL1.categoryL1Id}"
 							style="width: 207px;margin-bottom: 5px;">
 							<f:selectItem itemLabel="-- Select  -- " itemValue="" />
@@ -252,13 +277,17 @@
 								backingBean.managedBean.selectedCategory.pmCategoryL2,
 								backingBean.managedBean.selectedCategory.pmCategoryL3)}"
 								update="child,subChild" />
-						</p:selectOneMenu></td>
+						</p:selectOneMenu> <p:message id="supCatParCatMsg" for="supCatParCat"
+							showSummary="true" showDetail="false" display="icon" /></td>
 
 
 				</tr>
 				<tr>
-					<td><p:outputLabel value="* Sub Category" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.catCodes.subCat']}" />
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
 					<td><p:selectOneMenu
+							required="#{backingBean.managedBean.valueReqd}"
+							label="#{lbl['lbl.sm.catCodes.subCat']}"
 							value="#{backingBean.managedBean.selectedCategory.pmCategoryL2.categoryL2Id}"
 							id="child" style="width: 207px;margin-bottom: 5px;">
 							<f:selectItem itemLabel=" -- Select  -- " itemValue="" />
@@ -269,11 +298,15 @@
 							<p:ajax event="change"
 								listener="#{backingBean.populateSubChildCategoryByChild(backingBean.managedBean.selectedCategory.pmCategoryL2.categoryL2Id,backingBean.managedBean.selectedCategory.pmCategoryL3)}"
 								update="subChild" />
-						</p:selectOneMenu></td>
+						</p:selectOneMenu> <p:message id="childMsg" for="child" showSummary="true"
+							showDetail="false" display="icon" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="* Sub Category Division" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.catCodes.subCatDiv']}" />
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
 					<td><p:selectOneMenu
+							required="#{backingBean.managedBean.valueReqd}"
+							label=" #{lbl['lbl.sm.catCodes.subCatDiv']}"
 							value="#{backingBean.managedBean.selectedCategory.pmCategoryL3.categoryL3Id}"
 							id="subChild" style="width: 207px;margin-bottom: 5px;">
 							<f:selectItem itemLabel=" -- Select  --  " itemValue="" />
@@ -281,7 +314,8 @@
 								value="#{backingBean.managedBean.supplierSubChildCatList}"
 								var="subChild" itemLabel="#{subChild.categoryName}"
 								itemValue="#{subChild.categoryL3Id}" />
-						</p:selectOneMenu></td>
+						</p:selectOneMenu> <p:message id="subChildMsg" for="subChild" showSummary="true"
+							showDetail="false" display="icon" /></td>
 				</tr>
 				<!-- <tr>
 					<td><p:outputLabel value="Business Type" /></td>
@@ -292,11 +326,13 @@
 				<tr>
 					<td colspan="2">
 						<div align="right">
-							<p:commandButton value="Save"
-								action="#{backingBean.saveSelectedCategory}" type="submit"
+							<p:commandButton value="#{lbl['lbl.sm.button.save']}"
+								action="#{backingBean.saveSelectedCategory}"
 								partialSubmit="true" process="regCatDialog"
-								update=":form:tt:catDt, :form:tt:catDtR" />
-							<p:commandButton value="Cancel" onclick="regCatDialog.hide();" />
+								update=":form, @([id$=Msg])" />
+							<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
+								action="#{backingBean.cancelCategoryCodesSaveorUpdate}"
+								partialSubmit="true" process="@this" />
 						</div>
 					</td>
 
@@ -308,8 +344,9 @@
 	</p:dialog>
 
 	<p:confirmDialog id="typeConfirmationId"
-		message="You can add categories of the selected type only.Are you sure ?"
-		header="Select Category Type" widgetVar="typeConfirmation">
+		message="#{lbl['lbl.sm.catCodes.cnfrmMsg']}"
+		header="#{lbl['lbl.sm.catCodes.cmfrmHdr']}"
+		widgetVar="typeConfirmation">
 
 		<p:commandButton id="conf" value="Yes" update=":form:tt:catCodeInfPan"
 			action="#{backingBean.assignApplnCategoryType}"

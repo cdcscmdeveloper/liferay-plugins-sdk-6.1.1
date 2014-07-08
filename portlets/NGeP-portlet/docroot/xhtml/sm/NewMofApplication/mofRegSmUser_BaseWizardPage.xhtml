@@ -18,7 +18,7 @@
 		<ui:param name="mandatoryflg" value="true" />
 		<ac:smPanel id="tt">
 			<c:if test="#{!backingBean.managedBean.redirectToPersonPage}">
-				<table style="width: 100%">
+				<table style="width: 100%" id="wizardMofRegParentTable">
 					<tr>
 						<td><div class="navDiv" id="menuDiv" align="center">
 								<ul class="menu-text">
@@ -249,7 +249,8 @@
 				</c:choose>
 			</c:if>
 			<p:messages id="messages" showDetail="true" showSummary="false"
-				autoUpdate="#{backingBean.managedBean.showParentMsg}" closable="true" />
+				autoUpdate="#{backingBean.managedBean.showParentMsg}"
+				closable="true" />
 
 			<c:if test="#{backingBean.managedBean.tabActiveIndex eq 0}">
 				<ui:include src="step1CompanyInfo.xhtml" />

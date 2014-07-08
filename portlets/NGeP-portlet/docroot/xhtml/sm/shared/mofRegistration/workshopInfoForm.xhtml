@@ -6,9 +6,10 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="Workshop Details" toggleable="true">
+	<p:panel header="Workshop Details" toggleable="true"
+		id="smWorkShopDtPanel">
 
-		<p:dataTable var="work"
+		<p:dataTable var="work" widgetVar="smWorkShopDtWidVar"
 			value="#{backingBean.managedBean.applWorkShopFacilities}"
 			selection="#{backingBean.managedBean.selectedWorkShopFacilities}"
 			rowKey="#{work}" rowIndexVar="index" id="workDt">
@@ -24,7 +25,7 @@
 					value="#{work.smAddress.address1},#{work.smAddress.address2},#{work.smAddress.address3}" />
 			</p:column>
 			<p:column headerText="Action">
-				<p:commandLink oncomplete="workShopDialog.show();"
+				<p:commandLink partialSubmit="true" process="@this"
 					action="#{backingBean.assignSelWorkshop(work)}"
 					update=":form:tt:workShopDialog" style="padding-right:5px">
 					<p:graphicImage library="ep/images/design" name="edit.png"
@@ -35,10 +36,11 @@
 		</p:dataTable>
 		<p:spacer height="2px;" />
 		<div align="right">
-			<p:commandButton value="Add " oncomplete="workShopDialog.show();"
+			<p:commandButton value="Add " partialSubmit="true" process="@this"
 				action="#{backingBean.assignNewWorkshopBean}"
 				update=":form:tt:workShopDialog" />
-			<p:commandButton value="Delete "
+			<p:commandButton value="Delete " partialSubmit="true"
+				process="smWorkShopDtPanel"
 				action="#{backingBean.deleteSelectedWorkShops}"
 				update=":form:tt:workDt" />
 		</div>
@@ -46,48 +48,61 @@
 	</p:panel>
 	<p:dialog width="500px" height="500px" header="Workshop Information"
 		widgetVar="workShopDialog" resizable="false" showEffect="fade"
-		hideEffect="fade" modal="true" id="workShopDialog">
-
+		closable="false" hideEffect="fade" modal="true" id="workShopDialog">
+		<p:messages id="workShopDialogMsg" showSummary="false"
+			showDetail="true" autoUpdate="true" closable="true" />
 		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value="* Facility Type" /></td>
-				<td><p:inputText value="Workshop" readonly="true"
-						disabled="true" /></td>
+				<td><p:outputLabel value="Facility Type" /></td>
+				<td><p:inputText value="#{backingBean.managedBean.facilityType}"
+						readonly="true" disabled="true" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="* Name" /></td>
-				<td><p:inputText size="35"
-						value="#{backingBean.managedBean.selectedWorkShopFacility.facilityName}" /></td>
+				<td><p:outputLabel value="Name" /> <p:outputLabel value="*"
+						styleClass="mandatory" /></td>
+				<td><p:inputText size="35" maxlength="50"
+						required="#{backingBean.managedBean.valueReqd}" label="Name"
+						id="smWrkShpName"
+						value="#{backingBean.managedBean.selectedWorkShopFacility.facilityName}" />
+					<p:message id="smWrkShpNameMsg" for="smWrkShpName"
+						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="* Address" /></td>
-				<td><p:inputText
+				<td><p:outputLabel value="Address" /> <p:outputLabel value="*"
+						styleClass="mandatory" /></td>
+				<td><p:inputText maxlength="35"
+						required="#{backingBean.managedBean.valueReqd}" label="Address"
+						id="smWrkShpAddr"
 						value="#{backingBean.managedBean.selectedWorkShopFacility.smAddress.address1}"
-						size="35" /></td>
+						size="35" /> <p:message id="smWrkShpAddrMsg" for="smWrkShpAddr"
+						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 
 			<tr>
 				<td></td>
-				<td><p:inputText
+				<td><p:inputText maxlength="35"
 						value="#{backingBean.managedBean.selectedWorkShopFacility.smAddress.address2}"
 						size="35" /></td>
 			</tr>
 			<tr>
 				<td></td>
-				<td><p:inputText
+				<td><p:inputText maxlength="35"
 						value="#{backingBean.managedBean.selectedWorkShopFacility.smAddress.address3}"
 						size="35" /></td>
 			</tr>
 			<tr>
 				<td></td>
-				<td><p:inputText
+				<td><p:inputText maxlength="35"
 						value="#{backingBean.managedBean.selectedWorkShopFacility.smAddress.address4}"
 						size="35" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="*#{lbl['lbl.sm.country']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.country']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu
 						value="#{backingBean.managedBean.selectedWorkShopFacility.smAddress.pmCountry.countryId}"
+						required="#{backingBean.managedBean.valueReqd}"
+						label="#{lbl['lbl.sm.country']}" id="smWrkShpCntry"
 						style="width: 207px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="---Select---" itemValue="" />
 						<f:selectItems var="workshopCountry"
@@ -101,12 +116,16 @@
 								backingBean.managedBean.selectedWorkShopFacility.smAddress.pmDistrict,
 								backingBean.managedBean.selectedWorkShopFacility.smAddress.pmCity)}"
 							update="workShopState,workShopDist,workShopCity" />
-					</p:selectOneMenu></td>
+					</p:selectOneMenu> <p:message id="smWrkShpCntryMsg" for="smWrkShpCntry"
+						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+						required="#{backingBean.managedBean.valueReqd}"
+						label="#{lbl['lbl.sm.state']}"
 						value="#{backingBean.managedBean.selectedWorkShopFacility.smAddress.pmState.stateId}"
 						id="workShopState">
 						<f:selectItem itemLabel="---Select---" itemValue="" />
@@ -121,13 +140,16 @@
 								backingBean.managedBean.selectedWorkShopFacility.smAddress.pmCity)}"
 							update="workShopDist,workShopCity" />
 
-					</p:selectOneMenu></td>
+					</p:selectOneMenu> <p:message id="workShopStateMsg" for="workShopState"
+						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
-						id="workShopDist"
+						id="workShopDist" required="#{backingBean.managedBean.valueReqd}"
+						label="#{lbl['lbl.sm.district']}"
 						value="#{backingBean.managedBean.selectedWorkShopFacility.smAddress.pmDistrict.districtId}">
 						<f:selectItem itemLabel="---Select---" itemValue="" />
 						<f:selectItems var="workShopDist"
@@ -139,102 +161,131 @@
 								SupplierManagementConst.SM_WORKSHOP_FACILITY_PANEL,
 								backingBean.managedBean.selectedWorkShopFacility.smAddress.pmCity)}"
 							update="workShopCity" />
-					</p:selectOneMenu></td>
+					</p:selectOneMenu> <p:message id="workShopDistMsg" for="workShopDist"
+						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
-						id="workShopCity"
+						id="workShopCity" required="#{backingBean.managedBean.valueReqd}"
+						label="#{lbl['lbl.sm.towncity']}"
 						value="#{backingBean.managedBean.selectedWorkShopFacility.smAddress.pmCity.cityId}">
 						<f:selectItem itemLabel="---Select---" itemValue="" />
 						<f:selectItems var="workShopCity"
 							value="#{backingBean.managedBean.workShopFacilityCities}"
 							itemValue="#{workShopCity.cityId}"
 							itemLabel="#{workShopCity.cityName}" />
-					</p:selectOneMenu></td>
+					</p:selectOneMenu> <p:message id="workShopCityMsg" for="workShopCity"
+						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
-				<td><p:inputText
+				<td><p:inputText maxlength="10"
 						value="#{backingBean.managedBean.selectedWorkShopFacility.smAddress.postcode}"
 						size="35" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Phone NO." /></td>
-				<td><p:inputText value=" --TBC--" size="35" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="Fax NO." /></td>
-				<td><p:inputText value=" --TBC--" size="35" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="*Area(Sq Ft) *" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
 				<td><p:inputText
-						value="#{backingBean.managedBean.selectedWorkShopFacility.areaSquareFeet}"
-						size="35" /></td>
+						value="#{backingBean.managedBean.selectedWorkShopFacility.phoneNo}"
+						size="35" maxlength="12" label="#{lbl['lbl.sm.phoneno']}"
+						id="smWrkShpPhNo"
+						validatorMessage="#{lbl['lbl.sm.phoneno']} - #{lbl['lbl.sm.invalidNo']}">
+						<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
+					</p:inputText> <p:message id="smWrkShpPhNoMsg" for="smWrkShpPhNo"
+						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Ownership Type" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.faxno']}" /></td>
+				<td><p:inputText id="smWrkShpFaxNo"
+						label="#{lbl['lbl.sm.faxno']}"
+						value="#{backingBean.managedBean.selectedWorkShopFacility.faxNo}"
+						size="35" maxlength="12"
+						validatorMessage="#{lbl['lbl.sm.faxno']} - #{lbl['lbl.sm.invalidNo']}">
+						<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
+					</p:inputText> <p:message id="smWrkShpFaxNoMsg" for="smWrkShpFaxNo"
+						showSummary="true" showDetail="false" display="icon" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="Area(Sq Ft)" /></td>
+				<td><p:inputText id="smWrkShpArea" label="Area (Sq Ft)"
+						value="#{backingBean.managedBean.selectedWorkShopFacility.areaSquareFeet}"
+						size="35">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</p:inputText> <p:message id="smWrkShpAreaMsg" for="smWrkShpArea"
+						showSummary="true" showDetail="false" display="icon" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="Ownership Type" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneRadio
+						required="#{backingBean.managedBean.valueReqd}"
+						label="OwnerShip Type" id="smWrkShpOwnType"
 						value="#{backingBean.managedBean.selectedWorkShopFacility.ownershipType}">
 						<f:selectItem itemLabel="Rent " itemValue="R" />
 						<f:selectItem itemLabel="Own" itemValue="O" />
 						<p:ajax event="change"
 							listener="#{backingBean.workShopOwnerTypeSel}"
 							update="workPan,workPanLbl" />
-					</p:selectOneRadio></td>
+					</p:selectOneRadio> <p:message id="smWrkShpOwnTypeMsg" for="smWrkShpOwnType"
+						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
 				<td><p:outputPanel id="workPanLbl">
-						<p:outputLabel value="* Price (RM.)"
+						<p:outputLabel value="Price (RM.)"
 							rendered="#{backingBean.managedBean.selectedWorkShopFacility.ownershipType eq 'O'}" />
-						<p:outputLabel value="* Rent (RM.)"
+						<p:outputLabel value="Rent (RM.)"
 							rendered="#{backingBean.managedBean.selectedWorkShopFacility.ownershipType eq 'R'}" />
 					</p:outputPanel></td>
 				<td><p:outputPanel id="workPan">
 						<ui:fragment
 							rendered="#{backingBean.managedBean.selectedWorkShopFacility.ownershipType eq 'O'}">
-							<p:inputText
+							<p:inputText label="Price (RM.)" id="smWrkShpPrice"
 								value="#{backingBean.managedBean.selectedWorkShopFacility.purchasePrice}"
-								size="20" />
+								size="20">
+								<f:convertNumber
+									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+							</p:inputText>
+							<p:message id="smWrkShpPriceMsg" for="smWrkShpPrice"
+								showSummary="true" showDetail="false" display="icon" />
 						</ui:fragment>
 						<ui:fragment
 							rendered="#{backingBean.managedBean.selectedWorkShopFacility.ownershipType eq 'R'}">
-							<p:inputText
+							<p:inputText label="Rent (RM.)" id="smWrkShpRent"
 								value="#{backingBean.managedBean.selectedWorkShopFacility.rentalRate}"
-								size="20" />
+								size="20">
+								<f:convertNumber
+									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+							</p:inputText>
+							<p:message id="smWrkShpRentMsg" for="smWrkShpRent"
+								showSummary="true" showDetail="false" display="icon" />
 						</ui:fragment>
 					</p:outputPanel></td>
 			</tr>
 
 			<tr>
 				<td><p:outputLabel value="
-								Owner Name *" /></td>
-				<td><p:inputText
+								Owner Name" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:inputText maxlength="50" id="smWrkShpOwnName"
+						required="#{backingBean.managedBean.valueReqd}" label="Owner Name"
 						value="#{backingBean.managedBean.selectedWorkShopFacility.ownerName}"
-						size="35" /></td>
+						size="35" /> <p:message id="smWrkShpOwnNameMsg"
+						for="smWrkShpOwnName" showSummary="true" showDetail="false"
+						display="icon" /></td>
 			</tr>
-			<tr>
-				<td><p:outputLabel value="*Associated Category" /></td>
 
-				<td><p:selectManyMenu showCheckbox="true"
-						style="width : 150px;">
-						<f:selectItems
-							value="#{backingBean.managedBean.smAppl.smSupplierCategories}"
-							var="catBean"
-							itemLabel="#{catBean.pmCategoryL3.categoryL3Code} -  #{catBean.pmCategoryL3.categoryName}"
-							itemValue="#{catBean.supplierCategoryId}" />
-					</p:selectManyMenu></td>
-
-			</tr>
 		</table>
 		<br />
 		<div align="right">
 			<p:commandButton value="Save"
-				action="#{backingBean.addOrUpdateWorkshopToSmAppl}" type="submit"
+				action="#{backingBean.addOrUpdateWorkshopToSmAppl}"
 				partialSubmit="true" process="workShopDialog"
-				oncomplete="workShopDialog.hide();" update=":form:tt:workDt" />
-			<p:commandButton value="Cancel" onclick="workShopDialog.hide();" />
+				update=":form:tt:workDt, @([id$=Msg])" />
+			<p:commandButton value="Cancel" process="@this" partialSubmit="true"
+				action="#{backingBean.cancelWorkShopSaveorUpdate}" />
 		</div>
 	</p:dialog>
 </ui:composition>

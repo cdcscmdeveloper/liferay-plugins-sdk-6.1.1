@@ -67,8 +67,8 @@
 					<h:outputText value="#{equiBean.sharePercentage}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.label.action']}">
-					<p:commandLink update=":form:tt:eqiCompDialog"
-						partialSubmit="true" process="@this"
+					<p:commandLink update=":form:tt:eqiCompDialog" partialSubmit="true"
+						process="@this"
 						action="#{backingBean.assignSelEquiCompany(equiBean)}">
 						<p:graphicImage library="ep/images/design" name="edit.png"
 							value="/resources/ep/images/design/edit.png" />
@@ -78,9 +78,8 @@
 			<p:spacer height="2px;" />
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.sm.button.add']}"
-					action="#{backingBean.assignNewEquiCompBean}"
-					partialSubmit="true" process="@this"
-					 update=":form:tt:eqiCompDialog" />
+					action="#{backingBean.assignNewEquiCompBean}" partialSubmit="true"
+					process="@this" update=":form:tt:eqiCompDialog" />
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
 					action="#{backingBean.deleteSelectedEquiCompanies}"
 					process="equiInfPan" partialSubmit="true"
@@ -113,8 +112,9 @@
 			</p:outputPanel>
 		</p:panel>
 	</p:panel>
-	<p:dialog width="450px" height="450px" header="#{lbl['lbl.sm.equiComp.dialHdr']}"
-		id="eqiCompDialog" widgetVar="eqiCompDialog" resizable="false"
+	<p:dialog width="450px" height="450px"
+		header="#{lbl['lbl.sm.equiComp.dialHdr']}" id="eqiCompDialog"
+		widgetVar="eqiCompDialog" resizable="false" closable="false"
 		showEffect="fade" hideEffect="fade" modal="true">
 		<!-- <p:panel header="Associated Company Details"> -->
 		<p:messages id="suppEquiCompInfoMsg" showSummary="false"
@@ -313,10 +313,11 @@
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.sm.button.save']}"
 				action="#{backingBean.addOrUpdateEquityCompanyToSmAppl}"
-				 partialSubmit="true"
-				process=":form:tt:eqiCompDialog" update=":form:tt:eqiComDt, @([id$=Msg])" />
-			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}" partialSubmit="true" process="@this"
-				 action="#{backingBean.cancelEquiCompFuntionc}"/>
+				partialSubmit="true" process=":form:tt:eqiCompDialog"
+				update=":form:tt:eqiComDt, @([id$=Msg])" />
+			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
+				partialSubmit="true" process="@this"
+				action="#{backingBean.cancelEquiCompFuntionc}" />
 		</div>
 	</p:dialog>
 </ui:composition>

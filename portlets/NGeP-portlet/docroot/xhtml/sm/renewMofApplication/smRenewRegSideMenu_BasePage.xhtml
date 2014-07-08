@@ -20,8 +20,9 @@
 				src="/xhtml/sm/shared/mofRegistration/applicationReviewHeaderPage.xhtml" />
 		</p:outputPanel>
 		<ac:smPanel id="tt">
-			<p:messages id="messages" showDetail="true" autoUpdate="true"
-			closable="true" showSummary="false"/>
+			<p:messages id="messages" showDetail="true"
+				autoUpdate="#{backingBean.managedBean.showParentMsg}"
+				closable="true" showSummary="false" />
 
 			<c:if test="#{backingBean.managedBean.tabActiveIndex eq 0}">
 				<ui:include src="step1RenewAppln_CompanyInfo.xhtml" />
