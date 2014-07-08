@@ -357,6 +357,20 @@
 		<header-portlet-css>/css/main.css</header-portlet-css>
 		<css-class-wrapper>fldan-portlet</css-class-wrapper>
 	</portlet>
+	<portlet>
+		<portlet-name>flAp59</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<css-class-wrapper>flAp59-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
+		<portlet-name>flAp59Search</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<css-class-wrapper>flAp59Search-portlet</css-class-wrapper>
+	</portlet>
 	<!-- Fulfilment End Added by Giri -->
 
 	<portlet>
