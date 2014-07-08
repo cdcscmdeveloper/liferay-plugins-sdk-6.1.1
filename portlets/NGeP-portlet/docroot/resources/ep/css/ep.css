@@ -2384,6 +2384,14 @@ table.ppTwoTable td {
 }
 /*--------------------------       End PP Related      ------------------------------ */
 
+/*--------------------------       SM Related      ------------------------------ */
+.ui-dialog.smBizDialog{
+	height: 200px !important;
+}
+
+/*--------------------------       End SM Related      ------------------------------ */
+
+
 /*--------------------------       Custom Icons        ------------------------------ */
 .ui-icon-add {
 	background-image: url(#{ resource [ 'ep/images/design:add.png' ]
