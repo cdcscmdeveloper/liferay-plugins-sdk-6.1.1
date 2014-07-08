@@ -270,7 +270,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		IFulfilmentRequestSO iFulfilmentRequestSO = null;
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		try {
-			PmUser user = getFacesScopes().getUserSessionBean();
 			String token = getFacesScopes().getBPMAuthenticationCtxToken();
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			FlFulfilmentRequest flRequest = getManagedBean().getFlRequest();
@@ -283,16 +282,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				reqDTO.setRequisitioner(Boolean.TRUE);
 			}
 			flRequest.setFinancialYear(Calendar.getInstance().get(Calendar.YEAR));
-//			PmOrgProfile pmorgProfile = new PmOrgProfile();
-//			pmorgProfile.setOrgProfileId(4L);
-//			flRequest.setChargeOrgProfile(pmorgProfile);
-//			flRequest.setIssuedOrgProfile(pmorgProfile);
-//			flRequest.setPreparedOrgProfile(pmorgProfile);
-//			flRequest.setCreatedOrgProfile(pmorgProfile);
-//			PmAgOffice agOffice = new  PmAgOffice();
-			//TODO
-//			agOffice.setAgOfficeId(1L);
-//			flRequest.setAgOffice(agOffice);
 			
 			//TODO waiting for sm api to check the current date against the suppleir exp date.
 //			flRequest.getCtContract().getSmSupplier().getSmMofAccounts();
@@ -2055,6 +2044,17 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			calendar.setTime(startDate);
 			calendar.add(Calendar.MONTH, deliveryTerm);
 			getManagedBean().getSelectedDelAddr().setEndDate(calendar.getTime());
+		}
+	}
+	
+	public void getFinancingType(AjaxBehaviorEvent e) {
+		Long subSetiaId = (Long) e.getComponent().getAttributes().get("value");
+		if(subSetiaId!=null) {
+			IProjectSetiaSO projectSetiaSO = (IProjectSetiaSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IProjectSetiaSO.class);
+			ProjectSetiaReqDTO reqDTO = new ProjectSetiaReqDTO();
+			reqDTO.setSubSetiaId(subSetiaId);
+			ProjectSetiaResDTO resDTO = projectSetiaSO.retrieveSubSetia(reqDTO);
+			getManagedBean().setFinancingTypeCode(resDTO.getPmSubSetia().getFinancingType().getParameterCode());
 		}
 	}
 	
