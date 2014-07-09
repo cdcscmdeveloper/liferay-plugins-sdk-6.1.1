@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="Manufacturing / Assembly Details" toggleable="true">
+	<p:panel header="#{lbl['lbl.sm.manufacture.panHdr']}" toggleable="true">
 		<table style="width: 250px">
 			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 				<tr>
@@ -44,30 +44,31 @@
 				id="poManuBlc"
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.manufacturingVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.manufacturingVerified : false)}" />
 
-			<p:dataTable var="manBean"
+			<p:dataTable var="manBean" widgetVar="smManuDtWidVar"
 				value="#{backingBean.managedBean.smAppl.smManufacturingDtls}"
 				selection="#{backingBean.managedBean.selectedManufacturingList}"
 				rowKey="#{manBean}" rowIndexVar="index" id="manDt">
 				<ac:paginator for="manDt" />
 				<p:column selectionMode="multiple" width="5%" />
 
-				<p:column headerText="Type Of Product (s)">
+				<p:column headerText="#{lbl['lbl.sm.manufacture.prdType']}">
 					<h:outputText value="#{manBean.goodsType}" />
 				</p:column>
 
-				<p:column headerText="Brand">
+				<p:column headerText="#{lbl['lbl.sm.manufacture.brand']}">
 					<h:outputText value="#{manBean.brand}" />
 				</p:column>
-				<p:column headerText="Production Capability / Month">
+				<p:column
+					headerText="#{lbl['lbl.sm.manufacture.prodCap']} / #{lbl['lbl.sm.manufacture.month']}">
 					<h:outputText value="#{manBean.productionCapacity}" />
 				</p:column>
 
-				<p:column headerText="Measurement Unit">
+				<p:column headerText="#{lbl['lbl.sm.manufacture.mesUnit']}">
 					<h:outputText value="#{manBean.pmUom.uomName}" />
 				</p:column>
-				<p:column headerText="Action">
-					<p:commandLink oncomplete="manufactorDialog.show();"
-						update=":form:tt:manDia"
+				<p:column headerText="#{lbl['lbl.sm.label.action']}">
+					<p:commandLink update=":form:tt:manufactorDialog" process="@this"
+						partialSubmit="true"
 						action="#{backingBean.assignSelManufacturer(manBean)}"
 						style="padding-right:5px">
 						<p:graphicImage library="ep/images/design" name="edit.png"
@@ -78,10 +79,11 @@
 			</p:dataTable>
 			<p:spacer height="2px;" />
 			<div align="right">
-				<p:commandButton value="Add" oncomplete="manufactorDialog.show();"
-					update=":form:tt:manDia"
+				<p:commandButton value="#{lbl['lbl.sm.button.add']}" process="@this"
+					partialSubmit="true" update=":form:tt:manufactorDialog"
 					action="#{backingBean.assignNewManufacturerBean}" />
-				<p:commandButton value="Delete"
+				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
+					partialSubmit="true" process="manuInfPan"
 					action="#{backingBean.deleteSelectedManufacturers}"
 					update=":form:tt:manDt" />
 			</div>
@@ -89,7 +91,7 @@
 			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 				<table style="width: 50%">
 					<tr>
-						<td><p:outputLabel value="PO Remarks" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" cols="41"
 								value="#{backingBean.managedBean.poSecReview.manufacturingRemark}" /></td>
 					</tr>
@@ -98,11 +100,11 @@
 			<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
 				<table style="width: 100%">
 					<tr>
-						<td><p:outputLabel value="PO Remarks" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" readonly="true"
 								disabled="true" cols="41"
 								value="#{backingBean.managedBean.poSecReview.manufacturingRemark}" /></td>
-						<td><p:outputLabel value="Approver Remarks" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" cols="41"
 								value="#{backingBean.managedBean.apprvrSecReview.manufacturingRemark}" /></td>
 
@@ -111,59 +113,77 @@
 			</p:outputPanel>
 		</p:panel>
 	</p:panel>
-	<p:dialog width="600px" header="Manufacturing / Assembly Information"
+	<p:dialog width="600px" height="350px"
+		header="#{lbl['lbl.sm.manufacture.diaHdr']}"
 		widgetVar="manufactorDialog" resizable="false" showEffect="fade"
-		hideEffect="fade" modal="true" id="manDia">
-		<!-- <p:panel header="Manufacturing / Assembly Information"> -->
-
+		closable="false" hideEffect="fade" modal="true" id="manufactorDialog">
+		<p:messages id="manufactorDialogMsg" showSummary="false"
+			showDetail="true" autoUpdate="true" closable="true" />
 		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value="* Product Type" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.manufacture.prdType']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:inputText
+						required="#{backingBean.managedBean.valueReqd}"
+						label="#{lbl['lbl.sm.manufacture.prdType']}" id="smManuProdType"
+						maxlength="50"
 						value="#{backingBean.managedBean.selectedManufacturer.goodsType}"
-						size="35" /></td>
+						size="35" /> <p:message id="smManuProdTypeMsg"
+						for="smManuProdType" showSummary="true" showDetail="false"
+						display="icon" /></td>
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="Brand" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.manufacture.brand']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:inputText
+						required="#{backingBean.managedBean.valueReqd}"
+						label="#{lbl['lbl.sm.manufacture.brand']}" id="smManuBrdType"
+						maxlength="50"
 						value="#{backingBean.managedBean.selectedManufacturer.brand}"
-						size="35" /></td>
+						size="35" /> <p:message id="smManuBrdTypeMsg" for="smManuBrdType"
+						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="* Production Capacity" /></td>
-				<td><p:inputText
+				<td><p:outputLabel value="#{lbl['lbl.sm.manufacture.prodCap']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td><p:inputText maxlength="6"
+						required="#{backingBean.managedBean.valueReqd}"
+						label="#{lbl['lbl.sm.manufacture.prodCap']}" id="smManuProdCap"
 						value="#{backingBean.managedBean.selectedManufacturer.productionCapacity}"
-						size="35" /></td>
+						size="35">
+
+					</p:inputText> <p:message id="smManuProdCapMsg" for="smManuProdCap"
+						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="* Measurement" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.manufacture.mesUnit']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td valign="top"><p:selectOneMenu
+						required="#{backingBean.managedBean.valueReqd}"
+						label="#{lbl['lbl.sm.manufacture.mesUnit']}" id="smManuMesUnit"
 						value="#{backingBean.managedBean.selectedManufacturer.pmUom.uomId}"
 						style="width: 207px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="---Select---" itemValue="" />
 						<f:selectItems var="uom" value="#{backingBean.managedBean.uomLs}"
 							itemValue="#{uom.uomId}" itemLabel="#{uom.uomName}" />
-					</p:selectOneMenu></td>
-				<!-- <td>
-						<table>
-							<tr>
-								<td style="padding-right: 20px;"><p:inputText /></td>
+					</p:selectOneMenu> <p:message id="smManuMesUnitMsg" for="smManuMesUnit"
+						showSummary="true" showDetail="false" display="icon" /></td>
 
-							</tr>
-						</table>
-					</td> -->
 			</tr>
 
 		</table>
-		<!-- </p:panel> -->
+
 		<br />
 		<div align="right">
-			<p:commandButton value="Save" oncomplete="manufactorDialog.hide();"
+			<p:commandButton value="#{lbl['lbl.sm.button.save']}"
 				action="#{backingBean.addOrUpdateManufacturerToSmAppl}"
-				update=":form:tt:manDt" />
-			<p:commandButton value="Cancel" onclick="manufactorDialog.hide();" />
+				partialSubmit="true" process="manufactorDialog"
+				update=":form:tt:manDt, @([id$=Msg])" />
+			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
+				action="#{backingBean.cancelManuSaveorUpdate}" process="@this"
+				partialSubmit="true" />
 		</div>
 	</p:dialog>
 </ui:composition>

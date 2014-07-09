@@ -349,14 +349,12 @@
 					<td><p:outputLabel value="#{lbl['lbl.sm.bankDtls.assocBran']}"
 							id="banBranchLbl"
 							rendered="#{backingBean.managedBean.selectedBank.accountPurpose eq 'P' or backingBean.managedBean.selectedBank.accountPurpose eq 'B'}" />
-						<p:outputLabel value="*" styleClass="mandatory"
-							rendered="#{backingBean.managedBean.selectedBank.accountPurpose eq 'P' or backingBean.managedBean.selectedBank.accountPurpose eq 'B'}" /></td>
+					</td>
 					<td><p:selectOneMenu showCheckbox="true"
-							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.bankDtls.assocBran']}"
 							style="width: 207px;margin-bottom: 5px;" id="banBranchVal"
 							rendered="#{backingBean.managedBean.selectedBank.accountPurpose eq 'P' or backingBean.managedBean.selectedBank.accountPurpose eq 'B'}"
-							value="#{backingBean.managedBean.selectedBank.smSupplierBranch.supplierBranchId}">
+							value="#{backingBean.managedBean.selBankBranchId}">
 							<f:selectItem itemLabel="---Select---" itemValue="" />
 							<f:selectItems
 								value="#{backingBean.managedBean.smAppl.smSupplierBranches}"

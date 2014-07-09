@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header=" Machinery / Equipment Details" toggleable="true">
+	<p:panel header="#{lbl['lbl.sm.machine.panHdr']}" toggleable="true">
 		<table style="width: 250px">
 			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 				<tr>
@@ -44,35 +44,35 @@
 				id="poMachBlc"
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.machineryVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.machineryVerified : false)}" />
 
-			<p:dataTable var="macBean"
+			<p:dataTable var="macBean" widgetVar="smMachDtWidVar"
 				value="#{backingBean.managedBean.smAppl.smMachineDtls}"
 				selection="#{backingBean.managedBean.selectedMachineList}"
 				rowKey="#{macBean}" rowIndexVar="index" id="macDt">
 				<ac:paginator for="macDt" />
 				<p:column selectionMode="multiple" width="5%" />
 
-				<p:column headerText="Equipment Type">
+				<p:column headerText="#{lbl['lbl.sm.machine.equiType']}">
 					<h:outputText value="#{macBean.machineType}" />
 				</p:column>
 
-				<p:column headerText="Brand">
+				<p:column headerText="#{lbl['lbl.sm.machine.brand']}">
 					<h:outputText value="#{macBean.brandName}" />
 				</p:column>
-				<p:column headerText="Function">
+				<p:column headerText="#{lbl['lbl.sm.machine.function']}">
 					<h:outputText value="#{macBean.machineFunction}" />
 				</p:column>
 
-				<p:column headerText="Quantity">
+				<p:column headerText="#{lbl['lbl.sm.machine.quantity']}">
 					<h:outputText value="#{macBean.qty}" />
 				</p:column>
 
-				<p:column headerText="Value(RM.)">
+				<p:column headerText="#{lbl['lbl.sm.machine.value']}">
 					<h:outputText value="#{macBean.value}" />
 				</p:column>
-				<p:column headerText="Action">
-					<p:commandLink oncomplete="equipmentDialog.show();"
+				<p:column headerText="#{lbl['lbl.sm.label.action']}">
+					<p:commandLink partialSubmit="true" process="@this"
 						action="#{backingBean.assignSelMachinery(macBean)}"
-						update=":form:tt:eqDia" style="padding-right:5px">
+						update=":form:tt:equipmentDialog" style="padding-right:5px">
 						<p:graphicImage library="ep/images/design" name="edit.png"
 							value="/resources/ep/images/design/edit.png" />
 					</p:commandLink>
@@ -81,18 +81,18 @@
 			</p:dataTable>
 			<p:spacer height="2px;" />
 			<div align="right">
-				<p:commandButton value="Add" oncomplete="equipmentDialog.show();"
-					update=":form:tt:eqDia"
-					action="#{backingBean.assignNewMachineryBean}" />
-				<p:commandButton value="Delete"
+				<p:commandButton value="#{lbl['lbl.sm.button.add']}"
+					update=":form:tt:equipmentDialog" process="@this"
+					partialSubmit="true" action="#{backingBean.assignNewMachineryBean}" />
+				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
 					action="#{backingBean.deleteSelectedMachinery}"
-					update=":form:tt:macDt" />
+					partialSubmit="true" process="machInfPan" update=":form:tt:macDt" />
 			</div>
 			<br />
 			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 				<table style="width: 50%">
 					<tr>
-						<td><p:outputLabel value="PO Remarks" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" cols="41"
 								value="#{backingBean.managedBean.poSecReview.machineryRemark}" /></td>
 					</tr>
@@ -101,11 +101,11 @@
 			<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
 				<table style="width: 100%">
 					<tr>
-						<td><p:outputLabel value="PO Remarks" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" readonly="true"
 								disabled="true" cols="41"
 								value="#{backingBean.managedBean.poSecReview.machineryRemark}" /></td>
-						<td><p:outputLabel value="Approver Remarks" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" cols="41"
 								value="#{backingBean.managedBean.apprvrSecReview.machineryRemark}" /></td>
 
@@ -114,46 +114,77 @@
 			</p:outputPanel>
 		</p:panel>
 	</p:panel>
-	<p:dialog width="600px" header="Machinery / Equipment Information"
-		widgetVar="equipmentDialog" resizable="false" showEffect="fade"
-		hideEffect="fade" modal="true" id="eqDia">
-		<!-- <p:panel header="Machinery / Equipment Information"> -->
+	<p:dialog width="600px" height="350px"
+		header="#{lbl['lbl.sm.machine.diaHdr']}" widgetVar="equipmentDialog"
+		resizable="false" showEffect="fade" closable="false" hideEffect="fade"
+		modal="true" id="equipmentDialog">
+
+		<p:messages id="equipmentDialogMsg" showSummary="false"
+			showDetail="true" autoUpdate="true" closable="true" />
 
 		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value="* Machinery Type" /></td>
-				<td><p:inputText
+				<td><p:outputLabel value="#{lbl['lbl.sm.machine.equiType']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td><p:inputText maxlength="50"
+						required="#{backingBean.managedBean.valueReqd}"
+						label="#{lbl['lbl.sm.machine.equiType']}" id="smMachEquiType"
 						value="#{backingBean.managedBean.selectedMachine.machineType}"
-						size="35" /></td>
+						size="35" /> <p:message id="smMachEquiTypeMsg"
+						for="smMachEquiType" showSummary="true" showDetail="false"
+						display="icon" /></td>
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="Brand" /></td>
-				<td><p:inputText
+				<td><p:outputLabel value="#{lbl['lbl.sm.machine.brand']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:inputText maxlength="50"
+						required="#{backingBean.managedBean.valueReqd}"
+						label="#{lbl['lbl.sm.machine.brand']}" id="smMachBrand"
 						value="#{backingBean.managedBean.selectedMachine.brandName}"
-						size="35" /></td>
+						size="35">
+					</p:inputText> <p:message id="smMachBrandMsg" for="smMachBrand"
+						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="* Funtion" /></td>
-				<td><p:inputText
+				<td><p:outputLabel value="#{lbl['lbl.sm.machine.function']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td><p:inputText maxlength="50"
+						required="#{backingBean.managedBean.valueReqd}"
+						label="#{lbl['lbl.sm.machine.function']}" id="smMachFnc"
 						value="#{backingBean.managedBean.selectedMachine.machineFunction}"
-						size="35" /></td>
+						size="35" /> <p:message id="smMachFncMsg" for="smMachFnc"
+						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="* Quantity" /></td>
-				<td><p:inputText
-						value="#{backingBean.managedBean.selectedMachine.qty}" size="35" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.machine.quantity']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td><p:inputText maxlength="6"
+						required="#{backingBean.managedBean.valueReqd}"
+						label="#{lbl['lbl.sm.machine.quantity']}" id="smMachQuant"
+						value="#{backingBean.managedBean.selectedMachine.qty}" size="35" />
+					<p:message id="smMachQuantMsg" for="smMachQuant" showSummary="true"
+						showDetail="false" display="icon" /></td>
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="* Value (RM.)" /></td>
-				<td><p:inputText
-						value="#{backingBean.managedBean.selectedMachine.value}" size="35" />
-				</td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.machine.value']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:inputText maxlength="18"
+						required="#{backingBean.managedBean.valueReqd}"
+						label="#{lbl['lbl.sm.machine.value']}" id="smMachVal"
+						value="#{backingBean.managedBean.selectedMachine.value}" size="35">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</p:inputText> <p:message id="smMachValMsg" for="smMachVal" showSummary="true"
+						showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="* Purchase Method" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.machine.purMthd']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu
+						required="#{backingBean.managedBean.valueReqd}"
+						label="#{lbl['lbl.sm.machine.purMthd']}" id="smMachPurMthd"
 						value="#{backingBean.managedBean.selectedMachine.purchaseMethod}"
 						style="width: 207px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="-- Select --" itemValue="" />
@@ -161,33 +192,27 @@
 						<f:selectItem itemLabel="Credit Card" itemValue="B" />
 						<f:selectItem itemLabel="Debit Card" itemValue="C" />
 						<f:selectItem itemLabel="Online Banking" itemValue="D" />
-					</p:selectOneMenu></td>
+					</p:selectOneMenu> <p:message id="smMachPurMthdMsg" for="smMachPurMthd"
+						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Guarantor Name" /></td>
-				<td><p:inputText
+				<td><p:outputLabel value="#{lbl['lbl.sm.machine.guarnName']}" /></td>
+				<td><p:inputText maxlength="50"
 						value="#{backingBean.managedBean.selectedMachine.guarantorName}"
 						size="35" /></td>
 			</tr>
-			<!-- <tr>
-				<td><p:outputLabel value="*Associated Facility" /></td>
 
-				<td><p:selectManyMenu showCheckbox="true">
-						<f:selectItems
-							value="#{backingBean.managedBean.smAppl.smFacilities}" var="fac"
-							itemLabel="#{fac.ownerName}" itemValue="#{fac.ownerName}" />
-					</p:selectManyMenu></td>
-
-			</tr> -->
 
 		</table>
-		<!-- </p:panel> -->
 		<br />
 		<div align="right">
-			<p:commandButton value="Save" oncomplete="equipmentDialog.hide();"
+			<p:commandButton value="#{lbl['lbl.sm.button.save']}"
 				action="#{backingBean.addOrUpdateMachineToSmAppl}"
-				update=":form:tt:macDt" />
-			<p:commandButton value="Cancel" onclick="equipmentDialog.hide();" />
+				partialSubmit="true" process="equipmentDialog"
+				update=":form:tt:macDt, @([Id$=Msg])" />
+			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
+				partialSubmit="true" process="@this"
+				action="#{backingBean.cancelMachineSaveorUpdate}" />
 		</div>
 	</p:dialog>
 </ui:composition>

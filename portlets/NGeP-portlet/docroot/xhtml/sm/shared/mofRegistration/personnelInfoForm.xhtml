@@ -258,7 +258,7 @@
 		</p:panel>
 		<p:panel
 			header=" List of Company's Board of Directors / Management / Staff"
-			toggleable="true">
+			toggleable="true" id="smPersonnelParentPan">
 
 			<table style="width: 250px">
 				<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
@@ -296,61 +296,70 @@
 				<p:blockUI block=":form:tt:persInfPan" widgetVar="buiPoPers"
 					id="poPersBlc"
 					blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.personnelVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.personnelVerified : false)}" />
-				<p:dataTable var="person" widgetVar="suppPersonnelInfoDtWidVar"
-					value="#{backingBean.managedBean.smAppl.smPersonnels}"
-					selection="#{backingBean.managedBean.selectedShareHolders}"
-					rowKey="#{person}" rowIndexVar="index" id="personDt">
-					<ac:paginator for="personDt" />
-					<p:column selectionMode="multiple" width="5%" />
+				<p:panel id="persInfoDtPanel">
+					<p:dataTable var="person" widgetVar="suppPersonnelInfoDtWidVar"
+						value="#{backingBean.managedBean.smAppl.smPersonnels}"
+						selection="#{backingBean.managedBean.selectedShareHolders}"
+						rowKey="#{person}" rowIndexVar="index" id="personDt">
+						<ac:paginator for="personDt" />
+						<p:column selectionMode="multiple" width="5%" />
 
-					<p:column headerText="Name">
-						<h:outputText value="#{person.name}" />
-					</p:column>
+						<p:column headerText="Name">
+							<h:outputText value="#{person.name}" />
+						</p:column>
 
-					<p:column headerText="Identification Num">
-						<h:outputText value="#{person.identificationNo}" />
-					</p:column>
-					<p:column headerText="Is Equity Owner">
-						<h:outputText value="Yes" rendered="#{person.equityOwner}" />
-						<h:outputText value="No" rendered="#{!person.equityOwner}" />
-					</p:column>
-					<p:column headerText="Is Authorized">
-						<h:outputText value="Yes"
-							rendered="#{person.authorizedFlg eq '1'}" />
-						<h:outputText value="No" rendered="#{person.authorizedFlg eq '0'}" />
-					</p:column>
-					<p:column headerText="Cert Status">
-						<h:outputText value="Requested"
-							rendered="#{person.softcertFlg eq '2'}" />
-						<h:outputText value="Issued"
-							rendered="#{person.softcertFlg eq '1'}" />
-						<h:outputText value="Not Applied"
-							rendered="#{person.softcertFlg eq '0'}" />
-					</p:column>
-					<p:column headerText="Action">
-						<p:commandLink
-							action="#{backingBean.assignSelShareHolder(person)}"
-							update=":form" style="padding-right:5px;">
-							<p:graphicImage library="ep/images/design" name="edit.png"
-								value="/resources/ep/images/design/edit.png" />
-						</p:commandLink>
+						<p:column headerText="Identification Num">
+							<h:outputText value="#{person.identificationNo}" />
+						</p:column>
+						<p:column headerText="Is Equity Owner">
+							<h:outputText value="Yes" rendered="#{person.equityOwner}" />
+							<h:outputText value="No" rendered="#{!person.equityOwner}" />
+						</p:column>
+						<p:column headerText="Is Authorized">
+							<h:outputText value="Yes"
+								rendered="#{person.authorizedFlg eq '1'}" />
+							<h:outputText value="No"
+								rendered="#{person.authorizedFlg eq '0'}" />
+						</p:column>
+						<p:column headerText="Cert Status">
+							<h:outputText value="Requested"
+								rendered="#{person.softcertFlg eq '2'}" />
+							<h:outputText value="Issued"
+								rendered="#{person.softcertFlg eq '1'}" />
+							<h:outputText value="Not Applied"
+								rendered="#{person.softcertFlg eq '0'}" />
+						</p:column>
+						<p:column headerText="Action">
+							<p:commandLink
+								action="#{backingBean.assignSelShareHolder(person)}"
+								process="@this" partialSubmit="true" update=":form"
+								style="padding-right:5px;">
+								<p:graphicImage library="ep/images/design" name="edit.png"
+									value="/resources/ep/images/design/edit.png" />
+							</p:commandLink>
 
-					</p:column>
+						</p:column>
 
-				</p:dataTable>
-				<p:spacer height="2px;" />
-				<div align="right">
-					<p:commandButton value="Add Management / Staff"
-						action="#{backingBean.assignNewShareHolder(SupplierManagementConst.PERSONNEL_TYPE_STAFF)}"
-						update=":form" />
-					<p:commandButton value="Add Director/Higher Management"
-						action="#{backingBean.assignNewShareHolder(SupplierManagementConst.PERSONNEL_TYPE_DIRECTOR)}"
-						update=":form" />
-					<p:commandButton value="Delete"
-						action="#{backingBean.deleteSelectedShareHolders}"
-						update=":form:tt:personDt , :form:tt:stfSummaryPan" />
-				</div>
-				<p:panel id="persBranMapInfo">
+					</p:dataTable>
+
+					<p:spacer height="2px;" />
+					<div align="right">
+						<p:commandButton value="Add Management / Staff" process="@this"
+							partialSubmit="true"
+							action="#{backingBean.assignNewShareHolder(SupplierManagementConst.PERSONNEL_TYPE_STAFF)}"
+							update=":form" />
+						<p:commandButton value="Add Director/Higher Management"
+							process="@this" partialSubmit="true"
+							action="#{backingBean.assignNewShareHolder(SupplierManagementConst.PERSONNEL_TYPE_DIRECTOR)}"
+							update=":form" />
+						<p:commandButton value="Delete" process="persInfoDtPanel"
+							partialSubmit="true"
+							action="#{backingBean.deleteSelectedShareHolders}"
+							update=":form:tt:personDt , :form:tt:stfSummaryPan" />
+					</div>
+				</p:panel>
+				<p:panel id="persBranMapInfo" header="Branches - Point Of Contact"
+					rendered="#{backingBean.managedBean.smAppl.smSupplierBranches.size() gt 0}">
 					<p:dataTable var="branch" id="perBrDt"
 						value="#{backingBean.managedBean.smAppl.smSupplierBranches}"
 						rowIndexVar="index">
@@ -362,12 +371,16 @@
 						</p:column>
 						<p:column headerText="Point Of Contact">
 							<p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+								required="true"
+								label="Point of contact for : #{branch.branchName}"
 								id="brnPerVal" value="#{branch.smPersonnel.personnelId}">
 								<f:selectItems
 									value="#{backingBean.managedBean.smAppl.smPersonnels}"
 									var="brPerBean" itemLabel="#{brPerBean.name}"
 									itemValue="#{brPerBean.personnelId}" />
 							</p:selectOneMenu>
+							<p:message id="brnPerValMsg" for="brnPerVal" showSummary="true"
+								showDetail="false" display="icon" />
 						</p:column>
 
 					</p:dataTable>
