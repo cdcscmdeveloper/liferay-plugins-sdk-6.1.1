@@ -5031,3 +5031,18 @@ table.rptTbl {
 .ui-messages-info {
 	height : auto;
 }
+
+/*--------------------------       Left Right Button - Start      ---------------------------- */
+.rowBthWrap{
+	align: justify;
+	width: 100%;
+	background-color: #FFFFFF;
+}
+
+.rowBtnLeft{
+	float:left;
+}
+.rowBtnRight{
+	float:right;
+}
+/*--------------------------       Left Right Button - End      ------------------------------ */
