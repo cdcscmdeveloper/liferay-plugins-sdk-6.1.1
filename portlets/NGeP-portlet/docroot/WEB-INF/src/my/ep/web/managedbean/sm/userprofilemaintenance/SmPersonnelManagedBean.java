@@ -11,21 +11,14 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
-import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
-import my.ep.dto.sm.search.SupplierSearchReqDTO;
-import my.ep.dto.sm.search.SupplierSearchResDTO;
-import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
-import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
-import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 @ManagedBean(name = "smPersonnelMB")
@@ -49,16 +42,10 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	
 	private SmPersonnel updateSmPersonnel;
 	
-	private SmAddress updateSmPersonnelMailingAddress;
+	private SmPersonnelAddress updateSmPersonnelMailingAddress;
 	
-	private SmAddress updateSmPersonnelPermanentAddress;
+	private SmPersonnelAddress updateSmPersonnelPermanentAddress;
 
-	private SmPersonnel editSmPersonnel;
-	
-	private SmAddress editSmPersonnelMailingAddress;
-	
-	private SmAddress editSmPersonnelPermanentAddress;
-	
 	private List<SelectItem> countryList;
 	
 	private List<SelectItem> stateList;
@@ -207,54 +194,22 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 		this.updateSmPersonnel = updateSmPersonnel;
 	}
 
-	public SmAddress getUpdateSmPersonnelMailingAddress() {
-		if(updateSmPersonnelMailingAddress == null){
-			updateSmPersonnelMailingAddress = new SmAddress();
-		}
+	public SmPersonnelAddress getUpdateSmPersonnelMailingAddress() {
 		return updateSmPersonnelMailingAddress;
 	}
 
 	public void setUpdateSmPersonnelMailingAddress(
-			SmAddress updateSmPersonnelMailingAddress) {
+			SmPersonnelAddress updateSmPersonnelMailingAddress) {
 		this.updateSmPersonnelMailingAddress = updateSmPersonnelMailingAddress;
 	}
 
-	public SmAddress getUpdateSmPersonnelPermanentAddress() {
+	public SmPersonnelAddress getUpdateSmPersonnelPermanentAddress() {
 		return updateSmPersonnelPermanentAddress;
 	}
 
 	public void setUpdateSmPersonnelPermanentAddress(
-			SmAddress updateSmPersonnelPermanentAddress) {
+			SmPersonnelAddress updateSmPersonnelPermanentAddress) {
 		this.updateSmPersonnelPermanentAddress = updateSmPersonnelPermanentAddress;
-	}
-
-	public SmPersonnel getEditSmPersonnel() {
-		return editSmPersonnel;
-	}
-
-	public void setEditSmPersonnel(SmPersonnel editSmPersonnel) {
-		this.editSmPersonnel = editSmPersonnel;
-	}
-
-	public SmAddress getEditSmPersonnelMailingAddress() {
-		if(editSmPersonnelMailingAddress == null){
-			editSmPersonnelMailingAddress = new SmAddress();
-		}
-		return editSmPersonnelMailingAddress;
-	}
-
-	public void setEditSmPersonnelMailingAddress(
-			SmAddress editSmPersonnelMailingAddress) {
-		this.editSmPersonnelMailingAddress = editSmPersonnelMailingAddress;
-	}
-
-	public SmAddress getEditSmPersonnelPermanentAddress() {
-		return editSmPersonnelPermanentAddress;
-	}
-
-	public void setEditSmPersonnelPermanentAddress(
-			SmAddress editSmPersonnelPermanentAddress) {
-		this.editSmPersonnelPermanentAddress = editSmPersonnelPermanentAddress;
 	}
 
 	public List<SelectItem> getCountryList() {

@@ -65,8 +65,6 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 
 	public void preRenderSmPersonnel(){
 		System.out.println("********************SmPersonnelBackingBean PreRender***************");
-		initUserPersonnelInfo();
-//		initializeUpdateLists();
 
 		CountryReqDTO reqDTO = new CountryReqDTO();
 		reqDTO.setCountryCode("MY");
@@ -74,6 +72,7 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		CountryResDTO resDTO = reqSO.retrieveCountryByCode(reqDTO);
 		getManagedBean().setDefaultCountryId(resDTO.getPmCountry().getCountryId());
 
+		initUserPersonnelInfo();
 		this.getManagedBean().setSearchCompanyRole(null);
 		this.getManagedBean().setSearchEPRole(null);
 		this.getManagedBean().setSearchUsername(null);
@@ -81,7 +80,57 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, "userProfileSearch.xhtml");
 	}
-	
+
+	public void preRenderUpdateOwnProfilePage(){
+		System.out.println("********************SmPersonnelBackingBean preRenderUpdateOwnProfilePage***************");
+		
+		CountryReqDTO reqDTO = new CountryReqDTO();
+		reqDTO.setCountryCode("MY");
+		ICountrySO reqSO = (ICountrySO) BusinessDelegate.getInstance().getServiceObject("pm",ICountrySO.class);
+		CountryResDTO resDTO = reqSO.retrieveCountryByCode(reqDTO);
+		getManagedBean().setDefaultCountryId(resDTO.getPmCountry().getCountryId());
+		initUserPersonnelInfo();
+
+		getManagedBean().setDisableRole(false);
+		SmPersonnel smPersonnel = new SmPersonnel();
+		smPersonnel.setPmCountry(resDTO.getPmCountry());
+
+		reqDTO.setCountryId(getManagedBean().getDefaultCountryId());
+
+		resDTO = reqSO.retrieveCountryById(reqDTO);
+		SmAddress mailAddress = new SmAddress();
+		mailAddress.setPmCountry(resDTO.getPmCountry());
+		mailAddress.setPmState(new PmState());
+		mailAddress.setPmDistrict(new PmDistrict());
+		mailAddress.setPmCity(new PmCity());
+		
+		SmPersonnelAddress mailPersonnelAddress = new SmPersonnelAddress();
+		mailPersonnelAddress.setAddressType("M");
+		mailPersonnelAddress.setSmAddress(mailAddress);
+		mailPersonnelAddress.setSmPersonnel(smPersonnel);
+		
+		resDTO = reqSO.retrieveCountryById(reqDTO);
+		SmAddress permAddress = new SmAddress();
+		permAddress.setPmCountry(resDTO.getPmCountry());
+		permAddress.setPmState(new PmState());
+		permAddress.setPmDistrict(new PmDistrict());
+		permAddress.setPmCity(new PmCity());
+		
+		SmPersonnelAddress permPersonnelAddress = new SmPersonnelAddress();
+		permPersonnelAddress.setAddressType("P");
+		permPersonnelAddress.setSmAddress(permAddress);
+		permPersonnelAddress.setSmPersonnel(smPersonnel);
+
+		getManagedBean().setUpdateSmPersonnelMailingAddress(mailPersonnelAddress);
+		getManagedBean().setUpdateSmPersonnelPermanentAddress(permPersonnelAddress);
+		getManagedBean().setUpdateSmPersonnel(smPersonnel);
+		getCountryList();
+		
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, "updateUserProfile.xhtml");
+	}
+
 	public void resetSmPersonnelSearch() {
 		System.out.println("********************SmPersonnelBackingBean resetSmPersonnelSearch***************");
 		this.getManagedBean().setSearchCompanyRole(null);
@@ -174,16 +223,9 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		System.out.println("********************SmPersonnelBackingBean initializeUpdateLists***************");
 		getCountryList();
 
-		if(getManagedBean().getUpdateSmPersonnelMailingAddress().getPmCountry() != null){
-			getManagedBean().setStateList(getStateList(getManagedBean().getUpdateSmPersonnelMailingAddress().getPmCountry().getCountryId()));
-		}
-		
-		if(getManagedBean().getUpdateSmPersonnelMailingAddress().getPmState() != null){
-			getManagedBean().setDistrictList(getDistrictList(getManagedBean().getUpdateSmPersonnelMailingAddress().getPmState().getStateId()));
-		}
-		
-		if(getManagedBean().getUpdateSmPersonnelMailingAddress().getPmDistrict() != null){
-			getManagedBean().setCityList(getCityList(getManagedBean().getUpdateSmPersonnelMailingAddress().getPmDistrict().getDistrictId()));
+		if(getManagedBean().getUpdateSmPersonnel().getSmPersonnelAddresses() != null && getManagedBean().getUpdateSmPersonnel().getSmPersonnelAddresses().size() > 0){
+			updateMailAddLists(getManagedBean().getUpdateSmPersonnelMailingAddress().getSmAddress().getPmCountry().getCountryId().toString(), getManagedBean().getUpdateSmPersonnelMailingAddress().getSmAddress().getPmState().getStateId().toString(), getManagedBean().getUpdateSmPersonnelMailingAddress().getSmAddress().getPmDistrict().getDistrictId().toString());
+			updatePermAddLists(getManagedBean().getUpdateSmPersonnelPermanentAddress().getSmAddress().getPmCountry().getCountryId().toString(), getManagedBean().getUpdateSmPersonnelPermanentAddress().getSmAddress().getPmState().getStateId().toString(), getManagedBean().getUpdateSmPersonnelPermanentAddress().getSmAddress().getPmDistrict().getDistrictId().toString());
 		}
 	}
 	
@@ -281,46 +323,6 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		
 	}
 	
-	public void updateELists(String countryId, String stateId, String districtId){
-		if(!countryId.isEmpty() || countryId.equalsIgnoreCase("null")){
-			getManagedBean().setStateList(getStateList(Long.valueOf(countryId)));
-			getManagedBean().setDistrictList(null);
-			getManagedBean().setCityList(null);
-			
-			getManagedBean().getEditSmPersonnelMailingAddress().setPmDistrict(null);
-			getManagedBean().getEditSmPersonnelMailingAddress().setPmCity(null);
-		}
-		if(!stateId.isEmpty() || stateId.equalsIgnoreCase("null")){
-			getManagedBean().setDistrictList(getDistrictList(Long.valueOf(stateId)));
-			getManagedBean().setCityList(null);
-			
-			getManagedBean().getEditSmPersonnelMailingAddress().setPmCity(null);
-		}
-		if(!districtId.isEmpty() || districtId.equalsIgnoreCase("null")){
-			getManagedBean().setCityList(getCityList(Long.valueOf(districtId)));
-		}
-	}
-	
-	public void updateULists(String countryId, String stateId, String districtId){
-		if(!countryId.isEmpty() || countryId.equalsIgnoreCase("null")){
-			getManagedBean().setStateList(getStateList(Long.valueOf(countryId)));
-			getManagedBean().setDistrictList(null);
-			getManagedBean().setCityList(null);
-			
-			getManagedBean().getUpdateSmPersonnelMailingAddress().setPmDistrict(null);
-			getManagedBean().getUpdateSmPersonnelMailingAddress().setPmCity(null);
-		}
-		if(!stateId.isEmpty() || stateId.equalsIgnoreCase("null")){
-			getManagedBean().setDistrictList(getDistrictList(Long.valueOf(stateId)));
-			getManagedBean().setCityList(null);
-			
-			getManagedBean().getUpdateSmPersonnelMailingAddress().setPmCity(null);
-		}
-		if(!districtId.isEmpty() || districtId.equalsIgnoreCase("null")){
-			getManagedBean().setCityList(getCityList(Long.valueOf(districtId)));
-		}
-	}
-	
 	public void updateMailAddLists(String countryId, String stateId, String districtId){
 		if(!countryId.isEmpty() || countryId.equalsIgnoreCase("null")){
 			getManagedBean().setMailAddStateList(getStateList(Long.valueOf(countryId)));
@@ -359,6 +361,19 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		} else {
 			System.out.println("*********** Not same Addr ************** ");
 			getManagedBean().getBasicSmPersonnelMailingAddress().setSmAddress(
+					setDefaultAddr());
+		}
+
+	}
+
+	public void setUpdateMailingAddrSameAsPerm(AjaxBehaviorEvent e) {
+		if (getManagedBean().getUpdateSmPersonnelMailingAddress().isSameAsPerm()) {
+			System.out.println("********* Duplicate Mail Addr ***********");
+			this.getManagedBean().getUpdateSmPersonnelMailingAddress().setSmAddress(this.getManagedBean().getUpdateSmPersonnelPermanentAddress().getSmAddress());
+			updateMailAddLists(this.getManagedBean().getUpdateSmPersonnelMailingAddress().getSmAddress().getPmCountry().getCountryId().toString(), this.getManagedBean().getUpdateSmPersonnelMailingAddress().getSmAddress().getPmState().getStateId().toString(), this.getManagedBean().getUpdateSmPersonnelMailingAddress().getSmAddress().getPmDistrict().getDistrictId().toString());
+		} else {
+			System.out.println("*********** Not same Addr ************** ");
+			getManagedBean().getUpdateSmPersonnelMailingAddress().setSmAddress(
 					setDefaultAddr());
 		}
 
@@ -473,18 +488,64 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		
 		this.getManagedBean().setUpdateSmPersonnel(smPersonnel);
 		
-		if(smPersonnel.getSmPersonnelAddresses() != null){
+		if(smPersonnel.getSmPersonnelAddresses() != null && smPersonnel.getSmPersonnelAddresses().size() > 0){
 			List<SmPersonnelAddress> smPAList = new ArrayList<SmPersonnelAddress>();
 			
 			smPersonnel.getSmPersonnelAddresses().size();
 			smPAList.addAll(smPersonnel.getSmPersonnelAddresses()); 
 			for(SmPersonnelAddress smPA : smPAList){
 				if(smPA.getAddressType().equalsIgnoreCase("M")){
-					this.getManagedBean().setUpdateSmPersonnelMailingAddress(smPA.getSmAddress());
+					this.getManagedBean().setUpdateSmPersonnelMailingAddress(smPA);
 				} else if(smPA.getAddressType().equalsIgnoreCase("P")){
-					this.getManagedBean().setUpdateSmPersonnelPermanentAddress(smPA.getSmAddress());
+					this.getManagedBean().setUpdateSmPersonnelPermanentAddress(smPA);
 				}
 			}
+			initializeUpdateLists();
+		} else {
+			
+			SmAddress s1 = new SmAddress();
+			SmAddress s2 = new SmAddress();
+			
+	/*			Construct Mailing Address Object			*/
+			ICountrySO countrySO = (ICountrySO)BusinessDelegate.getInstance().getServiceObject("pm",ICountrySO.class);
+			CountryReqDTO reqCountryDTO = new CountryReqDTO();
+			reqCountryDTO.setCountryId(getManagedBean().getDefaultCountryId());
+			CountryResDTO resCountryDTO = countrySO.retrieveCountryById(reqCountryDTO);
+			s1.setPmCountry(resCountryDTO.getPmCountry());
+			s1.setPmState(new PmState());
+			s1.setPmDistrict(new PmDistrict());
+			s1.setPmCity(new PmCity());
+	
+	/*			Construct Permanent Address Object			*/
+			reqCountryDTO = new CountryReqDTO();
+			reqCountryDTO.setCountryId(getManagedBean().getDefaultCountryId());
+			resCountryDTO = countrySO.retrieveCountryById(reqCountryDTO);
+			s2.setPmCountry(resCountryDTO.getPmCountry());
+			s2.setPmState(new PmState());
+			s2.setPmDistrict(new PmDistrict());
+			s2.setPmCity(new PmCity());
+	
+			List<SmPersonnelAddress> smPersonnelAddresses = new ArrayList<SmPersonnelAddress>();
+			SmPersonnelAddress permPersonnelAddress = new SmPersonnelAddress();
+			permPersonnelAddress.setAddressType("P");
+			permPersonnelAddress.setSmAddress(s1);
+			permPersonnelAddress.setSmPersonnel(smPersonnel);
+			getManagedBean().setUpdateSmPersonnelPermanentAddress(permPersonnelAddress);
+			SmPersonnelAddress mailPersonnelAddress = new SmPersonnelAddress();
+			mailPersonnelAddress.setAddressType("M");
+			mailPersonnelAddress.setSmAddress(s1);
+			mailPersonnelAddress.setSmPersonnel(smPersonnel);
+			getManagedBean().setUpdateSmPersonnelMailingAddress(mailPersonnelAddress);
+			smPersonnelAddresses.add(getManagedBean().getUpdateSmPersonnelPermanentAddress());
+			smPersonnelAddresses.add(getManagedBean().getUpdateSmPersonnelMailingAddress());
+			smPersonnel.setSmPersonnelAddresses(smPersonnelAddresses);
+			
+			getCountryList();
+			
+			reqCountryDTO = new CountryReqDTO();
+			reqCountryDTO.setCountryId(getManagedBean().getDefaultCountryId());
+			resCountryDTO = countrySO.retrieveCountryById(reqCountryDTO);
+			smPersonnel.setPmCountry(resCountryDTO.getPmCountry());
 		}
 		
 	}
@@ -501,17 +562,10 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		PmDistrict district;
 		PmCity city;
 		
-		if(personnel.getPmUser().getUserId() == usr.getUserId()){
-			country = getManagedBean().getUpdateSmPersonnelMailingAddress().getPmCountry();
-			state = getManagedBean().getUpdateSmPersonnelMailingAddress().getPmState();
-			district = getManagedBean().getUpdateSmPersonnelMailingAddress().getPmDistrict();
-			city = getManagedBean().getUpdateSmPersonnelMailingAddress().getPmCity();
-		} else {
-			country = getManagedBean().getEditSmPersonnelMailingAddress().getPmCountry();
-			state = getManagedBean().getEditSmPersonnelMailingAddress().getPmState();
-			district = getManagedBean().getEditSmPersonnelMailingAddress().getPmDistrict();
-			city = getManagedBean().getEditSmPersonnelMailingAddress().getPmCity();
-		}
+		country = getManagedBean().getUpdateSmPersonnelMailingAddress().getSmAddress().getPmCountry();
+		state = getManagedBean().getUpdateSmPersonnelMailingAddress().getSmAddress().getPmState();
+		district = getManagedBean().getUpdateSmPersonnelMailingAddress().getSmAddress().getPmDistrict();
+		city = getManagedBean().getUpdateSmPersonnelMailingAddress().getSmAddress().getPmCity();
 		
 		if(country == null || state == null || district == null || city == null || country.getCountryId() == null || state.getStateId() == null || district.getDistrictId() == null || city.getCityId() == null){
 			returnMsg = false;
@@ -709,10 +763,10 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 	
 	public String update(SmPersonnel smPersonnel){
 		
-		boolean valid = true;
+//		boolean valid = true;
 		try{
-			valid = validateUI(smPersonnel);
-			if(valid){
+//			valid = validateUI(smPersonnel);
+//			if(valid){
 			
 				IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate
 						.getInstance().getServiceObject("sm", IPersonnelSO.class);
@@ -724,13 +778,18 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		
 				System.out.println("Result:" + resDTO.isSuccessful());
 				
-				if(resDTO.isSuccessful())
+				if(resDTO.isSuccessful()){
+					FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
+							FacesMessage.SEVERITY_INFO,
+							null,
+							MessageUtils.getMessage(MessageConst.INFO_100002, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 					return "/xhtml/sm/userProfileMaintenance/outputMsg";
-				else 
+
+				} else 
 					return null;
-			} else {
-				return null;
-			}
+//			} else {
+//				return null;
+//			}
 		} finally {
 			// do nothing
 		}
