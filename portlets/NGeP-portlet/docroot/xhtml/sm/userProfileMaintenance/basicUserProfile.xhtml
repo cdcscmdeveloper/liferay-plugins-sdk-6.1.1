@@ -36,7 +36,7 @@
 						<td><p:inputText id="basicBUName"
 								value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.name}"
 								size="35" required="true"
-								label="#{lbl['lbl.sm.userprofile.name']}" /></td>
+								label="#{lbl['lbl.sm.userprofile.name']}" disabled="#{smPersonnelBackingBean.managedBean.editMode}"/></td>
 						<td><p:message id="basicBUNameMsg" for="basicBUName"
 								showSummary="true" showDetail="false" display="icon" /></td>
 
@@ -46,7 +46,8 @@
 						<td><p:selectOneMenu id="basicBURole"
 								label="#{lbl['lbl.sm.userprofile.eprole']}"
 								value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole}"
-								style="width: 207px;margin-bottom: 5px;" required="true">
+								style="width: 207px;margin-bottom: 5px;" required="true" 
+								disabled="#{smPersonnelBackingBean.managedBean.editMode}">
 								<f:selectItem itemLabel="- Select One -" itemValue="" />
 								<f:selectItem itemLabel="Supplier User" itemValue="U"
 									itemDisabled="#{smPersonnelBackingBean.managedBean.disableRole}" />
@@ -65,7 +66,8 @@
 						<td><p:selectOneMenu id="basicBUCountry"
 								label="#{lbl['lbl.sm.userprofile.nationality']}"
 								value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.pmCountry.countryId}"
-								style="width: 207px;margin-bottom: 5px;" required="true">
+								style="width: 207px;margin-bottom: 5px;" required="true"
+								disabled="#{smPersonnelBackingBean.managedBean.editMode}">
 								<f:selectItem itemLabel="- Select One -" itemValue="" />
 								<f:selectItems
 									value="#{smPersonnelBackingBean.managedBean.countryList}" />
@@ -93,7 +95,7 @@
 						<td><p:selectOneMenu id="basicBUIdType" required="true"
 								label="#{lbl['lbl.sm.identificationtype']}"
 								value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.identificationTypeId}"
-								style="width:200px">
+								style="width:200px" disabled="#{smPersonnelBackingBean.managedBean.editMode}">
 								<f:selectItems
 									value="#{smPersonnelBackingBean.getDropdownValues('ID')}" />
 								<p:ajax event="change" partialSubmit="true" process="@this"
@@ -119,7 +121,8 @@
 									rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.identificationType.parameterCode eq 'I'}"
 									value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.identificationNo}"
 									size="35" maxlength="12"
-									validatorMessage="#{lbl['lbl.sm.person.icNum']} - #{lbl['lbl.sm.invalidNo']}">
+									validatorMessage="#{lbl['lbl.sm.person.icNum']} - #{lbl['lbl.sm.invalidNo']}"
+									disabled="#{smPersonnelBackingBean.managedBean.editMode}">
 									<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
 								</p:inputText>
 								<p:inputText
@@ -127,7 +130,8 @@
 									required="true" id="basicBUPasptNum"
 									rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.identificationType.parameterCode eq 'P' or smPersonnelBackingBean.managedBean.basicSmPersonnel.identificationType.parameterCode eq 'A'}"
 									value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.identificationNo}"
-									size="35" maxlength="12">
+									size="35" maxlength="12"
+									disabled="#{smPersonnelBackingBean.managedBean.editMode}">
 								</p:inputText>
 								<p:message id="basicBUIcNumMsg" for="basicBUIcNum"
 									showSummary="true" showDetail="false" display="icon" />
@@ -181,7 +185,10 @@
 						<td><p:inputText id="basicBUPhone"
 								label="#{lbl['lbl.sm.userprofile.phone']}"
 								value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.phoneNo}"
-								size="35" required="true" /></td>
+								size="35" required="true" 
+								validatorMessage="#{lbl['lbl.sm.userprofile.phone']} - #{lbl['lbl.sm.invalidNo']}">
+								<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
+								</p:inputText></td>
 						<td><p:message id="basicBUPhoneMsg" for="basicBUPhone"
 								showSummary="true" showDetail="false" display="icon" /></td>
 
@@ -191,7 +198,10 @@
 						<td><p:inputText id="basicBUMobile"
 								label="#{lbl['lbl.sm.userprofile.mobile']}"
 								value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.mobileNo}"
-								size="35" required="true" /></td>
+								size="35" required="true" 
+								validatorMessage="#{lbl['lbl.sm.userprofile.mobile']} - #{lbl['lbl.sm.invalidNo']}">
+								<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
+								</p:inputText></td>
 						<td><p:message id="basicBUMobileMsg" for="basicBUMobile"
 								showSummary="true" showDetail="false" display="icon" /></td>
 					</tr>

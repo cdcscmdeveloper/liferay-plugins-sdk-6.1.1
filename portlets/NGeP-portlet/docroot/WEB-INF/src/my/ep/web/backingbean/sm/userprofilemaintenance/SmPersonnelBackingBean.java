@@ -91,6 +91,7 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 	
 	public String navigateToAddNewUserPage(){  
 		System.out.println("********************SmPersonnelBackingBean navigateToAddNewUserPage***************");
+		getManagedBean().setEditMode(false);
 //		removeEPRole();
 		
 		CountryReqDTO reqDTO = new CountryReqDTO();
@@ -142,6 +143,7 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 	
 	public String navigateToUpdateUserPage(String personnelId){
 		System.out.println("********************SmPersonnelBackingBean navigateToUpdateUserPage***************");
+		getManagedBean().setEditMode(true);
 		getPersonnelInfoById(personnelId);
 		return "basicUserProfile.xhtml";
 	}
@@ -539,9 +541,13 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		reqDTO.setSmPersonnel(smPersonnel);
 		PersonnelResDTO resDTO = smPersonnelSO.savePersonnelRecord(reqDTO);
 		System.out.println("Result:" + resDTO.isSuccessful());
-		if(resDTO.isSuccessful())
-			return "acknowledge.xhtml";
-		else 
+		if(resDTO.isSuccessful()){
+			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
+					FacesMessage.SEVERITY_INFO,
+					null,
+					MessageUtils.getMessage(MessageConst.INFO_100002, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			return "/xhtml/sm/userProfileMaintenance/outputMsg";
+		} else 
 			return null;
 	}
 	
@@ -670,7 +676,11 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 			System.out.println("Result:" + resDTO.isSuccessful());
 			
 			if(resDTO.isSuccessful()){
-				return "acknowledge.xhtml";
+				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
+						FacesMessage.SEVERITY_INFO,
+						null,
+						MessageUtils.getMessage(MessageConst.INFO_721012, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				return "/xhtml/sm/userProfileMaintenance/outputMsg";
 			}
 			else 
 				return null;
@@ -715,7 +725,7 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 				System.out.println("Result:" + resDTO.isSuccessful());
 				
 				if(resDTO.isSuccessful())
-					return "acknowledge.xhtml";
+					return "/xhtml/sm/userProfileMaintenance/outputMsg";
 				else 
 					return null;
 			} else {

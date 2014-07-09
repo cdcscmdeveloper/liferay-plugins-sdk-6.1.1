@@ -94,6 +94,8 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	private boolean disableRole;
 	  
 	private boolean renderPrivilegesPanel;
+	
+	private boolean editMode;
 
 	public SmPersonnelManagedBean() {
 		// TODO Auto-generated constructor stub
@@ -400,6 +402,14 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 
 	public void setRenderPrivilegesPanel(boolean renderPrivilegesPanel) {
 		this.renderPrivilegesPanel = renderPrivilegesPanel;
+	}
+
+	public boolean isEditMode() {
+		return editMode;
+	}
+
+	public void setEditMode(boolean editMode) {
+		this.editMode = editMode;
 	}
 
 	
