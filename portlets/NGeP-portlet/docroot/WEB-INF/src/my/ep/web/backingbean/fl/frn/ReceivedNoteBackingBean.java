@@ -180,15 +180,17 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 				List<FlFulfilmentNoteItem> noteItemList=new ArrayList<FlFulfilmentNoteItem>();
 				int i = 0;
 				for (FlDelOrderItem delOrderItem : resDTO.getFlDeliveryOrder().getFlDelOrderItem()){
-					FlFulfilmentNoteItem noteItem=new FlFulfilmentNoteItem();
-					noteItem.setFlDelOrderItem(delOrderItem);
-					noteItem.setFlFulfilmentNote(getManagedBean().getFulfilmentNote());
-					noteItem.setFlItem(delOrderItem.getFlItem());
-					if(i == 0){
-						getManagedBean().setSelectedItem(noteItem);
+					if(delOrderItem.getDeliveredQty().doubleValue()>0) { 
+						FlFulfilmentNoteItem noteItem=new FlFulfilmentNoteItem();
+						noteItem.setFlDelOrderItem(delOrderItem);
+						noteItem.setFlFulfilmentNote(getManagedBean().getFulfilmentNote());
+						noteItem.setFlItem(delOrderItem.getFlItem());
+						if(i == 0){
+							getManagedBean().setSelectedItem(noteItem);
+						}
+						i++;
+						noteItemList.add(noteItem);
 					}
-					i++;
-					noteItemList.add(noteItem);
 				}
 				//Add noteItemList to Managed Bean List.
 				getManagedBean().getFulfilmentNote().setFlFulfilmentNoteItem(noteItemList);

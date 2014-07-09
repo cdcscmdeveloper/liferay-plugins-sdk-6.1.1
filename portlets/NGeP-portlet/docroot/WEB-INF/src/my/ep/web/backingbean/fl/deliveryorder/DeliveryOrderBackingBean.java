@@ -300,11 +300,13 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		BigDecimal unitPriceCal=new BigDecimal(0.0);
 		BigDecimal delQtyCal=new BigDecimal(0.0);
 		BigDecimal delAmtCal=new BigDecimal(0.0);
+		BigDecimal remainingQty=new BigDecimal(0.0);
 		
 		unitPriceCal=itemAddress.getUnitPrice();
 		delQtyCal= itemAddress.getDeliveredQty();
+		remainingQty = itemAddress.getOrderedQty().subtract(itemAddress.getSumDeliveredQty()).add(itemAddress.getRejectedQty());
 		
-		if(delQtyCal.add(itemAddress.getReceivedQty()).doubleValue()>itemAddress.getOrderedQty().doubleValue()) {
+		if(delQtyCal.doubleValue()>remainingQty.doubleValue()) {
 			itemAddress.setDeliveredQty(new BigDecimal(0));
 			throw new EpException(MessageConst.ERROR_100032, new String[]{"Delivery Quantity","Remaining Quantity"});
 		}

@@ -74,7 +74,7 @@
 						</h:outputText>
 					</p:column>
 					<p:column headerText="Remaining &lt;br /&gt; Qty." style="text-align:right">
-						<h:outputText value="#{doItems.orderedQty - doItems.receivedQty}" >
+						<h:outputText value="#{doItems.orderedQty - doItems.sumDeliveredQty + doItems.rejectedQty}" >
 							 <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, doItems.scRequestItem.uom.uomCode)}" />
 						</h:outputText>
 					</p:column>
