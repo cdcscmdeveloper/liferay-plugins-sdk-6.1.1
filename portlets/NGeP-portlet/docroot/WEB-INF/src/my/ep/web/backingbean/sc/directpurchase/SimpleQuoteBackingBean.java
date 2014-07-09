@@ -1356,30 +1356,41 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			return (int) ((toDate.getTime() - fromDate.getTime()) / MILLI_TO_DAYS );
 		}
 		
-		public void calcDuration(Integer duration) throws Exception {
+		public void dateListener(Integer duration) throws Exception {
 			ScQuote quote = getManagedBean().getScQuote();
 			// if duration and startDate
-			if(quote.getStartDate() != null){
-				if (duration != null) {
-					Calendar startDate = Calendar.getInstance();
-					//quote.setStartDate(startDate.getTime());
+			if(quote.getStartDate() != null && quote.getEndDate() == null){
+				Calendar startDate = Calendar.getInstance();
+				startDate.setTime(quote.getStartDate());
+				startDate.add(Calendar.HOUR_OF_DAY, duration);
+				Date endDate = startDate.getTime();
+				quote.setEndDate(endDate);
+				getManagedBean().setScQuote(quote);
 
-					startDate.setTime(quote.getStartDate());
-					startDate.add(Calendar.HOUR_OF_DAY, duration);
-					Date endDate = startDate.getTime();
+				getManagedBean().setDuration(hoursDifference(quote.getEndDate(),  quote.getStartDate()));
 
-					quote.setEndDate(endDate);
-					getManagedBean().setScQuote(quote);
-				}else if (getManagedBean().getScQuote().getStartDate() != null && 
-						getManagedBean().getScQuote().getEndDate() != null){
-					String sdate = DateUtils.dateToString(CommonConstants.DEFAULT_DATE_FORMAT,  quote.getStartDate());
-					String edate = DateUtils.dateToString(CommonConstants.DEFAULT_DATE_FORMAT,  quote.getEndDate());
-					getManagedBean().setDuration(
-							hoursDifference(DateUtils.convertStringToDate(CommonConstants.DEFAULT_DATE_FORMAT, edate), DateUtils.convertStringToDate(
-									CommonConstants.DEFAULT_DATE_FORMAT, sdate)));
-				}
+			} else if (getManagedBean().getScQuote().getStartDate() != null && 
+					getManagedBean().getScQuote().getEndDate() != null){
+
+				getManagedBean().setDuration(hoursDifference(quote.getEndDate(),  quote.getStartDate()));
 			}
 		}
+
+		public void calcDuration(Integer duration) throws Exception {
+			ScQuote quote = getManagedBean().getScQuote();
+			if (getManagedBean().getScQuote().getStartDate() != null && 
+					getManagedBean().getScQuote().getEndDate() != null){
+				Calendar startDate = Calendar.getInstance();
+				startDate.setTime(quote.getStartDate());
+				startDate.add(Calendar.HOUR_OF_DAY, duration);
+				Date endDate = startDate.getTime();
+				quote.setEndDate(endDate);
+				getManagedBean().setScQuote(quote);
+				getManagedBean().setDuration(hoursDifference(quote.getEndDate(),  quote.getStartDate()));
+			}
+			
+		}
+
 		
 	public void tabMenuListener(Integer activeIndex) {
 		debugLogger("tabMenuListener");
@@ -1449,12 +1460,16 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			// product Tpl Spe
 			if(ParameterConst.SQ_ITEM_LIST_PRODUCT.equalsIgnoreCase(specMaster.getItemTypeCode().getParameterCode())){
 				TplSpecMaster cloneSpecMaster = (TplSpecMaster) BeanUtils.cloneBean(specMaster);
+				cloneSpecMaster.setSpecMasterId(null);
+				cloneSpecMaster.setTplSpecQuestions(cloneTplSpecQuetions(cloneSpecMaster));
 				productTplSpecBean.setSpecMaster(cloneSpecMaster);
 				getManagedBean().setProductTemplateSpecBean(productTplSpecBean);
 
 			   // service Tpl Spe
 			} else  if(ParameterConst.SQ_ITEM_LIST_SERVICE.equalsIgnoreCase(specMaster.getItemTypeCode().getParameterCode())){
 				TplSpecMaster cloneSpecMaster = (TplSpecMaster) BeanUtils.cloneBean(specMaster);
+				cloneSpecMaster.setSpecMasterId(null);
+				cloneSpecMaster.setTplSpecQuestions(cloneTplSpecQuetions(cloneSpecMaster));
 				serviceTplSpecBean.setSpecMaster(cloneSpecMaster);
 				serviceTplSpecBean.setSpecMaster(specMaster);
 				getManagedBean().setServiceTemplateSpecBean(serviceTplSpecBean);
@@ -1463,6 +1478,20 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 		} finally {
 			templateSpecSO = null;
 		}
+	}
+	
+	private List<TplSpecQuestion>  cloneTplSpecQuetions(TplSpecMaster master) throws IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchMethodException{
+		List<TplSpecQuestion> questions = new ArrayList<TplSpecQuestion>();
+		for (TplSpecQuestion tplSpecQuestion : master.getTplSpecQuestions()) {
+			TplSpecQuestion question = (TplSpecQuestion) BeanUtils.cloneBean(tplSpecQuestion);
+			question.setSpecQuestionId(null);
+			question.setTplSpecMaster(master);
+			question.setTplSpecAnswers(null);
+			question.setTplSpecScorings(null);
+			question.setTplSpecTierQties(null);
+			questions.add(question);
+		}
+		return questions;
 	}
 	
 	public void cloneAction(String productOrService){
