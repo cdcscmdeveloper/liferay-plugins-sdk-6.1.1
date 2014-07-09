@@ -300,7 +300,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			serviceFee = new BigDecimal(getManagedBean().getInvoice().getFlRequest().getCtContract().getServiceFee());
 		}
 		
-		getManagedBean().setServiceCharge(serviceFee.toString());
+		getManagedBean().setServiceCharge(Double.toString(serviceFee.doubleValue()));
 		BigDecimal percentage = new BigDecimal(100);
 		BigDecimal invMulty = new BigDecimal(0.0);
 		BigDecimal feeAmount = new BigDecimal(0.0);
@@ -352,7 +352,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			serviceFee = new BigDecimal(getManagedBean().getInvoice().getFlRequest().getCtContract().getServiceFee());
 		}
 		
-		getManagedBean().setServiceCharge(serviceFee.toString());
+		getManagedBean().setServiceCharge(Double.toString(serviceFee.doubleValue()));
 		BigDecimal percentage = new BigDecimal(100);
 		BigDecimal invMulty = new BigDecimal(0.0);
 		BigDecimal feeAmount = new BigDecimal(0.0);
