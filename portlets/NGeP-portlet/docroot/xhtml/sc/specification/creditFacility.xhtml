@@ -114,12 +114,13 @@
 				<table>
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sc.spec.max.score']}"></p:outputLabel>
-						<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
+							<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
 						</td>
 						<td><p:inputText maxlength="18" id="creditFacilityScore"
 								label="#{lbl['lbl.sc.spec.max.score']}" required="true"
-								value="#{specificationBackingBean.managedBean.scQtCheckListScore.score}"></p:inputText>
-							<p:message id="finCreditfacilityMaxScore"
+								value="#{specificationBackingBean.managedBean.scQtCheckListScore.score}">
+								<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
+							</p:inputText> <p:message id="finCreditfacilityMaxScore"
 								for="creditFacilityScore" display="icon"></p:message></td>
 					</tr>
 				</table>

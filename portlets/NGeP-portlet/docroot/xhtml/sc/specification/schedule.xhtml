@@ -54,12 +54,15 @@
 						</f:facet>
 						<p:inputText value="#{frequency.scheduleNo}" required="true"
 							maxlength="3" label="#{lbl['lbl.sc.spec.schedule.no']}" size="5"
-							id="scheduleNum"></p:inputText>
+							id="scheduleNum">
+							<ac:validateNumber integerOnly="true" maxIntegerDigits="3"></ac:validateNumber>
+						</p:inputText>
 						<p:message id="freqScheduledid" for="scheduleNum" display="icon"></p:message>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.spec.start.month']}"
 						style="width:10%">
-						<p:selectOneMenu style="width:100px;"  value="#{frequency.startMonth}">
+						<p:selectOneMenu style="width:100px;"
+							value="#{frequency.startMonth}">
 
 							<f:selectItems value="#{specificationBackingBean.yearDetails}"></f:selectItems>
 							<p:ajax event="change"
@@ -74,13 +77,15 @@
 						<!-- <p:selectOneMenu value="#{frequency.startYear}">
 
 					</p:selectOneMenu> -->
-						<p:inputText value="#{frequency.startYear}" disabled="true" size="5"></p:inputText>
+						<p:inputText value="#{frequency.startYear}" disabled="true"
+							size="5"></p:inputText>
 
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sc.spec.end.month']}"
 						style="width:25%">
-						<p:selectOneMenu style="width:100px;" value="#{frequency.endMonth}">
+						<p:selectOneMenu style="width:100px;"
+							value="#{frequency.endMonth}">
 
 							<f:selectItems value="#{specificationBackingBean.yearDetails}"></f:selectItems>
 							<p:ajax event="change" update="frequencySchedule"
@@ -110,8 +115,8 @@
 							<h:outputText value="#{lbl['lbl.ct.sched.stype']}" />
 						</f:facet>
 
-						<p:selectOneMenu style="width:120px;" required="true" id="scheduledTypeId"
-							label="#{lbl['lbl.ct.sched.stype']}"
+						<p:selectOneMenu style="width:120px;" required="true"
+							id="scheduledTypeId" label="#{lbl['lbl.ct.sched.stype']}"
 							value="#{frequency.scheduleType.parameterId}">
 
 							<f:selectItems
@@ -161,7 +166,9 @@
 						</f:facet>
 						<p:inputText value="#{payment.phaseNo}" required="true"
 							label="#{lbl['lbl.sc.spec.phase']}" id="progressivePhase"
-							maxlength="3" size="5"/>
+							maxlength="3" size="5">
+							<ac:validateNumber integerOnly="true" maxIntegerDigits="3"></ac:validateNumber>
+						</p:inputText>
 						<p:message id="phaseNumId" for="progressivePhase" display="icon"></p:message>
 					</p:column>
 					<p:column style="width:30%">
@@ -178,7 +185,8 @@
 
 					<p:column headerText="#{lbl['lbl.sc.spec.stage2.score.from']}"
 						style="width:15%">
-						<p:selectOneMenu style="width:100px;" value="#{payment.startMonth}">
+						<p:selectOneMenu style="width:100px;"
+							value="#{payment.startMonth}">
 
 							<f:selectItems value="#{specificationBackingBean.yearDetails}"></f:selectItems>
 							<p:ajax event="change"
@@ -191,7 +199,8 @@
 						<!-- <p:selectOneMenu value="#{payment.fromDate}">
 
 						</p:selectOneMenu> -->
-						<p:inputText value="	#{payment.startYear}" disabled="true" size="5"></p:inputText>
+						<p:inputText value="	#{payment.startYear}" disabled="true"
+							size="5"></p:inputText>
 
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.spec.stage2.score.to']}"
@@ -219,7 +228,9 @@
 						</f:facet>
 						<p:inputText value="#{payment.percentage}" required="true"
 							id="progressivePercentage" size="20"
-							label="#{lbl['lbl.sc.spec.weight.percent']}" maxlength="18"></p:inputText>
+							label="#{lbl['lbl.sc.spec.weight.percent']}" maxlength="18">
+							<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
+						</p:inputText>
 						<p:message id="pahsePercentage" for="progressivePercentage"
 							display="icon"></p:message>
 					</p:column>

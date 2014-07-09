@@ -48,7 +48,9 @@
 							label="#{lbl['lbl.sc.spec.company.exp.since.year']}"
 							required="true"
 							value="#{specificationBackingBean.managedBean.scQtChecklist.scQtCheckListValue.year}"
-							maxlength="4"></p:inputText> <p:message id="finGovCompanyYrs"
+							maxlength="4">
+							<ac:validateNumber integerOnly="true" maxIntegerDigits="4"></ac:validateNumber>
+							</p:inputText> <p:message id="finGovCompanyYrs"
 							for="finSpecGovCompany" display="icon"></p:message></td>
 				</tr>
 			</table>
@@ -155,10 +157,11 @@
 						<td><p:outputLabel value="#{lbl['lbl.sc.spec.max.score']}"></p:outputLabel>
 							<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
 						</td>
-						<td><p:inputText id="finMaxScore" required="true" maxlength="18"
-								label="#{lbl['lbl.sc.spec.max.score']}"
-								value="#{specificationBackingBean.managedBean.scQtCheckListScore.score}"></p:inputText>
-							<p:message id="finGovMaxSoring" for="finMaxScore" display="icon"></p:message>
+						<td><p:inputText id="finMaxScore" required="true"
+								maxlength="18" label="#{lbl['lbl.sc.spec.max.score']}"
+								value="#{specificationBackingBean.managedBean.scQtCheckListScore.score}">
+								<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
+							</p:inputText> <p:message id="finGovMaxSoring" for="finMaxScore" display="icon"></p:message>
 						</td>
 					</tr>
 				</table>

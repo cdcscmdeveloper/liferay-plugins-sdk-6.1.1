@@ -23,6 +23,7 @@
 					label="#{lbl['lbl.sc.spec.stage2.score.from']}" required="true"
 					value="#{checkListScoring.rangeFrom}" maxlength="18">
 					<p:ajax event="blur" process="@this" partialSubmit="true" />
+					<ac:validateNumber integerOnly="true"  maxIntegerDigits="14" ></ac:validateNumber>
 				</p:inputText>
 				<p:message id="#{scoringPnlId}_rangeFrom"
 					for="#{scoringPnlId}_fromRange" display="icon"></p:message>
@@ -35,6 +36,7 @@
 				<p:inputText id="#{scoringPnlId}_toRange" required="true" style="text-align:right"
 					label="#{lbl['lbl.sc.spec.stage2.score.to']}"
 					value="#{checkListScoring.rangeTo}" maxlength="18">
+					<ac:validateNumber integerOnly="true"  maxIntegerDigits="14" ></ac:validateNumber>
 					<p:ajax event="blur" process="@this" partialSubmit="true"
 						listener="#{specificationBackingBean.compareChecklistScore(index,scoringList)}" />
 				</p:inputText>
@@ -48,7 +50,9 @@
 				</f:facet>
 				<p:inputText id="#{scoringPnlId}_toScore" style="text-align:right"
 					label="#{lbl['lbl.sc.spec.stage2.score']}" required="true"
-					value="#{checkListScoring.score}" maxlength="18"></p:inputText>
+					value="#{checkListScoring.score}" maxlength="18">
+					<ac:validateNumber integerOnly="true"  maxIntegerDigits="14" ></ac:validateNumber>
+					</p:inputText>
 				<p:message id="#{scoringPnlId}_Score" for="#{scoringPnlId}_toScore"
 					display="icon"></p:message>
 			</p:column>

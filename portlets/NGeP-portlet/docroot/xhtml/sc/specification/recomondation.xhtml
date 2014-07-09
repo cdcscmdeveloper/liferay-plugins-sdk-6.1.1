@@ -19,8 +19,9 @@
 								value="#{lbl['lbl.sc.spec.recommendation.technical']}"></h:outputLabel></td>
 						<td><p:inputText style="text-align:right" maxlength="5"
 								value="#{specificationBackingBean.managedBean.recommendationPackageScore.overallTechnical}">
+
 								<p:ajax event="blur" update="totalrecommendation"
-									process="@this,package" partialSubmit="true"
+									process="@this,package"
 									listener="#{specificationBackingBean.calculateTotalPackage(specificationBackingBean.managedBean.recommendationPackageScore)}"></p:ajax>
 							</p:inputText></td>
 					</tr>
@@ -29,8 +30,9 @@
 								value="#{lbl['lbl.sc.spec.fin.scoring.financial']}"></h:outputLabel></td>
 						<td><p:inputText style="text-align:right" maxlength="5"
 								value="#{specificationBackingBean.managedBean.recommendationPackageScore.overallFin}">
+
 								<p:ajax event="blur" update="totalrecommendation"
-									process="@this,package" partialSubmit="true"
+									process="@this,package"
 									listener="#{specificationBackingBean.calculateTotalPackage(specificationBackingBean.managedBean.recommendationPackageScore)}"></p:ajax>
 							</p:inputText></td>
 					</tr>
@@ -47,8 +49,9 @@
 						<td><h:outputLabel
 								value="#{lbl['lbl.sc.spec.recommendation.passing.score']}"></h:outputLabel></td>
 						<td><p:inputText style="text-align:right" maxlength="5"
-								value="#{specificationBackingBean.managedBean.recommendationPackageScore.passingScore}" />
-							<p:spacer width="5" /> <h:outputLabel value="/100%"></h:outputLabel></td>
+								value="#{specificationBackingBean.managedBean.recommendationPackageScore.passingScore}">
+
+							</p:inputText> <p:spacer width="5" /> <h:outputLabel value="/100%"></h:outputLabel></td>
 					</tr>
 				</table>
 			</p:panel>
@@ -61,8 +64,9 @@
 						<td><h:outputLabel
 								value="#{lbl['lbl.sc.spec.recommendation.passing.score']}"></h:outputLabel></td>
 						<td><p:inputText style="text-align:right" maxlength="5"
-								value="#{specificationBackingBean.managedBean.recommendationScore.passingScore}" />
-							<p:spacer width="5" /> <h:outputLabel value="/100%"></h:outputLabel></td>
+								value="#{specificationBackingBean.managedBean.recommendationScore.passingScore}">
+
+							</p:inputText> <p:spacer width="5" /> <h:outputLabel value="/100%"></h:outputLabel></td>
 					</tr>
 				</table>
 				<p:panelGrid style="margin-top:5px;width:100%;">
@@ -80,6 +84,7 @@
 						<p:column style="font-weight: bold;">
 							<p:inputText style="text-align:right" maxlength="5"
 								value="#{specificationBackingBean.managedBean.recommendationScore.overallTechnical}">
+
 								<p:ajax event="blur" update="technicalrecommendation"
 									process="@this,item" partialSubmit="true"
 									listener="#{specificationBackingBean.calculateRecommendtechnicalScore(specificationBackingBean.managedBean.recommendationScore)}"></p:ajax>
@@ -89,6 +94,7 @@
 						<p:column colspan="1" style="font-weight: bold;">
 							<p:inputText style="text-align:right" maxlength="5"
 								value="#{specificationBackingBean.managedBean.recommendationScore.overallOtherTechnical}">
+
 								<p:ajax event="blur" update="technicalrecommendation"
 									process="@this,item" partialSubmit="true"
 									listener="#{specificationBackingBean.calculateRecommendtechnicalScore(specificationBackingBean.managedBean.recommendationScore)}"></p:ajax>
@@ -104,6 +110,7 @@
 						<p:column style="font-weight: bold;">
 							<p:inputText style="text-align:right" maxlength="5"
 								value="#{specificationBackingBean.managedBean.recommendationScore.overallFin}">
+
 								<p:ajax event="blur" update="financialrecommendation"
 									process="@this,item" partialSubmit="true"
 									listener="#{specificationBackingBean.calculateRecommendFinancialScore(specificationBackingBean.managedBean.recommendationScore)}"></p:ajax>
@@ -113,6 +120,7 @@
 						<p:column colspan="1" style="font-weight: bold;">
 							<p:inputText style="text-align:right" maxlength="5"
 								value="#{specificationBackingBean.managedBean.recommendationScore.overallOtherFin}">
+
 								<p:ajax event="blur" update="financialrecommendation"
 									process="@this,item" partialSubmit="true"
 									listener="#{specificationBackingBean.calculateRecommendFinancialScore(specificationBackingBean.managedBean.recommendationScore)}"></p:ajax>
@@ -141,8 +149,9 @@
 								value="#{lbl['lbl.sc.spec.recommendation.passing.score']}"></h:outputLabel></td>
 						<td><p:inputText maxlength="5"
 								value="#{specificationBackingBean.managedBean.recommendationPackageScore.passingScore}"
-								style="text-align:right" /> <p:spacer width="5" /> <h:outputLabel
-								value="/100%"></h:outputLabel></td>
+								style="text-align:right">
+
+							</p:inputText> <p:spacer width="5" /> <h:outputLabel value="/100%"></h:outputLabel></td>
 					</tr>
 				</table>
 			</p:panel>
@@ -152,9 +161,10 @@
 					<tr>
 						<td><h:outputLabel
 								value="#{lbl['lbl.sc.spec.recommendation.passing.score']}"></h:outputLabel></td>
-						<td><p:inputText style="text-align:right"
-								value="#{specificationBackingBean.managedBean.recommendationScore.passingScore}" />
-							<p:spacer width="5" /> <h:outputLabel value="/100%"></h:outputLabel></td>
+						<td><p:inputText style="text-align:right" maxlength="5"
+								value="#{specificationBackingBean.managedBean.recommendationScore.passingScore}">
+
+							</p:inputText> <p:spacer width="5" /> <h:outputLabel value="/100%"></h:outputLabel></td>
 					</tr>
 				</table>
 				<p:panelGrid style="margin-top:5px;width:100%;">
@@ -173,6 +183,7 @@
 						<p:column style="font-weight: bold;">
 							<p:inputText style="text-align:right" maxlength="5"
 								value="#{specificationBackingBean.managedBean.recommendationScore.overallFin}">
+
 								<p:ajax event="blur" update="financial"
 									process="@this,recommendTechnicalItem" partialSubmit="true"
 									listener="#{specificationBackingBean.calculateRecommendFinancialScore(specificationBackingBean.managedBean.recommendationScore)}"></p:ajax>
@@ -182,6 +193,7 @@
 						<p:column colspan="1" style="font-weight: bold;">
 							<p:inputText style="text-align:right" maxlength="5"
 								value="#{specificationBackingBean.managedBean.recommendationScore.overallOtherFin}">
+
 								<p:ajax event="blur" update="financial"
 									process="@this,recommendTechnicalItem" partialSubmit="true"
 									listener="#{specificationBackingBean.calculateRecommendFinancialScore(specificationBackingBean.managedBean.recommendationScore)}"></p:ajax>

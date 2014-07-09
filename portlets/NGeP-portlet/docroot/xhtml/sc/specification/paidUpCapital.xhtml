@@ -13,8 +13,8 @@
 
 
 	<ui:define name="contentSection">
-	
-	<p:messages id="financialPaidUpCapitalsScore" autoUpdate="true"
+
+		<p:messages id="financialPaidUpCapitalsScore" autoUpdate="true"
 			showDetail="true" showSummary="false" closable="true"></p:messages>
 
 		<div>
@@ -22,14 +22,15 @@
 				action="#{specificationBackingBean.committeeBackAction}" />
 
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
-				style="float:right;" icon="ui-icon-save" 
+				style="float:right;" icon="ui-icon-save"
 				actionListener="#{specificationBackingBean.acceptPaidUpScore}" />
 
 
 
 		</div>
 		<p:spacer height="50"></p:spacer>
-		<p:panel header="#{lbl['lbl.sc.spec.paid.up.capital']}" toggleable="true">
+		<p:panel header="#{lbl['lbl.sc.spec.paid.up.capital']}"
+			toggleable="true">
 			<h:panelGrid columns="2">
 				<h:outputLabel value="#{lbl['lbl.sc.spec.paid.up.capital.ringgit']}"></h:outputLabel>
 				<p:inputText></p:inputText>
@@ -59,7 +60,8 @@
 						value="#{specificationBackingBean.managedBean.paidUpSelectList}" />
 					<ui:param name="componentName" value="Paid Up Capital" />
 					<ui:param name="scoringPnlId" value="paidUpId" />
-					<ui:param name="scoringPnlName" value="#{lbl['lbl.sc.spec.score.paid up.capital']}"></ui:param>
+					<ui:param name="scoringPnlName"
+						value="Scoring For Paid Up Capital"></ui:param>
 					<ui:include src="/xhtml/sc/specification/scoring.xhtml"></ui:include>
 					<div align="right">
 						<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
@@ -75,17 +77,19 @@
 				</h:panelGroup>
 
 			</p:panel>
-			<p:panel header="#{lbl['lbl.sc.spec.score.paid up.capital']}"
+			<p:panel header="Scoring For Paid Up Capital"
 				rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '2'}">
 				<table>
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sc.spec.max.score']}"></p:outputLabel>
-						<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
+							<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
 						</td>
-						<td><p:inputText maxlength="18" required="true" label="#{lbl['lbl.sc.spec.max.score']}" id="finpaidUpScore"
-								value="#{specificationBackingBean.managedBean.scQtCheckListScore.score}"></p:inputText>
-								<p:message id="finpaidUpMaxScore" for="finpaidUpScore" display="icon"></p:message>
-						</td>
+						<td><p:inputText maxlength="18" required="true"
+								label="#{lbl['lbl.sc.spec.max.score']}" id="finpaidUpScore"
+								value="#{specificationBackingBean.managedBean.scQtCheckListScore.score}">
+								<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
+							</p:inputText> <p:message id="finpaidUpMaxScore" for="finpaidUpScore"
+								display="icon"></p:message></td>
 					</tr>
 				</table>
 			</p:panel>

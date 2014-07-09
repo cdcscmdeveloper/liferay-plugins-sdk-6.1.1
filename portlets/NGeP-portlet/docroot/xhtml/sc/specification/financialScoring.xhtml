@@ -50,8 +50,9 @@
 					<p:inputText value="#{finance.qtScoreWeightage.score}" maxlength="18"
 						required="true" label="#{lbl['lbl.sc.spec.stage2.score']}"
 						id="finScoreWeightage" style="text-align:right">
+						<ac:validateNumber integerOnly="true"  maxIntegerDigits="14" ></ac:validateNumber>
 						<p:ajax event="blur" process="@this"
-							listener="#{specificationBackingBean.finScoreSum}" update="@form" />
+							listener="#{specificationBackingBean.finScoreSum}" update=":form:finaddpoints,:form:offeredPrice" />
 					</p:inputText>
 					<p:message id="finScoreCheckId" for="finScoreWeightage"
 						display="icon"></p:message>
@@ -62,6 +63,7 @@
 				<p:inputText value="#{finance.qtScoreWeightage.weightage}" maxlength="5"
 					style="text-align:right"
 					rendered="#{specificationBackingBean.managedBean.financialScoreSetting.weightageReq ne 'false'}">
+				
 					<p:ajax event="blur" process="@this"
 						listener="#{specificationBackingBean.finWeightageSum}"
 						update="@form" />
@@ -113,16 +115,22 @@
 					<p:column style="font-weight: bold;">#{lbl['lbl.sc.spec.fin.score.by.package']}</p:column>
 					<p:column style="font-weight: bold;">
 						<p:inputText style="text-align:right;" maxlength="18"
-							value="#{specificationBackingBean.managedBean.offerPricePackage.fromVariance}" />
+							value="#{specificationBackingBean.managedBean.offerPricePackage.fromVariance}" >
+						
+							</p:inputText>
 					</p:column>
 
 					<p:column colspan="1" style="font-weight: bold;">
 						<p:inputText style="text-align:right;" maxlength="18"
-							value="#{specificationBackingBean.managedBean.offerPricePackage.toVariance}" />
+							value="#{specificationBackingBean.managedBean.offerPricePackage.toVariance}" >
+						
+							</p:inputText>
 					</p:column>
 					<p:column colspan="1" style="font-weight: bold;">
 						<p:inputText style="text-align:right;" maxlength="18"
-							value="#{specificationBackingBean.managedBean.offerPricePackage.belowScore}" />
+							value="#{specificationBackingBean.managedBean.offerPricePackage.belowScore}" >
+						
+							</p:inputText>
 					</p:column>
 					<p:column colspan="1" style="font-weight: bold;">
 						<h:outputText
@@ -130,23 +138,32 @@
 					</p:column>
 					<p:column colspan="1" style="font-weight: bold;">
 						<p:inputText style="text-align:right;" maxlength="18"
-							value="#{specificationBackingBean.managedBean.offerPricePackage.aboveScore}" />
+							value="#{specificationBackingBean.managedBean.offerPricePackage.aboveScore}" >
+						
+							</p:inputText>
 					</p:column>
 				</p:row>
 				<p:row>
 					<p:column style="font-weight: bold;">#{lbl['lbl.sc.spec.fin.score.by.item']}</p:column>
 					<p:column style="font-weight: bold;">
 						<p:inputText style="text-align:right;" maxlength="18"
-							value="#{specificationBackingBean.managedBean.offerPriceItem.fromVariance}" />
+							value="#{specificationBackingBean.managedBean.offerPriceItem.fromVariance}" >
+						
+							
+							</p:inputText>
 					</p:column>
 
 					<p:column colspan="1" style="font-weight: bold;">
 						<p:inputText style="text-align:right;" maxlength="18"
-							value="#{specificationBackingBean.managedBean.offerPriceItem.toVariance}" />
+							value="#{specificationBackingBean.managedBean.offerPriceItem.toVariance}" >
+						
+							</p:inputText>
 					</p:column>
 					<p:column colspan="1" style="font-weight: bold;">
 						<p:inputText style="text-align:right;" maxlength="18"
-							value="#{specificationBackingBean.managedBean.offerPriceItem.belowScore}" />
+							value="#{specificationBackingBean.managedBean.offerPriceItem.belowScore}" >
+						
+							</p:inputText>
 					</p:column>
 					<p:column colspan="1" style="font-weight: bold;">
 						<h:outputText
@@ -154,7 +171,9 @@
 					</p:column>
 					<p:column colspan="1" style="font-weight: bold;">
 						<p:inputText style="text-align:right;" maxlength="18"
-							value="#{specificationBackingBean.managedBean.offerPriceItem.aboveScore}" />
+							value="#{specificationBackingBean.managedBean.offerPriceItem.aboveScore}" >
+						
+							</p:inputText>
 					</p:column>
 				</p:row>
 
@@ -170,7 +189,9 @@
 				<td style="width: 100px;"><h:outputText
 						value="#{lbl['lbl.sc.spec.fin.scoring.financial']}" /></td>
 				<td><p:inputText style="text-align:right" maxlength="5"
-						value="#{specificationBackingBean.managedBean.financialScoreSetting.passingScore}"></p:inputText>
+						value="#{specificationBackingBean.managedBean.financialScoreSetting.passingScore}">
+						
+						</p:inputText>
 					<p:spacer width="5"></p:spacer> <h:outputText value="/100 " /></td>
 			</tr>
 		</table>

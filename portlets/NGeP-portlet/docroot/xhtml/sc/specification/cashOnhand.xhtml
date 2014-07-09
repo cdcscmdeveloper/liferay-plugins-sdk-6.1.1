@@ -120,9 +120,10 @@
 						</td>
 						<td><p:inputText id="finCashScore" maxlength="18"
 								label="#{lbl['lbl.sc.spec.max.score']}" required="true"
-								value="#{specificationBackingBean.managedBean.scQtCheckListScore.score}"></p:inputText>
-							<p:message id="finCashMaxScore" for="finCashScore" display="icon"></p:message>
-						</td>
+								value="#{specificationBackingBean.managedBean.scQtCheckListScore.score}">
+								<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
+							</p:inputText> <p:message id="finCashMaxScore" for="finCashScore"
+								display="icon"></p:message></td>
 					</tr>
 				</table>
 			</p:panel>

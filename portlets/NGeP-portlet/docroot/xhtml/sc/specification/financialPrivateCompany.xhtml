@@ -47,7 +47,9 @@
 					<td><p:inputText maxlength="4"
 							label="#{lbl['lbl.sc.spec.company.exp.since.year']}"
 							required="true" id="finPrivateYears"
-							value="#{specificationBackingBean.managedBean.scQtChecklist.scQtCheckListValue.year}"></p:inputText>
+							value="#{specificationBackingBean.managedBean.scQtChecklist.scQtCheckListValue.year}">
+							<ac:validateNumber integerOnly="true" maxIntegerDigits="4"></ac:validateNumber>
+							</p:inputText>
 						<p:message id="finPrivateCmpnyYrs" for="finPrivateYears"
 							display="icon"></p:message></td>
 				</tr>
@@ -160,8 +162,9 @@
 						<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
 						<td><p:inputText id="finprivateScore" required="true"
 								label="#{lbl['lbl.sc.spec.max.score']}" maxlength="18"
-								value="#{specificationBackingBean.managedBean.scQtCheckListScore.score}"></p:inputText>
-							<p:message id="finPrivateMaxScore" for="finprivateScore"
+								value="#{specificationBackingBean.managedBean.scQtCheckListScore.score}">
+								<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
+							</p:inputText> <p:message id="finPrivateMaxScore" for="finprivateScore"
 								display="icon"></p:message></td>
 					</tr>
 				</table>
