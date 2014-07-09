@@ -5,165 +5,112 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<div align="left" class="header-info">
 
-		<table style="width: 100%">
+	<p:panel header="#{lbl['lbl.sc.item.details']}"
+		id="itemDetailsByPackage" toggleable="true">
 
-			<tr>
+		<p:dataTable id="scBidItemsList"
+			value="#{biddingBB.managedBean.scheduledBid.scBidItems}" var="item">
 
-				<td style="width: 100px"><p:outputLabel
-						value="#{lbl['lbl.sc.bidding.bm.bmbp.bidNo']}" /></td>
-				<td><p:inputText id="documentNo"
-						value="#{biddingBB.managedBean.bidNo}" disabled="true" size="20" /></td>
+			<p:column headerText="#{lbl['lbl.sc.item.name']}">
+				<h:outputText value="#{item.scRequestItem.itemName}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.item.description']}">
 
+				<h:outputText value="#{item.scRequestItem.itemDesc}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.uom']}">
 
-				<td style="width: 100px"><p:outputLabel
-						value="#{lbl['lbl.sc.bidding.bm.bmbp.docNo']}" /></td>
-				<td><p:inputText id="documentNo"
-						value="#{scheduleBiddingBB.managedBean.documentNo}"
-						disabled="true" size="20" /></td>
+				<h:outputText value="#{item.scRequestItem.uom.uomName}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.quantity']}">
+				<p:outputLabel style="textAllign : right" value="#{item.qty}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.min.decrement.block']}">
+				<p:outputLabel  value="#{item.decrementAmt}" />
+			</p:column>
 
+		</p:dataTable>
 
-				<td style="width: 100px"><p:outputLabel
-						value="#{lbl['lbl.sc.bidding.bm.bmbp.ptjName']}" /></td>
-				<td><p:inputText id="ptjName"
-						value="#{scheduleBiddingBB.managedBean.ptjName}" disabled="true"
-						size="50" /></td>
+	</p:panel>
 
-				<td style="width: 100px"><p:outputLabel
-						value="#{lbl['lbl.sc.bidding.bm.bmbp.status']}" /></td>
-
-				<td><p:inputText id="status"
-						value="#{scheduleBiddingBB.managedBean.status}" disabled="true"
-						size="30" /></td>
-
-			</tr>
-
-		</table>
-
-	</div>
+	<p:spacer height="10"></p:spacer>
 
 
-	<p:panel header="#{lbl['lbl.sc.bidding.bm.bmbp.bd']}" toggleable="true">
-
+	<p:panel header="#{lbl['lbl.sc.bid.summary']}" id="bidSummaryByPackage"
+		toggleable="true">
+		
+		<p:spacer height="10"></p:spacer>
+		<hr/>
+		<div align="center">
+		
+		<B>	Bidding Statistic Graph</B>
+		
+		</div>
+		
+		
+		<p:spacer height="10"></p:spacer>
+		
+		
 		<div>
-			<table style="width: 100%">
 
-				<tr>
-					<td style="width: 100px" ><p:outputLabel
-							value="#{lbl['lbl.sc.bidding.bm.bmbp.bd.bidStart']}" /></td>
-					<td><p:inputText id="bidNo"
-							value="#{biddingBB.managedBean.bidStart}" size="20" /></td>
-					<td style="width: 100px"><p:outputLabel
-							value="#{lbl['lbl.sc.bidding.bm.bmbp.bd.bidEnd']}" /></td>
-					<td><p:inputText id="bidNo"
-							value="#{biddingBB.managedBean.bidEnd}" size="20" /></td>
-
-
-				</tr>
-
-				<tr>
-					<td style="width: 100px" ><p:outputLabel
-							value="#{lbl['lbl.sc.bidding.bm.bmbp.bd.duration']}" /></td>
-					<td><p:inputText id="docNo"
-							value="#{}" size="10" /></td>
-					<td></td>
-					<td></td>
-					
-				</tr>
-
-				<tr>
-
-					<td><p:outputLabel
-							value="#{lbl['lbl.sc.bidding.bm.bmbp.bd.zoneName']}" /></td>
-					<td colspan="3"><p:selectOneMenu id="bidTitle"
-							value="#{biddingBB.managedBean.zoneName}" size="20" /></td>
-					<td></td>
-					<td></td>
-				</tr>
-
-				<tr>
-
-					<td><p:outputLabel
-							value="#{lbl['lbl.sc.bidding.bm.bmbp.bd.viewBy']}" /></td>
-					<td colspan="3"><p:selectOneMenu id="bidTitle"
-							value="#{biddingBB.managedBean.viewBy}" size="20" /></td>
-					<td></td>
-					<td></td>
-				</tr>
-			</table>
-	</p:panel>
-
-	<p:spacer height="10"></p:spacer>
-
-	<p:panel header="#{lbl['lbl.sc.bidding.bm.bmbp.id']}" toggleable="true">
-
-		<p:dataTable id="biddingList"
-			value="#{biddingBB.managedBean.itemList}" var="item">
-
-			<p:column headerText="#{lbl['lbl.sc.bidding.bm.bmbp.id.itemName']}">
-				<p:outputLabel value="#{item.itemName}" />
-			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.bidding.bm.bmbp.id.itemDesc']}">
-
-				<p:outputLabel value="#{item.itemDescription}" />
-			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.bidding.bm.bmbp.id.uom']}">
-
-				<p:outputLabel value="#{item.uom}" />
-			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.bidding.bm.bmbp.id.qty']}">
-				<p:outputLabel value="#{item.quantity}" />
-			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.bidding.bm.bmbp.id.minDecrement']}">
-
-				<p:outputLabel value="#{item.minDecrement}" />
-			</p:column>
+		<p:lineChart value="#{biddingBB.managedBean.bidPriceLinearModel}"
+			legendPosition="e" style="height:300px;" />
+			</div>
 			
+			<p:spacer height="10"></p:spacer>
+
+		<p:dataTable id="bidPackagesListForBMBP"
+			value="#{biddingBB.managedBean.bidPackages}" var="item">
+
+			<p:column headerText="#{lbl['lbl.sc.ranking']}">
+				<p:outputLabel value="#{item.ranking}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.supplier.code']}">
+
+				<p:commandLink value="#{item.scBidSupplier.smSupplier.supplierId}"
+					oncomplete="pricePop.show();"
+					actionListener="#{biddingBB.supplierItemPricePopupAction(item)}"
+					 update="@([id$=itemPricePop])"/>
+
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.bumiputera.status']}">
+
+				<h:outputText
+					value="#{(item.scBidSupplier.smSupplier.bumi)? 'Yes' : 'No' }" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.total.starting.price']}">
+				<p:outputLabel value="#{item.scBidSupplier.packageStartPrice}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.total.last.bid.price']}">
+				<p:outputLabel value="#{item.bidPrice}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.difference.rm']}">
+				<p:outputLabel value="200"
+					rendered="#{item.scBidSupplier.smSupplier.bumi}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.difference.perc']}">
+				<p:outputLabel value="2" 
+					rendered="#{item.scBidSupplier.smSupplier.bumi}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.pref.margin']}">
+				<p:outputLabel value="10" 
+					rendered="#{item.scBidSupplier.smSupplier.bumi}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.total.cost.saving']}">
+				<p:outputLabel value="100"  />
+			</p:column>
+
 		</p:dataTable>
 
 	</p:panel>
-	
-	<p:spacer height="10"></p:spacer>
-	
-	<p:panel header="#{lbl['lbl.sc.bidding.bm.bmbp.bs']}" toggleable="true">
-	
-	<p:lineChart value="#{chartBean.model}" legendPosition="e" />
-	
-	<!-- count down timer -->
+	<p:dialog closeOnEscape="true" header="#{lbl['lbl.sc.item.price']}"
+		widgetVar="pricePop" showEffect="fade" hideEffect="fade" modal="true"
+		id="itemPricePop">
+		<ui:include src="/xhtml/sc/bidding/BMByZoneItemPricePopup.xhtml"></ui:include>
+	</p:dialog>
 
-		<p:dataTable id="rankingList"
-			value="#{biddingBB.managedBean.rankingList}" var="item">
 
-			<p:column headerText="#{lbl['lbl.sc.bidding.bm.bmbp.bs.rank']}">
-				<p:outputLabel value="#{item.rank}" />
-			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.bidding.bm.bmbp.bs.supplierCode']}">
 
-				<p:outputLabel value="#{item.itemDescription}" />
-			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.bidding.bm.bmbp.bs.bumiputera']}">
-
-				<p:outputLabel value="#{item.uom}" />
-			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.bidding.bm.bmbp.bs.startPrice']}">
-				<p:outputLabel value="#{item.quantity}" />
-			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.bidding.bm.bmbp.bs.lastPrice']}">
-
-				<p:outputLabel value="#{item.minDecrement}" />
-			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.bidding.bm.bmbp.bs.difference']}">
-
-				<p:outputLabel value="#{item.minDecrement}" />
-			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.bidding.bm.bmbp.bs.costSaving']}">
-
-				<p:outputLabel value="#{item.minDecrement}" />
-			</p:column>
-			
-		</p:dataTable>
-
-	</p:panel>
 
 </ui:composition>
