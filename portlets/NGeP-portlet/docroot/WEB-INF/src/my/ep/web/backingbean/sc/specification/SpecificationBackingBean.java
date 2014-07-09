@@ -1181,8 +1181,9 @@ public class SpecificationBackingBean extends
 			PmParameter procurementCategory = scQt.getPmProcurementCategory();
 			if (null != procurementCategory
 					&& null != procurementCategory.getParameterId()) {
-				this.getManagedBean().setProcuremntCategory(procurementCategory.getParameterCode());
-						
+				this.getManagedBean().setProcuremntCategory(
+						procurementCategory.getParameterCode());
+
 			}
 
 			/*
@@ -1222,7 +1223,7 @@ public class SpecificationBackingBean extends
 			reqDTO.setCheckListTypeCode(ParameterConst.DOCUMENT_CATEGORY_TECHNICAL_CHECKLIST);
 			procurementCategoryCode(this.getManagedBean().getScQt());
 			// this.getManagedBean().getProcuremntCategory();
-			
+
 			reqDTO.setProcurementCatCode(this.getManagedBean()
 					.getProcuremntCategory());
 			List<ScQtCheckList> checkListList = new ArrayList<ScQtCheckList>();
@@ -1232,7 +1233,7 @@ public class SpecificationBackingBean extends
 						&& resDTO.getDocumentResultBean().size() > 0) {
 					// List<PmDocument>
 					// document=(List<PmDocument>)resDTO.getDocumentResultBean().get(0);
-				
+
 					for (PmDocument pmDoc : resDTO.getDocumentResultBean()) {
 						ScQtCheckList checkList = new ScQtCheckList();
 						checkList.setTitle(pmDoc.getDocName());
@@ -5451,9 +5452,14 @@ public class SpecificationBackingBean extends
 			}
 			int local = technical.getOverallTechnical().intValue()
 					+ technical.getOverallOtherTechnical().intValue();
+			if (local > this.getManagedBean().getRecommendationPackageTotal()
+					.intValue()) {
+				throw new EpException("You can't Enter More Than Total Score");
+			} else {
 
-			this.getManagedBean().setRecommendTechnicalScore(
-					new BigDecimal(local));
+				this.getManagedBean().setRecommendTechnicalScore(
+						new BigDecimal(local));
+			}
 		} finally {
 
 		}
@@ -5469,9 +5475,13 @@ public class SpecificationBackingBean extends
 			}
 			int local = financial.getOverallFin().intValue()
 					+ financial.getOverallOtherFin().intValue();
-
-			this.getManagedBean().setRecommendfinancialScore(
-					new BigDecimal(local));
+			if (local > this.getManagedBean().getRecommendationPackageTotal()
+					.intValue()) {
+				throw new EpException("You can't Enter More Than Total Score");
+			} else {
+				this.getManagedBean().setRecommendfinancialScore(
+						new BigDecimal(local));
+			}
 		} finally {
 
 		}
@@ -6771,7 +6781,8 @@ public class SpecificationBackingBean extends
 		return getManagedBean().getYearList();
 	}
 
-	public void handleFileUpload(FileUploadEvent event) throws FileNotFoundException, IOException {
+	public void handleFileUpload(FileUploadEvent event)
+			throws FileNotFoundException, IOException {
 
 		ScQtCheckList scQtChecklist = this.getManagedBean().getScQtChecklist();
 
@@ -7601,11 +7612,13 @@ public class SpecificationBackingBean extends
 				ScQtCheckList weight = (ScQtCheckList) weightageList.get(i);
 				if (null != weight.getDefinationType()
 						&& weight.getDefinationType().getParameterId() == 185) {
+					
 					getManagedBean().setTechnicalChecklistScoring(
 							weight.getQtScoreWeightage().getScore().intValue());
 					getManagedBean().setScoreVarience(
 							new BigDecimal(getManagedBean()
 									.getTechnicalChecklistScoring()));
+				
 				}
 
 				if (weight.getQtScoreWeightage().getWeightage() == null) {
