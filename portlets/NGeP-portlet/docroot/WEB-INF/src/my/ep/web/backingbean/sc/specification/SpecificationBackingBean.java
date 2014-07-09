@@ -2736,7 +2736,7 @@ public class SpecificationBackingBean extends
 			} else if (QTConstants.RESTRICTED_TYPE.equalsIgnoreCase(scQt
 					.getQtType())) {
 				List<ScQtCategory> openList = this.getManagedBean()
-						.getSuppCriteriarestrictedList();
+						.getSuppCriteriaopenList();
 				updateCategoryCodesToQt(openList, this.getManagedBean()
 						.getScQt());
 
@@ -6561,7 +6561,7 @@ public class SpecificationBackingBean extends
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
 		reqDTO.setScQtCheckList(checkList);
 		SpecificationResDTO resDTO = specSo.saveCheckListScore(reqDTO);
-		reqDTO.setScQtCheckList(checkList);
+		//reqDTO.setScQtCheckList(checkList);
 		// specSo.saveCheckListScore(reqDTO);
 
 		this.getManagedBean()
