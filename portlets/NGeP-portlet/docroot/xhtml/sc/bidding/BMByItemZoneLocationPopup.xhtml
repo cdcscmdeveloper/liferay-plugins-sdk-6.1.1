@@ -12,9 +12,9 @@
 
 			<tr>
 				<TD><p:outputLabel
-						value="#{lbl['lbl.sc.bidding.bm.bmbi.popzl.zoneName']}" /></TD>
+						value="#{lbl['lbl.sc.zone.name']}" /></TD>
 				<TD><p:inputText id="itemName"
-						value="#{biddingBB.managedBean.zoneName}" size="20"
+						value="#{biddingBB.managedBean.selectedZone}" size="20"
 						disabled="true" /></TD>
 			</tr>
 
@@ -27,21 +27,20 @@
 	<div>
 
 		<p:dataTable id="zoneLocation"
-			value="#{scheduleBiddingBB.managedBean.zoneLocationList}" var="zone">
+			value="#{scheduleBiddingBB.managedBean.zoneDetailsList[0].tplSpecZoneLocs}" var="zone">
 
-			<p:column headerText="#{lbl['lbl.sc.bidding.bm.bmbi.popzl.state']}">
+			<p:column headerText="#{lbl['lbl.sc.state']}">
 				<p:outputLabel value="#{zone.state}" />
-
 			</p:column>
 			<p:column
-				headerText="#{lbl['lbl.sc.bidding.bm.bmbi.popzl.district']}">
+				headerText="#{lbl['lbl.sc.district']}">
 				<p:outputLabel value="#{zone.district}" />
 			</p:column>
 		</p:dataTable>
 
 	</div>
 
-	<p:commandButton value="#{lbl['lbl.sc.bidding.schedulebid.pl.close']}"
+	<p:commandButton value="#{lbl['lbl.btn.close']}"
 		icon="ui-icon-close" />
 
 </ui:composition>
