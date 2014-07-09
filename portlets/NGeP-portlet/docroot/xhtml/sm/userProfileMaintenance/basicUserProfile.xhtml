@@ -459,7 +459,7 @@
 		</p:panel>
 		<p:outputPanel id="accountPrivilegesPanel">
 			<p:panel header="Account Privileges"
-				rendered="#{smPersonnelBackingBean.managedBean.renderPrivilegesPanel}"
+				rendered="#{smPersonnelBackingBean.managedBean.renderPrivilegesPanel and !smPersonnelBackingBean.managedBean.editMode}"
 				styleClass="noBorders tr,noBorders td" style="width:100%;"
 				toggleable="true">
 
