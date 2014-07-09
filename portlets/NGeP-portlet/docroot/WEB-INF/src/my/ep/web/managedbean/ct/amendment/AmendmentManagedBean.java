@@ -49,7 +49,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private String processName;
 	
 	private boolean pbConfirmMeeting;
-	private boolean memberSignOff = true;
+	private boolean memberSignOff;
 	private boolean letterOfAcceptance;
 	private boolean bpkSaSkApprover;
 	private boolean prepareLOA;
@@ -123,6 +123,11 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private int selectedTabIndex;
 	
 	private boolean decisionPbQcLOA;
+	
+	private boolean tabMenuHide;
+	private boolean tabMenuShowForZone;
+	private boolean tabMenuShowNoZone;
+	private boolean tabMenuShowNoZoneNoItem;
 	
 	public CtContractVer getContractVer() {
 		return contractVer;
@@ -677,5 +682,37 @@ public class AmendmentManagedBean extends BaseManagedBean {
 
 	public void setDecisionPbQcLOA(boolean decisionPbQcLOA) {
 		this.decisionPbQcLOA = decisionPbQcLOA;
+	}
+
+	public boolean isTabMenuHide() {
+		return tabMenuHide;
+	}
+
+	public void setTabMenuHide(boolean tabMenuHide) {
+		this.tabMenuHide = tabMenuHide;
+	}
+
+	public boolean isTabMenuShowForZone() {
+		return tabMenuShowForZone;
+	}
+
+	public void setTabMenuShowForZone(boolean tabMenuShowForZone) {
+		this.tabMenuShowForZone = tabMenuShowForZone;
+	}
+
+	public boolean isTabMenuShowNoZone() {
+		return tabMenuShowNoZone;
+	}
+
+	public void setTabMenuShowNoZone(boolean tabMenuShowNoZone) {
+		this.tabMenuShowNoZone = tabMenuShowNoZone;
+	}
+
+	public boolean isTabMenuShowNoZoneNoItem() {
+		return tabMenuShowNoZoneNoItem;
+	}
+
+	public void setTabMenuShowNoZoneNoItem(boolean tabMenuShowNoZoneNoItem) {
+		this.tabMenuShowNoZoneNoItem = tabMenuShowNoZoneNoItem;
 	}
 }
