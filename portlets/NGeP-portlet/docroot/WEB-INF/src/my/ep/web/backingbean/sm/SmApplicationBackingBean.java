@@ -2579,11 +2579,23 @@ public class SmApplicationBackingBean extends
 
 			getManagedBean().getSmAppl().getSmManufacturingDtls()
 					.add(getManagedBean().getSelectedManufacturer());
+			RequestContext.getCurrentInstance().execute(
+					"smManuDtWidVar.paginator.endLink.click()");
 		}
+		assignValReqdToFalse();
+		RequestContext.getCurrentInstance().execute("manufactorDialog.hide()");
+	}
+
+	public void cancelManuSaveorUpdate() {
+		assignValReqdToFalse();
+		RequestContext.getCurrentInstance().reset(":form:tt:manufactorDialog");
+		RequestContext.getCurrentInstance().execute("manufactorDialog.hide()");
 	}
 
 	public void assignSelManufacturer(SmManufacturingDtl manBean) {
 		getManagedBean().setSelectedManufacturer(manBean);
+		assignValReqdToTrue();
+		RequestContext.getCurrentInstance().execute("manufactorDialog.show()");
 	}
 
 	public void assignNewManufacturerBean() {
@@ -2593,6 +2605,8 @@ public class SmApplicationBackingBean extends
 		manu.setRevNo(1);
 		manu.setSmAppl(getManagedBean().getSmAppl());
 		getManagedBean().setSelectedManufacturer(manu);
+		assignValReqdToTrue();
+		RequestContext.getCurrentInstance().execute("manufactorDialog.show()");
 		System.out.println("****** After **********"
 				+ getManagedBean().getSelectedManufacturer().getPmUom()
 						.getUomName());
@@ -2628,11 +2642,23 @@ public class SmApplicationBackingBean extends
 
 			getManagedBean().getSmAppl().getSmMachineDtls()
 					.add(getManagedBean().getSelectedMachine());
+			RequestContext.getCurrentInstance().execute(
+					"smMachDtWidVar.paginator.endLink.click()");
 		}
+		assignValReqdToFalse();
+		RequestContext.getCurrentInstance().execute("equipmentDialog.hide()");
+	}
+
+	public void cancelMachineSaveorUpdate() {
+		assignValReqdToFalse();
+		RequestContext.getCurrentInstance().reset(":form:tt:equipmentDialog");
+		RequestContext.getCurrentInstance().execute("equipmentDialog.hide()");
 	}
 
 	public void assignSelMachinery(SmMachineDtl macBean) {
 		getManagedBean().setSelectedMachine(macBean);
+		assignValReqdToTrue();
+		RequestContext.getCurrentInstance().execute("equipmentDialog.show()");
 	}
 
 	public void assignNewMachineryBean() {
@@ -2640,6 +2666,8 @@ public class SmApplicationBackingBean extends
 		getManagedBean().getSelectedMachine().setRevNo(1);
 		getManagedBean().getSelectedMachine().setSmAppl(
 				getManagedBean().getSmAppl());
+		assignValReqdToTrue();
+		RequestContext.getCurrentInstance().execute("equipmentDialog.show()");
 	}
 
 	public void deleteSelectedMachinery() {
@@ -3441,115 +3469,6 @@ public class SmApplicationBackingBean extends
 
 	// -- Process Common for both Personnel and Share Holder Start --
 	// -- Process Personnel Start
-
-	// public void addOrUpdatePersonnelToSmAppl() throws ParseException {
-	// System.out.println("*** The personnel Info ****"
-	// + getManagedBean().getSelectedPersonnel().getName());
-	// boolean validPer = true;
-	// // if (getManagedBean().getSelectedPersonnel().getAuthorizedFlg() == 1)
-	// // {
-	// // validPer = validateAuthPersonLimit();
-	// // }
-	// getManagedBean().getSelectedPersonnel().setSmAppl(
-	// getManagedBean().getSmAppl());
-	// validPer = checkValidUser(getManagedBean().getSelectedPersonnel());
-	// if (validPer) {
-	// if (getManagedBean().getSmAppl().getSmPersonnels()
-	// .contains(getManagedBean().getSelectedPersonnel())) {
-	// getManagedBean()
-	// .getSmAppl()
-	// .getSmPersonnels()
-	// .set(getManagedBean()
-	// .getSmAppl()
-	// .getSmPersonnels()
-	// .indexOf(
-	// getManagedBean().getSelectedPersonnel()),
-	// getManagedBean().getSelectedPersonnel());
-	//
-	// System.out.println(" **** THIS IS AN UPDATE Personnel ******");
-	// } else {
-	//
-	// getManagedBean().getSmAppl().getSmPersonnels()
-	// .add(getManagedBean().getSelectedPersonnel());
-	// }
-	//
-	// IMofRegistrationSO mofRegistrationSO = null;
-	//
-	// try {
-	// System.out
-	// .println("***** updating Personnel  into database with app id **** "
-	// + getManagedBean().getSelectedPersonnel()
-	// .getSmAppl().getApplId());
-	// mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
-	// .getInstance().getServiceObject("sm",
-	// IMofRegistrationSO.class);
-	//
-	// MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
-	//
-	// reqDto.setSmAppl(this.getManagedBean().getSmAppl());
-	//
-	// MofRegistrationResDTO resDTO = mofRegistrationSO
-	// .updateApplication(reqDto);
-	// // getManagedBean().setSmAppl(resDTO.getSmAppl());
-	// } finally {
-	// mofRegistrationSO = null;
-	// retriveLatestApplAfterUpdate("");
-	// }
-	// // updateSmAppl(getManagedBean().getSmAppl().getApplType(),"Def");
-	// calcPersonnelListCount();
-	// RequestContext.getCurrentInstance()
-	// .execute("directorDialog.hide()");
-	// }
-	// }
-
-	// public void assignSelPersonnel(SmPersonnel shareHolderBean) {
-	// if (shareHolderBean.getAuthorizedFlg() == 1) {
-	// getManagedBean().setAuthPerCount(0);
-	// } else {
-	// getManagedBean().setAuthPerCount(getAuthUserCount());
-	// }
-	// getManagedBean().setSelectedPersonnel(shareHolderBean);
-	// }
-
-	// public void assignNewPersonnel(String personelType) {
-	// System.out.println("******* ADD NEW Personnel *************"
-	// + personelType);
-	// getManagedBean().setAuthPerCount(getAuthUserCount());
-	//
-	// SmPersonnel personnel = new SmPersonnel();
-	// personnel.setEquityOwner(false);
-	// if (personelType
-	// .equalsIgnoreCase(SupplierManagementConst.PERSONNEL_TYPE_DIRECTOR)) {
-	// personnel.setDirOrHghrMngmt(true);
-	// } else {
-	// personnel.setDirOrHghrMngmt(false);
-	// }
-	// setDefaultPersonnelValues(personnel);
-	// System.out.println("*** Bumi Flage **** " + personnel.getBumiFlg());
-	// getManagedBean().setSelectedPersonnel(personnel);
-	//
-	// }
-
-	// public void addOrUpdatePeronnelAddress(SmPersonnel persBean) {
-	// }
-
-	// public void deleteSelectedPersonnel() {
-	//
-	// System.out.println("*** Delete Personnels ******* "
-	// + getManagedBean().getSelectedPersonnels().size());
-	// if (getManagedBean().getSelectedPersonnels().size() > 0) {
-	// for (SmPersonnel per : getManagedBean().getSelectedPersonnels()) {
-	// getManagedBean().getSmAppl().getSmPersonnels().remove(per);
-	// }
-	// getManagedBean().getSelectedPersonnels().clear();
-	// calcPersonnelListCount();
-	// } else {
-	// System.out
-	// .println(" ******** NO Record selected please select atleast one ");
-	// }
-	//
-	// }
-
 	// -- Process Personnel End
 
 	// Process Bank Info Start
@@ -3577,37 +3496,21 @@ public class SmApplicationBackingBean extends
 			}
 		}
 
-		if (getManagedBean().getSelectedBank().getSmSupplierBranch() != null) {
-			if (getManagedBean().getSelectedBank().getSmSupplierBranch()
-					.getSupplierBranchId() == null
-					|| getManagedBean().getSelectedBank().getSmSupplierBranch()
-							.getSupplierBranchId().equals("")) {
-				System.out.println("******* Null value Branch ******");
-				getManagedBean().getSelectedBank().setSmSupplierBranch(
-						new SmSupplierBranch());
-			} else {
-				System.out.println("******* Selected value Branch ******"
-						+ getManagedBean().getSelectedBank()
-								.getSmSupplierBranch().getSupplierBranchId());
-				for (SmSupplierBranch brn : getManagedBean().getSmAppl()
-						.getSmSupplierBranches()) {
-					if (brn.getSupplierBranchId().equals(
-							getManagedBean().getSelectedBank()
-									.getSmSupplierBranch()
-									.getSupplierBranchId())) {
-						getManagedBean().getSelectedBank().setSmSupplierBranch(
-								brn);
-					}
+		if (getManagedBean().getSelBankBranchId() == null) {
+			getManagedBean().getSelectedBank().setSmSupplierBranch(null);
+		} else {
+			for (SmSupplierBranch brn : getManagedBean().getSmAppl()
+					.getSmSupplierBranches()) {
+				if (brn.getSupplierBranchId().equals(
+						getManagedBean().getSelBankBranchId())) {
+					getManagedBean().getSelectedBank().setSmSupplierBranch(brn);
+					break;
 				}
 			}
-		} else {
-			System.out
-					.println("**** This is a null branch for registration ******* ");
 		}
 
 		if (getManagedBean().getSmAppl().getSmSupplierBanks()
 				.contains(getManagedBean().getSelectedBank())) {
-
 			// TODO if any validations for edit
 		} else {
 
@@ -3626,6 +3529,7 @@ public class SmApplicationBackingBean extends
 
 	public void assignSelBank(SmSupplierBank shareBankBean) {
 		getManagedBean().setChequeSingPerId(null);
+		getManagedBean().setSelBankBranchId(null);
 		System.out.println("******* SIZE ********** "
 				+ shareBankBean.getSmChequeSignatories().size());
 		Long[] chequSigns = new Long[shareBankBean.getSmChequeSignatories()
@@ -3635,9 +3539,16 @@ public class SmApplicationBackingBean extends
 					.getSmPersonnel().getPersonnelId();
 
 		}
+
+		if (shareBankBean.getSmSupplierBranch() != null
+				&& shareBankBean.getSmSupplierBranch().getSupplierBranchId() != null) {
+			getManagedBean().setSelBankBranchId(
+					shareBankBean.getSmSupplierBranch().getSupplierBranchId());
+		}
 		getManagedBean().setChequeSingPerId(chequSigns);
 		// shareBankBean.getSmChequeSignatories().clear();
 		getManagedBean().setSelectedBank(shareBankBean);
+		retrieveBankFinOrgListByType();
 		assignStateDistAndCityForSelVal(shareBankBean.getSmAddress()
 				.getPmCountry().getCountryId(), shareBankBean.getSmAddress()
 				.getPmState().getStateId(), shareBankBean.getSmAddress()
@@ -3667,6 +3578,7 @@ public class SmApplicationBackingBean extends
 	public void assignNewBank() {
 		System.out.println("******* ADD NEW Bank Info *************");
 		getManagedBean().setChequeSingPerId(null);
+		getManagedBean().setSelBankBranchId(null);
 		SmSupplierBank bank = new SmSupplierBank();
 		bank.setSmAddress(setDefaultAddr());
 		// bank.setSmSupplierBranch(new SmSupplierBranch());
@@ -4575,8 +4487,8 @@ public class SmApplicationBackingBean extends
 					.getSelectedBank().getAccountPurpose()
 					.equalsIgnoreCase("B"))
 					&& getManagedBean().getSelectedBank().getSmSupplierBranch() == null) {
-				getManagedBean().getSelectedBank().setSmSupplierBranch(
-						new SmSupplierBranch());
+				// getManagedBean().getSelectedBank().setSmSupplierBranch(
+				// new SmSupplierBranch());
 			}
 		}
 		System.out.println("****** After getting the fin org list *******"

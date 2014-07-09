@@ -202,6 +202,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	// Bank Info
 	private Long[] chequeSingPerId;
 
+	private Long selBankBranchId;
+
 	private SmSupplierBank selectedBank;
 
 	private SmSupplierBank selectedSignatoryBankAcct;
@@ -2018,6 +2020,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setFacilityType(String facilityType) {
 		this.facilityType = facilityType;
+	}
+
+	public Long getSelBankBranchId() {
+		return selBankBranchId;
+	}
+
+	public void setSelBankBranchId(Long selBankBranchId) {
+		this.selBankBranchId = selBankBranchId;
 	}
 
 }
