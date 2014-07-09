@@ -34,6 +34,7 @@ public class AgreementManagedBean extends BaseManagedBean {
 	private Long ministryProfileId;
 	private Long departmentProfileId;
 	private String agreementType ="";
+	private String fileDirectory;
 	
 	private CtContract ctContract;
 	private CtContractVer contractVer;
@@ -88,6 +89,14 @@ public class AgreementManagedBean extends BaseManagedBean {
 		this.agreementType = agreementType;
 	}
 	
+	public String getFileDirectory() {
+		return fileDirectory;
+	}
+
+	public void setFileDirectory(String fileDirectory) {
+		this.fileDirectory = fileDirectory;
+	}
+
 	public String getTaskName() {
 		return taskName;
 	}
@@ -104,8 +113,6 @@ public class AgreementManagedBean extends BaseManagedBean {
 		this.ctContract = ctContract;
 	}
 	
-	
-
 	public List<CtAgreementParty> getCtAgencySigner() {
 		if(ctAgencySigner == null)
 			ctAgencySigner = new ArrayList<CtAgreementParty>();

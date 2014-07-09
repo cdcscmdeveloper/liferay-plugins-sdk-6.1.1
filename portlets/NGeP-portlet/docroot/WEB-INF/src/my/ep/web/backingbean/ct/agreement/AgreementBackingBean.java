@@ -98,6 +98,8 @@ import my.ep.web.backingbean.tpl.doc.TemplateDocBackingBean;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.ct.ContractManagementConst;
+import my.ep.web.format.AttachmentDateFormat;
+import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.ct.agreement.AgreementManagedBean;
 import my.ep.web.util.AddressUtils;
 import my.ep.web.util.CommonUtils;
@@ -153,7 +155,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	    }
 	   
 	   if(ctBB == null){
-		   ctBB = new ContractBackingBean();
+		   ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
 		   ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());	
 	   }
 	}
@@ -311,8 +313,15 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			this.getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
 			this.getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
 		}
-
+		
+		String docType = ParameterConst.DOCTYPE_AGREEMENT;
+		if(getManagedBean().getAgreementType().equalsIgnoreCase(ContractConst.SUP_AGREEMENT)) {
+			docType = ParameterConst.DOCTYPE_SUPPLEMENTAL_AGREEMENT;
+		}
+		
+		getManagedBean().setFileDirectory(CommonConstants.BASE_FILE_DIR+"/CT/"+getManagedBean().getCtContract().getContractNo()+"/"+docType);
 		initializeRemarks();
+		ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
 		ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 	}
 	
@@ -569,21 +578,6 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
     	this.getManagedBean().setDepartmentProfileId(id);
     }
     
-    public void fileUpload(FileUploadEvent event) throws Exception {
-		UploadedFile item = event.getFile();
-		String fileName = item.getFileName();
-		String filePath = "C:/projects/uploads/"+item.getFileName();
-		FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
-	    fileOuputStream.write(item.getContents());
-	    fileOuputStream.close();
-	    for(CtAgreementContent agreementContent : getManagedBean().getCtAgreement().getAgreementContents()){
-	    	if(agreementContent.equals(getManagedBean().getSelectedAgreementContent())){
-	    		agreementContent.setFilePath(filePath);
-	    		agreementContent.setFileName(fileName);
-	    	 }
-	     }
-	}
-    
     public String gotoContractView() {
     	Long contractVerId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("contractVerId"));
 		
@@ -598,20 +592,51 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		return CONTRACT_PAGE;
     }
     
-    public void uploadAgreement(FileUploadEvent event) throws Exception {
-		UploadedFile item = event.getFile();
-		String fileName = item.getFileName();
-		String filePath = "C:/projects/uploads/"+item.getFileName();
+    public void fileUpload(FileUploadEvent event) throws Exception {
+    	UploadedFile item = event.getFile();
+		AttachmentFormat attachmentFormat = new AttachmentDateFormat();
+		
+		String filePath = getManagedBean().getFileDirectory();
+		File file = new File(filePath);
+		file.mkdirs();
+		filePath = filePath + "/" + attachmentFormat.format(item.getFileName(), null);
+		
 		FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
 	    fileOuputStream.write(item.getContents());
 	    fileOuputStream.close();
-	    getManagedBean().getCtAgreement().setFileName(fileName);
+	    for(CtAgreementContent agreementContent : getManagedBean().getCtAgreement().getAgreementContents()){
+	    	if(agreementContent.equals(getManagedBean().getSelectedAgreementContent())){
+	    		agreementContent.setFileName(item.getFileName());
+	    		agreementContent.setFilePath(filePath);
+	    	 }
+	     }
+	}
+    
+    public void uploadAgreement(FileUploadEvent event) throws Exception {
+    	UploadedFile item = event.getFile();
+		AttachmentFormat attachmentFormat = new AttachmentDateFormat();
+		
+		String filePath = getManagedBean().getFileDirectory();
+		File file = new File(filePath);
+		file.mkdirs();
+		filePath = filePath + "/" + attachmentFormat.format(item.getFileName(), null);
+		
+		FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
+	    fileOuputStream.write(item.getContents());
+	    fileOuputStream.close();
+	    getManagedBean().getCtAgreement().setFileName(item.getFileName());
 	    getManagedBean().getCtAgreement().setFilePath(filePath);
 	}
 
     public void uploadStampedPage(FileUploadEvent event) throws Exception{
     	UploadedFile item = event.getFile();
-		String filePath = "C:/projects/uploads/"+item.getFileName();
+		AttachmentFormat attachmentFormat = new AttachmentDateFormat();
+		
+		String filePath = getManagedBean().getFileDirectory();
+		File file = new File(filePath);
+		file.mkdirs();
+		filePath = filePath + "/" + attachmentFormat.format(item.getFileName(), null);
+		
 		FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
 		this.getManagedBean().getCtAgreement().setStampedPageName(item.getFileName());
 	    this.getManagedBean().getCtAgreement().setStampedPagePath(filePath);
@@ -621,7 +646,13 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	
 	public void uploadSignedPage(FileUploadEvent event) throws Exception{
 		UploadedFile item = event.getFile();
-		String filePath = "C:/projects/uploads/"+item.getFileName();
+		AttachmentFormat attachmentFormat = new AttachmentDateFormat();
+		
+		String filePath = getManagedBean().getFileDirectory();
+		File file = new File(filePath);
+		file.mkdirs();
+		filePath = filePath + "/" + attachmentFormat.format(item.getFileName(), null);
+		
 		FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
 		this.getManagedBean().getCtAgreement().setSignedPageName(item.getFileName());
 	    this.getManagedBean().getCtAgreement().setSignedPagePath(filePath);
@@ -629,14 +660,10 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	    fileOuputStream.close();
 	}
 	
-	public void downloadFile(String filePath) throws IOException {
+	public void downloadFile(String filePath, String fileName) throws IOException {
 		PortletResponse  portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();  
 		HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
 		
-		String fileName = null;
-		
-		File file = new File(filePath);
-		fileName = file.getName();
 		res.setHeader( "Content-Disposition", "attachment; filename=\"" + fileName + "\"" );//
 		res.setHeader( "Content-Transfer-Encoding", "binary" );
 		res.setContentType("application/octet-stream");
@@ -666,21 +693,27 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	
 	public void downloadDocFile(String parameterCode) throws IOException{
 		IContractTemplateSO contractTemplateSO = null;
-		String filePath = null;
+		AttachmentFormat attachmentFormat = new AttachmentDateFormat();
+		
+		String content = null;	
+		String filePath = getManagedBean().getFileDirectory() + "/temp";
+		String fileName = getTemplateFileName(parameterCode);
+		File file = new File(filePath);
+		file.mkdirs();
+		filePath = filePath + "/" + attachmentFormat.format(fileName, null);
+		
 		try{
 			contractTemplateSO = (IContractTemplateSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractTemplateSO.class);
 			ContractTemplateReqDTO reqDTO = new ContractTemplateReqDTO();
 			ContractTemplateResDTO resDTO;
-			String content = null;
-			String tempDir = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/docDownload");			
+			
 			reqDTO.setTemplateName(parameterCode.toUpperCase());
 			resDTO = contractTemplateSO.retrieveTemplateByName(reqDTO);
 			content = new String(resDTO.getCtTemplate().getContent(), "UTF-8");
-			filePath = tempDir + "/" + ContractConst.getTemplateFileName(parameterCode);
 			content = getContent(content, parameterCode);
 			convertHtmlToDocFile(content, filePath);
-		 	downloadFile(filePath);
-		}catch(UnsupportedEncodingException e) {
+		 	downloadFile(filePath, fileName);
+		} catch(UnsupportedEncodingException e) {
 			  e.printStackTrace();
 		}
 	}
@@ -690,9 +723,13 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		IContractTemplateSO contractTemplateSO = null;
 		List<File> fileList = new ArrayList<File>();
 		ISearchBean<CtAgreementContent> searchBean = new SearchBean<CtAgreementContent>();
-		String filePath = null;
+		AttachmentFormat attachmentFormat = new AttachmentDateFormat();
+		
 		String content = null;
-		String tempDir = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/docDownload");
+		String filePath = null;
+		String tempDirectory = getManagedBean().getFileDirectory() + "/temp";
+		File file = new File(tempDirectory);
+		file.mkdirs();
 		
 		try{
 			agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IAgreementSO.class);
@@ -715,11 +752,13 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 					
 					templateReqDTO.setTemplateName(agreementContent.getTitle().toUpperCase());
 					ContractTemplateResDTO templateResDTO = contractTemplateSO.retrieveTemplateByName(templateReqDTO);
-					String filename = ContractConst.getTemplateFileName(agreementContent.getTitle().toUpperCase());
-					if (templateResDTO.getCtTemplate() != null && filename != null) {
+					String fileName = getTemplateFileName(agreementContent.getTitle());
+					
+					if (templateResDTO.getCtTemplate() != null && fileName != null) {
 						content = new String(templateResDTO.getCtTemplate().getContent(), "UTF-8");
-						content = getContent(content, agreementContent.getTitle().toUpperCase());
-						filePath = tempDir + "/" + filename;
+						content = getContent(content, agreementContent.getTitle());
+						filePath = tempDirectory + "/" + attachmentFormat.format(fileName, null);
+						
 						convertHtmlToDocFile(content, filePath);
 						fileList.add(new File(filePath));
 					}
@@ -742,16 +781,16 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 				}
 			}			
 			
-			File zipFile = new File(tempDir + "/agreement.zip");
+			String zipFileName = "agreement.zip";
+			File zipFile = new File(tempDirectory + "/" + attachmentFormat.format(zipFileName, null));
 			try {
 				zipFile.createNewFile();
 				byte[] buffer = new byte[1024];   
-				ZipOutputStream out = new ZipOutputStream(new   
-				FileOutputStream(zipFile));   
+				ZipOutputStream out = new ZipOutputStream(new FileOutputStream(zipFile));   
 				out.setLevel(Deflater.DEFAULT_COMPRESSION);   
-				for (File file : fileList) {
-					FileInputStream in = new FileInputStream(file);   
-					out.putNextEntry(new ZipEntry(file.getName()));   
+				for (File agreementFile : fileList) {
+					FileInputStream in = new FileInputStream(agreementFile);   
+					out.putNextEntry(new ZipEntry(agreementFile.getName()));   
 					int len;   
 					while ((len = in.read(buffer)) > 0) {
 						out.write(buffer, 0, len);   
@@ -763,10 +802,22 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			downloadFile(tempDir + "/agreement.zip");
+			downloadFile(zipFile.getPath(), zipFileName);
 		}catch(Exception exp){
 			exp.printStackTrace();
 		}
+	}
+	
+	private String getTemplateFileName(String templateType) {
+		if(templateType.equalsIgnoreCase(ContractConst.TEMPLATE_AGREEMENT_COVER_PAGE)) {
+			return "AgreementCoverPage.docx";
+		} else if(templateType.equalsIgnoreCase(ContractConst.TEMPLATE_AGREEMENT_PARTY)) {
+			return "AgreementPartyPage.docx";
+		} else if(templateType.equalsIgnoreCase(ContractConst.TEMPLATE_AGREEMENT_SIGNING_PAGE)) {
+			return "AgreementSigningPage.docx";
+		}
+		
+		return null;
 	}
 	
 	private void convertHtmlToDocFile(String content, String filePath){

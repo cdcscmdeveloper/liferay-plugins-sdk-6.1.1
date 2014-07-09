@@ -8,7 +8,7 @@
 		<h:panelGrid style="width:100%">
 			<h:panelGrid columns="2">
 				<p:outputLabel value="Sample Contract" />
-				<h:commandLink action="#{agreementBackingBean.downloadFile('sample')}">
+				<h:commandLink action="#{agreementBackingBean.downloadFile('', 'sample')}">
 					<p:graphicImage library="ep/images/design" name="download.png"
 						value="/resources/ep/images/design/download.png" title="File Download" />
 				</h:commandLink>				
@@ -58,7 +58,7 @@
 								  target="#{agreementBackingBean.managedBean.selectedAgreementContent}" />
 							</p:commandButton>
 							<h:commandLink rendered="#{data.filePath != null}" value="#{data.fileName}"
-								action="#{agreementBackingBean.downloadFile(data.filePath)}">
+								action="#{agreementBackingBean.downloadFile(data.filePath, data.fileName)}">
 							</h:commandLink>
 					  </h:panelGroup>
 				</p:column>
@@ -114,7 +114,8 @@
 				<h:commandLink value="#{agreementBackingBean.managedBean.ctAgreement.fileName}"
 					style="float:left;" styleClass="blue_font"
 					rendered="#{agreementBackingBean.managedBean.ctAgreement.fileName != null}"
-					action="#{agreementBackingBean.downloadFile(agreementBackingBean.managedBean.ctAgreement.filePath)}" />
+					action="#{agreementBackingBean.downloadFile(agreementBackingBean.managedBean.ctAgreement.filePath, 
+						agreementBackingBean.managedBean.ctAgreement.fileName)}" />
 			</h:panelGrid>
 			<p:spacer height="20" />
 		</h:panelGroup>

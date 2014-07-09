@@ -32,7 +32,8 @@
 						value="#{agreementBackingBean.managedBean.ctContract.currentAgreement.signedPageName}"
 						rendered="#{agreementBackingBean.managedBean.ctContract.currentAgreement.signedPageName != null}"
 						styleClass="blue_font"
-						action="#{agreementBackingBean.downloadFile(agreementBackingBean.managedBean.ctContract.currentAgreement.signedPagePath)}" />
+						action="#{agreementBackingBean.downloadFile(agreementBackingBean.managedBean.ctContract.currentAgreement.signedPagePath,
+							agreementBackingBean.managedBean.ctContract.currentAgreement.signedPageName)}" />
 				</h:panelGroup>
 			</h:panelGrid>
 			<h:panelGrid columns="2">
@@ -49,7 +50,8 @@
 						value="#{agreementBackingBean.managedBean.ctContract.currentAgreement.stampedPageName}"
 						rendered="#{agreementBackingBean.managedBean.ctContract.currentAgreement.stampedPageName != null}"
 						styleClass="blue_font"
-						action="#{agreementBackingBean.downloadFile(agreementBackingBean.managedBean.ctContract.currentAgreement.stampedPagePath)}" />
+						action="#{agreementBackingBean.downloadFile(agreementBackingBean.managedBean.ctContract.currentAgreement.stampedPagePath,
+							agreementBackingBean.managedBean.ctContract.currentAgreement.stampedPageName)}" />
 				</h:panelGroup>
 			</h:panelGrid>
 		</h:panelGrid>
