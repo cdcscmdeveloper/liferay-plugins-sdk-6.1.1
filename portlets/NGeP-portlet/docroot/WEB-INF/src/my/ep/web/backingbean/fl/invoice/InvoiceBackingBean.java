@@ -28,6 +28,7 @@ import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.fl.FulfilmentConst;
 import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
@@ -45,11 +46,9 @@ import my.ep.persistence.entity.fl.payment.FlInvoice;
 import my.ep.persistence.entity.fl.payment.FlInvoiceItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
-import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmContact;
 import my.ep.persistence.entity.pm.common.PmFinancialAcc;
 import my.ep.persistence.entity.pm.common.PmStatus;
-import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
@@ -258,6 +257,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 	}
 	
 	private void getInvoiceTable(FulfilmentResDTO resDTO){
+		BigDecimal invoiceAmt = new BigDecimal(0);
 		for(FlFulfilmentItem item : resDTO.getFlFulfilmentRequest().getFlFulfilmentItems()){
 			FlInvoiceItem invoiceItem = new FlInvoiceItem();
 			invoiceItem.setFlInvoice(getManagedBean().getInvoice());
@@ -288,7 +288,26 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			invoiceItem.setReceivedAmt(sumReceivedAmt);
 			invoiceItem.setInvAmt(sumReceivedAmt);
 			getManagedBean().getInvoice().getFlInvoiceItem().add(invoiceItem);
+			invoiceAmt = invoiceAmt.add(sumReceivedAmt);
 		}
+		getManagedBean().getInvoice().setInvoiceAmtOri(invoiceAmt);
+		getManagedBean().getInvoice().setInvoiceAmtNew(invoiceAmt);
+		
+		BigDecimal serviceFee = null;
+		if(resDTO.getFlFulfilmentRequest().getFlFulfilmentOrder().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)) {
+			serviceFee = new BigDecimal(FulfilmentConst.SERVICE_FEE_ZERO_POINT_FOUR);
+		} else {
+			serviceFee = new BigDecimal(getManagedBean().getInvoice().getFlRequest().getCtContract().getServiceFee());
+		}
+		
+		getManagedBean().setServiceCharge(serviceFee.toString());
+		BigDecimal percentage = new BigDecimal(100);
+		BigDecimal invMulty = new BigDecimal(0.0);
+		BigDecimal feeAmount = new BigDecimal(0.0);
+		invMulty = invoiceAmt.multiply(serviceFee);
+		feeAmount = invMulty.divide(percentage);
+		getManagedBean().getInvoice().setFeeAmt(feeAmount);
+		getManagedBean().getInvoice().setSupplierOrFactorAmt(invoiceAmt.subtract(feeAmount));
 	}
 	
 	public void retrieveInvTotalAmount(FlInvoiceItem flInvoiceItem){
@@ -325,8 +344,15 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		}
 		getManagedBean().getInvoice().setInvoiceAmtOri(orderTotalAmount);
 		getManagedBean().getInvoice().setInvoiceAmtNew(invoiceTotalAmount);
-		getManagedBean().setServiceCharge("0.4");
-		BigDecimal serviceFee = new BigDecimal(0.4);
+		
+		BigDecimal serviceFee = null;
+		if(getManagedBean().getInvoice().getFlFulfilmentOrder().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)) {
+			serviceFee = new BigDecimal(FulfilmentConst.SERVICE_FEE_ZERO_POINT_FOUR);
+		} else {
+			serviceFee = new BigDecimal(getManagedBean().getInvoice().getFlRequest().getCtContract().getServiceFee());
+		}
+		
+		getManagedBean().setServiceCharge(serviceFee.toString());
 		BigDecimal percentage = new BigDecimal(100);
 		BigDecimal invMulty = new BigDecimal(0.0);
 		BigDecimal feeAmount = new BigDecimal(0.0);
