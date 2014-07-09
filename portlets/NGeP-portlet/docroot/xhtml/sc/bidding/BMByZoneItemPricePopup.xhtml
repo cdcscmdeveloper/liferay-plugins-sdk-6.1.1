@@ -9,9 +9,8 @@
 		<table>
 
 			<tr>
-				<TD><p:outputLabel
-						value="#{lbl['lbl.sc.bidding.bm.bmbp.popup.ip.supplierCode']}" /></TD>
-				<TD><p:inputText id="itemName"
+				<TD><p:outputLabel value="#{lbl['lbl.sc.supplier.code']}" /></TD>
+				<TD><p:inputText id="supplierCode"
 						value="#{biddingBB.managedBean.supplierCode}" size="20"
 						disabled="true" /></TD>
 			</tr>
@@ -20,40 +19,42 @@
 
 	</div>
 
-	<p:panel header="#{lbl['lbl.sc.bidding.bm.bmbp.popup.ip.ipl']}"
-		toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.item.price.list']}" toggleable="true">
 
 		<div>
 
 			<p:dataTable id="itemPriceList"
-				value="#{scheduleBiddingBB.managedBean.itemPriceList}" var="itemPrice">
+				value="#{biddingBB.managedBean.scBidPriceList}"
+				var="itemPrice">
 
-				<p:column headerText="#{lbl['lbl.sc.bidding.bm.bmbp.popup.ip.ipl.itemName']}">
-					<p:outputLabel value="#{itemPrice.itemName}" />
-
-				</p:column>
-				<p:column
-					headerText="#{lbl['lbl.sc.bidding.bm.bmbp.popup.ip.ipl.startPrice']}">
-					<p:outputLabel value="#{itemPrice.startPrice}" />
-				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.bidding.bm.bmbp.popup.ip.ipl.lastPrice']}">
-					<p:outputLabel value="#{itemPrice.lastPrice}" />
+				<p:column headerText="#{lbl['lbl.sc.item.name']}">
+					<h:outputText
+						value="#{itemPrice.scBidSupplierItem.scBidItem.scRequestItem.itemName}" />
 
 				</p:column>
-				<p:column
-					headerText="#{lbl['lbl.sc.bidding.bm.bmbp.popup.ip.ipl.costSaving']}">
-					<p:outputLabel value="#{itemPrice.costSaving}" />
+				<p:column headerText="#{lbl['lbl.sc.start.price']}">
+					<p:outputLabel
+						value="#{itemPrice.scBidSupplierItem.itemStartPrice}" />
 				</p:column>
-				<p:column
-					headerText="#{lbl['lbl.sc.bidding.bm.bmbp.popup.ip.ipl.ranking']}">
+				<p:column headerText="#{lbl['lbl.sc.last.price']}">
+					<p:outputLabel value="#{itemPrice.bidPrice}" />
+
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.cost.saving']}">
+					<p:outputLabel
+						value="#{itemPrice.scBidSupplierItem.itemStartPrice - itemPrice.bidPrice}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.ranking']}">
 					<p:outputLabel value="#{itemPrice.ranking}" />
 				</p:column>
 			</p:dataTable>
 
 		</div>
+		<div align="right">
 
-		<p:commandButton value="#{lbl['lbl.sc.bidding.bm.bmbp.popup.close']}"
-			icon="ui-icon-close" />
+		<p:commandButton value="#{lbl['lbl.btn.close']}" icon="ui-icon-back" onclick="pricePop.hide();"/>
+		
+		</div>
 
 	</p:panel>
 </ui:composition>
