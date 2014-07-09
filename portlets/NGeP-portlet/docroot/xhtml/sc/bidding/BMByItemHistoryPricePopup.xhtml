@@ -10,68 +10,72 @@
 		<table>
 
 			<tr>
-				<TD><p:outputLabel
-						value="#{lbl['lbl.sc.bidding.bm.bmbi.pophp.hp.itemName']}" /></TD>
-				<TD><p:inputText id="itemName"
-						value="#{biddingBB.managedBean.itemName}" size="20"
-						disabled="true" /></TD>
+				<TD><p:outputLabel value="#{lbl['lbl.sc.item.name']}" /></TD>
+				<TD><p:inputText id="hPopupItemName"
+						value="#{biddingBB.managedBean.historyPrice.scBidSupplierItem.scBidItem.scRequestItem.itemName}"
+						size="20" disabled="true" /></TD>
 			</tr>
 
 			<tr>
-				<TD><p:outputLabel
-						value="#{lbl['lbl.sc.bidding.bm.bmbi.pophp.hp.uom]}" /></TD>
-				<TD><p:inputText id="itemName"
-						value="#{biddingBB.managedBean.uom}" size="20" disabled="true" /></TD>
+				<TD><p:outputLabel value="#{lbl['lbl.sc.uom']}" /></TD>
+				<TD><p:inputText id="hPopupUOM"
+						value="#{biddingBB.managedBean.historyPrice.scBidSupplierItem.scBidItem.scRequestItem.uom.uomName}"
+						size="20" disabled="true" /></TD>
 			</tr>
 
 			<tr>
-				<TD><p:outputLabel
-						value="#{lbl['lbl.sc.bidding.bm.bmbi.pophp.hp.qty']}" /></TD>
-				<TD><p:inputText id="itemName"
-						value="#{biddingBB.managedBean.quantity}" size="20"
-						disabled="true" /></TD>
+				<TD><p:outputLabel value="#{lbl['lbl.sc.quantity']}" /></TD>
+				<TD><p:inputText id="hPopupQty"
+						value="#{biddingBB.managedBean.historyPrice.scBidSupplierItem.scBidItem.qty}"
+						size="20" disabled="true" /></TD>
 			</tr>
 
 			<tr>
-				<TD><p:outputLabel
-						value="#{lbl['lbl.sc.bidding.bm.bmbi.pophp.hp.supplierCode']}" /></TD>
-				<TD><p:selectOneMenu id="bidTitle"
-						value="#{biddingBB.managedBean.supplierCode}" size="20" /></TD>
+				<TD><p:outputLabel value="#{lbl['lbl.sc.supplier.code']}" /></TD>
+				<TD><p:inputText id="hPopupSupplier"
+						value="#{biddingBB.managedBean.historyPrice.scBidSupplierItem.scBidSupplier.smSupplier.supplierId}"
+						size="20" disabled="true" /></TD>
 			</tr>
 
 		</table>
 
 	</div>
 
-	<p:panel header="#{lbl['lbl.sc.bidding.bm.bmbi.pophp.hs']}"
-		toggleable="true">
-		
-		<div>
-		<p:lineChart></p:lineChart>
+	<p:panel header="#{lbl['lbl.sc.history.summary']}" toggleable="true">
+
+		<p:spacer height="5"></p:spacer>
+		<hr/>
+		<div align="center">
+
+			<h1>
+				<B>	Bidding Statistic Graph</B>
+			</h1>
+
 		</div>
-
-
+		<p:spacer height="5"></p:spacer>
 		<div>
-
+			<p:lineChart value="#{biddingBB.managedBean.historyPriceLinearModel}"
+				legendPosition="e" style="height:250px; width:750px" />
+		</div>
+		<p:spacer height="10"></p:spacer>
+		<div>
 			<p:dataTable id="historySummary"
-				value="#{scheduleBiddingBB.managedBean.historySummaryList}"
-				var="history">
+				value="#{biddingBB.managedBean.bidHistoryPriceList}" var="history">
+				<p:column headerText="#{lbl['lbl.sc.submitted.time']}">
+					<h:outputText value="#{history.createdDate}">
 
-				<p:column
-					headerText="#{lbl['lbl.sc.bidding.bm.bmbi.pophp.hs.submittedTime']}">
-					<p:outputLabel value="#{history.submittedTime}" />
-
+						<f:convertDateTime type="both" timeStyle="short" dateStyle="short" />
+					</h:outputText>
 				</p:column>
-				<p:column
-					headerText="#{lbl['lbl.sc.bidding.bm.bmbi.pophp.hs.bidPrice']}">
+				<p:column headerText="#{lbl['lbl.sc.bid.price']}">
 					<p:outputLabel value="#{history.bidPrice}" />
 				</p:column>
 			</p:dataTable>
-
 		</div>
-
-		<p:commandButton value="#{lbl['lbl.sc.bidding.schedulebid.pl.close']}"
-			icon="ui-icon-close" />
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.btn.close']}" icon="ui-icon-back"
+				onclick="priceHistory.hide();" />
+		</div>
 	</p:panel>
 
 </ui:composition>
