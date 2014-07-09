@@ -152,7 +152,12 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 			supplierReqDTO.setUserId(pmUser.getUserId());
 
 			SupplierSearchResDTO smResDTO =supplierSearchSO.retriveSupplierProfiles(supplierReqDTO);
-
+		
+//           if(smResDTO.getResultBean().getResultList() == null){
+//        	   FacesContext facesContext = FacesContext.getCurrentInstance();
+//   			  facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "user's profile not found!"," "));
+//   			 return "unspscRequestForm";
+//            }
 			System.out.println("getSmSupplier"+smResDTO.getResultBean().getResultList().get(0));
 
 			this.getManagedBean().getRequestCode().setSmSupplier(smResDTO.getResultBean().getResultList().get(0));
@@ -181,7 +186,6 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 					facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,null, MessageUtils.getMessage(MessageConst.INFO_710001,
 							MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
 					System.out.println("***************BB end*****************");
-
 //					return "unspscRequestForm";
 					return "BPMtesting";
 
@@ -197,10 +201,15 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 					MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
 		}catch(Exception ex){
 			System.out.println("***************Exception*****************");
-			FacesContext facesContext = FacesContext.getCurrentInstance();
-			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"BPM  ERROR", ex.getMessage()));
-
-			return "unspscRequestForm";
+//			FacesContext facesContext = FacesContext.getCurrentInstance();
+//			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,ex.getMessage(), ex.getMessage()));
+//            ex.printStackTrace(); 
+            throw new EpException(MessageConst.EP_MAJ_00001, 
+					new String[]{ResourceBundleUtils.getMessage(null, 
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, 
+					new FacesScopes().getUserLocale())});
+            
+//			return "unspscRequestForm";
 		}
 
 //		return "taskListView";
@@ -952,10 +961,13 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		} catch (Exception ex) {
 
 			System.out.println("***************Exception*****************");
-			FacesContext facesContext = FacesContext.getCurrentInstance();
-			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"BPM  ERROR", ex.getMessage()));
+			
+			throw new EpException(MessageConst.EP_MAJ_00001, 
+					new String[]{ResourceBundleUtils.getMessage(null, 
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, 
+					new FacesScopes().getUserLocale())});
 
-			return "reviewBeforeCreateTempCode";
+//			return "reviewBeforeCreateTempCode";
 		}
 
 
@@ -963,6 +975,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		FacesContext facesContext = FacesContext.getCurrentInstance();
 		facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,null, MessageUtils.getMessage(MessageConst.INFO_710001,
 				MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
+		
 		
 		//return "taskListView";
 		return "BPMtesting";
