@@ -188,6 +188,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 						TplSpecQuestion specQuestion = new TplSpecQuestion();
 						specQuestion.setClItem(selectedSupplierItem.getCmItem().getItemName());
 						specQuestion.setClUom(selectedSupplierItem.getPmUom());
+						specQuestion.setCmItem(selectedSupplierItem.getCmItem());
 						tplSpecQuestions.add(specQuestion);
 						serviceTpl.setTplSpecQuestions(tplSpecQuestions);
 						serviceTemplateSpecBean.setSpecMaster(serviceTpl);
@@ -203,6 +204,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 						TplSpecQuestion prodQuestion = new TplSpecQuestion();
 						prodQuestion.setClItem(selectedSupplierItem.getCmItem().getItemName());
 						prodQuestion.setClUom(selectedSupplierItem.getPmUom());
+						prodQuestion.setCmItem(selectedSupplierItem.getCmItem());
 						productQuestions.add(prodQuestion);
 						prodTpl.setTplSpecQuestions(productQuestions);
 						productTemplateSpecBean.setSpecMaster(prodTpl);
@@ -384,7 +386,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 				if(getManagedBean().getProductTemplateSpecBean().getSpecMaster() != null){
 					List<ScQuoteDoc> quoteDocs = new ArrayList<ScQuoteDoc>();
 					ScQuoteDoc quoteDoc = new ScQuoteDoc();
-					if(getManagedBean().getProductTemplateSpecBean().getSpecMaster().getSpecMasterId() != null){
+					if(getManagedBean().getProductTemplateSpecBean().getSpecMaster().getSpecMasterId() == null){
 						quoteDoc.setSpecMaster(getManagedBean().getProductTemplateSpecBean().getSpecMaster());
 						quoteDoc.setQuote(getManagedBean().getScQuote());
 						quoteDocs.add(quoteDoc);
@@ -395,7 +397,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 				if(getManagedBean().getServiceTemplateSpecBean().getSpecMaster() != null){
 					List<ScQuoteDoc> quoteDocs = new ArrayList<ScQuoteDoc>();
 					ScQuoteDoc quoteDoc = new ScQuoteDoc();
-					if(getManagedBean().getServiceTemplateSpecBean().getSpecMaster().getSpecMasterId() != null){
+					if(getManagedBean().getServiceTemplateSpecBean().getSpecMaster().getSpecMasterId() == null){
 						quoteDoc.setSpecMaster(getManagedBean().getServiceTemplateSpecBean().getSpecMaster());
 						quoteDoc.setQuote(getManagedBean().getScQuote());
 						quoteDocs.add(quoteDoc);
@@ -571,7 +573,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 				if(getManagedBean().getProductTemplateSpecBean().getSpecMaster() != null){
 					List<ScQuoteDoc> quoteDocs = new ArrayList<ScQuoteDoc>();
 					ScQuoteDoc quoteDoc = new ScQuoteDoc();
-					if(getManagedBean().getProductTemplateSpecBean().getSpecMaster().getSpecMasterId() != null){
+					if(getManagedBean().getProductTemplateSpecBean().getSpecMaster().getSpecMasterId() == null){
 						quoteDoc.setSpecMaster(getManagedBean().getProductTemplateSpecBean().getSpecMaster());
 						quoteDoc.setQuote(getManagedBean().getScQuote());
 						quoteDocs.add(quoteDoc);
@@ -583,7 +585,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 				if(getManagedBean().getServiceTemplateSpecBean().getSpecMaster() != null){
 					List<ScQuoteDoc> quoteDocs = new ArrayList<ScQuoteDoc>();
 					ScQuoteDoc quoteDoc = new ScQuoteDoc();
-					if(getManagedBean().getServiceTemplateSpecBean().getSpecMaster().getSpecMasterId() != null){
+					if(getManagedBean().getServiceTemplateSpecBean().getSpecMaster().getSpecMasterId() == null){
 						quoteDoc.setSpecMaster(getManagedBean().getServiceTemplateSpecBean().getSpecMaster());
 						quoteDoc.setQuote(getManagedBean().getScQuote());
 						quoteDocs.add(quoteDoc);
@@ -1462,6 +1464,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 				TplSpecMaster cloneSpecMaster = (TplSpecMaster) BeanUtils.cloneBean(specMaster);
 				cloneSpecMaster.setSpecMasterId(null);
 				cloneSpecMaster.setTplSpecQuestions(cloneTplSpecQuetions(cloneSpecMaster));
+				cloneSpecMaster.setBrandNew(Boolean.TRUE);
 				productTplSpecBean.setSpecMaster(cloneSpecMaster);
 				getManagedBean().setProductTemplateSpecBean(productTplSpecBean);
 
@@ -1470,6 +1473,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 				TplSpecMaster cloneSpecMaster = (TplSpecMaster) BeanUtils.cloneBean(specMaster);
 				cloneSpecMaster.setSpecMasterId(null);
 				cloneSpecMaster.setTplSpecQuestions(cloneTplSpecQuetions(cloneSpecMaster));
+				cloneSpecMaster.setBrandNew(Boolean.TRUE);
 				serviceTplSpecBean.setSpecMaster(cloneSpecMaster);
 				serviceTplSpecBean.setSpecMaster(specMaster);
 				getManagedBean().setServiceTemplateSpecBean(serviceTplSpecBean);
@@ -1489,6 +1493,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			question.setTplSpecAnswers(null);
 			question.setTplSpecScorings(null);
 			question.setTplSpecTierQties(null);
+			question.setTplSpecEstimations(null);
 			questions.add(question);
 		}
 		return questions;
@@ -1674,8 +1679,9 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 	/**
 	 * render the view based on the task id
 	 * page nav. to simple quote and request note
+	 * @throws Exception 
 	 */
-	public void preRenderView() {
+	public void preRenderView() throws Exception {
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		TemplateSpecBean productTplSpecBean = getManagedBean().getProductTemplateSpecBean();
@@ -1786,7 +1792,12 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 					getManagedBean().setSupplierList(scQuote.getScQuoteSuppliers());
 				}
       
+				// remarks
 				initializeRemarks(scQuote);
+				
+				// duration calc
+				dateListener(getManagedBean().getDuration());
+				
 				getManagedBean().setScQuote(scQuote);
 				procurementTypeEvent();
 				getCurrentStatus(res.getDocStatus().longValue()); 
