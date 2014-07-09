@@ -16,9 +16,6 @@ import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
-import my.ep.constant.MessageConst;
-import my.ep.constant.pm.ParameterConst;
-import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmParameter;
@@ -189,7 +186,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 	
 	public boolean compareUserName(String username){
 		FacesScopes facesScopes = new FacesScopes();
-		if(username.equals(facesScopes.getUserScreenName())) {
+		if(username!=null && username.equals(facesScopes.getUserScreenName())) {
 			return true;
 		} else {
 			return false;
