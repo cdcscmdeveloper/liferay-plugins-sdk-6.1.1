@@ -92,12 +92,19 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 	public String navigateToAddNewUserPage(){  
 		System.out.println("********************SmPersonnelBackingBean navigateToAddNewUserPage***************");
 //		removeEPRole();
+		
+		CountryReqDTO reqDTO = new CountryReqDTO();
+		reqDTO.setCountryId(getManagedBean().getDefaultCountryId());
+		ICountrySO reqSO = (ICountrySO) BusinessDelegate.getInstance().getServiceObject("pm",ICountrySO.class);
+		CountryResDTO resDTO = reqSO.retrieveCountryById(reqDTO);
+		
 		getManagedBean().setDisableRole(false);
 		SmPersonnel smPersonnel = new SmPersonnel();
-		smPersonnel.setPmCountry(new PmCountry());
+		smPersonnel.setPmCountry(resDTO.getPmCountry());
 
+		resDTO = reqSO.retrieveCountryById(reqDTO);
 		SmAddress mailAddress = new SmAddress();
-		mailAddress.setPmCountry(new PmCountry());
+		mailAddress.setPmCountry(resDTO.getPmCountry());
 		mailAddress.setPmState(new PmState());
 		mailAddress.setPmDistrict(new PmDistrict());
 		mailAddress.setPmCity(new PmCity());
@@ -107,8 +114,9 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		mailPersonnelAddress.setSmAddress(mailAddress);
 		mailPersonnelAddress.setSmPersonnel(smPersonnel);
 		
+		resDTO = reqSO.retrieveCountryById(reqDTO);
 		SmAddress permAddress = new SmAddress();
-		permAddress.setPmCountry(new PmCountry());
+		permAddress.setPmCountry(resDTO.getPmCountry());
 		permAddress.setPmState(new PmState());
 		permAddress.setPmDistrict(new PmDistrict());
 		permAddress.setPmCity(new PmCity());
