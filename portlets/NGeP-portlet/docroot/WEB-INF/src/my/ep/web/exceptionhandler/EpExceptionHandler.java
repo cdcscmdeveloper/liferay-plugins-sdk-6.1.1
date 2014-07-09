@@ -72,6 +72,7 @@ public class EpExceptionHandler extends ExceptionHandlerWrapper{
 		    //here you do what ever you want with exception
 		    try {
 		    	String msgCode = MessageConst.ERROR_000001;
+		    	int bpmcode = 0;
            	 	Object[] params = null;
 		    	@SuppressWarnings("unchecked")
 				List<Throwable> throwables = ExceptionUtils.getThrowableList(exception);
@@ -94,7 +95,7 @@ public class EpExceptionHandler extends ExceptionHandlerWrapper{
 	            	} else if (rootException instanceof EpBpmException) {
 	            		EpBpmException epex = (EpBpmException)rootException;
 	            		msgCode = epex.getMessage();
-	            		
+	            		bpmcode = epex.getCode();
 	            		break;
 	            	}
 		    	}
@@ -121,6 +122,11 @@ public class EpExceptionHandler extends ExceptionHandlerWrapper{
             	 
             	 if (!msgCode.equals(message)) {
             		 msgCode += ": " + message;
+            	 }
+            	 
+            	 if(bpmcode>0){
+            		 msgCode = MessageUtils.getMessage(
+            				 MessageConst.ERROR_BPM_CODE+String.valueOf(bpmcode), params, MessageUtils.BUNDLE_COMMON_MESSAGES, userLocale);
             	 }
             	 
             	 FacesContext.getCurrentInstance().addMessage(componentId, 
