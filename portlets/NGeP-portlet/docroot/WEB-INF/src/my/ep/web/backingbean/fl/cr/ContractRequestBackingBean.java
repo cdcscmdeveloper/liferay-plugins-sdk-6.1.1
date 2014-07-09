@@ -31,6 +31,7 @@ import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
+import my.ep.biz.service.pm.common.agoffice.IAgOfficeSO;
 import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
@@ -40,11 +41,13 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.programactivity.IProgramActivitySO;
 import my.ep.biz.service.pm.common.projectsetia.IProjectSetiaSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
+import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.ct.ContractReqDTO;
@@ -63,6 +66,8 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
+import my.ep.dto.pm.common.agoffice.AgOfficeReqDTO;
+import my.ep.dto.pm.common.agoffice.AgOfficeResDTO;
 import my.ep.dto.pm.common.city.CityReqDTO;
 import my.ep.dto.pm.common.city.CityResDTO;
 import my.ep.dto.pm.common.country.CountryReqDTO;
@@ -80,6 +85,8 @@ import my.ep.dto.pm.common.projectsetia.ProjectSetiaReqDTO;
 import my.ep.dto.pm.common.projectsetia.ProjectSetiaResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
+import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.fl.codata.FLContractOrderDataType;
 import my.ep.persistence.entity.cm.catalog.CmItem;
@@ -99,6 +106,7 @@ import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
+import my.ep.persistence.entity.pm.common.PmAgOffice;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
@@ -267,7 +275,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	}
 
 	public String submitAction(String action) throws Exception {
-		FacesScopes facesScopes = new FacesScopes();
 		IFulfilmentRequestSO iFulfilmentRequestSO = null;
 		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
@@ -317,7 +324,9 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			if (resDTO.isSuccessful()) {
 				log.info("Record saved successfully");
 				String messageId = MessageConst.INFO_700005;
-				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
+					messageId = MessageConst.INFO_700004;
+				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 					messageId = MessageConst.INFO_700007;
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
 					messageId = MessageConst.INFO_700009;
@@ -408,40 +417,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		return supplierBranches;
 	}
 
-	/*public List<SelectItem> getIssuedDivisionProfileList() {
-		List<SelectItem> retrieveDivisionList = new ArrayList<SelectItem>();
-		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject("pm", IOrgProfileSO.class);
-		retrieveDivisionList.add(new SelectItem("", "- Select One -"));
-		System.out.println("getOrgProfileId: "+ getManagedBean().getFlRequest().getIssuedOrgProfile().getOrgProfileId());
-		getManagedBean().getFlRequest().setIssuedOrgProfile(getManagedBean().getPmUserOrg().getPmOrgProfile());
-		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-		// reqDTO.setParentOrgProfileId(getManagedBean().getFlRequest().getIssuedOrgProfile().getParentOrgProfile().getParentOrgProfile().getOrgProfileId());
-		// reqDTO.setParentOrgProfileId(getManagedBean().getIssuedJabatanId());
-		reqDTO.setOrgType(OrganizationType.DEPARTMENT.value());
-		OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(reqDTO);
-
-		if (resDTO.getOrgProfileList() != null && !resDTO.getOrgProfileList().isEmpty()) {
-
-			List<PmOrgProfile> listDB = resDTO.getOrgProfileList();
-			for (PmOrgProfile obj : listDB) {
-				retrieveDivisionList.add(new SelectItem(obj.getOrgProfileId(),obj.getOrgName()));
-			}
-		}
-		return retrieveDivisionList;
-	}
-*/
-	/*public void removeAddRow() {
-
-		try {
-			getManagedBean().getFlRequest().getFlDeliveryAddresses().remove(getManagedBean().getSelectedDelAddr());
-			getManagedBean().setSelectedAddrRow(null);
-			getManagedBean().setSelectedItemsRows(null);
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-		}
-	}*/
-	
 	public void removeAddRow(){
 		if(null !=getManagedBean().getFlRequest().getFlDeliveryAddresses()){
 			Iterator<FlDeliveryAddress> delAddressIterator=getManagedBean().getFlRequest().getFlDeliveryAddresses().iterator();
@@ -595,8 +570,8 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 					paramReqDTO.setParameterId(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getDeliveryTermUom().getParameterId());
 					deliveryAddr.setPmUom(parameterSO.retrieveParameterById(paramReqDTO).getPmParameter());
 					deliveryAddr.setDeliveryTerm(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getDeliveryTerm());
-//					deliveryAddr.setReceivingGrp(addrType);
 				}
+				
 				deliveryAddr.setPmAddress(addrType.getPmAddress());
 				if(i==0) {
 					getManagedBean().setSelectedDelAddr(deliveryAddr);
@@ -860,13 +835,18 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			FacesScopes facesScopes = new FacesScopes();
 			getManagedBean().setContractId(Long.parseLong(contractId));
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
-			IContractSO contractSO = BusinessDelegate.getInstance().getServiceObject("ct", IContractSO.class);
+			IContractSO contractSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+			IStatusSO statusSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 			ContractReqDTO ctDTO = new ContractReqDTO();
 			ctDTO.setContractId(getManagedBean().getContractId());
 			ContractResDTO contractResDTO = contractSO.retrieveContract(ctDTO);
 			getManagedBean().getFlRequest().setCtContract(contractResDTO.getContract());
 			getManagedBean().getFlRequest().setScheduleNo(scheduleNo);
 			getManagedBean().getFlRequest().setSmSupplier(contractResDTO.getContract().getSmSupplier());
+			StatusReqDTO statusReqDTO = new StatusReqDTO();
+			statusReqDTO.setStatusId(FulfilmentStatusConst.CR_PENDING_SUBMISSION);
+			StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
+			getManagedBean().getFlRequest().setStatus(statusResDTO.getPmStatus());
 			
 			for(CtAgency agency : getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtAgencies()){
 				
@@ -2062,6 +2042,20 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			ProjectSetiaResDTO resDTO = projectSetiaSO.retrieveSubSetia(reqDTO);
 			getManagedBean().setFinancingTypeCode(resDTO.getPmSubSetia().getFinancingType().getParameterCode());
 		}
+	}
+	
+	public AgOfficeResDTO getAgAccount(){
+		getManagedBean().getFlRequest().getIssuedOrgProfile().getOrgProfileId();
+		IAgOfficeSO glAccountSO = (IAgOfficeSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IAgOfficeSO.class);
+		AgOfficeReqDTO reqDTO = new AgOfficeReqDTO();
+		reqDTO.setOrgProfileId(getManagedBean().getFlRequest().getIssuedOrgProfile().getOrgProfileId());
+		AgOfficeResDTO resDTO = glAccountSO.retrieveAgOfficeByOrgProfileId(reqDTO);
+		if(getManagedBean().getFlRequest().getAgOffice()==null){
+			getManagedBean().getFlRequest().setAgOffice(new PmAgOffice());
+		}
+		getManagedBean().getFlRequest().setAgOffice(resDTO.getAgOffice());
+
+		return resDTO;
 	}
 	
 }

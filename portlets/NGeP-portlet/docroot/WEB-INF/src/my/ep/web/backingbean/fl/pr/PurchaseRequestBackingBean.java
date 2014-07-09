@@ -95,6 +95,7 @@ import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
+import my.ep.persistence.entity.pm.common.PmAgOffice;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
@@ -1617,14 +1618,16 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		return resDTO;
 	}
 	
-	public AgOfficeResDTO getAgAccount(Long orgProfileId){
-		IAgOfficeSO glAccountSO = (IAgOfficeSO) BusinessDelegate.getInstance().getServiceObject("pm",IAgOfficeSO.class);
+	public AgOfficeResDTO getAgAccount(){
+		getManagedBean().getFulfilmentRequest().getIssuedOrgProfile().getOrgProfileId();
+		IAgOfficeSO glAccountSO = (IAgOfficeSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IAgOfficeSO.class);
 		AgOfficeReqDTO reqDTO = new AgOfficeReqDTO();
-		reqDTO.setOrgProfileId(orgProfileId);
+		reqDTO.setOrgProfileId(getManagedBean().getFulfilmentRequest().getIssuedOrgProfile().getOrgProfileId());
 		AgOfficeResDTO resDTO = glAccountSO.retrieveAgOfficeByOrgProfileId(reqDTO);
-		getManagedBean().setAgOfficeId(resDTO.getAgOffice().getAgOfficeId()) ;
-		getManagedBean().setAgOfficeName(resDTO.getAgOffice().getOfficeName());
-		getManagedBean().getFulfilmentRequest().getAgOffice().setAgOfficeId(resDTO.getAgOffice().getAgOfficeId());
+		if(getManagedBean().getFulfilmentRequest().getAgOffice()==null){
+			getManagedBean().getFulfilmentRequest().setAgOffice(new PmAgOffice());
+		}
+		getManagedBean().getFulfilmentRequest().setAgOffice(resDTO.getAgOffice());
 
 		return resDTO;
 	}

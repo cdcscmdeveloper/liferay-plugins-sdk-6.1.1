@@ -40,7 +40,8 @@
 						lovId="PM_ORG_PROFILE" headerText="IssuePtj Lov"
 						saveObject="purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.orgName}"
-						update=":form:issuedOrgProfileId" readonly="true" size="39"
+						update=":form:issuedOrgProfileId,form:agOffice" readonly="true" size="39"
+						postUpdateListener="#{purchaseRequestBackingBean.agAccount}"
 						conditionField="parentOrgProfile.orgProfileId^#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.parentOrgProfile.orgProfileId}">
 					</ac:lov></td>
 			</tr>										
@@ -57,7 +58,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.accounting.ofc']}" /></td>
-				<td><p:inputText size="5" disabled="true"
+				<td><p:inputText size="5" disabled="true" id="agOffice"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.agOffice.officeCode}" />
 					<p:spacer width="5" /> <p:inputText size="39" disabled="true"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.agOffice.officeName}" />

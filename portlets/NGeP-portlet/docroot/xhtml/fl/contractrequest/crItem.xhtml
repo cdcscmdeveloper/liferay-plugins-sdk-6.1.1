@@ -37,13 +37,13 @@
 				<h:outputText rendered="#{address.addressType eq null}"
 					value="#{address.pmAddress.address1}, #{address.pmAddress.address2}, #{address.pmAddress.address3}, #{address.pmAddress.address4}" />
 			</p:column>
-			<p:column headerText="Delivery Term">
-				<h:outputText style="text-align:right"
+			<p:column headerText="Delivery Term" style="text-align:right">
+				<h:outputText
 					value="#{address.deliveryTerm} #{contractRequestBackingBean.getParameterDesc(address.pmUom)}" />
 			</p:column>
 
 			<p:column headerText="Exp. Delivery (Start)">
-				<p:calendar value="#{address.startDate}" id="calStartDate"
+				<p:calendar value="#{address.startDate}" id="calStartDate" 
 					showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 					<p:ajax event="dateSelect"
 						listener="#{contractRequestBackingBean.updateDeliveryAddrDate}"
@@ -52,10 +52,10 @@
 			</p:column>
 
 			<p:column headerText="Exp. Delivery (End)">
-				<p:calendar value="#{address.endDate}" id="calEndDate" disabled="true" readonlyInput="true"
+				<p:calendar value="#{address.endDate}" id="calEndDate" disabled="true" readonlyInput="true" 
 					showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 			</p:column>
-			<p:column headerText=" Recv. Officer">
+			<p:column headerText=" Recv. Officer" style="text-align:center">
 				<h:outputText style="text-align:right" />
 				<p:commandLink oncomplete="addOfficer.show();"
 					action="#{contractRequestBackingBean.receivingOfficerList(address)}"
@@ -112,18 +112,18 @@
 				<p:column headerText="Item Name">
 					<h:outputText value="#{item.scRequestItem.itemName}" />
 				</p:column>
-				<p:column headerText="Unit Price (MYR)">
+				<p:column headerText="Unit Price (MYR)" style="text-align:right">
 					<p:inputText value="#{item.unitPrice}" disabled="true"
 						style="text-align:right"></p:inputText>
 				</p:column>
-				<p:column headerText="Ord. Qty.">
+				<p:column headerText="Ord. Qty." style="text-align:right">
 					<p:inputText value="#{item.orderedQty}" style="text-align:right"
 						required="true" requiredMessage="Please input the quantity.">
 						<p:ajax update="subTotalTxt"
 							listener="#{contractRequestBackingBean.retrieveOrderAmount(item)}"></p:ajax>
 					</p:inputText>
 				</p:column>
-				<p:column headerText="Sub Total">
+				<p:column headerText="Sub Total" style="text-align:right">
 					<p:inputText id="subTotalTxt" style="text-align:right"
 						value="#{item.orderedAmt}" disabled="true">
 						<f:convertNumber pattern="#,#00.00" />

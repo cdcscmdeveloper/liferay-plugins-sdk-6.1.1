@@ -37,8 +37,9 @@
 						readonly="true"
 						saveObject="contractRequestBackingBean.managedBean.flRequest.issuedOrgProfile"
 						value="#{contractRequestBackingBean.managedBean.flRequest.issuedOrgProfile.orgName}"
-						conditionField="orgProfileId^#{contractRequestBackingBean.managedBean.testOrg}"
-						update=":form:ministry,:form:issuedOrgProfileId">
+						conditionField="parentOrgProfile.orgProfileId^#{contractRequestBackingBean.managedBean.flRequest.issuedOrgProfile.parentOrgProfile.orgProfileId}"
+						postUpdateListener="#{contractRequestBackingBean.agAccount}"
+						update=":form:ministry,:form:issuedOrgProfileId,:form:agOffice">
 					</ac:lov></td>
 			</tr>
 			<tr>
@@ -55,7 +56,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.accounting.ofc']}" /></td>
-				<td><p:inputText size="5" disabled="true"
+				<td><p:inputText size="5" disabled="true" id="agOffice"
 						value="#{contractRequestBackingBean.managedBean.flRequest.agOffice.officeCode}" />
 					<p:spacer width="5" /> <p:inputText size="39" disabled="true"
 						value="#{contractRequestBackingBean.managedBean.flRequest.agOffice.officeName}" /></td>
@@ -141,7 +142,6 @@
 				<td><p:selectBooleanCheckbox disabled="true"
 						value="#{contractRequestBackingBean.managedBean.flRequest.ctContract.factored}" /></td>
 			</tr>
-
 		</table>
 	</p:panel>
 	<p:panel header="SUPPLIER DETAIL" toggleable="true">
