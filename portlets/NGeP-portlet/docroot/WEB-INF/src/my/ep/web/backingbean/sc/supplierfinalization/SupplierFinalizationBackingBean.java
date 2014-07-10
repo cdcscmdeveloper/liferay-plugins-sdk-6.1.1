@@ -119,6 +119,9 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 	public static final int PREPARE_ACTIVE_INDEX_COMMITTEE = 1;
 	public static final int PREPARE_ACTIVE_INDEX_JOIN_IN = 2;
 	
+	public static final int ONLINE_BIDDING_ACTIVE_INDEX_SUMMARY = 0;
+	public static final int ONLINE_ACTIVE_INDEX_ENDORSEMENT = 1;
+	
 	public static final String NAVIGATE_TO_PREPARATION = "suppFinalizationMenu.xhtml";
 	
 	//temporary
@@ -938,6 +941,52 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		} finally {
 			qtSuppFinalizationSO = null;
 		}
+	}
+	
+	/**
+	 * To retrieve the details of Online Bidding Summary
+	 */
+	private void retrieveBiddingSummary() {
+		//TODO
+		/*IQTMeetingSO meetingSO;
+		try {
+			meetingSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTMeetingSO.class);
+
+			MeetingReqDTO reqDTO = new MeetingReqDTO();
+			reqDTO.setQtId(qtId);
+			reqDTO.setCommitteType(committeeType);
+			reqDTO.setIsAttended(null);
+			
+			MeetingResDTO resDTO = meetingSO.retrieveSignOffCommitteeListByCommType(reqDTO);
+			if (resDTO.getCommitteMembers() != null) {
+				this.getManagedBean().setCommitteeEndorsementList(resDTO.getCommitteMembers());
+			}
+		} finally {
+			meetingSO = null;
+		}*/
+	}
+	
+	/**
+	 * To retrieve the commitee of Online Bidding Endorsement
+	 */
+	private void retrieveOnlineBiddingEndorsement() {
+		//TODO
+		/*IQTMeetingSO meetingSO;
+		try {
+			meetingSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTMeetingSO.class);
+
+			MeetingReqDTO reqDTO = new MeetingReqDTO();
+			reqDTO.setQtId(qtId);
+			reqDTO.setCommitteType(committeeType);
+			reqDTO.setIsAttended(null);
+			
+			MeetingResDTO resDTO = meetingSO.retrieveSignOffCommitteeListByCommType(reqDTO);
+			if (resDTO.getCommitteMembers() != null) {
+				this.getManagedBean().setCommitteeEndorsementList(resDTO.getCommitteMembers());
+			}
+		} finally {
+			meetingSO = null;
+		}*/
 	}
 	
 	private void commonMessageAcknowledmentPage(String messageId, String variable1, String variable2){

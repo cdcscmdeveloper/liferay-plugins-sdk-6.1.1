@@ -34,6 +34,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private int activeIndex;
 	private int prepareActiveIndex;
 	private int zoneActiveIndex;
+	private int onlineBiddingActiveIndex;
 	
 	//Header
 	private ScQt scQt;
@@ -94,6 +95,10 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	//Committee Endorsement
 	private List<ScQtCommitteeActivity> committeeEndorsementList;
 	private List<ScQtCommitteeActivity> reminderList;
+	
+	//Online Bidding Endorsement
+	private List<ScQtCommitteeActivity> onlineBiddingEndorsementList;
+	private List<ScQtCommitteeActivity> onlineBiddingReminderList;
 	
 	private String subject;
 	private String message;
@@ -830,6 +835,50 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	 */
 	public void setForwardToBpk(boolean isForwardToBpk) {
 		this.isForwardToBpk = isForwardToBpk;
+	}
+
+	/**
+	 * @return the onlineBiddingActiveIndex
+	 */
+	public int getOnlineBiddingActiveIndex() {
+		return onlineBiddingActiveIndex;
+	}
+
+	/**
+	 * @param onlineBiddingActiveIndex the onlineBiddingActiveIndex to set
+	 */
+	public void setOnlineBiddingActiveIndex(int onlineBiddingActiveIndex) {
+		this.onlineBiddingActiveIndex = onlineBiddingActiveIndex;
+	}
+
+	/**
+	 * @return the onlineBiddingEndorsementList
+	 */
+	public List<ScQtCommitteeActivity> getOnlineBiddingEndorsementList() {
+		return onlineBiddingEndorsementList;
+	}
+
+	/**
+	 * @param onlineBiddingEndorsementList the onlineBiddingEndorsementList to set
+	 */
+	public void setOnlineBiddingEndorsementList(
+			List<ScQtCommitteeActivity> onlineBiddingEndorsementList) {
+		this.onlineBiddingEndorsementList = onlineBiddingEndorsementList;
+	}
+
+	/**
+	 * @return the onlineBiddingReminderList
+	 */
+	public List<ScQtCommitteeActivity> getOnlineBiddingReminderList() {
+		return onlineBiddingReminderList;
+	}
+
+	/**
+	 * @param onlineBiddingReminderList the onlineBiddingReminderList to set
+	 */
+	public void setOnlineBiddingReminderList(
+			List<ScQtCommitteeActivity> onlineBiddingReminderList) {
+		this.onlineBiddingReminderList = onlineBiddingReminderList;
 	}
 	
 	

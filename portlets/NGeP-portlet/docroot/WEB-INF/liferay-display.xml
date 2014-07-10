@@ -96,6 +96,7 @@
             <portlet id="scPresentation Demo" />
             <portlet id="scSupplierFinalizationMeetingConfirmation"/>
 			<portlet id="scSupplierFinalization"/>
+			<portlet id="scSupplierFinalizationEndorsement"/>
             <portlet id="Bidding List" />
             <portlet id="PurchaseInquiry"/>
             <portlet id="Simple Quote"></portlet>

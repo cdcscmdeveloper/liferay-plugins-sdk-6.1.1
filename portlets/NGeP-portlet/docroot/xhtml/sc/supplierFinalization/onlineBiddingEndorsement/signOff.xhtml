@@ -1,40 +1,36 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition
-	template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	
-	<ui:define name="resourceSection"/>
-	
-	<ui:define name="contentSection">
-		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
-		
+
+	<p:dialog id="signOffPopUp" header="#{lbl['lbl.sc.sign.off']}"
+		widgetVar="chairPerson" width="600" height="250" position="top">
+
 		<p:panel>
-			<ui:include src="/xhtml/sc/supplierFinalization/suppFinalizationHeader.xhtml" />
-			
-			<p:tabView dynamic="true" cache="true" orientation="left">
-				<p:ajax event="tabChange" listener="#{suppFinalizationBackingBean.onTabChangeAction}" immediate="true" />
-	
-				<p:tab title="#{lbl['lbl.sc.meeting.details']}" >
-					<ui:include src="/xhtml/sc/supplierFinalization/preparation/meetingDtls.xhtml"></ui:include>
-				</p:tab>
-	
-				<p:tab title="#{lbl['lbl.sc.committee.b']}" >
-					<ui:include src="/xhtml/sc/supplierFinalization/preparation/committeeDtls.xhtml"></ui:include>
-				</p:tab>
-	
-				<p:tab title="#{lbl['lbl.sc.join.in']}">
-					<ui:include src="/xhtml/sc/supplierFinalization/preparation/meetingAttendanceDtls.xhtml"></ui:include>
-				</p:tab>
-	
-			</p:tabView>
+			<h:panelGrid styleClass="noBorders tr,noBorders td" columns="2">
+				<h:outputLabel value="#{lbl['lbl.sc.pin.no']}" />
+				<p:inputText size="50" value="#{suppFinalizationBackingBean.managedBean.pinNo}"></p:inputText>
+			</h:panelGrid>
 		</p:panel>
-	</ui:define>
-	
-	<ui:define name="footerSection"/>
-	
+
+		<div align="right">
+			<p:commandButton 
+				value="#{lbl['lbl.btn.cancel']}"
+				style="float:right;" 
+				onclick="signOffPopUp.hide();"
+				icon="ui-icon-cancel"/>
+
+			<p:commandButton 
+				value="#{lbl['lbl.btn.submit']}"
+				style="float:right;" 
+				action="#{suppFinalizationBackingBean.signOff}"
+				oncomplete="signOffPopUp.hide();"
+				icon="ui-icon-submit"/>
+		</div>
+	</p:dialog>
+
 </ui:composition>
