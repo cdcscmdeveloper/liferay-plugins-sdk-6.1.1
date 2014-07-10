@@ -17,7 +17,8 @@
 
 			<p:column headerText="Deduction Type">
 				<p:selectOneMenu value="#{deductpayment.deductionType.parameterId}">
-					<f:selectItem itemLabel="-- Select --" itemValue="#{null}" />
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+						itemValue="#{null}" />
 					<f:selectItems
 						value="#{qTDeductionPaymentBackingBean.retrieveDeductionType(ParameterTypeConst.deductionType)}"
 						var="app" itemLabel="#{app.codeName}"
@@ -26,6 +27,13 @@
 						update="@form"
 						listener="#{qTDeductionPaymentBackingBean.deductionPaymentEvent(deductpayment)}" />
 				</p:selectOneMenu>
+			</p:column>
+
+			<p:column headerText="Deduction Amount"
+				rendered="#{qTDeductionPaymentBackingBean.managedBean.qtDeduction.deductionType.parameterId eq '108'}">
+				<p:inputText size="30" maxlength="18"
+					value="#{deductpayment.deductionAmount}"
+					style="margin-right:5px;text-align:right;" />
 			</p:column>
 
 		</p:dataTable>

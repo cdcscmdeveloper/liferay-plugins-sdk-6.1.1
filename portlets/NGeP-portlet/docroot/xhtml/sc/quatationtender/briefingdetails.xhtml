@@ -15,22 +15,35 @@
 			<table style="width: 100%" border="0">
 				<tr>
 					<td valign="top"><p:outputLabel
-							value="#{lbl['lbl.so.briefdesc']}" /></td>
-					<td colspan="3"><p:inputText
+							value="#{lbl['lbl.so.briefdesc']}" /> <p:outputLabel value="*"
+							styleClass="mandatory" /></td>
+					<td colspan="3"><p:inputText id="briefdesc"
+							required="#{qTBriefingSiteVisitBackingBean.managedBean.required}"
+							label="#{lbl['lbl.so.briefdesc']}"
 							value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.bsvDesc}"
-							style="margin-top:5px;" size="95" maxlength="50" /></td>
+							style="margin-top:5px;" size="95" maxlength="50" />
+						<p:message id="briefdescMsg" for="briefdesc" display="icon" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.so.briefdate']}" /></td>
-					<td colspan="3"><p:calendar
+					<td><p:outputLabel value="#{lbl['lbl.so.briefdate']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td colspan="3"><p:calendar id="briefdate"
+							required="#{qTBriefingSiteVisitBackingBean.managedBean.required}"
+							label="#{lbl['lbl.so.briefdate']}"
 							value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.bsvDate}"
-							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button" /></td>
+							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button" />
+						<p:message id="briefdateMsg" for="briefdate" display="icon" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.so.location']}" /></td>
-					<td colspan="3"><p:inputText
+					<td><p:outputLabel value="#{lbl['lbl.so.location']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td colspan="3"><p:inputText id="brieflocation"
+							required="#{qTBriefingSiteVisitBackingBean.managedBean.required}"
+							label="#{lbl['lbl.so.location']}"
 							value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.location}"
-							style="margin-top:5px;" size="30" maxlength="450" /></td>
+							style="margin-top:5px;" size="30" maxlength="450" /> <p:message
+							id="brieflocationMsg" for="brieflocation" display="icon" /></td>
+
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.so.add1']}" /></td>
@@ -109,10 +122,14 @@
 							for="briefpost" display="icon" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.so.coordinateofficer']}" /></td>
-					<td colspan="3"><p:inputText
+					<td><p:outputLabel value="#{lbl['lbl.so.coordinateofficer']}" />
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td colspan="3"><p:inputText id="briefofficer"
+							required="#{qTBriefingSiteVisitBackingBean.managedBean.required}"
+							label="#{lbl['lbl.so.coordinateofficer']}"
 							value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.coordinatingOfficer}"
-							size="95" maxlength="50" /></td>
+							size="95" maxlength="50" /> <p:message id="briefofficerMsg"
+							for="briefofficer" display="icon" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.so.maxattendance']}" /></td>

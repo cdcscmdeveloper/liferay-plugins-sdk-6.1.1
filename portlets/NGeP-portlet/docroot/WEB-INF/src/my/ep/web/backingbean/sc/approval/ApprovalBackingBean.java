@@ -86,9 +86,6 @@ public class ApprovalBackingBean extends
 			this.getManagedBean().getScQtApproval().setApprovalCategory(new PmParameter());
 		}
 
-		initializeRemark(new ArrayList<ScQtApprovalRemark>());
-
-		// getBudgetApproverName();
 	}
 
 	/**
@@ -309,11 +306,13 @@ public class ApprovalBackingBean extends
 			this.getManagedBean().setApprovalType(
 					ApprovalCategory.BPK_APPROVAL.dispalyName());
 			ScQtApproval approval = getApproval(qtId, "BPK");
+			this.getManagedBean().setScQtApproval(approval);
+			initializeRemark(new ArrayList<ScQtApprovalRemark>());
 		} else if (SCProcessNameConst.REVISE_BPK.equalsIgnoreCase(taskName)) {
 			this.getManagedBean().setApprovalType(
 					ApprovalCategory.BPK_APPROVAL.dispalyName());
 			ScQtApproval approval = getApproval(qtId, "BPK");
-
+			this.getManagedBean().setScQtApproval(approval);
 		} else if (SCProcessNameConst.APPROVE_COMMITTEE
 				.equalsIgnoreCase(taskName)) {
 			// QTCommitteBackingBean backingBean= new QTCommitteBackingBean();

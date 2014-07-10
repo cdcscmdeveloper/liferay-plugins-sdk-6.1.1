@@ -12,7 +12,8 @@
 			rowKey="#{requestdetails}">
 
 			<p:column headerText="#{lbl['lbl.sc.qt.type.reqdtls']}">
-				<h:outputText value="#{requestdetails.approvalType.parameterCode}" />
+				<h:outputText
+					value="#{approvalBackingBean.getParameterDesc(requestdetails.approvalType)}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.qt.from']}">
 				<h:outputText value="#{requestdetails.originalValue}" />

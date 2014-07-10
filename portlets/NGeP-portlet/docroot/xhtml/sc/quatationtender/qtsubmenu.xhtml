@@ -26,11 +26,11 @@
 					<p:menuitem value="#{lbl['lbl.qt.tecnical.spec']}"
 						action="#{qTDetailBB.retriveTechnicalSpecification}"
 						update="@form"
-						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId.intValue() lt 60002)}" />
+						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId.intValue() le 60002)}" />
 					<p:menuitem value="#{lbl['lbl.qt.finanial.spec']}"
 						action="#{qTDetailBB.retriveFinancialSpecification}"
 						update="@form"
-						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId.intValue() lt 60002)}" />
+						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId.intValue() le 60002)}" />
 					<p:menuitem value="#{lbl['lbl.qt.bsv.sample']}"
 						action="#{qTDetailBB.retrieveBriefingSitevisitTabDtl}"
 						update="@form"
@@ -69,7 +69,7 @@
 						<ui:include src="approvalWorkFlowMain.xhtml" />
 					</c:if>
 					<ui:fragment
-						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId.intValue() lt 60002)}">
+						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId.intValue() le 60002)}">
 						<c:if test="#{qTDetailBB.managedBean.activeIndex eq '4'}">
 							<ui:include src="qttechnicalchecklist.xhtml" />
 						</c:if>
