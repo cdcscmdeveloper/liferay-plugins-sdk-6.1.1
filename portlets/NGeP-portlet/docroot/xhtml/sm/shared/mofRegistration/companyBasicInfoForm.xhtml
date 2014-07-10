@@ -214,6 +214,8 @@
 					<td><p:outputLabel value="#{lbl['lbl.sm.annualRev']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+							label="#{lbl['lbl.sm.annualRev']}" required="true"
+							id="smSupAnnRev"
 							value="#{backingBean.managedBean.smAppl.smCompanyBasic.annualRevenue}">
 							<f:selectItem itemLabel="-- Select -- " itemValue="" />
 							<f:selectItem itemLabel="Kurang Daripada RM 100,000"
@@ -224,7 +226,8 @@
 								itemValue="3" />
 							<f:selectItem itemLabel="Lebih Daripada RM 1,000,000"
 								itemValue="4" />
-						</p:selectOneMenu></td>
+						</p:selectOneMenu> <p:message id="smSupAnnRevMsg" for="smSupAnnRev"
+							showSummary="true" showDetail="false" display="icon" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>

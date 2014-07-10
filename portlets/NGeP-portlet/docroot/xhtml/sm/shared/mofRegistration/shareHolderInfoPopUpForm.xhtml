@@ -321,6 +321,19 @@
 						<f:selectItem itemLabel="No" itemValue="0" />
 					</p:selectOneRadio></td>
 			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.eprole']}" /></td>
+				<td><p:selectOneMenu id="smPersnEpRole"
+						label="#{lbl['lbl.sm.userprofile.eprole']}"
+						value="#{backingBean.managedBean.selectedShareHolder.epRole}"
+						style="width: 207px;margin: 5px 0px 5px 0px;">
+						<f:selectItem itemLabel="-- Select --" itemValue="" />
+						<f:selectItem itemLabel="Supplier User" itemValue="U"
+							itemDisabled="#{backingBean.managedBean.selectedShareHolder.authorizedFlg ne '1'}" />
+						<f:selectItem itemLabel="Catalog User" itemValue="C" />
+					</p:selectOneMenu> <p:message id="smPersnEpRoleMsg" for="smPersnEpRole"
+						showSummary="true" showDetail="false" display="icon" /></td>
+			</tr>
 		</table>
 
 	</p:panel>
@@ -330,6 +343,19 @@
 		<table>
 			<tr>
 				<td><h:outputText value="#{lbl['lbl.sm.person.authMsg']}" /></td>
+			</tr>
+		</table>
+		<table style="width: 50%">
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.eprole']}" /></td>
+				<td><p:selectOneMenu id="smUnAuthPersnEpRole"
+						label="#{lbl['lbl.sm.userprofile.eprole']}"
+						value="#{backingBean.managedBean.selectedShareHolder.epRole}"
+						style="width: 207px;margin: 5px 0px 5px 0px;">
+						<f:selectItem itemLabel="-- Select --" itemValue="" />
+						<f:selectItem itemLabel="Catalog User" itemValue="C" />
+					</p:selectOneMenu> <p:message id="smUnAuthPersnEpRoleMsg" for="smUnAuthPersnEpRole"
+						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 		</table>
 
