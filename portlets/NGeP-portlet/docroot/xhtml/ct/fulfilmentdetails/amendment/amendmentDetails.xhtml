@@ -191,9 +191,9 @@
 						</p:row>
 					</p:columnGroup>
 						<p:column> <p:outputLabel value="#{data.ctAmendment.fileRefNo}"/></p:column>
-						<p:column> <p:outputLabel value="#{data.ctContractValue.extendPeriod}"/></p:column>
-						<p:column> <p:outputLabel value="#{amendmentBackingBean.convertTime(data.ctContractValue.effDate)}"/></p:column>
-						<p:column> <p:outputLabel value="#{amendmentBackingBean.convertTime(data.ctContractValue.expDate)}"/></p:column>
+						<p:column> <p:outputLabel value="#{data.ctAmendment.extendPeriod}"/></p:column>
+						<p:column> <p:outputLabel value="#{amendmentBackingBean.convertTime(data.ctAmendment.extendStartDate)}"/></p:column>
+						<p:column> <p:outputLabel value="#{amendmentBackingBean.convertTime(data.ctAmendment.extendEndDate)}"/></p:column>
 				</p:dataTable>
 			</h:panelGrid>
 		</h:panelGrid>

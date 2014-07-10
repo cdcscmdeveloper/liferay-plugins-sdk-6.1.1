@@ -26,6 +26,7 @@ import my.ep.persistence.entity.ct.dtl.item.CtItemCeilingQty;
 import my.ep.persistence.entity.ct.dtl.item.CtItemMaxQty;
 import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -128,6 +129,8 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private boolean tabMenuShowForZone;
 	private boolean tabMenuShowNoZone;
 	private boolean tabMenuShowNoZoneNoItem;
+	
+	private ScLoaReport selectedScLoaReports;
 	
 	public CtContractVer getContractVer() {
 		return contractVer;
@@ -714,5 +717,13 @@ public class AmendmentManagedBean extends BaseManagedBean {
 
 	public void setTabMenuShowNoZoneNoItem(boolean tabMenuShowNoZoneNoItem) {
 		this.tabMenuShowNoZoneNoItem = tabMenuShowNoZoneNoItem;
+	}
+
+	public ScLoaReport getSelectedScLoaReports() {
+		return selectedScLoaReports;
+	}
+
+	public void setSelectedScLoaReports(ScLoaReport selectedScLoaReports) {
+		this.selectedScLoaReports = selectedScLoaReports;
 	}
 }

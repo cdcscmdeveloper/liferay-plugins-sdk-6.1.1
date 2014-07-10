@@ -28,7 +28,6 @@ import java.util.zip.Deflater;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -119,6 +118,8 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
+import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
+import my.ep.persistence.entity.sc.loaloi.ScLoaReportAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmSupplierBank;
@@ -152,8 +153,6 @@ import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
-
-import com.liferay.portal.kernel.search.ParseException;
 import com.liferay.portal.util.PortalUtil;
 
 /**
@@ -162,7 +161,6 @@ import com.liferay.portal.util.PortalUtil;
  * @author Alam
  * @since 1/13/2014
  */
-
 @ManagedBean (name = "amendmentBackingBean")
 @RequestScoped
 public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> {
@@ -175,13 +173,16 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	private PmUser[] selectedPmUser;
 	private CtMeeting[] selectedMeetingUser;
 	private List<SelectItem> populateBankAccountList;
+	 ContractBackingBean ctBackingBean;
 	
 	public AmendmentBackingBean(){
 		if(this.getManagedBean().getAction() == null) {
 			 this.getManagedBean().setAction(new String[] { BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT });
 		}
-		 ContractBackingBean ctBackingBean = new ContractBackingBean();
-		  ctBackingBean.initializeRemarkAndAttachement(this.getManagedBean().getRemarkList(), this.getManagedBean().getAttachmentList());
+		if(ctBackingBean == null){
+		     ctBackingBean = new ContractBackingBean();
+		     ctBackingBean.initializeRemarkAndAttachement(this.getManagedBean().getRemarkList(), this.getManagedBean().getAttachmentList());
+		}
 	}
 	
 	private FacesScopes getFacesScopes(){
@@ -189,42 +190,24 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		return facesScopes;
 	}
 	
-	@PostConstruct
-	public void initializeContractValue() throws ParseException { 
-		   if(this.getManagedBean().getCtCommitteeMember() == null){
-			  this.getManagedBean().setCtCommitteeMember(new CtCommitteeMember());
-			  if(this.getManagedBean().getCtCommitteeMember().getPmUser() == null){
-				  this.getManagedBean().getCtCommitteeMember().setPmUser(new PmUser());				  
-			  }
-			  if(this.getManagedBean().getCtCommitteeMember().getMemberRole() == null){
-				  this.getManagedBean().getCtCommitteeMember().setMemberRole(new PmParameter());
-			  }
-		  }
-	}
-	
 	public void setTabMenuValue(){
-		 flush();
-		if(getManagedBean().getCtContract().isZonalPricing() && 
-				(getManagedBean().getContractVer().getCtAmendment().isQuantityChange()
-					  || getManagedBean().getContractVer().getCtAmendment().isItemPriceChange())){
+		  flush();
+		  if(getManagedBean().getCtContract().isZonalPricing() && (getManagedBean().getContractVer().getCtAmendment().isQuantityChange()
+		     || getManagedBean().getContractVer().getCtAmendment().isItemPriceChange())){
 				          getManagedBean().setTabMenuShowForZone(true);
 		
-			}else if(!getManagedBean().getCtContract().isZonalPricing() && 
-					 (getManagedBean().getContractVer().getCtAmendment().isQuantityChange()
-					  ||getManagedBean().getContractVer().getCtAmendment().isItemPriceChange())){
+	     }else if(!getManagedBean().getCtContract().isZonalPricing() && (getManagedBean().getContractVer().getCtAmendment().isQuantityChange()
+					 ||getManagedBean().getContractVer().getCtAmendment().isItemPriceChange())){
 				         getManagedBean().setTabMenuShowNoZone(true);
 			
-			}else if(!getManagedBean().getCtContract().isZonalPricing() && 
-					    !(getManagedBean().getContractVer().getCtAmendment().isQuantityChange()
-							  || getManagedBean().getContractVer().getCtAmendment().isItemPriceChange())){
-						          getManagedBean().setTabMenuShowNoZoneNoItem(true);
+		}else if(!getManagedBean().getCtContract().isZonalPricing() &&  !(getManagedBean().getContractVer().getCtAmendment().isQuantityChange()
+					|| getManagedBean().getContractVer().getCtAmendment().isItemPriceChange())){
+						getManagedBean().setTabMenuShowNoZoneNoItem(true);
 		
-			} else if(getManagedBean().getCtContract().isZonalPricing() && 
-				    !(getManagedBean().getContractVer().getCtAmendment().isQuantityChange()
-						  || getManagedBean().getContractVer().getCtAmendment().isItemPriceChange())){
-					          getManagedBean().setTabMenuShowNoZoneNoItem(true);
-				}
-		
+		}else if(getManagedBean().getCtContract().isZonalPricing() && !(getManagedBean().getContractVer().getCtAmendment().isQuantityChange()
+					|| getManagedBean().getContractVer().getCtAmendment().isItemPriceChange())){
+					     getManagedBean().setTabMenuShowNoZoneNoItem(true);
+		}
 	}
 	
 	public void flush(){
@@ -237,24 +220,24 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		flush();
 		if((tabValue == 0 || tabValue == 1 || tabValue == 2 || tabValue == 3 || tabValue == 3 || tabValue == 4 || tabValue == 5 || tabValue == 6 || tabValue == 7)   
 			  && this.getManagedBean().getCtContract().isZonalPricing() && (this.getManagedBean().getContractVer().getCtAmendment().isQuantityChange()
-				  || this.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange())){
-			          this.getManagedBean().setTabMenuShowForZone(true);
+			 || this.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange())){
+			      this.getManagedBean().setTabMenuShowForZone(true);
 	
 		}else if((tabValue == 0 || tabValue == 1 || tabValue == 2 || tabValue == 3 || tabValue == 3 || tabValue == 4 || tabValue == 5 || tabValue == 6)   
-			  && !this.getManagedBean().getCtContract().isZonalPricing() && (this.getManagedBean().getContractVer().getCtAmendment().isQuantityChange()
-				  || this.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange())){
+			    && !this.getManagedBean().getCtContract().isZonalPricing() && (this.getManagedBean().getContractVer().getCtAmendment().isQuantityChange()
+			   || this.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange())){
 			      this.getManagedBean().setTabMenuShowNoZone(true);
 		
 		}else if((tabValue == 0 || tabValue == 1 || tabValue == 2 || tabValue == 3 || tabValue == 3 || tabValue == 4 || tabValue == 5)   
 				  && !this.getManagedBean().getCtContract().isZonalPricing() && !(this.getManagedBean().getContractVer().getCtAmendment().isQuantityChange()
-						  || this.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange())){
+				  || this.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange())){
 					      this.getManagedBean().setTabMenuShowNoZoneNoItem(true);
+	
 		}else if((tabValue == 0 || tabValue == 1 || tabValue == 2 || tabValue == 3 || tabValue == 3 || tabValue == 4 || tabValue == 5)   
 				  && this.getManagedBean().getCtContract().isZonalPricing() && !(this.getManagedBean().getContractVer().getCtAmendment().isQuantityChange()
-						  || this.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange())){
-					      this.getManagedBean().setTabMenuShowNoZoneNoItem(true);
-		}
-		this.getManagedBean().setSelectedTabIndex(tabValue);
+				  || this.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange())){
+					   this.getManagedBean().setTabMenuShowNoZoneNoItem(true);
+		}this.getManagedBean().setSelectedTabIndex(tabValue);
 	}
 	
 	public void resetbooenaValue(){
@@ -334,10 +317,10 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 					this.getManagedBean().setSignUpdateDecision(true);
 			   }
 			} else if (res.getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME) || 
-					res.getTaskName().equalsIgnoreCase(CTProcessNameConst.VERIFY_FA_HT_NAME)) {
+				res.getTaskName().equalsIgnoreCase(CTProcessNameConst.VERIFY_FA_HT_NAME)) {
 				this.getManagedBean().setLetterOfAcceptance(true);
 				this.getManagedBean().setPrepareLOA(true);
-				this.getManagedBean().setWitnessHeader("AGENCY WITNESS DETAILS");
+				this.getManagedBean().setWitnessHeader(ContractConst.AGENCY_WITNES_HEADER);
 				if(this.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().size() > 0 && 
 						this.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers() != null){
 					this.getManagedBean().setDecisionPbQcLOA(true);
@@ -355,8 +338,8 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				this.getManagedBean().setPbConfirmMeeting(true);
 				this.getManagedBean().setSignUpdateDecision(false);
 			} else if (res.getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)) {
-				this.getManagedBean().setAckFA("Ack");
-				this.getManagedBean().setWitnessHeader("SUPPLIER WITNESS DETAILS");
+				this.getManagedBean().setAckFA(ContractConst.SUPPLIER_ACK_LOA);
+				this.getManagedBean().setWitnessHeader(ContractConst.SUPPLIER_WITNES_HEADER);
 				
 				contractTemplateSO = (IContractTemplateSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractTemplateSO.class);
 				ContractTemplateReqDTO templateReqDTO = new ContractTemplateReqDTO();
@@ -386,11 +369,11 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		    if(getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa()!=null) {
 		    	for(ScLoaWitness scLoaWitness : getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaWitnesses()) {
 		    		if((res.getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME) || 
-		    				res.getTaskName().equalsIgnoreCase(CTProcessNameConst.VERIFY_FA_HT_NAME)) && scLoaWitness.getPartyType().equalsIgnoreCase("A")) {
+		    				res.getTaskName().equalsIgnoreCase(CTProcessNameConst.VERIFY_FA_HT_NAME)) && scLoaWitness.getPartyType().equalsIgnoreCase(ContractConst.WITNES_TYPE_AGENCY)) {
 		    			getManagedBean().setScLoaWitness(scLoaWitness);
 		    			break;
 		    		} 
-		    		if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME) && scLoaWitness.getPartyType().equalsIgnoreCase("S")) {
+		    		if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME) && scLoaWitness.getPartyType().equalsIgnoreCase(ContractConst.WITNES_TYPE_SUPPLIER)) {
 		    			getManagedBean().setScLoaWitness(scLoaWitness);
 		    			break;
 		    		}		    		
@@ -398,6 +381,9 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		    }
 		    
 		    setTabMenuValue();
+		    if(this.getManagedBean().isLetterOfAcceptance()){
+		    	getLoaDocumentList();
+		    }
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, ContractConst.NAV_TO_CONTRACT_AMENDMENT);
 		} finally {
@@ -683,7 +669,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			SelectItem[] items = null;     
 			try {
 			        int i = 1;
-			        IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject("pm", IOrgProfileSO.class);
+			        IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 			        OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 			        reqDTO.setOrgType(OrganizationType.MINISTRY.value());
 			
@@ -701,22 +687,6 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			}
 		    return items;
 		}
-	    
-	    public String getEditorValue() {
-		   return editorValue;
-	    }
-
-	    public void setEditorValue(String editorValue) {
-		  this.editorValue = editorValue;
-	   }
-		
-		public String convertTime(Date time){ 
-	        String str ="";
-	    	Format format = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT); 
-	        if(time == null)
-	        	return str;
-	        return format.format(time); 
-	    } 
 		
 	public List<SelectItem> getItemTypeDropDown(){
     	List<SelectItem> list = new ArrayList<SelectItem>();
@@ -1305,6 +1275,24 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	    }
 	}
 	
+	public void contentLetterUpload(FileUploadEvent event) throws Exception {
+		UploadedFile files = event.getFile();
+		String fileName = files.getFileName();
+		String filePath = "C:/projects/uploads/"+files.getFileName();
+		FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
+	    fileOuputStream.write(files.getContents());
+	    fileOuputStream.close();
+	    int i=0;
+	    for(ScLoaReport reports : this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaReports()){
+	      if(reports.equals(this.getManagedBean().getSelectedScLoaReports()))
+	    	{
+	    	  this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaReports().get(i).getScLoaReportAttachment().setFileName(fileName);
+	    	  this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaReports().get(i).getScLoaReportAttachment().setFilePath(filePath);
+	        }i++;
+	    }
+		
+	}
+	
 	public void chkJustificationAction(){
 		  try {
 			    if(this.getManagedBean().getContractVer().getCtContractValue().isAp201Exempt() && !this.getManagedBean().isChkConceValue()){
@@ -1687,7 +1675,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		   return items;
 		}
 		
-		public List<PmDocument> getLoaDocumentList(){
+		 private void getLoaDocumentList(){
 			
 			 IDocumentSO documentSO = null;
 			try{
@@ -1695,13 +1683,24 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			     DocumentReqDTO reqDTO = new DocumentReqDTO();
 			     reqDTO.setDocCategoryCode(ParameterConst.DOCUMENT_CATEGORY_LOA_FOR_CONTRACT_AMENDMENT);
 			     DocumentResDTO resDTO = documentSO.retrieveDocumentCheckList(reqDTO);
-			     return resDTO.getDocumentList();
+			     if(getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaReports() == null){
+			    	 getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().setScLoaReports(new ArrayList<ScLoaReport>());
+			    }
+			    for(PmDocument document : resDTO.getDocumentList()){
+			      	 ScLoaReport reports = new ScLoaReport();
+			    	 reports.setPmDocument(document);
+			    	 reports.setTitle(document.getDocName());
+			    	 reports.setDefinationType(document.getDocDefinitionTypeCode());
+			    	 reports.setDocType(ParameterConst.DOCUMENT_CATEGORY_LOA_FOR_CONTRACT_AMENDMENT);
+			    	 this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaReports().add(reports);	
+			     }
+			    
 			}catch(Exception e){
 				e.printStackTrace();
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		
 			}
-			return null;
+			
 		}
 		
 		 public List<SelectItem> getPopulateBankAccountList() {
@@ -1921,13 +1920,66 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		return false;
 	}
 	
+	
 	public void addLoaContents() {
-		//TODO pending for S2 tables
+		ScLoaReport loaReport = new ScLoaReport();
+		try{
+	 
+			 if(loaReport.getDefinationType() == null){
+			    loaReport.setDefinationType(new PmParameter());
+			    loaReport.setDefinationType(retrieveParameterByCodeType(ParameterConst.DOCUMENT_DEFINITION_TYPE, ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD));
+		     }
+			 ScLoaReportAttachment attachment = new ScLoaReportAttachment();
+			 attachment.setDocType(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD);
+			 attachment.setScLoaReport(loaReport);
+			 loaReport.setScLoaReportAttachment(attachment);
+			 this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaReports().add(loaReport);
+		}catch(Exception ex){
+		   ex.printStackTrace();
+		}
 	}
 	
 	public void deleteLoaContents() {
-		//TODO pending for S2 tables
+		this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaReports().remove(this.getManagedBean().getSelectedScLoaReports());
 	}
+	
+	public PmParameter retrieveParameterByCodeType(String parameterType, String parameterCode) throws NamingException {
+		
+		 IParameterSO parameterSO = null;
+		 ParameterReqDTO reqDTO = null;
+		 try{
+			
+			reqDTO = new ParameterReqDTO();
+			reqDTO.setParameterCode(parameterCode);
+			reqDTO.setParameterType(parameterType);
+			parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+			ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
+			return resDTO.getPmParameter();
+		}catch(Exception e) {
+			 log.error("Exception>>", e);
+			 e.printStackTrace();
+			 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		 } finally {
+			 parameterSO = null;
+		 }
+		 return null;
+	 } 
+	
+	 public String getEditorValue() {
+		   return editorValue;
+	    }
+
+	    public void setEditorValue(String editorValue) {
+		  this.editorValue = editorValue;
+	   }
+		
+		public String convertTime(Date time){ 
+	        String str ="";
+	    	Format format = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT); 
+	        if(time == null)
+	        	return str;
+	        return format.format(time); 
+	    } 
 	
 	public CtPerformanceBond[] getSelectedBondList() {
 		return selectedBondList;
