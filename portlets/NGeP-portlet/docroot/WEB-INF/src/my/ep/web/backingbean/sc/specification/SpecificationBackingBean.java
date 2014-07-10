@@ -2735,6 +2735,8 @@ public class SpecificationBackingBean extends
 				updateCategoryCodesToQt(openList, scQt);
 			} else if (QTConstants.RESTRICTED_TYPE.equalsIgnoreCase(scQt
 					.getQtType())) {
+				scQt.setZoneLocationLevel(null);
+				scQt.getScQtSupplierCriteria().setLocationLevel(null);
 				List<ScQtCategory> openList = this.getManagedBean()
 						.getSuppCriteriaopenList();
 				updateCategoryCodesToQt(openList, this.getManagedBean()
