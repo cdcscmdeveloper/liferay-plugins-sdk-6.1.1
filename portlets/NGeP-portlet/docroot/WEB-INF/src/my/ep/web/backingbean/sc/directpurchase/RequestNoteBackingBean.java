@@ -186,10 +186,6 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 	     requestNote.setWorkFlowStatuses(workFlowStatuses);
 		requestNote.setSourceMethod(ParameterConst.REQUEST_NOTE_SC);
 		
-		if(requestNote.getPmOrgProfile().getOrgProfileId() == null){
-			requestNote.setPmOrgProfile(ptjNameEvent());
-		}
-		
 		// Remarks
 		requestNote.setRemarks(initializeRemarks(requestNote));
 	    if(requestNote.getRemarks() != null ){
@@ -292,11 +288,6 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 					}	
 				} 
 			}
-
-			if(requestNote.getPmOrgProfile().getOrgProfileId() == null){
-				requestNote.setPmOrgProfile(ptjNameEvent());
-			}
-			
 			FacesScopes facesScopes = new FacesScopes();
 			String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
 			requestNoteReqDTO.setRequestNote(requestNote);
@@ -421,8 +412,6 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		   scRequestNoteDtl.setFulfilmentType(parameterResDTO.getPmParameter());
 		   getManagedBean().setRequestNote(requestNote);
 		   getManagedBean().setFulfillmentType(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
-		   getManagedBean().setOrgProfile(requestNote.getPmOrgProfile());
-		   getManagedBean().setOrgProfileId(requestNote.getPmOrgProfile().getOrgProfileId());
 		   initialInformation(requestNote);
 		   fulfilmentTypeEvent(requestNote.getRequestNoteDtls().get(0));
 			
@@ -568,7 +557,6 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		IStatusSO iStatusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 		FacesScopes facesScopes = new FacesScopes();
 		List<ScRequestNoteRemark> results =   scRequestNote.getRemarks();
-
 		if(results == null){
 			results = new ArrayList<ScRequestNoteRemark>();
 		} 
@@ -641,6 +629,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 					}
 				}
 				// TODO PriceType drop down list in AddToCart
+				getManagedBean().setPriceType(ParameterConst.PRICE_TYPE_STANDARD);
 				getManagedBean().setPriceTypes(getPriceTypeDropdownValues(ParameterTypeConst.PRICE_TYPE, priceTypes));
 				// required validation
 				getManagedBean().setRequired(Boolean.TRUE);
@@ -814,7 +803,6 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		ScRequestItem requestItem = new ScRequestItem();
     	requestSupplierItem.setRequestNoteItem(requestItem);
 		getManagedBean().setRequestSupplierItem(requestSupplierItem);
-		getManagedBean().setOrgProfileId(null);
 		getManagedBean().setProcurementType(null);
 		getManagedBean().setJustification(null);
 		getManagedBean().setJustificationType(null);
@@ -988,14 +976,28 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 				}
 			}
 		}
-		
 		requestNote.setRequestNoteDtls(requestNoteDtls);
-		populateUserDivisionList();
+		// to get ptj
+		PmUser user = new FacesScopes().getUserSessionBean();
+		if (user != null) {
+			OrgProfileReqDTO profileReqDTO = new OrgProfileReqDTO();
+			profileReqDTO.setUserId(user.getUserId());
+			profileReqDTO.setOrgType(OrganizationType.DIVISION.value());
+			IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+			OrgProfileResDTO orgProfileResDTO = orgProfileSO
+					.retrieveOrgProfileListByOrgType(profileReqDTO);
+
+			if(orgProfileResDTO.getOrgProfileList() != null && orgProfileResDTO.getOrgProfileList().size()>0){
+				requestNote.setPmOrgProfile(orgProfileResDTO.getOrgProfileList().get(0));
+				ptjNameEvent();
+			}
+		}
 		requestNote.setRemarks(initializeRemarks(requestNote));
+		initialInformation(requestNote);
 		getManagedBean().setRequestNote(requestNote);
 		getManagedBean().setFulfillmentType(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
 		getCurrentStatus(status.getStatusId());
-		//initialInformation(requestNote);
 		fulfilmentTypeEvent(scRequestNoteDtl);
 		
 		// add to cart validation
@@ -1144,8 +1146,8 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		try{
 			UserReqDTO reqDTO = new UserReqDTO();
 			reqDTO.setRoleCode(roleCode);
-			if(getManagedBean().getOrgProfileId() != null){
-			  reqDTO.setOrgProfileId(getManagedBean().getOrgProfileId());
+			if(getManagedBean().getRequestNote().getPmOrgProfile()!= null){
+			  reqDTO.setOrgProfileId(getManagedBean().getRequestNote().getPmOrgProfile().getOrgProfileId());
 			}
 			IUserSO reqSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			UserResDTO resDTO = reqSO.retrieveUserListByRole(reqDTO);
@@ -1201,8 +1203,9 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			IUserSO iUserSO	=	(IUserSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			UserReqDTO userReqDto = new UserReqDTO();
 			userReqDto.setRoleCode(RoleCode.RN_APPROVER.value());
-			if(getManagedBean().getOrgProfileId() != null){
-			   userReqDto.setOrgProfileId(getManagedBean().getOrgProfileId());
+			
+			if(requestNote.getPmOrgProfile() != null){
+			   userReqDto.setOrgProfileId(requestNote.getPmOrgProfile().getOrgProfileId());
 			}
 			
 			UserResDTO userResDTO = iUserSO.retrieveUserListByRole(userReqDto);
@@ -1241,23 +1244,11 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 	}
 
 	
-	public PmOrgProfile ptjNameEvent() {
+	public void ptjNameEvent() {
 		IPurchaseInDefaultSO purchaseInDefaultSO  = null;
 		try {
-
-			if (getManagedBean().getOrgProfileId() != null) {
-				if(getManagedBean().getUserDivisionList() != null && !getManagedBean().getUserDivisionList().isEmpty()){
-					for (PmOrgProfile orgProfile : getManagedBean().getUserDivisionList()) {
-						if (orgProfile.getOrgProfileId().equals(getManagedBean().getOrgProfileId())) {
-							ScRequestNote sRequestNote = getManagedBean().getRequestNote();
-							sRequestNote.setPmOrgProfile(orgProfile);
-							getManagedBean().setRequestNote(sRequestNote);
-						}
-					}
-				}
-
 			//TODO Based on ptj selection have to get pid for request note 
-			 purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
+			purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
 			PurchaseInDefaultReqDTO purchaseInDefaultReqDTO = new PurchaseInDefaultReqDTO();
 			// fetch pid item for request note item	
 			List<ScRequestItem>	requestNoteItems = getManagedBean().getRequestNoteItems();
@@ -1267,8 +1258,9 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 					ScRequestSupplierItem requestSupplierItem = scRequestNoteDtl.getScRequestSupplierItem();
 					ScRequestItem requestItem = requestSupplierItem.getRequestNoteItem();
 					requestItem.setCmItem(scRequestNoteDtl.getScRequestSupplierItem().getSupplierItemPrice().getPricing().getCmSupplierItem().getCmItem());
+					
 					// TODO selected ptj id for non contract item for pid
-					purchaseInDefaultReqDTO.setOrgProfileId(getManagedBean().getOrgProfileId());
+					purchaseInDefaultReqDTO.setOrgProfileId(scRequestNoteDtl.getScRequestNote().getPmOrgProfile().getOrgProfileId());
 					purchaseInDefaultReqDTO.setItemId(scRequestNoteDtl.getScRequestSupplierItem().getSupplierItemPrice().getPricing().getCmSupplierItem().getCmItem().getItemId()) ;
 					PurchaseInDefaultResDTO defaultResDTO = purchaseInDefaultSO.getPurchaseInDefaultByItemId(purchaseInDefaultReqDTO);
 
@@ -1279,12 +1271,11 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 					} else {
 						requestItem.setPurchaseInDefault(null);
 					}
-					
 					requestSupplierItem.setRequestNoteItem(requestItem);
 					scRequestNoteDtl.setScRequestSupplierItem(requestSupplierItem);
 					requestNoteDtls.add(scRequestNoteDtl);
 					requestSupplierItem.setRequestNoteItem(requestItem);
-					
+
 					// request Note Items
 					requestNoteItems.add(requestItem);
 					//TODO call initialInformation &  fulfilmentTypeEvent methods based on ptj
@@ -1293,16 +1284,13 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 				}
 			}
 			this.getManagedBean().setRequestNoteDtls(requestNoteDtls);
-			ScRequestNote requestNote = getManagedBean().getRequestNote();
-			requestNote.setRequestNoteDtls(requestNoteDtls);
-			requestNote.setRequestNoteItems(requestNoteItems);
-			this.getManagedBean().setRequestNote(requestNote);
+			getManagedBean().getRequestNote().setRequestNoteDtls(requestNoteDtls);
+			getManagedBean().getRequestNote().setRequestNoteItems(requestNoteItems);
+			
+		} finally {
+			purchaseInDefaultSO = null;
 		}
-		return getManagedBean().getRequestNote().getPmOrgProfile();
-	} finally {
-		purchaseInDefaultSO = null;
 	}
-  }
 	
 	/**
 	  * To get Approver Pick List  in Request Note

@@ -102,7 +102,7 @@
 						</p:selectOneMenu> <p:message id="justTypeMsg" for="justificationId" display="icon" /></h:panelGroup></td>
 				</tr>
 				<tr>
-					<td><h:panelGroup id="justRmksLabel"><p:outputLabel value="#{lbl['lbl.sc.just.rmks']}" rendered="#{requestNoteBackingBean.managedBean.procTypeOption}" /></h:panelGroup></td>
+					<td style="vertical-align: top;padding-right: 1px;text-align: right;"><h:panelGroup id="justRmksLabel"><p:outputLabel value="#{lbl['lbl.sc.just.rmks']}" rendered="#{requestNoteBackingBean.managedBean.procTypeOption}" /></h:panelGroup></td>
 					<td><h:panelGroup id="justRmksValue"><p:inputTextarea id="justificationRmk" rendered="#{requestNoteBackingBean.managedBean.procTypeOption}"
 							label="#{lbl['lbl.sc.just.rmks']}" maxlength="100"
 							required="#{requestNoteBackingBean.managedBean.justRequired}"

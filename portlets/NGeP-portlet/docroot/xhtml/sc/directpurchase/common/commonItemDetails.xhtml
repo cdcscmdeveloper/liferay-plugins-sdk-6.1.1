@@ -43,42 +43,10 @@
 	
 	<p:panel id="glb_panel_request_list" toggleable="true" toggleSpeed="500">
 		<f:facet name="header">
-		 <h:outputText value="* " styleClass="mandatory" />
-		 <h:outputText value="#{lbl['lbl.sc.panel.title.item.detail']}" />
-			 
+			<h:outputText value="* " styleClass="mandatory" />
+			<h:outputText value="#{lbl['lbl.sc.panel.title.item.detail']}" />
 		</f:facet>
-          <p:outputPanel>	
-			<table style="width:100%">
-				<tr>
-					<ui:fragment
-						rendered="#{requestNoteBackingBean.managedBean.orgProfile.brandNew}">
-						<td style="width: 95px;">
-						
-						<p:outputLabel value="#{lbl['lbl.sc.request.note.ptj.name']}" />
-						<p:outputLabel value="*" styleClass="mandatory" />
-						
-						</td>
-						<td><p:selectOneMenu required="true" id="ptjName"  label="#{lbl['lbl.sc.request.note.ptj.name']}"
-								value="#{requestNoteBackingBean.managedBean.orgProfileId}"
-								styleClass="divisionclass"
-								style="width: 250px;margin-bottom: 5px;">
-								<f:selectItem itemLabel="- Select One -" itemValue="#{null}" />
-								<f:selectItems
-									value="#{requestNoteBackingBean.managedBean.userDivisionList}"
-									var="pmOrgProfile"
-									itemLabel="#{pmOrgProfile.orgCode} - #{pmOrgProfile.orgName}"
-									itemValue="#{pmOrgProfile.orgProfileId}" />
-								<p:ajax event="change" update="@([id$=requestNoteId])" partialSubmit="true"
-									process="@this"
-									listener="#{requestNoteBackingBean.ptjNameEvent}" />
-							</p:selectOneMenu>
-							</td>
-								<td> <p:message id="ptjNameMsg" for="ptjName" display="icon" /> </td>
-					</ui:fragment>
-				</tr>
-			</table>
-			</p:outputPanel>
-		
+
 		<h:panelGrid width="100%" style="margin-top:10px" id="itemDtlId">
 			<p:dataTable id="requestListDataTable" var="requestNoteDtl"
 				value="#{requestNoteBackingBean.managedBean.requestNoteDtls}"
