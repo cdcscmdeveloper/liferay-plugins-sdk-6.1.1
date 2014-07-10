@@ -349,8 +349,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	private List<TabBean> scCommitteeMemberTabList;
 
-	private Date proposalValidityUntil;
-
 	// Briefing & Site Visit Details
 	private ScQtBsvDtl qtBriefing;
 	private ScQtBsvDtl qtSiteBriefing = new ScQtBsvDtl();
@@ -386,6 +384,10 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<ScQtContactPerson> scQtContactPersons;
 	private List<ScQtContactPerson> selectedContactPersons;
 	private PmAddress pmAddress;
+	private Date proposalValidityUntil;
+	private Date closingDate;
+	
+	private String address;
 
 	// Document
 	private ScQtCheckList scQtChecklist;
@@ -412,7 +414,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public QTDetailManagedBean() {
 		log.info("inside ");
-
+		
+		pmAddress = new PmAddress();
 		qtnTenderSearchBean = new QtnTenderSearchBean();
 		cloneQtnTenderSearchBean = new QtnTenderSearchBean();
 
@@ -2003,6 +2006,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.proposalValidityUntil = proposalValidityUntil;
 	}
 
+	public Date getClosingDate() {
+		return closingDate;
+	}
+
+	public void setClosingDate(Date closingDate) {
+		this.closingDate = closingDate;
+	}
+
 	public List<ScQt> getDocumentCloneTenderList() {
 		return documentCloneTenderList;
 	}
@@ -2413,6 +2424,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setScQtBriefingAttendance(ScQtBsvAttendance scQtBriefingAttendance) {
 		this.scQtBriefingAttendance = scQtBriefingAttendance;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
 	}
 
 }

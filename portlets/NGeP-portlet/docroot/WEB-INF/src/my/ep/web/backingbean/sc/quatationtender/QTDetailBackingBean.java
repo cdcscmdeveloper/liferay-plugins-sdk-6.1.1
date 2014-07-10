@@ -2,7 +2,6 @@ package my.ep.web.backingbean.sc.quatationtender;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -60,6 +59,7 @@ import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sc.specification.SpecificationReqDTO;
 import my.ep.dto.sc.specification.SpecificationResDTO;
+import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
@@ -321,7 +321,7 @@ public class QTDetailBackingBean extends
 			if (quationTenderResDTO.isSuccessful()) {
 				ScQt scQt = quationTenderResDTO.getQtDetail();
 				// renew the session..
-				renewSesionObject();
+				//renewSesionObject();
 				//loadPrepareQtDetails(scQt.getQtId());
 				FacesContext
 						.getCurrentInstance()
@@ -671,14 +671,15 @@ public class QTDetailBackingBean extends
 				//selectedScQt.setFileNo(scQt.getQtNo());
 				this.getManagedBean().setQt(selectedScQt);
 				if (getManagedBean().getQt().getEstimatedAmount() != null) {
-					if (getManagedBean().getQt().getEstimatedAmount()
-							.intValue() <= 500000) {
-						getManagedBean().getQt().setPublishPeriod(7);
+					if(getManagedBean().getQt().getEstimatedAmount().intValue() > 20000 && getManagedBean().getQt().getEstimatedAmount().intValue() < 50000) {
 						getManagedBean().getQt().setQtValidityPeriod(60);
-					} else if (getManagedBean().getQt().getEstimatedAmount()
-							.intValue() > 500000) {
-						getManagedBean().getQt().setPublishPeriod(21);
+						getManagedBean().getQt().setPublishPeriod(3);
+					} else if(getManagedBean().getQt().getEstimatedAmount().intValue() > 50000 && getManagedBean().getQt().getEstimatedAmount().intValue() < 500000) {
 						getManagedBean().getQt().setQtValidityPeriod(90);
+						getManagedBean().getQt().setPublishPeriod(7);
+					} else if(getManagedBean().getQt().getEstimatedAmount().intValue() > 500000) {
+						getManagedBean().getQt().setQtValidityPeriod(90);
+						getManagedBean().getQt().setPublishPeriod(21);
 					}
 				}
 			}
@@ -706,6 +707,27 @@ public class QTDetailBackingBean extends
 		if (!scQt.isSpecApprovalReq()) {
 			scQt.setMinistrySpecSecrataryId(null);
 		}
+		
+		if(null != scQt.getEstimatedAmount()) {
+			if(scQt.getEstimatedAmount().intValue() > 20000 && scQt.getEstimatedAmount().intValue() < 50000) {
+				if(scQt.getQtValidityPeriod() > 60 ) {
+					throw new EpException(MessageConst.ERROR_100022,
+							new String[] { "Proposal Validity (Days) is not greater than 60 days", });
+				} else if(scQt.getPublishPeriod() < 3) {
+					throw new EpException(MessageConst.ERROR_100022,
+							new String[] { "Publishing Days is not less than 3 days", });
+				}
+			} else if (scQt.getEstimatedAmount().intValue() > 50000 && scQt.getEstimatedAmount().intValue() < 500000) {
+				if(scQt.getQtValidityPeriod() > 90 ) {
+					throw new EpException(MessageConst.ERROR_100022,
+							new String[] { "Proposal Validity (Days) is not greater than 90 days", });
+				} else if(scQt.getPublishPeriod() < 7) {
+					throw new EpException(MessageConst.ERROR_100022,
+							new String[] { "Publishing Days is not less than 7 days", });
+				}
+			}
+		}
+		
 		// No need to set the below fields automatically set by listener
 		PmUser users = new FacesScopes().getUserSessionBean();
 		scQt.setCreatedBy(users.getUserId());
@@ -1022,62 +1044,6 @@ public class QTDetailBackingBean extends
 	}
 
 	/**
-	 * @param b
-	 * @return
-	 */
-	/*
-	 * private BaseEntity constructRemarks(boolean isZonal) { List<ScRemark>
-	 * remarks = this.getManagedBean().getRemarks(); TplSpecZoneDtl specZoneDtl
-	 * = null; ScQt qt = null;
-	 * 
-	 * if (isZonal) { specZoneDtl = this.getManagedBean().getSelectedZone();
-	 * List<ScQtBreifingZoneRemark> zoneRemarks = new ArrayList<>(); for
-	 * (ScRemark scRemark : remarks) { ScQtBreifingZoneRemark briefingRemark =
-	 * (ScQtBreifingZoneRemark) scRemark; if (briefingRemark.getRemark() != null
-	 * && !"".equals(briefingRemark.getRemark()))
-	 * briefingRemark.setTplSpecZoneDtl(specZoneDtl);
-	 * zoneRemarks.add(briefingRemark);
-	 * 
-	 * }
-	 * 
-	 * specZoneDtl.setQtBriefingRemarks(zoneRemarks); return specZoneDtl; } else
-	 * { qt = this.getManagedBean().getQt(); List<ScQtBriefingRemark>
-	 * normalRemarks = new ArrayList<>(); for (ScRemark scRemark : remarks) {
-	 * ScQtBriefingRemark briefingRemark = (ScQtBriefingRemark) scRemark; if
-	 * (briefingRemark.getRemark() != null && briefingRemark.getRemarkId() ==
-	 * null) { briefingRemark.setScQt(qt); normalRemarks.add(briefingRemark);
-	 * 
-	 * } } qt.setScQtBriefingRemarks(normalRemarks); return qt; } }
-	 */
-
-	/**
-	 * @return
-	 */
-	/*
-	 * private ScQt constructApprovalRemarks() { List<ScRemark> remarks =
-	 * this.getManagedBean().getRemarks(); ScQt qt =
-	 * this.getManagedBean().getQt(); List<ScQtApprovalRemark> normalRemarks =
-	 * new ArrayList<>(); for (ScRemark scRemark : remarks) { ScQtApprovalRemark
-	 * approvalRemark = (ScQtApprovalRemark) scRemark;
-	 * if(approvalRemark.getRemark() != null && approvalRemark.getRemarkId() ==
-	 * null) { normalRemarks.add(approvalRemark); } }
-	 * qt.setScQtBriefingRemarks(normalRemarks); return qt; }
-	 */
-
-	/**
-	 * To get BUdget Approval Pick List in QT
-	 */
-
-	/*
-	 * private List<ScQtApproval> createTargetApproval(ScQtApproval
-	 * scQtApproval) { List<ScQtApproval> resultList = new
-	 * ArrayList<ScQtApproval>(); scQtApproval = new ScQtApproval(); for (PmUser
-	 * pmUser : getManagedBean().getBudgetApprovalUsers()) { scQtApproval.setP
-	 * resultList.add(scQtApproval); } return
-	 * getManagedBean().getBudgetApprovalUsers(); }
-	 */
-
-	/**
 	 * Method to prepare qt search criteria.
 	 * 
 	 * @param qtnTenderSearchBean
@@ -1162,7 +1128,7 @@ public class QTDetailBackingBean extends
 			}
 			
 			String status = qtnTenderSearchBean.getQtStatus();
-			if (!StringUtils.isBlank(status)) {				
+			if (!StringUtils.isBlank(status) && !status.equals("60000")) {				
 				qtSearchBean.getDataFilterBeans().add(
 						new SearchFilterBean("scQtStatus.pmStatus.statusId",
 								SearchOperator.OPERATOR_EQUALS.value(),
@@ -1173,9 +1139,7 @@ public class QTDetailBackingBean extends
 								true));
 				
 			}
-
 			// Adding search filterbeans to searchbean.
-			
 			qtSearchBean.getDataFilterBeans().addAll(searchFilterBean);
 		}
 	}
@@ -1185,7 +1149,7 @@ public class QTDetailBackingBean extends
 	 */
 	public void retriveFinancialSpecification() {
 		debugLogger("retriveFinancialSpecification");
-		if(getManagedBean().getQt().getQtStatus().getStatusId() < 60002) {
+		if(getManagedBean().getQt().getQtStatus().getStatusId() <= 60002) {
 			this.getManagedBean().setActiveIndex(5);
 		}
 		IQTSpecSO specSO;
@@ -1229,7 +1193,7 @@ public class QTDetailBackingBean extends
 	public void retriveTechnicalSpecification() {
 		debugLogger("retriveTechnicalSpecification");
 		
-		if(getManagedBean().getQt().getQtStatus().getStatusId() < 60002) {
+		if(getManagedBean().getQt().getQtStatus().getStatusId() <= 60002) {
 			this.getManagedBean().setActiveIndex(4);
 		}
 		IQTSpecSO specSO;
@@ -1878,7 +1842,7 @@ public class QTDetailBackingBean extends
 							.equals(ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT)) {
 						tabBeans.add(new TabBean(qtApproval.getApprovalType(),
 								qtApproval, approverSettingDtls(
-										RoleCode.BUDGET_APPROVER, qtApproval)));
+										RoleCode.COMMITTEE_APPROVER, qtApproval)));
 					}
 
 				}
@@ -2029,13 +1993,13 @@ public class QTDetailBackingBean extends
 			getManagedBean().getPmAddress().setPmState(new PmState());
 		}
 
-		if (getManagedBean().getQt() != null
-				&& null != getManagedBean().getQt().getClosingDate()) {
-			Calendar cal = Calendar.getInstance();
-			cal.setTime(getManagedBean().getQt().getClosingDate());
+		if (getManagedBean().getQt() != null) {
+			/*Calendar cal = Calendar.getInstance();
+			cal.setTime(getManagedBean().getQt().getPublishDate());
 			cal.add(Calendar.DATE, getManagedBean().getQt()
 					.getQtValidityPeriod());
-			getManagedBean().setProposalValidityUntil(cal.getTime());
+			//getManagedBean()
+			getManagedBean().setProposalValidityUntil(cal.getTime());*/
 
 			IQTDetailSO detailSO;
 			try {
@@ -2455,6 +2419,7 @@ public class QTDetailBackingBean extends
 			QtDetailsSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 			QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
+			tenderReqDTO.setDocType(QTConstants.DOCTYPE_QT);
 			tenderReqDTO.setQtId(qtId);
 			QuationTenderResDTO tenderResDTO = new QuationTenderResDTO();
 			if(getManagedBean().getQt().getQtId()==null) {
@@ -2462,16 +2427,6 @@ public class QTDetailBackingBean extends
 				if (tenderResDTO.getQtDetail() != null) {
 					if (tenderResDTO.getQtDetail() != null) {
 						getManagedBean().setQt(tenderResDTO.getQtDetail());
-						/*if (null == tenderResDTO.getQtSupplierCriteria()) {
-							ScQtSupplierCriteria qtSupplierCriteria = new ScQtSupplierCriteria();
-							qtSupplierCriteria
-									.setQtZoneCriterias(new ScQtZoneCriteria());
-							this.getManagedBean().setSupplierCriteria(
-									qtSupplierCriteria);
-						} else {
-							this.getManagedBean().setSupplierCriteria(
-									tenderResDTO.getQtSupplierCriteria());
-						}*/
 						if (this.getManagedBean().getZoneGeneralTrees().isEmpty()) {
 							if (tenderResDTO.getQtDetail().isZonal()) {
 								if (isNotNullOREmpty(tenderResDTO.getZoneDetails())) {
@@ -2483,6 +2438,18 @@ public class QTDetailBackingBean extends
 									}
 								}
 
+							}
+						}
+						if (getManagedBean().getQt().getEstimatedAmount() != null) {
+							if(getManagedBean().getQt().getEstimatedAmount().intValue() > 20000 && getManagedBean().getQt().getEstimatedAmount().intValue() < 50000) {
+								getManagedBean().getQt().setQtValidityPeriod(60);
+								getManagedBean().getQt().setPublishPeriod(3);
+							} else if(getManagedBean().getQt().getEstimatedAmount().intValue() > 50000 && getManagedBean().getQt().getEstimatedAmount().intValue() < 500000) {
+								getManagedBean().getQt().setQtValidityPeriod(90);
+								getManagedBean().getQt().setPublishPeriod(7);
+							} else if(getManagedBean().getQt().getEstimatedAmount().intValue() > 500000) {
+								getManagedBean().getQt().setQtValidityPeriod(90);
+								getManagedBean().getQt().setPublishPeriod(21);
 							}
 						}
 					}
@@ -2671,7 +2638,7 @@ public class QTDetailBackingBean extends
 	
 	public String technicalSpecBackAction() {
 		debugLogger("technicalSpecBackAction");
-		return "/xhtml/sc/quatationtender/qttechnicalchecklist.xhtml?faces-redirect=true";
+		return "/xhtml/sc/quatationtender/quatationtendercreation.xhtml?faces-redirect=true";
 	}
 	
 	public String financialSpecEditAction(ScQtCheckList checklist) {
@@ -2721,7 +2688,7 @@ public class QTDetailBackingBean extends
 	
 	public String financialSpecBackAction() {
 		debugLogger("financialSpecBackAction");
-		return "/xhtml/sc/quatationtender/qtfinancialchecklist.xhtml?faces-redirect=true";
+		return "/xhtml/sc/quatationtender/quatationtendercreation.xhtml?faces-redirect=true";
 	}
 	
 	public SelectItem[] getProcurementModeDropdownValues(){
