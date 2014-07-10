@@ -12,13 +12,12 @@
 				<tr>
 					<td class="TableFieldLeft" style="width: 60px;"><p:outputLabel
 							value="Remark" /></td>
-					<td class="TableFieldRight"><p:dataGrid
-							value="#{remarks}"
+					<td class="TableFieldRight"><p:dataGrid value="#{remarks}"
 							var="remarkVar" rowIndexVar="remarkIndex" columns="1">
 							<table>
 								<tr>
 									<td rowspan="2" valign="top"><h:graphicImage
-											value="#{qTScheduleDetailBackingBean.userImagePath(remarkVar.createdUser.loginId)}"
+											value="#{qTBriefingSiteVisitBackingBean.userImagePath(remarkVar.createdUser.loginId)}"
 											height="30" width="30" /></td>
 									<td width="5"></td>
 									<td><h:outputText
