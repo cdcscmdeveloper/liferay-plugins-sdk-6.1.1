@@ -33,12 +33,10 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	private static final long serialVersionUID = 1L;
 	private String method = ParameterConst.METHOD_PRI;
 	private String stockAvailability;
-	private Long orgProfileId;
 	private String procurementType;
 	private String justificationType;
 	private String priceType;
-	private PmOrgProfile pmOrgProfile = new PmOrgProfile();
-	private PmOrgProfile selectedPtj = new PmOrgProfile();
+	private PmOrgProfile pmOrgProfile;
 	
 	private ScRequestSupplierItem scRequestSupplierItem = new ScRequestSupplierItem();
 	private ScPrInquiry scPrInquiry = new ScPrInquiry();
@@ -144,18 +142,6 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	 */
 	public void setUserDivisionList(List<PmOrgProfile> userDivisionList) {
 		this.userDivisionList = userDivisionList;
-	}
-	/**
-	 * @return the orgProfileId
-	 */
-	public Long getOrgProfileId() {
-		return orgProfileId;
-	}
-	/**
-	 * @param orgProfileId the orgProfileId to set
-	 */
-	public void setOrgProfileId(Long orgProfileId) {
-		this.orgProfileId = orgProfileId;
 	}
 
 	/**
@@ -296,20 +282,6 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	public void setMethod(String method) {
 		this.method = method;
 	}
-	
-	/**
-	 * @return the pmOrgProfile
-	 */
-	public PmOrgProfile getPmOrgProfile() {
-		return pmOrgProfile;
-	}
-
-	/**
-	 * @param pmOrgProfile the pmOrgProfile to set
-	 */
-	public void setPmOrgProfile(PmOrgProfile pmOrgProfile) {
-		this.pmOrgProfile = pmOrgProfile;
-	}
 
 	/**
 	 * @return the processName
@@ -368,20 +340,6 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	}
 
 	/**
-	 * @return the selectedPtj
-	 */
-	public PmOrgProfile getSelectedPtj() {
-		return selectedPtj;
-	}
-
-	/**
-	 * @param selectedPtj the selectedPtj to set
-	 */
-	public void setSelectedPtj(PmOrgProfile selectedPtj) {
-		this.selectedPtj = selectedPtj;
-	}
-
-	/**
 	 * @return the stockAvailable
 	 */
 	public Integer getStockAvailable() {
@@ -393,6 +351,20 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	 */
 	public void setStockAvailable(Integer stockAvailable) {
 		this.stockAvailable = stockAvailable;
+	}
+
+	/**
+	 * @return the pmOrgProfile
+	 */
+	public PmOrgProfile getPmOrgProfile() {
+		return pmOrgProfile;
+	}
+
+	/**
+	 * @param pmOrgProfile the pmOrgProfile to set
+	 */
+	public void setPmOrgProfile(PmOrgProfile pmOrgProfile) {
+		this.pmOrgProfile = pmOrgProfile;
 	}
 
 	

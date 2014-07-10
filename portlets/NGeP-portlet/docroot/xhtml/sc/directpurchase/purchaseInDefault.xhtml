@@ -346,7 +346,7 @@
 					  <h:graphicImage library="ep/images/design" name="#{purchaseInDefaultBackingBean.determineIcon(attachFile)}" height="30" width="30" />
 					  </td>
 				   <td><h:outputText value="#{attachFile.createdUser.userName}" />, 
-					 <h:outputText  value="#{attachFile.changedDate}">
+					 <h:outputText  value="#{attachFile.createdDate}">
 					  	<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
 					 </h:outputText></td>
 				 </tr>

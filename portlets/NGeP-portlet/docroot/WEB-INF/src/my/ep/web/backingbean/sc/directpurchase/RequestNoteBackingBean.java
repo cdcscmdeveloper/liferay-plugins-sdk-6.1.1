@@ -977,19 +977,16 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			}
 		}
 		requestNote.setRequestNoteDtls(requestNoteDtls);
+		
 		// to get ptj
 		PmUser user = new FacesScopes().getUserSessionBean();
 		if (user != null) {
-			OrgProfileReqDTO profileReqDTO = new OrgProfileReqDTO();
-			profileReqDTO.setUserId(user.getUserId());
-			profileReqDTO.setOrgType(OrganizationType.DIVISION.value());
-			IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
-			OrgProfileResDTO orgProfileResDTO = orgProfileSO
-					.retrieveOrgProfileListByOrgType(profileReqDTO);
-
-			if(orgProfileResDTO.getOrgProfileList() != null && orgProfileResDTO.getOrgProfileList().size()>0){
-				requestNote.setPmOrgProfile(orgProfileResDTO.getOrgProfileList().get(0));
+			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			UserReqDTO userReqDTO = new UserReqDTO();
+			userReqDTO.setUserId(user.getUserId());
+			UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
+			if(userResDTO.getUserOrgList() != null && userResDTO.getUserOrgList().size()>0){
+				requestNote.setPmOrgProfile(userResDTO.getUserOrgList() .get(0).getPmOrgProfile());
 				ptjNameEvent();
 			}
 		}
@@ -1325,12 +1322,11 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 				purchaseInDefaultBackingBean.initialInformation(purchaseInDefault);
 				purchaseInDefaultBackingBean.retrieveReasonDescListByCategory();
 				purchaseInDefaultBackingBean.justificationTypeEvent();
-				purchaseInDefaultBackingBean.getManagedBean().setSelectedPmOrgProfile(getManagedBean().getRequestNote().getPmOrgProfile());
 				purchaseInDefaultBackingBean.getCurrentStatus(DPStatusConstants.PID_COMPLETED);
 				List<ScPurchaseInDefaultAttachment> attachments = new ArrayList<ScPurchaseInDefaultAttachment>();
 				ScPurchaseInDefaultAttachment attachment =purchaseInDefault.getScPurchaseInDefaultAttachment();
 				attachment.setUser(facesScopes.getUserSessionBean());
-				attachment.setChangedDate(new Timestamp(System.currentTimeMillis()));
+				attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 				attachments.add(attachment);
 				purchaseInDefaultBackingBean.getManagedBean().setAttachments(attachments);
 				

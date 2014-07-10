@@ -169,22 +169,19 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 			//wflowStatus.add(workFlowStatus);
 			scPurchaseInDefault.setWorkFlowStatuses(wflowStatus);
 			getCurrentStatus(status.getStatusId());  
-			
+
 			// to get ptj
 			PmUser user = new FacesScopes().getUserSessionBean();
 			if (user != null) {
-				OrgProfileReqDTO profileReqDTO = new OrgProfileReqDTO();
-				profileReqDTO.setUserId(user.getUserId());
-				profileReqDTO.setOrgType(OrganizationType.DIVISION.value());
-				IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
-				OrgProfileResDTO orgProfileResDTO = orgProfileSO
-						.retrieveOrgProfileListByOrgType(profileReqDTO);
-
-				if(orgProfileResDTO.getOrgProfileList() != null && orgProfileResDTO.getOrgProfileList().size()>0){
-					scPurchaseInDefault.setPmOrgProfile(orgProfileResDTO.getOrgProfileList().get(0));
+				IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+				UserReqDTO reqDTO = new UserReqDTO();
+				reqDTO.setUserId(user.getUserId());
+				UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
+				if(resDTO.getUserOrgList() != null && resDTO.getUserOrgList().size()>0){
+					scPurchaseInDefault.setPmOrgProfile(resDTO.getUserOrgList() .get(0).getPmOrgProfile());
 				}
 			}
+
 			initialInformation(scPurchaseInDefault);
 			retrieveReasonDescListByCategory();
 			
@@ -446,7 +443,7 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 			   attachment.setDocNo(purchaseInDefault.getPurchaseInDefaultNo());
 		   }
 		   
-		   attachment.setChangedDate(new Timestamp(System.currentTimeMillis()));
+		   attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		   attachment.setCreatedUser(facesScopes.getUserSessionBean());
 		  
 		   uploadAttachment(event.getFile(), attachment);

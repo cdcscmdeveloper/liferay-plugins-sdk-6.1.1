@@ -33,32 +33,6 @@
 	<p:panel header=" INQUIRY DETAIL" toggleable="true" id="addToCartId">
 		<table>
 			<tr>
-			<td colspan="4" style="width: 250px;"><p:outputPanel id="ptjId">
-				<table style="width:100%">
-				 <tr>
- 				  <ui:fragment rendered="#{purchaseInquiryBackingBean.managedBean.selectedPtj.brandNew}">
- 				        <td style="width: 250px;">
-						   <p:outputLabel value="#{lbl['lbl.sc.price.inquiry.ptj.name']}" />
-						    <p:outputLabel value="*" styleClass="mandatory" /></td>
-						 <td> <p:selectOneMenu  label="#{lbl['lbl.sc.price.inquiry.ptj.name']}" id="ptjName" required="true"
-						     value="#{purchaseInquiryBackingBean.managedBean.orgProfileId}"
-						     styleClass="divisionclass" style="width: 250px;margin-bottom: 5px;">
-						  <f:selectItem itemLabel="- Select One -" itemValue="#{null}" />
-						  <f:selectItems 
-							   value="#{purchaseInquiryBackingBean.managedBean.userDivisionList}"
-							   var="pmOrgProfile"
-							   itemLabel="#{pmOrgProfile.orgCode} - #{pmOrgProfile.orgName}"
-							   itemValue="#{pmOrgProfile.orgProfileId}" />
-							 <p:ajax event="change" update="prInqPanel"  partialSubmit="true"
-							     process="@this"  listener="#{purchaseInquiryBackingBean.ptjNameEvent}"/>
-					</p:selectOneMenu></td>
-					<td> <p:message id="ptjNameMsg" for="ptjName" display="icon" /> </td>
-			    	</ui:fragment>
-				</tr>
-				</table>
-			   </p:outputPanel></td>
-			</tr>
-			<tr>
 				<td style="width: 250px;"><p:outputLabel
 						value="#{lbl['lbl.sc.price.inquiry.supp.name']}" /></td>
 				<td><p:inputText disabled="true"

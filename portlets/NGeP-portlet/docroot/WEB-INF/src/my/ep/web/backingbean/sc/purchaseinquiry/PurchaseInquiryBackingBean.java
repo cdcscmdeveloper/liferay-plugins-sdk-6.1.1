@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.cm.catalogue.IViewSupplierItemSO;
-import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.directpurchase.IDirectPurchaseSO;
@@ -34,8 +34,8 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.DPStatusConstants;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
-import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
-import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
@@ -50,7 +50,6 @@ import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
-import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmStatus;
@@ -64,7 +63,6 @@ import my.ep.persistence.entity.sc.directpurchase.ScRequestSupplierItem;
 import my.ep.persistence.entity.sc.directpurchase.ScSupplierItemPrice;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.logging.LogKey;
-import my.ep.type.pm.OrganizationType;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
@@ -233,7 +231,18 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 		  getCurrentStatus(status.getStatusId());
 		  //TODO default value to  price type drop down listing
 		  getManagedBean().setPriceType(ParameterConst.PRICE_TYPE_STANDARD);
-		  populateUserDivisionList();
+		  
+		  // to get ptj
+		  PmUser user = new FacesScopes().getUserSessionBean();
+		  if (user != null) {
+			  IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			  UserReqDTO reqDTO = new UserReqDTO();
+			  reqDTO.setUserId(user.getUserId());
+			  UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
+			  if(resDTO.getUserOrgList() != null && resDTO.getUserOrgList().size()>0){
+				  getManagedBean().setPmOrgProfile(resDTO.getUserOrgList() .get(0).getPmOrgProfile());
+			  }
+		  }
 		  return "prInquiryMain";		 
 	  }
 
@@ -521,29 +530,6 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 	}
 
 	/**
-	 * to get Division drop down Listing in Purchase inquiry
-	 */
-	private void populateUserDivisionList() {
-		debugLogger("populateUserMinistryList");
-		PmUser user = new FacesScopes().getUserSessionBean();
-		if (user != null) {
-			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-			reqDTO.setUserId(user.getUserId());
-			reqDTO.setOrgType(OrganizationType.DIVISION.value());
-
-			IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-							IOrgProfileSO.class);
-			OrgProfileResDTO resDTO = orgProfileSO
-					.retrieveOrgProfileListByOrgType(reqDTO);
-
-			List<PmOrgProfile> userDivisionList = resDTO.getOrgProfileList();
-			System.out.println("userDivisionList" + userDivisionList.size());
-			getManagedBean().setUserDivisionList(userDivisionList);
-		}
-	}
-
-	/**
 	 * Event for procurement type drop down in Purchase inquiry
 	 */
 	public void procurementTypeEvent() {
@@ -658,8 +644,6 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 				requestNoteBackingBean.getManagedBean().setSourceMethod(ParameterConst.METHOD_SC);
 				requestNoteBackingBean.getManagedBean().setTaskId(getManagedBean().getTaskId());
 				
-				requestNoteBackingBean.getManagedBean().setOrgProfile(getManagedBean().getPmOrgProfile());
-				requestNoteBackingBean.getManagedBean().setOrgProfileId(getManagedBean().getPmOrgProfile().getOrgProfileId());
 				ScRequestNoteDtl scRequestNoteDtl = new ScRequestNoteDtl();
 				parameterReqDTO = new ParameterReqDTO();
 				parameterReqDTO.setParameterType(ParameterTypeConst.FULFILMENT_TYPE);
@@ -744,8 +728,6 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 			 ScSupplierItemPrice itemPrice =requestSupplierItem.getSupplierItemPrices().get(0);
 			 ScRequestNoteDtl requestNoteDtl = requestSupplierItem.getScRequestNoteDtl().get(0);
 			 requestSupplierItem.setSupplierItemPrice(itemPrice);
-			 getManagedBean().setPmOrgProfile(requestSupplierItem.getRequestNoteItem().getRequestNote().getPmOrgProfile());
-			 getManagedBean().setSelectedPtj(requestSupplierItem.getRequestNoteItem().getRequestNote().getPmOrgProfile());
 			 getManagedBean().setRequestNoteDtl(requestNoteDtl);
 			 prInquiry.setRequestSupplierItem(requestSupplierItem);
 			 prInquiry.setDayToResponse(ParameterConst.PIQ_RESP_DAYS); // by default days
@@ -798,19 +780,6 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 		 	}
 		}
 	  }
-	 
-	 
-	public void ptjNameEvent() {
-		if (getManagedBean().getOrgProfileId() != null) {
-			for (PmOrgProfile orgProfile : getManagedBean()
-					.getUserDivisionList()) {
-				if (orgProfile.getOrgProfileId().equals(
-						getManagedBean().getOrgProfileId())) {
-					getManagedBean().setPmOrgProfile(orgProfile);
-				}
-			}
-		}
-	}
 	
 	private	List<ScSupplierItemPrice>	createScSupplierItemPrices(ScRequestSupplierItem	scRequestSupplierItem, List<CmPricing> pricings){
 		List<ScSupplierItemPrice> results	=	new ArrayList<>();
