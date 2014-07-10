@@ -54,7 +54,9 @@ import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.authorization.PmUserPreference;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmAddressType;
+import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
@@ -113,8 +115,7 @@ public class CommitteBackingBean extends
 	public CommitteBackingBean() {
 		// retriveCommitteTypes();
 
-		getManagedBean().setRoleTypes(
-				getRoleTypeDropdownValues(ParameterTypeConst.COMMITTEE_ROLE));
+		getManagedBean().setRoleTypes(getRoleTypeDropdownValues());
 
 		if (this.getManagedBean().getOutComes() == null) {
 			this.getManagedBean().setOutComes(
@@ -125,30 +126,20 @@ public class CommitteBackingBean extends
 
 	/**
 	 * @param committeeRole
+	 * @param types
 	 * @return
 	 */
-	private SelectItem[] getRoleTypeDropdownValues(String committeeRole) {
+	public SelectItem[] getRoleTypeDropdownValues() {
+		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+		List<String> recommendList = new ArrayList<String>();
+		recommendList.add(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON);
 
-		List<String> types = new ArrayList<String>();
-		types.add("M");
-		types.add("S");
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("pmParameter.parameterCode",
+						SearchOperator.OPERATOR_NOT_IN.value(), recommendList));
 
-		SelectItem[] items = null;
-		try {
-			items = new SelectItem[types.size() + 1];
-			items[0] = new SelectItem(null, "- Select One -");
-			int i = 1;
-			for (String priceTypeCode : types) {
-				items[i++] = new SelectItem(priceTypeCode, getParameterDesc(
-						committeeRole, priceTypeCode));
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
-							e.getMessage()));
-		}
+		SelectItem[] items = getDropdownValuesBySearchBean(
+				ParameterTypeConst.COMMITTEE_ROLE, searchBean);
 		return items;
 	}
 
@@ -191,16 +182,9 @@ public class CommitteBackingBean extends
 				CommitteResDTO resDTO = committeSO
 						.retriveQtCommitteDtls(committeReqDTO);
 				return resDTO.getQtCommitteResultBean();
-			} catch (Exception e) {
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, e
-								.toString(),
-								"Sorry we are Unable to Save the Details"));
 			} finally {
 				committeSO = null;
 			}
-			return null;
 		}
 	}
 
@@ -225,6 +209,15 @@ public class CommitteBackingBean extends
 				bean.setSearchField("scQt.qtNo");
 				bean.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
 				bean.setSearchValue(qtNumber);
+				searchFilterBean.add(bean);
+			}
+
+			Date fromCreatedDate = qtnTenderSearchBean.getFromCreatedDate();
+			if (null != fromCreatedDate) {
+				SearchFilterBean bean = new SearchFilterBean();
+				bean.setSearchField(QTConstants.CREATED_DATE);
+				bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+				bean.setSearchValue(fromCreatedDate);
 				searchFilterBean.add(bean);
 			}
 
@@ -462,19 +455,21 @@ public class CommitteBackingBean extends
 		debugLogger("editAction");
 
 		this.getManagedBean().setHeaderTitle(
-				scQtCommittee.getScCommittee().getCommitteeType().getParameterCode());
+				scQtCommittee.getScCommittee().getCommitteeType()
+						.getParameterCode());
 		this.getManagedBean().setScCommittee(scQtCommittee.getScCommittee());
 
-		if (getManagedBean().getScCommittee().getCommitteeType().getParameterCode()
-				.equalsIgnoreCase("OC")
-				|| getManagedBean().getScCommittee().getCommitteeType().getParameterCode()
-						.equalsIgnoreCase("EC")
-				|| getManagedBean().getScCommittee().getCommitteeType().getParameterCode()
-						.equalsIgnoreCase("TEC")
-				|| getManagedBean().getScCommittee().getCommitteeType().getParameterCode()
-						.equalsIgnoreCase("FEC")) {
+		if (getManagedBean().getScCommittee().getCommitteeType()
+				.getParameterCode().equalsIgnoreCase("OC")
+				|| getManagedBean().getScCommittee().getCommitteeType()
+						.getParameterCode().equalsIgnoreCase("EC")
+				|| getManagedBean().getScCommittee().getCommitteeType()
+						.getParameterCode().equalsIgnoreCase("TEC")
+				|| getManagedBean().getScCommittee().getCommitteeType()
+						.getParameterCode().equalsIgnoreCase("FEC")) {
 			CommitteReqDTO reqDTO = new CommitteReqDTO();
-			PmParameter commType = scQtCommittee.getScCommittee().getCommitteeType();
+			PmParameter commType = scQtCommittee.getScCommittee()
+					.getCommitteeType();
 			Long qtId = scQtCommittee.getScQt().getQtId();
 			reqDTO.setCommitteeType(commType.getParameterCode());
 			reqDTO.setQtId(qtId);
@@ -538,7 +533,8 @@ public class CommitteBackingBean extends
 				|| getManagedBean().getScCommittee().getCommitteeType()
 						.equals("QCA")) {
 			CommitteReqDTO reqDTO = new CommitteReqDTO();
-			PmParameter commType = scQtCommittee.getScCommittee().getCommitteeType();
+			PmParameter commType = scQtCommittee.getScCommittee()
+					.getCommitteeType();
 			Long qtId = scQtCommittee.getScQt().getQtId();
 			reqDTO.setCommitteeType(commType.getParameterCode());
 			reqDTO.setQtId(qtId);
@@ -721,8 +717,10 @@ public class CommitteBackingBean extends
 				+ getManagedBean().getScCommittee().getCommitteeType());
 
 		CommitteReqDTO reqDTO = new CommitteReqDTO();
-		/*reqDTO.setCommitteeType(getManagedBean().getScCommittee()
-				.getCommitteeType());*/
+		/*
+		 * reqDTO.setCommitteeType(getManagedBean().getScCommittee()
+		 * .getCommitteeType());
+		 */
 		reqDTO.setQtId(scQt.getQtId());
 		CommitteResDTO resDTO = null;
 		try {
@@ -801,16 +799,56 @@ public class CommitteBackingBean extends
 	 * getManagedBean().setScCommitteeMemberList(committeMemebersList); }
 	 */
 
-	public void addCommitteMember(ScQtCommittee qtCommittee, String titleName) {
+	public void addCommitteMember(String titleName) {
 		debugLogger("addCommitteMember");
-		this.getManagedBean().setCommitteMember(null);
+		getManagedBean().setName(null);
+		getManagedBean().setIdentificationType(null);
+		getManagedBean().setIdentificationNo(null);
+		getManagedBean().setExternalUsers(null);
+		getManagedBean().setSelectedPmUser(null);
+		if (getManagedBean().getCommitteMember() == null) {
+			this.getManagedBean().setCommitteMember(new ScCommitteeMember());
+		}
+		getManagedBean().getCommitteMember().setUserSelection("E");
+		// this.getManagedBean().setCommitteMember(committeeMember);
+		getSelectionTypes();
+		// getManagedBean().setQtCommittee(qtCommittee);
+		getManagedBean().setHeaderTitle(titleName);
+	}
+
+	/**
+	 * User selection types gov external new
+	 */
+	private void getSelectionTypes() {
+		SelectionType[] type = SelectionType.values();
+		List<SelectItem> selectionTypes = new ArrayList<SelectItem>();
+
+		for (SelectionType selectionType : type) {
+			selectionTypes.add(new SelectItem(selectionType.value(),
+					selectionType.name()));
+		}
+		this.getManagedBean().setSelections(selectionTypes);
+	}
+
+	public void userSelcetionAction(AjaxBehaviorEvent event) {
+		String userSelection = (String) event.getComponent().getAttributes()
+				.get("value");
+		userSelection = this.getManagedBean().getCommitteMember()
+				.getUserSelection();
+		logger.info("User Selection : " + userSelection);
+		this.getManagedBean().setExternalUsers(null);
 		ScCommitteeMember committeeMember = new ScCommitteeMember();
 		committeeMember.setPmUser(new PmUser());
-		committeeMember.setUserSelection("E");
+		committeeMember.setUserSelection(userSelection);
 		this.getManagedBean().setCommitteMember(committeeMember);
-		getSelectionTypes();
-		getManagedBean().setQtCommittee(qtCommittee);
-		getManagedBean().setHeaderTitle(titleName);
+		if (SelectionType.Existing.value().equalsIgnoreCase(
+				getManagedBean().getCommitteMember().getUserSelection())) {
+			// getManagedBean().getCommitteMember().setExternalUser(true);
+		} else if (SelectionType.New.value().equalsIgnoreCase(
+				getManagedBean().getCommitteMember().getUserSelection())) {
+			getManagedBean().getCommitteMember().setMemberRole(
+					new PmParameter());
+		}
 	}
 
 	public void deleteCommitteeAction() {
@@ -931,6 +969,12 @@ public class CommitteBackingBean extends
 					.getPmParameter();
 			user.setIdentificationCode(identificationCode);
 
+			// Nationality
+			PmCountry pmCountry = new PmCountry();
+			pmCountry.setCountryId(1L);
+			user.setPmCountry(pmCountry);
+			// pmUser.setPmAddressTypes(null);
+
 			// pmUser.setPmAddressTypes(null);
 
 			// User Notification
@@ -1018,22 +1062,6 @@ public class CommitteBackingBean extends
 		scCommittee.setScCommitteeMembers(memberList);
 		this.getManagedBean().getQtCommittee().setScCommittee(scCommittee);
 
-	}
-
-	/**
-	 * User selection types gov external new
-	 */
-	private void getSelectionTypes() {
-		SelectionType[] type = SelectionType.values();
-		List<SelectItem> selectionTypes = new ArrayList<SelectItem>();
-
-		for (SelectionType selectionType : type) {
-			selectionTypes.add(new SelectItem(selectionType.value(),
-					selectionType.name()));
-		}
-		this.getManagedBean().setSelections(selectionTypes);
-		System.out.println("User Selection : "
-				+ getManagedBean().getSelections().size());
 	}
 
 	/**
@@ -1127,47 +1155,6 @@ public class CommitteBackingBean extends
 				.getSelectedCloneCommitteMemebers());
 
 		getManagedBean().setCommitteMembers(committeeMemberList);
-
-	}
-
-	public void userSelcetionAction(AjaxBehaviorEvent event) {
-		String userSelection = (String) event.getComponent().getAttributes()
-				.get("value");
-		System.out.println("_____________________+++++++++++++++"
-				+ userSelection);
-		this.getManagedBean().setExternalUsers(null);
-
-		this.getManagedBean().setMinstryList(null);
-		this.getManagedBean().setDeptList(null);
-		this.getManagedBean().setDivisionList(null);
-		ScCommitteeMember committeeMember = new ScCommitteeMember();
-		committeeMember.setPmUser(new PmUser());
-		committeeMember.setMinistryOrgProfile(new PmOrgProfile());
-		committeeMember.setPmOrgProfile(new PmOrgProfile());
-		committeeMember.setDepartmentOrgProfile(new PmOrgProfile());
-		this.getManagedBean().getCommitteMembers()
-				.remove(this.getManagedBean().getCommitteMember());
-		committeeMember.setUserSelection(userSelection);
-		this.getManagedBean().setCommitteMember(committeeMember);
-		this.getManagedBean().getCommitteMembers().add(committeeMember);
-		/*
-		 * if (this.getManagedBean().getCommitteMember().getUserSelection()
-		 * .equalsIgnoreCase(SelectionType.PROFILE.value())) {
-		 * 
-		 * retriveGovUsers();
-		 * getManagedBean().getCommitteMember().setGovtUser(true); } else
-		 */
-		if (this.getManagedBean().getCommitteMember().getUserSelection()
-				.equalsIgnoreCase(SelectionType.Existing.value())) {
-
-			// getManagedBean().getCommitteMember().setExternalUser(true);
-			retriveExternalUsers();
-		} else if (this.getManagedBean().getCommitteMember().getUserSelection()
-				.equalsIgnoreCase(SelectionType.New.value())) {
-
-			// getManagedBean().getCommitteMember().setExternalUser(true);
-			retriveAllMinstrys();
-		}
 
 	}
 
@@ -1399,10 +1386,11 @@ public class CommitteBackingBean extends
 	}
 
 	public void resetSearchDetails() {
-		this.getManagedBean().setTitle(null);
-		this.getManagedBean().setQtNo(null);
-		this.getManagedBean().setCreatedDt(null);
-		this.getManagedBean().setStatus(null);
+		this.getManagedBean().getQtnTenderSearchBean().setQtTitle(null);
+		this.getManagedBean().getQtnTenderSearchBean().setQtNo(null);
+		this.getManagedBean().getQtnTenderSearchBean().setFromCreatedDate(null);
+		this.getManagedBean().getQtnTenderSearchBean().setQtStatus(null);
+		this.getManagedBean().getQtnTenderSearchBean().setCommitteeType(null);
 	}
 
 	public void resetClone() {
