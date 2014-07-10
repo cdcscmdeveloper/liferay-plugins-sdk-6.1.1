@@ -711,19 +711,15 @@ public class QTDetailBackingBean extends
 		if(null != scQt.getEstimatedAmount()) {
 			if(scQt.getEstimatedAmount().intValue() > 20000 && scQt.getEstimatedAmount().intValue() < 50000) {
 				if(scQt.getQtValidityPeriod() > 60 ) {
-					throw new EpException(MessageConst.ERROR_100022,
-							new String[] { "Proposal Validity (Days) is not greater than 60 days", });
+					throw new EpException(MessageConst.ERROR_760044, new String[] {"Proposal Validity (Days)", "60"});
 				} else if(scQt.getPublishPeriod() < 3) {
-					throw new EpException(MessageConst.ERROR_100022,
-							new String[] { "Publishing Days is not less than 3 days", });
+					throw new EpException(MessageConst.ERROR_760045, new String[] {"3", });
 				}
 			} else if (scQt.getEstimatedAmount().intValue() > 50000 && scQt.getEstimatedAmount().intValue() < 500000) {
 				if(scQt.getQtValidityPeriod() > 90 ) {
-					throw new EpException(MessageConst.ERROR_100022,
-							new String[] { "Proposal Validity (Days) is not greater than 90 days", });
+					throw new EpException(MessageConst.ERROR_760044, new String[] {"Proposal Validity (Days)", "90"});
 				} else if(scQt.getPublishPeriod() < 7) {
-					throw new EpException(MessageConst.ERROR_100022,
-							new String[] { "Publishing Days is not less than 7 days", });
+					throw new EpException(MessageConst.ERROR_760045, new String[] {"6", });
 				}
 			}
 		}
