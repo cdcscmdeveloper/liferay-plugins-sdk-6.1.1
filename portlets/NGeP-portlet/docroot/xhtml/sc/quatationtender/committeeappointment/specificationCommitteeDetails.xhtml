@@ -54,19 +54,25 @@
 				<h:outputText value="#{specificationcommittee.PNP ? 'Yes' : 'No'}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.committe.clonetable.role']}"
-				style="width: 15%">
+			<p:column style="width: 15%">
+				<f:facet name="header">
+					<h:outputText value="* " styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.so.role']}" />
+				</f:facet>
+
 				<ui:fragment rendered="#{specificationcommittee.PNP}">
 					<h:outputText value="Chairperson"
 						rendered="#{specificationcommittee.memberRole.parameterId == '583'}" />
 				</ui:fragment>
 				<ui:fragment rendered="#{!specificationcommittee.PNP}">
-					<p:selectOneMenu
+					<p:selectOneMenu id="roleid" required="true"
+						label="#{lbl['lbl.so.role']}"
 						value="#{specificationcommittee.memberRole.parameterId}"
 						style="width: 110px;margin-bottom: 5px;">
 						<f:selectItems
 							value="#{qTCommitteBackingBean.managedBean.roleTypes}" />
 					</p:selectOneMenu>
+					<p:message id="roleidMsg" for="roleid" display="icon" />
 				</ui:fragment>
 			</p:column>
 
