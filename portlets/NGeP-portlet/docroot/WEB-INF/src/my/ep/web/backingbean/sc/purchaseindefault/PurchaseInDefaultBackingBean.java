@@ -169,12 +169,27 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 			//wflowStatus.add(workFlowStatus);
 			scPurchaseInDefault.setWorkFlowStatuses(wflowStatus);
 			getCurrentStatus(status.getStatusId());  
-			getManagedBean().setPurchaseInDefault(scPurchaseInDefault);
-			//initialInformation(scPurchaseInDefault);
-			populatePtjDropDownList();
-			retrieveReasonDescListByCategory();
-			/// by default value as cheaper price
 			
+			// to get ptj
+			PmUser user = new FacesScopes().getUserSessionBean();
+			if (user != null) {
+				OrgProfileReqDTO profileReqDTO = new OrgProfileReqDTO();
+				profileReqDTO.setUserId(user.getUserId());
+				profileReqDTO.setOrgType(OrganizationType.DIVISION.value());
+				IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+				OrgProfileResDTO orgProfileResDTO = orgProfileSO
+						.retrieveOrgProfileListByOrgType(profileReqDTO);
+
+				if(orgProfileResDTO.getOrgProfileList() != null && orgProfileResDTO.getOrgProfileList().size()>0){
+					scPurchaseInDefault.setPmOrgProfile(orgProfileResDTO.getOrgProfileList().get(0));
+				}
+			}
+			initialInformation(scPurchaseInDefault);
+			retrieveReasonDescListByCategory();
+			
+			getManagedBean().setPurchaseInDefault(scPurchaseInDefault);
+			// by default value as cheaper price
 			PmReason reason = new PmReason();
 			reason.setReasonCode(ParameterConst.PID_CP);
 			getManagedBean().getPurchaseInDefault().setReasonType(reason);
@@ -197,8 +212,7 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 				ScPurchaseInDefault scPurchaseInDefault = getManagedBean().getPurchaseInDefault();
 				scPurchaseInDefault.setRecordStatus(Boolean.TRUE);
 				scPurchaseInDefault.setCreatedDate(DateUtils.getCurrentDate());
-				// PmOrgProfile - pjt id
-				scPurchaseInDefault.setPmOrgProfile(getManagedBean().getPmOrgProfile());
+				
 				// Target Approver
 				scPurchaseInDefault.setApprovalUsers(createTargetApprover(scPurchaseInDefault));
 				// WorkFlow Status 
@@ -508,8 +522,8 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 	   IUserSO iUserSO	=	(IUserSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 	   UserReqDTO userReqDto = new UserReqDTO();
 	   userReqDto.setRoleCode(RoleCode.RN_APPROVER.value());
-	   if(getManagedBean().getPmOrgProfile() != null){
-		   userReqDto.setOrgProfileId(getManagedBean().getPmOrgProfile().getOrgProfileId());
+	   if(purchaseInDefault.getPmOrgProfile() != null){
+		   userReqDto.setOrgProfileId(purchaseInDefault.getPmOrgProfile().getOrgProfileId());
 	   }
 	   UserResDTO userResDTO = iUserSO.retrieveUserListByRole(userReqDto);
 	   List<PmUser> availableApprover	=	userResDTO.getUserList();
@@ -554,7 +568,7 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 
 		   List<PmOrgProfile> ptjList = resDTO.getOrgProfileList();
 		   System.out.println("userDivisionList" + ptjList.size());
-		   getManagedBean().setPtjDropdown(ptjList);
+		   //getManagedBean().setPtjDropdown(ptjList);
 	   }
    }
 
@@ -612,8 +626,6 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 		   getManagedBean().setProcessName(res.getProcessName());
 		   getManagedBean().setOutComes(res.getAction());
 		   getManagedBean().setPurchaseInDefault(purchaseInDefault);
-		   getManagedBean().setSelectedPmOrgProfile(purchaseInDefault.getPmOrgProfile());
-		   getManagedBean().setPmOrgProfile(purchaseInDefault.getPmOrgProfile());
 		   getManagedBean().setAttachments(attachments);
 		   getCurrentStatus(res.getDocStatus().longValue()); 
 
@@ -669,13 +681,6 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
    public void deleteUploadFile() {
 	   debugLogger("deleteUploadFile");
 	   getManagedBean().getAttachments().clear();
-   }
-
-   public PmOrgProfile ptjNameEvent() {
-	   if(getManagedBean().getPmOrgProfile() != null){
-		   initialInformation(getManagedBean().getPurchaseInDefault());
-	   }
-	   return null;
    }
 
 	 /**

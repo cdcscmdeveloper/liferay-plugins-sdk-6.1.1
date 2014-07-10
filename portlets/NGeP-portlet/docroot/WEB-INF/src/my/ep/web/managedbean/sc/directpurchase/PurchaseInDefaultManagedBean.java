@@ -51,12 +51,7 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean{
 	private String processName;
 	private String pidStatus;
 	private String pageNavToRequestNote;
-	
-	private List<PmOrgProfile> ptjDropdown;
-	private PmOrgProfile pmOrgProfile = new PmOrgProfile();
-	private PmOrgProfile selectedPmOrgProfile = new PmOrgProfile();
 	private PmReason pmReason;
-	
 	private boolean checkContractItem;
     
 	public PurchaseInDefaultManagedBean() {
@@ -237,48 +232,6 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean{
 	 */
 	public void setPidStatus(String pidStatus) {
 		this.pidStatus = pidStatus;
-	}
-	
-	/**
-	 * @return the ptjDropdown
-	 */
-	public List<PmOrgProfile> getPtjDropdown() {
-		return ptjDropdown;
-	}
-
-	/**
-	 * @param ptjDropdown the ptjDropdown to set
-	 */
-	public void setPtjDropdown(List<PmOrgProfile> ptjDropdown) {
-		this.ptjDropdown = ptjDropdown;
-	}
-
-	/**
-	 * @return the pmOrgProfile
-	 */
-	public PmOrgProfile getPmOrgProfile() {
-		return pmOrgProfile;
-	}
-
-	/**
-	 * @param pmOrgProfile the pmOrgProfile to set
-	 */
-	public void setPmOrgProfile(PmOrgProfile pmOrgProfile) {
-		this.pmOrgProfile = pmOrgProfile;
-	}
-
-	/**
-	 * @return the selectedPmOrgProfile
-	 */
-	public PmOrgProfile getSelectedPmOrgProfile() {
-		return selectedPmOrgProfile;
-	}
-
-	/**
-	 * @param selectedPmOrgProfile the selectedPmOrgProfile to set
-	 */
-	public void setSelectedPmOrgProfile(PmOrgProfile selectedPmOrgProfile) {
-		this.selectedPmOrgProfile = selectedPmOrgProfile;
 	}
 
 	/**
