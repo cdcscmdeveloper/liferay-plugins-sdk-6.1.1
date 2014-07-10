@@ -25,9 +25,13 @@
 
 
 		<p:panelGrid columns="2" styleClass="noBorders tr,noBorders td">
-			<p:panel id="UserProfile" header="Add New User"
+			<p:panel id="UserProfile"
 				styleClass="noBorders tr,noBorders td" style="width:100%;"
 				toggleable="true">
+				<f:facet name="header">
+					<h:outputText value="Add New User" rendered="#{!smPersonnelBackingBean.managedBean.editMode}"/>
+					<h:outputText value="Edit User" rendered="#{smPersonnelBackingBean.managedBean.editMode}"/>
+				</f:facet>
 				<table style="width: 100%">
 					<tr>
 						<td style="white-space: nowrap; float: left;"><p:outputLabel
