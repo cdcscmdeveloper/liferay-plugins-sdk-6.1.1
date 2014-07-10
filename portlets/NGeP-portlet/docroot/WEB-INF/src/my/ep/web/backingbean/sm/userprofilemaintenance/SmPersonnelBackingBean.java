@@ -125,7 +125,10 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		getManagedBean().setUpdateSmPersonnelPermanentAddress(permPersonnelAddress);
 		getManagedBean().setUpdateSmPersonnel(smPersonnel);
 		getCountryList();
-		
+
+		if(getManagedBean().getUpdateSmPersonnelMailingAddress().getSmAddress() != null)
+			getManagedBean().setTempAddress(getManagedBean().getUpdateSmPersonnelMailingAddress().getSmAddress());
+
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, "updateUserProfile.xhtml");
@@ -194,6 +197,8 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		System.out.println("********************SmPersonnelBackingBean navigateToUpdateUserPage***************");
 		getManagedBean().setEditMode(true);
 		getPersonnelInfoById(personnelId);
+		if(getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress() != null)
+			getManagedBean().setTempAddress(getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress());
 		return "basicUserProfile.xhtml";
 	}
 	
@@ -354,31 +359,96 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 	}
 
 	public void setMailingAddrSameAsPerm(AjaxBehaviorEvent e) {
+
 		if (getManagedBean().getBasicSmPersonnelMailingAddress().isSameAsPerm()) {
 			System.out.println("********* Duplicate Mail Addr ***********");
-			this.getManagedBean().getBasicSmPersonnelMailingAddress().setSmAddress(this.getManagedBean().getBasicSmPersonnelPermanentAddress().getSmAddress());
+			SmAddress address = cloneAddress(getManagedBean().getBasicSmPersonnelPermanentAddress().getSmAddress());
+			this.getManagedBean().getBasicSmPersonnelMailingAddress().setSmAddress(address);
 			updateMailAddLists(this.getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress().getPmCountry().getCountryId().toString(), this.getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress().getPmState().getStateId().toString(), this.getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress().getPmDistrict().getDistrictId().toString());
 		} else {
-			System.out.println("*********** Not same Addr ************** ");
-			getManagedBean().getBasicSmPersonnelMailingAddress().setSmAddress(
-					setDefaultAddr());
+			if(getManagedBean().getTempAddress() != null){
+				System.out.println("*********** Prev Addr ************** ");
+				getManagedBean().getBasicSmPersonnelMailingAddress().setSmAddress(
+						getManagedBean().getTempAddress());
+			} else {
+				System.out.println("*********** Not same Addr ************** ");
+				getManagedBean().getBasicSmPersonnelMailingAddress().setSmAddress(
+						setDefaultAddr());
+//				updateMailAddLists(getManagedBean().getDefaultCountryId().toString(),null,null);
+			}
 		}
-
 	}
 
 	public void setUpdateMailingAddrSameAsPerm(AjaxBehaviorEvent e) {
 		if (getManagedBean().getUpdateSmPersonnelMailingAddress().isSameAsPerm()) {
 			System.out.println("********* Duplicate Mail Addr ***********");
-			this.getManagedBean().getUpdateSmPersonnelMailingAddress().setSmAddress(this.getManagedBean().getUpdateSmPersonnelPermanentAddress().getSmAddress());
+			SmAddress address = cloneAddress(getManagedBean().getUpdateSmPersonnelPermanentAddress().getSmAddress());
+			this.getManagedBean().getUpdateSmPersonnelMailingAddress().setSmAddress(address);
 			updateMailAddLists(this.getManagedBean().getUpdateSmPersonnelMailingAddress().getSmAddress().getPmCountry().getCountryId().toString(), this.getManagedBean().getUpdateSmPersonnelMailingAddress().getSmAddress().getPmState().getStateId().toString(), this.getManagedBean().getUpdateSmPersonnelMailingAddress().getSmAddress().getPmDistrict().getDistrictId().toString());
 		} else {
-			System.out.println("*********** Not same Addr ************** ");
-			getManagedBean().getUpdateSmPersonnelMailingAddress().setSmAddress(
+			if(getManagedBean().getTempAddress() != null){
+				System.out.println("*********** Prev Addr ************** ");
+				getManagedBean().getUpdateSmPersonnelMailingAddress().setSmAddress(
+						getManagedBean().getTempAddress());
+			} else {
+				System.out.println("*********** Not same Addr ************** ");
+				getManagedBean().getUpdateSmPersonnelMailingAddress().setSmAddress(
 					setDefaultAddr());
+			}
 		}
 
 	}
 
+	private SmAddress cloneAddress(SmAddress refAddress){
+		SmAddress address = new SmAddress();
+		if(refAddress.getAddress1() != null)
+			address.setAddress1(new String(refAddress.getAddress1().toString()));
+		if(refAddress.getAddress2() != null)
+			address.setAddress2(new String(refAddress.getAddress2().toString()));
+		if(refAddress.getAddress3() != null)
+			address.setAddress3(new String(refAddress.getAddress3().toString()));
+		if(refAddress.getAddress4() != null)
+			address.setAddress4(new String(refAddress.getAddress4().toString()));
+		if(refAddress.getPostcode() != null)
+			address.setPostcode(new String(refAddress.getPostcode().toString()));
+		
+		/****Cloning the address******/
+		PmCountry country = new PmCountry();
+		PmState state = new PmState();
+		PmDistrict district = new PmDistrict();
+		PmCity city = new PmCity();
+		
+		CountryReqDTO countryReqDTO = new CountryReqDTO();
+		countryReqDTO.setCountryId(refAddress.getPmCountry().getCountryId());
+		ICountrySO countrySO = (ICountrySO) BusinessDelegate.getInstance().getServiceObject("pm",ICountrySO.class);
+		CountryResDTO countryResDTO = countrySO.retrieveCountryById(countryReqDTO);
+		country = countryResDTO.getPmCountry();
+		address.setPmCountry(country);
+		
+		StateReqDTO stateReqDTO = new StateReqDTO();
+		IStateSO stateSO = (IStateSO) BusinessDelegate.getInstance().getServiceObject("pm", IStateSO.class);
+		stateReqDTO.setStateId(refAddress.getPmState().getStateId());
+		StateResDTO stateResDTO = stateSO.retriveStateByID(stateReqDTO);
+		state = stateResDTO.getPmState();
+		address.setPmState(state);
+
+		DistrictReqDTO districtReqDTO = new DistrictReqDTO();
+		IDistrictSO districtSO = (IDistrictSO) BusinessDelegate.getInstance().getServiceObject("pm", IDistrictSO.class);
+		districtReqDTO.setDistrictId(refAddress.getPmDistrict().getDistrictId());
+		DistrictResDTO districtResDTO = districtSO.retriveDistrictByID(districtReqDTO);
+		district = districtResDTO.getPmDistrict();
+		address.setPmDistrict(district);
+		
+		CityReqDTO cityReqDTO = new CityReqDTO();
+		ICitySO citySO = (ICitySO) BusinessDelegate.getInstance().getServiceObject("pm", ICitySO.class);
+		cityReqDTO.setCityId(refAddress.getPmCity().getCityId());
+		CityResDTO cityResDTO = citySO.retriveCityById(cityReqDTO);
+		city = cityResDTO.getPmCity();
+		address.setPmCity(city);
+
+		return address;
+	}
+	
 	private SmAddress setDefaultAddr() {
 		SmAddress addr = new SmAddress();
 		PmCountry cntry = new PmCountry();

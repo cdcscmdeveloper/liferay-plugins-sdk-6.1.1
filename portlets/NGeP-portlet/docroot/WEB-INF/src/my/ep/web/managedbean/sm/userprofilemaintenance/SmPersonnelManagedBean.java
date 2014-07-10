@@ -13,6 +13,7 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
+import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.type.aut.SearchOperator;
@@ -84,6 +85,8 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	
 	private boolean editMode;
 
+	private SmAddress tempAddress;
+	
 	public SmPersonnelManagedBean() {
 		// TODO Auto-generated constructor stub
 		super();
@@ -365,6 +368,14 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 
 	public void setEditMode(boolean editMode) {
 		this.editMode = editMode;
+	}
+
+	public SmAddress getTempAddress() {
+		return tempAddress;
+	}
+
+	public void setTempAddress(SmAddress tempAddress) {
+		this.tempAddress = tempAddress;
 	}
 
 	
