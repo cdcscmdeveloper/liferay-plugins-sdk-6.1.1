@@ -50,27 +50,27 @@ public class SmDeleteCategoryCodeBackingBean extends
 			System.out.println("**** ENTER On Page Load Event  *************");
 
 			SmSupplier smApplSupplier = getCurrentSupplier();
-			// SmSupplier smApplSupplier = retriveSupplierById((long) 27)
-			// .getSmSupplier();
-			System.out.println("******** SIZE ********** "
-					+ smApplSupplier.getSmAppls().size());
-			// TODO Get the latest application
-			// SmAppl smAppl = smApplSupplier.getSmAppl();
+			System.out.println("**** Supplier Id is ********** "
+					+ smApplSupplier.getSupplierId());
 			SmAppl smAppl = smApplSupplier.getSmAppl();
-			if (smAppl == null) {
-				smAppl = new SmAppl();
-			}
 
-			if (smAppl.getSmSupplierCategories() == null) {
+			if (smAppl != null) {
+				System.out.println("******** The application id is *******"
+						+ smAppl.getApplId());
+				getManagedBean().setSmAppl(smAppl);
+				retriveLatestApplAfterUpdate();
+
+			} else {
+				smAppl = new SmAppl();
 				smAppl.setSmSupplierCategories(new ArrayList<SmSupplierCategory>());
+				getManagedBean().setSmAppl(smAppl);
 			}
-			System.out.println("******** The application id is *******"
-					+ smAppl.getApplId());
 
 			getManagedBean().setSmSupplier(smApplSupplier);
-			getManagedBean().setSmAppl(smAppl);
+
 			return SupplierManagementConst.PROCEED_DELETE_CATCODES_APPLN;
 		} catch (Exception e) {
+			e.printStackTrace();
 			return SupplierManagementConst.DEFAULT_DELETE_CATCODES_APPLN;
 
 		}
