@@ -85,7 +85,8 @@ import com.liferay.portal.util.PortalUtil;
 public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBean> {
 	
 	private static final String PROCESS_TERMINATE_PAGE = "/xhtml/ct/fulfilmentdetails/termination/terminationTab.xhtml?faces-redirect=true";
-
+	private static final String CONTRACT_MAINT_PAGE = "/xhtml/ct/fulfilmentdetails/search/search.xhtml?faces-redirect=true";
+	
 	private static Logger log = Logger.getLogger(TerminationBackingBean.class);
 	private Map<Long, String> reasonDescMap = new HashMap<Long, String>();
 	private CtTerminationReason[] selectedTerminationReasonsList;
@@ -189,6 +190,10 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 		  }
 
 	 }
+	
+	public String backAction() {
+		return CONTRACT_MAINT_PAGE;
+	}
 	
 	 public String saveContractTermination(String action) throws Exception{
 		

@@ -28,7 +28,7 @@
 	  	<p:messages id="messages" showDetail="true" showSummary="false" autoUpdate="true" closable="true" severity="error, info" />
 	   <table style="width: 100%;">
 	     <tr>
-	    	<td><p:commandButton value="Back" immediate="true" icon="ui-icon-back" rendered="#{terminationBackingBean.managedBean.taskId==null}" oncomplete="window.history.back();" /></td>
+	    	<td><p:commandButton value="Back" immediate="true" icon="ui-icon-back" rendered="#{terminationBackingBean.managedBean.taskId==null}" action="#{terminationBackingBean.backAction}" /></td>
 	    	<td class="ppRightBtn">
 	    		<c:if test="#{!terminationBackingBean.managedBean.viewContract}">
 				  	<ui:repeat var="outcome" value="#{terminationBackingBean.managedBean.action}">

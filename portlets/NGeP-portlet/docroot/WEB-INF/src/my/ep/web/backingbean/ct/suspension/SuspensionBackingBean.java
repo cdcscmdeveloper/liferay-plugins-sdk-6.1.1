@@ -56,7 +56,9 @@ import com.liferay.portal.util.PortalUtil;
 @ManagedBean (name = "suspensionBackingBean")
 @RequestScoped
 public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean> {
-
+	
+	 private static final String CONTRACT_MAINT_PAGE = "/xhtml/ct/fulfilmentdetails/search/search.xhtml?faces-redirect=true";
+	
 	 private static Logger log = Logger.getLogger(SuspensionBackingBean.class);
 	 private List<CtContractItem> ctContractItems;
 	 ContractBackingBean ctBB = null;
@@ -142,6 +144,10 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 	    } catch(Exception e){
 			e.printStackTrace();
 		}
+	 }
+	 
+	 public String backAction() {
+			return CONTRACT_MAINT_PAGE;
 	 }
 	 
 	 public void setSuspensionStatusValue(CtContractItem item){
