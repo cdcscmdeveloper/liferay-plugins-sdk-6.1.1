@@ -598,7 +598,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		deliveryAddr.setFlFulfilmentRequest(getManagedBean().getFlRequest());
 		deliveryAddr.setPmAddress(manualAddr);
 		//deliveryAddr.setAddressType(manualAddr);
-		deliveryAddr.setCheckManualAddress(true);
 		if(getManagedBean().getFlRequest().getCtContract().isZonalPricing()){
 			ContractZoneReqDTO zoneReqDTO = new ContractZoneReqDTO();
 			zoneReqDTO.setPmAddress(manualAddr);

@@ -287,6 +287,8 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			crBB.getManagedBean().setDocProcess(docType);
 			crBB.getManagedBean().setFlDocId(flDocId);
 			crBB.getManagedBean().setButtonVal(buttonVal);
+			crBB.getManagedBean().getApproverModel().setTarget(resDTO.getSelectedApproverList());
+			crBB.getManagedBean().getApproverModel().getSource().removeAll(resDTO.getSelectedApproverList());
 			if(buttonVal.equalsIgnoreCase("Update")){
 				String[] outcome = new String[2];
 				outcome[0] = BpmOutcomeConst.BPM_SAVE;
@@ -294,7 +296,6 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 				crBB.getManagedBean().setOutComes(outcome);
 				flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
 			}
-			
 			
 			crBB.getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
 			crBB.getManagedBean().setPmUser(reqDTO.getPmUser());

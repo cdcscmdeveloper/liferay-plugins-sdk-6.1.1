@@ -29,7 +29,7 @@
 				<p:commandLink oncomplete="addManualDeliveryAddr.show();"
 					action="#{purchaseRequestBackingBean.editManualAddress(address)}"
 					update=":form:addManualDelAddrDialog,@(.orderSummaryChange)"
-					style="padding-right:5px" rendered="#{address.checkManualAddress}">
+					style="padding-right:5px" rendered="#{address.receivingGrp}">
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png" />
 				</p:commandLink>
