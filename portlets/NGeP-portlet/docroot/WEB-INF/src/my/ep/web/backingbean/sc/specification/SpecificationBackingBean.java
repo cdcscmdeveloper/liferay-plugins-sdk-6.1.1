@@ -2663,7 +2663,7 @@ public class SpecificationBackingBean extends
 		ScQtSupplierCriteria qtSupplierCriteria = scQt
 				.getScQtSupplierCriteria();
 		if (!scQt.isPanel()) {
-			if (!scQt.isZonal()) {
+			if (!scQt.isZonal() && scQt.getQtType().equals("O")) {
 				scQt.setZoneLocationLevel(null);
 				List<ScQtLocCriteria> locCriteria = (List<ScQtLocCriteria>) getQuoteZones(
 						this.getManagedBean().getZoneTrees(),
@@ -2690,7 +2690,7 @@ public class SpecificationBackingBean extends
 
 				}
 
-			} else {
+			} else if (scQt.isZonal() && scQt.getQtType().equals("O")) {
 				List<TplSpecZoneDtl> businessOwnerZone = getZoneBusinessOwnerLocations(
 						this.getManagedBean().getZoneGeneralTrees(), null);
 				if (businessOwnerZone != null && !businessOwnerZone.isEmpty()) {
