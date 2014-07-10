@@ -53,7 +53,7 @@
 				
 				<p:commandLink 
 					     actionListener="#{zoneMaintenanceBackingBean.editZone(zoneTree,index)}"
-					     process="@this" update="@([id$=zonePopupPanel])" oncomplete="ZL.show();">
+					     process="@this" update=":form:ZL" oncomplete="ZL.show();">
 						<p:graphicImage library="ep/images/design" name="edit.png"
 							value="/resources/ep/images/design/edit.png" />
 					</p:commandLink>
@@ -69,17 +69,22 @@
 				
 		<div align="right" style="width: 100%">
 			<p:commandButton value="#{lbl['lbl.cm.zm.btn.add']}" process="@this" 
-			     update="@([id$=zonePopupPanel])" partialSubmit="true" 
+			     update=":form:ZL" partialSubmit="true" 
 				 oncomplete="ZL.show();" 
 				 actionListener="#{zoneMaintenanceBackingBean.addNewZone}" icon="ui-icon-add"/>
 		</div>	
 		
-		<p:dialog header="#{lbl['lbl.cm.zm.popup.header']}" widgetVar="ZL" modal="true"
+		<p:dialog id="ZL" widgetVar="ZL" header="#{zoneMaintenanceBackingBean.managedBean.editMode}" modal="true"
 		width="800" height="500">
+			<f:facet name="header">
+				<h:outputText value="#{lbl['lbl.cm.zm.header.add']}" rendered="#{!zoneMaintenanceBackingBean.managedBean.editMode}"/>
+				<h:outputText value="#{lbl['lbl.cm.zm.header.edit']}" rendered="#{zoneMaintenanceBackingBean.managedBean.editMode}"/>
+			</f:facet>
 			<h:panelGroup id="zonePopupPanel">
 				<table styleClass="noBorders tr,noBorders td" >
 					<TR>
-						<TD width="20%" valign="top"><p:outputLabel value="*Zone Name"></p:outputLabel>
+						<TD width="20%" valign="top"><p:outputLabel value="#{lbl['lbl.cm.zm.name']}"></p:outputLabel>
+						 <p:outputLabel	value="*" styleClass="mandatory" />
 						</TD>
 						<TD width="80%"><p:inputText id="zoneNameId"
 								value="#{zoneMaintenanceBackingBean.managedBean.selectedSupplierZone.suppZoneName}" >
@@ -114,7 +119,7 @@
 			</h:panelGroup>
 			<p:commandButton id="zoneAddButton"
 					value="#{lbl['lbl.cm.zm.btn.ok']}" disabled="#{zoneMaintenanceBackingBean.managedBean.selectedSupplierZone.suppZoneName.length() eq 0}"
-					style="float:right;" onclick="ZL.hide();" process="@all ,zoneNameId"
+					style="float:right;" oncomplete="ZL.hide();" process="@all ,zoneNameId"
 					update="@this, zonePopupPanel" partialSubmit="true"
 					actionListener="#{zoneMaintenanceBackingBean.updateZoneListOnPopUpClose}">
 		   </p:commandButton>
@@ -122,7 +127,7 @@
 			
 			
 			<p:commandButton value="#{lbl['lbl.cm.zm.btn.cancel']}" style="float:right;"
-				onclick="ZL.hide();"></p:commandButton>
+				oncomplete="ZL.hide();"></p:commandButton>
 		</p:dialog>	 			
 	</ui:define>	
 </ui:composition>

@@ -148,6 +148,7 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 	 */
 	public String saveCmSupplierZones() {
 		System.out.println("********************ZoneMaintenanceBackingBean saveCmSupplierZones***************");
+		assignValReqdToFalse();
 		/* First delete any records that are to be deleted */
 		if(getManagedBean().getDeletedCmSupplierZoneList() != null)
 			deleteCmSupplierZones();
@@ -179,6 +180,7 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 	}
 	
 	public void editZone(TreeNode rootZoneLocation, int zoneIndex) {
+		getManagedBean().setEditMode(true);
 		List<CmSupplierZoneStateDistrictDTO> detailDTOs = getDetails(rootZoneLocation);
 		CmSupplierZone zone = getZone(rootZoneLocation);
 		List<PmState> states = SourcingZoneDetailHelper
@@ -202,6 +204,8 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 	
 	public void addNewZone() {
 		System.out.println("********************ZoneMaintenanceBackingBean addNewZone***************");
+		getManagedBean().setEditMode(false);
+		assignValReqdToTrue();
 		getManagedBean().setSelectedSupplierZone(new CmSupplierZone());
 		getManagedBean().getSelectedSupplierZone().setSuppZoneName(null);
 		getManagedBean().setRootZoneTree(
@@ -527,4 +531,15 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 		getManagedBean().setSelectedSupplierZone(null);
 		getManagedBean().setZoneTrees(CmSupplierZoneSingleton.getInstance().buildZoneSDTree(this.getManagedBean().getCmSupplierZoneList()));
 	}
+	
+	private void assignValReqdToTrue() {
+		getManagedBean().setShowParentMsg(false);
+		getManagedBean().setValueReqd(true);
+	}
+
+	private void assignValReqdToFalse() {
+		getManagedBean().setShowParentMsg(true);
+		getManagedBean().setValueReqd(false);
+	}
+
 }

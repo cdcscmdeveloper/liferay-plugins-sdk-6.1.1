@@ -80,6 +80,12 @@ public class ZoneMaintenanceManagedBean extends BaseManagedBean {
 
 	private SmSupplier currentSupplier;
 	
+	private boolean showParentMsg;
+	
+	private boolean valueReqd;
+	
+	private boolean editMode;
+	
 	public ZoneMaintenanceManagedBean() {
 		super();
 	}
@@ -438,6 +444,30 @@ public class ZoneMaintenanceManagedBean extends BaseManagedBean {
 
 	public void setCurrentSupplier(SmSupplier currentSupplier) {
 		this.currentSupplier = currentSupplier;
+	}
+
+	public boolean isShowParentMsg() {
+		return showParentMsg;
+	}
+
+	public void setShowParentMsg(boolean showParentMsg) {
+		this.showParentMsg = showParentMsg;
+	}
+
+	public boolean isValueReqd() {
+		return valueReqd;
+	}
+
+	public void setValueReqd(boolean valueReqd) {
+		this.valueReqd = valueReqd;
+	}
+
+	public boolean isEditMode() {
+		return editMode;
+	}
+
+	public void setEditMode(boolean editMode) {
+		this.editMode = editMode;
 	}
 
 }
