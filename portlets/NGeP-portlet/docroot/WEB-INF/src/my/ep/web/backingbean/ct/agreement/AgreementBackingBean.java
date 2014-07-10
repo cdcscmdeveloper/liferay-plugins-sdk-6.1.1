@@ -589,6 +589,8 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	    ContractDetailsBackingBean contractDetailsBB =  new ContractDetailsBackingBean();
 	    contractDetailsBB.setValidateContractField(resDTO);  
 	    contractDetailsBB.getManagedBean().setViewContract(true);
+	    contractDetailsBB.getManagedBean().setExternalPageUrl(AGREEMENT_DOC_PAGE);
+	    
 		return CONTRACT_PAGE;
     }
     

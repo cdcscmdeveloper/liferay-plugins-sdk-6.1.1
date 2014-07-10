@@ -145,7 +145,8 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private String frequencySchedule;
 	
 	private CtFulfilment ctFulfilments;
-	 
+	private String externalPageUrl;
+	
 	public String[] getAction() {
 		return action;
 	}
@@ -827,5 +828,13 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 
 	public void setCtFulfilments(CtFulfilment ctFulfilments) {
 		this.ctFulfilments = ctFulfilments;
+	}
+	
+	public String getExternalPageUrl() {
+		return externalPageUrl;
+	}
+	
+	public void setExternalPageUrl(String externalPageUrl) {
+		this.externalPageUrl = externalPageUrl;
 	}
 }

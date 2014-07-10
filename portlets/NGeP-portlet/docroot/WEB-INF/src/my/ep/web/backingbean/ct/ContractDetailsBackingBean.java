@@ -137,6 +137,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	private static final String PROCESS_AMEND_PAGE = "/xhtml/ct/fulfilmentdetails/amendment/amendmentTab.xhtml?faces-redirect=true";
 	private static final String CONTRACT_PAGE = "/xhtml/ct/fulfilmentdetails/creation/fulfilment.xhtml?faces-redirect=true";
 	private static final String TERMINATE_HISTORY_PAGE = "/xhtml/ct/fulfilmentdetails/termination/terminationHistory.xhtml?faces-redirect=true";
+	private static final String CONTRACT_MAINT_PAGE = "/xhtml/ct/fulfilmentdetails/search/search.xhtml?faces-redirect=true";
 	
 	private String editorValue;
 	ContractBackingBean ctBB = null;
@@ -217,7 +218,14 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			userSO = null;
 		}
 		return sourceList;
-	}	
+	}
+	
+	public void preRenderSearch() {
+		renewSesionObject();
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, "search.xhtml?faces-redirect=true");
+	}
 	
 	public void preRenderView() {
 		
@@ -410,6 +418,10 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), "contract search failed."));
 		}
+	}
+	
+	public String backAction() {
+		return (getManagedBean().getExternalPageUrl() != null) ? getManagedBean().getExternalPageUrl() : CONTRACT_MAINT_PAGE;
 	}
 	
 	public void searchReset(){
