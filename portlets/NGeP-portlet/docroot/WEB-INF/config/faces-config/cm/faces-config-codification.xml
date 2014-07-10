@@ -40,11 +40,9 @@
 			<redirect />
 		</navigation-case>
 
-
 		<navigation-case>
 			<from-outcome>addCatalogItem</from-outcome>
 			<to-view-id>/xhtml/cm/catalogue/addCatalogView.xhtml</to-view-id>
-			<redirect />
 		</navigation-case>
 
 		<navigation-case>
