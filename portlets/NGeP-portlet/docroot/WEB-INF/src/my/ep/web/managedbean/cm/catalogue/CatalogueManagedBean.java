@@ -141,6 +141,10 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	
 	private List<CmSupplierZone> supplierZoneList;
 	
+	private List<SelectItem> optionList = new ArrayList<SelectItem>();
+	
+	private Integer optionListValue =0;
+	
 	private Integer pricingTabIndex =0;
 	
 	private Integer normalPricingIndex =0;
@@ -1325,6 +1329,30 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 	public void setUploadDir(String uploadDir) {
 		this.uploadDir = uploadDir;
+	}
+
+
+	public List<SelectItem> getOptionList() {
+		optionList.clear();
+		optionList.add(new SelectItem("1", "Add to CR"));
+		optionList.add(new SelectItem("2", "Add to Simple Quote"));
+		optionList.add(new SelectItem("3", "Add to Compare"));
+		return optionList;
+	}
+
+
+	public void setOptionList(List<SelectItem> optionList) {
+		this.optionList = optionList;
+	}
+
+
+	public Integer getOptionListValue() {
+		return optionListValue;
+	}
+
+
+	public void setOptionListValue(Integer optionListValue) {
+		this.optionListValue = optionListValue;
 	}
 
 	

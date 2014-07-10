@@ -192,9 +192,17 @@
 								<h:outputLabel value="#{supplierItem.bestPrice}" />
 							</p:column>
 
-
-							<p:column selectionMode="multiple" style="width:2%"
-								disabledSelection="#{supplierItem.contractNo != null or supplierItem.circularNo != null}" />
+							
+							<p:column selectionMode="multiple"  disabledSelection="#{supplierItem.contractNo != null or supplierItem.circularNo != null}" 
+							rendered="#{!unspscCodeBackingBean.requisitioner}"/>
+							
+							<p:column headerText=" " rendered="#{unspscCodeBackingBean.requisitioner}">
+								<p:selectOneMenu value="#{catalogueBackingBean.managedBean.optionListValue}" style="width: 128px;" >
+									<f:selectItem itemLabel="Select One" itemValue="0" />
+									<f:selectItems value="#{catalogueBackingBean.managedBean.optionList}" ></f:selectItems>
+								 	<p:ajax event="change" listener="#{catalogueBackingBean.addToList(supplierItem,catalogueBackingBean.managedBean.optionListValue)}" update="@([id$=btnId])" />
+								</p:selectOneMenu>
+							</p:column>
 
 							<p:column headerText="Action" width="2%"
 								rendered="#{unspscCodeBackingBean.requisitioner}">

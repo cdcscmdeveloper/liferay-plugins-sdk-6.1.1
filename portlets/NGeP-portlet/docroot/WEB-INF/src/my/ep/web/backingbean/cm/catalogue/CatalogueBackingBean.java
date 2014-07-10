@@ -2912,6 +2912,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	public String compareSupplierItem() {
 
 		log.info("==============compareSupplierItem========================");
+		log.info("this.getManagedBean().getSelectViewItems().size() = "+this.getManagedBean().getSelectViewItems().size());
 		this.getManagedBean().setSelectedSupplierItemList(null);
 		this.getManagedBean().setContractedExist(false);
 
@@ -5189,8 +5190,19 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		this.getManagedBean().setSimpleQuoteFlag(true);
 		this.getManagedBean().setCtRequestList(null);
 		this.getManagedBean().setSelectViewItems(null);
-		
 		this.getManagedBean().getSearchDataModel().resetData();
+	}
+	
+	public void addToList(VCmSupplierItem supplierItem,Integer optionListValue){
+		log.info("addToList trigger");
+		//log.info("supplierItem.getCompanyName() = "+supplierItem.getCompanyName()+" optionListValue = "+optionListValue.intValue());
+		if(optionListValue.intValue()==1){
+			this.getManagedBean().getCtRequestList().add(supplierItem);
+		/*}else if(optionListValue.intValue()==2){
+			this.getManagedBean().getsim().add(supplierItem);*/
+		}else if(optionListValue.intValue()==3){
+			this.getManagedBean().getSelectViewItems().add(supplierItem);
+		}
 	}
 
 	public SearchFilterBean getStatusFilterBean() {
