@@ -90,9 +90,10 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		CountryResDTO resDTO = reqSO.retrieveCountryByCode(reqDTO);
 		getManagedBean().setDefaultCountryId(resDTO.getPmCountry().getCountryId());
 		initUserPersonnelInfo();
+		fetchUpdateSmPersonnelAddresses(getManagedBean().getUpdateSmPersonnel());
 
 		getManagedBean().setDisableRole(false);
-		SmPersonnel smPersonnel = new SmPersonnel();
+/*		SmPersonnel smPersonnel = new SmPersonnel();
 		smPersonnel.setPmCountry(resDTO.getPmCountry());
 
 		reqDTO.setCountryId(getManagedBean().getDefaultCountryId());
@@ -125,7 +126,7 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		getManagedBean().setUpdateSmPersonnelPermanentAddress(permPersonnelAddress);
 		getManagedBean().setUpdateSmPersonnel(smPersonnel);
 		getCountryList();
-
+*/
 		if(getManagedBean().getUpdateSmPersonnelMailingAddress().getSmAddress() != null)
 			getManagedBean().setTempAddress(getManagedBean().getUpdateSmPersonnelMailingAddress().getSmAddress());
 
@@ -545,19 +546,16 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 	
 	
 	public void getPersonnelByPmUser(PmUser usr){
-		
 		IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate
 				.getInstance().getServiceObject("sm", IPersonnelSO.class);
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
-		
 		reqDTO.setUserId(Long.valueOf(usr.getUserId()));
-
 		PersonnelResDTO resDTO = smPersonnelSO.retrievePersonnelByUserId(reqDTO);
-		
 		SmPersonnel smPersonnel = resDTO.getSmPersonnel();
-		
 		this.getManagedBean().setUpdateSmPersonnel(smPersonnel);
-		
+	}
+
+	public void fetchUpdateSmPersonnelAddresses(SmPersonnel smPersonnel){
 		if(smPersonnel.getSmPersonnelAddresses() != null && smPersonnel.getSmPersonnelAddresses().size() > 0){
 			List<SmPersonnelAddress> smPAList = new ArrayList<SmPersonnelAddress>();
 			
@@ -617,9 +615,8 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 			resCountryDTO = countrySO.retrieveCountryById(reqCountryDTO);
 			smPersonnel.setPmCountry(resCountryDTO.getPmCountry());
 		}
-		
 	}
-
+	
 	
 	public boolean validateUI(SmPersonnel personnel){
 		
