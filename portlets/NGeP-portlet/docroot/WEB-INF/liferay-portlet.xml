@@ -184,7 +184,7 @@
 		<portlet-name>reviewPlanPreparation</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -196,7 +196,7 @@
 		<portlet-name>revisePlanPreparation</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -208,7 +208,7 @@
 		<portlet-name>reviewBudgetAllocation</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -233,7 +233,7 @@
 		<portlet-name>codification</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -244,7 +244,7 @@
 		<portlet-name>Catalogue</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -256,119 +256,119 @@
 		<portlet-name>flContractList</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<css-class-wrapper>flcos-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
 		<portlet-name>flRequestNoteList</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<css-class-wrapper>flrequestnote-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
 		<portlet-name>flPendingDeliveryList</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<css-class-wrapper>fldopending-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
 		<portlet-name>flDocumentMaintenance</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<css-class-wrapper>fldocs-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
 		<portlet-name>flContractOrder</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<css-class-wrapper>fl-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
 		<portlet-name>flContractRequest</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<css-class-wrapper>flcr-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
 		<portlet-name>flInvoice</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<css-class-wrapper>flinv-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
 		<portlet-name>flDeliveryOrder</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<css-class-wrapper>fldo-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
 		<portlet-name>flFulfilmentReceivedNote</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<css-class-wrapper>flfrn-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
 		<portlet-name>flPaymentMatch</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<css-class-wrapper>flpm-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
 		<portlet-name>flPurchaseOrder</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<css-class-wrapper>flpo-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
 		<portlet-name>flPurchaseRequest</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<css-class-wrapper>flpr-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
 		<portlet-name>flShippingInstruction</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<css-class-wrapper>flshippingInst-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
 		<portlet-name>flStopDelivery</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<css-class-wrapper>flsi-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
 		<portlet-name>flDebitAdjustmentNote</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<css-class-wrapper>fldan-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
 		<portlet-name>flAp59</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<css-class-wrapper>flAp59-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
 		<portlet-name>flAp59Search</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<css-class-wrapper>flAp59Search-portlet</css-class-wrapper>
 	</portlet>
 	<!-- Fulfilment End Added by Giri -->
@@ -452,7 +452,7 @@
 		<portlet-name>scProcurementList</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -462,7 +462,7 @@
 		<portlet-name>scProcurementPlanList</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -473,7 +473,7 @@
 		<portlet-name>scDirectPurchase</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -483,7 +483,7 @@
 		<portlet-name>simpleQuoteSupplier</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -493,7 +493,7 @@
 		<portlet-name>scDirectPurchaseTask</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -505,7 +505,7 @@
 		<portlet-name>scPurchaseInDefault</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -598,7 +598,7 @@
 		<portlet-name>TaskList</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -617,7 +617,7 @@
 		<portlet-name>smCancelMofReg</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -628,7 +628,7 @@
 		<portlet-name>sm</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -640,7 +640,7 @@
 		<portlet-name>smApplyBumi</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -651,7 +651,7 @@
 		<portlet-name>smUpdateMofDetails</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -664,7 +664,7 @@
 		<portlet-name>smAddtionalCatCodes</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -677,7 +677,7 @@
 		<portlet-name>smDeleteCategoryCode</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -689,7 +689,7 @@
 		<portlet-name>smRenewMof</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -699,7 +699,7 @@
 		<portlet-name>smDelPendingAppln</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -712,7 +712,7 @@
 		<portlet-name>sdoreview</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -722,7 +722,7 @@
 		<portlet-name>complaint</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -733,7 +733,7 @@
 		<portlet-name>svcassignment</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -743,7 +743,7 @@
 		<portlet-name>SvoSiteVisit</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -754,7 +754,7 @@
 		<portlet-name>questionnaire</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -765,7 +765,7 @@
 		<portlet-name>onlineRegistration</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -778,7 +778,7 @@
 		<portlet-name>catalogueTaskList</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -789,7 +789,7 @@
 		<portlet-name>CatalogueMaintenance</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -801,7 +801,7 @@
 		<portlet-name>UnspscRequestForm</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -811,7 +811,7 @@
 		<portlet-name>ExtensionRequestForm</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -823,7 +823,7 @@
 		<portlet-name>UnspscBulkUpload</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -833,7 +833,7 @@
 		<portlet-name>ContractedItem</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -843,7 +843,7 @@
 		<portlet-name>UnspscSingleUpload</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -855,7 +855,7 @@
 		<portlet-name>reviewUnspsc</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -866,7 +866,7 @@
 		<portlet-name>BpmTaskList</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -876,7 +876,7 @@
 		<portlet-name>reviewExtensionRequest</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -888,7 +888,7 @@
 		<portlet-name>reviewExtensionMaintenance</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -900,7 +900,7 @@
 		<portlet-name>scBriefingSiteVisitAttendance</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -912,7 +912,7 @@
 		<portlet-name>scQTMaintenance</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -924,7 +924,7 @@
 		<portlet-name>commonAppl</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -934,7 +934,7 @@
 		<portlet-name>SiteVisit</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -945,7 +945,7 @@
 		<portlet-name>MOFApplication</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -956,7 +956,7 @@
 		<portlet-name>onlineAccountMaintenance</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -967,7 +967,7 @@
 	<portlet-name>scQTReview</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -979,7 +979,7 @@
 	<portlet-name>scQTPrepareSpec</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -992,7 +992,7 @@
 	<portlet-name>scQTSiteVisit</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -1004,7 +1004,7 @@
 	<portlet-name>scSupplierProposal</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -1017,7 +1017,7 @@
 	<portlet-name>scSupplierNotification</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -1030,7 +1030,7 @@
 		<portlet-name>scTemplateDocument</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -1040,7 +1040,7 @@
 		<portlet-name>scCommitteMaintance</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -1060,7 +1060,7 @@
 		<portlet-name>scSupplierFinalizationMeetingConfirmation</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -1072,7 +1072,7 @@
 		<portlet-name>scSupplierFinalization</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -1084,7 +1084,7 @@
 		<portlet-name>scSupplierFinalizationEndorsement</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -1108,7 +1108,7 @@
 		<portlet-name>Bidding List</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -1141,7 +1141,7 @@
 		<portlet-name>PurchaseInquiry</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -1241,7 +1241,7 @@
 		<portlet-name>Simple Quote</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -1251,7 +1251,7 @@
 		<portlet-name>Supplier View</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -1261,7 +1261,7 @@
 		<portlet-name>pmZone</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -1271,7 +1271,7 @@
 		<portlet-name>ZoneMaintenancePortlet</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -1283,7 +1283,7 @@
 		<portlet-name>supplierUserActivation</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -1295,7 +1295,7 @@
 		<portlet-name>UserProfileMaintenance</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -1308,7 +1308,7 @@
 		<portlet-name>SpecCommitteMaintanance</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -1320,7 +1320,7 @@
 		<portlet-name>QTApproval</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -1332,7 +1332,7 @@
 		<portlet-name>Evaluation Meeting</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -1344,7 +1344,7 @@
 		<portlet-name>pmNotifications</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -1356,7 +1356,7 @@
 			<portlet-name>quickLinks</portlet-name>
 			<icon>/icon.png</icon>
 			<instanceable>false</instanceable>
-			<header-portlet-css>/css/main.css</header-portlet-css>
+			<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 			<footer-portlet-javascript>
 				/js/main.js
 			</footer-portlet-javascript>
@@ -1366,7 +1366,7 @@
 			<portlet-name>BusinessOwner</portlet-name>
 			<icon>/icon.png</icon>
 			<instanceable>false</instanceable>
-			<header-portlet-css>/css/main.css</header-portlet-css>
+			<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 			<footer-portlet-javascript>
 				/js/main.js
 			</footer-portlet-javascript>
@@ -1377,7 +1377,7 @@
 			<portlet-name>Review Purchase Inquiry</portlet-name>
 			<icon>/icon.png</icon>
 			<instanceable>false</instanceable>
-			<header-portlet-css>/css/main.css</header-portlet-css>
+			<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 			<footer-portlet-javascript>
 				/js/main.js
 			</footer-portlet-javascript>
@@ -1389,7 +1389,7 @@
 			<portlet-name>Review Purchase In Default</portlet-name>
 			<icon>/icon.png</icon>
 			<instanceable>false</instanceable>
-			<header-portlet-css>/css/main.css</header-portlet-css>
+			<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 			<footer-portlet-javascript>
 				/js/main.js
 			</footer-portlet-javascript>
@@ -1401,7 +1401,7 @@
 			<portlet-name>Review Simple Quote</portlet-name>
 			<icon>/icon.png</icon>
 			<instanceable>false</instanceable>
-			<header-portlet-css>/css/main.css</header-portlet-css>
+			<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 			<footer-portlet-javascript>
 				/js/main.js
 			</footer-portlet-javascript>
@@ -1413,7 +1413,7 @@
 			<portlet-name>pmUserProfilePersonalization</portlet-name>
 			<icon>/icon.png</icon>
 			<instanceable>false</instanceable>
-			<header-portlet-css>/css/main.css</header-portlet-css>
+			<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 			<footer-portlet-javascript>
 				/js/main.js
 			</footer-portlet-javascript>
@@ -1423,7 +1423,7 @@
 			<portlet-name>Review Supplier View</portlet-name>
 			<icon>/icon.png</icon>
 			<instanceable>false</instanceable>
-			<header-portlet-css>/css/main.css</header-portlet-css>
+			<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 			<footer-portlet-javascript>
 				/js/main.js
 			</footer-portlet-javascript>
@@ -1435,7 +1435,7 @@
 			<portlet-name>smResubmitApplication</portlet-name>
 			<icon>/icon.png</icon>
 			<instanceable>false</instanceable>
-			<header-portlet-css>/css/main.css</header-portlet-css>
+			<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 			<footer-portlet-javascript>
 				/js/main.js
 			</footer-portlet-javascript>
@@ -1447,7 +1447,7 @@
 			<portlet-name>SmUserProfileMaintenance</portlet-name>
 			<icon>/icon.png</icon>
 			<instanceable>false</instanceable>
-			<header-portlet-css>/css/main.css</header-portlet-css>
+			<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 			<footer-portlet-javascript>
 				/js/main.js
 			</footer-portlet-javascript>
@@ -1459,7 +1459,7 @@
 			<portlet-name>SoftCertReg</portlet-name>
 			<icon>/icon.png</icon>
 			<instanceable>false</instanceable>
-			<header-portlet-css>/css/main.css</header-portlet-css>
+			<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 			<footer-portlet-javascript>
 				/js/main.js
 			</footer-portlet-javascript>
@@ -1469,7 +1469,7 @@
 			<portlet-name>publicCatalogue</portlet-name>
 			<icon>/icon.png</icon>
 			<instanceable>false</instanceable>
-			<header-portlet-css>/css/main.css</header-portlet-css>
+			<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 			<footer-portlet-javascript>
 				/js/main.js
 			</footer-portlet-javascript>
@@ -1489,7 +1489,7 @@
 			<portlet-name>pmRejectionReason</portlet-name>
 			<icon>/icon.png</icon>
 			<instanceable>false</instanceable>
-			<header-portlet-css>/css/main.css</header-portlet-css>
+			<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 			<footer-portlet-javascript>
 				/js/main.js
 			</footer-portlet-javascript>
@@ -1501,7 +1501,7 @@
 			<portlet-name>pmSupportingDocument</portlet-name>
 			<icon>/icon.png</icon>
 			<instanceable>false</instanceable>
-			<header-portlet-css>/css/main.css</header-portlet-css>
+			<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 			<footer-portlet-javascript>
 				/js/main.js
 			</footer-portlet-javascript>
@@ -1513,7 +1513,7 @@
 			<portlet-name>pmTaskAssignment</portlet-name>
 			<icon>/icon.png</icon>
 			<instanceable>false</instanceable>
-			<header-portlet-css>/css/main.css</header-portlet-css>
+			<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 			<footer-portlet-javascript>
 				/js/main.js
 			</footer-portlet-javascript>
