@@ -5,6 +5,7 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.faces.bean.ManagedBean;
 
+import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmQuestion;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -30,6 +31,7 @@ public class QuestionnaireManagedBean extends BaseManagedBean{
 	private String expDate;
 	private String regDate;
 	private String targetUrl;
+	private SmAppl smAppl;
 	
 	public List<SmQuestion> getSmQuestionLs() {
 		return smQuestionLs;
@@ -121,5 +123,19 @@ public class QuestionnaireManagedBean extends BaseManagedBean{
 	 */
 	public void setTargetUrl(String targetUrl) {
 		this.targetUrl = targetUrl;
+	}
+
+	/**
+	 * @return the smAppl
+	 */
+	public SmAppl getSmAppl() {
+		return smAppl;
+	}
+
+	/**
+	 * @param smAppl the smAppl to set
+	 */
+	public void setSmAppl(SmAppl smAppl) {
+		this.smAppl = smAppl;
 	}
 }

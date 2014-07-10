@@ -150,6 +150,27 @@ public class SupplierManagementConst {
 	public static final String CAT_TYPE_MANUFACTURING = "M";
 	public static final String CAT_TYPE_PRINTING = "PC";
 	public static final String CAT_TYPE_TRAVEL = "PG";
+	
+	//Payment
+	public static final String SOFTCERT_PAYMENT = "SF";
+	public static final String MOF_PAYMENT = "MF";
+	public static final String RENEWAL_PAYMENT = "RF";
+	public static final String PROCESSING_PAYMENT = "PF";
+	public static final String ONLINE_PAYMENT = "OL";
+	public static final String OFFLINE_PAYMENT = "OF";
+	
+	public static final String MOL_SUCCESS = "00";
+	public static final String MOL_FAIL= "11";
+	public static final String MOL_PENDING = "22";
+	public static final String PAYMENT_INVALID_RES = "55";
+	
+	public static final String PM_STATUS_PAYMENT = "SPY";
+	public static final String PM_PAYMENT_MODE = "SPM";
+	public static final String PM_PAYMENT_ITEM = "SPI";
+	
+	public static final long PM_STAT_PENDING_PAYMENT = 20401;
+	public static final long PM_STAT_FAILED_PAYMENT = 20402;
+	public static final long PM_STAT_SUCCESS_PAYMENT = 20405;
 
 	// PO and Approver
 	public static final String PO_HQ = "UPS_PO";
