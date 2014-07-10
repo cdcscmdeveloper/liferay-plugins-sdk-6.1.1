@@ -71,6 +71,7 @@ import my.ep.web.backingbean.fl.pr.PurchaseRequestBackingBean;
 import my.ep.web.backingbean.fl.stopinstr.StopInstrBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
+import my.ep.web.constant.BpmOutcomeConst;
 import my.ep.web.managedbean.fl.doc.FlDocumentManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -282,9 +283,19 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			reqDTO.setFlRequestId(Long.valueOf(flDocId));
 			FulfilmentResDTO resDTO = fulfilmentRequestSO.retrieveFulfilmentRequest(reqDTO);
 			ContractRequestBackingBean crBB = new ContractRequestBackingBean();
+			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			crBB.getManagedBean().setDocProcess(docType);
 			crBB.getManagedBean().setFlDocId(flDocId);
 			crBB.getManagedBean().setButtonVal(buttonVal);
+			if(buttonVal.equalsIgnoreCase("Update")){
+				String[] outcome = new String[2];
+				outcome[0] = BpmOutcomeConst.BPM_SAVE;
+				outcome[1] = BpmOutcomeConst.BPM_SUBMIT;
+				crBB.getManagedBean().setOutComes(outcome);
+				flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
+			}
+			
+			
 			crBB.getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
 			crBB.getManagedBean().setPmUser(reqDTO.getPmUser());
 			if(buttonVal.equalsIgnoreCase("complain")){

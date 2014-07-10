@@ -57,5 +57,12 @@
 			<redirect />
 		</navigation-case>		
 	</navigation-rule>
+	
+	<managed-bean>
+		<description>Fulfilment Status Constants</description>
+		<managed-bean-name>FulfilmentStatusCont</managed-bean-name>
+		<managed-bean-class>my.ep.constant.fl.FulfilmentStatusConst</managed-bean-class>
+		<managed-bean-scope>application</managed-bean-scope>
+	</managed-bean>
 </faces-config>
 

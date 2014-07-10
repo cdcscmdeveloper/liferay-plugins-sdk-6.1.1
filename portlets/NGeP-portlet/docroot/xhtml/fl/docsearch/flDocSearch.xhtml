@@ -167,11 +167,11 @@
 					headerText="#{lbl['lbl.fl.doc.search.datatable.doc.status']}">
 					<h:outputText
 						value="#{flDocumentBackingBean.getStatusDescById(flDocument.status.statusId)}" />
-				</p:column>
+				</p:column>  
 				<p:column headerText="#{lbl['lbl.fl.doc.search.datatable.action']}"
 					style="text-align: center">
 					<p:commandLink
-						rendered="#{flDocument.docType == 'CR' or flDocument.docType == 'PR'  or flDocument.docType == 'PO' or flDocument.docType == 'CO' or flDocument.docType == 'DO' or flDocument.docType == 'IN' or flDocument.docType == 'FN' or flDocument.docType == 'PA'}"
+						rendered="#{(flDocument.docType == 'CR' and flDocument.status.statusId ne FulfilmentStatusCont.crPendingSubmission) or flDocument.docType == 'PR'  or flDocument.docType == 'PO' or flDocument.docType == 'CO' or flDocument.docType == 'DO' or flDocument.docType == 'IN' or flDocument.docType == 'FN' or flDocument.docType == 'PA'}"
 						onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'View'}])">
 						<p:graphicImage library="ep/images/design" name="document.png"
 							value="/resources/ep/images/design/document.png"
@@ -179,7 +179,7 @@
 					</p:commandLink>
 					<p:spacer width="7" />
 					<p:commandLink
-						rendered="#{flDocument.docType == 'DO' or flDocument.docType == 'IN' or flDocument.docType == 'FN'}"
+						rendered="#{flDocument.docType == 'DO' or flDocument.docType == 'IN' or flDocument.docType == 'FN' or (flDocument.docType == 'CR' and flDocument.status.statusId eq FulfilmentStatusCont.crPendingSubmission)}"
 						onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'Update'}])">
 						<p:graphicImage library="ep/images/design" name="edit.png"
 							value="/resources/ep/images/design/edit.png"
@@ -194,12 +194,6 @@
 							title="Cancel Document" />
 					</p:commandLink>
 					<p:spacer width="7" />
-					<p:commandLink rendered="#{flDocument.docType == 'CR'}"
-						onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'complain'}])">
-						<p:graphicImage library="ep/images/design" name="exclamation.png"
-							value="/resources/ep/images/design/exclamation.png"
-							title="Complain" />
-					</p:commandLink>
 					<p:commandLink rendered="#{flDocument.docType == 'PO' and flDocument.factored==true}"
 						onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'Submit'}])">
 						<p:graphicImage library="ep/images/design" name="terminate.png"

@@ -30,26 +30,6 @@
 					</ui:repeat></td>
 			</tr>
 		</table>
-		<table style="width: 100%">
-			<tr>
-				<c:if
-					test='#{contractRequestBackingBean.managedBean.buttonVal eq "Update"}'>
-					<td colspan="4" style="text-align: right"><p:commandButton
-							value="UPDATE"
-							action="#{contractRequestBackingBean.submitAction('UPDATE')}">
-							<f:param name="actionName" value="UPDATE" />
-						</p:commandButton></td>
-				</c:if>
-				<c:if
-					test='#{contractRequestBackingBean.managedBean.buttonVal eq "Cancel"}'>
-					<td colspan="4" style="text-align: right"><p:commandButton
-							value="CANCEL"
-							action="#{contractRequestBackingBean.submitAction('CANCEL')}">
-							<f:param name="actionName" value="CANCEL" />
-						</p:commandButton></td>
-				</c:if>
-			</tr>
-		</table>
 		<p:panel id="crHeaderPagePnl">
 		<ui:include src="/xhtml/fl/contractrequest/crHeaderPage.xhtml" />
 		</p:panel>
