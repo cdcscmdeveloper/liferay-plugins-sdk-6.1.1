@@ -8,7 +8,7 @@
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<ajaxable>false</ajaxable>
-		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<css-class-wrapper>ct-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
@@ -16,7 +16,7 @@
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<ajaxable>false</ajaxable>
-		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<css-class-wrapper>ct-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
@@ -24,7 +24,7 @@
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<ajaxable>false</ajaxable>
-		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<css-class-wrapper>ct-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
@@ -32,7 +32,7 @@
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<ajaxable>false</ajaxable>
-		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<css-class-wrapper>ct-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
@@ -40,7 +40,7 @@
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<ajaxable>false</ajaxable>
-		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<css-class-wrapper>ct-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
@@ -48,7 +48,7 @@
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<ajaxable>false</ajaxable>
-		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<css-class-wrapper>ct-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
@@ -56,7 +56,7 @@
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<ajaxable>false</ajaxable>
-		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<css-class-wrapper>ct-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
@@ -64,7 +64,7 @@
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<ajaxable>false</ajaxable>
-		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<css-class-wrapper>ct-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
@@ -72,7 +72,7 @@
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<ajaxable>false</ajaxable>
-		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<css-class-wrapper>ct-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
@@ -80,7 +80,7 @@
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<ajaxable>false</ajaxable>
-		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<css-class-wrapper>ct-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
@@ -88,7 +88,7 @@
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<ajaxable>false</ajaxable>
-		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<css-class-wrapper>ct-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
@@ -96,7 +96,7 @@
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<ajaxable>false</ajaxable>
-		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<css-class-wrapper>ct-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
@@ -104,7 +104,7 @@
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<ajaxable>false</ajaxable>
-		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<css-class-wrapper>ct-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
@@ -112,7 +112,7 @@
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<ajaxable>false</ajaxable>
-		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<css-class-wrapper>ct-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
@@ -120,7 +120,7 @@
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<ajaxable>false</ajaxable>
-		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<css-class-wrapper>ct-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
@@ -128,7 +128,7 @@
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<ajaxable>false</ajaxable>
-		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<css-class-wrapper>ct-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
@@ -136,7 +136,7 @@
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<ajaxable>false</ajaxable>
-		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<css-class-wrapper>ct-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
@@ -144,7 +144,7 @@
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<ajaxable>false</ajaxable>
-		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<css-class-wrapper>ct-portlet</css-class-wrapper>
 	</portlet>
 	<!-- Contract - END -->
@@ -154,7 +154,7 @@
 		<portlet-name>ppBudgetAlloc</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -164,7 +164,7 @@
 		<portlet-name>ppBudgetDisburse</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -174,7 +174,7 @@
 		<portlet-name>ppPlan</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -220,7 +220,7 @@
 		<portlet-name>ppProcurementApproval</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -378,7 +378,7 @@
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<ajaxable>false</ajaxable>
-		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<css-class-wrapper>committee-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
@@ -386,7 +386,7 @@
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<ajaxable>false</ajaxable>
-		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<css-class-wrapper>bidding-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
@@ -394,7 +394,7 @@
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<ajaxable>false</ajaxable>
-		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<css-class-wrapper>schedulebidding-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
@@ -402,7 +402,7 @@
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<ajaxable>false</ajaxable>
-		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<css-class-wrapper>onLineBidding-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
@@ -410,7 +410,7 @@
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<ajaxable>false</ajaxable>
-		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<css-class-wrapper>quatation-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
@@ -418,7 +418,7 @@
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<ajaxable>false</ajaxable>
-		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<css-class-wrapper>noticeBoard-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
@@ -426,7 +426,7 @@
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<ajaxable>false</ajaxable>
-		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<css-class-wrapper>spreview-portlet</css-class-wrapper>
 	</portlet>
 
@@ -435,7 +435,7 @@
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<ajaxable>false</ajaxable>
-		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<css-class-wrapper>specificationBussinessOwner-portlet</css-class-wrapper>
 	</portlet>
 	
@@ -444,7 +444,7 @@
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<ajaxable>false</ajaxable>
-		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<css-class-wrapper>specificationCommittee-portlet</css-class-wrapper>
 	</portlet>
 
@@ -515,7 +515,7 @@
 		<portlet-name>templateSpec</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -526,7 +526,7 @@
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<ajaxable>false</ajaxable>
-		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<css-class-wrapper>ep-portlet</css-class-wrapper>
 	</portlet>
 
@@ -536,7 +536,7 @@
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<ajaxable>false</ajaxable>
-		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<css-class-wrapper>proposal-portlet</css-class-wrapper>
 	</portlet>
 	
@@ -545,7 +545,7 @@
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<ajaxable>false</ajaxable>
-		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<css-class-wrapper>loilist-portlet</css-class-wrapper>
 	</portlet>
 
@@ -554,7 +554,7 @@
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<ajaxable>false</ajaxable>
-		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<css-class-wrapper>loalist-portlet</css-class-wrapper>
 	</portlet>
 	
@@ -563,7 +563,7 @@
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<ajaxable>false</ajaxable>
-		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<css-class-wrapper>loa-review-portlet</css-class-wrapper>
 	</portlet>
 	
@@ -572,7 +572,7 @@
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<ajaxable>false</ajaxable>
-		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<css-class-wrapper>loa-supplier-response-portlet</css-class-wrapper>
 	</portlet>
 
@@ -581,7 +581,7 @@
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<ajaxable>false</ajaxable>
-		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<css-class-wrapper>evaluation stage2-portlet</css-class-wrapper>
 	</portlet>
 	
@@ -590,7 +590,7 @@
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<ajaxable>false</ajaxable>
-		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<css-class-wrapper>evaluation stage1-portlet</css-class-wrapper>
 	</portlet>
 
@@ -610,7 +610,7 @@
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<ajaxable>false</ajaxable>
-		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<css-class-wrapper>Maintenance-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
@@ -1052,7 +1052,7 @@
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<ajaxable>false</ajaxable>
-		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<css-class-wrapper>userprofiles-portlet</css-class-wrapper>
 	</portlet>
 	<!-- Profile Management - end -->
@@ -1120,7 +1120,7 @@
 		<portlet-name>ppDisburseBudgetList</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -1130,7 +1130,7 @@
 		<portlet-name>ppAllocatedBudgetList</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -1154,7 +1154,7 @@
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<ajaxable>false</ajaxable>
-		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<css-class-wrapper>presentation demo-portlet</css-class-wrapper>
 	</portlet>
 	
@@ -1211,7 +1211,7 @@
 		<portlet-name>pmProfileManagement</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -1221,7 +1221,7 @@
 		<portlet-name>pmUserGroupSearch</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -1231,7 +1231,7 @@
 		<portlet-name>pmAuthrisationRole</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
@@ -1482,7 +1482,7 @@
 			<icon>/icon.png</icon>
 			<instanceable>false</instanceable>
 			<ajaxable>false</ajaxable>
-			<header-portlet-css>/css/ep/main.css</header-portlet-css>
+			<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 			<css-class-wrapper>sc-requestnote-search-portlet</css-class-wrapper>
 		</portlet>
 		<portlet>
