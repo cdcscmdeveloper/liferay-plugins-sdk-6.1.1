@@ -441,6 +441,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 				deliveryAddr = new FlDeliveryAddress();
 				deliveryAddr.setFlFulfilmentRequest(getManagedBean().getFulfilmentRequest());
 				deliveryAddr.setPmAddress(addrType.getPmAddress());
+				deliveryAddr.setAddressType(addrType);
 				deliveryAddr.setStartDate(getManagedBean().getFulfilmentRequest().getStartDate());
 				deliveryAddr.setEndDate(getManagedBean().getFulfilmentRequest().getEndDate());
 				deliveryAddr.setPmUom(getManagedBean().getFulfilmentRequest().getPmUom());
