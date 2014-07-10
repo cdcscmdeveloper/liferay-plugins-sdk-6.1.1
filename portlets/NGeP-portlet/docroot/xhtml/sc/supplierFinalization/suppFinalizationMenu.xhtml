@@ -9,8 +9,7 @@
 
 	<ui:define name="contentSection">
 	
-		<ui:include src="/xhtml/sc/supplierFinalization/suppFinalizationHeader.xhtml"></ui:include>
-		
+		<p:messages id="supplierFinalization" showDetail="true" autoUpdate="true" closable="true" severity="error,info"/>
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.btn.submit']}" 
 					process="@all"
@@ -18,6 +17,8 @@
 					action="#{suppFinalizationBackingBean.submitSuppFinalization}"
 					icon="ui-icon-submit" />
 		</div>	
+		
+		<ui:include src="/xhtml/sc/supplierFinalization/suppFinalizationHeader.xhtml"></ui:include>
 		
 		<p:tabView id="tab" dynamic="true" cache="true" orientation="top">
 			<p:ajax event="tabChange" listener="#{suppFinalizationBackingBean.onTabMenuChangeAction}" immediate="true" />

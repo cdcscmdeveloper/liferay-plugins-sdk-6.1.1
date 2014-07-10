@@ -125,11 +125,8 @@
 									<h:outputText value="#{lbl['lbl.sc.chairperson']}" rendered="#{existingMember.memberRole eq 'C'}"/>
 								</ui:fragment>
 								<ui:fragment rendered="#{!existingMember.PMP}">
-									<p:selectOneMenu id="appaction"
-										value="#{existingMember.memberRole}"
-										style="width: 110px;margin-bottom: 5px;">
-										<f:selectItems
-											value="#{suppFinalMeetingBackingBean.getRoleTypeDropdownValues(ParameterTypeConst.committeeRole)}" />
+									<p:selectOneMenu id="appaction" value="#{existingMember.memberRole}" style="width: 110px;margin-bottom: 5px;">
+										<f:selectItems value="#{suppFinalMeetingBackingBean.getRoleTypeDropdownValues(ParameterTypeConst.committeeRole)}" />
 									</p:selectOneMenu>
 								</ui:fragment> 
 							</p:column>

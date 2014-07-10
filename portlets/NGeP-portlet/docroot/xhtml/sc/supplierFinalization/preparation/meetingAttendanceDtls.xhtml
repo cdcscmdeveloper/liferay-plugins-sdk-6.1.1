@@ -6,59 +6,57 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-		<table style="border: 0px;width:100%; align:center">
-			<tr>
-				<td> 
-					<td width="100%" align="left" valign="top">
-						<div align="right">
-							<p:commandButton value="#{lbl['lbl.btn.save']}" 
-								process="@all"
-								partialSubmit="true"
-								action="#{suppFinalizationBackingBean.saveMeetingAttDtls}"
-								icon="ui-icon-save" />
-						</div>
+	<table style="border: 0px;width:100%; align:center">
+		<tr>
+			<td width="100%" align="left" valign="top">
+				<div align="right">
+					<p:commandButton value="#{lbl['lbl.btn.save']}" 
+						process="@all"
+						partialSubmit="true"
+						action="#{suppFinalizationBackingBean.saveMeetingAttDtls}"
+						icon="ui-icon-save" />
+				</div>
+				
+				<p:panel header="#{lbl['lbl.sc.join.in']}" toggleable="true">
+					<p:dataTable id="meetingAttDtlTbl" var="meetingAttDtl"
+						value="#{suppFinalizationBackingBean.managedBean.meetingAttendanceList}" rows="10"
+						rowKey="#{meetingAttDtl}" rowIndexVar="rowIndex"
+						selection="#{suppFinalizationBackingBean.managedBean.selectedMeetingAttList}">
+						<ac:paginator for="meetingAttDtlTbl" />
+
+						<p:column selectionMode="multiple" style="width:2%"></p:column>
 						
-						<p:panel header="#{lbl['lbl.sc.join.in']}" toggleable="true">
-							<p:dataTable id="meetingAttDtlTbl" var="meetingAttDtl"
-								value="#{suppFinalizationBackingBean.managedBean.meetingAttendanceList}" rows="10"
-								rowKey="#{meetingAttDtl}" rowIndexVar="rowIndex"
-								selection="#{suppFinalizationBackingBean.managedBean.selectedMeetingAttList}">
-								<ac:paginator for="meetingAttDtlTbl" />
-	
-								<p:column selectionMode="multiple" style="width:2%"></p:column>
-								
-								<p:column headerText="#{lbl['lbl.sc.name']}">
-									<h:inputText value="#{committeeDtl.scCommitteeMember.memberName}"/>
-								</p:column>
-					
-								<p:column headerText="#{lbl['lbl.sc.id.no']}">
-									<h:inputText value="#{committeeDtl.scCommitteeMember.icPassport}"/>
-								</p:column>
-								
-							</p:dataTable>
-							
-							<p:spacer height="10px"></p:spacer>
-							<div align="right">
-								<p:commandButton value="#{lbl['lbl.btn.add']}"
-									process="@this,meetingAttDtlTbl" 
-									partialSubmit="true"
-									action="#{suppFinalizationBackingBean.addMeetingAttDtls}"
-									update="meetingAttDtlTbl" 
-									icon="ui-icon-add" />
-									
-								<p:commandButton value="#{lbl['lbl.btn.delete']}"
-									process="@this, meetingAttDtlTbl" partialSubmit="true"
-									icon="ui-icon-delete"
-									action="#{suppFinalizationBackingBean.deleteRowsAction(suppFinalizationBackingBean.managedBean.meetingAttendanceList, suppFinalizationBackingBean.managedBean.selectedMeetingAttList)}"
-									update="meetingAttDtlTbl" />
+						<p:column headerText="#{lbl['lbl.sc.name']}">
+							<h:inputText value="#{committeeDtl.scCommitteeMember.memberName}"/>
+						</p:column>
 			
-							</div>
-						</p:panel> 
+						<p:column headerText="#{lbl['lbl.sc.id.no']}">
+							<h:inputText value="#{committeeDtl.scCommitteeMember.icPassport}"/>
+						</p:column>
+						
+					</p:dataTable>
+					
+					<p:spacer height="10px"></p:spacer>
+					<div align="right">
+						<p:commandButton value="#{lbl['lbl.btn.add']}"
+							process="@this,meetingAttDtlTbl" 
+							partialSubmit="true"
+							action="#{suppFinalizationBackingBean.addMeetingAttDtls}"
+							update="meetingAttDtlTbl" 
+							icon="ui-icon-add" />
+							
+						<p:commandButton value="#{lbl['lbl.btn.delete']}"
+							process="@this, meetingAttDtlTbl" partialSubmit="true"
+							icon="ui-icon-delete"
+							action="#{suppFinalizationBackingBean.deleteRowsAction(suppFinalizationBackingBean.managedBean.meetingAttendanceList, suppFinalizationBackingBean.managedBean.selectedMeetingAttList)}"
+							update="meetingAttDtlTbl" />
 	
-					</td>
-				</td>
-			</tr>
-		</table>
+					</div>
+				</p:panel> 
+
+			</td>
+		</tr>
+	</table>
 		
 </ui:composition>
 

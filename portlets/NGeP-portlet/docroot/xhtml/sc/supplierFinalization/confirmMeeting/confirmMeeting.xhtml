@@ -112,7 +112,7 @@
 									</ui:fragment>
 									
 									<ui:fragment rendered="#{!committeeMember.scCommitteeMember.PNP}">
-										<p:selectOneMenu value="#{committeeMember.scCommitteeMember.memberRole}" style="width: 110px;margin-bottom: 5px;">
+										<p:selectOneMenu value="#{committeeMember.scCommitteeMember.memberRole.parameterId}" style="width: 110px;margin-bottom: 5px;">
 											<f:selectItems value="#{suppFinalMeetingBackingBean.getRoleTypeDropdownValues(ParameterTypeConst.committeeRole)}" />
 										</p:selectOneMenu>
 									</ui:fragment>

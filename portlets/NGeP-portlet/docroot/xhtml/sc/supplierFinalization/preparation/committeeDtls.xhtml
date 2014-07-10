@@ -6,117 +6,107 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-		<table style="border: 0px;width:100%; align:center">
-			<tr>
-				<td> 
-					<td width="100%" align="left" valign="top">
-						<div align="right">
-							<p:commandButton value="#{lbl['lbl.btn.save']}" 
-								process="@all"
-								partialSubmit="true"
-								action="#{suppFinalizationBackingBean.saveCommitteeDtls}"
-								icon="ui-icon-save" />
-						</div>
+	<table style="border: 0px;width:100%; align:center">
+		<tr>
+			<td> 
+				<div align="right">
+					<p:commandButton value="#{lbl['lbl.btn.save']}" 
+						process="@all"
+						partialSubmit="true"
+						action="#{suppFinalizationBackingBean.saveCommitteeDtls}"
+						icon="ui-icon-save" />
+				</div>
+				
+				<p:panel header="#{lbl['lbl.sc.committee.b']}" toggleable="true">
+					<p:dataTable id="committeeDtlTbl" var="committeeDtl"
+						value="#{suppFinalizationBackingBean.managedBean.committeeList}" rows="10"
+						rowKey="#{committeeDtl}" rowIndexVar="rowIndex"
+						selection="#{suppFinalizationBackingBean.managedBean.selectedCommitteeList}">
+						<ac:paginator for="committeeDtlTbl" />
+
+						<p:column headerText="#{lbl['lbl.sc.name']}">
+							<h:outputText value="#{committeeDtl.scCommitteeMember.memberName}"></h:outputText>
+						</p:column>
+			
+						<p:column headerText="#{lbl['lbl.sc.id.no']}">
+							<h:outputText value="#{committeeDtl.scCommitteeMember.icPassport}"></h:outputText>
+						</p:column>
+			
+						<p:column headerText="#{lbl['lbl.sc.designation']}">
+							<h:outputText value="#{committeeDtl.scCommitteeMember.designation}"></h:outputText>
+						</p:column>
 						
-						<p:panel header="#{lbl['lbl.sc.committee.b']}" toggleable="true">
-							<p:dataTable id="committeeDtlTbl" var="committeeDtl"
-								value="#{suppFinalizationBackingBean.managedBean.committeeList}" rows="10"
-								rowKey="#{committeeDtl}" rowIndexVar="rowIndex"
-								selection="#{suppFinalizationBackingBean.managedBean.selectedCommitteeList}">
-								<ac:paginator for="committeeDtlTbl" />
-	
-								<p:column headerText="#{lbl['lbl.sc.name']}">
-									<h:outputText value="#{committeeDtl.scCommitteeMember.memberName}"></h:outputText>
-								</p:column>
+						<p:column headerText="#{lbl['lbl.sc.email']}">
+							<h:outputText value="#{committeeDtl.scCommitteeMember.email}"></h:outputText>
+						</p:column>
+			
+						<p:column headerText="#{lbl['lbl.sc.grade']}">
+							<h:outputText value="#{committeeDtl.scCommitteeMember.grade}"></h:outputText>
+						</p:column>
+			
+						<p:column headerText="#{lbl['lbl.sc.pnp']}">
+							<h:outputText value="#{committeeDtl.scCommitteeMember.PNP}"></h:outputText>
+						</p:column>
+						
+						<p:column headerText="#{lbl['lbl.sc.role']}">
+							<h:outputText value="#{suppFinalizationBackingBean.getParameterDesc(committeeDtl.scCommitteeMember.memberRole)}"></h:outputText>
+						</p:column>
+						
+						<p:column headerText="#{lbl['lbl.sc.representative.type']}">
+							<h:outputText value="#{committeeDtl.scCommitteeMember.memberType}"></h:outputText>
+						</p:column>
+						
+						<p:column headerText="#{lbl['lbl.sc.attendance']}" selectionMode="multiple" style="width:2%"></p:column>
+					</p:dataTable>
 					
-								<p:column headerText="#{lbl['lbl.sc.id.no']}">
-									<h:outputText value="#{committeeDtl.scCommitteeMember.icPassport}"></h:outputText>
-								</p:column>
-					
-								<p:column headerText="#{lbl['lbl.sc.designation']}">
-									<h:outputText value="#{committeeDtl.scCommitteeMember.designation}"></h:outputText>
-								</p:column>
-								
-								<p:column headerText="#{lbl['lbl.sc.email']}">
-									<h:outputText value="#{committeeDtl.scCommitteeMember.email}"></h:outputText>
-								</p:column>
-					
-								<p:column headerText="#{lbl['lbl.sc.grade']}">
-									<h:outputText value="#{committeeDtl.scCommitteeMember.grade}"></h:outputText>
-								</p:column>
-					
-								<p:column headerText="#{lbl['lbl.sc.pnp']}">
-									<h:outputText value="#{committeeDtl.scCommitteeMember.PNP}"></h:outputText>
-								</p:column>
-								
-								<p:column headerText="#{lbl['lbl.sc.role']}">
-									<ui:fragment rendered="#{committeeDtl.scCommitteeMember.PNP}">
-										<h:outputText value="#{lbl['lbl.sc.chairperson']}" rendered="#{committeeDtl.memberRole eq 'C'}" />
-									</ui:fragment>
-									<ui:fragment rendered="#{!committeeDtl.scCommitteeMember.PNP}">
-										<p:selectOneMenu
-											value="#{committeeDtl.scCommitteeMember.memberRole}"
-											style="width: 110px;margin-bottom: 5px;">
-											<f:selectItems value="#{suppFinalizationBackingBean.getRoleTypeDropdownValues(ParameterTypeConst.committeeRole)}" />
-										</p:selectOneMenu>
-									</ui:fragment>
-								</p:column>
-								
-								<p:column headerText="#{lbl['lbl.sc.representative.type']}">
-									<h:outputText value="#{committeeDtl.scCommitteeMember.PNP}"></h:outputText>
-								</p:column>
-								
-								<p:column headerText="#{lbl['lbl.sc.attendance']}" selectionMode="multiple" style="width:2%"></p:column>
-							</p:dataTable>
+					<p:spacer height="10px"></p:spacer>
+				</p:panel> 
+				
+				<p:panel header="#{lbl['lbl.sc.remark']}" toggleable="true">
+					<table style="width: 100%" id="remarkslist">
+						<tr>
+							<td class="TableFieldLeft" style="width: 96px;">
+								<p:outputLabel value="#{lbl['lbl.sc.remark']}" />
+							</td>
 							
-							<p:spacer height="10px"></p:spacer>
-						</p:panel> 
-						
-						<p:panel header="#{lbl['lbl.sc.spec.approval.remark']}" toggleable="true">
-							<table style="width: 100%" id="remarkslist">
-								<tr>
-									<td class="TableFieldLeft" style="width: 96px;"><p:outputLabel value="Remark" /></td>
-									<td class="TableFieldRight"><p:dataGrid var="remarkVar"
-											value="#{suppFinalizationBackingBean.managedBean.committeeRemarkList}"
-											rowIndexVar="remarkIndex" columns="1">
-											<table>
-												<tr>
-													<td rowspan="2" valign="top">
-														<h:graphicImage
-															height="30"
-															value="#{suppFinalizationBackingBean.userImagePath(remarkVar.createdUser.loginId)}"
-															width="30" />
-													</td>
-													<td width="5"></td>
-													<td>
-														<h:outputText value="#{remarkVar.createdUser.userName}" />, 
-														<h:outputText id="remarkDate" value="#{remarkVar.changedDate}">
-															<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
-														</h:outputText>
-													</td>
-												</tr>
-												<tr>
-													<td></td>
-													<td>
-														<p:inputTextarea cols="40"
-															value="#{remarkVar.remark}"
-															rendered="#{remarkVar.remarkId eq null}" /> 
-														<h:outputText
-															value="#{remarkVar.remark}"
-															rendered="#{remarkVar.remarkId ne null}"
-															style="display: inline-block; width:220px;word-wrap: break-word;" />
-													</td>
-												</tr>
-											</table>
-										</p:dataGrid>
-									</td>
-								</tr>
-							</table>
-						</p:panel>
-					</td>
-				</td>
-			</tr>
-		</table>
+							<td class="TableFieldRight">
+								<p:dataGrid var="remarkVar"
+									value="#{suppFinalizationBackingBean.managedBean.committeeRemarkList}"
+									rowIndexVar="remarkIndex" columns="1">
+									<table>
+										<tr>
+											<td rowspan="2" valign="top">
+												<h:graphicImage height="30"
+													value="#{suppFinalizationBackingBean.userImagePath(remarkVar.createdUser.loginId)}"
+													width="30" />
+											</td>
+											<td width="5"></td>
+											<td>
+												<h:outputText value="#{remarkVar.createdUser.userName}" />,
+												<h:outputText id="remarkDate" value="#{remarkVar.changedDate}">
+													<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
+												</h:outputText>
+											</td>
+										</tr>
+										<tr>
+											<td></td>
+											<td>
+												<p:inputTextarea cols="40" value="#{remarkVar.remark}"
+													rendered="#{remarkVar.remarkId eq null}" /> 
+												<h:outputText value="#{remarkVar.remark}"
+													rendered="#{remarkVar.remarkId ne null}"
+													style="display: inline-block; width:220px;word-wrap: break-word;" />
+											</td>
+										</tr>
+									</table>
+								</p:dataGrid>
+							</td>
+						</tr>
+					</table>
+				</p:panel>
+			</td>
+		</tr>
+	</table>
 </ui:composition>
 
 
