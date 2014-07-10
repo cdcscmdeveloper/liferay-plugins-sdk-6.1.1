@@ -5,33 +5,8 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<p:panel id="sqinfoId" header="SIMPLE QUOTE INFORMATION" toggleable="true">
-	<p:spacer height="7px" />
+	<p:spacer height="5px" />
 	  <table style="width:100%;">
-	      <tr>
-			<td colspan="4"><p:outputPanel>
-				<table style="width:100%">
-				    <tr>
-					    <c:if test ="#{simpleQuoteBackingBean.managedBean.pmOrgProfile.brandNew}">
-						 <td style="width: 150px">
-						    <p:outputLabel value="#{lbl['lbl.sc.sq.gen.info.ptn.name']}" />  <p:outputLabel value="*" styleClass="mandatory" /></td>
-						 <td> <p:selectOneMenu id="ptjName" label="Ptj Name" required="true"
-						     value="#{simpleQuoteBackingBean.managedBean.orgProfileId}"
-						     styleClass="divisionclass" style="width: 250px;">
-						   	<f:selectItem itemLabel="- Select One -" itemValue="#{null}" />
-						  <f:selectItems 
-							   value="#{simpleQuoteBackingBean.managedBean.userDivisionList}"
-							   var="pmOrgProfile"
-							   itemLabel="#{pmOrgProfile.orgCode} - #{pmOrgProfile.orgName}"
-							   itemValue="#{pmOrgProfile.orgProfileId}" />
-							 <p:ajax event="change"  update="@([id$=headerId])" partialSubmit="true" 
-							     process="@this"  listener="#{simpleQuoteBackingBean.ptjNameEvent}"/>
-					</p:selectOneMenu></td>
-						<td> <p:message id="ptjNameMsg" for="ptjName" display="icon" /> </td>
-					</c:if>
-				</tr>
-				</table>
-			   </p:outputPanel></td>
-			</tr>
 			<tr>
 				<td style="width: 150px;"><p:outputLabel
 						value="#{lbl['lbl.sc.sq.gen.info.panel']}" /></td>

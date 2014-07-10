@@ -57,10 +57,8 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	private	Long	assignedToUserId;
 	private	String	periodType;
 	private	int	periodValue;
-	private Long orgProfileId;
 	private String priceType;
 	private Integer duration;
-	private String durationDropdown;
 	private String createdBy;
 	private String processName;
 
@@ -71,8 +69,6 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	private	ScRequestNote	requestNote = new	ScRequestNote(); //contain request list information
 
 	private List<SmSupplier> smSuppliers = new ArrayList<SmSupplier>();
-	private PmOrgProfile pmOrgProfile = new PmOrgProfile();
-	private String ptjName;
 
 	private String priceTypeCode;
 	private boolean justTypeOption;
@@ -263,18 +259,7 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	public void setPeriodValue(int periodValue) {
 		this.periodValue = periodValue;
 	}
-	/**
-	 * @return the orgProfileId
-	 */
-	public Long getOrgProfileId() {
-		return orgProfileId;
-	}
-	/**
-	 * @param orgProfileId the orgProfileId to set
-	 */
-	public void setOrgProfileId(Long orgProfileId) {
-		this.orgProfileId = orgProfileId;
-	}
+
 	/**
 	 * @return the userDivisionList
 	 */
@@ -543,21 +528,6 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	public void setSelectedNodes(TreeNode[] selectedNodes) {
 		this.selectedNodes = selectedNodes;
 	}
-
-	/**
-	 * @return the pmOrgProfile
-	 */
-	public PmOrgProfile getPmOrgProfile() {
-		return pmOrgProfile;
-	}
-
-	/**
-	 * @param pmOrgProfile the pmOrgProfile to set
-	 */
-	public void setPmOrgProfile(PmOrgProfile pmOrgProfile) {
-		this.pmOrgProfile = pmOrgProfile;
-	}
-
 	/**
 	 * @return the locLevelDropdown
 	 */
@@ -755,20 +725,6 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	 */
 	public void setDuration(Integer duration) {
 		this.duration = duration;
-	}
-
-	/**
-	 * @return the durationDropdown
-	 */
-	public String getDurationDropdown() {
-		return durationDropdown;
-	}
-
-	/**
-	 * @param durationDropdown the durationDropdown to set
-	 */
-	public void setDurationDropdown(String durationDropdown) {
-		this.durationDropdown = durationDropdown;
 	}
 
 	/**
@@ -1159,18 +1115,6 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	public void setSelectedPanelSuppliers(
 			List<ScQuoteSupplier> selectedPanelSuppliers) {
 		this.selectedPanelSuppliers = selectedPanelSuppliers;
-	}
-	/**
-	 * @return the ptjName
-	 */
-	public String getPtjName() {
-		return ptjName;
-	}
-	/**
-	 * @param ptjName the ptjName to set
-	 */
-	public void setPtjName(String ptjName) {
-		this.ptjName = ptjName;
 	}
 	
 	/**

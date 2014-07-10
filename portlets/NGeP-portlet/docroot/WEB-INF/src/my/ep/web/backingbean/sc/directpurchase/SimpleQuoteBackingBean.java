@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
@@ -42,6 +43,8 @@ import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
@@ -215,7 +218,6 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			}
 		}
 		
-		
 		// TODO check flag for panel item or non contract item
 		if(itemPanelFlag){
 			scQuote.setPanel(Boolean.TRUE);
@@ -248,7 +250,20 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 		// location level by default - district 
 		getManagedBean().setLocationLevel(ParameterConst.LOCATION_LEVEL_DISTRICT);
 		
-		populateUserDivisionList();
+		//populateUserDivisionList();
+		
+		  // to get ptj
+		  PmUser user = new FacesScopes().getUserSessionBean();
+		  if (user != null) {
+			  IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			  UserReqDTO reqDTO = new UserReqDTO();
+			  reqDTO.setUserId(user.getUserId());
+			  UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
+			  if(resDTO.getUserOrgList() != null && resDTO.getUserOrgList().size()>0){
+				  getManagedBean().getRequestNote().setPmOrgProfile(resDTO.getUserOrgList() .get(0).getPmOrgProfile());
+			  }
+		  }
+		
 		// update tabmenu
 	    RequestContext.getCurrentInstance().update("tabMenuId");
 		return "simpleQuote";
@@ -277,14 +292,11 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			}
 			
 			if(quote.getRequestNote() == null){
-				requestNote = new ScRequestNote();
+				requestNote = getManagedBean().getRequestNote();
 				requestNote.setRequestNoteNo(directPurchaseSO.generateRequestNoteNo());
 				requestNote.setSourceMethod(ParameterConst.REQUEST_NOTE_SQ);
 				requestNote.setWorkFlowStatuses(null);
 				requestNote.setQuote(quote);
-				if(requestNote.getPmOrgProfile() == null){
-					requestNote.setPmOrgProfile(ptjNameEvent());
-				}
 				quote.setRequestNote(requestNote);
 			}
 
@@ -410,7 +422,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			reqDTO.setToken(token);
 			reqDTO.setSubmit(Boolean.FALSE);
 			reqDTO.setTaskId(getManagedBean().getTaskId());
-			reqDTO.setOrgProfileId(getManagedBean().getOrgProfileId());
+			reqDTO.setOrgProfileId(getManagedBean().getRequestNote().getPmOrgProfile().getOrgProfileId());
 			reqDTO.setQuoteBidDtl(quote);
 			QuoteResDTO quoteResDTO = null;
 			if(outcome.isEmpty()){
@@ -455,14 +467,11 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 				quote.setRequestItems(requestItems);
 			}
 			if(quote.getRequestNote() == null){
-				ScRequestNote requestNote = new ScRequestNote();
+				ScRequestNote requestNote = getManagedBean().getRequestNote();
 				requestNote.setRequestNoteNo(directPurchaseSO.generateRequestNoteNo());
 				requestNote.setSourceMethod(ParameterConst.REQUEST_NOTE_SQ);
 				requestNote.setWorkFlowStatuses(null);
 				requestNote.setQuote(quote);
-				if(requestNote.getPmOrgProfile() == null){
-					requestNote.setPmOrgProfile(ptjNameEvent());
-				}
 				quote.setRequestNote(requestNote);
 			}
 			
@@ -596,7 +605,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			FacesScopes facesScopes = new FacesScopes();
 			String token = facesScopes.getBPMAuthenticationCtxToken();
 			reqDTO.setToken(token);
-			reqDTO.setOrgProfileId(getManagedBean().getOrgProfileId());
+			reqDTO.setOrgProfileId(getManagedBean().getRequestNote().getPmOrgProfile().getOrgProfileId());
 			reqDTO.setQuoteBidDtl(quote);
 			reqDTO.setTaskId(getManagedBean().getTaskId());
 			QuoteResDTO quoteResDTO = null;
@@ -1413,8 +1422,8 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 							IAddressSO.class);
 			AddressReqDTO reqDTO = new AddressReqDTO();
-			if(getManagedBean().getOrgProfileId() != null){
-				reqDTO.setOrgProfileId(getManagedBean().getOrgProfileId());
+			if(getManagedBean().getRequestNote().getPmOrgProfile() != null){
+				reqDTO.setOrgProfileId(getManagedBean().getRequestNote().getPmOrgProfile().getOrgProfileId());
 				//reqDTO.setUserId(2L);
 				reqDTO.setAddressType(AddressType.BILLING_ADDRESS.value());
 				AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
@@ -1583,20 +1592,6 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			log.debug(message);
 		}
 		log.info(message);
-	}
-		
-	public PmOrgProfile ptjNameEvent() {
-		if (getManagedBean().getOrgProfileId() != null) {
-			for (PmOrgProfile orgProfile : getManagedBean()
-					.getUserDivisionList()) {
-				if (orgProfile.getOrgProfileId().equals(
-						getManagedBean().getOrgProfileId())) {
-					getManagedBean().setPtjName(orgProfile.getOrgName());
-					return orgProfile;
-				}
-			}
-		}
-		return null;
 	}
 
 	public String getSupplierListCriteria(){
@@ -1777,8 +1772,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 				getManagedBean().getScQuote().setRemarks(initializeRemarks(scQuote));
 				getManagedBean().setQuoteNo(scQuote.getQuoteNo());
 				
-				getManagedBean().setPtjName(scQuote.getRequestNote().getPmOrgProfile().getOrgName());
-				getManagedBean().setOrgProfileId(scQuote.getRequestNote().getPmOrgProfile().getOrgProfileId());
+				getManagedBean().getRequestNote().setPmOrgProfile(scQuote.getRequestNote().getPmOrgProfile());
 				// location level by default - district 
 				getManagedBean().setLocationLevel(ParameterConst.LOCATION_LEVEL_DISTRICT);
 				// business nature details
@@ -1801,7 +1795,6 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 				getManagedBean().setScQuote(scQuote);
 				procurementTypeEvent();
 				getCurrentStatus(res.getDocStatus().longValue()); 
-				getManagedBean().setPmOrgProfile(null);
 				getManagedBean().setProcessName(res.getProcessName());
 
 				// page navigation to simple quote
@@ -1878,7 +1871,6 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 					requestNoteBackingBean.getManagedBean().setProcessName(res.getProcessName());
 					requestNoteBackingBean.getManagedBean().setOutComes(res.getAction());
 					requestNoteBackingBean.getManagedBean().setTaskId(taskId);
-					requestNoteBackingBean.getManagedBean().setOrgProfile(requestNote.getPmOrgProfile());
 					
 					ScRequestNoteDtl scRequestNoteDtl = requestNote.getRequestNoteDtls().get(0);
 					requestNoteBackingBean.fulfilmentTypeEvent(scRequestNoteDtl);
@@ -1956,7 +1948,6 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 		    	getManagedBean().setSmSupplier(quoteResDTO.getSupplier());
 		    }
 			getManagedBean().setScQuote(scQuote);
-			getManagedBean().setPtjName(scQuote.getRequestNote().getPmOrgProfile().getOrgName());
 			initializeRemarks(scQuote);
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "supplerView");
