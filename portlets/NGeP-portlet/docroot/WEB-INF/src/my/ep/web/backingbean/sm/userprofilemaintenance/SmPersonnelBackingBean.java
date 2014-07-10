@@ -184,6 +184,8 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		getManagedBean().setBasicSmPersonnelPermanentAddress(permPersonnelAddress);
 		getManagedBean().setBasicSmPersonnel(smPersonnel);
 		getCountryList();
+		updateMailAddLists(getManagedBean().getDefaultCountryId().toString(), "", "");
+		updatePermAddLists(getManagedBean().getDefaultCountryId().toString(), "", "");
 		return "basicUserProfile.xhtml";
 	}
 
