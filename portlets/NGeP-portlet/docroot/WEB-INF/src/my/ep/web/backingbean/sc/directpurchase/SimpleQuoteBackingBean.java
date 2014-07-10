@@ -250,8 +250,6 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 		// location level by default - district 
 		getManagedBean().setLocationLevel(ParameterConst.LOCATION_LEVEL_DISTRICT);
 		
-		//populateUserDivisionList();
-		
 		  // to get ptj
 		  PmUser user = new FacesScopes().getUserSessionBean();
 		  if (user != null) {
@@ -1600,7 +1598,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 		StringBuilder  stateCriteria = new StringBuilder();
 		StringBuilder  divCriteria = new StringBuilder();
 		StringBuilder  distCriteria = new StringBuilder();
-		
+
 		// Business Nature Criteria
 		if(getManagedBean().getBusinessNatureCriterias() != null){
 			for (ScBusinessNatureQuoteCriteria natureQuoteCriteria : getManagedBean().getBusinessNatureCriterias()) {
@@ -1608,66 +1606,76 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 					busiNatureCriteria.append(natureQuoteCriteria.getPmBusinessNature().getBusinessNatureId())
 					.append(",");
 				}
-				
+
 			}
 		}
-		
+
 		if(busiNatureCriteria != null && busiNatureCriteria.length() > 0){
 			busiNatureCriteria.deleteCharAt(busiNatureCriteria.lastIndexOf(","));
 			busiNatureCriteria.append("^").append(SearchOperator.OPERATOR_IN.value());
 			criteria.append("smSupplierBusinesses.pmBusinessNature.businessNatureId").append("^").append(busiNatureCriteria.toString())
 			.append("|");
 		} 
-		
+
 		// Locality Criteria
-		List<LocationDTO> locationDTOs = new ArrayList<LocationDTO>();
-		for (TreeNode treeNode : getManagedBean().getLocationTrees()) {
-			//List<LocationDTO> locations  = getAllLocations(treeNode);
-			List<LocationDTO> locations  = new ArrayList<LocationDTO>();
-			locationDTOs.addAll(locations);
+		List<TplSpecZoneLoc> locationDTOs = new ArrayList<TplSpecZoneLoc>();
+		if (getManagedBean().getSelectedNodes() != null) {
+			for (TreeNode treeNode : getManagedBean().getLocationTrees()) {
+				if (treeNode.getParent().isSelected()) {
+					List<TplSpecZoneLoc> locationDTO = getLocations(treeNode);
+					locationDTOs.addAll(locationDTO);
+				}
+			}
 		}
+		List<PmState> states = SourcingLocationHelper
+				.getStateFromLocationDTO(locationDTOs);
+		List<PmDivision> divisions = SourcingLocationHelper
+				.getDivisionFromLocationDTO(locationDTOs);
+		List<PmDistrict> districts = SourcingLocationHelper
+				.getDistrictFromLocationDTO(locationDTOs);
 
-		if(locationDTOs != null && !locationDTOs.isEmpty() ){
-			for (LocationDTO locationDTO : locationDTOs) {
-
-				if(locationDTO.getState() != null){
-					stateCriteria.append(locationDTO.getState().getStateId())
-					.append(",");
-				}
-				if(locationDTO.getDivision() != null){
-					divCriteria.append(locationDTO.getDivision().getDivisionId())
-					.append(",");
-				}
-				if(locationDTO.getDistrict() != null){
-					distCriteria.append(locationDTO.getDistrict().getDistrictId())
-					.append(",");
-				}
+		if(states != null && states.size() >0 ){
+			for (PmState state : states) {
+				stateCriteria.append(state.getStateId())
+				.append(",");
 			}
-			
-			if(stateCriteria !=null && stateCriteria.length() > 0){
-				stateCriteria.deleteCharAt(stateCriteria.lastIndexOf(","));
-				stateCriteria.append("^").append(SearchOperator.OPERATOR_IN.value());
-				criteria.append("smAppl.smCompanyBasic.smCompanyAddresses.smAddress.pmState.stateId").append("^").append(stateCriteria.toString())
-				.append("|");
-			} 
-			
-			if(divCriteria !=null && divCriteria.length() > 0){
-				divCriteria.deleteCharAt(divCriteria.lastIndexOf(","));
-				divCriteria.append("^").append(SearchOperator.OPERATOR_IN.value());
-			} else{
-				divCriteria.append("");
-			}
-			if(distCriteria !=null && distCriteria.length() > 0){
-				distCriteria.deleteCharAt(distCriteria.lastIndexOf(","));
-				distCriteria.append("^").append(SearchOperator.OPERATOR_IN.value());
-				criteria.append("smAppl.smCompanyBasic.smCompanyAddresses.smAddress.pmDistrict.districtId").append("^").append(distCriteria.toString())
-				.append("|");
-			} 
 		}
 		
-		criteria.append("recordStatus^1");
+		if(divisions != null && divisions.size() >0 ){
+			for (PmDivision division : divisions) {
+				divCriteria.append(division.getDivisionId())
+				.append(",");
+			}
+		}
 
-		System.out.println("criteria :"+criteria.toString());
+		if(districts != null && districts.size() >0 ){
+			for (PmDistrict district : districts) {
+				distCriteria.append(district.getDistrictId())
+				.append(",");
+			}
+		}
+
+		if(stateCriteria !=null && stateCriteria.length() > 0){
+			stateCriteria.deleteCharAt(stateCriteria.lastIndexOf(","));
+			stateCriteria.append("^").append(SearchOperator.OPERATOR_IN.value());
+			criteria.append("smAppl.smCompanyBasic.smCompanyAddresses.smAddress.pmState.stateId").append("^").append(stateCriteria.toString())
+			.append("|");
+		} 
+
+		if(divCriteria !=null && divCriteria.length() > 0){
+			divCriteria.deleteCharAt(divCriteria.lastIndexOf(","));
+			divCriteria.append("^").append(SearchOperator.OPERATOR_IN.value());
+		} else{
+			divCriteria.append("");
+		}
+		if(distCriteria !=null && distCriteria.length() > 0){
+			distCriteria.deleteCharAt(distCriteria.lastIndexOf(","));
+			distCriteria.append("^").append(SearchOperator.OPERATOR_IN.value());
+			criteria.append("smAppl.smCompanyBasic.smCompanyAddresses.smAddress.pmDistrict.districtId").append("^").append(distCriteria.toString())
+			.append("|");
+		} 
+
+		criteria.append("recordStatus^1");
 		return criteria.toString();
 	}
 	
