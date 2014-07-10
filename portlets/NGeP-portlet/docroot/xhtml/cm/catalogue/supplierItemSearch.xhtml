@@ -134,21 +134,26 @@
 									rendered="#{catalogueBackingBean.managedBean.renderTableView}"
 									value="#{catalogueBackingBean.managedBean.searchDataModel}"
 									rowKey="#{supplierItem.rowId}"
-									selection="#{catalogueBackingBean.managedBean.selectViewItems}"
+									selection="#{catalogueBackingBean.managedBean.selectedItems}"
 									id="supplierItemID" var="supplierItem" rowIndexVar="rowIndex">
 
-									<ac:paginator for="supplierItemID"></ac:paginator>
+									<ac:paginator for="supplierItemID" ></ac:paginator>
 
 									<p:ajax event="rowSelectCheckbox"
+										listener="#{catalogueBackingBean.addToList(supplierItem,3)}"
 										update="@(.ui-button[id$=compareButton])"></p:ajax>
 									<p:ajax event="rowUnselectCheckbox"
+										listener="#{catalogueBackingBean.removeFromList(supplierItem)}"
 										update="@(.ui-button[id$=compareButton])"></p:ajax>
+										
+									<ui:remove>
 									<p:ajax event="rowUnselect"
 										update="@(.ui-button[id$=compareButton])"></p:ajax>
 									<p:ajax event="rowSelect"
 										update="@(.ui-button[id$=compareButton])"></p:ajax>
 									<p:ajax event="toggleSelect"
 										update="@(.ui-button[id$=compareButton])" />
+									</ui:remove>	
 
 							<p:column headerText="#{lbl['lbl.cm.image']}" width="80px;">
 								<h:panelGroup rendered="#{supplierItem.imagePath == null}">
@@ -194,7 +199,7 @@
 
 							
 							<p:column selectionMode="multiple"  disabledSelection="#{supplierItem.contractNo != null or supplierItem.circularNo != null}" 
-							rendered="#{!unspscCodeBackingBean.requisitioner}"/>
+							rendered="#{!unspscCodeBackingBean.requisitioner}" />
 							
 							<p:column headerText=" " rendered="#{unspscCodeBackingBean.requisitioner}">
 								<p:selectOneMenu value="#{catalogueBackingBean.managedBean.optionListValue}" style="width: 128px;" >

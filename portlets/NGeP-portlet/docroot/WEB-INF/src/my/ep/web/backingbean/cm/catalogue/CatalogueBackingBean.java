@@ -5195,7 +5195,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	
 	public void addToList(VCmSupplierItem supplierItem,Integer optionListValue){
 		log.info("addToList trigger");
-		//log.info("supplierItem.getCompanyName() = "+supplierItem.getCompanyName()+" optionListValue = "+optionListValue.intValue());
 		if(optionListValue.intValue()==1){
 			this.getManagedBean().getCtRequestList().add(supplierItem);
 		/*}else if(optionListValue.intValue()==2){
@@ -5203,6 +5202,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}else if(optionListValue.intValue()==3){
 			this.getManagedBean().getSelectViewItems().add(supplierItem);
 		}
+		this.getManagedBean().setOptionListValue(0);
+	}
+	
+	public void removeFromList(VCmSupplierItem supplierItem){
+		log.info("removeFromList trigger");
+		this.getManagedBean().getSelectViewItems().remove(supplierItem);
 	}
 
 	public SearchFilterBean getStatusFilterBean() {

@@ -122,6 +122,8 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 	private List<VCmSupplierItem> selectViewItems;
 	
+	private VCmSupplierItem[] selectedItems;
+	
 	private Map<Long, Boolean> selectedIds = new HashMap<Long, Boolean>();
 
 	private List<VCmSupplierItem> viewSupplierItemList;
@@ -1353,6 +1355,16 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 	public void setOptionListValue(Integer optionListValue) {
 		this.optionListValue = optionListValue;
+	}
+
+
+	public VCmSupplierItem[] getSelectedItems() {
+		return selectedItems;
+	}
+
+
+	public void setSelectedItems(VCmSupplierItem[] selectedItems) {
+		this.selectedItems = selectedItems;
 	}
 
 	
