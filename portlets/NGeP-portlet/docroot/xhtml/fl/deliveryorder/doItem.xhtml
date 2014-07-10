@@ -20,10 +20,7 @@
 			</p:column>
 			<p:column headerText="Delivery Address" width="10"
 				style="white-space:normal;" styleClass="fixed-size">
-				<h:outputText rendered="#{doDelAddress.pmAddress !=null}"
-					value="#{createDOBackingBean.getFullAddress(doDelAddress.pmAddress)}" />
-				<h:outputText rendered="#{doDelAddress.pmAddress eq null}"
-					value="#{createDOBackingBean.getFullAddress(doDelAddress.addressType.pmAddress)}" />
+				<h:outputText value="#{createDOBackingBean.getFullAddress(doDelAddress.pmAddress)}" />
 			</p:column>
 			<p:column style="width:2%">
 				<h:outputText value="Delivery Start / End" />
