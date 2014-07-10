@@ -48,6 +48,7 @@ import my.ep.web.bean.sm.SvcTemplateBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.vo.SmPersonnleCalcVO;
 
 import com.liferay.portal.model.Role;
@@ -356,8 +357,9 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	private String facilityType;
 
+	private PmCountry defPmCountry;
+
 	public SmApplicationManagedBean() {
-		System.out.println("******** Enter Managed Bean *******888");
 		// TODO Checking the user role
 		FacesScopes sc = new FacesScopes();
 		System.out.println(" << ======= Login USer === >>  "
@@ -548,6 +550,11 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		selectedStfPrfBdy = new SmAssociationBody();
 		selectedStfPrfBdy.setPmCertBody(new PmCertBody());
 		perIdTypeParam = new PmParameter();
+		defPmCountry = SmCommonUtil
+				.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
+		if (defPmCountry == null) {
+			defPmCountry = new PmCountry();
+		}
 		System.out.println(" ********* END MANAGED BEAN CREATION ****** ");
 	}
 
@@ -2028,6 +2035,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setSelBankBranchId(Long selBankBranchId) {
 		this.selBankBranchId = selBankBranchId;
+	}
+
+	public PmCountry getDefPmCountry() {
+		return defPmCountry;
+	}
+
+	public void setDefPmCountry(PmCountry defPmCountry) {
+		this.defPmCountry = defPmCountry;
 	}
 
 }

@@ -1,5 +1,6 @@
 package my.ep.web.backingbean.sm;
 
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.ParseException;
@@ -81,6 +82,8 @@ import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusReqDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusResDTO;
 import my.ep.exception.EpException;
+import my.ep.jaxb.sm.useradddata.SMUserAddDataType;
+import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
@@ -133,6 +136,7 @@ import my.ep.persistence.entity.sm.SmSvCategory;
 import my.ep.persistence.entity.sm.SmSvOffice;
 import my.ep.persistence.entity.sm.SmSvTask;
 import my.ep.persistence.entity.sm.SmSvTemplate;
+import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.pm.ReasonCategory;
 import my.ep.util.MessageUtils;
@@ -143,8 +147,10 @@ import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.vo.SmPersonnleCalcVO;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.primefaces.context.RequestContext;
@@ -232,6 +238,10 @@ public class SmApplicationBackingBean extends
 			retrieveRegistrationStatusList();
 			retrieveEduFieldList();
 		}
+		getManagedBean()
+				.setDefPmCountry(
+						SmCommonUtil
+								.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE));
 		SmAppl smAppl = new SmAppl();
 		SmSupplier smApplSupplier = new SmSupplier();
 		try {
@@ -2845,6 +2855,9 @@ public class SmApplicationBackingBean extends
 
 	public void addOrUpdateShareHolderAddress(SmPersonnel shareHolderBean)
 			throws ParseException {
+		// clone the addrs start
+		cloneShareHolderAddress();
+		// clone the addrs end
 		if (shareHolderBean.getSmPersonnelAddresses().isEmpty()) {
 
 			shareHolderBean.getSmPersonnelAddresses().add(
@@ -3435,33 +3448,36 @@ public class SmApplicationBackingBean extends
 				}
 			}
 		}
-		if (getManagedBean().getShareHolderPermAddr().getSmAddress()
-				.getAddressId() != null) {
-			if (getManagedBean()
-					.getShareHolderPermAddr()
-					.getSmAddress()
-					.getAddressId()
-					.equals(getManagedBean().getShareHolderMailAddr()
-							.getSmAddress().getAddressId())) {
-				getManagedBean().getShareHolderMailAddr().setSameAsPerm(true);
-			}
-			if (getManagedBean()
-					.getShareHolderPermAddr()
-					.getSmAddress()
-					.getAddressId()
-					.equals(getManagedBean().getShareHolderResdAddr()
-							.getSmAddress().getAddressId())) {
-				getManagedBean().getShareHolderResdAddr().setSameAsPerm(true);
-			}
-			if (getManagedBean()
-					.getShareHolderPermAddr()
-					.getSmAddress()
-					.getAddressId()
-					.equals(getManagedBean().getShareHolderOffAddr()
-							.getSmAddress().getAddressId())) {
-				getManagedBean().getShareHolderOffAddr().setSameAsPerm(true);
-			}
-		}
+		// getManagedBean().getShareHolderMailAddr().setSameAsPerm(false);
+		// getManagedBean().getShareHolderResdAddr().setSameAsPerm(false);
+		// getManagedBean().getShareHolderOffAddr().setSameAsPerm(false);
+		// if (getManagedBean().getShareHolderPermAddr().getSmAddress()
+		// .getAddressId() != null) {
+		// if (getManagedBean()
+		// .getShareHolderPermAddr()
+		// .getSmAddress()
+		// .getAddressId()
+		// .equals(getManagedBean().getShareHolderMailAddr()
+		// .getSmAddress().getAddressId())) {
+		// getManagedBean().getShareHolderMailAddr().setSameAsPerm(true);
+		// }
+		// if (getManagedBean()
+		// .getShareHolderPermAddr()
+		// .getSmAddress()
+		// .getAddressId()
+		// .equals(getManagedBean().getShareHolderResdAddr()
+		// .getSmAddress().getAddressId())) {
+		// getManagedBean().getShareHolderResdAddr().setSameAsPerm(true);
+		// }
+		// if (getManagedBean()
+		// .getShareHolderPermAddr()
+		// .getSmAddress()
+		// .getAddressId()
+		// .equals(getManagedBean().getShareHolderOffAddr()
+		// .getSmAddress().getAddressId())) {
+		// getManagedBean().getShareHolderOffAddr().setSameAsPerm(true);
+		// }
+		// }
 
 		getManagedBean().setSelectedShareHolder(shareHolderBean);
 
@@ -4340,7 +4356,12 @@ public class SmApplicationBackingBean extends
 	private SmAddress setDefaultAddr() {
 		SmAddress addr = new SmAddress();
 		PmCountry cntry = new PmCountry();
-		cntry.setCountryId(1l);
+		if (getManagedBean().getDefPmCountry() != null
+				&& getManagedBean().getDefPmCountry().getCountryId() != null) {
+			cntry = getManagedBean().getDefPmCountry();
+		} else {
+			cntry.setCountryId(1l);
+		}
 		addr.setPmCity(new PmCity());
 		addr.setPmCountry(cntry);
 		addr.setPmState(new PmState());
@@ -6736,4 +6757,91 @@ public class SmApplicationBackingBean extends
 				new PmCity());
 		populateCitiesByDistrict(districtId, panelName, new PmCity());
 	}
+
+	// SM Address Clone code start
+	private SmAddress cloneAsPermenantAddr(SmAddress srcAddr,
+			SmAddress desAddr, SmPersonnelAddress desPersAddr) {
+		SmAddress smAddress = new SmAddress();
+		try {
+			if (srcAddr.getAddressId() != null
+					&& desAddr.getAddressId() != null
+					&& srcAddr.getAddressId().equals(desAddr.getAddressId())) {
+				SmAddress temp;
+
+				// (SmAddress) BeanUtils.cloneBean(desAddr);
+				if (desPersAddr.isSameAsPerm()) {
+					temp = srcAddr;
+				} else {
+					temp = desAddr;
+
+				}
+				smAddress = setDefaultAddr();
+				smAddress.setAddressId(null);
+				resetToDefaultEntityValues(smAddress);
+				resetSmAddressChildLists(smAddress);
+				assignClonedAddressValues(smAddress, temp);
+				return smAddress;
+			} else {
+				if (desPersAddr.isSameAsPerm()) {
+					assignClonedAddressValues(desAddr, srcAddr);
+				}
+				return desAddr;
+			}
+		} finally {
+			smAddress = null;
+		}
+	}
+
+	private void assignClonedAddressValues(SmAddress desAddr, SmAddress srcAddr) {
+		desAddr.setAddress1(srcAddr.getAddress1());
+		desAddr.setAddress2(srcAddr.getAddress2());
+		desAddr.setAddress3(srcAddr.getAddress3());
+		desAddr.setAddress4(srcAddr.getAddress4());
+		desAddr.setPostcode(srcAddr.getPostcode());
+		desAddr.getPmCountry().setCountryId(
+				srcAddr.getPmCountry().getCountryId());
+		desAddr.getPmState().setStateId(srcAddr.getPmState().getStateId());
+		desAddr.getPmDistrict().setDistrictId(
+				srcAddr.getPmDistrict().getDistrictId());
+		desAddr.getPmCity().setCityId(srcAddr.getPmCity().getCityId());
+	}
+
+	private void cloneShareHolderAddress() {
+		getManagedBean().getShareHolderResdAddr().setSmAddress(
+				cloneAsPermenantAddr(getManagedBean().getShareHolderPermAddr()
+						.getSmAddress(), getManagedBean()
+						.getShareHolderResdAddr().getSmAddress(),
+						getManagedBean().getShareHolderResdAddr()));
+		getManagedBean().getShareHolderOffAddr().setSmAddress(
+				cloneAsPermenantAddr(getManagedBean().getShareHolderPermAddr()
+						.getSmAddress(), getManagedBean()
+						.getShareHolderOffAddr().getSmAddress(),
+						getManagedBean().getShareHolderOffAddr()));
+		getManagedBean().getShareHolderMailAddr().setSmAddress(
+				cloneAsPermenantAddr(getManagedBean().getShareHolderPermAddr()
+						.getSmAddress(), getManagedBean()
+						.getShareHolderMailAddr().getSmAddress(),
+						getManagedBean().getShareHolderMailAddr()));
+	}
+
+	private void resetToDefaultEntityValues(BaseEntity baseEntity) {
+		baseEntity.setBrandNew(true);
+		baseEntity.setModified(false);
+		baseEntity.setDeleted(false);
+		baseEntity.setCreatedBy(null);
+		baseEntity.setCreatedDate(null);
+		baseEntity.setChangedBy(null);
+		baseEntity.setChangedDate(null);
+	}
+
+	private void resetSmAddressChildLists(SmAddress smAdd) {
+		smAdd.setSmAssociateCompanies(new ArrayList<SmAssociateCompany>());
+		smAdd.setSmCompanyAddresses(new ArrayList<SmCompanyAddress>());
+		smAdd.setSmEquityCompanies(new ArrayList<SmEquityCompany>());
+		smAdd.setSmFacilities(new ArrayList<SmFacility>());
+		smAdd.setSmPersonnelAddresses(new ArrayList<SmPersonnelAddress>());
+		smAdd.setSmSupplierBanks(new ArrayList<SmSupplierBank>());
+		smAdd.setSmSupplierBranches(new ArrayList<SmSupplierBranch>());
+	}
+	// SM Address Clone code end
 }
