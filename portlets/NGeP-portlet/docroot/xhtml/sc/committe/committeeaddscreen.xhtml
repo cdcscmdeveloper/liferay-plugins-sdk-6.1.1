@@ -8,13 +8,14 @@
 
 	<p:dialog id="newcommitteeseids"
 		header="New #{committeBackingBean.managedBean.headerTitle}"
-		widgetVar="newcommittees" modal="true" position="top"
-		styleClass="addMember">
-
-		<p:panel>
-			<h:panelGrid columns="2" styleClass="noBorders tr,noBorders td">
+		widgetVar="newcommittees" modal="true" position="top">
+		<p:panel styleClass="addCommitteeMember">
+			<p:messages id="committeemessages" showDetail="true"
+				autoUpdate="true" closable="true" showSummary="false" />
+			<h:panelGrid columns="3" styleClass="noBorders tr,noBorders td">
+				<p:outputLabel value="*" styleClass="mandatory" />
 				<h:outputLabel value="#{lbl['lbl.sc.committe.addscreen.selection']}" />
-				<p:selectOneRadio
+				<p:selectOneRadio id="selectionradio"
 					value="#{committeBackingBean.managedBean.committeMember.userSelection}">
 					<f:selectItems
 						value="#{committeBackingBean.managedBean.selections}" />
@@ -22,6 +23,8 @@
 						listener="#{committeBackingBean.userSelcetionAction}"
 						update="newCommitteeProfile" />
 				</p:selectOneRadio>
+				<p:message id="selectionradioMsg" for="selectionradio"
+					display="icon" />
 			</h:panelGrid>
 
 			<p:panel id="newCommitteeProfile" style="width:100%;margin-top:10px;">
@@ -179,10 +182,13 @@
 						</tr>
 						<tr>
 							<td><p:outputLabel
-									value="#{lbl['lbl.sc.committe.addscreen.email']}" /></td>
-							<td><p:inputText
+									value="#{lbl['lbl.sc.committe.addscreen.email']}" /> <p:outputLabel
+									value="*" styleClass="mandatory" /></td>
+							<td><p:inputText id="email" required="true"
+									label="#{lbl['lbl.sc.committe.addscreen.email']}"
 									value="#{committeBackingBean.managedBean.committeMember.email}"
-									size="30" /></td>
+									size="30" maxlength="80" /> <p:message id="emailMsg"
+									for="email" display="icon" /></td>
 							<td />
 							<td />
 						</tr>
@@ -198,6 +204,7 @@
 							<td />
 							<td />
 						</tr>
+
 					</table>
 				</c:if>
 			</p:panel>
@@ -208,8 +215,7 @@
 					process="@this, newCommitteeProfile" icon="ui-icon-check"
 					actionListener="#{committeBackingBean.okCommitteeAction}" />
 
-				<p:commandButton value="#{lbl['lbl.so.cancelbtn']}"
-					styleClass="apply_button" process="@this"
+				<p:commandButton value="#{lbl['lbl.so.cancelbtn']}" process="@this"
 					oncomplete="newcommittees.hide();" icon="ui-icon-cancel" />
 			</div>
 		</p:panel>

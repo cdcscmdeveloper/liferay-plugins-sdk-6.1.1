@@ -7,11 +7,12 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<p:panel header="#{committeBackingBean.managedBean.headerTitle}"
-		toggleable="true" styleClass="scMemberDtl">
+		toggleable="true">
 		<p:dataTable id="committeMembersListId"
-			value="#{committeeMembersList.scCommitteeMembers}"
+			value="#{committeeMembersList}"
 			var="committeemember" rowIndexVar="index" editable="true"
-			rowKey="#{committeemember}" selection="#{selectedMembersList}">
+			rowKey="#{committeemember}"
+			selection="#{committeBackingBean.managedBean.selectedCommitteMemebers}">
 
 			<p:column selectionMode="multiple" style="width:2%" />
 
@@ -53,10 +54,10 @@
 				style="width: 10%">
 				<ui:fragment rendered="#{committeemember.PNP}">
 					<h:outputText value="Chairperson"
-						rendered="#{committeemember.memberRole eq 'C'}" />
+						rendered="#{committeemember.memberRole.parameterId == '583'}" />
 				</ui:fragment>
 				<ui:fragment rendered="#{!committeemember.PNP}">
-					<p:selectOneMenu value="#{committeemember.memberRole}"
+					<p:selectOneMenu value="#{committeemember.memberRole.parameterId}"
 						style="width: 110px;margin-bottom: 5px;">
 						<f:selectItems
 							value="#{committeBackingBean.managedBean.roleTypes}" />
@@ -72,11 +73,11 @@
 
 			<p:commandButton id="committeeadd" value="#{lbl['lbl.so.addbtn']}"
 				process="@this" icon="ui-icon-add"
-				action="#{committeBackingBean.addCommitteMember(committeBackingBean.managedBean.qtCommittee, committeBackingBean.managedBean.headerTitle)}"
-				oncomplete="newcommittees.show();" update="@(.addMember)" />
+				action="#{committeBackingBean.addCommitteMember(committeBackingBean.managedBean.headerTitle)}"
+				oncomplete="newcommittees.show();" update="@(.addCommitteeMember)" />
 
 			<p:commandButton value="#{lbl['lbl.so.delete']}"
-				icon="ui-icon-delete" process="@this"
+				icon="ui-icon-delete" process="@this, committeMembersListId"
 				action="#{committeBackingBean.deleteCommitteeAction}"
 				update="committeMembersListId" />
 		</div>

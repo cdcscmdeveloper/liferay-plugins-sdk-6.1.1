@@ -17,10 +17,7 @@
 		<ui:include src="/xhtml/sc/committe/committeeheader.xhtml" />
 
 		<ui:param name="committeeMembersList"
-			value="#{committeBackingBean.managedBean.qtCommittee.scCommittee}" />
-
-		<ui:param name="selectedMembersList"
-			value="#{committeBackingBean.managedBean.selectedCommitteMemebers}" />
+			value="#{committeBackingBean.managedBean.qtCommittee.scCommittee.scCommitteeMembers}" />
 
 		<ui:include src="committeeqcselection.xhtml" />
 
