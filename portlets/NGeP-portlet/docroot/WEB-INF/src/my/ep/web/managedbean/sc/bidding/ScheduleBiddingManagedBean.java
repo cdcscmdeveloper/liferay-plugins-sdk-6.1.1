@@ -12,8 +12,10 @@ import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.sc.bidding.ScBid;
 import my.ep.persistence.entity.sc.bidding.ScBidContactPerson;
+import my.ep.persistence.entity.sc.bidding.ScBidItem;
 import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQtRecommend;
 import my.ep.web.managedbean.BaseManagedBean;
 
 /**
@@ -28,52 +30,66 @@ public class ScheduleBiddingManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
 
 	private ScQt scQt;
-	private ScBid scBid;
-	private List<ScBidSchedule> selectedScBidScheduleList;
 	private List<ScBidContactPerson> scBidContactPersonList;
 	private List<ScBidContactPerson> multiSelectContact;
 	private Date bidStart;
 	private Date bidEnd;
-
+	private List<ScBidItem> bidItemList;
+	private List<ScBidItem> selectedBidItemList;
+	
+	private Date minStartDate;
+	
+	
 	public ScheduleBiddingManagedBean() {
+		minStartDate = new Date();
+	
 
-		if (scBid == null) {
+	}
+	
+	/**
+	 * @return the minStartDate
+	 */
+	public Date getMinStartDate() {
+		return minStartDate;
+	}
 
-			System.out
-					.println("******bid object is initially null********");
 
-			scBid = new ScBid();
-		}
 
+	/**
+	 * @param minStartDate the minStartDate to set
+	 */
+	public void setMinStartDate(Date minStartDate) {
+		this.minStartDate = minStartDate;
+	}
+
+
+
+	/**
+	 * @return the selectedBidItemList
+	 */
+	public List<ScBidItem> getSelectedBidItemList() {
+		return selectedBidItemList;
 	}
 
 	/**
-	 * @return the scBid
+	 * @param selectedBidItemList the selectedBidItemList to set
 	 */
-	public ScBid getScBid() {
-		return scBid;
+	public void setSelectedBidItemList(List<ScBidItem> selectedBidItemList) {
+		this.selectedBidItemList = selectedBidItemList;
 	}
 
 	/**
-	 * @param bid the bid to set
+	 * @return the bidItemList
 	 */
-	public void setBid(ScBid bid) {
-		this.scBid = bid;
+	public List<ScBidItem> getBidItemList() {
+		return bidItemList;
 	}
 
 	/**
-	 * @return the selectedScBidScheduleList
+	 * @param bidItemList the bidItemList to set
 	 */
-	public List<ScBidSchedule> getSelectedScBidScheduleList() {
-		return selectedScBidScheduleList;
-	}
-
-	/**
-	 * @param scBidScheduleList the scBidScheduleList to set
-	 */
-	public void setSelectedScBidScheduleList(
-			List<ScBidSchedule> scBidScheduleList) {
-		this.selectedScBidScheduleList = scBidScheduleList;
+	public void setBidItemList(List<ScBidItem> bidItemList) {
+		this.bidItemList = bidItemList;
 	}
 
 	/**
