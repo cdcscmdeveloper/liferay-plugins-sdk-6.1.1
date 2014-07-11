@@ -63,6 +63,14 @@
 					</p:commandButton>
 				</div>
 			</h:panelGroup>
+			
+			<h:panelGroup rendered="#{unspscCodeBackingBean.requisitioner}">
+				<div style="float: left; clear: both;">
+					<p:commandButton value="#{lbl['lbl.cm.back']}" icon="ui-icon-back"
+						action="#{catalogueBackingBean.cancelToSupplierItemSearch()}">
+					</p:commandButton>
+				</div>
+			</h:panelGroup>
 
 
 			<h:panelGroup rendered="#{unspscCodeBackingBean.catalogueAdmin}">
