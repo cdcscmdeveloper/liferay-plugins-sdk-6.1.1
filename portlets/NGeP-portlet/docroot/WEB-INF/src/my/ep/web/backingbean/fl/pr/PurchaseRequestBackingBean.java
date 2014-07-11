@@ -446,7 +446,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 				deliveryAddr.setEndDate(getManagedBean().getFulfilmentRequest().getEndDate());
 				deliveryAddr.setPmUom(getManagedBean().getFulfilmentRequest().getPmUom());
 				deliveryAddr.setDeliveryTerm(getManagedBean().getFulfilmentRequest().getDeliveryTerm());
-				deliveryAddr.setReceivingGrp(addrType);
 				if(i==0) {
 					getManagedBean().setSelectedDelAddr(deliveryAddr);
 				}
@@ -599,7 +598,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		IParameterSO parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 		ParameterReqDTO paramReqDTO = new ParameterReqDTO();
 		paramReqDTO.setParameterType(ParameterTypeConst.SC_ITEM_TYPE);
-		paramReqDTO.setParameterCode(ParameterConst.ITEM_TYPE_PRODUCT);
+		paramReqDTO.setParameterCode(ParameterConst.ITEM_TYPE_SERVICE);
 		PmParameter productType = parameterSO.retrieveParameterByTypeAndCode(paramReqDTO).getPmParameter();
 		
 		for (ScRequestNoteDtl purchaseItem : getManagedBean().getRequestNoteWithDtlsList()) {
