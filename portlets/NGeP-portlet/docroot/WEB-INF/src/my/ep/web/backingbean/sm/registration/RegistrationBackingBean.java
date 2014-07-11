@@ -439,7 +439,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		reqDTO.setServerPort(fs.getRequest().getServerPort());
 		
 		reqDTO.setSmSupp(this.getManagedBean().getSmSupp());
-		/*IRegistrationSO reqSO = (IRegistrationSO) BusinessDelegate.getInstance().getServiceObject("sm", IRegistrationSO.class);
+		IRegistrationSO reqSO = (IRegistrationSO) BusinessDelegate.getInstance().getServiceObject("sm", IRegistrationSO.class);
 		RegistrationResDTO resDTO = reqSO.createSupplier(reqDTO);
 
 		if (resDTO.isSuccessful()) {
@@ -457,8 +457,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		} else {
 			log.info("-------------------Error SubmitRegistration----------------");
 			throw new EpException(MessageConst.ERROR_721006);
-		}*/
-		return null;
+		}
 	}
 
 	public String updateOnlineAccount() {
