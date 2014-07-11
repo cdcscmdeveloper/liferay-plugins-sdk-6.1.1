@@ -43,13 +43,13 @@ import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.BpmOutcomeConst;
+import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
 import my.ep.constant.ct.ContractStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
-import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.circular.CircularReqDTO;
 import my.ep.dto.ct.circular.CircularResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -86,6 +86,7 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -121,6 +122,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	
 	private static Logger log = Logger.getLogger(PanelBackingBean.class);
 	private IPagingDataModel<CtCircularVer> circularVerPagingDataModel = new CircularVerPagingDataModel();
+	private static String baseDir = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
 	
 	public PanelBackingBean(){
 		if(getManagedBean().getOutComes()==null) {
@@ -160,7 +162,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	
 	public void preRenderCircular() {
 		renewSesionObject();
-		getManagedBean().setFileDirectory(CommonConstants.BASE_FILE_DIR+"/CT/Circulars/"+ParameterConst.DOCTYPE_PANEL_CIRCULAR);
+		getManagedBean().setFileDirectory(baseDir+"/CT/Circulars/"+ParameterConst.DOCTYPE_PANEL_CIRCULAR);
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "circularBase.xhtml?faces-redirect=true");
 	}
@@ -233,7 +235,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			getManagedBean().setCircular(resDTO.getCircularVer().getCtCircular());
 			getManagedBean().setCircularVer(resDTO.getCircularVer());
 			
-			getManagedBean().setFileDirectory(CommonConstants.BASE_FILE_DIR+"/CT/Circulars/"+ParameterConst.DOCTYPE_PANEL_CIRCULAR);
+			getManagedBean().setFileDirectory(baseDir+"/CT/Circulars/"+ParameterConst.DOCTYPE_PANEL_CIRCULAR);
 			initializeRemarks();
 			ContractBackingBean ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
 			ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
@@ -248,7 +250,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	
 	public void preRenderCancelCircular() {
 		renewSesionObject();
-		getManagedBean().setFileDirectory(CommonConstants.BASE_FILE_DIR+"/CT/Circulars/"+ParameterConst.DOCTYPE_CANCEL_CIRCULAR_REQUEST);
+		getManagedBean().setFileDirectory(baseDir+"/CT/Circulars/"+ParameterConst.DOCTYPE_CANCEL_CIRCULAR_REQUEST);
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "cancelCircularBase.xhtml?faces-redirect=true");
 	}
@@ -310,7 +312,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			} else {
 				getManagedBean().setCircularDocType(ContractConst.CIRCULAR_DOC_TYPE_PANEL);
 			}
-			getManagedBean().setFileDirectory(CommonConstants.BASE_FILE_DIR+"/CT/Circulars/"+ParameterConst.DOCTYPE_CANCEL_CIRCULAR_REQUEST);
+			getManagedBean().setFileDirectory(baseDir+"/CT/Circulars/"+ParameterConst.DOCTYPE_CANCEL_CIRCULAR_REQUEST);
 			
 			initializeRemarks();
 			ContractBackingBean ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
@@ -1056,7 +1058,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			getManagedBean().setRemarkList(resDTO.getRemarkList());
 			getManagedBean().setAttachmentList(resDTO.getAttachmentList());
 			
-			getManagedBean().setFileDirectory(CommonConstants.BASE_FILE_DIR+"/CT/Circulars/"+getManagedBean().getCircularVer().getDocType());
+			getManagedBean().setFileDirectory(baseDir+"/CT/Circulars/"+getManagedBean().getCircularVer().getDocType());
 			initializeRemarks();
 			ContractBackingBean ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
 			ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());

@@ -45,6 +45,7 @@ import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.BpmOutcomeConst;
+import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
@@ -86,6 +87,7 @@ import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -120,7 +122,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	
 	private static Logger log = Logger.getLogger(CentralContractBackingBean.class);
 	private IPagingDataModel<CtCircularVer> circularVerPagingDataModel = new CircularVerPagingDataModel();
-	private String fileDirectory = CommonConstants.BASE_FILE_DIR+"/CT/Circulars/"+ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR;
+	private static String fileDirectory = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)+"/CT/Circulars/"+ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR;
 	
 	public CentralContractBackingBean(){
 		if(getManagedBean().getOutComes()==null) {
@@ -985,7 +987,6 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	}
 	
 	public void extendStartEndDate(){
-		
 		if(this.getManagedBean().getCircularVer().getExtPeriod() > 0){
 			this.getManagedBean().getCircularVer().setExtendStartDate(this.getManagedBean().getCircularVer().getStartDate());
 		    Calendar cal = Calendar.getInstance();
@@ -996,13 +997,5 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			this.getManagedBean().getCircularVer().setExtendStartDate(null);
 			this.getManagedBean().getCircularVer().setExtendEndDate(null);
 		}
-	}
-
-	public String getFileDirectory() {
-		return fileDirectory;
-	}
-
-	public void setFileDirectory(String fileDirectory) {
-		this.fileDirectory = fileDirectory;
 	}
 }

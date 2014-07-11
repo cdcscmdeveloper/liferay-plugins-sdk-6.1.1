@@ -21,9 +21,10 @@ import javax.faces.context.FacesContext;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletResponse;
 
-import my.ep.constants.CommonConstants;
+import my.ep.constant.EpPropertiesConst;
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtRemark;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentFormat;
@@ -49,7 +50,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	public ContractBackingBean() {
 		log.debug("ContractBackingBean.constructor()");
 		if(getManagedBean().getFileDirectory()==null) {
-			getManagedBean().setFileDirectory(CommonConstants.BASE_FILE_DIR+"/temp");
+			getManagedBean().setFileDirectory(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)+"/CT/temp");
 		}
 	}
 	

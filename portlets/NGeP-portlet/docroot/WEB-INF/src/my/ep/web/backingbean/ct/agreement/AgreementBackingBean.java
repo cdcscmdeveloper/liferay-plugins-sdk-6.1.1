@@ -51,6 +51,8 @@ import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
+import my.ep.constant.BpmOutcomeConst;
+import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
@@ -89,13 +91,13 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.backingbean.ct.ContractDetailsBackingBean;
 import my.ep.web.backingbean.tpl.doc.TemplateDocBackingBean;
-import my.ep.constant.BpmOutcomeConst;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.ct.ContractManagementConst;
 import my.ep.web.format.AttachmentDateFormat;
@@ -135,7 +137,6 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	
 	private static final String CONTRACT_PAGE = "/xhtml/ct/fulfilmentdetails/creation/fulfilment.xhtml?faces-redirect=true";
 	private static final String AGREEMENT_DOC_PAGE = "/xhtml/ct/agreement/shared/sidemenu/agreementTab.xhtml?faces-redirect=true";
-	private static final String PROCESS_DOWNLOAD_PAGE ="/xhtml/ct/agreement/downloadDocument.xhtml";
 	
 	private static Logger log = Logger.getLogger(AgreementBackingBean.class);
 
@@ -319,7 +320,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			docType = ParameterConst.DOCTYPE_SUPPLEMENTAL_AGREEMENT;
 		}
 		
-		getManagedBean().setFileDirectory(CommonConstants.BASE_FILE_DIR+"/CT/"+getManagedBean().getCtContract().getContractNo()+"/"+docType);
+		getManagedBean().setFileDirectory(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)+"/CT/"+getManagedBean().getCtContract().getContractNo()+"/"+docType);
 		initializeRemarks();
 		ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
 		ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());

@@ -12,8 +12,8 @@ import java.util.Map;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.pm.ParameterConst;
-import my.ep.constants.CommonConstants;
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.circular.CtCancelCircularReq;
@@ -25,6 +25,7 @@ import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.primefaces.model.DualListModel;
@@ -95,7 +96,7 @@ public class PanelManagedBean extends BaseManagedBean {
 	
 	private int selectedTabIndex;
 	
-	private String fileDirectory = CommonConstants.BASE_FILE_DIR+"/CT/Circulars/"+ParameterConst.DOCTYPE_PANEL_CIRCULAR;
+	private String fileDirectory = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)+"/CT/Circulars/"+ParameterConst.DOCTYPE_PANEL_CIRCULAR;
 	
 	public CtCircular getCircular() {
 		return circular;
