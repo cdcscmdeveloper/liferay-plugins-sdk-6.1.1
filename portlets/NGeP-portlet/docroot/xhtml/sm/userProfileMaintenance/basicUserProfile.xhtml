@@ -15,12 +15,18 @@
 			closable="true" showSummary="false" />
 
 		<p:panel styleClass="noBorders tr,noBorders td" style="width:100%">
-			<div align="right">
-				<p:commandButton value="Save" ajax="false" icon="ui-icon-save"
-					action="#{smPersonnelBackingBean.save}" />
-				<p:commandButton value="Cancel" ajax="false" icon="ui-icon-cancel"
-					immediate="true" action="#{smPersonnelBackingBean.cancel}" />
-			</div>
+			<table style="width: 100%;">
+				<tr>
+					<td style="white-space: nowrap; float: left;">
+						<p:commandButton value="#{lbl['lbl.btn.back']}" ajax="false" icon="ui-icon-back"
+							immediate="true" action="#{smPersonnelBackingBean.cancel}" />
+					</td>
+					<td style="white-space: nowrap; float: right;">
+						<p:commandButton value="Save" ajax="false" icon="ui-icon-save"
+							action="#{smPersonnelBackingBean.save}" />
+					</td>
+				</tr>
+			</table>	
 		</p:panel>
 
 
