@@ -9,19 +9,20 @@
     <p:panel id="serviceId" header="Service Details"   toggleable="true"  toggleSpeed="500">
   	  <h:panelGrid  style="width:100%;">
   	    <p:dataTable id="serviceTable" var="data" value="#{contractDetailsBackingBean.managedBean.ctItemServiceList}" rowKey="#{data}" 
-           selectionMode="single" selection="#{contractDetailsBackingBean.managedBean.selectedServiceItem}" lazy="true" >
+           selectionMode="single" selection="#{contractDetailsBackingBean.managedBean.selectedServiceItem}"  widgetVar="serviceItemObj" >
            <ac:paginator for="serviceTable"/>
               <p:ajax event="rowSelect" update=":form:showServicePrice"/>
-		      <p:column headerText="Item Name">
+		      <p:column headerText="Item Name" 
+		         filterBy="#{data.itemName}" style="width:40%;" filterMatchMode="contains">
 		         <p:outputLabel value="#{data.itemName}" style="float:left;"/>
 		      </p:column>       
-		      <p:column headerText="UOM">
+		      <p:column headerText="UOM" style="width:20%;">
 		        <p:outputLabel value="#{data.uom.uomName}" style="float:left;"/>
 		      </p:column>        
-		      <p:column headerText="Qty." style="text-align: right;">
+		      <p:column headerText="Qty."  style="text-align: right; width:20%;">
 		        <p:outputLabel value="#{data.minimumOrderQty}"/>
 		      </p:column>               
-		      <p:column headerText="UOM Per Month"  style="text-align: right;">
+		      <p:column headerText="UOM Per Month"  style="text-align: right;width:20%;">
 		     	<p:outputLabel value="#{data.uomPerMonth}"/>
 		      </p:column>  
     		</p:dataTable> 

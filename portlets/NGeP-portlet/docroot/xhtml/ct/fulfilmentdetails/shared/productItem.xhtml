@@ -8,25 +8,26 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
     <p:panel id="itemId" header="Product Details"   toggleable="true"  toggleSpeed="500">
       <h:panelGrid  style="width:100%;">
-        <p:dataTable id="itemTable" var="data" value="#{contractDetailsBackingBean.managedBean.ctItemList}" rowKey="#{data}" 
-           selectionMode="single" selection="#{contractDetailsBackingBean.managedBean.selectedItem}" lazy="true">
+        <p:dataTable id="itemTable" var="data" value="#{contractDetailsBackingBean.managedBean.ctItemList}" 
+            rowKey="#{data}" selectionMode="single" selection="#{contractDetailsBackingBean.managedBean.selectedItem}" widgetVar="productsTables">
            <ac:paginator for="itemTable"/>
            <p:ajax event="rowSelect" update=":form:changeField"  />
-		   <p:column headerText="Item Name">
-		     <p:outputLabel value="#{data.itemName}" style="float:left;"/> </p:column>       
-		   <p:column headerText="UOM">
-		     <p:outputLabel value="#{data.uom.uomName}" style="float:left;"/> </p:column>        
-		   <p:column headerText="Minimum Order Qty." style="text-align: right;">
-		     <h:outputText value="#{data.minimumOrderQty}">
-     		     <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, data.uom.uomCode)}" />					
-		     </h:outputText>
+		   <p:column headerText="Item Name" filterBy="#{data.itemName}" style="width:40%;" filterMatchMode="contains">
+		          <p:outputLabel value="#{data.itemName}" style="float:left;"/> </p:column>       
+		   <p:column headerText="UOM" style="width:15%;">
+		          <p:outputLabel value="#{data.uom.uomName}" style="float:left;"/>
+		   </p:column>        
+		   <p:column headerText="Minimum Order Qty." style="text-align: right;width:15%;">
+		          <h:outputText value="#{data.minimumOrderQty}">
+     		           <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, data.uom.uomCode)}" />					
+		          </h:outputText>
 		     </p:column>   
-		   <p:column headerText="Maximum Qty." style="text-align: right;">
+		   <p:column headerText="Maximum Qty." style="text-align: right;width:15%;">
 		     <h:outputText value="#{data.maxProcureAmt}">
 		        <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, data.uom.uomCode)}" />					
 		      </h:outputText>
 		     </p:column>     
-		   <p:column headerText="Type Of Goods">
+		   <p:column headerText="Type Of Goods" style="width:15%;">
 		     <h:outputLabel value="#{contractDetailsBackingBean.getParameterDesc(data.itemOrigin)}"
 		       rendered="#{data.itemOrigin.parameterCode eq 'Local'}" style="float:left;"/>
 		     <p:commandLink value="#{contractDetailsBackingBean.getParameterDesc(data.itemOrigin)}" styleClass="blue_font" 
