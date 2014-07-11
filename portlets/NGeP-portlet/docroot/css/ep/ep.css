@@ -387,7 +387,7 @@ a:hover.nav_top {
 /* --------------------------          inputNumberSpinner ends      ------------------------------ */
 .backgroundRefresh {
 	/* background-image: url(/eP-portlet/images/design/btn_refresh.png); */
-	background-image: url(#{ resource [ 'ep/images/design:btn_refresh.png' ]
+	background-image: url('../images/design/btn_refresh.png') !important;
 }
 
 );
@@ -548,10 +548,8 @@ a.suppMenu {
 	text-decoration: none;
 	padding: 4px 1px 4px 0px;
 	display: block;
-	background-image: url(#{ resource [ 'ep/images/design:sidePanel.png' ]
-}
+	background-image: url('../images/design/sidePanel.png') !important;
 
-);
 background-repeat
 :
  
@@ -567,10 +565,7 @@ a:hover.suppMenu {
 	text-decoration: none;
 	padding: 4px 0px 4px 0px;
 	display: block;
-	background-image: url(#{ resource [ 'ep/images/design:sidePanelHover.png' ]
-}
-
-);
+	background-image: url('../images/design/sidePanelHover.png') !important;
 background-repeat
 :
  
@@ -707,10 +702,7 @@ a:visited.menuItemLink-selected {
 }
 
 .iconTreeNode {
-	background-image: url(#{ resource [ 'ep/images/design:icon_inbox.png' ]
-}
-
-);
+	background-image: url('../images/design/icon_inbox.png') !important;
 }
 .catLeft {
 	width: 30%;
@@ -918,13 +910,7 @@ a:hover.blue_font {
 }
 
 .ui-icon-calendar {
-	background-image: url(#{ resource [ 'ep/images/design:calendar.png' ]
-}
-
-)
-!
-important
-;
+	background-image: url('../images/design/calendar.png') !important;
 
     
 background-position
@@ -1133,13 +1119,7 @@ px
 }
 
 .ui-icon-pencil {
-	background-image: url(#{ resource [ 'ep/images/design:edit.png' ]
-}
-
-)
-!
-important
-;
+	background-image: url('../images/design/edit.png') !important;
 
 	
 background-position
@@ -1177,10 +1157,7 @@ center
 	border-bottom: 0px;
 	border-left: 0px;
 	border-right: 0px;
-	background-image: url(#{ resource [ 'ep/images/paginator:pagination_blueline.gif' ]
-}
-
-);
+	background-image: none;
 background-repeat
 :
  
@@ -1202,13 +1179,7 @@ repeat-x
 }
 
 .ui-icon-seek-first {
-	background-image: url(#{ resource [ 'ep/images/paginator:pagination_first.png' ]
-}
-
-)
-!
-important
-;
+	background-image: url('../images/paginator/pagination_first.png') !important;
 
 	
 background-position
@@ -1240,13 +1211,7 @@ important
 }
 
 .ui-paginator-first.ui-state-hover > .ui-icon-seek-first {
-	background-image: url(#{ resource [ 'ep/images/paginator:pagination_first_hover.png' ]
-}
-
-)
-!
-important
-;
+	background-image: url('../images/paginator/pagination_first_hover.png') !important;
 
 	
 background-position
@@ -1278,13 +1243,7 @@ important
 }
 
 .ui-icon-seek-prev {
-	background-image: url(#{ resource [ 'ep/images/paginator:pagination_pre.png' ]
-}
-
-)
-!
-important
-;
+	background-image: url('../images/paginator/pagination_pre.png') !important;
 
 	
 background-position
@@ -1316,13 +1275,7 @@ important
 }
 
 .ui-paginator-prev.ui-state-hover > .ui-icon-seek-prev {
-	background-image: url(#{ resource [ 'ep/images/paginator:pagination_pre_hover.png' ]
-}
-
-)
-!
-important
-;
+	background-image: url('../images/paginator/pagination_pre_hover.png') !important;
 
 	
 background-position
@@ -1354,13 +1307,7 @@ important
 }
 
 .ui-icon-seek-next {
-	background-image: url(#{ resource [ 'ep/images/paginator:pagination_next.png' ]
-}
-
-)
-!
-important
-;
+	background-image: url('../images/paginator/pagination_next.png') !important;
 
 	
 background-position
@@ -1392,13 +1339,7 @@ important
 }
 
 .ui-paginator-next.ui-state-hover > .ui-icon-seek-next {
-	background-image: url(#{ resource [ 'ep/images/paginator:pagination_next_hover.png' ]
-}
-
-)
-!
-important
-;
+	background-image: url('../images/paginator/pagination_next_hover.png') !important;
 
 	
 background-position
@@ -1430,13 +1371,7 @@ important
 }
 
 .ui-icon-seek-end {
-	background-image: url(#{ resource [ 'ep/images/paginator:pagination_last.png' ]
-}
-
-)
-!
-important
-;
+	background-image: url('../images/paginator/pagination_last.png') !important;
 
 	
 background-position
@@ -1474,13 +1409,7 @@ important
 }
 
 .ui-paginator-last.ui-state-hover > .ui-icon-seek-end {
-	background-image: url(#{ resource [ 'ep/images/paginator:pagination_last_hover.png' ]
-}
-
-)
-!
-important
-;
+	background-image: url('../images/paginator/pagination_last_hover.png') !important;
 
 	
 background-position
@@ -1529,13 +1458,7 @@ important
 
 /* End DataTable and Paginator */
 .search-icon {
-	background-image: url(#{ resource [ 'ep/images/design:Search-icon.png' ]
-}
-
-)
-!
-important
-;
+	background-image: url('../images/design/Search-icon.png') !important;
 
 
 }
@@ -1670,12 +1593,7 @@ important
 .ui-icon-minusthick {
 	width: 22px;
 	height:22px;
-	background: url(#{ resource [ 'ep/images/design:icon_hide.png' ]
-}
-
-)!
-important
-;
+	background: url('../images/design/icon_hide.png') !important;
 
 	
 width
@@ -1755,12 +1673,7 @@ display
 .ui-icon-plusthick {
 	width: 22px;
 	height:22px;
-	background: url(#{ resource [ 'ep/images/design:icon_show.png' ]
-}
-
-)!
-important
-;
+	background: url('../images/design/icon_show.png') !important;
 
 	
 width
@@ -1848,12 +1761,7 @@ display
 .ui-tabs .ui-tabs-nav {
 	background-color: #ffffff !important;
 	border-bottom: 0px !important;
-	background-image: url(#{ resource [ 'ep/images/design:side_menu_dot.png' ]
-}
-
-)!
-important
-;
+	background-image: url('../images/design/side_menu_dot.png') !important;
 
 	
 background-repeat
@@ -1962,7 +1870,7 @@ padding-left
 
 .ui-tabs.ui-tabs-left > .ui-tabs-nav {
 	background-position: right center;
-	background-image: url(#{resource['ep/images/design:side_menu_gap.png']})!important;
+	background-image: url('../images/design/side_menu_gap.png') !important;
 	background-repeat: repeat-y;
 	background-color: #f9f9f9!important;
 	width: 20%;
@@ -1979,7 +1887,7 @@ padding-left
 .ui-tabs.ui-tabs-left > .ui-tabs-nav li{
 	border:none!important;
 	background-position: right center;
-	background-image: url(#{resource['ep/images/design:side_menu_gap.png']});
+	background-image: url('../images/design/side_menu_gap.png') !important;
 	background-repeat: repeat-y;
 	background-color: #f9f9f9;
 	margin:0!important;
@@ -1997,7 +1905,7 @@ padding-left
 
 .ui-tabs.ui-tabs-left > .ui-tabs-nav .ui-tabs-selected {
 	background-position: right center!important;
-	background-image: url(#{resource['ep/images/design:side_menu_arrow_green.png']})!important;
+	background-image: url('../images/design/side_menu_arrow_green.png') !important;
 	background-repeat: no-repeat;
 	background-color: #8CC63E!important;
 	border:0px!important;
@@ -2030,23 +1938,12 @@ padding-left
 
 /* --------------------------        end left side tab bar view       ------------------------------ */
 .iconTreeNode {
-	background-image: url(#{ resource [ 'ep/images/design:icon_inbox.png' ]
-}
-
-)!
-important
-;
+	background-image: url('../images/design/icon_inbox.png') !important;
 
 
 }
 .iconAttachment {
-	background-image: url(#{ resource [ 'ep/images/design:icon_attachment.png' ]
-}
-
-)
-!
-important
-;
+	background-image: url('../images/design/icon_attachment.png') !important;
 
 
 }
@@ -2067,35 +1964,17 @@ important
 }
 
 .ui-message-error-icon {
-	background: url(#{ resource [ 'ep/images/design:icon_error.png' ]
-}
-
-)
-!
-important
-;
+	background: url('../images/design/icon_error.png') !important;
 
 
 }
 .ui-message-warn-icon {
-	background: url(#{ resource [ 'ep/images/design:icon_alert.png' ]
-}
-
-)
-!
-important
-;
+	background: url('../images/design/icon_alert.png') !important;
 
 
 }
 .ui-message-info-icon {
-	background: url(#{ resource [ 'ep/images/design:icon_info.png' ]
-}
-
-)
-!
-important
-;
+	background: url('../images/design/icon_info.png') !important;
 
 
 }
@@ -2104,10 +1983,7 @@ important
 
 /* --------------------------       Menu Button       ------------------------------ */
 .addSecMenu .ui-state-default .ui-icon {
-	background: url(#{ resource [ 'ep/images/design:btn_add.png' ]
-}
-
-);
+	background: url('../images/design/btn_add.png') !important;
 }
 .addSecMenu .ui-button {
 	border: none;
@@ -2394,13 +2270,7 @@ table.ppTwoTable td {
 
 /*--------------------------       Custom Icons        ------------------------------ */
 .ui-icon-add {
-	background-image: url(#{ resource [ 'ep/images/design:add.png' ]
-}
-
-)
-!
-important
-;
+	background-image: url('../images/design/add.png') !important;
 
 	
 background-position
@@ -2432,13 +2302,7 @@ important
 }
 
 .ui-icon-search {
-	background-image: url(#{ resource [ 'ep/images/design:search.png' ]
-}
-
-)
-!
-important
-;
+	background-image: url('../images/design/search.png') !important;
 
 	
 background-position
@@ -2470,13 +2334,7 @@ important
 }
 
 .ui-icon-delete {
-	background-image: url(#{ resource [ 'ep/images/design:trash.png' ]
-}
-
-)
-!
-important
-;
+	background-image: url('../images/design/trash.png') !important;
 
 	
 background-position
@@ -2508,13 +2366,7 @@ important
 }
 
 .ui-icon-accept {
-	background-image: url(#{ resource [ 'ep/images/design:tick.png' ]
-}
-
-)
-!
-important
-;
+	background-image: url('../images/design/tick.png') !important;
 
 	
 background-position
@@ -2546,13 +2398,7 @@ important
 }
 
 .ui-icon-ackno {
-	background-image: url(#{ resource [ 'ep/images/design:ackno.png' ]
-}
-
-)
-!
-important
-;
+	background-image: url('../images/design/ackno.png') !important;
 
 	
 background-position
@@ -2584,34 +2430,28 @@ important
 }
 
 .ui-icon-acknowledge {
-	background-image: url(#{ resource [ 'ep/images/design:ackno.png' ]}) !important;
+	background-image: url('../images/design/ackno.png') !important;
 	background-position:center;
 	border-radius:0px;
 	height:16px !important;
 }
 
 .ui-icon-endorse {
-	background-image: url(#{ resource [ 'ep/images/design:tick.png' ]}) !important;
+	background-image: url('../images/design/tick.png') !important;
 	background-position:center;
 	border-radius:0px;
 	height:16px !important;
 }
 
 .ui-icon-complete {
-	background-image: url(#{ resource [ 'ep/images/design:tick.png' ]}) !important;
+	background-image: url('../images/design/tick.png') !important;
 	background-position:center;
 	border-radius:0px;
 	height:16px !important;
 }
 
 .ui-icon-action {
-	background-image: url(#{ resource [ 'ep/images/design:action.png' ]
-}
-
-)
-!
-important
-;
+	background-image: url('../images/design/action.png') !important;
 
 	
 background-position
@@ -2643,13 +2483,7 @@ important
 }
 
 .ui-icon-approve {
-	background-image: url(#{ resource [ 'ep/images/design:tick.png' ]
-}
-
-)
-!
-important
-;
+	background-image: url('../images/design/tick.png') !important;
 
 	
 background-position
@@ -2681,13 +2515,7 @@ important
 }
 
 .ui-icon-cancel {
-	background-image: url(#{ resource [ 'ep/images/design:cancel.png' ]
-}
-
-)
-!
-important
-;
+	background-image: url('../images/design/cancel.png') !important;
 
 	
 background-position
@@ -2719,13 +2547,7 @@ important
 }
 
 .ui-icon-clone {
-	background-image: url(#{ resource [ 'ep/images/design:clone.png' ]
-}
-
-)
-!
-important
-;
+	background-image: url('../images/design/clone.png') !important;
 
 	
 background-position
@@ -2757,13 +2579,7 @@ important
 }
 
 .ui-icon-edit {
-	background-image: url(#{ resource [ 'ep/images/design:edit.png' ]
-}
-
-)
-!
-important
-;
+	background-image: url('../images/design/edit.png') !important;
 
 	
 background-position
@@ -2795,13 +2611,7 @@ important
 }
 
 .ui-icon-evaluate {
-	background-image: url(#{ resource [ 'ep/images/design:evaluate.png' ]
-}
-
-)
-!
-important
-;
+	background-image: url('../images/design/evaluate.png') !important;
 
 	
 background-position
@@ -2833,13 +2643,7 @@ important
 }
 
 .ui-icon-final {
-	background-image: url(#{ resource [ 'ep/images/design:finalize.png' ]
-}
-
-)
-!
-important
-;
+	background-image: url('../images/design/finalize.png') !important;
 
 	
 background-position
@@ -2871,13 +2675,7 @@ important
 }
 
 .ui-icon-next {
-	background-image: url(#{ resource [ 'ep/images/design:next.png' ]
-}
-
-)
-!
-important
-;
+	background-image: url('../images/design/next.png') !important;
 
 	
 background-position
@@ -2909,13 +2707,7 @@ important
 }
 
 .ui-icon-prev {
-	background-image: url(#{ resource [ 'ep/images/design:previous.png' ]
-}
-
-)
-!
-important
-;
+	background-image: url('../images/design/previous.png') !important;
 
 	
 background-position
@@ -2947,13 +2739,7 @@ important
 }
 
 .ui-icon-print {
-	background-image: url(#{ resource [ 'ep/images/design:print.png' ]
-}
-
-)
-!
-important
-;
+	background-image: url('../images/design/print.png') !important;
 
 	
 background-position
@@ -2985,13 +2771,7 @@ important
 }
 
 .ui-icon-reject {
-	background-image: url(#{ resource [ 'ep/images/design:reject.png' ]
-}
-
-)
-!
-important
-;
+	background-image: url('../images/design/reject.png') !important;
 
 	
 background-position
@@ -3023,13 +2803,7 @@ important
 }
 
 .ui-icon-reset {
-	background-image: url(#{ resource [ 'ep/images/design:reset.png' ]
-}
-
-)
-!
-important
-;
+	background-image: url('../images/design/reset.png') !important;
 
 	
 background-position
@@ -3061,13 +2835,7 @@ important
 }
 
 .ui-icon-revise {
-	background-image: url(#{ resource [ 'ep/images/design:revise.png' ]
-}
-
-)
-!
-important
-;
+	background-image: url('../images/design/revise.png') !important;
 
 	
 background-position
@@ -3099,13 +2867,7 @@ important
 }
 
 .ui-icon-save {
-	background-image: url(#{ resource [ 'ep/images/design:save.png' ]
-}
-
-)
-!
-important
-;
+	background-image: url('../images/design/save.png') !important;
 
 	
 background-position
@@ -3137,13 +2899,7 @@ important
 }
 
 .ui-icon-sign {
-	background-image: url(#{ resource [ 'ep/images/design:sign.png' ]
-}
-
-)
-!
-important
-;
+	background-image: url('../images/design/sign.png') !important;
 
 	
 background-position
@@ -3175,13 +2931,7 @@ important
 }
 
 .ui-icon-submit {
-	background-image: url(#{ resource [ 'ep/images/design:submit.png' ]
-}
-
-)
-!
-important
-;
+	background-image: url('../images/design/submit.png') !important;
 
 	
 background-position
@@ -3213,13 +2963,7 @@ important
 }
 
 .ui-icon-upload {
-	background-image: url(#{ resource [ 'ep/images/design:upload.png' ]
-}
-
-)
-!
-important
-;
+	background-image: url('../images/design/upload.png') !important;
 
 	
 background-position
@@ -3251,13 +2995,7 @@ important
 }
 
 .ui-icon-verify {
-	background-image: url(#{ resource [ 'ep/images/design:tick.png' ]
-}
-
-)
-!
-important
-;
+	background-image: url('../images/design/tick.png') !important;
 
 	
 background-position
@@ -3289,13 +3027,7 @@ important
 }
 
 .ui-icon-agree {
-	background-image: url(#{ resource [ 'ep/images/design:document.png' ]
-}
-
-)
-!
-important
-;
+	background-image: url('../images/design/document.png') !important;
 
 	
 background-position
@@ -3327,13 +3059,7 @@ important
 }
 
 .ui-icon-suspension {
-	background-image: url(#{ resource [ 'ep/images/design:pause.png' ]
-}
-
-)
-!
-important
-;
+	background-image: url('../images/design/pause.png') !important;
 
 	
 background-position
@@ -3365,13 +3091,7 @@ important
 }
 
 .ui-icon-terminate {
-	background-image: url(#{ resource [ 'ep/images/design:terminate.png' ]
-}
-
-)
-!
-important
-;
+	background-image: url('../images/design/terminate.png') !important;
 
 	
 background-position
@@ -3403,13 +3123,7 @@ important
 }
 
 .ui-icon-download {
-	background-image: url(#{ resource [ 'ep/images/design:download.png' ]
-}
-
-)
-!
-important
-;
+	background-image: url('../images/design/download.png') !important;
 
 	
 background-position
@@ -3441,13 +3155,7 @@ important
 }
 
 .ui-icon-folder {
-	background-image: url(#{ resource [ 'ep/images/design:folder.png' ]
-}
-
-)
-!
-important
-;
+	background-image: url('../images/design/folder.png') !important;
 
 	
 background-position
@@ -3479,13 +3187,7 @@ important
 }
 
 .ui-icon-complain {
-	background-image: url(#{ resource [ 'ep/images/design:exclamation.png' ]
-}
-
-)
-!
-important
-;
+	background-image: url('../images/design/exclamation.png') !important;
 
 	
 background-position
@@ -3517,13 +3219,7 @@ important
 }
 
 .ui-icon-cart {
-	background-image: url(#{ resource [ 'ep/images/design:cart_add.png' ]
-}
-
-)
-!
-important
-;
+	background-image: url('../images/design/cart_add.png') !important;
 
 	
 background-position
@@ -3555,13 +3251,7 @@ important
 }
 
 .ui-icon-arrow-1-e {
-	background-image: url(#{ resource [ 'ep/images/design:bullet_arrow_right.png' ]
-}
-
-)
-!
-important
-;
+	background-image: url('../images/design/bullet_arrow_right.png') !important;
 
 	
 background-position
@@ -3593,13 +3283,7 @@ important
 }
 
 .ui-icon-arrowstop-1-e {
-	background-image: url(#{ resource [ 'ep/images/design:bullet_arrow_right_2.png' ]
-}
-
-)
-!
-important
-;
+	background-image: url('../images/design/bullet_arrow_right_2.png') !important;
 
 	
 background-position
@@ -3631,13 +3315,7 @@ important
 }
 
 .ui-icon-arrow-1-w {
-	background-image: url(#{ resource [ 'ep/images/design:bullet_arrow_left.png' ]
-}
-
-)
-!
-important
-;
+	background-image: url('../images/design/bullet_arrow_left.png') !important;
 
 	
 background-position
@@ -3669,13 +3347,7 @@ important
 }
 
 .ui-icon-arrowstop-1-w {
-	background-image: url(#{ resource [ 'ep/images/design:bullet_arrow_left_2.png' ]
-}
-
-)
-!
-important
-;
+	background-image: url('../images/design/bullet_arrow_left_2.png') !important;
 
 	
 background-position
@@ -3707,13 +3379,7 @@ important
 }
 
 .ui-icon-arrow-1-n {
-	background-image: url(#{ resource [ 'ep/images/design:bullet_arrow_up.png' ]
-}
-
-)
-!
-important
-;
+	background-image: url('../images/design/bullet_arrow_up.png') !important;
 
 	
 background-position
@@ -3745,13 +3411,7 @@ important
 }
 
 .ui-icon-arrowstop-1-n {
-	background-image: url(#{ resource [ 'ep/images/design:bullet_arrow_top.png' ]
-}
-
-)
-!
-important
-;
+	background-image: url('../images/design/bullet_arrow_top.png') !important;
 
 	
 background-position
@@ -3783,13 +3443,7 @@ important
 }
 
 .ui-icon-arrow-1-s {
-	background-image: url(#{ resource [ 'ep/images/design:bullet_arrow_down.png' ]
-}
-
-)
-!
-important
-;
+	background-image: url('../images/design/bullet_arrow_down.png') !important;
 
 	
 background-position
@@ -3821,13 +3475,7 @@ important
 }
 
 .ui-icon-arrowstop-1-s {
-	background-image: url(#{ resource [ 'ep/images/design:bullet_arrow_bottom.png' ]
-}
-
-)
-!
-important
-;
+	background-image: url('../images/design/bullet_arrow_bottom.png') !important;
 
 	
 background-position
@@ -3859,13 +3507,7 @@ important
 }
 
 .ui-icon-back {
-	background-image: url(#{ resource [ 'ep/images/design:back.png' ]
-}
-
-)
-!
-important
-;
+	background-image: url('../images/design/back.png') !important;
 
 	
 background-position
@@ -3897,13 +3539,7 @@ important
 }
 
 .ui-icon-register {
-	background-image: url(#{ resource [ 'ep/images/design:register.png' ]
-}
-
-)
-!
-important
-;
+	background-image: url('../images/design/register.png') !important;
 
 	
 background-position
@@ -3935,13 +3571,7 @@ important
 }
 
 .iconAttachment {
-	background-image: url(#{ resource [ 'ep/images/design:attach.png' ]
-}
-
-)
-!
-important
-;
+	background-image: url('../images/design/attach.png') !important;
 
 	
 background-position
@@ -3973,13 +3603,7 @@ important
 }
 
 .ui-icon-mail {
-	background-image: url(#{ resource [ 'ep/images/design:mail.png' ]
-}
-
-)
-!
-important
-;
+	background-image: url('../images/design/mail.png') !important;
 
 	
 background-position
@@ -4011,13 +3635,7 @@ important
 }
 
 .ui-icon-cartfull {
-	background-image: url(#{ resource [ 'ep/images/design:cart_full.png' ]
-}
-
-)
-!
-important
-;
+	background-image: url('../images/design/cart_full.png') !important;
 
 	
 background-position
@@ -4049,13 +3667,7 @@ important
 }
 
 .ui-icon-lov {
-	background-image: url(#{ resource [ 'ep/images/design:magnifier_zoom_in.png' ]
-}
-
-)
-!
-important
-;
+	background-image: url('../images/design/magnifier_zoom_in.png') !important;
 
 	
 background-position
@@ -4087,14 +3699,14 @@ important
 }
 
 .ui-icon-history {
-	background-image: url(#{ resource [ 'ep/images/design:history_frame.png' ]}) !important;
+	background-image: url('../images/design/history_frame.png') !important;
 	background-position:center;
 	border-radius:0px;
 	height:16px !important;
 }
 
 .ui-icon-play {
-	background-image: url(#{ resource [ 'ep/images/design:play.png' ]}) !important;
+	background-image: url('../images/design/play.png') !important;
 	background-position:center;
 	border-radius:0px;
 	height:16px !important;
@@ -4821,7 +4433,7 @@ input[type="submit"]:hover, input[type="button"]:hover, input[type="reset"]:hove
 }
 
 .menu-line .red-dot {
-	background-image: url(#{resource['ep/images/design:reddot.png']});
+	background-image: url('../images/design/reddot.png') !important;
 	width: 15px;
 	height: 15px;
 }
@@ -4832,13 +4444,13 @@ input[type="submit"]:hover, input[type="button"]:hover, input[type="reset"]:hove
 }
 
 .menu-line .black-dot {
-	background-image: url(#{resource['ep/images/design:blackdot.png']});
+	background-image: url('../images/design/blackdot.png') !important;
 	width: 15px;
 	height: 15px;
 }
 
 .menu-line .green-dot {
-	background-image: url(#{resource['ep/images/design:greendot.png']});
+	background-image: url('../images/design/greendot.png') !important;
 	width: 15px;
 	height: 15px;
 }
