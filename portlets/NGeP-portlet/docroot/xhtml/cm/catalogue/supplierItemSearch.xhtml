@@ -201,16 +201,28 @@
 							<p:column selectionMode="multiple"  disabledSelection="#{supplierItem.contractNo != null or supplierItem.circularNo != null}" 
 							rendered="#{!unspscCodeBackingBean.requisitioner}" />
 							
+							<ui:remove>
 							<p:column headerText=" " rendered="#{unspscCodeBackingBean.requisitioner}">
+								
 								<p:selectOneMenu value="#{catalogueBackingBean.managedBean.optionListValue}" style="width: 128px;" >
 									<f:selectItem itemLabel="Select One" itemValue="0" />
 									<f:selectItems value="#{catalogueBackingBean.managedBean.optionList}" ></f:selectItems>
 								 	<p:ajax event="change" listener="#{catalogueBackingBean.addToList(supplierItem,catalogueBackingBean.managedBean.optionListValue)}" update="@([id$=btnId])" />
 								</p:selectOneMenu>
 							</p:column>
+							</ui:remove>
 
-							<p:column headerText="Action" width="2%"
-								rendered="#{unspscCodeBackingBean.requisitioner}">
+							<p:column headerText="Action" width="2%" rendered="#{unspscCodeBackingBean.requisitioner}">
+							
+								<p:menuButton value="">
+							        <p:menuitem value="#{lbl['lbl.cm.add.to.cr']}" actionListener="#{catalogueBackingBean.addToList(supplierItem,1)}" update="@([id$=btnId])" icon="ui-icon-plus" 
+							        rendered="#{supplierItem.contractNo != null}"/>
+							        <p:menuitem value="#{lbl['lbl.cm.add.to.simple.qoute']}" actionListener="#{catalogueBackingBean.addToList(supplierItem,2)}" update="@([id$=btnId])" icon="ui-icon-plus" 
+							        rendered="#{supplierItem.contractNo == null}"/>
+							        <p:menuitem value="#{lbl['lbl.cm.add.to.compare']}" actionListener="#{catalogueBackingBean.addToList(supplierItem,3)}" update="@([id$=btnId])" icon="ui-icon-plus" 
+							        rendered="#{supplierItem.contractNo == null and supplierItem.circularNo == null}"/>
+							    </p:menuButton>
+							    
 								<p:commandLink disabled="#{!supplierItem.atcRequired}" 
 									action="#{requestNoteBackingBean.addToCart(supplierItem.docId)}"
 									update="@([id$=addToCartPopup])"
@@ -225,7 +237,7 @@
 									id="pidId"
 									action="#{purchaseInDefaultBackingBean.pidAction(supplierItem)}"
 									disabled="#{!supplierItem.pidRequired}"
-									rendered="#{supplierItem.contractNo ne null or supplierItem.circularNo ne null }">
+									rendered="#{supplierItem.contractNo != null }">
 								</p:commandButton>
 								<p:tooltip for="pidId" value="#{lbl['lbl.sc.pid']}"
 									showEffect="fade" hideEffect="fade" />
