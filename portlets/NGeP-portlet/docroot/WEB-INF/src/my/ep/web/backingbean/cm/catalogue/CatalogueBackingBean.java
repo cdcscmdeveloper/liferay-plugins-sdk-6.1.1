@@ -5273,13 +5273,23 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	public void addToList(VCmSupplierItem supplierItem,Integer optionListValue){
 		log.info("addToList trigger");
 		if(optionListValue.intValue()==1){
-			this.getManagedBean().getCtRequestList().add(supplierItem);
+			if (!this.getManagedBean().getCtRequestList().contains(supplierItem))
+				this.getManagedBean().getCtRequestList().add(supplierItem);
+			else
+				 FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Item is already in the list."));
 		/*}else if(optionListValue.intValue()==2){
 			this.getManagedBean().getsim().add(supplierItem);*/
 		}else if(optionListValue.intValue()==3){
-			this.getManagedBean().getSelectViewItems().add(supplierItem);
+			if (!this.getManagedBean().getSelectViewItems().contains(supplierItem))
+				this.getManagedBean().getSelectViewItems().add(supplierItem);
+			else
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Item is already in the list."));
 		}
-		this.getManagedBean().setOptionListValue(0);
+		//this.getManagedBean().setOptionListValue(0);
 	}
 	
 	public void removeFromList(VCmSupplierItem supplierItem){
