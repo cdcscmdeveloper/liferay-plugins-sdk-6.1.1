@@ -19,6 +19,7 @@ import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
+import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
@@ -44,6 +45,7 @@ import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
@@ -52,6 +54,10 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
+
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.service.UserLocalServiceUtil;
 
 @ManagedBean(name="smPersonnelBackingBean")
 @ViewScoped
@@ -802,7 +808,7 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
 						FacesMessage.SEVERITY_INFO,
 						null,
-						MessageUtils.getMessage(MessageConst.INFO_721012, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+						MessageUtils.getMessage(MessageConst.INFO_721014, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 				return "/xhtml/sm/userProfileMaintenance/outputMsg";
 			}
 			else 
@@ -813,6 +819,30 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		if(isExistEmailInPmUser(smPersonnel.getEmail())){
 			throw new EpException(MessageConst.ERROR_722540);
 		}
+		if(isExistUserByIdentificationNo(smPersonnel.getIdentificationNo())){
+			throw new EpException(MessageConst.ERROR_722541);
+		}
+		try {
+			if(UserLocalServiceUtil.getUserByEmailAddress(Long.valueOf(getCompanyId()), smPersonnel.getEmail()) != null){
+				throw new EpException(MessageConst.ERROR_722540);
+			}
+		} catch (NumberFormatException | PortalException | SystemException e) {
+			// TODO Auto-generated catch block
+			log.info(e.getMessage());
+		}
+		
+		try {
+			if(UserLocalServiceUtil.getUserByScreenName(Long.valueOf(getCompanyId()), smPersonnel.getEmail()) != null) {
+				throw new EpException(MessageConst.ERROR_722541);
+			}
+		} catch (NumberFormatException | PortalException | SystemException e) {
+			// TODO Auto-generated catch block
+			log.info(e.getMessage());
+		}
+	}
+
+	public String getCompanyId() {
+		return EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_COMPANY_ID);
 	}
 
 	public boolean isExistEmailInPmUser(String email){
@@ -824,6 +854,20 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		
 		System.out.println("*********resDTO.getUserList().size()*****" + resDTO.getUserList().size());
 		if(resDTO.getUserList().size() > 0){
+			return true;
+		}else{
+			return false;
+		}
+	}
+
+	public boolean isExistUserByIdentificationNo(String idNo) {
+		System.out.println("*********retrieveUserByIdentificationNo**********" + idNo);
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject("pm", IUserSO.class);
+		UserReqDTO reqDTO = new UserReqDTO();
+		reqDTO.setLoginId(idNo);
+		UserResDTO resDTO = userSO.retrieveUserByLoginId(reqDTO);
+		
+		if(resDTO.getPmUser() != null){
 			return true;
 		}else{
 			return false;
