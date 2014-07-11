@@ -48,7 +48,7 @@
 			<f:verbatim   rendered="#{!contractDetailsBackingBean.managedBean.ctContract.agreement}"/> 
 			<h:panelGrid columns="3">
 			  <p:selectBooleanCheckbox value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt}" disabled="false" style="text-align:top;">
-			     <p:ajax event="change" update="centalJustificationPanel" listener="#{contractDetailsBackingBean.chkJustificationAction}" process="@this"/> 
+			     <p:ajax event="change" update=":form:centalJustificationPanel" listener="#{contractDetailsBackingBean.chkJustificationAction}" process="@this"/> 
 			  </p:selectBooleanCheckbox>
 			  <p:spacer width="2" />	
 			  <p:outputLabel value="AP201 Exemption" style="text-align:top;" />
@@ -73,9 +73,9 @@
 					styleClass="linkcommand" />
 			</p:commandLink>	    
 	 </h:panelGrid>
-	 <p:outputPanel id="centalJustificationPanel"  
-	   rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt}">
-	 <h:panelGrid columns="2" style="width:100px;" >
+	 <p:outputPanel id="centalJustificationPanel" >
+	 <h:panelGrid columns="2" style="width:100px;"
+	    rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt}" >
          <h:panelGroup>
 		    <div style="height:70px;width:175px; vertical-align:top;">
 			   <p:outputLabel id="centralJustificationLbls" value="* Justification" />
