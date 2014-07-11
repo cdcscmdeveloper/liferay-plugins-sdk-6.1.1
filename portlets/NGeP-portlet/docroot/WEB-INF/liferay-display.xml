@@ -197,6 +197,8 @@
 		<portlet id="ZoneMaintenancePortlet"></portlet>
 
 		<portlet id="smResubmitApplication"></portlet>
+		<portlet id="paymentResponse"></portlet>
+		<portlet id="smPayment"></portlet>
 	</category>
 
 	<category name="category.ep.wp">
