@@ -66,6 +66,7 @@ import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
+import my.ep.exception.EpException;
 import my.ep.jaxb.ct.contract.CTContractDataType;
 import my.ep.jaxb.ct.contract.amendment.CTContractAmendmentDataType;
 import my.ep.persistence.entity.ct.CtAttachment;
@@ -224,7 +225,14 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		renewSesionObject();
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, "search.xhtml?faces-redirect=true");
+				.handleNavigation(fc, null, CONTRACT_MAINT_PAGE);
+	}
+	
+	public void preRenderContract() {
+		renewSesionObject();
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, CONTRACT_PAGE);
 	}
 	
 	public void preRenderView() {
@@ -531,6 +539,12 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
     public String saveContract(String action) throws Exception{
 	    IContractSO contractSO = null;
 		try{
+			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
+				if(getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
+					throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
+				}
+			}
+			
 			ContractReqDTO reqDTO = new ContractReqDTO();
 			String token = getFacesScopes().getBPMAuthenticationCtxToken();
 			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);	

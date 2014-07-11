@@ -48,6 +48,7 @@ public class TerminationManagedBean extends BaseManagedBean{
 	private CtContractVer contractVer;
 
 	private boolean viewContract = false;
+	private String externalPageUrl;
 	
 	public String getTaskName() {
 		return taskName;
@@ -170,5 +171,13 @@ public class TerminationManagedBean extends BaseManagedBean{
 
 	public void setViewContract(boolean viewContract) {
 		this.viewContract = viewContract;
+	}
+	
+	public String getExternalPageUrl() {
+		return externalPageUrl;
+	}
+	
+	public void setExternalPageUrl(String externalPageUrl) {
+		this.externalPageUrl = externalPageUrl;
 	}
 }

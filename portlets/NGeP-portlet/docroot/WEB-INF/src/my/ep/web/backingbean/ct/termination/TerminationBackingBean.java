@@ -86,6 +86,7 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 	
 	private static final String PROCESS_TERMINATE_PAGE = "/xhtml/ct/fulfilmentdetails/termination/terminationTab.xhtml?faces-redirect=true";
 	private static final String CONTRACT_MAINT_PAGE = "/xhtml/ct/fulfilmentdetails/search/search.xhtml?faces-redirect=true";
+	private static final String TERMINATE_HISTORY_PAGE = "/xhtml/ct/fulfilmentdetails/termination/terminationHistory.xhtml?faces-redirect=true";
 	
 	private static Logger log = Logger.getLogger(TerminationBackingBean.class);
 	private Map<Long, String> reasonDescMap = new HashMap<Long, String>();
@@ -192,10 +193,12 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 	 }
 	
 	public String backAction() {
-		return CONTRACT_MAINT_PAGE;
+		String navigateUrl = (getManagedBean().getExternalPageUrl() != null) ? getManagedBean().getExternalPageUrl() : CONTRACT_MAINT_PAGE;
+		getManagedBean().setExternalPageUrl(null);
+		return navigateUrl;
 	}
 	
-	 public String saveContractTermination(String action) throws Exception{
+	public String saveContractTermination(String action) throws Exception{
 		
 		 IContractSO contractSO = null;
 		 ContractReqDTO reqDTO = null;
@@ -562,7 +565,8 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
     	getManagedBean().setContractVer(resDTO.getCtContractVer());
 	    getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
 	    getManagedBean().setViewContract(true);
-    	
+	    getManagedBean().setExternalPageUrl(TERMINATE_HISTORY_PAGE);
+	    
 		getManagedBean().setRemarkList(resDTO.getCtRemarks());
 		getManagedBean().setAttachmentList(resDTO.getCtAttachments());
 		ContractBackingBean ctBB = new ContractBackingBean();
