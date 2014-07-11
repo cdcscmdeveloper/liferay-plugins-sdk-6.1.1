@@ -301,10 +301,9 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		getManagedBean().getSelectedItemRowCalList().add(selectedAddressItem);
 		getManagedBean().getSelectedItemRowCalList().size();
 		getManagedBean().setItemSelectedForCal("S");
-		
 	}
+	
 	public void retrieveDelAmount(FlFulfilmentItemAddr itemAddress){
-		
 		BigDecimal unitPriceCal=new BigDecimal(0.0);
 		BigDecimal delQtyCal=new BigDecimal(0.0);
 		BigDecimal delAmtCal=new BigDecimal(0.0);
@@ -316,10 +315,15 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		
 		if(delQtyCal.doubleValue()>remainingQty.doubleValue()) {
 			itemAddress.setDeliveredQty(new BigDecimal(0));
+			itemAddress.setDeliveredAmt(new BigDecimal(0));
 			throw new EpException(MessageConst.ERROR_100032, new String[]{"Delivery Quantity","Remaining Quantity"});
 		}
 		
-		delAmtCal = unitPriceCal.multiply(delQtyCal);
+		if(itemAddress.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE) && itemAddress.getDeliveredAmt().doubleValue()>0) {
+			delAmtCal = itemAddress.getDeliveredAmt();
+		} else {
+			delAmtCal = unitPriceCal.multiply(delQtyCal);
+		}
 		itemAddress.setDeliveredAmt(delAmtCal);
 	}
 	

@@ -140,11 +140,9 @@
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 							</h:outputText>
-							<p:inputText value="#{doItems.deliveredAmt}" size="5"
-								maxlength="15"
+							<p:inputText value="#{doItems.deliveredAmt}" size="5" maxlength="15" styleClass="colFloatRight"
 								rendered="#{doItems.itemType.parameterCode eq ParameterConst.itemTypeService}">
-								<f:convertNumber
-									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+								<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 							</p:inputText>
 							<h:outputText value="#{doItems.deliveredAmt}" size="5"
 								rendered="#{createDOBackingBean.managedBean.docType eq 'CR'}">
