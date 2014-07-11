@@ -25,7 +25,7 @@
 				<f:facet name="header">
 					Zone Name
 				</f:facet>
-				<p:selectOneMenu value="#{standard.cmSupplierZone.suppZoneId}"
+				<p:selectOneMenu value="#{standard.cmSupplierZone.suppZoneId}" disabled="#{standard.standardDisabled}"
 					style="width: 128px;">
 					<f:selectItem itemLabel="Select One" itemValue="0" />
 					<f:selectItems
@@ -42,7 +42,7 @@
 				<f:facet name="header">
 					#{lbl['lbl.cm.price']}
 				</f:facet>
-				<p:inputText value="#{standard.price}" size="10">
+				<p:inputText value="#{standard.price}" size="10" disabled="#{standard.standardDisabled}">
 					<p:ajax event="keyup" update="zonalStanErrorLink" />
 				</p:inputText>
 			</p:column>
@@ -52,7 +52,7 @@
 				<f:facet name="header">
 					#{lbl['lbl.cm.start.date']}
 				</f:facet>
-				<p:calendar value="#{standard.startDate}" showOn="button" size="10" mindate="#{catalogueBackingBean.managedBean.currentDate}"
+				<p:calendar value="#{standard.startDate}" showOn="button" size="10" mindate="#{catalogueBackingBean.managedBean.currentDate}" disabled="#{standard.standardDisabled}"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
 					<p:ajax event="keyup" listener="#{catalogueBackingBean.validateZonalStandardDateOverlap(rowIndex)}" update="zonalStanErrorLink" />
 					<p:ajax event="dateSelect" listener="#{catalogueBackingBean.validateZonalStandardDateOverlap(rowIndex)}" update="zonalStanErrorLink" />
@@ -63,7 +63,7 @@
 				<f:facet name="header">
 					#{lbl['lbl.cm.end.date']}
 				</f:facet>
-				<p:calendar value="#{standard.endDate}" showOn="button" size="10"
+				<p:calendar value="#{standard.endDate}" showOn="button" size="10" disabled="#{standard.standardDisabled}"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
 					<p:ajax event="keyup" listener="#{catalogueBackingBean.validateZonalStandardDateOverlap(rowIndex)}" update="zonalStanErrorLink" />
 					<p:ajax event="dateSelect" listener="#{catalogueBackingBean.validateZonalStandardDateOverlap(rowIndex)}" update="zonalStanErrorLink" />
@@ -78,7 +78,7 @@
 
 				<table>
 					<tr>
-						<td style="float: right;"><p:commandLink
+						<td style="float: right;"><p:commandLink disabled="#{standard.standardDisabled}"
 								style="margin-left: 10px;" title="Delete"
 								action="#{catalogueBackingBean.deleteZonalStandardPrice(rowIndex)}"
 								update=":form:pricingTabID:headerTabId:zonalId:zStanPriceTableId">

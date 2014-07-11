@@ -716,6 +716,19 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		this.getManagedBean().setSupplierZoneList(resDTO.getSupplierZoneLs());
 		
 		//allow view only
+		
+		if(this.getManagedBean().getSelectedMaintainItem().getzStdPrices()!=null)
+			for(CmZonalStandardPricing a : this.getManagedBean().getSelectedMaintainItem().getzStdPrices()){
+				a.setStandardDisabled(true);
+				a.setDisplayAction(false);
+			}
+		
+		if(this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionPricings()!=null)
+			for(CmZonalPromotionPricing a : this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionPricings()){
+				a.setStandardDisabled(true);
+				a.setDisplayAction(false);
+			}
+		
 		if(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings()!=null)
 			for(CmTierPricing a : this.getManagedBean().getSelectedMaintainItem().getCmTierPricings()){
 				a.setStandardDisabled(true);
