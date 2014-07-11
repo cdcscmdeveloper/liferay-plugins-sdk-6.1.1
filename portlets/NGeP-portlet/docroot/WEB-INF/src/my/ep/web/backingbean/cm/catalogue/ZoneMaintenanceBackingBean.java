@@ -112,6 +112,9 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 				CmSupplierZone cmZone = ite.next(); 
 				if(cmZone.getSuppZoneId() == zone.getSuppZoneId()){
 					System.out.println("Found it");
+					if(cmZone.getCmPricings() != null && cmZone.getCmPricings().size() > 0){
+						throw new EpException(MessageConst.ERROR_716005);
+					}
 					System.out.println("Size Before:" + getManagedBean().getCmSupplierZoneList().size());
 					deleteList.add(cmZone);
 					ite.remove();
