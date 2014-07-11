@@ -281,148 +281,157 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 		ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
 				.getInstance().getServiceObject("sm", ISupplierSearchSO.class);
-		SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
-
-		PmUser pmUser = new FacesScopes().getUserSessionBean();
-		supplierReqDTO.setUserId(pmUser.getUserId());
-
-		SupplierSearchResDTO smResDTO = supplierSearchSO
-				.retriveSupplierProfiles(supplierReqDTO);
-
-		System.out.println("getSmSupplier"
-				+ smResDTO.getResultBean().getResultList().get(0));
-
-		CodificationBackingBean bb = new CodificationBackingBean();
-
-		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
-		CodificationReqDTO codeReqDTO = new CodificationReqDTO();
-
-		System.out.println("addToMaintain:"
-				+ bb.getManagedBean().getSelectedObject().length);
-
-		bb.getManagedBean().setExtensionVoList(null);
-		for (int i = 0; i < bb.getManagedBean().getSelectedObject().length; i++) {
-			ExtensionCodeVO extCodeVO = new ExtensionCodeVO();
-			Object[] objects = (Object[]) bb.getManagedBean()
-					.getSelectedObject()[i];
-
-			extCodeVO.setTypeId(Long.valueOf(String.valueOf(objects[0])));
-			extCodeVO.setBrandId(Long.valueOf(String.valueOf(objects[1])));
-			extCodeVO
-					.setMeasurementId(Long.valueOf(String.valueOf(objects[2])));
-			extCodeVO.setColorId(Long.valueOf(String.valueOf(objects[3])));
-
-			System.out.println("******type NAme******"
-					+ String.valueOf(objects[4]));
-			extCodeVO.setTypeName(String.valueOf(objects[4]));
-			extCodeVO.setBrandName(String.valueOf(objects[5]));
-			extCodeVO.setMeasurementName(String.valueOf(objects[6]));
-			extCodeVO.setColorName(String.valueOf(objects[7]));
-
-			bb.getManagedBean().getExtensionVoList().add(extCodeVO);
-
-		}
-
-		if (bb.getManagedBean().getExtensionVoList() != null
-				&& bb.getManagedBean().getExtensionVoList().size() > 0) {
-			for (int i = 0; i < bb.getManagedBean().getExtensionVoList().size(); i++) {
-
-				ExtensionCodeVO obj = bb.getManagedBean().getExtensionVoList()
-						.get(i);
-
-				codeReqDTO.setBrandId(obj.getBrandId());
-				codeReqDTO.setMeasurementId(obj.getMeasurementId());
-				codeReqDTO.setTypeId(obj.getTypeId());
-				codeReqDTO.setColorId(obj.getColorId());
-
-				System.out.println("........obj.getBrandId()="+obj.getBrandId());
-				System.out.println("........obj.obj.getMeasurementId()="+obj.getMeasurementId());
-				System.out.println("........obj.getTypeId()="+obj.getTypeId());
-				System.out.println("........obj.getColorId()="+obj.getColorId());
-				
-				CodificationResDTO codeResDTO = codificationSO
-						.searchItem(codeReqDTO);
-
-				if (codeResDTO.getItemList() != null
-						&& codeResDTO.getItemList().size() > 0) {
-
-					for (CmItem item : codeResDTO.getItemList()) {
+		
+		try{
+			SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
+	
+			PmUser pmUser = new FacesScopes().getUserSessionBean();
+			supplierReqDTO.setUserId(pmUser.getUserId());
+	
+			SupplierSearchResDTO smResDTO = supplierSearchSO
+					.retriveSupplierProfiles(supplierReqDTO);
+	
+			System.out.println("getSmSupplier"
+					+ smResDTO.getResultBean().getResultList().get(0));
+	
+			CodificationBackingBean bb = new CodificationBackingBean();
+	
+			CatalogueReqDTO reqDTO = new CatalogueReqDTO();
+			CodificationReqDTO codeReqDTO = new CodificationReqDTO();
+	
+			System.out.println("addToMaintain:"
+					+ bb.getManagedBean().getSelectedObject().length);
+	
+			bb.getManagedBean().setExtensionVoList(null);
+			for (int i = 0; i < bb.getManagedBean().getSelectedObject().length; i++) {
+				ExtensionCodeVO extCodeVO = new ExtensionCodeVO();
+				Object[] objects = (Object[]) bb.getManagedBean()
+						.getSelectedObject()[i];
+	
+				extCodeVO.setTypeId(Long.valueOf(String.valueOf(objects[0])));
+				extCodeVO.setBrandId(Long.valueOf(String.valueOf(objects[1])));
+				extCodeVO
+						.setMeasurementId(Long.valueOf(String.valueOf(objects[2])));
+				extCodeVO.setColorId(Long.valueOf(String.valueOf(objects[3])));
+	
+				System.out.println("******type NAme******"
+						+ String.valueOf(objects[4]));
+				extCodeVO.setTypeName(String.valueOf(objects[4]));
+				extCodeVO.setBrandName(String.valueOf(objects[5]));
+				extCodeVO.setMeasurementName(String.valueOf(objects[6]));
+				extCodeVO.setColorName(String.valueOf(objects[7]));
+	
+				bb.getManagedBean().getExtensionVoList().add(extCodeVO);
+	
+			}
+	
+			if (bb.getManagedBean().getExtensionVoList() != null
+					&& bb.getManagedBean().getExtensionVoList().size() > 0) {
+				for (int i = 0; i < bb.getManagedBean().getExtensionVoList().size(); i++) {
+	
+					ExtensionCodeVO obj = bb.getManagedBean().getExtensionVoList()
+							.get(i);
+	
+					codeReqDTO.setBrandId(obj.getBrandId());
+					codeReqDTO.setMeasurementId(obj.getMeasurementId());
+					codeReqDTO.setTypeId(obj.getTypeId());
+					codeReqDTO.setColorId(obj.getColorId());
+	
+					System.out.println("........obj.getBrandId()="+obj.getBrandId());
+					System.out.println("........obj.obj.getMeasurementId()="+obj.getMeasurementId());
+					System.out.println("........obj.getTypeId()="+obj.getTypeId());
+					System.out.println("........obj.getColorId()="+obj.getColorId());
+					
+					CodificationResDTO codeResDTO = codificationSO
+							.searchItem(codeReqDTO);
+	
+					if (codeResDTO.getItemList() != null
+							&& codeResDTO.getItemList().size() > 0) {
+	
+						for (CmItem item : codeResDTO.getItemList()) {
+							CmSupplierItem supplierItem = new CmSupplierItem();
+	
+							supplierItem.setCmItem(item);
+							supplierItem.setItemStatus("D");
+							supplierItem.setSmSupplier(smResDTO.getResultBean()
+									.getResultList().get(0));
+							supplierItem.setRecordStatus(true);
+							reqDTO.getSupplierItem().add(supplierItem);
+						}
+	
+					} else {
+						System.out.println("************else*******************");
+						CmType typeObj = bb.searchTypeOjbyTypeId(obj.getTypeId());
+						CmBrand brandObj = bb.searchBrandObjByBrandId(obj
+								.getBrandId());
+						CmMeasurement meaObj = bb
+								.searchMeasurementByMeasurementId(obj
+										.getMeasurementId());
+						CmColor colorObj = bb.searchColorObjByColorId(obj
+								.getColorId());
+	
+						codeReqDTO.setUnspscCode(bb.getManagedBean()
+								.getSelectedUNSPSCObj().getUnspscCode());
+						codeResDTO = codificationSO.searchCommodityObj(codeReqDTO);
+	
+						CmItem item = new CmItem();
+						item.setCmUnspsc(codeResDTO.getCommodityObj());
+						item.setCmType(typeObj);
+						item.setCmBrand(brandObj);
+						item.setCmMeasurement(meaObj);
+						item.setCmColor(colorObj);
+						item.setItemName(bb.getManagedBean().getSelectedUNSPSCObj()
+								.getUnspscTitle()
+								+ (typeObj.getTypeName().equals("NA") ? "": " "+typeObj.getTypeName())
+								+ (brandObj.getBrandName().equals("NA") ? "": " "+brandObj.getBrandName())
+								+ (meaObj.getMeasurementName().equals("NA") ? "" : " "+meaObj.getMeasurementName())
+								+ (colorObj.getColorName().equals("NA") ? "": " "+colorObj.getColorName()));
+						item.setExtensionCode(bb.getManagedBean()
+								.getSelectedUNSPSCObj().getUnspscCode()
+								+ typeObj.getTypeCode()
+								+ brandObj.getBrandCode()
+								+ meaObj.getMeasurementCode()
+								+ colorObj.getColorCode());
+	
+						System.out.println("item Name:" + item.getItemName());
+						codeReqDTO.setCmItem(item);
+						codeResDTO = codificationSO.saveNewItem(codeReqDTO);
+	
 						CmSupplierItem supplierItem = new CmSupplierItem();
-
-						supplierItem.setCmItem(item);
+	
+						supplierItem.setCmItem(codeResDTO.getCmItem());
 						supplierItem.setItemStatus("D");
 						supplierItem.setSmSupplier(smResDTO.getResultBean()
 								.getResultList().get(0));
 						supplierItem.setRecordStatus(true);
 						reqDTO.getSupplierItem().add(supplierItem);
 					}
-
-				} else {
-					System.out.println("************else*******************");
-					CmType typeObj = bb.searchTypeOjbyTypeId(obj.getTypeId());
-					CmBrand brandObj = bb.searchBrandObjByBrandId(obj
-							.getBrandId());
-					CmMeasurement meaObj = bb
-							.searchMeasurementByMeasurementId(obj
-									.getMeasurementId());
-					CmColor colorObj = bb.searchColorObjByColorId(obj
-							.getColorId());
-
-					codeReqDTO.setUnspscCode(bb.getManagedBean()
-							.getSelectedUNSPSCObj().getUnspscCode());
-					codeResDTO = codificationSO.searchCommodityObj(codeReqDTO);
-
-					CmItem item = new CmItem();
-					item.setCmUnspsc(codeResDTO.getCommodityObj());
-					item.setCmType(typeObj);
-					item.setCmBrand(brandObj);
-					item.setCmMeasurement(meaObj);
-					item.setCmColor(colorObj);
-					item.setItemName(bb.getManagedBean().getSelectedUNSPSCObj()
-							.getUnspscTitle()
-							+ (typeObj.getTypeName().equals("NA") ? "": " "+typeObj.getTypeName())
-							+ (brandObj.getBrandName().equals("NA") ? "": " "+brandObj.getBrandName())
-							+ (meaObj.getMeasurementName().equals("NA") ? "" : " "+meaObj.getMeasurementName())
-							+ (colorObj.getColorName().equals("NA") ? "": " "+colorObj.getColorName()));
-					item.setExtensionCode(bb.getManagedBean()
-							.getSelectedUNSPSCObj().getUnspscCode()
-							+ typeObj.getTypeCode()
-							+ brandObj.getBrandCode()
-							+ meaObj.getMeasurementCode()
-							+ colorObj.getColorCode());
-
-					System.out.println("item Name:" + item.getItemName());
-					codeReqDTO.setCmItem(item);
-					codeResDTO = codificationSO.saveNewItem(codeReqDTO);
-
-					CmSupplierItem supplierItem = new CmSupplierItem();
-
-					supplierItem.setCmItem(codeResDTO.getCmItem());
-					supplierItem.setItemStatus("D");
-					supplierItem.setSmSupplier(smResDTO.getResultBean()
-							.getResultList().get(0));
-					supplierItem.setRecordStatus(true);
-					reqDTO.getSupplierItem().add(supplierItem);
+	
 				}
-
+				catalogueSO.saveSupplierItem(reqDTO);
 			}
-			catalogueSO.saveSupplierItem(reqDTO);
+	
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+	
+			// facesContext.addMessage(null, new
+			// FacesMessage(FacesMessage.SEVERITY_INFO," Records Added Successfully",
+			// ""));
+	
+			facesContext.addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
+							.getMessage(MessageConst.INFO_710007, new String[] { ""
+									+ bb.getManagedBean().getExtensionVoList()
+											.size() },
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			catalogueSO = null;
+			supplierSearchSO = null;
+			codificationSO = null;
 		}
-
-		FacesContext facesContext = FacesContext.getCurrentInstance();
-
-		// facesContext.addMessage(null, new
-		// FacesMessage(FacesMessage.SEVERITY_INFO," Records Added Successfully",
-		// ""));
-
-		facesContext.addMessage(
-				null,
-				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
-						.getMessage(MessageConst.INFO_710007, new String[] { ""
-								+ bb.getManagedBean().getExtensionVoList()
-										.size() },
-								MessageUtils.BUNDLE_COMMON_MESSAGES,
-								new FacesScopes().getUserLocale())));
 
 		return "../catalogue/preRenderCatalogueMaintenanceFile.xhtml";
 	}
@@ -436,21 +445,30 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 		ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
 				.getInstance().getServiceObject("sm", ISupplierSearchSO.class);
-		SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
-
-		PmUser pmUser = new FacesScopes().getUserSessionBean();
-		supplierReqDTO.setUserId(pmUser.getUserId());
-
-		SupplierSearchResDTO smResDTO = supplierSearchSO
-				.retriveSupplierProfiles(supplierReqDTO);
-
-		reqDTO.setSupplierId(smResDTO.getResultBean().getResultList().get(0)
-				.getSupplierId());
-		reqDTO.setItemStatus("D");
-		CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
-		System.out.println("resDTO.getSupplierItemList():"
-				+ resDTO.getSupplierItemList().size());
-		this.getManagedBean().setMaintainItemList(resDTO.getSupplierItemList());
+		
+		try{
+			SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
+	
+			PmUser pmUser = new FacesScopes().getUserSessionBean();
+			supplierReqDTO.setUserId(pmUser.getUserId());
+	
+			SupplierSearchResDTO smResDTO = supplierSearchSO
+					.retriveSupplierProfiles(supplierReqDTO);
+	
+			reqDTO.setSupplierId(smResDTO.getResultBean().getResultList().get(0)
+					.getSupplierId());
+			reqDTO.setItemStatus("D");
+			CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
+			System.out.println("resDTO.getSupplierItemList():"
+					+ resDTO.getSupplierItemList().size());
+			this.getManagedBean().setMaintainItemList(resDTO.getSupplierItemList());
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			catalogueSO = null;
+			supplierSearchSO = null;
+		}
 
 		return "catalogueMaintenanceFile";
 	}
@@ -460,24 +478,30 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
 				.getInstance().getServiceObject("cm", ICatalogueSO.class);
 
-		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
-
-		reqDTO.setCmSupplierItemObj(this.getManagedBean().getMaintainItemList()
-				.get(index));
-
-		CatalogueResDTO resDTO = catalogueSO.deleteDraftItem(reqDTO);
-
-		if (resDTO.isSuccessful()) {
-
-			this.getManagedBean().getMaintainItemList().remove(index);
-
-			FacesContext facesContext = FacesContext.getCurrentInstance();
-			facesContext.addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-							MessageUtils.getMessage(MessageConst.INFO_710005,
-									MessageUtils.BUNDLE_COMMON_MESSAGES,
-									new FacesScopes().getUserLocale())));
+		try{
+			CatalogueReqDTO reqDTO = new CatalogueReqDTO();
+	
+			reqDTO.setCmSupplierItemObj(this.getManagedBean().getMaintainItemList()
+					.get(index));
+	
+			CatalogueResDTO resDTO = catalogueSO.deleteDraftItem(reqDTO);
+	
+			if (resDTO.isSuccessful()) {
+	
+				this.getManagedBean().getMaintainItemList().remove(index);
+	
+				FacesContext facesContext = FacesContext.getCurrentInstance();
+				facesContext.addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								MessageUtils.getMessage(MessageConst.INFO_710005,
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			catalogueSO = null;
 		}
 
 	}
@@ -486,54 +510,62 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
 				.getInstance().getServiceObject("cm", ICatalogueSO.class);
+		
+		try{
 
-		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
-
-		reqDTO.setSupplierId(this.getManagedBean().getMaintainItemList()
-				.get(index).getSmSupplier().getSupplierId());
-
-		CatalogueResDTO resDTO = catalogueSO
-				.retrieveSupplierZoneBySuppId(reqDTO);
-
-		System.out.println("size:" + resDTO.getSupplierZoneLs().size());
-
-		this.getManagedBean().setSupplierZoneList(resDTO.getSupplierZoneLs());
-
-		CmSupplierItem clone = (CmSupplierItem) SerializationUtils.clone(this
-				.getManagedBean().getMaintainItemList().get(index));
-
-		this.getManagedBean().setCloneCmSupplierItem(clone);
-		this.getManagedBean().setCloneIndex(index);
-
-		log.info("*****this.getManagedBean().getMaintainItemList().get(index).getCmImages().size()*****:"
-				+ this.getManagedBean().getMaintainItemList().get(index)
-						.getCmImages().size());
-		ReviewCatalogueBackingBean bb = new ReviewCatalogueBackingBean();
-		bb.getManagedBean().setCatDetTabActiveIndex(0);
-
-		this.getManagedBean().setSelectedMaintainItem(
-				this.getManagedBean().getMaintainItemList().get(index));
-		this.getManagedBean()
-				.getSelectedMaintainItem()
-				.setCompareDesc(
-						this.getManagedBean().getMaintainItemList().get(index)
-								.getItemDesc());
-
-		List<CmPromotionTierPricing> cmList = this.getManagedBean()
-				.getSelectedMaintainItem().getCmPromotionTierPricings();
-		if (cmList != null && cmList.size() > 0) {
-			for (CmPromotionTierPricing cmPricing : cmList) {
-				if (cmPricing.getParentPrice() != null) {
-					cmPricing.getParentPrice().setStandardDisabled(true);
-					cmPricing.setStandardDisabled(true);
+			CatalogueReqDTO reqDTO = new CatalogueReqDTO();
+	
+			reqDTO.setSupplierId(this.getManagedBean().getMaintainItemList()
+					.get(index).getSmSupplier().getSupplierId());
+	
+			CatalogueResDTO resDTO = catalogueSO
+					.retrieveSupplierZoneBySuppId(reqDTO);
+	
+			System.out.println("size:" + resDTO.getSupplierZoneLs().size());
+	
+			this.getManagedBean().setSupplierZoneList(resDTO.getSupplierZoneLs());
+	
+			CmSupplierItem clone = (CmSupplierItem) SerializationUtils.clone(this
+					.getManagedBean().getMaintainItemList().get(index));
+	
+			this.getManagedBean().setCloneCmSupplierItem(clone);
+			this.getManagedBean().setCloneIndex(index);
+	
+			log.info("*****this.getManagedBean().getMaintainItemList().get(index).getCmImages().size()*****:"
+					+ this.getManagedBean().getMaintainItemList().get(index)
+							.getCmImages().size());
+			ReviewCatalogueBackingBean bb = new ReviewCatalogueBackingBean();
+			bb.getManagedBean().setCatDetTabActiveIndex(0);
+	
+			this.getManagedBean().setSelectedMaintainItem(
+					this.getManagedBean().getMaintainItemList().get(index));
+			this.getManagedBean()
+					.getSelectedMaintainItem()
+					.setCompareDesc(
+							this.getManagedBean().getMaintainItemList().get(index)
+									.getItemDesc());
+	
+			List<CmPromotionTierPricing> cmList = this.getManagedBean()
+					.getSelectedMaintainItem().getCmPromotionTierPricings();
+			if (cmList != null && cmList.size() > 0) {
+				for (CmPromotionTierPricing cmPricing : cmList) {
+					if (cmPricing.getParentPrice() != null) {
+						cmPricing.getParentPrice().setStandardDisabled(true);
+						cmPricing.setStandardDisabled(true);
+					}
 				}
 			}
-		}
-
-		this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing()
-				.setStandardDisabled(true);
-
-		this.getManagedBean().setDisplayCatalogue(true);
+	
+			this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing()
+					.setStandardDisabled(true);
+	
+			this.getManagedBean().setDisplayCatalogue(true);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			catalogueSO = null;
+		}	
 
 		return "addCatalogItem";
 
@@ -702,44 +734,52 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		System.out.println("getDocId" + supplierItem.getDocId());
 
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
+		
+		try{
 
-		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
-		reqDTO.setDocId(supplierItem.getDocId());
-
-		CatalogueResDTO resDTO = null;
-		resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
-		this.getManagedBean().setDisplayCatalogue(false);
-		this.getManagedBean().setSelectedMaintainItem(resDTO.getSupplierItemList().get(0));
-		
-		reqDTO.setSupplierId(resDTO.getSupplierItemList().get(0).getSmSupplier().getSupplierId());
-		resDTO = catalogueSO.retrieveSupplierZoneBySuppId(reqDTO);
-		this.getManagedBean().setSupplierZoneList(resDTO.getSupplierZoneLs());
-		
-		//allow view only
-		
-		if(this.getManagedBean().getSelectedMaintainItem().getzStdPrices()!=null)
-			for(CmZonalStandardPricing a : this.getManagedBean().getSelectedMaintainItem().getzStdPrices()){
-				a.setStandardDisabled(true);
-				a.setDisplayAction(false);
-			}
-		
-		if(this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionPricings()!=null)
-			for(CmZonalPromotionPricing a : this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionPricings()){
-				a.setStandardDisabled(true);
-				a.setDisplayAction(false);
-			}
-		
-		if(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings()!=null)
-			for(CmTierPricing a : this.getManagedBean().getSelectedMaintainItem().getCmTierPricings()){
-				a.setStandardDisabled(true);
-				a.setDisplayAction(false);
-			}
-		
-		if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings()!=null)
-			for(CmPromotionTierPricing a : this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings()){
-				a.setStandardDisabled(true);
-			}
-		System.out.println("*****************end********************");
+			CatalogueReqDTO reqDTO = new CatalogueReqDTO();
+			reqDTO.setDocId(supplierItem.getDocId());
+	
+			CatalogueResDTO resDTO = null;
+			resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
+			this.getManagedBean().setDisplayCatalogue(false);
+			this.getManagedBean().setSelectedMaintainItem(resDTO.getSupplierItemList().get(0));
+			
+			reqDTO.setSupplierId(resDTO.getSupplierItemList().get(0).getSmSupplier().getSupplierId());
+			resDTO = catalogueSO.retrieveSupplierZoneBySuppId(reqDTO);
+			this.getManagedBean().setSupplierZoneList(resDTO.getSupplierZoneLs());
+			
+			//allow view only
+			
+			if(this.getManagedBean().getSelectedMaintainItem().getzStdPrices()!=null)
+				for(CmZonalStandardPricing a : this.getManagedBean().getSelectedMaintainItem().getzStdPrices()){
+					a.setStandardDisabled(true);
+					a.setDisplayAction(false);
+				}
+			
+			if(this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionPricings()!=null)
+				for(CmZonalPromotionPricing a : this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionPricings()){
+					a.setStandardDisabled(true);
+					a.setDisplayAction(false);
+				}
+			
+			if(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings()!=null)
+				for(CmTierPricing a : this.getManagedBean().getSelectedMaintainItem().getCmTierPricings()){
+					a.setStandardDisabled(true);
+					a.setDisplayAction(false);
+				}
+			
+			if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings()!=null)
+				for(CmPromotionTierPricing a : this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings()){
+					a.setStandardDisabled(true);
+				}
+			System.out.println("*****************end********************");
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			catalogueSO = null;
+		}
 
 		return "addCatalogView?faces-redirect=true";
 	}
@@ -2594,6 +2634,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		} catch (Exception e) {
 
 			e.printStackTrace();
+		}finally {
+			catalogueSO = null;
 		}
 
 		return "catalogMaintenanceFile";
@@ -2663,87 +2705,91 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				.getInstance().getServiceObject("cm", ICatalogueSO.class);
 		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 		CatalogueResDTO resDTO = null;
-		// SearchBean<CmSupplierItem> searchBean = new
-		// SearchBean<CmSupplierItem>();
-		// searchBean.setNavigatable(false);
 
 		ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
 				.getInstance().getServiceObject("sm", ISupplierSearchSO.class);
 		SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
 
-		PmUser pmUser = new FacesScopes().getUserSessionBean();
-		supplierReqDTO.setUserId(pmUser.getUserId());
-
-		SupplierSearchResDTO smResDTO = supplierSearchSO
-				.retriveSupplierProfiles(supplierReqDTO);
-
-		System.out.println("getSmSupplier"
-				+ smResDTO.getResultBean().getResultList().get(0));
-
-		reqDTO.setSupplierId(smResDTO.getResultBean().getResultList().get(0)
-				.getSupplierId());
-
-		resDTO = catalogueSO.retrieveSupplierZoneBySuppId(reqDTO);
-
-		System.out.println("size:" + resDTO.getSupplierZoneLs().size());
-
-		this.getManagedBean().setSupplierZoneList(resDTO.getSupplierZoneLs());
-
-		if (status.equalsIgnoreCase("Draft")) {
-
-			reqDTO.setItemStatus("D");
-			System.out.println("getSupplierId:" + reqDTO.getSupplierId());
-			resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
-
-			this.getManagedBean().setMaintainItemList(
-					resDTO.getSupplierItemList());
-			this.getManagedBean().setTabActiveIndex(0);
-
-		} else if (status.equalsIgnoreCase("Published")) {
-
-			reqDTO.setItemStatus("U");
-			resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
-
-			this.getManagedBean().setPublishedItemList(
-					resDTO.getSupplierItemList());
-			this.getManagedBean().setTabActiveIndex(4);
-
-		} else if (status.equalsIgnoreCase("Approval")) {
-
-			reqDTO.setItemStatus("P");
-			resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
-
-			this.getManagedBean().setApprovalItemList(
-					resDTO.getSupplierItemList());
-			this.getManagedBean().setTabActiveIndex(1);
-
-		} else if (status.equalsIgnoreCase("Approved")) {
-
-			reqDTO.setItemStatus("A");
-			resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
-
-			this.getManagedBean().setApprovedItemList(
-					resDTO.getSupplierItemList());
-			this.getManagedBean().setTabActiveIndex(2);
-
-		} else if (status.equalsIgnoreCase("Rejected")) {
-
-			reqDTO.setItemStatus("R");
-			resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
-
-			this.getManagedBean().setRejectedItemList(
-					resDTO.getSupplierItemList());
-			this.getManagedBean().setTabActiveIndex(3);
-
-		} else if (status.equalsIgnoreCase("Expired")) {
-
-			reqDTO.setItemStatus("E");
-			resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
-
-			this.getManagedBean().setExpiredItemList(
-					resDTO.getSupplierItemList());
-			this.getManagedBean().setTabActiveIndex(5);
-
+		try{
+			PmUser pmUser = new FacesScopes().getUserSessionBean();
+			supplierReqDTO.setUserId(pmUser.getUserId());
+	
+			SupplierSearchResDTO smResDTO = supplierSearchSO
+					.retriveSupplierProfiles(supplierReqDTO);
+	
+			System.out.println("getSmSupplier"
+					+ smResDTO.getResultBean().getResultList().get(0));
+	
+			reqDTO.setSupplierId(smResDTO.getResultBean().getResultList().get(0)
+					.getSupplierId());
+	
+			resDTO = catalogueSO.retrieveSupplierZoneBySuppId(reqDTO);
+	
+			System.out.println("size:" + resDTO.getSupplierZoneLs().size());
+	
+			this.getManagedBean().setSupplierZoneList(resDTO.getSupplierZoneLs());
+	
+			if (status.equalsIgnoreCase("Draft")) {
+	
+				reqDTO.setItemStatus("D");
+				System.out.println("getSupplierId:" + reqDTO.getSupplierId());
+				resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
+	
+				this.getManagedBean().setMaintainItemList(
+						resDTO.getSupplierItemList());
+				this.getManagedBean().setTabActiveIndex(0);
+	
+			} else if (status.equalsIgnoreCase("Published")) {
+	
+				reqDTO.setItemStatus("U");
+				resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
+	
+				this.getManagedBean().setPublishedItemList(
+						resDTO.getSupplierItemList());
+				this.getManagedBean().setTabActiveIndex(4);
+	
+			} else if (status.equalsIgnoreCase("Approval")) {
+	
+				reqDTO.setItemStatus("P");
+				resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
+	
+				this.getManagedBean().setApprovalItemList(
+						resDTO.getSupplierItemList());
+				this.getManagedBean().setTabActiveIndex(1);
+	
+			} else if (status.equalsIgnoreCase("Approved")) {
+	
+				reqDTO.setItemStatus("A");
+				resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
+	
+				this.getManagedBean().setApprovedItemList(
+						resDTO.getSupplierItemList());
+				this.getManagedBean().setTabActiveIndex(2);
+	
+			} else if (status.equalsIgnoreCase("Rejected")) {
+	
+				reqDTO.setItemStatus("R");
+				resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
+	
+				this.getManagedBean().setRejectedItemList(
+						resDTO.getSupplierItemList());
+				this.getManagedBean().setTabActiveIndex(3);
+	
+			} else if (status.equalsIgnoreCase("Expired")) {
+	
+				reqDTO.setItemStatus("E");
+				resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
+	
+				this.getManagedBean().setExpiredItemList(
+						resDTO.getSupplierItemList());
+				this.getManagedBean().setTabActiveIndex(5);
+	
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			catalogueSO = null;
+			supplierSearchSO = null;
 		}
 
 		return "catalogMaintenanceFile?faces-redirect=true";
@@ -2881,6 +2927,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}finally {
+			catalogueSO = null;
 		}
 
 		System.out.println("resDTO.isSuccessful():" + resDTO.isSuccessful());
@@ -2928,28 +2976,35 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		log.info("this.getManagedBean().getSelectViewItems().size() = "+this.getManagedBean().getSelectViewItems().size());
 		this.getManagedBean().setSelectedSupplierItemList(null);
 		this.getManagedBean().setContractedExist(false);
+		ICatalogueSO catalogueSO = null;
 
-		for (VCmSupplierItem view : this.getManagedBean().getSelectViewItems()) {
-
-			ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
-
-			CatalogueReqDTO reqDTO = new CatalogueReqDTO();
-			System.out.println("view.getDocId()" + view.getDocId());
-			reqDTO.setDocId(view.getDocId());
-
-			CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
-
-			System.out.println("*****************end********************");
-
-			this.getManagedBean().getSelectedSupplierItemList().add(resDTO.getSupplierItemList().get(0));
-		}
-
-		for (VCmSupplierItem view : this.getManagedBean().getViewSupplierItemList()) {
-
-			if (view.getContractNo() != null || view.getCircularNo() != null) {
-				this.getManagedBean().setContractedExist(true);
+		try{
+			for (VCmSupplierItem view : this.getManagedBean().getSelectViewItems()) {
+	
+				catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
+	
+				CatalogueReqDTO reqDTO = new CatalogueReqDTO();
+				System.out.println("view.getDocId()" + view.getDocId());
+				reqDTO.setDocId(view.getDocId());
+	
+				CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
+	
+				System.out.println("*****************end********************");
+	
+				this.getManagedBean().getSelectedSupplierItemList().add(resDTO.getSupplierItemList().get(0));
 			}
-
+	
+			for (VCmSupplierItem view : this.getManagedBean().getViewSupplierItemList()) {
+	
+				if (view.getContractNo() != null || view.getCircularNo() != null) {
+					this.getManagedBean().setContractedExist(true);
+				}
+	
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			catalogueSO = null;
 		}
 
 		return "compareCatalogue";
@@ -3080,35 +3135,44 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 		ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
 				.getInstance().getServiceObject("sm", ISupplierSearchSO.class);
-		SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
-		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
-
-		PmUser pmUser = new FacesScopes().getUserSessionBean();
-		supplierReqDTO.setUserId(pmUser.getUserId());
-
-		SupplierSearchResDTO smResDTO = supplierSearchSO
-				.retriveSupplierProfiles(supplierReqDTO);
-
-		System.out.println("getSmSupplier"
-				+ smResDTO.getResultBean().getResultList().get(0));
-
-		reqDTO.setSupplierId(smResDTO.getResultBean().getResultList().get(0)
-				.getSupplierId());
-		reqDTO.setItemStatus("D");
-		CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
-
-		/*
-		 * for(CmSupplierItem supplierItem: resDTO.getSupplierItemList()){
-		 * 
-		 * if(supplierItem.getzStdPrices()==null ||
-		 * supplierItem.getzStdPrices().isEmpty()){ CmZonalStandardPricing zone
-		 * = new CmZonalStandardPricing(); zone.setCmSupplierItem(supplierItem);
-		 * 
-		 * supplierItem.getzStdPrices().add(zone); } }
-		 */
-
-		System.out.println("*****************end********************");
-		this.getManagedBean().setMaintainItemList(resDTO.getSupplierItemList());
+		
+		try{
+			SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
+			CatalogueReqDTO reqDTO = new CatalogueReqDTO();
+	
+			PmUser pmUser = new FacesScopes().getUserSessionBean();
+			supplierReqDTO.setUserId(pmUser.getUserId());
+	
+			SupplierSearchResDTO smResDTO = supplierSearchSO
+					.retriveSupplierProfiles(supplierReqDTO);
+	
+			System.out.println("getSmSupplier"
+					+ smResDTO.getResultBean().getResultList().get(0));
+	
+			reqDTO.setSupplierId(smResDTO.getResultBean().getResultList().get(0)
+					.getSupplierId());
+			reqDTO.setItemStatus("D");
+			CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
+	
+			/*
+			 * for(CmSupplierItem supplierItem: resDTO.getSupplierItemList()){
+			 * 
+			 * if(supplierItem.getzStdPrices()==null ||
+			 * supplierItem.getzStdPrices().isEmpty()){ CmZonalStandardPricing zone
+			 * = new CmZonalStandardPricing(); zone.setCmSupplierItem(supplierItem);
+			 * 
+			 * supplierItem.getzStdPrices().add(zone); } }
+			 */
+	
+			System.out.println("*****************end********************");
+			this.getManagedBean().setMaintainItemList(resDTO.getSupplierItemList());
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			catalogueSO = null;
+			supplierSearchSO = null;
+		}
 
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
