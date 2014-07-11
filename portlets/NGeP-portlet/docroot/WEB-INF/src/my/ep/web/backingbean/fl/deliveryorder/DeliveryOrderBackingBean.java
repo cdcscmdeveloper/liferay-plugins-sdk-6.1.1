@@ -15,11 +15,15 @@ import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.fl.order.IDeliveryOrderSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
+import my.ep.bpm.dto.BpmRequestDTO;
+import my.ep.bpm.dto.BpmResponseDTO;
+import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constants.FLProcessNameConst;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.exception.EpException;
@@ -34,6 +38,7 @@ import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
+import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.fl.creatdo.DeliveryOrderManagedBean;
@@ -108,7 +113,7 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 			}
 			
 			// do validation for selected address have items with delmount and delQty or not....
-			if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
+			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
 				checkItemsWithDoAddress(actionName);
 			}
 			
@@ -161,7 +166,7 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 			reqDTO.setOutcome(action);
 			reqDTO.setToken(token);
 			reqDTO.setUserRole(getUserRole());
-			if("UPDATE".equalsIgnoreCase(action)){
+			if("UPDATE".equalsIgnoreCase(action) || "CANCEL".equalsIgnoreCase(action)){
 				reqDTO.setPmUser(getManagedBean().getPmUser());
 				if(null == getManagedBean().getSupplierDoRef()){
 					//TODO
@@ -171,6 +176,9 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 				}
 				reqDTO.setFlDeliveryOrder(getManagedBean().getFlDeliveryOrder());
 				resDTO = deliveryOrderSO.deliveryOrderModification(reqDTO);
+			}else if("ACKNOWLEDGE".equalsIgnoreCase(action)){
+				
+				
 			}
 			else{
 				reqDTO.setPmUser(facesScopes.getUserSessionBean());
@@ -316,16 +324,44 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 	}
 	
 	public void preRenderView() {
+		IDeliveryOrderSO deliveryOrderSO = null;
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
+		String taskId = originalServletRequest.getParameter("taskId");
 		String orderId = originalServletRequest.getParameter("orderId");
 		System.out.println("orderId :" + orderId);
 		if(orderId != null){
 			IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
-			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+			//FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			reqDTO.setFlOrderId(Long.parseLong(orderId));
 			FulfilmentResDTO resDTO = orderSO.retrieveFulfilmentOrderById(reqDTO);
 			setDeliveryOrder(resDTO);
+		}
+		if(null!=taskId && !"".equals(taskId)){
+			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+			String ctx = getFacesScopes().getBPMAuthenticationCtxToken();
+			BpmRequestDTO bpmreqDTO = new BpmRequestDTO();
+			bpmreqDTO.setCtxToken(ctx);
+			bpmreqDTO.setTaskId(taskId);
+			BpmResponseDTO res = bpmSO.getTaskDetails(bpmreqDTO);
+			getManagedBean().setModificationCancel(false);
+			if(FLProcessNameConst.DO_MODIFICATION_PROCESS_NAME.equals(res.getProcessName()) || FLProcessNameConst.DO_CANCELLATION_PROCESS_NAME.equals(res.getProcessName())){
+				getManagedBean().setButtonVal("ACK");
+				getManagedBean().setModificationCancel(true);
+			}	
+				reqDTO.setDeliveryOrderId(Long.valueOf(res.getDocId()));
+				deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IDeliveryOrderSO.class);
+				FulfilmentResDTO resDTO = deliveryOrderSO.retrieveDeliveryOrderById(reqDTO);
+				getManagedBean().setDocProcess(res.getDocType());
+				getManagedBean().setDocType(res.getDocType());
+				getManagedBean().setFlDeliveryOrder(resDTO.getFlDeliveryOrder());
+				resDTO.getFlDeliveryOrder().getFlDeliveryAddress().getFlFulfilmentItemAddr().get(0).getScRequestItem().getItemName();
+				getManagedBean().setFulfilmentRequest(resDTO.getFlDeliveryOrder().getFlRequest());
+				getManagedBean().setFulfilmentOrder(resDTO.getFlDeliveryOrder().getFlFulfilmentOrder());
+				getManagedBean().getFulfilmentOrder().setStatus(deliveryOrderSO.retrieveDelOrderStatus(reqDTO).getPmStatus());
+				getManagedBean().setPmUser(reqDTO.getPmUser());
+				getManagedBean().setOutComes(res.getAction());
 		}
 		getManagedBean().getFulfilmentRequest();
 	}
@@ -339,6 +375,14 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 				}
 			}
 		}
+	}
+	
+	public String getPortletTitle() {
+		String portletTitle = " Fulfilment Document Maintenance";
+		if(getManagedBean().isModificationCancel()) {
+			portletTitle = "Fulfilment Document Maintenance";
+		}
+		return portletTitle;
 	}
 	
 	

@@ -365,7 +365,11 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			doBB.getManagedBean().setFlDeliveryOrder(resDTO.getFlDeliveryOrder());
 			resDTO.getFlDeliveryOrder().getFlDeliveryAddress().getFlFulfilmentItemAddr().get(0).getScRequestItem().getItemName();
 			doBB.getManagedBean().setFulfilmentRequest(resDTO.getFlDeliveryOrder().getFlRequest());
+			doBB.getManagedBean().setFulfilmentOrder(resDTO.getFlDeliveryOrder().getFlFulfilmentOrder());
+			doBB.getManagedBean().getFulfilmentOrder().setStatus(deliveryOrderSO.retrieveDelOrderStatus(reqDTO).getPmStatus());
 			doBB.getManagedBean().setPmUser(reqDTO.getPmUser());
+			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+			flBB.initializeRemarkAndAttachement(new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 			navgPage=NAV_TO_MAINTAIN_DO;
 		}else if(docType.equals(FulfilmentConst.DOC_TYPE_IN)){
 			invoiceSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IInvoiceSO.class);
@@ -379,6 +383,8 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			invBB.getManagedBean().getInvoice().setFlRequest(resDTO.getInvoice().getFlRequest());
 			invBB.getManagedBean().setFulfilmentRequest(resDTO.getInvoice().getFlRequest());
 			invBB.getManagedBean().setPmUser(reqDTO.getPmUser());
+			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+			flBB.initializeRemarkAndAttachement(new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 			navgPage=NAV_TO_MAINTAIN_INV;
 		}
 		else if(docType.equals(FulfilmentConst.DOC_TYPE_FN)){
@@ -399,8 +405,9 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			for(FlFulfilmentNoteItem fulfilmentNoteItem: resDTO.getFulfilmentNote().getFlFulfilmentNoteItem()){
 				recNoteBB.getManagedBean().setSelectedItem(fulfilmentNoteItem);
 			}
+			recNoteBB.getManagedBean().getFulfilmentNote().setStatus(receivedNoteSO.retrieveReceivedNoteStatus(reqDTO).getPmStatus());
 			navgPage=NAV_TO_MAINTAIN_FRN;
-		}else if(docType.equals(FulfilmentConst.DOC_TYPE_FN)){
+		}else if(docType.equals(FulfilmentConst.DOC_TYPE_PA)){
 			paymentSO = (IPaymentMatchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IPaymentMatchSO.class);
 			reqDTO.setPaymentAdviseId(Long.valueOf(flDocId));
 			FulfilmentResDTO resDTO = paymentSO.retrievePaymentAdviseByPaymentId(reqDTO);

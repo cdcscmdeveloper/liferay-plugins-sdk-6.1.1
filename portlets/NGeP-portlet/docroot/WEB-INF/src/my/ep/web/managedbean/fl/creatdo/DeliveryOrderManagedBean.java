@@ -85,6 +85,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	
 	//tab menu
 	private int selectedTabIndex;
+	
+	private boolean modificationCancel;
 
 	/**
 	 * @return the itemSelectedForCal
@@ -606,6 +608,20 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 
 	public void setRejectionList(List<FlFulfilmentNoteItem> rejectionList) {
 		this.rejectionList = rejectionList;
+	}
+
+	/**
+	 * @return the modificationCancel
+	 */
+	public boolean isModificationCancel() {
+		return modificationCancel;
+	}
+
+	/**
+	 * @param modificationCancel the modificationCancel to set
+	 */
+	public void setModificationCancel(boolean modificationCancel) {
+		this.modificationCancel = modificationCancel;
 	}
 	
 }
