@@ -40,9 +40,9 @@
 			</p:column>
 			
 
-			<p:column headerText="Delivery Term (Days)">
+			<p:column headerText="Delivery Term">
 				<p:outputLabel style="text-align:right"
-					value="#{address.deliveryTerm}" />
+					value="#{address.deliveryTerm} #{purchaseRequestBackingBean.getParameterDesc(address.pmUom)}" />
 			</p:column>
 			<p:column headerText="Delivery Start">
 				<h:outputText value="#{address.startDate}" style="text-align:right">
