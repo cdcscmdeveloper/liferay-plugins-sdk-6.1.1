@@ -83,6 +83,10 @@ import org.apache.log4j.MDC;
 import org.primefaces.context.RequestContext;
 //import my.ep.util.lookupservice.EpNtfBusinessDelegate;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.service.UserLocalServiceUtil;
+
 @ManagedBean(name = "registrationBackingBean")
 @RequestScoped
 public class RegistrationBackingBean extends BaseBackingBean<RegistrationManagedBean>{
@@ -288,33 +292,41 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 		
 		// validate user's email existence at Liferay. 
-/*		try {
+		try {
 			if(UserLocalServiceUtil.getUserByEmailAddress(Long.valueOf(getCompanyId()), this.getManagedBean().getSmPersonnel().getEmail()) != null) {
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, "Email Address already exist.", "Email Address already exist."));
 				return null;
 			}
-			if(UserLocalServiceUtil.getUserByScreenName(Long.valueOf(getCompanyId()), this.getManagedBean().getSmPersonnel().getIdentificationNo()) != null) {
+			
+		} catch (NumberFormatException e) {
+//			e.printStackTrace();
+			log.info(e.getMessage());
+		} catch (PortalException e) {
+//			e.printStackTrace();
+			log.info(e.getMessage());
+		} catch (SystemException e) {
+//			e.printStackTrace();
+			log.info(e.getMessage());
+		}
+		
+		try {
+			
+			if(UserLocalServiceUtil.getUserByScreenName(Long.valueOf(getCompanyId()), this.getManagedBean().getSmPersonnel().getEmail()) != null) {
 				FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, "Login ID already exist.", "Login ID already exist."));
 				return null;
 			}
 		} catch (NumberFormatException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), e.getMessage()));
+//			e.printStackTrace();
+			log.info(e.getMessage());
 		} catch (PortalException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), e.getMessage()));
+//			e.printStackTrace();
+			log.info(e.getMessage());
 		} catch (SystemException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.getMessage(), e.getMessage()));
-		}*/
+//			e.printStackTrace();
+			log.info(e.getMessage());
+		}
 		
 		
 		if (smAppl.getApplType().equals(SupplierManagementConst.ACC_BASIC)) {
@@ -427,7 +439,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		reqDTO.setServerPort(fs.getRequest().getServerPort());
 		
 		reqDTO.setSmSupp(this.getManagedBean().getSmSupp());
-		IRegistrationSO reqSO = (IRegistrationSO) BusinessDelegate.getInstance().getServiceObject("sm", IRegistrationSO.class);
+		/*IRegistrationSO reqSO = (IRegistrationSO) BusinessDelegate.getInstance().getServiceObject("sm", IRegistrationSO.class);
 		RegistrationResDTO resDTO = reqSO.createSupplier(reqDTO);
 
 		if (resDTO.isSuccessful()) {
@@ -445,7 +457,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		} else {
 			log.info("-------------------Error SubmitRegistration----------------");
 			throw new EpException(MessageConst.ERROR_721006);
-		}
+		}*/
+		return null;
 	}
 
 	public String updateOnlineAccount() {
