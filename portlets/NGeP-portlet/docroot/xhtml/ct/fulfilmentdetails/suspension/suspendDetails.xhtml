@@ -60,7 +60,7 @@
 		<h:panelGrid  style="width:180px;">
 		   <h:panelGrid columns="3">
 			 <p:selectBooleanCheckbox value="#{suspensionBackingBean.managedBean.contractVer.ctContractValue.concession}" disabled="true">
-			    <p:ajax event="change" update="justificationPanel,exemptId" listener="#{suspensionBackingBean.chkJustificationAction}" process="@this"/> 
+			    <p:ajax event="change" update=":form:justificationPanel,:form:exemptId" listener="#{suspensionBackingBean.chkJustificationAction}" process="@this"/> 
 			 </p:selectBooleanCheckbox>
 			 <p:spacer width="2" />
 			 <p:outputLabel value="#{lbl['lbl.ct.chkbx.concession']}" />
@@ -85,7 +85,7 @@
 		   <h:panelGrid columns="3">
 			  <p:selectBooleanCheckbox id="exemptId" value="#{suspensionBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt}" 
 			    disabled="true" style="text-align:top;">
-			     <p:ajax event="change" update="justificationPanel" listener="#{suspensionBackingBean.chkJustificationAction}" process="@this"/> 
+			     <p:ajax event="change" update=":form:justificationPanel" listener="#{suspensionBackingBean.chkJustificationAction}" process="@this"/> 
 			  </p:selectBooleanCheckbox>
 			  <p:spacer width="2" />	
 			  <p:outputLabel value="#{lbl['lbl.ct.chkbx.ap201']}" style="text-align:top;" />
