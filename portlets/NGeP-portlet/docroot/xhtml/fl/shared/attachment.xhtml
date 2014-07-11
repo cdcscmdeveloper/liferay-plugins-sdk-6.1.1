@@ -37,7 +37,7 @@
 								<p:commandLink
 									action="#{fulfilmentBackingBean.deleteAttachmentAction(attachFileIndex)}"
 									immediate="true"
-									rendered="#{fulfilmentBackingBean.compareUserName(attachFile.createdUsername)}"
+									rendered="#{fulfilmentBackingBean.compareAttachmentUserName(attachFile.createdUsername)}"
 									update="lampiran">
 									<h:graphicImage library="ep/images/design"
 										name="icon_trash.png" styleClass="tasklist_title1" />

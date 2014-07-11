@@ -213,8 +213,7 @@ public class FulfilmentBackingBean extends
 		getManagedBean().setAttachmentList(fldelAddress.getAttachmentList());
 	}
 
-	@Override
-	public boolean compareUserName(String username){
+	public boolean compareAttachmentUserName(String username){
 		FacesScopes facesScopes = new FacesScopes();
 		if(username.equals(facesScopes.getUserSessionBean().getUserName())) {
 			return true;

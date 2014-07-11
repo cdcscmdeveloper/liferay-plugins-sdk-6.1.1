@@ -371,7 +371,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		}
 		
 		for(FlFulfilmentItem flItem : getManagedBean().getFulfilmentRequest().getFlFulfilmentItems()) { 
-			String key = flItem.getCmItem().getItemId() + flItem.getUnitPrice().doubleValue() + "";
+			String key = flItem.getCmItem().getItemId().toString() + flItem.getUnitPrice().doubleValue() + "";
 		    if(!getManagedBean().getFlItemMap().containsKey(key)) {
 			    getManagedBean().getFlItemMap().put(key, flItem);
 		    }
@@ -676,7 +676,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 				flItemAddr.getFlFulfilmentItem().setUnitPrice(flItemAddr.getUnitPrice());
 			} else {
 				FlFulfilmentItem fulfilmentItem = null;
-				String key = flItemAddr.getCmItem().getItemId() + flItemAddr.getUnitPrice().doubleValue() + "";
+				String key = flItemAddr.getCmItem().getItemId().toString() + flItemAddr.getUnitPrice().doubleValue() + "";
 			    if(!getManagedBean().getFlItemMap().containsKey(key)) {
 					fulfilmentItem = new FlFulfilmentItem();
 					fulfilmentItem.setFlFulfilmentRequest(getManagedBean().getFulfilmentRequest());
