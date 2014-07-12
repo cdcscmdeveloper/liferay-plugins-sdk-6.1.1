@@ -6,8 +6,6 @@ package my.ep.web.backingbean.fl.dan;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -39,16 +37,14 @@ import my.ep.type.pm.AddressType;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.fl.FulfilmentBackingBean;
 import my.ep.web.constant.BpmOutcomeConst;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.fl.dan.DebitAdjustmentNoteManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.vo.ChargeLineVO;
 
 import org.apache.log4j.Logger;
-import org.primefaces.model.DefaultTreeNode;
-import org.primefaces.model.TreeNode;
 
 import com.liferay.portal.util.PortalUtil;
 
@@ -63,45 +59,48 @@ import com.liferay.portal.util.PortalUtil;
 @RequestScoped
 public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustmentNoteManagedBean> {
 	private static Logger log = Logger.getLogger(DebitAdjustmentNoteBackingBean.class);
-	/**
-	 * get faces scopes
-	 * @return FacesScopes
-	 */
+
 	private FacesScopes getFacesScopes(){
-		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes;
+		return new FacesScopes();
 	}
 	
 	public String submitAction(String action) throws ParseException {
-		System.out.println("--DAN submit--");
+		log.debug("DebitAdjustmentNoteBackingBean.submitAction()");
 		IAdjustmentSO adjustmentSO = null;
 		try {
 			String token = getFacesScopes().getBPMAuthenticationCtxToken();
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			FlAdjustment adjustment = getManagedBean().getAdjustment();
-			adjustmentSO = (IAdjustmentSO) BusinessDelegate.getInstance().getServiceObject("fl", IAdjustmentSO.class);
+			adjustmentSO = (IAdjustmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IAdjustmentSO.class);
 			reqDTO.setAdjustment(adjustment);
 			reqDTO.setOutcome(action);
 			reqDTO.setTaskId(getManagedBean().getTaskId());
 			reqDTO.setToken(token);
+			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
+			
+			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+			reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
+			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
+			
 			FulfilmentResDTO resDTO = adjustmentSO.saveAdjustment(reqDTO);
 			if(resDTO.isSuccessful()) {
-				String messageId = MessageConst.INFO_700043;
+				String messageId = MessageConst.INFO_700026;
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 					messageId = MessageConst.INFO_700004;
 				}
 				
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,	null,
 						MessageUtils.getMessage(messageId, 
-								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_DELIVERY_ORDER), getManagedBean().getAdjustment().getFlInvoice().getFlFulfilmentOrder().getDocNo()}, 
+								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE), getManagedBean().getAdjustment().getDocNo()}, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, 
 								new FacesScopes().getUserLocale())));
 			}
 			if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
 				renewSesionObject();
 				return CommonUIConst.ACKNOWLEDGE_PAGE;
-			} 
-			
+			} else {
+				setAdjustmentNote(resDTO);
+			}
 		} finally {
 			adjustmentSO = null;
 		}
@@ -109,15 +108,12 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 	}
 	
 	public void preRenderView() {
-		HttpServletRequest servletRequest = PortalUtil
-				.getHttpServletRequest(new FacesScopes().getRequest());
-		HttpServletRequest originalServletRequest = PortalUtil
-				.getOriginalServletRequest(servletRequest);
+		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
+		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter("taskId");
-		System.out.println("taskId:" + taskId);
+
 		if(taskId != null){
-			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
-					.getServiceObject(IBpmSO.class);
+			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 			String ctx = getFacesScopes().getBPMAuthenticationCtxToken();
 			BpmRequestDTO reqDTO = new BpmRequestDTO();
 			reqDTO.setCtxToken(ctx);
@@ -130,34 +126,38 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 			for (String action : res.getAction()) {
 				outcome[i++] = action;
 			}
+			getManagedBean().setTaskId(taskId);
+			getManagedBean().setOutComes(outcome);
 
 			FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
 			FulfilmentResDTO resDTO = new FulfilmentResDTO();
 			FLDanDataType danObj = (FLDanDataType)obj;
-			System.out.println("danObj.getDanId(): "+danObj.getDanId());
 			flReqDTO.setDanId(danObj.getDanId());
-			IAdjustmentSO adjustmentSO = (IAdjustmentSO) BusinessDelegate.getInstance().getServiceObject("fl",IAdjustmentSO.class);
+			IAdjustmentSO adjustmentSO = (IAdjustmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IAdjustmentSO.class);
 			resDTO = adjustmentSO.retrieveAdjustmentById(flReqDTO);
-			FlAdjustment adjustment = resDTO.getAdjustment();
-			populateChargeLineTree(adjustment);
-			calInvSummary(adjustment);
-			DebitAdjustmentNoteBackingBean danBB = new DebitAdjustmentNoteBackingBean();
-			danBB.getManagedBean().setAdjustment(adjustment);
-			danBB.getManagedBean().setTaskId(taskId);
-			danBB.getManagedBean().setOutComes(outcome);
-			if(getManagedBean().getAdjustment().getStatus()==null) {
-				PmStatus pmStatus = new PmStatus();
-				pmStatus.setStatusId(FulfilmentStatusConst.PENDING_SUBSEQUENT_DEBIT_APPROVAL);
-				getManagedBean().getAdjustment().setStatus(pmStatus);
-			}
-			if(getManagedBean().getAdjustment().getFlOrder().isFactored()){
-				getFactoringBranchDtl();
-			}
+			setAdjustmentNote(resDTO);
+			getManagedBean().setSelectedTabIndex(0);
 		}
 	}
 	
+	private void setAdjustmentNote(FulfilmentResDTO resDTO) {
+		FlAdjustment adjustment = resDTO.getAdjustment();
+		calInvSummary(adjustment);
+		getManagedBean().setAdjustment(adjustment);
+		
+		if(getManagedBean().getAdjustment().getStatus()==null) {
+			PmStatus pmStatus = new PmStatus();
+			pmStatus.setStatusId(FulfilmentStatusConst.PENDING_SUBSEQUENT_DEBIT_APPROVAL);
+			getManagedBean().getAdjustment().setStatus(pmStatus);
+		}
+		if(getManagedBean().getAdjustment().getFlOrder().isFactored()){
+			getFactoringBranchDtl();
+		}
+		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+		flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
+	}
+	
 	private void calInvSummary(FlAdjustment adjustment) {
-		// TODO Auto-generated method stub
 		BigDecimal sumOrderedAmt = new BigDecimal(0);
 		BigDecimal sumInvoiceAmt = new BigDecimal(0);
 		BigDecimal sumDanAmt = new BigDecimal(0);
@@ -169,39 +169,6 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 			getManagedBean().setInvAmtTotal(sumInvoiceAmt);
 			getManagedBean().setDanAmtTotal(sumDanAmt);
 		}
-	}
-
-	private void populateChargeLineTree(FlAdjustment adjustment) {
-		Map<Long, TreeNode> chargeLineMap = new HashMap<Long, TreeNode>();
-
-		TreeNode root = getManagedBean().getDanChargeLineTree();
-		root = new DefaultTreeNode("root", null);
-		TreeNode parent = null;
-		TreeNode child = null;
-		BigDecimal sumOrderedAmt = new BigDecimal(0);
-		BigDecimal sumInvoiceAmt = new BigDecimal(0);
-		BigDecimal sumDanAmt = new BigDecimal(0);
-		for(FlAdjustmentItem adjustmentItem : adjustment.getFlAdjustmentItem()){
-			if(chargeLineMap.containsKey(adjustmentItem.getFlItem().getCmItem().getItemId())){
-				parent = chargeLineMap.get(adjustmentItem.getFlItem().getCmItem().getItemId());
-				child = new DefaultTreeNode(
-						new ChargeLineVO("","","",adjustmentItem.getFlItem().getUnitPrice(),adjustmentItem.getFlInvoiceItem().getOrderedAmt(),adjustmentItem.getFlInvoiceItem().getInvAmt(),adjustmentItem.getAdjustedAmt()),parent);
-				ChargeLineVO chargeLineVO = (ChargeLineVO)parent.getData();
-				sumOrderedAmt = chargeLineVO.getOrderedAmt().add(adjustmentItem.getFlInvoiceItem().getOrderedAmt());
-				sumInvoiceAmt = chargeLineVO.getInvoiceAmt().add(adjustmentItem.getFlInvoiceItem().getInvAmt());
-				sumDanAmt = chargeLineVO.getDanAmt().add(adjustmentItem.getAdjustedAmt());
-				chargeLineVO.setOrderedAmt(sumOrderedAmt);
-				chargeLineVO.setInvoiceAmt(sumInvoiceAmt);
-				chargeLineVO.setDanAmt(sumDanAmt);
-			}else{
-				parent = new DefaultTreeNode(
-						new ChargeLineVO(adjustmentItem.getFlItem().getCmItem().getExtensionCode(),adjustmentItem.getFlItem().getCmItem().getItemName(),"",adjustmentItem.getFlItem().getUnitPrice(),adjustmentItem.getFlInvoiceItem().getOrderedAmt(),adjustmentItem.getFlInvoiceItem().getInvAmt(),adjustmentItem.getAdjustedAmt()),root);
-				child = new DefaultTreeNode(
-						new ChargeLineVO("","","",adjustmentItem.getFlItem().getUnitPrice(),adjustmentItem.getFlInvoiceItem().getOrderedAmt(),adjustmentItem.getFlInvoiceItem().getInvAmt(),adjustmentItem.getAdjustedAmt()),parent);
-				chargeLineMap.put(adjustmentItem.getFlItem().getCmItem().getItemId(),parent);
-			}
-		}
-		getManagedBean().setDanChargeLineTree(root);
 	}
 	
 	public void getFactoringBranchDtl(){
@@ -263,6 +230,7 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 	        }
 		}
 	}
+	
 	public void selectDanItem() {
 		if(null !=getManagedBean().getSelectedDanItem().getFlItem().getPmVotFund()){
 			getManagedBean().setVotFundCode(getManagedBean().getSelectedDanItem().getFlItem().getPmVotFund().getVotFundCode());
@@ -288,5 +256,16 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 			}
 			getManagedBean().setFinancingTypeCode(getManagedBean().getSelectedDanItem().getFlItem().getPmSubSetia().getFinancingType().getParameterCode());
 		}
+	}
+	
+	public void onNodeUnSelect() {
+		getManagedBean().setVotFundCode("");
+		getManagedBean().setAssetIndCode("");
+		getManagedBean().setGlAccountCode("");
+		getManagedBean().setPrgActivityCode("");
+		getManagedBean().setProjectCode("");
+		getManagedBean().setSetiaCode("");
+		getManagedBean().setSubSetiaCode("");
+		getManagedBean().setFinancingTypeCode("");		
 	}
 }

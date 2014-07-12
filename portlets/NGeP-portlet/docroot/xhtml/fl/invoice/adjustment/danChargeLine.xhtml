@@ -44,6 +44,8 @@
 			selectionMode="single" rowKey="#{danItem}" lazy="true">
 			<p:ajax event="rowSelect" update=":form:chargeLineSection"
 				listener="#{danBackingBean.selectDanItem()}" />
+			<p:ajax event="rowUnselect" listener="#{danBackingBean.onNodeUnSelect()}"
+				update=":form:chargeLineSection" />				
 			<ac:paginator for="itemDataTable" />
 			<p:column headerText="Item Code">
 				<h:outputText value="#{danItem.flItem.cmItem.extensionCode}" />
@@ -74,7 +76,7 @@
 			</p:column>
 			<p:column headerText="DAN Amt.(RM)" style="text-align:right">
 				<h:outputText
-					value="#{danItem.flInvoiceItem.invAmt - danItem.flInvoiceItem.orderedAmt}">
+					value="#{danItem.adjustedAmt}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
@@ -86,45 +88,37 @@
 		<h:panelGroup styleClass="chargeLineSection" id="chargeLineSection">
 			<table style="width: 100%">
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.fl.charge.vot.code']}"
-							style="margin-bottom:15px;" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.charge.vot.code']}" /></td>
 					<td><p:inputText
 							value="#{danBackingBean.managedBean.votFundCode}" size="9"
 							disabled="true" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.fl.charge.asset.ind']}" /></td>
 					<td><p:inputText size="9" disabled="true"
-							value="#{danBackingBean.managedBean.glAccountCode}" /></td>
+							value="#{danBackingBean.getParameterDesc(ParameterTypeConst.assetInd, danBackingBean.managedBean.assetIndCode)}" /></td>
 					<td><p:outputLabel
 							value="#{lbl['lbl.fl.charge.asset.gosodo']}" /></td>
-					<td><p:inputText size="9" disabled="true" /></td>
+					<td><p:inputText size="9" disabled="true" value="#{danBackingBean.managedBean.glAccountCode}" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel
-							value="#{lbl['lbl.fl.charge.program.activity']}"
-							style="margin-bottom:15px;" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.charge.program.activity']}" /></td>
 					<td><p:inputText
 							value="#{danBackingBean.managedBean.prgActivityCode}" size="9"
 							disabled="true" /></td>
-					<td><p:outputLabel value="#{lbl['lbl.fl.charge.Project']}"
-							style="margin-bottom:15px;" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.charge.Project']}" /></td>
 					<td><p:inputText
 							value="#{danBackingBean.managedBean.projectCode}" size="9"
 							disabled="true" /></td>
-					<td><p:outputLabel
-							value="#{lbl['lbl.fl.charge.setia.subsetia']}"
-							style="margin-bottom:15px;" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.charge.setia.subsetia']}" /></td>
 					<td><p:inputText
 							value="#{danBackingBean.managedBean.setiaCode}" size="9"
 							disabled="true" /></td>
 					<td><p:inputText
 							value="#{danBackingBean.managedBean.subSetiaCode}" size="9"
 							disabled="true" /></td>
-					<td><p:outputLabel value="#{lbl['lbl.fl.charge.cp']}"
-							style="margin-bottom:15px;" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.charge.cp']}" /></td>
 					<td><p:inputText
 							value="#{danBackingBean.getParameterDesc(ParameterTypeConst.financingType,danBackingBean.managedBean.financingTypeCode)}"
 							size="9" disabled="true" /></td>
-
 				</tr>
 			</table>
 		</h:panelGroup>
