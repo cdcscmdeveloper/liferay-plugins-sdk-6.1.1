@@ -10,12 +10,11 @@
 	     toggleSpeed="500"  rendered="#{amendmentBackingBean.managedBean.itemProductExist}" >
 		<h:panelGrid style="width:100%;">
 			<p:dataTable id="itemTable" var="data" value="#{amendmentBackingBean.getContractItemByType(ParameterConst.itemTypeProduct)}"
-				rowKey="#{data}" selectionMode="single"	selection="#{amendmentBackingBean.managedBean.selectedItem}"
-				lazy="true" widgetVar="ctItemsTable">
+				rowKey="#{data}" selectionMode="single"	selection="#{amendmentBackingBean.managedBean.selectedItem}" lazy="true" widgetVar="ctItemsTableObj">
 				<ac:paginator for="itemTable" />
 				<p:ajax event="rowSelect" update=":form:changeField" />
-				<p:column headerText="#{lbl['lbl.ct.susp.tbl.item.name']}" style="width:45%;">
-					<p:outputLabel value="#{data.itemName}"	style="float:left;width:55%;" />
+				<p:column headerText="#{lbl['lbl.ct.susp.tbl.item.name']}" style="width:45%;" filterBy="#{data.itemName}" filterMatchMode="contains">
+					<p:outputLabel value="#{data.itemName}"	style="float:left;" />
 				</p:column>
 				<p:column style="width:10%;" headerText="Type of Goods">
 					<p:outputLabel value="#{amendmentBackingBean.getParameterDesc(data.itemOrigin)}" style="float:left;" />
@@ -23,12 +22,12 @@
 				<p:column headerText="#{lbl['lbl.ct.item.table.uom']}" style="width:10%;">
 					<p:outputLabel value="#{data.uom.uomName}" style="float:left;" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.ct.item.minodrqty']}" style="text-align: right;">
+				<p:column headerText="#{lbl['lbl.ct.item.minodrqty']}" style="width:10%;text-align: right;">
 					<h:outputText value="#{data.minimumOrderQty}" >
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, data.uom.uomCode)}" />					
 					</h:outputText>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.ct.item.maxqty']}" style="text-align: right;">
+				<p:column headerText="#{lbl['lbl.ct.item.maxqty']}" style="width:10%;text-align: right;">
 					<h:outputText value="#{data.maxQuantity}" >
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, data.uom.uomCode)}" />
 					</h:outputText>
@@ -204,10 +203,10 @@
 				<p:dataTable id="ceilingTable" var="data" lazy="true" rowKey="#{data}"
 					value="#{amendmentBackingBean.managedBean.selectedItem.ctItemCeilingQties}" >
 					<ac:paginator for="ceilingTable" />
-					<p:column headerText="Ministry Name" style="width:20%; white-space:normal;">
+					<p:column headerText="Ministry Name" style="width:25%; white-space:normal;">
 						<p:outputLabel style="float:left;" value="#{data.ctAgency.orgProfile.parentOrgProfile.orgName}" />
 					</p:column>
-					<p:column headerText="PTJ Name"	style="width:20%; white-space:normal;">
+					<p:column headerText="PTJ Name"	style="width:25%; white-space:normal;">
 						<p:outputLabel style="float:left;" value="#{data.ctAgency.orgProfile.orgName}" />
 					</p:column>
 					<p:column headerText="Ceiling Quantity" style="width:10%;">
@@ -230,7 +229,7 @@
 							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</h:outputText>
 					</p:column>
-					<p:column headerText="Action" style="width:5%;" styleClass="column-align-center">
+					<p:column headerText="Action" style="width:10%;" styleClass="column-align-center">
 						<p:commandLink update="ceilingTable" rendered="#{!data.changeCeilQuantity and data.editable}"
 							action="#{amendmentBackingBean.editCeilingQuantityOnIndexs()}">
 							<f:setPropertyActionListener value="#{data}" target="#{amendmentBackingBean.managedBean.ctItemCeilingQtys}" />
@@ -267,19 +266,19 @@
 		<h:panelGrid style="width:100%;">
 			<p:dataTable id="serviceTable" var="data" rowKey="#{data}" selectionMode="single" lazy="true"
 				value="#{amendmentBackingBean.getContractItemByType(ParameterConst.itemTypeService)}"
-				selection="#{amendmentBackingBean.managedBean.selectedItem}" >
+				selection="#{amendmentBackingBean.managedBean.selectedItem}"  widgetVar="serviceTableObj">
 				<ac:paginator for="serviceTable" />
 				<p:ajax event="rowSelect" update=":form:showServicePrice" />
-				<p:column headerText="Item Name" style="width:35%;">
+				<p:column headerText="Item Name" style="width:45%;" filterBy="#{data.itemName}" filterMatchMode="contains">
 					<p:outputLabel value="#{data.itemName}" style="float:left;" />
 				</p:column>
-				<p:column headerText="UOM"  style="width:25%;">
+				<p:column headerText="UOM"  style="width:15%;">
 					<p:outputLabel value="#{data.uom.uomName}" style="float:left;" />
 				</p:column>
-				<p:column headerText="Qty." style="width:20%;text-align: right;">
+				<p:column headerText="Qty." style="width:15%;text-align: right;">
 					<p:outputLabel value="#{data.minimumOrderQty}" />
 				</p:column>
-				<p:column headerText="UOM Per Month" style="width:20%;text-align: right;">
+				<p:column headerText="UOM Per Month" style="width:15%;text-align: right;">
 					<p:outputLabel value="#{data.uomPerMonth}" />
 				</p:column>
 			</p:dataTable>

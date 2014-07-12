@@ -13,12 +13,12 @@
 			</h:commandLink>
 			<p:outputLabel value="Bond Response Due Date" />
 			<h:panelGrid columns="3">
-				<p:inputText size="16" id="dueDate" disabled="true"
+				<p:inputText style="width:105px;" id="dueDate" disabled="true"
 					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.bondResDueDate}" >
 					<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</p:inputText>
 				<p:spacer width="2" />
-				<p:inputText style="width:55px;" value="30 days" disabled="true" />
+				<p:inputText style="width:50px;" value="30 days" disabled="true" />
 			</h:panelGrid>
 			<p:outputLabel value="Contract Period" />
 			<h:panelGrid columns="5">
