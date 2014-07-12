@@ -13,14 +13,14 @@
 				<tr>
 					<td valign="top"><p:outputLabel
 							value="#{lbl['lbl.sc.committe.clone.title']}" /></td>
-					<td colspan="3"><p:inputText
+					<td colspan="3"><p:inputText maxlength="100"
 							value="#{evaluationMeetingBackingBean.managedBean.cloneQtnTenderSearchBean.qtTitle}"
 							size="92" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel
 							value="#{lbl['lbl.sc.committe.clone.qtntender']}" /></td>
-					<td><p:inputText
+					<td><p:inputText maxlength="21"
 							value="#{evaluationMeetingBackingBean.managedBean.cloneQtnTenderSearchBean.qtNo}"
 							size="30" /></td>
 					<td />
@@ -33,7 +33,7 @@
 							value="#{evaluationMeetingBackingBean.managedBean.cloneQtnTenderSearchBean.procurementMode}"
 							style="width: 178px;margin-bottom: 5px;">
 							<f:selectItems
-								value="#{evaluationMeetingBackingBean.getDropdownCodeValues(ParameterTypeConst.scProcurementMode)}" />
+								value="#{evaluationMeetingBackingBean.procurementModeDropdownValues}" />
 						</p:selectOneMenu></td>
 					<td />
 					<td />
@@ -41,18 +41,25 @@
 				<tr>
 					<td><p:outputLabel
 							value="#{lbl['lbl.sc.committe.clone.datecreated']}" /></td>
-					<td><p:calendar
+					<td><p:calendar id="fromDate"
 							value="#{evaluationMeetingBackingBean.managedBean.cloneQtnTenderSearchBean.fromCreatedDate}"
-							size="30" showOn="button" /></td>
+							size="30" showOn="button" readonlyInput="true">
+							<p:ajax event="dateSelect" update="createdtTo" />
+						</p:calendar></td>
 					<td />
 					<td />
 				</tr>
 				<tr>
 					<td><p:outputLabel
 							value="#{lbl['lbl.sc.committe.clone.datecreated.to']}" /></td>
-					<td><p:calendar
+					<td><p:calendar id="createdtTo" readonlyInput="true"
+							mindate="#{evaluationMeetingBackingBean.managedBean.cloneQtnTenderSearchBean.fromCreatedDate}"
 							value="#{evaluationMeetingBackingBean.managedBean.cloneQtnTenderSearchBean.toCreatedDate}"
-							size="30" showOn="button" /></td>
+							size="30" showOn="button">
+							<f:attribute name="startDate"
+								value="#{evaluationMeetingBackingBean.managedBean.cloneQtnTenderSearchBean.fromCreatedDate}" />
+							<f:validator validatorId="dateRangeValidator" />
+						</p:calendar></td>
 					<td />
 					<td />
 				</tr>
@@ -61,16 +68,16 @@
 							value="#{lbl['lbl.sc.committe.clone.comstatus']}" /></td>
 					<td><p:selectOneMenu style="width: 178px;margin-bottom: 5px;"
 							value="#{evaluationMeetingBackingBean.managedBean.cloneQtnTenderSearchBean.qtStatus}">
-							<f:selectItem itemLabel="Select One" itemValue="" />
-							<f:selectItem itemLabel="Active" itemValue="1" />
-							<f:selectItem itemLabel="Non-Active" itemValue="2" />
+							<f:selectItems
+								value="#{evaluationMeetingBackingBean.getStatusDropdownValues('SC', 'QT')}"></f:selectItems>
 						</p:selectOneMenu></td>
 					<td />
 					<td />
 				</tr>
 			</table>
 			<div align="right">
-				<p:commandButton value="#{lbl['lbl.sc.eva.btn.reset']}" style="float:right;"
+				<p:commandButton value="#{lbl['lbl.sc.eva.btn.reset']}"
+					style="float:right;"
 					action="#{evaluationMeetingBackingBean.resetClone}"
 					update="clonesearchpnlid" icon="ui-icon-reset" resetValues="true"
 					partialSubmit="true" process="@this" />
@@ -86,8 +93,8 @@
 		<p:spacer height="3" />
 		<p:panel header="Quotation/Tender List" toggleable="true">
 			<p:dataTable id="clonesearchCommitteid"
-				value="#{evaluationMeetingBackingBean.managedBean.cloneTenderList}"
-				rowKey="#{scQt}" selectionMode="single" var="scQt"
+				value="#{evaluationMeetingBackingBean.searchQuotatioTender}"
+				rowKey="#{scQt}" selectionMode="single" var="scQt" lazy="true"
 				styleClass="cloneResults">
 
 				<ac:paginator for="clonesearchCommitteid" />
@@ -105,7 +112,7 @@
 
 				<p:column headerText="#{lbl['lbl.so.procmode']}">
 					<h:outputText
-						value="#{evaluationMeetingBackingBean.getParameterDesc(ParameterTypeConst.scProcurementMode, scQt.procurementMode)}" />
+						value="#{evaluationMeetingBackingBean.getParameterDesc(scQt.procurementMode)}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.so.crtdt']}">
@@ -117,15 +124,15 @@
 
 				<p:column headerText="#{lbl['lbl.so.bo.status']}">
 					<h:outputText
-						value="#{scQt.qtStatus.pmStatus.pmStatusDescs[0].statusName}" />
+						value="#{evaluationMeetingBackingBean.getStatusDescById(scQt.qtStatus.statusId)}" />
 				</p:column>
 			</p:dataTable>
 		</p:panel>
 
 
 
-		<p:panel id="committeedtlsid" header="#{lbl['lbl.sc.eva.committee.details']}"
-			toggleable="true">
+		<p:panel id="committeedtlsid"
+			header="#{lbl['lbl.sc.eva.committee.details']}" toggleable="true">
 
 			<p:dataTable id="cloneCommittee" var="committeeMember"
 				value="#{evaluationMeetingBackingBean.managedBean.cloneCommitteMemebers}"
@@ -158,7 +165,8 @@
 					<h:outputText value="#{committeeMember.PNP}"></h:outputText>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.eva.committee.role']}">
-					<h:outputText value="#{committeeMember.memberRole}"></h:outputText>
+					<h:outputText
+						value="#{evaluationMeetingBackingBean.getParameterDesc(committeeMember.memberRole)}"></h:outputText>
 
 				</p:column>
 
@@ -167,12 +175,14 @@
 				<p:commandButton value="#{lbl['lbl.so.cancelbtn']}"
 					style="float:right;" icon="ui-icon-cancel"
 					onclick="screen2.hide();" />
-				<p:commandButton value="#{lbl['lbl.so.okbtn']}" style="float:right;" process="@this,committeedtlsid"
-				partialSubmit="true"	actionListener="#{evaluationMeetingBackingBean.cloneCommitteeDtls}"
-					onclick="screen2.hide();" oncomplete="prepareCommittee.paginator.endLink.click();" icon="ui-icon-check"
-					update="evaluationpreparecommittee" />
-		
-		</div>
+				<p:commandButton value="#{lbl['lbl.so.okbtn']}" style="float:right;"
+					process="@this,committeedtlsid" partialSubmit="true"
+					actionListener="#{evaluationMeetingBackingBean.cloneCommitteeDtls}"
+					onclick="screen2.hide();"
+					oncomplete="prepareCommittee.paginator.endLink.click();"
+					icon="ui-icon-check" update="evaluationpreparecommittee" />
+
+			</div>
 		</p:panel>
 	</p:dialog>
 </ui:composition>

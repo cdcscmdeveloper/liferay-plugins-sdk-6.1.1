@@ -5,11 +5,12 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	
+
 	<p:messages id="evaluationMeeting" showDetail="true" autoUpdate="true"
-			closable="true" />
+		closable="true" />
+	<ac:title value="#{lbl['lbl.sc.eva.evaluation.Meeting']}"></ac:title>
 	<div align="right">
-		
+
 		<p:commandButton value="#{lbl['lbl.sc.eva.btn.save']}" process="@all"
 			partialSubmit="true"
 			action="#{evaluationMeetingBackingBean.saveCommitteeAction}"
@@ -33,20 +34,29 @@
 			<ac:paginator for="evaluationmeetingDetails" />
 
 			<p:column selectionMode="multiple" style="width:2%"></p:column>
-			<p:column headerText="#{lbl['lbl.sc.eva.prepare.meeting.date']}"
-				style="width:30%">
-
+			<p:column style="width:30%">
+				<f:facet name="header">
+					<h:outputText value="* " styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.sc.eva.prepare.meeting.date']}" />
+				</f:facet>
 
 				<p:calendar value="#{meeting.meetingDate}" showOn="button"
+					id="meetingDate" label="#{lbl['lbl.sc.eva.prepare.meeting.date']}"
+					required="true"
 					pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}"></p:calendar>
+				<p:message id="confirmMeetingId" for="meetingDate" display="icon"></p:message>
 
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.eva.prepare.meeting.loc']}">
-
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="* " styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.sc.eva.prepare.meeting.loc']}" />
+				</f:facet>
 
 				<p:inputTextarea value="#{meeting.meetingLocation}" rows="2"
-					cols="100"></p:inputTextarea>
-
+					maxlength="50" label="#{lbl['lbl.sc.eva.prepare.meeting.loc']}"
+					id="locationId" required="true" cols="100"></p:inputTextarea>
+				<p:message id="meetingLocationId" for="locationId" display="icon"></p:message>
 			</p:column>
 
 			<!-- <p:column headerText="#{lbl['lbl.sc.eva.prepare.meeting.action']}">
@@ -66,7 +76,8 @@
 				oncomplete="meetingDtls.paginator.endLink.click();"
 				update="evaluationmeetingDetails" icon="ui-icon-add" />
 			<p:commandButton value="#{lbl['lbl.sc.eva.btn.delete']}"
-				icon="ui-icon-delete"
+				icon="ui-icon-delete" process="@this,evaluationmeetingDetails"
+				partialSubmit="true"
 				action="#{evaluationMeetingBackingBean.deleteMeetingDetails}"
 				update="evaluationmeetingDetails" />
 
@@ -112,18 +123,24 @@
 			<p:column headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.pp']}">
 				<h:outputText value="#{committeeMember.scCommitteeMember.PNP}"></h:outputText>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.eva.committee.role']}">
+			<p:column>
+			<f:facet name="header">
+			<h:outputText value="*" styleClass="mandatory"></h:outputText>
+			<h:outputText value="#{lbl['lbl.sc.eva.committee.role']}"></h:outputText>
+			</f:facet>
 				<ui:fragment rendered="#{committeeMember.scCommitteeMember.PNP}">
 					<h:outputText value="Chairperson"
-						rendered="#{committeeMember.memberRole eq 'C'}" />
+						rendered="#{committeeMember.scCommitteeMember.memberRole.parameterId=='583'}" />
 				</ui:fragment>
 				<ui:fragment rendered="#{!committeeMember.scCommitteeMember.PNP}">
-					<p:selectOneMenu
-						value="#{committeeMember.scCommitteeMember.memberRole}"
+					<p:selectOneMenu id="meetingRoleId" required="true"
+						label="#{lbl['lbl.sc.eva.committee.role']}"
+						value="#{committeeMember.scCommitteeMember.memberRole.parameterId}"
 						style="width: 110px;margin-bottom: 5px;">
 						<f:selectItems
 							value="#{evaluationMeetingBackingBean.getRoleTypeDropdownValues(ParameterTypeConst.committeeRole)}" />
 					</p:selectOneMenu>
+					<p:message id="meetingRoleMsg" for="meetingRoleId" display="icon"></p:message>
 				</ui:fragment>
 
 			</p:column>
@@ -143,7 +160,8 @@
 				icon="ui-icon-add" update=":form:newspecificationcommitteeid"
 				oncomplete="newspecificationcommittee.show();" />
 			<p:commandButton value="#{lbl['lbl.sc.eva.btn.delete']}"
-				icon="ui-icon-delete"
+				icon="ui-icon-delete" process="@this,evaluationpreparecommittee"
+				partialSubmit="true"
 				action="#{evaluationMeetingBackingBean.deleteCommitteeMembers}"
 				update="evaluationpreparecommittee" />
 
@@ -175,8 +193,8 @@
 							</tr>
 							<tr>
 								<td></td>
-								<td><p:inputTextarea cols="40" value="#{remarkVar.remark}"
-										rendered="#{remarkVar.remarkId eq null}" /> <h:outputText
+								<td><p:inputTextarea rows="2" cols="100" value="#{remarkVar.remark}"
+										rendered="#{remarkVar.remarkId eq null}" maxlength="1000"/> <h:outputText
 										value="#{remarkVar.remark}"
 										rendered="#{remarkVar.remarkId ne null}"
 										style="display: inline-block; width:220px;word-wrap: break-word;" />
