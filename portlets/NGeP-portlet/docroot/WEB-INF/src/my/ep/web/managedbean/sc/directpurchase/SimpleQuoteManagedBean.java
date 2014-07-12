@@ -21,6 +21,7 @@ import my.ep.dto.sc.directpurchase.QuoteReqDTO;
 import my.ep.dto.sc.directpurchase.QuoteResDTO;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
+import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmBusinessNature;
@@ -64,6 +65,9 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 
 	private List<PmOrgProfile> userDivisionList;
 	private CmSupplierItem cmSupplierItem;
+	private List<CmSupplierItem> supplierItems = new ArrayList<CmSupplierItem>();
+	private List<CtContractItem> contractItems = new ArrayList<CtContractItem>();
+	
 	private List<PmUser> userList = new ArrayList<PmUser>();
 	private ScRequestNoteDtl requestNoteDtl = new ScRequestNoteDtl();
 	private	ScRequestNote	requestNote = new	ScRequestNote(); //contain request list information
@@ -144,6 +148,7 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	private String quoteNo;
 	private Date  today = new Date();
 	private int tabActiveIndex = 0;
+	private int simpleQuoteCounter;
 
 	public SimpleQuoteManagedBean() {
 		super();
@@ -1201,6 +1206,42 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	 */
 	public void setTabActiveIndex(int tabActiveIndex) {
 		this.tabActiveIndex = tabActiveIndex;
+	}
+	/**
+	 * @return the simpleQuoteCounter
+	 */
+	public int getSimpleQuoteCounter() {
+		return simpleQuoteCounter;
+	}
+	/**
+	 * @param simpleQuoteCounter the simpleQuoteCounter to set
+	 */
+	public void setSimpleQuoteCounter(int simpleQuoteCounter) {
+		this.simpleQuoteCounter = simpleQuoteCounter;
+	}
+	/**
+	 * @return the supplierItems
+	 */
+	public List<CmSupplierItem> getSupplierItems() {
+		return supplierItems;
+	}
+	/**
+	 * @param supplierItems the supplierItems to set
+	 */
+	public void setSupplierItems(List<CmSupplierItem> supplierItems) {
+		this.supplierItems = supplierItems;
+	}
+	/**
+	 * @return the contractItems
+	 */
+	public List<CtContractItem> getContractItems() {
+		return contractItems;
+	}
+	/**
+	 * @param contractItems the contractItems to set
+	 */
+	public void setContractItems(List<CtContractItem> contractItems) {
+		this.contractItems = contractItems;
 	}
 	
 	

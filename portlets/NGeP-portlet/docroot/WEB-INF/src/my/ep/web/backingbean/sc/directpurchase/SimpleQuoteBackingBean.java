@@ -14,13 +14,14 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import javax.faces.validator.ValidatorException;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletSession;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
+import my.ep.biz.service.ct.dtl.IContractItemSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
-import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
@@ -41,10 +42,10 @@ import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
+import my.ep.dto.ct.dtl.ContractItemReqDTO;
+import my.ep.dto.ct.dtl.ContractItemResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
-import my.ep.dto.pm.authorization.user.UserReqDTO;
-import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
@@ -58,7 +59,9 @@ import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
+import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
+import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddressType;
@@ -177,13 +180,13 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			// TODO check flag for panel item or non contract item
 			String ItemCode = selectedSupplierItem.getCmItem().getExtensionCode();
 			CharSequence charSeq = ItemCode.subSequence(0, 2);
-			Integer icode = Integer.valueOf(charSeq.toString());
+			Integer itemCode = Integer.valueOf(charSeq.toString());
 
 			// TODO checking  two digits in itemCode whether service or product
 			QuoteReqDTO quoteReqDTO = new QuoteReqDTO();
 			QuoteResDTO quoteResDTO = quoteSO.getQuoteDtlFirstTime(quoteReqDTO);
 			for (ScQuoteDoc quoteDoc : quoteResDTO.getQuoteDocs()) {
-				if (icode > ParameterConst.PRODUCT_OR_SERVICE) { // for service
+				if (itemCode >= 70 && itemCode <= 94) { // for service  between  70 and 94  
 					if(ParameterConst.SQ_ITEM_LIST_SERVICE.equalsIgnoreCase(quoteDoc.getSpecMaster().getItemTypeCode().getParameterCode())){
 						TemplateSpecBean serviceTemplateSpecBean = getManagedBean().getServiceTemplateSpecBean();
 						TplSpecMaster serviceTpl =  quoteDoc.getSpecMaster();
@@ -199,7 +202,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 						getManagedBean().setProductFlag(Boolean.FALSE);
 						
 					} 
-				}else if (icode < ParameterConst.PRODUCT_OR_SERVICE) { // product
+				 }else { // product
 					if(ParameterConst.SQ_ITEM_LIST_PRODUCT.equalsIgnoreCase(quoteDoc.getSpecMaster().getItemTypeCode().getParameterCode())){
 						TemplateSpecBean productTemplateSpecBean = getManagedBean().getProductTemplateSpecBean();
 						TplSpecMaster prodTpl = quoteDoc.getSpecMaster();
@@ -249,18 +252,21 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 		getManagedBean().setLocLevelDropdown(getLocationLevelDropdown());
 		// location level by default - district 
 		getManagedBean().setLocationLevel(ParameterConst.LOCATION_LEVEL_DISTRICT);
-		
-		  // to get ptj
-		  PmUser user = new FacesScopes().getUserSessionBean();
-		  if (user != null) {
-			  IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-			  UserReqDTO reqDTO = new UserReqDTO();
-			  reqDTO.setUserId(user.getUserId());
-			  UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
-			  if(resDTO.getUserOrgList() != null && resDTO.getUserOrgList().size()>0){
-				  getManagedBean().getRequestNote().setPmOrgProfile(resDTO.getUserOrgList() .get(0).getPmOrgProfile());
-			  }
-		  }
+		  
+		// to get ptj
+		PmUser user = new FacesScopes().getUserSessionBean();
+		if (user != null) {
+			OrgProfileReqDTO profileReqDTO = new OrgProfileReqDTO();
+			profileReqDTO.setUserId(user.getUserId());
+			profileReqDTO.setOrgType(OrganizationType.DIVISION.value());
+			IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+			OrgProfileResDTO orgProfileResDTO = orgProfileSO
+					.retrieveOrgProfileListByOrgType(profileReqDTO);
+			if(orgProfileResDTO.getOrgProfileList() != null && orgProfileResDTO.getOrgProfileList().size()>0){
+				getManagedBean().getRequestNote().setPmOrgProfile(orgProfileResDTO.getOrgProfileList().get(0));
+			}
+		}
 		
 		// update tabmenu
 	    RequestContext.getCurrentInstance().update("tabMenuId");
@@ -1380,8 +1386,12 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 
 			} else if (getManagedBean().getScQuote().getStartDate() != null && 
 					getManagedBean().getScQuote().getEndDate() != null){
-
-				getManagedBean().setDuration(hoursDifference(quote.getEndDate(),  quote.getStartDate()));
+				
+				if(getManagedBean().getScQuote().getEndDate().after(getManagedBean().getScQuote().getStartDate())){
+					getManagedBean().setDuration(hoursDifference(quote.getEndDate(),  quote.getStartDate()));
+				} else{
+					 throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR," check ", ""));
+				}
 			}
 		}
 
@@ -1606,7 +1616,6 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 					busiNatureCriteria.append(natureQuoteCriteria.getPmBusinessNature().getBusinessNatureId())
 					.append(",");
 				}
-
 			}
 		}
 
@@ -1893,8 +1902,6 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			      }
 				}	
 				
-				// ptj drop down
-				requestNoteBackingBean.populateUserDivisionList();
 				// page navigation to request note
 				FacesContext fc = FacesContext.getCurrentInstance();
 				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "commonRequestNote");
@@ -2066,6 +2073,40 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 		return null;
 	}
 	
+ /**
+   * addQuoteItem method to add cmSupplierItem to the  simpleQuote
+  */
+	public void addQuoteItem(VCmSupplierItem vCmSupplierItem) {
+		debugLogger("addQuoteItem");
+		IContractItemSO contractItemSO	=	(IContractItemSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractItemSO.class);
+		// adding contract item 
+		if(vCmSupplierItem.getContractNo() !=null){
+			// contract item
+			ContractItemReqDTO contractItemReqDTO = new ContractItemReqDTO();
+			contractItemReqDTO.setContractItemId(vCmSupplierItem.getDocId());
+			ContractItemResDTO contractItemResDTO = contractItemSO.getContractItem(contractItemReqDTO);
+			List<CtContractItem> contractItems = getManagedBean().getContractItems();
+			if(contractItemResDTO.getCtContractItem()!=null) {
+				if(getManagedBean().getContractItems().isEmpty()){
+					contractItems.add(contractItemResDTO.getCtContractItem());
+				} else {
+					List<Long> itemIds = new ArrayList<Long>();
+					for (CtContractItem ctContractItem : contractItems) {
+						itemIds.add(ctContractItem.getScRequestItem().getCmItem().getItemId());
+						if (itemIds.size() > 0) {
+							if(itemIds.contains(ctContractItem.getScRequestItem().getCmItem().getItemId())){
+								throw new EpException(MessageConst.INFO_700027, new String[]{ctContractItem.getScRequestItem().getCmItem().getItemName(),""});
+							} else {
+								contractItems.add(ctContractItem);
+								getManagedBean().setSimpleQuoteCounter(contractItems.size());
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
 	/**
 	 * Event for Zone in SQ
 	 */

@@ -7,10 +7,13 @@
 	 <p:panel>
 	  <div align="right">
 	    <c:if test="#{requestNoteBackingBean.managedBean.taskId eq null}">
+	           <p:commandButton value="#{lbl['lbl.sc.action.add.item']}" style="float:left;" icon="ui-icon-back" partialSubmit="true" process="@this"
+						immediate="true" action="#{requestNoteBackingBean.backToPervious}" />
+						
 				<p:commandButton value="#{lbl['lbl.sc.common.save']}" icon="ui-icon-save"
 				   	action="#{requestNoteBackingBean.saveAction('')}" update="@([id$=requestNoteId])"/>
 
-				<p:commandButton value="#{lbl['lbl.sc.common.submit']}" update="@([id$=requestNoteId])"
+				<p:commandButton value="#{lbl['lbl.sc.common.submit']}" update="@([id$=requestNoteId])" style="float:right;"
 					icon="ui-icon-submit"  action="#{requestNoteBackingBean.submitAction('')}"/>
 	    </c:if>
 	    </div>
@@ -19,6 +22,12 @@
 				<table style="width:100%">
 					<tr>
 						<td align="right">
+						
+						      <c:if test="#{requestNoteBackingBean.managedBean.requestNoteStatus eq 'Pending Submission'}">
+					               <p:commandButton value="#{lbl['lbl.sc.action.add.item']}" icon="ui-icon-add" partialSubmit="true" process="@this"
+						                immediate="true" action="#{requestNoteBackingBean.backToPervious}" />
+						      </c:if>
+						
 							  <c:if test="#{requestNoteBackingBean.managedBean.requestNoteStatus eq 'Pending Approval' 
 									  or requestNoteBackingBean.managedBean.requestNoteStatus eq 'Pending Submission' 
 									  or requestNoteBackingBean.managedBean.requestNoteStatus eq 'Pending Revision'}">

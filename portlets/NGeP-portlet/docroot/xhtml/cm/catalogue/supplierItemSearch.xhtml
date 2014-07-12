@@ -118,9 +118,14 @@
 									value="CR ( #{fn:length(catalogueBackingBean.managedBean.ctRequestList)} )" 
 									disabled="#{fn:length(catalogueBackingBean.managedBean.ctRequestList)&lt;1}"></p:commandButton>
 									
-								<p:commandButton value="#{lbl['lbl.sc.sq']}" rendered="#{unspscCodeBackingBean.requisitioner}" id="simpleQuoteId"
-									action="#{simpleQuoteBackingBean.simpleQuoteAction(simpleQuoteBackingBean.managedBean.cmSupplierItem.supplierItemId , false , null)}"
-									disabled="#{catalogueBackingBean.managedBean.simpleQuoteFlag}" />
+								<p:commandButton id="requestNoteId"
+									action="#{requestNoteBackingBean.requestNoteAction}"
+									value="#{lbl['lbl.sc.request.note']} (#{requestNoteBackingBean.managedBean.requestNoteCounter})"
+									disabled="#{requestNoteBackingBean.managedBean.requestNoteCounter eq '0'}" />
+
+								<p:commandButton value="#{lbl['lbl.sc.sq']} (#{simpleQuoteBackingBean.managedBean.simpleQuoteCounter})" rendered="#{unspscCodeBackingBean.requisitioner}" id="simpleQuoteId"
+									action="#{simpleQuoteBackingBean.simpleQuoteAction(simpleQuoteBackingBean.managedBean.cmSupplierItem.supplierItemId , false , null)}" />
+
 
 								<p:commandButton id="compareButton"
 									action="#{catalogueBackingBean.compareSupplierItem}"
@@ -217,14 +222,24 @@
 								<p:menuButton value="">
 							        <p:menuitem value="#{lbl['lbl.cm.add.to.cr']}" actionListener="#{catalogueBackingBean.addToList(supplierItem,1)}" update="@([id$=btnId])" icon="ui-icon-plus" 
 							        rendered="#{supplierItem.contractNo != null}"/>
-							        <p:menuitem value="#{lbl['lbl.cm.add.to.simple.qoute']}" actionListener="#{catalogueBackingBean.addToList(supplierItem,2)}" update="@([id$=btnId])" icon="ui-icon-plus" 
-							        rendered="#{supplierItem.contractNo == null}"/>
+							        <p:menuitem value="#{lbl['lbl.cm.add.to.simple.qoute']}" actionListener="#{simpleQuoteBackingBean.addQuoteItem(supplierItem)}" update="@([id$=btnId])" icon="ui-icon-plus" 
+							         rendered="#{supplierItem.circularNo ne null}" disabled="#{supplierItem.circularNo eq null}" />
 							        <p:menuitem value="#{lbl['lbl.cm.add.to.compare']}" actionListener="#{catalogueBackingBean.addToList(supplierItem,3)}" update="@([id$=btnId])" icon="ui-icon-plus" 
 							        rendered="#{supplierItem.contractNo == null and supplierItem.circularNo == null}"/>
 							    </p:menuButton>
 							    
+							    
+							    <p:commandButton value="#{lbl['lbl.sc.purchase.in.default']}"
+									id="pidId"
+									action="#{purchaseInDefaultBackingBean.pidAction(supplierItem)}"
+									disabled="#{!supplierItem.pidRequired}"
+									rendered="#{supplierItem.contractNo != null }">
+								</p:commandButton>
+								<p:tooltip for="pidId" value="#{lbl['lbl.sc.pid']}"
+									showEffect="fade" hideEffect="fade" />
+							    
 								<p:commandLink disabled="#{!supplierItem.atcRequired}" 
-									action="#{requestNoteBackingBean.addToCart(supplierItem.docId)}"
+									action="#{requestNoteBackingBean.addToCart(supplierItem.docId , false)}"
 									update="@([id$=addToCartPopup])"
 									rendered="#{supplierItem.contractNo == null and supplierItem.circularNo == null }">
 									<p:graphicImage library="ep/images/design"
@@ -233,23 +248,6 @@
 								<p:tooltip for="addToCartId" 
 									value="#{lbl['lbl.sc.add.to.cart']}" showEffect="fade"
 									hideEffect="fade" />
-								<p:commandButton value="#{lbl['lbl.sc.purchase.in.default']}"
-									id="pidId"
-									action="#{purchaseInDefaultBackingBean.pidAction(supplierItem)}"
-									disabled="#{!supplierItem.pidRequired}"
-									rendered="#{supplierItem.contractNo != null }">
-								</p:commandButton>
-								<p:tooltip for="pidId" value="#{lbl['lbl.sc.pid']}"
-									showEffect="fade" hideEffect="fade" />
-
-								<p:commandButton value="#{lbl['lbl.sc.simple.quote']}"
-									id="sqId"
-									action="#{simpleQuoteBackingBean.simpleQuoteAction(supplierItem.docId , true ,null)}"
-									rendered="#{supplierItem.circularNo ne null}"
-									disabled="#{supplierItem.circularNo eq null }">
-								</p:commandButton>
-								<p:tooltip for="sqId" value="#{lbl['lbl.sc.sq']}"
-									showEffect="fade" hideEffect="fade" />
 
 								<p:commandButton value="CR" update="@form" id="crId"
 									action="#{catalogueBackingBean.addToContractRequest(supplierItem)}"

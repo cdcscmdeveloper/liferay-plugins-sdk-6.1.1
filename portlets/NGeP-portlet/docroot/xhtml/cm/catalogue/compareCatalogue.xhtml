@@ -62,7 +62,7 @@
 									<p:graphicImage value="/resources/ep/images/design/icon_txt.png" height="15px"></p:graphicImage>
 								</p:commandLink> 
 								
-								<p:commandLink actionListener="#{requestNoteBackingBean.addToCart(supplierItem.supplierItemId)}" 
+								<p:commandLink actionListener="#{requestNoteBackingBean.addToCart(supplierItem.supplierItemId ,true)}" 
 								    partialSubmit="true"
 								    process="@this" 
 								    update="@([id$=addToCartPopup])"

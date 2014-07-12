@@ -14,7 +14,6 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.sc.directpurchase.ScPRIRemark;
 import my.ep.persistence.entity.sc.directpurchase.ScPrInquiry;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
@@ -42,7 +41,6 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	private ScPrInquiry scPrInquiry = new ScPrInquiry();
 	private CmSupplierItem supplierItem;
 	private	DualListModel<PmUser>	approvalUsers;
-	private List<PmOrgProfile> userDivisionList;
 	private List<ScRequestSupplierItem>	scRequestSupplierItems;
 	private ScRequestNoteDtl requestNoteDtl = new ScRequestNoteDtl();
 	
@@ -129,19 +127,6 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	 */
 	public void setApprovalUsers(DualListModel<PmUser> approvalUsers) {
 		this.approvalUsers = approvalUsers;
-	}
-	/**
-	 * @return the userDivisionList
-	 */
-	public List<PmOrgProfile> getUserDivisionList() {
-		return userDivisionList;
-	}
-
-	/**
-	 * @param userDivisionList the userDivisionList to set
-	 */
-	public void setUserDivisionList(List<PmOrgProfile> userDivisionList) {
-		this.userDivisionList = userDivisionList;
 	}
 
 	/**
@@ -366,6 +351,4 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	public void setPmOrgProfile(PmOrgProfile pmOrgProfile) {
 		this.pmOrgProfile = pmOrgProfile;
 	}
-
-	
 }

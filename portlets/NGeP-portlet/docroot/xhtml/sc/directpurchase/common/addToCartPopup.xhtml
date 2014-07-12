@@ -5,7 +5,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<p:dialog id="addToCartPopup" widgetVar="addToCartPopup"
-		header="ADD TO CART" width="540 " height="460" resizable="true"
+		header="Add to Request Note" width="540 " height="460" resizable="true"
 		 modal="true" dynamic="true">
 		<p:panel id="addToCartId">
 		<p:messages id="cartmessages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
@@ -117,8 +117,8 @@
 			<p:row>
 				<p:column width="60%" style="text-align:right">
 					<p:commandButton value="#{lbl['lbl.sc.ok']}" process="@this addToCartId ,addToCartPopup"
-						action="#{requestNoteBackingBean.addToRequestNote}" 
-						icon="ui-icon-submit" update="addToCartId"/>
+						action="#{requestNoteBackingBean.addToRequestNote(requestNoteBackingBean.managedBean.addToCartFlag)}" 
+						icon="ui-icon-submit" update="addToCartId ,supplierItemViewID"/>
 						
 					<p:commandButton value="#{lbl['lbl.sc.cancel']}" process="@this"
 						action="#{requestNoteBackingBean.closeListener}" icon="ui-icon-cancel" oncomplete="addToCartPopup.hide();"
