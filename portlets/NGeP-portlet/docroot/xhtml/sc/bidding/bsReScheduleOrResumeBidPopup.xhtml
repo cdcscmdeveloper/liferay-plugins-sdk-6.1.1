@@ -6,79 +6,135 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 
-	<div>
 
+
+	<p:panel id="selectActionRadio">
 		<table>
 
 			<tr>
 				<TD><p:outputLabel value="#{lbl['lbl.sc.action']}" /></TD>
 				<TD colspan="3"><p:selectOneRadio id="bidAction"
 						value="#{biddingBB.managedBean.bidAction.actionType}">
-
 						<f:selectItem itemLabel="Resume Bid" itemValue="R"></f:selectItem>
 						<f:selectItem itemLabel="Re-Bidding" itemValue="B"></f:selectItem>
+
+						<p:ajax event="change" process="@this,bidAction" partialSubmit="true"
+							listener="#{biddingBB.bidActionTypeChangeListener}"
+							update="newBidDatesPanel"></p:ajax>
 
 					</p:selectOneRadio></TD>
 
 			</tr>
+
 			<tr>
 				<TD><p:outputLabel value="#{lbl['lbl.sc.original.bid.start']}" /></TD>
 				<TD><p:inputText id="bidStartTime"
 						value="#{biddingBB.managedBean.bidAction.scBidSchedule.startDate}"
-						size="20" disabled="true" /></TD>
+						size="20" disabled="true" >
+						<f:convertDateTime dateStyle="short" timeStyle="short" type="both" />
+						</p:inputText>
+						</TD>
 				<TD><p:outputLabel value="#{lbl['lbl.sc.original.bid.end']}" /></TD>
 				<TD><p:inputText id="bidEndTime"
 						value="#{biddingBB.managedBean.bidAction.scBidSchedule.endDate}"
-						size="20" disabled="true" /></TD>
+						size="20" disabled="true" >
+						<f:convertDateTime dateStyle="short" timeStyle="short" type="both" />
+						</p:inputText></TD>
 			</tr>
 			<tr>
 				<TD><p:outputLabel value="#{lbl['lbl.sc.bid.paused.time']}" /></TD>
 				<TD><p:inputText id="bidPausedTime"
 						value="#{biddingBB.managedBean.bidAction.createdDate}" size="20"
-						disabled="true" /></TD>
+						disabled="true" >
+						<f:convertDateTime dateStyle="short" timeStyle="short" type="both" />
+						</p:inputText></TD>
 				<TD><p:outputLabel value="#{lbl['lbl.sc.remaining.time']}" /></TD>
-				<TD><p:inputText id="remainTime"
-						value="#{biddingBB.managedBean.bidAction.remainingTime}" size="20"
-						disabled="true" /></TD>
-			</tr>
-			<tr>
-				<TD><p:outputLabel value="#{lbl['lbl.sc.new.bidding.start']}" /></TD>
-				<TD><p:inputText id="newBidStart"
-						value="#{biddingBB.managedBean.bidAction.newStartDate}" size="20"
-						disabled="true" /></TD>
-				<TD><p:outputLabel value="#{lbl['lbl.sc.new.bidding.end']}" /></TD>
-				<TD><p:inputText id="newBidEnd"
-						value="#{biddingBB.managedBean.bidAction.newEndDate}" size="20"
-						disabled="true" /></TD>
-			</tr>
-			<tr>
-				<TD><p:outputLabel value="#{lbl['lbl.sc.new.bid.duration']}" /></TD>
-				<TD><p:inputText id="newBidDuration"
-						value="#{biddingBB.managedBean.bidAction.remainingTime}" size="20"
-						disabled="true" /></TD>
-				<TD></TD>
-				<TD></TD>
-			</tr>
-			<tr>
-				<TD><p:outputLabel value="#{lbl['lbl.sc.notes.to.supplier']}" /></TD>
-				<TD colspan="3"><p:inputTextarea
-						id="reBidOrResumeSupplierNotes"
-						value="#{biddingBB.managedBean.bidAction.remark}" size="200"
-						maxLength="1000" /></TD>
-
+				<TD><p:inputText id="remainTime" size="20" disabled="true"
+						value="#{biddingBB.managedBean.remainingTime}" /></TD>
 			</tr>
 
 		</table>
 
-	</div>
-	<div>
+	</p:panel>
 
-		<p:commandButton value="#{lbl['lbl.btn.ok']}" icon="ui-icon-ok"
-			action="#{biddingBB.reScheduleOrReBidAction()}"
-			onComplete="bidRescheduleOrResume.close();" />
+	<p:panel id="newBidDatesPanel">
+
+		<table>
+			<tr>
+				<TD><p:outputLabel value="#{lbl['lbl.sc.new.bidding.start']}" /></TD>
+				<TD><p:calendar id="newBidStart" required="true"
+						value="#{biddingBB.managedBean.bidAction.newStartDate}"
+						showOn="button"
+						pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}">
+						<p:ajax event="dateSelect" process="@this,newBidStart"
+							partialSubmit="true"
+							listener="#{biddingBB.resumeBidNewStartDateSelectListener}"
+							update="newResumeBidEndDate,newBidDuration"></p:ajax>
+					</p:calendar></TD>
+				<TD><p:outputLabel value="#{lbl['lbl.sc.new.bidding.end']}" /></TD>
+				<TD><p:inputText id="newResumeBidEndDate" size="20"
+						disabled="true"
+						value="#{biddingBB.managedBean.bidAction.newEndDate}"
+						rendered="#{biddingBB.managedBean.bidAction.actionType eq 'R'}" >
+						<f:convertDateTime dateStyle="short" timeStyle="short" type="both" />
+						</p:inputText>
+					<p:calendar id="newReBidEndDate" showOn="button" required="true"
+						rendered="#{biddingBB.managedBean.bidAction.actionType eq 'B'}"
+						pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}"
+						value="#{biddingBB.managedBean.bidAction.newEndDate}">
+						<p:ajax event="dateSelect" process="@this,newReBidEndDate,"
+							partialSubmit="true"
+							listener="#{biddingBB.reBidNewEndDateSelectListener}"
+							update="durationPanel" />
+
+					</p:calendar></TD>
+			</tr>
+		</table>
+
+	</p:panel>
+
+
+
+	<p:panel id="durationPanel">
+
+		<table>
+
+			<tr>
+				<TD><p:outputLabel value="#{lbl['lbl.sc.new.bid.duration']}" /></TD>
+				<TD><p:inputText id="newBidDuration"
+						value="#{biddingBB.managedBean.duration}" size="20"
+						disabled="true" /></TD>
+				<TD></TD>
+				<TD></TD>
+			</tr>
+
+		</table>
+
+	</p:panel>
+
+	<table>
+
+		<tr>
+			<TD><p:outputLabel value="#{lbl['lbl.sc.notes.to.supplier']}"
+					required="true" /></TD>
+			<TD colspan="3"><p:inputTextarea id="reBidOrResumeSupplierNotes"
+					value="#{biddingBB.managedBean.bidAction.remark}" rows="7"
+					cols="65" maxLength="200" /></TD>
+
+		</tr>
+
+	</table>
+
+	<div align="right">
+
+		<p:commandButton value="#{lbl['lbl.btn.ok']}" icon="ui-icon-submit"
+			actionListener="#{biddingBB.reScheduleOrReBidAction()}"
+			process="@this,reBidOrResumeSupplierNotes,newBidStart,newResumeBidEndDate,newReBidEndDate "
+			partialSubmit="true" oncomplete="bidRescheduleOrResume.hide();" update="@form"/>
 
 		<p:commandButton value="#{lbl['lbl.btn.cancel']}"
-			icon="ui-icon-cancel" onClick="bidRescheduleOrResume.close();" />
-	</div>
+			icon="ui-icon-cancel" onclick="bidRescheduleOrResume.hide();"
+			immediate="true" />
 
+	</div>
 </ui:composition>
