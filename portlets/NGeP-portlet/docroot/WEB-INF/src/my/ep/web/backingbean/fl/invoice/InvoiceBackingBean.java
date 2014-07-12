@@ -105,7 +105,6 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		try {
-
 			FlInvoice invoice = getManagedBean().getInvoice();
 			invoiceSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IInvoiceSO.class);
 			
@@ -114,12 +113,21 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 				calInvSummary();
 			}
 			
+			// Check is it DAN exist
+			if(action.equalsIgnoreCase(my.ep.constant.BpmOutcomeConst.BPM_SUBMIT)) {
+				BigDecimal adjustedAmt = new BigDecimal(0);
+				for(FlInvoiceItem invoiceItem : invoice.getFlInvoiceItem()){
+					adjustedAmt = invoiceItem.getInvAmt().subtract(invoiceItem.getOrderedAmt());
+					if(adjustedAmt.doubleValue()>0) {
+						reqDTO.setDan(true);
+						break;
+					}
+				}
+			}
+			
 			reqDTO.setInvoice(invoice);
 			reqDTO.setOutcome(action);
 			reqDTO.setTaskId(getManagedBean().getTaskId());
-			System.out.println("getManagedBean().isDan(): "+getManagedBean().isDan());
-			reqDTO.setDanRequired(getManagedBean().isDan());// for current testing DAN purpose in SO
-			reqDTO.setUpdateDan(getManagedBean().isUpdateDan());
 			reqDTO.setToken(token);
 			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
 			reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
