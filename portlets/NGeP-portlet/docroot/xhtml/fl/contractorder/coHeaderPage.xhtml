@@ -7,20 +7,18 @@
 	<div align="left" class="header-info">
 		<table style="width: 100%">
 			<tr>
-				<td><h:outputLabel
-						value="#{lbl['lbl.fl.rev.hed.contract.request.no']} " /></td>
-				<td class="header-info-text"></td>
-				<td><p:outputLabel
-						value="#{lbl['lbl.fl.rev.hed.contract.ord.no']} " /></td>
-				<td class="header-info-text"></td>
-				<td><p:outputLabel
-						value="#{lbl['lbl.fl.rev.hed.contract.ptj.name']} " /></td>
+				<td><h:outputLabel value="#{lbl['lbl.fl.rev.hed.contract.request.no']} " /></td>
+				<td class="header-info-text">
+					#{flOrderBB.managedBean.flRequest.ctContract.contractNo}</td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.rev.hed.contract.ord.no']} " /></td>
+				<td class="header-info-text">
+					#{flOrderBB.managedBean.flRequest.flFulfilmentOrder.docNo}</td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.rev.hed.contract.ptj.name']} " /></td>
 				<td class="header-info-text">
 					#{flOrderBB.managedBean.flRequest.preparedOrgProfile.orgName}</td>
-				<td><p:outputLabel
-						value="#{lbl['lbl.fl.rev.hed.contract.status']} " /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.rev.hed.contract.status']} " /></td>
 				<td class="header-info-text">
-					#{flOrderBB.getStatusDescById(flOrderBB.managedBean.flRequest.status.statusId)}
+					#{flOrderBB.getStatusDescById(flOrderBB.managedBean.fulfilmentOrder.status.statusId)}
 				</td>
 			</tr>
 		</table>
