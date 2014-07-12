@@ -55,6 +55,8 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 	private List<ScQtCommitteeActivity> committeeActivitySelect;
 	private ScQtCommittee scQtCommittee;
 	private List<ScQtCommitteRemarks> qtCommitteeRemarks;
+	private List<ScCommitteeMember> scCommitteeMemberList;
+	private ScQt qt;
 	
 	/**
 	 * @return the scQtMeetings
@@ -337,6 +339,28 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 	 */
 	public void setQtCommitteeRemarks(List<ScQtCommitteRemarks> qtCommitteeRemarks) {
 		this.qtCommitteeRemarks = qtCommitteeRemarks;
+	}
+	
+	
+	public void setScCommitteeMemberList(
+			List<ScCommitteeMember> scCommitteeMemberList) {
+		this.scCommitteeMemberList = scCommitteeMemberList;
+	}
+
+	public List<ScCommitteeMember> getScCommitteeMemberList() {
+		return scCommitteeMemberList;
+	}
+	/**
+	 * @return the qt
+	 */
+	public ScQt getQt() {
+		return qt;
+	}
+	/**
+	 * @param qt the qt to set
+	 */
+	public void setQt(ScQt qt) {
+		this.qt = qt;
 	}
 
 }

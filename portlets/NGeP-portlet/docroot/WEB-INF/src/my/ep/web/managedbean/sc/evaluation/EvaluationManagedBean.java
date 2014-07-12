@@ -74,7 +74,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private ScQtCommitteeActivity commiteeActivity;
 	
 	// OC,EC,TEC,FEC
-	private String committeeType = "FEC";
+	private String committeeType = "EC";
+	private boolean isDemo=true;
 	private List<ScQtEvaluationResult> manuals1SupplierList;
 	// private List<ScQtProposalLabel> manualProposalLabel;
 	// private List<ScQtManualEvaluation> manualEvaluateList;
@@ -132,7 +133,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private List<ScQtEvaluationResult> complianceSummaryQualSuppliers;
 	private List<ScQtEvaluationResult> complianceSummaryDisQualSuppliers;
 	
-	private List<ScQtCheckList> evaluationComplianceList;
+	private List<ScQtProposalChecklist> evaluationComplianceList;
 	private List<TplSpecQuestion> specItemList;
 	
 	private int complianceQualifiedSuppliers;
@@ -187,6 +188,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private ScQtScoreOfferPrice offerPriceItem;
 	private List<SummaryZoneBaen> finSpecZoneBean;
 	private List<ScCommitteeMember> endorscommitteeMemberList;
+	private String message;
+	private String subject;
 	
 	
 	private BigDecimal bankTotalAmt;
@@ -1451,20 +1454,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.complianceDisQualifiedSuppliers = complianceDisQualifiedSuppliers;
 	}
 
-	/**
-	 * @return the evaluationComplianceList
-	 */
-	public List<ScQtCheckList> getEvaluationComplianceList() {
-		return evaluationComplianceList;
-	}
-
-	/**
-	 * @param evaluationComplianceList the evaluationComplianceList to set
-	 */
-	public void setEvaluationComplianceList(
-			List<ScQtCheckList> evaluationComplianceList) {
-		this.evaluationComplianceList = evaluationComplianceList;
-	}
+	
 
 	/**
 	 * @return the specItemList
@@ -2084,6 +2074,63 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	public void setEndorscommitteeMemberList(
 			List<ScCommitteeMember> endorscommitteeMemberList) {
 		this.endorscommitteeMemberList = endorscommitteeMemberList;
+	}
+
+	/**
+	 * @return the isDemo
+	 */
+	public boolean isDemo() {
+		return isDemo;
+	}
+
+	/**
+	 * @param isDemo the isDemo to set
+	 */
+	public void setDemo(boolean isDemo) {
+		this.isDemo = isDemo;
+	}
+
+	/**
+	 * @return the message
+	 */
+	public String getMessage() {
+		return message;
+	}
+
+	/**
+	 * @param message the message to set
+	 */
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+	/**
+	 * @return the subject
+	 */
+	public String getSubject() {
+		return subject;
+	}
+
+	/**
+	 * @param subject the subject to set
+	 */
+	public void setSubject(String subject) {
+		this.subject = subject;
+	}
+
+	/**
+	 * @return the evaluationComplianceList
+	 */
+	public List<ScQtProposalChecklist> getEvaluationComplianceList() {
+		return evaluationComplianceList;
+	}
+
+	/**
+	 * @param evaluationComplianceList the evaluationComplianceList to set
+	 */
+	public void setEvaluationComplianceList(
+			List<ScQtProposalChecklist> evaluationComplianceList) {
+		this.evaluationComplianceList = evaluationComplianceList;
 	}
 
 	
