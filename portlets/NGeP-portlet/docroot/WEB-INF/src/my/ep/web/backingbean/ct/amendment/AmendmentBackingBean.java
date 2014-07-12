@@ -64,6 +64,7 @@ import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.BpmOutcomeConst;
+import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
@@ -128,12 +129,15 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.backingbean.ct.LocationDTO;
 import my.ep.web.constant.CommonUIConst;
+import my.ep.web.format.AttachmentDateFormat;
+import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.ct.amendment.AmendmentManagedBean;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.FacesScopes;
@@ -186,6 +190,10 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		if(ctBackingBean == null){
 		     ctBackingBean = new ContractBackingBean();
 		     ctBackingBean.initializeRemarkAndAttachement(this.getManagedBean().getRemarkList(), this.getManagedBean().getAttachmentList());
+		}
+		
+		if(getManagedBean().getFileDirectory().equalsIgnoreCase("") || getManagedBean().getFileDirectory() == null){
+			getManagedBean().setFileDirectory(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)+"/CT/"+ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
 		}
 	}
 	
@@ -1271,7 +1279,11 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	
 	public void fileUpload(FileUploadEvent event) throws Exception {
 		UploadedFile item = event.getFile();
-		String filePath = "C:/projects/uploads/"+item.getFileName();
+		AttachmentFormat attachmentFormat = new AttachmentDateFormat();
+		String filePath = getManagedBean().getFileDirectory();
+		File file = new File(filePath);
+		file.mkdirs();
+		filePath = filePath + "/" + attachmentFormat.format(item.getFileName(), null);
 		FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
 	    fileOuputStream.write(item.getContents());
 	    fileOuputStream.close();
@@ -1287,7 +1299,12 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	public void contentLetterUpload(FileUploadEvent event) throws Exception {
 		UploadedFile files = event.getFile();
 		String fileName = files.getFileName();
-		String filePath = "C:/projects/uploads/"+files.getFileName();
+		AttachmentFormat attachmentFormat = new AttachmentDateFormat();
+		String filePath = getManagedBean().getFileDirectory();
+		File file = new File(filePath);
+		file.mkdirs();
+		filePath = filePath + "/" + attachmentFormat.format(files.getFileName(), null);
+		
 		FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
 	    fileOuputStream.write(files.getContents());
 	    fileOuputStream.close();
@@ -1304,7 +1321,12 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	public void letterOfAcceptenceUpload(FileUploadEvent event) throws Exception{
 		UploadedFile files = event.getFile();
 		String fileName = files.getFileName();
-		String filePath = "C:/projects/uploads/"+files.getFileName();
+		AttachmentFormat attachmentFormat = new AttachmentDateFormat();
+		String filePath = getManagedBean().getFileDirectory();
+		File file = new File(filePath);
+		file.mkdirs();
+		filePath = filePath + "/" + attachmentFormat.format(files.getFileName(), null);
+		
 		FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
 		fileOuputStream.write(files.getContents());
 		fileOuputStream.close();

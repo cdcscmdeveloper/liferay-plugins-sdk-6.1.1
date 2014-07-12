@@ -29,7 +29,7 @@ import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.web.managedbean.BaseManagedBean;
 
 /**
- * Managed Bean For Contract Amendment
+ * ManagedBean For Contract Amendment
  * 
  * @author Alam
  * @since 1/13/2014	 
@@ -54,6 +54,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private String witnessHeader;
 	private String supplierBankAddress;
 	private String editorValue;
+	private String fileDirectory;
 	
 	private Long meetingStatusId;
 	private int selectedTabIndex;
@@ -107,7 +108,6 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private CtItemCeilingQty ctItemCeilingQtys;
 	private ScLoaWitness scLoaWitness;
 	private ScLoaReport selectedScLoaReports;
-	
 	
 	//private boolean productAndService;
     //	private double secondValue =0.0;
@@ -688,5 +688,13 @@ public class AmendmentManagedBean extends BaseManagedBean {
 
 	public void setSelectedScLoaReports(ScLoaReport selectedScLoaReports) {
 		this.selectedScLoaReports = selectedScLoaReports;
+	}
+
+	public String getFileDirectory() {
+		return fileDirectory;
+	}
+
+	public void setFileDirectory(String fileDirectory) {
+		this.fileDirectory = fileDirectory;
 	}
 }
