@@ -1,0 +1,44 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	
+
+		<table>
+
+			<tr>
+				<TD><p:outputLabel value="#{lbl['lbl.sc.item.name']}" /></TD>
+				<TD><p:inputText id=""
+						value="#{onlineBiddingBB.managedBean.}"
+						size="20" disabled="true" /></TD>
+			</tr>
+
+			<tr>
+				<TD><p:outputLabel value="#{lbl['lbl.sc.item.description']}" /></TD>
+				<TD><p:inputText id=""
+						value="#{onlineBiddingBB.managedBean.}"
+						size="20" disabled="true" /></TD>
+			</tr>
+
+			<tr>
+				<TD><p:outputLabel value="#{lbl['lbl.sc.uom']}" /></TD>
+				<TD><p:inputText id=""
+						value="#{onlineBiddingBB.managedBean.}"
+						size="20" disabled="true" /></TD>
+			</tr>
+
+			<tr>
+				<TD><p:outputLabel value="#{lbl['lbl.sc.quantity']}" /></TD>
+				<TD><p:inputText id=""
+						value="#{onlineBiddingBB.managedBean.}"
+						size="20" disabled="true" /></TD>
+			</tr>
+
+		</table>
+
+	<p:commandButton value="#{lbl['lbl.btn.close']}" icon="ui-icon-close" onclick="itemDetails.hide();"/>
+
+</ui:composition>
