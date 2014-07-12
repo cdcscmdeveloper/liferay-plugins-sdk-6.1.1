@@ -7,14 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	<div align="right">
 
-		
-		<p:commandButton value="#{lbl['lbl.sc.eva.btn.save']}"
-			style="float:right;"
-			action="#{evaluationBackingBean.saveMeetingAttendenceDtls}"
-			icon="ui-icon-save" />
-	</div>
 	<p:spacer height="40"></p:spacer>
 
 	<p:panel header="#{lbl['lbl.sc.eva.prepare.turut.hadir']}"
@@ -29,17 +22,30 @@
 			<ac:paginator for="turuthadir" />
 
 			<p:column selectionMode="multiple" style="width:2%"></p:column>
-			<p:column headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.name']}"
-				style="width:30%">
-
-				<p:inputText size="70" value="#{meetingAttendance.name}"></p:inputText>
+			<p:column style="width:50%">
+				<f:facet name="header">
+					<h:outputText value="* " styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.sc.eva.mtng.opn.cmt.name']}" />
+				</f:facet>
+				<p:inputText size="70" value="#{meetingAttendance.name}"
+					id="attendanceNameId" required="true"
+					label="#{lbl['lbl.sc.eva.mtng.opn.cmt.name']}" maxlength="50"></p:inputText>
+				<p:message id="attendanceNameMessageId" for="attendanceNameId"
+					display="icon"></p:message>
 
 
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.idn.no']}">
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="* " styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.sc.eva.mtng.opn.cmt.idn.no']}" />
+				</f:facet>
 
-
-				<p:inputText size="70" value="#{meetingAttendance.icPassport}"></p:inputText>
+				<p:inputText size="70" value="#{meetingAttendance.icPassport}"
+					id="attendacePassportId" required="true"
+					label="#{lbl['lbl.sc.eva.mtng.opn.cmt.idn.no']}" maxlength="15"></p:inputText>
+				<p:message id="attendancePassportMessageId"
+					for="attendacePassportId" display="icon"></p:message>
 
 			</p:column>
 
@@ -48,14 +54,15 @@
 		</p:dataTable>
 		<p:spacer height="10"></p:spacer>
 		<div align="right">
-			<p:commandButton id="turutbutton" value="#{lbl['lbl.sc.eva.btn.add']}"
-				process="@this,turuthadir" partialSubmit="true" update="turuthadir"
-					oncomplete="tirutWidget.paginator.endLink.click();"
-				icon="ui-icon-add" immediate1="true"
+			<p:commandButton id="turutbutton"
+				value="#{lbl['lbl.sc.eva.btn.add']}" process="@this,turuthadir"
+				partialSubmit="true" update="turuthadir"
+				oncomplete="tirutWidget.paginator.endLink.click();"
+				icon="ui-icon-add" 
 				action="#{evaluationBackingBean.addTurutDetails}" />
 			<p:commandButton value="#{lbl['lbl.sc.eva.btn.delete']}"
 				process="@this,turuthadir" partialSubmit="true"
-				icon="ui-icon-delete" update="turuthadir" immediate1="true"
+				icon="ui-icon-delete" update="turuthadir" 
 				actionListener="#{evaluationBackingBean.deleteTurutHadirDetails}" />
 
 		</div>

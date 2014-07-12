@@ -12,15 +12,17 @@
 
 
 	<ui:define name="contentSection">
-
+		<p:messages id="financialSpecEvaluationmsgId" autoUpdate="true"
+			closable="true" showDetail="true" showSummary="false"
+			severity="error,info"></p:messages>
 
 		<p:commandButton value="#{lbl['lbl.sc.spec.back']}"
 			style="float:left;" icon="ui-icon-back"
 			action="#{evaluationBackingBean.evaluationBackaction}" />
 
 		<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
-			style="float:right;" icon="ui-icon-save"
-			action="#{evaluationBackingBean.saveComplianceSample}" />
+			style="float:right;" icon="ui-icon-save" update="@all"
+			action="#{evaluationBackingBean.saveTempleateSpecDtls}" />
 
 
 		<p:panel>
@@ -50,11 +52,17 @@
 
 				<p:column headerText="#{lbl['lbl.sc.spec.asset.title']}"
 					style="width:90%">
-					<h:outputText value="#{psComplianceList.title}"></h:outputText>
+					<h:outputText value="#{psComplianceList.scQtCheckList.title}"></h:outputText>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.eva.comp.document']}"
 					style="width:10%">
+					<p:commandLink ajax="false"
+						actionListener="#{evaluationBackingBean.downloadDocuments(psComplianceList)}"
+						process="@this" partialSubmit="true">
+						<p:graphicImage library="ep/images/design"
+							value="/resources/ep/images/design/icon_txt.png" />
 
+					</p:commandLink>
 				</p:column>
 
 			</p:dataTable>
@@ -63,9 +71,9 @@
 
 
 
-		 <ac:templateSpec
+		<ac:templateSpec
 			templateSpecBean="#{evaluationBackingBean.managedBean.templateSpecBean}" />
- 
+
 
 		<p:panel header="Scoring Offered Price" toggleable="true">
 			<p:panelGrid style="margin-top:5px;width:100%;">

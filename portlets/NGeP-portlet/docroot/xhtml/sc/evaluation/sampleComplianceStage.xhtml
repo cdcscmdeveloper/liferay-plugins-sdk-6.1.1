@@ -12,13 +12,16 @@
 
 
 	<ui:define name="contentSection">
-
+		<p:messages id="sampleCompliance" showDetail="true" autoUpdate="true"
+			closable="true" severity="error,info" showSummary="false" />
 		<div>
 			<p:commandButton value="#{lbl['lbl.sc.spec.back']}"
-				style="float:left;" icon="ui-icon-back" action="#{evaluationBackingBean.evaluationBackaction}"/>
+				style="float:left;" icon="ui-icon-back"
+				action="#{evaluationBackingBean.evaluationBackaction}" />
 
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
-				style="float:right;" icon="ui-icon-save" action="#{evaluationBackingBean.saveComplianceSample}"/>
+				style="float:right;" icon="ui-icon-save" update="@all"
+				action="#{evaluationBackingBean.saveComplianceSample}" />
 		</div>
 
 		<p:panel>
@@ -26,7 +29,7 @@
 				<tr>
 					<td><h:outputLabel
 							value="#{lbl['lbl.sc.eva.compliance.smpl.sup.code']}"></h:outputLabel></td>
-					<td ><p:inputText size="50"
+					<td><p:inputText size="50"
 							value="#{evaluationBackingBean.managedBean.scQtSampleLbl.scQtProposal.supplierNo}"
 							disabled="true"></p:inputText></td>
 					<td style="width: 100px;"><h:outputLabel
@@ -47,31 +50,40 @@
 				<ac:paginator for="sampleItemId" />
 
 
-				<p:column headerText="#{lbl['lbl.sc.eva.samp.comp.item']}" style="width:35%">
+				<p:column headerText="#{lbl['lbl.sc.eva.samp.comp.item']}"
+					style="width:35%">
 
 					<h:outputText value="#{sampleItem.scRequestItem.itemName}"></h:outputText>
 
 
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.eva.samp.comp.lbl.ext.num']}" style="width:10%">
+				<p:column headerText="#{lbl['lbl.sc.eva.samp.comp.lbl.ext.num']}"
+					style="width:10%">
 					<h:outputText value="#{sampleItem.subLableNo}"></h:outputText>
 
 				</p:column>
 
 
 
-				<p:column headerText="#{lbl['lbl.sc.eva.comp.sub.status']}" style="width:20%">
-					<p:selectOneMenu
+				<p:column style="width:20%">
+					<f:facet name="header">
+						<h:outputText value="*" styleClass="mandatory"></h:outputText>
+						<h:outputText value="#{lbl['lbl.sc.eva.comp.sub.status']}"></h:outputText>
+					</f:facet>
+					<p:selectOneMenu id="sampleSubmissionId"
+						label="#{lbl['lbl.sc.eva.comp.sub.status']}" required="true"
 						value="#{sampleItem. submissionStatus.parameterId}">
-						<f:selectItem itemLabel="Hantar dan Mematuhi" itemValue="1"></f:selectItem>
-						<f:selectItem itemLabel="Hantar dan Tidak Mematuhi" itemValue="2"></f:selectItem>
-						<f:selectItem itemLabel="Tidak Hantar" itemValue="3"></f:selectItem>
+
+						<f:selectItems
+							value="#{evaluationBackingBean.getDropdownValues(ParameterTypeConst.sampleSubmissionStatus)}"></f:selectItems>
 					</p:selectOneMenu>
+					<p:message id="sampleSubmissionMsg" for="sampleSubmissionId"
+						display="icon"></p:message>
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.eva.comp.remark']}"
 					style="width:35%">
-					<p:inputTextarea rows="2" cols="40" value="#{sampleItem.remark}"></p:inputTextarea>
+					<p:inputTextarea rows="2" cols="40" maxlength="100" value="#{sampleItem.remark}"></p:inputTextarea>
 				</p:column>
 			</p:dataTable>
 
@@ -85,9 +97,11 @@
 				<ac:paginator for="itemSpecId" />
 
 
-				<p:column headerText="#{lbl['lbl.sc.eva.tech.spec.specification']}" style="width:50%">
+				<p:column headerText="#{lbl['lbl.sc.eva.tech.spec.specification']}"
+					style="width:50%">
 
-					<h:outputText value="#{itemspec.scRequestItem.tplSpecQuestion.clSpecDetail}"></h:outputText>
+					<h:outputText
+						value="#{itemspec.scRequestItem.tplSpecQuestion.clSpecDetail}"></h:outputText>
 				</p:column>
 
 			</p:dataTable>

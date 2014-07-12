@@ -8,14 +8,7 @@
 
 
 
-	<div align="right">
-
-
-		<p:commandButton value="#{lbl['lbl.sc.eva.btn.save']}"
-			style="float:right;"
-			action="#{evaluationBackingBean.saveOpenCommitteeDtls}"
-			icon="ui-icon-save" />
-	</div>
+	
 
 	<p:spacer height="40"></p:spacer>
 
@@ -83,7 +76,7 @@
 			</p:column>
 			<p:column>
 				<h:outputText
-					value="#{committeeMember.scCommitteeMember.memberRole}"></h:outputText>
+					value="#{committeeMember.scCommitteeMember.memberRole.parameterId}"></h:outputText>
 			</p:column>
 			<p:column>
 				<p:selectBooleanCheckbox value="#{committeeMember.attended}" />

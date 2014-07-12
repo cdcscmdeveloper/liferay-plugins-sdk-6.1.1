@@ -6,57 +6,52 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	
-		<table border="0" cellspacing="0" cellpadding="0" width="100%">
-		<tr><td width="20%;" style="vertical-align: baseline;">
-	
-      <p:tabMenu  activeIndex="#{evaluationBackingBean.managedBean.complianceActiveIndex}" styleClass="sidemenu"
-		style="display : table-caption;">
 
-		<p:menuitem value="#{lbl['lbl.sc.eva.compliance.stg.tech']}"		
-			action="#{evaluationBackingBean.retriveComplianceTechnical}" update="@form" />
-		<p:menuitem value="#{lbl['lbl.sc.eva.compliance.stg.sample']}"
-			
-			action="#{evaluationBackingBean.retriveComplianceSample}"
-			update="@form" />
-		<p:menuitem value="#{lbl['lbl.sc.eva.compliance.stg.fin']}"
-		
-			action="#{evaluationBackingBean.retriveComplianceFinancial}"
-		update="@form"	/>
-		
-		<p:menuitem value="#{lbl['lbl.sc.eva.compliance.stg.summary']}"
-		
-			action="#{evaluationBackingBean.retriveComplianceSummary}"
-		update="@form"	/>
-	</p:tabMenu>	
-</td>
-<td width="80%">
+	<table border="0" cellspacing="0" cellpadding="0" width="100%">
+		<tr>
+			<td width="20%;" class="sidemenutd" style="vertical-align: baseline;">
 
-	<c:if
-		test="#{evaluationBackingBean.managedBean.complianceActiveIndex eq '0'}">
+				<p:tabMenu
+					activeIndex="#{evaluationBackingBean.managedBean.complianceActiveIndex}"
+					styleClass="sidemenu" style="display : table-caption;">
 
-		<ui:include src="complianceTechnical.xhtml"></ui:include>
+					<p:menuitem value="#{lbl['lbl.sc.eva.compliance.stg.tech']}"
+						action="#{evaluationBackingBean.retriveComplianceTechnical}"
+						update="@form" />
+					<p:menuitem value="#{lbl['lbl.sc.eva.compliance.stg.sample']}"
+						action="#{evaluationBackingBean.retriveComplianceSample}"
+						update="@form" />
+					<p:menuitem value="#{lbl['lbl.sc.eva.compliance.stg.fin']}"
+						action="#{evaluationBackingBean.retriveComplianceFinancial}"
+						update="@form" />
 
-	</c:if>
+					<c:if
+						test="#{evaluationBackingBean.managedBean.complianceActiveIndex eq '2' or evaluationBackingBean.managedBean.complianceActiveIndex eq '3'}">
+						<p:menuitem value="#{lbl['lbl.sc.eva.compliance.stg.summary']}"
+							action="#{evaluationBackingBean.retriveComplianceSummary}"
+							update="@form" />
+					</c:if>
+				</p:tabMenu>
+			</td>
+			<td width="80%"><c:if
+					test="#{evaluationBackingBean.managedBean.complianceActiveIndex eq '0'}">
 
-	<c:if
-		test="#{evaluationBackingBean.managedBean.complianceActiveIndex eq '1'}">
+					<ui:include src="complianceTechnical.xhtml"></ui:include>
 
-			<ui:include src="complianceSample.xhtml"></ui:include>
-	</c:if>
-	<c:if
-		test="#{evaluationBackingBean.managedBean.complianceActiveIndex eq '2'}">
+				</c:if> <c:if
+					test="#{evaluationBackingBean.managedBean.complianceActiveIndex eq '1'}">
 
-		<ui:include src="complianceFinancial.xhtml"></ui:include>
-	</c:if>
-	
-	<c:if
-		test="#{evaluationBackingBean.managedBean.complianceActiveIndex eq '3'}">
+					<ui:include src="complianceSample.xhtml"></ui:include>
+				</c:if> <c:if
+					test="#{evaluationBackingBean.managedBean.complianceActiveIndex eq '2'}">
 
-		<ui:include src="complianceSummary.xhtml"></ui:include>
-	</c:if>
-	</td>
-	</tr>
+					<ui:include src="complianceFinancial.xhtml"></ui:include>
+				</c:if> <c:if
+					test="#{evaluationBackingBean.managedBean.complianceActiveIndex eq '3'}">
+
+					<ui:include src="complianceSummary.xhtml"></ui:include>
+				</c:if></td>
+		</tr>
 	</table>
 
 	<table style="width: 100%">

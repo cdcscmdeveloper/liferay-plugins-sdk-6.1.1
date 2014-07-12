@@ -12,6 +12,9 @@
 
 
 	<ui:define name="contentSection">
+	<p:messages id="financialPrivateEvaluationmsgId" autoUpdate="true"
+			closable="true" showDetail="true" showSummary="false"
+			severity="error,info"></p:messages>
 
 		<div>
 			<p:commandButton value="#{lbl['lbl.sc.spec.back']}"
@@ -19,7 +22,7 @@
 				action="#{evaluationBackingBean.evaluationBackaction}" />
 
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
-				style="float:right;" icon="ui-icon-save"
+				style="float:right;" icon="ui-icon-save" update="@all"
 				action="#{evaluationBackingBean.saveFinNonCompantDtls}" />
 		</div>
 
@@ -51,11 +54,17 @@
 
 				<p:column headerText="#{lbl['lbl.sc.spec.asset.title']}"
 					style="width:90%">
-					<h:outputText value="#{techComplianceList.title}"></h:outputText>
+					<h:outputText value="#{techComplianceList.scQtCheckList.title}"></h:outputText>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.eva.comp.document']}"
 					style="width:10%">
+					<p:commandLink ajax="false"
+						actionListener="#{evaluationBackingBean.downloadDocuments(techComplianceList)}"
+						process="@this" partialSubmit="true">
+						<p:graphicImage library="ep/images/design"
+							value="/resources/ep/images/design/icon_txt.png" />
 
+					</p:commandLink>
 				</p:column>
 
 			</p:dataTable>
@@ -134,7 +143,7 @@
 								rendered="#{evaluationBackingBean.managedBean.checklistScoreType eq '1'}"></p:inputText></td>
 						<td><h:outputText value="#{lbl['lbl.sc.eva.s1.user.score']}"
 								rendered="#{evaluationBackingBean.managedBean.checklistScoreType eq '2'}" /></td>
-						<td><p:inputText value="#{action.userScore}"
+						<td><p:inputText value="#{action.userScore}" maxlength="18"
 								rendered="#{evaluationBackingBean.managedBean.checklistScoreType eq '2'}"></p:inputText></td>
 					</tr>
 				</c:forEach>

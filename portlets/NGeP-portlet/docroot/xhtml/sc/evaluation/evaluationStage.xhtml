@@ -10,45 +10,84 @@
 
 	<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
-			<td width="20%;" style="vertical-align: baseline;"><p:tabMenu
+			<td width="20%;" class="sidemenutd" style="vertical-align: baseline;"><p:tabMenu
 					activeIndex="#{evaluationBackingBean.managedBean.evaluatioStageActiveIndex}"
 					styleClass="sidemenu" style="display : table-caption;">
-
-					<p:menuitem value="#{lbl['lbl.sc.eva.compliance.stg.tech']}"
-						action="#{evaluationBackingBean.retriveTechnicalEvaluationStage}"
-						update="@form" />
-					<p:menuitem value="#{lbl['lbl.sc.eva.compliance.stg.fin']}"
-						action="#{evaluationBackingBean.retriveFinancialEvaluationStage}"
-						update="@form" />
+					<c:if
+						test="#{evaluationBackingBean.managedBean.committeeType eq 'EC' or evaluationBackingBean.managedBean.committeeType eq 'TEC'}">
+						<p:menuitem value="#{lbl['lbl.sc.eva.compliance.stg.tech']}"
+							action="#{evaluationBackingBean.retriveTechnicalEvaluationStage}"
+							update="@form" />
+					</c:if>
+					<c:if
+						test="#{evaluationBackingBean.managedBean.committeeType eq 'EC' or evaluationBackingBean.managedBean.committeeType eq 'FEC'}">
+						<p:menuitem value="#{lbl['lbl.sc.eva.compliance.stg.fin']}"
+							action="#{evaluationBackingBean.retriveFinancialEvaluationStage}"
+							update="@form" />
+					</c:if>
 					<p:menuitem value="#{lbl['lbl.sc.eva.compliance.stg.summary']}"
 						action="#{evaluationBackingBean.retriveSummaryEvaluationStage}"
 						update="@form" />
 
 
 				</p:tabMenu></td>
-			<td width="80%;"><c:if
-					test="#{evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '0'}">
+			<td width="80%;"><ui:fragment
+					rendered="#{evaluationBackingBean.managedBean.committeeType eq 'EC' or evaluationBackingBean.managedBean.committeeType eq 'TEC'}">
+					<c:if
+						test="#{evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '0'}">
 
-					<ui:include src="technicalEvaluation.xhtml"></ui:include>
+						<ui:include src="technicalEvaluation.xhtml"></ui:include>
 
-				</c:if> <c:if
-					test="#{evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '1'}">
+					</c:if>
+				</ui:fragment> <ui:fragment
+					rendered="#{evaluationBackingBean.managedBean.committeeType eq 'EC'}">
+					<c:if
+						test="#{evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '1'}">
 
-					<ui:include src="financialEvaluation.xhtml"></ui:include>
-				</c:if> <c:if
-					test="#{evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '2'}">
-					
+						<ui:include src="financialEvaluation.xhtml"></ui:include>
+					</c:if>
+				</ui:fragment> <ui:fragment
+					rendered="#{evaluationBackingBean.managedBean.committeeType eq 'FEC'}">
+					<c:if
+						test="#{evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '0'}">
+
+						<ui:include src="financialEvaluation.xhtml"></ui:include>
+					</c:if>
+				</ui:fragment> <ui:fragment
+					rendered="#{evaluationBackingBean.managedBean.committeeType eq 'EC'}">
+					<c:if
+						test="#{evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '2'}">
+
+						<ui:fragment
+							rendered="#{evaluationBackingBean.managedBean.committeeType ne 'TEC'}">
+							<ui:include src="FinancialEvaluationCommitteeSummary.xhtml" />
+
+						</ui:fragment>
+					</c:if>
+				</ui:fragment> <ui:fragment
+					rendered="#{evaluationBackingBean.managedBean.committeeType eq 'TEC'}">
+					<c:if
+						test="#{evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '1'}">
+						<ui:fragment
+							rendered="#{evaluationBackingBean.managedBean.committeeType eq 'TEC'}">
+							<ui:include src="TECSummary.xhtml" />
+						</ui:fragment>
+					</c:if>
+
+
 					<ui:fragment
-						rendered="#{evaluationBackingBean.managedBean.committeeType ne 'TEC'}">
-						<ui:include src="FinancialEvaluationCommitteeSummary.xhtml" />
+						rendered="#{evaluationBackingBean.managedBean.committeeType eq 'FEC'}">
+						<c:if
+							test="#{evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '1'}">
 
-					</ui:fragment>
-					<ui:fragment
-						rendered="#{evaluationBackingBean.managedBean.committeeType eq 'TEC'}">
-						<ui:include src="TECSummary.xhtml" />
+							<ui:fragment
+								rendered="#{evaluationBackingBean.managedBean.committeeType ne 'TEC'}">
+								<ui:include src="FinancialEvaluationCommitteeSummary.xhtml" />
 
+							</ui:fragment>
+						</c:if>
 					</ui:fragment>
-				</c:if></td>
+				</ui:fragment></td>
 		</tr>
 	</table>
 
@@ -60,15 +99,29 @@
 						action="#{evaluationBackingBean.updateSmAppl}" icon="ui-icon-prev"
 						update=":form" />
 				</div></td>
-			<td><div align="right" style="width: 99%">
+			<td><ui:fragment
+					rendered="#{evaluationBackingBean.managedBean.committeeType eq 'TEC' and evaluationBackingBean.managedBean.demo eq 'true'}">
+					<div align="right" style="width: 99%">
 
 
-					<p:commandButton value="#{lbl['lbl.sm.next']}"
-						actionListener="#{evaluationBackingBean.setTabValue('2','3')}"
-						action="#{evaluationBackingBean.updateSmAppl}" icon="ui-icon-next"
-						iconPos="right" update=":form" />
+						<p:commandButton value="#{lbl['lbl.sm.next']}"
+							actionListener="#{evaluationBackingBean.setTabValue('2','3')}"
+							action="#{evaluationBackingBean.updateSmAppl}"
+							icon="ui-icon-next" iconPos="right" update=":form" />
 
-				</div></td>
+					</div>
+				</ui:fragment> <ui:fragment
+					rendered="#{evaluationBackingBean.managedBean.committeeType ne 'TEC' }">
+					<div align="right" style="width: 99%">
+
+
+						<p:commandButton value="#{lbl['lbl.sm.next']}"
+							actionListener="#{evaluationBackingBean.setTabValue('2','4')}"
+							action="#{evaluationBackingBean.updateSmAppl}"
+							icon="ui-icon-next" iconPos="right" update=":form" />
+
+					</div>
+				</ui:fragment></td>
 		</tr>
 	</table>
 

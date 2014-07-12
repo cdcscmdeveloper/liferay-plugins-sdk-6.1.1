@@ -14,7 +14,9 @@
 
 					<p:commandButton value="#{lbl['lbl.btn.save']}" update="@all"
 						action="#{specificationBackingBean.saveSpecificationDtls}"
-						icon="ui-icon-save" />
+						icon="ui-icon-save" >
+						 <f:setPropertyActionListener target="#{specificationBackingBean.managedBean.buttonOutCome}" value="save" />
+						</p:commandButton>
 
 			
 				
@@ -47,7 +49,9 @@
 						<c:if test="${action != '~'}">
 							<p:commandButton value="#{action}" process="@all" 
 								styleClass="ui-button" update="@all"
-								action="#{specificationBackingBean.updateBpmTask(action)}"  icon="#{iconVar}"/>
+								action="#{specificationBackingBean.updateBpmTask(action)}"  icon="#{iconVar}">
+								 <f:setPropertyActionListener target="#{specificationBackingBean.managedBean.buttonOutCome}" value="#{action}" />
+								</p:commandButton>
 						</c:if>
 						</c:forEach>
 						</p:column>

@@ -12,6 +12,9 @@
 
 
 	<ui:define name="contentSection">
+	<p:messages id="technicalPrivateEvaluationmsgId" autoUpdate="true"
+			closable="true" showDetail="true" showSummary="false"
+			severity="error,info"></p:messages>
 
 		<div>
 			<p:commandButton value="#{lbl['lbl.sc.spec.back']}"
@@ -19,7 +22,7 @@
 				action="#{evaluationBackingBean.evaluationBackaction}" />
 
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
-				style="float:right;" icon="ui-icon-save"
+				style="float:right;" icon="ui-icon-save" update="@all"
 				action="#{evaluationBackingBean.saveTechNonCompantDtls}" />
 		</div>
 
@@ -51,11 +54,17 @@
 
 				<p:column headerText="#{lbl['lbl.sc.spec.asset.title']}"
 					style="width:90%">
-					<h:outputText value="#{techComplianceList.title}"></h:outputText>
+					<h:outputText value="#{techComplianceList.scQtCheckList.title}"></h:outputText>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.eva.comp.document']}"
 					style="width:10%">
+					<p:commandLink ajax="false"
+						actionListener="#{evaluationBackingBean.downloadDocuments(techComplianceList)}"
+						process="@this" partialSubmit="true">
+						<p:graphicImage library="ep/images/design"
+							value="/resources/ep/images/design/icon_txt.png" />
 
+					</p:commandLink>
 				</p:column>
 
 			</p:dataTable>
@@ -130,7 +139,7 @@
 							<td><p:inputText readonly="true" disabled="true"
 									value="#{action.autoScore}"
 									rendered="#{action.criteriaType eq '15' and evaluationBackingBean.managedBean.checklistScoreType eq '1'}"></p:inputText>
-								<p:inputText value="#{action.userScore}"
+								<p:inputText value="#{action.userScore}" maxlength="18"
 									rendered="#{action.criteriaType eq '15' and evaluationBackingBean.managedBean.checklistScoreType eq '2'}"></p:inputText></td>
 						</tr>
 					</c:if>
@@ -149,7 +158,7 @@
 							<td><p:inputText readonly="true" disabled="true"
 									value="#{action.autoScore}"
 									rendered="#{action.criteriaType eq '16' and evaluationBackingBean.managedBean.companyScoreType eq '1'}"></p:inputText>
-								<p:inputText value="#{action.userScore}"
+								<p:inputText value="#{action.userScore}" maxlength="18"
 									rendered="#{action.criteriaType eq '16' and evaluationBackingBean.managedBean.companyScoreType eq '2'}"></p:inputText></td>
 						</tr>
 					</c:if>

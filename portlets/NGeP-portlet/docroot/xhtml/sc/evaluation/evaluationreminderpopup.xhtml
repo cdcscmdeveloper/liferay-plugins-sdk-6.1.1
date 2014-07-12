@@ -21,31 +21,36 @@
 			</p:dataTable>
 		</p:panel>
 
-		<p:panel header="#{lbl['lbl.sc.eva.reminder.dtls']}" toggleable="true">
+		<p:panel id="evaluationRemainderId"
+			header="#{lbl['lbl.sc.eva.reminder.dtls']}" toggleable="true">
 			<h:panelGrid styleClass="noBorders tr,noBorders td" columns="2">
 
 
 				<h:outputLabel value="#{lbl['lbl.sc.eva.committee.subject']}" />
 
-				<p:inputText size="50"></p:inputText>
+				<p:inputText size="75" maxlength="100"
+					value="#{evaluationBackingBean.managedBean.subject}"></p:inputText>
 
 				<h:outputLabel value="#{lbl['lbl.sc.eva.committee.message']}" />
 
-				<p:inputTextarea rows="5" cols="50"></p:inputTextarea>
+				<p:inputTextarea rows="5" cols="75" maxlength="1000"
+					value="#{evaluationBackingBean.managedBean.message}"></p:inputTextarea>
 
 			</h:panelGrid>
+
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.sc.eva.btn.cancel']}"
+					style="float:right;" oncomplete="evaluationreminder.hide();"
+					icon="ui-icon-cancel"></p:commandButton>
+				<p:commandButton value="#{lbl['lbl.sc.spec.committee.btn.send']}"
+					style="float:right;" oncomplete="evaluationreminder.hide();"
+					process="@this,evaluationRemainderId" partialSubmit="true"
+					icon="ui-icon-mail"
+					actionListener="#{evaluationBackingBean.secretarySubmitTask}"></p:commandButton>
+
+
+			</div>
 		</p:panel>
-
-		<div align="right">
-			<p:commandButton value="#{lbl['lbl.sc.eva.btn.cancel']}"
-				style="float:right;" onclick="evaluationreminder.hide();"
-				icon="ui-icon-cancel"></p:commandButton>
-			<p:commandButton value="#{lbl['lbl.sc.spec.committee.btn.send']}"
-				style="float:right;" onclick="evaluationreminder.hide();"
-				icon="ui-icon-mail"></p:commandButton>
-
-
-		</div>
 
 	</p:dialog>
 </ui:composition>

@@ -6,30 +6,22 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<div align="right">
 
-	
 
-		<p:commandButton value="#{lbl['lbl.sc.eva.btn.save']}"
-			style="float:right;" action="#{evaluationBackingBean.saveMeetingDtls}"
-			icon="ui-icon-save" />
-	
-</div>
-	
 	<p:spacer height="40"></p:spacer>
 
 	<p:panel header="#{lbl['lbl.sc.eva.compliance.tech.proposal']}"
 		toggleable="true">
 
 		<p:dataTable var="complianceTech" id="complianceTechnicalProposal"
-			editable="true" rowIndexVar="index"  
+			editable="true" rowIndexVar="index"
 			value="#{evaluationBackingBean.managedBean.complianceTechnicalCheckList}"
-			style="width:1000px;white-space: normal;" rowKey="#{complianceTech}">
+			rowKey="#{complianceTech}">
 			<ac:paginator for="complianceTechnicalProposal" />
 
 
 			<p:column headerText="#{lbl['lbl.sc.eva.compliance.fin.title']}"
-				style="width:70%">
+				style="width:70%;white-space: normal;">
 
 				<h:outputText value="#{complianceTech.title}"></h:outputText>
 
@@ -47,7 +39,7 @@
 			<p:column headerText="#{lbl['lbl.sc.eva.compliance.fin.action']}"
 				style="width:10%">
 
-				<p:commandButton value="#{lbl['lbl.sc.eva.btn.compliance']}" 
+				<p:commandButton value="#{lbl['lbl.sc.eva.btn.compliance']}"
 					rendered="#{complianceTech.definationType.parameterId eq '184'}"
 					process="@this" partialSubmit="true"
 					action="#{evaluationBackingBean.technicalComplianceAction(complianceTech)}" />

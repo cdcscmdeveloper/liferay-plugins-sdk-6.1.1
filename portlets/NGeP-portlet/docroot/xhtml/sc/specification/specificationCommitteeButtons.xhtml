@@ -5,14 +5,20 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-<p:panel>
-<p:panelGrid style="width:100%;"
+	<p:panel>
+		<p:panelGrid style="width:100%;"
 			styleClass="noBorders tr,noBorders td">
 			<p:row>
 				<p:column width="100%" style="text-align:right">
-					<p:commandButton value="Save" update="@all" action="#{specificationBackingBean.saveSpecificationCommitteeDtls}"  icon="ui-icon-save" />
-				
-			<c:forEach items="#{specificationBackingBean.managedBean.outComes}"
+					<p:commandButton value="Save" update="@all"
+						action="#{specificationBackingBean.saveSpecificationCommitteeDtls}"
+						icon="ui-icon-save">
+						<f:setPropertyActionListener
+							target="#{specificationBackingBean.managedBean.buttonOutCome}"
+							value="save" />
+					</p:commandButton>
+
+					<c:forEach items="#{specificationBackingBean.managedBean.outComes}"
 						var="action">
 
 						<c:if test="${action == 'SUBMIT'}">
@@ -36,18 +42,23 @@
 							<ui:param name="iconVar" value="ui-icon-approve" />
 
 						</c:if>
-			
-			
-			
-							<p:commandButton value="#{action}" process="@all" update="@all"
-								styleClass="ui-button"
-								action="#{specificationBackingBean.updateSpecCommitteBpmTask(action)}"  icon="#{iconVar}"/>
-								
-						</c:forEach>
-						</p:column>
-						</p:row>
+
+
+
+						<p:commandButton value="#{action}" process="@all" update="@all"
+							styleClass="ui-button"
+							action="#{specificationBackingBean.updateSpecCommitteBpmTask(action)}"
+							icon="#{iconVar}">
+							<f:setPropertyActionListener
+								target="#{specificationBackingBean.managedBean.buttonOutCome}"
+								value="save" />
+						</p:commandButton>
+
+					</c:forEach>
+				</p:column>
+			</p:row>
 		</p:panelGrid>
 
-</p:panel>
+	</p:panel>
 
-	</ui:composition>
+</ui:composition>

@@ -8,14 +8,7 @@
 
 
 
-<div align="right">
 
-		
-
-		<p:commandButton value="#{lbl['lbl.sc.eva.btn.save']}"
-			style="float:right;" action="#{evaluationBackingBean.saveMeetingDtls}"
-			icon="ui-icon-save" />
-	</div>
 
 	<p:spacer height="40"></p:spacer>
 	<p:panel header="#{lbl['lbl.sc.eva.compliance.fin.proposal']}"
@@ -24,12 +17,12 @@
 		<p:dataTable var="complianceFinancial"
 			id="complianceFinancialProposal" editable="true" rowIndexVar="index"
 			value="#{evaluationBackingBean.managedBean.compliancefinancialCheckList}"
-			style="width:100%;white-space: normal;" rowKey="#{complianceFinancial}">
+			rowKey="#{complianceFinancial}">
 			<ac:paginator for="complianceFinancialProposal" />
 
 
 			<p:column headerText="#{lbl['lbl.sc.eva.compliance.fin.title']}"
-				style="width:70%">
+				style="width:70%;white-space: normal;">
 
 				<h:outputText value="#{complianceFinancial.title}"></h:outputText>
 
@@ -39,15 +32,18 @@
 				style="width:20%">
 
 
-				<h:outputText value="#{evaluationBackingBean.getParameterDesc(complianceFinancial.definationType)}"></h:outputText>
+				<h:outputText
+					value="#{evaluationBackingBean.getParameterDesc(complianceFinancial.definationType)}"></h:outputText>
 
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.eva.compliance.fin.action']}"
 				style="width:10%">
 
-				<p:commandButton value="#{lbl['lbl.sc.eva.btn.compliance']}" rendered="#{complianceFinancial.definationType.parameterId eq '184'}"
-					process="@this" partialSubmit="true" action="#{evaluationBackingBean.financialComplianceAction(complianceFinancial)}" />
+				<p:commandButton value="#{lbl['lbl.sc.eva.btn.compliance']}"
+					rendered="#{complianceFinancial.definationType.parameterId eq '184'}"
+					process="@this" partialSubmit="true"
+					action="#{evaluationBackingBean.financialComplianceAction(complianceFinancial)}" />
 
 
 			</p:column>

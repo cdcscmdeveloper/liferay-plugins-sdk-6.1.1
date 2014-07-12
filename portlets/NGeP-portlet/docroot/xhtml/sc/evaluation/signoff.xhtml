@@ -20,20 +20,22 @@
 
 			<p:column headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.name']}"
 				style="width:35%">
-				<h:outputText value="#{memberName}"></h:outputText>
+				<h:outputText value="#{signOffMember.memberName}"></h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.idn.no']}"
 				style="width:35%">
-				<h:outputText value="#{memberName}"></h:outputText>
+				<h:outputText value="#{signOffMember.icPassport}"></h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.eva.committee.role']}"
 				style="width:20%">
-				<h:outputText value="#{signOffMember.signedOff}"></h:outputText>
+				<h:outputText
+					value="#{signOffMember.memberRole.parameterId}"></h:outputText>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.eva.mtng.status']}"
 				style="width:10%">
-
+              <h:outputText
+					value="#{evaluationBackingBean.getStatusDescById(signOffMember.scCommittee.committeStatus.statusId)}"></h:outputText>
 			</p:column>
 
 		</p:dataTable>

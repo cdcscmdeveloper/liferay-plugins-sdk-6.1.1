@@ -12,6 +12,9 @@
 
 
 	<ui:define name="contentSection">
+		<p:messages id="technicalEvaluationmsgId" autoUpdate="true"
+			closable="true" showDetail="true" showSummary="false"
+			severity="error,info"></p:messages>
 
 		<div>
 			<p:commandButton value="#{lbl['lbl.sc.spec.back']}"
@@ -19,8 +22,8 @@
 				action="#{evaluationBackingBean.evaluationBackaction}" />
 
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
-				style="float:right;" icon="ui-icon-save"
-				action="#{evaluationBackingBean.saveComplianceSample}" />
+				style="float:right;" icon="ui-icon-save" update="@all"
+				action="#{evaluationBackingBean.saveTempleateSpecDtls}" />
 		</div>
 
 		<p:panel>
@@ -28,13 +31,13 @@
 				<tr>
 					<td><h:outputLabel
 							value="#{lbl['lbl.sc.eva.compliance.smpl.sup.code']}"></h:outputLabel></td>
-					<td><p:inputText size="50" disabled="true" value="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.supplierNo}"></p:inputText></td>
-					<td style="width: 100px;">
-					<h:outputLabel value="#{lbl['lbl.sc.spec.asset.title']}"></h:outputLabel></td>
+					<td><p:inputText size="50" disabled="true"
+							value="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.supplierNo}"></p:inputText></td>
+					<td style="width: 100px;"><h:outputLabel
+							value="#{lbl['lbl.sc.spec.asset.title']}"></h:outputLabel></td>
 					<td><p:inputTextarea
 							value="#{evaluationBackingBean.managedBean.scQtChecklist.title}"
-							rows="2" cols="150" disabled="true"></p:inputTextarea>
-					</td>
+							rows="2" cols="150" disabled="true"></p:inputTextarea></td>
 				</tr>
 			</table>
 		</p:panel>
@@ -43,18 +46,26 @@
 
 		<p:panel header="#{lbl['lbl.sc.eva.compliance.list']}"
 			toggleable="true">
-			<p:dataTable var="psComplianceList" id="pServiceListId" value="#{evaluationBackingBean.managedBean.evaluationComplianceList}"
+			<p:dataTable var="psComplianceList" id="pServiceListId"
+				value="#{evaluationBackingBean.managedBean.evaluationComplianceList}"
 				rowIndexVar="index" style="width:100%" rowKey="#{psComplianceList}">
 				<ac:paginator for="pServiceListId" />
 
 
 				<p:column headerText="#{lbl['lbl.sc.spec.asset.title']}"
 					style="width:90%">
-                   <h:outputText value="#{psComplianceList.title}"></h:outputText>   
-                      
+					<h:outputText value="#{psComplianceList.scQtCheckList.title}"></h:outputText>
+
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.eva.comp.document']}"
 					style="width:10%">
+					<p:commandLink ajax="false"
+						actionListener="#{evaluationBackingBean.downloadDocuments(complianceTechnicalSupplier)}"
+						process="@this" partialSubmit="true">
+						<p:graphicImage library="ep/images/design"
+							value="/resources/ep/images/design/icon_txt.png" />
+
+					</p:commandLink>
 
 				</p:column>
 
@@ -62,58 +73,12 @@
 
 		</p:panel>
 
-<ac:templateSpec
+		<ac:templateSpec
 			templateSpecBean="#{evaluationBackingBean.managedBean.templateSpecBean}" />
 
 
 
-		<!-- <p:panel header="#{lbl['lbl.sc.eva.smpl.item.list']}"
-			toggleable="true">
-			<p:dataTable var="productServiceSpec" id="productSpecId" value="#{evaluationBackingBean.managedBean.specItemList}"
-				editable="true" rowIndexVar="index" style="width:100%"
-				rowKey="#{productServiceSpec}">
-				<ac:paginator for="productSpecId" />
 
-
-				<p:column headerText="#{lbl['lbl.sc.eva.tech.spec.item.name']}"
-					style="width:60%">
-                    <h:outputText value="#{productServiceSpec.clItem}"></h:outputText>
-				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.eva.tech.spec.uom']}"
-					style="width:20%">
-                          <h:outputText value="#{productServiceSpec.clUom.uomCode}"></h:outputText>
-				</p:column>
-
-
-
-				<p:column headerText="#{lbl['lbl.sc.eva.tech.spec.quantity']}"
-					style="width:20%">
-                      <h:outputText value="#{productServiceSpec.clUom.clQuantity}"></h:outputText>
-				</p:column>
-
-
-			</p:dataTable>
-
-		</p:panel>
-
-		<p:panel header="#{lbl['lbl.sc.eva.smpl.item.spec']}"
-			toggleable="true">
-			<p:dataTable var="itemspec" id="productServiceItemSpecId"
-				value="#{evaluationBackingBean.managedBean.complianceSampleItemList}"
-				rowIndexVar="index" style="width:50%" rowKey="#{itemspec}">
-				<ac:paginator for="productServiceItemSpecId" />
-
-
-				<p:column headerText="#{lbl['lbl.sc.eva.tech.spec.specification']}"
-					style="width:50%">
-
-
-				</p:column>
-
-			</p:dataTable>
-
-		</p:panel>
- -->
 
 	</ui:define>
 </ui:composition>

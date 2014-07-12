@@ -9,18 +9,20 @@
 
 	<ui:define name="resourceSection">
 	</ui:define>
-<p:messages id="financialCompliance" showDetail="true" autoUpdate="true"
-				closable="true" />
+
 
 	<ui:define name="contentSection">
-
+		<p:messages id="financialCompliance" showDetail="true"
+			autoUpdate="true" closable="true" severity="error,info"
+			showSummary="false" />
 		<div>
 			<p:commandButton value="#{lbl['lbl.sc.spec.back']}"
 				style="float:left;" icon="ui-icon-back"
 				action="#{evaluationBackingBean.evaluationBackaction}" />
 
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
-				style="float:right;" icon="ui-icon-save" action="#{evaluationBackingBean.saveFinacialCompliance}"/>
+				style="float:right;" icon="ui-icon-save" update="@all"
+				action="#{evaluationBackingBean.saveFinacialCompliance}" />
 		</div>
 
 		<p:panel>
@@ -46,33 +48,45 @@
 
 				<p:column headerText="#{lbl['lbl.sc.eva.comp.sup.code']}"
 					style="width:20%">
-                    <h:outputText value="#{complianceFinancialSupplier.scQtProposal.supplierNo}"></h:outputText>
+					<h:outputText
+						value="#{complianceFinancialSupplier.scQtProposal.supplierNo}"></h:outputText>
 
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.eva.comp.document']}"
 					style="width:10%">
-					<h:outputText></h:outputText>
+						<ui:fragment rendered="#{complianceFinancialSupplier.submitted eq 'true'}">
+					<p:commandLink ajax="false"
+						actionListener="#{evaluationBackingBean.downloadDocuments(complianceTechnicalSupplier)}"
+						process="@this" partialSubmit="true">
+						<p:graphicImage library="ep/images/design"
+							value="/resources/ep/images/design/icon_txt.png" />
+
+					</p:commandLink>
+					</ui:fragment>
 
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.eva.comp.sub.status']}"
 					style="width:20%">
 					<h:outputText
-						value="#{complianceFinancialSupplier.scQtCheckList.pmStatus.statusId}"></h:outputText>
+						value="#{complianceFinancialSupplier.submitted ? 'Submitteed' : 'Not Submitted'}"></h:outputText>
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.eva.comp.compliance.status']}"
 					style="width:15%">
-					<p:selectOneMenu value="#{complianceFinancialSupplier.compliance}">
-						<f:selectItem itemLabel="Not compliance" itemValue="false"></f:selectItem>
-						<f:selectItem itemLabel="Compliance" itemValue="true"></f:selectItem>
+					<p:selectOneMenu>
+
+						<f:selectItems
+							value="#{evaluationBackingBean.getDropdownValues(ParameterTypeConst.complianceStatus)}"></f:selectItems>
 					</p:selectOneMenu>
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.eva.comp.remark']}"
 					style="width:35%">
-					<p:inputTextarea rows="2" cols="40"
+					<ui:fragment rendered="#{complianceFinancialSupplier.submitted eq 'true'}">
+					<p:inputTextarea rows="2" cols="40" maxlength="200"
 						value="#{complianceFinancialSupplier.remark}"></p:inputTextarea>
+						</ui:fragment>
 				</p:column>
 			</p:dataTable>
 		</p:panel>

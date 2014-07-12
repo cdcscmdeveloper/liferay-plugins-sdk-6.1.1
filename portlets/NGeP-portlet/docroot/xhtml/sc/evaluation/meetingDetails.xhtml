@@ -8,16 +8,9 @@
 
 	<!-- <ui:include src="/xhtml/sc/quatationtender/qtntenderheader.xhtml" /> -->
 
-	<div align="right">
 
-		
 
-		<p:commandButton value="#{lbl['lbl.sc.eva.btn.save']}"
-			style="float:right;" 
-			action="#{evaluationBackingBean.saveMeetingDtls}" icon="ui-icon-save" />
-	</div>
 
-	<p:spacer height="40"></p:spacer>
 	<p:panel header="#{lbl['lbl.sc.eva.prepare.meeting']}"
 		toggleable="true">
 
@@ -32,27 +25,42 @@
 			<p:column headerText="#{lbl['lbl.sc.eva.prepare.meeting.date']}"
 				style="width:30%">
 
-
+				<f:facet name="header">
+					<h:outputText value="* " styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.sc.eva.prepare.meeting.date']}" />
+				</f:facet>
 				<p:calendar value="#{meeting.meetingDate}" showOn="button"
+					id="evaluationMeetingId"
+					label="#{lbl['lbl.sc.eva.prepare.meeting.date']}" required="true"
 					pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}"></p:calendar>
+				<p:message id="meetingEvaluationid" for="evaluationMeetingId"
+					display="icon"></p:message>
 
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.eva.prepare.meeting.loc']}">
-
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="* " styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.sc.eva.prepare.meeting.loc']}" />
+				</f:facet>
 
 				<p:inputTextarea value="#{meeting.meetingLocation}" rows="2"
-					cols="50"></p:inputTextarea>
-
+					maxlength="50" cols="50" id="evaluationMeetingLocation"
+					required="true" label="#{lbl['lbl.sc.eva.prepare.meeting.loc']}"></p:inputTextarea>
+				<p:message id="meetingEvaluationLocationid"
+					for="evaluationMeetingLocation" display="icon"></p:message>
 			</p:column>
 
 
-			<p:column headerText="#{lbl['lbl.sc.eva.mtng.status']}">
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="* " styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.sc.eva.mtng.status']}" />
+				</f:facet>
 
-
-				<p:selectOneMenu>
-					<f:selectItem itemLabel="Done" itemValue="2"></f:selectItem>
-					<f:selectItem itemLabel="Pending" itemValue="5"></f:selectItem>
-					<f:selectItem itemLabel="Cancel" itemValue="6"></f:selectItem>
+				<p:selectOneMenu id="meetingstatus" required="true"
+					label="#{lbl['lbl.sc.eva.mtng.status']}"
+					value="#{meeting.meetingStatus.statusId}">
+					<f:selectItems value="#{evaluationMeetingBackingBean.getStatusDropdownValues('SC', 'MS')}"></f:selectItems>
 				</p:selectOneMenu>
 
 			</p:column>
@@ -75,7 +83,8 @@
 		</p:dataTable>
 		<p:spacer height="10"></p:spacer>
 		<div align="right">
-			<p:commandButton id="meetingbutton" value="#{lbl['lbl.sc.eva.btn.add']}"
+			<p:commandButton id="meetingbutton"
+				value="#{lbl['lbl.sc.eva.btn.add']}"
 				oncomplete="evaluationMeeting.paginator.endLink.click();"
 				process="@this,evaluationmeetingDetails" partialSubmit="true"
 				action="#{evaluationBackingBean.addMeetingAction}"
