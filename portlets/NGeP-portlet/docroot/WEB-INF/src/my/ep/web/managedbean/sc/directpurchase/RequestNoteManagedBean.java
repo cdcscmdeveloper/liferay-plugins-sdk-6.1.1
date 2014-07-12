@@ -77,6 +77,7 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     private String requestNoteStatus;
     private boolean required = Boolean.FALSE;
     private boolean justRequired = Boolean.FALSE;
+    private boolean addToCartFlag;
     
     private String justification;
     private String justificationType;
@@ -94,6 +95,7 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     private List<Long> searchStatuses;
     private List<PmStatusDesc> statusDescs;
     private IPagingDataModel<ScRequestNote> reqNoteDataModel = new RequestNotePagingDataModel();
+    private int requestNoteCounter;
     
     public RequestNoteManagedBean() {
     	PmParameter pmParameter = new PmParameter();
@@ -678,6 +680,30 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	 */
 	public void setProcurementTypes(SelectItem[] procurementTypes) {
 		this.procurementTypes = procurementTypes;
+	}
+	/**
+	 * @return the requestNoteCounter
+	 */
+	public int getRequestNoteCounter() {
+		return requestNoteCounter;
+	}
+	/**
+	 * @param requestNoteCounter the requestNoteCounter to set
+	 */
+	public void setRequestNoteCounter(int requestNoteCounter) {
+		this.requestNoteCounter = requestNoteCounter;
+	}
+	/**
+	 * @return the addToCartFlag
+	 */
+	public boolean isAddToCartFlag() {
+		return addToCartFlag;
+	}
+	/**
+	 * @param addToCartFlag the addToCartFlag to set
+	 */
+	public void setAddToCartFlag(boolean addToCartFlag) {
+		this.addToCartFlag = addToCartFlag;
 	}
 	
 }
