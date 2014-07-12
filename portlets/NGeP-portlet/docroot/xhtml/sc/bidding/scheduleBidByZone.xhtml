@@ -5,165 +5,185 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:messages id="Schedule Bidding By Zone" showDetail="true" autoUpdate="true"
+	<p:messages id="ScheduleBidding" showDetail="true" autoUpdate="true"
 		closable="true" />
 
-	<div align="right">
+	<div align="right" style="width: 100%">
 
-		<p:commandButton value="#{lbl['lbl.sc.bidding.sbidbyzone.save']}"
-			process="@all" partialSubmit="true" style="float:right;"
-			icon="ui-icon-save"
-			action="#{scheduleBiddingBB.saveScheduledBidAction}/>
-	
-		<p:commandButton value="
-			#{lbl['lbl.sc.bidding.sbidbyzone.submit']}" process="@this"
-			partialSubmit="true" style="float:right;" icon="ui-icon-submit"
+		<p:commandButton
+			value="
+			#{lbl['lbl.btn.submit']}"
+			process="@this" partialSubmit="true" icon="ui-icon-submit"
 			action="#{scheduleBiddingBB.saveScheduledBidAction}" />
 
 	</div>
 
-	<div align="left" class="header-info">
+	<div align="left" class="header-info" style="width: 100%">
 
-		<table>
+		<table style="width: 100%">
 
 			<tr>
 
-				<td style="width: 200px"><h:outputText
-						value="#{lbl['lbl.sc.bidding.sbidbyzone.docno']}" /></td>
+				<td style="width: 100px" ><p:outputLabel
+						value="#{lbl['lbl.sc.document.no']}" /></td>
 				<td><p:inputText id="documentNo"
-						value="#{scheduleBiddingBB.managedBean.docNo}" disabled="true" /></td>
+						value="#{scheduleBiddingBB.managedBean.scQt.qtNo}"
+						disabled="true" size="20" /></td>
 
 
-				<td style="width: 200px"><h:outputText
-						value="#{lbl['lbl.sc.bidding.sbidbyzone.ptjname']}" /></td>
-				<td><p:intputText id="ptjName"
-						value="#{scheduleBiddingBB.managedBean.ptjName}" disabled="true" /></td>
+				<td style="width: 100px" ><p:outputLabel
+						value="#{lbl['lbl.sc.ptj.name']}" /></td>
+				<td><p:inputText id="ptjName"
+						value="#{scheduleBiddingBB.managedBean.scQt.PmOrgProfile.getOrgName}" disabled="true"
+						size="50" /></td>
 
-				<td style="width: 200px"><h:outputText
-						value="#{lbl['lbl.sc.bidding.sbidbyzone.status']}" /></td>
+				<td style="width: 100px" ><p:outputLabel
+						value="#{lbl['lbl.sc.status']}" /></td>
 
-				<td><p:inputText id="status" value="#{scheduleBiddingBB.managedBean.status}" disabled="true" /></td>
+				<td><p:inputText id="status"
+						value="#{scheduleBiddingBB.managedBean.scQt.qtStatus}" disabled="true"
+						size="30" /></td>
 
 			</tr>
 
 		</table>
 
 	</div>
-
-	<p:panel header="#{lbl['lbl.sc.bidding.sbidbyzone.bs']}" toggleable="true">
+<p:spacer height="10"></p:spacer>
+	<p:panel header="#{lbl['lbl.sc.bidding.schedule']}"
+		toggleable="true">
 
 		<p:dataTable id="bidSchedule"
-			value="#{scheduleBiddingBB.managedBean.scBidScheduleList}" var="scheduleBid">
+			value="#{scheduleBiddingBB.managedBean.scBid.scBidSchedules}"
+			var="scheduleBid">
 
-			<p:column selectionMode="multiple" style="width:2%"></p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.bidding.sbidbyzone.bs.dt.zoneName']}">
+
+			<p:column
+				headerText="#{lbl['lbl.sc.zone.name']}">
+				<p:commandLink value="#{scheduleBid.tplSpecZoneDtl.zoneName}"
+					onclick="participants.show();"
+					action="#{scheduleBiddingBB.getParticipantsListAction}" />
+
 				
-				<p:commandLink value="#{scheduleBid.ZoneName}"
-					action="#{scheduleBiddingBB.participantListAction()}" onClick="" />
+			</p:column> 
+
+				<p:column
+					headerText="#{lbl['lbl.sc.bidding.start']}">
+					<p:calendar value="#{scheduleBid.startDate}" showOn="button"
+						pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+				</p:column>
+				<p:column
+					headerText="#{lbl['lbl.sc.bidding.end']}">
+
+					<p:calendar value="#{scheduleBid.endDate}" showOn="button"
+						pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+				</p:column>
+				<p:column
+					headerText="#{lbl['lbl.sc.duration.hours']}">
+
+					<p:outputLabel value="#{scheduleBid.duration}" />
+				</p:column>
+		</p:dataTable>
+	</p:panel>
+
+	<p:dialog closeOnEscape="true" rendered="false"
+		header="#{lbl['lbl.sc.participant.list']}" widgetVar="participants"
+		resizable="true" showEffect="fade" hideEffect="fade" modal="true"
+		id="participants">
+
+		<ui:include src="/xhtml/sc/bidding/scheduleBidParticipantList.xhtml"></ui:include>
+	</p:dialog>
+
+	<p:spacer height="10"></p:spacer>
+
+
+	<p:panel header="#{lbl['lbl.sc.item.list']}"
+		toggleable="true">
+
+		<p:dataTable id="bidScheduleItems"
+			value="#{scheduleBiddingBB.managedBean.scBid.scBidSchedules}" var="item">
+			<p:column
+				headerText="#{lbl['lbl.sc.item.name']}">
+
+				<p:outputLabel value="#{item.scBidItems[0].scRequestItem.itemName}" />
+
 			</p:column>
-			
-			<p:column headerText="#{lbl['lbl.sc.bidding.sbidbyzone.bs.dt.bidstart']}">
-				<p:calendar value="#{scheduleBid.bidStart}" showOn="button"
-					mindate="#{DateUtils.getCurrentDateWithoutTime} + 1}"
-					pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+			<p:column
+				headerText="#{lbl['lbl.sc.item.description']}">
+
+				<p:outputLabel value="#{item.scBidItems[0].scRequestItem.itemDesc}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.bidding.sbidbyzone.bs.dt.bidend']}" >
-				
-				<p:calendar value="#{scheduleBid.bidEnd}" showOn="button" maxdate=""
-					pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+			<p:column headerText="#{lbl['lbl.sc.uom']}">
+
+				<p:outputLabel value="#{item.scBidItems[0].scRequestItem.uom.uomName}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.bidding.sbidbyzone.bs.dt.duration']}">
-				
-				<h:outputText value="#{scheduleBid.bidDuration}" />
+			<p:column headerText="#{lbl['lbl.sc.quantity']}">
+
+				<p:outputLabel value="#{item.scBidItems[0].scRequestItem.quantity}" />
 			</p:column>
-			
+
+			<p:column
+				headerText="#{lbl['lbl.sc.min.decrement.block']}">
+
+				<h:inputText value="#{item.scBidItems[0].decrementAmt}" />
+			</p:column>
 
 		</p:dataTable>
 
 	</p:panel>
-	
-	<p:panel header="#{lbl['lbl.sc.bidding.sbidbyzone.il']}" toggleable="true">
 
-		<p:dataTable id="bidSchedule"
-			value="#{scheduleBiddingBB.itemList}" var="item">
+	<p:spacer height="10"></p:spacer>
 
-			
+	<p:panel header="#{lbl['lbl.sc.contact.person.details']}"
+		toggleable="true">
 
-			<p:column headerText="#{lbl['lbl.sc.bidding.sbidbyzone.il.itemname']}">
-				<f:facet name="header">
-					<h:outputText value= />
-				</f:facet>
-				<h:outputText value="#{item.itemName}" />
-				<p:commandLink id="" action="" />
-			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.bidding.sbidbyzone.il.itemdesc']}">
-				
-				<h:outputText value="#{item.itemDescription}" />
-			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.bidding.sbidbyzone.il.uom']}">
-				
-				<h:outputText value="#{item.uom}" />
-			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.bidding.sbidbyzone.il.qty']}">
-				
-				<h:outputText value="#{item.quantity}" />
-			</p:column>
-			
-			<p:column headerText="#{lbl['lbl.sc.bidding.sbidbyzone.il.mindecrement']}">
-				
-				<h:outputText value="#{item.minDecrement}" />
-			</p:column>
-
-		</p:dataTable>
-
-	</p:panel>
-
-	<p:panel header="#{lbl['lbl.sc.bidding.sbidbyzone.cpd']}" toggleable="true">
-		
-		
 		<p:dataTable var="contact" id="contactPersonDetails"
 			widgetVar="contactDtls"
-			value="#{scheduleBiddingBB.managedBean.scBidContactPerson}"
+			value="#{scheduleBiddingBB.managedBean.scBidContactPersonList}"
 			selection="#{scheduleBiddingBB.managedBean.multiSelectContact}"
 			editable="true" rowIndexVar="index" style="width:100%"
-			rowKey="#{meeting}">
-			<ac:paginator for="contactPersonDetails"/>
+			rowKey="#{contact}">
+
 			<p:column selectionMode="multiple" style="width:2%"></p:column>
-			<p:column headerText="#{lbl['lbl.sc.bidding.sbidbyzone.cpd.name']}"
-				style="width:30%">
+			<p:column id="contactName" headerText="#{lbl['lbl.sc.name']}"
+				required="true" style="width:68%">
+				<p:inputText value="#{contact.contactName}" size="40">
 
-				<p:inputText value="#{scheduleBid.contactName}" />
+					<p:message id="contactNameMsg" for="contactName" display="icon" required="true" />
+
+				</p:inputText>
+
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.bidding.sbidbyzone.cpd.telno']}"
+			<p:column headerText="#{lbl['lbl.sc.telephone.no']}" 
 				style="width:30%">
+				<p:inputText id="phoneNo" value="#{contact.phoneNo}" size="40" required="true" >
 
-				<p:inputText value="#{scheduleBid.contactNo}" />
+					<p:message id="contactPhoneNoMsg" for="phoneNo" display="icon" />
+					
+				</p:inputText>
 			</p:column>
-
 
 		</p:dataTable>
-						
-		<p:spacer height="10"></p:spacer>
-		<div align="right">
-		
 
-		<p:commandButton value="#{lbl['lbl.sc.bidding.sbidbyzone.cpd.add']}"
+		<p:spacer height="10"></p:spacer>
+
+		<div align="right">
+
+			<p:commandButton value="#{lbl['lbl.btn.add']}"
 				process="@this,contactPersonDetails" partialSubmit="true"
-				action="#{scheduleBiddingBB.addContactAction}" 
-				oncomplete="contactDtls.paginator.endLink.click();"
-				update="evaluationmeetingDetails" 
-				icon="ui-icon-add" />
-				<!-- add action method in backing been -->
-			
-			<p:commandButton value="#{lbl['lbl.sc.bidding.sbidbyzone.cpd.delete']}"
-				icon="ui-icon-delete"
+				action="#{scheduleBiddingBB.addContactAction}" icon="ui-icon-add"
+				update="contactPersonDetails" />
+
+
+
+			<p:commandButton value="#{lbl['lbl.btn.delete']}"
+				icon="ui-icon-delete" process="@this,contactPersonDetails"
+				partialSubmit="true"
 				action="#{scheduleBiddingBB.deleteContactDetails}"
-						update="contactPersonDetails" />
-						
+				update="contactPersonDetails" />
+
 		</div>
-				
-	
 	</p:panel>
 
 </ui:composition>
