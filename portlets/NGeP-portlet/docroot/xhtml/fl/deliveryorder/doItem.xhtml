@@ -205,11 +205,6 @@
 						value="#{lbl['lbl.fl.delivery.address']}" /></td>
 				<td><p:inputTextarea cols="50" rows="3"
 						style=" margin-bottom:5px;" disabled="true"
-						rendered="#{createDOBackingBean.managedBean.selectedDelAddr.addressType !=null}"
-						value="#{createDOBackingBean.getFullAddress(createDOBackingBean.managedBean.selectedDelAddr.addressType.pmAddress)}" />
-					<p:inputTextarea cols="50" rows="3" style=" margin-bottom:5px;"
-						disabled="true"
-						rendered="#{createDOBackingBean.managedBean.selectedDelAddr.addressType eq null}"
 						value="#{createDOBackingBean.getFullAddress(createDOBackingBean.managedBean.selectedDelAddr.pmAddress)}" />
 				</td>
 			</tr>
