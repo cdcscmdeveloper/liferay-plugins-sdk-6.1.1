@@ -77,13 +77,9 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 	public static final String NAV_TO_CREATE_DO = "createDo";
 	public static final String NAV_TO_FL_ORDER = "flOrder";
 
-
 	private static Logger log = Logger.getLogger(FulfilmentOrderBackingBean.class);
 	public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat( "MM/dd/yy hh:mm a" );
-	/**
-	 * get faces scopes
-	 * @return FacesScopes
-	 */
+	
 	private FacesScopes getFacesScopes(){
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes;
@@ -91,21 +87,23 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 
 	public FulfilmentOrderBackingBean(){
 		retrievePendingDo();
-		//		getDeliveryAddress();
 		getDeliveryOrderStatus();
-
 	}
 
 	public String fulfillmentOrderAction(String action) {
+		log.debug("FulfilmentOrderBackingBean.fulfillmentOrderAction()");
 		IFulfilmentOrderSO fulfilmentOrderSO = null;
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		try {
+			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
+				if(flBB.getManagedBean().getRemarkList().get(0).getRemark()==null || flBB.getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
+					throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
+				}
+			}
+			
 			String token = getFacesScopes().getBPMAuthenticationCtxToken();
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			FlFulfilmentRequest flRequest = getManagedBean().getFlRequest();
-//			SmSupplier smSupplier = new SmSupplier();
-//			smSupplier.setSupplierId(1L);
-//			flRequest.setSmSupplier(smSupplier);
 			fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
 			reqDTO.setFlFulfilmentRequest(flRequest);
 
@@ -177,18 +175,9 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			else {
 				throw new EpException("Failed.");
 			}
-
-		}catch(Exception ex){
-			log.error("Exception>>", ex);
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR,
-							"Sorry We are unable to process.", ""));
-			ex.printStackTrace();
-		}finally {
+		} finally {
 			fulfilmentOrderSO = null;
 		}
-		return null;
 	}
 
 	private void retrievePendingDo() {

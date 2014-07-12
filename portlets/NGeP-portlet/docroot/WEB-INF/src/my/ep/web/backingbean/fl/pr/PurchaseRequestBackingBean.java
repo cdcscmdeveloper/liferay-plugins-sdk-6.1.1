@@ -108,7 +108,6 @@ import my.ep.persistence.entity.pm.common.PmSetia;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmSubSetia;
 import my.ep.persistence.entity.pm.common.PmVotFund;
-import my.ep.persistence.entity.sc.directpurchase.ScPurchaseRequest;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmPersonnel;
@@ -377,6 +376,11 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		    }
 		}
 		
+		if(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses().size()>0) {
+			getManagedBean().setSelectedDelAddr(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses().get(0));
+			selectAddrEvent();
+		}
+		
 		//initialize all the COA map
 		getVotFundList(getManagedBean().getFulfilmentRequest().getIssuedOrgProfile().getOrgProfileId());
 	}
@@ -621,23 +625,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			allItemsList.add(flItemAddr);
 		}
 		getManagedBean().setShowAllItemsRows(allItemsList);
-	}
-	
-	public void addPurchsedItems1() {
-		IPurchaseRequestSO purchaseRequestSO = (IPurchaseRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseRequestSO.class);
-		PurchaseRequestReqDTO reqDTO = new PurchaseRequestReqDTO();
-		reqDTO.setAssignedTo(13L);
-		reqDTO.setIncludeDetail(true);
-		PurchaseRequestResDTO resDTO = purchaseRequestSO.retrievePurchaseRequests(reqDTO);
-		//System.out.println("Item name::: "+resDTO.getListPurchaseRequest().get(0).getRequestNoteDtls().get(0).getScRequestSupplierItem().getRequestNoteItem().getItemName());
-		List<ScRequestNoteDtl> noteDtlList=new ArrayList<ScRequestNoteDtl>();
-		if(null!=resDTO && !resDTO.getListPurchaseRequest().isEmpty()){
-			for(ScPurchaseRequest purchaseRequest:resDTO.getListPurchaseRequest()){
-				noteDtlList.addAll(purchaseRequest.getRequestNoteDtls());
-			}
-		}
-		getManagedBean().setRequestNoteWithDtlsList(noteDtlList);
-		//noteDtlList.get(0).getScRequestSupplierItem().getSupplierItemPrices().get(0).getItemPrice();
 	}
 
 	public void selectedItemRow() {
