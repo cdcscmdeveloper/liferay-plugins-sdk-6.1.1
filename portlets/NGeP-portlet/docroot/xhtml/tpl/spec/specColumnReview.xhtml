@@ -3,10 +3,12 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:p="http://primefaces.org/ui">
 	
-	<p:column style="width:125px;" headerText="#{lbl[isSpecTypeFinancial ? 'lbl.tpl.spec.content.total.amount' : 'lbl.tpl.spec.content.answer']}">
-		<p:commandButton icon="ui-icon-pencil" style="background-color:transparent !important; border:0px none;" id="scoringBtn"
+	<p:column style="width:125px;" headerText="#{lbl[isSpecTypeFinancial ? 'lbl.tpl.spec.content.total.amount' : 'lbl.tpl.spec.content.answer']}" rendered="#{isScoringReq}">
+		<p:commandButton icon="ui-icon-pencil" style="background-color:transparent !important; border:0px none;" id="scoringBtn" 
+			action="#{templateSpecBackingBean.scoringPopupAction(templateSpecBean)}"
 			oncomplete="scoringSetPopup.show();"
 			partialSubmit="true" process="@this" update="@([id$=scoringSetPopup])">
 			<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{question}" />
@@ -17,7 +19,7 @@
 			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 		</h:outputText>
 	</p:column>
-	<p:column style="width:150px;" headerText="#{lbl['lbl.tpl.spec.content.comment']}">
+	<p:column style="width:150px;" headerText="#{lbl['lbl.tpl.spec.content.comment']}" rendered="#{isContentTypeReview}">
 		<p:inputTextarea style="width:96%;" value="#{question.clReviewRemark}" rows="1" maxlength="500" />
 	</p:column>
 </ui:composition>

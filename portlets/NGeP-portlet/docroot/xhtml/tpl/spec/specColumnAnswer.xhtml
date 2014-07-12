@@ -3,6 +3,7 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:p="http://primefaces.org/ui">
 	
 	<ui:decorate template="specColumnQuestionView.xhtml">
@@ -45,7 +46,7 @@
 			rendered="#{isQuestionTypeItem}" required="true" maxlength="19"
 			label="#{lbl['lbl.tpl.spec.content.unit.price']}">
 			<p:ajax event="blur" partialSubmit="true" process="@this" update="ansYearPG, ansPG" listener="#{templateSpecBackingBean.calcTotalAmount(templateSpecBean, tplSpecAnswer, isItemTypeService)}" />
-			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+			<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" maxIntegerDigits="14" />
 		</p:inputText>
 		<p:message id="ratePerUomMsg" for="ratePerUom" display="icon" />
 	</p:column>
@@ -77,7 +78,7 @@
 				value="#{tplSpecAnswer.answerNumeric}" maxlength="19"
 				rendered="#{isAnswerTypeNumeric and ((isSpecTypeFinancial and !isPriceTypeTier) or !isSpecTypeFinancial)}" disabled="#{isSpecTypeFinancial}" required="#{question.clAnswerRequired}"
 				label="#{lbl[answerlbl]}">
-				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" maxIntegerDigits="14" />
 			</p:inputText>
 			<p:message id="answerNumericMsg" for="answerNumeric" display="icon" rendered="#{isAnswerTypeNumeric and ((isSpecTypeFinancial and !isPriceTypeTier) or !isSpecTypeFinancial) and question.clAnswerRequired}" />
 			<h:selectOneMenu id="answerCompliance" style="width:100%;" 

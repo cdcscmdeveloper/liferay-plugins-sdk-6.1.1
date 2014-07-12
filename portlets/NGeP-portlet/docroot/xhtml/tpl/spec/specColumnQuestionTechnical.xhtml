@@ -66,7 +66,7 @@
 				value="#{question.clUomFrequency}" 
 				rendered="#{isQuestionTypeItem}" required="true" maxlength="4"
 				label="#{lbl['lbl.tpl.spec.content.frequency.per.uom']}">
-				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+				<ac:validateNumber  maxIntegerDigits="4" integerOnly="true" />
 			</p:inputText>
 			<p:message id="freqUOMMsg" for="freqUOM" display="icon" />
 		</p:column>
@@ -79,7 +79,7 @@
 				value="#{question.clUomPerDay}" 
 				rendered="#{isQuestionTypeItem and isUOMHours}" required="true" maxlength="4"
 				label="#{lbl['lbl.tpl.spec.content.no.uom.per.day']}">
-				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+				<ac:validateNumber  maxIntegerDigits="4" integerOnly="true" />
 			</p:inputText>
 			<p:message id="dayUOMMsg" for="dayUOM" display="icon" />
 		</p:column>
@@ -92,7 +92,7 @@
 				value="#{question.clUomPerMonth}" 
 				rendered="#{isQuestionTypeItem and (isUOMHours or isUOMDays)}" required="true" maxlength="4"
 				label="#{lbl['lbl.tpl.spec.content.no.uom.per.month']}">
-				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+				<ac:validateNumber maxIntegerDigits="4" integerOnly="true" />
 			</p:inputText>
 			<p:message id="monthUOMMsg" for="monthUOM" display="icon" />
 		</p:column>
@@ -105,7 +105,7 @@
 				value="#{question.clDurationMonth}" 
 				rendered="#{isQuestionTypeItem}" required="true" maxlength="4"
 				label="#{lbl['lbl.tpl.spec.content.duration.month']}">
-				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+				<ac:validateNumber maxIntegerDigits="4" integerOnly="true" />
 			</p:inputText>
 			<p:message id="durationMsg" for="duration" display="icon" />
 		</p:column>
@@ -132,9 +132,9 @@
 		<h:panelGroup id="qtyPG" rendered="#{isQuestionTypeItem}">
 			<p:inputText id="qty" style="min-width:0px !important;width:96%;" styleClass="ppNumericAlign"
 				value="#{question.clQuantity}" 
-				rendered="#{isPriceTypeAllStandard}" required="true" maxlength="19"
+				rendered="#{isPriceTypeAllStandard}" required="true" maxlength="14"
 				label="#{lbl['lbl.tpl.spec.content.quantity']}">
-				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, question)}" />
+				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, question)}" maxIntegerDigits="10" />
 			</p:inputText>
 			<p:message id="qtyMsg" for="qty" display="icon" />
 			<p:commandButton icon="ui-icon-pencil" style="background-color:transparent !important; border:0px none;"  
@@ -190,9 +190,9 @@
 		<h:panelGroup id="estPG" rendered="#{isQuestionTypeItem}">
 			<p:inputText id="estCost" style="min-width:0px !important;width:96%;" styleClass="ppNumericAlign"
 				value="#{question.tplSpecEstimations[0].estimatedCost}" 
-				required="true" rendered="#{isPriceTypeStandard}"
+				required="true" rendered="#{isPriceTypeStandard}" maxlength="19"
 				label="#{lbl['lbl.tpl.spec.content.estimate.cost']}">
-				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" maxIntegerDigits="14" />
 			</p:inputText>
 			<p:message id="estCostMsg" for="estCost" display="icon" />
 			<p:commandButton icon="ui-icon-pencil" style="background-color:transparent !important; border:0px none;"  

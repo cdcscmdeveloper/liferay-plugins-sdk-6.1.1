@@ -16,29 +16,32 @@
 		selection="#{templateSpecBean.selectedTierQtyList}">
 							
 		<ac:paginator for="tierQtyTbl" />
+		<ui:param name="uomCode" value="#{templateSpecBean.selectedSpecQuestion.clUom.uomCode}" />
 		
-		<p:column selectionMode="multiple" style="width:20px;" />
+		<p:column selectionMode="multiple" style="width:20px;" rendered="#{editable}" />
 		<p:column>
 			<f:facet name="header">
-				<h:outputText value="* " styleClass="mandatory" />
+				<h:outputText value="* " styleClass="mandatory" rendered="#{editable}" />
 				<h:outputText value="#{lbl['lbl.tpl.spec.content.tier.from.qty']}"/>
 			</f:facet>
 			<p:inputText id="fromQty" value="#{tplSpecTierQty.fromQty}" style="width:96%;" styleClass="ppNumericAlign" 
-				required="true" maxlength="19"
-				label="#{lbl['lbl.tpl.spec.content.tier.from.qty']}">
-				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+				required="true" maxlength="14"
+				label="#{lbl['lbl.tpl.spec.content.tier.from.qty']}"
+				disabled="#{!editable}">
+				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, uomCode)}" maxIntegerDigits="10" />
 			</p:inputText>
 			<p:message id="fromQtyMsg" for="fromQty" display="icon" />
 		</p:column>
 		<p:column>
 			<f:facet name="header">
-				<h:outputText value="* " styleClass="mandatory" />
+				<h:outputText value="* " styleClass="mandatory" rendered="#{editable}" />
 				<h:outputText value="#{lbl['lbl.tpl.spec.content.tier.to.qty']}"/>
 			</f:facet>
 			<p:inputText id="toQty" value="#{tplSpecTierQty.toQty}" style="width:96%;" styleClass="ppNumericAlign" 
-				required="true" maxlength="19"
-				label="#{lbl['lbl.tpl.spec.content.tier.to.qty']}">
-				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+				required="true" maxlength="14"
+				label="#{lbl['lbl.tpl.spec.content.tier.to.qty']}"
+				disabled="#{!editable}">
+				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, uomCode)}" maxIntegerDigits="10" />
 			</p:inputText>
 			<p:message id="toQtyMsg" for="toQty" display="icon" />
 		</p:column>
@@ -49,8 +52,9 @@
 			</f:facet>
 			<p:inputText id="subSeq" value="#{tplSpecTierQty.subSequence}" style="width:96%;" styleClass="ppNumericAlign" 
 				rendered="#{rowIndex > 0}" required="true" maxlength="6"
-				label="#{lbl['lbl.tpl.spec.content.tier.sub.sequence']}">
-				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+				label="#{lbl['lbl.tpl.spec.content.tier.sub.sequence']}"
+				disabled="#{!editable}">
+				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" maxIntegerDigits="6" />
 			</p:inputText>
 			<p:message id="subSeqMsg" for="subSeq" display="icon" />
 		</p:column>
@@ -61,11 +65,13 @@
 			process="@this, tierQtyTbl" partialSubmit="true"
 			action="#{templateSpecBackingBean.addTierQtyAction(templateSpecBean.selectedSpecQuestion)}"
 			oncomplete="tierQtyWidget.paginator.endLink.click();"
-			update="tierQtyTbl" icon="ui-icon-add" />
+			update="tierQtyTbl" icon="ui-icon-add"
+			rendered="#{editable}" />
 		<p:commandButton value="#{lbl['lbl.btn.delete']}"
 			process="@this, tierQtyTbl" partialSubmit="true"
 			icon="ui-icon-delete"
-			action="#{templateSpecBackingBean.deleteRowAction(templateSpecBean.selectedSpecQuestion.tplSpecTierQties, templateSpecBean.selectedTierQtyList)}"
-			update="tierQtyTbl" />
+			action="#{templateSpecBackingBean.deleteRowsAction(templateSpecBean.selectedSpecQuestion.tplSpecTierQties, templateSpecBean.selectedTierQtyList)}"
+			update="tierQtyTbl"
+			rendered="#{editable}" />
 	</div>
 </ui:composition>

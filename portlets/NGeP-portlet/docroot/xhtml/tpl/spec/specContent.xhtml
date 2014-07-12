@@ -58,14 +58,14 @@
 					<ui:param name="isUOMHours" value="#{question.clUom.uomCode == 'H' or question.clUom.uomCode == 'HUR' or question.clUom.uomCode == 'HR'}" />
 					<ui:param name="isUOMDays" value="#{question.clUom.uomCode == 'D' or question.clUom.uomCode == 'DAY'}" />
 					
-					<c:if test="#{isContentTypeQuestion and (isSpecTypeTechnical or (isSpecTypeFinancial and !isSpecificationReq))}">
+					<c:if test="#{isContentTypeQuestion and (isSpecTypeTechnical or (isSpecTypeFinancial and !isSpecificationReq)) and editable}">
 						<ui:decorate template="specColumnQuestionTechnical.xhtml" />
 					</c:if>
-					<c:if test="#{isContentTypeQuestion and isSpecTypeFinancial and isSpecificationReq}">
+					<c:if test="#{isContentTypeQuestion and isSpecTypeFinancial and isSpecificationReq and editable}">
 						<ui:decorate template="specColumnQuestionView.xhtml" />
 						<ui:decorate template="specColumnQuestionFinancial.xhtml" />
 					</c:if>
-					<c:if test="#{isContentTypeReview}">
+					<c:if test="#{isContentTypeReview or !editable}">
 						<ui:decorate template="specColumnQuestionView.xhtml" />
 						<ui:decorate template="specColumnReview.xhtml" />
 					</c:if>
@@ -79,6 +79,8 @@
 					
 					<ui:param name="question" value="#{tplSpecAnswer.tplSpecQuestion}" />
 					<ui:param name="isQuestionTypeItem" value="#{question.questionType == TplSpecConst.questionTypeItem}" />
+					<ui:param name="isPriceTypeStandard" value="#{question.clPriceTypeCode.parameterCode == ParameterConst.priceTypeStandard}" />
+					<ui:param name="isPriceTypeAllStandard" value="#{isPriceTypeStandard or question.clPriceTypeCode.parameterCode == ParameterConst.priceTypeZonalStandard}" />
 					<ui:param name="isPriceTypeTariff" value="#{question.clPriceTypeCode.parameterCode == ParameterConst.priceTypeTariff 
 						or question.clPriceTypeCode.parameterCode == ParameterConst.priceTypeZonalTariff}" />
 					<ui:param name="isPriceTypeTier" value="#{question.clPriceTypeCode.parameterCode == ParameterConst.priceTypeTier 
@@ -134,7 +136,7 @@
 						partialSubmit="true"
 						process="@this, tierQtyPnl"
 						update="tierQtyPnl" />
-					<p:commandButton value="#{lbl['lbl.btn.cancel']}" icon="ui-icon-cancel"  oncomplete="tierQtyPopup.hide()">
+					<p:commandButton value="#{lbl['lbl.btn.cancel']}" icon="ui-icon-cancel"  oncomplete="tierQtyPopup.hide()" rendered="#{editable}">
 						<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{null}" />
 					</p:commandButton>
 				</div>			
@@ -158,7 +160,7 @@
 						partialSubmit="true"
 						process="@this, scoreSettPnl"
 						update="scoreSettPnl" />
-					<p:commandButton value="#{lbl['lbl.btn.cancel']}" icon="ui-icon-cancel"  oncomplete="scoringSetPopup.hide()">
+					<p:commandButton value="#{lbl['lbl.btn.cancel']}" icon="ui-icon-cancel"  oncomplete="scoringSetPopup.hide()" rendered="#{editable}">
 						<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{null}" />
 					</p:commandButton>
 				</div>
@@ -182,7 +184,7 @@
 						partialSubmit="true"
 						process="@this, estimationPnl"
 						update="estimationPnl" />
-					<p:commandButton value="#{lbl['lbl.btn.cancel']}" icon="ui-icon-cancel"  oncomplete="estimationPopup.hide()">
+					<p:commandButton value="#{lbl['lbl.btn.cancel']}" icon="ui-icon-cancel"  oncomplete="estimationPopup.hide()" rendered="#{editable}">
 						<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{null}" />
 					</p:commandButton>
 				</div>			
