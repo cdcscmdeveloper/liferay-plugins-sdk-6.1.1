@@ -79,22 +79,23 @@
                   <p:selectOneMenu  style="width:70px" disabled="true">
             	    <f:selectItem itemLabel="And" itemValue=""/>
                  </p:selectOneMenu>
-                 <p:selectOneMenu for="ptjcodename"  style="width:100px;">
-                    <f:selectItem itemLabel="-Select One-" itemValue=""/>
+                 <p:selectOneMenu for="ptjcodename" value="#{contractDetailsBackingBean.managedBean.ptjCodeName}"  style="width:100px;">
+                    <f:selectItem itemLabel="-Select One-" itemValue="null"/>
             	    <f:selectItem itemLabel="PTJ Code" itemValue="Code"/>
             	    <f:selectItem itemLabel="PTJ Name" itemValue="Name"/>
                  </p:selectOneMenu>
 				 <p:spacer height="1"/>
-                 <p:selectOneMenu  style="width:70px">
+                 <p:selectOneMenu value="#{contractDetailsBackingBean.managedBean.ptjSearchtype}"  style="width:70px">
             	    <f:selectItem itemLabel="Equals" itemValue="E"/>
             	     <f:selectItem itemLabel="Like" itemValue="L"/>
                  </p:selectOneMenu>
                  <p:spacer height="1"/>
-                 <p:inputText style="width:220px;"/>
+                 <p:inputText  style="width:220px;" 
+                     value="#{contractDetailsBackingBean.managedBean.ptjCodeNameSearchValues}" />
 			  </h:panelGrid>
 			  	<div class="ppRightBtn">
-       		         <p:commandButton value="#{lbl['lbl.btn.search']}" action="#{contractDetailsBackingBean.searchAgencyDetails}" icon="ui-icon-search"   
-       		           update="@([id$=tableAgency])"/> 
+       		         <p:commandButton value="#{lbl['lbl.btn.search']}" update="@([id$=tableAgency])"
+       		            action="#{contractDetailsBackingBean.searchAgencyDetails}" icon="ui-icon-search" /> 
 			         <p:commandButton id="resetlBtn" value="#{lbl['lbl.btn.reset']}"/>
 		       </div>
 			   <p:spacer height="2"/>

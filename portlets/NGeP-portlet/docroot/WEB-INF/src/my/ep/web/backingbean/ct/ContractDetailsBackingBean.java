@@ -1667,6 +1667,27 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 						SearchOperator.OPERATOR_EQUALS.value(),
 						ministryProfileId));
 				
+				if(getManagedBean().getPtjCodeName() != null &&
+						(getManagedBean().getPtjCodeNameSearchValues() != null || getManagedBean().getPtjCodeNameSearchValues().equalsIgnoreCase(""))){
+					   
+					if(getManagedBean().getPtjCodeName().equalsIgnoreCase("Code") && getManagedBean().getPtjSearchtype().equalsIgnoreCase("E")){
+					      searchBean.getDataFilterBeans().add(new SearchFilterBean(
+							  "pmOrgValidity.orgCode", SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getPtjCodeNameSearchValues().toUpperCase()));
+				
+					}else if(getManagedBean().getPtjCodeName().equalsIgnoreCase("Code") && getManagedBean().getPtjSearchtype().equalsIgnoreCase("L")){
+						 searchBean.getDataFilterBeans().add(new SearchFilterBean(
+								  "pmOrgValidity.orgCode", SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getPtjCodeNameSearchValues().toUpperCase()));
+					
+					}else if(getManagedBean().getPtjCodeName().equalsIgnoreCase("Name") && getManagedBean().getPtjSearchtype().equalsIgnoreCase("E")){
+						 searchBean.getDataFilterBeans().add(new SearchFilterBean(
+								  "pmOrgValidity.orgName", SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getPtjCodeNameSearchValues().toUpperCase()));
+					
+					}else if(getManagedBean().getPtjCodeName().equalsIgnoreCase("Name") && getManagedBean().getPtjSearchtype().equalsIgnoreCase("L")){
+						 searchBean.getDataFilterBeans().add(new SearchFilterBean(
+								  "pmOrgValidity.orgName", SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getPtjCodeNameSearchValues().toUpperCase()));
+					}
+				}
+				
 				 IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 				 OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 				 reqDTO.setOrgProfileSearchBean(searchBean);
