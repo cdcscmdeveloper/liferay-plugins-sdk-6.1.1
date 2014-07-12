@@ -42,61 +42,56 @@ import org.primefaces.model.TreeNode;
 public class PanelManagedBean extends BaseManagedBean {
 
 	private static final long serialVersionUID = 1L;
-
+	
+	private String fileDirectory = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)+"/CT/Circulars/"+ParameterConst.DOCTYPE_PANEL_CIRCULAR;
 	private String circularDocType;
 	private String circularAdmin;
 	private String action;
-	
-	private boolean updateAction;
-	
-	private CtCircular circular;
-	private CtCircularVer circularVer;
-	private CtCancelCircular selectedCancelCircular;
-	private CtCancelCircularReq cancelCircularReq;
-	
-	private List<CtContactPerson> selectedContactPersons;
-	private List<CtCancelCircular> selectedCancelCirculars;
-	private List<CtCancelCircular> cancelledCircularList;
-	private CtCircularVer[] selectedCircularVerList;
-	private List<CtCircularVer> circularVerList;
-	private List<CtCancelCircular> selectedCancelledCircularList;
-	private List<CtRemark> remarkList;
-	private List<CtAttachment> attachmentList;
-	private DualListModel<String> approverModel;
-
-	// Search
 	private String searchCircularNo;
 	private String searchCircularName;
 	private String searchFileRefNo;
 	private String searchSupplierName;
 	private String searchItemName;
+	private String zoneName;
+		
 	private Date searchStartDate;
 	private Date searchEndDate;	
+	
 	private Long searchStatusId;
-	
-	private CtPanelItem selectedPanelItems;
-	private CtPanelZone selectedPanelZone;
-	private boolean selectionOfZone;
-	private List<CtPanelSupplier> panelSupplierList;
-	private CtPanelSupplier selectedPanelSupplier;
-	
-	private TreeNode rootZoanlTree;
-	private String zoneName;
-	private TreeNode[] selectedGeneralTreeNodes;
-	private int index = -1;
-	private List<TreeNode> zoneGeneralTrees = new ArrayList<TreeNode>();
-	private TreeNode rootLocationTree;
-	private Map<String, PmUser> userMap;
-	private boolean editZone;
-	
-	private TreeNode selectedZoneTree;
-	private boolean buttonHideActive;
 	private Long itemCategoryId;
 	private Long panelCoverageId;
-	
 	private int selectedTabIndex;
 	
-	private String fileDirectory = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)+"/CT/Circulars/"+ParameterConst.DOCTYPE_PANEL_CIRCULAR;
+	private boolean editZone;
+	private boolean updateAction;
+	private boolean buttonHideActive;
+	private boolean selectionOfZone;
+	private int index = -1;
+	
+	private TreeNode[] selectedGeneralTreeNodes;
+	private List<TreeNode> zoneGeneralTrees = new ArrayList<TreeNode>();
+	private TreeNode rootLocationTree;
+	private TreeNode rootZoanlTree;
+	private TreeNode selectedZoneTree;
+	
+	private CtCircular circular;
+	private CtCircularVer circularVer;
+	private CtCancelCircular selectedCancelCircular;
+	private CtCancelCircularReq cancelCircularReq;
+	private CtPanelItem selectedPanelItems;
+	private CtPanelZone selectedPanelZone;
+	private CtPanelSupplier selectedPanelSupplier;
+	private List<CtContactPerson> selectedContactPersons;
+	private List<CtCancelCircular> selectedCancelCirculars;
+	private List<CtCancelCircular> cancelledCircularList;
+	private List<CtCircularVer> circularVerList;
+	private List<CtCancelCircular> selectedCancelledCircularList;
+	private List<CtRemark> remarkList;
+	private List<CtAttachment> attachmentList;
+	private List<CtPanelSupplier> panelSupplierList;
+	private CtCircularVer[] selectedCircularVerList;
+	private DualListModel<String> approverModel;
+	private Map<String, PmUser> userMap;
 	
 	public CtCircular getCircular() {
 		return circular;
@@ -130,8 +125,6 @@ public class PanelManagedBean extends BaseManagedBean {
 			List<CtCancelCircular> selectedCancelledCircularList) {
 		this.selectedCancelledCircularList = selectedCancelledCircularList;
 	}
-
-	
 
 	public CtPanelItem getSelectedPanelItems() {
 		return selectedPanelItems;

@@ -46,18 +46,28 @@ public class CentralContractManagedBean extends BaseManagedBean {
 
 	private String circularAdmin;
 	private String action;
+	private String searchCircularNo;
+	private String searchCircularName;
+	private String searchFileRefNo;
+	private String searchContractNo;
+	private String searchContractName;
+	
+	private Date searchStartDate;
+	private Date searchEndDate;	
+	
+	private Long searchStatusId;
+	private int selectedTabIndex;
 	
 	private boolean updateAction;
 	private boolean updateTypeDisable;
+	private boolean chkItemZone;
+	private boolean chkItemPrice;
 	
 	private CtCircular circular;
 	private CtCircularVer circularVer;
 	private CtCircularContract selectedCircularContract;
 	private CtCircularItem selectedCircularItem;
 	private CtContractZone selectedZoneItems;
-	private boolean chkItemZone;
-	private boolean chkItemPrice;
-
 	private List<CtContract> contractList;
 	private List<CtContract> selectedContractList;
 	private List<CtContactPerson> selectedContactPersons;
@@ -65,29 +75,16 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	private List<CtCancelCircular> selectedCancelCirculars;
 	private List<CtCancelCircular> cancelledCircularList;
 	private List<CtCancelCircular> selectedCancelledCircularList;	
+	private List<CtRemark> remarkList;
+	private List<CtAttachment> attachmentList;
+	private List<PmOrgProfile> orgProfiles; 
+	private List<CtContractZone> contractItemZones;
 	private DualListModel<String> approverModel;
 	private Map<Long, PmUserGroup> userGroupMap;	
 	private Map<CtContractZone, List<CtItemPrice>> zonePriceMap;
 	private Map<String, PmUser> userMap;
-	
-	// Search
-	private String searchCircularNo;
-	private String searchCircularName;
-	private String searchFileRefNo;
-	private Date searchStartDate;
-	private Date searchEndDate;	
-	private Long searchStatusId;
-	private String searchContractNo;
-	private String searchContractName;
-	
-	private List<CtRemark> remarkList;
-	private List<CtAttachment> attachmentList;
 	private TreeNode centralZoneTrees;
-	private List<PmOrgProfile> orgProfiles; 
-	private int selectedTabIndex;
-	
-	private List<CtContractZone> contractItemZones;
-	
+
 	public boolean isUpdateAction() {
 		return updateAction;
 	}
