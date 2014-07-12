@@ -86,6 +86,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 	}
 	
 	public String submitAction(String action) {
+		log.debug("ReceivedNoteBackingBean.submitAction()");
 		IReceivedNoteSO receivedNoteSO = null;
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();
@@ -100,7 +101,6 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			reqDTO.setFulfilmentNote(fulfilmentNote);
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setOutcome(action);
-			reqDTO.setDeliveryOrderId(getManagedBean().getDeliveryOrderId());
 			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
 			reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
 			
@@ -116,6 +116,9 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			
 			if(resDTO.isSuccessful()) {
 				String messageId = MessageConst.INFO_700011;
+				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
+					messageId = MessageConst.INFO_700004;
+				}
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 						MessageUtils.getMessage(messageId, 
 								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_FULFILMENT_NOTE), resDTO.getFulfilmentNoteNo()}, 
@@ -124,7 +127,13 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 				if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
 					renewSesionObject();
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
-				} 
+				} else {
+					getManagedBean().setFulfilmentNote(resDTO.getFulfilmentNote());
+					getManagedBean().setSelectedItem(getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem().get(0));
+					reqDTO.setDeliveryOrderId(getManagedBean().getFulfilmentNote().getFlDeliveryOrder().getDeliveryOrderId());
+					getManagedBean().getFulfilmentNote().setStatus(receivedNoteSO.retrieveReceivedNoteStatus(reqDTO).getPmStatus());
+					flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
+				}
 			}
 		} finally {
 			receivedNoteSO = null;
@@ -133,32 +142,21 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 	}
 	
 	public void preRenderView() {
-		System.out.println("Prerender");
-		//		BPMTaskListBackingBean bb = new BPMTaskListBackingBean();
-		HttpServletRequest servletRequest = PortalUtil
-				.getHttpServletRequest(new FacesScopes().getRequest());
-		HttpServletRequest originalServletRequest = PortalUtil
-				.getOriginalServletRequest(servletRequest);
+		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
+		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter("taskId");
-		//		String loginId = originalServletRequest.getParameter("loginId");
-		System.out.println("taskId:" + taskId);
-		//		System.out.println("loginId:" + loginId);
-		IReceivedNoteSO receivedNoteSO = (IReceivedNoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IReceivedNoteSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();
 		if(taskId != null){
-
-			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
-					.getServiceObject(IBpmSO.class);
+			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 			String ctx = getFacesScopes().getBPMAuthenticationCtxToken();
 			BpmRequestDTO bpmRequestDTO = new BpmRequestDTO();
-			FacesScopes facesScopes = new FacesScopes();
-			String token = facesScopes.getBPMAuthenticationCtxToken();
 			bpmRequestDTO.setCtxToken(ctx);
 			bpmRequestDTO.setTaskId(taskId);
 			BpmResponseDTO res = bpmSO.getTaskDetails(bpmRequestDTO);
 			Object obj = res.getPojo();
-
+			
+			IReceivedNoteSO receivedNoteSO = (IReceivedNoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IReceivedNoteSO.class);
 			IDeliveryOrderSO deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IDeliveryOrderSO.class);
 			if(res.getProcessName().equalsIgnoreCase(FLProcessNameConst.FRN_CANCELLATION_PROCESS_NAME)){
 				FLDOFulfillmentCancelReqType fulfillmentCancelReqType = (FLDOFulfillmentCancelReqType)obj;
@@ -168,15 +166,12 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 				flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
 				
 				getManagedBean().setFulfilmentRequest(resDTO.getFlDeliveryOrder().getFlRequest());
-				//getManagedBean().setFulfilmentRequest(delOrderResDTO.getFlDeliveryOrder().getFlFulfilmentOrder().getFlFulfilmentRequest());
-				getManagedBean().setDeliveryOrderId(fulfillmentCancelReqType.getDoId());
 				getManagedBean().setTaskId(taskId);
 				getManagedBean().setOutComes(res.getAction());
-				System.out.println("Doc type in FRN::: "+resDTO.getFlDeliveryOrder().getFlRequest().getDocType());
 				getManagedBean().setDocType(resDTO.getFlDeliveryOrder().getFlRequest().getDocType());
 				
-				//combineSupAddress(resDTO.getFlDeliveryOrder().getFlRequest());
 				getManagedBean().getFulfilmentNote().setFlDeliveryOrder(resDTO.getFlDeliveryOrder());
+				getManagedBean().getFulfilmentNote().setFlRequest(getManagedBean().getFulfilmentRequest());
 				List<FlFulfilmentNoteItem> noteItemList=new ArrayList<FlFulfilmentNoteItem>();
 				int i = 0;
 				for (FlDelOrderItem delOrderItem : resDTO.getFlDeliveryOrder().getFlDelOrderItem()){
@@ -196,39 +191,48 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 				getManagedBean().getFulfilmentNote().setFlFulfilmentNoteItem(noteItemList);
 				getManagedBean().getFulfilmentNote().setFlRequest(resDTO.getFlDeliveryOrder().getFlRequest());
 				getManagedBean().setFrnCancellationProcess(true);
-
 			}else{
 				FLFulFillmentRecievedNoteDataType fulFillmentRecievedNoteDataType = (FLFulFillmentRecievedNoteDataType)obj;
 				reqDTO.setDeliveryOrderId(fulFillmentRecievedNoteDataType.getDoId());
-				resDTO = deliveryOrderSO.retrieveDeliveryOrderById(reqDTO);
+				
+				resDTO = receivedNoteSO.retrieveReceivedNoteByDeliveryOrderId(reqDTO);
+				if(resDTO.getFulfilmentNote()!=null) {
+					getManagedBean().setFulfilmentNote(resDTO.getFulfilmentNote());
+					getManagedBean().setFulfilmentRequest(resDTO.getFulfilmentNote().getFlRequest());
+					getManagedBean().setDocType(resDTO.getFulfilmentNote().getFlRequest().getDocType());
+				} else {
+					resDTO = deliveryOrderSO.retrieveDeliveryOrderById(reqDTO);
+					getManagedBean().setFulfilmentRequest(resDTO.getFlDeliveryOrder().getFlRequest());
+					getManagedBean().getFulfilmentNote().setFlDeliveryOrder(resDTO.getFlDeliveryOrder());
+					getManagedBean().getFulfilmentNote().setFlRequest(resDTO.getFlDeliveryOrder().getFlRequest());
+					getManagedBean().setDocType(resDTO.getFlDeliveryOrder().getFlRequest().getDocType());
+					
+					List<FlFulfilmentNoteItem> noteItemList=new ArrayList<FlFulfilmentNoteItem>();
+					for (FlDelOrderItem delOrderItem : resDTO.getFlDeliveryOrder().getFlDelOrderItem()){
+						FlFulfilmentNoteItem noteItem=new FlFulfilmentNoteItem();
+						noteItem.setFlDelOrderItem(delOrderItem);
+						noteItem.setFlFulfilmentNote(getManagedBean().getFulfilmentNote());
+						noteItem.setFlItem(delOrderItem.getFlItem());
+						if(delOrderItem.getFlFulfilmentItemAddr().getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) {
+							noteItem.setReceivedQty(delOrderItem.getDeliveredQty());
+							noteItem.setReceivedAmt(delOrderItem.getDeliveredAmt());
+						}						
+						noteItemList.add(noteItem);
+					}
+					getManagedBean().getFulfilmentNote().setFlFulfilmentNoteItem(noteItemList);
+				}
+				getManagedBean().setSelectedItem(getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem().get(0));
 				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 				flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
 				
-				getManagedBean().setFulfilmentRequest(resDTO.getFlDeliveryOrder().getFlRequest());
-				getManagedBean().setDeliveryOrderId(fulFillmentRecievedNoteDataType.getDoId());
-				getManagedBean().setTaskId(taskId);
-				getManagedBean().setOutComes(res.getAction());
-				System.out.println("Doc type in FRN::: "+resDTO.getFlDeliveryOrder().getFlRequest().getDocType());
-				getManagedBean().setDocType(resDTO.getFlDeliveryOrder().getFlRequest().getDocType());
-				
-				getManagedBean().getFulfilmentNote().setFlDeliveryOrder(resDTO.getFlDeliveryOrder());
-				List<FlFulfilmentNoteItem> noteItemList=new ArrayList<FlFulfilmentNoteItem>();
-				int i = 0;
-				for (FlDelOrderItem delOrderItem : resDTO.getFlDeliveryOrder().getFlDelOrderItem()){
-					FlFulfilmentNoteItem noteItem=new FlFulfilmentNoteItem();
-					noteItem.setFlDelOrderItem(delOrderItem);
-					noteItem.setFlFulfilmentNote(getManagedBean().getFulfilmentNote());
-					noteItem.setFlItem(delOrderItem.getFlItem());
-					if(i == 0){
-						getManagedBean().setSelectedItem(noteItem);
-					}
-					i++;
-					noteItemList.add(noteItem);
+				String[] outcome = new String[res.getAction().length + 1];
+				outcome[0] = BpmOutcomeConst.BPM_SAVE;
+				int x = 1;
+				for (String action : res.getAction()) {
+					outcome[x++] = action;
 				}
-				//Add noteItemList to Managed Bean List.
-				getManagedBean().getFulfilmentNote().setFlFulfilmentNoteItem(noteItemList);
-				getManagedBean().getFulfilmentNote().setFlRequest(resDTO.getFlDeliveryOrder().getFlRequest());
-				getManagedBean().getFulfilmentNote().setStatus(receivedNoteSO.retrieveReceivedNoteStatus(reqDTO).getPmStatus());
+				getManagedBean().setTaskId(taskId);
+				getManagedBean().setOutComes(outcome);
 			}
 			getManagedBean().setSelectedTabIndex(0);
 			reqDTO.setDeliveryOrderId(getManagedBean().getFulfilmentNote().getFlDeliveryOrder().getDeliveryOrderId());

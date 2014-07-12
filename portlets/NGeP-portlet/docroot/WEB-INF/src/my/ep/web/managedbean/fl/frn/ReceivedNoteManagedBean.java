@@ -14,12 +14,9 @@ import my.ep.persistence.entity.fl.frn.FlFulfilmentNote;
 import my.ep.persistence.entity.fl.frn.FlFulfilmentNoteItem;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
-import my.ep.persistence.entity.pm.authorization.PmOrgAddress;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCriteriaDesc;
 import my.ep.web.managedbean.BaseManagedBean;
-
-import org.apache.log4j.Logger;
 
 /**
  * Managed Bean for Create Received Note
@@ -30,7 +27,6 @@ import org.apache.log4j.Logger;
 @ManagedBean(name = "frnMB")
 @SessionScoped
 public class ReceivedNoteManagedBean extends BaseManagedBean {
-	private static Logger log = Logger.getLogger(ReceivedNoteManagedBean.class);
 	private static final long serialVersionUID = 1L;
 
 	private FlRemark flRemark = new FlRemark();
@@ -40,19 +36,12 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	private FlFulfilmentRequest fulfilmentRequest;
 	private FlFulfilmentNoteItem selectedItem = new FlFulfilmentNoteItem();
 
-	//private List<DeliveryAddressPopup> daPopupList;
-	//private List<DeliveryAddressPopup> selectedPopupAddress;
-	
 	private FlDeliveryAddress selectedAddrRow;
-	private List<PmOrgAddress> selectedPmDelAddrList;
-	private List<PmOrgAddress> delAddrList;
 	private FlDeliveryAddress selectedDelAddr;
-//	private List<PmMaksud> maksudCodeList;
 	private boolean checkPtjFlg = true;
 	
 	private String fulfillmentReqId;
 	private String buttonVal;
-	private long deliveryOrderId;
 	
 	private String docType;
 	private String supplierAddress;
@@ -106,34 +95,6 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectedAddrRow(FlDeliveryAddress selectedAddrRow) {
 		this.selectedAddrRow = selectedAddrRow;
-	}
-
-	/**
-	 * @return the selectedPmDelAddrList
-	 */
-	public List<PmOrgAddress> getSelectedPmDelAddrList() {
-		return selectedPmDelAddrList;
-	}
-
-	/**
-	 * @param selectedPmDelAddrList the selectedPmDelAddrList to set
-	 */
-	public void setSelectedPmDelAddrList(List<PmOrgAddress> selectedPmDelAddrList) {
-		this.selectedPmDelAddrList = selectedPmDelAddrList;
-	}
-
-	/**
-	 * @return the delAddrList
-	 */
-	public List<PmOrgAddress> getDelAddrList() {
-		return delAddrList;
-	}
-
-	/**
-	 * @param delAddrList the delAddrList to set
-	 */
-	public void setDelAddrList(List<PmOrgAddress> delAddrList) {
-		this.delAddrList = delAddrList;
 	}
 
 	/**
@@ -218,20 +179,6 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	 */
 	public void setButtonVal(String buttonVal) {
 		this.buttonVal = buttonVal;
-	}
-
-	/**
-	 * @return the deliveryOrderId
-	 */
-	public long getDeliveryOrderId() {
-		return deliveryOrderId;
-	}
-
-	/**
-	 * @param deliveryOrderId the deliveryOrderId to set
-	 */
-	public void setDeliveryOrderId(long deliveryOrderId) {
-		this.deliveryOrderId = deliveryOrderId;
 	}
 
 	/**
