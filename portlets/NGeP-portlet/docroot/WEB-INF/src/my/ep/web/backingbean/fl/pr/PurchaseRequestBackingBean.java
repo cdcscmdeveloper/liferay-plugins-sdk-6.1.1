@@ -800,7 +800,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 				fulfilmentItem.setSumOrderedQty(sumOrderedQty);
 			}
 		}
-		
 	}
 
 	public void calculateSubTotal(BigDecimal quantity){

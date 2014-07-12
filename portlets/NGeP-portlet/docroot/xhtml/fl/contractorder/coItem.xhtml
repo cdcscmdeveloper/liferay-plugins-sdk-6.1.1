@@ -31,7 +31,7 @@
 				<h:outputText value="Delivery Start" />
 				<p:spacer width="7" />
 				<p:inputText size="9"
-					value="#{flOrderBB.managedBean.flRequest.startDate}"
+					value="#{delAddressSummary.startDate}"
 					disabled="true">
 					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
@@ -40,7 +40,7 @@
 				<h:outputText value="Delivery End" />
 				<p:spacer width="7" />
 				<p:inputText size="9"
-					value="#{flOrderBB.managedBean.flRequest.endDate}" disabled="true">
+					value="#{delAddressSummary.endDate}" disabled="true">
 					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</p:inputText>

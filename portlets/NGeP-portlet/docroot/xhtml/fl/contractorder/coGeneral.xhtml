@@ -58,12 +58,12 @@
 				<td><p:inputText size="5" disabled="true"
 						value="#{flOrderBB.managedBean.flRequest.chargeOrgProfile.orgProfileId}" />
 					<p:spacer width="5" /> <p:inputText id="chargedPtj" size="39"
-						disabled="true"></p:inputText></td>
+						disabled="true" value="#{flOrderBB.managedBean.flRequest.chargeOrgProfile.orgName}"></p:inputText></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.accounting.ofc']}" /></td>
-				<td><p:inputText size="5" disabled="true" /> <p:spacer
-						width="5" /> <p:inputText size="39" disabled="true" /></td>
+				<td><p:inputText size="5" disabled="true" value="#{flOrderBB.managedBean.flRequest.agOffice.officeCode}"/> <p:spacer
+						width="5" /> <p:inputText size="39" disabled="true" value="#{flOrderBB.managedBean.flRequest.agOffice.officeName}" /></td>
 			</tr>
 		</table>
 	</p:panel>
@@ -84,7 +84,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.financial.year']}" /></td>
-				<td><p:inputText size="20" disabled="true" /></td>
+				<td><p:inputText size="20" disabled="true" value="#{flOrderBB.managedBean.fulfilmentOrder.flFulfilmentRequest.financialYear}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.prepared.date']}" /></td>
@@ -95,14 +95,24 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.period']}" /></td>
-				<td><p:inputText size="12" disabled="true" value="10" /> <p:spacer
-						width="5" /> <p:inputText size="2" value="Days" disabled="true" />
-					<p:spacer width="5" /> <p:outputLabel
-						value="#{lbl['lbl.fl.zonal']}" /> <h:selectBooleanCheckbox
+				<td><p:inputText size="12" disabled="true" style="text-align:right"
+						value="#{flOrderBB.managedBean.flRequest.ctContract.latestContractVer.ctContractValue.deliveryTerm}"
+						rendered="#{flOrderBB.managedBean.flRequest.ctContract.zonalPricing eq false}" />
+					<p:spacer width="5" /> <p:inputText size="2"
+						value="#{flOrderBB.getParameterDesc(flOrderBB.managedBean.flRequest.ctContract.latestContractVer.ctContractValue.deliveryTermUom)}"
+						disabled="true"
+						rendered="#{flOrderBB.managedBean.flRequest.ctContract.zonalPricing eq false}" />
+					<p:inputText size="12" disabled="true"
+						value=""
+						rendered="#{flOrderBB.managedBean.flRequest.ctContract.zonalPricing}" />
+					<p:spacer width="5" /> <p:inputText size="2" value="" disabled="true" rendered="#{flOrderBB.managedBean.flRequest.ctContract.zonalPricing}"/>
+					<p:spacer width="5" /> <h:outputText
+						value="#{lbl['lbl.fl.zonal']}" /> <p:selectBooleanCheckbox
+						value="#{flOrderBB.managedBean.flRequest.ctContract.zonalPricing}"
 						disabled="true" /></td>
-				<td><p:outputLabel value="#{lbl['lbl.fl.submission.date']}" /></td>
-				<td><p:inputText size="25" disabled="true"
-					value="#{flOrderBB.managedBean.fulfilmentOrder.submissionDate}">
+				<td><p:outputLabel value="#{lbl['lbl.fl.approver.date']}" /></td>
+				<td><p:inputText size="20" disabled="true"
+					value="#{flOrderBB.managedBean.fulfilmentOrder.flFulfilmentRequest.approvedDate}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText>
@@ -110,17 +120,27 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.start.delivery.date']}" /></td>
-				<td><p:inputText size="25" disabled="true">
-					</p:inputText></td>
+				<td><p:calendar mode="popup" showOn="button" disabled="#{flOrderBB.managedBean.flRequest.ctContract.zonalPricing}" readonlyInput="#{flOrderBB.managedBean.flRequest.ctContract.zonalPricing}"
+						value="#{flOrderBB.managedBean.flRequest.startDate}"
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+						<p:ajax event="dateSelect"
+							listener="#{flOrderBB.updateDeliveryDate}"
+							update="delEndDate" />
+					</p:calendar></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.cr.mto']}" /></td>
-				<td><p:selectBooleanCheckbox disabled="true" /></td>
+				<td><p:selectBooleanCheckbox
+						value="#{flOrderBB.managedBean.flRequest.ctContract.mto}"
+						disabled="true" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.end.delivery.date']}" /></td>
-				<td><p:inputText size="25" disabled="true">
-					</p:inputText></td>
+				<td><p:calendar mode="popup" showOn="button" disabled="true" readonlyInput="true" id="delEndDate"
+						value="#{flOrderBB.managedBean.flRequest.endDate}"
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+					</p:calendar></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.cr.factored']}" /></td>
-				<td><p:selectBooleanCheckbox disabled="true" /></td>
+				<td><p:selectBooleanCheckbox disabled="true"
+						value="#{flOrderBB.managedBean.flRequest.ctContract.factored}" /></td>
 			</tr>
 		</table>
 	</p:panel>
@@ -147,14 +167,16 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.branch']}" /></td>
-				<td><p:inputText disabled="true" size="50" value="#{flOrderBB.managedBean.flRequest.ctContract.latestContractVer.ctContractValue.supplierBranch}"/></td>
+				<td><p:inputText disabled="true" size="50" value="#{flOrderBB.managedBean.flRequest.ctContract.latestContractVer.ctContractValue.supplierBranch}"
+						/></td>
 			</tr>
 			<tr>
 				<td valign="top"><p:outputLabel
 						value="#{lbl['lbl.fl.supp.address']}" /></td>
-				<td><p:inputTextarea cols="50" rows="8" disabled="true"
+				<td><p:inputTextarea cols="50" rows="8" disabled="true" 
+				value="#{flOrderBB.getFullAddress(flOrderBB.managedBean.flRequest.ctContract.latestContractVer.ctContractValue.supplierAddress)}"
 						style=" margin-bottom:5px;"
-						value="#{flOrderBB.getFullAddress(flOrderBB.managedBean.flRequest.ctContract.latestContractVer.ctContractValue.supplierAddress)}" /></td>
+						 /></td>
 			</tr>
 			<tr>
 				<td style="width: 100px;"><p:outputLabel
@@ -162,32 +184,35 @@
 				<td><table style="width: 100%">
 						<tr>
 							<td style="width: 25px;"><p:inputText size="15"
-									disabled="true"
-									value="#{flOrderBB.managedBean.flRequest.ctContract.latestContractVer.ctContractValue.supplierPhoneNo}" /></td>
+									disabled="true" value="#{flOrderBB.managedBean.flRequest.ctContract.latestContractVer.ctContractValue.supplierPhoneNo}"
+									/></td>
 							<td style="width: 65px;"><p:outputLabel
 									value="#{lbl['lbl.fl.supp.faxno']}" /></td>
-							<td><p:inputText size="20" disabled="true"
-									value="#{flOrderBB.managedBean.flRequest.ctContract.latestContractVer.ctContractValue.supplierFaxNo}" /></td>
+							<td><p:inputText size="20" disabled="true" value="#{flOrderBB.managedBean.flRequest.ctContract.latestContractVer.ctContractValue.supplierFaxNo}"
+									/></td>
 						</tr>
 					</table></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.del.ord.contact.person']}" /></td>
-				<td><p:inputText disabled="true" size="50" value="#{flOrderBB.managedBean.flRequest.ctContract.latestContractVer.ctContractValue.supplierContact}"/></td>
+				<td><p:inputText disabled="true" size="50" value="#{flOrderBB.managedBean.flRequest.ctContract.latestContractVer.ctContractValue.supplierContact}"
+						 /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.del.ord.contact.email']}" /></td>
-				<td><p:inputText disabled="true" size="50" value="#{flOrderBB.managedBean.flRequest.ctContract.latestContractVer.ctContractValue.supplierEmail}"/></td>
+				<td><p:inputText disabled="true" size="50" value="#{flOrderBB.managedBean.flRequest.ctContract.latestContractVer.ctContractValue.supplierEmail}"
+						 /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.del.ord.contact.no']}" /></td>
-				<td><p:inputText disabled="true" size="15" value="#{flOrderBB.managedBean.flRequest.ctContract.latestContractVer.ctContractValue.supplierFaxNo}"/></td>
+				<td><p:inputText disabled="true" size="15" value="#{flOrderBB.managedBean.flRequest.ctContract.latestContractVer.ctContractValue.supplierFaxNo}"
+						 /></td>
 			</tr>
 		</table>
 	</p:panel>
-	<p:panel header="FACTORING DETAILS" toggleable="true">
+	<p:panel header="FACTORING DETAILS" toggleable="true" rendered="#{flOrderBB.managedBean.flRequest.ctContract.factored}">
 		<table style="width: 100%">
 			<tr>
 				<td style="width: 136px;"><p:outputLabel
@@ -199,7 +224,7 @@
 						value="#{lbl['lbl.fl.supp.address']}" /></td>
 				<td><p:inputTextarea cols="50" rows="8" disabled="true"
 						style=" margin-bottom:5px;"
-						value="#{contractRequestBackingBean.managedBean.supplierAddress}" /></td>
+						value="" /></td>
 			</tr>
 			<tr>
 				<td style="width: 100px;"><p:outputLabel

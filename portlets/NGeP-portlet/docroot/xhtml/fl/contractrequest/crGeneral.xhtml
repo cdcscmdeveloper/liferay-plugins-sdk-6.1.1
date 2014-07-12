@@ -95,7 +95,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.period']}" /></td>
-				<td><p:inputText size="12" disabled="true"
+				<td><p:inputText size="12" disabled="true" style="text-align:right"
 						value="#{contractRequestBackingBean.managedBean.flRequest.ctContract.latestContractVer.ctContractValue.deliveryTerm}"
 						rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing eq false}" />
 					<p:spacer width="5" /> <p:inputText size="2"
@@ -212,7 +212,7 @@
 			</tr>
 		</table>
 	</p:panel>
-	<p:panel header="FACTORING DETAILS" toggleable="true">
+	<p:panel header="FACTORING DETAILS" toggleable="true" rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.factored}">
 		<table style="width: 100%">
 			<tr>
 				<td style="width: 136px;"><p:outputLabel
