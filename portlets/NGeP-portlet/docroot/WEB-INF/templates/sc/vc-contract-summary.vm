@@ -15,7 +15,7 @@
 
 Terma-terma yang dipersetujui sebagai sebahagian dari terma terma kontrak
 <br />
-<ol type="I">
+<ol type="i">
 	<li>No Rujukan: $fileNo $docNo</li>
 	<li>Skop / Tajuk: $title</li>
 	<li>Pembekal: $supplierName</li>
@@ -25,9 +25,11 @@ Terma-terma yang dipersetujui sebagai sebahagian dari terma terma kontrak
 	<li>Potongan Pembayaran: $deductionTypes</li>
 	<li>Tempoh Kontrak: $contractDuration Month(s)
 		<br />
-		$contractEffDate to $contractExpDate
+		$contractEffDate - $contractExpDate
 	</li>
+	#if ( $bondAmt != "")
 	<li>Nilai Bon Pelaksanaan: $bondAmt</li>
+	#end
 	<li>Spesifikasi Tugas / Skop Kerja: Refer Attachment</li>
 	<li>Cara Pembayaran: Secara Elektronik iaitu menggunakan Sistem eperolehan (eP)</li>
 	<li>Lain-lain Terma: Refer Attachment</li>

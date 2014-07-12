@@ -3,6 +3,8 @@ package my.ep.web.backingbean.sc.loa;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -68,9 +70,9 @@ import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.constant.CommonUIConst;
-import my.ep.web.constant.SourcingConst;
 import my.ep.web.managedbean.sc.loa.LOADetailManagedBean;
 import my.ep.web.sc.quationtender.common.QTConstants;
+import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -482,6 +484,8 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 				e.printStackTrace();
 				throw new EpException(e.getMessage());
 			}
+			
+			scLoaReport.setScLoaReportAttachment(scLoaReportAttachment);
 		}
 		
 		return scLoaReportAttachment;
@@ -511,31 +515,39 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 		populateAttachmentDetails(attachment);
 		
 		ScLoiLoa scLoiLoa = scLoa.getScLoiLoa();
+		CommonUtils commonUtils = new CommonUtils();
+		SimpleDateFormat dateSDF = new SimpleDateFormat(commonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE));
+		DecimalFormat amountDF = new DecimalFormat(commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
     	VelocityContext context = new VelocityContext();
+    	
     	context.put("fileNo", scLoiLoa.getFileNo() + "-" + scLoa.getFileExtNo());
-    	context.put("docNo", null);
+    	context.put("docNo", "");
     	context.put("title", scLoiLoa.getTitle());
     	context.put("supplierName", scLoiLoa.getSupplierName());
-    	context.put("loaAmt", scLoa.getLoaAmt());
+    	context.put("loaAmt", amountDF.format(scLoa.getLoaAmt()));
     	context.put("fulfilmentType", getParameterDesc(scLoiLoa.getFulfilmentTypeCode()));
     	
+    	StringBuilder deductionTypes = new StringBuilder();
     	List<ScQtDeduction> scQtDeductions = scLoa.getScQtDeductions();
     	if (scQtDeductions != null) {
-    		StringBuilder deductionTypes = new StringBuilder();
-    		
     		for (ScQtDeduction scQtDeduction : scQtDeductions) {
         		if (deductionTypes.length() > 0) {
         			deductionTypes.append(",");
         		}
         		deductionTypes.append(getParameterDesc(scQtDeduction.getDeductionType()));
-        	}
-        	context.put("deductionTypes", deductionTypes.toString());	
+        	}	
     	}
+    	context.put("deductionTypes", deductionTypes.toString());
     	
     	context.put("contractDuration", scLoa.getContractDuration());
-    	context.put("contractEffDate", scLoa.getContractEffDate());
-    	context.put("contractExpDate", scLoa.getContractExpDate());
-    	context.put("bondAmt", scLoa.getBondAmt());
+    	context.put("contractEffDate", dateSDF.format(scLoa.getContractEffDate()));
+    	context.put("contractExpDate", dateSDF.format(scLoa.getContractExpDate()));
+    	
+    	String bondAmtStr = "";
+    	if (scLoa.getBondAmt() != null) {
+    		bondAmtStr = amountDF.format(scLoa.getBondAmt());	
+    	}
+    	context.put("bondAmt", bondAmtStr);
     	
     	DocumentGenerator.getInstance().generatePdfFromVelocity(
     			"/sc/vc-contract-summary.vm", 
