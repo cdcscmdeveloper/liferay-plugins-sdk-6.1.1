@@ -27,6 +27,8 @@ import my.ep.constants.FLProcessNameConst;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.exception.EpException;
+import my.ep.persistence.entity.fl.FlAttachment;
+import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.frn.FlFulfilmentNoteItem;
 import my.ep.persistence.entity.fl.order.FlDelOrderItem;
 import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
@@ -40,6 +42,7 @@ import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.fl.FulfilmentBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.fl.creatdo.DeliveryOrderManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -119,6 +122,14 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 			
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			FulfilmentResDTO resDTO = new FulfilmentResDTO();
+			if(isFlFulfilmentSupplier()) {
+				reqDTO.setSupplier(Boolean.TRUE);
+			}
+			if(FLProcessNameConst.UPDATE_BTN.equalsIgnoreCase(action) || FLProcessNameConst.CANCEL_BTN.equalsIgnoreCase(action)){
+				reqDTO.setPmUser(getManagedBean().getPmUser());
+			}else{
+				reqDTO.setPmUser(facesScopes.getUserSessionBean());
+			}
 			
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
 				for(FlDeliveryAddress flDeliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
@@ -166,22 +177,20 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 			reqDTO.setOutcome(action);
 			reqDTO.setToken(token);
 			reqDTO.setUserRole(getUserRole());
-			if("UPDATE".equalsIgnoreCase(action) || "CANCEL".equalsIgnoreCase(action)){
-				reqDTO.setPmUser(getManagedBean().getPmUser());
+			if(FLProcessNameConst.UPDATE_BTN.equalsIgnoreCase(action) || FLProcessNameConst.CANCEL_BTN.equalsIgnoreCase(action) || FLProcessNameConst.ACKNOWLEDGE_BTN.equalsIgnoreCase(action)){
 				if(null == getManagedBean().getSupplierDoRef()){
 					//TODO
 					// do valudation
 				}else{
 					getManagedBean().getFlDeliveryOrder().setSupplierDoRef(getManagedBean().getSupplierDoRef());
 				}
+				if(null != getManagedBean().getTaskId()){
+					reqDTO.setTaskId(getManagedBean().getTaskId());
+				}
 				reqDTO.setFlDeliveryOrder(getManagedBean().getFlDeliveryOrder());
 				resDTO = deliveryOrderSO.deliveryOrderModification(reqDTO);
-			}else if("ACKNOWLEDGE".equalsIgnoreCase(action)){
-				
-				
 			}
 			else{
-				reqDTO.setPmUser(facesScopes.getUserSessionBean());
 				resDTO = deliveryOrderSO.saveDeliveryOrder(reqDTO);
 			}
 			if(resDTO.isSuccessful()) {
@@ -256,7 +265,7 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		if(!anyAddressSelected){
 			throw new EpException(MessageConst.ERROR_100050, new String[]{"Delivery Address"});
 		}else{
-			if(!"UPDATE".equalsIgnoreCase(actionName)){
+			if(!FLProcessNameConst.UPDATE_BTN.equalsIgnoreCase(actionName)){
 				for(FlDeliveryAddress selectedDelAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
 					if(selectedDelAddress.getFlTempDoAddr().isSelected()) {
 						if(selectedDelAddress.getFlTempDoAddr().getSupplierDoRef()==null || selectedDelAddress.getFlTempDoAddr().getSupplierDoRef().length()==0) {
@@ -301,9 +310,10 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		getManagedBean().getSelectedItemRowCalList().add(selectedAddressItem);
 		getManagedBean().getSelectedItemRowCalList().size();
 		getManagedBean().setItemSelectedForCal("S");
+		
 	}
-	
 	public void retrieveDelAmount(FlFulfilmentItemAddr itemAddress){
+		
 		BigDecimal unitPriceCal=new BigDecimal(0.0);
 		BigDecimal delQtyCal=new BigDecimal(0.0);
 		BigDecimal delAmtCal=new BigDecimal(0.0);
@@ -315,7 +325,6 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		
 		if(delQtyCal.doubleValue()>remainingQty.doubleValue()) {
 			itemAddress.setDeliveredQty(new BigDecimal(0));
-			itemAddress.setDeliveredAmt(new BigDecimal(0));
 			throw new EpException(MessageConst.ERROR_100032, new String[]{"Delivery Quantity","Remaining Quantity"});
 		}
 		
@@ -366,6 +375,9 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 				getManagedBean().getFulfilmentOrder().setStatus(deliveryOrderSO.retrieveDelOrderStatus(reqDTO).getPmStatus());
 				getManagedBean().setPmUser(reqDTO.getPmUser());
 				getManagedBean().setOutComes(res.getAction());
+				getManagedBean().setTaskId(taskId);
+				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+				flBB.initializeRemarkAndAttachement(new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 		}
 		getManagedBean().getFulfilmentRequest();
 	}
@@ -387,6 +399,10 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 			portletTitle = "Fulfilment Document Maintenance";
 		}
 		return portletTitle;
+	}
+	public boolean isFlFulfilmentSupplier() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value()) || facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value()) || facesScopes.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value()) || facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value());
 	}
 	
 	
