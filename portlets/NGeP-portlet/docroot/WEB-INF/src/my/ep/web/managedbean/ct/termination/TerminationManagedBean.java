@@ -33,23 +33,21 @@ public class TerminationManagedBean extends BaseManagedBean{
 	private String[] action;
 	private String editorValue;
 	private String complaintCategory ="Breach The Obligation Of Tender / Contract";
-	
 	private String userLoginId;
-	private List<CtRemark> remarkList;
-	private List<CtAttachment> attachmentList;
+	private String externalPageUrl;
 	
 	private boolean disciplinaryValue;
 	private boolean termination;
 	private boolean mutualTermination;
 	private boolean remedy;
-	private List<CtTermination> terminationList;
+	private boolean viewContract = false;
 	
+	private List<CtRemark> remarkList;
+	private List<CtAttachment> attachmentList;
+	private List<CtTermination> terminationList;
 	private CtContract ctContract;
 	private CtContractVer contractVer;
 
-	private boolean viewContract = false;
-	private String externalPageUrl;
-	
 	public String getTaskName() {
 		return taskName;
 	}

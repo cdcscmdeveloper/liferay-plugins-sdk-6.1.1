@@ -118,6 +118,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
+import my.ep.persistence.entity.sc.loaloi.ScLoaAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReportAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
@@ -166,14 +167,17 @@ import com.liferay.portal.util.PortalUtil;
 public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> {
     
 	private static Logger log = Logger.getLogger(AmendmentBackingBean.class);
-	private CtPerformanceBond[] selectedBondList;
+	
 	private String editorValue;
-	private double secondValue =0.0;
-	private CtCommitteeMember[] selectedCommitteMembers;
+	
+	private ContractBackingBean ctBackingBean;
+	private List<SelectItem> populateBankAccountList;
 	private PmUser[] selectedPmUser;
 	private CtMeeting[] selectedMeetingUser;
-	private List<SelectItem> populateBankAccountList;
-	 ContractBackingBean ctBackingBean;
+    private CtPerformanceBond[] selectedBondList;
+	private CtCommitteeMember[] selectedCommitteMembers;
+	
+	//private double secondValue =0.0;
 	
 	public AmendmentBackingBean(){
 		if(this.getManagedBean().getAction() == null) {
@@ -383,6 +387,11 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		    setTabMenuValue();
 		    if(this.getManagedBean().isLetterOfAcceptance()){
 		    	getLoaDocumentList();
+		    	if(this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaAttachment() == null){
+		    		this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().setScLoaAttachment(new ScLoaAttachment());
+		    		this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaAttachment().setScLoa(
+		    				this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa());
+		    	}
 		    }
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, ContractConst.NAV_TO_CONTRACT_AMENDMENT);
@@ -1290,7 +1299,18 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	    	  this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaReports().get(i).getScLoaReportAttachment().setFilePath(filePath);
 	        }i++;
 	    }
-		
+	}
+	
+	public void letterOfAcceptenceUpload(FileUploadEvent event) throws Exception{
+		UploadedFile files = event.getFile();
+		String fileName = files.getFileName();
+		String filePath = "C:/projects/uploads/"+files.getFileName();
+		FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
+		fileOuputStream.write(files.getContents());
+		fileOuputStream.close();
+		this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaAttachment().setFileName(fileName);
+		this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaAttachment().setFilePath(filePath);	
+		this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaAttachment().setDocType(ParameterConst.DOCUMENT_CATEGORY_LOA_FOR_CONTRACT_AMENDMENT);
 	}
 	
 	public void chkJustificationAction(){
@@ -1989,14 +2009,14 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		this.selectedBondList = selectedBondList;
 	}
 
-	public double getSecondValue() {
+	/*public double getSecondValue() {
 		return secondValue;
 	}
 
 	public void setSecondValue(double secondValue) {
 		this.secondValue = secondValue;
 	}
-
+*/
 	public CtCommitteeMember[] getSelectedCommitteMembers() {
 		return selectedCommitteMembers;
 	}

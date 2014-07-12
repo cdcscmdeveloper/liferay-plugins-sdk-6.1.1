@@ -30,36 +30,31 @@ public class AgreementManagedBean extends BaseManagedBean {
 	private String taskId;
 	private String[] action;
 	private String taskName;
-	private PmUser userLogin;
-	private Long ministryProfileId;
-	private Long departmentProfileId;
 	private String agreementType ="";
 	private String fileDirectory;
 	
+	private Long ministryProfileId;
+	private Long departmentProfileId;
+	private int selectedTabIndex;
+	
+	private boolean chkConceValue;
+	private boolean uploadFinalAgreement;
+	private boolean uploadStampedAndSignedPage;
+	
+	private PmUser userLogin;
 	private CtContract ctContract;
 	private CtContractVer contractVer;
-	
 	private List<CtAgreementParty> ctAgencySigner;
 	private List<CtAgreementParty> ctSupplierSigner;
 	private List<CtAgreementParty> ctSupplierWitness;
 	private List<CtAgreementParty> ctSignAgencyWitness;
-	
 	private List<CtRemark> remarkList;
 	private List<CtAttachment> attachmentList;
 	private CtAgreementContent selectedAgreementContent;
 	private Map<String, PmUser> userMap;
 	private DualListModel<String> approverModel;
-	
-	private boolean chkConceValue;
-	
-	//KY
-	private boolean uploadFinalAgreement;
-	private boolean uploadStampedAndSignedPage;
-	
 	private Map<String, SmPersonnel> supplierUserMap;
-	
 	private CtAgreement ctAgreement;
-	private int selectedTabIndex;
 	
 	public AgreementManagedBean(){
 		

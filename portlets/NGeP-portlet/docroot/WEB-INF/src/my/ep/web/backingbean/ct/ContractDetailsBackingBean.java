@@ -141,17 +141,18 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	private static final String CONTRACT_MAINT_PAGE = "/xhtml/ct/fulfilmentdetails/search/search.xhtml?faces-redirect=true";
 	
 	private String editorValue;
-	ContractBackingBean ctBB = null;
+	
 	private boolean showZoneDetails;
 	private boolean validateScheduleDate;
 	
+	private ContractBackingBean ctBB = null;
+	private List<CtContractItem> ContractItemServiceList;
 	private CtSchedule[] selectedSchedule;
 	private CtAgency[] selectedListOfAgency;
+	private CtDeductionClause[] chkDeductionClause;
+	private CtProgressivePayment[] selectedProgressive;
 	private PmOrgProfile[] selectedPmOrgProfile;
 	private CtPerformanceBond[] selectedBondList;
-	private CtDeductionClause[] chkDeductionClause;
-	List<CtContractItem> ContractItemServiceList;
-	private CtProgressivePayment[] selectedProgressive;
 	private IPagingDataModel<VCtContract> contractDataModel = new ContractPagingDataModel();
 	private IPagingDataModel<PmOrgProfile> agencyDataModel = new AgencyPagingDataModel();	
 	

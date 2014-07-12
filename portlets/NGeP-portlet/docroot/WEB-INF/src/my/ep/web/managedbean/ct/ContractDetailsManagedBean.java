@@ -49,56 +49,13 @@ import org.primefaces.model.TreeNode;
 public class ContractDetailsManagedBean extends BaseManagedBean{
 
 	private static final long serialVersionUID = 1L;
-	
-	
+
 	private String taskName;
 	private String[] action;
-	private int selectedIndex;
 	private String processName;
-	private boolean bpkApprover=true;
-	
-	private CtContractVer contractVer;
-	private CtContract ctContract;
-	private List<VCtContract> contractList;
-	private List<CtAgency> listOfAgency;
-	private List<PmOrgProfile> pmOrgProfileList;
-
 	private String itemType;
 	private String showItem;
-	private boolean serviceItem;
-	private boolean productItem = true;
-	private boolean itemPricing = true;
-	private boolean itemCeilingQuantity;
-	private CtContractItem selectedItem;
-	private CtContractItem selectedCCItem;
-	private CtContractItem selectedServiceItem;
-	private List<CtContractItem> ctItemList;
-	private List<CtContractItem> ctItemServiceList;
 	private String popupForImportedItems ="L";
-	private boolean directPurchase;
-	
-	private CtDeduction ctDeductionDel;
-	private CtDeduction selectedDeduction;
-	private List<CtDeductionClause> ctDeductionClauseList;
-	private CtDeductionClause selectedDeductionClauses;
-	
-	private boolean scheduleType;
-	private boolean chkProgressive;
-	private CtSchedule ctSchedulesDel;
-	private boolean chkSchedule;
-	private boolean chkScheduleNulValue;
-	private boolean chkProgressiveNulValue;
-	private boolean disableScheduleRadio;
-	private boolean disableProgessiveRadio;
-	private CtProgressivePayment ctProgressivePaymentDel;
-	
-	private DualListModel<String> approverModel;
-	private Map<Long, PmUserGroup> userGroupMap;
-	private HashMap<String, PmUserGroupUser> approverMap;
-	
-	private List<CtRemark> remarkList;
-	private List<CtAttachment> attachmentList;
-	
 	private String ctName;
 	private String ctLOANo;
 	private String ctNumber;
@@ -107,45 +64,82 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private String ctPhysicalNo;
 	private String ctCircularName;
 	private String ctSupplierName;
-	private int ctContractStatus;
-	private Date ctDateStart;
-	private Date ctDateEnd;
-	private Long terminationTypeId;
-	
 	private String supplierAddress;
-	private SmAddress smAddress;
-	private String supplierCompanyName;
-	private boolean updateSupplierAddress;
-	private boolean updateCompanyName;
-	private CtPerformanceBond ctPerformanceBond;
-	
 	private	String	zoneName;
-	private CtContractZone selectedCtZone;
-	private TreeNode ctZoneTrees ;
-	private boolean showZoneDetails;
-	private List<CtContractZoneDtl> ctContractZoneDtls;
-	
-	private Long ministryProfileId;
-	private Long departmentProfileId;
+	private String supplierCompanyName;
 	private String supplierLocation;
 	private String contractType;
+	private String externalPageUrl;
+	private String ptjCodeName;
+	private String ptjSearchtype;
+	private String ptjCodeNameSearchValues;
+	private String frequencySchedule;
+	
+	private int selectedIndex;
+	private int ctContractStatus;
+	private Long terminationTypeId;
+	private Long ministryProfileId;
+	private Long departmentProfileId;
+    private double advancePaymentAmt;
+	private int selectedTabIndex;
+	
+	private Date ctDateStart;
+	private Date ctDateEnd;
+	
+	private boolean bpkApprover=true;
+	private boolean serviceItem;
+	private boolean productItem = true;
+	private boolean itemPricing = true;
+	private boolean itemCeilingQuantity;
+	private boolean directPurchase;
+	private boolean scheduleType;
+	private boolean chkProgressive;
+	private boolean chkSchedule;
+	private boolean chkScheduleNulValue;
+	private boolean chkProgressiveNulValue;
+	private boolean disableScheduleRadio;
+	private boolean disableProgessiveRadio;
+	private boolean updateSupplierAddress;
+	private boolean updateCompanyName;
+	private boolean showZoneDetails;
 	private boolean chkButton;
 	private boolean updateContract;
 	private boolean viewContract = false;
 	private boolean validateScheduleDate;
 	private boolean chkJustification;
 	private boolean flgPaymentTracking;
-	private double advancePaymentAmt;
-	
+	private boolean chkConceValue;
+
+	private CtContractVer contractVer;
+	private CtContract ctContract;
+	private List<VCtContract> contractList;
+	private List<CtAgency> listOfAgency;
+	private List<PmOrgProfile> pmOrgProfileList;
+	private CtContractItem selectedItem;
+	private CtContractItem selectedCCItem;
+	private CtContractItem selectedServiceItem;
+	private List<CtContractItem> ctItemList;
+	private List<CtContractItem> ctItemServiceList;
+	private CtDeduction ctDeductionDel;
+	private CtDeduction selectedDeduction;
+	private List<CtDeductionClause> ctDeductionClauseList;
+	private CtDeductionClause selectedDeductionClauses;
+	private CtSchedule ctSchedulesDel;
+	private CtProgressivePayment ctProgressivePaymentDel;
+	private DualListModel<String> approverModel;
+	private Map<Long, PmUserGroup> userGroupMap;
+	private HashMap<String, PmUserGroupUser> approverMap;
+	private List<CtRemark> remarkList;
+	private List<CtAttachment> attachmentList;
+	private SmAddress smAddress;
+	private CtPerformanceBond ctPerformanceBond;
+	private CtContractZone selectedCtZone;
+	private TreeNode ctZoneTrees ;
+	private List<CtContractZoneDtl> ctContractZoneDtls;
 	private Map<String, PmUser> userMap;
 	private SmSupplierBank smSupplierBanks;
-	private boolean chkConceValue;
-	private int selectedTabIndex;
 	private Map<String,Object> radioButtonSchedule;
-	private String frequencySchedule;
-	
 	private CtFulfilment ctFulfilments;
-	private String externalPageUrl;
 	
 	public String[] getAction() {
 		return action;
@@ -836,5 +830,29 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	
 	public void setExternalPageUrl(String externalPageUrl) {
 		this.externalPageUrl = externalPageUrl;
+	}
+
+	public String getPtjCodeName() {
+		return ptjCodeName;
+	}
+
+	public void setPtjCodeName(String ptjCodeName) {
+		this.ptjCodeName = ptjCodeName;
+	}
+
+	public String getPtjSearchtype() {
+		return ptjSearchtype;
+	}
+
+	public void setPtjSearchtype(String ptjSearchtype) {
+		this.ptjSearchtype = ptjSearchtype;
+	}
+
+	public String getPtjCodeNameSearchValues() {
+		return ptjCodeNameSearchValues;
+	}
+
+	public void setPtjCodeNameSearchValues(String ptjCodeNameSearchValues) {
+		this.ptjCodeNameSearchValues = ptjCodeNameSearchValues;
 	}
 }

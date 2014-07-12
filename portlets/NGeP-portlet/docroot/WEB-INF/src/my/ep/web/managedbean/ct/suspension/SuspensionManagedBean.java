@@ -32,14 +32,15 @@ public class SuspensionManagedBean extends BaseManagedBean {
 	private String taskName;
 	private String[] action;
 	private String editorValue;
+
+	private boolean chkConceValue;
+	
 	private CtContract ctContract;
 	private List<CtRemark> remarkList;
 	private CtContractVer contractVer;
 	private List<CtAttachment> attachmentList;
-	private boolean chkConceValue;
 	private List<CtContractItem> ctItemFilter;
 	
-
 	public String getEditorValue() {
 		return editorValue;
 	}

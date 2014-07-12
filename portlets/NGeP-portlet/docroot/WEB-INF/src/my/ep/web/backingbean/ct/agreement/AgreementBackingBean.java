@@ -135,18 +135,17 @@ import com.liferay.portal.util.PortalUtil;
 @RequestScoped
 public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> {
 	
+	private static Logger log = Logger.getLogger(AgreementBackingBean.class);
 	private static final String CONTRACT_PAGE = "/xhtml/ct/fulfilmentdetails/creation/fulfilment.xhtml?faces-redirect=true";
 	private static final String AGREEMENT_DOC_PAGE = "/xhtml/ct/agreement/shared/sidemenu/agreementTab.xhtml?faces-redirect=true";
-	
-	private static Logger log = Logger.getLogger(AgreementBackingBean.class);
 
 	private boolean supplementValue = true; 
+	private ContractBackingBean ctBB = null;
 	private CtAgreementParty[] selectedAgencyWitnes;
 	private CtAgreementParty[] selectedAgencySigner;
 	private CtAgreementParty[] selectedSupplierWitnes;
 	private CtAgreementParty[] selectedSupplierSigner;
-	ContractBackingBean ctBB = null;
-
+	
 	public AgreementBackingBean(){
 	   if(this.getManagedBean().getAction() == null) {
 			this.getManagedBean().setAction(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});

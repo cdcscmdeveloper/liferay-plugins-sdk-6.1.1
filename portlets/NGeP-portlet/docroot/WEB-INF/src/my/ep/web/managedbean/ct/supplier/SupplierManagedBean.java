@@ -37,39 +37,39 @@ public class SupplierManagedBean extends BaseManagedBean {
 	
 	private String[] action;
 	private String taskName;
+	
 	private Date effDate;
-	private String loaNo;
 	private Date expDate;
 	private Date loaDate;
+	
+	private boolean removeFactoring;
+	private boolean agreeFactoringClause;
+	
+	private Long loaId;
+	private int selectedIndex;
+	private Long contractVerId;
+	
+	private String loaNo;
 	private String contractNo;
 	private String contractName;
 	private String loginUser;
-	private int selectedIndex;
-	private CtFactoring factoring;
-	private CtFactoring uploadFiles;
-	private SearchFilterBean searchFilterBean = new SearchFilterBean();
-	private List<CtContract> contractList = new ArrayList<CtContract>();
-	private List<CtRemark> remarkList;
-	private List<CtAttachment> attachmentList;
-	
-	private CtContractVer contractVer;
-	private CtContract ctContract;
-	private List<PmFinancialAcc>  financialAccList;
-	private boolean removeFactoring;
-	private Long loaId;
-	private Long contractVerId;
-	
+	private String accountNo;
+	private String originalAccountNo;
 	private String factoringBankName;
 	private String factoringBankAddress;
-	private String originalAccountNo;
-	private String accountNo;
-
-	private boolean agreeFactoringClause;
 	
+	private CtContract ctContract;
+	private CtContractVer contractVer;
+	private CtFactoring factoring;
+	private CtFactoring uploadFiles;
+	private List<PmFinancialAcc>  financialAccList;
+	private SelectItem[] financialBankBranch;
+	private List<CtRemark> remarkList;
+	private List<CtAttachment> attachmentList;
 	private Map<Long, String> factoringCompMap;
 	private Map<String, SmSupplierBank> supplierBankAccountMap;
-	
-	private SelectItem[] financialBankBranch;
+	private List<CtContract> contractList = new ArrayList<CtContract>();
+	private SearchFilterBean searchFilterBean = new SearchFilterBean();
 	
 	public SupplierManagedBean(){
 		

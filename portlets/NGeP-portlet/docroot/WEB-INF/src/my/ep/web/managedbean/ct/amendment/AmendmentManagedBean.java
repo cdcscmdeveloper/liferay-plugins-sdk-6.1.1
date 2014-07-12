@@ -4,15 +4,12 @@
 package my.ep.web.managedbean.ct.amendment;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
-import org.primefaces.model.DualListModel;
 import org.primefaces.model.TreeNode;
 
 import my.ep.persistence.entity.ct.CtAttachment;
@@ -48,7 +45,30 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private String taskName;
 	private String[] action;
 	private String processName;
+	private String ackFA;
+	private String showItem ="Item  Pricing";
+	private String supplierAddress;
+	private String selectedRadioButton="1";
+	private String name = null;
+	private String identificationNo = null;
+	private String witnessHeader;
+	private String supplierBankAddress;
+	private String editorValue;
 	
+	private Long meetingStatusId;
+	private int selectedTabIndex;
+	
+	private boolean itemProductExist;
+	private boolean itemServiceExist;
+	private boolean termAndConditionFlg;
+	private boolean existingUsers = true;
+	private boolean newUsers;
+	private boolean directPurchase;
+	private boolean chkClause;
+	private boolean chkConceValue;
+	private boolean chkAmendOtherValue;
+	private boolean chkAmendExtendValue;
+	private boolean chkAmendAllValue;
 	private boolean pbConfirmMeeting;
 	private boolean memberSignOff;
 	private boolean letterOfAcceptance;
@@ -56,82 +76,44 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private boolean prepareLOA;
 	private boolean signOffDecision;
 	private boolean signUpdateDecision;
-	private String ackFA;
-	
-	private CtContract ctContract;
-	private CtContractVer contractVer;
-	
-	private String itemType;
-	private boolean serviceItem;
-	private boolean productAndService;
-	private boolean productItem = true;
-	private boolean itemPricing = true;
-	private boolean itemCeilingQuantity;
-	private String showItem ="Item  Pricing";
-	private List<CtItemPrice> itemPriceList;
-	
-	private List<CtRemark> remarkList;
-	private List<CtAttachment> attachmentList;
-	private double secondValue =0.0;
-	private PmUser userLogin;
-	private CtContractItem selectedServiceItem;
-	
-	private List<CtContractVer> amendHistoryList;
-	private CtPerformanceBond ctPerformanceBond;
-	private String supplierAddress;
-	private boolean directPurchase;
-	private boolean chkClause;
-	private boolean chkAmendOtherValue;
-	private boolean chkAmendExtendValue;
-	private boolean chkAmendAllValue;
-	private String supplierLocation;
-	private TreeNode ctZoneTrees;
-	private DualListModel<String> approverModel;
-	private Map<String, PmUser> userMap;
-	private List<CtContractItem> ctItemList;
-	private boolean chkConceValue;
-	private CtItemPrice selectedIndexOfPrice;
-	private CtItemCeilingQty selectedIndexOfCeilingQty;
-	
-	private CtCommitteeMember ctCommitteeMember;
-	private boolean existingUsers = true;
-	private boolean newUsers;
-	private String selectedRadioButton="1";
-	private String name = null;
-	private String identificationNo = null;
-	private String identificationType;
-	private List<PmUser> externalUsers;
-	private SelectItem[] roleTypes; // Role type drop down
-	private List<CtCommitteeMember> ctCommitteeMembers;
-	private Long meetingStatusId;
-	private String witnessHeader;
-	
-	private SmSupplierBank supplierBank;
-	private String supplierBankAddress;
-	
-	// Confirm use
-	private CtItemMaxQty ctItemMaxQty;
-	private CtItemPrice ctItemPrices;
-	private CtItemCeilingQty ctItemCeilingQtys;
-	private ScLoaWitness scLoaWitness;
-	
-	private boolean itemProductExist;
-	private boolean itemServiceExist;
-	
-	private String editorValue;
-	
-	private boolean termAndConditionFlg;
-	private int selectedTabIndex;
-	
 	private boolean decisionPbQcLOA;
-	
 	private boolean tabMenuHide;
 	private boolean tabMenuShowForZone;
 	private boolean tabMenuShowNoZone;
 	private boolean tabMenuShowNoZoneNoItem;
+	private boolean productItem = true;
+	private boolean itemPricing = true;
+	private boolean itemCeilingQuantity;
 	
+	private List<CtItemPrice> itemPriceList;
+	private List<CtRemark> remarkList;
+	private List<CtAttachment> attachmentList;
+    private CtContractItem selectedServiceItem;
+	private CtContract ctContract;
+	private CtContractVer contractVer;
+	private List<CtContractVer> amendHistoryList;
+	private CtPerformanceBond ctPerformanceBond;
+	private TreeNode ctZoneTrees;
+	private List<CtContractItem> ctItemList;
+	private CtItemPrice selectedIndexOfPrice;
+	private CtItemCeilingQty selectedIndexOfCeilingQty;
+	private CtCommitteeMember ctCommitteeMember;
+	private List<PmUser> externalUsers;
+	private SelectItem[] roleTypes; 
+	private List<CtCommitteeMember> ctCommitteeMembers;
+    private SmSupplierBank supplierBank;
+	private CtItemMaxQty ctItemMaxQty;
+	private CtItemPrice ctItemPrices;
+	private CtItemCeilingQty ctItemCeilingQtys;
+	private ScLoaWitness scLoaWitness;
 	private ScLoaReport selectedScLoaReports;
 	
+	
+	//private boolean productAndService;
+    //	private double secondValue =0.0;
+	//private PmUser userLogin;
+	//private String supplierLocation;
+	//private String identificationType;
 	public CtContractVer getContractVer() {
 		return contractVer;
 	}
@@ -209,7 +191,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 		this.attachmentList = attachmentList;
 	}
 
-	public String getItemType() {
+	/*public String getItemType() {
 		return itemType;
 	}
 
@@ -223,7 +205,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 
 	public void setServiceItem(boolean serviceItem) {
 		this.serviceItem = serviceItem;
-	}
+	}*/
 
 	public boolean isProductItem() {
 		return productItem;
@@ -233,13 +215,13 @@ public class AmendmentManagedBean extends BaseManagedBean {
 		this.productItem = productItem;
 	}
 
-	public boolean isProductAndService() {
+	/*public boolean isProductAndService() {
 		return productAndService;
 	}
 
 	public void setProductAndService(boolean productAndService) {
 		this.productAndService = productAndService;
-	}
+	}*/
 
 	public String getShowItem() {
 		return showItem;
@@ -275,7 +257,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 		this.itemPriceList = itemPriceList;
 	}
 
-	public double getSecondValue() {
+	/*public double getSecondValue() {
 		return secondValue;
 	}
 
@@ -289,7 +271,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 
 	public void setUserLogin(PmUser userLogin) {
 		this.userLogin = userLogin;
-	}
+	}*/
 
 	public List<CtContractVer> getAmendHistoryList() {
 		if(amendHistoryList==null) {
@@ -374,13 +356,13 @@ public class AmendmentManagedBean extends BaseManagedBean {
 		this.chkAmendAllValue = chkAmendAllValue;
 	}
 
-	public String getSupplierLocation() {
+	/*public String getSupplierLocation() {
 		return supplierLocation;
 	}
 
 	public void setSupplierLocation(String supplierLocation) {
 		this.supplierLocation = supplierLocation;
-	}
+	}*/
 
 	public TreeNode getCtZoneTrees() {
 		return ctZoneTrees;
@@ -388,25 +370,6 @@ public class AmendmentManagedBean extends BaseManagedBean {
 
 	public void setCtZoneTrees(TreeNode ctZoneTrees) {
 		this.ctZoneTrees = ctZoneTrees;
-	}
-	
-	public DualListModel<String> getApproverModel() {
-		return approverModel;
-	}
-
-	public void setApproverModel(DualListModel<String> approverModel) {
-		this.approverModel = approverModel;
-	}
-
-	public Map<String, PmUser> getUserMap() {
-		if(userMap==null) {
-			userMap = new HashMap<String, PmUser>();
-		}
-		return userMap;
-	}
-
-	public void setUserMap(Map<String, PmUser> userMap) {
-		this.userMap = userMap;
 	}
 
 	public List<CtContractItem> getCtItemList() {
@@ -524,13 +487,13 @@ public class AmendmentManagedBean extends BaseManagedBean {
 		this.identificationNo = identificationNo;
 	}
 
-	public String getIdentificationType() {
+	/*public String getIdentificationType() {
 		return identificationType;
 	}
 
 	public void setIdentificationType(String identificationType) {
 		this.identificationType = identificationType;
-	}
+	}*/
 
 	public List<PmUser> getExternalUsers() {
 		return externalUsers;

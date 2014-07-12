@@ -57,13 +57,15 @@ import com.liferay.portal.util.PortalUtil;
 @RequestScoped
 public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean> {
 	
+	 private static Logger log = Logger.getLogger(SuspensionBackingBean.class);
 	 private static final String CONTRACT_MAINT_PAGE = "/xhtml/ct/fulfilmentdetails/search/search.xhtml?faces-redirect=true";
 	
-	 private static Logger log = Logger.getLogger(SuspensionBackingBean.class);
+	 private ContractBackingBean ctBB = null;
 	 private List<CtContractItem> ctContractItems;
-	 ContractBackingBean ctBB = null;
+	
 	 public SuspensionBackingBean(){
-	    if (this.getManagedBean().getAction() == null) {
+	  
+		 if(this.getManagedBean().getAction() == null) {
 	    	this.getManagedBean().setAction(new String[] {BpmOutcomeConst.BPM_SUBMIT});	
 	    }
 	    

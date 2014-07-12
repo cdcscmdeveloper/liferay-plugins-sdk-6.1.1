@@ -84,14 +84,14 @@ import com.liferay.portal.util.PortalUtil;
 @RequestScoped
 public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBean> {
 	
+	private static Logger log = Logger.getLogger(TerminationBackingBean.class);
 	private static final String PROCESS_TERMINATE_PAGE = "/xhtml/ct/fulfilmentdetails/termination/terminationTab.xhtml?faces-redirect=true";
 	private static final String CONTRACT_MAINT_PAGE = "/xhtml/ct/fulfilmentdetails/search/search.xhtml?faces-redirect=true";
 	private static final String TERMINATE_HISTORY_PAGE = "/xhtml/ct/fulfilmentdetails/termination/terminationHistory.xhtml?faces-redirect=true";
 	
-	private static Logger log = Logger.getLogger(TerminationBackingBean.class);
+	private ContractBackingBean ctBB = null;
 	private Map<Long, String> reasonDescMap = new HashMap<Long, String>();
 	private CtTerminationReason[] selectedTerminationReasonsList;
-	private ContractBackingBean ctBB = null;
 	
 	public TerminationBackingBean(){
 		if(this.getManagedBean().getAction() == null) 
