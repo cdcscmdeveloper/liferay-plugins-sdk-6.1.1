@@ -13,26 +13,31 @@
 			<tr>
 				<TD><p:outputLabel value="#{lbl['lbl.sc.remaining.time']}" /></TD>
 				<TD><p:inputText id="bidPauseOrCancelRemainingTime"
-						value="#{biddingBB.managedBean.bidAction.remainingTime}" size="20"
+						value="#{biddingBB.managedBean.remainingTime}" size="20"
 						disabled="true" /></TD>
+
+			</tr>
+			<tr>
+
 				<TD><p:outputLabel value="#{lbl['lbl.sc.notes.to.supplier']}" /></TD>
-				<TD><p:inputTextarea id="bidPauseOrCancelsupplierNotes"
-						value="#{biddingBB.managedBean.bidAction.remark}" size="200"
-						maxlength="200" /></TD>
+				<TD><p:inputTextarea id="bidPauseOrCancelsupplierNotes" required="true"
+						value="#{biddingBB.managedBean.bidAction.remark}" cols="65" 
+						maxLength="200" />
+						</TD>
 			</tr>
 
 		</table>
 
 	</div>
-	<div>
 
-		<p:commandButton value="#{lbl['lbl.btn.ok']}"
-			action="#{biddingBB.pauseBidAction}" icon="ui-icon-ok"
-			onclick="pauseOrCancelBid.close();" />
+	<div align="right">
+		<p:commandButton value="#{lbl['lbl.btn.ok']}" update="@form"
+			actionListener="#{biddingBB.bidPauseOrCancelAction}"
+			icon="ui-icon-submit" process="@this,bidPauseOrCancelsupplierNotes "
+			partialSubmit="true" oncomplete="bidPauseOrCancel.hide();" />
 
-		<p:commandButton value="#{lbl['lbl.btn.cancel']}"
-			action="#{biddingBB.cancelBidAction}" icon="ui-icon-cancel"
-			onclick="pauseOrCancelBid.close();" />
+		<p:commandButton value="#{lbl['lbl.btn.cancel']}" immediate="true"
+			icon="ui-icon-cancel" onclick="bidPauseOrCancel.hide();" />
+
 	</div>
-
 </ui:composition>
