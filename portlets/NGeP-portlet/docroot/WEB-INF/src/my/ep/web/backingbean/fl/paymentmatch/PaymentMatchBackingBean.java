@@ -168,6 +168,12 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
 				} else {
 					getManagedBean().setPaymentAdvice(resDTO.getPaymentAdvice());
+					for(FlPaymentItem flPaymentItem : getManagedBean().getPaymentAdvice().getFlPaymentItems()) {
+						if(flPaymentItem.getFlAdjustmentItem()==null) {
+							flPaymentItem.setFlAdjustmentItem(new FlAdjustmentItem());
+							flPaymentItem.getFlAdjustmentItem().setAdjustedAmt(new BigDecimal(0));
+						}
+					}					
 					setAdjustmentDocNo(resDTO.getPaymentAdvice().getFlInvoice());
 					setStopInstrNo(resDTO.getPaymentAdvice().getFlInvoice().getFlFulfilmentOrder());					
 					flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
@@ -220,6 +226,12 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 				flBB.initializeRemarkAndAttachement(new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 			} else {
 				paymentAdvice = resDTO.getPaymentAdvice();
+				for(FlPaymentItem flPaymentItem : paymentAdvice.getFlPaymentItems()) {
+					if(flPaymentItem.getFlAdjustmentItem()==null) {
+						flPaymentItem.setFlAdjustmentItem(new FlAdjustmentItem());
+						flPaymentItem.getFlAdjustmentItem().setAdjustedAmt(new BigDecimal(0));
+					}
+				}
 				setAdjustmentDocNo(paymentAdvice.getFlInvoice());
 				setStopInstrNo(paymentAdvice.getFlInvoice().getFlFulfilmentOrder());
 				flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
