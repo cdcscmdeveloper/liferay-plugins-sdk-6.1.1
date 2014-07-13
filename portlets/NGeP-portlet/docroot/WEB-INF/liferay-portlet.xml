@@ -1292,7 +1292,7 @@
 		</css-class-wrapper>
 	</portlet>
 	<portlet>
-		<portlet-name>UserProfileMaintenance</portlet-name>
+		<portlet-name>supplierUserMaintenance</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
@@ -1300,7 +1300,7 @@
 			/js/main.js
 		</footer-portlet-javascript>
 		<css-class-wrapper>
-			userprofilemaintenance-portlet
+			supplierUserMaintenance-portlet
 		</css-class-wrapper>
 	</portlet>
 	

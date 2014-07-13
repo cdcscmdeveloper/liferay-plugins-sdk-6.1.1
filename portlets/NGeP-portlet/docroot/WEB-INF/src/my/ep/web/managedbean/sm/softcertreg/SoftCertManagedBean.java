@@ -3,26 +3,26 @@ package my.ep.web.managedbean.sm.softcertreg;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.model.SelectItem;
-
 import com.liferay.portal.model.Role;
 
-import my.ep.persistence.entity.pm.common.PmCity;
-import my.ep.persistence.entity.pm.common.PmCountry;
-import my.ep.persistence.entity.pm.common.PmDistrict;
-import my.ep.persistence.entity.pm.common.PmState;
-import my.ep.persistence.entity.sm.SmAddress;
-import my.ep.persistence.entity.sm.SmApplSectionReview;
+import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.sm.personnel.IPersonnelSO;
+import my.ep.dto.sm.personnel.PersonnelReqDTO;
+import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.persistence.entity.sm.SmPersonnel;
-import my.ep.persistence.entity.sm.SmPersonnelAddress;
+import my.ep.type.aut.SearchOperator;
+import my.ep.web.bean.paginator.IPagingDataModel;
+import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.lookupservice.BusinessDelegate;
 
 @ManagedBean(name = "softCertMB")
 @SessionScoped
@@ -39,10 +39,11 @@ public class SoftCertManagedBean extends BaseManagedBean {
 	private HashMap<Long, BigDecimal> paymentMap = new HashMap<Long, BigDecimal>();
 	private BigDecimal totalPaymentAmount;
 	private SmPersonnel loginUserPersonnelInfo;
-
 	private String loginRoleName;
+	private IPagingDataModel<SmPersonnel> softCertPagingDataModel = new SoftCertPagingDataModel();
 	
 	public SoftCertManagedBean(){
+		super();
 		FacesScopes sc = new FacesScopes();
 		List<Role> loginUserRoles = sc.getUserRoleList();
 		List<String> roleNames = new ArrayList<String>();
@@ -58,7 +59,42 @@ public class SoftCertManagedBean extends BaseManagedBean {
 			System.out.println("  *** LOGGED IN USER IS BASIC SUPPLIER ADMIN *** ");
 		}
 	}
+
+	private class SoftCertPagingDataModel extends PagingDataModel<SmPersonnel> {
+		private static final long serialVersionUID = 1L;
+
+		public SoftCertPagingDataModel() {
+			super("softCertPageDataModelId");
+		}
+
+		@Override
+		protected ISearchResultBean<SmPersonnel> pageChangeListener(ISearchBean<SmPersonnel> searchBean) {
+			try {
+				
+				
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("smAppl.smSupplier.supplierId",SearchOperator.OPERATOR_EQUALS.value(),getLoginUserPersonnelInfo().getSmAppl().getSmSupplier().getSupplierId()));
+				
+				PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+				reqDTO.setSearchPersonnelBean(searchBean);
+
+				IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate
+						.getInstance().getServiceObject("sm", IPersonnelSO.class);
+				PersonnelResDTO resDTO = smPersonnelSO.retrievePersonnelBySupplierIdForSoftCert(reqDTO);
+
+				if(resDTO.isSuccessful()) {
+					return resDTO.getSearchPersonnelResultBean();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+	}
 	
+	public void searchSmPersonnel(){
+		softCertPagingDataModel.reloadData();
+	}
+
 	public List<SmPersonnel> getPersonnelList() {
 		return personnelList;
 	}
@@ -115,6 +151,14 @@ public class SoftCertManagedBean extends BaseManagedBean {
 
 	public void setLoginRoleName(String loginRoleName) {
 		this.loginRoleName = loginRoleName;
+	}
+
+	public IPagingDataModel<SmPersonnel> getSoftCertPagingDataModel() {
+		return softCertPagingDataModel;
+	}
+
+	public void setSoftCertPagingDataModel(IPagingDataModel<SmPersonnel> softCertPagingDataModel) {
+		this.softCertPagingDataModel = softCertPagingDataModel;
 	}
 
 }

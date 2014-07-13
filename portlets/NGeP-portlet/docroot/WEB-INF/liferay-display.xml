@@ -151,6 +151,7 @@
 			<portlet id="reviewUnspsc"></portlet>
 			<portlet id="reviewExtensionRequest"></portlet>
 			<portlet id="reviewExtensionMaintenance"></portlet>
+			<portlet id="ZoneMaintenancePortlet"></portlet>
 		</category>
 	
 	
@@ -163,8 +164,6 @@
 		<portlet id="BpmTaskList"></portlet>
 		<portlet id="Welcome"></portlet>
 		<portlet id="supplierUserActivation"></portlet>
-
-		<portlet id="UserProfileMaintenance"></portlet>
 
 		<portlet id="SmUserProfileMaintenance"></portlet>
 		<portlet id="SoftCertReg"></portlet>
@@ -194,11 +193,11 @@
 		<portlet id="smUpdateMofDetails"></portlet>
 		<portlet id="SiteVisit"></portlet>
 		<portlet id="MOFApplication"></portlet>
-		<portlet id="ZoneMaintenancePortlet"></portlet>
 
 		<portlet id="smResubmitApplication"></portlet>
 		<portlet id="paymentResponse"></portlet>
 		<portlet id="smPayment"></portlet>
+		<portlet id="supplierUserMaintenance"></portlet>
 	</category>
 
 	<category name="category.ep.wp">

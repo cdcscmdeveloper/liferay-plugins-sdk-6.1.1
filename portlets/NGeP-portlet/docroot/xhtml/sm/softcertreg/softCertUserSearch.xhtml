@@ -8,79 +8,93 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
 	<ui:define name="contentSection">
-	
-	<h:panelGrid id="search" style="width:100%;">
-	 
-	<p:panel header="Results" toggleable="true">
-	<p:dataTable id="searchProfile" rowKey="#{personnel}" rowIndexVar="index" value="#{softCertBackingBean.managedBean.personnelList}" var="personnel" editable="true" style="word-wrap: break-word;table-layout: fixed;" selection="#{softCertBackingBean.managedBean.softCertSelectList}">
- 
-		<p:column selectionMode="multiple" style="width:2%" />
-						
-       <p:column headerText="#{lbl['lbl.sm.userprofile.name']}" >
-        <h:outputText value="#{personnel.name}" />  
-       </p:column>
-       
-       <p:column headerText="#{lbl['lbl.sm.userprofile.nationality']}" >
-        <h:outputText value="#{personnel.pmCountry.countryName}" />    
-       </p:column>
-    
-       <p:column headerText="#{lbl['lbl.sm.userprofile.isauthorized']}" rendered="#{softCertBackingBean.managedBean.loginRoleName eq 'MOF_SUPPLIER_ADMIN'}"> 
-        <h:outputText value="Y" rendered="#{personnel.authorized}"/>
-        <h:outputText value="N" rendered="!#{personnel.authorized}"/>
-       </p:column>
-       
-       <p:column headerText="#{lbl['lbl.sm.userprofile.eprole']}" > 
-        <h:outputText value="#{personnel.epRole}"/>
-       </p:column>
-       
-       <p:column headerText="#{lbl['lbl.sm.userprofile.assignedsoftcert']}" > 
-        <h:outputText value="Y" rendered="#{personnel.softcert}"/>
-        <h:outputText value="N" rendered="#{!personnel.softcert || personnel.softcert eq null}"/>
-       </p:column>
-       
-       <p:column headerText="#{lbl['lbl.sm.userprofile.softcertexpirationdate']}" > 
-        <h:outputText />
-       </p:column>
-       
-       <p:column headerText="#{lbl['lbl.sm.userprofile.iscontractsigner']}" rendered="#{softCertBackingBean.managedBean.loginRoleName eq 'MOF_SUPPLIER_ADMIN'}"> 
-        <h:outputText value="Y" rendered="#{personnel.contractSigner}"/>
-        <h:outputText value="N" rendered="!#{personnel.contractSigner}"/>
-       </p:column>
-     </p:dataTable>
-	</p:panel>
-	
-	<p:panel>
-	<h:panelGrid columns="2" style="width:100%;" styleClass="noBorders tr,noBorders td">
-      <p:commandButton value="Proceed" oncomplete="confirmDialog.show();" style="float:right;" icon="ui-icon-add">
-	  </p:commandButton>
-	 </h:panelGrid>	
-	 </p:panel>
-</h:panelGrid>
 
- 	<p:dialog id="confirmDialog" header="Confirmation" widgetVar="confirmDialog" modal="true" width="500" height="100">
-     <p:panel id="dPanel" style="width:100%">
-	     <table>
-	    	<tr>
-	    	<td>
-	    	<p:outputLabel value="Do you wish to continue?" />
-	    	</td>
-	    	</tr>
-	    	<tr>
-			<td>
-				<div align="center">
-				<p:commandButton value="Yes" onclick="confirmDialog.hide();" ajax="false" 
-				action="#{softCertBackingBean.navigateToPaymentPage}"/>
-				<p:commandButton value="No" onclick="confirmDialog.hide();"/>
-				</div>
-			</td>		
-			</tr>		
-		</table>
-	</p:panel>			
-	</p:dialog>
-    
-</ui:define>
+		<h:panelGrid id="search" style="width:100%;">
+
+			<p:panel header="Results" toggleable="true">
+				<p:dataTable id="softCertPageDataModelId" rowKey="#{personnel}"
+					rowIndexVar="index" lazy="true"
+					value="#{softCertBackingBean.managedBean.softCertPagingDataModel}"
+					var="personnel" editable="true"
+					style="word-wrap: break-word;table-layout: fixed;"
+					selection="#{softCertBackingBean.managedBean.softCertSelectList}">
+					<ac:paginator for="smPersonnelDataModelId" />
+					<p:column selectionMode="multiple" style="width:2%" />
+
+					<p:column headerText="#{lbl['lbl.sm.userprofile.name']}">
+						<h:outputText value="#{personnel.name}" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sm.userprofile.nationality']}">
+						<h:outputText value="#{personnel.pmCountry.countryName}" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sm.userprofile.isauthorized']}"
+						rendered="#{softCertBackingBean.managedBean.loginRoleName eq 'MOF_SUPPLIER_ADMIN'}">
+						<h:outputText value="Y" rendered="#{personnel.authorized}" />
+						<h:outputText value="N" rendered="!#{personnel.authorized}" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sm.userprofile.eprole']}">
+						<h:outputText value="#{personnel.epRole}" />
+					</p:column>
+
+					<p:column
+						headerText="#{lbl['lbl.sm.userprofile.assignedsoftcert']}">
+						<h:outputText value="Y" rendered="#{personnel.softcert}" />
+						<h:outputText value="N"
+							rendered="#{!personnel.softcert || personnel.softcert eq null}" />
+					</p:column>
+
+					<p:column
+						headerText="#{lbl['lbl.sm.userprofile.softcertexpirationdate']}">
+						<h:outputText />
+					</p:column>
+
+					<p:column
+						headerText="#{lbl['lbl.sm.userprofile.iscontractsigner']}"
+						rendered="#{softCertBackingBean.managedBean.loginRoleName eq 'MOF_SUPPLIER_ADMIN'}">
+						<h:outputText value="Y" rendered="#{personnel.contractSigner}" />
+						<h:outputText value="N" rendered="!#{personnel.contractSigner}" />
+					</p:column>
+				</p:dataTable>
+			</p:panel>
+
+			<p:panel>
+				<h:panelGrid columns="2" style="width:100%;"
+					styleClass="noBorders tr,noBorders td">
+					<p:commandButton value="Proceed" oncomplete="confirmDialog.show();"
+						style="float:right;" icon="ui-icon-add">
+					</p:commandButton>
+				</h:panelGrid>
+			</p:panel>
+		</h:panelGrid>
+
+		<p:dialog id="confirmDialog" header="Confirmation"
+			widgetVar="confirmDialog" modal="true" width="500" height="100">
+			<p:panel id="dPanel" style="width:100%">
+				<table>
+					<tr>
+						<td><p:outputLabel value="Do you wish to continue?" /></td>
+					</tr>
+					<tr>
+						<td>
+							<div align="center">
+								<p:commandButton value="Yes" onclick="confirmDialog.hide();"
+									ajax="false"
+									action="#{softCertBackingBean.navigateToPaymentPage}" />
+								<p:commandButton value="No" onclick="confirmDialog.hide();" />
+							</div>
+						</td>
+					</tr>
+				</table>
+			</p:panel>
+		</p:dialog>
+
+	</ui:define>
 </ui:composition>

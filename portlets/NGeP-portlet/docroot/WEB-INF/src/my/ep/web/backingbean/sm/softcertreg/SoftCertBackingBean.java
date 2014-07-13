@@ -6,7 +6,12 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+
+import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
+import my.ep.dto.pm.common.country.CountryReqDTO;
+import my.ep.dto.pm.common.country.CountryResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -28,12 +33,26 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean>{
 	@PostConstruct
 	public void init() {
 		
+//		FacesScopes facesScopes = new FacesScopes();
+//		PmUser usr = facesScopes.getUserSessionBean();
+//		getPersonnelByPmUser(usr);
+//		searchPersonnel();
+	}
+
+	public void preRenderSoftCert(){
+		System.out.println("********************SoftCertBackingBean PreRender***************");
+
 		FacesScopes facesScopes = new FacesScopes();
 		PmUser usr = facesScopes.getUserSessionBean();
 		getPersonnelByPmUser(usr);
-		searchPersonnel();
-	}
+//		searchPersonnel();
 
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, "softCertUserSearch.xhtml");
+	}
+	
+	
 	public String cancel(){
 
 		return "softCertUserSearch.xhtml";
