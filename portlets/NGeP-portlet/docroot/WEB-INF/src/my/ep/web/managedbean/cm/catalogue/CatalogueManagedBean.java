@@ -172,7 +172,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	
 	private List<VCmSupplierItem> tempSupplierList;
 	private List<VCmSupplierItem> ctRequestList;
-	private boolean simpleQuoteFlag = true; // enable or disable simple quote in search catalogue	
+	private boolean simpleQuoteFlag; // enable or disable simple quote in search catalogue	
 	private boolean displayCatalogue = false;
 	
 	private Date currentDate = new Date();
@@ -320,11 +320,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				System.out.println("*********after***********");
 				
 				// enable or disable simple quote in search catalogue
-				if(resDTO.getViewSuppItemResultBean() != null && resDTO.getViewSuppItemResultBean().getResultList() !=null && resDTO.getViewSuppItemResultBean().getResultList().size() > 0){
-					setSimpleQuoteFlag(true);
-				} else {
-					setSimpleQuoteFlag(false);
-				}
+				setSimpleQuoteFlag(Boolean.FALSE);
 				
 				return resDTO.getViewSuppItemResultBean();
 

@@ -8,7 +8,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
@@ -58,7 +57,6 @@ import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.cm.catalog.CmSupplierZone;
 import my.ep.persistence.entity.cm.catalog.CmSupplierZoneDTL;
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
-import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
@@ -82,7 +80,6 @@ import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
-import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
@@ -157,6 +154,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 	 * return String
 	 */
 	public String saveAction(String outcome) {
+		IStatusSO iStatusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 		IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
 		ScRequestNote requestNote = getManagedBean().getRequestNote();
@@ -171,7 +169,6 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		}
 		
 		requestNote.setSourceMethod(ParameterConst.REQUEST_NOTE_SC);
-		
 		// Remarks
 		requestNote.setRemarks(initializeRemarks(requestNote));
 	    if(requestNote.getRemarks() != null ){
@@ -182,7 +179,23 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 	    		}	
 	    	} 
 	    }
-	    requestNote.setWorkFlowStatuses(null);
+	    
+	    //Hoa: TODO WorkFlow Status should be set In the save, submit method
+	    List<ScRNWorkFlowStatus> workFlowStatuses =  new  ArrayList<ScRNWorkFlowStatus>();
+	    ScRNWorkFlowStatus workFlowStatus = new ScRNWorkFlowStatus();
+	    requestNote.setWorkFlowStatuses(workFlowStatuses);
+	    workFlowStatus.setRequestNote(requestNote);
+	    PmStatus status = new PmStatus();
+	    status.setStatusId(DPStatusConstants.RN_PENDING_SUBMISSION);
+	    StatusReqDTO statusReqDTO = new StatusReqDTO();
+	    if (status != null) {
+	    	statusReqDTO.setStatusId(status.getStatusId());
+	    	StatusResDTO statusResDTO = iStatusSO.retrieveStatusByStatusId(statusReqDTO);
+	    	workFlowStatus.setPmStatus(statusResDTO.getPmStatus());
+	    }
+	    workFlowStatuses.add(workFlowStatus);
+
+	    requestNote.setWorkFlowStatuses(workFlowStatuses);
 	    requestNoteReqDTO.setRequestNote(requestNote);
 	    FacesScopes face = new FacesScopes();
 		String token = face.getBPMAuthenticationCtxToken();
@@ -386,9 +399,6 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		   getManagedBean().setFulfillmentType(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
 		   initialInformation(requestNote);
 		   fulfilmentTypeEvent(requestNote.getRequestNoteDtls().get(0));
-		   
-		   // request note counter 
-		   getManagedBean().setRequestNoteCounter(requestNote.getRequestNoteDtls().size());
 			
 		} finally {
 			directPurchaseSO = null;
@@ -597,6 +607,11 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		
 		getManagedBean().setJustRequired(Boolean.FALSE);
 		getCurrentStatus(DPStatusConstants.RN_PENDING_SUBMISSION);
+		
+		// clear the justification type and justification remarks
+		getManagedBean().setJustificationType("");
+		getManagedBean().setJustification("");
+		getManagedBean().setProcTypeOption(Boolean.FALSE);
 		
 		getManagedBean().setAddToCartFlag(cart);
 		// update item details data table
@@ -948,7 +963,6 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		// request note counter
 		RequestContext.getCurrentInstance().execute("addToCartPopup.hide()");
 		RequestContext.getCurrentInstance().update("btnId");
-		getManagedBean().setRequestNoteCounter(getManagedBean().getRequestNoteDtls().size());
 		
 		// compare screen add to cart - page navigation to request note screen
 		if(cartFlag){
@@ -1040,11 +1054,15 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		List<ScRequestNoteDtl> requestNoteDtls = new ArrayList<ScRequestNoteDtl>();
 		requestNoteDtls.add(scRequestNoteDtl);
 		if(scRequestNoteDtl != null){
-     /*	ScRequestSupplierItem supplierItem = scRequestNoteDtl.getScRequestSupplierItem();
+			// for justification pop up
+			getManagedBean().setJustificationType(scRequestNoteDtl.getJustificationType().getParameterCode());
+			getManagedBean().setJustification(scRequestNoteDtl.getJustification());
+
+			/*	ScRequestSupplierItem supplierItem = scRequestNoteDtl.getScRequestSupplierItem();
 		  supplierItem.setSupplierItemPrice(scRequestNoteDtl.getScRequestSupplierItem().getSupplierItemPrice());
 		  String ItemCode = supplierItem.getSupplierItemPrice().getPricing().getCmSupplierItem().getCmItem().getExtensionCode();
 		  supplierItem.setScRequestNoteDtl(requestNoteDtls);
-		  
+
 		  CharSequence charSeq = ItemCode.subSequence(0, 2);
 		  Integer icode = Integer.valueOf(charSeq.toString());
 		  // TODO checking first two digits in itemCode  whether service or product
@@ -1053,8 +1071,8 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		  } else if (icode < ParameterConst.PRODUCT_OR_SERVICE) { // product
 			 getManagedBean().setItemCheck(Boolean.FALSE);
 		  }*/
-		  getManagedBean().setRequestSupplierItem(scRequestNoteDtl.getScRequestSupplierItem());
-		  if(scRequestNoteDtl.getScRequestSupplierItem().getSupplierItemPrices() != null && !scRequestNoteDtl.getScRequestSupplierItem().getSupplierItemPrices().isEmpty()){
+			getManagedBean().setRequestSupplierItem(scRequestNoteDtl.getScRequestSupplierItem());
+			if(scRequestNoteDtl.getScRequestSupplierItem().getSupplierItemPrices() != null && !scRequestNoteDtl.getScRequestSupplierItem().getSupplierItemPrices().isEmpty()){
 			  getManagedBean().getRequestSupplierItem().setSupplierItemPrice(scRequestNoteDtl.getScRequestSupplierItem().getSupplierItemPrices().get(0));
 		  }
 		 
@@ -1124,8 +1142,6 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			}
 		}
 		
-		// request note count 
-		getManagedBean().setRequestNoteCounter(getManagedBean().getRequestNoteDtls().size());
 		// update item details data table
 		RequestContext.getCurrentInstance().update("requestListDataTable");
 	}
@@ -1369,7 +1385,6 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		}
 		return items;
 	}
-	
 	
 	public String cancel() {
 		log.info("cancel");

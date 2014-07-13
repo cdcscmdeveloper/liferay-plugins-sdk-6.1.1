@@ -7,7 +7,7 @@
 	 <p:panel>
 	  <div align="right">
 	    <c:if test="#{requestNoteBackingBean.managedBean.taskId eq null}">
-	           <p:commandButton value="#{lbl['lbl.sc.action.add.item']}" style="float:left;" icon="ui-icon-back" partialSubmit="true" process="@this"
+	           <p:commandButton value="#{lbl['lbl.sc.action.back.to.search.catalogue']}" style="float:left;" icon="ui-icon-back" partialSubmit="true" process="@this"
 						immediate="true" action="#{requestNoteBackingBean.backToPervious}" />
 						
 				<p:commandButton value="#{lbl['lbl.sc.common.save']}" icon="ui-icon-save"
@@ -24,8 +24,8 @@
 						<td align="right">
 						
 						      <c:if test="#{requestNoteBackingBean.managedBean.requestNoteStatus eq 'Pending Submission'}">
-					               <p:commandButton value="#{lbl['lbl.sc.action.add.item']}" icon="ui-icon-add" partialSubmit="true" process="@this"
-						                immediate="true" action="#{requestNoteBackingBean.backToPervious}" />
+					               <p:commandButton value="#{lbl['lbl.sc.action.back.to.search.catalogue']}" icon="ui-icon-add" partialSubmit="true" process="@this"
+						                style="float:left;"  immediate="true" action="#{requestNoteBackingBean.backToPervious}" />
 						      </c:if>
 						
 							  <c:if test="#{requestNoteBackingBean.managedBean.requestNoteStatus eq 'Pending Approval' 

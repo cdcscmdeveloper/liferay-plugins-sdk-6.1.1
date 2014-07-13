@@ -12,7 +12,7 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
    <p:panel id="mainPanel">
    <div align="right">
 	    <c:if test="#{purchaseInquiryBackingBean.managedBean.taskId eq null}">
-	            <p:commandButton  immediate="true" value="#{lbl['lbl.sc.common.back']}" icon="ui-icon-back"
+	            <p:commandButton  immediate="true" value="#{lbl['lbl.sc.action.back.to.search.catalogue']}" icon="ui-icon-back"
 					 style="float:left;" action="#{purchaseInquiryBackingBean.backToPervious}" />
 				
 				 <p:commandButton value="#{lbl['lbl.sc.common.submit']}"
