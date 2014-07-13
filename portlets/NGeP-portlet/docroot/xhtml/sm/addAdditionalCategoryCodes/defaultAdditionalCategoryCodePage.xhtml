@@ -9,10 +9,10 @@
 
 
 	<ui:define name="contentSection">
-		
+
 		<p:messages id="addnlCatCodesMsgs" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="false"></p:messages>
-	
+
 		<table style="width: 100%">
 			<tr>
 				<td style="padding-left: 4px;"><p:outputPanel>
@@ -24,6 +24,7 @@
 			</tr>
 		</table>
 		<br />
+		<p:separator />
 		<table>
 			<tr>
 
@@ -37,7 +38,8 @@
 		</table>
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.sm.proceed']}" id="addCmdBtn"
-				action="#{backingBean.proceedToApplication('A')}" update="addnlCatCodesMsgs"
+				action="#{backingBean.proceedToApplication('A')}"
+				update="addnlCatCodesMsgs"
 				disabled="#{!backingBean.managedBean.termsAccepted}" />
 			<!-- <p:commandButton value="Cancel"
 				action="/xhtml/sm/homeScreen/defaultVirtualCertPage.xhtml" /> -->
