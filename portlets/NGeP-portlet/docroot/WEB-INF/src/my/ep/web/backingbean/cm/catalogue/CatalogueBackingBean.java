@@ -5294,12 +5294,48 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	public void addToList(VCmSupplierItem supplierItem,Integer optionListValue){
 		log.info("addToList trigger");
 		if(optionListValue.intValue()==1){
-			if (!this.getManagedBean().getCtRequestList().contains(supplierItem))
-				this.getManagedBean().getCtRequestList().add(supplierItem);
-			else
+			if (!this.getManagedBean().getCtRequestList().contains(supplierItem)){
+				System.out.println("************getContractNo***************"
+						+ supplierItem.getContractNo());
+
+				this.getManagedBean().setTempSupplierList(null);
+				this.getManagedBean().getTempSupplierList().add(supplierItem);
+
+				String contractNo = "";
+				boolean flag = false;
+
+				if (this.getManagedBean().getCtRequestList() != null && this.getManagedBean().getCtRequestList().size() > 0) {
+					for (VCmSupplierItem item : this.getManagedBean().getCtRequestList()) {
+						if (!item.getContractNo().equalsIgnoreCase(supplierItem.getContractNo())) {
+							System.out.println("********************different Contact No.");
+
+							flag = true;
+							contractNo = item.getContractNo();
+							break;
+						}
+					}
+				}
+
+				if (flag) {
+					throw new EpException(MessageConst.ERROR_740009, new String[]{contractNo});
+				} else {
+					System.out.println("size:" + this.getManagedBean().getTempSupplierList().size());
+
+					for (VCmSupplierItem temp : this.getManagedBean().getTempSupplierList()) {
+						System.out.println("temp.getDocId()" + temp.getDocId());
+						System.out.println("keySet:" + this.getManagedBean().getTempMap().keySet());
+						if (!this.getManagedBean().getTempMap().containsKey(temp.getDocId())) {
+							this.getManagedBean().getCtRequestList().add(temp);
+							this.getManagedBean().getTempMap().put(temp.getDocId(), temp.getDocId());
+						}
+					}
+				}
+			}
+			else{
 				 FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Item is already in the list."));
+			}
 		/*}else if(optionListValue.intValue()==2){
 			this.getManagedBean().getsim().add(supplierItem);*/
 		}else if(optionListValue.intValue()==3){

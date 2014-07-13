@@ -250,13 +250,6 @@
 								<p:tooltip for="addToCartId" 
 									value="#{lbl['lbl.sc.add.to.cart']}" showEffect="fade"
 									hideEffect="fade" />
-
-								<p:commandButton value="CR" update="@form" id="crId"
-									action="#{catalogueBackingBean.addToContractRequest(supplierItem)}"
-									rendered="#{supplierItem.contractNo ne null}">
-								</p:commandButton>
-								<p:tooltip for="crId" value="Contract Request"
-									showEffect="fade" hideEffect="fade" />
 							</p:column>
 
 						</p:dataTable>
