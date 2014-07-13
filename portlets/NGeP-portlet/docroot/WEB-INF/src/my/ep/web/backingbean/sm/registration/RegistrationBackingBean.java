@@ -294,9 +294,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		// validate user's email existence at Liferay. 
 		try {
 			if(UserLocalServiceUtil.getUserByEmailAddress(Long.valueOf(getCompanyId()), this.getManagedBean().getSmPersonnel().getEmail()) != null) {
-				FacesContext.getCurrentInstance().addMessage(null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, "Email Address already exist.", "Email Address already exist."));
-				return null;
+//				FacesContext.getCurrentInstance().addMessage(null,
+//						new FacesMessage(FacesMessage.SEVERITY_ERROR, "Email Address already exist.", "Email Address already exist."));
+//				return null;
+				throw new EpException(MessageConst.ERROR_721015);
 			}
 			
 		} catch (NumberFormatException e) {
@@ -312,10 +313,12 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		
 		try {
 			
-			if(UserLocalServiceUtil.getUserByScreenName(Long.valueOf(getCompanyId()), this.getManagedBean().getSmPersonnel().getEmail()) != null) {
-				FacesContext.getCurrentInstance().addMessage(null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, "Login ID already exist.", "Login ID already exist."));
-				return null;
+			if(UserLocalServiceUtil.getUserByScreenName(Long.valueOf(getCompanyId()), this.getManagedBean().getSmPersonnel().getIdentificationNo()) != null) {
+//			if(UserLocalServiceUtil.getUserByScreenName(1, "user011") != null) {
+//				FacesContext.getCurrentInstance().addMessage(null,
+//						new FacesMessage(FacesMessage.SEVERITY_ERROR, "Login ID already exist.", "Login ID already exist."));
+//				return null;
+				throw new EpException(MessageConst.ERROR_721016);
 			}
 		} catch (NumberFormatException e) {
 //			e.printStackTrace();
@@ -459,6 +462,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			log.info("-------------------Error SubmitRegistration----------------");
 			throw new EpException(MessageConst.ERROR_721006);
 		}
+//		return null;
 	}
 
 	public String updateOnlineAccount() {
