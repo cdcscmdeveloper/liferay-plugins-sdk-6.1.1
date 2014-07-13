@@ -4359,7 +4359,7 @@
 		</security-role-ref>
 	</portlet>
 	<portlet>
-		<portlet-name>zoneMaintenance</portlet-name>
+		<portlet-name>ZoneMaintenancePortlet</portlet-name>
 		<display-name>Zone Maintenance</display-name>
 		<portlet-class>
 			org.portletfaces.bridge.GenericFacesPortlet
@@ -4838,7 +4838,7 @@
 			</security-role-ref>
 		</portlet>
 		<portlet>
-			<portlet-name>SmUserProfileMaintenance</portlet-name>
+			<portlet-name>UserProfileMaintenance</portlet-name>
 			<display-name>SmUserProfileMaintenance</display-name>
 			<portlet-class>
 				org.portletfaces.bridge.GenericFacesPortlet
@@ -4855,7 +4855,7 @@
 				<portlet-mode>view</portlet-mode>
 			</supports>
 			<portlet-info>
-				<title>SmUserProfileMaintenance</title>
+				<title>UserProfileMaintenance</title>
 				<short-title>NewJSFPortlet</short-title>
 				<keywords></keywords>
 			</portlet-info>

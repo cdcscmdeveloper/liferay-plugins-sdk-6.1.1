@@ -151,7 +151,7 @@
 			<portlet id="reviewUnspsc"></portlet>
 			<portlet id="reviewExtensionRequest"></portlet>
 			<portlet id="reviewExtensionMaintenance"></portlet>
-			<portlet id="zoneMaintenance"></portlet>
+			<portlet id="ZoneMaintenancePortlet"></portlet>
 		</category>
 	
 	
@@ -165,7 +165,7 @@
 		<portlet id="Welcome"></portlet>
 		<portlet id="supplierUserActivation"></portlet>
 
-		<portlet id="SmUserProfileMaintenance"></portlet>
+		<portlet id="UserProfileMaintenance"></portlet>
 		<portlet id="SoftCertReg"></portlet>
 	</category>
 
