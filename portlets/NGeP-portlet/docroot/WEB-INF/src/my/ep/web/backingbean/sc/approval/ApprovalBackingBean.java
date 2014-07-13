@@ -204,9 +204,9 @@ public class ApprovalBackingBean extends
 			if (null == attachment) {
 				attachment = new ScQtApprovalAttachment();
 				attachment.setScQtApproval(scQtApproval);
-				attachment.setDocNo(scQtApproval.getScQt().getQtNo());
-				attachment.setPrefixFileName(scQtApproval.getApprovalCategory().getParameterCode());
 			}
+			attachment.setDocNo(scQtApproval.getScQt().getQtNo());
+			attachment.setPrefixFileName(scQtApproval.getApprovalCategory().getParameterCode());
 			attachment.setUser(facesScopes.getUserSessionBean());
 			attachment
 					.setChangedDate(new Timestamp(System.currentTimeMillis()));
@@ -500,9 +500,9 @@ public class ApprovalBackingBean extends
 			if (null == attachment) {
 				attachment = new ScQtApprovalAttachment();
 				attachment.setScQtApproval(scQtApproval);
-				attachment.setDocNo(scQtApproval.getScQt().getQtNo());
-				attachment.setPrefixFileName(scQtApproval.getApprovalCategory().getParameterCode());
 			}
+			attachment.setDocNo(scQtApproval.getScQt().getQtNo());
+			attachment.setPrefixFileName(scQtApproval.getApprovalCategory().getParameterCode());
 			attachment.setUser(facesScopes.getUserSessionBean());
 			attachment
 					.setChangedDate(new Timestamp(System.currentTimeMillis()));

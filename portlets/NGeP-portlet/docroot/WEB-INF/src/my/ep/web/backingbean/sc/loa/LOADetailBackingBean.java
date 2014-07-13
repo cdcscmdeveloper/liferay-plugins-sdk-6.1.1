@@ -428,11 +428,11 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 				if (null == scLoaAttachment) {
 					scLoaAttachment = new ScLoaAttachment();
 					scLoaAttachment.setScLoa(scLoa);
-					scLoaAttachment.setDocNo(scLoa.getLoaNo());
 					
 					scLoa.setScLoaAttachment(scLoaAttachment);
 				}
 				
+				scLoaAttachment.setDocNo(scLoa.getLoaNo());
 				scAttachment = scLoaAttachment;
 				
 			} else {
@@ -441,11 +441,11 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 				if (null == scLoaReportAttachment) {
 					scLoaReportAttachment = new ScLoaReportAttachment();
 					scLoaReportAttachment.setScLoaReport(selectedScLoaReport);
-					scLoaReportAttachment.setDocNo(selectedScLoaReport.getScLoa().getLoaNo());
 					
 					selectedScLoaReport.setScLoaReportAttachment(scLoaReportAttachment);
 				}
 				
+				scLoaReportAttachment.setDocNo(selectedScLoaReport.getScLoa().getLoaNo());
 				scAttachment = scLoaReportAttachment; 
 			}
 			
@@ -837,6 +837,7 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 
 			if (resDTO.isSuccessful()) {
 				renewSesionObject();
+				
 				editLOAAction(resDTO.getScLoa());
 				
 				FacesContext.getCurrentInstance().addMessage(
@@ -885,6 +886,8 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 			AwardSupplierResDTO resDTO = qtAwardSO.saveLOADtl(reqDTO);
 			
 			if (resDTO.isSuccessful()) {
+				scLoa = resDTO.getScLoa();
+				
 				renewSesionObject();
 				
 				FacesContext.getCurrentInstance().addMessage(

@@ -440,9 +440,9 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 		   if (null == attachment) {
 			   attachment = new ScPurchaseInDefaultAttachment();
 			   attachment.setScPurchaseInDefault(purchaseInDefault);
-			   attachment.setDocNo(purchaseInDefault.getPurchaseInDefaultNo());
 		   }
 		   
+		   attachment.setDocNo(purchaseInDefault.getPurchaseInDefaultNo());
 		   attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		   attachment.setCreatedUser(facesScopes.getUserSessionBean());
 		  

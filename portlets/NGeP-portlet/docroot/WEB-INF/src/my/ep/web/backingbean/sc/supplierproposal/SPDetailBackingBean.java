@@ -671,9 +671,9 @@ public class SPDetailBackingBean extends
 			if (null == attachment) {
 				attachment = new ScQtProposalChecklistAttachment();
 				attachment.setScQtProposalChecklist(scQtProposalChecklist);
-				attachment.setDocNo(scQtProposalChecklist.getScQtCheckList().getScQt().getQtNo());
-				attachment.setPrefixFileName(scQtProposalChecklist.getScQtProposal().getProposalNo());
 			}
+			attachment.setDocNo(scQtProposalChecklist.getScQtCheckList().getScQt().getQtNo());
+			attachment.setPrefixFileName(scQtProposalChecklist.getScQtProposal().getProposalNo());
 			attachment.setUser(facesScopes.getUserSessionBean());
 			attachment
 					.setChangedDate(new Timestamp(System.currentTimeMillis()));

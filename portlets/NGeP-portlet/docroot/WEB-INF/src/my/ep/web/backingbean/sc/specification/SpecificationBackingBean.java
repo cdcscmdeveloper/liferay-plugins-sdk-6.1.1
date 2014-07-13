@@ -6644,8 +6644,9 @@ public class SpecificationBackingBean extends
 		if (null == attachment) {
 			attachment = new ScQtCheckListAttachment();
 			attachment.setScQtCheckList(scQtChecklist);
-			attachment.setDocNo(scQtChecklist.getScQt().getQtNo());
 		}
+		attachment.setDocNo(scQtChecklist.getScQt().getQtNo());
+		
 		uploadAttachment(event.getFile(), attachment);
 
 		scQtChecklist.setScQtCheckListAttachment(attachment);

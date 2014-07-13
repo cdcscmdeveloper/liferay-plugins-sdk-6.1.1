@@ -36,8 +36,10 @@ import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
+import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -60,6 +62,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtRptBriefingPaperAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScRemark;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.type.pm.OrganizationType;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.sc.approval.ApprovalBackingBean;
@@ -166,52 +169,27 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		attachment.setChangedBy(createdUser.getUserId());
 		attachment.setCreatedUser(createdUser);
 		
-		StringBuilder filePath = new StringBuilder("\\ngep");
-		File theDir = new File(filePath.toString());
-		// if the directory does not exist, create it
-		if (!theDir.exists()) {
-			theDir.mkdir();
-		}
-		
-		filePath.append("\\");
+		String docRepoBaseDir = EpPropertiesUtils.getInstance().getProperty(
+				EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
+		StringBuilder filePath = new StringBuilder(docRepoBaseDir);
+		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
 		filePath.append(DateUtils.getLast2DigitOfYear());
-		theDir = new File(filePath.toString());
-		// if the directory does not exist, create it
-		if (!theDir.exists()) {
-			theDir.mkdir();
-		}
-		
-		filePath.append("\\");
+		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
 		filePath.append(ModuleCodeConst.SUPPLIER_SELECTION.toUpperCase());
-		theDir = new File(filePath.toString());
-		// if the directory does not exist, create it
-		if (!theDir.exists()) {
-			theDir.mkdir();
-		}
-		
-		filePath.append("\\");
+		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
 		filePath.append(attachment.getDocNo());
-		theDir = new File(filePath.toString());
-		// if the directory does not exist, create it
-		if (!theDir.exists()) {
-			theDir.mkdir();
-		}
-		
-		filePath.append("\\");
+		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
 		filePath.append(attachment.getDocType());
-		theDir = new File(filePath.toString());
-		// if the directory does not exist, create it
-		if (!theDir.exists()) {
-			theDir.mkdir();
-		}
+		
+		File theDir = new File(filePath.toString());
+		theDir.mkdirs();
 		
 		AttachmentFormat scFormat = getAttachmentFormat(attachment);
 		String formatedFileName = scFormat.format(
 				attachment.getFileName(), attachment.getPrefixFileName());
 		
-		filePath.append("\\");
+		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
 		filePath.append(formatedFileName);
-		
 		attachment.setFilePath(filePath.toString());
 		
 		log.info("=======get File path===="

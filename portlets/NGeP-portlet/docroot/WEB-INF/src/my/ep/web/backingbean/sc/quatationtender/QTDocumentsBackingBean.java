@@ -143,8 +143,8 @@ public class QTDocumentsBackingBean extends
 			if (null == attachment) {
 				attachment = new ScQtCheckListAttachment();
 				attachment.setScQtCheckList(scQtCheckList);
-				attachment.setDocNo(scQtCheckList.getScQt().getQtNo());
 			}
+			attachment.setDocNo(scQtCheckList.getScQt().getQtNo());
 			attachment.setUser(facesScopes.getUserSessionBean());
 			attachment
 					.setChangedDate(new Timestamp(System.currentTimeMillis()));
