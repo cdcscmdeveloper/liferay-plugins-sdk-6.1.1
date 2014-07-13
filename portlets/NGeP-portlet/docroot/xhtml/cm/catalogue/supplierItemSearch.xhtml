@@ -120,10 +120,10 @@
 									
 								<p:commandButton id="requestNoteId"
 									action="#{requestNoteBackingBean.requestNoteAction}"
-									value="#{lbl['lbl.sc.request.note']} (#{requestNoteBackingBean.managedBean.requestNoteCounter})"
+									value="#{lbl['lbl.sc.request.note']} ( #{requestNoteBackingBean.managedBean.requestNoteCounter} )"
 									disabled="#{requestNoteBackingBean.managedBean.requestNoteCounter eq '0'}" />
 
-								<p:commandButton value="#{lbl['lbl.sc.sq']} (#{simpleQuoteBackingBean.managedBean.simpleQuoteCounter})" rendered="#{unspscCodeBackingBean.requisitioner}" id="simpleQuoteId"
+								<p:commandButton value="#{lbl['lbl.sc.sq']} ( #{simpleQuoteBackingBean.managedBean.simpleQuoteCounter} )" rendered="#{unspscCodeBackingBean.requisitioner}" id="simpleQuoteId"
 									action="#{simpleQuoteBackingBean.simpleQuoteAction(simpleQuoteBackingBean.managedBean.cmSupplierItem.supplierItemId , false , null)}" />
 
 
@@ -223,7 +223,7 @@
 							        <p:menuitem value="#{lbl['lbl.cm.add.to.cr']}" actionListener="#{catalogueBackingBean.addToList(supplierItem,1)}" update="@([id$=btnId])" icon="ui-icon-plus" 
 							        rendered="#{supplierItem.contractNo != null}"/>
 							        <p:menuitem value="#{lbl['lbl.cm.add.to.simple.qoute']}" actionListener="#{simpleQuoteBackingBean.addQuoteItem(supplierItem)}" update="@([id$=btnId])" icon="ui-icon-plus" 
-							         rendered="#{supplierItem.circularNo ne null}" disabled="#{supplierItem.circularNo eq null}" />
+							         rendered="#{supplierItem.contractNo == null}" />
 							        <p:menuitem value="#{lbl['lbl.cm.add.to.compare']}" actionListener="#{catalogueBackingBean.addToList(supplierItem,3)}" update="@([id$=btnId])" icon="ui-icon-plus" 
 							        rendered="#{supplierItem.contractNo == null and supplierItem.circularNo == null}"/>
 							    </p:menuButton>
@@ -233,10 +233,12 @@
 									id="pidId"
 									action="#{purchaseInDefaultBackingBean.pidAction(supplierItem)}"
 									disabled="#{!supplierItem.pidRequired}"
-									rendered="#{supplierItem.contractNo != null }">
+									rendered="#{supplierItem.contractNo ne null or supplierItem.circularNo ne null }">
 								</p:commandButton>
 								<p:tooltip for="pidId" value="#{lbl['lbl.sc.pid']}"
 									showEffect="fade" hideEffect="fade" />
+									
+								<p:spacer width="5px" />
 							    
 								<p:commandLink disabled="#{!supplierItem.atcRequired}" 
 									action="#{requestNoteBackingBean.addToCart(supplierItem.docId , false)}"
