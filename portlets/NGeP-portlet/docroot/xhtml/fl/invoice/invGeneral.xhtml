@@ -53,7 +53,7 @@
 						<tr>
 							<td style="width: 25px;"><p:inputText size="15" value="#{invoiceBackingBean.managedBean.invoice.flRequest.smSupplier.regNo}"
 									disabled="true" /></td>
-							<td style="width: 65px;"><p:outputLabel
+							<td style="width: 69px;"><p:outputLabel
 									value="#{lbl['lbl.fl.supp.mof.no']}" /></td>
 							<td><p:inputText size="9" value="#{invoiceBackingBean.managedBean.invoice.flRequest.smSupplier.smMofAccounts[0].mofNo}" disabled="true" /></td>
 						</tr>
@@ -79,7 +79,7 @@
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.name']}" /></td>
 				<td><p:inputText size="45" disabled="true" id="suppName"
 						value="#{invoiceBackingBean.managedBean.invoice.flRequest.flSupplierDtl.supplierName}" /></td>
-				<td style="width: 140px;"><p:outputLabel
+				<td style="width: 148px;"><p:outputLabel
 						rendered="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factored eq 'false'}"
 						value="#{lbl['lbl.fl.payment.bank.name']}" /></td>
 				<td><p:inputText size="45" disabled="true" id="suppBankName"
@@ -197,6 +197,19 @@
 			</tr>
 		</table>
 	</p:panel>
+	<c:if test='#{invoiceBackingBean.managedBean.docMaintainRemarks eq "true"}'>
+	
+	<p:panel header="#{lbl['lbl.fl.remark.attachment']}" toggleable="true">
+		<table style="width: 100%">
+			<tr>
+				<td width="50%" valign="top"><ui:include
+						src="/xhtml/fl/shared/remark.xhtml" /></td>
+				
+			</tr>
+		</table>
+	</p:panel>
+	</c:if>
+	<c:if test='#{invoiceBackingBean.managedBean.docMaintainRemarks eq "false"}'>
 	<p:panel header="#{lbl['lbl.fl.remark.attachment']}" toggleable="true">
 		<table style="width: 100%">
 			<tr>
@@ -207,4 +220,5 @@
 			</tr>
 		</table>
 	</p:panel>
+	</c:if>
 </ui:composition>
