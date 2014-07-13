@@ -81,10 +81,9 @@
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, doItems.scRequestItem.uom.uomCode)}" />
 						</h:outputText>
 					</p:column>
-					<p:column headerText="Remaining &lt;br /&gt; Qty."
-						style="text-align:right">
-						<h:outputText
-							value="#{doItems.orderedQty - doItems.sumDeliveredQty + doItems.rejectedQty}">
+					<p:column headerText="Remaining &lt;br /&gt; Qty." style="text-align:right">
+						<h:outputText id="remaingQtyTxt"
+							value="#{doItems.orderedQty - doItems.sumDeliveredQty - doItems.deliveredQty + doItems.rejectedQty}">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, doItems.scRequestItem.uom.uomCode)}" />
 						</h:outputText>
@@ -95,7 +94,7 @@
 							<p:inputText value="#{doItems.deliveredQty}" size="5"
 								styleClass="colFloatRight" maxlength="14"
 								rendered="#{doItems.itemType.parameterCode eq ParameterConst.itemTypeProduct and createDOBackingBean.managedBean.docType eq 'PR' }">
-								<p:ajax event="blur" update="delQtyTxt,delAmountTxt"
+								<p:ajax event="blur" update="delQtyTxt,delAmountTxt,remaingQtyTxt"
 									process="@this"
 									listener="#{createDOBackingBean.retrieveDelAmount(doItems)}" />
 								<f:convertNumber
@@ -109,7 +108,7 @@
 							<p:inputText value="#{doItems.deliveredQty}" size="5"
 								styleClass="colFloatRight"
 								rendered="#{doItems.itemType.parameterCode eq ParameterConst.itemTypeService and doItems.orderedQty > 1 and createDOBackingBean.managedBean.docType eq 'PR' }">
-								<p:ajax event="blur" update="delQtyTxt,delAmountTxt"
+								<p:ajax event="blur" update="delQtyTxt,delAmountTxt,remaingQtyTxt"
 									process="@this"
 									listener="#{createDOBackingBean.retrieveDelAmount(doItems)}" />
 								<f:convertNumber
