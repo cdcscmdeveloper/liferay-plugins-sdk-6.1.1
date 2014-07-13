@@ -1268,7 +1268,7 @@
 		<css-class-wrapper>zone search-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
-		<portlet-name>ZoneMaintenancePortlet</portlet-name>
+		<portlet-name>zoneMaintenance</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>

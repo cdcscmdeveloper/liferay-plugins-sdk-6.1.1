@@ -151,7 +151,7 @@
 			<portlet id="reviewUnspsc"></portlet>
 			<portlet id="reviewExtensionRequest"></portlet>
 			<portlet id="reviewExtensionMaintenance"></portlet>
-			<portlet id="ZoneMaintenancePortlet"></portlet>
+			<portlet id="zoneMaintenance"></portlet>
 		</category>
 	
 	
