@@ -354,8 +354,8 @@
 							update=":form" />
 						<p:commandButton value="Delete" process="persInfoDtPanel"
 							partialSubmit="true"
-							action="#{backingBean.deleteSelectedShareHolders}"
-							update=":form:tt:personDt , :form:tt:stfSummaryPan" />
+							action="#{backingBean.deleteSelectedShareHolders(SupplierManagementConst.PERSONNEL_TYPE_STAFF)}"
+							update=":form:tt:personDt , :form:tt:stfSummaryPan ,:form:tt:persBranMapInfo" />
 					</div>
 				</p:panel>
 				<p:panel id="persBranMapInfo" header="Branches - Point Of Contact"
@@ -373,11 +373,15 @@
 							<p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
 								required="true"
 								label="Point of contact for : #{branch.branchName}"
-								id="brnPerVal" value="#{branch.smPersonnel.personnelId}">
+								id="brnPerVal" value="#{branch.contactPersonId}">
+								<f:selectItem itemLabel="---Select---" itemValue="" />
 								<f:selectItems
 									value="#{backingBean.managedBean.smAppl.smPersonnels}"
 									var="brPerBean" itemLabel="#{brPerBean.name}"
 									itemValue="#{brPerBean.personnelId}" />
+								<p:ajax event="change" partialSubmit="true" process="@this"
+									listener="#{backingBean.assignPersonForBranch(branch)}"
+									update=":form:tt:persBranMapInfo,:form:tt:persInfPan" />
 							</p:selectOneMenu>
 							<p:message id="brnPerValMsg" for="brnPerVal" showSummary="true"
 								showDetail="false" display="icon" />

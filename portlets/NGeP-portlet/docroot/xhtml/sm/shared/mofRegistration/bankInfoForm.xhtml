@@ -199,13 +199,16 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel
-							value="#{lbl['lbl.sm.bankDtls.bankBranch']}" /></td>
+							value="#{lbl['lbl.sm.bankDtls.bankBranch']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
 					<td><p:inputText maxlength="60"
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.bankDtls.bankBranch']}"
 							id="smBankBranchName"
 							value="#{backingBean.managedBean.selectedBank.bankBranch}"
-							size="35" /></td>
+							size="35" /> <p:message id="smBankBranchNameMsg"
+							for="smBankBranchName" showSummary="true" showDetail="false"
+							display="icon" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.bankDtls.acctNo']}" />

@@ -20,7 +20,8 @@
 				src="/xhtml/sm/shared/mofRegistration/applicationReviewHeaderPage.xhtml" />
 		</p:outputPanel>
 		<ac:smPanel id="tt">
-			<p:messages id="messages" showDetail="true" showSummary="false" autoUpdate="true"
+			<p:messages id="messages" showDetail="true" showSummary="false"
+				autoUpdate="#{backingBean.managedBean.showParentMsg}"
 				closable="true" />
 
 			<c:if test="#{backingBean.managedBean.tabActiveIndex eq 0}">

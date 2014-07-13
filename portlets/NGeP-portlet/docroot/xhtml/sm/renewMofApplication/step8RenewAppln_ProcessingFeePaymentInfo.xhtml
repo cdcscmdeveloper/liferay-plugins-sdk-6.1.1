@@ -18,7 +18,7 @@
 							action="#{backingBean.saveApplicationAsDraft(ParameterConst.newSmApplnForRenew,backingBean.managedBean.currentPageType)}"
 							update=":form" icon="ui-icon-save" style="margin-bottom:5px;" />
 						<p:commandButton value="Submit For Payment"
-							action="#{backingBean.submitRenewMofApplToBpm}"
+							action="#{backingBean.submitSmApplToBpm(ParameterConst.newSmApplnForRenew)}"
 							style="margin-bottom:5px;" />
 					</div>
 				</p:outputPanel> <p:panel header="#{lbl['lbl.sm.processFee.Header']}">
