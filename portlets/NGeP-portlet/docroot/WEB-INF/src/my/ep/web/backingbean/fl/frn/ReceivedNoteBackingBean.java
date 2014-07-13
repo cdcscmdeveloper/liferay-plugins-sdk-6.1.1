@@ -209,15 +209,17 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 					
 					List<FlFulfilmentNoteItem> noteItemList=new ArrayList<FlFulfilmentNoteItem>();
 					for (FlDelOrderItem delOrderItem : resDTO.getFlDeliveryOrder().getFlDelOrderItem()){
-						FlFulfilmentNoteItem noteItem=new FlFulfilmentNoteItem();
-						noteItem.setFlDelOrderItem(delOrderItem);
-						noteItem.setFlFulfilmentNote(getManagedBean().getFulfilmentNote());
-						noteItem.setFlItem(delOrderItem.getFlItem());
-						if(delOrderItem.getFlFulfilmentItemAddr().getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) {
-							noteItem.setReceivedQty(delOrderItem.getDeliveredQty());
-							noteItem.setReceivedAmt(delOrderItem.getDeliveredAmt());
-						}						
-						noteItemList.add(noteItem);
+						if(delOrderItem.getDeliveredQty().doubleValue()>0) { 
+							FlFulfilmentNoteItem noteItem=new FlFulfilmentNoteItem();
+							noteItem.setFlDelOrderItem(delOrderItem);
+							noteItem.setFlFulfilmentNote(getManagedBean().getFulfilmentNote());
+							noteItem.setFlItem(delOrderItem.getFlItem());
+							if(delOrderItem.getFlFulfilmentItemAddr().getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) {
+								noteItem.setReceivedQty(delOrderItem.getDeliveredQty());
+								noteItem.setReceivedAmt(delOrderItem.getDeliveredAmt());
+							}						
+							noteItemList.add(noteItem);
+						}
 					}
 					getManagedBean().getFulfilmentNote().setFlFulfilmentNoteItem(noteItemList);
 				}
