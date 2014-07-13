@@ -85,6 +85,10 @@ import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.cm.codification.CodificationBackingBean;
+import my.ep.web.backingbean.sc.directpurchase.RequestNoteBackingBean;
+import my.ep.web.backingbean.sc.directpurchase.SimpleQuoteBackingBean;
+import my.ep.web.backingbean.sc.purchaseindefault.PurchaseInDefaultBackingBean;
+import my.ep.web.backingbean.sc.purchaseinquiry.PurchaseInquiryBackingBean;
 import my.ep.web.managedbean.cm.catalogue.CatalogueManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
@@ -3113,6 +3117,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	public void preRenderSupplierCatalogue() {
 
 		
+
 		this.getManagedBean().setItemNameFilterBean(new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value()));
 		this.getManagedBean().setItemCodeFilterBean(new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value()));
 		this.getManagedBean().setSupplierNameFilterBean(new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value()));
@@ -3122,6 +3127,22 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		this.getManagedBean().setEpNoFilterBean(new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value()));
 		this.getManagedBean().setBizRegNoFilterBean(new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value()));
 
+
+		// s1 module
+		getManagedBean().setSimpleQuoteFlag(Boolean.TRUE);
+		RequestNoteBackingBean requestNoteBackingBean = new RequestNoteBackingBean();
+		requestNoteBackingBean.renewSesionObject();
+
+		SimpleQuoteBackingBean simpleQuoteBackingBean = new SimpleQuoteBackingBean();
+		simpleQuoteBackingBean.renewSesionObject();
+		
+		PurchaseInquiryBackingBean purchaseInquiryBackingBean  = new PurchaseInquiryBackingBean();
+		purchaseInquiryBackingBean.renewSesionObject();
+		
+		PurchaseInDefaultBackingBean purchaseInDefaultBackingBean = new PurchaseInDefaultBackingBean();
+		purchaseInDefaultBackingBean.renewSesionObject();
+		
+		
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, "supplierItemView");
