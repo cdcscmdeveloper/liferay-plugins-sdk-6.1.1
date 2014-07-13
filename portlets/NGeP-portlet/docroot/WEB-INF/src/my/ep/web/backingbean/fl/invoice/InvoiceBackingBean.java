@@ -38,6 +38,7 @@ import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
+import my.ep.exception.EpException;
 import my.ep.jaxb.fl.invoice.FLInvoiceDataType;
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
@@ -323,6 +324,10 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 	}
 	
 	public void retrieveInvTotalAmount(FlInvoiceItem flInvoiceItem){
+		if(flInvoiceItem.getInvAmt().doubleValue()>flInvoiceItem.getReceivedAmt().doubleValue()) {
+			flInvoiceItem.setInvAmt(flInvoiceItem.getReceivedAmt());
+			throw new EpException(MessageConst.ERROR_100032, new String[]{"Invoice Amount","Received Amount"});
+		}
 	   BigDecimal totalInvoiceAmt = new BigDecimal(0);
 	   for(TreeNode childNode : getManagedBean().getChargeLineItemRoot().getChildren()){
 		   FlInvoiceItem data= (FlInvoiceItem) childNode.getData();
