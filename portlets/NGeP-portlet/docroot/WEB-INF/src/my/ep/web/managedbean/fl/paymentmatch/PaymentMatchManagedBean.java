@@ -4,22 +4,15 @@
 package my.ep.web.managedbean.fl.paymentmatch;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.fl.payment.FlPaymentAdvice;
-import my.ep.persistence.entity.fl.payment.FlPaymentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.web.managedbean.BaseManagedBean;
 
-import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
 /**
@@ -90,56 +83,6 @@ public class PaymentMatchManagedBean extends BaseManagedBean{
 	
 	private String adjustmentDocNo;
 	private String stopInstrNo;
-	
-	public void populateChargeLineData(){
-		this.chargeLineItemRoot = new DefaultTreeNode("root", null);
-		 
-		Map<Long, List<FlPaymentItem>> paymentItemsMap = new HashMap<Long, List<FlPaymentItem>>();
-		List<FlPaymentItem> flPaymentItemList = null;
-		for (FlPaymentItem flPaymentItem : paymentAdvice.getFlPaymentItems()) {
-			if (paymentItemsMap.containsKey(flPaymentItem.getFlItem().getCmItem().getItemId())) {
-				flPaymentItemList = paymentItemsMap.get(flPaymentItem.getFlItem().getCmItem().getItemId());
-			} else {
-				flPaymentItemList = new ArrayList<FlPaymentItem>();
-			}
-			flPaymentItemList.add(flPaymentItem);
-			paymentItemsMap.put(flPaymentItem.getFlItem().getCmItem().getItemId(), flPaymentItemList);
-		}
-		
-		BigDecimal grandTotalOrderAmt = new BigDecimal(0);
-		BigDecimal grandTotalReceivedAmt = new BigDecimal(0);
-		BigDecimal grandTotalInvAmt = new BigDecimal(0);
-		for(Entry<Long, List<FlPaymentItem>> itemEntry : paymentItemsMap.entrySet()){
-			List<FlPaymentItem> paymentItems = itemEntry.getValue();
-			FlPaymentItem flPaymentItem = (FlPaymentItem) paymentItems.get(0).cloneEntity(); // parent entity, no need stored in DB.
-			flPaymentItem.setParent(true);
-			TreeNode childItemNode = new DefaultTreeNode(flPaymentItem.getFlItem().getCmItem().getItemId().toString(), flPaymentItem, chargeLineItemRoot);
-			
-			BigDecimal totalOrderAmt = new BigDecimal(0);
-			BigDecimal totalReceiveAmt = new BigDecimal(0);
-			BigDecimal totalRecallAmt = new BigDecimal(0);
-			BigDecimal totalInvAmt = new BigDecimal(0);
-			for(FlPaymentItem chargeLineItem : paymentItems) {
-				new DefaultTreeNode(chargeLineItem.getFlItem().getCmItem().getItemId().toString(),chargeLineItem,childItemNode);
-				totalOrderAmt=totalOrderAmt.add(chargeLineItem.getFlInvoiceItem().getOrderedAmt());
-				totalReceiveAmt=totalReceiveAmt.add(chargeLineItem.getFlInvoiceItem().getReceivedAmt());
-				totalRecallAmt=totalRecallAmt.add(chargeLineItem.getFlInvoiceItem().getRecalledAmt());
-				totalInvAmt=totalInvAmt.add(chargeLineItem.getFlInvoiceItem().getInvAmt());
-			}			
-
-			flPaymentItem.getFlInvoiceItem().setOrderedAmt(totalOrderAmt);
-			flPaymentItem.getFlInvoiceItem().setReceivedAmt(totalReceiveAmt);
-			flPaymentItem.getFlInvoiceItem().setRecalledAmt(totalRecallAmt);
-			flPaymentItem.getFlInvoiceItem().setInvAmt(totalInvAmt);
-			
-			grandTotalOrderAmt = grandTotalOrderAmt.add(totalOrderAmt);
-			grandTotalReceivedAmt = grandTotalReceivedAmt.add(totalReceiveAmt);
-			grandTotalInvAmt = grandTotalInvAmt.add(totalInvAmt);
-		}
-		setOrderedAmtGrandTotal(grandTotalOrderAmt);
-		setReceivedAmtGrandTotal(grandTotalReceivedAmt);
-		setInvAmtGrandTotal(grandTotalInvAmt);
-	}
 	
 	/**
 	 * @return the docType

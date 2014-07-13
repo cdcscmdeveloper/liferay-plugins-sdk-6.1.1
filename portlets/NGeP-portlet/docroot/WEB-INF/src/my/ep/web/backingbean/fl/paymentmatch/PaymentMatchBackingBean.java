@@ -7,7 +7,9 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -45,6 +47,7 @@ import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.adjust.FlAdjustment;
+import my.ep.persistence.entity.fl.adjust.FlAdjustmentItem;
 import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
 import my.ep.persistence.entity.fl.order.FlStopInstr;
 import my.ep.persistence.entity.fl.payment.FlInvoice;
@@ -76,6 +79,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
+import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
 import com.liferay.portal.util.PortalUtil;
@@ -278,6 +282,9 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		paymentAdvice.setFlPaymentDeduction(new ArrayList<FlPaymentDeduction>());
 		paymentAdvice.getFlPaymentDeduction().add(paymentDeduction);
 		
+		setAdjustmentDocNo(resDTO.getInvoice());
+		setStopInstrNo(resDTO.getInvoice().getFlFulfilmentOrder());
+		
 		FlPaymentItem flPaymentItem = null;
 		paymentAdvice.setFlPaymentItems(new ArrayList<FlPaymentItem>());
 		for(FlInvoiceItem invoiceItem : resDTO.getInvoice().getFlInvoiceItem()) {
@@ -285,10 +292,23 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			flPaymentItem.setFlPaymentAdvice(paymentAdvice);
 			flPaymentItem.setFlItem(invoiceItem.getFlFulfilmentItem());
 			flPaymentItem.setFlInvoiceItem(invoiceItem);
+			flPaymentItem.setFlAdjustmentItem(new FlAdjustmentItem());
+			if(getManagedBean().getAdjustmentDocNo()!=null) {
+				for(FlAdjustment flAdjustment : paymentAdvice.getFlInvoice().getFlAdjustments()) {
+					if(flAdjustment.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE) && 
+						flAdjustment.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE) {
+						for(FlAdjustmentItem flAdjustmentItem : flAdjustment.getFlAdjustmentItem()) {
+							if(flAdjustmentItem.getFlInvoiceItem()==invoiceItem) {
+								flPaymentItem.setFlAdjustmentItem(flAdjustmentItem);
+								break;
+							}
+						}
+					}
+				}
+			}
 			paymentAdvice.getFlPaymentItems().add(flPaymentItem);
 		}
-		setAdjustmentDocNo(resDTO.getInvoice());
-		setStopInstrNo(resDTO.getInvoice().getFlFulfilmentOrder());
+
 		return paymentAdvice;
 	}
 	
@@ -380,13 +400,66 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 	}
 	public void onTabChange(int selectedTabIndex){
 		if(selectedTabIndex==1){
-			getManagedBean().populateChargeLineData();	
+			populateChargeLineData();	
 			setClassName("@(.pmChargeLinePnlClass)");
 		}
 		if(selectedTabIndex==3){
 			calPmSummary();
 			setClassName("@(.pmSummaryPnlClass)");
 		}
+	}
+	
+	private void populateChargeLineData(){
+		getManagedBean().setChargeLineItemRoot(new DefaultTreeNode("root", null));
+		 
+		Map<Long, List<FlPaymentItem>> paymentItemsMap = new HashMap<Long, List<FlPaymentItem>>();
+		List<FlPaymentItem> flPaymentItemList = null;
+		for (FlPaymentItem flPaymentItem : getManagedBean().getPaymentAdvice().getFlPaymentItems()) {
+			if (paymentItemsMap.containsKey(flPaymentItem.getFlItem().getCmItem().getItemId())) {
+				flPaymentItemList = paymentItemsMap.get(flPaymentItem.getFlItem().getCmItem().getItemId());
+			} else {
+				flPaymentItemList = new ArrayList<FlPaymentItem>();
+			}
+			flPaymentItemList.add(flPaymentItem);
+			paymentItemsMap.put(flPaymentItem.getFlItem().getCmItem().getItemId(), flPaymentItemList);
+		}
+		
+		BigDecimal grandTotalOrderAmt = new BigDecimal(0);
+		BigDecimal grandTotalReceivedAmt = new BigDecimal(0);
+		BigDecimal grandTotalInvAmt = new BigDecimal(0);
+		for(Entry<Long, List<FlPaymentItem>> itemEntry : paymentItemsMap.entrySet()){
+			List<FlPaymentItem> paymentItems = itemEntry.getValue();
+			FlPaymentItem flPaymentItem = (FlPaymentItem) paymentItems.get(0).cloneEntity(); // parent entity, no need stored in DB.
+			flPaymentItem.setParent(true);
+			TreeNode childItemNode = new DefaultTreeNode(flPaymentItem.getFlItem().getCmItem().getItemId().toString(), flPaymentItem, getManagedBean().getChargeLineItemRoot());
+			
+			BigDecimal totalOrderAmt = new BigDecimal(0);
+			BigDecimal totalReceiveAmt = new BigDecimal(0);
+			BigDecimal totalRecallAmt = new BigDecimal(0);
+			BigDecimal totalInvAmt = new BigDecimal(0);
+			BigDecimal totalDanAmt = new BigDecimal(0);
+			for(FlPaymentItem chargeLineItem : paymentItems) {
+				new DefaultTreeNode(chargeLineItem.getFlItem().getCmItem().getItemId().toString(),chargeLineItem,childItemNode);
+				totalOrderAmt=totalOrderAmt.add(chargeLineItem.getFlInvoiceItem().getOrderedAmt());
+				totalReceiveAmt=totalReceiveAmt.add(chargeLineItem.getFlInvoiceItem().getReceivedAmt());
+				totalRecallAmt=totalRecallAmt.add(chargeLineItem.getFlInvoiceItem().getRecalledAmt());
+				totalInvAmt=totalInvAmt.add(chargeLineItem.getFlInvoiceItem().getInvAmt());
+				totalDanAmt=totalDanAmt.add(chargeLineItem.getFlAdjustmentItem().getAdjustedAmt());
+			}			
+
+			flPaymentItem.getFlInvoiceItem().setOrderedAmt(totalOrderAmt);
+			flPaymentItem.getFlInvoiceItem().setReceivedAmt(totalReceiveAmt);
+			flPaymentItem.getFlInvoiceItem().setRecalledAmt(totalRecallAmt);
+			flPaymentItem.getFlInvoiceItem().setInvAmt(totalInvAmt);
+			flPaymentItem.getFlAdjustmentItem().setAdjustedAmt(totalDanAmt);
+			
+			grandTotalOrderAmt = grandTotalOrderAmt.add(totalOrderAmt);
+			grandTotalReceivedAmt = grandTotalReceivedAmt.add(totalReceiveAmt);
+			grandTotalInvAmt = grandTotalInvAmt.add(totalInvAmt);
+		}
+		getManagedBean().setOrderedAmtGrandTotal(grandTotalOrderAmt);
+		getManagedBean().setReceivedAmtGrandTotal(grandTotalReceivedAmt);
+		getManagedBean().setInvAmtGrandTotal(grandTotalInvAmt);
 	}
 	
 	public void calPmSummary(){
