@@ -120,6 +120,10 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 					adjustedAmt = invoiceItem.getInvAmt().subtract(invoiceItem.getOrderedAmt());
 					if(adjustedAmt.doubleValue()>0) {
 						reqDTO.setDan(true);
+					} else if(adjustedAmt.doubleValue()<0) {
+						reqDTO.setCan(true);
+					}
+					if(reqDTO.isDan() && reqDTO.isCan()) {
 						break;
 					}
 				}

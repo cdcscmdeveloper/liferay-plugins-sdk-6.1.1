@@ -598,20 +598,9 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		getManagedBean().setRequestNoteWithDtlsList(noteDtlList);
 		List<FlFulfilmentItemAddr> allItemsList = new ArrayList<FlFulfilmentItemAddr>();
 		
-		//TODO remove this later. Currently item type is ScRequestItem maybe null
-		IParameterSO parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-		ParameterReqDTO paramReqDTO = new ParameterReqDTO();
-		paramReqDTO.setParameterType(ParameterTypeConst.SC_ITEM_TYPE);
-		paramReqDTO.setParameterCode(ParameterConst.ITEM_TYPE_SERVICE);
-		PmParameter productType = parameterSO.retrieveParameterByTypeAndCode(paramReqDTO).getPmParameter();
-		
 		for (ScRequestNoteDtl purchaseItem : getManagedBean().getRequestNoteWithDtlsList()) {
 			flItemAddr = new FlFulfilmentItemAddr();
 			flItemAddr.setItemType(purchaseItem.getScRequestSupplierItem().getRequestNoteItem().getItemType());
-			//TODO default to product type. Pls remove later.
-			if(flItemAddr.getItemType()==null) {
-				flItemAddr.setItemType(productType);
-			}
 			reqDTO.setRequestSupplierItemId(purchaseItem.getScRequestSupplierItem().getRequestSupplierItemId());
 			reqDTO.setPriceType(purchaseItem.getPriceType());
 			reqDTO.setOrderQuantity(new BigDecimal(1));
