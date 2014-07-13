@@ -88,6 +88,9 @@ public class PaymentMatchManagedBean extends BaseManagedBean{
 	//tab menu
 	private int selectedTabIndex;
 	
+	private String adjustmentDocNo;
+	private String stopInstrNo;
+	
 	public void populateChargeLineData(){
 		this.chargeLineItemRoot = new DefaultTreeNode("root", null);
 		 
@@ -574,5 +577,21 @@ public class PaymentMatchManagedBean extends BaseManagedBean{
 	 */
 	public void setBranchName(String branchName) {
 		this.branchName = branchName;
+	}
+
+	public String getAdjustmentDocNo() {
+		return adjustmentDocNo;
+	}
+
+	public void setAdjustmentDocNo(String adjustmentDocNo) {
+		this.adjustmentDocNo = adjustmentDocNo;
+	}
+
+	public String getStopInstrNo() {
+		return stopInstrNo;
+	}
+
+	public void setStopInstrNo(String stopInstrNo) {
+		this.stopInstrNo = stopInstrNo;
 	}
 }

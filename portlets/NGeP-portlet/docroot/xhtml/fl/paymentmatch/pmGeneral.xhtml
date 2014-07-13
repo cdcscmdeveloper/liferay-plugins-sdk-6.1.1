@@ -47,7 +47,7 @@
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flFulfilmentOrder.flFulfilmentRequest.issuedOrgProfile.orgName}"
 						disabled="true" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.pm.adj.no']}" /></td>
-				<td><p:inputText disabled="true" size="20" value=" " /></td>
+				<td><p:inputText disabled="true" size="20" value="#{paymentMatchBackingBean.managedBean.adjustmentDocNo}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.charge.ptj']}" /></td>
@@ -57,7 +57,7 @@
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flFulfilmentOrder.flFulfilmentRequest.chargeOrgProfile.orgName}"
 						disabled="true" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.pm.stop.instr.no']}" /></td>
-				<td><p:inputText disabled="true" size="20" value=" " /></td>
+				<td><p:inputText disabled="true" size="20" value="#{paymentMatchBackingBean.managedBean.stopInstrNo}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.accounting.ofc']}" /></td>

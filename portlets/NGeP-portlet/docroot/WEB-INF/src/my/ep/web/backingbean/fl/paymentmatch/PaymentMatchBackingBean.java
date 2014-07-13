@@ -7,7 +7,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
@@ -42,15 +41,19 @@ import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.votfund.VotFundReqDTO;
 import my.ep.dto.pm.common.votfund.VotFundResDTO;
 import my.ep.jaxb.fl.payment.instruction.FLPaymentInstructionDataType;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
+import my.ep.persistence.entity.fl.adjust.FlAdjustment;
+import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
+import my.ep.persistence.entity.fl.order.FlStopInstr;
+import my.ep.persistence.entity.fl.payment.FlInvoice;
 import my.ep.persistence.entity.fl.payment.FlInvoiceItem;
 import my.ep.persistence.entity.fl.payment.FlPaymentAdvice;
 import my.ep.persistence.entity.fl.payment.FlPaymentDeduction;
 import my.ep.persistence.entity.fl.payment.FlPaymentItem;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
-import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.common.PmContact;
 import my.ep.persistence.entity.pm.common.PmFinancialAcc;
@@ -125,8 +128,8 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		}
 	}
 	
-
 	public String submitAction(String action){
+		log.debug("PaymentMatchBackingBean.submitAction()");
 		IPaymentMatchSO paymentSO = null;
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		try {
@@ -161,6 +164,8 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
 				} else {
 					getManagedBean().setPaymentAdvice(resDTO.getPaymentAdvice());
+					setAdjustmentDocNo(resDTO.getPaymentAdvice().getFlInvoice());
+					setStopInstrNo(resDTO.getPaymentAdvice().getFlInvoice().getFlFulfilmentOrder());					
 					flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
 				}
 			}
@@ -211,6 +216,8 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 				flBB.initializeRemarkAndAttachement(new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 			} else {
 				paymentAdvice = resDTO.getPaymentAdvice();
+				setAdjustmentDocNo(paymentAdvice.getFlInvoice());
+				setStopInstrNo(paymentAdvice.getFlInvoice().getFlFulfilmentOrder());
 				flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
 			}
 
@@ -280,8 +287,32 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			flPaymentItem.setFlInvoiceItem(invoiceItem);
 			paymentAdvice.getFlPaymentItems().add(flPaymentItem);
 		}
-		
+		setAdjustmentDocNo(resDTO.getInvoice());
+		setStopInstrNo(resDTO.getInvoice().getFlFulfilmentOrder());
 		return paymentAdvice;
+	}
+	
+	private void setAdjustmentDocNo(FlInvoice flInvoice) {
+		String adjustmentDocNo = "";
+		for(FlAdjustment flAdjustment : flInvoice.getFlAdjustments()) {
+			if(flAdjustment.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE) {
+				if(flInvoice.getFlAdjustments().get(0)==flAdjustment) {
+					adjustmentDocNo = flAdjustment.getDocNo();
+				} else {
+					adjustmentDocNo = adjustmentDocNo + "," + flAdjustment.getDocNo();
+				}
+			}
+		}
+		getManagedBean().setAdjustmentDocNo(adjustmentDocNo);
+	}
+	
+	private void setStopInstrNo(FlFulfilmentOrder flFulfilmentOrder) {
+	 	for(FlStopInstr stopInstr : flFulfilmentOrder.getFlStopInstr()) {
+	 		if(stopInstr.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE) {
+	 			getManagedBean().setStopInstrNo(stopInstr.getStopInstrNo());
+	 			break;
+	 		}
+	 	}
 	}
 	
 	public void getFactoringBranchDtl(){
