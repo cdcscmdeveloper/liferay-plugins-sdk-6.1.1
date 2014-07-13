@@ -98,7 +98,7 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		initUserPersonnelInfo();
 		fetchUpdateSmPersonnelAddresses(getManagedBean().getUpdateSmPersonnel());
 
-		getManagedBean().setDisableRole(false);
+//		getManagedBean().setDisableRole(false);
 /*		SmPersonnel smPersonnel = new SmPersonnel();
 		smPersonnel.setPmCountry(resDTO.getPmCountry());
 
@@ -151,14 +151,14 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 	public String navigateToAddNewUserPage(){  
 		System.out.println("********************SmPersonnelBackingBean navigateToAddNewUserPage***************");
 		getManagedBean().setEditMode(false);
-//		removeEPRole();
+		removeEPRole();
 		
 		CountryReqDTO reqDTO = new CountryReqDTO();
 		reqDTO.setCountryId(getManagedBean().getDefaultCountryId());
 		ICountrySO reqSO = (ICountrySO) BusinessDelegate.getInstance().getServiceObject("pm",ICountrySO.class);
 		CountryResDTO resDTO = reqSO.retrieveCountryById(reqDTO);
 		
-		getManagedBean().setDisableRole(false);
+//		getManagedBean().setDisableRole(false);
 		SmPersonnel smPersonnel = new SmPersonnel();
 		smPersonnel.setPmCountry(resDTO.getPmCountry());
 
