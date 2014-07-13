@@ -1276,7 +1276,7 @@
 			/js/main.js
 		</footer-portlet-javascript>
 		<css-class-wrapper>
-			zonemaintenanceportlet-portlet
+			zoneMaintenance-portlet
 		</css-class-wrapper>
 	</portlet>
 	<portlet>

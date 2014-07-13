@@ -4359,8 +4359,8 @@
 		</security-role-ref>
 	</portlet>
 	<portlet>
-		<portlet-name>ZoneMaintenancePortlet</portlet-name>
-		<display-name>ZoneMaintenancePortlet</display-name>
+		<portlet-name>zoneMaintenance</portlet-name>
+		<display-name>Zone Maintenance</display-name>
 		<portlet-class>
 			org.portletfaces.bridge.GenericFacesPortlet
 		</portlet-class>
@@ -4374,7 +4374,7 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>ZoneMaintenancePortlet</title>
+			<title>Zone Maintenance</title>
 			<short-title>NewJSFPortlet</short-title>
 			<keywords></keywords>
 		</portlet-info>
