@@ -19,7 +19,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalAmount;
 import my.ep.persistence.entity.sm.SmMofAccount;
-import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
@@ -27,6 +26,7 @@ import my.ep.web.bean.sc.quatationtender.NoticeBoardSearchDataBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.primefaces.component.tabview.Tab;
+import org.primefaces.model.MenuModel;
 import org.primefaces.model.TreeNode;
 
 /**
@@ -138,6 +138,8 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	
 	private List<ScQtBsvAttendance> selectedBsvAttandance;
 	
+	private int selectedZoneTabIndex = 0;
+	private MenuModel zoneMenuModel;
 	
 	public NoticeBoardManagedBean() {
 		// scQt = new ScQt();
@@ -653,6 +655,34 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	public void setSelectedBsvAttandance(
 			List<ScQtBsvAttendance> selectedBsvAttandance) {
 		this.selectedBsvAttandance = selectedBsvAttandance;
+	}
+
+	/**
+	 * @return the selectedZoneTabIndex
+	 */
+	public int getSelectedZoneTabIndex() {
+		return selectedZoneTabIndex;
+	}
+
+	/**
+	 * @param selectedZoneTabIndex the selectedZoneTabIndex to set
+	 */
+	public void setSelectedZoneTabIndex(int selectedZoneTabIndex) {
+		this.selectedZoneTabIndex = selectedZoneTabIndex;
+	}
+
+	/**
+	 * @return the zoneMenuModel
+	 */
+	public MenuModel getZoneMenuModel() {
+		return zoneMenuModel;
+	}
+
+	/**
+	 * @param zoneMenuModel the zoneMenuModel to set
+	 */
+	public void setZoneMenuModel(MenuModel zoneMenuModel) {
+		this.zoneMenuModel = zoneMenuModel;
 	}
 
 	

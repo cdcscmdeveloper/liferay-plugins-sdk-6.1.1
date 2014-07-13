@@ -85,12 +85,15 @@ import my.ep.web.util.pm.helper.ParameterHelper;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.component.menuitem.MenuItem;
 import org.primefaces.event.NodeCollapseEvent;
 import org.primefaces.event.NodeExpandEvent;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.event.NodeUnselectEvent;
 import org.primefaces.event.TabChangeEvent;
+import org.primefaces.model.DefaultMenuModel;
 import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.MenuModel;
 import org.primefaces.model.TreeNode;
 
 /**
@@ -553,9 +556,13 @@ public class NoticeBoardBackingBean extends
 		} else if (scQt.isZonal()) {
 			List<TplSpecZoneDtl> zoneDtls = resDTO.getZones();
 			// Need to construct tab bean for zone
+			MenuModel zoneMenuModel = new DefaultMenuModel();
 			List<BriefingZoneBean> bsvZoneBeans = new ArrayList<BriefingZoneBean>();
 
 			if (null != zoneDtls) {
+				int zoneTabIndex = 0;
+				FacesContext facesContext = FacesContext.getCurrentInstance();
+				
 				for (TplSpecZoneDtl specZoneDtl : zoneDtls) {
 
 					BriefingReqDTO briefingReqDTO = new BriefingReqDTO();
@@ -573,13 +580,39 @@ public class NoticeBoardBackingBean extends
 							briefingResDTO.getSiteVisitList(),
 							briefingResDTO.getScQtBsv());
 					bsvZoneBeans.add(briefingZoneBean);
+					
+					MenuItem zoneItem = new MenuItem();
+					zoneItem.setValue(specZoneDtl.getZoneName());
+					zoneItem.setUpdate("@form");
+					zoneItem.setActionExpression(FacesScopes.createMethodExpression(
+							facesContext, "#{noticeBoardBackingBean.bsvZoneTabChangeAction(" + zoneTabIndex + ")}", 
+							null, new Class[] { Integer.class }));
+					zoneMenuModel.addMenuItem(zoneItem);
+					
+					zoneTabIndex++;
 				}
 			}
 
+			getManagedBean().setZoneMenuModel(zoneMenuModel);
+			if (bsvZoneBeans.size() > 0) {
+				getManagedBean().setNormalBsvBean(bsvZoneBeans.get(0));	
+			}
 			this.getManagedBean().setZoneBean(bsvZoneBeans);
 		}
 
 		return "/xhtml/sc/noticeboard/nbsupplierreg.xhtml?faces-redirect=true";
+	}
+	
+	public void bsvZoneTabChangeAction(Integer selectedZoneTabIndex) {
+		if (log.isDebugEnabled()) {
+			log.debug("bsvZoneTabChangeAction");	
+		}
+		
+		BriefingZoneBean selectedBsvBean = getManagedBean()
+        		.getZoneBean().get(selectedZoneTabIndex);
+        
+        getManagedBean().setNormalBsvBean(selectedBsvBean);
+		getManagedBean().setSelectedZoneTabIndex(selectedZoneTabIndex);
 	}
 
 	public void hideAndShowDates(String dateType) {
@@ -1226,8 +1259,8 @@ public class NoticeBoardBackingBean extends
 
 		this.getManagedBean().getZoneBean();
 
-		List<ScQtBsvDtl> bsvDetails = this.getManagedBean()
-				.getSelectedBriefingDtls();
+		BriefingZoneBean briefingZoneBean = getManagedBean().getNormalBsvBean(); 
+		List<ScQtBsvDtl> bsvDetails = briefingZoneBean.getSelectedBriefingDtls();
 		if (null == bsvDetails) {
 			bsvDetails = new ArrayList<ScQtBsvDtl>();
 		}
@@ -1235,8 +1268,7 @@ public class NoticeBoardBackingBean extends
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 						IQTBriefingSO.class);
 		BriefingReqDTO reqDTO = new BriefingReqDTO();
-		List<ScQtBsvDtl> siteVisitDetails = this.getManagedBean()
-				.getSelectedsiteVisitDtls();
+		List<ScQtBsvDtl> siteVisitDetails = briefingZoneBean.getSelectedSiteVisitDtls();
 		if (null != siteVisitDetails)
 			bsvDetails.addAll(siteVisitDetails);
 

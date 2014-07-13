@@ -30,35 +30,33 @@
 
 		</p:panelGrid>
 
-		<ui:fragment rendered="#{!noticeBoardBackingBean.managedBean.scQt.zonal}">
+		<c:if test="#{!noticeBoardBackingBean.managedBean.scQt.zonal}">
 			<ui:param name="bsvDetails"
 				value="#{noticeBoardBackingBean.managedBean.normalBsvBean}"></ui:param>
 			<ui:include src="/xhtml/sc/noticeboard/supplierregdtls.xhtml"></ui:include>
 			<ui:include
 				src="/xhtml/sc/noticeboard/noticeboardLocationPopUp.xhtml"></ui:include>
-		</ui:fragment>
+		</c:if>
 
-		<ui:fragment rendered="#{noticeBoardBackingBean.managedBean.scQt.zonal}">
+		<c:if test="#{noticeBoardBackingBean.managedBean.scQt.zonal}">
+			<table border="0" cellspacing="0" cellpadding="0" width="100%">
+			<tr>
+				<td width="20%" valign="top">
+					<p:tabMenu styleClass="sidemenu"
+						activeIndex="#{noticeBoardBackingBean.managedBean.selectedZoneTabIndex}"
+						style="display : table-caption;"
+						model="#{noticeBoardBackingBean.managedBean.zoneMenuModel}" />
+				</td>
+				<td width="80%">
+					<ui:param name="bsvDetails" value="#{noticeBoardBackingBean.managedBean.normalBsvBean}" />
+					<ui:include src="/xhtml/sc/noticeboard/supplierregdtls.xhtml"/>
+				</td>
+			</tr>
+			</table>
 
-			<p:tabView var="zones" orientation="left"
-				value="#{noticeBoardBackingBean.managedBean.zoneBean}">
-				
-					<p:tab title="#{zones.tplSpecZoneDtl.zoneName}">
-						<ui:param name="bsvDetails" value="#{zones}"></ui:param>
-						<!-- <ui:param name="bsvSelectedDtls"
-							value="#{zones.selectedBriefingDtls}"></ui:param>
-						<ui:param name="siteVisitSelectedDtls"
-							value="#{zones.selectedSiteVisitDtls}"></ui:param> -->
-
-
-						<ui:include src="/xhtml/sc/noticeboard/supplierregdtls.xhtml"></ui:include>
-					</p:tab>
-				
-
-			</p:tabView>
-			</ui:fragment>
-			<ui:include
-				src="/xhtml/sc/noticeboard/noticeboardLocationPopUp.xhtml"></ui:include>
+		</c:if>
+		
+		<ui:include src="/xhtml/sc/noticeboard/noticeboardLocationPopUp.xhtml"/>
 		
 	</ui:define>
 </ui:composition>
