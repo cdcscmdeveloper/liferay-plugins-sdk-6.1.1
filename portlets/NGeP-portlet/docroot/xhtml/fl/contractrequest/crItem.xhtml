@@ -218,7 +218,7 @@
 	<p:dialog id="addManualDelAddrDialog" header="Delivery Address"
 		widgetVar="addManualDeliveryAddr" showEffect="fade" hideEffect="fade"
 		visible="#{facesContext.validationFailed}" modal="true" width="900px"
-		height="350px" resizable="false">
+		resizable="false">
 		<p:ajax event="close"
 			listener="#{contractRequestBackingBean.closeListener}"
 			update="addManualDelAddrDialog" />
@@ -418,7 +418,7 @@
 	</p:dialog>
 	<p:dialog id="addReceivingOfficerDialog" header="RECEIVING OFFICER"
 		widgetVar="addOfficer" showEffect="fade" hideEffect="fade"
-		modal="true" height="250" width="600" resizable="false">
+		modal="true" width="600" resizable="false">
 		<p:dataTable id="receivingOfficerDt" var="receivingOfficer"
 			value="#{contractRequestBackingBean.managedBean.receivingOffList}"
 			rowKey="#{purchasedItem}">
