@@ -154,7 +154,7 @@
 	</h:panelGroup>
 	<p:dialog id="addDelAddrDialog" header="Add Delivery Address"
 		widgetVar="addDeliveryAddr" showEffect="fade" hideEffect="fade"
-		modal="true" height="250" width="600" resizable="false">
+		modal="true"  width="600" resizable="false">
 		<p:dataTable id="delAddr" var="delAddr"
 			value="#{purchaseRequestBackingBean.managedBean.addressTypesList}"
 			rowKey="#{delAddr.addressTypeId}"
@@ -181,7 +181,7 @@
 	<p:dialog id="addManualDelAddrDialog" header="Delivery Address"
 		widgetVar="addManualDeliveryAddr" showEffect="fade" hideEffect="fade"
 		visible="#{facesContext.validationFailed}" modal="true" width="900px"
-		height="350px" resizable="false">
+		 resizable="false">
 		<p:ajax event="close"
 			listener="#{purchaseRequestBackingBean.closeListener}"
 			update="addManualDelAddrDialog" />
