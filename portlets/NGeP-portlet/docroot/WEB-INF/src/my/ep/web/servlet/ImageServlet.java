@@ -36,7 +36,8 @@ public class ImageServlet extends HttpServlet {
 //		String tempDir = System.getProperty("java.io.tmpdir");
 		
 		StringBuilder uploadDir = new StringBuilder();
-		uploadDir.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.UPLOAD_URL)).append("ngep/cm");
+//		uploadDir.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.UPLOAD_URL)).append("ngep/cm");
+		uploadDir.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)).append("/cm");
 
 		String imageUrl = uploadDir + "/" + filename;
 		System.out.println("imageUrl: " + imageUrl);
