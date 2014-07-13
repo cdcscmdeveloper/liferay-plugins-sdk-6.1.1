@@ -292,7 +292,6 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			flPaymentItem.setFlPaymentAdvice(paymentAdvice);
 			flPaymentItem.setFlItem(invoiceItem.getFlFulfilmentItem());
 			flPaymentItem.setFlInvoiceItem(invoiceItem);
-			flPaymentItem.setFlAdjustmentItem(new FlAdjustmentItem());
 			if(getManagedBean().getAdjustmentDocNo()!=null) {
 				for(FlAdjustment flAdjustment : paymentAdvice.getFlInvoice().getFlAdjustments()) {
 					if(flAdjustment.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE) && 
@@ -305,6 +304,10 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 						}
 					}
 				}
+			}
+			if(flPaymentItem.getFlAdjustmentItem()==null) {
+				flPaymentItem.setFlAdjustmentItem(new FlAdjustmentItem());
+				flPaymentItem.getFlAdjustmentItem().setAdjustedAmt(new BigDecimal(0));
 			}
 			paymentAdvice.getFlPaymentItems().add(flPaymentItem);
 		}
