@@ -163,7 +163,7 @@
 								value="#{lbl['lbl.sm.userprofile.dob']}" /></td>
 						<td><p:calendar
 								value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.birthDate}"
-								showOn="button" id="dobDate" pattern="MM/dd/yyyy" /></td>
+								showOn="button" id="dobDate" pattern="MM/dd/yyyy" disabled="#{smPersonnelBackingBean.managedBean.editMode}"/></td>
 						<td></td>
 
 						<td><p:outputLabel
@@ -183,7 +183,7 @@
 						<td><p:inputText id="basicBUEmail"
 								label="#{lbl['lbl.sm.userprofile.email']}"
 								value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.email}"
-								size="40" required="true" /></td>
+								size="40" required="true" disabled="#{smPersonnelBackingBean.managedBean.editMode}"/></td>
 						<td><p:message id="basicBUEmailMsg" for="basicBUEmail"
 								showSummary="true" showDetail="false" display="icon" /></td>
 					</tr>
