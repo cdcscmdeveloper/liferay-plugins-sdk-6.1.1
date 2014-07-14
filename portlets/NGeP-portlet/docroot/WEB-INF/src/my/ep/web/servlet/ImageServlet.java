@@ -22,6 +22,7 @@ import org.apache.commons.lang.StringUtils;
 //@WebServlet("/imageServlet")
 public class ImageServlet extends HttpServlet {
 
+//	private static Logger log = Logger.getLogger(ImageServlet.class);
 	/**
 	 * 
 	 */
@@ -37,7 +38,7 @@ public class ImageServlet extends HttpServlet {
 		
 		StringBuilder uploadDir = new StringBuilder();
 //		uploadDir.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.UPLOAD_URL)).append("ngep/cm");
-		uploadDir.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)).append("/cm");
+		uploadDir.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)).append("/CM");
 
 		String imageUrl = uploadDir + "/" + filename;
 		System.out.println("imageUrl: " + imageUrl);
