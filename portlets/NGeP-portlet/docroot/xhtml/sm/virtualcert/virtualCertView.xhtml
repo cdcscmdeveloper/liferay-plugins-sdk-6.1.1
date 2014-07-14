@@ -9,22 +9,5 @@
 	
 	<ui:define name="contentSection">
 	<f:event listener="#{virtualCertBackingBean.viewVirtualCert}" type="preRenderView"></f:event>
-		<p:panel header="Virtual Certificate">
-			<p:dataTable value="#{virtualCertBackingBean.managedBean.mofAccountLs}"
-				var="mofAcc">
-				<p:column headerText="Cert Type">
-					#{mofAcc.mofNo}
-				</p:column>
-
-				<p:column headerText="Serial No">
-					#{mofAcc.mofNo}
-				</p:column>
-				
-				<p:column headerText="Download">
-					<p:commandButton value="Download"
-						action="#{virtualCertBackingBean.testHttp}" ajax="false"></p:commandButton>
-				</p:column>
-			</p:dataTable>
-		</p:panel>
 	</ui:define>
 </ui:composition>

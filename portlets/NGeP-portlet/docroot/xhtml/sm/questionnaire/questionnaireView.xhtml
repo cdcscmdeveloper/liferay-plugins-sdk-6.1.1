@@ -57,13 +57,7 @@
 <!-- 					<td><p:inputText disabled="true" /></td> -->
 <!-- 				</tr> -->
 
-				<tr>
-					<td><p:outputLabel value="Name" /></td>
-					<td><p:inputText disabled="true" value="#{questionnaireBackingBean.managedBean.pmUser.userName}"/></td>
 
-					<td><p:outputLabel value="Contact No." /></td>
-					<td><p:inputText  disabled="true" value="#{questionnaireBackingBean.managedBean.pmUser.mobileNo}"/></td>
-				</tr>
 			</table>
 		</p:panel>
 
@@ -80,7 +74,7 @@
 						</tr>
 						<tr>
 							<td></td>
-							<td><p:selectOneRadio value="#{ques.smAnswer.answerId}">
+							<td><p:selectOneRadio id="answerId" value="#{ques.smAnswer.answerId}">
 									<f:selectItems
 										value="#{ques.smQuestion.smAnswerCategory.smAnswers}"
 										var="ans" itemLabel="#{ans.answerValue}"
