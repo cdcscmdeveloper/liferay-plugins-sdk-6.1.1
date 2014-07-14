@@ -20,7 +20,7 @@
 				<p:dataTable id="softCertPageDataModelId" rowKey="#{personnel}"
 					rowIndexVar="index" lazy="true"
 					value="#{softCertBackingBean.managedBean.softCertPagingDataModel}"
-					var="personnel" selectionMode="multiple"
+					var="personnel"
 					selection="#{softCertBackingBean.managedBean.softCertSelectList}">
 					<ac:paginator for="softCertPageDataModelId" />
 					<p:column selectionMode="multiple" style="width:2%" />
