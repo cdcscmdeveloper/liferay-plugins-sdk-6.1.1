@@ -20,10 +20,9 @@
 				<p:dataTable id="softCertPageDataModelId" rowKey="#{personnel}"
 					rowIndexVar="index" lazy="true"
 					value="#{softCertBackingBean.managedBean.softCertPagingDataModel}"
-					var="personnel" editable="true"
-					style="word-wrap: break-word;table-layout: fixed;"
+					var="personnel" selectionMode="multiple"
 					selection="#{softCertBackingBean.managedBean.softCertSelectList}">
-					<ac:paginator for="smPersonnelDataModelId" />
+					<ac:paginator for="softCertPageDataModelId" />
 					<p:column selectionMode="multiple" style="width:2%" />
 
 					<p:column headerText="#{lbl['lbl.sm.userprofile.name']}">
