@@ -22,7 +22,7 @@
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="* #{lbl['lbl.cm.type']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.cm.type']}" /><p:outputLabel value="*" styleClass="mandatory"/></td>
 				<td><p:autoComplete
 						value="#{unspscCodeBackingBean.managedBean.selectedType}"
 						id="typePojo"
@@ -34,13 +34,13 @@
 						<p:ajax listener="#{unspscCodeBackingBean.requestNewType}"
 							update="requestTypeId"></p:ajax>
 					</p:selectBooleanCheckbox></td>
-				<td><p:outputLabel value="Request New"></p:outputLabel></td>
+				<td><p:outputLabel value="#{lbl['lbl.cm.request.new']}"></p:outputLabel></td>
 				<td><p:inputText id="requestTypeId"
 						value="#{unspscCodeBackingBean.managedBean.requestExtCode.typeName}"
 						disabled="#{unspscCodeBackingBean.managedBean.typeDisable}"></p:inputText></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="* #{lbl['lbl.cm.brand']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.cm.brand']}" /><p:outputLabel value="*" styleClass="mandatory"/></td>
 				<td><p:autoComplete
 						value="#{unspscCodeBackingBean.managedBean.selectedBrand}"
 						id="brandPojo"
@@ -52,13 +52,13 @@
 						<p:ajax listener="#{unspscCodeBackingBean.requestNewBrand}"
 							update="requestBrandId"></p:ajax>
 					</p:selectBooleanCheckbox></td>
-				<td><p:outputLabel value="Request New"></p:outputLabel></td>
+				<td><p:outputLabel value="#{lbl['lbl.cm.request.new']}"></p:outputLabel></td>
 				<td><p:inputText id="requestBrandId"
 						value="#{unspscCodeBackingBean.managedBean.requestExtCode.brandName}"
 						disabled="#{unspscCodeBackingBean.managedBean.brandDisable}"></p:inputText></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="* #{lbl['lbl.cm.measurement']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.cm.measurement']}" /><p:outputLabel value="*" styleClass="mandatory"/></td>
 				<td><p:autoComplete
 						value="#{unspscCodeBackingBean.managedBean.selectedMeasurement}"
 						id="measurementPojo"
@@ -71,13 +71,13 @@
 						<p:ajax listener="#{unspscCodeBackingBean.requestNewMeasurement}"
 							update="requestMeasurementId"></p:ajax>
 					</p:selectBooleanCheckbox></td>
-				<td><p:outputLabel value="Request New"></p:outputLabel></td>
+				<td><p:outputLabel value="#{lbl['lbl.cm.request.new']}"></p:outputLabel></td>
 				<td><p:inputText id="requestMeasurementId"
 						value="#{unspscCodeBackingBean.managedBean.requestExtCode.measurementName}"
 						disabled="#{unspscCodeBackingBean.managedBean.measurementDisable}"></p:inputText></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="* #{lbl['lbl.cm.color']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.cm.color']}" /><p:outputLabel value="*" styleClass="mandatory"/></td>
 				<td><p:autoComplete
 						value="#{unspscCodeBackingBean.managedBean.selectedColor}"
 						id="colorPojo"
@@ -89,7 +89,7 @@
 						<p:ajax listener="#{unspscCodeBackingBean.requestNewColor}"
 							update="requestColorId"></p:ajax>
 					</p:selectBooleanCheckbox></td>
-				<td><p:outputLabel value="Request New"></p:outputLabel></td>
+				<td><p:outputLabel value="#{lbl['lbl.cm.request.new']}"></p:outputLabel></td>
 				<td><p:inputText id="requestColorId"
 						value="#{unspscCodeBackingBean.managedBean.requestExtCode.colorName}"
 						disabled="#{unspscCodeBackingBean.managedBean.colorDisable}"></p:inputText></td>
@@ -112,7 +112,7 @@
 
 		<div class="clear"></div>
 
-		<h:outputText value="Tick the check box to request new."></h:outputText>
+		<h:outputText value="#{lbl['lbl.cm.request.extension.help.msg']}"></h:outputText>
 
 	</h:panelGroup>
 

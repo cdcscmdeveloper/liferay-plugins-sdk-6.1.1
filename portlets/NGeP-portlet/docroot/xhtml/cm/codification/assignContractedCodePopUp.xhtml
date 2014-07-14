@@ -19,7 +19,7 @@
 							headerText="Segment" update=":form:contractedItemPopUpId"
 							saveObject="codificationBackingBean.managedBean.selectedLovUnspscSegment"
 							value="#{codificationBackingBean.managedBean.selectedLovUnspscSegment.unspscTitle}"
-							conditionField="recordStatus^1|unspscLevel^0">
+							conditionField="recordStatus^1|unspscLevel^0|unspscCode^76000000^#{codificationBackingBean.productOrServiceOperator()}">
 
 						</ac:lov></td>
 
@@ -53,153 +53,156 @@
 							postUpdateListener="#{codificationBackingBean.fillExtensionLists()}">
 						</ac:lov></td>
 				</tr>
+				<h:panelGroup
+					rendered="#{codificationBackingBean.isSelectedRequestItemProduct()}">
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.cm.type']}"></p:outputLabel></td>
+						<td><p:selectOneMenu id="typeDD"
+								value="#{codificationBackingBean.typeFilterBean.searchValue}"
+								style="width:178px;">
+								<f:selectItem itemLabel="Select One" itemValue="" />
+								<f:selectItems
+									value="#{codificationBackingBean.managedBean.typeCriteria}" />
+							</p:selectOneMenu></td>
+						<td><p:selectBooleanCheckbox
+								disabled="#{empty codificationBackingBean.managedBean.selectedUNSPSCObj.unspscTitle}"
+								value="#{codificationBackingBean.managedBean.requestExtCode.requestType}">
+								<p:ajax listener="#{codificationBackingBean.requestNewType}"
+									update="requestTypeId"></p:ajax>
+							</p:selectBooleanCheckbox></td>
+						<td><p:outputLabel value="Request New"></p:outputLabel></td>
+						<td><p:inputText id="requestTypeId"
+								value="#{codificationBackingBean.managedBean.requestExtCode.typeName}"
+								disabled="#{codificationBackingBean.managedBean.typeDisable}"></p:inputText></td>
+					</tr>
 
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.cm.type']}"></p:outputLabel></td>
-					<td><p:selectOneMenu id="typeDD"
-							value="#{codificationBackingBean.typeFilterBean.searchValue}"
-							style="width:178px;">
-							<f:selectItem itemLabel="Select One" itemValue="" />
-							<f:selectItems
-								value="#{codificationBackingBean.managedBean.typeCriteria}" />
-						</p:selectOneMenu></td>
-					<td><p:selectBooleanCheckbox
-							disabled="#{empty codificationBackingBean.managedBean.selectedUNSPSCObj.unspscTitle}"
-							value="#{codificationBackingBean.managedBean.requestExtCode.requestType}">
-							<p:ajax listener="#{codificationBackingBean.requestNewType}"
-								update="requestTypeId"></p:ajax>
-						</p:selectBooleanCheckbox></td>
-					<td><p:outputLabel value="Request New"></p:outputLabel></td>
-					<td><p:inputText id="requestTypeId"
-							value="#{codificationBackingBean.managedBean.requestExtCode.typeName}"
-							disabled="#{codificationBackingBean.managedBean.typeDisable}"></p:inputText></td>
-				</tr>
-
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.cm.brand']}"></p:outputLabel></td>
-					<td><p:selectOneMenu id="brandDD"
-							value="#{codificationBackingBean.brandFilterBean.searchValue}"
-							style="width:178px;">
-							<f:selectItem itemLabel="Select One" itemValue="" />
-							<f:selectItems
-								value="#{codificationBackingBean.managedBean.brandCriteria}" />
-						</p:selectOneMenu></td>
-					<td><p:selectBooleanCheckbox
-							disabled="#{empty codificationBackingBean.managedBean.selectedUNSPSCObj.unspscTitle}"
-							value="#{codificationBackingBean.managedBean.requestExtCode.requestBrand}">
-							<p:ajax listener="#{codificationBackingBean.requestNewBrand}"
-								update="requestBrandId"></p:ajax>
-						</p:selectBooleanCheckbox></td>
-					<td><p:outputLabel value="Request New"></p:outputLabel></td>
-					<td><p:inputText id="requestBrandId"
-							value="#{codificationBackingBean.managedBean.requestExtCode.brandName}"
-							disabled="#{codificationBackingBean.managedBean.brandDisable}"></p:inputText></td>
-				</tr>
-				<tr style="margin-bottom: 10px" />
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.cm.measurement']}"></p:outputLabel></td>
-					<td><p:selectOneMenu id="measurementDD"
-							value="#{codificationBackingBean.measurementFilterBean.searchValue}"
-							style="width:178px;">
-							<f:selectItem itemLabel="Select One" itemValue="" />
-							<f:selectItems
-								value="#{codificationBackingBean.managedBean.measurementCriteria}" />
-						</p:selectOneMenu></td>
-					<td><p:selectBooleanCheckbox
-							disabled="#{empty codificationBackingBean.managedBean.selectedUNSPSCObj.unspscTitle}"
-							value="#{codificationBackingBean.managedBean.requestExtCode.requestMeasurement}">
-							<p:ajax
-								listener="#{codificationBackingBean.requestNewMeasurement}"
-								update="requestMeasurementId"></p:ajax>
-						</p:selectBooleanCheckbox></td>
-					<td><p:outputLabel value="Request New"></p:outputLabel></td>
-					<td><p:inputText id="requestMeasurementId"
-							value="#{codificationBackingBean.managedBean.requestExtCode.measurementName}"
-							disabled="#{codificationBackingBean.managedBean.measurementDisable}"></p:inputText></td>
-				</tr>
-				<tr style="margin-bottom: 10px" />
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.cm.color']}"></p:outputLabel></td>
-					<td><p:selectOneMenu id="colorDD"
-							value="#{codificationBackingBean.colorFilterBean.searchValue}"
-							style="width:178px;">
-							<f:selectItem itemLabel="Select One" itemValue="" />
-							<f:selectItems
-								value="#{codificationBackingBean.managedBean.colorCriteria}" />
-						</p:selectOneMenu></td>
-					<td><p:selectBooleanCheckbox
-							disabled="#{empty codificationBackingBean.managedBean.selectedUNSPSCObj.unspscTitle}"
-							value="#{codificationBackingBean.managedBean.requestExtCode.requestColor}">
-							<p:ajax listener="#{codificationBackingBean.requestNewColor}"
-								update="requestColorId"></p:ajax>
-						</p:selectBooleanCheckbox></td>
-					<td><p:outputLabel value="Request New"></p:outputLabel></td>
-					<td><p:inputText id="requestColorId"
-							value="#{codificationBackingBean.managedBean.requestExtCode.colorName}"
-							disabled="#{codificationBackingBean.managedBean.colorDisable}"></p:inputText></td>
-				</tr>
-
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.cm.brand']}"></p:outputLabel></td>
+						<td><p:selectOneMenu id="brandDD"
+								value="#{codificationBackingBean.brandFilterBean.searchValue}"
+								style="width:178px;">
+								<f:selectItem itemLabel="Select One" itemValue="" />
+								<f:selectItems
+									value="#{codificationBackingBean.managedBean.brandCriteria}" />
+							</p:selectOneMenu></td>
+						<td><p:selectBooleanCheckbox
+								disabled="#{empty codificationBackingBean.managedBean.selectedUNSPSCObj.unspscTitle}"
+								value="#{codificationBackingBean.managedBean.requestExtCode.requestBrand}">
+								<p:ajax listener="#{codificationBackingBean.requestNewBrand}"
+									update="requestBrandId"></p:ajax>
+							</p:selectBooleanCheckbox></td>
+						<td><p:outputLabel value="Request New"></p:outputLabel></td>
+						<td><p:inputText id="requestBrandId"
+								value="#{codificationBackingBean.managedBean.requestExtCode.brandName}"
+								disabled="#{codificationBackingBean.managedBean.brandDisable}"></p:inputText></td>
+					</tr>
+					<tr style="margin-bottom: 10px" />
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.cm.measurement']}"></p:outputLabel></td>
+						<td><p:selectOneMenu id="measurementDD"
+								value="#{codificationBackingBean.measurementFilterBean.searchValue}"
+								style="width:178px;">
+								<f:selectItem itemLabel="Select One" itemValue="" />
+								<f:selectItems
+									value="#{codificationBackingBean.managedBean.measurementCriteria}" />
+							</p:selectOneMenu></td>
+						<td><p:selectBooleanCheckbox
+								disabled="#{empty codificationBackingBean.managedBean.selectedUNSPSCObj.unspscTitle}"
+								value="#{codificationBackingBean.managedBean.requestExtCode.requestMeasurement}">
+								<p:ajax
+									listener="#{codificationBackingBean.requestNewMeasurement}"
+									update="requestMeasurementId"></p:ajax>
+							</p:selectBooleanCheckbox></td>
+						<td><p:outputLabel value="Request New"></p:outputLabel></td>
+						<td><p:inputText id="requestMeasurementId"
+								value="#{codificationBackingBean.managedBean.requestExtCode.measurementName}"
+								disabled="#{codificationBackingBean.managedBean.measurementDisable}"></p:inputText></td>
+					</tr>
+					<tr style="margin-bottom: 10px" />
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.cm.color']}"></p:outputLabel></td>
+						<td><p:selectOneMenu id="colorDD"
+								value="#{codificationBackingBean.colorFilterBean.searchValue}"
+								style="width:178px;">
+								<f:selectItem itemLabel="Select One" itemValue="" />
+								<f:selectItems
+									value="#{codificationBackingBean.managedBean.colorCriteria}" />
+							</p:selectOneMenu></td>
+						<td><p:selectBooleanCheckbox
+								disabled="#{empty codificationBackingBean.managedBean.selectedUNSPSCObj.unspscTitle}"
+								value="#{codificationBackingBean.managedBean.requestExtCode.requestColor}">
+								<p:ajax listener="#{codificationBackingBean.requestNewColor}"
+									update="requestColorId"></p:ajax>
+							</p:selectBooleanCheckbox></td>
+						<td><p:outputLabel value="Request New"></p:outputLabel></td>
+						<td><p:inputText id="requestColorId"
+								value="#{codificationBackingBean.managedBean.requestExtCode.colorName}"
+								disabled="#{codificationBackingBean.managedBean.colorDisable}"></p:inputText></td>
+					</tr>
+				</h:panelGroup>
 			</table>
 		</p:panel>
+		<h:panelGroup
+			rendered="#{codificationBackingBean.isSelectedRequestItemProduct()}">
 
-		<div style="float: right;">
-			<div style="text-align: right; float: right;">
-				<p:commandButton value="Search" icon="ui-icon-search"
-					action="#{codificationBackingBean.extensionCodeSearch}"
-					update="itemTableID" />
+			<div style="float: right;">
+				<div style="text-align: right; float: right;">
+					<p:commandButton value="Search" icon="ui-icon-search"
+						action="#{codificationBackingBean.extensionCodeSearch}"
+						update="itemTableID" />
+				</div>
+				<div style="text-align: right; float: right;">
+					<p:commandButton value="#{lbl['lbl.cm.r.e.c']}"
+						action="#{codificationBackingBean.requestNewExtensionCode}" />
+				</div>
+				<div style="text-align: right; float: right;">
+					<p:commandButton value="#{lbl['lbl.cm.r.u.c']}"
+						action="#{codificationBackingBean.goToRequestUnspsc}" />
+				</div>
 			</div>
-			<div style="text-align: right; float: right;">
-				<p:commandButton value="REC"
-					action="#{codificationBackingBean.requestNewExtensionCode}" />
+			<br />
+			<p:spacer height="30px;" />
+			<div style="float: left;">
+				<h:outputText
+					value="Tick the check box to request new or select from the list."></h:outputText>
 			</div>
-			<div style="text-align: right; float: right;">
-				<p:commandButton value="RUC"
-					action="#{codificationBackingBean.goToRequestUnspsc}" />
-			</div>
-		</div>
-		<br/>
-		<p:spacer height="30px;" />
-		<div style="float: left;">
-			<h:outputText
-				value="Tick the check box to request new or select from the list."></h:outputText>
-		</div>
 
-		<p:spacer height="40px;" />
-		<p:panel header="SEARCH RESULTS">
+			<p:spacer height="40px;" />
+			<p:panel header="SEARCH RESULTS">
 
-			<p:dataTable id="itemTableID"
-				value="#{codificationBackingBean.extensionSearchItemDataModel}"
-				rowKey="#{obj}" var="obj" rowIndexVar="rowIndex"
-				selection="#{codificationBackingBean.managedBean.selectedExtenstionForItem}"
-				lazy="true">
+				<p:dataTable id="itemTableID"
+					value="#{codificationBackingBean.extensionSearchItemDataModel}"
+					rowKey="#{obj}" var="obj" rowIndexVar="rowIndex"
+					selection="#{codificationBackingBean.managedBean.selectedExtenstionForItem}"
+					lazy="true">
 
-				<p:column selectionMode="single" style="width:2%" />
+					<p:column selectionMode="single" style="width:2%" />
 
-				<ac:paginator for="itemTableID"></ac:paginator>
+					<ac:paginator for="itemTableID"></ac:paginator>
 
-				<p:column>
-					<f:facet name="header">
+					<p:column>
+						<f:facet name="header">
 							#{lbl['lbl.cm.type']}
 						</f:facet>
 						#{obj[4]}
 
 					</p:column>
-				<p:column>
-					<f:facet name="header">
+					<p:column>
+						<f:facet name="header">
 							#{lbl['lbl.cm.brand']}
 						</f:facet>
 						#{obj[5]}
 					</p:column>
-				<p:column>
-					<f:facet name="header">
+					<p:column>
+						<f:facet name="header">
 							#{lbl['lbl.cm.measurement']}
 						</f:facet>
 						
 						#{obj[6]}
 
 					</p:column>
-				<p:column>
-					<f:facet name="header">
+					<p:column>
+						<f:facet name="header">
 							#{lbl['lbl.cm.color']}
 						</f:facet>
 						#{obj[7]}
@@ -208,13 +211,18 @@
 
 
 
-			</p:dataTable>
+				</p:dataTable>
 
-			<div class="clear"></div>
-			<div style="text-align: right;"></div>
+				<div class="clear"></div>
+				<div style="text-align: right;"></div>
 
-		</p:panel>
+			</p:panel>
+		</h:panelGroup>
 		<div style="text-align: right;">
+		<h:panelGroup rendered="#{!(codificationBackingBean.isSelectedRequestItemProduct())}">
+		<p:commandButton value="#{lbl['lbl.cm.r.u.c']}"
+						action="#{codificationBackingBean.goToRequestUnspsc}" />
+		</h:panelGroup>		
 			<p:commandButton value="#{lbl['lbl.cm.assign']}"
 				action="#{codificationBackingBean.insertContractedItemCode}"
 				update=":form:contractedTableId,:form:contractedItemID"
@@ -227,10 +235,10 @@
 		</div>
 		<div class="clear"></div>
 
-
+<h:panelGroup rendered="#{codificationBackingBean.isSelectedRequestItemProduct()}">
 		<h:outputText
 			value="Select a record from the result list to assign its code to the Item."></h:outputText>
-
+</h:panelGroup>
 	</h:panelGroup>
 
 

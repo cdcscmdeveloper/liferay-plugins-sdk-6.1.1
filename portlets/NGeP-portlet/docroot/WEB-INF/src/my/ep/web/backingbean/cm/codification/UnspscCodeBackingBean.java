@@ -84,7 +84,8 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		if(MDC.get(LogKey.USER_ID)==null) {
 			MDC.put(LogKey.USER_ID, 1L);
 		}
-
+		//clear requestCode object
+    this.getManagedBean().setRequestCode(null);
 	}
 
 	public boolean isCatalogueAdmin() {
@@ -158,7 +159,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 //   			  facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "user's profile not found!"," "));
 //   			 return "unspscRequestForm";
 //            }
-			System.out.println("getSmSupplier"+smResDTO.getResultBean().getResultList().get(0));
+			System.out.println("getSmSupplier="+smResDTO.getResultBean().getResultList().get(0));
 
 			this.getManagedBean().getRequestCode().setSmSupplier(smResDTO.getResultBean().getResultList().get(0));
 
