@@ -382,7 +382,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		
 		BigDecimal serviceFee = null;
 		if(getManagedBean().getInvoice().getFlFulfilmentOrder().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)) {
-			serviceFee = new BigDecimal(FulfilmentConst.SERVICE_FEE_ZERO_POINT_FOUR);
+			serviceFee = new BigDecimal(FulfilmentConst.SERVICE_FEE_ZERO_POINT_EIGHT);
 		} else {
 			serviceFee = new BigDecimal(getManagedBean().getInvoice().getFlRequest().getCtContract().getServiceFee());
 		}
