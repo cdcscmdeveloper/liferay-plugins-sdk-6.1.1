@@ -435,11 +435,11 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			
 			if (requestNoteResDTO.isSuccessful()) {
 				if(BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)){
-					IPurchaseRequestOsbSO purchaseReqSO = (IPurchaseRequestOsbSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseRequestOsbSO.class);
-					PurchaseRequestOSBReqDTO reqDTO = new PurchaseRequestOSBReqDTO();
-					reqDTO.setRequestNoteId(getManagedBean().getRequestNote().getRequestNoteId());
-					reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
-					purchaseReqSO.splitPurchaseRequest(reqDTO);
+//					IPurchaseRequestOsbSO purchaseReqSO = (IPurchaseRequestOsbSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseRequestOsbSO.class);
+//					PurchaseRequestOSBReqDTO reqDTO = new PurchaseRequestOSBReqDTO();
+//					reqDTO.setRequestNoteId(getManagedBean().getRequestNote().getRequestNoteId());
+//					reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
+//					purchaseReqSO.splitPurchaseRequest(reqDTO);
 					successMessage(MessageConst.INFO_700007, ParameterTypeConst.DOCUMENT_TYPES,
 							ParameterConst.DOCTYPE_REQUEST_NOTE, getManagedBean().getRequestNote().getRequestNoteNo());
 
