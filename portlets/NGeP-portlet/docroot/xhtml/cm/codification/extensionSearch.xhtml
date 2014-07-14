@@ -13,7 +13,13 @@
 	<ui:define name="contentSection">
 		<p:messages showDetail="true" autoUpdate="true" closable="true"
 			showSummary="true"></p:messages>
-
+			
+		<div style="text-align: right; min-height: 40px;">	
+			<div style="float: left; clear: both;">
+				<p:commandButton value="Back" icon="ui-icon-back" action="#{codificationBackingBean.backToPrev}" />
+			</div>
+		</div>
+						
 		<h:panelGroup rendered="#{unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.allSupplier}">
 			<table style="width: 100%">
 				<tr>
@@ -134,8 +140,6 @@
 					<p:commandButton value="Search" icon="ui-icon-search" id="searchButtonId"
 						action="#{codificationBackingBean.extensionCodeSearch}"
 						update="itemTableID" />
-					<p:commandButton value="Back" icon="ui-icon-back"
-						action="#{codificationBackingBean.backToPrev}" />
 				</div>
 			</p:panel>
 
