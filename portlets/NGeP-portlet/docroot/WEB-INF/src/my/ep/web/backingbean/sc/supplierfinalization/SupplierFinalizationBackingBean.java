@@ -1236,7 +1236,9 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 			
 			CommitteReqDTO reqDTO = new CommitteReqDTO();
 			reqDTO.setQtId(qtId);
-			reqDTO.setCommitteeType(commType);
+			
+			PmParameter pmParameter = getPmParameterById(new Long(commType));
+			reqDTO.setCommitteeType(pmParameter.getParameterCode());
 			reqDTO.setFinalizationSecratary(true);
 				
 			CommitteResDTO resDTO = committeSO.retrieveCommitteByQtIdNCommType(reqDTO);
@@ -1478,7 +1480,8 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		debugLogger("finalizationCommitteeEvent");
 		
 		String finalizationCommittee = getManagedBean().getFinalizationCommittee();
-		retrieveCommitteeSecretary(finalizationCommittee);
+		PmParameter pmParameter = getPmParameterById(new Long(finalizationCommittee));
+		retrieveCommitteeSecretary(pmParameter.getParameterCode());
 	}
 	
 	public void selectItemEvent(SelectEvent event) {
