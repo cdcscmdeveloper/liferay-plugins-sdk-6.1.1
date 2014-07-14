@@ -675,9 +675,9 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		
 		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 			if(getManagedBean().getCircularVer().getCircularRemarks().get(0).getRemark().length()==0 &&
-				getManagedBean().getCircularVer().getZoneRemarks().get(0).getRemark().length()==0 &&
-				getManagedBean().getCircularVer().getItemRemarks().get(0).getRemark().length()==0 ) {
-				throw new EpException("100022", new String[]{"Circular Details/Zone/Item Remark"});
+				(getManagedBean().getCircularVer().getItemRemarks().get(0).getRemark() != null && 
+					getManagedBean().getCircularVer().getItemRemarks().get(0).getRemark().length()==0 )) {
+				throw new EpException("100022", new String[]{"Circular Details/Item Remark"});
 			}
 		}
 	}
@@ -720,7 +720,6 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	
 	private void initializeRemarks() {
 		initiateRemark(getManagedBean().getCircularVer().getCircularRemarks());
-		initiateRemark(getManagedBean().getCircularVer().getZoneRemarks());
 		initiateRemark(getManagedBean().getCircularVer().getItemRemarks());
 	}
 	
