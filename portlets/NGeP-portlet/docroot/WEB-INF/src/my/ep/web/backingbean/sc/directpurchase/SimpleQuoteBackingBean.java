@@ -20,7 +20,7 @@ import javax.portlet.PortletSession;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
-import my.ep.biz.service.ct.dtl.IContractItemSO;
+import my.ep.biz.service.ct.supplier.IPanelSupplierSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
@@ -42,8 +42,8 @@ import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
-import my.ep.dto.ct.dtl.ContractItemReqDTO;
-import my.ep.dto.ct.dtl.ContractItemResDTO;
+import my.ep.dto.ct.supplier.PanelSupplierReqDTO;
+import my.ep.dto.ct.supplier.PanelSupplierResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.common.address.AddressReqDTO;
@@ -58,10 +58,10 @@ import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
+import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
-import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
+import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
-import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddressType;
@@ -73,6 +73,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.sc.directpurchase.ScBusinessNatureQuoteCriteria;
 import my.ep.persistence.entity.sc.directpurchase.ScLocationDistrictCriteria;
 import my.ep.persistence.entity.sc.directpurchase.ScLocationDivisionCriteria;
@@ -99,6 +100,7 @@ import my.ep.type.pm.OrganizationType;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.sc.directpurchase.SimpleQuoteManagedBean;
@@ -150,88 +152,121 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 	 * simpleQuoteAction for getting cmSupplierItem from search catalogue in
 	 * simpleQuote
 	 */
-	public String simpleQuoteAction(Long cmSupplierItemId, boolean itemPanelFlag ,List<CmSupplierItem> SupplierItems) {
+	public String simpleQuoteAction(Long docId, boolean panelItemFlag ,List<CmSupplierItem> compareSupplierItems) {
 		debugLogger("simpleQuoteAction");
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT,ICatalogueSO.class);
+		IPanelSupplierSO panelSupplierSO	=	(IPanelSupplierSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IPanelSupplierSO.class);
 		IQuoteSO quoteSO = (IQuoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQuoteSO.class);
-		CatalogueReqDTO catalogueReqDTO = new CatalogueReqDTO();
-		catalogueReqDTO.setDocId(cmSupplierItemId);
-		CatalogueResDTO catalogueResDTO = catalogueSO.searchSupplierItemByStatus(catalogueReqDTO);
 		ScQuote scQuote = getManagedBean().getScQuote();
-		getManagedBean().setQuoteNo(quoteSO.generateQuoteNo());
-		// adding multiple suppliers in supplier criteria
-		if(catalogueResDTO.getSupplierItemList() != null && !catalogueResDTO.getSupplierItemList().isEmpty()){
-			CmSupplierItem selectedSupplierItem = catalogueResDTO.getSupplierItemList().get(0);
-			if (selectedSupplierItem != null) {
-				if(SupplierItems != null && SupplierItems.size() > 0){
-					for(CmSupplierItem compareSuppItem : SupplierItems){
-						if(selectedSupplierItem.getCmItem().getItemId().equals(compareSuppItem.getCmItem().getItemId())){
-							getManagedBean().getCompareSuppliers().add(compareSuppItem.getSmSupplier());
+		if(scQuote == null){
+			scQuote = new ScQuote();
+		}
+		if(docId != null && docId >0 ){
+			// panel item 
+			if(panelItemFlag){
+				// check non contract item list 
+				if(getManagedBean().getSupplierItems() ==null || getManagedBean().getSupplierItems().isEmpty()){
+					scQuote.setPanel(Boolean.TRUE);
+					scQuote.setZonal(Boolean.FALSE);
+
+					PanelSupplierReqDTO reqDTO = new PanelSupplierReqDTO();
+					reqDTO.setPanelItemId(docId);
+					PanelSupplierResDTO resDTO= panelSupplierSO.retrievePanelItem(reqDTO);
+					List<CtPanelItem> panelItems = getManagedBean().getPanelItems();
+					if(panelItems == null){
+						panelItems = new ArrayList<CtPanelItem>();
+					}
+
+					if(resDTO.getCtPanelItem() != null) {
+					   if(panelItems.isEmpty()){
+							panelItems.add(resDTO.getCtPanelItem());
+							getManagedBean().setPanelItems(panelItems);
+							prepareQuestions(resDTO.getCtPanelItem() , null);
+
+					 } else {
+						List<Long> itemIds = new ArrayList<Long>();
+						for (CtPanelItem ctPanelItem : panelItems) {
+							 itemIds.add(ctPanelItem.getPanelItemId());
+						}
+						
+					   if (itemIds.size() > 0) {
+						 if(itemIds.contains(resDTO.getCtPanelItem().getPanelItemId())){
+							 throw new EpException(MessageConst.INFO_700027, new String[]{resDTO.getCtPanelItem().getScRequestItem().getCmItem().getItemName(),""});
+							 
+						} else {
+							panelItems.add(resDTO.getCtPanelItem());
+							getManagedBean().setPanelItems(panelItems);
+							prepareQuestions(resDTO.getCtPanelItem() , null);
+						}
+					   }
+					 }
+					}
+				} else{
+					throw new EpException("Select non contract items only");
+				}
+
+			}  else { // non contract item
+				
+			     if(getManagedBean().getPanelItems() == null || getManagedBean().getPanelItems().isEmpty()){ // check panel item list
+				    CatalogueReqDTO catalogueReqDTO = new CatalogueReqDTO();
+				    catalogueReqDTO.setDocId(docId);
+					CatalogueResDTO catalogueResDTO = catalogueSO.searchSupplierItemByStatus(catalogueReqDTO);
+
+				   if(catalogueResDTO.getSupplierItemList() != null && !catalogueResDTO.getSupplierItemList().isEmpty()){
+					 CmSupplierItem selectedSupplierItem = catalogueResDTO.getSupplierItemList().get(0);
+
+					List<CmSupplierItem> supplierItems = getManagedBean().getSupplierItems();
+				    if(supplierItems == null){
+						supplierItems = new ArrayList<CmSupplierItem>();
+				     }
+
+				   if(selectedSupplierItem != null) {
+					 if(supplierItems.isEmpty()){
+						supplierItems.add(selectedSupplierItem);
+						prepareQuestions(null , selectedSupplierItem);
+						getManagedBean().setSupplierItems(supplierItems);
+					 } else {
+						List<Long> itemIds = new ArrayList<Long>();
+						for (CmSupplierItem cmSupplierItem : supplierItems) {
+							itemIds.add(cmSupplierItem.getCmItem().getItemId());
+						}
+						if (itemIds.size() > 0) {
+							if(itemIds.contains(selectedSupplierItem.getCmItem().getItemId())){
+								throw new EpException(MessageConst.INFO_700027, new String[]{selectedSupplierItem.getCmItem().getItemName(),""});
+							} else {
+								supplierItems.add(selectedSupplierItem);
+								getManagedBean().setSupplierItems(supplierItems);
+								prepareQuestions(null , selectedSupplierItem);
+							}
 						}
 					}
-				}
-			}
+				   }
+				   // adding multiple suppliers  who are supplying same item in the compare screen to the supplier criteria
+				   if (selectedSupplierItem != null) {
+					   if(compareSupplierItems != null && compareSupplierItems.size() > 0){
+						   for(CmSupplierItem compareSuppItem : compareSupplierItems){
+							   if(selectedSupplierItem.getCmItem().getItemId().equals(compareSuppItem.getCmItem().getItemId())){
+								   getManagedBean().getCompareSuppliers().add(compareSuppItem.getSmSupplier());
+							   }
+						   }
+					   }
+				   }
 
-			if(!getManagedBean().getCompareSuppliers().isEmpty() && getManagedBean().getCompareSuppliers().size() >0){
-				List<SmSupplier> list = new ArrayList<SmSupplier>();
-				supplierListListener(list);
-			}
+				   if(!getManagedBean().getCompareSuppliers().isEmpty() && getManagedBean().getCompareSuppliers().size() >0){
+					   if(getManagedBean().getSupplierList().isEmpty()){
+						   supplierListListener(getManagedBean().getCompareSuppliers());
+					   }
+				   }
+				   }
 
-			// TODO check flag for panel item or non contract item
-			String ItemCode = selectedSupplierItem.getCmItem().getExtensionCode();
-			CharSequence charSeq = ItemCode.subSequence(0, 2);
-			Integer itemCode = Integer.valueOf(charSeq.toString());
-
-			// TODO checking  two digits in itemCode whether service or product
-			QuoteReqDTO quoteReqDTO = new QuoteReqDTO();
-			QuoteResDTO quoteResDTO = quoteSO.getQuoteDtlFirstTime(quoteReqDTO);
-			for (ScQuoteDoc quoteDoc : quoteResDTO.getQuoteDocs()) {
-				if (itemCode >= 70 && itemCode <= 94) { // for service  between  70 and 94  
-					if(ParameterConst.SQ_ITEM_LIST_SERVICE.equalsIgnoreCase(quoteDoc.getSpecMaster().getItemTypeCode().getParameterCode())){
-						TemplateSpecBean serviceTemplateSpecBean = getManagedBean().getServiceTemplateSpecBean();
-						TplSpecMaster serviceTpl =  quoteDoc.getSpecMaster();
-						List<TplSpecQuestion> tplSpecQuestions = new ArrayList<TplSpecQuestion>();
-						TplSpecQuestion specQuestion = new TplSpecQuestion();
-						specQuestion.setClItem(selectedSupplierItem.getCmItem().getItemName());
-						specQuestion.setClUom(selectedSupplierItem.getPmUom());
-						specQuestion.setCmItem(selectedSupplierItem.getCmItem());
-						tplSpecQuestions.add(specQuestion);
-						serviceTpl.setTplSpecQuestions(tplSpecQuestions);
-						serviceTemplateSpecBean.setSpecMaster(serviceTpl);
-						getManagedBean().setServiceTemplateSpecBean(serviceTemplateSpecBean);
-						getManagedBean().setProductFlag(Boolean.FALSE);
-						
-					} 
-				 }else { // product
-					if(ParameterConst.SQ_ITEM_LIST_PRODUCT.equalsIgnoreCase(quoteDoc.getSpecMaster().getItemTypeCode().getParameterCode())){
-						TemplateSpecBean productTemplateSpecBean = getManagedBean().getProductTemplateSpecBean();
-						TplSpecMaster prodTpl = quoteDoc.getSpecMaster();
-						List<TplSpecQuestion> productQuestions = new ArrayList<TplSpecQuestion>();
-						TplSpecQuestion prodQuestion = new TplSpecQuestion();
-						prodQuestion.setClItem(selectedSupplierItem.getCmItem().getItemName());
-						prodQuestion.setClUom(selectedSupplierItem.getPmUom());
-						prodQuestion.setCmItem(selectedSupplierItem.getCmItem());
-						productQuestions.add(prodQuestion);
-						prodTpl.setTplSpecQuestions(productQuestions);
-						productTemplateSpecBean.setSpecMaster(prodTpl);
-						getManagedBean().setProductTemplateSpecBean(productTemplateSpecBean);
-						getManagedBean().setProductFlag(Boolean.TRUE);
-					}
-				}
+			     }else {
+			    	 throw new EpException( "Select panel items only");
+			     }
 			}
 		}
 		
-		// TODO check flag for panel item or non contract item
-		if(itemPanelFlag){
-			scQuote.setPanel(Boolean.TRUE);
-			scQuote.setZonal(Boolean.FALSE);
-			scQuote.setMultipleQuote(Boolean.FALSE);
-		} else {
-			scQuote.setPanel(Boolean.FALSE);
-			scQuote.setZonal(Boolean.FALSE);
-			scQuote.setMultipleQuote(Boolean.TRUE);
-		}
-		
+		scQuote.setMultipleQuote(Boolean.FALSE);
+		scQuote.setQuoteNo(quoteSO.generateQuoteNo());
 		scQuote.setWorkflowStatuses(null);
 		getCurrentStatus(DPStatusConstants.SQ_PENDING_SUBMISSION);
 		// Initializing Remarks
@@ -239,7 +274,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 		
 		// procurement type by default as normal
 		PmParameter parameter = new PmParameter();
-		getManagedBean().getScQuote().setJustificationType(parameter);
+		scQuote.setJustificationType(parameter);
 		parameter.setParameterCode(ParameterConst.PROC_TYPE_NORMAL);
 		scQuote.setProcurementType(parameter);
 		this.getManagedBean().setScQuote(scQuote);
@@ -267,12 +302,130 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 				getManagedBean().getRequestNote().setPmOrgProfile(orgProfileResDTO.getOrgProfileList().get(0));
 			}
 		}
-		
-		// update tabmenu
-	    RequestContext.getCurrentInstance().update("tabMenuId");
-		return "simpleQuote";
-	}
 
+		// update tabmenu
+		 RequestContext.getCurrentInstance().update("tabMenuId");
+		 return "simpleQuote";
+		 
+	}
+	
+	public void prepareQuestions(CtPanelItem ctPanelItem, CmSupplierItem cmSupplierItem) {
+		int itemCode = 0;
+		CmItem cmItem = null;
+		PmUom uom = null;
+		String ItemName ="";
+		IQuoteSO quoteSO = (IQuoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQuoteSO.class);
+		// TODO check flag for panel item or non contract item
+		if(ctPanelItem != null){
+			String extCode = ctPanelItem.getScRequestItem().getCmItem().getExtensionCode();
+			CharSequence charSeq = extCode.subSequence(0, 2);
+			itemCode = Integer.valueOf(charSeq.toString());
+			cmItem = ctPanelItem.getScRequestItem().getCmItem();
+			ItemName = ctPanelItem.getScRequestItem().getCmItem().getItemName();
+			uom =  ctPanelItem.getPmUom();
+			
+		} else if(cmSupplierItem !=null){
+			String extCode = cmSupplierItem.getCmItem().getExtensionCode();
+			CharSequence charSeq = extCode.subSequence(0, 2);
+			itemCode = Integer.valueOf(charSeq.toString());
+			cmItem = cmSupplierItem.getCmItem();
+			ItemName = cmSupplierItem.getCmItem().getItemName();
+			uom =  cmSupplierItem.getPmUom();
+		}
+
+		// TODO checking  two digits in itemCode whether service or product
+		QuoteReqDTO quoteReqDTO = new QuoteReqDTO();
+		QuoteResDTO quoteResDTO = quoteSO.getQuoteDtlFirstTime(quoteReqDTO);
+		//get Template Spec Backing Bean
+		PortletSession portletSession = (PortletSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
+		TemplateSpecBackingBean  templateSpecBackingBean = (TemplateSpecBackingBean) portletSession.getAttribute("templateSpecBackingBean");
+		if (templateSpecBackingBean == null) {
+			templateSpecBackingBean = new TemplateSpecBackingBean();
+		}
+		
+		for (ScQuoteDoc quoteDoc : quoteResDTO.getQuoteDocs()) {
+			if (itemCode >= 70 && itemCode <= 94) { // for service  between  70 and 94  
+				if(ParameterConst.SQ_ITEM_LIST_SERVICE.equalsIgnoreCase(quoteDoc.getSpecMaster().getItemTypeCode().getParameterCode())){
+					TemplateSpecBean serviceTemplateSpecBean = getManagedBean().getServiceTemplateSpecBean();
+					TplSpecMaster serviceTpl =  quoteDoc.getSpecMaster();
+					List<TplSpecQuestion> tplSpecQuestions = serviceTpl.getTplSpecQuestions();
+					if(null == tplSpecQuestions){
+						tplSpecQuestions = new ArrayList<TplSpecQuestion>();
+					}
+
+					templateSpecBackingBean.addQuestion(tplSpecQuestions, tplSpecQuestions.size()-1, TemplateSpecConst.QUESTION_TYPE_ITEM);
+					TplSpecQuestion specQuestion = tplSpecQuestions.get(0);
+					specQuestion.setClUom(uom);
+					specQuestion.setCmItem(cmItem);
+					specQuestion.setClItem(ItemName);
+
+					serviceTpl.setTplSpecQuestions(tplSpecQuestions);
+					serviceTemplateSpecBean.setSpecMaster(serviceTpl);
+					getManagedBean().setServiceTemplateSpecBean(serviceTemplateSpecBean);
+					
+					
+			
+				} 
+			}else { // product
+				if(ParameterConst.SQ_ITEM_LIST_PRODUCT.equalsIgnoreCase(quoteDoc.getSpecMaster().getItemTypeCode().getParameterCode())){
+					TemplateSpecBean productTemplateSpecBean = getManagedBean().getProductTemplateSpecBean();
+					TplSpecMaster prodTpl = quoteDoc.getSpecMaster();
+					List<TplSpecQuestion> productQuestions = prodTpl.getTplSpecQuestions();
+					if(null == productQuestions){
+						productQuestions = new ArrayList<TplSpecQuestion>();
+					}
+					templateSpecBackingBean.addQuestion(productQuestions, productQuestions.size()-1, TemplateSpecConst.QUESTION_TYPE_ITEM);
+					TplSpecQuestion prodQuestion = productQuestions.get(0);
+
+					prodQuestion.setClUom(uom);
+					prodQuestion.setCmItem(cmItem);
+					prodQuestion.setClItem(ItemName);
+					prodTpl.setTplSpecQuestions(productQuestions);
+					productTemplateSpecBean.setSpecMaster(prodTpl);
+					getManagedBean().setProductTemplateSpecBean(productTemplateSpecBean);
+				
+					
+				}
+			}
+		}
+		
+		int counter = 0;
+		// simple quote item list counter
+		if(getManagedBean().getProductTemplateSpecBean().getSpecMaster() !=null && 
+				getManagedBean().getProductTemplateSpecBean().getSpecMaster().getTplSpecQuestions() != null){
+			counter = getManagedBean().getProductTemplateSpecBean().getSpecMaster().getTplSpecQuestions().size(); 
+		}
+		
+		if(getManagedBean().getServiceTemplateSpecBean().getSpecMaster() !=null && getManagedBean().getServiceTemplateSpecBean().getSpecMaster().getTplSpecQuestions() != null){
+			getManagedBean().setSimpleQuoteCounter(getManagedBean().getServiceTemplateSpecBean().getSpecMaster().getTplSpecQuestions().size());
+			counter = counter+getManagedBean().getServiceTemplateSpecBean().getSpecMaster().getTplSpecQuestions().size();
+			
+			
+		}
+		getManagedBean().setSimpleQuoteCounter(counter); 
+
+		// initiating empty question to the product list
+		List<TplSpecQuestion> specQuestions = new ArrayList<TplSpecQuestion>();
+		TplSpecQuestion question = new TplSpecQuestion();
+		specQuestions.add(question);
+		if(getManagedBean().getProductTemplateSpecBean().getSpecMaster() == null){
+			TemplateSpecBean productTemplateSpecBean = getManagedBean().getProductTemplateSpecBean();
+			TplSpecMaster product = new TplSpecMaster();
+			product.setTplSpecQuestions(specQuestions);
+			productTemplateSpecBean.setSpecMaster(product);
+			getManagedBean().setProductTemplateSpecBean(productTemplateSpecBean);
+		}
+		// initiating empty question to the server list
+		if(getManagedBean().getServiceTemplateSpecBean().getSpecMaster() == null){
+			TemplateSpecBean serverTemplateSpecBean = getManagedBean().getServiceTemplateSpecBean();
+			TplSpecMaster service = new TplSpecMaster();
+			service.setTplSpecQuestions(specQuestions);
+			serverTemplateSpecBean.setSpecMaster(service);
+			getManagedBean().setServiceTemplateSpecBean(serverTemplateSpecBean);
+		}
+	}
+	
+	
 	/**
 	 * saveSimpleQuote method to save SQ
 	 */
@@ -316,10 +469,6 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 				parameterReqDTO.setParameterCode(getManagedBean().getLocationLevel());
 				resDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
 				quote.setZoneLocatonLevel(resDTO.getPmParameter());
-			}
-			
-			if(quote.getQuoteNo()  == null){
-				quote.setQuoteNo(getManagedBean().getQuoteNo());
 			}
 			
 			// justification type
@@ -490,10 +639,6 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 				parameterReqDTO.setParameterCode(getManagedBean().getLocationLevel());
 				 resDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
 				quote.setZoneLocatonLevel(resDTO.getPmParameter());
-			}
-			
-			if(quote.getQuoteNo()  == null){
-				quote.setQuoteNo(getManagedBean().getQuoteNo());
 			}
 			
 			// justification type
@@ -701,10 +846,6 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			remark.setChangedBy(remark.getCreatedBy());
 			remark.setCreatedUser(facesScopes.getUserSessionBean());
-			if (getManagedBean().getScQuote().getRemarks() != null && getManagedBean().getScQuote().getRemarks().size() > 0) {
-				remark.setRemark(getManagedBean().getScQuote().getRemarks()
-						.get(0).getRemark());
-			}
 			PmStatus status = new PmStatus();
 			status.setStatusId(DPStatusConstants.SQ_PENDING_SUBMISSION);
 		    StatusReqDTO statusReqDTO = new StatusReqDTO();
@@ -1292,8 +1433,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 	 */
 	public String backToPervious() {
 		debugLogger("backToPervious");
-		getManagedBean().setProductFlag(Boolean.FALSE);
-		 super.renewSesionObject();
+		// super.renewSesionObject();
 		return "catalogueSearch";
 	}
 
@@ -1735,12 +1875,10 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 						if(ParameterConst.SQ_ITEM_LIST_PRODUCT.equalsIgnoreCase(specMaster.getItemTypeCode().getParameterCode())){
 							productTplSpecBean.setSpecMaster(specMaster);
 							getManagedBean().setProductTemplateSpecBean(productTplSpecBean);
-							getManagedBean().setProductFlag(Boolean.TRUE);
 							// service Tpl Spe
 						} else  if(ParameterConst.SQ_ITEM_LIST_SERVICE.equalsIgnoreCase(specMaster.getItemTypeCode().getParameterCode())){
 							serviceTplSpecBean.setSpecMaster(specMaster);
 							getManagedBean().setServiceTemplateSpecBean(serviceTplSpecBean);
-							getManagedBean().setProductFlag(Boolean.FALSE);
 						}
 					}
 				}
@@ -1787,7 +1925,6 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 				}
 				getManagedBean().setScQuote(scQuote);
 				getManagedBean().getScQuote().setRemarks(initializeRemarks(scQuote));
-				getManagedBean().setQuoteNo(scQuote.getQuoteNo());
 				
 				getManagedBean().getRequestNote().setPmOrgProfile(scQuote.getRequestNote().getPmOrgProfile());
 				// location level by default - district 
@@ -1948,7 +2085,6 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 				productTplSpecBean.setSpecMaster(scQuote.getQuoteDocs().get(0).getSpecMaster());
 				productTplSpecBean.setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
 				getManagedBean().setProductTemplateSpecBean(productTplSpecBean);
-				getManagedBean().setProductFlag(Boolean.TRUE);
 			}
 			
 			 if(quoteResDTO.getServiceAnswersTpl() != null && quoteResDTO.getServiceAnswersTpl().size() >0){
@@ -1956,7 +2092,6 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 				serviceTplSpecBean.setSpecMaster(scQuote.getQuoteDocs().get(0).getSpecMaster());
 				serviceTplSpecBean.setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
 				getManagedBean().setServiceTemplateSpecBean(serviceTplSpecBean);
-				getManagedBean().setProductFlag(Boolean.FALSE);
 			} 
 			 
 		    if(quoteResDTO.getSupplier() != null){
@@ -2071,40 +2206,6 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			quoteSO = null;
 		}
 		return null;
-	}
-	
- /**
-   * addQuoteItem method to add cmSupplierItem to the  simpleQuote
-  */
-	public void addQuoteItem(VCmSupplierItem vCmSupplierItem) {
-		debugLogger("addQuoteItem");
-		IContractItemSO contractItemSO	=	(IContractItemSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractItemSO.class);
-		// adding contract item 
-		if(vCmSupplierItem.getContractNo() !=null){
-			// contract item
-			ContractItemReqDTO contractItemReqDTO = new ContractItemReqDTO();
-			contractItemReqDTO.setContractItemId(vCmSupplierItem.getDocId());
-			ContractItemResDTO contractItemResDTO = contractItemSO.getContractItem(contractItemReqDTO);
-			List<CtContractItem> contractItems = getManagedBean().getContractItems();
-			if(contractItemResDTO.getCtContractItem()!=null) {
-				if(getManagedBean().getContractItems().isEmpty()){
-					contractItems.add(contractItemResDTO.getCtContractItem());
-				} else {
-					List<Long> itemIds = new ArrayList<Long>();
-					for (CtContractItem ctContractItem : contractItems) {
-						itemIds.add(ctContractItem.getScRequestItem().getCmItem().getItemId());
-						if (itemIds.size() > 0) {
-							if(itemIds.contains(ctContractItem.getScRequestItem().getCmItem().getItemId())){
-								throw new EpException(MessageConst.INFO_700027, new String[]{ctContractItem.getScRequestItem().getCmItem().getItemName(),""});
-							} else {
-								contractItems.add(ctContractItem);
-								getManagedBean().setSimpleQuoteCounter(contractItems.size());
-							}
-						}
-					}
-				}
-			}
-		}
 	}
 
 	/**

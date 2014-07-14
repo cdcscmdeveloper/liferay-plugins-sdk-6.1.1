@@ -20,8 +20,8 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.sc.directpurchase.QuoteReqDTO;
 import my.ep.dto.sc.directpurchase.QuoteResDTO;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
+import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
-import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmBusinessNature;
@@ -53,7 +53,7 @@ import org.primefaces.model.TreeNode;
 public class SimpleQuoteManagedBean extends BaseManagedBean{
 	private static final long serialVersionUID = 1L;
 	private String sourceMethod = ParameterConst.METHOD_SQ;
-	private ScQuote scQuote = new ScQuote();
+	private ScQuote scQuote;
 	private	String	fulfillmentType;
 	private	Long	assignedToUserId;
 	private	String	periodType;
@@ -65,8 +65,8 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 
 	private List<PmOrgProfile> userDivisionList;
 	private CmSupplierItem cmSupplierItem;
-	private List<CmSupplierItem> supplierItems = new ArrayList<CmSupplierItem>();
-	private List<CtContractItem> contractItems = new ArrayList<CtContractItem>();
+	private List<CmSupplierItem> supplierItems;
+	private List<CtPanelItem> panelItems;
 	
 	private List<PmUser> userList = new ArrayList<PmUser>();
 	private ScRequestNoteDtl requestNoteDtl = new ScRequestNoteDtl();
@@ -143,9 +143,7 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	private List<ScQuoteSupplier> selectedGovtSellers;
 	
 	// supplier view
-	private boolean productFlag;
 	private SmSupplier smSupplier;
-	private String quoteNo;
 	private Date  today = new Date();
 	private int tabActiveIndex = 0;
 	private int simpleQuoteCounter;
@@ -1121,31 +1119,7 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 			List<ScQuoteSupplier> selectedPanelSuppliers) {
 		this.selectedPanelSuppliers = selectedPanelSuppliers;
 	}
-	
-	/**
-	 * @return the productFlag
-	 */
-	public boolean isProductFlag() {
-		return productFlag;
-	}
-	/**
-	 * @param productFlag the productFlag to set
-	 */
-	public void setProductFlag(boolean productFlag) {
-		this.productFlag = productFlag;
-	}
-	/**
-	 * @return the quoteNo
-	 */
-	public String getQuoteNo() {
-		return quoteNo;
-	}
-	/**
-	 * @param quoteNo the quoteNo to set
-	 */
-	public void setQuoteNo(String quoteNo) {
-		this.quoteNo = quoteNo;
-	}
+
 	/**
 	 * @return the smSupplier
 	 */
@@ -1232,17 +1206,15 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 		this.supplierItems = supplierItems;
 	}
 	/**
-	 * @return the contractItems
+	 * @return the panelItems
 	 */
-	public List<CtContractItem> getContractItems() {
-		return contractItems;
+	public List<CtPanelItem> getPanelItems() {
+		return panelItems;
 	}
 	/**
-	 * @param contractItems the contractItems to set
+	 * @param panelItems the panelItems to set
 	 */
-	public void setContractItems(List<CtContractItem> contractItems) {
-		this.contractItems = contractItems;
+	public void setPanelItems(List<CtPanelItem> panelItems) {
+		this.panelItems = panelItems;
 	}
-	
-	
 }
