@@ -248,6 +248,12 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		getManagedBean().setFulfilmentRequest(flOrder.getFlFulfilmentRequest());
 		getManagedBean().setFulfilmentOrder(flOrder);
 		getManagedBean().setDocType(flOrder.getFlFulfilmentRequest().getDocType());
+		
+		if(flOrder.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)) {
+			new FulfilmentBackingBean(ParameterConst.DOCTYPE_DELIVERY_ORDER, flOrder.getFlFulfilmentRequest().getScPurchaseRequest().getRequestNote().getRequestNoteNo());
+		} else {
+			new FulfilmentBackingBean(ParameterConst.DOCTYPE_DELIVERY_ORDER, flOrder.getFlFulfilmentRequest().getCtContract().getContractNo());
+		}
 	}
 	
 	// this method do validations for items with Delivery Address,Delivery order and Delivery Amount
@@ -337,6 +343,7 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 	}
 	
 	public void preRenderView() {
+		log.debug("preRenderView()");
 		IDeliveryOrderSO deliveryOrderSO = null;
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());

@@ -6,7 +6,6 @@ package my.ep.web.backingbean.fl;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,18 +15,21 @@ import java.net.URLConnection;
 import java.sql.Timestamp;
 import java.util.List;
 
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletResponse;
 
+import my.ep.constant.ModuleCodeConst;
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.format.AttachmentDateFormat;
+import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.fl.FulfilmentManagedBean;
+import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
 
 import org.apache.log4j.Logger;
@@ -43,66 +45,45 @@ import org.primefaces.model.UploadedFile;
 
 @ManagedBean(name = "fulfilmentBackingBean")
 @RequestScoped
-public class FulfilmentBackingBean extends
-		BaseBackingBean<FulfilmentManagedBean> {
+public class FulfilmentBackingBean extends BaseBackingBean<FulfilmentManagedBean> {
 	private static Logger log = Logger.getLogger(FulfilmentBackingBean.class);
 
 	public FulfilmentBackingBean() {
 
 	}
+	
+	public FulfilmentBackingBean(String docType, String docNo) {
+		getManagedBean().setDocType(docType);
+		getManagedBean().setDocNo(docNo);
+	}	
 
-	public void handleFileUpload(FileUploadEvent event) {
-		FlAttachment attachment = new FlAttachment();
-
-		List<FlAttachment> attachmentList = this.getManagedBean()
-				.getAttachmentList();
-
-		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO,
-				"The file was uploaded successfully.", null);
-		FacesContext.getCurrentInstance().addMessage(null, message);
-
-		fileUpload(event.getFile(), attachment);
-		attachmentList.add(attachment);
-		System.out.println("Attach size ::: " + attachmentList.size());
-		System.out.println("file name " + attachment.getFileName());
-
-	}
-
-	public void fileUpload(UploadedFile file, FlAttachment attachment) {
-
-		String fileName = file.getFileName();
-		byte[] fileBytes = file.getContents();
-		Timestamp date = new Timestamp(System.currentTimeMillis());
+	public void handleFileUpload(FileUploadEvent event) throws Exception {
+		log.debug("FulfilmentBackingBean.handleFileUpload()");
 		FacesScopes facesScopes = new FacesScopes();
+		AttachmentFormat attachmentFormat = new AttachmentDateFormat();
+		
+		UploadedFile item = event.getFile();
+		
+		String filePath = DocumentRepositoryUtils.getUploadDirectoryPath(ModuleCodeConst.ORDER_FULFILLMENT, getManagedBean().getDocType(), getManagedBean().getDocNo());
+		File file = new File(filePath);
+		file.mkdirs();
+		filePath = filePath + "/" + attachmentFormat.format(item.getFileName(), null);
+		
+		FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
+	    fileOuputStream.write(item.getContents());
+	    fileOuputStream.close();
+	    
+	    FlAttachment attachment = new FlAttachment();
+		attachment.setFileName(item.getFileName());
+		attachment.setFilePath(filePath);
 		
 		attachment.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
 		attachment.setCreatedUsername(facesScopes.getUserSessionBean().getUserName());
-		attachment.setCreatedDate(date);
+		attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		attachment.setChangedBy(attachment.getCreatedBy());
-
-		attachment.setFileName(fileName);
-		attachment.setFileDescription("File uploded for Fulfilment Req Order");
-		File theDir = new File("\\upload\\");
-
-		// if the directory does not exist, create it
-		if (!theDir.exists()) {
-
-			theDir.mkdir();
-			System.out.println("creating directory: " + theDir);
-		}
-		attachment.setFilePath(theDir + "\\" + fileName);
-		System.out.println("=======get File path===="
-				+ attachment.getFilePath());
-		FileOutputStream fos;
-		try {
-			fos = new FileOutputStream(theDir + "\\" + fileName);
-			fos.write(fileBytes);
-			fos.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		attachment.setChangedDate(attachment.getCreatedDate());
+		
+		getManagedBean().getAttachmentList().add(attachment);		
 	}
 
 	public String determineIcon(FlAttachment attachment) {

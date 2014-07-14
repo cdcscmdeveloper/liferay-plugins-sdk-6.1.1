@@ -132,6 +132,11 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 			getManagedBean().setStopInstr(resDTO.getFlStopInstr());
 			
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+			if(resDTO.getFlStopInstr().getFlFulfilmentOrder().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)) {
+				new FulfilmentBackingBean(ParameterConst.DOCTYPE_STOP_DELIVERY, resDTO.getFlStopInstr().getFlRequest().getScPurchaseRequest().getRequestNote().getRequestNoteNo());
+			} else {
+				new FulfilmentBackingBean(ParameterConst.DOCTYPE_STOP_DELIVERY, resDTO.getFlStopInstr().getFlRequest().getCtContract().getContractNo());
+			}
 			flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
 		}
 	}

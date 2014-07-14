@@ -255,6 +255,12 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 				pmStatus.setStatusId(FulfilmentStatusConst.PA_PENDING_PAYMENT_MATCH);
 				getManagedBean().getPaymentAdvice().setStatus(pmStatus);
 			}	
+			
+			if(getManagedBean().getPaymentAdvice().getFulfilmentOrder().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)) {
+				new FulfilmentBackingBean(ParameterConst.DOCTYPE_PAYMENT_ADVICE, getManagedBean().getPaymentAdvice().getFlRequest().getScPurchaseRequest().getRequestNote().getRequestNoteNo());
+			} else {
+				new FulfilmentBackingBean(ParameterConst.DOCTYPE_PAYMENT_ADVICE, getManagedBean().getPaymentAdvice().getFlRequest().getCtContract().getContractNo());
+			}			
 		}
 	}
 	

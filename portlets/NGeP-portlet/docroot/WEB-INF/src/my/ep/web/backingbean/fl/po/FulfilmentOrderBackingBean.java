@@ -278,6 +278,9 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 				flReqDTO.setFlOrderId(resDTO.getFlFulfilmentRequest().getFlFulfilmentOrder().getFulfilmentOrderId());
 				resDTO = getFulfilmentOrderSO().retrieveFulfilmentOrderById(flReqDTO);
 				getManagedBean().setFulfilmentOrder(resDTO.getFlOrder());
+				
+				FulfilmentBackingBean flBB = new FulfilmentBackingBean(resDTO.getFlOrder().getDocType(), resDTO.getFlOrder().getFlFulfilmentRequest().getCtContract().getContractNo());
+				flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(),resDTO.getAttachmentList());
 			}  
 			getManagedBean().setSelectedTabIndex(0);
 		}
@@ -319,26 +322,18 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			} else {
 				FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
 				FulfilmentResDTO resDTO = new FulfilmentResDTO();
-				IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentRequestSO.class);
 				FLPurchaseOrderDataType flPurchaseOrd = (FLPurchaseOrderDataType)obj;
-				flReqDTO.setFlRequestId(flPurchaseOrd.getOrderDetails().getRequestId());
-				resDTO = fulfilmentSO.retrieveFulfilmentRequest(flReqDTO);
 				
-				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
-				if(resDTO.getFlFulfilmentRequest().getDocType().equalsIgnoreCase("PR")){
-					flBB.initializeRemarkAndAttachement(flBB.getManagedBean().getRemarkList(), resDTO.getAttachmentList());
-				}else{
-					flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(),resDTO.getAttachmentList());
-				}
-				
-				getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
-				getManagedBean().setTaskId(taskId);
-				getManagedBean().setOutComes(res.getAction());
-				getManagedBean().setDocType(resDTO.getFlFulfilmentRequest().getDocType());
-				
-				flReqDTO.setFlOrderId(resDTO.getFlFulfilmentRequest().getFlFulfilmentOrder().getFulfilmentOrderId());
+				flReqDTO.setFlOrderId(flPurchaseOrd.getOrderDetails().getOrderId());
 				resDTO = getFulfilmentOrderSO().retrieveFulfilmentOrderById(flReqDTO);
 				getManagedBean().setFulfilmentOrder(resDTO.getFlOrder());
+				getManagedBean().setFlRequest(resDTO.getFlOrder().getFlFulfilmentRequest());
+				getManagedBean().setTaskId(taskId);
+				getManagedBean().setOutComes(res.getAction());
+				getManagedBean().setDocType(resDTO.getFlOrder().getFlFulfilmentRequest().getDocType());
+				
+				FulfilmentBackingBean flBB = new FulfilmentBackingBean(resDTO.getFlOrder().getDocType(), resDTO.getFlOrder().getFlFulfilmentRequest().getScPurchaseRequest().getRequestNote().getRequestNoteNo());
+				flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
 			}  
 			getManagedBean().setSelectedTabIndex(0);
 		}

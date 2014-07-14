@@ -31,6 +31,9 @@ public class FulfilmentManagedBean extends BaseManagedBean {
 	private List<FlRemark> remarkList;
 	private List<FlAttachment> attachmentList;
 		
+	private String docType;
+	private String docNo;
+	
 	public FulfilmentManagedBean(){
 		
 	}
@@ -81,6 +84,22 @@ public class FulfilmentManagedBean extends BaseManagedBean {
 	 */
 	public void setAttachmentList(List<FlAttachment> attachmentList) {
 		this.attachmentList = attachmentList;
+	}
+
+	public String getDocType() {
+		return docType;
+	}
+
+	public void setDocType(String docType) {
+		this.docType = docType;
+	}
+
+	public String getDocNo() {
+		return docNo;
+	}
+
+	public void setDocNo(String docNo) {
+		this.docNo = docNo;
 	}
 	
 }

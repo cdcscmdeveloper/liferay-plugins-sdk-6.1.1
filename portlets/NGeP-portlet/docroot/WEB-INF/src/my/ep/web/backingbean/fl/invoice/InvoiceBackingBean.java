@@ -271,9 +271,15 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 					PmStatus pmStatus = new PmStatus();
 					pmStatus.setStatusId(FulfilmentStatusConst.IN_PENDING_INVOICE);
 					getManagedBean().getInvoice().setStatus(pmStatus);
+				}
+				
+				if(getManagedBean().getInvoice().getFlFulfilmentOrder().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)) {
+					new FulfilmentBackingBean(ParameterConst.DOCTYPE_INVOICE, getManagedBean().getInvoice().getFlRequest().getScPurchaseRequest().getRequestNote().getRequestNoteNo());
+				} else {
+					new FulfilmentBackingBean(ParameterConst.DOCTYPE_INVOICE, getManagedBean().getInvoice().getFlRequest().getCtContract().getContractNo());
+				}	
 			}
 		}
-	}
 	}
 	
 	public void factoringChecked(AjaxBehaviorEvent e) {
