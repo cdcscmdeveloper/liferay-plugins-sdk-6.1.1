@@ -15,6 +15,7 @@
 
 	<h:outputScript library="jquery/slides" name="jquery.slides.js" />
 
+<h:panelGroup rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) > 0 }">
 	<script>
 		$(function() {
 			$('#slides').slidesjs({
@@ -34,6 +35,25 @@
 			});
 		});
 	</script>
+</h:panelGroup>
+<h:panelGroup rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) &lt; 1 }">
+	<script>
+		$(function() {
+			$('#slides').slidesjs({
+				width : 940,
+				height : 528,
+				navigation : false,
+				pagination: false,
+		        generatePagination: false,
+				effect : {
+					fade : {
+						speed : 400
+					}
+				}
+			});
+		});
+	</script>
+</h:panelGroup>	
 
 	<p:messages id="catalogDetMsgId" showDetail="true" autoUpdate="true"
 		closable="true" showSummary="true"></p:messages>
@@ -146,7 +166,7 @@
 
 				<tr style="height: 30px;">
 
-					<td><p:outputLabel value="#{lbl['lbl.cm.uom']} *" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.cm.uom']}" /> <p:outputLabel value="*" styleClass="mandatory"/></td>
 					<td><ac:lov id="uomLovId" lovId="PM_UOM" size="26"
 							headerText="UOM Lov"
 							disabled="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue}"
