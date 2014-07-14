@@ -19,6 +19,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalAmount;
 import my.ep.persistence.entity.sm.SmMofAccount;
+import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
@@ -140,7 +141,6 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	
 	private int selectedZoneTabIndex = 0;
 	private MenuModel zoneMenuModel;
-	
 	public NoticeBoardManagedBean() {
 		// scQt = new ScQt();
 		// selectedScQt = new ScQt();
@@ -684,6 +684,7 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	public void setZoneMenuModel(MenuModel zoneMenuModel) {
 		this.zoneMenuModel = zoneMenuModel;
 	}
+
 
 	
 

@@ -448,7 +448,7 @@ public class TemplateMaintenanceBackingBean extends
 			//scQtDOc.setScQtZoneCriteria(null);
 
 			// qtTemplateReqDTO.setSpecMaster(specMaster);
-			qtTemplateReqDTO.setScQtDoc(scQtDOc);
+			//qtTemplateReqDTO.setScQtDoc(scQtDOc);
 
 			try {
 				qtTemplateSO = getTemplateSO();

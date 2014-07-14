@@ -1078,6 +1078,17 @@ public class NoticeBoardBackingBean extends
 					}
 				}
 
+				//Code to restrict not to show restricted tender and panel
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean(
+								"isPanel",
+								SearchOperator.OPERATOR_NOT_EQUALS.value(),
+								true));
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean(
+								"qtType",
+								SearchOperator.OPERATOR_NOT_EQUALS.value(),
+								"R"));
 				QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
 				qtReqDTO.setQtSearchBean(searchBean);
 
@@ -1352,6 +1363,20 @@ public class NoticeBoardBackingBean extends
 
 	public void setVisible(boolean visible) {
 		this.visible = visible;
+	}
+
+	public void registrationZoneTabChange(TabChangeEvent changeEvent) {
+		BriefingZoneBean selectedZoneBean = (BriefingZoneBean) changeEvent
+				.getData();
+	/*	List<BriefingZoneBean> zoneBeans = this.getManagedBean().getZoneBean();
+		for (BriefingZoneBean zoneBean : zoneBeans) {
+			if (zoneBean.getZoneName().equalsIgnoreCase(
+					selectedZoneBean.getZoneName())) {
+				this.getManagedBean().setSelectedBriefingZoneBean(
+						selectedZoneBean);
+				break;
+			}
+		}*/
 	}
 
 }

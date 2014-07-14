@@ -1,5 +1,6 @@
 package my.ep.web.bean.sc.quatationtender;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
@@ -35,6 +36,8 @@ public class BriefingZoneBean {
 		this.briefingList = briefingList;
 		this.sitevisitList = sitevisitList;
 		this.scQtBsv = scQtBsv;
+		this.selectedBriefingDtls=new ArrayList<>();
+		this.selectedSiteVisitDtls=new ArrayList<>();
 	}
 
 	public BriefingZoneBean(TplSpecZoneDtl tplSpecZoneDtl,

@@ -81,11 +81,15 @@ public class ApprovalBackingBean extends
 		if (this.getManagedBean().getScQtApproval() == null) {
 			this.getManagedBean().setScQtApproval(new ScQtApproval());
 		}
-		
+
 		if (this.getManagedBean().getScQtApproval().getApprovalCategory() == null) {
-			this.getManagedBean().getScQtApproval().setApprovalCategory(new PmParameter());
+			this.getManagedBean().getScQtApproval()
+					.setApprovalCategory(new PmParameter());
 		}
 
+		initializeRemark(new ArrayList<ScQtApprovalRemark>());
+
+		// getBudgetApproverName();
 	}
 
 	/**
@@ -193,7 +197,8 @@ public class ApprovalBackingBean extends
 		this.activeTabName = activeTabName;
 	}
 
-	public void handleFileUpload(FileUploadEvent event) throws FileNotFoundException, IOException {
+	public void handleFileUpload(FileUploadEvent event)
+			throws FileNotFoundException, IOException {
 
 		FacesScopes facesScopes = new FacesScopes();
 		List<ScQtApprovalAttachment> attachments = new ArrayList<ScQtApprovalAttachment>();
@@ -204,9 +209,10 @@ public class ApprovalBackingBean extends
 			if (null == attachment) {
 				attachment = new ScQtApprovalAttachment();
 				attachment.setScQtApproval(scQtApproval);
+				attachment.setDocNo(scQtApproval.getScQt().getQtNo());
+				attachment.setPrefixFileName(scQtApproval.getApprovalCategory()
+						.getParameterCode());
 			}
-			attachment.setDocNo(scQtApproval.getScQt().getQtNo());
-			attachment.setPrefixFileName(scQtApproval.getApprovalCategory().getParameterCode());
 			attachment.setUser(facesScopes.getUserSessionBean());
 			attachment
 					.setChangedDate(new Timestamp(System.currentTimeMillis()));
@@ -295,24 +301,26 @@ public class ApprovalBackingBean extends
 		Long qtId = obj.getQtId().longValue();
 		qtReqDto.setQtId(qtId);
 		QuationTenderResDTO tenderResDTO = detailSO.retriveQTDetails(qtReqDto);
-		// ApprovalBackingBean approvalBackingBean = new ApprovalBackingBean();
+
+		ScQtApproval scQtApproval = null;
 		this.getManagedBean().setQt(tenderResDTO.getQtDetail());
 		if (SCProcessNameConst.APPROVE_BUDGET.equalsIgnoreCase(taskName)) {
 			this.getManagedBean().setApprovalType(
 					ApprovalCategory.BUDGET_APPROVAL.dispalyName());
-			ScQtApproval approval = getApproval(qtId, "BUD");
-			this.getManagedBean().setScQtApproval(approval);
+			scQtApproval = getApproval(qtId,
+					ParameterConst.APPROVAL_CATEGORY_BUDGET);
+
 		} else if (SCProcessNameConst.APPROVE_BPK.equalsIgnoreCase(taskName)) {
 			this.getManagedBean().setApprovalType(
 					ApprovalCategory.BPK_APPROVAL.dispalyName());
-			ScQtApproval approval = getApproval(qtId, "BPK");
-			this.getManagedBean().setScQtApproval(approval);
-			initializeRemark(new ArrayList<ScQtApprovalRemark>());
+			scQtApproval = getApproval(qtId,
+					ParameterConst.APPROVAL_CATEGORY_BPK);
 		} else if (SCProcessNameConst.REVISE_BPK.equalsIgnoreCase(taskName)) {
 			this.getManagedBean().setApprovalType(
 					ApprovalCategory.BPK_APPROVAL.dispalyName());
-			ScQtApproval approval = getApproval(qtId, "BPK");
-			this.getManagedBean().setScQtApproval(approval);
+			scQtApproval = getApproval(qtId,
+					ParameterConst.APPROVAL_CATEGORY_BPK);
+
 		} else if (SCProcessNameConst.APPROVE_COMMITTEE
 				.equalsIgnoreCase(taskName)) {
 			// QTCommitteBackingBean backingBean= new QTCommitteBackingBean();
@@ -328,7 +336,7 @@ public class ApprovalBackingBean extends
 							SearchOperator.OPERATOR_EQUALS.value(), qtId));
 			commSearchBean.getDataFilterBeans().add(
 					new SearchFilterBean("scCommittee.approvalReq",
-							SearchOperator.OPERATOR_EQUALS.value(), "1"));
+							SearchOperator.OPERATOR_EQUALS.value(), true));
 			committeReqDTO.setCommSearchBean(commSearchBean);
 			CommitteResDTO resDTO = committeSO
 					.retriveQtCommitteDtls(committeReqDTO);
@@ -340,6 +348,7 @@ public class ApprovalBackingBean extends
 			this.getManagedBean().setScCommitteeMemberTabList(tabBeans);
 
 		}
+		this.getManagedBean().setScQtApproval(scQtApproval);
 
 		FacesContext context = FacesContext.getCurrentInstance();
 		context.getApplication()
@@ -491,7 +500,8 @@ public class ApprovalBackingBean extends
 		return "/xhtml/sc/quatationtender/Approver/approverMain.xhtml?faces-redirect=true";
 	}
 
-	public void handleFileAttachment(FileUploadEvent event) throws FileNotFoundException, IOException {
+	public void handleFileAttachment(FileUploadEvent event)
+			throws FileNotFoundException, IOException {
 		FacesScopes facesScopes = new FacesScopes();
 		if (event.getFile() != null) {
 			ScQtApproval scQtApproval = this.getManagedBean().getScQtApproval();
@@ -500,9 +510,10 @@ public class ApprovalBackingBean extends
 			if (null == attachment) {
 				attachment = new ScQtApprovalAttachment();
 				attachment.setScQtApproval(scQtApproval);
+				attachment.setDocNo(scQtApproval.getScQt().getQtNo());
+				attachment.setPrefixFileName(scQtApproval.getApprovalCategory()
+						.getParameterCode());
 			}
-			attachment.setDocNo(scQtApproval.getScQt().getQtNo());
-			attachment.setPrefixFileName(scQtApproval.getApprovalCategory().getParameterCode());
 			attachment.setUser(facesScopes.getUserSessionBean());
 			attachment
 					.setChangedDate(new Timestamp(System.currentTimeMillis()));

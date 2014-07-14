@@ -159,7 +159,9 @@ public class BPMTaskListBackingBean extends
 		temp.put(SCProcessNameConst.QUOTATION_TENDER_PROCESS_NAME +SCProcessNameConst.PREPARE_QT_SCHEDULE , "qtdetails");
 		temp.put(SCProcessNameConst.COMMITTEE_APPROVAL_PROCESS_NAME +SCProcessNameConst.APPROVE_COMMITTEE , "qtapprovals");
 		temp.put(SCProcessNameConst.COMMITTEE_APPROVAL_PROCESS_NAME +SCProcessNameConst.REVISE_COMMITTEE , "qtdetails");
-		
+		temp.put(SCProcessNameConst.SITE_VISIT_PROPOSAL_PROCESS_NAME +SCProcessNameConst.FINALIZE_ATTANDANCE , "sitevisit");
+		temp.put(SCProcessNameConst.SITE_VISIT_PROPOSAL_PROCESS_NAME +SCProcessNameConst.UPDATE_ATTANDANCE , "sitevisit");
+
 
 		this.getManagedBean().setBpmMap(temp);
 
