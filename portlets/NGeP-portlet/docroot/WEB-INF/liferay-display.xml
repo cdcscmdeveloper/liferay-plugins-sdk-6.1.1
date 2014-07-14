@@ -199,6 +199,7 @@
 		<portlet id="smResubmitApplication"></portlet>
 		<portlet id="paymentResponse"></portlet>
 		<portlet id="smPayment"></portlet>
+		<portlet id="virtualCert"></portlet>
 	</category>
 
 	<category name="category.ep.wp">
