@@ -218,10 +218,16 @@
 			</p:panel>
 		</p:panelGrid>
 
+		
+		<p:panel toggleable="true">
+			<f:facet name="header">
+					<h:outputText value="Address Info"/>
+				</f:facet>
+					
 		<p:panelGrid columns="2" styleClass="noBorders tr,noBorders td">
 					<p:panel id="PermanentAddressInfo" 
 						styleClass="noBorders tr,noBorders td">
-						<table>
+						<table style="width: 100%;">
 							<tr>
 								<td><u><b><h:outputText
 											value="#{lbl['lbl.sm.person.permAddr']} " /></b></u></td>
@@ -343,14 +349,14 @@
 						</table>
 					</p:panel>
 					<p:panel id="MailingAddressInfo" styleClass="noBorders tr,noBorders td">
-						<table>
+						<table style="width: 100%;">
 							<tr>
 								<td><u><b><h:outputText
 											value="#{lbl['lbl.sm.person.mailAddr']} " /></b></u></td>
 							</tr>
 							<tr>
 								<td></td>				
-								<td><p:selectBooleanCheckbox
+								<td style="white-space: nowrap; float: left;"><p:selectBooleanCheckbox
 										value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}">
 										<p:ajax event="change" update="@([id$=MailingAddressInfo])"
 											partialSubmit="true"
@@ -487,6 +493,7 @@
 						</table>
 					</p:panel>
 		</p:panelGrid>
+		</p:panel>
 		<p:outputPanel id="accountPrivilegesPanel">
 			<p:panel header="Account Privileges"
 				rendered="#{smPersonnelBackingBean.managedBean.renderPrivilegesPanel}"
