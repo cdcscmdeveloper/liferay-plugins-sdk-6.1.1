@@ -20,7 +20,7 @@
 					</c:if>
 					
 					<c:if
-							test="#{(qTDetailBB.managedBean.processName eq 'Prepare QT Details') || (qTDetailBB.managedBean.processName eq 'Quotation Tender Creation')}">
+							test="#{(qTDetailBB.managedBean.processName eq 'Prepare QT Details') || (qTDetailBB.managedBean.processName eq 'Quotation Tender Creation') || (qTDetailBB.managedBean.processName eq 'Committee Approval')}">
 						<ui:repeat
 							var="bpmAction"
 							value="#{qTDetailBB.managedBean.outComes}">
