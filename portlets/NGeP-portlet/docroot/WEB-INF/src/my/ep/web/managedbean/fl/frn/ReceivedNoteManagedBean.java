@@ -50,6 +50,7 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	private int selectedTabIndex;
 	private PmUser pmUser;
 	private List<PmCriteriaDesc> criteriaDescList;
+	private boolean docMaintainRemarks = false;
 	
 	/**
 	 * @return the flRemark
@@ -291,6 +292,20 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	 */
 	public void setCriteriaDescList(List<PmCriteriaDesc> criteriaDescList) {
 		this.criteriaDescList = criteriaDescList;
+	}
+
+	/**
+	 * @return the docMaintainRemarks
+	 */
+	public boolean isDocMaintainRemarks() {
+		return docMaintainRemarks;
+	}
+
+	/**
+	 * @param docMaintainRemarks the docMaintainRemarks to set
+	 */
+	public void setDocMaintainRemarks(boolean docMaintainRemarks) {
+		this.docMaintainRemarks = docMaintainRemarks;
 	}
 
 

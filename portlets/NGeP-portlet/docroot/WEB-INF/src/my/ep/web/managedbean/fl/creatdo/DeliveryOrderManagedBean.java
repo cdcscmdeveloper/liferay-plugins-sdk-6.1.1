@@ -87,6 +87,7 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	private int selectedTabIndex;
 	
 	private boolean modificationCancel;
+	private boolean docMaintainRemarks = false;
 
 	/**
 	 * @return the itemSelectedForCal
@@ -623,5 +624,20 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	public void setModificationCancel(boolean modificationCancel) {
 		this.modificationCancel = modificationCancel;
 	}
+
+	/**
+	 * @return the docMaintainRemarks
+	 */
+	public boolean isDocMaintainRemarks() {
+		return docMaintainRemarks;
+	}
+
+	/**
+	 * @param docMaintainRemarks the docMaintainRemarks to set
+	 */
+	public void setDocMaintainRemarks(boolean docMaintainRemarks) {
+		this.docMaintainRemarks = docMaintainRemarks;
+	}
+
 	
 }

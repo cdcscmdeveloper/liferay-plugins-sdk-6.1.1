@@ -125,7 +125,7 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 			if(isFlFulfilmentSupplier()) {
 				reqDTO.setSupplier(Boolean.TRUE);
 			}
-			if(FLProcessNameConst.UPDATE_BTN.equalsIgnoreCase(action) || FLProcessNameConst.CANCEL_BTN.equalsIgnoreCase(action)){
+			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
 				reqDTO.setPmUser(getManagedBean().getPmUser());
 			}else{
 				reqDTO.setPmUser(facesScopes.getUserSessionBean());
@@ -177,7 +177,7 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 			reqDTO.setOutcome(action);
 			reqDTO.setToken(token);
 			reqDTO.setUserRole(getUserRole());
-			if(FLProcessNameConst.UPDATE_BTN.equalsIgnoreCase(action) || FLProcessNameConst.CANCEL_BTN.equalsIgnoreCase(action) || FLProcessNameConst.ACKNOWLEDGE_BTN.equalsIgnoreCase(action)){
+			if(!(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE))){
 				if(null == getManagedBean().getSupplierDoRef()){
 					//TODO
 					// do valudation

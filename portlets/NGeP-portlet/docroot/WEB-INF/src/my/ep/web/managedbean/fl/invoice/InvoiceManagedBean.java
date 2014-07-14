@@ -78,6 +78,8 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	private String contactEmail;
 	private String contactPerson;
 	private String contactPhoneNo;
+	private boolean modificationCancel;
+	private boolean docMaintainRemarks = false;
 	
 	private FlFulfilmentRequest fulfilmentRequest;
 	
@@ -510,5 +512,33 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	 */
 	public void setTitle(String title) {
 		this.title = title;
+	}
+
+	/**
+	 * @return the modificationCancel
+	 */
+	public boolean isModificationCancel() {
+		return modificationCancel;
+	}
+
+	/**
+	 * @param modificationCancel the modificationCancel to set
+	 */
+	public void setModificationCancel(boolean modificationCancel) {
+		this.modificationCancel = modificationCancel;
+	}
+
+	/**
+	 * @return the docMaintainRemarks
+	 */
+	public boolean isDocMaintainRemarks() {
+		return docMaintainRemarks;
+	}
+
+	/**
+	 * @param docMaintainRemarks the docMaintainRemarks to set
+	 */
+	public void setDocMaintainRemarks(boolean docMaintainRemarks) {
+		this.docMaintainRemarks = docMaintainRemarks;
 	}
 }

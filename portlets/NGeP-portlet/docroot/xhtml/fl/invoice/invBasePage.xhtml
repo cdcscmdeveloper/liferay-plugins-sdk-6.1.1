@@ -12,47 +12,52 @@
 	</ui:define>
 
 	<ui:define name="contentSection">
+		<script>
+			$('#portlet_flInvoice_WAR_NGePportlet').find(
+					'.portlet-title-text').html(
+					'#{invoiceBackingBean.getPortletTitle()}');
+		</script>
 		<f:event listener="#{invoiceBackingBean.preRenderView}"
 			type="preRenderView" />
-		<p:messages id="messages" showDetail="true" autoUpdate="true" showSummary="false"
-			closable="true" severity="error, info" />
+		<p:messages id="messages" showDetail="true" autoUpdate="true"
+			showSummary="false" closable="true" severity="error, info" />
 		<table style="width: 100%">
 			<tr>
-				<td><p:commandButton value="Back" immediate="true" rendered="#{invoiceBackingBean.managedBean.taskId==null}"
+				<td><p:commandButton value="Back" immediate="true"
+						rendered="#{invoiceBackingBean.managedBean.taskId==null}"
 						icon="ui-icon-back" oncomplete="window.history.back();" /></td>
 				<td colspan="4" style="text-align: right;"><ui:repeat
 						var="bpmAction" value="#{invoiceBackingBean.managedBean.outComes}">
-						<p:commandButton value="#{bpmAction}"  update="@form" 
+						<p:commandButton value="#{bpmAction}" update="@form"
 							styleClass="ui-button"
 							icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
-							action="#{invoiceBackingBean.submitAction(bpmAction)}"
-							 />
+							action="#{invoiceBackingBean.submitAction(bpmAction)}" />
 					</ui:repeat></td>
 			</tr>
 		</table>
 		<table style="width: 100%">
-		<tr>
-			<c:if test='#{invoiceBackingBean.managedBean.buttonVal eq "Update"}'>
-				<td colspan="4" style="text-align: right;"><p:commandButton
-						value="UPDATE"
-						action="#{invoiceBackingBean.submitAction('UPDATE')}">
-						<f:param name="actionName" value="UPDATE" />
-					</p:commandButton></td>
-			</c:if>
-			<c:if test='#{invoiceBackingBean.managedBean.buttonVal eq "Cancel"}'>
-				<td colspan="4" style="text-align: right;"><p:commandButton
-						value="CANCEL"
-						action="#{invoiceBackingBean.submitAction('CANCEL')}">
-						<f:param name="actionName" value="CANCEL" />
-					</p:commandButton></td>
-			</c:if>
-		</tr>
-	</table>
+			<tr>
+				<c:if test='#{invoiceBackingBean.managedBean.buttonVal eq "Update"}'>
+					<td colspan="4" style="text-align: right;"><p:commandButton
+							value="UPDATE"
+							action="#{invoiceBackingBean.submitAction('UPDATE')}">
+							<f:param name="actionName" value="UPDATE" />
+						</p:commandButton></td>
+				</c:if>
+				<c:if test='#{invoiceBackingBean.managedBean.buttonVal eq "Cancel"}'>
+					<td colspan="4" style="text-align: right;"><p:commandButton
+							value="CANCEL"
+							action="#{invoiceBackingBean.submitAction('CANCEL')}">
+							<f:param name="actionName" value="CANCEL" />
+						</p:commandButton></td>
+				</c:if>
+			</tr>
+		</table>
 		<ui:include src="/xhtml/fl/invoice/invReviewHeaderPage.xhtml" />
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
-				<td width="20%" valign="top" class="sidemenutd">
-					<p:tabMenu styleClass="sidemenu"
+				<td width="20%" valign="top" class="sidemenutd"><p:tabMenu
+						styleClass="sidemenu"
 						activeIndex="#{invoiceBackingBean.managedBean.selectedTabIndex}">
 						<p:menuitem value="General" update="@form">
 							<f:setPropertyActionListener
@@ -71,7 +76,7 @@
 								target="#{invoiceBackingBean.managedBean.selectedTabIndex}"
 								value="2" />
 						</p:menuitem>
-						
+
 					</p:tabMenu></td>
 				<td width="80%"><p:outputPanel
 						rendered="#{invoiceBackingBean.managedBean.selectedTabIndex == 0}">

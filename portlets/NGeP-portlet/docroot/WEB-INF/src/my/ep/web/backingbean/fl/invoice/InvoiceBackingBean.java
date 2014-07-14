@@ -32,6 +32,7 @@ import my.ep.constant.fl.FulfilmentConst;
 import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constants.FLProcessNameConst;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.common.address.AddressReqDTO;
@@ -60,7 +61,7 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
-import my.ep.web.constant.BpmOutcomeConst;
+import my.ep.constant.BpmOutcomeConst;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.fl.invoice.InvoiceManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -135,11 +136,12 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			reqDTO.setTaskId(getManagedBean().getTaskId());
 			reqDTO.setToken(token);
 			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
-			reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
+			if(flBB.getManagedBean().getRemarkList().size() >0){
+				reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
+			}
 			
-			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 			reqDTO.setUserRole(getUserRole());
-			if("UPDATE".equalsIgnoreCase(action)){
+			if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
 				reqDTO.setPmUser(getManagedBean().getPmUser());
 				if(null != getManagedBean().getInvoice().getSupplierInvoiceRef()){
 					getManagedBean().getInvoice().setSupplierInvoiceRef(getManagedBean().getInvoice().getSupplierInvoiceRef());
@@ -147,6 +149,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 				reqDTO.setInvoice(getManagedBean().getInvoice());
 				resDTO = invoiceSO.invoiceModification(reqDTO);
 			}else{
+				reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 				resDTO = invoiceSO.saveInvoice(reqDTO);
 			}
 			if(resDTO.isSuccessful()) {
@@ -207,57 +210,72 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 			String ctx = getFacesScopes().getBPMAuthenticationCtxToken();
 			BpmRequestDTO bpmReqDTO = new BpmRequestDTO();
-
 			bpmReqDTO.setCtxToken(ctx);
 			bpmReqDTO.setTaskId(taskId);
 			BpmResponseDTO res = bpmSO.getTaskDetails(bpmReqDTO);
-			Object obj = res.getPojo();
-			String[] outcome = new String[res.getAction().length + 1];
-			outcome[0] = BpmOutcomeConst.BPM_SAVE;
-			int i = 1;
-			for (String action : res.getAction()) {
-				outcome[i++] = action;
-			}
-
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			FulfilmentResDTO resDTO = new FulfilmentResDTO();
-			FLInvoiceDataType paymentObj = (FLInvoiceDataType)obj;
-			IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
-			
-			reqDTO.setFlOrderId(paymentObj.getFlOrderId());
-			resDTO = invoiceSO.retrieveInvoiceByFlOrderId(reqDTO);//if save button are exist
-			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
-			
-			if(resDTO.getInvoice() == null){
-				getManagedBean().setInvoice(new FlInvoice());
-				getManagedBean().getInvoice().setFlInvoiceItem(new ArrayList<FlInvoiceItem>());
-				reqDTO.setFlRequestId(paymentObj.getFlRequestId());
-				resDTO = fulfilmentSO.retrieveFulfilmentRequest(reqDTO);
-				flBB.initializeRemarkAndAttachement(new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
-				getInvoiceTable(resDTO);				
-			} else {
+			getManagedBean().setModificationCancel(false);
+			if(FLProcessNameConst.ACK_MODIFIED_INVOICE_HT.equals(res.getTaskName())){
+				invoiceSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IInvoiceSO.class);
+				reqDTO.setInvoiceId(Long.valueOf(res.getDocId()));
+				resDTO = invoiceSO.retrieveInvoiceByInvoiceId(reqDTO);
+				getManagedBean().setDocProcess(res.getDocType());
 				getManagedBean().setInvoice(resDTO.getInvoice());
-				flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
+				//invBB.getManagedBean().getInvoice().getFlFulfilmentOrder().setFlFulfilmentRequest(resDTO.getInvoice().getFlRequest());
+				getManagedBean().getInvoice().setFlRequest(resDTO.getInvoice().getFlRequest());
+				getManagedBean().setFulfilmentRequest(resDTO.getInvoice().getFlRequest());
+				getManagedBean().setPmUser(reqDTO.getPmUser());
+				getManagedBean().setButtonVal("ACK");
+				getManagedBean().setModificationCancel(true);
+				getManagedBean().setTaskId(taskId);
+				getManagedBean().setOutComes(res.getAction());
+			}else{
+				Object obj = res.getPojo();
+				String[] outcome = new String[res.getAction().length + 1];
+				outcome[0] = BpmOutcomeConst.BPM_SAVE;
+				int i = 1;
+				for (String action : res.getAction()) {
+					outcome[i++] = action;
+				}
+				FLInvoiceDataType paymentObj = (FLInvoiceDataType)obj;
+				IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
+				
+				reqDTO.setFlOrderId(paymentObj.getFlOrderId());
+				resDTO = invoiceSO.retrieveInvoiceByFlOrderId(reqDTO);//if save button are exist
+				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+				
+				if(resDTO.getInvoice() == null){
+					getManagedBean().setInvoice(new FlInvoice());
+					getManagedBean().getInvoice().setFlInvoiceItem(new ArrayList<FlInvoiceItem>());
+					reqDTO.setFlRequestId(paymentObj.getFlRequestId());
+					resDTO = fulfilmentSO.retrieveFulfilmentRequest(reqDTO);
+					flBB.initializeRemarkAndAttachement(new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
+					getInvoiceTable(resDTO);				
+				} else {
+					getManagedBean().setInvoice(resDTO.getInvoice());
+					flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
+				}
+				
+				getManagedBean().setChargeLineItemRoot(null);
+				getManagedBean().setDocType(resDTO.getFlFulfilmentRequest().getDocType());
+				getManagedBean().setTaskId(taskId);
+				getManagedBean().setOutComes(outcome);
+				
+				getManagedBean().getInvoice().setFlFulfilmentOrder(resDTO.getFlFulfilmentRequest().getFlFulfilmentOrder());
+				getManagedBean().getInvoice().setFlRequest(resDTO.getFlFulfilmentRequest());
+				if(getManagedBean().getInvoice().getFlFulfilmentOrder().isFactored()){
+					getFactoringBranchDtl(); 
+				}
+				
+				getManagedBean().setSelectedTabIndex(0);
+				if(getManagedBean().getInvoice().getStatus()==null) {
+					PmStatus pmStatus = new PmStatus();
+					pmStatus.setStatusId(FulfilmentStatusConst.IN_PENDING_INVOICE);
+					getManagedBean().getInvoice().setStatus(pmStatus);
 			}
-			
-			getManagedBean().setChargeLineItemRoot(null);
-			getManagedBean().setDocType(resDTO.getFlFulfilmentRequest().getDocType());
-			getManagedBean().setTaskId(taskId);
-			getManagedBean().setOutComes(outcome);
-			
-			getManagedBean().getInvoice().setFlFulfilmentOrder(resDTO.getFlFulfilmentRequest().getFlFulfilmentOrder());
-			getManagedBean().getInvoice().setFlRequest(resDTO.getFlFulfilmentRequest());
-			if(getManagedBean().getInvoice().getFlFulfilmentOrder().isFactored()){
-				getFactoringBranchDtl(); 
-			}
-			
-			getManagedBean().setSelectedTabIndex(0);
-			if(getManagedBean().getInvoice().getStatus()==null) {
-				PmStatus pmStatus = new PmStatus();
-				pmStatus.setStatusId(FulfilmentStatusConst.IN_PENDING_INVOICE);
-				getManagedBean().getInvoice().setStatus(pmStatus);
-			}			
 		}
+	}
 	}
 	
 	public void factoringChecked(AjaxBehaviorEvent e) {
@@ -364,7 +382,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		
 		BigDecimal serviceFee = null;
 		if(getManagedBean().getInvoice().getFlFulfilmentOrder().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)) {
-			serviceFee = new BigDecimal(FulfilmentConst.SERVICE_FEE_ZERO_POINT_EIGHT);
+			serviceFee = new BigDecimal(FulfilmentConst.SERVICE_FEE_ZERO_POINT_FOUR);
 		} else {
 			serviceFee = new BigDecimal(getManagedBean().getInvoice().getFlRequest().getCtContract().getServiceFee());
 		}
@@ -568,6 +586,13 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		this.getManagedBean().setTitle(null);
 		this.getManagedBean().setContractNo(null);
 		this.getManagedBean().setLoaNo(null);
+	}
+	public String getPortletTitle() {
+		String portletTitle = " Fulfilment Document Maintenance";
+		if(getManagedBean().isModificationCancel()) {
+			portletTitle = "Fulfilment Document Maintenance";
+		}
+		return portletTitle;
 	}
 	
 }
