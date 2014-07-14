@@ -23,7 +23,7 @@
 		<p:dataTable id="specificationcommitteeid" styleClass="clonetecid"
 			value="#{committe.scCommitteeMembers}" var="specificationcommittee"
 			rowIndexVar="index" rowKey="#{specificationcommittee}"
-			selection="#{qTCommitteBackingBean.managedBean.selectedCommitteMemebers}">
+			selection="#{selectedCommittee}">
 
 			<p:column selectionMode="multiple" style="width:2%" />
 
@@ -65,7 +65,7 @@
 						rendered="#{specificationcommittee.memberRole.parameterId == '583'}" />
 				</ui:fragment>
 				<ui:fragment rendered="#{!specificationcommittee.PNP}">
-					<p:selectOneMenu id="roleid" required="true"
+					<p:selectOneMenu id="roleid" 
 						label="#{lbl['lbl.so.role']}"
 						value="#{specificationcommittee.memberRole.parameterId}"
 						style="width: 110px;margin-bottom: 5px;">

@@ -30,6 +30,9 @@
 
 					<ui:param name="committe"
 						value="#{committeeApproval.scQtCommittee.scCommittee}" />
+					
+					<ui:param name="selectedCommittee"
+						value="#{committeeApproval.members}" />
 
 					<ui:include src="specificationCommitteeDetails.xhtml" />
 
@@ -47,13 +50,15 @@
 						<p:commandButton value="#{lbl['lbl.so.clone.to.tec']}"
 							process="@this, specificationcommitteeid" update="@(.clonetecid)"
 							rendered="#{committeeApproval.titleName eq 'Specification Committee' and qTDetailBB.managedBean.qt.evaluationType eq 2}"
-							action="#{qTCommitteBackingBean.addCloneToTecDtl}" icon="ui-icon-add"/>
+							actionListener="#{qTCommitteBackingBean.addCloneToTecDtl}"
+							icon="ui-icon-clone" />
 					</div>
 				</ui:fragment>
 
 				<ui:fragment
 					rendered="#{committeeApproval.titleName eq 'Finalization Secretary'}">
-
+					<ui:param name="membersList"
+						value="#{committeeApproval.scQtCommittee}" />
 					<ui:include src="finalizationSecretaryDetails.xhtml" />
 				</ui:fragment>
 

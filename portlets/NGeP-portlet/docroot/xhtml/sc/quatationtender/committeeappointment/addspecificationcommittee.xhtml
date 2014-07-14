@@ -14,8 +14,8 @@
 			<p:messages id="scmessages" showDetail="true" autoUpdate="true"
 				closable="true" showSummary="false" />
 			<h:panelGrid columns="3" styleClass="noBorders tr,noBorders td">
-				<h:outputLabel value="#{lbl['lbl.sc.committe.addscreen.selection']}" />
 				<p:outputLabel value="*" styleClass="mandatory" />
+				<h:outputLabel value="#{lbl['lbl.sc.committe.addscreen.selection']}" />
 				<p:selectOneRadio
 					value="#{qTCommitteBackingBean.managedBean.committeMember.userSelection}">
 					<f:selectItems

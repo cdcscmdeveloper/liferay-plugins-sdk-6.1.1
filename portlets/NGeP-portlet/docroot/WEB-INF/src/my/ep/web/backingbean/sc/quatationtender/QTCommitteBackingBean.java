@@ -10,6 +10,7 @@ import java.util.Map.Entry;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 
@@ -67,6 +68,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.component.tabview.TabView;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.TabChangeEvent;
@@ -218,6 +220,14 @@ public class QTCommitteBackingBean extends
 	}
 	
 	public void onTabChangeAction(TabChangeEvent event) {
+		
+		FacesContext context = FacesContext.getCurrentInstance();
+		Map<String, String> params = context.getExternalContext().getRequestParameterMap();
+		TabView tabView = (TabView) event.getComponent();
+		String activeIndexValue = params.get(tabView.getClientId(context) + "_tabindex");
+		
+		this.getManagedBean().setSubTabIndex(Integer.parseInt(activeIndexValue));
+		System.out.println("Index : " + getManagedBean().getSubTabIndex());
 		String tabTitle = ((TabBean) event.getData()).getTitleName();
 
 		/*ScQtCommittee scQtCommittee = ((TabBean) event.getData()).getScQtCommittee();
@@ -464,8 +474,15 @@ public class QTCommitteBackingBean extends
 	public void deleteSpecificationCommittee() {
 		debugLogger("deleteSpecificationCommittee");
 		List<TabBean> beans = getManagedBean().getScCommitteeMemberTabList();
-		List<ScCommitteeMember> selectedList = this.getManagedBean().getSelectedCommitteMemebers();
+		TabBean bean = beans.get(this.getManagedBean().getSubTabIndex());
+		for(ScCommitteeMember member : bean.getMembers()) {
+			bean.getScQtCommittee().getScCommittee().getScCommitteeMembers().remove(member);
+		}
+		getManagedBean().getScCommitteeMemberTabList().add(this.getManagedBean().getSubTabIndex(), bean);
 		
+		
+		/*//List<ScCommitteeMember> selectedList = this.getManagedBean().getSelectedCommitteMemebers();
+		//System.out.println("Index : " + this.getManagedBean().getSubTabIndex());
 		TabBean bean = beans.get(this.getManagedBean().getSubTabIndex());
 		//bean.getScQtCommittee().getScCommittee().getScCommitteeMembers();
 		
@@ -474,7 +491,7 @@ public class QTCommitteBackingBean extends
 		}
 		getManagedBean().getScCommitteeMemberTabList().add(this.getManagedBean().getSubTabIndex(), bean);
 		
-		/*for(ScCommitteeMember member : bean.getMembers()) {
+		for(ScCommitteeMember member : bean.getMembers()) {
 			bean.getScQtCommittee().getScCommittee().getScCommitteeMembers().remove(member);
 		}
 		getManagedBean().getScCommitteeMemberTabList().add(this.getManagedBean().getSubTabIndex(), bean);*/

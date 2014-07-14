@@ -76,15 +76,15 @@
 						<h:panelGrid border="0" cellpadding="0" cellspacing="0"
 							columns="2" columnClasses="columnWidth20"
 							style="margin-left: 26px;"
-							rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000'}">
+							rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount gt '500000'}">
 							<h:outputLabel value="#{lbl['lbl.so.allstate']}"
 								style="width : 80px" />
-							<p:selectBooleanCheckbox disabled="true"
-								value="#{specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState}">
+							<p:selectBooleanCheckbox 
+								value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState}">
 								<f:selectItem
-									itemValue="#{specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState}"></f:selectItem>
+									itemValue="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState}" />
 								<p:ajax update="supplierallStae"
-									listener="#{specificationBackingBean.stateChange}" />
+									listener="#{qTSupplierQulCriteriaBackingBean.stateChange}" />
 							</p:selectBooleanCheckbox>
 						</h:panelGrid>
 					</h:panelGroup></td>
@@ -131,7 +131,7 @@
 								style="width: 178px;">
 
 								<f:selectItems
-									value="#{specificationBackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel)}" />
+									value="#{qTSupplierQulCriteriaBackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel)}" />
 								<p:ajax event="change"
 									listener="#{qTSupplierQulCriteriaBackingBean.selectLocation}"></p:ajax>
 							</p:selectOneMenu> <p:message id="withOutzone" for="locLevels" display="icon"></p:message>
