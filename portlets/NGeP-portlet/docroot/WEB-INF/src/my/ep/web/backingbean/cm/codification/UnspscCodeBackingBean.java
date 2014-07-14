@@ -1846,6 +1846,12 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 		return "reviewBeforeCreateTempCode?faces-redirect=true";
 	}
+	
+	public String backToCodificationSearch(){
+
+
+		return "codificationView?faces-redirect=true";
+	}
 
 
 	public String requestExtensionCode(){

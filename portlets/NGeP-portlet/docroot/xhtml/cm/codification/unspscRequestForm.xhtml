@@ -17,15 +17,26 @@
 
 		<p:messages id="unspscFormId" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="true"></p:messages>
+
 		<h:panelGroup id="cmUNSPSCrequestID">
+		
+			<div style="text-align: right; min-height: 40px;">
+				
+					<p:commandButton value="#{lbl['lbl.cm.submit']}"
+						icon="ui-icon-submit"
+						action="#{unspscCodeBackingBean.submitForRequest('SUBMIT')}"
+						update="@form"></p:commandButton>
+				
 
-
-			<div style="text-align: right;">
-				<p:commandButton value="#{lbl['lbl.cm.submit']}"
-					icon="ui-icon-submit"
-					action="#{unspscCodeBackingBean.submitForRequest('SUBMIT')}"
-					update="@form"></p:commandButton>
+				<div style="float: left; clear: both;">
+					<p:commandButton value="Back" icon="ui-icon-back" immediate="true"
+						action="#{unspscCodeBackingBean.backToCodificationSearch}"
+						update="@form">
+					</p:commandButton>
+				</div>
 			</div>
+
+
 
 
 
@@ -33,55 +44,61 @@
 			<table style="width: 100%;">
 				<tr>
 					<td><p:outputLabel value="Item Type"></p:outputLabel></td>
-					<td><p:selectOneMenu 
+					<td><p:selectOneMenu
 							value="#{unspscCodeBackingBean.managedBean.requestCode.itemType}"
 							style="width:228px;">
 							<f:selectItem itemValue="P" itemLabel="Product " />
 							<f:selectItem itemValue="S" itemLabel="Service" />
 							<p:ajax event="valueChange" update="@form" />
-						</p:selectOneMenu>
-						</td>
+						</p:selectOneMenu></td>
 					<td></td>
 					<td></td>
 				</tr>
 
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.cm.item.name']}" /><p:outputLabel value="*" styleClass="mandatory"/></td>
+					<td><p:outputLabel value="#{lbl['lbl.cm.item.name']}" />
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
 					<td><ac:inputText
 							value="#{unspscCodeBackingBean.managedBean.requestCode.itemName}"
 							required="true" size="40"></ac:inputText></td>
-					<td><p:outputLabel value="#{lbl['lbl.cm.request.description']}"/><p:outputLabel value="*" styleClass="mandatory"/></td>
+					<td><p:outputLabel
+							value="#{lbl['lbl.cm.request.description']}" />
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
 					<td><ac:inputText
 							value="#{unspscCodeBackingBean.managedBean.requestCode.itemDetail}"
 							required="true" size="40"></ac:inputText></td>
 				</tr>
-			
-			<h:panelGroup id="extensionFiledsId"
-				rendered="#{unspscCodeBackingBean.managedBean.requestCode.itemType != 'S'}">
+
+				<h:panelGroup id="extensionFiledsId"
+					rendered="#{unspscCodeBackingBean.managedBean.requestCode.itemType != 'S'}">
 					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.cm.type']}"/><p:outputLabel value="*" styleClass="mandatory"/></td>
+						<td><p:outputLabel value="#{lbl['lbl.cm.type']}" />
+							<p:outputLabel value="*" styleClass="mandatory" /></td>
 						<td><ac:inputText
 								value="#{unspscCodeBackingBean.managedBean.requestCode.typeName}"
 								required="true" size="40"></ac:inputText></td>
-						<td><p:outputLabel value="#{lbl['lbl.cm.brand']}"/><p:outputLabel value="*" styleClass="mandatory"/></td>
+						<td><p:outputLabel value="#{lbl['lbl.cm.brand']}" />
+							<p:outputLabel value="*" styleClass="mandatory" /></td>
 						<td><ac:inputText
 								value="#{unspscCodeBackingBean.managedBean.requestCode.brandName}"
 								required="true" size="40"></ac:inputText></td>
 					</tr>
 					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.cm.measurement']}"/><p:outputLabel value="*" styleClass="mandatory"/></td>
+						<td><p:outputLabel value="#{lbl['lbl.cm.measurement']}" />
+							<p:outputLabel value="*" styleClass="mandatory" /></td>
 						<td><ac:inputText
 								value="#{unspscCodeBackingBean.managedBean.requestCode.measurementName}"
 								required="true" size="40"></ac:inputText></td>
-						<td><p:outputLabel value="#{lbl['lbl.cm.color']}"/><p:outputLabel value="*" styleClass="mandatory"/></td>
+						<td><p:outputLabel value="#{lbl['lbl.cm.color']}" />
+							<p:outputLabel value="*" styleClass="mandatory" /></td>
 						<td><ac:inputText
 								value="#{unspscCodeBackingBean.managedBean.requestCode.colorName}"
 								required="true" size="40"></ac:inputText></td>
 					</tr>
-			</h:panelGroup>
+				</h:panelGroup>
 			</table>
 		</h:panelGroup>
-<p:spacer height="30px;"/>
+		<p:spacer height="30px;" />
 
 
 
