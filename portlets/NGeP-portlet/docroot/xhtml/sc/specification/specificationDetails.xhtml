@@ -81,12 +81,13 @@
 			</tr>
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.sc.spec.max.proposal']}" /></td>
-				<td><p:inputMask id="proposalId"  size="30" mask="9" placeHolder=""
+				<td><p:inputMask id="proposalId" size="30" mask="9"
+						placeHolder=""
 						disabled="#{specificationBackingBean.managedBean.scQt.pmProcurementCategory.parameterCode ne 'CHE'}"
 						label="#{lbl['lbl.sc.spec.max.proposal']}" maxlength="1"
 						value="#{specificationBackingBean.managedBean.scQt.maxProposal}"
 						style="text-align:right;">
-						</p:inputMask> </td>
+					</p:inputMask></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value=" #{lbl['lbl.sc.spec.ful.type']}" />
@@ -106,8 +107,9 @@
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.spec.complete.period']}" escape="false" /> <p:outputLabel
 						value="*" styleClass="mandatory"></p:outputLabel></td>
-				<td><p:inputMask id="contract" required="true" size="30" mask="9?99" placeHolder=""
-						maxlength="3" label="#{lbl['lbl.sc.spec.complete.period']}"
+				<td><p:inputMask id="contract" required="true" size="30"
+						mask="9?99" placeHolder="" maxlength="3"
+						label="#{lbl['lbl.sc.spec.complete.period']}"
 						value="#{specificationBackingBean.managedBean.scQt.contractDuration}"
 						style="text-align:right;">
 					</p:inputMask> <h:outputText value="(Month)" /> <p:message id="completion"
@@ -116,7 +118,7 @@
 		</table>
 	</p:panel>
 	<p:panel header="Zone/Location Info"
-		rendered="#{specificationBackingBean.managedBean.scQt.zonal !='false'}">
+		rendered="#{specificationBackingBean.managedBean.scQt.zonal !='false' and specificationBackingBean.managedBean.scQt.panel eq 'false'}">
 		<table style="width: 100%">
 			<tr>
 				<td style="width: 94px"><p:outputLabel value="Location Level" /></td>
@@ -134,7 +136,7 @@
 	</p:panel>
 
 	<p:panel
-		rendered="#{specificationBackingBean.managedBean.scQt.zonal !='false'}">
+		rendered="#{specificationBackingBean.managedBean.scQt.zonal !='false' and specificationBackingBean.managedBean.scQt.panel eq 'false'}">
 		<h:panelGrid width="100%">
 			<p:dataTable id="zoneGeneralDataTable"
 				value="#{specificationBackingBean.managedBean.zoneGeneralTrees}"
