@@ -18,7 +18,6 @@ import javax.servlet.http.HttpServletRequest;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.cm.catalogue.IViewSupplierItemSO;
-import my.ep.biz.service.osb.sc.IPurchaseRequestOsbSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
@@ -36,7 +35,6 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.DPStatusConstants;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
-import my.ep.dto.osb.sc.PurchaseRequestOSBReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -1314,7 +1312,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		 purchaseInDefaultSO = null;
 	 }
 	}
-	
+
 	public void closeListener() {
 		log.info("closeListener");
 		// add to cart validation
@@ -1385,6 +1383,25 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		}
 		return items;
 	}
+	
+	public boolean  checkPriceOffered(String priceTypeCode) {
+		log.info("checkPriceOffered");
+		if(priceTypeCode != null){
+			if(priceTypeCode.equalsIgnoreCase(ParameterConst.PRICE_TYPE_PROMOTION_TIER) ||
+					priceTypeCode.equalsIgnoreCase(ParameterConst.PRICE_TYPE_TARIFF) ||
+					priceTypeCode.equalsIgnoreCase(ParameterConst.PRICE_TYPE_TIER) || 
+					priceTypeCode.equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_PROMOTION) || 
+					priceTypeCode.equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_PROMOTION_TIER) ||
+					priceTypeCode.equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_STANDARD) ||
+					priceTypeCode.equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TARIFF) || 
+					priceTypeCode.equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)){
+
+				return Boolean.TRUE;
+			}
+		}
+		return Boolean.FALSE;
+	}
+
 	
 	public String cancel() {
 		log.info("cancel");
