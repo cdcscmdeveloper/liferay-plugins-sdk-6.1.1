@@ -13,6 +13,20 @@
 
 	<ui:define name="contentSection">
 	
+		<p:panel styleClass="noBorders tr,noBorders td" style="width:100%">
+			<table style="width: 100%;">
+				<tr>
+					<td>
+						<p:commandButton value="#{lbl['lbl.btn.back']}" ajax="false" icon="ui-icon-back"
+							immediate="true" action="#{softCertBackingBean.cancel}" />
+					</td>
+					<td style="white-space: nowrap; float: right;">
+					    <p:commandButton value="Make payment" style="float:right;" icon="ui-icon-next"/>
+					</td>
+				</tr>
+			</table>	
+		</p:panel>
+
 	<h:panelGrid id="search" style="width:100%;">
 	 
 	<p:panel header="Payment Selection" toggleable="true">
@@ -59,13 +73,6 @@
      </p:dataTable>
 	</p:panel>
 	
-	<p:panel>
-	<h:panelGrid columns="2" style="width:100%;" styleClass="noBorders tr,noBorders td">
-	  <p:commandButton value="Previous" ajax="false" icon="ui-icon-cancel" action="#{softCertBackingBean.cancel}"/>
-      <p:commandButton value="Make payment" style="float:right;" icon="ui-icon-add">
-	  </p:commandButton>
-	 </h:panelGrid>	
-	 </p:panel>
 </h:panelGrid>
 
 </ui:define>

@@ -14,6 +14,18 @@
 
 	<ui:define name="contentSection">
 
+		<p:panel styleClass="noBorders tr,noBorders td" style="width:100%">
+			<table style="width: 100%;">
+				<tr>
+					<td>
+						<p:commandButton value="Proceed" oncomplete="confirmDialog.show();"
+						style="float:right;" icon="ui-icon-next">
+					</p:commandButton>
+					</td>
+				</tr>
+			</table>	
+		</p:panel>
+
 		<h:panelGrid id="search" style="width:100%;">
 
 			<p:panel header="Results" toggleable="true">
@@ -64,14 +76,6 @@
 				</p:dataTable>
 			</p:panel>
 
-			<p:panel>
-				<h:panelGrid columns="2" style="width:100%;"
-					styleClass="noBorders tr,noBorders td">
-					<p:commandButton value="Proceed" oncomplete="confirmDialog.show();"
-						style="float:right;" icon="ui-icon-add">
-					</p:commandButton>
-				</h:panelGrid>
-			</p:panel>
 		</h:panelGrid>
 
 		<p:dialog id="confirmDialog" header="Confirmation"
