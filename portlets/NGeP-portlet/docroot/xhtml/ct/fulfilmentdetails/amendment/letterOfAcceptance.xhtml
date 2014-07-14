@@ -11,7 +11,7 @@
 		     <p:ajax event="rowSelect" update=":form:delLoaContentBtn" />
 			 <p:column headerText="Content" style="width:50%;">
 			    <p:outputLabel value="#{data.title}" style="float:left;" rendered="#{data.definationType.parameterCode == ParameterConst.documentDefinitionTypeSystemDefined}" />
-				<p:inputText value="#{data.scLoaReportAttachment.fileDesc}" style="width:90%;" rendered="#{data.definationType.parameterCode == ParameterConst.documentDefinitionTypeUpload}"/>
+				<p:inputText value="#{data.title}" style="width:90%;" rendered="#{data.definationType.parameterCode == ParameterConst.documentDefinitionTypeUpload}"/>
 		     </p:column>
 			 <p:column headerText="Type" style="width:15%;">
 				<p:outputLabel style="float:left;"

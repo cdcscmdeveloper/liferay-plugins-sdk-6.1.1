@@ -7,28 +7,34 @@
 	 <p:panel id="paymentDetails" header="PAYMENTS DETAILS" toggleable="true" toggleSpeed="500"
 	 	rendered="#{amendmentBackingBean.managedBean.ackFA == 'Ack'}" >
 		<h:panelGrid columns="2" style="width:75%" columnClasses="columnWidth30">
-			<p:outputLabel value="Account No"/>
-			<p:selectOneMenu  style="width:210px; margin-bottom: 5px;" 
-			   value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.bankAccountNo}">
+		  <h:panelGrid columns="2" style="float:right;">
+			 <p:outputLabel value="*" styleClass="mandatory" />
+			 <p:outputLabel value="Account No"/>
+		 </h:panelGrid>
+		<h:panelGrid columns="2">
+		   <p:selectOneMenu id="accountNo"  style="width:180px; margin-bottom: 5px;" 
+			 value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.bankAccountNo}">
 			   <f:selectItem itemLabel="-Select One-" itemValue=""/>
 			   <f:selectItems value="#{amendmentBackingBean.populateBankAccountList}"/>
 			    <p:ajax event="change" process="@this" update="paymentDetails" listener="#{amendmentBackingBean.changeAccountActionListener}"/>
-			</p:selectOneMenu>
-			<p:outputLabel value="Bank Name"/>
-			<p:inputText style="width:170px;" disabled="true"
-			    value="#{amendmentBackingBean.managedBean.supplierBank.pmFinancialOrg.finOrgName}"/>
+		     </p:selectOneMenu>
+		     <p:message for="accountNo" display="icon"/>
+		  </h:panelGrid>
+		   <p:outputLabel value="Bank Name"/>
+		   <p:inputText style="width:170px;" disabled="true"
+			    value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.bankName}"/>
 			<p:outputLabel value="Bank Branch"/>
 			<p:inputText style="width:170px;" disabled="true"
-			   value="#{amendmentBackingBean.managedBean.supplierBank.smSupplierBranch.branchName}"/>
+			   value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.bankBranch}"/>
 			 <h:panelGroup>
             <div style="height: 70px; vertical-align:top;">
                 <p:outputLabel for="payBankAddress" value="Bank Address" />
             </div>
            </h:panelGroup>
            <h:panelGrid>
-             <p:inputTextarea id="payBankAddress" disabled="true"
-                rows="4" cols="31"   maxlength="200"  autoResize="false" style="margin-bottom: 5px;" 
-                value="#{amendmentBackingBean.managedBean.supplierBankAddress}"/>
+             <p:inputTextarea id="payBankAddress" disabled="true"  rows="4" 
+               maxlength="200"  autoResize="false" style="width:170px;margin-bottom: 5px;" 
+                value="#{amendmentBackingBean.getFullAddress(amendmentBackingBean.managedBean.contractVer.ctContractValue.bankAddress)}"/>
            </h:panelGrid>
 		</h:panelGrid>
 	</p:panel>	

@@ -47,12 +47,10 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private String processName;
 	private String ackFA;
 	private String showItem ="Item  Pricing";
-	private String supplierAddress;
 	private String selectedRadioButton="1";
 	private String name = null;
 	private String identificationNo = null;
 	private String witnessHeader;
-	private String supplierBankAddress;
 	private String editorValue;
 	private String fileDirectory;
 	
@@ -109,11 +107,6 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private ScLoaWitness scLoaWitness;
 	private ScLoaReport selectedScLoaReports;
 	
-	//private boolean productAndService;
-    //	private double secondValue =0.0;
-	//private PmUser userLogin;
-	//private String supplierLocation;
-	//private String identificationType;
 	public CtContractVer getContractVer() {
 		return contractVer;
 	}
@@ -191,22 +184,6 @@ public class AmendmentManagedBean extends BaseManagedBean {
 		this.attachmentList = attachmentList;
 	}
 
-	/*public String getItemType() {
-		return itemType;
-	}
-
-	public void setItemType(String itemType) {
-		this.itemType = itemType;
-	}
-
-	public boolean isServiceItem() {
-		return serviceItem;
-	}
-
-	public void setServiceItem(boolean serviceItem) {
-		this.serviceItem = serviceItem;
-	}*/
-
 	public boolean isProductItem() {
 		return productItem;
 	}
@@ -214,14 +191,6 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	public void setProductItem(boolean productItem) {
 		this.productItem = productItem;
 	}
-
-	/*public boolean isProductAndService() {
-		return productAndService;
-	}
-
-	public void setProductAndService(boolean productAndService) {
-		this.productAndService = productAndService;
-	}*/
 
 	public String getShowItem() {
 		return showItem;
@@ -257,22 +226,6 @@ public class AmendmentManagedBean extends BaseManagedBean {
 		this.itemPriceList = itemPriceList;
 	}
 
-	/*public double getSecondValue() {
-		return secondValue;
-	}
-
-	public void setSecondValue(double secondValue) {
-		this.secondValue = secondValue;
-	}
-
-	public PmUser getUserLogin() {
-		return userLogin;
-	}
-
-	public void setUserLogin(PmUser userLogin) {
-		this.userLogin = userLogin;
-	}*/
-
 	public List<CtContractVer> getAmendHistoryList() {
 		if(amendHistoryList==null) {
 			amendHistoryList = new ArrayList<CtContractVer>();
@@ -306,14 +259,6 @@ public class AmendmentManagedBean extends BaseManagedBean {
 
 	public void setCtPerformanceBond(CtPerformanceBond ctPerformanceBond) {
 		this.ctPerformanceBond = ctPerformanceBond;
-	}
-
-	public String getSupplierAddress() {
-		return supplierAddress;
-	}
-
-	public void setSupplierAddress(String supplierAddress) {
-		this.supplierAddress = supplierAddress;
 	}
 
 	public boolean isDirectPurchase() {
@@ -355,14 +300,6 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	public void setChkAmendAllValue(boolean chkAmendAllValue) {
 		this.chkAmendAllValue = chkAmendAllValue;
 	}
-
-	/*public String getSupplierLocation() {
-		return supplierLocation;
-	}
-
-	public void setSupplierLocation(String supplierLocation) {
-		this.supplierLocation = supplierLocation;
-	}*/
 
 	public TreeNode getCtZoneTrees() {
 		return ctZoneTrees;
@@ -487,14 +424,6 @@ public class AmendmentManagedBean extends BaseManagedBean {
 		this.identificationNo = identificationNo;
 	}
 
-	/*public String getIdentificationType() {
-		return identificationType;
-	}
-
-	public void setIdentificationType(String identificationType) {
-		this.identificationType = identificationType;
-	}*/
-
 	public List<PmUser> getExternalUsers() {
 		return externalUsers;
 	}
@@ -584,14 +513,6 @@ public class AmendmentManagedBean extends BaseManagedBean {
 
 	public void setSupplierBank(SmSupplierBank supplierBank) {
 		this.supplierBank = supplierBank;
-	}
-
-	public String getSupplierBankAddress() {
-		return supplierBankAddress;
-	}
-
-	public void setSupplierBankAddress(String supplierBankAddress) {
-		this.supplierBankAddress = supplierBankAddress;
 	}
 
 	public CtItemMaxQty getCtItemMaxQty() {
