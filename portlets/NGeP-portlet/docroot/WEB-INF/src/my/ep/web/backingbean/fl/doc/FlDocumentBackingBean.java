@@ -329,10 +329,8 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 				stopInstrBB.getManagedBean().setStopInstr(flStopInstr);
 				stopInstrBB.populateStopInstrItem();
 				
-				if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE) || buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
-					FulfilmentBackingBean flBB = new FulfilmentBackingBean();
-					flBB.initializeRemarkAndAttachement(new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
-				}	
+				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+				flBB.initializeRemarkAndAttachement(new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 				navgPage = "stopInstr";
 			} else {
 				fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
