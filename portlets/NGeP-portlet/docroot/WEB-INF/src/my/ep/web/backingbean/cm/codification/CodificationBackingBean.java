@@ -919,7 +919,7 @@ public class CodificationBackingBean extends
 		if (isSelectedRequestItemProduct()) {
 			Object[] objects = (Object[]) this.getManagedBean()
 					.getSelectedExtenstionForItem();
-			System.out.println("................ objects.length"+ objects.length);
+			
 			System.out.println("................ isSelectedRequestItemProduct="+ isSelectedRequestItemProduct());
 			if (objects != null && objects.length > 0) {
 				extCodeVO = new ExtensionCodeVO();
