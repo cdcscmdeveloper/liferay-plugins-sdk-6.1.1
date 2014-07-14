@@ -110,10 +110,8 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			FlInvoice invoice = getManagedBean().getInvoice();
 			invoiceSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IInvoiceSO.class);
 			
-			if(null==getManagedBean().getChargeLineItemRoot()){
-				getManagedBean().populateChargeLineData();
-				calInvSummary();
-			}
+			// Need to call this as user may not click on summary menu
+			calInvSummary();
 			
 			// Check is it DAN exist
 			if(action.equalsIgnoreCase(my.ep.constant.BpmOutcomeConst.BPM_SUBMIT)) {
