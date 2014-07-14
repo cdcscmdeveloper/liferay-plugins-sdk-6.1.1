@@ -519,6 +519,9 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				}else{
 			        getManagedBean().setCircularVer(resDTO.getCircularVer());
 					getManagedBean().setCircular(resDTO.getCircularVer().getCtCircular());
+					getManagedBean().setSelectionOfZone(false);
+					getManagedBean().setSelectedPanelItems(null);
+					getManagedBean().setSelectedPanelZone(null);
 					getManagedBean().setUpdateAction(false);
 					initializeRemarks();
 					ContractBackingBean ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
