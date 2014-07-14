@@ -1390,15 +1390,36 @@ public class QTDetailBackingBean extends
 			}
 			if (null != getManagedBean().getQt().getEstimatedAmount()
 					&& getManagedBean().getQt().getEstimatedAmount().intValue() > 500000) {
+				retrieveFinalizationSecratryDtl(qtId);
 				getManagedBean().setFinalizeComm(getCommTypePBDropdownValues());
 				committeTabs.add(new TabBean("Finalization Secretary",
 						getFinalizationCommitteeTypeDtl("PBA", null)));
 			} else {
-				getManagedBean().setFinalizeComm(getCommTypeQCDropdownValues());
+				retrieveFinalizationSecratryDtl(qtId);
 				committeTabs.add(new TabBean("Finalization Secretary",
 						getFinalizationCommitteeTypeDtl("QCA", null)));
 			}
 			this.getManagedBean().setScCommitteeMemberTabList(committeTabs);
+		}
+	}
+
+	/**
+	 * @param qtId
+	 */
+	private void retrieveFinalizationSecratryDtl(Long qtId) {
+		ICommitteSO committeSO;
+		CommitteReqDTO reqDTO = new CommitteReqDTO();
+		reqDTO.setQtId(qtId);
+		CommitteResDTO resDTO = null;
+		try {
+			committeSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
+			resDTO = committeSO.retrieveFinalizationSecratryDtls(reqDTO);
+			List<PmParameter> finalizationSecratary = resDTO.getFinalizationSecratry();
+			log.info("Finalization Secratory Size : " + finalizationSecratary.size());
+			this.getManagedBean().setFinalizationSecratary(finalizationSecratary);
+		} finally {
+			committeSO = null;
 		}
 	}
 
@@ -2526,12 +2547,11 @@ public class QTDetailBackingBean extends
 		return items;
 	}
 
-	public void retrieveSecretaryNameByCommType(AjaxBehaviorEvent event) {
+	public void retrieveSecretaryNameByCommType(PmParameter parameter) {
 		debugLogger("retrieveSecretaryNameByCommType");
-		String commType = (String) event.getComponent().getAttributes()
-				.get("value");
+		String commType = parameter.getParameterCode();
 		System.out.println("commType : " + commType);
-		getManagedBean().setCommitteMember(new ScCommitteeMember());
+		getManagedBean().setCommitteMember(null);
 		CommitteReqDTO reqDTO = new CommitteReqDTO();
 		reqDTO.setCommitteeType(commType);
 		CommitteResDTO resDTO = null;
