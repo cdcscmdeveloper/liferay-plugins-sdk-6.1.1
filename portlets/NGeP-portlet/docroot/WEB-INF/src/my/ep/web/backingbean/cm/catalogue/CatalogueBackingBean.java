@@ -108,6 +108,8 @@ import org.apache.poi.xssf.usermodel.XSSFDataFormat;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.primefaces.event.FileUploadEvent;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.event.UnselectEvent;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
@@ -5337,8 +5339,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Item is already in the list."));
 			}
-		/*}else if(optionListValue.intValue()==2){
-			this.getManagedBean().getsim().add(supplierItem);*/
 		}else if(optionListValue.intValue()==3){
 			if (!this.getManagedBean().getSelectViewItems().contains(supplierItem))
 				this.getManagedBean().getSelectViewItems().add(supplierItem);
@@ -5349,6 +5349,25 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}
 		//this.getManagedBean().setOptionListValue(0);
 	}
+	
+	public void onRowSelect(SelectEvent event) {
+		VCmSupplierItem supplierItem = ((VCmSupplierItem)event.getObject());
+		if (!this.getManagedBean().getSelectViewItems().contains(supplierItem))
+			this.getManagedBean().getSelectViewItems().add(supplierItem);
+		else
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Item is already in the list."));
+		
+        
+    }
+	
+	public void onRowDeselect(UnselectEvent event) {
+		VCmSupplierItem supplierItem = ((VCmSupplierItem)event.getObject());
+		log.info("onRowDeselect trigger");
+		this.getManagedBean().getSelectViewItems().remove(supplierItem);
+        
+    }
 	
 	public void removeFromList(VCmSupplierItem supplierItem){
 		log.info("removeFromList trigger");

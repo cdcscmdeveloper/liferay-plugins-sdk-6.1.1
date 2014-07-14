@@ -145,11 +145,11 @@
 									<ac:paginator for="supplierItemID" ></ac:paginator>
 
 									<p:ajax event="rowSelectCheckbox"
-										listener="#{catalogueBackingBean.addToList(supplierItem,3)}"
-										update="@(.ui-button[id$=compareButton])"></p:ajax>
+										listener="#{catalogueBackingBean.onRowSelect}"
+										update="@([id$=btnId])"></p:ajax>
 									<p:ajax event="rowUnselectCheckbox"
-										listener="#{catalogueBackingBean.removeFromList(supplierItem)}"
-										update="@(.ui-button[id$=compareButton])"></p:ajax>
+										listener="#{catalogueBackingBean.onRowDeselect}"
+										update="@([id$=btnId])"></p:ajax>
 										
 									<ui:remove>
 									<p:ajax event="rowUnselect"
@@ -162,8 +162,14 @@
 
 							<p:column headerText="#{lbl['lbl.cm.image']}" width="80px;">
 								<h:panelGroup rendered="#{supplierItem.imagePath == null}">
-									<img src="/NGeP-portlet/images/noImage.jpg"
-										style="height: 80px; left: 0px !important;"/>
+								
+								<p:outputPanel style="border: 1px solid #808080; display: block; vertical-align: middle; padding: 20px 4px; text-align: center;">
+								#{lbl['lbl.cm.no.image.available']}
+								</p:outputPanel>
+								
+								<ui:remove>
+									<img src="/NGeP-portlet/images/noImage.jpg" style="height: 80px; left: 0px !important;"/>
+								</ui:remove>
 								</h:panelGroup>
 								<h:panelGroup rendered="#{supplierItem.imagePath != null}">
 									<img src="/NGeP-portlet/image?imageName=#{supplierItem.epNo}/#{supplierItem.imagePath}" 
