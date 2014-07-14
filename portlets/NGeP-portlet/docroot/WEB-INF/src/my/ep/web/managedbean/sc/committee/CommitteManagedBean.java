@@ -111,12 +111,13 @@ public class CommitteManagedBean extends BaseManagedBean {
 
 	// Search Committee
 	private IPagingDataModel<ScQtCommittee> searchQTDataModel;
+	private IPagingDataModel<ScQt> cloneSearchQTDataModel;
 
 	private QtnTenderSearchBean qtnTenderSearchBean;
-	private QtnTenderSearchBean cloneQtnTenderSearchBean = new QtnTenderSearchBean();
+	private QtnTenderSearchBean cloneQtnTenderSearchBean;
 	private List<ScQt> qtnTenderList = new ArrayList<ScQt>();
 	private List<ScQt> cloneCommitteeTenderList = new ArrayList<ScQt>();
-	private ScQt selectedCloneCommitteeTender;
+	private ScQt selectedCloneTender;
 
 	private TreeNode committeeNode;
 
@@ -129,11 +130,13 @@ public class CommitteManagedBean extends BaseManagedBean {
 	private SelectItem[] roleTypes; // Role type drop down
 
 	private String headerTitle;
+	private String commTypeTitle;
 
 	public CommitteManagedBean() {
 		log.info("inside ");
 
 		qtnTenderSearchBean = new QtnTenderSearchBean();
+		cloneQtnTenderSearchBean = new QtnTenderSearchBean();
 	}
 
 	public SelectItem[] getRoleTypes() {
@@ -548,6 +551,14 @@ public class CommitteManagedBean extends BaseManagedBean {
 		this.headerTitle = headerTitle;
 	}
 
+	public String getCommTypeTitle() {
+		return commTypeTitle;
+	}
+
+	public void setCommTypeTitle(String commTypeTitle) {
+		this.commTypeTitle = commTypeTitle;
+	}
+
 	public List<ScCommitteeRemark> getScCommitteeRemarksList() {
 		return scCommitteeRemarksList;
 	}
@@ -574,13 +585,12 @@ public class CommitteManagedBean extends BaseManagedBean {
 		this.cloneCommitteeTenderList = cloneCommitteeTenderList;
 	}
 
-	public ScQt getSelectedCloneCommitteeTender() {
-		return selectedCloneCommitteeTender;
+	public ScQt getSelectedCloneTender() {
+		return selectedCloneTender;
 	}
 
-	public void setSelectedCloneCommitteeTender(
-			ScQt selectedCloneCommitteeTender) {
-		this.selectedCloneCommitteeTender = selectedCloneCommitteeTender;
+	public void setSelectedCloneTender(ScQt selectedCloneTender) {
+		this.selectedCloneTender = selectedCloneTender;
 	}
 
 	public List<ScCommitteeMember> getSelectedCloneCommitteMemebers() {
@@ -590,6 +600,15 @@ public class CommitteManagedBean extends BaseManagedBean {
 	public void setSelectedCloneCommitteMemebers(
 			List<ScCommitteeMember> selectedCloneCommitteMemebers) {
 		this.selectedCloneCommitteMemebers = selectedCloneCommitteMemebers;
+	}
+
+	public IPagingDataModel<ScQt> getCloneSearchQTDataModel() {
+		return cloneSearchQTDataModel;
+	}
+
+	public void setCloneSearchQTDataModel(
+			IPagingDataModel<ScQt> cloneSearchQTDataModel) {
+		this.cloneSearchQTDataModel = cloneSearchQTDataModel;
 	}
 
 }

@@ -14,14 +14,14 @@
 						value="#{lbl['lbl.sc.committe.title']}" /></td>
 				<td colspan="3"><p:inputTextarea
 						value="#{committeBackingBean.managedBean.qtnTenderSearchBean.qtTitle}"
-						cols="120" rows="2" style=" margin-bottom:5px;" /></td>
+						cols="120" rows="2" style=" margin-bottom:5px;" maxlength="100" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.committe.qtntenderno']}" /></td>
 				<td><p:inputText
 						value="#{committeBackingBean.managedBean.qtnTenderSearchBean.qtNo}"
-						size="30" /></td>
+						size="30" maxlength="21" /></td>
 				<td />
 				<td />
 			</tr>
@@ -41,9 +41,8 @@
 				<td><p:selectOneMenu
 						value="#{committeBackingBean.managedBean.qtnTenderSearchBean.qtStatus}"
 						style="width: 178px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-						<f:selectItem itemLabel="Active" itemValue="1" />
-						<f:selectItem itemLabel="Non-Active" itemValue="2" />
+						<f:selectItems
+							value="#{committeBackingBean.getStatusDropdownValues('SC', 'CMT')}" />
 					</p:selectOneMenu></td>
 				<td />
 				<td />
@@ -91,7 +90,7 @@
 			<p:column headerText="#{lbl['lbl.sc.committe.resulttable.comtype']}"
 				style="width:15%;">
 				<h:outputText
-					value="#{scqtcommittee.scCommittee.committeeType.parameterCode}" />
+					value="#{committeBackingBean.getParameterDesc(scqtcommittee.scCommittee.committeeType)}" />
 			</p:column>
 
 			<p:column
@@ -105,7 +104,9 @@
 
 			<p:column
 				headerText="#{lbl['lbl.sc.committe.resulttable.recstatus']}"
-				style="width:10%">
+				style="width:15%">
+				<h:outputText
+					value="#{committeBackingBean.getStatusDescById(scqtcommittee.scCommittee.committeStatus.statusId)}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.committe.resulttable.action']}"

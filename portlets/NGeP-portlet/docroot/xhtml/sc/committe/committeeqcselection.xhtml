@@ -7,11 +7,10 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<p:panel header="#{committeBackingBean.managedBean.headerTitle}"
-		toggleable="true">
+		toggleable="true" styleClass="committeMemberDtl">
 		<p:dataTable id="committeMembersListId"
-			value="#{committeeMembersList}"
-			var="committeemember" rowIndexVar="index" editable="true"
-			rowKey="#{committeemember}"
+			value="#{committeBackingBean.managedBean.qtCommittee.scCommittee.scCommitteeMembers}"
+			var="committeemember" rowIndexVar="index" rowKey="#{committeemember}"
 			selection="#{committeBackingBean.managedBean.selectedCommitteMemebers}">
 
 			<p:column selectionMode="multiple" style="width:2%" />
@@ -68,14 +67,13 @@
 		</p:dataTable>
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.so.clonebtn']}"
-				onclick="clonecommittee.show();" process="@this"
-				icon="ui-icon-clone" />
-
+				action="#{committeBackingBean.cloneCommitteMembersAcition(committeBackingBean.managedBean.headerTitle)}"
+				oncomplete="clonecommittee.show();" process="@this"
+				icon="ui-icon-clone" update="@(.cloneMember)" />
 			<p:commandButton id="committeeadd" value="#{lbl['lbl.so.addbtn']}"
 				process="@this" icon="ui-icon-add"
 				action="#{committeBackingBean.addCommitteMember(committeBackingBean.managedBean.headerTitle)}"
 				oncomplete="newcommittees.show();" update="@(.addCommitteeMember)" />
-
 			<p:commandButton value="#{lbl['lbl.so.delete']}"
 				icon="ui-icon-delete" process="@this, committeMembersListId"
 				action="#{committeBackingBean.deleteCommitteeAction}"

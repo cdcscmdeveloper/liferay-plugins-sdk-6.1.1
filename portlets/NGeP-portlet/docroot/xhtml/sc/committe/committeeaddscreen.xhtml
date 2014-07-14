@@ -109,10 +109,10 @@
 								</ui:fragment>
 								<ui:fragment rendered="#{existcommitteeuser.PMP == false}">
 									<p:selectOneMenu id="appaction"
-										value="#{existcommitteeuser.memberRole}"
+										value="#{existcommitteeuser.memberRole.parameterId}"
 										style="width: 110px;margin-bottom: 5px;">
 										<f:selectItems
-											value="#{qTCommitteBackingBean.managedBean.roleTypes}" />
+											value="#{committeBackingBean.managedBean.roleTypes}" />
 									</p:selectOneMenu>
 								</ui:fragment>
 							</p:column>
@@ -211,7 +211,7 @@
 
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.so.okbtn']}"
-					onclick="newcommittees.hide();" update="@(.scMemberDtl)"
+					onclick="newcommittees.hide();" update="@(.committeMemberDtl)"
 					process="@this, newCommitteeProfile" icon="ui-icon-check"
 					actionListener="#{committeBackingBean.okCommitteeAction}" />
 

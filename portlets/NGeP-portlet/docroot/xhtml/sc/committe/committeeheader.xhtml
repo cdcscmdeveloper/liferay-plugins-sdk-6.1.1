@@ -7,20 +7,20 @@
 
 	<p:panel>
 		<div align="left" class="header-info">
-			<table>
+			<table style="width: 100%">
 				<tr>
-					<td style="width: 130px"><h:outputLabel
+					<td style="width: 10%"><h:outputLabel
 							value="#{lbl['lbl.so.qtnno']}" /></td>
-					<td style="width: 15%" class="header-info-text">
-						#{committeBackingBean.managedBean.qt.qtNo}</td>
-					<td style="width: 150px"><h:outputLabel
+					<td style="width: 10%" class="header-info-text">
+						#{committeBackingBean.managedBean.qtCommittee.scQt.qtNo}</td>
+					<td style="width: 5%"><h:outputLabel
 							value="#{lbl['lbl.so.ptj.name']}" /></td>
-					<td style="width: 15%" class="header-info-text">
-						#{committeBackingBean.managedBean.qt.pmOrgProfile.orgName}</td>
-					<td style="width: 190px"><h:outputLabel
+					<td style="width: 30%" class="header-info-text">
+						#{committeBackingBean.managedBean.qtCommittee.scQt.pmOrgProfile.orgName}</td>
+					<td style="width: 5%"><h:outputLabel
 							value="#{lbl['lbl.so.status']}" /></td>
-					<td style="width: 15%" class="header-info-text">
-						#{committeBackingBean.getStatusDescById(committeBackingBean.managedBean.qt.qtStatus.statusId)}
+					<td style="width: 12%" class="header-info-text">
+						#{committeBackingBean.getStatusDescById(committeBackingBean.managedBean.qtCommittee.scCommittee.committeStatus.statusId)}
 					</td>
 				</tr>
 			</table>

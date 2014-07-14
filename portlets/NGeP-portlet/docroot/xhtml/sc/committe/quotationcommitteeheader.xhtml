@@ -7,29 +7,23 @@
 
 	<p:panel>
 		<div align="left" class="header-info">
-			<table>
+			<table style="width: 100%">
 				<tr>
-					<td style="width: 130px"><h:outputLabel
+					<td style="width: 5%"><h:outputLabel
 							value="#{lbl['lbl.so.ptj.name']}" /></td>
-					<td><p:inputText
-							value="#{committeBackingBean.managedBean.qt.pmOrgProfile.orgName}"
-							disabled="true" size="30" /></td>
-					<td style="width: 210px"><h:outputLabel
+					<td style="width: 30%" class="header-info-text">
+						#{committeBackingBean.managedBean.qtCommittee.scQt.pmOrgProfile.orgName}</td>
+					<td style="width: 10%"><h:outputLabel
 							value="#{lbl['lbl.so.crtdt']}" /></td>
-					<td><p:inputText
-							value="#{committeBackingBean.managedBean.qt.createdDate}"
-							disabled="true" size="30">
-							<f:convertDateTime
-								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-						</p:inputText></td>
-					<td style="width: 198px"><h:outputLabel
+					<td style="width: 10%" class="header-info-text">
+						#{committeBackingBean.managedBean.qtCommittee.scQt.createdDate}</td>
+					<td style="width: 5%"><h:outputLabel
 							value="#{lbl['lbl.so.status']}" /></td>
-					<td><p:inputText
-							value="#{committeBackingBean.getStatusDescById(committeBackingBean.managedBean.qt.qtStatus.statusId)}"
-							disabled="true" size="30" /></td>
+					<td style="width: 12%" class="header-info-text">
+						#{committeBackingBean.getStatusDescById(committeBackingBean.managedBean.qtCommittee.scCommittee.committeStatus.statusId)}
+					</td>
 				</tr>
 			</table>
 		</div>
 	</p:panel>
-
 </ui:composition>
