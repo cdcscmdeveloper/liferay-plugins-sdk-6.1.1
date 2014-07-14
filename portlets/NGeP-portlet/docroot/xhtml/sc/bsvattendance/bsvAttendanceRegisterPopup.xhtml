@@ -46,10 +46,7 @@
 					listener="#{bsvAttendanceBackingBean.onRowSelect}"
 					update=":form:attendanceDetailstbl" process="@form" />
 
-				<p:column headerText="#{lbl['lbl.sc.bsv.attendance.mof.regno']}">
-					<h:outputText value="#{scQtBriefReg.supplier.smMofAccounts[0].mofNo}" />
-
-				</p:column>
+				
 
 				<p:column headerText="#{lbl['lbl.sc.bsv.attendance.supp.name']}">
 
@@ -76,7 +73,7 @@
 									<td><p:commandButton
 											value="#{lbl['lbl.sc.action.delete']}"
 											process="@this,complisttbl" partialSubmit="true"
-											update="complisttbl"
+											update="complisttbl,attendanceDetailstbl"
 											action="#{bsvAttendanceBackingBean.deleteSupplierDetails}"
 											icon="ui-icon-delete" /></td>
 								</tr>
@@ -145,7 +142,9 @@
 						<h:outputText value="#{scQtBriefAttendace.email}" />
 					</p:column>
 					<p:column>
-						<p:selectBooleanCheckbox value="#{scQtBriefAttendace.attended}" />
+						<p:selectBooleanCheckbox value="#{scQtBriefAttendace.attended}" >
+							<p:ajax listener="#{qTBusinessOwnerBackingBean.getConsolidateSelectAll}"/>
+						</p:selectBooleanCheckbox>
 					</p:column>
 				</c:if>
 				<c:if test="#{!scQtBriefAttendace.authorized}">

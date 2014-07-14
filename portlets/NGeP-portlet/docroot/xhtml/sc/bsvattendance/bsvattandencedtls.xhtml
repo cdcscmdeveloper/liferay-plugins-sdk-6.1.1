@@ -8,18 +8,20 @@
 
 	<p:panel>
 		<ui:include src="bsvLocationPopUp.xhtml"></ui:include>
-		<c:if
-			test="#{!bsvAttendanceBackingBean.managedBean.scQt.zonal}">
-			<ui:param name="bsvDetails" value="#{bsvAttendanceBackingBean.managedBean.normalBsvBean}"></ui:param>
+		<ui:fragment
+			rendered="#{!bsvAttendanceBackingBean.managedBean.scQt.zonal}">
+
+			<ui:param name="bsvDetails"
+				value="#{bsvAttendanceBackingBean.managedBean.normalBsvBean}"></ui:param>
 			<ui:include src="bsvdtls.xhtml"></ui:include>
+		</ui:fragment>
 
-		</c:if>
 
-		<c:if
-			test="#{bsvAttendanceBackingBean.managedBean.scQt.zonal}">
+		<ui:fragment
+			rendered="#{bsvAttendanceBackingBean.managedBean.scQt.zonal}">
 			<ui:include src="bsvattandancedtlsbyzone.xhtml"></ui:include>
 
-		</c:if>
+		</ui:fragment>
 	</p:panel>
 
 </ui:composition>

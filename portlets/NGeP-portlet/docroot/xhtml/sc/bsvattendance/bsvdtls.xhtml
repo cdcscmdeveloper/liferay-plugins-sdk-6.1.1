@@ -6,22 +6,23 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<c:if test="#{bsvDetails.scQtBsv.sameBsv}">
+	<ui:fragment rendered="#{bsvDetails.scQtBsv.sameBsv}">
 		<p:panel header="Briefing And Site Visit Details" toggleable="true">
 			<div>
 				<h:outputText value="* All Attandence required for Briefing">
 				</h:outputText>
 			</div>
 			<p:spacer width="10px"></p:spacer>
-			<p:dataTable var="brfsitdtl" value="#{bsvDetails.briefingList}">
-				<ac:paginator for="brfsitdtl"></ac:paginator>
+			<p:dataTable  id="samebsvdtls" var="brfsitdtl" value="#{bsvDetails.briefingList}">
+				<ac:paginator for="samebsvdtls"></ac:paginator>
 				<p:column headerText="#{lbl['lbl.qt.nb.description']}">
 					<h:outputText value="#{brfsitdtl.bsvDesc}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.qt.nb.dateTime']}"
 					style="width:25px">
 					<h:outputText value="#{brfsitdtl.bsvDate}">
-						<f:convertDateTime pattern="#{PPConst.dateDisplayPattern}" />
+						<f:convertDateTime
+						pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
 					</h:outputText>
 				</p:column>
 
@@ -58,15 +59,15 @@
 			</p:dataTable>
 
 		</p:panel>
-	</c:if>
-	<c:if test="#{!bsvDetails.scQtBsv.sameBsv}">
+	</ui:fragment>
+	<ui:fragment rendered="#{!bsvDetails.scQtBsv.sameBsv}">
 
 		<p:panel header="#{lbl['lbl.qt.nb.briefDtl']}" toggleable="true">
 			<h:outputText value="* All Attandence required for Briefing">
 			</h:outputText>
 			<p:spacer width="10px;">
 			</p:spacer>
-			<p:dataTable var="brfsitdtl" value="#{bsvDetails.briefingList}">
+			<p:dataTable id="brfsitdtl"  var="brfsitdtl" value="#{bsvDetails.briefingList}">
 				<ac:paginator for="brfsitdtl"></ac:paginator>
 				<p:column headerText="#{lbl['lbl.qt.nb.description']}">
 					<h:outputText value="#{brfsitdtl.bsvDesc}" />
@@ -74,7 +75,8 @@
 				<p:column headerText="#{lbl['lbl.qt.nb.dateTime']}"
 					style="width:25px;">
 					<h:outputText value="#{brfsitdtl.bsvDate}">
-						<f:convertDateTime pattern="#{PPConst.dateDisplayPattern}" />
+					<f:convertDateTime
+						pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
 					</h:outputText>
 				</p:column>
 
@@ -115,7 +117,7 @@
 
 		<p:panel header="#{lbl['lbl.qt.nb.siteDtl']}" toggleable="true">
 
-			<p:dataTable var="sitevisitDtls" value="#{bsvDetails.sitevisitList}">
+			<p:dataTable id="sitevisitDtls" var="sitevisitDtls" value="#{bsvDetails.sitevisitList}">
 				<ac:paginator for="sitevisitDtls"></ac:paginator>
 				<p:column headerText="#{lbl['lbl.qt.nb.description']}">
 					<h:outputText value="#{sitevisitDtls.bsvDesc}" />
@@ -123,7 +125,8 @@
 				<p:column headerText="#{lbl['lbl.qt.nb.dateTime']}"
 					style="width:25px;">
 					<h:outputText value="#{sitevisitDtls.bsvDate}">
-						<f:convertDateTime pattern="#{PPConst.dateDisplayPattern}" />
+					<f:convertDateTime
+						pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
 					</h:outputText>
 				</p:column>
 
@@ -162,7 +165,7 @@
 			</p:dataTable>
 
 		</p:panel>
-	</c:if>
+	</ui:fragment>
 
 	<p:panel header="Remarks" toggleable="true">
 		<table style="width: 100%">

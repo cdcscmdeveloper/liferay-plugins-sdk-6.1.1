@@ -19,7 +19,7 @@
 				<p:column>
 					<div style="float: right;">						
 						<p:commandButton value="#{lbl['lbl.btn.submit']}"
-							icon="ui-icon-submit" action="#{bsvAttendanceBackingBean.submitBsvDetails}" process="@this">
+							icon="ui-icon-submit" action="#{bsvAttendanceBackingBean.submitBsvDetails}" process="@all">
 						</p:commandButton>
 					</div>
 				</p:column>
@@ -43,8 +43,12 @@
 
 						</td>
 						<td style="width: 13%" class="header-info-text"><h:outputLabel
-								value="#{lbl['lbl.sc.status']}" /></td>
-						<td style="width: 21%"></td>
+								value="#{lbl['lbl.sc.status']}" />							
+								</td>
+						<td style="width: 21%" class="header-info-text">
+						
+						#{bsvAttendanceBackingBean.getStatusDescById(bsvAttendanceBackingBean.managedBean.scQt.qtStatus.statusId)}
+								</td>
 					</tr>
 				</table>
 			</div>
