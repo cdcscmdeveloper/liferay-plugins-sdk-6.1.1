@@ -193,12 +193,8 @@ public class SmApplicationBackingBean extends
 		}
 
 		if (appl != null && supplierProfile != null) {
-			System.out.println(" *** The application type is ******* "
-					+ appl.getApplType());
 			proceedToApplication(appl.getApplType(), Boolean.TRUE, appl,
 					supplierProfile);
-			System.out.println(" ****** After proceed *****"
-					+ getManagedBean().getSmAppl().getApplType());
 			getManagedBean().getSmAppl().setResubmit(true);
 			setNavigationForResubmitAppln(appl.getApplType());
 		} else {
@@ -223,10 +219,6 @@ public class SmApplicationBackingBean extends
 			SmAppl appl, SmSupplier supp) {
 		getManagedBean().setRedirectToPersonPage(false);
 		assignValReqdToFalse();
-		System.out
-				.println("**** ENTER Create Application Type Of  *************"
-						+ applicationType + "Application type = >>"
-						+ getManagedBean().getSmAppl().getSupplierType());
 		if (!applicationType.equalsIgnoreCase("C")) {
 			retrievePmCountryList();
 			retrievePmCertBodyList();
@@ -1354,35 +1346,34 @@ public class SmApplicationBackingBean extends
 		return docu;
 	}
 
-	public void createNewApplication() throws Exception {
-		try {
-			System.out.println("**** New BEAN  *************"
-					+ getManagedBean().getSmSupplier().getSmAppls().size());
-			System.out.println("**** Latest Appl Id   *************"
-					+ getManagedBean().getSmSupplier().getSmAppls().get(0)
-							.getApplId());
-			SmAppl app = getManagedBean().getSmSupplier().getSmAppls().get(0);
-			System.out.println(" ******* New Objectr == >> " + app.getApplId()
-					+ " Name == " + app.getApplNo());
-			getManagedBean().setSmAppl(app);
-			// TODO to be confirmed whether reqd to save the appln as draft
-			getManagedBean().setTabActiveIndex(outputTab);
-
-		} catch (Exception e) {
-			System.out.println("this is error");
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR,
-							"Sample error message",
-							"PrimeFaces makes no mistakes"));
-			getManagedBean().setTabActiveIndex(currentTab);
-		}
-
-	}
+	// public void createNewApplication() throws Exception {
+	// try {
+	// System.out.println("**** New BEAN  *************"
+	// + getManagedBean().getSmSupplier().getSmAppls().size());
+	// System.out.println("**** Latest Appl Id   *************"
+	// + getManagedBean().getSmSupplier().getSmAppls().get(0)
+	// .getApplId());
+	// SmAppl app = getManagedBean().getSmSupplier().getSmAppls().get(0);
+	// System.out.println(" ******* New Objectr == >> " + app.getApplId()
+	// + " Name == " + app.getApplNo());
+	// getManagedBean().setSmAppl(app);
+	// // TODO to be confirmed whether reqd to save the appln as draft
+	// getManagedBean().setTabActiveIndex(outputTab);
+	//
+	// } catch (Exception e) {
+	// System.out.println("this is error");
+	// e.printStackTrace();
+	// FacesContext.getCurrentInstance().addMessage(
+	// null,
+	// new FacesMessage(FacesMessage.SEVERITY_ERROR,
+	// "Sample error message",
+	// "PrimeFaces makes no mistakes"));
+	// getManagedBean().setTabActiveIndex(currentTab);
+	// }
+	//
+	// }
 
 	public void setTabValue(int currentTab, int outputTab) {
-		System.out.println(" ***** Tab Values *** " + currentTab + outputTab);
 		this.currentTab = currentTab;
 		this.outputTab = outputTab;
 
@@ -1393,15 +1384,10 @@ public class SmApplicationBackingBean extends
 		int currentPage = getManagedBean().getTabActiveIndex();
 		try {
 			this.currentTab = currentPage;
-			System.out
-					.println("********** ENTER THE PRE RENDER FOR SUPP DOXS ***** "
-							+ currentPage + "  , " + navType);
 			getManagedBean().getSmAppl().setSupportingDocMode("O");
 			if (navType.equalsIgnoreCase("next")) {
-				System.out.println("** MY NEXT PAGE ***");
 				this.outputTab = currentPage + 1;
 			} else if (navType.equalsIgnoreCase("prev")) {
-				System.out.println("** MY PREV PAGE ***");
 				this.outputTab = currentPage - 1;
 			} else {
 				this.outputTab = currentPage;
@@ -1416,54 +1402,24 @@ public class SmApplicationBackingBean extends
 		if (getManagedBean().getBasicCompanyFacility().getOwnershipType()
 				.equalsIgnoreCase("O")) {
 			getManagedBean().getBasicCompanyFacility().setSmAddress(null);
-			// System.out.println("******** SELECTED OWN FACILITY *******");
-			// SmAddress addr = getManagedBean().getBasicCompanyFacility()
-			// .getSmAddress();
-			// if (addr.getPmState().getStateId() == null) {
-			// getManagedBean().getBasicCompanyFacility().getSmAddress()
-			// .getPmState().setStateId(1l);
-			// }
-			// if (addr.getPmDistrict().getDistrictId() == null) {
-			// getManagedBean().getBasicCompanyFacility().getSmAddress()
-			// .getPmDistrict().setDistrictId(1l);
-			// }
-			// if (addr.getPmCity().getCityId() == null) {
-			// getManagedBean().getBasicCompanyFacility().getSmAddress()
-			// .getPmCity().setCityId(1l);
-			// }
-			// if (addr.getAddress1() == null) {
-			// getManagedBean().getBasicCompanyFacility().getSmAddress()
-			// .setAddress1(" ");
-			// }
 		} else {
 			SmAddress addr = setDefaultAddr();
 			getManagedBean().getBasicCompanyFacility().setSmAddress(addr);
-			System.out
-					.println("********* TEst getPmCountry NULL VALUE **********"
-							+ this.getManagedBean().getBasicCompanyFacility()
-									.getSmAddress().getPmCountry()
-									.getCountryId());
 		}
-		System.out
-				.println(" ******* On Change Office Facility ***** "
-						+ getManagedBean().getBasicCompanyFacility()
-								.getOwnershipType());
-		System.out.println(" **** Values In loop *********"
-				+ getManagedBean().getBasicCompanyFacility().getRentalRate());
 
 	}
 
-	public void assignPersonnelPrivilege(AjaxBehaviorEvent e) {
-		System.out.println("**** Enter peronnel privilege ******");
-		if (getManagedBean().getSelectedPersonnel().getAuthorizedFlg() == 0) {
-			getManagedBean().getSelectedPersonnel().setSoftcertFlg(0);
-			getManagedBean().getSelectedPersonnel().setContractSignerFlg(0);
-		}
-
-		if (getManagedBean().getSelectedPersonnel().getSoftcertFlg() == 0) {
-			getManagedBean().getSelectedPersonnel().setContractSignerFlg(0);
-		}
-	}
+	// public void assignPersonnelPrivilege(AjaxBehaviorEvent e) {
+	// System.out.println("**** Enter peronnel privilege ******");
+	// if (getManagedBean().getSelectedPersonnel().getAuthorizedFlg() == 0) {
+	// getManagedBean().getSelectedPersonnel().setSoftcertFlg(0);
+	// getManagedBean().getSelectedPersonnel().setContractSignerFlg(0);
+	// }
+	//
+	// if (getManagedBean().getSelectedPersonnel().getSoftcertFlg() == 0) {
+	// getManagedBean().getSelectedPersonnel().setContractSignerFlg(0);
+	// }
+	// }
 
 	public void assignShareHolderPrivilege(AjaxBehaviorEvent e) {
 		System.out.println("**** Enter Share Holder privilege ******");
@@ -1478,18 +1434,8 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void applicationCategorySelected(AjaxBehaviorEvent e) {
-		System.out
-				.println(" ******* On Application Category ***** "
-						+ getManagedBean().getSmAppl().getApplCategoryType()
-						+ "-- Size --"
-						+ getManagedBean().getSmAppl()
-								.getSmSupplierCategories().size());
 		StringBuffer sb = new StringBuffer();
 		String desc = null;
-		System.out.println("---- Current Active Tab ---- "
-				+ getManagedBean().getSmAppl().getCurrentActiveTab());
-		System.out.println("---- Active Tab Index ---- "
-				+ getManagedBean().getTabActiveIndex());
 		getManagedBean().getSmAppl().setCurrentActiveTab(
 				getManagedBean().getTabActiveIndex());
 		if (getManagedBean().getSmAppl().getApplCategoryType().equals("N")) {
@@ -1497,14 +1443,9 @@ public class SmApplicationBackingBean extends
 		} else {
 			desc = "Special";
 		}
-		sb.append("NOTE : '");
-		sb.append(desc);
-		sb.append("' categories can only be added in this applicaiton'");
+		sb.append("NOTE : '").append(desc)
+				.append("' categories can only be added in this applicaiton'");
 		getManagedBean().setCatTypeConfirm(sb.toString());
-		System.out.println("*** Msg Is ****"
-				+ getManagedBean().getCatTypeConfirm());
-		System.out.println(" -- DOC MODE -- "
-				+ getManagedBean().getSmAppl().getSupportingDocMode());
 		if (getManagedBean().isPoUser() || getManagedBean().isApproverUser()) {
 			assignMaxReviewCount(getManagedBean().getSmAppl().getApplType(),
 					getManagedBean().getSmAppl().getApplCategoryType(),
@@ -1513,8 +1454,6 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void assignApplnCategoryType() {
-		System.out.println("***** Before confirm +++++++"
-				+ getManagedBean().getSmAppl().getSupportingDocMode());
 		List<SmSupplierCategory> catList = new ArrayList<SmSupplierCategory>();
 		if (getManagedBean().getSmAppl().getApplCategoryType().equals("N")) {
 			for (SmSupplierCategory cat : getManagedBean().getSmAppl()
@@ -1557,13 +1496,14 @@ public class SmApplicationBackingBean extends
 						.equals("")) {
 			getManagedBean().getSmAppl().setSupportingDocMode("O");
 		}
+		RequestContext.getCurrentInstance().execute("typeConfirmation.hide()");
 	}
 
-	public void svcSelected(AjaxBehaviorEvent e) {
-		System.out.println(" ******* On Change Office Facility ***** "
-				+ getManagedBean().getPoSiteVisitType());
-
-	}
+	// public void svcSelected(AjaxBehaviorEvent e) {
+	// System.out.println(" ******* On Change Office Facility ***** "
+	// + getManagedBean().getPoSiteVisitType());
+	//
+	// }
 
 	// -- Process Branches Start
 	public void addOrUpdateBranchToSmAppl() {
@@ -1623,7 +1563,6 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void deleteSelectedBranches() {
-
 		if (getManagedBean().getSelectedBranches().size() > 0) {
 			for (SmSupplierBranch brn : getManagedBean().getSelectedBranches()) {
 				getManagedBean().getSmAppl().getSmSupplierBranches()
@@ -1641,7 +1580,6 @@ public class SmApplicationBackingBean extends
 
 	// -- Process Associated Companies Start
 	public void addOrUpdateAssocToSmAppl() {
-
 		if (getManagedBean().getSmAppl().getSmAssociateCompanies()
 				.contains(getManagedBean().getSelectedAssocCompany())) {
 			// TODO if any validation reqd for assoc companies
@@ -2325,9 +2263,6 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void deleteSelectedFactories() {
-
-		System.out.println("*** Delete Branches Companies ******* "
-				+ getManagedBean().getSelectedFactoryFacilities().size());
 		if (getManagedBean().getSelectedFactoryFacilities().size() > 0) {
 			for (SmFacility sm : getManagedBean()
 					.getSelectedFactoryFacilities()) {
@@ -2347,13 +2282,10 @@ public class SmApplicationBackingBean extends
 	// Dockyard start
 	public void addOrUpdateDockYardToSmAppl() {
 		SmFacility smFac = getManagedBean().getSelectedDockyardFacility();
-		System.out.println("**** This is dock yard data ********"
-				+ smFac.getSmAddress().getAddress1());
 		if (getManagedBean().getSmAppl().getSmFacilities().contains(smFac)) {
 
 			if (getManagedBean().getApplDockyardFacilities().contains(smFac)) {
-				System.out
-						.println(" ******* THIS IS EDIT FOR EXISITING Doc **********");
+				// TODO any validation for edit
 			}
 
 		} else {
@@ -2374,8 +2306,6 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void assignSelDockyard(SmFacility facilityBean) {
-		System.out.println("******** Selected dock value ******"
-				+ facilityBean.getSmAddress().getAddress1());
 		assignStateDistAndCityForSelVal(facilityBean.getSmAddress()
 				.getPmCountry().getCountryId(), facilityBean.getSmAddress()
 				.getPmState().getStateId(), facilityBean.getSmAddress()
@@ -2388,7 +2318,6 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void assignNewDockyardBean() {
-		System.out.println(" ********** New doc yard value *********");
 		getManagedBean().setSelectedDockyardFacility(new SmFacility());
 		getManagedBean().getSelectedDockyardFacility().setRevNo(1);
 		getManagedBean().getSelectedDockyardFacility().setSmAddress(
@@ -2727,10 +2656,6 @@ public class SmApplicationBackingBean extends
 		}
 
 		validShrHldr = checkValidUser(getManagedBean().getSelectedShareHolder());
-		// if (getManagedBean().getSelectedShareHolder().getAuthorizedFlg() ==
-		// 1) {
-		// validShrHldr = validateAuthPersonLimit();
-		// }
 		getManagedBean().getSelectedShareHolder().setSmAppl(
 				getManagedBean().getSmAppl());
 		if (validShrHldr) {
@@ -2764,16 +2689,6 @@ public class SmApplicationBackingBean extends
 						.add(getManagedBean().getSelectedShareHolder());
 
 			}
-			// for (SmSupplierBranch br : getManagedBean().getSmAppl()
-			// .getSmSupplierBranches()) {
-			// if (br.getSmPersonnel()
-			// .getPersonnelId()
-			// .equals(getManagedBean().getSelectedShareHolder()
-			// .getPersonnelId())) {
-			// System.out.println("**** On save or update **** ");
-			// br.setSmPersonnel(getManagedBean().getSelectedShareHolder());
-			// }
-			// }
 			saveOrUpdateAppl();
 			if (fromPage.equalsIgnoreCase("captialInfo")) {
 				getManagedBean().setRedirectToPersonPage(false);
@@ -3095,7 +3010,6 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void addShrHldrRelatedCompany() {
-		System.out.println("****** Add Rel Company ***********");
 		SmRelatedCompany com = new SmRelatedCompany();
 		com.setSmPersonnel(getManagedBean().getSelectedShareHolder());
 		getManagedBean().setSelectedRelatedCompany(com);
@@ -3104,8 +3018,6 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void assignSelShrHldrRelatedCompany(SmRelatedCompany com) {
-		System.out.println("*********** Selected value *********"
-				+ com.getCompanyName());
 		getManagedBean().setSelectedRelatedCompany(com);
 		assignValReqdToTrue();
 		RequestContext.getCurrentInstance().execute("equiRelCompInfo.show()");
@@ -3145,7 +3057,6 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void cancelShrHldrRelatedCompanies() {
-		System.out.println("*** Cancel ShrHldrRelatedCompanies function **** ");
 		assignValReqdToFalse();
 		RequestContext.getCurrentInstance().reset(":form:tt:equiRelCompInfo");
 		RequestContext.getCurrentInstance().execute("equiRelCompInfo.hide()");
@@ -3163,8 +3074,6 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void assignSelShrHldrAcademics(SmStaffAcademic aca) {
-		System.out.println("*********** Selected value *********"
-				+ aca.getInstituteName());
 		getManagedBean().setSelectedStaffAcademic(aca);
 		assignValReqdToTrue();
 		RequestContext.getCurrentInstance().execute("equiAcadInfo.show()");
@@ -3187,7 +3096,6 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void cancelShrHldrAcademic() {
-		System.out.println("*** Cancel cancelShrHldrAcademic function **** ");
 		assignValReqdToFalse();
 		RequestContext.getCurrentInstance().reset(":form:tt:equiAcadInfo");
 		RequestContext.getCurrentInstance().execute("equiAcadInfo.hide()");
@@ -3230,8 +3138,6 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void assignSelShrHldrProfBody(SmAssociationBody asb) {
-		System.out.println("*********** Selected value *********"
-				+ asb.getRegNo());
 		getManagedBean().setSelectedStfPrfBdy(asb);
 		assignValReqdToTrue();
 		RequestContext.getCurrentInstance().execute(
@@ -3240,7 +3146,6 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void cancelShrHldrProfBody() {
-		System.out.println("*** Cancel ShrHldrProfBody function **** ");
 		assignValReqdToFalse();
 		RequestContext.getCurrentInstance().reset(
 				":form:tt:equiShrProfBeanInfo");
@@ -3273,7 +3178,6 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void deleteSelectedShrHldrProfBodies() {
-
 		if (getManagedBean().getSelectedShrHldrProfBodies().size() > 0) {
 			for (SmAssociationBody prof : getManagedBean()
 					.getSelectedShrHldrProfBodies()) {
@@ -3285,7 +3189,6 @@ public class SmApplicationBackingBean extends
 			throw new EpException(MessageConst.ERROR_722534,
 					new String[] { "Personnel - Professional Body" });
 		}
-
 	}
 
 	public void assignPersonForBranch(SmSupplierBranch brn) {
@@ -3297,7 +3200,6 @@ public class SmApplicationBackingBean extends
 				getManagedBean().getSmAppl().getSmSupplierBranches()
 						.set(i, brn);
 				break;
-
 			}
 		}
 		saveOrUpdateAppl();
@@ -3305,10 +3207,6 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void assignPersonIdentType(AjaxBehaviorEvent e) {
-		System.out.println("***** The selected value of IC type is --- "
-				+ getManagedBean().getSelectedShareHolder()
-						.getIdentificationTypeId());
-		// getManagedBean().getSelectedShareHolder().setIdentificationNo("");
 		if (getManagedBean().getSelectedShareHolder().getIdentificationTypeId() != null) {
 			getManagedBean().getSelectedShareHolder()
 					.setIdentificationType(
@@ -3326,69 +3224,68 @@ public class SmApplicationBackingBean extends
 		}
 	}
 
-	public void setMailingAddrSameAsPerm(AjaxBehaviorEvent e) {
-		if (getManagedBean().getShareHolderMailAddr().isSameAsPerm()) {
-
-			System.out.println("********* Duplicate Mail Addr ***********");
-			getManagedBean().getShareHolderMailAddr().setSmAddress(
-					getManagedBean().getShareHolderPermAddr().getSmAddress());
-			populateDistrictsByState(getManagedBean().getShareHolderMailAddr()
-					.getSmAddress().getPmState().getStateId(),
-					SupplierManagementConst.SM_SHRHLDR_MAIL_ADDR_PANEL,
-					new PmDistrict(), new PmCity());
-			populateCitiesByDistrict(getManagedBean().getShareHolderMailAddr()
-					.getSmAddress().getPmDistrict().getDistrictId(),
-					SupplierManagementConst.SM_SHRHLDR_MAIL_ADDR_PANEL,
-					new PmCity());
-		} else {
-			System.out.println("*********** Not same Addr ************** ");
-			getManagedBean().getShareHolderMailAddr().setSmAddress(
-					setDefaultAddr());
-		}
-
-	}
-
-	public void setResiAddrSameAsPerm(AjaxBehaviorEvent e) {
-		if (getManagedBean().getShareHolderResdAddr().isSameAsPerm()) {
-			System.out.println("********* Duplicate Resi Addr ***********");
-			getManagedBean().getShareHolderResdAddr().setSmAddress(
-					getManagedBean().getShareHolderPermAddr().getSmAddress());
-			populateDistrictsByState(getManagedBean().getShareHolderResdAddr()
-					.getSmAddress().getPmState().getStateId(),
-					SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL,
-					new PmDistrict(), new PmCity());
-			populateCitiesByDistrict(getManagedBean().getShareHolderResdAddr()
-					.getSmAddress().getPmDistrict().getDistrictId(),
-					SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL,
-					new PmCity());
-		} else {
-			System.out.println("*********** Not same Addr ************** ");
-			getManagedBean().getShareHolderResdAddr().setSmAddress(
-					setDefaultAddr());
-		}
-
-	}
-
-	public void setOffcAddrSameAsPerm(AjaxBehaviorEvent e) {
-		if (getManagedBean().getShareHolderOffAddr().isSameAsPerm()) {
-			System.out.println("********* Duplicate Office Addr ***********");
-			getManagedBean().getShareHolderOffAddr().setSmAddress(
-					getManagedBean().getShareHolderPermAddr().getSmAddress());
-			populateDistrictsByState(getManagedBean().getShareHolderOffAddr()
-					.getSmAddress().getPmState().getStateId(),
-					SupplierManagementConst.SM_SHRHLDR_OFF_ADDR_PANEL,
-					new PmDistrict(), new PmCity());
-			populateCitiesByDistrict(getManagedBean().getShareHolderOffAddr()
-					.getSmAddress().getPmDistrict().getDistrictId(),
-					SupplierManagementConst.SM_SHRHLDR_OFF_ADDR_PANEL,
-					new PmCity());
-		} else {
-			System.out.println("*********** Not same Addr ************** ");
-			getManagedBean().getShareHolderOffAddr().setSmAddress(
-					setDefaultAddr());
-		}
-
-	}
+	// public void setMailingAddrSameAsPerm(AjaxBehaviorEvent e) {
+	// if (getManagedBean().getShareHolderMailAddr().isSameAsPerm()) {
+	// System.out.println("********* Duplicate Mail Addr ***********");
+	// getManagedBean().getShareHolderMailAddr().setSmAddress(
+	// getManagedBean().getShareHolderPermAddr().getSmAddress());
+	// populateDistrictsByState(getManagedBean().getShareHolderMailAddr()
+	// .getSmAddress().getPmState().getStateId(),
+	// SupplierManagementConst.SM_SHRHLDR_MAIL_ADDR_PANEL,
+	// new PmDistrict(), new PmCity());
+	// populateCitiesByDistrict(getManagedBean().getShareHolderMailAddr()
+	// .getSmAddress().getPmDistrict().getDistrictId(),
+	// SupplierManagementConst.SM_SHRHLDR_MAIL_ADDR_PANEL,
+	// new PmCity());
+	// } else {
+	// System.out.println("*********** Not same Addr ************** ");
+	// getManagedBean().getShareHolderMailAddr().setSmAddress(
+	// setDefaultAddr());
+	// }
+	//
+	// }
+	//
+	// public void setResiAddrSameAsPerm(AjaxBehaviorEvent e) {
+	// if (getManagedBean().getShareHolderResdAddr().isSameAsPerm()) {
+	// System.out.println("********* Duplicate Resi Addr ***********");
+	// getManagedBean().getShareHolderResdAddr().setSmAddress(
+	// getManagedBean().getShareHolderPermAddr().getSmAddress());
+	// populateDistrictsByState(getManagedBean().getShareHolderResdAddr()
+	// .getSmAddress().getPmState().getStateId(),
+	// SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL,
+	// new PmDistrict(), new PmCity());
+	// populateCitiesByDistrict(getManagedBean().getShareHolderResdAddr()
+	// .getSmAddress().getPmDistrict().getDistrictId(),
+	// SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL,
+	// new PmCity());
+	// } else {
+	// System.out.println("*********** Not same Addr ************** ");
+	// getManagedBean().getShareHolderResdAddr().setSmAddress(
+	// setDefaultAddr());
+	// }
+	//
+	// }
+	//
+	// public void setOffcAddrSameAsPerm(AjaxBehaviorEvent e) {
+	// if (getManagedBean().getShareHolderOffAddr().isSameAsPerm()) {
+	// System.out.println("********* Duplicate Office Addr ***********");
+	// getManagedBean().getShareHolderOffAddr().setSmAddress(
+	// getManagedBean().getShareHolderPermAddr().getSmAddress());
+	// populateDistrictsByState(getManagedBean().getShareHolderOffAddr()
+	// .getSmAddress().getPmState().getStateId(),
+	// SupplierManagementConst.SM_SHRHLDR_OFF_ADDR_PANEL,
+	// new PmDistrict(), new PmCity());
+	// populateCitiesByDistrict(getManagedBean().getShareHolderOffAddr()
+	// .getSmAddress().getPmDistrict().getDistrictId(),
+	// SupplierManagementConst.SM_SHRHLDR_OFF_ADDR_PANEL,
+	// new PmCity());
+	// } else {
+	// System.out.println("*********** Not same Addr ************** ");
+	// getManagedBean().getShareHolderOffAddr().setSmAddress(
+	// setDefaultAddr());
+	// }
+	//
+	// }
 
 	public void assignSelShareHolderAddress(SmPersonnel shareHolderBean) {
 
@@ -3499,36 +3396,6 @@ public class SmApplicationBackingBean extends
 				}
 			}
 		}
-		// getManagedBean().getShareHolderMailAddr().setSameAsPerm(false);
-		// getManagedBean().getShareHolderResdAddr().setSameAsPerm(false);
-		// getManagedBean().getShareHolderOffAddr().setSameAsPerm(false);
-		// if (getManagedBean().getShareHolderPermAddr().getSmAddress()
-		// .getAddressId() != null) {
-		// if (getManagedBean()
-		// .getShareHolderPermAddr()
-		// .getSmAddress()
-		// .getAddressId()
-		// .equals(getManagedBean().getShareHolderMailAddr()
-		// .getSmAddress().getAddressId())) {
-		// getManagedBean().getShareHolderMailAddr().setSameAsPerm(true);
-		// }
-		// if (getManagedBean()
-		// .getShareHolderPermAddr()
-		// .getSmAddress()
-		// .getAddressId()
-		// .equals(getManagedBean().getShareHolderResdAddr()
-		// .getSmAddress().getAddressId())) {
-		// getManagedBean().getShareHolderResdAddr().setSameAsPerm(true);
-		// }
-		// if (getManagedBean()
-		// .getShareHolderPermAddr()
-		// .getSmAddress()
-		// .getAddressId()
-		// .equals(getManagedBean().getShareHolderOffAddr()
-		// .getSmAddress().getAddressId())) {
-		// getManagedBean().getShareHolderOffAddr().setSameAsPerm(true);
-		// }
-		// }
 
 		getManagedBean().setSelectedShareHolder(shareHolderBean);
 
@@ -3597,8 +3464,6 @@ public class SmApplicationBackingBean extends
 	public void assignSelBank(SmSupplierBank shareBankBean) {
 		getManagedBean().setChequeSingPerId(null);
 		getManagedBean().setSelBankBranchId(null);
-		System.out.println("******* SIZE ********** "
-				+ shareBankBean.getSmChequeSignatories().size());
 		Long[] chequSigns = new Long[shareBankBean.getSmChequeSignatories()
 				.size()];
 		for (int i = 0; i < chequSigns.length; i++) {
@@ -3643,15 +3508,12 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void assignNewBank() {
-		System.out.println("******* ADD NEW Bank Info *************");
 		getManagedBean().setChequeSingPerId(null);
 		getManagedBean().setSelBankBranchId(null);
 		SmSupplierBank bank = new SmSupplierBank();
 		bank.setSmAddress(setDefaultAddr());
-		// bank.setSmSupplierBranch(new SmSupplierBranch());
 		bank.setSmAppl(getManagedBean().getSmAppl());
 		bank.setPmFinancialOrg(new PmFinancialOrg());
-		// bank.setPmbank(new PmBank());
 		getManagedBean().setBankStates(
 				retrievePmStateList(getManagedBean().getSelectedBank()
 						.getSmAddress().getPmCountry().getCountryId()));
@@ -3665,20 +3527,20 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Test BPM Connect
 	 */
-	public boolean initialBpmTask() {
-		IMofRegistrationSO regSo = null;
-		try {
-			regSo = (IMofRegistrationSO) BusinessDelegate.getInstance()
-					.getServiceObject("sm", IMofRegistrationSO.class);
-			return regSo.initialBpmTask();
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		} finally {
-			regSo = null;
-		}
-
-	}
+	// public boolean initialBpmTask() {
+	// IMofRegistrationSO regSo = null;
+	// try {
+	// regSo = (IMofRegistrationSO) BusinessDelegate.getInstance()
+	// .getServiceObject("sm", IMofRegistrationSO.class);
+	// return regSo.initialBpmTask();
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// return false;
+	// } finally {
+	// regSo = null;
+	// }
+	//
+	// }
 
 	/**
 	 * Make a call to the BPM for MofRegistration
@@ -3735,159 +3597,6 @@ public class SmApplicationBackingBean extends
 		}
 
 	}
-
-	// public String submitBumiApplToBpm() {
-	// try {
-	// initiateSmApplicationTask();
-	// FacesContext
-	// .getCurrentInstance()
-	// .addMessage(
-	// null,
-	// new FacesMessage(
-	// FacesMessage.SEVERITY_INFO,
-	// null,
-	// MessageUtils
-	// .getMessage(
-	// MessageConst.INFO_700005,
-	// new String[] {
-	// getParameterDesc(
-	// ParameterTypeConst.SUPPLIER_APPLICATION_TYPES,
-	// ParameterConst.NEW_SM_APPLN_FOR_BUMI),
-	// getManagedBean()
-	// .getSmAppl()
-	// .getApplNo() },
-	// MessageUtils.BUNDLE_COMMON_MESSAGES,
-	// new FacesScopes()
-	// .getUserLocale())));
-	//
-	// return CommonUIConst.ACKNOWLEDGE_PAGE;
-	// } catch (Exception e) {
-	// e.printStackTrace();
-	// // return SupplierManagementConst.BUMI_APPL_FAIL;
-	// throw new EpException(MessageConst.ERROR_722519);
-	// }
-	// }
-
-	// public String submitUpdateMofApplToBpm() {
-	// try {
-	// initiateSmApplicationTask();
-	// FacesContext
-	// .getCurrentInstance()
-	// .addMessage(
-	// null,
-	// new FacesMessage(
-	// FacesMessage.SEVERITY_INFO,
-	// null,
-	// MessageUtils
-	// .getMessage(
-	// MessageConst.INFO_700005,
-	// new String[] {
-	// getParameterDesc(
-	// ParameterTypeConst.SUPPLIER_APPLICATION_TYPES,
-	// ParameterConst.NEW_SM_APPLN_FOR_UPDATE),
-	// getManagedBean()
-	// .getSmAppl()
-	// .getApplNo() },
-	// MessageUtils.BUNDLE_COMMON_MESSAGES,
-	// new FacesScopes()
-	// .getUserLocale())));
-	//
-	// return CommonUIConst.ACKNOWLEDGE_PAGE;
-	// } catch (Exception e) {
-	// return SupplierManagementConst.UPDATE_MOF_APPL_FAIL;
-	// }
-	// }
-
-	// public String submitRenewMofApplToBpm() {
-	// try {
-	// initiateSmApplicationTask();
-	// FacesContext
-	// .getCurrentInstance()
-	// .addMessage(
-	// null,
-	// new FacesMessage(
-	// FacesMessage.SEVERITY_INFO,
-	// null,
-	// MessageUtils
-	// .getMessage(
-	// MessageConst.INFO_700005,
-	// new String[] {
-	// getParameterDesc(
-	// ParameterTypeConst.SUPPLIER_APPLICATION_TYPES,
-	// ParameterConst.NEW_SM_APPLN_FOR_RENEW),
-	// getManagedBean()
-	// .getSmAppl()
-	// .getApplNo() },
-	// MessageUtils.BUNDLE_COMMON_MESSAGES,
-	// new FacesScopes()
-	// .getUserLocale())));
-	//
-	// return CommonUIConst.ACKNOWLEDGE_PAGE;
-	// } catch (Exception e) {
-	// return SupplierManagementConst.RENEW_MOF_APPL_FAIL;
-	// }
-	// }
-
-	// public String submitAddnlCategoryApplToBpm() {
-	// try {
-	// initiateSmApplicationTask();
-	// FacesContext
-	// .getCurrentInstance()
-	// .addMessage(
-	// null,
-	// new FacesMessage(
-	// FacesMessage.SEVERITY_INFO,
-	// null,
-	// MessageUtils
-	// .getMessage(
-	// MessageConst.INFO_700005,
-	// new String[] {
-	// getParameterDesc(
-	// ParameterTypeConst.SUPPLIER_APPLICATION_TYPES,
-	// ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES),
-	// getManagedBean()
-	// .getSmAppl()
-	// .getApplNo() },
-	// MessageUtils.BUNDLE_COMMON_MESSAGES,
-	// new FacesScopes()
-	// .getUserLocale())));
-	//
-	// return CommonUIConst.ACKNOWLEDGE_PAGE;
-	// } catch (Exception e) {
-	// return SupplierManagementConst.ADDNLCAT_APPL_FAIL;
-	// }
-	// }
-
-	// public String submitMofApplToBpm() {
-	// try {
-	// initiateSmApplicationTask();
-	// FacesContext
-	// .getCurrentInstance()
-	// .addMessage(
-	// null,
-	// new FacesMessage(
-	// FacesMessage.SEVERITY_INFO,
-	// null,
-	// MessageUtils
-	// .getMessage(
-	// MessageConst.INFO_700005,
-	// new String[] {
-	// getParameterDesc(
-	// ParameterTypeConst.SUPPLIER_APPLICATION_TYPES,
-	// ParameterConst.NEW_SM_APPLN_FOR_MOF),
-	// getManagedBean()
-	// .getSmAppl()
-	// .getApplNo() },
-	// MessageUtils.BUNDLE_COMMON_MESSAGES,
-	// new FacesScopes()
-	// .getUserLocale())));
-	// return CommonUIConst.ACKNOWLEDGE_PAGE;
-	// } catch (Exception e) {
-	// e.printStackTrace();
-	// // return SupplierManagementConst.MOF_APPL_FAIL;
-	// throw new EpException(MessageConst.ERROR_722519);
-	// }
-	// }
 
 	public String submitSmApplToBpm(String applType) {
 		// try {
@@ -5924,13 +5633,15 @@ public class SmApplicationBackingBean extends
 					&& pers.getPersonnelId().equals(per.getPersonnelId())) {
 				System.out.println("**** Same obj without id ******");
 			} else {
-				if (per.getIdentificationNo().equalsIgnoreCase(
-						pers.getIdentificationNo())) {
+				if (per.getIdentificationNo() != null
+						&& per.getIdentificationNo().equalsIgnoreCase(
+								pers.getIdentificationNo())) {
 					validUser = false;
 					throw new EpException(MessageConst.ERROR_722524,
 							new String[] { pers.getIdentificationNo() });
 				}
-				if (per.getEmail().equalsIgnoreCase(pers.getEmail())) {
+				if (per.getEmail() != null
+						&& per.getEmail().equalsIgnoreCase(pers.getEmail())) {
 					validUser = false;
 					throw new EpException(MessageConst.ERROR_722540);
 				}
