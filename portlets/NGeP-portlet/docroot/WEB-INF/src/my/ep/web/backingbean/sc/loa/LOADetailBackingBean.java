@@ -41,7 +41,9 @@ import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
@@ -471,13 +473,17 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 		
 		if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED.equals(definitionType)) {
 			try {
-				if (SourcingConstants.DOC_DEF_KEY_CNTRACT_SUMMARY.equals(scLoaReport.getPmDocument().getDocDefinitionKey())) {
-					scLoaReportAttachment = new ScLoaReportAttachment();
-					scLoaReportAttachment.setScLoaReport(scLoaReport);
-					scLoaReportAttachment.setFileName("contract_summary.pdf");
-					
+				String docDefinitionKey = scLoaReport.getPmDocument().getDocDefinitionKey();
+				
+				scLoaReportAttachment = new ScLoaReportAttachment();
+				scLoaReportAttachment.setScLoaReport(scLoaReport);
+				
+				if (SourcingConstants.DOC_DEF_KEY_CONTRACT_SUMMARY.equals(docDefinitionKey)) {
 					generateContractSummaryPdfFromVelocity((ScAttachment)scLoaReportAttachment, 
 							getManagedBean().getScLoa());	
+				} else if (SourcingConstants.DOC_DEF_KEY_AGREEMENT_LETTER.equals(docDefinitionKey)) {
+					generateAgreementLetterPdfFromVelocity((ScAttachment)scLoaReportAttachment, 
+							getManagedBean().getScLoa());
 				}
 				// TODO - generate documents
 			} catch (Exception e) {
@@ -513,6 +519,7 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 	public void generateContractSummaryPdfFromVelocity(ScAttachment attachment, ScLoa scLoa) throws Exception {
 		
 		populateAttachmentDetails(attachment);
+		attachment.setFileName("contract_summary.pdf");
 		
 		ScLoiLoa scLoiLoa = scLoa.getScLoiLoa();
 		CommonUtils commonUtils = new CommonUtils();
@@ -550,7 +557,117 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
     	context.put("bondAmt", bondAmtStr);
     	
     	DocumentGenerator.getInstance().generatePdfFromVelocity(
-    			"/sc/vc-contract-summary.vm", 
+    			"/sc/loa-contract-summary.vm", 
+    			context, 
+    			new FileOutputStream(attachment.getFilePath()));
+	}
+	
+public void generateAgreementLetterPdfFromVelocity(ScAttachment attachment, ScLoa scLoa) throws Exception {
+		
+		populateAttachmentDetails(attachment);
+		attachment.setFileName("agreement_letter.pdf");
+		
+		ScLoiLoa scLoiLoa = scLoa.getScLoiLoa();
+		PmOrgProfile pmOrgProfile = scLoiLoa.getPmOrgProfile();
+		CommonUtils commonUtils = new CommonUtils();
+		SimpleDateFormat dateSDF = new SimpleDateFormat(commonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE));
+		DecimalFormat amountDF = new DecimalFormat(commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
+		DecimalFormat percentageDF = new DecimalFormat(commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE));
+    	VelocityContext context = new VelocityContext();
+    	
+    	IAddressSO addressSO = null;
+    	PmAddressType pmAddressType = null;
+		try {
+			addressSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
+			
+			AddressReqDTO reqDTO = new AddressReqDTO();
+			reqDTO.setOrgProfileId(pmOrgProfile.getOrgProfileId());
+			reqDTO.setAddressType(AddressType.CONTACT_ADDRESS.value());
+			AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
+			
+			if (resDTO.getAddressTypeList().size() > 0) {
+				pmAddressType = resDTO.getAddressTypeList().get(0);	
+			}
+		} finally {
+			addressSO = null;
+		}
+    	context.put("agency", pmOrgProfile.getOrgName());
+    	context.put("ministry", pmOrgProfile.getParentOrgProfile().getOrgName());
+    	
+    	String agencyAddress = "";
+    	String agencyPhoneNo = "";
+    	String agencyFaxNo = "";
+    	if (pmAddressType != null) {
+    		PmAddress pmAddress = pmAddressType.getPmAddress();
+    		
+    		agencyAddress = getAddress(pmAddress);
+    		agencyAddress = agencyAddress.replaceAll("\r\n", "<br />");
+    		agencyPhoneNo = pmAddress.getPhoneNo();
+    		agencyFaxNo = pmAddress.getFaxNo();
+    	}
+    	context.put("agencyAddress", agencyAddress);
+    	context.put("agencyPhoneNo", agencyPhoneNo);
+    	context.put("agencyFaxNo", agencyFaxNo);
+    	context.put("fileNo", scLoiLoa.getFileNo() + "-" + scLoa.getFileExtNo());
+    	context.put("loaNo", scLoa.getLoaNo());
+    	
+    	String issueDate = "";
+    	if (scLoa.getIssueDate() != null) {
+    		issueDate = dateSDF.format(scLoa.getIssueDate());	
+    	}
+    	context.put("issueDate", issueDate);
+    	
+    	context.put("supplierName", scLoiLoa.getSupplierName());
+    	String supplierAddress = "";
+    	if (scLoa.getSupplierAddress() != null) {
+    		supplierAddress = getSupplierAddress(scLoa.getSupplierAddress());	
+    		supplierAddress = supplierAddress.replaceAll("\r\n", "<br />");
+    	}
+    	context.put("supplierAddress", supplierAddress);
+    	context.put("procurementMode", "Direct Purchase");	// TODO
+    	context.put("title", scLoiLoa.getTitle());
+    	context.put("hasLoi", false);	//TODO
+    	context.put("bondReq", scLoa.isBondReq());
+    	
+    	String bondAmt = "";
+    	if (scLoa.getBondAmt() != null) {
+    		bondAmt = amountDF.format(scLoa.getBondAmt());	
+    	}
+    	context.put("bondAmt", bondAmt);
+    	context.put("bondAmtText", bondAmt);	// TODO
+    	
+    	String bondPercentage = "";
+    	if (scLoa.getBondPercentage() != null) {
+    		bondPercentage = percentageDF.format(scLoa.getBondPercentage());	
+    	}
+    	context.put("bondPercentage", bondPercentage);
+    	context.put("bondExpDate", "");	// TODO
+    	
+    	String bondResDueDays = "";
+    	if (scLoa.getBondResDueDate() != null && scLoa.getAckDate() != null) {
+    		bondResDueDays = DateUtils.getDaysDifference(scLoa.getBondResDueDate(), scLoa.getAckDate()) + "";	
+    	}
+    	context.put("bondResDueDays", bondResDueDays);
+    	
+    	String ackDate = "";
+    	if (scLoa.getAckDate() != null) {
+    		ackDate = dateSDF.format(scLoa.getAckDate());	
+    	}
+    	context.put("ackDate", ackDate);
+    	
+    	context.put("insWarrantyReq", scLoa.isInsWarrantyReq());
+    	
+    	String contractEffDate = "";
+    	if (scLoa.getContractEffDate() != null) {
+    		contractEffDate = dateSDF.format(scLoa.getContractEffDate());	
+    	}
+    	context.put("contractEffDate", contractEffDate);
+    	context.put("contractSigner", scLoa.getContractSigner().getUserName());
+    	context.put("contractSignerDesignation", scLoa.getContractSigner().getDesignation());
+    	
+    	DocumentGenerator.getInstance().generatePdfFromVelocity(
+    			"/sc/loa-agreement-letter.vm", 
     			context, 
     			new FileOutputStream(attachment.getFilePath()));
 	}

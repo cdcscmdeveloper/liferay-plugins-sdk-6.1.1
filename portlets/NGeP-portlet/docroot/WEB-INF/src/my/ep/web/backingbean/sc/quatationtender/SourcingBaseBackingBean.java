@@ -102,7 +102,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	
 	public static Logger log = EpLogger.getLogger(SourcingBaseBackingBean.class);
 	
-	protected static final String DELIMITER_ADDRESS = ",";
+	protected static final String DELIMITER_ADDRESS = ", \r\n";
 	
 	/**
 	 * Method to retrive orgprofiles based on user id and parent org id
