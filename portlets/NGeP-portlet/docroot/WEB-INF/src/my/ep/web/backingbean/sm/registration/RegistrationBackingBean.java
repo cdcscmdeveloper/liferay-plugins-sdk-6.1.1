@@ -68,6 +68,7 @@ import my.ep.persistence.entity.sm.SmSupplierBusiness;
 import my.ep.persistence.entity.sm.SmSupplierCert;
 import my.ep.persistence.entity.sm.SmSupplierOwner;
 import my.ep.persistence.logging.LogKey;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -365,7 +366,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		smPersonnel.setSoftcertFlg(SupplierManagementConst.REG_SOFTCERT);
 		smPersonnel.setBumiFlg(SupplierManagementConst.REG_BUMI);
 		smPersonnel.setContractSignerFlg(SupplierManagementConst.FIRST_USER_CONT_SIGNER);
-		smPersonnel.setEpRole(SupplierManagementConst.EP_ROLE_SUPPLIER_ADMIN);
+		smPersonnel.setEpRole(RoleCode.BASIC_SUPPLIER_ADMIN.value());
 		SmPersonnelAddress personnelAddRes = new SmPersonnelAddress();
 		SmPersonnelAddress personnelAddPerm = new SmPersonnelAddress();
 		
