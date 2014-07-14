@@ -675,7 +675,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		
 		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 			if(getManagedBean().getCircularVer().getCircularRemarks().get(0).getRemark().length()==0 &&
-				(getManagedBean().getCircularVer().getItemRemarks().get(0).getRemark() != null && 
+				(getManagedBean().getCircularVer().getItemRemarks().get(0).getRemark() == null || 
 					getManagedBean().getCircularVer().getItemRemarks().get(0).getRemark().length()==0 )) {
 				throw new EpException("100022", new String[]{"Circular Details/Item Remark"});
 			}
