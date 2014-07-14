@@ -12,17 +12,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import my.ep.constant.EpPropertiesConst;
+import my.ep.factory.EpLogger;
 import my.ep.util.EpPropertiesUtils;
 
 import org.apache.commons.lang.StringUtils;
-//
-//import my.ep.biz.service.cat.catalogue.ICatalogueSO;
-//import my.ep.web.util.lookupservice.BusinessDelegate;
+
+import org.apache.log4j.Logger;
 
 //@WebServlet("/imageServlet")
 public class ImageServlet extends HttpServlet {
 
-//	private static Logger log = Logger.getLogger(ImageServlet.class);
+	private static Logger log = EpLogger.getLogger(ImageServlet.class);
 	/**
 	 * 
 	 */
@@ -39,13 +39,12 @@ public class ImageServlet extends HttpServlet {
 		StringBuilder uploadDir = new StringBuilder();
 //		uploadDir.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.UPLOAD_URL)).append("ngep/cm");
 		uploadDir.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)).append("/CM");
-
 		String imageUrl = uploadDir + "/" + filename;
-		System.out.println("imageUrl: " + imageUrl);
+
+		log.info("filename: " + filename);
+		log.info("imageUrl: " + imageUrl);
 		
 		File file = new File(imageUrl);
-//		System.out.println("file: " + file.getAbsolutePath());
-		
 		byte[] b = new byte[(int) file.length()];
 		
 		try {
@@ -60,9 +59,9 @@ public class ImageServlet extends HttpServlet {
 	        
 	        fileInputStream.close();
 	        output.close();
+	        
 		} catch (FileNotFoundException e) {
-			System.out.println("File Not Found.");
-			e.printStackTrace();
+			log.error("File Not Found: " + e.getMessage());
 		}
 	}
 }
