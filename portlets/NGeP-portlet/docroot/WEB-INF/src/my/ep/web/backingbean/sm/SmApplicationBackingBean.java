@@ -4336,11 +4336,15 @@ public class SmApplicationBackingBean extends
 								.getSmApplSupportDocs()
 								.indexOf(getManagedBean().getSupportDoc()),
 								getManagedBean().getSupportDoc());
+				String filePath = "/" + Calendar.getInstance().get(Calendar.YEAR) + "/SM/" + getManagedBean().getSmAppl().getApplNo() + "/SD/";
 				for (SmApplSupportDoc docs : getManagedBean().getSmAppl()
 						.getSmApplSupportDocs()) {
 					System.out.println(" *** The name is ****"
 							+ docs.getSmApplDocFiles().get(0).getFileName());
+					docs.getSmApplDocFiles().get(0).setFilePath(filePath);
 				}
+				
+				commonUploadFile(event, filePath);
 			}
 		}
 

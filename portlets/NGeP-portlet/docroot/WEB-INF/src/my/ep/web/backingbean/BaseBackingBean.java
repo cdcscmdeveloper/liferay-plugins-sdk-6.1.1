@@ -4,6 +4,7 @@
 package my.ep.web.backingbean;
 
 import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -16,12 +17,14 @@ import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
+import my.ep.constant.EpPropertiesConst;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmAddress;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -534,9 +537,18 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 	    return items;
 	}
 	
-	public void commonUploadFile(FileUploadEvent event, String moduleName){
+	public void commonUploadFile(FileUploadEvent event, String path){
 
-		String tempDir = "C://Ngep//doc//"+moduleName+"//";
+//		String tempDir = "C://Ngep//doc//"+moduleName+"//";
+		String tempDir = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
+		tempDir += "/" + path;
+		
+		File dir = new File(tempDir);
+		log.info(" dir.exists()"+ dir.exists());
+		  
+		if(dir.exists()){}
+		else{dir.mkdirs();}
+		
 		String uploadDir = "";
 		
 		UploadedFile file = event.getFile();
