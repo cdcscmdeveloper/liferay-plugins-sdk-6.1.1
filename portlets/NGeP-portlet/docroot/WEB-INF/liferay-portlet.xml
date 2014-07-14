@@ -1276,7 +1276,7 @@
 			/js/main.js
 		</footer-portlet-javascript>
 		<css-class-wrapper>
-			ZoneMaintenancePortlet-portlet
+			zonemaintenanceportlet-portlet
 		</css-class-wrapper>
 	</portlet>
 	<portlet>
@@ -1292,7 +1292,7 @@
 		</css-class-wrapper>
 	</portlet>
 	<portlet>
-		<portlet-name>supplierUserMaintenance</portlet-name>
+		<portlet-name>UserProfileMaintenance</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
@@ -1300,7 +1300,7 @@
 			/js/main.js
 		</footer-portlet-javascript>
 		<css-class-wrapper>
-			supplierUserMaintenance-portlet
+			userprofilemaintenance-portlet
 		</css-class-wrapper>
 	</portlet>
 	
@@ -1444,7 +1444,7 @@
 			</css-class-wrapper>
 		</portlet>
 		<portlet>
-			<portlet-name>UserProfileMaintenance</portlet-name>
+			<portlet-name>SmUserProfileMaintenance</portlet-name>
 			<icon>/icon.png</icon>
 			<instanceable>false</instanceable>
 			<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>

@@ -4427,7 +4427,7 @@
 		</security-role-ref>
 	</portlet>
 	<portlet>
-		<portlet-name>supplierUserMaintenance</portlet-name>
+		<portlet-name>UserProfileMaintenance</portlet-name>
 		<display-name>Supplier User Maintenance</display-name>
 		<portlet-class>
 			org.portletfaces.bridge.GenericFacesPortlet
@@ -4445,7 +4445,7 @@
 		</supports>
 		<portlet-info>
 			<title>Supplier User Maintenance</title>
-			<short-title>Supplier User Maintenance</short-title>
+			<short-title>NewJSFPortlet</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
@@ -4838,8 +4838,8 @@
 			</security-role-ref>
 		</portlet>
 		<portlet>
-			<portlet-name>UserProfileMaintenance</portlet-name>
-			<display-name>SmUserProfileMaintenance</display-name>
+			<portlet-name>SmUserProfileMaintenance</portlet-name>
+			<display-name>Update User Profile</display-name>
 			<portlet-class>
 				org.portletfaces.bridge.GenericFacesPortlet
 			</portlet-class>
@@ -4855,7 +4855,7 @@
 				<portlet-mode>view</portlet-mode>
 			</supports>
 			<portlet-info>
-				<title>UserProfileMaintenance</title>
+				<title>Update User Profile</title>
 				<short-title>NewJSFPortlet</short-title>
 				<keywords></keywords>
 			</portlet-info>

@@ -166,6 +166,8 @@
 		<portlet id="supplierUserActivation"></portlet>
 
 		<portlet id="UserProfileMaintenance"></portlet>
+
+		<portlet id="SmUserProfileMaintenance"></portlet>
 		<portlet id="SoftCertReg"></portlet>
 	</category>
 
@@ -197,7 +199,6 @@
 		<portlet id="smResubmitApplication"></portlet>
 		<portlet id="paymentResponse"></portlet>
 		<portlet id="smPayment"></portlet>
-		<portlet id="supplierUserMaintenance"></portlet>
 	</category>
 
 	<category name="category.ep.wp">
