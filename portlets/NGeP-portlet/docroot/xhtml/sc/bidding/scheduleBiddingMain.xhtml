@@ -7,15 +7,13 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-		
+	
 	<ui:define name="contentSection">
 	
-		<table style="border: 0px;width:100%; align:center">
-			<tr>
-		<td width="1000 px" ><ui:include src="/xhtml/sc/bidding/scheduleBidNormal.xhtml" /></td>
-			
-			</tr>
-		</table>
-						
+		<h:panelGroup id="scScheduleBiddingPreRenderViewId">
+			<f:event listener="#{scheduleBiddingBB.retriveItemsToBid}" 
+				type="preRenderView" />	
+		</h:panelGroup>
+
 	</ui:define>
 </ui:composition>
