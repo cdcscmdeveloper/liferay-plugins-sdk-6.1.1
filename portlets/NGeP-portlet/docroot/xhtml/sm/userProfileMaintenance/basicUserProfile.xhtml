@@ -59,8 +59,7 @@
 								style="width: 207px;margin-bottom: 5px;" required="true" 
 								disabled="#{smPersonnelBackingBean.managedBean.editMode}">
 								<f:selectItem itemLabel="- Select One -" itemValue="" />
-								<f:selectItem itemLabel="Supplier User" itemValue="U" itemDisabled="#{smPersonnelBackingBean.managedBean.disableRole}" />
-								<f:selectItem itemLabel="Catalog User" itemValue="C" />
+								<f:selectItems value="#{smPersonnelBackingBean.managedBean.roleList}"/>
 								<p:ajax event="change" partialSubmit="true" process="@this"
 									listener="#{smPersonnelBackingBean.displayPrivileges}"
 									update=":form:accountPrivilegesPanel" />

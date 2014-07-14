@@ -45,6 +45,7 @@ import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -58,6 +59,7 @@ import org.apache.log4j.Logger;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.service.UserLocalServiceUtil;
+import com.rsa.certj.x.b;
 
 @ManagedBean(name="smPersonnelBackingBean")
 @ViewScoped
@@ -79,6 +81,7 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		getManagedBean().setDefaultCountryId(resDTO.getPmCountry().getCountryId());
 
 		initUserPersonnelInfo();
+		buildSearchRoleList();
 		this.getManagedBean().setSearchCompanyRole(null);
 		this.getManagedBean().setSearchEPRole(null);
 		this.getManagedBean().setSearchUsername(null);
@@ -96,6 +99,7 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		CountryResDTO resDTO = reqSO.retrieveCountryByCode(reqDTO);
 		getManagedBean().setDefaultCountryId(resDTO.getPmCountry().getCountryId());
 		initUserPersonnelInfo();
+		buildRoleList();
 		fetchUpdateSmPersonnelAddresses(getManagedBean().getUpdateSmPersonnel());
 
 //		getManagedBean().setDisableRole(false);
@@ -147,11 +151,45 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		this.getManagedBean().setSearchEPRole(null);
 		this.getManagedBean().setSearchUsername(null);
 	}
+
+	public void buildRoleList(){
+		removeEPRole();
+		List<SelectItem> roles = new ArrayList<SelectItem>();
+		
+		SelectItem role = new SelectItem();
+		role.setLabel("Supplier User");
+		role.setValue(RoleCode.BASIC_SUPPLIER_USER.value());
+		if(!getManagedBean().isDisableRole())
+			roles.add(role);
+		
+		role = new SelectItem();
+		role.setLabel("Catalogue User");
+		role.setValue(RoleCode.CM_USER.value());
+		roles.add(role);
+		
+		getManagedBean().setRoleList(roles);
+	}
 	
+	public void buildSearchRoleList(){
+		List<SelectItem> roles = new ArrayList<SelectItem>();
+		
+		SelectItem role = new SelectItem();
+		role.setLabel("Supplier User");
+		role.setValue(RoleCode.BASIC_SUPPLIER_USER.value());
+		roles.add(role);
+		
+		role = new SelectItem();
+		role.setLabel("Catalogue User");
+		role.setValue(RoleCode.CM_USER.value());
+		roles.add(role);
+		
+		getManagedBean().setSearchRoleList(roles);
+	}
+
 	public String navigateToAddNewUserPage(){  
 		System.out.println("********************SmPersonnelBackingBean navigateToAddNewUserPage***************");
 		getManagedBean().setEditMode(false);
-		removeEPRole();
+		buildRoleList();
 		
 		CountryReqDTO reqDTO = new CountryReqDTO();
 		reqDTO.setCountryId(getManagedBean().getDefaultCountryId());
@@ -205,6 +243,7 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 	public String navigateToUpdateUserPage(String personnelId){
 		System.out.println("********************SmPersonnelBackingBean navigateToUpdateUserPage***************");
 		getManagedBean().setEditMode(true);
+		buildRoleList();
 		getPersonnelInfoById(personnelId);
 		if(getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress() != null)
 			getManagedBean().setTempAddress(getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress());
@@ -931,7 +970,7 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 	}
 	
 	public void displayPrivileges(){
-		if(getManagedBean().getBasicSmPersonnel().getEpRole().equalsIgnoreCase("U"))
+		if(getManagedBean().getBasicSmPersonnel().getEpRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_USER.value()))
 			getManagedBean().setRenderPrivilegesPanel(true);
 		else
 			getManagedBean().setRenderPrivilegesPanel(false);

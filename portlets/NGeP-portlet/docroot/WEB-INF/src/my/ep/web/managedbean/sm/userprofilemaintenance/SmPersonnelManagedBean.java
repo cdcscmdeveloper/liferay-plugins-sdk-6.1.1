@@ -87,6 +87,10 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 
 	private SmAddress tempAddress;
 	
+	private List<SelectItem> roleList;
+	
+	private List<SelectItem> searchRoleList;
+
 	public SmPersonnelManagedBean() {
 		// TODO Auto-generated constructor stub
 		super();
@@ -376,6 +380,22 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 
 	public void setTempAddress(SmAddress tempAddress) {
 		this.tempAddress = tempAddress;
+	}
+
+	public List<SelectItem> getRoleList() {
+		return roleList;
+	}
+
+	public void setRoleList(List<SelectItem> roleList) {
+		this.roleList = roleList;
+	}
+
+	public List<SelectItem> getSearchRoleList() {
+		return searchRoleList;
+	}
+
+	public void setSearchRoleList(List<SelectItem> searchRoleList) {
+		this.searchRoleList = searchRoleList;
 	}
 
 	
