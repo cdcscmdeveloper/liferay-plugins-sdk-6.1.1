@@ -7,7 +7,7 @@
 	<p:dialog id="justPopup" widgetVar="justPopup" header="JUSTIFICATION" modal="true" width="440" height="220"
 		resizable="false" >
 		<p:spacer height="10px"/>
-		<table style="width: 400px">
+		<table style="width: 100%">
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.procurement.type']}" /></td>
 				<td><p:inputText disabled="true"
@@ -20,9 +20,9 @@
 			 </tr>
 			<tr>
 				<td style="vertical-align:top; text-align:left;"><p:outputLabel
-						value="#{lbl['lbl.sc.just.rmks']}" rendered="#{requestNoteBackingBean.managedBean.justTypeOption}" /></td>
+						value="#{lbl['lbl.sc.just.rmks']}"/></td>
 				<td><p:inputTextarea value="#{requestNoteBackingBean.managedBean.justification}"
-						rows="4" cols="48" style="margin-bottom: 5px;"  rendered="#{requestNoteBackingBean.managedBean.justTypeOption}"/></td>
+						rows="4" cols="48" style="margin-bottom: 5px;" disabled="true" /></td>
 			</tr>
 		</table>
          <p:spacer height="15px"></p:spacer>
@@ -34,6 +34,5 @@
 					</p:column>
 				</p:row>
 		 </p:panelGrid>
-
 	</p:dialog>
 </ui:composition>
