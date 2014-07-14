@@ -102,18 +102,20 @@
 				<td />
 				<td />
 			</tr> -->
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.so.zone.location']}" /></td>
-				<td><p:inputText
-						value="#{qTDetailBB.managedBean.qt.zonal ? 'Yes' : 'No'}"
-						disabled="true" size="30" /></td>
-				<td />
-				<td />
-			</tr>
+			<ui:fragment rendered="#{qTDetailBB.managedBean.qt.panel eq 'No'}">
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.so.zone.location']}" /></td>
+					<td><p:inputText
+							value="#{qTDetailBB.managedBean.qt.zonal ? 'Yes' : 'No'}"
+							disabled="true" size="30" /></td>
+					<td />
+					<td />
+				</tr>
+			</ui:fragment>
 		</table>
 	</p:panel>
 	<p:panel header="#{lbl['lbl.so.zone.location.info']}" toggleable="true"
-		rendered="#{qTDetailBB.managedBean.qt.zonal}">
+		rendered="#{qTDetailBB.managedBean.qt.zonal and qTDetailBB.managedBean.qt.panel eq 'false'}">
 		<table style="width: 100%">
 			<tr>
 				<td style="width: 165px"><p:outputLabel
