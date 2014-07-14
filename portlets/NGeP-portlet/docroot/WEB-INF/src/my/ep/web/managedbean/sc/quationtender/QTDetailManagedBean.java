@@ -31,6 +31,7 @@ import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDo;
 import my.ep.persistence.entity.pm.common.PmGo;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmReportSection;
 import my.ep.persistence.entity.pm.common.PmSo;
 import my.ep.persistence.entity.pm.common.PmState;
@@ -348,6 +349,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private String roleName;
 
 	private List<TabBean> scCommitteeMemberTabList;
+	private List<PmParameter> finalizationSecratary;
 
 	// Briefing & Site Visit Details
 	private ScQtBsvDtl qtBriefing;
@@ -2432,6 +2434,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setAddress(String address) {
 		this.address = address;
+	}
+
+	public List<PmParameter> getFinalizationSecratary() {
+		return finalizationSecratary;
+	}
+
+	public void setFinalizationSecratary(List<PmParameter> finalizationSecratary) {
+		this.finalizationSecratary = finalizationSecratary;
 	}
 
 }
