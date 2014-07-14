@@ -4874,7 +4874,7 @@
 		</portlet>
 		<portlet>
 			<portlet-name>SoftCertReg</portlet-name>
-			<display-name>SoftCertReg</display-name>
+			<display-name>Request Soft Cert</display-name>
 			<portlet-class>
 				org.portletfaces.bridge.GenericFacesPortlet
 			</portlet-class>
@@ -4890,7 +4890,7 @@
 				<portlet-mode>view</portlet-mode>
 			</supports>
 			<portlet-info>
-				<title>SoftCertReg</title>
+				<title>Request Soft Cert</title>
 				<short-title>NewJSFPortlet</short-title>
 				<keywords></keywords>
 			</portlet-info>
