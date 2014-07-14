@@ -12,7 +12,7 @@
 		<p:panel>
 			
 			<p:dataTable id="committeeReminder" var="reminder"
-				value="#{suppFinalizationBackingBean.managedBean.onlineBiddingReminderList}"
+				value="#{suppFinalBiddingBackingBean.managedBean.reminderList}"
 				rowKey="#{reminder}" rowIndexVar="index">
 				<ac:paginator for="committeeReminder" />
 
@@ -25,10 +25,10 @@
 		<p:panel header="#{lbl['lbl.sc.reminder']}" toggleable="true">
 			<h:panelGrid styleClass="noBorders tr,noBorders td" columns="2">
 				<h:outputLabel value="#{lbl['lbl.sc.subject']}" />
-				<p:inputText size="50"  value="#{suppFinalizationBackingBean.managedBean.subject}"></p:inputText>
+				<p:inputText size="50"  value="#{suppFinalBiddingBackingBean.managedBean.subject}"></p:inputText>
 				
 				<h:outputLabel value="#{lbl['lbl.sc.message']}" />
-				<p:inputTextarea rows="5" cols="50"  value="#{suppFinalizationBackingBean.managedBean.message}"></p:inputTextarea>
+				<p:inputTextarea rows="5" cols="50"  value="#{suppFinalBiddingBackingBean.managedBean.message}"></p:inputTextarea>
 			</h:panelGrid>
 		</p:panel>
 
@@ -41,7 +41,7 @@
 			<p:commandButton 
 				value="#{lbl['lbl.btn.submit']}"
 				style="float:right;" 
-				action="#{suppFinalizationBackingBean.sendReminder}"
+				action="#{suppFinalBiddingBackingBean.sendReminder}"
 				oncomplete="reminder.hide();"
 				icon="ui-icon-submit"/>
 		</div>

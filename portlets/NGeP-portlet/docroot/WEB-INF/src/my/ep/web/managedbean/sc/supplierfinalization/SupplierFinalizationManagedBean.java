@@ -6,8 +6,10 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.constant.pm.ParameterConst;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
+import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
@@ -61,12 +63,13 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private String loiLoaPreparedBy = ParameterConst.LOILOA_PREPARED_BY_DO;
 	private String fwdHigherAuthority = "false";
 	private String finalizationCommittee;
+	private PmUser committeeSecretary;
+	private String committeeSecretaryName;
 	private String reason;
 	private String reEvaluateBy;
 	private String reEvaluateReqFor;
 	private String reqSpecChanges;
-	private String recommendBy = ParameterConst.RECOMMEND_BY_SINGLE_AWARD;
-	private String recommendByItem = ParameterConst.RECOMMEND_BY_SINGLE_AWARD;
+	private Long recommendBy;
 	private String selectionMode = QTConstants.SF_SINGLE;
 	private String awardSupplier; 
 	
@@ -431,14 +434,14 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	/**
 	 * @return the recommendBy
 	 */
-	public String getRecommendBy() {
+	public Long getRecommendBy() {
 		return recommendBy;
 	}
 
 	/**
 	 * @param recommendBy the recommendBy to set
 	 */
-	public void setRecommendBy(String recommendBy) {
+	public void setRecommendBy(Long recommendBy) {
 		this.recommendBy = recommendBy;
 	}
 
@@ -810,20 +813,6 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the recommendByItem
-	 */
-	public String getRecommendByItem() {
-		return recommendByItem;
-	}
-
-	/**
-	 * @param recommendByItem the recommendByItem to set
-	 */
-	public void setRecommendByItem(String recommendByItem) {
-		this.recommendByItem = recommendByItem;
-	}
-
-	/**
 	 * @return the isForwardToBpk
 	 */
 	public boolean isForwardToBpk() {
@@ -879,6 +868,34 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	public void setOnlineBiddingReminderList(
 			List<ScQtCommitteeActivity> onlineBiddingReminderList) {
 		this.onlineBiddingReminderList = onlineBiddingReminderList;
+	}
+
+	/**
+	 * @return the committeeSecretary
+	 */
+	public PmUser getCommitteeSecretary() {
+		return committeeSecretary;
+	}
+
+	/**
+	 * @param committeeSecretary the committeeSecretary to set
+	 */
+	public void setCommitteeSecretary(PmUser committeeSecretary) {
+		this.committeeSecretary = committeeSecretary;
+	}
+
+	/**
+	 * @return the committeeSecretaryName
+	 */
+	public String getCommitteeSecretaryName() {
+		return committeeSecretaryName;
+	}
+
+	/**
+	 * @param committeeSecretaryName the committeeSecretaryName to set
+	 */
+	public void setCommitteeSecretaryName(String committeeSecretaryName) {
+		this.committeeSecretaryName = committeeSecretaryName;
 	}
 	
 	

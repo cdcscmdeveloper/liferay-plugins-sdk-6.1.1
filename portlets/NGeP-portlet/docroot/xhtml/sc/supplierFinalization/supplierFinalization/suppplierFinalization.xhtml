@@ -101,9 +101,11 @@
 					<h:column rendered="#{!suppFinalizationBackingBean.managedBean.forwardToBpk}">
 						<p:selectOneMenu id="finalizationCommittee" value="#{suppFinalizationBackingBean.managedBean.finalizationCommittee}">
 							<f:selectItems value="#{suppFinalizationBackingBean.getFinalizationCommitteeDropDown()}" />
+							<p:ajax event="change" update=":form:tab:committeeSecretary" 
+								listener="#{suppFinalizationBackingBean.finalizationCommitteeEvent}" process="@this" />
 			   			</p:selectOneMenu>
 			   			<p:spacer width="5px" />
-			   			<p:outputLabel value="#{suppFinalizationBackingBean.managedBean.finalizationCommittee}" readonly="true"/>
+			   			<p:inputText id="committeeSecretary" value="#{suppFinalizationBackingBean.managedBean.committeeSecretaryName}" disabled="true"/>
 					</h:column>
 					
 					<h:column>
@@ -111,7 +113,7 @@
 						<p:outputLabel value=" " rendered="#{suppFinalizationBackingBean.managedBean.forwardToBpk}"/>
 					</h:column>
 					<h:column>
-						<p:selectOneRadio id="reason" value="#{suppFinalizationBackingBean.managedBean.reason}" 
+						<p:selectOneRadio id="reason" value="#{suppFinalizationBackingBean.managedBean.reason}" layout="grid" columns="1"
 							rendered="#{!suppFinalizationBackingBean.managedBean.forwardToBpk}">
 							<f:selectItems value="#{suppFinalizationBackingBean.getReasonRadioBtn()}" />
 			   			</p:selectOneRadio>

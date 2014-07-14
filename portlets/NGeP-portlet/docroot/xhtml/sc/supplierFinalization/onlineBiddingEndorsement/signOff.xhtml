@@ -13,7 +13,7 @@
 		<p:panel>
 			<h:panelGrid styleClass="noBorders tr,noBorders td" columns="2">
 				<h:outputLabel value="#{lbl['lbl.sc.pin.no']}" />
-				<p:inputText size="50" value="#{suppFinalizationBackingBean.managedBean.pinNo}"></p:inputText>
+				<p:inputText size="50" value="#{suppFinalBiddingBackingBean.managedBean.pinNo}"></p:inputText>
 			</h:panelGrid>
 		</p:panel>
 
@@ -27,7 +27,7 @@
 			<p:commandButton 
 				value="#{lbl['lbl.btn.submit']}"
 				style="float:right;" 
-				action="#{suppFinalizationBackingBean.signOff}"
+				action="#{suppFinalBiddingBackingBean.signOff}"
 				oncomplete="signOffPopUp.hide();"
 				icon="ui-icon-submit"/>
 		</div>

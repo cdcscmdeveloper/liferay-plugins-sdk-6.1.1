@@ -121,6 +121,7 @@ public interface QTConstants {
 	public static final String RESTRICTED_TYPE="R";
 	public static final String PRESENTATION_DEMO="PD";
 	
-	
-	
+	public static final String BSV_TYPE_BRIEFING = "B";
+	public static final String BSV_TYPE_SITEVISIT = "S";
+	public static final String BSV_TYPE_BRIEFING_SITEVIST = "B";
 }

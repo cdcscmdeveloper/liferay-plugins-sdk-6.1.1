@@ -10,7 +10,7 @@
 	<p:panel header="#{lbl['lbl.sc.committee.endorsement']}" toggleable="true">
 		
 		<p:dataTable id="committeeEndorsement" var="endorsement"
-			value="#{suppFinalizationBackingBean.managedBean.onlineBiddingEndorsementList}"
+			value="#{suppFinalBiddingBackingBean.managedBean.committeeEndorsementList}"
 			rowKey="#{endorsement}" rowIndexVar="index">
 			<ac:paginator for="committeeEndorsement" />
 
@@ -23,11 +23,11 @@
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sc.role']}" style="width:20%">
-				<h:outputText value="#{suppFinalizationBackingBean.getParameterDesc(ParameterTypeConst.committeeRole, endorsement.scCommitteeMember.memberRole)}"></h:outputText>
+				<h:outputText value="#{suppFinalBiddingBackingBean.getParameterDesc(ParameterTypeConst.committeeRole, endorsement.scCommitteeMember.memberRole)}"></h:outputText>
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sc.representative.type']}" style="width:20%">
-				<h:outputText value="#{suppFinalizationBackingBean.getParameterDesc(ParameterTypeConst.organisationTypes, endorsement.scCommitteeMember.memberType)}"></h:outputText>
+				<h:outputText value="#{suppFinalBiddingBackingBean.getParameterDesc(ParameterTypeConst.organisationTypes, endorsement.scCommitteeMember.memberType)}"></h:outputText>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.status']}" style="width:20%">
@@ -40,7 +40,7 @@
 		<div align="right">
 			<p:commandButton 
 				value="#{lbl['lbl.btn.send.reminder']}"
-				action="#{suppFinalizationBackingBean.showReminder}"
+				action="#{suppFinalBiddingBackingBean.showReminder}"
 				update=":form:reminderPopup"
 				oncomplete="reminder.show();"
 				icon="ui-icon-mail" />
