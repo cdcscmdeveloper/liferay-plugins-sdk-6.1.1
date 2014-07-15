@@ -517,6 +517,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
 				.getInstance().getServiceObject("cm", ICatalogueSO.class);
 		
+		this.getManagedBean().setPreviousScreen(1);//catMaintenance
+		
 		try{
 
 			CatalogueReqDTO reqDTO = new CatalogueReqDTO();
@@ -588,6 +590,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 								.getItemDesc());
 		this.getManagedBean().setTabActiveIndex(4);
 		this.getManagedBean().setDisplayCatalogue(true);
+		this.getManagedBean().setPreviousScreen(1);//catMaintenance
 		return "addCatalogItem";
 
 	}
@@ -603,6 +606,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 								.getItemDesc());
 		this.getManagedBean().setTabActiveIndex(5);
 		this.getManagedBean().setDisplayCatalogue(true);
+		this.getManagedBean().setPreviousScreen(1);//catMaintenance
 		return "addCatalogItem";
 
 	}
@@ -616,48 +620,56 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				.getServiceObject("pm", IStatusSO.class);
 		String languageCode = new FacesScopes().getUserLocale().getLanguage();
 		StatusReqDTO statusReqDTO = new StatusReqDTO();
+		this.getManagedBean().setPreviousScreen(1);//catMaintenance
 
-		statusReqDTO.setDocType("CMR");
-		statusReqDTO.setModuleCode("CM");
-		statusReqDTO.setLanguageCode(languageCode);
-
-		StatusResDTO resDTO = statusSO.retrieveStatusDescList(statusReqDTO);
-
-		this.getManagedBean().setStatusDescList(resDTO.getStatusDescList());
-
-		/*
-		 * this.getManagedBean().setRejectReasonIds(new ArrayList<Long>());
-		 * for(CmItemRejectReason reason :
-		 * this.getManagedBean().getApprovalItemList
-		 * ().get(index).getCmItemRejectReasons()){
-		 * this.getManagedBean().getRejectReasonIds
-		 * ().add(reason.getPmStatus().getStatusId());
-		 * this.getManagedBean().setRejectReason(reason.getRemark()); }
-		 */
-
-		this.getManagedBean().setSelectedMaintainItem(
-				this.getManagedBean().getApprovalItemList().get(index));
-		this.getManagedBean()
-				.getSelectedMaintainItem()
-				.setCompareDesc(
-						this.getManagedBean().getApprovalItemList().get(index)
-								.getItemDesc());
-
-		for (CmItemRejectReason remark : this.getManagedBean()
-				.getSelectedMaintainItem().getCmItemRejectReasons()) {
-
-			userReqDTO.setUserId(remark.getChangedBy());
-			System.out.println("remark.getChangedBy()" + remark.getChangedBy());
-			UserResDTO userResDTO = userSO.retrieveUserDetails(userReqDTO);
-			System.out.println("userResDTO.getPmUser().getUserName():"
-					+ userResDTO.getPmUser().getUserName());
-			remark.setCreatedUser(userResDTO.getPmUser().getUserName());
-		}
-
-		this.getManagedBean().setTabActiveIndex(1);
-		this.getManagedBean().setDisplayCatalogue(true);
+		try{
+			statusReqDTO.setDocType("CMR");
+			statusReqDTO.setModuleCode("CM");
+			statusReqDTO.setLanguageCode(languageCode);
+	
+			StatusResDTO resDTO = statusSO.retrieveStatusDescList(statusReqDTO);
+	
+			this.getManagedBean().setStatusDescList(resDTO.getStatusDescList());
+	
+			/*
+			 * this.getManagedBean().setRejectReasonIds(new ArrayList<Long>());
+			 * for(CmItemRejectReason reason :
+			 * this.getManagedBean().getApprovalItemList
+			 * ().get(index).getCmItemRejectReasons()){
+			 * this.getManagedBean().getRejectReasonIds
+			 * ().add(reason.getPmStatus().getStatusId());
+			 * this.getManagedBean().setRejectReason(reason.getRemark()); }
+			 */
+	
+			this.getManagedBean().setSelectedMaintainItem(
+					this.getManagedBean().getApprovalItemList().get(index));
+			this.getManagedBean()
+					.getSelectedMaintainItem()
+					.setCompareDesc(
+							this.getManagedBean().getApprovalItemList().get(index)
+									.getItemDesc());
+	
+			for (CmItemRejectReason remark : this.getManagedBean()
+					.getSelectedMaintainItem().getCmItemRejectReasons()) {
+	
+				userReqDTO.setUserId(remark.getChangedBy());
+				System.out.println("remark.getChangedBy()" + remark.getChangedBy());
+				UserResDTO userResDTO = userSO.retrieveUserDetails(userReqDTO);
+				System.out.println("userResDTO.getPmUser().getUserName():"
+						+ userResDTO.getPmUser().getUserName());
+				remark.setCreatedUser(userResDTO.getPmUser().getUserName());
+			}
+			this.getManagedBean().setTabActiveIndex(1);
+			this.getManagedBean().setDisplayCatalogue(true);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			userSO = null;
+			statusSO = null;
+		}	
+		
 		return "addCatalogItem";
-
 	}
 
 	public String navigateToApprovedItemDet(int index) {
@@ -671,65 +683,69 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 								.getItemDesc());
 		this.getManagedBean().setTabActiveIndex(2);
 		this.getManagedBean().setDisplayCatalogue(true);
+		this.getManagedBean().setPreviousScreen(1);//catMaintenance
 		return "addCatalogItem";
 
 	}
 
 	public String navigateToRejectedItemDet(int index) {
 
-		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
-				.getInstance().getServiceObject("cm", ICatalogueSO.class);
+		IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject("pm", IStatusSO.class);
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject("pm", IUserSO.class);
+		this.getManagedBean().setPreviousScreen(1);//catMaintenance
 
-		IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance()
-				.getServiceObject("pm", IStatusSO.class);
-
-		String languageCode = new FacesScopes().getUserLocale().getLanguage();
-
-		StatusReqDTO statusReqDTO = new StatusReqDTO();
-
-		statusReqDTO.setDocType("CMR");
-		statusReqDTO.setModuleCode("CM");
-		statusReqDTO.setLanguageCode(languageCode);
-
-		StatusResDTO resDTO = statusSO.retrieveStatusDescList(statusReqDTO);
-
-		this.getManagedBean().setStatusDescList(resDTO.getStatusDescList());
-		/*
-		 * this.getManagedBean().setRejectReasonIds(new ArrayList<Long>());
-		 * for(CmItemRejectReason reason :
-		 * this.getManagedBean().getRejectedItemList
-		 * ().get(index).getCmItemRejectReasons()){
-		 * this.getManagedBean().getRejectReasonIds
-		 * ().add(reason.getPmStatus().getStatusId());
-		 * this.getManagedBean().setRejectReason(reason.getRemark()); }
-		 */
-
-		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
-		this.getManagedBean().setSelectedMaintainItem(
-				this.getManagedBean().getRejectedItemList().get(index));
-		this.getManagedBean()
-				.getSelectedMaintainItem()
-				.setCompareDesc(
-						this.getManagedBean().getRejectedItemList().get(index)
-								.getItemDesc());
-
-		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
-				.getServiceObject("pm", IUserSO.class);
-		UserReqDTO userReqDTO = new UserReqDTO();
-
-		for (CmItemRejectReason remark : this.getManagedBean()
-				.getSelectedMaintainItem().getCmItemRejectReasons()) {
-
-			userReqDTO.setUserId(remark.getChangedBy());
-			System.out.println("remark.getChangedBy()" + remark.getChangedBy());
-			UserResDTO userResDTO = userSO.retrieveUserDetails(userReqDTO);
-			System.out.println("userResDTO.getPmUser().getUserName():"
-					+ userResDTO.getPmUser().getUserName());
-			remark.setCreatedUser(userResDTO.getPmUser().getUserName());
+		try{
+			String languageCode = new FacesScopes().getUserLocale().getLanguage();
+	
+			StatusReqDTO statusReqDTO = new StatusReqDTO();
+	
+			statusReqDTO.setDocType("CMR");
+			statusReqDTO.setModuleCode("CM");
+			statusReqDTO.setLanguageCode(languageCode);
+	
+			StatusResDTO resDTO = statusSO.retrieveStatusDescList(statusReqDTO);
+	
+			this.getManagedBean().setStatusDescList(resDTO.getStatusDescList());
+			/*
+			 * this.getManagedBean().setRejectReasonIds(new ArrayList<Long>());
+			 * for(CmItemRejectReason reason :
+			 * this.getManagedBean().getRejectedItemList
+			 * ().get(index).getCmItemRejectReasons()){
+			 * this.getManagedBean().getRejectReasonIds
+			 * ().add(reason.getPmStatus().getStatusId());
+			 * this.getManagedBean().setRejectReason(reason.getRemark()); }
+			 */
+	
+			this.getManagedBean().setSelectedMaintainItem(
+					this.getManagedBean().getRejectedItemList().get(index));
+			this.getManagedBean()
+					.getSelectedMaintainItem()
+					.setCompareDesc(
+							this.getManagedBean().getRejectedItemList().get(index)
+									.getItemDesc());
+	
+			UserReqDTO userReqDTO = new UserReqDTO();
+	
+			for (CmItemRejectReason remark : this.getManagedBean()
+					.getSelectedMaintainItem().getCmItemRejectReasons()) {
+	
+				userReqDTO.setUserId(remark.getChangedBy());
+				System.out.println("remark.getChangedBy()" + remark.getChangedBy());
+				UserResDTO userResDTO = userSO.retrieveUserDetails(userReqDTO);
+				System.out.println("userResDTO.getPmUser().getUserName():"
+						+ userResDTO.getPmUser().getUserName());
+				remark.setCreatedUser(userResDTO.getPmUser().getUserName());
+			}
+	
+			this.getManagedBean().setTabActiveIndex(3);
+			this.getManagedBean().setDisplayCatalogue(true);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			userSO = null;
+			statusSO = null;
 		}
-
-		this.getManagedBean().setTabActiveIndex(3);
-		this.getManagedBean().setDisplayCatalogue(true);
 
 		return "addCatalogItem";
 
@@ -740,6 +756,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		System.out.println("getDocId" + supplierItem.getDocId());
 
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
+		this.getManagedBean().setPreviousScreen(0);//catSearch
 		
 		try{
 
@@ -748,7 +765,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	
 			CatalogueResDTO resDTO = null;
 			resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
-			this.getManagedBean().setDisplayCatalogue(false);
+			this.getManagedBean().setDisplayCatalogue(true);
 			this.getManagedBean().setSelectedMaintainItem(resDTO.getSupplierItemList().get(0));
 			
 			reqDTO.setSupplierId(resDTO.getSupplierItemList().get(0).getSmSupplier().getSupplierId());
@@ -5392,6 +5409,23 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					break;
 			}
 		}
+	}
+	
+	public String navigate(){
+		int a = this.getManagedBean().getPreviousScreen();
+		if (a==0)//0=catSearch
+			return cancelToSupplierItemSearch();
+		else if (a==1)//;1=catMaintenance
+			return cancelToMaintenanceFile();
+		else if (a==2)//2=pendingTask
+			return cancelToPendingApprovalItem();
+		else
+			return cancelToSupplierItemSearch();
+	}
+	
+	public String cancelToPendingApprovalItem() {
+	    
+		return "/xhtml/cm/catalogue/catalogueTaskList.xhtml";
 	}
 
 	public SearchFilterBean getStatusFilterBean() {

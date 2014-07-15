@@ -117,6 +117,7 @@ public class ReviewCatalogueBackingBean extends
 		}
 		bb.getManagedBean().setRejectReasonIds(new ArrayList<Long>());
 		bb.getManagedBean().setDisplayCatalogue(true);
+		bb.getManagedBean().setPreviousScreen(2);//pendingtask
 		return "addCatalogItem";
 
 	}

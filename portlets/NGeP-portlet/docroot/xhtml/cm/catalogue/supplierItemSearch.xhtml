@@ -190,11 +190,14 @@
 							</p:column>
 
 							<p:column headerText="#{lbl['lbl.cm.supplier.name']}">
-								<h:outputText value="#{supplierItem.companyName}"
-									rendered="#{supplierItem.contractNo != null or supplierItem.circularNo != null}"></h:outputText>
-								<p:commandLink value="#{supplierItem.companyName}"
-									rendered="#{supplierItem.contractNo == null and supplierItem.circularNo == null}"
-									action="#{catalogueBackingBean.navigateToSupplierItemDet(supplierItem)}" />
+								<ui:remove>
+									<h:outputText value="#{supplierItem.companyName}"
+										rendered="#{supplierItem.contractNo != null or supplierItem.circularNo != null}"></h:outputText>
+									<p:commandLink value="#{supplierItem.companyName}"
+										rendered="#{supplierItem.contractNo == null and supplierItem.circularNo == null}"
+										action="#{catalogueBackingBean.navigateToSupplierItemDet(supplierItem)}" />
+								</ui:remove>	
+								<h:outputText value="#{supplierItem.companyName}" ></h:outputText>
 							</p:column>
 
 							<p:column headerText="UOM">

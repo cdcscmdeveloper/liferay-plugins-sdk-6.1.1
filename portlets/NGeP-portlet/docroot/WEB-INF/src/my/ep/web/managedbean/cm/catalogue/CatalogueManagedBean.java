@@ -174,6 +174,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private List<VCmSupplierItem> ctRequestList;
 	private boolean simpleQuoteFlag; // enable or disable simple quote in search catalogue	
 	private boolean displayCatalogue = false;
+	private int previousScreen = 0;//0=catSearch;1=catMaintenance;2=pendingTask;
 	
 	private Date currentDate = new Date();
 
@@ -1361,6 +1362,16 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 	public void setSelectedItems(VCmSupplierItem[] selectedItems) {
 		this.selectedItems = selectedItems;
+	}
+
+
+	public int getPreviousScreen() {
+		return previousScreen;
+	}
+
+
+	public void setPreviousScreen(int previousScreen) {
+		this.previousScreen = previousScreen;
 	}
 
 	

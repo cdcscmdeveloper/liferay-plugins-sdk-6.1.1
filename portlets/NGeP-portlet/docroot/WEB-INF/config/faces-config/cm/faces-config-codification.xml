@@ -44,6 +44,11 @@
 			<from-outcome>addCatalogItem</from-outcome>
 			<to-view-id>/xhtml/cm/catalogue/addCatalogView.xhtml</to-view-id>
 		</navigation-case>
+		
+		<navigation-case>
+			<from-outcome>editCatalogItem</from-outcome>
+			<to-view-id>/xhtml/cm/catalogue/addCatalogEdit.xhtml</to-view-id>
+		</navigation-case>
 
 		<navigation-case>
 			<from-outcome>catalogueMaintenanceFile</from-outcome>

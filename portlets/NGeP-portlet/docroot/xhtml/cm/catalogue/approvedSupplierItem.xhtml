@@ -10,7 +10,7 @@
 	<div style="text-align: right;">
 		<p:commandButton value="#{lbl['lbl.cm.publish']}"
 			action="#{catalogueBackingBean.publishCatalogItem}"
-			update="approvedSupplierItemID"></p:commandButton>
+			update="approvedSupplierItemID" rendered="#{fn:length(catalogueBackingBean.managedBean.approvedItemList) > 0 }"></p:commandButton>
 	</div>
 	<p:dataTable id="approvedSupplierItemID"
 		value="#{catalogueBackingBean.managedBean.approvedItemList}"
@@ -18,7 +18,7 @@
 		rowKey="#{approved.supplierItemId}"
 		selection="#{catalogueBackingBean.managedBean.selectedApprovedItems}">
 
-		<p:column selectionMode="multiple" style="width:2%" />
+		<p:column selectionMode="multiple" style="width:2%" rendered="#{fn:length(catalogueBackingBean.managedBean.approvedItemList) > 0 }"/>
 		
 		<ac:paginator for="approvedSupplierItemID"></ac:paginator>
 

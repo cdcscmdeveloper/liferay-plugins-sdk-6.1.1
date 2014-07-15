@@ -60,6 +60,11 @@
 	<p:outputPanel id="addCatDet">
 
 		<div style="text-align: right; min-height: 40px;">
+				<div style="float: left; clear: both;">
+					<p:commandButton value="#{lbl['lbl.cm.back']}" icon="ui-icon-back"
+							action="#{catalogueBackingBean.navigate}">
+					</p:commandButton>
+				</div>
 
 			<h:panelGroup
 				rendered="#{unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.supplierAdmin or unspscCodeBackingBean.allSupplier}">
@@ -72,18 +77,25 @@
 					icon="ui-icon-save"
 					rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus != 'P' and catalogueBackingBean.managedBean.displayCatalogue}"
 					action="#{catalogueBackingBean.saveCatalogItem}" update="@form"></p:commandButton>
-				<p:commandButton value="#{lbl['lbl.cm.cancel']}"
-					rendered="#{catalogueBackingBean.managedBean.displayCatalogue}"
-					icon="ui-icon-cancel"
-					action="#{catalogueBackingBean.cancelToMaintenanceFile()}"></p:commandButton>
+					
+					<ui:remove>
+						<p:commandButton value="#{lbl['lbl.cm.cancel']}"
+							rendered="#{catalogueBackingBean.managedBean.displayCatalogue}"
+							icon="ui-icon-cancel"
+							action="#{catalogueBackingBean.cancelToMaintenanceFile()}"></p:commandButton>
+					</ui:remove>
 
 				<div style="float: left; clear: both;">
-					<p:commandButton value="#{lbl['lbl.cm.back']}" icon="ui-icon-back" rendered="#{!catalogueBackingBean.managedBean.displayCatalogue}"
-						action="#{catalogueBackingBean.cancelToSupplierItemSearch()}">
-					</p:commandButton>
+					<ui:remove>
+						<p:commandButton value="#{lbl['lbl.cm.back']}" icon="ui-icon-back" rendered="#{!catalogueBackingBean.managedBean.displayCatalogue}"
+							action="#{catalogueBackingBean.cancelToSupplierItemSearch()}">
+						</p:commandButton>
+					</ui:remove>
+					
 				</div>
 			</h:panelGroup>
 			
+			<ui:remove>
 			<h:panelGroup rendered="#{unspscCodeBackingBean.requisitioner}">
 				<div style="float: left; clear: both;">
 					<p:commandButton value="#{lbl['lbl.cm.back']}" icon="ui-icon-back"
@@ -91,7 +103,7 @@
 					</p:commandButton>
 				</div>
 			</h:panelGroup>
-
+			</ui:remove>
 
 			<h:panelGroup rendered="#{unspscCodeBackingBean.catalogueAdmin}">
 
@@ -100,11 +112,14 @@
 				<p:commandButton value="Reject" icon="ui-icon-reject"
 					update=":form:catalogDetMsgId :form:pricingTabID"
 					action="#{reviewCatBackingBean.rejectCatalogueItem}"></p:commandButton>
-
-				<p:commandButton value="#{lbl['lbl.cm.cancel']}"
-					icon="ui-icon-cancel"
-					action="#{reviewCatBackingBean.cancelToPendingApprovalItem()}"
-					immediate="true"></p:commandButton>
+				
+				<ui:remove>
+					<p:commandButton value="#{lbl['lbl.cm.cancel']}"
+						icon="ui-icon-cancel"
+						action="#{reviewCatBackingBean.cancelToPendingApprovalItem()}"
+						immediate="true">
+					</p:commandButton>
+				</ui:remove>
 
 			</h:panelGroup>
 		</div>
