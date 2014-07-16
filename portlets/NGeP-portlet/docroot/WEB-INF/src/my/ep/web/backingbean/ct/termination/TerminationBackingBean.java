@@ -458,6 +458,7 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 			contractTemplateSO = null;
 		}
 	}
+	 
 	
 	private String formAddress(String address1, String address2, String address3, String address4) {
 		StringBuffer address = new StringBuffer();

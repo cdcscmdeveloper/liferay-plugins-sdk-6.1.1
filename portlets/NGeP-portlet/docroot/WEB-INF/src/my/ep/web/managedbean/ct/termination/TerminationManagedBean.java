@@ -178,4 +178,5 @@ public class TerminationManagedBean extends BaseManagedBean{
 	public void setExternalPageUrl(String externalPageUrl) {
 		this.externalPageUrl = externalPageUrl;
 	}
+
 }

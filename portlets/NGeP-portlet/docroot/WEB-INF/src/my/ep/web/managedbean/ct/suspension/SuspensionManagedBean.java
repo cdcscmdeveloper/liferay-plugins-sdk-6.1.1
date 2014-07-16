@@ -32,8 +32,6 @@ public class SuspensionManagedBean extends BaseManagedBean {
 	private String taskName;
 	private String[] action;
 	private String editorValue;
-
-	private boolean chkConceValue;
 	
 	private CtContract ctContract;
 	private List<CtRemark> remarkList;
@@ -99,14 +97,6 @@ public class SuspensionManagedBean extends BaseManagedBean {
 
 	public void setAttachmentList(List<CtAttachment> attachmentList) {
 		this.attachmentList = attachmentList;
-	}
-
-	public boolean isChkConceValue() {
-		return chkConceValue;
-	}
-
-	public void setChkConceValue(boolean chkConceValue) {
-		this.chkConceValue = chkConceValue;
 	}
 
 	public List<CtContractItem> getCtItemFilter() {
