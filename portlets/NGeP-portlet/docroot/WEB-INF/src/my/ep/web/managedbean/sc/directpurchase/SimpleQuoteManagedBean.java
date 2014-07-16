@@ -146,7 +146,6 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	private SmSupplier smSupplier;
 	private Date  today = new Date();
 	private int tabActiveIndex = 0;
-	private int simpleQuoteCounter;
 
 	public SimpleQuoteManagedBean() {
 		super();
@@ -1181,18 +1180,7 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	public void setTabActiveIndex(int tabActiveIndex) {
 		this.tabActiveIndex = tabActiveIndex;
 	}
-	/**
-	 * @return the simpleQuoteCounter
-	 */
-	public int getSimpleQuoteCounter() {
-		return simpleQuoteCounter;
-	}
-	/**
-	 * @param simpleQuoteCounter the simpleQuoteCounter to set
-	 */
-	public void setSimpleQuoteCounter(int simpleQuoteCounter) {
-		this.simpleQuoteCounter = simpleQuoteCounter;
-	}
+
 	/**
 	 * @return the supplierItems
 	 */
