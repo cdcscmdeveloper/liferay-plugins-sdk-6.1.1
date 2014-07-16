@@ -153,7 +153,13 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 		if(getManagedBean().getAdjustment().getFlOrder().isFactored()){
 			getFactoringBranchDtl();
 		}
+		
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+		if(adjustment.getFlOrder().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)) {
+			new FulfilmentBackingBean(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE, adjustment.getFlRequest().getScPurchaseRequest().getRequestNote().getRequestNoteNo());
+		} else {
+			new FulfilmentBackingBean(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE, adjustment.getFlRequest().getCtContract().getContractNo());
+		}			
 		flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
 	}
 	
