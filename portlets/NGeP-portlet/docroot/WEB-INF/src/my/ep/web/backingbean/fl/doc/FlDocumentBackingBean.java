@@ -437,7 +437,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			recNoteBB.getManagedBean().setDocMaintainRemarks(true);
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE) || buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
 				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
-				flBB.initializeRemarkAndAttachement(new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
+				flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(),resDTO.getAttachmentList());
 				
 			}	
 			navgPage=NAV_TO_MAINTAIN_FRN;
