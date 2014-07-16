@@ -205,7 +205,9 @@
 							</p:column>
 							
 							<p:column headerText="#{lbl['lbl.cm.best.price']}">
-								<h:outputLabel value="#{supplierItem.bestPrice}" />
+								<h:outputLabel value="#{supplierItem.bestPrice}" >
+									<f:convertNumber pattern="#,###.00" />
+								</h:outputLabel>
 							</p:column>
 
 							
