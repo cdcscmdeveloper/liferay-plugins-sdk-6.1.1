@@ -1,0 +1,34 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:cc="http://java.sun.com/jsf/composite"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+   	xmlns:p="http://primefaces.org/ui"
+   	xmlns:ac="http://ac.my/jsf/composite/cc">
+    
+<cc:interface>
+	<cc:attribute name="beforeSignText" />
+	<cc:attribute name="postSignAction" method-signature="java.lang.String action()" />
+</cc:interface>
+
+<cc:implementation>
+	<p:remoteCommand name="postSignAction" action="#{cc.attrs.postSignAction}" />
+       
+
+    <p:dialog widgetVar="dlg1" resizable="false">
+        <h:panelGrid columns="3" cellpadding="3">
+        <h:outputLabel for="challengeQuestion1" value="*Challenge Question 1" />
+        <p:inputText value="#{spkiBackingBean.challengeQuestion[0]}" />
+        <h:outputLabel for="challengeQuestion2" value="*Challenge Question 2" />
+        <p:inputText value="#{spkiBackingBean.challengeQuestion[1]}" />
+        <h:outputLabel for="challengeQuestion3" value="*Challenge Question 3" />
+        <p:inputText value="#{spkiBackingBean.challengeQuestion[2]}" />
+        
+            <h:outputLabel for="password" value="*Digital Certificate PIN" />
+            <p:password binding="#{pin}" id="password" value="12345678" required="true" />
+ 			<p:commandButton value="Sign" oncomplete="digitalSign()" />        
+		</h:panelGrid>
+    </p:dialog>
+</cc:implementation>
+</ui:composition>
