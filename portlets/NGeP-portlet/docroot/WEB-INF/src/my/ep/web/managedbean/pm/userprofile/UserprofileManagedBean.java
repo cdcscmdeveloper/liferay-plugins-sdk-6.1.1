@@ -11,7 +11,6 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmDistrict;
-import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -34,7 +33,7 @@ public class UserprofileManagedBean extends BaseManagedBean {
 	
 	private static final Logger log= EpLogger.getLogger(UserprofileManagedBean.class);	
 	
-	private PmUser pmUser = new PmUser();
+	private PmUser pmUser;
 	
 	private PmAddress pmAddress;
 	
@@ -64,12 +63,18 @@ public class UserprofileManagedBean extends BaseManagedBean {
 
 	private List<PmUserGroup> usersGroup;
 	
+	private Long stateId;
+	
+	private Long districtId;	
+	
+	private String stateCode;
+	
+	private String districtCode;	
+	
 	// list of location
-	private List<PmState> states;
-	
-	private List<PmDivision> divisions;
-	
-	private List<PmDistrict> districts;
+	private List<PmState> stateList;
+		
+	private List<PmDistrict> districtList;
 	
 	private List<PmCity> citys;	
 	
@@ -92,6 +97,38 @@ public class UserprofileManagedBean extends BaseManagedBean {
 	public void setUsersGroup(List<PmUserGroup> usersGroup) {
 		this.usersGroup = usersGroup;
 	}	
+	
+	public Long getStateId() {
+		return stateId;
+	}
+
+	public void setStateId(Long stateId) {
+		this.stateId = stateId;
+	}
+
+	public Long getDistrictId() {
+		return districtId;
+	}
+
+	public void setDistrictId(Long districtId) {
+		this.districtId = districtId;
+	}
+
+	public String getStateCode() {
+		return stateCode;
+	}
+
+	public void setStateCode(String stateCode) {
+		this.stateCode = stateCode;
+	}
+
+	public String getDistrictCode() {
+		return districtCode;
+	}
+
+	public void setDistrictCode(String districtCode) {
+		this.districtCode = districtCode;
+	}
 
 	public String getUserNames() {
 		return userNames;
@@ -215,22 +252,6 @@ public class UserprofileManagedBean extends BaseManagedBean {
 		this.userGroupStatus = userGroupStatus;
 	}
 
-	public List<PmState> getStates() {
-		return states;
-	}
-
-	public void setStates(List<PmState> states) {
-		this.states = states;
-	}
-
-	public List<PmDistrict> getDistricts() {
-		return districts;
-	}
-
-	public void setDistricts(List<PmDistrict> districts) {
-		this.districts = districts;
-	}
-
 	public List<PmCity> getCitys() {
 		return citys;
 	}
@@ -239,13 +260,21 @@ public class UserprofileManagedBean extends BaseManagedBean {
 		this.citys = citys;
 	}
 
-	public List<PmDivision> getDivisions() {
-		return divisions;
+	public List<PmState> getStateList() {
+		return stateList;
 	}
 
-	public void setDivisions(List<PmDivision> divisions) {
-		this.divisions = divisions;
-	}	
+	public void setStateList(List<PmState> stateList) {
+		this.stateList = stateList;
+	}
+
+	public List<PmDistrict> getDistrictList() {
+		return districtList;
+	}
+
+	public void setDistrictList(List<PmDistrict> districtList) {
+		this.districtList = districtList;
+	}
 		
 
 }

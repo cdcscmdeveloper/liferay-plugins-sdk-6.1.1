@@ -6,30 +6,27 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.AjaxBehaviorEvent;
 
 import my.ep.biz.service.pm.authorization.user.IUserSO;
-import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
-import my.ep.biz.service.pm.common.division.IDivisionSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
-import my.ep.dto.pm.common.city.CityReqDTO;
-import my.ep.dto.pm.common.city.CityResDTO;
 import my.ep.dto.pm.common.country.CountryResDTO;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
-import my.ep.dto.pm.common.division.DivisionReqDTO;
-import my.ep.dto.pm.common.division.DivisionResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmCountry;
+import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.pm.userprofile.UserprofileManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -59,10 +56,8 @@ public class UserprofileBackingBean extends
 
 	public UserprofileBackingBean() {
 		retriveUserDtls();
-		retrievePmStateList();
-		retrievePmDistrictList();
-		retrievePmCityList();
-		retrievePmDivisionList();
+		retriveStateList();
+		
 	}
 
 	public List<PmParameterDesc> retrieveParameterDescByType(String type) {
@@ -77,46 +72,84 @@ public class UserprofileBackingBean extends
 		return resDTO.getCountryList();
 
 	}
+	
+	public void retriveStateList() {
+		IStateSO stateSo = null;
+		StateResDTO resDto = null;
 
-	public void retrievePmStateList() {
-		StateReqDTO reqDTO = new StateReqDTO();
-		reqDTO.setCountryId(1l);
-		IStateSO reqSO = (IStateSO) BusinessDelegate.getInstance()
-				.getServiceObject("pm", IStateSO.class);
-		StateResDTO resDTO = reqSO.retriveStatesListByCountryID(reqDTO);
+		try {
+			StateReqDTO reqDTO = new StateReqDTO();
+			reqDTO.setCountryId(1L);
+			stateSo = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IStateSO.class);
+			resDto = stateSo.retriveStatesListByCountryID(reqDTO);
 
-		this.getManagedBean().setStates(resDTO.getStateList());
+			if (resDto != null) {
+				this.getManagedBean().setStateList(resDto.getStateList());
+			}
+
+		} finally {
+			stateSo = null;
+		}
+
 	}
 
-	public void retrievePmDistrictList() {
-		DistrictReqDTO reqDTO = new DistrictReqDTO();
-		reqDTO.setStateId(1l);
-		IDistrictSO reqSO = (IDistrictSO) BusinessDelegate.getInstance()
-				.getServiceObject("pm", IDistrictSO.class);
-		DistrictResDTO resDTO = reqSO.retriveDistrictListByStateID(reqDTO);
+	public void districtBystate(AjaxBehaviorEvent event) {
+		IDistrictSO districtSo = null;
+		DistrictResDTO resDto = null;
+		try {
+			DistrictReqDTO reqDTO = new DistrictReqDTO();
+			Long stateId = (Long) event.getComponent().getAttributes()
+					.get("value");
+			if (stateId != null) {
+				List<PmState> stateList = this.getManagedBean().getStateList();
+				for (PmState sate : stateList) {
+					if (sate.getStateId().equals(stateId)) {
+						this.getManagedBean().setStateCode(sate.getStateCode());
 
-		this.getManagedBean().setDistricts(resDTO.getDistrictList());
+					}
+				}
+			}
+
+			reqDTO.setStateId(stateId);
+			districtSo = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IDistrictSO.class);
+			resDto = districtSo.retriveDistrictListByStateID(reqDTO);
+
+			if (resDto != null) {
+				this.getManagedBean().setDistrictList(resDto.getDistrictList());
+			}
+
+		} finally {
+			districtSo = null;
+		}
+
 	}
 
-	public void retrievePmCityList() {
-		CityReqDTO reqDTO = new CityReqDTO();
-		reqDTO.setDistrictId(1L);
-		ICitySO reqSO = (ICitySO) BusinessDelegate.getInstance()
-				.getServiceObject("pm", ICitySO.class);
-		CityResDTO resDTO = reqSO.retriveCityListByDistrictId(reqDTO);
+	public void districtCode(AjaxBehaviorEvent event) {
+		try {
+			Long districtId = (Long) event.getComponent().getAttributes()
+					.get("value");
+			if (null != districtId) {
+				List<PmDistrict> districtList = this.getManagedBean()
+						.getDistrictList();
+				for (PmDistrict district : districtList) {
+					if (district.getDistrictId().equals(districtId)) {
+						this.getManagedBean().setDistrictCode(
+								district.getDistrictCode());
 
-		this.getManagedBean().setCitys(resDTO.getCityList());
-	}
+					}
 
-	public void retrievePmDivisionList() {
-		DivisionReqDTO reqDTO = new DivisionReqDTO();
-		reqDTO.setStateId(14L);
-		IDivisionSO reqSO = (IDivisionSO) BusinessDelegate.getInstance()
-				.getServiceObject("pm", IDivisionSO.class);
-		DivisionResDTO resDTO = reqSO.retriveDivisionListByState(reqDTO);
+				}
 
-		this.getManagedBean().setDivisions(resDTO.getDivisionList());
-	}
+			}
+
+		} finally {
+
+		}
+
+	}	
+
 
 	private void retriveUserDtls() {
 		debugLogger("retriveUserDtls");
@@ -147,7 +180,7 @@ public class UserprofileBackingBean extends
 					debugLogger("=========no address type["
 							+ addressType2.getAddressType() + "]");
 					if (addressType2.getAddressType().equalsIgnoreCase("C")) {
-						debugLogger("=========no address type CCCC");
+						debugLogger("=========no address type CCCC=========");
 						this.getManagedBean().setPmAddress(
 								addressType2.getPmAddress());
 						logger.info(addressType2.getPmAddress());
@@ -156,7 +189,7 @@ public class UserprofileBackingBean extends
 					}
 				}
 			} else {
-				debugLogger("=========no address type");
+				debugLogger("=========no address type=========");
 			}
 		} else {
 			logger.debug("Unable to get the userDetails");
@@ -170,18 +203,27 @@ public class UserprofileBackingBean extends
 	public void updateMyProfileAction(PmUser pmUser) {
 		debugLogger("updateMyProfileAction");
 
-		pmUser.setPmNotifyLog(null);
-		pmUser.setPmUserNotifications(null);
-		pmUser.setPmNotifyUser(null);
-		pmUser.setPmUserPreference(null);
+//		debugLogger("=========no address type["
+//				+ getManagedBean().getPmAddress().getAddress1() + "]");
+//		getManagedBean().getPmAddress().getAddress1();
+//				
+//		List<PmAddressType> addressType = pmUser.getPmAddressTypes();
+//
+//		if (addressType != null) {				
+//			debugLogger("=========no null");
+//			for (PmAddressType addressType2 : addressType) {
+//				if (addressType2.getAddressType().equalsIgnoreCase("C")) {
+//					debugLogger("=========no null");
+//					addressType2.setPmAddress(this.getManagedBean().getPmAddress());
+//				}				
+//			}
+		
 		pmUser.setPmAddressTypes(null);
-		pmUser.setPmUserOrgs(null);
-
-		// pmUser.setSecretAnswer(null);
-		// pmUser.setOrgTypeCode(null);
+//		}
 
 		IUserSO userSO = null;
 		try {
+			
 			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			UserReqDTO reqDTO = new UserReqDTO();
@@ -193,8 +235,7 @@ public class UserprofileBackingBean extends
 				FacesContext.getCurrentInstance().addMessage(
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO,
-								"Record update successfully", "Record ID: "
-										+ resDTO.getPmUser().getUserId()));
+								"User Profiles successfully saved", ""));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
