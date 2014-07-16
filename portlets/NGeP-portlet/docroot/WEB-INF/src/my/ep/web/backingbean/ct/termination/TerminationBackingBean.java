@@ -218,7 +218,7 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 		    	reqDTO.setTerminationAction(ContractConst.TR_LETTER_MUTUAL);
 		    }
 		         
-		    reqDTO.setCtContract(this.getManagedBean().getContractVer().getCtContract());
+		    reqDTO.setCtContract(this.getManagedBean().getCtContract());
 		    reqDTO.setCtContractVer(this.getManagedBean().getContractVer());
 		    
 		    reqDTO.setUserRole(getUserRole());
