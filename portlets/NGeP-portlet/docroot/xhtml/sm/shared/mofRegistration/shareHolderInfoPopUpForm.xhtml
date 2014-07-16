@@ -328,9 +328,7 @@
 						value="#{backingBean.managedBean.selectedShareHolder.epRole}"
 						style="width: 207px;margin: 5px 0px 5px 0px;">
 						<f:selectItem itemLabel="-- Select --" itemValue="" />
-						<f:selectItem itemLabel="Supplier User" itemValue="U"
-							itemDisabled="#{backingBean.managedBean.selectedShareHolder.authorizedFlg ne '1'}" />
-						<f:selectItem itemLabel="Catalog User" itemValue="C" />
+						<f:selectItems value="#{backingBean.managedBean.ePRoleList}"/>
 					</p:selectOneMenu> <p:message id="smPersnEpRoleMsg" for="smPersnEpRole"
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
@@ -339,7 +337,7 @@
 	</p:panel>
 	<p:panel header="#{lbl['lbl.sm.person.shrPrvHdr']}" toggleable="true"
 		id="shrPrivPanel1"
-		rendered="#{backingBean.managedBean.authPerCount eq '5'}">
+		rendered="#{backingBean.managedBean.authPerCount eq '5' and backingBean.managedBean.selectedShareHolder.authorizedFlg ne '1' }">
 		<table>
 			<tr>
 				<td><h:outputText value="#{lbl['lbl.sm.person.authMsg']}" /></td>
@@ -353,7 +351,7 @@
 						value="#{backingBean.managedBean.selectedShareHolder.epRole}"
 						style="width: 207px;margin: 5px 0px 5px 0px;">
 						<f:selectItem itemLabel="-- Select --" itemValue="" />
-						<f:selectItem itemLabel="Catalog User" itemValue="C" />
+						<f:selectItems value="#{backingBean.managedBean.ePRoleList}"/>
 					</p:selectOneMenu> <p:message id="smUnAuthPersnEpRoleMsg" for="smUnAuthPersnEpRole"
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>

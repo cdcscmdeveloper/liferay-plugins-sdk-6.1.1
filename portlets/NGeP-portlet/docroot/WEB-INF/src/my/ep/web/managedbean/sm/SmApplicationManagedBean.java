@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.model.SelectItem;
 
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
@@ -254,6 +255,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private PmParameter perIdTypeParam;
 	private String facilityType;
 	private PmCountry defPmCountry;
+	private List<SelectItem> ePRoleList;
+	private boolean removeEpRole;
 
 	public SmApplicationManagedBean() {
 		// TODO Checking the user role
@@ -1915,6 +1918,22 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setDefPmCountry(PmCountry defPmCountry) {
 		this.defPmCountry = defPmCountry;
+	}
+
+	public List<SelectItem> getePRoleList() {
+		return ePRoleList;
+	}
+
+	public void setePRoleList(List<SelectItem> ePRoleList) {
+		this.ePRoleList = ePRoleList;
+	}
+
+	public boolean isRemoveEpRole() {
+		return removeEpRole;
+	}
+
+	public void setRemoveEpRole(boolean removeEpRole) {
+		this.removeEpRole = removeEpRole;
 	}
 
 }
