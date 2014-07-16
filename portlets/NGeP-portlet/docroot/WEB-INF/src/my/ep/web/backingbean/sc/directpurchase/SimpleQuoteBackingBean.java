@@ -353,7 +353,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 						tplSpecQuestions = new ArrayList<TplSpecQuestion>();
 					}
 
-					templateSpecBackingBean.addQuestion(tplSpecQuestions, tplSpecQuestions.size()-1, TemplateSpecConst.QUESTION_TYPE_ITEM);
+					templateSpecBackingBean.addQuestion(serviceTpl, tplSpecQuestions, tplSpecQuestions.size()-1, TemplateSpecConst.QUESTION_TYPE_ITEM);
 					TplSpecQuestion specQuestion = tplSpecQuestions.get(0);
 					specQuestion.setClUom(uom);
 					specQuestion.setCmItem(cmItem);
@@ -374,7 +374,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 					if(null == productQuestions){
 						productQuestions = new ArrayList<TplSpecQuestion>();
 					}
-					templateSpecBackingBean.addQuestion(productQuestions, productQuestions.size()-1, TemplateSpecConst.QUESTION_TYPE_ITEM);
+					templateSpecBackingBean.addQuestion(prodTpl, productQuestions, productQuestions.size()-1, TemplateSpecConst.QUESTION_TYPE_ITEM);
 					TplSpecQuestion prodQuestion = productQuestions.get(0);
 
 					prodQuestion.setClUom(uom);

@@ -1027,7 +1027,7 @@ public class SpecificationBackingBean extends
 						TplSpecMaster specMaster = new TplSpecMaster();
 						
 						List<TplSpecQuestion> questionsList = new ArrayList<TplSpecQuestion>();
-						new TemplateSpecBackingBean().addQuestion(questionsList, questionsList.size()-1, TemplateSpecConst.QUESTION_TYPE_ITEM);
+						new TemplateSpecBackingBean().addQuestion(specMaster, questionsList, questionsList.size()-1, TemplateSpecConst.QUESTION_TYPE_ITEM);
 						TplSpecQuestion tplSpecQuestion = questionsList.get(0);
 						PmParameter specType = new PmParameter();
 						specType.setParameterId(185L);

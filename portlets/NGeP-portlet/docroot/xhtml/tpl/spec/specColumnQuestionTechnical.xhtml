@@ -207,23 +207,23 @@
 	<p:column style="width:40px;">
 		<f:facet name="header">
 			<p:commandButton icon="ui-icon-add" style="background-color:transparent !important; border:0px none; width:10px; height:10px !important;"
-				action="#{templateSpecBackingBean.addQuestion(templateSpecBean.specMaster.tplSpecQuestions,-1,TplSpecConst.questionTypeItem)}"  
+				action="#{templateSpecBackingBean.addQuestion(templateSpecBean.specMaster, templateSpecBean.specMaster.tplSpecQuestions,-1,TplSpecConst.questionTypeItem)}"  
 				update="questionTbl" partialSubmit="true" process="questionTbl" />
 		</f:facet>
 		<c:if test="#{isSpecificationReq}">
 			<p:commandButton id="addBtn" icon="ui-icon-add" style="background-color:transparent !important; border:0px none; width:10px; height:10px !important;" />
 			<p:menu overlay="true" trigger="addBtn" my="left top" at="left bottom">
-				<p:menuitem value="#{lbl['lbl.tpl.spec.content.item']}" action="#{templateSpecBackingBean.addQuestion(templateSpecBean.specMaster.tplSpecQuestions,row,TplSpecConst.questionTypeItem)}"  
+				<p:menuitem value="#{lbl['lbl.tpl.spec.content.item']}" action="#{templateSpecBackingBean.addQuestion(templateSpecBean.specMaster, templateSpecBean.specMaster.tplSpecQuestions,row,TplSpecConst.questionTypeItem)}"  
 					update="questionTbl" partialSubmit="true" process="questionTbl">
 				</p:menuitem>
-				<p:menuitem value="#{lbl['lbl.tpl.spec.content.specification']}" action="#{templateSpecBackingBean.addQuestion(templateSpecBean.specMaster.tplSpecQuestions,row,TplSpecConst.questionTypeItemSpec)}" 
+				<p:menuitem value="#{lbl['lbl.tpl.spec.content.specification']}" action="#{templateSpecBackingBean.addQuestion(templateSpecBean.specMaster, templateSpecBean.specMaster.tplSpecQuestions,row,TplSpecConst.questionTypeItemSpec)}" 
 					update="questionTbl" partialSubmit="true" process="questionTbl">
 				</p:menuitem>
 			</p:menu>
 		</c:if>
 		<c:if test="#{!isSpecificationReq}">
 			<p:commandButton icon="ui-icon-add" style="background-color:transparent !important; border:0px none; width:10px; height:10px !important;"
-				action="#{templateSpecBackingBean.addQuestion(templateSpecBean.specMaster.tplSpecQuestions,row,TplSpecConst.questionTypeItem)}"  
+				action="#{templateSpecBackingBean.addQuestion(templateSpecBean.specMaster, templateSpecBean.specMaster.tplSpecQuestions,row,TplSpecConst.questionTypeItem)}"  
 				update="questionTbl" partialSubmit="true" process="questionTbl" />
 		</c:if>
 		<p:commandButton icon="ui-icon-delete" style="background-color:transparent !important; border:0px none; width:10px; height:10px !important;"

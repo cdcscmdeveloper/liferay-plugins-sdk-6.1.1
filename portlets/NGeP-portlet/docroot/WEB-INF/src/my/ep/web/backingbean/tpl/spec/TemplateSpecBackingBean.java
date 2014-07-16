@@ -261,10 +261,11 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 		log.info("renderTable()");
 	}
 
-	public void addQuestion(List<TplSpecQuestion> questionList, Integer row, String questionType) {
+	public void addQuestion(TplSpecMaster tplSpecMaster, List<TplSpecQuestion> questionList, Integer row, String questionType) {
 		IParameterSO parameterSO = null;
 		try {
 			TplSpecQuestion newQuestion = new TplSpecQuestion();
+			newQuestion.setTplSpecMaster(tplSpecMaster);
 			newQuestion.setQuestionType(questionType);
 			
 			parameterSO = BusinessDelegate.getInstance().getServiceObject(
@@ -308,13 +309,13 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 				newQuestion.setClUom(uom);	
 			}
 			
-			questionList.add(row + 1, newQuestion);
-			for(int i = row + 1; i < questionList.size(); i++) {
-				TplSpecQuestion question = questionList.get(i);
-				question.setQuestionOrder(i);
-			}
-			
 			newQuestion.setClAnswerRequired(true);
+			
+			questionList.add(row + 1, newQuestion);
+			for(int i = 0; i < questionList.size(); i++) {
+				TplSpecQuestion question = questionList.get(i);
+				question.setQuestionOrder(i+1);
+			}
 		} finally {
 			parameterSO = null;
 		}
@@ -435,7 +436,7 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 	
 	private void resetPriceTypeDtl(TplSpecQuestion specQuestion) {
 		List<TplSpecEstimation> specEstimations = null;
-		if (isPriceTypeStandard(specQuestion.getClPriceTypeCode().getParameterCode())) {
+		if (specQuestion.getTplSpecMaster().isEstCostReq() && isPriceTypeStandard(specQuestion.getClPriceTypeCode().getParameterCode())) {
 			specEstimations = new ArrayList<TplSpecEstimation>();
 			
 			TplSpecEstimation specEstimation = new TplSpecEstimation();
