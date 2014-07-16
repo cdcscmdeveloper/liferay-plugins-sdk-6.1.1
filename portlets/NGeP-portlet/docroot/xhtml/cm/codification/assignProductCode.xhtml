@@ -94,12 +94,12 @@
 					<p:commandButton value="#{lbl['lbl.cm.assign']}" disabled="#{!(requestItem.cmItem == null)}"
 						action="#{codificationBackingBean.assignProductCode(requestItem)}"
 						oncomplete="contractedItemPopUp.show()"
-						update=":form:contractedItemPopUpId"></p:commandButton>
+						update=":form:contractedItemPopUpId, :form:contractedItemDialog"></p:commandButton>
 				</p:column>
 			</p:dataTable>
 
 			<p:dialog id="contractedItemDialog" widgetVar="contractedItemPopUp" header="Assign Product Code"
-				width="680" height="550">
+				width="#{codificationBackingBean.managedBean.assignPopUpWidth}" height="#{codificationBackingBean.managedBean.assignPopUpHeight}">
 
 				<ui:include src="assignContractedCodePopUp.xhtml" />
 

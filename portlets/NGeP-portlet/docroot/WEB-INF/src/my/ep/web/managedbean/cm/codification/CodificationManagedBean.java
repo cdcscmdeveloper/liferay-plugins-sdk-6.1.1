@@ -117,6 +117,9 @@ public class CodificationManagedBean extends BaseManagedBean {
 	private boolean colorDisable = true;
 	private boolean measurementDisable = true;
 	
+	private String assignPopUpWidth="680";
+	private String assignPopUpHeight="550";
+	
 //	private String typeName;
 //	private String colorName;
 //	private String measurementName;
@@ -678,7 +681,21 @@ public class CodificationManagedBean extends BaseManagedBean {
 		this.requestExtCodeList = requestExtCodeList;
 	}
 
+	public String getAssignPopUpWidth() {
+		return assignPopUpWidth;
+	}
 
+	public void setAssignPopUpWidth(String assignPopUpWidth) {
+		this.assignPopUpWidth = assignPopUpWidth;
+	}
+
+	public String getAssignPopUpHeight() {
+		return assignPopUpHeight;
+	}
+
+	public void setAssignPopUpHeight(String assignPopUpHeight) {
+		this.assignPopUpHeight = assignPopUpHeight;
+	}
 
 
 	private IPagingDataModel<VCmPendingCodifiedItem> vPendingCodifiedItemSearchDataModel = new SearchPagingDataModel();

@@ -127,13 +127,15 @@ public class CodificationBackingBean extends
 
 	private TreeNode rootNodes;
 	private TreeNode selectedNode;
+	
 
 	public CodificationBackingBean() {
 		this.getManagedBean().setContractedItem(null);
 		CmUnspsc unspsc = new CmUnspsc();
 		unspsc.setUnspscTitle("item");
 		this.getManagedBean().getContractedItem().add(unspsc);
-
+//set with and height of popUp
+		
 		/*
 		 * ICodificationSO codificationSO = (ICodificationSO)
 		 * BusinessDelegate.getInstance
@@ -773,7 +775,14 @@ public class CodificationBackingBean extends
 	public void assignProductCode(ScRequestItem requestItem) {
 		System.out.println(">>>>>>>>>requestItem= " + requestItem);
 		this.getManagedBean().setSelectedRequestItem(requestItem);
-
+		if(isSelectedRequestItemProduct()){
+			this.getManagedBean().setAssignPopUpWidth("680");
+			this.getManagedBean().setAssignPopUpHeight("550");
+		}else{
+			this.getManagedBean().setAssignPopUpWidth("680");
+			this.getManagedBean().setAssignPopUpHeight("275");
+		}
+		
 		clearContractedCodePopUp();
 
 	}
@@ -915,12 +924,11 @@ public class CodificationBackingBean extends
 		this.getManagedBean().setExtensionVoList(null);
 
 		ExtensionCodeVO extCodeVO = null;
-		
+
 		if (isSelectedRequestItemProduct()) {
 			Object[] objects = (Object[]) this.getManagedBean()
 					.getSelectedExtenstionForItem();
-			
-			System.out.println("................ isSelectedRequestItemProduct="+ isSelectedRequestItemProduct());
+
 			if (objects != null && objects.length > 0) {
 				extCodeVO = new ExtensionCodeVO();
 				extCodeVO.setTypeId(Long.valueOf(String.valueOf(objects[0])));
@@ -962,7 +970,11 @@ public class CodificationBackingBean extends
 
 			ExtensionCodeVO obj = this.getManagedBean().getExtensionVoList()
 					.get(0);
-
+			System.out.println("**********obj.getBrandId()="+obj.getBrandId());
+			System.out.println("**********obj.getMeasurementId()="+obj.getMeasurementId());
+			System.out.println("**********obj.getTypeId()="+obj.getTypeId());
+			System.out.println("**********obj.getColorId()="+obj.getColorId());
+			System.out.println("*********.getSelectedUNSPSCObj().getUnspscId())="+(this.getManagedBean().getSelectedUNSPSCObj().getUnspscId()));
 			codeReqDTO.setBrandId(obj.getBrandId());
 			codeReqDTO.setMeasurementId(obj.getMeasurementId());
 			codeReqDTO.setTypeId(obj.getTypeId());
@@ -977,7 +989,8 @@ public class CodificationBackingBean extends
 					&& codeResDTO.getItemList().size() > 0) {
 
 				item = codeResDTO.getItemList().get(0);
-
+				System.out
+				.println("************item found, item.getItemId()="+item.getItemId());
 			} else {
 				System.out
 						.println("************create new CmItem*******************");
@@ -1031,12 +1044,6 @@ public class CodificationBackingBean extends
 			}
 
 			this.getManagedBean().getSelectedRequestItem().setCmItem(item);
-			for (ScRequestItem requestItem : this.getManagedBean()
-					.getSelectedVPendingRequestItemList()) {
-				System.out
-						.println(".....................requestItem.getCmItem().getExtensionCode()"
-								+ requestItem.getCmItem().getExtensionCode());
-			}
 
 			// check RequestItemList if all ItemCodes were assigned then
 			// update
@@ -1045,8 +1052,14 @@ public class CodificationBackingBean extends
 			boolean allCodeItemsAssigned = true;
 			for (ScRequestItem requestItem : this.getManagedBean()
 					.getSelectedVPendingRequestItemList()) {
-				if (requestItem.getCmItem().getExtensionCode() == null
-						|| requestItem.getCmItem().getExtensionCode().isEmpty()) {
+				if (requestItem.getCmItem() != null) {
+					if (requestItem.getCmItem().getExtensionCode() == null
+							|| requestItem.getCmItem().getExtensionCode()
+									.isEmpty()) {
+						allCodeItemsAssigned = false;
+						break;
+					}
+				} else {//requestItem.getCmItem()==null
 					allCodeItemsAssigned = false;
 					break;
 				}
@@ -2230,5 +2243,7 @@ public class CodificationBackingBean extends
 		}
 		return -1;
 	}
+	
+	
 
 }

@@ -84,8 +84,8 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		if(MDC.get(LogKey.USER_ID)==null) {
 			MDC.put(LogKey.USER_ID, 1L);
 		}
-		//clear requestCode object
-    this.getManagedBean().setRequestCode(null);
+
+	
 	}
 
 	public boolean isCatalogueAdmin() {
@@ -716,8 +716,8 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 			return "reviewUnspscCode";
 		}
 
-
-		return "verifyUnspscSearch?faces-redirect=true";
+      
+ return "verifyUnspscSearch";
 	}
 
 	public String navigateCodeAdminToSearch(){
@@ -2028,7 +2028,11 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 			this.getManagedBean().setMeasurementDisable(true);
 		}
 	}
-
+public void preRenderRequestUnspsc(){
+	System.out.println("...................preRenderRequestUnspsc..................");
+	//clear requestCode object
+    this.getManagedBean().setRequestCode(null);
+}
 
 
 }
