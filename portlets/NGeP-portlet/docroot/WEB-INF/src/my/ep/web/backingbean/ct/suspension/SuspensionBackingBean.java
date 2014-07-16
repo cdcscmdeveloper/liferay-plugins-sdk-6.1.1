@@ -137,7 +137,6 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 			
 			this.getManagedBean().setRemarkList(resDTO.getCtRemarks());
 			this.getManagedBean().setAttachmentList(resDTO.getCtAttachments());
-			ContractBackingBean ctBB = new ContractBackingBean();
 			ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
 			
 			FacesContext fc = FacesContext.getCurrentInstance();

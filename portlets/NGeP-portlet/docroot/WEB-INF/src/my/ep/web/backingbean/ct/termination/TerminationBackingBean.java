@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -71,7 +70,6 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import org.apache.commons.lang.text.StrSubstitutor;
 import org.apache.log4j.Logger;
 
-import com.liferay.portal.kernel.search.ParseException;
 import com.liferay.portal.util.PortalUtil;
 
 /**
@@ -101,12 +99,6 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 			 ctBB = new ContractBackingBean();
 			 ctBB.initializeRemarkAndAttachement(this.getManagedBean().getRemarkList(), this.getManagedBean().getAttachmentList());
 		}
-	}
-	
-	@PostConstruct
-	public void initializeContractValue() throws ParseException {
-		ContractBackingBean ctBB = new ContractBackingBean();
-		ctBB.initializeRemarkAndAttachement(this.getManagedBean().getRemarkList(), this.getManagedBean().getAttachmentList());
 	}
 	
 	private FacesScopes getFacesScopes(){
@@ -156,25 +148,19 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 			
 			if(this.getManagedBean().getContractVer().getCtTermination() == null){
 				this.getManagedBean().getContractVer().setCtTermination(new CtTermination());
-			    if(this.getManagedBean().getContractVer().getCtTermination().getDecisionType() == null){
-			    	this.getManagedBean().getContractVer().getCtTermination().setDecisionType(new PmParameter());
-			    	this.getManagedBean().getContractVer().getCtTermination().getDecisionType().setParameterId(new Long(retrieveParameterByTypeAndCode(ContractConst.TR_LETTER_MUTUAL)));
-			   }
+			    this.getManagedBean().getContractVer().getCtTermination().setDecisionType(new PmParameter());
 			}
 			
 			this.getManagedBean().setRemarkList(resDTO.getCtRemarks());
 			this.getManagedBean().setAttachmentList(resDTO.getCtAttachments());
-			ContractBackingBean ctBB = new ContractBackingBean();
 			ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
 			
 			flush();
-			String parameterCode = retrieveParameterById(this.getManagedBean().getContractVer().getCtTermination().getDecisionType().getParameterId());
-			
-			if(parameterCode.equalsIgnoreCase(ContractConst.TR_LETTER_REMEDY)){
+			if(this.getManagedBean().getContractVer().getCtTermination().getDecisionType().getParameterCode().equalsIgnoreCase(ContractConst.TR_LETTER_REMEDY)){
 				this.getManagedBean().setRemedy(true);
-			} else if(parameterCode.equalsIgnoreCase(ContractConst.TR_LETTER_TERMINATE)){
+			} else if(this.getManagedBean().getContractVer().getCtTermination().getDecisionType().getParameterCode().equalsIgnoreCase(ContractConst.TR_LETTER_TERMINATE)){
 				this.getManagedBean().setTermination(true);
-			} else if(parameterCode.equalsIgnoreCase(ContractConst.TR_LETTER_MUTUAL)) {
+			} else if(this.getManagedBean().getContractVer().getCtTermination().getDecisionType().getParameterCode().equalsIgnoreCase(ContractConst.TR_LETTER_MUTUAL)) {
 				this.getManagedBean().setMutualTermination(true);
 			}
 			
@@ -262,17 +248,14 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 				} else {
 					getManagedBean().setContractVer(resDTO.getCtContractVer());
 					getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
-					ContractBackingBean ctBB = new ContractBackingBean();
 					ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
 					
 					flush();
-					String parameterCode = retrieveParameterById(this.getManagedBean().getContractVer().getCtTermination().getDecisionType().getParameterId());
-					
-					if(parameterCode.equalsIgnoreCase(ContractConst.TR_LETTER_REMEDY)){
+					if(this.getManagedBean().getContractVer().getCtTermination().getDecisionType().getParameterCode().equalsIgnoreCase(ContractConst.TR_LETTER_REMEDY)){
 						this.getManagedBean().setRemedy(true);
-					} else if(parameterCode.equalsIgnoreCase(ContractConst.TR_LETTER_TERMINATE)){
+					} else if(this.getManagedBean().getContractVer().getCtTermination().getDecisionType().getParameterCode().equalsIgnoreCase(ContractConst.TR_LETTER_TERMINATE)){
 						this.getManagedBean().setTermination(true);
-					} else if(parameterCode.equalsIgnoreCase(ContractConst.TR_LETTER_MUTUAL)) {
+					} else if(this.getManagedBean().getContractVer().getCtTermination().getDecisionType().getParameterCode().equalsIgnoreCase(ContractConst.TR_LETTER_MUTUAL)) {
 						this.getManagedBean().setMutualTermination(true);
 					}
 				}
@@ -282,28 +265,6 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 		  }
 		  return null;
 	 }
-	 
-	 public int retrieveParameterByTypeAndCode(String parameterCode) throws NamingException {
-			
-		 IParameterSO parameterSO = null;
-		 ParameterReqDTO reqDTO = null;
-		 try{
-			
-			reqDTO = new ParameterReqDTO();
-			reqDTO.setParameterCode(parameterCode);
-			reqDTO.setParameterType("TDT");
-			parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-			ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
-			return resDTO.getPmParameter().getParameterId().intValue();
-		}catch(Exception e) {
-			 log.error("Exception>>", e);
-			 e.printStackTrace();
-			 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-		 } finally {
-			 parameterSO = null;
-		 }
-		 return 0;
-	 } 
 	 
 	 public String retrieveParameterById(Long parameterId) throws NamingException {
 		
@@ -458,7 +419,6 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 			contractTemplateSO = null;
 		}
 	}
-	 
 	
 	private String formAddress(String address1, String address2, String address3, String address4) {
 		StringBuffer address = new StringBuffer();
@@ -483,10 +443,9 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 	 
 	 public void addTerminateReason() {
 		CtTerminationReason terminateReason = new CtTerminationReason();
-		if(terminateReason.getReasonType() == null)
 			terminateReason.setReasonType(new PmReason());
 		    terminateReason.setCtTermination(this.getManagedBean().getContractVer().getCtTermination());
-		this.getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons().add(terminateReason);
+		    this.getManagedBean().getContractVer().getCtTermination().getCtTerminationReasons().add(terminateReason);
 	 }
 
 	 public void deleteTerminateReason() {
@@ -574,14 +533,13 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 		ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
 		
 		flush();
-		String parameterCode = retrieveParameterById(getManagedBean().getContractVer().getCtTermination().getDecisionType().getParameterId());
 		
-		if(parameterCode.equalsIgnoreCase(ContractConst.TR_LETTER_REMEDY)){
-			getManagedBean().setRemedy(true);
-		} else if(parameterCode.equalsIgnoreCase(ContractConst.TR_LETTER_TERMINATE)){
-			getManagedBean().setTermination(true);
-		} else if(parameterCode.equalsIgnoreCase(ContractConst.TR_LETTER_MUTUAL)) {
-			getManagedBean().setMutualTermination(true);
+		if(this.getManagedBean().getContractVer().getCtTermination().getDecisionType().getParameterCode().equalsIgnoreCase(ContractConst.TR_LETTER_REMEDY)){
+			this.getManagedBean().setRemedy(true);
+		} else if(this.getManagedBean().getContractVer().getCtTermination().getDecisionType().getParameterCode().equalsIgnoreCase(ContractConst.TR_LETTER_TERMINATE)){
+			this.getManagedBean().setTermination(true);
+		} else if(this.getManagedBean().getContractVer().getCtTermination().getDecisionType().getParameterCode().equalsIgnoreCase(ContractConst.TR_LETTER_MUTUAL)) {
+			this.getManagedBean().setMutualTermination(true);
 		}
 		
 		return PROCESS_TERMINATE_PAGE;
