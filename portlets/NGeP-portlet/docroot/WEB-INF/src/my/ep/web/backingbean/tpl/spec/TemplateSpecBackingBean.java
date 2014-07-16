@@ -275,12 +275,14 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 			reqDTO.setParameterCode(ParameterConst.ANSWER_TYPE_TEXT);
 			ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
 			newQuestion.setAnswerTypeCode(resDTO.getPmParameter());
+			resetAnswerTypeDtl(newQuestion);
 			
 			reqDTO = new ParameterReqDTO();
 			reqDTO.setParameterType(ParameterTypeConst.SCORE_TYPE);
 			reqDTO.setParameterCode(ParameterConst.SCORE_TYPE_USER);
 			resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
 			newQuestion.setScoreTypeCode(resDTO.getPmParameter());
+			resetScoreTypeDtl(newQuestion);
 			
 			if (TemplateSpecConst.QUESTION_TYPE_ITEM.equals(questionType)) {
 				reqDTO = new ParameterReqDTO();
@@ -294,6 +296,7 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 				reqDTO.setParameterCode(ParameterConst.PRICE_TYPE_STANDARD);
 				resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
 				newQuestion.setClPriceTypeCode(resDTO.getPmParameter());
+				resetPriceTypeDtl(newQuestion);
 				
 				reqDTO = new ParameterReqDTO();
 				reqDTO.setParameterType(ParameterTypeConst.DELIVERY_TERM);
@@ -423,22 +426,26 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
 			specQuestion.setClPriceTypeCode(resDTO.getPmParameter());
 			
-			List<TplSpecEstimation> specEstimations = null;
-			if (isPriceTypeStandard(specQuestion.getClPriceTypeCode().getParameterCode())) {
-				specEstimations = new ArrayList<TplSpecEstimation>();
-				
-				TplSpecEstimation specEstimation = new TplSpecEstimation();
-				specEstimation.setTplSpecQuestion(specQuestion);
-				
-				specEstimations.add(specEstimation);
-			}
-			
-			specQuestion.setTplSpecTierQties(null);
-			specQuestion.setTplSpecEstimations(specEstimations);
+			resetPriceTypeDtl(specQuestion);
 		} finally {
 			parameterSO = null;
 		}
 		
+	}
+	
+	private void resetPriceTypeDtl(TplSpecQuestion specQuestion) {
+		List<TplSpecEstimation> specEstimations = null;
+		if (isPriceTypeStandard(specQuestion.getClPriceTypeCode().getParameterCode())) {
+			specEstimations = new ArrayList<TplSpecEstimation>();
+			
+			TplSpecEstimation specEstimation = new TplSpecEstimation();
+			specEstimation.setTplSpecQuestion(specQuestion);
+			
+			specEstimations.add(specEstimation);
+		}
+		
+		specQuestion.setTplSpecTierQties(null);
+		specQuestion.setTplSpecEstimations(specEstimations);
 	}
 	
 	public void answerTypeChange(TplSpecQuestion specQuestion) {
@@ -453,22 +460,33 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
 			specQuestion.setAnswerTypeCode(resDTO.getPmParameter());
 			
-			if (ParameterConst.ANSWER_TYPE_TEXT.equals(specQuestion.getAnswerTypeCode())) {
-				reqDTO = new ParameterReqDTO();
-				reqDTO.setParameterType(ParameterTypeConst.SCORE_TYPE);
-				reqDTO.setParameterCode(ParameterConst.SCORE_TYPE_USER);
-				resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
-				specQuestion.setScoreTypeCode(resDTO.getPmParameter());	
-			}
+			resetAnswerTypeDtl(specQuestion);
 		} finally {
 			parameterSO = null;
 		}
 		
 	}
 	
-	public void scoreTypeChange(TemplateSpecBean templateSpecBean) {
-		Long selectedScoreTypeId = templateSpecBean.getSelectedScoreTypeId();
-		TplSpecQuestion specQuestion = templateSpecBean.getSelectedSpecQuestion();
+	private void resetAnswerTypeDtl(TplSpecQuestion specQuestion) {
+		if (ParameterConst.ANSWER_TYPE_TEXT.equals(specQuestion.getAnswerTypeCode().getParameterCode())) {
+			IParameterSO parameterSO = null;
+			try {
+				parameterSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+				
+				ParameterReqDTO reqDTO = new ParameterReqDTO();
+				reqDTO.setParameterType(ParameterTypeConst.SCORE_TYPE);
+				reqDTO.setParameterCode(ParameterConst.SCORE_TYPE_USER);
+				
+				ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
+				specQuestion.setScoreTypeCode(resDTO.getPmParameter());
+			} finally {
+				parameterSO = null;
+			}
+		}	
+	}
+	
+	public void scoreTypeChange(TplSpecQuestion specQuestion, Long selectedScoreTypeId) {
 		IParameterSO parameterSO = null;
 		try {
 			
@@ -478,10 +496,14 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 			reqDTO.setParameterId(selectedScoreTypeId);
 			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
 			specQuestion.setScoreTypeCode(resDTO.getPmParameter());
+			
+			resetScoreTypeDtl(specQuestion);
 		} finally {
 			parameterSO = null;
 		}
-		
+	}
+	
+	private void resetScoreTypeDtl(TplSpecQuestion specQuestion) {
 		// reset the scoring list.
 		specQuestion.setTplSpecScorings(null);
 		
@@ -652,7 +674,9 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 			tplSpecQuestion.setTplSpecTierQties(tplSpecTierQties);
 		}
 		
-		tplSpecTierQties.add(new TplSpecTierQty());
+		TplSpecTierQty tplSpecTierQty = new TplSpecTierQty();
+		tplSpecTierQty.setTplSpecQuestion(tplSpecQuestion);
+		tplSpecTierQties.add(tplSpecTierQty);
 		
 		tplSpecQuestion.setTplSpecEstimations(null);
 	}
@@ -668,7 +692,9 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 			tplSpecQuestion.setTplSpecScorings(tplSpecScorings);
 		}
 		
-		tplSpecScorings.add(new TplSpecScoring());
+		TplSpecScoring tplSpecScoring = new TplSpecScoring();
+		tplSpecScoring.setTplSpecQuestion(tplSpecQuestion);
+		tplSpecScorings.add(tplSpecScoring);
 	}
 	
 	public void tierQtyOkAction(TemplateSpecBean templateSpecBean) {

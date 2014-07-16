@@ -22,7 +22,7 @@
 				label="#{lbl['lbl.tpl.spec.content.scoring.settings.score.type']}"
 				rendered="#{editable}">
 				<f:selectItems value="#{templateSpecBackingBean.getDropdownValues(ParameterTypeConst.scoreType)}" />
-				<p:ajax event="change" listener="#{templateSpecBackingBean.scoreTypeChange(templateSpecBean)}" update="scorePG" />
+				<p:ajax event="change" listener="#{templateSpecBackingBean.scoreTypeChange(templateSpecBean.selectedSpecQuestion, templateSpecBean.selectedSpecQuestion.scoreTypeCode.parameterId)}" update="scorePG" />
 			</h:selectOneMenu>
 			<p:inputText value="#{templateSpecBackingBean.getParameterDesc(templateSpecBean.selectedSpecQuestion.scoreTypeCode)}" 
 				disabled="true" size="15"
