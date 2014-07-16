@@ -127,7 +127,7 @@
 									value="#{lbl['lbl.sc.request.note']} ( #{fn:length(requestNoteBackingBean.managedBean.requestNote.requestNoteDtls)} )"
 									disabled="#{fn:length(requestNoteBackingBean.managedBean.requestNote.requestNoteDtls) eq '0'}" />
 
-								<p:commandButton value="#{lbl['lbl.sc.sq']} ( #{simpleQuoteBackingBean.managedBean.simpleQuoteCounter} )" rendered="#{unspscCodeBackingBean.requisitioner}" id="simpleQuoteId"
+								<p:commandButton value="#{lbl['lbl.sc.sq']} ( #{simpleQuoteBackingBean.managedBean.productTemplateSpecBean.specMaster.tplSpecQuestions.size() + simpleQuoteBackingBean.managedBean.serviceTemplateSpecBean.specMaster.tplSpecQuestions.size()} )" rendered="#{unspscCodeBackingBean.requisitioner}" id="simpleQuoteId"
 									action="#{simpleQuoteBackingBean.simpleQuoteAction('' , false , null)}"  disabled="#{catalogueBackingBean.managedBean.simpleQuoteFlag}"/>
 
 
