@@ -4073,7 +4073,7 @@ public class SmApplicationBackingBean extends
 
 		List<SmPersonnel> list = new ArrayList<SmPersonnel>();
 		for(SmPersonnel personnel : personnels){
-			if(personnel.getEpRole() != null && personnel.getEpRole().length() > 0 && personnel.getPmUser() != null){
+			if(personnel.getEpRole() != null && personnel.getEpRole().length() > 0 && personnel.getPmUser() != null && personnel.getPersonnelId() != null){
 				list.add(personnel);
 			}
 		}
