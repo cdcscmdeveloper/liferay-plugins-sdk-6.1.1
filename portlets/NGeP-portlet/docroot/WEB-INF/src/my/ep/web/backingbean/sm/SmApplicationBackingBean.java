@@ -3974,7 +3974,7 @@ public class SmApplicationBackingBean extends
 			if (res.equalsIgnoreCase("Approve")) {
 				validSiteVisit = updateSmSupplierInfo(getManagedBean()
 						.getSmAppl().getApplType());
-				sendPersonnelActivationEmail();
+//				sendPersonnelActivationEmail();
 			}
 			if (validSiteVisit) {
 				ReviewApplicationResDTO resDTO = reqSO
@@ -4055,7 +4055,7 @@ public class SmApplicationBackingBean extends
 				retMsg = null;
 			}
 		} catch (Exception e) {
-			// e.printStackTrace();
+			e.printStackTrace();
 			retMsg = null;
 			throw new EpException(MessageConst.ERROR_722519);
 		} finally {
@@ -4085,6 +4085,10 @@ public class SmApplicationBackingBean extends
 			}
 		}
 		reqDTO.setSmPersonnelList(list);
+		FacesScopes fs = new FacesScopes();
+		reqDTO.setServerName(fs.getRequest().getServerName());
+		reqDTO.setServerPort(fs.getRequest().getServerPort());
+
 		PersonnelResDTO resDTO = smPersonnelSO.sendPersonnelActivationEmail(reqDTO);
 
 	}
