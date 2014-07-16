@@ -159,7 +159,13 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 //   			  facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "user's profile not found!"," "));
 //   			 return "unspscRequestForm";
 //            }
-			System.out.println("getSmSupplier="+smResDTO.getResultBean().getResultList().get(0));
+
+			if(smResDTO.getResultBean().getResultList().isEmpty()) {
+				throw new EpException(MessageConst.ERROR_721017);
+			}
+			
+			log.info("getSmSupplier: "+ smResDTO.getResultBean().getResultList().get(0));
+
 
 			this.getManagedBean().getRequestCode().setSmSupplier(smResDTO.getResultBean().getResultList().get(0));
 
