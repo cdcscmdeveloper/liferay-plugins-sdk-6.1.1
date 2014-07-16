@@ -89,42 +89,37 @@
 		<h:panelGroup styleClass="chargeLineSection" id="chargeLineSection">
 			<table style="width: 100%">
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.fl.charge.vot.code']}"
-							style="margin-bottom:15px;" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.charge.vot.code']}" /></td>
 					<td><p:inputText
 							value="#{paymentMatchBackingBean.managedBean.votFundCode}"
 							size="9" disabled="true" /> </td>
 					<td><p:outputLabel value="#{lbl['lbl.fl.charge.asset.ind']}" /></td>
 					<td><p:inputText
-							size="9" disabled="true" value="#{paymentMatchBackingBean.managedBean.glAccountCode}"/></td>
+							size="9" disabled="true" value="#{paymentMatchBackingBean.getParameterDesc(ParameterTypeConst.assetInd, paymentMatchBackingBean.managedBean.assetIndCode)}"/></td>
 					<td><p:outputLabel
 							value="#{lbl['lbl.fl.charge.asset.gosodo']}" /></td>
 					<td><p:inputText
-							size="9" disabled="true" /></td>
+							size="9" disabled="true" value="#{paymentMatchBackingBean.managedBean.glAccountCode}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel
-							value="#{lbl['lbl.fl.charge.program.activity']}"
-							style="margin-bottom:15px;" /></td>
+							value="#{lbl['lbl.fl.charge.program.activity']}" /></td>
 					<td><p:inputText
 							value="#{paymentMatchBackingBean.managedBean.prgActivityCode}"
 							size="9" disabled="true" /></td>
-					<td><p:outputLabel value="#{lbl['lbl.fl.charge.Project']}"
-							style="margin-bottom:15px;" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.charge.Project']}" /></td>
 					<td><p:inputText
 							value="#{paymentMatchBackingBean.managedBean.projectCode}"
 							size="9" disabled="true" /></td>
 					<td><p:outputLabel
-							value="#{lbl['lbl.fl.charge.setia.subsetia']}"
-							style="margin-bottom:15px;" /></td>
+							value="#{lbl['lbl.fl.charge.setia.subsetia']}" /></td>
 					<td><p:inputText
 							value="#{paymentMatchBackingBean.managedBean.setiaCode}"
 							size="9" disabled="true" /></td>
 					<td><p:inputText
 							value="#{paymentMatchBackingBean.managedBean.subSetiaCode}"
 							size="9" disabled="true" /></td>
-					<td><p:outputLabel value="#{lbl['lbl.fl.charge.cp']}"
-							style="margin-bottom:15px;" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.charge.cp']}" /></td>
 					<td><p:inputText value="#{paymentMatchBackingBean.getParameterDesc(ParameterTypeConst.financingType,paymentMatchBackingBean.managedBean.financingTypeCode)}"
 							size="9" disabled="true" /></td>
 
