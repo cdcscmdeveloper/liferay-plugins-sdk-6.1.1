@@ -351,8 +351,8 @@
 		<p:commandButton id="conf" value="Yes" update=":form:tt:catCodeInfPan"
 			action="#{backingBean.assignApplnCategoryType}"
 			oncomplete="typeConfirmation.hide()" />
-		<p:commandButton id="decline" value="No"
-			update=":form:tt:catCodeInfPan" onclick="typeConfirmation.hide()"
+		<p:commandButton id="decline" value="No" process="@this"
+			partialSubmit="true" update=":form:tt:catCodeInfPan"
 			action="#{backingBean.resetApplnCategoryType}" />
 
 	</p:confirmDialog>
