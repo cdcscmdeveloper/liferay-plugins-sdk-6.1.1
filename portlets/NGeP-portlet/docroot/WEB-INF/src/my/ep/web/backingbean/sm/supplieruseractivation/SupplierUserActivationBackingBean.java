@@ -162,7 +162,7 @@ public class SupplierUserActivationBackingBean extends
 						reqDTO.getSmPersonnel().setEpRole(RoleCode.CM_USER.value());
 					}
 					
-					if(reqDTO.getSmPersonnel().getEpRole() == RoleCode.BASIC_SUPPLIER_USER.value() || reqDTO.getSmPersonnel().getEpRole() == RoleCode.CM_USER.value())
+					if(reqDTO.getSmPersonnel().getEpRole() == RoleCode.BASIC_SUPPLIER_USER.value() || reqDTO.getSmPersonnel().getEpRole() == RoleCode.MOF_SUPPLIER_USER.value() || reqDTO.getSmPersonnel().getEpRole() == RoleCode.CM_USER.value())
 						resDTO = reqSO.createPmProfileForPersonnel(reqDTO);
 					if(resDTO.isSuccessful()){
 						this.getManagedBean().setValidActivation(false);
