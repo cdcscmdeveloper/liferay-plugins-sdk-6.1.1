@@ -117,7 +117,7 @@
 				<ac:paginator for="itemDataTable" />
 
 				<p:column headerText=" Item Code">
-					<h:outputText value="#{flItem.scRequestItem.cmItem.extensionCode}" />
+					<h:outputText value="#{flItem.scRequestItem.cmItem.extensionCode}" title="Requested Quantity: #{flItem.scRequestItem.quantity}"/>
 				</p:column>
 				<p:column headerText="Item Name" style="white-space:normal;">
 					<h:outputText value="#{flItem.scRequestItem.itemName}" />
