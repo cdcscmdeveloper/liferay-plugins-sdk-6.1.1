@@ -17,7 +17,7 @@
 		       <p:selectBooleanCheckbox 
 			       value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.feeExampted}" disabled="true" />
 		       <p:spacer width="2" />	
-		       <p:outputLabel value="Fee Exemption" />
+		       <p:outputLabel value="#{lbl['lbl.ct.chkbx.feeExmp']}" />
 	         </h:panelGrid>	
 		     <p:outputLabel id="centralEfDate" value="#{lbl['lbl.ct.effectiveDate']}" />
 		     <p:inputText for="centralEfDate" style="width:170px;" disabled="true"
@@ -41,7 +41,7 @@
 			       <f:selectItems value="#{contractDetailsBackingBean.getDropdownValues(ParameterTypeConst.deliveryTerm)}" />
 			   </p:selectOneMenu>
 			</h:panelGrid>	
-			<p:outputLabel id="centralSignDate" value="Signed Date" rendered="#{contractDetailsBackingBean.managedBean.ctContract.agreement}"/>
+			<p:outputLabel id="centralSignDate" value="#{lbl['lbl.ct.sdate']}" rendered="#{contractDetailsBackingBean.managedBean.ctContract.agreement}"/>
 			<p:inputText for="centralSignDate"  disabled="true" rendered="#{contractDetailsBackingBean.managedBean.ctContract.agreement}"
 			   style="width:170px;" value="#{contractDetailsBackingBean.convertTime(contractDetailsBackingBean.managedBean.ctContract.currentAgreement.signedDate)}"/>
 			<f:verbatim   rendered="#{!contractDetailsBackingBean.managedBean.ctContract.agreement}"/>
@@ -78,7 +78,10 @@
 	    rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt}" >
          <h:panelGroup>
 		    <div style="height:70px;width:175px; vertical-align:top;">
-			   <p:outputLabel id="centralJustificationLbls" value="* Justification" />
+			   <h:panelGrid columns="2" style="float:right;">
+		           <p:outputLabel value="*" styleClass="mandatory" />
+			   	   <p:outputLabel id="centralJustificationLbls" value="#{lbl['lbl.ct.justification']}" />
+			   </h:panelGrid>
 		    </div>
 	     </h:panelGroup>
 	  <h:panelGrid columns="2">
