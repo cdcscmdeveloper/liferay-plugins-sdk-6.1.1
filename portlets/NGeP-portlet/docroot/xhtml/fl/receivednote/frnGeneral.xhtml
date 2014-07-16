@@ -8,8 +8,8 @@
 	<p:panel header="REQUEST DETAIL" toggleable="true">
 		<table style="width: 100%">
 			<tr>
-				<td style="width: 130px;"><p:outputLabel value="#{lbl['lbl.fl.ministry']}" /></td>
-				<td style="width: 358px;"><p:inputText size="50" id="ministry"
+				<td style="width: 136px;"><p:outputLabel value="#{lbl['lbl.fl.ministry']}" /></td>
+				<td style="width: 378px;"><p:inputText size="50" id="ministry"
 						value="#{receivedNoteBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.parentOrgProfile.orgName}"
 						disabled="true" /></td>
 				<td style="width: 150px;" rowspan="3" valign="top"><p:outputLabel
@@ -67,7 +67,7 @@
 						style=" margin-bottom:5px;" disabled="true"
 						value="#{receivedNoteBackingBean.getFullAddress(receivedNoteBackingBean.managedBean.fulfilmentNote.flDeliveryOrder.flDeliveryAddress.pmAddress)}" />
 				</td>
-				<td style="width: 150px;"><p:outputLabel
+				<td style="width: 180px;"><p:outputLabel
 						value="#{lbl['lbl.fl.frn.prepare.date']}" /></td>
 
 				<td><p:inputText size="25" disabled="true" value="#{receivedNoteBackingBean.managedBean.fulfilmentNote.createdDate}">
@@ -99,14 +99,14 @@
 	<p:panel header="SUPPLIER DETAIL" toggleable="true">
 		<table style="width: 100%">
 			<tr>
-				<td style="width: 132px;"><p:outputLabel
+				<td style="width: 135px;"><p:outputLabel
 						value="#{lbl['lbl.fl.supp.ep.no']}" /></td>
 				<td><table style="width: 100%">
 						<tr>
 							<td style="width: 25px;"><p:inputText size="15"
 									disabled="true"
 									value="#{receivedNoteBackingBean.managedBean.fulfilmentRequest.smSupplier.regNo}" /></td>
-							<td style="width: 70px;"><p:outputLabel
+							<td style="width: 74px;"><p:outputLabel
 									value="#{lbl['lbl.fl.supp.mof.no']}" /></td>
 							<td><p:inputText size="20" disabled="true"
 									value="#{receivedNoteBackingBean.managedBean.fulfilmentRequest.smSupplier.smMofAccounts[0].mofNo}" /></td>
@@ -138,7 +138,7 @@
 							<td style="width: 25px;"><p:inputText size="15"
 									disabled="true"
 									value="#{receivedNoteBackingBean.managedBean.fulfilmentNote.flRequest.flSupplierDtl.phoneNo}" /></td>
-							<td style="width: 65px;"><p:outputLabel
+							<td style="width: 68px;"><p:outputLabel
 									value="#{lbl['lbl.fl.supp.faxno']}" /></td>
 							<td><p:inputText size="20" disabled="true"
 									value="#{receivedNoteBackingBean.managedBean.fulfilmentNote.flRequest.flSupplierDtl.faxNo}" /></td>
@@ -164,6 +164,10 @@
 			</tr>
 		</table>
 	</p:panel>
+	
+	
+	
+	
 	<p:panel header="#{lbl['lbl.fl.remark.attachment']}" toggleable="true">
 		<table style="width: 100%">
 			<tr>
@@ -174,4 +178,6 @@
 			</tr>
 		</table>
 	</p:panel>
+	
+	
 </ui:composition>
