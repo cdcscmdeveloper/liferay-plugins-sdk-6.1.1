@@ -267,6 +267,12 @@ public class SupplierManagementConst {
 	public static final String SM_APPL_PAGE_TYPE_SITEVISITREV = "SITEVISITREVSION";
 	public static final String SM_APPL_PAGE_TYPE_PODEC = "PODECISION";
 	public static final String SM_APPL_PAGE_TYPE_APPRDEC = "APPROVERDECISION";
+	
+	public static final String SM_MOF_CERT_SERIAL_SEQ = "SM_MOF_CERT_SERIAL_SEQ";
+	public static final String SM_MOF_465_SEQ = "SM_MOF_465_SEQ";
+	public static final String SM_MOF_357_0_SEQ = "SM_MOF_357_0_SEQ";
+	public static final String SM_MOF_357_2_SEQ = "SM_MOF_357_2_SEQ";
+	public static final String SM_MOF_357_3_SEQ = "SM_MOF_357_3_SEQ";
 
 	public static final int RECORD_STATUS_DELETED = 9;
 	public static final int RECORD_STATUS_SUSPENDED = 0;

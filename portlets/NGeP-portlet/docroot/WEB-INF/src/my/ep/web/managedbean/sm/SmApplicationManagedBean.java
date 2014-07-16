@@ -287,9 +287,9 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		} else {
 			System.out.println("  *** UNKNOWN USER ****");
 		}
-		if (sc.getUserScreenName().equalsIgnoreCase("user026")) {
-			setPoUser(true);
-		}
+		// if (sc.getUserScreenName().equalsIgnoreCase("user026")) {
+		// setPoUser(true);
+		// }
 
 		System.out.println("PO USER === >> " + isPoUser());
 		System.out.println("APPROVER USER === >> " + isApproverUser());

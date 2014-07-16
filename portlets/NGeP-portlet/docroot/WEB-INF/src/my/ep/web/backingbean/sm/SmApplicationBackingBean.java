@@ -280,6 +280,9 @@ public class SmApplicationBackingBean extends
 					if (smAppl.getApplType().equalsIgnoreCase(
 							ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
 						smAppl.setSmSupplierBanks(new ArrayList<SmSupplierBank>());
+						if (smAppl.getSmCompanyBasic() != null) {
+							smAppl.getSmCompanyBasic().setAnnualRevenue(0);
+						}
 					}
 					System.out
 							.println("****** After retrieve the appl is ********"
@@ -316,10 +319,6 @@ public class SmApplicationBackingBean extends
 			}
 
 			if (smAppl.getSmCompanyBasic() != null) {
-				if (smAppl.getApplType().equalsIgnoreCase(
-						ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
-					smAppl.getSmCompanyBasic().setAnnualRevenue(0);
-				}
 				if (smAppl.getSmCompanyBasic().getSmCompanyAddresses() != null
 						&& !smAppl.getSmCompanyBasic().getSmCompanyAddresses()
 								.isEmpty()) {
@@ -6324,22 +6323,25 @@ public class SmApplicationBackingBean extends
 				if (getManagedBean().getSmAppl().getSupplierType()
 						.equalsIgnoreCase("J")) {
 					sb.append("465-");
-					sb.append(generateMofNum(sb.toString()));
+					sb.append(generateMofNum(SupplierManagementConst.SM_MOF_465_SEQ));
 				} else {
 					if (getManagedBean().getSmAppl().getSmCompanyBasic()
 							.getSmCompanyAddresses().get(0).getSmAddress()
 							.getPmState().getStateName()
 							.equalsIgnoreCase("Sabah")) {
 						sb.append("357-2");
+						sb.append(generateMofNum(SupplierManagementConst.SM_MOF_357_2_SEQ));
 					} else if (getManagedBean().getSmAppl().getSmCompanyBasic()
 							.getSmCompanyAddresses().get(0).getSmAddress()
 							.getPmState().getStateName()
 							.equalsIgnoreCase("Sarawak")) {
 						sb.append("357-3");
+						sb.append(generateMofNum(SupplierManagementConst.SM_MOF_357_3_SEQ));
 					} else {
 						sb.append("357-0");
+						sb.append(generateMofNum(SupplierManagementConst.SM_MOF_357_0_SEQ));
 					}
-					sb.append(generateMofNum(sb.toString()));
+
 				}
 				System.out.println(" *** The final Mof account num **** "
 						+ sb.toString());
@@ -6448,7 +6450,7 @@ public class SmApplicationBackingBean extends
 		if (getManagedBean().getSmAppl().getSupplierType()
 				.equalsIgnoreCase("J")) {
 			sb.append("J");
-			sb.append(generateMofCertNum(sb.toString()));
+			sb.append(generateMofCertNum(SupplierManagementConst.SM_MOF_CERT_SERIAL_SEQ));
 		} else {
 			if (getManagedBean().getSmAppl().getSmCompanyBasic()
 					.getSmCompanyAddresses().get(0).getSmAddress().getPmState()
@@ -6473,31 +6475,32 @@ public class SmApplicationBackingBean extends
 					sb.append("K");
 				}
 			}
-			sb.append(generateMofCertNum(sb.toString()));
+			sb.append(generateMofCertNum(SupplierManagementConst.SM_MOF_CERT_SERIAL_SEQ));
 		}
 		cert.setCertSerialNo(sb.toString());
 		return cert;
 
 	}
 
-	private String generateMofNum(String mofPrefix) {
+	private String generateMofNum(String mofNumSeqName) {
 		IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
 				.getInstance().getServiceObject("sm", IMofRegistrationSO.class);
 
 		MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
-		reqDto.setMofNum(mofPrefix);
+		// reqDto.setMofNum(mofPrefix);
+		reqDto.setMofNumSeqName(mofNumSeqName);
 		reqDto.setSupplierType(getManagedBean().getSmAppl().getSupplierType());
 		reqDto.setSmAppl(this.getManagedBean().getSmAppl());
 		MofRegistrationResDTO resDTO = mofRegistrationSO.generateMofNum(reqDto);
 		return resDTO.getMofNum();
 	}
 
-	private String generateMofCertNum(String mofCertPrefix) {
+	private String generateMofCertNum(String mofCertSeqName) {
 		IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
 				.getInstance().getServiceObject("sm", IMofRegistrationSO.class);
 
 		MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
-		reqDto.setMofCertNum(mofCertPrefix);
+		reqDto.setMofCertSeqName(mofCertSeqName);
 		reqDto.setSmAppl(this.getManagedBean().getSmAppl());
 		MofRegistrationResDTO resDTO = mofRegistrationSO
 				.generateMofCertNum(reqDto);
