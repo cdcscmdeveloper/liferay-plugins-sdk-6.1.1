@@ -4073,11 +4073,18 @@ public class SmApplicationBackingBean extends
 
 		List<SmPersonnel> list = new ArrayList<SmPersonnel>();
 		for(SmPersonnel personnel : personnels){
+			// if(getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)){
+			// if(personnel.getEpRole() != null &&
+			// personnel.getEpRole().length() > 0 && personnel.getPmUser() ==
+			// null){
+			// list.add(personnel);
+			// }
+			// }
 			if(personnel.getEpRole() != null && personnel.getEpRole().length() > 0 && personnel.getPmUser() == null){
 				list.add(personnel);
 			}
 		}
-		reqDTO.setSmPersonnelList(personnels);
+		reqDTO.setSmPersonnelList(list);
 		PersonnelResDTO resDTO = smPersonnelSO.sendPersonnelActivationEmail(reqDTO);
 
 	}
