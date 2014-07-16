@@ -38,6 +38,7 @@ import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
@@ -85,6 +86,7 @@ import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.cm.codification.CodificationBackingBean;
+import my.ep.web.backingbean.fl.cr.ContractRequestBackingBean;
 import my.ep.web.backingbean.sc.directpurchase.RequestNoteBackingBean;
 import my.ep.web.backingbean.sc.directpurchase.SimpleQuoteBackingBean;
 import my.ep.web.backingbean.sc.purchaseindefault.PurchaseInDefaultBackingBean;
@@ -5221,27 +5223,20 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	public String navigateContractRequest() {
 
-		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance()
-				.getServiceObject("ct", IContractSO.class);
+		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 
-		if (this.getManagedBean().getCtRequestList() != null
-				&& this.getManagedBean().getCtRequestList().size() > 0) {
-			VCmSupplierItem supplierItemView = this.getManagedBean()
-					.getCtRequestList().get(0);
+		if (this.getManagedBean().getCtRequestList() != null && this.getManagedBean().getCtRequestList().size() > 0) {
+			VCmSupplierItem supplierItemView = this.getManagedBean().getCtRequestList().get(0);
 			ContractReqDTO reqDTO = new ContractReqDTO();
+		
 			reqDTO.setContractId(supplierItemView.getContractId());
-			System.out.println("supplierItemView.getContractId():"
-					+ supplierItemView.getContractId());
+			System.out.println("supplierItemView.getContractId():"+ supplierItemView.getContractId());
 			ContractResDTO resDTO = contractSO.retrieveContract(reqDTO);
-			if (resDTO.getContract().getFulfillmentType().getParameterCode()
-					.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)) {
-				System.out
-						.println("*************FULFILMENT_TYPE_ONE_OFF**************");
+			if (resDTO.getContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)) {
+				System.out.println("*************FULFILMENT_TYPE_ONE_OFF**************");
 				FacesContext facesContext = FacesContext.getCurrentInstance();
 
-				facesContext.addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+				facesContext.addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 								MessageUtils.getMessage(
 										MessageConst.INFO_710006,
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
@@ -5284,8 +5279,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 						themeDisplay.getLayout().getGroup().getFriendlyURL())
 						+ themeDisplay.getLayout().getGroup().getFriendlyURL()
 								.length());
+		ContractRequestBackingBean crBB = new ContractRequestBackingBean();
+		crBB.getManagedBean().setvCmSupplierItemList(getManagedBean().getCtRequestList());
 		ExternalContext externalContext = FacesContext.getCurrentInstance()
 				.getExternalContext();
+		externalContext.getApplicationMap().put(facesScope.getUserSessionBean().getUserId().toString()+getManagedBean().getCtRequestList().get(0)
+				.getContractId().toString(), getManagedBean().getCtRequestList());
 		String url = "contract-request";
 
 		try {

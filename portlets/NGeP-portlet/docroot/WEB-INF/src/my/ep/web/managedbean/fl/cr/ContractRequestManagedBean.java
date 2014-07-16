@@ -15,6 +15,7 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
 import my.ep.persistence.entity.cm.catalog.CmItem;
+import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.VCtActiveContract;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
@@ -78,6 +79,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private FlFulfilmentItemAddr selectedItemAddr;
 	private FlDeliveryAddress flManualAddress;
 	private List<SelectItem> supplierBranchesList;
+	private List<VCmSupplierItem> vCmSupplierItemList;
 
 	private List <FlFulfilmentItemAddr>  selectedItemsRows;
 	private PmOrgProfile pmOrgProfile;
@@ -1782,6 +1784,22 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectedAddrTypeList(List<PmAddressType> selectedAddrTypeList) {
 		this.selectedAddrTypeList = selectedAddrTypeList;
+	}
+
+
+	/**
+	 * @return the vCmSupplierItemList
+	 */
+	public List<VCmSupplierItem> getvCmSupplierItemList() {
+		return vCmSupplierItemList;
+	}
+
+
+	/**
+	 * @param vCmSupplierItemList the vCmSupplierItemList to set
+	 */
+	public void setvCmSupplierItemList(List<VCmSupplierItem> vCmSupplierItemList) {
+		this.vCmSupplierItemList = vCmSupplierItemList;
 	}
 
 
