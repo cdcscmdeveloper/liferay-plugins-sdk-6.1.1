@@ -111,7 +111,6 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 		  debugLogger("prInquiryAction");
 		  ScRequestSupplierItem requestSupplierItem = getManagedBean().getScRequestSupplierItem();
 		  ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT, ICatalogueSO.class);
-		  IStatusSO iStatusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 		  IPrInquirySO prInquirySO = (IPrInquirySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPrInquirySO.class);
 		  CatalogueReqDTO catReqDTO = new CatalogueReqDTO();
 		  catReqDTO.setSupplierItemId(cmSupplierItem.getSupplierItemId());
@@ -198,11 +197,9 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 				  supplierItems.add(scRequestSupplierItem);	
 			  }
 		  }
-		  if(supplierItems.isEmpty()){
-			  supplierItems.add(requestSupplierItem);
-			  
-		  }
 		  // Add selected supplier item.
+		  supplierItems.add(requestSupplierItem);
+		  
 		  requestItem.setSupplierItems(supplierItems);
 		  scPrInquiry.setRequestItem(requestItem);
 		  scPrInquiry.setScRequestSupplierItems(supplierItems);
@@ -542,6 +539,7 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 					.setJustDropdown(
 							getDropdownCodeValues(ParameterTypeConst.JUSTIFICATION_TYPE_EMERGENCY));
 		}
+		getManagedBean().getRequestNoteDtl().setJustificationType(new PmParameter());
 	}
 		
 	/**
