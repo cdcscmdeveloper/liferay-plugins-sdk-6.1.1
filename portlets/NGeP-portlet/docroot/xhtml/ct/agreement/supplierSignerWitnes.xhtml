@@ -9,30 +9,30 @@
     <p:panel id="signingWitness" header="#{lbl['lbl.ct.ag.suppsingdtls']}" toggleable="true" toggleSpeed="500">
       <h:panelGrid style="width:100%">  
         <p:outputLabel value="#{lbl['lbl.ct.ag.signer']}" style="float:left;"/>
-         <p:dataTable id="agSupplierSigner" var="data" value="#{agreementBackingBean.managedBean.ctSupplierSigner}"
-           selection="#{agreementBackingBean.selectedSupplierSigner}" rowKey="#{data}">
+         <p:dataTable id="agSupplierSigner" var="signSupplierVar" value="#{agreementBackingBean.managedBean.ctSupplierSigner}"
+           selection="#{agreementBackingBean.selectedSupplierSigner}" rowKey="#{signSupplierVar}">
             <ac:paginator for="agSupplierSigner"/>
 			   <p:column selectionMode="multiple" style="width:2%"/> 
                    <p:column style="width:25%;" headerText="#{lbl['lbl.ct.company']}">
                      <p:outputLabel value="#{agreementBackingBean.managedBean.contractVer.ctContractValue.supplierName}" style="float:left;"/>
                 </p:column> 
                 <p:column style="width:25%;" headerText="#{lbl['lbl.ct.ag.csigner']}">
-                  <p:selectOneMenu id="contractSigner" value="#{data.officerName}"  style="width:95%;">
-                   <f:selectItems value="#{agreementBackingBean.getSupplierSignerDropdown(data)}"/>
-                     <p:ajax event="change" update="suOfId,suOfPosition" process="@this" listener="#{agreementBackingBean.setSupplierUserValue(data,data.officerName)}"/> 
+                  <p:selectOneMenu id="contractSigner" value="#{signSupplierVar.officerName}"  style="width:95%;">
+                   <f:selectItems value="#{agreementBackingBean.getSupplierSignerDropdown(signSupplierVar)}"/>
+                     <p:ajax event="change" update="suOfId,suOfPosition" process="@this" listener="#{agreementBackingBean.setSupplierUserValue(signSupplierVar,signSupplierVar.officerName)}"/> 
                    </p:selectOneMenu>
                 </p:column>  
                 <p:column style="width:25%;" headerText="#{lbl['lbl.ct.ag.icno']}"> 
-                   <p:outputLabel id="suOfId" value="#{data.officerIc}" style="float:left;"/>
+                   <p:outputLabel id="suOfId" value="#{signSupplierVar.officerIc}" style="float:left;"/>
                 </p:column> 	
                 <p:column style="width:25%;" headerText="#{lbl['lbl.ct.ag.position']}" >
-                   <p:outputLabel id="suOfPosition" value="#{data.officerPosition}" style="float:left;"/>
+                   <p:outputLabel id="suOfPosition" value="#{signSupplierVar.officerPosition}" style="float:left;"/>
                 </p:column>  	
              </p:dataTable>
 		</h:panelGrid>
 		 <div class="ppRightBtn"> 
 		    <p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" action="#{agreementBackingBean.addSupplierSigner()}"
-		       icon="ui-icon-add" update="agSupplierSigner"/>
+		       icon="ui-icon-add" update=":form:agSupplierSigner"/>
 		    <p:commandButton value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete" process="@form" onsuccess="dlgAgSupplierDel.show()"/>
         </div>
          <p:dialog id="dlgAgSupplierDel" widgetVar="dlgAgSupplierDel" header="Delete Confirmation" styleClass="screen-title"  
@@ -45,31 +45,31 @@
               styleClass="ui-inputtextarea"></p:inputTextarea>
            </h:panelGrid>
            <div class="ppRightBtn">
-		     <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.yes']}" icon="ui-icon-accept" update="agSupplierSigner" process="@form" 
+		     <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.yes']}" icon="ui-icon-accept" update=":form:agSupplierSigner" process="@form" 
 				actionListener="#{agreementBackingBean.deleteSupplierSigner()}" onclick="dlgAgSupplierDel.hide();"/>
 			  <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.no']}" icon="ui-icon-reject" onclick="dlgAgSupplierDel.hide();" type="button" />
 		   </div>
         </p:dialog>  
         <h:panelGrid style="width:100%">
           <p:outputLabel value="Witness" style="float:left;"/>
-          <p:dataTable id="supplierWitnesTable" var="data" value="#{agreementBackingBean.managedBean.ctSupplierWitness}"
-            selection="#{agreementBackingBean.selectedSupplierWitnes}" rowKey="#{data}">
+          <p:dataTable id="supplierWitnesTable" var="supplierWitnessVar" value="#{agreementBackingBean.managedBean.ctSupplierWitness}"
+            selection="#{agreementBackingBean.selectedSupplierWitnes}" rowKey="#{supplierWitnessVar}">
             <ac:paginator for="witnessSign"/>
             <p:column selectionMode="multiple" style="width:2%"/> 
             <p:column style="width:50%;" headerText="#{lbl['lbl.ct.ag.witnessname']}">
-               <p:inputText value="#{data.officerName}" style="width:95%;" maxlength="20"/>
+               <p:inputText value="#{supplierWitnessVar.officerName}" style="width:95%;" maxlength="20"/>
             </p:column>
             <p:column style="width:25%;" headerText="#{lbl['lbl.ct.ag.icno']}"> 
-               <p:inputText value="#{data.officerIc}" style="width:95%;" maxlength="20"/>
+               <p:inputText value="#{supplierWitnessVar.officerIc}" style="width:95%;" maxlength="20"/>
             </p:column> 	       
             <p:column style="width:20%;" headerText="#{lbl['lbl.ct.ag.position']}" >
-               <p:inputText value="#{data.officerPosition}" style="width:95%;" maxlength="255"/>
+               <p:inputText value="#{supplierWitnessVar.officerPosition}" style="width:95%;" maxlength="255"/>
             </p:column>  
         </p:dataTable>
        </h:panelGrid>
         <div class="ppRightBtn"> 
 		    <p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" action="#{agreementBackingBean.addSupplierWitness()}"
-		       icon="ui-icon-add" update="supplierWitnesTable"/>
+		       icon="ui-icon-add" update=":form:supplierWitnesTable"/>
 		    <p:commandButton value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete" process="@form" onsuccess="dlgSupplierWitnesDel.show()"/>
         </div>
          <p:dialog id="dlgSupplierWitnesDel" widgetVar="dlgSupplierWitnesDel" header="Delete Confirmation" styleClass="screen-title"  
@@ -82,7 +82,7 @@
               styleClass="ui-inputtextarea"></p:inputTextarea>
            </h:panelGrid>
            <div class="ppRightBtn">
-		     <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.yes']}" icon="ui-icon-accept" update="supplierWitnesTable" process="@form" 
+		     <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.yes']}" icon="ui-icon-accept" update=":form:supplierWitnesTable" process="@form" 
 				actionListener="#{agreementBackingBean.deleteSupplierWitness()}" onclick="dlgSupplierWitnesDel.hide();"/>
 			  <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.no']}" icon="ui-icon-reject" onclick="dlgSupplierWitnesDel.hide();" type="button" />
 		   </div>

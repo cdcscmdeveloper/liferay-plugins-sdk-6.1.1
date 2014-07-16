@@ -14,51 +14,51 @@
 				</h:commandLink>				
 			</h:panelGrid>
 			<p:spacer height="5" />
-			<p:dataTable id="contentTable" var="data" rowIndexVar="rowIndex"
+			<p:dataTable id="contentTable" var="contentsVar" rowIndexVar="rowIndex"
 				value="#{agreementBackingBean.managedBean.ctAgreement.agreementContents}"
-				selectionMode="single" selection="#{agreementBackingBean.managedBean.selectedAgreementContent}" rowKey="#{data}">
-				<p:ajax event="rowSelect" update="@([id$=delContentBtn])" />
+				selectionMode="single" selection="#{agreementBackingBean.managedBean.selectedAgreementContent}" rowKey="#{contentsVar}">
+				<p:ajax event="rowSelect" update=":form:delContentBtn" />
 				<p:column style="width:60%;" headerText="Content">
-					<p:outputLabel value="#{data.title}" style="float:left;" rendered="#{data.contentType.parameterCode != ParameterConst.agreementUserUploadDoc}" />
-					<p:inputText value="#{data.title}" style="width:90%;" rendered="#{data.contentType.parameterCode eq ParameterConst.agreementUserUploadDoc}"/>
+					<p:outputLabel value="#{contentsVar.title}" style="float:left;" rendered="#{contentsVar.contentType.parameterCode != ParameterConst.agreementUserUploadDoc}" />
+					<p:inputText value="#{contentsVar.title}" style="width:90%;" rendered="#{contentsVar.contentType.parameterCode eq ParameterConst.agreementUserUploadDoc}"/>
 				</p:column>
 				<p:column style="width:20%px;"
 					headerText="#{lbl['lbl.ct.ag.table.type']}">
 					<p:outputLabel style="float:left;"
-						value="#{agreementBackingBean.getParameterDesc(data.contentType.pmParameterType.parameterType,data.contentType.parameterCode)}" />
+						value="#{agreementBackingBean.getParameterDesc(contentsVar.contentType.pmParameterType.parameterType,contentsVar.contentType.parameterCode)}" />
 				</p:column>
 				<p:column style="width:20%;" styleClass="column-align-center"
 					headerText="#{lbl['lbl.ct.ag.table.action']}">
-					<h:panelGroup rendered="#{data.contentType.parameterCode == ParameterConst.agreementTemplateDoc}">
+					<h:panelGroup rendered="#{contentsVar.contentType.parameterCode == ParameterConst.agreementTemplateDoc}">
 					 <p:commandLink process="@this" partialSubmit="true"
-							action="#{agreementBackingBean.downloadTemplateDoc(data)}">
+							action="#{agreementBackingBean.downloadTemplateDoc(contentsVar)}">
 							<p:graphicImage library="ep/images/design" name="download.png"
 								value="/resources/ep/images/design/download.png"
 								title="File Download" />
 						</p:commandLink>
 						<p:spacer width="2"/>
 					   <p:commandLink
-							action="#{agreementBackingBean.gotoTemplateDoc(data)}">
+							action="#{agreementBackingBean.gotoTemplateDoc(contentsVar)}">
 							<p:graphicImage library="ep/images/design" name="document.png"
 								value="/resources/ep/images/design/document.png"
 								title="View Document" />
 						</p:commandLink>	
 					</h:panelGroup>
-					<h:panelGroup rendered="#{data.contentType.parameterCode eq ParameterConst.agreementSystemDefineDoc}">
-						<h:commandLink action="#{agreementBackingBean.downloadDocFile(data.title)}">
+					<h:panelGroup rendered="#{contentsVar.contentType.parameterCode eq ParameterConst.agreementSystemDefineDoc}">
+						<h:commandLink action="#{agreementBackingBean.downloadDocFile(contentsVar.title)}">
 							<p:graphicImage library="ep/images/design" name="download.png"
 								value="/resources/ep/images/design/download.png"
 								title="File Download" />
 						</h:commandLink>
 					</h:panelGroup>
-					  	<h:panelGroup id="uploadUserDefinePg" rendered="#{data.contentType.parameterCode eq ParameterConst.agreementUserUploadDoc}">
+					  	<h:panelGroup id="uploadUserDefinePg" rendered="#{contentsVar.contentType.parameterCode eq ParameterConst.agreementUserUploadDoc}">
 							<p:commandButton oncomplete="uploadUserDefineDlg.show();return false;"
 								icon="iconAttachment" update=":form:contentTable">
-								<f:setPropertyActionListener value="#{data}" 
+								<f:setPropertyActionListener value="#{contentsVar}" 
 								  target="#{agreementBackingBean.managedBean.selectedAgreementContent}" />
 							</p:commandButton>
-							<h:commandLink rendered="#{data.filePath != null}" value="#{data.fileName}"
-								action="#{agreementBackingBean.downloadFile(data.filePath, data.fileName)}">
+							<h:commandLink rendered="#{contentsVar.filePath != null}" value="#{contentsVar.fileName}"
+								action="#{agreementBackingBean.downloadFile(contentsVar.filePath, contentsVar.fileName)}">
 							</h:commandLink>
 					  </h:panelGroup>
 				</p:column>
