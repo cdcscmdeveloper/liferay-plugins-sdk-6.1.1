@@ -274,7 +274,6 @@ public class SmApplicationBackingBean extends
 					if (resDto.isErrorCaued()) {
 						return setExceptionNavigationForAppl(applicationType);
 					}
-
 					smAppl = resDto.getSmAppl();
 					smAppl.setResubmit(false);
 					smAppl.setSupportingDocMode("O");
@@ -317,6 +316,10 @@ public class SmApplicationBackingBean extends
 			}
 
 			if (smAppl.getSmCompanyBasic() != null) {
+				if (smAppl.getApplType().equalsIgnoreCase(
+						ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
+					smAppl.getSmCompanyBasic().setAnnualRevenue(0);
+				}
 				if (smAppl.getSmCompanyBasic().getSmCompanyAddresses() != null
 						&& !smAppl.getSmCompanyBasic().getSmCompanyAddresses()
 								.isEmpty()) {
@@ -370,7 +373,6 @@ public class SmApplicationBackingBean extends
 												.getApplCategoryType(),
 										getManagedBean().getSmAppl()
 												.getSupplierType()));
-
 				if (getManagedBean().getSmAppl().getSmApplSectionReviews() == null) {
 					smAppl.setSmApplSectionReviews(new ArrayList<SmApplSectionReview>());
 				}
@@ -4319,7 +4321,6 @@ public class SmApplicationBackingBean extends
 
 	public void handleSupDocFileAttachment(FileUploadEvent event) {
 		System.out.println("********handleFileAttachment********");
-		FacesScopes facesScopes = new FacesScopes();
 		if (event.getFile() != null) {
 			System.out.println("***** File attached *******"
 					+ event.getFile().getFileName());
@@ -4336,14 +4337,16 @@ public class SmApplicationBackingBean extends
 								.getSmApplSupportDocs()
 								.indexOf(getManagedBean().getSupportDoc()),
 								getManagedBean().getSupportDoc());
-				String filePath = "/" + Calendar.getInstance().get(Calendar.YEAR) + "/SM/" + getManagedBean().getSmAppl().getApplNo() + "/SD/";
+				String filePath = "/"
+						+ Calendar.getInstance().get(Calendar.YEAR) + "/SM/"
+						+ getManagedBean().getSmAppl().getApplNo() + "/SD/";
 				for (SmApplSupportDoc docs : getManagedBean().getSmAppl()
 						.getSmApplSupportDocs()) {
 					System.out.println(" *** The name is ****"
 							+ docs.getSmApplDocFiles().get(0).getFileName());
 					docs.getSmApplDocFiles().get(0).setFilePath(filePath);
 				}
-				
+
 				commonUploadFile(event, filePath);
 			}
 		}

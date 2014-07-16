@@ -56,108 +56,55 @@ import com.liferay.portal.model.Role;
 @ManagedBean(name = "smApplMB")
 @SessionScoped
 public class SmApplicationManagedBean extends BaseManagedBean {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-
 	private SmAppl smAppl;
-
 	private SmSupplier smSupplier;
-
 	private int tabActiveIndex;
-
 	private SmSupplierBranch selectedBranch;
-
 	private SmSupplierBranch selectedBranchPrev;
-
 	private int selectedBranchIndex;
-
 	private List<SmSupplierBranch> selectedBranches;
-
 	private SmAssociateCompany selectedAssocCompany;
-
 	private List<SmAssociateCompany> selectedAssocCompanies;
-
 	private List<SmSupplierCert> selectedCertList;
-
 	private SmSupplierCert selectedCert;
-
 	private List<SmAssociationBody> selectedAssocBodyList;
-
 	private SmAssociationBody selectedAssocBody;
-
 	private List<SmCompanyExperience> selectedCompanyExperiences;
-
 	private SmCompanyExperience selectedCompanyExperience;
-
 	private String selectedParentCat;
-
 	private String selectedChildCat;
-
 	private String selectedSubChildCat;
-
 	private List<PmCategoryL1> defaultParentCatList;
-
 	private SmSupplierCategory selectedCategory;
-
 	private List<SmSupplierCategory> selectedCategories;
-
 	private List<SmSupplierCategory> deleteCategoryList;
-
 	private List<PmCategoryL1> supplierParentCatList;
-
 	private List<PmCategoryL2> supplierChildCatList;
-
 	private List<PmCategoryL3> supplierSubChildCatList;
-
 	private List<PmCategoryL2> comExpChildCatList;
-
 	private List<PmCategoryL3> comExpSubChildCatList;
-
 	private SmAddress defaultAddr;
-
 	private SmFacility selectedFactoryFacility;
-
 	private List<SmFacility> selectedFactoryFacilities;
-
 	private List<SmFacility> applFactoryFacilities;
-
 	private SmFacility selectedWorkShopFacility;
-
 	private List<SmFacility> selectedWorkShopFacilities;
-
 	private List<SmFacility> applWorkShopFacilities;
-
 	private SmFacility selectedDockyardFacility;
-
 	private List<SmFacility> selectedDockyardFacilities;
-
 	private List<SmFacility> applDockyardFacilities;
-
 	private SmFacility selectedStoreFacility;
-
 	private List<SmFacility> selectedStoreFacilities;
-
 	private List<SmFacility> applStoreFacilities;
-
 	private List<SmManufacturingDtl> selectedManufacturingList;
-
 	private SmManufacturingDtl selectedManufacturer;
-
 	private List<SmMachineDtl> selectedMachineList;
-
 	private SmMachineDtl selectedMachine;
-
 	private SmEquityCompany selectedEquityCompany;
-
 	private List<SmEquityCompany> selectedEquityCompanies;
-
 	private List<SmPersonnel> smapplShareHolders;
-
 	private List<SmPersonnel> selectedShareHolders;
-
 	private SmPersonnel selectedShareHolder;
 
 	private List<SmStaffExperience> selectedShrHldrJobFunctions;
@@ -168,90 +115,50 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private SmRelatedCompany selectedRelatedCompany;
 	private List<SmStaffAcademic> selectedShrHldrAcademics;
 	private SmStaffAcademic selectedStaffAcademic;
-
 	private boolean valueReqd;
-
 	private boolean showParentMsg;
-
 	private SmPersonnelAddress shareHolderPermAddr;
-
 	private SmPersonnelAddress shareHolderMailAddr;
-
 	private SmPersonnelAddress shareHolderResdAddr;
-
 	private SmPersonnelAddress shareHolderOffAddr;
-
-	// private SmStaffAcademic shareHolderAcademics;
-	// Personnel Info
-	// private List<SmPersonnel> smapplAuthPersonnels;
-
 	private List<SmPersonnel> selectedPersonnels;
-
 	private SmPersonnel selectedPersonnel;
-
 	private SmPersonnel addrUpdatePersonnel;
-
 	private List<SmStaffExperience> selectedPersJobFunctions;
 	private List<SmAssociationBody> selectedPersProfBodies;
 	private List<SmRelatedCompany> selectedPersRelatedCompanies;
 	private List<SmStaffAcademic> selectedPersAcademics;
-
 	private String supplierRemarks;
 
 	private String businessTypeVal;
 	private String personnelInfoHeader;
 	// Bank Info
 	private Long[] chequeSingPerId;
-
 	private Long selBankBranchId;
-
 	private SmSupplierBank selectedBank;
-
 	private SmSupplierBank selectedSignatoryBankAcct;
-
 	private List<SmSupplierBank> selectedBanks;
-
 	private String delPendAckMsg;
-
 	private boolean poUser;
-
 	private boolean supplierUser;
-
 	private boolean approverUser;
-
 	private String decisionAckMsg;
-
 	// TODO change the type later
 	private List<SvcTemplateBean> selectedTemplateList;
-
 	private String[] bpmActions;
-
 	private String selectedBpmAction;
-
 	private String taskId;
-
 	private String headerMsg;
-
 	private String poSiteVisitType;
-
 	private boolean testBlock;
-
 	private int maxReviewCount;
-
 	private int authPerCount;
-
 	private SmApplSectionReview poSecReview;
-
 	private SmApplSectionReview apprvrSecReview;
-
 	private boolean termsAccepted;
-
 	private String newSupplierType;
-
 	private String catTypeConfirm;
-
 	private SmFacility basicCompanyFacility;
-
 	private SmApplSupportDoc supportDoc;
 	// Address fields for all the forms
 	private List<PmEduField> eduFieldList;
@@ -336,27 +243,16 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<PmStatusDesc> regStatusDescList;
 
 	private String currentStatus;
-
 	private Long[] reasonId;
-
 	private SmPersonnleCalcVO personCalc;
-
 	private BigDecimal equiPerCapTotal;
-
 	private BigDecimal equiCompCapTotal;
-
 	private boolean validResubmit;
-
 	private boolean draftedAppl;
-
 	private String currentPageType;
-
 	private boolean redirectToPersonPage;
-
 	private PmParameter perIdTypeParam;
-
 	private String facilityType;
-
 	private PmCountry defPmCountry;
 
 	public SmApplicationManagedBean() {
@@ -391,32 +287,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		} else {
 			System.out.println("  *** UNKNOWN USER ****");
 		}
-		// if (sc.getUserScreenName().equalsIgnoreCase("user026")) {
-		// setPoUser(true);
-		// }
-		// if(sc.getUserScreenName().equalsIgnoreCase("user011")){
-		// setSupplierUser(true);
-		// }else if(sc.getUserScreenName().equalsIgnoreCase("user027")){
-		// setPoUser(true);
-		// }else if(sc.getUserScreenName().equalsIgnoreCase("user028")){
-		// setApproverUser(true);
-		// }
-		// if (roleNames.contains("HQ_PO")) {
-		// setPoUser(true);
-		// } else if (roleNames.contains("HQ_REG_APPROVER")) {
-		// setApproverUser(true);
-		// } else if (roleNames.contains("SUPPLIER_ADMIN")
-		// || roleNames.contains("SUPPLIER_USER")) {
-		// setSupplierUser(true);
-		//
-		// } else {
-		// System.out.println("****** UNKNOWN ROLE ****** ");
-		// }
+		if (sc.getUserScreenName().equalsIgnoreCase("user026")) {
+			setPoUser(true);
+		}
 
 		System.out.println("PO USER === >> " + isPoUser());
 		System.out.println("APPROVER USER === >> " + isApproverUser());
 		System.out.println("NORMAL USER === >> " + isSupplierUser());
-
 		defaultAddr = new SmAddress();
 		defaultAddr.setPmCity(new PmCity());
 		defaultAddr.setPmDistrict(new PmDistrict());
@@ -529,15 +406,10 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 		// Dummy data end
 
-		// defaultParentCatList = new ArrayList<PmCategoryL1>();
-		// defaultParentCatList.add(p1);
-		// defaultParentCatList.add(p2);
-
 		supplierParentCatList = new ArrayList<PmCategoryL1>();
 		supplierChildCatList = new ArrayList<PmCategoryL2>();
 		supplierSubChildCatList = new ArrayList<PmCategoryL3>();
 		// For CategoryCodes End
-
 		testBlock = Boolean.TRUE;
 		personCalc = new SmPersonnleCalcVO();
 		// setdefault panel names
