@@ -83,26 +83,12 @@
         <h:outputText value="Catalogue User" rendered="#{personnel.epRole eq 'CM_USER'}"/>
        </p:column>
        
-       <p:column headerText="#{lbl['lbl.sm.userprofile.assignedsoftcert']}" > 
-        <h:outputText value="Requested" rendered="#{personnel.softcertFlg eq '2'}"/>
-        <h:outputText value="Assigned" rendered="!#{personnel.softcertFlg eq '1'}"/>
-        <h:outputText value="Not assigned" rendered="!#{personnel.softcertFlg eq '0'}"/>
-       </p:column>
-       
-       <p:column headerText="#{lbl['lbl.sm.userprofile.softcertexpirationdate']}" > 
-        <h:outputText />
-       </p:column>
-       
-       <p:column headerText="#{lbl['lbl.sm.userprofile.iscontractsigner']}" > 
-        <h:outputText value="Yes" rendered="#{personnel.contractSigner}"/>
-        <h:outputText value="No" rendered="!#{personnel.contractSigner}"/>
-       </p:column>
-    <p:column headerText="#{lbl['lbl.sm.userprofile.action']}" >
-    	<p:commandLink title="Edit" ajax="false"
-				action="#{smPersonnelBackingBean.navigateToUpdateUserPage(personnel.personnelId)}">
-			<p:graphicImage value="/resources/ep/images/design/edit.png"></p:graphicImage>
-		</p:commandLink>
-	</p:column>
+	    <p:column headerText="#{lbl['lbl.sm.userprofile.action']}" >
+	    	<p:commandLink title="Edit" ajax="false"
+					action="#{smPersonnelBackingBean.navigateToUpdateUserPage(personnel.personnelId)}">
+				<p:graphicImage value="/resources/ep/images/design/edit.png"></p:graphicImage>
+			</p:commandLink>
+		</p:column>
      </p:dataTable>
 	</p:panel>
 	
