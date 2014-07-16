@@ -39,7 +39,8 @@
 				<f:facet name="header">
 					#{lbl['lbl.cm.price']}
 				</f:facet>
-				<p:inputText value="#{zPromotion.price}" size="10" readonly="true">
+				<p:inputText value="#{zPromotion.price}" size="10" readonly="true" style="text-align:right">
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</p:inputText>
 			</p:column>
 
