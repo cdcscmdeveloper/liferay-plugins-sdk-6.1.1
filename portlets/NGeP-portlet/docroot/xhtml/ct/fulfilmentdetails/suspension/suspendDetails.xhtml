@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<p:panel id="fd" header="#{lbl['lbl.ct.panel.name']}" toggleable="true" collapsed="false" toggleSpeed="500">
 		<h:panelGrid columns="2" style="width:100%;" styleClass="top-aligned-columns">
-		   <h:panelGrid columns="4" style="width:100%;" columnClasses="columnWidth15,columnWidth20,columnWidth20,columnWidth20">
+		   <h:panelGrid columns="4" style="width:950px;" columnClasses="columnWidth150,columnWidth200,columnWidth150,columnWidth200">
 		      <p:outputLabel id="cno" value="#{lbl['lbl.ct.cno']}" />
 			  <p:inputText for="cno" value="#{suspensionBackingBean.managedBean.ctContract.contractNo}" 
 			     disabled="true" style="width:170px;" />
@@ -48,7 +48,7 @@
 		    <h:panelGrid>
 			<p:inputTextarea id="contractName"
 				value="#{suspensionBackingBean.managedBean.ctContract.contractName}"
-				required="false" rows="3" style="width:170px;" disabled="true"
+				required="false" rows="3" style="width:170px;margin-bottom: 5px;" disabled="true"
 				autoResize="false" />	
 			</h:panelGrid>	
 			<p:outputLabel id="astatus1" value="#{lbl['lbl.ct.ag.agstatus']}" rendered="#{suspensionBackingBean.managedBean.ctContract.agreement and 
@@ -60,7 +60,6 @@
 		<h:panelGrid  style="width:180px;">
 		   <h:panelGrid columns="3">
 			 <p:selectBooleanCheckbox value="#{suspensionBackingBean.managedBean.contractVer.ctContractValue.concession}" disabled="true">
-			    <p:ajax event="change" update=":form:justificationPanel,:form:exemptId" listener="#{suspensionBackingBean.chkJustificationAction}" process="@this"/> 
 			 </p:selectBooleanCheckbox>
 			 <p:spacer width="2" />
 			 <p:outputLabel value="#{lbl['lbl.ct.chkbx.concession']}" />
@@ -84,8 +83,7 @@
 		   </h:panelGrid>	
 		   <h:panelGrid columns="3">
 			  <p:selectBooleanCheckbox id="exemptId" value="#{suspensionBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt}" 
-			    disabled="true" style="text-align:top;">
-			     <p:ajax event="change" update=":form:justificationPanel" listener="#{suspensionBackingBean.chkJustificationAction}" process="@this"/> 
+			    disabled="true" style="text-align:top;"> 
 			  </p:selectBooleanCheckbox>
 			  <p:spacer width="2" />	
 			  <p:outputLabel value="#{lbl['lbl.ct.chkbx.ap201']}" style="text-align:top;" />
@@ -98,20 +96,17 @@
 		   </h:panelGrid>	
 	    </h:panelGrid>
 	</h:panelGrid>
-	<p:outputPanel id="justificationPanel">
-	 <h:panelGrid columns="2" style="width:83%;" columnClasses="columnWidth20" 
+	 <h:panelGrid columns="2" style="width:950px;"  styleClass="top-aligned-columns" columnClasses="columnWidth200"
 	    rendered="#{suspensionBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt or 
 	       suspensionBackingBean.managedBean.contractVer.ctContractValue.concession}">
-         <h:panelGroup>
-		    <div style="height:65px; vertical-align:top;">
-			   <p:outputLabel for="justificationLbl" value="#{lbl['lbl.ct.justification']}" />
-		    </div>
-	     </h:panelGroup>
+	         <h:panelGrid columns="2" style="float:right;">
+		    	<p:outputLabel value="*" styleClass="mandatory" />
+			   <p:outputLabel for="justificationLbl" style="float:right;" value="#{lbl['lbl.ct.justification']}" />
+			  </h:panelGrid>
 	  <h:panelGrid>
 	    <p:inputTextarea id="justificationLbl" value="#{suspensionBackingBean.managedBean.contractVer.ctContractValue.justification}"
-		  rows="3" style="width:700px;"  disabled="true" autoResize="false" />	
+		  rows="3" style="width:650px;"  disabled="true" autoResize="false" />	
 	  </h:panelGrid>		
     </h:panelGrid> 
-  </p:outputPanel>
  </p:panel>
 </ui:composition>
