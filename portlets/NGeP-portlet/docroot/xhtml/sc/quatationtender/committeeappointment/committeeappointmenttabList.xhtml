@@ -9,7 +9,8 @@
 
 		<ui:include src="addspecificationcommittee.xhtml" />
 
-		<p:tabView id="tabView" orientation="top" var="committeeApproval" cache="false"
+		<p:tabView id="tabView" orientation="top" var="committeeApproval"
+			dynamic="true"
 			activeIndex="#{qTCommitteBackingBean.managedBean.subTabIndex}"
 			value="#{qTCommitteBackingBean.managedBean.scCommitteeMemberTabList}">
 

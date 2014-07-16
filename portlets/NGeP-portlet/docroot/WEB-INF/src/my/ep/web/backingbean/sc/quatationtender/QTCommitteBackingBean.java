@@ -478,8 +478,6 @@ public class QTCommitteBackingBean extends
 		for(ScCommitteeMember member : bean.getMembers()) {
 			bean.getScQtCommittee().getScCommittee().getScCommitteeMembers().remove(member);
 		}
-		getManagedBean().getScCommitteeMemberTabList().add(this.getManagedBean().getSubTabIndex(), bean);
-		
 		
 		/*//List<ScCommitteeMember> selectedList = this.getManagedBean().getSelectedCommitteMemebers();
 		//System.out.println("Index : " + this.getManagedBean().getSubTabIndex());
