@@ -579,7 +579,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			catalogueSO = null;
 		}	
 
-		return "addCatalogItem";
+		//return "addCatalogItem";
+		return "editCatalogItem";
 
 	}
 
@@ -595,8 +596,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		this.getManagedBean().setTabActiveIndex(4);
 		this.getManagedBean().setDisplayCatalogue(true);
 		this.getManagedBean().setPreviousScreen(1);//catMaintenance
-		return "addCatalogItem";
-
+		//return "addCatalogItem";
+		return "editCatalogItem";
 	}
 
 	public String navigateToExpiredItemDet(int index) {
@@ -611,8 +612,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		this.getManagedBean().setTabActiveIndex(5);
 		this.getManagedBean().setDisplayCatalogue(true);
 		this.getManagedBean().setPreviousScreen(1);//catMaintenance
-		return "addCatalogItem";
-
+		//return "addCatalogItem";
+		return "editCatalogItem";
 	}
 
 	public String navigateToApprovalItemDet(int index) {
@@ -674,6 +675,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}	
 		
 		return "addCatalogItem";
+		//return "editCatalogItem";
 	}
 
 	public String navigateToApprovedItemDet(int index) {
@@ -689,6 +691,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		this.getManagedBean().setDisplayCatalogue(true);
 		this.getManagedBean().setPreviousScreen(1);//catMaintenance
 		return "addCatalogItem";
+		//return "editCatalogItem";
 
 	}
 
@@ -751,8 +754,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			statusSO = null;
 		}
 
-		return "addCatalogItem";
-
+		//return "addCatalogItem";
+		return "editCatalogItem";
 	}
 
 	public String navigateToSupplierItemDet(VCmSupplierItem supplierItem) {
@@ -776,9 +779,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			resDTO = catalogueSO.retrieveSupplierZoneBySuppId(reqDTO);
 			this.getManagedBean().setSupplierZoneList(resDTO.getSupplierZoneLs());
 			
-			//allow view only
-			
-			if(this.getManagedBean().getSelectedMaintainItem().getzStdPrices()!=null)
+			/*if(this.getManagedBean().getSelectedMaintainItem().getzStdPrices()!=null)
 				for(CmZonalStandardPricing a : this.getManagedBean().getSelectedMaintainItem().getzStdPrices()){
 					a.setStandardDisabled(true);
 					a.setDisplayAction(false);
@@ -799,7 +800,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings()!=null)
 				for(CmPromotionTierPricing a : this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings()){
 					a.setStandardDisabled(true);
-				}
+				}*/
 			System.out.println("*****************end********************");
 			
 		} catch (Exception e) {
@@ -827,6 +828,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		} else {
 			price.setStand_group_id(1);
 		}
+		price.setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
 		this.getManagedBean().getSelectedMaintainItem().getCmTierPricings()
 				.add(price);
 	}
@@ -835,7 +837,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 		log.debug("*****addNewPromotionTierPricing*****");
 		CmPromotionTierPricing price = new CmPromotionTierPricing();
-
+		price.setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
 		this.getManagedBean().getSelectedMaintainItem()
 				.getCmPromotionTierPricings().add(price);
 	}
@@ -856,7 +858,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		} else {
 			price.setStand_group_id(1);
 		}
-
+		price.setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
 		this.getManagedBean().getSelectedMaintainItem()
 				.getCmZonalTierPricings().add(price);
 
@@ -865,7 +867,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	public void addNewZonalPromotionTierPricing() {
 
 		CmZonalPromotionTierPricing price = new CmZonalPromotionTierPricing();
-
+		price.setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
 		this.getManagedBean().getSelectedMaintainItem()
 				.getCmZonalPromotionTierPricings().add(price);
 
@@ -874,7 +876,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	public void addNewZonalStandardPricing() {
 
 		CmZonalStandardPricing price = new CmZonalStandardPricing();
-
+		price.setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
 		this.getManagedBean().getSelectedMaintainItem().getzStdPrices()
 				.add(price);
 
@@ -1570,7 +1572,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,MessageUtils.getMessage(MessageConst.ERROR_715009, 
 							new String[]{ResourceBundleUtils.getMessage("lbl.cm.zonal",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())},
 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-					return "addCatalogView";
+					return "editCatalogItem";
 					}
 			}
 			//Zonal Promotion Pricing
@@ -1580,7 +1582,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,MessageUtils.getMessage(MessageConst.ERROR_715009, 
 							new String[]{ResourceBundleUtils.getMessage("lbl.cm.zonal",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())},
 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-					return "addCatalogView";
+					return "editCatalogItem";
 					}
 			}
 			//Zonal Tier Pricing
@@ -1590,7 +1592,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,MessageUtils.getMessage(MessageConst.ERROR_715009, 
 							new String[]{ResourceBundleUtils.getMessage("lbl.cm.zonal.tier",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())},
 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-					return "addCatalogView";
+					return "editCatalogItem";
 					}
 			}
 			//Zonal Tier Promotion Pricing
@@ -1600,7 +1602,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,MessageUtils.getMessage(MessageConst.ERROR_715009, 
 							new String[]{ResourceBundleUtils.getMessage("lbl.cm.zonal.tier",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())},
 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-					return "addCatalogView";
+					return "editCatalogItem";
 					}
 			}
 
@@ -1622,7 +1624,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 									""));
 							this.getManagedBean().setPricingTabIndex(1);
 							this.getManagedBean().setTierPricingIndex(1);
-							return "addCatalogView";
+							return "editCatalogItem";
 						}
 					}
 					for (int i = 0; i < sortedTier.size(); i++) {
@@ -1638,7 +1640,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 									""));
 							this.getManagedBean().setPricingTabIndex(1);
 							this.getManagedBean().setTierPricingIndex(1);
-							return "addCatalogView";
+							return "editCatalogItem";
 						}
 					}
 					perviouslyList = sortedTier;
@@ -1662,7 +1664,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 									""));
 							this.getManagedBean().setPricingTabIndex(3);
 							this.getManagedBean().setZonalTierPricingIndex(0);
-							return "addCatalogView";
+							return "editCatalogItem";
 						}
 					}
 					for (int i = 0; i < sortedTier.size(); i++) {
@@ -1677,7 +1679,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 													""));
 							this.getManagedBean().setPricingTabIndex(3);
 							this.getManagedBean().setZonalTierPricingIndex(0);
-							return "addCatalogView";
+							return "editCatalogItem";
 						}
 					}
 					perviouslyList = sortedTier;
@@ -1696,7 +1698,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 								"Zonal Promotion Start date Overlapping", ""));
 						this.getManagedBean().setPricingTabIndex(2);
 						this.getManagedBean().setZonalPricingIndex(1);
-						return "addCatalogView";
+						return "editCatalogItem";
 					}
 				}
 				if (standard.getStartDate().compareTo(standard.getEndDate()) > 0) {
@@ -1709,7 +1711,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 											""));
 					this.getManagedBean().setPricingTabIndex(2);
 					this.getManagedBean().setZonalPricingIndex(1);
-					return "addCatalogView";
+					return "editCatalogItem";
 				}
 				previousZPromotionObj = standard;
 			}
@@ -1734,7 +1736,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 														""));
 								this.getManagedBean().setPricingTabIndex(3);
 								this.getManagedBean().setZonalTierPricingIndex(0);
-								return "addCatalogView";
+								return "editCatalogItem";
 							}
 						}
 						if (tier.getFromQty() >= tier.getToQty()) {
@@ -1747,7 +1749,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 													""));
 							this.getManagedBean().setPricingTabIndex(3);
 							this.getManagedBean().setZonalTierPricingIndex(0);
-							return "addCatalogView";
+							return "editCatalogItem";
 						}
 						previousObj = tier;
 					}
@@ -1767,7 +1769,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 													" Zonal Standard Tier Start date Overlapping",
 													""));
 							this.getManagedBean().setPricingTabIndex(3);
-							return "addCatalogView";
+							return "editCatalogItem";
 						}
 					}
 					for (int i = 0; i < sortedTier.size(); i++) {
@@ -1781,7 +1783,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 													" Zonal Standard Tier End date must be greater than Zonal Standard Tier start date",
 													""));
 							this.getManagedBean().setPricingTabIndex(3);
-							return "addCatalogView";
+							return "editCatalogItem";
 						}
 					}
 					perviouslyList = sortedTier;
@@ -1806,7 +1808,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 										" Standard Tier Overlapping", ""));
 								this.getManagedBean().setPricingTabIndex(1);
 								this.getManagedBean().setTierPricingIndex(0);
-								return "addCatalogView";
+								return "editCatalogItem";
 							}
 						}
 						if (tier.getFromQty() >= tier.getToQty()) {
@@ -1819,7 +1821,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 													""));
 							this.getManagedBean().setPricingTabIndex(1);
 							this.getManagedBean().setTierPricingIndex(0);
-							return "addCatalogView";
+							return "editCatalogItem";
 						}
 						previousObj = tier;
 					}
@@ -1840,7 +1842,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 													""));
 							this.getManagedBean().setPricingTabIndex(1);
 							this.getManagedBean().setTierPricingIndex(0);
-							return "addCatalogView";
+							return "editCatalogItem";
 						}
 					}
 					for (int i = 0; i < sortedTier.size(); i++) {
@@ -1857,7 +1859,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 													""));
 							this.getManagedBean().setPricingTabIndex(1);
 							this.getManagedBean().setTierPricingIndex(0);
-							return "addCatalogView";
+							return "editCatalogItem";
 						}
 					}
 					perviouslyList = sortedTier;
@@ -1875,7 +1877,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
 
-				return "addCatalogView";
+				return "editCatalogItem";
 			}*/
 
 			for (CmImage image : this.getManagedBean().getSelectedMaintainItem().getCmImages()) {
@@ -2059,7 +2061,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 									MessageUtils.BUNDLE_COMMON_MESSAGES,
 									new FacesScopes().getUserLocale())));
 
-			return "addCatalogView";
+			return "editCatalogItem";
 		} finally {
 			catalogueSO = null;
 		}
@@ -2153,7 +2155,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 										MessageConst.ERROR_715007,
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
-				return "addCatalogView";
+				return "editCatalogItem";
 			}
 			
 			//Standard Pricing
@@ -2166,7 +2168,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 										MessageConst.ERROR_715008,
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
-				return "addCatalogView";
+				return "editCatalogItem";
 			}
 
 			//Tier Pricing
@@ -2177,7 +2179,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,MessageUtils.getMessage(MessageConst.ERROR_715009, 
 							new String[]{ResourceBundleUtils.getMessage("lbl.cm.tier",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())},
 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-					return "addCatalogView";
+					return "editCatalogItem";
 					}
 			}
 			//Tier Promotion Pricing
@@ -2188,7 +2190,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,MessageUtils.getMessage(MessageConst.ERROR_715009, 
 							new String[]{ResourceBundleUtils.getMessage("lbl.cm.tier",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())},
 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-					return "addCatalogView";
+					return "editCatalogItem";
 					}
 			}
 			//Zonal Pricing
@@ -2199,7 +2201,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,MessageUtils.getMessage(MessageConst.ERROR_715009, 
 							new String[]{ResourceBundleUtils.getMessage("lbl.cm.zonal",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())},
 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-					return "addCatalogView";
+					return "editCatalogItem";
 					}
 			}
 			//Zonal Promotion Pricing
@@ -2210,7 +2212,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,MessageUtils.getMessage(MessageConst.ERROR_715009, 
 							new String[]{ResourceBundleUtils.getMessage("lbl.cm.zonal",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())},
 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-					return "addCatalogView";
+					return "editCatalogItem";
 					}
 			}
 			//Zonal Tier Pricing
@@ -2222,7 +2224,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,MessageUtils.getMessage(MessageConst.ERROR_715009, 
 							new String[]{ResourceBundleUtils.getMessage("lbl.cm.zonal.tier",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())},
 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-					return "addCatalogView";
+					return "editCatalogItem";
 					}
 			}
 			//Zonal Tier Promotion Pricing
@@ -2234,7 +2236,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,MessageUtils.getMessage(MessageConst.ERROR_715009, 
 							new String[]{ResourceBundleUtils.getMessage("lbl.cm.zonal.tier",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())},
 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-					return "addCatalogView";
+					return "editCatalogItem";
 					}
 			}
 			
@@ -2259,7 +2261,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 										" Standard Tier Overlapping", ""));
 								this.getManagedBean().setPricingTabIndex(1);
 								this.getManagedBean().setTierPricingIndex(0);
-								return "addCatalogView";
+								return "editCatalogItem";
 							}
 						}
 						if (tier.getFromQty() >= tier.getToQty()) {
@@ -2272,7 +2274,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 													""));
 							this.getManagedBean().setPricingTabIndex(1);
 							this.getManagedBean().setTierPricingIndex(0);
-							return "addCatalogView";
+							return "editCatalogItem";
 						}
 						previousObj = tier;
 					}
@@ -2293,7 +2295,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 													""));
 							this.getManagedBean().setPricingTabIndex(1);
 							this.getManagedBean().setTierPricingIndex(0);
-							return "addCatalogView";
+							return "editCatalogItem";
 						}
 					}
 					for (int i = 0; i < sortedTier.size(); i++) {
@@ -2310,7 +2312,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 													""));
 							this.getManagedBean().setPricingTabIndex(1);
 							this.getManagedBean().setTierPricingIndex(0);
-							return "addCatalogView";
+							return "editCatalogItem";
 						}
 					}
 					perviouslyList = sortedTier;
@@ -2335,7 +2337,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 									""));
 							this.getManagedBean().setPricingTabIndex(1);
 							this.getManagedBean().setTierPricingIndex(1);
-							return "addCatalogView";
+							return "editCatalogItem";
 						}
 					}
 					for (int i = 0; i < sortedTier.size(); i++) {
@@ -2351,7 +2353,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 									""));
 							this.getManagedBean().setPricingTabIndex(1);
 							this.getManagedBean().setTierPricingIndex(1);
-							return "addCatalogView";
+							return "editCatalogItem";
 						}
 					}
 					perviouslyList = sortedTier;
@@ -2370,7 +2372,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 								"Zonal Promotion Start date Overlapping", ""));
 						this.getManagedBean().setPricingTabIndex(2);
 						this.getManagedBean().setZonalPricingIndex(1);
-						return "addCatalogView";
+						return "editCatalogItem";
 					}
 				}
 				if (standard.getStartDate().compareTo(standard.getEndDate()) > 0) {
@@ -2383,7 +2385,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 											""));
 					this.getManagedBean().setPricingTabIndex(2);
 					this.getManagedBean().setZonalPricingIndex(1);
-					return "addCatalogView";
+					return "editCatalogItem";
 				}
 				previousZPromotionObj = standard;
 			}
@@ -2408,7 +2410,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 														""));
 								this.getManagedBean().setPricingTabIndex(3);
 								this.getManagedBean().setZonalTierPricingIndex(0);
-								return "addCatalogView";
+								return "editCatalogItem";
 							}
 						}
 						if (tier.getFromQty() >= tier.getToQty()) {
@@ -2421,7 +2423,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 													""));
 							this.getManagedBean().setPricingTabIndex(3);
 							this.getManagedBean().setZonalTierPricingIndex(0);
-							return "addCatalogView";
+							return "editCatalogItem";
 						}
 						previousObj = tier;
 					}
@@ -2441,7 +2443,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 													" Zonal Standard Tier Start date Overlapping",
 													""));
 							this.getManagedBean().setPricingTabIndex(3);
-							return "addCatalogView";
+							return "editCatalogItem";
 						}
 					}
 					for (int i = 0; i < sortedTier.size(); i++) {
@@ -2455,7 +2457,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 													" Zonal Standard Tier End date must be greater than Zonal Standard Tier start date",
 													""));
 							this.getManagedBean().setPricingTabIndex(3);
-							return "addCatalogView";
+							return "editCatalogItem";
 						}
 					}
 					perviouslyList = sortedTier;
@@ -2478,7 +2480,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 									""));
 							this.getManagedBean().setPricingTabIndex(3);
 							this.getManagedBean().setZonalTierPricingIndex(0);
-							return "addCatalogView";
+							return "editCatalogItem";
 						}
 					}
 					for (int i = 0; i < sortedTier.size(); i++) {
@@ -2493,7 +2495,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 													""));
 							this.getManagedBean().setPricingTabIndex(3);
 							this.getManagedBean().setZonalTierPricingIndex(0);
-							return "addCatalogView";
+							return "editCatalogItem";
 						}
 					}
 					perviouslyList = sortedTier;
@@ -2563,7 +2565,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 									MessageUtils.BUNDLE_COMMON_MESSAGES,
 									new FacesScopes().getUserLocale())));
 
-			return "addCatalogView";
+			return "editCatalogItem";
 		} finally {
 			catalogueSO = null;
 		}
