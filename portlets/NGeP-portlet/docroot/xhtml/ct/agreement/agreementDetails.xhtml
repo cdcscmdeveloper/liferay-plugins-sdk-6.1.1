@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<p:panel id="fd" header="#{lbl['lbl.ct.panel.name']}" toggleable="true" collapsed="false" toggleSpeed="500">
 		<h:panelGrid columns="2" style="width:100%;" styleClass="top-aligned-columns">
-		   <h:panelGrid columns="4" style="width:100%;" columnClasses="columnWidth15,columnWidth30,columnWidth15,columnWidth30">
+		   <h:panelGrid columns="4" style="width:800px;" columnClasses="columnWidth150,columnWidth200,columnWidth150,columnWidth200">
 		      <p:outputLabel id="cno" value="#{lbl['lbl.ct.cno']}" />
 		      <p:commandLink value="#{agreementBackingBean.managedBean.ctContract.contractNo}" styleClass="blue_font"
 		     		action="#{agreementBackingBean.gotoContractView}" >
@@ -57,16 +57,16 @@
 		    <h:panelGrid>
 			<p:inputTextarea id="contractName"
 				value="#{agreementBackingBean.managedBean.ctContract.contractName}"
-				required="false" rows="3" cols="31" disabled="true" style="width:170px;margin-bottom: 5px;"
-				autoResize="false" />	
+				      rows="3" disabled="true" style="width:170px;margin-bottom: 5px;" autoResize="false" />	
 			</h:panelGrid>	
-			<p:outputLabel id="astatus1" value="#{lbl['lbl.ct.ag.agstatus']}" rendered="#{agreementBackingBean.managedBean.ctContract.agreement and 
-			   agreementBackingBean.managedBean.ctContract.zonalPricing}" />
+			<p:outputLabel id="astatus1" value="#{lbl['lbl.ct.ag.agstatus']}" 
+			   rendered="#{agreementBackingBean.managedBean.ctContract.agreement and  agreementBackingBean.managedBean.ctContract.zonalPricing}" />
+		
 			<p:inputText for="astatus1" style="width:170px;" disabled="true" 
-			  value="#{agreementBackingBean.getStatusDescById(agreementBackingBean.managedBean.ctContract.currentAgreement.status.statusId)}"
-			 rendered="#{agreementBackingBean.managedBean.ctContract.agreement and agreementBackingBean.managedBean.ctContract.zonalPricing}" />
+			     rendered="#{agreementBackingBean.managedBean.ctContract.agreement and agreementBackingBean.managedBean.ctContract.zonalPricing}"
+			     value="#{agreementBackingBean.getStatusDescById(agreementBackingBean.managedBean.ctContract.currentAgreement.status.statusId)}"/>
 	    </h:panelGrid>
-		<h:panelGrid  style="width:180px;">
+		<h:panelGrid  style="width:150px;">
 		   <h:panelGrid columns="3">
 			 <p:selectBooleanCheckbox value="#{agreementBackingBean.managedBean.contractVer.ctContractValue.concession}" disabled="true">
 			 </p:selectBooleanCheckbox>
@@ -105,21 +105,19 @@
 		   </h:panelGrid>
 	    </h:panelGrid>
 	</h:panelGrid>
-	<p:outputPanel id="justificationPanel">
-	 <h:panelGrid columns="2" style="width:100%;" columnClasses="columnWidth15" 
+	 <h:panelGrid columns="2" style="width:800px;" 
 	    rendered="#{agreementBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt or 
 	       agreementBackingBean.managedBean.contractVer.ctContractValue.concession}">
-         <h:panelGroup>
-		    <div style="height:70px; vertical-align:top;">
+	        <h:panelGroup>
+		    <div style="height:70px; width:157px; vertical-align:top;">
 			   <p:outputLabel id="justificationLbls" value="#{lbl['lbl.ct.justification']}" />
-		    </div>
-	     </h:panelGroup>
+			</div>
+		</h:panelGroup>
 	  <h:panelGrid columns="1">
 	    <p:inputTextarea id="justificationLbl" value="#{agreementBackingBean.managedBean.contractVer.ctContractValue.justification}"
-		  rows="4" style="width:640px;"  disabled="true" required="true" autoResize="false"></p:inputTextarea>	
+		  rows="4" style="width:570px;"  disabled="true" required="true" autoResize="false"></p:inputTextarea>	
 	  </h:panelGrid>		
     </h:panelGrid> 
-  </p:outputPanel>
  </p:panel>
 </ui:composition>
 	  
