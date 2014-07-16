@@ -3475,7 +3475,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		fc.getApplication()
 				.getNavigationHandler()
 				.handleNavigation(fc, null,
-						"addCatalogView.xhtml?faces-redirect=true");
+						"addCatalogEdit.xhtml?faces-redirect=true");
 
 	}
 
