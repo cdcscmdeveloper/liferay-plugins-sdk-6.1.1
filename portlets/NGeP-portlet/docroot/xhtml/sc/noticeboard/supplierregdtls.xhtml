@@ -13,9 +13,9 @@
 
 				<p:dataTable var="brfsitdtl" value="#{bsvDetails.briefingList}"
 					selection="#{bsvDetails.selectedBriefingDtls}"
-					rowKey="#{brfsitdtl}" selectionMode="multiple" >
+					rowKey="#{brfsitdtl}"  >
 
-					<p:column style="width:2%" />
+					<p:column style="width:2%" selectionMode="multiple"/>
 					<p:column headerText="#{lbl['lbl.qt.nb.description']}">
 						<h:outputText value="#{brfsitdtl.bsvDesc}" />
 					</p:column>
@@ -56,9 +56,9 @@
 
 				<p:dataTable var="brfsitdtl" value="#{bsvDetails.briefingList}"
 					selection="#{bsvDetails.selectedBriefingDtls}"
-					rowKey="#{brfsitdtl}" rowIndexVar="index" selectionMode="multiple">
+					rowKey="#{brfsitdtl}" rowIndexVar="index" >
 
-					<p:column  style="width:2%" />
+					<p:column  style="width:2%" selectionMode="multiple" />
 					<p:column headerText="#{lbl['lbl.qt.nb.description']}">
 						<h:outputText value="#{brfsitdtl.bsvDesc}" />
 					</p:column>
@@ -97,9 +97,9 @@
 
 				<p:dataTable var="sitevisitDtls" value="#{bsvDetails.sitevisitList}"
 					selection="#{bsvDetails.selectedSiteVisitDtls}"
-					rowKey="#{sitevisitDtls}" rowIndexVar="index" selectionMode="multiple">
+					rowKey="#{sitevisitDtls}" rowIndexVar="index">
 
-					<p:column style="width:2%" />
+					<p:column style="width:2%" selectionMode="multiple"/>
 
 					<p:column headerText="#{lbl['lbl.qt.nb.description']}">
 						<h:outputText value="#{sitevisitDtls.bsvDesc}" />
