@@ -297,7 +297,11 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			SupplierSearchResDTO smResDTO = supplierSearchSO
 					.retriveSupplierProfiles(supplierReqDTO);
 	
-			System.out.println("getSmSupplier"
+			if(smResDTO.getResultBean().getResultList().isEmpty()) {
+				throw new EpException(MessageConst.ERROR_721017);
+			}
+			
+			log.info("getSmSupplier: "
 					+ smResDTO.getResultBean().getResultList().get(0));
 	
 			CodificationBackingBean bb = new CodificationBackingBean();
@@ -431,8 +435,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 											.size() },
 									MessageUtils.BUNDLE_COMMON_MESSAGES,
 									new FacesScopes().getUserLocale())));
-		} catch (Exception e) {
-			e.printStackTrace();
+//		} catch (Exception e) {
+//			e.printStackTrace();
 		}finally {
 			catalogueSO = null;
 			supplierSearchSO = null;
