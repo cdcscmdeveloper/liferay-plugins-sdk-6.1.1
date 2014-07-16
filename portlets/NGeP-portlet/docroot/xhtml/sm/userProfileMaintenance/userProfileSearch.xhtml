@@ -64,17 +64,13 @@
         <h:outputText value="#{personnel.name}" />  
        </p:column>
        
-       <p:column headerText="#{lbl['lbl.sm.userprofile.rolesincompany']}" >
-        <h:outputText />  
-       </p:column>
-       
        <p:column headerText="#{lbl['lbl.sm.userprofile.nationality']}" >
         <h:outputText value="#{personnel.pmCountry.countryName}" />    
        </p:column>
     
        <p:column headerText="#{lbl['lbl.sm.userprofile.isauthorized']}" > 
-        <h:outputText value="Y" rendered="#{personnel.authorized}"/>
-        <h:outputText value="N" rendered="!#{personnel.authorized}"/>
+        <h:outputText value="Yes" rendered="#{personnel.authorized}"/>
+        <h:outputText value="No" rendered="!#{personnel.authorized}"/>
        </p:column>
        
        <p:column headerText="#{lbl['lbl.sm.userprofile.accountstatus']}" > 
@@ -83,12 +79,14 @@
        </p:column>
        
        <p:column headerText="#{lbl['lbl.sm.userprofile.eprole']}" > 
-        <h:outputText />
+        <h:outputText value="Supplier User" rendered="#{personnel.epRole eq 'BASIC_SUPPLIER_USER'}"/>
+        <h:outputText value="Catalogue User" rendered="#{personnel.epRole eq 'CM_USER'}"/>
        </p:column>
        
        <p:column headerText="#{lbl['lbl.sm.userprofile.assignedsoftcert']}" > 
-        <h:outputText value="Y" rendered="#{personnel.softcert}"/>
-        <h:outputText value="N" rendered="!#{personnel.softcert}"/>
+        <h:outputText value="Requested" rendered="#{personnel.softcertFlg eq '2'}"/>
+        <h:outputText value="Assigned" rendered="!#{personnel.softcertFlg eq '1'}"/>
+        <h:outputText value="Not assigned" rendered="!#{personnel.softcertFlg eq '0'}"/>
        </p:column>
        
        <p:column headerText="#{lbl['lbl.sm.userprofile.softcertexpirationdate']}" > 
@@ -96,8 +94,8 @@
        </p:column>
        
        <p:column headerText="#{lbl['lbl.sm.userprofile.iscontractsigner']}" > 
-        <h:outputText value="Y" rendered="#{personnel.contractSigner}"/>
-        <h:outputText value="N" rendered="!#{personnel.contractSigner}"/>
+        <h:outputText value="Yes" rendered="#{personnel.contractSigner}"/>
+        <h:outputText value="No" rendered="!#{personnel.contractSigner}"/>
        </p:column>
     <p:column headerText="#{lbl['lbl.sm.userprofile.action']}" >
     	<p:commandLink title="Edit" ajax="false"
