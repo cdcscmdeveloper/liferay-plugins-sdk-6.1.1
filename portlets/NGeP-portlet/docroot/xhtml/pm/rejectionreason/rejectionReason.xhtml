@@ -8,6 +8,9 @@ xmlns:p="http://primefaces.org/ui"
 xmlns:c="http://java.sun.com/jsp/jstl/core"
 >
 	<ui:define name="contentSection">
+		<f:event listener="#{rejectionReasonBackingBean.preLoading}" type="preRenderView" />
+		<!-- Validation Message -->
+		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 		<!-- Search -->
 		<ui:include src="rejectionReasonSearch.xhtml"/>
 		<!-- Result -->
