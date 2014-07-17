@@ -250,12 +250,6 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 						   }
 					   }
 				   }
-
-				   if(!getManagedBean().getCompareSuppliers().isEmpty() && getManagedBean().getCompareSuppliers().size() >0){
-					   if(getManagedBean().getSupplierList().isEmpty()){
-						   supplierListListener(getManagedBean().getCompareSuppliers());
-					   }
-				   }
 				   }
 
 			     }else {
@@ -279,8 +273,10 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 		this.getManagedBean().setScQuote(scQuote);
 		
 		// adding suppliers from catalogue compare page
-		if(!getManagedBean().getCompareSuppliers().isEmpty() &&getManagedBean().getCompareSuppliers().size()>0){
-			supplierListListener(getManagedBean().getCompareSuppliers());
+		if(!getManagedBean().getCompareSuppliers().isEmpty() && getManagedBean().getCompareSuppliers().size() >0){
+			if(getManagedBean().getSupplierList().isEmpty()){
+				supplierListListener(getManagedBean().getCompareSuppliers());
+			}
 		}
 		
 		getManagedBean().setLocLevelDropdown(getLocationLevelDropdown());
@@ -878,7 +874,10 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			getManagedBean().setByBusinessNature(Boolean.FALSE);
 		}
 		
-		getManagedBean().getScQuote().setJustificationType(new PmParameter());
+		if(getManagedBean().getScQuote().getJustificationType() == null){
+			getManagedBean().getScQuote().setJustificationType(new PmParameter());	
+		}
+		
 	}
 	
 	/**
@@ -1883,7 +1882,6 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 							LocationSingleton.getInstance().buildLocationTree(null, states,
 									districts, divisions, null,TplSpecZoneLoc.class));
 				}
-				getManagedBean().setScQuote(scQuote);
 				getManagedBean().getRequestNote().setPmOrgProfile(scQuote.getRequestNote().getPmOrgProfile());
 				// location level by default - district 
 				getManagedBean().setLocationLevel(ParameterConst.LOCATION_LEVEL_DISTRICT);
@@ -1898,13 +1896,9 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 					getManagedBean().setSupplierList(scQuote.getScQuoteSuppliers());
 				}
       
-				// remarks
-				//initializeRemarks(scQuote);
-				
+				getManagedBean().setScQuote(scQuote);
 				// duration calc
 				dateListener(getManagedBean().getDuration());
-				
-				getManagedBean().setScQuote(scQuote);
 				procurementTypeEvent();
 				getCurrentStatus(res.getDocStatus().longValue()); 
 				getManagedBean().setProcessName(res.getProcessName());
