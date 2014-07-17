@@ -3,6 +3,7 @@
  */
 package my.ep.web.managedbean.pm.common.rejectionreason;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -32,6 +33,9 @@ public class RejectionReasonManagedBean extends BaseManagedBean {
 	private List <PmSupplierReason> appTypeRestrictions;
 	private List <PmSupplierReason> comTypeRestrictions;
 	private List <PmSupplierReason> suppTypeRestrictions;
+	private List <PmSupplierReason> deleteAppTypeRestrictions;
+	private List <PmSupplierReason> deleteComTypeRestrictions;
+	private List <PmSupplierReason> deleteSuppTypeRestrictions;
 
 
 	/**
@@ -134,6 +138,54 @@ public class RejectionReasonManagedBean extends BaseManagedBean {
 	 */
 	public void setSuppTypeRestrictions(List<PmSupplierReason> suppTypeRestrictions) {
 		this.suppTypeRestrictions = suppTypeRestrictions;
+	}
+
+//	if(deleteTypeRestrictions==null){
+//		deleteTypeRestrictions = new ArrayList<PmSupplierReason>();
+//	}
+	/**
+	 * @return the deleteAppTypeRestrictions
+	 */
+	public List<PmSupplierReason> getDeleteAppTypeRestrictions() {
+		return deleteAppTypeRestrictions;
+	}
+
+	/**
+	 * @param deleteAppTypeRestrictions the deleteAppTypeRestrictions to set
+	 */
+	public void setDeleteAppTypeRestrictions(
+			List<PmSupplierReason> deleteAppTypeRestrictions) {
+		this.deleteAppTypeRestrictions = deleteAppTypeRestrictions;
+	}
+
+	/**
+	 * @return the deleteComTypeRestrictions
+	 */
+	public List<PmSupplierReason> getDeleteComTypeRestrictions() {
+		return deleteComTypeRestrictions;
+	}
+
+	/**
+	 * @param deleteComTypeRestrictions the deleteComTypeRestrictions to set
+	 */
+	public void setDeleteComTypeRestrictions(
+			List<PmSupplierReason> deleteComTypeRestrictions) {
+		this.deleteComTypeRestrictions = deleteComTypeRestrictions;
+	}
+
+	/**
+	 * @return the deleteSuppTypeRestrictions
+	 */
+	public List<PmSupplierReason> getDeleteSuppTypeRestrictions() {
+		return deleteSuppTypeRestrictions;
+	}
+
+	/**
+	 * @param deleteSuppTypeRestrictions the deleteSuppTypeRestrictions to set
+	 */
+	public void setDeleteSuppTypeRestrictions(
+			List<PmSupplierReason> deleteSuppTypeRestrictions) {
+		this.deleteSuppTypeRestrictions = deleteSuppTypeRestrictions;
 	}
 
 

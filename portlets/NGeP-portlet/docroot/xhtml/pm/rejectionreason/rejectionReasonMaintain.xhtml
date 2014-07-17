@@ -8,11 +8,15 @@ xmlns:p="http://primefaces.org/ui"
 xmlns:c="http://java.sun.com/jsp/jstl/core"
 >
 	<ui:define name="contentSection">
-		<!-- Validation Message -->
-		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
-		<!-- Header -->
-		<ui:include src="headerSection.xhtml"/>
-		<!-- Rejection Reason Details -->
-		<ui:include src="rejectionReasonDetails.xhtml"/>
+		<p:outputPanel id="opRejectReasonMaintain">
+			<!-- Validation Message -->
+			<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
+			
+			<!-- Header -->
+			<ui:include src="headerSection.xhtml"/>
+			
+			<!-- Rejection Reason Details -->
+			<ui:include src="rejectionReasonDetails.xhtml"/>
+		</p:outputPanel>
  	</ui:define>
 </ui:composition>

@@ -16,14 +16,15 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 					<br/>
 					<p:dataTable id="dtAppType" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
 						value="#{rejectionReasonBackingBean.managedBean.appTypeRestrictions}"
-						var="restrict">
-						<p:column style="width:2%" >
-							<p:selectBooleanCheckbox value="#{restrict.deleted}"/>
-						</p:column>	
-				        <p:column headerText="#{lbl['lbl.pm.application.type']}">  
+						selection="#{rejectionReasonBackingBean.managedBean.deleteAppTypeRestrictions}"
+						var="restrict" rowKey="#{restrict}">
+						<p:column selectionMode="multiple" disabledSelection="#{!restrict.brandNew}" style="width:2%" />
+						<p:ajax event="rowSelectCheckbox" />
+				        <p:column headerText="#{lbl['lbl.pm.application.type']}">
 					    	<p:selectOneMenu id="somAppType"  styleClass="ppDropDownWidthM"
 								value="#{restrict.restrType.parameterId}">
 								<f:selectItems  value="#{rejectionReasonBackingBean.applicationTypeOptions()}"/>
+								<p:ajax event="change" update="somAppType"/>
 							</p:selectOneMenu>
 				        </p:column>  
 				        <p:column headerText="#{lbl['lbl.pm.status']}">  
@@ -48,10 +49,10 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 					<br/>
 					<p:dataTable id="dtComType" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
 						value="#{rejectionReasonBackingBean.managedBean.comTypeRestrictions}"
-						var="restrict">
-						<p:column style="width:2%" >
-							<p:selectBooleanCheckbox value="#{restrict.deleted}" disabled="#{!restrict.isBrandNew}"/>
-						</p:column>	
+						selection="#{rejectionReasonBackingBean.managedBean.deleteComTypeRestrictions}"
+						var="restrict" rowKey="#{restrict}">
+						<p:column selectionMode="multiple" disabledSelection="#{!restrict.brandNew}" style="width:2%" />
+						<p:ajax event="rowSelectCheckbox" />
 				        <p:column headerText="#{lbl['lbl.pm.company.type']}">  
 					    	<p:selectOneMenu id="somAppType" styleClass="ppDropDownWidthM"
 								value="#{restrict.restrType.parameterId}">
@@ -80,10 +81,10 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 					<br/>
 					<p:dataTable id="dtSuppType" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
 						value="#{rejectionReasonBackingBean.managedBean.suppTypeRestrictions}"
-						var="restrict">
-						<p:column style="width:2%" >
-							<p:selectBooleanCheckbox value="#{restrict.deleted}"/>
-						</p:column>	
+						selection="#{rejectionReasonBackingBean.managedBean.deleteSuppTypeRestrictions}"
+						var="restrict" rowKey="#{restrict}">
+						<p:column selectionMode="multiple" disabledSelection="#{!restrict.brandNew}" style="width:2%" />
+						<p:ajax event="rowSelectCheckbox" />
 				        <p:column headerText="#{lbl['lbl.pm.supplier.type']}">  
 					    	<p:selectOneMenu id="somAppType" styleClass="ppDropDownWidthM"
 								value="#{restrict.restrType.parameterId}">
