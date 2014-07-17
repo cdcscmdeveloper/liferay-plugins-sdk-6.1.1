@@ -636,43 +636,45 @@ public class QTDetailBackingBean extends
 		}
 		// Code for to update the supplier qualification criteria
 		List<ScQtCategory> categoryList = new ArrayList<ScQtCategory>();
-		if (this.getManagedBean().getQt().getQtType().equals("O")) {
-			List<ScQtCategory> openList = this.getManagedBean()
-					.getQtCategoryList();
-			if (openList != null && !openList.isEmpty()) {
-				for (ScQtCategory scQtCategory : openList) {
-					scQtCategory.setPmCategoryL1(scQtCategory.getPmCategoryL3()
-							.getPmCategoryL2().getPmCategoryL1());
-					scQtCategory.setPmCategoryL2(scQtCategory.getPmCategoryL3()
-							.getPmCategoryL2());
-					scQtCategory.setScQt(this.getManagedBean().getQt());
-					setUserDetails(scQtCategory);
-					categoryList.add(scQtCategory);
+		if(!this.getManagedBean().getQt().isPanel()) {
+			if (this.getManagedBean().getQt().getQtType().equals("O")) {
+				List<ScQtCategory> openList = this.getManagedBean()
+						.getQtCategoryList();
+				if (openList != null && !openList.isEmpty()) {
+					for (ScQtCategory scQtCategory : openList) {
+						scQtCategory.setPmCategoryL1(scQtCategory.getPmCategoryL3()
+								.getPmCategoryL2().getPmCategoryL1());
+						scQtCategory.setPmCategoryL2(scQtCategory.getPmCategoryL3()
+								.getPmCategoryL2());
+						scQtCategory.setScQt(this.getManagedBean().getQt());
+						setUserDetails(scQtCategory);
+						categoryList.add(scQtCategory);
+					}
+					scQt.setScQtCategorys(categoryList);
+				} else {
+					String category = CommonMethod.getMessageCommon("lbl.sc.spec.category.code");
+					throw new EpException(MessageConst.INFO_100022, new String[] { category });
 				}
-				scQt.setScQtCategorys(categoryList);
-			} else {
-				String category = CommonMethod.getMessageCommon("lbl.sc.spec.category.code");
-				throw new EpException(MessageConst.INFO_100022, new String[] { category });
-			}
-		} else if (this.getManagedBean().getQt().getQtType().equals("R")) {
-			List<ScQtCategory> restrictedList = this.getManagedBean()
-					.getSuppCriteriarestrictedList();
-			if (restrictedList != null && !restrictedList.isEmpty()) {
-				for (ScQtCategory scQtCategory : restrictedList) {
-					scQtCategory.setPmCategoryL1(scQtCategory.getPmCategoryL3()
-							.getPmCategoryL2().getPmCategoryL1());
-					scQtCategory.setPmCategoryL2(scQtCategory.getPmCategoryL3()
-							.getPmCategoryL2());
-					scQtCategory.setScQt(this.getManagedBean().getQt());
-					setUserDetails(scQtCategory);
-					categoryList.add(scQtCategory);
+			} else if (this.getManagedBean().getQt().getQtType().equals("R")) {
+				List<ScQtCategory> restrictedList = this.getManagedBean()
+						.getSuppCriteriarestrictedList();
+				if (restrictedList != null && !restrictedList.isEmpty()) {
+					for (ScQtCategory scQtCategory : restrictedList) {
+						scQtCategory.setPmCategoryL1(scQtCategory.getPmCategoryL3()
+								.getPmCategoryL2().getPmCategoryL1());
+						scQtCategory.setPmCategoryL2(scQtCategory.getPmCategoryL3()
+								.getPmCategoryL2());
+						scQtCategory.setScQt(this.getManagedBean().getQt());
+						setUserDetails(scQtCategory);
+						categoryList.add(scQtCategory);
+					}
+					scQt.setScQtCategorys(categoryList);
+				} else {
+					String category = CommonMethod
+							.getMessageCommon("lbl.sc.spec.category.code");
+					throw new EpException(MessageConst.INFO_100022,
+							new String[] { category });
 				}
-				scQt.setScQtCategorys(categoryList);
-			} else {
-				String category = CommonMethod
-						.getMessageCommon("lbl.sc.spec.category.code");
-				throw new EpException(MessageConst.INFO_100022,
-						new String[] { category });
 			}
 		}
 		if (!scQt.isZonal()) {
@@ -1145,7 +1147,7 @@ public class QTDetailBackingBean extends
 		this.getManagedBean().setActiveIndex(1);
 		List<TabBean> committeTabs = this.getManagedBean().getScCommitteeMemberTabList();
 		Long qtId = getManagedBean().getQt().getQtId();
-		/*if (null != qtId && null == committeTabs) {*/
+		if (null != qtId && null == committeTabs) {
 			String evaluationType = this.getManagedBean().getQt().getEvaluationType();
 			committeTabs = new ArrayList<TabBean>();
 			// BO and specification committe is common for both evaluations..
@@ -1175,7 +1177,7 @@ public class QTDetailBackingBean extends
 				committeTabs.add(new TabBean("Finalization Secretary", getFinalizationCommitteeTypeDtl(pmCode, null)));
 			}
 			this.getManagedBean().setScCommitteeMemberTabList(committeTabs);
-		//}
+		}
 	}
 
 	/**
@@ -1842,7 +1844,7 @@ public class QTDetailBackingBean extends
 			tenderReqDTO.setDocType(QTConstants.DOCTYPE_QT);
 			tenderReqDTO.setQtId(qtId);
 			QuationTenderResDTO tenderResDTO = new QuationTenderResDTO();
-			//if (getManagedBean().getQt() == null) {
+			if (getManagedBean().getQt() == null) {
 				tenderResDTO = QtDetailsSO.retriveQTDetails(tenderReqDTO);
 				if (tenderResDTO.getQtDetail() != null) {
 					getManagedBean().setQt(tenderResDTO.getQtDetail());
@@ -1880,7 +1882,7 @@ public class QTDetailBackingBean extends
 						}
 					}
 				}
-			//}
+			}
 		} finally {
 			QtDetailsSO = null;
 		}

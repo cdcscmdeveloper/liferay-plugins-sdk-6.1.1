@@ -15,9 +15,10 @@
 			value="#{qTCommitteBackingBean.managedBean.scCommitteeMemberTabList}">
 
 			<p:tab>
-				<f:facet name="header">
+				<f:facet name="title">
 					<p:graphicImage library="ep/images/design" name="icon_success.png"
-						value="/resources/ep/images/design/icon_success.png" />
+						value="/resources/ep/images/design/icon_success.png"
+						rendered="#{committeeApproval.scQtCommittee.scCommittee.committeStatus.statusId eq 60202}" />
 					<h:outputText value="#{committeeApproval.titleName}" />
 				</f:facet>
 
