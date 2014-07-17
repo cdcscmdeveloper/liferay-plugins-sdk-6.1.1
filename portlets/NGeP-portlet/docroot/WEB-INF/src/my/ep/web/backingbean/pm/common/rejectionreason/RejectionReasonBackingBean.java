@@ -634,12 +634,16 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 
 //		List<PmSupplierReason> tempList = new ArrayList<PmSupplierReason>();
 		if(ParameterTypeConst.SUPPLIER_APPLICATION_TYPES.equals(restrictionType)){
+			System.out.println(1);
 			if(this.getManagedBean().getDeleteAppTypeRestrictions()!=null && !this.getManagedBean().getDeleteAppTypeRestrictions().isEmpty()){
+				System.out.println(2);
 				if(this.getManagedBean().getAppTypeRestrictions()==null){
+					System.out.println(3);
 					this.getManagedBean().setAppTypeRestrictions(new ArrayList<PmSupplierReason>());
 				}
-				
+				System.out.println(4);
 				for(PmSupplierReason suppReason: this.getManagedBean().getDeleteAppTypeRestrictions()){
+					System.out.println(5);
 					this.getManagedBean().getAppTypeRestrictions().remove(suppReason);
 				}
 	//			for(PmSupplierReason suppReason: this.getManagedBean().getAppTypeRestrictions()){
@@ -802,23 +806,29 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		log.info("reasonCategoryChange");
 		if(id!=null && id>0L){
 			PmParameter paramObj = (PmParameter) reasonCategoryMapper.get(id);
+			System.out.println(paramObj.getParameterCode());
 			if(ParameterConst.REASON_CATEGORY_SUPPLIER.equals(paramObj.getParameterCode())){
 				if(isSearchBean){
 					this.getManagedBean().setSearchSuppReason(true);
-					this.getManagedBean().getReasonSearchBean().setReasonCategoryParam(paramObj);
+//					this.getManagedBean().getReasonSearchBean().setReasonCategoryParam(paramObj);
 				}else{
 					this.getManagedBean().setSuppReason(true);
 				}
 			}else{
 				if(isSearchBean){
 					this.getManagedBean().setSearchSuppReason(false);
-					this.getManagedBean().getReasonSearchBean().setReasonCategoryParam(new PmParameter());
+//					this.getManagedBean().getReasonSearchBean().setReasonCategoryParam(new PmParameter());
 				}else{
 					this.getManagedBean().setSuppReason(false);
 				}
 			}
 		}else{
-			throw new EpException("Parameter ID is null.");
+			if(isSearchBean){
+				this.getManagedBean().setSearchSuppReason(false);
+//				this.getManagedBean().getReasonSearchBean().setReasonCategoryParam(new PmParameter());
+			}else{
+				this.getManagedBean().setSuppReason(false);
+			}
 		}
 	}
 
@@ -841,11 +851,14 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			cateBean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
 			cateBean.setSearchValue(rSearchBean.getReasonCategoryParam().getParameterId());
 			searchBean.getDataFilterBeans().add(cateBean);
-			log.info("+ reasonCategory "  +rSearchBean.getReasonCategoryParam().getParameterCode() + "==" +ParameterConst.REASON_CATEGORY_SUPPLIER);
+			
 			//for supplier reason category
-			if(ParameterConst.REASON_CATEGORY_SUPPLIER.equals(rSearchBean.getReasonCategoryParam().getParameterCode())){
+			//get object TODO RAIN
+			PmParameter paramObj = (PmParameter) reasonCategoryMapper.get(rSearchBean.getReasonCategoryParam().getParameterId());
+			
+			if(ParameterConst.REASON_CATEGORY_SUPPLIER.equals(paramObj.getParameterCode())){
 				rSearchBean.setRestrType(null);
-				log.info("+ reasonCategory "  +rSearchBean.getReasonCategoryParam().getParameterCode());
+				log.info("+ reasonCategory "  +paramObj.getParameterCode());
 				List <Long> restrTypes = new ArrayList<Long>();
 				
 				if(rSearchBean.getApplicationType()!=null && rSearchBean.getApplicationType()>0L){
@@ -879,7 +892,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 					restrTypes.add(rSearchBean.getSupplierType());
 				}
 				
-				if(rSearchBean.getRestrType()!=null && rSearchBean.getRestrType()>0L){
+				if(restrTypes!=null && !restrTypes.isEmpty()){
 					log.info("+ getRestrType "  + rSearchBean.getRestrType());
 					SearchFilterBean bean = new SearchFilterBean();
 					bean.setSearchField("pmReason.pmSupplierReasons.restrType.parameterId");
