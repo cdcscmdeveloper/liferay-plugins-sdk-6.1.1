@@ -124,7 +124,7 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		permAddress.setPmCity(new PmCity());
 		
 		SmPersonnelAddress permPersonnelAddress = new SmPersonnelAddress();
-		permPersonnelAddress.setAddressType("P");
+		permPersonnelAddress.setAddressType("I");
 		permPersonnelAddress.setSmAddress(permAddress);
 		permPersonnelAddress.setSmPersonnel(smPersonnel);
 
@@ -216,7 +216,7 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		permAddress.setPmCity(new PmCity());
 		
 		SmPersonnelAddress permPersonnelAddress = new SmPersonnelAddress();
-		permPersonnelAddress.setAddressType("P");
+		permPersonnelAddress.setAddressType("I");
 		permPersonnelAddress.setSmAddress(permAddress);
 		permPersonnelAddress.setSmPersonnel(smPersonnel);
 
@@ -533,7 +533,7 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 			for(SmPersonnelAddress smPA : smPAList){
 				if(smPA.getAddressType().equalsIgnoreCase("M")){
 					this.getManagedBean().setBasicSmPersonnelMailingAddress(smPA);
-				} else if(smPA.getAddressType().equalsIgnoreCase("P")){
+				} else if(smPA.getAddressType().equalsIgnoreCase("I")){
 					this.getManagedBean().setBasicSmPersonnelPermanentAddress(smPA);
 				}
 			}
@@ -564,7 +564,7 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 
 			List<SmPersonnelAddress> smPersonnelAddresses = new ArrayList<SmPersonnelAddress>();
 			SmPersonnelAddress permPersonnelAddress = new SmPersonnelAddress();
-			permPersonnelAddress.setAddressType("P");
+			permPersonnelAddress.setAddressType("I");
 			permPersonnelAddress.setSmAddress(s1);
 			permPersonnelAddress.setSmPersonnel(smPersonnel);
 			getManagedBean().setBasicSmPersonnelPermanentAddress(permPersonnelAddress);
@@ -607,7 +607,7 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 			for(SmPersonnelAddress smPA : smPAList){
 				if(smPA.getAddressType().equalsIgnoreCase("M")){
 					this.getManagedBean().setUpdateSmPersonnelMailingAddress(smPA);
-				} else if(smPA.getAddressType().equalsIgnoreCase("P")){
+				} else if(smPA.getAddressType().equalsIgnoreCase("I")){
 					this.getManagedBean().setUpdateSmPersonnelPermanentAddress(smPA);
 				}
 			}
@@ -638,7 +638,7 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 	
 			List<SmPersonnelAddress> smPersonnelAddresses = new ArrayList<SmPersonnelAddress>();
 			SmPersonnelAddress permPersonnelAddress = new SmPersonnelAddress();
-			permPersonnelAddress.setAddressType("P");
+			permPersonnelAddress.setAddressType("I");
 			permPersonnelAddress.setSmAddress(s1);
 			permPersonnelAddress.setSmPersonnel(smPersonnel);
 			getManagedBean().setUpdateSmPersonnelPermanentAddress(permPersonnelAddress);

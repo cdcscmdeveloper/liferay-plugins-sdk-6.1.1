@@ -5717,11 +5717,12 @@ public class SmApplicationBackingBean extends
 				}
 			}
 		}
-		validatePersonnelICandEmail(pers);
+		if(!pers.getEpRole().isEmpty() && (pers.getEpRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value()) || pers.getEpRole().equalsIgnoreCase(RoleCode.CM_USER.value())))
+			validatePersonnelICandEmailLiferayAndPm(pers);
 		return validUser;
 	}
 
-	private void validatePersonnelICandEmail(SmPersonnel smPersonnel) {
+	private void validatePersonnelICandEmailLiferayAndPm(SmPersonnel smPersonnel) {
 		if(isExistEmailInPmUser(smPersonnel.getEmail())){
 			throw new EpException(MessageConst.ERROR_722540);
 		}
