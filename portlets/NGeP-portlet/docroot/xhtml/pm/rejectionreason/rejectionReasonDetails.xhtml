@@ -48,7 +48,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 					<td>
 						<p:dataTable id="dtReasonDesc" styleClass="reasonDescList" var="reasonDesc"  
 							value="#{rejectionReasonBackingBean.managedBean.selectedReason.pmReasonDescs}">
-					        <p:column headerText="#{lbl.pm.settings.language']}" width="10%">  
+					        <p:column headerText="#{lbl['lbl.pm.settings.language']}" width="10%">  
 						    	#{reasonDesc.pmLanguage.languageName}
 					        </p:column>  
 					        <p:column headerText="* #{lbl['lbl.pm.reason.desc']}">  
