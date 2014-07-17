@@ -459,8 +459,16 @@ public class SpecificationBackingBean extends
 	}
 
 	public String newProceedAction() {
+
 		if (!this.getManagedBean().getScQt().isPanel()) {
+
+			if (this.getManagedBean().getScQt().isPanel() != this
+					.getManagedBean().isPanelChange()) {
+
+				removespecDtls();
+			}
 			return "specificationCreation.xhtml?faces-redirect=true";
+
 		} else if (this.getManagedBean().getScQt().isPanel()
 				&& "PQ".equalsIgnoreCase(this.getManagedBean()
 						.getCircularType())
@@ -468,6 +476,12 @@ public class SpecificationBackingBean extends
 						.getPanelItemCategory())
 				|| "General".equalsIgnoreCase(this.getManagedBean()
 						.getPanelItemCategory())) {
+
+			if (this.getManagedBean().getScQt().isPanel() != this
+					.getManagedBean().isPanelChange()) {
+
+				removespecDtls();
+			}
 
 			return "specificationCreation.xhtml?faces-redirect=true";
 			// return "searchCircularPanelContract.xhtml?faces-redirect=true";
@@ -933,6 +947,7 @@ public class SpecificationBackingBean extends
 	 */
 	public void retriveBusinessOwnerQualificationCriteri() {
 		IQTDetailSO QtDetailsSO;
+
 		this.getManagedBean().setActiveIndex(1);
 		try {
 
@@ -957,7 +972,10 @@ public class SpecificationBackingBean extends
 							categoryResults);
 				}
 				ScQt scQt = tenderResDTO.getQtDetail();
+				this.getManagedBean().setAllStateCode(
+						tenderResDTO.getStateCode());
 				this.getManagedBean().setScQt(scQt);
+
 				if (!scQt.isZonal() && !scQt.isPanel()) {
 
 					List<ScQtLocCriteria> locCriteria = new ArrayList<ScQtLocCriteria>();
@@ -978,20 +996,21 @@ public class SpecificationBackingBean extends
 					if ("Specific".equalsIgnoreCase(this.getManagedBean()
 							.getPanelItemCategory())) {
 
-						List<CtPanelItem> panelList = this.getManagedBean()
-								.getSelectpanelItem();
-						panelList = new ArrayList<CtPanelItem>();
-
-						panelList.add(this.getManagedBean().getCtPanelItem());
-						this.getManagedBean().setSelectpanelItem(panelList);
-						createCircularItemSpec(this.getManagedBean()
-								.getCtPanelItem());
+						if (this.getManagedBean().getExistingpanelitem()
+								.getPanelItemId() != this.getManagedBean()
+								.getScQt().getScQtSupplierCriteria()
+								.getCtPanelItem().getPanelItemId()) {
+							removespecDtls();
+							createCircularItemSpec(this.getManagedBean()
+									.getCtPanelItem());
+						}
 						retriveZonesByCircularNo();
 
 					}
 
 					else if ("General".equalsIgnoreCase(this.getManagedBean()
 							.getPanelItemCategory())) {
+						removespecDtls();
 						List<CtPanelItem> panelList = this.getManagedBean()
 								.getSelectpanelItem();
 						panelList = new ArrayList<CtPanelItem>();
@@ -1049,20 +1068,33 @@ public class SpecificationBackingBean extends
 				} else if (scQt.isPanel() && !scQt.isZonal()) {
 					if ("Specific".equalsIgnoreCase(this.getManagedBean()
 							.getPanelItemCategory())) {
-						CtPanelItem panelItem = this.getManagedBean()
-								.getCtPanelItem();
-						createCircularItemSpec(panelItem);
+
+						removespecDtls();
+						createCircularItemSpec(this.getManagedBean()
+								.getCtPanelItem());
+
 					}
-
 					retriveZonesByCircularNo();
-
 				}
 			}
-
 		} finally {
 			QtDetailsSO = null;
 		}
 
+	}
+
+	private void removespecDtls() {
+		IQTSpecSO specSo = null;
+		try {
+			specSo = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
+			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+			reqDTO.setPanel(this.getManagedBean().getScQt().isPanel());
+			specSo.removeBOSpecDetails(reqDTO);
+		} finally {
+			specSo = null;
+		}
 	}
 
 	private void createCircularItemSpec(CtPanelItem panelItem) {
@@ -1072,8 +1104,8 @@ public class SpecificationBackingBean extends
 			TplSpecMaster specMaster = new TplSpecMaster();
 
 			List<TplSpecQuestion> questionsList = new ArrayList<TplSpecQuestion>();
-			new TemplateSpecBackingBean().addQuestion(specMaster,questionsList,
-					questionsList.size() - 1,
+			new TemplateSpecBackingBean().addQuestion(specMaster,
+					questionsList, questionsList.size() - 1,
 					TemplateSpecConst.QUESTION_TYPE_ITEM);
 			TplSpecQuestion tplSpecQuestion = questionsList.get(0);
 			PmParameter specType = new PmParameter();
@@ -1148,7 +1180,7 @@ public class SpecificationBackingBean extends
 			specMaster.setItemOriginCode(localGoods);
 			setUserDetails(specMaster);
 
-			//tplSpecQuestion.setTplSpecMaster(specMaster);
+			// tplSpecQuestion.setTplSpecMaster(specMaster);
 			tplSpecQuestion.setClItem(panelItem.getItemName());
 			tplSpecQuestion.setClSpecDetail(panelItem.getSpecification());
 			tplSpecQuestion.setClUom(panelItem.getPmUom());
@@ -3028,34 +3060,9 @@ public class SpecificationBackingBean extends
 			QuationTenderResDTO tenderResDTO = new QuationTenderResDTO();
 			tenderResDTO = QtDetailsSO.retriveQTDetails(tenderReqDTO);
 			ScQt scQt = tenderResDTO.getQtDetail();
-
+			this.getManagedBean().setPanelChange(scQt.isPanel());
 			if (scQt.isZonal()
 					&& this.getManagedBean().getZoneGeneralTrees().isEmpty()) {
-				if (scQt.getEstimatedAmount().intValue() > 500000) {
-					QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
-					reqDTO.setQtId(scQt.getQtId());
-					reqDTO.setQtdetail(scQt);
-
-					QuationTenderResDTO resDTO = QtDetailsSO
-							.retriveQTSuppQulCriDetails(reqDTO);
-					ScQt qt = resDTO.getQtDetail();
-					if (!qt.getScQtSupplierCriteria().isAllState()) {
-						List<ScQtLocCriteria> locCriteria = new ArrayList<ScQtLocCriteria>();
-						
-						if (null != resDTO.getLocationDetails() && !resDTO.getLocationDetails().isEmpty()) {
-							
-							for (TplSpecLoc localLoc : resDTO
-									.getLocationDetails()) {
-								ScQtLocCriteria criteria = (ScQtLocCriteria) localLoc;
-								locCriteria.add(criteria);
-							}
-							getManagedBean().getZoneTrees().add(
-									LocationSingleton.getInstance()
-											.constuctTreeNode(locCriteria));
-						}
-
-					}
-				}
 
 				if (isNotNullOREmpty(tenderResDTO.getZoneDetails())) {
 					for (TplSpecZoneDtl zone : tenderResDTO.getZoneDetails()) {
@@ -3131,7 +3138,7 @@ public class SpecificationBackingBean extends
 		try {
 			List<SelectItem> selectItems = new ArrayList<SelectItem>();
 			if (type == 684) {
-				selectItems.add(new SelectItem(null, "--Select One--"));
+				selectItems.add(new SelectItem(null, "-Select One-"));
 				this.getManagedBean().setTechnicalChecklistAction(null);
 
 				selectItems.add(new SelectItem(691, "Manual Submission"));
@@ -3140,7 +3147,7 @@ public class SpecificationBackingBean extends
 			if (type == 184) {
 
 				this.getManagedBean().setTechnicalChecklistAction(null);
-				selectItems.add(new SelectItem(null, "--Select One--"));
+				selectItems.add(new SelectItem(null, "-Select One-"));
 				selectItems.add(new SelectItem(688, "View"));
 				selectItems.add(new SelectItem(690, "Online Submission"));
 				this.getManagedBean().setTechnicalChecklistAction(selectItems);
@@ -3148,7 +3155,7 @@ public class SpecificationBackingBean extends
 			if (type == 685) {
 
 				this.getManagedBean().setTechnicalChecklistAction(null);
-				selectItems.add(new SelectItem(null, "--Select One--"));
+				selectItems.add(new SelectItem(null, "-Select One-"));
 				selectItems.add(new SelectItem(692, "Presentation/Demo"));
 				this.getManagedBean().setTechnicalChecklistAction(selectItems);
 			}
@@ -7446,12 +7453,14 @@ public class SpecificationBackingBean extends
 		CtPanelItem ctPanelItem = (CtPanelItem) selectEvent.getObject();
 		List<CtPanelItem> panelList = this.getManagedBean()
 				.getSelectpanelItem();
-		this.getManagedBean().setCtPanelItem(ctPanelItem);
+		if (null != panelList && !panelList.isEmpty()) {
+			this.getManagedBean().setExistingpanelitem(panelList.get(0));
+		}
 		panelList = new ArrayList<CtPanelItem>();
+		this.getManagedBean().setCtPanelItem(ctPanelItem);
 
 		this.getManagedBean().setPanelItemCategory(
 				getParameterDesc(ctPanelItem.getItemCategoryId()));
-
 		panelList.add(ctPanelItem);
 		this.getManagedBean().setSelectpanelItem(panelList);
 
