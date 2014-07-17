@@ -14,7 +14,12 @@
 			activeIndex="#{qTCommitteBackingBean.managedBean.subTabIndex}"
 			value="#{qTCommitteBackingBean.managedBean.scCommitteeMemberTabList}">
 
-			<p:tab title="#{committeeApproval.titleName}">
+			<p:tab>
+				<f:facet name="header">
+					<p:graphicImage library="ep/images/design" name="icon_success.png"
+						value="/resources/ep/images/design/icon_success.png" />
+					<h:outputText value="#{committeeApproval.titleName}" />
+				</f:facet>
 
 				<ui:fragment
 					rendered="#{committeeApproval.titleName eq 'Business Owner'}">
@@ -31,7 +36,7 @@
 
 					<ui:param name="committe"
 						value="#{committeeApproval.scQtCommittee.scCommittee}" />
-					
+
 					<ui:param name="selectedCommittee"
 						value="#{committeeApproval.members}" />
 
@@ -40,11 +45,12 @@
 					<div class="ppRightBtn">
 						<p:commandButton id="specificationcommitteeadd"
 							value="#{lbl['lbl.so.addbtn']}" process="@this"
-							action="#{qTCommitteBackingBean.addCommitteMember(committeeApproval.scQtCommittee, committeeApproval.titleName)}"
+							actionListener="#{qTCommitteBackingBean.addCommitteMember(committeeApproval.scQtCommittee, committeeApproval.titleName)}"
 							oncomplete="newspecificationcommittee.show();"
 							update="@(.scAddMember)" icon="ui-icon-add" />
 
-						<p:commandButton value="#{lbl['lbl.so.delete']}" process="@this, specificationcommitteeid"
+						<p:commandButton value="#{lbl['lbl.so.delete']}"
+							process="@this, specificationcommitteeid"
 							actionListener="#{qTCommitteBackingBean.deleteSpecificationCommittee}"
 							update="specificationcommitteeid" icon="ui-icon-delete" />
 

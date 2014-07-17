@@ -28,12 +28,14 @@
 			<p:panel id="newCommitteeProfile" style="width:100%;margin-top:10px;">
 				<c:if
 					test="#{qTCommitteBackingBean.managedBean.committeMember.userSelection eq 'E' }">
-					<p:panel header="#{lbl['lbl.so.searchbtn']}" toggleable="true">
+					<p:panel id="usersearchpnlid" header="#{lbl['lbl.so.searchbtn']}"
+						toggleable="true">
 						<table>
 							<tr>
 								<td><p:outputLabel value="#{lbl['lbl.sc.addscreen.name']}" /></td>
 								<td colspan="3"><p:inputText
-										value="#{qTCommitteBackingBean.managedBean.name}" size="64" /></td>
+										value="#{qTCommitteBackingBean.managedBean.userCommitteeSearchBean.name}"
+										size="64" /></td>
 							</tr>
 							<tr>
 								<td style="width: 110px;"><p:outputLabel
@@ -52,27 +54,26 @@
 										size="30" /></td>
 							</tr>
 						</table>
+						<div class="ppRightBtn">
+							<p:commandButton value="#{lbl['lbl.so.searchbtn']}"
+								action="#{qTCommitteBackingBean.searchUserAction}"
+								update="existingcommitteesearchid" icon="ui-icon-search"
+								process="@this, usersearchpnlid" />
+							<p:commandButton value="#{lbl['lbl.so.reset']}"
+								action="#{qTCommitteBackingBean.reset}" update="usersearchpnlid"
+								icon="ui-icon-reset" resetValues="true" partialSubmit="true"
+								process="@this" />
+						</div>
 					</p:panel>
-					<div class="ppRightBtn">
-						<p:commandButton value="#{lbl['lbl.so.searchbtn']}"
-							icon="ui-icon-search"
-							action="#{qTCommitteBackingBean.existingCommitteeSearchAction}"
-							update="@(.existingCommitteeResults)" partialSubmit="true"
-							process="@parent" />
-						<p:commandButton value="#{lbl['lbl.so.reset']}"
-							action="#{qTCommitteBackingBean.reset}"
-							update="newCommitteeProfile" icon="ui-icon-reset"
-							resetValues="true" partialSubmit="true" process="@this" />
-					</div>
-					<p:spacer height="5" />
 					<p:panel header="#{lbl['lbl.so.result']}" toggleable="true">
-						<p:dataTable id="existingcommitteesearch"
-							value="#{qTCommitteBackingBean.managedBean.externalUsers}"
+						<p:dataTable id="existingcommitteesearchid"
+							value="#{qTCommitteBackingBean.managedBean.userSearchCommitteeDataModel}"
 							selection="#{qTCommitteBackingBean.managedBean.selectedPmUser}"
-							rowKey="#{existcommitteeuser}" var="existcommitteeuser"
-							styleClass="existingCommitteeResults" style="width : 900px;">
+							rowKey="#{existcommitteeuser.userId}" var="existcommitteeuser"
+							lazy="true" style="width : 900px;"
+							styleClass="existingCommitteeResults">
 
-							<ac:paginator for="existingcommitteesearch" />
+							<ac:paginator for="existingcommitteesearchid" />
 
 							<p:column selectionMode="multiple" style="width:2%" />
 
