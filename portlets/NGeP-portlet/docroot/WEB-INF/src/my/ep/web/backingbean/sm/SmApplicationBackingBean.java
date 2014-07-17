@@ -3974,7 +3974,7 @@ public class SmApplicationBackingBean extends
 			if (res.equalsIgnoreCase("Approve")) {
 				validSiteVisit = updateSmSupplierInfo(getManagedBean()
 						.getSmAppl().getApplType());
-//				sendPersonnelActivationEmail();
+				sendPersonnelActivationEmail();
 			}
 			if (validSiteVisit) {
 				ReviewApplicationResDTO resDTO = reqSO
