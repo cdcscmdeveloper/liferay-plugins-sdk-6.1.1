@@ -18,8 +18,9 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 						value="#{rejectionReasonBackingBean.managedBean.appTypeRestrictions}"
 						selection="#{rejectionReasonBackingBean.managedBean.deleteAppTypeRestrictions}"
 						var="restrict" rowKey="#{restrict}">
+						<p:ajax event="toggleSelect" update="@this" process="@this" />
+						<p:ajax event="rowSelectCheckbox" update="@this" />
 						<p:column selectionMode="multiple" disabledSelection="#{!restrict.brandNew}" style="width:2%" />
-						<p:ajax event="rowSelectCheckbox" />
 				        <p:column headerText="#{lbl['lbl.pm.application.type']}">
 					    	<p:selectOneMenu id="somAppType"  styleClass="ppDropDownWidthM"
 								value="#{restrict.restrType.parameterId}">
@@ -51,8 +52,10 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 						value="#{rejectionReasonBackingBean.managedBean.comTypeRestrictions}"
 						selection="#{rejectionReasonBackingBean.managedBean.deleteComTypeRestrictions}"
 						var="restrict" rowKey="#{restrict}">
+						<p:ajax event="toggleSelect" update="@this" process="@this" />
+						<p:ajax event="rowSelectCheckbox" update="@this" />
+						
 						<p:column selectionMode="multiple" disabledSelection="#{!restrict.brandNew}" style="width:2%" />
-						<p:ajax event="rowSelectCheckbox" />
 				        <p:column headerText="#{lbl['lbl.pm.company.type']}">  
 					    	<p:selectOneMenu id="somAppType" styleClass="ppDropDownWidthM"
 								value="#{restrict.restrType.parameterId}">
@@ -83,8 +86,10 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 						value="#{rejectionReasonBackingBean.managedBean.suppTypeRestrictions}"
 						selection="#{rejectionReasonBackingBean.managedBean.deleteSuppTypeRestrictions}"
 						var="restrict" rowKey="#{restrict}">
+						<p:ajax event="toggleSelect" update="@this" process="@this" />
+						<p:ajax event="rowSelectCheckbox" update="@this" />
 						<p:column selectionMode="multiple" disabledSelection="#{!restrict.brandNew}" style="width:2%" />
-						<p:ajax event="rowSelectCheckbox" />
+
 				        <p:column headerText="#{lbl['lbl.pm.supplier.type']}">  
 					    	<p:selectOneMenu id="somAppType" styleClass="ppDropDownWidthM"
 								value="#{restrict.restrType.parameterId}">
