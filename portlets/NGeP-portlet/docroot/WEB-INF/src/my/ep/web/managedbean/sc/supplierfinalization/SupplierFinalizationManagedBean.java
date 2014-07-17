@@ -67,8 +67,9 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private String committeeSecretaryName;
 	private String reason;
 	private String reEvaluateBy;
-	private String reEvaluateReqFor;
-	private String reqSpecChanges;
+	private boolean reqSpecChanges;
+	private boolean reEvaluateReqForTech;
+	private boolean reEvaluateReqForFin;
 	private Long recommendBy;
 	private String selectionMode = QTConstants.SF_SINGLE;
 	private String awardSupplier; 
@@ -404,30 +405,16 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the reEvaluateReqFor
-	 */
-	public String getReEvaluateReqFor() {
-		return reEvaluateReqFor;
-	}
-
-	/**
-	 * @param reEvaluateReqFor the reEvaluateReqFor to set
-	 */
-	public void setReEvaluateReqFor(String reEvaluateReqFor) {
-		this.reEvaluateReqFor = reEvaluateReqFor;
-	}
-
-	/**
 	 * @return the reqSpecChanges
 	 */
-	public String getReqSpecChanges() {
+	public boolean getReqSpecChanges() {
 		return reqSpecChanges;
 	}
 
 	/**
 	 * @param reqSpecChanges the reqSpecChanges to set
 	 */
-	public void setReqSpecChanges(String reqSpecChanges) {
+	public void setReqSpecChanges(boolean reqSpecChanges) {
 		this.reqSpecChanges = reqSpecChanges;
 	}
 
@@ -896,6 +883,34 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	 */
 	public void setCommitteeSecretaryName(String committeeSecretaryName) {
 		this.committeeSecretaryName = committeeSecretaryName;
+	}
+
+	/**
+	 * @return the reEvaluateReqForTech
+	 */
+	public boolean isReEvaluateReqForTech() {
+		return reEvaluateReqForTech;
+	}
+
+	/**
+	 * @param reEvaluateReqForTech the reEvaluateReqForTech to set
+	 */
+	public void setReEvaluateReqForTech(boolean reEvaluateReqForTech) {
+		this.reEvaluateReqForTech = reEvaluateReqForTech;
+	}
+
+	/**
+	 * @return the reEvaluateReqForFin
+	 */
+	public boolean isReEvaluateReqForFin() {
+		return reEvaluateReqForFin;
+	}
+
+	/**
+	 * @param reEvaluateReqForFin the reEvaluateReqForFin to set
+	 */
+	public void setReEvaluateReqForFin(boolean reEvaluateReqForFin) {
+		this.reEvaluateReqForFin = reEvaluateReqForFin;
 	}
 	
 	

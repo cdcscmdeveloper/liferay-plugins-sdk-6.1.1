@@ -88,6 +88,7 @@ import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.sc.supplierfinalization.SupplierFinalizationManagedBean;
 import my.ep.web.sc.quationtender.common.QTConstants;
+import my.ep.web.type.sc.quationtender.SelectionType;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pp.common.CommonMethod;
@@ -528,7 +529,6 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 	}
 	
 	private void saveByItem(ScQtFinalization scQtFinalization){
-		//TODO
 		List<ScQtRecommend> scQtRecommendList = new ArrayList<ScQtRecommend>();
 		List<ScQtRecommendDtl> scQtRecommendDtlList = new ArrayList<ScQtRecommendDtl>();
 		
@@ -564,16 +564,29 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 	}
 	
 	private void reEvaluateQT(ScQtFinalization scQtFinalization){
-		//TODO
+		//TODO - BPM
+		String reEvaluateBy = getManagedBean().getReEvaluateBy();
+		boolean reEvaluateTech = getManagedBean().isReEvaluateReqForTech();
+		boolean reEvaluateFin = getManagedBean().isReEvaluateReqForFin();
 		
-		scQtFinalization.setReEvaluateCommitte(getManagedBean().getReEvaluateBy());
-		//scQtFinalization.setReEvaluateTechReq(getManagedBean().getReEvaluateReqFor());
-		//scQtFinalization.setReEvaluateFinReq(reEvaluateFinReq);
+		scQtFinalization.setReEvaluateCommitte(reEvaluateBy);
+		scQtFinalization.setReEvaluateTechReq(reEvaluateTech);
+		scQtFinalization.setReEvaluateFinReq(reEvaluateFin);
+		
+		if(reEvaluateBy.equals(SelectionType.New)){
+			//BPM send task to maintain committee
+		}
+		if(reEvaluateTech && reEvaluateFin){
+			//BPM send task to reEvaluate tech/fin
+		
+		}else if(reEvaluateTech || reEvaluateFin){
+			//BPM send task to reEvaluate tech or fin only
+		}
 	}
 	
 	private void rePublishQT(ScQtFinalization scQtFinalization){
 		//TODO - BPM
-		boolean specChanges = getManagedBean().getReqSpecChanges().equalsIgnoreCase("true")?true:false;
+		boolean specChanges = getManagedBean().getReqSpecChanges();
 		scQtFinalization.setSpecChangeReq(specChanges);
 		
 		if(specChanges){
@@ -823,13 +836,13 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 			
 			if(resDTO.getScQtFinalization() != null){
 				ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
-				String recommendType = scQtFinalization.getRecommendedTypeId().getParameterCode();
 				
 				//set the managed bean
 				String decisionTypeCode = scQtFinalization.getDecision().getParameterCode();
 				getManagedBean().setDecisionType(decisionTypeCode);
 				
 				if(decisionTypeCode.equals(ParameterConst.DECISION_RECOMMEND_SUPPLIER)){
+					String recommendType = scQtFinalization.getRecommendedTypeId().getParameterCode();
 					getManagedBean().setRecommendType(recommendType);
 					getManagedBean().setBiddingEndorsement(scQtFinalization.getOnlineBiddingEndorse());
 					getManagedBean().setLoiLoaPreparedBy(scQtFinalization.getLoiLoaBy());
@@ -861,11 +874,15 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 						//TODO
 					}
 				}else if(decisionTypeCode.equals(ParameterConst.DECISION_RE_EVALUATION)){
-					//TODO
+					getManagedBean().setReEvaluateBy(scQtFinalization.getReEvaluateCommitte());
+					getManagedBean().setReEvaluateReqForTech(scQtFinalization.isReEvaluateTechReq());
+					getManagedBean().setReEvaluateReqForFin(scQtFinalization.isReEvaluateFinReq());
+					
 				}else if(decisionTypeCode.equals(ParameterConst.DECISION_RE_PUBLISH)){
-					//TODO
+					getManagedBean().setReqSpecChanges(scQtFinalization.isSpecChangeReq());
+					
 				}else if(decisionTypeCode.equals(ParameterConst.DECISION_CANCEL)){
-					//nothing
+					//nothing to set
 				}
 			}
 		} finally {
@@ -1237,8 +1254,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 			CommitteReqDTO reqDTO = new CommitteReqDTO();
 			reqDTO.setQtId(qtId);
 			
-			PmParameter pmParameter = getPmParameterById(new Long(commType));
-			reqDTO.setCommitteeType(pmParameter.getParameterCode());
+			reqDTO.setCommitteeType(commType);
 			reqDTO.setFinalizationSecratary(true);
 				
 			CommitteResDTO resDTO = committeSO.retrieveCommitteByQtIdNCommType(reqDTO);
@@ -1282,15 +1298,17 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		return items;
 	}
 	
-	public SelectItem[] getReEvaluateByRadioBtn(){
-		SelectItem[] items = getDropdownCodeValues(ParameterTypeConst.CHECKLIST_TYPE);
-		return items;
-    }
-	
-	public SelectItem[] getReEvaluateReqForCheckBox(){
-		SelectItem[] items = getDropdownCodeValues(ParameterTypeConst.CHECKLIST_TYPE);
-		return items;
-    }
+	public SelectItem[] getReEvaluateByRadioBtn() {
+		SelectionType[] type = SelectionType.values();
+		SelectItem[] items = null;
+		
+		items = new SelectItem[type.length];
+	    int i = 0;
+	    for(SelectionType selectionType : type) {
+	    	items[i++] = new SelectItem(selectionType.value(), selectionType.name());
+	    }
+	    return items;
+	}
 	
 	public SelectItem[] getPackageRecommendByDropDown(){
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
@@ -1357,7 +1375,10 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		this.getManagedBean().setReEvaluate(false);
 		this.getManagedBean().setRePublish(false);
 		
-		if(decision.equals(ParameterConst.DECISION_RECOMMEND_SUPPLIER)){
+		if(decision == null){
+			resetFlag();
+			
+		}else if(decision.equals(ParameterConst.DECISION_RECOMMEND_SUPPLIER)){
 			this.getManagedBean().setRecommendSupplier(true);
 			
 		}else if(decision.equals(ParameterConst.DECISION_RE_EVALUATION)){
