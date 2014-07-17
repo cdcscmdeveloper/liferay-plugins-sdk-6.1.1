@@ -287,6 +287,7 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 				mailPersonnelAddress.setSmPersonnel(getManagedBean().getBasicSmPersonnel());
 				getManagedBean().setBasicSmPersonnelMailingAddress(mailPersonnelAddress);
 				getManagedBean().getBasicSmPersonnel().getSmPersonnelAddresses().add(getManagedBean().getBasicSmPersonnelMailingAddress());
+				updateMailAddLists(getManagedBean().getDefaultCountryId().toString(), "", "");
 			}
 			if(getManagedBean().getBasicSmPersonnelPermanentAddress() != null){
 				address = getManagedBean().getBasicSmPersonnelPermanentAddress().getSmAddress(); 
@@ -312,6 +313,7 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 				permPersonnelAddress.setSmPersonnel(getManagedBean().getBasicSmPersonnel());
 				getManagedBean().setBasicSmPersonnelPermanentAddress(permPersonnelAddress);
 				getManagedBean().getBasicSmPersonnel().getSmPersonnelAddresses().add(getManagedBean().getBasicSmPersonnelPermanentAddress());
+				updatePermAddLists(getManagedBean().getDefaultCountryId().toString(), "", "");
 			}
 		}
 	}
@@ -347,6 +349,7 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 					mailPersonnelAddress.setSmPersonnel(getManagedBean().getUpdateSmPersonnel());
 					getManagedBean().setUpdateSmPersonnelMailingAddress(mailPersonnelAddress);
 					getManagedBean().getUpdateSmPersonnel().getSmPersonnelAddresses().add(getManagedBean().getUpdateSmPersonnelMailingAddress());
+					updateMailAddLists(getManagedBean().getDefaultCountryId().toString(), "", "");
 			}
 			if(getManagedBean().getUpdateSmPersonnelPermanentAddress() != null){
 				address = getManagedBean().getUpdateSmPersonnelPermanentAddress().getSmAddress();
@@ -372,6 +375,7 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 				permPersonnelAddress.setSmPersonnel(getManagedBean().getUpdateSmPersonnel());
 				getManagedBean().setUpdateSmPersonnelPermanentAddress(permPersonnelAddress);
 				getManagedBean().getUpdateSmPersonnel().getSmPersonnelAddresses().add(getManagedBean().getUpdateSmPersonnelPermanentAddress());
+				updatePermAddLists(getManagedBean().getDefaultCountryId().toString(), "", "");
 			}
 		}
 	}
