@@ -342,6 +342,10 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private CtCircularVer ctCircularVer;
 	private List<ScQtCheckList>  finspecChecklist;
 	private String buttonOutCome;
+	private int allStateCode;
+	private boolean isPanelChange;
+	private String newItemCategory;
+	private CtPanelItem existingpanelitem;
 
 	public SpecificationManagedBean() {
 		
@@ -3878,6 +3882,62 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	 */
 	public void setButtonOutCome(String buttonOutCome) {
 		this.buttonOutCome = buttonOutCome;
+	}
+
+	/**
+	 * @return the allStateCode
+	 */
+	public int getAllStateCode() {
+		return allStateCode;
+	}
+
+	/**
+	 * @param allStateCode the allStateCode to set
+	 */
+	public void setAllStateCode(int allStateCode) {
+		this.allStateCode = allStateCode;
+	}
+
+	/**
+	 * @return the isPanelChange
+	 */
+	public boolean isPanelChange() {
+		return isPanelChange;
+	}
+
+	/**
+	 * @param isPanelChange the isPanelChange to set
+	 */
+	public void setPanelChange(boolean isPanelChange) {
+		this.isPanelChange = isPanelChange;
+	}
+
+	/**
+	 * @return the newItemCategory
+	 */
+	public String getNewItemCategory() {
+		return newItemCategory;
+	}
+
+	/**
+	 * @param newItemCategory the newItemCategory to set
+	 */
+	public void setNewItemCategory(String newItemCategory) {
+		this.newItemCategory = newItemCategory;
+	}
+
+	/**
+	 * @return the existingpanelitem
+	 */
+	public CtPanelItem getExistingpanelitem() {
+		return existingpanelitem;
+	}
+
+	/**
+	 * @param existingpanelitem the existingpanelitem to set
+	 */
+	public void setExistingpanelitem(CtPanelItem existingpanelitem) {
+		this.existingpanelitem = existingpanelitem;
 	}
 
 }
