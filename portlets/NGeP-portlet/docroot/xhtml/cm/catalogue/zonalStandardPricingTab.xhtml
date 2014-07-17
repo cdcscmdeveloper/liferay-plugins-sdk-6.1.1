@@ -63,7 +63,7 @@
 				<f:facet name="header">
 					#{lbl['lbl.cm.end.date']}
 				</f:facet>
-				<p:calendar value="#{standard.endDate}" showOn="button" size="10" disabled="#{standard.standardDisabled}"
+				<p:calendar value="#{standard.endDate}" showOn="button" size="10" mindate="#{catalogueBackingBean.managedBean.currentDate}" disabled="#{standard.standardDisabled}"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
 					<p:ajax event="keyup" listener="#{catalogueBackingBean.validateZonalStandardDateOverlap(rowIndex)}" update="zonalStanErrorLink" />
 					<p:ajax event="dateSelect" listener="#{catalogueBackingBean.validateZonalStandardDateOverlap(rowIndex)}" update="zonalStanErrorLink" />

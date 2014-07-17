@@ -50,7 +50,7 @@
 				<f:facet name="header">
 					#{lbl['lbl.cm.start.date']}
 				</f:facet>
-				<p:calendar value="#{zPromotion.startDate}" showOn="button" disabled="#{zPromotion.standardDisabled}"
+				<p:calendar value="#{zPromotion.startDate}" showOn="button" disabled="#{zPromotion.standardDisabled}" mindate="#{catalogueBackingBean.managedBean.currentDate}"
 					size="10" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
 					<p:ajax event="keyup" listener="#{catalogueBackingBean.validateZonalPromoDateOverlap(rowIndex)}" update="zonalPromoErrorLink" />
 					<p:ajax event="dateSelect" listener="#{catalogueBackingBean.validateZonalPromoDateOverlap(rowIndex)}" update="zonalPromoErrorLink" />
@@ -61,7 +61,7 @@
 				<f:facet name="header">
 					#{lbl['lbl.cm.end.date']}
 				</f:facet>
-				<p:calendar value="#{zPromotion.endDate}" showOn="button" size="10" disabled="#{zPromotion.standardDisabled}"
+				<p:calendar value="#{zPromotion.endDate}" showOn="button" size="10" disabled="#{zPromotion.standardDisabled}" mindate="#{catalogueBackingBean.managedBean.currentDate}"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
 					<p:ajax event="keyup" listener="#{catalogueBackingBean.validateZonalPromoDateOverlap(rowIndex)}" update="zonalPromoErrorLink" />
 					<p:ajax event="dateSelect" listener="#{catalogueBackingBean.validateZonalPromoDateOverlap(rowIndex)}" update="zonalPromoErrorLink" />
