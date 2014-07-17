@@ -2804,7 +2804,7 @@ public class SmApplicationBackingBean extends
 		per.setIdentificationNo(shareHolderBean.getIdentificationNo());
 		per.setSmPersonnelAddresses(shareHolderBean.getSmPersonnelAddresses());
 		getManagedBean().setSelectedPersonnel(per);
-		if(getManagedBean().getSelectedShareHolder().getAuthorizedFlg() != 1)
+		if (getManagedBean().getSelectedShareHolder().getAuthorizedFlg() != 1)
 			getManagedBean().setRemoveEpRole(true);
 		else
 			getManagedBean().setRemoveEpRole(false);
@@ -2888,23 +2888,23 @@ public class SmApplicationBackingBean extends
 
 	}
 
-	public void buildRoleList(){
+	public void buildRoleList() {
 		List<SelectItem> roles = new ArrayList<SelectItem>();
-		
+
 		SelectItem role = new SelectItem();
 		role.setLabel("Supplier User");
 		role.setValue(RoleCode.MOF_SUPPLIER_USER.value());
-		if(!getManagedBean().isRemoveEpRole())
+		if (!getManagedBean().isRemoveEpRole())
 			roles.add(role);
-		
+
 		role = new SelectItem();
 		role.setLabel("Catalogue User");
 		role.setValue(RoleCode.CM_USER.value());
 		roles.add(role);
-		
+
 		getManagedBean().setePRoleList(roles);
 	}
-	
+
 	public void assignNewShareHolder(String personelType) {
 		System.out.println("********* assignNewShareHolder *****");
 		getManagedBean().setAuthPerCount(getAuthUserCount());
@@ -3829,9 +3829,11 @@ public class SmApplicationBackingBean extends
 						+ resDTO.isBpmSuccess());
 				valid = resDTO.isBpmSuccess();
 			} else {
+				System.out.println("*** The Save as draft returned null **** ");
 				valid = false;
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new EpException(MessageConst.ERROR_722519);
 		} finally {
 			regSo = null;
@@ -4064,15 +4066,16 @@ public class SmApplicationBackingBean extends
 		return retMsg;
 	}
 
-	private void sendPersonnelActivationEmail(){
-		List<SmPersonnel> personnels = getManagedBean().getSmAppl().getSmPersonnels();
-		
+	private void sendPersonnelActivationEmail() {
+		List<SmPersonnel> personnels = getManagedBean().getSmAppl()
+				.getSmPersonnels();
+
 		IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate
 				.getInstance().getServiceObject("sm", IPersonnelSO.class);
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 
 		List<SmPersonnel> list = new ArrayList<SmPersonnel>();
-		for(SmPersonnel personnel : personnels){
+		for (SmPersonnel personnel : personnels) {
 			// if(getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)){
 			// if(personnel.getEpRole() != null &&
 			// personnel.getEpRole().length() > 0 && personnel.getPmUser() ==
@@ -4080,7 +4083,9 @@ public class SmApplicationBackingBean extends
 			// list.add(personnel);
 			// }
 			// }
-			if(personnel.getEpRole() != null && personnel.getEpRole().length() > 0 && personnel.getPmUser() == null){
+			if (personnel.getEpRole() != null
+					&& personnel.getEpRole().length() > 0
+					&& personnel.getPmUser() == null) {
 				list.add(personnel);
 			}
 		}
@@ -4089,10 +4094,11 @@ public class SmApplicationBackingBean extends
 		reqDTO.setServerName(fs.getRequest().getServerName());
 		reqDTO.setServerPort(fs.getRequest().getServerPort());
 
-		PersonnelResDTO resDTO = smPersonnelSO.sendPersonnelActivationEmail(reqDTO);
+		PersonnelResDTO resDTO = smPersonnelSO
+				.sendPersonnelActivationEmail(reqDTO);
 
 	}
-	
+
 	private boolean setPaymentMode() {
 		boolean payReq = false;
 		if (getManagedBean().getSmAppl().getApplType()
@@ -5717,29 +5723,34 @@ public class SmApplicationBackingBean extends
 				}
 			}
 		}
-		if(!pers.getEpRole().isEmpty() && (pers.getEpRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value()) || pers.getEpRole().equalsIgnoreCase(RoleCode.CM_USER.value())))
+		if (!pers.getEpRole().isEmpty()
+				&& (pers.getEpRole().equalsIgnoreCase(
+						RoleCode.MOF_SUPPLIER_USER.value()) || pers.getEpRole()
+						.equalsIgnoreCase(RoleCode.CM_USER.value())))
 			validatePersonnelICandEmailLiferayAndPm(pers);
 		return validUser;
 	}
 
 	private void validatePersonnelICandEmailLiferayAndPm(SmPersonnel smPersonnel) {
-		if(isExistEmailInPmUser(smPersonnel.getEmail())){
+		if (isExistEmailInPmUser(smPersonnel.getEmail())) {
 			throw new EpException(MessageConst.ERROR_722540);
 		}
-		if(isExistUserByIdentificationNo(smPersonnel.getIdentificationNo())){
+		if (isExistUserByIdentificationNo(smPersonnel.getIdentificationNo())) {
 			throw new EpException(MessageConst.ERROR_722541);
 		}
 		try {
-			if(UserLocalServiceUtil.getUserByEmailAddress(Long.valueOf(getCompanyId()), smPersonnel.getEmail()) != null){
+			if (UserLocalServiceUtil.getUserByEmailAddress(
+					Long.valueOf(getCompanyId()), smPersonnel.getEmail()) != null) {
 				throw new EpException(MessageConst.ERROR_722540);
 			}
 		} catch (NumberFormatException | PortalException | SystemException e) {
 			// TODO Auto-generated catch block
 			log.info(e.getMessage());
 		}
-		
+
 		try {
-			if(UserLocalServiceUtil.getUserByScreenName(Long.valueOf(getCompanyId()), smPersonnel.getEmail()) != null) {
+			if (UserLocalServiceUtil.getUserByScreenName(
+					Long.valueOf(getCompanyId()), smPersonnel.getEmail()) != null) {
 				throw new EpException(MessageConst.ERROR_722541);
 			}
 		} catch (NumberFormatException | PortalException | SystemException e) {
@@ -5748,37 +5759,42 @@ public class SmApplicationBackingBean extends
 		}
 	}
 
-	public boolean isExistEmailInPmUser(String email){
-		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject("pm", IUserSO.class);
+	public boolean isExistEmailInPmUser(String email) {
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
+				.getServiceObject("pm", IUserSO.class);
 		UserReqDTO reqDTO = new UserReqDTO();
 		reqDTO.setEmail(email);
-		
+
 		UserResDTO resDTO = userSO.retrieveUserByEmail(reqDTO);
-		
-		System.out.println("*********resDTO.getUserList().size()*****" + resDTO.getUserList().size());
-		if(resDTO.getUserList().size() > 0){
+
+		System.out.println("*********resDTO.getUserList().size()*****"
+				+ resDTO.getUserList().size());
+		if (resDTO.getUserList().size() > 0) {
 			return true;
-		}else{
+		} else {
 			return false;
 		}
 	}
 
 	public boolean isExistUserByIdentificationNo(String idNo) {
-		System.out.println("*********retrieveUserByIdentificationNo**********" + idNo);
-		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject("pm", IUserSO.class);
+		System.out.println("*********retrieveUserByIdentificationNo**********"
+				+ idNo);
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
+				.getServiceObject("pm", IUserSO.class);
 		UserReqDTO reqDTO = new UserReqDTO();
 		reqDTO.setLoginId(idNo);
 		UserResDTO resDTO = userSO.retrieveUserByLoginId(reqDTO);
-		
-		if(resDTO.getPmUser() != null){
+
+		if (resDTO.getPmUser() != null) {
 			return true;
-		}else{
+		} else {
 			return false;
 		}
 	}
 
 	public String getCompanyId() {
-		return EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_COMPANY_ID);
+		return EpPropertiesUtils.getInstance().getProperty(
+				EpPropertiesConst.PORTAL_COMPANY_ID);
 	}
 
 	private boolean validateIctCatCode() {
