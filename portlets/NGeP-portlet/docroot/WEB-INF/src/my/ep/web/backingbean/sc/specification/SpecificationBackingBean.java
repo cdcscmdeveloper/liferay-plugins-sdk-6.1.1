@@ -1072,7 +1072,7 @@ public class SpecificationBackingBean extends
 			TplSpecMaster specMaster = new TplSpecMaster();
 
 			List<TplSpecQuestion> questionsList = new ArrayList<TplSpecQuestion>();
-			new TemplateSpecBackingBean().addQuestion(questionsList,
+			new TemplateSpecBackingBean().addQuestion(specMaster,questionsList,
 					questionsList.size() - 1,
 					TemplateSpecConst.QUESTION_TYPE_ITEM);
 			TplSpecQuestion tplSpecQuestion = questionsList.get(0);
@@ -1148,7 +1148,7 @@ public class SpecificationBackingBean extends
 			specMaster.setItemOriginCode(localGoods);
 			setUserDetails(specMaster);
 
-			tplSpecQuestion.setTplSpecMaster(specMaster);
+			//tplSpecQuestion.setTplSpecMaster(specMaster);
 			tplSpecQuestion.setClItem(panelItem.getItemName());
 			tplSpecQuestion.setClSpecDetail(panelItem.getSpecification());
 			tplSpecQuestion.setClUom(panelItem.getPmUom());
