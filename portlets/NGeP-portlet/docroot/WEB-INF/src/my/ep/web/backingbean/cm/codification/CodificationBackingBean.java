@@ -355,7 +355,7 @@ public class CodificationBackingBean extends
 		@Override
 		protected ISearchResultBean<CmUnspsc> pageChangeListener(
 				ISearchBean<CmUnspsc> searchBean) {
-
+			System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>titleFilterBean.getSearchValue()="+titleFilterBean.getSearchValue());
 			if (getManagedBean().getAutoCompleteUnspscCode().getUnspscCode() != null
 					&& getManagedBean().getAutoCompleteUnspscCode()
 							.getUnspscCode().trim().length() > 0) {
@@ -448,6 +448,7 @@ public class CodificationBackingBean extends
 	}
 
 	public void unspscSearch() {
+		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>titleFilterBean="+titleFilterBean.getSearchValue());
 		searchDataModel.reloadData();
 	}
 

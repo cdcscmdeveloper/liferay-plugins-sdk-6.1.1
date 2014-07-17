@@ -713,7 +713,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,null, MessageUtils.getMessage(MessageConst.ERROR_715001,
 					MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
 
-			return "reviewUnspscCode";
+			return "reviewUnspscCode?faces-redirect=true";
 		}
 
       
