@@ -919,6 +919,10 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		//TODO have to compare duplicate items in request note
 		if (getManagedBean().getRequestNoteDtls().isEmpty()){
 			getManagedBean().getRequestNoteDtls().add(scRequestNoteDtl);
+			
+			// set by default selected price type , rec.supplier and offer price
+			supplierLister(scRequestNoteDtl.getScRequestSupplierItem().getSupplierItemId() ,scRequestNoteDtl.getPriceType().getParameterId() ,
+					scRequestNoteDtl,scRequestNoteDtl.getRequestItem().getSupplierItems());
 		} else {
 			List<Long> itemIds = new ArrayList<Long>();
 			for (ScRequestNoteDtl noteDtl : getManagedBean().getRequestNoteDtls()) {
@@ -929,6 +933,9 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 					throw new EpException(MessageConst.INFO_700027, new String[]{scRequestNoteDtl.getScRequestSupplierItem().getSupplierItemPrice().getPricing().getCmSupplierItem().getCmItem().getItemName(),""});
 				} else {
 					requestNoteDtls.add(scRequestNoteDtl);
+					// set by default selected price type , rec.supplier and offer price
+					supplierLister(scRequestNoteDtl.getScRequestSupplierItem().getSupplierItemId() ,scRequestNoteDtl.getPriceType().getParameterId() ,
+							scRequestNoteDtl,scRequestNoteDtl.getRequestItem().getSupplierItems());
 					getManagedBean().setRequestNoteDtls(requestNoteDtls);
 				}
 			}
@@ -1053,9 +1060,10 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		requestNoteDtls.add(scRequestNoteDtl);
 		if(scRequestNoteDtl != null){
 			// for justification pop up
-			getManagedBean().setJustificationType(scRequestNoteDtl.getJustificationType().getParameterCode());
-			getManagedBean().setJustification(scRequestNoteDtl.getJustification());
-
+			if(scRequestNoteDtl.getJustificationType() != null){
+				getManagedBean().setJustificationType(scRequestNoteDtl.getJustificationType().getParameterCode());
+				getManagedBean().setJustification(scRequestNoteDtl.getJustification());
+			}
 			/*	ScRequestSupplierItem supplierItem = scRequestNoteDtl.getScRequestSupplierItem();
 		  supplierItem.setSupplierItemPrice(scRequestNoteDtl.getScRequestSupplierItem().getSupplierItemPrice());
 		  String ItemCode = supplierItem.getSupplierItemPrice().getPricing().getCmSupplierItem().getCmItem().getExtensionCode();
