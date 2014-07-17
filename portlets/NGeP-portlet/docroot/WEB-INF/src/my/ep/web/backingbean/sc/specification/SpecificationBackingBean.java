@@ -3039,16 +3039,11 @@ public class SpecificationBackingBean extends
 					QuationTenderResDTO resDTO = QtDetailsSO
 							.retriveQTSuppQulCriDetails(reqDTO);
 					ScQt qt = resDTO.getQtDetail();
-					if (qt.getScQtSupplierCriteria().isAllState()) {
+					if (!qt.getScQtSupplierCriteria().isAllState()) {
 						List<ScQtLocCriteria> locCriteria = new ArrayList<ScQtLocCriteria>();
-						System.out.println("===all states false===");
-						System.out.println("===resDTO.getLocationDetails()==="
-								+ resDTO.getLocationDetails().size());
+						
 						if (null != resDTO.getLocationDetails()) {
-							System.out
-									.println("===resDTO.getLocationDetails()==="
-											+ resDTO.getLocationDetails()
-													.size());
+							
 							for (TplSpecLoc localLoc : resDTO
 									.getLocationDetails()) {
 								ScQtLocCriteria criteria = (ScQtLocCriteria) localLoc;
