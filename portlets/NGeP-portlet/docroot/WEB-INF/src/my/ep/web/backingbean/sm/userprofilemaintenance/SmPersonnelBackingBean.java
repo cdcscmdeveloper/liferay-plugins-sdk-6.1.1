@@ -262,13 +262,56 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		getCountryList();
 
 		if(getManagedBean().getBasicSmPersonnel().getSmPersonnelAddresses() != null && getManagedBean().getBasicSmPersonnel().getSmPersonnelAddresses().size() > 0){
-			SmAddress address = getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress(); 
-			if(address.getAddress1() != null){
-				updateMailAddLists(address.getPmCountry().getCountryId().toString(), address.getPmState().getStateId().toString(), address.getPmDistrict().getDistrictId().toString());
+			SmAddress address = new SmAddress();
+			if(getManagedBean().getBasicSmPersonnelMailingAddress() != null){
+				address = getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress(); 
+				if(address.getAddress1() != null){
+					updateMailAddLists(address.getPmCountry().getCountryId().toString(), address.getPmState().getStateId().toString(), address.getPmDistrict().getDistrictId().toString());
+				}
+			} else {
+				SmAddress s1 = new SmAddress();
+				
+			/*	Construct Mailing Address Object			*/
+				ICountrySO countrySO = (ICountrySO)BusinessDelegate.getInstance().getServiceObject("pm",ICountrySO.class);
+				CountryReqDTO reqCountryDTO = new CountryReqDTO();
+				reqCountryDTO.setCountryId(getManagedBean().getDefaultCountryId());
+				CountryResDTO resCountryDTO = countrySO.retrieveCountryById(reqCountryDTO);
+				s1.setPmCountry(resCountryDTO.getPmCountry());
+				s1.setPmState(new PmState());
+				s1.setPmDistrict(new PmDistrict());
+				s1.setPmCity(new PmCity());
+				
+				SmPersonnelAddress mailPersonnelAddress = new SmPersonnelAddress();
+				mailPersonnelAddress.setAddressType("M");
+				mailPersonnelAddress.setSmAddress(s1);
+				mailPersonnelAddress.setSmPersonnel(getManagedBean().getBasicSmPersonnel());
+				getManagedBean().setBasicSmPersonnelMailingAddress(mailPersonnelAddress);
+				getManagedBean().getBasicSmPersonnel().getSmPersonnelAddresses().add(getManagedBean().getBasicSmPersonnelMailingAddress());
 			}
-			address = getManagedBean().getBasicSmPersonnelPermanentAddress().getSmAddress(); 
-			if(address.getAddress1() != null){
-				updatePermAddLists(address.getPmCountry().getCountryId().toString(), address.getPmState().getStateId().toString(), address.getPmDistrict().getDistrictId().toString());
+			if(getManagedBean().getBasicSmPersonnelPermanentAddress() != null){
+				address = getManagedBean().getBasicSmPersonnelPermanentAddress().getSmAddress(); 
+				if(address.getAddress1() != null){
+					updatePermAddLists(address.getPmCountry().getCountryId().toString(), address.getPmState().getStateId().toString(), address.getPmDistrict().getDistrictId().toString());
+				}
+			} else {
+				SmAddress s1 = new SmAddress();
+				
+			/*	Construct Permanent Address Object			*/
+				ICountrySO countrySO = (ICountrySO)BusinessDelegate.getInstance().getServiceObject("pm",ICountrySO.class);
+				CountryReqDTO reqCountryDTO = new CountryReqDTO();
+				reqCountryDTO.setCountryId(getManagedBean().getDefaultCountryId());
+				CountryResDTO resCountryDTO = countrySO.retrieveCountryById(reqCountryDTO);
+				s1.setPmCountry(resCountryDTO.getPmCountry());
+				s1.setPmState(new PmState());
+				s1.setPmDistrict(new PmDistrict());
+				s1.setPmCity(new PmCity());
+				
+				SmPersonnelAddress permPersonnelAddress = new SmPersonnelAddress();
+				permPersonnelAddress.setAddressType("I");
+				permPersonnelAddress.setSmAddress(s1);
+				permPersonnelAddress.setSmPersonnel(getManagedBean().getBasicSmPersonnel());
+				getManagedBean().setBasicSmPersonnelPermanentAddress(permPersonnelAddress);
+				getManagedBean().getBasicSmPersonnel().getSmPersonnelAddresses().add(getManagedBean().getBasicSmPersonnelPermanentAddress());
 			}
 		}
 	}
@@ -279,14 +322,57 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		getCountryList();
 
 		if(getManagedBean().getUpdateSmPersonnel().getSmPersonnelAddresses() != null && getManagedBean().getUpdateSmPersonnel().getSmPersonnelAddresses().size() > 0){
-			SmAddress address = getManagedBean().getUpdateSmPersonnelMailingAddress().getSmAddress(); 
-			if(address.getAddress1() != null){
-				updateMailAddLists(address.getPmCountry().getCountryId().toString(), address.getPmState().getStateId().toString(), address.getPmDistrict().getDistrictId().toString());
+			SmAddress address = new SmAddress();
+			if(getManagedBean().getUpdateSmPersonnelMailingAddress() != null){
+				address = getManagedBean().getUpdateSmPersonnelMailingAddress().getSmAddress(); 
+				if(address.getAddress1() != null){
+					updateMailAddLists(address.getPmCountry().getCountryId().toString(), address.getPmState().getStateId().toString(), address.getPmDistrict().getDistrictId().toString());
+				}
+			} else {
+					SmAddress s1 = new SmAddress();
+				
+				/*	Construct Mailing Address Object			*/
+					ICountrySO countrySO = (ICountrySO)BusinessDelegate.getInstance().getServiceObject("pm",ICountrySO.class);
+					CountryReqDTO reqCountryDTO = new CountryReqDTO();
+					reqCountryDTO.setCountryId(getManagedBean().getDefaultCountryId());
+					CountryResDTO resCountryDTO = countrySO.retrieveCountryById(reqCountryDTO);
+					s1.setPmCountry(resCountryDTO.getPmCountry());
+					s1.setPmState(new PmState());
+					s1.setPmDistrict(new PmDistrict());
+					s1.setPmCity(new PmCity());
+					
+					SmPersonnelAddress mailPersonnelAddress = new SmPersonnelAddress();
+					mailPersonnelAddress.setAddressType("M");
+					mailPersonnelAddress.setSmAddress(s1);
+					mailPersonnelAddress.setSmPersonnel(getManagedBean().getUpdateSmPersonnel());
+					getManagedBean().setUpdateSmPersonnelMailingAddress(mailPersonnelAddress);
+					getManagedBean().getUpdateSmPersonnel().getSmPersonnelAddresses().add(getManagedBean().getUpdateSmPersonnelMailingAddress());
 			}
-			address = getManagedBean().getUpdateSmPersonnelPermanentAddress().getSmAddress();
-			if(address.getAddress1() != null){
-				updatePermAddLists(address.getPmCountry().getCountryId().toString(), address.getPmState().getStateId().toString(), address.getPmDistrict().getDistrictId().toString());
-			}	
+			if(getManagedBean().getUpdateSmPersonnelPermanentAddress() != null){
+				address = getManagedBean().getUpdateSmPersonnelPermanentAddress().getSmAddress();
+				if(address.getAddress1() != null){
+					updatePermAddLists(address.getPmCountry().getCountryId().toString(), address.getPmState().getStateId().toString(), address.getPmDistrict().getDistrictId().toString());
+				}
+			} else {
+				SmAddress s1 = new SmAddress();
+			
+			/*	Construct Permanent Address Object			*/
+				ICountrySO countrySO = (ICountrySO)BusinessDelegate.getInstance().getServiceObject("pm",ICountrySO.class);
+				CountryReqDTO reqCountryDTO = new CountryReqDTO();
+				reqCountryDTO.setCountryId(getManagedBean().getDefaultCountryId());
+				CountryResDTO resCountryDTO = countrySO.retrieveCountryById(reqCountryDTO);
+				s1.setPmCountry(resCountryDTO.getPmCountry());
+				s1.setPmState(new PmState());
+				s1.setPmDistrict(new PmDistrict());
+				s1.setPmCity(new PmCity());
+				
+				SmPersonnelAddress permPersonnelAddress = new SmPersonnelAddress();
+				permPersonnelAddress.setAddressType("I");
+				permPersonnelAddress.setSmAddress(s1);
+				permPersonnelAddress.setSmPersonnel(getManagedBean().getUpdateSmPersonnel());
+				getManagedBean().setUpdateSmPersonnelPermanentAddress(permPersonnelAddress);
+				getManagedBean().getUpdateSmPersonnel().getSmPersonnelAddresses().add(getManagedBean().getUpdateSmPersonnelPermanentAddress());
+			}
 		}
 	}
 	
