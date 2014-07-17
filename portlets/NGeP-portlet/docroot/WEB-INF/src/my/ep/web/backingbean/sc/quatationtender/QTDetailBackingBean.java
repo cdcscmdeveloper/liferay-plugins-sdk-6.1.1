@@ -164,12 +164,12 @@ public class QTDetailBackingBean extends
 
 	@PostConstruct
 	private void init() {
-		/*if (this.getManagedBean().getQt() == null) {
+		if (this.getManagedBean().getQt() == null) {
 			this.getManagedBean().setQt(new ScQt());
-		}*/
-		/*if (this.getManagedBean().getQt().getPmOrgProfile() == null) {
+		}
+		if (this.getManagedBean().getQt().getPmOrgProfile() == null) {
 			this.getManagedBean().getQt().setPmOrgProfile(new PmOrgProfile());
-		}*/
+		}
 		handlePTJName();
 		IPagingDataModel<ScQt> searchQTDataModel = getManagedBean()
 				.getSearchQTDataModel();
