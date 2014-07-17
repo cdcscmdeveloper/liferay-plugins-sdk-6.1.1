@@ -477,7 +477,7 @@
 			<td valign="top"><p:panel id="offcAddrPan">
 					<table style="width: 100%">
 						<tr>
-							<td><u><b><h:outputText
+							<td width="150px"><u><b><h:outputText
 											value="#{lbl['lbl.sm.person.offAddr']}" /></b></u></td>
 							<td><table style="width: 100%">
 									<tr>
@@ -499,9 +499,8 @@
 							</c:when>
 							<c:otherwise>
 								<tr>
-									<td width="170px"><p:outputLabel
-											value="#{lbl['lbl.sm.address']}" /> <p:outputLabel value="*"
-											styleClass="mandatory" /></td>
+									<td><p:outputLabel value="#{lbl['lbl.sm.address']}" /> <p:outputLabel
+											value="*" styleClass="mandatory" /></td>
 									<td><p:inputText id="equiPersOffcAddrLine" maxlength="35"
 											label="#{lbl['lbl.sm.person.offAddr']} - #{lbl['lbl.sm.address']}"
 											required="#{!backingBean.managedBean.shareHolderOffAddr.sameAsPerm}"
