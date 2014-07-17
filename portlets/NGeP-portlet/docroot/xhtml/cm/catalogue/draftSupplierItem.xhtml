@@ -71,7 +71,7 @@
 				<h:outputText value="* " styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.cm.uom']}" />
 			</f:facet>
-			<ac:lov id="draftUomLovId" lovId="PM_UOM" size="20" headerText="UOM"
+			<ac:lov id="draftUomLovId" lovId="PM_UOM" size="20" headerText="UOM" readonly="true"
 				saveObject="catalogueBackingBean.managedBean.maintainItemList[#{rowIndex}].pmUom"
 				value="#{selectedSuppCat.pmUom.uomName}"
 				conditionField="recordStatus^1">
@@ -93,7 +93,7 @@
 				<h:outputText value="#{lbl['lbl.cm.end.date']}" />
 			</f:facet>
 			<p:calendar value="#{selectedSuppCat.cmStandardPricing.endDate}"
-				showOn="button" size="10"
+				showOn="button" size="10" mindate="#{catalogueBackingBean.managedBean.currentDate}"
 				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
 
 		</p:column>
