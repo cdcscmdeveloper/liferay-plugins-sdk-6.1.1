@@ -118,7 +118,7 @@
 				<p:column width="60%" style="text-align:right">
 					<p:commandButton value="#{lbl['lbl.sc.ok']}" process="@this addToCartId ,addToCartPopup"
 						action="#{requestNoteBackingBean.addToRequestNote(requestNoteBackingBean.managedBean.addToCartFlag)}" 
-						icon="ui-icon-submit" update="addToCartId ,supplierItemViewID"/>
+						icon="ui-icon-submit" update="addToCartId ,@([id$=supplierItemViewID])"/>
 						
 					<p:commandButton value="#{lbl['lbl.sc.cancel']}" process="@this"
 						action="#{requestNoteBackingBean.closeListener}" icon="ui-icon-cancel" oncomplete="addToCartPopup.hide();"
