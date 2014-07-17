@@ -3042,7 +3042,7 @@ public class SpecificationBackingBean extends
 					if (!qt.getScQtSupplierCriteria().isAllState()) {
 						List<ScQtLocCriteria> locCriteria = new ArrayList<ScQtLocCriteria>();
 						
-						if (null != resDTO.getLocationDetails()) {
+						if (null != resDTO.getLocationDetails() && !resDTO.getLocationDetails().isEmpty()) {
 							
 							for (TplSpecLoc localLoc : resDTO
 									.getLocationDetails()) {
