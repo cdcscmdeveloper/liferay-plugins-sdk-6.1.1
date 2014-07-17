@@ -45,8 +45,9 @@
 			</p:column>
 			<p:column>
 				<p:inputText readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue}"
-					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.price}">
+					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.price}" style="text-align:right">
 					<p:ajax event="keyup" update="standardErrorLink" />
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</p:inputText>
 			</p:column>
 			<p:column>
@@ -71,7 +72,10 @@
 				<p:commandLink id="standardErrorLink" title="Error" update=":form"
 					oncomplete="errorDialog.show();"
 					actionListener="#{catalogueBackingBean.updateStandardErrorDialog(catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing)}"
-					disabled="#{!(catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.price eq null or catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.startDate eq null or catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.endDate eq null or catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.startDate >= catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.endDate)}">
+					disabled="#{!(catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.price eq null or 
+					catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.startDate eq null or 
+					catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.endDate eq null or 
+					catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.startDate >= catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.endDate)}">
 					<p:graphicImage value="/resources/ep/images/design/icon_error.png"></p:graphicImage>
 				</p:commandLink>
 			</p:column>
