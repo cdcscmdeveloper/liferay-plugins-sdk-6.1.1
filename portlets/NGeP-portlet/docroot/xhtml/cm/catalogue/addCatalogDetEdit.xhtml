@@ -403,48 +403,6 @@
 			        </p:column>
 			    </p:row>
 			</p:panelGrid>
-			
-			<ui:remove>
-			<h:panelGroup id="errorPopupPanel">
-				<table>
-					<tr>
-						<td style="white-space: nowrap; float: left;">
-								<p:graphicImage value="/resources/ep/images/messages/error.png"></p:graphicImage>
-								<p:outputLabel value="from quantity greater than To quantity."
-									rendered="#{catalogueBackingBean.managedBean.error1}"></p:outputLabel>
-
-								<p:graphicImage value="/resources/ep/images/messages/error.png"></p:graphicImage>
-								<p:outputLabel value="End date cannot be less than start date."
-									rendered="#{catalogueBackingBean.managedBean.error2}"></p:outputLabel>
-								
-								<p:graphicImage value="/resources/ep/images/messages/error.png"></p:graphicImage>
-								<p:outputLabel value="Please fill all columns."
-									rendered="#{catalogueBackingBean.managedBean.error3}"></p:outputLabel>
-								
-								<p:graphicImage value="/resources/ep/images/messages/error.png"></p:graphicImage>
-								<p:outputLabel
-									value="Start and end dates of this tier cannot overlap with others."
-									rendered="#{catalogueBackingBean.managedBean.error4}"></p:outputLabel>
-								
-								<p:graphicImage value="/resources/ep/images/messages/error.png"></p:graphicImage>
-								<p:outputLabel
-									value="Normal Promotion Date must within Normal Standard Date range."
-									rendered="#{catalogueBackingBean.managedBean.error5}"></p:outputLabel>
-								
-								<p:outputLabel
-									value="Normal Promotion Price must be less than Normal Standard Price."
-									rendered="#{catalogueBackingBean.managedBean.error6}"></p:outputLabel>
-							</td>
-					</tr>
-					<tr>
-						<td><p:panel>
-								<p:commandButton value="#{lbl['lbl.cm.zm.btn.ok']}"
-									style="float:right;" onclick="errorDialog.hide();" />
-							</p:panel></td>
-					</tr>
-				</table>
-			</h:panelGroup>
-			</ui:remove>
 		</p:dialog>
 
 
