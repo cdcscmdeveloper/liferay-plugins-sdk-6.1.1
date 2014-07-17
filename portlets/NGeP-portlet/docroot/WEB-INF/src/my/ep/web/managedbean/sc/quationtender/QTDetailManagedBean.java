@@ -73,6 +73,7 @@ import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
 import my.ep.web.bean.sc.quatationtender.TabBean;
+import my.ep.web.bean.sc.quatationtender.UserCommitteeSearchBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.type.sc.quationtender.CloneAll;
@@ -351,6 +352,10 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<TabBean> scCommitteeMemberTabList;
 	private List<PmParameter> finalizationSecratary;
 
+	// Existing Committee Search
+	private IPagingDataModel<PmUser> userSearchCommitteeDataModel;
+	private UserCommitteeSearchBean userCommitteeSearchBean;
+
 	// Briefing & Site Visit Details
 	private ScQtBsvDtl qtBriefing;
 	private ScQtBsvDtl qtSiteBriefing = new ScQtBsvDtl();
@@ -388,7 +393,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private PmAddress pmAddress;
 	private Date proposalValidityUntil;
 	private Date closingDate;
-	
+
 	private String address;
 
 	// Document
@@ -416,10 +421,12 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public QTDetailManagedBean() {
 		log.info("inside ");
-		
+
 		pmAddress = new PmAddress();
 		qtnTenderSearchBean = new QtnTenderSearchBean();
 		cloneQtnTenderSearchBean = new QtnTenderSearchBean();
+		
+		userCommitteeSearchBean = new UserCommitteeSearchBean();
 
 		root2 = new DefaultTreeNode("Root", null);
 		TreeNode node0 = new DefaultTreeNode("Clone All", root2);
@@ -1819,7 +1826,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		return selectSearchcommitteeNode;
 	}
 
-	public void setSelectSearchcommitteeNode(TreeNode[] selectSearchcommitteeNode) {
+	public void setSelectSearchcommitteeNode(
+			TreeNode[] selectSearchcommitteeNode) {
 		this.selectSearchcommitteeNode = selectSearchcommitteeNode;
 	}
 
@@ -2424,7 +2432,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		return scQtBriefingAttendance;
 	}
 
-	public void setScQtBriefingAttendance(ScQtBsvAttendance scQtBriefingAttendance) {
+	public void setScQtBriefingAttendance(
+			ScQtBsvAttendance scQtBriefingAttendance) {
 		this.scQtBriefingAttendance = scQtBriefingAttendance;
 	}
 
@@ -2442,6 +2451,24 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setFinalizationSecratary(List<PmParameter> finalizationSecratary) {
 		this.finalizationSecratary = finalizationSecratary;
+	}
+
+	public IPagingDataModel<PmUser> getUserSearchCommitteeDataModel() {
+		return userSearchCommitteeDataModel;
+	}
+
+	public void setUserSearchCommitteeDataModel(
+			IPagingDataModel<PmUser> userSearchCommitteeDataModel) {
+		this.userSearchCommitteeDataModel = userSearchCommitteeDataModel;
+	}
+
+	public UserCommitteeSearchBean getUserCommitteeSearchBean() {
+		return userCommitteeSearchBean;
+	}
+
+	public void setUserCommitteeSearchBean(
+			UserCommitteeSearchBean userCommitteeSearchBean) {
+		this.userCommitteeSearchBean = userCommitteeSearchBean;
 	}
 
 }

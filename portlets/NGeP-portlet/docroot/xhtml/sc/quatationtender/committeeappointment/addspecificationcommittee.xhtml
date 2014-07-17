@@ -41,7 +41,7 @@
 								<td style="width: 110px;"><p:outputLabel
 										value="#{lbl['lbl.sc.addscreen.idtype']}" /></td>
 								<td colspan="3"><p:selectOneMenu
-										value="#{qTCommitteBackingBean.managedBean.identificationType}"
+										value="#{qTCommitteBackingBean.managedBean.userCommitteeSearchBean.identificationType}"
 										style="width: 178px;margin-bottom: 5px;">
 										<f:selectItems
 											value="#{qTCommitteBackingBean.getDropdownCodeValues(ParameterTypeConst.identificationTypes)}" />
@@ -50,7 +50,7 @@
 							<tr>
 								<td><p:outputLabel value="#{lbl['lbl.sc.addscreen.idno']}" /></td>
 								<td colspan="3"><p:inputText
-										value="#{qTCommitteBackingBean.managedBean.identificationNo}"
+										value="#{qTCommitteBackingBean.managedBean.userCommitteeSearchBean.identificationNo}"
 										size="30" /></td>
 							</tr>
 						</table>
