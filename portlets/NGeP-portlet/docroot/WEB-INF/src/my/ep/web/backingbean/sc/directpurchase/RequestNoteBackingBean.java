@@ -639,9 +639,12 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		scRequestItem.setItemName(cmItem.getItemName());
 		scRequestItem.setItemDesc(cmSupplierItem.getItemDesc());
 		scRequestItem.setMinqty(cmSupplierItem.getMinOrder());
-		scRequestItem.setUom(cmSupplierItem.getPmUom());
 		
-		
+		if(cmSupplierItem.getPmUom()!=null){
+			scRequestItem.setUom(cmSupplierItem.getPmUom());
+		} else{
+			throw new EpException("Uom is mandatory.");
+		}
 		return scRequestItem;
 	}
 	
