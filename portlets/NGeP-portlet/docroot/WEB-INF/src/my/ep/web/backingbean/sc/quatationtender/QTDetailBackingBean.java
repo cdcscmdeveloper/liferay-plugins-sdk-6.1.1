@@ -297,7 +297,8 @@ public class QTDetailBackingBean extends
 				//renew the session..
 				renewSesionObject();
 				//this.getManagedBean().setSupplierCriteria(scQt.getScQtSupplierCriteria());
-				loadPrepareQtDetails(scQt.getQtId());
+				//loadPrepareQtDetails(scQt.getQtId());
+				retrieveQuationTenderDetails(scQt.getQtId());
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 										MessageUtils.getMessage(MessageConst.INFO_700004, new String[] {
 																getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION), scQt.getQtNo() },
@@ -1321,6 +1322,7 @@ public class QTDetailBackingBean extends
 	}
 
 	public void preRenderView() {
+		renewSesionObject();
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter("taskId");

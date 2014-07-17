@@ -1333,7 +1333,6 @@ public class NoticeBoardBackingBean extends
 		} else {
 			throw new EpException("Please select Bsv To register");
 		}
-
 		reqDTO.setQtBriefingList(bsvDetails);
 		BriefingResDTO resDto = qtBriefingSO.saveQTDtl(reqDTO);
 		if (resDto.isSuccessful()) {

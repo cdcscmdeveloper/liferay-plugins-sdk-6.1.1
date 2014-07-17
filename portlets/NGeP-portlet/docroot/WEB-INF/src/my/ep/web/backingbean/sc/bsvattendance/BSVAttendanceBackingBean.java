@@ -646,10 +646,8 @@ public class BSVAttendanceBackingBean extends
 			this.getManagedBean().setBriefingRegistrationList(null);
 
 			if (briefing != null) {
-
 				this.getManagedBean().setScQtBriefing(briefing);
 				BriefingReqDTO reqDTO = new BriefingReqDTO();
-
 				reqDTO.setQtBriefingId(briefing.getQtBsvDtlId());
 
 				BriefingResDTO resDTO = qTBriefingSO
