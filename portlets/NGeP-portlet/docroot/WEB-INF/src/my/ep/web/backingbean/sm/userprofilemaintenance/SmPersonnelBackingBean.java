@@ -262,8 +262,14 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		getCountryList();
 
 		if(getManagedBean().getBasicSmPersonnel().getSmPersonnelAddresses() != null && getManagedBean().getBasicSmPersonnel().getSmPersonnelAddresses().size() > 0){
-			updateMailAddLists(getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress().getPmCountry().getCountryId().toString(), getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress().getPmState().getStateId().toString(), getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress().getPmDistrict().getDistrictId().toString());
-			updatePermAddLists(getManagedBean().getBasicSmPersonnelPermanentAddress().getSmAddress().getPmCountry().getCountryId().toString(), getManagedBean().getBasicSmPersonnelPermanentAddress().getSmAddress().getPmState().getStateId().toString(), getManagedBean().getBasicSmPersonnelPermanentAddress().getSmAddress().getPmDistrict().getDistrictId().toString());
+			SmAddress address = getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress(); 
+			if(address.getAddress1() != null){
+				updateMailAddLists(address.getPmCountry().getCountryId().toString(), address.getPmState().getStateId().toString(), address.getPmDistrict().getDistrictId().toString());
+			}
+			address = getManagedBean().getBasicSmPersonnelPermanentAddress().getSmAddress(); 
+			if(address.getAddress1() != null){
+				updatePermAddLists(address.getPmCountry().getCountryId().toString(), address.getPmState().getStateId().toString(), address.getPmDistrict().getDistrictId().toString());
+			}
 		}
 	}
 	
@@ -273,8 +279,14 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		getCountryList();
 
 		if(getManagedBean().getUpdateSmPersonnel().getSmPersonnelAddresses() != null && getManagedBean().getUpdateSmPersonnel().getSmPersonnelAddresses().size() > 0){
-			updateMailAddLists(getManagedBean().getUpdateSmPersonnelMailingAddress().getSmAddress().getPmCountry().getCountryId().toString(), getManagedBean().getUpdateSmPersonnelMailingAddress().getSmAddress().getPmState().getStateId().toString(), getManagedBean().getUpdateSmPersonnelMailingAddress().getSmAddress().getPmDistrict().getDistrictId().toString());
-			updatePermAddLists(getManagedBean().getUpdateSmPersonnelPermanentAddress().getSmAddress().getPmCountry().getCountryId().toString(), getManagedBean().getUpdateSmPersonnelPermanentAddress().getSmAddress().getPmState().getStateId().toString(), getManagedBean().getUpdateSmPersonnelPermanentAddress().getSmAddress().getPmDistrict().getDistrictId().toString());
+			SmAddress address = getManagedBean().getUpdateSmPersonnelMailingAddress().getSmAddress(); 
+			if(address.getAddress1() != null){
+				updateMailAddLists(address.getPmCountry().getCountryId().toString(), address.getPmState().getStateId().toString(), address.getPmDistrict().getDistrictId().toString());
+			}
+			address = getManagedBean().getUpdateSmPersonnelPermanentAddress().getSmAddress();
+			if(address.getAddress1() != null){
+				updatePermAddLists(address.getPmCountry().getCountryId().toString(), address.getPmState().getStateId().toString(), address.getPmDistrict().getDistrictId().toString());
+			}	
 		}
 	}
 	
