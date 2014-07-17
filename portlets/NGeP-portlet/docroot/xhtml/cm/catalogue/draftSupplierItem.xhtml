@@ -61,8 +61,9 @@
 				<h:outputText value="* " styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.cm.price']}" />
 			</f:facet>
-			<p:inputText value="#{selectedSuppCat.cmStandardPricing.price}"
-				size="10"></p:inputText>
+			<p:inputText value="#{selectedSuppCat.cmStandardPricing.price}" size="10" style="text-align:right">
+			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+			</p:inputText>
 
 		</p:column>
 		<p:column width="5%">
