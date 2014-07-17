@@ -13,11 +13,12 @@
 
 	<ui:define name="contentSection">
 		<p:messages id="boTemplatespecCreate" showDetail="true"
-			showSummary="false" autoUpdate="true" closable="true" severity="error, info"/>
+			showSummary="false" autoUpdate="true" closable="true"
+			severity="error, info" />
 		<div>
 			<p:commandButton value="#{lbl['lbl.sc.spec.back']}"
 				style="float:left;" icon="ui-icon-back"
-				action="#{specificationBackingBean.backAction}"  />
+				action="#{specificationBackingBean.backAction}" />
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.cancel']}"
 				style="float:right;" icon="ui-icon-cancel"
 				action="#{specificationBackingBean.backAction}"></p:commandButton>
@@ -28,7 +29,7 @@
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
 				style="float:right;"
 				action="#{specificationBackingBean.saveTemplateSpec(null,'1',null)}"
-				icon="ui-icon-save" update="@all"/>
+				icon="ui-icon-save" update="@all" />
 
 		</div>
 		<div class="clear"></div>
@@ -60,9 +61,9 @@
 				<tr>
 
 					<td><h:outputLabel value="#{lbl['lbl.sc.spec.local.goods']}" /></td>
-					<td><p:selectOneRadio id="estimated">
+					<td><p:selectOneRadio id="estimated" value="#{specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.itemOriginCode.parameterId}">
 							<f:selectItems
-								value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+								value="#{specificationBackingBean.getRadioButtonValues(ParameterTypeConst.itemOrigin)}" />
 						</p:selectOneRadio></td>
 				</tr>
 
