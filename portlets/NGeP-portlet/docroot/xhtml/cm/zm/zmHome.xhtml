@@ -118,17 +118,17 @@
 					</TR>
 				</table>
 			</h:panelGroup>
+			<p:commandButton value="#{lbl['lbl.cm.zm.btn.cancel']}" style="float:right;" icon="ui-icon-cancel"
+				oncomplete="ZL.hide();"></p:commandButton>
+					&#160;&#160;
+
 			<p:commandButton id="zoneAddButton"
 					value="#{lbl['lbl.cm.zm.btn.ok']}" disabled="#{zoneMaintenanceBackingBean.managedBean.selectedSupplierZone.suppZoneName eq null or zoneMaintenanceBackingBean.managedBean.selectedSupplierZone.suppZoneName.length() eq 0}"
 					style="float:right;" oncomplete="ZL.hide();" process="@all ,zoneNameId"
-					update="@this, zonePopupPanel" partialSubmit="true"
+					update="@this, zonePopupPanel" partialSubmit="true" icon="ui-icon-accept"
 					actionListener="#{zoneMaintenanceBackingBean.updateZoneListOnPopUpClose}">
 		   </p:commandButton>
-					&#160;&#160;
 			
-			
-			<p:commandButton value="#{lbl['lbl.cm.zm.btn.cancel']}" style="float:right;"
-				oncomplete="ZL.hide();"></p:commandButton>
 		</p:dialog>	 			
 	</ui:define>	
 </ui:composition>
