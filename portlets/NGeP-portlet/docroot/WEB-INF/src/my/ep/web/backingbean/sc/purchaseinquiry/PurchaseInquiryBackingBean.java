@@ -205,12 +205,14 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 		  scPrInquiry.setScRequestSupplierItems(supplierItems);
 		  scPrInquiry.setRequestSupplierItem(requestSupplierItem);
 		  getManagedBean().setScPrInquiry(scPrInquiry);
+		  
+		  requestSupplierItem.setRequestNoteItem(requestItem);
+		  requestSupplierItem.setScPrInquiy(scPrInquiry);
+		  getManagedBean().setScRequestSupplierItem(requestSupplierItem);
+		
 		  requestNoteDtl.setRequestItem(requestItem);
 		  requestNoteDtl.setScRequestSupplierItem(requestSupplierItem);
 		  getManagedBean().setRequestNoteDtl(requestNoteDtl);
-		  requestSupplierItem.setRequestNoteItem(requestItem);
-		  getManagedBean().setScRequestSupplierItem(requestSupplierItem);
-		  
 		  // pr inquiry status
 		  getCurrentStatus(DPStatusConstants.PRI_PENDING_SUBMISSION);
 		  //TODO default value to  price type drop down listing
@@ -609,12 +611,17 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 						}
 
 						requestNoteBackingBean.getManagedBean().setProcurementType(scRequestNoteDtl.getProcurementType().getParameterCode());
+						requestNoteBackingBean.getManagedBean().setRequestSupplierItem(scRequestNoteDtl.getScRequestSupplierItem());
+						
+						//requestNoteBackingBean.supplierLister(supplierId, priceTypeId, requestNoteDtl, supplierItems)
+						requestNoteBackingBean.supplierLister(scRequestNoteDtl.getScRequestSupplierItem().getSmSupplier().getSupplierId(),
+								scRequestNoteDtl.getPriceType().getParameterId(), scRequestNoteDtl, scRequestNoteDtl.getRequestItem().getSupplierItems());
+						
 						requestNoteDtls.add(scRequestNoteDtl);
 					}
 					requestNoteBackingBean.getManagedBean().setRequestSupplierItem(requestNoteDtls.get(0).getScRequestSupplierItem());
 				}
 				
-				requestNoteBackingBean.getManagedBean().setRequestSupplierItem(requestNote.getRequestNoteDtls().get(0).getScRequestSupplierItem());
 				IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 				FacesScopes facesScopes = new FacesScopes();
 				String token = facesScopes.getBPMAuthenticationCtxToken();
@@ -712,8 +719,11 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 			 ScRequestSupplierItem requestSupplierItem = prInquiry.getScRequestSupplierItems().get(0);
 			 ScSupplierItemPrice itemPrice =requestSupplierItem.getSupplierItemPrices().get(0);
 			 ScRequestNoteDtl requestNoteDtl = requestSupplierItem.getScRequestNoteDtl().get(0);
+			
+			 getManagedBean().setScRequestSupplierItem(requestNoteDtl.getScRequestSupplierItem());
 			 requestSupplierItem.setSupplierItemPrice(itemPrice);
 			 getManagedBean().setRequestNoteDtl(requestNoteDtl);
+			 
 			 prInquiry.setRequestSupplierItem(requestSupplierItem);
 			 prInquiry.setDayToResponse(ParameterConst.PIQ_RESP_DAYS); // by default days
 
@@ -722,7 +732,7 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 			 getManagedBean().setPriceType(itemPrice.getPricing().getPricingType());
 			 getManagedBean().setPriceTypes(getPriceTypeDropdownValues(ParameterTypeConst.PRICE_TYPE, priceTypes));
 			 getManagedBean().setPmOrgProfile(requestNoteDtl.getScRequestNote().getPmOrgProfile());
-		 }
+	    }
 		 getManagedBean().setTaskId(taskId);
 		 getManagedBean().setProcessName(res.getProcessName());
 		 getManagedBean().setOutComes(res.getAction());
@@ -740,6 +750,8 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 	 */
 	public String backToPervious() {
 		log.info("backToPervious");
+		// clear data
+		super.renewSesionObject();
 		return "catalogueSearch";
 	}
 
