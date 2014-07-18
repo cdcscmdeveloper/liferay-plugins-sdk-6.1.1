@@ -139,7 +139,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			}
 			
 			reqDTO.setUserRole(getUserRole());
-			if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
+			if(!(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE))){
 				reqDTO.setPmUser(getManagedBean().getPmUser());
 				if(null != getManagedBean().getInvoice().getSupplierInvoiceRef()){
 					getManagedBean().getInvoice().setSupplierInvoiceRef(getManagedBean().getInvoice().getSupplierInvoiceRef());
@@ -214,7 +214,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			FulfilmentResDTO resDTO = new FulfilmentResDTO();
 			getManagedBean().setModificationCancel(false);
-			if(FLProcessNameConst.ACK_MODIFIED_INVOICE_HT.equals(res.getTaskName())){
+			if(FLProcessNameConst.ACK_MODIFIED_INVOICE_HT.equals(res.getTaskName()) || FLProcessNameConst.REVIEW_CANCEL_INVOICE_HT.equals(res.getTaskName())){
 				invoiceSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IInvoiceSO.class);
 				reqDTO.setInvoiceId(Long.valueOf(res.getDocId()));
 				resDTO = invoiceSO.retrieveInvoiceByInvoiceId(reqDTO);
@@ -228,6 +228,8 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 				getManagedBean().setModificationCancel(true);
 				getManagedBean().setTaskId(taskId);
 				getManagedBean().setOutComes(res.getAction());
+				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+				flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
 			}else{
 				Object obj = res.getPojo();
 				String[] outcome = new String[res.getAction().length + 1];
