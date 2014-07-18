@@ -110,6 +110,7 @@ public class SupplierManagementConst {
 	public static final String PERM_ADD = "I";
 	public static final String BUS_ADD = "C";
 	public static final String RES_ADD = "R";
+	public static final String MAIL_ADD = "M";
 	public static final int DEFAULT_REV_NO = 1;
 	public static final String PROF_SERVICE = "P";
 	public static final String SPECIAL_SERVICE = "S";
