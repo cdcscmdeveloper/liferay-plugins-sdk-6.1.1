@@ -31,10 +31,13 @@
 			<p:inputText for="signBy" disabled="true" style="width:170px;"/>
 			<h:outputLabel id="dperiod" value="#{lbl['lbl.ct.dperiod']}" rendered="#{!amendmentBackingBean.managedBean.ctContract.zonalPricing}" />
 			<h:panelGrid columns="3" rendered="#{!amendmentBackingBean.managedBean.ctContract.zonalPricing}">
-				<p:inputText for="dperiod" styleClass="ppRightBtn" size="23" value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.deliveryTerm}" 
-					disabled="#{amendmentBackingBean.managedBean.ctContract.zonalPricing}" />
+				<p:inputText for="dperiod" styleClass="ppRightBtn" style="width:65px;"  disabled="true" 
+				   value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.deliveryTerm}" />
 				<p:spacer width="2"/>
-				<p:outputLabel value="Days" />
+				<p:selectOneMenu  style="width:100px;"  disabled="true" 
+				   value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.deliveryTermUom.parameterId}">
+			       <f:selectItems value="#{amendmentBackingBean.getDropdownValues(ParameterTypeConst.deliveryTerm)}" />
+			   </p:selectOneMenu>
 			</h:panelGrid>	
 			 <p:outputLabel id="astatus" value="#{lbl['lbl.ct.ag.agstatus']}" rendered="#{!amendmentBackingBean.managedBean.ctContract.zonalPricing}" />
 			 <p:inputText for="astatus" style="width:170px;" disabled="true" rendered="#{!amendmentBackingBean.managedBean.ctContract.zonalPricing}" />

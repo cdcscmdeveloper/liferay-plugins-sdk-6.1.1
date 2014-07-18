@@ -40,8 +40,6 @@ public class AmendmentManagedBean extends BaseManagedBean {
 
 	private static final long serialVersionUID = 1L;
 	
-	private CtContractItem selectedItem;
-	
 	private String taskName;
 	private String[] action;
 	private String processName;
@@ -106,6 +104,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private CtItemCeilingQty ctItemCeilingQtys;
 	private ScLoaWitness scLoaWitness;
 	private ScLoaReport selectedScLoaReports;
+	private CtContractItem selectedItem;
 	
 	public CtContractVer getContractVer() {
 		return contractVer;

@@ -28,12 +28,15 @@
 			<p:outputLabel id="signBy" value="#{lbl['lbl.ct.sdate']}"  rendered="#{terminationBackingBean.managedBean.ctContract.agreement}" />
 			<p:inputText for="signBy" value="#{terminationBackingBean.convertTime(terminationBackingBean.managedBean.ctContract.currentAgreement.signedDate)}"
 			   rendered="#{terminationBackingBean.managedBean.ctContract.agreement}" disabled="true" style="width:170px;"/>
-			<h:outputLabel id="dperiod" value="#{lbl['lbl.ct.dperiod']}" rendered="#{!terminationBackingBean.managedBean.ctContract.zonalPricing}" />
+			<p:outputLabel id="dperiod" value="#{lbl['lbl.ct.dperiod']}" rendered="#{!terminationBackingBean.managedBean.ctContract.zonalPricing}" />
 			<h:panelGrid columns="3" rendered="#{!terminationBackingBean.managedBean.ctContract.zonalPricing}">
-				<p:inputText for="dperiod" styleClass="ppRightBtn" size="23" value="#{terminationBackingBean.managedBean.contractVer.ctContractValue.deliveryTerm}" 
-					disabled="#{terminationBackingBean.managedBean.ctContract.zonalPricing}" />
+				<p:inputText for="dperiod" styleClass="ppRightBtn" style="width:65px;" disabled="true" 
+				   value="#{terminationBackingBean.managedBean.contractVer.ctContractValue.deliveryTerm}" />
 				<p:spacer width="2"/>
-				<p:outputLabel value="#{lbl['lbl.ct.days']}" />
+				<p:selectOneMenu  style="width:100px;"  disabled="true" 
+				   value="#{terminationBackingBean.managedBean.contractVer.ctContractValue.deliveryTermUom.parameterId}">
+			       <f:selectItems value="#{terminationBackingBean.getDropdownValues(ParameterTypeConst.deliveryTerm)}" />
+			   </p:selectOneMenu>
 			</h:panelGrid>	
 			<f:verbatim rendered="#{terminationBackingBean.managedBean.ctContract.zonalPricing and !terminationBackingBean.managedBean.ctContract.agreement}"/>
 			<f:verbatim rendered="#{terminationBackingBean.managedBean.ctContract.zonalPricing and !terminationBackingBean.managedBean.ctContract.agreement}"/>

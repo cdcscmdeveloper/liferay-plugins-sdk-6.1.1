@@ -36,11 +36,14 @@
 			<p:inputText for="signBy"  value="#{agreementBackingBean.convertTime(agreementBackingBean.managedBean.ctContract.currentAgreement.signedDate)}"
 			   rendered="#{agreementBackingBean.managedBean.ctContract.agreement}" disabled="true" style="width:170px;"/>
 			<h:outputLabel id="dperiod" value="#{lbl['lbl.ct.dperiod']}" rendered="#{!agreementBackingBean.managedBean.ctContract.zonalPricing}" />
-			<h:panelGrid columns="3" rendered="#{!agreementBackingBean.managedBean.ctContract.zonalPricing}">
-				<p:inputText for="dperiod" styleClass="ppRightBtn" size="23" value="#{agreementBackingBean.managedBean.contractVer.ctContractValue.deliveryTerm}" 
-					disabled="#{agreementBackingBean.managedBean.ctContract.zonalPricing}" />
+	        <h:panelGrid columns="3" rendered="#{!agreementBackingBean.managedBean.ctContract.zonalPricing}">
+				<p:inputText for="dperiod" styleClass="ppRightBtn" style="width:65px;" disabled="true" 
+				   value="#{agreementBackingBean.managedBean.contractVer.ctContractValue.deliveryTerm}" />
 				<p:spacer width="2"/>
-				<p:outputLabel value="Days" />
+				<p:selectOneMenu  style="width:100px;"  disabled="true" 
+				   value="#{agreementBackingBean.managedBean.contractVer.ctContractValue.deliveryTermUom.parameterId}">
+			       <f:selectItems value="#{agreementBackingBean.getDropdownValues(ParameterTypeConst.deliveryTerm)}" />
+			   </p:selectOneMenu>
 			</h:panelGrid>	
 			<f:verbatim rendered="#{agreementBackingBean.managedBean.ctContract.zonalPricing and !agreementBackingBean.managedBean.ctContract.agreement}"/>
 			<f:verbatim rendered="#{agreementBackingBean.managedBean.ctContract.zonalPricing and !agreementBackingBean.managedBean.ctContract.agreement}"/>

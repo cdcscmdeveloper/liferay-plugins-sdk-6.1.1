@@ -28,10 +28,13 @@
 			   rendered="#{suspensionBackingBean.managedBean.ctContract.agreement}" disabled="true" style="width:170px;"/>
 			<h:outputLabel id="dperiod" value="#{lbl['lbl.ct.dperiod']}" rendered="#{!suspensionBackingBean.managedBean.ctContract.zonalPricing}" />
 			<h:panelGrid columns="3" rendered="#{!suspensionBackingBean.managedBean.ctContract.zonalPricing}">
-				<p:inputText for="dperiod" styleClass="ppRightBtn" size="23" value="#{suspensionBackingBean.managedBean.contractVer.ctContractValue.deliveryTerm}" 
-					disabled="true" />
+				<p:inputText for="dperiod" styleClass="ppRightBtn" style="width:65px;" disabled="true" 
+				   value="#{suspensionBackingBean.managedBean.contractVer.ctContractValue.deliveryTerm}" />
 				<p:spacer width="2"/>
-				<p:outputLabel value="Days" />
+				<p:selectOneMenu  style="width:100px;"  disabled="true" 
+				   value="#{suspensionBackingBean.managedBean.contractVer.ctContractValue.deliveryTermUom.parameterId}">
+			       <f:selectItems value="#{suspensionBackingBean.getDropdownValues(ParameterTypeConst.deliveryTerm)}" />
+			   </p:selectOneMenu>
 			</h:panelGrid>	
 			<f:verbatim rendered="#{suspensionBackingBean.managedBean.ctContract.zonalPricing and !suspensionBackingBean.managedBean.ctContract.agreement}"/>
 			<f:verbatim rendered="#{suspensionBackingBean.managedBean.ctContract.zonalPricing and !suspensionBackingBean.managedBean.ctContract.agreement}"/>
