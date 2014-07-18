@@ -70,6 +70,7 @@ public class SupplierManagedBean extends BaseManagedBean {
 	private Map<String, SmSupplierBank> supplierBankAccountMap;
 	private List<CtContract> contractList = new ArrayList<CtContract>();
 	private SearchFilterBean searchFilterBean = new SearchFilterBean();
+	private String fileDirectory;
 	
 	public SupplierManagedBean(){
 		
@@ -331,4 +332,11 @@ public class SupplierManagedBean extends BaseManagedBean {
 		this.financialBankBranch = financialBankBranch;
 	}
 	
+	public String getFileDirectory() {
+		return fileDirectory;
+	}
+
+	public void setFileDirectory(String fileDirectory) {
+		this.fileDirectory = fileDirectory;
+	}
 }

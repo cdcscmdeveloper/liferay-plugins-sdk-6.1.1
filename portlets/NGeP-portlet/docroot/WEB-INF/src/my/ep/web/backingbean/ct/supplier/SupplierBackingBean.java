@@ -88,7 +88,10 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.ct.ContractManagementConst;
+import my.ep.web.format.AttachmentDateFormat;
+import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.ct.supplier.SupplierManagedBean;
+import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -121,7 +124,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			initializeFactoring();
 		} 
 		if(ctBB == null){
-			ctBB = new ContractBackingBean();
+			ctBB = new ContractBackingBean(this.getManagedBean().getFileDirectory());
 			ctBB.initializeRemarkAndAttachement(this.getManagedBean().getRemarkList(), this.getManagedBean().getAttachmentList());
 		}
 	}
@@ -184,9 +187,11 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			this.getManagedBean().setTaskId(taskId);
 			this.getManagedBean().setAction(res.getAction());
 			this.getManagedBean().setTaskName(res.getTaskName());
+			String docType = null;
 
 			if (res.getProcessName().equalsIgnoreCase(CTProcessNameConst.BANK_ACCOUNT_CHANGE_PROCESS_NAME)) {
 				CTBankAccountDataType dataType = (CTBankAccountDataType) obj;
+				docType = ParameterConst.DOCTYPE_CHANGE_BANK_ACCOUNT;
 				
 				contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,	IContractSO.class);
 				ContractReqDTO ctReqDTO = new ContractReqDTO();
@@ -203,6 +208,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 				}
 			} else if (res.getProcessName().equalsIgnoreCase(CTProcessNameConst.FACTORING_REQUEST_PROCESS_NAME)) {
 				CTFactoringDataType dataType = (CTFactoringDataType) obj;
+				docType = ParameterConst.DOCTYPE_REQUEST_FACTORING;
 				
 				contractSupplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSupplierSO.class);
 				ContractSupplierReqDTO csReqDTO = new ContractSupplierReqDTO();
@@ -232,8 +238,10 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 					getManagedBean().setRemoveFactoring(true);
 				}
 			}
-
-			ContractBackingBean ctBB = new ContractBackingBean();
+			
+			getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, 
+				docType, getManagedBean().getCtContract().getContractNo()));
+			ContractBackingBean ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
 			ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 
 			if (res.getProcessName().equalsIgnoreCase(CTProcessNameConst.BANK_ACCOUNT_CHANGE_PROCESS_NAME)) {
@@ -648,33 +656,25 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	}
     
     public void fileUpload(FileUploadEvent event) throws Exception {
-	    UploadedFile item = event.getFile();
-	    String filePath = "C:/projects/uploads/"+item.getFileName();
-	    FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
+    	UploadedFile item = event.getFile();
+		AttachmentFormat attachmentFormat = new AttachmentDateFormat();
+		
+		String filePath = getManagedBean().getFileDirectory();
+		File file = new File(filePath);
+		file.mkdirs();
+		filePath = filePath + "/" + attachmentFormat.format(item.getFileName(), null);
+		
+		FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
+	    fileOuputStream.write(item.getContents());
+	    fileOuputStream.close();    	
 	    this.getManagedBean().getFactoring().setFileName(item.getFileName());
 	    this.getManagedBean().getFactoring().setFilePath(filePath);
-        fileOuputStream.write(item.getContents());
-        fileOuputStream.close();
     }
     
-    public String fileNames(String filePath){
-		String fileName = "";
-		if(filePath == null || filePath=="")
-		  return fileName;
-		
-		File file = new File(filePath);
-		fileName = file.getName().substring(0, file.getName().lastIndexOf('.'));
-	    return fileName;
-	}
-    
-    public void downloadFile(String filePath) throws IOException {
-		PortletResponse  portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();  
+    public void downloadFile(String filePath, String fileName) throws IOException {
+    	PortletResponse  portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();  
 		HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
 		
-		String fileName = null;
-		
-		File file = new File(filePath);
-		fileName = file.getName();
 		res.setHeader( "Content-Disposition", "attachment; filename=\"" + fileName + "\"" );//
 		res.setHeader( "Content-Transfer-Encoding", "binary" );
 		res.setContentType("application/octet-stream");

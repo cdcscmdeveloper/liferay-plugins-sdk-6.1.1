@@ -170,7 +170,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	 
 	    initializeRemarks();
 	    if(ctBB == null){
-		  ctBB = new ContractBackingBean();
+		  ctBB = new ContractBackingBean(this.getManagedBean().getFileDirectory());
 		  ctBB.initializeRemarkAndAttachement(this.getManagedBean().getRemarkList(), this.getManagedBean().getAttachmentList());
 		}
 	}
@@ -383,7 +383,9 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			}
 			
 			initializeRemarks();
-			ContractBackingBean ctBB = new ContractBackingBean();
+			getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, 
+					getManagedBean().getContractVer().getDocType(), getManagedBean().getCtContract().getContractNo()));
+			ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
 		    ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
 	}
 	
@@ -732,7 +734,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
     	UploadedFile item = event.getFile();
 		AttachmentFormat attachmentFormat = new AttachmentDateFormat();
 		
-		String filePath = DocumentRepositoryUtils.getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, getManagedBean().getContractVer().getDocType(), getManagedBean().getCtContract().getContractNo());
+		String filePath = getManagedBean().getFileDirectory();
 		File file = new File(filePath);
 		file.mkdirs();
 		filePath = filePath + "/" + attachmentFormat.format(item.getFileName(), null);
@@ -1312,6 +1314,9 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		    trBB.getManagedBean().setRemarkList(resDTO.getCtRemarks());
 		    trBB.getManagedBean().setAttachmentList(resDTO.getCtAttachments());
 			trBB.getManagedBean().setViewContract(false);
+			trBB.getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, 
+					trBB.getManagedBean().getContractVer().getDocType(), trBB.getManagedBean().getCtContract().getContractNo()));	
+			
 		}catch(Exception e) {
 				e.printStackTrace();
 		} finally{
@@ -1368,10 +1373,8 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			suspBB.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
 		    suspBB.getManagedBean().setRemarkList(resDTO.getCtRemarks());
 		    suspBB.getManagedBean().setAttachmentList(resDTO.getCtAttachments());
-			
-			ContractBackingBean ctBB = new ContractBackingBean();
-			ctBB.initializeRemarkAndAttachement(suspBB.getManagedBean().getRemarkList(), suspBB.getManagedBean().getAttachmentList()); 
-			
+		    suspBB.getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, 
+					suspBB.getManagedBean().getContractVer().getDocType(), suspBB.getManagedBean().getCtContract().getContractNo()));
 		} catch(Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -1379,7 +1382,6 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			resDTO = null;
 			reqDTO = null;
 			suspBB = null;
-			ctBB = null;
 		}
 		return PROCESS_SUSPEND_PAGE;
 	}
@@ -1407,9 +1409,8 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			
 			amendBB.getManagedBean().setRemarkList(resDTO.getCtRemarks());
 			amendBB.getManagedBean().setAttachmentList(resDTO.getCtAttachments());
-			ContractBackingBean ctBB = new ContractBackingBean();
-			ctBB.initializeRemarkAndAttachement(amendBB.getManagedBean().getRemarkList(), amendBB.getManagedBean().getAttachmentList()); 
-			
+			amendBB.getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, 
+					amendBB.getManagedBean().getContractVer().getDocType(), amendBB.getManagedBean().getCtContract().getContractNo()));	
 		}finally {
 			contractSO = null;
 			ctBB = null;
@@ -1486,9 +1487,15 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	
 	public void agencyFileUpload(FileUploadEvent event) throws Exception {
 		FacesScopes facesScopes = new FacesScopes();
+		AttachmentFormat attachmentFormat = new AttachmentDateFormat();
 		
 		UploadedFile item = event.getFile();
-		String filePath = "C:/projects/uploads/"+item.getFileName();
+		
+		String filePath = getManagedBean().getFileDirectory();
+		File file = new File(filePath);
+		file.mkdirs();
+		filePath = filePath + "/" + attachmentFormat.format(item.getFileName(), null);
+		
 		FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
 	    fileOuputStream.write(item.getContents());
 	    fileOuputStream.close();

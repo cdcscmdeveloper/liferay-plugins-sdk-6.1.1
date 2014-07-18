@@ -38,6 +38,7 @@ public class SuspensionManagedBean extends BaseManagedBean {
 	private CtContractVer contractVer;
 	private List<CtAttachment> attachmentList;
 	private List<CtContractItem> ctItemFilter;
+	private String fileDirectory;
 	
 	public String getEditorValue() {
 		return editorValue;
@@ -106,7 +107,12 @@ public class SuspensionManagedBean extends BaseManagedBean {
 	public void setCtItemFilter(List<CtContractItem> ctItemFilter) {
 		this.ctItemFilter = ctItemFilter;
 	}
-	
-	
 
+	public String getFileDirectory() {
+		return fileDirectory;
+	}
+
+	public void setFileDirectory(String fileDirectory) {
+		this.fileDirectory = fileDirectory;
+	}
 }

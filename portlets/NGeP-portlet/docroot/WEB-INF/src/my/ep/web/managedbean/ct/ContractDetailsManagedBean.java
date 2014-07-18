@@ -140,6 +140,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private SmSupplierBank smSupplierBanks;
 	private Map<String,Object> radioButtonSchedule;
 	private CtFulfilment ctFulfilments;
+	private String fileDirectory;
 	
 	public String[] getAction() {
 		return action;
@@ -854,5 +855,13 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 
 	public void setPtjCodeNameSearchValues(String ptjCodeNameSearchValues) {
 		this.ptjCodeNameSearchValues = ptjCodeNameSearchValues;
+	}
+	
+	public String getFileDirectory() {
+		return fileDirectory;
+	}
+
+	public void setFileDirectory(String fileDirectory) {
+		this.fileDirectory = fileDirectory;
 	}
 }

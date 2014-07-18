@@ -167,7 +167,7 @@
 				<p:spacer width="1"/>
 		     <h:commandLink value="#{supplierBackingBean.managedBean.factoring.fileName}" 
 		        style="float:left;" styleClass="blue_font"  rendered="#{supplierBackingBean.managedBean.factoring.filePath != null}" 
-				action="#{supplierBackingBean.downloadFile(supplierBackingBean.managedBean.factoring.filePath)}"/>		
+				action="#{supplierBackingBean.downloadFile(supplierBackingBean.managedBean.factoring.filePath, supplierBackingBean.managedBean.factoring.fileName)}"/>		
 		    </h:panelGrid>		
 		  </h:panelGroup> 
       </h:panelGrid>

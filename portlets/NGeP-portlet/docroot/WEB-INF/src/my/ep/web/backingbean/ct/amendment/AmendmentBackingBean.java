@@ -181,7 +181,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		}
 		
 		if(ctBackingBean == null){
-		     ctBackingBean = new ContractBackingBean();
+		     ctBackingBean = new ContractBackingBean(this.getManagedBean().getFileDirectory());
 		     ctBackingBean.initializeRemarkAndAttachement(this.getManagedBean().getRemarkList(), this.getManagedBean().getAttachmentList());
 		}
 	}

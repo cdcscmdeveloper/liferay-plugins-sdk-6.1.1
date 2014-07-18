@@ -64,6 +64,7 @@ import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.ct.ContractManagementConst;
 import my.ep.web.managedbean.ct.termination.TerminationManagedBean;
+import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -96,7 +97,7 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 			this.getManagedBean().setAction(new String[] {BpmOutcomeConst.BPM_SUBMIT});	
 		
 		if(ctBB == null){
-			 ctBB = new ContractBackingBean();
+			 ctBB = new ContractBackingBean(this.getManagedBean().getFileDirectory());
 			 ctBB.initializeRemarkAndAttachement(this.getManagedBean().getRemarkList(), this.getManagedBean().getAttachmentList());
 		}
 	}
@@ -529,8 +530,8 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 	    
 		getManagedBean().setRemarkList(resDTO.getCtRemarks());
 		getManagedBean().setAttachmentList(resDTO.getCtAttachments());
-		ContractBackingBean ctBB = new ContractBackingBean();
-		ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
+		getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, 
+				getManagedBean().getContractVer().getDocType(), getManagedBean().getCtContract().getContractNo()));
 		
 		flush();
 		

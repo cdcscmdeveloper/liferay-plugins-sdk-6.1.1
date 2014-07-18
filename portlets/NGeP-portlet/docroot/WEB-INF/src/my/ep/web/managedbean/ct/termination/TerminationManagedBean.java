@@ -47,6 +47,7 @@ public class TerminationManagedBean extends BaseManagedBean{
 	private List<CtTermination> terminationList;
 	private CtContract ctContract;
 	private CtContractVer contractVer;
+	private String fileDirectory;
 
 	public String getTaskName() {
 		return taskName;
@@ -179,4 +180,11 @@ public class TerminationManagedBean extends BaseManagedBean{
 		this.externalPageUrl = externalPageUrl;
 	}
 
+	public String getFileDirectory() {
+		return fileDirectory;
+	}
+
+	public void setFileDirectory(String fileDirectory) {
+		this.fileDirectory = fileDirectory;
+	}
 }

@@ -40,9 +40,11 @@
 			</p:dataTable> 
        	</div>
        	<div class="ppRightBtn">
-       		<p:commandButton value="#{lbl['lbl.ct.agn.btn.add']}" process="@form" icon="ui-icon-add" onclick="dlgAgency.show();" rendered="#{!contractDetailsBackingBean.managedBean.directPurchase}"/> 
-			<p:commandButton id="delBtn" value="Delete" icon="ui-icon-delete" process="@form" onclick="dlgDel.show();"  rendered="#{!contractDetailsBackingBean.managedBean.directPurchase}"/>
-			<p:commandButton value="#{lbl['lbl.ct.agn.table.da']}" disabled="#{fn:length(contractDetailsBackingBean.selectedListOfAgency)!=1}" onclick="deliveryAddressDlg.show();" rendered="#{!contractDetailsBackingBean.managedBean.directPurchase}" />
+       		<p:commandButton value="#{lbl['lbl.ct.agn.btn.add']}" process="@form" icon="ui-icon-add" onclick="dlgAgency.show();" rendered="#{!contractDetailsBackingBean.managedBean.directPurchase and
+       			contractDetailsBackingBean.managedBean.contractVer.ctAgencies.get(0).ctAgencyAddresses == null}"/> 
+			<p:commandButton id="delBtn" value="Delete" icon="ui-icon-delete" process="@form" onclick="dlgDel.show();"  rendered="#{!contractDetailsBackingBean.managedBean.directPurchase and
+       			contractDetailsBackingBean.managedBean.contractVer.ctAgencies.get(0).ctAgencyAddresses == null}"/>
+			<p:commandButton value="#{lbl['lbl.ct.agn.table.da']}" disabled="#{fn:length(contractDetailsBackingBean.selectedListOfAgency)!=1}" onclick="deliveryAddressDlg.show();"/>
 	  	</div>
 	  	    
         <p:dialog id="dlgDel" widgetVar="dlgDel" header="#{lbl['lbl.ct.dialong.cofirm.header']}" styleClass="screen-title"  
@@ -120,11 +122,11 @@
            </p:panel>
 	</p:dialog>
 	<p:dialog id="deliveryAddressDlg" header="#{lbl['lbl.ct.agn.table.da']}" widgetVar="deliveryAddressDlg" modal="true" width="600" height="400">
-	  <p:dataTable id="deliveryAddressTbl" var="data" value="#{contractDetailsBackingBean.selectedListOfAgency[0].ctAgencyAddresses}"
+	  <p:dataTable id="deliveryAddressTbl" var="agencyData" value="#{contractDetailsBackingBean.selectedListOfAgency[0].ctAgencyAddresses}"
 		lazy="true" rowKey="#{data}">
 		<ac:paginator for="deliveryAddressTbl"/>
 		<p:column headerText="#{lbl['lbl.ct.agn.table.da']}">
-		   <p:outputLabel value="#{data.addressType.pmAddress.address1}" style="float:left;" />
+		   <p:outputLabel value="#{contractDetailsBackingBean.getFullAddress(agencyData.addressType.pmAddress)}" style="float:left;" />
 		</p:column>
 	   </p:dataTable>
 	</p:dialog>

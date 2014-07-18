@@ -70,7 +70,7 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 	    }
 	    
 	    if(ctBB == null){
-			  ctBB = new ContractBackingBean();
+			  ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
 			  ctBB.initializeRemarkAndAttachement(this.getManagedBean().getRemarkList(), this.getManagedBean().getAttachmentList());
 			}
 	 }

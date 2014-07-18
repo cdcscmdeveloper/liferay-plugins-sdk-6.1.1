@@ -56,7 +56,11 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	
 	public ContractBackingBean(String fileDirectory) {
 		log.debug("ContractBackingBean.constructor(fileDirectory)");
-		getManagedBean().setFileDirectory(fileDirectory);
+		if(getManagedBean().getFileDirectory()==null) {
+			getManagedBean().setFileDirectory(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)+"/CT/temp");
+		} else {
+			getManagedBean().setFileDirectory(fileDirectory);
+		}
 	}
 	
 	public void initializeRemarkAndAttachement(List<CtRemark> remarkList, List<CtAttachment> attachmentList) {
