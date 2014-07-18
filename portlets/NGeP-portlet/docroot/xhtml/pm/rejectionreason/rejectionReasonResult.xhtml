@@ -22,7 +22,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	            #{reason.reasonDesc}
 	        </p:column> 
 	        <p:column headerText="#{lbl['lbl.pm.status']}">  
-	            #{(reason.recordStatusFlg==1)?'Active':'Inactive'}
+	            #{(reason.recordStatusFlg==1)? lbl['lbl.pm.active'] : lbl['lbl.pm.inactive']}
 	        </p:column>  
 	        <p:column headerText="#{lbl['lbl.pm.action']}">  
       		   <p:commandLink action="#{rejectionReasonBackingBean.redirectToMaintainReason(reason.pmReason.reasonId)}" >
