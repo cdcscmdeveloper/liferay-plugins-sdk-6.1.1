@@ -40,6 +40,7 @@ import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.ct.ContractManagementConst;
 import my.ep.web.managedbean.ct.suspension.SuspensionManagedBean;
+import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -137,6 +138,9 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 			
 			this.getManagedBean().setRemarkList(resDTO.getCtRemarks());
 			this.getManagedBean().setAttachmentList(resDTO.getCtAttachments());
+			getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, 
+					getManagedBean().getContractVer().getDocType(), getManagedBean().getCtContract().getContractNo()));
+			ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());	    
 			ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
 			
 			FacesContext fc = FacesContext.getCurrentInstance();

@@ -154,6 +154,9 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 			
 			this.getManagedBean().setRemarkList(resDTO.getCtRemarks());
 			this.getManagedBean().setAttachmentList(resDTO.getCtAttachments());
+			getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, 
+					getManagedBean().getContractVer().getDocType(), getManagedBean().getCtContract().getContractNo()));
+			ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
 			ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
 			
 			flush();
