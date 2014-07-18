@@ -476,7 +476,7 @@ public class SpecificationBackingBean extends
 						.getPanelItemCategory())
 				|| "General".equalsIgnoreCase(this.getManagedBean()
 						.getPanelItemCategory())) {
-            
+
 			if (this.getManagedBean().getScQt().isPanel() != this
 					.getManagedBean().isPanelChange()) {
 
@@ -531,13 +531,12 @@ public class SpecificationBackingBean extends
 		return "/xhtml/sc/main/createCommitteeTemplate.xhtml?faces-redirect=true";
 	}
 
-	
 	/**
 	 * To add empty row to category open code data table
 	 */
 	public void addNewCategoryAction() {
 		// debugLogger("addNewCategoryAction");
-	
+
 		// ScQt scQt = getManagedBean().getScQtSpec().getScQt();
 		List<ScQtCategory> qtCategoryList = this.getManagedBean()
 				.getSuppCriteriaopenList();
@@ -554,8 +553,6 @@ public class SpecificationBackingBean extends
 		qtCategoryList.add(category);
 		this.getManagedBean().setSuppCriteriaopenList(qtCategoryList);
 	}
-
-	
 
 	public void deleteCategoryCodes() {
 
@@ -578,8 +575,6 @@ public class SpecificationBackingBean extends
 			for (ScQtCategory category : openSelectList)
 				openList.remove(category);
 		}
-
-		
 
 	}
 
@@ -807,7 +802,7 @@ public class SpecificationBackingBean extends
 		retriveFinancialSpecification();
 		retriveApprovalRemarks();
 		this.getManagedBean().setActiveIndex(0);
-		
+
 	}
 
 	/**
@@ -836,8 +831,6 @@ public class SpecificationBackingBean extends
 		this.getManagedBean().setActiveIndex(0);
 
 	}
-
-	
 
 	/**
 	 * To get the Supplier Qualification Criteria Details for BO PrepareSpec..
@@ -1280,7 +1273,6 @@ public class SpecificationBackingBean extends
 
 			}
 
-			
 		} finally {
 
 		}
@@ -2945,32 +2937,35 @@ public class SpecificationBackingBean extends
 		this.getManagedBean().setActiveIndex(0);
 
 		try {
+			if (null == this.getManagedBean().getScQt()) {
+				QtDetailsSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+				QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
+				tenderReqDTO.setQtId(qtId);
+				tenderReqDTO.setDocType(docType);
+				QuationTenderResDTO tenderResDTO = new QuationTenderResDTO();
+				tenderResDTO = QtDetailsSO.retriveQTDetails(tenderReqDTO);
+				ScQt scQt = tenderResDTO.getQtDetail();
+				this.getManagedBean().setPanelChange(scQt.isPanel());
+				if (scQt.isZonal()
+						&& this.getManagedBean().getZoneGeneralTrees()
+								.isEmpty()) {
 
-			QtDetailsSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-			QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
-			tenderReqDTO.setQtId(qtId);
-			tenderReqDTO.setDocType(docType);
-			QuationTenderResDTO tenderResDTO = new QuationTenderResDTO();
-			tenderResDTO = QtDetailsSO.retriveQTDetails(tenderReqDTO);
-			ScQt scQt = tenderResDTO.getQtDetail();
-			this.getManagedBean().setPanelChange(scQt.isPanel());
-			if (scQt.isZonal()
-					&& this.getManagedBean().getZoneGeneralTrees().isEmpty()) {
+					if (isNotNullOREmpty(tenderResDTO.getZoneDetails())) {
+						for (TplSpecZoneDtl zone : tenderResDTO
+								.getZoneDetails()) {
+							getManagedBean().getZoneGeneralTrees().add(
+									LocationSingleton.getInstance()
+											.constuctTreeNode(zone,
+													zone.getTplSpecZoneLocs()));
 
-				if (isNotNullOREmpty(tenderResDTO.getZoneDetails())) {
-					for (TplSpecZoneDtl zone : tenderResDTO.getZoneDetails()) {
-						getManagedBean().getZoneGeneralTrees().add(
-								LocationSingleton.getInstance()
-										.constuctTreeNode(zone,
-												zone.getTplSpecZoneLocs()));
-
+						}
 					}
 				}
-			}
-			getManagedBean().setScQt(scQt);
-			if (null != scQt.getEstimatedAmount()) {
-				setProcurementMode(scQt);
+				getManagedBean().setScQt(scQt);
+				if (null != scQt.getEstimatedAmount()) {
+					setProcurementMode(scQt);
+				}
 			}
 
 		} finally {
@@ -7901,6 +7896,7 @@ public class SpecificationBackingBean extends
 	 * To redirect BO prepareSpec Screen..
 	 */
 	public void preRenderView() {
+		renewSesionObject();
 		HttpServletRequest servletRequest = PortalUtil
 				.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil
