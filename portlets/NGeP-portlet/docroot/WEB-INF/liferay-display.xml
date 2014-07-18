@@ -38,7 +38,8 @@
 			<portlet id="pmUserProfilePersonalization"></portlet>
 			<portlet id="pmRejectionReason"></portlet>
 			<portlet id="pmSupportingDocument"></portlet>			
-			<portlet id="pmTaskAssignment"></portlet>				
+			<portlet id="pmTaskAssignment"></portlet>pmDigiSign				
+			<portlet id="pmDigiSign"></portlet>				
 		</category>
 		<!-- Profile Management - END -->		
 
