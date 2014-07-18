@@ -14,13 +14,14 @@ import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.bpm.vo.WorklistItemVO;
+import my.ep.constants.FLProcessNameConst;
 import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
-import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.PagingConst;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.ResourceBundleUtils;
 
 @ManagedBean(name = "bpmTasklistMB")
 @SessionScoped
@@ -213,6 +214,14 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 
 					// setTaskList(responseDTO.getWorklistVO().getWorklistItem());
 
+					if(responseDTO.getWorklistVO().getWorklistItem()!=null) {
+						for(WorklistItemVO worklistItemVO : responseDTO.getWorklistVO().getWorklistItem()) {
+							if(worklistItemVO.getTitle().equalsIgnoreCase(FLProcessNameConst.PURCHASE_REQUEST_TASK_TITLE)) {
+								worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.fl.purchase.request.task.title", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+							}
+						}
+					}
+					
 					resultBean.setTotalRecord(responseDTO.getWorklistVO()
 							.getTotal());
 					resultBean.setResultList(responseDTO.getWorklistVO()
