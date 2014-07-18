@@ -476,7 +476,7 @@ public class SpecificationBackingBean extends
 						.getPanelItemCategory())
 				|| "General".equalsIgnoreCase(this.getManagedBean()
 						.getPanelItemCategory())) {
-
+            
 			if (this.getManagedBean().getScQt().isPanel() != this
 					.getManagedBean().isPanelChange()) {
 
@@ -531,46 +531,13 @@ public class SpecificationBackingBean extends
 		return "/xhtml/sc/main/createCommitteeTemplate.xhtml?faces-redirect=true";
 	}
 
-	public void cateGoryUpdate(BaseEntity entity) {
-		List<ScQtCategory> qtCategoryList = this.getManagedBean()
-				.getSuppCriteriaopenList();
-
-		if (qtCategoryList == null) {
-			qtCategoryList = new ArrayList<ScQtCategory>();
-			this.getManagedBean().setSuppCriteriaopenList(qtCategoryList);
-		}
-		PmCategoryL3 category = (PmCategoryL3) entity;
-
-		ScQtCategory category1 = new ScQtCategory();
-		if (category1.getPmCategoryL3() == null) {
-			category1.setPmCategoryL3(new PmCategoryL3());
-
-		}
-		if (category1.getPmCategoryL2() == null) {
-			category1.setPmCategoryL2(new PmCategoryL2());
-
-		}
-		if (category1.getPmCategoryL1() == null) {
-			category1.setPmCategoryL1(new PmCategoryL1());
-
-		}
-		category1.getPmCategoryL3().setCategoryL3Code(
-				category.getCategoryL3Code());
-		category1.getPmCategoryL2().setCategoryL2Code(
-				category.getPmCategoryL2().getCategoryL2Code());
-		category1.getPmCategoryL1().setCategoryL1Code(
-				category.getPmCategoryL2().getPmCategoryL1()
-						.getCategoryL1Code());
-		// category1.getPmCategoryL3().setC
-		qtCategoryList.add(category1);
-	}
-
+	
 	/**
 	 * To add empty row to category open code data table
 	 */
 	public void addNewCategoryAction() {
 		// debugLogger("addNewCategoryAction");
-		System.out.println("======enter new category method action===");
+	
 		// ScQt scQt = getManagedBean().getScQtSpec().getScQt();
 		List<ScQtCategory> qtCategoryList = this.getManagedBean()
 				.getSuppCriteriaopenList();
@@ -588,25 +555,7 @@ public class SpecificationBackingBean extends
 		this.getManagedBean().setSuppCriteriaopenList(qtCategoryList);
 	}
 
-	public void addRestrictedCategoryAction() {
-		// debugLogger("addNewCategoryAction");
-
-		// ScQt scQt = getManagedBean().getScQtSpec().getScQt();
-		List<ScQtCategory> qtCategoryList = this.getManagedBean()
-				.getSuppCriteriarestrictedList();
-		if (qtCategoryList == null) {
-			qtCategoryList = new ArrayList<ScQtCategory>();
-			this.getManagedBean().setSuppCriteriarestrictedList(qtCategoryList);
-		}
-
-		ScQtCategory category = new ScQtCategory();
-		// category.setScQt(scQt);
-		category.setPmCategoryL1(new PmCategoryL1());
-		category.setPmCategoryL2(new PmCategoryL2());
-		category.setPmCategoryL3(new PmCategoryL3());
-		qtCategoryList.add(category);
-
-	}
+	
 
 	public void deleteCategoryCodes() {
 
@@ -630,24 +579,7 @@ public class SpecificationBackingBean extends
 				openList.remove(category);
 		}
 
-		List<ScQtCategory> restrictedList = this.getManagedBean()
-				.getSuppCriteriarestrictedList();
-		if (null == restrictedList) {
-			restrictedList = new ArrayList<ScQtCategory>();
-		}
-
-		List<ScQtCategory> restrictedSelectList = this.getManagedBean()
-				.getSuppCriteriarestrictedBoSelectList();
-		if (null == restrictedSelectList) {
-			restrictedSelectList = new ArrayList<ScQtCategory>();
-		}
-
-		if (restrictedList.size() == restrictedSelectList.size()) {
-			restrictedList.clear();
-		} else {
-			for (ScQtCategory category : restrictedSelectList)
-				restrictedList.remove(category);
-		}
+		
 
 	}
 
@@ -875,25 +807,7 @@ public class SpecificationBackingBean extends
 		retriveFinancialSpecification();
 		retriveApprovalRemarks();
 		this.getManagedBean().setActiveIndex(0);
-		/*
-		 * retriveFinancialCheckList();
-		 * 
-		 * 
-		 * retriveTechnicalScoring();
-		 * 
-		 * retriveFinancialScoring();
-		 * 
-		 * retriveRecommendationDetails();
-		 * 
-		 * retriveFulfilmentDtls();
-		 * 
-		 * 
-		 * 
-		 * retriveDeliveryDetails();
-		 * 
-		 * 
-		 * retriveCommitteeEndorsment();
-		 */
+		
 	}
 
 	/**
@@ -923,24 +837,7 @@ public class SpecificationBackingBean extends
 
 	}
 
-	public void businessOwnerTabChange(TabChangeEvent event) {
-		String tabTitle = event.getTab().getTitle();
-		if (tabTitle.equalsIgnoreCase("General")) {
-			retriveSpecdetails(this.getManagedBean().getScQt().getQtId(), "");
-		} else if (tabTitle.equalsIgnoreCase("Supplier Qualification Criteria")) {
-			retriveBusinessOwnerQualificationCriteri();
-
-		} else if (tabTitle.equalsIgnoreCase("Technical Specification")) {
-			retriveTechnicalSpecification();
-
-		} else if (tabTitle.equalsIgnoreCase("Financial Specification")) {
-			retriveFinancialSpecification();
-		}
-
-		else if (tabTitle.equalsIgnoreCase("Approval")) {
-			retriveApprovalRemarks();
-		}
-	}
+	
 
 	/**
 	 * To get the Supplier Qualification Criteria Details for BO PrepareSpec..
@@ -975,106 +872,116 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().setAllStateCode(
 						tenderResDTO.getStateCode());
 				this.getManagedBean().setScQt(scQt);
+				if (!scQt.isPanel()) {
 
-				if (!scQt.isZonal() && !scQt.isPanel()) {
+					if ((!scQt.isZonal())
+							|| (scQt.getEstimatedAmount().intValue() > 500000 && !scQt
+									.getScQtSupplierCriteria().isAllState())) {
 
-					List<ScQtLocCriteria> locCriteria = new ArrayList<ScQtLocCriteria>();
+						List<ScQtLocCriteria> locCriteria = new ArrayList<ScQtLocCriteria>();
 
-					if (null != tenderResDTO.getLocationDetails()) {
-						for (TplSpecLoc localLoc : tenderResDTO
-								.getLocationDetails()) {
-							ScQtLocCriteria criteria = (ScQtLocCriteria) localLoc;
-							locCriteria.add(criteria);
+						if (null != tenderResDTO.getLocationDetails()) {
+							for (TplSpecLoc localLoc : tenderResDTO
+									.getLocationDetails()) {
+								ScQtLocCriteria criteria = (ScQtLocCriteria) localLoc;
+								locCriteria.add(criteria);
+							}
+							getManagedBean().getZoneTrees().add(
+									LocationSingleton.getInstance()
+											.constuctTreeNode(locCriteria));
 						}
-						getManagedBean().getZoneTrees().add(
-								LocationSingleton.getInstance()
-										.constuctTreeNode(locCriteria));
+
 					}
+				} else {
+					if (scQt.isZonal() && scQt.isPanel()) {
 
-				} else if (scQt.isZonal() && scQt.isPanel()) {
+						if ("Specific".equalsIgnoreCase(this.getManagedBean()
+								.getPanelItemCategory())) {
 
-					if ("Specific".equalsIgnoreCase(this.getManagedBean()
-							.getPanelItemCategory())) {
+							if (this.getManagedBean().getExistingpanelitem()
+									.getPanelItemId() != this.getManagedBean()
+									.getScQt().getScQtSupplierCriteria()
+									.getCtPanelItem().getPanelItemId()) {
+								removespecDtls();
+								createCircularItemSpec(this.getManagedBean()
+										.getCtPanelItem());
+							}
+							retriveZonesByCircularNo();
 
-						if (this.getManagedBean().getExistingpanelitem()
-								.getPanelItemId() != this.getManagedBean()
-								.getScQt().getScQtSupplierCriteria()
-								.getCtPanelItem().getPanelItemId()) {
+						}
+
+						else if ("General".equalsIgnoreCase(this
+								.getManagedBean().getPanelItemCategory())) {
 							removespecDtls();
-							createCircularItemSpec(this.getManagedBean()
+							List<CtPanelItem> panelList = this.getManagedBean()
+									.getSelectpanelItem();
+							panelList = new ArrayList<CtPanelItem>();
+
+							panelList.add(this.getManagedBean()
 									.getCtPanelItem());
+							this.getManagedBean().setSelectpanelItem(panelList);
+							retriveZonesByCircularNo();
+
 						}
-						retriveZonesByCircularNo();
 
-					}
+						else if (null == this.getManagedBean().getCtPanelItem()) {
 
-					else if ("General".equalsIgnoreCase(this.getManagedBean()
-							.getPanelItemCategory())) {
-						removespecDtls();
-						List<CtPanelItem> panelList = this.getManagedBean()
-								.getSelectpanelItem();
-						panelList = new ArrayList<CtPanelItem>();
+							List<CtPanelItem> panelList = this.getManagedBean()
+									.getSelectpanelItem();
+							panelList = new ArrayList<CtPanelItem>();
+							panelList
+									.add(this.getManagedBean().getScQt()
+											.getScQtSupplierCriteria()
+											.getCtPanelItem());
+							this.getManagedBean().setSelectpanelItem(panelList);
+							this.getManagedBean().setCircularExpDate(
+									this.getManagedBean().getScQt()
+											.getScQtSupplierCriteria()
+											.getCtPanelItem()
+											.getCtCircularVer().getEndDate());
+							this.getManagedBean()
+									.setCirCularNo(
+											this.getManagedBean().getScQt()
+													.getScQtSupplierCriteria()
+													.getCtPanelItem()
+													.getCtCircularVer()
+													.getCircularNo());
+							this.getManagedBean().setCircularName(
+									this.getManagedBean().getScQt()
+											.getScQtSupplierCriteria()
+											.getCtPanelItem()
+											.getCtCircularVer().getName());
 
-						panelList.add(this.getManagedBean().getCtPanelItem());
-						this.getManagedBean().setSelectpanelItem(panelList);
-						retriveZonesByCircularNo();
+							List<CtPanelZone> ctPanelZone = new ArrayList<CtPanelZone>();
+							if (isNotNullOREmpty(tenderResDTO.getZoneDetails())) {
+								for (TplSpecZoneDtl zoneDtl : tenderResDTO
+										.getZoneDetails()) {
 
-					}
+									ctPanelZone.add(zoneDtl.getPanelZone());
 
-					else if (null == this.getManagedBean().getCtPanelItem()) {
+								}
+							}
 
-						List<CtPanelItem> panelList = this.getManagedBean()
-								.getSelectpanelItem();
-						panelList = new ArrayList<CtPanelItem>();
-						panelList.add(this.getManagedBean().getScQt()
-								.getScQtSupplierCriteria().getCtPanelItem());
-						this.getManagedBean().setSelectpanelItem(panelList);
-						this.getManagedBean().setCircularExpDate(
-								this.getManagedBean().getScQt()
-										.getScQtSupplierCriteria()
-										.getCtPanelItem().getCtCircularVer()
-										.getEndDate());
-						this.getManagedBean().setCirCularNo(
-								this.getManagedBean().getScQt()
-										.getScQtSupplierCriteria()
-										.getCtPanelItem().getCtCircularVer()
-										.getCircularNo());
-						this.getManagedBean().setCircularName(
-								this.getManagedBean().getScQt()
-										.getScQtSupplierCriteria()
-										.getCtPanelItem().getCtCircularVer()
-										.getName());
+							if (null != ctPanelZone && !ctPanelZone.isEmpty()) {
 
-						List<CtPanelZone> ctPanelZone = new ArrayList<CtPanelZone>();
-						if (isNotNullOREmpty(tenderResDTO.getZoneDetails())) {
-							for (TplSpecZoneDtl zoneDtl : tenderResDTO
-									.getZoneDetails()) {
-
-								ctPanelZone.add(zoneDtl.getPanelZone());
+								getManagedBean().getCtZoneSuppliers().add(
+										LocationSingleton.getInstance()
+												.constuctPanelTreeNodes(
+														ctPanelZone));
 
 							}
 						}
+					} else if (scQt.isPanel() && !scQt.isZonal()) {
+						if ("Specific".equalsIgnoreCase(this.getManagedBean()
+								.getPanelItemCategory())) {
 
-						if (null != ctPanelZone && !ctPanelZone.isEmpty()) {
-
-							getManagedBean()
-									.getCtZoneSuppliers()
-									.add(LocationSingleton
-											.getInstance()
-											.constuctPanelTreeNodes(ctPanelZone));
+							removespecDtls();
+							createCircularItemSpec(this.getManagedBean()
+									.getCtPanelItem());
 
 						}
+						retriveZonesByCircularNo();
 					}
-				} else if (scQt.isPanel() && !scQt.isZonal()) {
-					if ("Specific".equalsIgnoreCase(this.getManagedBean()
-							.getPanelItemCategory())) {
-
-						removespecDtls();
-						createCircularItemSpec(this.getManagedBean()
-								.getCtPanelItem());
-
-					}
-					retriveZonesByCircularNo();
 				}
 			}
 		} finally {
@@ -1373,20 +1280,7 @@ public class SpecificationBackingBean extends
 
 			}
 
-			/*
-			 * List<PmParameterDesc> localParamDesc =
-			 * retrieveParameterDescByType
-			 * (ParameterTypeConst.PROCUREMENT_CATEGORY); for (PmParameterDesc
-			 * paramDesc : localParamDesc) { if
-			 * (paramDesc.getPmParameter().getParameterId()
-			 * .equals(Long.valueOf(
-			 * scQt.getPmProcurementCategory().getParameterId()))) {
-			 * 
-			 * this.getManagedBean().setProcuremntCategory(
-			 * paramDesc.getPmParameter().getParameterCode()); }
-			 * 
-			 * }
-			 */
+			
 		} finally {
 
 		}
