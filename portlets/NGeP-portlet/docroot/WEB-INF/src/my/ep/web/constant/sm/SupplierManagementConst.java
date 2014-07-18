@@ -107,7 +107,7 @@ public class SupplierManagementConst {
 	public static final String STYPE_BASIC = "B";
 	public static final String ACC_BASIC = "O";
 	public static final String ACC_MOF = "M";
-	public static final String PERM_ADD = "P";
+	public static final String PERM_ADD = "I";
 	public static final String BUS_ADD = "C";
 	public static final String RES_ADD = "R";
 	public static final int DEFAULT_REV_NO = 1;
