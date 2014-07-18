@@ -5019,7 +5019,7 @@
 			<init-param>
 				<name>javax.portlet.faces.defaultViewId.view</name>
 				<value>
-					/xhtml/pm/supportingdocument/supportingDocument.xhtml
+					/xhtml/pm/supportingdocument/preRender.xhtml
 				</value>
 			</init-param>
 			<expiration-cache>0</expiration-cache>
