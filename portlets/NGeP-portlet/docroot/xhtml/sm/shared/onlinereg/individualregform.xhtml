@@ -26,11 +26,13 @@
 			<tr>
 				<td class="tdTitle"><p:outputLabel
 						value="* #{lbl['lbl.sm.individual.newicno']}" /></td>
-				<td class="tdContent"><p:inputMask id="individualRegNoId"
-						required="true" label="#{lbl['lbl.sm.individual.newicno']}"
+				<td class="tdContent">
+					<p:inputText id="individualRegNoId" required="true" label="#{lbl['lbl.sm.individual.newicno']}"
 						value="#{registrationBackingBean.managedBean.smSupp.regNo}"
-						size="40" mask="999999999999" maxlength="20"
-						disabled="#{!registrationBackingBean.managedBean.smSupp.brandNew}" />
+						size="40" maxlength="15"
+						disabled="#{!registrationBackingBean.managedBean.smSupp.brandNew}">
+						<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
+					</p:inputText>
 					&#160; <p:graphicImage id="uidti" library="ep/images/design"
 						name="tooltips.png" /> <p:tooltip id="uidtt" for="uidti">
 						<p:outputLabel escape="false" value="#{lbl['tt.sm.user.id.no']}" />
