@@ -4,11 +4,14 @@
 package my.ep.web.managedbean.fl.paymentmatch;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
 import my.ep.persistence.entity.fl.payment.FlPaymentAdvice;
+import my.ep.persistence.entity.fl.payment.FlPaymentDeduction;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -29,6 +32,7 @@ public class PaymentMatchManagedBean extends BaseManagedBean{
 	private static final long serialVersionUID = 1L;
 
 	private FlPaymentAdvice paymentAdvice;
+	private List<FlPaymentDeduction> selectedDeductions;
 
 	// for Deduction panel display	
 	private String docType;
@@ -55,6 +59,7 @@ public class PaymentMatchManagedBean extends BaseManagedBean{
 		private Long subSetiaId;
 		private Long prgActivityId;
 		private String financingTypeCode;
+		private Long deductionId;
 		
 	
 	private FlFulfilmentRequest fulfilmentRequest;
@@ -536,5 +541,33 @@ public class PaymentMatchManagedBean extends BaseManagedBean{
 
 	public void setStopInstrNo(String stopInstrNo) {
 		this.stopInstrNo = stopInstrNo;
+	}
+
+	/**
+	 * @return the selectedDeductions
+	 */
+	public List<FlPaymentDeduction> getSelectedDeductions() {
+		return selectedDeductions;
+	}
+
+	/**
+	 * @param selectedDeductions the selectedDeductions to set
+	 */
+	public void setSelectedDeductions(List<FlPaymentDeduction> selectedDeductions) {
+		this.selectedDeductions = selectedDeductions;
+	}
+
+	/**
+	 * @return the deductionId
+	 */
+	public Long getDeductionId() {
+		return deductionId;
+	}
+
+	/**
+	 * @param deductionId the deductionId to set
+	 */
+	public void setDeductionId(Long deductionId) {
+		this.deductionId = deductionId;
 	}
 }

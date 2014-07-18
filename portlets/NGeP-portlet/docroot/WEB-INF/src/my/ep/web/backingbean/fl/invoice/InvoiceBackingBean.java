@@ -334,7 +334,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		if(resDTO.getFlFulfilmentRequest().getFlFulfilmentOrder().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)) {
 			serviceFee = new BigDecimal(FulfilmentConst.SERVICE_FEE_ZERO_POINT_EIGHT);
 		} else {
-			serviceFee = new BigDecimal(getManagedBean().getInvoice().getFlRequest().getCtContract().getServiceFee());
+			serviceFee = new BigDecimal(resDTO.getFlFulfilmentRequest().getCtContract().getServiceFee());
 		}
 		
 		getManagedBean().setServiceCharge(Double.toString(serviceFee.doubleValue()));
@@ -594,7 +594,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		this.getManagedBean().setLoaNo(null);
 	}
 	public String getPortletTitle() {
-		String portletTitle = " Fulfilment Document Maintenance";
+		String portletTitle = "Invoice";
 		if(getManagedBean().isModificationCancel()) {
 			portletTitle = "Fulfilment Document Maintenance";
 		}

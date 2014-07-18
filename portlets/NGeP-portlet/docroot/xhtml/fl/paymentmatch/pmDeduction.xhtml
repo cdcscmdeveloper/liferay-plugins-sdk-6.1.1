@@ -8,20 +8,29 @@
 
 	<p:panel id="deductionPanel" header="DEDUCTIONS" toggleable="true">
 		<p:dataTable id="deductionDataTable" var="deduction" value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flPaymentDeduction}"
-			rowIndexVar="index" selectionMode="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flFulfilmentOrder.docType == ParameterConst.doctypeContractOrder?'multiple':'single'}" rowKey="#{deduction}" lazy="true">
+			rowIndexVar="index"
+			selection="#{paymentMatchBackingBean.managedBean.selectedDeductions}" rowKey="#{deduction}" lazy="true">
 			<ac:paginator for="deductionDataTable" />
+			<p:column selectionMode="multiple" style="width:2%;text-align:center" />
 			<p:column headerText="Type">
-				<h:outputText value="#{paymentMatchBackingBean.getParameterDesc(deduction.deductionType)}" />
+				<h:outputText rendered="#{index == 0}" value="#{paymentMatchBackingBean.getParameterDesc(deduction.deductionType)}" />
+				<p:selectOneMenu rendered="#{index > 0}" value="#{paymentMatchBackingBean.managedBean.deductionId}" >
+				<f:selectItem itemLabel="-- Select -- " itemValue="" />
+						<f:selectItems var="ctDeduction"
+							value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.ctContract.latestContractVer.ctDeductions}"
+							itemLabel="#{paymentMatchBackingBean.getParameterDesc(ctDeduction.deductionType)}"
+							itemValue="#{ctDeduction.deductionId}" />
+				</p:selectOneMenu>
 			</p:column>
 			<p:column headerText="Description">
-				<h:outputText value="#{deduction.deductionDesc}" />
+				<p:inputText rendered="#{index > 0}" value="#{deduction.deductionDesc}" />
 			</p:column>
 			<p:column headerText="Clauses">
 				<h:outputText style="text-align:right">
 				</h:outputText>
 			</p:column>
 			<p:column headerText="Amanah">
-				<h:outputText style="text-align:right" />
+				<h:inputText style="text-align:right" />
 			</p:column>
 			<p:column headerText="GOSODO">
 				<h:outputText value="#{deduction.pmGlAccount.glAccCode}" />
@@ -34,9 +43,11 @@
 		</p:dataTable>
 		<p:spacer height="2px"></p:spacer>
 		<div style="width: 100%; text-align: right">
-			<p:commandButton rendered="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flFulfilmentOrder.docType == ParameterConst.doctypeContractOrder}" value="Add" icon="ui-icon-add" />
-			<p:commandButton rendered="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flFulfilmentOrder.docType == ParameterConst.doctypeContractOrder}" id="deleteDeductionBtn" value="Delete" icon="ui-icon-delete">
-			</p:commandButton>
+			<p:commandButton 
+			rendered="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flFulfilmentOrder.docType == ParameterConst.doctypeContractOrder}" 
+			value="Add" icon="ui-icon-add" action="#{paymentMatchBackingBean.addDeductionRow()}" update="deductionDataTable"/>
+			<p:commandButton rendered="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flFulfilmentOrder.docType == ParameterConst.doctypeContractOrder}" 
+			id="deleteDeductionBtn" value="Delete" icon="ui-icon-delete"/>
 		</div>
 	</p:panel>
 </ui:composition>

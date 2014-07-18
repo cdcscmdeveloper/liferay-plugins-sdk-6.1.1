@@ -49,26 +49,19 @@
 					<h:outputText  styleClass="colFloatRight" value="#{item.flDelOrderItem.deliveredAmt}">
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText>
-					<p:inputText styleClass="colFloatRight" value="#{item.flDelOrderItem.deliveredAmt}"
-						rendered="#{receivedNoteBackingBean.managedBean.docType eq 'CR'}">
-						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					</p:inputText>
 				</h:panelGroup>
 			</p:column>
 			<p:column headerText="Received &lt;br /&gt; Qty." style="text-align:right">
 				<p:inputText id="receivedQty" styleClass="colFloatRight" value="#{item.receivedQty}" size="8" maxlength="14"
-					rendered="#{item.flItem.itemType.parameterCode eq ParameterConst.itemTypeProduct and receivedNoteBackingBean.managedBean.docType eq 'PR'}">
+					rendered="#{item.flItem.itemType.parameterCode eq ParameterConst.itemTypeProduct}">
 					<p:ajax update="receivedAmt,receivedQty" listener="#{receivedNoteBackingBean.retrieveReceivedAmt(item)}"></p:ajax>
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.uom.uomCode)}" />
 				</p:inputText>
 				<h:outputText
-					rendered="#{item.flItem.itemType.parameterCode eq ParameterConst.itemTypeService and receivedNoteBackingBean.managedBean.docType eq 'PR'}"
+					rendered="#{item.flItem.itemType.parameterCode eq ParameterConst.itemTypeService}"
 					value="#{item.receivedQty}" styleClass="colFloatRight">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.uom.uomCode)}" />
 				</h:outputText>
-				<p:inputText value="#{item.receivedQty}" rendered="#{receivedNoteBackingBean.managedBean.docType eq 'CR'}" >
-					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.uom.uomCode)}" />
-				</p:inputText>
 			</p:column>
 			<p:column headerText="Received &lt;br /&gt; Amt.(RM)" style="text-align:right">
 				<p:inputText styleClass="colFloatRight"
@@ -77,10 +70,6 @@
 				</p:inputText>
 				<h:outputText id="receivedAmt" value="#{item.receivedAmt}" styleClass="colFloatRight"
 					rendered="#{item.flItem.itemType.parameterCode eq ParameterConst.itemTypeProduct}">
-					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-				</h:outputText>
-				<h:outputText value="#{item.receivedAmt}" styleClass="colFloatRight"
-					rendered="#{receivedNoteBackingBean.managedBean.docType eq 'CR'}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>

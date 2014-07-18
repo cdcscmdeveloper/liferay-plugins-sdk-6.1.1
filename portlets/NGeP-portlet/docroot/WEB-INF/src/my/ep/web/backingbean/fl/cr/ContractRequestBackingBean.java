@@ -271,6 +271,11 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			
 		}
 		getManagedBean().setDeleteButtonHide(true);
+		
+		if(isFlFulfilmentRequisitioner()) {
+			FacesScopes facesScopes = new FacesScopes();
+			getManagedBean().setFulfilmentRequisitioner(facesScopes.getUserSessionBean().getLoginId());
+		}
 	}
 
 	public String submitAction(String action) throws Exception {
@@ -799,6 +804,10 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			}
 			
 			getManagedBean().setMinistryName(resDTO.getFlFulfilmentRequest().getIssuedOrgProfile().getParentOrgProfile().getOrgName());
+			if(!getManagedBean().getFlRequest().getFlDeliveryAddresses().isEmpty()){
+				getManagedBean().setSelectedDelAddr(getManagedBean().getFlRequest().getFlDeliveryAddresses().get(0));
+			}
+			
 			if(getManagedBean().getFlManualAddress() == null){
 				getManagedBean().setFlManualAddress(new FlDeliveryAddress());
 				getManagedBean().getFlManualAddress().setDeliveryAddressId(1L);
@@ -2120,6 +2129,11 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				}
 			}
 		}
+	}
+	
+	public boolean isFlFulfilmentRequisitioner() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes.hasRoleUser(RoleCode.REQUISITIONER.value());
 	}
 	
 }

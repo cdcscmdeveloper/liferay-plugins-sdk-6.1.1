@@ -61,6 +61,7 @@ import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.common.PmContact;
 import my.ep.persistence.entity.pm.common.PmFinancialAcc;
 import my.ep.persistence.entity.pm.common.PmGlAccount;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmPrgActivity;
 import my.ep.persistence.entity.pm.common.PmProject;
 import my.ep.persistence.entity.pm.common.PmSetia;
@@ -631,5 +632,14 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 	 */
 	public static void setSubSetiaCodeMap(Map<Long, PmSubSetia> subSetiaCodeMap) {
 		PaymentMatchBackingBean.subSetiaCodeMap = subSetiaCodeMap;
+	}
+	public void addDeductionRow(){
+		FlPaymentDeduction paymentDeduction = new FlPaymentDeduction();
+		paymentDeduction.setFlPaymentAdvice(getManagedBean().getPaymentAdvice());
+		paymentDeduction.setDeductionType(new PmParameter());
+		paymentDeduction.setDeductionDesc("");
+		paymentDeduction.setPmVotFund(new PmVotFund());
+		paymentDeduction.setPmGlAccount(new PmGlAccount());
+		getManagedBean().getPaymentAdvice().getFlPaymentDeduction().add(paymentDeduction);
 	}
 }

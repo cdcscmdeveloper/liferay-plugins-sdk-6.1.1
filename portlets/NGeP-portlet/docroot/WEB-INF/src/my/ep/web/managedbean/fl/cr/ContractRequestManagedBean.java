@@ -94,6 +94,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private Long contractId;
 	private Long testOrg;
 	private String orgProfileIds;
+	private String fulfilmentRequisitioner;
 	
 	//getcontract
 	private CtContract ctContract = new CtContract();
@@ -1800,6 +1801,22 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setvCmSupplierItemList(List<VCmSupplierItem> vCmSupplierItemList) {
 		this.vCmSupplierItemList = vCmSupplierItemList;
+	}
+
+
+	/**
+	 * @return the fulfilmentRequisitioner
+	 */
+	public String getFulfilmentRequisitioner() {
+		return fulfilmentRequisitioner;
+	}
+
+
+	/**
+	 * @param fulfilmentRequisitioner the fulfilmentRequisitioner to set
+	 */
+	public void setFulfilmentRequisitioner(String fulfilmentRequisitioner) {
+		this.fulfilmentRequisitioner = fulfilmentRequisitioner;
 	}
 
 

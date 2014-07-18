@@ -120,7 +120,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.start.delivery.date']}" /></td>
-				<td><p:calendar mode="popup" showOn="button" disabled="#{flOrderBB.managedBean.flRequest.ctContract.zonalPricing}" readonlyInput="#{flOrderBB.managedBean.flRequest.ctContract.zonalPricing}"
+				<td><p:calendar mode="popup" showOn="button" disabled="true" readonlyInput="true"
 						value="#{flOrderBB.managedBean.flRequest.startDate}"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 						<p:ajax event="dateSelect"

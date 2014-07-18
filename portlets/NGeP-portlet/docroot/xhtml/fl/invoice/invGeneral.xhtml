@@ -39,8 +39,8 @@
 			</tr>
 			<tr>			
 				<td><p:outputLabel value="#{lbl['lbl.fl.inv.contract.no']}" rendered="#{invoiceBackingBean.managedBean.invoice.flRequest.docType eq 'CR'}" /></td>
-				<td><p:commandLink value="ContractNo" rendered="#{invoiceBackingBean.managedBean.invoice.flRequest.docType eq 'CR'}">
-					</p:commandLink></td>
+				<td><p:inputText disabled="true" size="45" value="#{invoiceBackingBean.managedBean.invoice.flRequest.ctContract.contractNo}" 
+				rendered="#{invoiceBackingBean.managedBean.invoice.flRequest.docType eq 'CR'}"/></td>
 			</tr>
 		</table>
 	</p:panel>
@@ -73,7 +73,7 @@
 							listener="#{invoiceBackingBean.bankInfoActionListener}" />
 					</p:selectOneMenu> <p:message for="accountId" display="icon" />
 					 <p:inputText disabled="true" rendered="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.docType eq 'CO'}"
-		   			value=""></p:inputText></td>
+		   			value="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.flFulfilmentRequest.ctContract.latestContractVer.ctContractValue.bankAccountNo}"></p:inputText></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.name']}" /></td>
@@ -83,8 +83,12 @@
 						rendered="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factored eq 'false'}"
 						value="#{lbl['lbl.fl.payment.bank.name']}" /></td>
 				<td><p:inputText size="45" disabled="true" id="suppBankName"
-						rendered="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factored eq 'false'}"
-						value="#{invoiceBackingBean.managedBean.invoice.paymentBank.finOrgName}" /></td>
+						rendered="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factored eq 'false' and invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.docType eq 'PO'}"
+						value="#{invoiceBackingBean.managedBean.invoice.paymentBank.finOrgName}" />
+						<p:inputText size="45" disabled="true"
+						rendered="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factored eq 'false' and invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.docType eq 'CO'}"
+						value="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.flFulfilmentRequest.ctContract.latestContractVer.ctContractValue.bankName}" />
+						</td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.branch']}" /></td>
