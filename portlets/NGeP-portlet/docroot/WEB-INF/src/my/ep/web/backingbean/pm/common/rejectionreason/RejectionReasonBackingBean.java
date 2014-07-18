@@ -411,8 +411,9 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		}
 		
 		//unique reason code
-		if(!isUniqueReasonCode(this.getManagedBean().getSelectedReason().getReasonCode(), 
-				this.getManagedBean().getSelectedReason().isBrandNew()?null:this.getManagedBean().getSelectedReason().getReasonId())){
+		if(!isUniqueReasonCode(this.getManagedBean().getSelectedReason().getReasonCode()
+				, this.getManagedBean().getSelectedReason().getReasonCategoryCode().getParameterId()
+				, this.getManagedBean().getSelectedReason().isBrandNew()?null:this.getManagedBean().getSelectedReason().getReasonId())){
 			throw new EpException(MessageConst.ERROR_770003, new String[]{this.getManagedBean().getSelectedReason().getReasonCode()});
 
 		}
@@ -452,7 +453,8 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
 						FacesMessage.SEVERITY_INFO,
 						null,
-						MessageUtils.getMessage(MessageConst.INFO_770006, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+						MessageUtils.getMessage(MessageConst.INFO_770006, new String[]{rejectReason.getReasonCode()},
+						MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 
 			}
 		}catch (Exception e){
@@ -483,7 +485,8 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
 						FacesMessage.SEVERITY_INFO,
 						null,
-						MessageUtils.getMessage(MessageConst.INFO_770007, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+						MessageUtils.getMessage(MessageConst.INFO_770007, new String[]{rejectReason.getReasonCode()},
+						MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 
 			}
 		}catch (Exception e){
@@ -500,16 +503,25 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	 * @param id
 	 * @return
 	 */
-	private boolean isUniqueReasonCode(String reasonCode, Long id){
+	private boolean isUniqueReasonCode(String reasonCode, Long reasonCategory, Long id){
 		log.info("isUniqueReasonCode");
 		boolean isUnique = true;
 		//Create search bean
 		SearchBean<PmReasonDesc> searchBean = new SearchBean<PmReasonDesc>();
-		SearchFilterBean bean = new SearchFilterBean();
-		bean.setSearchField("pmReason.reasonCode");
-		bean.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
-		bean.setSearchValue(reasonCode);
-		searchBean.getDataFilterBeans().add(bean);
+		SearchFilterBean beanReason = new SearchFilterBean();
+		
+		//add reason code
+		beanReason.setSearchField("pmReason.reasonCode");
+		beanReason.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
+		beanReason.setSearchValue(reasonCode);
+		searchBean.getDataFilterBeans().add(beanReason);
+		
+		//add reason category
+		SearchFilterBean beanCategory = new SearchFilterBean();
+		beanCategory.setSearchField("pmReason.reasonCategoryCode.parameterId");
+		beanCategory.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+		beanCategory.setSearchValue(reasonCategory);
+		searchBean.getDataFilterBeans().add(beanCategory);
 		
 		//Filter by search bean
 		ReasonReqDTO reqDTO = new ReasonReqDTO();
@@ -634,18 +646,14 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 
 //		List<PmSupplierReason> tempList = new ArrayList<PmSupplierReason>();
 		if(ParameterTypeConst.SUPPLIER_APPLICATION_TYPES.equals(restrictionType)){
-			System.out.println(1);
 			if(this.getManagedBean().getDeleteAppTypeRestrictions()!=null && !this.getManagedBean().getDeleteAppTypeRestrictions().isEmpty()){
-				System.out.println(2);
 				if(this.getManagedBean().getAppTypeRestrictions()==null){
-					System.out.println(3);
 					this.getManagedBean().setAppTypeRestrictions(new ArrayList<PmSupplierReason>());
 				}
-				System.out.println(4);
 				for(PmSupplierReason suppReason: this.getManagedBean().getDeleteAppTypeRestrictions()){
-					System.out.println(5);
 					this.getManagedBean().getAppTypeRestrictions().remove(suppReason);
 				}
+				this.getManagedBean().getDeleteAppTypeRestrictions().clear();
 	//			for(PmSupplierReason suppReason: this.getManagedBean().getAppTypeRestrictions()){
 	//				if(suppReason.isDeleted()){
 	//					tempList.add(suppReason);	
@@ -654,6 +662,8 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	//			for(PmSupplierReason suppReason: tempList){
 	//				this.getManagedBean().getAppTypeRestrictions().remove(suppReason);
 	//			}
+			}else{
+				throw new EpException(MessageConst.ERROR_770014);
 			}
 		}else if(ParameterTypeConst.COMPANY_TYPES.equals(restrictionType)){
 			if(this.getManagedBean().getDeleteComTypeRestrictions()!=null && !this.getManagedBean().getDeleteComTypeRestrictions().isEmpty()){
@@ -664,6 +674,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 				for(PmSupplierReason suppReason: this.getManagedBean().getDeleteComTypeRestrictions()){
 					this.getManagedBean().getComTypeRestrictions().remove(suppReason);
 				}
+				this.getManagedBean().getComTypeRestrictions().clear();
 	//			for(PmSupplierReason suppReason: this.getManagedBean().getComTypeRestrictions()){
 	//				if(suppReason.isDeleted()){
 	//					tempList.add(suppReason);	
@@ -672,6 +683,8 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	//			for(PmSupplierReason suppReason: tempList){
 	//				this.getManagedBean().getComTypeRestrictions().remove(suppReason);
 	//			}
+			}else{
+				throw new EpException(MessageConst.ERROR_770014);
 			}
 		}else if(ParameterTypeConst.SUPPLIER_TYPES.equals(restrictionType)){
 			if(this.getManagedBean().getDeleteSuppTypeRestrictions()!=null && !this.getManagedBean().getDeleteSuppTypeRestrictions().isEmpty()){
@@ -682,6 +695,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 				for(PmSupplierReason suppReason: this.getManagedBean().getDeleteSuppTypeRestrictions()){
 					this.getManagedBean().getSuppTypeRestrictions().remove(suppReason);
 				}
+				this.getManagedBean().getSuppTypeRestrictions().clear();
 	//			for(PmSupplierReason suppReason: this.getManagedBean().getSuppTypeRestrictions()){
 	//				if(suppReason.isDeleted()){
 	//					tempList.add(suppReason);	
@@ -691,6 +705,8 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	//			for(PmSupplierReason suppReason: tempList){
 	//				this.getManagedBean().getSuppTypeRestrictions().remove(suppReason);
 	//			}
+			}else{
+				throw new EpException(MessageConst.ERROR_770014);
 			}
 		}
 			

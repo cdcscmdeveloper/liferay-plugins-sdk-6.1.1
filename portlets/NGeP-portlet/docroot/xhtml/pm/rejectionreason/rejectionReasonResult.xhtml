@@ -15,7 +15,10 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	        <p:column headerText="#{lbl['lbl.pm.reason.code']}">  
 		    	#{reason.pmReason.reasonCode}
 	        </p:column>  
-	        <p:column headerText="#{lbl['lbl.pm.reason.desc']}">  
+	        <p:column headerText="#{lbl['lbl.pm.reason.category']}">  
+	            #{rejectionReasonBackingBean.getParameterDesc(reason.pmReason.reasonCategoryCode)}
+	        </p:column> 
+	         <p:column headerText="#{lbl['lbl.pm.reason.desc']}">  
 	            #{reason.reasonDesc}
 	        </p:column> 
 	        <p:column headerText="#{lbl['lbl.pm.status']}">  
