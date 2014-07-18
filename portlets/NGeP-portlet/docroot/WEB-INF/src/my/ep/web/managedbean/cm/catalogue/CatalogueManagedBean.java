@@ -179,15 +179,15 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private Date currentDate = new Date();
 
 	private SearchFilterBean itemNameFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
-	private SearchFilterBean itemCodeFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
+	private SearchFilterBean itemCodeFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
 	private SearchFilterBean supplierNameFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
-	private SearchFilterBean contractNoFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
-	private SearchFilterBean circularNoFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
+	private SearchFilterBean contractNoFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+	private SearchFilterBean circularNoFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
 	private SearchFilterBean natureOfBusinessFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
 
-	private SearchFilterBean epNoFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
-	private SearchFilterBean mofNoFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
-	private SearchFilterBean bizRegNoFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
+	private SearchFilterBean epNoFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+	private SearchFilterBean mofNoFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+	private SearchFilterBean bizRegNoFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
 
 	private SearchFilterBean districtFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_IN.value());
 	private SearchFilterBean stateFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_IN.value());
@@ -237,36 +237,43 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 				if (StringUtils.isNotBlank((String)itemCodeFilterBean.getSearchValue())) {
 					itemCodeFilterBean.setSearchField("itemCode");
+					itemCodeFilterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(itemCodeFilterBean);
 				}
 
 				if (StringUtils.isNotBlank((String)supplierNameFilterBean.getSearchValue())) {
 					supplierNameFilterBean.setSearchField("companyName");
+					supplierNameFilterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(supplierNameFilterBean);
 				}
 
 				if (StringUtils.isNotBlank((String)contractNoFilterBean.getSearchValue())) {
 					contractNoFilterBean.setSearchField("contractNo");
+					contractNoFilterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(contractNoFilterBean);
 				}
 
 				if (StringUtils.isNotBlank((String)circularNoFilterBean.getSearchValue())) {
 					circularNoFilterBean.setSearchField("circularNo");
+					circularNoFilterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(circularNoFilterBean);
 				}
 
 				if (StringUtils.isNotBlank((String)epNoFilterBean.getSearchValue())) {
 					epNoFilterBean.setSearchField("epNo");
+					epNoFilterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(epNoFilterBean);
 				}
 
 				if (StringUtils.isNotBlank((String)mofNoFilterBean.getSearchValue())) {
 					mofNoFilterBean.setSearchField("mofNo");
+					mofNoFilterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(mofNoFilterBean);
 				}
 
 				if (StringUtils.isNotBlank((String)bizRegNoFilterBean.getSearchValue())) {
 					bizRegNoFilterBean.setSearchField("bizRegNo");
+					bizRegNoFilterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(bizRegNoFilterBean);
 				}
 				
