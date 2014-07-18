@@ -110,7 +110,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		PortletResponse  portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();  
 		HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
 		res.setHeader( "Content-Disposition", "attachment; filename=\"" + attachment.getFileName() + "\"" );//
-		res.setHeader( "Content-Transfer-Encoding", "binary" );
+//		res.setHeader( "Content-Transfer-Encoding", "binary" );
 		res.setContentType("application/octet-stream");
 		res.flushBuffer();
 		OutputStream out = res.getOutputStream();   

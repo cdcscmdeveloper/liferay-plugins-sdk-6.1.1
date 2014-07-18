@@ -1099,7 +1099,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		String filePath = getManagedBean().getCircularVer().getCircularFilePath();
 		
 		res.setHeader( "Content-Disposition", "attachment; filename=\"" + fileName + "\"" );//
-		res.setHeader( "Content-Transfer-Encoding", "binary" );
+//		res.setHeader( "Content-Transfer-Encoding", "binary" );
 		res.setContentType("application/octet-stream");
 		res.flushBuffer();
 		OutputStream out = res.getOutputStream();   
