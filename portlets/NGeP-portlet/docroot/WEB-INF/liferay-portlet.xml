@@ -414,6 +414,14 @@
 		<css-class-wrapper>quatation-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
+		<portlet-name>scCommitteeAppointment</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<ajaxable>false</ajaxable>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
+		<css-class-wrapper>committee-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
 		<portlet-name>scNoticeBoard</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>

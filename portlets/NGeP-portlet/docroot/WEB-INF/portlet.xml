@@ -882,6 +882,40 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>
+		
+	<!-- Committee Appointment -->
+	<portlet>
+		<portlet-name>scCommitteeAppointment</portlet-name>
+		<display-name>Committee Appointment</display-name>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
+		<init-param>
+			<name>javax.portlet.faces.defaultViewId.view</name>
+			<value>/xhtml/sc/quatationtender/committeeappointment/qtcommitteeappointment.xhtml</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Committee Appointment</title>
+			<short-title>Committee Appointment</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
+	
 	<portlet>
 		<portlet-name>scCommittee</portlet-name>
 		<display-name>Committee</display-name>
@@ -896,8 +930,8 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>Committe</title>
-			<short-title>Committe</short-title>
+			<title>Committee</title>
+			<short-title>Committee</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
