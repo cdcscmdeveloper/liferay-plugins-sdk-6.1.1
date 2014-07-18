@@ -1,0 +1,25 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<ui:define name="contentSection">
+		<ui:include src="clonecommitteeappointment.xhtml" />
+
+		<ac:title value="Committee Appointment" />
+		<table style="border: 0px; width: 100%">
+			<tr>
+				<td width="100%"><p:messages id="specmessages"
+						showDetail="true" autoUpdate="true" closable="true"
+						showSummary="false" /> <ui:include
+						src="committeeappointmentdetails.xhtml" /></td>
+			</tr>
+		</table>
+
+	</ui:define>
+</ui:composition>
