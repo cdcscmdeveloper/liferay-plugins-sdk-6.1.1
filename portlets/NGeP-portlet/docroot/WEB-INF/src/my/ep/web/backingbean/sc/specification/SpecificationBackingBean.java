@@ -203,6 +203,8 @@ public class SpecificationBackingBean extends
 
 	public String businessOwnerBackAction() {
 		this.getManagedBean().setActiveIndex(0);
+		this.getManagedBean().setCircularType("");
+		this.getManagedBean().setPanelItemList(new ArrayList<CtPanelItem>());
 		return "specificationview.xhtml";
 	}
 
