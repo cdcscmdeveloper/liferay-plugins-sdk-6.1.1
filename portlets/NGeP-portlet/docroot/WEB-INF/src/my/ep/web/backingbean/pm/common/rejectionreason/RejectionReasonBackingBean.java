@@ -22,6 +22,7 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.common.language.ILanguageSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
+import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.common.language.LanguageResDTO;
@@ -198,7 +199,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 //			this.getManagedBean().setComTypeRestrictions(loadRestriction(ParameterTypeConst.COMPANY_TYPES, id));
 //			this.getManagedBean().setSuppTypeRestrictions(loadRestriction(ParameterTypeConst.SUPPLIER_TYPES, id));
 		}catch (Exception e){
-			throw new EpException("Unabled to load reject reason for id: " + id);
+			throw new EpException(MessageConst.ERROR_770004);
 		}
 		
 		log.info("loadRejectReason - End");
@@ -329,7 +330,8 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			}
 		}catch(Exception e){
 			e.printStackTrace();
-			throw new EpException("Invalid Reason Restriction. " + e.getMessage()); //TODO
+			throw new EpException(MessageConst.ERROR_770001, new String[]{e.getMessage()});
+
 		}
 	}
 //	/**
@@ -382,9 +384,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			}
 				
 		} catch (Exception e) {
-			throw new EpException("Failed to get restriction list due to " + e.getMessage());
-			//TODO:throw exception
-
+			throw new EpException(MessageConst.ERROR_770002, new String[]{e.getMessage()});
 		}
 		log.info("retrieveReasonObjById - End");
 		return pmReason;
@@ -413,7 +413,8 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		//unique reason code
 		if(!isUniqueReasonCode(this.getManagedBean().getSelectedReason().getReasonCode(), 
 				this.getManagedBean().getSelectedReason().isBrandNew()?null:this.getManagedBean().getSelectedReason().getReasonId())){
-			throw new EpException("Reason Code "+ this.getManagedBean().getSelectedReason().getReasonCode() +" is existed."); //TODO
+			throw new EpException(MessageConst.ERROR_770003, new String[]{this.getManagedBean().getSelectedReason().getReasonCode()});
+
 		}
 		
 		if(this.getManagedBean().getSelectedReason().isBrandNew()){
@@ -447,18 +448,17 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			ReasonResDTO resDTO = reqSO.createReason(reqDTO);
 			if(resDTO.isSuccessful()){
 				isSuccess = true;
-				log.info("createRejectReason - successful"); //TODO
-				log.info("createRejectReason id: " + resDTO.getPmReason().getReasonId());
+				log.info("createRejectReason - successful"); //TODO 770015
 				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
 						FacesMessage.SEVERITY_INFO,
 						null,
-						MessageUtils.getMessage("Add Successful", MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+						MessageUtils.getMessage(MessageConst.INFO_770006, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+
 			}
 		}catch (Exception e){
-			log.info("createRejectReason - fail"); //TODO
+			log.info("createRejectReason - fail");
 			e.printStackTrace();
-			throw new EpException("Please contact administrator.");
-			
+			throw new EpException(MessageConst.ERROR_770004);
 		}
 		return isSuccess;
 	}
@@ -479,17 +479,17 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			ReasonResDTO resDTO = reqSO.updateReason(reqDTO);
 			if(resDTO.isSuccessful()){
 				isSuccess = true;
-				log.info("updateRejectReason - successful"); //TODO
+				log.info("updateRejectReason - successful");
 				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
 						FacesMessage.SEVERITY_INFO,
 						null,
-						MessageUtils.getMessage("Update Successful", MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+						MessageUtils.getMessage(MessageConst.INFO_770007, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+
 			}
 		}catch (Exception e){
 			log.info("updateRejectReason - fail"); //TODO
 			e.printStackTrace();
-			throw new EpException("Please contact administrator.");
-			
+			throw new EpException(MessageConst.ERROR_770004);
 		}
 		return isSuccess;
 	}
@@ -729,19 +729,19 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			//throw validation message accordingly
 			if(!isSelected){
 				if(ParameterTypeConst.SUPPLIER_APPLICATION_TYPES.equals(restrictType)){
-					throw new EpException("Application Supplier Type must be selected.");
+					throw new EpException(MessageConst.ERROR_770008);
 				}else if(ParameterTypeConst.COMPANY_TYPES.equals(restrictType)){
-					throw new EpException("Company Type must be selected.");
+					throw new EpException(MessageConst.ERROR_770009);
 				}else if(ParameterTypeConst.SUPPLIER_TYPES.equals(restrictType)){
-					throw new EpException("Supplier Type must be selected.");
+					throw new EpException(MessageConst.ERROR_770010);
 				}
 			}else if(!isUnique){
 				if(ParameterTypeConst.SUPPLIER_APPLICATION_TYPES.equals(restrictType)){
-					throw new EpException("Duplicated Application Supplier Type.");
+					throw new EpException(MessageConst.ERROR_770011);
 				}else if(ParameterTypeConst.COMPANY_TYPES.equals(restrictType)){
-					throw new EpException("Duplicated Company Type.");
+					throw new EpException(MessageConst.ERROR_770012);
 				}else if(ParameterTypeConst.SUPPLIER_TYPES.equals(restrictType)){
-					throw new EpException("Duplicated Supplier Type.");
+					throw new EpException(MessageConst.ERROR_770013);
 				}
 			}	
 		}		
@@ -810,14 +810,12 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			if(ParameterConst.REASON_CATEGORY_SUPPLIER.equals(paramObj.getParameterCode())){
 				if(isSearchBean){
 					this.getManagedBean().setSearchSuppReason(true);
-//					this.getManagedBean().getReasonSearchBean().setReasonCategoryParam(paramObj);
 				}else{
 					this.getManagedBean().setSuppReason(true);
 				}
 			}else{
 				if(isSearchBean){
 					this.getManagedBean().setSearchSuppReason(false);
-//					this.getManagedBean().getReasonSearchBean().setReasonCategoryParam(new PmParameter());
 				}else{
 					this.getManagedBean().setSuppReason(false);
 				}
@@ -825,7 +823,6 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		}else{
 			if(isSearchBean){
 				this.getManagedBean().setSearchSuppReason(false);
-//				this.getManagedBean().getReasonSearchBean().setReasonCategoryParam(new PmParameter());
 			}else{
 				this.getManagedBean().setSuppReason(false);
 			}
@@ -853,7 +850,6 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			searchBean.getDataFilterBeans().add(cateBean);
 			
 			//for supplier reason category
-			//get object TODO RAIN
 			PmParameter paramObj = (PmParameter) reasonCategoryMapper.get(rSearchBean.getReasonCategoryParam().getParameterId());
 			
 			if(ParameterConst.REASON_CATEGORY_SUPPLIER.equals(paramObj.getParameterCode())){
@@ -920,7 +916,6 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			bean.setSearchValue(rSearchBean.getReasonDesc());
 			searchBean.getDataFilterBeans().add(bean);
 		}
-		
 
 		if(rSearchBean.getStatus()!=null && rSearchBean.getStatus()>0L){
 			log.info("+ status "  +rSearchBean.getStatus());
@@ -994,7 +989,8 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 					return resDTO.getReasonDescResultBean();
 				}
 			} catch (Exception e) {
-				e.printStackTrace();//TODO
+				e.printStackTrace();
+				throw new EpException(MessageConst.ERROR_770005);
 			}
 
 			return null;
