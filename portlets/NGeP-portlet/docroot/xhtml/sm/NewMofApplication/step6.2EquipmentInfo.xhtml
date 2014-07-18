@@ -9,14 +9,14 @@
 		test="#{backingBean.managedBean.approverUser or backingBean.managedBean.poUser}">
 		<table style="width: 100%">
 			<tr>
-				<td style="width: 20%; vertical-align: baseline;"><ui:include
+				<td style="width: 20%; vertical-align: baseline;" class="sidemenutd"><ui:include
 						src="smMofApplnSideMenuItem.xhtml" /></td>
 				<td><h:inputHidden
 						value="#{backingBean.managedBean.smAppl.applCategoryType}" /> <ui:include
 						src="/xhtml/sm/shared/mofRegistration/manufacturingOrAssmblyInfoForm.xhtml" />
 					<ui:include
 						src="/xhtml/sm/shared/mofRegistration/machineryInfoForm.xhtml" />
-				
+
 					<div class="nav-wrapper">
 						<table style="width: 100%">
 							<tr>
@@ -49,7 +49,7 @@
 			src="/xhtml/sm/shared/mofRegistration/manufacturingOrAssmblyInfoForm.xhtml" />
 		<ui:include
 			src="/xhtml/sm/shared/mofRegistration/machineryInfoForm.xhtml" />
-		
+
 		<div class="nav-wrapper">
 			<table style="width: 100%">
 				<tr>

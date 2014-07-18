@@ -48,22 +48,14 @@
 						showSummary="true" showDetail="false" display="icon" /></td>
 
 				<td><p:outputPanel id="equiPerDtlIdenTypeLblPan">
-						<p:outputLabel value="#{lbl['lbl.sm.person.icNum']}"
-							id="equiPerIcNumLbl"
-							rendered="#{backingBean.managedBean.selectedShareHolder.identificationType.parameterCode eq 'I'}" />
-						<p:outputLabel value="#{lbl['lbl.sm.person.psptNum']}"
-							id="equiPerPsptNumLbl"
-							rendered="#{backingBean.managedBean.selectedShareHolder.identificationType.parameterCode eq 'P'}" />
-						<p:outputLabel value="#{lbl['lbl.sm.person.armyNum']}"
-							id="equiPerArmyNumLbl"
-							rendered="#{backingBean.managedBean.selectedShareHolder.identificationType.parameterCode eq 'A'}" />
-						<p:outputLabel value="*" styleClass="mandatory"
-							rendered="#{backingBean.managedBean.selectedShareHolder.identificationType.parameterCode eq 'I' or backingBean.managedBean.selectedShareHolder.identificationType.parameterCode eq 'A' or backingBean.managedBean.selectedShareHolder.identificationType.parameterCode eq 'P'}" />
+						<p:outputLabel value="#{lbl['lbl.sm.shrHldrInfo.idNo']}"
+							id="equiPerIcNumLbl" />
+						<p:outputLabel value="*" styleClass="mandatory" />
 					</p:outputPanel></td>
 
 				<td><p:outputPanel id="equiPerDtlIdenTypePan">
-						<p:inputText label="#{lbl['lbl.sm.person.icNum']}" required="true"
-							id="equiPerIcNum"
+						<p:inputText label="#{lbl['lbl.sm.shrHldrInfo.idNo']}"
+							required="true" id="equiPerIcNum"
 							rendered="#{backingBean.managedBean.selectedShareHolder.identificationType.parameterCode eq 'I'}"
 							value="#{backingBean.managedBean.selectedShareHolder.identificationNo}"
 							size="35" maxlength="12"
@@ -72,9 +64,9 @@
 						</p:inputText>
 						<p:message id="equiPerIcNumMsg" for="equiPerIcNum"
 							showSummary="true" showDetail="false" display="icon" />
-						<p:inputText label="#{lbl['lbl.sm.person.psptNum']}"
+						<p:inputText label="#{lbl['lbl.sm.shrHldrInfo.idNo']}"
 							required="true" id="equiPerPasptNum"
-							rendered="#{backingBean.managedBean.selectedShareHolder.identificationType.parameterCode eq 'P' or backingBean.managedBean.selectedShareHolder.identificationType.parameterCode eq 'A'}"
+							rendered="#{backingBean.managedBean.selectedShareHolder.identificationType.parameterCode ne 'I'}"
 							value="#{backingBean.managedBean.selectedShareHolder.identificationNo}"
 							size="35" maxlength="12">
 						</p:inputText>
@@ -328,7 +320,7 @@
 						value="#{backingBean.managedBean.selectedShareHolder.epRole}"
 						style="width: 207px;margin: 5px 0px 5px 0px;">
 						<f:selectItem itemLabel="-- Select --" itemValue="" />
-						<f:selectItems value="#{backingBean.managedBean.ePRoleList}"/>
+						<f:selectItems value="#{backingBean.managedBean.ePRoleList}" />
 					</p:selectOneMenu> <p:message id="smPersnEpRoleMsg" for="smPersnEpRole"
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
@@ -351,7 +343,7 @@
 						value="#{backingBean.managedBean.selectedShareHolder.epRole}"
 						style="width: 207px;margin: 5px 0px 5px 0px;">
 						<f:selectItem itemLabel="-- Select --" itemValue="" />
-						<f:selectItems value="#{backingBean.managedBean.ePRoleList}"/>
+						<f:selectItems value="#{backingBean.managedBean.ePRoleList}" />
 					</p:selectOneMenu> <p:message id="smUnAuthPersnEpRoleMsg" for="smUnAuthPersnEpRole"
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
