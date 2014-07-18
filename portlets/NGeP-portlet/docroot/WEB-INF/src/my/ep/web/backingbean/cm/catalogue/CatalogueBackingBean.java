@@ -2597,6 +2597,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 						.getSelectedMaintainItems()[i];
 				System.out.println("catalog.getPmUom().getUomName():"
 						+ catalog.getPmUom().getUomName());
+				
+				//mandatory checking
 				if (catalog.getCmStandardPricing().getPrice() == null
 						|| catalog.getCmStandardPricing().getStartDate() == null
 						|| catalog.getCmStandardPricing().getEndDate() == null
@@ -2613,6 +2615,17 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 					return "catalogMaintenanceFile";
 				}
+				
+				if(catalog.getCmStandardPricing().getStartDate().after(catalog.getCmStandardPricing().getEndDate())){
+					FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+								MessageUtils.getMessage(MessageConst.ERROR_715011,
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+					return "catalogMaintenanceFile";
+				}
+					
 
 				if (catalog.isReviewRequired()) {
 					catalog.setItemStatus("P");
