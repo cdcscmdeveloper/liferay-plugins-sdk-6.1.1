@@ -12,7 +12,8 @@
 	</style>
 	<p:panel id="bondId" header="#{lbl['lbl.ct.pbd.panel.name']}"
 		toggleable="true" toggleSpeed="500"
-		rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctPerformanceBonds.size() != 0  or contractDetailsBackingBean.managedBean.updateContract}">
+		rendered="#{(contractDetailsBackingBean.managedBean.contractVer.ctPerformanceBonds.size() != 0  or contractDetailsBackingBean.managedBean.updateContract) and
+			!contractDetailsBackingBean.managedBean.directPurchase}">
 		<p:dataTable id="tableBond" var="varBond"
 			value="#{contractDetailsBackingBean.managedBean.contractVer.ctPerformanceBonds}"
 			rowKey="#{varBond}"
@@ -78,9 +79,9 @@
 							target="#{contractDetailsBackingBean.managedBean.ctPerformanceBond}" />
 					</p:commandButton>
 					<h:commandLink
-						value="#{contractDetailsBackingBean.fileNames(varBond.filePath)}"
+						value="#{varBond.fileName}"
 						style="float:left;" styleClass="blue_font"
-						action="#{contractDetailsBackingBean.downloadFile(varBond.filePath)}" />
+						action="#{contractDetailsBackingBean.downloadFile(varBond.filePath, varBond.fileName)}" />
 				</h:panelGroup>
 			</p:column>
 			<p:column>

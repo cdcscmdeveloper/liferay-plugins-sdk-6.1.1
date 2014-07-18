@@ -80,7 +80,8 @@
 					     action="#{contractDetailsBackingBean.setSelectedTabValue(3)}"/>
 					  <p:menuitem value="#{lbl['lbl.ct.menu.dedu']}" update=":form" 
 					         rendered="#{contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
-					         and contractDetailsBackingBean.managedBean.ctContract.zonalPricing}"
+					         and contractDetailsBackingBean.managedBean.ctContract.zonalPricing
+					         and !contractDetailsBackingBean.managedBean.directPurchase}"
 					          action="#{contractDetailsBackingBean.setSelectedTabValue(4)}"/>
 					  <p:menuitem value="#{lbl['lbl.ct.menu.sched']}" update=":form"
 					         rendered="#{contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
@@ -128,7 +129,8 @@
 					       contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}"/>
 					       <p:menuitem value="#{lbl['lbl.ct.menu.dedu']}" update=":form" action="#{contractDetailsBackingBean.setSelectedTabValue(4)}"
 					          rendered="#{!contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
-					       contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}"/>
+					       contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
+					       and !contractDetailsBackingBean.managedBean.directPurchase}"/>
 					       <p:menuitem value="#{lbl['lbl.ct.menu.sched']}" update=":form" action="#{contractDetailsBackingBean.setSelectedTabValue(5)}"
 					        rendered="#{!contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
 					       contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}"/>
@@ -207,7 +209,8 @@
 				</p:outputPanel>
 				
 				<p:outputPanel rendered="#{contractDetailsBackingBean.managedBean.selectedTabIndex == 4 and
-				  contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}">
+				  contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry and
+				  !contractDetailsBackingBean.managedBean.directPurchase}">
 					<ui:include src="/xhtml/ct/fulfilmentdetails/shared/deduction.xhtml" />
 				</p:outputPanel>
 				

@@ -106,8 +106,11 @@ import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.ct.ContractManagementConst;
+import my.ep.web.format.AttachmentDateFormat;
+import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.ct.ContractDetailsManagedBean;
 import my.ep.web.util.AddressUtils;
+import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -726,28 +729,30 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	}
     
     public void fileUpload(FileUploadEvent event) throws Exception {
-		UploadedFile item = event.getFile();
-		String filePath = "C:/projects/uploads/"+item.getFileName();
+    	UploadedFile item = event.getFile();
+		AttachmentFormat attachmentFormat = new AttachmentDateFormat();
+		
+		String filePath = DocumentRepositoryUtils.getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, getManagedBean().getContractVer().getDocType(), getManagedBean().getCtContract().getContractNo());
+		File file = new File(filePath);
+		file.mkdirs();
+		filePath = filePath + "/" + attachmentFormat.format(item.getFileName(), null);
+		
 		FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
 	    fileOuputStream.write(item.getContents());
 	    fileOuputStream.close();
-	    int i=0;
-	    for(CtPerformanceBond ctPerformanceBond : this.getManagedBean().getContractVer().getCtPerformanceBonds()){
-	      if(ctPerformanceBond.equals(this.getManagedBean().getCtPerformanceBond()))
-	    	{
-	    	  this.getManagedBean().getContractVer().getCtPerformanceBonds().get(i).setFilePath(filePath);
-	        }i++;
-	    }
+	    
+	    for(CtPerformanceBond ctPerformanceBond : getManagedBean().getContractVer().getCtPerformanceBonds()){
+	    	if(ctPerformanceBond.equals(getManagedBean().getCtPerformanceBond())){
+	    		ctPerformanceBond.setFileName(item.getFileName());
+	    		ctPerformanceBond.setFilePath(filePath);
+	    	 }
+	     }
 	}
     
-	public void downloadFile(String filePath) throws IOException {
+	public void downloadFile(String filePath, String fileName) throws IOException {
 		PortletResponse  portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();  
 		HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
 		
-		String fileName = null;
-		
-		File file = new File(filePath);
-		fileName = file.getName();
 		res.setHeader( "Content-Disposition", "attachment; filename=\"" + fileName + "\"" );//
 		res.setHeader( "Content-Transfer-Encoding", "binary" );
 		res.setContentType("application/octet-stream");
@@ -765,23 +770,14 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			byte[] buffer = new byte[4096];
 			int bytesRead;
 			while ((bytesRead = input.read( buffer )) != -1){ 
-				out.write( buffer, 0, bytesRead ); buffer = new byte[4096]; 
+				out.write( buffer, 0, bytesRead );
+				buffer = new byte[4096]; 
 			}
 			input.close();			
 		}
 		out.flush();
 		out.close(); 
 		FacesContext.getCurrentInstance().responseComplete();
-	}	
-	
-	public String fileNames(String filePath){
-		String fileName = "";
-		if(filePath == null || filePath=="")
-		  return fileName;
-		
-		File file = new File(filePath);
-		fileName = file.getName().substring(0, file.getName().lastIndexOf('.'));
-	    return fileName;
 	}
 	
     public List<SelectItem> getItemTypeDropDown(){
@@ -1038,6 +1034,9 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
     /*Implementation of Bond Details*/
     public void addBondDetails() {
 		CtPerformanceBond ctPerformanceBond = new CtPerformanceBond();
+		if (ctPerformanceBond.getFinancialOrg() == null) {
+			ctPerformanceBond.setFinancialOrg(new PmFinancialOrg());
+		}
 		this.getManagedBean().getContractVer().getCtPerformanceBonds().add(ctPerformanceBond);
 	}
     

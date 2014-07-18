@@ -39,7 +39,7 @@
        <p:outputLabel  value="Factoring Letter"  />  
         <h:commandLink value="#{contractDetailsBackingBean.managedBean.ctContract.ctFactoring.fileName}" 
            style="float:left;" styleClass="blue_font" 
-	       action="#{contractDetailsBackingBean.downloadFile(contractDetailsBackingBean.managedBean.ctContract.ctFactoring.filePath)}" />			
+	       action="#{contractDetailsBackingBean.downloadFile(contractDetailsBackingBean.managedBean.ctContract.ctFactoring.filePath, contractDetailsBackingBean.managedBean.ctContract.ctFactoring.fileName)}" />			
      </h:panelGrid>
    </p:panel>
 </ui:composition>

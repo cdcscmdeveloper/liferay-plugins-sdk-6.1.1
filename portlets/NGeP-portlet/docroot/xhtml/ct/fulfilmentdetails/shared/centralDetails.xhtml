@@ -31,15 +31,19 @@
 		       <p:spacer width="2" />	
 		       <p:outputLabel value="#{lbl['lbl.ct.agreement']}" />
 		     </h:panelGrid> 
-		     <h:outputLabel id="centralPeriod" value="#{lbl['lbl.ct.dperiod']}" />
-		     <h:panelGrid columns="3">
+		     <h:panelGrid columns="2" style="float:right;">
+				<p:outputLabel value="*" styleClass="mandatory" />
+		     	<p:outputLabel id="centralPeriod" value="#{lbl['lbl.ct.dperiod']}" />
+		     </h:panelGrid>
+		     <h:panelGrid columns="4">
 		       <p:inputText for="centralDelPeriod" styleClass="ppRightBtn" style="width:65px;" 
 		          maxlength="4" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.deliveryTerm}"/>
                <p:spacer width="2" />
                <p:selectOneMenu id="centralDelPeriod" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.deliveryTermUom.parameterId}" 
-                 style="width:100px;" >
+                 style="width:100px;" required="true"  label="#{lbl['lbl.ct.dperiod']}" >
 			       <f:selectItems value="#{contractDetailsBackingBean.getDropdownValues(ParameterTypeConst.deliveryTerm)}" />
-			   </p:selectOneMenu>
+			   </p:selectOneMenu>			   
+			   <p:message for="centralDelPeriod" display="icon"/>
 			</h:panelGrid>	
 			<p:outputLabel id="centralSignDate" value="#{lbl['lbl.ct.sdate']}" rendered="#{contractDetailsBackingBean.managedBean.ctContract.agreement}"/>
 			<p:inputText for="centralSignDate"  disabled="true" rendered="#{contractDetailsBackingBean.managedBean.ctContract.agreement}"
