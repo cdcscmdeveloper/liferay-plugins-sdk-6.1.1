@@ -8,6 +8,9 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<ui:define name="contentSection">
+ 
+ <f:event listener="#{bpmTasklistBackingBean.preRenderTaskListView}"
+			type="preRenderView" />
 
 		<h:panelGroup id="tasksListViewId">
 
