@@ -12,8 +12,8 @@
 			<p:messages id="bomessages" showDetail="true" autoUpdate="true"
 				closable="true" showSummary="false" />
 			<h:panelGrid columns="3" styleClass="noBorders tr,noBorders td">
-				<h:outputLabel value="#{lbl['lbl.sc.committe.addscreen.selection']}" />
 				<p:outputLabel value="*" styleClass="mandatory" />
+				<h:outputLabel value="#{lbl['lbl.sc.committe.addscreen.selection']}" />
 				<p:selectOneRadio id="selection"
 					value="#{qTBusinessOwnerBackingBean.managedBean.committeMember.userSelection}">
 					<f:selectItems
@@ -101,7 +101,7 @@
 							</p:column>
 
 							<p:column headerText="#{lbl['lbl.so.bo.pp']}">
-								<h:outputText value="#{existuser.PMP}" />
+								<h:outputText value="#{existuser.PMP ? 'Yes' : 'No'}" />
 							</p:column>
 
 							<p:column headerText="#{lbl['lbl.so.bo.email']}">
