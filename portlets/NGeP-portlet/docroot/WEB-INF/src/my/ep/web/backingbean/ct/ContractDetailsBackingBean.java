@@ -1637,6 +1637,16 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	public void setAgencytDataModel(IPagingDataModel<PmOrgProfile> agencyDataModel) {
 		this.agencyDataModel = agencyDataModel;
 	}
+	
+	public String fileNames(String filePath){
+		String fileName = "";
+		if(filePath == null || filePath=="")
+		  return fileName;
+		
+		File file = new File(filePath);
+		fileName = file.getName().substring(0, file.getName().lastIndexOf('.'));
+	    return fileName;
+	}
 
 	private class AgencyPagingDataModel extends PagingDataModel<PmOrgProfile> {
 		private static final long serialVersionUID = 1L;
