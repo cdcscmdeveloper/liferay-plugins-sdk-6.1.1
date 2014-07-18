@@ -2149,7 +2149,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			
 			//----------mandatory checking-------------------------------------------------------------------------------------------//
 			
-			if (this.getManagedBean().getSelectedMaintainItem().getPmUom().getUomName().isEmpty()) {
+			if (this.getManagedBean().getSelectedMaintainItem().getPmUom().getUomName()==null || 
+				this.getManagedBean().getSelectedMaintainItem().getPmUom().getUomName().isEmpty()) {
 				FacesContext.getCurrentInstance().addMessage(
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
@@ -2245,6 +2246,17 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			//----------mandatory checking end----------------------------------------------------------------------------------------//
 			
 			//----------logic checking-----------------------------------------------------------------------------------------------//
+			
+			if(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getStartDate()
+					.after(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getEndDate())){
+				FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+							MessageUtils.getMessage(MessageConst.ERROR_715011,
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+				return "editCatalogItem";
+			}
 
 			Map<Date, List<CmTierPricing>> tierMap = groupingTier(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings());
 			if (!tierMap.isEmpty() && tierMap.size() > 0) {
