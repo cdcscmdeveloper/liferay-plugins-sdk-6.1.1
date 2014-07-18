@@ -13,18 +13,16 @@
 </cc:interface>
 
 <cc:implementation>
-	<p:remoteCommand name="postSignAction" action="#{cc.attrs.postSignAction}" />
        
-
     <p:dialog widgetVar="spki_dlg" resizable="false">
-        <h:panelGrid columns="3" cellpadding="3">
-        <h:outputLabel for="challengeQuestion1" value="*Challenge Question 1" />
+        <h:panelGrid columns="2" cellpadding="3">
+        <h:outputLabel value="*Challenge Question 1" />
         <p:inputText value="sss" />
         
         
             <h:outputLabel for="password" value="*Digital Certificate PIN" />
             <p:password binding="#{pin}" id="password" value="12345678" required="true" />
- 			<p:commandButton value="Sign" oncomplete="#{cc.attrs.postSignAction}" />        
+ 			<p:commandButton value="Sign" action="#{cc.attrs.postSignAction}" />        
 		</h:panelGrid>
     </p:dialog>
 </cc:implementation>
