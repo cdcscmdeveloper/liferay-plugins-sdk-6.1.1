@@ -977,10 +977,10 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		String templateDocUrl = null;
 		try {
 			tplDocBB = new TemplateDocBackingBean();
-			//TODO: pass the proper value to template doc
-			//tplDocBB.getManagedBean().setProcessType(ModuleCodeConst.CONTRACT_MANAGEMENT);
-			//tplDocBB.getManagedBean().setExternalPageUrl(AGREEMENT_DOC_PAGE);
-			//tplDocBB.getManagedBean().setCtAgreementContent(agreementContent);
+			
+			tplDocBB.getManagedBean().setProcessType(ParameterConst.TPL_DOC_PROCESS_TYPE_CONTRACT);
+			tplDocBB.getManagedBean().setExternalPageUrl(AGREEMENT_DOC_PAGE);
+			tplDocBB.getManagedBean().setCtAgreementContent(agreementContent);
 			// Create new template doc
 			if (agreementContent.getTplDocMaster() == null) {
 				templateDocUrl = tplDocBB.createNewTemplate();

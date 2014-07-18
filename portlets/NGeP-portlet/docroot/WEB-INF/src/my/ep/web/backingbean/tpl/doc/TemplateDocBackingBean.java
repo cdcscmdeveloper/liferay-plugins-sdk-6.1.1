@@ -30,11 +30,13 @@ import javax.xml.bind.JAXBException;
 
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.ct.agreement.IAgreementSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.tpl.doc.ITemplateDocSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.dto.ct.agreement.ContractAgreementReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.tpl.doc.TemplateDocReqDTO;
@@ -83,7 +85,7 @@ public class TemplateDocBackingBean extends
 	private static Logger log = Logger.getLogger(TemplateDocBackingBean.class);
 
 	/* navigation */
-	private static final String NAV_TO_MAINT = "templateDocMaint";
+	private static final String NAV_TO_MAINT = "/xhtml/tpl/doc/templateDocMaint.xhtml";
 
 	public TemplateDocBackingBean() {
 		if (this.getManagedBean().getTemplateTypeList() == null) {
@@ -623,16 +625,25 @@ public void destroyWorld(ActionEvent actionEvent){
 				TplDocMaster tplDocMasterDB = resDTOS.getTplDocMaster();
 				getTemplateDatatableList(templateSectionList);
 				getManagedBean().setSelectedTemplate(tplDocMasterDB);
+				
+				// TODO: common save for all process type from external page
+				if (getManagedBean().getProcessType() != null && getManagedBean().getProcessType().equalsIgnoreCase(ParameterConst.TPL_DOC_PROCESS_TYPE_CONTRACT)) {
+					getManagedBean().getCtAgreementContent().setTplDocMaster(resDTO.getTplDocMaster());
+					ContractAgreementReqDTO contractAgreementReqDTO = new ContractAgreementReqDTO();					
+					contractAgreementReqDTO.setAgreementContent(getManagedBean().getCtAgreementContent());
+					IAgreementSO agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IAgreementSO.class);
+					agreementSO.saveAgreementClause(contractAgreementReqDTO);					
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return "templateDocSearch";
+		return (getManagedBean().getExternalPageUrl() != null) ? getManagedBean().getExternalPageUrl() : "templateDocSearch";
 	}
 
 	public String backAction() {
 		getManagedBean().setSelectedTemplate(null);
-		return "templateDocSearch";
+		return (getManagedBean().getExternalPageUrl() != null) ? getManagedBean().getExternalPageUrl() : "templateDocSearch";
 	}
 	
 	public static void getDocSectionList(int level, TreeNode node,

@@ -11,6 +11,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
+import my.ep.persistence.entity.ct.agreement.CtAgreementContent;
 import my.ep.persistence.entity.tpl.TplCategory;
 import my.ep.persistence.entity.tpl.doc.TplDocMaster;
 import my.ep.persistence.entity.tpl.doc.TplDocSection;
@@ -81,11 +82,12 @@ public class TemplateDocManagedBean extends BaseManagedBean {
 	private SelectItem[] templateProcessTypeList;
 	
 	//private List<TplSearch> templateDocSearch;
-	
-	
+
 	// for search in data table
 	private List<TplDocMaster> templateSearchList;
-	
+
+	private String externalPageUrl;
+	private CtAgreementContent ctAgreementContent; 
 		/**
 	 * TemplateManagedBean constructor.
 	 */	
@@ -420,4 +422,19 @@ public class TemplateDocManagedBean extends BaseManagedBean {
 		this.processValue = processValue;
 	}
 
+	public String getExternalPageUrl() {
+		return externalPageUrl;
+	}
+
+	public void setExternalPageUrl(String externalPageUrl) {
+		this.externalPageUrl = externalPageUrl;
+	}
+	
+	public CtAgreementContent getCtAgreementContent() {
+		return ctAgreementContent;
+	}
+
+	public void setCtAgreementContent(CtAgreementContent ctAgreementContent) {
+		this.ctAgreementContent = ctAgreementContent;
+	}
 }
