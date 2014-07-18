@@ -689,6 +689,8 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 		 if(getManagedBean().getPageNavToRequestNote() != null){
 			 fc.getApplication().getNavigationHandler().handleNavigation(fc, null, getManagedBean().getPageNavToRequestNote());  
 		 } else {
+			   // clear data
+				super.renewSesionObject();
 			 fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "catalogueSearch");  
 		 }
 	 }		
