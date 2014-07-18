@@ -13,21 +13,29 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
 
+import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.SearchBean;
+import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.cm.codification.ICodificationSO;
+import my.ep.biz.service.cm.codification.IDashSummarySO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
-import my.ep.biz.service.pm.common.dashSummary.IDashSummarySO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.bpm.vo.DashSummaryVO;
 import my.ep.bpm.vo.WorklistItemVO;
+import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constants.BpmConstants;
 import my.ep.dto.pm.common.dashSummary.BpmTaskSummaryDTO;
 import my.ep.dto.pm.common.dashSummary.DashSummaryReqDTO;
 import my.ep.dto.pm.common.dashSummary.DashSummaryResDTO;
 import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.OrganizationType;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.cm.DashSummaryStatus;
@@ -36,6 +44,7 @@ import my.ep.web.constant.PagingConst;
 import my.ep.web.managedbean.bpm.tasklist.BPMTaskDashSumManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.ParameterHelper;
 
 import org.apache.log4j.Logger;
 import org.primefaces.model.chart.CartesianChartModel;
@@ -45,6 +54,7 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portal.util.PortalUtil;
 
 @ManagedBean(name = "bpmTaskDashSumBackingBean")
 @RequestScoped
@@ -58,7 +68,7 @@ public class BPMTaskDashSumBackingBean extends
 	private int pendingDeliveryListNum;
 	private int pendingApprovalItemNum;
 	private int pendingMOFSubmissionNum;
-
+	private ISearchBean<PmParameterDesc> docTypeSearchBean;
 	public BPMTaskDashSumBackingBean() {
 		super();
 		createTaskBarModel();
@@ -70,14 +80,16 @@ public class BPMTaskDashSumBackingBean extends
 		try {
 
 			dashSummarySO = (IDashSummarySO) BusinessDelegate.getInstance()
-					.getServiceObject("pm", IDashSummarySO.class);
+					.getServiceObject("cm", IDashSummarySO.class);
 			FacesScopes face = new FacesScopes();
 			String token = face.getBPMAuthenticationCtxToken();
+			long userId = new FacesScopes().getUserSessionBean().getUserId();
 
 			System.out.println("testing BPM auth******" + token);
 			DashSummaryReqDTO reqDTO = new DashSummaryReqDTO();
 
 			reqDTO.setCtxToken(token);
+			reqDTO.setUserId(userId);
 			DashSummaryResDTO responseDTO = dashSummarySO.getTaskSummary(reqDTO);
 			System.out.println("responseDTO*****" + responseDTO);
 			System.out.println("responseDTO.getTaskSummaryDTOList()*****" + responseDTO.getTaskSummaryDTOList());
@@ -101,8 +113,9 @@ public class BPMTaskDashSumBackingBean extends
 	}
 
 	public void redirectToTaskList() throws PortalException, SystemException{
-		
+	
 		try {
+		
 			FacesScopes facesScope = new FacesScopes();
 			ThemeDisplay themeDisplay = (ThemeDisplay)facesScope.getRequestScope(WebKeys.THEME_DISPLAY);
 			
@@ -122,8 +135,7 @@ public class BPMTaskDashSumBackingBean extends
 	}
 	public void goToTaskListFilterDocType(String docTypeId)throws PortalException, SystemException{
 		System.out.println("....................goToTaskListFilterDocType.......................");
-//		BPMTaskListBackingBean bb = new BPMTaskListBackingBean();
-//		bb.getManagedBean().setDocType(docTypeId);
+		
 		try {
 			FacesScopes facesScope = new FacesScopes();
 			
@@ -134,9 +146,8 @@ public class BPMTaskDashSumBackingBean extends
 
 			String commonUrl = themeDisplay.getURLCurrent().substring(0,themeDisplay.getURLCurrent().indexOf(themeDisplay.getLayout().getGroup().getFriendlyURL())+ themeDisplay.getLayout().getGroup().getFriendlyURL().length());
 			System.out.println("commonUrl" + commonUrl);
-	      	facesScope.setRequestScope("docTypeId", docTypeId);
 	      	
-		 externalContext.redirect(commonUrl+"/" + "tasklist1");
+		 externalContext.redirect(commonUrl+"/" + "tasklist1?docTypeId="+docTypeId);
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -236,7 +247,13 @@ public class BPMTaskDashSumBackingBean extends
 		this.pendingMOFSubmissionNum = pendingMOFSubmissionNum;
 	}
 
-	
+	public ISearchBean<PmParameterDesc> getDocTypeSearchBean() {
+		if (this.docTypeSearchBean == null) {
+			this.docTypeSearchBean = super.createSearchBean(PmParameterDesc.class, "docTypeId");
+		}
+		
+		return this.docTypeSearchBean;
+	}
 
 	
 

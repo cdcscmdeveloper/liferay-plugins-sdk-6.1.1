@@ -9,6 +9,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
@@ -32,6 +33,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
 
+import com.liferay.compat.portal.util.PortalUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -380,5 +382,24 @@ public class BPMTaskListBackingBean extends
 		}
 		
 		return this.docTypeSearchBean;
+	}
+	
+	public void preRenderTaskListView() {
+		System.out
+				.println("........................preRenderTaskListView..........................");
+//		 this.getManagedBean().setViewBy("ALL");
+//		 this.getManagedBean().setAssignment("ALL");
+//		 this.getManagedBean().setDocType("");
+		 
+		HttpServletRequest servletRequest = PortalUtil
+				.getHttpServletRequest(new FacesScopes().getRequest());
+		HttpServletRequest originalServletRequest = PortalUtil
+				.getOriginalServletRequest(servletRequest);
+		String docTypeId = originalServletRequest.getParameter("docTypeId");
+		
+		if (docTypeId != null && !docTypeId.isEmpty()) {
+			this.getManagedBean().setDocType(docTypeId);
+			originalServletRequest.getParameterMap().remove("docTypeId");
+		}
 	}
 }
