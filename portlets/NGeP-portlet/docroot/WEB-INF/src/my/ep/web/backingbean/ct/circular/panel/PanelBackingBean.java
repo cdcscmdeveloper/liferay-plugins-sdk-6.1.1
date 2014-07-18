@@ -1106,8 +1106,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		if(filePath!=null) {
 			InputStream input = null;
 			try {
-				String urlFilePath = "file://"+filePath;
-				URLConnection uc = new URL(urlFilePath).openConnection();
+				URLConnection uc = new URL(filePath).openConnection();
 				input = new BufferedInputStream(uc.getInputStream()); 
 			} catch (Exception e) {
 				// Cannot open connection, maybe local file
