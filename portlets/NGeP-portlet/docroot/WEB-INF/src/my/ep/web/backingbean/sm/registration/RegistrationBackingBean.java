@@ -281,6 +281,31 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			return null;
 		}
 		
+		if (smSupp.getBusinessType().equals(SupplierManagementConst.INDIVIDUAL_FLAG)) {
+			PmParameter identificationType = new PmParameter();
+			
+			for (Map.Entry<Long, Object> entry : identityType.entrySet()) {
+					PmParameter identParam = (PmParameter) entry.getValue();
+					if(identParam.getParameterCode().equals(SupplierManagementConst.BASIC_IND_IDENT_TYPE)){
+						identificationType = identParam;
+						break;
+					}
+			}
+			
+			PmCountry indNationality = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
+			smSupp.setServiceCategory(SupplierManagementConst.SPECIAL_SERVICE); //DEFAULT for Individual
+//			smSuppOwner.setIdentificationType(SupplierManagementConst.BASIC_IND_IDENT_TYPE);
+			smSuppOwner.setIdentificationTypeId(identificationType.getParameterId());
+			smSuppOwner.setOwnerName(smAppl.getSmCompanyBasic().getCompanyName());
+			smSuppOwner.setIdentificationNo(smSupp.getRegNo());
+			smPersonnel.setName(smAppl.getSmCompanyBasic().getCompanyName());
+//			smPersonnel.setIdentificationTypeId(SupplierManagementConst.BASIC_IND_IDENT_TYPE);
+			smPersonnel.setIdentificationTypeId(identificationType.getParameterId());
+			smPersonnel.setIdentificationNo(smSupp.getRegNo());
+			smPersonnel.setPmCountry(indNationality);
+			this.getManagedBean().setSmBusinessAdd(this.getManagedBean().getSmPermenantAdd());
+		}
+		
 		if(isExistEmailInPmUser(this.getManagedBean().getSmPersonnel().getEmail())){
 			throw new EpException(MessageConst.ERROR_721004);
 
@@ -335,21 +360,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		
 		if (smAppl.getApplType().equals(SupplierManagementConst.ACC_BASIC)) {
 			smAppl.setSupplierType(SupplierManagementConst.STYPE_BASIC);
-		}
-
-		if (smSupp.getBusinessType().equals(SupplierManagementConst.INDIVIDUAL_FLAG)) {
-			PmCountry indNationality = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
-			smSupp.setServiceCategory(SupplierManagementConst.SPECIAL_SERVICE); //DEFAULT for Individual
-//			smSuppOwner.setIdentificationType(SupplierManagementConst.BASIC_IND_IDENT_TYPE);
-			smSuppOwner.setIdentificationTypeId(SupplierManagementConst.BASIC_IND_IDENT_TYPE_ID);
-			smSuppOwner.setOwnerName(smAppl.getSmCompanyBasic().getCompanyName());
-			smSuppOwner.setIdentificationNo(smSupp.getRegNo());
-			smPersonnel.setName(smAppl.getSmCompanyBasic().getCompanyName());
-//			smPersonnel.setIdentificationTypeId(SupplierManagementConst.BASIC_IND_IDENT_TYPE);
-			smPersonnel.setIdentificationTypeId(SupplierManagementConst.BASIC_IND_IDENT_TYPE_ID);
-			smPersonnel.setIdentificationNo(smSupp.getRegNo());
-			smPersonnel.setPmCountry(indNationality);
-			this.getManagedBean().setSmBusinessAdd(this.getManagedBean().getSmPermenantAdd());
 		}
 
 		smSupp.setCompanyName(smAppl.getSmCompanyBasic().getCompanyName());
