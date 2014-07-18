@@ -28,7 +28,6 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.sm.SmApplicationBackingBean;
 import my.ep.web.backingbean.sm.sdoreview.SdoReviewBackingBean;
 import my.ep.web.backingbean.sm.supportingdocinquiry.SupportingDocInquiryBackingBean;
-import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.commonappl.CommonApplManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;

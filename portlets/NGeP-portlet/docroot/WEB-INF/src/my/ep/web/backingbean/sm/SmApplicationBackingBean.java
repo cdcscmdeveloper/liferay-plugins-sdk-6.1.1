@@ -5723,7 +5723,8 @@ public class SmApplicationBackingBean extends
 				}
 			}
 		}
-		if (!pers.getEpRole().isEmpty()
+		if (pers.getEpRole() != null
+				&& !pers.getEpRole().isEmpty()
 				&& (pers.getEpRole().equalsIgnoreCase(
 						RoleCode.MOF_SUPPLIER_USER.value()) || pers.getEpRole()
 						.equalsIgnoreCase(RoleCode.CM_USER.value())))
