@@ -18,17 +18,17 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 						value="#{rejectionReasonBackingBean.managedBean.appTypeRestrictions}"
 						selection="#{rejectionReasonBackingBean.managedBean.deleteAppTypeRestrictions}"
 						var="restrict" rowKey="#{restrict}">
-						<p:ajax event="toggleSelect" update="@this" process="@this" />
-						<p:ajax event="rowSelectCheckbox" update="@this" />
+						<p:ajax event="toggleSelect" update="@this, cbAppDelete" process="@this" />
+						<p:ajax event="rowSelectCheckbox" update="@this, cbAppDelete" />
 						<p:column selectionMode="multiple" disabledSelection="#{!restrict.brandNew}" style="width:2%" />
-				        <p:column headerText="#{lbl['lbl.pm.application.type']}">
+				        <p:column headerText="* #{lbl['lbl.pm.application.type']}">
 					    	<p:selectOneMenu id="somAppType"  styleClass="ppDropDownWidthM"
 								value="#{restrict.restrType.parameterId}">
 								<f:selectItems  value="#{rejectionReasonBackingBean.applicationTypeOptions()}"/>
 								<p:ajax event="change" update="somAppType"/>
 							</p:selectOneMenu>
 				        </p:column>  
-				        <p:column headerText="#{lbl['lbl.pm.status']}">  
+				        <p:column headerText="* #{lbl['lbl.pm.status']}">  
 				         	<p:selectOneMenu styleClass="ppDropDownWidthS" value="#{restrict.recordStatusFlg}">
 								<f:selectItems  value="#{rejectionReasonBackingBean.getStatusOptions()}"/>
 							</p:selectOneMenu>
@@ -40,8 +40,9 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 							action="#{rejectionReasonBackingBean.addRestriction(ParameterTypeConst.supplierApplicationTypes)}"
 							immediate="true"/>
 						&#160;
-						<p:commandButton value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete" update="dtAppType"
-							immediate="true"
+						<p:commandButton id="cbAppDelete" value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete" update="dtAppType"
+							immediate="true" disabled="#{rejectionReasonBackingBean.managedBean.deleteAppTypeRestrictions !=null 
+							and rejectionReasonBackingBean.managedBean.deleteAppTypeRestrictions.size>0}"
 							action="#{rejectionReasonBackingBean.deleteRestrictions(ParameterTypeConst.supplierApplicationTypes)}" /> 
 					</div>
 				</p:tab>
@@ -56,13 +57,13 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 						<p:ajax event="rowSelectCheckbox" update="@this" />
 						
 						<p:column selectionMode="multiple" disabledSelection="#{!restrict.brandNew}" style="width:2%" />
-				        <p:column headerText="#{lbl['lbl.pm.company.type']}">  
+				        <p:column headerText="* #{lbl['lbl.pm.company.type']}">  
 					    	<p:selectOneMenu id="somAppType" styleClass="ppDropDownWidthM"
 								value="#{restrict.restrType.parameterId}">
 								<f:selectItems  value="#{rejectionReasonBackingBean.companyTypeOptions()}"/>
 							</p:selectOneMenu>
 				        </p:column>  
-				        <p:column headerText="#{lbl['lbl.pm.status']}">  
+				        <p:column headerText="* #{lbl['lbl.pm.status']}">  
 				            <p:selectOneMenu styleClass="ppDropDownWidthS" value="#{restrict.recordStatusFlg}">
 								<f:selectItems  value="#{rejectionReasonBackingBean.getStatusOptions()}"/>
 							</p:selectOneMenu>
@@ -90,13 +91,13 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 						<p:ajax event="rowSelectCheckbox" update="@this" />
 						<p:column selectionMode="multiple" disabledSelection="#{!restrict.brandNew}" style="width:2%" />
 
-				        <p:column headerText="#{lbl['lbl.pm.supplier.type']}">  
+				        <p:column headerText="* #{lbl['lbl.pm.supplier.type']}">  
 					    	<p:selectOneMenu id="somAppType" styleClass="ppDropDownWidthM"
 								value="#{restrict.restrType.parameterId}">
 								<f:selectItems  value="#{rejectionReasonBackingBean.supplierTypeOptions()}"/>
 							</p:selectOneMenu>
 				        </p:column>  
-				        <p:column headerText="#{lbl['lbl.pm.status']}">  
+				        <p:column headerText="* #{lbl['lbl.pm.status']}">  
 					        <p:selectOneMenu styleClass="ppDropDownWidthS" value="#{restrict.recordStatusFlg}">
 								<f:selectItems  value="#{rejectionReasonBackingBean.getStatusOptions()}"/>
 							</p:selectOneMenu>

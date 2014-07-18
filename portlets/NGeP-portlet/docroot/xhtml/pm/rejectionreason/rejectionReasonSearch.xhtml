@@ -38,7 +38,8 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 					<p:outputLabel value="#{lbl['lbl.pm.reason.code']}"/>
 				</th>
 				<td>
-					<p:inputText styleClass="ppDisplayTextM" value="#{rejectionReasonBackingBean.managedBean.reasonSearchBean.reasonCode}"/>
+					<p:inputText styleClass="ppDisplayTextM" maxlength="10" 
+						value="#{rejectionReasonBackingBean.managedBean.reasonSearchBean.reasonCode}"/>
 				</td>
 				<th>
 					<p:outputLabel value="#{lbl['lbl.pm.company.type']}"/>
@@ -56,7 +57,8 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 					<p:outputLabel value="#{lbl['lbl.pm.reason.desc']}"/>
 				</th>
 				<td>
-					<p:inputText styleClass="ppDisplayTextM" value="#{rejectionReasonBackingBean.managedBean.reasonSearchBean.reasonDesc}"/>
+				 	<p:inputTextarea value="#{rejectionReasonBackingBean.managedBean.reasonSearchBean.reasonDesc}" 
+				 		cols="50" rows="5" maxlength="255"/>
 				</td>
 				<th>
 					<p:outputLabel value="#{lbl['lbl.pm.supplier.type']}"/>
