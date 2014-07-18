@@ -4211,6 +4211,13 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		CmZonalStandardPricing cmTierPricing = this.getManagedBean()
 				.getSelectedMaintainItem().getzStdPrices().get(index);
 
+		if (cmTierPricing.getFromQty() != null
+				&& cmTierPricing.getToQty() != null
+				&& cmTierPricing.getFromQty() >= cmTierPricing.getToQty()) {
+			this.getManagedBean().setError1(true);
+		} else {
+			this.getManagedBean().setError1(false);
+		}
 		if (cmTierPricing.getStartDate() != null
 				&& cmTierPricing.getEndDate() != null
 				&& cmTierPricing.getStartDate().compareTo(
