@@ -26,7 +26,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 					<p:outputLabel value="#{lbl['lbl.pm.application.type']}"/>
 				</th>
 				<td>
-					<p:selectOneMenu id="somAppType" styleClass="ppDropDownWidthL" 
+					<p:selectOneMenu id="somAppType" styleClass="ppDropDownWidthM" 
 						disabled="#{!rejectionReasonBackingBean.managedBean.searchSuppReason}"
 						value="#{rejectionReasonBackingBean.managedBean.reasonSearchBean.applicationType}">
 						<f:selectItems  value="#{rejectionReasonBackingBean.applicationTypeOptions()}"/>
@@ -45,7 +45,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 					<p:outputLabel value="#{lbl['lbl.pm.company.type']}"/>
 				</th>
 				<td>
-					<p:selectOneMenu id="somComType" styleClass="ppDropDownWidthL"
+					<p:selectOneMenu id="somComType" styleClass="ppDropDownWidthM"
 						disabled="#{!rejectionReasonBackingBean.managedBean.searchSuppReason}"
 						value="#{rejectionReasonBackingBean.managedBean.reasonSearchBean.companyType}">
 						<f:selectItems  value="#{rejectionReasonBackingBean.companyTypeOptions()}"/>
@@ -64,7 +64,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 					<p:outputLabel value="#{lbl['lbl.pm.supplier.type']}"/>
 				</th>
 				<td>
-					<p:selectOneMenu id="somSuppType" styleClass="ppDropDownWidthL" 
+					<p:selectOneMenu id="somSuppType" styleClass="ppDropDownWidthM" 
 						disabled="#{!rejectionReasonBackingBean.managedBean.searchSuppReason}"
 						value="#{rejectionReasonBackingBean.managedBean.reasonSearchBean.supplierType}">
 						<f:selectItems  value="#{rejectionReasonBackingBean.supplierTypeOptions()}"/>

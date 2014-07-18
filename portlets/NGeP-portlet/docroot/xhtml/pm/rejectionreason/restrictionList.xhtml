@@ -18,8 +18,8 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 						value="#{rejectionReasonBackingBean.managedBean.appTypeRestrictions}"
 						selection="#{rejectionReasonBackingBean.managedBean.deleteAppTypeRestrictions}"
 						var="restrict" rowKey="#{restrict}">
-						<p:ajax event="toggleSelect" update="@this, :form:tvReasonRestriction:cbAppDelete" process="@this" />
-						<p:ajax event="rowSelectCheckbox" update="@this, :form:tvReasonRestriction:cbAppDelete" />
+						<p:ajax event="toggleSelect" update="@this" process="@this" />
+						<p:ajax event="rowSelectCheckbox" update="@this" />
 						<p:column selectionMode="multiple" disabledSelection="#{!restrict.brandNew}" style="width:2%" />
 				        <p:column headerText="* #{lbl['lbl.pm.application.type']}">
 					    	<p:selectOneMenu id="somAppType"  styleClass="ppDropDownWidthM"
@@ -52,8 +52,8 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 						value="#{rejectionReasonBackingBean.managedBean.comTypeRestrictions}"
 						selection="#{rejectionReasonBackingBean.managedBean.deleteComTypeRestrictions}"
 						var="restrict" rowKey="#{restrict}">
-						<p:ajax event="toggleSelect" update="@this" process="@this, :form:tvReasonRestriction:cbComDelete" />
-						<p:ajax event="rowSelectCheckbox" update="@this, :form:tvReasonRestriction:cbComDelete" />
+						<p:ajax event="toggleSelect" update="@this" process="@this" />
+						<p:ajax event="rowSelectCheckbox" update="@this" />
 						
 						<p:column selectionMode="multiple" disabledSelection="#{!restrict.brandNew}" style="width:2%" />
 				        <p:column headerText="* #{lbl['lbl.pm.company.type']}">  
@@ -86,8 +86,8 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 						value="#{rejectionReasonBackingBean.managedBean.suppTypeRestrictions}"
 						selection="#{rejectionReasonBackingBean.managedBean.deleteSuppTypeRestrictions}"
 						var="restrict" rowKey="#{restrict}">
-						<p:ajax event="toggleSelect" update="@this, :form:tvReasonRestriction:cbSuppDelete" process="@this" />
-						<p:ajax event="rowSelectCheckbox" update="@this, :form:tvReasonRestriction:cbSuppDelete" />
+						<p:ajax event="toggleSelect" update="@this" process="@this" />
+						<p:ajax event="rowSelectCheckbox" update="@this" />
 						<p:column selectionMode="multiple" disabledSelection="#{!restrict.brandNew}" style="width:2%" />
 
 				        <p:column headerText="* #{lbl['lbl.pm.supplier.type']}">  
