@@ -108,7 +108,7 @@
 			<tr>		    
   				<td><p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.country']}" />
   					<p:outputLabel value="*" styleClass="mandatory" /></td>	  
-		        <td><p:selectOneMenu value="#{userprofileBackingBean.managedBean.pmAddress.pmCountry.countryId}" 
+		        <td><p:selectOneMenu 
 		              style="width:180px;margin-bottom:5px;">
             	     <f:selectItem itemValue="#{null}" itemLabel="Select One"/> 		             
 					 <f:selectItems
@@ -144,7 +144,7 @@
     
 		<table style="width:100%">                  
   			<tr>	
-  				<td><p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.state']}" />
+  				<td style="width:234px;"><p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.state']}" />
   					<p:outputLabel value="*" styleClass="mandatory" /></td>  
 		        <td><p:selectOneMenu value="#{userprofileBackingBean.managedBean.stateId}"   
 		              style="width:180px;margin-bottom:5px;">
