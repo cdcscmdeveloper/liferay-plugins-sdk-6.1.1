@@ -8,8 +8,9 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 		
 	<p:panel header="RESPONSIBLE ORG. UNIT" toggleable="true">
-	   <p:dataTable id="orgUnitId" var="orgUnitList" value="#{userprofilesBackingBean.managedBean.orgUnits}"
-	    styleClass="orgUnitId">   
+	   <p:dataTable id="orgUnitId" var="orgUnitList" 
+	     value="#{userprofilesBackingBean.managedBean.orgUnits}"
+	     styleClass="orgUnitId" rowIndexVar="index">   
 		   
 	    <p:column headerText="#{lbl['lbl.pm.profiles.resorg.table.orgtype']}" >
 		   <p:selectOneMenu  
@@ -25,10 +26,9 @@
 	    <p:column headerText="#{lbl['lbl.pm.profiles.resorg.table.code']}" > 
 			 <ac:lov id="orgLov" lovId="PM_ORG_PROFILE"
 					headerText="Org Lov"
-					saveObject="userprofilesBackingBean.managedBean.orgUnits[#{index}].pmOrgProfile"
-					value="#{orgUnitList.pmOrgValidity.orgCode}"
-					update=":form:orgsubId:orgUnitId">
-             </ac:lov>    
+					saveObject="userprofilesBackingBean.managedBean.orgUnits[#{index}].pmOrgValidity"
+					value="#{orgUnitList.pmOrgValidity.orgCode}">
+             </ac:lov>  
         </p:column>
         
         <p:column headerText="#{lbl['lbl.pm.profiles.resorg.table.name']}" > 
@@ -62,5 +62,6 @@
         <p:commandButton value="Delete" icon="ui-icon-delete" />
        
 		</div>
+    <ac:lovPopup /> 		
 	</p:panel>
 </ui:composition>	

@@ -7,15 +7,13 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel styleClass="recAddUpdate">	
+	<p:panel styleClass="receivingAddUpdate">	
 	<p:tabView>	
 	  <p:tab title="ROLES">  
-		<p:dataTable id="userRolesDelivered" var="rolename" editable="true" style="width:100%" widgetVar="roleService"
-		  rowIndexVar="index" value="#{roleDetailList}" selection="#{selectRoleList}" rowKey="#{role}">
-	    <ac:paginator for="userRolesList"></ac:paginator>
-		<p:column selectionMode="multiple" style="width:2%"></p:column>	    	  
-	    <p:column headerText="#{lbl['lbl.pm.profiles.authorisation.role']}" > 
-          <h:outputText value="#{rolename.roleNames}" />
+		<p:dataTable editable="true" style="width:100%">
+		  	        	  
+	    <p:column headerText="#{lbl['lbl.pm.profiles.authorisation.role']}" >
+          <h:outputText />
         </p:column>
         
         <p:column headerText="#{lbl['lbl.pm.profiles.authorisation.apprlimit']}" > 
@@ -34,30 +32,28 @@
        <p:spacer height="15"></p:spacer>
 		
 		<div align="right">
-		 <p:commandButton value="Add" icon="ui-icon-add" oncomplete="roleReceiving.show();" />
+		<p:commandButton
+		  value="#{lbl['lbl.so.addbtn']}" process="@this"
+		  oncomplete="roleReceiving.show();"
+		  icon="ui-icon-add" />
         <p:commandButton value="Delete" icon="ui-icon-delete" />
        
 		</div>	  
       </p:tab>  
       	
 	  <p:tab title="RECEIVING ADDRESS">	
-		<p:dataTable id="recAddDelivered" var="recaddress" editable="true" style="width:100%" widgetVar="receivingService"
-		   rowIndexVar="index" value="#{receivingAddList}" selection="#{selectReceivingAddList}" rowKey="#{recaddress}">
-        <ac:paginator for="recAddDelivered"></ac:paginator>
-        
-        <p:column selectionMode="multiple" style="width:2%" />
+		<p:dataTable editable="true" style="width:100%" widgetVar="receivingAddService">	          
         
 	    <p:column headerText="#{lbl['lbl.pm.profiles.authorisation.addname']}" > 
-			<h:outputText value="#{recaddress.receivingAddress}" size="50"></h:outputText>,
         </p:column>
         <p:column headerText="Status" > 
-          <h:outputText />   
         </p:column>
 		</p:dataTable>
        <p:spacer height="15"></p:spacer>
 		
 		<div align="right">
-		 <p:commandButton value="Add" oncomplete="receivingAddress.show();" icon="ui-icon-add" />
+			<p:commandButton value="#{lbl['lbl.so.addbtn']}"
+		     oncomplete="receivingAddress.show();" icon="ui-icon-add" />
         <p:commandButton value="Delete" icon="ui-icon-delete" />
        </div>
       </p:tab> 	  	      

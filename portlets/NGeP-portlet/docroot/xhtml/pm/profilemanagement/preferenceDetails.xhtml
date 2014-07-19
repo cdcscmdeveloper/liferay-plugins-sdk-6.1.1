@@ -13,9 +13,10 @@
 
 		        <h:outputLabel value="#{lbl['lbl.pm.profiles.preferences.language']}"></h:outputLabel>
                <p:columnGroup> 		        
-		          <p:selectOneMenu style="width:178px;margin-bottom:5px;">  
-            		<f:selectItem itemLabel="English" itemValue="1" />  
-            		<f:selectItem itemLabel="Bahasa Malaysia" itemValue="2" />  
+		          <p:selectOneMenu value="#{userprofilesBackingBean.managedBean.pmUser.pmUserPreference.preferredLanguage}"
+		             style="width:178px;margin-bottom:5px;">    	
+					<f:selectItem itemLabel="English" itemValue="en" />
+					<f:selectItem itemLabel="Bahasa Malaysia" itemValue="ms" />
                   </p:selectOneMenu>
                  <h:outputLink id="lang" value="#">&#160;&#160;   
                  <p:graphicImage library="ep/images/design" name="tooltips.png"
@@ -26,7 +27,7 @@
                  
                 <h:outputLabel value="#{lbl['lbl.pm.profiles.preferences.notificationremoval']}" />
                 <p:columnGroup>                
-                 <p:inputText value="0" size="5" />&#160; 
+                 <p:inputText value="#{userprofilesBackingBean.managedBean.pmUser.pmUserPreference.notifyRemovalDay}" size="5" />&#160; 
                  <h:commandButton value="Days" style="width:62px" />
                  <h:outputLink id="fade" value="#">&#160;&#160;   
                  <p:graphicImage library="ep/images/design" name="tooltips.png"
