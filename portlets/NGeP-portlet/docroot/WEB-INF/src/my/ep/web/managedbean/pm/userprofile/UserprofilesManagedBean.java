@@ -18,7 +18,6 @@ import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmCriteria;
-import my.ep.persistence.entity.pm.common.PmCriteriaDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
@@ -46,11 +45,15 @@ public class UserprofilesManagedBean extends BaseManagedBean {
 	
 	private PmUser user;
 	
-	private PmUser pmUser = new PmUser();	
+	private PmUser pmUser;
 	
 	private PmCriteria pmCriteria;		
 
 	private PmAddress pmAddress;
+	
+	private PmAddress cAddress;
+	
+	private PmAddressType addressType;	
 	
 	private PmOrgValidity orgValidity;
 	
@@ -58,8 +61,6 @@ public class UserprofilesManagedBean extends BaseManagedBean {
 				
     // user profile	search	
 	private String userNames;
-	
-	private String criteriaDescs;	
 	
 	private String userRole;	
 	
@@ -71,7 +72,11 @@ public class UserprofilesManagedBean extends BaseManagedBean {
 	
 	private String roleNames;
 	
-	private String districtCode;	
+	private String language;
+	
+	private String districtCode;
+	
+	private String cityCode;
 	
 	// user group profile
 	private String userGroupNames;	
@@ -98,8 +103,6 @@ public class UserprofilesManagedBean extends BaseManagedBean {
     
     private List<PmOrgProfile> deleteorgUnits;      
 	
-	private List<PmCriteriaDesc> criterias;	
-	
 	private List<PmAddress> address;	
 
 	private List<PmUserGroup> usersGroup;
@@ -112,14 +115,6 @@ public class UserprofilesManagedBean extends BaseManagedBean {
 	private List<RoleList> rolelists;
 	
 	private List<AddressList> addresslistss;	
-	
-	private List<PmState> states;	
-	
-	private List<PmDistrict> districts;
-	
-	private List<PmCity> citys;	
-	
-	private List<PmDivision> divisions;	
 	
 	private List<PmCountry> countries;	
 	
@@ -135,17 +130,44 @@ public class UserprofilesManagedBean extends BaseManagedBean {
 
 	private Long divisionId;
 	
-	private boolean status;	
+	private Long cityId;	
+	
+	private boolean status;		
+	
+	// list of location
+	private List<PmState> stateList;
+		
+	private List<PmDistrict> districtList;
+	
+	private List<PmCity> cityList;	
 	
 	// org search	
     private String orgNames;
     
     // get the lists of roles
-	public List<PmRoleDesc> userRoleSelect;;
+    private List<PmRoleDesc> userRoleSelect;
+	
+    // get the lists of approver type
+	private List<PmRoleDesc> userApproverSelect;	
 	
 	//get the lists of address
-	private List<PmAddressType> userAddressSelect;
+	private List<PmAddressType> pmRecevingAddressList;	
+	private PmAddressType selectRecevingAddress;
+	private List<PmAddressType> selectedUserAddress;
+	//get the lists of role
+	private List<PmRoleDesc> selectedUserRole;
+	private PmRoleDesc selectUserRole;
 	
+	private PmOrgProfile orgProfile;
+	
+	public PmOrgProfile getOrgProfile() {
+		return orgProfile;
+	}
+
+	public void setOrgProfile(PmOrgProfile orgProfile) {
+		this.orgProfile = orgProfile;
+	}
+
 	public Long getUserId() {
 		return userId;
 	}
@@ -226,14 +248,6 @@ public class UserprofilesManagedBean extends BaseManagedBean {
 		this.userNames = userNames;
 	}	
 	
-	public String getCriteriaDesc() {
-		return criteriaDescs;
-	}
-
-	public void setCriteriaDesc(String criteriaDescs) {
-		this.criteriaDescs = criteriaDescs;
-	}
-
 	public String getUserRole() {
 		return userRole;
 	}
@@ -262,10 +276,32 @@ public class UserprofilesManagedBean extends BaseManagedBean {
 		return userStatus;
 	}
 
-
-
 	public void setUserStatus(boolean userStatus) {
 		this.userStatus = userStatus;
+	}	
+
+	public List<PmState> getStateList() {
+		return stateList;
+	}
+
+	public void setStateList(List<PmState> stateList) {
+		this.stateList = stateList;
+	}
+
+	public List<PmDistrict> getDistrictList() {
+		return districtList;
+	}
+
+	public void setDistrictList(List<PmDistrict> districtList) {
+		this.districtList = districtList;
+	}	
+
+	public List<PmCity> getCityList() {
+		return cityList;
+	}
+
+	public void setCityList(List<PmCity> cityList) {
+		this.cityList = cityList;
 	}
 
 	public String getStateCode() {
@@ -291,6 +327,14 @@ public class UserprofilesManagedBean extends BaseManagedBean {
 
 	public void setDistrictCode(String districtCode) {
 		this.districtCode = districtCode;
+	}		
+
+	public String getCityCode() {
+		return cityCode;
+	}
+
+	public void setCityCode(String cityCode) {
+		this.cityCode = cityCode;
 	}
 
 	public PmAddress getPmAddress() {
@@ -300,8 +344,23 @@ public class UserprofilesManagedBean extends BaseManagedBean {
 
 	public void setPmAddress(PmAddress pmAddress) {
 		this.pmAddress = pmAddress;
+	}		
+
+	public PmAddress getcAddress() {
+		return cAddress;
 	}
-	
+
+	public void setcAddress(PmAddress cAddress) {
+		this.cAddress = cAddress;
+	}
+
+	public PmAddressType getAddressType() {
+		return addressType;
+	}
+
+	public void setAddressType(PmAddressType addressType) {
+		this.addressType = addressType;
+	}
 
 	public boolean isEditable() {
 		return isEditable;
@@ -374,14 +433,6 @@ public class UserprofilesManagedBean extends BaseManagedBean {
 	public void setUser(PmUser user) {
 		this.user = user;
 	}
-
-	public List<PmState> getStates() {
-		return states;
-	}
-
-	public void setStates(List<PmState> states) {
-		this.states = states;
-	}
 	
 	public PmState getState() {
 		return state;
@@ -398,33 +449,7 @@ public class UserprofilesManagedBean extends BaseManagedBean {
 
 	public void setCity(PmCity city) {
 		this.city = city;
-	}
-
-	public List<PmDistrict> getDistricts() {
-		return districts;
-	}
-
-	public void setDistricts(List<PmDistrict> districts) {
-		this.districts = districts;
-	}
-	
-	public List<PmCity> getCitys() {
-		return citys;
-	}
-
-	public void setCitys(List<PmCity> citys) {
-		this.citys = citys;
-	}
-	
-	
-	
-	public List<PmCriteriaDesc> getCriterias() {
-		return criterias;
-	}
-
-	public void setCriterias(List<PmCriteriaDesc> criterias) {
-		this.criterias = criterias;
-	}
+	}	
 
 	public PmDivision getDivision() {
 		return division;
@@ -441,15 +466,7 @@ public class UserprofilesManagedBean extends BaseManagedBean {
 	public void setDistrict(PmDistrict district) {
 		this.district = district;
 	}
-
-	public List<PmDivision> getDivisions() {
-		return divisions;
-	}
-
-	public void setDivisions(List<PmDivision> divisions) {
-		this.divisions = divisions;
-	}
-		
+	
 	public List<PmCountry> getCountries() {
 		return countries;
 	}
@@ -489,7 +506,15 @@ public class UserprofilesManagedBean extends BaseManagedBean {
 	public void setDivisionId(Long divisionId) {
 		this.divisionId = divisionId;
 	}
-		
+				
+	public Long getCityId() {
+		return cityId;
+	}
+
+	public void setCityId(Long cityId) {
+		this.cityId = cityId;
+	}
+
 	public boolean isStatus() {
 		return status;
 	}
@@ -513,13 +538,61 @@ public class UserprofilesManagedBean extends BaseManagedBean {
 	public void setUserRoleSelect(List<PmRoleDesc> userRoleSelect) {
 		this.userRoleSelect = userRoleSelect;
 	}
-
-	public List<PmAddressType> getUserAddressSelect() {
-		return userAddressSelect;
+	
+	public List<PmRoleDesc> getUserApproverSelect() {
+		return userApproverSelect;
 	}
 
-	public void setUserAddressSelect(List<PmAddressType> userAddressSelect) {
-		this.userAddressSelect = userAddressSelect;
+	public void setUserApproverSelect(List<PmRoleDesc> userApproverSelect) {
+		this.userApproverSelect = userApproverSelect;
+	}			
+
+	public List<PmAddressType> getPmRecevingAddressList() {
+		return pmRecevingAddressList;
+	}
+
+	public void setPmRecevingAddressList(List<PmAddressType> pmRecevingAddressList) {
+		this.pmRecevingAddressList = pmRecevingAddressList;
+	}	
+
+	public PmAddressType getSelectRecevingAddress() {
+		return selectRecevingAddress;
+	}
+
+	public void setSelectRecevingAddress(PmAddressType selectRecevingAddress) {
+		this.selectRecevingAddress = selectRecevingAddress;
+	}	
+
+	public List<PmAddressType> getSelectedUserAddress() {
+		return selectedUserAddress;
+	}
+
+	public void setSelectedUserAddress(List<PmAddressType> selectedUserAddress) {
+		this.selectedUserAddress = selectedUserAddress;
+	}
+
+	public List<PmRoleDesc> getSelectedUserRole() {
+		return selectedUserRole;
+	}
+
+	public void setSelectedUserRole(List<PmRoleDesc> selectedUserRole) {
+		this.selectedUserRole = selectedUserRole;
+	}	
+
+	public PmRoleDesc getSelectUserRole() {
+		return selectUserRole;
+	}
+
+	public void setSelectUserRole(PmRoleDesc selectUserRole) {
+		this.selectUserRole = selectUserRole;
+	}
+		
+	public String getLanguage() {
+		return language;
+	}
+
+	public void setLanguage(String language) {
+		this.language = language;
 	}
 
 	public List<PreferenceList> getPreferencelists() {
