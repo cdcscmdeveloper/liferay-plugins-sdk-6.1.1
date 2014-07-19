@@ -1401,6 +1401,11 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	public void editItemPriceOnIndexs() {
 		List<CtItemPrice> ctItemPriceList = new ArrayList<CtItemPrice>();
 		CtItemPrice addDupObj = new CtItemPrice();
+		
+		Calendar previousDate = Calendar.getInstance();
+		previousDate.setTime(getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());
+		previousDate.add(Calendar.DATE, -1);
+		
 		for (CtItemPrice ctItemPrice : this.getManagedBean().getSelectedItem().getCtItemPrices()) {
 			ctItemPriceList.add(ctItemPrice);
 			if (!ctItemPrice.isChangePrice() && !ctItemPrice.isChkIndexOfRow()) {
@@ -1423,7 +1428,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 					addDupObj.setChangePrice(true);
 					addDupObj.setAssociateCtItemPrice(ctItemPrice);
 					ctItemPrice.setChkIndexOfRow(true);
-					ctItemPrice.setExpDate(getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());
+					ctItemPrice.setExpDate(previousDate.getTime());
 					ctItemPriceList.add(addDupObj);
 				}
 			}
@@ -1443,6 +1448,11 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	public void editCeilingQuantityOnIndexs() {
 		List<CtItemCeilingQty> ctItemCeilingQtys = new ArrayList<CtItemCeilingQty>();
 		CtItemCeilingQty addDupObj = new CtItemCeilingQty();
+		
+		Calendar previousDate = Calendar.getInstance();
+		previousDate.setTime(getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());
+		previousDate.add(Calendar.DATE, -1);
+		
 		for (CtItemCeilingQty ceilingQty : this.getManagedBean().getSelectedItem().getCtItemCeilingQties()) {
 			ctItemCeilingQtys.add(ceilingQty);
 			if (!ceilingQty.isChangeCeilQuantity() && !ceilingQty.isChkIndexOfRow()) {
@@ -1462,7 +1472,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 					addDupObj.setChangeCeilQuantity(true);
 					addDupObj.setAssociateCtItemCeilingQty(ceilingQty);
 					ceilingQty.setChkIndexOfRow(true);
-					ceilingQty.setExpDate(getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());
+					ceilingQty.setExpDate(previousDate.getTime());
 					ctItemCeilingQtys.add(addDupObj);
 				}
 			}
@@ -1482,6 +1492,11 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	public void editItemMaxQtyOnIndexs() {
 		List<CtItemMaxQty> ctItemMaxQtyList = new ArrayList<CtItemMaxQty>();
 		CtItemMaxQty addDupObj = new CtItemMaxQty();
+		
+		Calendar previousDate = Calendar.getInstance();
+		previousDate.setTime(getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());
+		previousDate.add(Calendar.DATE, -1);
+		
 		for (CtItemMaxQty ctItemMaxQty : getManagedBean().getSelectedItem().getCtItemMaxQties()) {
 			ctItemMaxQtyList.add(ctItemMaxQty);
 			if (!ctItemMaxQty.isChangeQuantity() && !ctItemMaxQty.isChkIndexOfRow()) {
@@ -1497,7 +1512,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 					}
 					addDupObj.setChangeQuantity(true);
 					addDupObj.setAssociateCtItemMaxQty(ctItemMaxQty);
-					ctItemMaxQty.setExpDate(getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());
+					ctItemMaxQty.setExpDate(previousDate.getTime());
 					ctItemMaxQty.setChkIndexOfRow(true);
 					ctItemMaxQtyList.add(addDupObj);
 				}
@@ -1804,7 +1819,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			getManagedBean().getContractVer().getCtAmendment().setExtendStartDate(c.getTime());
 			c.add(Calendar.MONTH, 3);
 			getManagedBean().getContractVer().getCtAmendment().setExtendEndDate(c.getTime());
-			getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(c.getTime());
+			getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(getManagedBean().getContractVer().getCtAmendment().getExtendStartDate());
 		}
 	}
 	
@@ -1815,6 +1830,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		getManagedBean().getContractVer().getCtAmendment().setExtendStartDate(c.getTime());
 		c.add(Calendar.MONTH, getManagedBean().getContractVer().getCtAmendment().getExtendPeriod());
 		getManagedBean().getContractVer().getCtAmendment().setExtendEndDate(c.getTime());
+		getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(getManagedBean().getContractVer().getCtAmendment().getExtendStartDate());
 	}
 		
 	public void onItemPriceChecked() {
