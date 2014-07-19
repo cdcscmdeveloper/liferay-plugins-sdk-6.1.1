@@ -14,7 +14,20 @@
 
 
 	<ui:define name="contentSection">
-
+		<p:messages id="messages" showDetail="true" showSummary="false"
+			autoUpdate="true" closable="true" />
+		<table style="width: 100%">
+			<tr>
+				<td></td>
+				<td>
+					<div align="right" style="width: 99%" class="button-wrapper">
+						<p:commandButton value="Re Submit"
+							action="#{backingBean.resubmitSmApplInquiryToBpm(backingBean.managedBean.smAppl.applType)}"
+							style="margin-bottom:5px;" />
+					</div>
+				</td>
+			</tr>
+		</table>
 		<p:panel
 			header=" Supporting Document Offline Check List - Application No. - #{backingBean.managedBean.smAppl.applNo}">
 			<br />

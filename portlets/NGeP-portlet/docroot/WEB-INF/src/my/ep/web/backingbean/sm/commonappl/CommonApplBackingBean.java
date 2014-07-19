@@ -153,8 +153,9 @@ public class CommonApplBackingBean extends
 				SmApplicationBackingBean smApplBB = new SmApplicationBackingBean();
 				// TODO Change this impl to get values from DB and set
 				// smSupplier , smAppl of the managedBean
-
-				smApplBB.getManagedBean().setSmAppl(appl);
+				smApplBB.proceedToApplication(appl.getApplType(), Boolean.TRUE,
+						appl, mofResDto.getSmSupplier());
+				// smApplBB.getManagedBean().setSmAppl(appl);
 				smApplBB.getManagedBean().setBpmActions(resDTO.getAction());
 				smApplBB.getManagedBean().setTaskId(taskId);
 				setNavigationForSmDecision("RS", smApplBB);
@@ -176,8 +177,9 @@ public class CommonApplBackingBean extends
 				SmApplicationBackingBean smApplBB = new SmApplicationBackingBean();
 				// TODO Change this impl to get values from DB and set
 				// smSupplier , smAppl of the managedBean
-
-				smApplBB.getManagedBean().setSmAppl(appl);
+				smApplBB.proceedToApplication(appl.getApplType(), Boolean.TRUE,
+						appl, mofResDto.getSmSupplier());
+				// smApplBB.getManagedBean().setSmAppl(appl);
 				smApplBB.getManagedBean().setBpmActions(resDTO.getAction());
 				smApplBB.getManagedBean().setTaskId(taskId);
 				setNavigationForSmDecision("RS", smApplBB);

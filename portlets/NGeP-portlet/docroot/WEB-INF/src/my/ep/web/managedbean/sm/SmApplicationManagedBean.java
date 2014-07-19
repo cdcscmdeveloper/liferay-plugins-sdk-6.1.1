@@ -257,6 +257,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private PmCountry defPmCountry;
 	private List<SelectItem> ePRoleList;
 	private boolean removeEpRole;
+	private List<SmApplSupportDoc> missinDocs;
 
 	public SmApplicationManagedBean() {
 		// TODO Checking the user role
@@ -1934,6 +1935,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setRemoveEpRole(boolean removeEpRole) {
 		this.removeEpRole = removeEpRole;
+	}
+
+	public List<SmApplSupportDoc> getMissinDocs() {
+		return missinDocs;
+	}
+
+	public void setMissinDocs(List<SmApplSupportDoc> missinDocs) {
+		this.missinDocs = missinDocs;
 	}
 
 }

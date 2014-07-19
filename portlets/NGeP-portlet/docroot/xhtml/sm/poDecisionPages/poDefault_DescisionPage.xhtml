@@ -47,7 +47,8 @@
 					</c:if>
 					<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
 						<p:commandButton value="Send Enquiry"
-							onclick="sendInqDialog.show();" />
+							action="#{backingBean.assignMissingDocsList}"
+							oncomplete="sendInqDialog.show();" />
 					</c:if>
 				</div> <p:panel header="PO Decision">
 					<table>
@@ -146,7 +147,8 @@
 		<ui:include
 			src="/xhtml/sm/shared/mofSdoSharedPages/sdoSendEnquiry.xhtml" />
 		<div align="right">
-			<p:commandButton value="Submit" onclick="sendInqDialog.hide();"
+			<p:commandButton value="Submit Inquiry"
+				oncomplete="sendInqDialog.hide();"
 				action="#{backingBean.submitPOorApproverReviewToBPM('INQUIRY')}" />
 			<p:commandButton value="Cancel" onclick="sendInqDialog.hide();" />
 		</div>
@@ -166,7 +168,8 @@
 		<ui:include
 			src="/xhtml/sm/shared/poDecisionSharedPages/submitToApproverForm.xhtml" />
 		<div align="right">
-			<p:commandButton value="Submit" onclick="submitApprvrDialog.hide();"
+			<p:commandButton value="Submit"
+				oncomplete="submitApprvrDialog.hide();"
 				action="#{backingBean.submitPOorApproverReviewToBPM('ESCALATE')}" />
 			<p:commandButton value="Cancel" onclick="submitApprvrDialog.hide();" />
 		</div>
@@ -178,7 +181,7 @@
 		<ui:include
 			src="/xhtml/sm/shared/poDecisionSharedPages/approvedRemarksPopUpForm.xhtml" />
 		<div align="right">
-			<p:commandButton value="Submit" onclick="approveDialog.hide();"
+			<p:commandButton value="Submit" oncomplete="approveDialog.hide();"
 				action="#{backingBean.submitPOorApproverReviewToBPM('APPROVE')}" />
 			<p:commandButton value="Cancel" onclick="approveDialog.hide();" />
 		</div>
@@ -190,7 +193,7 @@
 		<ui:include
 			src="/xhtml/sm/shared/poDecisionSharedPages/rejectedRemarksPopUpForm.xhtml" />
 		<div align="right">
-			<p:commandButton value="Submit" onclick="rejectDialog.hide();"
+			<p:commandButton value="Submit" oncomplete="rejectDialog.hide();"
 				action="#{backingBean.submitPOorApproverReviewToBPM('REJECT')}" />
 			<p:commandButton value="Cancel" onclick="rejectDialog.hide();" />
 		</div>
