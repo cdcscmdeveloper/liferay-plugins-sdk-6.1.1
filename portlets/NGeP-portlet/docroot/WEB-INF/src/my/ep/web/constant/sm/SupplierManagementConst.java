@@ -151,24 +151,24 @@ public class SupplierManagementConst {
 	public static final String CAT_TYPE_MANUFACTURING = "M";
 	public static final String CAT_TYPE_PRINTING = "PC";
 	public static final String CAT_TYPE_TRAVEL = "PG";
-	
-	//Payment
+
+	// Payment
 	public static final String SOFTCERT_PAYMENT = "SF";
 	public static final String MOF_PAYMENT = "MF";
 	public static final String RENEWAL_PAYMENT = "RF";
 	public static final String PROCESSING_PAYMENT = "PF";
 	public static final String ONLINE_PAYMENT = "OL";
 	public static final String OFFLINE_PAYMENT = "OF";
-	
+
 	public static final String MOL_SUCCESS = "00";
-	public static final String MOL_FAIL= "11";
+	public static final String MOL_FAIL = "11";
 	public static final String MOL_PENDING = "22";
 	public static final String PAYMENT_INVALID_RES = "55";
-	
+
 	public static final String PM_STATUS_PAYMENT = "SPY";
 	public static final String PM_PAYMENT_MODE = "SPM";
 	public static final String PM_PAYMENT_ITEM = "SPI";
-	
+
 	public static final long PM_STAT_PENDING_PAYMENT = 20401;
 	public static final long PM_STAT_FAILED_PAYMENT = 20402;
 	public static final long PM_STAT_SUCCESS_PAYMENT = 20405;
@@ -268,12 +268,13 @@ public class SupplierManagementConst {
 	public static final String SM_APPL_PAGE_TYPE_SITEVISITREV = "SITEVISITREVSION";
 	public static final String SM_APPL_PAGE_TYPE_PODEC = "PODECISION";
 	public static final String SM_APPL_PAGE_TYPE_APPRDEC = "APPROVERDECISION";
-	
+
 	public static final String SM_MOF_CERT_SERIAL_SEQ = "SM_MOF_CERT_SERIAL_SEQ";
 	public static final String SM_MOF_465_SEQ = "SM_MOF_465_SEQ";
 	public static final String SM_MOF_357_0_SEQ = "SM_MOF_357_0_SEQ";
 	public static final String SM_MOF_357_2_SEQ = "SM_MOF_357_2_SEQ";
 	public static final String SM_MOF_357_3_SEQ = "SM_MOF_357_3_SEQ";
+	public static final String SM_MYIDENTITY_STATUS_CODE_VALID = "70018";
 
 	public static final int RECORD_STATUS_DELETED = 9;
 	public static final int RECORD_STATUS_SUSPENDED = 0;
