@@ -116,27 +116,25 @@
 						<td><p:outputPanel
 								id="basicBUIdTypeLblPan">
 								<p:outputLabel
-									value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.identificationType.parameterCode eq 'P' ? lbl['lbl.sm.person.psptNum'] : (smPersonnelBackingBean.managedBean.basicSmPersonnel.identificationType.parameterCode eq 'I' ? lbl['lbl.sm.person.icNum'] : lbl['lbl.sm.person.armyNum'])}"
-									id="equiPerIcNumLbl"
-									rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.identificationType.parameterCode eq 'I' or smPersonnelBackingBean.managedBean.basicSmPersonnel.identificationType.parameterCode eq 'A' or smPersonnelBackingBean.managedBean.basicSmPersonnel.identificationType.parameterCode eq 'P'}" />
-								<p:outputLabel value="*" styleClass="mandatory"
-									rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.identificationType.parameterCode eq 'I' or smPersonnelBackingBean.managedBean.basicSmPersonnel.identificationType.parameterCode eq 'A' or smPersonnelBackingBean.managedBean.basicSmPersonnel.identificationType.parameterCode eq 'P'}" />
+									value="#{lbl['lbl.sm.userprofile.idno']}"
+									id="equiPerIcNumLbl" />
+								<p:outputLabel value="*" styleClass="mandatory" />
 							</p:outputPanel></td>
 
 						<td><p:outputPanel id="basicBUIdTypePan">
-								<p:inputText label="#{lbl['lbl.sm.person.icNum']}"
+								<p:inputText label="#{lbl['lbl.sm.userprofile.idno']}"
 									required="true" id="basicBUIcNum"
 									rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.identificationType.parameterCode eq 'I'}"
 									value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.identificationNo}"
 									size="35" maxlength="12"
-									validatorMessage="#{lbl['lbl.sm.person.icNum']} - #{lbl['lbl.sm.invalidNo']}"
+									validatorMessage="#{lbl['lbl.sm.userprofile.idno']} - #{lbl['lbl.sm.invalidNo']}"
 									disabled="#{smPersonnelBackingBean.managedBean.editMode}">
 									<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
 								</p:inputText>
 								<p:inputText
-									label="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.identificationType.parameterCode eq 'P' ? lbl['lbl.sm.person.psptNum'] : lbl['lbl.sm.person.armyNum']}"
+									label="#{lbl['lbl.sm.userprofile.idno']}"
 									required="true" id="basicBUPasptNum"
-									rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.identificationType.parameterCode eq 'P' or smPersonnelBackingBean.managedBean.basicSmPersonnel.identificationType.parameterCode eq 'A'}"
+									rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.identificationType.parameterCode ne 'I'}"
 									value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.identificationNo}"
 									size="35" maxlength="12"
 									disabled="#{smPersonnelBackingBean.managedBean.editMode}">
