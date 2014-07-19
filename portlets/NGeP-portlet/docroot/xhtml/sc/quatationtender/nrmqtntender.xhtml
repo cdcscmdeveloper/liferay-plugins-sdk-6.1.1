@@ -67,7 +67,6 @@
 		</div>
 		<ac:lovPopup />
 	</p:panel>
-	<p:spacer height="1" />
 
 	<p:panel>
 		<table style="width: 100%">
@@ -79,30 +78,32 @@
 							rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount gt '500000'}">
 							<h:outputLabel value="#{lbl['lbl.so.allstate']}"
 								style="width : 80px" />
-							<p:selectBooleanCheckbox 
+							<p:selectBooleanCheckbox
+								disabled="#{qTSupplierQulCriteriaBackingBean.managedBean.allStateCode eq '3'}"
 								value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState}">
 								<f:selectItem
 									itemValue="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState}" />
-								<p:ajax update="supplierallStae"
+								<p:ajax update="supplierallStae, minPaidCapital"
 									listener="#{qTSupplierQulCriteriaBackingBean.stateChange}" />
 							</p:selectBooleanCheckbox>
 						</h:panelGrid>
 					</h:panelGroup></td>
 				<td></td>
 			</tr>
-			<tr>
-				<td style="width: 150px"><p:outputLabel
-						value="#{lbl['lbl.so.paidup']}"
-						rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount gt '500000'}" /></td>
-				<td><p:inputText size="30" maxlength="18"
-						rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount gt '500000'}"
-						value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.minPaidUpCapital}"
-						style="margin-right:5px;text-align:right;">
-						<ac:validateNumber
-							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}"
-							maxIntegerDigits="14"></ac:validateNumber>
-					</p:inputText></td>
-			</tr>
+			<p:outputPanel id="minPaidCapital">
+				<tr>
+					<td style="width: 150px"><p:outputLabel
+							value="#{lbl['lbl.so.paidup']}"
+							rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount gt '500000' and qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState eq 'true'}" /></td>
+					<td><p:inputText size="30" maxlength="18"
+							rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount gt '500000' and qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState eq 'true'}"
+							value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.minPaidUpCapital}"
+							style="margin-right:5px;text-align:right;">
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}"></f:convertNumber>
+						</p:inputText></td>
+				</tr>
+			</p:outputPanel>
 		</table>
 	</p:panel>
 
