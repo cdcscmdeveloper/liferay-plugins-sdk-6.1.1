@@ -17,8 +17,8 @@
 				</td>
 				<td style="text-align:right">
 					<p:commandButton action="#{templateDocBackingBean.saveAction}" value="Save" />
-					<p:spacer width="5px" />
-					<p:commandButton action="#{templateDocBackingBean.saveAction}" value="Submit" />
+					<p:spacer width="5px" rendered="#{templateDocBackingBean.managedBean.externalPageUrl==null}" />
+					<p:commandButton action="#{templateDocBackingBean.saveAction}" rendered="#{templateDocBackingBean.managedBean.externalPageUrl==null}" value="Submit" />
 				</td>
 			</tr>
 		</table>
@@ -29,7 +29,8 @@
 						<h:outputLabel value="#{lbl['lbl.tpl.doc.category']}" />
 					</td>
 					<td class="TableFieldRight">
-						<p:selectOneMenu value="#{templateDocBackingBean.managedBean.categoryId}" id="templateCategory">
+						<p:selectOneMenu value="#{templateDocBackingBean.managedBean.categoryId}" id="templateCategory" 
+							disabled="#{templateDocBackingBean.managedBean.externalPageUrl!=null}" >
 						<!-- <p:selectOneMenu value="#{templateDocBackingBean.managedBean.templCategory}" id="templateCategory"> -->
 							<f:selectItems value="#{templateDocBackingBean.managedBean.templateCategoryList}" />
 						</p:selectOneMenu>
@@ -38,7 +39,8 @@
 						<h:outputLabel value="#{lbl['lbl.tpl.doc.processtype']}" />
 					</td>
 					<td class="TableFieldRight">
-					<p:selectOneMenu value="#{templateDocBackingBean.managedBean.processType}" id="templateCategory111">
+					<p:selectOneMenu value="#{templateDocBackingBean.managedBean.processType}" id="templateCategory111"
+						disabled="#{templateDocBackingBean.managedBean.externalPageUrl!=null}" >
 							<f:selectItems value="#{templateDocBackingBean.managedBean.templateProcessTypeList}" />
 						</p:selectOneMenu>
 					</td>
@@ -47,11 +49,13 @@
 				<tr>
 					<td class="TableFieldLeft" style="width: 120px"><h:outputLabel value="#{lbl['lbl.tpl.doc.title']}" /></td>
 					<td class="TableFieldRight">
-						<p:inputText value="#{templateDocBackingBean.managedBean.selectedTemplate.docTitle}" style="width:280px" />
+						<p:inputText value="#{templateDocBackingBean.managedBean.selectedTemplate.docTitle}" style="width:280px" 
+							disabled="#{templateDocBackingBean.managedBean.externalPageUrl!=null}" />
 					</td>
 					<td class="TableFieldLeft" style="width: 120px"><h:outputLabel value="#{lbl['lbl.tpl.doc.description']}" /></td>
 					<td class="TableFieldRight">
 						<p:inputTextarea value="#{templateDocBackingBean.managedBean.selectedTemplate.docDesc}"
+							disabled="#{templateDocBackingBean.managedBean.externalPageUrl!=null}"
 							style="width:280px" cols="33" rows="3" autoResize="false" />
 					</td>
 				</tr>

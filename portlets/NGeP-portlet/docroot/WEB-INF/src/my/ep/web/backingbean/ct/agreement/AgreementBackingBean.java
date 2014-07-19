@@ -52,7 +52,6 @@ import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.BpmOutcomeConst;
-import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
@@ -973,25 +972,19 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	}
 	
 	public String gotoTemplateDoc(CtAgreementContent agreementContent) {
-		TemplateDocBackingBean tplDocBB = null;
 		String templateDocUrl = null;
-		try {
-			tplDocBB = new TemplateDocBackingBean();
-			
-			tplDocBB.getManagedBean().setProcessType(ParameterConst.TPL_DOC_PROCESS_TYPE_CONTRACT);
-			tplDocBB.getManagedBean().setExternalPageUrl(AGREEMENT_DOC_PAGE);
-			tplDocBB.getManagedBean().setCtAgreementContent(agreementContent);
-			// Create new template doc
-			if (agreementContent.getTplDocMaster() == null) {
-				templateDocUrl = tplDocBB.createNewTemplate();
-			}
-			else {
-				templateDocUrl = tplDocBB.goToMaint(agreementContent.getTplDocMaster());
-			}
-		}catch(Exception e) {
-			e.printStackTrace();
+
+		TemplateDocBackingBean tplDocBB = new TemplateDocBackingBean();
+		tplDocBB.getManagedBean().setProcessType(ParameterConst.TPL_DOC_PROCESS_TYPE_CONTRACT);
+		tplDocBB.getManagedBean().setExternalPageUrl(AGREEMENT_DOC_PAGE);
+		tplDocBB.getManagedBean().setCtAgreementContent(agreementContent);
+		// Create new template doc
+		if (agreementContent.getTplDocMaster() == null) {
+			templateDocUrl = tplDocBB.createNewTemplate();
 		}
-		
+		else {
+			templateDocUrl = tplDocBB.goToMaint(agreementContent.getTplDocMaster());
+		}
 		return templateDocUrl;
 	}
 	

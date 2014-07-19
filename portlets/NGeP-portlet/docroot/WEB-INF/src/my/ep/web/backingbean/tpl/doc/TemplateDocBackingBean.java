@@ -34,6 +34,7 @@ import my.ep.biz.service.ct.agreement.IAgreementSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.tpl.doc.ITemplateDocSO;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.ct.ContractConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.ct.agreement.ContractAgreementReqDTO;
@@ -111,9 +112,6 @@ public class TemplateDocBackingBean extends
 			this.getManagedBean().setTemplateProcessTypeList(procesCodes);
 			
 		}
-		
-		getManagedBean().setCategoryId(null);
-		getManagedBean().setProcessType(null);
 
 	}
 
@@ -627,7 +625,7 @@ public void destroyWorld(ActionEvent actionEvent){
 				getManagedBean().setSelectedTemplate(tplDocMasterDB);
 				
 				// TODO: common save for all process type from external page
-				if (getManagedBean().getProcessType() != null && getManagedBean().getProcessType().equalsIgnoreCase(ParameterConst.TPL_DOC_PROCESS_TYPE_CONTRACT)) {
+				if (getManagedBean().getExternalPageUrl() != null && getManagedBean().getProcessType().equalsIgnoreCase(ParameterConst.TPL_DOC_PROCESS_TYPE_CONTRACT)) {
 					getManagedBean().getCtAgreementContent().setTplDocMaster(resDTO.getTplDocMaster());
 					ContractAgreementReqDTO contractAgreementReqDTO = new ContractAgreementReqDTO();					
 					contractAgreementReqDTO.setAgreementContent(getManagedBean().getCtAgreementContent());
@@ -666,30 +664,66 @@ public void destroyWorld(ActionEvent actionEvent){
 	}
 
 	public String createNewTemplate() {
-		FacesScopes facesScopes = new FacesScopes();
-		TplDocMaster docMaster = new TplDocMaster();
-		docMaster.setBrandNew(Boolean.TRUE);
-		docMaster.setCreatedBy(1l);
-		docMaster.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-		getManagedBean().setSelectedTemplate(docMaster);
-		getManagedBean().setDocSectionMap(
-				new HashMap<TplDocSection, TreeNode>());
-		TreeNode selectedNode = (new DefaultTreeNode("root", "", null));
-		getManagedBean().setDocSectionTN(selectedNode);
-		for (int i = 1; i <= 5; i++) {
-			TplDocSection docSection = new TplDocSection();
-			docSection.setTplDocMaster(docMaster);
-			docSection.setSectionNumber(i + "");
-			docSection.setSectionName("Section" + i);
-			docSection.setCreatedBy(1l);
-			docSection.setChangedBy(1l);
-			docSection.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-			docSection.setBrandNew(Boolean.TRUE);
-			docSection
-					.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-			TreeNode node = new DefaultTreeNode(docSection, selectedNode);
-			getManagedBean().getDocSectionMap().put(
-					(TplDocSection) node.getData(), node);
+		if(getManagedBean().getProcessType()!=null && getManagedBean().getProcessType().equalsIgnoreCase(ParameterConst.TPL_DOC_PROCESS_TYPE_CONTRACT)) {
+			ITemplateDocSO templateSO = (ITemplateDocSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.COMMON_COMPONENT, ITemplateDocSO.class);
+			TemplateDocReqDTO reqDTO = new TemplateDocReqDTO();
+			reqDTO.setTitle(ContractConst.AGREEMENT_STANDARD_CLAUSE);
+			reqDTO.setProcessType(ParameterConst.TPL_DOC_PROCESS_TYPE_STANDARD);
+			reqDTO.setCloneTemplate(true);
+			TemplateDocResDTO resDTO = templateSO.getTemplateSectionListByTitleAndProcessType(reqDTO);
+			
+			if (resDTO.getDocSectionList() != null && !resDTO.getDocSectionList().isEmpty()) {
+				getManagedBean().setDocSectionMap(new HashMap<TplDocSection, TreeNode>());
+				getManagedBean().setDocSectionTN(new DefaultTreeNode("root", "", null));
+
+				Map<String, TreeNode> secSeqMap = new HashMap<String, TreeNode>();
+				TreeNode node = null;
+				for (TplDocSection objL1 : resDTO.getDocSectionList()) {
+					if (objL1.getParent() == null) {
+						node = new DefaultTreeNode(objL1, getManagedBean().getDocSectionTN());
+						getManagedBean().getDocSectionMap().put(objL1, node);
+						secSeqMap.put(objL1.toString(), node);
+					} else {
+						node = new DefaultTreeNode(objL1, secSeqMap.get(objL1.getParent().toString()));
+						getManagedBean().getDocSectionMap().put(objL1, node);
+						secSeqMap.put(objL1.toString(), node);
+					}
+				}
+			}
+			
+			PmParameter pmParameter = new PmParameter();
+			pmParameter.setParameterCode(ParameterConst.TPL_DOC_PROCESS_TYPE_CONTRACT);
+			resDTO.getTplDocMaster().setProcessTypeCode(pmParameter);
+			
+			getManagedBean().setSelectedTemplate(resDTO.getTplDocMaster());
+			getManagedBean().setDeletedList(new ArrayList<TplDocSection>());
+			getManagedBean().setProcessType(resDTO.getTplDocMaster().getProcessTypeCode().getParameterCode());
+			getManagedBean().setCategoryId(resDTO.getTplDocMaster().getCategoryId());
+		} else {
+			TplDocMaster docMaster = new TplDocMaster();
+			docMaster.setBrandNew(Boolean.TRUE);
+			docMaster.setCreatedBy(1l);
+			docMaster.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+			getManagedBean().setSelectedTemplate(docMaster);
+			getManagedBean().setDocSectionMap(
+					new HashMap<TplDocSection, TreeNode>());
+			TreeNode selectedNode = (new DefaultTreeNode("root", "", null));
+			getManagedBean().setDocSectionTN(selectedNode);
+			for (int i = 1; i <= 5; i++) {
+				TplDocSection docSection = new TplDocSection();
+				docSection.setTplDocMaster(docMaster);
+				docSection.setSectionNumber(i + "");
+				docSection.setSectionName("Section" + i);
+				docSection.setCreatedBy(1l);
+				docSection.setChangedBy(1l);
+				docSection.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+				docSection.setBrandNew(Boolean.TRUE);
+				docSection
+						.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+				TreeNode node = new DefaultTreeNode(docSection, selectedNode);
+				getManagedBean().getDocSectionMap().put(
+						(TplDocSection) node.getData(), node);
+			}
 		}
 		return NAV_TO_MAINT;
 	}
