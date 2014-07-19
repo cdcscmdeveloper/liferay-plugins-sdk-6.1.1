@@ -350,8 +350,8 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 				
 				Map<String, String> valuesMap = new HashMap<String, String>();
 				valuesMap.put("PTJ_NAME", getManagedBean().getCtContract().getOwnerOrgProfile().getOrgName());
-				valuesMap.put("JABATAN_NAME", getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getOrgName());
-				valuesMap.put("MINISTRY_NAME", getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getParentOrgProfile().getOrgName());
+//				valuesMap.put("JABATAN_NAME", getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getOrgName());
+				valuesMap.put("MINISTRY_NAME", getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getOrgName());
 				if(pmAddressType!=null) {
 					valuesMap.put("PTJ_ADDRESS", formAddress(pmAddressType.getPmAddress().getAddress1(), pmAddressType.getPmAddress().getAddress2(), pmAddressType.getPmAddress().getAddress3(), pmAddressType.getPmAddress().getAddress4()));
 					valuesMap.put("TEL_NO", pmAddressType.getPmAddress().getPhoneNo());

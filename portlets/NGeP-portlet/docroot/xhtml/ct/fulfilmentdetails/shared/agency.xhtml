@@ -41,7 +41,7 @@
        	</div>
        	<div class="ppRightBtn">
        		<p:commandButton value="#{lbl['lbl.ct.agn.btn.add']}" process="@form" icon="ui-icon-add" onclick="dlgAgency.show();" rendered="#{!contractDetailsBackingBean.managedBean.directPurchase and
-       			contractDetailsBackingBean.managedBean.contractVer.ctAgencies.get(0).ctAgencyAddresses == null}"/> 
+       			fn:length(contractDetailsBackingBean.managedBean.contractVer.ctAgencies.get(0).ctAgencyAddresses)==0}"/> 
 			<p:commandButton id="delBtn" value="Delete" icon="ui-icon-delete" process="@form" onclick="dlgDel.show();"  rendered="#{!contractDetailsBackingBean.managedBean.directPurchase and
        			contractDetailsBackingBean.managedBean.contractVer.ctAgencies.get(0).ctAgencyAddresses == null}"/>
 			<p:commandButton value="#{lbl['lbl.ct.agn.table.da']}" disabled="#{fn:length(contractDetailsBackingBean.selectedListOfAgency)!=1}" onclick="deliveryAddressDlg.show();"/>
