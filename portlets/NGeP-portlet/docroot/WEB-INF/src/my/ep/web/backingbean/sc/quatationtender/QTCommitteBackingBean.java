@@ -111,8 +111,6 @@ public class QTCommitteBackingBean extends
 
 	public QTCommitteBackingBean() {
 		
-		retrieveCommitteeAppointmentDetails(2107l);
-		
 		getManagedBean().setRoleTypes(getRoleTypeDropdownValues());
 		if(null == this.getManagedBean().getCommitteMember()){
 			this.getManagedBean().setCommitteMember(new ScCommitteeMember());
@@ -713,9 +711,11 @@ public class QTCommitteBackingBean extends
 				committeeMember.setPmOrgProfile(scQt.getPmOrgProfile());
 				
 				if(committeeMember.isPNP() == true) {
-					PmParameter parameter = user.getMemberRole();
-					parameter.setParameterId(583l);
-					committeeMember.setMemberRole(parameter);
+					ParameterReqDTO reqDTO = new ParameterReqDTO();
+					reqDTO.setParameterType(ParameterTypeConst.COMMITTEE_ROLE);
+					reqDTO.setParameterCode(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON);
+					ParameterResDTO resDTO = getParameterSO().retrieveParameterByTypeAndCode(reqDTO);
+					committeeMember.setMemberRole(resDTO.getPmParameter());
 				} else {
 					committeeMember.setMemberRole(user.getMemberRole());
 				}
