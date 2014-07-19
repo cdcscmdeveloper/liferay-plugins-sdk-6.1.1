@@ -617,6 +617,10 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 						requestNoteBackingBean.supplierLister(scRequestNoteDtl.getScRequestSupplierItem().getSmSupplier().getSupplierId(),
 								scRequestNoteDtl.getPriceType().getParameterId(), scRequestNoteDtl, scRequestNoteDtl.getRequestItem().getSupplierItems());
 						
+						// fulfilmentTypeEvent
+						requestNoteBackingBean.fulfilmentTypeEvent(scRequestNoteDtl);
+						requestNoteBackingBean.getManagedBean().setRequestNoteDtl(scRequestNoteDtl);
+						
 						requestNoteDtls.add(scRequestNoteDtl);
 					}
 					requestNoteBackingBean.getManagedBean().setRequestSupplierItem(requestNoteDtls.get(0).getScRequestSupplierItem());
@@ -637,14 +641,6 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 				requestNoteBackingBean.getManagedBean().setSourceMethod(ParameterConst.METHOD_SC);
 				requestNoteBackingBean.getManagedBean().setTaskId(getManagedBean().getTaskId());
 				
-				ScRequestNoteDtl scRequestNoteDtl = new ScRequestNoteDtl();
-				parameterReqDTO = new ParameterReqDTO();
-				parameterReqDTO.setParameterType(ParameterTypeConst.FULFILMENT_TYPE);
-				parameterReqDTO.setParameterCode(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
-				ParameterResDTO parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
-				
-				scRequestNoteDtl.setFulfilmentType(parameterResDTO.getPmParameter());
-				requestNoteBackingBean.fulfilmentTypeEvent(scRequestNoteDtl);
 				requestNoteBackingBean.initialInformation(requestNote);
 				requestNoteBackingBean.getCurrentStatus(DPStatusConstants.RN_PENDING_SUBMISSION);
 				requestNoteBackingBean.getManagedBean().setFulfillmentType(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
