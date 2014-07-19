@@ -13,6 +13,8 @@
 			selection="#{purchaseRequestBackingBean.managedBean.selectedNode}"
 			selectionMode="single"
 			value="#{purchaseRequestBackingBean.managedBean.chargeLineItemRoot}" >
+			<p:ajax event="expand" 
+                onstart="blockTreeTable.show();" oncomplete="blockTreeTable.hide();" />  
 			<p:ajax event="select"
 				listener="#{purchaseRequestBackingBean.onNodeSelect()}"
 				update="@(.chargeLineSection)" />
@@ -52,7 +54,7 @@
 			</p:column>
 			<p:column headerText="Ordered Qty." style="text-align:right">
 				<h:outputText value="#{chargeLineNode.chargeOrderedQty}"
-					rendered="#{chargeLineNode.parent == 'false'}">
+					rendered="#{chargeLineNode.parent == 'false'}" >
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 				</h:outputText>
@@ -73,10 +75,13 @@
 
 			</p:column>
 		</p:treeTable>
-		<br />
-		<br />
-		<br />
+		<p:blockUI widgetVar="blockTreeTable"  block="chargeLineTbl">  
+			<p:graphicImage value="/resources/ep/images/ajax-loader.gif"></p:graphicImage>  
+		</p:blockUI> 
 		
+		<br />
+		<br />
+		<br />
 		<table style="width: 93%">
 			<tr>
 				<td style="text-align: right; font: bold; size: 10;">Grand
@@ -298,7 +303,7 @@
 		<div style="width: 100%; text-align: right">
 			<p:commandButton value="Apply" icon="ui-icon-accept" 
 				process="@this,chargeAss,applyBulkChargeDialog"
-				update="bulkUpdatePnl,chargeLineTbl"
+				update="bulkUpdatePnl,chargeLineTbl,chargeAss"
 				action="#{purchaseRequestBackingBean.chargeLineApply}">
 			</p:commandButton>
 			<p:commandButton value="Cancel" icon="ui-icon-cancel"
@@ -306,4 +311,5 @@
 			</p:commandButton>
 		</div>
 	</p:dialog>
+	
 </ui:composition>
