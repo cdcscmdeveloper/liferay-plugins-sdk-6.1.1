@@ -165,8 +165,10 @@
 		          !amendmentBackingBean.managedBean.contractVer.ctAmendment.contractExtend}" >
 				<p:calendar size="10" style="float:left;" id="edateCal1" showOn="button"  readonlyInput="true"
 			    	required="true" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
-				    label="#{lbl['lbl.ct.amend.txt.effdate']}" value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentEffDate}">
-				    <p:ajax event="dateSelect" listener="#{amendmentBackingBean.changeAmendmentEffDate}" process="@this" update=":form:itemId,:form:serviceId"/> 
+				    label="#{lbl['lbl.ct.amend.txt.effdate']}" value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentEffDate}"
+				    maxdate="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.expDate}"
+				    mindate="#{amendmentBackingBean.currentDate}">
+				        <p:ajax event="dateSelect" listener="#{amendmentBackingBean.changeAmendmentEffDate}" process="@this" update=":form:itemId,:form:serviceId"/> 
 				 </p:calendar>
 				<p:message for="edateCal1" display="icon" />	
 			</h:panelGrid>
