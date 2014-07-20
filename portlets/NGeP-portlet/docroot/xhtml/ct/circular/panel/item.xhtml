@@ -49,7 +49,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			  </p:column>
 			  <p:column headerText="Min. Order Qty" style="white-space:pre-line;width:5%;">
 			  <p:inputText value="#{data.minimumOrderQty}" style="width:90%;text-align:right;" label="Min. Order Qty">
-			     <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY)}" /> </p:inputText>
+			     <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, data.pmUom.uomCode)}" /> </p:inputText>
 			  </p:column>
 			  <p:column headerText="Had Pembelian Luar Kontrak" style="white-space:pre-line;width:7%;">
 			    <p:inputText value="#{data.maxProcureAmt}" style="width:90%;text-align:right;" label="Had Pembelian Luar Kontrak">
