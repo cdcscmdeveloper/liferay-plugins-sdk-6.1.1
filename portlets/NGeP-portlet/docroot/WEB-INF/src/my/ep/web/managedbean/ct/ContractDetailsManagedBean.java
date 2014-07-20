@@ -3,6 +3,7 @@
  */
 package my.ep.web.managedbean.ct;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -16,7 +17,6 @@ import javax.faces.bean.SessionScoped;
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtContractVer;
-import my.ep.persistence.entity.ct.CtFulfilment;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.VCtContract;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
@@ -81,6 +81,8 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private Long ministryProfileId;
 	private Long departmentProfileId;
     private double advancePaymentAmt;
+    private BigDecimal paidAdvancePaymentAmt;
+    private BigDecimal paidInvoiceAmt;
 	private int selectedTabIndex;
 	
 	private Date ctDateStart;
@@ -139,7 +141,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private Map<String, PmUser> userMap;
 	private SmSupplierBank smSupplierBanks;
 	private Map<String,Object> radioButtonSchedule;
-	private CtFulfilment ctFulfilments;
 	private String fileDirectory;
 	
 	public String[] getAction() {
@@ -729,6 +730,22 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 		this.advancePaymentAmt = advancePaymentAmt;
 	}
 
+	public BigDecimal getPaidAdvancePaymentAmt() {
+		return paidAdvancePaymentAmt;
+	}
+
+	public void setPaidAdvancePaymentAmt(BigDecimal paidAdvancePaymentAmt) {
+		this.paidAdvancePaymentAmt = paidAdvancePaymentAmt;
+	}
+
+	public BigDecimal getPaidInvoiceAmt() {
+		return paidInvoiceAmt;
+	}
+
+	public void setPaidInvoiceAmt(BigDecimal paidInvoiceAmt) {
+		this.paidInvoiceAmt = paidInvoiceAmt;
+	}
+
 	public Map<String, PmUser> getUserMap() {
 		if(userMap==null) {
 			userMap = new HashMap<String, PmUser>();
@@ -815,14 +832,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 
 	public void setFrequencySchedule(String frequencySchedule) {
 		this.frequencySchedule = frequencySchedule;
-	}
-
-	public CtFulfilment getCtFulfilments() {
-		return ctFulfilments;
-	}
-
-	public void setCtFulfilments(CtFulfilment ctFulfilments) {
-		this.ctFulfilments = ctFulfilments;
 	}
 	
 	public String getExternalPageUrl() {

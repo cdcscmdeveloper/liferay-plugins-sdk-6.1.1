@@ -219,7 +219,7 @@
 				</p:column>              
 				<p:column headerText="#{lbl['lbl.ct.item.table2.ceil.quan']}" style="text-align: right;">
 					<p:inputText style="width:70px;" styleClass="ppRightBtn" maxlength="24" value="#{data.ceilingQuantity}">
-					 <f:convertNumber pattern="#,###.00" /></p:inputText>
+					 <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY)}" /></p:inputText>
 				</p:column>            
 				<p:column headerText="#{lbl['lbl.ct.item.table1.price.efdate']}">
 				     <h:outputText value="#{data.effDate}" style="float:left;">

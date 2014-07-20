@@ -23,7 +23,7 @@
 			 </p:column>
 			 <p:column headerText="#{lbl['lbl.ct.agn.tree.ptj.amount']}" style="width:130px;">
 				<p:inputText value="#{data.ceilingAmount}" maxlength="23" styleClass="ppRightBtn" style="width:110px;">
-				 	<f:convertNumber pattern="#,###.00" /> 
+				 	<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" /> 
 				</p:inputText>
 		   	 </p:column>
 		   	 <p:column headerText="#{lbl['lbl.ct.effectiveDate']}" style="width:80px;">

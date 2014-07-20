@@ -23,7 +23,7 @@
 			  <p:outputLabel id="contractAmount" value="#{lbl['lbl.ct.contractAmount']}" />
 			  <p:inputText for="contractAmount" styleClass="ppRightBtn" value="#{terminationBackingBean.managedBean.contractVer.ctContractValue.contractAmount}"
 				 disabled="true" style="width:170px;">
-				   <f:convertNumber pattern="#,###.00"/>
+				   <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}"/>
 			</p:inputText>	
 			<p:outputLabel id="signBy" value="#{lbl['lbl.ct.sdate']}"  rendered="#{terminationBackingBean.managedBean.ctContract.agreement}" />
 			<p:inputText for="signBy" value="#{terminationBackingBean.convertTime(terminationBackingBean.managedBean.ctContract.currentAgreement.signedDate)}"

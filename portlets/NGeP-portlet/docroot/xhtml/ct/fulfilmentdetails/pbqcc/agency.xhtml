@@ -23,7 +23,7 @@
 					style="width:130px;">
 					<p:inputText value="#{data.ceilingAmount}" styleClass="ppRightBtn"
 						style="width:120px;">
-						<f:convertNumber pattern="#,###.00" />
+						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</p:inputText>
 				</p:column>
 			</p:dataTable>

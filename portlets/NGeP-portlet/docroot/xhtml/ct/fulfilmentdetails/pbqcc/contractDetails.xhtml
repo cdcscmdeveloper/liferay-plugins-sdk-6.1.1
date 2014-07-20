@@ -36,7 +36,7 @@
 		    <p:outputLabel value="#{lbl['lbl.ct.contractAmount']}" />
 			<p:inputText value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.contractAmount}"
 				 disabled="true" style="width:130px;" styleClass="ppRightBtn" >	
-				 <f:convertNumber pattern="#,###.00" />
+				 <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				 </p:inputText>	
 				<p:outputLabel value="#{lbl['lbl.ct.loaNo']}" />
 		    	<p:inputText style="width:130px;" disabled="true" 

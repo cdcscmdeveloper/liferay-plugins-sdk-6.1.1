@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.URL;
 import java.net.URLConnection;
 import java.sql.Timestamp;
@@ -320,6 +321,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		    for(CtDeduction deduct : this.getManagedBean().getContractVer().getCtDeductions()){
 		      if(deduct.getDeductionType().getParameterCode().equalsIgnoreCase(ContractConst.AP_DEDUCTION_TYPE)){
 		    	 this.getManagedBean().setFlgPaymentTracking(true);
+		    	 this.getManagedBean().setAdvancePaymentAmt(deduct.getAmount());
 		    	 calAdvancePaymentTracking(this.getManagedBean().getCtContract().getContractId());
 		      }
 		   }
@@ -408,8 +410,13 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		}
 	}
 	
-	public void calAdvancePaymentTracking(Long contractId){
+	private void calAdvancePaymentTracking(Long contractId){
+		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+		ContractResDTO resDTO = new ContractResDTO();
+		resDTO = contractSO.calAdvancePaymentTracking(contractId);
 		
+		this.getManagedBean().setPaidAdvancePaymentAmt(resDTO.getPaidAdvancePaymentAmt());
+		this.getManagedBean().setPaidInvoiceAmt(resDTO.getPaidInvoiceAmt());
 	}
 	
 	private SmAddress retrieveLatestSupplierAddress() {
@@ -1517,12 +1524,16 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
         return format.format(time); 
     } 
 	
-	public BigDecimal calculatePaidPercentage(){
-		return (this.getManagedBean().getCtFulfilments().getPaidInvoiceAmt().multiply(new BigDecimal(100))).divide(this.getManagedBean().getCtFulfilments().getPaidAdvancePayment());
-		
+	public BigDecimal calculatePaidAdvancePercentage(){
+		return (this.getManagedBean().getPaidAdvancePaymentAmt().multiply(BigDecimal.valueOf(100)).divide(BigDecimal.valueOf(this.getManagedBean().getAdvancePaymentAmt()), 2, RoundingMode.HALF_UP));
 	}
+	
 	public BigDecimal calculateBalanceToPaid(){
-		return this.getManagedBean().getCtFulfilments().getPaidAdvancePayment().subtract(this.getManagedBean().getCtFulfilments().getPaidInvoiceAmt());
+		return (BigDecimal.valueOf(this.getManagedBean().getAdvancePaymentAmt()).subtract(this.getManagedBean().getPaidAdvancePaymentAmt()));
+	}
+	
+	public BigDecimal calculatePaidPercentage(){
+		return (this.getManagedBean().getPaidInvoiceAmt().multiply(BigDecimal.valueOf(100)).divide(this.getManagedBean().getContractVer().getCtContractValue().getContractAmount(), 2, RoundingMode.HALF_UP));
 	}
 
 	public CtDeductionClause[] getChkDeductionClause() {
