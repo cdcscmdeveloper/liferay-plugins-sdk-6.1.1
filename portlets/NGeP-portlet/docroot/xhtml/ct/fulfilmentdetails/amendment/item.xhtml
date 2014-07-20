@@ -9,8 +9,8 @@
 	<p:panel id="itemId" header="Product Details" toggleable="true"	
 	     toggleSpeed="500"  rendered="#{amendmentBackingBean.managedBean.itemProductExist}" >
 		<h:panelGrid style="width:100%;">
-			<p:dataTable id="itemTable" var="data" value="#{amendmentBackingBean.getContractItemByType(ParameterConst.itemTypeProduct)}"
-				rowKey="#{data}" selectionMode="single"	selection="#{amendmentBackingBean.managedBean.selectedItem}" lazy="true" widgetVar="ctItemsTableObj">
+			<p:dataTable id="itemTable" var="data" value="#{amendmentBackingBean.managedBean.ctItemList}"  lazy="true"  
+				selectionMode="single"	selection="#{amendmentBackingBean.managedBean.selectedItem}"  rowKey="#{data}" widgetVar="ctItemsTableObj" >
 				<ac:paginator for="itemTable" />
 				<p:ajax event="rowSelect" update=":form:changeField" />
 				<p:column headerText="#{lbl['lbl.ct.susp.tbl.item.name']}" style="width:45%;" filterBy="#{data.itemName}" filterMatchMode="contains">
@@ -43,13 +43,14 @@
 					</p:commandLink>
 				</p:column>
 			</p:dataTable>
-			<p:dialog id="dlgItemMaxQty" widgetVar="dlgItemMaxQty" header="Edit Maximum Quantity" styleClass="screen-title" resizable="false" modal="true" width="420" height="200">
+			<p:dialog id="dlgItemMaxQty" widgetVar="dlgItemMaxQty" 
+			   header="Edit Maximum Quantity" styleClass="screen-title" resizable="false" modal="true" width="420" height="200">
 				<h:panelGrid columns="1">
 					<p:outputLabel value="Item Name : #{amendmentBackingBean.managedBean.selectedItem.itemName}" />
 				</h:panelGrid>
 				<p:spacer  height="5"/>
-				<p:dataTable id="ctItemMaxQtyTable" var="data" value="#{amendmentBackingBean.managedBean.selectedItem.ctItemMaxQties}"
-					rowKey="#{data}" lazy="true" widgetVar="ctItemMaxQtyTable">
+				<p:dataTable id="ctItemMaxQtyTable" var="data" 
+				     value="#{amendmentBackingBean.managedBean.selectedItem.ctItemMaxQties}" lazy="true">
 					<ac:paginator for="ctItemMaxQtyTable" />
 					<p:column headerText="Maximum Quantity">
 						<p:inputText value="#{data.maxQuantity}" styleClass="ppRightBtn" style="width:119px;" rendered="#{data.changeQuantity}">
@@ -262,11 +263,11 @@
 			</p:dialog>
 		</p:outputPanel>
 	</p:panel>
-	<p:panel id="serviceId" header="Service Details" toggleable="true" toggleSpeed="500" rendered="#{amendmentBackingBean.managedBean.itemServiceExist}">
+	<p:panel id="serviceId" header="Service Details" 
+	  toggleable="true" toggleSpeed="500" rendered="#{amendmentBackingBean.managedBean.itemServiceExist}">
 		<h:panelGrid style="width:100%;">
-			<p:dataTable id="serviceTable" var="data" rowKey="#{data}" selectionMode="single" lazy="true"
-				value="#{amendmentBackingBean.getContractItemByType(ParameterConst.itemTypeService)}"
-				selection="#{amendmentBackingBean.managedBean.selectedItem}"  widgetVar="serviceTableObj">
+			<p:dataTable id="serviceTable" var="data"  lazy="true" value="#{amendmentBackingBean.managedBean.ctServiceItemList}"
+				selectionMode="single" selection="#{amendmentBackingBean.managedBean.selectedServiceItem}"   rowKey="#{data}"  widgetVar="serviceTableObj">
 				<ac:paginator for="serviceTable" />
 				<p:ajax event="rowSelect" update=":form:showServicePrice" />
 				<p:column headerText="Item Name" style="width:45%;" filterBy="#{data.itemName}" filterMatchMode="contains">
@@ -285,12 +286,12 @@
 		</h:panelGrid>
 		<p:outputPanel id="showServicePrice">
 			<p:spacer height="20" />
-			<h:panelGrid columns="1" style="width:100%"	rendered="#{amendmentBackingBean.managedBean.selectedItem != null}">
+			<h:panelGrid columns="1" style="width:100%"	rendered="#{amendmentBackingBean.managedBean.selectedServiceItem != null}">
 				<p:dataTable id="servicePriceTable" var="data" rowKey="#{data}" lazy="true"
-					value="#{amendmentBackingBean.managedBean.selectedItem.ctItemPrices}" >
+					value="#{amendmentBackingBean.managedBean.selectedServiceItem.ctItemPrices}" >
 					<ac:paginator for="servicePriceTable" />
 					<p:column headerText="#{lbl['lbl.ct.item.table1.price.zone']}" style="width:40%;"
-						rendered="#{amendmentBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeZonalStandard}">
+						rendered="#{amendmentBackingBean.managedBean.selectedServiceItem.priceType.parameterCode eq ParameterConst.priceTypeZonalStandard}">
 						<p:outputLabel value="#{data.ctContractZone.zoneName}" style="float:left;" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.item.table1.price.price']}" style="width:10%;">
@@ -316,12 +317,12 @@
 					<p:column headerText="Action" styleClass="column-align-center"
 						style="width:10%;">
 						<p:commandLink update="servicePriceTable" process="@form" rendered="#{!data.changePrice and data.editable}"
-							action="#{amendmentBackingBean.editItemPriceOnIndexs()}">
-							<f:setPropertyActionListener value="#{data}" target="#{amendmentBackingBean.managedBean.ctItemPrices}" />
+							action="#{amendmentBackingBean.editServiceItemPriceOnIndexs()}">
+							<f:setPropertyActionListener value="#{data}" target="#{amendmentBackingBean.managedBean.ctServiceItemPrices}" />
 							<p:graphicImage library="ep/images/design" name="edit.png" value="/resources/ep/images/design/edit.png" title="Edit" />
 						</p:commandLink>
 						<p:commandLink rendered="#{data.changePrice}" oncomplete="dlgSvcItemPrices.show();return false;">
-							<f:setPropertyActionListener value="#{data}" target="#{amendmentBackingBean.managedBean.ctItemPrices}" />
+							<f:setPropertyActionListener value="#{data}" target="#{amendmentBackingBean.managedBean.ctServiceItemPrices}" />
 							<p:graphicImage library="ep/images/design" name="delete.png" value="/resources/ep/images/design/delete.png" title="Delete" />
 						</p:commandLink>
 					</p:column>
@@ -338,7 +339,7 @@
 					</h:panelGrid>
 					<div class="ppRightBtn">
 						<p:commandButton value="Yes" icon="ui-icon-accept"	update="servicePriceTable" process="@form"
-							action="#{amendmentBackingBean.deleteItemPriceOnIndexs()}" onclick="dlgSvcItemPrices.hide();" />
+							action="#{amendmentBackingBean.deleteServiceItemPriceOnIndexs()}" onclick="dlgSvcItemPrices.hide();" />
 						<p:commandButton value="No" icon="ui-icon-reject" onclick="dlgSvcItemPrices.hide();" type="button" />
 					</div>
 				</p:dialog>			

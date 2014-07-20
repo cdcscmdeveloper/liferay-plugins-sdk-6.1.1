@@ -92,6 +92,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private CtPerformanceBond ctPerformanceBond;
 	private TreeNode ctZoneTrees;
 	private List<CtContractItem> ctItemList;
+	private List<CtContractItem> ctServiceItemList;
 	private CtItemPrice selectedIndexOfPrice;
 	private CtItemCeilingQty selectedIndexOfCeilingQty;
 	private CtCommitteeMember ctCommitteeMember;
@@ -105,6 +106,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private ScLoaWitness scLoaWitness;
 	private ScLoaReport selectedScLoaReports;
 	private CtContractItem selectedItem;
+	private CtItemPrice ctServiceItemPrices;
 	
 	public CtContractVer getContractVer() {
 		return contractVer;
@@ -617,4 +619,24 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	public void setFileDirectory(String fileDirectory) {
 		this.fileDirectory = fileDirectory;
 	}
+
+	public CtItemPrice getCtServiceItemPrices() {
+		return ctServiceItemPrices;
+	}
+
+	public void setCtServiceItemPrices(CtItemPrice ctServiceItemPrices) {
+		this.ctServiceItemPrices = ctServiceItemPrices;
+	}
+
+	public List<CtContractItem> getCtServiceItemList() {
+		if(ctServiceItemList == null)
+			ctServiceItemList = new ArrayList<CtContractItem>();
+		return ctServiceItemList;
+	}
+
+	public void setCtServiceItemList(List<CtContractItem> ctServiceItemList) {
+		this.ctServiceItemList = ctServiceItemList;
+	}
+	
+	
 }

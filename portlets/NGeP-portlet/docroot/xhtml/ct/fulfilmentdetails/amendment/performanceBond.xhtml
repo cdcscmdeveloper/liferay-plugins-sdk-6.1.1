@@ -6,33 +6,39 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
-	<p:panel id="bondId" header="#{lbl['lbl.ct.pbd.panel.name']}" toggleable="true"  toggleSpeed="500">
-        <p:dataTable  id="tableBond" var="data" value="#{amendmentBackingBean.managedBean.contractVer.ctPerformanceBonds}"
-           rowKey="#{data}" > 
+	<p:panel id="bondId" header="#{lbl['lbl.ct.pbd.panel.name']}"  toggleable="true"  toggleSpeed="500"
+	    rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctPerformanceBonds.size() > 0}"  >
+        <p:dataTable  id="tableBond" var="data" 
+           value="#{amendmentBackingBean.managedBean.contractVer.ctPerformanceBonds}"> 
 	      <ac:paginator for="tableBond" />
-	       <p:columnGroup type="header"> 
-	            <p:row> 
-                    <p:column headerText="#{lbl['lbl.ct.pbd.table.rno']}"  /> 
-                    <p:column headerText="#{lbl['lbl.ct.pbd.table.fi']}" /> 
-                    <p:column headerText="#{lbl['lbl.ct.pbd.table.amt']}" /> 
-                    <p:column headerText="#{lbl['lbl.ct.pbd.table.efdate']}" /> 	
-		            <p:column headerText="#{lbl['lbl.ct.pbd.table.edate']}" />
-		            <p:column headerText="Attachment"/> 
-		            <p:column headerText="Status"/> 
-               </p:row>							
-	        </p:columnGroup>
-            <p:column><p:inputText value="#{data.refNo}" style="width:70px;" disabled="true"/></p:column>	
-            <p:column><p:selectOneMenu id="orgName" value="#{data.financialOrg.financialOrgId}" style="width:180px;" disabled="true">
-                <f:selectItems value="#{amendmentBackingBean.retrieveFinancialOrgList()}"/></p:selectOneMenu></p:column>	
-            <p:column><p:inputText value="#{data.bondAmount}" styleClass="ppRightBtn" style="width:70px;"  disabled="true" >
-                 <f:convertNumber pattern="#,###.00" /></p:inputText></p:column>	
-            <p:column> <p:calendar value="#{data.effDate}" id="popupButtonCal4" showOn="button" size="10" disabled="true" 
-                   pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"/> 
+         
+            <p:column headerText="#{lbl['lbl.ct.pbd.table.rno']}"   style="width:10%;">
+                <p:inputText value="#{data.refNo}" style="width:70px;" disabled="true"/>
             </p:column>	
-            <p:column> <p:calendar value="#{data.expDate}" id="popupButtonCal5" showOn="button" disabled="true"  
+         
+            <p:column headerText="#{lbl['lbl.ct.pbd.table.fi']}"  style="width:25%;">
+                <p:selectOneMenu id="orgName" value="#{data.financialOrg.financialOrgId}" style="width:180px;" disabled="true">
+                     <f:selectItems value="#{amendmentBackingBean.retrieveFinancialOrgList()}"/>
+                </p:selectOneMenu>
+            </p:column>	
+         
+            <p:column headerText="#{lbl['lbl.ct.pbd.table.amt']}" style="width:10%;" >
+                  <p:inputText value="#{data.bondAmount}" styleClass="ppRightBtn" style="width:70px;"  disabled="true" >
+                      <f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" /></p:inputText>
+             </p:column>	
+         
+            <p:column headerText="#{lbl['lbl.ct.pbd.table.efdate']}" style="width:10%;" > 
+                 <p:calendar value="#{data.effDate}" id="popupButtonCal4" showOn="button" size="10" disabled="true" 
+                    pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"/> 
+            </p:column>	
+           
+            <p:column headerText="#{lbl['lbl.ct.pbd.table.edate']}"  style="width:10%;"> 
+                <p:calendar value="#{data.expDate}" id="popupButtonCal5" showOn="button" disabled="true"  
                    pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" size="10"/> 
             </p:column>	
-            <p:column styleClass="column-align-center">
+           
+            <p:column styleClass="column-align-center" headerText="#{lbl['lbl.ct.attachement']}"  style="width:25%;">
                <h:panelGroup id="uploadBondPg">
 					<h:commandLink styleClass="blue_font"
 						value="#{amendmentBackingBean.fileNames(data.filePath)}"
@@ -40,11 +46,13 @@
 						action="#{amendmentBackingBean.downloadFile(data.filePath)}" />
 				</h:panelGroup> 
 			</p:column>
-             <p:column style="width:10%;">
-               <p:selectOneMenu id="rStatus" style="width:100%;" disabled="true" >
+            
+             <p:column style="width:10%;" headerText="#{lbl['lbl.ct.status']}">
+               <p:selectOneMenu id="rStatus" value="#{data.recordStatusFlg}" style="width:100%;" disabled="true" >
                   <f:selectItems value="#{amendmentBackingBean.getStatusDropdown()}"/>
                </p:selectOneMenu>   
              </p:column>
+	    
 	    </p:dataTable>
   </p:panel>
 </ui:composition>

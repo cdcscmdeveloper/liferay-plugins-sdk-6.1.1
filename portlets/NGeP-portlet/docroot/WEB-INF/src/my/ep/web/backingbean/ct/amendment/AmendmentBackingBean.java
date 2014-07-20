@@ -361,18 +361,15 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			    }
 			
 			   if(resDTO.getCtContractVer().getCtContractItems() != null && resDTO.getCtContractVer().getCtContractItems().size() > 0){
-			         if(this.getManagedBean().getCtItemList() == null) {
-			                this.getManagedBean().setCtItemList(new ArrayList<CtContractItem>());
-			         } else {
-			               this.getManagedBean().getCtItemList().clear();
-			         }
-			       
-			         for(CtContractItem item : getManagedBean().getContractVer().getCtContractItems()) {
-				           getManagedBean().getCtItemList().add(item);
+			        this.getManagedBean().getCtItemList().clear();
+			        this.getManagedBean().getCtServiceItemList().clear();
+			        for(CtContractItem item : getManagedBean().getContractVer().getCtContractItems()) {
 				           if(item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)) {
 					               getManagedBean().setItemProductExist(true);
+					               getManagedBean().getCtItemList().add(item);
 				          } else if(item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) {
 					               getManagedBean().setItemServiceExist(true);
+					               this.getManagedBean().getCtServiceItemList().add(item);
 				          }
 			         }
 			   }
@@ -490,14 +487,13 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	        
 			   contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 			   reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
+			   
+			   if(this.getManagedBean().getContractVer().getCtContractItems().size() > 0) {
+					this.getManagedBean().getContractVer().getCtContractItems().clear();
+	            }
+	            this.getManagedBean().getContractVer().getCtContractItems().addAll(this.getManagedBean().getCtItemList());
+	            this.getManagedBean().getContractVer().getCtContractItems().addAll(this.getManagedBean().getCtServiceItemList());
 	      
-			   if(this.getManagedBean().getCtItemList().size() > 0 && this.getManagedBean().getCtItemList() != null){
-	                 if(this.getManagedBean().getContractVer().getCtContractItems().size() > 0) 
-			  	 	     this.getManagedBean().getContractVer().getCtContractItems().clear();
-	          
-                     this.getManagedBean().getContractVer().getCtContractItems().addAll(this.getManagedBean().getCtItemList());
-	           }
-	        
 	           getManagedBean().getContractVer().setDocType(ContractConst.DOC_TYPE_CONTRACT_AMENDMENT);
 	           chkComplyAP201Rule();	
 	        
@@ -1437,12 +1433,87 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		this.getManagedBean().getSelectedItem().getCtItemPrices().addAll(ctItemPriceList);
 		ctItemPriceList.clear();
 	}
+	
+	public void changeAmendmentEffDate(){
+		
+		if(this.getManagedBean().getSelectedServiceItem() != null){
+			    for (CtItemPrice ctItemPrice : this.getManagedBean().getSelectedServiceItem().getCtItemPrices()) {
+				     if(ctItemPrice.isChangePrice())
+				         ctItemPrice.setEffDate(getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());
+			  }
+		  }
+		  if(this.getManagedBean().getSelectedItem() != null ){
+			  
+			  if(this.getManagedBean().getSelectedItem().getCtItemPrices() != null && this.getManagedBean().getSelectedItem().getCtItemPrices().size()>0){
+			      for(CtItemPrice ctItemPrice : this.getManagedBean().getSelectedItem().getCtItemPrices()) {
+				         if(ctItemPrice.isChangePrice())
+				             ctItemPrice.setEffDate(getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());
+			       }
+			   }if(this.getManagedBean().getSelectedItem().getCtItemCeilingQties() != null && this.getManagedBean().getSelectedItem().getCtItemCeilingQties().size()>0){
+			      for(CtItemCeilingQty ctItemCeilingQty : this.getManagedBean().getSelectedItem().getCtItemCeilingQties()) {
+				         if(ctItemCeilingQty.isChangeCeilQuantity())
+				        	 ctItemCeilingQty.setEffDate(getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());
+			       }
+			  }if(this.getManagedBean().getSelectedItem().getCtItemMaxQties() != null && this.getManagedBean().getSelectedItem().getCtItemMaxQties().size()>0){
+			      for(CtItemMaxQty ctItemMaxQty : this.getManagedBean().getSelectedItem().getCtItemMaxQties()) {
+				         if(ctItemMaxQty.isChangeQuantity())
+				        	 ctItemMaxQty.setEffDate(getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());
+			       }
+			  }
+		  }
+	}
+	
+	public void editServiceItemPriceOnIndexs() {
+		List<CtItemPrice> ctItemPriceList = new ArrayList<CtItemPrice>();
+		CtItemPrice addDupObj = new CtItemPrice();
+		
+		Calendar previousDate = Calendar.getInstance();
+		previousDate.setTime(getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());
+		previousDate.add(Calendar.DATE, -1);
+		
+		for (CtItemPrice ctItemPrice : this.getManagedBean().getSelectedServiceItem().getCtItemPrices()) {
+			ctItemPriceList.add(ctItemPrice);
+			if (!ctItemPrice.isChangePrice() && !ctItemPrice.isChkIndexOfRow()) {
+				if (ctItemPrice.equals(this.getManagedBean().getCtServiceItemPrices())) {
+					addDupObj.setFromQty(ctItemPrice.getFromQty());
+					addDupObj.setToQty(ctItemPrice.getToQty());
+					addDupObj.setSubSequence(ctItemPrice.getSubSequence());
+					addDupObj.setUnitPrice(ctItemPrice.getUnitPrice());
+					addDupObj.setEffDate(getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());
+					if(getManagedBean().getContractVer().getCtAmendment().isContractExtend())
+				     	addDupObj.setExpDate(getManagedBean().getContractVer().getCtAmendment().getExtendEndDate());
+					else
+					  addDupObj.setExpDate(ctItemPrice.getExpDate());
+					if (ctItemPrice.getCtContractZone() != null) {
+						addDupObj.setCtContractZone(ctItemPrice.getCtContractZone());
+					}
+					if (ctItemPrice.getCtContractItem() != null) {
+						addDupObj.setCtContractItem(ctItemPrice.getCtContractItem());
+					}
+					addDupObj.setChangePrice(true);
+					addDupObj.setAssociateCtItemPrice(ctItemPrice);
+					ctItemPrice.setChkIndexOfRow(true);
+					ctItemPrice.setExpDate(previousDate.getTime());
+					ctItemPriceList.add(addDupObj);
+				}
+			}
+		}
+		this.getManagedBean().getSelectedServiceItem().getCtItemPrices().clear();
+		this.getManagedBean().getSelectedServiceItem().getCtItemPrices().addAll(ctItemPriceList);
+		ctItemPriceList.clear();
+	}
 	    
 	public void deleteItemPriceOnIndexs() {
 		CtItemPrice ctItemPrice = getManagedBean().getCtItemPrices().getAssociateCtItemPrice();
 		ctItemPrice.setExpDate(getManagedBean().getContractVer().getCtContractValue().getExpDate());
 		ctItemPrice.setChkIndexOfRow(false);
 		this.getManagedBean().getSelectedItem().getCtItemPrices().remove(getManagedBean().getCtItemPrices());
+	}
+	public void deleteServiceItemPriceOnIndexs() {
+		CtItemPrice ctItemPrice = getManagedBean().getCtServiceItemPrices().getAssociateCtItemPrice();
+		ctItemPrice.setExpDate(getManagedBean().getContractVer().getCtContractValue().getExpDate());
+		ctItemPrice.setChkIndexOfRow(false);
+		this.getManagedBean().getSelectedServiceItem().getCtItemPrices().remove(getManagedBean().getCtServiceItemPrices());
 	}
 	    
 	public void editCeilingQuantityOnIndexs() {
@@ -1866,7 +1937,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		return super.getDropdownCodeValuesBySearchBean(ParameterTypeConst.ITEM_DISPLAY_TYPE, searchBean);
 	}
 	
-	public List<CtContractItem> getContractItemByType(String itemTypeCode) {
+	/*public List<CtContractItem> getContractItemByType(String itemTypeCode) {
 		List<CtContractItem> ctItemList = new ArrayList<CtContractItem>();
 		for (CtContractItem item : getManagedBean().getCtItemList()) {
 			if (item.getItemType().getParameterCode().equalsIgnoreCase(itemTypeCode)) {
@@ -1875,7 +1946,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		}
 		return ctItemList;
 	}
-	
+	*/
 	public boolean breachAP201Rules(int rulesType) {
 		if(rulesType==1) { // extend
 			if(getManagedBean().getAmendHistoryList().size()>0 || getManagedBean().getContractVer().getCtAmendment().getExtendPeriod()>=24) {
