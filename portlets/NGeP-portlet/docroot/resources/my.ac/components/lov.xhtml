@@ -36,6 +36,14 @@
 			readonly="#{cc.attrs.readonly}"
 			disabled="#{cc.attrs.disabled}"
 			required="#{cc.attrs.required}">
+			
+			<!-- <f:valueChangeListener type="my.ep.web.backingbean.components.lov.PopulateObjectListener" /> -->
+			
+			<f:attribute name="conditionField" 	value="#{cc.attrs.conditionField}" />
+			<f:attribute name="lovId" 			value="#{cc.attrs.lovId}" />
+			<f:attribute name="saveObject" 		value="#{cc.attrs.saveObject}" />
+			<f:attribute name="lovBB" 			value="#{lovBackingBean}" />
+			
 		</p:inputText>
 	</h:panelGroup>
 	&#160;
@@ -89,6 +97,8 @@
 		</p:commandButton>
 	</h:panelGroup>
 	<p:message id="#{cc.attrs.id}Msg" for="#{cc.attrs.id}"></p:message>
+	
+	
 	
 </h:panelGroup>
 
