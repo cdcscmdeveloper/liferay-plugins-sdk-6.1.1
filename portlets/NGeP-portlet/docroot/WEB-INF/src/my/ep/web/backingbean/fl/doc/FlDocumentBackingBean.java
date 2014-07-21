@@ -209,7 +209,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 					flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
 					flDocTypes.add(ParameterConst.DOCTYPE_INVOICE);
 				}else if(getManagedBean().getSearchOrderType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER) && isFlFulfilmentSupplier()) {
-					flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_ORDER);
+					flDocTypes.add(ParameterConst.DOCTYPE_CONTRACT_ORDER);
 					flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
 					flDocTypes.add(ParameterConst.DOCTYPE_INVOICE);
 				}else if(getManagedBean().getSearchOrderType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER) && isFlFulfilmentRecevingOfficer()) {

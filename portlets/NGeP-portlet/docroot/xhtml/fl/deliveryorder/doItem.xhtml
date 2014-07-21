@@ -226,7 +226,7 @@
 
 	<p:dialog id="rejectionDialog" header="Rejection History"
 		widgetVar="rejectionDialog" showEffect="fade" hideEffect="fade"
-		modal="true" height="350" width="800" resizable="false">
+		modal="true" width="800" resizable="false">
 		<table>
 			<tr>
 				<td><p:outputLabel value="Item Code" /></td>
@@ -264,5 +264,11 @@
 				</h:outputText>
 			</p:column>
 		</p:dataTable>
+		<p:spacer height="2px"></p:spacer>
+		<div style="width: 100%; text-align: right">
+			<p:commandButton value="Close" icon="ui-icon-cancel"
+				oncomplete="rejectionDialog.hide();" >
+			</p:commandButton>
+		</div>		
 	</p:dialog>
 </ui:composition>
