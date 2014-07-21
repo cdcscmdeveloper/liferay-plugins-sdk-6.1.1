@@ -313,7 +313,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			}else{
 				return NAV_TO_MAINTAIN_CR;	
 			}
-		}else if(docType.equals(FulfilmentConst.DOC_TYPE_PO)){
+		} else if(buttonVal.equalsIgnoreCase("Stop Fulfilment")) { 
 			fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
 			reqDTO.setFlOrderId(Long.valueOf(flDocId));
 			FulfilmentResDTO resDTO = fulfilmentOrderSO.retrieveFulfilmentOrder(reqDTO);			
@@ -339,24 +339,27 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 				}
 				flBB.initializeRemarkAndAttachement(new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 				navgPage = "stopInstr";
-			} else {
-				fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
-
-				FulfilmentOrderBackingBean flOrderBB=new FulfilmentOrderBackingBean();
-				flOrderBB.getManagedBean().setButtonVal(buttonVal);
-				flOrderBB.getManagedBean().setFlRequest(resDTO.getFlOrder().getFlFulfilmentRequest());
-				flOrderBB.getManagedBean().setPmUser(reqDTO.getPmUser());
-				flOrderBB.getManagedBean().setFulfilmentOrder(resDTO.getFlOrder());
-				flOrderBB.getManagedBean().setRemoveFactoring(false);
-				if(resDTO.getFlOrder().isFactored()){
-					flOrderBB.getManagedBean().setRemoveFactoring(true);
-				}
-				if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE) || buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
-					FulfilmentBackingBean flBB = new FulfilmentBackingBean();
-					flBB.initializeRemarkAndAttachement(new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
-				}	
-				navgPage=NAV_TO_MAINTAIN_PO;
 			}
+		} else if(docType.equals(FulfilmentConst.DOC_TYPE_PO)){
+			fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
+			reqDTO.setFlOrderId(Long.valueOf(flDocId));
+			FulfilmentResDTO resDTO = fulfilmentOrderSO.retrieveFulfilmentOrder(reqDTO);			
+			fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
+
+			FulfilmentOrderBackingBean flOrderBB=new FulfilmentOrderBackingBean();
+			flOrderBB.getManagedBean().setButtonVal(buttonVal);
+			flOrderBB.getManagedBean().setFlRequest(resDTO.getFlOrder().getFlFulfilmentRequest());
+			flOrderBB.getManagedBean().setPmUser(reqDTO.getPmUser());
+			flOrderBB.getManagedBean().setFulfilmentOrder(resDTO.getFlOrder());
+			flOrderBB.getManagedBean().setRemoveFactoring(false);
+			if(resDTO.getFlOrder().isFactored()){
+				flOrderBB.getManagedBean().setRemoveFactoring(true);
+			}
+			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE) || buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
+				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+				flBB.initializeRemarkAndAttachement(new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
+			}	
+			navgPage=NAV_TO_MAINTAIN_PO;
 		}else if(docType.equals(FulfilmentConst.DOC_TYPE_CO)){
 			fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
 			fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
