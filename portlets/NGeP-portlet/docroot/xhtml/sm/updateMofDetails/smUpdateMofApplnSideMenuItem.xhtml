@@ -41,7 +41,7 @@
 					action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForUpdate,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
 					update=":form" />
 				<c:choose>
-					<c:when test="#{backingBean.managedBean.smAppl.recordStatus}">
+					<c:when test="#{backingBean.managedBean.reviewSiteVisit}">
 						<p:menuitem value="#{lbl['lbl.sm.siteReviewLbl']}"
 							actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'6')}"
 							action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForUpdate,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV)}"

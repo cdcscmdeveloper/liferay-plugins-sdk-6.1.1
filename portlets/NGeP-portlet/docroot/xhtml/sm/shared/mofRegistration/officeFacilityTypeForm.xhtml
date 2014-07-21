@@ -113,7 +113,7 @@
 							<table style="width: 100%">
 								<tr>
 									<td><p:inputText id="companyAdd1" size="35" maxlength="35"
-											required="true"
+											required="true" label="#{lbl['lbl.sm.companyaddress']}"
 											value="#{backingBean.managedBean.basicCompanyFacility.smAddress.address1}" />
 										<p:message id="companyAdd1Msg" for="companyAdd1"
 											showSummary="true" showDetail="false" display="icon" /></td>
@@ -237,9 +237,13 @@
 
 					<tr>
 
-						<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
-						<td><p:inputText size="35" maxlength="10"
-								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.postcode}" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" />
+							<p:outputLabel value="*" styleClass="mandatory" /></td>
+						<td><p:inputText size="35" maxlength="10" required="true"
+								label="#{lbl['lbl.sm.postcode']}" id="companyPostCode"
+								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.postcode}" />
+							<p:message id="companyPostCodeMsg" for="companyPostCode"
+								showSummary="true" showDetail="false" display="icon" /></td>
 					</tr>
 					<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 

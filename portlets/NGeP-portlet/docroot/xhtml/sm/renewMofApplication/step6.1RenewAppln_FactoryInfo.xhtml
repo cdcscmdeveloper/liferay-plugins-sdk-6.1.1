@@ -5,25 +5,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<table style="width: 250px">
-		<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
-			<tr>
-				<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox /></td>
-				<td valign="top"><h:outputText
-						value=" Section Verified By PO: "
-						title="For PO to highlight the verified section " /></td>
 
-			</tr>
-		</p:outputPanel>
-		<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
-			<tr>
-				<td width="10px"><p:selectBooleanCheckbox /></td>
-				<td valign="top"><h:outputText
-						value=" Section Verified By Approver: "
-						title="For Approver to highlight the verified section " /></td>
-			</tr>
-		</p:outputPanel>
-	</table>
 	<br />
 	<table style="width: 100%">
 		<tr>
@@ -36,7 +18,26 @@
 							action="#{backingBean.saveApplicationAsDraft(ParameterConst.newSmApplnForRenew,backingBean.managedBean.currentPageType)}"
 							update=":form" icon="ui-icon-save" style="margin-bottom:5px;" />
 					</div>
-				</p:outputPanel> <h:inputHidden
+				</p:outputPanel>
+				<table style="width: 250px">
+					<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
+						<tr>
+							<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox /></td>
+							<td valign="top"><h:outputText
+									value=" Section Verified By PO: "
+									title="For PO to highlight the verified section " /></td>
+
+						</tr>
+					</p:outputPanel>
+					<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
+						<tr>
+							<td width="10px"><p:selectBooleanCheckbox /></td>
+							<td valign="top"><h:outputText
+									value=" Section Verified By Approver: "
+									title="For Approver to highlight the verified section " /></td>
+						</tr>
+					</p:outputPanel>
+				</table> <br /> <h:inputHidden
 					value="#{backingBean.managedBean.smAppl.applCategoryType}" /> <ui:include
 					src="/xhtml/sm/shared/mofRegistration/factoryOrWorkshopInfoForm.xhtml" />
 				<ui:include

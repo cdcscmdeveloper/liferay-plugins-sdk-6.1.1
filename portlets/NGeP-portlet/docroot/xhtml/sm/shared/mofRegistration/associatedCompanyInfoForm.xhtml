@@ -262,8 +262,8 @@
 						showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" />
-					<p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
 						id="assocCity" required="#{backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sm.towncity']}"
@@ -276,10 +276,15 @@
 						showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
-				<td><p:inputText
+				<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:inputText id="assocCmpyPostCode"
+						required="#{backingBean.managedBean.valueReqd}"
+						label="#{lbl['lbl.sm.postcode']}"
 						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.postcode}"
-						size="35" maxlength="10" /></td>
+						size="35" maxlength="10" /> <p:message id="assocCmpyPostCodeMsg"
+						for="assocCmpyPostCode" showSummary="true" showDetail="false"
+						display="icon" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>

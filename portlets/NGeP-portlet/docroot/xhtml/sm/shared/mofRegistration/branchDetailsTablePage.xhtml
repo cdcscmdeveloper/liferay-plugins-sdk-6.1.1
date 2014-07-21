@@ -113,8 +113,8 @@
 					showDetail="false" display="icon" /></td>
 		</tr>
 		<tr>
-			<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" />
-				<p:outputLabel value="*" styleClass="mandatory" /></td>
+			<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /> <p:outputLabel
+					value="*" styleClass="mandatory" /></td>
 			<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
 					id="branchCity" required="#{backingBean.managedBean.valueReqd}"
 					label="#{lbl['lbl.sm.towncity']}"
@@ -128,10 +128,15 @@
 					showDetail="false" display="icon" /></td>
 		</tr>
 		<tr>
-			<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
-			<td><p:inputText
+			<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
+					value="*" styleClass="mandatory" /></td>
+			<td><p:inputText id="branchPostCode"
+					required="#{backingBean.managedBean.valueReqd}"
+					label="#{lbl['lbl.sm.postcode']}"
 					value="#{backingBean.managedBean.selectedBranch.smAddress.postcode}"
-					size="35" maxlength="10" /></td>
+					size="35" maxlength="10" /> <p:message id="branchPostCodeMsg"
+					for="branchPostCode" showSummary="true" showDetail="false"
+					display="icon" /></td>
 		</tr>
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>

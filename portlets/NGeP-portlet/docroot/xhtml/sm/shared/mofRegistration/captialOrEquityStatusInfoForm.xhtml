@@ -44,9 +44,9 @@
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.captialVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.captialVerified : false)}" />
 			<table style="width: 100%">
 				<tr>
-					<td><p:outputLabel
+					<td style="width: 21%;"><p:outputLabel
 							value="* #{lbl['lbl.sm.equiStatus.authCap']}" /></td>
-					<td style="width: 58%;"><p:inputText id="authCapAmt"
+					<td style="width: 40%;"><p:inputText id="authCapAmt"
 							title="This field is applicable for companies of type ROC Only"
 							size="10"
 							value="#{backingBean.managedBean.smAppl.smCompanyBasic.authorizedCapital}"

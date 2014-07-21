@@ -178,10 +178,15 @@
 						showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
-				<td><p:inputText maxlength="10"
+				<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:inputText maxlength="10" id="smFacStorePosCode"
+						required="#{backingBean.managedBean.valueReqd}"
+						label="#{lbl['lbl.sm.postcode']}"
 						value="#{backingBean.managedBean.selectedStoreFacility.smAddress.postcode}"
-						size="35" /></td>
+						size="35" /> <p:message id="smFacStorePosCodeMsg"
+						for="smFacStorePosCode" showSummary="true" showDetail="false"
+						display="icon" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>

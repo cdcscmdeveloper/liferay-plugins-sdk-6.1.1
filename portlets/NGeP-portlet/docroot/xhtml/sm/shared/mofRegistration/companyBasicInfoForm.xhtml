@@ -93,7 +93,7 @@
 						<table style="width: 100%">
 							<tr>
 								<td><p:inputText size="35" required="true" id="smSupAddr1"
-										maxlength="35"
+										maxlength="35" label="#{lbl['lbl.sm.companyaddress']}"
 										value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address1}" />
 									<p:message id="smSupAddr1Msg" for="smSupAddr1"
 										showSummary="true" showDetail="false" display="icon" /></td>
@@ -207,10 +207,14 @@
 				</tr>
 
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
-					<td><p:inputText size="35"
+					<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td><p:inputText size="35" required="true" id="smSupPostCode"
+							label="#{lbl['lbl.sm.postcode']}"
 							value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.postcode}"
-							maxlength="10" /></td>
+							maxlength="10" /> <p:message id="smSupPostCodeMsg"
+							for="smSupPostCode" showSummary="true" showDetail="false"
+							display="icon" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.sm.annualRev']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"

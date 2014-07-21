@@ -67,7 +67,7 @@
 									src="/xhtml/sm/poDecisionPages/poReviewSupportingDocuments.xhtml" />
 							</c:if>
 							<c:choose>
-								<c:when test="#{backingBean.managedBean.smAppl.recordStatus}">
+								<c:when test="#{backingBean.managedBean.reviewSiteVisit}">
 									<c:if test="#{backingBean.managedBean.tabActiveIndex eq 9}">
 										<ui:include
 											src="/xhtml/sm/reviewSiteVisitReport/reviewSiteVisitReportDocuments.xhtml" />
@@ -118,7 +118,7 @@
 									src="/xhtml/sm/poDecisionPages/poReviewSupportingDocuments.xhtml" />
 							</c:if>
 							<c:choose>
-								<c:when test="#{backingBean.managedBean.smAppl.recordStatus}">
+								<c:when test="#{backingBean.managedBean.reviewSiteVisit}">
 									<c:if test="#{backingBean.managedBean.tabActiveIndex eq 7}">
 										<ui:include
 											src="/xhtml/sm/reviewSiteVisitReport/reviewSiteVisitReportDocuments.xhtml" />

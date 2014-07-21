@@ -54,8 +54,9 @@
 		<table style="width: 100%">
 			<tr>
 				<td><p:outputLabel value="Facility Type" /></td>
-				<td><p:inputText value="#{backingBean.managedBean.facilityType}"
-						readonly="true" disabled="true" /></td>
+				<td><p:inputText
+						value="#{backingBean.managedBean.facilityType}" readonly="true"
+						disabled="true" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="Name" /> <p:outputLabel value="*"
@@ -180,10 +181,15 @@
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
-				<td><p:inputText maxlength="10"
+				<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:inputText maxlength="10" id="smFacWrkShpPosCode"
+						required="#{backingBean.managedBean.valueReqd}"
+						label="#{lbl['lbl.sm.postcode']}"
 						value="#{backingBean.managedBean.selectedWorkShopFacility.smAddress.postcode}"
-						size="35" /></td>
+						size="35" /> <p:message id="smFacWrkShpPosCodeMsg"
+						for="smFacWrkShpPosCode" showSummary="true" showDetail="false"
+						display="icon" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>

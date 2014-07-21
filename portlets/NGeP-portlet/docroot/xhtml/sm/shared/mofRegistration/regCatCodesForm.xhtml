@@ -70,8 +70,7 @@
 				value="#{backingBean.managedBean.smAppl.supportingDocMode}" />
 			<p:dataTable var="catBean" widgetVar="smCatCodesNonRenewApplDtWidVar"
 				value="#{backingBean.managedBean.smAppl.smSupplierCategories}"
-				rowKey="#{catBean.supplierCategoryId}" rowIndexVar="index"
-				id="catDt"
+				rowKey="#{catBean}" rowIndexVar="index" id="catDt"
 				rendered="#{!(backingBean.managedBean.smAppl.applType == 'R')}">
 				<ac:paginator for="catDt" />
 				<p:columnGroup type="header">
@@ -185,19 +184,20 @@
 						rendered="#{catBeanR.specialCategory}" />
 				</p:column>
 				<p:column rendered="#{backingBean.managedBean.poUser}">
-					<p:selectOneRadio layout="pageDirection" id="catPoApprR">
+					<p:selectOneRadio layout="pageDirection" id="catPoApprR"
+						value="#{catBeanR.poDecFlg}">
 						<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.apprv']}"
-							itemValue="true" />
+							itemValue="1" />
 						<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.reject']}"
-							itemValue="false" />
+							itemValue="0" />
 					</p:selectOneRadio>
 				</p:column>
 				<p:column rendered="#{backingBean.managedBean.poUser}">
-					<p:inputTextarea value="#{catBean.poRemarks}" />
+					<p:inputTextarea value="#{catBeanR.poRemarks}" />
 				</p:column>
 				<p:column rendered="#{backingBean.managedBean.approverUser}">
 					<p:selectOneRadio layout="pageDirection" id="catApprvrAppr"
-						value="#{catBean.apprvrDecFlg}">
+						value="#{catBeanR.apprvrDecFlg}">
 						<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.apprv']}"
 							itemValue="1" />
 						<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.reject']}"
@@ -205,7 +205,7 @@
 					</p:selectOneRadio>
 				</p:column>
 				<p:column rendered="#{backingBean.managedBean.approverUser}">
-					<p:inputTextarea value="#{catBean.approverRemarks}" />
+					<p:inputTextarea value="#{catBeanR.approverRemarks}" />
 				</p:column>
 			</p:dataTable>
 			<p:spacer height="2px;" />

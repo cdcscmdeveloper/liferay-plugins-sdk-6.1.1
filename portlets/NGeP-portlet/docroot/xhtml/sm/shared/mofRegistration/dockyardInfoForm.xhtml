@@ -179,10 +179,15 @@
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
-				<td><p:inputText
+				<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:inputText id="smFacDockYardPosCode"
+						required="#{backingBean.managedBean.valueReqd}"
+						label="#{lbl['lbl.sm.postcode']}"
 						value="#{backingBean.managedBean.selectedDockyardFacility.smAddress.postcode}"
-						size="35" /></td>
+						size="35" /> <p:message id="smFacDockYardPosCodeMsg"
+						for="smFacDockYardPosCode" showSummary="true" showDetail="false"
+						display="icon" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>

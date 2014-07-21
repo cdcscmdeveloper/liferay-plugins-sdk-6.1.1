@@ -337,10 +337,15 @@
 							showDetail="false" display="icon" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
 					<td><p:inputText maxlength="10"
+							required="#{backingBean.managedBean.valueReqd}"
+							label="#{lbl['lbl.sm.postcode']}" id="suppBankPostCode"
 							value="#{backingBean.managedBean.selectedBank.smAddress.postcode}"
-							size="35" /></td>
+							size="35" /> <p:message id="suppBankPostCodeMsg"
+							for="suppBankPostCode" showSummary="true" showDetail="false"
+							display="icon" /></td>
 				</tr>
 
 				<tr>

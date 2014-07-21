@@ -34,13 +34,13 @@
 			<c:when test="#{backingBean.managedBean.poUser}">
 				<p:menuitem value="#{lbl['lbl.sm.docsReviewLbl']}"
 					actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'4')}"
-					action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForBumi,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV)}"
+					action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForBumi,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
 					update=":form" />
 				<c:choose>
-					<c:when test="#{backingBean.managedBean.smAppl.recordStatus}">
+					<c:when test="#{backingBean.managedBean.reviewSiteVisit}">
 						<p:menuitem value="#{lbl['lbl.sm.siteReviewLbl']}"
 							actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'5')}"
-							action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForBumi,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
+							action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForBumi,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV)}"
 							update=":form" />
 						<p:menuitem value="#{lbl['lbl.sm.poDecisionLbl']}"
 							actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'6')}"
