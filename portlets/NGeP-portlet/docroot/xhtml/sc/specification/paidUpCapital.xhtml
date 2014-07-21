@@ -29,11 +29,22 @@
 
 		</div>
 		<p:spacer height="50"></p:spacer>
+		
+		<p:panel>
+			<table>
+				<tr>
+					<td><h:outputLabel value="#{lbl['lbl.sc.spec.asset.title']}"></h:outputLabel></td>
+					<td><p:inputTextarea rows="2" cols="100"
+							value="#{specificationBackingBean.managedBean.scQtChecklist.title}"
+							disabled="true"></p:inputTextarea></td>
+				</tr>
+			</table>
+		</p:panel>
 		<p:panel header="#{lbl['lbl.sc.spec.paid.up.capital']}"
 			toggleable="true">
 			<h:panelGrid columns="2">
 				<h:outputLabel value="#{lbl['lbl.sc.spec.paid.up.capital.ringgit']}"></h:outputLabel>
-				<p:inputText></p:inputText>
+				<p:inputText disabled="true"></p:inputText>
 			</h:panelGrid>
 		</p:panel>
 		<p:panel>

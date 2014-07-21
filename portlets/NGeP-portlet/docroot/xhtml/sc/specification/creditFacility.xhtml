@@ -33,9 +33,9 @@
 				<tr>
 					<td><h:outputLabel value="#{lbl['lbl.sc.spec.asset.title']}"></h:outputLabel>
 					</td>
-					<td><p:inputText
+					<td><p:inputTextarea rows="2" cols="100"
 							value="#{specificationBackingBean.managedBean.scQtChecklist.title}"
-							disabled="true"></p:inputText></td>
+							disabled="true"></p:inputTextarea></td>
 				</tr>
 			</table>
 		</p:panel>
@@ -58,6 +58,13 @@
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.spec.amount']}">
 					<p:inputText></p:inputText>
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.sp.amt.paid']}">
+
+					<p:inputText>
+
+					</p:inputText>
 				</p:column>
 			</p:dataTable>
 
