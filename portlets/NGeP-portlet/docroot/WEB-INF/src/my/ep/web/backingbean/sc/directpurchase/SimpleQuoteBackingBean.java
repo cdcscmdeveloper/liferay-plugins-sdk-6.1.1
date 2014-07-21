@@ -2019,18 +2019,9 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			quoteReqDTO.setFetchSubEntity(true);
 			QuoteResDTO  quoteResDTO = quoteSO.getQuoteDtlForSupplier(quoteReqDTO);
 			ScQuote scQuote = quoteResDTO.getQuoteBidDtl();
+			
 			// remarks
-			List<ScSQRemark> results= new ArrayList<ScSQRemark>();
-			if(scQuote.getRemarks() != null){
-				for (ScSQRemark remark : scQuote.getRemarks()) {
-					remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
-					remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-					remark.setChangedBy(remark.getCreatedBy());
-					remark.setUser(facesScopes.getUserSessionBean());
-					results.add(remark);
-				}
-			}
-			scQuote.setRemarks(results);
+			scQuote.setRemarks(initializeRemarks(scQuote));
             // service and product
 			if(quoteResDTO.getProductAnswersTpl() != null && quoteResDTO.getProductAnswersTpl().size() >0){
 				productTplSpecBean.setSpecAnswerList(quoteResDTO.getProductAnswersTpl());
