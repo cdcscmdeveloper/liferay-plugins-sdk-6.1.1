@@ -8,6 +8,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.pm.common.status.IStatusSO;
@@ -62,7 +63,7 @@ public class BSVAttendanceBackingBean extends
 
 	public BSVAttendanceBackingBean() {
 		if (getManagedBean().getScQt() == null) {
-			// retrieveBriefingSiteVisitList(2029l);
+			retrieveBriefingSiteVisitList(2029l);
 		}
 	}
 
@@ -74,9 +75,9 @@ public class BSVAttendanceBackingBean extends
 		IQTBriefingSO qTBriefingSO = null;
 
 		try {
-			if (this.getManagedBean().getNormalBsvBean() == null
+			/*if (this.getManagedBean().getNormalBsvBean() == null
 					|| null == this.getManagedBean().getZoneBean()
-					|| this.getManagedBean().getZoneBean().isEmpty()) {
+					|| this.getManagedBean().getZoneBean().isEmpty()) {*/
 				qTBriefingSO = (IQTBriefingSO) BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 								IQTBriefingSO.class);
@@ -136,7 +137,7 @@ public class BSVAttendanceBackingBean extends
 					}
 					this.getManagedBean().setNormalBsvBean(briefingZoneBean);
 
-				}
+				//}
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -180,11 +181,9 @@ public class BSVAttendanceBackingBean extends
 		log.info("** attendanceRegistration **");
 		this.getManagedBean().setPreviousPage("bsvAttendanceRegisterMain");
 		getregistrationDetails(briefing);
-		
-		
+
 		return NAV_TO_BSV_REG_PAGE + "?faces-redirect=true";
 	}
-	
 
 	/**
 	 * Method To call to save Briefing Site Visit Details
@@ -258,7 +257,7 @@ public class BSVAttendanceBackingBean extends
 	 */
 	public String saveBriefingRegAttendance(String status) {
 		IQTBriefingSO qTBriefingSO = null;
-		String url=null;
+		String url = null;
 		try {
 			qTBriefingSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTBriefingSO.class);
@@ -297,36 +296,32 @@ public class BSVAttendanceBackingBean extends
 			reqDTO.setQtBriefingList(briefingDetails);
 
 			BriefingResDTO resDTO = qTBriefingSO.saveQTDtl(reqDTO);
-			
+
 			if ("complete".equalsIgnoreCase(status)) {
-			url=this.getManagedBean().getPreviousPage()
-					+ ".xhtml?faces-redirect=true";
-			}
-			if (resDTO.isSuccessful()) {
+				String previousPage=this.getManagedBean().getPreviousPage();
+				Long qtId=this.getManagedBean().getScQt().getQtId();
 				//renewSesionObject();
-				ScQtBsvDtl bsv = resDTO.getBriefingList().get(0);				
+				retrieveBriefingSiteVisitList(qtId);
+				url = previousPage+".xhtml?faces-redirect=true";
+			}
+			if (resDTO.isSuccessful()) {				
+				ScQtBsvDtl bsv = resDTO.getBriefingList().get(0);
 				getregistrationDetails(bsv);
-				FacesContext
-						.getCurrentInstance()
-						.addMessage(
-								null,
-								new FacesMessage(
-										FacesMessage.SEVERITY_INFO,
-										null,
-										MessageUtils
-												.getMessage(
-														MessageConst.INFO_700004,
-														new String[] {
-																},
-														MessageUtils.BUNDLE_COMMON_MESSAGES,
-														new FacesScopes()
-																.getUserLocale())));
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								MessageUtils.getMessage(
+										MessageConst.INFO_700004, new String[] {
+												
+												"Registered Attandance For Briefing/SiteVisit",bsv.getQtBsvDtlId().toString() },
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
 
 			}
 		} finally {
 			qTBriefingSO = null;
 		}
-		
+
 		return url;
 
 	}
@@ -488,7 +483,6 @@ public class BSVAttendanceBackingBean extends
 				briefingAttendance.setEmail(personnel.getEmail());
 				briefingAttendance.setBsvRegistration(briefingRegistration);
 				briefingAttendance.setAuthorized(true);
-
 				attanedList.add(briefingAttendance);
 			}
 		}
@@ -635,8 +629,8 @@ public class BSVAttendanceBackingBean extends
 		}
 		return true;
 	}
-	
-	private void getregistrationDetails(ScQtBsvDtl briefing){
+
+	private void getregistrationDetails(ScQtBsvDtl briefing) {
 		this.getManagedBean().setBriefingAttendanceList(null);
 		IQTBriefingSO qTBriefingSO = null;
 
@@ -671,5 +665,19 @@ public class BSVAttendanceBackingBean extends
 		} finally {
 			qTBriefingSO = null;
 		}
+	}
+	
+	public void updateAttandanceToSelectedBsvReg(AjaxBehaviorEvent event){
+		
+	event.getComponent().getParent().getParent().getAttributes().get("rowIndexVar");
+	
+		boolean selectedValue = (boolean) event.getComponent().getAttributes()
+				.get("value");
+		
+		List<ScQtBsvAttendance> attandances= this.getManagedBean().getBriefingAttendanceList();
+
+		
+		this.getManagedBean().getSelectedbriefRegistration().setBsvAttendance(attandances);
+		
 	}
 }
