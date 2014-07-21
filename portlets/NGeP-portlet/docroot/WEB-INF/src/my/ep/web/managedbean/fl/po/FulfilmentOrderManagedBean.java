@@ -93,6 +93,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	private TreeNode chargeLineItemRoot ;
 	private FlFulfilmentItemAddr stopInstr;
 	
+	private boolean docMaintainRemarks = false;
+	
 	
 	public void populateChargeLineData(){
 		this.chargeLineItemRoot = new DefaultTreeNode("root", null);
@@ -727,6 +729,20 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	 */
 	public void setStopInstr(FlFulfilmentItemAddr stopInstr) {
 		this.stopInstr = stopInstr;
+	}
+
+	/**
+	 * @return the docMaintainRemarks
+	 */
+	public boolean isDocMaintainRemarks() {
+		return docMaintainRemarks;
+	}
+
+	/**
+	 * @param docMaintainRemarks the docMaintainRemarks to set
+	 */
+	public void setDocMaintainRemarks(boolean docMaintainRemarks) {
+		this.docMaintainRemarks = docMaintainRemarks;
 	}
 
 }
