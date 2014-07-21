@@ -185,7 +185,7 @@
 						   <table><tr> 
 							     <td class="TableFieldLeft">
 								     <ac:lov id="supplier" lovId="SM_SUPPLIER"
-									    postUpdateListener="simpleQuoteBackingBean.supplierListListener(simpleQuoteBackingBean.managedBean.smSuppliers)"
+									    postUpdateListener="simpleQuoteBackingBean.supplierListListener(simpleQuoteBackingBean.managedBean.smSuppliers ,simpleQuoteBackingBean.managedBean.scQuote)"
 										headerText="Supplier Lov" buttonLabel="Add"
 										buttonIcon="ui-icon-add" selectionMode="multiple"
 										update="@form"
