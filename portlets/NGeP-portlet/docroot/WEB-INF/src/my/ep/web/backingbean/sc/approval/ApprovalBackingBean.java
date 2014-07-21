@@ -52,6 +52,7 @@ import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.sc.quatationtender.TabBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
+import my.ep.web.sc.quationtender.common.QTConstants;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -300,6 +301,7 @@ public class ApprovalBackingBean extends
 		QuationTenderReqDTO qtReqDto = new QuationTenderReqDTO();
 		Long qtId = obj.getQtId().longValue();
 		qtReqDto.setQtId(qtId);
+		qtReqDto.setDocType(QTConstants.DOCTYPE_QT);
 		QuationTenderResDTO tenderResDTO = detailSO.retriveQTDetails(qtReqDto);
 
 		ScQtApproval scQtApproval = null;
@@ -364,7 +366,7 @@ public class ApprovalBackingBean extends
 		String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
 		qtReqDTO.setToken(ctxToken);
 		qtReqDTO.setTaskId(this.getManagedBean().getTaskId());
-
+		qtReqDTO.setDocType(QTConstants.DOCTYPE_QT);
 		qtReqDTO.setPayLoad(this.getManagedBean().getQuotationTenderDataType());
 		// TODO Need to get it from front end and set it
 
