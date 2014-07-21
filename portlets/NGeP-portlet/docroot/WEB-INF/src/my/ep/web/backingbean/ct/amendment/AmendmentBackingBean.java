@@ -167,7 +167,6 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	private static Logger log = Logger.getLogger(AmendmentBackingBean.class);
 	
 	private String editorValue;
-	private Date currentDate;
 	
 	private ContractBackingBean ctBackingBean;
 	private List<SelectItem> populateBankAccountList;
@@ -1925,6 +1924,8 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		setTabMenuValue();
 		if(getManagedBean().getContractVer().getCtAmendment().isItemPriceChange()) {
 			getManagedBean().getContractVer().getCtAmendment().setValueChange(true);
+		}else if(!getManagedBean().getContractVer().getCtAmendment().isItemPriceChange() && !getManagedBean().getContractVer().getCtAmendment().isQuantityChange()){
+			getManagedBean().getContractVer().getCtAmendment().setValueChange(false);
 		}
 	}
 
@@ -1932,6 +1933,8 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		setTabMenuValue();
 		if(getManagedBean().getContractVer().getCtAmendment().isQuantityChange()) {
 			getManagedBean().getContractVer().getCtAmendment().setValueChange(true);
+		}else if(!getManagedBean().getContractVer().getCtAmendment().isItemPriceChange() && !getManagedBean().getContractVer().getCtAmendment().isQuantityChange()){
+			getManagedBean().getContractVer().getCtAmendment().setValueChange(false);
 		}
 	}
 	
@@ -2095,12 +2098,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	}
 
 	public Date getCurrentDate() {
-		return new Date();
+		return  new Date();
 	}
-
-	public void setCurrentDate(Date currentDate) {
-		this.currentDate = currentDate;
-	}
-	
 	
 }

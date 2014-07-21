@@ -14,11 +14,11 @@
              <p:spacer width="2"/>
              <p:outputLabel value="MOF No." />  
              <p:inputText disabled="true" style="width:78px;" 
-             	value="#{amendmentBackingBean.managedBean.contractVer.ctContract.smSupplier.smMofAccounts[0].mofNo}" />
+             	value="#{amendmentBackingBean.managedBean.ctContract.loa.scLoiLoa.mofNo}" />
           </h:panelGrid>
            <p:outputLabel value="Contact Person" />  
-           <p:inputText disabled="true" style="width:170px;" value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.supplierContact}" />
-         
+           <p:inputText disabled="true" style="width:170px;" 
+              value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.supplierContact}" />
           <p:outputLabel value="Supplier Name" />
           	 <p:inputText disabled="true" style="width:210px;" id="supplierCompanyName"
              	value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.supplierName}" />

@@ -14,11 +14,11 @@
              <p:spacer width="2"/>
              <p:outputLabel value="MOF No." />  
              <p:inputText disabled="true" style="width:78px;" 
-             	value="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.smSupplier.smMofAccounts[0].mofNo}" />
+             	value="#{contractDetailsBackingBean.managedBean.ctContract.loa.scLoiLoa.mofNo}" />
           </h:panelGrid>
            <p:outputLabel value="Contact Person" />  
-           <p:inputText disabled="true" style="width:170px;" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.supplierContact}" />
-         
+           <p:inputText disabled="true" style="width:170px;" 
+              value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.supplierContact}" />
           <p:outputLabel value="Supplier Name" />
           <h:panelGrid columns="3">
           	 <p:inputText disabled="true" style="width:210px;" id="supplierCompanyName"
@@ -65,7 +65,8 @@
 		     </h:panelGrid>
            </h:panelGrid>
            <p:outputLabel  value="#{lbl['lbl.ct.su.email']}"/>  
-           <p:inputText disabled="true" style="width:170px;" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.supplierEmail}"/>
+           <p:inputText disabled="true" style="width:170px;" 
+              value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.supplierEmail}"/>
         </h:panelGrid>
      <h:panelGrid columns="4" style="width:100%;" styleClass="top-aligned-columns"
          columnClasses="columnWidth150,columnWidth350,columnWidth150,columnWidth200"
