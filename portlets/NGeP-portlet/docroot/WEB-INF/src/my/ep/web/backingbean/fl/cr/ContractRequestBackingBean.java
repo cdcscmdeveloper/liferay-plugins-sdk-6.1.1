@@ -157,7 +157,7 @@ import com.liferay.portal.util.PortalUtil;
 @ManagedBean(name = "contractRequestBackingBean")
 @RequestScoped
 public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestManagedBean> {
-	private static Logger log = Logger.getLogger(ContractRequestBackingBean.class);
+	private static Logger log =  Logger.getLogger(ContractRequestBackingBean.class);
 	public static final String NAV_TO_CREATE_CONTRACT_REQUEST = "/xhtml/fl/contractrequest/crBasePage.xhtml";
 	private boolean checkFlg = false;
 	private String className="@(.myCrClassName)";
@@ -334,7 +334,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				}
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 						MessageUtils.getMessage(messageId, 
-								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_CONTRACT_REQUEST), flRequest.getDocNo()}, 
+								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_CONTRACT_REQUEST), resDTO.getFlFulfilmentRequest().getDocNo()}, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 					
 				if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
@@ -743,6 +743,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		System.out.println("taskId:" + taskId);
 		if (taskId != null) {
 			renewSesionObject();
+			ContractRequestBackingBean crBB = new ContractRequestBackingBean();
 			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 			String ctx = getFacesScopes().getBPMAuthenticationCtxToken();
 			BpmRequestDTO reqDTO = new BpmRequestDTO();
@@ -827,6 +828,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			getManagedBean().setSelectedTabIndex(0);
 		}else if(contractId != null){
 			renewSesionObject();
+			ContractRequestBackingBean crBB = new ContractRequestBackingBean();
 			FacesScopes facesScopes = new FacesScopes();
 			getManagedBean().setContractId(Long.parseLong(contractId));
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
