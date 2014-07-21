@@ -76,39 +76,20 @@
 							<f:setPropertyActionListener
 								target="#{flOrderBB.managedBean.selectedTabIndex}" value="0" />
 						</p:menuitem>
-						<c:if test="#{empty flOrderBB.managedBean.buttonVal}">
-							<p:menuitem value="Order Summary" update="@form"
-								actionListener="#{flOrderBB.onTabChange(1)}">
-								<f:setPropertyActionListener
-									target="#{flOrderBB.managedBean.selectedTabIndex}" value="1" />
-							</p:menuitem>
-						</c:if>
-						<c:if test="#{not empty flOrderBB.managedBean.buttonVal}">
-							<p:menuitem value="Charge Line Summary" update="@form"
-								actionListener="#{flOrderBB.onTabChange(1)}">
-								<f:setPropertyActionListener
-									target="#{flOrderBB.managedBean.selectedTabIndex}" value="1" />
-							</p:menuitem>
-						</c:if>
+						<p:menuitem value="Order Summary" update="@form"
+							actionListener="#{flOrderBB.onTabChange(1)}">
+							<f:setPropertyActionListener
+								target="#{flOrderBB.managedBean.selectedTabIndex}" value="1" />
+						</p:menuitem>
 					</p:tabMenu></td>
-				<c:if test="#{empty flOrderBB.managedBean.buttonVal}">
-					<td width="80%"><p:outputPanel
-							rendered="#{flOrderBB.managedBean.selectedTabIndex == 0}">
-							<ui:include src="poGeneral.xhtml" />
-						</p:outputPanel> <p:outputPanel
-							rendered="#{flOrderBB.managedBean.selectedTabIndex == 1}">
-							<ui:include src="poItem.xhtml" />
-						</p:outputPanel></td>
-				</c:if>
-				<c:if test="#{not empty flOrderBB.managedBean.buttonVal}">
-					<td width="80%"><p:outputPanel
-							rendered="#{flOrderBB.managedBean.selectedTabIndex == 0}">
-							<ui:include src="siGeneral.xhtml" />
-						</p:outputPanel> <p:outputPanel
-							rendered="#{flOrderBB.managedBean.selectedTabIndex == 1}">
-							<ui:include src="siItem.xhtml" />
-						</p:outputPanel></td>
-				</c:if>
+
+				<td width="80%"><p:outputPanel
+						rendered="#{flOrderBB.managedBean.selectedTabIndex == 0}">
+						<ui:include src="poGeneral.xhtml" />
+					</p:outputPanel> <p:outputPanel
+						rendered="#{flOrderBB.managedBean.selectedTabIndex == 1}">
+						<ui:include src="poItem.xhtml" />
+					</p:outputPanel></td>
 			</tr>
 		</table>
 	</ui:define>

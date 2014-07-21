@@ -290,16 +290,27 @@
 			</table>
 		</p:panel>
 	</h:panelGroup>
-	
-	<p:panel header="#{lbl['lbl.fl.remark.attachment']}" toggleable="true">
-		<table style="width: 100%">
-			<tr>
-				<td width="50%" valign="top"><ui:include
-						src="/xhtml/fl/shared/remark.xhtml" /></td>
-				<td width="50%" valign="top"><ui:include
-						src="/xhtml/fl/shared/attachment.xhtml" /></td>
-			</tr>
-		</table>
-	</p:panel>
+	<c:if test='#{flOrderBB.managedBean.docMaintainRemarks eq "true"}'>
+		<p:panel header="#{lbl['lbl.fl.remark.attachment']}" toggleable="true">
+			<table style="width: 100%">
+				<tr>
+					<td width="50%" valign="top"><ui:include
+							src="/xhtml/fl/shared/remark.xhtml" /></td>
+				</tr>
+			</table>
+		</p:panel>
+	</c:if>
+	<c:if test='#{flOrderBB.managedBean.docMaintainRemarks eq "false"}'>
+		<p:panel header="#{lbl['lbl.fl.remark.attachment']}" toggleable="true">
+			<table style="width: 100%">
+				<tr>
+					<td width="50%" valign="top"><ui:include
+							src="/xhtml/fl/shared/remark.xhtml" /></td>
+					<td width="50%" valign="top"><ui:include
+							src="/xhtml/fl/shared/attachment.xhtml" /></td>
+				</tr>
+			</table>
+		</p:panel>
+	</c:if>	
 
 </ui:composition>
