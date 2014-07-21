@@ -103,7 +103,7 @@
 						value="#{lbl['lbl.sc.sq.gen.info.duration']}" /></td>
 				<td>
 				 <p:outputPanel autoUpdate="true" id="durationId">
-				   <p:inputText  size="6" label="#{lbl['lbl.sc.sq.gen.info.duration']}"  maxlength="3" 
+				   <p:inputText  size="6" label="#{lbl['lbl.sc.sq.gen.info.duration']}"
 				      value="#{simpleQuoteBackingBean.managedBean.duration}" 
 				      style="text-align:right;">
 				      <p:ajax event="blur" update="startDate ,endDate" process="@this durationId"
