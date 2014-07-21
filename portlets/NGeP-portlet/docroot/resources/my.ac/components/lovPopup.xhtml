@@ -29,14 +29,6 @@
 		<ui:include src="lovSearchPanel.xhtml" />
 
 		<table style="width:100%;"><tr><TD style="text-align:right;">
-			<p:commandButton
-				icon="ui-icon-reset"
-				value="#{lbl['lbl.btn.reset']}"
-				action="#{lovBackingBean.resetAction}"
-				partialSubmit="true"
-				process="searchPanel"
-				update="searchPanel resultPanel">
-			</p:commandButton>
 			<p:commandButton 
 				icon="ui-icon-search"
 				value="#{lbl['lbl.btn.search']}"
@@ -45,6 +37,14 @@
 				process="searchPanel"
 				update="resultPanel">
 			</p:commandButton>		
+			<p:commandButton
+				icon="ui-icon-reset"
+				value="#{lbl['lbl.btn.reset']}"
+				action="#{lovBackingBean.resetAction}"
+				partialSubmit="true"
+				process="searchPanel"
+				update="searchPanel resultPanel">
+			</p:commandButton>
 		</TD></tr></table>
 
 		</h:panelGroup>
