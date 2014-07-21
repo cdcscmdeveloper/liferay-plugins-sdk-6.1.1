@@ -1487,7 +1487,7 @@ public class CommitteBackingBean extends
 						ICommitteSO.class);
 
 		CommitteReqDTO committeReqDTO = new CommitteReqDTO();
-		committeReqDTO.getScCommittee().setCommitteeId(new Long(committeDataType.getComId()).longValue());
+		//committeReqDTO.getScCommittee().setCommitteeId(new Long(committeDataType.getComId()).longValue());
 		/*
 		 * committeReqDTO.setCommitteId(new Long(committeDataType.getComId())
 		 * .longValue()); CommitteResDTO resDTO = committeSO
