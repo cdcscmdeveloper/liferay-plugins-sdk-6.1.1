@@ -5480,13 +5480,22 @@ public class SpecificationBackingBean extends
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
 			reqDTO.setScQtCheckList(checkList);
 			SpecificationResDTO resDTO = specSo.saveCheckListScore(reqDTO);
-			reqDTO.setScQtCheckList(checkList);
-			// specSo.saveCheckListScore(reqDTO);
-
 			this.getManagedBean()
 					.getScQtCheckSt2techProposal()
 					.add(this.getManagedBean().getIndex(),
 							resDTO.getScQtCheckList());
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+							MessageUtils.getMessage(MessageConst.INFO_700004,
+									new String[] {
+											"Specification Score ",
+											resDTO.getScQtCheckList()
+													.getQtChecklistId()
+													.toString() },
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+
 			// }ll
 		} finally {
 
@@ -5621,14 +5630,23 @@ public class SpecificationBackingBean extends
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
 			reqDTO.setScQtCheckList(checkList);
 			SpecificationResDTO resDTO = specSo.saveCheckListScore(reqDTO);
-			reqDTO.setScQtCheckList(checkList);
-			// specSo.saveCheckListScore(reqDTO);
+
 			this.getManagedBean()
 					.getScQtCheckSt2techProposal()
 					.add(this.getManagedBean().getIndex(),
 							resDTO.getScQtCheckList());
-			// this.getManagedBean().setCollectionScoring(localList);
-			// }ll
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+							MessageUtils.getMessage(MessageConst.INFO_700004,
+									new String[] {
+											"Specification Score ",
+											resDTO.getScQtCheckList()
+													.getQtChecklistId()
+													.toString() },
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+
 		} finally {
 
 		}
@@ -5703,13 +5721,19 @@ public class SpecificationBackingBean extends
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
 		reqDTO.setScQtCheckList(checkList);
 		SpecificationResDTO resDTO = specSo.saveCheckListScore(reqDTO);
-		reqDTO.setScQtCheckList(checkList);
-		// specSo.saveCheckListScore(reqDTO);
-
 		this.getManagedBean()
 				.getScQtCheckSt2financeProposalList()
 				.add(this.getManagedBean().getIndex(),
 						resDTO.getScQtCheckList());
+		FacesContext.getCurrentInstance().addMessage(
+				null,
+				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
+						.getMessage(MessageConst.INFO_700004, new String[] {
+								"Specification Score ",
+								resDTO.getScQtCheckList().getQtChecklistId()
+										.toString() },
+								MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
 
 	}
 
@@ -5780,13 +5804,19 @@ public class SpecificationBackingBean extends
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
 		reqDTO.setScQtCheckList(checkList);
 		SpecificationResDTO resDTO = specSo.saveCheckListScore(reqDTO);
-		reqDTO.setScQtCheckList(checkList);
-		// specSo.saveCheckListScore(reqDTO);
-
 		this.getManagedBean()
 				.getScQtCheckSt2financeProposalList()
 				.add(this.getManagedBean().getIndex(),
 						resDTO.getScQtCheckList());
+		FacesContext.getCurrentInstance().addMessage(
+				null,
+				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
+						.getMessage(MessageConst.INFO_700004, new String[] {
+								"Specification Score ",
+								resDTO.getScQtCheckList().getQtChecklistId()
+										.toString() },
+								MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
 
 	}
 
@@ -5857,15 +5887,22 @@ public class SpecificationBackingBean extends
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
 		reqDTO.setScQtCheckList(checkList);
 		SpecificationResDTO resDTO = specSo.saveCheckListScore(reqDTO);
-		reqDTO.setScQtCheckList(checkList);
-		// specSo.saveCheckListScore(reqDTO);
+
 		this.getManagedBean()
 				.getScQtCheckSt2techProposal()
 				.add(this.getManagedBean().getIndex(),
 						resDTO.getScQtCheckList());
 
-		// this.getManagedBean().setCollectionScoring(localList);
-		// }ll
+		FacesContext.getCurrentInstance().addMessage(
+				null,
+				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
+						.getMessage(MessageConst.INFO_700004, new String[] {
+								"Specification Score ",
+								resDTO.getScQtCheckList().getQtChecklistId()
+										.toString() },
+								MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
+
 	}
 
 	public void acceptTechnicalScore() {
@@ -5936,12 +5973,19 @@ public class SpecificationBackingBean extends
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
 		reqDTO.setScQtCheckList(checkList);
 		SpecificationResDTO resDTO = specSo.saveCheckListScore(reqDTO);
-		reqDTO.setScQtCheckList(checkList);
-		// specSo.saveCheckListScore(reqDTO);
 		this.getManagedBean()
 				.getScQtCheckSt2techProposal()
 				.add(this.getManagedBean().getIndex(),
 						resDTO.getScQtCheckList());
+		FacesContext.getCurrentInstance().addMessage(
+				null,
+				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
+						.getMessage(MessageConst.INFO_700004, new String[] {
+								"Specification Score ",
+								resDTO.getScQtCheckList().getQtChecklistId()
+										.toString() },
+								MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
 
 	}
 
@@ -6014,12 +6058,20 @@ public class SpecificationBackingBean extends
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
 		reqDTO.setScQtCheckList(checkList);
 		SpecificationResDTO resDTO = specSo.saveCheckListScore(reqDTO);
-		reqDTO.setScQtCheckList(checkList);
-		// specSo.saveCheckListScore(reqDTO);
+
 		this.getManagedBean()
 				.getScQtCheckSt2techProposal()
 				.add(this.getManagedBean().getIndex(),
 						resDTO.getScQtCheckList());
+		FacesContext.getCurrentInstance().addMessage(
+				null,
+				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
+						.getMessage(MessageConst.INFO_700004, new String[] {
+								"Specification Score ",
+								resDTO.getScQtCheckList().getQtChecklistId()
+										.toString() },
+								MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
 
 	}
 
@@ -6092,13 +6144,20 @@ public class SpecificationBackingBean extends
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
 		reqDTO.setScQtCheckList(checkList);
 		SpecificationResDTO resDTO = specSo.saveCheckListScore(reqDTO);
-		reqDTO.setScQtCheckList(checkList);
-		// specSo.saveCheckListScore(reqDTO);
-
 		this.getManagedBean()
 				.getScQtCheckSt2financeProposalList()
 				.add(this.getManagedBean().getIndex(),
 						resDTO.getScQtCheckList());
+		FacesContext.getCurrentInstance().addMessage(
+				null,
+				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
+						.getMessage(MessageConst.INFO_700004, new String[] {
+								"Specification Score ",
+								resDTO.getScQtCheckList().getQtChecklistId()
+										.toString() },
+								MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
+
 	}
 
 	public void acceptCashScore() {
@@ -6170,13 +6229,20 @@ public class SpecificationBackingBean extends
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
 		reqDTO.setScQtCheckList(checkList);
 		SpecificationResDTO resDTO = specSo.saveCheckListScore(reqDTO);
-		reqDTO.setScQtCheckList(checkList);
-		// specSo.saveCheckListScore(reqDTO);
-
 		this.getManagedBean()
 				.getScQtCheckSt2financeProposalList()
 				.add(this.getManagedBean().getIndex(),
 						resDTO.getScQtCheckList());
+		FacesContext.getCurrentInstance().addMessage(
+				null,
+				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
+						.getMessage(MessageConst.INFO_700004, new String[] {
+								"Specification Score ",
+								resDTO.getScQtCheckList().getQtChecklistId()
+										.toString() },
+								MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
+
 	}
 
 	public void acceptBankScore() {
@@ -6334,22 +6400,26 @@ public class SpecificationBackingBean extends
 			e.printStackTrace();
 		}
 		checkList.setScQtCheckListScores(localList);
-		// this.getManagedBean().setCollectionScoring(localList);
-		// }ll
-
 		IQTSpecSO specSo;
 		SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 		specSo = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
 		reqDTO.setScQtCheckList(checkList);
 		SpecificationResDTO resDTO = specSo.saveCheckListScore(reqDTO);
-		// reqDTO.setScQtCheckList(checkList);
-		// specSo.saveCheckListScore(reqDTO);
-
 		this.getManagedBean()
 				.getScQtCheckSt2financeProposalList()
 				.add(this.getManagedBean().getIndex(),
 						resDTO.getScQtCheckList());
+		FacesContext.getCurrentInstance().addMessage(
+				null,
+				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
+						.getMessage(MessageConst.INFO_700004, new String[] {
+								"Specification Score ",
+								resDTO.getScQtCheckList().getQtChecklistId()
+										.toString() },
+								MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
+
 	}
 
 	public void acceptAssetScore() {
@@ -6421,13 +6491,20 @@ public class SpecificationBackingBean extends
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
 		reqDTO.setScQtCheckList(checkList);
 		SpecificationResDTO resDTO = specSo.saveCheckListScore(reqDTO);
-		reqDTO.setScQtCheckList(checkList);
-		// specSo.saveCheckListScore(reqDTO);
-
 		this.getManagedBean()
 				.getScQtCheckSt2financeProposalList()
 				.add(this.getManagedBean().getIndex(),
 						resDTO.getScQtCheckList());
+		FacesContext.getCurrentInstance().addMessage(
+				null,
+				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
+						.getMessage(MessageConst.INFO_700004, new String[] {
+								"Specification Score ",
+								resDTO.getScQtCheckList().getQtChecklistId()
+										.toString() },
+								MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
+
 	}
 
 	public void acceptPaidUpScore() {
@@ -6491,50 +6568,26 @@ public class SpecificationBackingBean extends
 		checkList.getQtScoreWeightage().setScore(new BigDecimal(paidUp));
 		checkList.setScQt(this.getManagedBean().getScQt());
 		checkList.setScQtCheckListScores(localList);
-		// this.getManagedBean().setCollectionScoring(localList);
-		// }ll
-
 		IQTSpecSO specSo;
 		SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 		specSo = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
 		reqDTO.setScQtCheckList(checkList);
 		SpecificationResDTO resDTO = specSo.saveCheckListScore(reqDTO);
-
-		reqDTO.setScQtCheckList(checkList);
-		// specSo.saveCheckListScore(reqDTO);
-
 		this.getManagedBean()
 				.getScQtCheckSt2financeProposalList()
 				.add(this.getManagedBean().getIndex(),
 						resDTO.getScQtCheckList());
-	}
+		FacesContext.getCurrentInstance().addMessage(
+				null,
+				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
+						.getMessage(MessageConst.INFO_700004, new String[] {
+								"Specification Score ",
+								resDTO.getScQtCheckList().getQtChecklistId()
+										.toString() },
+								MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
 
-	public List<SelectItem> getAppDetails() {
-		List<SelectItem> selectItems = new ArrayList<SelectItem>();
-
-		try {
-
-			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
-					"pm", IUserSO.class);
-			List<PmUser> comitteeUsersUsers = new ArrayList<PmUser>();
-			if (getManagedBean().getComitteeUsers() == null) {
-				UserReqDTO reqDTO = new UserReqDTO();
-				reqDTO.setRoleCode(RoleCode.MSC_COMMITTEE.value());
-				UserResDTO resDTO = userSO.retrieveUserListByRole(reqDTO);
-				comitteeUsersUsers = resDTO.getUserList();
-			}
-			selectItems.add(new SelectItem(null, "--Select One--"));
-			for (int i = 0; i < comitteeUsersUsers.size(); i++) {
-				PmUser user = (PmUser) comitteeUsersUsers.get(i);
-				selectItems.add(new SelectItem(user.getUserId(), user
-						.getUserName()));
-			}
-			this.getManagedBean().setComitteeUsers(selectItems);
-		} finally {
-
-		}
-		return getManagedBean().getComitteeUsers();
 	}
 
 	public List<SelectItem> getYearDetails() {
