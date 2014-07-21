@@ -30,6 +30,7 @@ import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDo;
+import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmGo;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmReportSection;
@@ -264,6 +265,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean descriptionField = true;
 	private boolean durationField = true;
 
+	private int allStateCode;
+
 	// Business Owner
 	private List<ScCommitteeMember> scCommitteeMemberList;
 	private ScCommitteeMember selectScCommitteMember;
@@ -399,6 +402,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	// Document
 	private ScQtCheckList scQtChecklist;
 	private TemplateSpecBean templateSpecBean = new TemplateSpecBean();
+	private List<PmDocument> pmDocumentList;
+	private List<PmDocument> selectedPmDocumentList;
 
 	// Delivery Location
 	private List<ScQtDeliveryLoc> deliveryLocList;
@@ -425,7 +430,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		pmAddress = new PmAddress();
 		qtnTenderSearchBean = new QtnTenderSearchBean();
 		cloneQtnTenderSearchBean = new QtnTenderSearchBean();
-		
+
 		userCommitteeSearchBean = new UserCommitteeSearchBean();
 
 		root2 = new DefaultTreeNode("Root", null);
@@ -2469,6 +2474,31 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setUserCommitteeSearchBean(
 			UserCommitteeSearchBean userCommitteeSearchBean) {
 		this.userCommitteeSearchBean = userCommitteeSearchBean;
+	}
+
+	public int getAllStateCode() {
+		return allStateCode;
+	}
+
+	public void setAllStateCode(int allStateCode) {
+		this.allStateCode = allStateCode;
+	}
+
+	public List<PmDocument> getPmDocumentList() {
+		return pmDocumentList;
+	}
+
+	public void setPmDocumentList(List<PmDocument> pmDocumentList) {
+		this.pmDocumentList = pmDocumentList;
+	}
+
+	public List<PmDocument> getSelectedPmDocumentList() {
+		return selectedPmDocumentList;
+	}
+
+	public void setSelectedPmDocumentList(
+			List<PmDocument> selectedPmDocumentList) {
+		this.selectedPmDocumentList = selectedPmDocumentList;
 	}
 
 }

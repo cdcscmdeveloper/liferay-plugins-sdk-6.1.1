@@ -228,7 +228,7 @@ public class CommitteBackingBean extends
 				searchFilterBean.add(bean);
 			}
 			
-			String status = qtnTenderSearchBean.getQtStatus();
+			/*String status = qtnTenderSearchBean.getQtStatus();
 			if (!StringUtils.isBlank(status)) {
 				SearchFilterBean bean = new SearchFilterBean();
 				bean.setAndOr(SearchCondition.CONDITION_OR.value());
@@ -246,8 +246,15 @@ public class CommitteBackingBean extends
 				bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
 				bean.setSearchValue(committeeType);
 				searchFilterBean.add(bean);
+			}*/
+			String status = qtnTenderSearchBean.getQtStatus();
+			if (!StringUtils.isBlank(status)) {
+				qtSearchBean.getDataFilterBeans().add(new SearchFilterBean("scCommittee.committeStatus.statusId", SearchOperator.OPERATOR_EQUALS.value(), status));
 			}
-
+			String committeeType = qtnTenderSearchBean.getCommitteeType();
+			if (!StringUtils.isBlank(committeeType)) {
+				qtSearchBean.getDataFilterBeans().add(new SearchFilterBean("scCommittee.committeeType.parameterCode", SearchOperator.OPERATOR_EQUALS.value(), committeeType));
+			}
 			qtSearchBean.getDataFilterBeans().addAll(searchFilterBean);
 		}
 	}
