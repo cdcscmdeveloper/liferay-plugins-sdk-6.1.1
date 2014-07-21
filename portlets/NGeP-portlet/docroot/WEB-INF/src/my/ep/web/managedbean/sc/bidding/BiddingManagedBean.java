@@ -1,5 +1,6 @@
 package my.ep.web.managedbean.sc.bidding;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -48,12 +49,18 @@ public class BiddingManagedBean extends BaseManagedBean {
 	private String searchDocumentNo;
 	private String searchBidTitle;
 	private Date searchBiddingDateFrom;
-	private Date mindate;
 	private Date searchBiddingDateTo;
+	
+	
 	private Long remainingTime;
+	private String duration;
+	private String newBidDuration;
 	private ScBidAction bidAction;
-	
-	
+	private Date mindate;
+	private Date maxdate;
+	private String actionType;
+	private Date newStartDate;
+	private Date newEndDate;
 	
 		
 	
@@ -83,6 +90,7 @@ public class BiddingManagedBean extends BaseManagedBean {
 	private Long supplierCode;
 	
 	private List<ScBidPackage> bidPackages;
+	private BigDecimal lowestNonBumiOfferedPrice;
 	
 	private List<TplSpecZoneDtl> zoneDetailsList;
 	private String selectedZone;
@@ -91,10 +99,7 @@ public class BiddingManagedBean extends BaseManagedBean {
 	private Date createdDateTo;
 
 	
-	private String actionType;
-	private Long duration;
-	private Date newStartDate;
-	private Date newEndDate;
+	
 	
 	private String createdBy;
 
@@ -103,7 +108,7 @@ public class BiddingManagedBean extends BaseManagedBean {
 	
 	public BiddingManagedBean() {
 
-		System.out.println("biddingMB constructor");
+		
 		bidAction = new ScBidAction();
 		
 	}
@@ -113,10 +118,63 @@ public class BiddingManagedBean extends BaseManagedBean {
 	}
 	
 	
+	
+	/**
+	 * @return the lowestNonBumiOfferedPrice
+	 */
+	public BigDecimal getLowestNonBumiOfferedPrice() {
+		return lowestNonBumiOfferedPrice;
+	}
 
-	
-	
-	
+	/**
+	 * @param lowestNonBumiOfferedPrice the lowestNonBumiOfferedPrice to set
+	 */
+	public void setLowestNonBumiOfferedPrice(BigDecimal lowestNonBumiOfferedPrice) {
+		this.lowestNonBumiOfferedPrice = lowestNonBumiOfferedPrice;
+	}
+
+	/**
+	 * @return the newBidDuration
+	 */
+	public String getNewBidDuration() {
+		return newBidDuration;
+	}
+
+	/**
+	 * @param newBidDuration the newBidDuration to set
+	 */
+	public void setNewBidDuration(String newBidDuration) {
+		this.newBidDuration = newBidDuration;
+	}
+
+	/**
+	 * @return the maxdate
+	 */
+	public Date getMaxdate() {
+		return maxdate;
+	}
+
+	/**
+	 * @param maxdate the maxdate to set
+	 */
+	public void setMaxdate(Date maxdate) {
+		this.maxdate = maxdate;
+	}
+
+	/**
+	 * @return the remainingTime
+	 */
+	public Long getRemainingTime() {
+		return remainingTime;
+	}
+
+	/**
+	 * @param remainingTime the remainingTime to set
+	 */
+	public void setRemainingTime(Long remainingTime) {
+		this.remainingTime = remainingTime;
+	}
+
 	/**
 	 * @return the mindate
 	 */
@@ -454,25 +512,6 @@ public class BiddingManagedBean extends BaseManagedBean {
 	}
 
 
-
-	/**
-	 * @return the remainingTime
-	 */
-	public Long getRemainingTime() {
-		return remainingTime;
-	}
-
-
-
-	/**
-	 * @param remainingTime the remainingTime to set
-	 */
-	public void setRemainingTime(Long remainingTime) {
-		this.remainingTime = remainingTime;
-	}
-
-
-
 	/**
 	 * @return the actionType
 	 */
@@ -489,25 +528,19 @@ public class BiddingManagedBean extends BaseManagedBean {
 		this.actionType = actionType;
 	}
 
-
-
 	/**
 	 * @return the duration
 	 */
-	public Long getDuration() {
+	public String getDuration() {
 		return duration;
 	}
-
-
 
 	/**
 	 * @param duration the duration to set
 	 */
-	public void setDuration(Long duration) {
+	public void setDuration(String duration) {
 		this.duration = duration;
 	}
-
-
 
 	/**
 	 * @return the newStartDate
