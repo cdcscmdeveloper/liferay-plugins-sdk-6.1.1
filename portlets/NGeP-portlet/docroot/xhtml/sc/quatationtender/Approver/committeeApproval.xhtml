@@ -43,7 +43,7 @@
 				style="width: 15%">
 				<ui:fragment rendered="#{committeeapprover.PNP}">
 					<h:outputText value="Chairperson"
-						rendered="#{committeeapprover.memberRole.parameterId == '583'}" />
+						rendered="#{committeeapprover.memberRole.parameterCode eq 'C'}" />
 				</ui:fragment>
 				<ui:fragment rendered="#{!committeeapprover.PNP}">
 					<p:selectOneMenu
