@@ -106,6 +106,7 @@
 
 				<p:dataTable id="unspscTableID"
 					value="#{codificationBackingBean.searchDataModel}" var="unspscObj"
+					lazy="true"
 					rowKey="#{unspscObj.unspscId}" rowIndexVar="rowIndex"
 					selection="#{codificationBackingBean.managedBean.selectedUNSPSCObj}"
 					width="100%" selectionMode="single">
