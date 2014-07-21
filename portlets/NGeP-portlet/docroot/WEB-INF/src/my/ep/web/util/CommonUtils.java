@@ -46,6 +46,10 @@ public class CommonUtils {
 				dateFormat = CommonConstants.DEFAULT_DATETIME_FORMAT;
 				
 				break;
+			case CommonConstants.DATE_FORMAT_TYPE_DATETIME_WITH_SECONDS : 
+				dateFormat = CommonConstants.DEFAULT_DATETIME_WITH_SECONDS_FORMAT;
+				
+				break;
 			default : 
 				throw new IllegalArgumentException("Invalid dateFormatType.");
 		}
