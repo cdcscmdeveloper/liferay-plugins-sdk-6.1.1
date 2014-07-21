@@ -14,6 +14,8 @@ import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.bpm.vo.WorklistItemVO;
+import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constants.FLProcessNameConst;
 import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
@@ -218,6 +220,11 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 						for(WorklistItemVO worklistItemVO : responseDTO.getWorklistVO().getWorklistItem()) {
 							if(worklistItemVO.getTitle().equalsIgnoreCase(FLProcessNameConst.PURCHASE_REQUEST_TASK_TITLE)) {
 								worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.fl.purchase.request.task.title", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+							}
+							
+							// s1 module 
+							if(worklistItemVO.getTitle().equalsIgnoreCase(ParameterConst.RN_TITLE)) {
+								worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.request.note", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 							}
 						}
 					}
