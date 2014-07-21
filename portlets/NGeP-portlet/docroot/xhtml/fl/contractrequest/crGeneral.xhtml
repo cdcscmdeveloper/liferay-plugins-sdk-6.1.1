@@ -134,7 +134,11 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.end.delivery.date']}" /></td>
-				<td><p:calendar mode="popup" showOn="button" disabled="true" readonlyInput="true" id="delEndDate"
+				<td><p:calendar mode="popup" showOn="button" id="delEndDate" 
+						disabled="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing}" 
+						readonlyInput="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing}"
+						mindate="#{contractRequestBackingBean.managedBean.flRequest.startDate}" 
+						maxdate="#{contractRequestBackingBean.managedBean.maxDate}"
 						value="#{contractRequestBackingBean.managedBean.flRequest.endDate}"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 					</p:calendar></td>

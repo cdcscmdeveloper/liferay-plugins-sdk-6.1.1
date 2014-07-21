@@ -43,7 +43,7 @@
 			</p:column>
 
 			<p:column headerText="Exp. Delivery (Start)">
-				<p:calendar value="#{address.startDate}" id="calStartDate" 
+				<p:calendar value="#{address.startDate}" id="calStartDate"  disabled="#{!contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing}"
 					showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 					<p:ajax event="dateSelect"
 						listener="#{contractRequestBackingBean.updateDeliveryAddrDate}"
@@ -52,7 +52,9 @@
 			</p:column>
 
 			<p:column headerText="Exp. Delivery (End)">
-				<p:calendar value="#{address.endDate}" id="calEndDate" disabled="true" readonlyInput="true" 
+				<p:calendar value="#{address.endDate}" id="calEndDate" disabled="#{!contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing}"
+					mindate="#{address.startDate}" 
+					maxdate="#{contractRequestBackingBean.managedBean.maxDate}"
 					showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 			</p:column>
 			<p:column headerText=" Recv. Officer" style="text-align:center">

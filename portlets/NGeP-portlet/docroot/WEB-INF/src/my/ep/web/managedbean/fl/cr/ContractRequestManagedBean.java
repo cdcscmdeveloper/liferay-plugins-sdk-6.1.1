@@ -5,6 +5,7 @@ package my.ep.web.managedbean.fl.cr;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -95,6 +96,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private Long testOrg;
 	private String orgProfileIds;
 	private String fulfilmentRequisitioner;
+	private Date maxDate;
 	
 	//getcontract
 	private CtContract ctContract = new CtContract();
@@ -1818,6 +1820,22 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setFulfilmentRequisitioner(String fulfilmentRequisitioner) {
 		this.fulfilmentRequisitioner = fulfilmentRequisitioner;
+	}
+
+
+	/**
+	 * @return the maxDate
+	 */
+	public Date getMaxDate() {
+		return maxDate;
+	}
+
+
+	/**
+	 * @param maxDate the maxDate to set
+	 */
+	public void setMaxDate(Date maxDate) {
+		this.maxDate = maxDate;
 	}
 
 

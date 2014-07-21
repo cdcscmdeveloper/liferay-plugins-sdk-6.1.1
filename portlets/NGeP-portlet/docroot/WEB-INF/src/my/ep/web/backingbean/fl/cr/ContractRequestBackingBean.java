@@ -841,7 +841,10 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			getManagedBean().getFlRequest().setScheduleNo(scheduleNo);
 			getManagedBean().getFlRequest().setSmSupplier(contractResDTO.getContract().getSmSupplier());
 			getManagedBean().getFlRequest().setFinancialYear(Calendar.getInstance().get(Calendar.YEAR));
-			getManagedBean().getFlRequest().setStartDate(new Timestamp(System.currentTimeMillis()));
+			if(!getManagedBean().getFlRequest().getCtContract().isZonalPricing()){
+				getManagedBean().getFlRequest().setStartDate(new Timestamp(System.currentTimeMillis()));
+				updateDeliveryDate();
+			}
 			StatusReqDTO statusReqDTO = new StatusReqDTO();
 			statusReqDTO.setStatusId(FulfilmentStatusConst.CR_PENDING_SUBMISSION);
 			StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
@@ -885,8 +888,12 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			flBackingBean.initializeRemarkAndAttachement(flBB.getManagedBean().getRemarkList(), flBB.getManagedBean().getAttachmentList());
 			getManagedBean().setSelectedTabIndex(0);
 		}
+		if(!getManagedBean().getFlRequest().getFlDeliveryAddresses().isEmpty()){
+			getManagedBean().setSelectedDelAddr(getManagedBean().getFlRequest().getFlDeliveryAddresses().get(0));
+		}
 		
 		if(getManagedBean().getFlRequest().getCtContract().isZonalPricing()){
+			getManagedBean().getFlRequest().setStartDate(null);
 			getManagedBean().setFlManualAddress(new FlDeliveryAddress());
 			getManagedBean().getFlManualAddress().setDeliveryAddressId(1L);
 			getManagedBean().getFlManualAddress().setPmAddress(new PmAddress());
@@ -2031,11 +2038,13 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			Calendar calendar = Calendar.getInstance();
 			calendar.setTime(startDate);
 			calendar.add(Calendar.DATE, deliveryTerm);
+			getManagedBean().setMaxDate(calendar.getTime());
 			getManagedBean().getFlRequest().setEndDate(calendar.getTime());
 		}else if(uomCode.equalsIgnoreCase(ParameterConst.DELIVERY_TERM_MONTHS)){
 			Calendar calendar = Calendar.getInstance();
 			calendar.setTime(startDate);
 			calendar.add(Calendar.MONTH, deliveryTerm);
+			getManagedBean().setMaxDate(calendar.getTime());
 			getManagedBean().getFlRequest().setEndDate(calendar.getTime());
 		}
 		
@@ -2056,11 +2065,13 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			Calendar calendar = Calendar.getInstance();
 			calendar.setTime(startDate);
 			calendar.add(Calendar.DATE, deliveryTerm);
+			getManagedBean().setMaxDate(calendar.getTime());
 			getManagedBean().getSelectedDelAddr().setEndDate(calendar.getTime());
 		}else if(getManagedBean().getSelectedDelAddr().getPmUom().getParameterCode().equalsIgnoreCase(ParameterConst.DELIVERY_TERM_MONTHS)){
 			Calendar calendar = Calendar.getInstance();
 			calendar.setTime(startDate);
 			calendar.add(Calendar.MONTH, deliveryTerm);
+			getManagedBean().setMaxDate(calendar.getTime());
 			getManagedBean().getSelectedDelAddr().setEndDate(calendar.getTime());
 		}
 	}
