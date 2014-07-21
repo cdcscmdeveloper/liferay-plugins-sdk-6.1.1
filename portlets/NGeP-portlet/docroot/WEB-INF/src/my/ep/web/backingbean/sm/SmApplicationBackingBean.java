@@ -317,16 +317,9 @@ public class SmApplicationBackingBean extends
 
 			if (getManagedBean().isApproverUser()
 					|| getManagedBean().isPoUser()) {
-				System.out.println("**** LOGIN IS PO or APPROVER *******"
-						+ smAppl.getApplCategoryType());
-				// smAppl.setSupportingDocMode("O");
-				// smAppl.setSupplierType(SupplierManagementConst.STYPE_CONSULTANT);
-
 				if (smAppl.getSmCompanyBasic() == null) {
-					System.out.println(" **** COMPANY BAsic cannot be null");
 					smAppl.setSmCompanyBasic(new SmCompanyBasic());
 				}
-				// smAppl.setApplCategoryType("S");
 			}
 
 			if (smAppl.getSmCompanyBasic() != null) {
@@ -630,6 +623,14 @@ public class SmApplicationBackingBean extends
 						.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)) {
 			retriveCurrentAppl();
 		}
+		if (currentPageType
+				.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)
+				&& getManagedBean().isSupplierUser()
+				&& getManagedBean().getSmAppl().getSupportingDocMode() != null
+				&& getManagedBean().getSmAppl().getSupportingDocMode()
+						.equals("O")) {
+			validateSupportingDocs();
+		}
 		testUpdateSmAppl(applType, currentPageType, outputPageType, false);
 		System.out
 				.println("******* Current page AFTER in managed bean ********"
@@ -700,6 +701,10 @@ public class SmApplicationBackingBean extends
 				System.out.println("*** This a personnel Page ********");
 				assignApplicationSupportingDocs();
 			}
+			if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
+					SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL)) {
+				calcPersonnelListCount();
+			}
 			assignValReqdToFalse();
 		}
 		return isError;
@@ -739,25 +744,6 @@ public class SmApplicationBackingBean extends
 			if (getManagedBean().isApproverUser()) {
 				setDefaultApproverReviewSection();
 			}
-
-			// if (currentPageType
-			// .equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY))
-			// {
-			// System.out.println(" ****8 This is capital ********* ");
-			// for (int i = 0; i < getManagedBean().getSmAppl()
-			// .getSmSupplierBranches().size(); i++) {
-			// SmSupplierBranch br = getManagedBean().getSmAppl()
-			// .getSmSupplierBranches().get(i);
-			// if (br.getSmPersonnel() == null) {
-			// System.out
-			// .println(" **** This is null personnel ******** ");
-			// br.setSmPersonnel(new SmPersonnel());
-			// getManagedBean().getSmAppl().getSmSupplierBranches()
-			// .set(i, br);
-			//
-			// }
-			// }
-			// }
 			if (getManagedBean().getSmAppl().getPmStatus() != null) {
 				System.out.println("***** After final Retrieve ****"
 						+ getManagedBean().getSmAppl().getPmStatus()
@@ -1040,7 +1026,7 @@ public class SmApplicationBackingBean extends
 				setNavigationBackToCurrentPage();
 				throw new EpException(MessageConst.ERROR_722509);
 			}
-			calcPersonnelListCount();
+			// calcPersonnelListCount();
 			break;
 		case SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL:
 			int mgmtCount = 0;
@@ -2654,13 +2640,11 @@ public class SmApplicationBackingBean extends
 			validShrHldr = false;
 			throw new EpException(MessageConst.ERROR_722518);
 		}
-
+		addOrUpdateShareHolderAddress(getManagedBean().getSelectedShareHolder());
 		validShrHldr = checkValidUser(getManagedBean().getSelectedShareHolder());
 		getManagedBean().getSelectedShareHolder().setSmAppl(
 				getManagedBean().getSmAppl());
 		if (validShrHldr) {
-			addOrUpdateShareHolderAddress(getManagedBean()
-					.getSelectedShareHolder());
 			if (getManagedBean().getSmAppl().getSmPersonnels()
 					.contains(getManagedBean().getSelectedShareHolder())) {
 				getManagedBean()
@@ -3623,7 +3607,9 @@ public class SmApplicationBackingBean extends
 
 	public String resubmitSmApplInquiryToBpm(String applType) {
 		System.out.println("*** Resubmit for send inquiry **** ");
-		if (getManagedBean().getSmAppl().getSupportingDocMode().equals("O")) {
+		if (getManagedBean().getSmAppl().getSupportingDocMode() != null
+				&& getManagedBean().getSmAppl().getSupportingDocMode()
+						.equals("O")) {
 			validateSupportingDocs();
 		}
 		getManagedBean().getSmAppl().setResubmit(true);
@@ -3633,6 +3619,17 @@ public class SmApplicationBackingBean extends
 
 	public String submitSmApplToBpm(String applType) {
 		// try {
+		if ((applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)
+				|| applType
+						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)
+				|| applType
+						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI) || applType
+					.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE))
+				&& getManagedBean().getSmAppl().getSupportingDocMode() != null
+				&& getManagedBean().getSmAppl().getSupportingDocMode()
+						.equals("O")) {
+			validateSupportingDocs();
+		}
 		initiateSmApplicationTask();
 		FacesContext
 				.getCurrentInstance()
@@ -5201,6 +5198,17 @@ public class SmApplicationBackingBean extends
 				System.out
 						.println("*********Setting Basic company value **********");
 				this.getManagedBean().setBasicCompanyFacility(smFac);
+				if (smFac.getSmAddress() != null
+						&& smFac.getSmAddress().getPmCountry() != null
+						&& smFac.getSmAddress().getPmState() != null
+						&& smFac.getSmAddress().getPmCity() != null) {
+					assignStateDistAndCityForSelVal(
+							smFac.getSmAddress().getPmCountry().getCountryId(),
+							smFac.getSmAddress().getPmState().getStateId(),
+							smFac.getSmAddress().getPmDistrict()
+									.getDistrictId(),
+							SupplierManagementConst.SM_OFFICE_FACILITY_INFO_PANEL);
+				}
 			}
 			if (smFac.getFacilityType().equalsIgnoreCase(
 					SupplierManagementConst.SM_FACILITY_TYPE_FACTORY)) {
@@ -5711,6 +5719,7 @@ public class SmApplicationBackingBean extends
 									SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_PERM)
 					&& addr.getSmAddress() != null) {
 				postCode = addr.getSmAddress().getPostcode();
+				System.out.println(" *** Perm Addr Post Code ****" + postCode);
 			}
 		}
 		IMyIdentitySO myIdentitySO = (IMyIdentitySO) BusinessDelegate
@@ -5720,7 +5729,8 @@ public class SmApplicationBackingBean extends
 		reqDTO.setNewIcNo(per.getIdentificationNo());
 		reqDTO.setType("Online");
 		reqDTO.setPostCode(postCode);
-
+		System.out
+				.println(" *** Req DTO Post Code ****" + reqDTO.getPostCode());
 		MyIdentityResDTO resDTO = myIdentitySO.myIdentityVerification(reqDTO);
 		StringBuffer sb = new StringBuffer();
 		sb.append("MessageConst.ERROR_MYIDENTITY_");
@@ -6852,16 +6862,17 @@ public class SmApplicationBackingBean extends
 	// SM Address Clone code end
 	private boolean validateSupportingDocs() {
 		boolean validSupportDocs = true;
+		int i = 0;
 		StringBuffer sb = new StringBuffer();
-		sb.append("\n");
 		for (SmApplSupportDoc doc : getManagedBean().getSmAppl()
 				.getSmApplSupportDocs()) {
 			if (doc.getSmApplDocFiles().get(0).getFileName()
 					.equalsIgnoreCase(" ")
 					|| doc.getSmApplDocFiles().get(0).getFilePath()
 							.equalsIgnoreCase(" ")) {
+				sb.append(++i + ".)");
 				sb.append(doc.getPmDocument().getDocName());
-				sb.append("\n");
+				sb.append(",  ");
 				validSupportDocs = false;
 			}
 		}

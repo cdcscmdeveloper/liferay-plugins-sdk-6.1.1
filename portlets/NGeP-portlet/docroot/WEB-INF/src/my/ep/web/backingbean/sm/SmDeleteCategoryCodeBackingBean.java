@@ -81,33 +81,33 @@ public class SmDeleteCategoryCodeBackingBean extends
 		System.out.println(" **** EXCUTE ON LOAD EVENT **********");
 	}
 
-	private MofRegistrationResDTO retriveSupplierById(long id) {
-		IMofRegistrationSO mofRegistrationSO = null;
-
-		try {
-			mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
-					.getInstance().getServiceObject("sm",
-							IMofRegistrationSO.class);
-			MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
-			reqDto.setSupplierId(id);
-			MofRegistrationResDTO resDTO = mofRegistrationSO
-					.retrieveSupplierProfile(reqDto);
-			return resDTO;
-
-		} catch (Exception e) {
-			return new MofRegistrationResDTO();
-		} finally {
-
-		}
-	}
-
-	public void onRowSelect(SelectEvent event) {
-		System.out
-				.println("*********** Enterd THE RoW SELECT METHOD ***********"
-						+ getManagedBean().getSelectedCategories().size());
-		manageSelectedRecords();
-
-	}
+	// private MofRegistrationResDTO retriveSupplierById(long id) {
+	// IMofRegistrationSO mofRegistrationSO = null;
+	//
+	// try {
+	// mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
+	// .getInstance().getServiceObject("sm",
+	// IMofRegistrationSO.class);
+	// MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
+	// reqDto.setSupplierId(id);
+	// MofRegistrationResDTO resDTO = mofRegistrationSO
+	// .retrieveSupplierProfile(reqDto);
+	// return resDTO;
+	//
+	// } catch (Exception e) {
+	// return new MofRegistrationResDTO();
+	// } finally {
+	//
+	// }
+	// }
+	//
+	// public void onRowSelect(SelectEvent event) {
+	// System.out
+	// .println("*********** Enterd THE RoW SELECT METHOD ***********"
+	// + getManagedBean().getSelectedCategories().size());
+	// manageSelectedRecords();
+	//
+	// }
 
 	public void onToggleSelect(ToggleSelectEvent event) {
 		System.out.println("*********** On Select or Unslect all ***********"

@@ -258,6 +258,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<SelectItem> ePRoleList;
 	private boolean removeEpRole;
 	private List<SmApplSupportDoc> missinDocs;
+	private boolean reviewSiteVisit;
 
 	public SmApplicationManagedBean() {
 		// TODO Checking the user role
@@ -1943,6 +1944,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setMissinDocs(List<SmApplSupportDoc> missinDocs) {
 		this.missinDocs = missinDocs;
+	}
+
+	public boolean isReviewSiteVisit() {
+		return reviewSiteVisit;
+	}
+
+	public void setReviewSiteVisit(boolean reviewSiteVisit) {
+		this.reviewSiteVisit = reviewSiteVisit;
 	}
 
 }

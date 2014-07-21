@@ -218,6 +218,15 @@ public class CommonApplBackingBean extends
 				// smApplBB.getManagedBean().getSmAppl()
 				// .setApplId(new Long(smObj.getDocumentId()));
 				// smApplBB.getManagedBean().setSmAppl(appl);
+				if (resDTO.getTaskName().equalsIgnoreCase("Verify Application")) {
+					System.out
+							.println("*** This is po or approver action after site visit *** ");
+					smApplBB.getManagedBean().setReviewSiteVisit(true);
+				} else {
+					System.out
+							.println("*** This is po or approver for normal review without site visit *** ");
+					smApplBB.getManagedBean().setReviewSiteVisit(false);
+				}
 				smApplBB.getManagedBean().setBpmActions(resDTO.getAction());
 				smApplBB.getManagedBean().setTaskId(taskId);
 				setNavigationForSmDecision(appl.getApplType(), smApplBB);
@@ -249,9 +258,15 @@ public class CommonApplBackingBean extends
 
 				smApplBB.proceedToApplication(appl.getApplType(), Boolean.TRUE,
 						appl, mofResDto.getSmSupplier());
-				// smApplBB.getManagedBean().getSmAppl()
-				// .setApplId(new Long(smObj.getDocumentId()));
-				// smApplBB.getManagedBean().setSmAppl(appl);
+				if (resDTO.getTaskName().equalsIgnoreCase("Verify Application")) {
+					System.out
+							.println("*** This is po or approver action after site visit *** ");
+					smApplBB.getManagedBean().setReviewSiteVisit(true);
+				} else {
+					System.out
+							.println("*** This is po or approver for normal review without site visit *** ");
+					smApplBB.getManagedBean().setReviewSiteVisit(false);
+				}
 				smApplBB.getManagedBean().setBpmActions(resDTO.getAction());
 				smApplBB.getManagedBean().setTaskId(taskId);
 				setNavigationForSmDecision(appl.getApplType(), smApplBB);
