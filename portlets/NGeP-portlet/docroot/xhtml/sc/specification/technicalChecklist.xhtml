@@ -46,10 +46,9 @@
 
 			<p:column headerText="#{lbl['lbl.sc.spec.stage.type']}"
 				style="width:10%">
-				<ui:fragment rendered="#{stageTwoTechnical.qtChecklistId!=null}">
+				<ui:fragment rendered="#{stageTwoTechnical.qtChecklistId ne null}">
 					<h:outputText
-						value="#{specificationBackingBean.getParameterDesc(stageTwoTechnical.definationType)}"
-						rendered="#{stageTwoTechnical.definationType.parameterId=='185' or stageTwoTechnical.definationType.parameterId=='187' or stageTwoTechnical.definationType.parameterId=='188' or stageTwoTechnical.definationType.parameterId=='184' or stageTwoTechnical.definationType.parameterId=='684' or stageTwoTechnical.definationType.parameterId=='685'}"></h:outputText>
+						value="#{specificationBackingBean.getParameterDesc(stageTwoTechnical.definationType)}"></h:outputText>
 
 
 				</ui:fragment>
@@ -58,17 +57,13 @@
 
 
 
-				<ui:fragment rendered="#{stageTwoTechnical.qtChecklistId==null}">
-
-					<h:outputText value="Upload"
-						rendered="#{index lt specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 and stageTwoTechnical.definationType.parameterId=='184'}"></h:outputText>
-
-					<h:outputText value="Sample"
-						rendered="#{index lt specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 and stageTwoTechnical.definationType.parameterId=='684'}"></h:outputText>
+				<ui:fragment rendered="#{stageTwoTechnical.qtChecklistId eq null}">
+                
+					<h:outputText
+						value="#{specificationBackingBean.getParameterDesc(stageTwoTechnical.definationType)}"
+						rendered="#{index lt specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1}"></h:outputText>
 
 
-					<h:outputText value="Presentation/Demo"
-						rendered="#{index lt specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 and stageTwoTechnical.definationType.parameterId=='685'}"></h:outputText>
 
 				</ui:fragment>
 
@@ -78,13 +73,11 @@
 
 					<p:selectOneMenu style="width:100px;"
 						value="#{stageTwoTechnical.definationType.parameterId}">
-						<f:selectItem itemLabel="--Select One--" itemValue="#{null}" />
-						<f:selectItem itemLabel="Sample" itemValue="684" />
-						<f:selectItem itemLabel="Upload" itemValue="184" />
-						<f:selectItem itemLabel="Presentation/Demo" itemValue="685" />
+						<f:selectItems
+							value="#{specificationBackingBean.getTechnicalChecklIstDefValues(ParameterTypeConst.documentDefinitionType)}"></f:selectItems>
 						<p:ajax event="change" process="@this" update="@(.sample#{index})"
 							partialSubmit="true"
-							listener="#{specificationBackingBean.typeChange}"></p:ajax>
+							listener="#{specificationBackingBean.typeChange(index,specificationBackingBean.managedBean.scQtCheckSt2techProposal)}"></p:ajax>
 					</p:selectOneMenu>
 				</ui:fragment>
 
@@ -98,50 +91,39 @@
 						value="#{stageTwoTechnical.action.parameterId}">
 						<f:selectItems
 							value="#{specificationBackingBean.managedBean.technicalChecklistAction}" />
-						<p:ajax event="change" process="@this"
+						<p:ajax event="change" process="@this" partialSubmit="true"
 							update="stageTwotechProposal"
-							listener="#{specificationBackingBean.checklistActionChange}"></p:ajax>
+							listener="#{specificationBackingBean.checklistActionChange(index,specificationBackingBean.managedBean.scQtCheckSt2techProposal)}"></p:ajax>
 					</p:selectOneMenu>
 				</ui:fragment>
 
-				<ui:fragment rendered="#{stageTwoTechnical.qtChecklistId==null}">
-					<h:outputText value="Manual Submission"
-						rendered="#{index lt specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 and stageTwoTechnical.action.parameterId eq '691'}"></h:outputText>
-
-
-					<h:outputText value="View"
-						rendered="#{index lt specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 and stageTwoTechnical.action.parameterId eq '688'}"></h:outputText>
-
-
-					<h:outputText value="Online Submission"
-						rendered="#{index lt specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 and stageTwoTechnical.action.parameterId eq '690'}"></h:outputText>
-
-
-					<h:outputText value="Presentation/Demo"
-						rendered="#{index lt specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 and stageTwoTechnical.action.parameterId eq '692'}"></h:outputText>
-				</ui:fragment>
-
-				<ui:fragment rendered="#{stageTwoTechnical.qtChecklistId!=null}">
+				<ui:fragment rendered="#{stageTwoTechnical.qtChecklistId eq null}">
 					<h:outputText
 						value="#{specificationBackingBean.getParameterDesc(stageTwoTechnical.action)}"
-						rendered="#{stageTwoTechnical.action.parameterId eq '691' or stageTwoTechnical.action.parameterId eq '688' or stageTwoTechnical.action.parameterId eq '690' or stageTwoTechnical.action.parameterId eq '692'  or stageTwoTechnical.action.parameterId eq '689' }"></h:outputText>
-
+						rendered="#{index lt specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 }"></h:outputText>
 
 				</ui:fragment>
 
+
+				<ui:fragment rendered="#{stageTwoTechnical.qtChecklistId ne null}">
+					<h:outputText
+						value="#{specificationBackingBean.getParameterDesc(stageTwoTechnical.action)}"></h:outputText>
+
+
+				</ui:fragment>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.spec.stage2.score.head']}"
 				style="width:10%">
 				<p:selectBooleanCheckbox styleClass="action#{index}"
 					value="#{stageTwoTechnical.scoringReq}" disabled="true"
-					rendered="#{stageTwoTechnical.action.parameterId  ne '690'}">
+					rendered="#{stageTwoTechnical.action.parameterCode  ne 'O'}">
 
 				</p:selectBooleanCheckbox>
 
 				<p:selectBooleanCheckbox styleClass="action#{index}"
 					value="#{stageTwoTechnical.scoringReq}"
-					rendered="#{stageTwoTechnical.action.parameterId eq '690'}">
+					rendered="#{stageTwoTechnical.action.parameterCode eq 'O'}">
 
 				</p:selectBooleanCheckbox>
 			</p:column>
@@ -154,11 +136,11 @@
 
 			<p:column headerText="#{lbl['lbl.sc.spec.stage.document']}"
 				style="width:20%">
-			
+
 				<!-- <h:panelGroup id="document"> rendered="#{stageTwoTechnical.definationType.parameterId eq '184'}"-->
 				<p:commandLink oncomplete="uploadDlg.show();return false;"
 					styleClass="sample#{index}"
-					rendered="#{stageTwoTechnical.definationType.parameterId eq '184'}"
+					rendered="#{stageTwoTechnical.definationType.parameterCode eq 'UP'}"
 					update="stageTwotechProposal">
 					<p:graphicImage library="ep/images/design" name="upload.png"
 						value="/resources/ep/images/design/upload.png" />
@@ -175,7 +157,7 @@
 				style="width:10%">
 
 				<p:commandLink
-					rendered="#{stageTwoTechnical.definationType.parameterId eq '185' or stageTwoTechnical.definationType.parameterId eq '187' or stageTwoTechnical.definationType.parameterId eq '188'}"
+					rendered="#{stageTwoTechnical.definationType.parameterCode eq 'TS' or stageTwoTechnical.definationType.parameterCode eq 'SD' or stageTwoTechnical.definationType.parameterCode eq 'WF'}"
 					action="#{specificationBackingBean.technicalChecklistEditAction(index,stageTwoTechnical)}">
 
 					<p:graphicImage library="ep/images/design" name="edit.png"

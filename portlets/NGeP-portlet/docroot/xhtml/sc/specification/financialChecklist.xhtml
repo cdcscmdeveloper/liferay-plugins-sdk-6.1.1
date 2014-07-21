@@ -45,20 +45,10 @@
 				style="width:20%">
 
 
-				<h:outputText value="Template Specification"
-					rendered="#{stageTwofunctional.definationType.parameterId=='185'}"></h:outputText>
+				<h:outputText
+					value="#{specificationBackingBean.getParameterDesc(stageTwofunctional.definationType)}"></h:outputText>
 
 
-				<h:outputText value="System Defined"
-					rendered="#{stageTwofunctionall.definationType.parameterId=='187'}"></h:outputText>
-
-
-				<h:outputText value="Upload"
-					rendered="#{stageTwofunctional.definationType.parameterId=='184'}"></h:outputText>
-
-
-				<h:outputText value="Web Form"
-					rendered="#{stageTwofunctional.definationType.parameterId=='188'}"></h:outputText>
 
 
 
@@ -68,45 +58,37 @@
 
 				<ui:fragment
 					rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2financeProposalList.size()-1 and stageTwofunctional.title ==null}">
-					<p:selectOneMenu value="#{stageTwofunctional.action.parameterId}" style="width:100px;">
-						<f:selectItem itemLabel="--Select One--" itemValue="#{null}" />
-						<f:selectItem itemLabel="View" itemValue="688" />
-						<f:selectItem itemLabel="Online Submission" itemValue="690" />
+					<p:selectOneMenu value="#{stageTwofunctional.action.parameterId}"
+						style="width:100px;">
+						<f:selectItems
+							value="#{specificationBackingBean.getFinChecklIstActionValues(ParameterTypeConst.scSupplierAction)}"></f:selectItems>
 						<p:ajax event="change" process="@this" partialSubmit="true"
-							update="financeProposaltwo"></p:ajax>
+							update="financeProposaltwo"
+							listener="#{specificationBackingBean.financialCheckListAction(index,specificationBackingBean.managedBean.scQtCheckSt2financeProposalList)}"></p:ajax>
 					</p:selectOneMenu>
 				</ui:fragment>
 				<ui:fragment rendered="#{stageTwofunctional.qtChecklistId==null}">
-					<h:outputText value="Online Submission"
-						rendered="#{index lt specificationBackingBean.managedBean.scQtCheckSt2financeProposalList.size()-1 and stageTwofunctional.action.parameterId eq '690'}" />
-
-					<h:outputText value="View"
-						rendered="#{index lt specificationBackingBean.managedBean.scQtCheckSt2financeProposalList.size()-1 and stageTwofunctional.action.parameterId eq '688'}" />
+					<h:outputText
+						value="#{specificationBackingBean.getParameterDesc(stageTwofunctional.action)}"
+						rendered="#{index lt specificationBackingBean.managedBean.scQtCheckSt2financeProposalList.size()-1 }" />
 				</ui:fragment>
 
 				<ui:fragment rendered="#{stageTwofunctional.qtChecklistId!=null}">
 					<h:outputText
-						value="#{specificationBackingBean.getParameterDesc(stageTwofunctional.action)}"
-						rendered="#{stageTwofunctional.action.parameterId eq '688' or stageTwofunctional.action.parameterId eq '690' or stageTwofunctional.action.parameterId eq '689' }"></h:outputText>
+						value="#{specificationBackingBean.getParameterDesc(stageTwofunctional.action)}"></h:outputText>
 
 
 				</ui:fragment>
-
-				<!-- <h:outputText value="Online Submit"
-						rendered="#{stageTwofunctional.action.parameterId eq '9'}"></h:outputText>
-					<h:outputText value="View"
-						rendered="#{stageTwofunctional.action.parameterId eq '8'}"></h:outputText> -->
-
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.stage2.score.head']}"
 				style="width:10%">
 				<p:selectBooleanCheckbox value="#{stageTwofunctional.scoringReq}"
 					disabled="true"
-					rendered="#{stageTwofunctional.action.parameterId ne '690' }">
+					rendered="#{stageTwofunctional.action.parameterCode ne 'O' }">
 
 				</p:selectBooleanCheckbox>
 				<p:selectBooleanCheckbox value="#{stageTwofunctional.scoringReq}"
-					rendered="#{stageTwofunctional.action.parameterId eq '690'}">
+					rendered="#{stageTwofunctional.action.parameterCode eq 'O'}">
 
 				</p:selectBooleanCheckbox>
 			</p:column>
@@ -119,10 +101,10 @@
 
 			<p:column headerText="#{lbl['lbl.sc.spec.stage.document']}"
 				style="width:30%">
-				
+
 				<p:commandLink oncomplete="uploadS1Fin.show();return false;"
 					update="financeProposaltwo"
-					rendered="#{stageTwofunctional.definationType.parameterId=='184'}">
+					rendered="#{stageTwofunctional.definationType.parameterCode eq 'UP'}">
 					<p:graphicImage library="ep/images/design" name="upload.png"
 						value="/resources/ep/images/design/upload.png" />
 					<f:setPropertyActionListener value="#{stageTwofunctional}"
@@ -138,7 +120,7 @@
 				style="width:10%">
 				<p:commandLink
 					action="#{specificationBackingBean.financialChecklistEditAction(index,stageTwofunctional)}"
-					rendered="#{stageTwofunctional.definationType.parameterId=='188' or stageTwofunctionall.definationType.parameterId=='187' or stageTwofunctional.definationType.parameterId=='185'}">
+					rendered="#{stageTwofunctional.definationType.parameterCode eq 'WF' or stageTwofunctional.definationType.parameterCode eq 'SD' or stageTwofunctional.definationType.parameterCode eq 'TS'}">
 
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png" />

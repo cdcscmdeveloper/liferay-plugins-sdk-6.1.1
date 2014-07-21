@@ -45,7 +45,8 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.mandatory']}"
 				style="width:10%">
-				<h:outputText value="#{cateGory.mandatory ? 'Yes' : 'No'}"></h:outputText>
+				
+				<h:outputText value="#{lbl[cateGory.mandatory ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
 			</p:column>
 
 		</p:dataTable>
@@ -187,7 +188,9 @@
 		<table>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.so.allstate']}" /></td>
-				<td><p:inputText value="Yes" style="margin-right:5px;" /></td>
+				<td><p:inputText
+						value="#{specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState ? 'lbl.btn.yes' : 'lbl.btn.no'}"
+						disabled="true" style="margin-right:5px;" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.so.paidup']}" /></td>

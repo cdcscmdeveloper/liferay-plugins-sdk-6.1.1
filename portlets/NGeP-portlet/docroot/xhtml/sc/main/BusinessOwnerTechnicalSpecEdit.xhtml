@@ -51,7 +51,7 @@
 				<tr>
 					<td><h:outputLabel value="#{lbl['lbl.sc.tpl.search.item']}" /></td>
 					<td><ui:fragment
-							rendered="#{specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.itemTypeCode.parameterId =='157'}">
+							rendered="#{specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.itemTypeCode.parameterCode eq '3'}">
 							<p:selectOneMenu id="itemTypeSelectId" required="true"
 								label="#{lbl['lbl.sc.tpl.search.item']}"
 								value="#{specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.itemTypeCode.parameterId}">
@@ -61,7 +61,7 @@
 							<p:message id="itemTypeMessagespec" for="itemTypeSelectId"
 								display="icon"></p:message>
 						</ui:fragment> <ui:fragment
-							rendered="#{specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.itemTypeCode.parameterId !='157'}">
+							rendered="#{specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.itemTypeCode.parameterCode ne '3'}">
 
 							<p:inputText disabled="true" size="30"
 								value="#{specificationBackingBean.getParameterDesc(specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.itemTypeCode)}" />

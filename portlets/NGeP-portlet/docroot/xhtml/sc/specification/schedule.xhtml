@@ -9,7 +9,7 @@
 	<h:panelGroup id="frequency">
 
 		<h:panelGrid columns="2" columnClasses="columnWidth50,columnWidth50"
-			rendered="#{specificationBackingBean.managedBean.scQt.fulfilmentType.parameterId eq '117'}">
+			rendered="#{specificationBackingBean.managedBean.fulfilmentType eq 'PS'}">
 			<p:selectOneRadio
 				value="#{specificationBackingBean.managedBean.scQt.scheduleType}">
 				<f:selectItem itemLabel="Frequency Schedule" itemValue="F"></f:selectItem>
@@ -21,11 +21,11 @@
 		<h:panelGroup id="schedule">
 			<p:panel header="#{lbl['lbl.sc.spec.freq.schedule']} "
 				toggleable="true"
-				rendered="#{specificationBackingBean.managedBean.scQt.fulfilmentType.parameterId eq '117' and  specificationBackingBean.managedBean.scQt.scheduleType eq 'F'}">
+				rendered="#{specificationBackingBean.managedBean.fulfilmentType eq 'PS' and  specificationBackingBean.managedBean.scQt.scheduleType eq 'F'}">
 
 
 				<h:panelGrid columns="2" columnClasses="columnWidth50,columnWidth50"
-					rendered="#{specificationBackingBean.managedBean.scQt.fulfilmentType.parameterId eq '117' and  specificationBackingBean.managedBean.scQt.scheduleType eq 'F'}">
+					rendered="#{specificationBackingBean.managedBean.fulfilmentType eq 'PS' and  specificationBackingBean.managedBean.scQt.scheduleType eq 'F'}">
 					<h:outputLabel value="#{lbl['lbl.sc.spec.total.frequency']}"></h:outputLabel>
 					<p:inputText
 						value="#{specificationBackingBean.managedBean.totalFrequency}">
@@ -41,7 +41,7 @@
 
 
 				<p:dataTable id="frequencySchedule" var="frequency"
-					rendered="#{specificationBackingBean.managedBean.scQt.fulfilmentType.parameterId eq '117' and  specificationBackingBean.managedBean.scQt.scheduleType eq 'F'}"
+					rendered="#{specificationBackingBean.managedBean.fulfilmentType eq 'PS' and  specificationBackingBean.managedBean.scQt.scheduleType eq 'F'}"
 					rowIndexVar="index"
 					value="#{specificationBackingBean.managedBean.scheduleList}">
 					<ac:paginator for="frequencySchedule" />
@@ -138,7 +138,7 @@
 	</h:panelGroup>
 	<h:panelGroup id="progressive">
 		<c:if
-			test="#{specificationBackingBean.managedBean.scQt.fulfilmentType.parameterId eq '118' or specificationBackingBean.managedBean.scQt.scheduleType eq 'P'}">
+			test="#{specificationBackingBean.managedBean.fulfilmentType eq 'PA' or specificationBackingBean.managedBean.scQt.scheduleType eq 'P'}">
 			<p:panel header="#{lbl['lbl.sc.spec.progressive.payment']}"
 				toggleable="true">
 

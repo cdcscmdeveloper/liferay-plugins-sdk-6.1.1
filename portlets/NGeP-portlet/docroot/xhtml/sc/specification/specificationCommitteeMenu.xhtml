@@ -64,7 +64,7 @@
 							update="@form" />
 
 						<c:if
-							test="#{specificationBackingBean.managedBean.scQt.fulfilmentType.parameterId eq '117' or specificationBackingBean.managedBean.scQt.fulfilmentType.parameterId eq '118'}">
+							test="#{specificationBackingBean.managedBean.fulfilmentType eq 'PS' or specificationBackingBean.managedBean.fulfilmentType eq 'PA'}">
 							<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}"
 								actionListener="#{specificationBackingBean.retriveFulfilmentDtls}"
 								update="@form" />
@@ -124,7 +124,7 @@
 						test="#{specificationBackingBean.managedBean.activeIndex eq '8'}">
 
 						<ui:fragment
-							rendered="#{specificationBackingBean.managedBean.scQt.fulfilmentType.parameterId eq '117' or specificationBackingBean.managedBean.scQt.fulfilmentType.parameterId eq '118'}">
+							rendered="#{specificationBackingBean.managedBean.fulfilmentType eq 'PS' or specificationBackingBean.managedBean.fulfilmentType eq 'PA'}">
 
 							<ui:include src="schedule.xhtml" />
 						</ui:fragment>
@@ -194,7 +194,7 @@
 							update="@form" />
 
 						<c:if
-							test="#{specificationBackingBean.managedBean.scQt.fulfilmentType.parameterId eq '117' or specificationBackingBean.managedBean.scQt.fulfilmentType.parameterId eq '118'}">
+							test="#{specificationBackingBean.managedBean.fulfilmentType eq 'PS' or specificationBackingBean.managedBean.fulfilmentType eq 'PA'}">
 							<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}"
 								actionListener="#{specificationBackingBean.retriveFulfilmentDtls}"
 								update="@form" />
@@ -240,7 +240,7 @@
 						test="#{specificationBackingBean.managedBean.activeIndex eq '7'}">
 
 						<ui:fragment
-							rendered="#{specificationBackingBean.managedBean.scQt.fulfilmentType.parameterId eq '117' or specificationBackingBean.managedBean.scQt.fulfilmentType.parameterId eq '118'}">
+							rendered="#{specificationBackingBean.managedBean.fulfilmentType eq 'PS' or specificationBackingBean.managedBean.fulfilmentType eq 'PA'}">
 
 							<ui:include src="schedule.xhtml" />
 						</ui:fragment>

@@ -44,7 +44,9 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.mandatory']}"
 				style="width:10%">
-             <h:outputText value="#{cateGory.mandatory ? 'Yes' : 'No'}"></h:outputText>
+
+				<h:outputText
+					value="#{lbl[cateGory.mandatory ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
 			</p:column>
 
 		</p:dataTable>

@@ -21,8 +21,9 @@
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.sc.spec.panel']}" /></td>
 				<td colspan="3"><p:inputText
-						value="#{specificationBackingBean.managedBean.scQt.panel ? 'Yes' : 'No'}"
-						readonly="true" disabled="true" size="30" /></td>
+						value="#{lbl[specificationBackingBean.managedBean.scQt.panel ? 'lbl.btn.yes' : 'lbl.btn.no' ]}"
+						readonly="true" disabled="true" size="30" /> 
+				</td>
 			</tr>
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.sc.spec.est.price']}" />
