@@ -1,5 +1,10 @@
 package my.ep.web.backingbean.sc.bidding;
 
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -25,6 +30,7 @@ import my.ep.persistence.entity.sc.bidding.ScBidPrice;
 import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.sc.bidding.BiddingManagedBean;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -101,27 +107,12 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 	public void bidPausePopUpAction(ScBidSchedule bid) {
 
 		getManagedBean().setBidAction(new ScBidAction());
-		getManagedBean().setRemainingTime(0l);
+		getManagedBean().setDuration("0:0");
 		getManagedBean().getBidAction().setActionType(
 				BiddingConst.BID_ACTION_TYPE_PAUSED);
 		getManagedBean().getBidAction().setScBidSchedule(bid);
-		System.out.println("*** Bid end date *********" + bid.getEndDate());
-
-		getManagedBean().setRemainingTime(
+		getManagedBean().setDuration(
 				durationCalculator(new Date(), bid.getEndDate()));
-
-		if (getManagedBean().getBidAction() != null) {
-
-			System.out.println("********"
-					+ getManagedBean().getBidAction().getActionType());
-			System.out.println("********"
-					+ getManagedBean().getBidAction().getRemark());
-			System.out.println("********"
-					+ getManagedBean().getBidAction().getScBidSchedule()
-							.getBidScheduleId());
-			System.out.println("***** Remaining time ****** "
-					+ getManagedBean().getRemainingTime());
-		}
 
 		// RequestContext.getCurrentInstance().execute("bidPauseOrCancel.show()");
 
@@ -129,38 +120,15 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 
 	public void bidCancelPopUpAction(ScBidSchedule bid) {
 
-		if (getManagedBean().getBidAction() == null) {
-
-			// getManagedBean().setBidAction(new ScBidAction());
-
-			System.out
-					.println("*********bidAction object in bidCancelPopUpAction() is  null ********");
-		}
-
-		else {
-			System.out
-					.println("*********bidAction object in bidCancelPopUpAction() is not null********");
-		}
+		
 		getManagedBean().setBidAction(new ScBidAction());
-		getManagedBean().setRemainingTime(0l);
+		getManagedBean().setDuration("0:0");
 		getManagedBean().getBidAction().setActionType(
 				BiddingConst.BID_ACTION_TYPE_CANCELLED);
 		getManagedBean().getBidAction().setScBidSchedule(bid);
-		getManagedBean().setRemainingTime(
+		getManagedBean().setDuration(
 				durationCalculator(new Date(), bid.getEndDate()));
 
-		if (getManagedBean().getBidAction() != null) {
-
-			System.out.println("********"
-					+ getManagedBean().getBidAction().getActionType());
-			System.out.println("********"
-					+ getManagedBean().getBidAction().getRemark());
-			System.out.println("********"
-					+ getManagedBean().getBidAction().getScBidSchedule()
-							.getBidScheduleId());
-			System.out
-					.println("********" + getManagedBean().getRemainingTime());
-		}
 
 	}
 
@@ -173,27 +141,8 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 					ModuleCodeConst.SUPPLIER_SELECTION, IBiddingSO.class);
 
 			BiddingReqDTO reqDto = new BiddingReqDTO();
-
-			if (getManagedBean().getBidAction() != null) {
-
-				System.out
-						.println("*********bidAction object in bidPauseOrCancelAction() is not null********");
-				System.out.println("********"
-						+ getManagedBean().getBidAction().getActionType());
-				System.out.println("********"
-						+ getManagedBean().getBidAction().getRemark());
-				System.out.println("********"
-						+ getManagedBean().getBidAction().getScBidSchedule()
-								.getBidScheduleId());
-			} else {
-				System.out
-						.println("*********bidAction object in bidPauseOrCancelAction() is  null********");
-			}
-
+			
 			reqDto.setScBidAction(getManagedBean().getBidAction());
-
-			System.out
-					.println("*********bidAction object is set to reqDto********");
 
 			BiddingResDTO resDto = biddingSO.updateBidAction(reqDto);
 
@@ -201,15 +150,13 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 
 				System.out
 						.println("*********bidAction update sucessfull********");
-			} else {
-				System.out.println("*********bidAction update failed********");
-			}
+			} 
 		}
 
 		finally {
 			biddingSO = null;
 			getManagedBean().setBidAction(null);
-			getManagedBean().setRemainingTime(0l);
+			getManagedBean().setDuration("0:0");
 
 		}
 
@@ -225,11 +172,6 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 
 			System.out
 					.println("*********bidAction object in reScheduleOrReBidPopUpAction() is null ********");
-		}
-
-		else {
-			System.out
-					.println("*********bidAction object in reScheduleOrReBidPopUpAction() is not null********");
 		}
 
 		IBiddingSO biddingSO = null;
@@ -258,14 +200,22 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 
 			getManagedBean().getBidAction().setScBidSchedule(bid);
 			System.out.println("ScBidSchedule instance set to  bidAction");
+			
 			getManagedBean().getBidAction().setActionType(
 					BiddingConst.BID_ACTION_TYPE_RESUME);
 			System.out.println("default actiontype set to  bidAction");
+			
+			getManagedBean().setMindate(new Date());
+			
 			getManagedBean().setRemainingTime(
+					remainingTimeCalculator(getManagedBean().getBidAction().getCreatedDate(), bid.getEndDate()));
+			
+			getManagedBean().setDuration(
 					durationCalculator(getManagedBean().getBidAction()
 							.getCreatedDate(), bid.getEndDate()));
 			System.out.println("********* value set to remainingTime"
 					+ getManagedBean().getRemainingTime());
+			getManagedBean().setNewBidDuration("");
 		}
 
 	}
@@ -274,15 +224,18 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 
 		String type = (String) e.getComponent().getAttributes().get("value");
 
-		System.out.println("current selected actionType is*******" + type);
 		getManagedBean().getBidAction().setActionType(type);
-
-		System.out.println("value for actionType ScBidAction is*******"
-				+ getManagedBean().getBidAction().getActionType());
-
-		//getManagedBean().getBidAction().setNewStartDate(new Date());
-		//getManagedBean().getBidAction().setNewEndDate(new Date());
-		//getManagedBean().setDuration(0l);
+		
+		getManagedBean().getBidAction().setNewStartDate(null);
+		getManagedBean().getBidAction().setNewEndDate(null);
+		getManagedBean().setNewBidDuration("");
+		
+		if(type.equalsIgnoreCase("B")){
+			Calendar c = Calendar.getInstance(); 
+			c.setTime(DateUtils.getCurrentDateWithoutTime()); 
+			c.add(Calendar.DATE, 1);
+			getManagedBean().setMindate(c.getTime());
+		}
 
 	}
 
@@ -291,13 +244,8 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 		Date startDate = (Date) e.getComponent().getAttributes().get("value");
 		getManagedBean().getBidAction().setNewStartDate(startDate);
 
-		System.out.println("current selected actionType is*******"
-				+ getManagedBean().getBidAction().getActionType());
-		if (getManagedBean().getBidAction().getActionType() == BiddingConst.BID_ACTION_TYPE_RESUME) {
-
-			System.out.println("new start date is*******"
-					+ getManagedBean().getBidAction().getNewStartDate());
-
+		if (getManagedBean().getBidAction().getActionType().equalsIgnoreCase("R")) {
+			
 			final long ONE_MINUTE_IN_MILLIS = 60000;// millisecs
 
 			long curTimeInMs = getManagedBean().getBidAction()
@@ -308,35 +256,34 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 					* ONE_MINUTE_IN_MILLIS);
 
 			getManagedBean().getBidAction().setNewEndDate(newEndDate);
-
-			getManagedBean().setDuration(getManagedBean().getRemainingTime());
-			System.out.println("new duration is*******"
-					+ getManagedBean().getDuration());
+			Long remainingTime = getManagedBean().getRemainingTime();
+			Long hours = remainingTime / 60;
+			Long minutes = remainingTime % 60;
+			String duration = hours + ":" + minutes;
+			getManagedBean().setNewBidDuration(duration);
+		
+		}else if (getManagedBean().getBidAction().getActionType().equalsIgnoreCase("B")){
+			
+			getManagedBean().getBidAction().setNewEndDate(null);
+			getManagedBean().setMindate(startDate);
+			Calendar c = Calendar.getInstance();
+			c.setTime(startDate);
+			c.add(Calendar.HOUR, 2);
+			getManagedBean().setMaxdate(c.getTime());
 		}
 	}
 
 	public void reBidNewEndDateSelectListener(AjaxBehaviorEvent e) {
-
-		System.out
-				.println("******* insidereBidNewEndDateSelectListener()*********");
-
-		System.out.println("current selected actionType is*******"
-				+ getManagedBean().getActionType());
-		if (getManagedBean().getActionType() == BiddingConst.BID_ACTION_TYPE_REBIDDING) {
-
-			Date endDate = (Date) e.getComponent().getAttributes().get("value");
-			getManagedBean().getBidAction().setNewEndDate(endDate);
-
-			System.out.println("selected new endDate is*******"
-					+ getManagedBean().getBidAction().getNewEndDate());
-
-			getManagedBean().setDuration(
+		
+		Date endDate = (Date) e.getComponent().getAttributes().get("value");
+		getManagedBean().getBidAction().setNewEndDate(endDate);
+		 
+		if (getManagedBean().getBidAction().getActionType().equalsIgnoreCase("B")) {
+			
+			getManagedBean().setNewBidDuration(
 					durationCalculator(getManagedBean().getBidAction()
 							.getNewStartDate(), getManagedBean().getBidAction()
 							.getNewEndDate()));
-			System.out.println("new bid duration is*******"
-					+ getManagedBean().getDuration());
-
 		}
 	}
 
@@ -356,30 +303,42 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 
 				System.out
 						.println("*********bidAction update sucessfull********");
-			} else {
-				System.out.println("*********bidAction update failed********");
-				bidManagementAction(new ScBidSchedule());
-			}
-
+			} 
 		}
 
 		finally {
 			biddingSO = null;
 			getManagedBean().setBidAction(null);
-			getManagedBean().setRemainingTime(0l);
-			getManagedBean().setDuration(0l);
+			getManagedBean().setRemainingTime(null);
+			getManagedBean().setDuration(null);
 
 		}
 
 	}
 
-	private Long durationCalculator(Date pausedTime, Date endDate) {
+	private String durationCalculator(Date pausedTime, Date endDate) {
+
+		long durationInMills = endDate.getTime() - pausedTime.getTime();
+
+		long time = TimeUnit.MINUTES.convert(durationInMills,
+				TimeUnit.MILLISECONDS);
+		Long hours = time / 60;
+		Long minutes = time % 60;
+		String duration = hours + ":" + minutes;
+		System.out.println("**** Value from duration calc *******" + duration);
+		return duration;
+	}
+	
+	private Long remainingTimeCalculator(Date pausedTime, Date endDate) {
 
 		long durationInMills = endDate.getTime() - pausedTime.getTime();
 		long time = TimeUnit.MINUTES.convert(durationInMills,
 				TimeUnit.MILLISECONDS);
-		System.out.println("**** Value from duration calc *******" + time);
+		System.out.println("**** Value from remainingTimeCalculator *******" + time);
 		return time;
+		
+		
+		
 	}
 
 	/**
@@ -442,7 +401,7 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 		}
 
 		getManagedBean().setRemainingTime(
-				durationCalculator(new Date(), getManagedBean()
+				remainingTimeCalculator(new Date(), getManagedBean()
 						.getScheduledBid().getEndDate()));
 
 		System.out.println("****remaining time Set*****");
@@ -451,13 +410,19 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 				durationCalculator(getManagedBean().getScheduledBid()
 						.getStartDate(), getManagedBean().getScheduledBid()
 						.getEndDate()));
-		System.out.println("****duration time Set*****");
 		getManagedBean().setBidManagementViewBy("P");
-		System.out.println("****default viewBy set*****");
-		System.out.println("****bidPackeges size is*****"
-				+ getManagedBean().getBidPackages().size());
-		System.out.println("****createBidPackagePriceLinearModel called*****");
 		createBidPackagePriceLinearModel(getManagedBean().getBidPackages());
+		
+		List<BigDecimal> nonBumiPriceList = new ArrayList<BigDecimal>();
+		for (ScBidPackage scBidPackage : getManagedBean().getBidPackages()){
+			
+			if(!scBidPackage.getScBidSupplier().getSmSupplier().isBumi()){
+				
+				nonBumiPriceList.add(scBidPackage.getBidPrice());
+			}
+		}
+		 Collections.sort(nonBumiPriceList);
+		 getManagedBean().setLowestNonBumiOfferedPrice(nonBumiPriceList.get(0));
 		
 		getManagedBean().setRendered(false);
 
@@ -486,7 +451,7 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 			System.out.println("line chart date" + bidPackage.getCreatedDate()
 					+ "line chart price" + bidPackage.getBidPrice());
 
-			chartSeries.set(bidPackage.getCreatedDate(),
+			chartSeries.set(getCurrentTimeWithoutDate(bidPackage.getCreatedDate()),
 					bidPackage.getBidPrice());
 		}
 
@@ -506,9 +471,6 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 		String type = (String) e.getComponent().getAttributes().get("value");
 
 		getManagedBean().setBidManagementViewBy(type);
-
-		System.out.println("viewByItem Selected is"
-				+ type.equalsIgnoreCase("I"));
 
 		if (type.equalsIgnoreCase("I")) {
 
@@ -682,7 +644,7 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 			System.out.println("line chart date" + bidPrice.getCreatedDate()
 					+ "line chart price" + bidPrice.getBidPrice());
 
-			chartSeries.set(bidPrice.getCreatedDate(), bidPrice.getBidPrice());
+			chartSeries.set(getCurrentTimeWithoutDate(bidPrice.getCreatedDate()), bidPrice.getBidPrice());
 		}
 
 		if (getManagedBean().getItemPriceLinearModel() != null) {
@@ -764,7 +726,7 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 			System.out.println("line chart date" + bidPrice.getCreatedDate()
 					+ "line chart price" + bidPrice.getBidPrice());
 
-			chartSeries.set(bidPrice.getCreatedDate(), bidPrice.getBidPrice());
+			chartSeries.set(getCurrentTimeWithoutDate(bidPrice.getCreatedDate()), bidPrice.getBidPrice());
 		}
 
 		if (getManagedBean().getItemPriceLinearModel() != null) {
@@ -777,5 +739,12 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 
 		}
 	}
+	
+	private String  getCurrentTimeWithoutDate(Date date) {
+		 SimpleDateFormat localDateFormat = new SimpleDateFormat("HH:mm:ss");
+	        String time = localDateFormat.format(date);
+	        return time;
+	}
+	
 
 }
