@@ -1,0 +1,56 @@
+<ui:composition	
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	
+   <p:panel header="AUTHORIZED SIGNATORY" toggleable="true">
+		
+	<table>
+	  <tr>	  	
+		<td><p:outputLabel value="#{lbl['lbl.pm.as.search']}" />
+			<p:outputLabel value="*" styleClass="mandatory" /></td>
+		<td><p:selectOneMenu style="width:178px;margin-bottom:5px;">      
+            	<f:selectItem itemLabel="SABAH" itemValue="0" /> 
+            	<f:selectItem itemLabel="SARAWAK" itemValue="1" />  
+            	<f:selectItem itemLabel="SEMENANJUNG" itemValue="2" />              	
+    	    </p:selectOneMenu></td>	
+	  </tr>	
+	</table>
+	<br />
+	
+	<p:dataTable editable="true">
+	<ac:paginator for="searchProfCertResult" />
+       <p:column headerText="#{lbl['lbl.pm.as.name']}"> 
+        <h:outputText />       
+       </p:column>
+       
+       <p:column headerText="#{lbl['lbl.pm.as.effdate']}"> 
+        <h:outputText />
+       </p:column> 
+       
+        <p:column headerText="#{lbl['lbl.pm.as.expdate']}"> 
+        <h:outputText />
+       </p:column>                     
+     
+       <p:column headerText="#{lbl['lbl.pm.search.status']}">                
+       </p:column >
+       
+     </p:dataTable>
+	
+	<p:panel>
+       <p:spacer height="15"></p:spacer>
+		
+		<div align="right">
+		<p:commandButton value="#{lbl['lbl.so.addbtn']}" icon="ui-icon-add" />
+        <p:commandButton value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete" />
+       </div>
+	</p:panel>	
+	
+	
+   </p:panel>	
+</ui:composition>
