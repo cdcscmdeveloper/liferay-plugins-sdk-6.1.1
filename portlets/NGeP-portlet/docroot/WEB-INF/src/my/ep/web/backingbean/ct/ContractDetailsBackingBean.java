@@ -1322,8 +1322,8 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		    trBB.getManagedBean().setAttachmentList(resDTO.getCtAttachments());
 			trBB.getManagedBean().setViewContract(false);
 			trBB.getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, 
-					trBB.getManagedBean().getContractVer().getDocType(), trBB.getManagedBean().getCtContract().getContractNo()));	
-			
+			trBB.getManagedBean().getContractVer().getDocType(), trBB.getManagedBean().getCtContract().getContractNo()));	
+			trBB.flush();
 		}catch(Exception e) {
 				e.printStackTrace();
 		} finally{
@@ -1395,13 +1395,13 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	
 	public String gotoAmendPage() {
 		IContractSO contractSO = null;
+		AmendmentBackingBean amendBB = null;
 		try {
 			String latestContractVerId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("latestContractVerId");
 			Long contractVerId = (!latestContractVerId.isEmpty()) ? Long.parseLong(latestContractVerId) : null;
 			Long contractId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("contractId"));
 			
 			ContractReqDTO reqDTO = new ContractReqDTO();
-			AmendmentBackingBean amendBB = new AmendmentBackingBean();
 			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 			if(contractVerId == null) {
 				reqDTO.setContractId(contractId);
@@ -1410,14 +1410,16 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			reqDTO.setContractVerId(contractVerId);
 			reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
 			reqDTO.setUpdateAction(true);
-			amendBB.getManagedBean().setSelectedTabIndex(0);
 			ContractResDTO resDTO = contractSO.retrieveContractVer(reqDTO);
+			amendBB = new AmendmentBackingBean();
+			amendBB.getManagedBean().setSelectedTabIndex(0);
 			amendBB.setAmendmentContractVer(resDTO);
 			
 			amendBB.getManagedBean().setRemarkList(resDTO.getCtRemarks());
 			amendBB.getManagedBean().setAttachmentList(resDTO.getCtAttachments());
 			amendBB.getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, 
-					amendBB.getManagedBean().getContractVer().getDocType(), amendBB.getManagedBean().getCtContract().getContractNo()));	
+			amendBB.getManagedBean().getContractVer().getDocType(), amendBB.getManagedBean().getCtContract().getContractNo()));	
+			amendBB.flush();
 		}finally {
 			contractSO = null;
 			ctBB = null;

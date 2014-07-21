@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<p:panel id="amend" header="#{lbl['lbl.ct.amend.panel.header']}" toggleable="true" toggleSpeed="500">	
-		<h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth15">
+		<h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth225">
 			<h:panelGrid columns="2" style="float:right;">
 				<p:outputLabel value="*" styleClass="mandatory" />
 				<p:outputLabel value="#{lbl['lbl.ct.amend.amendtype']}" />
@@ -39,7 +39,8 @@
 			</h:panelGrid>
 			<f:verbatim/>
 			<h:panelGrid columns="3">
-				<p:selectBooleanCheckbox disabled="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange}"
+				<p:selectBooleanCheckbox disabled="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange 
+				    or amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange}"
 					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.valueChange}"  >
 					<p:ajax event="change"  update=":form:amend" process="@form" /> 
 					</p:selectBooleanCheckbox>
@@ -56,7 +57,7 @@
 				<p:outputLabel value="#{lbl['lbl.ct.amend.chClause']}"  />
 			</h:panelGrid>
 	     </h:panelGrid>
-	    <h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth15">
+	    <h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth225">
 			<h:panelGrid columns="2" style="float:right;">
 				<p:outputLabel value="*" styleClass="mandatory" />
 				<p:outputLabel value="#{lbl['lbl.ct.amend.txt.frno']}" />
@@ -76,7 +77,7 @@
 				<p:message for="txtname" display="icon" />	
 			</h:panelGrid>
 		</h:panelGrid>
-		<h:panelGrid columns="3" style="width:100%"	columnClasses="columnWidth15">
+		<h:panelGrid columns="3" style="width:100%"	columnClasses="columnWidth225">
 			<h:panelGroup>
 				<div style="float: right; vertical-align: top;">
 					<h:panelGrid columns="2">
@@ -92,7 +93,7 @@
 				<p:message for="txtdesc" display="icon" />	
 			</h:panelGrid>
 		</h:panelGrid>
-		<h:panelGrid columns="6" style="width:100%" columnClasses="columnWidth15">
+		<h:panelGrid columns="6" style="width:100%" columnClasses="columnWidth225">
 			<h:outputLabel value="#{lbl['lbl.ct.amend.txt.ceperiod']}"
 				rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.contractExtend}" />
 			<h:panelGrid columns="3"
@@ -113,13 +114,13 @@
 			<p:outputLabel value="#{lbl['lbl.ct.amend.txt.cestart']}"
 				rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.contractExtend}" />
 			<p:inputText id="extStartDate" value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.extendStartDate}" 
-			    disabled="true" style="width:80px;" rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.contractExtend}">
+			    disabled="true" style="width:100px;" rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.contractExtend}">
 				<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 			</p:inputText>
 			<p:outputLabel value="#{lbl['lbl.ct.amend.txt.ceend']}"
 				rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.contractExtend}" />
 			<p:inputText id="extEndDate" value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.extendEndDate}" 
-			    disabled="true" style="width:80px;" rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.contractExtend}">
+			    disabled="true" style="width:100px;" rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.contractExtend}">
 				<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 			</p:inputText>
 			<h:panelGrid columns="2" rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or
@@ -144,7 +145,7 @@
 		          amendmentBackingBean.managedBean.contractVer.ctAmendment.valueChange}" />
 			<p:inputText id="addValue"
 				value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.contractAmount}"
-				styleClass="ppRightBtn" style="width:80px;" disabled="true"
+				styleClass="ppRightBtn" style="width:100px;" disabled="true"
 				rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or
 		          amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange or
 		          amendmentBackingBean.managedBean.contractVer.ctAmendment.valueChange}">
@@ -174,7 +175,7 @@
 			</h:panelGrid>
 		</h:panelGrid>
 		<h:panelGrid columns="2" style="width:100%"
-			columnClasses="columnWidth15" rendered="#{amendmentBackingBean.managedBean.amendHistoryList != null and 
+			columnClasses="columnWidth225" rendered="#{amendmentBackingBean.managedBean.amendHistoryList != null and 
 			!empty amendmentBackingBean.managedBean.amendHistoryList}">
 			<h:panelGroup>
 				<div style="height: 35px; vertical-align: top;">

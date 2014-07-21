@@ -55,7 +55,7 @@
 			<p:outputLabel id="astatus1" value="#{lbl['lbl.ct.ag.agstatus']}" rendered="#{amendmentBackingBean.managedBean.ctContract.zonalPricing}" />
 			<p:inputText for="astatus1" style="width:170px;" disabled="true" rendered="#{amendmentBackingBean.managedBean.ctContract.zonalPricing}" />
 	    </h:panelGrid>
-		<h:panelGrid  style="width:150px;">
+		<h:panelGrid  style="width:180px;">
 		   <h:panelGrid columns="3">
 			 <p:selectBooleanCheckbox value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.concession}" disabled="true">
 			    <p:ajax event="change" update=":form:justificationPanel,:form:exemptId" listener="#{amendmentBackingBean.chkJustificationAction}" process="@this"/> 

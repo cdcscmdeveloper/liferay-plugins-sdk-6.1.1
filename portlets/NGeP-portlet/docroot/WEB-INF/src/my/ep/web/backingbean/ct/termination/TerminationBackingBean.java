@@ -313,7 +313,7 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 		 }
 	 }
 	  
-	 private void flush() {
+	 public void flush() {
 	     this.getManagedBean().setTermination(false);
 		 this.getManagedBean().setRemedy(false);
 		 this.getManagedBean().setMutualTermination(false);

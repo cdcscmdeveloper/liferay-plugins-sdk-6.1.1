@@ -65,7 +65,7 @@
 			  value="#{contractDetailsBackingBean.getStatusDescById(contractDetailsBackingBean.managedBean.ctContract.currentAgreement.status.statusId)}"
 			 rendered="#{contractDetailsBackingBean.managedBean.ctContract.agreement and contractDetailsBackingBean.managedBean.ctContract.zonalPricing}" />
 	    </h:panelGrid>
-		<h:panelGrid  style="width:150px;">
+		<h:panelGrid  style="width:170px;">
 		   <h:panelGrid columns="3">
 			 <p:selectBooleanCheckbox value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.concession}" disabled="false">
 			    <p:ajax event="change" update=":form:justificationPanel,:form:exemptId" listener="#{contractDetailsBackingBean.chkJustificationAction}" process="@this"/> 
@@ -111,7 +111,7 @@
 	 rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt or 
 	       contractDetailsBackingBean.managedBean.contractVer.ctContractValue.concession}">
          <h:panelGroup>
-		    <div style="height:70px; width:157px; vertical-align:top;">
+		    <div style="height:90px; width:157px; vertical-align:top;">
 		       <h:panelGrid columns="2" style="float:right;">
 		           <p:outputLabel value="*" styleClass="mandatory" />
 			   	   <p:outputLabel id="justificationLbls" value="#{lbl['lbl.ct.justification']}" />
