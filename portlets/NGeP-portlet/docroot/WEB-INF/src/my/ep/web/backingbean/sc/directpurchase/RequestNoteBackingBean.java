@@ -796,7 +796,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		getManagedBean().setJustRequired(Boolean.FALSE);
 		
 		if(scRequestItem.getQuantity().intValue() == 0){
-			throw new EpException(MessageConst.INFO_700027, new String[]{"Order Quatity: must be more than 0",""});
+			//throw new EpException(MessageConst.INFO_700027, new String[]{"Order Quatity: must be more than 0",""});
 		}
 		
 		ScSupplierItemPrice scSupplierItemPrice = requestSupplierItem.getSupplierItemPrice();
