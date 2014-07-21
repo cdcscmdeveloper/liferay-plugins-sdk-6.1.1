@@ -17,10 +17,10 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.prepared.ptj']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td><p:inputText size="5" id="preparedOrgProfileId"
+				<td><p:inputText size="5" id="preparedOrgProfileId" disabled="true"
 						value="#{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.pmOrgValidity.orgCode}" />
 					<p:spacer width="5" /> <ac:lov id="preparedPtj"
-						lovId="PM_ORG_PROFILE" headerText="PreparedPtj Lov"
+						lovId="PM_ORG_PROFILE" headerText="Prepared PTJ Lov"
 						saveObject="contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile"
 						value="#{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.orgName}"
 						size="39" update=":form:preparedOrgProfileId" readonly="true"
@@ -30,10 +30,10 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td><p:inputText size="5" id="issuedOrgProfileId"
+				<td><p:inputText size="5" id="issuedOrgProfileId" disabled="true"
 						value="#{contractRequestBackingBean.managedBean.flRequest.issuedOrgProfile.pmOrgValidity.orgCode}" />
 					<p:spacer width="5" /> <ac:lov id="issuePtj"
-						lovId="PM_ORG_PROFILE" headerText="IssuePtj Lov" size="39"
+						lovId="PM_ORG_PROFILE" headerText="Issue PTJ Lov" size="39"
 						readonly="true"
 						saveObject="contractRequestBackingBean.managedBean.flRequest.issuedOrgProfile"
 						value="#{contractRequestBackingBean.managedBean.flRequest.issuedOrgProfile.orgName}"
@@ -45,10 +45,10 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.charge.ptj']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td><p:inputText size="5" id="chargeOrgProfileId"
+				<td><p:inputText size="5" id="chargeOrgProfileId" disabled="true"
 						value="#{contractRequestBackingBean.managedBean.flRequest.chargeOrgProfile.pmOrgValidity.orgCode}" />
 					<p:spacer width="5" /> <ac:lov id="chargePtj"
-						lovId="PM_ORG_PROFILE" headerText="ChargePtj Lov"
+						lovId="PM_ORG_PROFILE" headerText="Charge PTJ Lov" readonly="true"
 						saveObject="contractRequestBackingBean.managedBean.flRequest.chargeOrgProfile"
 						value="#{contractRequestBackingBean.managedBean.flRequest.chargeOrgProfile.orgName}"
 						update=":form:chargeOrgProfileId" size="39">
