@@ -143,12 +143,6 @@
 								rendered="#{doItems.itemType.parameterCode eq ParameterConst.itemTypeService}">
 								<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 							</p:inputText>
-							<h:outputText value="#{doItems.deliveredAmt}" size="5"
-								rendered="#{createDOBackingBean.managedBean.docType eq 'CR'}">
-								<f:convertNumber
-									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-							</h:outputText>
-
 						</h:panelGroup>
 					</p:column>
 					<p:column headerText="Ordered &lt;br /&gt; Amt.(RM)"
