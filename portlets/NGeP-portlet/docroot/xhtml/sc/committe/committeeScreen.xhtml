@@ -10,10 +10,7 @@
 		toggleable="true">
 		<p:dataTable id="committelistid"
 			value="#{committeBackingBean.managedBean.qtCommittee.scCommittee.scCommitteeMembers}"
-			var="committeemember" rowIndexVar="index" rowKey="#{committeemember}"
-			selection="#{committeBackingBean.managedBean.selectedCommitteMemebers}">
-
-			<p:column selectionMode="multiple" style="width:2%" />
+			var="committeemember" rowIndexVar="index" rowKey="#{committeemember}">
 
 			<ac:paginator for="committelistid" />
 
@@ -46,49 +43,16 @@
 
 			<p:column headerText="#{lbl['lbl.sc.committe.sctable.details.pp']}"
 				style="width: 5%">
-				<h:outputText value="#{committeemember.PNP ? 'Yes' : 'No'}" />
+				<h:outputText
+					value="#{lbl[committeemember.PNP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.committe.sctable.detailsrole']}"
 				style="width: 10%">
-				<ui:fragment rendered="#{committeemember.PNP}">
-					<h:outputText value="Chairperson"
-						rendered="#{committeemember.memberRole.parameterId == '583'}" />
-				</ui:fragment>
-				<ui:fragment rendered="#{!committeemember.PNP}">
-					<p:selectOneMenu value="#{committeemember.memberRole.parameterId}"
-						style="width: 110px;margin-bottom: 5px;">
-						<f:selectItems
-							value="#{committeBackingBean.managedBean.roleTypes}" />
-					</p:selectOneMenu>
-				</ui:fragment>
+				<h:outputText
+					value="#{committeBackingBean.getParameterDesc(committeemember.memberRole)}" />
 			</p:column>
 		</p:dataTable>
-	</p:panel>
-
-	<p:panel header="#{lbl['lbl.sc.qt.remark']}" toggleable="true">
-		<table style="width: 100%" id="remarkslist">
-			<tr>
-				<td class="TableFieldLeft" style="width: 96px;"><p:outputLabel
-						value="#{lbl['lbl.sc.qt.remark']}" /></td>
-				<td class="TableFieldRight"><p:dataGrid
-						value="#{committeBackingBean.managedBean.scCommitteeRemarksList}"
-						var="remarkVar" rowIndexVar="remarkIndex" columns="1">
-						<table>
-							<tr>
-								<td rowspan="2" valign="top"><h:graphicImage
-										value="#{committeBackingBean.userImagePath(remarkVar.createdUser.loginId)}"
-										height="30" width="30" /></td>
-								<td width="5"></td>
-								<td><h:outputText value="#{remarkVar.createdUser.userName}" />,
-									<h:outputText id="remarkDates" value="#{remarkVar.changedDate}">
-										<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
-									</h:outputText></td>
-							</tr>
-						</table>
-					</p:dataGrid></td>
-			</tr>
-		</table>
 	</p:panel>
 
 </ui:composition>
