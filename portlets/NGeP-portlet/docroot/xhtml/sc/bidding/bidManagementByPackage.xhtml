@@ -27,7 +27,7 @@
 				<p:outputLabel style="textAllign : right" value="#{item.qty}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.min.decrement.block']}">
-				<p:outputLabel  value="#{item.decrementAmt}" />
+				<p:outputLabel value="#{item.decrementAmt}" />
 			</p:column>
 
 		</p:dataTable>
@@ -39,26 +39,26 @@
 
 	<p:panel header="#{lbl['lbl.sc.bid.summary']}" id="bidSummaryByPackage"
 		toggleable="true">
-		
+
 		<p:spacer height="10"></p:spacer>
-		<hr/>
+
 		<div align="center">
-		
-		<B>	Bidding Statistic Graph</B>
-		
+
+			<B> Bidding Statistic Graph</B>
+
 		</div>
-		
-		
+
+
 		<p:spacer height="10"></p:spacer>
-		
-		
+
+
 		<div>
 
-		<p:lineChart value="#{biddingBB.managedBean.bidPriceLinearModel}"
-			legendPosition="e" style="height:300px;" />
-			</div>
-			
-			<p:spacer height="10"></p:spacer>
+			<p:lineChart value="#{biddingBB.managedBean.bidPriceLinearModel}"
+				legendPosition="e" style="height:300px;" />
+		</div>
+
+		<p:spacer height="10"></p:spacer>
 
 		<p:dataTable id="bidPackagesListForBMBP"
 			value="#{biddingBB.managedBean.bidPackages}" var="item">
@@ -71,7 +71,7 @@
 				<p:commandLink value="#{item.scBidSupplier.smSupplier.supplierId}"
 					oncomplete="pricePop.show();"
 					actionListener="#{biddingBB.supplierItemPricePopupAction(item)}"
-					 update="@([id$=itemPricePop])"/>
+					update="@([id$=itemPricePop])" />
 
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.bumiputera.status']}">
@@ -86,19 +86,21 @@
 				<p:outputLabel value="#{item.bidPrice}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.difference.rm']}">
-				<p:outputLabel value="200"
+				<p:outputLabel
+					value="#{item.bidPrice - biddingBB.managedBean.lowestNonBumiOfferedPrice}"
 					rendered="#{item.scBidSupplier.smSupplier.bumi}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.difference.perc']}">
-				<p:outputLabel value="2" 
+				<p:outputLabel
+					value="#{((item.bidPrice - biddingBB.managedBean.lowestNonBumiOfferedPrice)* 100)/biddingBB.managedBean.lowestNonBumiOfferedPrice }"
 					rendered="#{item.scBidSupplier.smSupplier.bumi}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.pref.margin']}">
-				<p:outputLabel value="10" 
+				<p:outputLabel value="10"
 					rendered="#{item.scBidSupplier.smSupplier.bumi}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.total.cost.saving']}">
-				<p:outputLabel value="100"  />
+				<p:outputLabel value="100" />
 			</p:column>
 
 		</p:dataTable>
