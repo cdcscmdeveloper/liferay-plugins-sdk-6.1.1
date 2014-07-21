@@ -362,6 +362,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		  //  this.getManagedBean().setContractType(resDTO.getCtContractVer().getCtContract().getContractType().getParameterCode());
 		    if(this.getManagedBean().getContractVer().getCtContractValue().getContractAmount().intValue() < 50000){
 		    	this.getManagedBean().setDirectPurchase(true);
+		    	this.getManagedBean().setFlgPaymentTracking(false);
 		    }
 		    
 		    retriveZonesByContractVer();
