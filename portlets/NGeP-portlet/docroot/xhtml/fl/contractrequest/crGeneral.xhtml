@@ -17,7 +17,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.prepared.ptj']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td><p:inputText size="5" id="preparedOrgProfileId" disabled="true"
+				<td><p:inputText size="5" id="preparedOrgProfileId" readonly="true"
 						value="#{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.pmOrgValidity.orgCode}" />
 					<p:spacer width="5" /> <ac:lov id="preparedPtj"
 						lovId="PM_ORG_PROFILE" headerText="Prepared PTJ Lov"
@@ -30,7 +30,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td><p:inputText size="5" id="issuedOrgProfileId" disabled="true"
+				<td><p:inputText size="5" id="issuedOrgProfileId" readonly="true"
 						value="#{contractRequestBackingBean.managedBean.flRequest.issuedOrgProfile.pmOrgValidity.orgCode}" />
 					<p:spacer width="5" /> <ac:lov id="issuePtj"
 						lovId="PM_ORG_PROFILE" headerText="Issue PTJ Lov" size="39"
@@ -45,7 +45,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.charge.ptj']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td><p:inputText size="5" id="chargeOrgProfileId" disabled="true"
+				<td><p:inputText size="5" id="chargeOrgProfileId" readonly="true"
 						value="#{contractRequestBackingBean.managedBean.flRequest.chargeOrgProfile.pmOrgValidity.orgCode}" />
 					<p:spacer width="5" /> <ac:lov id="chargePtj"
 						lovId="PM_ORG_PROFILE" headerText="Charge PTJ Lov" readonly="true"
