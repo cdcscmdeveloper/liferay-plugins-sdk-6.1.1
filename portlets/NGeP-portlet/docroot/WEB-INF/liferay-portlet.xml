@@ -1571,6 +1571,16 @@
 			</footer-portlet-javascript>
 			<css-class-wrapper>virtualcert-portlet</css-class-wrapper>
 		</portlet>
+	<portlet>
+		<portlet-name>pmProfessionalCertifiedBody</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>pm-ProfessionalCertifiedBody-portlet</css-class-wrapper>
+	</portlet>			
 		<role-mapper>
 		<role-name>administrator</role-name>
 		<role-link>Administrator</role-link>

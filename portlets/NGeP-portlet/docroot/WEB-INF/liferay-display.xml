@@ -39,7 +39,8 @@
 			<portlet id="pmRejectionReason"></portlet>
 			<portlet id="pmSupportingDocument"></portlet>			
 			<portlet id="pmTaskAssignment"></portlet>			
-			<portlet id="pmDigiSign"></portlet>				
+			<portlet id="pmDigiSign"></portlet>	
+			<portlet id="pmProfessionalCertifiedBody"></portlet>						
 		</category>
 		<!-- Profile Management - END -->		
 
