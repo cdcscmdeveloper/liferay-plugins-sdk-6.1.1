@@ -15,15 +15,18 @@
 <cc:implementation>
        
     <p:dialog widgetVar="spki_dlg" resizable="false">
-        <h:panelGrid columns="2" cellpadding="3">
-        <h:outputLabel value="*Challenge Question 1" />
-        <p:inputText value="sss" />
+        <span id="#{cc.clientId}">
         
+    
+        <h:outputLabel value="*Please answer the following challenge question" />
+          <h:panelGrid id="spkiPanel" columns="2" cellpadding="3">
+           <h:outputLabel value="#{spkiBackingBean.challengeQues1}" />
+           <p:inputText value="#{spkiBackingBean.challsAnswer}" />
         
             <h:outputLabel for="password" value="*Digital Certificate PIN" />
             <p:password binding="#{pin}" id="password" value="12345678" required="true" />
  			<p:commandButton value="Sign" action="#{cc.attrs.postSignAction}" />        
-		</h:panelGrid>
+		</h:panelGrid></span>
     </p:dialog>
 </cc:implementation>
 </ui:composition>
