@@ -17,16 +17,16 @@
 				<tr>
 					<td style="width: 7%"><p:outputLabel
 							value="#{lbl['lbl.sc.bidding.no']}" /></td>
-					<td style="width: 10%" class="header-info-text">
+					<td style="width: 14%" class="header-info-text">
 						#{biddingBB.managedBean.scheduledBid.bidNo}</td>
 					<td style="width: 8%"><p:outputLabel
 							value="#{lbl['lbl.sc.document.no']}" /></td>
-					<td style="width: 10%" class="header-info-text">#{biddingBB.managedBean.scheduledBid.scBid.docNo}
+					<td style="width: 14%" class="header-info-text">#{biddingBB.managedBean.scheduledBid.scBid.docNo}
 					</td>
 
 					<td style="width: 6%"><p:outputLabel
 							value="#{lbl['lbl.sc.ptj.name']}" /></td>
-					<td style="width: 44%" class="header-info-text">#{biddingBB.managedBean.scheduledBid.scBid.pmOrgProfile.orgName}
+					<td style="width: 36%" class="header-info-text">#{biddingBB.managedBean.scheduledBid.scBid.pmOrgProfile.orgName}
 					</td>
 
 					<td style="width: 5%"><p:outputLabel
@@ -53,21 +53,19 @@
 						<td><p:inputText id="bidStart"
 								value="#{biddingBB.managedBean.scheduledBid.startDate}"
 								size="20" disabled="true">
-								<f:convertDateTime type="both" dateStyle="short"
-									timeStyle="short" />
+								<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
 							</p:inputText></td>
 						<td style="width: 100px"><p:outputLabel
 								value="#{lbl['lbl.sc.bidding.end']}" /></td>
 						<td><p:inputText id="bidEnd"
 								value="#{biddingBB.managedBean.scheduledBid.endDate}" size="20"
 								disabled="true">
-								<f:convertDateTime type="both" dateStyle="short"
-									timeStyle="short" />
+								<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
 							</p:inputText></td>
 					</tr>
 
 					<tr>
-						<td style="width: 100px"><p:outputLabel
+						<td style="width: 110px"><p:outputLabel
 								value="#{lbl['lbl.sc.duration.hours']}" /></td>
 						<td><p:inputText id="duration" size="20" disabled="true"
 								value="#{biddingBB.managedBean.duration}" /></td>
@@ -82,9 +80,14 @@
 								value="#{lbl['lbl.sc.zone.name']}" /></td>
 						<td colspan="3"><p:inputText id="zoneName" disabled="true"
 								value="#{biddingBB.managedBean.scheduledBid.tplSpecZoneDtl.zoneName}" />
-							<p:commandLink id="zoneList" size="5">
+							<p:commandLink id="zoneList" size="5"
+								oncomplete="zoneLocPopup.show();" partialSubmit="true"
+								process="@this" update="@([id$=zoneLocPopup])">
 								<p:graphicImage library="ep/images/design" name="evaluate.png"
 									value="/resources/ep/images/design/evaluate.png" />
+								<f:setPropertyActionListener
+									target="#{zoneLocationBackingBean.tplSpecZoneDtl}"
+									value="#{scLoiLoaItem.tplSpecZoneDtl}" />
 							</p:commandLink></td>
 						<td></td>
 						<td></td>
@@ -124,8 +127,12 @@
 				<ui:include src="bidManagementByItem.xhtml"></ui:include>
 			</ui:fragment>
 
-
 		</h:panelGroup>
 
+		<p:dialog closeOnEscape="true" header="#{lbl['lbl.sc.zone.location']}" rendered="false"
+			widgetVar="zoneLocPopup" showEffect="fade" hideEffect="fade"
+			modal="true" id="zoneLocPopup">
+			<ui:include src="/xhtml/sc/bidding/BMByItemZoneLocationPopup.xhtml"></ui:include>
+		</p:dialog>
 	</ui:define>
 </ui:composition>
