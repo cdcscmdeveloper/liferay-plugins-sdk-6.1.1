@@ -282,6 +282,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		itemAddress.setParent(true);
 		itemAddress.getScRequestItem().setRequestNoteItemId(flFulfilmentItemAddr.getScRequestItem().getRequestNoteItemId());
 		itemAddress.getScRequestItem().setItemType(flFulfilmentItemAddr.getScRequestItem().getItemType());
+		itemAddress.getScRequestItem().setUom(flFulfilmentItemAddr.getScRequestItem().getUom());
 		if(null==itemAddress.getCmItem()){
 			itemAddress.setCmItem(new CmItem());
 		}

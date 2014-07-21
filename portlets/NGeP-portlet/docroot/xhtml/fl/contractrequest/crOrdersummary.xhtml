@@ -12,7 +12,7 @@
 			<p:column style="width:2%">
 				<p:rowToggler />
 			</p:column>
-			<p:column headerText="Delivery Address">
+			<p:column headerText="Delivery Address" style="white-space:normal;">
 				<h:outputText rendered="#{delAddressSummary.addressType != null}"
 					value="#{delAddressSummary.addressType.pmAddress.address1}, #{delAddressSummary.addressType.pmAddress.address2}, #{delAddressSummary.addressType.pmAddress.address3}" />
 				<h:outputText rendered="#{delAddressSummary.addressType eq null}"
@@ -21,9 +21,9 @@
 			<p:column>
 				<h:outputText value="Delivery Term" />
 				<p:spacer width="10" />
-				<p:inputText size="3" disabled="true" value="#{delAddressSummary.deliveryTerm}"/>
+				<p:inputText size="3" disabled="true" value="#{delAddressSummary.deliveryTerm}" style="width:50px; text-align:right;"/>
 				<p:spacer width="5" />
-				<h:inputText size="4" disabled="true"  value="#{contractRequestBackingBean.getParameterDesc(delAddressSummary.pmUom)}"/>
+				<h:inputText size="4" style="width:50px" disabled="true"  value="#{contractRequestBackingBean.getParameterDesc(delAddressSummary.pmUom)}"/>
 			</p:column>
 			<p:column>
 				<h:outputText value="Delivery Start" />
@@ -51,7 +51,7 @@
 					<p:column headerText="Item Code">
 						<h:outputText value="#{newItems.cmItem.extensionCode}"/> 
 					</p:column>
-					<p:column headerText="Item Name">
+					<p:column headerText="Item Name" style="white-space:normal;">
 						<h:outputText value="#{newItems.scRequestItem.itemName}" />
 					</p:column>
 					<p:column headerText="UOM">
@@ -59,17 +59,17 @@
 					</p:column>
 					<p:column headerText="Unit Price (RM)">
 						<h:outputText value="#{newItems.unitPrice}"
-							style="text-align:right">
+							styleClass="colFloatRight" >
 							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</h:outputText>
 					</p:column>
 					<p:column headerText="Ordered Qty.">
-						<h:outputText value="#{newItems.orderedQty}" style="text-align:right">
+						<h:outputText value="#{newItems.orderedQty}" styleClass="colFloatRight" >
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 						</h:outputText>
 					</p:column>
 					<p:column headerText="Ordered Amt.(RM)">
-						<h:outputText value="#{newItems.orderedAmt}" style="text-align:right">
+						<h:outputText value="#{newItems.orderedAmt}" styleClass="colFloatRight" >
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</h:outputText>
 					</p:column>

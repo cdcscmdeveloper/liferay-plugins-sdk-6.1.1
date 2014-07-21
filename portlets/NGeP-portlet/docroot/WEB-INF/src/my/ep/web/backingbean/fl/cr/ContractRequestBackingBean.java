@@ -742,7 +742,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		
 		System.out.println("taskId:" + taskId);
 		if (taskId != null) {
-
+			renewSesionObject();
 			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 			String ctx = getFacesScopes().getBPMAuthenticationCtxToken();
 			BpmRequestDTO reqDTO = new BpmRequestDTO();
@@ -824,7 +824,9 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				getManagedBean().getFlManualAddress().getPmAddress().setPmDivision(new PmDivision());
 				getManagedBean().getFlManualAddress().getPmAddress().getPmDivision().setDivisionId(1L);
 			}
+			getManagedBean().setSelectedTabIndex(0);
 		}else if(contractId != null){
+			renewSesionObject();
 			FacesScopes facesScopes = new FacesScopes();
 			getManagedBean().setContractId(Long.parseLong(contractId));
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
@@ -836,6 +838,8 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			getManagedBean().getFlRequest().setCtContract(contractResDTO.getContract());
 			getManagedBean().getFlRequest().setScheduleNo(scheduleNo);
 			getManagedBean().getFlRequest().setSmSupplier(contractResDTO.getContract().getSmSupplier());
+			getManagedBean().getFlRequest().setFinancialYear(Calendar.getInstance().get(Calendar.YEAR));
+			getManagedBean().getFlRequest().setStartDate(new Timestamp(System.currentTimeMillis()));
 			StatusReqDTO statusReqDTO = new StatusReqDTO();
 			statusReqDTO.setStatusId(FulfilmentStatusConst.CR_PENDING_SUBMISSION);
 			StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
@@ -877,11 +881,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			getManagedBean().setOutComes(outcome);
 			FulfilmentBackingBean flBackingBean = new FulfilmentBackingBean();
 			flBackingBean.initializeRemarkAndAttachement(flBB.getManagedBean().getRemarkList(), flBB.getManagedBean().getAttachmentList());
-//			for (CtAgency ctAgent : getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtAgencies()) {
-//
-//				getManagedBean().getAgenciesList().add(ctAgent.getOrgProfile().getOrgProfileId());
-//				
-//			}
+			getManagedBean().setSelectedTabIndex(0);
 		}
 		
 		if(getManagedBean().getFlRequest().getCtContract().isZonalPricing()){
