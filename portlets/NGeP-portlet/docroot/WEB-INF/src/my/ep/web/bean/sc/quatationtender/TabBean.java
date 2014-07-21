@@ -21,6 +21,10 @@ public class TabBean {
 	private ScQtCommittee scQtCommittee;
 
 	private List<ScCommitteeMember> members;
+	
+	public TabBean(String titleName) {
+		this.titleName = titleName;
+	}
 
 	public TabBean(String titleName, ScQtApproval scQtApproval,
 			DualListModel<ScQtApproverSettings> budgetApprovalUsers) {
