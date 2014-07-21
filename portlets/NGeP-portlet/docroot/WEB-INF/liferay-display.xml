@@ -40,7 +40,8 @@
 			<portlet id="pmSupportingDocument"></portlet>			
 			<portlet id="pmTaskAssignment"></portlet>			
 			<portlet id="pmDigiSign"></portlet>	
-			<portlet id="pmProfessionalCertifiedBody"></portlet>						
+			<portlet id="pmProfessionalCertifiedBody"></portlet>
+			<portlet id="pmAuthorizedSignatory"></portlet>										
 		</category>
 		<!-- Profile Management - END -->		
 
