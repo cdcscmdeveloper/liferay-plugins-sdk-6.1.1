@@ -7,6 +7,10 @@
 
 	<ui:fragment
 		rendered="#{committeBackingBean.managedBean.headerTitle eq 'Opening Committee' or committeBackingBean.managedBean.headerTitle eq 'Evaluation Committee' or committeBackingBean.managedBean.headerTitle eq 'TEC' or committeBackingBean.managedBean.headerTitle eq 'FEC'}">
+		<ui:fragment rendered="#{committeBackingBean.managedBean.scCommittee.committeStatus.statusId eq '60202'}">
+			<ui:include src="/xhtml/sc/committe/committenavbutton.xhtml" />
+		</ui:fragment>
+		
 		<ui:include src="committeeqcselection.xhtml" />
 	</ui:fragment>
 

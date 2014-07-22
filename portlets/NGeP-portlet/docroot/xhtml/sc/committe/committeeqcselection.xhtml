@@ -13,7 +13,8 @@
 			var="committeemember" rowIndexVar="index" rowKey="#{committeemember}"
 			selection="#{committeBackingBean.managedBean.selectedCommitteMemebers}">
 
-			<p:column selectionMode="multiple" style="width:2%" />
+			<p:column selectionMode="multiple" style="width:2%"
+				rendered="#{committeBackingBean.managedBean.qtCommittee.scCommittee.committeStatus.statusId eq '60202'}" />
 
 			<ac:paginator for="committeMembersListId" />
 
@@ -49,39 +50,54 @@
 				<h:outputText value="#{committeemember.PNP ? 'Yes' : 'No'}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.committe.sctable.detailsrole']}"
-				style="width: 10%">
-				<ui:fragment rendered="#{committeemember.PNP}">
-					<h:outputText value="Chairperson"
-						rendered="#{committeemember.memberRole.parameterCode eq 'C'}" />
-				</ui:fragment>
-				<ui:fragment rendered="#{!committeemember.PNP}">
-					<p:selectOneMenu value="#{committeemember.memberRole.parameterId}"
-						style="width: 110px;margin-bottom: 5px;">
-						<f:selectItems
-							value="#{committeBackingBean.managedBean.roleTypes}" />
-					</p:selectOneMenu>
-				</ui:fragment>
-			</p:column>
+			<c:if
+				test="#{committeBackingBean.managedBean.qtCommittee.scCommittee.committeStatus.statusId.intValue() ne 60202}">
 
+				<p:column headerText="#{lbl['lbl.sc.committe.sctable.detailsrole']}"
+					style="width: 10%">
+					<h:outputText
+						value="#{committeBackingBean.getParameterDesc(committeemember.memberRole)}" />
+				</p:column>
+			</c:if>
+			<c:if
+				test="#{committeBackingBean.managedBean.qtCommittee.scCommittee.committeStatus.statusId.intValue() eq 60202}">
+				<p:column headerText="#{lbl['lbl.sc.committe.sctable.detailsrole']}"
+					style="width: 10%">
+					<ui:fragment rendered="#{committeemember.PNP}">
+						<h:outputText value="Chairperson"
+							rendered="#{committeemember.memberRole.parameterCode eq 'C'}" />
+					</ui:fragment>
+					<ui:fragment rendered="#{!committeemember.PNP}">
+						<p:selectOneMenu value="#{committeemember.memberRole.parameterId}"
+							style="width: 110px;margin-bottom: 5px;">
+							<f:selectItems
+								value="#{committeBackingBean.managedBean.roleTypes}" />
+						</p:selectOneMenu>
+					</ui:fragment>
+				</p:column>
+			</c:if>
 		</p:dataTable>
-		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.so.clonebtn']}"
-				action="#{committeBackingBean.cloneCommitteMembersAcition(committeBackingBean.managedBean.headerTitle)}"
-				oncomplete="clonecommittee.show();" process="@this"
-				icon="ui-icon-clone" update="@(.cloneMember)" />
-			<p:commandButton id="committeeadd" value="#{lbl['lbl.so.addbtn']}"
-				process="@this" icon="ui-icon-add"
-				action="#{committeBackingBean.addCommitteMember(committeBackingBean.managedBean.headerTitle)}"
-				oncomplete="newcommittees.show();" update="@(.addCommitteeMember)" />
-			<p:commandButton value="#{lbl['lbl.so.delete']}"
-				icon="ui-icon-delete" process="@this, committeMembersListId"
-				action="#{committeBackingBean.deleteCommitteeAction}"
-				update="committeMembersListId" />
-		</div>
+		<h:panelGroup
+			rendered="#{committeBackingBean.managedBean.qtCommittee.scCommittee.committeStatus.statusId eq '60202'}">
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.so.clonebtn']}"
+					action="#{committeBackingBean.cloneCommitteMembersAcition(committeBackingBean.managedBean.headerTitle)}"
+					oncomplete="clonecommittee.show();" process="@this"
+					icon="ui-icon-clone" update="@(.cloneMember)" />
+				<p:commandButton id="committeeadd" value="#{lbl['lbl.so.addbtn']}"
+					process="@this" icon="ui-icon-add"
+					action="#{committeBackingBean.addCommitteMember(committeBackingBean.managedBean.headerTitle)}"
+					oncomplete="newcommittees.show();" update="@(.addCommitteeMember)" />
+				<p:commandButton value="#{lbl['lbl.so.delete']}"
+					icon="ui-icon-delete" process="@this, committeMembersListId"
+					action="#{committeBackingBean.deleteCommitteeAction}"
+					update="committeMembersListId" />
+			</div>
+		</h:panelGroup>
 	</p:panel>
 
-	<p:panel header="#{lbl['lbl.sc.qt.remark']}" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.qt.remark']}" toggleable="true"
+		rendered="#{committeBackingBean.managedBean.qtCommittee.scCommittee.committeStatus.statusId eq '60202'}">
 		<table style="width: 100%" id="remarkslist">
 			<tr>
 				<td class="TableFieldLeft" style="width: 96px;"><p:outputLabel
