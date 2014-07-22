@@ -14,31 +14,42 @@
 			<p:column selectionMode="multiple" style="width:2%;text-align:center" />
 			<p:column headerText="Type">
 				<h:outputText rendered="#{index == 0}" value="#{paymentMatchBackingBean.getParameterDesc(deduction.deductionType)}" />
-				<p:selectOneMenu rendered="#{index > 0}" value="#{paymentMatchBackingBean.managedBean.deductionId}" >
-				<f:selectItem itemLabel="-- Select -- " itemValue="" />
-						<f:selectItems var="ctDeduction"
-							value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.ctContract.latestContractVer.ctDeductions}"
-							itemLabel="#{paymentMatchBackingBean.getParameterDesc(ctDeduction.deductionType)}"
-							itemValue="#{ctDeduction.deductionId}" />
+				<p:selectOneMenu rendered="#{index > 0}" value="#{deduction.deductionType.parameterId}" >
+					<p:ajax event="change" process="@this" update=":form:deductionDataTable" />
+					<f:selectItem itemLabel="-- Select -- " itemValue="" />
+					<f:selectItems var="ctDeduction"
+						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.ctContract.latestContractVer.ctDeductions}"
+						itemLabel="#{paymentMatchBackingBean.getParameterDesc(ctDeduction.deductionType)}"
+						itemValue="#{ctDeduction.deductionType.parameterId}" />
 				</p:selectOneMenu>
 			</p:column>
 			<p:column headerText="Description">
 				<p:inputText rendered="#{index > 0}" value="#{deduction.deductionDesc}" />
 			</p:column>
 			<p:column headerText="Clauses">
-				<h:outputText style="text-align:right">
-				</h:outputText>
+				<h:outputText style="text-align:right" />
 			</p:column>
 			<p:column headerText="Amanah">
-				<h:inputText style="text-align:right" />
+				<h:outputText rendered="#{deduction.deductionType.parameterCode==ParameterConst.deductionTypeTransactionFee}" 
+					value="#{deduction.pmVotFund.votFundCode}" />
+				<p:inputText rendered="#{deduction.deductionType.parameterCode!=ParameterConst.deductionTypeTransactionFee}" 
+					value="#{deduction.pmVotFund.votFundCode}" />					
 			</p:column>
 			<p:column headerText="GOSODO">
-				<h:outputText value="#{deduction.pmGlAccount.glAccCode}" />
+				<h:outputText rendered="#{deduction.deductionType.parameterCode==ParameterConst.deductionTypeTransactionFee}" 
+					value="#{deduction.pmGlAccount.glAccCode}" />
+				<p:inputText rendered="#{deduction.deductionType.parameterCode!=ParameterConst.deductionTypeTransactionFee}" 
+					value="#{deduction.pmGlAccount.glAccCode}" />					
 			</p:column>
 			<p:column headerText="Amount (RM)" style="text-align:right">
-				<h:outputText styleClass="colFloatRight" value="#{deduction.deductionAmt}" >
+				<h:outputText styleClass="colFloatRight" value="#{deduction.deductionAmt}" 
+					rendered="#{deduction.deductionType.parameterCode==ParameterConst.deductionTypeFixed or deduction.deductionType.parameterCode==ParameterConst.deductionTypeTransactionFee}" >
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
+				<p:inputText styleClass="colFloatRight" value="#{deduction.deductionAmt}" 
+					rendered="#{!(deduction.deductionType.parameterCode==ParameterConst.deductionTypeFixed or deduction.deductionType.parameterCode==ParameterConst.deductionTypeTransactionFee)}" >
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</p:inputText>				
 			</p:column>
 		</p:dataTable>
 		<p:spacer height="2px"></p:spacer>
