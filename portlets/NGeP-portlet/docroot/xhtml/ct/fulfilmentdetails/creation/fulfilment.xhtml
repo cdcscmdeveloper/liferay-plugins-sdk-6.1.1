@@ -42,228 +42,487 @@
 			<td width="20%;" style="vertical-align: baseline;" class="sidemenutd">
 				<p:tabMenu id="menuTabId" styleClass="sidemenu"
 					activeIndex="#{contractDetailsBackingBean.managedBean.selectedTabIndex}">
-				          <p:menuitem value="#{lbl['lbl.ct.menu.fd']}" update=":form" 
-				            rendered="#{contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeCentral}"
-					        action="#{contractDetailsBackingBean.setSelectedTabValue(0)}"  />
-					      <p:menuitem value="#{lbl['lbl.ct.menu.item']}" update=":form" 
-					         rendered="#{contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeCentral}"
-					         action="#{contractDetailsBackingBean.setSelectedTabValue(1)}"/>
-					      <p:menuitem value="#{lbl['lbl.ct.menu.factoring']}" update=":form" 
-					         action="#{contractDetailsBackingBean.setSelectedTabValue(2)}"  
-					         rendered="#{contractDetailsBackingBean.managedBean.ctContract.factored and 
-					           contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeCentral}"/>
-					       <p:menuitem value="#{lbl['lbl.ct.menu.sett']}" update=":form" 
-					         rendered="#{contractDetailsBackingBean.managedBean.ctContract.factored and 
-					          contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeCentral}"
-					         action="#{contractDetailsBackingBean.setSelectedTabValue(3)}"/>
-			                <p:menuitem value="#{lbl['lbl.ct.menu.sett']}" update=":form" 
-					         rendered="#{!contractDetailsBackingBean.managedBean.ctContract.factored and 
-					           contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeCentral}" 
-					     action="#{contractDetailsBackingBean.setSelectedTabValue(2)}"/>
-			      
-			       
-			          <p:menuitem value="#{lbl['lbl.ct.menu.fd']}" update=":form"
-			            rendered="#{contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}"
-                        action="#{contractDetailsBackingBean.setSelectedTabValue(0)}">
-					</p:menuitem>
-					<p:menuitem value="#{lbl['lbl.ct.menu.agency']}" update=":form"
-					    rendered="#{contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}"
-					    action="#{contractDetailsBackingBean.setSelectedTabValue(1)}">
-					</p:menuitem>
-					<p:menuitem value="#{lbl['lbl.ct.menu.zone']}" update=":form" 
-					    rendered="#{contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
-					    and contractDetailsBackingBean.managedBean.ctContract.zonalPricing}"
-					 action="#{contractDetailsBackingBean.setSelectedTabValue(2)}"/>
-					 <p:menuitem value="#{lbl['lbl.ct.menu.item']}" update=":form"
-					    rendered="#{contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
-					    and contractDetailsBackingBean.managedBean.ctContract.zonalPricing}"
-					     action="#{contractDetailsBackingBean.setSelectedTabValue(3)}"/>
-					  <p:menuitem value="#{lbl['lbl.ct.menu.dedu']}" update=":form" 
-					         rendered="#{contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
-					         and contractDetailsBackingBean.managedBean.ctContract.zonalPricing
-					         and !contractDetailsBackingBean.managedBean.directPurchase}"
-					          action="#{contractDetailsBackingBean.setSelectedTabValue(4)}"/>
-					  <p:menuitem value="#{lbl['lbl.ct.menu.sched']}" update=":form"
-					         rendered="#{contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
-					          and contractDetailsBackingBean.managedBean.ctContract.zonalPricing}" 
-					          action="#{contractDetailsBackingBean.setSelectedTabValue(5)}"/>
-					 <p:menuitem value="#{lbl['lbl.ct.menu.factoring']}" update=":form" action="#{contractDetailsBackingBean.setSelectedTabValue(6)}"
-					 rendered="#{contractDetailsBackingBean.managedBean.ctContract.factored and !contractDetailsBackingBean.managedBean.flgPaymentTracking
-					          and  contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
-			                  and contractDetailsBackingBean.managedBean.ctContract.zonalPricing}"/>
-					               <p:menuitem value="#{lbl['lbl.ct.menu.sett']}" update=":form" action="#{contractDetailsBackingBean.setSelectedTabValue(7)}"
-					                rendered="#{contractDetailsBackingBean.managedBean.ctContract.factored and !contractDetailsBackingBean.managedBean.flgPaymentTracking
-					          and  contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
-			                  and contractDetailsBackingBean.managedBean.ctContract.zonalPricing}"/>
-					         
-					        <p:menuitem value="#{lbl['lbl.ct.menu.advPaymentTracking']}" update=":form"  action="#{contractDetailsBackingBean.setSelectedTabValue(6)}"
-					                rendered="#{!contractDetailsBackingBean.managedBean.ctContract.factored and contractDetailsBackingBean.managedBean.flgPaymentTracking
-					          and  contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
-			                  and contractDetailsBackingBean.managedBean.ctContract.zonalPricing }"/>
-					               <p:menuitem value="#{lbl['lbl.ct.menu.sett']}" update=":form" action="#{contractDetailsBackingBean.setSelectedTabValue(7)}"
-					               rendered="#{!contractDetailsBackingBean.managedBean.ctContract.factored and contractDetailsBackingBean.managedBean.flgPaymentTracking
-					          and  contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
-			                  and contractDetailsBackingBean.managedBean.ctContract.zonalPricing }"/>
-					       
-					             <p:menuitem value="#{lbl['lbl.ct.menu.factoring']}" update=":form" action="#{contractDetailsBackingBean.setSelectedTabValue(6)}"
-					             rendered="#{contractDetailsBackingBean.managedBean.ctContract.factored and contractDetailsBackingBean.managedBean.flgPaymentTracking
-					             and  contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
-			                  and contractDetailsBackingBean.managedBean.ctContract.zonalPricing }"/>
-					               <p:menuitem value="#{lbl['lbl.ct.menu.advPaymentTracking']}" update=":form"  action="#{contractDetailsBackingBean.setSelectedTabValue(7)}"
-					                rendered="#{contractDetailsBackingBean.managedBean.ctContract.factored and contractDetailsBackingBean.managedBean.flgPaymentTracking
-					             and  contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
-			                  and contractDetailsBackingBean.managedBean.ctContract.zonalPricing }"/>
-					               <p:menuitem value="#{lbl['lbl.ct.menu.sett']}" update=":form" action="#{contractDetailsBackingBean.setSelectedTabValue(8)}"
-					                rendered="#{contractDetailsBackingBean.managedBean.ctContract.factored and contractDetailsBackingBean.managedBean.flgPaymentTracking
-					             and  contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
-			                  and contractDetailsBackingBean.managedBean.ctContract.zonalPricing }"/>
-					          
-					               <p:menuitem value="#{lbl['lbl.ct.menu.sett']}" update=":form" action="#{contractDetailsBackingBean.setSelectedTabValue(6)}"
-					               rendered="#{!contractDetailsBackingBean.managedBean.ctContract.factored and !contractDetailsBackingBean.managedBean.flgPaymentTracking 
-					            and  contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
-			                  and contractDetailsBackingBean.managedBean.ctContract.zonalPricing}"/>
-					          
-					  
-					       <p:menuitem value="#{lbl['lbl.ct.menu.item']}" update=":form" action="#{contractDetailsBackingBean.setSelectedTabValue(3)}"
-					        rendered="#{!contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
-					       contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}"/>
-					       <p:menuitem value="#{lbl['lbl.ct.menu.dedu']}" update=":form" action="#{contractDetailsBackingBean.setSelectedTabValue(4)}"
-					          rendered="#{!contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
-					       contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
-					       and !contractDetailsBackingBean.managedBean.directPurchase}"/>
-					       <p:menuitem value="#{lbl['lbl.ct.menu.sched']}" update=":form" action="#{contractDetailsBackingBean.setSelectedTabValue(5)}"
-					        rendered="#{!contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
-					       contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}"/>
+				      
+				          <p:menuitem value="#{lbl['lbl.ct.menu.fd']}" update=":form" action="#{contractDetailsBackingBean.setSelectedTabValue(0)}"/>
+				          <p:menuitem value="#{lbl['lbl.ct.menu.agency']}" update=":form" action="#{contractDetailsBackingBean.setSelectedTabValue(1)}"
+					          rendered="#{contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}">
+					      </p:menuitem>
+				          
+					      <p:menuitem value="#{lbl['lbl.ct.menu.item']}" update=":form"  action="#{contractDetailsBackingBean.setSelectedTabValue(1)}"
+					          rendered="#{contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeCentral}">
+					      </p:menuitem>
 					      
-					          <p:menuitem value="#{lbl['lbl.ct.menu.factoring']}" update=":form" action="#{contractDetailsBackingBean.setSelectedTabValue(6)}"
-					          rendered="#{contractDetailsBackingBean.managedBean.ctContract.factored and !contractDetailsBackingBean.managedBean.flgPaymentTracking
-					        and  !contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
-					       contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}"/>
-					          <p:menuitem value="#{lbl['lbl.ct.menu.sett']}" update=":form" action="#{contractDetailsBackingBean.setSelectedTabValue(7)}"
-					            rendered="#{contractDetailsBackingBean.managedBean.ctContract.factored and !contractDetailsBackingBean.managedBean.flgPaymentTracking
-					        and  !contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
-					       contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}"/>
-					       
-					   
-					            <p:menuitem value="#{lbl['lbl.ct.menu.advPaymentTracking']}" update=":form"  action="#{contractDetailsBackingBean.setSelectedTabValue(6)}"
-					            rendered="#{!contractDetailsBackingBean.managedBean.ctContract.factored and contractDetailsBackingBean.managedBean.flgPaymentTracking
-					         and  !contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
-					       contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}"/>
-					            <p:menuitem value="#{lbl['lbl.ct.menu.sett']}" update=":form" action="#{contractDetailsBackingBean.setSelectedTabValue(7)}"
-					             rendered="#{!contractDetailsBackingBean.managedBean.ctContract.factored and contractDetailsBackingBean.managedBean.flgPaymentTracking
-					         and  !contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
-					       contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}"/>
-					       
+					      <p:menuitem value="#{lbl['lbl.ct.menu.factoring']}" update=":form"  action="#{contractDetailsBackingBean.setSelectedTabValue(2)}"  
+					           rendered="#{contractDetailsBackingBean.managedBean.ctContract.factored and 
+					           contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeCentral}">
+					      </p:menuitem>
+					    
+					      <p:menuitem value="#{lbl['lbl.ct.menu.sett']}" update=":form"  action="#{contractDetailsBackingBean.setSelectedTabValue(3)}"  
+					           rendered="#{contractDetailsBackingBean.managedBean.ctContract.factored and 
+					           contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeCentral}">
+					      </p:menuitem>
+			             
+			              <p:menuitem value="#{lbl['lbl.ct.menu.sett']}" update=":form"   action="#{contractDetailsBackingBean.setSelectedTabValue(2)}" 
+			                   rendered="#{!contractDetailsBackingBean.managedBean.ctContract.factored and 
+					           contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeCentral}">
+			              </p:menuitem>
+			              
+					      <p:menuitem value="#{lbl['lbl.ct.menu.zone']}" update=":form"   action="#{contractDetailsBackingBean.setSelectedTabValue(2)}"
+					          rendered="#{contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
+					          contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}">
+					      </p:menuitem>
+					      
+					     <p:menuitem value="#{lbl['lbl.ct.menu.item']}" update=":form"  action="#{contractDetailsBackingBean.setSelectedTabValue(3)}" 
+					       rendered="#{contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
+					          contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}">
+					     </p:menuitem>
 					     
-					             <p:menuitem value="#{lbl['lbl.ct.menu.factoring']}" update=":form" action="#{contractDetailsBackingBean.setSelectedTabValue(6)}"
-					             rendered="#{contractDetailsBackingBean.managedBean.ctContract.factored and contractDetailsBackingBean.managedBean.flgPaymentTracking
-					         and  !contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
-					       contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}"/>
-					             <p:menuitem value="#{lbl['lbl.ct.menu.advPaymentTracking']}" update=":form"  action="#{contractDetailsBackingBean.setSelectedTabValue(7)}"
-					             rendered="#{contractDetailsBackingBean.managedBean.ctContract.factored and contractDetailsBackingBean.managedBean.flgPaymentTracking
-					         and  !contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
-					       contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}"/>
-					             <p:menuitem value="#{lbl['lbl.ct.menu.sett']}" update=":form" action="#{contractDetailsBackingBean.setSelectedTabValue(8)}"
-					             rendered="#{contractDetailsBackingBean.managedBean.ctContract.factored and contractDetailsBackingBean.managedBean.flgPaymentTracking
-					         and  !contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
-					       contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}"/>
-					       
-					               <p:menuitem value="#{lbl['lbl.ct.menu.sett']}" update=":form" action="#{contractDetailsBackingBean.setSelectedTabValue(6)}"
-					               rendered="#{!contractDetailsBackingBean.managedBean.ctContract.factored and !contractDetailsBackingBean.managedBean.flgPaymentTracking
-					          and  !contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
-					       contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}"/>
+					     <p:menuitem value="#{lbl['lbl.ct.menu.dedu']}" update=":form" action="#{contractDetailsBackingBean.setSelectedTabValue(4)}"
+					           rendered="#{contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
+					          contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
+					          and !contractDetailsBackingBean.managedBean.directPurchase}">
+					      </p:menuitem>
+					      
+					     <p:menuitem value="#{lbl['lbl.ct.menu.sched']}" update=":form" action="#{contractDetailsBackingBean.setSelectedTabValue(5)}"
+					         rendered="#{contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
+					          contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
+					          and !contractDetailsBackingBean.managedBean.directPurchase}">
+					      </p:menuitem>   
+					      
+					      <p:menuitem value="#{lbl['lbl.ct.menu.factoring']}" update=":form" action="#{contractDetailsBackingBean.setSelectedTabValue(6)}"
+					         rendered="#{contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
+					          contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
+					          and !contractDetailsBackingBean.managedBean.directPurchase and contractDetailsBackingBean.managedBean.ctContract.factored}">
+					      </p:menuitem>
+					      
+					      <p:menuitem value="#{lbl['lbl.ct.menu.advPaymentTracking']}" update=":form"  action="#{contractDetailsBackingBean.setSelectedTabValue(6)}"
+					           rendered="#{contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
+					          contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
+					          and !contractDetailsBackingBean.managedBean.directPurchase and !contractDetailsBackingBean.managedBean.ctContract.factored
+					          and contractDetailsBackingBean.managedBean.flgPaymentTracking}">
+					      </p:menuitem>
+					      
+					      <p:menuitem value="#{lbl['lbl.ct.menu.advPaymentTracking']}" update=":form"  action="#{contractDetailsBackingBean.setSelectedTabValue(7)}"
+					          rendered="#{contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
+					          contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
+					          and !contractDetailsBackingBean.managedBean.directPurchase and contractDetailsBackingBean.managedBean.ctContract.factored
+					          and contractDetailsBackingBean.managedBean.flgPaymentTracking}">
+					        </p:menuitem>
+					        
+					         <p:menuitem value="#{lbl['lbl.ct.menu.sett']}" update=":form" action="#{contractDetailsBackingBean.setSelectedTabValue(6)}"
+					           rendered="#{contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
+					          contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
+					          and !contractDetailsBackingBean.managedBean.directPurchase and !contractDetailsBackingBean.managedBean.ctContract.factored
+					          and !contractDetailsBackingBean.managedBean.flgPaymentTracking}">
+					        </p:menuitem>
+					        
+                              <p:menuitem value="#{lbl['lbl.ct.menu.sett']}" update=":form" action="#{contractDetailsBackingBean.setSelectedTabValue(7)}"
+					           rendered="#{(contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
+					          contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
+					          and !contractDetailsBackingBean.managedBean.directPurchase and !contractDetailsBackingBean.managedBean.ctContract.factored
+					          and contractDetailsBackingBean.managedBean.flgPaymentTracking) 
+					          or (contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
+					          contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
+					          and !contractDetailsBackingBean.managedBean.directPurchase and contractDetailsBackingBean.managedBean.ctContract.factored
+					          and !contractDetailsBackingBean.managedBean.flgPaymentTracking)}">
+					        </p:menuitem>
+					        
+					         <p:menuitem value="#{lbl['lbl.ct.menu.sett']}" update=":form" action="#{contractDetailsBackingBean.setSelectedTabValue(8)}"
+					           rendered="#{contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
+					          contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
+					          and !contractDetailsBackingBean.managedBean.directPurchase and contractDetailsBackingBean.managedBean.ctContract.factored
+					          and contractDetailsBackingBean.managedBean.flgPaymentTracking}">
+					        </p:menuitem>
+					      
 					     
+					  <p:menuitem value="#{lbl['lbl.ct.menu.sched']}" update=":form" action="#{contractDetailsBackingBean.setSelectedTabValue(4)}"
+					         rendered="#{contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
+					          contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
+					          and contractDetailsBackingBean.managedBean.directPurchase}">
+					  </p:menuitem>
+					  
+					   <p:menuitem value="#{lbl['lbl.ct.menu.factoring']}" update=":form" action="#{contractDetailsBackingBean.setSelectedTabValue(5)}"
+					         rendered="#{contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
+					          contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
+					          and contractDetailsBackingBean.managedBean.directPurchase and contractDetailsBackingBean.managedBean.ctContract.factored}">
+					      </p:menuitem>
+					      
+					      <p:menuitem value="#{lbl['lbl.ct.menu.advPaymentTracking']}" update=":form"  action="#{contractDetailsBackingBean.setSelectedTabValue(5)}"
+					           rendered="#{contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
+					          contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
+					          and contractDetailsBackingBean.managedBean.directPurchase and !contractDetailsBackingBean.managedBean.ctContract.factored
+					          and contractDetailsBackingBean.managedBean.flgPaymentTracking}">
+					      </p:menuitem>
+					      
+					      <p:menuitem value="#{lbl['lbl.ct.menu.advPaymentTracking']}" update=":form"  action="#{contractDetailsBackingBean.setSelectedTabValue(6)}"
+					          rendered="#{contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
+					          contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
+					          and contractDetailsBackingBean.managedBean.directPurchase and contractDetailsBackingBean.managedBean.ctContract.factored
+					          and contractDetailsBackingBean.managedBean.flgPaymentTracking}">
+					        </p:menuitem>
+					        
+					         <p:menuitem value="#{lbl['lbl.ct.menu.sett']}" update=":form" action="#{contractDetailsBackingBean.setSelectedTabValue(5)}"
+					           rendered="#{contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
+					          contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
+					          and contractDetailsBackingBean.managedBean.directPurchase and !contractDetailsBackingBean.managedBean.ctContract.factored
+					          and !contractDetailsBackingBean.managedBean.flgPaymentTracking}">
+					        </p:menuitem>
+					        
+                              <p:menuitem value="#{lbl['lbl.ct.menu.sett']}" update=":form" action="#{contractDetailsBackingBean.setSelectedTabValue(6)}"
+					           rendered="#{(contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
+					          contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
+					          and contractDetailsBackingBean.managedBean.directPurchase and !contractDetailsBackingBean.managedBean.ctContract.factored
+					          and contractDetailsBackingBean.managedBean.flgPaymentTracking) 
+					          or (contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
+					          contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
+					          and contractDetailsBackingBean.managedBean.directPurchase and contractDetailsBackingBean.managedBean.ctContract.factored
+					          and !contractDetailsBackingBean.managedBean.flgPaymentTracking)}">
+					        </p:menuitem>
+					        
+					         <p:menuitem value="#{lbl['lbl.ct.menu.sett']}" update=":form" action="#{contractDetailsBackingBean.setSelectedTabValue(7)}"
+					           rendered="#{contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
+					          contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
+					          and contractDetailsBackingBean.managedBean.directPurchase and contractDetailsBackingBean.managedBean.ctContract.factored
+					          and contractDetailsBackingBean.managedBean.flgPaymentTracking}">
+					        </p:menuitem>
+					          
+					          
+				
+					       <p:menuitem value="#{lbl['lbl.ct.menu.item']}" update=":form" action="#{contractDetailsBackingBean.setSelectedTabValue(2)}"
+					            rendered="#{!contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
+					             contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}">
+					      </p:menuitem>
+					      
+					       <p:menuitem value="#{lbl['lbl.ct.menu.dedu']}" update=":form" action="#{contractDetailsBackingBean.setSelectedTabValue(3)}"
+					          rendered="#{!contractDetailsBackingBean.managedBean.ctContract.zonalPricing and
+					           contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
+					           and !contractDetailsBackingBean.managedBean.directPurchase}">
+					       </p:menuitem>
+					       
+					       <p:menuitem value="#{lbl['lbl.ct.menu.sched']}" update=":form" action="#{contractDetailsBackingBean.setSelectedTabValue(4)}"
+					           rendered="#{!contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
+					           contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
+					           and !contractDetailsBackingBean.managedBean.directPurchase}">
+					       </p:menuitem>
+					       
+					        <p:menuitem value="#{lbl['lbl.ct.menu.factoring']}" update=":form" action="#{contractDetailsBackingBean.setSelectedTabValue(5)}"
+					         rendered="#{!contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
+					          contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
+					          and !contractDetailsBackingBean.managedBean.directPurchase and contractDetailsBackingBean.managedBean.ctContract.factored}">
+					      </p:menuitem>
+					      
+					      <p:menuitem value="#{lbl['lbl.ct.menu.advPaymentTracking']}" update=":form"  action="#{contractDetailsBackingBean.setSelectedTabValue(5)}"
+					           rendered="#{!contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
+					          contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
+					          and !contractDetailsBackingBean.managedBean.directPurchase and !contractDetailsBackingBean.managedBean.ctContract.factored
+					          and contractDetailsBackingBean.managedBean.flgPaymentTracking}">
+					      </p:menuitem>
+					      
+					      <p:menuitem value="#{lbl['lbl.ct.menu.advPaymentTracking']}" update=":form"  action="#{contractDetailsBackingBean.setSelectedTabValue(6)}"
+					          rendered="#{!contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
+					          contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
+					          and !contractDetailsBackingBean.managedBean.directPurchase and contractDetailsBackingBean.managedBean.ctContract.factored
+					          and contractDetailsBackingBean.managedBean.flgPaymentTracking}">
+					        </p:menuitem>
+					        
+					         <p:menuitem value="#{lbl['lbl.ct.menu.sett']}" update=":form" action="#{contractDetailsBackingBean.setSelectedTabValue(5)}"
+					           rendered="#{!contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
+					          contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
+					          and !contractDetailsBackingBean.managedBean.directPurchase and !contractDetailsBackingBean.managedBean.ctContract.factored
+					          and !contractDetailsBackingBean.managedBean.flgPaymentTracking}">
+					        </p:menuitem>
+					        
+                              <p:menuitem value="#{lbl['lbl.ct.menu.sett']}" update=":form" action="#{contractDetailsBackingBean.setSelectedTabValue(6)}"
+					           rendered="#{(!contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
+					          contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
+					          and !contractDetailsBackingBean.managedBean.directPurchase and contractDetailsBackingBean.managedBean.ctContract.factored
+					          and !contractDetailsBackingBean.managedBean.flgPaymentTracking)
+					          or(!contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
+					          contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
+					          and !contractDetailsBackingBean.managedBean.directPurchase and !contractDetailsBackingBean.managedBean.ctContract.factored
+					          and contractDetailsBackingBean.managedBean.flgPaymentTracking)}">
+					        </p:menuitem>
+					        
+					         <p:menuitem value="#{lbl['lbl.ct.menu.sett']}" update=":form" action="#{contractDetailsBackingBean.setSelectedTabValue(7)}"
+					           rendered="#{!contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
+					          contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
+					          and !contractDetailsBackingBean.managedBean.directPurchase and contractDetailsBackingBean.managedBean.ctContract.factored
+					          and contractDetailsBackingBean.managedBean.flgPaymentTracking}">
+					        </p:menuitem>
+					        
+					         <p:menuitem value="#{lbl['lbl.ct.menu.sched']}" update=":form" action="#{contractDetailsBackingBean.setSelectedTabValue(3)}"
+					         rendered="#{!contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
+					          contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
+					          and contractDetailsBackingBean.managedBean.directPurchase}">
+					  </p:menuitem>
+					  
+					   <p:menuitem value="#{lbl['lbl.ct.menu.factoring']}" update=":form" action="#{contractDetailsBackingBean.setSelectedTabValue(4)}"
+					         rendered="#{!contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
+					          contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
+					          and contractDetailsBackingBean.managedBean.directPurchase and contractDetailsBackingBean.managedBean.ctContract.factored}">
+					      </p:menuitem>
+					      
+					      <p:menuitem value="#{lbl['lbl.ct.menu.advPaymentTracking']}" update=":form"  action="#{contractDetailsBackingBean.setSelectedTabValue(4)}"
+					           rendered="#{!contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
+					          contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
+					          and contractDetailsBackingBean.managedBean.directPurchase and !contractDetailsBackingBean.managedBean.ctContract.factored
+					          and contractDetailsBackingBean.managedBean.flgPaymentTracking}">
+					      </p:menuitem>
+					      
+					      <p:menuitem value="#{lbl['lbl.ct.menu.advPaymentTracking']}" update=":form"  action="#{contractDetailsBackingBean.setSelectedTabValue(5)}"
+					          rendered="#{!contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
+					          contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
+					          and contractDetailsBackingBean.managedBean.directPurchase and contractDetailsBackingBean.managedBean.ctContract.factored
+					          and contractDetailsBackingBean.managedBean.flgPaymentTracking}">
+					        </p:menuitem>
+					        
+					         <p:menuitem value="#{lbl['lbl.ct.menu.sett']}" update=":form" action="#{contractDetailsBackingBean.setSelectedTabValue(4)}"
+					           rendered="#{!contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
+					          contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
+					          and contractDetailsBackingBean.managedBean.directPurchase and !contractDetailsBackingBean.managedBean.ctContract.factored
+					          and !contractDetailsBackingBean.managedBean.flgPaymentTracking}">
+					        </p:menuitem>
+					        
+                              <p:menuitem value="#{lbl['lbl.ct.menu.sett']}" update=":form" action="#{contractDetailsBackingBean.setSelectedTabValue(5)}"
+					           rendered="#{(!contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
+					          contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
+					          and contractDetailsBackingBean.managedBean.directPurchase and contractDetailsBackingBean.managedBean.ctContract.factored
+					          and !contractDetailsBackingBean.managedBean.flgPaymentTracking)
+					          or(!contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
+					          contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
+					          and contractDetailsBackingBean.managedBean.directPurchase and !contractDetailsBackingBean.managedBean.ctContract.factored
+					          and contractDetailsBackingBean.managedBean.flgPaymentTracking)}">
+					        </p:menuitem>
+					        
+					         <p:menuitem value="#{lbl['lbl.ct.menu.sett']}" update=":form" action="#{contractDetailsBackingBean.setSelectedTabValue(6)}"
+					           rendered="#{!contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
+					          contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
+					          and contractDetailsBackingBean.managedBean.directPurchase and contractDetailsBackingBean.managedBean.ctContract.factored
+					          and contractDetailsBackingBean.managedBean.flgPaymentTracking}">
+					        </p:menuitem>
+					
 		    </p:tabMenu>
 			</td>
 			<td width="80%;">
 			      <p:outputPanel rendered="#{contractDetailsBackingBean.managedBean.selectedTabIndex == 0}">
-				   <p:outputPanel rendered="#{contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}">
-		 	          <ui:include src="/xhtml/ct/fulfilmentdetails/shared/fulfilmentDetails.xhtml"/>
+				      <p:outputPanel rendered="#{contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}">
+		 	               <ui:include src="/xhtml/ct/fulfilmentdetails/shared/fulfilmentDetails.xhtml"/>
 		 	        </p:outputPanel>
-		 	        <p:outputPanel rendered="#{contractDetailsBackingBean.managedBean.selectedTabIndex == 0 and contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeCentral}">
-		 	          <ui:include src="/xhtml/ct/fulfilmentdetails/shared/centralDetails.xhtml"/>
+		 	        <p:outputPanel rendered="#{contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeCentral}">
+		 	             <ui:include src="/xhtml/ct/fulfilmentdetails/shared/centralDetails.xhtml"/>
 		 	        </p:outputPanel>
 				    <ui:include	src="/xhtml/ct/fulfilmentdetails/shared/quotationTender.xhtml" />
 				    <ui:include src="/xhtml/ct/fulfilmentdetails/shared/supplier.xhtml" />
 				    <ui:include	src="/xhtml/ct/fulfilmentdetails/shared/performanceBond.xhtml" />
 				    <ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" />
 				</p:outputPanel>
+			
 				<p:outputPanel rendered="#{contractDetailsBackingBean.managedBean.selectedTabIndex == 1 and 
 				   contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}">
 					<ui:include src="/xhtml/ct/fulfilmentdetails/shared/agency.xhtml" />
 				</p:outputPanel>
 	
 				<p:outputPanel rendered="#{contractDetailsBackingBean.managedBean.selectedTabIndex == 2 and 
-				   contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}">
+				    contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
+				    contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}">
 					<ui:include src="/xhtml/ct/fulfilmentdetails/shared/zone.xhtml" />
 			    </p:outputPanel>
 				
-				<p:outputPanel rendered="#{contractDetailsBackingBean.managedBean.selectedTabIndex == 3 and
-				  contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}">
+				<p:outputPanel rendered="#{((contractDetailsBackingBean.managedBean.selectedTabIndex == 3 and contractDetailsBackingBean.managedBean.ctContract.zonalPricing)
+				    or (contractDetailsBackingBean.managedBean.selectedTabIndex == 2 and !contractDetailsBackingBean.managedBean.ctContract.zonalPricing)) and 
+				    contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}">
 					<ui:include src="/xhtml/ct/fulfilmentdetails/shared/productItem.xhtml" />
 				    <ui:include src="/xhtml/ct/fulfilmentdetails/shared/serviceItem.xhtml" />
 				</p:outputPanel>
+				
 				<p:outputPanel rendered="#{contractDetailsBackingBean.managedBean.selectedTabIndex == 1 and 
 				  contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeCentral}">
 					<ui:include src="/xhtml/ct/fulfilmentdetails/shared/centralItem.xhtml" />
 				</p:outputPanel>
 				
-				<p:outputPanel rendered="#{contractDetailsBackingBean.managedBean.selectedTabIndex == 4 and
-				  contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry and
-				  !contractDetailsBackingBean.managedBean.directPurchase}">
+				<p:outputPanel rendered="#{(contractDetailsBackingBean.managedBean.selectedTabIndex == 4 and 
+				              !contractDetailsBackingBean.managedBean.directPurchase and contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
+					          contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry)
+					          
+					          or(contractDetailsBackingBean.managedBean.selectedTabIndex == 3 and 
+					             !contractDetailsBackingBean.managedBean.directPurchase and !contractDetailsBackingBean.managedBean.ctContract.zonalPricing and
+					              contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry)}">
 					<ui:include src="/xhtml/ct/fulfilmentdetails/shared/deduction.xhtml" />
 				</p:outputPanel>
 				
-				<p:outputPanel rendered="#{contractDetailsBackingBean.managedBean.selectedTabIndex == 5 and
-				  contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}">
+				<p:outputPanel rendered="#{(contractDetailsBackingBean.managedBean.selectedTabIndex == 5 and 
+				    contractDetailsBackingBean.managedBean.ctContract.zonalPricing and !contractDetailsBackingBean.managedBean.directPurchase
+				    and contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry)
+				    
+				    or (contractDetailsBackingBean.managedBean.selectedTabIndex == 4 and 
+				        contractDetailsBackingBean.managedBean.ctContract.zonalPricing and contractDetailsBackingBean.managedBean.directPurchase
+					    and contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry)
+					    
+					or (contractDetailsBackingBean.managedBean.selectedTabIndex == 4 and 
+					    !contractDetailsBackingBean.managedBean.ctContract.zonalPricing  and !contractDetailsBackingBean.managedBean.directPurchase
+					     and contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry)
+					     
+					 or(contractDetailsBackingBean.managedBean.selectedTabIndex == 3 and 
+					   !contractDetailsBackingBean.managedBean.ctContract.zonalPricing and contractDetailsBackingBean.managedBean.directPurchase
+					    and  contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry )}">
 					 <ui:include src="/xhtml/ct/fulfilmentdetails/shared/schedule.xhtml" />
 				</p:outputPanel>
-				<p:outputPanel rendered="#{(contractDetailsBackingBean.managedBean.selectedTabIndex == 6 and contractDetailsBackingBean.managedBean.ctContract.factored
-				and contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry) or 
-				 (contractDetailsBackingBean.managedBean.selectedTabIndex == 2 and  contractDetailsBackingBean.managedBean.ctContract.factored and 
-				    contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeCentral)}">
+				
+				<p:outputPanel rendered="#{(contractDetailsBackingBean.managedBean.selectedTabIndex == 2 and  
+				     contractDetailsBackingBean.managedBean.ctContract.factored and 
+					contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeCentral)
+					
+					or(contractDetailsBackingBean.managedBean.selectedTabIndex == 6 and contractDetailsBackingBean.managedBean.ctContract.zonalPricing 
+					  and contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
+					  and !contractDetailsBackingBean.managedBean.directPurchase and contractDetailsBackingBean.managedBean.ctContract.factored)
+				
+				  or(contractDetailsBackingBean.managedBean.selectedTabIndex == 5 and contractDetailsBackingBean.managedBean.ctContract.zonalPricing 
+				     and contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
+					 and contractDetailsBackingBean.managedBean.directPurchase and contractDetailsBackingBean.managedBean.ctContract.factored)
+					 
+				 or(contractDetailsBackingBean.managedBean.selectedTabIndex == 5 and !contractDetailsBackingBean.managedBean.ctContract.zonalPricing 
+				    and contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
+					and !contractDetailsBackingBean.managedBean.directPurchase and contractDetailsBackingBean.managedBean.ctContract.factored)
+				
+				or(contractDetailsBackingBean.managedBean.selectedTabIndex == 4 and !contractDetailsBackingBean.managedBean.ctContract.zonalPricing 
+				   and contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
+				   and contractDetailsBackingBean.managedBean.directPurchase and contractDetailsBackingBean.managedBean.ctContract.factored)}">
 					<ui:include src="/xhtml/ct/fulfilmentdetails/shared/factoring.xhtml"/>
 				</p:outputPanel>
 	
-				<p:outputPanel rendered="#{(contractDetailsBackingBean.managedBean.selectedTabIndex == 6
-				and contractDetailsBackingBean.managedBean.flgPaymentTracking and !contractDetailsBackingBean.managedBean.ctContract.factored) or
-				(contractDetailsBackingBean.managedBean.selectedTabIndex == 7 and contractDetailsBackingBean.managedBean.flgPaymentTracking 
-				and contractDetailsBackingBean.managedBean.ctContract.factored) and
-				contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}">
-					<ui:include src="/xhtml/ct/fulfilmentdetails/shared/paymentTracking.xhtml"/>
-				</p:outputPanel>
+				<p:outputPanel rendered="#{(contractDetailsBackingBean.managedBean.selectedTabIndex == 6 and 
+				              contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
+					          contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
+					          and !contractDetailsBackingBean.managedBean.directPurchase and !contractDetailsBackingBean.managedBean.ctContract.factored
+					          and contractDetailsBackingBean.managedBean.flgPaymentTracking)
+					          
+					        or(contractDetailsBackingBean.managedBean.selectedTabIndex == 7 and  contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
+					          contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
+					          and !contractDetailsBackingBean.managedBean.directPurchase and contractDetailsBackingBean.managedBean.ctContract.factored
+					          and contractDetailsBackingBean.managedBean.flgPaymentTracking)
+					          
+					       or(contractDetailsBackingBean.managedBean.selectedTabIndex == 5 and contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
+					          contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
+					          and contractDetailsBackingBean.managedBean.directPurchase and !contractDetailsBackingBean.managedBean.ctContract.factored
+					          and contractDetailsBackingBean.managedBean.flgPaymentTracking)
+					          
+					      or(contractDetailsBackingBean.managedBean.selectedTabIndex == 6 and contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
+					          contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
+					          and contractDetailsBackingBean.managedBean.directPurchase and contractDetailsBackingBean.managedBean.ctContract.factored
+					          and contractDetailsBackingBean.managedBean.flgPaymentTracking)
+					          
+					      or(contractDetailsBackingBean.managedBean.selectedTabIndex == 5 and !contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
+					          contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
+					          and !contractDetailsBackingBean.managedBean.directPurchase and !contractDetailsBackingBean.managedBean.ctContract.factored
+					          and contractDetailsBackingBean.managedBean.flgPaymentTracking)
+					      
+					      or(contractDetailsBackingBean.managedBean.selectedTabIndex == 6 and !contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
+					          contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
+					          and !contractDetailsBackingBean.managedBean.directPurchase and contractDetailsBackingBean.managedBean.ctContract.factored
+					          and contractDetailsBackingBean.managedBean.flgPaymentTracking)
+					          
+					     or(contractDetailsBackingBean.managedBean.selectedTabIndex == 4 and !contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
+					          contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
+					          and contractDetailsBackingBean.managedBean.directPurchase and !contractDetailsBackingBean.managedBean.ctContract.factored
+					          and contractDetailsBackingBean.managedBean.flgPaymentTracking)
+
+                          or(contractDetailsBackingBean.managedBean.selectedTabIndex == 5 and !contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
+					          contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
+					          and contractDetailsBackingBean.managedBean.directPurchase and contractDetailsBackingBean.managedBean.ctContract.factored
+					          and contractDetailsBackingBean.managedBean.flgPaymentTracking)}">
+				             	<ui:include src="/xhtml/ct/fulfilmentdetails/shared/paymentTracking.xhtml"/>
+				   </p:outputPanel>
 				
-				<p:outputPanel rendered="#{((contractDetailsBackingBean.managedBean.selectedTabIndex == 2 and 
-				!contractDetailsBackingBean.managedBean.ctContract.factored and 
-				 contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeCentral) or 
-				 (contractDetailsBackingBean.managedBean.selectedTabIndex == 3 and contractDetailsBackingBean.managedBean.ctContract.factored 
-				 and contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeCentral)) or 
-				 
-				((
-				(contractDetailsBackingBean.managedBean.selectedTabIndex == 8 and contractDetailsBackingBean.managedBean.ctContract.factored and 
-				 contractDetailsBackingBean.managedBean.flgPaymentTracking and contractDetailsBackingBean.managedBean.ctContract.zonalPricing) or
-				 
-				 (contractDetailsBackingBean.managedBean.selectedTabIndex == 7 and contractDetailsBackingBean.managedBean.ctContract.factored and 
-				  !contractDetailsBackingBean.managedBean.flgPaymentTracking and contractDetailsBackingBean.managedBean.ctContract.zonalPricing) or
-				  
-				  (contractDetailsBackingBean.managedBean.selectedTabIndex == 7 and !contractDetailsBackingBean.managedBean.ctContract.factored 
-				  and contractDetailsBackingBean.managedBean.flgPaymentTracking and contractDetailsBackingBean.managedBean.ctContract.zonalPricing) or
-				  
-				  (contractDetailsBackingBean.managedBean.selectedTabIndex == 6 and !contractDetailsBackingBean.managedBean.ctContract.factored and 
-				  !contractDetailsBackingBean.managedBean.flgPaymentTracking and contractDetailsBackingBean.managedBean.ctContract.zonalPricing) or
-				  
-				  (contractDetailsBackingBean.managedBean.selectedTabIndex == 7 and contractDetailsBackingBean.managedBean.ctContract.factored and 
-				  !contractDetailsBackingBean.managedBean.flgPaymentTracking  and  !contractDetailsBackingBean.managedBean.ctContract.zonalPricing) or
-				  
-				  (contractDetailsBackingBean.managedBean.selectedTabIndex == 7 and !contractDetailsBackingBean.managedBean.ctContract.factored and 
-				  contractDetailsBackingBean.managedBean.flgPaymentTracking and  !contractDetailsBackingBean.managedBean.ctContract.zonalPricing) or
-				  
-				  (contractDetailsBackingBean.managedBean.selectedTabIndex == 8 and contractDetailsBackingBean.managedBean.ctContract.factored and 
-				  contractDetailsBackingBean.managedBean.flgPaymentTracking and  !contractDetailsBackingBean.managedBean.ctContract.zonalPricing) or
-				  
-				  (contractDetailsBackingBean.managedBean.selectedTabIndex == 6 and !contractDetailsBackingBean.managedBean.ctContract.factored and 
-				  !contractDetailsBackingBean.managedBean.flgPaymentTracking and  !contractDetailsBackingBean.managedBean.ctContract.zonalPricing)) 
-				  and contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry)}">
+				<p:outputPanel rendered="#{(contractDetailsBackingBean.managedBean.selectedTabIndex == 3 and 
+				     contractDetailsBackingBean.managedBean.ctContract.factored and 
+					 contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeCentral)
+					
+				   or(contractDetailsBackingBean.managedBean.selectedTabIndex == 2 and 
+				      !contractDetailsBackingBean.managedBean.ctContract.factored and 
+				      contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeCentral)
+				   
+			       or(contractDetailsBackingBean.managedBean.selectedTabIndex == 6 and contractDetailsBackingBean.managedBean.ctContract.zonalPricing 
+			          and contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
+				      and !contractDetailsBackingBean.managedBean.directPurchase and !contractDetailsBackingBean.managedBean.ctContract.factored
+				      and !contractDetailsBackingBean.managedBean.flgPaymentTracking)
+				
+			    	or(contractDetailsBackingBean.managedBean.selectedTabIndex == 7 and contractDetailsBackingBean.managedBean.ctContract.zonalPricing
+				       and contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
+				       and !contractDetailsBackingBean.managedBean.directPurchase and !contractDetailsBackingBean.managedBean.ctContract.factored
+				       and contractDetailsBackingBean.managedBean.flgPaymentTracking)
+				       
+				    or(contractDetailsBackingBean.managedBean.selectedTabIndex == 7 and contractDetailsBackingBean.managedBean.ctContract.zonalPricing
+				       and contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
+				       and !contractDetailsBackingBean.managedBean.directPurchase and contractDetailsBackingBean.managedBean.ctContract.factored
+				       and !contractDetailsBackingBean.managedBean.flgPaymentTracking)
+
+                     or(contractDetailsBackingBean.managedBean.selectedTabIndex == 8 and contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
+					     contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
+					     and !contractDetailsBackingBean.managedBean.directPurchase and contractDetailsBackingBean.managedBean.ctContract.factored
+					     and contractDetailsBackingBean.managedBean.flgPaymentTracking)
+					  
+				      or(contractDetailsBackingBean.managedBean.selectedTabIndex == 5 and contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
+					      contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
+					      and contractDetailsBackingBean.managedBean.directPurchase and !contractDetailsBackingBean.managedBean.ctContract.factored
+					      and !contractDetailsBackingBean.managedBean.flgPaymentTracking)
+
+
+                       or(contractDetailsBackingBean.managedBean.selectedTabIndex == 6 and contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
+					       contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
+					       and contractDetailsBackingBean.managedBean.directPurchase and !contractDetailsBackingBean.managedBean.ctContract.factored
+					       and contractDetailsBackingBean.managedBean.flgPaymentTracking)
+					     
+					      or(contractDetailsBackingBean.managedBean.selectedTabIndex == 6 and contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
+					       contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
+					       and contractDetailsBackingBean.managedBean.directPurchase and contractDetailsBackingBean.managedBean.ctContract.factored
+					       and !contractDetailsBackingBean.managedBean.flgPaymentTracking)
+
+                        or(contractDetailsBackingBean.managedBean.selectedTabIndex == 7 and contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
+					        contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
+					        and contractDetailsBackingBean.managedBean.directPurchase and contractDetailsBackingBean.managedBean.ctContract.factored
+					        and contractDetailsBackingBean.managedBean.flgPaymentTracking)
+
+                         or(contractDetailsBackingBean.managedBean.selectedTabIndex == 5 and !contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
+					         contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
+					         and !contractDetailsBackingBean.managedBean.directPurchase and !contractDetailsBackingBean.managedBean.ctContract.factored
+					         and !contractDetailsBackingBean.managedBean.flgPaymentTracking)
+
+
+                          or(contractDetailsBackingBean.managedBean.selectedTabIndex == 6 and !contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
+					          contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
+					          and !contractDetailsBackingBean.managedBean.directPurchase and contractDetailsBackingBean.managedBean.ctContract.factored
+					          and !contractDetailsBackingBean.managedBean.flgPaymentTracking)
+					          
+					           or(contractDetailsBackingBean.managedBean.selectedTabIndex == 6 and !contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
+					          contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
+					          and !contractDetailsBackingBean.managedBean.directPurchase and !contractDetailsBackingBean.managedBean.ctContract.factored
+					          and contractDetailsBackingBean.managedBean.flgPaymentTracking)
+
+                          or(contractDetailsBackingBean.managedBean.selectedTabIndex == 7 and !contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
+					          contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
+					          and !contractDetailsBackingBean.managedBean.directPurchase and contractDetailsBackingBean.managedBean.ctContract.factored
+					          and contractDetailsBackingBean.managedBean.flgPaymentTracking)
+
+
+                           or(contractDetailsBackingBean.managedBean.selectedTabIndex == 4 and !contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
+					          contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
+					          and contractDetailsBackingBean.managedBean.directPurchase and !contractDetailsBackingBean.managedBean.ctContract.factored
+					          and !contractDetailsBackingBean.managedBean.flgPaymentTracking)
+
+                          or(contractDetailsBackingBean.managedBean.selectedTabIndex == 5 and !contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
+					          contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
+					          and contractDetailsBackingBean.managedBean.directPurchase and !contractDetailsBackingBean.managedBean.ctContract.factored
+					          and contractDetailsBackingBean.managedBean.flgPaymentTracking)
+					          
+					           or(contractDetailsBackingBean.managedBean.selectedTabIndex == 5 and !contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
+					          contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
+					          and contractDetailsBackingBean.managedBean.directPurchase and contractDetailsBackingBean.managedBean.ctContract.factored
+					          and !contractDetailsBackingBean.managedBean.flgPaymentTracking)
+
+                          or(contractDetailsBackingBean.managedBean.selectedTabIndex == 6 and !contractDetailsBackingBean.managedBean.ctContract.zonalPricing and 
+					          contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry
+					          and contractDetailsBackingBean.managedBean.directPurchase and contractDetailsBackingBean.managedBean.ctContract.factored
+					          and contractDetailsBackingBean.managedBean.flgPaymentTracking)}">
 					<ui:include	src="/xhtml/ct/fulfilmentdetails/shared/approverSetting.xhtml" />
 				   <ui:include	src="/xhtml/ct/fulfilmentdetails/shared/fulfilmentSetting.xhtml" />
 				</p:outputPanel>
