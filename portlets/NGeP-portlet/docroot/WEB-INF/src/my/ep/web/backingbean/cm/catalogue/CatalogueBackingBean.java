@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -574,6 +575,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					.setStandardDisabled(true);
 	
 			this.getManagedBean().setDisplayCatalogue(true);
+			updateStandardErrorDialog(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing());
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -598,6 +600,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		this.getManagedBean().setTabActiveIndex(4);
 		this.getManagedBean().setDisplayCatalogue(true);
 		this.getManagedBean().setPreviousScreen(1);//catMaintenance
+		updateStandardErrorDialog(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing());
 		//return "addCatalogItem";
 		return "editCatalogItem";
 	}
@@ -614,6 +617,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		this.getManagedBean().setTabActiveIndex(5);
 		this.getManagedBean().setDisplayCatalogue(true);
 		this.getManagedBean().setPreviousScreen(1);//catMaintenance
+		updateStandardErrorDialog(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing());
 		//return "addCatalogItem";
 		return "editCatalogItem";
 	}
@@ -668,6 +672,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			}
 			this.getManagedBean().setTabActiveIndex(1);
 			this.getManagedBean().setDisplayCatalogue(true);
+			//updateStandardErrorDialog(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing());
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -692,6 +697,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		this.getManagedBean().setTabActiveIndex(2);
 		this.getManagedBean().setDisplayCatalogue(true);
 		this.getManagedBean().setPreviousScreen(1);//catMaintenance
+		//updateStandardErrorDialog(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing());
 		return "addCatalogItem";
 		//return "editCatalogItem";
 
@@ -748,6 +754,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	
 			this.getManagedBean().setTabActiveIndex(3);
 			this.getManagedBean().setDisplayCatalogue(true);
+			updateStandardErrorDialog(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing());
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -780,29 +787,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			reqDTO.setSupplierId(resDTO.getSupplierItemList().get(0).getSmSupplier().getSupplierId());
 			resDTO = catalogueSO.retrieveSupplierZoneBySuppId(reqDTO);
 			this.getManagedBean().setSupplierZoneList(resDTO.getSupplierZoneLs());
-			
-			/*if(this.getManagedBean().getSelectedMaintainItem().getzStdPrices()!=null)
-				for(CmZonalStandardPricing a : this.getManagedBean().getSelectedMaintainItem().getzStdPrices()){
-					a.setStandardDisabled(true);
-					a.setDisplayAction(false);
-				}
-			
-			if(this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionPricings()!=null)
-				for(CmZonalPromotionPricing a : this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionPricings()){
-					a.setStandardDisabled(true);
-					a.setDisplayAction(false);
-				}
-			
-			if(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings()!=null)
-				for(CmTierPricing a : this.getManagedBean().getSelectedMaintainItem().getCmTierPricings()){
-					a.setStandardDisabled(true);
-					a.setDisplayAction(false);
-				}
-			
-			if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings()!=null)
-				for(CmPromotionTierPricing a : this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings()){
-					a.setStandardDisabled(true);
-				}*/
+
 			System.out.println("*****************end********************");
 			
 		} catch (Exception e) {
@@ -2257,6 +2242,21 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 									new FacesScopes().getUserLocale())));
 				return "editCatalogItem";
 			}
+			
+			//1 year period between start and end date
+			Calendar cal = Calendar.getInstance();  
+			cal.setTime(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getStartDate());
+			cal.add(Calendar.YEAR, 1);
+			
+			if(cal.getTime().compareTo(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getEndDate())<0){
+				FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+							MessageUtils.getMessage(MessageConst.ERROR_715012,
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+				return "editCatalogItem";
+			}
 
 			Map<Date, List<CmTierPricing>> tierMap = groupingTier(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings());
 			if (!tierMap.isEmpty() && tierMap.size() > 0) {
@@ -2614,6 +2614,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				if (catalog.getCmStandardPricing().getPrice() == null
 						|| catalog.getCmStandardPricing().getStartDate() == null
 						|| catalog.getCmStandardPricing().getEndDate() == null
+						|| catalog.getPmUom().getUomName() == null
 						|| catalog.getPmUom().getUomName().isEmpty()) {
 
 					System.out.println("********validation**********");
@@ -2628,11 +2629,27 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					return "catalogMaintenanceFile";
 				}
 				
+				//end date before start date
 				if(catalog.getCmStandardPricing().getStartDate().after(catalog.getCmStandardPricing().getEndDate())){
 					FacesContext.getCurrentInstance().addMessage(
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 								MessageUtils.getMessage(MessageConst.ERROR_715011,
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+					return "catalogMaintenanceFile";
+				}
+				
+				//1 year period between start and end date
+				Calendar cal = Calendar.getInstance();  
+				cal.setTime(catalog.getCmStandardPricing().getStartDate());
+				cal.add(Calendar.YEAR, 1);
+				
+				if(cal.getTime().compareTo(catalog.getCmStandardPricing().getEndDate())<0){
+					FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+								MessageUtils.getMessage(MessageConst.ERROR_715012,
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
 					return "catalogMaintenanceFile";
@@ -4290,6 +4307,25 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		} else {
 			this.getManagedBean().setError3(false);
 		}
+		
+		//check for 1 year period
+		if(standardPricing.getStartDate() != null && standardPricing.getEndDate()!=null){
+			Calendar cal = Calendar.getInstance();  
+			cal.setTime(standardPricing.getStartDate());
+			cal.add(Calendar.YEAR, 1);
+			
+			//log.info("start 1year after "+cal.getTime());
+			//log.info("end date "+standardPricing.getEndDate().getTime());
+			//log.info("start compare to end "+cal.getTime().compareTo(standardPricing.getEndDate()));
+			//log.info("end compare to start "+standardPricing.getEndDate().compareTo(cal.getTime()));
+			
+			if(cal.getTime().compareTo(standardPricing.getEndDate())<0){
+				this.getManagedBean().setError7(true);
+			}else{
+				this.getManagedBean().setError7(false);
+			}
+		}else
+			this.getManagedBean().setError7(false);
 	}
 
 	public void updatePromotionErrorDialog() {

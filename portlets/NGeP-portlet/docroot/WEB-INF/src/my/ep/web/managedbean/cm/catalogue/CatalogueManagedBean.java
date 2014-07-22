@@ -169,6 +169,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private boolean error4 = false;
 	private boolean error5 = false;
 	private boolean error6 = false;
+	private boolean error7 = false;
 	
 	private List<VCmSupplierItem> tempSupplierList;
 	private List<VCmSupplierItem> ctRequestList;
@@ -1379,6 +1380,16 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 	public void setPreviousScreen(int previousScreen) {
 		this.previousScreen = previousScreen;
+	}
+
+
+	public boolean isError7() {
+		return error7;
+	}
+
+
+	public void setError7(boolean error7) {
+		this.error7 = error7;
 	}
 
 	

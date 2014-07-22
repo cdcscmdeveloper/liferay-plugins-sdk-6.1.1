@@ -46,7 +46,7 @@
 			<p:column>
 				<p:inputText readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue}"
 					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.price}" style="text-align:right">
-					<p:ajax event="keyup" update="standardErrorLink" />
+					<p:ajax event="keyup" update="standardErrorLink" listener="#{catalogueBackingBean.updateStandardErrorDialog(catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing)}"/>
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</p:inputText>
 			</p:column>
@@ -54,8 +54,8 @@
 				<p:calendar readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue}"
 					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.startDate}" mindate="#{catalogueBackingBean.managedBean.currentDate}"
 					showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
-					<p:ajax event="dateSelect" update="standardErrorLink" />
-					<p:ajax event="keyup" update="standardErrorLink" />
+					<p:ajax event="dateSelect" update="standardErrorLink" listener="#{catalogueBackingBean.updateStandardErrorDialog(catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing)}"/>
+					<p:ajax event="keyup" update="standardErrorLink" listener="#{catalogueBackingBean.updateStandardErrorDialog(catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing)}"/>
 				</p:calendar>
 
 			</p:column>
@@ -63,19 +63,23 @@
 				<p:calendar readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue}"
 					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.endDate}" mindate="#{catalogueBackingBean.managedBean.currentDate}"
 					showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
-					<p:ajax event="dateSelect" update="standardErrorLink" />
-					<p:ajax event="keyup" update="standardErrorLink" />
+					<p:ajax event="dateSelect" update="standardErrorLink" listener="#{catalogueBackingBean.updateStandardErrorDialog(catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing)}"/>
+					<p:ajax event="keyup" update="standardErrorLink" listener="#{catalogueBackingBean.updateStandardErrorDialog(catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing)}"/>
 				</p:calendar>
 
 			</p:column>
 			<p:column>
 				<p:commandLink id="standardErrorLink" title="Error" update=":form"
 					oncomplete="errorDialog.show();"
-					actionListener="#{catalogueBackingBean.updateStandardErrorDialog(catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing)}"
-					disabled="#{!(catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.price eq null or 
-					catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.startDate eq null or 
-					catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.endDate eq null or 
-					catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.startDate >= catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.endDate)}">
+					
+					disabled="#{!(catalogueBackingBean.managedBean.error1 or
+					catalogueBackingBean.managedBean.error2 or
+					catalogueBackingBean.managedBean.error3 or
+					catalogueBackingBean.managedBean.error4 or
+					catalogueBackingBean.managedBean.error5 or
+					catalogueBackingBean.managedBean.error6 or
+					catalogueBackingBean.managedBean.error7
+					)}">
 					<p:graphicImage value="/resources/ep/images/design/icon_error.png"></p:graphicImage>
 				</p:commandLink>
 			</p:column>

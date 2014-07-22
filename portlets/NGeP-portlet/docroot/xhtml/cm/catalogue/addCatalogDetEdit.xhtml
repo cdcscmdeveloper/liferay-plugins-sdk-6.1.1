@@ -378,6 +378,10 @@
 			        <p:column style="width:2%;"><p:graphicImage value="/resources/ep/images/messages/error.png"></p:graphicImage></p:column>
 			        <p:column><h:outputText value="Normal Promotion Price must be less than Normal Standard Price."></h:outputText></p:column>
 			    </p:row>
+			    <p:row rendered="#{catalogueBackingBean.managedBean.error7}">
+			        <p:column style="width:2%;"><p:graphicImage value="/resources/ep/images/messages/error.png"></p:graphicImage></p:column>
+			        <p:column><h:outputText value="End date cannot be more than a year of start date."></h:outputText></p:column>
+			    </p:row>
 			 
 			    <p:row>
 			        <p:column colspan="2">
