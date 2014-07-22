@@ -826,6 +826,9 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				getManagedBean().getFlManualAddress().getPmAddress().getPmDivision().setDivisionId(1L);
 			}
 			getManagedBean().setSelectedTabIndex(0);
+			if(!getManagedBean().getFlRequest().getFlDeliveryAddresses().isEmpty()){
+				getManagedBean().setSelectedDelAddr(getManagedBean().getFlRequest().getFlDeliveryAddresses().get(0));
+			}			
 		}else if(contractId != null){
 			renewSesionObject();
 			ContractRequestBackingBean crBB = new ContractRequestBackingBean();
@@ -887,9 +890,9 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			FulfilmentBackingBean flBackingBean = new FulfilmentBackingBean();
 			flBackingBean.initializeRemarkAndAttachement(flBB.getManagedBean().getRemarkList(), flBB.getManagedBean().getAttachmentList());
 			getManagedBean().setSelectedTabIndex(0);
-		}
-		if(!getManagedBean().getFlRequest().getFlDeliveryAddresses().isEmpty()){
-			getManagedBean().setSelectedDelAddr(getManagedBean().getFlRequest().getFlDeliveryAddresses().get(0));
+			if(!getManagedBean().getFlRequest().getFlDeliveryAddresses().isEmpty()){
+				getManagedBean().setSelectedDelAddr(getManagedBean().getFlRequest().getFlDeliveryAddresses().get(0));
+			}
 		}
 		
 		if(getManagedBean().getFlRequest().getCtContract().isZonalPricing()){
