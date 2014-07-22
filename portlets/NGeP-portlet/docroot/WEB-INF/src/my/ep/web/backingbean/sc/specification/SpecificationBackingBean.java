@@ -479,8 +479,10 @@ public class SpecificationBackingBean extends
 					this.getManagedBean().getScQt().getScQtSupplierCriteria()
 							.setLocationLevel(new PmParameter());
 				}
-				if ( this.getManagedBean().getScQt().getEstimatedAmount().intValue() > 500000) {
-					this.getManagedBean().getScQt().getScQtSupplierCriteria().setAllState(true);
+				if (this.getManagedBean().getScQt().getEstimatedAmount()
+						.intValue() > 500000) {
+					this.getManagedBean().getScQt().getScQtSupplierCriteria()
+							.setAllState(true);
 				}
 				getManagedBean().setZoneGeneralTrees(new ArrayList<TreeNode>());
 			}
@@ -3130,6 +3132,12 @@ public class SpecificationBackingBean extends
 				.get("value");
 
 		this.getManagedBean().getScQt().setQtType(type);
+	}
+
+	public void panelChangeValue(AjaxBehaviorEvent event) {
+		Boolean panel = (Boolean) event.getComponent().getAttributes()
+				.get("value");
+		this.getManagedBean().getScQt().setPanel(panel);
 	}
 
 	public void typeChange(int index, List<ScQtCheckList> checkList) {
@@ -6797,11 +6805,7 @@ public class SpecificationBackingBean extends
 
 	public void retriveZonesByCircularNo() {
 		try {
-			this.getManagedBean().setTechnicalSpecList(
-					new ArrayList<ScQtCheckList>());
-			this.getManagedBean()
-					.setFinSpecList(new ArrayList<ScQtCheckList>());
-			this.getManagedBean().getSelectpanelItem();
+
 			PanelSupplierReqDTO reqDTO = new PanelSupplierReqDTO();
 			reqDTO.setPanelItem(this.getManagedBean().getCtPanelItem());
 			IPanelSupplierSO panelSupplierSO = (IPanelSupplierSO) BusinessDelegate
@@ -6813,6 +6817,7 @@ public class SpecificationBackingBean extends
 					.retrievePanelZonesByPanelItem(reqDTO);
 
 			if (isNotNullOREmpty(resDTO.getCtPanelZones())) {
+				getManagedBean().setCtZoneSuppliers(new ArrayList<TreeNode>());
 				if (null != getManagedBean().getCtZoneSuppliers()
 						&& getManagedBean().getCtZoneSuppliers().size() == 0) {
 					this.getManagedBean().setCtPanelZones(
@@ -7918,7 +7923,7 @@ public class SpecificationBackingBean extends
 					.equalsIgnoreCase(taskName)) {
 				loadPrepareSpecDetails(quotationTenderDataType.getQtId()
 						.longValue(), getDocTypeByTaskName(taskName));
-				//this.getManagedBean().setActiveIndex(4);
+				// this.getManagedBean().setActiveIndex(4);
 			}
 			ScQt scQt = this.getManagedBean().getScQt();
 			if (null == scQt.getEstimatedAmount()) {
@@ -8912,7 +8917,7 @@ public class SpecificationBackingBean extends
 			if (null == supplierCriteria.getLocationLevel()) {
 				supplierCriteria.setLocationLevel(new PmParameter());
 			}
-			
+
 			this.getManagedBean()
 					.setZoneGeneralTrees(new ArrayList<TreeNode>());
 
