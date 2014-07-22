@@ -2518,6 +2518,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			
 			//----------logic checking end-------------------------------------------------------------------------------------------//
 			
+			//record status = active
+			this.getManagedBean().getSelectedMaintainItem().setRecordStatusFlg(1);
+			
 			reqDTO.getSaveSupplierItems().add(this.getManagedBean().getSelectedMaintainItem());
 			catalogueSO.updateSupplierItem(reqDTO);
 
@@ -2662,6 +2665,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					catalog.setItemStatus("U");
 				}
 
+				//status active
+				catalog.setRecordStatusFlg(1);
+				
 				catalog.getCmStandardPricing().setCmSupplierItem(catalog);
 
 				/*
@@ -3562,27 +3568,26 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	public void deleteTierPrice() {
 
-		List<CmTierPricing> tierList = this.getManagedBean()
-				.getSelectedMaintainItem().getCmTierPricings();
+		List<CmTierPricing> tierList = this.getManagedBean().getSelectedMaintainItem().getCmTierPricings();
 		List<CmTierPricing> dataList = new ArrayList<CmTierPricing>();
 		System.out.println("tierList:" + tierList.size());
+		
 		for (CmTierPricing cmPricing : tierList) {
-			System.out.println("cmPricing.getStand_group_id()"
-					+ cmPricing.getStand_group_id());
-			System.out
-					.println("tierList.get(this.getManagedBean().getTierRowIndex()).getStand_group_id()"
-							+ tierList.get(
-									this.getManagedBean().getTierRowIndex())
-									.getStand_group_id());
-			if (cmPricing.getStand_group_id().compareTo(
-					tierList.get(this.getManagedBean().getTierRowIndex())
-							.getStand_group_id()) == 0) {
-				dataList.add(cmPricing);
-			}
+			//System.out.println("cmPricing.getStand_group_id()" + cmPricing.getStand_group_id());
+			//System.out.println("tierList.get(this.getManagedBean().getTierRowIndex()) "+ cmPricing.get(this.getManagedBean().getTierRowIndex()));
+			//if (cmPricing.getStand_group_id().compareTo(tierList.get(this.getManagedBean().getTierRowIndex()).getStand_group_id()) == 0) {
+			//	dataList.add(cmPricing);
+			//}
+			if(cmPricing.getStand_group_id()!=null)
+				if (cmPricing.getStand_group_id().compareTo(tierList.get(this.getManagedBean().getTierRowIndex()).getStand_group_id()) == 0) {
+					dataList.add(cmPricing);
+				}
 		}
+		
+		if(dataList.size()==0)
+			dataList.add(tierList.get(this.getManagedBean().getTierRowIndex()));
 
-		List<CmPromotionTierPricing> promotionTierList = this.getManagedBean()
-				.getSelectedMaintainItem().getCmPromotionTierPricings();
+		List<CmPromotionTierPricing> promotionTierList = this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings();
 		List<CmPromotionTierPricing> childList = new ArrayList<CmPromotionTierPricing>();
 		for (CmPromotionTierPricing cmPricing : promotionTierList) {
 
