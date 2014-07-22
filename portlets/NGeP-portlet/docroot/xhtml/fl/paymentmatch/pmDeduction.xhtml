@@ -14,13 +14,13 @@
 			<p:column selectionMode="multiple" style="width:2%;text-align:center" />
 			<p:column headerText="Type">
 				<h:outputText rendered="#{index == 0}" value="#{paymentMatchBackingBean.getParameterDesc(deduction.deductionType)}" />
-				<p:selectOneMenu rendered="#{index > 0}" value="#{deduction.deductionType.parameterId}" >
+				<p:selectOneMenu rendered="#{index > 0}" value="#{deduction.deductionType.parameterCode}" >
 					<p:ajax event="change" process="@this" update=":form:deductionDataTable" />
 					<f:selectItem itemLabel="-- Select -- " itemValue="" />
 					<f:selectItems var="ctDeduction"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.ctContract.latestContractVer.ctDeductions}"
 						itemLabel="#{paymentMatchBackingBean.getParameterDesc(ctDeduction.deductionType)}"
-						itemValue="#{ctDeduction.deductionType.parameterId}" />
+						itemValue="#{ctDeduction.deductionType.parameterCode}" />
 				</p:selectOneMenu>
 			</p:column>
 			<p:column headerText="Description">
