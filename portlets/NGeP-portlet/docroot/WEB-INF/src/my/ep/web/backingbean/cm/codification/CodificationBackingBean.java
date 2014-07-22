@@ -920,7 +920,7 @@ public class CodificationBackingBean extends
 				.getInstance().getServiceObject("cm",
 						IPendingCodifiedItemSO.class);
 
-		CodificationReqDTO codeReqDTO = new CodificationReqDTO();
+		
 
 		this.getManagedBean().setExtensionVoList(null);
 
@@ -947,6 +947,7 @@ public class CodificationBackingBean extends
 			extCodeVO = new ExtensionCodeVO();
 			CmUnspsc selectedCommodity = this.getManagedBean()
 					.getSelectedUNSPSCObj();
+			
 			extCodeVO.setTypeId(selectedCommodity.getCmType().get(0)
 					.getTypeId());
 			extCodeVO.setBrandId(selectedCommodity.getCmBrand().get(0)
@@ -971,11 +972,8 @@ public class CodificationBackingBean extends
 
 			ExtensionCodeVO obj = this.getManagedBean().getExtensionVoList()
 					.get(0);
-			System.out.println("**********obj.getBrandId()="+obj.getBrandId());
-			System.out.println("**********obj.getMeasurementId()="+obj.getMeasurementId());
-			System.out.println("**********obj.getTypeId()="+obj.getTypeId());
-			System.out.println("**********obj.getColorId()="+obj.getColorId());
-			System.out.println("*********.getSelectedUNSPSCObj().getUnspscId())="+(this.getManagedBean().getSelectedUNSPSCObj().getUnspscId()));
+			
+			CodificationReqDTO codeReqDTO = new CodificationReqDTO();
 			codeReqDTO.setBrandId(obj.getBrandId());
 			codeReqDTO.setMeasurementId(obj.getMeasurementId());
 			codeReqDTO.setTypeId(obj.getTypeId());
@@ -996,19 +994,25 @@ public class CodificationBackingBean extends
 				System.out
 						.println("************create new CmItem*******************");
 				CmType typeObj = this.searchTypeOjbyTypeId(obj.getTypeId());
+				
 				CmBrand brandObj = this.searchBrandObjByBrandId(obj
 						.getBrandId());
+				
 				CmMeasurement meaObj = this
 						.searchMeasurementByMeasurementId(obj
 								.getMeasurementId());
+				
 				CmColor colorObj = this.searchColorObjByColorId(obj
 						.getColorId());
-
+				
+				
+				codeReqDTO = new CodificationReqDTO();
 				codeReqDTO.setUnspscCode(this.getManagedBean()
 						.getSelectedUNSPSCObj().getUnspscCode());
 				codeResDTO = codificationSO.searchCommodityObj(codeReqDTO);
 
 				CmItem newItem = new CmItem();
+				
 				newItem.setCmUnspsc(codeResDTO.getCommodityObj());
 				newItem.setCmType(typeObj);
 				newItem.setCmBrand(brandObj);
@@ -1040,7 +1044,7 @@ public class CodificationBackingBean extends
 						+ newItem.getExtensionCode());
 				codeReqDTO.setCmItem(newItem);
 				codeResDTO = codificationSO.saveNewItem(codeReqDTO);
-				item = newItem;
+				item = codeResDTO.getCmItem();
 
 			}
 
@@ -1074,8 +1078,10 @@ public class CodificationBackingBean extends
 				RequestItemReqDTO requestItemReqDTO = new RequestItemReqDTO();
 				requestItemReqDTO.setRequestItems(this.getManagedBean()
 						.getSelectedVPendingRequestItemList());
+				
 				requestItemResDTO = ReqItemSO
 						.saveRequestItems(requestItemReqDTO);
+				
 				// update status of pendingCodifiedItem
 				PendingCodifiedItemReqDTO codifiedItemReqDTO = new PendingCodifiedItemReqDTO();
 				codifiedItemReqDTO.setPendingCodifiedItemId(this
@@ -1091,7 +1097,7 @@ public class CodificationBackingBean extends
 
 				codifiedItemReqDTO.setPendingCodifiedItem(codifiedItem);
 				codifiedItemSO.updatePendingCodifiedItem(codifiedItemReqDTO);
-
+				
 				facesContext = FacesContext.getCurrentInstance();
 				facesContext.addMessage(
 						null,

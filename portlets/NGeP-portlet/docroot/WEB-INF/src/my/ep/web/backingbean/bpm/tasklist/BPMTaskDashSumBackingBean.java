@@ -63,10 +63,10 @@ public class BPMTaskDashSumBackingBean extends
 
 	private static Logger log = Logger
 			.getLogger(BPMTaskDashSumBackingBean.class);
-	private int totalTask = 0;
+	private long totalTask = 0;
 	private List<BpmTaskSummaryDTO> dashboardSummary = new ArrayList<BpmTaskSummaryDTO>();
 	private int pendingDeliveryListNum;
-	private int pendingApprovalItemNum;
+	private long pendingApprovalItemNum;
 	private int pendingMOFSubmissionNum;
 	private ISearchBean<PmParameterDesc> docTypeSearchBean;
 	public BPMTaskDashSumBackingBean() {
@@ -207,16 +207,18 @@ public class BPMTaskDashSumBackingBean extends
 //			return flFulFilmentOrderList;
 //	}
 
-	public int getTotalTask() {
-		return totalTask;
-	}
-
-	public void setTotalTask(int totalTask) {
-		this.totalTask = totalTask;
-	}
+	
 
 	public List<BpmTaskSummaryDTO> getDashboardSummary() {
 		return dashboardSummary;
+	}
+
+	public long getTotalTask() {
+		return totalTask;
+	}
+
+	public void setTotalTask(long totalTask) {
+		this.totalTask = totalTask;
 	}
 
 	public void setDashboardSummary(List<BpmTaskSummaryDTO> dashboardSummary) {
@@ -231,11 +233,11 @@ public class BPMTaskDashSumBackingBean extends
 		this.pendingDeliveryListNum = pendingDeliveryListNum;
 	}
 
-	public int getPendingApprovalItemNum() {
+	public long getPendingApprovalItemNum() {
 		return pendingApprovalItemNum;
 	}
 
-	public void setPendingApprovalItemNum(int pendingApprovalItemNum) {
+	public void setPendingApprovalItemNum(long pendingApprovalItemNum) {
 		this.pendingApprovalItemNum = pendingApprovalItemNum;
 	}
 
