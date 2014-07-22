@@ -22,7 +22,7 @@
 			<p:column selectionMode="multiple" style="width:2%"></p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.category.code']}"
 				style="width:15%">
-				<ac:lov id="openPtj" lovId="PM_CATEGORY_L3"
+				<ac:lov id="openPtj" lovId="PM_CATEGORY_L3" disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
 					headerText="Category Lov"
 					saveObject="specificationBackingBean.managedBean.suppCriteriaopenList[#{index}].pmCategoryL3"
 					value="#{cateGory.pmCategoryL3.categoryL3Code}"
@@ -56,7 +56,8 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.mandatory']}"
 				style="width:10%">
-				<p:selectBooleanCheckbox value="#{cateGory.mandatory}">
+				<p:selectBooleanCheckbox value="#{cateGory.mandatory}"
+					disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}">
 
 				</p:selectBooleanCheckbox>
 			</p:column>
@@ -65,11 +66,13 @@
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
 				process="@this" update="openPnlId" icon="ui-icon-add"
+				disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
 				actionListener="#{specificationBackingBean.addNewCategoryAction}" />
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
 				icon="ui-icon-delete" process="@this,openPnlId" partialSubmit="true"
 				action="#{specificationBackingBean.deleteCategoryCodes}"
-				update="openPnlId" />
+				update="openPnlId"
+				disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}" />
 
 		</div>
 	</p:panel>
@@ -88,7 +91,7 @@
 							<h:outputLabel value="#{lbl['lbl.so.allstate']}"
 								style="width : 80px" />
 							<p:selectBooleanCheckbox
-								disabled="#{specificationBackingBean.managedBean.allStateCode eq '3'}"
+								disabled="#{specificationBackingBean.managedBean.allStateCode eq '3' or specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
 								value="#{specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState}">
 								<f:selectItem
 									itemValue="#{specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState}"></f:selectItem>
@@ -105,6 +108,7 @@
 							value="#{lbl['lbl.so.paidup']}"
 							rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState eq 'true'}" /></td>
 					<td><p:inputText size="30" maxlength="18"
+							disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
 							rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState eq 'true'}"
 							value="#{specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.minPaidUpCapital}"
 							style="margin-right:5px;text-align:right;">
@@ -130,6 +134,7 @@
 						<td style="width: 150px"><p:outputLabel
 								value="#{lbl['lbl.so.paidup']}" /></td>
 						<td><p:inputText size="30" maxlength="18"
+								disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
 								value="#{specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.minPaidUpCapital}"
 								style="margin-right:5px;text-align:right;">
 								<f:convertNumber
@@ -141,6 +146,7 @@
 								value="#{lbl['lbl.sc.spec.zone.location.level']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
 						<td><p:selectOneMenu id="locLevels" required="true"
+								disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
 								label="#{lbl['lbl.sc.spec.zone.location.level']}"
 								value="#{specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.locationLevel.parameterId}"
 								style="width: 178px;">
@@ -181,6 +187,7 @@
 
 						<p:column headerText="Action" style="width:10%">
 							<p:commandLink
+								disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
 								actionListener="#{specificationBackingBean.editZoneLocation(zoneTree,index)}"
 								process="@this" update="@([id$=zonePopupPanel])"
 								oncomplete="ZoneLocation.show();">
@@ -195,10 +202,12 @@
 					<p:commandButton value="#{lbl['lbl.ct.ded.btn.add']}"
 						process="@this" update="@([id$=zonePopupPanel])"
 						oncomplete="ZoneLocation.show();"
+						disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
 						actionListener="#{specificationBackingBean.showZoneLocationPopup}"
 						icon="ui-icon-add" />
 					<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
 						update="zoneLocationDataTable" icon="ui-icon-delete"
+						disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
 						action="#{specificationBackingBean.deleteSupplierQualificationTreeNode}" />
 				</div>
 			</p:panel>
@@ -211,6 +220,7 @@
 						<td style="width: 150px"><p:outputLabel
 								value="#{lbl['lbl.so.paidup']}" /></td>
 						<td><p:inputText size="30" maxlength="18"
+								disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
 								value="#{specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.minPaidUpCapital}"
 								style="margin-right:5px;text-align:right;">
 								<f:convertNumber
@@ -332,6 +342,7 @@
 						value="#{lbl['lbl.sc.spec.supplier.criteria.tot.suppliers']}" /></td>
 				<td><p:inputText style="margin-right:5px;" disabled="true" />
 					<p:commandButton value="#{lbl['lbl.so.searchbtn']}"
+						disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
 						icon="ui-icon-search" partialSubmit="true" /></td>
 			</tr>
 		</table>

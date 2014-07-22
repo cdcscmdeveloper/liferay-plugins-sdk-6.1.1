@@ -32,6 +32,7 @@
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:inputText size="35" style="text-align:right"
 						id="estPrice" required="true"
+						disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
 						label="#{lbl['lbl.sc.spec.est.price']}" maxlength="18"
 						value="#{specificationBackingBean.managedBean.scQt.estimatedAmount}">
 
@@ -50,6 +51,7 @@
 
 				<td><h:outputLabel value=" #{lbl['lbl.sc.spec.justification']}" /></td>
 				<td colspan="3"><p:inputTextarea rows="2" cols="143"
+						disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
 						maxlength="200"
 						value="#{specificationBackingBean.managedBean.scQt.justificationRemark}"></p:inputTextarea></td>
 
@@ -76,6 +78,7 @@
 						rendered="#{specificationBackingBean.managedBean.scQt.panel eq 'No'}">
 
 						<p:selectOneRadio required="true" id="tenderType"
+							disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
 							label="#{lbl['lbl.sc.spec.qut.tender.type']}"
 							value="#{specificationBackingBean.managedBean.scQt.qtType}">
 
@@ -111,6 +114,7 @@
 				<td><ui:fragment
 						rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount le '50000'}">
 						<p:selectOneRadio
+							disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
 							value="#{specificationBackingBean.managedBean.scQt.evaluationType}">
 							<f:selectItems
 								value="#{specificationBackingBean.managedBean.evaluationTypeItem}" />
@@ -120,6 +124,7 @@
 					</ui:fragment> <ui:fragment
 						rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount eq null or specificationBackingBean.managedBean.scQt.estimatedAmount gt '50000'}">
 						<p:selectOneRadio required="true" id="evalType"
+							disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
 							label=" #{lbl['lbl.sc.spec.evaluation.type']}"
 							value="#{specificationBackingBean.managedBean.scQt.evaluationType}">
 							<f:selectItems
@@ -139,6 +144,7 @@
 							value="*" styleClass="mandatory" /></td>
 
 					<td><p:selectOneRadio id="techEvaluation" required="true"
+							disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
 							label="#{lbl['lbl.sc.spec.requir.tech.eval']}"
 							value="#{specificationBackingBean.managedBean.scQt.techEvaluationReq}">
 							<f:selectItems
@@ -153,6 +159,7 @@
 					rendered="#{specificationBackingBean.managedBean.scQt.qtType eq 'O' and specificationBackingBean.managedBean.scQt.panel eq 'No'}">
 					<td><h:outputLabel value="Zone/Location" /></td>
 					<td><p:selectOneRadio
+							disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
 							value="#{specificationBackingBean.managedBean.scQt.zonal}">
 							<f:selectItems
 								value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
@@ -169,6 +176,7 @@
 						value="#{lbl['lbl.sc.spec.peocure.category']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu id="procCategory" required="true"
+						disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
 						label="#{lbl['lbl.sc.spec.peocure.category']}"
 						value="#{specificationBackingBean.managedBean.scQt.pmProcurementCategory.parameterId}">
 						<f:selectItems
@@ -192,6 +200,7 @@
 							value="#{lbl['lbl.sc.spec.zone.location.level']}" /> <p:outputLabel
 							value="*" styleClass="mandatory"></p:outputLabel></td>
 					<td><p:selectOneMenu id="locationLevels" required="true"
+							disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
 							label="#{lbl['lbl.sc.spec.zone.location.level']}"
 							value="#{specificationBackingBean.managedBean.scQt.zoneLocationLevel.parameterId}"
 							style="width: 178px;">
@@ -241,6 +250,7 @@
 					<p:column headerText="#{lbl['lbl.sc.spec.stage.action']}"
 						style="width:10%">
 						<p:commandLink
+							disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
 							actionListener="#{specificationBackingBean.editBusinessOwnerZoneLocation(zoneTree,index)}"
 							process="@this" update="@([id$=zonePopupGeneral])"
 							oncomplete="ZoneGeneral.show();">
@@ -255,10 +265,12 @@
 				<p:commandButton value="#{lbl['lbl.ct.ded.btn.add']}"
 					process="@this" update="@([id$=zonePopupGeneral])"
 					oncomplete="ZoneGeneral.show();"
+					disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
 					actionListener="#{specificationBackingBean.showGeneralZoneLocationPopup}"
 					icon="ui-icon-add" />
 				<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
 					icon="ui-icon-delete"
+					disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
 					action="#{specificationBackingBean.deleteTreeNode}"
 					update="zoneGeneralDataTable" />
 			</div>

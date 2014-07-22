@@ -11,12 +11,13 @@
 			styleClass="noBorders tr,noBorders td">
 			<p:row>
 				<p:column width="100%">
+					<c:if
+						test="#{specificationBackingBean.managedBean.taskName ne 'Specification Approval'}">
+						<p:commandButton value="#{lbl['lbl.sc.spec.back']}"
+							style="float:left;" icon="ui-icon-back" update="@form"
+							action="#{specificationBackingBean.businessOwnerBackAction}" />
 
-					<p:commandButton value="#{lbl['lbl.sc.spec.back']}"
-						style="float:left;" icon="ui-icon-back" update="@form"
-						action="#{specificationBackingBean.businessOwnerBackAction}" />
-
-
+					</c:if>
 					<ui:repeat var="bpmAction"
 						value="#{specificationBackingBean.managedBean.outComes}">
 						<ui:param name="buttonLabel"
@@ -26,14 +27,15 @@
 							icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
 							action="#{specificationBackingBean.updateBpmTask(bpmAction)}" />
 					</ui:repeat>
-					<p:commandButton value="#{lbl['lbl.btn.save']}" update="@all"
-						style="float:right;"
-						action="#{specificationBackingBean.saveSpecificationDtls}"
-						icon="ui-icon-save">
-						<f:setPropertyActionListener
-							target="#{specificationBackingBean.managedBean.buttonOutCome}"
-							value="save" />
-					</p:commandButton>
+					<c:if
+						test="#{specificationBackingBean.managedBean.taskName ne 'Specification Approval'}">
+						<p:commandButton value="#{lbl['lbl.btn.save']}" update="@all"
+							style="float:right;"
+							action="#{specificationBackingBean.saveSpecificationDtls}"
+							icon="ui-icon-save">
+
+						</p:commandButton>
+					</c:if>
 
 				</p:column>
 			</p:row>

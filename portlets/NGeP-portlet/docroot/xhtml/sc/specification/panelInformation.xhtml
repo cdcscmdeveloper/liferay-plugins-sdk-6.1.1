@@ -20,6 +20,7 @@
 				<p:spacer width="5" />
 
 				<p:commandLink value="#{lbl['lbl.so.cirattach']}"
+					disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
 					style="margin-right:20px;" ajax="false" process="@this"
 					partialSubmit="true"
 					actionListener="#{specificationBackingBean.downloadCircularDtls}">

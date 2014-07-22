@@ -28,7 +28,7 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.stage.action']}"
 				style="width:10%">
-				<p:commandLink ajax="false"
+				<p:commandLink ajax="false" disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
 					action="#{specificationBackingBean.technicalSpecEditAction(technicalSpec)}">
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png" />
@@ -39,7 +39,7 @@
 		<p:spacer height="20"></p:spacer>
 
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.sc.spec.create.specification']}" process="@this" icon="ui-icon-add" 
+			<p:commandButton value="#{lbl['lbl.sc.spec.create.specification']}" process="@this" icon="ui-icon-add" disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
 			actionListener="#{specificationBackingBean.technicalSpecBoValidate}"	partialSubmit="true" oncomplete="createOwnerSpec.show();" />
 
 
