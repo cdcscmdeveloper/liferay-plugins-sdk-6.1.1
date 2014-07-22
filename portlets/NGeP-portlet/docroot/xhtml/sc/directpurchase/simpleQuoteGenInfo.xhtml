@@ -13,8 +13,10 @@
 				<td><p:selectOneRadio id="panel" required="true" 
 				         value="#{simpleQuoteBackingBean.managedBean.scQuote.panel}" 
 				         label="#{lbl['lbl.sc.sq.gen.info.panel']}" disabled="true">
-						<f:selectItems
-							value="#{simpleQuoteBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+					   <f:selectItem itemLabel="#{lbl['lbl.btn.yes']}"
+							itemValue="true" />
+						<f:selectItem itemLabel="#{lbl['lbl.btn.no']}"
+							itemValue="false" />
 					</p:selectOneRadio>
 					<p:message id="panelMsg" for="panel" display="icon" /> </td>
 
@@ -28,7 +30,7 @@
 				<td style="width: 150px;" colspan="4">
 					<table>
 						<tr>
-							<td><p:inputText size="120" id="title" required="true" maxlength="100"
+							<td><p:inputText size="110" id="title" required="true" maxlength="100"
 									label="#{lbl['lbl.sc.sq.gen.info.title']}"
 									value="#{simpleQuoteBackingBean.managedBean.scQuote.title}"
 									style="margin-bottom: 5px;" /></td>
@@ -92,8 +94,10 @@
 					<p:selectOneRadio id="zonal" required="true"
 				         value="#{simpleQuoteBackingBean.managedBean.scQuote.zonal}" 
 				         label="#{lbl['lbl.sc.sq.gen.info.zonal']}" disabled="false">
-						<f:selectItems
-							value="#{simpleQuoteBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+						<f:selectItem itemLabel="#{lbl['lbl.btn.yes']}"
+							itemValue="true" />
+						<f:selectItem itemLabel="#{lbl['lbl.btn.no']}"
+							itemValue="false" />
 						<p:ajax event="change" update="@([id$=mainTabMenu])" process="@this" listener="#{simpleQuoteBackingBean.zoneEvent}" />
 					</p:selectOneRadio>
 					<p:message id="zonalMsg" for="zonal" display="icon" /></td>
@@ -144,7 +148,7 @@
 				       readonlyInput="true"  required="true"
 				       pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" 
 				       value="#{simpleQuoteBackingBean.managedBean.scQuote.endDate}">
-				     <p:ajax event="dateSelect" update="durationId"  process="@form"
+				     <p:ajax event="dateSelect" update="durationId"  process="@this" partialSubmit="true" 
 										listener="#{simpleQuoteBackingBean.dateListener(simpleQuoteBackingBean.managedBean.duration)}" />
 				    </p:calendar>
 				    </td>
