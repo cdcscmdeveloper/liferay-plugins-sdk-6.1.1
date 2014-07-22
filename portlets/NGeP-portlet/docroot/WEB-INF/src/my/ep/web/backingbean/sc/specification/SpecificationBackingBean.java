@@ -469,6 +469,20 @@ public class SpecificationBackingBean extends
 					.getManagedBean().isPanelChange()) {
 
 				removespecDtls();
+				this.getManagedBean().getScQt()
+						.setScQtSupplierCriteria(new ScQtSupplierCriteria());
+				this.getManagedBean().getScQt().setZonal(false);
+				this.getManagedBean().getScQt().getScQtSupplierCriteria()
+						.setQtZoneCriterias(null);
+				if (null == this.getManagedBean().getScQt()
+						.getScQtSupplierCriteria().getLocationLevel()) {
+					this.getManagedBean().getScQt().getScQtSupplierCriteria()
+							.setLocationLevel(new PmParameter());
+				}
+				if ( this.getManagedBean().getScQt().getEstimatedAmount().intValue() > 500000) {
+					this.getManagedBean().getScQt().getScQtSupplierCriteria().setAllState(true);
+				}
+				getManagedBean().setZoneGeneralTrees(new ArrayList<TreeNode>());
 			}
 			return "specificationCreation.xhtml?faces-redirect=true";
 
@@ -484,6 +498,16 @@ public class SpecificationBackingBean extends
 					.getManagedBean().isPanelChange()) {
 
 				removespecDtls();
+				this.getManagedBean().getScQt()
+						.setScQtSupplierCriteria(new ScQtSupplierCriteria());
+				this.getManagedBean().getScQt().getScQtSupplierCriteria()
+						.setQtZoneCriterias(null);
+				this.getManagedBean().getScQt().getScQtSupplierCriteria()
+						.setScQtLocCriteria(null);
+				this.getManagedBean().getScQt().setScQtCategorys(null);
+				this.getManagedBean().getScQt().setZonal(false);
+				getManagedBean().setZoneGeneralTrees(new ArrayList<TreeNode>());
+				getManagedBean().setZoneTrees(new ArrayList<TreeNode>());
 			}
 
 			return "specificationCreation.xhtml?faces-redirect=true";
@@ -1195,7 +1219,7 @@ public class SpecificationBackingBean extends
 			tplSpecQuestion.setClQuantity(new BigDecimal(panelItem
 					.getMinimumOrderQty()));
 			tplSpecQuestion.setTplSpecEstimations(null);
-
+			setUserDetails(tplSpecQuestion);
 			// questionsList.add(tplSpecQuestion);
 			specMaster.setTplSpecQuestions(questionsList);
 
@@ -7894,7 +7918,7 @@ public class SpecificationBackingBean extends
 					.equalsIgnoreCase(taskName)) {
 				loadPrepareSpecDetails(quotationTenderDataType.getQtId()
 						.longValue(), getDocTypeByTaskName(taskName));
-				this.getManagedBean().setActiveIndex(4);
+				//this.getManagedBean().setActiveIndex(4);
 			}
 			ScQt scQt = this.getManagedBean().getScQt();
 			if (null == scQt.getEstimatedAmount()) {
@@ -8885,7 +8909,10 @@ public class SpecificationBackingBean extends
 			this.getManagedBean()
 					.setZoneGeneralTrees(new ArrayList<TreeNode>());
 			supplierCriteria.setQtZoneCriterias(null);
-			supplierCriteria.setLocationLevel(new PmParameter());
+			if (null == supplierCriteria.getLocationLevel()) {
+				supplierCriteria.setLocationLevel(new PmParameter());
+			}
+			
 			this.getManagedBean()
 					.setZoneGeneralTrees(new ArrayList<TreeNode>());
 
@@ -8911,7 +8938,7 @@ public class SpecificationBackingBean extends
 
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		List<String> recommendList = new ArrayList<String>();
-		recommendList.add("3");
+		recommendList.add(ParameterConst.ITEM_TYPE_PRODUCT_AND_SERVICE);
 
 		searchBean.getDataFilterBeans().add(
 				new SearchFilterBean("pmParameter.parameterCode",
@@ -8919,6 +8946,34 @@ public class SpecificationBackingBean extends
 
 		SelectItem[] items = getDropdownValuesBySearchBean(
 				ParameterTypeConst.SC_ITEM_TYPE, searchBean);
+		return items;
+	}
+
+	public SelectItem[] getLocalGoodsRadioValues(String itemType) {
+
+		List<String> types = new ArrayList<String>();
+		types.add(ParameterConst.LOCAL_GOODS);
+		types.add(ParameterConst.IMPORTED_GOODS);
+
+		SelectItem[] items = null;
+		try {
+			items = new SelectItem[types.size()];
+			int i = 0;
+			for (String location : types) {
+				List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(itemType);
+
+				for (PmParameterDesc paramDesc : localParamDesc) {
+					if (paramDesc.getPmParameter().getParameterCode()
+							.equals(location)) {
+
+						items[i++] = new SelectItem(paramDesc.getPmParameter()
+								.getParameterId(), paramDesc.getCodeName());
+
+					}
+				}
+			}
+		} finally {
+		}
 		return items;
 	}
 
