@@ -2,6 +2,7 @@ package my.ep.web.backingbean.sm.commonappl;
 
 import java.math.BigDecimal;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
@@ -11,6 +12,7 @@ import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.remarks.ISmRemarksSO;
 import my.ep.biz.service.sm.sdoreview.ISdoReviewSO;
 import my.ep.bpm.dto.BpmResponseDTO;
+import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
@@ -24,10 +26,12 @@ import my.ep.jaxb.sm.mofregdata.SMMOFRegDataType;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmRemark;
+import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.sm.SmApplicationBackingBean;
 import my.ep.web.backingbean.sm.sdoreview.SdoReviewBackingBean;
 import my.ep.web.backingbean.sm.supportingdocinquiry.SupportingDocInquiryBackingBean;
+import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.sm.commonappl.CommonApplManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -459,6 +463,17 @@ public class CommonApplBackingBean extends
 		amount = amount.subtract(BigDecimal.valueOf(150));
 		amount = amount.add(BigDecimal.valueOf(400));
 		this.getManagedBean().setTotalAmount(amount);
+	}
+
+	public String makePayment() {
+		System.out.println("****** Make Payment **********");
+		
+		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+				FacesMessage.SEVERITY_INFO, null, 
+				MessageUtils.getMessage(MessageConst.INFO_721059, 
+						new String[]{""+1}, 
+						MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
+		return CommonUIConst.ACKNOWLEDGE_PAGE;
 	}
 
 	private void setNavigationForDraftAppl(String appType) {

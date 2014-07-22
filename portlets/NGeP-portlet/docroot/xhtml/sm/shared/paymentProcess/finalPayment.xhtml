@@ -8,6 +8,11 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<ui:define name="contentSection">
+			<div align="right">
+				<p:commandButton value="Make Payment" action="#{commApplBackingBean.makePayment}" />
+				<p:commandButton value="Cancel" />
+			</div>
+	
 			<p:panel header="Payment Summary :">
 				<p:dataTable id="paymentList" rowKey="#{pay}" rowIndexVar="index" 
 				value="#{commApplBackingBean.managedBean.personnelList}" var="pay" 
@@ -56,9 +61,5 @@
 					</p:columnGroup>
 				</p:dataTable>
 			</p:panel>
-			<div align="center">
-				<p:commandButton value="Make Payment" action="/xhtml/sm/shared/paymentProcess/paymentMsg.xhtml" />
-				<p:commandButton value="Cancel" />
-			</div>
 	</ui:define>
 </ui:composition>
