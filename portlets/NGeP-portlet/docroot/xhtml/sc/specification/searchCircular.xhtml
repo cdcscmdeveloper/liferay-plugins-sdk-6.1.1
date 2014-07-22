@@ -28,7 +28,7 @@
 
 						<f:selectItems
 							value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
-						<p:ajax event="change" update="panelupdate"></p:ajax>
+						<p:ajax event="change" update="panelupdate" listener="#{specificationBackingBean.panelChangeValue}"></p:ajax>
 					</p:selectOneRadio> <p:message id="selectPanelTitleId" for="panelTitle" display="icon"></p:message>
 				</td>
 			</tr>
