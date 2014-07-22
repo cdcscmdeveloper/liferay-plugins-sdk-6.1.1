@@ -1655,6 +1655,8 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().setTechPoints(score);
 
 				this.getManagedBean().setTechnicalScoring(checklist);
+				techWeightageSum();
+				techScoreSum();
 			}
 
 		} finally {
@@ -1842,6 +1844,8 @@ public class SpecificationBackingBean extends
 
 				this.getManagedBean().setFinSpecList(specChecklist);
 				this.getManagedBean().setFinancialScoring(localChecklist);
+				finWeightageSum();
+				finScoreSum();
 
 			}
 		} finally {
@@ -1911,11 +1915,17 @@ public class SpecificationBackingBean extends
 					if (recommnendationSetting.getSettingType() == 4) {
 						this.getManagedBean().setRecommendationPackageScore(
 								recommnendationSetting);
+						calculateTotalPackage(this.getManagedBean()
+								.getRecommendationPackageScore());
 					}
 
 					if (recommnendationSetting.getSettingType() == 5) {
 						this.getManagedBean().setRecommendationScore(
 								recommnendationSetting);
+						calculateRecommendtechnicalScore(this.getManagedBean()
+								.getRecommendationScore());
+						calculateRecommendFinancialScore(this.getManagedBean()
+								.getRecommendationScore());
 					}
 
 				}
