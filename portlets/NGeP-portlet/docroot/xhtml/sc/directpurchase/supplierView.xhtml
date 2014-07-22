@@ -76,14 +76,14 @@
 		</table>
 		<p:spacer height="5px" />
        
-      <h:panelGroup style="width: 100%;" rendered="#{fn:length(simpleQuoteBackingBean.managedBean.productTemplateSpecBean.specAnswerList) eq '0'}">
+      <h:panelGroup style="width: 100%;" rendered="#{fn:length(simpleQuoteBackingBean.managedBean.productTemplateSpecBean.specAnswerList) ne '0'}">
 		<ac:templateSpec
 			templateSpecBean="#{simpleQuoteBackingBean.managedBean.productTemplateSpecBean}"
 			title="PRODUCT LIST" />
       </h:panelGroup>
       
 	<p:spacer height="25px" />
-	 <h:panelGroup style="width: 100%;" rendered="#{fn:length(simpleQuoteBackingBean.managedBean.serviceTemplateSpecBean.specAnswerList) eq '0'}">
+	 <h:panelGroup style="width: 100%;" rendered="#{fn:length(simpleQuoteBackingBean.managedBean.serviceTemplateSpecBean.specAnswerList) ne '0'}">
 		<ac:templateSpec
 			templateSpecBean="#{simpleQuoteBackingBean.managedBean.serviceTemplateSpecBean}"
 			title="SERVICE LIST" />
