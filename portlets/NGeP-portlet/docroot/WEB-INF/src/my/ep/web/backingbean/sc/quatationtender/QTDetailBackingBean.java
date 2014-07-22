@@ -544,24 +544,24 @@ public class QTDetailBackingBean extends
 				if (getManagedBean().getQt().getEstimatedAmount() != null) {
 					if (getManagedBean().getQt().getEstimatedAmount().intValue() > SourcingConstants.ESTMT_TWANTY_THOUSAND && getManagedBean().getQt().getEstimatedAmount().intValue() < SourcingConstants.ESTMT_FIFTY_THOUSAND) {
 						if (getManagedBean().getQt().getQtValidityPeriod() == null) {
-							getManagedBean().getQt().setQtValidityPeriod(60);
+							getManagedBean().getQt().setQtValidityPeriod(SourcingConstants.SIXTY_DAYS);
 						}
 						if (getManagedBean().getQt().getPublishPeriod() == null) {
-							getManagedBean().getQt().setPublishPeriod(3);
+							getManagedBean().getQt().setPublishPeriod(SourcingConstants.PUBLISH_THREE_DAYS);
 						}
 					} else if (getManagedBean().getQt().getEstimatedAmount().intValue() > SourcingConstants.ESTMT_FIFTY_THOUSAND && getManagedBean().getQt().getEstimatedAmount().intValue() < SourcingConstants.ESTMT_FIVE_HUNDERED_THOUSAND) {
 						if (getManagedBean().getQt().getQtValidityPeriod() == null) {
-							getManagedBean().getQt().setQtValidityPeriod(90);
+							getManagedBean().getQt().setQtValidityPeriod(SourcingConstants.NINTY_DAYS);
 						}
 						if (getManagedBean().getQt().getPublishPeriod() == null) {
-							getManagedBean().getQt().setPublishPeriod(7);
+							getManagedBean().getQt().setPublishPeriod(SourcingConstants.PUBLISH_SEVEN_DAYS);
 						}
 					} else if (getManagedBean().getQt().getEstimatedAmount().intValue() > SourcingConstants.ESTMT_FIVE_HUNDERED_THOUSAND) {
 						if (getManagedBean().getQt().getQtValidityPeriod() == null) {
-							getManagedBean().getQt().setQtValidityPeriod(90);
+							getManagedBean().getQt().setQtValidityPeriod(SourcingConstants.NINTY_DAYS);
 						}
 						if (getManagedBean().getQt().getPublishPeriod() == null) {
-							getManagedBean().getQt().setPublishPeriod(21);
+							getManagedBean().getQt().setPublishPeriod(SourcingConstants.PUBLISH_TWENTYONE_DAYS);
 						}
 					}
 				}
@@ -590,16 +590,16 @@ public class QTDetailBackingBean extends
 		}
 		if (null != scQt.getEstimatedAmount()) {
 			if (scQt.getEstimatedAmount().intValue() > SourcingConstants.ESTMT_TWANTY_THOUSAND && scQt.getEstimatedAmount().intValue() < SourcingConstants.ESTMT_FIFTY_THOUSAND) {
-				if (scQt.getQtValidityPeriod() > 60) {
+				if (scQt.getQtValidityPeriod() > SourcingConstants.SIXTY_DAYS) {
 					throw new EpException(MessageConst.ERROR_760044, new String[] { "Proposal Validity (Days)", "60" });
-				} else if (scQt.getPublishPeriod() < 3) {
+				} else if (scQt.getPublishPeriod() < SourcingConstants.PUBLISH_THREE_DAYS) {
 					throw new EpException(MessageConst.ERROR_760045, new String[] { "Publishing Period (Days)", "3" });
 				}
-			} else if (scQt.getEstimatedAmount().intValue() > SourcingConstants.ESTMT_FIVE_HUNDERED_THOUSAND && scQt.getEstimatedAmount().intValue() < SourcingConstants.ESTMT_FIVE_HUNDERED_THOUSAND) {
-				if (scQt.getQtValidityPeriod() > 90) {
+			} else if (scQt.getEstimatedAmount().intValue() > SourcingConstants.ESTMT_FIFTY_THOUSAND && scQt.getEstimatedAmount().intValue() < SourcingConstants.ESTMT_FIVE_HUNDERED_THOUSAND) {
+				if (scQt.getQtValidityPeriod() > SourcingConstants.NINTY_DAYS) {
 					throw new EpException(MessageConst.ERROR_760044, new String[] { "Proposal Validity (Days)", "90" });
-				} else if (scQt.getPublishPeriod() < 7) {
-					throw new EpException(MessageConst.ERROR_760045, new String[] { "Publishing Period (Days)", "6" });
+				} else if (scQt.getPublishPeriod() < SourcingConstants.PUBLISH_SEVEN_DAYS) {
+					throw new EpException(MessageConst.ERROR_760045, new String[] { "Publishing Period (Days)", "7" });
 				}
 			}
 		}
@@ -1308,7 +1308,7 @@ public class QTDetailBackingBean extends
 		Object obj = res.getPojo();
 		this.getManagedBean().setOutComes(res.getAction());
 		SCQuotationTenderDataType quotationTenderDataType = (SCQuotationTenderDataType) obj;
-		retrieveFinalizationSecratryDtl(new Long(quotationTenderDataType.getQtId()));
+		//retrieveFinalizationSecratryDtl(new Long(quotationTenderDataType.getQtId()));
 		retrieveQuationTenderDetails(new Long(quotationTenderDataType.getQtId()));
 		if (null == this.getManagedBean().getQt().getProcurementMode()) {
 			this.getManagedBean().getQt().setProcurementMode(new PmParameter());
@@ -1809,24 +1809,24 @@ public class QTDetailBackingBean extends
 					if (getManagedBean().getQt().getEstimatedAmount() != null) {
 						if (getManagedBean().getQt().getEstimatedAmount().intValue() > SourcingConstants.ESTMT_TWANTY_THOUSAND && getManagedBean().getQt().getEstimatedAmount().intValue() < SourcingConstants.ESTMT_FIFTY_THOUSAND) {
 							if (getManagedBean().getQt().getQtValidityPeriod() == null) {
-								getManagedBean().getQt().setQtValidityPeriod(60);
+								getManagedBean().getQt().setQtValidityPeriod(SourcingConstants.SIXTY_DAYS);
 							}
 							if (getManagedBean().getQt().getPublishPeriod() == null) {
-								getManagedBean().getQt().setPublishPeriod(3);
+								getManagedBean().getQt().setPublishPeriod(SourcingConstants.PUBLISH_THREE_DAYS);
 							}
 						} else if (getManagedBean().getQt().getEstimatedAmount().intValue() > SourcingConstants.ESTMT_FIFTY_THOUSAND && getManagedBean().getQt().getEstimatedAmount().intValue() < SourcingConstants.ESTMT_FIVE_HUNDERED_THOUSAND) {
 							if (getManagedBean().getQt().getQtValidityPeriod() == null) {
-								getManagedBean().getQt().setQtValidityPeriod(90);
+								getManagedBean().getQt().setQtValidityPeriod(SourcingConstants.NINTY_DAYS);
 							}
 							if (getManagedBean().getQt().getPublishPeriod() == null) {
-								getManagedBean().getQt().setPublishPeriod(7);
+								getManagedBean().getQt().setPublishPeriod(SourcingConstants.PUBLISH_SEVEN_DAYS);
 							}
 						} else if (getManagedBean().getQt().getEstimatedAmount().intValue() > SourcingConstants.ESTMT_FIVE_HUNDERED_THOUSAND) {
 							if (getManagedBean().getQt().getQtValidityPeriod() == null) {
-								getManagedBean().getQt().setQtValidityPeriod(90);
+								getManagedBean().getQt().setQtValidityPeriod(SourcingConstants.NINTY_DAYS);
 							}
 							if (getManagedBean().getQt().getPublishPeriod() == null) {
-								getManagedBean().getQt().setPublishPeriod(21);
+								getManagedBean().getQt().setPublishPeriod(SourcingConstants.PUBLISH_TWENTYONE_DAYS);
 							}
 						}
 					}

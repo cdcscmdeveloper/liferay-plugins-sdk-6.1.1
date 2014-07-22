@@ -28,19 +28,20 @@
 			<p:panel id="newProfile" style="width:100%;margin-top:10px;">
 				<c:if
 					test="#{qTBusinessOwnerBackingBean.managedBean.committeMember.userSelection eq 'E' }">
-					<p:panel header="Search" toggleable="true">
+					<p:panel id="usersearchpnlids" header="#{lbl['lbl.so.searchbtn']}"
+						toggleable="true">
 						<table>
 							<tr>
 								<td><p:outputLabel value="#{lbl['lbl.sc.addscreen.name']}" /></td>
 								<td colspan="3"><p:inputText
-										value="#{qTBusinessOwnerBackingBean.managedBean.name}"
+										value="#{qTBusinessOwnerBackingBean.managedBean.userBusineeOwnerSearchBean.name}"
 										size="64" /></td>
 							</tr>
 							<tr>
 								<td><p:outputLabel
 										value="#{lbl['lbl.sc.addscreen.idtype']}" /></td>
 								<td><p:selectOneMenu id="appaction"
-										value="#{qTBusinessOwnerBackingBean.managedBean.identificationType}"
+										value="#{qTBusinessOwnerBackingBean.managedBean.userBusineeOwnerSearchBean.identificationType}"
 										style="width: 178px;margin-bottom: 5px;">
 										<f:selectItems
 											value="#{qTBusinessOwnerBackingBean.getDropdownCodeValues(ParameterTypeConst.identificationTypes)}" />
@@ -51,33 +52,30 @@
 							<tr>
 								<td><p:outputLabel value="#{lbl['lbl.sc.addscreen.idno']}" /></td>
 								<td><p:inputText id="Idno"
-										value="#{qTBusinessOwnerBackingBean.managedBean.identificationNo}"
+										value="#{qTBusinessOwnerBackingBean.managedBean.userBusineeOwnerSearchBean.identificationNo}"
 										size="30" /></td>
 								<td />
 								<td />
 							</tr>
 						</table>
 					</p:panel>
-					<p:commandButton value="#{lbl['lbl.so.reset']}"
-						style="float:right;" action="#{qTBusinessOwnerBackingBean.reset}"
-						update="newProfile" icon="ui-icon-reset" resetValues="true"
-						partialSubmit="true" process="@this" />
+					<div class="ppRightBtn">
+						<p:commandButton value="#{lbl['lbl.so.searchbtn']}"
+							action="#{qTBusinessOwnerBackingBean.searchUserAction}"
+							update="existingsearch" icon="ui-icon-search"
+							process="@this, usersearchpnlids" />
+						<p:commandButton value="#{lbl['lbl.so.reset']}"
+							action="#{qTBusinessOwnerBackingBean.reset}"
+							update="usersearchpnlids" icon="ui-icon-reset" resetValues="true"
+							partialSubmit="true" process="@this" />
+					</div>
 
-					<p:commandButton value="#{lbl['lbl.so.searchbtn']}"
-						style="float:right;" icon="ui-icon-search"
-						action="#{qTBusinessOwnerBackingBean.existingBusinessOwnerAction}"
-						update="@(.existingResults)" partialSubmit="true"
-						process="@parent" />
-
-					<br />
-					<br />
-					<p:spacer height="5" />
 					<p:panel header="#{lbl['lbl.so.bo.search.result']}"
 						toggleable="true">
 						<p:dataTable id="existingsearch"
-							value="#{qTBusinessOwnerBackingBean.managedBean.externalUsers}"
+							value="#{qTBusinessOwnerBackingBean.managedBean.userSearchBusinessOwnerDataModel}"
 							selection="#{qTBusinessOwnerBackingBean.managedBean.selectedPmUser}"
-							rowKey="#{existuser}" var="existuser"
+							rowKey="#{existuser.userId}" var="existuser" lazy="true"
 							styleClass="existingResults" style="width : 100%;">
 
 							<ac:paginator for="existingsearch" />

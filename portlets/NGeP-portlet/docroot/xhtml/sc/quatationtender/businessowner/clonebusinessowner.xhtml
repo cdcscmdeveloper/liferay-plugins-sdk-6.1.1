@@ -16,21 +16,21 @@
 					<td><p:outputLabel
 							value="#{lbl['lbl.sc.committe.clone.title']}" /></td>
 					<td colspan="3"><p:inputText
-							value="#{qTBusinessOwnerBackingBean.managedBean.cloneQtnTenderSearchBean.qtTitle}"
+							value="#{qTBusinessOwnerBackingBean.managedBean.cloneBusinessOwnerSearchBean.qtTitle}"
 							size="92" maxlength="100" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel
 							value="#{lbl['lbl.sc.committe.clone.qtntender']}" /></td>
 					<td><p:inputText
-							value="#{qTBusinessOwnerBackingBean.managedBean.cloneQtnTenderSearchBean.qtNo}"
+							value="#{qTBusinessOwnerBackingBean.managedBean.cloneBusinessOwnerSearchBean.qtNo}"
 							size="30" maxlength="21" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel
 							value="#{lbl['lbl.sc.committe.clone.procurementmode']}" /></td>
 					<td><p:selectOneMenu
-							value="#{qTBusinessOwnerBackingBean.managedBean.cloneQtnTenderSearchBean.procurementMode}"
+							value="#{qTBusinessOwnerBackingBean.managedBean.cloneBusinessOwnerSearchBean.procurementMode}"
 							style="width: 178px;margin-bottom: 5px;">
 							<f:selectItems
 								value="#{qTBusinessOwnerBackingBean.getProcurementModeDropdownValues()}" />
@@ -39,7 +39,7 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.so.creatdtfrom']}" /></td>
 					<td><p:calendar id="crdateFrm" showOn="button"
-							value="#{qTBusinessOwnerBackingBean.managedBean.cloneQtnTenderSearchBean.fromCreatedDate}"
+							value="#{qTBusinessOwnerBackingBean.managedBean.cloneBusinessOwnerSearchBean.fromCreatedDate}"
 							size="30" readonlyInput="true">
 							<p:ajax event="dateSelect" update="createdtTo" />
 						</p:calendar></td>
@@ -47,11 +47,11 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.so.creatdtto']}" /></td>
 					<td><p:calendar id="createdtTo" showOn="button"
-							value="#{qTBusinessOwnerBackingBean.managedBean.cloneQtnTenderSearchBean.toCreatedDate}"
-							mindate="#{qTBusinessOwnerBackingBean.managedBean.cloneQtnTenderSearchBean.fromCreatedDate}"
+							value="#{qTBusinessOwnerBackingBean.managedBean.cloneBusinessOwnerSearchBean.toCreatedDate}"
+							mindate="#{qTBusinessOwnerBackingBean.managedBean.cloneBusinessOwnerSearchBean.fromCreatedDate}"
 							size="30" readonlyInput="true">
 							<f:attribute name="startDate"
-								value="#{qTBusinessOwnerBackingBean.managedBean.cloneQtnTenderSearchBean.fromCreatedDate}" />
+								value="#{qTBusinessOwnerBackingBean.managedBean.cloneBusinessOwnerSearchBean.fromCreatedDate}" />
 							<f:validator validatorId="dateRangeValidator" />
 						</p:calendar></td>
 				</tr>
@@ -59,7 +59,7 @@
 					<td><p:outputLabel
 							value="#{lbl['lbl.sc.committe.clone.comstatus']}" /></td>
 					<td><p:selectOneMenu style="width: 178px;margin-bottom: 5px;"
-							value="#{qTBusinessOwnerBackingBean.managedBean.cloneQtnTenderSearchBean.qtStatus}">
+							value="#{qTBusinessOwnerBackingBean.managedBean.cloneBusinessOwnerSearchBean.qtStatus}">
 							<f:selectItems
 								value="#{qTDetailBB.getStatusDropdownValues('SC', 'QT')}" />
 						</p:selectOneMenu></td>
@@ -70,23 +70,22 @@
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.search']}"
 					icon="ui-icon-search"
-					action="#{qTBusinessOwnerBackingBean.cloneSearchCommitteAction}"
-					update="@(.cloneResults)" partialSubmit="true" process="@parent" />
+					action="#{qTBusinessOwnerBackingBean.cloneSearchBOAction}"
+					update="clonesearchboid" process="@parent, searchpnlid" />
 				<p:commandButton value="#{lbl['lbl.btn.reset']}"
 					action="#{qTBusinessOwnerBackingBean.resetClone}"
 					update="searchpnlid" icon="ui-icon-reset" resetValues="true"
 					partialSubmit="true" process="@this" />
 			</div>
 		</p:panel>
-		<p:spacer height="3" />
 		<p:panel header="#{lbl['lbl.so.qtlist']}" toggleable="true">
-			<p:dataTable id="clonesearchCommitte"
-				value="#{qTBusinessOwnerBackingBean.managedBean.cloneBusinessTenderList}"
+			<p:dataTable id="clonesearchboid"
+				value="#{qTBusinessOwnerBackingBean.managedBean.cloneBusinessOwnerDataModel}"
 				selection="#{qTBusinessOwnerBackingBean.managedBean.selectedCloneBusinessTender}"
-				rowKey="#{scQt}" selectionMode="single" var="scQt"
+				rowKey="#{scQt}" selectionMode="single" var="scQt" lazy="true"
 				styleClass="cloneResults">
 
-				<ac:paginator for="clonesearchCommitte" />
+				<ac:paginator for="clonesearchboid" />
 
 				<p:ajax event="rowSelect" update=":form:businessownerlistid"
 					listener="#{qTBusinessOwnerBackingBean.onRowCloneAction}" />

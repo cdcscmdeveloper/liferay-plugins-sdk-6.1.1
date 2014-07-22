@@ -279,7 +279,13 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<ScCommitteeMember> cloneCommitteMemebers;
 	private List<ScCommitteeMember> selectedCommitteMemebers;
 	private ScQtCommittee selectedScQtCommittee;
-
+	
+	private IPagingDataModel<ScQt> cloneBusinessOwnerDataModel;
+	private IPagingDataModel<PmUser> userSearchBusinessOwnerDataModel;
+	private UserCommitteeSearchBean userBusineeOwnerSearchBean;
+	private QtnTenderSearchBean cloneBusinessOwnerSearchBean;
+	private List<ScQt> selectedCloneBOList;
+	
 	// Search properties
 	private String title = null;
 	private String qtNo = null;
@@ -292,7 +298,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private String identificationNo = null;
 	private String identificationType;
 
-	private String panelItem = "No";
 	private int publishingPeriod;
 
 	private List<SelectItem> comitteeUsers;
@@ -432,6 +437,9 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		cloneQtnTenderSearchBean = new QtnTenderSearchBean();
 
 		userCommitteeSearchBean = new UserCommitteeSearchBean();
+		
+		cloneBusinessOwnerSearchBean = new QtnTenderSearchBean();
+		userBusineeOwnerSearchBean = new UserCommitteeSearchBean();
 
 		root2 = new DefaultTreeNode("Root", null);
 		TreeNode node0 = new DefaultTreeNode("Clone All", root2);
@@ -648,14 +656,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setSelectedPmUser(List<PmUser> selectedPmUser) {
 		this.selectedPmUser = selectedPmUser;
-	}
-
-	public String getPanelItem() {
-		return panelItem;
-	}
-
-	public void setPanelItem(String panelItem) {
-		this.panelItem = panelItem;
 	}
 
 	public ScQtCommittee getSelectedCloneCommittee() {
@@ -2499,6 +2499,50 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setSelectedPmDocumentList(
 			List<PmDocument> selectedPmDocumentList) {
 		this.selectedPmDocumentList = selectedPmDocumentList;
+	}
+
+	public IPagingDataModel<ScQt> getCloneBusinessOwnerDataModel() {
+		return cloneBusinessOwnerDataModel;
+	}
+
+	public void setCloneBusinessOwnerDataModel(
+			IPagingDataModel<ScQt> cloneBusinessOwnerDataModel) {
+		this.cloneBusinessOwnerDataModel = cloneBusinessOwnerDataModel;
+	}
+
+	public IPagingDataModel<PmUser> getUserSearchBusinessOwnerDataModel() {
+		return userSearchBusinessOwnerDataModel;
+	}
+
+	public void setUserSearchBusinessOwnerDataModel(
+			IPagingDataModel<PmUser> userSearchBusinessOwnerDataModel) {
+		this.userSearchBusinessOwnerDataModel = userSearchBusinessOwnerDataModel;
+	}
+
+	public UserCommitteeSearchBean getUserBusineeOwnerSearchBean() {
+		return userBusineeOwnerSearchBean;
+	}
+
+	public void setUserBusineeOwnerSearchBean(
+			UserCommitteeSearchBean userBusineeOwnerSearchBean) {
+		this.userBusineeOwnerSearchBean = userBusineeOwnerSearchBean;
+	}
+
+	public QtnTenderSearchBean getCloneBusinessOwnerSearchBean() {
+		return cloneBusinessOwnerSearchBean;
+	}
+
+	public void setCloneBusinessOwnerSearchBean(
+			QtnTenderSearchBean cloneBusinessOwnerSearchBean) {
+		this.cloneBusinessOwnerSearchBean = cloneBusinessOwnerSearchBean;
+	}
+
+	public List<ScQt> getSelectedCloneBOList() {
+		return selectedCloneBOList;
+	}
+
+	public void setSelectedCloneBOList(List<ScQt> selectedCloneBOList) {
+		this.selectedCloneBOList = selectedCloneBOList;
 	}
 
 }
