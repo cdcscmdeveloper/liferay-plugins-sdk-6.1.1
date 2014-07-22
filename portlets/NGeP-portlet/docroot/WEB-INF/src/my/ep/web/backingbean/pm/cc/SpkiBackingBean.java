@@ -57,7 +57,7 @@ public class SpkiBackingBean {
 	private static List<String> challs = null;
 	private String challengeQues1;
 	private String challsAnswer;
-	private String name = null;
+	private String password;
 	
 	public SpkiBackingBean() {}
 	
@@ -149,7 +149,7 @@ public class SpkiBackingBean {
 //https://kmcep-dev.digicert.com.my/RequestRevokeCert.aspx
 	    debugLogger("this.challengeQues1====================================: "+this.challengeQues1);
 	    debugLogger("SignedText====================================: "+this.challsAnswer);
-	    debugLogger("ser====================================: "+value3);
+	    debugLogger("this.password ====================================: "+this.password );
 
 		}
 	public void RequestChangePIN() throws IOException, PortalException, SystemException {
@@ -171,6 +171,12 @@ public class SpkiBackingBean {
 	public void setChallsAnswer(String challsAnswer) {
 		this.challsAnswer = challsAnswer;
 
+	}
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 
