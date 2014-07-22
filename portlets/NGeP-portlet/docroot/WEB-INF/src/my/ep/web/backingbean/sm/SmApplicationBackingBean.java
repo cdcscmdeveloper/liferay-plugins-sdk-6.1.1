@@ -6745,8 +6745,15 @@ public class SmApplicationBackingBean extends
 							ISupplierSearchSO.class);
 			SupplierSearchResDTO smResDTO = supplierSearchSO
 					.retriveSupplierProfiles(supplierSearchReqDTO);
-			smSupp = (SmSupplier) smResDTO.getResultBean().getResultList()
-					.get(0);
+			if (smResDTO.getResultBean().getResultList() != null
+					&& smResDTO.getResultBean().getResultList().size() > 0) {
+				smSupp = (SmSupplier) smResDTO.getResultBean().getResultList()
+						.get(0);
+			} else {
+				System.out
+						.println("**** No valid supplier record found for this user ******");
+				throw new EpException(MessageConst.ERROR_721017);
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
