@@ -173,7 +173,7 @@
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/ct/supplier/bank/changeBankAccount.xhtml</value>
+			<value>/xhtml/ct/supplier/bank/preRenderChangeBankAccount.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -493,7 +493,7 @@
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/ct/supplier/factoring/requestOfFactoring.xhtml</value>
+			<value>/xhtml/ct/supplier/factoring/preRenderRequestFactoring.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
