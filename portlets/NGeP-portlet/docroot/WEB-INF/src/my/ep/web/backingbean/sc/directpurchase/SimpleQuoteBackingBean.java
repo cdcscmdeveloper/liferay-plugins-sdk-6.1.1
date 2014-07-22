@@ -1535,30 +1535,37 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 		}
 		
 		// ptj locality address
-		if(getManagedBean().getLocationTrees() == null && getManagedBean().getLocationTrees().isEmpty()){
+		if(getManagedBean().getLocationTrees() == null || getManagedBean().getLocationTrees().isEmpty()){
 			IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 							IAddressSO.class);
 			AddressReqDTO reqDTO = new AddressReqDTO();
 			if(getManagedBean().getRequestNote().getPmOrgProfile() != null){
 				reqDTO.setOrgProfileId(getManagedBean().getRequestNote().getPmOrgProfile().getOrgProfileId());
-				//reqDTO.setUserId(2L);
 				reqDTO.setAddressType(AddressType.BILLING_ADDRESS.value());
 				AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
 				List<PmAddressType> list = resDTO.getAddressTypeList();
 				if(list != null && list.size() >0){
-					System.out.println("Delivery Address List: " + list.size());
 					PmAddressType addressType = list.get(0);
 					List<PmState> states = new ArrayList<PmState>();
 					List<PmDivision> divisions = new ArrayList<PmDivision>();
 					List<PmDistrict> districts = new ArrayList<PmDistrict>();
-					PmState pmState = addressType.getPmAddress().getPmState();
-					states.add(pmState);
-					PmDistrict pmDistrict = addressType.getPmAddress().getPmDistrict();
-					districts.add(pmDistrict);
-					/*getManagedBean().getLocationTrees().add(
+					
+					if(addressType.getPmAddress().getPmDivision() != null){
+						divisions.add(addressType.getPmAddress().getPmDivision());
+					}
+					
+					if(addressType.getPmAddress().getPmDistrict() != null){
+						districts.add(addressType.getPmAddress().getPmDistrict());
+					}
+					
+					if(addressType.getPmAddress().getPmState() != null && districts.isEmpty() && divisions.isEmpty()){
+						states.add(addressType.getPmAddress().getPmState());
+					}
+					
+					getManagedBean().getLocationTrees().add(
 							LocationSingleton.getInstance().buildLocationTree(null, states,
-									districts, divisions, null,TplSpecZoneLoc.class));*/
+									districts, divisions, null,TplSpecZoneLoc.class));
 				}
 			}
 		}
