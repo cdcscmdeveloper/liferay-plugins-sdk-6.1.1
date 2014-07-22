@@ -207,7 +207,7 @@ public class ScheduleBiddingBackingBean extends
 			 * { item.setDecrementAmt(1000l); }else if(itemEstimatedPrice >=
 			 * 1000000){ item.setDecrementAmt(2500l); }
 			 */
-			item.setDecrementAmt(200L);
+			//item.setDecrementAmt(200L);
 			item.setScBidSchedule(new ScBidSchedule());
 			bidItemList.add(item);
 		}
