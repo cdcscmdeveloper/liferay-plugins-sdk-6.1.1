@@ -168,7 +168,7 @@
 				
 			    <p:column headerText="#{lbl['lbl.sc.request.note.fulfill.type']}"  style="width:10%;">
 					<p:inputText value="#{requestNoteBackingBean.getParameterDesc(ParameterTypeConst.fulfilmentType ,requestNoteDtl.fulfilmentType.parameterCode)}" 
-					   disabled="true" size="4" />
+					   disabled="true" size="4" style="margin-top: 8px;"  />
 				</p:column>
 				
 				<p:column style="width:10%;">
@@ -193,7 +193,7 @@
 						<h:outputText value="* " styleClass="mandatory" />
 						<h:outputText value="#{lbl['lbl.sc.request.note.delivery.term']}" />
 					</f:facet>
-					<p:inputText style="width:25px;text-align:right;"
+					<p:inputText style="width:25px;text-align:right;margin-top: 8px;margin-right: 1px;" 
 					   label="#{lbl['lbl.sc.request.note.delivery.term']}"
 					   size="6" maxlength="4"
 					   id="deliveryTerm" value="#{requestNoteDtl.deliverTerm}" required="true">
@@ -232,7 +232,7 @@
 					<p:spacer width="6px;"/>
 					<h:outputText value="#{lbl['lbl.sc.request.note.delivery.term']}"></h:outputText>
 					<p:spacer width="6px;"/>
-					<p:inputText id="periodId" style="width:20px;" required="false"
+					<p:inputText id="periodId" style="width:20px;text-align:right;margin-top: 7px;" required="false"
 						value="#{requestNoteBackingBean.managedBean.periodValue}" />
 					<p:spacer width="4px;"/>
 					<p:selectOneMenu id="periodMode" 
