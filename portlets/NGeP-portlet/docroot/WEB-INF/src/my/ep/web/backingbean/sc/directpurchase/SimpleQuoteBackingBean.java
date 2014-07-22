@@ -1654,7 +1654,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			for (SmSupplier supplier : suppliers) {
 				ScQuoteSupplier quoteSupplier = new ScQuoteSupplier();
 				quoteSupplier.setSmSupplier(supplier);
-				quoteSupplier.setQuote(getManagedBean().getScQuote());
+				quoteSupplier.setQuote(quote);
 
 				if(getManagedBean().getSupplierList().isEmpty()){
 					supplierList.add(quoteSupplier);
