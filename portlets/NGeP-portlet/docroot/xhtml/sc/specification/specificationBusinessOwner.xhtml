@@ -98,6 +98,7 @@
 					<td><p:outputLabel value="#{lbl['lbl.sc.spec.opn.for']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td><p:selectOneRadio required="true" id="openFor"
+							disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
 							label="#{lbl['lbl.sc.spec.opn.for']}"
 							value="#{specificationBackingBean.managedBean.scQt.openFor}">
 							<f:selectItems
