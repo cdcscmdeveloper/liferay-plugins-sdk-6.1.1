@@ -5,10 +5,10 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-
-	<p:dialog id="cloneDialogId" header="Clone Committee"
-		widgetVar="cloneMemberWidgetVar" modal="true" width="800" height="800"
-		position="top">
+	
+	<p:dialog id="cloneDialogId" header="#{lbl['lbl.sc.clone.committee']}"
+		widgetVar="cloneMemberWidgetVar" width="950" height="600" position="top"
+		styleClass="cloneAddMember">
 
 		<p:panel id="cloneSearchPanel" header="Search" toggleable="true">
 			<table>
@@ -85,7 +85,7 @@
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.btn.reset']}"
 					style="float:right;"
-					action="#{suppFinalMeetingBackingBean.resetClone}"
+					action="#{suppFinalMeetingBackingBean.cloneResetAction}"
 					update="cloneSearchPanel" 
 					icon="ui-icon-reset" 
 					resetValues="true"
@@ -95,7 +95,7 @@
 				<p:commandButton value="#{lbl['lbl.btn.search']}"
 					style="float:right;" 
 					icon="ui-icon-search"
-					action="#{suppFinalMeetingBackingBean.cloneSearchCommitteAction}"
+					action="#{suppFinalMeetingBackingBean.cloneSearchAction}"
 					update="cloneCommitteeSearchTbl" 
 					partialSubmit="true"
 					process="@parent" />
@@ -107,8 +107,8 @@
 		<p:spacer height="3" />
 		<p:panel header="#{lbl['lbl.sc.qtn.list']}" toggleable="true">
 			<p:dataTable id="cloneCommitteeSearchTbl"
-				value="#{suppFinalMeetingBackingBean.managedBean.cloneTenderList}"
-				rowKey="#{scQt}" selectionMode="single" var="scQt"
+				value="#{suppFinalMeetingBackingBean.managedBean.cloneSearchQTDataModel}"
+				rowKey="#{scQt}" selectionMode="single" var="scQt" lazy="true"
 				styleClass="cloneResults">
 
 				<ac:paginator for="cloneCommitteeSearchTbl" />
@@ -126,7 +126,7 @@
 
 				<p:column headerText="#{lbl['lbl.sc.procurement.mode']}">
 					<h:outputText
-						value="#{suppFinalMeetingBackingBean.getParameterDesc(ParameterTypeConst.scProcurementMode, scQt.procurementMode)}" />
+						value="#{suppFinalMeetingBackingBean.getParameterDesc(scQt.procurementMode)}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.created.date']}">
@@ -136,7 +136,7 @@
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.status']}">
-					<h:outputText value="#{scQt.qtStatus.pmStatus.pmStatusDescs[0].statusName}" />
+					<h:outputText value="#{suppFinalMeetingBackingBean.getStatusDescById(scQt.qtStatus.statusId)}" />
 				</p:column>
 			</p:dataTable>
 		</p:panel>
@@ -145,8 +145,8 @@
 			header="#{lbl['lbl.sc.committee.details']}" toggleable="true">
 
 			<p:dataTable id="cloneCommitteeTbl" var="committeeMember"
-				value="#{suppFinalMeetingBackingBean.managedBean.cloneCommitteMemebers}"
-				selection="#{suppFinalMeetingBackingBean.managedBean.cloneCommitteMemebersSelect}"
+				value="#{suppFinalMeetingBackingBean.managedBean.cloneCommitteMembers}"
+				selection="#{suppFinalMeetingBackingBean.managedBean.cloneCommitteMembersSelect}"
 				rowKey="#{committeeMember.committeeMemberId}">
 				<ac:paginator for="cloneCommitteeTbl" />
 
@@ -173,11 +173,11 @@
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.pnp']}">
-					<h:outputText value="#{committeeMember.PNP}"></h:outputText>
+					<h:outputText value="#{committeeMember.PNP ? lbl['lbl.txt.yes'] : lbl['lbl.txt.no']}"></h:outputText>
 				</p:column>
 				
 				<p:column headerText="#{lbl['lbl.sc.role']}">
-					<h:outputText value="#{committeeMember.memberRole}"></h:outputText>
+					<h:outputText value="#{suppFinalMeetingBackingBean.getParameterDesc(committeeMember.memberRole)}"></h:outputText>
 				</p:column>
 			</p:dataTable>
 			
@@ -191,7 +191,7 @@
 					style="float:right;"
 					process="@this,committeeDtlPanel" 
 					partialSubmit="true"
-					actionListener="#{suppFinalMeetingBackingBean.cloneCommitteeDtls}"
+					actionListener="#{suppFinalMeetingBackingBean.cloneAction}"
 					onclick="cloneMemberWidgetVar.hide();"
 					oncomplete="committeeMemberWidVar.paginator.endLink.click();"
 					icon="ui-icon-check" 

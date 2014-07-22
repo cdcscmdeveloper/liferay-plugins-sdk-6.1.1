@@ -79,6 +79,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtRptBriefingPaperAttachment;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
+import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
@@ -130,7 +131,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 	
 	//temporary
 	Long qtId = 146L;
-	String committeeType = ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A;
+	String committeeType = ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A;
 	
 	public SupplierFinalizationBackingBean() {
 		if(getManagedBean().getScQt() == null){
@@ -254,15 +255,19 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 				if(qtCommittee.getScQtMeetings() == null){
 					qtCommittee.setScQtMeetings(new ArrayList<ScQtMeeting>());
 				}
+				for(ScQtMeeting scQtMeeting : this.getManagedBean().getMeetingList()){
+					System.out.println("LOC : "+ scQtMeeting.getMeetingLocation());
+					System.out.println("STATUS : "+ scQtMeeting.getMeetingStatus().getStatusId());
+				}
 				qtCommittee.setScQtMeetings(this.getManagedBean().getMeetingList());
 			}
 			metReqDtO.setScQtCommitte(qtCommittee);
 			meetingso.saveQTDtl(metReqDtO);
 			retriveMeetingDtls();
 			
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Meeting Details Saved Successfully", "Supplier Finalization"));
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Meeting Details Saved Successfully", ""));
 		} finally {
-
+			meetingso = null;
 		}
 	}
 	
@@ -342,7 +347,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 			metReqDtO.setScQtCommitte(qtCommittee);
 			meetingso.saveQTDtl(metReqDtO);
 			
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Committee Details Saved Successfully", "Supplier Finalization"));
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Committee Details Saved Successfully", ""));
 		} finally {
 
 		}
@@ -380,8 +385,8 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		}
 	}
 	
-	public void saveMeetingAttendanceDtls(){
-		debugLogger("..In saveMeetingAttendanceDtls()..");
+	public void saveMeetingAttendance(){
+		debugLogger("..In saveMeetingAttendance()..");
 		IQTMeetingSO meetingso = null;
 		try {
 			meetingso = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTMeetingSO.class);
@@ -396,7 +401,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 			metReqDtO.setScQtCommitte(qtCommittee);
 			meetingso.saveQTDtl(metReqDtO);
 			
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Turut Hadir Saved Successfully", "Supplier Finalization"));
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Turut Hadir Saved Successfully", ""));
 		} finally {
 
 		}
@@ -425,19 +430,33 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 				recommendSupplier(scQtFinalization);
 				
 			}else if(decisionTypeCode.equals(ParameterConst.DECISION_RE_EVALUATION)){
-				reEvaluateQT(scQtFinalization);
+				String reEvaluateBy = getManagedBean().getReEvaluateBy();
+				boolean reEvaluateTech = getManagedBean().isReEvaluateReqForTech();
+				boolean reEvaluateFin = getManagedBean().isReEvaluateReqForFin();
+				
+				scQtFinalization.setReEvaluateCommitte(reEvaluateBy);
+				scQtFinalization.setReEvaluateTechReq(reEvaluateTech);
+				scQtFinalization.setReEvaluateFinReq(reEvaluateFin);
 			
 			}else if(decisionTypeCode.equals(ParameterConst.DECISION_RE_PUBLISH)){
-				rePublishQT(scQtFinalization);
+				boolean specChanges = getManagedBean().getReqSpecChanges();
+				scQtFinalization.setSpecChangeReq(specChanges);
 			
 			}else if(decisionTypeCode.equals(ParameterConst.DECISION_CANCEL)){
-				//TODO - called Sagar API for Cancel QT
+				//nothing to set
 			}
 			
 			reqDTO.setScQtFinalization(scQtFinalization);
 			qtSuppFinalizationSO.saveSuppFinalization(reqDTO);
 			retrieveSuppFinalizationDtls();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Supplier Finalization Saved Successfully", "Supplier Finalization"));
+			
+			//String docType = ;
+			String qtId = getManagedBean().getScQt().getQtId().toString();
+			String desc = getParameterDesc( ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION);
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+							MessageUtils.getMessage(MessageConst.INFO_700004, new String[] {desc,qtId},
+							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+
 		} finally {
 
 		}
@@ -563,31 +582,69 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		scQtFinalization.setScQtRecommends(scQtRecommendList);
 	}
 	
-	private void reEvaluateQT(ScQtFinalization scQtFinalization){
+	public void submitSuppFinalization(){
 		//TODO - BPM
-		String reEvaluateBy = getManagedBean().getReEvaluateBy();
+		saveSuppFinalization();
+		
+		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
+		String decisionType = scQtFinalization.getDecision().getParameterCode();
+		
+		if(decisionType.equals(ParameterConst.DECISION_RECOMMEND_SUPPLIER)){
+			submitRecommendSupplier(scQtFinalization);
+			
+		}else if(decisionType.equals(ParameterConst.DECISION_RE_EVALUATION)){
+			submitReEvaluateQT(scQtFinalization);
+		
+		}else if(decisionType.equals(ParameterConst.DECISION_RE_PUBLISH)){
+			submitRePublishQT(scQtFinalization);
+		
+		}else if(decisionType.equals(ParameterConst.DECISION_CANCEL)){
+			//TODO - called Sagar API for Cancel QT
+		}
+		
+		String variable1 = getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION) + " " + getManagedBean().getScQt().getQtNo();
+		String variable2 = CommonMethod.getMessageCommon("lbl.sc.supplier.finalization");
+		commonMessageAcknowledmentPage(MessageConst.INFO_700026, variable1, variable2);
+	}
+	
+	private void submitRecommendSupplier(ScQtFinalization scQtFinalization){
+		//TODO - BPM
+		String recommendType = scQtFinalization.getRecommendedTypeId().getParameterCode();
+		
+		if(scQtFinalization.isHigherAuthReq()){
+			// BPM Send task to DO/commitee for the re-finalize by higher authority
+		}else{
+			if(recommendType.equals(ParameterConst.RECOMMEND_TYPE_PACKAGE)){
+				//BPM send task for award/online bidding/multiple LOI by package
+			}else if(recommendType.equals(ParameterConst.RECOMMEND_TYPE_ITEM)){
+				//BPM send task for award/online bidding/multiple LOI by items
+			}
+		}
+	}
+	
+	private void submitReEvaluateQT(ScQtFinalization scQtFinalization){
+		//TODO - BPM
+		String reEvaluateBy = scQtFinalization.getReEvaluateCommitte();
 		boolean reEvaluateTech = getManagedBean().isReEvaluateReqForTech();
 		boolean reEvaluateFin = getManagedBean().isReEvaluateReqForFin();
-		
-		scQtFinalization.setReEvaluateCommitte(reEvaluateBy);
-		scQtFinalization.setReEvaluateTechReq(reEvaluateTech);
-		scQtFinalization.setReEvaluateFinReq(reEvaluateFin);
 		
 		if(reEvaluateBy.equals(SelectionType.New)){
 			//BPM send task to maintain committee
 		}
 		if(reEvaluateTech && reEvaluateFin){
-			//BPM send task to reEvaluate tech/fin
+			//BPM send task to reEvaluate technical and financial
 		
-		}else if(reEvaluateTech || reEvaluateFin){
-			//BPM send task to reEvaluate tech or fin only
+		}else if(reEvaluateTech && !reEvaluateFin){
+			//BPM send task to reEvaluate technical only
+			
+		}else if(!reEvaluateTech && reEvaluateFin){
+			//BPM send task to reEvaluate financial only
 		}
 	}
 	
-	private void rePublishQT(ScQtFinalization scQtFinalization){
+	private void submitRePublishQT(ScQtFinalization scQtFinalization){
 		//TODO - BPM
-		boolean specChanges = getManagedBean().getReqSpecChanges();
-		scQtFinalization.setSpecChangeReq(specChanges);
+		boolean specChanges = scQtFinalization.isSpecChangeReq();
 		
 		if(specChanges){
 			//BPM send task to whole SC 
@@ -597,13 +654,6 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 			//(not required to obtained like budget, bpk approval) 
 			//(not allow change info which related all approval - budget, bpk etc)
 		}
-	}
-	
-	public void submitSuppFinalization(){
-		//TODO - BPM
-		String variable1 = getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION) + " " + getManagedBean().getScQt().getQtNo();
-		String variable2 = CommonMethod.getMessageCommon("lbl.sc.supplier.finalization");
-		commonMessageAcknowledmentPage(MessageConst.INFO_700026, variable1, variable2);
 	}
 	
 	
@@ -921,7 +971,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 			qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
 			
 			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
-			reqDTO.setQtId(qtId);
+			reqDTO.setQtId(qtId);//FIXME
 			reqDTO.setQtZoneCriteriaId(qtZoneCriteriaId);
 			if(getManagedBean().isItemize()){//itemize
 				reqDTO.setItemize(true);
@@ -941,7 +991,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 	}
 	
 	/**
-	 * Method to call Supplier Details popup in supplier finalization
+	 * Method to call Supplier Details pop up in supplier finalization
 	 */
 	public void showSupplierDetails() {
 		debugLogger("showSuppDetails");
@@ -949,22 +999,24 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 			this.getManagedBean().setShortlistedSupplier(getManagedBean().getShortlistedSupplier());
 			
 			SmSupplier smSupplier = getManagedBean().getShortlistedSupplier().getScQtProposal().getScQtSupplier().getSmSupplier();
+			getManagedBean().setSmSupplier(smSupplier);
+			getManagedBean().setSmMofAccount(smSupplier.getSmMofAccounts().get(0));
+			
 			SmCompanyBasic smCompanyBasic = smSupplier.getSmAppl().getSmCompanyBasic();
+			getManagedBean().setSmCompanyBasic(smCompanyBasic);
+			
+			List<SmPersonnel> smPersonnelList = smSupplier.getSmAppl().getSmPersonnels();
+			for (SmPersonnel smPersonnel : smPersonnelList) {
+				if(smPersonnel.isContactPerson()){
+					getManagedBean().setSmPersonnel(smPersonnel);
+					break;
+				}
+			}
 
 			for (SmCompanyAddress smCompanyAddress : smCompanyBasic.getSmCompanyAddresses()) {
 				if (AddressType.CONTACT_ADDRESS.value().equals(smCompanyAddress.getAddressType())) {
-
-					//FIXME - copy from vishu
-					
-					
-					/*scLoiLoa.setSupplierBranch("HQ");
-					scLoiLoa.setSupplierAddress(smCompanyAddress.getSmAddress());
-					scLoiLoa.setSupplierContact(supplierHQPersonnel.getName());
-					scLoiLoa.setSupplierPhoneNo(smCompanyBasic.getPhoneNo());
-					scLoiLoa.setSupplierFaxNo(smCompanyBasic.getFaxNo());
-					scLoiLoa.setSupplierMobNo(supplierHQPersonnel.getMobileNo());
-					scLoiLoa.setSupplierEmail(supplierHQPersonnel.getEmail());*/
-
+					getManagedBean().setSupplierBranch(QTConstants.SUPPLIER_INFO_HQ);
+					getManagedBean().setSupplierAddress(smCompanyAddress.getSmAddress());
 					break;
 				}
 			}
@@ -980,7 +1032,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 			meetingSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTMeetingSO.class);
 
 			MeetingReqDTO reqDTO = new MeetingReqDTO();
-			reqDTO.setQtId(qtId);
+			reqDTO.setQtId(qtId);//FIXME
 			reqDTO.setCommitteType(committeeType);
 			reqDTO.setIsAttended(null);
 			

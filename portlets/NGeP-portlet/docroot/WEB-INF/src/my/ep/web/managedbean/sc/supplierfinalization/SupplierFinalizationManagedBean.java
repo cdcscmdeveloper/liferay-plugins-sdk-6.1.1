@@ -9,7 +9,6 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
-import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
@@ -19,6 +18,10 @@ import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeetingAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtReport;
+import my.ep.persistence.entity.sm.SmAddress;
+import my.ep.persistence.entity.sm.SmCompanyBasic;
+import my.ep.persistence.entity.sm.SmMofAccount;
+import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -73,6 +76,13 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private Long recommendBy;
 	private String selectionMode = QTConstants.SF_SINGLE;
 	private String awardSupplier; 
+	
+	private String supplierBranch;
+	private SmSupplier smSupplier;
+	private SmCompanyBasic smCompanyBasic;
+	private SmPersonnel smPersonnel;
+	private SmAddress supplierAddress;
+	private SmMofAccount smMofAccount;
 	
 	private boolean isItemize;
 	private boolean isRecommendSupplier;
@@ -911,6 +921,90 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	 */
 	public void setReEvaluateReqForFin(boolean reEvaluateReqForFin) {
 		this.reEvaluateReqForFin = reEvaluateReqForFin;
+	}
+
+	/**
+	 * @return the supplierBranch
+	 */
+	public String getSupplierBranch() {
+		return supplierBranch;
+	}
+
+	/**
+	 * @param supplierBranch the supplierBranch to set
+	 */
+	public void setSupplierBranch(String supplierBranch) {
+		this.supplierBranch = supplierBranch;
+	}
+
+	/**
+	 * @return the supplierAddress
+	 */
+	public SmAddress getSupplierAddress() {
+		return supplierAddress;
+	}
+
+	/**
+	 * @param supplierAddress the supplierAddress to set
+	 */
+	public void setSupplierAddress(SmAddress supplierAddress) {
+		this.supplierAddress = supplierAddress;
+	}
+
+	/**
+	 * @return the smPersonnel
+	 */
+	public SmPersonnel getSmPersonnel() {
+		return smPersonnel;
+	}
+
+	/**
+	 * @param smPersonnel the smPersonnel to set
+	 */
+	public void setSmPersonnel(SmPersonnel smPersonnel) {
+		this.smPersonnel = smPersonnel;
+	}
+
+	/**
+	 * @return the smCompanyBasic
+	 */
+	public SmCompanyBasic getSmCompanyBasic() {
+		return smCompanyBasic;
+	}
+
+	/**
+	 * @param smCompanyBasic the smCompanyBasic to set
+	 */
+	public void setSmCompanyBasic(SmCompanyBasic smCompanyBasic) {
+		this.smCompanyBasic = smCompanyBasic;
+	}
+
+	/**
+	 * @return the smMofAccount
+	 */
+	public SmMofAccount getSmMofAccount() {
+		return smMofAccount;
+	}
+
+	/**
+	 * @param smMofAccount the smMofAccount to set
+	 */
+	public void setSmMofAccount(SmMofAccount smMofAccount) {
+		this.smMofAccount = smMofAccount;
+	}
+
+	/**
+	 * @return the smSupplier
+	 */
+	public SmSupplier getSmSupplier() {
+		return smSupplier;
+	}
+
+	/**
+	 * @param smSupplier the smSupplier to set
+	 */
+	public void setSmSupplier(SmSupplier smSupplier) {
+		this.smSupplier = smSupplier;
 	}
 	
 	

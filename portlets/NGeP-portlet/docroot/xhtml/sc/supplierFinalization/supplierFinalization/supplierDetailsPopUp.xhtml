@@ -18,7 +18,7 @@
 			</h:column>
 			<h:column>
 				<p:inputText size="30"
-					value="#{suppFinalizationBackingBean.managedBean.shortlistedSupplier.scQtProposal.scQtSupplier.smSupplier.epNo}"
+					value="#{suppFinalizationBackingBean.managedBean.smSupplier.epNo}"
 					readonly="true" />
 			</h:column>
 			
@@ -27,7 +27,7 @@
 			</h:column>
 			<h:column>
 				<p:inputText size="30" style=" margin-bottom:5px;"
-					value="#{suppFinalizationBackingBean.managedBean.shortlistedSupplier.scQtProposal.scQtSupplier.smSupplier.companyName}"
+					value="#{suppFinalizationBackingBean.managedBean.smSupplier.companyName}"
 					readonly="true" />
 			</h:column>
 			
@@ -43,7 +43,7 @@
 			</h:column>
 			<h:column>
 				<p:inputText size="30" style=" margin-bottom:5px;"
-					value="#{suppFinalizationBackingBean.managedBean.shortlistedSupplier.scQtProposal.scQtSupplier.smSupplier.regNo}"
+					value="#{suppFinalizationBackingBean.managedBean.smSupplier.regNo}"
 					readonly="true" />
 			</h:column>
 			
@@ -52,7 +52,7 @@
 			</h:column>
 			<h:column>
 				<p:inputText size="30"
-					value="#{suppFinalizationBackingBean.managedBean.shortlistedSupplier.scQtProposal.scQtSupplier.smSupplier.smMofAccounts[0].mofNo}"
+					value="#{suppFinalizationBackingBean.managedBean.smMofAccount.mofNo}"
 					readonly="true" />
 			</h:column>
 			
@@ -60,7 +60,8 @@
 				<p:outputLabel value="#{lbl['lbl.sc.income.tax.ref.no']}" />
 			</h:column>
 			<h:column>
-				<p:inputText size="30" style=" margin-bottom:5px;" value="" readonly="true" />
+				<p:inputText size="30" style="margin-bottom:5px;" 
+					value="#{suppFinalizationBackingBean.managedBean.smCompanyBasic.incomeTaxNo}" readonly="true" />
 			</h:column>
 			
 			<h:column>
@@ -68,7 +69,7 @@
 			</h:column>
 			<h:column>
 				<p:inputText size="30"
-					value="#{suppFinalizationBackingBean.managedBean.shortlistedSupplier.scQtProposal.scQtSupplier.smSupplier.establishDate}"
+					value="#{suppFinalizationBackingBean.managedBean.smSupplier.establishDate}"
 					readonly="true" />
 			</h:column>
 			
@@ -77,7 +78,7 @@
 			</h:column>
 			<h:column>
 				<p:inputText size="30" style=" margin-bottom:5px;"
-					value="#{suppFinalizationBackingBean.managedBean.shortlistedSupplier.scQtProposal.scQtSupplier.smSupplier.businessType}"
+					value="#{suppFinalizationBackingBean.managedBean.smSupplier.businessType}"
 					readonly="true" />
 			</h:column>
 			
@@ -86,7 +87,7 @@
 			</h:column>
 			<h:column>
 				<p:inputText size="30"
-					value="#{suppFinalizationBackingBean.managedBean.shortlistedSupplier.scQtProposal.scQtSupplier.smSupplier.smMofAccounts[0].expDate}"
+					value="#{suppFinalizationBackingBean.managedBean.smMofAccount.expDate}"
 					readonly="true" />
 			</h:column>
 			
@@ -101,35 +102,36 @@
 				<p:outputLabel value="#{lbl['lbl.sc.branch']}" />
 			</h:column>
 			<h:column>
-				<p:inputText size="30" value="" readonly="true" />
+				<p:inputText size="30" value="#{suppFinalizationBackingBean.managedBean.supplierBranch}" readonly="true" />
 			</h:column>
 			
 			<h:column>
 				<p:outputLabel value="#{lbl['lbl.sc.address']}" />
 			</h:column>
 			<h:column>
-				<p:inputTextarea cols="30" value="-" style=" margin-bottom:5px;" readonly="true" />
+				<p:inputTextarea cols="30" value="#{suppFinalizationBackingBean.managedBean.supplierAddress.address1}" 
+					style=" margin-bottom:5px;" readonly="true" />
 			</h:column>
 			
 			<h:column>
 				<p:outputLabel value="#{lbl['lbl.sc.contact.person']}" />
 			</h:column>
 			<h:column>
-				<p:inputText size="30" value="" readonly="true" />
+				<p:inputText size="30" value="#{suppFinalizationBackingBean.managedBean.smPersonnel.name}" readonly="true" />
 			</h:column>
 			
 			<h:column>
 				<p:outputLabel value="#{lbl['lbl.sc.designation']}" />
 			</h:column>
 			<h:column>
-				<p:inputText size="30" value="-" readonly="true" />
+				<p:inputText size="30" value="#{suppFinalizationBackingBean.managedBean.smPersonnel.designation}" readonly="true" />
 			</h:column>
 			
 			<h:column>
 				<p:outputLabel value="#{lbl['lbl.sc.email']}" />
 			</h:column>
 			<h:column>
-				<p:inputText size="30" value="" readonly="true" />
+				<p:inputText size="30" value="#{suppFinalizationBackingBean.managedBean.smPersonnel.email}" readonly="true" />
 			</h:column>
 		</h:panelGrid>
 

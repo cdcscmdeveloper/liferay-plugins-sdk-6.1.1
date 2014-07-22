@@ -13,6 +13,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
+import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -45,12 +46,16 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 	private QtnTenderSearchBean cloneQtnTenderSearchBean;
 	private List<ScQt> cloneTenderList;
 	private List<ScQt> selectedCloneTender;
-	private List<ScCommitteeMember> cloneCommitteMemebers;
-	private List<ScCommitteeMember> cloneCommitteMemebersSelect;
+	private List<ScCommitteeMember> cloneCommitteMembers;
+	private List<ScCommitteeMember> cloneCommitteMembersSelect;
 	private List<ScQtCommitteeActivity> committeeMemberActivity;
 	private List<ScQtCommitteeActivity> committeeActivitySelect;
 	private ScQtCommittee scQtCommittee;
 	private List<ScQtCommitteRemarks> qtCommitteeRemarks;
+	
+	private IPagingDataModel<ScQt> cloneSearchQTDataModel;
+	boolean isCommiteeChanged = false;
+	
 	/**
 	 * @return the scQtMeetings
 	 */
@@ -258,32 +263,6 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 		this.selectedCloneTender = selectedCloneTender;
 	}
 	/**
-	 * @return the cloneCommitteMemebers
-	 */
-	public List<ScCommitteeMember> getCloneCommitteMemebers() {
-		return cloneCommitteMemebers;
-	}
-	/**
-	 * @param cloneCommitteMemebers the cloneCommitteMemebers to set
-	 */
-	public void setCloneCommitteMemebers(
-			List<ScCommitteeMember> cloneCommitteMemebers) {
-		this.cloneCommitteMemebers = cloneCommitteMemebers;
-	}
-	/**
-	 * @return the cloneCommitteMemebersSelect
-	 */
-	public List<ScCommitteeMember> getCloneCommitteMemebersSelect() {
-		return cloneCommitteMemebersSelect;
-	}
-	/**
-	 * @param cloneCommitteMemebersSelect the cloneCommitteMemebersSelect to set
-	 */
-	public void setCloneCommitteMemebersSelect(
-			List<ScCommitteeMember> cloneCommitteMemebersSelect) {
-		this.cloneCommitteMemebersSelect = cloneCommitteMemebersSelect;
-	}
-	/**
 	 * @return the committeeMemberActivity
 	 */
 	public List<ScQtCommitteeActivity> getCommitteeMemberActivity() {
@@ -344,6 +323,56 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 	 */
 	public void setScQt(ScQt scQt) {
 		this.scQt = scQt;
+	}
+	/**
+	 * @return the cloneSearchQTDataModel
+	 */
+	public IPagingDataModel<ScQt> getCloneSearchQTDataModel() {
+		return cloneSearchQTDataModel;
+	}
+	/**
+	 * @param cloneSearchQTDataModel the cloneSearchQTDataModel to set
+	 */
+	public void setCloneSearchQTDataModel(
+			IPagingDataModel<ScQt> cloneSearchQTDataModel) {
+		this.cloneSearchQTDataModel = cloneSearchQTDataModel;
+	}
+	/**
+	 * @return the cloneCommitteMembers
+	 */
+	public List<ScCommitteeMember> getCloneCommitteMembers() {
+		return cloneCommitteMembers;
+	}
+	/**
+	 * @param cloneCommitteMembers the cloneCommitteMembers to set
+	 */
+	public void setCloneCommitteMembers(List<ScCommitteeMember> cloneCommitteMembers) {
+		this.cloneCommitteMembers = cloneCommitteMembers;
+	}
+	/**
+	 * @return the cloneCommitteMembersSelect
+	 */
+	public List<ScCommitteeMember> getCloneCommitteMembersSelect() {
+		return cloneCommitteMembersSelect;
+	}
+	/**
+	 * @param cloneCommitteMembersSelect the cloneCommitteMembersSelect to set
+	 */
+	public void setCloneCommitteMembersSelect(
+			List<ScCommitteeMember> cloneCommitteMembersSelect) {
+		this.cloneCommitteMembersSelect = cloneCommitteMembersSelect;
+	}
+	/**
+	 * @return the isCommiteeChanged
+	 */
+	public boolean isCommiteeChanged() {
+		return isCommiteeChanged;
+	}
+	/**
+	 * @param isCommiteeChanged the isCommiteeChanged to set
+	 */
+	public void setCommiteeChanged(boolean isCommiteeChanged) {
+		this.isCommiteeChanged = isCommiteeChanged;
 	}
 	
 }

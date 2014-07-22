@@ -23,11 +23,11 @@
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sc.role']}" style="width:20%">
-				<h:outputText value="#{suppFinalizationBackingBean.getParameterDesc(ParameterTypeConst.committeeRole, endorsement.scCommitteeMember.memberRole)}"></h:outputText>
+				<h:outputText value="#{suppFinalizationBackingBean.getParameterDesc(endorsement.scCommitteeMember.memberRole)}"/>
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sc.representative.type']}" style="width:20%">
-				<h:outputText value="#{suppFinalizationBackingBean.getParameterDesc(ParameterTypeConst.organisationTypes, endorsement.scCommitteeMember.memberType)}"></h:outputText>
+				<h:outputText value="#{suppFinalizationBackingBean.getParameterDesc(endorsement.scCommitteeMember.memberType)}"/>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.status']}" style="width:20%">

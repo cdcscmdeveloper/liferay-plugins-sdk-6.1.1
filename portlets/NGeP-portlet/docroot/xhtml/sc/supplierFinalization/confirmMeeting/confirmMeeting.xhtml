@@ -19,8 +19,9 @@
 							<p:commandButton value="#{lbl['lbl.btn.save']}" 
 								process="@all"
 								partialSubmit="true"
-								action="#{suppFinalMeetingBackingBean.saveCommitteeAction}"
-								icon="ui-icon-save" />
+								action="#{suppFinalMeetingBackingBean.saveAction}"
+								icon="ui-icon-save" 
+								update="@form"/>
 								
 							<p:commandButton value="#{lbl['lbl.btn.submit']}"
 								process="@this" 
@@ -38,6 +39,22 @@
 								editable="true" rowIndexVar="index" style="width:100%"
 								rowKey="#{meeting}">
 								<ac:paginator for="meetingTbl" />
+								
+								<p:ajax event="rowSelect" 
+									listener="#{suppFinalMeetingBackingBean.selectMeetingEvent}"
+									update=":form:meetingTbl" />
+									
+								<p:ajax event="rowSelectCheckbox" 
+									listener="#{suppFinalMeetingBackingBean.selectMeetingEvent}"
+									update=":form:meetingTbl" />
+									
+								<p:ajax event="rowUnselect"
+									listener="#{suppFinalMeetingBackingBean.unSelectMeetingEvent}"
+									update=":form:meetingTbl"></p:ajax>
+									
+								<p:ajax event="rowUnselectCheckbox"
+									listener="#{suppFinalMeetingBackingBean.unSelectMeetingEvent}"
+									update=":form:meetingTbl"></p:ajax>
 					
 								<p:column selectionMode="multiple" style="width:2%"></p:column>
 								
@@ -59,14 +76,15 @@
 								<p:commandButton value="#{lbl['lbl.btn.add']}"
 									process="@this,meetingTbl" 
 									partialSubmit="true"
-									action="#{suppFinalMeetingBackingBean.addMeetingAction}"
+									action="#{suppFinalMeetingBackingBean.meetingAddAction}"
 									oncomplete="meetingDtls.paginator.endLink.click();"
 									update="meetingTbl" 
 									icon="ui-icon-add" />
 									
-								<p:commandButton value="#{lbl['lbl.btn.delete']}"
-									icon="ui-icon-delete"
-									action="#{suppFinalMeetingBackingBean.deleteMeetingDetails}"
+								<p:commandButton value="#{lbl['lbl.btn.delete']}" 
+									icon="ui-icon-delete" process="@this,meetingTbl"
+									partialSubmit="true"
+									action="#{suppFinalMeetingBackingBean.meetingDeleteAction}"
 									update="meetingTbl" />
 							</div>
 						</p:panel>
@@ -107,15 +125,16 @@
 								</p:column>
 								
 								<p:column headerText="#{lbl['lbl.sc.role']}">
-									<ui:fragment rendered="#{committeeMember.scCommitteeMember.PNP}">
-										<h:outputText value="#{lbl['lbl.sc.chairperson']}" rendered="#{committeeDtl.memberRole eq 'C'}" />
-									</ui:fragment>
-									
-									<ui:fragment rendered="#{!committeeMember.scCommitteeMember.PNP}">
-										<p:selectOneMenu value="#{committeeMember.scCommitteeMember.memberRole.parameterId}" style="width: 110px;margin-bottom: 5px;">
-											<f:selectItems value="#{suppFinalMeetingBackingBean.getRoleTypeDropdownValues(ParameterTypeConst.committeeRole)}" />
-										</p:selectOneMenu>
-									</ui:fragment>
+									<h:outputText value="#{lbl['lbl.sc.chairperson']}" rendered="#{committeeMember.scCommitteeMember.PNP}" />
+									<p:selectOneMenu id="meetingRoleId" required="true" rendered="#{!committeeMember.scCommitteeMember.PNP}"
+										value="#{committeeMember.scCommitteeMember.memberRole.parameterId}" style="width: 110px;margin-bottom: 5px;">
+										<f:selectItems value="#{suppFinalMeetingBackingBean.getRoleTypeDropdownValues(ParameterTypeConst.committeeRole)}" />
+									</p:selectOneMenu>
+									<p:message id="meetingRoleMsg" for="meetingRoleId" display="icon"></p:message>
+								</p:column>
+								
+								<p:column headerText="#{lbl['lbl.sc.representative.type']}">
+									<h:outputText value="#{suppFinalMeetingBackingBean.getParameterDesc(ommitteeMember.scCommitteeMember.memberType)}"/>
 								</p:column>
 							</p:dataTable>
 					
@@ -123,23 +142,21 @@
 							<div align="right">
 								<p:commandButton value="#{lbl['lbl.btn.clone']}"
 									process="@this" 
-									partialSubmit="true" 
 									oncomplete="cloneMemberWidgetVar.show();"
-									actionListener="#{suppFinalMeetingBackingBean.addCloneCommittee}"
+									actionListener="#{suppFinalMeetingBackingBean.clonePopupAction}"
 									update="form:cloneDialogId" 
 									icon="ui-icon-clone" />
 								
 								<p:commandButton value="#{lbl['lbl.btn.add']}" 
 									process="@this"
-									partialSubmit="true"
-									actionListener="#{suppFinalMeetingBackingBean.addCommitteeDetails}"
+									actionListener="#{suppFinalMeetingBackingBean.addPopupAction}"
 									icon="ui-icon-add" 
 									update=":form:newMemberDialogId"
 									oncomplete="newMemberWidgetVar.show();" />
 								
 								<p:commandButton value="#{lbl['lbl.btn.delete']}"
 									icon="ui-icon-delete"
-									action="#{suppFinalMeetingBackingBean.deleteCommitteeMembers}"
+									action="#{suppFinalMeetingBackingBean.committeeDeleteAction}"
 									update="memberListTbl" />
 							</div>
 						</p:panel>

@@ -13,7 +13,7 @@
 					<p:commandButton value="#{lbl['lbl.btn.save']}" 
 						process="@all"
 						partialSubmit="true"
-						action="#{suppFinalizationBackingBean.saveMeetingAttDtls}"
+						action="#{suppFinalizationBackingBean.saveMeetingAttendance}"
 						icon="ui-icon-save" />
 				</div>
 				
@@ -27,11 +27,11 @@
 						<p:column selectionMode="multiple" style="width:2%"></p:column>
 						
 						<p:column headerText="#{lbl['lbl.sc.name']}">
-							<h:inputText value="#{committeeDtl.scCommitteeMember.memberName}"/>
+							<h:inputText value="#{meetingAttDtl.name}" maxlength="50" size="50"/>
 						</p:column>
 			
 						<p:column headerText="#{lbl['lbl.sc.id.no']}">
-							<h:inputText value="#{committeeDtl.scCommitteeMember.icPassport}"/>
+							<h:inputText value="#{meetingAttDtl.icPassport}" maxlength="15" size="15"/>
 						</p:column>
 						
 					</p:dataTable>
@@ -41,7 +41,7 @@
 						<p:commandButton value="#{lbl['lbl.btn.add']}"
 							process="@this,meetingAttDtlTbl" 
 							partialSubmit="true"
-							action="#{suppFinalizationBackingBean.addMeetingAttDtls}"
+							action="#{suppFinalizationBackingBean.addMeetingAttendance}"
 							update="meetingAttDtlTbl" 
 							icon="ui-icon-add" />
 							
