@@ -3,6 +3,7 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
@@ -75,14 +76,14 @@
 		</table>
 		<p:spacer height="5px" />
        
-      <h:panelGroup style="width: 100%;">
+      <h:panelGroup style="width: 100%;" rendered="#{fn:length(simpleQuoteBackingBean.managedBean.productTemplateSpecBean.specMaster.tplSpecQuestions) eq '0'}">
 		<ac:templateSpec
 			templateSpecBean="#{simpleQuoteBackingBean.managedBean.productTemplateSpecBean}"
 			title="PRODUCT LIST" />
       </h:panelGroup>
       
 	<p:spacer height="25px" />
-	 <h:panelGroup style="width: 100%;">
+	 <h:panelGroup style="width: 100%;" rendered="#{fn:length(simpleQuoteBackingBean.managedBean.serviceTemplateSpecBean.specMaster.tplSpecQuestions) eq '0'}">
 		<ac:templateSpec
 			templateSpecBean="#{simpleQuoteBackingBean.managedBean.serviceTemplateSpecBean}"
 			title="SERVICE LIST" />
