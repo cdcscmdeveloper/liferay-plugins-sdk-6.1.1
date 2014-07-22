@@ -8,12 +8,12 @@
      <h:panelGrid columns="4" style="width:100%;" styleClass="top-aligned-columns"
          columnClasses="columnWidth150,columnWidth350,columnWidth150,columnWidth200">
           <p:outputLabel value="Business Reg. No." />  
-          <h:panelGrid columns="4">
+          <h:panelGrid columns="4" style="width:230px;" >
              <p:inputText disabled="true" style="width:60px;" 
                 value="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.smSupplier.regNo}" />
              <p:spacer width="2"/>
              <p:outputLabel value="MOF No." />  
-             <p:inputText disabled="true" style="width:78px;" 
+             <p:inputText disabled="true" style="width:70px;" 
              	value="#{contractDetailsBackingBean.managedBean.ctContract.loa.scLoiLoa.mofNo}" />
           </h:panelGrid>
            <p:outputLabel value="Contact Person" />  
@@ -39,7 +39,7 @@
            <p:inputText  value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.supplierPhoneNo}"  disabled="true" style="width:170px;" />
           
           <p:outputLabel value="Branch Name" />
-          <p:inputText disabled="true" style="width:210px;" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.supplierBranch}" /> 
+          <p:inputText disabled="true" style="width:170px;" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.supplierBranch}" /> 
            <p:outputLabel  value="#{lbl['lbl.ct.su.fax']}"/>
            <p:inputText  disabled="true" style="width:170px;"  
               value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.supplierFaxNo}"/>  
@@ -68,6 +68,7 @@
            <p:inputText disabled="true" style="width:170px;" 
               value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.supplierEmail}"/>
         </h:panelGrid>
+        <p:spacer height="15"/>
      <h:panelGrid columns="4" style="width:100%;" styleClass="top-aligned-columns"
          columnClasses="columnWidth150,columnWidth350,columnWidth150,columnWidth200"
        rendered="#{!contractDetailsBackingBean.managedBean.ctContract.factored}">
