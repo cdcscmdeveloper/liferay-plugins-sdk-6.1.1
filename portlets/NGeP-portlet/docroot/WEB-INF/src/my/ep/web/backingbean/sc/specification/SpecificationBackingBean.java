@@ -37,9 +37,8 @@ import my.ep.biz.service.ct.circular.ICircularDetailSO;
 import my.ep.biz.service.ct.circular.ICircularSO;
 import my.ep.biz.service.ct.supplier.IPanelSupplierSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
-import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
-import my.ep.biz.service.pm.common.district.IDistrictSO;
+import my.ep.biz.service.pm.common.district.IDistrictSO;		
 import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
@@ -67,8 +66,6 @@ import my.ep.dto.ct.supplier.PanelSupplierReqDTO;
 import my.ep.dto.ct.supplier.PanelSupplierResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
-import my.ep.dto.pm.authorization.user.UserReqDTO;
-import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
@@ -97,7 +94,6 @@ import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
-import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
@@ -140,7 +136,6 @@ import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
-import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
@@ -507,7 +502,6 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().getScQt().getScQtSupplierCriteria()
 						.setScQtLocCriteria(null);
 				this.getManagedBean().getScQt().setScQtCategorys(null);
-				this.getManagedBean().getScQt().setZonal(false);
 				getManagedBean().setZoneGeneralTrees(new ArrayList<TreeNode>());
 				getManagedBean().setZoneTrees(new ArrayList<TreeNode>());
 			}
@@ -1060,7 +1054,7 @@ public class SpecificationBackingBean extends
 								.equalsIgnoreCase(this.getManagedBean()
 										.getPanelItemCategory())) {
 
-							removespecDtls();
+							//removespecDtls();
 
 							createCircularItemSpec(this.getManagedBean()
 									.getCtPanelItem());
@@ -7371,9 +7365,7 @@ public class SpecificationBackingBean extends
 		CtPanelItem ctPanelItem = (CtPanelItem) selectEvent.getObject();
 		List<CtPanelItem> panelList = this.getManagedBean()
 				.getSelectpanelItem();
-		if (null != panelList && !panelList.isEmpty()) {
-			this.getManagedBean().setExistingpanelitem(panelList.get(0));
-		}
+		
 		panelList = new ArrayList<CtPanelItem>();
 		this.getManagedBean().setCtPanelItem(ctPanelItem);
 
