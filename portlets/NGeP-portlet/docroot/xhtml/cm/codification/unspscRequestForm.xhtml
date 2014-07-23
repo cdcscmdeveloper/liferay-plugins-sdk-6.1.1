@@ -14,9 +14,6 @@
 			$('#portlet_codification_WAR_NGePportlet').find(
 					'.portlet-title-text').html('UNSPSC Request Form');
 		</script>
-		
-        <f:event listener="#{unspscCodeBackingBean.preRenderRequestUnspsc}"
-			type="preRenderView" />
 
 		<p:messages id="unspscFormId" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="true"></p:messages>
@@ -44,7 +41,7 @@
 
 
 
-			<table style="width: 100%;">
+			<table style="width: 100%;" id="unspscFormId">
 				<tr>
 					<td><p:outputLabel value="Item Type"></p:outputLabel></td>
 					<td><p:selectOneMenu
@@ -52,7 +49,7 @@
 							style="width:228px;">
 							<f:selectItem itemValue="P" itemLabel="Product " />
 							<f:selectItem itemValue="S" itemLabel="Service" />
-							<p:ajax event="valueChange" update="@form" />
+							<p:ajax event="valueChange" process="@this" update=":form:cmUNSPSCrequestID" partialSubmit="true" />
 						</p:selectOneMenu></td>
 					<td></td>
 					<td></td>
