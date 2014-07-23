@@ -88,7 +88,6 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private Map<Long, PmUserGroup> userGroupMap;
 	private List<Long> agenciesList; 
 	
-	private String ministryName;
 	private String requisitioner;
 	private String approver;
 	private Long docStatusId;
@@ -779,22 +778,6 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setPmOrgProfile(PmOrgProfile pmOrgProfile) {
 		this.pmOrgProfile = pmOrgProfile;
-	}
-
-
-	/**
-	 * @return the ministryName
-	 */
-	public String getMinistryName() {
-		return ministryName;
-	}
-
-
-	/**
-	 * @param ministryName the ministryName to set
-	 */
-	public void setMinistryName(String ministryName) {
-		this.ministryName = ministryName;
 	}
 
 	/**

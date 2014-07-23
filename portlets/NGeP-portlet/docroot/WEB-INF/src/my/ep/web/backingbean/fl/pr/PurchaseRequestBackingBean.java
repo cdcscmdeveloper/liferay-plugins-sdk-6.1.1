@@ -1689,26 +1689,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		}
 	}
 	
-	
-	public void getSelectedSupplierBranchDtl1(Long supplierBranchId){
-		IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,IMofRegistrationSO.class);
-		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
-		reqDTO.setBranchId(supplierBranchId);
-		MofRegistrationResDTO resDTO = mofRegistrationSO.retrieveSupplierBranchDtlByBranchId(reqDTO);
-		
-		SmSupplierBranch supplierBranch = resDTO.getSupplierBranch();//all this should reset into our Flrequest.FlSupplierDtl
-		FlSupplierDtl supplierDtl = getManagedBean().getFulfilmentRequest().getFlSupplierDtl();
-		supplierDtl.setBranchName(supplierBranch.getBranchName());
-		supplierDtl.setFaxNo(supplierBranch.getFaxNo());
-		supplierDtl.setPhoneNo(supplierBranch.getPhoneNo());
-		supplierDtl.setSmAddress(supplierBranch.getSmAddress());
-		supplierDtl.setContactEmail(supplierBranch.getSmPersonnel().getEmail());
-		supplierDtl.setContactFaxNo(supplierBranch.getSmPersonnel().getFaxNo());
-		supplierDtl.setContactMobileNo(supplierBranch.getSmPersonnel().getMobileNo());
-		supplierDtl.setContactPerson(supplierBranch.getSmPersonnel().getName());
-		supplierDtl.setContactPhoneNo(supplierBranch.getSmPersonnel().getPhoneNo());
-	}
-	
 	/**
 	 * @return the votFundCodeMap
 	 */
