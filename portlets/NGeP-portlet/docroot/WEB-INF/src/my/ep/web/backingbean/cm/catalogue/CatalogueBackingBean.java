@@ -1554,18 +1554,21 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			
 			
 			//1 year period between start and end date
-			Calendar cal = Calendar.getInstance();  
-			cal.setTime(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getStartDate());
-			cal.add(Calendar.YEAR, 1);
-			
-			if(cal.getTime().compareTo(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getEndDate())<0){
-				FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-							MessageUtils.getMessage(MessageConst.ERROR_715012,
-									MessageUtils.BUNDLE_COMMON_MESSAGES,
-									new FacesScopes().getUserLocale())));
-				return "editCatalogItem";
+			if(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getStartDate()!=null && 
+			   this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getEndDate()!=null){
+				Calendar cal = Calendar.getInstance();  
+				cal.setTime(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getStartDate());
+				cal.add(Calendar.YEAR, 1);
+				
+				if(cal.getTime().compareTo(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getEndDate())<0){
+					FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+								MessageUtils.getMessage(MessageConst.ERROR_715012,
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+					return "editCatalogItem";
+				}
 			}
 
 			//Zonal Pricing
