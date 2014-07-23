@@ -222,9 +222,15 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 								worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.fl.purchase.request.task.title", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 							}
 							
-							// s1 module 
+							// s1 module
 							if(worklistItemVO.getTitle().equalsIgnoreCase(ParameterConst.RN_TITLE)) {
 								worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.request.note", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+							}
+							if(worklistItemVO.getTitle().equalsIgnoreCase(ParameterConst.PI_TITLE)) {
+								worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.pr.inquiry", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+							}
+							if(worklistItemVO.getTitle().equalsIgnoreCase(ParameterConst.PD_TITLE)) {
+								worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.pid", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 							}
 						}
 					}
