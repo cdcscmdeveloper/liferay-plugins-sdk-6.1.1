@@ -10,11 +10,11 @@
 	           <p:commandButton value="#{lbl['lbl.sc.action.back.to.search.catalogue']}" style="float:left;" icon="ui-icon-back" partialSubmit="true" process="@this"
 						immediate="true" action="#{requestNoteBackingBean.backToPervious}" />
 						
-				<p:commandButton value="#{lbl['lbl.sc.common.save']}" icon="ui-icon-save"
+				<p:commandButton value="#{lbl['lbl.sc.common.save']}" icon="ui-icon-save" process="@all"
 				   	action="#{requestNoteBackingBean.saveAction('')}" update="@([id$=requestNoteId])"/>
 
 				<p:commandButton value="#{lbl['lbl.sc.common.submit']}" update="@([id$=requestNoteId])" style="float:right;"
-					icon="ui-icon-submit"  action="#{requestNoteBackingBean.submitAction('')}"/>
+					icon="ui-icon-submit"  action="#{requestNoteBackingBean.submitAction('')}" process="@all"/>
 	    </c:if>
 	    </div>
 	    <div>
@@ -24,7 +24,7 @@
 						<td align="right">
 						
 						      <c:if test="#{requestNoteBackingBean.managedBean.requestNoteStatus eq 'Pending Submission'}">
-					               <p:commandButton value="#{lbl['lbl.sc.action.back.to.search.catalogue']}" icon="ui-icon-add" partialSubmit="true" process="@this"
+					               <p:commandButton value="#{lbl['lbl.sc.action.back.to.search.catalogue']}" icon="ui-icon-add" partialSubmit="true" 
 						                style="float:left;"  immediate="true" action="#{requestNoteBackingBean.backToPervious}" />
 						      </c:if>
 						
@@ -32,7 +32,7 @@
 									  or requestNoteBackingBean.managedBean.requestNoteStatus eq 'Pending Submission' 
 									  or requestNoteBackingBean.managedBean.requestNoteStatus eq 'Pending Revision'}">
                                    <p:commandButton value="#{lbl['lbl.sc.common.save']}" icon="ui-icon-save" action="#{requestNoteBackingBean.saveAction('Save')}"
-										update="@([id$=requestNoteId])" />
+										update="@([id$=requestNoteId])" process="@all" />
 
 								</c:if>
 								

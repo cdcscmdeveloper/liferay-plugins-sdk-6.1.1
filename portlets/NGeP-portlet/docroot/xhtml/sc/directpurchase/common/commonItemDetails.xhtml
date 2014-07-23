@@ -48,11 +48,12 @@
 		</f:facet>
 
 		<h:panelGrid width="100%" style="margin-top:10px" id="itemDtlId">
-			<p:dataTable id="requestListDataTable" var="requestNoteDtl"
+			<p:dataTable id="requestListDataTable" var="requestNoteDtl" style="white-space: normal;"
 				value="#{requestNoteBackingBean.managedBean.requestNoteDtls}"
 				rows="10"
 				selection="#{requestNoteBackingBean.managedBean.selectedRequestNoteDtls}"
-				rowKey="#{requestNoteDtl}" rowIndexVar="rowIndex">
+				rowKey="#{requestNoteBackingBean.key}" rowIndexVar="rowIndex">
+				
 				<p:column selectionMode="multiple" style="width:2%" /> 
 
 				<p:column headerText="#{lbl['lbl.sc.request.note.item.name']}" style="width:25%;white-space: normal;">
@@ -184,6 +185,9 @@
 							value="#{requestNoteBackingBean.managedBean.userList}" 
 							var="user" itemLabel="#{user.userName}"
 							itemValue="#{user.userId}"></f:selectItems>
+								<p:ajax event="change" update="prepareBy" partialSubmit="true"
+									process="@this"
+									listener="#{requestNoteBackingBean.supplierLister(requestNoteDtl.scRequestSupplierItem.supplierItemId, null, requestNoteDtl,requestNoteDtl.requestItem.supplierItems)}" />
 					</p:selectOneMenu>
 					   <p:message id="prepareByMsg" for="prepareBy" display="icon" />
 				</p:column>
