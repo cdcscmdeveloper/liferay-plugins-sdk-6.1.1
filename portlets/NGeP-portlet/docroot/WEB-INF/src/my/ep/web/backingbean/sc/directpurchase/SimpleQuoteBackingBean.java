@@ -2189,7 +2189,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			if(getManagedBean().getServiceTemplateSpecBean().getSpecAnswerList() != null){
 				specAnswers.addAll(getManagedBean().getServiceTemplateSpecBean().getSpecAnswerList());
 			}
-			
+			reqDTO.setSpecAnswers(specAnswers);
 			reqDTO.setQuoteBidDtl(quote);
 			QuoteResDTO quoteResDTO = quoteSO.saveSupplierResponse(reqDTO);
 			if (quoteResDTO.isSuccessful()) {
