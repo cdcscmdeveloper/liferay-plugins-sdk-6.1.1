@@ -14,8 +14,7 @@ import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.bpm.vo.WorklistItemVO;
-import my.ep.constant.pm.ParameterConst;
-import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.FLProcessNameConst;
 import my.ep.constants.SCProcessNameConst;
 import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
@@ -224,13 +223,13 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 							}
 							
 							// s1 module
-							if(worklistItemVO.getTitle().equalsIgnoreCase(SCProcessNameConst.RN_TITLE)) {
+							if(worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.RN_TITLE)) {
 								worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.request.note", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 							}
-							if(worklistItemVO.getTitle().equalsIgnoreCase(SCProcessNameConst.PI_TITLE)) {
+							if(worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.PI_TITLE)) {
 								worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.pr.inquiry", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 							}
-							if(worklistItemVO.getTitle().equalsIgnoreCase(SCProcessNameConst.PD_TITLE)) {
+							if(worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.PD_TITLE)) {
 								worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.pid", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 							}
 						}
