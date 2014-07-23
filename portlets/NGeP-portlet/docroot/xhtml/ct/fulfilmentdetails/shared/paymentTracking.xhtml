@@ -16,11 +16,11 @@
         <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" /></p:inputText>
        <p:outputLabel  value="Paid (%)"/>  
        <p:inputText style="width:170px;" styleClass="ppRightBtn"
-        value="#{contractDetailsBackingBean.calculatePaidAdvancePercentage()}">
+        value="#{contractDetailsBackingBean.paidAdvancePercentage}">
         <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" /></p:inputText>
        <p:outputLabel  value="Balanced To Be Paid (RM)"/>
         <p:inputText style="width:170px;" styleClass="ppRightBtn"
-          value="#{contractDetailsBackingBean.calculateBalanceToPaid()}" >
+          value="#{contractDetailsBackingBean.balanceToPaid}" >
         <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" /></p:inputText> 
        
      </h:panelGrid>
@@ -37,7 +37,7 @@
         <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" /></p:inputText>
        <p:outputLabel  value="Completion (%)"  />  
        <p:inputText    style="width:170px;" styleClass="ppRightBtn"
-          value="#{contractDetailsBackingBean.calculatePaidPercentage()}">
+          value="#{contractDetailsBackingBean.paidPercentage}">
         <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" /></p:inputText>
      </h:panelGrid>
    </p:panel>

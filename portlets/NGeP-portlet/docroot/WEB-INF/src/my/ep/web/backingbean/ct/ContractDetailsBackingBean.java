@@ -145,7 +145,9 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	private static final String CONTRACT_MAINT_PAGE = "/xhtml/ct/fulfilmentdetails/search/search.xhtml?faces-redirect=true";
 	
 	private String editorValue;
-	
+	private BigDecimal paidAdvancePercentage;
+	private BigDecimal balanceToPaid;
+	private BigDecimal paidPercentage;
 	private boolean showZoneDetails;
 	private boolean validateScheduleDate;
 	
@@ -1197,41 +1199,61 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	 }
 		 
      public void validateDate(CtSchedule ctSchedule){
-    	 int startYearValue = Integer.valueOf((String) ctSchedule.getFromTranYear());  
-		 int toyearValue = Integer.valueOf((String) ctSchedule.getToTranYears()); 
-		 if((ctSchedule.getFromTranDate() > ctSchedule.getToTranDate() && startYearValue >= toyearValue)||
-		     (ctSchedule.getFromTranDate() <= ctSchedule.getToTranDate() && startYearValue > toyearValue)){
-		     for (CtSchedule dataList : this.getManagedBean().getContractVer().getCtSchedules()) {
-		    	if(dataList.toString().equalsIgnoreCase(ctSchedule.toString())){
-		    		dataList.setValidateScheduleDate(true);
-		         }
-		     }
-		  }else{
-		     for(CtSchedule dataList : this.getManagedBean().getContractVer().getCtSchedules()) {
-			    if(dataList.toString().equalsIgnoreCase(ctSchedule.toString())){
-			        dataList.setValidateScheduleDate(false);
-			    }
+    	 if(ctSchedule.getFromTranYear() == null || ctSchedule.getToTranYears() == null) {
+    		 for(CtSchedule dataList : this.getManagedBean().getContractVer().getCtSchedules()) {
+ 			    if(dataList.toString().equalsIgnoreCase(ctSchedule.toString())){
+ 			        dataList.setValidateScheduleDate(false);
+ 			    }
+ 			 }
+    	 }
+    	 else {    	 
+	    	 int startYearValue = Integer.valueOf((String) ctSchedule.getFromTranYear());  
+			 int toyearValue = Integer.valueOf((String) ctSchedule.getToTranYears()); 
+			 if((ctSchedule.getFromTranDate() > ctSchedule.getToTranDate() && startYearValue >= toyearValue)||
+			     (ctSchedule.getFromTranDate() <= ctSchedule.getToTranDate() && startYearValue > toyearValue)){
+			     for (CtSchedule dataList : this.getManagedBean().getContractVer().getCtSchedules()) {
+			    	if(dataList.toString().equalsIgnoreCase(ctSchedule.toString())){
+			    		dataList.setValidateScheduleDate(true);
+			         }
+			     }
+			  }
+			 else{
+			     for(CtSchedule dataList : this.getManagedBean().getContractVer().getCtSchedules()) {
+				    if(dataList.toString().equalsIgnoreCase(ctSchedule.toString())){
+				        dataList.setValidateScheduleDate(false);
+				    }
+				 }
 			 }
-		 }
+    	 }
 	}
 		 
     public void validateProgressiveDate(CtProgressivePayment  ctProgressivePayment){
-		int startYearValue = Integer.valueOf((String) ctProgressivePayment.getFromProYear()); 
-		int toyearValue = Integer.valueOf((String) ctProgressivePayment.getToProYears()); 
-		if((ctProgressivePayment.getFromProDate() > ctProgressivePayment.getToProDate()  &&  startYearValue >= toyearValue)||
-				(ctProgressivePayment.getFromProDate() <= ctProgressivePayment.getToProDate()  && startYearValue > toyearValue)){
-		   for (CtProgressivePayment dataList : this.getManagedBean().getContractVer().getCtProgressivePayments()) {
-		    	  if(dataList.equals(ctProgressivePayment)){
-		    		 dataList.setValidateProgressiveDate(true);
-		    	}
-		    }
-		 }else{
-		    for(CtProgressivePayment dataList : this.getManagedBean().getContractVer().getCtProgressivePayments()) {
-                 if(dataList.equals(ctProgressivePayment)){
-		    	    dataList.setValidateProgressiveDate(false);
-		          }
-		     }
-		 }
+    	if(ctProgressivePayment.getFromProYear() == null || ctProgressivePayment.getToProYears() == null) {
+    		 for (CtProgressivePayment dataList : this.getManagedBean().getContractVer().getCtProgressivePayments()) {
+		    	  if(dataList.toString().equalsIgnoreCase(ctProgressivePayment.toString())){
+			        dataList.setValidateProgressiveDate(false);
+			    }
+			 }
+   	 	}
+    	else {
+			int startYearValue = Integer.valueOf((String) ctProgressivePayment.getFromProYear()); 
+			int toyearValue = Integer.valueOf((String) ctProgressivePayment.getToProYears()); 
+			if((ctProgressivePayment.getFromProDate() > ctProgressivePayment.getToProDate()  &&  startYearValue >= toyearValue)||
+					(ctProgressivePayment.getFromProDate() <= ctProgressivePayment.getToProDate()  && startYearValue > toyearValue)){
+			   for (CtProgressivePayment dataList : this.getManagedBean().getContractVer().getCtProgressivePayments()) {
+			    	  if(dataList.equals(ctProgressivePayment)){
+			    		 dataList.setValidateProgressiveDate(true);
+			    	}
+			    }
+			 }
+			else{
+			    for(CtProgressivePayment dataList : this.getManagedBean().getContractVer().getCtProgressivePayments()) {
+	                 if(dataList.equals(ctProgressivePayment)){
+			    	    dataList.setValidateProgressiveDate(false);
+			          }
+			     }
+			 }
+    	}
 	}
 		 
     public void chkJustificationAction(){
@@ -1525,20 +1547,35 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
         if(time == null)
         	return str;
         return format.format(time); 
-    } 
+    }
 	
-	public BigDecimal calculatePaidAdvancePercentage(){
-		return (this.getManagedBean().getPaidAdvancePaymentAmt().multiply(BigDecimal.valueOf(100)).divide(BigDecimal.valueOf(this.getManagedBean().getAdvancePaymentAmt()), 2, RoundingMode.HALF_UP));
-	}
-	
-	public BigDecimal calculateBalanceToPaid(){
-		return (BigDecimal.valueOf(this.getManagedBean().getAdvancePaymentAmt()).subtract(this.getManagedBean().getPaidAdvancePaymentAmt()));
-	}
-	
-	public BigDecimal calculatePaidPercentage(){
-		return (this.getManagedBean().getPaidInvoiceAmt().multiply(BigDecimal.valueOf(100)).divide(this.getManagedBean().getContractVer().getCtContractValue().getContractAmount(), 2, RoundingMode.HALF_UP));
+	public BigDecimal getPaidAdvancePercentage() {
+		paidAdvancePercentage = (this.getManagedBean().getPaidAdvancePaymentAmt().multiply(BigDecimal.valueOf(100)).divide(BigDecimal.valueOf(this.getManagedBean().getAdvancePaymentAmt()), 2, RoundingMode.HALF_UP));
+		return paidAdvancePercentage;
 	}
 
+	public void setPaidAdvancePercentage(BigDecimal paidAdvancePercentage) {
+		this.paidAdvancePercentage = paidAdvancePercentage;
+	}
+
+	public BigDecimal getBalanceToPaid() {
+		balanceToPaid = (BigDecimal.valueOf(this.getManagedBean().getAdvancePaymentAmt()).subtract(this.getManagedBean().getPaidAdvancePaymentAmt()));
+		return balanceToPaid;
+	}
+
+	public void setBalanceToPaid(BigDecimal balanceToPaid) {
+		this.balanceToPaid = balanceToPaid;
+	}
+
+	public BigDecimal getPaidPercentage() {
+		paidPercentage = (this.getManagedBean().getPaidInvoiceAmt().multiply(BigDecimal.valueOf(100)).divide(this.getManagedBean().getContractVer().getCtContractValue().getContractAmount(), 2, RoundingMode.HALF_UP));
+		return paidPercentage;
+	}
+
+	public void setPaidPercentage(BigDecimal paidPercentage) {
+		this.paidPercentage = paidPercentage;
+	}
+	
 	public CtDeductionClause[] getChkDeductionClause() {
 		return chkDeductionClause;
 	}
