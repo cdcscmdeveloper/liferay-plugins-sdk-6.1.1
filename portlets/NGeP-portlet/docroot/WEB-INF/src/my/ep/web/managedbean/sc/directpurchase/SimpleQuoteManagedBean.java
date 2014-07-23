@@ -59,7 +59,7 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	private	String	periodType;
 	private	int	periodValue;
 	private String priceType;
-	private String duration;
+	private double duration;
 	private String createdBy;
 	private String processName;
 
@@ -718,14 +718,14 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	/**
 	 * @return the duration
 	 */
-	public String getDuration() {
+	public double getDuration() {
 		return duration;
 	}
 
 	/**
 	 * @param duration the duration to set
 	 */
-	public void setDuration(String duration) {
+	public void setDuration(double duration) {
 		this.duration = duration;
 	}
 
