@@ -90,6 +90,8 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	
 	private boolean agreeTC;
 	
+	private String confirmEmail;
+	
 	public SmSupplier getSmSupp() {
 		return smSupp;
 	}
@@ -471,6 +473,14 @@ public class RegistrationManagedBean extends BaseManagedBean {
 
 	public void setAgreeTC(boolean agreeTC) {
 		this.agreeTC = agreeTC;
+	}
+
+	public String getConfirmEmail() {
+		return confirmEmail;
+	}
+
+	public void setConfirmEmail(String confirmEmail) {
+		this.confirmEmail = confirmEmail;
 	}
 
 }
