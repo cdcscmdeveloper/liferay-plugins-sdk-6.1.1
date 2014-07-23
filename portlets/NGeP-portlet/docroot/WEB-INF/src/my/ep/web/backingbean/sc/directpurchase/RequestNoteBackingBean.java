@@ -1326,6 +1326,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 						for (ScSupplierItemPrice scSupplierItemPrice : scRequestSupplierItem.getSupplierItemPrices()) {
 							if(scSupplierItemPrice.getPriceType().getParameterId().equals(priceTypeId)){
 								scRequestSupplierItem.setSupplierItemPrice(scSupplierItemPrice);
+								requestNoteDtl.setPriceType(scSupplierItemPrice.getPriceType());
 								break;
 							}
 						}
@@ -1335,12 +1336,15 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 				}
 				scRequestSupplierItem.setSupplierItemId(supplierId);
 				requestNoteDtl.setScRequestSupplierItem(scRequestSupplierItem);
-				PmParameter param = new PmParameter();
-				param.setParameterId(priceTypeId);
-				requestNoteDtl.setPriceType(param);
-				PmUser user = new PmUser();
-				user.setUserId(requestNoteDtl.getAssignedUser().getUserId());
-				requestNoteDtl.setAssignedUser(user);
+
+				if(getManagedBean().getUserList() != null && getManagedBean().getUserList().size()>0){
+					for (PmUser user  : getManagedBean().getUserList()) {
+						if(user.getUserId() == requestNoteDtl.getAssignedUser().getUserId()){
+							user.setUserId(requestNoteDtl.getAssignedUser().getUserId());
+							requestNoteDtl.setAssignedUser(user);	
+						}
+					}
+				}
 				
 				break;
 			}

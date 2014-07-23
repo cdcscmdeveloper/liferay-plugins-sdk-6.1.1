@@ -224,7 +224,7 @@
 		</p:panelGrid>
 		<p:spacer height="15px" />
 		<p:dataTable id="respDtl" var="supplierItemPrice"
-			value="#{purchaseInquiryBackingBean.managedBean.requestNoteDtl.scRequestSupplierItem.supplierItemPrices}"
+			value="#{purchaseInquiryBackingBean.managedBean.scPrInquiry.requestSupplierItem.supplierItemPrices}"
 			rowKey="#{supplierItemPrice.pricing.pricingId}" rowIndexVar="index">
 			<p:column headerText="#{lbl['lbl.sc.price.inquiry.zone']}" style="width:25%">
 					<h:outputText value="#{supplierItemPrice.pricing.cmSupplierZone.suppZoneName}"/>

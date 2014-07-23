@@ -459,6 +459,18 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 					   }	
 				   } 
 			   }
+			   
+			   // updating price 
+			   List<ScRequestSupplierItem>	scRequestSupplierItems = new ArrayList<ScRequestSupplierItem>();
+			   if(prInquiry.getScRequestSupplierItems() != null && prInquiry.getScRequestSupplierItems().size() >0){
+				   for (ScRequestSupplierItem scRequestSupplierItem : prInquiry.getScRequestSupplierItems()) {
+					   if(scRequestSupplierItem.getRequestSupplierItemId() == prInquiry.getRequestSupplierItem().getRequestSupplierItemId()){
+						   scRequestSupplierItems.add(prInquiry.getRequestSupplierItem());
+					   } else{
+						   scRequestSupplierItems.add(scRequestSupplierItem);
+					   }
+				   }
+			   }
 			   prInquiry.setIsStockAvailable(getManagedBean().getStockAvailable());
 			   reqDTO.setPrInquiryDetail(prInquiry);
 			   FacesScopes facesScopes = new FacesScopes();
