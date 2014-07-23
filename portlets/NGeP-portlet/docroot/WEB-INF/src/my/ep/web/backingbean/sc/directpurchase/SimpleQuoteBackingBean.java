@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -1451,75 +1452,74 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 
 	 }
 	 
-	public void durationEvent(){
-		try {
-			if(getManagedBean().getScQuote().getStartDate() != null && 
-					getManagedBean().getScQuote().getEndDate() != null){
-				String sdate = DateUtils.dateToString(CommonConstants.DEFAULT_DATE_FORMAT,  getManagedBean().getScQuote().getStartDate());
-				String edate = DateUtils.dateToString(CommonConstants.DEFAULT_DATE_FORMAT,  getManagedBean().getScQuote().getEndDate());
-				getManagedBean().setDuration(
-						hoursDifference(DateUtils.convertStringToDate(CommonConstants.DEFAULT_DATE_FORMAT, edate), DateUtils.convertStringToDate(
-								CommonConstants.DEFAULT_DATE_FORMAT, sdate)));
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	} 
-	
-	   private static int minsDifference(Date toDate, Date fromDate) {
-			final int MILLI_TO_MINS = 1000 * 60;
-			return (int) (toDate.getTime() - fromDate.getTime()) / MILLI_TO_MINS;
-		}
-	
-		private static int hoursDifference(Date toDate, Date fromDate) {
-			final int MILLI_TO_HOURS = 1000 * 60 * 60;
-			return (int) (toDate.getTime() - fromDate.getTime()) / MILLI_TO_HOURS;
-		}
-	
-		public static int daysBetween(Date toDate, Date fromDate) {
-			final int MILLI_TO_DAYS = 1000 * 60 * 60 * 24;
-			return (int) ((toDate.getTime() - fromDate.getTime()) / MILLI_TO_DAYS );
-		}
+	/*
+	 * public void durationEvent(){ try {
+	 * if(getManagedBean().getScQuote().getStartDate() != null &&
+	 * getManagedBean().getScQuote().getEndDate() != null){ String sdate =
+	 * DateUtils.dateToString(CommonConstants.DEFAULT_DATE_FORMAT,
+	 * getManagedBean().getScQuote().getStartDate()); String edate =
+	 * DateUtils.dateToString(CommonConstants.DEFAULT_DATE_FORMAT,
+	 * getManagedBean().getScQuote().getEndDate());
+	 * getManagedBean().setDuration(
+	 * hoursDifference(DateUtils.convertStringToDate
+	 * (CommonConstants.DEFAULT_DATE_FORMAT, edate),
+	 * DateUtils.convertStringToDate( CommonConstants.DEFAULT_DATE_FORMAT,
+	 * sdate))); } } catch (Exception e) { e.printStackTrace(); } }
+	 */
+	/*
+	 * private static int minsDifference(Date toDate, Date fromDate) { final int
+	 * MILLI_TO_MINS = 1000 * 60; return (int) (toDate.getTime() -
+	 * fromDate.getTime()) / MILLI_TO_MINS; }
+	 * 
+	 * private static int hoursDifference(Date toDate, Date fromDate) { final
+	 * int MILLI_TO_HOURS = 1000 * 60 * 60; return (int) (toDate.getTime() -
+	 * fromDate.getTime()) / MILLI_TO_HOURS; }
+	 * 
+	 * public static int daysBetween(Date toDate, Date fromDate) { final int
+	 * MILLI_TO_DAYS = 1000 * 60 * 60 * 24; return (int) ((toDate.getTime() -
+	 * fromDate.getTime()) / MILLI_TO_DAYS ); }
+	 */
+	 
+	 
+	 public void dateListener() throws Exception {
+		 ScQuote quote = getManagedBean().getScQuote();
+		 // if duration and startDate
+		 if(quote.getStartDate() != null && quote.getEndDate() == null){
+			 //getManagedBean().setDuration(getTimeDiff(quote.getEndDate(),  quote.getStartDate()));
+
+		 } else if (getManagedBean().getScQuote().getStartDate() != null && 
+				 getManagedBean().getScQuote().getEndDate() != null){
+
+			 if(getManagedBean().getScQuote().getEndDate().after(getManagedBean().getScQuote().getStartDate())){
+				 getManagedBean().setDuration(getTimeDiff(quote.getEndDate(),  quote.getStartDate()));
+			 } else{
+				 throw new EpException("The End date must be greater than the start date");
+			 }
+		 }
+	 }
+
 		
-		public void dateListener(Integer duration) throws Exception {
-			ScQuote quote = getManagedBean().getScQuote();
-			// if duration and startDate
-			if(quote.getStartDate() != null && quote.getEndDate() == null){
-				Calendar startDate = Calendar.getInstance();
-				startDate.setTime(quote.getStartDate());
-				startDate.add(Calendar.HOUR_OF_DAY, duration);
-				Date endDate = startDate.getTime();
-				quote.setEndDate(endDate);
-				getManagedBean().setScQuote(quote);
-
-				getManagedBean().setDuration(hoursDifference(quote.getEndDate(),  quote.getStartDate()));
-
-			} else if (getManagedBean().getScQuote().getStartDate() != null && 
-					getManagedBean().getScQuote().getEndDate() != null){
-				
-				if(getManagedBean().getScQuote().getEndDate().after(getManagedBean().getScQuote().getStartDate())){
-					getManagedBean().setDuration(hoursDifference(quote.getEndDate(),  quote.getStartDate()));
-				} else{
-					throw new EpException("The End date must be greater than the start date");
-				}
+		public static String getTimeDiff(Date dateOne, Date dateTwo) {
+			String diff = "";
+			long timeDiff = Math.abs(dateOne.getTime() - dateTwo.getTime());
+			diff = String.format("%d", TimeUnit.MILLISECONDS.toHours(timeDiff));
+			return diff;
 			}
-		}
-
-		public void calcDuration(Integer duration) throws Exception {
-			ScQuote quote = getManagedBean().getScQuote();
-			if (getManagedBean().getScQuote().getStartDate() != null && 
-					getManagedBean().getScQuote().getEndDate() != null){
-				Calendar startDate = Calendar.getInstance();
-				startDate.setTime(quote.getStartDate());
-				startDate.add(Calendar.HOUR_OF_DAY, duration);
-				Date endDate = startDate.getTime();
-				quote.setEndDate(endDate);
-				getManagedBean().setScQuote(quote);
-				getManagedBean().setDuration(hoursDifference(quote.getEndDate(),  quote.getStartDate()));
-			}
-			
-		}
-
+		
+	/*
+	 * public void calcDuration(Integer duration) throws Exception { ScQuote
+	 * quote = getManagedBean().getScQuote(); if
+	 * (getManagedBean().getScQuote().getStartDate() != null &&
+	 * getManagedBean().getScQuote().getEndDate() != null){ Calendar startDate =
+	 * Calendar.getInstance(); startDate.setTime(quote.getStartDate());
+	 * startDate.add(Calendar.HOUR_OF_DAY, duration); Date endDate =
+	 * startDate.getTime(); quote.setEndDate(endDate);
+	 * getManagedBean().setScQuote(quote);
+	 * getManagedBean().setDuration(hoursDifference(quote.getEndDate(),
+	 * quote.getStartDate())); }
+	 * 
+	 * }
+	 */
 		
 	public void tabMenuListener(Integer activeIndex) {
 		debugLogger("tabMenuListener");
@@ -1935,7 +1935,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
       
 				getManagedBean().setScQuote(scQuote);
 				// duration calc
-				dateListener(getManagedBean().getDuration());
+				dateListener();
 				procurementTypeEvent();
 				getCurrentStatus(res.getDocStatus().longValue()); 
 				getManagedBean().setProcessName(res.getProcessName());
