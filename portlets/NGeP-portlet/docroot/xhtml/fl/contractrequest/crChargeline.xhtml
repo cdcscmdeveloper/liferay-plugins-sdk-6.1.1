@@ -105,8 +105,7 @@
 		<h:panelGroup styleClass="chargeLineSection" id="chargeLineSection">
 			<table style="width: 100%">
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.fl.charge.vot.code']}"
-							style="margin-bottom:15px;" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.charge.vot.code']}" /></td>
 					<td><p:inputText
 							value="#{contractRequestBackingBean.managedBean.votFundCode}"
 							size="9" disabled="true" /> </td>
@@ -119,28 +118,22 @@
 							size="9" disabled="true" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel
-							value="#{lbl['lbl.fl.charge.program.activity']}"
-							style="margin-bottom:15px;" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.charge.program.activity']}" /></td>
 					<td><p:inputText
 							value="#{contractRequestBackingBean.managedBean.prgActivityCode}"
 							size="9" disabled="true" /></td>
-					<td><p:outputLabel value="#{lbl['lbl.fl.charge.Project']}"
-							style="margin-bottom:15px;" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.charge.Project']}" /></td>
 					<td><p:inputText
 							value="#{contractRequestBackingBean.managedBean.projectCode}"
 							size="9" disabled="true" /></td>
-					<td><p:outputLabel
-							value="#{lbl['lbl.fl.charge.setia.subsetia']}"
-							style="margin-bottom:15px;" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.charge.setia.subsetia']}"/></td>
 					<td><p:inputText
 							value="#{contractRequestBackingBean.managedBean.setiaCode}"
 							size="9" disabled="true" /></td>
 					<td><p:inputText
 							value="#{contractRequestBackingBean.managedBean.subSetiaCode}"
 							size="9" disabled="true" /></td>
-					<td><p:outputLabel value="#{lbl['lbl.fl.charge.cp']}"
-							style="margin-bottom:15px;" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.charge.cp']}" /></td>
 					<td><p:inputText value="#{contractRequestBackingBean.getParameterDesc(ParameterTypeConst.financingType,contractRequestBackingBean.managedBean.financingTypeCode)}"
 							size="9" disabled="true" /></td>
 
