@@ -33,6 +33,7 @@ public class FulfilmentManagedBean extends BaseManagedBean {
 		
 	private String docType;
 	private String docNo;
+	private boolean docMaintainRemarks = false;
 	
 	public FulfilmentManagedBean(){
 		
@@ -100,6 +101,20 @@ public class FulfilmentManagedBean extends BaseManagedBean {
 
 	public void setDocNo(String docNo) {
 		this.docNo = docNo;
+	}
+
+	/**
+	 * @return the docMaintainRemarks
+	 */
+	public boolean isDocMaintainRemarks() {
+		return docMaintainRemarks;
+	}
+
+	/**
+	 * @param docMaintainRemarks the docMaintainRemarks to set
+	 */
+	public void setDocMaintainRemarks(boolean docMaintainRemarks) {
+		this.docMaintainRemarks = docMaintainRemarks;
 	}
 	
 }

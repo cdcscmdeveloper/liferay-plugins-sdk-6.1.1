@@ -65,6 +65,8 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	private Boolean checkPaDocType =false;
 	private Boolean checkTitle =false;
 	private Boolean  checkDoInDocType=false;
+	private Boolean  checkDoDocType=false;
+	private Boolean  checkInDocType=false;
 	
 	// getUserGroup
 	private String flRequisitioner;
@@ -499,6 +501,34 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	 */
 	public void setApproverMap(HashMap<String, PmUserGroupUser> approverMap) {
 		this.approverMap = approverMap;
+	}
+
+	/**
+	 * @return the checkDoDocType
+	 */
+	public Boolean getCheckDoDocType() {
+		return checkDoDocType;
+	}
+
+	/**
+	 * @param checkDoDocType the checkDoDocType to set
+	 */
+	public void setCheckDoDocType(Boolean checkDoDocType) {
+		this.checkDoDocType = checkDoDocType;
+	}
+
+	/**
+	 * @return the checkInDocType
+	 */
+	public Boolean getCheckInDocType() {
+		return checkInDocType;
+	}
+
+	/**
+	 * @param checkInDocType the checkInDocType to set
+	 */
+	public void setCheckInDocType(Boolean checkInDocType) {
+		this.checkInDocType = checkInDocType;
 	}
 	
 }

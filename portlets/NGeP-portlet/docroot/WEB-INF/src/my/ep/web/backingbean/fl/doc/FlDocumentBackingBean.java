@@ -3,6 +3,7 @@
  */
 package my.ep.web.backingbean.fl.doc;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -51,6 +52,9 @@ import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.VFlDocument;
 import my.ep.persistence.entity.fl.frn.FlFulfilmentNoteItem;
 import my.ep.persistence.entity.fl.order.FlStopInstr;
+import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
+import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
+import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
@@ -352,13 +356,17 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			flOrderBB.getManagedBean().setPmUser(reqDTO.getPmUser());
 			flOrderBB.getManagedBean().setFulfilmentOrder(resDTO.getFlOrder());
 			flOrderBB.getManagedBean().setRemoveFactoring(false);
+			flOrderBB.getManagedBean().setDocMaintainRemarks(true);
 			if(resDTO.getFlOrder().isFactored()){
 				flOrderBB.getManagedBean().setRemoveFactoring(true);
 			}
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE) || buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
 				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 				flBB.initializeRemarkAndAttachement(new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
-			}	
+				flBB.getManagedBean().setDocMaintainRemarks(true);
+				getSumOrderedQty(flOrderBB.getManagedBean().getFlRequest());
+			}
+			flOrderBB.getManagedBean().getFulfilmentOrder();
 			navgPage=NAV_TO_MAINTAIN_PO;
 		}else if(docType.equals(FulfilmentConst.DOC_TYPE_CO)){
 			fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
@@ -493,12 +501,19 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 				this.getManagedBean().setCheckTitle(true);
 				this.getManagedBean().setCheckDocType(false);
 				this.getManagedBean().setCheckPoDocType(false);
-			}else if(id.equals(FulfilmentConst.DOC_TYPE_DO) || id.equals(FulfilmentConst.DOC_TYPE_IN)){
-				this.getManagedBean().setCheckDoInDocType(true);
+			}else if(id.equals(FulfilmentConst.DOC_TYPE_DO)){
+				this.getManagedBean().setCheckDoDocType(true);
+				this.getManagedBean().setCheckInDocType(false);
+				this.getManagedBean().setCheckDocType(false);
+			}else if(id.equals(FulfilmentConst.DOC_TYPE_IN)){
+				this.getManagedBean().setCheckInDocType(true);
+				this.getManagedBean().setCheckDoDocType(false);
 				this.getManagedBean().setCheckDocType(false);
 			}else{
 				this.getManagedBean().setCheckDocType(false);
 				this.getManagedBean().setCheckPoDocType(false);
+				this.getManagedBean().setCheckDoDocType(false);
+				this.getManagedBean().setCheckInDocType(false);
 				this.getManagedBean().setCheckDoInDocType(false);
 			}
 		}
@@ -669,5 +684,17 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 	public boolean isFlFulfilmentPaymentOfficer() {
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes.hasRoleUser(RoleCode.PAY_OFFICER.value());
+	}
+	
+	private void getSumOrderedQty(FlFulfilmentRequest flRequest) {
+		if(flRequest.getFlFulfilmentItems() != null && !flRequest.getFlFulfilmentItems().isEmpty()){
+			BigDecimal sumOrderedQty = new BigDecimal(0);
+			for(FlFulfilmentItem fulfilmentItem : flRequest.getFlFulfilmentItems()){
+				for(FlFulfilmentItemAddr itemAddress : fulfilmentItem.getFlFulfilmentItemAddr()){
+					sumOrderedQty = sumOrderedQty.add(itemAddress.getOrderedQty());
+				}
+				fulfilmentItem.setSumOrderedQty(sumOrderedQty);
+			}
+		}
 	}
 }
