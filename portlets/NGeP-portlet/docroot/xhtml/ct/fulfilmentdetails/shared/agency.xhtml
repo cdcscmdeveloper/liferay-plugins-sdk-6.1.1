@@ -10,32 +10,32 @@
 	
    <p:panel id="agencyId" header="#{lbl['lbl.ct.agn.panel.name']}"    toggleable="true"  toggleSpeed="500">
      <div style="overflow-x:auto">
-       <p:dataTable id="tableAgencyDetails" var="data" value="#{contractDetailsBackingBean.managedBean.contractVer.ctAgencies}" 
-            selection="#{contractDetailsBackingBean.selectedListOfAgency}" rowKey="#{data}">
+       <p:dataTable id="tableAgencyDetails" var="agencyData" value="#{contractDetailsBackingBean.managedBean.contractVer.ctAgencies}" 
+            selection="#{contractDetailsBackingBean.selectedListOfAgency}" rowKey="#{agencyData}">
              <ac:paginator for="tableAgencyDetails"/>
              <p:ajax event="rowSelect" update=":form:agencyId" />
              <p:column selectionMode="multiple" style="width:2%;" />
              <p:column headerText="#{lbl['lbl.ct.agn.model.min']}">
-				<h:outputText value="#{data.orgProfile.parentOrgProfile.orgName}"/>
+				<h:outputText value="#{agencyData.orgProfile.parentOrgProfile.orgName}"/>
 			 </p:column>
 			  <p:column headerText="#{lbl['lbl.ct.agn.ptj']}">
-				<h:outputText  value="#{data.orgProfile.orgName}"/>
+				<h:outputText  value="#{agencyData.orgProfile.orgName}"/>
 			 </p:column>
 			 <p:column headerText="#{lbl['lbl.ct.agn.tree.ptj.amount']}" style="width:130px;">
-				<p:inputText value="#{data.ceilingAmount}" maxlength="23" styleClass="ppRightBtn" style="width:110px;">
+				<p:inputText value="#{agencyData.ceilingAmount}" maxlength="23" styleClass="ppRightBtn" style="width:110px;">
 				 	<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" /> 
 				</p:inputText>
 		   	 </p:column>
 		   	 <p:column headerText="#{lbl['lbl.ct.effectiveDate']}" style="width:80px;">
-				<h:outputText value="#{data.effDate}">
+				<h:outputText value="#{agencyData.effDate}">
 				  <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></h:outputText>
 		   	 </p:column>
 		   	 <p:column headerText="#{lbl['lbl.ct.edate']}" style="width:80px;">
-				<h:outputText value="#{data.expDate}">
+				<h:outputText value="#{agencyData.expDate}">
 				  <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></h:outputText>
 		   	 </p:column>
 		   	 <p:column headerText="#{lbl['lbl.ct.agn.ap178']}" style="width:50px;">
-		   	    <p:selectBooleanCheckbox value="#{data.ap178}" style="width:50px;float:center;"/>
+		   	    <p:selectBooleanCheckbox value="#{agencyData.ap178}" style="width:50px;float:center;"/>
 		   	 </p:column>
 			</p:dataTable> 
        	</div>
@@ -43,7 +43,7 @@
        		<p:commandButton value="#{lbl['lbl.ct.agn.btn.add']}" process="@form" icon="ui-icon-add" onclick="dlgAgency.show();" rendered="#{!contractDetailsBackingBean.managedBean.directPurchase and
        			fn:length(contractDetailsBackingBean.managedBean.contractVer.ctAgencies.get(0).ctAgencyAddresses)==0}"/> 
 			<p:commandButton id="delBtn" value="Delete" icon="ui-icon-delete" process="@form" onclick="dlgDel.show();"  rendered="#{!contractDetailsBackingBean.managedBean.directPurchase and
-       			contractDetailsBackingBean.managedBean.contractVer.ctAgencies.get(0).ctAgencyAddresses == null}"/>
+       			fn:length(contractDetailsBackingBean.managedBean.contractVer.ctAgencies.get(0).ctAgencyAddresses)==0}"/>
 			<p:commandButton value="#{lbl['lbl.ct.agn.table.da']}" disabled="#{fn:length(contractDetailsBackingBean.selectedListOfAgency)!=1}" onclick="deliveryAddressDlg.show();"/>
 	  	</div>
 	  	    
@@ -122,11 +122,11 @@
            </p:panel>
 	</p:dialog>
 	<p:dialog id="deliveryAddressDlg" header="#{lbl['lbl.ct.agn.table.da']}" widgetVar="deliveryAddressDlg" modal="true" width="600" height="400">
-	  <p:dataTable id="deliveryAddressTbl" var="agencyData" value="#{contractDetailsBackingBean.selectedListOfAgency[0].ctAgencyAddresses}"
-		lazy="true" rowKey="#{data}">
+	  <p:dataTable id="deliveryAddressTbl" var="deliveryAddress" value="#{contractDetailsBackingBean.selectedListOfAgency[0].ctAgencyAddresses}"
+		lazy="true" rowKey="#{deliveryAddress}">
 		<ac:paginator for="deliveryAddressTbl"/>
 		<p:column headerText="#{lbl['lbl.ct.agn.table.da']}">
-		   <p:outputLabel value="#{contractDetailsBackingBean.getFullAddress(agencyData.addressType.pmAddress)}" style="float:left;" />
+		   <p:outputLabel value="#{deliveryAddress.addressType.pmAddress.address1}" style="float:left;" />
 		</p:column>
 	   </p:dataTable>
 	</p:dialog>
