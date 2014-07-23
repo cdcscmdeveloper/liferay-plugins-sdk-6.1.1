@@ -37,6 +37,7 @@ import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.primefaces.model.DualListModel;
+import org.primefaces.model.MenuModel;
 import org.primefaces.model.TreeNode;
 /**
  * Managed Bean For Contract Details
@@ -83,7 +84,9 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
     private double advancePaymentAmt;
     private BigDecimal paidAdvancePaymentAmt;
     private BigDecimal paidInvoiceAmt;
-	private int selectedTabIndex;
+	private int selectedTabIndex =0;
+	
+	private MenuModel fulfilmentMenuModel;
 	
 	private Date ctDateStart;
 	private Date ctDateEnd;
@@ -111,6 +114,8 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private boolean chkJustification;
 	private boolean flgPaymentTracking;
 	private boolean chkConceValue;
+	private boolean tabMenuShowForZone;
+	private boolean tabMenuShowFactored;
 
 	private CtContractVer contractVer;
 	private CtContract ctContract;
@@ -141,6 +146,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private Map<String, PmUser> userMap;
 	private SmSupplierBank smSupplierBanks;
 	private Map<String,Object> radioButtonSchedule;
+	private List<String> finalListOfSideMenu;
 	private String fileDirectory;
 	
 	public String[] getAction() {
@@ -872,5 +878,37 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 
 	public void setFileDirectory(String fileDirectory) {
 		this.fileDirectory = fileDirectory;
+	}
+
+	public boolean isTabMenuShowForZone() {
+		return tabMenuShowForZone;
+	}
+
+	public void setTabMenuShowForZone(boolean tabMenuShowForZone) {
+		this.tabMenuShowForZone = tabMenuShowForZone;
+	}
+
+	public boolean isTabMenuShowFactored() {
+		return tabMenuShowFactored;
+	}
+
+	public void setTabMenuShowFactored(boolean tabMenuShowFactored) {
+		this.tabMenuShowFactored = tabMenuShowFactored;
+	}
+
+	public MenuModel getFulfilmentMenuModel() {
+		return fulfilmentMenuModel;
+	}
+
+	public void setFulfilmentMenuModel(MenuModel fulfilmentMenuModel) {
+		this.fulfilmentMenuModel = fulfilmentMenuModel;
+	}
+
+	public List<String> getFinalListOfSideMenu() {
+		return finalListOfSideMenu;
+	}
+
+	public void setFinalListOfSideMenu(List<String> finalListOfSideMenu) {
+		this.finalListOfSideMenu = finalListOfSideMenu;
 	}
 }

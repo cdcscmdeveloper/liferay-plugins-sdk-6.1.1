@@ -116,12 +116,15 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
+import org.primefaces.component.menuitem.MenuItem;
 import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.RowEditEvent;
 import org.primefaces.event.SelectEvent;
+import org.primefaces.model.DefaultMenuModel;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.DualListModel;
+import org.primefaces.model.MenuModel;
 import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
 
@@ -392,7 +395,83 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 					getManagedBean().getContractVer().getDocType(), getManagedBean().getCtContract().getContractNo()));
 			ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
 		    ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
+		    ConstructSideTabMenu();
 	}
+	
+public void ConstructSideTabMenu(){
+		
+		MenuModel fulfilmentMenuModel = new DefaultMenuModel();
+		TabSidemenuName menu = new TabSidemenuName();
+		
+		int zoneTabIndex = 0;
+		FacesContext facesContext = FacesContext.getCurrentInstance();
+		
+		if(this.getManagedBean().getFinalListOfSideMenu() == null)
+			   this.getManagedBean().setFinalListOfSideMenu( new ArrayList<String>());
+		else
+			   this.getManagedBean().getFinalListOfSideMenu().clear();
+		
+		if(this.getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)){
+		      if (this.getManagedBean().getCtContract().isZonalPricing()) {
+	 		          this.getManagedBean().getFinalListOfSideMenu().addAll(menu.menuWithZone);
+	                  if (getManagedBean().isDirectPurchase()) {
+			    	                  this.getManagedBean().getFinalListOfSideMenu().addAll(menu.menuWithDirectPurchase);
+	                            }else{
+	            	                  this.getManagedBean().getFinalListOfSideMenu().addAll(menu.menuWithNoPurchase);
+	                            }if(this.getManagedBean().getCtContract().isFactored()){
+	            	                 this.getManagedBean().getFinalListOfSideMenu().addAll(menu.menuWithFactoring);
+	                           }if(this.getManagedBean().isFlgPaymentTracking()){
+	            	                 this.getManagedBean().getFinalListOfSideMenu().addAll(menu.menuWithPayment);
+	                           }if(!this.isApprover()){
+	            	                 this.getManagedBean().getFinalListOfSideMenu().addAll(menu.menuWithSetting);
+	                           }
+	                 }else if(!getManagedBean().getCtContract().isZonalPricing()){
+	    	                  this.getManagedBean().getFinalListOfSideMenu().addAll(menu.menuWithNoZone);
+	                          if(this.getManagedBean().isDirectPurchase()){
+			    	                this.getManagedBean().getFinalListOfSideMenu().addAll(menu.menuWithDirectPurchase);
+	                          }else{
+	            	                 this.getManagedBean().getFinalListOfSideMenu().addAll(menu.menuWithNoPurchase);
+	                          }if(this.getManagedBean().getCtContract().isFactored()){
+	            	                this.getManagedBean().getFinalListOfSideMenu().addAll(menu.menuWithFactoring);
+	                          }if(this.getManagedBean().isFlgPaymentTracking()){
+	            	                this.getManagedBean().getFinalListOfSideMenu().addAll(menu.menuWithPayment);
+	                          }if(!this.isApprover()){
+	            	                this.getManagedBean().getFinalListOfSideMenu().addAll(menu.menuWithSetting);
+	                          }
+	                   }
+		       
+		      }if(this.getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)){
+		               this.getManagedBean().getFinalListOfSideMenu().addAll(menu.menuCentralFulfilment);
+	                   if(this.getManagedBean().getCtContract().isFactored()){
+	            	         this.getManagedBean().getFinalListOfSideMenu().addAll(menu.menuWithFactoring);
+		                }if(!this.isApprover()){
+        	                this.getManagedBean().getFinalListOfSideMenu().addAll(menu.menuWithSetting);
+                      }
+		      }
+		      
+	 	    for( String str : this.getManagedBean().getFinalListOfSideMenu()){
+	 	    	MenuItem zoneItem = new MenuItem();
+				zoneItem.setValue(str);
+				zoneItem.setUpdate("@form");
+				zoneItem.setActionExpression(FacesScopes
+						.createMethodExpression(facesContext,
+								"#{contractDetailsBackingBean.fulfilmentTabChangeAction("
+										+ zoneTabIndex + ")}", null,
+								new Class[] { Integer.class }));
+				fulfilmentMenuModel.addMenuItem(zoneItem);
+
+				zoneTabIndex++;
+	 	    } this.getManagedBean().setFulfilmentMenuModel(fulfilmentMenuModel);
+    }
+	
+	public void fulfilmentTabChangeAction(Integer selectedTabIndex) {
+		if (log.isDebugEnabled()) {
+			log.debug("fulfilmentTabChangeAction");
+		}
+
+		getManagedBean().setSelectedTabIndex(selectedTabIndex);
+	}
+
 	
 	private void renderUpdateCheckbox(CtContractVer ctContractVer) {
 		if(ctContractVer.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE) &&
