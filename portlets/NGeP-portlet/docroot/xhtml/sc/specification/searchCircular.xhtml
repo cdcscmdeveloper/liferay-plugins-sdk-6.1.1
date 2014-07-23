@@ -14,7 +14,7 @@
 		<table>
 			<tr>
 				<td style="width: 100px;" valign="top"><p:outputLabel
-						value="#{lbl['lbl.sc.spec.stage.title']}" /> </td>
+						value="#{lbl['lbl.sc.spec.stage.title']}" /></td>
 				<td><p:inputTextarea readonly="true" rows="2" cols="100"
 						value="#{specificationBackingBean.managedBean.scQt.qtTitle}"
 						disabled="true"></p:inputTextarea></td>
@@ -28,7 +28,9 @@
 
 						<f:selectItems
 							value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
-						<p:ajax event="change" update="panelupdate" listener="#{specificationBackingBean.panelChangeValue}"></p:ajax>
+						<p:ajax event="change" update="panelupdate"
+							listener="#{specificationBackingBean.panelChangeValue}"
+							process="@this" partialSubmit="true"></p:ajax>
 					</p:selectOneRadio> <p:message id="selectPanelTitleId" for="panelTitle" display="icon"></p:message>
 				</td>
 			</tr>
@@ -46,7 +48,7 @@
 
 	<div align="right" style="width: 100%;">
 
-		<p:commandButton value="#{lbl['lbl.sm.next']} " process="@this"
+		<p:commandButton value="#{lbl['lbl.sm.next']} " process="@form"
 			partialSubmit="true" style="float-right;" icon="ui-icon-next"
 			action="#{specificationBackingBean.newProceedAction}" />
 	</div>
