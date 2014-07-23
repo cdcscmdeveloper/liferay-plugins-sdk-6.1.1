@@ -12,9 +12,9 @@
 	</ui:define>
 	<ui:define name="contentSection">
 	
-		<p:dataTable value="#{flOrderBB.managedBean.pendingDoList}" sortMode="multiple" rows="10"
-			var="pending" id="pendingTable" rowIndexVar="rowIndex" width="100%">
-			<ac:paginator for="pendingTable" />
+		<p:dataTable value="#{flOrderBB.pendingDoDataModel}" lazy="true"
+			var="pending" id="flPendingDoListDt" rowIndexVar="rowIndex" width="100%" rows="10">
+			<ac:paginator for="flPendingDoListDt" />
 			<p:column headerText="Order Number">
 				<p:commandLink value="#{pending.docNo}"
 					action="#{flOrderBB.navigateToFlOrder(rowIndex)}">
@@ -45,7 +45,7 @@
 			</p:column>
 		</p:dataTable>
 		<p:remoteCommand action="#{flOrderBB.stopDelivery}" name="goToDetail"
-			update="pendingTable" process="@this" />
+			update="flPendingDoListDt" process="@this" />
 	</ui:define>
 
 </ui:composition>

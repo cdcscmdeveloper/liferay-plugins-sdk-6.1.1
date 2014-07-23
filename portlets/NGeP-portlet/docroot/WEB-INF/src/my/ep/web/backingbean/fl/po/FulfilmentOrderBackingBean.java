@@ -9,11 +9,14 @@ import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
+import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
@@ -42,7 +45,6 @@ import my.ep.exception.EpException;
 import my.ep.jaxb.fl.codata.FLContractOrderDataType;
 import my.ep.jaxb.fl.podata.FLPurchaseOrderDataType;
 import my.ep.jaxb.fl.stopfullfillmentdata.FLStopFullfillmentDataType;
-import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
 import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
 import my.ep.persistence.entity.fl.order.FlStopInstr;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
@@ -60,6 +62,8 @@ import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
 import my.ep.web.backingbean.fl.deliveryorder.DeliveryOrderBackingBean;
+import my.ep.web.bean.paginator.IPagingDataModel;
+import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.fl.po.FulfilmentOrderManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -68,10 +72,9 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import org.apache.log4j.Logger;
 
 import com.liferay.portal.util.PortalUtil;
-//import my.ep.web.backingbean.fl.frn.CreateFRNBackingBean;
 
 @ManagedBean(name="flOrderBB")
-@RequestScoped
+@ViewScoped
 public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderManagedBean>{
 
 	public static final String NAV_TO_CREATE_DO = "createDo";
@@ -80,14 +83,14 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 	private static Logger log = Logger.getLogger(FulfilmentOrderBackingBean.class);
 	public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat( "MM/dd/yy hh:mm a" );
 	
+	private IPagingDataModel<FlFulfilmentOrder> pendingDoDataModel = new PendingDoPagingDataModel();
+	
 	private FacesScopes getFacesScopes(){
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes;
 	}
 
 	public FulfilmentOrderBackingBean(){
-		retrievePendingDo();
-		getDeliveryOrderStatus();
 	}
 
 	public String fulfillmentOrderAction(String action) {
@@ -179,19 +182,6 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			fulfilmentOrderSO = null;
 		}
 	}
-
-	private void retrievePendingDo() {
-		if(isFlFulfilmentSupplier()) {
-			IFulfilmentOrderSO filmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject("fl", IFulfilmentOrderSO.class);
-			
-			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-			reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
-			
-			FulfilmentResDTO resDTO = filmentOrderSO.getPendingDoList(reqDTO);
-			List<FlFulfilmentOrder> pendingDoList = resDTO.getFulfilmentOrderList();
-			this.getManagedBean().setPendingDoList(pendingDoList);
-		}
-	}
 	
 	public FulfilmentResDTO getDeliveryAddress() {
 		IFulfilmentOrderSO filmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject("fl", IFulfilmentOrderSO.class);
@@ -202,14 +192,6 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 
 	}
 	
-	public FulfilmentResDTO getDeliveryOrderStatus() {
-		IFulfilmentOrderSO filmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject("fl", IFulfilmentOrderSO.class);
-		FulfilmentResDTO resDTO = new FulfilmentResDTO();
-		List<FlDeliveryOrder> deliveryOrderStatusList = filmentOrderSO.getDeliveryOrderStatusList();
-		this.getManagedBean().setDeliveryOrderStatusList(deliveryOrderStatusList);
-		return resDTO;
-
-	}
 	public String navigateToDO(int index) {
 		DeliveryOrderBackingBean doMB=new DeliveryOrderBackingBean();
 		FlFulfilmentOrder fulfilmentOrder=this.getManagedBean().getFulfilmentOrder();
@@ -576,5 +558,48 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			}
 		}
 
-	
+
+		private class PendingDoPagingDataModel extends PagingDataModel<FlFulfilmentOrder> {
+			private static final long serialVersionUID = 1L;
+
+			public PendingDoPagingDataModel() {
+				super("flPendingDoListDt");
+			}
+			
+			@Override
+			public ISearchResultBean<FlFulfilmentOrder> pageChangeListener(ISearchBean<FlFulfilmentOrder> searchBean) {
+				if (log.isDebugEnabled()) {
+					log.debug("pageChangeListener");
+				}
+				try {
+					FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+					reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+					reqDTO.setPendingDoSearchBean(searchBean);
+					IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
+					FulfilmentResDTO resDTO = orderSO.searchPendingDoList(reqDTO);
+					if(resDTO.isSuccessful()) {
+						return resDTO.getPendingDoResultBean();
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				return null;
+			}
+		}
+
+
+		/**
+		 * @return the pendingDoDataModel
+		 */
+		public IPagingDataModel<FlFulfilmentOrder> getPendingDoDataModel() {
+			return pendingDoDataModel;
+		}
+
+		/**
+		 * @param pendingDoDataModel the pendingDoDataModel to set
+		 */
+		public void setPendingDoDataModel(
+				IPagingDataModel<FlFulfilmentOrder> pendingDoDataModel) {
+			this.pendingDoDataModel = pendingDoDataModel;
+		}
 }

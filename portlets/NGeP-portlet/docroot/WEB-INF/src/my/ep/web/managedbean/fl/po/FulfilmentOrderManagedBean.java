@@ -63,7 +63,6 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	private List<FlDeliveryAddress> selectedDelAddrList;
 	private List<FlFulfilmentOrder> pendingDoList;
 	private List<FlDeliveryAddress>deliveryAddressList;
-	private List<FlDeliveryOrder>deliveryOrderStatusList;
 	private List<PmFinancialOrg> pmFinancialOrgs;
 	private List<PmFinancialBranch> factoringBranchList;
 	private List<PmReasonDesc> reasonDescs;
@@ -272,21 +271,6 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	 */
 	public void setDeliveryAddressList(List<FlDeliveryAddress> deliveryAddressList) {
 		this.deliveryAddressList = deliveryAddressList;
-	}
-
-	/**
-	 * @return the deliveryOrderStatusList
-	 */
-	public List<FlDeliveryOrder> getDeliveryOrderStatusList() {
-		return deliveryOrderStatusList;
-	}
-
-	/**
-	 * @param deliveryOrderStatusList the deliveryOrderStatusList to set
-	 */
-	public void setDeliveryOrderStatusList(
-			List<FlDeliveryOrder> deliveryOrderStatusList) {
-		this.deliveryOrderStatusList = deliveryOrderStatusList;
 	}
 
 	/**
