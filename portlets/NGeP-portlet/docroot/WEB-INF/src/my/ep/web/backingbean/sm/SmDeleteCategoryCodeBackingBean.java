@@ -101,13 +101,13 @@ public class SmDeleteCategoryCodeBackingBean extends
 	// }
 	// }
 	//
-	// public void onRowSelect(SelectEvent event) {
-	// System.out
-	// .println("*********** Enterd THE RoW SELECT METHOD ***********"
-	// + getManagedBean().getSelectedCategories().size());
-	// manageSelectedRecords();
-	//
-	// }
+	public void onRowSelect(SelectEvent event) {
+		System.out
+				.println("*********** Enterd THE RoW SELECT METHOD ***********"
+						+ getManagedBean().getSelectedCategories().size());
+		manageSelectedRecords();
+
+	}
 
 	public void onToggleSelect(ToggleSelectEvent event) {
 		System.out.println("*********** On Select or Unslect all ***********"

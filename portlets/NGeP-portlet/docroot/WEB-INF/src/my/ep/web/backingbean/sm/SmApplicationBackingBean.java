@@ -3488,6 +3488,9 @@ public class SmApplicationBackingBean extends
 		// shareBankBean.getSmChequeSignatories().clear();
 		getManagedBean().setSelectedBank(shareBankBean);
 		retrieveBankFinOrgListByType();
+		if (shareBankBean.getSmAddress() == null) {
+			shareBankBean.setSmAddress(setDefaultAddr());
+		}
 		assignStateDistAndCityForSelVal(shareBankBean.getSmAddress()
 				.getPmCountry().getCountryId(), shareBankBean.getSmAddress()
 				.getPmState().getStateId(), shareBankBean.getSmAddress()
@@ -3521,11 +3524,11 @@ public class SmApplicationBackingBean extends
 		bank.setSmAddress(setDefaultAddr());
 		bank.setSmAppl(getManagedBean().getSmAppl());
 		bank.setPmFinancialOrg(new PmFinancialOrg());
+		bank.setSmChequeSignatories(new ArrayList<SmChequeSignatory>());
+		getManagedBean().setSelectedBank(bank);
 		getManagedBean().setBankStates(
 				retrievePmStateList(getManagedBean().getSelectedBank()
 						.getSmAddress().getPmCountry().getCountryId()));
-		bank.setSmChequeSignatories(new ArrayList<SmChequeSignatory>());
-		getManagedBean().setSelectedBank(bank);
 		assignValReqdToTrue();
 		RequestContext.getCurrentInstance().execute("bankDialog.show()");
 	}
