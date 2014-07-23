@@ -18,12 +18,12 @@
 	<p:panel id="searchSmUserProfile" header="Search Users" styleClass="noBorders tr,noBorders td">
 		<table style="width: 100%;">
 			<tr>
-				<td style="float: left; padding-top: 5px;"><p:outputLabel value="Username" /></td>
+				<td style="width: 10%;"><p:outputLabel value="#{lbl['lbl.sm.userprofile.search.username']}" /></td>
 				<td><p:inputText id="username" value="#{smPersonnelBackingBean.managedBean.searchUsername}" size="35" /></td>
 			</tr>
 			<tr>
-				<td style="float: left; padding-top: 5px;"><p:outputLabel value="User Role" /></td>
-				<td ><p:selectOneMenu id="userEPRole" value="#{smPersonnelBackingBean.managedBean.searchEPRole}" style="width: 207px; margin-bottom: 5px;">
+				<td style="width: 10%;"><p:outputLabel value="#{lbl['lbl.sm.userprofile.search.userrole']}" /></td>
+				<td><p:selectOneMenu id="userEPRole" value="#{smPersonnelBackingBean.managedBean.searchEPRole}" style="width: 207px; margin-bottom: 5px;">
 						<f:selectItem itemLabel="-- Select One--" itemValue="" />
 						<f:selectItems value="#{smPersonnelBackingBean.managedBean.searchRoleList}"/>
 					</p:selectOneMenu></td>
