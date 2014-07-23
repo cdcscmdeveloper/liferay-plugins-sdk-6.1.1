@@ -1483,28 +1483,24 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 	 
 	 public void dateListener() throws Exception {
 		 ScQuote quote = getManagedBean().getScQuote();
-		 // if duration and startDate
-		 if(quote.getStartDate() != null && quote.getEndDate() == null){
-			 //getManagedBean().setDuration(getTimeDiff(quote.getEndDate(),  quote.getStartDate()));
+		 if (quote.getStartDate() != null &&  quote.getEndDate() != null){
 
-		 } else if (getManagedBean().getScQuote().getStartDate() != null && 
-				 getManagedBean().getScQuote().getEndDate() != null){
-
-			 if(getManagedBean().getScQuote().getEndDate().after(getManagedBean().getScQuote().getStartDate())){
+			 if(quote.getEndDate().after(quote.getStartDate())){
 				 getManagedBean().setDuration(getTimeDiff(quote.getEndDate(),  quote.getStartDate()));
 			 } else{
 				 throw new EpException("The End date must be greater than the start date");
 			 }
 		 }
 	 }
-
 		
-		public static String getTimeDiff(Date dateOne, Date dateTwo) {
-			String diff = "";
-			long timeDiff = Math.abs(dateOne.getTime() - dateTwo.getTime());
-			diff = String.format("%d", TimeUnit.MILLISECONDS.toHours(timeDiff));
-			return diff;
-			}
+	 public static double getTimeDiff(Date dateOne, Date dateTwo) {
+		 long timeDiff = Math.abs(dateOne.getTime() - dateTwo.getTime());
+		 String hours = String.format("%d", TimeUnit.MILLISECONDS.toHours(timeDiff));
+		 String mins = String.format("%d", (TimeUnit.MILLISECONDS.toMinutes(timeDiff) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(timeDiff))));
+		 double time  = (double) Integer.valueOf(hours) + (double)(Integer.valueOf(mins))/60;
+		
+		 return time;
+	 }
 		
 	/*
 	 * public void calcDuration(Integer duration) throws Exception { ScQuote
