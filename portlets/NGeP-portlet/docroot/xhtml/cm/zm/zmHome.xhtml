@@ -75,7 +75,7 @@
 		</div>	
 		
 		<p:dialog id="ZL" widgetVar="ZL" header="#{zoneMaintenanceBackingBean.managedBean.editMode}" modal="true"
-		width="800" height="500">
+		width="35%" height="55%">
 			<f:facet name="header">
 				<h:outputText value="#{lbl['lbl.cm.zm.header.add']}" rendered="#{!zoneMaintenanceBackingBean.managedBean.editMode}"/>
 				<h:outputText value="#{lbl['lbl.cm.zm.header.edit']}" rendered="#{zoneMaintenanceBackingBean.managedBean.editMode}"/>
@@ -118,6 +118,8 @@
 					</TR>
 				</table>
 			</h:panelGroup>
+			
+		<div align="right">		
 			<p:commandButton value="#{lbl['lbl.cm.zm.btn.cancel']}" style="float:right;" icon="ui-icon-cancel"
 				oncomplete="ZL.hide();"></p:commandButton>
 					&#160;&#160;
@@ -128,6 +130,7 @@
 					update="@this, zonePopupPanel" partialSubmit="true" icon="ui-icon-accept"
 					actionListener="#{zoneMaintenanceBackingBean.updateZoneListOnPopUpClose}">
 		   </p:commandButton>
+		</div>
 			
 		</p:dialog>	 			
 	</ui:define>	
