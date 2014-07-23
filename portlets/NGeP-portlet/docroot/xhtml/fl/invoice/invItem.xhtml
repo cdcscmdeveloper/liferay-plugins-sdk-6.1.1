@@ -10,6 +10,8 @@
 
 		<p:treeTable id="chargeLineTbl" var="chargeLineNode"
 			styleClass="invItemChange" value="#{invoiceBackingBean.managedBean.chargeLineItemRoot}">
+			<p:ajax event="expand" 
+                onstart="blockTreeTable.show();" oncomplete="blockTreeTable.hide();" />  			
 			<p:column headerText="Item Code" style="white-space:normal; width:130px;">
 				<h:outputText
 					value="#{chargeLineNode.flFulfilmentItem.flFulfilmentItemAddr[0].scRequestItem.cmItem.extensionCode}"
@@ -73,6 +75,9 @@
 				</p:inputText><p:message for="chargeInvAmt" display="icon" />
 			</p:column>
 		</p:treeTable>
+		<p:blockUI widgetVar="blockTreeTable" block="chargeLineTbl">  
+			<p:graphicImage value="/resources/ep/images/ajax-loader.gif"></p:graphicImage>  
+		</p:blockUI> 			
 		<br />
 		<h:panelGroup id="grandTotalPnl">
 			<table style="width: 93%">

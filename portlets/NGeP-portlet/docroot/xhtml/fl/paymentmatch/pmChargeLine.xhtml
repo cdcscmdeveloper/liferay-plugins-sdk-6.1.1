@@ -9,10 +9,11 @@
 	<p:panel header="ITEM DETAIL" toggleable="true" styleClass="pmChargeLinePnlClass">
 
 		<p:treeTable id="chargeLineTbl" var="chargeLineNode"
-			
 			selection="#{paymentMatchBackingBean.managedBean.selectedNode}"
 			selectionMode="single"
 			value="#{paymentMatchBackingBean.managedBean.chargeLineItemRoot}">
+			<p:ajax event="expand" 
+                onstart="blockTreeTable.show();" oncomplete="blockTreeTable.hide();" />  			
 			<p:ajax event="select"
 				listener="#{paymentMatchBackingBean.onNodeSelect()}"
 				update="@(.chargeLineSection)" />
@@ -83,6 +84,9 @@
 				</h:outputText>
 			</p:column>
 		</p:treeTable>
+		<p:blockUI widgetVar="blockTreeTable" block="chargeLineTbl">  
+			<p:graphicImage value="/resources/ep/images/ajax-loader.gif"></p:graphicImage>  
+		</p:blockUI> 			
 		<br />
 		<br />
 		<br />

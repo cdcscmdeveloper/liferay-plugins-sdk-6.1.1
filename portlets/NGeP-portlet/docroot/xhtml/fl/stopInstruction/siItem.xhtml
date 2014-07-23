@@ -9,6 +9,8 @@
 	<p:panel header="ITEM" toggleable="true" styleClass="siInvItemPnlClass">
 		<p:treeTable id="chargeLineTbl" var="chargeLineNode"
 			styleClass="invItemChange" value="#{stopInstrBB.managedBean.chargeLineItemRoot}">
+			<p:ajax event="expand" 
+                onstart="blockTreeTable.show();" oncomplete="blockTreeTable.hide();" />  			
 			<p:column headerText="Item Code" style="white-space:normal; width:130px;">
 				<h:outputText
 					value="#{chargeLineNode.flFulfilmentItemAddr.scRequestItem.cmItem.extensionCode}"
@@ -67,7 +69,9 @@
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
-			
 		</p:treeTable>
-		</p:panel>
+		<p:blockUI widgetVar="blockTreeTable" block="chargeLineTbl">  
+			<p:graphicImage value="/resources/ep/images/ajax-loader.gif"></p:graphicImage>  
+		</p:blockUI> 		
+	</p:panel>
 </ui:composition>
