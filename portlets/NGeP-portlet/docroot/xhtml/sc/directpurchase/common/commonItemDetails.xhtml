@@ -113,7 +113,7 @@
 							
 							<p:ajax event="change" update="priceType" partialSubmit="true"
 									process="@this"
-									listener="#{requestNoteBackingBean.supplierLister(requestNoteDtl.scRequestSupplierItem.supplierItemId, null, requestNoteDtl,requestNoteDtl.requestItem.supplierItems)}" />
+									listener="#{requestNoteBackingBean.supplierLister(requestNoteDtl.scRequestSupplierItem.supplierItemId, null, requestNoteDtl,requestNoteDtl.requestItem.supplierItems , null)}" />
 					</p:selectOneMenu>
 					<p:message id="recSupplierMsg" for="recSupplier" display="icon" />
 				</p:column>
@@ -136,7 +136,7 @@
 							
 							<p:ajax event="change" update="offerPriceId" partialSubmit="true"
 									process="@this"
-									listener="#{requestNoteBackingBean.supplierLister(requestNoteDtl.scRequestSupplierItem.supplierItemId ,requestNoteDtl.priceType.parameterId ,requestNoteDtl,requestNoteDtl.requestItem.supplierItems)}" />
+									listener="#{requestNoteBackingBean.supplierLister(requestNoteDtl.scRequestSupplierItem.supplierItemId ,requestNoteDtl.priceType.parameterId ,requestNoteDtl,requestNoteDtl.requestItem.supplierItems, null)}" />
 					</p:selectOneMenu>
 					<p:message id="priceTypeMsg" for="priceType" display="icon" />
 				</p:column>
@@ -187,7 +187,7 @@
 							itemValue="#{user.userId}"></f:selectItems>
 								<p:ajax event="change" update="prepareBy" partialSubmit="true"
 									process="@this"
-									listener="#{requestNoteBackingBean.supplierLister(requestNoteDtl.scRequestSupplierItem.supplierItemId, null, requestNoteDtl,requestNoteDtl.requestItem.supplierItems)}" />
+									listener="#{requestNoteBackingBean.supplierLister(requestNoteDtl.scRequestSupplierItem.supplierItemId, null, requestNoteDtl,requestNoteDtl.requestItem.supplierItems , requestNoteDtl.assignedUser.userId)}" />
 					</p:selectOneMenu>
 					   <p:message id="prepareByMsg" for="prepareBy" display="icon" />
 				</p:column>

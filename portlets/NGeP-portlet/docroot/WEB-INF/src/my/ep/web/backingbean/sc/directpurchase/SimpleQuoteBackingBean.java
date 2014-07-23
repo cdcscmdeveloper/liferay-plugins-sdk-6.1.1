@@ -2022,7 +2022,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 						
 						// by default selected rec.supplier , price type and offered price
 						requestNoteBackingBean.supplierLister(requestNoteDtl.getScRequestSupplierItem().getSmSupplier().getSupplierId(),
-								requestNoteDtl.getPriceType().getParameterId(), requestNoteDtl, requestNoteDtl.getRequestItem().getSupplierItems());
+								requestNoteDtl.getPriceType().getParameterId(), requestNoteDtl, requestNoteDtl.getRequestItem().getSupplierItems() , requestNoteDtl.getAssignedUser().getUserId());
 						
 						
 						requestNoteDtl.setAssignedUser(new PmUser());
