@@ -22,13 +22,13 @@
 
 
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.cancel']}"
-				style="float:right;" icon="ui-icon-cancel"
+				style="float:right;" icon="ui-icon-cancel" disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
 				action="#{specificationBackingBean.backAction}"></p:commandButton>
 			<p:commandButton value="#{lbl['lbl.sc.spec.btn.complete']}"
-				style="float:right;" icon="ui-icon-check" update="@all"
+				style="float:right;" icon="ui-icon-check" update="@all" disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
 				action="#{specificationBackingBean.completeTemplateSpec(null)}" />
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
-				style="float:right;"
+				style="float:right;" disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
 				action="#{specificationBackingBean.saveTemplateSpec(null,'1',null)}"
 				icon="ui-icon-save" update="@all" />
 
@@ -43,7 +43,7 @@
 				<tr>
 					<td valign="top"><h:outputLabel
 							value="#{lbl['lbl.sc.tpl.main.title']}"></h:outputLabel></td>
-					<td colspan="3"><p:inputTextarea rows="2" cols="95"
+					<td colspan="3"><p:inputTextarea rows="2" cols="95" disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
 							style="margin-bottom:5px;" maxlength="200"
 							value="#{specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.specName}" /></td>
 				</tr>
@@ -53,7 +53,7 @@
 						<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel></td>
 					<td><ui:fragment
 							rendered="#{specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.itemTypeCode.parameterCode eq '3'}">
-							<p:selectOneMenu id="itemTypeSelectId" required="true"
+							<p:selectOneMenu id="itemTypeSelectId" required="true" disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
 								label="#{lbl['lbl.sc.tpl.search.item']}"
 								value="#{specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.itemTypeCode.parameterId}">
 								<f:selectItems
