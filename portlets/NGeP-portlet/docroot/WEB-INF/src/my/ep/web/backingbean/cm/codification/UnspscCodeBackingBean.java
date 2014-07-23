@@ -83,11 +83,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 	public UnspscCodeBackingBean(){
 		if(MDC.get(LogKey.USER_ID)==null) {
 			MDC.put(LogKey.USER_ID, 1L);
-		}
-		
-		//clear requestCode object
-	    this.getManagedBean().setRequestCode(new CmRequestCode());
-	
+		}		
 	}
 
 	public boolean isCatalogueAdmin() {
@@ -2029,6 +2025,15 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		}else{
 			this.getManagedBean().setMeasurementDisable(true);
 		}
+	}
+	
+	public void preRenderUnspscRequestView() {
+		//clear requestCode object
+	    this.getManagedBean().setRequestCode(new CmRequestCode());
+	
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, "unspscRequestForm");
 	}
 
 }
