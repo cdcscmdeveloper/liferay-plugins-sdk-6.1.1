@@ -10,7 +10,7 @@
 	<p:messages id="evaluateMessages" showDetail="true" autoUpdate="true"
 		closable="true" severity="error, info" />
 
-	
+
 
 	<table style="width: 100%">
 		<tr>
@@ -26,14 +26,16 @@
 								styleClass="#{evaluationBackingBean.managedBean.tabActiveIndex eq 0 ? 'currentStep' : ''}" />
 						</li>
 
-						<li><h:outputText
-								value="#{lbl['lbl.sc.eva.main.menu.comp.stg']}"
-								rendered="#{evaluationBackingBean.managedBean.tempTab lt 1}" />
-							<p:commandLink value="#{lbl['lbl.sc.eva.main.menu.comp.stg']}"
-								actionListener="#{evaluationBackingBean.setTabValue(evaluationBackingBean.managedBean.tabActiveIndex,'1')}"
-								action="#{evaluationBackingBean.updateSmAppl}" update=":form"
-								rendered="#{evaluationBackingBean.managedBean.tempTab ge 1}"
-								styleClass="#{evaluationBackingBean.managedBean.tabActiveIndex eq 1 ? 'currentStep' : ''}" /></li>
+					
+							<li><h:outputText
+									value="#{lbl['lbl.sc.eva.main.menu.comp.stg']}"
+									rendered="#{evaluationBackingBean.managedBean.tempTab lt 1}" />
+								<p:commandLink value="#{lbl['lbl.sc.eva.main.menu.comp.stg']}"
+									actionListener="#{evaluationBackingBean.setTabValue(evaluationBackingBean.managedBean.tabActiveIndex,'1')}"
+									action="#{evaluationBackingBean.updateSmAppl}" update=":form"
+									rendered="#{evaluationBackingBean.managedBean.tempTab ge 1}"
+									styleClass="#{evaluationBackingBean.managedBean.tabActiveIndex eq 1 ? 'currentStep' : ''}" /></li>
+						
 
 
 						<li><h:outputText
@@ -47,7 +49,7 @@
 
 
 						<ui:fragment
-							rendered="#{evaluationBackingBean.managedBean.committeeType eq 'TEC' and evaluationBackingBean.managedBean.demo eq 'true'}">
+							rendered="#{evaluationBackingBean.managedBean.committeeType eq 'TEC' and evaluationBackingBean.managedBean.scQt.demoRequired eq 'true'}">
 							<li><h:outputText
 									value="#{lbl['lbl.sc.eva.present.demo.head']} "
 									rendered="#{evaluationBackingBean.managedBean.tempTab lt 3}" />
@@ -87,15 +89,16 @@
 
 						<li
 							class="#{evaluationBackingBean.managedBean.tabActiveIndex eq 0 ? 'space red-dot' : 'space green-dot'}" />
-						<li
-							class="#{evaluationBackingBean.managedBean.tabActiveIndex eq 1 ? 'space red-dot' :  (evaluationBackingBean.managedBean.tempTab ge 1 ? 'space green-dot':'space black-dot')}" />
-
+					
+							<li
+								class="#{evaluationBackingBean.managedBean.tabActiveIndex eq 1 ? 'space red-dot' :  (evaluationBackingBean.managedBean.tempTab ge 1 ? 'space green-dot':'space black-dot')}" />
+					
 
 						<li
 							class="#{evaluationBackingBean.managedBean.tabActiveIndex eq 2 ? 'space red-dot' :  (evaluationBackingBean.managedBean.tempTab ge 2 ? 'space green-dot':'space black-dot')}" />
 
 						<ui:fragment
-							rendered="#{evaluationBackingBean.managedBean.committeeType eq 'TEC' and evaluationBackingBean.managedBean.demo eq 'true'}">
+							rendered="#{evaluationBackingBean.managedBean.committeeType eq 'TEC' and evaluationBackingBean.managedBean.scQt.demoRequired eq 'true'}">
 							<li
 								class="#{evaluationBackingBean.managedBean.tabActiveIndex eq 3 ? 'space red-dot' :  (evaluationBackingBean.managedBean.tempTab ge 3 ? 'space green-dot':'space black-dot')}" />
 						</ui:fragment>

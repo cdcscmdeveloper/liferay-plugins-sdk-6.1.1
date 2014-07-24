@@ -41,7 +41,7 @@
 				style="width:10%">
 
 				<p:commandButton value="#{lbl['lbl.sc.eva.btn.compliance']}"
-					rendered="#{complianceFinancial.definationType.parameterId eq '184'}"
+					rendered="#{complianceFinancial.definationType.parameterCode eq 'UP'}"
 					process="@this" partialSubmit="true"
 					action="#{evaluationBackingBean.financialComplianceAction(complianceFinancial)}" />
 

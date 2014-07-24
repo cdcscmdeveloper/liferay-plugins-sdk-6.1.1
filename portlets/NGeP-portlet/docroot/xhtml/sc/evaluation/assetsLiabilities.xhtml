@@ -70,124 +70,44 @@
 
 		</p:panel>
 
-		<p:panel header="#{lbl['lbl.sc.spec.asset.assets']}" toggleable="true">
-			<p:dataTable id="assetsCode" rowIndexVar="index" var="factory">
-				<ac:paginator for="assetsCode"></ac:paginator>
-
-				<p:column headerText="#{lbl['lbl.sc.spec.asset.assets']}">
-					<p:inputText></p:inputText>
-				</p:column>
-
-				<p:column headerText="#{lbl['lbl.sc.spec.asset.type']}">
-					<p:inputText></p:inputText>
-				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.spec.asset.doc.ref.num']}">
-					<p:inputText></p:inputText>
-				</p:column>
-
-				<p:column headerText="#{lbl['lbl.sc.spec.asset.amount']}">
-					<p:inputText></p:inputText>
-				</p:column>
 
 
+		<p:panel header="#{lbl['lbl.sc.sp.assest.liabilities']}"
+			toggleable="true">
+			<table>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sc.sp.current.asset']}" /></td>
+					<td><p:inputText style="text-align:right" disabled="true">
 
-			</p:dataTable>
+						</p:inputText></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sc.sp.current.liability']}" /></td>
+					<td><p:inputText style="text-align:right" disabled="true">
 
+						</p:inputText></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sc.sp.acid.ratio']}" /></td>
+					<td><p:inputText style="text-align:right" id="totalacidratio"
+							readonly="true" disabled="true">
 
+						</p:inputText></td>
+				</tr>
+			</table>
 		</p:panel>
 
-		<h:panelGrid columns="2">
-			<h:outputLabel value="#{lbl['lbl.sc.spec.asset.tot.current.assets']}"></h:outputLabel>
-			<p:inputText readonly="true" disabled="true"></p:inputText>
-			<h:outputLabel value="#{lbl['lbl.sc.spec.asst.tot.fix.assets']}"></h:outputLabel>
-			<p:inputText readonly="true" disabled="true"></p:inputText>
-		</h:panelGrid>
 
 
 
-		<p:panel header="#{lbl['lbl.sc.spec.liabilities']}" toggleable="true">
-			<p:dataTable id="liabilitiesCode" rowIndexVar="index" var="factory">
-				<ac:paginator for="liabilitiesCode"></ac:paginator>
-
-				<p:column headerText="#{lbl['lbl.sc.spec.liabilitie.type']}">
-					<p:inputText></p:inputText>
-				</p:column>
-
-				<p:column headerText="#{lbl['lbl.sc.spec.liabilitie.desc']}">
-					<p:inputText></p:inputText>
-				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.spec.liabilitie.doc.ref.num']}">
-					<p:inputText></p:inputText>
-				</p:column>
-
-				<p:column headerText="#{lbl['lbl.sc.spec.liabilitie.amount']}">
-					<p:inputText></p:inputText>
-				</p:column>
-
-
-
-			</p:dataTable>
-
-
-		</p:panel>
-
-		<h:panelGrid columns="2">
-			<h:outputLabel value="#{lbl['lbl.sc.spec.liabilitie.tot.cur']}"></h:outputLabel>
-			<p:inputText readonly="true" disabled="true"></p:inputText>
-			<h:outputLabel value="#{lbl['lbl.sc.spec.liabilitie.tot.fix']}"></h:outputLabel>
-			<p:inputText readonly="true" disabled="true"></p:inputText>
-		</h:panelGrid>
 
 
 
 		<p:panel header="#{lbl['lbl.sc.spec.asset.summary']}"
 			toggleable="true">
 
-			<p:panelGrid style="margin-top:20px;width:100%;">
-				<f:facet name="header">
 
-					<p:row>
-						<p:column colspan="1"></p:column>
-						<p:column colspan="1">#{lbl['lbl.sc.spec.current']}</p:column>
-						<p:column colspan="1">#{lbl['lbl.sc.spec.fixed']}</p:column>
-						<p:column>#{lbl['lbl.sc.spec.total.asset']}</p:column>
-					</p:row>
-				</f:facet>
-				<p:row>
-					<p:column style="font-weight: bold;">#{lbl['lbl.sc.spec.asset']}</p:column>
-					<p:column style="font-weight: bold;">1000</p:column>
-
-					<p:column colspan="1" style="font-weight: bold;">2000</p:column>
-					<p:column colspan="1" style="font-weight: bold;">3000</p:column>
-
-				</p:row>
-				<p:row>
-					<p:column style="font-weight: bold;">#{lbl['lbl.sc.spec.liability']}</p:column>
-					<p:column style="font-weight: bold;">2000</p:column>
-
-					<p:column colspan="1" style="font-weight: bold;">3000</p:column>
-					<p:column colspan="1" style="font-weight: bold;">5000</p:column>
-
-				</p:row>
-
-				<p:row>
-					<p:column style="font-weight: bold;"></p:column>
-					<p:column style="font-weight: bold;">#{lbl['lbl.sc.spec.rotational.capital']}</p:column>
-
-					<p:column colspan="1" style="font-weight: bold;">#{lbl['lbl.sc.spec.fixed.capital']}</p:column>
-					<p:column colspan="1" style="font-weight: bold;">#{lbl['lbl.sc.spec.net.amount']}</p:column>
-
-				</p:row>
-
-				<p:row>
-					<p:column style="font-weight: bold;"></p:column>
-					<p:column style="font-weight: bold;">1000</p:column>
-
-					<p:column colspan="1" style="font-weight: bold;">1000</p:column>
-					<p:column colspan="1" style="font-weight: bold;">2000</p:column>
-
-				</p:row>
-			</p:panelGrid>
 			<table>
 				<c:forEach
 					items="#{evaluationBackingBean.managedBean.finAssetLiabilityProposalScore}"

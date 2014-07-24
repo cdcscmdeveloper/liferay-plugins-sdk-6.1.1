@@ -29,7 +29,9 @@
 						test="#{evaluationBackingBean.managedBean.complianceActiveIndex eq '2' or evaluationBackingBean.managedBean.complianceActiveIndex eq '3'}">
 						<p:menuitem value="#{lbl['lbl.sc.eva.compliance.stg.summary']}"
 							action="#{evaluationBackingBean.retriveComplianceSummary}"
-							update="@form" />
+							update="@form">
+							
+						</p:menuitem>
 					</c:if>
 				</p:tabMenu>
 			</td>

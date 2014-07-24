@@ -11,7 +11,8 @@
 	<ui:define name="contentSection">
 		<ac:title value="Prepare Evaluation"></ac:title>
 		<p:commandButton value="#{lbl['lbl.sc.eva.btn.generate']}"
-			style="float:right;" icon="ui-icon-evaluate"
+			style="float:right;" icon="ui-icon-evaluate" update="@form"
+			rendered="#{evaluationBackingBean.managedBean.generateEvaluationButton eq 'false'}"
 			action="#{evaluationBackingBean.generateEvaluationStage}" />
 		<p:commandButton value="#{lbl['lbl.sc.eva.btn.submit']}"
 			style="float:right;" icon="ui-icon-submit" />
