@@ -626,7 +626,7 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 						requestNoteBackingBean.getManagedBean().setRequestSupplierItem(scRequestNoteDtl.getScRequestSupplierItem());
 						
 						requestNoteBackingBean.supplierLister(scRequestNoteDtl.getScRequestSupplierItem().getSmSupplier().getSupplierId(),
-								scRequestNoteDtl.getPriceType().getParameterId(), scRequestNoteDtl, scRequestNoteDtl.getRequestItem().getSupplierItems() ,scRequestNoteDtl.getAssignedUser().getUserId());
+								scRequestNoteDtl.getPriceType().getParameterId(), scRequestNoteDtl, scRequestNoteDtl.getRequestItem().getSupplierItems() ,scRequestNoteDtl.getAssignedUser().getUserId() ,scRequestNoteDtl.getDeliverTermType().getParameterId());
 						
 						// fulfilmentTypeEvent
 						requestNoteBackingBean.fulfilmentTypeEvent(scRequestNoteDtl);

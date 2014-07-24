@@ -364,7 +364,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 					}
 					
 					supplierLister(scRequestNoteDtl.getScRequestSupplierItem().getSupplierItemId() ,scRequestNoteDtl.getPriceType().getParameterId() ,
-							scRequestNoteDtl,scRequestNoteDtl.getRequestItem().getSupplierItems() ,scRequestNoteDtl.getAssignedUser().getUserId());
+							scRequestNoteDtl,scRequestNoteDtl.getRequestItem().getSupplierItems() ,scRequestNoteDtl.getAssignedUser().getUserId() , scRequestNoteDtl.getDeliverTermType().getParameterId());
 					requestNoteDtls.add(scRequestNoteDtl);
 					
 				}
@@ -912,7 +912,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			
 			// set by default selected price type , rec.supplier and offer price
 			supplierLister(scRequestNoteDtl.getScRequestSupplierItem().getSupplierItemId() ,scRequestNoteDtl.getPriceType().getParameterId() ,
-					scRequestNoteDtl,scRequestNoteDtl.getRequestItem().getSupplierItems() ,scRequestNoteDtl.getAssignedUser().getUserId());
+					scRequestNoteDtl,scRequestNoteDtl.getRequestItem().getSupplierItems() ,scRequestNoteDtl.getAssignedUser().getUserId() ,scRequestNoteDtl.getDeliverTermType().getParameterId());
 		} else {
 			List<Long> itemIds = new ArrayList<Long>();
 			for (ScRequestNoteDtl noteDtl : getManagedBean().getRequestNoteDtls()) {
@@ -925,7 +925,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 					requestNoteDtls.add(scRequestNoteDtl);
 					// set by default selected price type , rec.supplier and offer price
 					supplierLister(scRequestNoteDtl.getScRequestSupplierItem().getSupplierItemId() ,scRequestNoteDtl.getPriceType().getParameterId() ,
-							scRequestNoteDtl,scRequestNoteDtl.getRequestItem().getSupplierItems() , scRequestNoteDtl.getAssignedUser().getUserId());
+							scRequestNoteDtl,scRequestNoteDtl.getRequestItem().getSupplierItems() , scRequestNoteDtl.getAssignedUser().getUserId() ,scRequestNoteDtl.getDeliverTermType().getParameterId());
 					getManagedBean().setRequestNoteDtls(requestNoteDtls);
 				}
 			}
@@ -1315,7 +1315,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		getManagedBean().setJustRequired(Boolean.FALSE);
 	}
 	
-	public void supplierLister(Long supplierId ,Long priceTypeId ,ScRequestNoteDtl requestNoteDtl , List<ScRequestSupplierItem> supplierItems , Long assignedUserId) {
+	public void supplierLister(Long supplierId ,Long priceTypeId ,ScRequestNoteDtl requestNoteDtl , List<ScRequestSupplierItem> supplierItems , Long assignedUserId , Long deliveryTermId) {
 		debugLogger("supplierLister");
 		for (ScRequestSupplierItem scRequestSupplierItem : supplierItems) {
 			if(scRequestSupplierItem.getSmSupplier().getSupplierId().equals(supplierId)){
@@ -1334,15 +1334,27 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 				} else{
 					requestNoteDtl.getPriceType().setParameterId(null);
 				}
+				
+				// selected rec.supplier
 				scRequestSupplierItem.setSupplierItemId(supplierId);
 				requestNoteDtl.setScRequestSupplierItem(scRequestSupplierItem);
-
+               
+				// prepared by
 				if(getManagedBean().getUserList() != null && getManagedBean().getUserList().size()>0){
 					for (PmUser user  : getManagedBean().getUserList()) {
 						if(user.getUserId().equals(assignedUserId)){
 							requestNoteDtl.setAssignedUser(user);	
 						}
 					}
+				}
+
+				// delivery term
+				if(deliveryTermId != null){
+					IParameterSO  parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+					ParameterReqDTO reqDTO = new ParameterReqDTO();
+					reqDTO.setParameterId(deliveryTermId);
+					ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
+					requestNoteDtl.setDeliverTermType(resDTO.getPmParameter());
 				}
 				
 				break;

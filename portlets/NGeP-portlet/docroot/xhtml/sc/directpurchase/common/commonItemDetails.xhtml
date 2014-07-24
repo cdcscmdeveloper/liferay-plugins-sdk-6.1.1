@@ -113,7 +113,7 @@
 							
 							<p:ajax event="change" update="priceType" partialSubmit="true"
 									process="@this"
-									listener="#{requestNoteBackingBean.supplierLister(requestNoteDtl.scRequestSupplierItem.supplierItemId, null, requestNoteDtl,requestNoteDtl.requestItem.supplierItems , null)}" />
+									listener="#{requestNoteBackingBean.supplierLister(requestNoteDtl.scRequestSupplierItem.supplierItemId, null, requestNoteDtl,requestNoteDtl.requestItem.supplierItems , null , null)}" />
 					</p:selectOneMenu>
 					<p:message id="recSupplierMsg" for="recSupplier" display="icon" />
 				</p:column>
@@ -136,7 +136,7 @@
 							
 							<p:ajax event="change" update="offerPriceId" partialSubmit="true"
 									process="@this"
-									listener="#{requestNoteBackingBean.supplierLister(requestNoteDtl.scRequestSupplierItem.supplierItemId ,requestNoteDtl.priceType.parameterId ,requestNoteDtl,requestNoteDtl.requestItem.supplierItems, null)}" />
+									listener="#{requestNoteBackingBean.supplierLister(requestNoteDtl.scRequestSupplierItem.supplierItemId ,requestNoteDtl.priceType.parameterId ,requestNoteDtl,requestNoteDtl.requestItem.supplierItems, null ,null)}" />
 					</p:selectOneMenu>
 					<p:message id="priceTypeMsg" for="priceType" display="icon" />
 				</p:column>
@@ -187,7 +187,7 @@
 							itemValue="#{user.userId}"></f:selectItems>
 								<p:ajax event="change" update="prepareBy" partialSubmit="true"
 									process="@this"
-									listener="#{requestNoteBackingBean.supplierLister(requestNoteDtl.scRequestSupplierItem.supplierItemId, null, requestNoteDtl,requestNoteDtl.requestItem.supplierItems , requestNoteDtl.assignedUser.userId)}" />
+									listener="#{requestNoteBackingBean.supplierLister(requestNoteDtl.scRequestSupplierItem.supplierItemId, null, requestNoteDtl,requestNoteDtl.requestItem.supplierItems , requestNoteDtl.assignedUser.userId ,null)}" />
 					</p:selectOneMenu>
 					   <p:message id="prepareByMsg" for="prepareBy" display="icon" />
 				</p:column>
@@ -206,6 +206,10 @@
 					    label="Delivery Term Type"
 						value="#{requestNoteDtl.deliverTermType.parameterId}">
 						<f:selectItems value="#{requestNoteBackingBean.getDropdownValues(ParameterTypeConst.deliveryTerm)}"/>
+						
+						<p:ajax event="change" update="prepareBy" partialSubmit="true"
+									process="@this"
+									listener="#{requestNoteBackingBean.supplierLister(requestNoteDtl.scRequestSupplierItem.supplierItemId, null, requestNoteDtl,requestNoteDtl.requestItem.supplierItems , requestNoteDtl.assignedUser.userId ,requestNoteDtl.deliverTermType.parameterId)}" />
 					</p:selectOneMenu>
 					  <p:message id="deliveryTermMsg" for="deliveryTerm" display="icon" />
 					  <p:message id="deliveryTypeMsg" for="deliveryType" display="icon" />
