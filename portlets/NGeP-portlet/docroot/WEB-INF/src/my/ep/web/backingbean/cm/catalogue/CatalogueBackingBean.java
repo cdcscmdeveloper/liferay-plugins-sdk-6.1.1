@@ -1892,8 +1892,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					break;
 				}
 			}
-			System.out.println("compareDesc:"+ this.getManagedBean().getSelectedMaintainItem().getCompareDesc());
-			System.out.println("getItemDesc:"+ this.getManagedBean().getSelectedMaintainItem().getItemDesc());
+			log.debug("compareDesc:"+ this.getManagedBean().getSelectedMaintainItem().getCompareDesc());
+			log.debug("getItemDesc:"+ this.getManagedBean().getSelectedMaintainItem().getItemDesc());
 
 			if (this.getManagedBean().getSelectedMaintainItem().getCompareDesc() != null
 			&& this.getManagedBean().getSelectedMaintainItem().getCompareDesc().trim().length() > 0) {
@@ -1909,7 +1909,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					// this.getManagedBean().getSelectedMaintainItem().setItemStatus("P");
 				}
 			}
-			System.out.println("isReviewRequired:"+ this.getManagedBean().getSelectedMaintainItem().isReviewRequired());
+			log.debug("isReviewRequired:"+ this.getManagedBean().getSelectedMaintainItem().isReviewRequired());
 
 			/*
 			 * if(this.getManagedBean().getSelectedMaintainItem().isReviewRequired
@@ -2067,7 +2067,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 									MessageUtils.BUNDLE_COMMON_MESSAGES,
 									new FacesScopes().getUserLocale())));
 
-			return "editCatalogItem";
+//			return "editCatalogItem";
+			return null;
 		} finally {
 			catalogueSO = null;
 		}
