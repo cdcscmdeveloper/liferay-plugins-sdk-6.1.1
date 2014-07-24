@@ -1021,16 +1021,16 @@ public class CodificationBackingBean extends
 				newItem.setItemName(this.getManagedBean()
 						.getSelectedUNSPSCObj().getUnspscTitle()
 						+ " "
-						+ (typeObj.getTypeName().equals("NA") ? "" : typeObj
+						+ (typeObj.getTypeName().equals("N/A") ? "" : typeObj
 								.getTypeName())
 						+ " "
-						+ (brandObj.getBrandName().equals("NA") ? "" : brandObj
+						+ (brandObj.getBrandName().equals("N/A") ? "" : brandObj
 								.getBrandName())
 						+ " "
-						+ (meaObj.getMeasurementName().equals("NA") ? ""
+						+ (meaObj.getMeasurementName().equals("N/A") ? ""
 								: meaObj.getMeasurementName())
 						+ " "
-						+ (colorObj.getColorName().equals("NA") ? "" : colorObj
+						+ (colorObj.getColorName().equals("N/A") ? "" : colorObj
 								.getColorName()));
 
 				newItem.setExtensionCode(this.getManagedBean()
