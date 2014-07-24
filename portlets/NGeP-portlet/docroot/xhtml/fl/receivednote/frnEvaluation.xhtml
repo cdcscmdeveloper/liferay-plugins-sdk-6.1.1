@@ -37,8 +37,8 @@
 			<p:column headerText="Criteria">
 				<h:outputText value="#{receivedNoteBackingBean.getCriteriaDesc(suppEvalution.pmCriteria)}" />
 			</p:column>
-			<p:column headerText="* Score" style="text-align:right">
-				<p:inputText value="#{suppEvalution.score}" maxlength="1" styleClass="colFloatRight" id="score" label="Score" required="true" />
+			<p:column headerText="* Score" >
+				<p:inputText value="#{suppEvalution.score}" style="text-align:right" maxlength="1"  id="score" label="Score" required="true" />
 				<p:message for="score" display="icon" />
 			</p:column>
 			<p:column headerText="Remarks">
