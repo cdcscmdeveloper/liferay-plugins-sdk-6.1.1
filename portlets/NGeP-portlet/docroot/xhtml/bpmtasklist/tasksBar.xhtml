@@ -10,7 +10,7 @@
 	<ui:define name="contentSection">
 
 		<h:panelGroup id="tasksBarId">
-			<p:spacer height="10px;" />
+			<p:spacer height="8px;" />
 			<hr class="horizontal_line" />
 			<table style="width: 100%">
 				<tr>
@@ -42,10 +42,10 @@
 									varStatus="loopStatus">
 									<tr>
 										<td
-											style="width: 10%; text-align: right; font-size: 14px; color: gray; margin-left: 5px;">#{status.total}</td>
+											style="width: 5%; text-align: right; font-size: 14px; color: gray; padding-left: 60px;">#{status.total}</td>
 										<td
-											style="width: 80%; text-align: left; font-size: 14px; color: gray; padding-left: 60px;">
-											 #{bpmTasklistBackingBean.applicationStatus(status.statusId)}
+											style="width: 95%; text-align: left; font-size: 14px; color: gray;">
+											 	<p:spacer width="2px;" /> #{bpmTasklistBackingBean.applicationStatus(status.statusId)}
 										</td>
 
 									</tr>
