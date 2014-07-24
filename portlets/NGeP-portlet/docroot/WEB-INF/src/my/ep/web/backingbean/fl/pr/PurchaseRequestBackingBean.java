@@ -1779,11 +1779,24 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	
 	public void updateDeliveryDate() {
 		Date startDate = getManagedBean().getFulfilmentRequest().getStartDate();
-		int deliveryTerm = getManagedBean().getFulfilmentRequest().getDeliveryTerm();
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(startDate);
-		calendar.add(Calendar.DATE, deliveryTerm);
-		getManagedBean().getFulfilmentRequest().setEndDate(calendar.getTime());
+		int deliveryTerm = 0;
+		String uomCode = "";
+		deliveryTerm = getManagedBean().getFulfilmentRequest().getDeliveryTerm();
+		uomCode = getManagedBean().getFulfilmentRequest().getPmUom().getParameterCode();
+		
+		if(uomCode.equalsIgnoreCase(ParameterConst.DELIVERY_TERM_DAYS)){
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(startDate);
+			calendar.add(Calendar.DATE, deliveryTerm);
+			getManagedBean().setMaxDate(calendar.getTime());
+			getManagedBean().getFulfilmentRequest().setEndDate(calendar.getTime());
+		}else if(uomCode.equalsIgnoreCase(ParameterConst.DELIVERY_TERM_MONTHS)){
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(startDate);
+			calendar.add(Calendar.MONTH, deliveryTerm);
+			getManagedBean().setMaxDate(calendar.getTime());
+			getManagedBean().getFulfilmentRequest().setEndDate(calendar.getTime());
+		}
 		
 		//update delivery address
 		for(FlDeliveryAddress flDeliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()) {
