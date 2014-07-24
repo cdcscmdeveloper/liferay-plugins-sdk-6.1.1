@@ -81,10 +81,10 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 					if (null != managedBeanAnnotation){
 						managedBeanName = managedBeanAnnotation.name()/* + getConcatId()*/;
 					}
-				}
-				
-				if (StringUtils.isBlank(managedBeanName)) {
-					managedBeanName = StringUtils.uncapitalize(managedBeanClazz.getSimpleName());
+					
+					if (StringUtils.isBlank(managedBeanName)) {
+						managedBeanName = StringUtils.uncapitalize(managedBeanClazz.getSimpleName());
+					}
 				}
 			}
 		//}
