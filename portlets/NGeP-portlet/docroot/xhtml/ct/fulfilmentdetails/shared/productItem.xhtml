@@ -11,7 +11,7 @@
         <p:dataTable id="itemTable" var="data" value="#{contractDetailsBackingBean.managedBean.ctItemList}"  widgetVar="itemTableObj"
             selectionMode="single" selection="#{contractDetailsBackingBean.managedBean.selectedItem}" rowKey="#{data}">
            <ac:paginator for="itemTable"/>
-           <p:ajax event="rowSelect" update=":form:changeField"  />
+           <p:ajax event="rowSelect" update=":form:changeField" process="@form" />
 		   <p:column headerText="#{lbl['lbl.ct.item.table.name']}"  filterBy="#{data.itemName}" style="width:40%;" filterMatchMode="contains">
 		          <p:outputLabel value="#{data.itemName}" style="float:left;"/>
 		    </p:column>       
@@ -44,7 +44,7 @@
 		    <h:outputLabel for="show" value="#{lbl['lbl.ct.item.show']}" style="width:50px;"/>  
 		      <p:selectOneMenu id="show" value="#{contractDetailsBackingBean.managedBean.showItem}" style="width:200px;">
 		         <f:selectItems value="#{contractDetailsBackingBean.getDropdownCodeValues(ParameterTypeConst.itemDisplayType)}" />
-		         <p:ajax event="change" update=":form:changeField" listener="#{contractDetailsBackingBean.changeField}" process="@this"/>  
+		         <p:ajax event="change" update=":form:changeField" listener="#{contractDetailsBackingBean.changeField}" process="@form"/>  
 			  </p:selectOneMenu>         
 		  </h:panelGrid>
 		  <p:spacer height="20"/>
@@ -209,7 +209,7 @@
 			 rendered="#{(contractDetailsBackingBean.managedBean.showItem == ParameterConst.itemDisplayTypeCeilQty)
 			  and contractDetailsBackingBean.managedBean.selectedItem!=null}">
 			 <p:dataTable id="ceilingTable" var="data" 
-			   value="#{contractDetailsBackingBean.managedBean.selectedItem.ctItemCeilingQties}"  lazy="true" >
+			   value="#{contractDetailsBackingBean.managedBean.selectedItem.ctItemCeilingQties}" >
 				<ac:paginator for="ceilingTable"/>
 				<p:column headerText="#{lbl['lbl.ct.item.table2.ceil.min']}">
 				   <p:outputLabel value="#{data.ctAgency.orgProfile.parentOrgProfile.orgName}" style="float:left;" />
@@ -219,8 +219,6 @@
 				</p:column>              
 				<p:column headerText="#{lbl['lbl.ct.item.table2.ceil.quan']}" style="text-align: right;">
 					<p:inputText style="width:70px;" styleClass="ppRightBtn" maxlength="24" value="#{data.ceilingQuantity}">
-					   <p:ajax event="blur" process="@this" 
-				        listener="#{contractDetailsBackingBean.ceilingQuantityValue(data)}" update=":form:ceilingTable"/>
 					    <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, contractDetailsBackingBean.managedBean.selectedItem.uom.uomCode)}" />
 					 </p:inputText>
 				</p:column>            
