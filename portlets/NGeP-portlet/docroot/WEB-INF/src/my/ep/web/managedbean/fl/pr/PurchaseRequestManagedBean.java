@@ -5,6 +5,7 @@ package my.ep.web.managedbean.fl.pr;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -217,6 +218,7 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	
 	private boolean required;
 	private PmUser pmUser;
+	private Date maxDate;
 	
 	
 	
@@ -1793,6 +1795,20 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setPmUser(PmUser pmUser) {
 		this.pmUser = pmUser;
+	}
+
+	/**
+	 * @return the maxDate
+	 */
+	public Date getMaxDate() {
+		return maxDate;
+	}
+
+	/**
+	 * @param maxDate the maxDate to set
+	 */
+	public void setMaxDate(Date maxDate) {
+		this.maxDate = maxDate;
 	}
 
 }
