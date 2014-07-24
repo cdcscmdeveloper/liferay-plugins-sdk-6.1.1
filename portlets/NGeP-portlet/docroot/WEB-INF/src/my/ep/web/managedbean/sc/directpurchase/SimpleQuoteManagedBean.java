@@ -146,6 +146,7 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	private SmSupplier smSupplier;
 	private Date  today = new Date();
 	private int tabActiveIndex = 0;
+	private Long defaultCountryId;
 
 	public SimpleQuoteManagedBean() {
 		super();
@@ -1205,4 +1206,17 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	public void setPanelItems(List<CtPanelItem> panelItems) {
 		this.panelItems = panelItems;
 	}
+	/**
+	 * @return the defaultCountryId
+	 */
+	public Long getDefaultCountryId() {
+		return defaultCountryId;
+	}
+	/**
+	 * @param defaultCountryId the defaultCountryId to set
+	 */
+	public void setDefaultCountryId(Long defaultCountryId) {
+		this.defaultCountryId = defaultCountryId;
+	}
+	
 }

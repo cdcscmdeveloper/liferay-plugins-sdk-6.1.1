@@ -5,7 +5,6 @@ package my.ep.web.backingbean.sc.directpurchase;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -23,6 +22,7 @@ import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.ct.supplier.IPanelSupplierSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
+import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.directpurchase.IDirectPurchaseSO;
@@ -39,7 +39,6 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.DPStatusConstants;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.tpl.TemplateSpecConst;
-import my.ep.constants.CommonConstants;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
 import my.ep.dto.ct.supplier.PanelSupplierReqDTO;
@@ -48,6 +47,8 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
+import my.ep.dto.pm.common.country.CountryReqDTO;
+import my.ep.dto.pm.common.country.CountryResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
@@ -107,7 +108,6 @@ import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.sc.directpurchase.SimpleQuoteManagedBean;
-import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
@@ -303,6 +303,13 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			}
 		}
 
+		// to get country id
+		CountryReqDTO reqDTO = new CountryReqDTO();
+		reqDTO.setCountryCode("MY");
+		ICountrySO reqSO = (ICountrySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,ICountrySO.class);
+		CountryResDTO resDTO = reqSO.retrieveCountryByCode(reqDTO);
+		getManagedBean().setDefaultCountryId(resDTO.getPmCountry().getCountryId());
+		
 		// update tabmenu
 		 RequestContext.getCurrentInstance().update("tabMenuId");
 		 return "simpleQuote";
@@ -387,24 +394,24 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 				} else {
 					prodTpl = productTemplateSpecBean.getSpecMaster();
 				}
+               
+				if(itemCode>0){
+					if (itemCode < 70 || itemCode > 94) { // for product  < 70 and  > 94  
+						List<TplSpecQuestion> productQuestions = prodTpl.getTplSpecQuestions();
+						if(null == productQuestions){
+							productQuestions = new ArrayList<TplSpecQuestion>();
+						}
+						templateSpecBackingBean.addQuestion(prodTpl ,productQuestions, productQuestions.size()-1, TemplateSpecConst.QUESTION_TYPE_ITEM);
+						TplSpecQuestion prodQuestion = productQuestions.get(productQuestions.size()-1);
 
-				if (itemCode < 70 || itemCode > 94) { // for product  < 70 and  > 94  
-					List<TplSpecQuestion> productQuestions = prodTpl.getTplSpecQuestions();
-					if(null == productQuestions){
-						productQuestions = new ArrayList<TplSpecQuestion>();
+						prodQuestion.setClUom(uom);
+						prodQuestion.setCmItem(cmItem);
+						prodQuestion.setClItem(ItemName);
+						prodTpl.setTplSpecQuestions(productQuestions);
 					}
-					templateSpecBackingBean.addQuestion(prodTpl ,productQuestions, productQuestions.size()-1, TemplateSpecConst.QUESTION_TYPE_ITEM);
-					
-					
-					TplSpecQuestion prodQuestion = productQuestions.get(productQuestions.size()-1);
-
-					prodQuestion.setClUom(uom);
-					prodQuestion.setCmItem(cmItem);
-					prodQuestion.setClItem(ItemName);
-					prodTpl.setTplSpecQuestions(productQuestions);
-					productTemplateSpecBean.setSpecMaster(prodTpl);
-					getManagedBean().setProductTemplateSpecBean(productTemplateSpecBean);
 				}
+				productTemplateSpecBean.setSpecMaster(prodTpl);
+				getManagedBean().setProductTemplateSpecBean(productTemplateSpecBean);
 			}
 		}
 	}
@@ -988,7 +995,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			locationLevel = ParameterConst.LOCATION_LEVEL_DISTRICT;
 		}
 		getManagedBean().setRootZoneTree(
-				LocationSingleton.getInstance().buildLocationPopupTree(ParameterConst.COUNTRY_CODE_MYS, null,
+				LocationSingleton.getInstance().buildLocationPopupTree(getManagedBean().getDefaultCountryId(), null,
 						null, null, null, locationLevel, TplSpecZoneLoc.class));
 	}
 	
@@ -1002,7 +1009,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 		}
 	
 		getManagedBean().setRootLocationTree(
-				LocationSingleton.getInstance().buildLocationPopupTree(ParameterConst.COUNTRY_CODE_MYS, null,
+				LocationSingleton.getInstance().buildLocationPopupTree(getManagedBean().getDefaultCountryId(), null,
 						null, null, null, locationLevel, TplSpecZoneLoc.class));
 	}
 	
@@ -1160,7 +1167,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 				.getCityFromLocationDTO(locationDTOs);
 		
 		getManagedBean().setRootZoneTree(
-				LocationSingleton.getInstance().buildLocationPopupTree(ParameterConst.COUNTRY_CODE_MYS,
+				LocationSingleton.getInstance().buildLocationPopupTree(getManagedBean().getDefaultCountryId(),
 						states, districts, divisions, cities, ParameterConst.LOCATION_LEVEL_DISTRICT,TplSpecZoneLoc.class));
 		int i = zoneIndex;
 		this.getManagedBean().setZoneIndex(i);
@@ -1180,7 +1187,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 		List<PmCity> cities = SourcingLocationHelper
 				.getCityFromLocationDTO(locationDTOs);
 		getManagedBean().setRootLocationTree(
-				LocationSingleton.getInstance().buildLocationPopupTree(ParameterConst.COUNTRY_CODE_MYS,
+				LocationSingleton.getInstance().buildLocationPopupTree(getManagedBean().getDefaultCountryId(),
 						states, districts, divisions, cities, ParameterConst.LOCATION_LEVEL_DISTRICT,TplSpecZoneLoc.class));
 		int i = LocIndex;
 		this.getManagedBean().setLocIndex(i);
