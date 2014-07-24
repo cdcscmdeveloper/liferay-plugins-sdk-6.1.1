@@ -52,7 +52,7 @@
 	</p:panel>
 
 		<p:dialog id="bizDialog" header="#{lbl['lbl.sm.natureofbusiness']}" widgetVar="bizDlg" styleClass="smBizDialog"
-			modal="true" height="200" width="750" dynamic="true">
+			modal="true" width="750" dynamic="true">
 			<p:outputPanel header="Nature of Business" id="outPnlNatBiz">
 				<p:messages id="messageDialog" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 				<table class="customTbl">
@@ -146,9 +146,8 @@
 							update="natureBusinessId,outPnlNatBiz"
 							action="#{registrationBackingBean.addSupplierBusinessNature}" />
 					</c:otherwise>
-					<br/>
+					
 				</c:choose>
 			</div>
-			
 		</p:dialog>
 </ui:composition>
