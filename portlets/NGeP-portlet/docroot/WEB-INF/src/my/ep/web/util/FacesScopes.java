@@ -88,8 +88,7 @@ public class FacesScopes {
 	 * @return The object with the specified name
 	 */
 	public Object getSessionScope(String key) {
-		Object obj = portletSession.getAttribute(key);
-		return obj;
+		return facesContext.getExternalContext().getSessionMap().get(key);
 	}
 
 	/**
@@ -102,7 +101,7 @@ public class FacesScopes {
 	 *            The object to be bound; cannot be null
 	 */
 	public void setSessionScope(String key, Object object) {
-		portletSession.setAttribute(key, object);
+		facesContext.getExternalContext().getSessionMap().put(key, object);
 	}
 
 	public Object getRequestScope(String key) {
@@ -146,9 +145,11 @@ public class FacesScopes {
 	 * 
 	 * @param key
 	 *            The name of the object to remove from this session
+	 * 
+	 * @return the object removed.
 	 */
-	public void removeFromSession(String key) {
-		portletSession.removeAttribute(key);
+	public Object removeFromSession(String key) {
+		return facesContext.getExternalContext().getSessionMap().remove(key);
 	}
 
 	/**

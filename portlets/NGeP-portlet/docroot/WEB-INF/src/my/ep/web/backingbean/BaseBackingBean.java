@@ -18,7 +18,6 @@ import javax.faces.model.SelectItem;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.constant.EpPropertiesConst;
-import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
@@ -35,7 +34,6 @@ import my.ep.web.util.SecurityFilterUtil;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.StatusHelper;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
@@ -79,30 +77,15 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 						.getActualTypeArguments()[0];
 				if (null != managedBeanClazz){
 					ManagedBean managedBeanAnnotation = managedBeanClazz.getAnnotation(ManagedBean.class);
-					System.out.println("managedBeanAnnotation:" +managedBeanAnnotation);
 					if (null != managedBeanAnnotation){
-						managedBeanName = managedBeanAnnotation.name() + getConcatId();
+						managedBeanName = managedBeanAnnotation.name()/* + getConcatId()*/;
 					}
 				}
 			}
 		//}
 		
-		
 		if (log.isDebugEnabled()){
 			log.debug("managedBeanName:" + managedBeanName);
-		}
-		if (null !=managedBeanName){
-			FacesScopes facesScopes = new FacesScopes();
-			T tmpBean = (T)facesScopes.getSessionScope(managedBeanName);
-			if(null == tmpBean){
-				managedBean = renewSesionObject();
-			}else{
-				managedBean = tmpBean;
-			}
-		}
-		
-		if (log.isDebugEnabled()){
-			log.debug("managedBean:" + managedBean);
 		}
 	}
 	
@@ -121,30 +104,52 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		this.managedBeanClazz = managedBeanClazz;
 	}
 	
-	public T renewSesionObject(){
+	public void renewSesionObject(){
 		if (log.isDebugEnabled()){
 			log.debug("In renewSesionObject");
 		}
+		
 		try{
-			managedBean = managedBeanClazz.newInstance();
 			FacesScopes facesScopes = new FacesScopes();
-			facesScopes.setSessionScope(managedBeanName, managedBean);
-		} catch(EpException ex){
-			throw ex;
+			@SuppressWarnings("unchecked")
+			T tmpBean = (T)facesScopes.removeFromSession(managedBeanName);
+			
+			log.info("remove managedBean from session:" + tmpBean);
+			
+			managedBean = null;
 		} catch(Exception ex){
 			log.error("Failed to renew managed bean: " + managedBeanName, ex);
 		}
-		return managedBean;
+		
+		//return managedBean;
 	}
 	
 	/**
 	 * @return the managedBean
 	 */
-	public T getManagedBean() {
+	public T getManagedBean() {		
+		if (managedBean == null && null !=managedBeanName){
+			/*FacesScopes facesScopes = new FacesScopes();
+			@SuppressWarnings("unchecked")
+			T tmpBean = (T)facesScopes.getSessionScope(managedBeanName);
+			if(null == tmpBean){
+				managedBean = createNewSesionObject();
+			}else{
+				managedBean = tmpBean;
+			}*/
+
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+			managedBean = facesContext.getApplication().evaluateExpressionGet(
+					facesContext, "#{" + managedBeanName + "}", managedBeanClazz);
+			
+			log.info("managedBean:" + managedBean);
+		}
+		
 		return managedBean;
+		
 	}
-	
-	private String getConcatId(){
+
+	/*private String getConcatId(){
 		String concatId = "";
 		
 		
@@ -164,7 +169,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		}
 		
 		return concatId;
-	}
+	}*/
 	
 	/* Utility method */
 	public String userImagePath(String userId){
