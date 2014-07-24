@@ -533,7 +533,7 @@ public class SmApplicationBackingBean extends
 							throw new EpException(MessageConst.ERROR_722502);
 						}
 					} else if (applicationType.equalsIgnoreCase("A")
-							&& diffDays < 90) {
+							&& (diffDays >= 0 && diffDays < 90)) {
 						result = true;
 						System.out.println("***************MOF Account Expiry near for Ac No.: " + account.getMofNo() + "\nExp Date:" + account.getExpDate() + "\nDiff Days:" + diffDays);
 						throw new EpException(MessageConst.ERROR_722503);
