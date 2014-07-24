@@ -422,10 +422,9 @@ public void ConstructSideTabMenu(){
 	            	                 this.getManagedBean().getFinalListOfSideMenu().addAll(menu.menuWithFactoring);
 	                           }if(this.getManagedBean().isFlgPaymentTracking()){
 	            	                 this.getManagedBean().getFinalListOfSideMenu().addAll(menu.menuWithPayment);
-	                           }if(!this.isApprover()){
-	            	                 this.getManagedBean().getFinalListOfSideMenu().addAll(menu.menuWithSetting);
-	                           }
-	                 }else if(!getManagedBean().getCtContract().isZonalPricing()){
+	                           } this.getManagedBean().getFinalListOfSideMenu().addAll(menu.menuWithSetting);
+	                
+		      }else if(!getManagedBean().getCtContract().isZonalPricing()){
 	    	                  this.getManagedBean().getFinalListOfSideMenu().addAll(menu.menuWithNoZone);
 	                          if(this.getManagedBean().isDirectPurchase()){
 			    	                this.getManagedBean().getFinalListOfSideMenu().addAll(menu.menuWithDirectPurchase);
@@ -435,18 +434,15 @@ public void ConstructSideTabMenu(){
 	            	                this.getManagedBean().getFinalListOfSideMenu().addAll(menu.menuWithFactoring);
 	                          }if(this.getManagedBean().isFlgPaymentTracking()){
 	            	                this.getManagedBean().getFinalListOfSideMenu().addAll(menu.menuWithPayment);
-	                          }if(!this.isApprover()){
-	            	                this.getManagedBean().getFinalListOfSideMenu().addAll(menu.menuWithSetting);
 	                          }
-	                   }
-		       
-		      }if(this.getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)){
+	            	         this.getManagedBean().getFinalListOfSideMenu().addAll(menu.menuWithSetting);   
+	          }
+		 }if(this.getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)){
 		               this.getManagedBean().getFinalListOfSideMenu().addAll(menu.menuCentralFulfilment);
 	                   if(this.getManagedBean().getCtContract().isFactored()){
 	            	         this.getManagedBean().getFinalListOfSideMenu().addAll(menu.menuWithFactoring);
-		                }if(!this.isApprover()){
-        	                this.getManagedBean().getFinalListOfSideMenu().addAll(menu.menuWithSetting);
-                      }
+		                }
+        	          this.getManagedBean().getFinalListOfSideMenu().addAll(menu.menuWithSetting);   
 		      }
 		      
 	 	    for( String str : this.getManagedBean().getFinalListOfSideMenu()){
