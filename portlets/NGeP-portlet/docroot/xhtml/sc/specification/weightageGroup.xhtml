@@ -6,52 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<!-- <p:panel header="Level Of Score">
-		<p:panelGrid style="margin-top:5px;width:70%;">
-			<f:facet name="header">
 
-				<p:row>
-					<p:column colspan="1">Tehap</p:column>
-					<p:column colspan="1">*I</p:column>
-					<p:column colspan="1">*II</p:column>
-					<p:column>*III</p:column>
-					<p:column>*IV</p:column>
-					<p:column>*V</p:column>
-				</p:row>
-			</f:facet>
-			<p:row>
-				<p:column style="font-weight: bold;">Score</p:column>
-				<p:column style="font-weight: bold;">
-					<p:inputText />
-				</p:column>
-
-				<p:column colspan="1" style="font-weight: bold;">
-					<p:inputText />
-				</p:column>
-				<p:column colspan="1" style="font-weight: bold;">
-					<p:inputText />
-				</p:column>
-				<p:column colspan="1" style="font-weight: bold;">
-					<p:inputText />
-				</p:column>
-				<p:column colspan="1" style="font-weight: bold;">
-					<p:inputText />
-				</p:column>
-
-
-			</p:row>
-
-
-
-
-
-
-
-
-		</p:panelGrid>
-
-	</p:panel>
- -->
 	<p:panel header="#{lbl['lbl.sc.spec.tech.score.setting']}"
 		toggleable="true">
 
@@ -95,7 +50,7 @@
 					id="techScoreWeight" required="true" maxlength="18"
 					label="#{lbl['lbl.sc.spec.stage2.score']}" style="text-align:right"
 					rendered="#{tech.qtScoreWeightage.score=='0'}">
-					<ac:validateNumber integerOnly="true"  maxIntegerDigits="14" ></ac:validateNumber>
+					<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
 					<p:ajax event="blur" process="@this"
 						listener="#{specificationBackingBean.techScoreSum}" update="@form" />
 				</p:inputText>
@@ -103,10 +58,10 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.weight.weight']}"
 				style="width:20%;">
-				<p:inputText value="#{tech.qtScoreWeightage.weightage}" maxlength="5"
-					style="text-align:right"
+				<p:inputText value="#{tech.qtScoreWeightage.weightage}"
+					maxlength="5" style="text-align:right"
 					rendered="#{specificationBackingBean.managedBean.technicalScoreSetting.weightageReq ne 'false'}">
-						
+
 					<p:ajax event="blur" process="@this"
 						listener="#{specificationBackingBean.techWeightageSum}"
 						update="@form" />
@@ -156,9 +111,8 @@
 						value=" #{lbl['lbl.sc.spec.qual.present.demo']}" /></td>
 				<td><p:inputText style="text-align:right" maxlength="5"
 						value="#{specificationBackingBean.managedBean.demoScoreSetting.passingScore}">
-						
-						</p:inputText>
-					<p:spacer width="5"></p:spacer> <h:outputText value="/100 " /></td>
+
+					</p:inputText> <p:spacer width="5"></p:spacer> <h:outputText value="/100 " /></td>
 			</tr>
 
 
@@ -169,9 +123,8 @@
 						value="#{lbl['lbl.sc.spec.recommendation.technical']}" /></td>
 				<td><p:inputText style="text-align:right" maxlength="5"
 						value="#{specificationBackingBean.managedBean.technicalScoreSetting.passingScore}">
-						
-						</p:inputText>
-					<p:spacer width="5"></p:spacer> <h:outputText value="/100 " /></td>
+
+					</p:inputText> <p:spacer width="5"></p:spacer> <h:outputText value="/100 " /></td>
 			</tr>
 		</table>
 
