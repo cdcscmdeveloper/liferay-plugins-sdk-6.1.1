@@ -1,0 +1,117 @@
+<ui:composition
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:f="http://java.sun.com/jsf/core"
+xmlns:h="http://java.sun.com/jsf/html"
+xmlns:ui="http://java.sun.com/jsf/facelets"
+xmlns:p="http://primefaces.org/ui"
+xmlns:c="http://java.sun.com/jsp/jstl/core"
+>
+	<p:panel id="pSupportDocCheckListDet" header="#{lbl['lbl.pm.document.details']}" toggleable="true">	
+		<br/>
+		<!-- Document Detail -->
+		<table class="ppTwoTable">
+			<tr>
+				<th>
+					<p:outputLabel value="* #{lbl['lbl.pm.document.name']}"/>
+				</th>
+				<td colspan="3">
+					<p:inputTextarea
+				 		cols="50" rows="5" maxlength="255"/>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					<p:outputLabel value="* #{lbl['lbl.pm.document.definition']}"/>
+				</th>
+				<td>
+					<p:selectOneMenu disabled="true" styleClass="ppDropDownWidthS" label="#{lbl['lbl.pm.document.definition']}"
+					>
+						<f:selectItem  itemLabel="Select" itemValue="0" />
+					</p:selectOneMenu>
+				</td>
+				<th>
+					<p:outputLabel value="* #{lbl['lbl.pm.display.sequence']}"/>
+				</th>
+				<td>
+					<p:inputText styleClass="ppDisplayTextS"/>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					<p:outputLabel value="* #{lbl['lbl.pm.supplier.action']}"/>
+				</th>
+				<td>
+					<p:selectOneMenu disabled="true"  styleClass="ppDropDownWidthS" label="#{lbl['lbl.pm.document.definition']}"
+					>
+						<f:selectItem  itemLabel="Select" itemValue="0" />
+					</p:selectOneMenu>
+				</td>
+				<th>
+					<p:outputLabel value="* #{lbl['lbl.pm.scoring.required']}"/>
+				</th>
+				<td>
+					<p:selectOneRadio>
+						<f:selectItems value="#{supportDocBackingBean.getYesNoOptions()}" />
+					</p:selectOneRadio> 
+				</td>
+			</tr>
+			<tr>
+				<th>
+					<p:outputLabel value="#{lbl['lbl.pm.status']}"/>
+				</th>
+				<td>
+					<p:selectOneMenu styleClass="ppDropDownWidthM" >
+						<f:selectItems  value="#{supportDocBackingBean.getStatusOptions()}"/>
+					</p:selectOneMenu>
+				</td>
+				<th>
+					
+				</th>
+				<td>
+				</td>
+			</tr>
+		</table>
+	</p:panel>
+	<p:panel id="pProcureRestrList" header="#{lbl['lbl.pm.document.restriction']}" toggleable="true">	
+		<br/>
+		<p:tabView widgetVar="tvProcureRestr" id="tvDocCheckListRestr" dynamic="false" cache="false" orientation="top">
+			<!-- Application Type -->
+			<p:tab id="tAppType" title="#{lbl['lbl.pm.procurement.category']}">  
+				<br/>
+				<p:dataTable id="dtProcureCat" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
+					>
+					<p:ajax event="toggleSelect" update="@this" process="@this" />
+					<p:ajax event="rowSelectCheckbox" update="@this" />
+					<p:column selectionMode="multiple" disabledSelection="#{!restrict.brandNew}" style="width:2%" />
+			        <p:column headerText="* #{lbl['lbl.pm.procurement.category']}">
+				    	<p:selectOneMenu styleClass="ppDropDownWidthM"
+							value="#{restrict.restrType.parameterId}">
+							<f:selectItems  value="#{supportDocBackingBean.applicationTypeOptions()}"/>
+							<p:ajax event="change" update="somAppType"/>
+						</p:selectOneMenu>
+			        </p:column>  
+			        <p:column headerText="* #{lbl['lbl.pm.mandatory']}">  
+			         	<p:selectOneMenu styleClass="ppDropDownWidthS" value="#{restrict.recordStatusFlg}">
+							<f:selectItems  value="#{supportDocBackingBean.getStatusOptions()}"/>
+						</p:selectOneMenu>
+			        </p:column>   
+			        <p:column headerText="* #{lbl['lbl.pm.status']}">  
+			         	<p:selectOneMenu styleClass="ppDropDownWidthS" value="#{restrict.recordStatusFlg}">
+							<f:selectItems  value="#{supportDocBackingBean.getStatusOptions()}"/>
+						</p:selectOneMenu>
+			        </p:column>  
+			   	</p:dataTable>
+			   	<br/>
+		   		<div class="ppRightBtn">
+					<p:commandButton value="#{lbl['lbl.btn.add']}" icon="ui-icon-add"  update="dtProcureCat"
+						action="#{supportDocBackingBean.addRestriction(ParameterTypeConst.supplierApplicationTypes)}"
+						immediate="true"/>
+					&#160;
+					<p:commandButton id="cbAppDelete" value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete" update="dtProcureCat"
+						immediate="true" 
+						action="#{supportDocBackingBean.deleteRestrictions(ParameterTypeConst.supplierApplicationTypes)}" /> 
+				</div>
+			</p:tab>
+		</p:tabView>
+	</p:panel>
+</ui:composition>

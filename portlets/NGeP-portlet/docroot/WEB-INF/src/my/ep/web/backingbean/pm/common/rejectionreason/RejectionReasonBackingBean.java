@@ -53,7 +53,7 @@ import org.apache.log4j.Logger;
  * Backing Bean for Rejection Reason
  * 
  * @author RAIN POH
- * @since 8/7/2013
+ * @since 8/7/2014
  *
  */
 
@@ -933,10 +933,10 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			searchBean.getDataFilterBeans().add(bean);
 		}
 
-		if(rSearchBean.getStatus()!=null && rSearchBean.getStatus()>0L){
+		if(rSearchBean.getStatus()!=null){
 			log.info("+ status "  +rSearchBean.getStatus());
 			SearchFilterBean bean = new SearchFilterBean();
-			bean.setSearchField("pmReason.recordStatus");
+			bean.setSearchField("pmReason.recordStatusFlg");
 			bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
 			bean.setSearchValue(rSearchBean.getStatus());
 			searchBean.getDataFilterBeans().add(bean);

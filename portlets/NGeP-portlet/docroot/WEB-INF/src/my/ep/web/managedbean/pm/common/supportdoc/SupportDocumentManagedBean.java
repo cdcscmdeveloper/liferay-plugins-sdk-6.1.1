@@ -6,6 +6,7 @@ package my.ep.web.managedbean.pm.common.supportdoc;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.web.bean.pm.SupportDocumentSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
 /**
@@ -19,4 +20,24 @@ import my.ep.web.managedbean.BaseManagedBean;
 @SessionScoped
 public class SupportDocumentManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
+	
+	private SupportDocumentSearchBean supportDocSearchBean;
+
+	/**
+	 * @return the supportDocSearchBean
+	 */
+	public SupportDocumentSearchBean getSupportDocSearchBean() {
+		return supportDocSearchBean;
+	}
+
+	/**
+	 * @param supportDocSearchBean the supportDocSearchBean to set
+	 */
+	public void setSupportDocSearchBean(
+			SupportDocumentSearchBean supportDocSearchBean) {
+		this.supportDocSearchBean = supportDocSearchBean;
+	}
+	
+	
+	
 }

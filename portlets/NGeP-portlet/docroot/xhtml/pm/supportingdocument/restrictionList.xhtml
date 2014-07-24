@@ -1,0 +1,156 @@
+<ui:composition
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:f="http://java.sun.com/jsf/core"
+xmlns:h="http://java.sun.com/jsf/html"
+xmlns:ui="http://java.sun.com/jsf/facelets"
+xmlns:p="http://primefaces.org/ui"
+xmlns:c="http://java.sun.com/jsp/jstl/core"
+>
+
+	<p:outputPanel id="opRestriction">
+		<p:panel id="pDocRestriction" header="#{lbl['lbl.pm.document.restriction']}" toggleable="true" 
+		>
+			<p:tabView widgetVar="tvDocRestriction" id="tvDocRestriction" dynamic="false" cache="false" orientation="top">
+				<!-- Application Type -->
+				<p:tab id="tAppType" title="#{lbl['lbl.pm.application.type']}">  
+					<br/>
+					<p:dataTable id="dtAppType" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
+						
+						
+						>
+						<p:ajax event="toggleSelect" update="@this" process="@this" />
+						<p:ajax event="rowSelectCheckbox" update="@this" />
+						<p:column selectionMode="multiple" disabledSelection="#{!restrict.brandNew}" style="width:2%" />
+				        <p:column headerText="* #{lbl['lbl.pm.application.type']}">
+					    	<p:selectOneMenu id="somAppType"  styleClass="ppDropDownWidthM"
+								value="#{restrict.restrType.parameterId}">
+								<f:selectItems  value="#{supportDocBackingBean.applicationTypeOptions()}"/>
+								<p:ajax event="change" update="somAppType"/>
+							</p:selectOneMenu>
+				        </p:column>  
+				        <p:column headerText="* #{lbl['lbl.pm.status']}">  
+				         	<p:selectOneMenu styleClass="ppDropDownWidthS" value="#{restrict.recordStatusFlg}">
+								<f:selectItems  value="#{supportDocBackingBean.getStatusOptions()}"/>
+							</p:selectOneMenu>
+				        </p:column>  
+				   	</p:dataTable>
+				   	<br/>
+			   		<div class="ppRightBtn">
+						<p:commandButton value="#{lbl['lbl.btn.add']}" icon="ui-icon-add"  update="dtAppType"
+							action="#{supportDocBackingBean.addRestriction(ParameterTypeConst.supplierApplicationTypes)}"
+							immediate="true"/>
+						&#160;
+						<p:commandButton id="cbAppDelete" value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete" update="dtAppType"
+							immediate="true" 
+							action="#{supportDocBackingBean.deleteRestrictions(ParameterTypeConst.supplierApplicationTypes)}" /> 
+					</div>
+				</p:tab>
+				<!-- Company Type -->
+				<p:tab id="tComType" title="#{lbl['lbl.pm.company.type']}">  
+					<br/>
+					<p:dataTable id="dtComType" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
+						>
+						<p:ajax event="toggleSelect" update="@this" process="@this" />
+						<p:ajax event="rowSelectCheckbox" update="@this" />
+						
+						<p:column selectionMode="multiple" disabledSelection="#{!restrict.brandNew}" style="width:2%" />
+				        <p:column headerText="* #{lbl['lbl.pm.company.type']}">  
+					    	<p:selectOneMenu id="somAppType" styleClass="ppDropDownWidthM"
+								value="#{restrict.restrType.parameterId}">
+								<f:selectItems  value="#{supportDocBackingBean.companyTypeOptions()}"/>
+							</p:selectOneMenu>
+				        </p:column>  
+				        <p:column headerText="* #{lbl['lbl.pm.status']}">  
+				            <p:selectOneMenu styleClass="ppDropDownWidthS" value="#{restrict.recordStatusFlg}">
+								<f:selectItems  value="#{supportDocBackingBean.getStatusOptions()}"/>
+							</p:selectOneMenu>
+				        </p:column>
+				   	</p:dataTable>
+			   		<br/>
+			   		<div class="ppRightBtn">
+						<p:commandButton value="#{lbl['lbl.btn.add']}" icon="ui-icon-add"  update="dtComType"
+							action="#{supportDocBackingBean.addRestriction(ParameterTypeConst.companyTypes)}"
+							immediate="true"/>
+						&#160;
+						<p:commandButton id="cbComDelete" value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete" update="dtComType"
+							immediate="true"
+							action="#{supportDocBackingBean.deleteRestrictions(ParameterTypeConst.companyTypes)}" /> 
+					</div>
+				</p:tab>
+				<!-- Supplier Type -->
+				<p:tab id="tSuppType" title="#{lbl['lbl.pm.supplier.type']}">  
+					<br/>
+					<p:dataTable id="dtSuppType" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
+						>
+						<p:ajax event="toggleSelect" update="@this" process="@this" />
+						<p:ajax event="rowSelectCheckbox" update="@this" />
+						<p:column selectionMode="multiple" disabledSelection="#{!restrict.brandNew}" style="width:2%" />
+
+				        <p:column headerText="* #{lbl['lbl.pm.supplier.type']}">  
+					    	<p:selectOneMenu id="somAppType" styleClass="ppDropDownWidthM"
+								value="#{restrict.restrType.parameterId}">
+								<f:selectItems  value="#{supportDocBackingBean.supplierTypeOptions()}"/>
+							</p:selectOneMenu>
+				        </p:column>  
+				        <p:column headerText="* #{lbl['lbl.pm.status']}">  
+					        <p:selectOneMenu styleClass="ppDropDownWidthS" value="#{restrict.recordStatusFlg}">
+								<f:selectItems  value="#{supportDocBackingBean.getStatusOptions()}"/>
+							</p:selectOneMenu>
+				        </p:column>  
+				   	</p:dataTable>
+				   	<br/>
+			   		<div class="ppRightBtn">
+						<p:commandButton value="#{lbl['lbl.btn.add']}" icon="ui-icon-add"  update="dtSuppType"
+							action="#{supportDocBackingBean.addRestriction(ParameterTypeConst.supplierTypes)}"
+							immediate="true"/>
+						&#160;
+						<p:commandButton id="cbSuppDelete" value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete"  update="dtSuppType"
+							immediate="true"
+							action="#{supportDocBackingBean.deleteRestrictions(ParameterTypeConst.supplierTypes)}" /> 
+					</div>
+				</p:tab>
+				<!-- Category -->
+				<p:tab id="tCat" title="#{lbl['lbl.pm.category']}">  
+					<br/>
+					<p:dataTable id="dtCat" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
+						>
+						<p:ajax event="toggleSelect" update="@this" process="@this" />
+						<p:ajax event="rowSelectCheckbox" update="@this" />
+						<p:column selectionMode="multiple" disabledSelection="#{!restrict.brandNew}" style="width:2%" />
+
+				        <p:column headerText="#{lbl['lbl.pm.category.l1']}">  
+					    	category1
+				        </p:column>  
+				        <p:column headerText="#{lbl['lbl.pm.category.l2']}">  
+					    	category2
+				        </p:column>  
+				        <p:column headerText="#{lbl['lbl.pm.category.l3']}">  
+					    	category3
+				        </p:column>   
+				        <p:column headerText="* #{lbl['lbl.pm.status']}">  
+					      	status
+				        </p:column>  
+				   	</p:dataTable>
+				   	<br/>
+			   		<div class="ppRightBtn">
+						<p:commandButton value="#{lbl['lbl.btn.add']}" icon="ui-icon-add"  update="dtCat" oncomplete="dlCatDetModal.show()"
+							immediate="true"/>
+						&#160;
+						<p:commandButton value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete"  update="dtCat"
+							immediate="true"
+							/> 
+					</div>
+				</p:tab>
+			</p:tabView>
+			<br/>
+		</p:panel>
+	</p:outputPanel>
+	
+	<!--  Dialog for Category Details -->
+	<p:dialog id="dlCatDet" header="#{lbl['lbl.pm.select.category']}" widgetVar="dlCatDetModal"
+    		 resizable="false" styleClass="ppDialogBigBg" dynamic="true">  
+    	<p:outputPanel id="opCatDet">
+	    	<ui:include src="categoryDetails.xhtml"/>
+    	</p:outputPanel>
+	</p:dialog>
+</ui:composition>
