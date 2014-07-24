@@ -962,7 +962,7 @@ public class CodificationBackingBean extends
 					.getBrandName());// should be NA
 			extCodeVO.setMeasurementName(selectedCommodity.getCmMeasurement()
 					.get(0).getMeasurementName());// should be NA
-			extCodeVO.setColorName("NA");
+			extCodeVO.setColorName("N/A");
 		}
 		if (extCodeVO != null) {
 			this.getManagedBean().getExtensionVoList().add(extCodeVO);

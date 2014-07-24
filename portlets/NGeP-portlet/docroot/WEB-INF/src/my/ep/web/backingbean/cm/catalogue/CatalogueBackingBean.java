@@ -395,10 +395,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 						item.setCmColor(colorObj);
 						item.setItemName(bb.getManagedBean().getSelectedUNSPSCObj()
 								.getUnspscTitle()
-								+ (typeObj.getTypeName().equals("NA") ? "": " "+typeObj.getTypeName())
-								+ (brandObj.getBrandName().equals("NA") ? "": " "+brandObj.getBrandName())
-								+ (meaObj.getMeasurementName().equals("NA") ? "" : " "+meaObj.getMeasurementName())
-								+ (colorObj.getColorName().equals("NA") ? "": " "+colorObj.getColorName()));
+								+ (typeObj.getTypeName().equals("N/A") ? "": " "+typeObj.getTypeName())
+								+ (brandObj.getBrandName().equals("N/A") ? "": " "+brandObj.getBrandName())
+								+ (meaObj.getMeasurementName().equals("N/A") ? "" : " "+meaObj.getMeasurementName())
+								+ (colorObj.getColorName().equals("N/A") ? "": " "+colorObj.getColorName()));
 						item.setExtensionCode(bb.getManagedBean()
 								.getSelectedUNSPSCObj().getUnspscCode()
 								+ typeObj.getTypeCode()
