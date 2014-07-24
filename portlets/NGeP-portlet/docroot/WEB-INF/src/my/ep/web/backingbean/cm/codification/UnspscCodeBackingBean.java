@@ -714,7 +714,12 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 			return "reviewUnspscCode?faces-redirect=true";
 		}
 
-      
+ //clear search fileds and result
+		CodificationBackingBean bb = new CodificationBackingBean();
+		bb.getManagedBean().setAutoCompleteUnspscCode(new CmUnspsc());
+		bb.getTitleFilterBean().setSearchValue(null);
+		bb.setSearchDataModel(null);
+		
  return "verifyUnspscSearch";
 	}
 

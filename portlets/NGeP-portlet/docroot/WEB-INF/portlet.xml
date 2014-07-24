@@ -5286,8 +5286,8 @@
 	</portlet>
 	
 	<portlet>
-		<portlet-name>BpmTaskBar</portlet-name>
-		<display-name>BpmTaskBar</display-name>
+		<portlet-name>TaskSummary</portlet-name>
+		<display-name>TaskSummary</display-name>
 		<portlet-class>
 			org.portletfaces.bridge.GenericFacesPortlet
 		</portlet-class>
@@ -5301,7 +5301,7 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>Task Bar</title>
+			<title>Tasks Summary</title>
 			<short-title>NewJSFPortlet</short-title>
 			<keywords></keywords>
 		</portlet-info>
