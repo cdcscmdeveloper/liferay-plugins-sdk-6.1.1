@@ -1,0 +1,213 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+
+	<p:panel>
+	    
+		<h:panelGroup id="ModReport">
+		<h:panelGrid columns="4" style="width:100%;">
+			<p:outputLabel value="#{lbl['lbl.rpt.module']}" style="float:left;margin-bottom:15px;"/>
+			<p:selectOneMenu value="#{reportBackingBean.managedBean.moduleName}" style="width:150px;margin-bottom:15px;">
+				<f:selectItem itemLabel="--SelectOne--" itemValue="#{null}"></f:selectItem>
+				<f:selectItems value="#{reportBackingBean.retriveModuleList()}"></f:selectItems>
+				<p:ajax event="change" listener="#{reportBackingBean.retriveReportListBymoduleName}"
+					 partialSubmit="true"  update="@form"/>
+			</p:selectOneMenu>			
+			<p:outputLabel value="#{lbl['lbl.rpt.rptName']}" style="float:left;margin-bottom:15px;"/>
+			<p:selectOneMenu value="#{reportBackingBean.managedBean.reportNameValue}" style="width:190px;margin-bottom:15px;">
+				<f:selectItem itemLabel="--SelectOne--" itemValue="#{null}"></f:selectItem>
+				<f:selectItems value="#{reportBackingBean.managedBean.reportList}"></f:selectItems>
+				<p:ajax event="change" listener="#{reportBackingBean.criteriaVariablesByReport}"
+					 partialSubmit="true" update="@form"/>
+			</p:selectOneMenu>	    
+		    <p:outputLabel value="#{lbl['lbl.rpt.rptTitle']} " style="float:left;font-size:13px;;margin-bottom:15px;font-weight:bold;"/>		    
+		    <p:outputLabel id="rptDisplay" value="#{reportBackingBean.managedBean.reportName}" 
+							 style="float:left;font-size:13px;margin-bottom:15px;font-weight:bold;width:427px;"/>			
+		    <p:outputLabel value="" style="width:200px"/>
+		    <p:outputLabel value="" style="width:200px"/>		  
+			<c:if test="#{reportBackingBean.managedBean.rptGenBean.quotationIdView}">			
+			<p:outputLabel value="#{lbl['lbl.rpt.qtId']}"  style="float:left;margin-bottom:5px;"/>
+			<p:inputText value="#{reportBackingBean.quotationId}"  style="float:left;margin-bottom:5px;">			
+						
+			</p:inputText>			
+			</c:if>			
+			<c:if test="#{reportBackingBean.managedBean.rptGenBean.paymentIdView}">			
+			<p:outputLabel value="#{lbl['lbl.rpt.pymtId']}"  style="float:left;margin-bottom:5px;"/>
+			<p:inputText value="#{reportBackingBean.paymentId}"  style="float:left;margin-bottom:5px;"/>
+			</c:if>			
+		    <c:if test="#{reportBackingBean.managedBean.rptGenBean.itemTypeView}">
+			<p:outputLabel value="#{lbl['lbl.rpt.itemType']}" style="float:left;margin-bottom:5px;"/>
+			<p:inputText  value="#{reportBackingBean.itemType}" style="float:left;margin-bottom:5px;"/>
+			</c:if>			
+		  <c:if test="#{reportBackingBean.managedBean.rptGenBean.itemStatusView}">
+			<h:outputLabel value="#{lbl['lbl.rpt.itemStatus']}"  style="float:left;margin-bottom:5px;"/>
+			<p:inputText value="#{reportBackingBean.itemStatus}"  style="float:left;margin-bottom:5px;"/>
+			</c:if>			
+			  <c:if test="#{reportBackingBean.managedBean.rptGenBean.unspscCodeView}">
+			<p:outputLabel value="#{lbl['lbl.rpt.unspscCode']}" style="float:left;margin-bottom:5px;" />
+			<p:inputText value="#{reportBackingBean.unspscCode}"  style="float:left;margin-bottom:5px;"/>
+			</c:if>			
+			<c:if test="#{reportBackingBean.managedBean.rptGenBean.unspscTitleView}">
+			<p:outputLabel value="#{lbl['lbl.rpt.unspscTitle']}"  style="float:left;margin-bottom:5px;"/>
+			<p:inputText value="#{reportBackingBean.unspscTitle}"  style="float:left;margin-bottom:5px;"/>
+			</c:if>			
+			<c:if test="#{reportBackingBean.managedBean.rptGenBean.extentionCodeView}">
+			<p:outputLabel value="#{lbl['lbl.rpt.extCode']}"  style="float:left;margin-bottom:5px;"/>
+			<p:inputText value="#{reportBackingBean.extentionCode}"  style="float:left;margin-bottom:5px;"/>
+			</c:if>			
+			<c:if test="#{reportBackingBean.managedBean.rptGenBean.companyNameView}">
+			<p:outputLabel value="#{lbl['lbl.rpt.cmpName']}"  style="float:left;margin-bottom:5px;"/>
+			<p:inputText value="#{reportBackingBean.companyName}" style="float:left;margin-bottom:5px;" />
+			</c:if>			
+			<c:if test="#{reportBackingBean.managedBean.rptGenBean.registrationTypeView}">
+			<p:outputLabel value="#{lbl['lbl.rpt.rgstType']}"  style="float:left;margin-bottom:5px;"/>
+			<p:inputText value="#{reportBackingBean.registrationType}" style="float:left;margin-bottom:5px;" />
+			</c:if>						
+			<c:if test="#{reportBackingBean.managedBean.rptGenBean.itemCategoryView}">
+			<p:outputLabel value="#{lbl['lbl.rpt.catItm']}"  style="float:left;margin-bottom:5px;"/>
+			<p:inputText value="#{reportBackingBean.itemCategory}"  style="float:left;margin-bottom:5px;"/>
+			</c:if>
+			<c:if test="#{reportBackingBean.managedBean.rptGenBean.itemNameView}">
+			<p:outputLabel value="#{lbl['lbl.rpt.itmName']}"  style="float:left;margin-bottom:5px;"/>
+			<p:inputText value="#{reportBackingBean.itemName}"  style="float:left;margin-bottom:5px;"/>
+			</c:if>
+			<c:if test="#{reportBackingBean.managedBean.rptGenBean.proofIdentityView}">
+			<p:outputLabel value="#{lbl['lbl.rpt.prfIdt']}"  style="float:left;margin-bottom:5px;"/>
+			<p:inputText value="#{reportBackingBean.proofIdentity}"  style="float:left;margin-bottom:5px;"/>
+			</c:if>			
+			<c:if test="#{reportBackingBean.managedBean.rptGenBean.ptjView}">
+			<p:outputLabel value="#{lbl['lbl.rpt.ptj']}"  style="float:left;margin-bottom:5px;"/>
+			<p:inputText value="#{reportBackingBean.ptj}"  style="float:left;margin-bottom:5px;"/>
+			</c:if>
+			<c:if test="#{reportBackingBean.managedBean.rptGenBean.contractNoView}">
+			<p:outputLabel value="#{lbl['lbl.rpt.contractNo']}"  style="float:left;margin-bottom:5px;"/>
+			<p:inputText value="#{reportBackingBean.contractNo}"  style="float:left;margin-bottom:5px;"/>
+			</c:if>
+			<c:if test="#{reportBackingBean.managedBean.rptGenBean.sstView}">
+			<p:outputLabel value="#{lbl['lbl.rpt.sst']}"  style="float:left;margin-bottom:5px;"/>
+			<p:inputText value="#{reportBackingBean.sst}"  style="float:left;margin-bottom:5px;"/>
+			</c:if>
+			<c:if test="#{reportBackingBean.managedBean.rptGenBean.jabatanView}">
+			<p:outputLabel value="#{lbl['lbl.rpt.jabatan']}"  style="float:left;margin-bottom:5px;"/>
+			<p:inputText value="#{reportBackingBean.jabatan}"  style="float:left;margin-bottom:5px;"/>
+			</c:if>
+			<c:if test="#{reportBackingBean.managedBean.rptGenBean.ministryView}">
+			<p:outputLabel value="#{lbl['lbl.rpt.ministry']}"  style="float:left;margin-bottom:5px;"/>
+			<p:inputText value="#{reportBackingBean.ministry}"  style="float:left;margin-bottom:5px;"/>
+			</c:if>
+			<c:if test="#{reportBackingBean.managedBean.rptGenBean.supplierView}">
+			<p:outputLabel value="#{lbl['lbl.rpt.supplier']}"  style="float:left;margin-bottom:5px;"/>
+			<p:inputText value="#{reportBackingBean.supplier}"  style="float:left;margin-bottom:5px;"/>
+			</c:if>
+			<c:if test="#{reportBackingBean.managedBean.rptGenBean.statusView}">
+			<p:outputLabel value="#{lbl['lbl.rpt.status']}"  style="float:left;margin-bottom:5px;"/>
+			<p:inputText value="#{reportBackingBean.status}"  style="float:left;margin-bottom:5px;"/>
+			</c:if>
+			<c:if test="#{reportBackingBean.managedBean.rptGenBean.durationView}">
+			<p:outputLabel value="#{lbl['lbl.rpt.duration']}"  style="float:left;margin-bottom:5px;"/>
+			<p:inputText value="#{reportBackingBean.duration}"  style="float:left;margin-bottom:5px;"/>
+			</c:if>
+			<c:if test="#{reportBackingBean.managedBean.rptGenBean.recievingOfficerView}">
+			<p:outputLabel value="#{lbl['lbl.rpt.recievingOfficer']}"  style="float:left;margin-bottom:5px;"/>
+			<p:inputText value="#{reportBackingBean.recievingOfficer}"  style="float:left;margin-bottom:5px;"/>
+			</c:if>
+			<c:if test="#{reportBackingBean.managedBean.rptGenBean.deliveryAddressView}">
+			<p:outputLabel value="#{lbl['lbl.rpt.deliveryAddress']}"  style="float:left;margin-bottom:5px;"/>
+			<p:inputText value="#{reportBackingBean.deliveryAddress}"  style="float:left;margin-bottom:5px;"/>
+			</c:if>
+			<c:if test="#{reportBackingBean.managedBean.rptGenBean.flRecNoteNoView}">
+			<p:outputLabel value="#{lbl['lbl.rpt.flRecNoteNo']}"  style="float:left;margin-bottom:5px;"/>
+			<p:inputText value="#{reportBackingBean.flRecNoteNo}"  style="float:left;margin-bottom:5px;"/>
+			</c:if>
+			<c:if test="#{reportBackingBean.managedBean.rptGenBean.contractTypeView}">
+			<p:outputLabel value="#{lbl['lbl.rpt.contractType']}"  style="float:left;margin-bottom:5px;"/>
+			<p:inputText value="#{reportBackingBean.contractType}"  style="float:left;margin-bottom:5px;"/>
+			</c:if>
+			<c:if test="#{reportBackingBean.managedBean.rptGenBean.requisitionerView}">
+			<p:outputLabel value="#{lbl['lbl.rpt.requisitioner']}"  style="float:left;margin-bottom:5px;"/>
+			<p:inputText value="#{reportBackingBean.requisitioner}"  style="float:left;margin-bottom:5px;"/>
+			</c:if>
+			<c:if test="#{reportBackingBean.managedBean.rptGenBean.mtoContractView}">
+			<p:outputLabel value="#{lbl['lbl.rpt.mtoContract']}"  style="float:left;margin-bottom:5px;"/>
+			<p:inputText value="#{reportBackingBean.mtoContract}"  style="float:left;margin-bottom:5px;"/>
+			</c:if>
+			<c:if test="#{reportBackingBean.managedBean.rptGenBean.invoiceNoView}">
+			<p:outputLabel value="#{lbl['lbl.rpt.invoiceNo']}"  style="float:left;margin-bottom:5px;"/>
+			<p:inputText value="#{reportBackingBean.invoiceNo}"  style="float:left;margin-bottom:5px;"/>
+			</c:if>
+			<c:if test="#{reportBackingBean.managedBean.rptGenBean.deductionTypeView}">
+			<p:outputLabel value="#{lbl['lbl.rpt.deductionType']}"  style="float:left;margin-bottom:5px;"/>
+			<p:inputText value="#{reportBackingBean.deductionType}"  style="float:left;margin-bottom:5px;"/>
+			</c:if>
+			<c:if test="#{reportBackingBean.managedBean.rptGenBean.crNoView}">
+			<p:outputLabel value="#{lbl['lbl.rpt.crNo']}"  style="float:left;margin-bottom:5px;"/>
+			<p:inputText value="#{reportBackingBean.crNo}"  style="float:left;margin-bottom:5px;"/>
+			</c:if>
+			<c:if test="#{reportBackingBean.managedBean.rptGenBean.approverNameView}">
+			<p:outputLabel value="#{lbl['lbl.rpt.approverName']}"  style="float:left;margin-bottom:5px;"/>
+			<p:inputText value="#{reportBackingBean.approverName}"  style="float:left;margin-bottom:5px;"/>
+			</c:if>
+			<c:if test="#{reportBackingBean.managedBean.rptGenBean.documentTypeView}">
+			<p:outputLabel value="#{lbl['lbl.rpt.documentType']}"  style="float:left;margin-bottom:5px;"/>
+			<p:inputText value="#{reportBackingBean.documentType}"  style="float:left;margin-bottom:5px;"/>
+			</c:if>
+			<c:if test="#{reportBackingBean.managedBean.rptGenBean.criteriaView}">
+			<p:outputLabel value="#{lbl['lbl.rpt.criteria']}"  style="float:left;margin-bottom:5px;"/>
+			<p:inputText value="#{reportBackingBean.criteria}"  style="float:left;margin-bottom:5px;"/>
+			</c:if>
+			<c:if test="#{reportBackingBean.managedBean.rptGenBean.scoringView}">
+			<p:outputLabel value="#{lbl['lbl.rpt.scoring']}"  style="float:left;margin-bottom:5px;"/>
+			<p:inputText value="#{reportBackingBean.scoring}"  style="float:left;margin-bottom:5px;"/>
+			</c:if>
+			<c:if test="#{reportBackingBean.managedBean.rptGenBean.pkpNoView}">
+			<p:outputLabel value="#{lbl['lbl.rpt.pkpNo']}"  style="float:left;margin-bottom:5px;"/>
+			<p:inputText value="#{reportBackingBean.pkpNo}"  style="float:left;margin-bottom:5px;"/>
+			</c:if>
+			<c:if test="#{reportBackingBean.managedBean.rptGenBean.deliveryOrderNoView}">
+			<p:outputLabel value="#{lbl['lbl.rpt.deliveryOrderNo']}"  style="float:left;margin-bottom:5px;"/>
+			<p:inputText value="#{reportBackingBean.deliveryOrderNo}"  style="float:left;margin-bottom:5px;"/>
+			</c:if>
+			<c:if test="#{reportBackingBean.managedBean.rptGenBean.itemCodeView}">
+			<p:outputLabel value="#{lbl['lbl.rpt.itemCode']}"  style="float:left;margin-bottom:5px;"/>
+			<p:inputText value="#{reportBackingBean.itemCode}"  style="float:left;margin-bottom:5px;"/>
+			</c:if>
+			<c:if test="#{reportBackingBean.managedBean.rptGenBean.poAmountView}">
+			<p:outputLabel value="#{lbl['lbl.rpt.poAmount']}"  style="float:left;margin-bottom:5px;"/>
+			<p:inputText value="#{reportBackingBean.poAmount}"  style="float:left;margin-bottom:5px;"/>
+			</c:if>
+			<c:if test="#{reportBackingBean.managedBean.rptGenBean.prNoView}">
+			<p:outputLabel value="#{lbl['lbl.rpt.prNo']}"  style="float:left;margin-bottom:5px;"/>
+			<p:inputText value="#{reportBackingBean.prNo}"  style="float:left;margin-bottom:5px;"/>
+			</c:if>
+			<c:if test="#{reportBackingBean.managedBean.rptGenBean.pmoView}">
+			<p:outputLabel value="#{lbl['lbl.rpt.pmo']}"  style="float:left;margin-bottom:5px;"/>
+			<p:inputText value="#{reportBackingBean.pmo}"  style="float:left;margin-bottom:5px;"/>
+			</c:if>			             
+		</h:panelGrid>
+		<h:panelGrid id="rptDate" columns="4" style="width:100%;">
+		<c:if test="#{reportBackingBean.managedBean.rptGenBean.fromDateView}">
+			<p:outputLabel value="#{lbl['lbl.rpt.dtFrm']}" style="margin-right:12px;margin-bottom:5px;float:left;"/>
+			<p:calendar showOn="button" value="#{reportBackingBean.fromDate}" 
+				pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+				size="20" style="margin-right:175px;margin-bottom:5px;float:left;">
+			</p:calendar>			
+			<p:outputLabel value="#{lbl['lbl.rpt.dtTo']}" style="margin-right:12px;margin-bottom:5px;float:left;"/>
+			<p:calendar showOn="button" value="#{reportBackingBean.toDate}"
+				pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+				size="20" style="margin-right:-6px;margin-bottom:5px;float:left;">				
+			</p:calendar>
+            </c:if> 
+		</h:panelGrid>
+		</h:panelGroup>		
+		<div align="right">
+			<p:commandButton value="Generate"  process="@all" action="#{reportBackingBean.generateReport}" update="@all" />
+			<p:commandButton value="Reset"  process="@all" action="#{reportBackingBean.resetReportForm}" update="@all" />
+		</div>
+	</p:panel>
+
+</ui:composition>
