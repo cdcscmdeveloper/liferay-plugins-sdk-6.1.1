@@ -54,7 +54,7 @@
 				<h:outputText value="#{chargeLineNode.chargeOrderedQty}"
 					rendered="#{chargeLineNode.parent == 'false'}">
 					<f:convertNumber
-						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, chargeLineNode.scRequestItem.uom.uomCode)}" />
 				</h:outputText>
 			</p:column>
 			<p:column headerText="Ordered Amt.(RM)" style="text-align:right">

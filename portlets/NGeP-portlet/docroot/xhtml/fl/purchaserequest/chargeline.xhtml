@@ -56,7 +56,7 @@
 				<h:outputText value="#{chargeLineNode.chargeOrderedQty}"
 					rendered="#{chargeLineNode.parent == 'false'}" >
 					<f:convertNumber
-						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, chargeLineNode.scRequestItem.uom.uomCode)}" />
 				</h:outputText>
 			</p:column>
 			<p:column headerText="Ordered Amt.(RM)" style="text-align:right">
@@ -132,7 +132,8 @@
 					<td><p:inputText
 							value="#{purchaseRequestBackingBean.managedBean.projectCode}"
 							size="9" disabled="true" /></td>
-					<td><p:outputLabel value="#{lbl['lbl.fl.charge.setia.subsetia']}" /></td>
+					<td><p:outputLabel
+							value="#{lbl['lbl.fl.charge.setia.subsetia']}" /></td>
 					<td><p:inputText
 							value="#{purchaseRequestBackingBean.managedBean.setiaCode}"
 							size="9" disabled="true" /></td>
@@ -297,7 +298,7 @@
 		<div style="width: 100%; text-align: right">
 			<p:commandButton value="Apply" icon="ui-icon-accept" 
 				process="@this,chargeAss,applyBulkChargeDialog"
-				update="bulkUpdatePnl,chargeLineTbl,chargeAss"
+				update="bulkUpdatePnl,chargeLineTbl,chargeAss,chargeLineSection"
 				action="#{purchaseRequestBackingBean.chargeLineApply}">
 			</p:commandButton>
 			<p:commandButton value="Cancel" icon="ui-icon-cancel"
