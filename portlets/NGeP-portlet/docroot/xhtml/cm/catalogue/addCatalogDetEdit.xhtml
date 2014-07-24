@@ -145,12 +145,12 @@
 							title="Upload"
 							rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus != 'P' and catalogueBackingBean.managedBean.displayCatalogue}"
 							onclick="imageDialog.show()">
-							<p:graphicImage value="/resources/ep/images/design/upload.png" style="margin-top:10px;"></p:graphicImage>
+							<p:graphicImage value="/css/images/design/upload.png" style="margin-top:10px;"></p:graphicImage>
 						</p:commandLink> 
 						<p:commandLink
 							rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus != 'P' and catalogueBackingBean.managedBean.displayCatalogue}"
 							title="Delete" oncomplete="deleteImage.show()">
-							<p:graphicImage value="/resources/ep/images/design/trash.png"></p:graphicImage>
+							<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
 						</p:commandLink>
 
 					</td>
@@ -355,31 +355,31 @@
 			
 			<p:panelGrid styleClass="noBorders">
 			    <p:row rendered="#{catalogueBackingBean.managedBean.error1}">
-			        <p:column style="width:2%;"><p:graphicImage value="/resources/ep/images/messages/error.png"></p:graphicImage></p:column>
+			        <p:column style="width:2%;"><p:graphicImage value="/css/images/messages/error.png"></p:graphicImage></p:column>
 			        <p:column><h:outputText value="From quantity greater than To quantity."></h:outputText></p:column>
 			    </p:row>
 			     <p:row rendered="#{catalogueBackingBean.managedBean.error2}">
-			        <p:column style="width:2%;"><p:graphicImage value="/resources/ep/images/messages/error.png"></p:graphicImage></p:column>
+			        <p:column style="width:2%;"><p:graphicImage value="/css/images/messages/error.png"></p:graphicImage></p:column>
 			        <p:column><h:outputText value="End date cannot be less than start date."></h:outputText></p:column>
 			    </p:row>
 			     <p:row rendered="#{catalogueBackingBean.managedBean.error3}">
-			        <p:column style="width:2%;"><p:graphicImage value="/resources/ep/images/messages/error.png"></p:graphicImage></p:column>
+			        <p:column style="width:2%;"><p:graphicImage value="/css/images/messages/error.png"></p:graphicImage></p:column>
 			        <p:column><h:outputText value="Please fill all columns."></h:outputText></p:column>
 			    </p:row>
 			     <p:row rendered="#{catalogueBackingBean.managedBean.error4}">
-			        <p:column style="width:2%;"><p:graphicImage value="/resources/ep/images/messages/error.png"></p:graphicImage></p:column>
+			        <p:column style="width:2%;"><p:graphicImage value="/css/images/messages/error.png"></p:graphicImage></p:column>
 			        <p:column><h:outputText value="Start and end dates of this tier cannot overlap with others."></h:outputText></p:column>
 			    </p:row>
 			     <p:row rendered="#{catalogueBackingBean.managedBean.error5}">
-			        <p:column style="width:2%;"><p:graphicImage value="/resources/ep/images/messages/error.png"></p:graphicImage></p:column>
+			        <p:column style="width:2%;"><p:graphicImage value="/css/images/messages/error.png"></p:graphicImage></p:column>
 			        <p:column><h:outputText value="Normal Promotion Date must within Normal Standard Date range."></h:outputText></p:column>
 			    </p:row>
 			     <p:row rendered="#{catalogueBackingBean.managedBean.error6}">
-			        <p:column style="width:2%;"><p:graphicImage value="/resources/ep/images/messages/error.png"></p:graphicImage></p:column>
+			        <p:column style="width:2%;"><p:graphicImage value="/css/images/messages/error.png"></p:graphicImage></p:column>
 			        <p:column><h:outputText value="Normal Promotion Price must be less than Normal Standard Price."></h:outputText></p:column>
 			    </p:row>
 			    <p:row rendered="#{catalogueBackingBean.managedBean.error7}">
-			        <p:column style="width:2%;"><p:graphicImage value="/resources/ep/images/messages/error.png"></p:graphicImage></p:column>
+			        <p:column style="width:2%;"><p:graphicImage value="/css/images/messages/error.png"></p:graphicImage></p:column>
 			        <p:column><h:outputText value="End date cannot be more than a year of start date."></h:outputText></p:column>
 			    </p:row>
 			 

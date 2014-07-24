@@ -79,7 +79,7 @@
 								style="margin-left: 10px;" title="Delete" disabled="#{zPromotion.standardDisabled}"
 								action="#{catalogueBackingBean.deleteZonalPromotionPrice(rowIndex)}"
 								update=":form:pricingTabID:headerTabId:zonalId:cmZonalPromotionPricingsId">
-								<p:graphicImage value="/resources/ep/images/design/trash.png"></p:graphicImage>
+								<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
 							</p:commandLink></td>
 
 						<td style="text-align: right;"><p:commandLink
@@ -88,7 +88,7 @@
 								update=":form" oncomplete="errorDialog.show();"
 								disabled="#{!(zPromotion.price eq null or zPromotion.startDate eq null or zPromotion.endDate eq null or zPromotion.startDate >= zPromotion.endDate or zPromotion.cmSupplierZone.suppZoneId == 0 or !zPromotion.displayAction)}">
 								<p:graphicImage
-									value="/resources/ep/images/design/icon_error.png"></p:graphicImage>
+									value="/css/images/design/icon_error.png"></p:graphicImage>
 							</p:commandLink></td>
 					</tr>
 				</table>

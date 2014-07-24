@@ -82,7 +82,7 @@
 								style="margin-left: 10px;" title="Delete"
 								action="#{catalogueBackingBean.deleteZonalStandardPrice(rowIndex)}"
 								update=":form:pricingTabID:headerTabId:zonalId:zStanPriceTableId">
-								<p:graphicImage value="/resources/ep/images/design/trash.png"></p:graphicImage>
+								<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
 							</p:commandLink></td>
 
 						<td style="text-align: right;"><p:commandLink
@@ -91,7 +91,7 @@
 								update=":form" oncomplete="errorDialog.show();"
 								disabled="#{!(standard.price eq null or standard.startDate eq null or standard.endDate eq null or standard.startDate >= standard.endDate or standard.cmSupplierZone.suppZoneId == 0 or !standard.displayAction)}">
 								<p:graphicImage
-									value="/resources/ep/images/design/icon_error.png"></p:graphicImage>
+									value="/css/images/design/icon_error.png"></p:graphicImage>
 							</p:commandLink></td>
 					</tr>
 

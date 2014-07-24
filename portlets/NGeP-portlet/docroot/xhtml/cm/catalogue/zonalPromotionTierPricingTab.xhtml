@@ -96,7 +96,7 @@
 								rendered="#{tier.showFlag}"
 								action="#{catalogueBackingBean.deleteZonalPromotionTierPrice(rowIndex)}"
 								update=":form">
-								<p:graphicImage value="/resources/ep/images/design/trash.png"></p:graphicImage>
+								<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
 							</p:commandLink></td>
 						<td style="text-align: right;"><p:commandLink
 								id="zPromoTierPriceId" title="Error" process="@this"
@@ -104,7 +104,7 @@
 								update=":form" oncomplete="errorDialog.show();"
 								disabled="#{!(tier.price eq null || tier.startDate eq null or tier.endDate eq null or tier.startDate >= tier.endDate || !tier.displayAction)}">
 								<p:graphicImage
-									value="/resources/ep/images/design/icon_error.png"></p:graphicImage>
+									value="/css/images/design/icon_error.png"></p:graphicImage>
 							</p:commandLink></td>
 					</tr>
 				</table>
