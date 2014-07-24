@@ -30,9 +30,9 @@
 		     </p:column>     
 		   <p:column headerText="#{lbl['lbl.ct.item.typeofgoods']}" style="width:15%;">
 		     <h:outputLabel value="#{contractDetailsBackingBean.getParameterDesc(data.itemOrigin)}"
-		       rendered="#{data.itemOrigin.parameterCode eq 'Local'}" style="float:left;"/>
+		       rendered="#{data.itemOrigin.parameterCode == 'L'}" style="float:left;"/>
 		     <p:commandLink value="#{contractDetailsBackingBean.getParameterDesc(data.itemOrigin)}" styleClass="blue_font" 
-		     	rendered="#{data.itemOrigin.parameterCode eq 'Imported'}" 
+		     	rendered="#{data.itemOrigin.parameterCode == 'I'}" 
 		        onclick="importedDlg.show();return false;" />	
 		     </p:column>              
     	 </p:dataTable> 
