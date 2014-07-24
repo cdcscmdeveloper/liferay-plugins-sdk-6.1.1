@@ -116,6 +116,7 @@
 				<td><p:calendar mode="popup" readonlyInput="true"
 						showOn="button"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+						mindate="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.startDate}" 
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.startDate}">
 						<p:ajax event="dateSelect"
 							listener="#{purchaseRequestBackingBean.updateDeliveryDate}"
@@ -125,7 +126,9 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.end.delivery.date']}" /></td>
 				<td><p:calendar id="delEndDate" mode="popup"
-						readonlyInput="true" disabled="true" showOn="button"
+						readonlyInput="true"  showOn="button"
+						mindate="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.startDate}" 
+						maxdate="#{purchaseRequestBackingBean.managedBean.maxDate}"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.endDate}">
 					</p:calendar></td>
