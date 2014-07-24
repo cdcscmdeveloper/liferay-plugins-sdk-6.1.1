@@ -90,7 +90,7 @@
 								rendered="#{price.showFlag}"
 								action="#{catalogueBackingBean.deletePromotionTierPrice(rowIndex)}"
 								update=":form:pricingTabID:headerTabId:tierId:pricingPromotionTierID, :form:pricingTabID:headerTabId:tierId:pricingTierID">
-								<p:graphicImage value="/resources/ep/images/design/trash.png"></p:graphicImage>
+								<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
 							</p:commandLink></td>
 						<td style="text-align: right;"><p:commandLink
 								id="pTErrorLink" title="Error" process="@this"
@@ -99,7 +99,7 @@
 								oncomplete="errorDialog.show();"
 								disabled="#{!(price.price eq null || price.startDate eq null or price.endDate eq null or price.startDate >= price.endDate || !price.displayAction)}">
 								<p:graphicImage
-									value="/resources/ep/images/design/icon_error.png"></p:graphicImage>
+									value="/css/images/design/icon_error.png"></p:graphicImage>
 							</p:commandLink></td>
 					</tr>
 
