@@ -121,16 +121,17 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.pp']}">
-				<h:outputText value="#{committeeMember.scCommitteeMember.PNP}"></h:outputText>
+				<h:outputText
+					value="#{lbl[committeeMember.scCommitteeMember.PNP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}"></h:outputText>
 			</p:column>
 			<p:column>
-			<f:facet name="header">
-			<h:outputText value="*" styleClass="mandatory"></h:outputText>
-			<h:outputText value="#{lbl['lbl.sc.eva.committee.role']}"></h:outputText>
-			</f:facet>
+				<f:facet name="header">
+					<h:outputText value="*" styleClass="mandatory"></h:outputText>
+					<h:outputText value="#{lbl['lbl.sc.eva.committee.role']}"></h:outputText>
+				</f:facet>
 				<ui:fragment rendered="#{committeeMember.scCommitteeMember.PNP}">
-					<h:outputText value="Chairperson"
-						rendered="#{committeeMember.scCommitteeMember.memberRole.parameterId=='583'}" />
+					<h:outputText
+						value="#{evaluationMeetingBackingBean.getParameterDesc(committeeMember.scCommitteeMember.memberRole)}" />
 				</ui:fragment>
 				<ui:fragment rendered="#{!committeeMember.scCommitteeMember.PNP}">
 					<p:selectOneMenu id="meetingRoleId" required="true"
@@ -193,9 +194,10 @@
 							</tr>
 							<tr>
 								<td></td>
-								<td><p:inputTextarea rows="2" cols="100" value="#{remarkVar.remark}"
-										rendered="#{remarkVar.remarkId eq null}" maxlength="1000"/> <h:outputText
+								<td><p:inputTextarea rows="2" cols="100"
 										value="#{remarkVar.remark}"
+										rendered="#{remarkVar.remarkId eq null}" maxlength="1000" />
+									<h:outputText value="#{remarkVar.remark}"
 										rendered="#{remarkVar.remarkId ne null}"
 										style="display: inline-block; width:220px;word-wrap: break-word;" />
 								</td>

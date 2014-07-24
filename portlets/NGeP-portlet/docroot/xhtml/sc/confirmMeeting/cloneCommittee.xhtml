@@ -162,7 +162,8 @@
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.pp']}">
-					<h:outputText value="#{committeeMember.PNP}"></h:outputText>
+					<h:outputText
+						value="#{lbl[committeeMember.PNP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}"></h:outputText>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.eva.committee.role']}">
 					<h:outputText
@@ -171,11 +172,12 @@
 				</p:column>
 
 			</p:dataTable>
+			<p:spacer height="30"></p:spacer>
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.so.cancelbtn']}"
 					style="float:right;" icon="ui-icon-cancel"
 					onclick="screen2.hide();" />
-				<p:commandButton value="#{lbl['lbl.so.okbtn']}" style="float:right;"
+				<p:commandButton value="#{lbl['lbl.so.okbtn']}" 
 					process="@this,committeedtlsid" partialSubmit="true"
 					actionListener="#{evaluationMeetingBackingBean.cloneCommitteeDtls}"
 					onclick="screen2.hide();"

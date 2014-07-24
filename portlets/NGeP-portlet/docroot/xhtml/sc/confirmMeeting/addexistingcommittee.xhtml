@@ -11,16 +11,16 @@
 		header="New #{evaluationMeetingBackingBean.managedBean.tabTitle}"
 		dynamic="true" widgetVar="newspecificationcommittee" modal="true"
 		styleClass="scAddMember">
-		
+
 		<p:panel id="addexistingNewId">
-		<p:messages id="existingNewid" autoUpdate="true" showDetail="true"
-			showSummary="false" closable="true"></p:messages>
+			<p:messages id="existingNewid" autoUpdate="true" showDetail="true"
+				showSummary="false" closable="true"></p:messages>
 			<table>
 				<tr>
 					<td><p:outputLabel
 							value="#{lbl['lbl.sc.committe.addscreen.selection']}" /> <p:outputLabel
 							value="*" styleClass="mandatory"></p:outputLabel></td>
-					<td><p:selectOneRadio 
+					<td><p:selectOneRadio
 							label="#{lbl['lbl.sc.committe.addscreen.selection']}"
 							id="meetingUserSelect"
 							value="#{evaluationMeetingBackingBean.managedBean.committeMember.userSelection}">
@@ -81,8 +81,8 @@
 					<p:spacer height="40" />
 					<p:panel header="Search Result" toggleable="true">
 						<p:dataTable id="existingcommitteesearch"
-							widgetVar="existingCommittee"
-							value="#{evaluationMeetingBackingBean.managedBean.externalUsers}"
+							widgetVar="existingCommittee" lazy="true"
+							value="#{evaluationMeetingBackingBean.searchExistingUser}"
 							selection="#{evaluationMeetingBackingBean.managedBean.selectedPmUser}"
 							rowKey="#{existcommitteeuser.userId}" var="existcommitteeuser"
 							styleClass="existingCommitteeResults" style="width : 900px;">
@@ -114,12 +114,13 @@
 							</p:column>
 
 							<p:column headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.pp']}">
-								<h:outputText value="#{existcommitteeuser.PMP ? 'Yes' : 'No'}" />
+								<h:outputText
+									value="#{lbl[existcommitteeuser.PMP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
 							</p:column>
 
 							<p:column headerText="#{lbl['lbl.sc.eva.committee.role']}">
 								<ui:fragment rendered="#{existcommitteeuser.PMP == true}">
-									<h:outputText value="Chairperson"  />
+									<h:outputText value="Chairperson" />
 								</ui:fragment>
 								<ui:fragment rendered="#{!existcommitteeuser.PMP}">
 									<p:selectOneMenu id="appaction"
@@ -219,12 +220,10 @@
 								<td><p:inputText maxlength="80" id="emailValid"
 										required="true" label="#{lbl['lbl.sc.email']}"
 										value="#{evaluationMeetingBackingBean.managedBean.committeMember.email}"
-										size="30" > 
+										size="30">
 										<f:validateRegex
 											pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
-										</p:inputText>
-										<p:message id="emailId" for="emailValid"
-										display="icon"></p:message></td>
+									</p:inputText> <p:message id="emailId" for="emailValid" display="icon"></p:message></td>
 
 							</tr>
 							<tr>
@@ -252,7 +251,8 @@
 			<p:commandButton value="Ok" style="float:right;"
 				oncomplete="prepareCommittee.paginator.endLink.click();"
 				update="evaluationpreparecommittee,addexistingNewId"
-				process="@this, newCommitteeProfile,addexistingNewId" icon="ui-icon-check"
+				process="@this, newCommitteeProfile,addexistingNewId"
+				icon="ui-icon-check"
 				actionListener="#{evaluationMeetingBackingBean.okCommitteeAction}" />
 
 		</p:panel>
