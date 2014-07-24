@@ -302,8 +302,9 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		defaultAddr = new SmAddress();
 		defaultAddr.setPmCity(new PmCity());
 		defaultAddr.setPmDistrict(new PmDistrict());
-		defaultAddr.setPmCountry(new PmCountry());
-		defaultAddr.getPmCountry().setCountryId(1l);
+//		defaultAddr.setPmCountry(new PmCountry());
+		defaultAddr.setPmCountry(SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE));
+//		defaultAddr.getPmCountry().setCountryId(1l);
 		defaultAddr.setPmState(new PmState());
 
 		selectedCategories = new ArrayList<SmSupplierCategory>();
