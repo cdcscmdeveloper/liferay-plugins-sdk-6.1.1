@@ -151,11 +151,11 @@
 				<td class="tdTitle"><p:outputLabel
 						value="* #{lbl['lbl.sm.confirmemail']}" /></td>
 				<td class="tdContent">
-				<p:inputText size="40" id="conEmail" required="true"  label="#{lbl['lbl.sm.confirmemail']}" maxlength="80"/>
+				<p:inputText size="40" id="conEmail" value="#{registrationBackingBean.managedBean.confirmEmail}" required="true"  label="#{lbl['lbl.sm.confirmemail']}" maxlength="80"/>
 				<p:message id="conEmailMsg" for="conEmail" display="icon" /></td>
 			</tr>
 
-			<tr>
+			<!-- <tr>
 				<td class="tdTitle"><p:outputLabel
 						value="#{lbl['lbl.sm.notificationmode']}" /></td>
 				<td class="tdContent">
@@ -178,7 +178,7 @@
 						</tr>
 					</table>
 				</td>
-			</tr>
+			</tr> -->
 		</table>
 	</p:panel>
 </ui:composition>
