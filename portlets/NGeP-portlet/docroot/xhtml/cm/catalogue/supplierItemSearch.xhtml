@@ -157,7 +157,7 @@
 										update="@(.ui-button[id$=compareButton])" />
 									</ui:remove>	
 
-							<p:column headerText="#{lbl['lbl.cm.image']}" width="80px;">
+							<p:column headerText="#{lbl['lbl.cm.image']}" width="8%">
 								<h:panelGroup rendered="#{supplierItem.imagePath == null}">
 								
 								<p:outputPanel style="border: 1px solid #808080; display: block; vertical-align: middle; padding: 20px 4px; text-align: center;">
@@ -179,12 +179,12 @@
 									action="#{catalogueBackingBean.navigateToSupplierItemDet(supplierItem)}" />								
 							</p:column>
 
-							<p:column width="10%" headerText="#{lbl['lbl.cm.contact.no']}"
+							<p:column width="8%" headerText="#{lbl['lbl.cm.contact.no']}"
 										rendered="#{unspscCodeBackingBean.requisitioner}">
 								#{supplierItem.contractNo}
 							</p:column>
 
-							<p:column width="10%" headerText="#{lbl['lbl.cm.circular.no']}"
+							<p:column width="8%" headerText="#{lbl['lbl.cm.circular.no']}"
 										rendered="#{unspscCodeBackingBean.requisitioner}">
 								#{supplierItem.circularNo}
 							</p:column>
@@ -200,11 +200,11 @@
 								<h:outputText value="#{supplierItem.companyName}" ></h:outputText>
 							</p:column>
 
-							<p:column headerText="UOM">
+							<p:column width="5%" headerText="UOM">
 							#{supplierItem.uomName}
 							</p:column>
 							
-							<p:column headerText="#{lbl['lbl.cm.best.price']}">
+							<p:column width="8%" headerText="#{lbl['lbl.cm.best.price']}">
 								<h:outputLabel value="#{supplierItem.bestPrice}" >
 									<f:convertNumber pattern="#,###.##" />
 								</h:outputLabel>
@@ -232,7 +232,7 @@
 							</p:column>
 							</ui:remove>
 
-							<p:column headerText="Action" width="2%" rendered="#{unspscCodeBackingBean.requisitioner}">
+							<p:column headerText="Action" rendered="#{unspscCodeBackingBean.requisitioner}">
 							
 								<p:menuButton value="">
 							        <p:menuitem value="#{lbl['lbl.cm.add.to.cr']}" actionListener="#{catalogueBackingBean.addToList(supplierItem,1)}" update="@([id$=btnId])" icon="ui-icon-plus" 
