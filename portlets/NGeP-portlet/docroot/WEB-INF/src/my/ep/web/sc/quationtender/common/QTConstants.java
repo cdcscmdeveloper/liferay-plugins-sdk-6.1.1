@@ -134,26 +134,37 @@ public interface QTConstants {
 	public static final String FINANCIAL_DOC_TYPE = "2";
 	public static final String TECHNICAL_SPEC_TYPE = "T";
 	public static final String FINANCIAL_SPEC_TYPE = "F";
-	public static final String CIRCULAR_PANEL_TYPE="PQ";
-	public static final String CIRCULAR_CENTRAL_CONTRACT_TYPE="CQ";
-	public static final String ITEM_SPECIFIC_TYPE="Specific";
-	public static final String ITEM_GENERAL_TYPE="General";
-	public static final String TEMPLETE_SPEC_CODE="TS";
-	public static final String TECHNICAL_GOV_CODE="TG";
-	public static final String TECHNICAL_PRIVATE_CODE="TN";
-	public static final String TECHNICAL_STAFF_LIST="TL";
-	public static final String TECHNICAL_NUMBER_EMPLOYEES="NE";
-	public static final String FINANCIAL_GOV_CODE="FG";
-	public static final String FINANCIAL_PRIVATE_CODE="FN";
-	public static final String FINANCIAL_CREDIT_FACILITY_CODE="CF";
-	public static final String FINANCIAL_CASH_ON_HAND_CODE="CH";
-	public static final String FINANCIAL_BANK_STMT_CODE="BS";
-	public static final String FINANCIAL_ASSET_LIABILITY_CODE="AL";
-	public static final String FINANCIAL_PAID_UP_CAPITAL_CODE="PC";
-	public static final String FINANCIAL_SUPPLIER_DETAILS_CODE="SD";
-	
+	public static final String CIRCULAR_PANEL_TYPE = "PQ";
+	public static final String CIRCULAR_CENTRAL_CONTRACT_TYPE = "CQ";
+	public static final String ITEM_SPECIFIC_TYPE = "Specific";
+	public static final String ITEM_GENERAL_TYPE = "General";
+	public static final String TEMPLETE_SPEC_CODE = "TS";
+	public static final String TECHNICAL_GOV_CODE = "TG";
+	public static final String TECHNICAL_PRIVATE_CODE = "TN";
+	public static final String TECHNICAL_STAFF_LIST = "TL";
+	public static final String TECHNICAL_NUMBER_EMPLOYEES = "NE";
+	public static final String FINANCIAL_GOV_CODE = "FG";
+	public static final String FINANCIAL_PRIVATE_CODE = "FN";
+	public static final String FINANCIAL_CREDIT_FACILITY_CODE = "CF";
+	public static final String FINANCIAL_CASH_ON_HAND_CODE = "CH";
+	public static final String FINANCIAL_BANK_STMT_CODE = "BS";
+	public static final String FINANCIAL_ASSET_LIABILITY_CODE = "AL";
+	public static final String FINANCIAL_PAID_UP_CAPITAL_CODE = "PC";
+	public static final String FINANCIAL_SUPPLIER_DETAILS_CODE = "SD";
+
 	public static final String SUPPLIER_INFO_HQ = "HQ";
-	
-	
+
+	// Evaluation Constants
+	public static final String COMPLIANCE_CHECK = "C";
+	public static final String TECHNICAL_EVALUATION = "T";
+	public static final String PRESENTATION_DEMO_EVALUATION = "P";
+	public static final String FINANCIAL_EVALUATION_BY_PACKAGE = "FP";
+	public static final String FINANCIAL_EVALUATION_BY_ITEM = "FI";
+	public static final String RECOMMENDATION_BY_PACKAGE = "RP";
+	public static final String RECOMMENDATION_BY_ITEM = "RI";
+	public static final String AWARD_TYPE_PACKAGE="P";
+	public static final String AWARD_TYPE_ITEM="I";
+	public static final String PREFERENCE_MARGIN="M";
+	public static final String FINANCIAL_EVALUATION = "F";
 
 }
