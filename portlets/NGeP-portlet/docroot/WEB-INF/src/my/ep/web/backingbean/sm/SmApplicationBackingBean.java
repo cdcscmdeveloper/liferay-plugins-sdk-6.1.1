@@ -2,6 +2,7 @@ package my.ep.web.backingbean.sm;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -516,8 +517,10 @@ public class SmApplicationBackingBean extends
 				if (account.getSupplierType().equalsIgnoreCase(
 						smSupplier.getSmAppl().getSupplierType())) {
 
+					Timestamp currentDate = new Timestamp(System.currentTimeMillis());
+					
 					long diff = account.getExpDate().getTime()
-							- (new Date()).getTime();
+							- currentDate.getTime();
 					long diffDays = diff / (24 * 60 * 60 * 1000);
 
 					if (applicationType.equalsIgnoreCase("R")) {
@@ -532,6 +535,7 @@ public class SmApplicationBackingBean extends
 					} else if (applicationType.equalsIgnoreCase("A")
 							&& diffDays < 90) {
 						result = true;
+						System.out.println("***************MOF Account Expiry near for Ac No.: " + account.getMofNo() + "\nExp Date:" + account.getExpDate() + "\nDiff Days:" + diffDays);
 						throw new EpException(MessageConst.ERROR_722503);
 					} else if (applicationType.equalsIgnoreCase("B")
 							&& smSupplier.isBumi()) {
@@ -4243,7 +4247,9 @@ public class SmApplicationBackingBean extends
 				&& getManagedBean().getDefPmCountry().getCountryId() != null) {
 			cntry = getManagedBean().getDefPmCountry();
 		} else {
-			cntry.setCountryId(1l);
+			cntry = SmCommonUtil
+			.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
+//			cntry.setCountryId(1l);
 		}
 		addr.setPmCity(new PmCity());
 		addr.setPmCountry(cntry);
@@ -6752,6 +6758,7 @@ public class SmApplicationBackingBean extends
 					&& smResDTO.getResultBean().getResultList().size() > 0) {
 				smSupp = (SmSupplier) smResDTO.getResultBean().getResultList()
 						.get(0);
+				System.out.println("*************Current Supplier: " + smSupp.getSupplierId());
 			} else {
 				System.out
 						.println("**** No valid supplier record found for this user ******");
