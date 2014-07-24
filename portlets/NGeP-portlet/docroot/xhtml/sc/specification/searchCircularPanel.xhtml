@@ -137,109 +137,108 @@
 			<p:panel header="#{lbl['lbl.sc.spec.panel.item.list']}"
 				toggleable="true">
 
-				
-					<p:dataTable id="panelItemList" var="panelItem" rowIndexVar="index"
-						lazy="true" style="width:100%"
-						value="#{specificationBackingBean.managedBean.panelItemList}"
-						rowKey="#{panelItem}">
 
-						<ac:paginator for="panelItemList"></ac:paginator>
-						<p:ajax event="rowSelectRadio"
-							listener="#{specificationBackingBean.panelListSelect}"></p:ajax>
-						<p:columnGroup>
-							<p:row>
+				<p:dataTable id="panelItemList" var="panelItem" rowIndexVar="index"
+					lazy="true" style="width:100%"
+					value="#{specificationBackingBean.managedBean.panelItemList}"
+					rowKey="#{panelItem}">
 
-
-								<p:column headerText="#{lbl['lbl.sc.spec.panel.item']}"
-									style="width:20%">
-
-								</p:column>
-
-								<p:column
-									headerText="#{lbl['lbl.tpl.spec.content.specification']}"
-									style="width:15%">
-
-								</p:column>
-								<p:column headerText="#{lbl['lbl.sc.spec.panel.item.category']}"
-									style="width:10%">
-
-								</p:column>
-
-								<p:column headerText="#{lbl['lbl.sc.spec.panel.coverage']}"
-									style="width:5%">
-
-								</p:column>
-
-								<p:column headerText="#{lbl['lbl.tpl.spec.content.uom']}"
-									style="width:15%">
-
-								</p:column>
-
-								<p:column headerText="#{lbl['lbl.sc.spec.min.order.quantity']}"
-									style="width:15%">
-
-								</p:column>
-
-								<p:column headerText="#{lbl['lbl.sc.spec.luar.contract']}"
-									style="width:18%">
-
-								</p:column>
-
-								<p:column>
-
-								</p:column>
-
-							</p:row>
-						</p:columnGroup>
+					<ac:paginator for="panelItemList"></ac:paginator>
+					<p:ajax event="rowSelectRadio" process="@this" partialSubmit="true"
+						listener="#{specificationBackingBean.panelListSelect}"></p:ajax>
+					<p:columnGroup>
+						<p:row>
 
 
+							<p:column headerText="#{lbl['lbl.sc.spec.panel.item']}"
+								style="width:20%">
+
+							</p:column>
+
+							<p:column
+								headerText="#{lbl['lbl.tpl.spec.content.specification']}"
+								style="width:15%">
+
+							</p:column>
+							<p:column headerText="#{lbl['lbl.sc.spec.panel.item.category']}"
+								style="width:10%">
+
+							</p:column>
+
+							<p:column headerText="#{lbl['lbl.sc.spec.panel.coverage']}"
+								style="width:5%">
+
+							</p:column>
+
+							<p:column headerText="#{lbl['lbl.tpl.spec.content.uom']}"
+								style="width:15%">
+
+							</p:column>
+
+							<p:column headerText="#{lbl['lbl.sc.spec.min.order.quantity']}"
+								style="width:15%">
+
+							</p:column>
+
+							<p:column headerText="#{lbl['lbl.sc.spec.luar.contract']}"
+								style="width:18%">
+
+							</p:column>
+
+							<p:column>
+
+							</p:column>
+
+						</p:row>
+					</p:columnGroup>
 
 
-						<p:column headerText="#{lbl['lbl.sc.spec.panel.item']}"
-							style="width:20%">
-							<h:outputText value="#{panelItem.itemName}" />
-						</p:column>
-
-						<p:column
-							headerText="#{lbl['lbl.tpl.spec.content.specification']}"
-							style="width:15%">
-							<h:outputText value="#{panelItem.specification}" />
-
-						</p:column>
-						<p:column headerText="#{lbl['lbl.sc.spec.panel.item.category']}"
-							style="width:10%">
-							<h:outputText
-								value="#{specificationBackingBean.getParameterDesc(panelItem.itemCategoryId)}" />
-						</p:column>
-
-						<p:column headerText="#{lbl['lbl.sc.spec.panel.coverage']}"
-							style="width:5%">
-							<h:outputText
-								value="#{specificationBackingBean.getParameterDesc(panelItem.panelCoverageId)}" />
-						</p:column>
-
-						<p:column headerText="#{lbl['lbl.tpl.spec.content.uom']}"
-							style="width:15%">
-							<h:outputText value="#{panelItem.pmUom.uomId}" />
-						</p:column>
-
-						<p:column headerText="#{lbl['lbl.sc.spec.min.order.quantity']}"
-							style="width:15%">
-							<h:outputText value="#{panelItem.minimumOrderQty}" />
-						</p:column>
-
-						<p:column headerText="#{lbl['lbl.sc.spec.luar.contract']}"
-							style="width:18%">
-
-						</p:column>
 
 
-						<p:column
-							headerText="#{lbl['lbl.sc.spec.circular.list.selection']}"
-							selectionMode="single" style="width:2%" />
+					<p:column headerText="#{lbl['lbl.sc.spec.panel.item']}"
+						style="width:20%">
+						<h:outputText value="#{panelItem.itemName}" />
+					</p:column>
 
-					</p:dataTable>
-				
+					<p:column headerText="#{lbl['lbl.tpl.spec.content.specification']}"
+						style="width:15%">
+						<h:outputText value="#{panelItem.specification}" />
+
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sc.spec.panel.item.category']}"
+						style="width:10%">
+						<h:outputText
+							value="#{specificationBackingBean.getParameterDesc(panelItem.itemCategoryId)}" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.spec.panel.coverage']}"
+						style="width:5%">
+						<h:outputText
+							value="#{specificationBackingBean.getParameterDesc(panelItem.panelCoverageId)}" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.tpl.spec.content.uom']}"
+						style="width:15%">
+						<h:outputText value="#{panelItem.pmUom.uomId}" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.spec.min.order.quantity']}"
+						style="width:15%">
+						<h:outputText value="#{panelItem.minimumOrderQty}" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.spec.luar.contract']}"
+						style="width:18%">
+
+					</p:column>
+
+
+					<p:column
+						headerText="#{lbl['lbl.sc.spec.circular.list.selection']}"
+						selectionMode="single" style="width:2%" />
+
+				</p:dataTable>
+
 
 			</p:panel>
 
