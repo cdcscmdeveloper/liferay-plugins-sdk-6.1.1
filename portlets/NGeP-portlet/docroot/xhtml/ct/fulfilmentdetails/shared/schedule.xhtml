@@ -13,7 +13,7 @@
                disabled="#{contractDetailsBackingBean.managedBean.disableScheduleRadio}">  
                <f:selectItems value="#{contractDetailsBackingBean.managedBean.radioButtonSchedule}" />
                   <p:ajax event="change"  update=":form:paymentSchedule"
-                    process="@this" listener="#{contractDetailsBackingBean.progressivePayment}" /> 
+                    process="@form" listener="#{contractDetailsBackingBean.progressivePayment}" /> 
             </p:selectOneRadio>
          </h:panelGrid>  
          <p:outputPanel id="paymentSchedule">   
@@ -31,13 +31,13 @@
 		           <p:selectOneMenu id="fromMonth" value="#{schedVar.fromTranDate}" style="width:45%;"> 
 		              <f:selectItem itemLabel="-Select One-" itemValue=""/>
                       <f:selectItems value="#{contractDetailsBackingBean.monthList}"/>  
-                      <p:ajax event="change" update="tableSchedule" process="@this" listener="#{contractDetailsBackingBean.validateDate(schedVar)}"/> 
+                      <p:ajax event="change" update=":form:tableSchedule" process="@this" listener="#{contractDetailsBackingBean.validateDate(schedVar)}"/> 
                    </p:selectOneMenu> 
                    <p:spacer width="1"/>
                    <p:selectOneMenu id="fromYear" value="#{schedVar.fromTranYear}" style="width:45%;"> 
                       <f:selectItem itemLabel="-Select One-" itemValue=""/>
                       <f:selectItems value="#{contractDetailsBackingBean.yearList}" var="year" itemValue="#{year}" itemLabel="#{year}"  />  
-                      <p:ajax event="change" update="tableSchedule" process="@this" listener="#{contractDetailsBackingBean.validateDate(schedVar)}"/> 
+                      <p:ajax event="change" update=":form:tableSchedule" process="@this" listener="#{contractDetailsBackingBean.validateDate(schedVar)}"/> 
                    </p:selectOneMenu> 
 		        </p:column> 	
 		        <p:column style="width:30%;" headerText="#{lbl['lbl.ct.sched.eperiod']}">
@@ -45,13 +45,13 @@
 		              <p:selectOneMenu id="toMonth" value="#{schedVar.toTranDate}"  style="width:40%;" >
 		                <f:selectItem itemLabel="-Select One-" itemValue=""/>
                         <f:selectItems value="#{contractDetailsBackingBean.monthList}" />  
-                        <p:ajax event="change" update="tableSchedule" process="@this" listener="#{contractDetailsBackingBean.validateDate(schedVar)}" />
+                        <p:ajax event="change" update=":form:tableSchedule" process="@form" listener="#{contractDetailsBackingBean.validateDate(schedVar)}" />
                       </p:selectOneMenu>
                    <p:spacer width="1"/>
                    <p:selectOneMenu id="toYear" value="#{schedVar.toTranYears}" style="width:40%;" >
             	      <f:selectItem itemLabel="-Select One-" itemValue=""/>
                       <f:selectItems value="#{contractDetailsBackingBean.yearList}" />
-                      <p:ajax event="change" update="tableSchedule" process="@this" listener="#{contractDetailsBackingBean.validateDate(schedVar)}"/> 
+                      <p:ajax event="change" update=":form:tableSchedule" process="@this" listener="#{contractDetailsBackingBean.validateDate(schedVar)}"/> 
                    </p:selectOneMenu>
                    <p:spacer width="5"/>
 		               <p:graphicImage id="schedValidation" library="ep/images/design"   name="reject.png" 
@@ -61,8 +61,8 @@
 		            </h:panelGroup>
 		         </p:column> 
 		         <p:column headerText="#{lbl['lbl.ct.sched.stype']}" style="width:20%;">
-		            <p:selectOneMenu id="scheduleType" value="#{schedVar.scheduleType.parameterId}" style="width:80%;"> 
-                      <f:selectItems value="#{contractDetailsBackingBean.getDropdownValues(ParameterTypeConst.scheduleType)}"/>  
+		            <p:selectOneMenu id="scheduleTypeid" value="#{schedVar.scheduleType.parameterId}" style="width:80%;"> 
+                      <f:selectItems value="#{contractDetailsBackingBean.getDropdownValues(ParameterTypeConst.scheduleType)}"/> 
                    </p:selectOneMenu> 
 		         </p:column>
 		     </p:dataTable>  

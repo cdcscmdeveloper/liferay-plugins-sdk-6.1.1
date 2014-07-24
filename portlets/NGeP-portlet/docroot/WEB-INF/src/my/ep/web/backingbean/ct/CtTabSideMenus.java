@@ -7,7 +7,7 @@ import java.util.List;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
 
-public  class TabSidemenuName {
+public  class CtTabSideMenus {
 
 	FacesScopes face;
 	List<String> menuWithZone= null;
@@ -19,7 +19,7 @@ public  class TabSidemenuName {
 	List<String> menuWithSetting = null;
 	List<String> menuCentralFulfilment = null;
 	
-	public TabSidemenuName(){
+	public CtTabSideMenus(){
 		   face = new FacesScopes();
 		   
 		   if(menuWithZone == null){

@@ -10,6 +10,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
+import org.primefaces.model.MenuModel;
 import org.primefaces.model.TreeNode;
 
 import my.ep.persistence.entity.ct.CtAttachment;
@@ -54,6 +55,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	
 	private Long meetingStatusId;
 	private int selectedTabIndex;
+	private MenuModel amendMenuModel;
 	
 	private boolean itemProductExist;
 	private boolean itemServiceExist;
@@ -107,6 +109,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private ScLoaReport selectedScLoaReports;
 	private CtContractItem selectedItem;
 	private CtItemPrice ctServiceItemPrices;
+	private List<String> finalListOfSideMenu;
 	
 	public CtContractVer getContractVer() {
 		return contractVer;
@@ -637,6 +640,21 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	public void setCtServiceItemList(List<CtContractItem> ctServiceItemList) {
 		this.ctServiceItemList = ctServiceItemList;
 	}
-	
+
+	public List<String> getFinalListOfSideMenu() {
+		return finalListOfSideMenu;
+	}
+
+	public void setFinalListOfSideMenu(List<String> finalListOfSideMenu) {
+		this.finalListOfSideMenu = finalListOfSideMenu;
+	}
+
+	public MenuModel getAmendMenuModel() {
+		return amendMenuModel;
+	}
+
+	public void setAmendMenuModel(MenuModel amendMenuModel) {
+		this.amendMenuModel = amendMenuModel;
+	}
 	
 }

@@ -401,7 +401,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 public void ConstructSideTabMenu(){
 		
 		MenuModel fulfilmentMenuModel = new DefaultMenuModel();
-		TabSidemenuName menu = new TabSidemenuName();
+		CtTabSideMenus menu = new CtTabSideMenus();
 		
 		int zoneTabIndex = 0;
 		FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -1623,14 +1623,6 @@ public void ConstructSideTabMenu(){
         	return str;
         return format.format(time); 
     }
-	
-	public void ceilingQuantityValue(CtItemCeilingQty itemCeilingQty){
-		for(CtItemCeilingQty ceilingQty : this.getManagedBean().getSelectedItem().getCtItemCeilingQties()){
-			   if(ceilingQty.equals(itemCeilingQty)){
-				   ceilingQty.setCeilingQuantity(itemCeilingQty.getCeilingQuantity());
-			   }
-		}
-	}
 	
 	public BigDecimal getPaidAdvancePercentage() {
 		paidAdvancePercentage = (this.getManagedBean().getPaidAdvancePaymentAmt().multiply(BigDecimal.valueOf(100)).divide(BigDecimal.valueOf(this.getManagedBean().getAdvancePaymentAmt()), 2, RoundingMode.HALF_UP));

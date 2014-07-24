@@ -148,8 +148,11 @@ import org.docx4j.openpackaging.parts.PartName;
 import org.docx4j.openpackaging.parts.WordprocessingML.AlternativeFormatInputPart;
 import org.docx4j.relationships.Relationship;
 import org.docx4j.wml.CTAltChunk;
+import org.primefaces.component.menuitem.MenuItem;
 import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.DefaultMenuModel;
 import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.MenuModel;
 import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
 import com.liferay.portal.util.PortalUtil;
@@ -326,7 +329,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		    	}
 		    }
 		    
-		    setTabMenuValue();
+		    ConstructTabSideMenu();
 		    if(this.getManagedBean().isLetterOfAcceptance()){
 		    	   getLoaDocumentList();
 		     	  if(this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaAttachment() == null){
@@ -376,6 +379,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		
 			    retriveZonesByContractVer();
 			    initializeRemarks();
+			    ConstructTabSideMenu();
 			    ctBackingBean.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 			    getManagedBean().setRemarkList(resDTO.getCtRemarks());
 			    getManagedBean().setAttachmentList(resDTO.getCtAttachments());
@@ -394,56 +398,70 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		    }
 	   }
 	
-	   public void setTabMenuValue(){
-		      flush();
-		      if(getManagedBean().getCtContract().isZonalPricing() && 
-			       (getManagedBean().getContractVer().getCtAmendment().isQuantityChange()|| getManagedBean().getContractVer().getCtAmendment().isItemPriceChange())){
-				          getManagedBean().setTabMenuShowForZone(true);
+	public void ConstructTabSideMenu(){
 		
-	           }else if(!getManagedBean().getCtContract().isZonalPricing() && 
-	    		        (getManagedBean().getContractVer().getCtAmendment().isQuantityChange()||getManagedBean().getContractVer().getCtAmendment().isItemPriceChange())){
-				              getManagedBean().setTabMenuShowNoZone(true);
+		int zoneTabIndex = 0;
+		FacesContext facesContext = FacesContext.getCurrentInstance();
+		
+		MenuModel amendMenuModel = new DefaultMenuModel();
+		AmendTabSideMenus sideMenu = new AmendTabSideMenus();
+		
+		if(getManagedBean().getFinalListOfSideMenu() == null)
+			getManagedBean().setFinalListOfSideMenu(new ArrayList<String>());
+		else
+			getManagedBean().getFinalListOfSideMenu().clear();
+		
+		if(this.getManagedBean().getAckFA() == null){
+			    getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithAmendFulfilment);
+			    if(getManagedBean().getContractVer().getCtAmendment().isQuantityChange()|| getManagedBean().getContractVer().getCtAmendment().isItemPriceChange()){
+			    	 if(getManagedBean().getCtContract().isZonalPricing()){
+				    	  getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithZone);
+				    } getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithItem);
 			
-		       }else if(!getManagedBean().getCtContract().isZonalPricing() &&  
-				         !(getManagedBean().getContractVer().getCtAmendment().isQuantityChange()|| getManagedBean().getContractVer().getCtAmendment().isItemPriceChange())){
-						      getManagedBean().setTabMenuShowNoZoneNoItem(true);
+			    }if(getManagedBean().isBpkSaSkApprover()) { 
+			    	getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithSpAprlAP201);
+			  
+			    }if(getManagedBean().isPrepareLOA() && getManagedBean().isDecisionPbQcLOA()){
+			    	getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithDecision);
+			    
+			    }if(getManagedBean().isPrepareLOA()){
+			    	getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithPrepareLoa);
+			   
+			    }if(getManagedBean().isPbConfirmMeeting()){
+			    	getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithMeetings);
+			    
+			    }if(getManagedBean().isSignUpdateDecision()){
+			    	getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithDecision);
+			    
+			    }if(getManagedBean().isSignOffDecision()){
+		    	     getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithDecision);
+		        }
+		   }else if(this.getManagedBean().getAckFA().equalsIgnoreCase("Ack")){
+			   getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithAmendSupplier);
+		   }
 		
-		       }else if(getManagedBean().getCtContract().isZonalPricing() && 
-				            !(getManagedBean().getContractVer().getCtAmendment().isQuantityChange() || getManagedBean().getContractVer().getCtAmendment().isItemPriceChange())){
-					          getManagedBean().setTabMenuShowNoZoneNoItem(true);
-		       }
-	     }
+		 for( String str : this.getManagedBean().getFinalListOfSideMenu()){
+	 	    	MenuItem menuItem = new MenuItem();
+	 	    	menuItem.setValue(str);
+	 	    	menuItem.setUpdate("@form");
+	 	    	menuItem.setActionExpression(FacesScopes
+						.createMethodExpression(facesContext,
+								"#{amendmentBackingBean.amendTabChangeAction("
+										+ zoneTabIndex + ")}", null,
+								new Class[] { Integer.class }));
+	 	    	amendMenuModel.addMenuItem(menuItem);
+
+				zoneTabIndex++;
+	 	    } getManagedBean().setAmendMenuModel(amendMenuModel);
+ }
 	
-	     public void flush(){
-		       this.getManagedBean().setTabMenuShowForZone(false);
-		       this.getManagedBean().setTabMenuShowNoZone(false);
-		       this.getManagedBean().setTabMenuShowNoZoneNoItem(false);
-	     }
-	
-	    public void setSelectedTabValue(int tabValue){
-		      flush();
-		      if((tabValue == 0 || tabValue == 1 || tabValue == 2 || tabValue == 3 || tabValue == 3 || tabValue == 4 || tabValue == 5 || tabValue == 6 || tabValue == 7)   
-			      && this.getManagedBean().getCtContract().isZonalPricing() && 
-			      (this.getManagedBean().getContractVer().getCtAmendment().isQuantityChange() || this.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange())){
-			           this.getManagedBean().setTabMenuShowForZone(true);
-	
-		       }else if((tabValue == 0 || tabValue == 1 || tabValue == 2 || tabValue == 3 || tabValue == 3 || tabValue == 4 || tabValue == 5 || tabValue == 6)   
-			         && !this.getManagedBean().getCtContract().isZonalPricing() 
-			         && (this.getManagedBean().getContractVer().getCtAmendment().isQuantityChange() || this.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange())){
-			               this.getManagedBean().setTabMenuShowNoZone(true);
-		
-		       }else if((tabValue == 0 || tabValue == 1 || tabValue == 2 || tabValue == 3 || tabValue == 3 || tabValue == 4 || tabValue == 5)   
-				  && !this.getManagedBean().getCtContract().isZonalPricing() &&
-				  !(this.getManagedBean().getContractVer().getCtAmendment().isQuantityChange() || this.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange())){
-					      this.getManagedBean().setTabMenuShowNoZoneNoItem(true);
-	
-		       }else if((tabValue == 0 || tabValue == 1 || tabValue == 2 || tabValue == 3 || tabValue == 3 || tabValue == 4 || tabValue == 5)   
-				  && this.getManagedBean().getCtContract().isZonalPricing() && 
-				  !(this.getManagedBean().getContractVer().getCtAmendment().isQuantityChange() || this.getManagedBean().getContractVer().getCtAmendment().isItemPriceChange())){
-					   this.getManagedBean().setTabMenuShowNoZoneNoItem(true);
-		       }this.getManagedBean().setSelectedTabIndex(tabValue);
-    	}
-	    
+	public void amendTabChangeAction(Integer selectedTabIndex) {
+		if (log.isDebugEnabled()) {
+			log.debug("fulfilmentTabChangeAction");
+		}
+		getManagedBean().setSelectedTabIndex(selectedTabIndex);
+	}
+
 	    public void changeField() {
 			flushItem();
 			if(this.getManagedBean().getShowItem()!=null) {
@@ -1921,21 +1939,19 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	}
 		
 	public void onItemPriceChecked() {
-		setTabMenuValue();
 		if(getManagedBean().getContractVer().getCtAmendment().isItemPriceChange()) {
 			getManagedBean().getContractVer().getCtAmendment().setValueChange(true);
 		}else if(!getManagedBean().getContractVer().getCtAmendment().isItemPriceChange() && !getManagedBean().getContractVer().getCtAmendment().isQuantityChange()){
 			getManagedBean().getContractVer().getCtAmendment().setValueChange(false);
-		}
+		}ConstructTabSideMenu();
 	}
 
 	public void onQuantityChecked() {
-		setTabMenuValue();
 		if(getManagedBean().getContractVer().getCtAmendment().isQuantityChange()) {
 			getManagedBean().getContractVer().getCtAmendment().setValueChange(true);
 		}else if(!getManagedBean().getContractVer().getCtAmendment().isItemPriceChange() && !getManagedBean().getContractVer().getCtAmendment().isQuantityChange()){
 			getManagedBean().getContractVer().getCtAmendment().setValueChange(false);
-		}
+		}ConstructTabSideMenu();
 	}
 	
 	public SelectItem[] getItemDisplayTypeDropdownList() {
