@@ -19,8 +19,8 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchResultBean;
+import my.ep.biz.service.cc.dashsummary.IDashSummarySO;
 import my.ep.biz.service.cm.codification.ICodificationSO;
-import my.ep.biz.service.cm.codification.IDashSummarySO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
@@ -29,9 +29,9 @@ import my.ep.bpm.vo.DashSummaryVO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constants.BpmConstants;
-import my.ep.dto.pm.common.dashSummary.BpmTaskSummaryDTO;
-import my.ep.dto.pm.common.dashSummary.DashSummaryReqDTO;
-import my.ep.dto.pm.common.dashSummary.DashSummaryResDTO;
+import my.ep.dto.cc.dashsummary.BpmTaskSummaryDTO;
+import my.ep.dto.cc.dashsummary.DashSummaryReqDTO;
+import my.ep.dto.cc.dashsummary.DashSummaryResDTO;
 import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.type.aut.SearchOperator;
@@ -80,7 +80,7 @@ public class BPMTaskDashSumBackingBean extends
 		try {
 
 			dashSummarySO = (IDashSummarySO) BusinessDelegate.getInstance()
-					.getServiceObject("cm", IDashSummarySO.class);
+					.getServiceObject("cc", IDashSummarySO.class);
 			FacesScopes face = new FacesScopes();
 			String token = face.getBPMAuthenticationCtxToken();
 			long userId = new FacesScopes().getUserSessionBean().getUserId();
