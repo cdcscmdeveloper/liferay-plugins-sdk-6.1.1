@@ -72,10 +72,10 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private int tabActiveIndex;
 
 	private ScQtCommitteeActivity commiteeActivity;
-	
+
 	// OC,EC,TEC,FEC
 	private String committeeType = "EC";
-	private boolean isDemo=true;
+	private boolean isDemo = true;
 	private List<ScQtEvaluationResult> manuals1SupplierList;
 	// private List<ScQtProposalLabel> manualProposalLabel;
 	// private List<ScQtManualEvaluation> manualEvaluateList;
@@ -94,8 +94,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private List<ScQtMeetingAttendance> meetingAttendanceSelectList;
 	private List<ScQtCheckList> complianceTechnicalCheckList;
 	private List<ScQtCheckList> compliancefinancialCheckList;
-	private ScQtCheckList scQtChecklist; 
-	private ScQtProposalChecklist qtProposalChecklist; 
+	private ScQtCheckList scQtChecklist;
+	private ScQtProposalChecklist qtProposalChecklist;
 	private ScQt scQt;
 	private int countDays;
 	private List<ScQtProposalChecklist> complianceTechnicalProposalCheckList;
@@ -112,40 +112,40 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private List<ScQtCheckList> evaluationStgTechnicalCheckList;
 	private List<ScQtCheckList> evaluationStgfinancialCheckList;
 	private String summaryViewBy;
-	private List<ScQtCheckListScore> technicalGovNoOfContracts=new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> technicalGovNoOfYears=new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> technicalPrivateNoOfContracts=new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> technicalPrivateNoOfYears=new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> technicalStaffScore=new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> totalNumEmployees=new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> finGovContract=new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> finPrivateContract=new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> bankStatementScore=new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> creditFacilityScore=new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> cashOnHandScore=new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> assetLiabilityScore=new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> paidUpCapitalScore=new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> technicalGovNoOfContracts = new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> technicalGovNoOfYears = new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> technicalPrivateNoOfContracts = new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> technicalPrivateNoOfYears = new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> technicalStaffScore = new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> totalNumEmployees = new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> finGovContract = new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> finPrivateContract = new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> bankStatementScore = new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> creditFacilityScore = new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> cashOnHandScore = new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> assetLiabilityScore = new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> paidUpCapitalScore = new ArrayList<ScQtCheckListScore>();
 	private String checklistScoreType;
 	private String companyScoreType;
 	private ScQtCheckListScore technicalContractUserScore;
 	private ScQtCheckListScore technicalNoOfYearsUserScore;
-	
+
 	private List<ScQtEvaluationResult> complianceSummaryQualSuppliers;
 	private List<ScQtEvaluationResult> complianceSummaryDisQualSuppliers;
-	
+
 	private List<ScQtProposalChecklist> evaluationComplianceList;
 	private List<TplSpecQuestion> specItemList;
-	
+
 	private int complianceQualifiedSuppliers;
 	private int complianceDisQualifiedSuppliers;
 	private List<ScQtPRPExperience> prpCompanyExperienceList;
 	private List<ScLoa> loaGovCompanyExpList;
 	private List<ScQtSampleItem> sampleItemList;
 	private ScQtPRPEmployee noOfEmployeeList;
-	
+
 	private List<ScQtPRPCashOnHand> cashOnHandList;
 	private List<ScQtPRPCreditFacility> creditFacilityList;
-	
+
 	private List<ScQtPRPBankStmt> bankStmtList;
 	private List<ScQtPRPAssetLiability> assetList;
 	private List<ScQtProposalScore> techGovProposalScore;
@@ -160,38 +160,40 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private List<ScQtProposalScore> finCashOnHandProposalScore;
 	private List<ScQtProposalScore> finAssetLiabilityProposalScore;
 	private List<ScQtProposalScore> finPaidUpCapitalProposalScore;
-	
+
 	private List<ScQtEvaluationResult> evaluationSummaryQualSuppliers;
 	private List<ScQtEvaluationResult> evaluationSummaryDisQualSuppliers;
-	
+
 	private List<ScRequestItem> summaryItemList;
 	private ScRequestItem singlesummaryItemList;
 	private List<ScQtEvaluationResult> itemSummaryQualSuppliers;
 	private List<ScQtEvaluationResult> itemSummaryDisQualSuppliers;
 	private int itemTotQualSuppliers;
 	private int itemTotDisQualSuppliers;
-	
+
 	private int evaTotQualifiedSuppliers;
 	private int evaTotDisQualifiedSuppliers;
 	private List<SummaryZoneBaen> summaryZoneBean;
 	private List<SummaryZoneBaen> summaryItemZoneBean;
-	
+
 	private List<TplSpecZoneDtl> tplSpecZoneDtls;
-	
+
 	private TplSpecZoneDtl selectedZone;
-	
+
 	private List<ScQtProposalChecklist> presentationDemoSupplierList;
-	
+
 	private List<ScQtProposalChecklist> finSpecSupplierList;
-	
+
 	private ScQtScoreOfferPrice offerPricePackage;
 	private ScQtScoreOfferPrice offerPriceItem;
 	private List<SummaryZoneBaen> finSpecZoneBean;
 	private List<ScCommitteeMember> endorscommitteeMemberList;
 	private String message;
 	private String subject;
-	
-	
+	private boolean generateEvaluationButton = false;
+	private boolean complianceStageHide = false;
+	private int complianceSummaryCount=0;
+
 	private BigDecimal bankTotalAmt;
 
 	private TemplateSpecBean templateSpecBean = new TemplateSpecBean();
@@ -530,8 +532,6 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	public void setCommiteeActivity(ScQtCommitteeActivity commiteeActivity) {
 		this.commiteeActivity = commiteeActivity;
 	}
-
-	
 
 	/**
 	 * @return the committeeType
@@ -1084,10 +1084,6 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.evaluatioStageActiveIndex = evaluatioStageActiveIndex;
 	}
 
-	
-
-	
-
 	/**
 	 * @return the summaryViewBy
 	 */
@@ -1103,8 +1099,6 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.summaryViewBy = summaryViewBy;
 	}
 
-	
-
 	/**
 	 * @return the qtProposalChecklist
 	 */
@@ -1113,7 +1107,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param qtProposalChecklist the qtProposalChecklist to set
+	 * @param qtProposalChecklist
+	 *            the qtProposalChecklist to set
 	 */
 	public void setQtProposalChecklist(ScQtProposalChecklist qtProposalChecklist) {
 		this.qtProposalChecklist = qtProposalChecklist;
@@ -1127,7 +1122,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param evaluationStgTechnicalCheckList the evaluationStgTechnicalCheckList to set
+	 * @param evaluationStgTechnicalCheckList
+	 *            the evaluationStgTechnicalCheckList to set
 	 */
 	public void setEvaluationStgTechnicalCheckList(
 			List<ScQtCheckList> evaluationStgTechnicalCheckList) {
@@ -1142,14 +1138,13 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param evaluationStgfinancialCheckList the evaluationStgfinancialCheckList to set
+	 * @param evaluationStgfinancialCheckList
+	 *            the evaluationStgfinancialCheckList to set
 	 */
 	public void setEvaluationStgfinancialCheckList(
 			List<ScQtCheckList> evaluationStgfinancialCheckList) {
 		this.evaluationStgfinancialCheckList = evaluationStgfinancialCheckList;
 	}
-
-	
 
 	/**
 	 * @return the checklistScoreType
@@ -1159,7 +1154,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param checklistScoreType the checklistScoreType to set
+	 * @param checklistScoreType
+	 *            the checklistScoreType to set
 	 */
 	public void setChecklistScoreType(String checklistScoreType) {
 		this.checklistScoreType = checklistScoreType;
@@ -1173,7 +1169,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param technicalContractUserScore the technicalContractUserScore to set
+	 * @param technicalContractUserScore
+	 *            the technicalContractUserScore to set
 	 */
 	public void setTechnicalContractUserScore(
 			ScQtCheckListScore technicalContractUserScore) {
@@ -1188,7 +1185,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param technicalNoOfYearsUserScore the technicalNoOfYearsUserScore to set
+	 * @param technicalNoOfYearsUserScore
+	 *            the technicalNoOfYearsUserScore to set
 	 */
 	public void setTechnicalNoOfYearsUserScore(
 			ScQtCheckListScore technicalNoOfYearsUserScore) {
@@ -1203,7 +1201,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param companyScoreType the companyScoreType to set
+	 * @param companyScoreType
+	 *            the companyScoreType to set
 	 */
 	public void setCompanyScoreType(String companyScoreType) {
 		this.companyScoreType = companyScoreType;
@@ -1217,7 +1216,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param technicalGovNoOfContracts the technicalGovNoOfContracts to set
+	 * @param technicalGovNoOfContracts
+	 *            the technicalGovNoOfContracts to set
 	 */
 	public void setTechnicalGovNoOfContracts(
 			List<ScQtCheckListScore> technicalGovNoOfContracts) {
@@ -1232,7 +1232,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param technicalGovNoOfYears the technicalGovNoOfYears to set
+	 * @param technicalGovNoOfYears
+	 *            the technicalGovNoOfYears to set
 	 */
 	public void setTechnicalGovNoOfYears(
 			List<ScQtCheckListScore> technicalGovNoOfYears) {
@@ -1247,7 +1248,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param technicalPrivateNoOfYears the technicalPrivateNoOfYears to set
+	 * @param technicalPrivateNoOfYears
+	 *            the technicalPrivateNoOfYears to set
 	 */
 	public void setTechnicalPrivateNoOfYears(
 			List<ScQtCheckListScore> technicalPrivateNoOfYears) {
@@ -1262,7 +1264,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param technicalPrivateNoOfContracts the technicalPrivateNoOfContracts to set
+	 * @param technicalPrivateNoOfContracts
+	 *            the technicalPrivateNoOfContracts to set
 	 */
 	public void setTechnicalPrivateNoOfContracts(
 			List<ScQtCheckListScore> technicalPrivateNoOfContracts) {
@@ -1277,9 +1280,11 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param technicalStaffScore the technicalStaffScore to set
+	 * @param technicalStaffScore
+	 *            the technicalStaffScore to set
 	 */
-	public void setTechnicalStaffScore(List<ScQtCheckListScore> technicalStaffScore) {
+	public void setTechnicalStaffScore(
+			List<ScQtCheckListScore> technicalStaffScore) {
 		this.technicalStaffScore = technicalStaffScore;
 	}
 
@@ -1291,7 +1296,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param totalNumEmployees the totalNumEmployees to set
+	 * @param totalNumEmployees
+	 *            the totalNumEmployees to set
 	 */
 	public void setTotalNumEmployees(List<ScQtCheckListScore> totalNumEmployees) {
 		this.totalNumEmployees = totalNumEmployees;
@@ -1305,7 +1311,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param finGovContract the finGovContract to set
+	 * @param finGovContract
+	 *            the finGovContract to set
 	 */
 	public void setFinGovContract(List<ScQtCheckListScore> finGovContract) {
 		this.finGovContract = finGovContract;
@@ -1319,9 +1326,11 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param finPrivateContract the finPrivateContract to set
+	 * @param finPrivateContract
+	 *            the finPrivateContract to set
 	 */
-	public void setFinPrivateContract(List<ScQtCheckListScore> finPrivateContract) {
+	public void setFinPrivateContract(
+			List<ScQtCheckListScore> finPrivateContract) {
 		this.finPrivateContract = finPrivateContract;
 	}
 
@@ -1333,9 +1342,11 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param bankStatementScore the bankStatementScore to set
+	 * @param bankStatementScore
+	 *            the bankStatementScore to set
 	 */
-	public void setBankStatementScore(List<ScQtCheckListScore> bankStatementScore) {
+	public void setBankStatementScore(
+			List<ScQtCheckListScore> bankStatementScore) {
 		this.bankStatementScore = bankStatementScore;
 	}
 
@@ -1347,9 +1358,11 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param creditFacilityScore the creditFacilityScore to set
+	 * @param creditFacilityScore
+	 *            the creditFacilityScore to set
 	 */
-	public void setCreditFacilityScore(List<ScQtCheckListScore> creditFacilityScore) {
+	public void setCreditFacilityScore(
+			List<ScQtCheckListScore> creditFacilityScore) {
 		this.creditFacilityScore = creditFacilityScore;
 	}
 
@@ -1361,7 +1374,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param cashOnHandScore the cashOnHandScore to set
+	 * @param cashOnHandScore
+	 *            the cashOnHandScore to set
 	 */
 	public void setCashOnHandScore(List<ScQtCheckListScore> cashOnHandScore) {
 		this.cashOnHandScore = cashOnHandScore;
@@ -1375,9 +1389,11 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param assetLiabilityScore the assetLiabilityScore to set
+	 * @param assetLiabilityScore
+	 *            the assetLiabilityScore to set
 	 */
-	public void setAssetLiabilityScore(List<ScQtCheckListScore> assetLiabilityScore) {
+	public void setAssetLiabilityScore(
+			List<ScQtCheckListScore> assetLiabilityScore) {
 		this.assetLiabilityScore = assetLiabilityScore;
 	}
 
@@ -1389,9 +1405,11 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param paidUpCapitalScore the paidUpCapitalScore to set
+	 * @param paidUpCapitalScore
+	 *            the paidUpCapitalScore to set
 	 */
-	public void setPaidUpCapitalScore(List<ScQtCheckListScore> paidUpCapitalScore) {
+	public void setPaidUpCapitalScore(
+			List<ScQtCheckListScore> paidUpCapitalScore) {
 		this.paidUpCapitalScore = paidUpCapitalScore;
 	}
 
@@ -1403,7 +1421,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param complianceSummaryQualSuppliers the complianceSummaryQualSuppliers to set
+	 * @param complianceSummaryQualSuppliers
+	 *            the complianceSummaryQualSuppliers to set
 	 */
 	public void setComplianceSummaryQualSuppliers(
 			List<ScQtEvaluationResult> complianceSummaryQualSuppliers) {
@@ -1418,7 +1437,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param complianceSummaryDisQualSuppliers the complianceSummaryDisQualSuppliers to set
+	 * @param complianceSummaryDisQualSuppliers
+	 *            the complianceSummaryDisQualSuppliers to set
 	 */
 	public void setComplianceSummaryDisQualSuppliers(
 			List<ScQtEvaluationResult> complianceSummaryDisQualSuppliers) {
@@ -1433,7 +1453,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param complianceQualifiedSuppliers the complianceQualifiedSuppliers to set
+	 * @param complianceQualifiedSuppliers
+	 *            the complianceQualifiedSuppliers to set
 	 */
 	public void setComplianceQualifiedSuppliers(int complianceQualifiedSuppliers) {
 		this.complianceQualifiedSuppliers = complianceQualifiedSuppliers;
@@ -1447,14 +1468,13 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param complianceDisQualifiedSuppliers the complianceDisQualifiedSuppliers to set
+	 * @param complianceDisQualifiedSuppliers
+	 *            the complianceDisQualifiedSuppliers to set
 	 */
 	public void setComplianceDisQualifiedSuppliers(
 			int complianceDisQualifiedSuppliers) {
 		this.complianceDisQualifiedSuppliers = complianceDisQualifiedSuppliers;
 	}
-
-	
 
 	/**
 	 * @return the specItemList
@@ -1464,7 +1484,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param specItemList the specItemList to set
+	 * @param specItemList
+	 *            the specItemList to set
 	 */
 	public void setSpecItemList(List<TplSpecQuestion> specItemList) {
 		this.specItemList = specItemList;
@@ -1478,7 +1499,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param prpCompanyExperienceList the prpCompanyExperienceList to set
+	 * @param prpCompanyExperienceList
+	 *            the prpCompanyExperienceList to set
 	 */
 	public void setPrpCompanyExperienceList(
 			List<ScQtPRPExperience> prpCompanyExperienceList) {
@@ -1493,7 +1515,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param loaGovCompanyExpList the loaGovCompanyExpList to set
+	 * @param loaGovCompanyExpList
+	 *            the loaGovCompanyExpList to set
 	 */
 	public void setLoaGovCompanyExpList(List<ScLoa> loaGovCompanyExpList) {
 		this.loaGovCompanyExpList = loaGovCompanyExpList;
@@ -1507,7 +1530,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param sampleItemList the sampleItemList to set
+	 * @param sampleItemList
+	 *            the sampleItemList to set
 	 */
 	public void setSampleItemList(List<ScQtSampleItem> sampleItemList) {
 		this.sampleItemList = sampleItemList;
@@ -1521,7 +1545,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param noOfEmployeeList the noOfEmployeeList to set
+	 * @param noOfEmployeeList
+	 *            the noOfEmployeeList to set
 	 */
 	public void setNoOfEmployeeList(ScQtPRPEmployee noOfEmployeeList) {
 		this.noOfEmployeeList = noOfEmployeeList;
@@ -1535,7 +1560,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param cashOnHandList the cashOnHandList to set
+	 * @param cashOnHandList
+	 *            the cashOnHandList to set
 	 */
 	public void setCashOnHandList(List<ScQtPRPCashOnHand> cashOnHandList) {
 		this.cashOnHandList = cashOnHandList;
@@ -1549,9 +1575,11 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param creditFacilityList the creditFacilityList to set
+	 * @param creditFacilityList
+	 *            the creditFacilityList to set
 	 */
-	public void setCreditFacilityList(List<ScQtPRPCreditFacility> creditFacilityList) {
+	public void setCreditFacilityList(
+			List<ScQtPRPCreditFacility> creditFacilityList) {
 		this.creditFacilityList = creditFacilityList;
 	}
 
@@ -1563,7 +1591,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param bankStmtList the bankStmtList to set
+	 * @param bankStmtList
+	 *            the bankStmtList to set
 	 */
 	public void setBankStmtList(List<ScQtPRPBankStmt> bankStmtList) {
 		this.bankStmtList = bankStmtList;
@@ -1577,7 +1606,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param assetList the assetList to set
+	 * @param assetList
+	 *            the assetList to set
 	 */
 	public void setAssetList(List<ScQtPRPAssetLiability> assetList) {
 		this.assetList = assetList;
@@ -1591,9 +1621,11 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param techGovProposalScore the techGovProposalScore to set
+	 * @param techGovProposalScore
+	 *            the techGovProposalScore to set
 	 */
-	public void setTechGovProposalScore(List<ScQtProposalScore> techGovProposalScore) {
+	public void setTechGovProposalScore(
+			List<ScQtProposalScore> techGovProposalScore) {
 		this.techGovProposalScore = techGovProposalScore;
 	}
 
@@ -1605,7 +1637,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param techPrivateProposalScore the techPrivateProposalScore to set
+	 * @param techPrivateProposalScore
+	 *            the techPrivateProposalScore to set
 	 */
 	public void setTechPrivateProposalScore(
 			List<ScQtProposalScore> techPrivateProposalScore) {
@@ -1620,7 +1653,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param techSampleProposalScore the techSampleProposalScore to set
+	 * @param techSampleProposalScore
+	 *            the techSampleProposalScore to set
 	 */
 	public void setTechSampleProposalScore(
 			List<ScQtProposalScore> techSampleProposalScore) {
@@ -1635,7 +1669,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param techStaffProposalScore the techStaffProposalScore to set
+	 * @param techStaffProposalScore
+	 *            the techStaffProposalScore to set
 	 */
 	public void setTechStaffProposalScore(
 			List<ScQtProposalScore> techStaffProposalScore) {
@@ -1650,7 +1685,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param techNoOfEmployeeProposalScore the techNoOfEmployeeProposalScore to set
+	 * @param techNoOfEmployeeProposalScore
+	 *            the techNoOfEmployeeProposalScore to set
 	 */
 	public void setTechNoOfEmployeeProposalScore(
 			List<ScQtProposalScore> techNoOfEmployeeProposalScore) {
@@ -1665,9 +1701,11 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param finGovProposalScore the finGovProposalScore to set
+	 * @param finGovProposalScore
+	 *            the finGovProposalScore to set
 	 */
-	public void setFinGovProposalScore(List<ScQtProposalScore> finGovProposalScore) {
+	public void setFinGovProposalScore(
+			List<ScQtProposalScore> finGovProposalScore) {
 		this.finGovProposalScore = finGovProposalScore;
 	}
 
@@ -1679,7 +1717,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param finPrivateProposalScore the finPrivateProposalScore to set
+	 * @param finPrivateProposalScore
+	 *            the finPrivateProposalScore to set
 	 */
 	public void setFinPrivateProposalScore(
 			List<ScQtProposalScore> finPrivateProposalScore) {
@@ -1694,7 +1733,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param finbankStmtProposalScore the finbankStmtProposalScore to set
+	 * @param finbankStmtProposalScore
+	 *            the finbankStmtProposalScore to set
 	 */
 	public void setFinbankStmtProposalScore(
 			List<ScQtProposalScore> finbankStmtProposalScore) {
@@ -1709,7 +1749,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param finCreditFacilityProposalScore the finCreditFacilityProposalScore to set
+	 * @param finCreditFacilityProposalScore
+	 *            the finCreditFacilityProposalScore to set
 	 */
 	public void setFinCreditFacilityProposalScore(
 			List<ScQtProposalScore> finCreditFacilityProposalScore) {
@@ -1724,7 +1765,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param finCashOnHandProposalScore the finCashOnHandProposalScore to set
+	 * @param finCashOnHandProposalScore
+	 *            the finCashOnHandProposalScore to set
 	 */
 	public void setFinCashOnHandProposalScore(
 			List<ScQtProposalScore> finCashOnHandProposalScore) {
@@ -1739,7 +1781,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param finAssetLiabilityProposalScore the finAssetLiabilityProposalScore to set
+	 * @param finAssetLiabilityProposalScore
+	 *            the finAssetLiabilityProposalScore to set
 	 */
 	public void setFinAssetLiabilityProposalScore(
 			List<ScQtProposalScore> finAssetLiabilityProposalScore) {
@@ -1754,7 +1797,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param finPaidUpCapitalProposalScore the finPaidUpCapitalProposalScore to set
+	 * @param finPaidUpCapitalProposalScore
+	 *            the finPaidUpCapitalProposalScore to set
 	 */
 	public void setFinPaidUpCapitalProposalScore(
 			List<ScQtProposalScore> finPaidUpCapitalProposalScore) {
@@ -1769,7 +1813,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param bankTotalAmt the bankTotalAmt to set
+	 * @param bankTotalAmt
+	 *            the bankTotalAmt to set
 	 */
 	public void setBankTotalAmt(BigDecimal bankTotalAmt) {
 		this.bankTotalAmt = bankTotalAmt;
@@ -1783,7 +1828,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param evaluationSummaryQualSuppliers the evaluationSummaryQualSuppliers to set
+	 * @param evaluationSummaryQualSuppliers
+	 *            the evaluationSummaryQualSuppliers to set
 	 */
 	public void setEvaluationSummaryQualSuppliers(
 			List<ScQtEvaluationResult> evaluationSummaryQualSuppliers) {
@@ -1798,7 +1844,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param evaluationSummaryDisQualSuppliers the evaluationSummaryDisQualSuppliers to set
+	 * @param evaluationSummaryDisQualSuppliers
+	 *            the evaluationSummaryDisQualSuppliers to set
 	 */
 	public void setEvaluationSummaryDisQualSuppliers(
 			List<ScQtEvaluationResult> evaluationSummaryDisQualSuppliers) {
@@ -1813,7 +1860,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param evaTotQualifiedSuppliers the evaTotQualifiedSuppliers to set
+	 * @param evaTotQualifiedSuppliers
+	 *            the evaTotQualifiedSuppliers to set
 	 */
 	public void setEvaTotQualifiedSuppliers(int evaTotQualifiedSuppliers) {
 		this.evaTotQualifiedSuppliers = evaTotQualifiedSuppliers;
@@ -1827,7 +1875,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param evaTotDisQualifiedSuppliers the evaTotDisQualifiedSuppliers to set
+	 * @param evaTotDisQualifiedSuppliers
+	 *            the evaTotDisQualifiedSuppliers to set
 	 */
 	public void setEvaTotDisQualifiedSuppliers(int evaTotDisQualifiedSuppliers) {
 		this.evaTotDisQualifiedSuppliers = evaTotDisQualifiedSuppliers;
@@ -1841,7 +1890,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param summaryItemList the summaryItemList to set
+	 * @param summaryItemList
+	 *            the summaryItemList to set
 	 */
 	public void setSummaryItemList(List<ScRequestItem> summaryItemList) {
 		this.summaryItemList = summaryItemList;
@@ -1855,7 +1905,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param itemSummaryQualSuppliers the itemSummaryQualSuppliers to set
+	 * @param itemSummaryQualSuppliers
+	 *            the itemSummaryQualSuppliers to set
 	 */
 	public void setItemSummaryQualSuppliers(
 			List<ScQtEvaluationResult> itemSummaryQualSuppliers) {
@@ -1870,7 +1921,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param itemSummaryDisQualSuppliers the itemSummaryDisQualSuppliers to set
+	 * @param itemSummaryDisQualSuppliers
+	 *            the itemSummaryDisQualSuppliers to set
 	 */
 	public void setItemSummaryDisQualSuppliers(
 			List<ScQtEvaluationResult> itemSummaryDisQualSuppliers) {
@@ -1885,7 +1937,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param itemTotQualSuppliers the itemTotQualSuppliers to set
+	 * @param itemTotQualSuppliers
+	 *            the itemTotQualSuppliers to set
 	 */
 	public void setItemTotQualSuppliers(int itemTotQualSuppliers) {
 		this.itemTotQualSuppliers = itemTotQualSuppliers;
@@ -1899,7 +1952,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param itemTotDisQualSuppliers the itemTotDisQualSuppliers to set
+	 * @param itemTotDisQualSuppliers
+	 *            the itemTotDisQualSuppliers to set
 	 */
 	public void setItemTotDisQualSuppliers(int itemTotDisQualSuppliers) {
 		this.itemTotDisQualSuppliers = itemTotDisQualSuppliers;
@@ -1913,7 +1967,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param singlesummaryItemList the singlesummaryItemList to set
+	 * @param singlesummaryItemList
+	 *            the singlesummaryItemList to set
 	 */
 	public void setSinglesummaryItemList(ScRequestItem singlesummaryItemList) {
 		this.singlesummaryItemList = singlesummaryItemList;
@@ -1927,7 +1982,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param summaryZoneBean the summaryZoneBean to set
+	 * @param summaryZoneBean
+	 *            the summaryZoneBean to set
 	 */
 	public void setSummaryZoneBean(List<SummaryZoneBaen> summaryZoneBean) {
 		this.summaryZoneBean = summaryZoneBean;
@@ -1941,7 +1997,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param summaryItemZoneBean the summaryItemZoneBean to set
+	 * @param summaryItemZoneBean
+	 *            the summaryItemZoneBean to set
 	 */
 	public void setSummaryItemZoneBean(List<SummaryZoneBaen> summaryItemZoneBean) {
 		this.summaryItemZoneBean = summaryItemZoneBean;
@@ -1955,7 +2012,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param tplSpecZoneDtls the tplSpecZoneDtls to set
+	 * @param tplSpecZoneDtls
+	 *            the tplSpecZoneDtls to set
 	 */
 	public void setTplSpecZoneDtls(List<TplSpecZoneDtl> tplSpecZoneDtls) {
 		this.tplSpecZoneDtls = tplSpecZoneDtls;
@@ -1969,7 +2027,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param selectedZone the selectedZone to set
+	 * @param selectedZone
+	 *            the selectedZone to set
 	 */
 	public void setSelectedZone(TplSpecZoneDtl selectedZone) {
 		this.selectedZone = selectedZone;
@@ -1983,7 +2042,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param presentationDemoActiveIndex the presentationDemoActiveIndex to set
+	 * @param presentationDemoActiveIndex
+	 *            the presentationDemoActiveIndex to set
 	 */
 	public void setPresentationDemoActiveIndex(int presentationDemoActiveIndex) {
 		this.presentationDemoActiveIndex = presentationDemoActiveIndex;
@@ -1997,7 +2057,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param presentationDemoSupplierList the presentationDemoSupplierList to set
+	 * @param presentationDemoSupplierList
+	 *            the presentationDemoSupplierList to set
 	 */
 	public void setPresentationDemoSupplierList(
 			List<ScQtProposalChecklist> presentationDemoSupplierList) {
@@ -2012,7 +2073,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param finSpecSupplierList the finSpecSupplierList to set
+	 * @param finSpecSupplierList
+	 *            the finSpecSupplierList to set
 	 */
 	public void setFinSpecSupplierList(
 			List<ScQtProposalChecklist> finSpecSupplierList) {
@@ -2027,7 +2089,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param offerPricePackage the offerPricePackage to set
+	 * @param offerPricePackage
+	 *            the offerPricePackage to set
 	 */
 	public void setOfferPricePackage(ScQtScoreOfferPrice offerPricePackage) {
 		this.offerPricePackage = offerPricePackage;
@@ -2041,7 +2104,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param offerPriceItem the offerPriceItem to set
+	 * @param offerPriceItem
+	 *            the offerPriceItem to set
 	 */
 	public void setOfferPriceItem(ScQtScoreOfferPrice offerPriceItem) {
 		this.offerPriceItem = offerPriceItem;
@@ -2055,7 +2119,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param finSpecZoneBean the finSpecZoneBean to set
+	 * @param finSpecZoneBean
+	 *            the finSpecZoneBean to set
 	 */
 	public void setFinSpecZoneBean(List<SummaryZoneBaen> finSpecZoneBean) {
 		this.finSpecZoneBean = finSpecZoneBean;
@@ -2069,7 +2134,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param endorscommitteeMemberList the endorscommitteeMemberList to set
+	 * @param endorscommitteeMemberList
+	 *            the endorscommitteeMemberList to set
 	 */
 	public void setEndorscommitteeMemberList(
 			List<ScCommitteeMember> endorscommitteeMemberList) {
@@ -2084,7 +2150,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param isDemo the isDemo to set
+	 * @param isDemo
+	 *            the isDemo to set
 	 */
 	public void setDemo(boolean isDemo) {
 		this.isDemo = isDemo;
@@ -2098,7 +2165,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param message the message to set
+	 * @param message
+	 *            the message to set
 	 */
 	public void setMessage(String message) {
 		this.message = message;
@@ -2112,7 +2180,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param subject the subject to set
+	 * @param subject
+	 *            the subject to set
 	 */
 	public void setSubject(String subject) {
 		this.subject = subject;
@@ -2126,16 +2195,55 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param evaluationComplianceList the evaluationComplianceList to set
+	 * @param evaluationComplianceList
+	 *            the evaluationComplianceList to set
 	 */
 	public void setEvaluationComplianceList(
 			List<ScQtProposalChecklist> evaluationComplianceList) {
 		this.evaluationComplianceList = evaluationComplianceList;
 	}
 
-	
+	/**
+	 * @return the generateEvaluationButton
+	 */
+	public boolean isGenerateEvaluationButton() {
+		return generateEvaluationButton;
+	}
 
-	
-	
+	/**
+	 * @param generateEvaluationButton
+	 *            the generateEvaluationButton to set
+	 */
+	public void setGenerateEvaluationButton(boolean generateEvaluationButton) {
+		this.generateEvaluationButton = generateEvaluationButton;
+	}
+
+	/**
+	 * @return the complianceStageHide
+	 */
+	public boolean isComplianceStageHide() {
+		return complianceStageHide;
+	}
+
+	/**
+	 * @param complianceStageHide the complianceStageHide to set
+	 */
+	public void setComplianceStageHide(boolean complianceStageHide) {
+		this.complianceStageHide = complianceStageHide;
+	}
+
+	/**
+	 * @return the complianceSummaryCount
+	 */
+	public int getComplianceSummaryCount() {
+		return complianceSummaryCount;
+	}
+
+	/**
+	 * @param complianceSummaryCount the complianceSummaryCount to set
+	 */
+	public void setComplianceSummaryCount(int complianceSummaryCount) {
+		this.complianceSummaryCount = complianceSummaryCount;
+	}
 
 }
