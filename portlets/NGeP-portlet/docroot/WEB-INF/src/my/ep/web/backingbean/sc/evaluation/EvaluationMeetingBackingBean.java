@@ -35,6 +35,7 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
+import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
@@ -91,12 +92,10 @@ import org.primefaces.event.SelectEvent;
 public class EvaluationMeetingBackingBean extends
 		SourcingBaseBackingBean<EvaluationMeetingManagedBean> {
 	private IPagingDataModel<ScQt> searchQuotatioTender = new clonePagingDataModel();
+	private IPagingDataModel<PmUser> searchExistingUser = new existingUserPagingDataModel();
 
 	public EvaluationMeetingBackingBean() {
-		/*
-		 * getManagedBean().setRoleTypes(
-		 * getRoleTypeDropdownValues(ParameterTypeConst.COMMITTEE_ROLE));
-		 */
+		
 		if (this.getManagedBean().getCloneQtnTenderSearchBean() == null) {
 			this.getManagedBean().setCloneQtnTenderSearchBean(
 					new QtnTenderSearchBean());
@@ -354,6 +353,9 @@ public class EvaluationMeetingBackingBean extends
 		// debugLogger("okCommitteeAction");
 		IUserSO iUserSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		IParameterSO parameterSo = BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IParameterSO.class);
 
 		UserReqDTO userReqDTO = new UserReqDTO();
 
@@ -522,9 +524,17 @@ public class EvaluationMeetingBackingBean extends
 				 * .getPmOrgProfile());
 				 */
 				if (committeeMember.isPNP() == true) {
-					PmParameter parameter = user.getMemberRole();
-					parameter.setParameterId(583L);
-					committeeMember.setMemberRole(parameter);
+
+					ParameterReqDTO chairPerson = new ParameterReqDTO();
+					chairPerson
+							.setParameterType(ParameterTypeConst.COMMITTEE_ROLE);
+					chairPerson
+							.setParameterCode(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON);
+					ParameterResDTO chairPersonresDTO = parameterSo
+							.retrieveParameterByTypeAndCode(chairPerson);
+
+					committeeMember.setMemberRole(chairPersonresDTO
+							.getPmParameter());
 				} else {
 					committeeMember.setMemberRole(user.getMemberRole());
 				}
@@ -535,20 +545,6 @@ public class EvaluationMeetingBackingBean extends
 				committeeMember.setPmOrgProfile(this.getManagedBean().getQt()
 						.getPmOrgProfile());
 				setUserDetails(committeeMember);
-				// committeeMember.setCreatedBy(1L);
-				// committeeMember.setChangedBy(1L);
-				// committeeMember.setCreatedDate(new Timestamp(System
-				// .currentTimeMillis()));
-				// committeeMember.setScCommittee(scCommittee);
-				// memberList.add(committeeMember);
-				/*
-				 * ScQtCommitteeActivity activity = new ScQtCommitteeActivity();
-				 * activity.setScQtCommittee(this.getManagedBean()
-				 * .getScQtCommittee());
-				 * activity.setScCommitteeMember(committeeMember);
-				 * committeeActivity.add(activity);
-				 */
-				// memberList.add(member);
 
 				if (committeeActivity.isEmpty()) {
 
@@ -638,58 +634,47 @@ public class EvaluationMeetingBackingBean extends
 	}
 
 	public void existingCommitteeSearchAction() {
+		searchExistingUser.reloadData();
 		// debugLogger("existingCommitteeSearchAction");
-		UserReqDTO userReqDTO = new UserReqDTO();
-		SearchBean<PmUser> searchBean = new SearchBean<PmUser>();
-		UserResDTO resDto = null;
-		if (null != getManagedBean().getName()
-				&& !"".equalsIgnoreCase(getManagedBean().getName())) {
-			SearchFilterBean usernameSearchBean = new SearchFilterBean(
-					SearchOperator.OPERATOR_LIKE.value());
-			usernameSearchBean.setSearchField("userName");
-			usernameSearchBean.setSearchValue(getManagedBean().getName());
-			searchBean.getDataFilterBeans().add(usernameSearchBean);
-		}
-		if (null != getManagedBean().getIdentificationNo()
-				&& !"".equalsIgnoreCase(getManagedBean().getIdentificationNo())) {
-			SearchFilterBean idNoSearchBean = new SearchFilterBean(
-					SearchOperator.OPERATOR_LIKE.value());
-			idNoSearchBean.setSearchField("identificationNo");
-			idNoSearchBean.setSearchValue(getManagedBean()
-					.getIdentificationNo());
-			searchBean.getDataFilterBeans().add(idNoSearchBean);
-		}
-
-		if (null != getManagedBean().getIdentificationType()
-				&& !"".equalsIgnoreCase(getManagedBean()
-						.getIdentificationType())) {
-			SearchFilterBean idNoSearchBean = new SearchFilterBean(
-					SearchOperator.OPERATOR_EQUALS.value());
-			idNoSearchBean.setSearchField("identificationCode.parameterCode");
-			idNoSearchBean.setSearchValue(getManagedBean()
-					.getIdentificationType());
-			searchBean.getDataFilterBeans().add(idNoSearchBean);
-		}
-		userReqDTO.setUserSearchBean(searchBean);
-		try {
-			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-			resDto = userSO.searchUserProfile(userReqDTO);
-			if (resDto != null) {
-				this.getManagedBean().setExternalUsers(
-						resDto.getUserResultBean().getResultList());
-				for (PmUser user : this.getManagedBean().getExternalUsers()) {
-					if (user.getMemberRole() == null) {
-						user.setMemberRole(new PmParameter());
-					}
-					if (user.isPMP()) {
-						user.getMemberRole().setParameterId(583L);
-					}
-				}
-			}
-		} finally {
-
-		}
+		/*
+		 * UserReqDTO userReqDTO = new UserReqDTO(); SearchBean<PmUser>
+		 * searchBean = new SearchBean<PmUser>(); UserResDTO resDto = null; if
+		 * (null != getManagedBean().getName() &&
+		 * !"".equalsIgnoreCase(getManagedBean().getName())) { SearchFilterBean
+		 * usernameSearchBean = new SearchFilterBean(
+		 * SearchOperator.OPERATOR_LIKE.value());
+		 * usernameSearchBean.setSearchField("userName");
+		 * usernameSearchBean.setSearchValue(getManagedBean().getName());
+		 * searchBean.getDataFilterBeans().add(usernameSearchBean); } if (null
+		 * != getManagedBean().getIdentificationNo() &&
+		 * !"".equalsIgnoreCase(getManagedBean().getIdentificationNo())) {
+		 * SearchFilterBean idNoSearchBean = new SearchFilterBean(
+		 * SearchOperator.OPERATOR_LIKE.value());
+		 * idNoSearchBean.setSearchField("identificationNo");
+		 * idNoSearchBean.setSearchValue(getManagedBean()
+		 * .getIdentificationNo());
+		 * searchBean.getDataFilterBeans().add(idNoSearchBean); }
+		 * 
+		 * if (null != getManagedBean().getIdentificationType() &&
+		 * !"".equalsIgnoreCase(getManagedBean() .getIdentificationType())) {
+		 * SearchFilterBean idNoSearchBean = new SearchFilterBean(
+		 * SearchOperator.OPERATOR_EQUALS.value());
+		 * idNoSearchBean.setSearchField("identificationCode.parameterCode");
+		 * idNoSearchBean.setSearchValue(getManagedBean()
+		 * .getIdentificationType());
+		 * searchBean.getDataFilterBeans().add(idNoSearchBean); }
+		 * userReqDTO.setUserSearchBean(searchBean); try { IUserSO userSO =
+		 * BusinessDelegate.getInstance().getServiceObject(
+		 * ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class); resDto =
+		 * userSO.searchUserProfile(userReqDTO); if (resDto != null) {
+		 * this.getManagedBean().setExternalUsers(
+		 * resDto.getUserResultBean().getResultList()); for (PmUser user :
+		 * this.getManagedBean().getExternalUsers()) { if (user.getMemberRole()
+		 * == null) { user.setMemberRole(new PmParameter()); } if (user.isPMP())
+		 * { user.getMemberRole().setParameterId(583L); } } } } finally {
+		 * 
+		 * }
+		 */
 	}
 
 	public void addCloneCommittee() {
@@ -934,18 +919,19 @@ public class EvaluationMeetingBackingBean extends
 				String status = getManagedBean().getCloneQtnTenderSearchBean()
 						.getQtStatus();
 				if (!StringUtils.isBlank(status)) {
-					SearchFilterBean bean = new SearchFilterBean();
 
-					bean.setSearchField("scQtStatus.pmStatus.statusId");
-					bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS
-							.value());
-					bean.setSearchValue(status);
-					searchBean.getDataFilterBeans().add(bean);
-					// searchFilterBean.add(bean);
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean(
+									"scQtStatus.pmStatus.statusId",
+									SearchOperator.OPERATOR_EQUALS.value(),
+									status));
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean("scQtStatus.current",
+									SearchOperator.OPERATOR_EQUALS.value(),
+									true));
+
 				}
 
-				// Adding search filterbeans to searchbean.
-				// qtSearchBean.getDataFilterBeans().addAll(searchFilterBean);
 				reqDTO.setQtSearchBean(searchBean);
 
 				QuationTenderResDTO dto = null;
@@ -957,7 +943,7 @@ public class EvaluationMeetingBackingBean extends
 				dto = detailSO.getQuationTenders(reqDTO);
 
 				if (dto.isSuccessful()) {
-					// System.out.println("circular and panel type"+resDto.getCircularVerResultBean().getResultList());
+
 					return dto.getQtResultBean();
 				}
 			} finally {
@@ -966,7 +952,77 @@ public class EvaluationMeetingBackingBean extends
 
 			return null;
 		}
+	}
 
+	private class existingUserPagingDataModel extends PagingDataModel<PmUser> {
+		private static final long serialVersionUID = 1L;
+
+		public existingUserPagingDataModel() {
+
+			super("existingcommitteesearch");
+
+		}
+
+		public ISearchResultBean<PmUser> pageChangeListener(
+				ISearchBean<PmUser> searchBean) {
+
+			try {
+				UserReqDTO userReqDTO = new UserReqDTO();
+
+				UserResDTO resDto = null;
+				if (null != getManagedBean().getName()
+						&& !"".equalsIgnoreCase(getManagedBean().getName())) {
+					SearchFilterBean usernameSearchBean = new SearchFilterBean(
+							SearchOperator.OPERATOR_LIKE.value());
+					usernameSearchBean.setSearchField("userName");
+					usernameSearchBean.setSearchValue(getManagedBean()
+							.getName());
+					searchBean.getDataFilterBeans().add(usernameSearchBean);
+				}
+				if (null != getManagedBean().getIdentificationNo()
+						&& !"".equalsIgnoreCase(getManagedBean()
+								.getIdentificationNo())) {
+					SearchFilterBean idNoSearchBean = new SearchFilterBean(
+							SearchOperator.OPERATOR_LIKE.value());
+					idNoSearchBean.setSearchField("identificationNo");
+					idNoSearchBean.setSearchValue(getManagedBean()
+							.getIdentificationNo());
+					searchBean.getDataFilterBeans().add(idNoSearchBean);
+				}
+
+				if (null != getManagedBean().getIdentificationType()
+						&& !"".equalsIgnoreCase(getManagedBean()
+								.getIdentificationType())) {
+					SearchFilterBean idNoSearchBean = new SearchFilterBean(
+							SearchOperator.OPERATOR_EQUALS.value());
+					idNoSearchBean
+							.setSearchField("identificationCode.parameterCode");
+					idNoSearchBean.setSearchValue(getManagedBean()
+							.getIdentificationType());
+					searchBean.getDataFilterBeans().add(idNoSearchBean);
+				}
+				userReqDTO.setUserSearchBean(searchBean);
+
+				IUserSO userSO = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+								IUserSO.class);
+				resDto = userSO.searchUserProfile(userReqDTO);
+				if (resDto != null) {
+					getManagedBean().setExternalUsers(
+							resDto.getUserResultBean().getResultList());
+					for (PmUser user : getManagedBean().getExternalUsers()) {
+						if (user.getMemberRole() == null) {
+							user.setMemberRole(new PmParameter());
+						}
+					}
+				}
+				return resDto.getUserResultBean();
+
+			} finally {
+
+			}
+
+		}
 	}
 
 	/**
@@ -983,6 +1039,22 @@ public class EvaluationMeetingBackingBean extends
 	public void setSearchQuotatioTender(
 			IPagingDataModel<ScQt> searchQuotatioTender) {
 		this.searchQuotatioTender = searchQuotatioTender;
+	}
+
+	/**
+	 * @return the searchExistingUser
+	 */
+	public IPagingDataModel<PmUser> getSearchExistingUser() {
+		return searchExistingUser;
+	}
+
+	/**
+	 * @param searchExistingUser
+	 *            the searchExistingUser to set
+	 */
+	public void setSearchExistingUser(
+			IPagingDataModel<PmUser> searchExistingUser) {
+		this.searchExistingUser = searchExistingUser;
 	}
 
 }
