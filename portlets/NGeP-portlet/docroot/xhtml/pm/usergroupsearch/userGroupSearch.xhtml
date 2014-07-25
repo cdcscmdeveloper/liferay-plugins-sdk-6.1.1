@@ -17,67 +17,53 @@
 		
 	<h:panelGrid id="userGroupSearch" style="width:100%;">
 	</h:panelGrid>
-     
-			<p:tabView>
-				<p:tab id="definedGroupSearch" title="DEFINED SEARCH">
-				   <ui:include src="/xhtml/pm/usergroupsearch/userGroupDefinedSearch.xhtml" />
-				</p:tab>
-				<p:tab id="advancedGroupSearch" title="ADVANCED SEARCH">
-				   <ui:include src="/xhtml/pm/usergroupsearch/userGroupAdvancedSearch.xhtml" />					
-				</p:tab>			
-			</p:tabView>
-				
+	
+	 <ui:include src="/xhtml/pm/usergroupsearch/userGroupDefinedSearch.xhtml" />
+			
       <div align="right">
-			<p:commandButton value="Search" icon="ui-icon-search" 
-			 update="searchGroupProfile" action="#{userprofileBackingBean.retriveUserProfile}" />
-            <p:commandButton value="Reset" icon="ui-icon-reset"></p:commandButton>
+			<p:commandButton value="Search" icon="ui-icon-search" update="searchGroupProfile" />
+            <p:commandButton value="Reset" type="reset" icon="ui-icon-reset" 
+            process="@this" actionListener="#{usergroupBackingBean.reset}"/>
 	  </div>
     <br/>
 	<br/>
 	</p:panel>
 	
 	<p:panel header="Results" toggleable="true">
-	<p:dataTable id="searchGroupProfile" value="#{userprofileBackingBean.managedBean.users}" var="usergroupprofile" editable="true">
- 	<ac:paginator />
-    <p:ajax event="rowEdit" />  
-    <p:ajax event="rowEditCancel"/> 
-				
- 
-       <p:column headerText="Login ID" > 
-        <h:outputText value="#{usergroupprofile.loginId}" />
+	<p:dataTable id="searchGroupProfile">
+ 	<ac:paginator for="searchGroupProfile" />
+		
+       <p:column headerText="Group Code"> 
+        <h:outputText  />       
        </p:column>
        
-       <p:column headerText="Salutation" > 
+       <p:column headerText="Group Name"> 
         <h:outputText />
        </p:column>       
      
-       <p:column headerText="User Name" >
-        <h:outputText value="#{usergroupprofile.userName}" />   
+       <p:column headerText="PTJ Code"> 
+         <h:outputText />        
        </p:column>
     
-       <p:column headerText="City Name" >
+       <p:column headerText="PTJ Name">
         <h:outputText />
        </p:column>
-       
-      <p:column headerText="State Name" >
-        <h:outputText />    
-      </p:column>
-   
-     <p:column headerText="Status"> 
-      <h:outputText />
-    </p:column>
-    
-    <p:column headerText="Action">
-    <p:commandLink>
-     <p:graphicImage library="ep/images/design" name="edit.png"
-      value="/resources/ep/images/design/edit.png" />
-    </p:commandLink>
-    </p:column>    
+      
+    	<p:column headerText="Action">
+   		 <p:commandLink>
+     	<p:graphicImage library="ep/images/design" name="edit.png"
+     	 value="/resources/ep/images/design/edit.png" />
+    	 </p:commandLink>
+   	 	</p:column>    
      </p:dataTable>
 	</p:panel>
 	
-     <div>
-      <p:commandButton value="Create" style="float:right;" action="userGroupMaintenance.xhtml?faces-redirect=true"
-       ajax="false" icon="ui-icon-add" />
-     </div>
+	<p:panel>
+	<h:panelGrid columns="2" style="width:100%;" styleClass="noBorders tr,noBorders td">
+
+      <p:commandButton value="Create" style="float:right;"
+        action="#{usergroupBackingBean.createUserGroupProfiles()}" ajax="false" icon="ui-icon-add" />
+	
+	 </h:panelGrid>	
+	</p:panel>
 </ui:composition>
