@@ -62,11 +62,12 @@
 			value="#{backingBean.managedBean.smAppl.smApplSupportDocs}">
 			<ac:paginator for="onSdList" />
 
-			<p:column headerText="Document Description">
-				<h:outputText value="#{table.pmDocument.docName}" />
+			<p:column headerText="Document Description" style="width : 70%;">
+				<p:outputLabel value="#{table.pmDocument.docName}"
+					style="float: left;white-space: normal;" />
 			</p:column>
 
-			<p:column headerText="Upload Document ">
+			<p:column headerText="Upload Document " style="width : 10%;">
 				<p:commandLink oncomplete="attachDlg1.show();return false;"
 					action="#{backingBean.assignSelectedSupportDoc(table)}">
 					<p:graphicImage library="ep/images/design" name="upload.png"
@@ -74,8 +75,9 @@
 						style="margin-right:2px;" />
 				</p:commandLink>
 			</p:column>
-			<p:column headerText="Added Document Name">
-				<h:outputText value="#{table.smApplDocFiles[0].fileName}" />
+			<p:column headerText="Added Document Name" style="width : 20%;">
+				<p:outputLabel value="#{table.smApplDocFiles[0].fileName}"
+					style="float: left;white-space: normal;" />
 			</p:column>
 		</p:dataTable>
 
