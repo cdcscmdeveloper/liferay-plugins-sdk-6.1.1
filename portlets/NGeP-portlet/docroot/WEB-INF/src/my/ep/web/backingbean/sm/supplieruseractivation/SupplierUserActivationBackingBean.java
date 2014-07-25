@@ -162,23 +162,24 @@ public class SupplierUserActivationBackingBean extends
 						reqDTO.getSmPersonnel().setEpRole(RoleCode.CM_USER.value());
 					}
 					
-					if(reqDTO.getSmPersonnel().getEpRole() == RoleCode.BASIC_SUPPLIER_USER.value() || reqDTO.getSmPersonnel().getEpRole() == RoleCode.MOF_SUPPLIER_USER.value() || reqDTO.getSmPersonnel().getEpRole() == RoleCode.CM_USER.value())
+					if(reqDTO.getSmPersonnel().getEpRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_USER.value()) || reqDTO.getSmPersonnel().getEpRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value()) || reqDTO.getSmPersonnel().getEpRole().equalsIgnoreCase(RoleCode.CM_USER.value())){
 						resDTO = reqSO.createPmProfileForPersonnel(reqDTO);
-					if(resDTO.isSuccessful()){
-						this.getManagedBean().setValidActivation(false);
-						this.getManagedBean().setSmPersonnel(null);
-						return navigateToAck();
-//						SpkiReqDTO spkiReqDTO = new SpkiReqDTO();
-//						spkiReqDTO.setSmPersonnel(this.getManagedBean().getSmPersonnel());
-//						ISpkiSO spkiReqSO = (ISpkiSO) BusinessDelegate.getInstance().getServiceObject("sm", ISpkiSO.class);
-//						SpkiResDTO spkiResDTO = spkiReqSO.requestCertificate(spkiReqDTO);
-						
-//						FacesContext.getCurrentInstance().addMessage(
-//								null,
-//								new FacesMessage(FacesMessage.SEVERITY_INFO,
-//										"Your account has been created successfully.", ""));
-					}else{
-						errorMsg("PM Creation Error.");
+						if(resDTO.isSuccessful()){
+							this.getManagedBean().setValidActivation(false);
+							this.getManagedBean().setSmPersonnel(null);
+							return navigateToAck();
+	//						SpkiReqDTO spkiReqDTO = new SpkiReqDTO();
+	//						spkiReqDTO.setSmPersonnel(this.getManagedBean().getSmPersonnel());
+	//						ISpkiSO spkiReqSO = (ISpkiSO) BusinessDelegate.getInstance().getServiceObject("sm", ISpkiSO.class);
+	//						SpkiResDTO spkiResDTO = spkiReqSO.requestCertificate(spkiReqDTO);
+							
+	//						FacesContext.getCurrentInstance().addMessage(
+	//								null,
+	//								new FacesMessage(FacesMessage.SEVERITY_INFO,
+	//										"Your account has been created successfully.", ""));
+						}else{
+							errorMsg("PM Creation Error.");
+						}
 					}
 				} else {
 					
