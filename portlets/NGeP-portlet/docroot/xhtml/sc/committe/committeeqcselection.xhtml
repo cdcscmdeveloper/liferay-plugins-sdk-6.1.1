@@ -47,7 +47,7 @@
 
 			<p:column headerText="#{lbl['lbl.sc.committe.sctable.details.pp']}"
 				style="width: 5%">
-				<h:outputText value="#{committeemember.PNP ? 'Yes' : 'No'}" />
+				<h:outputText value="#{lbl[committeemember.PNP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
 			</p:column>
 
 			<c:if

@@ -19,10 +19,8 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.so.procmode']}" style="width:10%">
-				<c:if test="${qt.procurementMode ne null}">
-					<h:outputText
-						value="#{committeBackingBean.getParameterDesc(qt.procurementMode)}" />
-				</c:if>
+				<h:outputText
+					value="#{committeBackingBean.getParameterDesc(qt.procurementMode)}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.so.crtdt']}" style="width:10%">
@@ -33,6 +31,8 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.so.status']}" style="width:10%">
+				<h:outputText
+					value="#{committeBackingBean.getStatusDescById(scQt.qtStatus.statusId)}" />
 			</p:column>
 
 		</p:dataTable>

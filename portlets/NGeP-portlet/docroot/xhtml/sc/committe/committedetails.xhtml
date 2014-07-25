@@ -10,12 +10,18 @@
 		<ui:fragment rendered="#{committeBackingBean.managedBean.scCommittee.committeStatus.statusId eq '60202'}">
 			<ui:include src="/xhtml/sc/committe/committenavbutton.xhtml" />
 		</ui:fragment>
-		
+		<ui:include src="/xhtml/sc/committe/committeeheader.xhtml" />
 		<ui:include src="committeeqcselection.xhtml" />
 	</ui:fragment>
 
 	<ui:fragment
-		rendered="#{committeBackingBean.managedBean.headerTitle eq 'Quotation Committee B' or committeBackingBean.managedBean.headerTitle eq 'Quotation Committee A'}">
+		rendered="#{committeBackingBean.managedBean.headerTitle eq 'Quotation Committee B' or committeBackingBean.managedBean.headerTitle eq 'Quotation Committee A' or
+					committeBackingBean.managedBean.headerTitle eq 'Procurement Board B' or committeBackingBean.managedBean.headerTitle eq 'Procurement Board A' or
+					committeBackingBean.managedBean.headerTitle eq 'Federal Procurement Board Sabah' or committeBackingBean.managedBean.headerTitle eq 'Federal Procurement Board Sarawak'}">
+		<ui:fragment rendered="#{committeBackingBean.managedBean.scCommittee.committeStatus.statusId eq '60202'}">
+			<ui:include src="/xhtml/sc/committe/committenavbutton.xhtml" />
+		</ui:fragment>
+		<ui:include src="/xhtml/sc/committe/committeeheader.xhtml" />
 		<ui:include src="committeefcselection.xhtml" />
 	</ui:fragment>
 

@@ -6,19 +6,19 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel header="Procurement Board B" toggleable="true">
+	<p:panel header="#{committeBackingBean.managedBean.headerTitle}"
+		toggleable="true" styleClass="committeMemberDtls">
 		<div align="right">
 			<p:commandButton value="View History"
 				action="#{committeBackingBean.viewHistoryAction}" />
 		</div>
-
-		<p:dataTable id="procurementid"
+		<p:dataTable id="procurementid" rowKey="#{committeemember}"
 			value="#{committeBackingBean.managedBean.qtCommittee.scCommittee.scCommitteeMembers}"
 			var="committeemember" rowIndexVar="index" editable="true"
-			rowKey="#{committeemember}"
 			selection="#{committeBackingBean.managedBean.selectedCommitteMemebers}">
 
-			<p:column selectionMode="multiple" style="width:2%" />
+			<p:column selectionMode="multiple" style="width:2%"
+				rendered="#{committeBackingBean.managedBean.qtCommittee.scCommittee.committeStatus.statusId eq '60202'}" />
 
 			<ac:paginator for="procurementid" />
 
@@ -51,23 +51,35 @@
 
 			<p:column headerText="#{lbl['lbl.sc.committe.sctable.details.pp']}"
 				style="width: 5%">
-				<h:outputText value="#{committeemember.PNP ? 'Yes' : 'No'}" />
+				<h:outputText
+					value="#{lbl[committeemember.PNP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
 			</p:column>
+			<c:if
+				test="#{committeBackingBean.managedBean.qtCommittee.scCommittee.committeStatus.statusId.intValue() ne 60202}">
 
-			<p:column headerText="#{lbl['lbl.sc.committe.sctable.detailsrole']}"
-				style="width: 10%">
-				<ui:fragment rendered="#{committeemember.PNP}">
-					<h:outputText value="Chairperson"
-						rendered="#{committeemember.memberRole eq 'C'}" />
-				</ui:fragment>
-				<ui:fragment rendered="#{!committeemember.PNP}">
-					<p:selectOneMenu value="#{committeemember.memberRole}"
-						style="width: 110px;margin-bottom: 5px;">
-						<f:selectItems
-							value="#{committeBackingBean.managedBean.roleTypes}" />
-					</p:selectOneMenu>
-				</ui:fragment>
-			</p:column>
+				<p:column headerText="#{lbl['lbl.sc.committe.sctable.detailsrole']}"
+					style="width: 10%">
+					<h:outputText
+						value="#{committeBackingBean.getParameterDesc(committeemember.memberRole)}" />
+				</p:column>
+			</c:if>
+			<c:if
+				test="#{committeBackingBean.managedBean.qtCommittee.scCommittee.committeStatus.statusId.intValue() eq 60202}">
+				<p:column headerText="#{lbl['lbl.sc.committe.sctable.detailsrole']}"
+					style="width: 10%">
+					<ui:fragment rendered="#{committeemember.PNP}">
+						<h:outputText value="Chairperson"
+							rendered="#{committeemember.memberRole.parameterCode eq 'C'}" />
+					</ui:fragment>
+					<ui:fragment rendered="#{!committeemember.PNP}">
+						<p:selectOneMenu value="#{committeemember.memberRole.parameterId}"
+							style="width: 110px;margin-bottom: 5px;">
+							<f:selectItems
+								value="#{committeBackingBean.managedBean.roleTypes}" />
+						</p:selectOneMenu>
+					</ui:fragment>
+				</p:column>
+			</c:if>
 
 			<p:column headerText="#{lbl['lbl.sc.committe.sctable.rep.type']}"
 				style="width: 15%">
@@ -78,19 +90,21 @@
 					<f:selectItem itemLabel="Turut Hadir" itemValue="3" />
 				</p:selectOneMenu>
 			</p:column>
-
 		</p:dataTable>
+		<h:panelGroup
+			rendered="#{committeBackingBean.managedBean.qtCommittee.scCommittee.committeStatus.statusId eq '60202'}">
+			<div class="ppRightBtn">
+				<p:commandButton id="quotationcommitteeadd"
+					value="#{lbl['lbl.so.addbtn']}" process="@this" icon="ui-icon-add"
+					action="#{committeBackingBean.addCommitteMember(committeBackingBean.managedBean.headerTitle)}"
+					oncomplete="screen3.show();" update="@(.addQCMember)" />
 
-		<div class="ppRightBtn">
-			<p:commandButton id="quotationcommitteeadd"
-				value="#{lbl['lbl.so.addbtn']}" process="@this" icon="ui-icon-add"
-				action="#{committeBackingBean.addCommitteMember(committeBackingBean.managedBean.qtCommittee, committeBackingBean.managedBean.headerTitle)}"
-				oncomplete="screen3.show();" update="@(.addQCMember)" />
-
-			<p:commandButton value="#{lbl['lbl.so.delete']}"
-				icon="ui-icon-delete" update="committeMembersListId" />
-		</div>
-
+				<p:commandButton value="#{lbl['lbl.so.delete']}"
+					icon="ui-icon-delete" process="@this, committeMembersListId"
+					action="#{committeBackingBean.deleteCommitteeAction}"
+					update="committeMembersListId" />
+			</div>
+		</h:panelGroup>
 	</p:panel>
 	<ui:include src="/xhtml/sc/committe/committeetenderscreen.xhtml" />
 </ui:composition>

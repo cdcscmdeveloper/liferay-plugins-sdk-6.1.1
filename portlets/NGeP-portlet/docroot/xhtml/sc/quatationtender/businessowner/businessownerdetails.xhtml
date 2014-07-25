@@ -52,7 +52,7 @@
 				<h:outputText value="#{businessowner.grade}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.so.bo.pp']}" style="width : 6%">
-				<h:outputText value="#{businessowner.PNP ? 'Yes' : 'No'}" />
+				<h:outputText value="#{lbl[businessowner.PNP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.so.bo.consolidate']}"
 				style="width:10%" selectionMode="single">
