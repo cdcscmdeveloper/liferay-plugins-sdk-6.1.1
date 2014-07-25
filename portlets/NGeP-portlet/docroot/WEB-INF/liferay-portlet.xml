@@ -1598,7 +1598,17 @@
 		<ajaxable>false</ajaxable>
 		<header-portlet-css>/css/ep/main.css</header-portlet-css>
 		<css-class-wrapper>reports-portlet</css-class-wrapper>
-	 </portlet>				
+	 </portlet>
+	<portlet>
+		<portlet-name>pmSalutation</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>pm-Salutation-portlet</css-class-wrapper>
+	</portlet>	 				
 		<role-mapper>
 		<role-name>administrator</role-name>
 		<role-link>Administrator</role-link>
