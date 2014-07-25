@@ -18,6 +18,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
+import my.ep.web.bean.sc.quatationtender.UserCommitteeSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.apache.log4j.Logger;
@@ -84,9 +85,15 @@ public class CommitteManagedBean extends BaseManagedBean {
 	private List<PmUser> govUsers;
 
 	private String userId;
+	
+	private IPagingDataModel<PmUser> userSearchQCDataModel;
+	private UserCommitteeSearchBean userQCSearchBean;
 
 	private List<PmUser> externalUsers;
 	private List<PmUser> selectedPmUser;
+	
+	private List<SelectItem> representativesTypeslist;
+	private List<SelectItem> addRepresentativesTypeslist;
 
 	private String tenderNum;
 	private List<ScQt> scQt;
@@ -137,6 +144,8 @@ public class CommitteManagedBean extends BaseManagedBean {
 
 		qtnTenderSearchBean = new QtnTenderSearchBean();
 		cloneQtnTenderSearchBean = new QtnTenderSearchBean();
+		
+		userQCSearchBean = new UserCommitteeSearchBean(); 
 	}
 
 	public SelectItem[] getRoleTypes() {
@@ -609,6 +618,41 @@ public class CommitteManagedBean extends BaseManagedBean {
 	public void setCloneSearchQTDataModel(
 			IPagingDataModel<ScQt> cloneSearchQTDataModel) {
 		this.cloneSearchQTDataModel = cloneSearchQTDataModel;
+	}
+
+	public IPagingDataModel<PmUser> getUserSearchQCDataModel() {
+		return userSearchQCDataModel;
+	}
+
+	public void setUserSearchQCDataModel(
+			IPagingDataModel<PmUser> userSearchQCDataModel) {
+		this.userSearchQCDataModel = userSearchQCDataModel;
+	}
+
+	public UserCommitteeSearchBean getUserQCSearchBean() {
+		return userQCSearchBean;
+	}
+
+	public void setUserQCSearchBean(UserCommitteeSearchBean userQCSearchBean) {
+		this.userQCSearchBean = userQCSearchBean;
+	}
+
+	public List<SelectItem> getRepresentativesTypeslist() {
+		return representativesTypeslist;
+	}
+
+	public void setRepresentativesTypeslist(
+			List<SelectItem> representativesTypeslist) {
+		this.representativesTypeslist = representativesTypeslist;
+	}
+
+	public List<SelectItem> getAddRepresentativesTypeslist() {
+		return addRepresentativesTypeslist;
+	}
+
+	public void setAddRepresentativesTypeslist(
+			List<SelectItem> addRepresentativesTypeslist) {
+		this.addRepresentativesTypeslist = addRepresentativesTypeslist;
 	}
 
 }
