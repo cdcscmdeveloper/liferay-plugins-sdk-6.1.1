@@ -9,40 +9,51 @@
 	<p:panel id="itemId" header="Product Details" toggleable="true"	
 	     toggleSpeed="500"  rendered="#{amendmentBackingBean.managedBean.itemProductExist}" >
 		<h:panelGrid style="width:100%;">
-			<p:dataTable id="itemTable" var="data" value="#{amendmentBackingBean.managedBean.ctItemList}"  lazy="true"  
-				selectionMode="single"	selection="#{amendmentBackingBean.managedBean.selectedItem}"  rowKey="#{data}" widgetVar="ctItemsTableObj" >
+		
+			<p:dataTable id="itemTable" var="ctItemVar" 
+			    value="#{amendmentBackingBean.managedBean.ctItemList}"  widgetVar="ctItemsTableObj"
+				selectionMode="single"	selection="#{amendmentBackingBean.managedBean.selectedItem}"  rowKey="#{ctItemVar}">
 				<ac:paginator for="itemTable" />
-				<p:ajax event="rowSelect" update=":form:changeField" />
-				<p:column headerText="#{lbl['lbl.ct.susp.tbl.item.name']}" style="width:45%;" filterBy="#{data.itemName}" filterMatchMode="contains">
-					<p:outputLabel value="#{data.itemName}"	style="float:left;" />
+				<p:ajax event="rowSelect" update=":form:itemTable,:form:changeField" />
+			
+				<p:column headerText="#{lbl['lbl.ct.susp.tbl.item.name']}" 
+				      style="width:45%;" filterBy="#{ctItemVar.itemName}" filterMatchMode="contains">
+					<p:outputLabel value="#{ctItemVar.itemName}"	style="float:left;" />
 				</p:column>
+			
 				<p:column style="width:10%;" headerText="Type of Goods">
-					<p:outputLabel value="#{amendmentBackingBean.getParameterDesc(data.itemOrigin)}" style="float:left;" />
+					<p:outputLabel value="#{amendmentBackingBean.getParameterDesc(ctItemVar.itemOrigin)}" style="float:left;" />
 				</p:column>				
+			
 				<p:column headerText="#{lbl['lbl.ct.item.table.uom']}" style="width:10%;">
-					<p:outputLabel value="#{data.uom.uomName}" style="float:left;" />
+					<p:outputLabel value="#{ctItemVar.uom.uomName}" style="float:left;" />
 				</p:column>
+			
 				<p:column headerText="#{lbl['lbl.ct.item.minodrqty']}" style="width:10%;text-align: right;">
-					<h:outputText value="#{data.minimumOrderQty}" >
-						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, data.uom.uomCode)}" />					
+					<h:outputText value="#{ctItemVar.minimumOrderQty}" >
+						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctItemVar.uom.uomCode)}" />					
 					</h:outputText>
 				</p:column>
+			
 				<p:column headerText="#{lbl['lbl.ct.item.maxqty']}" style="width:10%;text-align: right;">
-					<h:outputText value="#{data.maxQuantity}" >
-						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, data.uom.uomCode)}" />
+					<h:outputText value="#{ctItemVar.maxQuantity}" >
+						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctItemVar.uom.uomCode)}" />
 					</h:outputText>
 				</p:column>
+			
 				<p:column headerText="#{lbl['lbl.ct.item.newmaxqty']}" style="text-align: right;" rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange}">
-					<p:inputText size="10" value="#{data.newMaxQuantity}" disabled="true" styleClass="ppRightBtn" >
-						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, data.uom.uomCode)}" />					
+					<p:inputText size="10" value="#{ctItemVar.newMaxQuantity}" disabled="true" styleClass="ppRightBtn" >
+						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctItemVar.uom.uomCode)}" />					
 					</p:inputText>
 					<p:spacer width="5"/>
 					<p:commandLink update=":form:dlgItemMaxQty,itemTable" oncomplete="dlgItemMaxQty.show();return false;">
-						<f:setPropertyActionListener value="#{data}" target="#{amendmentBackingBean.managedBean.selectedItem}" />
+						<f:setPropertyActionListener value="#{ctItemVar}" target="#{amendmentBackingBean.managedBean.selectedItem}" />
 						<p:graphicImage library="ep/images/design" name="edit.png" value="/resources/ep/images/design/edit.png" title="Edit" style="margin-bottom: -4px;"  />
 					</p:commandLink>
 				</p:column>
+				
 			</p:dataTable>
+			
 			<p:dialog id="dlgItemMaxQty" widgetVar="dlgItemMaxQty" 
 			   header="Edit Maximum Quantity" styleClass="screen-title" resizable="false" modal="true" width="420" height="200">
 				<h:panelGrid columns="1">
@@ -55,6 +66,7 @@
 					<p:column headerText="Maximum Quantity">
 						<p:inputText value="#{data.maxQuantity}" styleClass="ppRightBtn" style="width:119px;" rendered="#{data.changeQuantity}">
 							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, data.ctContractItem.uom.uomCode)}" />
+							<p:ajax process="@this"/>
 						</p:inputText>
 						<h:outputText value="#{data.maxQuantity}" style="float:right;" rendered="#{!data.changeQuantity}">
 							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, data.ctContractItem.uom.uomCode)}" />
@@ -89,7 +101,8 @@
 						action="#{amendmentBackingBean.setNewMaxQty()}" onclick="dlgItemMaxQty.hide();" />
 					<p:commandButton value="Cancel" icon="ui-icon-reject" onclick="dlgItemMaxQty.hide();" type="button" />
 				</div>
-			</p:dialog>		
+			</p:dialog>	
+				
 			<p:dialog id="dlgDelItemMaxQty" widgetVar="dlgDelItemMaxQty" header="Delete Confirmation" styleClass="screen-title"
 				resizable="false" modal="true" width="350" height="95">
 				<h:panelGrid columns="3">
@@ -107,76 +120,78 @@
 				</div>
 			</p:dialog>					
 		</h:panelGrid>
+		
 		<p:outputPanel id="changeField">
 			<p:spacer height="20" />
 			<h:panelGrid columns="2" style="height:50px;text-align:bottom;"
-				rendered="#{amendmentBackingBean.managedBean.selectedItem!=null}">
+				rendered="#{amendmentBackingBean.managedBean.selectedItem != null}">
 				<h:outputLabel for="show" value="Show" style="width:50px;" />
 				<p:selectOneMenu id="show" value="#{amendmentBackingBean.managedBean.showItem}" style="width:200px;">
 					<f:selectItems value="#{amendmentBackingBean.getItemDisplayTypeDropdownList()}" />
-					<p:ajax event="change" update=":form:changeField"	listener="#{amendmentBackingBean.changeField}" process="@this" />
+					<p:ajax event="change" update=":form:changeField"	listener="#{amendmentBackingBean.changeField}" process="@form" />
 				</p:selectOneMenu>
 			</h:panelGrid>
-			<p:outputPanel style="width:100%" rendered="#{(amendmentBackingBean.managedBean.selectedItem!=null and 
+			<p:outputPanel style="width:100%" rendered="#{(amendmentBackingBean.managedBean.selectedItem !=null and 
 				amendmentBackingBean.managedBean.showItem == ParameterConst.itemDisplayTypePrice)
 				and amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange}">
-				<p:dataTable id="itemPriceTable" var="data" rowKey="#{data}" lazy="true"
+				<p:dataTable id="itemPriceTable" var="itemPriceVar" 
 					value="#{amendmentBackingBean.managedBean.selectedItem.ctItemPrices}" >
 					<ac:paginator for="itemPriceTable" />
 					<p:column headerText="#{lbl['lbl.ct.item.table1.price.zone']}" style="width:40%;"
 						rendered="#{amendmentBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeZonalStandard or 
 					  		amendmentBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeZonalTier or 
 					  		amendmentBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeZonalTariff}">
-						<p:outputLabel value="#{data.ctContractZone.zoneName}" style="float:left;" />
+						<p:outputLabel value="#{itemPriceVar.ctContractZone.zoneName}" style="float:left;" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.item.fromqty']}" style="width:10%;"
 						rendered="#{amendmentBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeTier or 
 					  		amendmentBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeZonalTier or
 					  		amendmentBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeTariff or 
 					  		amendmentBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeZonalTariff}">
-						<p:outputLabel value="#{data.fromQty}" styleClass="ppRightBtn" />
+						<p:outputLabel value="#{itemPriceVar.fromQty}" styleClass="ppRightBtn" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.item.toqty']}" style="width:10%;"
 						rendered="#{amendmentBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeTier or 
 					  		amendmentBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeZonalTier or
 					  		amendmentBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeTariff or 
 					  		amendmentBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeZonalTariff}">
-						<p:outputLabel value="#{data.toQty}" styleClass="ppRightBtn" />
+						<p:outputLabel value="#{itemPriceVar.toQty}" styleClass="ppRightBtn" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.item.subseq']}" style="width:10%;"
 						rendered="#{amendmentBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeTariff or 
 					  		amendmentBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeZonalTariff}">
-						<p:outputLabel value="#{data.toQty}" styleClass="ppRightBtn" />
+						<p:outputLabel value="#{itemPriceVar.toQty}" styleClass="ppRightBtn" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.item.table1.price.price']}" style="width:10%;">
-					  <h:panelGroup style="float:right;" rendered="#{data.changePrice}">
-					   	<p:inputText value="#{data.unitPrice}" styleClass="ppRightBtn" style="width:100px;">
+					  <h:panelGroup style="float:right;" rendered="#{itemPriceVar.changePrice}">
+					   	<p:inputText value="#{itemPriceVar.unitPrice}" styleClass="ppRightBtn" style="width:100px;">
 							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+							<p:ajax process="@this"/>
 						</p:inputText>
 						</h:panelGroup>
-						<h:outputText value="#{data.unitPrice}" style="float:right;" rendered="#{!data.changePrice}">
+						<h:outputText value="#{itemPriceVar.unitPrice}" style="float:right;" rendered="#{!itemPriceVar.changePrice}">
 							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</h:outputText>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.item.table1.price.efdate']}" style="width:10%;">
-						<h:outputText value="#{data.effDate}">
+						<h:outputText value="#{itemPriceVar.effDate}">
 							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</h:outputText>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.item.table1.price.edate']}" style="width:10%;">
-						<h:outputText value="#{data.expDate}">
+						<h:outputText value="#{itemPriceVar.expDate}">
 							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</h:outputText>
 					</p:column>
 					<p:column headerText="Action" styleClass="column-align-center"
 						style="width:10%;">
-						<p:commandLink update=":form:itemPriceTable" process="@form" rendered="#{!data.changePrice and data.editable}"
+						<p:commandLink update=":form:itemId" process="@form" rendered="#{!itemPriceVar.changePrice and itemPriceVar.editable}"
 							action="#{amendmentBackingBean.editItemPriceOnIndexs()}">
-							<f:setPropertyActionListener value="#{data}" target="#{amendmentBackingBean.managedBean.ctItemPrices}" />
+							<f:setPropertyActionListener value="#{itemPriceVar}" target="#{amendmentBackingBean.managedBean.ctItemPrices}" />
 							<p:graphicImage library="ep/images/design" name="edit.png" value="/resources/ep/images/design/edit.png" title="Edit" />
 						</p:commandLink>
-						<p:commandLink rendered="#{data.changePrice}" oncomplete="dlgItemPrices.show();return false;">
-							<f:setPropertyActionListener value="#{data}" target="#{amendmentBackingBean.managedBean.ctItemPrices}" />
+						<p:commandLink rendered="#{itemPriceVar.changePrice}" oncomplete="dlgItemPrices.show();return false;">
+							<f:setPropertyActionListener value="#{itemPriceVar}" target="#{amendmentBackingBean.managedBean.ctItemPrices}" />
 							<p:graphicImage library="ep/images/design" name="delete.png" value="/resources/ep/images/design/delete.png" title="Delete" />
 						</p:commandLink>
 					</p:column>
@@ -214,6 +229,7 @@
 					     <h:panelGroup style="float:right;" rendered="#{data.changeCeilQuantity}">
 						  <p:inputText value="#{data.ceilingQuantity}" styleClass="ppRightBtn" style="width:100px;">
 							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, data.ctContractItem.uom.uomCode)}" />
+								<p:ajax process="@this"/>
 						</p:inputText>
 						</h:panelGroup>
 						<h:outputText value="#{data.ceilingQuantity}" style="float:right;" rendered="#{!data.changeCeilQuantity}">
@@ -298,6 +314,7 @@
 					     <h:panelGroup style="float:right;"  rendered="#{data.changePrice}">
 					    	<p:inputText value="#{data.unitPrice}" styleClass="ppRightBtn" style="width:100px;">
 							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+								<p:ajax process="@this"/>
 						</p:inputText>
 					</h:panelGroup>
 						<h:outputText value="#{data.unitPrice}" style="float:right;" rendered="#{!data.changePrice}">
@@ -387,4 +404,3 @@
 		</table>
 	</p:panel>		  	
  </ui:composition>
-

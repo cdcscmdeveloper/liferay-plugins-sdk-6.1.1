@@ -57,8 +57,8 @@
                  styleClass="ui-inputtextarea"></p:inputTextarea>
            </h:panelGrid>
            <div class="ppRightBtn">
-		     <p:commandButton value="Yes" icon="ui-icon-accept" update="@([id$=tableAgencyDetails])" process="@form" 
-				actionListener="#{contractDetailsBackingBean.deleteAgencyDetails()}" onclick="dlgDel.hide();"/>
+		     <p:commandButton value="Yes" icon="ui-icon-accept" update=":form:tableAgencyDetails,:form:itemId"
+		         process="@form" actionListener="#{contractDetailsBackingBean.deleteAgencyDetails()}" onclick="dlgDel.hide();"/>
 			  <p:commandButton value="No" icon="ui-icon-reject" onclick="dlgDel.hide();" type="button" />
 		   </div>
         </p:dialog>  
@@ -96,7 +96,7 @@
                      value="#{contractDetailsBackingBean.managedBean.ptjCodeNameSearchValues}" />
 			  </h:panelGrid>
 			  	<div class="ppRightBtn">
-       		         <p:commandButton value="#{lbl['lbl.btn.search']}" update="@([id$=tableAgency])"
+       		         <p:commandButton value="#{lbl['lbl.btn.search']}" update=":form:tableAgency"
        		            action="#{contractDetailsBackingBean.searchAgencyDetails}" icon="ui-icon-search" /> 
 			         <p:commandButton id="resetlBtn" value="#{lbl['lbl.btn.reset']}"/>
 		       </div>
@@ -114,7 +114,7 @@
 			 </p:dataTable>
              <f:facet name="footer">
 			  <h:panelGrid columns="2"  style="float:right;height:100px;vertical-align: middle;">
-				<p:commandButton value="Select"   process="@form" update="@([id$=tableAgencyDetails],[id$=dialogAgency])" 
+				<p:commandButton value="Select"   process="@form" update=":form:tableAgencyDetails,:form:itemId" 
 				action="#{contractDetailsBackingBean.addAgencyDetails()}" icon="ui-icon-accept" onclick="dlgAgency.hide();"/>
                 <p:commandButton value="Cancel" icon="ui-icon-cancel" type="button" ajax="false" onclick="dlgAgency.hide();" />
 			  </h:panelGrid>

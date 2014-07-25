@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -1013,6 +1014,13 @@ public void ConstructSideTabMenu(){
 		}
 	}
     
+  public void  refreshCeilingQuantity(){
+	  if (this.getManagedBean().getShowItem() != null &&
+			   this.getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY)){
+		     refreshAgencyCeilingQuantityList();
+	   }
+    }
+    
     public void changeItemTypes(){
     	try{
     		flushItem();
@@ -1142,6 +1150,17 @@ public void ConstructSideTabMenu(){
 		  ctAgency.setExpDate(getManagedBean().getContractVer().getCtContractValue().getExpDate());
 		  ctAgency.setOrgProfile(pmOrgProfile);
 		  this.getManagedBean().getContractVer().getCtAgencies().add(ctAgency);
+		  if(this.getManagedBean().getCtItemList() != null &&  this.getManagedBean().getCtItemList().size() > 1){
+			     for(CtContractItem contractItem: this.getManagedBean().getCtItemList()){
+			    	             CtItemCeilingQty itemCeilingQty = new CtItemCeilingQty();
+			    		  	      itemCeilingQty.setCtAgency(ctAgency);
+			    			      itemCeilingQty.setCtContractItem(contractItem);
+			    		  	      itemCeilingQty.setCeilingQuantity(new BigDecimal(0));
+			    			      itemCeilingQty.setEffDate(getManagedBean().getContractVer().getCtContractValue().getEffDate());
+			    			      itemCeilingQty.setExpDate(getManagedBean().getContractVer().getCtContractValue().getExpDate());
+			    			      contractItem.getCtItemCeilingQties().add(itemCeilingQty);
+							}
+						}
 	   }selectedPmOrgProfile = null;
 	}
 	 
@@ -1149,6 +1168,17 @@ public void ConstructSideTabMenu(){
 	  for(int i = 0; i < selectedListOfAgency.length; i++) {
 		 CtAgency ctAgency = selectedListOfAgency[i];
 		 this.getManagedBean().getContractVer().getCtAgencies().remove(ctAgency);
+		 if(this.getManagedBean().getCtItemList() != null &&  this.getManagedBean().getCtItemList().size() > 1){
+			     for(CtContractItem contractItem: this.getManagedBean().getCtItemList()){
+			    	 Iterator<CtItemCeilingQty> ctItemCeilingQtyIterator =  contractItem.getCtItemCeilingQties().iterator();
+			    	 while(ctItemCeilingQtyIterator.hasNext()){
+							CtItemCeilingQty ctItemCeilingQty = ctItemCeilingQtyIterator.next();
+							if(ctItemCeilingQty.getCtAgency().getOrgProfile().getOrgProfileId().equals(ctAgency.getOrgProfile().getOrgProfileId())){
+								ctItemCeilingQtyIterator.remove();
+							}
+						}
+			     }	
+		   }
 	  }selectedListOfAgency = null;	
 	}
 	
@@ -1516,7 +1546,7 @@ public void ConstructSideTabMenu(){
 			amendBB.getManagedBean().setRemarkList(resDTO.getCtRemarks());
 			amendBB.getManagedBean().setAttachmentList(resDTO.getCtAttachments());
 			amendBB.getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, 
-			amendBB.getManagedBean().getContractVer().getDocType(), amendBB.getManagedBean().getCtContract().getContractNo()));
+			amendBB.getManagedBean().getContractVer().getDocType(), amendBB.getManagedBean().getCtContract().getContractNo()));	
 		}finally {
 			contractSO = null;
 			ctBB = null;

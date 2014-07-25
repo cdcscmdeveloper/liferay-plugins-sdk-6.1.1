@@ -45,7 +45,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private String[] action;
 	private String processName;
 	private String ackFA;
-	private String showItem ="Item  Pricing";
+	private String showItem;
 	private String selectedRadioButton="1";
 	private String name = null;
 	private String identificationNo = null;
