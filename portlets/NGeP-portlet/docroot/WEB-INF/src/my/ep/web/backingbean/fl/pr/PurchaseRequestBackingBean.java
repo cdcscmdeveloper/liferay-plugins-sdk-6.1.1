@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -128,6 +129,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
+import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.TreeNode;
 
@@ -383,6 +385,22 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		
 		//initialize all the COA map
 		getVotFundList(getManagedBean().getFulfilmentRequest().getIssuedOrgProfile().getOrgProfileId());
+		
+		Date startDate = getManagedBean().getFulfilmentRequest().getStartDate();
+		int deliveryTerm = 0;
+		deliveryTerm = getManagedBean().getFulfilmentRequest().getDeliveryTerm();
+		String uomCode = getManagedBean().getFulfilmentRequest().getPmUom().getParameterCode();
+		if(uomCode.equalsIgnoreCase(ParameterConst.DELIVERY_TERM_DAYS)){
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(startDate);
+			calendar.add(Calendar.DATE, deliveryTerm);
+			getManagedBean().setMaxDate(calendar.getTime());
+		}else if(uomCode.equalsIgnoreCase(ParameterConst.DELIVERY_TERM_MONTHS)){
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(startDate);
+			calendar.add(Calendar.MONTH, deliveryTerm);
+			getManagedBean().setMaxDate(calendar.getTime());
+		}
 	}
 
 	public void flDeliveryAddrList() {
@@ -777,6 +795,8 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			
 			setFulfilmentRequestField(resDTO);
 		}
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "prBasePage.xhtml?faces-redirect=true");
 	}
 	
 	private void getSumOrderedQty(FlFulfilmentRequest flRequest) {
@@ -887,7 +907,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		return facesScopes.hasRoleUser(RoleCode.FL_APPROVER.value());
 	}
 	
-	public void getLoginUserOrg(){
+	private void getLoginUserOrg(){
 		PmUser user = getFacesScopes().getUserSessionBean();
 		UserReqDTO reqDTO = new UserReqDTO();
 		reqDTO.setUserId(user.getUserId());
@@ -1052,7 +1072,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			for(TreeNode children:selectedNode.getChildren()){
 				FlFulfilmentItemAddr childData=((FlFulfilmentItemAddr)children.getData());
 				if(null !=childData.getPmVotFund()){
-					String votFundCode = votFundCodeMap.get(childData.getPmVotFund().getVotFundId()).getVotFundCode();
 					getManagedBean().setVotFundCode(childData.getPmVotFund().getVotFundCode());
 				}
 				
@@ -1180,14 +1199,13 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			
 			updateAllItemsWithChargeDrops(getManagedBean().getSelectedNodes()); // set COA to Y
 			FlFulfilmentItemAddr childItemAddress = null;
-			 boolean selected=false;
+			boolean selected=false;
 			for(TreeNode selectedNode : getManagedBean().getSelectedNodes()){
 				//code for selecting the treenode from popupmenu
-				 if(!selected){
+				if(!selected){
 					getManagedBean().setSelectedNode(selectedNode);
 					selected=true;
-				 }
-				 
+				}
 				for(TreeNode children:selectedNode.getChildren()){
 					childItemAddress = (FlFulfilmentItemAddr)children.getData();
 					childItemAddress.setPmVotFund(pmVotFund);
@@ -1222,12 +1240,84 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 					}
 				}
 			}
-			getManagedBean().populateChargeLineData(true);
+			populateChargeLineData(true);
 			onNodeSelect();
 			RequestContext.getCurrentInstance().execute("applyBulkCharge.hide()");
 		} finally {
 			parameterSO = null;
 		}
+	}
+	
+	private void populateChargeLineData(boolean retainPreviousSelection) {
+		getManagedBean().setChargeLineItemRoot(new DefaultTreeNode("root", null));
+		Map<Long, List<FlFulfilmentItemAddr>> chargeLineItemsMap = new HashMap<Long, List<FlFulfilmentItemAddr>>();
+		
+		for(FlDeliveryAddress  deliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
+			for(FlFulfilmentItemAddr itemAddress : deliveryAddress.getFlFulfilmentItemAddr()){
+				itemAddress.setChargeOrderedAmt(itemAddress.getOrderedAmt());
+				itemAddress.setChargeOrderedQty(itemAddress.getOrderedQty());
+				itemAddress.setChargeUnitPrice(itemAddress.getUnitPrice());
+				if(chargeLineItemsMap.containsKey(itemAddress.getScRequestItem().getRequestNoteItemId())){
+					//code for calculating duplicate charge line order amount and quantity for same unit price  Condition for checking unit price same.
+					boolean notContained=true;
+					for(FlFulfilmentItemAddr containedItem : chargeLineItemsMap.get(itemAddress.getScRequestItem().getRequestNoteItemId())){
+						if(containedItem.getChargeUnitPrice().equals(itemAddress.getUnitPrice())){
+							containedItem.setChargeOrderedAmt( containedItem.getChargeOrderedAmt().add(itemAddress.getOrderedAmt()));
+							containedItem.setChargeOrderedQty(containedItem.getChargeOrderedQty().add(itemAddress.getOrderedQty()));
+							notContained=false;
+						}
+					}
+					if(notContained){
+						chargeLineItemsMap.get(itemAddress.getScRequestItem().getRequestNoteItemId()).add(itemAddress);
+					}
+				} else {
+					List<FlFulfilmentItemAddr> itemAddressList=new ArrayList<FlFulfilmentItemAddr>();
+					itemAddressList.add(itemAddress);
+					chargeLineItemsMap.put(itemAddress.getScRequestItem().getRequestNoteItemId(),itemAddressList);
+				}
+			}
+		}
+		
+		FlFulfilmentItemAddr flItemAddress = null;
+		TreeNode childItemNode = null;
+		BigDecimal totalOrderAmt = null;
+		BigDecimal grandTotalOrderAmt=new BigDecimal(0);
+		getManagedBean().setOrderedAmtGrandTotal(grandTotalOrderAmt);
+		int i=0;
+		for(Entry<Long, List<FlFulfilmentItemAddr>> itemEntry : chargeLineItemsMap.entrySet()){
+			flItemAddress = (FlFulfilmentItemAddr) itemEntry.getValue().get(0).cloneEntity();
+			flItemAddress.setParent(true);
+			if(null != flItemAddress.getPmVotFund() && null != flItemAddress.getPmVotFund().getVotFundId()){
+				flItemAddress.setCoaValue("Y");
+			}else{
+				flItemAddress.setCoaValue("N");
+			}
+			
+			//Do create New Item Address and copy the first element data manually.
+			childItemNode = new DefaultTreeNode(flItemAddress.getScRequestItem().getRequestNoteItemId().toString(), flItemAddress,getManagedBean().getChargeLineItemRoot());
+			totalOrderAmt = new BigDecimal(0);
+			
+			if(retainPreviousSelection){
+				if(childItemNode.getType().equals(getManagedBean().getSelectedNode().getType())){
+					retainPreviousSelection = false;
+					getManagedBean().setSelectedNode(childItemNode);
+					childItemNode.setSelected(true);
+					i++;
+				}
+			} else if(i==0) {
+				getManagedBean().setSelectedNode(childItemNode);
+				childItemNode.setSelected(true);
+				i++;
+			}
+			
+			for(FlFulfilmentItemAddr itemAddr : itemEntry.getValue()) {
+				new DefaultTreeNode(itemAddr.getScRequestItem().getRequestNoteItemId().toString(), itemAddr, childItemNode);
+				totalOrderAmt = totalOrderAmt.add(itemAddr.getChargeOrderedAmt());
+			}
+			flItemAddress.setChargeOrderedAmt(totalOrderAmt);
+			grandTotalOrderAmt = grandTotalOrderAmt.add(totalOrderAmt);
+		}
+		getManagedBean().setOrderedAmtGrandTotal(grandTotalOrderAmt);
 	}
 
 	private void chargeLineValidation() {
@@ -1696,6 +1786,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			}
 		}
 	}
+	
 	/**
 	 * @return the votFundCodeMap
 	 */
@@ -1769,7 +1860,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	
 	public void onTabChange(int selectedTabIndex){
 		if(selectedTabIndex==3){
-			getManagedBean().populateChargeLineData(false);
+			populateChargeLineData(false);	
 			setClassName("@(.prChargeLinePnlClass)");
 			onNodeSelect();
 			getVotFundList(getManagedBean().getFulfilmentRequest().getIssuedOrgProfile().getOrgProfileId());
@@ -1809,4 +1900,5 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			flDeliveryAddress.setEndDate(getManagedBean().getFulfilmentRequest().getEndDate());
 		}
 	}
+	
 }
