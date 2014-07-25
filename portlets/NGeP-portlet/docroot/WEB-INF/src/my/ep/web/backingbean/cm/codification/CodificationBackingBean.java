@@ -1746,7 +1746,9 @@ public class CodificationBackingBean extends
 		reqDTO.getRequestExtList().add(
 				unspscBB.getManagedBean().getRequestCode());
 		resDTO = unspscSO.updateExtensionRequest(reqDTO);
-
+		FacesContext facesContext = FacesContext.getCurrentInstance();
+		facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,null, MessageUtils.getMessage(MessageConst.INFO_710001,
+				MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
 		return "BPMtesting";
 	}
 
