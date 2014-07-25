@@ -731,7 +731,7 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 			 requestSupplierItem.setSupplierItemPrice(itemPrice);
 			 getManagedBean().setRequestNoteDtl(requestNoteDtl);
 			 
-			 prInquiry.setRequestSupplierItem(requestSupplierItem);
+			 prInquiry.setRequestSupplierItem(requestNoteDtl.getScRequestSupplierItem());
 			 prInquiry.setDayToResponse(ParameterConst.PIQ_RESP_DAYS); // by default days
 
 			 List<String> priceTypes= new ArrayList<String>();
