@@ -180,6 +180,7 @@ public class SupplierManagementConst {
 	public static final String PO_HQ_TEMP = "UPS_PO_HQ";
 
 	public static final String APPROVER_HQ = "UPS_APPROVER";
+	public static final String APPROVER = "APPROVER";
 	public static final String APPROVER_HQ_TEMP = "UPS_APPROVER_HQ";
 	public static final String APPROVER_SA = "UPS_APPROVER_SA";
 	public static final String APPROVER_SK = "UPS_APPROVER_SK";
