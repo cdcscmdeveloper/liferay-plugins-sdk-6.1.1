@@ -17,6 +17,7 @@ import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.supplieruseractivation.SupplierUserActivationReqDTO;
 import my.ep.dto.sm.supplieruseractivation.SupplierUserActivationResDTO;
+import my.ep.exception.EpException;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.logging.LogKey;
@@ -168,17 +169,8 @@ public class SupplierUserActivationBackingBean extends
 							this.getManagedBean().setValidActivation(false);
 							this.getManagedBean().setSmPersonnel(null);
 							return navigateToAck();
-	//						SpkiReqDTO spkiReqDTO = new SpkiReqDTO();
-	//						spkiReqDTO.setSmPersonnel(this.getManagedBean().getSmPersonnel());
-	//						ISpkiSO spkiReqSO = (ISpkiSO) BusinessDelegate.getInstance().getServiceObject("sm", ISpkiSO.class);
-	//						SpkiResDTO spkiResDTO = spkiReqSO.requestCertificate(spkiReqDTO);
-							
-	//						FacesContext.getCurrentInstance().addMessage(
-	//								null,
-	//								new FacesMessage(FacesMessage.SEVERITY_INFO,
-	//										"Your account has been created successfully.", ""));
 						}else{
-							errorMsg("PM Creation Error.");
+							throw new EpException(MessageConst.ERROR_721001);
 						}
 					}
 				} else {
@@ -195,23 +187,12 @@ public class SupplierUserActivationBackingBean extends
 						SupplierUserActivationResDTO resDTO = new SupplierUserActivationResDTO();
 						
 						resDTO = reqSO.createPmProfile(reqDTO);
-	//					SupplierUserActivationResDTO resDTO = new SupplierUserActivationResDTO();
-	//					resDTO.setSuccessful(true);
 						if(resDTO.isSuccessful()){
 							this.getManagedBean().setValidActivation(false);
 							this.getManagedBean().setSmPersonnel(null);
 							return navigateToAck();
-	//						SpkiReqDTO spkiReqDTO = new SpkiReqDTO();
-	//						spkiReqDTO.setSmPersonnel(this.getManagedBean().getSmPersonnel());
-	//						ISpkiSO spkiReqSO = (ISpkiSO) BusinessDelegate.getInstance().getServiceObject("sm", ISpkiSO.class);
-	//						SpkiResDTO spkiResDTO = spkiReqSO.requestCertificate(spkiReqDTO);
-							
-	//						FacesContext.getCurrentInstance().addMessage(
-	//								null,
-	//								new FacesMessage(FacesMessage.SEVERITY_INFO,
-	//										"Your account has been created successfully.", ""));
 						}else{
-							errorMsg("PM Creation Error.");
+							throw new EpException(MessageConst.ERROR_721001);
 						}
 					} else {
 						errorMsg("Invalid Password.");
@@ -219,10 +200,11 @@ public class SupplierUserActivationBackingBean extends
 				}
 			}else{
 				log.info("Invalid Activation Key.");
-				errorMsg("Invalid Activation Key.");
+				throw new EpException(MessageConst.ERROR_721031);
 			}
 		} else {
-			errorMsg("Invalid Request.");
+			log.info("Invalid Request.");
+			throw new EpException(MessageConst.ERROR_721032);
 		}
 		
 		return "/xhtml/sm/supplieruseractivation/enterActivationDetails.xhtml";
