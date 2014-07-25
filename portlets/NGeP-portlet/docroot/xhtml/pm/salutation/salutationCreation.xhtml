@@ -1,0 +1,36 @@
+<ui:composition	
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	
+   <p:panel>
+	<h:panelGrid styleClass="noBorders tr,noBorders td" ></h:panelGrid>
+   </p:panel>
+	
+   <p:panel header="SALUTATION" toggleable="true">
+		
+	<table>
+	  <tr>	  	
+		<td><p:outputLabel value="#{lbl['lbl.pm.sa.code']}" />
+			<p:outputLabel value="*" styleClass="mandatory" /></td>
+		<td><p:inputText value="#{salutationBackingBean.managedBean.pmSalutation.salutationCode}" size="30" /></td>
+	  </tr>	
+	  <tr>
+		<td><p:outputLabel value="#{lbl['lbl.pm.sa.name']}" />
+			<p:outputLabel value="*" styleClass="mandatory" /></td>
+		<td><p:inputText value="#{salutationBackingBean.managedBean.pmSalutation.salutationName}" size="30" /></td>
+	  </tr>
+	   <tr> 
+		<td><p:outputLabel value="Status :" /></td>
+     	<td><p:selectOneMenu style="width:178px;margin-bottom:5px;">   
+			  <f:selectItems value="#{salutationBackingBean.getStatusList()}" /> 
+    	    </p:selectOneMenu></td>				
+	    </tr>
+	</table>
+   </p:panel>	
+</ui:composition>
