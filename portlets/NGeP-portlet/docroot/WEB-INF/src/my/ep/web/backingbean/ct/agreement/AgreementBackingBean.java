@@ -164,11 +164,11 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		return facesScopes;
 	}
 	
-	public String resetAgreementSessionData() {
-		log.debug("renewing session object..");
+	public void preRenderAgreement() {
 		renewSesionObject();
-		log.info("session renewed, forward to agreement page.");
-		return "agreementTab.xhtml";
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, "agreementTab.xhtml?faces-redirect=true");
 	}
 
 	public void preRenderView() throws NamingException {
