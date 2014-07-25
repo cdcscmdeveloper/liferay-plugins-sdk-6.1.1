@@ -9,20 +9,19 @@
 			<table style="width:100%">
 				<tr>
 					<td class="TableFieldLeft" style="width:120px">
-						<!-- <h:outputLabel value="#{lbl['lbl.template.doc.category']}" /> -->
 						<h:outputLabel value=" Template Category" />
 					</td>
 					<td class="TableFieldRight">
-						<p:selectOneMenu value="#{templateDocBackingBean.managedBean.categoryId}" id="templateCategory">
-							  <f:selectItems value="#{templateDocBackingBean.managedBean.templateCategoryList}" />
+						<p:selectOneMenu value="#{templateDocBackingBean.managedBean.procurementCategoryId}" id="templateCategory">
+							<f:selectItems value="#{templateDocBackingBean.getDropdownValues(ParameterTypeConst.procurementCategory)}" />
 						</p:selectOneMenu>
 					</td>
 					<td class="TableFieldLeft" style="width:120px">
 						<h:outputLabel value=" Process Type" />
 					</td>
 					<td class="TableFieldRight">
-						<p:selectOneMenu value="#{templateDocBackingBean.managedBean.processType}">
-						<f:selectItems value="#{templateDocBackingBean.getDropdownCodeValues('PST')}" />
+						<p:selectOneMenu value="#{templateDocBackingBean.managedBean.processTypeId}">
+							<f:selectItems value="#{templateDocBackingBean.getDropdownValues(ParameterTypeConst.tplDocProcessType)}" />
 						</p:selectOneMenu>
 					</td>
 				</tr>
@@ -51,7 +50,6 @@
 					<td colspan="4" style="text-align:right;">
 						<p:commandButton value="Reset" action="#{templateDocBackingBean.reset}" 
 							   update="panel1,panel2" icon="ui-icon-reset" resetValues="true" partialSubmit="true" process="@this">
-							   <!--  <p:ajax update="panel1" resetValues="true" /> --> 
 					    </p:commandButton>						 
 					 
 					</td>

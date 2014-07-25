@@ -9,10 +9,8 @@ import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.model.SelectItem;
 
 import my.ep.persistence.entity.ct.agreement.CtAgreementContent;
-import my.ep.persistence.entity.tpl.TplCategory;
 import my.ep.persistence.entity.tpl.doc.TplDocMaster;
 import my.ep.persistence.entity.tpl.doc.TplDocSection;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -32,84 +30,45 @@ public class TemplateDocManagedBean extends BaseManagedBean {
 
 	private static final long serialVersionUID = 1L;
 
-	private Long categoryId;
-	private String processType;
+	private boolean showTemplateList;
+	
+	private Long procurementCategoryId;
+	private Long processTypeId;
+	private Long impCategoryId;
+	private Long impProcessTypeId;
+	private Long docMasterId;
 	private String title;
 	private String desc;
-	private String templCategory;
+	private String impTitle;
 	
-	private String processValue;
-
-	private Long impCategoryId;
-	private Long docMasterId;	
-	
-	private TplCategory category;
-	
-	private TplDocMaster selectedTemplate;
-	private TplDocMaster selectedImpMaster;
-	private List<TplDocMaster> templateMasterList;
-	private List<TplDocMaster> importMasterList;
-	
-	private TplDocSection selectedSection;
-	private List<TplDocSection> deletedList;	
-	private List<TplDocSection> fullTemplateList;
-	private List<TplDocSection> selectedTemplateList;	
-	private List<TplDocSection> importedSectionList;
-	private List<TplDocSection> variableList;
-	
-	private TreeNode docSectionTN;
-	private TreeNode imptSectionTN;
-	private TreeNode selectedImpSection;
-	private Map<TplDocSection, TreeNode> docSectionMap;
-	
+	private String processType;
+	private String externalPageUrl;
 	private String selectedSectionTitle;
 	private String selectedSectionContent;
 	private String selectedSectionName;
+	private String selectedSectionText;
 	private String selectedOption;
 	private String previewValue;
-	private String flow;
-	private String selectedVariable;
-	private boolean showTemplateList = false;
 	
-	private String selectedSectionText;
-	
-		private List<SelectItem> templateTypeList;
-	    private Map<String, String> templateTypeMap;
-	
-	
-	private List<SelectItem> templateCategoryList; 
-	
-	private SelectItem[] templateProcessTypeList;
-	
-	//private List<TplSearch> templateDocSearch;
-
-	// for search in data table
-	private List<TplDocMaster> templateSearchList;
-
-	private String externalPageUrl;
 	private CtAgreementContent ctAgreementContent; 
-		/**
+	private TplDocMaster selectedTemplate;
+	private TplDocMaster selectedImpMaster;
+	private TplDocSection selectedSection;
+	private TreeNode docSectionTN;
+	private TreeNode imptSectionTN;
+	private TreeNode selectedImpSection;
+	
+	private List<TplDocMaster> importMasterList;
+	private List<TplDocMaster> templateSearchList;
+	private List<TplDocSection> variableList;
+	private List<TplDocSection> deletedList;
+	private List<TplDocSection> importedSectionList;
+	private Map<TplDocSection, TreeNode> docSectionMap;
+
+	/**
 	 * TemplateManagedBean constructor.
 	 */	
 	public TemplateDocManagedBean() {
-	}
-
-	
-	public List<TplDocSection> getFullTemplateList() {
-		return fullTemplateList;
-	}
-
-	public void setFullTemplateList(List<TplDocSection> fullTemplateList) {
-		this.fullTemplateList = fullTemplateList;
-	}
-
-	public List<TplDocSection> getSelectedTemplateList() {
-		return selectedTemplateList;
-	}
-
-	public void setSelectedTemplateList(
-			List<TplDocSection> selectedTemplateList) {
-		this.selectedTemplateList = selectedTemplateList;
 	}
 
 	public TplDocSection getSelectedSection() {
@@ -128,22 +87,6 @@ public class TemplateDocManagedBean extends BaseManagedBean {
 		this.selectedSectionTitle = selectedSectionTitle;
 	}
 
-	public boolean isShowTemplateList() {
-		return showTemplateList;
-	}
-
-	public void setShowTemplateList(boolean showTemplateList) {
-		this.showTemplateList = showTemplateList;
-	}
-
-	public String getFlow() {
-		return flow;
-	}
-
-	public void setFlow(String flow) {
-		this.flow = flow;
-	}
-
 	public TplDocMaster getSelectedTemplate() {
 		return selectedTemplate;
 	}
@@ -152,36 +95,12 @@ public class TemplateDocManagedBean extends BaseManagedBean {
 		this.selectedTemplate = selectedTemplate;
 	}
 
-	public String getSelectedVariable() {
-		return selectedVariable;
-	}
-
-	public void setSelectedVariable(String selectedVariable) {
-		this.selectedVariable = selectedVariable;
-	}
-
-	public List<TplDocSection> getDeletedList() {
-		return deletedList;
-	}
-
-	public void setDeletedList(List<TplDocSection> deletedList) {
-		this.deletedList = deletedList;
-	}
-
 	public TreeNode getDocSectionTN() {
 		return docSectionTN;
 	}
 
 	public void setDocSectionTN(TreeNode docSectionTN) {
 		this.docSectionTN = docSectionTN;
-	}
-
-	public List<TplDocMaster> getTemplateMasterList() {
-		return templateMasterList;
-	}
-
-	public void setTemplateMasterList(List<TplDocMaster> templateMasterList) {
-		this.templateMasterList = templateMasterList;
 	}
 
 	public String getSelectedSectionName() {
@@ -243,54 +162,6 @@ public class TemplateDocManagedBean extends BaseManagedBean {
 		this.imptSectionTN = imptSectionTN;
 	}
 
-	public TreeNode getSelectedImpSection() {
-		return selectedImpSection;
-	}
-
-	public void setSelectedImpSection(TreeNode selectedImpSection) {
-		this.selectedImpSection = selectedImpSection;
-	}
-
-	public Map<TplDocSection, TreeNode> getDocSectionMap() {
-		return docSectionMap;
-	}
-
-	public void setDocSectionMap(Map<TplDocSection, TreeNode> docSectionMap) {
-		this.docSectionMap = docSectionMap;
-	}
-
-	public List<TplDocSection> getImportedSectionList() {
-		return importedSectionList;
-	}
-
-	public void setImportedSectionList(List<TplDocSection> importedSectionList) {
-		this.importedSectionList = importedSectionList;
-	}
-
-	public List<SelectItem> getTemplateTypeList() {
-		return templateTypeList;
-	}
-
-	public void setTemplateTypeList(List<SelectItem> templateTypeList) {
-		this.templateTypeList = templateTypeList;
-	}
-
-	public Map<String, String> getTemplateTypeMap() {
-		return templateTypeMap;
-	}
-
-	public void setTemplateTypeMap(Map<String, String> templateTypeMap) {
-		this.templateTypeMap = templateTypeMap;
-	}
-
-	public Long getCategoryId() {
-		return categoryId;
-	}
-
-	public void setCategoryId(Long categoryId) {
-		this.categoryId = categoryId;
-	}
-
 	public Long getImpCategoryId() {
 		return impCategoryId;
 	}
@@ -299,127 +170,12 @@ public class TemplateDocManagedBean extends BaseManagedBean {
 		this.impCategoryId = impCategoryId;
 	}
 
-	public Long getDocMasterId() {
-		return docMasterId;
-	}
-
-	public void setDocMasterId(Long docMasterId) {
-		this.docMasterId = docMasterId;
-	}
-
 	public String getSelectedSectionContent() {
 		return selectedSectionContent;
 	}
 
 	public void setSelectedSectionContent(String selectedSectionContent) {
 		this.selectedSectionContent = selectedSectionContent;
-	}
-
-	public TplCategory getCategory() {
-		return category;
-	}
-
-	public void setCategory(TplCategory category) {
-		this.category = category;
-	}
-
-	public List<SelectItem> getTemplateCategoryList() {
-		return templateCategoryList;
-	}
-
-	public void setTemplateCategoryList(List<SelectItem> templateCategoryList) {
-		this.templateCategoryList = templateCategoryList;
-	}
-
-	
-	/*public List<TplSearch> getTemplateDocSearch() {
-		return templateDocSearch;
-	}
-
-	public void setTemplateDocSearch(List<TplSearch> templateDocSearch) {
-		this.templateDocSearch = templateDocSearch;
-	}*/
-
-
-	public String getProcessType() {
-		if(processType == null)
-			processType = "";
-		return processType;
-	}
-
-
-	public void setProcessType(String processType) {
-		this.processType = processType;
-	}
-
-
-	public String getTemplCategory() {
-		return templCategory;
-	}
-
-
-	public void setTemplCategory(String templCategory) {
-		this.templCategory = templCategory;
-	}
-
-
-	public List<TplDocMaster> getTemplateSearchList() {
-		return templateSearchList;
-	}
-
-
-	public void setTemplateSearchList(List<TplDocMaster> templateSearchList) {
-		this.templateSearchList = templateSearchList;
-	}
-
-
-	public String getSelectedSectionText() {
-		return selectedSectionText;
-	}
-
-
-	public void setSelectedSectionText(String selectedSectionText) {
-		this.selectedSectionText = selectedSectionText;
-	}
-
-
-	public String getTitle() {
-		return title;
-	}
-
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-
-	public String getDesc() {
-		return desc;
-	}
-
-
-	public void setDesc(String desc) {
-		this.desc = desc;
-	}
-
-
-	public SelectItem[] getTemplateProcessTypeList() {
-		return templateProcessTypeList;
-	}
-
-
-	public void setTemplateProcessTypeList(SelectItem[] templateProcessTypeList) {
-		this.templateProcessTypeList = templateProcessTypeList;
-	}
-
-
-	public String getProcessValue() {
-		return processValue;
-	}
-
-
-	public void setProcessValue(String processValue) {
-		this.processValue = processValue;
 	}
 
 	public String getExternalPageUrl() {
@@ -436,5 +192,135 @@ public class TemplateDocManagedBean extends BaseManagedBean {
 
 	public void setCtAgreementContent(CtAgreementContent ctAgreementContent) {
 		this.ctAgreementContent = ctAgreementContent;
+	}
+
+	public Long getProcurementCategoryId() {
+		return procurementCategoryId;
+	}
+
+	public void setProcurementCategoryId(Long procurementCategoryId) {
+		this.procurementCategoryId = procurementCategoryId;
+	}
+
+	public Long getProcessTypeId() {
+		return processTypeId;
+	}
+
+	public void setProcessTypeId(Long processTypeId) {
+		this.processTypeId = processTypeId;
+	}
+
+	public String getDesc() {
+		return desc;
+	}
+
+	public void setDesc(String desc) {
+		this.desc = desc;
+	}
+	
+	public String getTitle() {
+		return title;
+	}
+
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+
+	public String getProcessType() {
+		return processType;
+	}
+
+
+	public void setProcessType(String processType) {
+		this.processType = processType;
+	}
+
+
+	public Long getImpProcessTypeId() {
+		return impProcessTypeId;
+	}
+
+
+	public void setImpProcessTypeId(Long impProcessTypeId) {
+		this.impProcessTypeId = impProcessTypeId;
+	}
+
+
+	public String getImpTitle() {
+		return impTitle;
+	}
+
+
+	public void setImpTitle(String impTitle) {
+		this.impTitle = impTitle;
+	}
+
+	public String getSelectedSectionText() {
+		return selectedSectionText;
+	}
+
+	public void setSelectedSectionText(String selectedSectionText) {
+		this.selectedSectionText = selectedSectionText;
+	}
+
+	public List<TplDocMaster> getTemplateSearchList() {
+		return templateSearchList;
+	}
+
+	public void setTemplateSearchList(List<TplDocMaster> templateSearchList) {
+		this.templateSearchList = templateSearchList;
+	}
+
+	public List<TplDocSection> getDeletedList() {
+		if(deletedList==null) {
+			deletedList = new ArrayList<TplDocSection>();
+		}
+		return deletedList;
+	}
+
+	public void setDeletedList(List<TplDocSection> deletedList) {
+		this.deletedList = deletedList;
+	}
+
+	public List<TplDocSection> getImportedSectionList() {
+		return importedSectionList;
+	}
+
+	public void setImportedSectionList(List<TplDocSection> importedSectionList) {
+		this.importedSectionList = importedSectionList;
+	}
+
+	public Map<TplDocSection, TreeNode> getDocSectionMap() {
+		return docSectionMap;
+	}
+
+	public void setDocSectionMap(Map<TplDocSection, TreeNode> docSectionMap) {
+		this.docSectionMap = docSectionMap;
+	}
+
+	public Long getDocMasterId() {
+		return docMasterId;
+	}
+
+	public void setDocMasterId(Long docMasterId) {
+		this.docMasterId = docMasterId;
+	}
+
+	public boolean isShowTemplateList() {
+		return showTemplateList;
+	}
+
+	public void setShowTemplateList(boolean showTemplateList) {
+		this.showTemplateList = showTemplateList;
+	}
+
+	public TreeNode getSelectedImpSection() {
+		return selectedImpSection;
+	}
+
+	public void setSelectedImpSection(TreeNode selectedImpSection) {
+		this.selectedImpSection = selectedImpSection;
 	}
 }

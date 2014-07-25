@@ -5,15 +5,14 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:p="http://primefaces.org/ui" >
 
-
-
 	<ui:define name="resourceSection"/>
 	<ui:define name="contentSection">
 		<h:outputText value="New Template Document" styleClass="pageTitle" />
+		<p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="true" closable="true" severity="error,info" />
 		<table width="100%">
 			<tr>
 				<td style="text-align:left">
-					<p:commandButton action="#{templateDocBackingBean.backAction}" value="Back" />
+					<p:commandButton immediate="true" action="#{templateDocBackingBean.backAction}" value="Back" />
 				</td>
 				<td style="text-align:right">
 					<p:commandButton action="#{templateDocBackingBean.saveAction}" value="Save" />
@@ -29,19 +28,21 @@
 						<h:outputLabel value="#{lbl['lbl.tpl.doc.category']}" />
 					</td>
 					<td class="TableFieldRight">
-						<p:selectOneMenu value="#{templateDocBackingBean.managedBean.categoryId}" id="templateCategory" 
+						<p:selectOneMenu id="procCat" style="width:289px" 
+							value="#{templateDocBackingBean.managedBean.selectedTemplate.procurementCategory.parameterId}"
+							required="true"	label="#{lbl['lbl.tpl.spec.procurement.category']}" 
 							disabled="#{templateDocBackingBean.managedBean.externalPageUrl!=null}" >
-						<!-- <p:selectOneMenu value="#{templateDocBackingBean.managedBean.templCategory}" id="templateCategory"> -->
-							<f:selectItems value="#{templateDocBackingBean.managedBean.templateCategoryList}" />
+							<f:selectItems value="#{templateDocBackingBean.getDropdownValues(ParameterTypeConst.procurementCategory)}" />
 						</p:selectOneMenu>
+						<p:message for="procCat" display="icon" />
 					</td>
 					<td class="TableFieldLeft" style="width:120px">
 						<h:outputLabel value="#{lbl['lbl.tpl.doc.processtype']}" />
 					</td>
 					<td class="TableFieldRight">
-					<p:selectOneMenu value="#{templateDocBackingBean.managedBean.processType}" id="templateCategory111"
+					<p:selectOneMenu value="#{templateDocBackingBean.managedBean.selectedTemplate.processType.parameterId}" id="templateCategory111"
 						disabled="#{templateDocBackingBean.managedBean.externalPageUrl!=null}" >
-							<f:selectItems value="#{templateDocBackingBean.managedBean.templateProcessTypeList}" />
+							<f:selectItems value="#{templateDocBackingBean.getDropdownValues(ParameterTypeConst.tplDocProcessType)}" />
 						</p:selectOneMenu>
 					</td>
 				</tr>
@@ -76,7 +77,7 @@
 		<p:panel id="panel2" header="Contents" toggleable="true">
 			
 			<h:panelGrid width="100%">
-				<p:treeTable id="sampleTT" var="document"
+				<p:treeTable id="sampleTT" var="document" 
 					value="#{templateDocBackingBean.managedBean.docSectionTN}" >
 					<p:column style="width:200px">
 						<f:facet name="header">Section</f:facet>
@@ -231,18 +232,18 @@
 					<td class="TableFieldRight">
 						<p:selectOneMenu id="imptTemplateCategory" style="width:100px;"
 							value="#{templateDocBackingBean.managedBean.impCategoryId}">
-							<f:selectItems value="#{templateDocBackingBean.templateCategoryList}" />
+							<f:selectItems value="#{templateDocBackingBean.getDropdownValues(ParameterTypeConst.procurementCategory)}" />
 						</p:selectOneMenu>
 					</td>
 					<td class="TableFieldLeft" style="width: 120px"><h:outputLabel value="Process Type" /></td>
 					<td class="TableFieldRight">
 						<p:selectOneMenu style="width:100px;"
-							value="#{templateDocBackingBean.managedBean.impCategoryId}">
-							<f:selectItems value="#{templateDocBackingBean.templateCategoryList}" />
+							value="#{templateDocBackingBean.managedBean.impProcessTypeId}">
+							<f:selectItems value="#{templateDocBackingBean.getDropdownValues(ParameterTypeConst.tplDocProcessType)}" />
 						</p:selectOneMenu>
 					</td>
 					<td class="TableFieldLeft" style="width: 120px"><h:outputLabel value="Title" /></td>
-					<td class="TableFieldRight"><p:inputText style="width:180px" /></td>
+					<td class="TableFieldRight"><p:inputText style="width:180px" value="#{templateDocBackingBean.managedBean.impTitle}" /></td>
 					<td>
 						<p:commandLink action="#{templateDocBackingBean.imptSearchResult}" 
 							process="@this,imptTemplateCategory" update="impMasterList">

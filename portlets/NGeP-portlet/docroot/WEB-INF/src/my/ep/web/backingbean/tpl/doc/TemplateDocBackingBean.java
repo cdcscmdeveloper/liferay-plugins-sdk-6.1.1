@@ -31,22 +31,17 @@ import javax.xml.bind.JAXBException;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.agreement.IAgreementSO;
-import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.tpl.doc.ITemplateDocSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
 import my.ep.constant.pm.ParameterConst;
-import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.ct.agreement.ContractAgreementReqDTO;
-import my.ep.dto.pm.common.parameter.ParameterReqDTO;
-import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.tpl.doc.TemplateDocReqDTO;
 import my.ep.dto.tpl.doc.TemplateDocResDTO;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.tpl.TplCategory;
 import my.ep.persistence.entity.tpl.doc.TplDocMaster;
 import my.ep.persistence.entity.tpl.doc.TplDocSection;
-import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.tpl.doc.TemplateDocManagedBean;
@@ -77,77 +72,20 @@ import com.lowagie.text.pdf.PdfPTable;
  */
 @ManagedBean(name = "templateDocBackingBean")
 @RequestScoped
-public class TemplateDocBackingBean extends
-		BaseBackingBean<TemplateDocManagedBean> {
-
-	
+public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBean> {
 
 	private boolean uncheck = false;
 	private static Logger log = Logger.getLogger(TemplateDocBackingBean.class);
 
-	/* navigation */
 	private static final String NAV_TO_MAINT = "/xhtml/tpl/doc/templateDocMaint.xhtml";
 
-	public TemplateDocBackingBean() {
-		if (this.getManagedBean().getTemplateTypeList() == null) {
-			ITemplateDocSO templateSO = (ITemplateDocSO) BusinessDelegate
-					.getInstance().getServiceObject("cc", ITemplateDocSO.class);
-		}
-		if (this.getManagedBean().getTemplateCategoryList() == null) {
-
-			ITemplateDocSO templateSO = (ITemplateDocSO) BusinessDelegate
-					.getInstance().getServiceObject("cc", ITemplateDocSO.class);
-			System.out.println("templateSO: " + templateSO);
-			TemplateDocResDTO resDTO = templateSO.getTemplateCategoryList(null);
-
-			List<TplCategory> categoryListDB = resDTO.getCategoryList();
-			this.getManagedBean().setTemplateCategoryList(
-					toSelectItems(resDTO.getCategoryList()));
-
-		}
-		if (this.getManagedBean().getTemplateProcessTypeList() == null) {
-			SelectItem[] procesCodes = getDropdownCodeValues(ParameterTypeConst.TPL_DOC_PROCESS_TYPE);
-			/*if(procesCodes !=null){
-				List<SelectItem>procesCode=Arrays.asList(procesCodes);*/
-			this.getManagedBean().setTemplateProcessTypeList(procesCodes);
-			
-		}
-
-	}
-
-	private List<SelectItem> toSelectItems(List<TplCategory> dropdownList) {
-		List<SelectItem> itemList = new ArrayList<SelectItem>();
-		itemList.add(new SelectItem("", "- Select One -"));
-		if(null!=dropdownList){
-			for (TplCategory dropdown : dropdownList) {
-				itemList.add(new SelectItem(dropdown.getCategoryId(), dropdown
-						.getCategoryDesc()));
-			}
-		}
-		
-		return itemList;
-	}
-	
-	
-	@SuppressWarnings("unused")
-	private List<SelectItem> toTplSpecDesc(List<TplSpecMaster> dataTableList) {
-		List<SelectItem> specDescList = new ArrayList<SelectItem>();
-		for (TplSpecMaster specDesc : dataTableList) {
-			specDescList.add(new SelectItem(specDesc.getProcessType(), specDesc
-					.getSpecDesc()));
-		}
-		return specDescList;
-	}
-	
-
+	public TemplateDocBackingBean() {}
 
 	public void positionNode(String position) {
-		TreeNode selectedNode = getManagedBean().getDocSectionMap().get(
-				getManagedBean().getSelectedSection());
+		TreeNode selectedNode = getManagedBean().getDocSectionMap().get(getManagedBean().getSelectedSection());
 		TreeNode parentNode = selectedNode.getParent();
 		if (position.equalsIgnoreCase("left")) {
-			if (parentNode != null
-					&& !parentNode.getType().equalsIgnoreCase("root")) {
+			if (parentNode != null && !parentNode.getType().equalsIgnoreCase("root")) {
 				selectedNode.setParent(parentNode.getParent());
 				rePosition(parentNode);
 			} else {
@@ -160,8 +98,7 @@ public class TemplateDocBackingBean extends
 				selectedNode.setParent(parentNode.getChildren().get(index - 1));
 				parentNode.getChildren().get(index - 1).setExpanded(true);
 			} else {
-				System.out
-						.println("First item in the level cannot indent to right");
+				System.out.println("First item in the level cannot indent to right");
 			}
 		} else if (position.equalsIgnoreCase("up")) {
 			// First item in the level cannot move up
@@ -187,8 +124,7 @@ public class TemplateDocBackingBean extends
 	public void rePosition(TreeNode node) {
 		TreeNode parentNode = node.getParent();
 		int position = parentNode.getChildren().indexOf(node);
-		parentNode.getChildren().add(position + 1,
-				parentNode.getChildren().get(parentNode.getChildCount() - 1));
+		parentNode.getChildren().add(position + 1, parentNode.getChildren().get(parentNode.getChildCount() - 1));
 		parentNode.getChildren().remove(parentNode.getChildCount() - 1);
 	}
 
@@ -216,114 +152,70 @@ public class TemplateDocBackingBean extends
 		}
 		return templateCategoryList;
 	}
-
-
-	
-	public List<SelectItem> getTemplateNameList() {
-		List<SelectItem> templateNameList = new ArrayList<SelectItem>();
-
-		if (getManagedBean().getCategoryId() != null
-				&& !getManagedBean().getCategoryId().equals("")) {
-			ITemplateDocSO templateSO = (ITemplateDocSO) BusinessDelegate
-					.getInstance().getServiceObject("cc", ITemplateDocSO.class);
-
-			TemplateDocReqDTO reqDTO = new TemplateDocReqDTO();
-			reqDTO.setCategoryId(getManagedBean().getCategoryId());
-			reqDTO.setTemplateType(null);
-
-			TemplateDocResDTO resDTO = templateSO.getTemplateMasterList(reqDTO);
-			if (resDTO.getDocMasterList() != null
-					&& !resDTO.getDocMasterList().isEmpty()) {
-				Long templateMasterSeq = null;
-				List<TplDocMaster> docMasterListDB = resDTO.getDocMasterList();
-				for (TplDocMaster obj : docMasterListDB) {
-					templateNameList.add(new SelectItem(obj.getDocMasterId(),
-							obj.getDocName()));
-					if (templateMasterSeq == null) {
-						templateMasterSeq = obj.getDocMasterId();
-					}
-				}
-				getManagedBean().setDocMasterId(templateMasterSeq);
-				getManagedBean().setShowTemplateList(true);
-			}
-		}
-		return templateNameList;
-	}
-	
 	
 	public String goToMaint(TplDocMaster selTemplate) {       
-		
-		ITemplateDocSO templateSO = (ITemplateDocSO) BusinessDelegate
-				.getInstance().getServiceObject("cc", ITemplateDocSO.class);
-		TemplateDocReqDTO reqDTO1 = new TemplateDocReqDTO();
-		
+		ITemplateDocSO templateSO = (ITemplateDocSO) BusinessDelegate.getInstance().getServiceObject("cc", ITemplateDocSO.class);
 		getManagedBean().setSelectedTemplate(selTemplate);
 		
-		System.out.println("==============>>>>>>>>>>>>>>>> " + getManagedBean().getSelectedTemplate());
-		
-		reqDTO1.setDocMasterId(getManagedBean().getSelectedTemplate()
-				.getDocMasterId());
-//		TemplateDocResDTO resDTO = templateSO
-//				.getTemplateCategoryById(reqDTO1);
-		TemplateDocResDTO resDTO1= templateSO.getTemplateSectionListByMaster(reqDTO1);
-		List<TplDocSection> templateSectionList = resDTO1.getDocSectionList();
-		TplDocMaster tplDocMaster1 = resDTO1.getTplDocMaster();
-//				if (tplDocMaster1.getTplCategory() == null) {
-//			tplDocMaster1.setTplCategory(getManagedBean().getSelectedTemplate()
-//					.getTplCategory());
-//		}
-//		if(tplDocMaster1.getProcessType() == null){
-//			tplDocMaster1.setProcessType(getManagedBean().getSelectedTemplate().getProcessType());
-//		}
-		getTemplateDatatableList(templateSectionList);
-		getManagedBean().setSelectedTemplate(tplDocMaster1);
-		getManagedBean().setDeletedList(new ArrayList<TplDocSection>());
-//		TplDocMaster tplDocMaster = new TplDocMaster();
-//		TemplateDocReqDTO reqDTO = new TemplateDocReqDTO();
-//		reqDTO.setTplDocMaster(this.getManagedBean().getSelectedTemplate());
-		getManagedBean().setProcessType(selTemplate.getProcessTypeCode().getParameterCode());
+		TemplateDocReqDTO reqDTO = new TemplateDocReqDTO();
+		reqDTO.setDocMasterId(getManagedBean().getSelectedTemplate().getDocMasterId());
+		TemplateDocResDTO resDTO= templateSO.getTemplateSectionListByMaster(reqDTO);
+		List<TplDocSection> templateSectionList = resDTO.getDocSectionList();
+		TplDocMaster tplDocMaster = resDTO.getTplDocMaster();
 
+		getManagedBean().setSelectedTemplate(tplDocMaster);
+		getManagedBean().setDeletedList(new ArrayList<TplDocSection>());
+		getTemplateDatatableList(templateSectionList);
 		return NAV_TO_MAINT;
 	}
 
-public void reset() {  
-	this.getManagedBean().setTemplateSearchList(null);
-	this.getManagedBean().setCategoryId(null);
-	this.getManagedBean().setTitle(null);
-	this.getManagedBean().setDesc(null);
-	
-	
-} 
+	public void reset() {  
+		this.getManagedBean().setTemplateSearchList(null);
+		this.getManagedBean().setProcurementCategoryId(null);
+		this.getManagedBean().setProcessTypeId(null);
+		this.getManagedBean().setTitle(null);
+		this.getManagedBean().setDesc(null);
+	} 
 
+	public void destroyWorld(ActionEvent actionEvent) {
+		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO,"System Error", "Please try again later.");
+		FacesContext.getCurrentInstance().addMessage(null, message);
+	}
 
-public void destroyWorld(ActionEvent actionEvent){  
-    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "System Error",  "Please try again later.");  
-      
-    FacesContext.getCurrentInstance().addMessage(null, message);  
-}  
-
-	private void getTemplateDatatableList(
-			List<TplDocSection> templateSectionList) {
+	private void getTemplateDatatableList(List<TplDocSection> templateSectionList) {
 		if (templateSectionList != null && !templateSectionList.isEmpty()) {
-			getManagedBean().setDocSectionMap(
-					new HashMap<TplDocSection, TreeNode>());
-			getManagedBean().setDocSectionTN(
-					new DefaultTreeNode("root", "", null));
+			getManagedBean().setDocSectionMap(new HashMap<TplDocSection, TreeNode>());
+			getManagedBean().setDocSectionTN(new DefaultTreeNode("root", "", null));
 
 			Map<Long, TreeNode> secSeqMap = new HashMap<Long, TreeNode>();
 			TreeNode node = null;
 			for (TplDocSection objL1 : templateSectionList) {
 				if (objL1.getParent() == null) {
-					node = new DefaultTreeNode(objL1, getManagedBean()
-							.getDocSectionTN());
+					node = new DefaultTreeNode(objL1, getManagedBean().getDocSectionTN());
 					getManagedBean().getDocSectionMap().put(objL1, node);
 					secSeqMap.put(objL1.getDocSectionId(), node);
 				} else {
-					node = new DefaultTreeNode(objL1, secSeqMap.get(objL1
-							.getParent().getDocSectionId()));
+					node = new DefaultTreeNode(objL1, secSeqMap.get(objL1.getParent().getDocSectionId()));
 					getManagedBean().getDocSectionMap().put(objL1, node);
 					secSeqMap.put(objL1.getDocSectionId(), node);
 				}
+			}
+		} else {
+			getManagedBean().setDocSectionMap(new HashMap<TplDocSection, TreeNode>());
+			TreeNode selectedNode = (new DefaultTreeNode("root", "", null));
+			getManagedBean().setDocSectionTN(selectedNode);
+			for (int i = 1; i <= 5; i++) {
+				TplDocSection docSection = new TplDocSection();
+				docSection.setTplDocMaster(getManagedBean().getSelectedTemplate());
+				docSection.setSectionNumber(i + "");
+				docSection.setSectionName("Section" + i);
+				docSection.setCreatedBy(1l);
+				docSection.setChangedBy(1l);
+				docSection.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+				docSection.setBrandNew(Boolean.TRUE);
+				docSection.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+				TreeNode node = new DefaultTreeNode(docSection, selectedNode);
+				getManagedBean().getDocSectionMap().put((TplDocSection) node.getData(), node);
 			}
 		}
 	}
@@ -331,18 +223,13 @@ public void destroyWorld(ActionEvent actionEvent){
 	public void editContent() {
 		try {
 			if (getManagedBean().getSelectedSection() != null) {
-				TplDocSection selectedSection = getManagedBean()
-						.getSelectedSection();
-				getManagedBean().setSelectedSectionName(
-						selectedSection.getSectionName());
-				getManagedBean().setSelectedSectionTitle(
-						selectedSection.getSectionTitle());
-				getManagedBean().setSelectedSectionText(
-						selectedSection.getSectionContent());
+				TplDocSection selectedSection = getManagedBean().getSelectedSection();
+				getManagedBean().setSelectedSectionName(selectedSection.getSectionName());
+				getManagedBean().setSelectedSectionTitle(selectedSection.getSectionTitle());
+				getManagedBean().setSelectedSectionText(selectedSection.getSectionContent());
 			}
 
-			if (getManagedBean().getVariableList() != null
-					&& !getManagedBean().getVariableList().isEmpty()) {
+			if (getManagedBean().getVariableList() != null && !getManagedBean().getVariableList().isEmpty()) {
 				getManagedBean().setSelectedOption("2");
 			} else {
 				getManagedBean().setSelectedOption("1");
@@ -358,13 +245,11 @@ public void destroyWorld(ActionEvent actionEvent){
 			String sectionText = getManagedBean().getSelectedSectionText();
 			String sectionName = getManagedBean().getSelectedSectionName();
 			String sectionNumber = getManagedBean().getSelectedSection().getSectionNumber();
-			TplDocSection selectedSection = getManagedBean()
-					.getSelectedSection();
+			TplDocSection selectedSection = getManagedBean().getSelectedSection();
 			selectedSection.setSectionTitle(sectionTitle);
 			selectedSection.setSectionContent(sectionText);
 			selectedSection.setSectionName(sectionName);
 			selectedSection.setSectionNumber(sectionNumber);
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -395,10 +280,8 @@ public void destroyWorld(ActionEvent actionEvent){
 	
 	public void previewAction() {
 		try {
-			String outputFileName = "Document" + "_"
-					+ DateUtils.dateToString("yyMMddHHmmssZ", new Date());
-			String combinedContentHtml = MergeDocx.mergePreviewAction(
-					getManagedBean().getDocSectionTN(), outputFileName, "P");
+			String outputFileName = "Document" + "_"+ DateUtils.dateToString("yyMMddHHmmssZ", new Date());
+			String combinedContentHtml = MergeDocx.mergePreviewAction(getManagedBean().getDocSectionTN(), outputFileName, "P");
 			getManagedBean().setPreviewValue(combinedContentHtml);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -444,13 +327,9 @@ public void destroyWorld(ActionEvent actionEvent){
 	}
 
 	public void deleteNode() {
-		
-		TreeNode deleteNode = getManagedBean().getDocSectionMap().get(
-				getManagedBean().getSelectedSection());
+		TreeNode deleteNode = getManagedBean().getDocSectionMap().get(getManagedBean().getSelectedSection());
 		deleteNode.getParent().getChildren().remove(deleteNode);
-		getManagedBean().getDeletedList().add(
-				(TplDocSection) deleteNode.getData());
-		
+		getManagedBean().getDeletedList().add((TplDocSection) deleteNode.getData());
 	}
 
 	public void addNode() {
@@ -460,44 +339,15 @@ public void destroyWorld(ActionEvent actionEvent){
 				getManagedBean().getSelectedSection());
 		if (selectedNode != null) {
 			TplDocSection docSection = new TplDocSection();
-			docSection.setTplDocMaster(((TplDocSection) selectedNode.getData())
-					.getTplDocMaster());
+			docSection.setTplDocMaster(((TplDocSection) selectedNode.getData()).getTplDocMaster());
 			docSection.setSectionName("[Section]");
 			docSection.setSectionContent("");
 			docSection.setChangedBy(1l);
 			docSection.setBrandNew(Boolean.TRUE);
 			docSection.setCreatedDate(date);
-			TreeNode node = new DefaultTreeNode(docSection,
-					selectedNode.getParent());
-			getManagedBean().getDocSectionMap().put(
-					(TplDocSection) node.getData(), node);
+			TreeNode node = new DefaultTreeNode(docSection,	selectedNode.getParent());
+			getManagedBean().getDocSectionMap().put((TplDocSection) node.getData(), node);
 			rePosition(selectedNode);
-		}
-	}
-
-	public void searchResult() {
-		if (getManagedBean().getCategoryId() != null
-				&& !getManagedBean().getCategoryId().equals("")) {
-			ITemplateDocSO templateSO = (ITemplateDocSO) BusinessDelegate
-					.getInstance().getServiceObject("cc", ITemplateDocSO.class);
-
-			TemplateDocReqDTO reqDTO = new TemplateDocReqDTO();
-			reqDTO.setCategoryId(getManagedBean().getCategoryId());
-			reqDTO.setTemplateType(null);
-
-			TemplateDocResDTO resDTO = templateSO.getTemplateMasterList(reqDTO);
-
-			if (resDTO.getDocMasterList() != null
-					&& !resDTO.getDocMasterList().isEmpty()) {
-				Long templateMasterSeq = null;
-				List<TplDocMaster> docMasterListDB = resDTO.getDocMasterList();
-				this.getManagedBean().setTemplateMasterList(docMasterListDB);
-				for (TplDocMaster masterSeq : docMasterListDB) {
-					templateMasterSeq = masterSeq.getDocMasterId();
-				}
-				getManagedBean().setDocMasterId(templateMasterSeq);
-				getManagedBean().setShowTemplateList(true);
-			}
 		}
 	}
 
@@ -547,26 +397,20 @@ public void destroyWorld(ActionEvent actionEvent){
 			if (ind.equalsIgnoreCase("update")) {
 				tplDocMaster = tplDocMasterE;				
 				tplDocMaster.setBrandNew(false);
-				tplDocMaster.setCategoryId(tplDocMasterE.getCategoryId());				
+				tplDocMaster.setProcurementCategory(tplDocMasterE.getProcurementCategory());				
 				tplDocMaster.setDocName(tplDocMaster.getDocTitle());
-				
 			}
 			
-			tplDocMaster.setCategoryId(new Long(getManagedBean().getCategoryId()));
-			tplDocMaster.setPmStatus(1l);
+			tplDocMaster.setProcurementCategory(tplDocMasterE.getProcurementCategory());
+			tplDocMaster.setProcessType(tplDocMasterE.getProcessType());
+			tplDocMaster.setTemplateType(tplDocMasterE.getTemplateType());
 			tplDocMaster.setTemplateStatus('F');
-//     		tplDocMaster.setRecordStatus(true);
-//			tplDocMaster.setChangedBy(10l);
-//			tplDocMaster.setCreatedBy(1l);
-//		    tplDocMaster.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			tplDocMaster.setDocTitle(tplDocMasterE.getDocTitle());
 			tplDocMaster.setDocDesc(tplDocMasterE.getDocDesc());
 			tplDocMaster.setDocFooter(tplDocMasterE.getDocFooter());
-			tplDocMaster.setCategoryId(tplDocMasterE.getCategoryId());
 
 			List<TplDocSection> docSectionList = new ArrayList<TplDocSection>();
-			getDocSectionList(1, getManagedBean().getDocSectionTN(),
-					docSectionList);
+			getDocSectionList(1, getManagedBean().getDocSectionTN(), docSectionList);
 			for (int i = 0; i < docSectionList.size(); i++) {
 				TplDocSection sectionOrder = docSectionList.get(i);
 				sectionOrder.setSectionOrder(i);
@@ -574,41 +418,16 @@ public void destroyWorld(ActionEvent actionEvent){
 			tplDocMaster.setTplDocSectionCollection(docSectionList);
 
 			List<TplDocSection> deletedSectionList = new ArrayList<TplDocSection>();
-			if (getManagedBean().getDeletedList() != null
-					&& !getManagedBean().getDeletedList().isEmpty()) {
-				for (TplDocSection genTemplateSection : getManagedBean()
-						.getDeletedList()) {
+			if (getManagedBean().getDeletedList() != null && !getManagedBean().getDeletedList().isEmpty()) {
+				for (TplDocSection genTemplateSection : getManagedBean().getDeletedList()) {
 					genTemplateSection.setTplDocMaster(tplDocMaster);
 					genTemplateSection.setDeleted(true);
 					deletedSectionList.add(genTemplateSection);
 				}
 			}
 			tplDocMaster.setDeletedCollection(deletedSectionList);
-			
-			IParameterSO parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-			ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
-			parameterReqDTO.setParameterType(ParameterTypeConst.TPL_DOC_PROCESS_TYPE);
-			if(getManagedBean().getProcessType().equalsIgnoreCase(ParameterConst.TPL_DOC_PROCESS_TYPE_STANDARD))
-				parameterReqDTO.setParameterCode(ParameterConst.TPL_DOC_PROCESS_TYPE_STANDARD);
-			else if(getManagedBean().getProcessType().equalsIgnoreCase(ParameterConst.TPL_DOC_PROCESS_TYPE_SOURCING))
-				parameterReqDTO.setParameterCode(ParameterConst.TPL_DOC_PROCESS_TYPE_SOURCING);
-			else if(getManagedBean().getProcessType().equalsIgnoreCase(ParameterConst.TPL_DOC_PROCESS_TYPE_CONTRACT))
-				parameterReqDTO.setParameterCode(ParameterConst.TPL_DOC_PROCESS_TYPE_CONTRACT);
-			else
-				parameterReqDTO.setParameterCode(null);
-			
-			ParameterResDTO parameterResDTO = new ParameterResDTO();
-			if(parameterReqDTO.getParameterCode() != null){
-				parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
-				tplDocMaster.setProcessTypeCode(parameterResDTO.getPmParameter());
-			} else {
-				tplDocMaster.setProcessTypeCode(new PmParameter());
-			}
-			   
-			
 
-			ITemplateDocSO templateSO = (ITemplateDocSO) BusinessDelegate
-					.getInstance().getServiceObject("cc", ITemplateDocSO.class);
+			ITemplateDocSO templateSO = (ITemplateDocSO) BusinessDelegate.getInstance().getServiceObject("cc", ITemplateDocSO.class);
 			TemplateDocReqDTO reqDTO = new TemplateDocReqDTO();
 			reqDTO.setTplDocMaster(tplDocMaster);
 
@@ -616,10 +435,8 @@ public void destroyWorld(ActionEvent actionEvent){
 			if (resDTO.isSuccessful()) {
 				TemplateDocReqDTO reqDTOS = new TemplateDocReqDTO();
 				reqDTOS.setDocMasterId(resDTO.getTplDocMaster().getDocMasterId());
-				TemplateDocResDTO resDTOS = templateSO
-						.getTemplateSectionListByMaster(reqDTOS);
-				List<TplDocSection> templateSectionList = resDTOS
-						.getDocSectionList();
+				TemplateDocResDTO resDTOS = templateSO.getTemplateSectionListByMaster(reqDTOS);
+				List<TplDocSection> templateSectionList = resDTOS.getDocSectionList();
 				TplDocMaster tplDocMasterDB = resDTOS.getTplDocMaster();
 				getTemplateDatatableList(templateSectionList);
 				getManagedBean().setSelectedTemplate(tplDocMasterDB);
@@ -636,12 +453,12 @@ public void destroyWorld(ActionEvent actionEvent){
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return (getManagedBean().getExternalPageUrl() != null) ? getManagedBean().getExternalPageUrl() : "templateDocSearch";
+		return (getManagedBean().getExternalPageUrl() != null) ? getManagedBean().getExternalPageUrl()+"?faces-rediret=true" : "templateDocSearch?faces-redirect=true";
 	}
 
 	public String backAction() {
 		getManagedBean().setSelectedTemplate(null);
-		return (getManagedBean().getExternalPageUrl() != null) ? getManagedBean().getExternalPageUrl() : "templateDocSearch";
+		return (getManagedBean().getExternalPageUrl() != null) ? getManagedBean().getExternalPageUrl()+"?faces-rediret=true" : "templateDocSearch?faces-redirect=true";
 	}
 	
 	public static void getDocSectionList(int level, TreeNode node,
@@ -693,20 +510,21 @@ public void destroyWorld(ActionEvent actionEvent){
 			
 			PmParameter pmParameter = new PmParameter();
 			pmParameter.setParameterCode(ParameterConst.TPL_DOC_PROCESS_TYPE_CONTRACT);
-			resDTO.getTplDocMaster().setProcessTypeCode(pmParameter);
+			resDTO.getTplDocMaster().setProcessType(pmParameter);
 			
 			getManagedBean().setSelectedTemplate(resDTO.getTplDocMaster());
 			getManagedBean().setDeletedList(new ArrayList<TplDocSection>());
-			getManagedBean().setProcessType(resDTO.getTplDocMaster().getProcessTypeCode().getParameterCode());
-			getManagedBean().setCategoryId(resDTO.getTplDocMaster().getCategoryId());
+			getManagedBean().setProcessType(resDTO.getTplDocMaster().getProcessType().getParameterCode());
 		} else {
 			TplDocMaster docMaster = new TplDocMaster();
-			docMaster.setBrandNew(Boolean.TRUE);
-			docMaster.setCreatedBy(1l);
-			docMaster.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+			docMaster.setProcurementCategory(new PmParameter());
+			docMaster.setTemplateType(new PmParameter());
+			docMaster.setProcessType(new PmParameter());
+			docMaster.setDocName("");
+			docMaster.setDocTitle("");
+			docMaster.setDocDesc("");
 			getManagedBean().setSelectedTemplate(docMaster);
-			getManagedBean().setDocSectionMap(
-					new HashMap<TplDocSection, TreeNode>());
+			getManagedBean().setDocSectionMap(new HashMap<TplDocSection, TreeNode>());
 			TreeNode selectedNode = (new DefaultTreeNode("root", "", null));
 			getManagedBean().setDocSectionTN(selectedNode);
 			for (int i = 1; i <= 5; i++) {
@@ -718,57 +536,45 @@ public void destroyWorld(ActionEvent actionEvent){
 				docSection.setChangedBy(1l);
 				docSection.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 				docSection.setBrandNew(Boolean.TRUE);
-				docSection
-						.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+				docSection.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 				TreeNode node = new DefaultTreeNode(docSection, selectedNode);
-				getManagedBean().getDocSectionMap().put(
-						(TplDocSection) node.getData(), node);
+				getManagedBean().getDocSectionMap().put((TplDocSection) node.getData(), node);
 			}
 		}
 		return NAV_TO_MAINT;
 	}
 
 	public void imptSearchResult() {
-		if (getManagedBean().getImpCategoryId() != null
-				&& !getManagedBean().getImpCategoryId().equals("")) {
-			ITemplateDocSO templateSO = (ITemplateDocSO) BusinessDelegate
-					.getInstance().getServiceObject("cc", ITemplateDocSO.class);
+		ITemplateDocSO templateSO = (ITemplateDocSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.COMMON_COMPONENT, ITemplateDocSO.class);
 
-			TemplateDocReqDTO reqDTO = new TemplateDocReqDTO();
-			reqDTO.setCategoryId(getManagedBean().getImpCategoryId());
-			reqDTO.setTemplateType(null);
+		TemplateDocReqDTO reqDTO = new TemplateDocReqDTO();
+		reqDTO.setCategoryId(getManagedBean().getImpCategoryId());
+		reqDTO.setProcessTypeId(getManagedBean().getImpProcessTypeId());
+		reqDTO.setTitle(getManagedBean().getImpTitle());
+		reqDTO.setTemplateType(null);
 
-			TemplateDocResDTO resDTO = templateSO.getTemplateMasterList(reqDTO);
+		TemplateDocResDTO resDTO = templateSO.getTemplateMasterList(reqDTO);
 
-			if (resDTO.getDocMasterList() != null
-					&& !resDTO.getDocMasterList().isEmpty()) {
-				Long templateMasterSeq = null;
-				List<TplDocMaster> docMasterListDB = resDTO.getDocMasterList();
-				this.getManagedBean().setImportMasterList(docMasterListDB);
-				for (TplDocMaster masterSeq : docMasterListDB) {
-					templateMasterSeq = masterSeq.getDocMasterId();
-				}
-				getManagedBean().setDocMasterId(templateMasterSeq);
-				getManagedBean().setShowTemplateList(true);
+		if (resDTO.getDocMasterList() != null && !resDTO.getDocMasterList().isEmpty()) {
+			Long templateMasterSeq = null;
+			List<TplDocMaster> docMasterListDB = resDTO.getDocMasterList();
+			this.getManagedBean().setImportMasterList(docMasterListDB);
+			for (TplDocMaster masterSeq : docMasterListDB) {
+				templateMasterSeq = masterSeq.getDocMasterId();
 			}
+			getManagedBean().setDocMasterId(templateMasterSeq);
+			getManagedBean().setShowTemplateList(true);
 		}
 	}
 
 	public void selectedSectionTree() {
-		ITemplateDocSO templateSO = (ITemplateDocSO) BusinessDelegate
-				.getInstance().getServiceObject("cc", ITemplateDocSO.class);
+		ITemplateDocSO templateSO = (ITemplateDocSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.COMMON_COMPONENT, ITemplateDocSO.class);
 		TemplateDocReqDTO reqDTO = new TemplateDocReqDTO();
-		reqDTO.setDocMasterId(getManagedBean().getSelectedImpMaster()
-				.getDocMasterId());
+		reqDTO.setDocMasterId(getManagedBean().getSelectedImpMaster().getDocMasterId());
 
-		TemplateDocResDTO resDTO = templateSO
-				.getTemplateSectionListByMaster(reqDTO);
+		TemplateDocResDTO resDTO = templateSO.getTemplateSectionListByMaster(reqDTO);
 		List<TplDocSection> templateSectionList = resDTO.getDocSectionList();
 		TplDocMaster tplDocMaster = resDTO.getTplDocMaster();
-		if (tplDocMaster.getTplCategory() == null) {
-			tplDocMaster.setTplCategory(getManagedBean().getSelectedImpMaster()
-					.getTplCategory());
-		}
 		getImportedDatatableList(templateSectionList);
 		getManagedBean().setSelectedImpMaster(tplDocMaster);
 		getManagedBean().setImportedSectionList(null);
@@ -799,21 +605,16 @@ public void destroyWorld(ActionEvent actionEvent){
 	public void addSelectedImptNodes() {
 		FacesScopes facesScopes = new FacesScopes();
 		Timestamp date = new Timestamp(System.currentTimeMillis());
-		TreeNode selectedNode = getManagedBean().getDocSectionMap().get(
-				getManagedBean().getSelectedSection());
-		for (TplDocSection docSection : getManagedBean()
-				.getImportedSectionList()) {
+		TreeNode selectedNode = getManagedBean().getDocSectionMap().get(getManagedBean().getSelectedSection());
+		for (TplDocSection docSection : getManagedBean().getImportedSectionList()) {
 			docSection = cloneObj(docSection);
 			docSection.setTplDocMaster(getManagedBean().getSelectedTemplate());
 			docSection.setCreatedBy(1l);
 			docSection.setCreatedDate(date);
-			TreeNode node = new DefaultTreeNode(docSection,
-					selectedNode.getParent());
-			getManagedBean().getDocSectionMap().put(
-					(TplDocSection) node.getData(), node);
+			TreeNode node = new DefaultTreeNode(docSection,selectedNode.getParent());
+			getManagedBean().getDocSectionMap().put((TplDocSection) node.getData(), node);
 		}
-		importRePosition(selectedNode, getManagedBean()
-				.getImportedSectionList().size());
+		importRePosition(selectedNode, getManagedBean().getImportedSectionList().size());
 	}
 
 	public void initializeImport(ActionEvent e) {
@@ -826,10 +627,8 @@ public void destroyWorld(ActionEvent actionEvent){
 
 	public void checkRow(TplDocSection docSection) {
 		if (getManagedBean().getImportedSectionList() == null) {
-			getManagedBean().setImportedSectionList(
-					new ArrayList<TplDocSection>());
+			getManagedBean().setImportedSectionList(new ArrayList<TplDocSection>());
 		}
-
 		if (getManagedBean().getImportedSectionList().contains(docSection)) {
 			getManagedBean().getImportedSectionList().remove(docSection);
 		} else {
@@ -965,54 +764,43 @@ public void destroyWorld(ActionEvent actionEvent){
 	}
 
 	public void tempDocSearch() {
-		
 		ITemplateDocSO  templateDocSO = null;
 		try {
-			System.out.println("!!!!!!!!!! Enter Template Doc Search Method !!!!!!!!");
 			templateDocSO = (ITemplateDocSO)BusinessDelegate.getInstance().getServiceObject("cc",ITemplateDocSO.class);
 			TemplateDocReqDTO reqDTO = new TemplateDocReqDTO();
 			
 			SearchBean<TplDocMaster> searchBean = new SearchBean<TplDocMaster>();
 			searchBean.setNavigatable(false);
-			Long templLong = this.getManagedBean().getCategoryId();
+			Long templLong = this.getManagedBean().getProcurementCategoryId();
 			if(null != templLong){
-			searchBean.getDataFilterBeans().add(new SearchFilterBean("categoryId",SearchOperator.OPERATOR_EQUALS.value(),templLong));
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("procurementCategory.parameterId",SearchOperator.OPERATOR_EQUALS.value(),templLong));
 			}
-			String processValue =this.getManagedBean().getProcessValue();
+			Long processValue =this.getManagedBean().getProcessTypeId();
 			if(null != processValue){
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("processType.codeId",SearchOperator.OPERATOR_EQUALS.value(),processValue));
-				}
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("processType.parameterId",SearchOperator.OPERATOR_EQUALS.value(),processValue));
+			}
 			String title=this.getManagedBean().getTitle();
 			if(null != title){
 				searchBean.getDataFilterBeans().add(new SearchFilterBean("docTitle",SearchOperator.OPERATOR_LIKE.value(),title));
-				}
+			}
 			String desc=this.getManagedBean().getDesc();
 			if(null != desc){
 				searchBean.getDataFilterBeans().add(new SearchFilterBean("docDesc",SearchOperator.OPERATOR_LIKE.value(),desc));
-				}
+			}
 			reqDTO.setSearchBean(searchBean);
-			TemplateDocResDTO resDTO = templateDocSO.TemplateDocSearch(reqDTO);
-			System.out.println("===============resDTO======"+resDTO.getDocMasterList().size());
+			TemplateDocResDTO resDTO = templateDocSO.searchTemplateDoc(reqDTO);
 			this.getManagedBean().setTemplateSearchList(resDTO.getDocMasterList());
 		} finally {
 			templateDocSO = null;
 		}
-		
-		this.getManagedBean().setProcessType(null);
-		this.getManagedBean().setCategory(null);
-		this.getManagedBean().setTitle(null);
-		
 	}
 	
 	public String createPDF() throws Exception {
-	
 		FacesContext context = FacesContext.getCurrentInstance();
-            
-		    String outputFileName = "Document" + "_"
-				+ DateUtils.dateToString("yyMMddHHmmssZ", new Date());
-			String html =  MergeDocx.mergePreviewAction(
-					getManagedBean().getDocSectionTN(), outputFileName, "P");
-	        WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage.createPackage();
+
+		String outputFileName = "Document" + "_"+ DateUtils.dateToString("yyMMddHHmmssZ", new Date());
+		String html = MergeDocx.mergePreviewAction(getManagedBean().getDocSectionTN(), outputFileName, "P");
+		WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage.createPackage();
 		
 		    /*XWPFDocument document = new XWPFDocument();
 		    String outputFileName = "Document" + "_"
@@ -1032,14 +820,11 @@ public void destroyWorld(ActionEvent actionEvent){
 	        paragraphTwoRunOne.setText("And this is paragraph two.");*/
 	       
 	        
-	        wordMLPackage.getMainDocumentPart().getContent()
-            .addAll(XHTMLImporter.convert(html, null, wordMLPackage));
-	        File f =new File("sectionContent.docx");
-	        wordMLPackage.save(f);
-	        
+		wordMLPackage.getMainDocumentPart().getContent().addAll(XHTMLImporter.convert(html, null, wordMLPackage));
+		File f = new File("sectionContent.docx");
+		wordMLPackage.save(f);
 	        
 		try {
-
 			// Writting to Response code
 			PortletResponse portletResponse = (PortletResponse) context
 					.getExternalContext().getResponse();
@@ -1047,11 +832,9 @@ public void destroyWorld(ActionEvent actionEvent){
 					.getHttpServletResponse(portletResponse);
 			res.setContentType("application/msword");
 			res.setHeader("Expires", "0");
-			res.setHeader("Cache-Control",
-					"must-revalidate, post-check=0, pre-check=0");
+			res.setHeader("Cache-Control","must-revalidate, post-check=0, pre-check=0");
 			res.setHeader("Pragma", "public");
-			res.setHeader("Content-disposition",
-					"attachment;filename=sectionContent.docx");
+			res.setHeader("Content-disposition","attachment;filename=sectionContent.docx");
 			OutputStream out = res.getOutputStream();
 			FileInputStream fin=new FileInputStream(f);
 			int i=-1;
@@ -1065,18 +848,12 @@ public void destroyWorld(ActionEvent actionEvent){
 			out.close();
 			fin.close();
 			context.responseComplete();
-			
 		} catch (FileNotFoundException e) {
-	            e.printStackTrace();
-	        } catch (IOException e) {
-	            e.printStackTrace();
-	        }
-	
-		 return null;
-		
-		
-		
-		
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	
