@@ -1,110 +1,134 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:cc="http://java.sun.com/jsf/composite"
-    xmlns:ui="http://java.sun.com/jsf/facelets"
-    xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:f="http://java.sun.com/jsf/core"
-    xmlns:fn="http://java.sun.com/jsp/jstl/functions"
-   	xmlns:p="http://primefaces.org/ui"
-   	xmlns:ac="http://ac.my/jsf/composite/cc">
-    
-<cc:interface>
-	<cc:attribute name="beforeSignText" />
-	<cc:attribute name="postSignAction" method-signature="java.lang.String action()" />
-</cc:interface>
+	xmlns:cc="http://java.sun.com/jsf/composite"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<cc:interface>
+		<cc:attribute name="beforeSignText" />
+		<cc:attribute name="postSignAction"
+			method-signature="java.lang.String action()" />
+	</cc:interface>
 
 
-<cc:implementation>
-	<p:remoteCommand name="postSignAction" action="#{cc.attrs.postSignAction}" />
-    <h:inputHidden id ="inputTextBeforeSign" binding="#{textBeforeSign}" value="#{cc.attrs.textBeforeSign}" />
-    <h:outputScript library="ep/gpki_js" name="gpki-api.js" />
- 
-        <script>
-        
-        function DigiSign(){
-        	var textBeforeSign =  $("[id='#{textBeforeSign.clientId}']").val();  
-        	var plainText =  encodeURIComponent(Aegis.hash(textBeforeSign));
-//         	var plainText =  $("[id='#{bs.clientId}']").val();
+	<cc:implementation>
+		<p:remoteCommand name="postSignAction"
+			action="#{cc.attrs.postSignAction}" />
+		<h:inputHidden id="inputTextBeforeSign" binding="#{textBeforeSign}"
+			value="#{cc.attrs.textBeforeSign}" />
+		<h:outputScript library="ep/gpki_js" name="gpki-api.js" />
 
-//         	var $foo = $("[id='#{pin.clientId}']");
-			var pin = $("[id='#{pin.clientId}']").val();
-             alert("p");
-             sign_st(pin, plainText);
-            
-             }        								
-        function parseVerifyResult(msg){
-        	$(document).ready(function(){var obj = jQuery.parseJSON(msg);
-        		var statusCode = obj.status_code;
-        		var statusMsg = obj.status_message;
-//         		$("#gpki-data").html(statusMsg);
-        		
-        		if (statusCode == "0") {
-        			var serialNo = obj.serial_no;
-        			var validity = obj.cert_validity;
-        			var subjectDn = obj.subject_dn;
-        			gpki_dlg.hide();
-        			msg = "This signature is *VALID*" + "\n" + "serialNo = " + serialNo + "\n" + "validity = " + validity + "\n" + "subjectDn = " + subjectDn;
-        			Aegis.alert(msg);
-                }else {
-        			Aegis.alert("This signature is *INVALID* :" + statusMsg);
-        		}
-        		
-        	});
-        }
+		<script>
+			function DigiSign() {
+				var textBeforeSign = $("[id='#{textBeforeSign.clientId}']")
+						.val();
+				var plainText = encodeURIComponent(Aegis.hash(textBeforeSign));
+				//         	var plainText =  $("[id='#{bs.clientId}']").val();
 
-        function parseSignResult(msg){alert("ss");
-		$(document).ready(function(){
-			alert("dd");
-			var obj = jQuery.parseJSON(msg);
-			alert("sng");
-			var statusCode = obj.status_code;
-			var statusMsg = obj.status_message;	
-			var startDate = obj.start_date;
-			var endDate = obj.end_date;
-			var subjectDN = obj.subject_dn;
-			var serialNo = obj.serial_no;
-			var ic = obj.ic_no;
-			var signedData = encodeURIComponent(obj.signed_data);
-			if (statusCode == "0") {
-				var po = "dop";
-				var textBeforeSign =  $("[id='#{textBeforeSign.clientId}']").val();
-        		var originalText = encodeURIComponent(Aegis.hash(textBeforeSign));
-        		var signedText = encodeURIComponent(signedData);
-        		var serialNo = obj.serial_no;
-        		verify(originalText, signedText);
-				Aegis.alert(signedText);			
-
-				Aegis.alert(signedData);
-				alert("sngz");
-
-				
-				postSignAction([{name:'textBeforeSign', value:textBeforeSign},{name:'signedText', value:signedText},{name:'serialNo', value:serialNo}]);
-
-				alert("snga");
-
-				/* put your logic to handle the result here */
+				//         	var $foo = $("[id='#{pin.clientId}']");
+				var pin = $("[id='#{pin.clientId}']").val();
+				if (pin != "") {
+					sign_st(pin, plainText);
+				}else{
+					alert("Please Insert Pin Number");
+				}
 			}
-			else if (statusCode == "50"){
-				Aegis.alert("Wrong PIN");
-			}else if (statusCode == "40"){
-				Aegis.alert("CERT_EXPIRED");
-			}else if (statusCode == "41"){
-				Aegis.alert("CERT_REVOKED");
-			}else if (statusCode == "43"){
-				Aegis.alert("CERT_NOT_YET_VALID");
-			}
-			else{
-				Aegis.alert("Error No: "+statusCode+" \n"+statusMsg);
-			}
-		});
-	}
-</script>
+			function parseVerifyResult(msg) {
+				$(document).ready(
+						function() {
+							var obj = jQuery.parseJSON(msg);
+							var statusCode = obj.status_code;
+							var statusMsg = obj.status_message;
+							//         		$("#gpki-data").html(statusMsg);
 
-    <p:dialog widgetVar="gpki_dlg" resizable="false">
-        <h:panelGrid columns="3" cellpadding="3">
-            <h:outputLabel for="password" value="*Digital Certificate PIN" />
-            <p:password binding="#{pin}" id="password" required="true" />
- 			<p:commandButton value="Sign" oncomplete="DigiSign()" />        
-		</h:panelGrid>
-    </p:dialog>
-</cc:implementation>
+							if (statusCode == "0") {
+								var serialNo = obj.serial_no;
+								var validity = obj.cert_validity;
+								var subjectDn = obj.subject_dn;
+								gpki_dlg.hide();
+								msg = "This signature is *VALID*" + "\n"
+										+ "serialNo = " + serialNo + "\n"
+										+ "validity = " + validity + "\n"
+										+ "subjectDn = " + subjectDn;
+								Aegis.alert(msg);
+							} else {
+								Aegis.alert("This signature is *INVALID* :"
+										+ statusMsg);
+							}
+
+						});
+			}
+
+			function parseSignResult(msg) {
+				alert("ss");
+				$(document)
+						.ready(
+								function() {
+									alert("dd");
+									var obj = jQuery.parseJSON(msg);
+									alert("sng");
+									var statusCode = obj.status_code;
+									var statusMsg = obj.status_message;
+									var startDate = obj.start_date;
+									var endDate = obj.end_date;
+									var subjectDN = obj.subject_dn;
+									var serialNo = obj.serial_no;
+									var ic = obj.ic_no;
+									var signedData = encodeURIComponent(obj.signed_data);
+									if (statusCode == "0") {
+										var po = "dop";
+										var textBeforeSign = $(
+												"[id='#{textBeforeSign.clientId}']")
+												.val();
+										var originalText = encodeURIComponent(Aegis
+												.hash(textBeforeSign));
+										var signedText = encodeURIComponent(signedData);
+										var serialNo = obj.serial_no;
+										verify(originalText, signedText);
+										Aegis.alert(signedText);
+
+										Aegis.alert(signedData);
+										alert("sngz");
+
+										postSignAction([ {
+											name : 'textBeforeSign',
+											value : textBeforeSign
+										}, {
+											name : 'signedText',
+											value : signedText
+										}, {
+											name : 'serialNo',
+											value : serialNo
+										} ]);
+
+										alert("snga");
+
+										/* put your logic to handle the result here */
+									} else if (statusCode == "50") {
+										Aegis.alert("Wrong PIN");
+									} else if (statusCode == "40") {
+										Aegis.alert("CERT_EXPIRED");
+									} else if (statusCode == "41") {
+										Aegis.alert("CERT_REVOKED");
+									} else if (statusCode == "43") {
+										Aegis.alert("CERT_NOT_YET_VALID");
+									} else {
+										Aegis.alert("Error No: " + statusCode
+												+ " \n" + statusMsg);
+									}
+								});
+			}
+		</script>
+
+		<p:dialog widgetVar="gpki_dlg" resizable="false" modal="true">
+			<h:panelGrid columns="3" cellpadding="3">
+				<h:outputLabel for="password" value="*Digital Certificate PIN" />
+				<p:password binding="#{pin}" id="password" />
+				<p:commandButton value="Sign" oncomplete="DigiSign();return false;" />
+			</h:panelGrid>
+		</p:dialog>
+	</cc:implementation>
 </ui:composition>
