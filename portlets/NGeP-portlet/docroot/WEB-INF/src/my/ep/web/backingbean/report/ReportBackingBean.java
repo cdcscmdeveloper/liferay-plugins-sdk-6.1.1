@@ -934,7 +934,7 @@ public class ReportBackingBean extends BaseBackingBean<ReportMangedBean>{
 			this.getManagedBean().setRptGenBean(rptGenBean);
 		}else{
 			log.info("inside else################");
-			throw new EpException(MessageConst.ERROR_REPORT_70001, new String[] { "Please select atleast one Report" });
+			//throw new EpException(MessageConst.ERROR_REPORT_70001, new String[] { "Please select atleast one Report" });
 		}
 	}
 	/*
