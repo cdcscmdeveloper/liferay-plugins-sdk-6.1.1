@@ -1,0 +1,168 @@
+package my.ep.web.backingbean.pm.salutation;
+
+import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
+
+import org.apache.log4j.Logger;
+
+import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.pm.common.salutation.ISalutationSO;
+import my.ep.dto.pm.common.salutation.SalutationReqDTO;
+import my.ep.dto.pm.common.salutation.SalutationResDTO;
+import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.pm.common.PmSalutation;
+import my.ep.type.aut.SearchOperator;
+import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.bean.paginator.IPagingDataModel;
+import my.ep.web.bean.paginator.PagingDataModel;
+import my.ep.web.managedbean.pm.salutation.SalutationManagedBean;
+import my.ep.web.util.lookupservice.BusinessDelegate;
+
+/**
+ * @author DK
+ * 
+ */
+@ManagedBean(name = "salutationBackingBean")
+@RequestScoped
+public class SalutationBackingBean extends
+		BaseBackingBean<SalutationManagedBean> { 
+	
+	private static final Logger log = EpLogger
+			.getLogger(SalutationManagedBean.class);	
+	
+	private IPagingDataModel<PmSalutation> salutationDataModel = new salutationPagingDataModel();	
+
+	public SalutationBackingBean() {
+		log.info("inside constructor");
+
+	}
+
+	private void debugLogger(Object message) {
+		if (log.isDebugEnabled()) {
+			log.debug(message);
+		}
+		log.info(message);
+	}	
+	
+	// reload to professional cert search page 
+	public String redirectSalSearch() {
+		debugLogger("redirectSalSearch");
+
+		return "/xhtml/pm/salutation/salutationMain.xhtml";
+
+	}		
+	
+	// reload to professional cert creation page 
+	public String createSalutation() {
+		debugLogger("createSalutation");
+		
+		return "/xhtml/pm/salutation/salutationMaintenance.xhtml";
+
+	}	
+	
+	// get status item dropdown
+	 public SelectItem[] getStatusList() {
+			
+			SelectItem[] items = null;     
+			try{
+			    items = new SelectItem[2];
+			    items[0] = new SelectItem(0, "Active");
+			    items[1] = new SelectItem(1, "Inactive");  
+			 }catch (Exception e) {
+				e.printStackTrace();
+				FacesContext.getCurrentInstance().addMessage
+				(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+			 }
+		    return items;
+		}
+
+
+		private ISearchBean<PmSalutation> getSearchBeanData(ISearchBean<PmSalutation> searchBean){
+				
+			if (getManagedBean().getSalutationCodes() != null
+					&& !"".equals(getManagedBean().getSalutationCodes())) {
+				SearchFilterBean codesSearchBean = new SearchFilterBean(
+						SearchOperator.OPERATOR_EQUALS.value());
+				codesSearchBean
+						.setSearchField("salutationCode");
+				codesSearchBean.setSearchValue(getManagedBean()
+						.getSalutationCodes());
+				searchBean.getDataFilterBeans().add(codesSearchBean);
+			}
+
+			if (getManagedBean().getSalutationNames() != null
+					&& !"".equals(getManagedBean().getSalutationNames())) {
+				SearchFilterBean codesSearchBean = new SearchFilterBean(
+						SearchOperator.OPERATOR_EQUALS.value());
+				codesSearchBean
+						.setSearchField("salutationName");
+				codesSearchBean.setSearchValue(getManagedBean()
+						.getSalutationNames());
+				searchBean.getDataFilterBeans().add(codesSearchBean);
+			}	
+
+			return searchBean;
+		}	 
+	 
+	public void retrieveSalutation(){
+			debugLogger("retrieveSalutation");
+			
+			salutationDataModel.reloadData();
+			
+		}	 
+	 
+	 
+	public IPagingDataModel<PmSalutation> getSalutationDataModel() {
+		return salutationDataModel;
+	}
+
+	public void setSalutationDataModel(
+			IPagingDataModel<PmSalutation> salutationDataModel) {
+		this.salutationDataModel = salutationDataModel;
+	}	
+
+
+	private class salutationPagingDataModel extends PagingDataModel<PmSalutation> {
+		private static final long serialVersionUID = 1L;
+
+		public salutationPagingDataModel() {
+			super("salutationSR");
+		}
+
+		@Override
+		public ISearchResultBean<PmSalutation> pageChangeListener(ISearchBean<PmSalutation> searchBean) {
+
+			try {	
+				ISearchBean<PmSalutation> searchBeanData = getSearchBeanData(searchBean);
+				SalutationReqDTO reqDTO = new SalutationReqDTO();
+				
+
+				reqDTO.setSalutationSearchBean(searchBeanData);
+				
+				ISalutationSO reqSO = (ISalutationSO) BusinessDelegate.getInstance().getServiceObject("pm", ISalutationSO.class);	
+				SalutationResDTO resDTO = reqSO.retrieveSalutationBySearch(reqDTO);
+				if (resDTO.isSuccessful()) {
+					return resDTO.getSalutationSearchResultBean();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			return null;
+		}
+	}
+
+	public String goToMaintaincePage(PmSalutation pmSalutation) {
+		debugLogger("goToMaintainceAction");
+		this.getManagedBean().setPmSalutation(pmSalutation);
+
+		return "/xhtml/pm/salutation/salutationMaintenance.xhtml";
+	}	
+	
+	 
+}
