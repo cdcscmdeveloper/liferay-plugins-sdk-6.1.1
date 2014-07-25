@@ -1591,8 +1591,7 @@
 		</footer-portlet-javascript>
 		<css-class-wrapper>pm-ProfessionalCertifiedBody-portlet</css-class-wrapper>
 	</portlet>
-	</portlet>
-		<portlet>
+	<portlet>
 		<portlet-name>reports</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
