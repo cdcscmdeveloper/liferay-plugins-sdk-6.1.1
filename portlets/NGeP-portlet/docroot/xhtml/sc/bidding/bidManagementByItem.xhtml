@@ -3,7 +3,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel header="#{lbl['lbl.sc.item.details']}" toggleable="true">
 
@@ -14,7 +15,7 @@
 
 			<p:ajax event="rowSelect" listener="#{biddingBB.rowSelectListener}"
 				update="@form" />
-
+			<ac:paginator for="biddingListBMBI"></ac:paginator>
 
 			<p:column headerText="#{lbl['lbl.sc.item.name']}">
 				<h:outputText value="#{bidItem.scRequestItem.itemName}" />
@@ -23,15 +24,22 @@
 
 				<h:outputText value="#{bidItem.scRequestItem.itemDesc}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.uom']}">
+			<p:column style="width : 60px" headerText="#{lbl['lbl.sc.uom']}">
 
 				<h:outputText value="#{bidItem.scRequestItem.uom.uomName}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.quantity']}">
-				<p:outputLabel value="#{bidItem.qty}" />
+			<p:column style="width : 65px" headerText="#{lbl['lbl.sc.quantity']}">
+				<p:outputLabel value="#{bidItem.qty}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, question.clUom.uomCode)}" />
+				</p:outputLabel>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.min.decrement.block']}">
-				<p:outputLabel value="#{bidItem.decrementAmt}" />
+			<p:column style="width : 125px"
+				headerText="#{lbl['lbl.sc.min.decrement.block']}">
+				<p:outputLabel value="#{bidItem.decrementAmt}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+				</p:outputLabel>
 			</p:column>
 		</p:dataTable>
 
@@ -46,7 +54,7 @@
 		<div align="center">
 
 			<h1>
-			<B>	Bidding Statistic Graph</B>
+				<B> Bidding Statistic Graph</B>
 			</h1>
 
 		</div>
@@ -64,37 +72,56 @@
 
 		<!-- count down timer -->
 
-		<p:dataTable id="rankingList"
+		<p:dataTable id="rankingList" 
 			value="#{biddingBB.managedBean.scBidPriceList}" var="bidPriceItem">
-
-			<p:column headerText="#{lbl['lbl.sc.ranking']}">
-				<p:outputLabel value="#{bidPriceItem.ranking}" />
+			<ac:paginator for="rankingList"></ac:paginator>
+			<p:column  headerText="#{lbl['lbl.sc.ranking']}" style=" align : center; width : 14%">
+				<h:outputText value="#{bidPriceItem.ranking}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.supplier.code']}">
+			<p:column 
+				headerText="#{lbl['lbl.sc.supplier.code']}" style="align : center; width : 14%">
 				<h:outputText
 					value="#{bidPriceItem.scBidSupplierItem.scBidSupplier.smSupplier.supplierId}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.bumiputera.status']}">
+			<p:column style="align : center; width : 14%"
+				headerText="#{lbl['lbl.sc.bumiputera.status']}">
 				<h:outputText
 					value="#{(bidPriceItem.scBidSupplierItem.scBidSupplier.smSupplier.bumi) ? 'Yes' : 'No'}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.starting.price']}">
+			<p:column style="align : center; width : 14%"
+				headerText="#{lbl['lbl.sc.starting.price']}">
 				<p:outputLabel
-					value="#{bidPriceItem.scBidSupplierItem.itemStartPrice}" />
+					value="#{bidPriceItem.scBidSupplierItem.itemStartPrice}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</p:outputLabel>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.last.bid.price']}">
-				<p:commandLink value="#{bidPriceItem.bidPrice}"
-					oncomplete="priceHistory.show();"
-					actionListener="#{biddingBB.historyPricePopupAction(bidPriceItem)}"
-					update="@([id$=historyPricePopupPanel])" />
+			<p:column style=" align : center; width : 14%"
+				headerText="#{lbl['lbl.sc.last.bid.price']}">
+				<div style="align: right">
+					<p:commandLink value="#{bidPriceItem.bidPrice}"  style=" align : right"
+						oncomplete="priceHistory.show();"
+						actionListener="#{biddingBB.historyPricePopupAction(bidPriceItem)}"
+						update="@([id$=historyPricePopupPanel])">
+
+					</p:commandLink>
+				</div>
 
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.difference.rm']}">
+			<p:column style=" align : center; width : 15%"
+				headerText="#{lbl['lbl.sc.difference.rm']}">
 				<p:outputLabel
-					value="#{bidPriceItem.scBidSupplierItem.itemStartPrice - bidPriceItem.bidPrice}" />
+					value="#{bidPriceItem.scBidSupplierItem.itemStartPrice - bidPriceItem.bidPrice}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</p:outputLabel>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.cost.saving']}">
-				<p:outputLabel value="#{1000}" />
+			<p:column style=" align : center; width : 15%"
+				headerText="#{lbl['lbl.sc.cost.saving']}">
+				<p:outputLabel value="#{1000}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</p:outputLabel>
 			</p:column>
 
 		</p:dataTable>

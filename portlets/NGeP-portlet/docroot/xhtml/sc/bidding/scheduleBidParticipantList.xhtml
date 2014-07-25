@@ -8,13 +8,13 @@
 	<div>
 
 		<p:dataTable id="participantList"
-			value="#{scheduleBiddingBB.managedBean.scQt.requestItems}"
+			value="#{scheduleBiddingBB.managedBean.bidParticipants}"
 			var="bidParticipant">
-			<p:column headerText="name">
-				<h:outputText />
+			<p:column headerText="#{lbl['lbl.sc.supplier.name']}">
+				<h:outputText value="#{bidParticipant.supplier.companyName}"/>
 			</p:column>
-			<p:column headerText="offered price">
-				<p:outputLabel  />
+			<p:column headerText="#{lbl['lbl.sc.offered.price']}">
+				<p:outputLabel  value="#{bidParticipant.scQtProposalAmount.proposalAmt}"/>
 			</p:column>
 		</p:dataTable>
 

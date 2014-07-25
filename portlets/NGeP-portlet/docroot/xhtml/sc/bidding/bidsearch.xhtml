@@ -139,7 +139,7 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.status']}">
 
-				<p:outputLabel
+				<h:outputText
 					value="#{biddingBB.getStatusDescById(bid.pmStatus.statusId)}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.action']}">
@@ -149,8 +149,8 @@
 
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png" />
-
 				</p:commandLink>
+				<p:spacer width="5" ></p:spacer>
 				<p:commandLink id="pauseButton"
 					rendered="#{biddingBB.getStatusDescById(bid.pmStatus.statusId) eq 'In Progress'}"
 					process="@this" partialSubmit="true"
@@ -160,8 +160,9 @@
 					<p:graphicImage library="ep/images/design" name="pause.png"
 						value="/resources/ep/images/design/pause.png" />
 				</p:commandLink>
+				<p:spacer width="5" ></p:spacer>
 				<p:commandLink id="cancelButton"
-					rendered="#{biddingBB.getStatusDescById(bid.pmStatus.statusId) eq 'In Progress' || biddingBB.getStatusDescById(bid.pmStatus.statusId) eq 'Pending Bidding'}"
+					rendered="#{biddingBB.getStatusDescById(bid.pmStatus.statusId) eq 'In Progress' or biddingBB.getStatusDescById(bid.pmStatus.statusId) eq 'Pending Bidding'}"
 					process="@this" partialSubmit="true"
 					actionListener="#{biddingBB.bidCancelPopUpAction(bid)}"
 					update="@([id$=pauseCancelPopUp])"
@@ -170,6 +171,7 @@
 					<p:graphicImage library="ep/images/design" name="cancel.png"
 						value="/resources/ep/images/design/cancel.png" />
 				</p:commandLink>
+				<p:spacer width="5" ></p:spacer>
 				<p:commandLink id="resumeButton"
 					rendered="#{biddingBB.getStatusDescById(bid.pmStatus.statusId) eq 'Paused'}"
 					process="@this" partialSubmit="true"

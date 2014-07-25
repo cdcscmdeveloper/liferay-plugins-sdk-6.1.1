@@ -3,54 +3,53 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<div>
-
 		<table>
-
 			<tr>
 				<TD><p:outputLabel value="#{lbl['lbl.sc.item.name']}" /></TD>
 				<TD><p:inputText id="hPopupItemName"
 						value="#{biddingBB.managedBean.historyPrice.scBidSupplierItem.scBidItem.scRequestItem.itemName}"
 						size="20" disabled="true" /></TD>
 			</tr>
-
 			<tr>
 				<TD><p:outputLabel value="#{lbl['lbl.sc.uom']}" /></TD>
 				<TD><p:inputText id="hPopupUOM"
 						value="#{biddingBB.managedBean.historyPrice.scBidSupplierItem.scBidItem.scRequestItem.uom.uomName}"
 						size="20" disabled="true" /></TD>
 			</tr>
-
 			<tr>
 				<TD><p:outputLabel value="#{lbl['lbl.sc.quantity']}" /></TD>
-				<TD><p:inputText id="hPopupQty"
-						value="#{biddingBB.managedBean.historyPrice.scBidSupplierItem.scBidItem.qty}"
-						size="20" disabled="true" /></TD>
+				<TD>
+					<div style="align: right">
+						<p:inputText id="hPopupQty"
+							value="#{biddingBB.managedBean.historyPrice.scBidSupplierItem.scBidItem.qty}"
+							size="20" disabled="true">
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, question.clUom.uomCode)}" />
+						</p:inputText>
+					</div>
+				</TD>
 			</tr>
-
 			<tr>
 				<TD><p:outputLabel value="#{lbl['lbl.sc.supplier.code']}" /></TD>
 				<TD><p:inputText id="hPopupSupplier"
 						value="#{biddingBB.managedBean.historyPrice.scBidSupplierItem.scBidSupplier.smSupplier.supplierId}"
 						size="20" disabled="true" /></TD>
 			</tr>
-
 		</table>
 
 	</div>
 
 	<p:panel header="#{lbl['lbl.sc.history.summary']}" toggleable="true">
-
 		<p:spacer height="5"></p:spacer>
-		
+
 		<div align="center">
-
 			<h1>
-				<B>	Bidding Statistic Graph</B>
+				<B> Bidding Statistic Graph</B>
 			</h1>
-
 		</div>
 		<p:spacer height="5"></p:spacer>
 		<div>
@@ -61,14 +60,18 @@
 		<div>
 			<p:dataTable id="historySummary"
 				value="#{biddingBB.managedBean.bidHistoryPriceList}" var="history">
+				<ac:paginator for="historySummary"></ac:paginator>
 				<p:column headerText="#{lbl['lbl.sc.submitted.time']}">
 					<h:outputText value="#{history.createdDate}">
-
-						<f:convertDateTime type="both" timeStyle="short" dateStyle="short" />
+					<f:convertDateTime  pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME_WITH_SECONDS)}" />
+					<!-- need to change the pattern value  -->
 					</h:outputText>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.bid.price']}">
-					<p:outputLabel value="#{history.bidPrice}" />
+					<p:outputLabel value="#{history.bidPrice}" >
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</p:outputLabel>
 				</p:column>
 			</p:dataTable>
 		</div>

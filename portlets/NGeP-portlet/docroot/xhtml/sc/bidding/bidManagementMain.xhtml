@@ -4,11 +4,14 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<ui:define name="resourceSection">
 	</ui:define>
 
 	<ui:define name="contentSection">
+	
+	<ui:param name="isZonal" value="true" />
 
 		<div align="left" class="header-info">
 
@@ -44,8 +47,8 @@
 		<p:panel header="#{lbl['lbl.sc.bid.details']}"
 			id="bidDetailsForBidManagement" toggleable="true">
 
-			<div>
-				<table style="width: 100%">
+			<div align="center">
+				<table style="width: 60%">
 
 					<tr>
 						<td style="width: 100px"><p:outputLabel
@@ -53,14 +56,16 @@
 						<td><p:inputText id="bidStart"
 								value="#{biddingBB.managedBean.scheduledBid.startDate}"
 								size="20" disabled="true">
-								<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+								<f:convertDateTime
+									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
 							</p:inputText></td>
 						<td style="width: 100px"><p:outputLabel
 								value="#{lbl['lbl.sc.bidding.end']}" /></td>
 						<td><p:inputText id="bidEnd"
 								value="#{biddingBB.managedBean.scheduledBid.endDate}" size="20"
 								disabled="true">
-								<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+								<f:convertDateTime
+									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
 							</p:inputText></td>
 					</tr>
 
@@ -78,16 +83,18 @@
 
 						<td style="width: 100px"><p:outputLabel
 								value="#{lbl['lbl.sc.zone.name']}" /></td>
-						<td colspan="3"><p:inputText id="zoneName" disabled="true"
+						<td><p:inputText id="zoneNameLabel"
+								disabled="true"
 								value="#{biddingBB.managedBean.scheduledBid.tplSpecZoneDtl.zoneName}" />
-							<p:commandLink id="zoneList" size="5"
-								oncomplete="zoneLocPopup.show();" partialSubmit="true"
-								process="@this" update="@([id$=zoneLocPopup])">
+								<p:spacer width="5" ></p:spacer>
+							<p:commandLink id="zoneName" oncomplete="zoneLocPopup.show();" rendered="#{isZonal}"
+								partialSubmit="true" process="@this"
+								update="@([id$=zoneLocPopup])">
 								<p:graphicImage library="ep/images/design" name="evaluate.png"
 									value="/resources/ep/images/design/evaluate.png" />
 								<f:setPropertyActionListener
 									target="#{zoneLocationBackingBean.tplSpecZoneDtl}"
-									value="#{scLoiLoaItem.tplSpecZoneDtl}" />
+									value="#{biddingBB.managedBean.scheduledBid.tplSpecZoneDtl}" />
 							</p:commandLink></td>
 						<td></td>
 						<td></td>
@@ -97,15 +104,13 @@
 
 						<td style="width: 100px"><p:outputLabel
 								value="#{lbl['lbl.sc.view.by']}" /></td>
-						<td colspan="3"><p:selectOneMenu id="viewBy"
-								value="#{biddingBB.managedBean.bidManagementViewBy}" size="20">
-
+						<td><p:selectOneMenu id="viewBy"
+								value="#{biddingBB.managedBean.bidManagementViewBy}" style="width : 135px">
 								<f:selectItem itemLabel="Package" itemValue="P"></f:selectItem>
 								<f:selectItem itemLabel="Item" itemValue="I"></f:selectItem>
 								<p:ajax event="change" process="@this" partialSubmit="true"
 									listener="#{biddingBB.viewByChangeListener}"
 									update="bidManagement"></p:ajax>
-
 							</p:selectOneMenu></td>
 						<td></td>
 						<td></td>
@@ -129,10 +134,13 @@
 
 		</h:panelGroup>
 
-		<p:dialog closeOnEscape="true" header="#{lbl['lbl.sc.zone.location']}" rendered="false"
-			widgetVar="zoneLocPopup" showEffect="fade" hideEffect="fade"
-			modal="true" id="zoneLocPopup">
-			<ui:include src="/xhtml/sc/bidding/BMByItemZoneLocationPopup.xhtml"></ui:include>
+		<p:dialog id="zoneLocPopup" widgetVar="zoneLocPopup"
+			header="#{lbl['lbl.tpl.spec.zone.details']}" modal="true" width="350"
+			height="200">
+
+			<ui:include src="/xhtml/sc/bidding/BMByItemZoneLocationPopup.xhtml" />
 		</p:dialog>
+
+
 	</ui:define>
 </ui:composition>

@@ -5,193 +5,159 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:messages id="onlineBidding" showDetail="true" autoUpdate="true"
-		closable="true" />
-
-	<div>
-		<p:outputLabel value="#{lbl['lbl.sc.bidding.no']}" />
-
-		<p:selectOneMenu />
-
-	</div>
-
-	<p:panel id="bidDetails" header="#{lbl['lbl.sc.bid.details']}"
-		toggleable="true">
-
-
-
-		<table style="width: 100%; align: LEFT">
-
-			<tr>
-
-				<td style="width: 100px"><p:outputLabel
-						value="#{lbl['lbl.sc.bidding.no']}" /></td>
-				<td><p:inputText id="bidNo"
-						value="#{onlineBiddingBB.managedBean.bidNo}" disabled="true"
-						size="20" /></td>
-				<TD></TD>
-				<TD></TD>
-
-			</tr>
-
-			<tr>
-
-				<td style="width: 100px"><p:outputLabel
-						value="#{lbl['lbl.sc.document.no']}" /></td>
-				<td><p:inputText id="documentNo"
-						value="#{onlineBiddingBB.managedBean.documentNo}" disabled="true"
-						size="20" /></td>
-				<TD></TD>
-				<TD></TD>
-
-			</tr>
-
-			<tr>
-
-				<td><p:outputLabel
-						value="#{lbl['lbl.sc.document.title']}" /></td>
-				<td colspan="3"><p:inputText id="documentTitle"
-						value="#{onlineBiddingBB.managedBean.documentTitle}"
-						disabled="true" size="60" /></td>
-
-
-			</tr>
-
-			<tr>
-
-				<td><p:outputLabel
-						value="#{lbl['lbl.sc.ptj.name']}" /></td>
-				<td colspan="3"><p:inputText id="ptjName"
-						value="#{onlineBiddingBB.managedBean.ptjName}" disabled="true"
-						size="60" /></td>
-
-			</tr>
-
-			<tr>
-
-				<td><p:outputLabel
-						value="#{lbl['lbl.sc.bidding.start']}" /></td>
-				<td><p:inputText id="bidStart"
-						value="#{onlineBiddingBB.managedBean.bidStart}" disabled="true"
-						size="20" /></td>
-				<TD><p:outputLabel
-						value="#{lbl['lbl.sc.bidding.end']}" /></TD>
-				<TD><p:inputText id="bidEnd"
-						value="#{onlineBiddingBB.managedBean.bidEnd}" disabled="true"
-						size="20" /></TD>
-
-			</tr>
-
-		</table>
-
-	</p:panel>
-
 	<p:panel header="#{lbl['lbl.sc.bid.price']}" toggleable="true">
 
-
-
 		<p:dataTable id="itemWiseBidList"
-			value="#{onlineBiddingBB.managedBean.itemWiseBidList}" var="bidItem">
+			value="#{onlineBiddingBB.managedBean.bidPrices}" var="bidPriceItem">
 
 			<p:columnGroup type="header">
 
 				<p:row>
-					<p:column rowspan="2"
-						headerText="#{lbl['lbl.sc.item.name']}" />
+					<p:column rowspan="2" headerText="#{lbl['lbl.sc.item.name']}"
+						style="width : 22%" />
+
+					<p:column rowspan="2" headerText="#{lbl['lbl.sc.quantity']}"
+						style="width : 7%" />
 
 					<p:column rowspan="2"
-						headerText="#{lbl['lbl.sc.quantity']}" />
+						headerText="#{lbl['lbl.sc.min.decrement.block']}"
+						style="width : 4%" />
 
-					<p:column rowspan="2"
-						headerText="#{lbl['lbl.sc.min.decrement.block']}" />
+					<p:column colspan="2" headerText="#{lbl['lbl.sc.starting']}"
+						style="width : 19%;text-align:center" />
 
-					<p:column colspan="2"
-						headerText="#{lbl['lbl.sc.starting']}" />
+					<p:column colspan="2" headerText="#{lbl['lbl.sc.last.bid']}"
+						style=" width : 19%; text-align:center" />
 
-					<p:column colspan="2"
-						headerText="#{lbl['lbl.sc.last.bid']}" />
+					<p:column colspan="3" headerText="#{lbl['lbl.sc.new.bid']}"
+						style="width : 18% ; text-align:center" />
 
-					<p:column colspan="3"
-						headerText="#{lbl['lbl.sc.new.bid']}" />
-
-					<p:column rowspan="2"
-						headerText="#{lbl['lbl.sc.current.ranking']}" />
+					<p:column rowspan="2" headerText="#{lbl['lbl.sc.current.ranking']}"
+						style="width : 4%" />
 
 
 				</p:row>
 				<p:row>
-					<p:column
-						headerText="#{lbl['lbl.sc.unit.price']}" />
+					<p:column headerText="#{lbl['lbl.sc.unit.price']}"
+						style="width : 9%" />
 
-					<p:column
-						headerText="#{lbl['lbl.sc.sub.total']}" />
+					<p:column headerText="#{lbl['lbl.sc.sub.total']}"
+						style="width : 10%" />
 
-					<p:column
-						headerText="#{lbl['lbl.sc.unit.price']}" />
+					<p:column headerText="#{lbl['lbl.sc.unit.price']}"
+						style="width : 9%" />
 
-					<p:column
-						headerText="#{lbl['lbl.sc.sub.total']}" />
+					<p:column headerText="#{lbl['lbl.sc.sub.total']}"
+						style="width : 10%" />
 
-					<p:column headerText="#{lbl['lbl.sc.decrement']}" />
+					<p:column headerText="#{lbl['lbl.sc.decrement']}"
+						style="width : 7%" />
 
-					<p:column
-						headerText="#{lbl['lbl.sc.unit.price']}" />
+					<p:column headerText="#{lbl['lbl.sc.unit.price']}"
+						style="width : 8%" />
 
-					<p:column
-						headerText="#{lbl['lbl.sc.sub.total']}" />
+					<p:column headerText="#{lbl['lbl.sc.sub.total']}"
+						style="width : 10%" />
 
 				</p:row>
 			</p:columnGroup>
-			<p:row>
+			<p:column style="width : 22%">
+				<p:commandLink
+					value="#{bidPriceItem.scBidSupplierItem.scBidItem.scRequestItem.itemName}"
+					action="#{onlineBiddingBB.itemDetialsPopupAction(bidPriceItem)}"
+					oncomplete="onlineBiddingItemDetails.show()" />
+			</p:column>
+			<p:column style="width : 7%">
+				<p:outputLabel
+					value="#{bidPriceItem.scBidSupplierItem.scBidItem.qty}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, question.clUom.uomCode)}" />
+				</p:outputLabel>
+			</p:column>
+			<p:column style="width : 4%">
+				<p:outputLabel
+					value="#{bidPriceItem.scBidSupplierItem.scBidItem.decrementAmt}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</p:outputLabel>
+			</p:column>
+			<p:column style="width : 9%">
+				<p:outputLabel
+					value="#{bidPriceItem.scBidSupplierItem.itemStartPrice}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</p:outputLabel>
+			</p:column>
+			<p:column style="width : 10%">
+				<p:outputLabel
+					value="#{bidPriceItem.scBidSupplierItem.itemStartPrice * bidPriceItem.scBidSupplierItem.scBidItem.qty}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</p:outputLabel>
+			</p:column>
+			<p:column style="width : 9%">
+				<p:outputLabel value="#{bidPriceItem.bidPrice}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</p:outputLabel>
+			</p:column>
+			<p:column style="width : 10%">
+				<p:outputLabel
+					value="#{bidPriceItem.bidPrice * bidPriceItem.scBidSupplierItem.scBidItem.qty}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</p:outputLabel>
+			</p:column>
+			<p:column style="width : 7%">
+				<p:spinner widgetVar="decrementSpinner" 
+					value="#{onlineBiddingBB.managedBean.selectedDecrementAmt}"
+					min="#{bidPriceItem.scBidSupplierItem.scBidItem.decrementAmt}"
+					max="#{bidPriceItem.bidPrice /10}"
+					stepFactor="#{bidPriceItem.scBidSupplierItem.scBidItem.decrementAmt}">
+					<p:ajax event="change" process="@this" partialSubmit="true"
+						listener="#{onlineBiddingBB.decrementAmountValueChangeListener}"></p:ajax>
+				</p:spinner>
+				<p:spacer width="5" ></p:spacer>
+				<h:button rendered="#{onlineBiddingBB.managedBean.rendered}" icon="ui-icon-submit"/>
+			</p:column>
+			<p:column style="width : 8%">
+				<p:outputLabel id="newPrice"
+					value="#{onlineBiddingBB.managedBean.newBidPrice}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</p:outputLabel>
+			</p:column>
+			<p:column style="width : 10%">
+				<p:outputLabel id="newPriceSubTotal"
+					value="#{onlineBiddingBB.managedBean.newBidPrice * bidPriceItem.scBidSupplierItem.scBidItem.qty}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</p:outputLabel>
+			</p:column>
+			<p:column style="width : 4%">
+				<p:outputLabel id="newRanking" value="#{bidPriceItem.ranking}" />
+			</p:column>
 
-				<p:column>
-					<p:commandLink value="#{bidItem.itemName}"
-						onComplete="widgetVar.show" />
-				</p:column>
-				<p:column>
-					<p:outputLabel value="#{bidItem.qty}" />
-				</p:column>
-				<p:column>
-					<p:outputLabel value="#{bidItem.minDecrement}" />
-				</p:column>
-				<p:column>
-					<p:outputLabel value="#{bidItem.startingUnitPrice}" />
-				</p:column>
-				<p:column>
-					<p:outputLabel value="#{bidItem.startingSubTotal}" />
-				</p:column>
-				<p:column>
-					<p:outputLabel value="#{bidItem.lastBidUnitPrice}" />
-				</p:column>
-				<p:column>
-					<p:outputLabel value="#{bidItem.lastBidSubTotal}" />
-				</p:column>
-				<p:column>
-					<p:inputText value="#{bidItem.newBidDecrement}" />
-				</p:column>
-				<p:column>
-					<p:outputLabel value="#{bidItem.newBidUnitPrice}" />
-				</p:column>
-				<p:column>
-					<p:outputLabel value="#{bidItem.newBidsubTotal}" />
-				</p:column>
-				<p:column>
-					<p:outputLabel value="#{bidItem.currentRanking}" />
-				</p:column>
-
-			</p:row>
 			<p:columnGroup type="footer">
 
 				<p:row>
 					<p:column colspan="4" footerText="Total" style="text-align:right" />
-					<p:column footerText="sample2" style="text-align:left" />
-					<!-- <p:outputLabel value="#{bidItem.startingTotal}" /> -->
+					<p:column>
+					<p:outputLabel id="itemStartPriceTotal"
+						value="#{onlineBiddingBB.managedBean.itemStartPriceTotal}">
+					</p:outputLabel>
+					</p:column>
 					<p:column footerText="Total" style="text-align:right" />
-					<p:column footerText="sample2" style="text-align:left" />
-					<!-- <p:outputLabel value="#{bidItem.lastbidTotal}" /> -->
+					<p:column>
+					<p:outputLabel id="itemLastBidPriceTotal"
+						value="#{onlineBiddingBB.managedBean.itemLastBidPriceTotal}">
+					</p:outputLabel>
+					</p:column>
 					<p:column colspan="2" footerText="Total" style="text-align:right" />
-					<p:column footerText="sample3" style="text-align:left" colspan="2" />
-					<!-- <h:outputText value="#{bidItem.newbidTotal}" /> -->
+					<p:column>
+					<p:outputLabel id="itemNewBidPriceTotal" value="#{onlineBiddingBB.managedBean.itemLastBidPriceTotal}">
+					</p:outputLabel>
+					</p:column>
 				</p:row>
 
 			</p:columnGroup>
@@ -200,45 +166,22 @@
 
 	</p:panel>
 
-	<div style="allign: right">
-		<p:outputLabel value="#{lbl['lbl.sc.package.ranking']}" />
-		<p:inputText id="bidNos" value="something" disabled="true" size="20" />
-	</div>
-	<p:panel header="#{lbl['lbl.sc.contact.person.details']}" toggleable="true">
-	
-	<p:dataTable id="contactPersonDT"
-			value="#{onlineBiddingBB.managedBean.contactPersonList}" var="contact">
-			
-			<p:column headerText="#{lbl['lbl.sc.name']}">
-				<p:outputLabel
-					value="#{contact.contactName}" />
-			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.tel.no']}">
-				<p:outputLabel
-					value="#{contact.PhoneNo}" />
-			</p:column>
-	
-	</p:dataTable>
+	<p:panel header="#{lbl['lbl.sc.contact.person.details']}"
+		toggleable="true">
 
-	</p:panel>
-	
-	<p:panel id="onlineBiddingItemDetailsPopupPanel">
-	<p:dialog   
-		header="#{lbl['lbl.sc.item.details']}" widgetVar="itemDetails"
-		 showEffect="fade" hideEffect="fade" modal="true"
-		id="onlineBiddingItemDetails">
-		<ui:include src="/xhtml/sc/bidding/onlineBiddingItemDetailsPopup.xhtml"></ui:include>
-	</p:dialog>
-	</p:panel>
-	
-	
-	<p:panel id="onlineBiddingNotificationPopupPanel">
-	<p:dialog   
-		header="#{lbl['lbl.sc.notification']}" widgetVar="notification"
-		 showEffect="fade" hideEffect="fade" modal="true"
-		id="onlineBiddingNotification">
-		<ui:include src="/xhtml/sc/bidding/ onlineBiddingNotificationPopup.xhtml"></ui:include>
-	</p:dialog>
+		<p:dataTable id="contactPersonDT"
+			value="#{onlineBiddingBB.managedBean.bidContactPersons}"
+			var="contact">
+
+			<p:column headerText="#{lbl['lbl.sc.name']}" style="width : 70%">
+				<h:outputText value="#{contact.contactName}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.tel.no']}" style="width : 30%">
+				<p:outputLabel value="#{contact.phoneNo}" />
+			</p:column>
+
+		</p:dataTable>
+
 	</p:panel>
 
 </ui:composition>

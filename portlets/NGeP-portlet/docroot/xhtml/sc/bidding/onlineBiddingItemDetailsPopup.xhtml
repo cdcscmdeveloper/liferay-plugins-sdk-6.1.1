@@ -5,40 +5,38 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	
-
 		<table>
 
 			<tr>
 				<TD><p:outputLabel value="#{lbl['lbl.sc.item.name']}" /></TD>
-				<TD><p:inputText id=""
-						value="#{onlineBiddingBB.managedBean.}"
-						size="20" disabled="true" /></TD>
+				<TD><p:inputText 
+						value="#{onlineBiddingBB.managedBean.scBidPrice.scBidSupplierItem.scBidItem.scRequestItem.itemName}"
+						size="35" disabled="true" /></TD>
 			</tr>
 
 			<tr>
 				<TD><p:outputLabel value="#{lbl['lbl.sc.item.description']}" /></TD>
-				<TD><p:inputText id=""
-						value="#{onlineBiddingBB.managedBean.}"
-						size="20" disabled="true" /></TD>
+				<TD><p:inputTextarea cols="70" rows="5"
+						value="#{onlineBiddingBB.managedBean.scBidPrice.scBidSupplierItem.scBidItem.scRequestItem.itemDesc}"
+						 disabled="true" /></TD>
 			</tr>
 
 			<tr>
 				<TD><p:outputLabel value="#{lbl['lbl.sc.uom']}" /></TD>
-				<TD><p:inputText id=""
-						value="#{onlineBiddingBB.managedBean.}"
+				<TD><p:inputText 
+						value="#{onlineBiddingBB.managedBean.scBidPrice.scBidSupplierItem.scBidItem.scRequestItem.uom.uomName}"
 						size="20" disabled="true" /></TD>
 			</tr>
 
 			<tr>
 				<TD><p:outputLabel value="#{lbl['lbl.sc.quantity']}" /></TD>
-				<TD><p:inputText id=""
-						value="#{onlineBiddingBB.managedBean.}"
+				<TD><p:inputText 
+						value="#{onlineBiddingBB.managedBean.scBidPrice.scBidSupplierItem.scBidItem.qty}"
 						size="20" disabled="true" /></TD>
 			</tr>
 
 		</table>
 
-	<p:commandButton value="#{lbl['lbl.btn.close']}" icon="ui-icon-close" onclick="itemDetails.hide();"/>
+	<p:commandButton value="#{lbl['lbl.btn.close']}" icon="ui-icon-back" onclick="itemDetails.hide();"/>
 
 </ui:composition>
