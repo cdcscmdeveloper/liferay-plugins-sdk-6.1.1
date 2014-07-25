@@ -18,6 +18,7 @@ import my.ep.persistence.entity.fl.payment.FlInvoiceItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -47,10 +48,15 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	
 	private boolean isDan = false;
 	private boolean isUpdateDan = false;
+	private BigDecimal sumOrderedAmt;
+	private String expDate;
+	private String effDate;
+	private Long statusId;
 	
 	private String factoringCheck="false";
 	private String docType;
 	private Map<String, SmSupplierBank> supplierBankAccountMap;
+	private List<PmStatusDesc>decisionList;
 	
 	// Inv Items
 	private TreeNode chargeLineItemRoot ;
@@ -541,4 +547,77 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	public void setDocMaintainRemarks(boolean docMaintainRemarks) {
 		this.docMaintainRemarks = docMaintainRemarks;
 	}
+
+	/**
+	 * @return the decisionList
+	 */
+	public List<PmStatusDesc> getDecisionList() {
+		return decisionList;
+	}
+
+	/**
+	 * @param decisionList the decisionList to set
+	 */
+	public void setDecisionList(List<PmStatusDesc> decisionList) {
+		this.decisionList = decisionList;
+	}
+
+	/**
+	 * @return the sumOrderedAmt
+	 */
+	public BigDecimal getSumOrderedAmt() {
+		return sumOrderedAmt;
+	}
+
+	/**
+	 * @param sumOrderedAmt the sumOrderedAmt to set
+	 */
+	public void setSumOrderedAmt(BigDecimal sumOrderedAmt) {
+		this.sumOrderedAmt = sumOrderedAmt;
+	}
+
+	/**
+	 * @return the expDate
+	 */
+	public String getExpDate() {
+		return expDate;
+	}
+
+	/**
+	 * @param expDate the expDate to set
+	 */
+	public void setExpDate(String expDate) {
+		this.expDate = expDate;
+	}
+
+	/**
+	 * @return the effDate
+	 */
+	public String getEffDate() {
+		return effDate;
+	}
+
+	/**
+	 * @param effDate the effDate to set
+	 */
+	public void setEffDate(String effDate) {
+		this.effDate = effDate;
+	}
+
+	/**
+	 * @return the statusId
+	 */
+	public Long getStatusId() {
+		return statusId;
+	}
+
+	/**
+	 * @param statusId the statusId to set
+	 */
+	public void setStatusId(Long statusId) {
+		this.statusId = statusId;
+	}
+
+
+
 }

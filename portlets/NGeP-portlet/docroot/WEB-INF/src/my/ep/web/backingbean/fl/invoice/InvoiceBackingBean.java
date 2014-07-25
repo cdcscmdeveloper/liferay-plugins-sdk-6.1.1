@@ -4,13 +4,14 @@
 package my.ep.web.backingbean.fl.invoice;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
@@ -22,21 +23,26 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.fl.invoice.IInvoiceSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
+import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
+import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.fl.FulfilmentConst;
 import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constants.CommonConstants;
 import my.ep.constants.FLProcessNameConst;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
+import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
@@ -51,6 +57,7 @@ import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.pm.common.PmContact;
 import my.ep.persistence.entity.pm.common.PmFinancialAcc;
 import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
@@ -61,7 +68,6 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
-import my.ep.constant.BpmOutcomeConst;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.fl.invoice.InvoiceManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -81,7 +87,7 @@ import com.liferay.portal.util.PortalUtil;
  */
 
 @ManagedBean(name = "invoiceBackingBean")
-@RequestScoped
+@ViewScoped
 public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 	private static Logger log = Logger.getLogger(InvoiceBackingBean.class);
 	private String className="@(.myInvClassName)";
@@ -196,13 +202,10 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			return RoleCode.BASIC_SUPPLIER_ADMIN.value();
 		else if(getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value()))
 			return RoleCode.BASIC_SUPPLIER_USER.value();
+		else if(getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value()))
+			return RoleCode.BPK_APPROVER.value();
 		else 
 			return null;
-	}
-
-	public void test(){
-		System.out.println("getManagedBean().isDan(): "+getManagedBean().isDan());
-		System.out.println("getManagedBean().isUpdateDan(): "+getManagedBean().isUpdateDan());
 	}
 
 	public void preRenderView() {
@@ -256,7 +259,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 				if(resDTO.getInvoice() == null){
 					getManagedBean().setInvoice(new FlInvoice());
 					getManagedBean().getInvoice().setFlInvoiceItem(new ArrayList<FlInvoiceItem>());
-					reqDTO.setFlRequestId(paymentObj.getFlRequestId());
+					reqDTO.setFlRequestId(paymentObj.getFlRequestId().longValue());
 					resDTO = fulfilmentSO.retrieveFulfilmentRequest(reqDTO);
 					flBB.initializeRemarkAndAttachement(new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 					getInvoiceTable(resDTO);				
@@ -558,13 +561,13 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		try {
 			searchBean.getDataFilterBeans().add(new SearchFilterBean("ap59Status.statusId",SearchOperator.OPERATOR_EQUALS.value(),FulfilmentStatusConst.AP59_PENDING_AP59_DECISION));
 			
-			if(getManagedBean().getLoaNo()!=null) {
+			if(getManagedBean().getLoaNo()!=null && getManagedBean().getLoaNo().length() > 0) {
 				searchBean.getDataFilterBeans().add(new SearchFilterBean("flRequest.ctContract.loa.loaNo",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getLoaNo()));
 			}
-			if(getManagedBean().getContractNo()!=null) {
+			if(getManagedBean().getContractNo()!=null && getManagedBean().getContractNo().length() > 0) {
 				searchBean.getDataFilterBeans().add(new SearchFilterBean("flRequest.ctContract.contractNo",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getContractNo()));
 			}
-			if(getManagedBean().getTitle()!=null) {
+			if(getManagedBean().getTitle()!=null && getManagedBean().getTitle().length() > 0) {
 				searchBean.getDataFilterBeans().add(new SearchFilterBean("flRequest.title",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getTitle()));
 			}
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
@@ -607,6 +610,115 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			portletTitle = "Fulfilment Document Maintenance";
 		}
 		return portletTitle;
+	}
+	
+	public String navigateToPage(){
+		renewSesionObject();
+		String navgPage="/xhtml/fl/ap59/ap59BasePage.xhtml?faces-redirect=true";
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
+		String invoiceId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("invoiceId");
+		
+		IInvoiceSO invoiceSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IInvoiceSO.class);
+		IStatusSO statusSO = (IStatusSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IStatusSO.class);
+		reqDTO.setInvoiceId(new Long(invoiceId));
+		FulfilmentResDTO resDTO = invoiceSO.retrieveInvoiceByInvoiceId(reqDTO);
+		StatusReqDTO statusReqDTO = new StatusReqDTO();
+		statusReqDTO.setDocType(FulfilmentConst.DOC_TYPE_AP59);
+		statusReqDTO.setLanguageCode(CommonConstants.DEFAULT_LANGUAGE_CODE);
+		statusReqDTO.setModuleCode(FulfilmentConst.FULFILMENT);
+		StatusResDTO statusResDTO = statusSO.retrieveStatusDescList(statusReqDTO);
+		InvoiceBackingBean invBB = new InvoiceBackingBean();
+		invBB.getManagedBean().setInvoice(resDTO.getInvoice());
+		BigDecimal sumOrderedAmt = new BigDecimal(0);
+		for(FlFulfilmentItem item : resDTO.getInvoice().getFlRequest().getFlFulfilmentItems()){
+			for(FlFulfilmentItemAddr itemAddr : item.getFlFulfilmentItemAddr()){
+				sumOrderedAmt = sumOrderedAmt.add(itemAddr.getOrderedAmt());
+			}
+		}
+		invBB.getManagedBean().setSumOrderedAmt(sumOrderedAmt);
+		BigDecimal serviceFee = null;
+		if(resDTO.getInvoice().getFlFulfilmentOrder().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)) {
+			serviceFee = new BigDecimal(FulfilmentConst.SERVICE_FEE_ZERO_POINT_EIGHT);
+		} else {
+			serviceFee = new BigDecimal(resDTO.getInvoice().getFlRequest().getCtContract().getServiceFee());
+		}
+		
+		getManagedBean().setServiceCharge(Double.toString(serviceFee.doubleValue()));
+		for(PmStatusDesc statusDesc : statusResDTO.getStatusDescList()){
+			if(!statusDesc.getPmStatus().getStatusId().equals(FulfilmentStatusConst.AP59_PENDING_AP59_DECISION)){
+				if(invBB.getManagedBean().getDecisionList() == null	){
+					invBB.getManagedBean().setDecisionList(new ArrayList<PmStatusDesc>());
+				}
+				invBB.getManagedBean().getDecisionList().add(statusDesc);
+			}
+		}
+		 SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
+		 String expDate=null;
+		 String effDate=null;
+		 expDate = DATE_FORMAT.format(invBB.getManagedBean().getInvoice().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getExpDate());
+		 effDate = DATE_FORMAT.format(invBB.getManagedBean().getInvoice().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getEffDate());
+		 invBB.getManagedBean().setExpDate(expDate);
+		 invBB.getManagedBean().setEffDate(effDate);
+		 FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+		flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
+		return navgPage;
+	}
+	
+	public String submitAp59(){
+		IInvoiceSO invoiceSO = null;
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+		String action = BpmOutcomeConst.BPM_SUBMIT;
+		try {
+			FlInvoice invoice = getManagedBean().getInvoice();
+			invoiceSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IInvoiceSO.class);
+			
+			reqDTO.setStatusId(getManagedBean().getStatusId());
+			reqDTO.setInvoice(invoice);
+			reqDTO.setOutcome(action);
+			reqDTO.setUserRole(getUserRole());
+			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
+			if(flBB.getManagedBean().getRemarkList().size() >0){
+				reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
+			}
+			resDTO = invoiceSO.updateInvoiceWithAP59(reqDTO);
+			if(resDTO.isSuccessful()) {
+				String messageId = MessageConst.INFO_700026;
+				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
+					messageId = MessageConst.INFO_700004;
+				} else if(resDTO.getInvoice()!=null && resDTO.getInvoice().getAp59Status()!=null && 
+						resDTO.getInvoice().getAp59Status().getStatusId().longValue()==FulfilmentStatusConst.AP59_PENDING_AP59_DECISION) {
+					messageId = MessageConst.INFO_700004;
+				}
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+						FacesMessage.SEVERITY_INFO, 
+						null,
+						MessageUtils.getMessage(messageId, 
+								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_AP59), resDTO.getInvoiceNo()}, 
+								MessageUtils.BUNDLE_COMMON_MESSAGES, 
+								new FacesScopes().getUserLocale())));
+				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && resDTO.getInvoice()!=null && resDTO.getInvoice().getAp59Status()!=null && 
+					resDTO.getInvoice().getAp59Status().getStatusId().longValue()==FulfilmentStatusConst.AP59_PENDING_AP59_DECISION) {
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+							MessageUtils.getMessage(MessageConst.INFO_745001, null, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				}
+				if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
+					renewSesionObject();
+					return CommonUIConst.ACKNOWLEDGE_PAGE;
+				} else {
+					getManagedBean().setInvoice(resDTO.getInvoice());
+					flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
+					if(getManagedBean().getInvoice().getFlFulfilmentOrder().isFactored()){
+						getFactoringBranchDtl(); 
+					}
+				}
+			}
+		}finally {
+			invoiceSO = null;
+		}
+		return null;
 	}
 	
 }

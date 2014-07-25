@@ -772,7 +772,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			
 			IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentRequestSO.class);
 			FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
-			flReqDTO.setFlRequestId(flPurchaseOrd.getOrderDetails().getRequestId());
+			flReqDTO.setFlRequestId(flPurchaseOrd.getOrderDetails().getRequestId().longValue());
 			FulfilmentResDTO resDTO = fulfilmentSO.retrieveFulfilmentRequest(flReqDTO);
 			
 			setFulfilmentRequestField(resDTO);

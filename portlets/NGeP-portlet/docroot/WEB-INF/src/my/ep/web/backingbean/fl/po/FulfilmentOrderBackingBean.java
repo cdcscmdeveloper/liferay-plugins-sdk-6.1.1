@@ -250,7 +250,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 				FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
 				FulfilmentResDTO resDTO = new FulfilmentResDTO();
 				
-				flReqDTO.setFlRequestId(crDataType.getOrderDetails().getRequestId());
+				flReqDTO.setFlRequestId(crDataType.getOrderDetails().getRequestId().longValue());
 				resDTO = requestSO.retrieveFulfilmentRequest(flReqDTO);
 				getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
 				getManagedBean().setTaskId(taskId);

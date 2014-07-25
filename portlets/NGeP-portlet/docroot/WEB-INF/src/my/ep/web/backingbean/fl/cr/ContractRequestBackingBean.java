@@ -760,10 +760,10 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			FulfilmentResDTO resDTO = new FulfilmentResDTO();
 			FLContractOrderDataType coObj = (FLContractOrderDataType) obj;
 			if (coObj.getContractId().intValue() == 0) {
-				flReqDTO.setFlRequestId(coObj.getAssociatedCrId());
+				flReqDTO.setFlRequestId(coObj.getAssociatedCrId().longValue());
 
 			} else {
-				flReqDTO.setFlRequestId(coObj.getContractId());
+				flReqDTO.setFlRequestId(coObj.getContractId().longValue());
 			}
 
 			///flReqDTO.setSelectedApprovers(coObj.getApproverList());
