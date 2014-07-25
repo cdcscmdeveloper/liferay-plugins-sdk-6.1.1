@@ -8,6 +8,8 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<ui:define name="contentSection">
-		<f:event listener="#{panelBackingBean.preRenderSearch}" type="preRenderView" />	
+		<p:remoteCommand name="testAutoRun"
+		    action="#{panelBackingBean.presetCircularSessionData}"
+		    autoRun="true" />
 	</ui:define>
 </ui:composition>

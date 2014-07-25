@@ -8,6 +8,8 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<ui:define name="contentSection">
-		<f:event listener="#{panelBackingBean.preRenderCancelCircular}" type="preRenderView" />	
+		<p:remoteCommand name="testAutoRun"
+		    action="#{panelBackingBean.resetCancelCircularSessionData}"
+		    autoRun="true" />
 	</ui:define>
 </ui:composition>

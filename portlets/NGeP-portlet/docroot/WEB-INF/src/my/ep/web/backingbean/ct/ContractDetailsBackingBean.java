@@ -232,18 +232,18 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		return sourceList;
 	}
 	
-	public void preRenderSearch() {
+	public String resetSearchSessionData() {
+		log.debug("renewing session object..");
 		renewSesionObject();
-		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, CONTRACT_MAINT_PAGE);
+		log.info("session renewed, forward to search contract page.");
+		return CONTRACT_MAINT_PAGE;
 	}
 	
-	public void preRenderContract() {
+	public String resetContractSessionData() {
+		log.debug("renewing session object..");
 		renewSesionObject();
-		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, CONTRACT_PAGE);
+		log.info("session renewed, forward to contract page.");
+		return CONTRACT_PAGE;
 	}
 	
 	public void preRenderView() {

@@ -8,6 +8,8 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<ui:define name="contentSection">
-		<f:event listener="#{supplierBackingBean.preRenderChangeBankAccount}" type="preRenderView" />	
+		<p:remoteCommand name="testAutoRun"
+		    action="#{supplierBackingBean.resetChangeBankAccountSessionData}"
+		    autoRun="true" />
 	</ui:define>
 </ui:composition>

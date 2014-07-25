@@ -164,11 +164,11 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		return facesScopes;
 	}
 	
-	public void preRenderAgreement() {
+	public String resetAgreementSessionData() {
+		log.debug("renewing session object..");
 		renewSesionObject();
-		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, "agreementTab.xhtml?faces-redirect=true");
+		log.info("session renewed, forward to agreement page.");
+		return "agreementTab.xhtml";
 	}
 
 	public void preRenderView() throws NamingException {
@@ -849,16 +849,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		DecimalFormat nf = new DecimalFormat(commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
 		Map<String, String> valuesMap = new HashMap<String, String>();
 		Calendar c = Calendar.getInstance();
-		IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IAddressSO.class);
-		AddressReqDTO addressReqDTO = new AddressReqDTO();
-		addressReqDTO.setAddressType(AddressType.CONTACT_ADDRESS.value());
-		addressReqDTO.setOrgProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());
-		AddressResDTO addressResDTO = addressSO.retrieveAddressTypeList(addressReqDTO);
-		PmAddressType pmAddressType = null;
-		if(addressResDTO.getAddressTypeList().size()>0) {
-			pmAddressType = addressResDTO.getAddressTypeList().get(0);
-		}
-		
+				
 		if(ContractConst.TEMPLATE_AGREEMENT_COVER_PAGE.equalsIgnoreCase(parameterCode)) {
 			valuesMap.put("CONTRACT_TITLE", getManagedBean().getCtContract().getQuotationTender().getQtTitle());
 			valuesMap.put("SUPPLIER_NAME", getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getSupplierName());
@@ -879,7 +870,18 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			
 			StrSubstitutor sub = new StrSubstitutor(valuesMap);
 			content = sub.replace(content);
-		}else if(ContractConst.TEMPLATE_AGREEMENT_PARTY.equalsIgnoreCase(parameterCode)) {
+		}
+		else if(ContractConst.TEMPLATE_AGREEMENT_PARTY.equalsIgnoreCase(parameterCode)) {
+			IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IAddressSO.class);
+			AddressReqDTO addressReqDTO = new AddressReqDTO();
+			addressReqDTO.setAddressType(AddressType.CONTACT_ADDRESS.value());
+			addressReqDTO.setOrgProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());
+			AddressResDTO addressResDTO = addressSO.retrieveAddressTypeList(addressReqDTO);
+			PmAddressType pmAddressType = null;
+			if(addressResDTO.getAddressTypeList().size()>0) {
+				pmAddressType = addressResDTO.getAddressTypeList().get(0);
+			}
+			
 			valuesMap.put("USER_INPUT_DATE", c.get(Calendar.DATE)+"");
 			valuesMap.put("USER_INPUT_MONTH", c.get(Calendar.MONTH)+"");
 			valuesMap.put("CURRENT_YEAR", c.get(Calendar.YEAR)+"");
@@ -903,7 +905,8 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			
 			StrSubstitutor sub = new StrSubstitutor(valuesMap);
 			content = sub.replace(content);
-		}else if(ContractConst.TEMPLATE_AGREEMENT_SIGNING_PAGE.equalsIgnoreCase(parameterCode)) {
+		}
+		else if(ContractConst.TEMPLATE_AGREEMENT_SIGNING_PAGE.equalsIgnoreCase(parameterCode)) {
 			for(CtAgreementParty agreementParty : getManagedBean().getCtAgencySigner()){
 				content = content + "Di hadapan		: " + agreementParty.getOfficerName() + "<br/>" + 
 								"Nama			: " + agreementParty.getOfficerName() + "<br/>" + 
