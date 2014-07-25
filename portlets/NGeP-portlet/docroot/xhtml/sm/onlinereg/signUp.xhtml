@@ -15,7 +15,7 @@
 <!-- 		<p:inputText id="textInt1" value="" required="true" /> -->
 <!-- 	<p:message id="testtextMsg" for="textInt1" display="icon"  update="@([id$=Msg])" /> -->
 
-		<f:event listener="#{registrationBackingBean.resetSessionData}" type="preRenderView" />
+		
 
 		<p:panel header="Account Type">
 			<table>
@@ -80,8 +80,8 @@
 				</c:choose>
 			</p:scrollPanel>
 			<br />
-			<p:selectBooleanCheckbox id="chkTcId" value="#{registrationBackingBean.managedBean.agreeTC}" update="btnProceed">
-				<p:ajax update="btnProceed" />
+			<p:selectBooleanCheckbox id="chkTcId" value="#{registrationBackingBean.managedBean.agreeTC}">
+				<p:ajax update="btnProceed" partialSubmit="true" process="@this" />
 			</p:selectBooleanCheckbox>
 			I have agreed the <a href="">Terms &#38; Conditions</a>
 		</p:panel>

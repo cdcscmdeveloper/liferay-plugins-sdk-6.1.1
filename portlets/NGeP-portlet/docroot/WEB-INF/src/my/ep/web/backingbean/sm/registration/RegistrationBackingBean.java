@@ -1093,14 +1093,24 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		return true;
 	}
 
-	public void resetSessionData() {
+	/*public void resetSessionData() {
 		this.getManagedBean().setApplType(SupplierManagementConst.ACC_MOF);
-//		this.getManagedBean().setAgreeTC(false);
+		this.getManagedBean().setAgreeTC(false);
 		this.getManagedBean().setSmSupp(null);
 		this.getManagedBean().setSmAppl(null);
+		this.getManagedBean().setConfirmEmail(null);
 		resetBusinessNatureSelection();
-	}
+		System.out.println("renewSesionObject");
+//		renewSesionObject();
+	}*/
 
+	public String resetSessionData() {
+		log.debug("renewing session object..");
+		renewSesionObject();
+		log.info("session renewed, forward to sign up page.");
+		return "signUp.xhtml";
+	}
+	
 	public String getCompanyId() {
 		return EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_COMPANY_ID);
 	}
