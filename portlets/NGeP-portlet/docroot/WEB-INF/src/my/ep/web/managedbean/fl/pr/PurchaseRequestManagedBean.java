@@ -229,10 +229,10 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 		return chargeLineItemRoot;
 	}
 	
-	public void populateChargeLineData(){
+	public void populateChargeLineData(boolean retainPreviousSelection){
 		this.chargeLineItemRoot = new DefaultTreeNode("root", null);
 		Map<Long, List<FlFulfilmentItemAddr>> chargeLineItemsMap = processChargeLineItems();
-		prepareChargeLineTreeNode(chargeLineItemsMap, chargeLineItemRoot);
+		prepareChargeLineTreeNode(chargeLineItemsMap, chargeLineItemRoot,retainPreviousSelection);
 	}
 
 	/**
@@ -288,17 +288,31 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	
 	
 	private void prepareChargeLineTreeNode(
-			Map<Long, List<FlFulfilmentItemAddr>> chargeLineItemsMap,TreeNode chargeLineItemRoot) {
+			Map<Long, List<FlFulfilmentItemAddr>> chargeLineItemsMap,TreeNode chargeLineItemRoot,boolean retainPreviousSelection) {
 		BigDecimal grandTotalOrderAmt=new BigDecimal(0);
 		setOrderedAmtGrandTotal(grandTotalOrderAmt);
+		int i=0;
 		for(Entry<Long, List<FlFulfilmentItemAddr>> itemEntry:chargeLineItemsMap.entrySet()){
 			List<FlFulfilmentItemAddr> itemAddress=itemEntry.getValue();
 			FlFulfilmentItemAddr flItemAddress=getFulfilmentItemAddress(itemAddress.get(0));
 			if(null!=flItemAddress){
 				//Do create New Item Address and copy the first element data manually.
-				
 				TreeNode childItemNode=new DefaultTreeNode(flItemAddress.getScRequestItem().getRequestNoteItemId().toString(),flItemAddress,chargeLineItemRoot);
 				BigDecimal totalOrderAmt=new BigDecimal(0);
+				
+				if(retainPreviousSelection){
+					if(childItemNode.getType().equals(getSelectedNode().getType())){
+						retainPreviousSelection=false;
+						setSelectedNode(childItemNode);
+						childItemNode.setSelected(true);
+						i++;
+					}
+				} else if(i==0){
+						setSelectedNode(childItemNode);
+						childItemNode.setSelected(true);
+						i++;
+				}
+				
 				for(FlFulfilmentItemAddr itemAddr:itemAddress){
 					new DefaultTreeNode(itemAddr.getScRequestItem().getRequestNoteItemId().toString(),itemAddr,childItemNode);
 					totalOrderAmt=totalOrderAmt.add(itemAddr.getChargeOrderedAmt());

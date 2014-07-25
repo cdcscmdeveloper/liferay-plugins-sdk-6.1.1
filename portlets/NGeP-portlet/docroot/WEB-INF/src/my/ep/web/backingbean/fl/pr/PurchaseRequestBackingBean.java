@@ -1053,7 +1053,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 				FlFulfilmentItemAddr childData=((FlFulfilmentItemAddr)children.getData());
 				if(null !=childData.getPmVotFund()){
 					String votFundCode = votFundCodeMap.get(childData.getPmVotFund().getVotFundId()).getVotFundCode();
-					getManagedBean().setVotFundCode(votFundCode);
+					getManagedBean().setVotFundCode(childData.getPmVotFund().getVotFundCode());
 				}
 				
 				if(childData.getAssetInd()!=null) {
@@ -1180,7 +1180,14 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			
 			updateAllItemsWithChargeDrops(getManagedBean().getSelectedNodes()); // set COA to Y
 			FlFulfilmentItemAddr childItemAddress = null;
+			 boolean selected=false;
 			for(TreeNode selectedNode : getManagedBean().getSelectedNodes()){
+				//code for selecting the treenode from popupmenu
+				 if(!selected){
+					getManagedBean().setSelectedNode(selectedNode);
+					selected=true;
+				 }
+				 
 				for(TreeNode children:selectedNode.getChildren()){
 					childItemAddress = (FlFulfilmentItemAddr)children.getData();
 					childItemAddress.setPmVotFund(pmVotFund);
@@ -1215,7 +1222,8 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 					}
 				}
 			}
-			getManagedBean().populateChargeLineData();
+			getManagedBean().populateChargeLineData(true);
+			onNodeSelect();
 			RequestContext.getCurrentInstance().execute("applyBulkCharge.hide()");
 		} finally {
 			parameterSO = null;
@@ -1688,7 +1696,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			}
 		}
 	}
-	
 	/**
 	 * @return the votFundCodeMap
 	 */
@@ -1762,11 +1769,9 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	
 	public void onTabChange(int selectedTabIndex){
 		if(selectedTabIndex==3){
-			getManagedBean().setSelectedNode(null);
-			getManagedBean().setVotFundCode(null);
-			
-			getManagedBean().populateChargeLineData();	
+			getManagedBean().populateChargeLineData(false);
 			setClassName("@(.prChargeLinePnlClass)");
+			onNodeSelect();
 			getVotFundList(getManagedBean().getFulfilmentRequest().getIssuedOrgProfile().getOrgProfileId());
 		}
 		if(selectedTabIndex==1){
@@ -1804,5 +1809,4 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			flDeliveryAddress.setEndDate(getManagedBean().getFulfilmentRequest().getEndDate());
 		}
 	}
-	
 }
