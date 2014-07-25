@@ -160,19 +160,18 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		return new FacesScopes();
 	}
 	
-	public String resetCircularSessionData() {
-		log.debug("renewing session object..");
+	public void preRenderCircular() {
 		renewSesionObject();
 		getManagedBean().setFileDirectory(baseDir+"/CT/Circulars/"+ParameterConst.DOCTYPE_PANEL_CIRCULAR);
-		log.info("session renewed, forward to panel circular page.");
-		return "circularBase.xhtml";
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "circularBase.xhtml?faces-redirect=true");
 	}
 	
-	public String resetSearchSessionData() {
-		log.debug("renewing session object..");
+	public void preRenderSearch() {
 		renewSesionObject();
-		log.info("session renewed, forward to search panel page.");
-		return "search.xhtml";
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, "search.xhtml?faces-redirect=true");
 	}
 	
 	public void preRenderView() {
@@ -249,12 +248,11 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		}
 	}
 	
-	public String resetCancelCircularSessionData() {
-		log.debug("renewing session object..");
+	public void preRenderCancelCircular() {
 		renewSesionObject();
 		getManagedBean().setFileDirectory(baseDir+"/CT/Circulars/"+ParameterConst.DOCTYPE_CANCEL_CIRCULAR_REQUEST);
-		log.info("session renewed, forward to cancel circular page.");
-		return "cancelCircularBase.xhtml";
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "cancelCircularBase.xhtml?faces-redirect=true");
 	}
 	
 	public void preRenderViewCancelReq() {

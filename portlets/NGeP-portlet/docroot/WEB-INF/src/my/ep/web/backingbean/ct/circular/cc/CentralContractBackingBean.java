@@ -150,18 +150,18 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		return new FacesScopes();
 	}
 	
-	public String resetCircularSessionData() {
-		log.debug("renewing session object..");
+	public void preRenderCircular() {
 		renewSesionObject();
-		log.info("session renewed, forward to central contract circular page.");
-		return "circularBase.xhtml";
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, "circularBase.xhtml?faces-redirect=true");
 	}
 	
-	public String resetSearchSessionData() {
-		log.debug("renewing session object..");
+	public void preRenderSearch() {
 		renewSesionObject();
-		log.info("session renewed, forward to search central contract page.");
-		return "search.xhtml";
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, "search.xhtml?faces-redirect=true");
 	}
 
 	public void preRenderView() {

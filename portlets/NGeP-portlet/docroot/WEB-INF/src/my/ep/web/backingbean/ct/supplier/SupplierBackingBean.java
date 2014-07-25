@@ -147,18 +147,18 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		return facesScopes;
 	}
 	
-	public String resetChangeBankAccountSessionData() {
-		log.debug("renewing session object..");
+	public void preRenderChangeBankAccount() {
 		renewSesionObject();
-		log.info("session renewed, forward to change bank account page.");
-		return "changeBankAccount.xhtml";
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, "changeBankAccount.xhtml?faces-redirect=true");
 	}
 	
-	public String resetRequestFactoringSessionData() {
-		log.debug("renewing session object..");
+	public void preRenderRequestFactoring() {
 		renewSesionObject();
-		log.info("session renewed, forward to request factoring page.");
-		return "requestOfFactoring.xhtml";
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, "requestOfFactoring.xhtml?faces-redirect=true");
 	}
     
 	public void preRenderView() {
