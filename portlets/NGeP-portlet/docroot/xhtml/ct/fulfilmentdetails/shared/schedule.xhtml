@@ -63,13 +63,14 @@
 		         <p:column headerText="#{lbl['lbl.ct.sched.stype']}" style="width:20%;">
 		            <p:selectOneMenu id="scheduleTypeid" value="#{schedVar.scheduleType.parameterId}" style="width:80%;"> 
                       <f:selectItems value="#{contractDetailsBackingBean.getDropdownValues(ParameterTypeConst.scheduleType)}"/> 
+                      <p:ajax process="@this"/>
                    </p:selectOneMenu> 
 		         </p:column>
 		     </p:dataTable>  
 	         <p:spacer height="2"  />
 		        <div class="ppRightBtn"> 
 		          <p:commandButton value="#{lbl['lbl.ct.ded.btn.add']}" icon="ui-icon-add" 
-		             action="#{contractDetailsBackingBean.addScheduleDetails}" update="tableSchedule"/>
+		               action="#{contractDetailsBackingBean.addScheduleDetails}" update=":form:tableSchedule"/>
 		 	      <p:commandButton value="Delete" process="@form" onclick="dlgSchedule.show()" icon="ui-icon-delete" />  
 	            </div>
 	          <p:dialog id="dlgSchedule" widgetVar="dlgSchedule" modal="true" width="350"
