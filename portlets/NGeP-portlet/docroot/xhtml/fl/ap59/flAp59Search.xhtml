@@ -35,9 +35,6 @@
 					<p:outputLabel value="#{lbl['lbl.fl.ap59.loa.no']}"
 						style="width: 125px;" />
 					<p:inputText size="40" value="#{invoiceBackingBean.managedBean.loaNo}"></p:inputText>
-					<p:outputLabel value="#{lbl['lbl.fl.ap59.phys.loa.no']}"
-						style="padding-left: 71px;" />
-					<p:inputText size="40"></p:inputText>
 				</h:panelGrid>
 			</h:panelGroup>
 			<h:panelGroup id="docTitleSearch">
@@ -80,11 +77,11 @@
 				</p:column>
 				<p:column
 					headerText="#{lbl['lbl.fl.ap59.search.datatable.contr.own.ptj']}">
-					<h:outputText />
+					<h:outputText value="#{flInvoice.flRequest.ctContract.ownerOrgProfile.pmOrgValidity.orgName}"/>
 				</p:column>
 				<p:column
 					headerText="#{lbl['lbl.fl.ap59.search.datatable.contr.ord.ptj']}">
-					<h:outputText />
+					<h:outputText value="#{flInvoice.flRequest.preparedOrgProfile.pmOrgValidity.orgName}"/>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.fl.ap59.search.datatable.supp']}">
 					<h:outputText value="#{flInvoice.flRequest.smSupplier.companyName}"/>
@@ -92,7 +89,7 @@
 
 				<p:column headerText="#{lbl['lbl.fl.ap59.search.datatable.action']}"
 					style="text-align: center">
-					<p:commandLink>
+					<p:commandLink onclick="goToDetail([{name:'invoiceId', value:'#{flInvoice.invoiceId}'}])">
 						<p:graphicImage library="ep/images/design" name="document.png"
 							value="/resources/ep/images/design/document.png"
 							title="View Document" />
@@ -101,7 +98,7 @@
 				</p:column>
 
 			</p:dataTable>
-			<p:remoteCommand  name="goToDetail" />
+			<p:remoteCommand name="goToDetail" action="#{invoiceBackingBean.navigateToPage}"/>
 
 
 

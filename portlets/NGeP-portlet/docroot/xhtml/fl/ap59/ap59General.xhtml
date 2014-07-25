@@ -11,29 +11,28 @@
 				<td style="width: 139px"><p:outputLabel
 						value="#{lbl['lbl.fl.ministry']}" /></td>
 				<td><p:inputText size="50"
-						value="#{invoiceBackingBean.managedBean.invoice.flRequest.issuedOrgProfile.parentOrgProfile.orgName}"
+						value="#{invoiceBackingBean.managedBean.invoice.flRequest.ctContract.ownerOrgProfile.parentOrgProfile.orgName}"
 						disabled="true" /></td>
 				<td style="width: 139px"><p:outputLabel value="#{lbl['lbl.fl.ap59.phys.contr.no']}" /></td>
-				<td><p:inputText size="40" disabled="true" /></td>
+				<td><p:inputText size="40" disabled="true" value="#{invoiceBackingBean.managedBean.invoice.flRequest.ctContract.contractPhysicalNo}"/></td>
 			</tr>
 			<tr>
 				<td style="width: 139px"><p:outputLabel
 						value="#{lbl['lbl.fl.ap59.ptj']}" /></td>
-				<td><p:inputText size="50" disabled="true" /></td>
-				<td><p:outputLabel value="#{lbl['lbl.fl.ap59.phys.loa.no']}" /></td>
-				<td><p:inputText size="40" disabled="true" /></td>
+				<td><p:inputText size="50" disabled="true" value="#{invoiceBackingBean.managedBean.invoice.flRequest.ctContract.ownerOrgProfile.pmOrgValidity.orgName}"/></td>
+			<td><p:outputLabel value="#{lbl['lbl.fl.ap59.loa.no']}" /></td>
+				<td><p:inputText size="40" disabled="true" value="#{invoiceBackingBean.managedBean.invoice.flRequest.ctContract.loaPhysicalNo}"/></td>
 			</tr>
 			<tr>
 				<td style="width: 139px"><p:outputLabel
 						value="#{lbl['lbl.fl.ap59.supp.name']}" /></td>
-				<td><p:inputText size="50" disabled="true" /></td>
-				<td><p:outputLabel value="#{lbl['lbl.fl.ap59.loa.no']}" /></td>
-				<td><p:inputText size="40" disabled="true" /></td>
+				<td><p:inputText size="50" disabled="true" value="#{invoiceBackingBean.managedBean.invoice.flRequest.ctContract.smSupplier.companyName}"/></td>
+				
 			</tr>
 			<tr>
 				<td valign="top" style="width: 137px;"><p:outputLabel
 						value="#{lbl['lbl.fl.ap59.contr.title']}" /></td>
-				<td><p:inputTextarea rows="4" cols="50"
+				<td><p:inputTextarea rows="4" cols="50" value="#{invoiceBackingBean.managedBean.invoice.flRequest.ctContract.contractName}"
 						style="margin-bottom:5px;" disabled="true" /></td>
 			</tr>
 		</table>
@@ -43,21 +42,23 @@
 			<tr>
 				<td style="width: 139px"><p:outputLabel
 						value="#{lbl['lbl.fl.ministry']}" /></td>
-				<td><p:inputText size="50" disabled="true" /></td>
+				<td><p:inputText size="50" disabled="true" value="#{invoiceBackingBean.managedBean.invoice.flRequest.issuedOrgProfile.parentOrgProfile.orgName}"/></td>
 				<td style="width: 139px"><p:outputLabel value="#{lbl['lbl.fl.ap59.ord.date']}" /></td>
-				<td><p:inputText size="40" disabled="true" /></td>
+				<td><p:inputText size="40" disabled="true" value="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.createdDate}">
+				<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" /></p:inputText></td>
 			</tr>
 			<tr>
 				<td style="width: 139px"><p:outputLabel
 						value="#{lbl['lbl.fl.ap59.ptj']}" /></td>
-				<td><p:inputText size="50" disabled="true" /></td>
+				<td><p:inputText size="50" disabled="true" value="#{invoiceBackingBean.managedBean.invoice.flRequest.issuedOrgProfile.pmOrgValidity.orgName}"/></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.ap59.ord.amt']}" /></td>
-				<td><p:inputText size="40" disabled="true" /></td>
+				<td><p:inputText size="40" disabled="true" value="#{invoiceBackingBean.managedBean.sumOrderedAmt}"/></td>
 			</tr>
 			<tr>
 				<td valign="top" style="width: 137px;"><p:outputLabel
 						value="#{lbl['lbl.fl.ap59.ord.title']}" /></td>
-				<td><p:inputTextarea rows="4" cols="50"
+				<td><p:inputTextarea rows="4" cols="50" value="#{invoiceBackingBean.managedBean.invoice.flRequest.title}"
 						style="margin-bottom:5px;" disabled="true" /></td>
 			</tr>
 
@@ -106,8 +107,12 @@
 			<tr>
 				<td style="width: 139px"><p:outputLabel
 						value="#{lbl['lbl.fl.ap59.decision']}" /></td>
-				<td><p:selectOneMenu style="margin-bottom:15px;">
+				<td><p:selectOneMenu style="margin-bottom:15px;" value="#{invoiceBackingBean.managedBean.statusId}" required="true">
 						<f:selectItem itemLabel="-- Select -- " itemValue="" />
+						<f:selectItems var="decision"
+							value="#{invoiceBackingBean.managedBean.decisionList}"
+							itemLabel="#{decision.statusName}"
+							itemValue="#{decision.pmStatus.statusId}" />
 					</p:selectOneMenu></td>
 			</tr>
 		</table>

@@ -16,11 +16,11 @@
 				<td><p:outputLabel value="#{lbl['lbl.fl.ap59.contr.effect.date']} " />
 				</td>
 				<td class="header-info-text">
-					#{invoiceBackingBean.managedBean.invoice.flRequest.preparedOrgProfile.orgName}
+					#{invoiceBackingBean.managedBean.effDate}
 				</td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.ap59.contr.exp.date']} " /></td>
 				<td class="header-info-text">
-					#{invoiceBackingBean.getStatusDescById(invoiceBackingBean.managedBean.invoice.status.statusId)}
+				#{invoiceBackingBean.managedBean.expDate}
 				</td>
 			</tr>
 		</table>

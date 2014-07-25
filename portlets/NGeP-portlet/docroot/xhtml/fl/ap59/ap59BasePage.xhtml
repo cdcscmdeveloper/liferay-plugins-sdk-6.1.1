@@ -20,27 +20,16 @@
 						rendered="#{invoiceBackingBean.managedBean.taskId==null}"
 						icon="ui-icon-back" oncomplete="window.history.back();" /></td>
 				<td colspan="4" style="text-align: right;"><p:commandButton
-						value="SUBMIT"
+						value="SUBMIT" action="#{invoiceBackingBean.submitAp59}"
 						icon="ui-icon-submit">
-						<f:param name="actionName" value="SUBMIT" />
 					</p:commandButton>
 					</td>
 			</tr>
 		</table>
 		<ui:include src="/xhtml/fl/ap59/ap59ReviewHeaderPage.xhtml" />
-		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+		<table width="100%">
 			<tr>
-				<td width="20%" valign="top" class="sidemenutd"><p:tabMenu
-						styleClass="sidemenu"
-						activeIndex="#{invoiceBackingBean.managedBean.selectedTabIndex}">
-						<p:menuitem value="General" update="@form">
-							<f:setPropertyActionListener
-								target="#{invoiceBackingBean.managedBean.selectedTabIndex}"
-								value="0" />
-						</p:menuitem>
-					</p:tabMenu></td>
-				<td width="80%"><p:outputPanel
-						rendered="#{invoiceBackingBean.managedBean.selectedTabIndex == 0}">
+				<td width="100%"><p:outputPanel>
 						<ui:include src="ap59General.xhtml" />
 					</p:outputPanel></td>
 			</tr>
