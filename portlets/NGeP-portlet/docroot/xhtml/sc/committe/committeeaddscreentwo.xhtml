@@ -6,8 +6,8 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:dialog id="Add2" position="top"
-		header="New #{committeBackingBean.managedBean.headerTitle}"
+	<p:dialog id="Add2" position="top" resizable="false"
+		header="New #{committeBackingBean.managedBean.headerTitle}" width="970"
 		widgetVar="screen3" modal="true" styleClass="addQCMember">
 		<p:panel>
 			<p:messages id="committeemessagesid" showDetail="true"
@@ -71,7 +71,7 @@
 							value="#{committeBackingBean.managedBean.userSearchQCDataModel}"
 							selection="#{committeBackingBean.managedBean.selectedPmUser}"
 							rowKey="#{existcommitteeuser.userId}" var="existcommitteeuser"
-							lazy="true" styleClass="committeeResults" style="width : 900px;">
+							lazy="true" styleClass="committeeResults" style="width : 933px;">
 
 							<ac:paginator for="userexistid" />
 
@@ -80,36 +80,36 @@
 							<p:column headerText="#{lbl['lbl.so.bo.name']}">
 								<h:outputText value="#{existcommitteeuser.userName}" />
 							</p:column>
-
 							<p:column headerText="#{lbl['lbl.so.bo.identification.no']}">
 								<h:outputText value="#{existcommitteeuser.identificationNo}" />
 							</p:column>
-
 							<p:column headerText="#{lbl['lbl.so.bo.designation']}">
 								<h:outputText value="#{existcommitteeuser.designation}" />
 							</p:column>
-
 							<p:column headerText="#{lbl['lbl.so.bo.email']}">
 								<h:outputText
 									value="#{existcommitteeuser.pmAddressTypes[0].pmAddress.email}" />
 							</p:column>
-
 							<p:column headerText="#{lbl['lbl.so.bo.grade']}">
 								<h:outputText value="#{existcommitteeuser.grade}" />
 							</p:column>
-
 							<p:column headerText="#{lbl['lbl.so.bo.pp']}">
 								<h:outputText
 									value="#{lbl[existcommitteeuser.PMP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
 							</p:column>
-
 							<p:column headerText="#{lbl['lbl.so.role']}">
-								<h:outputText
-									value="#{existcommitteeuser.memberRole.parameterCode}" />
+								<ui:fragment rendered="#{!existcommitteeuser.PMP}">
+									<h:outputText value="Member" />
+								</ui:fragment>
 							</p:column>
-
-							<p:column headerText="#{lbl['lbl.so.rep.type']}">
-
+							<p:column headerText="#{lbl['lbl.so.rep.type']}"
+								style="width: 15%">
+								<p:selectOneMenu
+									value="#{existcommitteeuser.representativesType.parameterId}"
+									style="width: 178px;margin-bottom: 5px;">
+									<f:selectItems
+										value="#{committeBackingBean.managedBean.addRepresentativesTypeslist}" />
+								</p:selectOneMenu>
 							</p:column>
 						</p:dataTable>
 					</p:panel>
@@ -145,7 +145,7 @@
 								<td />
 							</tr>
 							<tr>
-								<td style="width: 130px;"><p:outputLabel
+								<td style="width: 140px;"><p:outputLabel
 										value="#{lbl['lbl.sc.committe.addscreen.idno']}" /> <p:outputLabel
 										value="*" styleClass="mandatory" /></td>
 								<td><p:inputText id="idno" required="true"
@@ -217,6 +217,18 @@
 											value="#{committeBackingBean.getDropdownValues(ParameterTypeConst.committeeRole)}" />
 									</p:selectOneMenu> <p:message id="roleMsg" for="role" display="icon" /></td>
 							</tr>
+							<tr>
+								<td><p:outputLabel
+										value="#{lbl['lbl.sc.committe.sctable.rep.type']}" /> <p:outputLabel
+										value="*" styleClass="mandatory" /></td>
+								<td colspan="3"><p:selectOneMenu id="repTypeid"
+										required="true"
+										value="#{committeBackingBean.managedBean.committeMember.representativeType.parameterId}"
+										style="width: 178px;margin-bottom: 5px;">
+										<f:selectItems
+											value="#{committeBackingBean.managedBean.addRepresentativesTypeslist}" />
+									</p:selectOneMenu> <p:message id="repTypeidMsg" for="repTypeid" display="icon" /></td>
+							</tr>
 						</table>
 					</p:panel>
 				</c:if>
@@ -225,7 +237,7 @@
 				<p:commandButton value="#{lbl['lbl.so.okbtn']}"
 					onclick="screen3.hide();" process="@this, newProfile"
 					update="@(.committeMemberDtls)" icon="ui-icon-check"
-					actionListener="#{committeBackingBean.okCommitteeAction}" />
+					actionListener="#{committeBackingBean.okQCCommitteeAction}" />
 
 				<p:commandButton value="#{lbl['lbl.so.cancelbtn']}" process="@this"
 					oncomplete="screen3.hide();" icon="ui-icon-cancel" />

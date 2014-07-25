@@ -10,7 +10,7 @@
 		toggleable="true" styleClass="committeMemberDtls">
 		<div align="right">
 			<p:commandButton value="View History"
-				action="#{committeBackingBean.viewHistoryAction}" />
+				action="#{committeBackingBean.viewHistoryAction(committeBackingBean.managedBean.qtCommittee)}" />
 		</div>
 		<p:dataTable id="procurementid" rowKey="#{committeemember}"
 			value="#{committeBackingBean.managedBean.qtCommittee.scCommittee.scCommitteeMembers}"
@@ -83,12 +83,12 @@
 
 			<p:column headerText="#{lbl['lbl.sc.committe.sctable.rep.type']}"
 				style="width: 15%">
-				<p:selectOneMenu value="#{committeemember.memberType}"
-					style="width: 120px;margin-bottom: 5px;">
-					<f:selectItem itemLabel="Others" itemValue="1" />
-					<f:selectItem itemLabel="JKR" itemValue="2" />
-					<f:selectItem itemLabel="Turut Hadir" itemValue="3" />
+				<p:selectOneMenu value="#{committeemember.representativeType.parameterId}"
+					style="width: 178px;margin-bottom: 5px;">
+					<f:selectItems
+						value="#{committeBackingBean.managedBean.representativesTypeslist}" />
 				</p:selectOneMenu>
+
 			</p:column>
 		</p:dataTable>
 		<h:panelGroup
