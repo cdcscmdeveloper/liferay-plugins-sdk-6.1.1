@@ -398,7 +398,7 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 		    			}
 		    			scRequestSupplierItem.setSupplierItemPrices(results);
 		    			scRequestSupplierItem.setScRequestNoteDtl(requestNoteDtls);
-		    			scRequestSupplierItem.setScPrInquiy(prInquiry);
+		    			//scRequestSupplierItem.setScPrInquiy(prInquiry);
 		    			requestSupplierItems.add(scRequestSupplierItem);
 		    		}
 		    	}
