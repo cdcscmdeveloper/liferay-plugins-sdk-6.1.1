@@ -481,10 +481,11 @@ public class QTDocumentsBackingBean extends
 				this.getManagedBean().setQtDoc(new ScQtDoc());
 			}
 
-			this.getManagedBean()
+			//temporarily Comment by fara
+			/*this.getManagedBean()
 					.getQtDoc()
 					.setTplDocMaster(
-							docBB.getManagedBean().getSelectedTemplate());
+							docBB.getManagedBean().getSelectedTemplate());*/
 
 			if (this.getManagedBean().getQtDoc().getScQtCheckList() == null) {
 				this.getManagedBean().getQtDoc()
@@ -492,7 +493,8 @@ public class QTDocumentsBackingBean extends
 			}
 			this.getManagedBean().getQtDoc()
 					.setScQt(this.getManagedBean().getQt());
-			this.getManagedBean().getQtDoc().getTplDocMaster().setPmStatus(1L);
+			//temporarily Comment by fara
+			//this.getManagedBean().getQtDoc().getTplDocMaster().setPmStatus(1L);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -516,7 +518,9 @@ public class QTDocumentsBackingBean extends
 					.getScQtCheckList();
 			checklist.setTitle("ssqqqq");
 			qtDoc.setScQtCheckList(checklist);
-			qtDoc.getTplDocMaster().setCategoryId(1l);
+			
+			//temporarily Comment by fara
+			/*qtDoc.getTplDocMaster().setCategoryId(1l);
 			PmParameter processType = new PmParameter();
 			processType.setParameterId(1145l);
 			qtDoc.getTplDocMaster().setProcessTypeCode(processType);
@@ -525,7 +529,7 @@ public class QTDocumentsBackingBean extends
 			qtDoc.getTplDocMaster().setTemplateTypeCode(templateType);
 			qtDoc.getTplDocMaster().setDocName("sssss");
 			qtDoc.getTplDocMaster().setTemplateStatus('F');
-			qtDoc.getTplDocMaster().setPmStatus(1l);
+			qtDoc.getTplDocMaster().setPmStatus(1l);*/
 			List<ScQtDoc> docs = new ArrayList<ScQtDoc>();
 			docs.add(qtDoc);
 			qtTemplateReqDTO.setScQtDoc(docs);
