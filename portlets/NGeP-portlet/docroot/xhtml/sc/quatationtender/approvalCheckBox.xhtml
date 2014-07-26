@@ -27,94 +27,92 @@
 
 		<p:spacer height="10" />
 
-		<p:tabView var="approvalCategory" orientation="top"
-			activeIndex="#{qTDetailBB.managedBean.subTabIndex}"
-			value="#{approvalBackingBean.managedBean.tabList}">
+		<p:tabMenu
+			activeIndex="#{qTDetailBB.managedBean.selectedApprovalTabIndex}"
+			model="#{qTDetailBB.managedBean.approvalMenuModel}" />
 
-			<p:tab title="#{approvalCategory.titleName}">
-				<ui:fragment
-					rendered="#{approvalCategory.titleName eq 'Budget Approval'}">
 
-					<ui:param name="budgetList"
-						value="#{approvalCategory.budgetApprovalUsers}" />
-					<ui:param name="budgetApprovalRemarkList"
-						value="#{approvalCategory.scQtApproval.scQtApprovalRemarks}" />
+		<ui:fragment
+			rendered="#{qTDetailBB.managedBean.selectedApprovalTabBean.titleName eq 'Budget Approval'}">
 
-					<ui:include src="approvalDetailSection.xhtml" />
-				</ui:fragment>
-				<ui:fragment
-					rendered="#{approvalCategory.titleName eq 'BPK Approval'}">
-					
-					<ui:param name="bpkApproverCategory"
-						value="#{approvalCategory.scQtApproval}" />
-						
-					<ui:param name="approvalDtlsList"
-						value="#{approvalCategory.scQtApproval.scQtApprovalDtls}" />
+			<ui:param name="budgetList"
+				value="#{qTDetailBB.managedBean.selectedApprovalTabBean.budgetApprovalUsers}" />
+			<ui:param name="budgetApprovalRemarkList"
+				value="#{qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval.scQtApprovalRemarks}" />
 
-					<ui:param name="bpkApprovalRemarkList"
-						value="#{approvalCategory.scQtApproval.scQtApprovalRemarks}" />
+			<ui:include src="approvalDetailSection.xhtml" />
+		</ui:fragment>
+		<ui:fragment
+			rendered="#{qTDetailBB.managedBean.selectedApprovalTabBean.titleName eq 'BPK Approval'}">
 
-					<ui:include
-						src="/xhtml/sc/quatationtender/approval/approvalDetailsBPK.xhtml" />
-				</ui:fragment>
-				<ui:fragment
-					rendered="#{approvalCategory.titleName eq 'Committee Appointment Approval'}">
+			<ui:param name="bpkApproverCategory"
+				value="#{qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval}" />
 
-					<ui:param name="committeeApprovalDtlsList"
-						value="#{approvalCategory.scQtApproval.scQtApprovalDtls}" />
+			<ui:param name="approvalDtlsList"
+				value="#{qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval.scQtApprovalDtls}" />
 
-					<ui:param name="commiteList"
-						value="#{approvalCategory.budgetApprovalUsers}" />
-						
-					<ui:param name="commiteApproverCategory"
-						value="#{approvalCategory.scQtApproval}" />
+			<ui:param name="bpkApprovalRemarkList"
+				value="#{qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval.scQtApprovalRemarks}" />
 
-					<ui:param name="committeeApprovalRemarkList"
-						value="#{approvalCategory.scQtApproval.scQtApprovalRemarks}" />
-						
-					<ui:param name="committeeApprovalAttachment"
-						value="#{approvalCategory.scQtApproval.scQtApprovalAttachment}" />
+			<ui:include
+				src="/xhtml/sc/quatationtender/approval/approvalDetailsBPK.xhtml" />
+		</ui:fragment>
+		<ui:fragment
+			rendered="#{qTDetailBB.managedBean.selectedApprovalTabBean.titleName eq 'Committee Appointment Approval'}">
 
-					<ui:include
-						src="/xhtml/sc/quatationtender/approval/approvalDetailsCommittee.xhtml" />
-				</ui:fragment>
-				<ui:fragment
-					rendered="#{approvalCategory.titleName eq 'PTJ Approval'}">
+			<ui:param name="committeeApprovalDtlsList"
+				value="#{qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval.scQtApprovalDtls}" />
 
-					<ui:param name="ptjApprovalDtlsList"
-						value="#{approvalCategory.scQtApproval.scQtApprovalDtls}" />
+			<ui:param name="commiteList"
+				value="#{qTDetailBB.managedBean.selectedApprovalTabBean.budgetApprovalUsers}" />
 
-					<ui:param name="ptjList"
-						value="#{approvalCategory.budgetApprovalUsers}" />
+			<ui:param name="commiteApproverCategory"
+				value="#{qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval}" />
 
-					<ui:param name="ptjApprovalRemarkList"
-						value="#{approvalCategory.scQtApproval.scQtApprovalRemarks}" />
+			<ui:param name="committeeApprovalRemarkList"
+				value="#{qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval.scQtApprovalRemarks}" />
 
-					<ui:include
-						src="/xhtml/sc/quatationtender/approvalDetailsPTJ.xhtml" />
-				</ui:fragment>
-				<ui:fragment
-					rendered="#{approvalCategory.titleName eq 'Finalization Committee Approval'}">
+			<ui:param name="committeeApprovalAttachment"
+				value="#{qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval.scQtApprovalAttachment}" />
 
-					<ui:param name="fcaApprovalDtlsList"
-						value="#{approvalCategory.scQtApproval.scQtApprovalDtls}" />
+			<ui:include
+				src="/xhtml/sc/quatationtender/approval/approvalDetailsCommittee.xhtml" />
+		</ui:fragment>
+		<ui:fragment
+			rendered="#{qTDetailBB.managedBean.selectedApprovalTabBean.titleName eq 'PTJ Approval'}">
 
-					<ui:param name="fcaApprovalRemarkList"
-						value="#{approvalCategory.scQtApproval.scQtApprovalRemarks}" />
+			<ui:param name="ptjApprovalDtlsList"
+				value="#{qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval.scQtApprovalDtls}" />
 
-					<ui:include
-						src="/xhtml/sc/quatationtender/approval/approvalDetailsProcurement.xhtml" />
-				</ui:fragment>
-				<ui:fragment
-					rendered="#{approvalCategory.titleName eq 'Others Approval'}">
+			<ui:param name="ptjList"
+				value="#{qTDetailBB.managedBean.selectedApprovalTabBean.budgetApprovalUsers}" />
 
-					<ui:param name="othersApprovalDtlsList"
-						value="#{approvalCategory.scQtApproval}" />
+			<ui:param name="ptjApprovalRemarkList"
+				value="#{qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval.scQtApprovalRemarks}" />
 
-					<ui:include
-						src="/xhtml/sc/quatationtender/approval/approvalDetailsOthers.xhtml" />
-				</ui:fragment>
-			</p:tab>
-		</p:tabView>
+			<ui:include src="/xhtml/sc/quatationtender/approvalDetailsPTJ.xhtml" />
+		</ui:fragment>
+		<ui:fragment
+			rendered="#{qTDetailBB.managedBean.selectedApprovalTabBean.titleName eq 'Finalization Committee Approval'}">
+
+			<ui:param name="fcaApprovalDtlsList"
+				value="#{qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval.scQtApprovalDtls}" />
+
+			<ui:param name="fcaApprovalRemarkList"
+				value="#{qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval.scQtApprovalRemarks}" />
+
+			<ui:include
+				src="/xhtml/sc/quatationtender/approval/approvalDetailsProcurement.xhtml" />
+		</ui:fragment>
+		<ui:fragment
+			rendered="#{qTDetailBB.managedBean.selectedApprovalTabBean.titleName eq 'Others Approval'}">
+
+			<ui:param name="othersApprovalDtlsList"
+				value="#{qTDetailBB.managedBean.selectedApprovalTabBean.scQtApproval}" />
+
+			<ui:include
+				src="/xhtml/sc/quatationtender/approval/approvalDetailsOthers.xhtml" />
+		</ui:fragment>
+		
 	</p:panel>
 </ui:composition>

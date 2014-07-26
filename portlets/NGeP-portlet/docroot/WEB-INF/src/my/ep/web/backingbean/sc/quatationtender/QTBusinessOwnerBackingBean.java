@@ -738,7 +738,7 @@ public class QTBusinessOwnerBackingBean extends
 		}
 		scCommittee.setScCommitteeMembers(memberList);
 		PmStatus committeStatus = new PmStatus();
-		committeStatus.setStatusId(60202l);
+		committeStatus.setStatusId(QTStatusConst.CM_COMPLETE);
 		scCommittee.setCommitteStatus(committeStatus);
 		for (ScCommitteeMember scCommitteeMember : memberList) {
 			scCommitteeMember.setScCommittee(scCommittee);
@@ -795,8 +795,9 @@ public class QTBusinessOwnerBackingBean extends
 	public String saveBusinessOwnerAction() {
 		IQTDetailSO detailSO;
 		try {
-			detailSO = getDetailSO();
+			detailSO = getDetailSO();			
 			QuationTenderReqDTO quationTenderReqDTO = prepareBOInfo();
+			detailSO.validateateBODetails(quationTenderReqDTO);
 			quationTenderReqDTO.setDocType(QTConstants.DOCTYPE_QT);
 			QuationTenderResDTO quationTenderResDTO = new QuationTenderResDTO();
 			quationTenderResDTO = (QuationTenderResDTO) detailSO.saveQTDtl(quationTenderReqDTO);
@@ -831,15 +832,6 @@ public class QTBusinessOwnerBackingBean extends
 		}
 		// No need to set the below fields automatically set by listener
 		setUserDetails(scQt);
-		// Setting the Business Owner details to Qtdetails
-		if (null != this.getManagedBean().getScCommitteeMemberList()
-				&& !this.getManagedBean().getScCommitteeMemberList().isEmpty()) {
-			if (!isConsolidate(this.getManagedBean().getScCommitteeMemberList())) {
-				throw new EpException(MessageConst.ERROR_100022, new String[] { "Consolidate", });
-			}
-		} else {
-			throw new EpException(MessageConst.ERROR_100022, new String[] { "Business Owner", });
-		}
 		// Code to set the QtCommitte N Memembers to ScQt
 		List<ScQtCommittee> qtCommittees = new ArrayList<ScQtCommittee>();
 		qtCommittees.add(this.getManagedBean().getScQtCommittee());
@@ -850,21 +842,11 @@ public class QTBusinessOwnerBackingBean extends
 		return quationTenderReqDTO;
 	}
 
-	/**
-	 * @param scCommitteeMemberList
-	 * @return
-	 */
-	private boolean isConsolidate(List<ScCommitteeMember> scCommitteeMemberList) {
-		boolean flag = false;
-		for (ScCommitteeMember committeeMember : scCommitteeMemberList) {
-			if (committeeMember.isConsolidate()) {
-				flag = true;
-				break;
-			}
-		}
-		return flag;
-	}
-
+	
+/**
+ * Will called submit Bo details..
+ * @return
+ */
 	public String submitBusinessOwnerAction() {
 		IQTDetailSO detailSO;
 		QuationTenderResDTO quationTenderResDTO = null;
@@ -909,7 +891,7 @@ public class QTBusinessOwnerBackingBean extends
 		qtCommitte.setScQtMeetings(null);
 		ScCommittee committee = new ScCommittee();
 		PmStatus committeStatus = new PmStatus();
-		committeStatus.setStatusId(60200l);
+		committeStatus.setStatusId(QTStatusConst.CM_PENDING_SUBMISSION);
 		committee.setCommitteStatus(committeStatus);
 		committee.setScCommitteeMembers(new ArrayList<ScCommitteeMember>());
 		ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
@@ -934,6 +916,7 @@ public class QTBusinessOwnerBackingBean extends
 	}
 
 	public String cancelQTDetails() {
+		
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 								MessageUtils.getMessage(MessageConst.INFO_700010, new String[] {
 														getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION), this.getManagedBean().getQt().getQtNo() },
@@ -1012,4 +995,5 @@ public class QTBusinessOwnerBackingBean extends
 		SelectItem[] items = getDropdownCodeValuesBySearchBean(ParameterTypeConst.SC_PROCUREMENT_MODE, searchBean);
 		return items;
     }
+	
 }

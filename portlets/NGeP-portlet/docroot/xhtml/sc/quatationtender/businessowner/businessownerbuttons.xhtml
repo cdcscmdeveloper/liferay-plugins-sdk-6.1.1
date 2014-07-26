@@ -8,17 +8,23 @@
 	<p:panel>
 		<div align="right">
 
-			<c:if test="#{qTDetailBB.managedBean.taskId eq null}">
-				
-				<p:commandButton value="#{lbl['lbl.so.save']}" 
-					action="#{qTBusinessOwnerBackingBean.saveBusinessOwnerAction}" process="@all" icon="ui-icon-save" update="@all" />
-				<p:commandButton value="#{lbl['lbl.so.submit']}" 
-					action="#{qTBusinessOwnerBackingBean.submitBusinessOwnerAction}" process="@all" icon="ui-icon-submit" update="@all"  />
-				<p:button value="#{lbl['lbl.so.cancelbtn']}" action="#{qTBusinessOwnerBackingBean.cancelQTDetails}" process="@all" style="float:right;margin-right: 12px;" icon="ui-icon-cancel" update="@all" />
-				
-			</c:if>
-					
-		
+	
+				<p:commandButton value="#{lbl['lbl.so.save']}"
+					action="#{qTBusinessOwnerBackingBean.saveBusinessOwnerAction}"
+					process="@all" icon="ui-icon-save" update="@all" />
+				<p:commandButton value="#{lbl['lbl.so.submit']}"
+					action="#{qTBusinessOwnerBackingBean.submitBusinessOwnerAction}"
+					process="@all" icon="ui-icon-submit" update="@all" rendered="#{!qTBusinessOwnerBackingBean.managedBean.qt.qtStatus eq getQtPendingAppointBo()}"/>
+
+				<p:commandButton value="#{lbl['lbl.so.cancelbtn']}"
+					action="#{qTBusinessOwnerBackingBean.cancelQTDetails}"
+					process="@all" style="float:right;margin-right: 12px;"
+					icon="ui-icon-cancel" update="@all"
+					rendered="#{!qTBusinessOwnerBackingBean.managedBean.qt.brandNew}" />
+
+			
+
+
 		</div>
 	</p:panel>
 </ui:composition>

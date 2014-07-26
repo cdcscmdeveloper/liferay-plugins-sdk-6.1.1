@@ -9,69 +9,53 @@
 
 		<ui:include src="addspecificationcommittee.xhtml" />
 
-		<p:tabView id="tabView" orientation="top" var="committeeApproval"
-			dynamic="true"
-			activeIndex="#{qTCommitteBackingBean.managedBean.subTabIndex}"
-			value="#{qTCommitteBackingBean.managedBean.scCommitteeMemberTabList}">
 
-			<p:tab>
-				<f:facet name="title">
-					<p:graphicImage library="ep/images/design" name="icon_success.png"
-						value="/resources/ep/images/design/icon_success.png"
-						rendered="#{committeeApproval.scQtCommittee.scCommittee.committeStatus.statusId eq 60202}" />
-					<h:outputText value="#{committeeApproval.titleName}" />
-				</f:facet>
+		<ui:fragment
+			rendered="#{qTDetailBB.managedBean.selectedTabBean.titleName eq 'Business Owner'}">
 
-				<ui:fragment
-					rendered="#{committeeApproval.titleName eq 'Business Owner'}">
+			<ui:param name="committe"
+				value="#{qTDetailBB.managedBean.selectedTabBean.scQtCommittee.scCommittee}" />
 
-					<ui:param name="committe"
-						value="#{committeeApproval.scQtCommittee.scCommittee}" />
+			<ui:include src="businessOwnerCommittee.xhtml" />
 
-					<ui:include src="businessOwnerCommittee.xhtml" />
+		</ui:fragment>
 
-				</ui:fragment>
+		<ui:fragment
+			rendered="#{qTDetailBB.managedBean.selectedTabBean.titleName ne 'Finalization Secretary' and qTDetailBB.managedBean.selectedTabBean.titleName ne 'Business Owner'}">
+			<ui:param name="committe"
+				value="#{qTDetailBB.managedBean.selectedTabBean.scQtCommittee.scCommittee}" />
+			<ui:param name="selectedCommittee"
+				value="#{qTDetailBB.managedBean.selectedTabBean.members}" />
 
-				<ui:fragment
-					rendered="#{committeeApproval.titleName ne 'Finalization Secretary' and committeeApproval.titleName ne 'Business Owner'}">
+			<ui:include src="specificationCommitteeDetails.xhtml" />
 
-					<ui:param name="committe"
-						value="#{committeeApproval.scQtCommittee.scCommittee}" />
+			<div class="ppRightBtn">
+				<p:commandButton id="specificationcommitteeadd"
+					value="#{lbl['lbl.so.addbtn']}" process="@this"
+					actionListener="#{qTCommitteBackingBean.addCommitteMember(qTDetailBB.managedBean.selectedTabBean.scQtCommittee, committeeApproval.titleName)}"
+					oncomplete="newspecificationcommittee.show();"
+					update="@(.scAddMember)" icon="ui-icon-add" />
 
-					<ui:param name="selectedCommittee"
-						value="#{committeeApproval.members}" />
+				<p:commandButton value="#{lbl['lbl.so.delete']}"
+					process="@this, specificationcommitteeid"
+					actionListener="#{qTCommitteBackingBean.deleteSpecificationCommittee}"
+					update="specificationcommitteeid" icon="ui-icon-delete" />
 
-					<ui:include src="specificationCommitteeDetails.xhtml" />
+				<p:commandButton value="#{lbl['lbl.so.clone.to.tec']}"
+					process="@this, specificationcommitteeid" update="@(.clonetecid)"
+					rendered="#{qTDetailBB.managedBean.selectedTabBean.titleName eq 'Specification Committee' and qTDetailBB.managedBean.qt.evaluationType eq 2}"
+					actionListener="#{qTCommitteBackingBean.addCloneToTecDtl}"
+					icon="ui-icon-clone" />
+			</div>
+		</ui:fragment>
 
-					<div class="ppRightBtn">
-						<p:commandButton id="specificationcommitteeadd"
-							value="#{lbl['lbl.so.addbtn']}" process="@this"
-							actionListener="#{qTCommitteBackingBean.addCommitteMember(committeeApproval.scQtCommittee, committeeApproval.titleName)}"
-							oncomplete="newspecificationcommittee.show();"
-							update="@(.scAddMember)" icon="ui-icon-add" />
+		<ui:fragment
+			rendered="#{qTDetailBB.managedBean.selectedTabBean.titleName eq 'Finalization Secretary'}">
+			<ui:param name="qtCommitte"
+				value="#{qTDetailBB.managedBean.selectedTabBean.scQtCommittee}" />
+			<ui:include src="finalizationSecretaryDetails.xhtml" />
+		</ui:fragment>
 
-						<p:commandButton value="#{lbl['lbl.so.delete']}"
-							process="@this, specificationcommitteeid"
-							actionListener="#{qTCommitteBackingBean.deleteSpecificationCommittee}"
-							update="specificationcommitteeid" icon="ui-icon-delete" />
 
-						<p:commandButton value="#{lbl['lbl.so.clone.to.tec']}"
-							process="@this, specificationcommitteeid" update="@(.clonetecid)"
-							rendered="#{committeeApproval.titleName eq 'Specification Committee' and qTDetailBB.managedBean.qt.evaluationType eq 2}"
-							actionListener="#{qTCommitteBackingBean.addCloneToTecDtl}"
-							icon="ui-icon-clone" />
-					</div>
-				</ui:fragment>
-
-				<ui:fragment
-					rendered="#{committeeApproval.titleName eq 'Finalization Secretary'}">
-					<ui:param name="membersList"
-						value="#{committeeApproval.scQtCommittee}" />
-					<ui:include src="finalizationSecretaryDetails.xhtml" />
-				</ui:fragment>
-
-			</p:tab>
-
-		</p:tabView>
 	</p:panel>
 </ui:composition>

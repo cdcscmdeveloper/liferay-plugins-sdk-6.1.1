@@ -7,7 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:dialog id="newbusinessownerid" header="#{lbl['lbl.so.bo.new']}"
-		widgetVar="newbusinessowner" modal="true" position="top">
+		widgetVar="newbusinessowner" modal="true" position="top" resizable="true">
 		<p:panel toggleable="true" styleClass="qtAddMember" id="bopanel">
 			<p:messages id="bomessages" showDetail="true" autoUpdate="true"
 				closable="true" showSummary="false" />
@@ -25,23 +25,22 @@
 				<p:message id="selectionMsg" for="selection" display="icon" />
 			</h:panelGrid>
 
-			<p:panel id="newProfile" style="width:100%;margin-top:10px;">
+			<p:panel id="newProfile" >
 				<c:if
 					test="#{qTBusinessOwnerBackingBean.managedBean.committeMember.userSelection eq 'E' }">
-					<p:panel id="usersearchpnlids" header="#{lbl['lbl.so.searchbtn']}"
-						toggleable="true">
+					<p:panel header="Search" toggleable="true">
 						<table>
 							<tr>
 								<td><p:outputLabel value="#{lbl['lbl.sc.addscreen.name']}" /></td>
 								<td colspan="3"><p:inputText
-										value="#{qTBusinessOwnerBackingBean.managedBean.userBusineeOwnerSearchBean.name}"
+										value="#{qTBusinessOwnerBackingBean.managedBean.name}"
 										size="64" /></td>
 							</tr>
 							<tr>
 								<td><p:outputLabel
 										value="#{lbl['lbl.sc.addscreen.idtype']}" /></td>
 								<td><p:selectOneMenu id="appaction"
-										value="#{qTBusinessOwnerBackingBean.managedBean.userBusineeOwnerSearchBean.identificationType}"
+										value="#{qTBusinessOwnerBackingBean.managedBean.identificationType}"
 										style="width: 178px;margin-bottom: 5px;">
 										<f:selectItems
 											value="#{qTBusinessOwnerBackingBean.getDropdownCodeValues(ParameterTypeConst.identificationTypes)}" />
@@ -52,30 +51,33 @@
 							<tr>
 								<td><p:outputLabel value="#{lbl['lbl.sc.addscreen.idno']}" /></td>
 								<td><p:inputText id="Idno"
-										value="#{qTBusinessOwnerBackingBean.managedBean.userBusineeOwnerSearchBean.identificationNo}"
+										value="#{qTBusinessOwnerBackingBean.managedBean.identificationNo}"
 										size="30" /></td>
 								<td />
 								<td />
 							</tr>
 						</table>
 					</p:panel>
-					<div class="ppRightBtn">
-						<p:commandButton value="#{lbl['lbl.so.searchbtn']}"
-							action="#{qTBusinessOwnerBackingBean.searchUserAction}"
-							update="existingsearch" icon="ui-icon-search"
-							process="@this, usersearchpnlids" />
-						<p:commandButton value="#{lbl['lbl.so.reset']}"
-							action="#{qTBusinessOwnerBackingBean.reset}"
-							update="usersearchpnlids" icon="ui-icon-reset" resetValues="true"
-							partialSubmit="true" process="@this" />
-					</div>
+					<p:commandButton value="#{lbl['lbl.so.reset']}"
+						style="float:right;" action="#{qTBusinessOwnerBackingBean.reset}"
+						update="newProfile" icon="ui-icon-reset" resetValues="true"
+						partialSubmit="true" process="@this" />
 
+					<p:commandButton value="#{lbl['lbl.so.searchbtn']}"
+						style="float:right;" icon="ui-icon-search"
+						action="#{qTBusinessOwnerBackingBean.existingBusinessOwnerAction}"
+						update="@(.existingResults)" partialSubmit="true"
+						process="@parent" />
+
+					<br />
+					<br />
+					<p:spacer height="5" />
 					<p:panel header="#{lbl['lbl.so.bo.search.result']}"
 						toggleable="true">
 						<p:dataTable id="existingsearch"
-							value="#{qTBusinessOwnerBackingBean.managedBean.userSearchBusinessOwnerDataModel}"
+							value="#{qTBusinessOwnerBackingBean.managedBean.externalUsers}"
 							selection="#{qTBusinessOwnerBackingBean.managedBean.selectedPmUser}"
-							rowKey="#{existuser.userId}" var="existuser" lazy="true"
+							rowKey="#{existuser}" var="existuser"
 							styleClass="existingResults" style="width : 100%;">
 
 							<ac:paginator for="existingsearch" />
@@ -99,8 +101,7 @@
 							</p:column>
 
 							<p:column headerText="#{lbl['lbl.so.bo.pp']}">
-								<h:outputText
-									value="#{lbl[existuser.PMP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
+								<h:outputText value="#{existuser.PMP ? 'Yes' : 'No'}" />
 							</p:column>
 
 							<p:column headerText="#{lbl['lbl.so.bo.email']}">

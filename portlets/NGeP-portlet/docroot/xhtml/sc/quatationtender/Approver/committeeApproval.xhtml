@@ -46,12 +46,9 @@
 						rendered="#{committeeapprover.memberRole.parameterCode eq 'C'}" />
 				</ui:fragment>
 				<ui:fragment rendered="#{!committeeapprover.PNP}">
-					<p:selectOneMenu
-						value="#{committeeapprover.memberRole.parameterId}"
-						style="width: 110px;margin-bottom: 5px;">
-						<f:selectItems
-							value="#{approvalBackingBean.managedBean.roleTypes}" />
-					</p:selectOneMenu>
+					
+					<h:outputText value="#{approvalBackingBean.getParameterDesc(committeeapprover.memberRole)}"></h:outputText>
+					
 				</ui:fragment>
 			</p:column>
 

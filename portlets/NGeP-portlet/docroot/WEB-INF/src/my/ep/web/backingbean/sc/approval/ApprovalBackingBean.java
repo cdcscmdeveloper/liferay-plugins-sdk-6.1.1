@@ -20,18 +20,25 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
+import my.ep.bpm.dto.BaseResponseDTO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
+import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.sc.QTStatusConst;
+import my.ep.constant.sc.SourcingConstants;
+import my.ep.constants.BpmConstants;
 import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
+import my.ep.dto.sc.quationtender.BaseQTReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
+import my.ep.jaxb.sc.committeedata.SCCommitteeDataType;
 import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmStatus;
@@ -53,6 +60,7 @@ import my.ep.web.bean.sc.quatationtender.TabBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.sc.quationtender.common.QTConstants;
+import my.ep.web.type.sc.quationtender.BPMOutComeTypes;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -290,16 +298,22 @@ public class ApprovalBackingBean extends
 		reqDTO.setCtxToken(ctx);
 		reqDTO.setTaskId(taskId);
 		BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
-		SCQuotationTenderDataType obj = (SCQuotationTenderDataType) res
-				.getPojo();
-		this.getManagedBean().setQuotationTenderDataType(obj);
+
 		this.getManagedBean().setOutComes(res.getAction());
 		String taskName = res.getTaskName();
+		Object obj = null;
+		Long qtId = null;
+		if (SCProcessNameConst.APPROVE_COMMITTEE.equalsIgnoreCase(taskName)) {
+			obj = (SCCommitteeDataType) res.getPojo();
+			qtId = ((SCCommitteeDataType) obj).getQtId().longValue();
+		} else {
+			obj = (SCQuotationTenderDataType) res.getPojo();
+			qtId = ((SCQuotationTenderDataType) obj).getQtId().longValue();
+		}
+		this.getManagedBean().setQuotationTenderDataType(obj);
 		IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-
 		QuationTenderReqDTO qtReqDto = new QuationTenderReqDTO();
-		Long qtId = obj.getQtId().longValue();
 		qtReqDto.setQtId(qtId);
 		qtReqDto.setDocType(QTConstants.DOCTYPE_QT);
 		QuationTenderResDTO tenderResDTO = detailSO.retriveQTDetails(qtReqDto);
@@ -360,52 +374,86 @@ public class ApprovalBackingBean extends
 	}
 
 	public String updateBpmTask(String outcome) {
-
-		QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
+	
 		FacesScopes facesScopes = new FacesScopes();
 		String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
-		qtReqDTO.setToken(ctxToken);
-		qtReqDTO.setTaskId(this.getManagedBean().getTaskId());
-		qtReqDTO.setDocType(QTConstants.DOCTYPE_QT);
-		qtReqDTO.setPayLoad(this.getManagedBean().getQuotationTenderDataType());
-		// TODO Need to get it from front end and set it
 
-		qtReqDTO.setOutcome(outcome);
+		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+				.getServiceObject(IBpmSO.class);
+
+		BpmRequestDTO reqDTO = new BpmRequestDTO();
+		reqDTO.setCtxToken(ctxToken);
+		reqDTO.setTaskId(this.getManagedBean().getTaskId());
+		BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
+		String taskName = res.getTaskName();
+
 		try {
-			IQTDetailSO detailSO = BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-							IQTDetailSO.class);
 			ScQt qt = this.getManagedBean().getQt();
-			ScQtApproval approval = this.getManagedBean().getScQtApproval();
-			if (null != approval && null != approval.getQtApprovalId()) {
-				approval.setApproverAction("A");
-
-				// approval.setApproverId(facesScopes.getUserSessionBean());
-				List<ScQtApproval> qtApproval = new ArrayList<ScQtApproval>();
-				qtApproval.add(approval);
-				// qt.setScQtApprovals(qtApproval);
-			}
-			// List<TabBean> committeTabs =
-			// this.getManagedBean().getScCommitteeMemberTabList();
-			ISearchResultBean<ScQtCommittee> qtCommittes = this
-					.getManagedBean().getQtCommittes();
-			if (null != qtCommittes && null != qtCommittes.getResultList()) {
-				for (ScQtCommittee scQtCommittee : qtCommittes.getResultList()) {
-					PmStatus committeStatus = new PmStatus();
-					committeStatus.setStatusId(60202L);
-					scQtCommittee.getScCommittee().setCommitteStatus(
-							committeStatus);
+			CommitteResDTO committeResDto = null;
+			QuationTenderResDTO qtResDTO = null;
+			if (SCProcessNameConst.APPROVE_COMMITTEE.equalsIgnoreCase(taskName)
+					|| SCProcessNameConst.REVISE_COMMITTEE
+							.equalsIgnoreCase(taskName)) {
+				ISearchResultBean<ScQtCommittee> qtCommittes = this
+						.getManagedBean().getQtCommittes();
+				if (null != qtCommittes && null != qtCommittes.getResultList()) {
+					for (ScQtCommittee scQtCommittee : qtCommittes
+							.getResultList()) {
+						PmStatus committeStatus = new PmStatus();
+						if (BpmOutcomeConst.BPM_REVISE
+								.equalsIgnoreCase(outcome)) {
+							committeStatus
+									.setStatusId(QTStatusConst.CM_REVISION);
+						} else {
+							committeStatus
+									.setStatusId(QTStatusConst.CM_COMPLETE);
+						}
+						scQtCommittee.getScCommittee().setCommitteStatus(
+								committeStatus);
+					}
+					qt.setScQtCommittees(qtCommittes.getResultList());
 				}
-				qt.setScQtCommittees(qtCommittes.getResultList());
+				ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+								ICommitteSO.class);
+				CommitteReqDTO committeReqDTO = new CommitteReqDTO();
+				committeReqDTO.setToken(ctxToken);
+				committeReqDTO.setTaskId(this.getManagedBean().getTaskId());
+				committeReqDTO.setPayLoad(this.getManagedBean()
+						.getQuotationTenderDataType());
+				committeReqDTO.setOutcome(outcome);
+				committeReqDTO.setScQt(qt);
+				committeResDto = committeSO.updateBPMAction(committeReqDTO);
 			} else {
-				qt.setScQtCommittees(null);
-			}
-			qtReqDTO.setQtdetail(qt);
-			QuationTenderResDTO resDTO = (QuationTenderResDTO) detailSO
-					.updateBPMAction(qtReqDTO);
+				QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
+				qtReqDTO.setToken(ctxToken);
+				qtReqDTO.setTaskId(this.getManagedBean().getTaskId());
+				qtReqDTO.setDocType(QTConstants.DOCTYPE_QT);
+				qtReqDTO.setPayLoad(this.getManagedBean()
+						.getQuotationTenderDataType());
+				qtReqDTO.setOutcome(outcome);
 
-			if (resDTO.isSuccessful()) {
-				ScQt scQt = resDTO.getQtDetail();
+				IQTDetailSO detailSO = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+								IQTDetailSO.class);
+
+				ScQtApproval approval = this.getManagedBean().getScQtApproval();
+				if (null != approval && null != approval.getQtApprovalId()) {
+					approval.setApproverAction("A");
+					List<ScQtApproval> qtApproval = new ArrayList<ScQtApproval>();
+					qtApproval.add(approval);
+					// qt.setScQtApprovals(qtApproval);
+				}
+
+				qt.setScQtCommittees(null);
+				qtReqDTO.setQtdetail(qt);
+				qtResDTO = (QuationTenderResDTO) detailSO
+						.updateBPMAction(qtReqDTO);
+			}
+
+			if ((null != committeResDto && committeResDto.isSuccessful())
+					|| (null != qtResDTO && qtResDTO.isSuccessful())) {
+
 				FacesContext
 						.getCurrentInstance()
 						.addMessage(
@@ -420,7 +468,7 @@ public class ApprovalBackingBean extends
 																getParameterDesc(
 																		ParameterTypeConst.DOCUMENT_TYPES,
 																		ParameterConst.DOCTYPE_QUOTATION),
-																scQt.getQtNo() },
+																qt.getQtNo() },
 														MessageUtils.BUNDLE_COMMON_MESSAGES,
 														new FacesScopes()
 																.getUserLocale())));

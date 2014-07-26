@@ -33,6 +33,7 @@ import my.ep.persistence.entity.pm.common.PmDo;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmGo;
 import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmReportSection;
 import my.ep.persistence.entity.pm.common.PmSo;
 import my.ep.persistence.entity.pm.common.PmState;
@@ -83,6 +84,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import org.apache.log4j.Logger;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.DualListModel;
+import org.primefaces.model.MenuModel;
 import org.primefaces.model.TreeNode;
 
 /**
@@ -203,7 +205,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private ScQtApproval scQtApproval;
 	private String uploadUpdateId;
 	// Payload for BPM
-	private SCQuotationTenderDataType quotationTenderDataType;
+	private Object quotationTenderDataType;
 	private boolean isEditable = true;
 
 	private List<SmSupplier> panelSuppliers;
@@ -351,7 +353,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<ScQtCheckList> selectedQtCheckLists;
 	private boolean ecType;
 
-	private SelectItem[] roleTypes; // Role type drop down
+	private List<PmParameterDesc> roleTypes; // Role type drop down
 
 	private SelectItem[] finalizeComm;
 
@@ -424,7 +426,15 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	private List<ScQtCheckList> technicalSpecList;
 	private List<ScQtCheckList> financialSpecList;
-
+	
+	//Added code to move to tabmenus..
+	private MenuModel menuModel;
+	public int selectedTabIndex;
+	public TabBean selectedTabBean;
+	
+	public MenuModel approvalMenuModel;
+	public int selectedApprovalTabIndex;
+	public TabBean selectedApprovalTabBean;
 	public void setPanelSuppliers(List<SmSupplier> panelSuppliers) {
 		this.panelSuppliers = panelSuppliers;
 	}
@@ -1395,12 +1405,12 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.processName = processName;
 	}
 
-	public SCQuotationTenderDataType getQuotationTenderDataType() {
+	public Object getQuotationTenderDataType() {
 		return quotationTenderDataType;
 	}
 
 	public void setQuotationTenderDataType(
-			SCQuotationTenderDataType quotationTenderDataType) {
+			Object quotationTenderDataType) {
 		this.quotationTenderDataType = quotationTenderDataType;
 	}
 
@@ -1811,11 +1821,11 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.committemembers = committemembers;
 	}
 
-	public SelectItem[] getRoleTypes() {
+	public List<PmParameterDesc> getRoleTypes() {
 		return roleTypes;
 	}
 
-	public void setRoleTypes(SelectItem[] roleTypes) {
+	public void setRoleTypes(List<PmParameterDesc> roleTypes) {
 		this.roleTypes = roleTypes;
 	}
 
@@ -2543,6 +2553,54 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setSelectedCloneBOList(List<ScQt> selectedCloneBOList) {
 		this.selectedCloneBOList = selectedCloneBOList;
+	}
+	
+	public MenuModel getMenuModel() {
+		return menuModel;
+	}
+
+	public void setMenuModel(MenuModel menuModel) {
+		this.menuModel = menuModel;
+	}
+
+	public int getSelectedTabIndex() {
+		return selectedTabIndex;
+	}
+
+	public void setSelectedTabIndex(int selectedTabIndex) {
+		this.selectedTabIndex = selectedTabIndex;
+	}
+
+	public TabBean getSelectedTabBean() {
+		return selectedTabBean;
+	}
+
+	public void setSelectedTabBean(TabBean selectedTabBean) {
+		this.selectedTabBean = selectedTabBean;
+	}
+
+	public MenuModel getApprovalMenuModel() {
+		return approvalMenuModel;
+	}
+
+	public void setApprovalMenuModel(MenuModel approvalMenuModel) {
+		this.approvalMenuModel = approvalMenuModel;
+	}
+
+	public int getSelectedApprovalTabIndex() {
+		return selectedApprovalTabIndex;
+	}
+
+	public void setSelectedApprovalTabIndex(int setSelectedApprovalTabIndex) {
+		this.selectedApprovalTabIndex = setSelectedApprovalTabIndex;
+	}
+
+	public TabBean getSelectedApprovalTabBean() {
+		return selectedApprovalTabBean;
+	}
+
+	public void setSelectedApprovalTabBean(TabBean selectedApprovalTabBean) {
+		this.selectedApprovalTabBean = selectedApprovalTabBean;
 	}
 
 }

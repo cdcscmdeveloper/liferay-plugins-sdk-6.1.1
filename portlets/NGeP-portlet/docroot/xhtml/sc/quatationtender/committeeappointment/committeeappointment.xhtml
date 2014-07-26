@@ -16,8 +16,14 @@
 			<tr>
 				<td width="100%"><p:messages id="specmessages"
 						showDetail="true" autoUpdate="true" closable="true"
-						showSummary="false" /> <ui:include
-						src="committeeappointmentdetails.xhtml" /></td>
+						showSummary="false" /> <!-- <ui:include
+						src="committeeappointmentdetails.xhtml" /> -->
+						<p:tabMenu styleClass="sidemenu"
+						activeIndex="#{qTDetailBB.managedBean.selectedTabIndex}"
+						style="display : table-caption;"
+						model="#{qTDetailBB.managedBean.menuModel}" />
+						
+						</td>
 			</tr>
 		</table>
 

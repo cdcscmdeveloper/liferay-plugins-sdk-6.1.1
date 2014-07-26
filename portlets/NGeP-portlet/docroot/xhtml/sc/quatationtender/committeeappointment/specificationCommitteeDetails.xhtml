@@ -14,7 +14,8 @@
 				<td><p:inputText
 						value="#{qTCommitteBackingBean.getStatusDescById(committe.committeStatus.statusId)}"
 						size="30" disabled="true" readonly="true" /></td>
-				<td><p:selectBooleanCheckbox value="#{committe.approvalReq}" disabled="#{committe.committeeType.parameterCode eq 'SC'}"/></td>
+				<td><p:selectBooleanCheckbox value="#{committe.approvalReq}"
+						disabled="#{committe.approvalReq}" /></td>
 				<td style="width: 110px"><p:outputLabel
 						value="#{lbl['lbl.so.send.for.approval']}" /></td>
 			</tr>
@@ -51,7 +52,8 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.so.bo.pp']}" style="width: 5%">
-				<h:outputText value="#{lbl[specificationcommittee.PNP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
+				<h:outputText
+					value="#{lbl[specificationcommittee.PNP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
 			</p:column>
 
 			<p:column style="width: 15%">
@@ -65,12 +67,17 @@
 						rendered="#{specificationcommittee.memberRole.parameterCode eq 'C'}" />
 				</ui:fragment>
 				<ui:fragment rendered="#{!specificationcommittee.PNP}">
-					<p:selectOneMenu id="roleid" 
-						label="#{lbl['lbl.so.role']}"
+					<p:selectOneMenu id="roleid" label="#{lbl['lbl.so.role']}"
 						value="#{specificationcommittee.memberRole.parameterId}"
 						style="width: 110px;margin-bottom: 5px;">
-						<f:selectItems
-							value="#{qTCommitteBackingBean.managedBean.roleTypes}" />
+							<p:ajax event="change" partialSubmit="true" process="@this"
+							listener="#{qTCommitteBackingBean.roleChangeListner(specificationcommittee)}"></p:ajax>
+						<f:selectItem itemLabel="-Select One-" itemValue="#{null}"></f:selectItem>
+						<f:selectItems var="role"
+							value="#{qTCommitteBackingBean.managedBean.roleTypes}"
+							itemLabel="#{role.codeName}"
+							itemValue="#{role.pmParameter.parameterId}" />
+
 					</p:selectOneMenu>
 					<p:message id="roleidMsg" for="roleid" display="icon" />
 				</ui:fragment>

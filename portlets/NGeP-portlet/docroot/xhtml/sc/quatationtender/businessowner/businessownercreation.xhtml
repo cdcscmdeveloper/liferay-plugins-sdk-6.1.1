@@ -8,12 +8,11 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<ui:define name="contentSection"><ui:include
-		src="clonebusinessowner.xhtml" />
-		<ui:include
-		src="addbusinessowner.xhtml" />
+	<ui:define name="contentSection">
+		<ui:include src="clonebusinessowner.xhtml" />
+		<ui:include src="addbusinessowner.xhtml" />
 		<ac:title value="#{lbl['lbl.qt.qtdetails']}" />
-			<table style="border: 0px; width: 100%">
+		<table style="border: 0px; width: 100%">
 			<tr>
 				<td width="100%"><p:messages id="specmessages"
 						showDetail="true" autoUpdate="true" closable="true"
@@ -23,9 +22,7 @@
 			</tr>
 			<tr>
 				<td width="100%" valign="top"><ui:include
-						src="qtbusinessowner.xhtml" />
-					
-						</td>
+						src="qtbusinessowner.xhtml" /></td>
 			</tr>
 		</table>
 	</ui:define>

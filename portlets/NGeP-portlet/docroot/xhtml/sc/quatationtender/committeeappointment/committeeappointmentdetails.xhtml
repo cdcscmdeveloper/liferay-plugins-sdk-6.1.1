@@ -23,7 +23,11 @@
 				oncomplete="screen2.show();" process="@this" icon="ui-icon-clone"
 				update="@(.cloneCommitteMember)" />
 		</div>
-
+		<p:tabMenu activeIndex="#{qTDetailBB.managedBean.selectedTabIndex}" 
+			model="#{qTDetailBB.managedBean.menuModel}"  >
+			
+			</p:tabMenu>		
+		
 		<ui:include src="committeeappointmenttabList.xhtml" />
 	</p:panel>
 </ui:composition>

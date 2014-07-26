@@ -110,8 +110,13 @@
 									<p:selectOneMenu id="appaction"
 										value="#{existcommitteeuser.memberRole.parameterId}"
 										style="width: 110px;margin-bottom: 5px;">
-										<f:selectItems
-											value="#{qTCommitteBackingBean.managedBean.roleTypes}" />
+										<f:selectItem itemLabel="-Select One-" itemValue="#{null}"></f:selectItem>
+
+										<f:selectItems var="role"
+											value="#{qTCommitteBackingBean.managedBean.roleTypes}"
+											itemLabel="#{role.codeName}"
+											itemValue="#{role.pmParameter.parameterId}" />
+
 									</p:selectOneMenu>
 								</ui:fragment>
 							</p:column>
