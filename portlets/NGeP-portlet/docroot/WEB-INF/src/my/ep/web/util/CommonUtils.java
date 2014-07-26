@@ -97,7 +97,7 @@ public class CommonUtils {
 			case CommonConstants.NUMBER_FORMAT_TYPE_QTY : 
 				PmUom pmUom = uomMap.get(uomCode);
 				
-				if (pmUom == null) {
+				if (pmUom == null && uomCode!=null && uomCode.length()>0) {
 					IUomSO uomSO;
 					
 					try {
