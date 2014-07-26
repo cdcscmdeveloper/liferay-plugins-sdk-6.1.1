@@ -239,7 +239,10 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.price.inquiry.price.published']}" style="width:15%">
-				<h:outputText value="#{supplierItemPrice.pricing.price}" style="float:right"/>
+				<h:outputText value="#{supplierItemPrice.pricing.price}" style="float:right" >
+				 <f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}"/>
+				  </h:outputText>
 			</p:column>
 
 			<p:column style="width:15%">

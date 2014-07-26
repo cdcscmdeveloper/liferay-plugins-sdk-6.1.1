@@ -7,8 +7,8 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
    <ui:define name="contentSection">
-   <p:messages showDetail="true" autoUpdate="true" closable="true" severity="error, info" id="mainMsg"/>
-   <ac:title value="#{lbl['lbl.sc.pr.inquiry']}"/>
+   <p:messages showDetail="true" autoUpdate="true" closable="true"  showSummary="false" severity="error, info" id="mainMsg"/>
+   <ac:title value="#{lbl['lbl.sc.pr.inquiry.title']}"/> 
    <p:panel id="mainPanel">
    <div align="right">
 	    <c:if test="#{purchaseInquiryBackingBean.managedBean.taskId eq null}">
@@ -32,18 +32,21 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 								<c:if test="${action == 'CANCEL'}">
 									<ui:param name="iconVar" value="ui-icon-submit" />
 									<c:if test="#{purchaseInquiryBackingBean.managedBean.taskId ne null and unspscCodeBackingBean.requisitioner}">
-										<p:commandButton value="#{lbl['lbl.sc.common.cancel']}"
-											icon="ui-icon-cancel"
-											action="#{purchaseInquiryBackingBean.requisitionerAction(action)}" />
+									
 										<p:commandButton value="#{lbl['lbl.sc.common.proceed.btn']}"
-											icon="ui-icon-submit"
+											icon="ui-icon-submit" style="float:left;"
 											action="#{purchaseInquiryBackingBean.requisitionerAction('Processed')}" />
+											
+										<p:commandButton value="#{lbl['lbl.sc.common.cancel']}"
+											icon="ui-icon-cancel" style="float:right;"
+											action="#{purchaseInquiryBackingBean.requisitionerAction(action)}" />
+
 									</c:if>
 								</c:if>
 
 								<c:if
 									test="#{purchaseInquiryBackingBean.managedBean.processName eq 'Purchase Inquiry Creation'}">
-									<p:commandButton value="#{action}" process="@all"
+									<p:commandButton value="#{action}" process="@all" partialSubmit="true"
 										rendered="#{!unspscCodeBackingBean.requisitioner}"
 										styleClass="ui-button" icon="#{iconVar}" update="mainPanel"
 										actionListener="#{purchaseInquiryBackingBean.submitPrInquiryPrice(action)}" />

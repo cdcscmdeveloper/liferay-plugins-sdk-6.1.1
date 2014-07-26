@@ -8,7 +8,7 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
     <ui:define name="contentSection">
     <p:messages showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
-    <ac:title value="#{lbl['lbl.sc.sq']}"/>
+    <ac:title value="#{lbl['lbl.sc.sq.title']}"/>
     
     	  <div align="right">
 	    <c:if test="#{simpleQuoteBackingBean.managedBean.taskId eq null}">

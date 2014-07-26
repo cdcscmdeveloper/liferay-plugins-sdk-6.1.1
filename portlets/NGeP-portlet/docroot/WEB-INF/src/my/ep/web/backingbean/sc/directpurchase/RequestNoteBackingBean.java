@@ -976,17 +976,21 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		List<Long> checkIds = new ArrayList<Long>();
 		List<PmParameter> params = new ArrayList<PmParameter>();
 		for (ScSupplierItemPrice scSupplierItemPrice : supplierItemPrices) {
-			if(scSupplierItemPrice.getPriceType().getParameterId() != null){
-				reqDTO.setParameterType(ParameterTypeConst.PRICE_TYPE);
-				reqDTO.setParameterCode(scSupplierItemPrice.getPriceType().getParameterCode());
-				ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
-				scSupplierItemPrice.setPriceType(resDTO.getPmParameter());
+			if(scSupplierItemPrice.getPriceType() != null){
+				if(scSupplierItemPrice.getPriceType().getParameterId() != null){
+					reqDTO.setParameterType(ParameterTypeConst.PRICE_TYPE);
+					reqDTO.setParameterCode(scSupplierItemPrice.getPriceType().getParameterCode());
+					ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
+					scSupplierItemPrice.setPriceType(resDTO.getPmParameter());
+				}
+				
+				if(!checkIds.contains(scSupplierItemPrice.getPriceType().getParameterId())){
+					checkIds.add(scSupplierItemPrice.getPriceType().getParameterId());
+					params.add(scSupplierItemPrice.getPriceType());
+				}
 			}
 
-			if(!checkIds.contains(scSupplierItemPrice.getPriceType().getParameterId())){
-				checkIds.add(scSupplierItemPrice.getPriceType().getParameterId());
-				params.add(scSupplierItemPrice.getPriceType());
-			}
+			
 		}
 		return params;
 	}
@@ -1324,10 +1328,12 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 					if(scRequestSupplierItem.getSupplierItemPrices()!= null && scRequestSupplierItem.getSupplierItemPrices().size()>0){
 
 						for (ScSupplierItemPrice scSupplierItemPrice : scRequestSupplierItem.getSupplierItemPrices()) {
-							if(scSupplierItemPrice.getPriceType().getParameterId().equals(priceTypeId)){
-								scRequestSupplierItem.setSupplierItemPrice(scSupplierItemPrice);
-								requestNoteDtl.setPriceType(scSupplierItemPrice.getPriceType());
-								break;
+							if(scSupplierItemPrice.getPriceType() != null){
+								if(scSupplierItemPrice.getPriceType().getParameterId().equals(priceTypeId)){
+									scRequestSupplierItem.setSupplierItemPrice(scSupplierItemPrice);
+									requestNoteDtl.setPriceType(scSupplierItemPrice.getPriceType());
+									break;
+								}
 							}
 						}
 					}
@@ -1463,5 +1469,4 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		}
 		return statusDescs;
 	}
-
 }

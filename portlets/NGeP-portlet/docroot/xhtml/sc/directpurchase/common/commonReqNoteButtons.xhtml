@@ -13,8 +13,11 @@
 				<p:commandButton value="#{lbl['lbl.sc.common.save']}" icon="ui-icon-save" process="@all"
 				   	action="#{requestNoteBackingBean.saveAction('')}" update="@([id$=requestNoteId])"/>
 
-				<p:commandButton value="#{lbl['lbl.sc.common.submit']}" update="@([id$=requestNoteId])" style="float:right;"
+				<p:commandButton value="#{lbl['lbl.sc.common.submit']}" update="@([id$=requestNoteId])"
 					icon="ui-icon-submit"  action="#{requestNoteBackingBean.submitAction('')}" process="@all"/>
+					
+			 <p:commandButton value="#{lbl['lbl.sc.common.cancel']}"  action="#{requestNoteBackingBean.cancel}"
+			   style="float:right;" icon="ui-icon-cancel" process="@this"  partialSubmit="true"/>
 	    </c:if>
 	    </div>
 	    <div>

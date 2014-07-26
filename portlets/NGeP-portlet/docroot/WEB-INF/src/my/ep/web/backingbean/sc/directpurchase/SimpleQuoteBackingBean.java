@@ -1935,8 +1935,11 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 				if(scQuote.getScQuoteSuppliers() != null && scQuote.getScQuoteSuppliers().size() > 0){
 					getManagedBean().setSupplierList(scQuote.getScQuoteSuppliers());
 				}
-      
+                
+				// remarks
+				scQuote.setRemarks(initializeRemarks(scQuote));
 				getManagedBean().setScQuote(scQuote);
+				
 				// duration calc
 				dateListener();
 				procurementTypeEvent();
@@ -2232,6 +2235,13 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 		}
 		
 		this.getManagedBean().setScQuote(quote);
+	}
+	
+	public String cancel() {
+		log.info("cancel");
+		// clear sq
+		super.renewSesionObject();
+		return "catalogueSearch";
 	}
 }
 

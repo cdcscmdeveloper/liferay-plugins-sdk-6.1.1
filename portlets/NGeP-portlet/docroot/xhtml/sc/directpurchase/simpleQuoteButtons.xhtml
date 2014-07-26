@@ -14,12 +14,22 @@
 					    action="#{simpleQuoteBackingBean.saveSimpleQuote('')}" process="@all" update="@form"/>
 				
 			 <p:commandButton value="#{lbl['lbl.sc.common.submit']}"  action="#{simpleQuoteBackingBean.submitSimpleQuote('')}"
-			   style="float:right;" icon="ui-icon-submit" process="@all" update="@form" />
+			   icon="ui-icon-submit" process="@all" update="@form" />
+			   
+			   	 <p:commandButton value="#{lbl['lbl.sc.common.cancel']}"  action="#{simpleQuoteBackingBean.cancel}"
+			   style="float:right;" icon="ui-icon-cancel" process="@this" partialSubmit="true"/>
+			   
+			   
 	    </c:if>
 	     <table>
 			   <tr>
 					<td align="right">
-					    <c:if test="#{simpleQuoteBackingBean.managedBean.taskId ne null}">
+					
+					  <c:if test="#{simpleQuoteBackingBean.managedBean.taskId ne null}">
+					     <c:if test="#{requestNoteBackingBean.managedBean.requestNoteStatus eq 'Pending Submission'}">
+							<p:commandButton immediate="true" value="#{lbl['lbl.sc.action.back.to.search.catalogue']}" icon="ui-icon-back" partialSubmit="true" process="@this"
+								style="float:left;" action="#{simpleQuoteBackingBean.backToPervious}" />
+						</c:if>
 					    
 					     <c:if test="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending Approval' 
 									  or simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending Submission'}">

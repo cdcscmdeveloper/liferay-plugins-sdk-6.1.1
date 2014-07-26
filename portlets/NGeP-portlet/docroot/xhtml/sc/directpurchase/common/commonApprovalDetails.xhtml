@@ -12,7 +12,7 @@
 		<table style="width: 100%">
 			<tr>
 				<td style="width: 250px;"><p:pickList id="approver"
-						label="#{lbl['lbl.sc.approve.list']}" disabled="#{requestNoteBackingBean.managedBean.requestNoteStatus eq 'Pending Approval'}"
+						label="#{lbl['lbl.sc.approver']}" disabled="#{requestNoteBackingBean.managedBean.requestNoteStatus eq 'Pending Approval'}"
 						value="#{requestNoteBackingBean.managedBean.approvalUsers}"
 						var="approverUser" required="true" showTargetControls="true"
 						itemLabel="#{approverUser.userName}" itemValue="#{approverUser}"

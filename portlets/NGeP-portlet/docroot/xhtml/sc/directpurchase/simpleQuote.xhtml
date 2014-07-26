@@ -8,7 +8,7 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
     <ui:define name="contentSection">
     <ac:title value="#{lbl['lbl.sc.sq']}"/>
-    <p:messages showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
+    <p:messages showDetail="true" autoUpdate="true" closable="true" severity="error, info"  showSummary="false"/>
       <ui:include src="/xhtml/sc/directpurchase/simpleQuoteButtons.xhtml" />
      <ui:include src="/xhtml/sc/directpurchase/simpleQuoteHeader.xhtml" />
     <p:panel id="sqMainId">
