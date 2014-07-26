@@ -1135,7 +1135,7 @@ public class SpecificationBackingBean extends
 			scqtDocDest.setScQt(this.getManagedBean().getScQt());
 			scqtDocDest.setTplSpecMaster(specMaster);
 			scqtDocDest.setScQtCheckList(checkList);
-			scqtDocDest.setTplDocMaster(null);
+			//scqtDocDest.setTplDocMaster(null);
 			scqtDocDest.setRecordStatus(true);
 			setUserDetails(scqtDocDest);
 
@@ -8050,7 +8050,7 @@ public class SpecificationBackingBean extends
 				.retrieveParameterByTypeAndCode(localGoodsReqDTO);
 		specMaster.setItemOriginCode(localGoodsResDTO.getPmParameter());
 		scqtDocDest.setTplSpecMaster(specMaster);
-		scqtDocDest.setTplDocMaster(null);
+		//scqtDocDest.setTplDocMaster(null);
 		ScQtCheckList checkList = new ScQtCheckList();
 		checkList.setDocCategory(docType);
 
