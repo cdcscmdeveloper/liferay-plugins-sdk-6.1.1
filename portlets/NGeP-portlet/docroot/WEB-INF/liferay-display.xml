@@ -67,7 +67,6 @@
 			<portlet id="scDirectPurchase" />
 			<portlet id="simpleQuoteSupplier" />
 			<portlet id="scDirectPurchaseTask" />
-			<portlet id="scPurchaseInDefault" />
 			<portlet id="scSupplierReview" />
 			<portlet id="scQuotationTender" />
 			<portlet id="scCommitteeAppointment" />
@@ -103,9 +102,6 @@
 			<portlet id="scSupplierFinalization"/>
 			<portlet id="scSupplierFinalizationEndorsement"/>
             <portlet id="Bidding List" />
-            <portlet id="PurchaseInquiry"/>
-            <portlet id="Simple Quote"></portlet>
-            <portlet id="Supplier View"></portlet>
             <portlet id="SpecCommitteMaintanance"></portlet>
             <portlet id="QTApproval"></portlet>
             <portlet id="BusinessOwner"></portlet>
