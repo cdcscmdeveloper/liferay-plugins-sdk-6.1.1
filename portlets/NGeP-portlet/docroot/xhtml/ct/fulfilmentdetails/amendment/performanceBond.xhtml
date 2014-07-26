@@ -41,9 +41,9 @@
             <p:column styleClass="column-align-center" headerText="#{lbl['lbl.ct.attachement']}"  style="width:25%;">
                <h:panelGroup id="uploadBondPg">
 					<h:commandLink styleClass="blue_font"
-						value="#{amendmentBackingBean.fileNames(data.filePath)}"
+						value="#{data.fileName}"
 						rendered="#{data.filePath != null}" style="float:left;"
-						action="#{amendmentBackingBean.downloadFile(data.filePath)}" />
+						action="#{amendmentBackingBean.downloadFile(data.filePath, data.fileName)}" />
 				</h:panelGroup> 
 			</p:column>
             

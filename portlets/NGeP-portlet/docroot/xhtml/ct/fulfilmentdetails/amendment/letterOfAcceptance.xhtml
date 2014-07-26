@@ -25,13 +25,13 @@
 						    target="#{amendmentBackingBean.managedBean.selectedScLoaReports}" />
 					</p:commandButton>
 					<h:commandLink rendered="#{data.scLoaReportAttachment.filePath != null}" value="#{data.scLoaReportAttachment.fileName}"
-						action="#{amendmentBackingBean.downloadFile(data.scLoaReportAttachment.filePath)}">
+						action="#{amendmentBackingBean.downloadFile(data.scLoaReportAttachment.filePath, data.scLoaReportAttachment.fileName)}">
 					</h:commandLink>
 				 </h:panelGroup>
 			 </p:column>
 			 <p:column headerText="Action" styleClass="column-align-center" style="width:10%;">
 			    <h:panelGroup  rendered="#{data.definationType.parameterCode == ParameterConst.documentDefinitionTypeUpload}">
-			       <h:commandLink icon="ui-icon-download" action="#{amendmentBackingBean.downloadFile(data.scLoaReportAttachment.filePath)}">
+			       <h:commandLink icon="ui-icon-download" action="#{amendmentBackingBean.downloadFile(data.scLoaReportAttachment.filePath, data.scLoaReportAttachment.fileName)}">
 				       <p:graphicImage library="ep/images/design" name="download.png"
 						   value="/resources/ep/images/design/download.png" title="File Download" />
 				   </h:commandLink>
@@ -89,7 +89,8 @@
 				 <h:commandLink style="float:left;" styleClass="blue_font" 
 				     value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.scLoaAttachment.fileName}"
 				     rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.scLoaAttachment != null}"
-					action="#{amendmentBackingBean.downloadFile(amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.scLoaAttachment.filePath)}" />
+					action="#{amendmentBackingBean.downloadFile(amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.scLoaAttachment.filePath,
+						amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.scLoaAttachment.fileName)}" />
 			</h:panelGrid>
 		</h:panelGroup>
 		<p:dialog id="uploadLoaDlg" widgetVar="uploadLoaDlg"  modal="false" resizable="false"
