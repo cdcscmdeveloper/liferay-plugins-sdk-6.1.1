@@ -37,9 +37,6 @@ import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import my.ep.biz.bean.search.ISearchBean;
-import my.ep.biz.bean.search.SearchBean;
-import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.agreement.IAgreementSO;
 import my.ep.biz.service.ct.tpl.IContractTemplateSO;
@@ -86,7 +83,6 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.sm.SmPersonnel;
-import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
@@ -721,10 +717,8 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	}
 	
 	public void downloadAll(){
-		IAgreementSO agreementSO = null;
 		IContractTemplateSO contractTemplateSO = null;
 		List<File> fileList = new ArrayList<File>();
-		ISearchBean<CtAgreementContent> searchBean = new SearchBean<CtAgreementContent>();
 		AttachmentFormat attachmentFormat = new AttachmentDateFormat();
 		
 		String content = null;
@@ -734,19 +728,10 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		file.mkdirs();
 		
 		try{
-			agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IAgreementSO.class);
 			contractTemplateSO = (IContractTemplateSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractTemplateSO.class);
+			ContractTemplateReqDTO templateReqDTO = new ContractTemplateReqDTO();
 			
-			// Retrieve agreement content list by agreement id
-			searchBean.getDataFilterBeans().add(new SearchFilterBean("agreement.agreementId",
-						SearchOperator.OPERATOR_EQUALS.value(), getManagedBean().getCtAgreement().getAgreementId()));
-			
-			ContractAgreementReqDTO reqDTO = new ContractAgreementReqDTO();
-			reqDTO.setSearchBean(searchBean);
-			ContractAgreementResDTO resDTO = agreementSO.retrieveAgreementContentList(reqDTO);
-			
-			for (CtAgreementContent agreementContent : resDTO.getResultBean().getResultList()) {
-				ContractTemplateReqDTO templateReqDTO = new ContractTemplateReqDTO();
+			for (CtAgreementContent agreementContent : getManagedBean().getCtAgreement().getAgreementContents()) {
 				// System Define Doc
 				if (agreementContent.getContentType().getParameterId().equals(
 						(retrieveParameterByCodeType(ParameterConst.DOCUMENT_DEFINITION_TYPE, 
@@ -864,7 +849,8 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 				content = content + "<div style=\"font-weight: normal; text-align: center;\"><strong>JUMLAH BON PELAKSANAAN:</strong></div>" + 
 						"<div style=\"font-weight: normal; text-align: center;\"><strong>RM ${PERFORMANCE_BOND_VALUE}</strong></div>" +
 						"<div style=\"font-weight: normal; text-align: center;\"><strong>(RINGGIT MALAYSIA :${PERFORMANCE_BOND_VALUE_TEXT})</strong></div>";
-				valuesMap.put("PERFORMANCE_BOND_VALUE", nf.format(getManagedBean().getCtContract().getLoa().getBondAmt())+"");
+				if (getManagedBean().getCtContract().getLoa().getBondAmt() != null)
+					valuesMap.put("PERFORMANCE_BOND_VALUE", nf.format(getManagedBean().getCtContract().getLoa().getBondAmt())+"");
 				valuesMap.put("PERFORMANCE_BOND_VALUE_TEXT", getManagedBean().getCtContract().getLoa().getBondAmt()+"");
 			}
 			
