@@ -14,7 +14,7 @@
 					process="@all" icon="ui-icon-save" update="@all" />
 				<p:commandButton value="#{lbl['lbl.so.submit']}"
 					action="#{qTBusinessOwnerBackingBean.submitBusinessOwnerAction}"
-					process="@all" icon="ui-icon-submit" update="@all" rendered="#{!qTBusinessOwnerBackingBean.managedBean.qt.qtStatus eq getQtPendingAppointBo()}"/>
+					process="@all" icon="ui-icon-submit" update="@all" rendered="#{!qTBusinessOwnerBackingBean.managedBean.qt.qtStatus eq ParameterConst.qtPendingAppointBo}"/>
 
 				<p:commandButton value="#{lbl['lbl.so.cancelbtn']}"
 					action="#{qTBusinessOwnerBackingBean.cancelQTDetails}"
