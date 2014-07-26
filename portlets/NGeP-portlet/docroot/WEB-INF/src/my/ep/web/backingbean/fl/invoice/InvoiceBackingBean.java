@@ -56,7 +56,6 @@ import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.pm.common.PmContact;
 import my.ep.persistence.entity.pm.common.PmFinancialAcc;
-import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.type.aut.SearchOperator;
@@ -281,9 +280,10 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 				
 				getManagedBean().setSelectedTabIndex(0);
 				if(getManagedBean().getInvoice().getStatus()==null) {
-					PmStatus pmStatus = new PmStatus();
-					pmStatus.setStatusId(FulfilmentStatusConst.IN_PENDING_INVOICE);
-					getManagedBean().getInvoice().setStatus(pmStatus);
+					IStatusSO statusSO = (IStatusSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IStatusSO.class);
+					StatusReqDTO statusReqDTO = new StatusReqDTO();
+					statusReqDTO.setStatusId(FulfilmentStatusConst.IN_PENDING_INVOICE);
+					getManagedBean().getInvoice().setStatus(statusSO.retrieveStatusByStatusId(statusReqDTO).getPmStatus());
 				}
 				
 				if(getManagedBean().getInvoice().getFlFulfilmentOrder().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)) {

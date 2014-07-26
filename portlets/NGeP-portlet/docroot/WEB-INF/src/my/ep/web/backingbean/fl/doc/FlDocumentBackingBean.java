@@ -59,7 +59,6 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmReason;
-import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
@@ -323,9 +322,12 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			FulfilmentResDTO resDTO = fulfilmentOrderSO.retrieveFulfilmentOrder(reqDTO);			
 			if(buttonVal.equalsIgnoreCase("Stop Fulfilment")) {
 				FlStopInstr flStopInstr = new FlStopInstr();
-				PmStatus pmStatus = new PmStatus();
-				pmStatus.setStatusId(FulfilmentStatusConst.SD_PENDING_SUBMISSION);
-				flStopInstr.setPmStatus(pmStatus);
+				
+				IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IStatusSO.class);
+				StatusReqDTO statusReqDTO = new StatusReqDTO();
+				statusReqDTO.setStatusId(FulfilmentStatusConst.SD_PENDING_SUBMISSION);
+
+				flStopInstr.setPmStatus(statusSO.retrieveStatusByStatusId(statusReqDTO).getPmStatus());
 				flStopInstr.setPmReason(new PmReason());
 				flStopInstr.setFlRequest(resDTO.getFlOrder().getFlFulfilmentRequest());
 				flStopInstr.setFlFulfilmentOrder(resDTO.getFlOrder());

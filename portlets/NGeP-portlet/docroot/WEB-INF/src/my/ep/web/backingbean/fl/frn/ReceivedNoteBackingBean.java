@@ -103,6 +103,9 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			reqDTO.setOutcome(action);
 			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
 			reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
+			if(flBB.getManagedBean().getRemarkList().size()>1) {
+				reqDTO.setFlRemarkList(flBB.getManagedBean().getRemarkList());
+			}
 			
 			reqDTO.setToken(token);
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
