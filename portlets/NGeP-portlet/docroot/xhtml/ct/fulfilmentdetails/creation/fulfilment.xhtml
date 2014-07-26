@@ -45,7 +45,7 @@
 						model="#{contractDetailsBackingBean.managedBean.fulfilmentMenuModel}" />
 			  </td>
 			 	<td width="80%">
-			 	<p:outputPanel rendered="#{contractDetailsBackingBean.managedBean.finalListOfSideMenu.get(contractDetailsBackingBean.managedBean.selectedTabIndex) == 'Fulfilment Details' }">
+			 	<p:outputPanel rendered="#{contractDetailsBackingBean.managedBean.finalListOfSideMenu.get(contractDetailsBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.fd'] }">
 				      <p:outputPanel rendered="#{contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}">
 		 	               <ui:include src="/xhtml/ct/fulfilmentdetails/shared/fulfilmentDetails.xhtml"/>
 		 	        </p:outputPanel>
@@ -57,41 +57,41 @@
 				    <ui:include	src="/xhtml/ct/fulfilmentdetails/shared/performanceBond.xhtml" />
 				    <ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" />
 				</p:outputPanel>
-				<p:outputPanel rendered="#{contractDetailsBackingBean.managedBean.finalListOfSideMenu.get(contractDetailsBackingBean.managedBean.selectedTabIndex) == 'Agency' }">
+				<p:outputPanel rendered="#{contractDetailsBackingBean.managedBean.finalListOfSideMenu.get(contractDetailsBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.agency'] }">
 					<ui:include src="/xhtml/ct/fulfilmentdetails/shared/agency.xhtml" />
 				</p:outputPanel>
-				<p:outputPanel rendered="#{contractDetailsBackingBean.managedBean.finalListOfSideMenu.get(contractDetailsBackingBean.managedBean.selectedTabIndex) == 'Zone' }">
+				<p:outputPanel rendered="#{contractDetailsBackingBean.managedBean.finalListOfSideMenu.get(contractDetailsBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.zone'] }">
 					<ui:include src="/xhtml/ct/fulfilmentdetails/shared/zone.xhtml" />
 			    </p:outputPanel>
 				
-				<p:outputPanel rendered="#{contractDetailsBackingBean.managedBean.finalListOfSideMenu.get(contractDetailsBackingBean.managedBean.selectedTabIndex) == 'Item'
+				<p:outputPanel rendered="#{contractDetailsBackingBean.managedBean.finalListOfSideMenu.get(contractDetailsBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.item']
 				   and contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}">
 					<ui:include src="/xhtml/ct/fulfilmentdetails/shared/productItem.xhtml" />
 				    <ui:include src="/xhtml/ct/fulfilmentdetails/shared/serviceItem.xhtml" />
 				</p:outputPanel>
 				
-				<p:outputPanel rendered="#{contractDetailsBackingBean.managedBean.finalListOfSideMenu.get(contractDetailsBackingBean.managedBean.selectedTabIndex) == 'Item' and 
+				<p:outputPanel rendered="#{contractDetailsBackingBean.managedBean.finalListOfSideMenu.get(contractDetailsBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.item'] and 
 				     contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeCentral}">
 					<ui:include src="/xhtml/ct/fulfilmentdetails/shared/centralItem.xhtml" />
 				</p:outputPanel>
 				
-				<p:outputPanel rendered="#{contractDetailsBackingBean.managedBean.finalListOfSideMenu.get(contractDetailsBackingBean.managedBean.selectedTabIndex) == 'Deduction' }">
+				<p:outputPanel rendered="#{contractDetailsBackingBean.managedBean.finalListOfSideMenu.get(contractDetailsBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.dedu'] }">
 					<ui:include src="/xhtml/ct/fulfilmentdetails/shared/deduction.xhtml" />
 				</p:outputPanel>
 				
-				<p:outputPanel rendered="#{contractDetailsBackingBean.managedBean.finalListOfSideMenu.get(contractDetailsBackingBean.managedBean.selectedTabIndex) == 'Schedule' }">
+				<p:outputPanel rendered="#{contractDetailsBackingBean.managedBean.finalListOfSideMenu.get(contractDetailsBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.sched'] }">
 					 <ui:include src="/xhtml/ct/fulfilmentdetails/shared/schedule.xhtml" />
 				</p:outputPanel>
 				
-				<p:outputPanel rendered="#{contractDetailsBackingBean.managedBean.finalListOfSideMenu.get(contractDetailsBackingBean.managedBean.selectedTabIndex) == 'Factoring' }">
+				<p:outputPanel rendered="#{contractDetailsBackingBean.managedBean.finalListOfSideMenu.get(contractDetailsBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.factoring'] }">
 					<ui:include src="/xhtml/ct/fulfilmentdetails/shared/factoring.xhtml"/>
 				</p:outputPanel>
 	
-				<p:outputPanel rendered="#{contractDetailsBackingBean.managedBean.finalListOfSideMenu.get(contractDetailsBackingBean.managedBean.selectedTabIndex) == 'Advanced Payment Tracking' }">
+				<p:outputPanel rendered="#{contractDetailsBackingBean.managedBean.finalListOfSideMenu.get(contractDetailsBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.advPaymentTracking'] }">
 				             	<ui:include src="/xhtml/ct/fulfilmentdetails/shared/paymentTracking.xhtml"/>
 				   </p:outputPanel>
 				
-				<p:outputPanel rendered="#{contractDetailsBackingBean.managedBean.finalListOfSideMenu.get(contractDetailsBackingBean.managedBean.selectedTabIndex) == 'Setting' }">
+				<p:outputPanel rendered="#{contractDetailsBackingBean.managedBean.finalListOfSideMenu.get(contractDetailsBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.sett'] }">
 					<ui:include	src="/xhtml/ct/fulfilmentdetails/shared/approverSetting.xhtml" />
 				   <ui:include	src="/xhtml/ct/fulfilmentdetails/shared/fulfilmentSetting.xhtml" />
 				</p:outputPanel>
