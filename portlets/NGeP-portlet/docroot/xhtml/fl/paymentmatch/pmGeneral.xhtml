@@ -11,7 +11,7 @@
 			<tr>
 				<td style="width: 126px;"><p:outputLabel
 						value="#{lbl['lbl.fl.ministry']}" /></td>
-				<td style="width: 360px;"><p:inputText size="50"
+				<td style="width: 360px;"><p:inputText size="53"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flFulfilmentOrder.flFulfilmentRequest.issuedOrgProfile.parentOrgProfile.orgName}"
 						disabled="true" /></td>
 				<td style="width: 150px;"><p:outputLabel value="#{lbl['lbl.fl.pm.supp.inv.no']}" /></td>
@@ -85,15 +85,15 @@
 	<p:panel header="PAYMENT DESCRIPTION" toggleable="true">
 		<table style="width: 100%">
 			<tr>
-				<td rowspan="4" valign="top" style="width: 115px;"><p:outputLabel
+				<td rowspan="4" valign="top" style="width: 127px;"><p:outputLabel
 						value="#{lbl['lbl.fl.pm.payment.desc']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td rowspan="4" style="width: 280px;"><p:inputTextarea cols="50" rows="6"
+				<td rowspan="4" style="width: 280px;"><p:inputTextarea cols="55" rows="6"
 						maxlength="255" style=" margin-bottom:5px;" id="paymentDesc"
 						label="PaymentDescription" required="true"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.description}" />
 				</td>
-				<td style="width: 100px;">
+				<td style="width: 106px;">
 					<p:message for="paymentDesc" display="icon" />
 				</td>
 				<td style="width: 120px;"><p:outputLabel
@@ -138,27 +138,27 @@
 							<td style="width: 25px;"><p:inputText size="15"
 									disabled="true"
 									value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flFulfilmentOrder.flFulfilmentRequest.smSupplier.regNo}" /></td>
-							<td style="width: 70px;"><p:outputLabel
+							<td style="width: 68px;"><p:outputLabel
 									value="#{lbl['lbl.fl.supp.mof.no']}" /></td>
-							<td><p:inputText size="21" disabled="true" /></td>
+							<td><p:inputText size="16" disabled="true" /></td>
 
 						</tr>
 					</table></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.name']}" /></td>
-				<td><p:inputText disabled="true" size="50"
+				<td><p:inputText disabled="true" size="53"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flFulfilmentOrder.flFulfilmentRequest.flSupplierDtl.supplierName}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.branch']}" /></td>
-				<td><p:inputText disabled="true" size="50"
+				<td><p:inputText disabled="true" size="53"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flFulfilmentOrder.flFulfilmentRequest.flSupplierDtl.branchName}" /></td>
 			</tr>
 			<tr>
 				<td valign="top"><p:outputLabel
 						value="#{lbl['lbl.fl.supp.address']}" /></td>
-				<td><p:inputTextarea cols="50" rows="8" disabled="true"
+				<td><p:inputTextarea cols="55" rows="8" disabled="true"
 						style=" margin-bottom:5px;"
 						value="#{paymentMatchBackingBean.getFullAddress(paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flFulfilmentOrder.flFulfilmentRequest.flSupplierDtl.smAddress)}" /></td>
 			</tr>
@@ -170,9 +170,9 @@
 							<td style="width: 25px;"><p:inputText size="15"
 									disabled="true"
 									value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flFulfilmentOrder.flFulfilmentRequest.flSupplierDtl.phoneNo}" /></td>
-							<td style="width: 65px;"><p:outputLabel
+							<td style="width: 68px;"><p:outputLabel
 									value="#{lbl['lbl.fl.supp.faxno']}" /></td>
-							<td><p:inputText size="21" disabled="true"
+							<td><p:inputText size="16" disabled="true"
 									value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flFulfilmentOrder.flFulfilmentRequest.flSupplierDtl.faxNo}" /></td>
 						</tr>
 					</table></td>
@@ -180,13 +180,13 @@
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.del.ord.contact.person']}" /></td>
-				<td><p:inputText disabled="true" size="50"
+				<td><p:inputText disabled="true" size="53"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flFulfilmentOrder.flFulfilmentRequest.flSupplierDtl.contactPerson}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.del.ord.contact.email']}" /></td>
-				<td><p:inputText disabled="true" size="50"
+				<td><p:inputText disabled="true" size="53"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flFulfilmentOrder.flFulfilmentRequest.flSupplierDtl.contactEmail}" /></td>
 			</tr>
 			<tr>
@@ -200,9 +200,9 @@
 		rendered="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flFulfilmentOrder.factored eq 'true'}">
 		<table style="width: 100%">
 			<tr>
-				<td style="width: 117px;"><p:outputLabel
+				<td style="width: 132px;"><p:outputLabel
 						value="#{lbl['lbl.fl.supp.fact.com']}" /></td>
-				<td><p:inputText disabled="true" size="50"
+				<td><p:inputText disabled="true" size="53"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flFulfilmentOrder.pmFinancialOrg.finOrgName}" /></td>
 				<td style="width: 133px;"><p:outputLabel
 						value="#{lbl['lbl.fl.payment.bank.name']}" /></td>
@@ -212,7 +212,7 @@
 			<tr>
 				<td style="width: 117px;"><p:outputLabel
 						value="#{lbl['lbl.fl.supp.fact.branch']}" /></td>
-				<td><p:inputText disabled="true" size="50"
+				<td><p:inputText disabled="true" size="53"
 						value="#{paymentMatchBackingBean.managedBean.branchName}" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.bank.acc.no']}" /></td>
 				<td><p:inputText size="45" disabled="true"
@@ -221,7 +221,7 @@
 			<tr>
 				<td valign="top"><p:outputLabel
 						value="#{lbl['lbl.fl.supp.address']}" /></td>
-				<td><p:inputTextarea cols="50" rows="8" disabled="true"
+				<td><p:inputTextarea cols="55" rows="8" disabled="true"
 						style=" margin-bottom:5px;"
 						value="#{paymentMatchBackingBean.managedBean.supplierAddress}" /></td>
 			</tr>
@@ -233,9 +233,9 @@
 							<td style="width: 25px;"><p:inputText size="15"
 									disabled="true"
 									value="#{paymentMatchBackingBean.managedBean.phoneNo}" /></td>
-							<td style="width: 65px;"><p:outputLabel
+							<td style="width: 68px;"><p:outputLabel
 									value="#{lbl['lbl.fl.supp.faxno']}" /></td>
-							<td><p:inputText size="21" disabled="true"
+							<td><p:inputText size="16" disabled="true"
 									value="#{paymentMatchBackingBean.managedBean.faxNo}" /></td>
 						</tr>
 					</table></td>
@@ -243,13 +243,13 @@
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.del.ord.contact.person']}" /></td>
-				<td><p:inputText disabled="true" size="50"
+				<td><p:inputText disabled="true" size="53"
 						value="#{paymentMatchBackingBean.managedBean.contactPerson}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.del.ord.contact.email']}" /></td>
-				<td><p:inputText disabled="true" size="50"
+				<td><p:inputText disabled="true" size="53"
 						value="#{paymentMatchBackingBean.managedBean.contactEmail}" /></td>
 			</tr>
 			<tr>
