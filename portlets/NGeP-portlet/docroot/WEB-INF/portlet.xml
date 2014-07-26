@@ -1897,7 +1897,7 @@
 	</portlet>
 	<portlet>
 		<portlet-name>scDirectPurchaseTask</portlet-name>
-		<display-name>Direct Purchase Task</display-name>
+		<display-name>Review / Request Note</display-name>
 		<portlet-class>
 			org.portletfaces.bridge.GenericFacesPortlet
 		</portlet-class>
@@ -1911,8 +1911,8 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>Direct Purchase Task</title>
-			<short-title>NewJSFPortlet</short-title>
+			<title>Review / Request Note</title>
+			<short-title>Review / Request Note</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
@@ -1928,39 +1928,6 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>
-
-	<portlet>
-		<portlet-name>scPurchaseInDefault</portlet-name>
-		<display-name>Purchase In Default</display-name>
-		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
-		<init-param>
-			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/sc/directpurchase/purchaseInDefaultMain.xhtml</value>
-		</init-param>
-		<expiration-cache>0</expiration-cache>
-		<supports>
-			<mime-type>text/html</mime-type>
-			<portlet-mode>view</portlet-mode>
-		</supports>
-		<portlet-info>
-			<title>Purchase In Default</title>
-			<short-title>Purchase In Default</short-title>
-			<keywords></keywords>
-		</portlet-info>
-		<security-role-ref>
-			<role-name>administrator</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>guest</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>power-user</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>user</role-name>
-		</security-role-ref>
-	</portlet>
-	
 	<portlet>
 		<portlet-name>templateDoc</portlet-name>
 		<display-name>templateDoc</display-name>
@@ -3822,40 +3789,8 @@
 	 		<role-name>user</role-name>
 	 	</security-role-ref>
 	 </portlet>
-	  	  
-	  <portlet>
-		<portlet-name>PurchaseInquiry</portlet-name>
-	  	<display-name>PurchaseInquiry</display-name>
-		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
-		<init-param>
-			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/sc/directpurchase/prInquiryMain.xhtml</value>
-		</init-param>
-		<expiration-cache>0</expiration-cache>
-		<supports>
-			<mime-type>text/html</mime-type>
-			<portlet-mode>view</portlet-mode>
-		</supports>
-		<portlet-info>
-			<title>Purchase Inquiry </title>
-			<short-title>Purchase Inquiry</short-title>
-			<keywords></keywords>
-		</portlet-info>
-		<security-role-ref>
-			<role-name>administrator</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>guest</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>power-user</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>user</role-name>
-		</security-role-ref>
-	</portlet>
-	
-		<portlet>
+	  
+	<portlet>
 		<portlet-name>ppDisburseBudgetList</portlet-name>
 		<display-name>Disbursed Budget List</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
@@ -4264,72 +4199,7 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>	
-	<portlet>
-		<portlet-name>Simple Quote</portlet-name>
-		<display-name>Simple Quote</display-name>
-		<portlet-class>
-			org.portletfaces.bridge.GenericFacesPortlet
-		</portlet-class>
-		<init-param>
-			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/sc/directpurchase/simpleQuote.xhtml</value>
-		</init-param>
-		<expiration-cache>0</expiration-cache>
-		<supports>
-			<mime-type>text/html</mime-type>
-			<portlet-mode>view</portlet-mode>
-		</supports>
-		<portlet-info>
-			<title>Simple Quote</title>
-			<short-title>NewJSFPortlet</short-title>
-			<keywords></keywords>
-		</portlet-info>
-		<security-role-ref>
-			<role-name>administrator</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>guest</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>power-user</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>user</role-name>
-		</security-role-ref>
-	</portlet>
-	<portlet>
-		<portlet-name>Supplier View</portlet-name>
-		<display-name>Supplier View</display-name>
-		<portlet-class>
-			org.portletfaces.bridge.GenericFacesPortlet
-		</portlet-class>
-		<init-param>
-			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/sc/directpurchase/supplierViewMain.xhtml</value>
-		</init-param>
-		<expiration-cache>0</expiration-cache>
-		<supports>
-			<mime-type>text/html</mime-type>
-			<portlet-mode>view</portlet-mode>
-		</supports>
-		<portlet-info>
-			<title>Supplier View</title>
-			<short-title>NewJSFPortlet</short-title>
-			<keywords></keywords>
-		</portlet-info>
-		<security-role-ref>
-			<role-name>administrator</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>guest</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>power-user</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>user</role-name>
-		</security-role-ref>
-	</portlet>
+	
 	<portlet>
 		<portlet-name>pmZone</portlet-name>
 		<display-name>Zone Search</display-name>
@@ -4634,7 +4504,7 @@
 	
 		<portlet>
 			<portlet-name>Review Purchase Inquiry</portlet-name>
-			<display-name>Review Purchase Inquiry</display-name>
+			<display-name>Review / Request Purchase Inquiry</display-name>
 			<portlet-class>
 				org.portletfaces.bridge.GenericFacesPortlet
 			</portlet-class>
@@ -4650,8 +4520,8 @@
 				<portlet-mode>view</portlet-mode>
 			</supports>
 			<portlet-info>
-				<title>Review Purchase Inquiry</title>
-				<short-title>NewJSFPortlet</short-title>
+				<title>Review / Request Purchase Inquiry</title>
+				<short-title>Review / Request Purchase Inquiry</short-title>
 				<keywords></keywords>
 			</portlet-info>
 			<security-role-ref>
@@ -4686,7 +4556,7 @@
 			</supports>
 			<portlet-info>
 				<title>Review Purchase In Default</title>
-				<short-title>NewJSFPortlet</short-title>
+				<short-title>Review Purchase In Default</short-title>
 				<keywords></keywords>
 			</portlet-info>
 			<security-role-ref>
@@ -4721,7 +4591,7 @@
 			</supports>
 			<portlet-info>
 				<title>Review Simple Quote</title>
-				<short-title>NewJSFPortlet</short-title>
+				<short-title>Review Simple Quote</short-title>
 				<keywords></keywords>
 			</portlet-info>
 			<security-role-ref>
@@ -4772,7 +4642,7 @@
 	</portlet>			
 		<portlet>
 			<portlet-name>Review Supplier View</portlet-name>
-			<display-name>Review Supplier View</display-name>
+			<display-name>Response Simple Quote</display-name>
 			<portlet-class>
 				org.portletfaces.bridge.GenericFacesPortlet
 			</portlet-class>
@@ -4788,8 +4658,8 @@
 				<portlet-mode>view</portlet-mode>
 			</supports>
 			<portlet-info>
-				<title>Review Supplier View</title>
-				<short-title>NewJSFPortlet</short-title>
+				<title>Response Simple Quote</title>
+				<short-title>Response Simple Quote</short-title>
 				<keywords></keywords>
 			</portlet-info>
 			<security-role-ref>
