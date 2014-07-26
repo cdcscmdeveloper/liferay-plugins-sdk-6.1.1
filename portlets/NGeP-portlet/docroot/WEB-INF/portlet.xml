@@ -1670,7 +1670,7 @@
 
 <portlet>
 		<portlet-name>BusinessOwner</portlet-name>
-		<display-name>BusinessOwner</display-name>
+		<display-name>Prepare Specification (BO)</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
@@ -1683,8 +1683,8 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>BusinessOwner</title>
-			<short-title>BusinessOwner</short-title>
+			<title>Prepare Specification (BO)</title>
+			<short-title>Prepare Specification (BO)</short-title>
 
 			<keywords></keywords>
 		</portlet-info>
@@ -1703,7 +1703,7 @@
 	</portlet>
 	<portlet>
 		<portlet-name>scSpecification BusinessOwner</portlet-name>
-		<display-name>Specification BusinessOwner</display-name>
+		<display-name>Prepare Specification (BO)</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
@@ -1716,8 +1716,8 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>Specification BusinessOwner</title>
-			<short-title>Specification BusinessOwner</short-title>
+			<title>Prepare Specification (BO)</title>
+			<short-title>Prepare Specification (BO)</short-title>
 	
 			<keywords></keywords>
 		</portlet-info>
@@ -1738,7 +1738,7 @@
 	
 	<portlet>
 		<portlet-name>scSpecification Committee</portlet-name>
-		<display-name>Specification Committee</display-name>
+		<display-name>Prepare QT Checklist</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
@@ -1750,8 +1750,8 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>Specification Committee</title>
-			<short-title>Specification Committee</short-title>
+			<title>Prepare QT Checklist</title>
+			<short-title>Prepare QT Checklist</short-title>
 
 			<keywords></keywords>
 		</portlet-info>
