@@ -765,6 +765,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		getLoginUserOrg();
 		
 		if (taskId != null) {
+			renewSesionObject();
 			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 			String ctx = getFacesScopes().getBPMAuthenticationCtxToken();
 			BpmRequestDTO reqDTO = new BpmRequestDTO();
@@ -1139,6 +1140,10 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	}
 	
 	public void clearPopupLists(){
+		updateSelectedTreeNodes();
+		if(getManagedBean().getSelectedNodes().length==0) {
+			throw new EpException(MessageConst.ERROR_100049);
+		}
 		getManagedBean().setVotFundId(0L);
 		getManagedBean().setAssetIndId(null);
 		getManagedBean().setGlAccountId(null);
@@ -1152,10 +1157,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		getManagedBean().setSetiaList(new ArrayList<PmSetia>());
 		getManagedBean().setSubSetiaList(new ArrayList<PmSubSetia>());
 		
-		updateSelectedTreeNodes();
-		if(getManagedBean().getSelectedNodes().length==0) {
-			throw new EpException(MessageConst.ERROR_100049);
-		}
 		RequestContext.getCurrentInstance().execute("applyBulkCharge.show()");
 	}
 	
@@ -1566,8 +1567,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		getManagedBean().setSetiaId(0L);
 		getManagedBean().setSubSetiaId(0L);	
 		getManagedBean().setVotFundList(resDTO.getPmOrgProfile().getPmPtjGroup().getPmVotFunds());
-		
-		
 		
 		return resDTO;
 	}
