@@ -7,8 +7,10 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<ui:define name="contentSection">
-	<ac:title value="#{lbl['lbl.sc.request.note.title']}"/>
-	<p:messages showDetail="true" autoUpdate="true" closable="true" severity="error, info" showSummary="false" />
+	 <p:messages showDetail="true" autoUpdate="true" closable="true" severity="error, info" showSummary="false" />
+	  <c:if test="#{requestNoteBackingBean.managedBean.titleChecker}">
+			<ac:title value="#{lbl['lbl.sc.request.note']}"/>
+	  </c:if>
 	<p:panel id="requestNoteId">
 			 <ui:include
 				src="/xhtml/sc/directpurchase/common/commonReqNoteButtons.xhtml" /> 

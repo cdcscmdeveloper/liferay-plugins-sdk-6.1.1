@@ -629,6 +629,8 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 		   initialInformation(purchaseInDefault);
 		   retrieveReasonDescListByCategory();
 		   justificationTypeEvent();
+		   // title checker
+		   getManagedBean().setTitleChecker(Boolean.FALSE);
 		   FacesContext fc = FacesContext.getCurrentInstance();
 		   fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "purchaseInDefaultMain");
 	   }

@@ -113,7 +113,7 @@
 							var="supplierItem" itemLabel="#{supplierItem.smSupplier.companyName}"
 							itemValue="#{supplierItem.smSupplier.supplierId}"></f:selectItems>
 							
-							<p:ajax event="change" update="priceType" partialSubmit="true"
+							<p:ajax event="change" update="priceType ,offerPriceId" partialSubmit="true"
 									process="@this"
 									listener="#{requestNoteBackingBean.supplierLister(requestNoteDtl.scRequestSupplierItem.supplierItemId, requestNoteDtl.priceType.parameterId, requestNoteDtl,requestNoteDtl.requestItem.supplierItems , requestNoteDtl.assignedUser.userId ,requestNoteDtl.deliverTermType.parameterId)}" />
 					</p:selectOneMenu>

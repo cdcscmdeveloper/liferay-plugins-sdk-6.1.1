@@ -1,3 +1,4 @@
+
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
 template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
@@ -7,9 +8,12 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<ui:define name="contentSection">
-	<p:messages showDetail="true" autoUpdate="true" closable="true" severity="error, info"  showSummary="false"/>
-	<ac:title value="#{lbl['lbl.sc.pid.title']}"/> 
-    <p:panel id="mailPanel">
+	<c:if test="#{purchaseInDefaultBackingBean.managedBean.titleChecker}">
+		 <ac:title value="#{lbl['lbl.sc.pid']}" />
+	</c:if>
+		
+    <p:messages showDetail="true" autoUpdate="true" closable="true" severity="error, info"  showSummary="false"/>
+   <p:panel id="mailPanel">
 	  <div align="right">
 	    <c:if test="#{purchaseInDefaultBackingBean.managedBean.taskId eq null}">
 	      

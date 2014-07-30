@@ -54,6 +54,8 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	private boolean supplierFlag;
 	private Integer stockAvailable;
 	
+	private boolean titleChecker = Boolean.TRUE;
+	
 	public PurchaseInquiryManagedBean() {
 		List<ScPRIRemark> remarks = new ArrayList<ScPRIRemark>();
 		scPrInquiry.setRemarks(remarks);
@@ -351,4 +353,19 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	public void setPmOrgProfile(PmOrgProfile pmOrgProfile) {
 		this.pmOrgProfile = pmOrgProfile;
 	}
+
+	/**
+	 * @return the titleChecker
+	 */
+	public boolean isTitleChecker() {
+		return titleChecker;
+	}
+
+	/**
+	 * @param titleChecker the titleChecker to set
+	 */
+	public void setTitleChecker(boolean titleChecker) {
+		this.titleChecker = titleChecker;
+	}
+	
 }

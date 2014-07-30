@@ -7,9 +7,12 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
    <ui:define name="contentSection">
-   <p:messages showDetail="true" autoUpdate="true" closable="true"  showSummary="false" severity="error, info" id="mainMsg"/>
-   <ac:title value="#{lbl['lbl.sc.pr.inquiry.title']}"/> 
-   <p:panel id="mainPanel">
+	<c:if test="#{purchaseInquiryBackingBean.managedBean.titleChecker}">
+			<ac:title value="#{lbl['lbl.sc.pr.inquiry']}" />
+	</c:if>
+
+	 <p:messages showDetail="true" autoUpdate="true" closable="true"  showSummary="false" severity="error, info" id="mainMsg"/>
+  <p:panel id="mainPanel">
    <div align="right">
 	    <c:if test="#{purchaseInquiryBackingBean.managedBean.taskId eq null}">
 	            <p:commandButton  immediate="true" value="#{lbl['lbl.sc.action.back.to.search.catalogue']}" icon="ui-icon-back"

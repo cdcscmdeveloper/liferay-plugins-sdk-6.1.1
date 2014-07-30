@@ -13,7 +13,6 @@ import javax.faces.model.SelectItem;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
-import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefault;
@@ -53,6 +52,8 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean{
 	private String pageNavToRequestNote;
 	private PmReason pmReason;
 	private boolean checkContractItem;
+	
+	private boolean titleChecker = Boolean.TRUE;
     
 	public PurchaseInDefaultManagedBean() {
 	}
@@ -288,6 +289,20 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean{
 	 */
 	public void setCheckContractItem(boolean checkContractItem) {
 		this.checkContractItem = checkContractItem;
+	}
+
+	/**
+	 * @return the titleChecker
+	 */
+	public boolean isTitleChecker() {
+		return titleChecker;
+	}
+
+	/**
+	 * @param titleChecker the titleChecker to set
+	 */
+	public void setTitleChecker(boolean titleChecker) {
+		this.titleChecker = titleChecker;
 	}
 
 }

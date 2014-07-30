@@ -84,6 +84,8 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     private String procurementType;
     private String priceType;
     
+    private boolean titleChecker = Boolean.TRUE;
+    
     // BPM Task
     private SCDirectPurchaseDataType directPurchaseDataType;
     
@@ -692,6 +694,18 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	 */
 	public void setAddToCartFlag(boolean addToCartFlag) {
 		this.addToCartFlag = addToCartFlag;
+	}
+	/**
+	 * @return the titleChecker
+	 */
+	public boolean isTitleChecker() {
+		return titleChecker;
+	}
+	/**
+	 * @param titleChecker the titleChecker to set
+	 */
+	public void setTitleChecker(boolean titleChecker) {
+		this.titleChecker = titleChecker;
 	}
 	
 }

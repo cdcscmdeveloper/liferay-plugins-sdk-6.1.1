@@ -336,6 +336,9 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
                
 				// For status 
 				getCurrentStatus(res.getDocStatus().longValue());
+				
+				// title checker
+				getManagedBean().setTitleChecker(Boolean.FALSE);
 				FacesContext fc = FacesContext.getCurrentInstance();
 				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "commonRequestNote");
 			}
@@ -1151,17 +1154,6 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		}
 	}
 	
-	public String  getKey() {
-		String test = "";
-		if (getManagedBean().getTaskId()== null) {
-			test = "requestNoteDtl";
-		} else{
-			test = "requestNoteDtl.requestNoteDtlId";
-		}
-		return test;
-	}
-	
-	
 	 public void initialInformation(ScRequestNote requestNote){
 		    DualListModel<PmUser>	approvalUsers;
 			IUserSO iUserSO	=	(IUserSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
@@ -1323,7 +1315,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		debugLogger("supplierLister");
 		for (ScRequestSupplierItem scRequestSupplierItem : supplierItems) {
 			if(scRequestSupplierItem.getSmSupplier().getSupplierId().equals(supplierId)){
-				if(priceTypeId !=null){
+				if(priceTypeId != null && priceTypeId > 0){
 
 					if(scRequestSupplierItem.getSupplierItemPrices()!= null && scRequestSupplierItem.getSupplierItemPrices().size()>0){
 

@@ -748,6 +748,9 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 		 getManagedBean().setScPrInquiry(prInquiry);
 		 initializeRemarks(prInquiry);
 		 getCurrentStatus(res.getDocStatus().longValue()); 
+		 
+		 // title checker
+		 getManagedBean().setTitleChecker(Boolean.FALSE);
 		 FacesContext fc = FacesContext.getCurrentInstance();
 		 fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "prInquiryMain");
 	 }	
