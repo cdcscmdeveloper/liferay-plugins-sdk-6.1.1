@@ -1,0 +1,20 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:panel>
+		<p:commandButton value="Back" immediate="true"
+					icon="ui-icon-back" update=":form" process="@this"
+			action="#{organisationBackingBean.backToSearch}" 
+			style="float:left;" />
+		<p:commandButton value="Save"
+			action="#{organisationBackingBean.saveOrganization}"
+			icon="ui-icon-save" style="float:right;" />
+
+		<br />
+		<br />
+	</p:panel>
+</ui:composition>

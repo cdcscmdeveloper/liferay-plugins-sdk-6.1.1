@@ -1,0 +1,252 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<ui:define name="contentSection">
+		<p:panel header="#{lbl['lbl.pm.location.details']}" toggleable="true">
+			<p:outputPanel>
+				
+					<table>
+					<ui:fragment
+					rendered="#{locationBackingBean.managedBean.selectedType eq 'ST'}">
+						<tr>
+							<td class="TableFieldLeft"><h:outputLabel
+									value="#{lbl['lbl.pm.location.type']}"></h:outputLabel></td>
+							<td class="TableFieldRight"><p:inputText value="STATE"
+									disabled="true" /></td>
+						</tr>
+						
+						<tr>
+							<td class="TableFieldLeft"><p:outputLabel
+									value="#{lbl['lbl.pm.state.code']}" /><p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+							<td class="TableFieldRight"><p:inputText id="statecode"
+									label="#{lbl['lbl.pm.state.code']}"
+									value="#{locationBackingBean.managedBean.state.stateCode}"
+									required="true" /> <p:message id="statecodeMsg"
+									for="statecode" display="icon" /></td>
+						</tr>
+						<tr>
+							<td class="TableFieldLeft"><h:outputLabel
+									value="#{lbl['lbl.pm.state.name']}"></h:outputLabel></td>
+							<td class="TableFieldRight"><p:inputText
+									value="#{locationBackingBean.managedBean.state.stateName}"
+									size="50" disabled="true" /></td>
+						</tr>
+						<tr>
+							<td class="TableFieldLeft" style="width: 30%"><h:outputLabel
+									value="#{lbl['lbl.pm.country']}"></h:outputLabel></td>
+							<td class="TableFieldRight"><p:inputText
+									value="#{locationBackingBean.managedBean.state.pmCountry.countryName}"
+									size="50" disabled="true" /></td>
+						</tr>
+						<tr>
+							<td class="TableFieldLeft"><h:outputLabel
+									value="#{lbl['lbl.pm.location.status']}"/><p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+							<td><p:selectOneMenu
+									value="#{locationBackingBean.managedBean.state.recordStatusFlg}" required="true"
+									style="margin-bottom: 5px;">
+									<f:selectItems
+										value="#{locationBackingBean.getDropdownCodeValues(ParameterTypeConst.recordStatus)}" />
+								</p:selectOneMenu></td>
+						</tr>
+					
+				</ui:fragment>
+				<ui:fragment
+					rendered="#{locationBackingBean.managedBean.selectedType eq 'DV'}">
+					
+						<tr>
+							<td class="TableFieldLeft"><h:outputLabel
+									value="#{lbl['lbl.pm.location.type']}"></h:outputLabel></td>
+							<td class="TableFieldRight"><p:inputText value="DIVISION"
+									disabled="true" /></td>
+						</tr>
+						<tr>
+							<td class="TableFieldLeft"><p:outputLabel
+									value="#{lbl['lbl.pm.division.code']}" /><p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+							<td class="TableFieldRight"><p:inputText id="divisioncode"
+									label="#{lbl['lbl.pm.division.code']}"
+									value="#{locationBackingBean.managedBean.division.divisionCode}"
+									required="true" /> <p:message id="divisioncodeMsg"
+									for="divisioncode" display="icon" /></td>
+						</tr>
+						<tr>
+							<td class="TableFieldLeft"><h:outputLabel
+									value="#{lbl['lbl.pm.division.name']}"></h:outputLabel></td>
+							<td class="TableFieldRight"><p:inputText
+									value="#{locationBackingBean.managedBean.division.divisionName}"
+									disabled="true" size="50" /></td>
+						</tr>
+						<tr>
+							<td class="TableFieldLeft"><h:outputLabel
+									value="#{lbl['lbl.pm.state.name']}"></h:outputLabel></td>
+							<td class="TableFieldRight"><p:inputText
+									value="#{locationBackingBean.managedBean.division.pmState.stateName}"
+									size="50" disabled="true" /></td>
+						</tr>
+						<tr>
+							<td class="TableFieldLeft" style="width: 30%"><h:outputLabel
+									value="#{lbl['lbl.pm.country']}"></h:outputLabel></td>
+							<td class="TableFieldRight"><p:inputText disabled="true"
+									value="#{locationBackingBean.managedBean.division.pmState.pmCountry.countryName}"
+									size="50" /></td>
+						</tr>
+						<tr>
+							<td class="TableFieldLeft" style="width: 30%"><h:outputLabel
+									value="#{lbl['lbl.pm.location.status']}"/><p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+							<td><p:selectOneMenu
+									value="#{locationBackingBean.managedBean.division.recordStatusFlg}" required="true"
+									style="margin-bottom: 5px;">
+									<f:selectItems
+										value="#{locationBackingBean.getDropdownCodeValues(ParameterTypeConst.recordStatus)}" />
+								</p:selectOneMenu></td>
+						</tr>
+				
+				</ui:fragment>
+				<ui:fragment
+					rendered="#{locationBackingBean.managedBean.selectedType eq 'DS'}">
+					
+						<tr>
+							<td class="TableFieldLeft"><h:outputLabel
+									value="#{lbl['lbl.pm.location.type']}"></h:outputLabel></td>
+							<td class="TableFieldRight"><p:inputText value="DISTRICT"
+									disabled="true" /></td>
+						</tr>
+						<tr>
+							<td class="TableFieldLeft" style="width: 30%"><p:outputLabel
+									value="#{lbl['lbl.pm.district.code']}" /><p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+
+							<td class="TableFieldRight"><p:inputText id="districtcode"
+									label="#{lbl['lbl.pm.district.code']}"
+									value="#{locationBackingBean.managedBean.district.districtCode}"
+									required="true" /> <p:message id="districtcodeMsg"
+									for="districtcode" display="icon" /></td>
+						</tr>
+						<tr>
+							<td class="TableFieldLeft" style="width: 30%"><h:outputLabel
+									value="#{lbl['lbl.pm.district.name']}"></h:outputLabel></td>
+							<td class="TableFieldRight"><p:inputText
+									value="#{locationBackingBean.managedBean.district.districtName}"
+									disabled="true" size="50" /></td>
+						</tr>
+						<tr>
+							<td class="TableFieldLeft" style="width: 30%"><p:outputLabel
+									value="#{lbl['lbl.pm.division']}" /></td>
+							<td class="TableFieldRight"><p:inputText disabled="true"
+									value="#{locationBackingBean.managedBean.division.divisionName}"
+									style="margin-bottom: 5px;" size="50" /></td>
+						</tr>
+
+						<tr>
+							<td class="TableFieldLeft"><h:outputLabel
+									value="#{lbl['lbl.pm.state.name']}"></h:outputLabel></td>
+							<td class="TableFieldRight"><p:inputText disabled="true"
+									value="#{locationBackingBean.managedBean.district.pmState.stateName}"
+									style="margin-bottom: 5px;" size="50" /></td>
+						</tr>
+						<tr>
+							<td class="TableFieldLeft"><h:outputLabel
+									value="#{lbl['lbl.pm.country']}"></h:outputLabel></td>
+							<td class="TableFieldRight"><p:outputPanel id="stateIdd">
+									<p:inputText disabled="true" style="margin-bottom: 5px;"
+										value="#{locationBackingBean.managedBean.district.pmState.pmCountry.countryName}"
+										size="50" />
+								</p:outputPanel></td>
+						</tr>
+						<tr>
+							<td class="TableFieldLeft"><h:outputLabel
+									value="#{lbl['lbl.pm.location.status']}"/><p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+							<td><p:selectOneMenu
+									value="#{locationBackingBean.managedBean.district.recordStatusFlg}" required="true"
+									style="margin-bottom: 5px;">
+									<f:selectItems
+										value="#{locationBackingBean.getDropdownCodeValues(ParameterTypeConst.recordStatus)}" />
+								</p:selectOneMenu></td>
+						</tr>
+				
+				</ui:fragment>
+				<ui:fragment
+					rendered="#{locationBackingBean.managedBean.selectedType eq 'CT'}">
+				
+						<tr>
+							<td class="TableFieldLeft" style="width: 30%"><h:outputLabel
+									value="#{lbl['lbl.pm.location.type']}"></h:outputLabel></td>
+							<td class="TableFieldRight"><p:inputText value="CITY"
+									disabled="true" /></td>
+						</tr>
+						<tr>
+							<td class="TableFieldLeft" style="width: 30%"><p:outputLabel
+									value="#{lbl['lbl.pm.city.code']}" /><p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+
+							<td class="TableFieldRight"><p:inputText id="citycode"
+									label="#{lbl['lbl.pm.city.code']}"
+									value="#{locationBackingBean.managedBean.city.cityCode}"
+									required="true" /> <p:message id="citycodeMsg" for="citycode"
+									display="icon" /></td>
+						</tr>
+
+						<tr>
+							<td class="TableFieldLeft" style="width: 30%"><h:outputLabel
+									value="#{lbl['lbl.pm.city.name']}"></h:outputLabel></td>
+							<td class="TableFieldRight"><p:inputText
+									value="#{locationBackingBean.managedBean.city.cityName}"
+									size="50" disabled="true" /></td>
+						</tr>
+						<tr>
+							<td class="TableFieldLeft" style="width: 30%"><p:outputLabel
+									value="#{lbl['lbl.pm.district']}" /></td>
+							<td class="TableFieldRight"><p:inputText disabled="true"
+									value="#{locationBackingBean.managedBean.city.pmDistrict.districtName}"
+									style="margin-bottom: 5px;" size="50" /></td>
+						</tr>
+						<tr>
+							<td class="TableFieldLeft" style="width: 30%"><p:outputLabel
+									value="#{lbl['lbl.pm.division']}" /></td>
+							<td class="TableFieldRight"><p:inputText disabled="true"
+									value="#{locationBackingBean.managedBean.city.cityName}"
+									style="margin-bottom: 5px;" size="50" /></td>
+						</tr>
+
+						<tr>
+							<td class="TableFieldLeft" style="width: 30%"><h:outputLabel
+									value="#{lbl['lbl.pm.state.name']}"></h:outputLabel></td>
+							<td class="TableFieldRight"><p:inputText disabled="true"
+									value="#{locationBackingBean.managedBean.city.pmDistrict.pmState.stateName}"
+									style="margin-bottom: 5px;" size="50" /></td>
+						</tr>
+						<tr>
+							<td class="TableFieldLeft" style="width: 30%"><h:outputLabel
+									value="#{lbl['lbl.pm.country']}"></h:outputLabel></td>
+							<td class="TableFieldRight"><p:inputText disabled="true"
+									value="#{locationBackingBean.managedBean.city.pmDistrict.pmState.pmCountry.countryName}"
+									style="margin-bottom: 5px;" size="50" /></td>
+						</tr>
+						<tr>
+							<td class="TableFieldLeft" style="width: 30%"><h:outputLabel
+									value="#{lbl['lbl.pm.location.status']}"/><p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+							<td><p:selectOneMenu
+									value="#{locationBackingBean.managedBean.city.recordStatusFlg}" required="true"
+									style="margin-bottom: 5px;">
+									<f:selectItems
+										value="#{locationBackingBean.getDropdownCodeValues(ParameterTypeConst.recordStatus)}" />
+								</p:selectOneMenu></td>
+						</tr></ui:fragment>
+					</table>
+				
+			</p:outputPanel>
+
+		</p:panel>
+
+	</ui:define>
+</ui:composition>

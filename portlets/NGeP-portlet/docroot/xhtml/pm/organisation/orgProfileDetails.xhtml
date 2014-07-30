@@ -1,0 +1,150 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<p:panel>
+		<h:panelGrid columns="2">
+			<h:outputLabel value="#{lbl['lbl.pm.organisation.orgType']}"></h:outputLabel>
+			<p:selectOneMenu id="orgtypeId"
+				label="#{lbl['lbl.pm.organisation.orgType']}"
+				value="#{organisationBackingBean.managedBean.orgType}"
+				style="width: 230px;margin-bottom: 5px;" required="true">				
+				<f:selectItems
+					value="#{organisationBackingBean.getDropdownCodeValues(ParameterTypeConst.organisationTypes)}" />
+				<p:ajax event="change" update="@form"
+					listener="#{organisationBackingBean.resetOrgProfile}" />
+			</p:selectOneMenu>
+			<p:message id="orgtypeMsg" for="orgtypeId" display="icon" />
+
+		</h:panelGrid>
+	</p:panel>
+	<p:panel header="#{lbl['lbl.pm.header.general.org.profile']}"
+		id="orgproflieId" styleClass="sampleDetails" toggleable="true">
+		<table>
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.pm.organisation.orgCode']}" /></td>
+				<td><p:inputText id="orgCode"
+						label="#{lbl['lbl.pm.organisation.orgCode']}"
+						value="#{organisationBackingBean.managedBean.orgProfile.pmOrgValidity.orgCode}"
+						required="true" /> <p:message id="orgCodeMsg" for="orgCode"
+						display="icon" /></td>
+				<ui:fragment
+					rendered="#{organisationBackingBean.managedBean.orgType eq 'FPJ'}">
+					<td><h:outputText
+							value="#{lbl['lbl.pm.organisation.groupOrg']}" /></td>
+					<td><p:selectBooleanCheckbox
+							value="#{organisationBackingBean.managedBean.orgProfile.groupOrg}">
+							<p:ajax update="@form" />
+						</p:selectBooleanCheckbox></td>
+				</ui:fragment>
+				<ui:fragment
+					rendered="#{organisationBackingBean.managedBean.orgType eq 'STG' or organisationBackingBean.managedBean.orgType eq 'GLC' or organisationBackingBean.managedBean.orgType eq 'FPJ' or organisationBackingBean.managedBean.orgType eq 'STB' or organisationBackingBean.managedBean.orgType eq 'LAT'}">
+					<td><h:outputText
+							value="#{lbl['lbl.pm.organisation.govSeller']}" /></td>
+					<td><p:selectBooleanCheckbox
+							value="#{organisationBackingBean.managedBean.orgProfile.govtSeller}">
+							<p:ajax update="@form" />
+						</p:selectBooleanCheckbox></td>
+				</ui:fragment>
+
+			</tr>
+			<tr>
+				<td><h:outputLabel
+						value="#{lbl['lbl.pm.organisation.orgName']}"></h:outputLabel></td>
+
+				<td><p:inputText id="orgName"
+						label="#{lbl['lbl.pm.organisation.orgName']}"
+						value="#{organisationBackingBean.managedBean.orgProfile.pmOrgValidity.orgName}"
+						required="true" size="40" /> <p:message id="orgNameMsg"
+						for="orgName" display="icon" /></td>
+			</tr>
+			<ui:fragment
+				rendered="#{organisationBackingBean.managedBean.orgType eq 'FPJ' or organisationBackingBean.managedBean.orgType eq 'FMI' }">
+				<tr>
+					<td><h:outputLabel
+							value="#{lbl['lbl.pm.organisation.effDate']}"></h:outputLabel></td>
+					<td><p:calendar
+							value="#{organisationBackingBean.managedBean.orgProfile.pmOrgValidity.effDate}"
+							id="effDate" showOn="button" size="29" readonlyInput="true"  
+							mindate="#{organisationBackingBean.managedBean.currentDate}"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+							<p:ajax event="dateSelect" update="expDate" />
+						</p:calendar></td>
+
+
+					<td><h:outputLabel
+							value="#{lbl['lbl.pm.organisation.expDate']}"></h:outputLabel></td>
+
+					<td><p:calendar id="expDate"
+							value="#{organisationBackingBean.managedBean.orgProfile.pmOrgValidity.expDate}"
+							showOn="button" size="20"
+							mindate="#{organisationBackingBean.managedBean.orgProfile.pmOrgValidity.effDate}"
+							readonlyInput="true"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+
+						</p:calendar></td>
+				</tr>
+			</ui:fragment>
+
+			<ui:fragment
+				rendered="#{organisationBackingBean.managedBean.orgType eq 'PSH' or organisationBackingBean.managedBean.orgType eq 'PSQ' }">
+				<tr>
+					<td><h:outputLabel value="#{lbl['lbl.pm.zone.name']}"></h:outputLabel></td>
+					<td><p:selectOneMenu id="zoneCode"
+						label="#{lbl['lbl.pm.zone.name']}"
+							value="#{organisationBackingBean.managedBean.zoneId}"
+							required="#{organisationBackingBean.managedBean.orgType eq 'PSH' or organisationBackingBean.managedBean.orgType eq 'PSQ' }"
+							style="width: 218px;margin-bottom: 5px;">
+							<f:selectItem itemValue="0" itemLabel="---Select---" />
+							<f:selectItems var="zoneLs"
+								value="#{organisationBackingBean.managedBean.zones}"
+								itemLabel="#{zoneLs.zoneName}" itemValue="#{zoneLs.zoneId}" />
+
+						</p:selectOneMenu> <p:message id="zoneCodeMsg" for="zoneCode" display="icon" /></td>
+
+
+				</tr>
+			</ui:fragment>
+			<tr>
+				<td><h:outputLabel value="#{lbl['lbl.pm.organisation.status']}"></h:outputLabel></td>
+				<td><p:selectOneMenu id="orgStatus"
+						label="#{lbl['lbl.pm.organisation.status']}"
+						value="#{organisationBackingBean.managedBean.orgProfile.pmOrgValidity.recordStatusFlg}"
+						rendered="true" required="true" style="margin-bottom: 5px;">
+						
+						<f:selectItems
+					value="#{organisationBackingBean.getDropdownCodeValues(ParameterTypeConst.recordStatus)}" />
+					</p:selectOneMenu> <p:message id="orgStatusMsg" for="orgStatus" display="icon" /></td>
+			</tr>
+		</table>
+	</p:panel>
+	<!-- <ui:fragment
+		rendered="#{organisationBackingBean.managedBean.orgType eq 'FPJ'}">
+		<ui:include src="/xhtml/pm/organisation/orgControlProfile.xhtml" />
+	</ui:fragment> -->
+
+
+	<p:panel header="#{lbl['lbl.pm.header.general.org.address']}"
+		toggleable="true">
+
+		<p:tabView>
+			<p:tab title="#{lbl['lbl.pm.header.general.org.office']}">
+				<ui:include src="/xhtml/pm/organisation/orgOfficeAddress.xhtml" />
+			</p:tab>
+
+
+			<p:tab title="#{lbl['lbl.pm.header.general.org.delivery']}"
+				rendered="#{organisationBackingBean.managedBean.orgType eq 'FPJ'}">
+				<ui:include src="/xhtml/pm/organisation/orgDeliveryAddres.xhtml" />
+			</p:tab>
+
+
+
+		</p:tabView>
+	</p:panel>
+
+
+</ui:composition>

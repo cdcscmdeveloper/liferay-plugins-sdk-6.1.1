@@ -1,0 +1,55 @@
+<ui:composition xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:panel styleClass="sampleDetails">
+
+		<p:dataTable id="deliveryaddressId"
+			value="#{organisationBackingBean.managedBean.orgProfile.pmAddressTypes}"
+			var="orgaddress" rowIndexVar="index" rowKey="#{orgaddress}"
+			selection="#{organisationBackingBean.managedBean.selectedAddressTypes}">
+
+			<!-- <p:ajax event="rowSelectRadio"
+				listener="#{organisationBackingBean.consolidateRowSelectRadio}" /> -->
+
+			<ac:paginator for="deliveryaddressId" />
+			<p:column selectionMode="multiple" style="width:2%" />
+			<p:column headerText="#{lbl['lbl.pm.address.address']}">
+				<h:outputText value="#{orgaddress.pmAddress.address1}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.pm.address.district']}"
+				style="width : 15%">
+				<h:outputText
+					value="#{orgaddress.pmAddress.pmDistrict.districtName}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.pm.address.state']}"
+				style="width : 15%">
+				<h:outputText value="#{orgaddress.pmAddress.pmState.stateName}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.pm.organisation.status']}"
+				style="width : 5%">
+
+			</p:column>
+
+
+
+
+		</p:dataTable>
+		<div align="right">
+
+
+			<p:commandButton value="#{lbl['lbl.so.addbtn']}" process="@this"
+				oncomplete="addressPopup.show();"
+				action="#{organisationBackingBean.assignNewAddress}"
+				icon="ui-icon-add" />
+
+			<p:commandButton value="#{lbl['lbl.so.delete']}"
+				icon="ui-icon-delete"
+				action="#{organisationBackingBean.deleteSelectedAdddress}"
+				update="deliveryaddressId" />
+		</div>
+		<ui:include src="/xhtml/pm/organisation/orgAddressPopUp.xhtml"></ui:include>
+	</p:panel>
+</ui:composition>

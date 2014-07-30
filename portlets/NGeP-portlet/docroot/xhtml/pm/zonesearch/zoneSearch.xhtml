@@ -1,61 +1,58 @@
-<ui:composition	
-	xmlns="http://www.w3.org/1999/xhtml"
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-	
-		
 	<p:panel>
-		<h:panelGrid styleClass="noBorders tr,noBorders td" ></h:panelGrid>
-    </p:panel>
-	
+		<h:panelGrid styleClass="noBorders tr,noBorders td"></h:panelGrid>
+	</p:panel>
 	<p:panel header="SEARCH" toggleable="true">
-		
-	<h:panelGrid id="userGroupSearch" style="width:100%;">
-	</h:panelGrid>
-     
-			<p:tabView>
-				<p:tab id="definedZoneSearch" title="DEFINED SEARCH">
-				   <ui:include src="/xhtml/pm/zonesearch/zoneDefinedSearch.xhtml" />
-				</p:tab>		
-			</p:tabView>
-				
-      <div align="right">
-			<p:commandButton value="Search" icon="ui-icon-search" />
-            <p:commandButton value="Reset" icon="ui-icon-reset" />
-	  </div>
-    <br/>
-	<br/>
+		<h:panelGrid id="zoneSearch" style="width:100%;">
+			<ui:include src="/xhtml/pm/zonesearch/zoneDefinedSearch.xhtml" />
+			<p:column>
+				<div align="right">
+
+					<p:commandButton value="#{lbl['lbl.pm.reset.zone']}"
+						style="float:right;" action="#{zoneBackingBean.reset}"
+						update="zoneSerchState" icon="ui-icon-reset" resetValues="true"
+						partialSubmit="true" process="@this" />
+					<p:commandButton value="#{lbl['lbl.pm.search.zone']}"
+						style="float:right;" icon="ui-icon-search"
+						action="#{zoneBackingBean.searchZone}" update="searchZones" />
+				</div>
+			</p:column>
+			<br />
+		</h:panelGrid>
 	</p:panel>
-	
-	<p:panel header="Results" toggleable="true">
-	<p:dataTable id="searchZoneProfile" value="" var="" editable="true">
- 	<ac:paginator />
-    <p:ajax event="rowEdit" />  
-    <p:ajax event="rowEditCancel"/> 
-    				
-       <p:column headerText="Zone Code" > 
-        <h:outputText />
-       </p:column>
-       
-       <p:column headerText="Zone Name" > 
-        <h:outputText />
-       </p:column>     
-    
-    <p:column headerText="Action">
-    <p:commandLink>
-     <p:graphicImage library="ep/images/design" name="edit.png"
-      value="/resources/ep/images/design/edit.png" />
-    </p:commandLink>
-    </p:column>    
-     </p:dataTable>
+	<p:panel header="#{lbl['lbl.pm.search.result']}" toggleable="true">
+
+		<p:dataTable id="searchZones" var="zone"
+			value="#{zoneBackingBean.searchZone}" rowIndexVar="index" lazy="true">
+
+			<ac:paginator for="searchZones"></ac:paginator>
+
+			<p:column headerText="#{lbl['lbl.pm.zone.code']}" style="width :15%">
+				<h:outputText value="#{zone.zoneCode}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.pm.zone.name']}" style="width :30%">
+				<h:outputText value="#{zone.zoneName}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.pm.action']}" style="width :5%">
+				<p:commandLink action="#{zoneBackingBean.editZone(zone)}">
+					<p:graphicImage library="ep/images/design" name="edit.png"
+						title="Edit Zone" value="/resources/ep/images/design/edit.png" />
+				</p:commandLink>
+
+			</p:column>
+		</p:dataTable>
 	</p:panel>
-	
-     <div>
-      <p:commandButton value="Create" style="float:right;" action="zoneMaintenance.xhtml?faces-redirect=true"
-         ajax="false" icon="ui-icon-add" />
-     </div>
+
+	<div>
+		<p:commandButton value="Create" style="float:right;"
+			action="#{zoneBackingBean.addZone()}" ajax="false" icon="ui-icon-add" />
+	</div>
 </ui:composition>

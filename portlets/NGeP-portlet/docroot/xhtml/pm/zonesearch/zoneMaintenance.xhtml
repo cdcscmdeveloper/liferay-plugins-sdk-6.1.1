@@ -6,22 +6,24 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-
-		
 	<ui:define name="contentSection">
-	<table style="border:0px;width:100%">
-	 <tr>
-	  <td><ui:include src="/xhtml/pm/zonesearch/zoneNavigationButton.xhtml"></ui:include></td>
-	 </tr>
-	 
-	 <tr>
-	  <td><ui:include src="/xhtml/pm/zonesearch/zoneMaintenanceDetails.xhtml"></ui:include></td>
-	 </tr>
-	 
-	 <tr>
-	  <td><ui:include src="/xhtml/pm/zonesearch/zoneStatePopUp.xhtml"></ui:include></td>
-	 </tr>  	   
-	</table>
-   							
+		<p:messages showDetail="true" autoUpdate="true" closable="true"
+			severity="error, info" />
+	
+		<table style="border: 0px; width: 100%">
+			<tr>
+				<td><ui:include
+						src="/xhtml/pm/zonesearch/zoneNavigationButton.xhtml"></ui:include></td>
+			</tr>
+
+			<tr>
+				<td><ui:include
+						src="/xhtml/pm/zonesearch/zoneMaintenanceDetails.xhtml"></ui:include></td>
+			</tr>
+
+			<tr>
+				<td><ui:include src="/xhtml/pm/zonesearch/zoneStatePopUp.xhtml"></ui:include></td>
+			</tr>
+		</table>
 	</ui:define>
 </ui:composition>

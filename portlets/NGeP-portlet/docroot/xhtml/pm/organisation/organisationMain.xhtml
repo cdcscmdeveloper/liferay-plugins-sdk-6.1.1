@@ -1,0 +1,96 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<ui:define name="contentSection">
+		<p:panel>
+			<h:panelGrid styleClass="noBorders tr,noBorders td"></h:panelGrid>
+		</p:panel>
+		<p:panel header="#{lbl['lbl.pm.header.general.org.search']}"
+			toggleable="true">
+			<h:panelGrid id="organisationSearchr" style="width:100%;">
+				<h:column>
+					<!-- <p:tabView>
+						<p:tab id="definedSearch"
+							title="#{lbl['lbl.pm.header.general.org.defsearch']}">
+							<ui:include
+								src="/xhtml/pm/organisation/organisationDefinedSearch.xhtml" />
+						</p:tab>
+						<p:tab id="advancedSearch" title="#{lbl['lbl.pm.header.general.org.advsearch']}">
+							<ui:include
+								src="/xhtml/pm/organisation/organisationAdvancedSearch.xhtml" />
+						</p:tab>
+					</p:tabView> -->
+					<ui:include
+						src="/xhtml/pm/organisation/organisationDefinedSearch.xhtml" />
+				</h:column>
+				<h:column>
+
+					<p:commandButton value="#{lbl['lbl.pm.organisation.reset']}"
+						style="float:right;"
+						action="#{organisationBackingBean.resetOrganisation}"
+						update="organisationSearchr" icon="ui-icon-reset"
+						resetValues="true" partialSubmit="true" process="@this" />
+					<p:commandButton value="#{lbl['lbl.pm.organisation.search']}"
+						style="float:right;" icon="ui-icon-search"
+						action="#{organisationBackingBean.searchOrg}"
+						update="organisationSearch" />
+				</h:column>
+			</h:panelGrid>
+		</p:panel>
+		<p:panel header="#{lbl['lbl.pm.organisation.result']}"
+			toggleable="true">
+			<p:dataTable id="organisationSearch" var="organisation"
+				value="#{organisationBackingBean.searchOrganisation}"
+				rowIndexVar="index" lazy="true">
+
+				<ac:paginator for="organisationSearch"></ac:paginator>
+
+				<p:column headerText="#{lbl['lbl.pm.organisation.orgCode']}"
+					style="width :15%">
+					<h:outputText value="#{organisation.pmOrgValidity.orgCode}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.pm.organisation.orgName']}"
+					style="width :40%">
+					<h:outputText value="#{organisation.pmOrgValidity.orgName}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.pm.organisation.status']}"
+					style="width :15%">
+
+					<h:outputText value="Active"
+						rendered="#{organisation.recordStatusFlg == '1'}" />
+					<h:outputText value="Expired"
+						rendered="#{organisation.recordStatusFlg == '2'}" />
+					<h:outputText value="Cancled"
+						rendered="#{organisation.recordStatusFlg == '3'}" />
+					<h:outputText value="Inactive"
+						rendered="#{organisation.recordStatusFlg == '0'}" />
+					<h:outputText value="Deleted"
+						rendered="#{organisation.recordStatusFlg == '9'}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.pm.organisation.action']}"
+					style="width :5%">
+					<p:commandLink
+						action="#{organisationBackingBean.editOrganization(organisation)}">
+						<p:graphicImage library="ep/images/design" name="edit.png"
+							title="Edit Organisation"
+							value="/resources/ep/images/design/edit.png" />
+					</p:commandLink>
+				</p:column>
+			</p:dataTable>
+		</p:panel>
+		<div class="ppRightBtn">
+
+			<p:commandButton id="addLocation"
+				value="#{lbl['lbl.pm.create.location']}" icon="ui-icon-add"
+				action="#{organisationBackingBean.addOrganisation()}" />
+		</div>
+
+	</ui:define>
+
+</ui:composition>

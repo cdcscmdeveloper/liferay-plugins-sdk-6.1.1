@@ -1,0 +1,126 @@
+<ui:composition xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:panel styleClass="sampleDetails">
+		<table>
+			<tr>
+				<td><h:outputLabel
+						value="#{lbl['lbl.pm.address.country']}"></h:outputLabel></td>
+				<td><p:selectOneMenu
+						value="#{organisationBackingBean.managedBean.pmAddress.pmCountry.countryId}"
+						required="true" style="width: 218px;margin-bottom: 5px;">
+						<f:selectItem itemValue="0" itemLabel="---Select---" />
+						<f:selectItems var="counLs"
+							value="#{organisationBackingBean.managedBean.countries}"
+							itemLabel="#{counLs.countryName}" itemValue="#{counLs.countryId}" />
+
+					</p:selectOneMenu></td>
+
+
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value="Address" /></td>
+				<td><p:inputText
+						value="#{organisationBackingBean.managedBean.pmAddress.address1}"
+						size="50" /></td>
+				<td style="width: 200px;"><p:outputLabel value="* State" /></td>
+				<td><p:selectOneMenu style="width: 218px;margin-bottom: 5px;"
+						value="#{organisationBackingBean.managedBean.pmAddress.pmState.stateId}">
+						<f:selectItem itemLabel="-- Select -- " itemValue="" />
+						<f:selectItems var="state"
+							value="#{organisationBackingBean.managedBean.states}"
+							itemLabel="#{state.stateName}" itemValue="#{state.stateId}" />
+						<p:ajax event="change"
+							listener="#{organisationBackingBean.retrievePmDistrictList}"
+							update="@(.stateDistrict)" />
+					</p:selectOneMenu></td>
+
+			</tr>
+			<tr>
+				<td><p:outputLabel /></td>
+				<td><p:inputText
+						value="#{organisationBackingBean.managedBean.pmAddress.address2}"
+						size="50" /></td>
+				<td><p:outputLabel value="District" /></td>
+				<td><p:selectOneMenu styleClass="stateDistrict"
+						style="width: 218px;margin-bottom: 5px;"
+						value="#{organisationBackingBean.managedBean.pmAddress.pmDistrict.districtId}">
+						<f:selectItem itemLabel="-- Select -- " itemValue="" />
+						<f:selectItems var="district"
+							value="#{organisationBackingBean.managedBean.districts}"
+							itemValue="#{district.districtId}"
+							itemLabel="#{district.districtName}" />
+						<p:ajax event="change"
+							listener="#{organisationBackingBean.retrievePmCityList}"
+							update="@(.districtCity)" />
+					</p:selectOneMenu></td>
+
+			</tr>
+			<tr>
+				<td><p:outputLabel /></td>
+				<td><p:inputText
+						value="#{organisationBackingBean.managedBean.pmAddress.address3}"
+						size="50" /></td>
+				<td><p:outputLabel value="* City/Town" /></td>
+				<td><p:selectOneMenu styleClass="districtCity"
+						style="width: 218px;margin-bottom: 5px;"
+						value="#{organisationBackingBean.managedBean.pmAddress.pmCity.cityId}">
+						<f:selectItem itemLabel="-- Select -- " itemValue="" />
+						<f:selectItems var="city"
+							value="#{organisationBackingBean.managedBean.citys}"
+							itemValue="#{city.cityId}" itemLabel="#{city.cityName}" />
+					</p:selectOneMenu></td>
+
+
+
+			</tr>
+			<tr>
+				<td><p:outputLabel /></td>
+				<td><p:inputText
+						value="#{organisationBackingBean.managedBean.pmAddress.address4}"
+						size="50" /></td>
+				<td><p:outputLabel value="* Postalcode" /></td>
+				<td><p:inputText
+						value="#{organisationBackingBean.managedBean.pmAddress.postcode}"
+						size="15" /></td>
+
+
+			</tr>
+			<tr>
+				<td><p:outputLabel value="Email" /></td>
+				<td><p:inputText
+						value="#{organisationBackingBean.managedBean.pmAddress.email}"
+						size="50" /></td>
+				<td><p:outputLabel value="Fax" /></td>
+				<td><p:inputText
+						value="#{organisationBackingBean.managedBean.pmAddress.mobileNo}"
+						size="15" /></td>
+
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value="Contact Person" /></td>
+				<td><p:commandLink oncomplete="contactPersonPopup.show();"
+						action="#{organisationBackingBean.addContactPerson}">
+						<p:graphicImage library="ep/images/design" name="edit.png"
+							title="Contact Person"
+							value="/resources/ep/images/design/edit.png" />
+					</p:commandLink></td>
+
+
+				<td><p:outputLabel value="Tel No." /></td>
+				<td><p:inputText
+						value="#{organisationBackingBean.managedBean.pmAddress.faxNo}"
+						size="15" /></td>
+
+
+			</tr>
+
+		</table>
+		<ui:include src="/xhtml/pm/organisation/orgContactPersonPopUp.xhtml"></ui:include>
+	</p:panel>
+</ui:composition>

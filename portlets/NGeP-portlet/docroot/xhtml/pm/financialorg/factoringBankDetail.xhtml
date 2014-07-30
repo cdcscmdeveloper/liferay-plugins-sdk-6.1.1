@@ -1,0 +1,60 @@
+<ui:composition xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:panel>
+		<p:dataTable id="financialaccid" var="financialacc"
+			value="#{financialOrgBackingBean.managedBean.pmFinancialAcc}"
+			rowKey="#{financialacc}" rowIndexVar="rowIndex"
+			selection="#{financialOrgBackingBean.managedBean.selectedPmFinancialAcc}">
+
+			<p:column selectionMode="multiple" style="width:2%" />
+
+			<ac:paginator for="financialacc" />
+			<p:column headerText="#{lbl['lbl.pm.financialorg.paymentbankname']}">
+				<p:inputText  size="20" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.pm.financialorg.acnumber']}">
+
+				<p:inputText value="#{financialacc.accountNo}" size="15" />
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.pm.financialorg.effdate']}">
+					
+					<p:calendar value="#{financialacc.effDate}" showOn="button"
+						size="15" />
+				</p:column>
+			<p:column headerText="#{lbl['lbl.pm.financialorg.expdate']}">
+
+				<p:calendar value="#{financialacc.expDate}" showOn="button"
+						size="15" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.pm.financialorg.status']}">
+				<p:selectOneMenu
+					value="#{financialacc.recordStatusFlg}"
+					required="true" style="margin-bottom: 5px;">
+					<f:selectItems
+						value="#{financialOrgBackingBean.getDropdownCodeValues(ParameterTypeConst.recordStatus)}" />
+				</p:selectOneMenu>
+
+			</p:column>
+
+		</p:dataTable>
+		<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.so.addbtn']}"
+				process="@this,financialaccid" partialSubmit="true"
+				action="#{financialOrgBackingBean.addFinancialAcc}"
+				update="financialaccid" icon="ui-icon-add" />
+
+			<p:commandButton value="#{lbl['lbl.so.delete']}"
+				icon="ui-icon-delete" update="financialaccid"
+				process="@this,financialaccid" partialSubmit="true"
+				action="#{financialOrgBackingBean.deleteFinancialAcc}" />
+
+		</div>
+
+
+	</p:panel>
+</ui:composition>

@@ -1,0 +1,67 @@
+<ui:composition xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:p="http://primefaces.org/ui">
+	<p:panel header="#{lbl['lbl.pm.menu.factoringbranch.finance']}"
+		toggleable="true">
+		<p:dataTable id="financialbranchid" var="financialbranch"
+			value="#{financialOrgBackingBean.managedBean.pmFinancialBranch}"
+			rowKey="#{financialbranch}" rowIndexVar="rowIndex2"
+			selection="#{financialOrgBackingBean.managedBean.selectedPmFinancialBranch}">
+
+			<p:column selectionMode="multiple" style="width:2%" />
+
+			<ac:paginator for="financialbranch" />
+
+			<p:column headerText="#{lbl['lbl.pm.financialbranch.branchname']}">
+
+				<p:inputText value="#{financialbranch.branchName}" size="15" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.pm.financialorg.status']}">
+				<p:selectOneMenu
+					value="#{financialbranch.recordStatusFlg}"
+					 style="margin-bottom: 5px;">
+					<f:selectItems
+						value="#{financialOrgBackingBean.getDropdownCodeValues(ParameterTypeConst.recordStatus)}" />
+				</p:selectOneMenu>
+
+			</p:column>
+
+		</p:dataTable>
+		<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.so.addbtn']}"
+				process="@this,financialbranchid" partialSubmit="true"
+				action="#{financialOrgBackingBean.addFinancialBranch}"
+				update="financialbranchid" icon="ui-icon-add" />
+
+			<p:commandButton value="#{lbl['lbl.so.delete']}"
+				icon="ui-icon-delete" update="financialbranchid"
+				process="@this,financialbranchid" partialSubmit="true"
+				action="#{financialOrgBackingBean.deleteFinancialBranch}" />
+
+		</div>
+
+
+
+	</p:panel>
+
+	<p:panel>
+
+		<h:panelGrid id="financial" style="width:100%;" toggleable="true">
+			<p:tabView>
+				<p:tab title="ADDRESS">
+					<ui:include
+						src="/xhtml/pm/financialorg/factoringBranchAddress.xhtml" />
+				</p:tab>
+				<p:tab title="FACTORING BANK DETAIL">
+					<ui:include
+						src="/xhtml/pm/financialorg/factoringBranchDetail.xhtml" />
+				</p:tab>
+			</p:tabView>
+		</h:panelGrid>
+
+	</p:panel>
+
+</ui:composition>

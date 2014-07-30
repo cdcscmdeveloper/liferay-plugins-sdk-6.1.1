@@ -1,0 +1,42 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	
+	<table border="0" cellspacing="0" cellpadding="0" width="100%">
+		<tr>
+			<td  class="sidemenutd" width="20%" style="vertical-align: baseline;"><p:tabMenu
+					styleClass="sidemenu"
+					activeIndex="#{organisationBackingBean.managedBean.organisationActiveIndex}"
+					style="display : table-caption;">
+					<p:menuitem value="#{lbl['lbl.pm.sidemenu.general.org.profile']}"
+					action="#{organisationBackingBean.getProfileDetails}"
+						update="@form" />
+					<p:menuitem value="#{lbl['lbl.pm.sidemenu.general.org.govSeller']}"
+					action="#{organisationBackingBean.getGovernmentSeller}"  rendered="#{organisationBackingBean.managedBean.orgProfile.govtSeller}"
+						update="@form" />
+						<p:menuitem value="#{lbl['lbl.pm.sidemenu.general.org.resProfile']}"
+					action="#{organisationBackingBean.getResponsibleProfile}"  rendered="#{organisationBackingBean.managedBean.orgProfile.groupOrg}"
+						update="@form" />
+
+				</p:tabMenu></td>
+			<td width="80%" style="vertical-align: top;"><c:if
+					test="#{organisationBackingBean.managedBean.organisationActiveIndex eq '0'}">
+					<ui:include src="orgProfileDetails.xhtml" />
+				</c:if> <c:if
+					test="#{organisationBackingBean.managedBean.organisationActiveIndex eq '1'}" >
+					<ui:include src="orgGovernmentSeller.xhtml" />
+			</c:if>
+			 <c:if
+					test="#{organisationBackingBean.managedBean.organisationActiveIndex eq '2'}">
+					<ui:include src="orgResponsibleProfile.xhtml" />
+			</c:if></td>
+		</tr>
+	</table>
+	
+	
+</ui:composition>

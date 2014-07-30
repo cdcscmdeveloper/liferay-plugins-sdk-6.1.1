@@ -1,0 +1,22 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<ui:define name="contentSection">
+		<p:messages showDetail="true" autoUpdate="true" closable="true"
+			severity="error, info" />
+		<div class="ppLeftBtn">
+			<p:commandButton value="#{lbl['lbl.pm.back.location']}"
+				icon="ui-icon-back" action="#{locationBackingBean.backToSearch}"
+				immediate="true" />
+		</div>
+		<div style="width: 100%; text-align: right">
+			<p:commandButton value="#{lbl['lbl.pm.save.location']}"
+				icon="ui-icon-save" action="#{locationBackingBean.updateLocation}" />
+		</div>
+		<ui:include src="/xhtml/pm/location/editLocation.xhtml" />
+	</ui:define>
+</ui:composition>

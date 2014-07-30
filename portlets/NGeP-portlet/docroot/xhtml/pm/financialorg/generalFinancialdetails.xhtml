@@ -1,0 +1,89 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:panel header="#{lbl['lbl.pm.header.general.finance']}"
+		toggleable="true">
+
+		<table>
+			<tr>
+				<td><h:outputLabel
+						value="#{lbl['lbl.pm.financialorg.regType']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:selectOneMenu id="regType"
+						label="#{lbl['lbl.pm.financialorg.regType']}" required="true"
+						value="#{financialOrgBackingBean.managedBean.regTypeId}"
+						style="width: 178px;margin-bottom: 5px;">
+						<f:selectItems
+							value="#{financialOrgBackingBean.getDropdownCodeValues(ParameterTypeConst.financialOrgRegType)}" />
+					</p:selectOneMenu> <p:message id="regTypeMsg" for="regType" display="icon" /></td>
+			</tr>
+			<tr>
+				<td><h:outputLabel value="#{lbl['lbl.pm.financialorg.regNo']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td><p:inputText id="bizRegNo"
+						label="#{lbl['lbl.pm.financialorg.regNo']}"
+						value="#{financialOrgBackingBean.managedBean.financialOrg.bizRegNumber}"
+						required="true" size="30" /> <p:message id="bizRegNoMsg"
+						for="bizRegNo" display="icon" /></td>
+			</tr>
+			<tr>
+				<td><h:outputLabel value="#{lbl['lbl.pm.financialorg.name']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td><p:inputText id="finOrgName"
+						label="#{lbl['lbl.pm.financialorg.name']}"
+						value="#{financialOrgBackingBean.managedBean.financialOrg.finOrgName}"
+						required="true" size="30" /> <p:message id="finOrgNameMsg"
+						for="finOrgName" display="icon" /></td>
+			</tr>
+			<tr>
+				<td><h:outputLabel
+						value="#{lbl['lbl.pm.address.country']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:selectOneMenu id="country"
+						label="#{lbl['lbl.pm.address.country']}"
+						value="#{financialOrgBackingBean.managedBean.financialOrg.pmCountry.countryId}"
+						required="true" style="margin-bottom: 15px;">
+						<f:selectItem itemValue="0" itemLabel="---Select---" />
+						<f:selectItems var="counLs"
+							value="#{financialOrgBackingBean.managedBean.countries}"
+							itemLabel="#{counLs.countryName}" itemValue="#{counLs.countryId}" />
+
+					</p:selectOneMenu> <p:message id="countryMsg" for="country" display="icon" /></td>
+			</tr>
+			<tr>
+				<td><h:outputLabel value="#{lbl['lbl.pm.financialorg.status']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td><p:selectOneMenu
+						label="#{lbl['lbl.pm.financialorg.status']}"
+						value="#{financialOrgBackingBean.managedBean.financialOrg.recordStatusFlg}"
+						id="recordSts" required="true" style="margin-bottom: 5px;">
+						<f:selectItems
+							value="#{financialOrgBackingBean.getDropdownCodeValues(ParameterTypeConst.recordStatus)}" />
+					</p:selectOneMenu> <p:message id="recordStsMsg" for="recordSts" display="icon" /></td>
+
+			</tr>
+		</table>
+		<br>
+		<br></br>
+		</br>
+		<h:panelGrid id="financial" style="width:100%;" toggleable="true">
+			<p:tabView>
+				<p:tab title="MAIN ADDRESS">
+					<ui:include src="/xhtml/pm/financialorg/mainAddress.xhtml" />
+				</p:tab>
+				<p:tab title="FINANCIAL SERVICES">
+					<ui:include src="/xhtml/pm/financialorg/financialServices.xhtml" />
+				</p:tab>
+				<p:tab title="FACTORING BANK DETAIL"
+					activeIndex="#{financialOrgBackingBean.managedBean.byFactoring}">
+					<ui:include src="/xhtml/pm/financialorg/factoringBankDetail.xhtml" />
+				</p:tab>
+			</p:tabView>
+		</h:panelGrid>
+	</p:panel>
+
+</ui:composition>

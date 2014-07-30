@@ -1,0 +1,101 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<p:panel>
+		<h:panelGrid styleClass="noBorders tr,noBorders td"></h:panelGrid>
+	</p:panel>
+
+	<p:panel header="SEARCH" toggleable="true" id="financialOrgSearch">
+
+		<h:panelGrid columns="2">
+			<h:outputLabel value="#{lbl['lbl.pm.financialorg.name']}"></h:outputLabel>
+			<p:inputText value="#{financialOrgBackingBean.managedBean.orgName}"
+				size="50" />
+			<h:outputLabel value="#{lbl['lbl.pm.financialorg.buzregno']}"></h:outputLabel>
+			<p:inputText value="#{financialOrgBackingBean.managedBean.regNumber}"
+				size="30" />
+			<h:outputLabel value="#{lbl['lbl.pm.financialorg.services']}"></h:outputLabel>
+
+			<p:selectOneMenu
+				value="#{financialOrgBackingBean.managedBean.serviceType}"
+				style="width: 200px;margin-bottom: 5px;">
+				<f:selectItems
+					value="#{financialOrgBackingBean.getDropdownCodeValues(ParameterTypeConst.bankServices)}" />
+			</p:selectOneMenu>
+		</h:panelGrid>
+		<h:panelGrid border="0" columns="1" cellpadding="0" cellspacing="0"
+			width="100%">
+			<p:column>
+				<div style="float: right;">
+					<p:commandButton value="#{lbl['lbl.pm.reset.location']}"
+						style="float:right;" action="#{financialOrgBackingBean.reset}"
+						update="financialOrgSearch" icon="ui-icon-reset"
+						resetValues="true" partialSubmit="true" />
+					<p:commandButton value="#{lbl['lbl.pm.search.location']}"
+						style="float:right;" icon="ui-icon-search"
+						action="#{financialOrgBackingBean.searchFinancialOrg}"
+						update="searchFinancialId" />
+
+				</div>
+			</p:column>
+
+		</h:panelGrid>
+
+	</p:panel>
+	<p:panel header="#{lbl['lbl.pm.search.result']}" toggleable="true">
+
+		<p:dataTable id="searchFinancialId" var="finorg"
+			value="#{financialOrgBackingBean.searchFinancialOrg}"
+			rowIndexVar="index" lazy="true">
+
+			<ac:paginator for="searchFinancialId"></ac:paginator>
+
+			<p:column headerText="#{lbl['lbl.pm.financialorg.name']}"
+				style="width :15%">
+				<h:outputText value="#{finorg.finOrgName}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.pm.financialorg.buzregno']}"
+				style="width :40%">
+				<h:outputText value="#{finorg.bizRegNumber}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.pm.financialorg.status']}"
+				style="width :15%">
+
+				<h:outputText value="Active"
+					rendered="#{finorg.recordStatusFlg == '1'}" />
+				<h:outputText value="Expired"
+					rendered="#{finorg.recordStatusFlg == '2'}" />
+				<h:outputText value="Cancled"
+					rendered="#{finorg.recordStatusFlg == '3'}" />
+				<h:outputText value="Inactive"
+					rendered="#{finorg.recordStatusFlg == '0'}" />
+				<h:outputText value="Deleted"
+					rendered="#{finorg.recordStatusFlg == '9'}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.pm.financialorg.action']}"
+				style="width :5%">
+				<p:commandLink
+					action="#{financialOrgBackingBean.editFinancialOrg(finorg)}">
+					<p:graphicImage library="ep/images/design" name="edit.png"
+						title="Edit Financial Org"
+						value="/resources/ep/images/design/edit.png" />
+				</p:commandLink>
+
+			</p:column>
+		</p:dataTable>
+	</p:panel>
+	<div class="ppRightBtn">
+
+		<p:commandButton value="#{lbl['lbl.pm.financialorg.create']}"
+			icon="ui-icon-add"
+			action="#{financialOrgBackingBean.addFinancialOrg()}" ajax="false" />
+
+
+	</div>
+</ui:composition>

@@ -1,0 +1,58 @@
+<ui:composition xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:panel>
+		<p:dataTable id="financialsrvid" var="financialsrv"
+			value="#{financialOrgBackingBean.managedBean.pmFinancialSvc}"
+			rowKey="#{financialsrv}" rowIndexVar="rowIndex"
+			selection="#{financialOrgBackingBean.managedBean.selectedPmFinancialSvc}">
+
+			<p:column selectionMode="multiple" style="width:2%" />
+
+			<ac:paginator for="financialsrv" />
+			<p:column headerText="#{lbl['lbl.pm.financialorg.servicetype']}">
+
+				<p:selectOneMenu value="#{financialsrv.serviceTypeCode.parameterCode}"
+					style="width: 178px;margin-bottom: 5px;">
+					<f:selectItems
+						value="#{financialOrgBackingBean.getDropdownCodeValues(ParameterTypeConst.bankServices)}" />
+					<!-- <p:ajax event="change" partialSubmit="true"
+						listener="#{financialOrgBackingBean.onChangeAction}"
+						update="@form" process="@this financial" /> -->
+				</p:selectOneMenu>
+			</p:column>
+
+
+			<p:column headerText="#{lbl['lbl.pm.financialorg.bankcode']}">
+
+				<p:inputText value="#{financialsrv.bankCode}" size="20" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.pm.financialorg.status']}">
+				<p:selectOneMenu
+					value="#{financialsrv.recordStatusFlg}"
+					required="true" style="margin-bottom: 5px;">
+					<f:selectItems
+						value="#{financialOrgBackingBean.getDropdownCodeValues(ParameterTypeConst.recordStatus)}" />
+				</p:selectOneMenu>
+
+			</p:column>
+
+		</p:dataTable>
+		<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.so.addbtn']}"
+				process="@this,financialsrvid" partialSubmit="true"
+				action="#{financialOrgBackingBean.addFinancialService}"
+				update="financialsrvid" icon="ui-icon-add" />
+
+			<p:commandButton value="#{lbl['lbl.so.delete']}"
+				icon="ui-icon-delete" update="financialsrvid"  partialSubmit="true" process="@this,financialsrvid"
+				action="#{financialOrgBackingBean.deleteFinancialService}" />
+
+		</div>
+
+
+	</p:panel>
+</ui:composition>

@@ -1,0 +1,133 @@
+<ui:composition xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:panel styleClass="sampleDetails">
+		<table>
+		<tr>
+				<td><h:outputLabel value="#{lbl['lbl.pm.address.country']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td><p:selectOneMenu id="countrya"
+						value="#{financialOrgBackingBean.managedBean.branchAddress.pmCountry.countryId}"
+						label="{lbl['lbl.pm.address.country']}" required="true"
+						style="width: 218px;margin-bottom: 5px;">
+						<f:selectItem itemValue="0" itemLabel="---Select---" />
+						<f:selectItems var="counLs"
+							value="#{financialOrgBackingBean.managedBean.countries}"
+							itemLabel="#{counLs.countryName}" itemValue="#{counLs.countryId}" />
+					</p:selectOneMenu> <p:message id="countryaMsg" for="countrya" display="icon" /></td>
+
+				<td><h:outputLabel value="#{lbl['lbl.pm.address.state']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:selectOneMenu style="width: 218px;margin-bottom: 5px;"
+						id="state" label="#{lbl['lbl.pm.address.state']}" required="true"
+						value="#{financialOrgBackingBean.managedBean.branchAddress.pmState.stateId}">
+						<f:selectItem itemLabel="-- Select -- " itemValue="" />
+						<f:selectItems var="state"
+							value="#{financialOrgBackingBean.managedBean.states}"
+							itemLabel="#{state.stateName}" itemValue="#{state.stateId}" />
+						<p:ajax event="change"
+							listener="#{financialOrgBackingBean.retrievePmDistrictList}"
+							update="@(.stateDistrict)" />
+					</p:selectOneMenu>
+					<p:message id="stateMsg" for="state" display="icon" /></td>
+			</tr>
+
+			<tr>
+				<td><h:outputLabel value="#{lbl['lbl.pm.address.address']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td><p:inputText id="address1" required="true"
+						label="#{lbl['lbl.pm.address.address']}"
+						value="#{financialOrgBackingBean.managedBean.branchAddress.address1}"
+						size="50" />
+					<p:message id="address1Msg" for="address1" display="icon" /></td>
+				<td><h:outputLabel value="#{lbl['lbl.pm.address.district']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td><p:selectOneMenu id="district" styleClass="stateDistrict"
+						required="true" label="#{lbl['lbl.pm.address.district']}"
+						style="width: 218px;margin-bottom: 5px;"
+						value="#{financialOrgBackingBean.managedBean.branchAddress.pmDistrict.districtId}">
+						<f:selectItem itemLabel="-- Select -- " itemValue="" />
+						<f:selectItems var="district"
+							value="#{financialOrgBackingBean.managedBean.districts}"
+							itemValue="#{district.districtId}"
+							itemLabel="#{district.districtName}" />
+						<p:ajax event="change"
+							listener="#{financialOrgBackingBean.retrievePmCityList}"
+							update="@(.districtCity)" />
+					</p:selectOneMenu> <p:message id="districtMsg" for="district" display="icon" /></td>
+				
+			</tr>
+			<tr>
+				<td><p:outputLabel /></td>
+				<td><p:inputText
+						value="#{financialOrgBackingBean.managedBean.branchAddress.address2}"
+						size="50" /></td>
+				<td><h:outputLabel value="#{lbl['lbl.pm.address.city']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:selectOneMenu styleClass="districtCity" id="city"
+						label="#{lbl['lbl.pm.address.city']}"
+						style="width: 218px;margin-bottom: 5px;" required="true"
+						value="#{financialOrgBackingBean.managedBean.branchAddress.pmCity.cityId}">
+						<f:selectItem itemLabel="-- Select -- " itemValue="" />
+						<f:selectItems var="city"
+							value="#{financialOrgBackingBean.managedBean.citys}"
+							itemValue="#{city.cityId}" itemLabel="#{city.cityName}" />
+					</p:selectOneMenu> <p:message id="cityMsg" for="city" display="icon" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel /></td>
+				<td><p:inputText
+						value="#{financialOrgBackingBean.managedBean.branchAddress.address3}"
+						size="50" /></td>
+				<td><h:outputLabel value="#{lbl['lbl.pm.address.postcode']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:inputText id="postcode" required="true" label="#{lbl['lbl.pm.address.postcode']}"
+						value="#{financialOrgBackingBean.managedBean.branchAddress.postcode}"
+						size="30" /> <p:message id="postcodeMsg" for="postcode" display="icon" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel /></td>
+				<td><p:inputText
+						value="#{financialOrgBackingBean.managedBean.branchAddress.address4}"
+						size="50" /></td>
+
+			</tr>
+			<tr>
+				<td><h:outputLabel value="#{lbl['lbl.pm.address.email']}" /></td>
+				<td><p:inputText
+						value="#{financialOrgBackingBean.managedBean.branchAddress.email}"
+						size="50" /></td>
+
+
+
+			</tr>
+
+			<tr>
+				<td><h:outputLabel value="#{lbl['lbl.pm.address.tel']}" /></td>
+				<td><p:inputText
+						value="#{financialOrgBackingBean.managedBean.branchAddress.mobileNo}"
+						size="15" /></td>
+
+				<td><h:outputLabel value="#{lbl['lbl.pm.address.fax']}" /></td>
+				<td><p:inputText
+						value="#{financialOrgBackingBean.managedBean.branchAddress.faxNo}"
+						size="15" /></td>
+
+
+			</tr>
+			<tr>
+				<td><p:outputLabel value="Contact Person" /></td>
+				<td><p:commandLink oncomplete="contactPersonPopup.show();">
+						<p:graphicImage library="ep/images/design" name="edit.png"
+							title="Contact Person"
+							value="/resources/ep/images/design/edit.png" />
+					</p:commandLink></td>
+			</tr>
+			
+		</table>
+		<ui:include src="/xhtml/pm/financialorg/contactPersonPopUp.xhtml"></ui:include>
+	</p:panel>
+</ui:composition>
