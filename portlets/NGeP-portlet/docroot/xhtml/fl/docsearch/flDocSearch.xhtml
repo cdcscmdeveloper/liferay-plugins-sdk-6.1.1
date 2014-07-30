@@ -21,43 +21,43 @@
 			closable="true" severity="error, info" />
 		<p:panel id="searchPanel" header="SEARCH" toggleable="true">
 			<h:panelGroup id="defineSearchTbl">
-				<h:panelGrid columns="4" columnClasses="cmWidth1">
+				<h:panelGrid columns="4" columnClasses="flWidth1">
 					<p:outputLabel value="#{lbl['lbl.fl.doc.search.fl.order.type']}"
-						style="width: 125px;" />
+						style="width: 117px;" />
 					<p:selectOneMenu
 						value="#{flDocumentBackingBean.managedBean.searchOrderType}"
-						style="width: 207px;">
+						style="width: 185px;">
 						<f:selectItems
 							value="#{flDocumentBackingBean.getDropdownCodeValues(ParameterTypeConst.fulfilmentOrderType)}" />
 						<p:ajax event="change" update="searchDocTypeDD,docTypeSearch"
 							listener="#{flDocumentBackingBean.selectedOrderType}" />
 					</p:selectOneMenu>
 					<p:outputLabel value="#{lbl['lbl.fl.doc.search.doc.type']}"
-						 style="padding-left: 130px;"/>
-					<p:selectOneMenu id="searchDocTypeDD" style="width: 207px;"
+						 style="padding-left: 20px;"/>
+					<p:selectOneMenu id="searchDocTypeDD" style="width: 185px;"
 						value="#{flDocumentBackingBean.managedBean.searchDocType}">
 						<f:selectItems
 							value="#{flDocumentBackingBean.getDocumentTypeDropDown()}" />
 						<p:ajax event="change"
-							update="docTypeSearch,docTitleSearch,docStatusSearch,docDoInvStatusSearch"
+							update="docTypeSearch,docTitleSearch,docStatusSearch,docDoStatusSearch,docInvStatusSearch"
 							listener="#{flDocumentBackingBean.selectedDoctype}" />
 					</p:selectOneMenu>
 				</h:panelGrid>
 			</h:panelGroup>
 			<h:panelGroup id="docTitleSearch">
-				<h:panelGrid columns="4" columnClasses="cmWidth1"
+				<h:panelGrid columns="4" columnClasses="flWidth1"
 					rendered="#{flDocumentBackingBean.managedBean.checkTitle}">
 					<p:outputLabel value="#{lbl['lbl.fl.doc.search.doc.title']}" />
-					<p:inputText size="88"
+					<p:inputText size="55"
 						value="#{flDocumentBackingBean.managedBean.searchTitle}"></p:inputText>
 				</h:panelGrid>
 			</h:panelGroup>
 			<h:panelGroup id="docStatusSearch">
-				<h:panelGrid columns="4" columnClasses="cmWidth1">
+				<h:panelGrid columns="4" columnClasses="flWidth1" >
 					<p:outputLabel value="#{lbl['lbl.fl.doc.search.doc.status']}" />
 					<p:selectOneMenu id="statusId"
 						value="#{flDocumentBackingBean.managedBean.statusDescId}"
-						style="width: 400px;">
+						style="width: 314px;">
 						<f:selectItem itemLabel="-- Select -- " itemValue="" />
 						<f:selectItems var="statusList"
 							value="#{flDocumentBackingBean.managedBean.docStatusList}"
@@ -66,39 +66,47 @@
 					</p:selectOneMenu>
 				</h:panelGrid>
 			</h:panelGroup>
-			<h:panelGrid columns="4" columnClasses="cmWidth1">
+			<h:panelGrid columns="4" columnClasses="flWidth1">
 				<p:outputLabel value="#{lbl['lbl.fl.doc.search.supp.name']}" />
-				<p:inputText size="60"
+				<p:inputText size="55"
 					value="#{flDocumentBackingBean.managedBean.searchSuppName}"></p:inputText>
 			</h:panelGrid>
-			<h:panelGroup id="docDoInvStatusSearch">
-				<h:panelGrid columns="4" columnClasses="cmWidth1"
-					rendered="#{flDocumentBackingBean.managedBean.checkDoInDocType}">
+			<h:panelGroup id="docDoStatusSearch">
+				<h:panelGrid columns="4" columnClasses="flWidth1"
+					rendered="#{flDocumentBackingBean.managedBean.checkDoDocType}">
 					<p:outputLabel value="#{lbl['lbl.fl.doc.search.supp.do.ref']}" />
 					<p:inputText size="20"
 						value="#{flDocumentBackingBean.managedBean.searchSuppDoRef}"></p:inputText>
 				</h:panelGrid>
 			</h:panelGroup>
+			<h:panelGroup id="docInvStatusSearch">
+				<h:panelGrid columns="4" columnClasses="flWidth1"
+					rendered="#{flDocumentBackingBean.managedBean.checkInDocType}">
+					<p:outputLabel value="#{lbl['lbl.fl.doc.search.supp.inv.ref']}" />
+					<p:inputText size="20"
+						value="#{flDocumentBackingBean.managedBean.searchSuppInvRef}"></p:inputText>
+				</h:panelGrid>
+			</h:panelGroup>
 			<h:panelGroup id="docTypeSearch">
-				<h:panelGrid columns="4" columnClasses="cmWidth1"
+				<h:panelGrid columns="4" columnClasses="flWidth1"
 					rendered="#{flDocumentBackingBean.managedBean.checkDocType}">
 					<p:outputLabel value="#{lbl['lbl.fl.doc.search.loa.no']}" />
-					<p:inputText size="35"
+					<p:inputText size="20"
 						value="#{flDocumentBackingBean.managedBean.searchLoaNo}"></p:inputText>
 				</h:panelGrid>
-				<h:panelGrid columns="4" columnClasses="cmWidth1"
+				<h:panelGrid columns="4" columnClasses="flWidth1"
 					rendered="#{flDocumentBackingBean.managedBean.checkDocType}">
 					<p:outputLabel value="#{lbl['lbl.fl.doc.search.circular.no']}" />
-					<p:inputText size="35"
+					<p:inputText size="20"
 						value="#{flDocumentBackingBean.managedBean.searchLoaNo}"></p:inputText>
 				</h:panelGrid>
-				<h:panelGrid columns="4" columnClasses="cmWidth1"
+				<h:panelGrid columns="4" columnClasses="flWidth1"
 					rendered="#{flDocumentBackingBean.managedBean.checkDocType}">
 					<p:outputLabel value="#{lbl['lbl.fl.doc.search.contract.no']}" />
-					<p:inputText size="35"
+					<p:inputText size="20"
 						value="#{flDocumentBackingBean.managedBean.searchContractNo}"></p:inputText>
 				</h:panelGrid>
-				<h:panelGrid columns="4" columnClasses="cmWidth1"
+				<h:panelGrid columns="4" columnClasses="flWidth1"
 					rendered="#{flDocumentBackingBean.managedBean.checkDocType}">
 					<p:outputLabel
 						value="#{lbl['lbl.fl.doc.search.contract.duration']}" />
@@ -112,12 +120,12 @@
 						value="#{flDocumentBackingBean.managedBean.searchContractToDuration}">
 					</p:calendar>
 				</h:panelGrid>
-				<h:panelGrid columns="4" columnClasses="cmWidth1"
+				<h:panelGrid columns="4" columnClasses="flWidth1"
 					rendered="#{flDocumentBackingBean.managedBean.checkPoDocType}">
 					<p:outputLabel value="#{lbl['lbl.fl.doc.search.procurement.type']}" />
 					<p:selectOneMenu id="parameterId"
 						value="#{flDocumentBackingBean.managedBean.searchProcurementTypeId}"
-						style="width: 366px;">
+						style="width: 314px;">
 						<f:selectItem itemLabel="-- Select -- " itemValue="" />
 						<f:selectItems var="procureList"
 							value="#{flDocumentBackingBean.managedBean.procurementTypeList}"
@@ -170,46 +178,24 @@
 				</p:column>  
 				<p:column headerText="#{lbl['lbl.fl.doc.search.datatable.action']}"
 					style="text-align: center">
-					<p:commandLink
-						rendered="#{(flDocument.docType == 'CR' and flDocument.status.statusId ne FulfilmentStatusCont.crPendingSubmission) or flDocument.docType == 'PR'  or flDocument.docType == 'PO' or flDocument.docType == 'CO' or flDocument.docType == 'DO' or flDocument.docType == 'IN' or flDocument.docType == 'FN' or flDocument.docType == 'PA'}"
-						onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'View'}])">
-						<p:graphicImage library="ep/images/design" name="document.png"
-							value="/resources/ep/images/design/document.png"
-							title="View Document" />
-					</p:commandLink>
-					<p:spacer width="7" />
-					<p:commandLink
-						rendered="#{flDocument.docType == 'DO' or flDocument.docType == 'IN' or flDocument.docType == 'FN' or (flDocument.docType == 'CR' and flDocument.status.statusId eq FulfilmentStatusCont.crPendingSubmission)}"
-						onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'Update'}])">
-						<p:graphicImage library="ep/images/design" name="edit.png"
-							value="/resources/ep/images/design/edit.png"
-							title="Update Document" />
-					</p:commandLink>
-					<p:spacer width="7" />
-					<p:commandLink
-						rendered="#{flDocument.docType == 'PO' or flDocument.docType == 'CO' or flDocument.docType == 'DO' or flDocument.docType == 'IN' or flDocument.docType == 'FN'}"
-						onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'Cancel'}])">
-						<p:graphicImage library="ep/images/design" name="cancel.png"
-							value="/resources/ep/images/design/cancel.png"
-							title="Cancel Document" />
-					</p:commandLink>
-					<p:spacer width="7" />
-					<p:commandLink rendered="#{flDocument.docType == 'PO' and flDocument.factored==true}"
-						onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'Submit'}])">
-						<p:graphicImage library="ep/images/design" name="terminate.png"
-							value="/resources/ep/images/design/terminate.png"
-							title="Factoring Company Removal" />
-					</p:commandLink>
-					<p:spacer width="7" />
-					<p:commandLink rendered="#{flDocument.docType == 'PO' or flDocument.docType == 'CO'}"
-						onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'Stop Fulfilment'}])">
-						<p:graphicImage library="ep/images/design" name="terminate.png"
-							value="/resources/ep/images/design/terminate.png"
-							title="Stop Fulfilment" />
-					</p:commandLink>
-
+					<p:menuButton value="">
+							        <p:menuitem value="#{lbl['lbl.fl.doc.search.action.view']}"  
+							        rendered="#{(flDocument.docType == 'CR' and flDocument.status.statusId ne FulfilmentStatusCont.crPendingSubmission) or flDocument.docType == 'PR'  or flDocument.docType == 'PO' or flDocument.docType == 'CO' or flDocument.docType == 'DO' or flDocument.docType == 'IN' or flDocument.docType == 'FN' or flDocument.docType == 'PA'}"
+							        onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'View'},{name:'statusId', value:'#{flDocument.status.statusId}'}])"/>
+							        <p:menuitem value="#{lbl['lbl.fl.doc.search.action.update']}"  
+							        rendered="#{flDocument.docType == 'DO' or flDocument.docType == 'IN' or flDocument.docType == 'FN' or (flDocument.docType == 'CR' and flDocument.status.statusId eq FulfilmentStatusCont.crPendingSubmission)}"
+							        onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'Update'},{name:'statusId', value:'#{flDocument.status.statusId}'}])"/>
+							        <p:menuitem value="#{lbl['lbl.fl.doc.search.action.cancel']}" 
+							        rendered="#{flDocument.docType == 'PO' or flDocument.docType == 'CO' or flDocument.docType == 'DO' or flDocument.docType == 'IN' or flDocument.docType == 'FN'}"
+									onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'Cancel'},{name:'statusId', value:'#{flDocument.status.statusId}'}])"/>
+									<p:menuitem value="#{lbl['lbl.fl.doc.search.action.factory.comp.removal']}" 
+							        rendered="#{flDocument.docType == 'PO' and flDocument.status.statusId eq FulfilmentStatusCont.poPendingInvoice}"
+									onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'Remove Factoring'},{name:'statusId', value:'#{flDocument.status.statusId}'}])"/>
+									<p:menuitem value="#{lbl['lbl.fl.doc.search.action.stop.fulfilment']}" 
+							        rendered="#{flDocument.docType == 'PO' or flDocument.docType == 'CO'}"
+									onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'Stop Fulfilment'}])"/>
+					</p:menuButton>
 				</p:column>
-
 			</p:dataTable>
 			<p:remoteCommand action="#{flDocumentBackingBean.navigateToPage}"
 				name="goToDetail" />
