@@ -14,7 +14,7 @@
 
 <cc:implementation>
        
-    <p:dialog widgetVar="spki_dlg" resizable="false">
+    <p:dialog widgetVar="spki_dlg" resizable="false" modal="true">
         <span id="#{cc.clientId}">
         
     
@@ -24,8 +24,8 @@
            <p:inputText value="#{spkiBackingBean.challsAnswer}" />
         
             <h:outputLabel for="password" value="*Digital Certificate PIN" />
-            <p:password binding="#{pin}" id="password" value="12345678" required="true" />
- 			<p:commandButton value="Sign" action="#{cc.attrs.postSignAction}" />        
+            <p:password binding="#{pin}" id="password"  />
+ 			<p:commandButton value="Sign" action="#{cc.attrs.postSignAction}" oncomplete="spki_dlg.hide();" />        
 		</h:panelGrid></span>
     </p:dialog>
 </cc:implementation>

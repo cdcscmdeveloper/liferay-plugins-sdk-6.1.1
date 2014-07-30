@@ -58,7 +58,7 @@ load: function(src, callback) {
  * @returns {undefined} Not applicable
  */
 runScript: function(src,callback,failedcallback){
-	$.ajax({cache:false})
+	/*$.ajax({cache:false})*/
 	Aegis.start();
 	$("#spacer").ajaxError(function(e, jqxhr, settings, exception) {
 		if (settings.dataType=='script') {
