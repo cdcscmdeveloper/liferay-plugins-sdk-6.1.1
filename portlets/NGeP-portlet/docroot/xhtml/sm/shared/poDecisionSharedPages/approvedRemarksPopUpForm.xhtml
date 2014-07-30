@@ -9,7 +9,8 @@
 	<table style="width: 100%">
 		<tr>
 			<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
-				<td><p:outputLabel value="* Registration Status" /></td>
+				<td><p:outputLabel value="Registration Status" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
 
 				<td><p:selectOneMenu
 						value="#{backingBean.managedBean.smAppl.pmStatus.statusId}"
@@ -24,7 +25,8 @@
 			</c:if>
 		</tr>
 		<tr>
-			<td><p:outputLabel value="Remarks For Approval*" /></td>
+			<td><p:outputLabel value="Remarks For Approval" /> <p:outputLabel
+					value="*" styleClass="mandatory" /></td>
 			<td style="padding-top: 5px;"><p:inputTextarea cols="90" /></td>
 		</tr>
 	</table>

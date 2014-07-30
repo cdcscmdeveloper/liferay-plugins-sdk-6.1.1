@@ -107,7 +107,8 @@
 		<ui:include
 			src="/xhtml/sm/shared/poDecisionSharedPages/approvedRemarksPopUpForm.xhtml" />
 		<div align="right">
-			<p:commandButton value="Submit" onclick="approverAppDialog.hide();"
+			<p:commandButton value="Submit"
+				oncomplete="approverAppDialog.hide();"
 				action="#{backingBean.submitPOorApproverReviewToBPM('APPROVE')}" />
 			<p:commandButton value="Cancel" onclick="approverAppDialog.hide();" />
 		</div>
@@ -119,7 +120,8 @@
 		<ui:include
 			src="/xhtml/sm/shared/poDecisionSharedPages/rejectedRemarksPopUpForm.xhtml" />
 		<div align="right">
-			<p:commandButton value="Submit" onclick="approverRejDialog.hide();"
+			<p:commandButton value="Submit"
+				oncomplete="approverRejDialog.hide();"
 				action="#{backingBean.submitPOorApproverReviewToBPM('REJECT')}" />
 			<p:commandButton value="Cancel" onclick="approverRejDialog.hide();" />
 		</div>

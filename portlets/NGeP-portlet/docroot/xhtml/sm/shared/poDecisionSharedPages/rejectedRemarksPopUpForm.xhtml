@@ -10,7 +10,8 @@
 	<table style="width: 100%">
 		<tr>
 			<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
-				<td><p:outputLabel value="* Rejection Reason(s)" /></td>
+				<td><p:outputLabel value="Rejection Reason(s)" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
 
 				<td><p:selectManyMenu showCheckbox="true"
 						value="#{backingBean.managedBean.reasonId}"
@@ -22,7 +23,8 @@
 			</c:if>
 		</tr>
 		<tr>
-			<td><p:outputLabel value="Remarks For Rejection*" /></td>
+			<td><p:outputLabel value="Remarks For Rejection" />
+				<p:outputLabel value="*" styleClass="mandatory" /></td>
 			<td style="padding-top: 5px;"><p:inputTextarea cols="90" /></td>
 		</tr>
 	</table>

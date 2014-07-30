@@ -57,7 +57,7 @@
 								rendered="#{staff.staffCategory eq SupplierManagementConst.STAFF_TYPE_SEMIPROF}" />
 							<p:outputLabel value="#{lbl['lbl.sm.staff.clericalStaff']}"
 								rendered="#{staff.staffCategory eq SupplierManagementConst.STAFF_TYPE_CLERICAL}" /></td>
-						<td width="70px"><p:outputLabel
+						<td width="90px"><p:outputLabel
 								value="#{lbl['lbl.sm.staff.bumi']}" /> <p:outputLabel value="*"
 								styleClass="mandatory" /></td>
 						<td width="55px"><p:inputText size="4" id="bumiStf"
@@ -67,9 +67,9 @@
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 							</p:inputText></td>
-						<td width="95px"><p:message for="bumiStf" showDetail="false"
+						<td width="70px"><p:message for="bumiStf" showDetail="false"
 								showSummary="true" display="icon" /></td>
-						<td width="80px"><p:outputLabel
+						<td width="100px"><p:outputLabel
 								value="#{lbl['lbl.sm.staff.nonBumi']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
 						<td width="55px"><p:inputText size="4" id="nonBumStf"
@@ -79,9 +79,9 @@
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 							</p:inputText></td>
-						<td width="95px"><p:message for="nonBumStf"
+						<td width="70px"><p:message for="nonBumStf"
 								showDetail="false" showSummary="true" display="icon" /></td>
-						<td width="80px"><p:outputLabel
+						<td width="100px"><p:outputLabel
 								value="#{lbl['lbl.sm.staff.frgnr']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
 						<td width="55px"><p:inputText id="frgStf" size="4"
@@ -91,7 +91,7 @@
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 							</p:inputText></td>
-						<td width="95px"><p:message for="frgStf" showDetail="false"
+						<td width="70px"><p:message for="frgStf" showDetail="false"
 								showSummary="true" display="icon" /></td>
 					</tr>
 
