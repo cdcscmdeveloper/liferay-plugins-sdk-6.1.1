@@ -2,7 +2,7 @@ package my.ep.web.backingbean.pm.salutation;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
@@ -12,11 +12,13 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.common.salutation.ISalutationSO;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.common.salutation.SalutationReqDTO;
 import my.ep.dto.pm.common.salutation.SalutationResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.type.aut.SearchOperator;
+import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -28,14 +30,14 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
  * 
  */
 @ManagedBean(name = "salutationBackingBean")
-@RequestScoped
+@ViewScoped
 public class SalutationBackingBean extends
 		BaseBackingBean<SalutationManagedBean> { 
 	
 	private static final Logger log = EpLogger
 			.getLogger(SalutationManagedBean.class);	
 	
-	private IPagingDataModel<PmSalutation> salutationDataModel = new salutationPagingDataModel();	
+	private IPagingDataModel<PmSalutation> salutationDataModel = new SalutationPagingDataModel();	
 
 	public SalutationBackingBean() {
 		log.info("inside constructor");
@@ -49,23 +51,33 @@ public class SalutationBackingBean extends
 		log.info(message);
 	}	
 	
-	// reload to professional cert search page 
+	/**
+	 * reload to professional cert search page 
+	 * 
+	 */		
 	public String redirectSalSearch() {
 		debugLogger("redirectSalSearch");
 
 		return "/xhtml/pm/salutation/salutationMain.xhtml";
 
-	}		
+	}	
 	
-	// reload to professional cert creation page 
+	/**
+	 * reload to professional cert creation page
+	 * 
+	 */	
 	public String createSalutation() {
 		debugLogger("createSalutation");
-		
+		PmSalutation pmSalutation= new PmSalutation();
+		this.getManagedBean().setPmSalutation(pmSalutation);
 		return "/xhtml/pm/salutation/salutationMaintenance.xhtml";
 
 	}	
-	
-	// get status item dropdown
+
+	/**
+	 * get status item dropdown
+	 * 
+	 */	
 	 public SelectItem[] getStatusList() {
 			
 			SelectItem[] items = null;     
@@ -81,7 +93,10 @@ public class SalutationBackingBean extends
 		    return items;
 		}
 
-
+		/**
+		 * search salutation info based 
+		 * on salutation codes and names search
+		 */
 		private ISearchBean<PmSalutation> getSearchBeanData(ISearchBean<PmSalutation> searchBean){
 				
 			if (getManagedBean().getSalutationCodes() != null
@@ -126,11 +141,11 @@ public class SalutationBackingBean extends
 		this.salutationDataModel = salutationDataModel;
 	}	
 
-
-	private class salutationPagingDataModel extends PagingDataModel<PmSalutation> {
+	
+	private class SalutationPagingDataModel extends PagingDataModel<PmSalutation> {
 		private static final long serialVersionUID = 1L;
 
-		public salutationPagingDataModel() {
+		public SalutationPagingDataModel() {
 			super("salutationSR");
 		}
 
@@ -156,7 +171,10 @@ public class SalutationBackingBean extends
 			return null;
 		}
 	}
-
+	
+	/**
+	 * get salutation info into maintenance page
+	 */
 	public String goToMaintaincePage(PmSalutation pmSalutation) {
 		debugLogger("goToMaintainceAction");
 		this.getManagedBean().setPmSalutation(pmSalutation);
@@ -164,5 +182,25 @@ public class SalutationBackingBean extends
 		return "/xhtml/pm/salutation/salutationMaintenance.xhtml";
 	}	
 	
-	 
+	/**
+	 * save and update salutation details
+	 * 
+	 */
+	 public void saveSaluationDtls(){
+		 PmSalutation salutation= this.getManagedBean().getPmSalutation();
+		 SalutationReqDTO reqDTO = new SalutationReqDTO();
+		 reqDTO.setSalutation(salutation);
+		 ISalutationSO iSalutationSO= EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ISalutationSO.class);
+		
+		 SalutationResDTO resDTO= iSalutationSO.saveOrUpdateSaluationDtls(reqDTO);
+		 this.getManagedBean().setPmSalutation(resDTO.getSalutation());
+		 if(resDTO.isSuccessful()){
+				FacesContext
+				.getCurrentInstance()
+				.addMessage(
+						null,
+						new FacesMessage(
+								FacesMessage.SEVERITY_INFO,"","Saved Successfully"));
+			}
+	 }
 }

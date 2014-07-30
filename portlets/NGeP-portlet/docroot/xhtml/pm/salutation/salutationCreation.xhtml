@@ -7,28 +7,26 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	
+	  
 	
-   <p:panel>
-	<h:panelGrid styleClass="noBorders tr,noBorders td" ></h:panelGrid>
-   </p:panel>
-	
-   <p:panel header="SALUTATION" toggleable="true">
+   <p:panel header="SALUTATION" toggleable="true" styleClass="noBorders tr,noBorders td" >
 		
 	<table>
 	  <tr>	  	
 		<td><p:outputLabel value="#{lbl['lbl.pm.sa.code']}" />
 			<p:outputLabel value="*" styleClass="mandatory" /></td>
-		<td><p:inputText value="#{salutationBackingBean.managedBean.pmSalutation.salutationCode}" size="30" /></td>
+		<td><p:inputText id="SalutationCode" value="#{salutationBackingBean.managedBean.pmSalutation.salutationCode}" size="30" required="true"/></td>
 	  </tr>	
 	  <tr>
 		<td><p:outputLabel value="#{lbl['lbl.pm.sa.name']}" />
 			<p:outputLabel value="*" styleClass="mandatory" /></td>
-		<td><p:inputText value="#{salutationBackingBean.managedBean.pmSalutation.salutationName}" size="30" /></td>
+		<td><p:inputText id="SalutationName" value="#{salutationBackingBean.managedBean.pmSalutation.salutationName}" size="30" required="true"/></td>
 	  </tr>
 	   <tr> 
 		<td><p:outputLabel value="Status :" /></td>
-     	<td><p:selectOneMenu style="width:178px;margin-bottom:5px;">   
-			  <f:selectItems value="#{salutationBackingBean.getStatusList()}" /> 
+     	<td><p:selectOneMenu style="width:178px;margin-bottom:5px;" value="#{salutationBackingBean.managedBean.pmSalutation.recordStatusFlg}" > 
+    	    <f:selectItems value="#{salutationBackingBean.getStatusList()}"></f:selectItems>
+    	   
     	    </p:selectOneMenu></td>				
 	    </tr>
 	</table>

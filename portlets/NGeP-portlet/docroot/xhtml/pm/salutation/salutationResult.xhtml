@@ -47,7 +47,7 @@
        </p:column >
         
     	<p:column headerText="#{lbl['lbl.pm.profiles.search.result.action']}">
-   		 <p:commandLink action="#{salutationBackingBean.goToMaintaincePage(salutationList)}">
+   		 <p:commandLink action="#{salutationBackingBean.goToMaintaincePage(salutationList)}" process="@this" partialSubmit="true">
      		<p:graphicImage library="ep/images/design" name="edit.png"
      		 value="/resources/ep/images/design/edit.png" />
     	 </p:commandLink>
@@ -58,7 +58,7 @@
 	<p:panel>
 	<h:panelGrid columns="2" style="width:100%;" styleClass="noBorders tr,noBorders td">
 
-      <p:commandButton value="#{lbl['lbl.btn.create']}" action="#{salutationBackingBean.createSalutation(null)}" 
+      <p:commandButton value="#{lbl['lbl.btn.create']}" action="#{salutationBackingBean.createSalutation}" 
       				   style="float:right;" icon="ui-icon-add" />
 	
 	 </h:panelGrid>	
