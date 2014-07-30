@@ -366,8 +366,6 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 	   BigDecimal totalInvoiceAmt = new BigDecimal(0);
 	   for(TreeNode childNode : getManagedBean().getChargeLineItemRoot().getChildren()){
 		   FlInvoiceItem data= (FlInvoiceItem) childNode.getData();
-		   BigDecimal invoiceTotalAmount=new BigDecimal(0);
-		   invoiceTotalAmount=invoiceTotalAmount.add(data.getInvAmt());
 		   
 		   if(flInvoiceItem.getFlFulfilmentItem().getCmItem().getItemId().longValue() == data.getFlFulfilmentItem().getCmItem().getItemId().longValue()){
 			   BigDecimal invoiceAmount=new BigDecimal(0);
@@ -377,6 +375,8 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			   }
 			   data.setInvAmt(invoiceAmount);
 			   totalInvoiceAmt = totalInvoiceAmt.add(invoiceAmount);			  
+		   } else {
+			   totalInvoiceAmt = totalInvoiceAmt.add(data.getInvAmt());	
 		   }
 	   }
 	   getManagedBean().setInvAmtGrandTotal(totalInvoiceAmt);
