@@ -19,6 +19,7 @@ import javax.portlet.PortletSession;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
+import my.ep.biz.service.cm.catalogue.IViewSupplierItemSO;
 import my.ep.biz.service.ct.supplier.IPanelSupplierSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
@@ -63,6 +64,7 @@ import my.ep.exception.EpException;
 import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
 import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
+import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
@@ -104,6 +106,7 @@ import my.ep.type.pm.OrganizationType;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
@@ -226,43 +229,56 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 				   if(catalogueResDTO.getSupplierItemList() != null && !catalogueResDTO.getSupplierItemList().isEmpty()){
 					 CmSupplierItem selectedSupplierItem = catalogueResDTO.getSupplierItemList().get(0);
 
-					List<CmSupplierItem> supplierItems = getManagedBean().getSupplierItems();
-				    if(supplierItems == null){
-						supplierItems = new ArrayList<CmSupplierItem>();
-				     }
-
-				   if(selectedSupplierItem != null) {
-					 if(supplierItems.isEmpty()){
-						supplierItems.add(selectedSupplierItem);
-						prepareQuestions(null , selectedSupplierItem);
-						getManagedBean().setSupplierItems(supplierItems);
+					 // copy all selected suppliers from the catalogue search
+					 if(compareSupplierItems == null){
+						 IViewSupplierItemSO viewSupplierItemSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT, IViewSupplierItemSO.class);
+						 catalogueReqDTO = new CatalogueReqDTO();
+						 catalogueReqDTO.setViewSearchBean(new CatalogueBackingBean().getManagedBean().getSearchDataModel().getSearchBean());
+						 catalogueReqDTO.setSupplierItemId(selectedSupplierItem.getSupplierItemId());
+						 catalogueReqDTO.setExtensionCode(selectedSupplierItem.getCmItem().getExtensionCode());
+						 catalogueResDTO = viewSupplierItemSO.getSuppliersItemPricingByExtensionCode(catalogueReqDTO);
+						 List<SmSupplier> selectedSuppliers = getManagedBean().getCompareSuppliers();
+						 for (VCmSupplierItem vCmSupplierItem : catalogueResDTO.getViewSuppItemResultBean().getResultList()) {
+							 if (vCmSupplierItem.getCmPricings() != null && vCmSupplierItem.getCmPricings().size() > 0) {
+								 CmSupplierItem supplierItem = vCmSupplierItem.getCmPricings().get(0).getCmSupplierItem();
+								 if(supplierItem.getSmSupplier() != null){
+									 selectedSuppliers.add(supplierItem.getSmSupplier());
+								 }
+							 }
+						 }
+						 selectedSuppliers.add(selectedSupplierItem.getSmSupplier());
+						 supplierListListener(selectedSuppliers , scQuote);
 					 } else {
-						List<Long> itemIds = new ArrayList<Long>();
-						for (CmSupplierItem cmSupplierItem : supplierItems) {
-							itemIds.add(cmSupplierItem.getCmItem().getItemId());
-						}
-						if (itemIds.size() > 0) {
-							if(itemIds.contains(selectedSupplierItem.getCmItem().getItemId())){
-								throw new EpException(MessageConst.INFO_700027, new String[]{selectedSupplierItem.getCmItem().getItemName(),""});
-							} else {
-								supplierItems.add(selectedSupplierItem);
-								getManagedBean().setSupplierItems(supplierItems);
-								prepareQuestions(null , selectedSupplierItem);
-							}
-						}
-					}
-				   }
-				   
-				   // selected suppliers from the catalogue search
-				   if(compareSupplierItems == null){
-					   compareSupplierItems = getManagedBean().getSupplierItems();
-				   }
-				   // adding multiple suppliers  who are supplying same item in the compare screen to the supplier criteria
-				   if (selectedSupplierItem != null) {
-					   if(compareSupplierItems != null && compareSupplierItems.size() > 0){
-							supplierListListener(addSelectedSuppliers(compareSupplierItems) , scQuote);
-					   }
-				   }
+						 supplierListListener(addSelectedSuppliers(compareSupplierItems) , scQuote);
+					 }
+
+
+					 List<CmSupplierItem> supplierItems = getManagedBean().getSupplierItems();
+					 if(supplierItems == null){
+						 supplierItems = new ArrayList<CmSupplierItem>();
+					 }
+
+					 if(selectedSupplierItem != null) {
+						 if(supplierItems.isEmpty()){
+							 supplierItems.add(selectedSupplierItem);
+							 prepareQuestions(null , selectedSupplierItem);
+							 getManagedBean().setSupplierItems(supplierItems);
+						 } else {
+							 List<Long> itemIds = new ArrayList<Long>();
+							 for (CmSupplierItem cmSupplierItem : supplierItems) {
+								 itemIds.add(cmSupplierItem.getCmItem().getItemId());
+							 }
+							 if (itemIds.size() > 0) {
+								 if(itemIds.contains(selectedSupplierItem.getCmItem().getItemId())){
+									 throw new EpException(MessageConst.INFO_700027, new String[]{selectedSupplierItem.getCmItem().getItemName(),""});
+								 } else {
+									 supplierItems.add(selectedSupplierItem);
+									 getManagedBean().setSupplierItems(supplierItems);
+									 prepareQuestions(null , selectedSupplierItem);
+								 }
+							 }
+						 }
+					 }
 				   }
 			     }else {
 			    	 throw new EpException( "Select panel items only");
@@ -2195,6 +2211,16 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			if(getManagedBean().getServiceTemplateSpecBean().getSpecAnswerList() != null){
 				specAnswers.addAll(getManagedBean().getServiceTemplateSpecBean().getSpecAnswerList());
 			}
+			
+			// remarks
+			if(quote.getRemarks() != null ){
+				for (int i = 0; i < quote.getRemarks().size(); i++) {
+					ScSQRemark remark = quote.getRemarks().get(i);
+					if(StringUtils.isBlank(remark.getRemark())){
+						quote.getRemarks().remove(remark);
+					}	
+				} 
+			}
 			reqDTO.setSpecAnswers(specAnswers);
 			reqDTO.setQuoteBidDtl(quote);
 			QuoteResDTO quoteResDTO = quoteSO.saveSupplierResponse(reqDTO);
@@ -2235,6 +2261,42 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 		}
 		
 		this.getManagedBean().setScQuote(quote);
+	}
+	
+	/**
+	 * Event for No.Of quote in SQ
+	 */
+	public void noOfQuoteEvent() {
+		ScQuote quote = getManagedBean().getScQuote();
+		if (quote.getMultipleQuote()){ // for multiple quote
+			
+			//get Template spec backing bean and manage bean
+			PortletSession portletSession = (PortletSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
+			TemplateSpecBackingBean templateSpecBackingBean = (TemplateSpecBackingBean) portletSession.getAttribute("templateSpecBackingBean");
+			if (templateSpecBackingBean == null) {
+				templateSpecBackingBean = new TemplateSpecBackingBean();
+			}
+			
+			// product
+			if(getManagedBean().getProductTemplateSpecBean().getSpecMaster() != null){
+				TplSpecMaster  productTplSpec = getManagedBean().getProductTemplateSpecBean().getSpecMaster();
+
+				for (TplSpecQuestion TplSpecQuestion : productTplSpec.getTplSpecQuestions()) {
+					templateSpecBackingBean.resetPriceTypeDtl(TplSpecQuestion);
+				}
+				getManagedBean().getProductTemplateSpecBean().getSpecMaster().setEstCostReq(Boolean.TRUE);
+			}
+
+			// service 
+			if(getManagedBean().getServiceTemplateSpecBean().getSpecMaster() != null){
+				TplSpecMaster  serviceTplSpec = getManagedBean().getProductTemplateSpecBean().getSpecMaster();
+
+				for (TplSpecQuestion TplSpecQuestion : serviceTplSpec.getTplSpecQuestions()) {
+					templateSpecBackingBean.resetPriceTypeDtl(TplSpecQuestion);
+				}
+				getManagedBean().getServiceTemplateSpecBean().getSpecMaster().setEstCostReq(Boolean.TRUE);
+			}
+		}
 	}
 	
 	public String cancel() {
