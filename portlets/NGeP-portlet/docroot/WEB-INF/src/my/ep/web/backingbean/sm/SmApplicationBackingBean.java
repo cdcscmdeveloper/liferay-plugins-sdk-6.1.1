@@ -288,7 +288,8 @@ public class SmApplicationBackingBean extends
 					System.out.println(" *** After clone Supplier Id ******* "
 							+ smApplSupplier.getSupplierId());
 					resDto = retriveLatestDraftApplication(smApplSupplier,
-							applicationType);
+							applicationType,
+							SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC);
 					if (resDto.isErrorCaued()) {
 						return setExceptionNavigationForAppl(applicationType);
 					}
@@ -402,9 +403,9 @@ public class SmApplicationBackingBean extends
 				}
 			}
 
-			calcPersonnelListCount();
+			// calcPersonnelListCount();
 			// calculateCapital();
-			calculateBumiPercentageTotals();
+			// calculateBumiPercentageTotals();
 			updateSmAppl(applicationType, "", "");
 			getManagedBean().setCurrentPageType(
 					SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC);
@@ -722,9 +723,6 @@ public class SmApplicationBackingBean extends
 				getManagedBean().getSmAppl().setCurrentActiveTab(currentTab);
 				getManagedBean().setCurrentPageType(currentPageType);
 			}
-			// if (valid) {
-			// valid = retriveLatestApplAfterUpdate(pageType);
-			// }
 			isError = valid;
 		}
 
@@ -919,7 +917,7 @@ public class SmApplicationBackingBean extends
 			updateSuccess = resDTO.isSuccessful();
 		} catch (Exception e) {
 			// System.out.println("this is error");
-			// e.printStackTrace();
+			 e.printStackTrace();
 			updateSuccess = false;
 			throw new EpException(MessageConst.ERROR_722506);
 		} finally {
@@ -1411,7 +1409,7 @@ public class SmApplicationBackingBean extends
 		int currentPage = getManagedBean().getTabActiveIndex();
 		try {
 			this.currentTab = currentPage;
-			getManagedBean().getSmAppl().setSupportingDocMode("O");
+			// getManagedBean().getSmAppl().setSupportingDocMode("O");
 			if (navType.equalsIgnoreCase("next")) {
 				this.outputTab = currentPage + 1;
 			} else if (navType.equalsIgnoreCase("prev")) {
@@ -3747,6 +3745,8 @@ public class SmApplicationBackingBean extends
 												MessageUtils.BUNDLE_COMMON_MESSAGES,
 												new FacesScopes()
 														.getUserLocale())));
+		// TODO remove if effect flow
+		renewSesionObject();
 		return CommonUIConst.ACKNOWLEDGE_PAGE;
 		// } catch (Exception e) {
 		// e.printStackTrace();
@@ -3785,7 +3785,7 @@ public class SmApplicationBackingBean extends
 													MessageUtils.BUNDLE_COMMON_MESSAGES,
 													new FacesScopes()
 															.getUserLocale())));
-
+			renewSesionObject();
 			return CommonUIConst.ACKNOWLEDGE_PAGE;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -3837,7 +3837,7 @@ public class SmApplicationBackingBean extends
 													.getApplNo() },
 									MessageUtils.BUNDLE_COMMON_MESSAGES,
 									new FacesScopes().getUserLocale())));
-
+			renewSesionObject();
 			return CommonUIConst.ACKNOWLEDGE_PAGE;
 		} catch (Exception e) {
 			return SupplierManagementConst.PROCEED_DEL_PENDING_MOF_APPLN;
@@ -3881,7 +3881,7 @@ public class SmApplicationBackingBean extends
 														MessageUtils.BUNDLE_COMMON_MESSAGES,
 														new FacesScopes()
 																.getUserLocale())));
-
+				renewSesionObject();
 				return CommonUIConst.ACKNOWLEDGE_PAGE;
 			}
 		} finally {
@@ -4102,8 +4102,6 @@ public class SmApplicationBackingBean extends
 				sendPersonnelActivationEmail();
 			}
 			if (validSiteVisit) {
-				ReviewApplicationResDTO resDTO = reqSO
-						.submitPOorApproverReviewToBPM(reqDTO);
 				String msgConst = "";
 				if (getManagedBean().isPoUser()
 						|| getManagedBean().isApproverUser()) {
@@ -4126,7 +4124,8 @@ public class SmApplicationBackingBean extends
 					} else if (res.equalsIgnoreCase("SITE_VISIT_AFTER_APPROVE")) {
 						msgConst = MessageConst.INFO_700017;
 					}
-
+					ReviewApplicationResDTO resDTO = reqSO
+							.submitPOorApproverReviewToBPM(reqDTO);
 					FacesContext
 							.getCurrentInstance()
 							.addMessage(
@@ -4149,6 +4148,7 @@ public class SmApplicationBackingBean extends
 															MessageUtils.BUNDLE_COMMON_MESSAGES,
 															new FacesScopes()
 																	.getUserLocale())));
+					renewSesionObject();
 					retMsg = CommonUIConst.ACKNOWLEDGE_PAGE;
 
 				} else {
@@ -4735,7 +4735,7 @@ public class SmApplicationBackingBean extends
 	}
 
 	private MofRegistrationResDTO retriveLatestDraftApplication(
-			SmSupplier supplier, String applType) {
+			SmSupplier supplier, String applType, String currentPage) {
 		IMofRegistrationSO mofRegistrationSO = null;
 
 		try {
@@ -4745,6 +4745,7 @@ public class SmApplicationBackingBean extends
 			MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
 			reqDto.setSmSupplier(supplier);
 			reqDto.setAppType(applType);
+			reqDto.setCurrentPage(currentPage);
 			MofRegistrationResDTO resDTO = mofRegistrationSO
 					.retrieveLatestSmApplicationDraft(reqDto);
 			return resDTO;
