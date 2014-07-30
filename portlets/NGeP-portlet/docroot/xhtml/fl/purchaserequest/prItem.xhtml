@@ -380,7 +380,7 @@
 
 	<p:dialog id="addPurchasedItemDialog" header="ITEM LIST"
 		widgetVar="addItems" showEffect="fade" hideEffect="fade" modal="true"
-		height="450" width="600" resizable="false">
+		width="600" resizable="false">
 		<p:dataTable id="purchasedItemDt" var="purchasedItem"
 			value="#{purchaseRequestBackingBean.managedBean.requestNoteWithDtlsList}"
 			rowKey="#{purchasedItem}"
@@ -424,7 +424,7 @@
 	</p:dialog>
 	<p:dialog id="addReceivingOfficerDialog" header="RECEIVING OFFICER"
 		widgetVar="addOfficer" showEffect="fade" hideEffect="fade"
-		modal="true" height="250" width="600" resizable="false">
+		modal="true" width="600" resizable="false">
 		<p:dataTable id="receivingOfficerDt" var="receivingOfficer"
 			value="#{purchaseRequestBackingBean.managedBean.receivingOffList}"
 			rowKey="#{purchasedItem}">
