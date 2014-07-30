@@ -261,7 +261,8 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 				new FulfilmentBackingBean(ParameterConst.DOCTYPE_PAYMENT_ADVICE, getManagedBean().getPaymentAdvice().getFlRequest().getScPurchaseRequest().getRequestNote().getRequestNoteNo());
 			} else {
 				new FulfilmentBackingBean(ParameterConst.DOCTYPE_PAYMENT_ADVICE, getManagedBean().getPaymentAdvice().getFlRequest().getCtContract().getContractNo());
-			}			
+			}	
+			populateChargeLineData();
 		}
 	}
 	
@@ -422,7 +423,7 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 	}
 	public void onTabChange(int selectedTabIndex){
 		if(selectedTabIndex==1){
-			populateChargeLineData();	
+			//populateChargeLineData();	
 			setClassName("@(.pmChargeLinePnlClass)");
 		}
 		if(selectedTabIndex==3){
@@ -478,6 +479,12 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			grandTotalOrderAmt = grandTotalOrderAmt.add(totalOrderAmt);
 			grandTotalReceivedAmt = grandTotalReceivedAmt.add(totalReceiveAmt);
 			grandTotalInvAmt = grandTotalInvAmt.add(totalInvAmt);
+			
+			if(getManagedBean().getSelectedNode()==null) {
+				getManagedBean().setSelectedNode(childItemNode);
+				childItemNode.setSelected(true);
+				onNodeSelect();
+			}
 		}
 		getManagedBean().setOrderedAmtGrandTotal(grandTotalOrderAmt);
 		getManagedBean().setReceivedAmtGrandTotal(grandTotalReceivedAmt);
