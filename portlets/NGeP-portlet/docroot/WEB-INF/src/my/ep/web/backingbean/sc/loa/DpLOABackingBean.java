@@ -15,7 +15,6 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.sc.directpurchase.PurchaseRequestReqDTO;
 import my.ep.dto.sc.directpurchase.PurchaseRequestResDTO;
-import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.awardsupplierdata.SCAwardSupplierDataType;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseRequest;
@@ -53,17 +52,13 @@ public class DpLOABackingBean extends
 		try {
 			SCAwardSupplierDataType dpDataType = getBpmTaskDetails(SCAwardSupplierDataType.class);
 			
-			retrieveLOAList(Long.valueOf(dpDataType.getDpId()));
+			retrieveLOAList(Long.valueOf(dpDataType.getSourceId()));
 			
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, QTConstants.DP_LOA_LIST_PAGE);	
-		} catch (EpException epe) {
-			handleException(epe);
 		} catch (Exception e) {
 			handleException(e);
-		} finally {
-			
 		}
 	}
 
