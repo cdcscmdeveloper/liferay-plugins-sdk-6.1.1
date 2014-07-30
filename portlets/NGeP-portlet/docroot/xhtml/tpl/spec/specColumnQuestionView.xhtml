@@ -14,7 +14,7 @@
 	<p:column style="width:75px;" headerText="#{lbl['lbl.tpl.spec.content.fulfilment.type']}" rendered="#{isItemTypeService and isFulfilmentTypeReq}">
 		<h:outputText value="#{templateSpecBackingBean.getParameterDesc(question.clFulfilmentTypeCode)}" rendered="#{isQuestionTypeItem}" />
 	</p:column>
-	<p:column style="width:125px;" headerText="#{lbl['lbl.tpl.spec.content.uom']}">
+	<p:column style="width:90px;white-space:normal;" headerText="#{lbl['lbl.tpl.spec.content.uom']}">
 		<h:outputText value="#{question.clUom.uomName}" rendered="#{isQuestionTypeItem}" />
 	</p:column>
 	

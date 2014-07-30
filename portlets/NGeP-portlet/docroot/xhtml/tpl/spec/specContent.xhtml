@@ -113,9 +113,12 @@
 			<br />
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.ok']}" icon="ui-icon-accept" 
-					oncomplete="delConfirmPopup.hide();" immediate1="true" action="#{templateSpecBackingBean.deleteQuestion(templateSpecBean)}"
-					partialSubmit="true" pprocess="@this,spg" update="spg" />
-				<p:commandButton value="#{lbl['lbl.btn.cancel']}" icon="ui-icon-cancel" oncomplete="delConfirmPopup.hide();return false" />
+					oncomplete="delConfirmPopup.hide();" action="#{templateSpecBackingBean.deleteQuestion(templateSpecBean)}"
+					partialSubmit="true" process="@this,spg" update="spg" />
+				<p:commandButton value="#{lbl['lbl.btn.cancel']}" icon="ui-icon-cancel" immediate="true" oncomplete="delConfirmPopup.hide();return false">
+					<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion.selected}" value="#{false}" />
+					<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{null}" />
+				</p:commandButton>
 			</div>
 		</p:dialog>
 		

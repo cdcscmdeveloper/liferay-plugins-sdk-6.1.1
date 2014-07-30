@@ -55,6 +55,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecTierQty;
 import my.ep.persistence.entity.tpl.spec.TplSpecZone;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.OrganizationType;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -90,13 +91,6 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
     }
 
 	public TemplateSpecBackingBean() {
-		if (getManagedBean().getTemplateSpecBean().getSupplier() == null) {
-			IRegistrationSO registrationSO = BusinessDelegate.getInstance().getServiceObject("sm", IRegistrationSO.class);
-			RegistrationReqDTO registrationReqDTO = new RegistrationReqDTO();
-			registrationReqDTO.setSupplierId(2L);
-			RegistrationResDTO registrationResDTO = registrationSO.retrieveSuppOnlineAcc(registrationReqDTO);
-			getManagedBean().getTemplateSpecBean().setSupplier(registrationResDTO.getSmSupp());	
-		}
 	}
 	
 	public String retrieveTemplateSpecMaster(TemplateSpecBean templateSpecBean) {
@@ -113,6 +107,25 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 			if (!TemplateSpecConst.CONTENT_TYPE_QUESTION.equals(contentType)) {
 				SmSupplier smSupplier = templateSpecBean.getSupplier();
 				
+				/*if (smSupplier == null) {
+					IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+					OrgProfileReqDTO profileReqDTO = new OrgProfileReqDTO();
+					profileReqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
+					profileReqDTO.setOrgType(OrganizationType.SUPPLIER.value());
+					OrgProfileResDTO profileResDTO = orgProfileSO
+							.retrieveOrgProfileListByOrgType(profileReqDTO);
+					
+					if (profileResDTO.getOrgProfileList().size() > 0) {
+						IRegistrationSO registrationSO = BusinessDelegate.getInstance().getServiceObject(
+								ModuleCodeConst.SUPPLIER_MANAGEMENT, IRegistrationSO.class);
+						RegistrationReqDTO registrationReqDTO = new RegistrationReqDTO();
+						registrationReqDTO.setSupplierId(profileResDTO.getOrgProfileList().get(0).getOrgProfileId());
+						RegistrationResDTO registrationResDTO = registrationSO.retrieveSuppOnlineAcc(registrationReqDTO);
+						smSupplier = registrationResDTO.getSmSupp();	
+					}
+				}*/
+				
 				reqDTO.setSupplier(smSupplier);
 			}
 
@@ -123,6 +136,10 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 				templateSpecBean.setSpecMaster(specMaster);
 				templateSpecBean.setSpecAnswerList(resDTO.getSpecAnswerList());
 				templateSpecBean.setSelectedSpecQuestion(null);
+				
+				if (resDTO.getSpecAnswerList() != null) {
+					calcGrandTotalAmount(templateSpecBean);	
+				}
 			}
 		} finally {
 			templateSpecSO = null;
@@ -136,7 +153,7 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 		
 		ITemplateSpecSO templateSpecSO = null;
 		try {
-			templateSpecSO = (ITemplateSpecSO)BusinessDelegate.getInstance().getServiceObject("cc",ITemplateSpecSO.class);
+			templateSpecSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.COMMON_COMPONENT,ITemplateSpecSO.class);
 			TemplateSpecReqDTO reqDTO = new TemplateSpecReqDTO();
 			
 			TplSpecMaster specMaster = templateSpecBean.getSpecMaster();
@@ -171,7 +188,7 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 	public void saveAnswerAction(TemplateSpecBean templateSpecBean) {
 		ITemplateSpecSO templateSpecSO = null;
 		try {
-			templateSpecSO = (ITemplateSpecSO)BusinessDelegate.getInstance().getServiceObject("cc",ITemplateSpecSO.class);
+			templateSpecSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.COMMON_COMPONENT,ITemplateSpecSO.class);
 
 			List<TplSpecAnswer> answerList = templateSpecBean.getSpecAnswerList();
 			
@@ -273,7 +290,11 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 			
 			ParameterReqDTO reqDTO = new ParameterReqDTO();
 			reqDTO.setParameterType(ParameterTypeConst.ANSWER_TYPE);
-			reqDTO.setParameterCode(ParameterConst.ANSWER_TYPE_TEXT);
+			if (ParameterConst.SPECIFICATION_TYPE_FINANCIAL.equals(tplSpecMaster.getSpecTypeCode().getParameterCode())) {
+				reqDTO.setParameterCode(ParameterConst.ANSWER_TYPE_NUMERIC);
+			} else {
+				reqDTO.setParameterCode(ParameterConst.ANSWER_TYPE_TEXT);
+			}
 			ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
 			newQuestion.setAnswerTypeCode(resDTO.getPmParameter());
 			resetAnswerTypeDtl(newQuestion);
@@ -548,6 +569,7 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 				BigDecimal uomPerDay = specQuestion.getClUomPerDay();
 				BigDecimal uomPerMonth = specQuestion.getClUomPerMonth();
 				BigDecimal durationMonth = specMaster.getDurationMonth();
+				BigDecimal itemDurationMonth = specQuestion.getClDurationMonth();
 				
 				if (uomFrequency != null) {
 					totalPrice = totalPrice.multiply(uomFrequency);
@@ -561,10 +583,14 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 					totalPrice = totalPrice.multiply(uomPerMonth);
 				}
 				
-				specAnswer.setAmountPerYear(totalPrice);
+				specAnswer.setAmountPerYear(totalPrice.multiply(BigDecimal.valueOf(12)));
 				
 				if (durationMonth != null) {
 					totalPrice = totalPrice.multiply(durationMonth);
+				}
+				
+				if (itemDurationMonth != null) {
+					totalPrice = totalPrice.multiply(itemDurationMonth);
 				}
 			}
 			specAnswer.setAnswerNumeric(totalPrice);
@@ -736,18 +762,23 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 	}
 	
 	private void calcGrandTotalAmount(TemplateSpecBean templateSpecBean) {
-		BigDecimal specTotal = new BigDecimal(0);
+		BigDecimal totalAmount = new BigDecimal(0);
+		BigDecimal totalAmountPerYear = new BigDecimal(0);
+		TplSpecMaster specMaster = templateSpecBean.getSpecMaster();
 		List<TplSpecAnswer> specAnswerList = templateSpecBean.getSpecAnswerList();
 		
 		for (TplSpecAnswer tplSpecAnswer : specAnswerList) {
 			if (tplSpecAnswer.getAnswerNumeric() != null) {
-				specTotal.add(tplSpecAnswer.getAnswerNumeric());	
+				totalAmount = totalAmount.add(tplSpecAnswer.getAnswerNumeric());	
+			}
+			
+			if (tplSpecAnswer.getAmountPerYear() != null) {
+				totalAmountPerYear = totalAmountPerYear.add(tplSpecAnswer.getAmountPerYear());	
 			}
 		}
 		
-		System.out.println("specTotal: " + specTotal);
-		
-		templateSpecBean.getSpecMaster().setSpecTotal(specTotal);
+		specMaster.setTotalAmountPerYear(totalAmountPerYear);
+		specMaster.setTotalAmount(totalAmount);
 	}
 	
 	private boolean isPriceTypeStandard(String priceType) {
@@ -793,7 +824,7 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 
 			ITemplateSpecSO templateSpecSO;
 			try {
-				templateSpecSO = BusinessDelegate.getInstance().getServiceObject("cc",ITemplateSpecSO.class);
+				templateSpecSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.COMMON_COMPONENT,ITemplateSpecSO.class);
 				
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("processType",

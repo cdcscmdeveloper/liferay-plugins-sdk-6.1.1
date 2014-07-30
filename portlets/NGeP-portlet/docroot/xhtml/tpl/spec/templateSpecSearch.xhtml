@@ -9,7 +9,12 @@
 	<ui:define name="resourceSection"></ui:define>
 
 	<ui:define name="contentSection">
-		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />		
+		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />	
+		
+		<p:blockUI block=":form" trigger="tplSpecMasterTbl">
+			<p:graphicImage value="/resources/ep/images/ajax-loader.gif" />
+		</p:blockUI>
+			
 		<p:panel id="panel1" header="#{lbl['lbl.tpl.spec.search']}" toggleable="true">
 			<table style="width:100%">
 				<tr>

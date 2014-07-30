@@ -26,7 +26,7 @@
 		</ui:define>
 	</ui:decorate>
 	
-	<p:column style="width:50px;text-align:right;" headerText="#{lbl['lbl.tpl.spec.content.sub.sequence']}" rendered="#{isSpecTypeFinancial}">
+	<p:column style="width:50px;text-align:right;" headerText="#{lbl['lbl.tpl.spec.content.sub.sequence']}" rendered="#{isSpecTypeFinancial and !isItemTypeService}">
 		<h:outputText value="#{tplSpecAnswer.tplSpecTierQty.subSequence}" rendered="#{isQuestionTypeItem and isPriceTypeTariff}">
 			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, tplSpecAnswer.tplSpecQuestion.clUom.uomCode)}" />
 		</h:outputText>
@@ -45,28 +45,40 @@
 			value="#{tplSpecAnswer.ratePerUom}"
 			rendered="#{isQuestionTypeItem}" required="true" maxlength="19"
 			label="#{lbl['lbl.tpl.spec.content.unit.price']}">
-			<p:ajax event="blur" partialSubmit="true" process="@this" update="ansYearPG, ansPG" listener="#{templateSpecBackingBean.calcTotalAmount(templateSpecBean, tplSpecAnswer, isItemTypeService)}" />
+			<p:ajax event="blur" partialSubmit="true" process="@this" update="ansYearPG, ansPG, @(.calcAmount)" listener="#{templateSpecBackingBean.calcTotalAmount(templateSpecBean, tplSpecAnswer, isItemTypeService)}" />
 			<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" maxIntegerDigits="14" />
 		</p:inputText>
 		<p:message id="ratePerUomMsg" for="ratePerUom" display="icon" />
 	</p:column>
-	<p:column style="width:95px;" rendered="#{isItemTypeService and isSpecTypeFinancial}" headerText="#{lbl['lbl.tpl.spec.content.amount.per.year']}">
-		<h:panelGroup id="ansYearPG">
-			<p:inputText style="min-width:0px !important;width:96%;" styleClass="ppNumericAlign"
-				value="#{tplSpecAnswer.amountPerYear}"
-				rendered="#{isQuestionTypeItem}" disabled="true">
+	<p:column style="width:90px;white-space:normal;text-align:right;" rendered="#{isItemTypeService and isSpecTypeFinancial}" headerText="#{lbl['lbl.tpl.spec.content.amount.per.year']}">
+		<f:facet name="footer">
+			<h:outputText id="totalAmountPerYr" 
+				styleClass="calcAmount" 
+				value="#{templateSpecBean.specMaster.totalAmountPerYear}">
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-			</p:inputText>
+			</h:outputText>
+		</f:facet>
+		<h:panelGroup id="ansYearPG">
+			<h:outputText 
+				value="#{tplSpecAnswer.amountPerYear}"
+				rendered="#{isQuestionTypeItem}">
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+			</h:outputText>
 		</h:panelGroup>
 	</p:column>
 	<ui:param name="answerlbl" value="#{isSpecTypeFinancial ? 'lbl.tpl.spec.content.total.amount' : 'lbl.tpl.spec.content.answer'}" />
-	<p:column style="width:125px;" headerText="#{lbl[answerlbl]}">
+	<p:column style="width:115px;#{isSpecTypeFinancial ? 'text-align:right;' : ''}" headerText="#{lbl[answerlbl]}">
 		<f:facet name="header">
-			<h:outputText value="* " styleClass="mandatory" />
+			<h:outputText value="* " styleClass="mandatory" rendered="#{!isSpecTypeFinancial}" />
 			<h:outputText value="#{lbl[answerlbl]}"/>
 		</f:facet>
 		<f:facet name="footer">
-			<p:inputText style="width:96%;" styleClass="ppNumericAlign" value="#{templateSpecBean.specMaster.specTotal}" disabled="true" rendered="#{isSpecTypeFinancial}" />
+			<h:outputText id="totalAmount" 
+				styleClass="calcAmount" 
+				value="#{templateSpecBean.specMaster.totalAmount}" 
+				rendered="#{isSpecTypeFinancial}">
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+			</h:outputText>
 		</f:facet>
 		
 		<h:panelGroup id="ansPG">
@@ -76,11 +88,16 @@
 			<p:message id="answerTextMsg" for="answerText" display="icon" rendered="#{isAnswerTypeText and question.clAnswerRequired}" />
 			<p:inputText id="answerNumeric" style="width:96%;" styleClass="ppNumericAlign" 
 				value="#{tplSpecAnswer.answerNumeric}" maxlength="19"
-				rendered="#{isAnswerTypeNumeric and ((isSpecTypeFinancial and !isPriceTypeTier) or !isSpecTypeFinancial)}" disabled="#{isSpecTypeFinancial}" required="#{question.clAnswerRequired}"
+				rendered="#{isAnswerTypeNumeric and !isSpecTypeFinancial}" required="#{question.clAnswerRequired}"
 				label="#{lbl[answerlbl]}">
 				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" maxIntegerDigits="14" />
 			</p:inputText>
 			<p:message id="answerNumericMsg" for="answerNumeric" display="icon" rendered="#{isAnswerTypeNumeric and ((isSpecTypeFinancial and !isPriceTypeTier) or !isSpecTypeFinancial) and question.clAnswerRequired}" />
+			<h:outputText id="answerNumText" 
+				value="#{tplSpecAnswer.answerNumeric}"
+				rendered="#{isAnswerTypeNumeric and (isSpecTypeFinancial and !isPriceTypeTier)}">
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+			</h:outputText>
 			<h:selectOneMenu id="answerCompliance" style="width:100%;" 
 				value="#{tplSpecAnswer.answerCompliance}" 
 				rendered="#{isAnswerTypeDropdown}" required="#{question.clAnswerRequired}"
@@ -89,6 +106,11 @@
 			</h:selectOneMenu>
 			<p:message id="answerComplianceMsg" for="answerCompliance" display="icon" rendered="#{isAnswerTypeDropdown and question.clAnswerRequired}" />
 		</h:panelGroup>
+	</p:column>
+	<p:column style="width:50px;text-align:right;" headerText="#{lbl['lbl.tpl.spec.content.ranking']}" rendered="#{isSpecTypeFinancial and isEstCostReq and !isScoringReq}">
+		<h:outputText value="#{tplSpecAnswer.tplSpecSuppAnswer.ranking}">
+			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+		</h:outputText>
 	</p:column>
 	<p:column style="width:130px;" headerText="#{lbl['lbl.tpl.spec.content.note']}">
 		<p:inputTextarea style="width:96%;" value="#{tplSpecAnswer.answerRemark}" rows="1" maxlength="500" />

@@ -12,7 +12,7 @@
 			<h:outputText value="#{lbl['lbl.tpl.spec.content.item']}"/>
 		</f:facet>	
 		<p:inputTextarea id="itemName" style="width:96%;" value="#{question.clItem}" 
-			rendered="#{isQuestionTypeItem}" required="true" rows="1" maxlength="200"
+			rendered="#{isQuestionTypeItem}" required="#{!question.selected}" rows="1" maxlength="200"
 			label="#{lbl['lbl.tpl.spec.content.item']}" />
 		<p:message id="itemNameMsg" for="itemName" display="icon" />
 	</p:column>
@@ -22,7 +22,7 @@
 			<h:outputText value="#{lbl['lbl.tpl.spec.content.specification']}"/>
 		</f:facet>
 		<p:inputTextarea id="specification" style="width:96%;" value="#{question.clSpecDetail}" 
-			rendered="#{!isQuestionTypeItem or !isSpecificationReq}" required="true" rows="1" maxlength="200"
+			rendered="#{!isQuestionTypeItem or !isSpecificationReq}" required="#{!question.selected}" rows="1" maxlength="200"
 			label="#{lbl['lbl.tpl.spec.content.specification']}" />
 		<p:message id="specificationMsg" for="specification" display="icon" />
 	</p:column>
@@ -31,7 +31,7 @@
 			<h:outputText value="* " styleClass="mandatory" />
 			<h:outputText value="#{lbl['lbl.tpl.spec.content.fulfilment.type']}"/>
 		</f:facet>
-		<h:selectOneMenu id="fulfilType" value="#{question.clFulfilmentTypeCode.parameterId}" required="true" style="width:100%;" 
+		<h:selectOneMenu id="fulfilType" value="#{question.clFulfilmentTypeCode.parameterId}" required="#{!question.selected}" style="width:100%;" 
 			rendered="#{isQuestionTypeItem}"
 			label="#{lbl['lbl.tpl.spec.content.fulfilment.type']}">
 			<f:selectItems value="#{templateSpecBackingBean.getDropdownValues(ParameterTypeConst.fulfilmentType)}" />
@@ -50,9 +50,9 @@
 			value="#{question.clUom.uomName}"
 			conditionField="recordStatus^1"
 			rendered="#{isQuestionTypeItem}"
-			required="true"
+			required="#{!question.selected}"
 			size="12"
-			update1="#{p:component('dayUOM')}">
+			update="@form">
 		</ac:lov>
 	</p:column>
 	
@@ -64,7 +64,7 @@
 			</f:facet>
 			<p:inputText id="freqUOM" style="min-width:0px !important;width:96%;" styleClass="ppNumericAlign" 
 				value="#{question.clUomFrequency}" 
-				rendered="#{isQuestionTypeItem}" required="true" maxlength="4"
+				rendered="#{isQuestionTypeItem}" required="#{!question.selected}" maxlength="4"
 				label="#{lbl['lbl.tpl.spec.content.frequency.per.uom']}">
 				<ac:validateNumber  maxIntegerDigits="4" integerOnly="true" />
 			</p:inputText>
@@ -77,7 +77,7 @@
 			</f:facet>
 			<p:inputText id="dayUOM" style="min-width:0px !important;width:96%;" styleClass="ppNumericAlign"
 				value="#{question.clUomPerDay}" 
-				rendered="#{isQuestionTypeItem and isUOMHours}" required="true" maxlength="4"
+				rendered="#{isQuestionTypeItem and isUOMHours}" required="#{!question.selected}" maxlength="4"
 				label="#{lbl['lbl.tpl.spec.content.no.uom.per.day']}">
 				<ac:validateNumber  maxIntegerDigits="4" integerOnly="true" />
 			</p:inputText>
@@ -90,7 +90,7 @@
 			</f:facet>
 			<p:inputText id="monthUOM" style="min-width:0px !important;width:96%;" styleClass="ppNumericAlign"
 				value="#{question.clUomPerMonth}" 
-				rendered="#{isQuestionTypeItem and (isUOMHours or isUOMDays)}" required="true" maxlength="4"
+				rendered="#{isQuestionTypeItem and (isUOMHours or isUOMDays)}" required="#{!question.selected}" maxlength="4"
 				label="#{lbl['lbl.tpl.spec.content.no.uom.per.month']}">
 				<ac:validateNumber maxIntegerDigits="4" integerOnly="true" />
 			</p:inputText>
@@ -103,7 +103,7 @@
 			</f:facet>
 			<p:inputText id="duration" style="min-width:0px !important;width:96%;" styleClass="ppNumericAlign"
 				value="#{question.clDurationMonth}" 
-				rendered="#{isQuestionTypeItem}" required="true" maxlength="4"
+				rendered="#{isQuestionTypeItem}" required="#{!question.selected}" maxlength="4"
 				label="#{lbl['lbl.tpl.spec.content.duration.month']}">
 				<ac:validateNumber maxIntegerDigits="4" integerOnly="true" />
 			</p:inputText>
@@ -116,7 +116,7 @@
 			<h:outputText value="* " styleClass="mandatory" />
 			<h:outputText value="#{lbl['lbl.tpl.spec.content.price.type']}"/>
 		</f:facet>
-		<h:selectOneMenu id="priceType" value="#{question.clPriceTypeCode.parameterId}" required="true" style="width:100%;"
+		<h:selectOneMenu id="priceType" value="#{question.clPriceTypeCode.parameterId}" required="#{!question.selected}" style="width:100%;"
 			rendered="#{isQuestionTypeItem}"
 			label="#{lbl['lbl.tpl.spec.content.price.type']}">
 			<f:selectItems value="#{templateSpecBackingBean.getPriceTypeDropdownList(templateSpecBean.specMaster)}" />
@@ -132,7 +132,7 @@
 		<h:panelGroup id="qtyPG" rendered="#{isQuestionTypeItem}">
 			<p:inputText id="qty" style="min-width:0px !important;width:96%;" styleClass="ppNumericAlign"
 				value="#{question.clQuantity}" 
-				rendered="#{isPriceTypeAllStandard}" required="true" maxlength="14"
+				rendered="#{isPriceTypeAllStandard}" required="#{!question.selected}" maxlength="14"
 				label="#{lbl['lbl.tpl.spec.content.quantity']}">
 				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, question)}" maxIntegerDigits="10" />
 			</p:inputText>
@@ -152,9 +152,9 @@
 		</f:facet>
 		<p:inputText id="deliveryTerm" style="min-width:0px !important;width:21%;" styleClass="ppNumericAlign"
 			value="#{question.clDeliveryTerm}" 
-			rendered="#{isQuestionTypeItem}" required="true" maxlength="4"
+			rendered="#{isQuestionTypeItem}" required="#{!question.selected}" maxlength="4"
 			label="#{lbl['lbl.tpl.spec.content.delivery.term']}" />
-		<h:selectOneMenu id="delTermType" value="#{question.clDeliveryTermTypeCode.parameterId}" required="true" style="width:75%;" 
+		<h:selectOneMenu id="delTermType" value="#{question.clDeliveryTermTypeCode.parameterId}" required="#{!question.selected}" style="width:75%;" 
 			rendered="#{isQuestionTypeItem}"
 			label="#{lbl['lbl.tpl.spec.content.delivery.term']}">
 			<f:selectItems value="#{templateSpecBackingBean.getDropdownValues(ParameterTypeConst.deliveryTerm)}" />
@@ -169,7 +169,7 @@
 			<h:outputText value="#{lbl[isSpecTypeFinancial ? 'lbl.tpl.spec.content.total.amount' : 'lbl.tpl.spec.content.answer']}"/>
 		</f:facet>
 		<h:selectOneMenu id="answerTypeId" value="#{question.answerTypeCode.parameterId}" style="width:83%;"
-			required="true"
+			required="#{!question.selected}"
 			label="#{lbl[isSpecTypeFinancial ? 'lbl.tpl.spec.content.total.amount' : 'lbl.tpl.spec.content.answer']}">
 			<f:selectItems value="#{templateSpecBackingBean.getDropdownValues(ParameterTypeConst.answerType)}" />
 			<p:ajax event="change" listener="#{templateSpecBackingBean.answerTypeChange(question)}" update="scoringBtn" />
@@ -190,7 +190,7 @@
 		<h:panelGroup id="estPG" rendered="#{isQuestionTypeItem}">
 			<p:inputText id="estCost" style="min-width:0px !important;width:96%;" styleClass="ppNumericAlign"
 				value="#{question.tplSpecEstimations[0].estimatedCost}" 
-				required="true" rendered="#{isPriceTypeStandard}" maxlength="19"
+				required="#{!question.selected}" rendered="#{isPriceTypeStandard}" maxlength="19"
 				label="#{lbl['lbl.tpl.spec.content.estimate.cost']}">
 				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" maxIntegerDigits="14" />
 			</p:inputText>
@@ -227,8 +227,9 @@
 				update="questionTbl" partialSubmit="true" process="questionTbl" />
 		</c:if>
 		<p:commandButton icon="ui-icon-delete" style="background-color:transparent !important; border:0px none; width:10px; height:10px !important;"
-			process="@form" oncomplete="delConfirmPopup.show();">
+			immediate="true" process="@form" oncomplete="delConfirmPopup.show();">
 			<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{question}" />
+			<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion.selected}" value="#{true}" />
 		</p:commandButton>
 	</p:column>
 </ui:composition>
