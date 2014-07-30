@@ -54,8 +54,6 @@ import my.ep.jaxb.sc.sitevisitproposaldata.SCSiteVisitProposalDataType;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.common.PmAddress;
-import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScAttachment;
@@ -64,7 +62,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCheckListAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklistAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtRptBriefingPaperAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScRemark;
-import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.type.pm.OrganizationType;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
@@ -105,8 +102,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		extends BaseBackingBean<T> {
 	
 	public static Logger log = EpLogger.getLogger(SourcingBaseBackingBean.class);
-	
-	protected static final String DELIMITER_ADDRESS = ", \r\n";
 	
 	/**
 	 * Method to retrive orgprofiles based on user id and parent org id
@@ -519,70 +514,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 		
 		return userName;
-	}
-	
-	public String getSupplierAddress(SmAddress pmAddress) {
-		StringBuilder address = new StringBuilder();
-		
-		if (pmAddress != null) {
-			String addr = pmAddress.getAddress1();
-			
-			if (StringUtils.isNotBlank(addr)) {
-				address.append(addr);
-				address.append(DELIMITER_ADDRESS);
-			}
-			
-			addr = pmAddress.getAddress2();
-			if (StringUtils.isNotBlank(addr)) {
-				address.append(addr);
-				address.append(DELIMITER_ADDRESS);
-			}
-			
-			addr = pmAddress.getAddress3();
-			if (StringUtils.isNotBlank(addr)) {
-				address.append(addr);
-				address.append(DELIMITER_ADDRESS);
-			}
-			
-			addr = pmAddress.getAddress4();
-			if (StringUtils.isNotBlank(addr)) {
-				address.append(addr);
-			}	
-		}
-		
-		return address.toString();
-	}
-	
-	public String getAddress(PmAddress pmAddress) {
-		StringBuilder address = new StringBuilder();
-		
-		if (pmAddress != null) {
-			String addr = pmAddress.getAddress1();
-			
-			if (StringUtils.isNotBlank(addr)) {
-				address.append(addr);
-				address.append(DELIMITER_ADDRESS);
-			}
-			
-			addr = pmAddress.getAddress2();
-			if (StringUtils.isNotBlank(addr)) {
-				address.append(addr);
-				address.append(DELIMITER_ADDRESS);
-			}
-			
-			addr = pmAddress.getAddress3();
-			if (StringUtils.isNotBlank(addr)) {
-				address.append(addr);
-				address.append(DELIMITER_ADDRESS);
-			}
-			
-			addr = pmAddress.getAddress4();
-			if (StringUtils.isNotBlank(addr)) {
-				address.append(addr);
-			}	
-		}
-		
-		return address.toString();
 	}
 	
 	protected <PARENT_ENTITY extends BaseEntity, REMARK_CLASS extends ScRemark> List<REMARK_CLASS> initializeRemarks(

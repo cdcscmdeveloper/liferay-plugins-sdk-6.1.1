@@ -22,6 +22,7 @@ import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
+import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -601,7 +602,7 @@ public void generateAgreementLetterPdfFromVelocity(ScAttachment attachment, ScLo
     	if (pmAddressType != null) {
     		PmAddress pmAddress = pmAddressType.getPmAddress();
     		
-    		agencyAddress = getAddress(pmAddress);
+    		agencyAddress = getFullAddress(pmAddress);
     		agencyAddress = agencyAddress.replaceAll("\r\n", "<br />");
     		agencyPhoneNo = pmAddress.getPhoneNo();
     		agencyFaxNo = pmAddress.getFaxNo();
@@ -621,7 +622,7 @@ public void generateAgreementLetterPdfFromVelocity(ScAttachment attachment, ScLo
     	context.put("supplierName", scLoiLoa.getSupplierName());
     	String supplierAddress = "";
     	if (scLoa.getSupplierAddress() != null) {
-    		supplierAddress = getSupplierAddress(scLoa.getSupplierAddress());	
+    		supplierAddress = getFullAddress(scLoa.getSupplierAddress());	
     		supplierAddress = supplierAddress.replaceAll("\r\n", "<br />");
     	}
     	context.put("supplierAddress", supplierAddress);
@@ -1013,7 +1014,7 @@ public void generateAgreementLetterPdfFromVelocity(ScAttachment attachment, ScLo
 								FacesMessage.SEVERITY_INFO,
 								null,
 								MessageUtils.getMessage(
-										MessageConst.INFO_700005,
+										MessageConst.INFO_700026,
 										new String[] {
 												getParameterDesc(
 														ParameterTypeConst.DOCUMENT_TYPES,
@@ -1032,6 +1033,62 @@ public void generateAgreementLetterPdfFromVelocity(ScAttachment attachment, ScLo
 		return null;
 	}
 	
+	public String updateBpmTaskAction(String outcome) {
+		debugLogger("updateBpmTaskAction");
+		
+		IQTAwardSO qtAwardSO = null;
+		
+		try {
+			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
+			
+			ScLoa scLoa = this.getManagedBean().getScLoa();
+			
+			parseLOADetails(scLoa);
+			
+			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+			reqDTO.setScLoa(scLoa);
+
+			AwardSupplierResDTO resDTO = qtAwardSO.saveLOADtl(reqDTO);
+			
+			if (resDTO.isSuccessful()) {
+				scLoa = resDTO.getScLoa();
+				
+				renewSesionObject();
+				
+				Long statusId = scLoa.getPmStatus().getStatusId().longValue();
+				String messageCode = null;
+				
+				if (QTStatusConst.LOA_PENDING_APPROVAL.equals(statusId)) {
+					if (BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome)) {
+						messageCode = MessageConst.INFO_700007;
+					} else if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)) {
+						messageCode = MessageConst.INFO_700008;	
+					} else if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)) {
+						messageCode = MessageConst.INFO_700009;
+					}
+				} else if (QTStatusConst.LOA_PENDING_REVISION.equals(statusId)) {
+					messageCode = MessageConst.INFO_700026;
+				} else if (QTStatusConst.LOA_PENDING_CONTRACT_SIGNING.equals(statusId)) {
+					messageCode = MessageConst.INFO_700026;
+				} else if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId)) {
+					messageCode = MessageConst.INFO_700013;
+				} else if (QTStatusConst.LOA_PENDING_VERIFICATION.equals(statusId)) {
+					messageCode = MessageConst.INFO_700001;
+				}
+				
+				successMessage(messageCode, ParameterTypeConst.DOCUMENT_TYPES,
+						ParameterConst.DOCTYPE_LETTER_OF_AWARD, 
+						scLoa.getLoaNo());
+			}
+
+		} finally {
+			qtAwardSO = null;
+		}
+		
+		return null;	
+	}
+	
 	private void parseLOADetails(ScLoa scLoa) {
 		if (scLoa.isBrandNew()) {
 			scLoa.setIssueDate(new Date());
@@ -1045,7 +1102,9 @@ public void generateAgreementLetterPdfFromVelocity(ScAttachment attachment, ScLo
 			scLoa.setScLoaWorkFlowStatuses(workFlowStatuses);	
 		}
 		
-		if (scLoa.isApprovalReq() && QTStatusConst.LOA_PENDING_SUBMISSION.equals(scLoa.getPmStatus().getStatusId().longValue())) {
+		Long statusId = scLoa.getPmStatus().getStatusId().longValue();
+		
+		if (scLoa.isApprovalReq() && QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId)) {
 			PmUser approverUser = getManagedBean().getApproverUser();
 			
 			if (approverUser.getUserId() != null) {
@@ -1061,6 +1120,10 @@ public void generateAgreementLetterPdfFromVelocity(ScAttachment attachment, ScLo
 					scLoaApproval.setApprover(approverUser);
 				}
 			}
+		}
+		
+		if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId)) {
+			scLoa.setAckDate(new Date());
 		}
 		
 		scLoa.setScLoaRemarks(finalizeRemarks(scLoa.getScLoaRemarks()));
