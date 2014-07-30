@@ -451,7 +451,7 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 		
 	}
 	
-	private void resetPriceTypeDtl(TplSpecQuestion specQuestion) {
+	public void resetPriceTypeDtl(TplSpecQuestion specQuestion) {
 		List<TplSpecEstimation> specEstimations = null;
 		if (specQuestion.getTplSpecMaster().isEstCostReq() && isPriceTypeStandard(specQuestion.getClPriceTypeCode().getParameterCode())) {
 			specEstimations = new ArrayList<TplSpecEstimation>();
