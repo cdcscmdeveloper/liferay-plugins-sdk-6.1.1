@@ -13,31 +13,31 @@
    </p:panel>
 	
    <p:panel header="ASSOCIATION / CERTIFIED BODY" toggleable="true">
-		
+				
 	<table>
 	  <tr>	  	
 		<td><p:outputLabel value="#{lbl['lbl.pm.search.codes']}" />
 			<p:outputLabel value="*" styleClass="mandatory" /></td>
-		<td><p:inputText size="30" /></td>
+		<td><p:inputText size="30" value="#{profcertifiedbodyBackingBean.managedBean.certBody.bodyCode}" required="true"/></td>
 	  </tr>	
 	  <tr>	
 		<td><p:outputLabel value="#{lbl['lbl.pm.search.name']}" />
 			<p:outputLabel value="*" styleClass="mandatory" /></td>
-		<td><p:inputText size="30" /></td>
+		<td><p:inputText size="30" value="#{profcertifiedbodyBackingBean.managedBean.certBody.bodyName}" required="true"/></td>
 	  </tr>
 	  <tr>
 		<td><p:outputLabel value="#{lbl['lbl.pm.search.desc']}" />
 			<p:outputLabel value="*" styleClass="mandatory" /></td>
-		<td><p:inputTextarea row="40" cols="80" /></td>
+		<td><p:inputTextarea row="40" cols="80" value="#{profcertifiedbodyBackingBean.managedBean.certBody.description}" required="true"/></td>
 	  </tr>
 	  <tr>
 	    <td></td>
-	  	<td><p:selectBooleanCheckbox /><h:outputText value="Professional Body" />&#160;&#160;&#160;
-	  		<p:selectBooleanCheckbox /><h:outputText value="Certified Body" /></td>	  	
+	  	<td><p:selectBooleanCheckbox value="#{profcertifiedbodyBackingBean.managedBean.certBody.professionalBody}" /><h:outputText value="Professional Body" />&#160;&#160;&#160;
+	  		<p:selectBooleanCheckbox value="#{profcertifiedbodyBackingBean.managedBean.certBody.certifiedBody}" /><h:outputText value="Certified Body" /></td>	  	
 	  </tr>
 	   <tr> 
 		<td><p:outputLabel value="Status :" /></td>
-     	<td><p:selectOneMenu style="width:178px;margin-bottom:5px;">   
+     	<td><p:selectOneMenu style="width:178px;margin-bottom:5px;" value="#{profcertifiedbodyBackingBean.managedBean.certBody.recordStatusFlg}">   
 			  <f:selectItems value="#{profcertifiedbodyBackingBean.getStatusList()}" /> 
     	    </p:selectOneMenu></td>				
 	    </tr>

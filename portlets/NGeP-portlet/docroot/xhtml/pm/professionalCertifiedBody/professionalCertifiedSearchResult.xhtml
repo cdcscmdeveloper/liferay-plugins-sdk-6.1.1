@@ -21,8 +21,8 @@
 			
       <div align="right">
 			<p:commandButton value="#{lbl['lbl.btn.search']}" icon="ui-icon-search" 
-				 update="searchProfCertResult" />
-            <p:commandButton value="#{lbl['lbl.btn.reset']}" action="profcertifiedbodyBackingBean.resetSearch()" 
+				 update="searchProfCertResult" action="#{profcertifiedbodyBackingBean.searchProfessionalCertBody}" />
+            <p:commandButton value="#{lbl['lbl.btn.reset']}" 
                type="reset" icon="ui-icon-reset" />
 	  </div>
     <br/>
@@ -30,22 +30,22 @@
 	</p:panel>
 	
 	<p:panel header="RESULT" id="professionalCertResult" toggleable="true">
-	<p:dataTable id="searchProfCertResult" editable="true">
+	<p:dataTable id="searchProfCertResult"  var="certBody" editable="true" value="#{profcertifiedbodyBackingBean.profCertBodyModel}" lazy="true">
 	<ac:paginator for="searchProfCertResult" />
        <p:column headerText="#{lbl['lbl.pm.pc.code']}"> 
-        <h:outputText />       
+        <h:outputText  value="#{certBody.bodyCode}"/>       
        </p:column>
        
        <p:column headerText="#{lbl['lbl.pm.pc.acname']}"> 
-        <h:outputText />
+        <h:outputText value="#{certBody.bodyName}" />
        </p:column>       
      
        <p:column headerText="#{lbl['lbl.pm.pc.type']}"> 
-                 
+        <h:outputText value="#{certBody.bodyName}"></h:outputText>
        </p:column >
         
     	<p:column headerText="#{lbl['lbl.pm.profiles.search.result.action']}">
-   		 <p:commandLink >
+   		 <p:commandLink action="#{profcertifiedbodyBackingBean.editCertDetials(certBody)}" style="margin-right:20px;" partialSubmit="true" process="@this">
      	<p:graphicImage library="ep/images/design" name="edit.png"
      	 value="/resources/ep/images/design/edit.png" />
     	 </p:commandLink>
@@ -56,7 +56,7 @@
 	<p:panel>
 	<h:panelGrid columns="2" style="width:100%;" styleClass="noBorders tr,noBorders td">
 
-      <p:commandButton value="#{lbl['lbl.btn.create']}" action="#{profcertifiedbodyBackingBean.createProfCert(null)}" 
+      <p:commandButton value="#{lbl['lbl.btn.create']}" action="#{profcertifiedbodyBackingBean.createProfCert}" 
       	ajax="false" style="float:right;" icon="ui-icon-add" />
 	
 	 </h:panelGrid>	
