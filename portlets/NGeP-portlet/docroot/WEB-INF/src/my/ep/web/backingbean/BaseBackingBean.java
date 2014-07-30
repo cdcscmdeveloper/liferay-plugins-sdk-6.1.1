@@ -12,6 +12,7 @@ import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.context.ExceptionHandler;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
@@ -26,6 +27,7 @@ import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.web.constant.CommonUIConst;
+import my.ep.web.exceptionhandler.EpExceptionHandler;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.AddressUtils;
 import my.ep.web.util.EpPortletUtil;
@@ -615,4 +617,12 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 	public String getFullAddress(PmAddress pmAddress) {
 		return AddressUtils.getFullAddress(pmAddress);
 	}
+	
+	public void handleException(Exception exception) {
+		ExceptionHandler expHandler = FacesContext.getCurrentInstance().getExceptionHandler();
+		if (expHandler instanceof EpExceptionHandler) {
+			((EpExceptionHandler)expHandler).handleException(exception);
+		}
+	}
+	
 }
