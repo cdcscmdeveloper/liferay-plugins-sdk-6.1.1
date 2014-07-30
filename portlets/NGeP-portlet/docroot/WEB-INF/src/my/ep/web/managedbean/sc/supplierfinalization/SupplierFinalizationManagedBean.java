@@ -17,7 +17,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResult;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeetingAttendance;
-import my.ep.persistence.entity.sc.quationtender.ScQtReport;
+//import my.ep.persistence.entity.sc.quationtender.ScQtReport;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmMofAccount;
@@ -56,7 +56,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private List<ScQtMeetingAttendance> selectedMeetingAttList;
 	
 	//Briefing Paper/Kertas Taklimat
-	private ScQtReport scQtReport;
+//	private ScQtReport scQtReport;
 	private List<PmDocument> documentList;
 	
 	//Supplier Finalization
@@ -273,20 +273,20 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 			List<ScQtMeetingAttendance> selectedMeetingAttList) {
 		this.selectedMeetingAttList = selectedMeetingAttList;
 	}
-
-	/**
-	 * @return the scQtReport
-	 */
-	public ScQtReport getScQtReport() {
-		return scQtReport;
-	}
-
-	/**
-	 * @param scQtReport the scQtReport to set
-	 */
-	public void setScQtReport(ScQtReport scQtReport) {
-		this.scQtReport = scQtReport;
-	}
+//
+//	/**
+//	 * @return the scQtReport
+//	 */
+//	public ScQtReport getScQtReport() {
+//		return scQtReport;
+//	}
+//
+//	/**
+//	 * @param scQtReport the scQtReport to set
+//	 */
+//	public void setScQtReport(ScQtReport scQtReport) {
+//		this.scQtReport = scQtReport;
+//	}
 
 	/**
 	 * @return the documentList
