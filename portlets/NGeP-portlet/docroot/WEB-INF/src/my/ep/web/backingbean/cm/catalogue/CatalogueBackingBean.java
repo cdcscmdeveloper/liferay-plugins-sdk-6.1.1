@@ -20,6 +20,7 @@ import java.util.Vector;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.RequestScoped;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
@@ -124,7 +125,8 @@ import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 
 @ManagedBean(name = "catalogueBackingBean")
-@ViewScoped
+//@ViewScoped
+@RequestScoped
 public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> {
 
 	private static Logger log = Logger.getLogger(CatalogueBackingBean.class);
@@ -5403,20 +5405,22 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	}
 	
 	public void resetCatalogueSearch() {
-		this.getManagedBean().getItemNameFilterBean().setSearchValue("");
-		this.getManagedBean().getItemCodeFilterBean().setSearchValue("");
-		this.getManagedBean().getSupplierNameFilterBean().setSearchValue("");
-		this.getManagedBean().getBizRegNoFilterBean().setSearchValue("");
-		this.getManagedBean().getEpNoFilterBean().setSearchValue("");
-		this.getManagedBean().getMofNoFilterBean().setSearchValue("");
-		this.getManagedBean().getContractNoFilterBean().setSearchValue("");
-		this.getManagedBean().getCircularNoFilterBean().setSearchValue("");
-		this.getManagedBean().setStateId(new long[0]);
-		this.getManagedBean().setDistrictList(null);
-		this.getManagedBean().setSimpleQuoteFlag(true);
-		this.getManagedBean().setCtRequestList(null);
-		this.getManagedBean().setSelectViewItems(null);
-		this.getManagedBean().getSearchDataModel().resetData();
+//		this.getManagedBean().getItemNameFilterBean().setSearchValue("");
+//		this.getManagedBean().getItemCodeFilterBean().setSearchValue("");
+//		this.getManagedBean().getSupplierNameFilterBean().setSearchValue("");
+//		this.getManagedBean().getBizRegNoFilterBean().setSearchValue("");
+//		this.getManagedBean().getEpNoFilterBean().setSearchValue("");
+//		this.getManagedBean().getMofNoFilterBean().setSearchValue("");
+//		this.getManagedBean().getContractNoFilterBean().setSearchValue("");
+//		this.getManagedBean().getCircularNoFilterBean().setSearchValue("");
+//		this.getManagedBean().setStateId(new long[0]);
+//		this.getManagedBean().setDistrictList(null);
+//		this.getManagedBean().setSimpleQuoteFlag(true);
+//		this.getManagedBean().setCtRequestList(null);
+//		this.getManagedBean().setSelectViewItems(null);
+//		this.getManagedBean().getSearchDataModel().resetData();
+				
+		renewSesionObject();
 	}
 	
 	public void addToList(VCmSupplierItem supplierItem,Integer optionListValue){
@@ -5462,14 +5466,14 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			else{
 				 FacesContext.getCurrentInstance().addMessage(
 					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Item is already in the list."));
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, "Item is already in the list."));
 			}
 		}else if(optionListValue.intValue()==3){
 			boolean found = false;
 			for(VCmSupplierItem vCmSupplierItem: this.getManagedBean().getSelectViewItems()){
 				if(vCmSupplierItem.getRowId()==supplierItem.getRowId()){
 					FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Item is already in the list."));
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, "Item is already in the list."));
 					found = true;
 					break;
 				}
@@ -5486,7 +5490,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		for(VCmSupplierItem vCmSupplierItem: this.getManagedBean().getSelectViewItems()){
 			if(vCmSupplierItem.getRowId()==supplierItem.getRowId()){
 				FacesContext.getCurrentInstance().addMessage(null,
-				new FacesMessage(FacesMessage.SEVERITY_INFO, null, "Item is already in the list."));
+				new FacesMessage(FacesMessage.SEVERITY_ERROR, null, "Item is already in the list."));
 				found = true;
 				break;
 			}

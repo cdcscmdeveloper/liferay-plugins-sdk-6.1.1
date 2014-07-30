@@ -134,7 +134,8 @@
 								<p:commandButton id="compareButton"
 									action="#{catalogueBackingBean.compareSupplierItem}"
 									value="#{lbl['lbl.cm.compare']} ( #{fn:length(catalogueBackingBean.managedBean.selectViewItems)} )"
-									disabled="#{2 > fn:length(catalogueBackingBean.managedBean.selectViewItems)}" />
+									disabled="#{2 > fn:length(catalogueBackingBean.managedBean.selectViewItems)}"
+									rendered="#{unspscCodeBackingBean.requisitioner}" />
 							</div>
 						</h:panelGroup>
 							<h:panelGroup id="searchViewId">
@@ -147,6 +148,13 @@
 									id="supplierItemID" var="supplierItem" rowIndexVar="rowIndex">
 
 									<ac:paginator for="supplierItemID" ></ac:paginator>
+									
+									<p:ajax event="rowSelectCheckbox"
+												listener="#{catalogueBackingBean.onRowSelect}"
+												update="@([id$=btnId])"></p:ajax>
+									<p:ajax event="rowUnselectCheckbox"
+												listener="#{catalogueBackingBean.onRowUnselect}"
+												update="@([id$=btnId])"></p:ajax>
 										
 									<ui:remove>
 									<p:ajax event="rowUnselect"
@@ -210,16 +218,10 @@
 								</h:outputLabel>
 							</p:column>
 
-							
+							<ui:remove>
 							<p:column selectionMode="multiple"  disabledSelection="#{supplierItem.contractNo != null or supplierItem.circularNo != null}" 
 							rendered="#{!unspscCodeBackingBean.requisitioner}" />
-							
-							<p:ajax event="rowSelectCheckbox"
-										listener="#{catalogueBackingBean.onRowSelect}"
-										update="@([id$=btnId])"></p:ajax>
-							<p:ajax event="rowUnselectCheckbox"
-										listener="#{catalogueBackingBean.onRowUnselect}"
-										update="@([id$=btnId])"></p:ajax>
+							</ui:remove>
 							
 							<ui:remove>
 							<p:column headerText=" " rendered="#{unspscCodeBackingBean.requisitioner}">
