@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -2662,6 +2663,21 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 								MessageUtils.getMessage(MessageConst.ERROR_715011,
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
+					return "catalogMaintenanceFile";
+				}
+				
+				Calendar c = new GregorianCalendar();
+				c.add(Calendar.DATE, -1);
+				c.set(Calendar.HOUR_OF_DAY, 0);
+				c.set(Calendar.MINUTE, 0);
+				c.set(Calendar.SECOND, 0);
+				Date d1 = c.getTime(); 
+				
+				if(catalog.getCmStandardPricing().getStartDate().before(d1)) {
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+									"Start date must be at least today."));
 					return "catalogMaintenanceFile";
 				}
 				
