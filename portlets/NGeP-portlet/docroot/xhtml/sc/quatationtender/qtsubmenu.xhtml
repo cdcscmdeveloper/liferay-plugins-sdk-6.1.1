@@ -13,44 +13,53 @@
 					activeIndex="#{qTDetailBB.managedBean.activeIndex}"
 					style="display : table-caption;">
 					<p:menuitem value="#{lbl['lbl.qt.qtdetails']}"
-						action="#{qTDetailBB.qtDetailsTabChange(0)}"
-						update="@form" process="@form"/>
+						action="#{qTDetailBB.qtDetailsTabChange(0)}" update="@form"
+						process="@form" />
 					<p:menuitem value="#{lbl['lbl.so.committee.appointment']}"
-						action="#{qTDetailBB.qtDetailsTabChange(1)}"
-						update="@form" process="@form"/>
+						action="#{qTDetailBB.qtDetailsTabChange(1)}" update="@form"
+						process="@form" />
 					<p:menuitem value="#{lbl['lbl.qt.supplierqulificationcriteria']}"
-						action="#{qTDetailBB.qtDetailsTabChange(2)}"
-						update="@form" process="@form" />
+						action="#{qTDetailBB.qtDetailsTabChange(2)}" update="@form"
+						process="@form" />
 					<p:menuitem value="#{lbl['lbl.qt.approval']}"
-						action="#{qTDetailBB.qtDetailsTabChange(3)}" update="@form" process="@form"/>
+						action="#{qTDetailBB.qtDetailsTabChange(3)}" update="@form"
+						process="@form" />
 					<p:menuitem value="#{lbl['lbl.qt.tecnical.spec']}"
-						action="#{qTDetailBB.retriveTechnicalSpecification}"
-						update="@form" process="@form"
-						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId.intValue() le 60002)}" />
+						action="#{qTDetailBB.qtDetailsTabChange(4)}" update="@form"
+						process="@form"
+						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId le QTStatusConst.QT_PENDING_QT_SUBMISSION)}" />
 					<p:menuitem value="#{lbl['lbl.qt.finanial.spec']}"
-						action="#{qTDetailBB.retriveFinancialSpecification}"
-						update="@form" process="@form"
-						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId.intValue() le 60002)}" />
-					<p:menuitem value="#{lbl['lbl.qt.bsv.sample']}"
-						action="#{qTDetailBB.retrieveBriefingSitevisitTabDtl}"
-						update="@form" process="@form"
-						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId.intValue() gt 60002)}" />
-
-					<p:menuitem value="#{lbl['lbl.qt.schedule.contact']}"
-						action="#{qTDetailBB.retrieveScheduleTabDtl}" update="@form"
-						style="white-space: normal;" process="@form"
-						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId.intValue() gt 60002)}" />
-					<p:menuitem value="#{lbl['lbl.qt.deduction.payment']}"
-						action="#{qTDetailBB.retrieveDeductionPaymentTabDtl}"
-						update="@form" process="@form"
-						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId.intValue() gt 60002)}" />
-					<p:menuitem value="#{lbl['lbl.qt.documents']}"
-						action="#{qTDetailBB.retrieveDocumentTabDtl}" update="@form"
-						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId.intValue() gt 60002)}"  process="@form"/>
+						action="#{qTDetailBB.qtDetailsTabChange(5)}" update="@form"
+						process="@form"
+						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId le QTStatusConst.QT_PENDING_QT_SUBMISSION)}" />
 					<p:menuitem value="#{lbl['lbl.qt.activities']}"
-						action="#{qTDetailBB.retrieveActivitiesTabDtl}" update="@form"  process="@form"/>
-					<p:menuitem value="#{lbl['lbl.qt.public.approval']}" update="@form" process="@form"
-						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId.intValue() gt 60002)}" />
+						action="#{qTDetailBB.qtDetailsTabChange(6)}" update="@form"
+						process="@form"
+						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId le QTStatusConst.QT_PENDING_QT_SUBMISSION)}" />
+
+					<p:menuitem value="#{lbl['lbl.qt.bsv.sample']}"
+						action="#{qTDetailBB.qtDetailsTabChange(4)}" update="@form"
+						process="@form"
+						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId gt QTStatusConst.QT_PENDING_QT_SUBMISSION)}" />
+					<p:menuitem value="#{lbl['lbl.qt.schedule.contact']}"
+						action="#{qTDetailBB.qtDetailsTabChange(5)}" update="@form"
+						style="white-space: normal;" process="@form"
+						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId gt QTStatusConst.QT_PENDING_QT_SUBMISSION)}" />
+					<p:menuitem value="#{lbl['lbl.qt.deduction.payment']}"
+						action="#{qTDetailBB.qtDetailsTabChange(6)}" update="@form"
+						process="@form"
+						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId gt QTStatusConst.QT_PENDING_QT_SUBMISSION)}" />
+					<p:menuitem value="#{lbl['lbl.qt.documents']}"
+						action="#{qTDetailBB.qtDetailsTabChange(7)}" update="@form"
+						process="@form"
+						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId gt QTStatusConst.QT_PENDING_QT_SUBMISSION)}" />
+					<p:menuitem value="#{lbl['lbl.qt.activities']}"
+						action="#{qTDetailBB.qtDetailsTabChange(8)}" update="@form"
+						process="@form"
+						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId gt QTStatusConst.QT_PENDING_QT_SUBMISSION)}" />
+					<p:menuitem value="#{lbl['lbl.qt.public.approval']}" update="@form"
+						process="@form"
+						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId gt QTStatusConst.QT_PENDING_QT_SUBMISSION)}" />
 
 				</p:tabMenu></td>
 			<td width="80%" style="vertical-align: top;"><h:panelGroup
@@ -69,16 +78,19 @@
 						<ui:include src="approvalWorkFlowMain.xhtml" />
 					</c:if>
 					<ui:fragment
-						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId.intValue() le 60002)}">
+						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId le QTStatusConst.QT_PENDING_QT_SUBMISSION)}">
 						<c:if test="#{qTDetailBB.managedBean.activeIndex eq '4'}">
 							<ui:include src="qttechnicalchecklist.xhtml" />
 						</c:if>
 						<c:if test="#{qTDetailBB.managedBean.activeIndex eq '5'}">
 							<ui:include src="qtfinancialchecklist.xhtml" />
 						</c:if>
+						<c:if test="#{qTDetailBB.managedBean.activeIndex eq '6'}">
+							<ui:include src="qtactivitiestracking.xhtml" />
+						</c:if>
 					</ui:fragment>
 					<ui:fragment
-						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId.intValue() gt 60002)}">
+						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId gt QTStatusConst.QT_PENDING_QT_SUBMISSION)}">
 
 						<c:if test="#{qTDetailBB.managedBean.activeIndex eq '4'}">
 							<ui:include
@@ -105,6 +117,20 @@
 				</h:panelGroup></td>
 		</tr>
 	</table>
+
+	<p:dialog id="attach" widgetVar="attachDlg1" modal="true"
+		resizable="false" width="700px" height="200" styleClass="pop_up_top"
+		header="#{lbl['lbl.txt.choose.files']}">
+
+		<p:ajax event="close" />
+		<p:fileUpload style="display:inline;"
+			fileUploadListener="#{qTDocumentsBackingBean.handleFileAttachment}"
+			mode="advanced" id="uploadattachmentid"
+			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
+			invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
+			update="menuQTContent" oncomplete="attachDlg1.hide()">
+		</p:fileUpload>
+	</p:dialog>
 
 	<ui:include src="/xhtml/sc/quatationtender/approval/uploads.xhtml" />
 </ui:composition>

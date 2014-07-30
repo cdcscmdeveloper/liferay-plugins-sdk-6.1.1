@@ -7,7 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:dialog id="newbusinessownerid" header="#{lbl['lbl.so.bo.new']}"
-		widgetVar="newbusinessowner" modal="true" position="top" resizable="true">
+		width="900" widgetVar="newbusinessowner" modal="true" position="top">
 		<p:panel toggleable="true" styleClass="qtAddMember" id="bopanel">
 			<p:messages id="bomessages" showDetail="true" autoUpdate="true"
 				closable="true" showSummary="false" />
@@ -25,22 +25,23 @@
 				<p:message id="selectionMsg" for="selection" display="icon" />
 			</h:panelGrid>
 
-			<p:panel id="newProfile" >
+			<p:panel id="newProfile">
 				<c:if
 					test="#{qTBusinessOwnerBackingBean.managedBean.committeMember.userSelection eq 'E' }">
-					<p:panel header="Search" toggleable="true">
+					<p:panel id="usersearchpnlids" header="#{lbl['lbl.so.searchbtn']}"
+						toggleable="true">
 						<table>
 							<tr>
 								<td><p:outputLabel value="#{lbl['lbl.sc.addscreen.name']}" /></td>
 								<td colspan="3"><p:inputText
-										value="#{qTBusinessOwnerBackingBean.managedBean.name}"
+										value="#{qTBusinessOwnerBackingBean.managedBean.userBusineeOwnerSearchBean.name}"
 										size="64" /></td>
 							</tr>
 							<tr>
 								<td><p:outputLabel
 										value="#{lbl['lbl.sc.addscreen.idtype']}" /></td>
 								<td><p:selectOneMenu id="appaction"
-										value="#{qTBusinessOwnerBackingBean.managedBean.identificationType}"
+										value="#{qTBusinessOwnerBackingBean.managedBean.userBusineeOwnerSearchBean.identificationType}"
 										style="width: 178px;margin-bottom: 5px;">
 										<f:selectItems
 											value="#{qTBusinessOwnerBackingBean.getDropdownCodeValues(ParameterTypeConst.identificationTypes)}" />
@@ -51,60 +52,63 @@
 							<tr>
 								<td><p:outputLabel value="#{lbl['lbl.sc.addscreen.idno']}" /></td>
 								<td><p:inputText id="Idno"
-										value="#{qTBusinessOwnerBackingBean.managedBean.identificationNo}"
+										value="#{qTBusinessOwnerBackingBean.managedBean.userBusineeOwnerSearchBean.identificationNo}"
 										size="30" /></td>
 								<td />
 								<td />
 							</tr>
 						</table>
 					</p:panel>
-					<p:commandButton value="#{lbl['lbl.so.reset']}"
-						style="float:right;" action="#{qTBusinessOwnerBackingBean.reset}"
-						update="newProfile" icon="ui-icon-reset" resetValues="true"
-						partialSubmit="true" process="@this" />
+					<div class="ppRightBtn">
+						<p:commandButton value="#{lbl['lbl.so.searchbtn']}"
+							action="#{qTBusinessOwnerBackingBean.searchUserAction}"
+							update="existingsearch" icon="ui-icon-search"
+							process="@this, usersearchpnlids" />
+						<p:commandButton value="#{lbl['lbl.so.reset']}"
+							action="#{qTBusinessOwnerBackingBean.reset}"
+							update="usersearchpnlids" icon="ui-icon-reset" resetValues="true"
+							partialSubmit="true" process="@this" />
+					</div>
 
-					<p:commandButton value="#{lbl['lbl.so.searchbtn']}"
-						style="float:right;" icon="ui-icon-search"
-						action="#{qTBusinessOwnerBackingBean.existingBusinessOwnerAction}"
-						update="@(.existingResults)" partialSubmit="true"
-						process="@parent" />
-
-					<br />
-					<br />
-					<p:spacer height="5" />
 					<p:panel header="#{lbl['lbl.so.bo.search.result']}"
 						toggleable="true">
 						<p:dataTable id="existingsearch"
-							value="#{qTBusinessOwnerBackingBean.managedBean.externalUsers}"
+							value="#{qTBusinessOwnerBackingBean.managedBean.userSearchBusinessOwnerDataModel}"
 							selection="#{qTBusinessOwnerBackingBean.managedBean.selectedPmUser}"
-							rowKey="#{existuser}" var="existuser"
+							rowKey="#{existuser.userId}" var="existuser" lazy="true"
 							styleClass="existingResults" style="width : 100%;">
 
 							<ac:paginator for="existingsearch" />
 
 							<p:column selectionMode="multiple" style="width:2%" />
 
-							<p:column headerText="#{lbl['lbl.so.bo.name']}">
+							<p:column headerText="#{lbl['lbl.so.bo.name']}"
+								style="width : 20%">
 								<h:outputText value="#{existuser.userName}" />
 							</p:column>
 
-							<p:column headerText="#{lbl['lbl.so.bo.identification.no']}">
+							<p:column headerText="#{lbl['lbl.so.bo.identification.no']}"
+								style="width : 15%">
 								<h:outputText value="#{existuser.identificationNo}" />
 							</p:column>
 
-							<p:column headerText="#{lbl['lbl.so.bo.designation']}">
+							<p:column headerText="#{lbl['lbl.so.bo.designation']}"
+								style="width : 15%">
 								<h:outputText value="#{existuser.designation}" />
 							</p:column>
 
-							<p:column headerText="#{lbl['lbl.so.bo.grade']}">
+							<p:column headerText="#{lbl['lbl.so.bo.grade']}"
+								style="width : 5%">
 								<h:outputText value="#{existuser.grade}" />
 							</p:column>
 
-							<p:column headerText="#{lbl['lbl.so.bo.pp']}">
-								<h:outputText value="#{existuser.PMP ? 'Yes' : 'No'}" />
+							<p:column headerText="#{lbl['lbl.so.bo.pp']}" style="width : 6%">
+								<h:outputText
+									value="#{lbl[existuser.PMP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
 							</p:column>
 
-							<p:column headerText="#{lbl['lbl.so.bo.email']}">
+							<p:column headerText="#{lbl['lbl.so.bo.email']}"
+								style="width : 15%">
 								<h:outputText
 									value="#{existuser.pmAddressTypes[0].pmAddress.email}" />
 							</p:column>

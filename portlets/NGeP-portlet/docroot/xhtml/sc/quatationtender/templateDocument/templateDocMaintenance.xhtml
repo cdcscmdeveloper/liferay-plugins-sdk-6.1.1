@@ -20,17 +20,16 @@
 			<p:commandButton value="#{lbl['lbl.sc.tpl.doc.btn.save']}"
 				action="#{qTDocumentsBackingBean.saveAction}" icon="ui-icon-save" />
 		</div>
-		<p:spacer height="10" />
+		<p:spacer height="2" />
 		<p:panel>
 			<table>
 				<tr>
-					<td style="width: 120px;"><h:outputLabel
-							value="Report Section" /></td>
-					<td colspan="3"><p:inputText value="#{qTDocumentsBackingBean.managedBean.qtCheckList.title}" disabled="true" size="90" /></td>
+					<td style="width: 120px;"><h:outputLabel value="Report Section" /></td>
+					<td colspan="3"><p:inputText value="#{qTDocumentsBackingBean.managedBean.scQtDocReport.title}" disabled="true" size="90" /></td>
 				</tr>
 			</table>
 		</p:panel>
-		<p:spacer height="30" />
+		<p:spacer height="3" />
 		<p:panel>
 			<ui:include src="/xhtml/tpl/doc/templateDocMaintSection.xhtml" />
 		</p:panel>
