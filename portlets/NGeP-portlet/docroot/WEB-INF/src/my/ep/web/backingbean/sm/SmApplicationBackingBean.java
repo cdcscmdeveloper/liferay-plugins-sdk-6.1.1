@@ -256,6 +256,12 @@ public class SmApplicationBackingBean extends
 
 				boolean cannotProceedAlertMsg = false;
 
+				cannotProceedAlertMsg = checkActiveSmApplForSupp(currSupp);
+				
+				if (cannotProceedAlertMsg) {
+					throw new EpException(MessageConst.ERROR_722542);
+				}
+				
 				if (applicationType.equalsIgnoreCase("N")) {
 					smAppl.setSupplierType(getManagedBean()
 							.getNewSupplierType());
@@ -440,6 +446,25 @@ public class SmApplicationBackingBean extends
 		} finally {
 			// mofRegistrationSO = null;
 		}
+	}
+
+	private boolean checkActiveSmApplForSupp(SmSupplier smSupplier) {
+
+		boolean activeSmAppl = false;
+		
+		IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
+				.getInstance().getServiceObject("sm", IMofRegistrationSO.class);
+
+		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+		MofRegistrationResDTO resDTO = new MofRegistrationResDTO();
+
+		reqDTO.setSupplierId(smSupplier.getSupplierId());
+		resDTO = mofRegistrationSO.retrieveActiveSmApplBySupp(reqDTO);
+		
+		if(resDTO.getSmAppl() != null)
+			activeSmAppl = true;
+		
+		return activeSmAppl;
 	}
 
 	private void setSupplierCancellationRemarks(String docType, Long docId) {
