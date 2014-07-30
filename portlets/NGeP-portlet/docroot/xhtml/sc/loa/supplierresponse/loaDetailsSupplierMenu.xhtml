@@ -131,6 +131,7 @@
 					value="#{lOADetailBackingBean.managedBean.loaSupplierWitness.phoneNo}"
 					required="true"
 					maxlength="20"
+					validator="#{webappBean.checkPhoneNumber}"
 					label="#{lbl['lbl.sc.loiloa.tel.no']}" />
 				<p:message id="phoneNoMsg" for="phoneNo" display="icon" />
 			</td>
@@ -145,6 +146,7 @@
 					value="#{lOADetailBackingBean.managedBean.loaSupplierWitness.faxNo}"
 					required="true"
 					maxlength="20"
+					validator="#{webappBean.checkPhoneNumber}"
 					label="#{lbl['lbl.sc.loiloa.fax.no']}" />
 				<p:message id="faxNoMsg" for="faxNo" display="icon" />
 			</td>
@@ -159,6 +161,7 @@
 					value="#{lOADetailBackingBean.managedBean.loaSupplierWitness.mobileNo}"
 					required="true"
 					maxlength="20"
+					validator="#{webappBean.checkPhoneNumber}"
 					label="#{lbl['lbl.sc.loiloa.mobile.no']}" />
 				<p:message id="mobileNoMsg" for="mobileNo" display="icon" />
 			</td>
@@ -173,6 +176,7 @@
 					value="#{lOADetailBackingBean.managedBean.loaSupplierWitness.email}"
 					required="true"
 					maxlength="80"
+					validator="#{webappBean.checkEmail}"
 					label="#{lbl['lbl.sc.loiloa.email']}" />
 				<p:message id="emailMsg" for="email" display="icon" />
 			</td>
