@@ -3441,7 +3441,35 @@ public class SmApplicationBackingBean extends
 							SupplierManagementConst.SM_SHRHLDR_OFF_ADDR_PANEL);
 				}
 			}
+			
+			if(getManagedBean().getShrHldrPermStates().isEmpty()){
+				getManagedBean().setShrHldrPermStates(defStates);
+				getManagedBean().setShrHldrPermDistricts(
+						new ArrayList<PmDistrict>());
+				getManagedBean().setShrHldrPermCities(new ArrayList<PmCity>());
+			}
+			if(getManagedBean().getShrHldrMailStates().isEmpty()){
+				getManagedBean().setShrHldrMailStates(defStates);
+				getManagedBean().setShrHldrMailDistricts(
+						new ArrayList<PmDistrict>());
+				getManagedBean().setShrHldrMailCities(new ArrayList<PmCity>());
+			}
+			if(getManagedBean().getShrHldrResdStates().isEmpty()){
+				getManagedBean().setShrHldrResdStates(defStates);
+				getManagedBean().setShrHldrResdDistricts(
+						new ArrayList<PmDistrict>());
+				getManagedBean().setShrHldrResdCities(new ArrayList<PmCity>());
+			}
+			if(getManagedBean().getShrHldrOffStates().isEmpty()){
+				getManagedBean().setShrHldrOffStates(defStates);
+				getManagedBean().setShrHldrOffDistricts(
+						new ArrayList<PmDistrict>());
+				getManagedBean().setShrHldrOffCities(new ArrayList<PmCity>());
+			}
+			
+			
 		}
+		
 
 		getManagedBean().setSelectedShareHolder(shareHolderBean);
 
