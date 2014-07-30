@@ -5,6 +5,7 @@ package my.ep.web.backingbean.fl.frn;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -310,5 +311,9 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 				}
 			}			
 		}
+	}
+	
+	public Date getCurrentDate() {
+		return new Date();
 	}
 }

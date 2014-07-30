@@ -89,6 +89,7 @@
 						value="*" styleClass="mandatory" /></td>
 				<td style="width: 170px;"><p:calendar mode="popup" showOn="button" id="receivedDate" label="#{lbl['lbl.fl.frn.act.received.date']}" required="true"
 						value="#{receivedNoteBackingBean.managedBean.fulfilmentNote.receivedDate}"
+						maxdate="#{receivedNoteBackingBean.getCurrentDate()}"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 					</p:calendar>
 				</td>
