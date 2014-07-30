@@ -138,40 +138,6 @@
 	<p:panel header="PANEL ITEM DETAIL" toggleable="true" rendered="#{!purchaseInDefaultBackingBean.managedBean.checkContractItem}">
 	<p:spacer height="4px" />
 	  	 <table>
-	        <tr>
-			     <td colspan="4" style="width: 250px;"><p:outputPanel>
-				 <table style="width: 90%">
-				  <tr>
- 				     <ui:fragment rendered="#{purchaseInDefaultBackingBean.managedBean.selectedPmOrgProfile.brandNew}">
- 				     <td style="width: 250px;">
-					  <p:outputLabel value="#{lbl['lbl.sc.purchase.in.default.ptj.name']}" /> <p:outputLabel value="*" styleClass="mandatory" /></td>
-					 <td> 
-					  <table>
-					    <tr>
-						 <td> 
-						   <p:selectOneMenu id="panelItemPtj" required="true" label="#{lbl['lbl.sc.purchase.in.default.ptj.name']}"
-						       value="#{purchaseInDefaultBackingBean.managedBean.pmOrgProfile.orgProfileId}"
-						       styleClass="divisionclass" style="width: 250px;margin-bottom: 5px;">
-						       <f:selectItem itemLabel="- Select One -"> </f:selectItem>
-						       <f:selectItems 
-							      value="#{purchaseInDefaultBackingBean.managedBean.ptjDropdown}"
-							      var="pmOrgProfile"
-							      itemLabel="#{pmOrgProfile.orgCode} - #{pmOrgProfile.orgName}"
-							     itemValue="#{pmOrgProfile.orgProfileId}" />
-							      <p:ajax event="change"  update="@([id$=approversId])" partialSubmit="true" 
-							     process="@this"  listener="#{purchaseInDefaultBackingBean.ptjNameEvent}"/>
-					        </p:selectOneMenu></td>
-							<td> <p:message id="panelItemPtjMsg" for="panelItemPtj" display="icon" /> </td>
-							</tr>
-						</table>
-					</td>
-					
-			    	</ui:fragment>
-				</tr>
-				</table>
-			   </p:outputPanel></td>
-			</tr>
-	 
 			<tr>
 				<td style="width: 250px;"><p:outputLabel value="#{lbl['lbl.sc.purchase.in.default.supp.name']}" /></td>
 				<td><p:inputText disabled="true" 
