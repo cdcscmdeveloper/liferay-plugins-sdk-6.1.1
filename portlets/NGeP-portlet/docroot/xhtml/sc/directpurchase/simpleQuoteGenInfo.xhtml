@@ -160,6 +160,8 @@
 							itemValue="false" />
 						<f:selectItem itemLabel="#{lbl['lbl.sc.sq.gen.info.multiple']}"
 							itemValue="true" />
+						<p:ajax event="change" update="@([id$=mainTabMenu])" process="@this" partialSubmit="true" listener="#{simpleQuoteBackingBean.noOfQuoteEvent}" />
+							
 					</p:selectOneRadio><p:message id="noofquoteMsg" for="noOfQuote" display="icon" /> </td>
 			</tr>
 		</table>
