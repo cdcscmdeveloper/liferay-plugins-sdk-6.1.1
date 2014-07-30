@@ -68,6 +68,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
+import my.ep.persistence.entity.sc.quationtender.ScQtDocReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResult;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResultDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
@@ -75,7 +76,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeetingAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommend;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommendDtl;
-import my.ep.persistence.entity.sc.quationtender.ScQtReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtRptBriefingPaperAttachment;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
@@ -690,12 +690,12 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 	public void downloadDocFile(PmDocument pmDocument) throws IOException{
 		log.debug("..In downloadDocFile(String parameterCode)..");
 		
-		ScQtReport scQtReport = retrieveBriefingPaperByDocId(pmDocument);
+		ScQtDocReport scQtReport = retrieveBriefingPaperByDocId(pmDocument);
 		if(scQtReport != null){
 			//download from DB
-			String filePath = scQtReport.getScQtRptBriefingPaperAttachment().getFilePath();
-			String fileName = scQtReport.getScQtRptBriefingPaperAttachment().getFileName();
-			downloadFile(filePath, fileName);
+			//String filePath = scQtReport.getScQtRptBriefingPaperAttachment().getFilePath();
+			//String fileName = scQtReport.getScQtRptBriefingPaperAttachment().getFileName();
+			//downloadFile(filePath, fileName);
 		}else{
 			//system generate, save to DB and download
 			generatedAndDownloadDoc(pmDocument);
@@ -704,9 +704,9 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 	}
 	
 	//Kertas Taklimat
-	private ScQtReport retrieveBriefingPaperByDocId(PmDocument pmDocument) {
+	private ScQtDocReport retrieveBriefingPaperByDocId(PmDocument pmDocument) {
 		IQTSuppFinalizationSO qtSuppFinalizationSO;
-		ScQtReport scQtReport = null;
+		ScQtDocReport scQtReport = null;
 		try {
 			qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
 
@@ -769,7 +769,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 	public void uploadFileAttachment(UploadedFile file, PmDocument pmDocument) throws FileNotFoundException, IOException {
 		debugLogger("handleFileAttachment");
 		
-		ScQtReport scQtReport = new ScQtReport();
+		ScQtDocReport scQtReport = new ScQtDocReport();
 		scQtReport.setScQt(this.getManagedBean().getScQt());
 		if(this.getManagedBean().getScQt().getProcurementMode().getParameterCode().equals(ParameterConst.PROCUREMENT_MODE_QUOTATION)){
 			scQtReport.setDocType(ParameterConst.DOCTYPE_QUOTATION);
@@ -788,7 +788,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		attachment.setChangedDate(new Timestamp(System.currentTimeMillis()));
 		
 		uploadAttachment(file, attachment);
-		scQtReport.setScQtRptBriefingPaperAttachment(attachment);
+		//scQtReport.setScQtRptBriefingPaperAttachment(attachment);
 		
 		IQTSuppFinalizationSO suppFinalizationSO = null;
 		try {

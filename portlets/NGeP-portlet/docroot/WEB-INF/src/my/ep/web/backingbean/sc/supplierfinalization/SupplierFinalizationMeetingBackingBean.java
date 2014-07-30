@@ -596,7 +596,7 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 			qtDetailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 			reqDTO.setQtId(qtId);
-			QuationTenderResDTO resDTO = qtDetailSO.retriveFinalizationCommitteeById(reqDTO);
+			QuationTenderResDTO resDTO = qtDetailSO.retriveQTDetails(reqDTO);
 			
 			if(resDTO.isSuccessful()){
 				committeSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
