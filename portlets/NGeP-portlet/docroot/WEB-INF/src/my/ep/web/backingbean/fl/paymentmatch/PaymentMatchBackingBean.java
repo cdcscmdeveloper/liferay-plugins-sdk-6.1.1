@@ -192,7 +192,7 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		String taskId = originalServletRequest.getParameter("taskId");
 		System.out.println("taskId:" + taskId);
 		if(taskId != null){
-
+			renewSesionObject();
 			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 					.getServiceObject(IBpmSO.class);
 			String ctx = getFacesScopes().getBPMAuthenticationCtxToken();
