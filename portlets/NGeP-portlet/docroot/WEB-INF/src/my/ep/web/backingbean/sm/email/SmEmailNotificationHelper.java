@@ -9,6 +9,7 @@ import my.ep.ntf.service.INtfSO;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplRejectReason;
 import my.ep.persistence.entity.sm.SmPersonnel;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.lookupservice.EpNtfBusinessDelegate;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.util.FacesScopes;
@@ -81,12 +82,23 @@ public class SmEmailNotificationHelper {
 			System.out.println("** smAppl.getSmPersonnels().size() ** "
 					+ smAppl.getSmPersonnels().size());
 			if (per.getEpRole() != null
-					&& per.getEpRole().equalsIgnoreCase("A")) {
+					&& (per.getEpRole().equalsIgnoreCase(
+							RoleCode.MOF_SUPPLIER_ADMIN.value()) || per
+							.getEpRole().equalsIgnoreCase(
+									RoleCode.BASIC_SUPPLIER_ADMIN.value()))) {
 				// emailLst.add(per.getEmail());
-				receiverList.add(per.getPmUser().getUserId().toString());
+				if (per.getPmUser() != null) {
+					receiverList.add(per.getPmUser().getUserId().toString());
+				} else {
+					System.out
+							.println(" **** THE MOF ADMIN IS AVAILABLE - BUT NO RECORD FOR THIS USER IN PM USER TO SEND MAIL******* ");
+				}
 				contList.add(per.getName());
 				System.out.println(" **The email id ***" + per.getEmail());
 				break;
+			} else {
+				System.out
+						.println(" **** NO USER WITH THE MOF ADMIN IS AVAILABLE TO SEND MAIL******* ");
 			}
 		}
 
