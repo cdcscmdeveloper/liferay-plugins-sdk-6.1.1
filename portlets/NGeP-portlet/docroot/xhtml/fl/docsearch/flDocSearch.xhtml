@@ -181,16 +181,16 @@
 					<p:menuButton value="">
 							        <p:menuitem value="#{lbl['lbl.fl.doc.search.action.view']}"  
 							        rendered="#{(flDocument.docType == 'CR' and flDocument.status.statusId ne FulfilmentStatusCont.crPendingSubmission) or flDocument.docType == 'PR'  or flDocument.docType == 'PO' or flDocument.docType == 'CO' or flDocument.docType == 'DO' or flDocument.docType == 'IN' or flDocument.docType == 'FN' or flDocument.docType == 'PA'}"
-							        onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'View'},{name:'statusId', value:'#{flDocument.status.statusId}'}])"/>
+							        onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'View'}])"/>
 							        <p:menuitem value="#{lbl['lbl.fl.doc.search.action.update']}"  
 							        rendered="#{flDocument.docType == 'DO' or flDocument.docType == 'IN' or flDocument.docType == 'FN' or (flDocument.docType == 'CR' and flDocument.status.statusId eq FulfilmentStatusCont.crPendingSubmission)}"
-							        onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'Update'},{name:'statusId', value:'#{flDocument.status.statusId}'}])"/>
+							        onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'Update'}])"/>
 							        <p:menuitem value="#{lbl['lbl.fl.doc.search.action.cancel']}" 
 							        rendered="#{flDocument.docType == 'PO' or flDocument.docType == 'CO' or flDocument.docType == 'DO' or flDocument.docType == 'IN' or flDocument.docType == 'FN'}"
-									onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'Cancel'},{name:'statusId', value:'#{flDocument.status.statusId}'}])"/>
+									onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'Cancel'}])"/>
 									<p:menuitem value="#{lbl['lbl.fl.doc.search.action.factory.comp.removal']}" 
 							        rendered="#{flDocument.docType == 'PO' and flDocument.status.statusId eq FulfilmentStatusCont.poPendingInvoice}"
-									onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'Remove Factoring'},{name:'statusId', value:'#{flDocument.status.statusId}'}])"/>
+									onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'Remove Factoring'}])"/>
 									<p:menuitem value="#{lbl['lbl.fl.doc.search.action.stop.fulfilment']}" 
 							        rendered="#{flDocument.docType == 'PO' or flDocument.docType == 'CO'}"
 									onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'Stop Fulfilment'}])"/>
