@@ -10,7 +10,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -28,39 +27,44 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
-import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.biz.service.sc.quationtender.IQTTemplateSO;
+import my.ep.biz.service.tpl.doc.ITemplateDocSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.sc.SourcingConstants;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
-import my.ep.dto.pm.common.status.StatusReqDTO;
-import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sc.quationtender.QTTemplateDocReqDTO;
 import my.ep.dto.sc.quationtender.QTTemplateDocResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sc.specification.SpecificationReqDTO;
 import my.ep.dto.sc.specification.SpecificationResDTO;
+import my.ep.dto.tpl.doc.TemplateDocReqDTO;
+import my.ep.dto.tpl.doc.TemplateDocResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.common.PmDocument;
-import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.sc.quationtender.ScAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListAttachment;
-import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
+import my.ep.persistence.entity.sc.quationtender.ScQtDocReport;
+import my.ep.persistence.entity.sc.quationtender.ScQtDocReportAttachment;
+import my.ep.persistence.entity.tpl.doc.TplDocMaster;
+import my.ep.persistence.entity.tpl.doc.TplDocSection;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.tpl.doc.TemplateDocBackingBean;
 import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.sc.quationtender.common.QTConstants;
-import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
@@ -77,7 +81,7 @@ import com.liferay.portal.util.PortalUtil;
 public class QTDocumentsBackingBean extends
 		SourcingBaseBackingBean<QTDetailManagedBean> {
 
-	private static final String NAV_TO_TEMPLATE_DOC_MAINTENANACE = "/xhtml/sc/quatationtender/templateDocument/templateDocMaintenance.xhtml";
+	//private static final String NAV_TO_TEMPLATE_DOC_MAINTENANACE = "/xhtml/sc/quatationtender/templateDocument/templateDocMaintenance.xhtml";
 
 	private static final Logger log = EpLogger
 			.getLogger(QTDocumentsBackingBean.class);
@@ -94,7 +98,29 @@ public class QTDocumentsBackingBean extends
 
 	public void addDocumentList() {
 		debugLogger("addDocumentList");
-		List<ScQtCheckList> qtCheckLists = getManagedBean().getScQtChecklists();
+		ScQt scQt = this.getManagedBean().getQt();
+		List<ScQtDocReport> scQtDocReports = this.getManagedBean().getScQtDocReportList();
+		if (scQtDocReports == null) {
+			scQtDocReports = new ArrayList<ScQtDocReport>();
+			scQt.setScQtDocReports(scQtDocReports);
+		}
+		ScQtDocReport scQtDocReport = new ScQtDocReport();
+		scQtDocReport.setScQt(scQt);
+		scQtDocReport.setScQtDocReportAttachment(new ScQtDocReportAttachment());
+		IParameterSO parameterSO = null;
+		try {
+			parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+			ParameterReqDTO reqDTO = new ParameterReqDTO();
+			reqDTO.setParameterType(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE);
+			reqDTO.setParameterCode(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD);
+			ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
+			scQtDocReport.setDefinationType(resDTO.getPmParameter());
+		} finally {
+			parameterSO = null;
+		}
+		scQtDocReports.add(scQtDocReport);
+		
+		/*List<ScQtCheckList> qtCheckLists = getManagedBean().getScQtChecklists();
 		if (null == qtCheckLists) {
 			qtCheckLists = new ArrayList<ScQtCheckList>();
 		}
@@ -102,9 +128,11 @@ public class QTDocumentsBackingBean extends
 			existedCheckList.setBrandNew(false);
 		}
 		ScQtCheckList checkList = new ScQtCheckList();
-		PmParameter parameter = new PmParameter();
-		parameter.setParameterId(184l);
-		checkList.setDefinationType(parameter);
+		ParameterReqDTO reqDTO = new ParameterReqDTO();
+		reqDTO.setParameterType(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE);
+		reqDTO.setParameterCode(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD);
+		ParameterResDTO resDTO = getParameterSO().retrieveParameterByTypeAndCode(reqDTO);
+		checkList.setDefinationType(resDTO.getPmParameter());
 		checkList.setDocCategory(null);
 		checkList.setScoringReq(true);
 		checkList.setChecklistSeq(1);
@@ -112,44 +140,36 @@ public class QTDocumentsBackingBean extends
 		checkList.setCreatedBy(1L);
 		checkList.setScQt(getManagedBean().getQt());
 
-		IParameterSO parameterSO = (IParameterSO) BusinessDelegate
-				.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-		ParameterReqDTO reqDTO = new ParameterReqDTO();
-		reqDTO.setParameterId(1l);
-		ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
-		checkList.setAction(resDTO.getPmParameter());
+		ParameterReqDTO reqDTO1 = new ParameterReqDTO();
+		reqDTO1.setParameterId(1l);
+		ParameterResDTO resDTO1 = getParameterSO().retrieveParameterById(reqDTO1);
+		checkList.setAction(resDTO1.getPmParameter());
 		checkList.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		IStatusSO statussO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
-
 		StatusReqDTO statusreq = new StatusReqDTO();
 		statusreq.setStatusId(1L);
 		StatusResDTO statusres = statussO.retrieveStatusByStatusId(statusreq);
 
 		checkList.setPmStatus(statusres.getPmStatus());
 		qtCheckLists.add(checkList);
-		this.getManagedBean().setScQtChecklists(qtCheckLists);
+		this.getManagedBean().setScQtChecklists(qtCheckLists);*/
 	}
 
 	public void handleFileAttachment(FileUploadEvent event) throws FileNotFoundException, IOException {
 		debugLogger("handleFileAttachment");
-		FacesScopes facesScopes = new FacesScopes();
 		if (event.getFile() != null) {
-			ScQtCheckList scQtCheckList = this.getManagedBean()
-					.getScQtChecklist();
-			ScQtCheckListAttachment attachment = getManagedBean()
-					.getScQtChecklist().getScQtCheckListAttachment();
-			if (null == attachment) {
-				attachment = new ScQtCheckListAttachment();
-				attachment.setScQtCheckList(scQtCheckList);
+			ScAttachment scAttachment = null;
+			ScQtDocReport selectedScQtDocReport = getManagedBean().getSelectedScQtDocReport();
+			ScQtDocReportAttachment scQtDocReportAttachment = selectedScQtDocReport.getScQtDocReportAttachment();
+			if (null == scQtDocReportAttachment) {
+				scQtDocReportAttachment = new ScQtDocReportAttachment();
+				scQtDocReportAttachment.setScQtDocReport(selectedScQtDocReport);
+				selectedScQtDocReport.setScQtDocReportAttachment(scQtDocReportAttachment);
 			}
-			attachment.setDocNo(scQtCheckList.getScQt().getQtNo());
-			attachment.setUser(facesScopes.getUserSessionBean());
-			attachment
-					.setChangedDate(new Timestamp(System.currentTimeMillis()));
-			uploadAttachment(event.getFile(), attachment);
-			scQtCheckList.setScQtCheckListAttachment(attachment);
+			scQtDocReportAttachment.setDocNo(selectedScQtDocReport.getScQt().getQtNo());
+			scAttachment = scQtDocReportAttachment; 
+			uploadAttachment(event.getFile(), scAttachment);
 		}
 	}
 
@@ -317,17 +337,15 @@ public class QTDocumentsBackingBean extends
 
 	public void deleteDocument() {
 		debugLogger("deleteDocument");
-		List<ScQtCheckList> checkLists = getManagedBean().getScQtChecklists();
-		List<ScQtCheckList> selectedCheckLists = getManagedBean()
-				.getSelectedCheckLists();
-		if (checkLists.size() == selectedCheckLists.size()) {
-			checkLists.clear();
+		List<ScQtDocReport> scQtDocReports = getManagedBean().getScQtDocReportList();
+		List<ScQtDocReport> selectedScQtDocReports = getManagedBean().getSelectedScQtDocReports();
+		if (scQtDocReports.size() == selectedScQtDocReports.size()) {
+			scQtDocReports.clear();
 		} else {
-			for (ScQtCheckList scQtCheckList : selectedCheckLists) {
-				checkLists.remove(scQtCheckList);
+			for (ScQtDocReport scQtDocReport : selectedScQtDocReports) {
+				scQtDocReports.remove(scQtDocReport);
 			}
 		}
-
 	}
 
 	public void documentDownLoadZipFile(List<ScQtCheckList> checkLists)
@@ -469,37 +487,92 @@ public class QTDocumentsBackingBean extends
 		this.getManagedBean().setStatus(null);
 	}
 
-	public String showTemplateAction(ScQtCheckList scQtCheckList) {
+	public String showTemplateAction(ScQtDocReport scQtDocReport) {
 		debugLogger("showTemplateAction");
+		IQTTemplateSO qtTemplateSO = null;
+		ITemplateDocSO templateSO = null;
+		String templateDocUrl = null;
 		try {
-			getManagedBean().setQtCheckList(scQtCheckList);
-			log.info("Title Name : " + getManagedBean().getQtCheckList().getTitle());
-			TemplateDocBackingBean docBB = new TemplateDocBackingBean();
-			docBB.createNewTemplate();
-
-			if (this.getManagedBean().getQtDoc() == null) {
+			getManagedBean().setScQtDocReport(scQtDocReport);
+			TemplateDocBackingBean tplDocBB = new TemplateDocBackingBean();
+			
+			templateSO = (ITemplateDocSO) BusinessDelegate.getInstance().getServiceObject("cc", ITemplateDocSO.class);
+			TemplateDocReqDTO tmplateReqDTO = new TemplateDocReqDTO();
+			tmplateReqDTO.setDocMasterId(70l);
+			TemplateDocResDTO templateResDTO = templateSO.getTemplateMaster(tmplateReqDTO);
+			System.out.println("------------" + templateResDTO.getTplDocMaster());
+			
+			if(scQtDocReport.getTplDocMaster() == null) {
+				// clone TplDocMaster Details
+				TplDocMaster tplDocMaster = (TplDocMaster) BeanUtils.cloneBean(templateResDTO.getTplDocMaster());
+				tplDocMaster.setDocMasterId(null);
+				setUserDetails(tplDocMaster);
+				
+				List<TplDocSection> tplDocSectionList = new ArrayList<TplDocSection>();
+				List<TplDocSection> docSectionList = new ArrayList<TplDocSection>();
+				tplDocBB.getDocSectionList(1, tplDocBB.getManagedBean().getDocSectionTN(), docSectionList);
+				for (int i = 0; i < docSectionList.size(); i++) {
+					TplDocSection sectionOrder = docSectionList.get(i);
+					sectionOrder.setSectionOrder(i);
+					// clone TplDocSection Details
+					TplDocSection tplDocSection1 = (TplDocSection) BeanUtils.cloneBean(sectionOrder);
+					tplDocSection1.setDocSectionId(null);
+					tplDocSection1.setTplDocMaster(tplDocMaster);
+					setUserDetails(tplDocSection1);
+					tplDocSectionList.add(tplDocSection1);
+				}
+				tplDocMaster.setTplDocSectionCollection(tplDocSectionList);
+				tplDocMaster.setDocTitle(scQtDocReport.getTitle());
+				//tplDocMaster.setCategoryId(1l);
+				//tplDocMaster.setOrgProfileId(null);
+				// Process Type
+				ParameterReqDTO reqDTO = new ParameterReqDTO();
+				reqDTO.setParameterType(ParameterTypeConst.TPL_DOC_PROCESS_TYPE);
+				reqDTO.setParameterCode(ParameterConst.TPL_DOC_PROCESS_TYPE_SOURCING);
+				ParameterResDTO resDTO = getParameterSO().retrieveParameterByTypeAndCode(reqDTO);
+				//tplDocMaster.setProcessTypeCode(resDTO.getPmParameter());
+				// Template Type
+				ParameterReqDTO reqDTO1 = new ParameterReqDTO();
+				reqDTO1.setParameterType(ParameterTypeConst.TEMPLATE_TYPE);
+				reqDTO1.setParameterCode(ParameterConst.TEMPLATE_TYPE_MINISTRY);
+				ParameterResDTO resDTO1 = getParameterSO().retrieveParameterByTypeAndCode(reqDTO1);
+				//tplDocMaster.setTemplateTypeCode(resDTO1.getPmParameter());
+				tplDocMaster.setDocName(scQtDocReport.getTitle());
+				//tplDocMaster.setPmStatus(1l);
+				
+				// Saving
+				qtTemplateSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTTemplateSO.class);
+				QTTemplateDocReqDTO qtTemplateReqDTO = new QTTemplateDocReqDTO();
+				//qtTemplateReqDTO.setScQtDoc(docs);
+				QTTemplateDocResDTO qtTemplateResDTO = qtTemplateSO.saveOrUpdateTemplateDoc(qtTemplateReqDTO);
+				
+				// Setting the data from managedbean tpldocmaster
+				//getManagedBean().setTplDocMaster(tplDocMaster);
+				
+				templateDocUrl = tplDocBB.goToMaint(tplDocMaster);
+				//tplDocBB.createNewTemplate();
+				
+				//return NAV_TO_TEMPLATE_DOC_MAINTENANACE + "?faces-redirect=true";
+			} else {
+				templateDocUrl = tplDocBB.goToMaint(getManagedBean().getTplDocMaster()); // Need to Change
+			}
+			
+			/*if (this.getManagedBean().getQtDoc() == null) {
 				this.getManagedBean().setQtDoc(new ScQtDoc());
 			}
 
-			//temporarily Comment by fara
-			/*this.getManagedBean()
-					.getQtDoc()
-					.setTplDocMaster(
-							docBB.getManagedBean().getSelectedTemplate());*/
-
 			if (this.getManagedBean().getQtDoc().getScQtCheckList() == null) {
-				this.getManagedBean().getQtDoc()
-						.setScQtCheckList(new ScQtCheckList());
+				this.getManagedBean().getQtDoc().setScQtCheckList(new ScQtCheckList());
 			}
-			this.getManagedBean().getQtDoc()
-					.setScQt(this.getManagedBean().getQt());
-			//temporarily Comment by fara
-			//this.getManagedBean().getQtDoc().getTplDocMaster().setPmStatus(1L);
+			this.getManagedBean().getQtDoc().setScQt(this.getManagedBean().getQt());
+			this.getManagedBean().getQtDoc().getTplDocMaster().setPmStatus(1L);*/
+
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return NAV_TO_TEMPLATE_DOC_MAINTENANACE + "?faces-redirect=true";
+		//return NAV_TO_TEMPLATE_DOC_MAINTENANACE + "?faces-redirect=true";
+		return templateDocUrl;
 	}
 
 	public String documentBackAction() {
@@ -507,50 +580,119 @@ public class QTDocumentsBackingBean extends
 		return "/xhtml/sc/quatationtender/quatationtendercreation.xhtml?faces-redirect=true";
 	}
 	
-	public void saveAction() {
+/*	public void saveAction() {
 		debugLogger("saveAction");
 		IQTTemplateSO qtTemplateSO = null;
 		try {
-			QTTemplateDocReqDTO qtTemplateReqDTO = new QTTemplateDocReqDTO();
-			//List<ScQtDoc> qtDocList = this.getManagedBean().getScQtDocs();
-			ScQtDoc qtDoc = this.getManagedBean().getQtDoc();
-			ScQtCheckList checklist = this.getManagedBean().getQtDoc()
-					.getScQtCheckList();
-			checklist.setTitle("ssqqqq");
-			qtDoc.setScQtCheckList(checklist);
-			
-			//temporarily Comment by fara
-			/*qtDoc.getTplDocMaster().setCategoryId(1l);
-			PmParameter processType = new PmParameter();
-			processType.setParameterId(1145l);
-			qtDoc.getTplDocMaster().setProcessTypeCode(processType);
-			PmParameter templateType = new PmParameter();
-			templateType.setParameterId(124l);
-			qtDoc.getTplDocMaster().setTemplateTypeCode(templateType);
-			qtDoc.getTplDocMaster().setDocName("sssss");
-			qtDoc.getTplDocMaster().setTemplateStatus('F');
-			qtDoc.getTplDocMaster().setPmStatus(1l);*/
 			List<ScQtDoc> docs = new ArrayList<ScQtDoc>();
+			
+			ScQtDoc qtDoc = this.getManagedBean().getQtDoc();
+			
+			//TplDocMaster master = this.getManagedBean().getQtDoc().getTplDocMaster();
+			//ScQtCheckList checkList = this.getManagedBean().getQtCheckList();
+			
+			TemplateDocBackingBean docBB = new TemplateDocBackingBean();
+			List<TplDocSection> tplDocSectionList = new ArrayList<TplDocSection>();
+			List<TplDocSection> docSectionList = new ArrayList<TplDocSection>();
+			docBB.getDocSectionList(1, docBB.getManagedBean().getDocSectionTN(), docSectionList);
+			for (int i = 0; i < docSectionList.size(); i++) {
+				TplDocSection sectionOrder = docSectionList.get(i);
+				sectionOrder.setSectionOrder(i);
+				
+				TplDocSection TplDocSection1 = (TplDocSection) BeanUtils
+						.cloneBean(sectionOrder);
+				TplDocSection1.setDocSectionId(null);
+				tplDocSectionList.add(TplDocSection1);
+			}
+			master.setTplDocSectionCollection(tplDocSectionList);
+			master.setDocTitle(checkList.getTitle());
+			master.setCategoryId(1l);
+			master.setOrgProfileId(null);
+			// Process Type
+			ParameterReqDTO reqDTO = new ParameterReqDTO();
+			reqDTO.setParameterType(ParameterTypeConst.TPL_DOC_PROCESS_TYPE);
+			reqDTO.setParameterCode(ParameterConst.TPL_DOC_PROCESS_TYPE_SOURCING);
+			ParameterResDTO resDTO = getParameterSO().retrieveParameterByTypeAndCode(reqDTO);
+			master.setProcessTypeCode(resDTO.getPmParameter());
+			// Template Type
+			ParameterReqDTO reqDTO1 = new ParameterReqDTO();
+			reqDTO1.setParameterType(ParameterTypeConst.TEMPLATE_TYPE);
+			reqDTO1.setParameterCode(ParameterConst.TEMPLATE_TYPE_MINISTRY);
+			ParameterResDTO resDTO1 = getParameterSO().retrieveParameterByTypeAndCode(reqDTO1);
+			master.setTemplateTypeCode(resDTO1.getPmParameter());
+			master.setDocName("TemplateDocument");
+			master.setPmStatus(1l);
+			
+			qtDoc.setScQt(this.getManagedBean().getQt());
+			qtDoc.setTplDocMaster(getManagedBean().getTplDocMaster());
+			qtDoc.setTplSpecMaster(null);
+			this.getManagedBean().getQtCheckList().setScQtDoc(qtDoc);
+			qtDoc.setScQtCheckList(this.getManagedBean().getQtCheckList());
 			docs.add(qtDoc);
-			qtTemplateReqDTO.setScQtDoc(docs);
-			qtTemplateSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTTemplateSO.class);
-
-			QTTemplateDocResDTO resDTO = qtTemplateSO
-					.saveOrUpdateTemplateDoc(qtTemplateReqDTO);
-			if (resDTO.isSuccessful()) {
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO,
-								"Record saved successfully.", ""
-
-						));
-			} else {
-				throw new EpException("Failed.");
+			qtTemplateSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTTemplateSO.class);
+			QTTemplateDocReqDTO templateReqDTO = new QTTemplateDocReqDTO();
+			templateReqDTO.setScQtDoc(docs);
+			QTTemplateDocResDTO templateResDTO = qtTemplateSO.saveOrUpdateTemplateDoc(templateReqDTO);
+			if (templateResDTO.isSuccessful()) {
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Record saved successfully.", "" ));
 			}
 		} finally {
 			qtTemplateSO = null;
 		}
-		
+	}*/
+	
+	public void downloadAllReports() throws IOException {
+		debugLogger("downloadAllReports");
+		List<ScQtDocReport> scQtDocReports = getManagedBean().getScQtDocReportList();
+		List<ScQtDocReportAttachment> scAttachments = new ArrayList<ScQtDocReportAttachment>();
+		for (ScQtDocReport scQtDocReport : scQtDocReports) {
+			ScQtDocReportAttachment attachment = scQtDocReport.getScQtDocReportAttachment();
+			if(attachment == null) {
+				attachment = generateDocumentAttachment(scQtDocReport);
+			}
+		}
+		downloadAllFiles("NGeP-QT-Report", scAttachments);
+	}
+	
+	/**
+	 * @param scQtReport
+	 * @return
+	 */
+	private ScQtDocReportAttachment generateDocumentAttachment(ScQtDocReport scQtDocReport) {
+		String definitionType = scQtDocReport.getDefinationType().getParameterCode();
+		ScQtDocReportAttachment scQtDocReportAttachment = null;
+		if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED.equals(definitionType)) {
+			try {
+				String docDefinitionKey = scQtDocReport.getPmDocument().getDocDefinitionKey();
+				scQtDocReportAttachment = new ScQtDocReportAttachment();
+				scQtDocReportAttachment.setScQtDocReport(scQtDocReport);
+				if (SourcingConstants.DOC_DEF_KEY_CONTRACT_SUMMARY.equals(docDefinitionKey)) {
+					/*generateContractSummaryPdfFromVelocity((ScAttachment)paperAttachment, 
+							getManagedBean().getQt());*/
+				} else if (SourcingConstants.DOC_DEF_KEY_AGREEMENT_LETTER.equals(docDefinitionKey)) {
+					/*generateAgreementLetterPdfFromVelocity((ScAttachment)paperAttachment, 
+							getManagedBean().getQt());*/
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new EpException(e.getMessage());
+			}
+			scQtDocReport.setScQtDocReportAttachment(scQtDocReportAttachment);
+		}
+		return scQtDocReportAttachment;
+	}
+
+	public void downloadReport(ScQtDocReport scQtDocReport) throws IOException {
+		debugLogger("downloadReport");
+		ScQtDocReportAttachment scQtDocReportAttachment = scQtDocReport.getScQtDocReportAttachment();
+		if (scQtDocReportAttachment == null) {
+			scQtDocReportAttachment = generateDocumentAttachment(scQtDocReport);
+		}
+		downloadFile(scQtDocReportAttachment);
+	}
+	
+	private IParameterSO getParameterSO() {
+		return BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 	}
 }

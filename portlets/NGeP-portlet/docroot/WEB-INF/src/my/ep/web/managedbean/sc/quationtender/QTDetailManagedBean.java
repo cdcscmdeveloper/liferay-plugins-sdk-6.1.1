@@ -15,7 +15,6 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.factory.EpLogger;
-import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.circular.CtCircular;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
@@ -57,8 +56,8 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
-import my.ep.persistence.entity.sc.quationtender.ScQtDeliveryLoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
+import my.ep.persistence.entity.sc.quationtender.ScQtDocReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
@@ -68,6 +67,7 @@ import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.tpl.doc.TplDocMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.pm.RoleCode;
 import my.ep.web.backingbean.sc.quatationtender.CloneAllDataModel;
@@ -325,9 +325,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	private List<BriefingZoneBean> briefingZoneBean = new ArrayList<BriefingZoneBean>();
 
-	private String ALPHA_NUM = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-	private String number;
-
 	private int index = -1;
 
 	private ScQtSupplier scQtSupplier;
@@ -411,10 +408,12 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private TemplateSpecBean templateSpecBean = new TemplateSpecBean();
 	private List<PmDocument> pmDocumentList;
 	private List<PmDocument> selectedPmDocumentList;
+	private List<ScQtDocReport> scQtDocReportList;
+	private List<ScQtDocReport> selectedScQtDocReports;
+	private ScQtDocReport selectedScQtDocReport;
+	private ScQtDocReport scQtDocReport;
+	private TplDocMaster tplDocMaster;
 
-	// Delivery Location
-	private List<ScQtDeliveryLoc> deliveryLocList;
-	private List<ScQtDeliveryLoc> selectedDeliveryLocList;
 	private TreeNode[] selectedGeneralTreeNodes;
 
 	public ScQtSupplierCriteria supplierCriteria;
@@ -461,16 +460,11 @@ public class QTDetailManagedBean extends BaseManagedBean {
 					node0);
 		}
 
-		// getBudgetApproverNames();
-		// getCommitteeApproverNames();
 		getPTJApproverNames();
 		getPublicationApprovalNames();
 
 	}
 
-	/**
-	 * 
-	 */
 	private void getPublicationApprovalNames() {
 		IUserSO iUserSO = (IUserSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -484,18 +478,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 				selectedApprover);
 	}
 
-	/*
-	 * private void getCommitteeApproverNames() { IUserSO iUserSO = (IUserSO)
-	 * BusinessDelegate.getInstance()
-	 * .getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-	 * UserReqDTO userReqDto = new UserReqDTO();
-	 * userReqDto.setRoleCode(RoleCode.APPROVER.value()); UserResDTO userResDTO
-	 * = iUserSO.retrieveUserListByRole(userReqDto); List<PmUser>
-	 * availableApprover = userResDTO.getUserList(); List<PmUser>
-	 * selectedApprover = new ArrayList<PmUser>(); committeeApprovalUsers = new
-	 * DualListModel<PmUser>(availableApprover, selectedApprover); }
-	 */
-
 	private void getPTJApproverNames() {
 		IUserSO iUserSO = (IUserSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -507,34 +489,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		List<PmUser> selectedApprover = new ArrayList<PmUser>();
 		ptjApprovalUsers = new DualListModel<PmUser>(availableApprover,
 				selectedApprover);
-	}
-
-	/*
-	 * private void getBudgetApproverNames() { IUserSO iUserSO = (IUserSO)
-	 * BusinessDelegate.getInstance()
-	 * .getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-	 * UserReqDTO userReqDto = new UserReqDTO();
-	 * userReqDto.setRoleCode(RoleCode.BUDGET_APPROVER.value()); UserResDTO
-	 * userResDTO = iUserSO.retrieveUserListByRole(userReqDto); List<PmUser>
-	 * availableApprover = userResDTO.getUserList(); List<PmUser>
-	 * selectedApprover = new ArrayList<PmUser>(); budgetApprovalUsers = new
-	 * DualListModel<PmUser>(availableApprover, selectedApprover); }
-	 */
-
-	public String getALPHA_NUM() {
-		return ALPHA_NUM;
-	}
-
-	public void setALPHA_NUM(String aLPHA_NUM) {
-		ALPHA_NUM = aLPHA_NUM;
-	}
-
-	public String getNumber() {
-		return number;
-	}
-
-	public void setNumber(String number) {
-		this.number = number;
 	}
 
 	public PmOrgProfile getOrgProfile() {
@@ -1788,23 +1742,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.publicationApprovalUsers = publicationApprovalUsers;
 	}
 
-	public List<ScQtDeliveryLoc> getDeliveryLocList() {
-		return deliveryLocList;
-	}
-
-	public void setDeliveryLocList(List<ScQtDeliveryLoc> deliveryLocList) {
-		this.deliveryLocList = deliveryLocList;
-	}
-
-	public List<ScQtDeliveryLoc> getSelectedDeliveryLocList() {
-		return selectedDeliveryLocList;
-	}
-
-	public void setSelectedDeliveryLocList(
-			List<ScQtDeliveryLoc> selectedDeliveryLocList) {
-		this.selectedDeliveryLocList = selectedDeliveryLocList;
-	}
-
 	public boolean isDurationField() {
 		return durationField;
 	}
@@ -2601,6 +2538,46 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setSelectedApprovalTabBean(TabBean selectedApprovalTabBean) {
 		this.selectedApprovalTabBean = selectedApprovalTabBean;
+	}
+
+	public List<ScQtDocReport> getScQtDocReportList() {
+		return scQtDocReportList;
+	}
+
+	public void setScQtDocReportList(List<ScQtDocReport> scQtDocReportList) {
+		this.scQtDocReportList = scQtDocReportList;
+	}
+
+	public List<ScQtDocReport> getSelectedScQtDocReports() {
+		return selectedScQtDocReports;
+	}
+
+	public void setSelectedScQtDocReports(List<ScQtDocReport> selectedScQtDocReports) {
+		this.selectedScQtDocReports = selectedScQtDocReports;
+	}
+
+	public ScQtDocReport getSelectedScQtDocReport() {
+		return selectedScQtDocReport;
+	}
+
+	public void setSelectedScQtDocReport(ScQtDocReport selectedScQtDocReport) {
+		this.selectedScQtDocReport = selectedScQtDocReport;
+	}
+
+	public ScQtDocReport getScQtDocReport() {
+		return scQtDocReport;
+	}
+
+	public void setScQtDocReport(ScQtDocReport scQtDocReport) {
+		this.scQtDocReport = scQtDocReport;
+	}
+
+	public TplDocMaster getTplDocMaster() {
+		return tplDocMaster;
+	}
+
+	public void setTplDocMaster(TplDocMaster tplDocMaster) {
+		this.tplDocMaster = tplDocMaster;
 	}
 
 }

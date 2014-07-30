@@ -9,98 +9,64 @@
 	<p:panel header="Document List" toggleable="true">
 		<table style="width: 100%">
 			<tr>
-				<td style="text-align: right;"><p:commandLink
-						value="Sample Salinan Kontrak" /></td>
+				<td style="text-align: right;"><p:commandLink value="Sample Salinan Kontrak" /></td>
 			</tr>
 		</table>
 
-		<p:dataTable var="document" id="doctbl" widgetVar="documentWidget"
-			value="#{qTDocumentsBackingBean.managedBean.scQtChecklists}"
-			selection="#{qTDocumentsBackingBean.managedBean.selectedCheckLists}"
-			styleClass="documentslist" rowKey="#{document}" editable="true"
-			rowIndexVar="rowIndex">
+		<p:dataTable var="scQtDocReport" id="doctbl" widgetVar="documentWidget"
+			value="#{qTDocumentsBackingBean.managedBean.scQtDocReportList}"
+			selection="#{qTDocumentsBackingBean.managedBean.selectedScQtDocReports}"
+			rowKey="#{scQtDocReport}" rowIndexVar="rowIndex">
 
 			<ac:paginator for="doctbl" />
 
-			<p:column selectionMode="multiple" style="text-align:left;"
-				rendered="#{document.manditory !='true'}" />
-			<p:column style="text-align:left;"
-				rendered="#{document.manditory =='true'}" />
+			<p:column selectionMode="multiple" style="width:2%"
+				disabledSelection="#{!empty scQtDocReport.pmDocument}" />
 
 			<p:column headerText="#{lbl['lbl.so.title']}" style="width:58%">
-
-				<h:outputText value="#{document.title}"
-					rendered="#{document.brandNew eq false}" />
-
-				<p:inputText value="#{document.title}" size="50"
-					rendered="#{document.brandNew eq true}" />
+				<h:inputText size="50" value="#{scQtDocReport.title}"
+					rendered="#{empty scQtDocReport.pmDocument}" />
+				<h:outputText value="#{scQtDocReport.title}"
+					rendered="#{!empty scQtDocReport.pmDocument}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.so.type']}" style="width:10%">
-				<h:outputText value="#{document.definationType.parameterCode}"
-					rendered="#{document.brandNew eq false}" />
-				<h:outputText value="Upload"
-					rendered="#{document.definationType.parameterId=='184'}" />
+			<p:column style="width:10%;" headerText="#{lbl['lbl.sc.type']}">
+				#{qTDocumentsBackingBean.getParameterDesc(scQtDocReport.definationType)}
 			</p:column>
-
-			<p:column headerText="#{lbl['lbl.so.attachment']}" style="width:20%">
-				<h:outputText value="#{document.scQtCheckListAttachment.fileName}" />
-
-				<p:commandButton oncomplete="attachDlg1.show();return false;"
-					rendered="#{document.definationType.parameterId=='184'}"
-					icon="iconAttachment" update="doctbl" value="Attach Files">
-					<f:setPropertyActionListener value="#{document}"
-						target="#{qTDocumentsBackingBean.managedBean.scQtChecklist}" />
-				</p:commandButton>
-
+			
+			<p:column style="width:20%;" headerText="#{lbl['lbl.so.attachment']}">
+				<ui:fragment rendered="#{scQtDocReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload}">
+					<h:outputText value="#{scQtDocReport.scQtDocReportAttachment.fileName}" />
+					<p:commandButton oncomplete="attachDlg1.show();"
+						value="#{lbl['lbl.txt.attachment']}" icon="ui-icon-attachment"
+						partialSubmit="true" process="@this" update="@([id$=attach])">
+						<f:setPropertyActionListener target="#{qTDocumentsBackingBean.managedBean.selectedScQtDocReport}" value="#{scQtDocReport}" />
+					</p:commandButton>
+				</ui:fragment>
 			</p:column>
-
-			<p:column headerText="#{lbl['lbl.so.action']}" style="width:10%">
+			
+			<p:column style="width:10%;" headerText="#{lbl['lbl.so.action']}">
 				<p:commandLink
-					action="#{qTDocumentsBackingBean.showTemplateAction(document)}">
+					action="#{qTDocumentsBackingBean.showTemplateAction(scQtDocReport)}">
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png"
-						rendered="#{document.definationType.parameterId=='186'}" />
-				</p:commandLink>
-
-				<p:commandButton value="Download" update="doctbl"
-					actionListener="#{qTDocumentsBackingBean.downloadDocumentFile(document)}"
-					rendered="#{!empty document.scQtCheckListAttachment}" />
-
+						rendered="#{scQtDocReport.definationType.parameterCode eq 'TD'}" />
+				</p:commandLink>			
+				<p:commandButton id="download" icon="ui-icon-download" style="background-color:transparent !important; border:0px none;"
+					ajax="false"
+					action="#{qTDocumentsBackingBean.downloadReport(scQtDocReport)}"
+					rendered="#{scQtDocReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload ? !empty scQtDocReport.scQtDocReportAttachment.fileName : true}" />
 			</p:column>
-
 		</p:dataTable>
-		<p:spacer height="20px" />
-		<div align="right">
-			<p:commandButton ajax="false" value="Download All"
-				actionListener="#{qTDocumentsBackingBean.documentDownLoadZipFile(qTDocumentsBackingBean.managedBean.selectedCheckLists)}" />
-
-			<p:commandButton value="#{lbl['lbl.so.clonebtn']}"
-				onclick="screen2.show();" process="@this" icon="ui-icon-clone" />
-
-			<p:commandButton value="#{lbl['lbl.so.addbtn']}"
-				process="@this,doctbl" partialSubmit="true"
-				action="#{qTDocumentsBackingBean.addDocumentList}"
-				oncomplete="documentWidget.paginator.endLink.click();"
-				update="doctbl" icon="ui-icon-add" />
-
-			<p:commandButton value="#{lbl['lbl.so.delete']}"
-				icon="ui-icon-delete"
+		<p:spacer height="2"/>
+		<div class="ppRightBtn">
+			<p:commandButton icon="ui-icon-download" value="#{lbl['lbl.btn.download.all']}" ajax="false" action="#{qTDocumentsBackingBean.downloadAllReports}" />
+			<p:commandButton value="#{lbl['lbl.so.clonebtn']}" onclick="screen2.show();" process="@this" icon="ui-icon-clone" />
+			<p:commandButton value="#{lbl['lbl.btn.add']}" process="@this, doctbl" partialSubmit="true" action="#{qTDocumentsBackingBean.addDocumentList}"
+				oncomplete="documentWidget.paginator.endLink.click();" update="doctbl" icon="ui-icon-add" />
+			<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this, doctbl" partialSubmit="true" icon="ui-icon-delete"
 				action="#{qTDocumentsBackingBean.deleteDocument}" update="doctbl" />
 		</div>
-
 	</p:panel>
-
-	<p:dialog id="attachDlgid" widgetVar="attachDlg1" dynamic="true"
-		resizable="false" width="700px" height="200" styleClass="pop_up_top"
-		header="#{lbl['lbl.bpm.choose.file']}">
-		<p:fileUpload style="display:inline;"
-			fileUploadListener="#{qTDocumentsBackingBean.handleFileAttachment}"
-			mode="advanced" id="upload1"
-			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
-			invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
-			update="doctbl" oncomplete="attachDlg1.hide()">
-		</p:fileUpload>
-	</p:dialog>
 
 </ui:composition>
