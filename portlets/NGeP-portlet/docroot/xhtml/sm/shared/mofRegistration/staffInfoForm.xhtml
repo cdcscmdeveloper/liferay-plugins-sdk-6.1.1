@@ -50,13 +50,13 @@
 					<tr>
 						<td width="200px"><p:outputLabel
 								value="#{lbl['lbl.sm.staff.totalStaff']} "
-								rendered="#{staff.staffCategory eq 'C'}" /> <p:outputLabel
-								value="#{lbl['lbl.sm.staff.profStaff']}"
-								rendered="#{staff.staffCategory eq 'P'}" /> <p:outputLabel
-								value="#{lbl['lbl.sm.staff.semiProfStaff']}"
-								rendered="#{staff.staffCategory eq 'S'}" /> <p:outputLabel
-								value="#{lbl['lbl.sm.staff.clericalStaff']}"
-								rendered="#{staff.staffCategory eq 'L'}" /></td>
+								rendered="#{staff.staffCategory eq SupplierManagementConst.STAFF_TYPE_CONTRACTOR}" />
+							<p:outputLabel value="#{lbl['lbl.sm.staff.profStaff']}"
+								rendered="#{staff.staffCategory eq SupplierManagementConst.STAFF_TYPE_PROFESSIONAL}" />
+							<p:outputLabel value="#{lbl['lbl.sm.staff.semiProfStaff']}"
+								rendered="#{staff.staffCategory eq SupplierManagementConst.STAFF_TYPE_SEMIPROF}" />
+							<p:outputLabel value="#{lbl['lbl.sm.staff.clericalStaff']}"
+								rendered="#{staff.staffCategory eq SupplierManagementConst.STAFF_TYPE_CLERICAL}" /></td>
 						<td width="70px"><p:outputLabel
 								value="#{lbl['lbl.sm.staff.bumi']}" /> <p:outputLabel value="*"
 								styleClass="mandatory" /></td>

@@ -4301,15 +4301,19 @@ public class SmApplicationBackingBean extends
 		SmAppl app = getManagedBean().getSmAppl();
 		if (supplierType.equals(SupplierManagementConst.STYPE_CONTRACTOR)) {
 			SmStaffTotal stf = new SmStaffTotal();
-			staffList.add(setDefaultStaffValues(stf, app, "C"));
+			staffList.add(setDefaultStaffValues(stf, app,
+					SupplierManagementConst.STAFF_TYPE_CONTRACTOR));
 		} else if (supplierType
 				.equals(SupplierManagementConst.STYPE_CONSULTANT)) {
 			SmStaffTotal stf1 = new SmStaffTotal();
-			staffList.add(setDefaultStaffValues(stf1, app, "P"));
+			staffList.add(setDefaultStaffValues(stf1, app,
+					SupplierManagementConst.STAFF_TYPE_PROFESSIONAL));
 			SmStaffTotal stf2 = new SmStaffTotal();
-			staffList.add(setDefaultStaffValues(stf2, app, "S"));
+			staffList.add(setDefaultStaffValues(stf2, app,
+					SupplierManagementConst.STAFF_TYPE_SEMIPROF));
 			SmStaffTotal stf3 = new SmStaffTotal();
-			staffList.add(setDefaultStaffValues(stf3, app, "L"));
+			staffList.add(setDefaultStaffValues(stf3, app,
+					SupplierManagementConst.STAFF_TYPE_CLERICAL));
 		}
 		return staffList;
 	}
@@ -6046,22 +6050,26 @@ public class SmApplicationBackingBean extends
 
 	private void assignEnteredStaffValues() {
 		for (SmStaffTotal stf : getManagedBean().getSmAppl().getSmStaffTotals()) {
-			if (stf.getStaffCategory().equalsIgnoreCase("C")
-					|| stf.getStaffCategory().equalsIgnoreCase("L")) {
+			if (stf.getStaffCategory().equalsIgnoreCase(
+					SupplierManagementConst.STAFF_TYPE_CONTRACTOR)
+					|| stf.getStaffCategory().equalsIgnoreCase(
+							SupplierManagementConst.STAFF_TYPE_CLERICAL)) {
 				getManagedBean().getPersonCalc().setStfBumiActCnt(
 						stf.getTotalBumi().intValue());
 				getManagedBean().getPersonCalc().setStfFrgActCnt(
 						stf.getTotalForeigner().intValue());
 				getManagedBean().getPersonCalc().setStfNonBumiActCnt(
 						stf.getTotalNonBumi().intValueExact());
-			} else if (stf.getStaffCategory().equalsIgnoreCase("P")) {
+			} else if (stf.getStaffCategory().equalsIgnoreCase(
+					SupplierManagementConst.STAFF_TYPE_PROFESSIONAL)) {
 				getManagedBean().getPersonCalc().setProfBumiActCnt(
 						stf.getTotalBumi().intValue());
 				getManagedBean().getPersonCalc().setProfFrgActCnt(
 						stf.getTotalForeigner().intValue());
 				getManagedBean().getPersonCalc().setProfNonBumiActCnt(
 						stf.getTotalNonBumi().intValue());
-			} else if (stf.getStaffCategory().equalsIgnoreCase("S")) {
+			} else if (stf.getStaffCategory().equalsIgnoreCase(
+					SupplierManagementConst.STAFF_TYPE_SEMIPROF)) {
 				getManagedBean().getPersonCalc().setSemiBumiActCnt(
 						stf.getTotalBumi().intValue());
 				getManagedBean().getPersonCalc().setSemiFrgActCnt(

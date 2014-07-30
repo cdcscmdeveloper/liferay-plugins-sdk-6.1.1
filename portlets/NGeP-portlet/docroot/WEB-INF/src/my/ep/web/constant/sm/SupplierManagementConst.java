@@ -210,6 +210,11 @@ public class SupplierManagementConst {
 	public static final String SM_APPL_BPM_OUTCOME_DRAFT = "DRAFT";
 	public static final String SM_APPL_BPM_OUTCOME_SAVE = "SAVE";
 
+	public static final String STAFF_TYPE_CONTRACTOR = "K";
+	public static final String STAFF_TYPE_PROFESSIONAL = "P";
+	public static final String STAFF_TYPE_SEMIPROF = "S";
+	public static final String STAFF_TYPE_CLERICAL = "C";
+
 	public static final String SM_SUPPLIER_BUSINESS_TYPE_INDIVIDUAL = "A";
 	public static final String SM_SUPPLIER_BUSINESS_TYPE_LLP = "B";
 	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG = "C";
@@ -580,6 +585,22 @@ public class SupplierManagementConst {
 
 	public String getPERSONNEL_TYPE_EQUITY() {
 		return PERSONNEL_TYPE_EQUITY;
+	}
+
+	public String getSTAFF_TYPE_CONTRACTOR() {
+		return STAFF_TYPE_CONTRACTOR;
+	}
+
+	public String getSTAFF_TYPE_PROFESSIONAL() {
+		return STAFF_TYPE_PROFESSIONAL;
+	}
+
+	public String getSTAFF_TYPE_SEMIPROF() {
+		return STAFF_TYPE_SEMIPROF;
+	}
+
+	public String getSTAFF_TYPE_CLERICAL() {
+		return STAFF_TYPE_CLERICAL;
 	}
 
 }

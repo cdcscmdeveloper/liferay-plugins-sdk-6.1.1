@@ -55,7 +55,10 @@
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sm.projDtls.contrVal']}">
-					<h:outputText value="#{contrBean.contractValue}" />
+					<h:outputText value="#{contrBean.contractValue}">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</h:outputText>
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sm.projDtls.procDate']}">
@@ -268,8 +271,8 @@
 						</tr>
 						<tr>
 							<td><p:outputLabel
-									value="#{lbl['lbl.sm.projDtls.subCatDiv']}" />
-								<p:outputLabel value="*" styleClass="mandatory" /></td>
+									value="#{lbl['lbl.sm.projDtls.subCatDiv']}" /> <p:outputLabel
+									value="*" styleClass="mandatory" /></td>
 							<td><p:selectOneMenu
 									required="#{backingBean.managedBean.valueReqd}"
 									label="#{lbl['lbl.sm.projDtls.subCatDiv']}"
