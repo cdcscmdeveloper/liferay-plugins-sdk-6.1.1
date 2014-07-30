@@ -52,7 +52,9 @@
 				value="#{requestNoteBackingBean.managedBean.requestNoteDtls}"
 				rows="10"
 				selection="#{requestNoteBackingBean.managedBean.selectedRequestNoteDtls}"
-				rowKey="#{requestNoteBackingBean.key}" rowIndexVar="rowIndex">
+				rowKey="#{requestNoteDtl}" rowIndexVar="rowIndex">
+				
+				<ui:include src="/xhtml/cc/rowSelectionEvent.xhtml" />
 				
 				<p:column selectionMode="multiple" style="width:2%" /> 
 
@@ -104,7 +106,7 @@
 				
 				   <p:selectOneMenu value="#{requestNoteDtl.scRequestSupplierItem.supplierItemId}" 
 				        id="recSupplier" label="#{lbl['lbl.sc.request.note.rec.suppier']}"
-				        style="width:120px;" required="true">  
+				        style="width:120px;" required="#{!requestNoteDtl.selected}">  
 					   <f:selectItem itemLabel="-Select One-" itemValue="#{null}" />
 					   <f:selectItems
 							value="#{requestNoteDtl.requestItem.supplierItems}" 
@@ -125,7 +127,7 @@
 					</f:facet>
 				
 					<p:selectOneMenu id="priceType" 
-						required="true" label="#{lbl['lbl.sc.request.note.price.type']}"
+						required="#{!requestNoteDtl.selected}" label="#{lbl['lbl.sc.request.note.price.type']}"
 						value="#{requestNoteDtl.priceType.parameterId}">
 						 <f:selectItem itemLabel="-Select One-" itemValue="#{null}" />
 						<f:selectItems
@@ -179,7 +181,7 @@
 					</f:facet>
 					<p:selectOneMenu value="#{requestNoteDtl.assignedUser.userId}" style="width:120px;" 
 					   id="prepareBy" label="#{lbl['lbl.sc.request.note.loa.prepare.by']}" 
-					   required="true">  
+					   required="#{!requestNoteDtl.selected}">  
 					   <f:selectItem itemLabel="-Select One-" itemValue="#{null}" />
 					   <f:selectItems
 							value="#{requestNoteBackingBean.managedBean.userList}" 
@@ -200,9 +202,9 @@
 					<p:inputText style="width:25px;text-align:right;margin-top: 8px;margin-right: 1px;" 
 					   label="#{lbl['lbl.sc.request.note.delivery.term']}"
 					   size="6" maxlength="4"
-					   id="deliveryTerm" value="#{requestNoteDtl.deliverTerm}" required="true">
+					   id="deliveryTerm" value="#{requestNoteDtl.deliverTerm}" required="#{!requestNoteDtl.selected}">
 					   </p:inputText>
-					<p:selectOneMenu  style="width:75px;" required="true" id="deliveryType" 
+					<p:selectOneMenu  style="width:75px;" required="#{!requestNoteDtl.selected}" id="deliveryType" 
 					    label="Delivery Term Type"
 						value="#{requestNoteDtl.deliverTermType.parameterId}">
 						<f:selectItems value="#{requestNoteBackingBean.getDropdownValues(ParameterTypeConst.deliveryTerm)}"/>
