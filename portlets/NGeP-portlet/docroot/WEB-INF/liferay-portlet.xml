@@ -1608,7 +1608,37 @@
 			/js/main.js
 		</footer-portlet-javascript>
 		<css-class-wrapper>pm-Salutation-portlet</css-class-wrapper>
-	</portlet>	 				
+	</portlet>	 	
+		<portlet>
+		<portlet-name>pmLocation</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
+			<footer-portlet-javascript>
+				/js/main.js
+			</footer-portlet-javascript>
+		<css-class-wrapper>location search-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
+		<portlet-name>pmFinancialOrg</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
+			<footer-portlet-javascript>
+				/js/main.js
+			</footer-portlet-javascript>
+		<css-class-wrapper>finanical search-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
+		<portlet-name>pmOrganisation</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
+			<footer-portlet-javascript>
+				/js/main.js
+			</footer-portlet-javascript>
+		<css-class-wrapper>organisation search-portlet</css-class-wrapper>
+	</portlet>
 		<role-mapper>
 		<role-name>administrator</role-name>
 		<role-link>Administrator</role-link>

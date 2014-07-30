@@ -42,7 +42,10 @@
 			<portlet id="pmDigiSign"></portlet>	
 			<portlet id="pmProfessionalCertifiedBody"></portlet>
 			<portlet id="pmAuthorizedSignatory"></portlet>	
-			<portlet id="pmSalutation"></portlet>												
+			<portlet id="pmSalutation"></portlet>	
+			<portlet id="pmLocation"></portlet>	
+			<portlet id="pmFinancialOrg"></portlet>	
+			<portlet id="pmOrganisation"></portlet>												
 		</category>
 		<!-- Profile Management - END -->		
 
