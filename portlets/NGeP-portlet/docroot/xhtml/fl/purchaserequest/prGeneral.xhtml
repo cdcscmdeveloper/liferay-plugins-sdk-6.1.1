@@ -40,8 +40,8 @@
 						lovId="PM_ORG_PROFILE" headerText="Issue PTJ Lov"
 						saveObject="purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.orgName}"
-						update=":form:issuedOrgProfileId,form:agOffice" readonly="true" size="39"
-						postUpdateListener="#{purchaseRequestBackingBean.agAccount}"
+						update=":form:issuedOrgProfileId,:form:agOffice" readonly="true" size="39"
+						postUpdateListener="purchaseRequestBackingBean.getAgAccount()"
 						conditionField="parentOrgProfile.orgProfileId^#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.parentOrgProfile.orgProfileId}">
 					</ac:lov></td>
 			</tr>										
@@ -53,6 +53,7 @@
 						lovId="PM_ORG_PROFILE" headerText="Charge PTJ Lov" readonly="true"
 						saveObject="purchaseRequestBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile.orgName}"
+						conditionField="parentOrgProfile.orgProfileId^#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile.parentOrgProfile.orgProfileId}" 
 						update=":form:chargeOrgProfileId" size="39">
 					</ac:lov></td>
 			</tr>
