@@ -129,6 +129,9 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			reqDTO.setContractOrder(getManagedBean().isContractRequest());
 			if(getManagedBean().getFactoringCheck().equalsIgnoreCase("true")) {
 				getManagedBean().getFulfilmentOrder().setFactored(true);
+			} else {
+				getManagedBean().getFulfilmentOrder().setPmFinancialOrg(null);
+				getManagedBean().getFulfilmentOrder().setPmFinancialBranch(null);
 			}
 			reqDTO.setFulfilmentOrder(getManagedBean().getFulfilmentOrder());
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
