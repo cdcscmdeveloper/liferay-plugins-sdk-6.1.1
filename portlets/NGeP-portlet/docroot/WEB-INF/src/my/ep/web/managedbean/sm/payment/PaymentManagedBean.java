@@ -36,10 +36,11 @@ public class PaymentManagedBean extends BaseManagedBean{
 	private SmBillDtl applicationPayment;
 	private List<SmBillDtl> newSmBillDtlLs;
 	private Map<Long,SmBillDtl> defaultCertPaymentMap;
+	private Object bpmPojo;
 	
-	private boolean offlinePayment;
+	//private boolean offlinePayment;
 	private Long appId;
-	private String paymentMode; 
+	//private String paymentMode; 
 		
 //	/**
 //	 * @return the amount
@@ -222,18 +223,18 @@ public class PaymentManagedBean extends BaseManagedBean{
 	public void setTotalAmount(BigDecimal totalAmount) {
 		this.totalAmount = totalAmount;
 	}
-	/**
-	 * @return the offlinePayment
-	 */
-	public boolean isOfflinePayment() {
-		return offlinePayment;
-	}
-	/**
-	 * @param offlinePayment the offlinePayment to set
-	 */
-	public void setOfflinePayment(boolean offlinePayment) {
-		this.offlinePayment = offlinePayment;
-	}
+//	/**
+//	 * @return the offlinePayment
+//	 */
+//	public boolean isOfflinePayment() {
+//		return offlinePayment;
+//	}
+//	/**
+//	 * @param offlinePayment the offlinePayment to set
+//	 */
+//	public void setOfflinePayment(boolean offlinePayment) {
+//		this.offlinePayment = offlinePayment;
+//	}
 	/**
 	 * @return the applId
 	 */
@@ -249,14 +250,20 @@ public class PaymentManagedBean extends BaseManagedBean{
 	/**
 	 * @return the paymentMode
 	 */
-	public String getPaymentMode() {
+/*	public String getPaymentMode() {
 		return paymentMode;
 	}
-	/**
+	*//**
 	 * @param paymentMode the paymentMode to set
-	 */
+	 *//*
 	public void setPaymentMode(String paymentMode) {
 		this.paymentMode = paymentMode;
+	}*/
+	public Object getBpmPojo() {
+		return bpmPojo;
+	}
+	public void setBpmPojo(Object bpmPojo) {
+		this.bpmPojo = bpmPojo;
 	}
 
 }
