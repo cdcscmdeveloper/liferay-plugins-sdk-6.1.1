@@ -862,7 +862,9 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 					for(PmUserGroupUser user : userGroup.getPmUserGroupUsers()) {
 						source.add(user.getPmUser().getUserName());
 					}
-					getManagedBean().getApproverModel().setSource(source);
+					if(getManagedBean().getApproverModel().getSource().size()==0) {
+						getManagedBean().getApproverModel().setSource(source);
+					}
 				}
 				i++;
 			}
