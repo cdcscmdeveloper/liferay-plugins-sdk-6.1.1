@@ -38,8 +38,8 @@
 						saveObject="contractRequestBackingBean.managedBean.flRequest.issuedOrgProfile"
 						value="#{contractRequestBackingBean.managedBean.flRequest.issuedOrgProfile.orgName}"
 						conditionField="parentOrgProfile.orgProfileId^#{contractRequestBackingBean.managedBean.flRequest.issuedOrgProfile.parentOrgProfile.orgProfileId}"
-						postUpdateListener="#{contractRequestBackingBean.agAccount}"
-						update=":form:ministry,:form:issuedOrgProfileId,:form:agOffice">
+						postUpdateListener="contractRequestBackingBean.getAgAccount()"
+						update=":form:ministry,:form:issuedOrgProfileId,:form:agOffice,:form:agOfficeName">
 					</ac:lov></td>
 			</tr>
 			<tr>
@@ -51,6 +51,7 @@
 						lovId="PM_ORG_PROFILE" headerText="Charge PTJ Lov" readonly="true"
 						saveObject="contractRequestBackingBean.managedBean.flRequest.chargeOrgProfile"
 						value="#{contractRequestBackingBean.managedBean.flRequest.chargeOrgProfile.orgName}"
+						conditionField="parentOrgProfile.orgProfileId^#{contractRequestBackingBean.managedBean.flRequest.chargeOrgProfile.parentOrgProfile.orgProfileId}"
 						update=":form:chargeOrgProfileId" size="39">
 					</ac:lov></td>
 			</tr>
@@ -58,7 +59,7 @@
 				<td><p:outputLabel value="#{lbl['lbl.fl.accounting.ofc']}" /></td>
 				<td><p:inputText size="5" disabled="true" id="agOffice"
 						value="#{contractRequestBackingBean.managedBean.flRequest.agOffice.officeCode}" />
-					<p:spacer width="5" /> <p:inputText size="39" disabled="true"
+					<p:spacer width="5" /> <p:inputText size="39" disabled="true" id="agOfficeName"
 						value="#{contractRequestBackingBean.managedBean.flRequest.agOffice.officeName}" /></td>
 			</tr>
 		</table>
