@@ -444,7 +444,10 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 						getManagedBean().getSupplierBankAccountMap().put(obj.getAccountNo(), obj);
 					}
 				}
-			}else if (this.getManagedBean().getInvoice().getFlRequest().getSmSupplier().getSmAppl().getSmSupplierBanks() != null
+			}
+			
+			if (populateBankAccountList.size()==0  
+					&& this.getManagedBean().getInvoice().getFlRequest().getSmSupplier().getSmAppl().getSmSupplierBanks() != null
 					&& this.getManagedBean().getInvoice().getFlRequest().getSmSupplier().getSmAppl().getSmSupplierBanks().size() > 0) {
 				List<SmSupplierBank> supplierBank = this.getManagedBean().getInvoice().getFlRequest().getSmSupplier().getSmAppl().getSmSupplierBanks();
 				for (SmSupplierBank obj : supplierBank) {
