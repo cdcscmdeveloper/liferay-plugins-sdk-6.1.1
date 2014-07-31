@@ -8,7 +8,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<ui:define name="contentSection">
-	<p:panel header="Summary">
+	<p:panel header="Payment Summary">
 		<p:dataTable value="#{paymentBackingBean.managedBean.newSmBillDtlLs}" var="itemLs">
 			<p:column headerText="Item">
 					#{itemLs.itemDesc}
@@ -23,19 +23,6 @@
 		</p:dataTable>
 	</p:panel>
 
-<!-- 		<table> -->
-<!-- 			<tr> -->
-<!-- 				<th>Item</th> -->
-<!-- 				<th>Price</th> -->
-<!-- 			</tr> -->
-<!-- 			<ui:repeat var="itemLs" value="#{paymentBackingBean.managedBean.newSmBillDtlLs}" varStatus="status"> -->
-<!-- 				<tr> -->
-<!-- 					<td>#{itemLs.itemDesc} <h:outputText rendered="#{itemLs.pmParameter.parameterCode eq 'SF'}"  value="- #{itemLs.smPersonnel.name}" /></td> -->
-<!-- 					<td>#{itemLs.itemPrice}</td> -->
-<!-- 				</tr> -->
-<!-- 			</ui:repeat> -->
-<!-- 		</table> -->
-
 		<div align="right">
 			<h3>Total:
 			<h:outputText value="#{paymentBackingBean.managedBean.totalAmount}">
@@ -45,17 +32,12 @@
 		</div>
 
 
-		<p:outputPanel rendered="#{!paymentBackingBean.managedBean.offlinePayment}">
-			<p:panel header="Payment Method" id="pnlPaymentMethod">
-				<p:selectOneMenu id="paymentMethodid" value="#{paymentBackingBean.managedBean.paymentMode}">
-					<f:selectItems value="#{paymentBackingBean.getPaymentModeDropDown()}" />
-				</p:selectOneMenu>
-			</p:panel>
+
 
 			<div align="right">
 				<p:commandButton value="Proceed" id="btnSubmit" action="#{paymentBackingBean.submitPayment}" />
 			</div>
-		</p:outputPanel>
+
 
 
 	</ui:define>
