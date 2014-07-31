@@ -170,7 +170,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		private static final long serialVersionUID = 1L;
 
 		public taskPagingDataModel() {
-			super("bpmTaskItemID");
+			super("taskListId");
 			// TODO Auto-generated constructor stub
 		}
 

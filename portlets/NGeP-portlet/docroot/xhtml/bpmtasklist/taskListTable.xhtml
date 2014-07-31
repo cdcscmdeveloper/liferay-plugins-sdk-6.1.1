@@ -31,8 +31,8 @@
 				<f:selectItem itemLabel="#{lbl['lbl.bpm.past.month']}"
 					itemValue="MONTH"></f:selectItem>
 				<p:ajax event="change"
-					onstart="resetPaginator()"
-					oncomplete="#{bpmTasklistBackingBean.filterViewbyNAssignment()}"
+					onstart1="resetPaginator()"
+					action="#{bpmTasklistBackingBean.filterViewbyNAssignment()}"
 				   update="taskListId"></p:ajax>
 			</p:selectOneMenu>
 		</div>
@@ -47,8 +47,8 @@
 			<f:selectItem itemLabel="#{lbl['lbl.bpm.all']}" itemValue=""></f:selectItem>
 			 <f:selectItems value="#{bpmTasklistBackingBean.getRadioButtonCodeValuesBySearchBean(ParameterTypeConst.documentTypes, bpmTasklistBackingBean.docTypeSearchBean)}" />
 				<p:ajax event="change"
-					onstart="resetPaginator()"
-					oncomplete="#{bpmTasklistBackingBean.filterViewbyNAssignment()}"
+					onstart1="resetPaginator()"
+					action="#{bpmTasklistBackingBean.filterViewbyNAssignment()}"
 				   update="taskListId"></p:ajax>
 			</p:selectOneMenu>
 		</div>
@@ -67,8 +67,8 @@
 				<f:selectItem itemLabel="#{lbl['lbl.bpm.my.group']}"
 					itemValue="GROUP"></f:selectItem>
 				<p:ajax event="change"
-					onstart="resetPaginator()"
-				    oncomplete="#{bpmTasklistBackingBean.filterViewbyNAssignment()}"
+					onstart1="resetPaginator()"
+				    action="#{bpmTasklistBackingBean.filterViewbyNAssignment()}"
 				   update="taskListId"></p:ajax>
 			</p:selectOneMenu>
 		</div>

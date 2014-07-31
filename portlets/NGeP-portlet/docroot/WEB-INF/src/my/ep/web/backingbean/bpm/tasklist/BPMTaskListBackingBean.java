@@ -402,5 +402,7 @@ public class BPMTaskListBackingBean extends
 			this.getManagedBean().setDocType(docTypeId);
 			originalServletRequest.getParameterMap().remove("docTypeId");
 		}
+		
+		this.getManagedBean().getTaskListDataModel().reloadData();
 	}
 }

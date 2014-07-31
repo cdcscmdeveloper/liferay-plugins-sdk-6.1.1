@@ -40,6 +40,7 @@ public abstract class PagingDataModel<T> extends LazyDataModel<T> implements IPa
 	
 	private boolean firstLoad;
 	private boolean defaultFirstLoad;
+	private int first;
 	private int pageNo;
 	private String componentId;
 	private String sortField;
@@ -112,6 +113,7 @@ public abstract class PagingDataModel<T> extends LazyDataModel<T> implements IPa
 	 * 
 	 * @see org.primefaces.model.LazyDataModel#load(int, int, java.lang.String, org.primefaces.model.SortOrder, java.util.Map)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public final List<T> load(int first, int pageSize, String sortField,
 			SortOrder sortOrder, Map<String, String> filters) {
@@ -120,22 +122,28 @@ public abstract class PagingDataModel<T> extends LazyDataModel<T> implements IPa
 		int pageNo = (int)(first / pageSize) + 1;
 		ISearchResultBean<T> resultBean = null;
 		
-		this.pageNo = pageNo;
-		this.sortField = sortField;
-		this.sortOrder = sortOrder;
-		super.setPageSize(pageSize);
-		
-		if (firstLoad) {
-			this.searchBean = createSearchBean();
+		if (pageNo != this.pageNo) {
+			// retrieve new list from DB.
+			this.pageNo = pageNo;
+			this.sortField = sortField;
+			this.sortOrder = sortOrder;
+			super.setPageSize(pageSize);
 			
-			resultBean = pageChangeListener(searchBean);
-		}  else {
-			firstLoad = true;
+			if (firstLoad) {
+				this.searchBean = createSearchBean();
+				
+				resultBean = pageChangeListener(searchBean);
+			}  else {
+				firstLoad = true;
+				
+				resultBean = new SearchResultBean<T>();
+			}
 			
-			resultBean = new SearchResultBean<T>();
+			return updatePagingResults(resultBean);	
+		} else {
+			// return cache list
+			return (List<T>)getWrappedData();
 		}
-		
-		return updatePagingResults(resultBean);
 	}
 	
 	/*
@@ -157,6 +165,8 @@ public abstract class PagingDataModel<T> extends LazyDataModel<T> implements IPa
 			dataTable.reset();
 			//dataTable.loadLazyData();
 		}
+		
+		resetValue();
 	}
 	
 	/*
@@ -256,12 +266,34 @@ public abstract class PagingDataModel<T> extends LazyDataModel<T> implements IPa
 	 */
 	protected abstract ISearchResultBean<T> pageChangeListener(ISearchBean<T> searchBean);
 	
+	private void resetValue() {
+		first = 0;
+		pageNo = 0;
+		sortField = null;
+		sortOrder = null;
+		searchBean = null;
+	}
+	
 	private void debugLogger(Object message) {
         if(log.isDebugEnabled()) {
             log.debug(message);
         }
         log.info(message);
     }
+
+	/**
+	 * @return the first
+	 */
+	public int getFirst() {
+		return first;
+	}
+
+	/**
+	 * @param first the first to set
+	 */
+	public void setFirst(int first) {
+		this.first = first;
+	}
 
 	/**
 	 * @return the pageNo
