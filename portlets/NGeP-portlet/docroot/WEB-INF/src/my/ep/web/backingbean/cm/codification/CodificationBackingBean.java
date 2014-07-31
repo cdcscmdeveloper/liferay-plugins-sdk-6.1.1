@@ -1,6 +1,5 @@
 package my.ep.web.backingbean.cm.codification;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,32 +8,24 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
-import my.ep.web.util.FacesScopes;
-import my.ep.web.util.ResourceBundleUtils;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchResultBean;
-import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.biz.service.cm.codification.IPendingCodifiedItemSO;
 import my.ep.biz.service.sc.requestitem.IRequestItemSO;
-import my.ep.biz.service.sm.registration.IRegistrationSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.constant.pm.ParameterConst;
-import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.codification.CodificationReqDTO;
 import my.ep.dto.cm.codification.CodificationResDTO;
 import my.ep.dto.cm.codification.PendingCodifiedItemReqDTO;
 import my.ep.dto.cm.codification.PendingCodifiedItemResDTO;
 import my.ep.dto.sc.requestitem.RequestItemReqDTO;
 import my.ep.dto.sc.requestitem.RequestItemResDTO;
-import my.ep.dto.sm.registration.RegistrationReqDTO;
-import my.ep.dto.sm.registration.RegistrationResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
@@ -45,7 +36,6 @@ import my.ep.persistence.entity.cm.catalog.CmMeasurement;
 import my.ep.persistence.entity.cm.catalog.CmPendingCodifiedItem;
 import my.ep.persistence.entity.cm.catalog.CmRecommendCode;
 import my.ep.persistence.entity.cm.catalog.CmRequestCode;
-import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.cm.catalog.CmType;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.cm.catalog.VCmPendingCodifiedItem;
@@ -60,6 +50,7 @@ import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.cm.CmConst;
 import my.ep.web.managedbean.cm.codification.CodificationManagedBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.vo.ClassesVO;
 import my.ep.web.vo.CommoditiesVO;
@@ -170,6 +161,19 @@ public class CodificationBackingBean extends
 
 	}
 
+	public String resetAction() {
+		System.out.println("In reset action...................");
+		titleFilterBean = null;
+		codeFilterBean = null;
+		
+		titleFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+		codeFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+		
+		this.getManagedBean().setAutoCompleteUnspscCode(null);
+		System.out.println("after reset.........................");
+		return null;
+	}
+	
 	private class ExtensionSearchItemDataModel extends
 			PagingDataModel<Object[]> {
 
@@ -2253,6 +2257,9 @@ public class CodificationBackingBean extends
 		return -1;
 	}
 	
-	
+	public boolean isAllSupplier() {		
+		FacesScopes fs = new FacesScopes();
+		return fs.hasRoleUser("SUPPLIER_ADMIN") || fs.hasRoleUser("SUPPLIER_USER") || fs.hasRoleUser("MOF_SUPPLIER_USER") || fs.hasRoleUser("MOF_SUPPLIER_ADMIN") || fs.hasRoleUser("BASIC_SUPPLIER_USER") || fs.hasRoleUser("BASIC_SUPPLIER_ADMIN") || fs.hasRoleUser("CM_USER");
+	}
 
 }
