@@ -1,9 +1,6 @@
 package my.ep.web.backingbean.sm.payment;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.InvocationTargetException;
@@ -28,15 +25,12 @@ import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.payment.IPaymentSO;
-import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.payment.PaymentReqDTO;
 import my.ep.dto.sm.payment.PaymentResDTO;
-import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.common.PmBusinessNature;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
@@ -48,11 +42,9 @@ import my.ep.persistence.entity.sm.SmPaymentDtl;
 import my.ep.persistence.entity.sm.SmPaymentOrder;
 import my.ep.persistence.entity.sm.SmPaymentResponse;
 import my.ep.persistence.entity.sm.SmPersonnel;
-import my.ep.persistence.logging.LogKey;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.payment.PaymentManagedBean;
 import my.ep.web.util.DateUtils;
@@ -60,32 +52,33 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.apache.log4j.Logger;
+
+import com.liferay.portal.util.PortalUtil;
 
 @ManagedBean (name = "paymentBackingBean")
 @RequestScoped
 public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 
-	public static Logger log = Logger.getLogger(PaymentManagedBean.class);
+	public static Logger log = Logger.getLogger(PaymentBackingBean.class);
 	private final String merchantId = EpPropertiesUtils.getInstance().getProperty("molpay.merchantid");
 	private final String vKey = EpPropertiesUtils.getInstance().getProperty("molpay.vkey");
 	private final String paymentGatewayUrl = EpPropertiesUtils.getInstance().getProperty("molpay.url") + merchantId + "/";
+	private final String molIpnUrl =  EpPropertiesUtils.getInstance().getProperty("molpay.ipnurl");
 	private String vCode;
 	
 	private Map<String, PmParameterDesc> supplierPaymentItemMap;
 
 	public PaymentBackingBean(){
 		this.getManagedBean().setCountry("MY");
-		PmUser pmUser = new FacesScopes().getUserSessionBean();
-		if (pmUser != null && pmUser.getUserId() != null) {
-			System.out.println("***userId: " + pmUser.getUserId());
-
-			new LogKey(pmUser.getUserId()); 
-		}else{
-			new LogKey(1L); 
-		}
+//		PmUser pmUser = new FacesScopes().getUserSessionBean();
+//		if (pmUser != null && pmUser.getUserId() != null) {
+//			System.out.println("***userId: " + pmUser.getUserId());
+//
+//			new LogKey(pmUser.getUserId()); 
+//		}else{
+//			new LogKey(1L); 
+//		}
 	}
 
 	/**
@@ -138,17 +131,18 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 		/*
 		 * for testing Purpose
 		 */
-		System.out.println(">>>>>>>InitPayment Stert>>>>");
+/*		System.out.println(">>>>>>>InitPayment Stert>>>>");
 		MofRegistrationReqDTO mofReqDTO = new MofRegistrationReqDTO();
 		mofReqDTO.setApplId(1009);
 		IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate.getInstance().getServiceObject("sm", IMofRegistrationSO.class);
 		MofRegistrationResDTO mofResDTO  = mofRegistrationSO.retrieveSupplierProfileByApplId(mofReqDTO);
 		this.getManagedBean().setSmAppl(mofResDTO.getSmAppl());
+		this.getManagedBean().setAppId(mofReqDTO.getApplId());*/ //dummy test
 
 		log.info("*******retrieveBillInfo Start******");
 		IPaymentSO reqSO = (IPaymentSO) BusinessDelegate.getInstance().getServiceObject("sm", IPaymentSO.class);
 		PaymentReqDTO reqDTO = new PaymentReqDTO();
-		reqDTO.setApplId(this.getManagedBean().getSmAppl().getApplId());
+		reqDTO.setApplId(this.getManagedBean().getAppId());
 		//reqDTO.setSmAppl(this.getManagedBean().getSmAppl());
 		PaymentResDTO resDTO = reqSO.retrieveSmBillByApplId(reqDTO);
 		
@@ -161,7 +155,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 		if(resDTO.getSmBill().getSmPayments().size() > 0){
 			System.out.println("******check is it Offline Payment*****");
 			if(checkOfflinePayment(billId)){
-				this.getManagedBean().setOfflinePayment(true);
+				//this.getManagedBean().setOfflinePayment(true);
 				System.out.println("*****is Offline Payment*****");
 				BigDecimal ttlAmount = new BigDecimal(0);
 				
@@ -177,7 +171,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 				FacesContext fc = FacesContext.getCurrentInstance();
 				fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/payment/paymentSummary.xhtml");		
 			}else{
-				this.getManagedBean().setOfflinePayment(false);
+				//this.getManagedBean().setOfflinePayment(false);
 				System.out.println("*****is Online Payment*****");
 				
 				proceedToItemList(smBillDtls);
@@ -205,10 +199,10 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 		System.out.println("**********SelectedSoftCertLs****" + this.getManagedBean().getSelectedSoftCertLs().length);
 
 
-		if(this.getManagedBean().getSelectedSoftCertLs() != null){
+		if(this.getManagedBean().getSelectedSoftCertLs() != null && this.getManagedBean().getSelectedSoftCertLs().length > 0){
 			this.getManagedBean().setSoftCertReqPersonnels(new ArrayList<SmPersonnel>());
 			for(SmPersonnel softcertPersonnel : this.getManagedBean().getSmAppl().getSmPersonnels()){
-				if(softcertPersonnel.getSoftcertFlg() == 1){
+				if(softcertPersonnel.getSoftcertFlg() == SupplierManagementConst.IS_SOFTCERT_REQ){
 					this.getManagedBean().getSoftCertReqPersonnels().add(softcertPersonnel);
 				}
 			}
@@ -220,6 +214,8 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 	}
 	
 	public String proceedToPaymentSummary(){
+		System.out.println("****proceedToPaymentSummary****");
+
 		SmBill smBill = this.getManagedBean().getSmBill();
 		BigDecimal ttlAmount = new BigDecimal(0);
 		System.out.println("****MAP SIE****" + this.getManagedBean().getDefaultCertPaymentMap().size());
@@ -290,7 +286,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 			PmStatus paymentStatus = new PmStatus();
 			
 			for(PmParameterDesc pMethod : paymentModeLs){
-				if(pMethod.getPmParameter().getParameterCode().equals(this.getManagedBean().getPaymentMode())){
+				if(pMethod.getPmParameter().getParameterCode().equals(SupplierManagementConst.ONLINE_PAYMENT)){
 					paymentMode = pMethod.getPmParameter();
 				}
 			}
@@ -324,14 +320,14 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 
 			System.out.println("***Total Amount***" +totalAmount);
 
-			if(this.getManagedBean().getPaymentMode().equals(SupplierManagementConst.ONLINE_PAYMENT)){
-				SmPaymentOrder pymtOrder = new SmPaymentOrder();
-				pymtOrder.setSmPayment(payment);
-				pymtOrder.setPaymentGateway("MOL");
-				//pymtOrder.setChannelName("TESTING");
+//			if(this.getManagedBean().getPaymentMode().equals(SupplierManagementConst.ONLINE_PAYMENT)){
+			SmPaymentOrder pymtOrder = new SmPaymentOrder();
+			pymtOrder.setSmPayment(payment);
+			pymtOrder.setPaymentGateway("MOL");
+			//pymtOrder.setChannelName("TESTING");
 
-				payment.setSmPaymentOrder(pymtOrder);
-			}
+			payment.setSmPaymentOrder(pymtOrder);
+//			}
 
 			List<SmPayment> smPaymentLs = new ArrayList<SmPayment>();
 			smPaymentLs.add(payment);
@@ -339,26 +335,31 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 			
 			PaymentReqDTO reqDTO = new PaymentReqDTO();
 			reqDTO.setSmBill(smBill);
+			
 			IPaymentSO reqSO = (IPaymentSO) BusinessDelegate.getInstance().getServiceObject("sm", IPaymentSO.class);
 			PaymentResDTO resDTO = new PaymentResDTO();
 			resDTO = reqSO.createPayment(reqDTO);
 			
 			System.out.println("******Payment ID********" + resDTO.getSmBill().getSmPayments().get(0).getPaymentId());
 			
-			if(this.getManagedBean().getPaymentMode().equals(SupplierManagementConst.OFFLINE_PAYMENT)){
+/*			if(this.getManagedBean().getPaymentMode().equals(SupplierManagementConst.OFFLINE_PAYMENT)){
 				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,MessageUtils.getMessage(MessageConst.INFO_721051,
 						MessageUtils.BUNDLE_COMMON_MESSAGES,
 						new FacesScopes().getUserLocale())));
 
 				return "paymentAcknowledge";
 
-			}else{
+			}else{*/
 				PmUser pmUser = new FacesScopes().getUserSessionBean();
+
+				PortalUtil.getHttpServletRequest(new FacesScopes().getRequest()).getSession().setAttribute("paymentTaskId", this.getManagedBean().getTaskId());
+				PortalUtil.getHttpServletRequest(new FacesScopes().getRequest()).getSession().setAttribute("paymentBpmPojo", this.getManagedBean().getBpmPojo());
+				
 				this.getManagedBean().setOrderId(resDTO.getSmBill().getSmPayments().get(0).getPaymentId());
 				this.getManagedBean().setBillMobile(pmUser.getMobileNo());
 				this.getManagedBean().setBillEmail(pmUser.getEmail());
 				this.getManagedBean().setBillName(pmUser.getUserName());
-				this.getManagedBean().setBillDesc("NGeP");
+				this.getManagedBean().setBillDesc("NGeP Payment");
 				//this.getManagedBean().
 				String orderId = resDTO.getSmBill().getSmPayments().get(0).getPaymentId().toString();
 				String vc = SmCommonUtil.md5(totalAmount + merchantId + orderId + vKey);
@@ -368,18 +369,28 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 				this.getManagedBean().setTotalAmount(ttlAmt);
 
 				return "paymentRequestSubmission";
-			}
+			//}
 		}
 		
 		return "";
 	}
 	
 	public void responsePreRender() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
+		String taskId = (String)PortalUtil.getHttpServletRequest(new FacesScopes().getRequest()).getSession().getAttribute("paymentTaskId");
+		Object bpmPojo = (Object)PortalUtil.getHttpServletRequest(new FacesScopes().getRequest()).getSession().getAttribute("paymentBpmPojo");
+		
+		
 		log.info("************responsePreRender Start********");
+		log.info("-----------BPM TaskId-----------" + taskId);
+		log.info("-----------BPM POJO-----------" + bpmPojo);
+		
+		this.getManagedBean().setTaskId(taskId);
+		this.getManagedBean().setBpmPojo(bpmPojo);
+		
 		PortletRequest pr = (PortletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get("javax.portlet.request");
 		Method method = pr.getClass().getMethod("getOriginalHttpServletRequest");
 		HttpServletRequest httpServletRequest = (HttpServletRequest)method.invoke(pr, new Object[] {});
-
+		
 		String orderId = httpServletRequest.getParameter("orderid");
 		String tranID = httpServletRequest.getParameter("tranID");
 		String status = httpServletRequest.getParameter("status");
@@ -466,7 +477,6 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 				try {
 					txDate = DateUtils.convertStringToDate("yyyy-MM-dd HH:mm:ss",paydate);
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
 					txDate = new Date();
 					e.printStackTrace();
 				}
@@ -484,26 +494,30 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 				smPayment.setPmStatus(pmStatDesc.getPmStatus());
 				
 				//updatePayment(smPayment,validPayment);
+				String token = getFacesScopes().getBPMAuthenticationCtxToken();
 				PaymentReqDTO pymtReqDTO = new PaymentReqDTO();
 				
 				pymtReqDTO.setValidPayment(validPayment);
 				pymtReqDTO.setSmPayment(smPayment);
+				pymtReqDTO.setOutcome(SupplierManagementConst.BPM_SUBMIT);
+				pymtReqDTO.setTaskId(this.getManagedBean().getTaskId());
+				pymtReqDTO.setBpmPojo(this.getManagedBean().getBpmPojo());
+				pymtReqDTO.setToken(token);
 				
 				PaymentResDTO pymtResDTO = reqSO.updatePayment(pymtReqDTO);
 				
 				showPaymentResponse(status);
+				this.renewSesionObject();
 			}else{
 				showPaymentResponse(SupplierManagementConst.PAYMENT_INVALID_RES);
+				this.renewSesionObject();
 			}
 		}else{
-			showPaymentResponse(SupplierManagementConst.PAYMENT_INVALID_RES);
-//			FacesContext fc = FacesContext.getCurrentInstance();
-//			fc.addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR,null,MessageUtils.getMessage(MessageConst.ERROR_721021,
-//					MessageUtils.BUNDLE_COMMON_MESSAGES,
-//					new FacesScopes().getUserLocale())));
-//			fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/payment/paymentError.xhtml");			
+			showPaymentResponse(SupplierManagementConst.PAYMENT_INVALID_RES);		
+			this.renewSesionObject();
 		}
-		
+		PortalUtil.getHttpServletRequest(new FacesScopes().getRequest()).getSession().removeAttribute("paymentTaskId");
+		PortalUtil.getHttpServletRequest(new FacesScopes().getRequest()).getSession().removeAttribute("paymentBpmPojo");
 //		return "paymentAcknowledge";
 	}
 	
@@ -521,13 +535,13 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 		}
 		strParams.append("treq=1");
 		System.out.println("StrParams>>>>>>" + strParams);
-		URL url = null;
-		BufferedReader reader = null;
+		//URL url = null;
+		//BufferedReader reader = null;
 
 		try
 		{
 			// create the HttpURLConnection
-			url = new URL("http://localhost:81/test/index.php");
+			URL url = new URL(molIpnUrl);
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
 			// just want to do an HTTP POST here
@@ -543,7 +557,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 			writer.close();
 			os.close();
 			// give it 15 seconds to respond
-			connection.setReadTimeout(15*1000);
+			/*connection.setReadTimeout(15*1000);
 			connection.connect();
 			
 			StringBuilder stringBuilder;
@@ -557,12 +571,12 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 			{
 				stringBuilder.append(line + "\n");
 			}
-			System.out.println(">>>"+ stringBuilder.toString());
+			System.out.println(">>>"+ stringBuilder.toString());*/
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
-			throw e;
+			//throw e;
 		}
 	}
 	
@@ -602,33 +616,33 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 			fc.addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,MessageUtils.getMessage(MessageConst.INFO_721059,
 					MessageUtils.BUNDLE_COMMON_MESSAGES,
 					new FacesScopes().getUserLocale())));
-			//fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/payment/paymentAcknowledge.xhtml");	
 			break;
 
 		case SupplierManagementConst.MOL_FAIL : 
 			fc.addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR,null,MessageUtils.getMessage(MessageConst.ERROR_721051,
 					MessageUtils.BUNDLE_COMMON_MESSAGES,
 					new FacesScopes().getUserLocale())));
-			//fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/payment/paymentAcknowledge.xhtml");	
 			break;
 
 		case SupplierManagementConst.MOL_PENDING :
 			fc.addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,MessageUtils.getMessage(MessageConst.INFO_721055,
 					MessageUtils.BUNDLE_COMMON_MESSAGES,
 					new FacesScopes().getUserLocale())));
-			//fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/payment/paymentAcknowledge.xhtml");	
 			break;
 
 		case SupplierManagementConst.PAYMENT_INVALID_RES :
 			fc.addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR,null,MessageUtils.getMessage(MessageConst.EP_MAJ_00001,
 					MessageUtils.BUNDLE_COMMON_MESSAGES,
 					new FacesScopes().getUserLocale())));
-			
-			System.out.println("***************IS 55***********");
 			break;
 
 		}
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/payment/paymentAcknowledge.xhtml");
+	}
+	
+	private FacesScopes getFacesScopes() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes;
 	}
 }
 
