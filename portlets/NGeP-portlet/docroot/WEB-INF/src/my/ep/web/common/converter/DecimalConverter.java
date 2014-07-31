@@ -73,12 +73,12 @@ public class DecimalConverter extends NumberConverter {
 						return super.getAsObject(context, component, value);
 					} catch (Exception ex) {
 						throw new EpException(
-								MessageConst.ERROR_700052,
+								MessageConst.ERROR_700050,
 								new String[]{ex.getMessage()});
 					}
 				} else {
 					throw new EpException(
-							MessageConst.ERROR_700053);
+							MessageConst.ERROR_700051);
 				}
 			} else {
 				Pattern pattern = Pattern
@@ -89,12 +89,12 @@ public class DecimalConverter extends NumberConverter {
 						return super.getAsObject(context, component, value);
 					} catch (Exception ex) {
 						throw new EpException(
-								MessageConst.ERROR_700052,
+								MessageConst.ERROR_700050,
 								new String[]{ex.getMessage()});
 					}
 				} else {
 					throw new EpException(
-							MessageConst.ERROR_700053);
+							MessageConst.ERROR_700052);
 				}
 			}
 		}else{
