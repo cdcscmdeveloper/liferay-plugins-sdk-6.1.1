@@ -29,6 +29,7 @@ import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.sm.SmApplicationBackingBean;
+import my.ep.web.backingbean.sm.payment.PaymentBackingBean;
 import my.ep.web.backingbean.sm.sdoreview.SdoReviewBackingBean;
 import my.ep.web.backingbean.sm.supportingdocinquiry.SupportingDocInquiryBackingBean;
 import my.ep.web.constant.CommonUIConst;
@@ -449,6 +450,25 @@ public class CommonApplBackingBean extends
 					.handleNavigation(fc, null,
 							"/xhtml/sm/suppliersupportingdocinquiry/inquiryresponse.xhtml");
 
+		}else if (resDTO.getTaskName().equalsIgnoreCase("Processing Fee")) {
+			Object bpmObj = new Object();
+			PaymentBackingBean paymentBB = new PaymentBackingBean();
+			if (resDTO.getProcessName().equalsIgnoreCase("MOF Supplier Registration")) {
+				bpmObj = (SMMOFRegDataType) resDTO.getPojo();
+				paymentBB.getManagedBean().setAppId((long) ((SMMOFRegDataType) bpmObj).getDocumentId());
+
+			} else if (resDTO.getProcessName().equalsIgnoreCase("MOF Account Maintain")) {
+				bpmObj = (SMMOFAccMainDataType) resDTO.getPojo();
+				paymentBB.getManagedBean().setAppId((long) ((SMMOFAccMainDataType) bpmObj).getDocumentId());
+			}
+		
+			paymentBB.getManagedBean().setTaskId(taskId);
+			paymentBB.getManagedBean().setBpmPojo(bpmObj);
+
+			paymentBB.retrieveBillInfo();
+			
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/payment/portletViewMode.xhtml");
 		}
 
 	}
