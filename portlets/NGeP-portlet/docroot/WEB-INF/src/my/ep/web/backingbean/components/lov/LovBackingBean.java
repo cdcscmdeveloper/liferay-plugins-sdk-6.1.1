@@ -332,8 +332,7 @@ public class LovBackingBean implements Serializable {
 
 	public void resetAction() {
 //		this.setResultList(new ArrayList());
-		this.getSearchDataModel().updatePagingResults(null);
-		this.setSearchDataModel(new SearchPagingDataModel());
+		this.getSearchDataModel().resetData();
 		this.setLovSearchBean(new SearchBean());
 //		this.setLovBean(new LovBean());
 	}
