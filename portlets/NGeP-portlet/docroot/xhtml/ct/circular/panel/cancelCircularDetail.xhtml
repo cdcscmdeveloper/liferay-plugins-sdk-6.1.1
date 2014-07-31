@@ -17,7 +17,7 @@
 		</p:selectOneMenu>		
 		<p:spacer height="10" />
 		<p:outputPanel id="cancelCircularList">
-		<p:dataTable id="cancelCcrDt" var="data" lazy="true" rowKey="#{data}"
+		<p:dataTable id="cancelCcrDt" var="data" rowKey="#{data}"
 			value="#{panelBackingBean.managedBean.cancelCircularReq.ctCancelCircularList}"
 			selection="#{panelBackingBean.managedBean.selectedCancelledCircularList}" >
 			<ac:paginator for="cancelCcrDt" />
@@ -37,7 +37,7 @@
 		</p:outputPanel>	
 		<p:dialog id="activeCircularDlg" header="#{lbl['lbl.ct.cc.acirculars']}" widgetVar="activeCircularDlg" modal="true" width="700" height="350">
 			<p:panel id="circular">
-				<p:dataTable id="circularVerDt" var="data" lazy="true" rowKey="#{data.circularVerId}" 
+				<p:dataTable id="circularVerDt" var="data" rowKey="#{data.circularVerId}" 
 					selection="#{panelBackingBean.managedBean.selectedCircularVerList}"
 					value="#{panelBackingBean.managedBean.circularVerList}" >
 					<ac:paginator for="circularVerDt" />

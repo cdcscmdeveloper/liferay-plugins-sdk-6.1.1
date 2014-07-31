@@ -7,7 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
 
 	<p:panel id="zonePnl" header="#{lbl['lbl.ct.pc.panel.zone']}" toggleable="true" toggleSpeed="500" >
-		<p:dataTable id="circularZoneDt" var="data" rowKey="#{data}" lazy="true"
+		<p:dataTable id="circularZoneDt" var="data" rowKey="#{data}"
 			value="#{panelBackingBean.managedBean.circularVer.ctCircularZones}" selectionMode="single" 
 			selection="#{panelBackingBean.managedBean.selectedCircularZone}" >
 			<ac:paginator for="circularZoneDt" />
@@ -41,7 +41,7 @@
 		<p:spacer height="20" />
 		
 		<h:panelGroup id="circularZoneDtlPnl">
-			<p:dataTable id="circularZoneDtlDt" var="data" rowKey="#{data}" lazy="true" rowIndexVar="index"
+			<p:dataTable id="circularZoneDtlDt" var="data" rowKey="#{data}" rowIndexVar="index"
 				value="#{panelBackingBean.managedBean.selectedCircularZone.ctCircularZoneDtls}" selectionMode="single" 
 				selection="#{panelBackingBean.managedBean.selectedCircularZoneDtl}" >
 				<ac:paginator for="circularZoneDtlDt" />

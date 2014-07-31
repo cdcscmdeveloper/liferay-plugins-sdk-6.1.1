@@ -9,7 +9,7 @@
 		toggleable="true" toggleSpeed="500">
 		<p:dataTable id="centralContractDt" var="data" rowIndexVar="index"
 			value="#{centralContractBackingBean.managedBean.circularVer.ctCircularContracts}"
-			lazy="true" selectionMode="single"
+			selectionMode="single"
 			selection="#{centralContractBackingBean.managedBean.selectedCircularContract}"
 			rowKey="#{data}">
 			<ac:paginator for="centralContractDt" />
@@ -99,7 +99,7 @@
 				<div style="clear: both" />
 				<p:dataTable id="circularItemDt" var="itemVar"
 					value="#{centralContractBackingBean.managedBean.selectedCircularContract.ctCircularItems}"
-					lazy="true" selectionMode="single"
+					selectionMode="single"
 					selection="#{centralContractBackingBean.managedBean.selectedCircularItem}"
 					rowKey="#{itemVar}">
 					<ac:paginator for="circularItemDt" />
@@ -159,7 +159,6 @@
 				<div style="clear: both" />
 				<p:dataTable id="circularItemZoneDt" var="dataZone"
 					value="#{centralContractBackingBean.managedBean.contractItemZones}"
-					lazy="true"
 					selection="#{centralContractBackingBean.managedBean.selectedZoneItems}"
 					selectionMode="single" rowKey="#{dataZone}" rowIndexVar="index">
 					<ac:paginator for="circularItemZoneDt" />
@@ -248,7 +247,7 @@
 						actionListener="#{centralContractBackingBean.searchContract()}" />
 				</h:panelGrid>
 				<p:dataTable id="contractDt" var="data" rowIndexVar="index"
-					rowKey="#{data.contractId}" lazy="true" paginator="true"
+					rowKey="#{data.contractId}" paginator="true"
 					value="#{centralContractBackingBean.managedBean.contractList}"
 					selection="#{centralContractBackingBean.managedBean.selectedContractList}">
 					<ac:paginator for="contractDt" />

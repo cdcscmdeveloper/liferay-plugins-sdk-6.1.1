@@ -61,7 +61,7 @@
 				</h:panelGrid>
 				<p:spacer  height="5"/>
 				<p:dataTable id="ctItemMaxQtyTable" var="data" 
-				     value="#{amendmentBackingBean.managedBean.selectedItem.ctItemMaxQties}" lazy="true">
+				     value="#{amendmentBackingBean.managedBean.selectedItem.ctItemMaxQties}">
 					<ac:paginator for="ctItemMaxQtyTable" />
 					<p:column headerText="Maximum Quantity">
 						<p:inputText value="#{data.maxQuantity}" styleClass="ppRightBtn" style="width:119px;" rendered="#{data.changeQuantity}">
@@ -216,7 +216,7 @@
 			<h:panelGrid columns="1" style="width:100%" rendered="#{amendmentBackingBean.managedBean.selectedItem!=null and
 			 		(amendmentBackingBean.managedBean.showItem == ParameterConst.itemDisplayTypeCeilQty)
 			 		and amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange}">
-				<p:dataTable id="ceilingTable" var="data" lazy="true" rowKey="#{data}"
+				<p:dataTable id="ceilingTable" var="data" rowKey="#{data}"
 					value="#{amendmentBackingBean.managedBean.selectedItem.ctItemCeilingQties}" >
 					<ac:paginator for="ceilingTable" />
 					<p:column headerText="Ministry Name" style="width:25%; white-space:normal;">
@@ -282,7 +282,7 @@
 	<p:panel id="serviceId" header="Service Details" 
 	  toggleable="true" toggleSpeed="500" rendered="#{amendmentBackingBean.managedBean.itemServiceExist}">
 		<h:panelGrid style="width:100%;">
-			<p:dataTable id="serviceTable" var="data"  lazy="true" value="#{amendmentBackingBean.managedBean.ctServiceItemList}"
+			<p:dataTable id="serviceTable" var="data" value="#{amendmentBackingBean.managedBean.ctServiceItemList}"
 				selectionMode="single" selection="#{amendmentBackingBean.managedBean.selectedServiceItem}"   rowKey="#{data}"  widgetVar="serviceTableObj">
 				<ac:paginator for="serviceTable" />
 				<p:ajax event="rowSelect" update=":form:showServicePrice" />
@@ -303,7 +303,7 @@
 		<p:outputPanel id="showServicePrice">
 			<p:spacer height="20" />
 			<h:panelGrid columns="1" style="width:100%"	rendered="#{amendmentBackingBean.managedBean.selectedServiceItem != null}">
-				<p:dataTable id="servicePriceTable" var="data" rowKey="#{data}" lazy="true"
+				<p:dataTable id="servicePriceTable" var="data" rowKey="#{data}"
 					value="#{amendmentBackingBean.managedBean.selectedServiceItem.ctItemPrices}" >
 					<ac:paginator for="servicePriceTable" />
 					<p:column headerText="#{lbl['lbl.ct.item.table1.price.zone']}" style="width:40%;"

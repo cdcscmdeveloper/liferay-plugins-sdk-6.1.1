@@ -16,7 +16,7 @@
 	
 	<p:panel id="contactPerson" header="#{lbl['lbl.ct.pc.cpd']}" toggleable="true" toggleSpeed="500" widgetVar="panelcontactPerson">
 		<p:dataTable id="contactPersonDt" var="data" value="#{panelBackingBean.managedBean.circularVer.ctContactPersons}"
-			rowKey="#{data}" rowIndexVar="index" lazy="true" selection="#{panelBackingBean.managedBean.selectedContactPersons}">
+			rowKey="#{data}" rowIndexVar="index" selection="#{panelBackingBean.managedBean.selectedContactPersons}">
 			<ac:paginator for="contactPersonDt" />
 			<p:column selectionMode="multiple" style="width:3%" />
 			<p:column headerText="#{lbl['lbl.ct.pc.cperson']}">
@@ -58,7 +58,7 @@
 	</p:panel>
 	
 	<p:panel id="cancelCircularPnl" header="Related Cancelled Circular" toggleable="true" toggleSpeed="500">
-		<p:dataTable id="cancelCircularDt" var="data" rowKey="#{data}" lazy="true" rowIndexVar="index" 
+		<p:dataTable id="cancelCircularDt" var="data" rowKey="#{data}" rowIndexVar="index" 
 			value="#{panelBackingBean.managedBean.circularVer.ctCancelCircularList}"
 			selection="#{panelBackingBean.managedBean.selectedCancelCirculars}" >
 			<ac:paginator for="cancelCircularDt" />		
@@ -81,7 +81,7 @@
 	
 	<p:dialog id="cancelCircularDlg" header="Cancelled Circulars" widgetVar="cancelCircularDlg" modal="true" width="550" height="350">
 		<p:panel id="circular">
-			<p:dataTable id="cancelledCclDt" var="data" lazy="true" rowKey="#{data}" rowIndexVar="index"
+			<p:dataTable id="cancelledCclDt" var="data" rowKey="#{data}" rowIndexVar="index"
 				value="#{panelBackingBean.managedBean.cancelledCircularList}" 
 				selection="#{panelBackingBean.managedBean.selectedCancelledCircularList}" >
 				<ac:paginator for="cancelledCclDt" />

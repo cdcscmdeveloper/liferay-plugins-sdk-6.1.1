@@ -258,7 +258,7 @@
          <p:spacer height="15"/>
          <h:panelGrid style="width:100%">
 		   <p:dataTable id="terminationReason" var="data" value="#{terminationBackingBean.managedBean.contractVer.ctTermination.ctTerminationReasons}" 
-			 lazy="false" dynamic="true" rowKey="#{data}" selection="#{terminationBackingBean.selectedTerminationReasonsList}">
+			 dynamic="true" rowKey="#{data}" selection="#{terminationBackingBean.selectedTerminationReasonsList}">
 			 <ac:paginator for="terminationReason" />
 			     <p:column selectionMode="multiple" style="width:1%;"/>  
 		         <p:column style="width:24%;"  headerText="#{lbl['lbl.ct.tr.table.reason']}" >

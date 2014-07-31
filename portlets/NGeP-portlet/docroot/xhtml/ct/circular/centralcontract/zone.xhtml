@@ -11,7 +11,7 @@
 		<table style="width=100%;">
 			<tr>
 				<td valign="top">
-					<p:dataTable id="circularZoneDt" var="data" rowKey="#{data}" lazy="true"
+					<p:dataTable id="circularZoneDt" var="data" rowKey="#{data}"
 						value="#{centralContractBackingBean.getCircularZoneList('C')}" selectionMode="single" 
 						selection="#{centralContractBackingBean.managedBean.selectedCircularZone}" >
 						<ac:paginator for="circularZoneDt" />
@@ -43,7 +43,7 @@
 				<td><p:spacer width="50px;" /></td>
 				<td valign="top">
 					<h:panelGroup id="circularZoneDtlPnl">
-						<p:dataTable id="circularZoneDtlDt" var="data" rowKey="#{data}" lazy="true" rowIndexVar="index"
+						<p:dataTable id="circularZoneDtlDt" var="data" rowKey="#{data}" rowIndexVar="index"
 							value="#{centralContractBackingBean.managedBean.selectedCircularZone.ctCircularZoneDtls}" selectionMode="single" 
 							selection="#{centralContractBackingBean.managedBean.selectedCircularZoneDtl}" >
 							<ac:paginator for="circularZoneDtlDt" />
@@ -88,7 +88,7 @@
 		<table style="width:100%;">
 			<tr>
 				<td valign="top">
-					<p:dataTable id="itemZoneDt" var="data" rowKey="#{data}" lazy="true"
+					<p:dataTable id="itemZoneDt" var="data" rowKey="#{data}"
 						value="#{centralContractBackingBean.getCircularZoneList('I')}" selectionMode="single" 
 						selection="#{centralContractBackingBean.managedBean.selectedItemZone}" >
 						<ac:paginator for="itemZoneDt" />
@@ -117,7 +117,7 @@
 				<td><p:spacer width="50px;" /></td>
 				<td valign="top">
 					<h:panelGroup id="itemZoneDtlPnl">
-						<p:dataTable id="itemZoneDtlDt" var="data" rowKey="#{data}" lazy="true" rowIndexVar="index"
+						<p:dataTable id="itemZoneDtlDt" var="data" rowKey="#{data}" rowIndexVar="index"
 							value="#{centralContractBackingBean.managedBean.selectedItemZone.ctCircularZoneDtls}" selectionMode="single" 
 							selection="#{centralContractBackingBean.managedBean.selectedItemZoneDtl}" >
 							<ac:paginator for="itemZoneDtlDt" />

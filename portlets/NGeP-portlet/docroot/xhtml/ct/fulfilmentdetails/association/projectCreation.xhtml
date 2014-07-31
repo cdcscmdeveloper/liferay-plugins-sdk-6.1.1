@@ -110,7 +110,7 @@
               </h:panelGrid>
 		     <p:spacer height="2"/>
              <p:dataTable id="advanceCtSearch" var="data" value="#{associationBackingBean.managedBean.contractList}" rowIndexVar="index"
-                 widgetVar="dataTableObj"  lazy="false" dynamic="true" selection="#{associationBackingBean.selectedContractList}" rowKey="#{data.contractId}">
+                 widgetVar="dataTableObj" dynamic="true" selection="#{associationBackingBean.selectedContractList}" rowKey="#{data.contractId}">
                     <ac:paginator for="advanceCtSearch"/>
                 	<p:column selectionMode="multiple" style="width:2%;" />
 			        <p:column headerText="#{lbl['lbl.ct.asearch.model.table2.cno']}">

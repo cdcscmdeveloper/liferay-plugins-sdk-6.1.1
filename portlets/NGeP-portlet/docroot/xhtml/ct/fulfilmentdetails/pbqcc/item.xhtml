@@ -24,8 +24,7 @@
 			<p:dataTable id="itemTable" var="data"
 				value="#{amendmentBackingBean.contractItemList}" rowKey="#{data}"
 				selectionMode="single"
-				selection="#{amendmentBackingBean.managedBean.selectedItem}"
-				lazy="true">
+				selection="#{amendmentBackingBean.managedBean.selectedItem}">
 				<ac:paginator for="itemTable" />
 				<p:ajax event="rowSelect" update=":form:tabview:changeField" />
 				<p:column headerText="Item Name">
@@ -69,7 +68,7 @@
 					rendered="#{((amendmentBackingBean.managedBean.showItem == ParameterConst.itemDisplayTypePrice) or amendmentBackingBean.managedBean.serviceItem) and amendmentBackingBean.managedBean.selectedItem!=null}">
 					<p:dataTable id="itemPriceTable" var="data"
 						value="#{amendmentBackingBean.managedBean.selectedItem.ctItemPrices}"
-						rowKey="#{data}" lazy="true">
+						rowKey="#{data}">
 						<ac:paginator for="itemPriceTable" />
 						<p:column headerText="Zone">
 							<p:outputLabel value="#{data.ctContractZone.zoneName}"
@@ -100,7 +99,7 @@
 					rendered="#{(amendmentBackingBean.managedBean.showItem == ParameterConst.itemDisplayTypeCeilQty) and amendmentBackingBean.managedBean.productItem}">
 					<p:dataTable id="ceilingTable" var="data"
 						value="#{amendmentBackingBean.managedBean.selectedItem.ctItemCeilingQties}"
-						rowKey="#{data}" lazy="true">
+						rowKey="#{data}">
 						<ac:paginator for="ceilingTable" />
 						<p:column headerText="Ministry Name">
 							<p:outputLabel

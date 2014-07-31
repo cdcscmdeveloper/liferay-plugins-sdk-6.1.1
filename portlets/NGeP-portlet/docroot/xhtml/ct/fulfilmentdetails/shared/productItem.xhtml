@@ -53,7 +53,7 @@
 			rendered="#{(contractDetailsBackingBean.managedBean.showItem == ParameterConst.itemDisplayTypePrice) 
 			   and contractDetailsBackingBean.managedBean.selectedItem != null}">
 		      <p:dataTable id="itemPriceTier" var="data" 
-		         value="#{contractDetailsBackingBean.managedBean.selectedItem.ctItemPrices}" lazy="true" >
+		         value="#{contractDetailsBackingBean.managedBean.selectedItem.ctItemPrices}">
 			     <ac:paginator for="itemPriceTier"/>
 			        <c:if test="#{contractDetailsBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeStandard}">
 			             <p:column headerText="#{lbl['lbl.ct.item.table1.price.price']}" style="text-align: right;">

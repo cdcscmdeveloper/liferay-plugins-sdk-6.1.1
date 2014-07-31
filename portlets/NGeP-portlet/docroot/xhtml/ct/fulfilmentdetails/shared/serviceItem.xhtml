@@ -31,7 +31,7 @@
 		   <p:spacer height="20"/>
 		    <h:panelGrid columns="1" style="width:100%" 
 		       rendered="#{contractDetailsBackingBean.managedBean.selectedServiceItem != null}">
-		      <p:dataTable id="servicePriceTable" var="data"  lazy="true"
+		      <p:dataTable id="servicePriceTable" var="data"
 		         value="#{contractDetailsBackingBean.managedBean.selectedServiceItem.ctItemPrices}">
 			    <ac:paginator for="servicePriceTable"/>
 			     <p:column headerText="#{lbl['lbl.ct.item.table1.price.zone']}">

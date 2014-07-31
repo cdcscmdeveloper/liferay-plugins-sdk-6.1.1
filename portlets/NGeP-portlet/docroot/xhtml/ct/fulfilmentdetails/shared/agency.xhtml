@@ -123,7 +123,7 @@
 	</p:dialog>
 	<p:dialog id="deliveryAddressDlg" header="#{lbl['lbl.ct.agn.table.da']}" widgetVar="deliveryAddressDlg" modal="true" width="600" height="400">
 	  <p:dataTable id="deliveryAddressTbl" var="deliveryAddress" value="#{contractDetailsBackingBean.selectedListOfAgency[0].ctAgencyAddresses}"
-		lazy="true" rowKey="#{deliveryAddress}">
+		rowKey="#{deliveryAddress}">
 		<ac:paginator for="deliveryAddressTbl"/>
 		<p:column headerText="#{lbl['lbl.ct.agn.table.da']}">
 		   <p:outputLabel value="#{deliveryAddress.addressType.pmAddress.address1}" style="float:left;" />

@@ -19,7 +19,7 @@
          <p:outputPanel id="paymentSchedule">   
          <h:panelGroup  style="width:100%;"
             rendered="#{contractDetailsBackingBean.managedBean.ctContract.frequencySchedule}">    
-	        <p:dataTable id="tableSchedule" var="schedVar" lazy="true"
+	        <p:dataTable id="tableSchedule" var="schedVar"
 	           value="#{contractDetailsBackingBean.managedBean.contractVer.ctSchedules}" 
 	           rowIndexVar="index" selection="#{contractDetailsBackingBean.selectedSchedule}" rowKey="#{schedVar}" >
 	            <ac:paginator for="tableSchedule" />

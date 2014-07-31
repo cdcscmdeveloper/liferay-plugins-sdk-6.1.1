@@ -17,7 +17,7 @@
 	
 	<p:panel id="contactPerson" header="#{lbl['lbl.ct.pc.cpd']}" toggleable="true" toggleSpeed="500" widgetVar="panelcontactPerson">
 		<p:dataTable id="contactPersonDt" var="data" value="#{centralContractBackingBean.managedBean.circularVer.ctContactPersons}"
-		 	rowKey="#{data}" rowIndexVar="index" lazy="true" selection="#{centralContractBackingBean.managedBean.selectedContactPersons}">
+		 	rowKey="#{data}" rowIndexVar="index" selection="#{centralContractBackingBean.managedBean.selectedContactPersons}">
 			<ac:paginator for="contactPersonDt" />
 			<p:column selectionMode="multiple" style="width:3%" />
 			<p:column headerText="#{lbl['lbl.ct.pc.cperson']}">
@@ -62,7 +62,7 @@
 	
 	<p:panel id="exemptedOrgPnl" header="Exempted Ministry" toggleable="true" toggleSpeed="500">
 		<p:dataTable id="exemptedOrgDt" var="data" value="#{centralContractBackingBean.managedBean.circularVer.ctExemptedOrgs}"
-		 	rowKey="#{data}" rowIndexVar="index" lazy="true" selection="#{centralContractBackingBean.managedBean.selectedExemptedOrgs}">
+		 	rowKey="#{data}" rowIndexVar="index" selection="#{centralContractBackingBean.managedBean.selectedExemptedOrgs}">
 			<ac:paginator for="exemptedOrgDt" />
 			<p:column selectionMode="multiple" style="width:3%" />
 			<p:column headerText="Ministry">
@@ -112,7 +112,7 @@
 	</p:panel>
 	
 	<p:panel id="cancelCircularPnl" header="Related Cancelled Circular" toggleable="true" toggleSpeed="500">
-		<p:dataTable id="cancelCircularDt" var="data" rowKey="#{data}" lazy="true" rowIndexVar="index" 
+		<p:dataTable id="cancelCircularDt" var="data" rowKey="#{data}" rowIndexVar="index" 
 			value="#{centralContractBackingBean.managedBean.circularVer.ctCancelCircularList}"
 			selection="#{centralContractBackingBean.managedBean.selectedCancelCirculars}" >
 			<ac:paginator for="cancelCircularDt" />
@@ -135,7 +135,7 @@
 	
 	<p:dialog id="cancelCircularDlg" header="Cancelled Circulars" widgetVar="cancelCircularDlg" modal="true" width="550" height="350">
 		<p:panel id="circular">
-			<p:dataTable id="cancelledCclDt" var="data" lazy="true" rowKey="#{data}" rowIndexVar="index"
+			<p:dataTable id="cancelledCclDt" var="data" rowKey="#{data}" rowIndexVar="index"
 				value="#{centralContractBackingBean.managedBean.cancelledCircularList}" 
 				selection="#{centralContractBackingBean.managedBean.selectedCancelledCircularList}" >
 				<ac:paginator for="cancelledCclDt" />
