@@ -136,6 +136,78 @@ public class SpkiBackingBean {
 		
 		return tok;
 	}
+	
+	public void spkiSignTransaction() {
+		try{
+			// Create property file
+			File f = new File("kmc.properties");
+			// Create KMCClient with the property file
+			KMCClient client = KMCClientFactory.getInstance(f);
+
+//			// Request service for user selected question for authentication
+//			IKMCAPIResponse res = client.requestService(KMCRequestBuilder.getChallengeQuestions("800808081011", 1));
+//			List<String> challs = null;
+//			switch(res.getStatusCode())
+//			{
+//			case IKMCAPIResponse.OPERATION_SUCCESSFUL:
+//				challs =  (List<String>) res.get(IKMCAPIResponse.GetChallengeQuestionResonse.CHALLENGE_RESPONSES);
+//				// show to the user to allow user answer the challenge
+//				for(int i = 0 ; i < challs.size() ; i ++)
+//				{
+//					System.out.println("Challange of "+(i+1)+" is : "+challs.get(i));
+//				}
+//				
+//				break;
+//
+//				default:
+//				System.err.println("API return error. Code was "+res.getStatusCode()+". Message was : "+res.getStatusMessage());
+//				return;
+//			}
+//
+//			if(challs.size() == 0)
+//			{IKMCAPIResponse
+//				System.err.println("No challanges found for the user! Data signing failed!");
+//				return;
+//			}
+//			
+			// Simulate user selected the question and answer accordingly
+			Map<Object, Object> challenges = new HashMap<Object, Object>();
+			challenges.put("Name?", "Don't care!");
+
+			// Simulate the data ready to sign
+			String dataForSigning = "This is data for signing!";
+			
+			// Simulate usel expression that maps to a server side
+ 
+			String pin = "123123";
+			
+			// Request service to signData based on the answered challenges and data 
+			IKMCAPIResponse res = client.requestService(KMCRequestBuilder.signData("800808081011","cdc", pin.toCharArray(), challenges, new ByteArrayInputStream(dataForSigning.getBytes())));
+			switch(res.getStatusCode())
+			{
+			case IKMCAPIResponse.OPERATION_SUCCESSFUL:
+				// application take over from here for the digital signature handling
+				// Here is sample to write the signature to file...
+				FileOutputStream fos = new FileOutputStream("sign.bin");
+				fos.write((byte[])res.get(IKMCAPIResponse.SignDataResponse.SIGNATURE));
+				fos.flush();
+				fos.close();
+				System.out.println("Data signing successful. Signature saved to sign.bin");
+				break;
+
+			default:
+				System.err.println("API return error. Code was "+res.getStatusCode()+" Message was : "+res.getStatusMessage());
+				return;
+			}
+			
+			
+		} catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+
+	}
+	
 	public void signAction() {
 //		Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
 
