@@ -1999,10 +1999,6 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 					// remarks
 				    requestNote.setRemarks(requestNoteBackingBean.initializeRemarks(requestNote));
 					
-					ScRequestSupplierItem  requestSupplierItem = new ScRequestSupplierItem();
-					SmSupplier  smSupplier = new SmSupplier();
-					requestSupplierItem.setSmSupplier(smSupplier);
-					
 					List<ScRequestNoteDtl>	requestNoteDtls = new ArrayList<ScRequestNoteDtl>();
 					for (ScRequestNoteDtl requestNoteDtl : requestNote.getRequestNoteDtls()) {
 						ParameterResDTO parameterResDTO=null;
@@ -2030,10 +2026,6 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 							parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
 							requestNoteDtl.setDeliverTermType(parameterResDTO.getPmParameter());
 						}
-
-						// TODO  hard code request supp item and proc type
-						requestSupplierItem.setRequestNoteItem(requestNoteDtl.getRequestItem());
-						requestNoteDtl.setScRequestSupplierItem(requestSupplierItem);
 						
 						if(requestNoteDtl.getJustificationType() != null){
 							requestNoteBackingBean.getManagedBean().setJustificationType(requestNoteDtl.getJustificationType().getParameterCode());
@@ -2046,12 +2038,13 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 							requestNoteBackingBean.getManagedBean().setJustification(requestNoteDtl.getJustification());
 						}
 						
-						// by default selected rec.supplier , price type and offered price
+						if(requestNoteDtl.getAssignedUser() == null){
+							requestNoteDtl.setAssignedUser(new PmUser());	
+						}
+						// by default selected rec.supplier , price type, assigned by and offered price 
 						requestNoteBackingBean.supplierLister(requestNoteDtl.getScRequestSupplierItem().getSmSupplier().getSupplierId(),
 								requestNoteDtl.getPriceType().getParameterId(), requestNoteDtl, requestNoteDtl.getRequestItem().getSupplierItems() , requestNoteDtl.getAssignedUser().getUserId() ,requestNoteDtl.getDeliverTermType().getParameterId());
 						
-						
-						requestNoteDtl.setAssignedUser(new PmUser());
 						requestNoteDtls.add(requestNoteDtl);
 					}
 					
@@ -2063,13 +2056,13 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 					requestNoteBackingBean.getManagedBean().setTaskId(taskId);
 					
 					ScRequestNoteDtl scRequestNoteDtl = requestNote.getRequestNoteDtls().get(0);
+					requestNoteBackingBean.getManagedBean().setRequestNote(requestNote);
 					requestNoteBackingBean.fulfilmentTypeEvent(scRequestNoteDtl);
 					requestNoteBackingBean.getManagedBean().setFulfillmentType(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN);
 					requestNoteBackingBean.getManagedBean().setRequestNoteDtl(scRequestNoteDtl);
-					requestNoteBackingBean.getManagedBean().setRequestNote(requestNote);
 					
 					// For status 
-					requestNoteBackingBean.getCurrentStatus(res.getDocStatus().longValue());
+					requestNoteBackingBean.getCurrentStatus(DPStatusConstants.RN_PENDING_SUBMISSION);
 					//approvers list
 					requestNoteBackingBean.initialInformation(requestNote);
 			      }
@@ -2298,6 +2291,9 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 					}
 				}
 			}
+		} else{
+			getManagedBean().getProductTemplateSpecBean().getSpecMaster().setEstCostReq(Boolean.FALSE);
+			getManagedBean().getServiceTemplateSpecBean().getSpecMaster().setEstCostReq(Boolean.FALSE);
 		}
 	}
 	
