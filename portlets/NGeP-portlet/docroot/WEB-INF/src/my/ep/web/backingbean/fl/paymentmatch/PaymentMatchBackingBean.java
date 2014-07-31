@@ -44,6 +44,7 @@ import my.ep.dto.pm.common.votfund.VotFundReqDTO;
 import my.ep.dto.pm.common.votfund.VotFundResDTO;
 import my.ep.jaxb.fl.payment.instruction.FLPaymentInstructionDataType;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.adjust.FlAdjustment;
@@ -58,6 +59,7 @@ import my.ep.persistence.entity.fl.payment.FlPaymentItem;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmContact;
 import my.ep.persistence.entity.pm.common.PmFinancialAcc;
 import my.ep.persistence.entity.pm.common.PmGlAccount;
@@ -648,5 +650,27 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		paymentDeduction.setPmVotFund(new PmVotFund());
 		paymentDeduction.setPmGlAccount(new PmGlAccount());
 		getManagedBean().getPaymentAdvice().getFlPaymentDeduction().add(paymentDeduction);
+		getGlAccountList(getManagedBean().getPaymentAdvice().getFlRequest().getIssuedOrgProfile());
+		getManagedBean().setVotFundList(getManagedBean().getPaymentAdvice().getFlRequest().getIssuedOrgProfile().getPmPtjGroup().getPmVotFunds());
 	}
+	
+	public void retrieveClauses(FlPaymentDeduction deduction){
+		if(deduction.getDeductionType().getParameterCode() != null){
+			for(CtDeduction ctDeduction : getManagedBean().getPaymentAdvice().getFlRequest().getCtContract().getLatestContractVer().getCtDeductions()){
+				if(ctDeduction.getDeductionType().getParameterCode().equals(deduction.getDeductionType().getParameterCode())){
+					getManagedBean().setCtDeductionClauseList(ctDeduction.getCtDeductionClauses());
+				}
+			}
+		}
+	}
+	
+	private void getGlAccountList(PmOrgProfile pmOrgProfile){
+		IGlAccountSO glAccountSO = (IGlAccountSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IGlAccountSO.class);
+		
+		GlAccountReqDTO glAccountReqDTO = new GlAccountReqDTO();
+		glAccountReqDTO.setPtjGroupId(pmOrgProfile.getPmPtjGroup().getPtjGroupId());
+		GlAccountResDTO glAccountResDTO = glAccountSO.retrieveGlAccountList(glAccountReqDTO);
+		getManagedBean().setGlAccountList(glAccountResDTO.getGlAccountList());
+	}
+	
 }

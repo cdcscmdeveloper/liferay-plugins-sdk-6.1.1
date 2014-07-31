@@ -10,10 +10,13 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
+import my.ep.persistence.entity.ct.dtl.deduction.CtDeductionClause;
 import my.ep.persistence.entity.fl.payment.FlPaymentAdvice;
 import my.ep.persistence.entity.fl.payment.FlPaymentDeduction;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmGlAccount;
+import my.ep.persistence.entity.pm.common.PmVotFund;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.primefaces.model.TreeNode;
@@ -33,7 +36,11 @@ public class PaymentMatchManagedBean extends BaseManagedBean{
 
 	private FlPaymentAdvice paymentAdvice;
 	private List<FlPaymentDeduction> selectedDeductions;
-
+	private CtDeduction ctDeduction;
+	private List<CtDeductionClause> ctDeductionClauseList;
+	private List<PmGlAccount> glAccountList;
+	private List<PmVotFund> votFundList;
+	
 	// for Deduction panel display	
 	private String docType;
 	
@@ -569,5 +576,62 @@ public class PaymentMatchManagedBean extends BaseManagedBean{
 	 */
 	public void setDeductionId(Long deductionId) {
 		this.deductionId = deductionId;
+	}
+
+	/**
+	 * @return the ctDeduction
+	 */
+	public CtDeduction getCtDeduction() {
+		return ctDeduction;
+	}
+
+	/**
+	 * @param ctDeduction the ctDeduction to set
+	 */
+	public void setCtDeduction(CtDeduction ctDeduction) {
+		this.ctDeduction = ctDeduction;
+	}
+
+	/**
+	 * @return the ctDeductionClauseList
+	 */
+	public List<CtDeductionClause> getCtDeductionClauseList() {
+		return ctDeductionClauseList;
+	}
+
+	/**
+	 * @param ctDeductionClauseList the ctDeductionClauseList to set
+	 */
+	public void setCtDeductionClauseList(
+			List<CtDeductionClause> ctDeductionClauseList) {
+		this.ctDeductionClauseList = ctDeductionClauseList;
+	}
+
+	/**
+	 * @return the glAccountList
+	 */
+	public List<PmGlAccount> getGlAccountList() {
+		return glAccountList;
+	}
+
+	/**
+	 * @param glAccountList the glAccountList to set
+	 */
+	public void setGlAccountList(List<PmGlAccount> glAccountList) {
+		this.glAccountList = glAccountList;
+	}
+
+	/**
+	 * @return the votFundList
+	 */
+	public List<PmVotFund> getVotFundList() {
+		return votFundList;
+	}
+
+	/**
+	 * @param votFundList the votFundList to set
+	 */
+	public void setVotFundList(List<PmVotFund> votFundList) {
+		this.votFundList = votFundList;
 	}
 }
