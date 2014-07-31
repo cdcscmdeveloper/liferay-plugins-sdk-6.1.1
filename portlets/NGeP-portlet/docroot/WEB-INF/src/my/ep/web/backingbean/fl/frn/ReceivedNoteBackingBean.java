@@ -317,4 +317,10 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 	public Date getCurrentDate() {
 		return new Date();
 	}
+	
+	public void checkScore(FlSupplierEvaluation supplierEvaluation){
+		if(supplierEvaluation.getScore() > 5 || supplierEvaluation.getScore() == 0){
+			throw new EpException(MessageConst.ERROR_100039, new String[]{supplierEvaluation.getScore().toString(),"1","5"});
+		}
+	}
 }

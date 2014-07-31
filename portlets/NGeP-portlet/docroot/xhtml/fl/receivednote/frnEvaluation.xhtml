@@ -38,7 +38,10 @@
 				<h:outputText value="#{receivedNoteBackingBean.getCriteriaDesc(suppEvalution.pmCriteria)}" />
 			</p:column>
 			<p:column headerText="* Score" >
-				<p:inputText value="#{suppEvalution.score}" style="text-align:right" maxlength="1"  id="score" label="Score" required="true" />
+				<p:inputText validatorMessage="Maximum score is 5" 
+				 value="#{suppEvalution.score}" style="text-align:right" maxlength="1"  id="score" label="Score" required="true" >
+				<p:ajax update="score" listener="#{receivedNoteBackingBean.checkScore(suppEvalution)}"></p:ajax>
+				</p:inputText>
 				<p:message for="score" display="icon" />
 			</p:column>
 			<p:column headerText="Remarks">
