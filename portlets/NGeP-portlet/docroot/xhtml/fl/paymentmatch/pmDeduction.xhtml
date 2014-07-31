@@ -10,7 +10,7 @@
 	<p:panel id="deductionPanel" header="DEDUCTIONS" toggleable="true">
 		<p:dataTable id="deductionDataTable" var="deduction" value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flPaymentDeduction}"
 			rowIndexVar="index"
-			selection="#{paymentMatchBackingBean.managedBean.selectedDeductions}" rowKey="#{deduction}" lazy="true">
+			selection="#{paymentMatchBackingBean.managedBean.selectedDeductions}" rowKey="#{deduction}">
 			<ac:paginator for="deductionDataTable" />
 			<p:column selectionMode="multiple" style="width:2%;text-align:center" disabledSelection="#{index == 0}"/>
 			<p:column headerText="Type">
