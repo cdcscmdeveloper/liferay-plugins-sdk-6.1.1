@@ -2276,25 +2276,27 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			if (templateSpecBackingBean == null) {
 				templateSpecBackingBean = new TemplateSpecBackingBean();
 			}
+			TplSpecMaster  serviceTplSpec = getManagedBean().getProductTemplateSpecBean().getSpecMaster();
+			TplSpecMaster  productTplSpec = getManagedBean().getProductTemplateSpecBean().getSpecMaster();
 			
 			// product
-			if(getManagedBean().getProductTemplateSpecBean().getSpecMaster() != null){
-				TplSpecMaster  productTplSpec = getManagedBean().getProductTemplateSpecBean().getSpecMaster();
-
-				for (TplSpecQuestion TplSpecQuestion : productTplSpec.getTplSpecQuestions()) {
-					templateSpecBackingBean.resetPriceTypeDtl(TplSpecQuestion);
+			if(productTplSpec != null){
+				if(productTplSpec.getTplSpecQuestions() != null && productTplSpec.getTplSpecQuestions().size() >0){
+					getManagedBean().getProductTemplateSpecBean().getSpecMaster().setEstCostReq(Boolean.TRUE);
+					for (TplSpecQuestion TplSpecQuestion : productTplSpec.getTplSpecQuestions()) {
+						templateSpecBackingBean.resetPriceTypeDtl(TplSpecQuestion);
+					}
 				}
-				getManagedBean().getProductTemplateSpecBean().getSpecMaster().setEstCostReq(Boolean.TRUE);
-			}
+			  }
 
 			// service 
-			if(getManagedBean().getServiceTemplateSpecBean().getSpecMaster() != null){
-				TplSpecMaster  serviceTplSpec = getManagedBean().getProductTemplateSpecBean().getSpecMaster();
-
-				for (TplSpecQuestion TplSpecQuestion : serviceTplSpec.getTplSpecQuestions()) {
-					templateSpecBackingBean.resetPriceTypeDtl(TplSpecQuestion);
+			if(serviceTplSpec != null){
+				if(serviceTplSpec.getTplSpecQuestions() != null && serviceTplSpec.getTplSpecQuestions().size() >0){
+					getManagedBean().getServiceTemplateSpecBean().getSpecMaster().setEstCostReq(Boolean.TRUE);
+					for (TplSpecQuestion TplSpecQuestion : serviceTplSpec.getTplSpecQuestions()) {
+						templateSpecBackingBean.resetPriceTypeDtl(TplSpecQuestion);
+					}
 				}
-				getManagedBean().getServiceTemplateSpecBean().getSpecMaster().setEstCostReq(Boolean.TRUE);
 			}
 		}
 	}
