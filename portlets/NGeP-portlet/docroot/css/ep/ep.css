@@ -4624,7 +4624,7 @@ table.rptTbl {
   border: 1px dashed;
   border-style: none none dashed;
   margin-top: 15px;
-  margin-bottom: 15px;
+  margin-bottom: 0px !important;
 }
 
 .row_separator_dotted_line{
@@ -4641,7 +4641,7 @@ table.rptTbl {
   height : 2px;
   border-style: none none solid;
   margin-top: 15px;
-  margin-bottom: 15px;
+  margin-bottom: 0px !important;
 }
 .summary-title{
 	color : black;
