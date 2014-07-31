@@ -2,16 +2,22 @@ package my.ep.web.util.sm.helper;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.dto.pm.common.country.CountryReqDTO;
 import my.ep.dto.pm.common.country.CountryResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
+import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.id.Hex;
@@ -35,6 +41,21 @@ public class SmCommonUtil {
         return new String(Hex.encodeHex(shaDig));
 	}
 	
+	public static String md5(String str) {
+
+		MessageDigest md = null;
+		try {
+			md = MessageDigest.getInstance("MD5");
+		} catch (NoSuchAlgorithmException ex) {
+			System.out.println(ex.getMessage());
+			//	            return;
+		}
+		md.update(str.getBytes());
+		byte[] md5Dig = md.digest();
+		
+		return new String(Hex.encodeHex(md5Dig));
+	}
+	
 	public static List<PmParameterDesc> retrieveParameterDescList(String paramType,String lang){
 		ParameterReqDTO reqDTO = new ParameterReqDTO();
 		reqDTO.setParameterType(paramType);
@@ -55,4 +76,24 @@ public class SmCommonUtil {
 		
 		return resDTO.getPmCountry();
 	}
+	
+	public static List<PmStatusDesc> retrievePmStatusList(String moduleCode,String docType, String lang){
+		StatusReqDTO reqDTO = new StatusReqDTO();
+		reqDTO.setDocType(docType);
+		reqDTO.setModuleCode(moduleCode);
+		reqDTO.setLanguageCode(lang);
+		IStatusSO reqSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject("pm", IStatusSO.class);
+		StatusResDTO resDTO = reqSO.retrieveStatusDescList(reqDTO);
+		
+		return resDTO.getStatusDescList();
+	}
+	
+	public static Map<Long,PmStatusDesc> converPmStatusListToMap(List<PmStatusDesc> pmStatusDescLs){
+		Map<Long, PmStatusDesc> statDescMap= new HashMap<Long, PmStatusDesc>();
+		for(PmStatusDesc pmStatDesc : pmStatusDescLs){
+			statDescMap.put(pmStatDesc.getPmStatus().getStatusId(), pmStatDesc);
+		}
+		return statDescMap;
+	}
+	
 }
