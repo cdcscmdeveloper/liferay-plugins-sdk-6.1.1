@@ -13,8 +13,8 @@
 </cc:interface>
 
 <cc:implementation>
-	<p:remoteCommand name="updateSearchDialog" update="searchPanel lovTitle resultPanel" partialSubmit="true" />
-	<p:remoteCommand name="resetAllData" update="searchPanel lovTitle resultPanel" partialSubmit="true" action="#{lovBackingBean.resetAction}" />
+	<p:remoteCommand name="updateSearchDialog" update="searchPanel lovTitle resultPanel" partialSubmit="true" process="@this" />
+	<p:remoteCommand name="resetAllData" update="searchPanel lovTitle resultPanel" partialSubmit="true" action="#{lovBackingBean.resetAction}" process="@this" />
 	
 	<p:dialog id="lovPopup" widgetVar="lovPopup" modal="true" width="700" position="top" onHide="resetAllData();">
 	
