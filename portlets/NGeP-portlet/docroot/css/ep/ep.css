@@ -4623,7 +4623,6 @@ table.rptTbl {
 .horizontal_dotted_line{
   border: 1px dashed;
   border-style: none none dashed;
-  width: 900px;
   margin-top: 15px;
   margin-bottom: 15px;
 }
@@ -4641,7 +4640,6 @@ table.rptTbl {
 .horizontal_line{
   height : 2px;
   border-style: none none solid;
-  width: 900px;
   margin-top: 15px;
   margin-bottom: 15px;
 }
