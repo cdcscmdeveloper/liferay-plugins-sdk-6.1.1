@@ -190,6 +190,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 	    	statusReqDTO.setStatusId(status.getStatusId());
 	    	StatusResDTO statusResDTO = iStatusSO.retrieveStatusByStatusId(statusReqDTO);
 	    	workFlowStatus.setPmStatus(statusResDTO.getPmStatus());
+	    	workFlowStatus.setCurrent(Boolean.TRUE);
 	    }
 	    workFlowStatuses.add(workFlowStatus);
 
@@ -663,7 +664,12 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		result.setScRequestSupplierItem(scRequestSupplierItem);
 		result.setPricing(pricing);
 		
-		result.setTplSpecZone(null);	//TODO - zone in cm.
+		// zone dtl
+		if(pricing.getCmSupplierZone() != null){
+			TplSpecZoneDtl tplSpecZone = new TplSpecZoneDtl();
+			tplSpecZone.setZoneName(pricing.getCmSupplierZone().getSuppZoneName());
+			//result.setTplSpecZone(tplSpecZone);
+		}
 		
 		IParameterSO parameterSO;
 		try {
@@ -1079,19 +1085,19 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		
 		List<PmUser> userlist = new ArrayList<PmUser>();
 		if(requestNoteDtl.getFulfilmentType() != null ){
-		if (requestNoteDtl.getFulfilmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)) {
-			userlist = userListByRole(RoleCode.REQUISITIONER.value());
-			getManagedBean().setUserList(userlist);
-			
-		 } else if (requestNoteDtl.getFulfilmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN)) {
-			List<String> roleList= new ArrayList<String>();
-			roleList.add(RoleCode.DESK_OFFICER.value());
-			roleList.add(RoleCode.REQUISITIONER.value());
-			for (String role : roleList) {
-			   userlist.addAll(userListByRole(role));
+			if (requestNoteDtl.getFulfilmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)) {
+				userlist = userListByRole(RoleCode.REQUISITIONER.value());
+				getManagedBean().setUserList(userlist);
+
+			} else {
+				List<String> roleList= new ArrayList<String>();
+				roleList.add(RoleCode.DESK_OFFICER.value());
+				roleList.add(RoleCode.REQUISITIONER.value());
+				for (String role : roleList) {
+					userlist.addAll(userListByRole(role));
+				}
+				getManagedBean().setUserList(userlist);
 			}
-		    getManagedBean().setUserList(userlist);
-		   }
 		}
 	}
 	

@@ -2041,6 +2041,13 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 						if(requestNoteDtl.getAssignedUser() == null){
 							requestNoteDtl.setAssignedUser(new PmUser());	
 						}
+						
+						if(requestNoteDtl.getScRequestSupplierItem() == null){
+							ScRequestSupplierItem  requestSupplierItem = new ScRequestSupplierItem();
+							SmSupplier  smSupplier = new SmSupplier();
+							requestSupplierItem.setSmSupplier(smSupplier);
+							requestNoteDtl.setScRequestSupplierItem(requestSupplierItem);
+						}
 						// by default selected rec.supplier , price type, assigned by and offered price 
 						requestNoteBackingBean.supplierLister(requestNoteDtl.getScRequestSupplierItem().getSmSupplier().getSupplierId(),
 								requestNoteDtl.getPriceType().getParameterId(), requestNoteDtl, requestNoteDtl.getRequestItem().getSupplierItems() , requestNoteDtl.getAssignedUser().getUserId() ,requestNoteDtl.getDeliverTermType().getParameterId());
