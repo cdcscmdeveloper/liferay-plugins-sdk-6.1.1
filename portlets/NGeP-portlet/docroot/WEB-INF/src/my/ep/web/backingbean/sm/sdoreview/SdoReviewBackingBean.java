@@ -174,9 +174,8 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 	
 	public void inquiryRowSelect(){
 		System.out.println("*************inquiryRowSelect***********"+ this.getManagedBean().getSelectedInquiryResponse().getInquiryText());
-		RequestContext.getCurrentInstance().execute("responseDlg.show()");
-		RequestContext.getCurrentInstance().update("");
-
+		RequestContext.getCurrentInstance().update("resOutPanelId");
+		//RequestContext.getCurrentInstance().execute("responseDlg.show()");
 	}
 	
 	public void retrieveBusinessTypeList(){
