@@ -53,7 +53,7 @@
 			<p:column>
 				<p:inputText value="#{varBond.bondAmount}" styleClass="ppRightBtn"
 					maxlength="23" disabled="#{varBond.performanceBondId != null}"
-					style="width:100px;">
+					style="width:100px;" label="#{lbl['lbl.ct.pbd.table.amt']}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</p:inputText>

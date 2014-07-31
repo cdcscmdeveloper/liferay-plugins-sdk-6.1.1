@@ -42,7 +42,7 @@
 				</p:column>
 			
 				<p:column headerText="#{lbl['lbl.ct.item.newmaxqty']}" style="text-align: right;" rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange}">
-					<p:inputText size="10" value="#{ctItemVar.newMaxQuantity}" disabled="true" styleClass="ppRightBtn" >
+					<p:inputText size="10" value="#{ctItemVar.newMaxQuantity}" disabled="true" styleClass="ppRightBtn" label="#{lbl['lbl.ct.item.newmaxqty']}">
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctItemVar.uom.uomCode)}" />					
 					</p:inputText>
 					<p:spacer width="5"/>
@@ -64,7 +64,7 @@
 				     value="#{amendmentBackingBean.managedBean.selectedItem.ctItemMaxQties}">
 					<ac:paginator for="ctItemMaxQtyTable" />
 					<p:column headerText="Maximum Quantity">
-						<p:inputText value="#{data.maxQuantity}" styleClass="ppRightBtn" style="width:119px;" rendered="#{data.changeQuantity}">
+						<p:inputText value="#{data.maxQuantity}" styleClass="ppRightBtn" style="width:119px;" rendered="#{data.changeQuantity}" label="Maximum Quantity">
 							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, data.ctContractItem.uom.uomCode)}" />
 							<p:ajax process="@this"/>
 						</p:inputText>
@@ -164,7 +164,7 @@
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.item.table1.price.price']}" style="width:10%;">
 					  <h:panelGroup style="float:right;" rendered="#{itemPriceVar.changePrice}">
-					   	<p:inputText value="#{itemPriceVar.unitPrice}" styleClass="ppRightBtn" style="width:100px;">
+					   	<p:inputText value="#{itemPriceVar.unitPrice}" styleClass="ppRightBtn" style="width:100px;" label="#{lbl['lbl.ct.item.table1.price.price']}">
 							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 							<p:ajax process="@this"/>
 						</p:inputText>
@@ -227,7 +227,7 @@
 					</p:column>
 					<p:column headerText="Ceiling Quantity" style="width:10%;">
 					     <h:panelGroup style="float:right;" rendered="#{data.changeCeilQuantity}">
-						  <p:inputText value="#{data.ceilingQuantity}" styleClass="ppRightBtn" style="width:100px;">
+						  <p:inputText value="#{data.ceilingQuantity}" styleClass="ppRightBtn" style="width:100px;" label="Ceiling Quantity">
 							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, data.ctContractItem.uom.uomCode)}" />
 								<p:ajax process="@this"/>
 						</p:inputText>
@@ -312,7 +312,7 @@
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.item.table1.price.price']}" style="width:10%;">
 					     <h:panelGroup style="float:right;"  rendered="#{data.changePrice}">
-					    	<p:inputText value="#{data.unitPrice}" styleClass="ppRightBtn" style="width:100px;">
+					    	<p:inputText value="#{data.unitPrice}" styleClass="ppRightBtn" style="width:100px;" label="#{lbl['lbl.ct.item.table1.price.price']}">
 							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 								<p:ajax process="@this"/>
 						</p:inputText>
