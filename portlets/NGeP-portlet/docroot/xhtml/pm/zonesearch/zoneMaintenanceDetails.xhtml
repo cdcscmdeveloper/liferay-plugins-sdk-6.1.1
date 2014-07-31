@@ -49,7 +49,7 @@
 		<p:dataTable id="selectedStateId"
 			value="#{zoneBackingBean.managedBean.zoneStateList}" var="state"
 			rowIndexVar="index" rowKey="#{state}"
-			selection="#{zoneBackingBean.managedBean.selectedZones}" lazy="true">
+			selection="#{zoneBackingBean.managedBean.selectedZones}">
 			<ac:paginator for="selectedStateId"></ac:paginator>
 			<p:column selectionMode="multiple" style="width:2%" />
 			<p:column headerText="#{lbl['lbl.pm.state.code']}" style="width :15%">

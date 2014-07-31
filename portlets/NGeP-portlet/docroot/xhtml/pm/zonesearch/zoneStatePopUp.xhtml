@@ -11,7 +11,7 @@
 		<p:dataTable id="searchStateId" var="state"
 			value="#{zoneBackingBean.managedBean.states}"
 			selection="#{zoneBackingBean.managedBean.selectedStates}"
-			rowKey="#{state.stateId}" rowIndexVar="index" lazy="true">
+			rowKey="#{state.stateId}" rowIndexVar="index">
 			<p:column selectionMode="multiple" style="width:2%" />
 			<ac:paginator for="searchStateId"></ac:paginator>
 			<p:column headerText="#{lbl['lbl.pm.state.code']}" style="width :15%">
