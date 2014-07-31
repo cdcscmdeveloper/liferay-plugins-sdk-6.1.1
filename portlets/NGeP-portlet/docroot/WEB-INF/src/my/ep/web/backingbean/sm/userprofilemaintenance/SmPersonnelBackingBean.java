@@ -962,8 +962,8 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		}
 		if(isExistUserByIdentificationNo(smPersonnel.getIdentificationNo())){
 			throw new EpException(MessageConst.ERROR_722541);
-//		} else if(smPersonnel.getIdentificationType().getParameterCode().equals("I")){
-//				myIdentityVerification(smPersonnel);
+		} else if(smPersonnel.getIdentificationType().getParameterCode().equals("I")){
+				myIdentityVerification(smPersonnel);
 		}
 		try {
 			if(UserLocalServiceUtil.getUserByEmailAddress(Long.valueOf(getCompanyId()), smPersonnel.getEmail()) != null){
