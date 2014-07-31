@@ -320,6 +320,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 	
 	public void checkScore(FlSupplierEvaluation supplierEvaluation){
 		if(supplierEvaluation.getScore() > 5 || supplierEvaluation.getScore() == 0){
+			supplierEvaluation.setScore(null);
 			throw new EpException(MessageConst.ERROR_100039, new String[]{supplierEvaluation.getScore().toString(),"1","5"});
 		}
 	}
