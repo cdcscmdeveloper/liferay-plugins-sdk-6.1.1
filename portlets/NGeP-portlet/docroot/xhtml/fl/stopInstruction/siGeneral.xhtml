@@ -49,7 +49,7 @@
 	<p:panel header="SUPPLIER DETAIL" toggleable="true">
 		<table style="width: 100%">
 			<tr>
-				<td style="width: 117px;"><p:outputLabel
+				<td style="width: 138px;"><p:outputLabel
 						value="#{lbl['lbl.fl.supp.ep.no']}" /></td>
 				<td><table style="width: 100%">
 						<tr>
@@ -120,7 +120,7 @@
 		<p:panel header="STOP INSTRUCTION REASON" toggleable="true" id="stopInstructionPnl" >
 			<table style="width: 100%">
 				<tr>
-					<td style="width: 116px;">
+					<td style="width: 138px;">
 						<p:outputLabel value="Reason"/>
 						<p:outputLabel value="*" styleClass="mandatory"/>
 					</td>
@@ -136,7 +136,7 @@
 						</p:selectOneMenu> 
 					</td>
 					<td><p:message for="reasonId" display="icon" /></td>
-					<td style="width: 257px;"><p:outputLabel value="Submission Date" /></td>
+					<td style="width: 138px;"><p:outputLabel value="Submission Date" /></td>
 					<td>
 						<p:inputText value="#{stopInstrBB.managedBean.stopInstr.createdDate}" disabled="true">
 							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
