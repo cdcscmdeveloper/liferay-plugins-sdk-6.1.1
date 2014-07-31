@@ -11,8 +11,7 @@
 		<p:dataTable id="frnItemDt" var="item" width="100%"
 			value="#{receivedNoteBackingBean.managedBean.fulfilmentNote.flFulfilmentNoteItem}"
 			selection="#{receivedNoteBackingBean.managedBean.selectedItem}"
-			rowIndexVar="index" selectionMode="single" rowKey="#{item}"
-			lazy="true">
+			rowIndexVar="index" selectionMode="single" rowKey="#{item}" >
 			<p:ajax event="rowSelect" update=":form:selectedItemSection" />
 			<ac:paginator for="itemDataTable" />
 			<p:column headerText="Item Code">

@@ -11,7 +11,7 @@
 			value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.flDeliveryAddresses}"
 			rowIndexVar="index"
 			selection="#{purchaseRequestBackingBean.managedBean.selectedDelAddr}"
-			selectionMode="single" rowKey="#{address}" lazy="true">
+			selectionMode="single" rowKey="#{address}">
 			<ac:paginator for="addressDataTable" />
 			<p:ajax event="rowSelect"
 				update=":form:itemDetPanelGroup,:form:deleteAddrBtn"
@@ -110,7 +110,7 @@
 	</p:panel>
 	<h:panelGroup id="itemDetPanelGroup">
 		<p:panel id="itemDetPanel" header="ITEM LIST" toggleable="true">
-			<p:dataTable id="itemDataTable" var="flItem" lazy="true"
+			<p:dataTable id="itemDataTable" var="flItem" 
 				rowIndexVar="index"
 				value="#{purchaseRequestBackingBean.managedBean.showAllItemsRows}"
 				rowKey="#{flItem}">

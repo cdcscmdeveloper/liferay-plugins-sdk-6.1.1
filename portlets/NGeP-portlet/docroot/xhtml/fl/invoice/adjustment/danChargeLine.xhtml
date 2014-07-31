@@ -41,7 +41,7 @@
 			value="#{danBackingBean.managedBean.adjustment.flAdjustmentItem}"
 			rowIndexVar="index"
 			selection="#{danBackingBean.managedBean.selectedDanItem}"
-			selectionMode="single" rowKey="#{danItem}" lazy="true">
+			selectionMode="single" rowKey="#{danItem}" >
 			<p:ajax event="rowSelect" update=":form:chargeLineSection"
 				listener="#{danBackingBean.selectDanItem()}" />
 			<p:ajax event="rowUnselect" listener="#{danBackingBean.onNodeUnSelect()}"

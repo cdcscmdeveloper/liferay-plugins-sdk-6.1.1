@@ -12,7 +12,7 @@
 			rowIndexVar="index"
 			selection="#{contractRequestBackingBean.managedBean.selectedDelAddr}"
 			selectionMode="single" 
-			rowKey="#{address}" lazy="true">
+			rowKey="#{address}">
 			<ac:paginator for="addressDataTable" />
 			<p:ajax event="rowSelect"
 				update=":form:itemDetPanelGroup,:form:deleteAddrBtn" />
@@ -104,7 +104,7 @@
 		</p:confirmDialog>
 		<p:spacer height="20" />
 		<h:panelGroup id="itemDetPanelGroup">
-			<p:dataTable id="itemDataTable" var="item" lazy="true"
+			<p:dataTable id="itemDataTable" var="item"
 				rowIndexVar="index" rowKey="#{item}"
 				value="#{contractRequestBackingBean.managedBean.selectedDelAddr.flFulfilmentItemAddr}"
 				selection="#{contractRequestBackingBean.managedBean.selectedItemsRows}"
