@@ -102,47 +102,66 @@ public class CommonApplBackingBean extends
 					.handleNavigation(fc, null,
 							"/xhtml/sm/sdoreview/reviewSupportingDocuments");
 		} else if (resDTO.getTaskName().equalsIgnoreCase("Make Payment")) {
-			System.out.println("Process Name: " + resDTO.getProcessName());
-			/*
-			 * SMMOFRegDataType smMofObj = (SMMOFRegDataType) resDTO.getPojo();
-			 * SvoSiteVisitBackingBean svoBB = new SvoSiteVisitBackingBean();
-			 * svoBB.getManagedBean().setAppId(smMofObj.getDocumentId());
-			 * svoBB.getManagedBean().setBpmAction(resDTO.getAction());
-			 * svoBB.getManagedBean().setTaskId(taskId);
-			 */
+//			System.out.println("Process Name: " + resDTO.getProcessName());
+//			/*
+//			 * SMMOFRegDataType smMofObj = (SMMOFRegDataType) resDTO.getPojo();
+//			 * SvoSiteVisitBackingBean svoBB = new SvoSiteVisitBackingBean();
+//			 * svoBB.getManagedBean().setAppId(smMofObj.getDocumentId());
+//			 * svoBB.getManagedBean().setBpmAction(resDTO.getAction());
+//			 * svoBB.getManagedBean().setTaskId(taskId);
+//			 */
+//
+//			int documentId = 0;
+//			if (resDTO.getProcessName()
+//					.equalsIgnoreCase("MOF Account Maintain")) {
+//				SMMOFAccMainDataType smObj = (SMMOFAccMainDataType) resDTO
+//						.getPojo();
+//				documentId = smObj.getDocumentId();
+//
+//			} else if (resDTO.getProcessName().equalsIgnoreCase(
+//					"MOF Supplier Registration")) {
+//				SMMOFRegDataType smObj = (SMMOFRegDataType) resDTO.getPojo();
+//				documentId = smObj.getDocumentId();
+//			}
+//
+//			MofRegistrationResDTO mofResDto = new MofRegistrationResDTO();
+//			mofResDto = retriveApplicationById(documentId);
+//			SmAppl appl = mofResDto.getSmAppl();
+//			this.getManagedBean().setApplType(appl.getApplType());
+//			this.getManagedBean().setPersonnelList(appl.getSmPersonnels());
+//			this.getManagedBean().getPersonnelList().add(new SmPersonnel());
+//			this.getManagedBean().setSelectPersonnelList(
+//					this.getManagedBean().getPersonnelList());
+//			this.getManagedBean().setpListSize(
+//					this.getManagedBean().getPersonnelList().size() - 1);
+//			updateAmount();
+//			FacesContext fc = FacesContext.getCurrentInstance();
+//			fc.getApplication()
+//					.getNavigationHandler()
+//					.handleNavigation(fc, null,
+//							"/xhtml/sm/shared/paymentProcess/finalPayment.xhtml");
+//			// FacesContext fc = FacesContext.getCurrentInstance();
+//			// fc.getApplication().getNavigationHandler().handleNavigation(fc,
+//			// null, "/xhtml/sm/svositevisit/siteVisitView");
+			
+			Object bpmObj = new Object();
+			PaymentBackingBean paymentBB = new PaymentBackingBean();
+			if (resDTO.getProcessName().equalsIgnoreCase("MOF Supplier Registration")) {
+				bpmObj = (SMMOFRegDataType) resDTO.getPojo();
+				paymentBB.getManagedBean().setAppId((long) ((SMMOFRegDataType) bpmObj).getDocumentId());
 
-			int documentId = 0;
-			if (resDTO.getProcessName()
-					.equalsIgnoreCase("MOF Account Maintain")) {
-				SMMOFAccMainDataType smObj = (SMMOFAccMainDataType) resDTO
-						.getPojo();
-				documentId = smObj.getDocumentId();
-
-			} else if (resDTO.getProcessName().equalsIgnoreCase(
-					"MOF Supplier Registration")) {
-				SMMOFRegDataType smObj = (SMMOFRegDataType) resDTO.getPojo();
-				documentId = smObj.getDocumentId();
+			} else if (resDTO.getProcessName().equalsIgnoreCase("MOF Account Maintain")) {
+				bpmObj = (SMMOFAccMainDataType) resDTO.getPojo();
+				paymentBB.getManagedBean().setAppId((long) ((SMMOFAccMainDataType) bpmObj).getDocumentId());
 			}
+		
+			paymentBB.getManagedBean().setTaskId(taskId);
+			paymentBB.getManagedBean().setBpmPojo(bpmObj);
 
-			MofRegistrationResDTO mofResDto = new MofRegistrationResDTO();
-			mofResDto = retriveApplicationById(documentId);
-			SmAppl appl = mofResDto.getSmAppl();
-			this.getManagedBean().setApplType(appl.getApplType());
-			this.getManagedBean().setPersonnelList(appl.getSmPersonnels());
-			this.getManagedBean().getPersonnelList().add(new SmPersonnel());
-			this.getManagedBean().setSelectPersonnelList(
-					this.getManagedBean().getPersonnelList());
-			this.getManagedBean().setpListSize(
-					this.getManagedBean().getPersonnelList().size() - 1);
-			updateAmount();
+			paymentBB.retrieveBillInfo();
+			
 			FacesContext fc = FacesContext.getCurrentInstance();
-			fc.getApplication()
-					.getNavigationHandler()
-					.handleNavigation(fc, null,
-							"/xhtml/sm/shared/paymentProcess/finalPayment.xhtml");
-			// FacesContext fc = FacesContext.getCurrentInstance();
-			// fc.getApplication().getNavigationHandler().handleNavigation(fc,
-			// null, "/xhtml/sm/svositevisit/siteVisitView");
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/payment/portletViewMode.xhtml");
 		} else if (resDTO.getTaskName().equalsIgnoreCase("Respond PO Inquiry")) {
 			System.out.println("** Respond to PO Inquiry *********"
 					+ resDTO.getProcessName());
