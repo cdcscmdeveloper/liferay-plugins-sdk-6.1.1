@@ -983,6 +983,54 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	public void editManualAddress(FlDeliveryAddress flDelAddress){
 		//retrieveCountryList();
 		getManagedBean().setFlManulaAddress(flDelAddress);
+		if(getManagedBean().getFlManulaAddress().getPmAddress().getPmDivision()==null) {
+			getManagedBean().getFlManulaAddress().getPmAddress().setPmDivision(new PmDivision());
+		}
+		retrieveCountryList();
+		
+		StateReqDTO reqDTO = new StateReqDTO();
+		reqDTO.setCountryId(flDelAddress.getPmAddress().getPmCountry().getCountryId());
+		IStateSO reqSO = (IStateSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStateSO.class);
+		StateResDTO resDTO = reqSO.retriveStatesListByCountryID(reqDTO);
+		getManagedBean().setStateList(resDTO.getStateList());
+		
+		DistrictReqDTO districtReqDTO = new DistrictReqDTO();
+		IDistrictSO districtSO = (IDistrictSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDistrictSO.class);
+		
+		if(getManagedBean().getFlManulaAddress().getPmAddress().getPmDivision().getDivisionId()!=null) {
+			DivisionReqDTO divReqDTO= new DivisionReqDTO();
+			divReqDTO.setStateId(flDelAddress.getPmAddress().getPmState().getStateId());
+			IDivisionSO divisionSO = (IDivisionSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDivisionSO.class);
+			DivisionResDTO divResDTO = divisionSO.retriveDivisionListByState(divReqDTO);
+			getManagedBean().setDivisionList(divResDTO.getDivisionList());
+			
+			districtReqDTO.setDivisionId(flDelAddress.getPmAddress().getPmDivision().getDivisionId());
+			DistrictResDTO districtResDTO = districtSO.retriveDistrictListByDivision(districtReqDTO);
+			getManagedBean().setDistrictList(districtResDTO.getDistrictList());		
+		} else {
+			districtReqDTO.setStateId(flDelAddress.getPmAddress().getPmState().getStateId());
+			DistrictResDTO districtResDTO = districtSO.retriveDistrictListByStateID(districtReqDTO);
+			getManagedBean().setDistrictList(districtResDTO.getDistrictList());			
+		}
+		
+		CityReqDTO cityReqDTO = new CityReqDTO();
+		cityReqDTO.setDistrictId(flDelAddress.getPmAddress().getPmDistrict().getDistrictId());
+		ICitySO citySO = (ICitySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICitySO.class);
+		CityResDTO cityResDTO = citySO.retriveCityListByDistrictId(cityReqDTO);
+		this.getManagedBean().setCityList(cityResDTO.getCityList());
+		
+		if(getManagedBean().getManualAddressMap() == null || getManagedBean().getManualAddressMap().size() == 0){
+			setManualAddressList();
+		}
+		getManagedBean().setManualAddressList(getManagedBean().getManualAddressMap().get(flDelAddress.getPmAddress().getPmDistrict().getDistrictId()));
+		List<SelectItem> manualAddrList = new ArrayList<SelectItem>();
+		if(getManagedBean().getManualAddressList()!=null) {
+			for (PmAddressType obj : getManagedBean().getManualAddressList()) {
+				manualAddrList.add(new SelectItem(obj.getAddressTypeId(), obj.getPmAddress().getAddressName()));
+			}
+		}
+		getManagedBean().setManualAddrList(manualAddrList);
+		
 		flDelAddress.setEditable(true);
 	}
 	
