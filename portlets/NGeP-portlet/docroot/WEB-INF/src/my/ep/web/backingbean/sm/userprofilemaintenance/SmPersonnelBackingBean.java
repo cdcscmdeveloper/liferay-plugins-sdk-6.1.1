@@ -804,7 +804,7 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 	}
 
 	public String saveUser(SmPersonnel smPersonnel){
-		validatePersonnelBeforeSave(smPersonnel);
+//		validatePersonnelBeforeSave(smPersonnel);
 		IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate
 				.getInstance().getServiceObject("sm", IPersonnelSO.class);
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
