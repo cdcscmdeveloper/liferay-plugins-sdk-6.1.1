@@ -16,6 +16,7 @@ import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
+import my.ep.biz.service.sm.common.myidentity.IMyIdentitySO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
@@ -31,6 +32,8 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
+import my.ep.dto.sm.common.myidentity.MyIdentityReqDTO;
+import my.ep.dto.sm.common.myidentity.MyIdentityResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.exception.EpException;
@@ -959,6 +962,8 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		}
 		if(isExistUserByIdentificationNo(smPersonnel.getIdentificationNo())){
 			throw new EpException(MessageConst.ERROR_722541);
+		} else if(smPersonnel.getIdentificationType().getParameterCode().equals("I")){
+				myIdentityVerification(smPersonnel);
 		}
 		try {
 			if(UserLocalServiceUtil.getUserByEmailAddress(Long.valueOf(getCompanyId()), smPersonnel.getEmail()) != null){
@@ -976,6 +981,37 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		} catch (NumberFormatException | PortalException | SystemException e) {
 			// TODO Auto-generated catch block
 			log.info(e.getMessage());
+		}
+	}
+
+	public void myIdentityVerification(SmPersonnel per) {
+		String postCode = "";
+		for (SmPersonnelAddress addr : per.getSmPersonnelAddresses()) {
+			if (addr.getAddressType() != null
+					&& addr.getAddressType()
+							.equalsIgnoreCase(
+									SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_PERM)
+					&& addr.getSmAddress() != null) {
+				postCode = addr.getSmAddress().getPostcode();
+				System.out.println(" *** Perm Addr Post Code ****" + postCode);
+			}
+		}
+		IMyIdentitySO myIdentitySO = (IMyIdentitySO) BusinessDelegate
+				.getInstance().getServiceObject("sm", IMyIdentitySO.class);
+		MyIdentityReqDTO reqDTO = new MyIdentityReqDTO();
+		reqDTO.setName(per.getName());
+		reqDTO.setNewIcNo(per.getIdentificationNo());
+		reqDTO.setType("Online");
+		reqDTO.setPostCode(postCode);
+		System.out
+				.println(" *** Req DTO Post Code ****" + reqDTO.getPostCode());
+		MyIdentityResDTO resDTO = myIdentitySO.myIdentityVerification(reqDTO);
+		StringBuffer sb = new StringBuffer();
+		sb.append("MessageConst.ERROR_MYIDENTITY_");
+		if (!resDTO.getStatusCode().equalsIgnoreCase(
+				SupplierManagementConst.SM_MYIDENTITY_STATUS_CODE_VALID)) {
+			sb.append(resDTO.getStatusCode());
+			throw new EpException(sb.toString());
 		}
 	}
 
