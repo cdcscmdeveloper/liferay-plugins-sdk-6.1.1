@@ -63,7 +63,7 @@ public class SalutationBackingBean extends
 	}	
 	
 	/**
-	 * reload to professional cert creation page
+	 * reload to salutation maintain page
 	 * 
 	 */	
 	public String createSalutation() {
