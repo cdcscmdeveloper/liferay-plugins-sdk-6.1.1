@@ -23,7 +23,7 @@
 					label="#{lbl['lbl.sc.spec.stage2.score.from']}" required="true"
 					value="#{checkListScoring.rangeFrom}" maxlength="18">
 					<p:ajax event="blur" process="@this" partialSubmit="true" />
-					<ac:validateNumber integerOnly="true"  maxIntegerDigits="14" ></ac:validateNumber>
+					<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
 				</p:inputText>
 				<p:message id="#{scoringPnlId}_rangeFrom"
 					for="#{scoringPnlId}_fromRange" display="icon"></p:message>
@@ -33,12 +33,12 @@
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.sc.spec.stage2.score.to']}" />
 				</f:facet>
-				<p:inputText id="#{scoringPnlId}_toRange" required="true" style="text-align:right"
+				<p:inputText id="#{scoringPnlId}_toRange" required="true"
+					style="text-align:right"
 					label="#{lbl['lbl.sc.spec.stage2.score.to']}"
 					value="#{checkListScoring.rangeTo}" maxlength="18">
-					<ac:validateNumber integerOnly="true"  maxIntegerDigits="14" ></ac:validateNumber>
-					<p:ajax event="blur" process="@this" partialSubmit="true"
-						listener="#{specificationBackingBean.compareChecklistScore(index,scoringList)}" />
+					<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
+					<p:ajax event="blur" process="@this" partialSubmit="true" />
 				</p:inputText>
 				<p:message id="#{scoringPnlId}_rangeTo"
 					for="#{scoringPnlId}_toRange" display="icon"></p:message>
@@ -51,8 +51,8 @@
 				<p:inputText id="#{scoringPnlId}_toScore" style="text-align:right"
 					label="#{lbl['lbl.sc.spec.stage2.score']}" required="true"
 					value="#{checkListScoring.score}" maxlength="18">
-					<ac:validateNumber integerOnly="true"  maxIntegerDigits="14" ></ac:validateNumber>
-					</p:inputText>
+					<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
+				</p:inputText>
 				<p:message id="#{scoringPnlId}_Score" for="#{scoringPnlId}_toScore"
 					display="icon"></p:message>
 			</p:column>

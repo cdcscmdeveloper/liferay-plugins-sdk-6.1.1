@@ -22,7 +22,8 @@
 			<p:column selectionMode="multiple" style="width:2%"></p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.category.code']}"
 				style="width:15%">
-				<ac:lov id="openPtj" lovId="PM_CATEGORY_L3" disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
+				<ac:lov id="openPtj" lovId="PM_CATEGORY_L3"
+					disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
 					headerText="Category Lov"
 					saveObject="specificationBackingBean.managedBean.suppCriteriaopenList[#{index}].pmCategoryL3"
 					value="#{cateGory.pmCategoryL3.categoryL3Code}"
@@ -282,11 +283,11 @@
 			</p:panel>
 
 
-			<p:dialog widgetVar="ZoneLocation" modal="true" width="600"
-				position="top" height="400">
-				<p:panel id="zonePopupPanel"
-					header="#{lbl['lbl.sc.spec.zone.add.location']}">
-					<table styleClass="noBorders tr,noBorders td">
+			<p:dialog header="#{lbl['lbl.sc.spec.zone.add.location']}"
+				widgetVar="ZoneLocation" modal="true" width="600" position="top"
+				height="400">
+				<p:panel id="zonePopupPanel">
+					<table  border="0">
 						<TR>
 
 							<TD width="80%"><p:panel></p:panel>
