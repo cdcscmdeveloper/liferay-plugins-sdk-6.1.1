@@ -136,7 +136,7 @@
 									required="true" id="basicBUPasptNum"
 									rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.identificationType.parameterCode ne 'I'}"
 									value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.identificationNo}"
-									size="35" maxlength="12"
+									size="35" maxlength="15"
 									disabled="#{smPersonnelBackingBean.managedBean.editMode}">
 								</p:inputText>
 								<p:message id="basicBUIcNumMsg" for="basicBUIcNum"
@@ -148,10 +148,16 @@
 					</tr>
 					<tr>
 						<td><p:outputLabel
-								value="#{lbl['lbl.sm.userprofile.dob']}" /></td>
-						<td><p:calendar
-								value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.birthDate}"
-								showOn="button" id="dobDate" pattern="MM/dd/yyyy" disabled="#{smPersonnelBackingBean.managedBean.editMode}"/></td>
+								value="#{lbl['lbl.sm.userprofile.dob']}" />
+							<p:outputLabel value="*" styleClass="mandatory" /></td>
+						<td><p:calendar showOn="button" navigator="true"
+								display="inline" required="true" readonlyInput="true"
+								label="#{lbl['lbl.sm.person.dob']}" id="dobDate"
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+								yearRange="-99:+0"
+								value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.birthDate}" />
+							<p:message id="dobDateMsg" for="dobDate"
+									showSummary="true" showDetail="false" display="icon" /></td>
 						<td></td>
 
 						<td><p:outputLabel
@@ -171,7 +177,10 @@
 						<td><p:inputText id="basicBUEmail"
 								label="#{lbl['lbl.sm.userprofile.email']}"
 								value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.email}"
-								size="40" required="true" disabled="#{smPersonnelBackingBean.managedBean.editMode}"/></td>
+								size="40" required="true" disabled="#{smPersonnelBackingBean.managedBean.editMode}">
+								<f:validateRegex
+							pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+								</p:inputText></td>
 						<td><p:message id="basicBUEmailMsg" for="basicBUEmail"
 								showSummary="true" showDetail="false" display="icon" /></td>
 					</tr>
@@ -182,7 +191,7 @@
 						<td><p:inputText id="basicBUPhone"
 								label="#{lbl['lbl.sm.userprofile.phone']}"
 								value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.phoneNo}"
-								size="35" required="true" 
+								size="35" maxlength="12" required="true" 
 								validatorMessage="#{lbl['lbl.sm.userprofile.phone']} - #{lbl['lbl.sm.invalidNo']}">
 								<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
 								</p:inputText></td>
@@ -195,7 +204,7 @@
 						<td><p:inputText id="basicBUMobile"
 								label="#{lbl['lbl.sm.userprofile.mobile']}"
 								value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.mobileNo}"
-								size="35" required="true" 
+								size="35" maxlength="12" required="true" 
 								validatorMessage="#{lbl['lbl.sm.userprofile.mobile']} - #{lbl['lbl.sm.invalidNo']}">
 								<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
 								</p:inputText></td>

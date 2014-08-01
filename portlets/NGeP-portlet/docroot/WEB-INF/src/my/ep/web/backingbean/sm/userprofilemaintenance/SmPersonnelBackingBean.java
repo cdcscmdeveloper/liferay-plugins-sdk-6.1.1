@@ -174,6 +174,11 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		List<SelectItem> roles = new ArrayList<SelectItem>();
 		
 		SelectItem role = new SelectItem();
+		role.setLabel("Supplier Admin");
+		role.setValue(RoleCode.BASIC_SUPPLIER_ADMIN.value());
+		roles.add(role);
+		
+		role = new SelectItem();
 		role.setLabel("Supplier User");
 		role.setValue(RoleCode.BASIC_SUPPLIER_USER.value());
 		roles.add(role);
