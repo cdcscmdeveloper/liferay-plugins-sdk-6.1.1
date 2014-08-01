@@ -12,7 +12,7 @@
 			styleClass="invItemChange" value="#{invoiceBackingBean.managedBean.chargeLineItemRoot}">
 			<p:ajax event="expand" 
                 onstart="blockTreeTable.show();" oncomplete="blockTreeTable.hide();" />  			
-			<p:column headerText="Item Code" style="white-space:normal; width:130px;">
+			<p:column headerText="Item Code" style="white-space:normal; width:145px;">
 				<h:outputText
 					value="#{chargeLineNode.flFulfilmentItem.flFulfilmentItemAddr[0].scRequestItem.cmItem.extensionCode}"
 					rendered="#{chargeLineNode.parent == 'true'}" />
