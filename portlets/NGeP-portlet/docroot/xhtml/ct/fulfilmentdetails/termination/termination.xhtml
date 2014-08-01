@@ -8,7 +8,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<p:panel id="fd" header="#{lbl['lbl.ct.panel.name']}" toggleable="true" collapsed="false" toggleSpeed="500">
 		<h:panelGrid columns="2" style="width:100%;" styleClass="top-aligned-columns">
-		   <h:panelGrid columns="4" style="width:950px;" columnClasses="columnWidth200,columnWidth200,columnWidth225,columnWidth200">
+		   <h:panelGrid columns="4" style="width:1000px;" columnClasses="columnWidth200,columnWidth250,columnWidth300,columnWidth250">
 		      <p:outputLabel id="cno" value="#{lbl['lbl.ct.cno']}" />
 			  <p:inputText for="cno" value="#{terminationBackingBean.managedBean.ctContract.contractNo}" 
 			     disabled="true" style="width:170px;" />
@@ -97,8 +97,7 @@
 			  <p:outputLabel value="#{lbl['lbl.ct.chkbx.pbexemption']}" style="text-align:top;" />
 		   </h:panelGrid>	
 	    </h:panelGrid>
-	</h:panelGrid>
-	 <h:panelGrid columns="2" style="width:960px;"  styleClass="top-aligned-columns" columnClasses="columnWidth225"
+	    <h:panelGrid columns="2" style="width:1000px;"  styleClass="top-aligned-columns" columnClasses="columnWidth200"
 	    rendered="#{terminationBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt or 
 	       terminationBackingBean.managedBean.contractVer.ctContractValue.concession}">
 	          <h:panelGrid columns="2" style="float:right;">
@@ -106,13 +105,14 @@
 			      <p:outputLabel for="justificationLbl" style="float:right;" value="#{lbl['lbl.ct.justification']}" />
 			  </h:panelGrid>
 	  <h:panelGrid>
-	    <p:inputTextarea id="justificationLbl" value="#{terminationBackingBean.managedBean.contractVer.ctContractValue.justification}"
-		  rows="3" style="width:665px;"  disabled="true" autoResize="false" />	
+	    <p:inputTextarea id="justificationLbl" rows="4" style="width:720px;"  disabled="true" 
+	        autoResize="false"  value="#{terminationBackingBean.managedBean.contractVer.ctContractValue.justification}"/>	
 	  </h:panelGrid>		
     </h:panelGrid> 
+	</h:panelGrid>
  </p:panel>
     <p:panel id="terminateContract" header="#{lbl['lbl.ct.tr.panel.header']}" toggleable="true"  toggleSpeed="500">
-       <h:panelGrid columns="4" style="width:950px;" columnClasses="columnWidth200,columnWidth200,columnWidth225,columnWidth200">
+       <h:panelGrid columns="4" style="width:1000px;" columnClasses="columnWidth200,columnWidth250,columnWidth300,columnWidth250">
         <h:panelGrid columns="2" style="float:right;">
 			<p:outputLabel value="*" styleClass="mandatory" />
             <p:outputLabel value="#{lbl['lbl.ct.tr.recom']}" />

@@ -18,11 +18,11 @@
 		</p:column>
 		<p:column headerText="#{lbl['lbl.ct.susp.tbl.agency.efdate']}" style="width:15%;">
 		   <h:panelGroup rendered="#{data.recordStatusFlg == 1}">
-			  <p:calendar id="effDateActive" value="#{data.effDate}" size="15" 
+			  <p:calendar id="effDateActive" value="#{data.effDate}" styleClass="calanderWidth"
 			    showOn="button" disabled="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
 		   </h:panelGroup>
 		   <h:panelGroup id="effDateId" rendered="#{data.recordStatusFlg == 0}">
-			 <p:calendar id="effDateInActive"  value="#{data.effDate}" size="15" showOn="button" 
+			 <p:calendar id="effDateInActive"  value="#{data.effDate}" styleClass="calanderWidth" showOn="button" 
 			    readonlyInput="true" disabled="false" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
 			    <p:ajax event="dateSelect" update="agencyDetailsTable" process="@this" listener="#{suspensionBackingBean.validateAgencyDate(data)}"/> 
 			 </p:calendar>
@@ -34,12 +34,12 @@
 		 </p:column> 	
 	     <p:column headerText="#{lbl['lbl.ct.susp.tbl.agency.expdate']}" style="width:15%;">
 			<h:panelGroup rendered="#{data.recordStatusFlg == 1}">
-			   <p:calendar  id="expDateActive" value="#{data.expDate}" size="15" 
+			   <p:calendar  id="expDateActive" value="#{data.expDate}" styleClass="calanderWidth"
 			      showOn="button" disabled="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
 			</h:panelGroup>
 			<h:panelGroup id="expDateId" rendered="#{data.recordStatusFlg == 0}">
-			   <p:calendar id="expDateInActive" value="#{data.expDate}" size="15" showOn="button" 
-			      readonlyInput="true" disabled="false" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
+			   <p:calendar id="expDateInActive" value="#{data.expDate}" styleClass="calanderWidth"
+			       showOn="button"  readonlyInput="true" disabled="false" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
                   <p:ajax event="dateSelect" update="agencyDetailsTable" 
                     process="@this" listener="#{suspensionBackingBean.validateAgencyDate(data)}"/> 
 			   </p:calendar>

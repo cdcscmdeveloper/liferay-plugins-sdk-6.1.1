@@ -22,12 +22,12 @@
 			<p:column headerText="#{lbl['lbl.ct.susp.tbl.item.efdate']}" style="width:15%;">
 			   <h:panelGroup rendered="#{data.recordStatus}">
 			      <p:calendar id="effDateActive" value="#{data.effDate}" readonlyInput="true" 
-			        size="15" showOn="button" disabled="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
+			        styleClass="calanderWidth" showOn="button" disabled="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
 			   </h:panelGroup>
 			   <h:panelGroup id="effDateItemId" rendered="#{!data.recordStatus}">
-			      <p:calendar value="#{data.effDate}" size="15" id="effDateInActive" showOn="button" 
-			        readonlyInput="true" disabled="false" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
-			        <p:ajax event="dateSelect" update="itemTable" 
+			      <p:calendar value="#{data.effDate}" styleClass="calanderWidth"  id="effDateInActive"
+			         showOn="button"  readonlyInput="true"  pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
+			        <p:ajax event="dateSelect" update=":form:itemTable" 
 			          process="@this" listener="#{suspensionBackingBean.validateItemDate(data)}"/> 
 			      </p:calendar>
 			      <p:spacer width="5"/>
@@ -39,13 +39,13 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.ct.susp.tbl.item.expdate']}" style="width:15%;">
 			   <h:panelGroup rendered="#{data.recordStatus}">
-			      <p:calendar id="expDateActive" value="#{data.expDate}" size="15" 
+			      <p:calendar id="expDateActive" value="#{data.expDate}"  styleClass="calanderWidth"
 			         showOn="button" disabled="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
 			    </h:panelGroup>
 			    <h:panelGroup id="expDateItemId" rendered="#{!data.recordStatus}">
-			      <p:calendar value="#{data.expDate}" size="15" id="expDateInActive" disabled="false" 
+			      <p:calendar value="#{data.expDate}" styleClass="calanderWidth"  id="expDateInActive" 
 			        showOn="button" readonlyInput="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
-                    <p:ajax event="dateSelect" update="itemTable"
+                    <p:ajax event="dateSelect" update=":form:itemTable"
                       process="@this" listener="#{suspensionBackingBean.validateItemDate(data)}"/> 
 			      </p:calendar>
 			      <p:spacer width="5"/>

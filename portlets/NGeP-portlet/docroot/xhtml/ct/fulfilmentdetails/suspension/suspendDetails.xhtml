@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<p:panel id="fd" header="#{lbl['lbl.ct.panel.name']}" toggleable="true" collapsed="false" toggleSpeed="500">
 		<h:panelGrid columns="2" style="width:100%;" styleClass="top-aligned-columns">
-		   <h:panelGrid columns="4" style="width:950px;" columnClasses="columnWidth150,columnWidth200,columnWidth150,columnWidth200">
+		   <h:panelGrid columns="4" style="width:1000px;" columnClasses="columnWidth200,columnWidth250,columnWidth300,columnWidth250">
 		      <p:outputLabel id="cno" value="#{lbl['lbl.ct.cno']}" />
 			  <p:inputText for="cno" value="#{suspensionBackingBean.managedBean.ctContract.contractNo}" 
 			     disabled="true" style="width:170px;" />
@@ -98,9 +98,8 @@
 			  <p:outputLabel value="#{lbl['lbl.ct.chkbx.pbexemption']}" style="text-align:top;" />
 		   </h:panelGrid>	
 	    </h:panelGrid>
-	</h:panelGrid>
-	 <h:panelGrid columns="2" style="width:950px;"  styleClass="top-aligned-columns" columnClasses="columnWidth200"
-	    rendered="#{suspensionBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt or 
+	     <h:panelGrid columns="2" style="width:1000px;"  styleClass="top-aligned-columns" columnClasses="columnWidth200"
+	      rendered="#{suspensionBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt or 
 	       suspensionBackingBean.managedBean.contractVer.ctContractValue.concession}">
 	         <h:panelGrid columns="2" style="float:right;">
 		    	<p:outputLabel value="*" styleClass="mandatory" />
@@ -108,8 +107,9 @@
 			  </h:panelGrid>
 	  <h:panelGrid>
 	    <p:inputTextarea id="justificationLbl" value="#{suspensionBackingBean.managedBean.contractVer.ctContractValue.justification}"
-		  rows="3" style="width:650px;"  disabled="true" autoResize="false" />	
+		  rows="4" style="width:720px;"  disabled="true" autoResize="false" />	
 	  </h:panelGrid>		
     </h:panelGrid> 
+	</h:panelGrid>
  </p:panel>
 </ui:composition>
