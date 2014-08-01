@@ -40,7 +40,6 @@ import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
-import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRole;
@@ -58,6 +57,7 @@ import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
+import my.ep.persistence.entity.sc.quationtender.ScQtStatus;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
@@ -795,20 +795,21 @@ public class QTBusinessOwnerBackingBean extends
 	public String saveBusinessOwnerAction() {
 		IQTDetailSO detailSO;
 		try {
-			detailSO = getDetailSO();			
-			QuationTenderReqDTO quationTenderReqDTO = prepareBOInfo();
-			detailSO.validateateBODetails(quationTenderReqDTO);
+			detailSO = getDetailSO();	
+			ScQt scQt = prepareBOInfo();
+			scQt.setScQtStatus(null);
+			QuationTenderReqDTO quationTenderReqDTO =new QuationTenderReqDTO() ;
+			quationTenderReqDTO.setQtdetail(scQt);			
 			quationTenderReqDTO.setDocType(QTConstants.DOCTYPE_QT);
-			QuationTenderResDTO quationTenderResDTO = new QuationTenderResDTO();
-			quationTenderResDTO = (QuationTenderResDTO) detailSO.saveQTDtl(quationTenderReqDTO);
+			detailSO.validateateBODetails(quationTenderReqDTO);
+			QuationTenderResDTO quationTenderResDTO =  detailSO.saveQTDtl(quationTenderReqDTO);
 			if (quationTenderResDTO.isSuccessful()) {
 				// TODO Need to think to move to finally block...
 				// To renew the session..
 				renewSesionObject();
-				getMinistrySpecificationSecretaryList();
-				ScQt scQt = quationTenderResDTO.getQtDetail();
+				getMinistrySpecificationSecretaryList();				
 				QTDetailBackingBean detailBackingBean = new QTDetailBackingBean();
-				detailBackingBean.editAction(scQt);
+				detailBackingBean.editAction(quationTenderResDTO.getQtDetail());
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 										MessageUtils.getMessage(MessageConst.INFO_700004, new String[] {
 																getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION), scQt.getQtNo() },
@@ -825,7 +826,7 @@ public class QTBusinessOwnerBackingBean extends
 	 * 
 	 * @return
 	 */
-	private QuationTenderReqDTO prepareBOInfo() {
+	private ScQt prepareBOInfo() {
 		ScQt scQt = this.getManagedBean().getQt();
 		if (!scQt.isSpecApprovalReq()) {
 			scQt.setMinistrySpecSecrataryId(null);
@@ -837,9 +838,9 @@ public class QTBusinessOwnerBackingBean extends
 		qtCommittees.add(this.getManagedBean().getScQtCommittee());
 		scQt.setScQtCommittees(qtCommittees);
 		// Constructing reqDto
-		QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
-		quationTenderReqDTO.setQtdetail(scQt);
-		return quationTenderReqDTO;
+		/*QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
+		quationTenderReqDTO.setQtdetail(scQt);*/
+		return scQt;
 	}
 
 	
@@ -852,7 +853,11 @@ public class QTBusinessOwnerBackingBean extends
 		QuationTenderResDTO quationTenderResDTO = null;
 		try {
 			detailSO = getDetailSO();
-			QuationTenderReqDTO quationTenderReqDTO = prepareBOInfo();
+			ScQt scQt = prepareBOInfo();
+			
+			scQt.setScQtStatus(null);
+			QuationTenderReqDTO quationTenderReqDTO =new QuationTenderReqDTO() ;
+			quationTenderReqDTO.setQtdetail(scQt);			
 			FacesScopes facesScopes = new FacesScopes();
 			String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
 			quationTenderReqDTO.setToken(ctxToken);
@@ -862,7 +867,7 @@ public class QTBusinessOwnerBackingBean extends
 			// To renew the session object..
 			renewSesionObject();
 			if (quationTenderResDTO.isSuccessful()) {
-				ScQt scQt = quationTenderResDTO.getQtDetail();
+				 scQt = quationTenderResDTO.getQtDetail();
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 										MessageUtils.getMessage(MessageConst.INFO_700026, new String[] {
 																getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION), scQt.getQtNo() },
@@ -903,10 +908,19 @@ public class QTBusinessOwnerBackingBean extends
 		this.getManagedBean().setScQtCommittee(qtCommitte);
 		this.getManagedBean().setScCommitteeMemberList(qtCommitte.getScCommittee().getScCommitteeMembers());
 		this.getManagedBean().setCommitteMember(new ScCommitteeMember());
-		PmStatus qtStatus = new PmStatus();
-		qtStatus.setStatusId(QTStatusConst.QT_PENDING_APPOINT_BO);
-		scQt.setQtStatus(qtStatus);
+		PmStatus status = new PmStatus();
+		status.setStatusId(QTStatusConst.QT_PENDING_APPOINT_BO);
+		scQt.setQtStatus(status);
+		
 		scQt.setQtNo(dto.getQtNo());
+		ScQtStatus qtStatus= new ScQtStatus();
+		qtStatus.setScQt(scQt);
+		qtStatus.setPmStatus(scQt.getQtStatus());
+		qtStatus.setCurrent(true);
+		qtStatus.setDocType(QTConstants.DOCTYPE_QT);
+		List<ScQtStatus> qtStatuses= new ArrayList<ScQtStatus>();
+		qtStatuses.add(qtStatus);
+		scQt.setScQtStatus(qtStatuses);
 		this.getManagedBean().setQt(scQt);
 		return "/xhtml/sc/quatationtender/businessowner/businessownercreation.xhtml" + "?faces-redirect=true";
 	}
