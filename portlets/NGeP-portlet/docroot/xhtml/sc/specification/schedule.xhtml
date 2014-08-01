@@ -74,11 +74,11 @@
 					<p:column
 						headerText="#{lbl['lbl.sc.spec.freq.schedule.start.year']}"
 						style="width:15%">
-						<!-- <p:selectOneMenu value="#{frequency.startYear}">
+						<p:selectOneMenu value="#{frequency.startYear}">
+							<f:selectItems
+								value="#{specificationBackingBean.yearsDisplayDtls}"></f:selectItems>
+						</p:selectOneMenu>
 
-					</p:selectOneMenu> -->
-						<p:inputText value="#{frequency.startYear}" disabled="true"
-							size="5"></p:inputText>
 
 					</p:column>
 
@@ -95,10 +95,11 @@
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.spec.freq.schedule.end.year']}"
 						style="width:15%">
-						<!-- <p:selectOneMenu value="#{frequency.endYear}">
+						<p:selectOneMenu value="#{frequency.endYear}">
+							<f:selectItems
+								value="#{specificationBackingBean.yearsDisplayDtls}"></f:selectItems>
+						</p:selectOneMenu>
 
-					</p:selectOneMenu> -->
-						<p:inputText value="#{frequency.endYear}" disabled="true" size="5"></p:inputText>
 
 					</p:column>
 					<p:column
@@ -196,11 +197,12 @@
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.spec.freq.schedule.end.year']}"
 						style="width:15%">
-						<!-- <p:selectOneMenu value="#{payment.fromDate}">
 
-						</p:selectOneMenu> -->
-						<p:inputText value="	#{payment.startYear}" disabled="true"
-							size="5"></p:inputText>
+						<p:selectOneMenu value="#{payment.startYear}">
+							<f:selectItems
+								value="#{specificationBackingBean.yearsDisplayDtls}"></f:selectItems>
+						</p:selectOneMenu>
+
 
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.spec.stage2.score.to']}"
@@ -216,10 +218,11 @@
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.spec.freq.schedule.end.year']}"
 						style="width:15%">
-						<!-- <p:selectOneMenu value="#{payment.toDate}">
+						<p:selectOneMenu value="#{payment.endYear}">
+							<f:selectItems
+								value="#{specificationBackingBean.yearsDisplayDtls}"></f:selectItems>
+						</p:selectOneMenu>
 
-						</p:selectOneMenu> -->
-						<p:inputText value="#{payment.endYear}" disabled="true" size="5"></p:inputText>
 					</p:column>
 					<p:column style="width:10%">
 						<f:facet name="header">

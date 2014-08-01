@@ -15,9 +15,9 @@
 						styleClass="sidemenu" style="display : table-caption;">
 
 						<p:menuitem value="#{lbl['lbl.sc.spec.general']}" update="@form"
-							action="#{specificationBackingBean.retriveSpecdetails(null,'QT')}" />
+							action="#{specificationBackingBean.qtChecklistTabChange(0)}" />
 						<p:menuitem value="#{lbl['lbl.sc.spec.supplier.qual.criteraia']}"
-							action="#{specificationBackingBean.retriveBusinessOwnerQualificationCriteri}"
+							action="#{specificationBackingBean.qtChecklistTabChange(1)}"
 							update="@form" />
 
 						<c:if
@@ -30,43 +30,43 @@
 						<c:if
 							test="#{specificationBackingBean.managedBean.scQt.evaluationType eq '2'}">
 							<p:menuitem value="#{lbl['lbl.sc.spec.tech.check.list']}"
-								actionListener="#{specificationBackingBean.retriveTechnicalCheckList}"
+								actionListener="#{specificationBackingBean.qtChecklistTabChange(2)}"
 								update="@form" />
 						</c:if>
 
 
 
 						<p:menuitem value="#{lbl['lbl.sc.spec.finance.check.list']}"
-							actionListener="#{specificationBackingBean.retriveFinancialCheckList}"
+							actionListener="#{specificationBackingBean.qtChecklistTabChange(3)}"
 							update="@form" />
 
 
 						<c:if
 							test="#{specificationBackingBean.managedBean.scQt.evaluationType eq '2'}">
 							<p:menuitem value="#{lbl['lbl.sc.spec.tech.scoring']}"
-								actionListener="#{specificationBackingBean.retriveTechnicalScoring}"
+								actionListener="#{specificationBackingBean.qtChecklistTabChange(4)}"
 								update="@form" />
 						</c:if>
 
 
 						<p:menuitem value="#{lbl['lbl.sc.spec.financial.scoring']}"
-							actionListener="#{specificationBackingBean.retriveFinancialScoring}"
+							actionListener="#{specificationBackingBean.qtChecklistTabChange(5)}"
 							update="@form" />
 
 
 						<p:menuitem value="#{lbl['lbl.sc.spec.recommendation']}"
-							actionListener="#{specificationBackingBean.retriveRecommendationDetails}"
+							actionListener="#{specificationBackingBean.qtChecklistTabChange(6)}"
 							update="@form" />
 
 
 						<p:menuitem value="#{lbl['lbl.sc.spec.delivery.service.address']}"
-							actionListener="#{specificationBackingBean.retriveDeliveryDetails}"
+							actionListener="#{specificationBackingBean.qtChecklistTabChange(7)}"
 							update="@form" />
 
 						<c:if
 							test="#{specificationBackingBean.managedBean.fulfilmentType eq 'PS' or specificationBackingBean.managedBean.fulfilmentType eq 'PA'}">
 							<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}"
-								actionListener="#{specificationBackingBean.retriveFulfilmentDtls}"
+								actionListener="#{specificationBackingBean.qtChecklistTabChange(8)}"
 								update="@form" />
 						</c:if>
 
@@ -74,7 +74,7 @@
 
 
 						<p:menuitem value="#{lbl['lbl.sc.spec.committee.endorse']}"
-							actionListener="#{specificationBackingBean.retriveCommitteeEndorsment}"
+							actionListener="#{specificationBackingBean.qtChecklistTabChange(9)}"
 							update="@form" />
 
 					</p:tabMenu></td>
@@ -155,15 +155,15 @@
 						styleClass="sidemenu" style="display : table-caption;">
 
 						<p:menuitem value="#{lbl['lbl.sc.spec.general']}" update="@form"
-							action="#{specificationBackingBean.retriveSpecdetails(null,'QT')}" />
+							action="#{specificationBackingBean.qtChecklistTabChange(0)}" />
 						<p:menuitem value="#{lbl['lbl.sc.spec.supplier.qual.criteraia']}"
-							action="#{specificationBackingBean.retriveBusinessOwnerQualificationCriteri}"
+							action="#{specificationBackingBean.qtChecklistTabChange(1)}"
 							update="@form" />
 
 						<c:if
 							test="#{specificationBackingBean.managedBean.scQt.evaluationType eq '1'}">
 							<p:menuitem value="#{lbl['lbl.sc.spec.prepare.specification']}"
-								actionListener="#{specificationBackingBean.retriveTechnicalSpecification}"
+								actionListener="#{specificationBackingBean.qtChecklistTabChange(2)}"
 								update="@form" />
 						</c:if>
 
@@ -172,7 +172,7 @@
 
 
 						<p:menuitem value="#{lbl['lbl.sc.spec.finance.check.list']}"
-							actionListener="#{specificationBackingBean.retriveFinancialCheckList}"
+							actionListener="#{specificationBackingBean.qtChecklistTabChange(3)}"
 							update="@form" />
 
 
@@ -180,23 +180,23 @@
 
 
 						<p:menuitem value="#{lbl['lbl.sc.spec.financial.scoring']}"
-							actionListener="#{specificationBackingBean.retriveFinancialScoring}"
+							actionListener="#{specificationBackingBean.qtChecklistTabChange(4)}"
 							update="@form" />
 
 
 						<p:menuitem value="#{lbl['lbl.sc.spec.recommendation']}"
-							actionListener="#{specificationBackingBean.retriveRecommendationDetails}"
+							actionListener="#{specificationBackingBean.qtChecklistTabChange(5)}"
 							update="@form" />
 
 
 						<p:menuitem value="#{lbl['lbl.sc.spec.delivery.service.address']}"
-							actionListener="#{specificationBackingBean.retriveDeliveryDetails}"
+							actionListener="#{specificationBackingBean.qtChecklistTabChange(6)}"
 							update="@form" />
 
 						<c:if
 							test="#{specificationBackingBean.managedBean.fulfilmentType eq 'PS' or specificationBackingBean.managedBean.fulfilmentType eq 'PA'}">
 							<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}"
-								actionListener="#{specificationBackingBean.retriveFulfilmentDtls}"
+								actionListener="#{specificationBackingBean.qtChecklistTabChange(7)}"
 								update="@form" />
 						</c:if>
 
@@ -204,7 +204,7 @@
 
 
 						<p:menuitem value="#{lbl['lbl.sc.spec.committee.endorse']}"
-							actionListener="#{specificationBackingBean.retriveCommitteeEndorsment}"
+							actionListener="#{specificationBackingBean.qtChecklistTabChange(8)}"
 							update="@form" />
 
 					</p:tabMenu></td>

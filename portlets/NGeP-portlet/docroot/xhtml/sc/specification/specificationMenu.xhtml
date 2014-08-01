@@ -19,31 +19,29 @@
 					styleClass="sidemenu" style="display : table-caption;">
 
 					<p:menuitem value="#{lbl['lbl.sc.spec.general']}" update="@form"
-						action="#{specificationBackingBean.retriveSpecdetails(null,'QT')}" />
+						action="#{specificationBackingBean.businessOwnerTabChange(0)}" />
 					<p:menuitem value="#{lbl['lbl.sc.spec.supplier.qual.criteraia']}"
-						action="#{specificationBackingBean.retriveBusinessOwnerQualificationCriteri}"
+						action="#{specificationBackingBean.businessOwnerTabChange(1)}"
 						update="@form" />
 					<p:menuitem value="#{lbl['lbl.sc.spec.tech.specification']}"
-					actionListener="#{specificationBackingBean.retriveTechnicalSpecification}"
+						actionListener="#{specificationBackingBean.businessOwnerTabChange(2)}"
 						update="@form" />
 
 
 					<p:menuitem value="#{lbl['lbl.sc.spec.financial.specification']}"
-					actionListener="#{specificationBackingBean.retriveFinancialSpecification}"
-						update="@form" />
-						
+						actionListener="#{specificationBackingBean.businessOwnerTabChange(3)}" update="@form" />
+
 					<c:if
 						test="#{specificationBackingBean.managedBean.scQt.specApprovalReq eq 'true' and specificationBackingBean.managedBean.taskName eq 'Specification Approval' }">
 
-					<p:menuitem value="#{lbl['lbl.sc.spec.approval']}" 
-					actionListener="#{specificationBackingBean.retriveApprovalRemarks}"
-					update="@form" />
+						<p:menuitem value="#{lbl['lbl.sc.spec.approval']}"
+							actionListener="#{specificationBackingBean.businessOwnerTabChange(4)}"
+							update="@form" />
 					</c:if>
 
 
 				</p:tabMenu></td>
-			<td width="80%;">
-			 <c:if
+			<td width="80%;"><c:if
 					test="#{specificationBackingBean.managedBean.activeIndex eq '0'}">
 
 					<ui:include src="specificationBusinessOwner.xhtml"></ui:include>
@@ -63,7 +61,7 @@
 				</c:if> <c:if
 					test="#{specificationBackingBean.managedBean.activeIndex eq '4'}">
 
-						<ui:fragment
+					<ui:fragment
 						rendered="#{specificationBackingBean.managedBean.scQt.specApprovalReq eq 'true'}">
 						<ui:include src="approvalBusinessOwner.xhtml"></ui:include>
 
@@ -72,5 +70,5 @@
 				</c:if></td>
 		</tr>
 	</table>
-<ui:include src="/xhtml/sc/main/createTemplate.xhtml"></ui:include>
+	<ui:include src="/xhtml/sc/main/createTemplate.xhtml"></ui:include>
 </ui:composition>
