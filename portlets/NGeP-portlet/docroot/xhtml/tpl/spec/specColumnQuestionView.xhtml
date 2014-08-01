@@ -8,7 +8,7 @@
 	<p:column style="white-space:normal;" headerText="#{lbl['lbl.tpl.spec.content.item']}">	
 		<h:outputText value="#{question.clItem}" escape="false" />
 	</p:column>
-	<p:column style="white-space:normal;" headerText="#{lbl['lbl.tpl.spec.content.specification']}" rendered="#{isSpecTypeTechnical}">
+	<p:column style="white-space:normal;" headerText="#{lbl['lbl.tpl.spec.content.specification']}" rendered="#{isSpecTypeTechnical or (isSpecTypeFinancial and !isSpecificationReq)}">
 		<h:outputText value="#{question.clSpecDetail}" escape="false" />
 	</p:column>
 	<p:column style="width:75px;" headerText="#{lbl['lbl.tpl.spec.content.fulfilment.type']}" rendered="#{isItemTypeService and isFulfilmentTypeReq}">
