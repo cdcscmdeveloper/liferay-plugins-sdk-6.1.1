@@ -384,20 +384,21 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 				  } else {
 					  serviceTpl = serviceTemplateSpecBean.getSpecMaster();
 				  }
-
+				  
+				  List<TplSpecQuestion> tplSpecQuestions = serviceTpl.getTplSpecQuestions();
+				  if(null == tplSpecQuestions){
+					  tplSpecQuestions = new ArrayList<TplSpecQuestion>();
+				  }
+				  
 				  if (itemCode >= 70 && itemCode <= 94) { // for service  between  70 and 94  
-					  List<TplSpecQuestion> tplSpecQuestions = serviceTpl.getTplSpecQuestions();
-					  if(null == tplSpecQuestions){
-						  tplSpecQuestions = new ArrayList<TplSpecQuestion>();
-					  }
+					
 					templateSpecBackingBean.addQuestion(serviceTpl, tplSpecQuestions, tplSpecQuestions.size()-1, TemplateSpecConst.QUESTION_TYPE_ITEM);
 				    TplSpecQuestion specQuestion = tplSpecQuestions.get(tplSpecQuestions.size()-1);
 					specQuestion.setClUom(uom);
 					specQuestion.setCmItem(cmItem);
 					specQuestion.setClItem(ItemName);
-
-					serviceTpl.setTplSpecQuestions(tplSpecQuestions);
 				} 
+				serviceTpl.setTplSpecQuestions(tplSpecQuestions);
 				serviceTemplateSpecBean.setSpecMaster(serviceTpl);
 				getManagedBean().setServiceTemplateSpecBean(serviceTemplateSpecBean);
 
@@ -410,22 +411,25 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 				} else {
 					prodTpl = productTemplateSpecBean.getSpecMaster();
 				}
+				
+				List<TplSpecQuestion> productQuestions = prodTpl.getTplSpecQuestions();
+				if(null == productQuestions){
+					productQuestions = new ArrayList<TplSpecQuestion>();
+				}
                
 				if(itemCode>0){
 					if (itemCode < 70 || itemCode > 94) { // for product  < 70 and  > 94  
-						List<TplSpecQuestion> productQuestions = prodTpl.getTplSpecQuestions();
-						if(null == productQuestions){
-							productQuestions = new ArrayList<TplSpecQuestion>();
-						}
+					
 						templateSpecBackingBean.addQuestion(prodTpl ,productQuestions, productQuestions.size()-1, TemplateSpecConst.QUESTION_TYPE_ITEM);
 						TplSpecQuestion prodQuestion = productQuestions.get(productQuestions.size()-1);
 
 						prodQuestion.setClUom(uom);
 						prodQuestion.setCmItem(cmItem);
 						prodQuestion.setClItem(ItemName);
-						prodTpl.setTplSpecQuestions(productQuestions);
+						
 					}
 				}
+				prodTpl.setTplSpecQuestions(productQuestions);
 				productTemplateSpecBean.setSpecMaster(prodTpl);
 				getManagedBean().setProductTemplateSpecBean(productTemplateSpecBean);
 			}
