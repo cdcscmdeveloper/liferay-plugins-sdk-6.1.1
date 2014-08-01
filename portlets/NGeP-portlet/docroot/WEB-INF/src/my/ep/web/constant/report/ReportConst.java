@@ -83,7 +83,7 @@ public class ReportConst {
 	public static final String SUM_REJ_CAT_ITM_RPT_VAL = "SummaryRejCatItms";
 	public static final String TOT_CAT_ITM_APPR_REJ_RPT_NAME = "Total Catalogue Items Approved and Rejected";
 	public static final String TOT_CAT_ITM_APPR_REJ_RPT_VAL = "TotCatItmsApprNRej";
-	public static final String LST_UNSPSC_CODE_REG_RPT_NAME = "Total Catalogue Items Approved and Rejected";
+	public static final String LST_UNSPSC_CODE_REG_RPT_NAME = "List of UNSPSC Code Request";
 	public static final String LST_UNSPSC_CODE_REG_RPT_VAL = "LstUNSPSCCodeReq";
 	public static final String LST_NEW_EXT_CODE_CREA_RPT_NAME = "List of New Extension Code Creation";
 	public static final String LST_NEW_EXT_CODE_CREA_RPT_VAL = "LstNewExtCodeCreat";
