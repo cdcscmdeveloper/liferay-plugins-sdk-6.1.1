@@ -3045,7 +3045,7 @@
 	</portlet>
 	<portlet>
 		<portlet-name>reviewUnspsc</portlet-name>
-		<display-name>reviewUnspsc</display-name>
+		<display-name>Review UNSPSC</display-name>
 		<portlet-class>
 			org.portletfaces.bridge.GenericFacesPortlet
 		</portlet-class>
