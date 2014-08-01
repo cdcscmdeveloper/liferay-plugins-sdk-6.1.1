@@ -6,15 +6,17 @@ import java.text.DecimalFormat;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.event.AjaxBehaviorEvent;
 
 import my.ep.biz.service.sc.bidding.IBiddingSO;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.sc.bidding.BiddingReqDTO;
 import my.ep.dto.sc.bidding.BiddingResDTO;
 import my.ep.persistence.entity.sc.bidding.ScBidPrice;
+import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.sc.bidding.OnlineBiddingManagedBean;
+import my.ep.web.util.CommonUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
@@ -26,6 +28,10 @@ public class OnlineBiddingBackingBean extends
 
 	private static Logger log = Logger
 			.getLogger(OnlineBiddingBackingBean.class);
+	CommonUtils commonUtils = new CommonUtils();
+	DecimalFormat nf = new DecimalFormat(
+			commonUtils
+					.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
 
 	public OnlineBiddingBackingBean() {
 
@@ -86,18 +92,15 @@ public class OnlineBiddingBackingBean extends
 				.handleNavigation(fc, null, "onlineBiddingMain.xhtml");
 	}
 
-	public void slectedBidChangeListener(AjaxBehaviorEvent e) {
+	public void slectedBidChangeListener(ScBidSchedule bid) {
 
 		System.out
 				.println("*********slectedBidChangeListener called***********");
 
-		Long bidScheduleId = (Long) e.getComponent().getAttributes()
-				.get("value");
-
 		// TODO temporary hard coded
 		Long supplierId = 1l;
-		// Long bidScheduleId = 1l;
-
+		Long bidScheduleId = 1L;
+		// Long bidScheduleId = bid.getBidScheduleId();
 		IBiddingSO biddingSO = null;
 
 		try {
@@ -105,8 +108,6 @@ public class OnlineBiddingBackingBean extends
 					ModuleCodeConst.SUPPLIER_SELECTION, IBiddingSO.class);
 
 			BiddingReqDTO reqDTO = new BiddingReqDTO();
-			// reqDTO.setBidScheduleId(selectedScheduledBid.getBidScheduleId());
-			// TODO temporary hard coded
 			reqDTO.setBidScheduleId(bidScheduleId);
 			reqDTO.setSupplierId(supplierId);
 
@@ -135,14 +136,27 @@ public class OnlineBiddingBackingBean extends
 
 	}
 
-	public void decrementAmountValueChangeListener(AjaxBehaviorEvent e) {
-		ScBidPrice scBidPrice = (ScBidPrice) e.getComponent().getAttributes()
-				.get("value");
+	public void decrementAmountValueChangeListener(ScBidPrice scBidPrice){
+		
+		getManagedBean().setScBidPrice(scBidPrice);
+		
+	}
+	
+	public void submitBidPrice() {
+		ScBidPrice scBidPrice = getManagedBean().getScBidPrice();
+		
+		System.out.println("****new  bid price is ****** "
+				+ scBidPrice.getBidPrice());
+		System.out.println("****new  decrementAmount Value is ****** "
+				+ getManagedBean().getSelectedDecrementAmt().doubleValue());
 		BigDecimal bidPrice = BigDecimal.valueOf(scBidPrice.getBidPrice()
 				.doubleValue()
 				- getManagedBean().getSelectedDecrementAmt().doubleValue());
+		System.out.println("****new  bid price is ****** "
+				+ bidPrice.doubleValue());
 		getManagedBean().setNewBidPrice(bidPrice);
 		scBidPrice.setBidPrice(bidPrice);
+		// scBidPrice.setNewBidPrice();
 
 		IBiddingSO biddingSO = null;
 
@@ -162,7 +176,9 @@ public class OnlineBiddingBackingBean extends
 				System.out.println("***** bidPrice submitted Sucessfuly *****");
 
 			} else {
-				System.out.println("resDTO payload fetch failed");
+
+				getManagedBean().setRendered(resDTO.isSuccessful());
+				System.out.println("*****bidPrice submission failed*****");
 			}
 
 		}
@@ -189,9 +205,8 @@ public class OnlineBiddingBackingBean extends
 			System.out.println("***** startPriceTotal value is *****"
 					+ startPriceTotal);
 		}
-		getManagedBean().setItemStartPriceTotal(
-				new DecimalFormat("###,###.##").format(startPriceTotal));
 
+		getManagedBean().setItemStartPriceTotal(nf.format(startPriceTotal));
 	}
 
 	public void itemLastBidPriceTotal() {
@@ -204,9 +219,8 @@ public class OnlineBiddingBackingBean extends
 						.getScBidSupplierItem().getScBidItem().getQty());
 			}
 		}
-
-		getManagedBean().setItemStartPriceTotal(
-				new DecimalFormat("###,###.##").format(lastBidPriceTotal));
+		getManagedBean().setItemStartPriceTotal(nf.format(lastBidPriceTotal));
+		
 	}
 
 	/**
