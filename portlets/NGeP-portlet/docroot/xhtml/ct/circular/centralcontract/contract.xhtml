@@ -14,7 +14,7 @@
 			rowKey="#{data}">
 			<ac:paginator for="centralContractDt" />
 			<p:ajax event="rowSelect"
-				update="@([id$=circularItemsPanel],[id$=deleteContractBtn],[id$=circularZonePanel],[id$=circularPricePanel])"
+				update=":form:contractListPnl"
 				process="@this"
 				listener="#{centralContractBackingBean.setContractListner()}" />
 			<p:column headerText="#{lbl['lbl.ct.cc.phyloa']}">
@@ -53,14 +53,12 @@
 		</p:dataTable>
 		<p:spacer height="2" />
 		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.btn.add']}" process="@form"
-				partialSubmit="true" icon="ui-icon-add"
+			<p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" icon="ui-icon-add"
 				oncomplete="contractDlg.show();"
-				actionListener="#{centralContractBackingBean.addCircularContractListener()}"
-				update="contractDlg" />
+				actionListener="#{centralContractBackingBean.addCircularContractListener()}"/>
 			<p:commandButton id="deleteContractBtn"
 				value="#{lbl['lbl.btn.delete']}" process="@this"
-				partialSubmit="true" icon="ui-icon-delete"
+				icon="ui-icon-delete"
 				disabled="#{centralContractBackingBean.managedBean.selectedCircularContract == null}"
 				onsuccess="delCtContractDlg.show()" />
 		</div>
