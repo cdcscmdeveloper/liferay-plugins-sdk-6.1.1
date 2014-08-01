@@ -14,7 +14,7 @@
 			    value="#{amendmentBackingBean.managedBean.ctItemList}"  widgetVar="ctItemsTableObj"
 				selectionMode="single"	selection="#{amendmentBackingBean.managedBean.selectedItem}"  rowKey="#{ctItemVar}">
 				<ac:paginator for="itemTable" />
-				<p:ajax event="rowSelect" update=":form:itemTable,:form:changeField" />
+				<p:ajax event="rowSelect" update=":form:itemId" process="@this"  />
 			
 				<p:column headerText="#{lbl['lbl.ct.susp.tbl.item.name']}" 
 				      style="width:45%;" filterBy="#{ctItemVar.itemName}" filterMatchMode="contains">
@@ -41,14 +41,14 @@
 					</h:outputText>
 				</p:column>
 			
-				<p:column headerText="#{lbl['lbl.ct.item.newmaxqty']}" style="text-align: right;" rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange}">
-					<p:inputText size="10" value="#{ctItemVar.newMaxQuantity}" disabled="true" styleClass="ppRightBtn" label="#{lbl['lbl.ct.item.newmaxqty']}">
+				<p:column headerText="#{lbl['lbl.ct.item.newmaxqty']}" style="text-align: right;width:15%;" rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange}">
+					<p:inputText style="width:75px;" value="#{ctItemVar.newMaxQuantity}" disabled="true" styleClass="ppRightBtn" label="#{lbl['lbl.ct.item.newmaxqty']}">
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctItemVar.uom.uomCode)}" />					
 					</p:inputText>
 					<p:spacer width="5"/>
 					<p:commandLink update=":form:dlgItemMaxQty,itemTable" oncomplete="dlgItemMaxQty.show();return false;">
 						<f:setPropertyActionListener value="#{ctItemVar}" target="#{amendmentBackingBean.managedBean.selectedItem}" />
-						<p:graphicImage library="ep/images/design" name="edit.png" value="/resources/ep/images/design/edit.png" title="Edit" style="margin-bottom: -4px;"  />
+						<p:graphicImage library="ep/images/design" name="edit.png" value="/resources/ep/images/design/edit.png" title="Edit" style="margin-bottom: -4px;" />
 					</p:commandLink>
 				</p:column>
 				
@@ -285,7 +285,7 @@
 			<p:dataTable id="serviceTable" var="data" value="#{amendmentBackingBean.managedBean.ctServiceItemList}"
 				selectionMode="single" selection="#{amendmentBackingBean.managedBean.selectedServiceItem}"   rowKey="#{data}"  widgetVar="serviceTableObj">
 				<ac:paginator for="serviceTable" />
-				<p:ajax event="rowSelect" update=":form:showServicePrice" />
+				<p:ajax event="rowSelect" update=":form:serviceId" process="@this" />
 				<p:column headerText="Item Name" style="width:45%;" filterBy="#{data.itemName}" filterMatchMode="contains">
 					<p:outputLabel value="#{data.itemName}" style="float:left;" />
 				</p:column>
