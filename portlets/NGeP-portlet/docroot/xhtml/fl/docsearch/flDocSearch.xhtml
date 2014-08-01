@@ -23,7 +23,7 @@
 			<h:panelGroup id="defineSearchTbl">
 				<h:panelGrid columns="4" columnClasses="flWidth1">
 					<p:outputLabel value="#{lbl['lbl.fl.doc.search.fl.order.type']}"
-						style="width: 117px;" />
+						style="width: 146px;" />
 					<p:selectOneMenu
 						value="#{flDocumentBackingBean.managedBean.searchOrderType}"
 						style="width: 185px;">
@@ -48,7 +48,7 @@
 				<h:panelGrid columns="4" columnClasses="flWidth1"
 					rendered="#{flDocumentBackingBean.managedBean.checkTitle}">
 					<p:outputLabel value="#{lbl['lbl.fl.doc.search.doc.title']}" />
-					<p:inputText size="55"
+					<p:inputText size="46"
 						value="#{flDocumentBackingBean.managedBean.searchTitle}"></p:inputText>
 				</h:panelGrid>
 			</h:panelGroup>
@@ -68,7 +68,7 @@
 			</h:panelGroup>
 			<h:panelGrid columns="4" columnClasses="flWidth1">
 				<p:outputLabel value="#{lbl['lbl.fl.doc.search.supp.name']}" />
-				<p:inputText size="55"
+				<p:inputText size="46"
 					value="#{flDocumentBackingBean.managedBean.searchSuppName}"></p:inputText>
 			</h:panelGrid>
 			<h:panelGroup id="docDoStatusSearch">
@@ -189,7 +189,7 @@
 							        rendered="#{flDocument.docType == 'PO' or flDocument.docType == 'CO' or flDocument.docType == 'DO' or flDocument.docType == 'IN' or flDocument.docType == 'FN'}"
 									onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'Cancel'}])"/>
 									<p:menuitem value="#{lbl['lbl.fl.doc.search.action.factory.comp.removal']}" 
-							        rendered="#{flDocument.docType == 'PO' and flDocument.status.statusId eq FulfilmentStatusCont.poPendingInvoice}"
+							        rendered="#{flDocument.docType == 'PO' and (flDocument.status.statusId eq FulfilmentStatusCont.poPendingInvoice or flDocument.status.statusId eq FulfilmentStatusCont.poPendingPaymentmatch)}"
 									onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'Remove Factoring'}])"/>
 									<p:menuitem value="#{lbl['lbl.fl.doc.search.action.stop.fulfilment']}" 
 							        rendered="#{flDocument.docType == 'PO' or flDocument.docType == 'CO'}"
