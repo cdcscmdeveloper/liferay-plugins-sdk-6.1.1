@@ -31,7 +31,7 @@
 	          <p:outputLabel value="#{lbl['lbl.ct.asearch.model.pname']}" />
 	       </h:panelGrid>
 	       <h:panelGrid id="projectValidation" columns="2">
-           <p:inputText id="projectNames" style="width:200px;" required="true" label="#{lbl['lbl.ct.asearch.model.pname']}"
+           <p:inputText id="projectNames" style="width:300px;" required="true" label="#{lbl['lbl.ct.asearch.model.pname']}"
                value="#{associationBackingBean.managedBean.ctAssociation.projectName}" maxlength="100">
                </p:inputText>
            </h:panelGrid>
@@ -40,9 +40,9 @@
                  <p:outputLabel value="#{lbl['lbl.ct.asearch.model.pdes']}" />
              </h:panelGrid>
             <h:panelGrid id="descValidation" columns="2">
-		   <p:inputText id="projectDesc" style="width:400px;" required="true" label="#{lbl['lbl.ct.asearch.model.pdes']}"
+		   <p:inputText id="projectDesc" style="width:500px;" required="true" label="#{lbl['lbl.ct.asearch.model.pdes']}"
 		       value="#{associationBackingBean.managedBean.ctAssociation.description}" maxlength="200">
-		     <p:ajax event="blur" update="panelHeader,descValidation"/>
+		     <p:ajax event="blur" update=":form:panelHeader,:form:descValidation"/>
 		   </p:inputText>
 		    <p:message for="projectDesc" display="icon"/>
 		   </h:panelGrid>
@@ -56,7 +56,7 @@
                <p:column headerText="#{lbl['lbl.ct.asearch.model.table1.cno']}" style="width:15%;">
 			     <h:outputText value="#{data.contractNo}"/>
 			   </p:column>
-			   <p:column headerText="#{lbl['lbl.ct.asearch.model.table1.sname']}" style="width:20%;">
+			   <p:column headerText="#{lbl['lbl.ct.asearch.model.table1.sname']}" style="width:20%;white-space:normal;">
 				 <h:outputText  value="#{data.latestContractVer.ctContractValue.supplierName}"/>
 			   </p:column>
 			   <p:column headerText="#{lbl['lbl.ct.asearch.model.table1.cstart']}" style="width:10%;">
@@ -72,7 +72,7 @@
 			   <p:column headerText="#{lbl['lbl.ct.asearch.model.table1.pcode']}" style="width:5%;">
 				 <h:outputText  value="#{data.ownerOrgProfile.orgCode}"/>
 			   </p:column>
-			   <p:column headerText="#{lbl['lbl.ct.asearch.model.table1.pname']}" style="width:20%;">
+			   <p:column headerText="#{lbl['lbl.ct.asearch.model.table1.pname']}" style="width:20%;white-space:normal;">
 				 <h:outputText  value="#{data.ownerOrgProfile.orgName}"/>
 			   </p:column>
 			</p:dataTable> 

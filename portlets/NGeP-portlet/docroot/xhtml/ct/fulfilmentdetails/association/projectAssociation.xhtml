@@ -57,15 +57,15 @@
          rowKey="#{data}" selection="#{associationBackingBean.ctSelectAssociation}"
          lazy="true" rowIndexVar="index">
 	     <ac:paginator for="associateSearch"/>
-		 <p:column selectionMode="multiple" style="width:18px;" />
-		 <p:column style="width:25%;" headerText="#{lbl['lbl.ct.asearch.table1.pname']}">
+		 <p:column selectionMode="multiple" style="width:3%;" />
+		 <p:column style="width:30%; white-space:normal;" headerText="#{lbl['lbl.ct.asearch.table1.pname']}">
 		   <h:outputText value="#{data.projectName}" /> </p:column> 
-		 <p:column style="width:35%;" headerText="#{lbl['lbl.ct.asearch.table1.pdes']}">
+		 <p:column style="width:50%; white-space:normal;" headerText="#{lbl['lbl.ct.asearch.table1.pdes']}">
 		   <h:outputText value="#{data.description}" /> </p:column> 
-		 <p:column style="width:25%;" headerText="#{lbl['lbl.ct.asearch.table1.noc']}">
-		   <h:outputText value="#{associationBackingBean.getAssocContractCount(data.associationId)}" />
+		 <p:column style="width:7%;" headerText="#{lbl['lbl.ct.asearch.table1.noc']}">
+		   <h:outputText value="#{associationBackingBean.getAssocContractCount(data.associationId)}"  style="float:right;"/>
 		 </p:column>
-		 <p:column style="width:15%;" headerText="#{lbl['lbl.ct.asearch.table1.action']}" styleClass="column-align-center">
+		 <p:column style="width:10%;" headerText="#{lbl['lbl.ct.asearch.table1.action']}" styleClass="column-align-center">
 		   <p:commandLink action="#{associationBackingBean.gotoUpdateAssociatePage}" process="@this" styleClass="column-align-center">
 			  <f:setPropertyActionListener value="#{data}" target="#{associationBackingBean.managedBean.ctUpdateAssociation}" />
 			  <p:graphicImage library="ep/images/design" name="edit.png" value="/resources/ep/images/design/edit.png" title="Edit" />
