@@ -1,0 +1,45 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<div align="left" class="header-info">
+		<table style="width: 100%">
+			<tr>
+				<c:if test="#{empty flOrderBB.managedBean.buttonVal}">
+					<td><h:outputLabel value="#{lbl['lbl.fl.rev.hed.pr.no']} " />
+					</td>
+					<td class="header-info-text">
+						#{flOrderBB.managedBean.flRequest.docNo}</td>
+					<td><p:outputLabel
+							value="#{lbl['lbl.fl.rev.hed.pr.order.no']} " /></td>
+					<td class="header-info-text">
+						#{flOrderBB.managedBean.flRequest.flFulfilmentOrder.docNo}</td>
+				</c:if>
+				<c:if test="#{not empty flOrderBB.managedBean.buttonVal}">
+					<td><h:outputLabel value="#{lbl['lbl.fl.po.co.no']} " />
+					</td>
+					<td class="header-info-text">
+						#{flOrderBB.managedBean.flRequest.flFulfilmentOrder.docNo}</td>
+					<td><p:outputLabel
+							value="#{lbl['lbl.fl.pm.stop.instr.no']} " /></td>
+					<td class="header-info-text">
+						</td>
+
+				</c:if>
+				<td><p:outputLabel value="#{lbl['lbl.fl.rev.hed.ptj.name']} " />
+				</td>
+				<td class="header-info-text">
+					#{flOrderBB.managedBean.flRequest.preparedOrgProfile.orgName}</td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.rev.hed.status']} " />
+				</td>
+				<td class="header-info-text">
+					#{flOrderBB.getStatusDescById(flOrderBB.managedBean.fulfilmentOrder.status.statusId)}
+				</td>
+			</tr>
+		</table>
+	</div>
+	<p:spacer height="10px" />
+
+</ui:composition>
