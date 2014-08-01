@@ -14,7 +14,7 @@
 			closable="true" />
 
 		<ui:param name="isPending"
-			value="#{onlineBiddingBB.managedBean.scBidSchedule.pmStatus.statusId eq 'BidStatusConst.BID_PENDING_BIDDING'}" />
+			value="#{onlineBiddingBB.getStatusDescById(onlineBiddingBB.managedBean.scBidSchedule.pmStatus.statusId) eq 'Pending Bidding'}" />
 		<ui:param name="isInProgress"
 			value="#{onlineBiddingBB.getStatusDescById(onlineBiddingBB.managedBean.scBidSchedule.pmStatus.statusId) eq 'In Progress'}" />
 		
@@ -29,7 +29,7 @@
 								value="#{onlineBiddingBB.managedBean.activeBidSchedules}"
 								itemLabel="#{bid.bidNo}" itemValue="#{bid.bidScheduleId}"></f:selectItems>
 							<p:ajax event="change" process="@this" partialSubmit="true"
-								listener="#{onlineBiddingBB.slectedBidChangeListener}"
+								listener="#{onlineBiddingBB.slectedBidChangeListener(bid)}"
 								update="@form"></p:ajax>
 
 						</p:selectOneMenu></TD>
@@ -71,7 +71,7 @@
 								value="#{lbl['lbl.sc.document.title']}" /></td>
 						<td colspan="3"><p:inputText id="documentTitle"
 								value="#{onlineBiddingBB.managedBean.scBidSchedule.scBid.docTitle}"
-								disabled="true" size="110" /></td>
+								disabled="true" size="130" /></td>
 
 					</tr>
 
@@ -81,7 +81,7 @@
 								value="#{lbl['lbl.sc.ptj.name']}" /></td>
 						<td colspan="3"><p:inputText id="ptjName"
 								value="#{onlineBiddingBB.managedBean.scBidSchedule.scBid.pmOrgProfile.orgName}"
-								disabled="true" size="110" /></td>
+								disabled="true" size="130" /></td>
 
 					</tr>
 
@@ -91,7 +91,7 @@
 								value="#{lbl['lbl.sc.bidding.start']}" /></td>
 						<td><p:inputText id="bidStart"
 								value="#{onlineBiddingBB.managedBean.scBidSchedule.startDate}"
-								disabled="true" size="20">
+								disabled="true" size="30">
 								<f:convertDateTime
 									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
 							</p:inputText></td>
@@ -99,7 +99,7 @@
 								value="#{lbl['lbl.sc.bidding.end']}" /></TD>
 						<TD><p:inputText id="bidEnd"
 								value="#{onlineBiddingBB.managedBean.scBidSchedule.endDate}"
-								disabled="true" size="20">
+								disabled="true" size="30">
 								<f:convertDateTime
 									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
 							</p:inputText></TD>

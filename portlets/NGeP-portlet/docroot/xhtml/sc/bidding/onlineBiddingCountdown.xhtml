@@ -5,27 +5,51 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-   <p:panel header="#{lbl['lbl.sc.bid.price']}" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.bid.price']}" toggleable="true">
+		<p:spacer height="5"></p:spacer>
+		<script src="#{resource['countdown.js']}"></script>
+		<!-- This is the one worked -->
+		<div style="align: left">
+			<table style="width: 50%;">
+				<tr>
+					<td style="width: 15%;"><p:outputLabel
+							value="#{lbl['lbl.sc.opening.time']}" /></td>
+					<td style="width: 85%; align: left"><script
+							type="application/javascript">
+						
+			var myCountdown = new Countdown({time:"#{onlineBiddingBB.managedBean.remainingTimeToBid}",hideLine: true,rangeHi: "day",rangeLo: "second",width: 250,height: 70}); 
+					
+					</script></td>
+				</tr>
+			</table>
+		</div>
+		<p:spacer height="5"></p:spacer>
 
-	<div style="width: 100%">
-	
-		<p:dataTable id="bidItemWisePriceList"
-			value="#{onlineBiddingBB.managedBean.bidPrices}" var="bidPriceItem">
+		<div style="width: 100%">
 
-			<p:columnGroup type="header">
-				<p:row>
-					<p:column rowspan="2" headerText="#{lbl['lbl.sc.item.name']}"  style="width: 53%" />
-					<p:column rowspan="2" headerText="#{lbl['lbl.sc.quantity']}" style="width: 7%"/>
-					<p:column rowspan="2"
-						headerText="#{lbl['lbl.sc.min.decrement.block']}" style="width: 10%"/>
-					<p:column colspan="2" headerText="#{lbl['lbl.sc.starting']}" style="width: 30%;text-align:center"/>
-				</p:row>
-				<p:row>
-					<p:column headerText="#{lbl['lbl.sc.unit.price']}"  style="width: 15%;text-align:center"/>
-					<p:column headerText="#{lbl['lbl.sc.sub.total']}" style="width: 15%;text-align:center"/>
+			<p:dataTable id="bidItemWisePriceList"
+				value="#{onlineBiddingBB.managedBean.bidPrices}" var="bidPriceItem">
 
-				</p:row>
-			</p:columnGroup>
+				<p:columnGroup type="header">
+					<p:row>
+						<p:column rowspan="2" headerText="#{lbl['lbl.sc.item.name']}"
+							style="width: 53%" />
+						<p:column rowspan="2" headerText="#{lbl['lbl.sc.quantity']}"
+							style="width: 7%" />
+						<p:column rowspan="2"
+							headerText="#{lbl['lbl.sc.min.decrement.block']}"
+							style="width: 10%" />
+						<p:column colspan="2" headerText="#{lbl['lbl.sc.starting']}"
+							style="width: 30%;text-align:center" />
+					</p:row>
+					<p:row>
+						<p:column headerText="#{lbl['lbl.sc.unit.price']}"
+							style="width: 15%;text-align:center" />
+						<p:column headerText="#{lbl['lbl.sc.sub.total']}"
+							style="width: 15%;text-align:center" />
+
+					</p:row>
+				</p:columnGroup>
 				<p:column>
 					<p:commandLink
 						value="#{bidPriceItem.scBidSupplierItem.scBidItem.scRequestItem.itemName}"
@@ -33,46 +57,47 @@
 						oncomplete="onlineBiddingItemDetails.show" />
 				</p:column>
 				<p:column>
-					<p:outputLabel
+					<h:outputText style="align : right"
 						value="#{bidPriceItem.scBidSupplierItem.scBidItem.qty}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, question.clUom.uomCode)}" />
-					</p:outputLabel>
+					</h:outputText>
 				</p:column>
 				<p:column>
-					<p:outputLabel
-						value="#{bidPriceItem.scBidSupplierItem.scBidItem.decrementAmt}" >
+					<h:outputText style="align : right"
+						value="#{bidPriceItem.scBidSupplierItem.scBidItem.decrementAmt}">
 						<f:convertNumber
-						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-						</p:outputLabel>
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</h:outputText>
 				</p:column>
 				<p:column>
-					<p:outputLabel
-						value="#{bidPriceItem.scBidSupplierItem.itemStartPrice}" >
+					<h:outputText style="align : right"
+						value="#{bidPriceItem.scBidSupplierItem.itemStartPrice}">
 						<f:convertNumber
-						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-						</p:outputLabel>
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</h:outputText>
 				</p:column>
 				<p:column>
-					<p:outputLabel
-						value="#{bidPriceItem.scBidSupplierItem.itemStartPrice * bidPriceItem.scBidSupplierItem.scBidItem.qty}" >
+					<h:outputText style="align : right"
+						value="#{bidPriceItem.scBidSupplierItem.itemStartPrice * bidPriceItem.scBidSupplierItem.scBidItem.qty}">
 						<f:convertNumber
-						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-						</p:outputLabel>
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</h:outputText>
 				</p:column>
-			
-			<p:columnGroup type="footer">
 
-				<p:row>
-					<p:column colspan="4" footerText="Total" style="text-align:right" />
-					<p:column id="itemStartPriceTotal" style="text-align:right" footerText="#{onlineBiddingBB.managedBean.itemStartPriceTotal}">
-					
-					</p:column>
-				</p:row>
+				<p:columnGroup type="footer">
 
-			</p:columnGroup>
-		</p:dataTable>
-	</div>
+					<p:row>
+						<p:column colspan="4" footerText="Total" style="text-align:right" />
+						<p:column id="itemStartPriceTotal" style="text-align:right"
+							footerText="#{onlineBiddingBB.managedBean.itemStartPriceTotal}">
+
+						</p:column>
+					</p:row>
+
+				</p:columnGroup>
+			</p:dataTable>
+		</div>
 	</p:panel>
 
 </ui:composition>
