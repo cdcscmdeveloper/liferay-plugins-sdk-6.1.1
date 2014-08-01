@@ -929,6 +929,10 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 //			smPersonnel.setContractSignerFlg(1);
 //			smPersonnel.setSoftcertFlg(1);
 			
+			if(smPersonnel.getIdentificationType().getParameterCode().equals("I")){
+					myIdentityVerification(smPersonnel);
+			}
+			
 			reqCountryDTO = new CountryReqDTO();
 			reqCountryDTO.setCountryId(getManagedBean().getDefaultCountryId());
 			resCountryDTO = countrySO.retrieveCountryById(reqCountryDTO);
@@ -967,9 +971,8 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		}
 		if(isExistUserByIdentificationNo(smPersonnel.getIdentificationNo())){
 			throw new EpException(MessageConst.ERROR_722541);
-		} else if(smPersonnel.getIdentificationType().getParameterCode().equals("I")){
-				myIdentityVerification(smPersonnel);
 		}
+		
 		try {
 			if(UserLocalServiceUtil.getUserByEmailAddress(Long.valueOf(getCompanyId()), smPersonnel.getEmail()) != null){
 				throw new EpException(MessageConst.ERROR_722540);
