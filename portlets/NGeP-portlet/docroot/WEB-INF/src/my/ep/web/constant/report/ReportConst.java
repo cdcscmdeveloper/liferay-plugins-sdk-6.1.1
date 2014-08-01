@@ -83,8 +83,8 @@ public class ReportConst {
 	public static final String SUM_REJ_CAT_ITM_RPT_VAL = "SummaryRejCatItms";
 	public static final String TOT_CAT_ITM_APPR_REJ_RPT_NAME = "Total Catalogue Items Approved and Rejected";
 	public static final String TOT_CAT_ITM_APPR_REJ_RPT_VAL = "TotCatItmsApprNRej";
-	public static final String LST_UNSPSC_CODE_REG_RPT_NAME = "List of UNSPSC Code Request";
-	public static final String LST_UNSPSC_CODE_REG_RPT_VAL = "LstUNSPSCCodeReq";
+	public static final String LST_UNSPSC_CODE_REQ_RPT_NAME = "List of UNSPSC Code Request";
+	public static final String LST_UNSPSC_CODE_REQ_RPT_VAL = "LstUNSPSCCodeReq";
 	public static final String LST_NEW_EXT_CODE_CREA_RPT_NAME = "List of New Extension Code Creation";
 	public static final String LST_NEW_EXT_CODE_CREA_RPT_VAL = "LstNewExtCodeCreat";
 	public static final String LST_ITM_CODE_RPT_NAME = "List of Item Codes";
@@ -268,5 +268,10 @@ public class ReportConst {
 	public static final String AMP_PMO_EQ = "&pmo=";
 	public static final String EXC_PREV_URL = "http://ngepdevrps01.ngep.com:8891/reports/rwservlet?server=rptsvr_ngepdevrps01_asinst_2&report=";
 	public static final String EXC_NEXT_URL = "&destype=cache&desformat=pdf&userid=ngep_dev/ngep_dev@ngepdb";
+	public static final String PLZ_SEL_ONE_RPT_SEARCH = "Please select at least one report";
+	public static final String PLZ_SEL_ONE_RPT_CRITERIA_SEARCH = "Please select at least one search criteria";
+	public static final String CATLOG_ADMIN = "Catalogue Administrator";
+	public static final String SUPPL = "Supplier";
+	public static final String CODIF_ADMIN = "Codification Administrator";
 	
 }

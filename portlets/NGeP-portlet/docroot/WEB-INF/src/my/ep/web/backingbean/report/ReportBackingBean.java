@@ -22,12 +22,26 @@ import my.ep.web.bean.report.ReportsGenerateBean;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.report.ReportMangedBean;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.Closeable;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLConnection;
+
+import javax.portlet.PortletResponse;
+import javax.portlet.ResourceResponse;
+import javax.servlet.http.HttpServletResponse;
+import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;;
 /**
  * @Author Jangari Kondal Reddy
  */
 @ManagedBean(name="reportBackingBean")
 @RequestScoped
-public class ReportBackingBean extends BaseBackingBean<ReportMangedBean>{
+public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>{
 	private static final Logger log = EpLogger.getLogger(ReportBackingBean.class);
 
 	public ReportBackingBean() {
@@ -83,7 +97,7 @@ public class ReportBackingBean extends BaseBackingBean<ReportMangedBean>{
 	private String pmo;
 	/*FL end*/
 	List<SelectItem> reportList;
-	ReportsGenerateBean rptGenBean = new ReportsGenerateBean();;
+	ReportsGenerateBean rptGenBean = new ReportsGenerateBean();
 	private List<SelectItem> moduleList;
 	
 	public String getUserId() {
@@ -593,8 +607,8 @@ public class ReportBackingBean extends BaseBackingBean<ReportMangedBean>{
 		reportList.add(selectItem13);
 		
 		SelectItem selectItem14= new SelectItem();
-		selectItem14.setLabel(ReportConst.LST_UNSPSC_CODE_REG_RPT_NAME);
-		selectItem14.setValue(ReportConst.LST_UNSPSC_CODE_REG_RPT_VAL);
+		selectItem14.setLabel(ReportConst.LST_UNSPSC_CODE_REQ_RPT_NAME);
+		selectItem14.setValue(ReportConst.LST_UNSPSC_CODE_REQ_RPT_VAL);
 		reportList.add(selectItem14);
 		
 		SelectItem selectItem15= new SelectItem();
@@ -933,15 +947,15 @@ public class ReportBackingBean extends BaseBackingBean<ReportMangedBean>{
 			}
 			this.getManagedBean().setRptGenBean(rptGenBean);
 		}else{
-			log.info("inside else################");
-			//throw new EpException(MessageConst.ERROR_REPORT_70001, new String[] { "Please select atleast one Report" });
+			
+			throw new EpException(ReportConst.PLZ_SEL_ONE_RPT_SEARCH);
 		}
 	}
 	/*
 	 *Enable CM module criteria by report name 
 	 */
 	public void criteriaVariablesByReportByCM(){
-		if(this.getUserId()=="Catalogue Administrator"){		
+		if(this.getUserId()==ReportConst.CATLOG_ADMIN){		
 			switch (getManagedBean().getReportNameValue()) {
 				case ReportConst.LST_PUB_CAT_ITM_RPT_VAL:
 		        	rptGenBean.setItemTypeView(true);
@@ -1007,8 +1021,8 @@ public class ReportBackingBean extends BaseBackingBean<ReportMangedBean>{
 		        default:            
 		            break;
 			}
-		}else if(this.getUserId()=="Supplier"){
-		}else if(this.getUserId()=="Codification Administrator"){
+		}else if(this.getUserId()==ReportConst.SUPPL){
+		}else if(this.getUserId()==ReportConst.CODIF_ADMIN){
 		}		
 		switch (getManagedBean().getReportNameValue()) {
 		
@@ -1153,14 +1167,14 @@ public class ReportBackingBean extends BaseBackingBean<ReportMangedBean>{
 				rptGenBean.setProofIdentityView(true);
 				getManagedBean().setReportName(ReportConst.TOT_CAT_ITM_APPR_REJ_RPT_NAME);
 	            break;
-	        case ReportConst.LST_UNSPSC_CODE_REG_RPT_VAL:
+	        case ReportConst.LST_UNSPSC_CODE_REQ_RPT_VAL:
 	        	rptGenBean.setItemTypeView(true);						
 				rptGenBean.setCompanyNameView(true);
 				rptGenBean.setRegistrationTypeView(true);			
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);			
 				rptGenBean.setProofIdentityView(true);
-				getManagedBean().setReportName(ReportConst.LST_UNSPSC_CODE_REG_RPT_NAME);
+				getManagedBean().setReportName(ReportConst.LST_UNSPSC_CODE_REQ_RPT_NAME);
 	            break;
 	        case ReportConst.LST_NEW_EXT_CODE_CREA_RPT_VAL:
 	        	rptGenBean.setUnspscCodeView(true);
@@ -2002,6 +2016,8 @@ public class ReportBackingBean extends BaseBackingBean<ReportMangedBean>{
 			}else if(getManagedBean().getModuleName().equalsIgnoreCase(ModuleCodeConst.ORDER_FULFILLMENT)){
 				generateFLReport();
 			}
+		}else{
+			throw new EpException(ReportConst.PLZ_SEL_ONE_RPT_SEARCH);
 		}
 	}
 	/*
@@ -2043,7 +2059,9 @@ public class ReportBackingBean extends BaseBackingBean<ReportMangedBean>{
 				e.printStackTrace();
 			}
 			log.info("url="+url);
-		}				
+		}else{
+			throw new EpException(ReportConst.PLZ_SEL_ONE_RPT_CRITERIA_SEARCH);
+		}
 	}
 	/*
 	 *Generate CM module report  
@@ -2096,25 +2114,25 @@ public class ReportBackingBean extends BaseBackingBean<ReportMangedBean>{
 			urlCMReportNameJsps.put(ReportConst.LST_PEND_CODE_ASGN_AGNCY_RPT_VAL, ReportConst.EMPTY_VAL);
 			urlCMReportNameJsps.put(ReportConst.SUM_REJ_CAT_ITM_RPT_VAL, ReportConst.CM_REJ_CAT_ITM_SMRY_JSP);
 			urlCMReportNameJsps.put(ReportConst.TOT_CAT_ITM_APPR_REJ_RPT_VAL, ReportConst.CM_APPR_N_REJ_CAT_ITM_JSP);
-			urlCMReportNameJsps.put(ReportConst.LST_UNSPSC_CODE_REG_RPT_VAL, ReportConst.EMPTY_VAL);
+			urlCMReportNameJsps.put(ReportConst.LST_UNSPSC_CODE_REQ_RPT_VAL, ReportConst.EMPTY_VAL);
 			urlCMReportNameJsps.put(ReportConst.LST_NEW_EXT_CODE_CREA_RPT_VAL, ReportConst.EMPTY_VAL);
 			urlCMReportNameJsps.put(ReportConst.LST_ITM_CODE_RPT_VAL, ReportConst.EMPTY_VAL);
-			//-----------
-			
-			rptGenBean.setUrlReportJSPName(urlCMReportNameJsps.get(getManagedBean().getReportNameValue().trim()));
-			
+			//-----------			
+			rptGenBean.setUrlReportJSPName(urlCMReportNameJsps.get(getManagedBean().getReportNameValue().trim()));			
 			String url=ReportConst.EXC_PREV_URL+rptGenBean.getUrlReportJSPName()+rptGenBean.getItemNameTotVar()+rptGenBean.getItemTypeTotVar()+rptGenBean.getItemStatusTotVar()+rptGenBean.getUnspscCodeTotVar()+rptGenBean.getUnspscTitleTotVar()+rptGenBean.getExtentionCodeTotVar()+rptGenBean.getCompanyNameTotVar()+rptGenBean.getRegistrationTypeTotVar()+rptGenBean.getItemCategoryTotVar()+rptGenBean.getProofIdentityTotVar()+ReportConst.EXC_NEXT_URL;
-			try {
+			try {				
 				ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-				externalContext.redirect(url);				
+				externalContext.redirect(url);
+				
 			} catch (IOException e) {				
 				e.printStackTrace();
 			}
-			log.info(url);			
+			log.info(url);
 		}else{
-			
+			throw new EpException(ReportConst.PLZ_SEL_ONE_RPT_CRITERIA_SEARCH);
 		}
 	}
+	
 	/*
 	 *Generate FL module report 
 	 */
@@ -2204,9 +2222,7 @@ public class ReportBackingBean extends BaseBackingBean<ReportMangedBean>{
 			if((this.getPmo()!=null)&&(this.getPmo()!=ReportConst.EMPTY_VAL)){
 				rptGenBean.setPmoTotVar(ReportConst.AMP_PMO_EQ+this.getPmo());
 			}
-			//-----
-			
-			
+			//-----			
 			if((this.getItemName()!=null)&&(this.getItemName()!=ReportConst.EMPTY_VAL)){
 				rptGenBean.setItemNameTotVar(ReportConst.AMP_ITM_NAME_EQ+this.getItemName());
 			}
@@ -2305,13 +2321,14 @@ public class ReportBackingBean extends BaseBackingBean<ReportMangedBean>{
 			String url=ReportConst.EXC_PREV_URL+rptGenBean.getUrlReportJSPName()+rptGenBean.getItemNameTotVar()+rptGenBean.getItemTypeTotVar()+rptGenBean.getItemStatusTotVar()+rptGenBean.getUnspscCodeTotVar()+rptGenBean.getUnspscTitleTotVar()+rptGenBean.getExtentionCodeTotVar()+rptGenBean.getCompanyNameTotVar()+rptGenBean.getRegistrationTypeTotVar()+rptGenBean.getItemCategoryTotVar()+rptGenBean.getProofIdentityTotVar()+rptGenBean.getPtjTotVar()+rptGenBean.getContractNoTotVar()+rptGenBean.getSstTotVar()+rptGenBean.getJabatanTotVar()+rptGenBean.getMinistryTotVar()+rptGenBean.getSupplierTotVar()+rptGenBean.getStatusTotVar()+rptGenBean.getDurationTotVar()+rptGenBean.getRecievingOfficerTotVar()+rptGenBean.getDeliveryAddressTotVar()+rptGenBean.getFlRecNoteNoTotVar()+rptGenBean.getContractTypeTotVar()+rptGenBean.getRequisitionerTotVar()+rptGenBean.getMtoContractTotVar()+rptGenBean.getInvoiceNoTotVar()+rptGenBean.getDeductionTypeTotVar()+rptGenBean.getCrNoTotVar()+rptGenBean.getApproverNameTotVar()+rptGenBean.getDocumentTypeTotVar()+rptGenBean.getCriteriaTotVar()+rptGenBean.getScoringTotVar()+rptGenBean.getPkpNoTotVar()+rptGenBean.getDeliveryOrderNoTotVar()+rptGenBean.getItemCodeTotVar()+rptGenBean.getPoAmountTotVar()+rptGenBean.getPrNoTotVar()+rptGenBean.getPmoTotVar()+ReportConst.EXC_NEXT_URL;
 			try {
 				ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-				externalContext.redirect(url);				
+				externalContext.redirect(url);
+				
 			} catch (IOException e) {				
 				e.printStackTrace();
 			}
 			log.info(url);
 		}else{
-			
+			throw new EpException(ReportConst.PLZ_SEL_ONE_RPT_CRITERIA_SEARCH);
 		}
 	}
 	/*
