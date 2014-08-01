@@ -13,7 +13,8 @@
 			</h:panelGrid>
 			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox
-					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.contractExtend}">
+					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.contractExtend}"
+					disabled="#{!amendmentBackingBean.validContractExtendPeriod()}">
 					<p:ajax event="change" update=":form:amend" process="@form" listener="#{amendmentBackingBean.onContractExtensionChecked}" />
 				</p:selectBooleanCheckbox>
 				<p:spacer width="2" />
@@ -22,7 +23,8 @@
 			<f:verbatim/>
 			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox
-					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange}" >
+					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange}"
+					disabled="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.contractAmount lt CtConst.contractThresholdValue}">
 					 <p:ajax event="change" update=":form"  process="@form" listener="#{amendmentBackingBean.onItemPriceChecked}" /> 
 					 </p:selectBooleanCheckbox>
 				<p:spacer width="2" />
@@ -31,7 +33,8 @@
 			<f:verbatim/>
 		    <h:panelGrid columns="3">
 				<p:selectBooleanCheckbox
-					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange}" >
+					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange}" 
+					disabled="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.contractAmount lt CtConst.contractThresholdValue}">
 					<p:ajax event="change" update=":form" process="@form" listener="#{amendmentBackingBean.onQuantityChecked}" /> 
 					</p:selectBooleanCheckbox>
 				<p:spacer width="2" />
@@ -40,7 +43,8 @@
 			<f:verbatim/>
 			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox disabled="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange 
-				    or amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange}"
+				    or amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange
+				    or amendmentBackingBean.managedBean.contractVer.ctContractValue.contractAmount lt CtConst.contractThresholdValue}"
 					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.valueChange}"  >
 					<p:ajax event="change"  update=":form:amend" process="@form" /> 
 					</p:selectBooleanCheckbox>
@@ -197,8 +201,16 @@
 					</p:columnGroup>
 						<p:column> <p:outputLabel value="#{data.ctAmendment.fileRefNo}"/></p:column>
 						<p:column> <p:outputLabel value="#{data.ctAmendment.extendPeriod}"/></p:column>
-						<p:column> <p:outputLabel value="#{amendmentBackingBean.convertTime(data.ctAmendment.extendStartDate)}"/></p:column>
-						<p:column> <p:outputLabel value="#{amendmentBackingBean.convertTime(data.ctAmendment.extendEndDate)}"/></p:column>
+						<p:column>
+							<p:outputLabel value="#{data.ctAmendment.extendStartDate}">
+								<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+							</p:outputLabel>
+						</p:column>
+						<p:column>
+							<p:outputLabel value="#{data.ctAmendment.extendEndDate}">
+								<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+							</p:outputLabel>
+						</p:column>
 				</p:dataTable>
 			</h:panelGrid>
 		</h:panelGrid>

@@ -10,6 +10,13 @@
 		<managed-bean-class>my.ep.constant.ct.ContractStatusConst</managed-bean-class>
 		<managed-bean-scope>application</managed-bean-scope>
 	</managed-bean>
+	
+	<managed-bean>
+		<description>Contract Constants</description>
+		<managed-bean-name>CtConst</managed-bean-name>
+		<managed-bean-class>my.ep.constant.ct.ContractConst</managed-bean-class>
+		<managed-bean-scope>application</managed-bean-scope>
+	</managed-bean>
 
 </faces-config>
 

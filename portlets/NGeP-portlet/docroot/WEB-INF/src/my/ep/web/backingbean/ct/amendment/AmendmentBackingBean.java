@@ -16,7 +16,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
-import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -2029,15 +2028,17 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			 parameterSO = null;
 		 }
 		 return null;
-	 } 
+	 }
 	
-	public String convertTime(Date time){ 
-        String str ="";
-    	Format format = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT); 
-        if(time == null)
-        	return str;
-        return format.format(time); 
-    } 
+	public boolean validContractExtendPeriod() {
+		Calendar c = Calendar.getInstance();
+		c.add(Calendar.DATE, ContractConst.CONTRACT_EXTEND_BEFORE_DAYS);
+		
+		if(getManagedBean().getContractVer().getCtContractValue().getExpDate().before(c.getTime())){
+			return false;
+		}
+		return true;
+	}
 	
 	 public String getEditorValue() {
 		   return editorValue;
