@@ -106,13 +106,13 @@
 		          <p:selectOneMenu id="fromProMonth" value="#{ProgVar.fromProDate}" style="width:120px;"> 
 		           <f:selectItem itemLabel="-Select One-" itemValue=""/>
                    <f:selectItems value="#{contractDetailsBackingBean.monthList}" />  
-                   <p:ajax event="change" update="tableProgress" process="@this" listener="#{contractDetailsBackingBean.validateProgressiveDate(ProgVar)}"/>
+                   <p:ajax event="change" update=":form:tableProgress" process="@form" listener="#{contractDetailsBackingBean.validateProgressiveDate(ProgVar)}"/>
                   </p:selectOneMenu> 
                    <p:spacer width="1"/>
                    <p:selectOneMenu id="fromProYear" value="#{ProgVar.fromProYear}" style="width:120px;"> 
                      <f:selectItem itemLabel="-Select One-" itemValue=""/>
                      <f:selectItems value="#{contractDetailsBackingBean.yearList}"/>  
-                     <p:ajax event="change" update="tableProgress" process="@this" listener="#{contractDetailsBackingBean.validateProgressiveDate(ProgVar)}"/>
+                     <p:ajax event="change" update=":form:tableProgress" process="@form" listener="#{contractDetailsBackingBean.validateProgressiveDate(ProgVar)}"/>
                    </p:selectOneMenu> 
 		        </p:column> 	
 		        <p:column style="width:30%;" headerText="#{lbl['lbl.ct.sched.eperiod']}">
@@ -120,13 +120,13 @@
 		            <p:selectOneMenu id="toProMonth" value="#{ProgVar.toProDate}"  style="width:120px;" >
 		               <f:selectItem itemLabel="-Select One-" itemValue=""/>
                        <f:selectItems value="#{contractDetailsBackingBean.monthList}" />  
-                       <p:ajax event="change" update="tableProgress" process="@this" listener="#{contractDetailsBackingBean.validateProgressiveDate(ProgVar)}"/>
+                       <p:ajax event="change" update=":form:tableProgress" process="@form" listener="#{contractDetailsBackingBean.validateProgressiveDate(ProgVar)}"/>
                      </p:selectOneMenu>
                      <p:spacer width="1"/>
                      <p:selectOneMenu id="toProYear" value="#{ProgVar.toProYears}" style="width:120px;" >
             	        <f:selectItem itemLabel="-Select One-" itemValue=""/>
                         <f:selectItems value="#{contractDetailsBackingBean.yearList}" />  
-                        <p:ajax event="change" update="tableProgress" process="@this" listener="#{contractDetailsBackingBean.validateProgressiveDate(ProgVar)}"/> 
+                        <p:ajax event="change" update=":form:tableProgress" process="@form" listener="#{contractDetailsBackingBean.validateProgressiveDate(ProgVar)}"/> 
                      </p:selectOneMenu>
                      <p:spacer width="5"/>
 		             <p:graphicImage id="validateProAction" library="ep/images/design" 
