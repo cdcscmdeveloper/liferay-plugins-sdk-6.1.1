@@ -29,7 +29,14 @@
 					<td><p:inputText value="#{smPersonnelBackingBean.managedBean.updateSmPersonnel.name}" readonly="true" disabled="true" size="35" /></td>
 					<td></td>
 					<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.eprole']}" /></td>
-					<td><p:inputText value="#{smPersonnelBackingBean.managedBean.updateSmPersonnel.epRole}" readonly="true" disabled="true" size="35" /></td>
+					<td><p:selectOneMenu id="basicBURole"
+								label="#{lbl['lbl.sm.userprofile.eprole']}"
+								value="#{smPersonnelBackingBean.managedBean.updateSmPersonnel.epRole}"
+								style="width: 207px;margin-bottom: 5px;" required="true" 
+								disabled="true">
+								<f:selectItem itemLabel="- Select One -" itemValue="" />
+								<f:selectItems value="#{smPersonnelBackingBean.managedBean.roleList}"/>
+							</p:selectOneMenu></td>
 					<td></td>
 				</tr>
 				<tr>
@@ -72,12 +79,10 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.dob']}" /></td>
-					<td><p:calendar showOn="button" navigator="true"
-								display="inline" required="true" readonlyInput="true"
-								label="#{lbl['lbl.sm.person.dob']}" id="dobDate"
-								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-								yearRange="-99:+0"
-								value="#{smPersonnelBackingBean.managedBean.updateSmPersonnel.birthDate}" /></td>
+					<td><p:inputText id="dobDate" label="#{lbl['lbl.sm.person.dob']}" value="#{smPersonnelBackingBean.managedBean.updateSmPersonnel.birthDate}" size="35" readonly="true" disabled="true">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</p:inputText></td>
 					<td></td>
 					
 					<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.designation']}" /> <p:outputLabel
