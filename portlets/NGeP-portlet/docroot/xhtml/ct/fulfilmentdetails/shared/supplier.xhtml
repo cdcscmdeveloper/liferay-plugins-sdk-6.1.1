@@ -8,10 +8,9 @@
      <h:panelGrid columns="4" style="width:100%;" styleClass="top-aligned-columns"
          columnClasses="columnWidth150,columnWidth350,columnWidth150,columnWidth200">
           <p:outputLabel value="Business Reg. No." />  
-          <h:panelGrid columns="4" style="width:230px;" >
+          <h:panelGrid columns="3" style="width:230px;" >
              <p:inputText disabled="true" style="width:60px;" 
                 value="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.smSupplier.regNo}" />
-             <p:spacer width="2"/>
              <p:outputLabel value="MOF No." />  
              <p:inputText disabled="true" style="width:70px;" 
              	value="#{contractDetailsBackingBean.managedBean.ctContract.loa.scLoiLoa.mofNo}" />

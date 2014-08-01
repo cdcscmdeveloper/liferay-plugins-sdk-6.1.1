@@ -32,11 +32,11 @@
 				<p:outputLabel id="dperiod" value="#{lbl['lbl.ct.dperiod']}"  />
 			</h:panelGrid> 
 			<h:panelGrid columns="4"  rendered="#{!contractDetailsBackingBean.managedBean.ctContract.zonalPricing}">
-		    	<p:inputText for="dperiod" styleClass="ppRightBtn" style="width:65px;"
+		    	<p:inputText for="dperiod" styleClass="ppRightBtn" style="width:45px;"
 		          maxlength="4" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.deliveryTerm}"/>
                 <p:spacer width="2" />
                 <p:selectOneMenu id="deliveryTerm" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.deliveryTermUom.parameterId}" 
-                   style="width:100px;" required="true" label="#{lbl['lbl.ct.dperiod']}" >
+                   style="width:120px;" required="true" label="#{lbl['lbl.ct.dperiod']}" >
 			       <f:selectItems value="#{contractDetailsBackingBean.getDropdownValues(ParameterTypeConst.deliveryTerm)}" />
 			   </p:selectOneMenu>
 			   <p:message for="deliveryTerm" display="icon"/>
