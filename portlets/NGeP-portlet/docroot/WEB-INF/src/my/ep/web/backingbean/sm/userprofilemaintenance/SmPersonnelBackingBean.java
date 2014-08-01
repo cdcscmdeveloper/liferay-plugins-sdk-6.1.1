@@ -100,6 +100,12 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		getManagedBean().setDefaultCountryId(resDTO.getPmCountry().getCountryId());
 		initUserPersonnelInfo();
 		buildRoleList();
+		
+		SelectItem role = new SelectItem();
+		role.setLabel("Supplier Admin");
+		role.setValue(RoleCode.BASIC_SUPPLIER_ADMIN.value());
+		getManagedBean().getRoleList().add(role);
+		
 		fetchUpdateSmPersonnelAddresses(getManagedBean().getUpdateSmPersonnel());
 
 //		getManagedBean().setDisableRole(false);
@@ -153,7 +159,6 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 	}
 
 	public void buildRoleList(){
-		removeEPRole();
 		List<SelectItem> roles = new ArrayList<SelectItem>();
 		
 		SelectItem role = new SelectItem();
@@ -194,6 +199,7 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 	public String navigateToAddNewUserPage(){  
 		System.out.println("********************SmPersonnelBackingBean navigateToAddNewUserPage***************");
 		getManagedBean().setEditMode(false);
+		removeEPRole();
 		buildRoleList();
 		
 		CountryReqDTO reqDTO = new CountryReqDTO();
@@ -249,6 +255,12 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		System.out.println("********************SmPersonnelBackingBean navigateToUpdateUserPage***************");
 		getManagedBean().setEditMode(true);
 		buildRoleList();
+		
+		SelectItem role = new SelectItem();
+		role.setLabel("Supplier Admin");
+		role.setValue(RoleCode.BASIC_SUPPLIER_ADMIN.value());
+		getManagedBean().getRoleList().add(role);
+		
 		getPersonnelInfoById(personnelId);
 		if(getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress() != null)
 			getManagedBean().setTempAddress(getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress());
@@ -800,6 +812,10 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 	public String save(){
 		
 		String returnValue = null;
+		if(getManagedBean().getBasicSmPersonnel().getEpRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_USER.value()))
+			getManagedBean().getBasicSmPersonnel().setAuthorized(true);
+		else if(getManagedBean().getBasicSmPersonnel().getEpRole().equalsIgnoreCase(RoleCode.CM_USER.value()))
+			getManagedBean().getBasicSmPersonnel().setAuthorized(false);
 		if(getManagedBean().getBasicSmPersonnel().getPersonnelId() == null){
 			returnValue = saveNewUser(getManagedBean().getBasicSmPersonnel());
 		} else {
@@ -1110,13 +1126,6 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 			getManagedBean().setDisableRole(false);
 		else
 			getManagedBean().setDisableRole(true);
-	}
-	
-	public void displayPrivileges(){
-		if(getManagedBean().getBasicSmPersonnel().getEpRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_USER.value()))
-			getManagedBean().setRenderPrivilegesPanel(true);
-		else
-			getManagedBean().setRenderPrivilegesPanel(false);
 	}
 	
 	public void assignPersonIdentType(AjaxBehaviorEvent e) {

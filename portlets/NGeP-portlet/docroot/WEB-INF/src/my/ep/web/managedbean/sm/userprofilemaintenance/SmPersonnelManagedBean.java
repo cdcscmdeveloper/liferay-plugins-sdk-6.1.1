@@ -79,10 +79,8 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 
 	private IPagingDataModel<SmPersonnel> smPersonnelDataModel2 = new SmPersonnelPagingDataModel();
 	
-	private boolean disableRole;
+	private boolean disableRole = false;
 	  
-	private boolean renderPrivilegesPanel;
-	
 	private boolean editMode;
 
 	private SmAddress tempAddress;
@@ -356,14 +354,6 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 
 	public void setDisableRole(boolean disableRole) {
 		this.disableRole = disableRole;
-	}
-
-	public boolean isRenderPrivilegesPanel() {
-		return renderPrivilegesPanel;
-	}
-
-	public void setRenderPrivilegesPanel(boolean renderPrivilegesPanel) {
-		this.renderPrivilegesPanel = renderPrivilegesPanel;
 	}
 
 	public boolean isEditMode() {
