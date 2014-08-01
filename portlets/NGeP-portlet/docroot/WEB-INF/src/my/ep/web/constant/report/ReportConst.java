@@ -29,7 +29,7 @@ public class ReportConst {
 	public static final String SPPSAP2_FEC_RPT_VAL = "SPPSAP2-FEC";
 	public static final String KPSAP2_PEMARKAHAN_FEC_RPT_NAME = "Kaedah Penilaian Spesifikasi  Am Peringkat2 (Pemarkahan) - FEC";
 	public static final String KPSAP2_PEMARKAHAN_FEC_RPT_VAL = "KPSAP2(Pemarkahan)-FEC";
-	public static final String AKPT_FEC_RPT_NAME = "Kaedah Penilaian Spesifikasi  Am Peringkat2 (Pemarkahan) - FEC";
+	public static final String AKPT_FEC_RPT_NAME = "Analisis Keputusan Penilaian Teknikal - FEC";
 	public static final String AKPT_FEC_RPT_VAL = "AKPT-FEC";
 	public static final String HARGA_TAWARAN_FEC_RPT_NAME = "Harga Tawaran - FEC";
 	public static final String HARGA_TAWARAN_FEC_RPT_VAL = "HargaTawaran-FEC";
