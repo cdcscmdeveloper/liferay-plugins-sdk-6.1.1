@@ -1087,7 +1087,7 @@ public class SpecificationBackingBean extends
 					.equalsIgnoreCase(deliveryAddress.getEvaluationType())) {
 
 				specReqDTO.setScQt(deliveryAddress);
-				specSo.validateSCFulfillmentSchedules(specReqDTO);
+				//specSo.validateSCFulfillmentSchedules(specReqDTO);
 
 			}
 
@@ -1114,7 +1114,7 @@ public class SpecificationBackingBean extends
 			if (QTConstants.EVALUATION_TWO_TIER.equalsIgnoreCase(fulfilMentDtls
 					.getEvaluationType())) {
 				specReqDTO.setScQt(fulfilMentDtls);
-				specSo.validateSCFulfillmentSchedules(specReqDTO);
+				//specSo.validateSCFulfillmentSchedules(specReqDTO);
 			}
 
 			break;
@@ -1985,8 +1985,7 @@ public class SpecificationBackingBean extends
 				checklist.addAll(resDTO.getSpecResultBean().getResultList());
 			}
 
-			List<ScQtCheckList> technicalScoring = this.getManagedBean()
-					.getTechnicalScoring();
+			List<ScQtCheckList> technicalScoring = null;
 			if (technicalScoring == null) {
 				technicalScoring = new ArrayList<ScQtCheckList>();
 			}
@@ -2266,7 +2265,14 @@ public class SpecificationBackingBean extends
 					}
 
 				}
-
+				for(ScQtCheckList speCheckList : checklist){
+					if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
+							.equalsIgnoreCase(speCheckList.getDefinationType()
+									.getParameterCode())){
+						speCheckList.setQtScoreWeightage(tmpCheckList.getQtScoreWeightage());
+					}
+				}
+			//	this.getManagedBean().setScQtCheckSt2financeProposalList(checklist);
 				this.getManagedBean().setFinSpecList(specChecklist);
 				this.getManagedBean().setFinancialScoring(localChecklist);
 				finWeightageSum();
@@ -8892,7 +8898,7 @@ public class SpecificationBackingBean extends
 		SpecificationResDTO resDTO = null;
 		String taskId = this.getManagedBean().getTaskId();
 		String[] outComes = this.getManagedBean().getOutComes();
-		List<ScQtCheckList> checklist = this.getManagedBean()
+		/*List<ScQtCheckList> checklist = this.getManagedBean()
 				.getScQtCheckSt2financeProposalList();
 		if (checklist == null) {
 			checklist = new ArrayList<ScQtCheckList>();
@@ -8911,7 +8917,7 @@ public class SpecificationBackingBean extends
 				.getTechnicalScoring();
 		if (technicalScoringList == null) {
 			technicalScoringList = new ArrayList<ScQtCheckList>();
-		}
+		}*/
 
 		SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
 		switch (activeIndex) {
@@ -9023,7 +9029,7 @@ public class SpecificationBackingBean extends
 				specReqDTO.setCheckLists(technicalScoring);
 				specReqDTO.setSpecType(QTConstants.TECHNICAL_SPEC_TYPE);
 				specReqDTO.setScQt(scoring);
-				specSO.validateSCScoreSettings(specReqDTO);
+				//specSO.validateSCScoreSettings(specReqDTO);
 				resDTO = specSO.saveQTDtl(specReqDTO);
 				renewSesionObject();
 				this.getManagedBean().setScQt(resDTO.getScQt());
@@ -9141,7 +9147,7 @@ public class SpecificationBackingBean extends
 					.getEvaluationType())) {
 
 				specReqDTO.setScQt(fulfilMent);
-				specSO.validateSCFulfillmentSchedules(specReqDTO);
+				//specSO.validateSCFulfillmentSchedules(specReqDTO);
 				resDTO = specSO.saveQTDtl(specReqDTO);
 				renewSesionObject();
 				this.getManagedBean().setScQt(resDTO.getScQt());
@@ -9175,7 +9181,7 @@ public class SpecificationBackingBean extends
 					.getEvaluationType())) {
 
 				specReqDTO.setScQt(fulfilMentdtls);
-				specSO.validateSCFulfillmentSchedules(specReqDTO);
+				//specSO.validateSCFulfillmentSchedules(specReqDTO);
 				resDTO = specSO.saveQTDtl(specReqDTO);
 				renewSesionObject();
 				this.getManagedBean().setScQt(resDTO.getScQt());
@@ -9192,10 +9198,10 @@ public class SpecificationBackingBean extends
 		this.getManagedBean().setActiveIndex(activeIndex);
 		this.getManagedBean().setTaskId(taskId);
 		this.getManagedBean().setOutComes(outComes);
-		this.getManagedBean().setScQtCheckSt2financeProposalList(checklist);
+		/*this.getManagedBean().setScQtCheckSt2financeProposalList(checklist);
 		this.getManagedBean().setScQtCheckSt2techProposal(techchecklistScore);
 		this.getManagedBean().setFinancialScoring(financialScoring);
-		this.getManagedBean().setTechnicalScoring(technicalScoringList);
+		this.getManagedBean().setTechnicalScoring(technicalScoringList);*/
 
 	}
 
