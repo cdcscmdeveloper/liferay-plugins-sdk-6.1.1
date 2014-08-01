@@ -1439,10 +1439,13 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 
 						if(code.isRemarkRequired()){
-
-							FacesContext facesContext = FacesContext.getCurrentInstance();
-							facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Remark Required", ""));
-							return "reviewApproveExtensionCode";
+							System.out.println("................test...........code.isRemarkRequired()="+code.isRemarkRequired());
+							throw new EpException(MessageConst.ERROR_716007,
+									new String[] { ResourceBundleUtils.getMessage(null,
+											ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+											new FacesScopes().getUserLocale()) });
+							
+//							return "reviewApproveExtensionCode";
 						}
 					}
 

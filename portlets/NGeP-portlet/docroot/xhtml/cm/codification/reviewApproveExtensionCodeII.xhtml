@@ -13,7 +13,7 @@
 	<ui:define name="contentSection">
 
 
-		<p:messages id="reviewApproveExt2" showDetail="true" autoUpdate="true" closable="true" showSummary="true"></p:messages>
+		<p:messages id="reviewApproveExt2" showDetail="true" autoUpdate="true" closable="true" showSummary="false"></p:messages>
 
 		<h:panelGroup id="extensionFlowReviewID">
 
@@ -254,7 +254,7 @@
 								<td><h:panelGrid columns="2"
 										columnClasses="cmColumnWidth">
 										<p:inputText value="#{review.typeRemarkII}" size="30"
-											requiredMessage="Remark is required!"
+											requiredMessage="Type Remark is required!"
 											disabled="#{unspscCodeBackingBean.codeAdmin}"
 											required="#{unspscCodeBackingBean.checkRemark(review.reviewedTypeNameII, review.reviewedTypeName)}"
 											id="typeremark2"></p:inputText>
@@ -266,7 +266,7 @@
 								<td><h:panelGrid columns="2"
 										columnClasses="cmColumnWidth">
 										<p:inputText value="#{review.brandRemarkII}" size="30"
-											id="brandRemark2" requiredMessage="Remark is required!"
+											id="brandRemark2" requiredMessage="Brand Remark is required!"
 											required="#{unspscCodeBackingBean.checkRemark(review.reviewedBrandNameII, review.reviewedBrandName)}"
 											disabled="#{unspscCodeBackingBean.codeAdmin}"></p:inputText>
 										<p:message id="brandremarkmsg" for="brandRemark2"></p:message>
@@ -276,7 +276,7 @@
 								<td><h:panelGrid columns="2"
 										columnClasses="cmColumnWidth">
 										<p:inputText value="#{review.measurementRemarkII}" size="30"
-											id="measurementRemark2" requiredMessage="Remark is required!"
+											id="measurementRemark2" requiredMessage="Measurement Remark is required!"
 											required="#{unspscCodeBackingBean.checkRemark(review.reviewedMeasurementNameII, review.reviewedMeasurementName)}"
 											disabled="#{unspscCodeBackingBean.codeAdmin}"></p:inputText>
 										<p:message id="measurementremarkmsg" for="measurementRemark2"></p:message>
@@ -286,7 +286,7 @@
 								<td><h:panelGrid columns="2"
 										columnClasses="cmColumnWidth">
 										<p:inputText value="#{review.colorRemarkII}" size="30"
-											id="colorRemark2" requiredMessage="Remark is required!"
+											id="colorRemark2" requiredMessage="Color Remark is required!"
 											required="#{unspscCodeBackingBean.checkRemark(review.reviewedColorNameII, review.reviewedColorName)}"
 											disabled="#{unspscCodeBackingBean.codeAdmin}"></p:inputText>
 										<p:message id="colorremarkmsg" for="colorRemark2"></p:message>

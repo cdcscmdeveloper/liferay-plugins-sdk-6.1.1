@@ -158,25 +158,26 @@
 			<portlet id="reviewExtensionMaintenance"></portlet>
 			<portlet id="ZoneMaintenancePortlet"></portlet>
 		</category>
-	
-	
 
-	<category name="category.sample">
-		<portlet id="TaskList"></portlet>
-		<portlet id="sm"></portlet>
-		
 
-		<portlet id="BpmTaskList"></portlet>
-		<portlet id="Welcome"></portlet>
-		<portlet id="supplierUserActivation"></portlet>
 
-		<portlet id="UserProfileMaintenance"></portlet>
+		<category name="category.sample">
+			<portlet id="TaskList"></portlet>
+			<portlet id="sm"></portlet>
 
-		<portlet id="SmUserProfileMaintenance"></portlet>
-		<portlet id="SoftCertReg"></portlet>
-	</category>
 
-	<category name="Template">
+			<portlet id="BpmTaskList"></portlet>
+			<portlet id="Welcome"></portlet>
+			<portlet id="supplierUserActivation"></portlet>
+
+			<portlet id="UserProfileMaintenance"></portlet>
+
+			<portlet id="SmUserProfileMaintenance"></portlet>
+			<portlet id="SoftCertReg"></portlet>
+			<portlet id="TaskSummary"></portlet>
+		</category>
+
+		<category name="Template">
 		<portlet id="templateDoc"></portlet>
 		<portlet id="templateSpec"></portlet>
 	</category>

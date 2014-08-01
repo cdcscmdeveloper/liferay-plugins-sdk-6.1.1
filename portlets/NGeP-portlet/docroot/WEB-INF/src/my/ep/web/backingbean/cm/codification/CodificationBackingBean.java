@@ -452,7 +452,20 @@ public class CodificationBackingBean extends
 	}
 
 	public void unspscSearch() {
+		String unspscCode = getManagedBean().getAutoCompleteUnspscCode().getUnspscCode();
+		String unspscTitle = titleFilterBean.getSearchValue().toString();
 		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>titleFilterBean="+titleFilterBean.getSearchValue());
+		if((unspscCode == null && (unspscTitle == null || unspscTitle.isEmpty())) 
+				|| ((unspscCode != null && unspscCode.isEmpty()) && (unspscTitle != null && unspscTitle.isEmpty()))){
+			throw new EpException(MessageConst.ERROR_716006,
+					new String[] { ResourceBundleUtils.getMessage(null,
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							new FacesScopes().getUserLocale()) });
+			
+			
+			
+		}
+		
 		searchDataModel.reloadData();
 	}
 
