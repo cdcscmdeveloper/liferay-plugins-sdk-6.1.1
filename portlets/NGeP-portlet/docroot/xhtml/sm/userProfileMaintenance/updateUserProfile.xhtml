@@ -22,13 +22,15 @@
 	</p:panel>
 
 	<p:panelGrid columns="2" styleClass="noBorders tr,noBorders td">
-	<p:panel id="UserProfile" header="Update User" styleClass="noBorders tr,noBorders td" >
+	<p:panel id="UserProfile" header="Update User" styleClass="noBorders tr,noBorders td" toggleable="true">
 		<table style="width:100%;">
 			 	<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.name']}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.name']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
 					<td><p:inputText value="#{smPersonnelBackingBean.managedBean.updateSmPersonnel.name}" readonly="true" disabled="true" size="35" /></td>
 					<td></td>
-					<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.eprole']}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.eprole']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
 					<td><p:selectOneMenu id="basicBURole"
 								label="#{lbl['lbl.sm.userprofile.eprole']}"
 								value="#{smPersonnelBackingBean.managedBean.updateSmPersonnel.epRole}"
@@ -40,8 +42,18 @@
 					<td></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.nationality']}" /></td>
-					<td><p:inputText value="#{smPersonnelBackingBean.managedBean.updateSmPersonnel.pmCountry.countryName}" readonly="true" disabled="true" size="35" /></td>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sm.userprofile.nationality']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
+					<td><p:selectOneMenu id="basicBUCountry"
+							label="#{lbl['lbl.sm.userprofile.nationality']}"
+							value="#{smPersonnelBackingBean.managedBean.updateSmPersonnel.pmCountry.countryId}"
+							style="width: 207px;margin-bottom: 5px;"
+							disabled="true">
+							<f:selectItem itemLabel="- Select One -" itemValue="" />
+							<f:selectItems
+								value="#{smPersonnelBackingBean.managedBean.countryList}" />
+						</p:selectOneMenu></td>
 				</tr>
 				<tr>		
 					<td><p:outputLabel
@@ -78,8 +90,9 @@
 						<td></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.dob']}" /></td>
-					<td><p:inputText id="dobDate" label="#{lbl['lbl.sm.person.dob']}" value="#{smPersonnelBackingBean.managedBean.updateSmPersonnel.birthDate}" size="35" readonly="true" disabled="true">
+					<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.dob']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
+					<td><p:inputText id="dobDate" label="#{lbl['lbl.sm.person.dob']}" value="#{smPersonnelBackingBean.managedBean.updateSmPersonnel.birthDate}" size="20" readonly="true" disabled="true">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</p:inputText></td>
@@ -94,7 +107,7 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.email']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
-					<td><p:inputText id="updateBUEmail" value="#{smPersonnelBackingBean.managedBean.updateSmPersonnel.email}" size="40" required="true" /></td>
+					<td><p:inputText id="updateBUEmail" value="#{smPersonnelBackingBean.managedBean.updateSmPersonnel.email}" size="40" required="true" readonly="true" disabled="true"/></td>
 						<td><p:message id="updateBUEmailMsg" for="updateBUEmail"
 								showSummary="true" showDetail="false" display="icon" /></td>
 

@@ -79,6 +79,7 @@
        </p:column>
        
        <p:column headerText="#{lbl['lbl.sm.userprofile.eprole']}" > 
+        <h:outputText value="Supplier Admin" rendered="#{personnel.epRole eq 'BASIC_SUPPLIER_ADMIN'}"/>
         <h:outputText value="Supplier User" rendered="#{personnel.epRole eq 'BASIC_SUPPLIER_USER'}"/>
         <h:outputText value="Catalogue User" rendered="#{personnel.epRole eq 'CM_USER'}"/>
        </p:column>
