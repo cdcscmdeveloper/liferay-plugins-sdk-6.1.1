@@ -125,7 +125,7 @@ public class BPMTaskDashSumBackingBean extends
 			String commonUrl = themeDisplay.getURLCurrent().substring(0,themeDisplay.getURLCurrent().indexOf(themeDisplay.getLayout().getGroup().getFriendlyURL())+ themeDisplay.getLayout().getGroup().getFriendlyURL().length());
 			System.out.println("commonUrl" + commonUrl);
 
-			 externalContext.redirect(commonUrl+"/" + "tasklist1");
+			 externalContext.redirect(commonUrl+"/" + "task-list");
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -147,7 +147,7 @@ public class BPMTaskDashSumBackingBean extends
 			String commonUrl = themeDisplay.getURLCurrent().substring(0,themeDisplay.getURLCurrent().indexOf(themeDisplay.getLayout().getGroup().getFriendlyURL())+ themeDisplay.getLayout().getGroup().getFriendlyURL().length());
 			System.out.println("commonUrl" + commonUrl);
 	      	
-		 externalContext.redirect(commonUrl+"/" + "tasklist1?docTypeId="+docTypeId);
+		 externalContext.redirect(commonUrl+"/" + "task-list?docTypeId="+docTypeId);
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

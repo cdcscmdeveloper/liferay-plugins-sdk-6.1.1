@@ -18,13 +18,14 @@
 				<ui:repeat var="action"
 					value="#{unspscCodeBackingBean.managedBean.action}">
 					<p:commandButton value="#{action}"
+					    disabled="#{action == 'SUBMIT' and (unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes.size() >=1)}"
 						rendered="#{action != 'REQUEST EXTENSION'}"
 						action="#{unspscCodeBackingBean.bpmTesting(action)}"
 						update="@form"></p:commandButton>
-				</ui:repeat>
+						</ui:repeat>
 
 			</div>
-
+			
 			<ui:include src="DocumentHeader.xhtml"></ui:include>
 
 
@@ -44,11 +45,11 @@
 					</tr>
 
 					<tr>
-						<td><p:outputLabel value="* #{lbl['lbl.cm.item.name']}"></p:outputLabel></td>
+						<td><p:outputLabel value="#{lbl['lbl.cm.item.name']}"></p:outputLabel></td>
 						<td><p:inputText
 								value="#{unspscCodeBackingBean.managedBean.requestCode.itemName}"
 								disabled="true" size="40"></p:inputText></td>
-						<td><p:outputLabel value="* #{lbl['lbl.cm.item.details']}"></p:outputLabel></td>
+						<td><p:outputLabel value="#{lbl['lbl.cm.item.details']}"></p:outputLabel></td>
 						<td><p:inputText
 								value="#{unspscCodeBackingBean.managedBean.requestCode.itemDetail}"
 								disabled="true" size="40"></p:inputText></td>
@@ -56,21 +57,21 @@
 					<h:panelGroup id="extensionFiledsId"
 						rendered="#{unspscCodeBackingBean.managedBean.requestCode.itemType != 'S'}">
 						<tr>
-							<td><p:outputLabel value="* #{lbl['lbl.cm.type']}"></p:outputLabel></td>
+							<td><p:outputLabel value="#{lbl['lbl.cm.type']}"></p:outputLabel></td>
 							<td><p:inputText
 									value="#{unspscCodeBackingBean.managedBean.requestCode.typeName}"
 									disabled="true" size="40"></p:inputText></td>
-							<td><p:outputLabel value="* #{lbl['lbl.cm.brand']}"></p:outputLabel></td>
+							<td><p:outputLabel value="#{lbl['lbl.cm.brand']}"></p:outputLabel></td>
 							<td><p:inputText
 									value="#{unspscCodeBackingBean.managedBean.requestCode.brandName}"
 									disabled="true" size="40"></p:inputText></td>
 						</tr>
 						<tr>
-							<td><p:outputLabel value="* #{lbl['lbl.cm.measurement']}"></p:outputLabel></td>
+							<td><p:outputLabel value="#{lbl['lbl.cm.measurement']}"></p:outputLabel></td>
 							<td><p:inputText
 									value="#{unspscCodeBackingBean.managedBean.requestCode.measurementName}"
 									disabled="true" size="40"></p:inputText></td>
-							<td><p:outputLabel value="* #{lbl['lbl.cm.color']}"></p:outputLabel></td>
+							<td><p:outputLabel value="#{lbl['lbl.cm.color']}"></p:outputLabel></td>
 							<td><p:inputText
 									value="#{unspscCodeBackingBean.managedBean.requestCode.colorName}"
 									disabled="true" size="40"></p:inputText></td>
@@ -119,7 +120,7 @@
 						</f:facet>
 						<p:commandLink
 							action="#{unspscCodeBackingBean.removeRecommendCode(rowIndex)}"
-							update=":form:recomemendUnspscId">
+							update="@form">
 							<p:graphicImage value="/resources/ep/images/design/trash.png"></p:graphicImage>
 						</p:commandLink>
 

@@ -2059,7 +2059,7 @@ padding-left
 	border: 0px !important;
 }
 .cmColumnWidth {
-	border: 0px !important;
+	border: none;
 	width:20px;
 	padding: 0 0 0 0 !important;
 }

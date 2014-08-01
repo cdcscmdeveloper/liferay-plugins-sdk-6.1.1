@@ -82,40 +82,32 @@
 						<table>
 							<tr>
 								<td><h:panelGrid columns="2"
-										columnClasses="cmColumnWidth, border0">
+										columnClasses="cmColumnWidth">
 										<p:inputText value="#{review.typeName}" disabled="true"></p:inputText>
 
-										<p:graphicImage value="/resources/ep/images/design/add.png"
-											rendered="#{review.requestType}" />
 
 									</h:panelGrid></td>
 							</tr>
 							<tr>
 								<td><h:panelGrid columns="2"
-										columnClasses="cmColumnWidth, border0">
+										columnClasses="cmColumnWidth">
 										<p:inputText value="#{review.brandName}" disabled="true"></p:inputText>
 
-
-										<p:graphicImage value="/resources/ep/images/design/add.png"
-											rendered="#{review.requestBrand}" />
 									</h:panelGrid></td>
 							</tr>
 							<tr>
 								<td><h:panelGrid columns="2"
-										columnClasses="cmColumnWidth, border0">
+										columnClasses="cmColumnWidth">
 										<p:inputText value="#{review.measurementName}" disabled="true"></p:inputText>
-										<p:graphicImage value="/resources/ep/images/design/add.png"
-											rendered="#{review.requestMeasurement}" />
-
+										
 
 									</h:panelGrid></td>
 							</tr>
 							<tr>
 								<td><h:panelGrid columns="2"
-										columnClasses="cmColumnWidth, border0">
+										columnClasses="cmColumnWidth">
 										<p:inputText value="#{review.colorName}" disabled="true"></p:inputText>
-										<p:graphicImage value="/resources/ep/images/design/add.png"
-											rendered="#{review.requestColor}" />
+				
 
 									</h:panelGrid></td>
 							</tr>
@@ -130,28 +122,28 @@
 						<table>
 							<tr>
 								<td><h:panelGrid columns="2"
-										columnClasses="cmColumnWidth, border0">
+										columnClasses="cmColumnWidth">
 										<p:inputText value="#{review.reviewedTypeName}"
 											disabled="true"></p:inputText>
 									</h:panelGrid></td>
 							</tr>
 							<tr>
 								<td><h:panelGrid columns="2"
-										columnClasses="cmColumnWidth, border0">
+										columnClasses="cmColumnWidth">
 										<p:inputText value="#{review.reviewedBrandName}"
 											disabled="true"></p:inputText>
 									</h:panelGrid></td>
 							</tr>
 							<tr>
 								<td><h:panelGrid columns="2"
-										columnClasses="cmColumnWidth, border0">
+										columnClasses="cmColumnWidth">
 										<p:inputText value="#{review.reviewedMeasurementName}"
 											disabled="true"></p:inputText>
 									</h:panelGrid></td>
 							</tr>
 							<tr>
 								<td><h:panelGrid columns="2"
-										columnClasses="cmColumnWidth, border0">
+										columnClasses="cmColumnWidth">
 										<p:inputText value="#{review.reviewedColorName}"
 											disabled="true"></p:inputText>
 									</h:panelGrid></td>
@@ -169,28 +161,28 @@
 						<table>
 							<tr>
 								<td><h:panelGrid columns="2"
-										columnClasses="cmColumnWidth, border0">
+										columnClasses="cmColumnWidth">
 										<p:inputText value="#{review.typeRemark}" disabled="true"
 											size="30"></p:inputText>
 									</h:panelGrid></td>
 							</tr>
 							<tr>
 								<td><h:panelGrid columns="2"
-										columnClasses="cmColumnWidth, border0">
+										columnClasses="cmColumnWidth">
 										<p:inputText value="#{review.brandRemark}" disabled="true"
 											size="30"></p:inputText>
 									</h:panelGrid></td>
 							</tr>
 							<tr>
 								<td><h:panelGrid columns="2"
-										columnClasses="cmColumnWidth, border0">
+										columnClasses="cmColumnWidth">
 										<p:inputText value="#{review.measurementRemark}"
 											disabled="true" size="30"></p:inputText>
 									</h:panelGrid></td>
 							</tr>
 							<tr>
 								<td><h:panelGrid columns="2"
-										columnClasses="cmColumnWidth, border0">
+										columnClasses="cmColumnWidth">
 										<p:inputText value="#{review.colorRemark}" disabled="true"
 											size="30"></p:inputText>
 									</h:panelGrid></td>
@@ -209,7 +201,7 @@
 						<table>
 							<tr>
 								<td><h:panelGrid columns="2"
-										columnClasses="cmColumnWidth, border0">
+										columnClasses="cmColumnWidth">
 										<p:inputText value="#{review.reviewedTypeNameII}"
 											disabled="#{!review.requestType or unspscCodeBackingBean.codeAdmin}">
 											<p:ajax event="blur"
@@ -220,7 +212,7 @@
 							</tr>
 							<tr>
 								<td><h:panelGrid columns="2"
-										columnClasses="cmColumnWidth, border0">
+										columnClasses="cmColumnWidth">
 										<p:inputText value="#{review.reviewedBrandNameII}"
 											disabled="#{!review.requestBrand or unspscCodeBackingBean.codeAdmin}">
 											<p:ajax event="blur"
@@ -230,7 +222,7 @@
 							</tr>
 							<tr>
 								<td><h:panelGrid columns="2"
-										columnClasses="cmColumnWidth, border0">
+										columnClasses="cmColumnWidth">
 										<p:inputText value="#{review.reviewedMeasurementNameII}"
 											disabled="#{!review.requestMeasurement or unspscCodeBackingBean.codeAdmin}">
 											<p:ajax event="blur"
@@ -240,7 +232,7 @@
 							</tr>
 							<tr>
 								<td><h:panelGrid columns="2"
-										columnClasses="cmColumnWidth, border0">
+										columnClasses="cmColumnWidth">
 										<p:inputText value="#{review.reviewedColorNameII}"
 											disabled="#{!review.requestColor or unspscCodeBackingBean.codeAdmin}">
 											<p:ajax event="blur"
@@ -260,7 +252,7 @@
 						<table>
 							<tr>
 								<td><h:panelGrid columns="2"
-										columnClasses="cmColumnWidth, border0">
+										columnClasses="cmColumnWidth">
 										<p:inputText value="#{review.typeRemarkII}" size="30"
 											requiredMessage="Remark is required!"
 											disabled="#{unspscCodeBackingBean.codeAdmin}"
@@ -272,7 +264,7 @@
 							</tr>
 							<tr>
 								<td><h:panelGrid columns="2"
-										columnClasses="cmColumnWidth, border0">
+										columnClasses="cmColumnWidth">
 										<p:inputText value="#{review.brandRemarkII}" size="30"
 											id="brandRemark2" requiredMessage="Remark is required!"
 											required="#{unspscCodeBackingBean.checkRemark(review.reviewedBrandNameII, review.reviewedBrandName)}"
@@ -282,7 +274,7 @@
 							</tr>
 							<tr>
 								<td><h:panelGrid columns="2"
-										columnClasses="cmColumnWidth, border0">
+										columnClasses="cmColumnWidth">
 										<p:inputText value="#{review.measurementRemarkII}" size="30"
 											id="measurementRemark2" requiredMessage="Remark is required!"
 											required="#{unspscCodeBackingBean.checkRemark(review.reviewedMeasurementNameII, review.reviewedMeasurementName)}"
@@ -292,7 +284,7 @@
 							</tr>
 							<tr>
 								<td><h:panelGrid columns="2"
-										columnClasses="cmColumnWidth, border0">
+										columnClasses="cmColumnWidth">
 										<p:inputText value="#{review.colorRemarkII}" size="30"
 											id="colorRemark2" requiredMessage="Remark is required!"
 											required="#{unspscCodeBackingBean.checkRemark(review.reviewedColorNameII, review.reviewedColorName)}"
