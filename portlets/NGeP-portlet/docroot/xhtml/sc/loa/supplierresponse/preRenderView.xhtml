@@ -7,8 +7,6 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 		
 	<ui:define name="contentSection">
-		<p:messages id="preRenderMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
-		
 		<f:event listener="#{lOADetailBackingBean.preRenderSupplierView}" type="preRenderView" />	
 	</ui:define>
 </ui:composition>

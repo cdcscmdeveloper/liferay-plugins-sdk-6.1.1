@@ -12,20 +12,27 @@
 		<tr>
 			<td width="18%">
 				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.contract.signer']}" />
-				<p:outputLabel value="*" styleClass="mandatory" />
+				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
 			<td width="82%">
-				<p:selectOneMenu id="contractSigner" 
-					value="#{lOADetailBackingBean.managedBean.scLoa.contractSigner.userId}"
-					style="width: 280px;margin-bottom: 5px;"
-					required="true"
-					label="#{lbl['lbl.sc.loiloa.loa.contract.signer']}">
-					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
-					<f:selectItems value="#{lOADetailBackingBean.managedBean.contractSignerList}"
-						var="contractUser" itemLabel="#{contractUser.userName}"
-						itemValue="#{contractUser.userId}" />
-				</p:selectOneMenu>
-				<p:message id="contractSignerMsg" for="contractSigner" display="icon" />
+				<c:if test="#{isEditableStatus}">
+					<p:selectOneMenu id="contractSigner" 
+						value="#{lOADetailBackingBean.managedBean.contractSignerUser.userId}"
+						style="width: 280px;margin-bottom: 5px;"
+						required="true"
+						label="#{lbl['lbl.sc.loiloa.loa.contract.signer']}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
+						<f:selectItems value="#{lOADetailBackingBean.managedBean.contractSignerList}"
+							var="contractUser" itemLabel="#{contractUser.userName}"
+							itemValue="#{contractUser.userId}" />
+					</p:selectOneMenu>
+					<p:message id="contractSignerMsg" for="contractSigner" display="icon" />
+				</c:if>
+				<c:if test="#{!isEditableStatus}">
+					<p:inputText size="40"
+						value="#{lOADetailBackingBean.managedBean.scLoa.contractSigner.userName}"
+						disabled="true" />
+				</c:if>
 			</td>
 		</tr>
 		</table>
@@ -41,13 +48,15 @@
 				<p:selectOneRadio id="approvalReq"
 					value="#{lOADetailBackingBean.managedBean.scLoa.approvalReq}"
 					required="true"
-					label="#{lbl['lbl.sc.loiloa.loa.appr.req']}">
+					label="#{lbl['lbl.sc.loiloa.loa.appr.req']}"
+					disabled="#{!isEditableStatus}">
 					<f:selectItems value="#{lOADetailBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
-					<p:ajax event="change" update="approver" />
+					<p:ajax event="change" update="approver" disabled="#{!isEditableStatus}" />
 				</p:selectOneRadio>
 				<p:message id="approvalReqMsg" for="approvalReq" display="icon" />
 			</td>
 		</tr>
+		<c:if test="#{isEditableStatus}">
 		<tr>
 			<td>
 				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loi.approver']}" />
@@ -69,21 +78,21 @@
 				</p:selectOneMenu>
 			</td>
 		</tr>
+		</c:if>
 		</table>
 	</p:panel>
 	
 	<p:panel header="#{lbl['lbl.txt.remarks']}" toggleable="true">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
-			<td width="10%"></td>
-			<td width="90%">
+			<td width="11%"></td>
+			<td width="89%">
 				<p:dataGrid value="#{lOADetailBackingBean.managedBean.scLoa.scLoaRemarks}" var="scLoaRemark" rowIndexVar="rowIndex" columns="1" >
 					<table border="0" cellspacing="0" cellpadding="0" width="100%">
 					<tr>
 						<td rowspan="2" style="vertical-align: top;" align="left">
 							<h:graphicImage value="#{ctBackingBean.userImagePath(scLoaRemark.createdUser.loginId)}" height="30" width="30" />
 						</td>
-						<td width="5"></td>
 						<td>
 							<h:outputText value="#{scLoaRemark.createdUser.userName}"/>,
 							<h:outputText id="remarkDate" value="#{scLoaRemark.createdDate}">
@@ -92,7 +101,6 @@
 						</td>
 					</tr>
 					<tr>
-						<td></td>
 						<td>
 							<p:inputTextarea style="width:350px;" id="remarks" value="#{scLoaRemark.remark}" rendered="#{scLoaRemark.brandNew}"  maxlength="1000"/>
 							<h:outputText value="#{scLoaRemark.remark}" rendered="#{!scLoaRemark.brandNew}" style="display: inline-block; width:350px;word-wrap: break-word;"/>

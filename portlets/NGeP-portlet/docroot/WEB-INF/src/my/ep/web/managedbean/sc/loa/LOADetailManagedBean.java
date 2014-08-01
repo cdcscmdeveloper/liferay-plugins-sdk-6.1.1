@@ -32,31 +32,10 @@ import my.ep.web.managedbean.BaseManagedBean;
 @ManagedBean(name = "lOADetailManagedBean")
 @SessionScoped
 public class LOADetailManagedBean extends BaseManagedBean {
-
 	private static final long serialVersionUID = 1L;
 	
-	private List<SelectItem> comitteeUsers;
-	public String approvalDate;
-
-	private ScQtProposalRanking scQtProposalRanking;
-	
-	public String address;
-	private String status;
-
-
-	private ScPerformanceBond scBondDtl;
-	private List<ScPerformanceBond> scBondDtlList;
-	private List<ScPerformanceBond> selectScBondDtlList;
-	
-	private PmCurrency pmCurrency;
-
-	private List<SelectItem> selectItemList;
-	
-	private double percentageBond;
-	private int bondAmount;
-	private String bondPercentage;
-	
 	private int selectedTabIndex;
+	private Long sourceId;
 	private Long selectedBankId;
 	private boolean agreeWithTermsConditions;
 	private String termsConditions;
@@ -69,6 +48,7 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	private ScLoaWitness loaSupplierWitness;
 	private ScQtDeduction selectedScQtDeduction;
 	private ScLoaReport selectedScLoaReport;
+	private PmUser contractSignerUser;
 	private PmUser approverUser;
 	private ScLoaApproval scLoaApproval;
 	private StreamedContent loaStreamContent;
@@ -84,7 +64,401 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	private List<SmSupplierBank> bankList;
 	private List<PmUser> approverList;
 	
+	// TODO - To be removed
+	private List<SelectItem> comitteeUsers;
+	public String approvalDate;
+	private ScQtProposalRanking scQtProposalRanking;
+	public String address;
+	private String status;
+	private ScPerformanceBond scBondDtl;
+	private List<ScPerformanceBond> scBondDtlList;
+	private List<ScPerformanceBond> selectScBondDtlList;
+	private PmCurrency pmCurrency;
+	private List<SelectItem> selectItemList;	
+	private double percentageBond;
+	private int bondAmount;
+	private String bondPercentage;
+	
 	public LOADetailManagedBean() {
+	}
+
+	/**
+	 * @return the selectedTabIndex
+	 */
+	public int getSelectedTabIndex() {
+		return selectedTabIndex;
+	}
+
+	/**
+	 * @param selectedTabIndex the selectedTabIndex to set
+	 */
+	public void setSelectedTabIndex(int selectedTabIndex) {
+		this.selectedTabIndex = selectedTabIndex;
+	}
+
+	/**
+	 * @return the sourceId
+	 */
+	public Long getSourceId() {
+		return sourceId;
+	}
+
+	/**
+	 * @param sourceId the sourceId to set
+	 */
+	public void setSourceId(Long sourceId) {
+		this.sourceId = sourceId;
+	}
+
+	/**
+	 * @return the selectedBankId
+	 */
+	public Long getSelectedBankId() {
+		return selectedBankId;
+	}
+
+	/**
+	 * @param selectedBankId the selectedBankId to set
+	 */
+	public void setSelectedBankId(Long selectedBankId) {
+		this.selectedBankId = selectedBankId;
+	}
+
+	/**
+	 * @return the agreeWithTermsConditions
+	 */
+	public boolean isAgreeWithTermsConditions() {
+		return agreeWithTermsConditions;
+	}
+
+	/**
+	 * @param agreeWithTermsConditions the agreeWithTermsConditions to set
+	 */
+	public void setAgreeWithTermsConditions(boolean agreeWithTermsConditions) {
+		this.agreeWithTermsConditions = agreeWithTermsConditions;
+	}
+
+	/**
+	 * @return the termsConditions
+	 */
+	public String getTermsConditions() {
+		return termsConditions;
+	}
+
+	/**
+	 * @param termsConditions the termsConditions to set
+	 */
+	public void setTermsConditions(String termsConditions) {
+		this.termsConditions = termsConditions;
+	}
+
+	/**
+	 * @return the selectedSupplierBranchName
+	 */
+	public String getSelectedSupplierBranchName() {
+		return selectedSupplierBranchName;
+	}
+
+	/**
+	 * @param selectedSupplierBranchName the selectedSupplierBranchName to set
+	 */
+	public void setSelectedSupplierBranchName(String selectedSupplierBranchName) {
+		this.selectedSupplierBranchName = selectedSupplierBranchName;
+	}
+
+	/**
+	 * @return the selectedContractAgency
+	 */
+	public String getSelectedContractAgency() {
+		return selectedContractAgency;
+	}
+
+	/**
+	 * @param selectedContractAgency the selectedContractAgency to set
+	 */
+	public void setSelectedContractAgency(String selectedContractAgency) {
+		this.selectedContractAgency = selectedContractAgency;
+	}
+
+	/**
+	 * @return the attachmentDocType
+	 */
+	public String getAttachmentDocType() {
+		return attachmentDocType;
+	}
+
+	/**
+	 * @param attachmentDocType the attachmentDocType to set
+	 */
+	public void setAttachmentDocType(String attachmentDocType) {
+		this.attachmentDocType = attachmentDocType;
+	}
+
+	/**
+	 * @return the scLoa
+	 */
+	public ScLoa getScLoa() {
+		return scLoa;
+	}
+
+	/**
+	 * @param scLoa the scLoa to set
+	 */
+	public void setScLoa(ScLoa scLoa) {
+		this.scLoa = scLoa;
+	}
+
+	/**
+	 * @return the supplierHQPersonnel
+	 */
+	public SmPersonnel getSupplierHQPersonnel() {
+		return supplierHQPersonnel;
+	}
+
+	/**
+	 * @param supplierHQPersonnel the supplierHQPersonnel to set
+	 */
+	public void setSupplierHQPersonnel(SmPersonnel supplierHQPersonnel) {
+		this.supplierHQPersonnel = supplierHQPersonnel;
+	}
+
+	/**
+	 * @return the loaAgencyWitness
+	 */
+	public ScLoaWitness getLoaAgencyWitness() {
+		return loaAgencyWitness;
+	}
+
+	/**
+	 * @param loaAgencyWitness the loaAgencyWitness to set
+	 */
+	public void setLoaAgencyWitness(ScLoaWitness loaAgencyWitness) {
+		this.loaAgencyWitness = loaAgencyWitness;
+	}
+
+	/**
+	 * @return the loaSupplierWitness
+	 */
+	public ScLoaWitness getLoaSupplierWitness() {
+		return loaSupplierWitness;
+	}
+
+	/**
+	 * @param loaSupplierWitness the loaSupplierWitness to set
+	 */
+	public void setLoaSupplierWitness(ScLoaWitness loaSupplierWitness) {
+		this.loaSupplierWitness = loaSupplierWitness;
+	}
+
+	/**
+	 * @return the selectedScQtDeduction
+	 */
+	public ScQtDeduction getSelectedScQtDeduction() {
+		return selectedScQtDeduction;
+	}
+
+	/**
+	 * @param selectedScQtDeduction the selectedScQtDeduction to set
+	 */
+	public void setSelectedScQtDeduction(ScQtDeduction selectedScQtDeduction) {
+		this.selectedScQtDeduction = selectedScQtDeduction;
+	}
+
+	/**
+	 * @return the selectedScLoaReport
+	 */
+	public ScLoaReport getSelectedScLoaReport() {
+		return selectedScLoaReport;
+	}
+
+	/**
+	 * @param selectedScLoaReport the selectedScLoaReport to set
+	 */
+	public void setSelectedScLoaReport(ScLoaReport selectedScLoaReport) {
+		this.selectedScLoaReport = selectedScLoaReport;
+	}
+
+	/**
+	 * @return the contractSignerUser
+	 */
+	public PmUser getContractSignerUser() {
+		return contractSignerUser;
+	}
+
+	/**
+	 * @param contractSignerUser the contractSignerUser to set
+	 */
+	public void setContractSignerUser(PmUser contractSignerUser) {
+		this.contractSignerUser = contractSignerUser;
+	}
+
+	/**
+	 * @return the approverUser
+	 */
+	public PmUser getApproverUser() {
+		return approverUser;
+	}
+
+	/**
+	 * @param approverUser the approverUser to set
+	 */
+	public void setApproverUser(PmUser approverUser) {
+		this.approverUser = approverUser;
+	}
+
+	/**
+	 * @return the scLoaApproval
+	 */
+	public ScLoaApproval getScLoaApproval() {
+		return scLoaApproval;
+	}
+
+	/**
+	 * @param scLoaApproval the scLoaApproval to set
+	 */
+	public void setScLoaApproval(ScLoaApproval scLoaApproval) {
+		this.scLoaApproval = scLoaApproval;
+	}
+
+	/**
+	 * @return the loaStreamContent
+	 */
+	public StreamedContent getLoaStreamContent() {
+		return loaStreamContent;
+	}
+
+	/**
+	 * @param loaStreamContent the loaStreamContent to set
+	 */
+	public void setLoaStreamContent(StreamedContent loaStreamContent) {
+		this.loaStreamContent = loaStreamContent;
+	}
+
+	/**
+	 * @return the selectedScLoaReports
+	 */
+	public List<ScLoaReport> getSelectedScLoaReports() {
+		return selectedScLoaReports;
+	}
+
+	/**
+	 * @param selectedScLoaReports the selectedScLoaReports to set
+	 */
+	public void setSelectedScLoaReports(List<ScLoaReport> selectedScLoaReports) {
+		this.selectedScLoaReports = selectedScLoaReports;
+	}
+
+	/**
+	 * @return the selectedDeductionClauses
+	 */
+	public List<ScQtDeductionClause> getSelectedDeductionClauses() {
+		return selectedDeductionClauses;
+	}
+
+	/**
+	 * @param selectedDeductionClauses the selectedDeductionClauses to set
+	 */
+	public void setSelectedDeductionClauses(
+			List<ScQtDeductionClause> selectedDeductionClauses) {
+		this.selectedDeductionClauses = selectedDeductionClauses;
+	}
+
+	/**
+	 * @return the agencyList
+	 */
+	public List<PmParameterDesc> getAgencyList() {
+		return agencyList;
+	}
+
+	/**
+	 * @param agencyList the agencyList to set
+	 */
+	public void setAgencyList(List<PmParameterDesc> agencyList) {
+		this.agencyList = agencyList;
+	}
+
+	/**
+	 * @return the agencyProfileList
+	 */
+	public List<PmOrgProfile> getAgencyProfileList() {
+		return agencyProfileList;
+	}
+
+	/**
+	 * @param agencyProfileList the agencyProfileList to set
+	 */
+	public void setAgencyProfileList(List<PmOrgProfile> agencyProfileList) {
+		this.agencyProfileList = agencyProfileList;
+	}
+
+	/**
+	 * @return the contractAdminList
+	 */
+	public List<PmUser> getContractAdminList() {
+		return contractAdminList;
+	}
+
+	/**
+	 * @param contractAdminList the contractAdminList to set
+	 */
+	public void setContractAdminList(List<PmUser> contractAdminList) {
+		this.contractAdminList = contractAdminList;
+	}
+
+	/**
+	 * @return the contractSignerList
+	 */
+	public List<PmUser> getContractSignerList() {
+		return contractSignerList;
+	}
+
+	/**
+	 * @param contractSignerList the contractSignerList to set
+	 */
+	public void setContractSignerList(List<PmUser> contractSignerList) {
+		this.contractSignerList = contractSignerList;
+	}
+
+	/**
+	 * @return the branchsList
+	 */
+	public List<SmSupplierBranch> getBranchsList() {
+		return branchsList;
+	}
+
+	/**
+	 * @param branchsList the branchsList to set
+	 */
+	public void setBranchsList(List<SmSupplierBranch> branchsList) {
+		this.branchsList = branchsList;
+	}
+
+	/**
+	 * @return the bankList
+	 */
+	public List<SmSupplierBank> getBankList() {
+		return bankList;
+	}
+
+	/**
+	 * @param bankList the bankList to set
+	 */
+	public void setBankList(List<SmSupplierBank> bankList) {
+		this.bankList = bankList;
+	}
+
+	/**
+	 * @return the approverList
+	 */
+	public List<PmUser> getApproverList() {
+		return approverList;
+	}
+
+	/**
+	 * @param approverList the approverList to set
+	 */
+	public void setApproverList(List<PmUser> approverList) {
+		this.approverList = approverList;
 	}
 
 	/**
@@ -127,34 +501,6 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	 */
 	public void setScQtProposalRanking(ScQtProposalRanking scQtProposalRanking) {
 		this.scQtProposalRanking = scQtProposalRanking;
-	}
-
-	/**
-	 * @return the branchsList
-	 */
-	public List<SmSupplierBranch> getBranchsList() {
-		return branchsList;
-	}
-
-	/**
-	 * @param branchsList the branchsList to set
-	 */
-	public void setBranchsList(List<SmSupplierBranch> branchsList) {
-		this.branchsList = branchsList;
-	}
-
-	/**
-	 * @return the bankList
-	 */
-	public List<SmSupplierBank> getBankList() {
-		return bankList;
-	}
-
-	/**
-	 * @param bankList the bankList to set
-	 */
-	public void setBankList(List<SmSupplierBank> bankList) {
-		this.bankList = bankList;
 	}
 
 	/**
@@ -256,105 +602,6 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the selectedScQtDeduction
-	 */
-	public ScQtDeduction getSelectedScQtDeduction() {
-		return selectedScQtDeduction;
-	}
-
-	/**
-	 * @param selectedScQtDeduction the selectedScQtDeduction to set
-	 */
-	public void setSelectedScQtDeduction(ScQtDeduction selectedScQtDeduction) {
-		this.selectedScQtDeduction = selectedScQtDeduction;
-	}
-
-	/**
-	 * @return the approverUser
-	 */
-	public PmUser getApproverUser() {
-		return approverUser;
-	}
-
-	/**
-	 * @param approverUser the approverUser to set
-	 */
-	public void setApproverUser(PmUser approverUser) {
-		this.approverUser = approverUser;
-	}
-
-	/**
-	 * @return the scLoaApproval
-	 */
-	public ScLoaApproval getScLoaApproval() {
-		return scLoaApproval;
-	}
-
-	/**
-	 * @param scLoaApproval the scLoaApproval to set
-	 */
-	public void setScLoaApproval(ScLoaApproval scLoaApproval) {
-		this.scLoaApproval = scLoaApproval;
-	}
-
-	/**
-	 * @return the loaStreamContent
-	 */
-	public StreamedContent getLoaStreamContent() {
-		return loaStreamContent;
-	}
-
-	/**
-	 * @param loaStreamContent the loaStreamContent to set
-	 */
-	public void setLoaStreamContent(StreamedContent loaStreamContent) {
-		this.loaStreamContent = loaStreamContent;
-	}
-
-	/**
-	 * @return the selectedScLoaReport
-	 */
-	public ScLoaReport getSelectedScLoaReport() {
-		return selectedScLoaReport;
-	}
-
-	/**
-	 * @param selectedScLoaReport the selectedScLoaReport to set
-	 */
-	public void setSelectedScLoaReport(ScLoaReport selectedScLoaReport) {
-		this.selectedScLoaReport = selectedScLoaReport;
-	}
-
-	/**
-	 * @return the selectedScLoaReports
-	 */
-	public List<ScLoaReport> getSelectedScLoaReports() {
-		return selectedScLoaReports;
-	}
-
-	/**
-	 * @param selectedScLoaReports the selectedScLoaReports to set
-	 */
-	public void setSelectedScLoaReports(List<ScLoaReport> selectedScLoaReports) {
-		this.selectedScLoaReports = selectedScLoaReports;
-	}
-
-	/**
-	 * @return the selectedDeductionClauses
-	 */
-	public List<ScQtDeductionClause> getSelectedDeductionClauses() {
-		return selectedDeductionClauses;
-	}
-
-	/**
-	 * @param selectedDeductionClauses the selectedDeductionClauses to set
-	 */
-	public void setSelectedDeductionClauses(
-			List<ScQtDeductionClause> selectedDeductionClauses) {
-		this.selectedDeductionClauses = selectedDeductionClauses;
-	}
-
-	/**
 	 * @return the percentageBond
 	 */
 	public double getPercentageBond() {
@@ -394,230 +641,6 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	 */
 	public void setBondPercentage(String bondPercentage) {
 		this.bondPercentage = bondPercentage;
-	}
-
-	/**
-	 * @return the approverList
-	 */
-	public List<PmUser> getApproverList() {
-		return approverList;
-	}
-
-	/**
-	 * @param approverList the approverList to set
-	 */
-	public void setApproverList(List<PmUser> approverList) {
-		this.approverList = approverList;
-	}
-
-	/**
-	 * @return the selectedTabIndex
-	 */
-	public int getSelectedTabIndex() {
-		return selectedTabIndex;
-	}
-
-	/**
-	 * @param selectedTabIndex the selectedTabIndex to set
-	 */
-	public void setSelectedTabIndex(int selectedTabIndex) {
-		this.selectedTabIndex = selectedTabIndex;
-	}
-
-	/**
-	 * @return the agreeWithTermsConditions
-	 */
-	public boolean isAgreeWithTermsConditions() {
-		return agreeWithTermsConditions;
-	}
-
-	/**
-	 * @param agreeWithTermsConditions the agreeWithTermsConditions to set
-	 */
-	public void setAgreeWithTermsConditions(boolean agreeWithTermsConditions) {
-		this.agreeWithTermsConditions = agreeWithTermsConditions;
-	}
-
-	/**
-	 * @return the termsConditions
-	 */
-	public String getTermsConditions() {
-		return termsConditions;
-	}
-
-	/**
-	 * @param termsConditions the termsConditions to set
-	 */
-	public void setTermsConditions(String termsConditions) {
-		this.termsConditions = termsConditions;
-	}
-
-	/**
-	 * @return the attachmentDocType
-	 */
-	public String getAttachmentDocType() {
-		return attachmentDocType;
-	}
-
-	/**
-	 * @param attachmentDocType the attachmentDocType to set
-	 */
-	public void setAttachmentDocType(String attachmentDocType) {
-		this.attachmentDocType = attachmentDocType;
-	}
-
-	/**
-	 * @return the selectedBankId
-	 */
-	public Long getSelectedBankId() {
-		return selectedBankId;
-	}
-
-	/**
-	 * @param selectedBankId the selectedBankId to set
-	 */
-	public void setSelectedBankId(Long selectedBankId) {
-		this.selectedBankId = selectedBankId;
-	}
-
-	/**
-	 * @return the selectedSupplierBranchName
-	 */
-	public String getSelectedSupplierBranchName() {
-		return selectedSupplierBranchName;
-	}
-
-	/**
-	 * @param selectedSupplierBranchName the selectedSupplierBranchName to set
-	 */
-	public void setSelectedSupplierBranchName(String selectedSupplierBranchName) {
-		this.selectedSupplierBranchName = selectedSupplierBranchName;
-	}
-
-	/**
-	 * @return the selectedContractAgency
-	 */
-	public String getSelectedContractAgency() {
-		return selectedContractAgency;
-	}
-
-	/**
-	 * @param selectedContractAgency the selectedContractAgency to set
-	 */
-	public void setSelectedContractAgency(String selectedContractAgency) {
-		this.selectedContractAgency = selectedContractAgency;
-	}
-
-	/**
-	 * @return the scLoa
-	 */
-	public ScLoa getScLoa() {
-		return scLoa;
-	}
-
-	/**
-	 * @param scLoa the scLoa to set
-	 */
-	public void setScLoa(ScLoa scLoa) {
-		this.scLoa = scLoa;
-	}
-
-	/**
-	 * @return the supplierHQPersonnel
-	 */
-	public SmPersonnel getSupplierHQPersonnel() {
-		return supplierHQPersonnel;
-	}
-
-	/**
-	 * @param supplierHQPersonnel the supplierHQPersonnel to set
-	 */
-	public void setSupplierHQPersonnel(SmPersonnel supplierHQPersonnel) {
-		this.supplierHQPersonnel = supplierHQPersonnel;
-	}
-
-	/**
-	 * @return the loaAgencyWitness
-	 */
-	public ScLoaWitness getLoaAgencyWitness() {
-		return loaAgencyWitness;
-	}
-
-	/**
-	 * @param loaAgencyWitness the loaAgencyWitness to set
-	 */
-	public void setLoaAgencyWitness(ScLoaWitness loaAgencyWitness) {
-		this.loaAgencyWitness = loaAgencyWitness;
-	}
-
-	/**
-	 * @return the loaSupplierWitness
-	 */
-	public ScLoaWitness getLoaSupplierWitness() {
-		return loaSupplierWitness;
-	}
-
-	/**
-	 * @param loaSupplierWitness the loaSupplierWitness to set
-	 */
-	public void setLoaSupplierWitness(ScLoaWitness loaSupplierWitness) {
-		this.loaSupplierWitness = loaSupplierWitness;
-	}
-
-	/**
-	 * @return the agencyList
-	 */
-	public List<PmParameterDesc> getAgencyList() {
-		return agencyList;
-	}
-
-	/**
-	 * @param agencyList the agencyList to set
-	 */
-	public void setAgencyList(List<PmParameterDesc> agencyList) {
-		this.agencyList = agencyList;
-	}
-
-	/**
-	 * @return the agencyProfileList
-	 */
-	public List<PmOrgProfile> getAgencyProfileList() {
-		return agencyProfileList;
-	}
-
-	/**
-	 * @param agencyProfileList the agencyProfileList to set
-	 */
-	public void setAgencyProfileList(List<PmOrgProfile> agencyProfileList) {
-		this.agencyProfileList = agencyProfileList;
-	}
-
-	/**
-	 * @return the contractAdminList
-	 */
-	public List<PmUser> getContractAdminList() {
-		return contractAdminList;
-	}
-
-	/**
-	 * @param contractAdminList the contractAdminList to set
-	 */
-	public void setContractAdminList(List<PmUser> contractAdminList) {
-		this.contractAdminList = contractAdminList;
-	}
-
-	/**
-	 * @return the contractSignerList
-	 */
-	public List<PmUser> getContractSignerList() {
-		return contractSignerList;
-	}
-
-	/**
-	 * @param contractSignerList the contractSignerList to set
-	 */
-	public void setContractSignerList(List<PmUser> contractSignerList) {
-		this.contractSignerList = contractSignerList;
 	}
 
 }

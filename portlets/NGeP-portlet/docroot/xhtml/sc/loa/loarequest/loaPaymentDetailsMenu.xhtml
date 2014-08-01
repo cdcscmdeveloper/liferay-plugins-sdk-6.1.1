@@ -5,33 +5,33 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	
-	<ui:param name="isSupplierAckStatus" value="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT}" />
 
 	<p:panel header="#{lbl['lbl.sc.loiloa.payment.details']}" toggleable="true">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
 			<td width="18%">
 				<h:outputLabel value="#{lbl['lbl.sc.loiloa.loa.acc.no']}" />
-				<p:outputLabel value="*" styleClass="mandatory" rendered1="#{isSupplierAckStatus}" />
+				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isSupplierAckStatus}" />
 			</td>
 			<td width="82%">
-				<p:selectOneMenu
-					value="#{lOADetailBackingBean.managedBean.selectedBankId}"
-					style="width: 280px;margin-bottom: 5px;"
-					rendered="#{isSupplierAckStatus}"
-					required="true">
-					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-					<f:selectItems
-						value="#{lOADetailBackingBean.managedBean.bankList}"
-						var="smSupplierBank" 
-						itemValue="#{smSupplierBank.supplierBankId}" itemLabel="#{smSupplierBank.accountNo}" />
-					<p:ajax event="change"
-						listener="#{lOADetailBackingBean.handleBankDetailsChanged}"
-						partialSubmit="true" process="@this" update="bankName, bankBranch, bankAddress" />
-				</p:selectOneMenu>
-				<p:inputText value="#{lOADetailBackingBean.managedBean.scLoa.bankAccNo}" disabled="true" size="50"
-					rendered="#{!isSupplierAckStatus}" />
+				<c:if test="#{isSupplierAckStatus}">
+					<p:selectOneMenu
+						value="#{lOADetailBackingBean.managedBean.selectedBankId}"
+						style="width: 280px;margin-bottom: 5px;"
+						required="true">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+						<f:selectItems
+							value="#{lOADetailBackingBean.managedBean.bankList}"
+							var="smSupplierBank" 
+							itemValue="#{smSupplierBank.supplierBankId}" itemLabel="#{smSupplierBank.accountNo}" />
+						<p:ajax event="change"
+							listener="#{lOADetailBackingBean.handleBankDetailsChanged}"
+							partialSubmit="true" process="@this" update="bankName, bankBranch, bankAddress" />
+					</p:selectOneMenu>
+				</c:if>
+				<c:if test="#{!isSupplierAckStatus}">
+					<p:inputText value="#{lOADetailBackingBean.managedBean.scLoa.bankAccNo}" disabled="true" size="50" />
+				</c:if>
 			</td>
 		</tr>
 		<tr>

@@ -14,7 +14,7 @@
 			
 			<ac:paginator for="contentsTbl" />
 			
-			<p:column selectionMode="multiple" style="width:2%" disabledSelection="#{!empty scLoaReport.pmDocument}" />
+			<p:column selectionMode="multiple" style="width:2%" disabledSelection="#{!empty scLoaReport.pmDocument}" rendered="#{isEditableStatus}" />
 			
 			<p:column headerText="#{lbl['lbl.sc.content']}">
 				<h:inputText style="width:96%" value="#{scLoaReport.title}" rendered="#{empty scLoaReport.pmDocument}" />
@@ -25,7 +25,7 @@
 				#{lOADetailBackingBean.getParameterDesc(scLoaReport.definationType)}
 			</p:column>
 
-			<p:column style="width:15%;" headerText="#{lbl['lbl.sc.upload']}">
+			<p:column style="width:15%;" headerText="#{lbl['lbl.sc.upload']}" rendered="#{isEditableStatus}">
 				<ui:fragment rendered="#{scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload}">
 					<h:outputText value="#{scLoaReport.scLoaReportAttachment.fileName}" />
 					<p:commandButton oncomplete="attachmentPopupDlg.show();"
@@ -49,18 +49,20 @@
 			<p:commandButton icon="ui-icon-download" value="#{lbl['lbl.btn.download.all']}"
 				ajax="false"	
 				action="#{lOADetailBackingBean.downloadAllReports}" />
-				
-			<p:commandButton value="#{lbl['lbl.btn.add']}"
-				process="@this, contentsTbl" partialSubmit="true"
-				action="#{lOADetailBackingBean.addLoaContentAction}"
-				oncomplete="contentsTblWidget.paginator.endLink.click();"
-				update="contentsTbl" icon="ui-icon-add" />
-				
-			<p:commandButton value="#{lbl['lbl.btn.delete']}"
-				process="@this, contentsTbl" partialSubmit="true"
-				icon="ui-icon-delete"
-				action="#{lOADetailBackingBean.deleteRowsAction(lOADetailBackingBean.managedBean.scLoa.scLoaReports, lOADetailBackingBean.managedBean.selectedScLoaReports)}"
-				update="contentsTbl" />
+			
+			<c:if test="#{isEditableStatus}">
+				<p:commandButton value="#{lbl['lbl.btn.add']}"
+					process="@this, contentsTbl" partialSubmit="true"
+					action="#{lOADetailBackingBean.addLoaContentAction}"
+					oncomplete="contentsTblWidget.paginator.endLink.click();"
+					update="contentsTbl" icon="ui-icon-add" />
+					
+				<p:commandButton value="#{lbl['lbl.btn.delete']}"
+					process="@this, contentsTbl" partialSubmit="true"
+					icon="ui-icon-delete"
+					action="#{lOADetailBackingBean.deleteRowsAction(lOADetailBackingBean.managedBean.scLoa.scLoaReports, lOADetailBackingBean.managedBean.selectedScLoaReports)}"
+					update="contentsTbl" />
+			</c:if>
 		</div>
 	</p:panel>
 	
@@ -71,11 +73,13 @@
 				<h:outputLabel value="#{lbl['lbl.txt.attachment']}" />
 			</td>
 			<td class="TableFieldRight">
-				<p:commandButton oncomplete="attachmentPopupDlg.show();return false;" icon="iconAttachment"
-					partialSubmit="true" process="@this" update="@([id$=attachmentPopup])" 
-					value="#{lbl['lbl.txt.attach.file']}">
-					<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.attachmentDocType}" value="#{ParameterConst.doctypeLetterOfAward}" />
-				</p:commandButton>
+				<c:if test="#{isEditableStatus}">
+					<p:commandButton oncomplete="attachmentPopupDlg.show();return false;" icon="iconAttachment"
+						partialSubmit="true" process="@this" update="@([id$=attachmentPopup])" 
+						value="#{lbl['lbl.txt.attach.file']}">
+						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.attachmentDocType}" value="#{ParameterConst.doctypeLetterOfAward}" />
+					</p:commandButton>
+				</c:if>
 			</td>
 		</tr>
 		<tr>
@@ -107,7 +111,7 @@
 							<p:spacer width="5" />
 							<p:commandLink
 								immediate="true"
-								rendered="#{isPendingSubmissionStatus and !empty lOADetailBackingBean.managedBean.scLoa.scLoaAttachment}"
+								rendered="#{isEditableStatus and !empty lOADetailBackingBean.managedBean.scLoa.scLoaAttachment}"
 								update="attachFilesPG">
 								<h:graphicImage library="ep/images/design"
 									name="icon_trash.png" styleClass="tasklist_title1" />

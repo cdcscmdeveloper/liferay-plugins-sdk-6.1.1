@@ -153,15 +153,19 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 	public void preRenderView() {
 		debugLogger("preRenderView");
 		
-		//SCQuotationTenderDataType scDataType = getBpmTaskDetails(SCQuotationTenderDataType.class);
-		
-		ScLoa scLoa = new ScLoa();
-		scLoa.setLoaId(214L);	//251
-		editLOAAction(scLoa);
-		
-		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, QTConstants.LOA_PAGE);
+		try {
+			//SCQuotationTenderDataType scDataType = getBpmTaskDetails(SCQuotationTenderDataType.class);
+			
+			ScLoa scLoa = new ScLoa();
+			scLoa.setLoaId(214L);	//251
+			editLOAAction(scLoa);
+			
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler()
+					.handleNavigation(fc, null, QTConstants.LOA_PAGE);	
+		} catch (Exception e) {
+			handleException(e);
+		}
 	}
 	
 	public void preRenderSupplierView() {
@@ -176,7 +180,7 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 			//SCQuotationTenderDataType scDataType = getBpmTaskDetails(SCQuotationTenderDataType.class);
 			
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
-			reqDTO.setLoaId(214L);
+			reqDTO.setLoaId(299L);
 
 			AwardSupplierResDTO resDTO = qtAwardSO.retrieveSupplierLOADtl(reqDTO);
 			
@@ -208,10 +212,14 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 			}
 			getManagedBean().setLoaSupplierWitness(loaSupplierWitness);
 			
+			generateDeclarationFromVelocity(scLoa);
+			
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, QTConstants.SUPPLIER_LOA_PAGE);
 			
+		} catch (Exception e) {
+			handleException(e);
 		} finally {
 			qtAwardSO = null;
 		}
@@ -221,7 +229,6 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 		ScLoa scLoa = resDTO.getScLoa();
 		
 		getManagedBean().setScLoa(scLoa);
-		
 
 		// Supplier Branch
 		getManagedBean().setSelectedSupplierBranchName(scLoa.getSupplierBranch());
@@ -250,6 +257,10 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 		getManagedBean().setLoaAgencyWitness(loaAgencyWitness);
 		getManagedBean().setLoaSupplierWitness(loaSupplierWitness);
 		
+		// Issue & Acknowledge Date  
+		scLoa.setIssueDate(DateUtils.getCurrentDateWithoutTime());
+		scLoa.setAckDueDate(DateUtils.addDays(scLoa.getIssueDate(), 14));
+		
 		//getManagedBean().getScLoa().setContractPTJProfile(orgProfile);
 
 		/*getManagedBean().getScLoa().setSmSupplier(
@@ -275,6 +286,12 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 				new BigDecimal(1000000));*/
 		//getManagedBean().getScLoa().setMtoDuration(14);
 		
+		// Contract Signer
+		PmUser contractSignerUser = scLoa.getContractSigner();
+		if (contractSignerUser == null) {
+			contractSignerUser = new PmUser();
+		}
+		getManagedBean().setContractSignerUser(contractSignerUser);
 		getManagedBean().setContractSignerList(resDTO.getContractSignerList());
 		
 		// Approver
@@ -563,7 +580,7 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
     			new FileOutputStream(attachment.getFilePath()));
 	}
 	
-public void generateAgreementLetterPdfFromVelocity(ScAttachment attachment, ScLoa scLoa) throws Exception {
+	public void generateAgreementLetterPdfFromVelocity(ScAttachment attachment, ScLoa scLoa) throws Exception {
 		
 		populateAttachmentDetails(attachment);
 		attachment.setFileName("agreement_letter.pdf");
@@ -671,6 +688,26 @@ public void generateAgreementLetterPdfFromVelocity(ScAttachment attachment, ScLo
     			"/sc/loa-agreement-letter.vm", 
     			context, 
     			new FileOutputStream(attachment.getFilePath()));
+	}
+	
+	private void generateDeclarationFromVelocity(ScLoa scLoa) throws Exception {	
+		PmUser pmUser = new FacesScopes().getUserSessionBean();
+		ScLoiLoa scLoiLoa = scLoa.getScLoiLoa();
+		PmOrgProfile pmOrgProfile = scLoiLoa.getPmOrgProfile();
+    	VelocityContext context = new VelocityContext();
+    	
+    	context.put("title", scLoiLoa.getTitle());
+    	context.put("userName", pmUser.getUserName());
+    	context.put("icNo", pmUser.getIdentificationNo());
+    	context.put("supplierName", scLoiLoa.getSupplierName());
+    	context.put("mofNo", "");	// TODO
+    	context.put("agency", pmOrgProfile.getOrgName());
+    	
+    	String termsConditions = DocumentGenerator.getInstance().getHtmlFromVelocity(
+    			"/sc/loa-declaration.vm", 
+    			context);
+    	
+    	getManagedBean().setTermsConditions(termsConditions);
 	}
 	
 	public StreamedContent getLoaStreamContent() throws IOException {
@@ -954,9 +991,11 @@ public void generateAgreementLetterPdfFromVelocity(ScAttachment attachment, ScLo
 			AwardSupplierResDTO resDTO = qtAwardSO.saveLOADtl(reqDTO);
 
 			if (resDTO.isSuccessful()) {
+				scLoa = resDTO.getScLoa();
+				
 				renewSesionObject();
 				
-				editLOAAction(resDTO.getScLoa());
+				editLOAAction(scLoa);
 				
 				FacesContext.getCurrentInstance().addMessage(
 						null,
@@ -993,13 +1032,17 @@ public void generateAgreementLetterPdfFromVelocity(ScAttachment attachment, ScLo
 			
 			ScLoa scLoa = this.getManagedBean().getScLoa();
 			
+			validateLOADetails(scLoa);
+			
 			parseLOADetails(scLoa);
 			
-			scLoa.setIssueDate(new Date());
+			scLoa.setIssueDate(DateUtils.getCurrentDateWithoutTime());
 			scLoa.setAckDueDate(DateUtils.addDays(scLoa.getIssueDate(), 14));
 			
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setScLoa(scLoa);
+			reqDTO.setSubmit(true);
+			reqDTO.setSourceId(getManagedBean().getSourceId());
 
 			AwardSupplierResDTO resDTO = qtAwardSO.saveLOADtl(reqDTO);
 			
@@ -1043,6 +1086,8 @@ public void generateAgreementLetterPdfFromVelocity(ScAttachment attachment, ScLo
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
 			
 			ScLoa scLoa = this.getManagedBean().getScLoa();
+			
+			validateLOADetails(scLoa);
 			
 			parseLOADetails(scLoa);
 			
@@ -1089,6 +1134,16 @@ public void generateAgreementLetterPdfFromVelocity(ScAttachment attachment, ScLo
 		return null;	
 	}
 	
+	private void validateLOADetails(ScLoa scLoa) {
+		Long statusId = scLoa.getPmStatus().getStatusId().longValue();
+		
+		if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId)) {
+			if (!getManagedBean().isAgreeWithTermsConditions()) {
+				throw new EpException(MessageConst.ERROR_750002);
+			}	
+		}
+	}
+	
 	private void parseLOADetails(ScLoa scLoa) {
 		if (scLoa.isBrandNew()) {
 			scLoa.setIssueDate(new Date());
@@ -1124,6 +1179,11 @@ public void generateAgreementLetterPdfFromVelocity(ScAttachment attachment, ScLo
 		
 		if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId)) {
 			scLoa.setAckDate(new Date());
+		}
+		
+		PmUser contractSignerUser = getManagedBean().getContractSignerUser();
+		if (contractSignerUser != null && contractSignerUser.getUserId() != null) {
+			scLoa.setContractSigner(contractSignerUser);	
 		}
 		
 		scLoa.setScLoaRemarks(finalizeRemarks(scLoa.getScLoaRemarks()));
@@ -1185,6 +1245,7 @@ public void generateAgreementLetterPdfFromVelocity(ScAttachment attachment, ScLo
 			getManagedBean().setAgencyList(agencyList);
 		}
 		
+		contractAgencyChanged();
 	}
 
 	public void contractAgencyChanged() {

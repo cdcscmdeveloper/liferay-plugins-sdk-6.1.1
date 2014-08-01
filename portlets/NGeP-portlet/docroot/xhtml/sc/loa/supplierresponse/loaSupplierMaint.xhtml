@@ -43,9 +43,9 @@
 						<ui:include src="loaLetterOfAcceptanceView.xhtml" />
 					</c:if>
 					
-					<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == 2}">
+					<h:panelGroup rendered="#{lOADetailBackingBean.managedBean.selectedTabIndex == 2}">
 						<ui:include src="loaDeclarationMenu.xhtml" />
-					</c:if>
+					</h:panelGroup>
 				</h:panelGroup>
 			</td>
 		</tr>

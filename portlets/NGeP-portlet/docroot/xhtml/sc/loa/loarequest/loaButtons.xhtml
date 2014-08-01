@@ -24,7 +24,7 @@
 					<p:commandButton value="#{lbl[buttonLabel]}" update="@form" 
 						styleClass="ui-button"
 						icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
-						action="#{qTDetailBB.updateBpmTask(bpmAction)}" />
+						action="#{lOADetailBackingBean.updateBpmTaskAction(bpmAction)}" />
 				</ui:repeat>
 			</c:when>
 		</c:choose>

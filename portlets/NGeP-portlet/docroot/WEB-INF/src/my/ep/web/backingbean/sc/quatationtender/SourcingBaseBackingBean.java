@@ -587,26 +587,30 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	}
 	
 	protected <ATTACHMENT extends ScAttachment> StreamedContent getAttachmentStreamContent(ATTACHMENT scAttachment, String contentType) throws IOException {
-		File file = new File(scAttachment.getFilePath());
-		ByteArrayOutputStream tmpOut = new ByteArrayOutputStream();
-        FileInputStream in = new FileInputStream(file);
-        byte[] buf = new byte[512];
-        int len;
-        while (true) {
-            len = in.read(buf);
-            if (len == -1) {
-                break;
-            }
-            tmpOut.write(buf, 0, len);
-        }
-        in.close();
-        tmpOut.close();
-        ByteBuffer bb = ByteBuffer.wrap(tmpOut.toByteArray(), 0,
-                                        tmpOut.size());
+		if (scAttachment != null) {
+			File file = new File(scAttachment.getFilePath());
+			ByteArrayOutputStream tmpOut = new ByteArrayOutputStream();
+	        FileInputStream in = new FileInputStream(file);
+	        byte[] buf = new byte[512];
+	        int len;
+	        while (true) {
+	            len = in.read(buf);
+	            if (len == -1) {
+	                break;
+	            }
+	            tmpOut.write(buf, 0, len);
+	        }
+	        in.close();
+	        tmpOut.close();
+	        ByteBuffer bb = ByteBuffer.wrap(tmpOut.toByteArray(), 0,
+	                                        tmpOut.size());
 
-        ByteArrayInputStream stream = new ByteArrayInputStream(bb.array());
-		
-		return new DefaultStreamedContent(stream, contentType);
+	        ByteArrayInputStream stream = new ByteArrayInputStream(bb.array());
+			
+			return new DefaultStreamedContent(stream, contentType);	
+		} else {
+			return null;
+		}
 	}
 	
 	protected List<PmParameterDesc> retrieveParametersBySearchBean(String parameterType,ISearchBean<PmParameterDesc> searchBean){
