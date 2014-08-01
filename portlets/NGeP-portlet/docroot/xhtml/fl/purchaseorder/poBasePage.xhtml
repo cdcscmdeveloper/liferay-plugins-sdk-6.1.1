@@ -25,6 +25,8 @@
 				<td><p:commandButton value="Back" immediate="true"
 						icon="ui-icon-back" oncomplete="window.history.back();"
 						rendered="#{flOrderBB.managedBean.taskId==null}" /></td>
+				<c:if
+						test='#{flOrderBB.managedBean.outComes ne "null"}'>		
 				<td colspan="4" style="text-align: right"><ui:repeat
 						var="bpmAction" value="#{flOrderBB.managedBean.outComes}">
 						<p:commandButton value="#{bpmAction}" ajax='false'
@@ -32,40 +34,17 @@
 							icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
 							action="#{flOrderBB.fulfillmentOrderAction(bpmAction)}"
 							process="@this" />
-					</ui:repeat> <c:if
+					</ui:repeat> </td></c:if><c:if
 						test='#{flOrderBB.managedBean.buttonVal eq "Stop Fulfilment"}'>
+						<td colspan="4" style="text-align: right">
 						<p:commandButton value="STOP FULFILMENT" icon="ui-icon-terminate"
 							action="#{flOrderBB.fulfillmentOrderAction('STOP FULFILMENT')}">
 							<f:param name="actionName" value="STOP" />
 						</p:commandButton>
-					</c:if></td>
+					</td></c:if>
 			</tr>
 		</table>
-		<table style="width: 100%;">
-			<tr>
-				<c:if test='#{flOrderBB.managedBean.buttonVal eq "Update"}'>
-					<td colspan="4" style="text-align: right"><p:commandButton
-							value="UPDATE"
-							action="#{flOrderBB.fulfillmentOrderAction('UPDATE')}">
-							<f:param name="actionName" value="UPDATE" />
-						</p:commandButton></td>
-				</c:if>
-				<c:if test='#{flOrderBB.managedBean.buttonVal eq "Cancel"}'>
-					<td colspan="4" style="text-align: right"><p:commandButton
-							value="CANCEL"
-							action="#{flOrderBB.fulfillmentOrderAction('CANCEL')}">
-							<f:param name="actionName" value="CANCEL" />
-						</p:commandButton></td>
-				</c:if>
-				<c:if test='#{flOrderBB.managedBean.buttonVal eq "Submit"}'>
-					<td colspan="4" style="text-align: right"><p:commandButton
-							value="SUBMIT"
-							action="#{flOrderBB.fulfillmentOrderAction('SUBMIT')}">
-							<f:param name="actionName" value="SUBMIT" />
-						</p:commandButton></td>
-				</c:if>
-			</tr>
-		</table>
+		
 		<ui:include src="poReviewHeaderPage.xhtml" />
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
