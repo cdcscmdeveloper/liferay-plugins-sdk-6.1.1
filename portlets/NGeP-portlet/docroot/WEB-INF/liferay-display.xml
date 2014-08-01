@@ -45,7 +45,8 @@
 			<portlet id="pmSalutation"></portlet>	
 			<portlet id="pmLocation"></portlet>	
 			<portlet id="pmFinancialOrg"></portlet>	
-			<portlet id="pmOrganisation"></portlet>												
+			<portlet id="pmOrganisation"></portlet>	
+			<portlet id="pmEducationField"></portlet>														
 		</category>
 		<!-- Profile Management - END -->		
 
