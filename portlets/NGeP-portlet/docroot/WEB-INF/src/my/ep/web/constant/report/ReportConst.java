@@ -228,7 +228,7 @@ public class ReportConst {
 	public static final String SUMM_RPT_PAN_ITM_VAL = "SummaryReport-PanelItem";
 	//FL Module reports end
 	public static final String EMPTY_VAL = "";
-	public static final String AMP_QUOTE_ID_EQ = "&qt_id=";
+	public static final String AMP_QUOTE_ID_EQ = "&qtid=";
 	public static final String AMP_ITM_NAME_EQ = "&itemname=";
 	public static final String AMP_ITM_TYPE_EQ = "&itemtype=";
 	public static final String AMP_ITM_STATUS_EQ = "&itemstatus=";
