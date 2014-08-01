@@ -67,7 +67,7 @@
 	    </h:panelGrid>
 		<h:panelGrid  style="width:170px;">
 		   <h:panelGrid columns="3">
-			 <p:selectBooleanCheckbox value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.concession}" disabled="false">
+			 <p:selectBooleanCheckbox value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.concession}">
 			    <p:ajax event="change" update=":form:justificationPanel,:form:exemptId" listener="#{contractDetailsBackingBean.chkJustificationAction}" process="@this"/> 
 			 </p:selectBooleanCheckbox>
 			 <p:spacer width="2" />
@@ -112,7 +112,7 @@
 	       contractDetailsBackingBean.managedBean.contractVer.ctContractValue.concession}">
          <h:panelGroup>
 		    <div style="height:90px; width:157px; vertical-align:top;">
-		       <h:panelGrid columns="2" style="float:right;">
+		       <h:panelGrid columns="2" style="float:right;margin-right:-11px;">
 		           <p:outputLabel value="*" styleClass="mandatory" />
 			   	   <p:outputLabel id="justificationLbls" value="#{lbl['lbl.ct.justification']}" />
 			   </h:panelGrid>
@@ -120,7 +120,7 @@
 	     </h:panelGroup>
 	  <h:panelGrid columns="2">
 	    <p:inputTextarea id="justificationLbl" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.justification}"
-		  rows="4" style="width:570px;" disabled="false" maxlength="200" validator="#{webappBean.checkSpaces}" label="#{lbl['lbl.ct.justification']}"
+		  rows="4" style="width:570px;" maxlength="200" validator="#{webappBean.checkSpaces}" label="#{lbl['lbl.ct.justification']}"
 		  required="true" autoResize="false">
 		   <p:ajax oncomplete="$('.ui-state-error').removeClass('ui-state-error');" update="justificationPanel"/></p:inputTextarea>
 		   <p:message for="justificationLbl" display="icon"/>	

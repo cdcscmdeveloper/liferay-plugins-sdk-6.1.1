@@ -5,32 +5,20 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<p:panel id="cc" header="#{lbl['lbl.ct.panel.name']}" toggleable="true" collapsed="false" toggleSpeed="500">
-	   <h:panelGrid columns="5" style="width:100%;" 
-	      columnClasses="columnWidth150,columnWidth200,columnWidth150,columnWidth200,columnWidth15">
+	<h:panelGrid columns="2" style="width:100%;" styleClass="top-aligned-columns">
+		<h:panelGrid columns="4" style="width:800px;" columnClasses="columnWidth150,columnWidth200,columnWidth150,columnWidth200">
 		     <p:outputLabel id="centralNo" value="#{lbl['lbl.ct.cno']}" />
 		     <p:inputText for="centralNo" disabled="true" style="width:170px;"
 		        maxlength="17"  value="#{contractDetailsBackingBean.managedBean.ctContract.contractNo}" />
 		     <p:outputLabel id="centralphyNo" value="#{lbl['lbl.ct.physicalNo']}" />
 		     <p:inputText for="centralphyNo" style="width:170px;"  maxlength="30"
 		       value="#{contractDetailsBackingBean.managedBean.ctContract.contractPhysicalNo}"/>				
-		     <h:panelGrid columns="3">
-		       <p:selectBooleanCheckbox 
-			       value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.feeExampted}" disabled="true" />
-		       <p:spacer width="2" />	
-		       <p:outputLabel value="#{lbl['lbl.ct.chkbx.feeExmp']}" />
-	         </h:panelGrid>	
 		     <p:outputLabel id="centralEfDate" value="#{lbl['lbl.ct.effectiveDate']}" />
 		     <p:inputText for="centralEfDate" style="width:170px;" disabled="true"
 			    value="#{contractDetailsBackingBean.convertTime(contractDetailsBackingBean.managedBean.contractVer.ctContractValue.effDate)}" />
 		     <p:outputLabel id="centralExpDate" value="#{lbl['lbl.ct.edate']}" />
 		     <p:inputText for="centralExpDate" style="width:170px;" disabled="true"
 			    value="#{contractDetailsBackingBean.convertTime(contractDetailsBackingBean.managedBean.contractVer.ctContractValue.expDate)}" />
-		     <h:panelGrid columns="3">  
-			   <p:selectBooleanCheckbox 
-			      value="#{contractDetailsBackingBean.managedBean.ctContract.agreement}" disabled="true" />
-		       <p:spacer width="2" />	
-		       <p:outputLabel value="#{lbl['lbl.ct.agreement']}" />
-		     </h:panelGrid> 
 		     <h:panelGrid columns="2" style="float:right;">
 				<p:outputLabel value="*" styleClass="mandatory" />
 		     	<p:outputLabel id="centralPeriod" value="#{lbl['lbl.ct.dperiod']}" />
@@ -50,13 +38,6 @@
 			   style="width:170px;" value="#{contractDetailsBackingBean.convertTime(contractDetailsBackingBean.managedBean.ctContract.currentAgreement.signedDate)}"/>
 			<f:verbatim   rendered="#{!contractDetailsBackingBean.managedBean.ctContract.agreement}"/>
 			<f:verbatim   rendered="#{!contractDetailsBackingBean.managedBean.ctContract.agreement}"/> 
-			<h:panelGrid columns="3">
-			  <p:selectBooleanCheckbox value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt}" disabled="false" style="text-align:top;">
-			     <p:ajax event="change" update=":form:centalJustificationPanel" listener="#{contractDetailsBackingBean.chkJustificationAction}" process="@this"/> 
-			  </p:selectBooleanCheckbox>
-			  <p:spacer width="2" />	
-			  <p:outputLabel value="AP201 Exemption" style="text-align:top;" />
-		   </h:panelGrid>	
 			<h:panelGroup>
 		      <div style="height: 40px; vertical-align: top;">
 			  <p:outputLabel for="centralContractName" value="Contract Title"/>
@@ -77,20 +58,43 @@
 					styleClass="linkcommand" />
 			</p:commandLink>	    
 	 </h:panelGrid>
+	  <h:panelGrid  style="width:170px;">
+	      <h:panelGrid columns="3">  
+		       <p:selectBooleanCheckbox 
+			       value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.feeExampted}" disabled="true" />
+		       <p:spacer width="2" />	
+		       <p:outputLabel value="#{lbl['lbl.ct.chkbx.feeExmp']}" />
+	         </h:panelGrid>	
+	         <h:panelGrid columns="3">  
+			   <p:selectBooleanCheckbox 
+			      value="#{contractDetailsBackingBean.managedBean.ctContract.agreement}" disabled="true" />
+		       <p:spacer width="2" />	
+		       <p:outputLabel value="#{lbl['lbl.ct.agreement']}" />
+		     </h:panelGrid> 
+		     <h:panelGrid columns="3">
+			  <p:selectBooleanCheckbox value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt}" style="text-align:top;">
+			     <p:ajax event="change" update=":form:centalJustificationPanel" listener="#{contractDetailsBackingBean.chkJustificationAction}" process="@this"/> 
+			  </p:selectBooleanCheckbox>
+			  <p:spacer width="2" />	
+			  <p:outputLabel value="AP201 Exemption" style="text-align:top;" />
+		   </h:panelGrid>	
+	 </h:panelGrid>
+	 </h:panelGrid>
 	 <p:outputPanel id="centalJustificationPanel" >
-	 <h:panelGrid columns="2" style="width:100px;"
-	    rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt}" >
+	 <h:panelGrid columns="2" style="width:800px;" 
+	        rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt}" >
          <h:panelGroup>
-		    <div style="height:70px;width:175px; vertical-align:top;">
-			   <h:panelGrid columns="2" style="float:right;">
+		    <div style="height:90px; width:157px; vertical-align:top;">
+		       <h:panelGrid columns="2"  style="float:right;margin-right:-11px;">
 		           <p:outputLabel value="*" styleClass="mandatory" />
-			   	   <p:outputLabel id="centralJustificationLbls" value="#{lbl['lbl.ct.justification']}" />
+			   	   <p:outputLabel id="centralJustificationId" value="#{lbl['lbl.ct.justification']}" style="" />
 			   </h:panelGrid>
 		    </div>
 	     </h:panelGroup>
 	  <h:panelGrid columns="2">
 	    <p:inputTextarea id="centralJustificationLbl" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.justification}"
-		  rows="4" style="width:590px;" validator="#{webappBean.checkSpaces}" maxlength="200"  required="true" autoResize="false">
+		   rows="4" style="width:570px;" maxlength="200" validator="#{webappBean.checkSpaces}" required="true" autoResize="false" 
+		    label="#{lbl['lbl.ct.justification']}">
 		  </p:inputTextarea>	
 	     <p:message for="centralJustificationLbl" display="icon"/>
 	  </h:panelGrid>		
