@@ -151,7 +151,7 @@
 								display="inline" required="true" readonlyInput="true"
 								label="#{lbl['lbl.sm.person.dob']}" id="dobDate"
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-								yearRange="-99:+0"
+								yearRange="-99:+0" disabled="#{smPersonnelBackingBean.managedBean.editMode}"
 								value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.birthDate}" />
 							<p:message id="dobDateMsg" for="dobDate"
 									showSummary="true" showDetail="false" display="icon" /></td>

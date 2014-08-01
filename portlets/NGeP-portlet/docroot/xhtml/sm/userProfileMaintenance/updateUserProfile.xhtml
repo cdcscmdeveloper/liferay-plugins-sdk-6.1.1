@@ -25,43 +25,69 @@
 	<p:panel id="UserProfile" header="Update User" styleClass="noBorders tr,noBorders td" >
 		<table style="width:100%;">
 			 	<tr>
-					<td style="white-space:nowrap; float:left;"><p:outputLabel value="#{lbl['lbl.sm.userprofile.name']}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.name']}" /></td>
 					<td><p:inputText value="#{smPersonnelBackingBean.managedBean.updateSmPersonnel.name}" readonly="true" disabled="true" size="35" /></td>
 					<td></td>
-					<td style="white-space:nowrap; float:left;"><p:outputLabel value="#{lbl['lbl.sm.userprofile.eprole']}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.eprole']}" /></td>
 					<td><p:inputText value="#{smPersonnelBackingBean.managedBean.updateSmPersonnel.epRole}" readonly="true" disabled="true" size="35" /></td>
 					<td></td>
 				</tr>
 				<tr>
-					<td style="white-space:nowrap; float:left;"><p:outputLabel value="#{lbl['lbl.sm.userprofile.nationality']}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.nationality']}" /></td>
 					<td><p:inputText value="#{smPersonnelBackingBean.managedBean.updateSmPersonnel.pmCountry.countryName}" readonly="true" disabled="true" size="35" /></td>
 				</tr>
 				<tr>		
-					
-						<td style="white-space: nowrap; float: left;"><p:outputPanel
+					<td><p:outputLabel
+								value="#{lbl['lbl.sm.identificationtype']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
+						<td><p:selectOneMenu id="updateBUIdType"
+								label="#{lbl['lbl.sm.identificationtype']}"
+								value="#{smPersonnelBackingBean.managedBean.updateSmPersonnel.identificationTypeId}"
+								style="width:200px" disabled="true">
+								<f:selectItems
+									value="#{smPersonnelBackingBean.getDropdownValues('ID')}" />
+							</p:selectOneMenu></td>
+						<td><p:message id="updateBUIdTypeMsg" for="updateBUIdType"
+								showSummary="true" showDetail="false" display="icon" /></td>
+
+						<td><p:outputPanel
 								id="updateBUIdTypeLblPan">
 								<p:outputLabel
-									value="#{smPersonnelBackingBean.managedBean.updateSmPersonnel.identificationType.parameterCode eq 'P' ? lbl['lbl.sm.person.psptNum'] : (smPersonnelBackingBean.managedBean.updateSmPersonnel.identificationType.parameterCode eq 'I' ? lbl['lbl.sm.person.icNum'] : lbl['lbl.sm.person.armyNum'])}"
-									rendered="#{smPersonnelBackingBean.managedBean.updateSmPersonnel.identificationType.parameterCode eq 'I' or smPersonnelBackingBean.managedBean.updateSmPersonnel.identificationType.parameterCode eq 'A' or smPersonnelBackingBean.managedBean.updateSmPersonnel.identificationType.parameterCode eq 'P'}" />
-							</p:outputPanel>		
-							</td>
-					<td><p:inputText value="#{smPersonnelBackingBean.managedBean.updateSmPersonnel.identificationNo}" readonly="true" disabled="true" size="35" 
-							rendered="#{smPersonnelBackingBean.managedBean.updateSmPersonnel.identificationType.parameterCode eq 'I' or smPersonnelBackingBean.managedBean.updateSmPersonnel.identificationType.parameterCode eq 'A' or smPersonnelBackingBean.managedBean.updateSmPersonnel.identificationType.parameterCode eq 'P'}"/></td>
-					<td></td>
+									value="#{lbl['lbl.sm.userprofile.idno']}"
+									id="equiPerIcNumLbl" />
+								<p:outputLabel value="*" styleClass="mandatory" />
+							</p:outputPanel></td>
+						<td><p:outputPanel id="updateBUIdTypePan">
+								<p:inputText
+									label="#{lbl['lbl.sm.userprofile.idno']}"
+									required="true" id="updateBUIcNum"
+									value="#{smPersonnelBackingBean.managedBean.updateSmPersonnel.identificationNo}"
+									size="35" maxlength="15"
+									readonly="true" disabled="true">
+								</p:inputText>
+								<p:message id="updateBUIcNumMsg" for="updateBUIcNum"
+									showSummary="true" showDetail="false" display="icon" />
+							</p:outputPanel></td>
+						<td></td>
 				</tr>
 				<tr>
-					<td style="white-space:nowrap; float:left;"><p:outputLabel value="#{lbl['lbl.sm.userprofile.dob']}" /></td>
-					<td><p:calendar value="#{smPersonnelBackingBean.managedBean.updateSmPersonnel.birthDate}" showOn="button" id="dobDate" pattern="MM/dd/yyyy"/></td>
-						<td></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.dob']}" /></td>
+					<td><p:calendar showOn="button" navigator="true"
+								display="inline" required="true" readonlyInput="true"
+								label="#{lbl['lbl.sm.person.dob']}" id="dobDate"
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+								yearRange="-99:+0"
+								value="#{smPersonnelBackingBean.managedBean.updateSmPersonnel.birthDate}" /></td>
+					<td></td>
 					
-					<td style="white-space:nowrap; float:left;"><p:outputLabel value="#{lbl['lbl.sm.userprofile.designation']}" /> <p:outputLabel
+					<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.designation']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
 					<td><p:inputText id="updateBUDes" value="#{smPersonnelBackingBean.managedBean.updateSmPersonnel.designation}" size="35" required="true" /></td>
 						<td><p:message id="updateBUDesMsg" for="updateBUDes"
 								showSummary="true" showDetail="false" display="icon" /></td>
 				</tr>		
 				<tr>
-					<td style="white-space:nowrap; float:left;"><p:outputLabel value="#{lbl['lbl.sm.userprofile.email']}" /> <p:outputLabel
+					<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.email']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
 					<td><p:inputText id="updateBUEmail" value="#{smPersonnelBackingBean.managedBean.updateSmPersonnel.email}" size="40" required="true" /></td>
 						<td><p:message id="updateBUEmailMsg" for="updateBUEmail"
@@ -69,7 +95,7 @@
 
 					</tr>
 					<tr>
-						<td style="white-space: nowrap; float: left;"><p:outputLabel
+						<td><p:outputLabel
 								value="#{lbl['lbl.sm.userprofile.phone']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
 						<td><p:inputText id="updateBUPhone"
@@ -82,7 +108,7 @@
 						<td><p:message id="updateBUPhoneMsg" for="updateBUPhone"
 								showSummary="true" showDetail="false" display="icon" /></td>
 
-						<td style="white-space: nowrap; float: left;"><p:outputLabel
+						<td><p:outputLabel
 								value="#{lbl['lbl.sm.userprofile.mobile']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
 						<td><p:inputText id="updateBUMobile"
@@ -98,255 +124,283 @@
 		</table>	
 	</p:panel>
 	</p:panelGrid>
-		<p:panel id="AddressInfo" header="Address Info"
-			styleClass="noBorders tr,noBorders td" toggleable="true">
-			<p:panelGrid columns="2" header="Address Info"
-				styleClass="noBorders tr,noBorders td">
-				<p:panel id="PermanentAddressInfo" header="Permanent Address"
-					styleClass="noBorders tr,noBorders td">
-					<table>
-						<tr>
-							<td style="white-space: nowrap; float: left;"><p:outputLabel
-									value="#{lbl['lbl.sm.address']}" /> <p:outputLabel value="*"
-									styleClass="mandatory" /></td>
-							<td class="tdContent" colspan="3"><p:inputText
-									maxlength="35" required="true" id="permAdd1"
-									label="#{lbl['lbl.sm.address']}"
-									value="#{smPersonnelBackingBean.managedBean.updateSmPersonnelPermanentAddress.smAddress.address1}"
-									size="35" /> <p:message id="permAdd1Msg" for="permAdd1"
-									showSummary="true" showDetail="false" display="icon" /></td>
-						</tr>
-						<tr>
-							<td style="white-space: nowrap; float: left;"></td>
-							<td class="tdContent" colspan="3"><p:inputText
-									maxlength="35"
-									value="#{smPersonnelBackingBean.managedBean.updateSmPersonnelPermanentAddress.smAddress.address2}"
-									size="35" /></td>
-						</tr>
-						<tr>
-							<td style="white-space: nowrap; float: left;"></td>
-							<td class="tdContent" colspan="3"><p:inputText
-									maxlength="35"
-									value="#{smPersonnelBackingBean.managedBean.updateSmPersonnelPermanentAddress.smAddress.address3}"
-									size="35" /></td>
-						</tr>
-						<tr>
-							<td style="white-space: nowrap; float: left;"></td>
-							<td class="tdContent" colspan="3"><p:inputText
-									maxlength="35"
-									value="#{smPersonnelBackingBean.managedBean.updateSmPersonnelPermanentAddress.smAddress.address4}"
-									size="35" /></td>
-						</tr>
-						<tr>
-							<td style="white-space: nowrap; float: left;"><p:outputLabel
-									value="#{lbl['lbl.sm.country']}" /> <p:outputLabel value="*"
-									styleClass="mandatory" /></td>
-							<td class="tdContent"><p:selectOneMenu required="true"
-									id="updatePermAddCountryList" label="#{lbl['lbl.sm.country']}"
-									value="#{smPersonnelBackingBean.managedBean.updateSmPersonnelPermanentAddress.smAddress.pmCountry.countryId}"
-									style="width: 207px;margin-bottom: 5px;">
-									<f:selectItem itemLabel="- Select One -" itemValue="" />
-									<f:selectItems
-										value="#{smPersonnelBackingBean.managedBean.permAddCountryList}" />
-									<p:ajax event="change"
-										update="updatePermAddStateList, updatePermAddDistrictList, updatePermAddCityList"
-										listener="#{smPersonnelBackingBean.updatePermAddLists(smPersonnelBackingBean.managedBean.updateSmPersonnelPermanentAddress.smAddress.pmCountry.countryId,null,null)}" />
-								</p:selectOneMenu> <p:message id="updatePermAddCountryListMsg"
-									for="updatePermAddCountryList" showSummary="true"
-									showDetail="false" display="icon" /></td>
-						</tr>
-						<tr>
-							<td style="white-space: nowrap; float: left;"><p:outputLabel
-									value="#{lbl['lbl.sm.state']}" /> <p:outputLabel value="*"
-									styleClass="mandatory" /></td>
-							<td class="tdContent"><p:selectOneMenu required="true"
-									label="#{lbl['lbl.sm.state']}" id="updatePermAddStateList"
-									value="#{smPersonnelBackingBean.managedBean.updateSmPersonnelPermanentAddress.smAddress.pmState.stateId}"
-									style="width: 207px;margin-bottom: 5px;">
-									<f:selectItem itemLabel="- Select One -" itemValue="" />
-									<f:selectItems
-										value="#{smPersonnelBackingBean.managedBean.permAddStateList}" />
-									<p:ajax event="change"
-										update="updatePermAddDistrictList, updatePermAddCityList"
-										listener="#{smPersonnelBackingBean.updatePermAddLists(null,smPersonnelBackingBean.managedBean.updateSmPersonnelPermanentAddress.smAddress.pmState.stateId,null)}" />
-								</p:selectOneMenu> <p:message id="updatePermAddStateListMsg"
-									for="updatePermAddStateList" showSummary="true"
-									showDetail="false" display="icon" /></td>
-						</tr>
-						<tr>
-							<td style="white-space: nowrap; float: left;"><p:outputLabel
-									value="#{lbl['lbl.sm.district']}" /> <p:outputLabel value="*"
-									styleClass="mandatory" /></td>
-							<td class="tdContent"><p:selectOneMenu required="true"
-									label="#{lbl['lbl.sm.district']}" id="updatePermAddDistrictList"
-									value="#{smPersonnelBackingBean.managedBean.updateSmPersonnelPermanentAddress.smAddress.pmDistrict.districtId}"
-									style="width: 207px;margin-bottom: 5px;">
-									<f:selectItem itemLabel="- Select One -" itemValue="" />
-									<f:selectItems
-										value="#{smPersonnelBackingBean.managedBean.permAddDistrictList}" />
-									<p:ajax event="change" update="updatePermAddCityList"
-										listener="#{smPersonnelBackingBean.updatePermAddLists(null,null,smPersonnelBackingBean.managedBean.updateSmPersonnelPermanentAddress.smAddress.pmDistrict.districtId)}" />
-								</p:selectOneMenu> <p:message id="updatePermAddDistrictListMsg"
-									for="updatePermAddDistrictList" showSummary="true"
-									showDetail="false" display="icon" /></td>
-						</tr>
-						<tr>
-							<td style="white-space: nowrap; float: left;"><p:outputLabel
-									value="#{lbl['lbl.sm.towncity']}" /> <p:outputLabel value="*"
-									styleClass="mandatory" /></td>
-							<td class="tdContent"><p:selectOneMenu required="true"
-									label="#{lbl['lbl.sm.towncity']}" id="updatePermAddCityList"
-									value="#{smPersonnelBackingBean.managedBean.updateSmPersonnelPermanentAddress.smAddress.pmCity.cityId}"
-									style="width: 207px;margin-bottom: 5px;">
-									<f:selectItem itemLabel="- Select One -" itemValue="" />
-									<f:selectItems
-										value="#{smPersonnelBackingBean.managedBean.permAddCityList}" />
-								</p:selectOneMenu> <p:message id="updatePermAddCityListMsg"
-									for="updatePermAddCityList" showSummary="true"
-									showDetail="false" display="icon" /></td>
-						</tr>
-						<tr>
-							<td style="white-space: nowrap; float: left;"><p:outputLabel
-									value="#{lbl['lbl.sm.postcode']}" /></td>
-							<td class="tdContent"><p:inputText size="10" maxlength="10"
-									value="#{smPersonnelBackingBean.managedBean.updateSmPersonnelPermanentAddress.smAddress.postcode}" /></td>
-						</tr>
-					</table>
-				</p:panel>
-
-				<p:panel id="MailingAddressInfo" header="Mailing Address"
-					styleClass="noBorders tr,noBorders td">
-					<table>
-						<tr>
-							<td style="white-space: nowrap; float: left;"><p:selectBooleanCheckbox
-									value="#{smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.sameAsPerm}">
-									<p:ajax event="change" update="@([id$=MailingAddressInfo])"
-										partialSubmit="true"
-										process="@this, @([id$=PermanentAddressInfo])"
-										listener="#{smPersonnelBackingBean.setUpdateMailingAddrSameAsPerm}" />
-								</p:selectBooleanCheckbox> <p:outputLabel value="Same as permanent address" /></td>
-						</tr>
-						<tr>
-							<td style="white-space: nowrap; float: left;"><p:outputLabel
-									value="#{lbl['lbl.sm.address']}" /> <p:outputLabel value="*"
-									styleClass="mandatory" /></td>
-							<td class="tdContent" colspan="3"><p:inputText
-									maxlength="35" label="#{lbl['lbl.sm.address']}" required="true"
-									id="mailAdd1"
-									value="#{smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.smAddress.address1}"
-									size="35"
-									disabled="#{smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.sameAsPerm}" />
-								<p:message id="mailAdd1Msg" for="mailAdd1" showSummary="true"
-									showDetail="false" display="icon" /></td>
-						</tr>
-						<tr>
-							<td style="white-space: nowrap; float: left;"></td>
-							<td class="tdContent" colspan="3"><p:inputText
-									maxlength="35"
-									value="#{smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.smAddress.address2}"
-									size="35"
-									disabled="#{smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.sameAsPerm}" /></td>
-						</tr>
-						<tr>
-							<td style="white-space: nowrap; float: left;"></td>
-							<td class="tdContent" colspan="3"><p:inputText
-									maxlength="35"
-									value="#{smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.smAddress.address3}"
-									size="35"
-									disabled="#{smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.sameAsPerm}" /></td>
-						</tr>
-						<tr>
-							<td style="white-space: nowrap; float: left;"></td>
-							<td class="tdContent" colspan="3"><p:inputText
-									maxlength="35"
-									value="#{smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.smAddress.address4}"
-									size="35"
-									disabled="#{smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.sameAsPerm}" /></td>
-						</tr>
-						<tr>
-							<td style="white-space: nowrap; float: left;"><p:outputLabel
-									value="#{lbl['lbl.sm.country']}" /> <p:outputLabel value="*"
-									styleClass="mandatory" /></td>
-							<td class="tdContent"><p:selectOneMenu required="true"
-									id="updateMailAddCountryList"
-									disabled="#{smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.sameAsPerm}"
-									label="#{lbl['lbl.sm.country']}"
-									value="#{smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.smAddress.pmCountry.countryId}"
-									style="width: 207px;margin-bottom: 5px;">
-									<f:selectItem itemLabel="- Select One -" itemValue="" />
-									<f:selectItems
-										value="#{smPersonnelBackingBean.managedBean.mailAddCountryList}" />
-									<p:ajax event="change"
-										update="updateMailAddStateList, updateMailAddDistrictList, updateMailAddCityList"
-										listener="#{smPersonnelBackingBean.updateMailAddLists(smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.smAddress.pmCountry.countryId,null,null)}" />
-								</p:selectOneMenu> <p:message id="updateMailAddCountryListMsg"
-									for="updateMailAddCountryList" showSummary="true"
-									showDetail="false" display="icon" /></td>
-						</tr>
-						<tr>
-							<td style="white-space: nowrap; float: left;"><p:outputLabel
-									value="#{lbl['lbl.sm.state']}" /> <p:outputLabel value="*"
-									styleClass="mandatory" /></td>
-							<td class="tdContent"><p:selectOneMenu required="true"
-									disabled="#{smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.sameAsPerm}"
-									label="#{lbl['lbl.sm.state']}" id="updateMailAddStateList"
-									value="#{smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.smAddress.pmState.stateId}"
-									style="width: 207px;margin-bottom: 5px;">
-									<f:selectItem itemLabel="- Select One -" itemValue="" />
-									<f:selectItems
-										value="#{smPersonnelBackingBean.managedBean.mailAddStateList}" />
-									<p:ajax event="change"
-										update="updateMailAddDistrictList, updateMailAddCityList"
-										listener="#{smPersonnelBackingBean.updateMailAddLists(null,smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.smAddress.pmState.stateId,null)}" />
-								</p:selectOneMenu> <p:message id="updateMailAddStateListMsg"
-									for="updateMailAddStateList" showSummary="true"
-									showDetail="false" display="icon" /></td>
-						</tr>
-						<tr>
-							<td style="white-space: nowrap; float: left;"><p:outputLabel
-									value="#{lbl['lbl.sm.district']}" /> <p:outputLabel value="*"
-									styleClass="mandatory" /></td>
-							<td class="tdContent"><p:selectOneMenu required="true"
-									disabled="#{smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.sameAsPerm}"
-									id="updateMailAddDistrictList" label="#{lbl['lbl.sm.district']}"
-									value="#{smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.smAddress.pmDistrict.districtId}"
-									style="width: 207px;margin-bottom: 5px;">
-									<f:selectItem itemLabel="- Select One -" itemValue="" />
-									<f:selectItems
-										value="#{smPersonnelBackingBean.managedBean.mailAddDistrictList}" />
-									<p:ajax event="change" update="updateMailAddCityList"
-										listener="#{smPersonnelBackingBean.updateMailAddLists(null,null,smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.smAddress.pmDistrict.districtId)}" />
-								</p:selectOneMenu> <p:message id="updateMailAddDistrictListMsg"
-									for="updateMailAddDistrictList" showSummary="true"
-									showDetail="false" display="icon" /></td>
-						</tr>
-						<tr>
-							<td style="white-space: nowrap; float: left;"><p:outputLabel
-									value="#{lbl['lbl.sm.towncity']}" /> <p:outputLabel value="*"
-									styleClass="mandatory" /></td>
-							<td class="tdContent"><p:selectOneMenu required="true"
-									disabled="#{smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.sameAsPerm}"
-									id="updateMailAddCityList" label="#{lbl['lbl.sm.towncity']}"
-									value="#{smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.smAddress.pmCity.cityId}"
-									style="width: 207px;margin-bottom: 5px;">
-									<f:selectItem itemLabel="- Select One -" itemValue="" />
-									<f:selectItems
-										value="#{smPersonnelBackingBean.managedBean.mailAddCityList}" />
-								</p:selectOneMenu> <p:message id="updateMailAddCityListMsg"
-									for="updateMailAddCityList" showSummary="true"
-									showDetail="false" display="icon" /></td>
-						</tr>
-						<tr>
-							<td style="white-space: nowrap; float: left;"><p:outputLabel
-									value="#{lbl['lbl.sm.postcode']}" /></td>
-							<td class="tdContent"><p:inputText size="10" maxlength="10"
-									disabled="#{smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.sameAsPerm}"
-									value="#{smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.smAddress.postcode}" /></td>
-						</tr>
-					</table>
-				</p:panel>
-			</p:panelGrid>
+	
+	
+	
+		<p:panel toggleable="true">
+		<f:facet name="header">
+				<h:outputText value="Address Info"/>
+			</f:facet>
+				
+		<p:panelGrid columns="2" styleClass="noBorders tr,noBorders td">
+					<p:panel id="PermanentAddressInfo" 
+						styleClass="noBorders tr,noBorders td">
+						<table style="width: 100%;">
+							<tr>
+								<td><u><b><h:outputText
+											value="#{lbl['lbl.sm.person.permAddr']} " /></b></u></td>
+							</tr>
+							<tr>
+								<td><p:outputLabel
+										value="#{lbl['lbl.sm.address']}" /> <p:outputLabel value="*"
+										styleClass="mandatory" /></td>
+								<td ><p:inputText
+										maxlength="35" required="true" id="permAdd1"
+										label="#{lbl['lbl.sm.address']}"
+										value="#{smPersonnelBackingBean.managedBean.updateSmPersonnelPermanentAddress.smAddress.address1}"
+										size="35" /></td>
+								<td><p:message id="permAdd1Msg" for="permAdd1"
+										showSummary="true" showDetail="false" display="icon" /></td>
+							</tr>
+							<tr>
+								<td></td>
+								<td ><p:inputText
+										maxlength="35"
+										value="#{smPersonnelBackingBean.managedBean.updateSmPersonnelPermanentAddress.smAddress.address2}"
+										size="35" /></td>
+							</tr>
+							<tr>
+								<td></td>
+								<td ><p:inputText
+										maxlength="35"
+										value="#{smPersonnelBackingBean.managedBean.updateSmPersonnelPermanentAddress.smAddress.address3}"
+										size="35" /></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td></td>
+								<td ><p:inputText
+										maxlength="35"
+										value="#{smPersonnelBackingBean.managedBean.updateSmPersonnelPermanentAddress.smAddress.address4}"
+										size="35" /></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td><p:outputLabel
+										value="#{lbl['lbl.sm.country']}" /> <p:outputLabel value="*"
+										styleClass="mandatory" /></td>
+								<td ><p:selectOneMenu required="true"
+										id="updatePermAddCountryList" label="#{lbl['lbl.sm.country']}"
+										value="#{smPersonnelBackingBean.managedBean.updateSmPersonnelPermanentAddress.smAddress.pmCountry.countryId}"
+										style="width: 207px;margin-bottom: 5px;">
+										<f:selectItem itemLabel="- Select One -" itemValue="" />
+										<f:selectItems
+											value="#{smPersonnelBackingBean.managedBean.permAddCountryList}" />
+										<p:ajax event="change"
+											update="updatePermAddStateList, updatePermAddDistrictList, updatePermAddCityList"
+											listener="#{smPersonnelBackingBean.updatePermAddLists(smPersonnelBackingBean.managedBean.updateSmPersonnelPermanentAddress.smAddress.pmCountry.countryId,null,null)}" />
+									</p:selectOneMenu></td>
+								<td><p:message id="updatePermAddCountryListMsg"
+										for="updatePermAddCountryList" showSummary="true"
+										showDetail="false" display="icon" /></td>
+							</tr>
+							<tr>
+								<td><p:outputLabel
+										value="#{lbl['lbl.sm.state']}" /> <p:outputLabel value="*"
+										styleClass="mandatory" /></td>
+								<td ><p:selectOneMenu required="true"
+										label="#{lbl['lbl.sm.state']}" id="updatePermAddStateList"
+										value="#{smPersonnelBackingBean.managedBean.updateSmPersonnelPermanentAddress.smAddress.pmState.stateId}"
+										style="width: 207px;margin-bottom: 5px;">
+										<f:selectItem itemLabel="- Select One -" itemValue="" />
+										<f:selectItems
+											value="#{smPersonnelBackingBean.managedBean.permAddStateList}" />
+										<p:ajax event="change"
+											update="updatePermAddDistrictList, updatePermAddCityList"
+											listener="#{smPersonnelBackingBean.updatePermAddLists(null,smPersonnelBackingBean.managedBean.updateSmPersonnelPermanentAddress.smAddress.pmState.stateId,null)}" />
+									</p:selectOneMenu></td>
+								<td><p:message id="updatePermAddStateListMsg"
+										for="updatePermAddStateList" showSummary="true"
+										showDetail="false" display="icon" /></td>
+							</tr>
+							<tr>
+								<td><p:outputLabel
+										value="#{lbl['lbl.sm.district']}" /> <p:outputLabel value="*"
+										styleClass="mandatory" /></td>
+								<td ><p:selectOneMenu required="true"
+										label="#{lbl['lbl.sm.district']}" id="updatePermAddDistrictList"
+										value="#{smPersonnelBackingBean.managedBean.updateSmPersonnelPermanentAddress.smAddress.pmDistrict.districtId}"
+										style="width: 207px;margin-bottom: 5px;">
+										<f:selectItem itemLabel="- Select One -" itemValue="" />
+										<f:selectItems
+											value="#{smPersonnelBackingBean.managedBean.permAddDistrictList}" />
+										<p:ajax event="change" update="updatePermAddCityList"
+											listener="#{smPersonnelBackingBean.updatePermAddLists(null,null,smPersonnelBackingBean.managedBean.updateSmPersonnelPermanentAddress.smAddress.pmDistrict.districtId)}" />
+									</p:selectOneMenu></td>
+								<td><p:message id="updatePermAddDistrictListMsg"
+										for="updatePermAddDistrictList" showSummary="true"
+										showDetail="false" display="icon" /></td>
+							</tr>
+							<tr>
+								<td><p:outputLabel
+										value="#{lbl['lbl.sm.towncity']}" /> <p:outputLabel value="*"
+										styleClass="mandatory" /></td>
+								<td ><p:selectOneMenu required="true"
+										label="#{lbl['lbl.sm.towncity']}" id="updatePermAddCityList"
+										value="#{smPersonnelBackingBean.managedBean.updateSmPersonnelPermanentAddress.smAddress.pmCity.cityId}"
+										style="width: 207px;margin-bottom: 5px;">
+										<f:selectItem itemLabel="- Select One -" itemValue="" />
+										<f:selectItems
+											value="#{smPersonnelBackingBean.managedBean.permAddCityList}" />
+									</p:selectOneMenu></td>
+								<td><p:message id="updatePermAddCityListMsg"
+										for="updatePermAddCityList" showSummary="true"
+										showDetail="false" display="icon" /></td>
+							</tr>
+							<tr>
+								<td><p:outputLabel
+										value="#{lbl['lbl.sm.postcode']}" /></td>
+								<td ><p:inputText size="10" maxlength="10"
+										value="#{smPersonnelBackingBean.managedBean.updateSmPersonnelPermanentAddress.smAddress.postcode}" /></td>
+								<td></td>
+							</tr>
+						</table>
+					</p:panel>
+					<p:panel id="MailingAddressInfo" styleClass="noBorders tr,noBorders td">
+						<table style="width: 100%;">
+							<tr>
+								<td><u><b><h:outputText
+											value="#{lbl['lbl.sm.person.mailAddr']} " /></b></u></td>
+							</tr>
+							<tr>
+								<td></td>				
+								<td style="white-space: nowrap; float: left;"><p:selectBooleanCheckbox
+										value="#{smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.sameAsPerm}">
+										<p:ajax event="change" update="@([id$=MailingAddressInfo])"
+											partialSubmit="true"
+											process="@this, @([id$=PermanentAddressInfo])"
+											listener="#{smPersonnelBackingBean.setUpdateMailingAddrSameAsPerm}" />
+									</p:selectBooleanCheckbox><p:outputLabel value="Same as permanent address" /></td>
+								<td></td>				
+							</tr>
+							<tr>
+								<td><p:outputLabel
+										value="#{lbl['lbl.sm.address']}" /> <p:outputLabel value="*"
+										styleClass="mandatory" /></td>
+								<td  ><p:inputText
+										maxlength="35" label="#{lbl['lbl.sm.address']}" required="true"
+										id="mailAdd1"
+										value="#{smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.smAddress.address1}"
+										size="35"
+										disabled="#{smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.sameAsPerm}" /></td>
+								<td><p:message id="mailAdd1Msg" for="mailAdd1" showSummary="true"
+										showDetail="false" display="icon" /></td>
+							</tr>
+							<tr>
+								<td></td>
+								<td  ><p:inputText
+										maxlength="35"
+										value="#{smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.smAddress.address2}"
+										size="35"
+										disabled="#{smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.sameAsPerm}" /></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td></td>
+								<td  ><p:inputText
+										maxlength="35"
+										value="#{smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.smAddress.address3}"
+										size="35"
+										disabled="#{smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.sameAsPerm}" /></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td></td>
+								<td  ><p:inputText
+										maxlength="35"
+										value="#{smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.smAddress.address4}"
+										size="35"
+										disabled="#{smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.sameAsPerm}" /></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td><p:outputLabel
+										value="#{lbl['lbl.sm.country']}" /> <p:outputLabel value="*"
+										styleClass="mandatory" /></td>
+								<td ><p:selectOneMenu required="true"
+										id="updateMailAddCountryList"
+										disabled="#{smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.sameAsPerm}"
+										label="#{lbl['lbl.sm.country']}"
+										value="#{smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.smAddress.pmCountry.countryId}"
+										style="width: 207px;margin-bottom: 5px;">
+										<f:selectItem itemLabel="- Select One -" itemValue="" />
+										<f:selectItems
+											value="#{smPersonnelBackingBean.managedBean.mailAddCountryList}" />
+										<p:ajax event="change"
+											update="updateMailAddStateList, updateMailAddDistrictList, updateMailAddCityList"
+											listener="#{smPersonnelBackingBean.updateMailAddLists(smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.smAddress.pmCountry.countryId,null,null)}" />
+									</p:selectOneMenu></td>
+								<td><p:message id="updateMailAddCountryListMsg"
+										for="updateMailAddCountryList" showSummary="true"
+										showDetail="false" display="icon" /></td>
+							</tr>
+							<tr>
+								<td><p:outputLabel
+										value="#{lbl['lbl.sm.state']}" /> <p:outputLabel value="*"
+										styleClass="mandatory" /></td>
+								<td ><p:selectOneMenu required="true"
+										disabled="#{smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.sameAsPerm}"
+										label="#{lbl['lbl.sm.state']}" id="updateMailAddStateList"
+										value="#{smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.smAddress.pmState.stateId}"
+										style="width: 207px;margin-bottom: 5px;">
+										<f:selectItem itemLabel="- Select One -" itemValue="" />
+										<f:selectItems
+											value="#{smPersonnelBackingBean.managedBean.mailAddStateList}" />
+										<p:ajax event="change"
+											update="updateMailAddDistrictList, updateMailAddCityList"
+											listener="#{smPersonnelBackingBean.updateMailAddLists(null,smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.smAddress.pmState.stateId,null)}" />
+									</p:selectOneMenu></td>
+								<td><p:message id="updateMailAddStateListMsg"
+										for="updateMailAddStateList" showSummary="true"
+										showDetail="false" display="icon" /></td>
+							</tr>
+							<tr>
+								<td><p:outputLabel
+										value="#{lbl['lbl.sm.district']}" /> <p:outputLabel value="*"
+										styleClass="mandatory" /></td>
+								<td ><p:selectOneMenu required="true"
+										disabled="#{smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.sameAsPerm}"
+										id="updateMailAddDistrictList" label="#{lbl['lbl.sm.district']}"
+										value="#{smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.smAddress.pmDistrict.districtId}"
+										style="width: 207px;margin-bottom: 5px;">
+										<f:selectItem itemLabel="- Select One -" itemValue="" />
+										<f:selectItems
+											value="#{smPersonnelBackingBean.managedBean.mailAddDistrictList}" />
+										<p:ajax event="change" update="updateMailAddCityList"
+											listener="#{smPersonnelBackingBean.updateMailAddLists(null,null,smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.smAddress.pmDistrict.districtId)}" />
+									</p:selectOneMenu></td>
+								<td><p:message id="updateMailAddDistrictListMsg"
+										for="updateMailAddDistrictList" showSummary="true"
+										showDetail="false" display="icon" /></td>
+							</tr>
+							<tr>
+								<td><p:outputLabel
+										value="#{lbl['lbl.sm.towncity']}" /> <p:outputLabel value="*"
+										styleClass="mandatory" /></td>
+								<td ><p:selectOneMenu required="true"
+										disabled="#{smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.sameAsPerm}"
+										id="updateMailAddCityList" label="#{lbl['lbl.sm.towncity']}"
+										value="#{smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.smAddress.pmCity.cityId}"
+										style="width: 207px;margin-bottom: 5px;">
+										<f:selectItem itemLabel="- Select One -" itemValue="" />
+										<f:selectItems
+											value="#{smPersonnelBackingBean.managedBean.mailAddCityList}" />
+									</p:selectOneMenu></td>
+								<td><p:message id="updateMailAddCityListMsg"
+										for="updateMailAddCityList" showSummary="true"
+										showDetail="false" display="icon" /></td>
+							</tr>
+							<tr>
+								<td><p:outputLabel
+										value="#{lbl['lbl.sm.postcode']}" /></td>
+								<td ><p:inputText size="10" maxlength="10"
+										disabled="#{smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.sameAsPerm}"
+										value="#{smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.smAddress.postcode}" /></td>
+								<td></td>
+							</tr>
+						</table>
+					</p:panel>
+		</p:panelGrid>
 		</p:panel>
-
 </ui:define>	
 </ui:composition>

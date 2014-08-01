@@ -780,6 +780,9 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 			reqCountryDTO.setCountryId(getManagedBean().getDefaultCountryId());
 			resCountryDTO = countrySO.retrieveCountryById(reqCountryDTO);
 			smPersonnel.setPmCountry(resCountryDTO.getPmCountry());
+
+			updatePermAddLists(getManagedBean().getUpdateSmPersonnelPermanentAddress().getSmAddress().getPmCountry().getCountryId().toString(), "", "");
+			updateMailAddLists(getManagedBean().getUpdateSmPersonnelMailingAddress().getSmAddress().getPmCountry().getCountryId().toString(), "", "");
 		}
 	}
 	
