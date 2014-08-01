@@ -4336,7 +4336,7 @@
 	</portlet>
 	<portlet>
 		<portlet-name>SpecCommitteMaintanance</portlet-name>
-		<display-name>Specification Committee</display-name>
+		<display-name>Prepare QT Checklist</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
@@ -4348,8 +4348,8 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>SpecCommitteMaintanance</title>
-			<short-title>Specification Committee</short-title>
+			<title>Prepare QT Checklist</title>
+			<short-title>Prepare QT Checklist</short-title>
 
 			<keywords></keywords>
 		</portlet-info>
