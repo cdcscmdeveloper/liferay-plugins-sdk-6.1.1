@@ -10,6 +10,7 @@
 
 	<p:dialog widgetVar="createCommitteeSpec" modal="true" width="1000"
 		height="500">
+		<ac:title value="#{lbl['lbl.sc.spec.business.owner']}"></ac:title>
 		<p:messages id="specCommitteecreateTemplate" showDetail="true"
 			autoUpdate="true" closable="true" showSummary="false" />
 
@@ -45,7 +46,8 @@
 									value="#{lbl['lbl.sc.tpl.search.item']}"></p:outputLabel> <p:outputLabel
 									value="*" styleClass="mandatory" /></td>
 							<td><p:selectOneMenu style="margin-bottom:5px;"
-									required="#{specificationBackingBean.managedBean.required}" label="#{lbl['lbl.sc.tpl.search.item']}"
+									required="#{specificationBackingBean.managedBean.required}"
+									label="#{lbl['lbl.sc.tpl.search.item']}"
 									id="standardCommitteeItemType"
 									value="#{specificationBackingBean.managedBean.searchItemTypeId}">
 									<f:selectItems
@@ -62,7 +64,8 @@
 							<td style="width: 115px;"><h:outputLabel
 									value="#{lbl['lbl.sc.tpl.search.item']}"></h:outputLabel></td>
 							<td><p:selectOneMenu style="margin-bottom:5px;"
-									required="#{specificationBackingBean.managedBean.required}" label="#{lbl['lbl.sc.tpl.search.item']}"
+									required="#{specificationBackingBean.managedBean.required}"
+									label="#{lbl['lbl.sc.tpl.search.item']}"
 									id="sourcingCommitteeItemType"
 									value="#{specificationBackingBean.managedBean.searchItemTypeId}">
 									<f:selectItems
@@ -157,6 +160,7 @@
 
 
 		</p:panel>
-		  <p:ajax event="close" listener="#{specificationBackingBean.closeListener}" />
+		<p:ajax event="close"
+			listener="#{specificationBackingBean.closeListener}" />
 	</p:dialog>
 </ui:composition>

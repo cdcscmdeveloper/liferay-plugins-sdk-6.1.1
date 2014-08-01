@@ -10,25 +10,28 @@
 
 	<p:dialog widgetVar="createOwnerSpec" modal="true" width="1000"
 		height="500">
-<p:messages id="bocreateTemplate" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
+		<ac:title value="#{lbl['lbl.sc.spec.business.owner']}"></ac:title>
+		<p:messages id="bocreateTemplate" showDetail="true" autoUpdate="true"
+			closable="true" showSummary="false" />
 		<p:panel header="#{lbl['lbl.sc.tpl.search']}" id="searchBospec">
-        
+
 			<table>
 				<tr>
 					<td style="width: 150px;"><p:outputLabel
 							value="#{lbl['lbl.sc.spec.template.spec.standard.template']}" />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneRadio required="true" label="#{lbl['lbl.sc.spec.template.spec.standard.template']}" id="tempSpecStandardTemplate"
+					<td><p:selectOneRadio required="true"
+							label="#{lbl['lbl.sc.spec.template.spec.standard.template']}"
+							id="tempSpecStandardTemplate"
 							value="#{specificationBackingBean.managedBean.standardTemplate}">
 							<f:selectItem itemLabel="Yes" itemValue="ST"></f:selectItem>
 							<f:selectItem itemLabel="No" itemValue="SC"></f:selectItem>
 							<p:ajax event="change"
 								listener="#{specificationBackingBean.templateChange}"
 								update="cretaeupdate,listUpdate"></p:ajax>
-								
-						</p:selectOneRadio>
-						<p:message id="strdTemplate" for="tempSpecStandardTemplate" display="icon"></p:message>
-						</td>
+
+						</p:selectOneRadio> <p:message id="strdTemplate" for="tempSpecStandardTemplate"
+							display="icon"></p:message></td>
 				</tr>
 			</table>
 
@@ -40,14 +43,16 @@
 							<td style="width: 150px;"><p:outputLabel
 									value="#{lbl['lbl.sc.tpl.search.item']}"></p:outputLabel> <p:outputLabel
 									value="*" styleClass="mandatory" /></td>
-							<td><p:selectOneMenu style="margin-bottom:5px;" required="#{specificationBackingBean.managedBean.required}" label="#{lbl['lbl.sc.tpl.search.item']}" id="templateSpecItemType"
+							<td><p:selectOneMenu style="margin-bottom:5px;"
+									required="#{specificationBackingBean.managedBean.required}"
+									label="#{lbl['lbl.sc.tpl.search.item']}"
+									id="templateSpecItemType"
 									value="#{specificationBackingBean.managedBean.searchItemTypeId}">
 									<f:selectItems
 										value="#{specificationBackingBean.getDropdownValues(ParameterTypeConst.scItemType)}" />
-										
-								</p:selectOneMenu>
-								<p:message id="boItemType" for="templateSpecItemType" display="icon"></p:message>
-								</td>
+
+								</p:selectOneMenu> <p:message id="boItemType" for="templateSpecItemType"
+									display="icon"></p:message></td>
 						</tr>
 					</table>
 				</ui:fragment>
@@ -56,19 +61,19 @@
 					<table>
 						<tr>
 							<td style="width: 115px;"><p:outputLabel
-									value="#{lbl['lbl.sc.tpl.search.item']}"></p:outputLabel>
-									<p:outputLabel
-									value="*" styleClass="mandatory" />
-									</td>
-							<td><p:selectOneMenu style="margin-bottom:5px;" required="#{specificationBackingBean.managedBean.required}" label="#{lbl['lbl.sc.tpl.search.item']}" id="sourcingSpecItemType"
+									value="#{lbl['lbl.sc.tpl.search.item']}"></p:outputLabel> <p:outputLabel
+									value="*" styleClass="mandatory" /></td>
+							<td><p:selectOneMenu style="margin-bottom:5px;"
+									required="#{specificationBackingBean.managedBean.required}"
+									label="#{lbl['lbl.sc.tpl.search.item']}"
+									id="sourcingSpecItemType"
 									value="#{specificationBackingBean.managedBean.searchItemTypeId}">
 									<f:selectItems
 										value="#{specificationBackingBean.getDropdownValues(ParameterTypeConst.scItemType)}" />
-										
-										
-								</p:selectOneMenu>
-								<p:message id="sourcingBoItemType" for="sourcingSpecItemType" display="icon"></p:message>
-								</td>
+
+
+								</p:selectOneMenu> <p:message id="sourcingBoItemType" for="sourcingSpecItemType"
+									display="icon"></p:message></td>
 						</tr>
 						<tr>
 							<td style="width: 115px;"><h:outputLabel
@@ -97,10 +102,11 @@
 			</h:panelGroup>
 			<div align="right" style="width: 70%;">
 				<p:commandButton value="#{lbl['lbl.sc.tpl.btn.search']}"
-					action="#{specificationBackingBean.searchScqtDocAction}"  process="@this searchBospec"
-					update="searchBospec,createList" icon="ui-icon-search" />
+					action="#{specificationBackingBean.searchScqtDocAction}"
+					process="@this searchBospec" update="searchBospec,createList"
+					icon="ui-icon-search" />
 				<p:commandButton value="#{lbl['lbl.sc.eva.btn.reset']}"
-					icon="ui-icon-reset"  partialSubmit="true" update="searchBospec"
+					icon="ui-icon-reset" partialSubmit="true" update="searchBospec"
 					process="@this" action="#{specificationBackingBean.resetTemplate}" />
 			</div>
 
