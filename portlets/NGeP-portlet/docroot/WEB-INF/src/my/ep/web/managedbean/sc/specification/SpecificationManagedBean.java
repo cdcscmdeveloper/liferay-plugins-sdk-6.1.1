@@ -254,6 +254,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private List<ScQtCheckList> financialSpecList;
 
 	private List<SelectItem> yearList;
+	private List<SelectItem> yearsDisplayList;
 
 	private int totalSuppliers;
 
@@ -3938,6 +3939,20 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	 */
 	public void setExistingpanelitem(CtPanelItem existingpanelitem) {
 		this.existingpanelitem = existingpanelitem;
+	}
+
+	/**
+	 * @return the yearsDisplayList
+	 */
+	public List<SelectItem> getYearsDisplayList() {
+		return yearsDisplayList;
+	}
+
+	/**
+	 * @param yearsDisplayList the yearsDisplayList to set
+	 */
+	public void setYearsDisplayList(List<SelectItem> yearsDisplayList) {
+		this.yearsDisplayList = yearsDisplayList;
 	}
 
 }
