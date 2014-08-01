@@ -226,8 +226,10 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 					flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
 				}
 			}
+			List<String> selectedItemCode = new ArrayList<String>();
 		    for(SelectItem selectItem : itemList) {
-		    	if(flDocTypes.contains(selectItem.getValue())) {
+		    	if(flDocTypes.contains(selectItem.getValue()) && !selectedItemCode.contains(selectItem.getValue().toString())) {
+		    		selectedItemCode.add(selectItem.getValue().toString());
 		    		selectedItemList.add(selectItem);
 		    	}
 		    }
