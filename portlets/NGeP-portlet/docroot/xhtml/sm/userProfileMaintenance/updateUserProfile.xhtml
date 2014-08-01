@@ -119,7 +119,7 @@
 						<td><p:inputText id="updateBUPhone"
 								label="#{lbl['lbl.sm.userprofile.phone']}"
 								value="#{smPersonnelBackingBean.managedBean.updateSmPersonnel.phoneNo}"
-								size="35" required="true" 
+								size="35" maxlength="12" required="true" 
 								validatorMessage="#{lbl['lbl.sm.userprofile.phone']} - #{lbl['lbl.sm.invalidNo']}">
 								<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
 								</p:inputText></td>
@@ -132,7 +132,7 @@
 						<td><p:inputText id="updateBUMobile"
 								label="#{lbl['lbl.sm.userprofile.mobile']}"
 								value="#{smPersonnelBackingBean.managedBean.updateSmPersonnel.mobileNo}"
-								size="35" required="true" 
+								size="35" maxlength="12" required="true" 
 								validatorMessage="#{lbl['lbl.sm.userprofile.mobile']} - #{lbl['lbl.sm.invalidNo']}">
 								<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
 								</p:inputText></td>
