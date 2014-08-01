@@ -1,0 +1,32 @@
+<ui:composition	
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+		
+   <p:panel header="EDUCATION FIELD" toggleable="true" styleClass="noBorders tr,noBorders td" >
+		
+	<table>
+	  <tr>	  	
+		<td><p:outputLabel value="#{lbl['lbl.pm.ef.code']}" />
+			<p:outputLabel value="*" styleClass="mandatory" /></td>
+		<td><p:inputText value="#{educationBackingBean.managedBean.pmEduField.fieldCode}" size="30" /></td>
+	  </tr>	
+	  <tr>	  	
+		<td><p:outputLabel value="#{lbl['lbl.pm.ef.fname']}" />
+			<p:outputLabel value="*" styleClass="mandatory" /></td>
+		<td><p:inputText value="#{educationBackingBean.managedBean.pmEduField.fieldName}" size="100" /></td>
+	  </tr>	
+	   <tr> 
+		<td><p:outputLabel value="#{lbl['lbl.pm.search.status']}" /></td>
+     	<td><p:selectOneMenu style="width:178px;margin-bottom:5px;"> 
+  	        </p:selectOneMenu></td>				
+	    </tr>
+	</table>
+   </p:panel>
+     	
+</ui:composition>

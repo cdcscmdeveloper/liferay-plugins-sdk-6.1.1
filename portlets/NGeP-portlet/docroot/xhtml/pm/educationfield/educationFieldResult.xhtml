@@ -1,0 +1,70 @@
+<ui:composition	
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+		
+	
+	<p:panel>
+		<h:panelGrid styleClass="noBorders tr,noBorders td" ></h:panelGrid>
+    </p:panel>
+	
+	<p:panel id="educationSearch" header="SEARCH" toggleable="true">
+		
+	<h:panelGrid style="width:100%;">
+	</h:panelGrid>
+	
+	 <ui:include src="/xhtml/pm/educationfield/educationFieldSearch.xhtml" />
+			
+      <div align="right">
+			<p:commandButton value="#{lbl['lbl.btn.search']}" icon="ui-icon-search" 
+							 action="#{educationBackingBean.retrieveEducationField}"
+						     update="educationSR" process="educationSearch"/>
+            <p:commandButton value="#{lbl['lbl.btn.reset']}" icon="ui-icon-reset" />
+	  </div>
+    <br/>
+	<br/>
+	</p:panel>
+	
+	<p:panel id="educationResult" header="RESULT" toggleable="true">
+	<p:dataTable id="educationSR" value="#{educationBackingBean.educationFieldDataModel}"
+				var="educationList" rowIndexVar="index" lazy="true">	
+	   <ac:paginator for="educationSR" />
+		
+       <p:column headerText="#{lbl['lbl.pm.ef.code']}"> 
+		<h:outputText value="#{educationList.fieldCode}" />      
+       </p:column>
+       
+       <p:column headerText="#{lbl['lbl.pm.ef.name']}"> 
+		<h:outputText value="#{educationList.fieldName}" />
+       </p:column> 
+       
+        <p:column headerText="#{lbl['lbl.pm.ef.category']}"> 
+		<h:outputText />
+       </p:column>             
+     
+       <p:column headerText="#{lbl['lbl.pm.search.status']}"> 
+                 
+       </p:column >
+        
+    	<p:column headerText="#{lbl['lbl.pm.profiles.search.result.action']}">
+   		 <p:commandLink action="#{educationBackingBean.goToMaintaincePage(educationList)}" process="@this" partialSubmit="true">
+     		<p:graphicImage library="ep/images/design" name="edit.png"
+     		 value="/resources/ep/images/design/edit.png" />
+    	 </p:commandLink>
+   	 	</p:column>    
+     </p:dataTable>
+	</p:panel>
+	
+	<p:panel>
+	<h:panelGrid columns="2" style="width:100%;" styleClass="noBorders tr,noBorders td">
+
+      <p:commandButton value="#{lbl['lbl.btn.create']}" action="#{educationBackingBean.createEducation}"
+      				   style="float:right;" icon="ui-icon-add" />
+	
+	 </h:panelGrid>	
+	</p:panel>
+</ui:composition>
