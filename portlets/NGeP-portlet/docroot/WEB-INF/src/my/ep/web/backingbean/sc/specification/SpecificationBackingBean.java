@@ -2190,6 +2190,7 @@ public class SpecificationBackingBean extends
 				if (null != specChecklist && specChecklist.size() > 0) {
 					tmpCheckList.setQtScoreWeightage(specChecklist.get(0)
 							.getQtScoreWeightage());
+					this.getManagedBean().setScQtChecklist(tmpCheckList);
 					if (specChecklist.get(0).getQtScoreWeightage().getScore() != null) {
 						getManagedBean().setScoreVarience(
 								specChecklist.get(0).getQtScoreWeightage()
@@ -2249,6 +2250,7 @@ public class SpecificationBackingBean extends
 							offerPrice);
 
 				} else {
+					
 					for (ScQtScoreOfferPrice scoreOfferPrice : tmpCheckList
 							.getQtScoreWeightage().getScQtScoreOfferPrices()) {
 						if (ParameterConst.RECOMMEND_TYPE_PACKAGE
