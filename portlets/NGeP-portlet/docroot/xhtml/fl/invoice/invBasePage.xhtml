@@ -33,24 +33,23 @@
 							icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
 							action="#{invoiceBackingBean.submitAction(bpmAction)}" />
 					</ui:repeat></td>
-			</tr>
-		</table>
-		<table style="width: 100%">
-			<tr>
-				<c:if test='#{invoiceBackingBean.managedBean.buttonVal eq "Update"}'>
-					<td colspan="4" style="text-align: right;"><p:commandButton
-							value="UPDATE"
+			<h:panelGroup
+					rendered="#{invoiceBackingBean.managedBean.buttonVal eq 'Update'}">	
+					<td colspan="4" style="text-align: right"><p:commandButton
+							value="UPDATE" icon="ui-icon-edit"
 							action="#{invoiceBackingBean.submitAction('UPDATE')}">
 							<f:param name="actionName" value="UPDATE" />
 						</p:commandButton></td>
-				</c:if>
-				<c:if test='#{invoiceBackingBean.managedBean.buttonVal eq "Cancel"}'>
-					<td colspan="4" style="text-align: right;"><p:commandButton
-							value="CANCEL"
+				</h:panelGroup>
+				<h:panelGroup
+					rendered="#{invoiceBackingBean.managedBean.buttonVal eq 'Cancel'}">	
+					<td colspan="4" style="text-align: right"><p:commandButton
+							value="CANCEL" icon="ui-icon-cancel"
 							action="#{invoiceBackingBean.submitAction('CANCEL')}">
 							<f:param name="actionName" value="CANCEL" />
 						</p:commandButton></td>
-				</c:if>
+				</h:panelGroup>
+					
 			</tr>
 		</table>
 		<ui:include src="/xhtml/fl/invoice/invReviewHeaderPage.xhtml" />

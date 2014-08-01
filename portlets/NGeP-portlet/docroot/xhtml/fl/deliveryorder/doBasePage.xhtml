@@ -50,26 +50,22 @@
 								action="#{createDOBackingBean.createDeliveryOrder(bpmAction)}" />
 						</ui:repeat></td>
 				</h:panelGroup>
-			</tr>
-		</table>
-		<table style="width: 100%;">
-			<tr>
-				<c:if
-					test='#{createDOBackingBean.managedBean.buttonVal eq "Update"}'>
+				<h:panelGroup
+					rendered="#{createDOBackingBean.managedBean.buttonVal eq 'Update'}">	
 					<td colspan="4" style="text-align: right"><p:commandButton
-							value="UPDATE"
+							value="UPDATE" icon="ui-icon-edit"
 							action="#{createDOBackingBean.createDeliveryOrder('UPDATE')}">
 							<f:param name="actionName" value="UPDATE" />
 						</p:commandButton></td>
-				</c:if>
-				<c:if
-					test='#{createDOBackingBean.managedBean.buttonVal eq "Cancel"}'>
+				</h:panelGroup>
+				<h:panelGroup
+					rendered="#{createDOBackingBean.managedBean.buttonVal eq 'Cancel'}">	
 					<td colspan="4" style="text-align: right"><p:commandButton
-							value="CANCEL"
+							value="CANCEL" icon="ui-icon-cancel"
 							action="#{createDOBackingBean.createDeliveryOrder('CANCEL')}">
 							<f:param name="actionName" value="CANCEL" />
 						</p:commandButton></td>
-				</c:if>
+				</h:panelGroup>
 			</tr>
 		</table>
 		<ui:include src="doReviewHeaderPage.xhtml" />
