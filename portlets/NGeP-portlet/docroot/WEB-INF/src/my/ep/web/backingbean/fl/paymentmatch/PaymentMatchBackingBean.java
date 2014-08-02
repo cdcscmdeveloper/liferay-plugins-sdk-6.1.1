@@ -265,6 +265,10 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 				new FulfilmentBackingBean(ParameterConst.DOCTYPE_PAYMENT_ADVICE, getManagedBean().getPaymentAdvice().getFlRequest().getCtContract().getContractNo());
 			}	
 			populateChargeLineData();
+			if(null == getManagedBean().getPaymentAdvice().getDescription()){
+				getManagedBean().getPaymentAdvice().setDescription(getManagedBean().getPaymentAdvice().getFlRequest().getTitle());
+				
+			}
 		}
 	}
 	
