@@ -3713,13 +3713,7 @@ public class SmApplicationBackingBean extends
 
 	public String submitSmApplToBpm(String applType) {
 		// try {
-		if ((applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)
-				|| applType
-						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)
-				|| applType
-						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI) || applType
-					.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE))
-				&& getManagedBean().getSmAppl().getSupportingDocMode() != null
+		if ( getManagedBean().getSmAppl().getSupportingDocMode() != null
 				&& getManagedBean().getSmAppl().getSupportingDocMode()
 						.equals("O")) {
 			validateSupportingDocs();
