@@ -3494,7 +3494,7 @@ public class SpecificationBackingBean extends
 		// this.getManagedBean().setActiveIndex(0);
 
 		try {
-			if (null == this.getManagedBean().getScQt()) {
+			
 				QtDetailsSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 				QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
@@ -3529,7 +3529,7 @@ public class SpecificationBackingBean extends
 				if (null != scQt.getEstimatedAmount()) {
 					setProcurementMode(scQt);
 				}
-			}
+			
 
 		} finally {
 			QtDetailsSO = null;
