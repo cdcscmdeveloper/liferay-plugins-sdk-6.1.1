@@ -49,11 +49,11 @@
 		<table style="width: 100%">
 			<tr>
 				<td rowspan="3" valign="top" style="width: 142px;"><p:outputLabel
-						value="* #{lbl['lbl.fl.title']}" /></td>
+						value="#{lbl['lbl.fl.title']}" /></td>
 				<td rowspan="3"><p:inputTextarea cols="50" rows="4"
 						style=" margin-bottom:5px;"
 						value="#{flOrderBB.managedBean.flRequest.title}" disabled="true" /></td>
-				<td style="width: 131px;"><p:outputLabel
+				<td style="width: 134px;"><p:outputLabel
 						value="#{lbl['lbl.fl.procurement.type']}" /></td>
 				<td><p:inputText size="25"
 						value="#{purchaseRequestBackingBean.getParameterDesc(flOrderBB.managedBean.flRequest.procurementType)}"
@@ -91,7 +91,8 @@
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText></td>
-				<td><p:outputLabel value="#{lbl['lbl.fl.factored']} " /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.factored']} " /><p:outputLabel value="*"
+						styleClass="mandatory" /></td>
 				<td><p:selectOneRadio disabled="#{flOrderBB.managedBean.buttonVal!=null}" 
 						value="#{flOrderBB.managedBean.factoringCheck}">
 						<f:selectItem itemLabel="Yes" itemValue="true" />
@@ -121,9 +122,9 @@
 							<td style="width: 25px;"><p:inputText size="16"
 									disabled="true"
 									value="#{flOrderBB.managedBean.flRequest.smSupplier.regNo}" /></td>
-							<td style="width: 69px;"><p:outputLabel
+							<td style="width: 72px;"><p:outputLabel
 									value="#{lbl['lbl.fl.supp.mof.no']}" /></td>
-							<td><p:inputText size="19" disabled="true"
+							<td><p:inputText size="15" disabled="true"
 									value="#{flOrderBB.managedBean.flRequest.smSupplier.smMofAccounts[0].mofNo}" /></td>
 						</tr>
 					</table></td>
@@ -153,9 +154,9 @@
 							<td style="width: 25px;"><p:inputText size="16"
 									disabled="true"
 									value="#{flOrderBB.managedBean.flRequest.flSupplierDtl.phoneNo}" /></td>
-							<td style="width: 65px;"><p:outputLabel
+							<td style="width: 72px;"><p:outputLabel
 									value="#{lbl['lbl.fl.supp.faxno']}" /></td>
-							<td><p:inputText size="19" disabled="true"
+							<td><p:inputText size="15" disabled="true"
 									value="#{flOrderBB.managedBean.flRequest.flSupplierDtl.faxNo}" /></td>
 						</tr>
 					</table></td>
@@ -229,9 +230,9 @@
 								<td style="width: 25px;"><p:inputText size="15"
 										disabled="true"
 										value="#{flOrderBB.managedBean.phoneNo}" /></td>
-								<td style="width: 65px;"><p:outputLabel
+								<td style="width: 72px;"><p:outputLabel
 										value="#{lbl['lbl.fl.supp.faxno']}" /></td>
-								<td><p:inputText size="19" disabled="true"
+								<td><p:inputText size="15" disabled="true"
 										value="#{flOrderBB.managedBean.faxNo}" /></td>
 							</tr>
 						</table></td>
