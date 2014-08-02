@@ -7,43 +7,41 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<p:panel id="contractListPnl" header="#{lbl['lbl.ct.cc.ct']}"
 		toggleable="true" toggleSpeed="500">
-		<p:dataTable id="centralContractDt" var="data" rowIndexVar="index"
+		<p:dataTable id="centralContractDt" var="circularContractsVar" rowIndexVar="index"
 			value="#{centralContractBackingBean.managedBean.circularVer.ctCircularContracts}"
-			selectionMode="single"
-			selection="#{centralContractBackingBean.managedBean.selectedCircularContract}"
-			rowKey="#{data}">
+			selectionMode="single" selection="#{centralContractBackingBean.managedBean.selectedCircularContract}" rowKey="#{circularContractsVar}">
 			<ac:paginator for="centralContractDt" />
 			<p:ajax event="rowSelect"
 				update=":form:contractListPnl"
 				process="@this"
 				listener="#{centralContractBackingBean.setContractListner()}" />
 			<p:column headerText="#{lbl['lbl.ct.cc.phyloa']}">
-				<h:outputText value="#{data.ctContract.loaPhysicalNo}" />
+				<h:outputText value="#{circularContractsVar.ctContract.loaPhysicalNo}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.ct.cc.phyCno']}">
-				<h:outputText value="#{data.ctContract.contractPhysicalNo}" />
+				<h:outputText value="#{circularContractsVar.ctContract.contractPhysicalNo}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.ct.cc.ctname']}">
-				<h:outputText value="#{data.ctContract.contractName}" />
+				<h:outputText value="#{circularContractsVar.ctContract.contractName}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.ct.cc.sup']}">
 				<h:outputText
-					value="#{data.ctContract.latestContractVer.ctContractValue.supplierName}" />
+					value="#{circularContractsVar.ctContract.latestContractVer.ctContractValue.supplierName}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.ct.cc.ctsdate']}">
 				<h:outputText
-					value="#{data.ctContract.latestContractVer.ctContractValue.effDate}">
+					value="#{circularContractsVar.ctContract.latestContractVer.ctContractValue.effDate}">
 					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 				</h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.ct.cc.ctedate']}">
 				<h:outputText
-					value="#{data.ctContract.latestContractVer.ctContractValue.expDate}">
+					value="#{circularContractsVar.ctContract.latestContractVer.ctContractValue.expDate}">
 					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 				</h:outputText>
 			</p:column>
 			<p:column headerText="Status">
-				<p:selectOneMenu value="#{data.recordStatusFlg}"
+				<p:selectOneMenu value="#{circularContractsVar.recordStatusFlg}"
 					disabled="#{!centralContractBackingBean.managedBean.updateAction}"
 					style="width:70px;">
 					<f:selectItem itemValue="0" itemLabel="Inactive" />
@@ -188,8 +186,8 @@
 		     and centralContractBackingBean.managedBean.chkItemZone)?lbl['lbl.ct.cc.sublabel.zoneprice']:lbl['lbl.ct.cc.sublabel.itemprice']}"
 					style="float:left; font-weight:bold; padding-top:25px;" />
 				<div style="clear: both" />
-				<p:dataTable id="circularItemZonePriceDt" var="priceVar"
-					value="#{centralContractBackingBean.getItemPrice()}">
+				<p:dataTable id="circularItemZonePriceDt" var="priceVar" 
+				     value="#{centralContractBackingBean.getItemPrice()}">
 					<ac:paginator for="circularItemZonePriceDt" />
 					<p:column headerText="From Qty." style="width:30%;">
 						<h:outputText value="#{priceVar.fromQty}" style="width:50%;" />
@@ -244,24 +242,24 @@
 						icon="ui-icon-search" update="contractDt"
 						actionListener="#{centralContractBackingBean.searchContract()}" />
 				</h:panelGrid>
-				<p:dataTable id="contractDt" var="data" rowIndexVar="index"
-					rowKey="#{data.contractId}" paginator="true"
+				<p:dataTable id="contractDt" var="contractListVar" rowIndexVar="index"
+					rowKey="#{contractListVar.contractId}" paginator="true"
 					value="#{centralContractBackingBean.managedBean.contractList}"
 					selection="#{centralContractBackingBean.managedBean.selectedContractList}">
 					<ac:paginator for="contractDt" />
 					<p:column selectionMode="multiple" style="width:3%;" />
 					<p:column headerText="#{lbl['lbl.ct.cc.phyloa']}">
-						<h:outputText value="#{data.loaPhysicalNo}" />
+						<h:outputText value="#{contractListVar.loaPhysicalNo}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.cc.phyCno']}">
-						<h:outputText value="#{data.contractPhysicalNo}" />
+						<h:outputText value="#{contractListVar.contractPhysicalNo}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.search.table.cno']}">
-						<h:outputText value="#{data.contractNo}" />
+						<h:outputText value="#{contractListVar.contractNo}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.cc.sup']}">
 						<h:outputText
-							value="#{data.latestContractVer.ctContractValue.supplierName}" />
+							value="#{contractListVar.latestContractVer.ctContractValue.supplierName}" />
 					</p:column>
 				</p:dataTable>
 				<p:spacer height="2" />

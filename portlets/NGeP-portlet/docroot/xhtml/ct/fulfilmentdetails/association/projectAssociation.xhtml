@@ -12,14 +12,15 @@
       .column-align-center { text-align: center !important;}
     </style>
     <p:panel id="messageId">
-      	<p:messages id="messages" showDetail="true" showSummary="false" autoUpdate="true" closable="true" severity="error, info" />
+      	<p:messages id="messages" showDetail="true" 
+      	   showSummary="false" autoUpdate="true" closable="true" severity="error, info" />
     </p:panel>
     <p:panel id="associatePanelId" header="#{lbl['lbl.ct.projassociate']}"   toggleable="true"  toggleSpeed="500">
       <h:panelGrid columns="4" style="width:100%;">
         <p:outputLabel value="#{lbl['lbl.ct.asearch.pname']}"  />
         <p:inputText id="pNames"  maxlength="100" style="width:170px;" 
            label="#{lbl['lbl.ct.asearch.pname']}"  value="#{associationBackingBean.managedBean.projectName}"/>
-     
+   
         <p:outputLabel value="#{lbl['lbl.ct.asearch.cname']}"  />
         <p:inputText id="contractName" maxlength="1000" style="width:170px;"
            label="#{lbl['lbl.ct.asearch.cname']}" value="#{associationBackingBean.managedBean.ctName}" />

@@ -781,13 +781,13 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
     }
 
 	public List<CtItemPrice> getItemPrice() {
-		 List<CtItemPrice> itemPriceList;
-		if(this.getManagedBean().getZonePriceMap().size() > 0) {
-		if(this.getManagedBean().getSelectedZoneItems() != null);
-		  itemPriceList =  getManagedBean().getZonePriceMap().get(this.getManagedBean().getSelectedZoneItems());
-		}else{
-		  itemPriceList = this.getManagedBean().getSelectedCircularItem().getCtContractItem().getCtItemPrices();
-		}
+		 List<CtItemPrice> itemPriceList = new ArrayList<CtItemPrice>();
+	 	 if(this.getManagedBean().getZonePriceMap().size() > 0) {
+		     if(this.getManagedBean().getSelectedZoneItems() != null);
+		           itemPriceList =  getManagedBean().getZonePriceMap().get(this.getManagedBean().getSelectedZoneItems());
+		    }else{
+		         itemPriceList = this.getManagedBean().getSelectedCircularItem().getCtContractItem().getCtItemPrices();
+	    	}
 		return itemPriceList;
 	}
 	

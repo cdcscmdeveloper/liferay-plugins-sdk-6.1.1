@@ -8,19 +8,20 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
     <p:panel id="meetingPanel" header="#{lbl['lbl.ct.amend.meetingDtl']}" toggleable="true"  toggleSpeed="500">
       <div style="overflow-x:auto">
-      <p:dataTable id="meetingTable" var="data" value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.ctMeetings}"
-         selection="#{amendmentBackingBean.selectedMeetingUser}" rowKey="#{data}">
+      <p:dataTable id="meetingTable" var="ctMeetingsVar" 
+        value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.ctMeetings}"
+         selection="#{amendmentBackingBean.selectedMeetingUser}" rowKey="#{ctMeetingsVar}">
              <ac:paginator for="meetingTable" />
               <p:column selectionMode="multiple" style="width:2%;" />
 			  <p:column style="width:25%;" headerText="#{lbl['lbl.ct.amend.dtofmeeting']}">
-			     <p:calendar value="#{data.meetingDate}" size="25" id="calMeeting"
+			     <p:calendar value="#{ctMeetingsVar.meetingDate}" size="25" id="calMeeting"
 			         readonlyInput="true"  showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
 			  </p:column> 
 			  <p:column style="width:55%;" headerText="#{lbl['lbl.ct.amend.locofmeeting']}">
-				    <p:inputText value="#{data.meetingLocation}" style="width:95%;"/>
+				    <p:inputText value="#{ctMeetingsVar.meetingLocation}" style="width:95%;"/>
 			  </p:column> 
 			  <p:column style="width:20%;" headerText="Status">
-				 <p:selectOneMenu value="#{data.meetingStatusId}" style="with:150px;">
+				 <p:selectOneMenu value="#{ctMeetingsVar.meetingStatusId}" style="with:150px;">
 			          <f:selectItems value="#{amendmentBackingBean.getMeetingStatusDropdown()}"/>
 			     </p:selectOneMenu>
 			  </p:column> 	
@@ -50,34 +51,35 @@
       	</p:panel>
       <p:panel id="committePanel" header="#{lbl['lbl.ct.amend.commmember']}" toggleable="true"  toggleSpeed="500">
         <div style="overflow-x:auto">
-         <p:dataTable id="committeTable" var="data" value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.ctCommitteeMembers}"
-           selection="#{amendmentBackingBean.selectedCommitteMembers}" rowKey="#{data}">
+         <p:dataTable id="committeTable" var="ctCommitteeVar" 
+            value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.ctCommitteeMembers}"
+           selection="#{amendmentBackingBean.selectedCommitteMembers}" rowKey="#{ctCommitteeVar}">
             <ac:paginator for="committeTable" />
                  <p:column selectionMode="multiple" style="width:2%;" />
 				 <p:column style="width:20%;" headerText="Name">
-				   <p:outputLabel value="#{data.memberName}" style="float:left;"/>
+				   <p:outputLabel value="#{ctCommitteeVar.memberName}" style="float:left;"/>
 				 </p:column> 
 				 <p:column style="width:15%;" headerText="Identification No.">
-				    <p:outputLabel value="#{data.icPassport}" style="float:left;"/>
+				    <p:outputLabel value="#{ctCommitteeVar.icPassport}" style="float:left;"/>
 				 </p:column>  
 				 <p:column style="width:15%;" headerText="Designation">
-				   <p:outputLabel value="#{data.designation}" style="float:left;"/>
+				   <p:outputLabel value="#{ctCommitteeVar.designation}" style="float:left;"/>
 				 </p:column> 
 				 <p:column style="width:15%;" headerText="Email">
-				    <p:outputLabel value="#{data.email}" style="float:left;"/>
+				    <p:outputLabel value="#{ctCommitteeVar.email}" style="float:left;"/>
 				 </p:column> 
 				 <p:column style="width:10%;" headerText="Grade">
-				     <p:outputLabel value="#{data.grade}" style="float:left;"/>
+				     <p:outputLabel value="#{ctCommitteeVar.grade}" style="float:left;"/>
 				 </p:column> 
 				 <p:column headerText="PNP">
-				     <h:outputText value="#{data.pnp ? 'Yes' : 'No'}"  style="float:left;"/>
+				     <h:outputText value="#{ctCommitteeVar.pnp ? 'Yes' : 'No'}"  style="float:left;"/>
 				 </p:column>
 				 <p:column headerText="Role">
-					 <ui:fragment rendered="#{data.pnp == true}">
+					 <ui:fragment rendered="#{ctCommitteeVar.pnp == true}">
 							<h:outputText value="Chairperson" />
 					 </ui:fragment>
-					<ui:fragment rendered="#{data.pnp == false}">
-						<p:selectOneMenu id="appaction" value="#{data.memberRole.parameterId}"
+					<ui:fragment rendered="#{ctCommitteeVar.pnp == false}">
+						<p:selectOneMenu id="appaction" value="#{ctCommitteeVar.memberRole.parameterId}"
 							style="width: 110px;margin-bottom: 5px;">
 							 <f:selectItems
 								value="#{amendmentBackingBean.getDropdownValues(ParameterTypeConst.committeeRole)}" />
@@ -144,7 +146,8 @@
 		      </p:panel>
 		      <p:panel id="searchResult" header="#{lbl['lbl.ct.tpl.result']}" toggleable="true"  toggleSpeed="500">
 		        <div style="overflow-x:auto">
-                 <p:dataTable id="newCommitteTable" var="existuser" value="#{amendmentBackingBean.managedBean.externalUsers}"
+                 <p:dataTable id="newCommitteTable" var="existuser" 
+                   value="#{amendmentBackingBean.managedBean.externalUsers}"
                    rowKey="#{existuser}" selection="#{amendmentBackingBean.selectedPmUser}">
                    <ac:paginator for="newCommitteTable" />
                       <p:column selectionMode="multiple" style="width:2%" />

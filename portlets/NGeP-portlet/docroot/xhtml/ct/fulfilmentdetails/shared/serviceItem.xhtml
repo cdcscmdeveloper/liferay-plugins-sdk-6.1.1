@@ -31,21 +31,21 @@
 		   <p:spacer height="20"/>
 		    <h:panelGrid columns="1" style="width:100%" 
 		       rendered="#{contractDetailsBackingBean.managedBean.selectedServiceItem != null}">
-		      <p:dataTable id="servicePriceTable" var="data"
+		      <p:dataTable id="servicePriceTable" var="itemPricesVar"
 		         value="#{contractDetailsBackingBean.managedBean.selectedServiceItem.ctItemPrices}">
 			    <ac:paginator for="servicePriceTable"/>
 			     <p:column headerText="#{lbl['lbl.ct.item.table1.price.zone']}">
-			        <p:outputLabel value="#{data.ctContractZone.zoneName}" style="float:left;" />
+			        <p:outputLabel value="#{itemPricesVar.ctContractZone.zoneName}" style="float:left;" />
 			     </p:column>                   
 			     <p:column headerText="#{lbl['lbl.ct.item.table1.price.price']}" style="text-align: right;">
-			        <p:outputLabel value="#{data.unitPrice}"/>
+			        <p:outputLabel value="#{itemPricesVar.unitPrice}"/>
 			     </p:column>            
 			     <p:column headerText="#{lbl['lbl.ct.item.table1.price.efdate']}">
-				   <p:calendar style="width:130px;" value="#{data.effDate}"
+				   <p:calendar style="width:130px;" value="#{itemPricesVar.effDate}"
 				       pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" disabled="true" />
 			     </p:column>       
 			     <p:column headerText="#{lbl['lbl.ct.item.table1.price.edate']}">
-			         <p:calendar style="width:130px;" value="#{data.expDate}"
+			         <p:calendar style="width:130px;" value="#{itemPricesVar.expDate}"
 			             pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" disabled="true"  />
 			    </p:column>       
 		    </p:dataTable>

@@ -11,17 +11,17 @@
 		<table style="width=100%;">
 			<tr>
 				<td valign="top">
-					<p:dataTable id="circularZoneDt" var="data" rowKey="#{data}"
+					<p:dataTable id="circularZoneDt" var="circularZoneVar" rowKey="#{circularZoneVar}"
 						value="#{centralContractBackingBean.getCircularZoneList('C')}" selectionMode="single" 
 						selection="#{centralContractBackingBean.managedBean.selectedCircularZone}" >
 						<ac:paginator for="circularZoneDt" />
 						<p:ajax event="rowSelect" update=":form:tabview:circularZoneDtlPnl,:form:tabview:deleteZoneBtn" 
 							listener="#{centralContractBackingBean.selectZoneEvent()}" />
 						<p:column headerText="#{lbl['lbl.ct.pc.zone.name']}" style="width:250px;" >
-							<p:inputText value="#{data.name}" style="width:250px;" maxlength="100" />
+							<p:inputText value="#{circularZoneVar.name}" style="width:250px;" maxlength="100" />
 						</p:column>
 						<p:column headerText="#{lbl['lbl.ct.zone.tree.period']}" style="width:150px;" >
-							<p:inputText value="#{data.deliveryTerm}" maxlength="4" label="#{lbl['lbl.ct.zone.tree.period']}" />
+							<p:inputText value="#{circularZoneVar.deliveryTerm}" maxlength="4" label="#{lbl['lbl.ct.zone.tree.period']}" />
 						</p:column>						
 					</p:dataTable>
 					<p:spacer height="2" />
@@ -43,20 +43,20 @@
 				<td><p:spacer width="50px;" /></td>
 				<td valign="top">
 					<h:panelGroup id="circularZoneDtlPnl">
-						<p:dataTable id="circularZoneDtlDt" var="data" rowKey="#{data}" rowIndexVar="index"
+						<p:dataTable id="circularZoneDtlDt" var="circularZoneDtlsVar" rowKey="#{circularZoneDtlsVar}" rowIndexVar="index"
 							value="#{centralContractBackingBean.managedBean.selectedCircularZone.ctCircularZoneDtls}" selectionMode="single" 
 							selection="#{centralContractBackingBean.managedBean.selectedCircularZoneDtl}" >
 							<ac:paginator for="circularZoneDtlDt" />
 							<p:ajax event="rowSelect" update=":form:tabview:deleteZoneDtlBtn" />
 							<p:column headerText="Location" style="width:450px;">
-								<p:selectOneMenu value="#{data.state.stateId}" rendered="#{centralContractBackingBean.managedBean.circularVer.zonalLevel.parameterCode == ParameterConst.locationLevelState}">
+								<p:selectOneMenu value="#{circularZoneDtlsVar.state.stateId}" rendered="#{centralContractBackingBean.managedBean.circularVer.zonalLevel.parameterCode == ParameterConst.locationLevelState}">
 									<p:ajax event="change" process="@this" />
 									<f:selectItems value="#{centralContractBackingBean.getStateDropdownValues()}" />
 								</p:selectOneMenu>			
 								<ac:lov id="district" lovId="PM_DISTRICT" rendered="#{centralContractBackingBean.managedBean.circularVer.zonalLevel.parameterCode == ParameterConst.locationLevelDistrict}"
 									headerText="District Lov" 
 									saveObject="centralContractBackingBean.managedBean.selectedCircularZone.ctCircularZoneDtls[#{index}].district"
-									value="#{data.district.districtName}"
+									value="#{circularZoneDtlsVar.district.districtName}"
 									conditionField="recordStatus^1" /> 					
 							</p:column>
 						</p:dataTable>
@@ -88,14 +88,14 @@
 		<table style="width:100%;">
 			<tr>
 				<td valign="top">
-					<p:dataTable id="itemZoneDt" var="data" rowKey="#{data}"
+					<p:dataTable id="itemZoneDt" var="itemZoneVar" rowKey="#{itemZoneVar}"
 						value="#{centralContractBackingBean.getCircularZoneList('I')}" selectionMode="single" 
 						selection="#{centralContractBackingBean.managedBean.selectedItemZone}" >
 						<ac:paginator for="itemZoneDt" />
 						<p:ajax event="rowSelect" update=":form:tabview:itemZoneDtlPnl,:form:tabview:deleteItemZoneBtn" 
 							listener="#{centralContractBackingBean.selectItemZoneEvent()}" />
 						<p:column headerText="#{lbl['lbl.ct.pc.zone.name']}" style="width:370px;" >
-							<p:inputText value="#{data.name}" style="width:400px;" />
+							<p:inputText value="#{itemZoneVar.name}" style="width:400px;" />
 						</p:column>			
 					</p:dataTable>
 					<p:spacer height="2" />
@@ -117,20 +117,20 @@
 				<td><p:spacer width="50px;" /></td>
 				<td valign="top">
 					<h:panelGroup id="itemZoneDtlPnl">
-						<p:dataTable id="itemZoneDtlDt" var="data" rowKey="#{data}" rowIndexVar="index"
+						<p:dataTable id="itemZoneDtlDt" var="itemZoneDtVar" rowKey="#{itemZoneDtVar}" rowIndexVar="index"
 							value="#{centralContractBackingBean.managedBean.selectedItemZone.ctCircularZoneDtls}" selectionMode="single" 
 							selection="#{centralContractBackingBean.managedBean.selectedItemZoneDtl}" >
 							<ac:paginator for="itemZoneDtlDt" />
 							<p:ajax event="rowSelect" update=":form:tabview:deleteItemZoneDtlBtn" />
 							<p:column headerText="Location" style="width:400px;">
-								<p:selectOneMenu value="#{data.state.stateId}" rendered="#{centralContractBackingBean.managedBean.circularVer.itemZonalLevel.parameterCode == ParameterConst.locationLevelState}">
+								<p:selectOneMenu value="#{itemZoneDtVar.state.stateId}" rendered="#{centralContractBackingBean.managedBean.circularVer.itemZonalLevel.parameterCode == ParameterConst.locationLevelState}">
 									<p:ajax event="change" process="@this" />
 									<f:selectItems value="#{centralContractBackingBean.getStateDropdownValues()}" />
 								</p:selectOneMenu>			
 								<ac:lov id="item_district" lovId="PM_DISTRICT" rendered="#{centralContractBackingBean.managedBean.circularVer.itemZonalLevel.parameterCode == ParameterConst.locationLevelDistrict}"
 									headerText="District Lov" 
 									saveObject="centralContractBackingBean.managedBean.selectedItemZone.ctCircularZoneDtls[#{index}].district"
-									value="#{data.district.districtName}"
+									value="#{itemZoneDtVar.district.districtName}"
 									conditionField="recordStatus^1" /> 					
 							</p:column>
 						</p:dataTable>

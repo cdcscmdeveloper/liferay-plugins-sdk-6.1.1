@@ -16,24 +16,24 @@
 	</p:panel>
 	
 	<p:panel id="contactPerson" header="#{lbl['lbl.ct.pc.cpd']}" toggleable="true" toggleSpeed="500" widgetVar="panelcontactPerson">
-		<p:dataTable id="contactPersonDt" var="data" value="#{centralContractBackingBean.managedBean.circularVer.ctContactPersons}"
-		 	rowKey="#{data}" rowIndexVar="index" selection="#{centralContractBackingBean.managedBean.selectedContactPersons}">
+		<p:dataTable id="contactPersonDt" var="contactPersonsVar" value="#{centralContractBackingBean.managedBean.circularVer.ctContactPersons}"
+		 	rowKey="#{contactPersonsVar}" rowIndexVar="index" selection="#{centralContractBackingBean.managedBean.selectedContactPersons}">
 			<ac:paginator for="contactPersonDt" />
 			<p:column selectionMode="multiple" style="width:3%" />
 			<p:column headerText="#{lbl['lbl.ct.pc.cperson']}">
-				<p:inputText id="cperson" value="#{data.name}" maxlength="20"
+				<p:inputText id="cperson" value="#{contactPersonsVar.name}" maxlength="20"
 				   style="width:150px;" label="#{lbl['lbl.ct.pc.cperson']}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.ct.pc.caddress']}">
-				<p:inputText value="#{data.address}" style="width:250px;" maxlength="200" />
+				<p:inputText value="#{contactPersonsVar.address}" style="width:250px;" maxlength="200" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.ct.pc.cemail']}">
-				  <p:inputText id="validateEmail" value="#{data.email}" maxlength="100"
+				  <p:inputText id="validateEmail" value="#{contactPersonsVar.email}" maxlength="100"
 				     style="width:120px;" validator="#{webappBean.checkEmail}" label="#{lbl['lbl.ct.pc.cemail']}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.ct.pc.pno']}">
 				<p:inputText id="validPhone" style="width:120px;" label="#{lbl['lbl.ct.pc.pno']}" maxlength="100"
-				   value="#{data.phoneNo}"  validator="#{webappBean.checkPhoneNumber}" />
+				   value="#{contactPersonsVar.phoneNo}"  validator="#{webappBean.checkPhoneNumber}" />
 			</p:column>
 		</p:dataTable>
 		<p:spacer height="2" />
@@ -61,12 +61,12 @@
 	</p:panel>
 	
 	<p:panel id="exemptedOrgPnl" header="Exempted Ministry" toggleable="true" toggleSpeed="500">
-		<p:dataTable id="exemptedOrgDt" var="data" value="#{centralContractBackingBean.managedBean.circularVer.ctExemptedOrgs}"
-		 	rowKey="#{data}" rowIndexVar="index" selection="#{centralContractBackingBean.managedBean.selectedExemptedOrgs}">
+		<p:dataTable id="exemptedOrgDt" var="exemptedOrgsVar" value="#{centralContractBackingBean.managedBean.circularVer.ctExemptedOrgs}"
+		 	rowKey="#{exemptedOrgsVar}" rowIndexVar="index" selection="#{centralContractBackingBean.managedBean.selectedExemptedOrgs}">
 			<ac:paginator for="exemptedOrgDt" />
 			<p:column selectionMode="multiple" style="width:3%" />
 			<p:column headerText="Ministry">
-				#{data.orgProfile.orgName}
+				#{exemptedOrgsVar.orgProfile.orgName}
 			</p:column>
 		</p:dataTable>
 		<p:spacer height="2" />		
@@ -112,16 +112,16 @@
 	</p:panel>
 	
 	<p:panel id="cancelCircularPnl" header="Related Cancelled Circular" toggleable="true" toggleSpeed="500">
-		<p:dataTable id="cancelCircularDt" var="data" rowKey="#{data}" rowIndexVar="index" 
+		<p:dataTable id="cancelCircularDt" var="cancelCircularVar" rowKey="#{cancelCircularVar}" rowIndexVar="index" 
 			value="#{centralContractBackingBean.managedBean.circularVer.ctCancelCircularList}"
 			selection="#{centralContractBackingBean.managedBean.selectedCancelCirculars}" >
 			<ac:paginator for="cancelCircularDt" />
 			<p:column selectionMode="multiple" style="width:3%" />
 			<p:column headerText="#{lbl['lbl.ct.cc.cno']}">
-				<h:outputText value="#{data.circularVer.circularNo}" />
+				<h:outputText value="#{cancelCircularVar.circularVer.circularNo}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.ct.pc.cname']}" >
-				<h:outputText value="#{data.circularVer.name}" />
+				<h:outputText value="#{cancelCircularVar.circularVer.name}" />
 			</p:column>
 		</p:dataTable>
 		<p:spacer height="2" />
@@ -135,16 +135,16 @@
 	
 	<p:dialog id="cancelCircularDlg" header="Cancelled Circulars" widgetVar="cancelCircularDlg" modal="true" width="550" height="350">
 		<p:panel id="circular">
-			<p:dataTable id="cancelledCclDt" var="data" rowKey="#{data}" rowIndexVar="index"
+			<p:dataTable id="cancelledCclDt" var="cancelledCircularDlgVar" rowKey="#{cancelledCircularDlgVar}" rowIndexVar="index"
 				value="#{centralContractBackingBean.managedBean.cancelledCircularList}" 
 				selection="#{centralContractBackingBean.managedBean.selectedCancelledCircularList}" >
 				<ac:paginator for="cancelledCclDt" />
 				<p:column selectionMode="multiple" style="width:3%" />
 				<p:column headerText="#{lbl['lbl.ct.cc.cno']}">
-					<h:outputText value="#{data.circularVer.circularNo}" style="width:200px;" />
+					<h:outputText value="#{cancelledCircularDlgVar.circularVer.circularNo}" style="width:200px;" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.ct.cc.cname']}">
-					<h:outputText value="#{data.circularVer.name}" style="width:300px;" />
+					<h:outputText value="#{cancelledCircularDlgVar.circularVer.name}" style="width:300px;" />
 				</p:column>									
 			</p:dataTable>
 			<p:spacer height="2" />
