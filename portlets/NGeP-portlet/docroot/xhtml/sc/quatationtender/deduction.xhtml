@@ -6,85 +6,103 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="Deduction Payment" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.deduction.payment']}" toggleable="true">
 
-		<p:dataTable id="deductPaymentId" var="deductpayment"
+		<p:dataTable id="deductPaymentTblId"
+			widgetVar="deductPaymentTblWidget" var="scQtDeduction"
 			value="#{qTDeductionPaymentBackingBean.managedBean.scQtDeductionList}"
 			selection="#{qTDeductionPaymentBackingBean.managedBean.selectedScQtDeduction}"
-			rowKey="#{deductpayment}" rowIndexVar="rowIndex">
+			rowKey="#{scQtDeduction}" rowIndexVar="rowIndex"
+			selectionMode="single">
 
-			<ac:paginator for="deductPaymentId" />
+			<p:ajax event="rowSelect" partialSubmit="true" process="@this"
+				update=":form:clausePnl" />
+			<p:ajax event="rowUnselect" partialSubmit="true" process="@this"
+				update=":form:clausePnl" />
 
-			<p:column headerText="Deduction Type">
-				<p:selectOneMenu value="#{deductpayment.deductionType.parameterId}">
-					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
-						itemValue="#{null}" />
+			<ac:paginator for="deductPaymentTblId" />
+
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="* " styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.sc.deduction.type']}" />
+				</f:facet>
+
+				<p:selectOneMenu id="deductionType"
+					value="#{scQtDeduction.deductionType.parameterId}" required="true">
 					<f:selectItems
-						value="#{qTDeductionPaymentBackingBean.retrieveDeductionType(ParameterTypeConst.deductionType)}"
-						var="app" itemLabel="#{app.codeName}"
-						itemValue="#{app.pmParameter.parameterId}" />
+						value="#{qTDeductionPaymentBackingBean.getDropdownValues(ParameterTypeConst.deductionType)}" />
 					<p:ajax event="change" partialSubmit="true" process="@this"
-						update="@form"
-						listener="#{qTDeductionPaymentBackingBean.deductionPaymentEvent(deductpayment)}" />
+						update=":form:clausePnl"
+						oncomplete="deductPaymentTblWidget.unselectAllRows(); deductPaymentTblWidget.selectRow(#{rowIndex}, true);"
+						listener="#{qTDeductionPaymentBackingBean.deductionTypeChange(scQtDeduction)}" />
 				</p:selectOneMenu>
+				<p:message id="deductionTypeMsg" for="deductionType" display="icon" />
 			</p:column>
 
-			<p:column headerText="Deduction Amount"
-				rendered="#{qTDeductionPaymentBackingBean.managedBean.qtDeduction.deductionType.parameterId eq '108'}">
+			<p:column headerText="Deduction Amount">
+				#{qTDeductionPaymentBackingBean.managedBean.selectedScQtDeduction.deductionType.parameterCode}
 				<p:inputText size="30" maxlength="18"
-					value="#{deductpayment.deductionAmount}"
-					style="margin-right:5px;text-align:right;" />
+					value="#{scQtDeduction.deductionAmount}"
+					style="margin-right:5px;text-align:right;"
+					rendered="#{qTDeductionPaymentBackingBean.managedBean.selectedScQtDeduction.deductionType.parameterCode eq ParameterConst.deductionTypeFixed}">
+					<p:ajax update=":form:deductPaymentTblId" />
+				</p:inputText>
 			</p:column>
 
 		</p:dataTable>
-		<p:panelGrid columns="2" style="width:100%;"
-			styleClass="noBorders tr,noBorders td">
-			<f:facet name="footer">
-				<div align="right">
-					<p:commandButton value="#{lbl['lbl.so.addbtn']}"
-						process="@this, deductPaymentId" partialSubmit="true"
-						action="#{qTDeductionPaymentBackingBean.addDedcutionPayment}"
-						update="deductPaymentId" icon="ui-icon-add" />
-					<p:commandButton value="#{lbl['lbl.so.delete']}"
-						icon="ui-icon-delete"
-						action="#{qTDeductionPaymentBackingBean.deleteDedcutionPayment}"
-						update="deductPaymentId" />
-				</div>
-			</f:facet>
-		</p:panelGrid>
-	</p:panel>
-	<p:panel header="Clauses" toggleable="true">
-		<h:panelGroup id="clausePnlId">
 
-			<p:dataTable id="deductionclauseid" var="deductionclause"
-				value="#{qTDeductionPaymentBackingBean.managedBean.scQtDeductionClauses}"
+		<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.btn.add']}"
+				process="@this, deductPaymentTblId" partialSubmit="true"
+				action="#{qTDeductionPaymentBackingBean.addDeductionPaymentAction}"
+				oncomplete="deductPaymentTblWidget.paginator.endLink.click();"
+				update="deductPaymentTblId" icon="ui-icon-add" />
+			<p:commandButton value="#{lbl['lbl.btn.delete']}"
+				process="@this, deductPaymentTblId" partialSubmit="true"
+				icon="ui-icon-delete"
+				action="#{qTDeductionPaymentBackingBean.deleteRowAction(qTDeductionPaymentBackingBean.managedBean.scQtDeductionList, qTDeductionPaymentBackingBean.managedBean.selectedScQtDeduction)}"
+				update="deductPaymentTblId" />
+		</div>
+
+		<p:panel id="clausePnl" header="#{lbl['lbl.sc.deduction.clauses']}"
+			toggleable="true">
+			<p:dataTable id="deductClauseTblId" widgetVar="deductClauseTblWidget"
+				var="scQtDeductionClause"
+				value="#{qTDeductionPaymentBackingBean.managedBean.selectedScQtDeduction.scQtDeductionClauses}"
 				selection="#{qTDeductionPaymentBackingBean.managedBean.selectedDeductionClauses}"
-				rowKey="#{deductionclause}" rowIndexVar="rowIndex">
+				rowKey="#{scQtDeductionClause}" rowIndexVar="rowIndex">
+
+				<ac:paginator for="deductClauseTblId" />
 
 				<p:column selectionMode="multiple" style="width:2%" />
 
-				<p:column headerText="Clause">
-					<p:inputTextarea value="#{deductionclause.clauseDesc}" cols="120"
-						rows="2" style=" margin-bottom:5px;" />
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="* " styleClass="mandatory" />
+						<h:outputText value="#{lbl['lbl.sc.deduction.clause']}" />
+					</f:facet>
+
+					<p:inputTextarea value="#{scQtDeductionClause.clauseDesc}"
+						cols="170" rows="2" maxlength="500" style=" margin-bottom:5px;" />
 				</p:column>
 
 			</p:dataTable>
-			<p:panelGrid columns="2" style="width:100%;"
-				styleClass="noBorders tr,noBorders td"
-				rendered="#{qTDeductionPaymentBackingBean.managedBean.qtDeduction.deductionType.parameterId eq '110'}">
-				<f:facet name="footer">
-					<div align="right">
-						<p:commandButton value="#{lbl['lbl.so.addbtn']}" process="@this"
-							partialSubmit="true" icon="ui-icon-add"
-							action="#{qTDeductionPaymentBackingBean.addDeductionClause}"
-							update="clausePnlId" />
-						<p:commandButton value="#{lbl['lbl.so.delete']}"
-							icon="ui-icon-delete" />
-					</div>
-				</f:facet>
-			</p:panelGrid>
-
-		</h:panelGroup>
-
+			<div class="ppRightBtn">
+				<h:panelGroup
+					rendered="#{!empty qTDeductionPaymentBackingBean.managedBean.selectedScQtDeduction and qTDeductionPaymentBackingBean.managedBean.selectedScQtDeduction.deductionType.parameterCode eq ParameterConst.deductionTypeOthers}">
+					<p:commandButton value="#{lbl['lbl.btn.add']}"
+						process="@this, deductClauseTblId" partialSubmit="true"
+						action="#{qTDeductionPaymentBackingBean.addDeductionClauseAction}"
+						oncomplete="deductClauseTblWidget.paginator.endLink.click();"
+						update="deductClauseTblId" icon="ui-icon-add" />
+					<p:commandButton value="#{lbl['lbl.btn.delete']}"
+						process="@this, deductClauseTblId" partialSubmit="true"
+						icon="ui-icon-delete"
+						action="#{qTDeductionPaymentBackingBean.deleteRowsAction(qTDeductionPaymentBackingBean.managedBean.selectedScQtDeduction.scQtDeductionClauses, qTDeductionPaymentBackingBean.managedBean.selectedDeductionClauses)}"
+						update="deductClauseTblId" />
+				</h:panelGroup>
+			</div>
+		</p:panel>
 	</p:panel>
 </ui:composition>

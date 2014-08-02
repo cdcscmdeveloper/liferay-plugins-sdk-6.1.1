@@ -14,54 +14,53 @@
 					<td style="width: 160px;"><p:outputLabel
 							value="#{lbl['lbl.so.briefsamevisit']}" /></td>
 					<td><p:selectOneRadio
-							value="#{qTBriefingSiteVisitBackingBean.managedBean.scQtBsv.sameBsv}">
+							value="#{zonePnlList.scQtBsv.sameBsv}">
 							<f:selectItem itemLabel="Yes" itemValue="true" />
 							<f:selectItem itemLabel="No" itemValue="false" />
-							<p:ajax update="samebsvrequireid"
+							<p:ajax update="samebsvrequireid, addtositebuttonid"
 								listener="#{qTBriefingSiteVisitBackingBean.processChecked}" />
 						</p:selectOneRadio></td>
 				</tr>
 			</table>
 			<p:spacer height="3px" />
-
-			<p:dataTable value="#{briefingList}" id="briefdetaillistid"
-				var="briefdetails" rowKey="#{briefdetails}" rowIndexVar="index"
-				editable="true" selection="#{selectedbriefingList}">
+			<p:dataTable id="zonebriefdtlsid" var="zonebriefdtls"
+				value="#{briefingList}" rowKey="#{zonebriefdtls}"
+				rowIndexVar="index" editable="true"
+				selection="#{selectedbriefingList}">
 
 				<p:column selectionMode="multiple" style="width:2%" />
 
-				<ac:paginator for="briefdetaillistid" />
+				<ac:paginator for="zonebriefdtlsid" />
 
 				<p:column headerText="#{lbl['lbl.so.desc']}">
-
-					<h:outputText value="#{briefdetails.bsvDesc}" />
-
+					<h:outputText value="#{zonebriefdtls.bsvDesc}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.so.date']}" style="width :5%;">
-					<h:outputText value="#{briefdetails.bsvDate}">
+					<h:outputText value="#{zonebriefdtls.bsvDate}">
 						<f:convertDateTime
 							pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
 					</h:outputText>
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.so.location']}">
-					<h:outputText value="#{briefdetails.location}" />
+					<h:outputText value="#{zonebriefdtls.location}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.so.coordinateofficer']}"
 					style="width :17%;">
-					<h:outputText value="#{briefdetails.coordinatingOfficer}" />
+					<h:outputText value="#{zonebriefdtls.coordinatingOfficer}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.so.maxattendance']}"
 					style="width :5%;">
-					<h:outputText value="#{briefdetails.maxNoOfAttendance}" />
+					<h:outputText value="#{zonebriefdtls.maxNoOfAttendance}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.so.briefstatus']}"
 					style="width :8%;">
-
+					<h:outputText
+						value="#{qTBriefingSiteVisitBackingBean.getStatusDescById(zonebriefdtls.bsvStatus.statusId)}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.so.action']}" style="width :6%;">
 				</p:column>

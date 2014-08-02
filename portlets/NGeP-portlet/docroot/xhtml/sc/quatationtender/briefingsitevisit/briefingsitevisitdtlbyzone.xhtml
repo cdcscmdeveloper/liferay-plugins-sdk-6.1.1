@@ -19,11 +19,13 @@
 				value="#{qTBriefingSiteVisitBackingBean.managedBean.selectedBriefingDetails}" />
 			<ui:include src="briefingIncludeDetails.xhtml" />
 			<div align="right">
-				<p:commandButton id="addtositevisitdtlid"
-					process="@this, briefdetaillistid" partialSubmit="true"
-					value="#{lbl['lbl.so.addtositevisit']}" icon="ui-icon-add"
-					actionListener="#{qTBriefingSiteVisitBackingBean.addToSiteVisitZoneDtl}" />
-
+				<h:panelGroup id="addtositebuttonid">
+					<p:commandButton id="addtositevisitdtlid"
+						process="@this, zonebriefdtlsid" partialSubmit="true"
+						value="#{lbl['lbl.so.addtositevisit']}" icon="ui-icon-add"
+						actionListener="#{qTBriefingSiteVisitBackingBean.addToSiteVisitZoneDtl}"
+						rendered="#{zonePnlList.scQtBsv.sameBsv eq 'fasle'}" />
+				</h:panelGroup>
 				<p:commandButton id="briefaddid" value="#{lbl['lbl.so.addbtn']}"
 					process="@this"
 					action="#{qTBriefingSiteVisitBackingBean.addZoneBriefingDetails(zonePnlList.tplSpecZoneDtl.zoneName)}"
@@ -31,9 +33,9 @@
 					icon="ui-icon-add" />
 
 				<p:commandButton value="#{lbl['lbl.so.delete']}"
-					icon="ui-icon-delete" process="@this, briefdetaillistid"
+					icon="ui-icon-delete" process="@this, zonebriefdtlsid"
 					action="#{qTBriefingSiteVisitBackingBean.deleteZoneBriefingDetails}"
-					partialSubmit="true" update="briefdetaillistid" />
+					partialSubmit="true" update="zonebriefdtlsid" />
 			</div>
 			<table style="width: 100%" border="0">
 				<tr>
@@ -52,8 +54,7 @@
 
 			<!-- Site Visit Details -->
 			<h:panelGroup id="samebsvrequireid">
-				<ui:fragment
-					rendered="#{qTBriefingSiteVisitBackingBean.managedBean.scQtBsv.sameBsv eq 'false'}">
+				<ui:fragment rendered="#{zonePnlList.scQtBsv.sameBsv eq 'false'}">
 					<ui:param name="sitevisitList" value="#{zonePnlList.sitevisitList}" />
 					<ui:param name="selectedSitevisitList"
 						value="#{qTBriefingSiteVisitBackingBean.managedBean.selectedSiteVisitDetails}" />

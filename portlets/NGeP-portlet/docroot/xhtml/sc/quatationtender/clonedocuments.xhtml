@@ -1,4 +1,3 @@
-
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
@@ -8,127 +7,122 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:dialog id="documentcloneid" header="Clone Document"
-		widgetVar="screen2" width="950" height="600">
-		<p:panel header="Search Document" id="clonedocid" toggleable="true">
-			<table style="width: 100%">
+		widgetVar="screen2" width="950" height="600" position="top"
+		styleClass="clonedocument">
+		<p:panel header="#{lbl['lbl.so.searchbtn']}" toggleable="true"
+			id="clonedocid">
+			<table>
 				<tr>
-					<td><p:outputLabel
+					<td valign="top"><p:outputLabel
 							value="#{lbl['lbl.sc.committe.clone.title']}" /></td>
 					<td colspan="3"><p:inputTextarea cols="100" rows="2"
-							value="#{qTDocumentsBackingBean.managedBean.cloneQtnTenderSearchBean.qtTitle}"
-							style=" margin-bottom:5px;" /></td>
+							maxlength="100" style=" margin-bottom:5px;"
+							value="#{qTDocumentsBackingBean.managedBean.cloneDocumentSearchBean.qtTitle}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel
 							value="#{lbl['lbl.sc.committe.clone.qtntender']}" /></td>
-					<td colspan="3"><p:inputText
-							value="#{qTDocumentsBackingBean.managedBean.cloneQtnTenderSearchBean.qtNo}"
-							size="32" /></td>
+					<td><p:inputText size="32" maxlength="21"
+							value="#{qTDocumentsBackingBean.managedBean.cloneDocumentSearchBean.qtNo}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel
 							value="#{lbl['lbl.sc.committe.clone.procurementmode']}" /></td>
-					<td><p:selectOneMenu
-							value="#{qTDocumentsBackingBean.managedBean.cloneQtnTenderSearchBean.procurementMode}"
-							style="width: 192px;margin-bottom: 5px;">
+					<td><p:selectOneMenu style="width: 192px;margin-bottom: 5px;"
+							value="#{qTDocumentsBackingBean.managedBean.cloneDocumentSearchBean.procurementMode}">
 							<f:selectItems
-								value="#{qTDocumentsBackingBean.getDropdownCodeValues(ParameterTypeConst.scProcurementMode)}" />
+								value="#{qTDocumentsBackingBean.getProcurementModeDropdownValues()}" />
 						</p:selectOneMenu></td>
 					<td />
 					<td />
 				</tr>
 				<tr>
-					<td><p:outputLabel
-							value="#{lbl['lbl.sc.committe.clone.datecreated']}" /></td>
-					<td><p:calendar
-							value="#{qTDocumentsBackingBean.managedBean.cloneQtnTenderSearchBean.fromCreatedDate}"
-							size="32" showOn="button" /></td>
-					<td />
-					<td />
+					<td><p:outputLabel value="#{lbl['lbl.so.creatdtfrom']}" /></td>
+					<td><p:calendar id="crdateFrm" showOn="button"
+							value="#{qTDocumentsBackingBean.managedBean.cloneDocumentSearchBean.fromCreatedDate}"
+							size="30" readonlyInput="true">
+							<p:ajax event="dateSelect" update="createdtTo" />
+						</p:calendar></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel
-							value="#{lbl['lbl.sc.committe.clone.datecreated.to']}" /></td>
-					<td><p:calendar
-							value="#{qTDocumentsBackingBean.managedBean.cloneQtnTenderSearchBean.toCreatedDate}"
-							size="32" showOn="button" /></td>
-					<td />
-					<td />
+					<td><p:outputLabel value="#{lbl['lbl.so.creatdtto']}" /></td>
+					<td><p:calendar id="createdtTo" showOn="button"
+							value="#{qTDocumentsBackingBean.managedBean.cloneDocumentSearchBean.toCreatedDate}"
+							mindate="#{qTDocumentsBackingBean.managedBean.cloneDocumentSearchBean.fromCreatedDate}"
+							size="30" readonlyInput="true">
+							<f:attribute name="startDate"
+								value="#{qTDocumentsBackingBean.managedBean.cloneDocumentSearchBean.fromCreatedDate}" />
+							<f:validator validatorId="dateRangeValidator" />
+						</p:calendar></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel
 							value="#{lbl['lbl.sc.committe.clone.comstatus']}" /></td>
 					<td><p:selectOneMenu style="width: 192px;margin-bottom: 5px;"
-							value="#{qTDocumentsBackingBean.managedBean.cloneQtnTenderSearchBean.qtStatus}">
-							<f:selectItem itemLabel="Select One" itemValue="" />
-							<f:selectItem itemLabel="Active" itemValue="1" />
-							<f:selectItem itemLabel="Non-Active" itemValue="2" />
+							value="#{qTDocumentsBackingBean.managedBean.cloneDocumentSearchBean.qtStatus}">
+							<f:selectItems
+								value="#{qTDocumentsBackingBean.getStatusDropdownValues('SC', 'QT')}" />
 						</p:selectOneMenu></td>
 					<td />
 					<td />
 				</tr>
 			</table>
-			<div align="right">
-				<p:commandButton value="#{lbl['lbl.so.reset']}" style="float:right;"
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.search']}"
+					icon="ui-icon-search"
+					action="#{qTDocumentsBackingBean.cloneSearchDocumentAction}"
+					update="clonesearchdocid" process="@parent, clonedocid" />
+				<p:commandButton value="#{lbl['lbl.btn.reset']}"
 					action="#{qTDocumentsBackingBean.resetClone}" update="clonedocid"
 					icon="ui-icon-reset" resetValues="true" partialSubmit="true"
 					process="@this" />
-				<p:commandButton value="#{lbl['lbl.so.searchbtn']}" icon="ui-icon-search"
-					style="float:right;" update="@(.cloneResults)" partialSubmit="true"
-					process="@parent"
-					action="#{qTDocumentsBackingBean.documentCloneSearchAction}" />
 			</div>
-			<br />
-			<br />
 		</p:panel>
-		<p:spacer height="3" />
-
-		<p:panel header="Quotation/Tender List" toggleable="true">
-			<p:dataTable id="clonesearchCommitteId"
-				value="#{qTDocumentsBackingBean.managedBean.documentCloneTenderList}"
+		<p:panel header="#{lbl['lbl.so.qtlist']}" toggleable="true">
+			<p:dataTable id="clonesearchdocid"
+				value="#{qTDocumentsBackingBean.managedBean.cloneDocumentDataModel}"
 				selection="#{qTDocumentsBackingBean.managedBean.selectedDocumentCloneTender}"
-				rowKey="#{documentclone}" selectionMode="single" var="documentclone"
+				rowKey="#{scQt}" selectionMode="single" var="scQt" lazy="true"
 				styleClass="cloneResults">
 
-				<ac:paginator for="clonesearchCommitteId" />
+				<ac:paginator for="clonesearchdocid" />
 
 				<p:ajax event="rowSelect" update=":form:documentlistid"
 					listener="#{qTDocumentsBackingBean.onRowCloneAction}" />
 
 				<p:column headerText="#{lbl['lbl.sc.committe.result.qtntender']}">
-					<h:outputText value="#{documentclone.qtNo}" />
+					<h:outputText value="#{scQt.qtNo}" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.committe.result.title']}">
-					<h:outputText value="#{documentclone.qtTitle}" />
+				<p:column headerText="#{lbl['lbl.so.title']}">
+					<h:outputText value="#{scQt.qtTitle}" />
 				</p:column>
 
-				<p:column
-					headerText="#{lbl['lbl.sc.committe.result.procurementmode']}">
+				<p:column headerText="#{lbl['lbl.so.procmode']}">
 					<h:outputText
-						value="#{qTDocumentsBackingBean.getParameterDesc(ParameterTypeConst.scProcurementMode, documentclone.procurementMode)}" />
+						value="#{qTDocumentsBackingBean.getParameterDesc(scQt.procurementMode)}" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.committe.result.datecreated']}">
-					<h:outputText value="#{documentclone.createdDate}">
+				<p:column headerText="#{lbl['lbl.so.crtdt']}">
+					<h:outputText value="#{scQt.createdDate}">
 						<f:convertDateTime
 							pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
 					</h:outputText>
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.committe.result.status']}">
+				<p:column headerText="#{lbl['lbl.so.bo.status']}">
 					<h:outputText
-						value="#{documentclone.qtStatus.pmStatus.pmStatusDescs[0].statusName}" />
+						value="#{qTDocumentsBackingBean.getStatusDescById(scQt.qtStatus.statusId)}" />
 				</p:column>
 			</p:dataTable>
 		</p:panel>
 		<p:spacer height="3" />
 		<p:panel id="cloneDocumentList" header="Document List"
 			toggleable="true">
-			<p:dataTable id="documentlistid" 
-				value="#{qTDocumentsBackingBean.managedBean.qtCheckLists}"
-				var="doclist" rowKey="#{doclist.qtChecklistId}"
-				selection="#{qTDocumentsBackingBean.managedBean.selectedQtCheckLists}"
+			<p:dataTable id="documentlistid"
+				value="#{qTDocumentsBackingBean.managedBean.cloneScQtDocReports}"
+				var="doclist" rowKey="#{doclist}"
+				selection="#{qTDocumentsBackingBean.managedBean.selectedCloneScQtDocReports}"
 				styleClass="cloneResults,cloneDocumentList">
 
 				<p:column selectionMode="multiple" style="width:2%" />
@@ -137,15 +131,15 @@
 					<h:outputText value="#{doclist.title}" />
 				</p:column>
 			</p:dataTable>
-			<div align="right">
-				<p:commandButton value="#{lbl['lbl.so.cancelbtn']}"
-					style="float:right;" icon="ui-icon-cancel"
-					onclick="screen2.hide();" />
-				<p:commandButton value="#{lbl['lbl.so.okbtn']}" style="float:right;"
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.so.okbtn']}"
 					action="#{qTDocumentsBackingBean.addDocumentCloneAction}"
 					onclick="screen2.hide();"
-					oncomplete="documentWidget.paginator.endLink.click();" update="doctbl" icon="ui-icon-check" />
-
+					oncomplete="documentWidget.paginator.endLink.click();"
+					update="doctbl" icon="ui-icon-check" />
+					
+				<p:commandButton value="#{lbl['lbl.so.cancelbtn']}"
+					icon="ui-icon-cancel" onclick="screen2.hide();" />
 			</div>
 		</p:panel>
 
