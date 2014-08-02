@@ -40,6 +40,7 @@ import my.ep.biz.service.sm.remarks.ISmRemarksSO;
 import my.ep.biz.service.sm.reviewApplication.IReviewApplicationSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.sm.siteVisit.ISiteAssignSO;
+import my.ep.biz.service.sm.supplieruseractivation.ISupplierUserActivationSO;
 import my.ep.biz.service.sm.workFlowStatus.ISmWorkFlowStatusSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
@@ -87,6 +88,8 @@ import my.ep.dto.sm.siteVisit.SiteAssignReqDTO;
 import my.ep.dto.sm.siteVisit.SiteAssignResDTO;
 import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
 import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
+import my.ep.dto.sm.supplieruseractivation.SupplierUserActivationReqDTO;
+import my.ep.dto.sm.supplieruseractivation.SupplierUserActivationResDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusReqDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusResDTO;
 import my.ep.exception.EpException;
@@ -3005,15 +3008,47 @@ public class SmApplicationBackingBean extends
 		List<SelectItem> roles = new ArrayList<SelectItem>();
 
 		SelectItem role = new SelectItem();
-		role.setLabel("Supplier User");
-		role.setValue(RoleCode.MOF_SUPPLIER_USER.value());
-		if (!getManagedBean().isRemoveEpRole())
-			roles.add(role);
 
-		role = new SelectItem();
-		role.setLabel("Catalogue User");
-		role.setValue(RoleCode.CM_USER.value());
-		roles.add(role);
+		String applType = getManagedBean().getSmAppl().getApplType();
+		int roleCase = 0;
+
+		if (applType.equalsIgnoreCase("N")) {
+			roleCase = 1;
+		} else if (applType.equalsIgnoreCase("A")
+				|| applType.equalsIgnoreCase("B")
+				|| applType.equalsIgnoreCase("U")
+				|| applType.equalsIgnoreCase("R")) {
+			roleCase = 2;
+		}
+
+		switch (roleCase) {
+		case 1:
+			role = new SelectItem();
+			role.setLabel("Supplier User");
+			role.setValue(RoleCode.BASIC_SUPPLIER_USER.value());
+			if (!getManagedBean().isRemoveEpRole())
+				roles.add(role);
+
+			role = new SelectItem();
+			role.setLabel("Catalogue User");
+			role.setValue(RoleCode.CM_USER.value());
+			roles.add(role);
+			break;
+		case 2:
+			role = new SelectItem();
+			role.setLabel("Supplier User");
+			role.setValue(RoleCode.MOF_SUPPLIER_USER.value());
+			if (!getManagedBean().isRemoveEpRole())
+				roles.add(role);
+
+			role = new SelectItem();
+			role.setLabel("Catalogue User");
+			role.setValue(RoleCode.CM_USER.value());
+			roles.add(role);
+			break;
+		default:
+			break;
+		}
 
 		getManagedBean().setePRoleList(roles);
 	}
@@ -3767,6 +3802,47 @@ public class SmApplicationBackingBean extends
 						SupplierManagementConst.PM_STATUS_PO_REVIEW,
 						getManagedBean().getSmAppl().getApplId()));
 			}
+
+			//Set list of users to send to BPM
+			if (getManagedBean().getSmAppl().getApplType()
+					.equalsIgnoreCase("N")
+					|| getManagedBean().getSmAppl().getApplType()
+							.equalsIgnoreCase("A")
+					|| getManagedBean().getSmAppl().getApplType()
+							.equalsIgnoreCase("B")
+					|| getManagedBean().getSmAppl().getApplType()
+							.equalsIgnoreCase("U")
+					|| getManagedBean().getSmAppl().getApplType()
+							.equalsIgnoreCase("R")){
+				reqDTO.setUserList(new ArrayList<String>());
+				for (SmPersonnel personnel : getManagedBean().getSmAppl()
+						.getSmPersonnels()) {
+					if (personnel.getEpRole() != null
+							&& !personnel.getEpRole().isEmpty()
+							&& (personnel.getEpRole().equalsIgnoreCase(
+									RoleCode.MOF_SUPPLIER_ADMIN.value())
+									|| personnel.getEpRole()
+											.equalsIgnoreCase(
+													RoleCode.MOF_SUPPLIER_ADMIN
+															.value())
+									|| personnel.getEpRole().equalsIgnoreCase(
+											RoleCode.MOF_SUPPLIER_USER.value())
+									|| personnel.getEpRole().equalsIgnoreCase(
+											RoleCode.BASIC_SUPPLIER_ADMIN
+													.value()) || personnel
+									.getEpRole().equalsIgnoreCase(
+											RoleCode.BASIC_SUPPLIER_USER
+													.value()))) {
+						if (personnel.getPmUser() != null
+								&& personnel.getPmUser().getUserId() != null) {
+							reqDTO.getUserList().add(personnel.getPmUser().getLoginId());
+						}
+					}
+				}
+				if(reqDTO.getUserList() == null){
+					throw new EpException(MessageConst.ERROR_722546);
+				}
+			}
 			MofRegistrationResDTO resDTO;
 			regSo = (IMofRegistrationSO) BusinessDelegate.getInstance()
 					.getServiceObject("sm", IMofRegistrationSO.class);
@@ -4161,6 +4237,46 @@ public class SmApplicationBackingBean extends
 						}
 					}
 					reqDTO.setPaymentReqd(setPaymentMode());
+				}
+
+				//Update PmUser details for the list of personnel from the application
+				for (SmPersonnel personnel : getManagedBean().getSmAppl()
+						.getSmPersonnels()) {
+					if (personnel.getEpRole() != null
+							&& !personnel.getEpRole().isEmpty()) {
+						SupplierUserActivationReqDTO userActivationReqDTO = new SupplierUserActivationReqDTO();
+						userActivationReqDTO.setSmPersonnel(personnel);
+						// reqDTO.setConfirmPassword(confirmPassword);
+						System.out
+								.println("Proceed to update user.............................");
+						ISupplierUserActivationSO userActivationSO = (ISupplierUserActivationSO) BusinessDelegate
+								.getInstance().getServiceObject("sm",
+										ISupplierUserActivationSO.class);
+						SupplierUserActivationResDTO userActivationResDTO = new SupplierUserActivationResDTO();
+						if (userActivationReqDTO
+								.getSmPersonnel()
+								.getEpRole()
+								.equalsIgnoreCase(
+										RoleCode.BASIC_SUPPLIER_USER.value())
+								|| userActivationReqDTO
+										.getSmPersonnel()
+										.getEpRole()
+										.equalsIgnoreCase(
+												RoleCode.MOF_SUPPLIER_USER
+														.value())
+								|| userActivationReqDTO
+										.getSmPersonnel()
+										.getEpRole()
+										.equalsIgnoreCase(
+												RoleCode.CM_USER.value())) {
+							userActivationResDTO = userActivationSO
+									.updatePmProfileForPersonnel(userActivationReqDTO);
+							if (userActivationResDTO.isSuccessful()) {
+								System.out
+										.println("PmUser updated successfully ........");
+							}
+						}
+					}
 				}
 			}
 
