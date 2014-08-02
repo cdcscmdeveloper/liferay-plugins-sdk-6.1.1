@@ -248,6 +248,9 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		IReceivedNoteSO receivedNoteSO = null;
 		IFulfilmentOrderSO fulfilmentOrderSO = null;
 		IPaymentMatchSO paymentSO = null;
+		IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IStatusSO.class);
+		StatusReqDTO statusReqDTO = null;
+		
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		flBB.getManagedBean().setDocMaintainRemarks(false);
 		String navgPage="/xhtml/fl/docsearch/flDocSearch.xhtml";
@@ -327,10 +330,9 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			FulfilmentResDTO resDTO = fulfilmentOrderSO.retrieveFulfilmentOrder(reqDTO);			
 			if(buttonVal.equalsIgnoreCase("Stop Fulfilment")) {
 				FlStopInstr flStopInstr = new FlStopInstr();
-				IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IStatusSO.class);
-				StatusReqDTO statusReqDTO = new StatusReqDTO();
-				statusReqDTO.setStatusId(FulfilmentStatusConst.SD_PENDING_SUBMISSION);
 
+				statusReqDTO = new StatusReqDTO();
+				statusReqDTO.setStatusId(FulfilmentStatusConst.SD_PENDING_SUBMISSION);
 				flStopInstr.setPmStatus(statusSO.retrieveStatusByStatusId(statusReqDTO).getPmStatus());
 				flStopInstr.setPmReason(new PmReason());
 				flStopInstr.setFlRequest(resDTO.getFlOrder().getFlFulfilmentRequest());
@@ -429,15 +431,24 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			resDTO.getFlDeliveryOrder().getFlDeliveryAddress().getFlFulfilmentItemAddr().get(0).getScRequestItem().getItemName();
 			doBB.getManagedBean().setFulfilmentRequest(resDTO.getFlDeliveryOrder().getFlRequest());
 			doBB.getManagedBean().setFulfilmentOrder(resDTO.getFlDeliveryOrder().getFlFulfilmentOrder());
-			doBB.getManagedBean().getFulfilmentOrder().setStatus(deliveryOrderSO.retrieveDelOrderStatus(reqDTO).getPmStatus());
 			doBB.getManagedBean().setPmUser(reqDTO.getPmUser());
 			doBB.getManagedBean().setDocMaintainRemarks(true);
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE) || buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
 				//flBB.initializeRemarkAndAttachement(new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 				flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(),resDTO.getAttachmentList());
 				flBB.getManagedBean().setDocMaintainRemarks(true);
-				
 			}	
+			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
+				statusReqDTO = new StatusReqDTO();
+				statusReqDTO.setStatusId(FulfilmentStatusConst.DO_PENDING_CANCELLATION_SUBMISSION);
+				doBB.getManagedBean().getFulfilmentOrder().setStatus(statusSO.retrieveStatusByStatusId(statusReqDTO).getPmStatus());
+			} else if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE)) {
+				statusReqDTO = new StatusReqDTO();
+				statusReqDTO.setStatusId(FulfilmentStatusConst.CR_PENDING_SUBMISSION); //TODO Should change to DO_PENDING_SUBMISSION?
+				doBB.getManagedBean().getFulfilmentOrder().setStatus(statusSO.retrieveStatusByStatusId(statusReqDTO).getPmStatus());
+			} else {
+				doBB.getManagedBean().getFulfilmentOrder().setStatus(deliveryOrderSO.retrieveDelOrderStatus(reqDTO).getPmStatus());
+			}
 			navgPage=NAV_TO_MAINTAIN_DO;
 		}else if(docType.equals(FulfilmentConst.DOC_TYPE_IN)){
 			invoiceSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IInvoiceSO.class);
