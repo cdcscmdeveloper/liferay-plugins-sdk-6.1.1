@@ -153,7 +153,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			
 			if(resDTO.isSuccessful()) {
 				String messageId = MessageConst.INFO_700011;
-				String documentType = ParameterConst.DOCTYPE_PURCHASE_REQUEST;
+				String documentType = ParameterConst.DOCTYPE_PURCHASE_ORDER;
 				String docNo = getManagedBean().getFulfilmentOrder().getDocNo();
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 					messageId = MessageConst.INFO_700008;
