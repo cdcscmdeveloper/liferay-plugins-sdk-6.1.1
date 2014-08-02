@@ -2037,7 +2037,9 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 	
 	public void preRenderUnspscRequestView() {
 		//clear requestCode object
-	    this.getManagedBean().setRequestCode(new CmRequestCode());
+//	    this.getManagedBean().setRequestCode(new CmRequestCode());
+		
+		renewSesionObject();
 	
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
