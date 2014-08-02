@@ -1985,8 +1985,7 @@ public class SpecificationBackingBean extends
 				checklist.addAll(resDTO.getSpecResultBean().getResultList());
 			}
 
-			List<ScQtCheckList> technicalScoring = this.getManagedBean()
-					.getTechnicalScoring();
+			List<ScQtCheckList> technicalScoring = null;
 			if (technicalScoring == null) {
 				technicalScoring = new ArrayList<ScQtCheckList>();
 			}
