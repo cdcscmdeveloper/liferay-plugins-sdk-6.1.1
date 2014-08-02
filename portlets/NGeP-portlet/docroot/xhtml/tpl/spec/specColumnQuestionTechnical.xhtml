@@ -53,7 +53,7 @@
 			required="#{!question.selected}"
 			size="12"
 			update="@form">
-			<f:ajax event="click" onevent="alert(123);" />
+			<f:setPropertyActionListener for="actionEvent" target="#{templateSpecBackingBean.managedBean.tplSpecQuestions}" value="#{templateSpecBean.specMaster.tplSpecQuestions}" />
 		</ac:lov>
 	</p:column>
 	
