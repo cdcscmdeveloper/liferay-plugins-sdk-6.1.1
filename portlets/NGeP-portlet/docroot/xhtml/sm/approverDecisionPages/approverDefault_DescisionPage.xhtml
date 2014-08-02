@@ -78,12 +78,35 @@
 
 						</tr>
 					</table>
+					<table style="width: 100%">
+						<tr>
+							<td><c:choose>
+									<c:when
+										test="#{backingBean.managedBean.personCalc.halfBumiStatus and backingBean.managedBean.smAppl.applType ne 'C'}">
+										<p:outputLabel
+											value="#{lbl['lbl.sm.recommendation.halfBumi']}"
+											style="color: green;font-weight: bold;float:left;" />
+									</c:when>
+									<c:when
+										test="#{backingBean.managedBean.personCalc.fullBumiStatus and backingBean.managedBean.smAppl.applType ne 'C'}">
+										<p:outputLabel
+											value="#{lbl['lbl.sm.recommendation.fullBumi']}"
+											style="color: green;font-weight: bold;float:left;" />
+									</c:when>
+									<c:otherwise>
+										<p:outputLabel value="#{lbl['lbl.sm.recommendation.noBumi']}"
+											style="color: green;font-weight: bold;float:left;" />
+									</c:otherwise>
+								</c:choose></td>
+						</tr>
+
+					</table>
+
 					<p:separator />
 					<div>
 						<p:outputLabel value="#{lbl['lbl.sm.apprvr.splNotes']}"
 							style="float :left;" escape="false" />
 					</div>
-					<p:separator />
 					<!-- <div align="center">
 			<p:splitButton value="Select Decision">
 				<p:menuitem value="Approve" onclick="approverAppDialog.show();" />

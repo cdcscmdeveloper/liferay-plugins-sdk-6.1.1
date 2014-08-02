@@ -56,7 +56,7 @@
 							required="true">
 							<f:selectItem itemLabel="Own" itemValue="O" />
 							<f:selectItem itemLabel="Rent" itemValue="R" />
-							<p:ajax update="ofp" event="change"
+							<p:ajax update="ofp" event="change" process="@this"
 								listener="#{backingBean.officeFacilitySelected}" />
 						</p:selectOneRadio></td>
 					<td><p:message for="ownTypeId" showDetail="false"
@@ -237,8 +237,8 @@
 
 					<tr>
 
-						<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" />
-							<p:outputLabel value="*" styleClass="mandatory" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
 						<td><p:inputText size="35" maxlength="10" required="true"
 								label="#{lbl['lbl.sm.postcode']}" id="companyPostCode"
 								value="#{backingBean.managedBean.basicCompanyFacility.smAddress.postcode}" />
