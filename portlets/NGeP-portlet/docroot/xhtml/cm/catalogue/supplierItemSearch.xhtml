@@ -145,7 +145,8 @@
 									value="#{catalogueBackingBean.managedBean.searchDataModel}"
 									rowKey="#{supplierItem.rowId}"
 									selection="#{catalogueBackingBean.managedBean.selectedItems}"
-									id="supplierItemID" var="supplierItem" rowIndexVar="rowIndex">
+									id="supplierItemID" var="supplierItem" rowIndexVar="rowIndex"
+									rows="10">
 
 									<ac:paginator for="supplierItemID" ></ac:paginator>
 									
