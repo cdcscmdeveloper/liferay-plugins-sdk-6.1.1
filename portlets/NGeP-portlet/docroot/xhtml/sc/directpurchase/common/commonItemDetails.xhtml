@@ -4,43 +4,6 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-	<h:panelGroup id="rnHeaderId">
-	 <div align="left" class="header-info">
-		<table style="width: 100%">
-			<tr>
-				<td style="width: 10%">
-					<h:outputLabel value="#{lbl['lbl.sc.request.note.header.rn.no']}" />
-				</td>
-				<td style="width: 10%" class="header-info-text">
-					#{requestNoteBackingBean.managedBean.requestNote.requestNoteNo}
-				</td>
-				
-				<td style="width: 10%">
-					<h:outputLabel value="#{lbl['lbl.sc.request.note.header.ptj.name']}" />
-				</td>
-				<td style="width: 25%" class="header-info-text">
-				   #{requestNoteBackingBean.managedBean.requestNote.pmOrgProfile.orgName}
-				</td>
-				
-				<td style="width: 6%">
-					<h:outputLabel value="#{lbl['lbl.sc.request.note.header.method']}" />
-				</td>
-				<td style="width: 10%" class="header-info-text">
-				  #{requestNoteBackingBean.managedBean.sourceMethod}
-				</td>
-				
-				<td style="width: 6%">
-					<h:outputLabel value="#{lbl['lbl.sc.request.note.header.status']}" />
-				</td>
-				<td style="width: 15%" class="header-info-text">
-				  #{requestNoteBackingBean.managedBean.requestNoteStatus}
-				</td>
-				
-			</tr>
-		</table>
-	</div>
-	</h:panelGroup>
-	
 	<p:panel id="glb_panel_request_list" toggleable="true" toggleSpeed="500">
 		<f:facet name="header">
 			<h:outputText value="* " styleClass="mandatory" />
@@ -113,10 +76,20 @@
 							var="supplierItem" itemLabel="#{supplierItem.smSupplier.companyName}"
 							itemValue="#{supplierItem.smSupplier.supplierId}"></f:selectItems>
 							
-							<p:ajax event="change" update="priceType ,offerPriceId" partialSubmit="true"
+							<p:ajax event="change" update="priceType ,offerPriceId ,supplierViewId" partialSubmit="true"
 									process="@this"
 									listener="#{requestNoteBackingBean.supplierLister(requestNoteDtl.scRequestSupplierItem.supplierItemId, requestNoteDtl.priceType.parameterId, requestNoteDtl,requestNoteDtl.requestItem.supplierItems , requestNoteDtl.assignedUser.userId ,requestNoteDtl.deliverTermType.parameterId)}" />
 					</p:selectOneMenu>
+					<p:spacer width="2px"></p:spacer>
+					<p:commandLink oncomplete="suppDetailsPopup.show();return false;" partialSubmit="true" process="@this" id="supplierViewId"
+						update="@([id$=suppDetailsPopup])">
+						<p:graphicImage library="ep/images/design" name="evaluate.png"
+							style="vertical-align:middle" />
+							<f:setPropertyActionListener value="#{requestNoteDtl.scRequestSupplierItem.smSupplier}" 
+						target="#{supplierDetailBackingBean.managedBean.smSupplier}" />
+					</p:commandLink>
+
+
 					<p:message id="recSupplierMsg" for="recSupplier" display="icon" />
 				</p:column>
 				
@@ -232,7 +205,7 @@
 					<p:selectOneMenu 
 						value="#{requestNoteBackingBean.managedBean.assignedToUserId}"
 					    disabled="false">
-						 <f:selectItem itemLabel="- Select One -" itemValue="#{null}" />
+						 <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 						<f:selectItems
 							value="#{requestNoteBackingBean.managedBean.userList}"
 							var="user" itemLabel="#{user.userName}"
@@ -268,5 +241,5 @@
 			</p:row>
 		</p:panelGrid>
 	</p:panel>
-	
+	<ui:include src="/xhtml/sc/common/supplierDetailsPopup.xhtml" />
 </ui:composition>
