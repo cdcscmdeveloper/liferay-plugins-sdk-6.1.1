@@ -525,7 +525,7 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		}
 	}
 
-	public void setMailingAddrSameAsPerm(AjaxBehaviorEvent e) {
+	public void setMailingAddrSameAsPerm() {
 
 		if (getManagedBean().getBasicSmPersonnelMailingAddress().isSameAsPerm()) {
 			System.out.println("********* Duplicate Mail Addr ***********");
@@ -819,6 +819,8 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 			getManagedBean().getBasicSmPersonnel().setAuthorized(true);
 		else if(getManagedBean().getBasicSmPersonnel().getEpRole().equalsIgnoreCase(RoleCode.CM_USER.value()))
 			getManagedBean().getBasicSmPersonnel().setAuthorized(false);
+		
+		setMailingAddrSameAsPerm();
 		if(getManagedBean().getBasicSmPersonnel().getPersonnelId() == null){
 			returnValue = saveNewUser(getManagedBean().getBasicSmPersonnel());
 		} else {
