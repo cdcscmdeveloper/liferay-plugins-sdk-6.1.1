@@ -32,19 +32,19 @@
 	<p:panel header="RESULT" id="professionalCertResult" toggleable="true">
 	<p:dataTable id="searchProfCertResult"  var="certBody" editable="true" value="#{profcertifiedbodyBackingBean.profCertBodyModel}" lazy="true">
 	<ac:paginator for="searchProfCertResult" />
-       <p:column headerText="#{lbl['lbl.pm.pc.code']}"> 
+       <p:column headerText="#{lbl['lbl.pm.pc.code']}" style="width:10%"> 
         <h:outputText  value="#{certBody.bodyCode}"/>       
        </p:column>
        
-       <p:column headerText="#{lbl['lbl.pm.pc.acname']}"> 
+       <p:column headerText="#{lbl['lbl.pm.pc.acname']}" style="width:50%"> 
         <h:outputText value="#{certBody.bodyName}" />
        </p:column>       
      
-       <p:column headerText="#{lbl['lbl.pm.pc.type']}"> 
-        <h:outputText value="#{certBody.bodyName}"></h:outputText>
+       <p:column headerText="#{lbl['lbl.pm.pc.type']}" style="width:35%"> 
+        <h:outputText value="#{certBody.description}"></h:outputText>
        </p:column >
         
-    	<p:column headerText="#{lbl['lbl.pm.profiles.search.result.action']}">
+    	<p:column headerText="#{lbl['lbl.pm.profiles.search.result.action']}" style="width:5%">
    		 <p:commandLink action="#{profcertifiedbodyBackingBean.editCertDetials(certBody)}" style="margin-right:20px;" partialSubmit="true" process="@this">
      	<p:graphicImage library="ep/images/design" name="edit.png"
      	 value="/resources/ep/images/design/edit.png" />
