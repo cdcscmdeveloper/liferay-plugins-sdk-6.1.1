@@ -282,6 +282,7 @@ public class SupplierManagementConst {
 	public static final String SM_MOF_357_2_SEQ = "SM_MOF_357_2_SEQ";
 	public static final String SM_MOF_357_3_SEQ = "SM_MOF_357_3_SEQ";
 	public static final String SM_MYIDENTITY_STATUS_CODE_VALID = "70018";
+	public static final String SM_MYIDENTITY_SEVERITY_SUCC = "SUCC";
 
 	public static final int RECORD_STATUS_DELETED = 9;
 	public static final int RECORD_STATUS_SUSPENDED = 0;
