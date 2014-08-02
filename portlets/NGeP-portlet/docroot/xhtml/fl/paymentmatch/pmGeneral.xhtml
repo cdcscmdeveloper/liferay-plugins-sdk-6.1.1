@@ -90,7 +90,7 @@
 						value="*" styleClass="mandatory" /></td>
 				<td rowspan="4" style="width: 280px;"><p:inputTextarea cols="55" rows="6"
 						maxlength="255" style=" margin-bottom:5px;" id="paymentDesc"
-						label="PaymentDescription" required="true"
+						label="#{lbl['lbl.fl.pm.payment.desc']}" required="true"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.description}" />
 				</td>
 				<td style="width: 106px;">
@@ -200,7 +200,7 @@
 		rendered="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flFulfilmentOrder.factored eq 'true'}">
 		<table style="width: 100%">
 			<tr>
-				<td style="width: 132px;"><p:outputLabel
+				<td style="width: 236px;"><p:outputLabel
 						value="#{lbl['lbl.fl.supp.fact.com']}" /></td>
 				<td><p:inputText disabled="true" size="53"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flFulfilmentOrder.pmFinancialOrg.finOrgName}" /></td>

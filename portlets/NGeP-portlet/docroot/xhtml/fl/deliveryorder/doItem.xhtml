@@ -20,24 +20,26 @@
 			</p:column>
 			<p:column headerText="Delivery Address" width="10"
 				style="white-space:normal;" styleClass="fixed-size">
-				<h:outputText value="#{createDOBackingBean.getFullAddress(doDelAddress.pmAddress)}" />
+				<h:outputText
+					value="#{createDOBackingBean.getFullAddress(doDelAddress.pmAddress)}" />
 			</p:column>
 			<p:column style="width:2%">
 				<h:outputText value="Delivery Start / End" />
 				<p:spacer width="4" />
-				<p:inputText size="7" disabled="true"
+				<p:inputText size="9" disabled="true"
 					value="#{doDelAddress.startDate}">
 					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</p:inputText>
 				<p:spacer width="4" />
-				<p:inputText size="7" disabled="true"
+				<p:inputText size="9" disabled="true"
 					value="#{doDelAddress.endDate}">
 					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</p:inputText>
 			</p:column>
 			<p:column>
+				<p:outputLabel value="*" styleClass="mandatory" style="float : left" />
 				<h:outputText value="Supplier DO. No." />
 				<p:spacer width="4" />
 				<p:inputText size="9" maxlength="30"
@@ -52,11 +54,13 @@
 						value="/resources/ep/images/design/attach.png"
 						title="Remark and Attachment" />
 				</p:commandLink>
+
+				<p:spacer width="10" />
 			</p:column>
 			<p:rowExpansion>
 				<p:dataTable id="doItems" var="doItems"
-					value="#{doDelAddress.flFulfilmentItemAddr}" 
-					rowIndexVar="index" rowKey="#{flItem}"
+					value="#{doDelAddress.flFulfilmentItemAddr}" rowIndexVar="index"
+					rowKey="#{flItem}"
 					styleClass="itemsSelectedPanel show-column-names">
 					<p:column headerText="Item Name" style="white-space:normal;">
 						<h:outputText value="#{doItems.scRequestItem.itemName}"
@@ -81,7 +85,8 @@
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, doItems.scRequestItem.uom.uomCode)}" />
 						</h:outputText>
 					</p:column>
-					<p:column headerText="Remaining &lt;br /&gt; Qty." style="text-align:right">
+					<p:column headerText="Remaining &lt;br /&gt; Qty."
+						style="text-align:right">
 						<h:outputText id="remaingQtyTxt"
 							value="#{doItems.orderedQty - doItems.sumDeliveredQty - doItems.deliveredQty + doItems.rejectedQty}">
 							<f:convertNumber
@@ -94,8 +99,8 @@
 							<p:inputText value="#{doItems.deliveredQty}" size="5"
 								styleClass="colFloatRight" maxlength="14"
 								rendered="#{doItems.itemType.parameterCode eq ParameterConst.itemTypeProduct and createDOBackingBean.managedBean.docType eq 'PR' }">
-								<p:ajax event="blur" update="delQtyTxt,delAmountTxt,remaingQtyTxt"
-									process="@this"
+								<p:ajax event="blur"
+									update="delQtyTxt,delAmountTxt,remaingQtyTxt" process="@this"
 									listener="#{createDOBackingBean.retrieveDelAmount(doItems)}" />
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, doItems.scRequestItem.uom.uomCode)}" />
@@ -108,8 +113,8 @@
 							<p:inputText value="#{doItems.deliveredQty}" size="5"
 								styleClass="colFloatRight"
 								rendered="#{doItems.itemType.parameterCode eq ParameterConst.itemTypeService and doItems.orderedQty > 1 and createDOBackingBean.managedBean.docType eq 'PR' }">
-								<p:ajax event="blur" update="delQtyTxt,delAmountTxt,remaingQtyTxt"
-									process="@this"
+								<p:ajax event="blur"
+									update="delQtyTxt,delAmountTxt,remaingQtyTxt" process="@this"
 									listener="#{createDOBackingBean.retrieveDelAmount(doItems)}" />
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, doItems.scRequestItem.uom.uomCode)}" />
@@ -139,9 +144,11 @@
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 							</h:outputText>
-							<p:inputText value="#{doItems.deliveredAmt}" size="5" maxlength="15" styleClass="colFloatRight"
+							<p:inputText value="#{doItems.deliveredAmt}" size="5"
+								maxlength="15" styleClass="colFloatRight"
 								rendered="#{doItems.itemType.parameterCode eq ParameterConst.itemTypeService}">
-								<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+								<f:convertNumber
+									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 							</p:inputText>
 						</h:panelGroup>
 					</p:column>
@@ -267,8 +274,8 @@
 		<p:spacer height="2px"></p:spacer>
 		<div style="width: 100%; text-align: right">
 			<p:commandButton value="Close" icon="ui-icon-cancel"
-				oncomplete="rejectionDialog.hide();" >
+				oncomplete="rejectionDialog.hide();">
 			</p:commandButton>
-		</div>		
+		</div>
 	</p:dialog>
 </ui:composition>
