@@ -1546,7 +1546,7 @@ public class SpecificationBackingBean extends
 			scqtDocDest.setTplSpecMaster(specMaster);
 			scqtDocDest.setScQtCheckList(checkList);
 			// scqtDocDest.setTplDocMaster(null);
-			// scqtDocDest.setTplDocMaster(null);
+			//scqtDocDest.setTplDocMaster(null);
 			scqtDocDest.setRecordStatus(true);
 			setUserDetails(scqtDocDest);
 
@@ -1985,7 +1985,8 @@ public class SpecificationBackingBean extends
 				checklist.addAll(resDTO.getSpecResultBean().getResultList());
 			}
 
-			List<ScQtCheckList> technicalScoring = null;
+			List<ScQtCheckList> technicalScoring = this.getManagedBean()
+					.getTechnicalScoring();
 			if (technicalScoring == null) {
 				technicalScoring = new ArrayList<ScQtCheckList>();
 			}
@@ -2250,7 +2251,6 @@ public class SpecificationBackingBean extends
 							offerPrice);
 
 				} else {
-
 					for (ScQtScoreOfferPrice scoreOfferPrice : tmpCheckList
 							.getQtScoreWeightage().getScQtScoreOfferPrices()) {
 						if (ParameterConst.RECOMMEND_TYPE_PACKAGE
@@ -2267,12 +2267,12 @@ public class SpecificationBackingBean extends
 					}
 
 				}
-				for (ScQtCheckList speCheckList : checklist) {
+
+				for(ScQtCheckList speCheckList : checklist){
 					if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
 							.equalsIgnoreCase(speCheckList.getDefinationType()
-									.getParameterCode())) {
-						speCheckList.setQtScoreWeightage(tmpCheckList
-								.getQtScoreWeightage());
+									.getParameterCode())){
+						speCheckList.setQtScoreWeightage(tmpCheckList.getQtScoreWeightage());
 					}
 				}
 				// this.getManagedBean().setScQtCheckSt2financeProposalList(checklist);
@@ -3313,7 +3313,7 @@ public class SpecificationBackingBean extends
 		SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 
 		ScQt scQt = this.getManagedBean().getScQt();
-
+		scQt.setScQtStatus(null);
 		scQt.setMaxProposal(1);
 		scQt.setScheduleType("F");
 		if (!scQt.isPanel()) {
@@ -8919,6 +8919,7 @@ public class SpecificationBackingBean extends
 		}
 
 		scQt.setScQtCommittees(null);
+		scQt.setScQtStatus(null);
 		reqDTO.setScQt(scQt);
 		return reqDTO;
 	}
@@ -8964,7 +8965,7 @@ public class SpecificationBackingBean extends
 			ScQt scQtSupplier = constructSpecCommitteDtls().getScQt();
 
 			specReqDTO.setScQt(scQtSupplier);
-			specSO.validateSupplierQulificationInfo(specReqDTO);
+			//specSO.validateSupplierQulificationInfo(specReqDTO);
 			resDTO = specSO.saveQTDtl(specReqDTO);
 			renewSesionObject();
 			this.getManagedBean().setScQt(resDTO.getScQt());
@@ -9058,7 +9059,7 @@ public class SpecificationBackingBean extends
 				specReqDTO.setCheckLists(technicalScoring);
 				specReqDTO.setSpecType(QTConstants.TECHNICAL_SPEC_TYPE);
 				specReqDTO.setScQt(scoring);
-				// specSO.validateSCScoreSettings(specReqDTO);
+				specSO.validateSCScoreSettings(specReqDTO);
 				resDTO = specSO.saveQTDtl(specReqDTO);
 				renewSesionObject();
 				this.getManagedBean().setScQt(resDTO.getScQt());
@@ -9238,11 +9239,7 @@ public class SpecificationBackingBean extends
 	}
 
 	public String updateSpecCommitteBpmTask(String action) {
-		SpecificationReqDTO spReqDTO = constructSpecCommitteDtls();
-		if ("SUBMIT".equalsIgnoreCase(action)) {
-			spReqDTO.getScQt().setRequestItems(
-					constructRequestItems(this.getManagedBean().getScQt()));
-		}
+		SpecificationReqDTO spReqDTO = constructSpecCommitteDtls();		
 		spReqDTO.setOutcome(action);
 		spReqDTO.setTaskId(this.getManagedBean().getTaskId());
 		spReqDTO.setPayLoad(this.getManagedBean().getSpecificationDataType());
