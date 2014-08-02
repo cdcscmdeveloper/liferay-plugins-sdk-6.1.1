@@ -35,7 +35,7 @@
 					</p:commandLink>
 				</p:column>
 				  
-				<p:column headerText="#{lbl['lbl.sc.request.note.proc.type']}" style="width:6%;">
+				<p:column headerText="#{lbl['lbl.sc.request.note.proc.type']}" style="width:7%;">
 					<ui:fragment rendered="#{requestNoteDtl.procurementType.parameterCode eq 'E'}">
 						<p:commandLink value="Emergency" partialSubmit="true" process="@this"
 							update=":form:justPopup"
@@ -55,7 +55,7 @@
 					</ui:fragment>
 				</p:column>
 				
-				<p:column headerText="#{lbl['lbl.sc.request.note.summary']}" style="width:5%;">
+				<p:column headerText="#{lbl['lbl.sc.request.note.summary']}" style="width:6%;">
 				    <p:commandLink partialSubmit="true"  process="@this" >
 				       <p:graphicImage value="/resources/ep/images/design/document.png"  height="15px" width="15px"/>
 				  </p:commandLink> 
@@ -69,7 +69,7 @@
 				
 				   <p:selectOneMenu value="#{requestNoteDtl.scRequestSupplierItem.supplierItemId}" 
 				        id="recSupplier" label="#{lbl['lbl.sc.request.note.rec.suppier']}"
-				        style="width:180px;" required="#{!requestNoteDtl.selected}">  
+				        style="width:140px;" required="#{!requestNoteDtl.selected}">  
 					   <f:selectItem itemLabel="-Select One-" itemValue="#{null}" />
 					   <f:selectItems
 							value="#{requestNoteDtl.requestItem.supplierItems}" 
@@ -93,13 +93,13 @@
 					<p:message id="recSupplierMsg" for="recSupplier" display="icon" />
 				</p:column>
 				
-				<p:column style="width:10%;">
+				<p:column style="width:11%;">
 					<f:facet name="header">
 						<h:outputText value="* " styleClass="mandatory" />
 						<h:outputText value="#{lbl['lbl.sc.request.note.price.type']}" />
 					</f:facet>
 				
-					<p:selectOneMenu id="priceType" style="width:125px;"
+					<p:selectOneMenu id="priceType" style="width:100px;"
 						required="#{!requestNoteDtl.selected}" label="#{lbl['lbl.sc.request.note.price.type']}"
 						value="#{requestNoteDtl.priceType.parameterId}">
 						 <f:selectItem itemLabel="-Select One-" itemValue="#{null}" />
@@ -142,17 +142,17 @@
 					</h:panelGroup>
 				</p:column>
 				
-			    <p:column headerText="#{lbl['lbl.sc.request.note.fulfill.type']}"  style="width:6%;">
+			    <p:column headerText="#{lbl['lbl.sc.request.note.fulfill.type']}"  style="width:8%;">
 					<p:inputText value="#{requestNoteBackingBean.getParameterDesc(ParameterTypeConst.fulfilmentType ,requestNoteDtl.fulfilmentType.parameterCode)}" 
 					   disabled="true" size="6" style="margin-top: 8px;"  />
 				</p:column>
 				
-				<p:column style="width:10%;">
+				<p:column style="width:12%;">
 					<f:facet name="header">
 						<h:outputText value="* " styleClass="mandatory" />
 						<h:outputText value="#{lbl['lbl.sc.request.note.loa.prepare.by']}" />
 					</f:facet>
-					<p:selectOneMenu value="#{requestNoteDtl.assignedUser.userId}" style="width:125px;" 
+					<p:selectOneMenu value="#{requestNoteDtl.assignedUser.userId}" style="width:115px;" 
 					   id="prepareBy" label="#{lbl['lbl.sc.request.note.loa.prepare.by']}" 
 					   required="#{!requestNoteDtl.selected}">  
 					   <f:selectItem itemLabel="-Select One-" itemValue="#{null}" />
@@ -167,7 +167,7 @@
 					   <p:message id="prepareByMsg" for="prepareBy" display="icon" />
 				</p:column>
 			
-			    <p:column style="width:9%;">
+			    <p:column style="width:11%;">
 			        <f:facet name="header">
 						<h:outputText value="* " styleClass="mandatory" />
 						<h:outputText value="#{lbl['lbl.sc.request.note.delivery.term']}" />
