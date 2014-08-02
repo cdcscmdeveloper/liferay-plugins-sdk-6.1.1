@@ -46,7 +46,7 @@
 				action="#{registrationBackingBean.addBusinessNature}" />
 
 			<p:commandButton id="btnRemove" update="natureBusinessId" immediate="true"
-				value="Remove"
+				value="#{lbl['lbl.btn.delete']}"
 				action="#{registrationBackingBean.removeBusinessNature}" />
 		</div>
 	</p:panel>
@@ -54,7 +54,7 @@
 		<p:dialog id="bizDialog" header="#{lbl['lbl.sm.natureofbusiness']}" widgetVar="bizDlg" styleClass="smBizDialog"
 			modal="true" width="750" dynamic="true">
 			<p:outputPanel header="Nature of Business" id="outPnlNatBiz">
-				<p:messages id="messageDialog" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
+				<p:messages id="messageDialog" showDetail="true" closable="true" showSummary="false" />
 				<table class="customTbl">
 					<tr>
 						<td><p:outputLabel value="L1" /></td>
