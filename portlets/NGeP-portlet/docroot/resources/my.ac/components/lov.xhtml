@@ -22,7 +22,7 @@
 	<cc:attribute name="selectionMode" default="single" />
 	<cc:attribute name="buttonLabel" default="" />
 	<cc:attribute name="buttonIcon" default="ui-icon-lov" />
-	
+	<cc:actionSource name="actionEvent" targets="#{cc.attrs.id}#{cc.attrs.selectionMode eq 'single' ? 'lovLink' : 'lovBtn'}" />
 </cc:interface>
 
 <cc:implementation>

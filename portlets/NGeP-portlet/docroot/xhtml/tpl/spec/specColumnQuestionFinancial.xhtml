@@ -25,11 +25,11 @@
 		
 		<p:inputText style="min-width:0px !important;width:75%;" rendered="#{isQuestionTypeItem}" disabled="true" />
 		<p:commandButton icon="ui-icon-pencil" style="background-color:transparent !important; border:0px none;" id="scoringBtn" 
-			action="#{templateSpecBackingBean.scoringPopupAction(templateSpecBean)}"
+			action="#{templateSpecBackingBean.scoringPopupAction()}"
 			oncomplete="scoringSetPopup.show();"
 			partialSubmit="true" process="@this" update="@([id$=scoringSetPopup])"
 			rendered="#{isScoringReq}">
-			<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{question}" />
+			<f:setPropertyActionListener target="#{templateSpecBackingBean.managedBean.selectedSpecQuestion}" value="#{question}" />
 		</p:commandButton>
 	</p:column>
 	<p:column style="width:80px;" rendered="#{isEstCostReq}">
@@ -49,7 +49,7 @@
 			oncomplete="estimationPopup.show();"
 			partialSubmit="true" process="@this" update="@([id$=estimationPopup])"
 			rendered="#{!isPriceTypeStandard}">
-			<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{question}" />
+			<f:setPropertyActionListener target="#{templateSpecBackingBean.managedBean.selectedSpecQuestion}" value="#{question}" />
 		</p:commandButton>
 	</p:column>
 </ui:composition>

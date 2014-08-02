@@ -6,7 +6,6 @@ import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
-import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecScoring;
 import my.ep.persistence.entity.tpl.spec.TplSpecTierQty;
 
@@ -14,8 +13,6 @@ public class TemplateSpecBean {
 	private TplSpecMaster specMaster;
 	private String contentType;
 	private SmSupplier supplier;
-	private Long selectedScoreTypeId;
-	private TplSpecQuestion selectedSpecQuestion;
 	private List<TplSpecAnswer> specAnswerList;
 	private List<TplSpecTierQty> selectedTierQtyList;
 	private List<TplSpecScoring> selectedScoringList;
@@ -68,34 +65,6 @@ public class TemplateSpecBean {
 	 */
 	public void setSupplier(SmSupplier supplier) {
 		this.supplier = supplier;
-	}
-
-	/**
-	 * @return the selectedScoreTypeId
-	 */
-	public Long getSelectedScoreTypeId() {
-		return selectedScoreTypeId;
-	}
-
-	/**
-	 * @param selectedScoreTypeId the selectedScoreTypeId to set
-	 */
-	public void setSelectedScoreTypeId(Long selectedScoreTypeId) {
-		this.selectedScoreTypeId = selectedScoreTypeId;
-	}
-
-	/**
-	 * @return the selectedSpecQuestion
-	 */
-	public TplSpecQuestion getSelectedSpecQuestion() {
-		return selectedSpecQuestion;
-	}
-
-	/**
-	 * @param selectedSpecQuestion the selectedSpecQuestion to set
-	 */
-	public void setSelectedSpecQuestion(TplSpecQuestion selectedSpecQuestion) {
-		this.selectedSpecQuestion = selectedSpecQuestion;
 	}
 
 	/**

@@ -3,7 +3,6 @@
  */
 package my.ep.web.managedbean.tpl.spec;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -34,68 +33,138 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 	private Long searchItemTypeId;
 	private Long searchSpecTypeId;
 	
+	private Long selectedScoreTypeId;
+	private TplSpecQuestion selectedSpecQuestion;
+	private List<TplSpecQuestion> tplSpecQuestions;
 	private TemplateSpecBean templateSpecBean = new TemplateSpecBean();
 	
-	private List<TplSpecQuestion> deletedQuestions;
-	
-	public List<TplSpecQuestion> getDeletedQuestions() {
-		if(deletedQuestions==null) {
-			deletedQuestions = new ArrayList<TplSpecQuestion>();
-		}
-		return deletedQuestions;
-	}
-	
-	public void setDeletedQuestions(List<TplSpecQuestion> deletedQuestions) {
-		this.deletedQuestions = deletedQuestions;
+	public TemplateSpecManagedBean() {
 	}
 
+	/**
+	 * @return the searchSpecName
+	 */
 	public String getSearchSpecName() {
 		return searchSpecName;
 	}
 
+	/**
+	 * @param searchSpecName the searchSpecName to set
+	 */
 	public void setSearchSpecName(String searchSpecName) {
 		this.searchSpecName = searchSpecName;
 	}
 
-	public Long getSearchTemplateTypeId() {
-		return searchTemplateTypeId;
-	}
-
-	public void setSearchTemplateTypeId(Long searchTemplateTypeId) {
-		this.searchTemplateTypeId = searchTemplateTypeId;
-	}
-
-	public Long getSearchOrgProfileId() {
-		return searchOrgProfileId;
-	}
-
-	public void setSearchOrgProfileId(Long searchOrgProfileId) {
-		this.searchOrgProfileId = searchOrgProfileId;
-	}
-
-	public Long getSearchItemTypeId() {
-		return searchItemTypeId;
-	}
-
-	public void setSearchItemTypeId(Long searchItemTypeId) {
-		this.searchItemTypeId = searchItemTypeId;
-	}
-
-	public Long getSearchSpecTypeId() {
-		return searchSpecTypeId;
-	}
-
-	public void setSearchSpecTypeId(Long searchSpecTypeId) {
-		this.searchSpecTypeId = searchSpecTypeId;
-	}
-
+	/**
+	 * @return the searchProcurementCategoryId
+	 */
 	public Long getSearchProcurementCategoryId() {
 		return searchProcurementCategoryId;
 	}
 
-	public void setSearchProcurementCategoryId(
-			Long searchProcurementCategoryId) {
+	/**
+	 * @param searchProcurementCategoryId the searchProcurementCategoryId to set
+	 */
+	public void setSearchProcurementCategoryId(Long searchProcurementCategoryId) {
 		this.searchProcurementCategoryId = searchProcurementCategoryId;
+	}
+
+	/**
+	 * @return the searchTemplateTypeId
+	 */
+	public Long getSearchTemplateTypeId() {
+		return searchTemplateTypeId;
+	}
+
+	/**
+	 * @param searchTemplateTypeId the searchTemplateTypeId to set
+	 */
+	public void setSearchTemplateTypeId(Long searchTemplateTypeId) {
+		this.searchTemplateTypeId = searchTemplateTypeId;
+	}
+
+	/**
+	 * @return the searchOrgProfileId
+	 */
+	public Long getSearchOrgProfileId() {
+		return searchOrgProfileId;
+	}
+
+	/**
+	 * @param searchOrgProfileId the searchOrgProfileId to set
+	 */
+	public void setSearchOrgProfileId(Long searchOrgProfileId) {
+		this.searchOrgProfileId = searchOrgProfileId;
+	}
+
+	/**
+	 * @return the searchItemTypeId
+	 */
+	public Long getSearchItemTypeId() {
+		return searchItemTypeId;
+	}
+
+	/**
+	 * @param searchItemTypeId the searchItemTypeId to set
+	 */
+	public void setSearchItemTypeId(Long searchItemTypeId) {
+		this.searchItemTypeId = searchItemTypeId;
+	}
+
+	/**
+	 * @return the searchSpecTypeId
+	 */
+	public Long getSearchSpecTypeId() {
+		return searchSpecTypeId;
+	}
+
+	/**
+	 * @param searchSpecTypeId the searchSpecTypeId to set
+	 */
+	public void setSearchSpecTypeId(Long searchSpecTypeId) {
+		this.searchSpecTypeId = searchSpecTypeId;
+	}
+
+	/**
+	 * @return the selectedScoreTypeId
+	 */
+	public Long getSelectedScoreTypeId() {
+		return selectedScoreTypeId;
+	}
+
+	/**
+	 * @param selectedScoreTypeId the selectedScoreTypeId to set
+	 */
+	public void setSelectedScoreTypeId(Long selectedScoreTypeId) {
+		this.selectedScoreTypeId = selectedScoreTypeId;
+	}
+
+	/**
+	 * @return the selectedSpecQuestion
+	 */
+	public TplSpecQuestion getSelectedSpecQuestion() {
+		return selectedSpecQuestion;
+	}
+
+	/**
+	 * @param selectedSpecQuestion the selectedSpecQuestion to set
+	 */
+	public void setSelectedSpecQuestion(TplSpecQuestion selectedSpecQuestion) {
+		this.selectedSpecQuestion = selectedSpecQuestion;
+	}
+
+	/**
+	 * @return the tplSpecQuestions
+	 */
+	public List<TplSpecQuestion> getTplSpecQuestions() {
+		return tplSpecQuestions;
+	}
+
+	/**
+	 * @param tplSpecQuestions the tplSpecQuestions to set
+	 */
+	public void setTplSpecQuestions(List<TplSpecQuestion> tplSpecQuestions) {
+		this.tplSpecQuestions = tplSpecQuestions;
 	}
 
 	/**

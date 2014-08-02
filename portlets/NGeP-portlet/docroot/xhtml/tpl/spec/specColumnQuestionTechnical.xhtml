@@ -46,13 +46,14 @@
 		</f:facet>
 		<ac:lov id="uomLovId" lovId="PM_UOM" 
 			headerText="UOM Lov"
-			saveObject="templateSpecBean.specMaster.tplSpecQuestions[#{row}].clUom"
+			saveObject="templateSpecBackingBean.managedBean.tplSpecQuestions[#{row}].clUom"
 			value="#{question.clUom.uomName}"
 			conditionField="recordStatus^1"
 			rendered="#{isQuestionTypeItem}"
 			required="#{!question.selected}"
 			size="12"
 			update="@form">
+			<f:ajax event="click" onevent="alert(123);" />
 		</ac:lov>
 	</p:column>
 	
@@ -141,7 +142,7 @@
 				oncomplete="tierQtyPopup.show();"
 				partialSubmit="true" process="@this" update="@([id$=tierQtyPopup])"
 				rendered="#{!isPriceTypeAllStandard}">
-				<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{question}" />
+				<f:setPropertyActionListener target="#{templateSpecBackingBean.managedBean.selectedSpecQuestion}" value="#{question}" />
 			</p:commandButton>
 		</h:panelGroup>
 	</p:column>
@@ -175,10 +176,10 @@
 			<p:ajax event="change" listener="#{templateSpecBackingBean.answerTypeChange(question)}" update="scoringBtn" />
 		</h:selectOneMenu>	
 		<p:commandButton icon="ui-icon-pencil" style="background-color:transparent !important; border:0px none;" id="scoringBtn"
-			action="#{templateSpecBackingBean.scoringPopupAction(templateSpecBean)}"
+			action="#{templateSpecBackingBean.scoringPopupAction()}"
 			oncomplete="scoringSetPopup.show();"
 			partialSubmit="true" process="@this" update="@([id$=scoringSetPopup])">
-			<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{question}" />
+			<f:setPropertyActionListener target="#{templateSpecBackingBean.managedBean.selectedSpecQuestion}" value="#{question}" />
 		</p:commandButton>
 		<p:message id="answerTypeIdMsg" for="answerTypeId" display="icon" />
 	</p:column>
@@ -200,7 +201,7 @@
 				oncomplete="estimationPopup.show();"
 				partialSubmit="true" process="@this" update="@([id$=estimationPopup])"
 				rendered="#{!isPriceTypeStandard}">
-				<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{question}" />
+				<f:setPropertyActionListener target="#{templateSpecBackingBean.managedBean.selectedSpecQuestion}" value="#{question}" />
 			</p:commandButton>
 		</h:panelGroup>
 	</p:column>
@@ -228,8 +229,9 @@
 		</c:if>
 		<p:commandButton icon="ui-icon-delete" style="background-color:transparent !important; border:0px none; width:10px; height:10px !important;"
 			immediate="true" process="@form" oncomplete="delConfirmPopup.show();">
-			<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{question}" />
-			<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion.selected}" value="#{true}" />
+			<f:setPropertyActionListener target="#{templateSpecBackingBean.managedBean.tplSpecQuestions}" value="#{templateSpecBean.specMaster.tplSpecQuestions}" />
+			<f:setPropertyActionListener target="#{templateSpecBackingBean.managedBean.selectedSpecQuestion}" value="#{question}" />
+			<f:setPropertyActionListener target="#{templateSpecBackingBean.managedBean.selectedSpecQuestion.selected}" value="#{true}" />
 		</p:commandButton>
 	</p:column>
 </ui:composition>

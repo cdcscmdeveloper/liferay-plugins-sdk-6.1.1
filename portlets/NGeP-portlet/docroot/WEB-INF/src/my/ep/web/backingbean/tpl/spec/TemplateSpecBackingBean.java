@@ -131,7 +131,7 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 				
 				templateSpecBean.setSpecMaster(specMaster);
 				templateSpecBean.setSpecAnswerList(resDTO.getSpecAnswerList());
-				templateSpecBean.setSelectedSpecQuestion(null);
+				getManagedBean().setSelectedSpecQuestion(null);
 				
 				if (resDTO.getSpecAnswerList() != null) {
 					calcGrandTotalAmount(templateSpecBean);	
@@ -155,7 +155,6 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 			TplSpecMaster specMaster = templateSpecBean.getSpecMaster();
 			
 			reqDTO.setSpecMaster(specMaster);
-			reqDTO.setDeletedQuestionList(this.getManagedBean().getDeletedQuestions());
 			TemplateSpecResDTO resDTO = templateSpecSO.saveTemplateSpec(reqDTO);		
 
 			if(resDTO.isSuccessful()) {
@@ -216,9 +215,9 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 		}
 	}
 
-	public void deleteQuestion(TemplateSpecBean templateSpecBean) {
-		List<TplSpecQuestion> specQuestionList = templateSpecBean.getSpecMaster().getTplSpecQuestions();
-		TplSpecQuestion questionToDelete = templateSpecBean.getSelectedSpecQuestion();
+	public void deleteQuestion() {
+		List<TplSpecQuestion> specQuestionList = getManagedBean().getTplSpecQuestions();
+		TplSpecQuestion questionToDelete = getManagedBean().getSelectedSpecQuestion();
 		int selectedIndex = specQuestionList.indexOf(questionToDelete);
 
 		if(questionToDelete.getQuestionType().equalsIgnoreCase(TemplateSpecConst.QUESTION_TYPE_ITEM)) {
@@ -229,7 +228,6 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 				}
 				if(!childToDelete.isBrandNew()) {
 					childToDelete.setDeleted(true);
-					getManagedBean().getDeletedQuestions().add(childToDelete);
 				}
 				specQuestionList.remove(childToDelete);
 				i--;
@@ -237,7 +235,6 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 		} 
 		if(!questionToDelete.isBrandNew()) {
 			questionToDelete.setDeleted(true);
-			this.getManagedBean().getDeletedQuestions().add(questionToDelete);
 		}
 		specQuestionList.remove(questionToDelete);
 	}
@@ -254,7 +251,7 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 		
 		templateSpecBean.setSpecMaster(specMaster);
 		
-		templateSpecBean.setSelectedSpecQuestion(null);
+		getManagedBean().setSelectedSpecQuestion(null);
 		getManagedBean().setTemplateSpecBean(templateSpecBean);
 		
 		return "maintenance"; 
@@ -595,13 +592,13 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 		}
 	}
 	
-	public void scoringPopupAction(TemplateSpecBean templateSpecBean) {
+	public void scoringPopupAction() {
 		debugLogger("scoringPopupAction");
 		
-		TplSpecQuestion tplSpecQuestion = templateSpecBean.getSelectedSpecQuestion();
+		TplSpecQuestion tplSpecQuestion = getManagedBean().getSelectedSpecQuestion();
 		
 		// update selected score type id
-		templateSpecBean.setSelectedScoreTypeId(
+		getManagedBean().setSelectedScoreTypeId(
 				tplSpecQuestion.getScoreTypeCode().getParameterId());
 		
 		// add compliance scoring.
@@ -720,12 +717,12 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 		tplSpecScorings.add(tplSpecScoring);
 	}
 	
-	public void tierQtyOkAction(TemplateSpecBean templateSpecBean) {
+	public void tierQtyOkAction() {
 		debugLogger("tierQtyOkAction");
 		
 		ITemplateSpecSO templateSpecSO = null;
 		try {
-			List<TplSpecTierQty> specTierQties = templateSpecBean.getSelectedSpecQuestion().getTplSpecTierQties();
+			List<TplSpecTierQty> specTierQties = getManagedBean().getSelectedSpecQuestion().getTplSpecTierQties();
 			
 			templateSpecSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
@@ -736,23 +733,23 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 			templateSpecSO = null;
 		}
 		
-		templateSpecBean.setSelectedSpecQuestion(null);
+		getManagedBean().setSelectedSpecQuestion(null);
 		
 		RequestContext.getCurrentInstance().execute("tierQtyPopup.hide()");
 	}
 	
-	public void scoringOkAction(TemplateSpecBean templateSpecBean) {
+	public void scoringOkAction() {
 		debugLogger("scoringOkAction");
 		
-		templateSpecBean.setSelectedSpecQuestion(null);
+		getManagedBean().setSelectedSpecQuestion(null);
 		
 		RequestContext.getCurrentInstance().execute("scoringSetPopup.hide()");
 	}
 	
-	public void estCostOkAction(TemplateSpecBean templateSpecBean) {
+	public void estCostOkAction() {
 		debugLogger("estCostOkAction");
 		
-		templateSpecBean.setSelectedSpecQuestion(null);
+		getManagedBean().setSelectedSpecQuestion(null);
 		
 		RequestContext.getCurrentInstance().execute("estimationPopup.hide()");
 	}

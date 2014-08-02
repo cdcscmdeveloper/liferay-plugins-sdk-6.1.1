@@ -56,7 +56,7 @@
 				oncomplete="tierQtyPopup.show();"
 				partialSubmit="true" process="@this" update="@([id$=tierQtyPopup])"
 				rendered="#{isQuestionTypeItem and !isPriceTypeAllStandard}">
-				<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{question}" />
+				<f:setPropertyActionListener target="#{templateSpecBackingBean.managedBean.selectedSpecQuestion}" value="#{question}" />
 			</p:commandButton>
 		</ui:insert>
 	</p:column>

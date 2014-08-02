@@ -6,17 +6,17 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:p="http://primefaces.org/ui">
 	
-	<ui:param name="isSelectedPriceTypeTariff" value="#{templateSpecBean.selectedSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeTariff or templateSpecBean.selectedSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeZonalTariff}" />
-	<ui:param name="isSelectedPriceTypeTier" value="#{templateSpecBean.selectedSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeTier 
-		or templateSpecBean.selectedSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypePromotionTier 
-		or templateSpecBean.selectedSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeZonalTier 
-		or templateSpecBean.selectedSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeZonalPromotionTier 
+	<ui:param name="isSelectedPriceTypeTariff" value="#{templateSpecBackingBean.managedBean.selectedSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeTariff or templateSpecBackingBean.managedBean.selectedSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeZonalTariff}" />
+	<ui:param name="isSelectedPriceTypeTier" value="#{templateSpecBackingBean.managedBean.selectedSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeTier 
+		or templateSpecBackingBean.managedBean.selectedSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypePromotionTier 
+		or templateSpecBackingBean.managedBean.selectedSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeZonalTier 
+		or templateSpecBackingBean.managedBean.selectedSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeZonalPromotionTier 
 		or isSelectedPriceTypeTariff}" />
 	
 	<p:dataTable id="estimationTbl" widgetVar="tierQtyWidget"
 		var="tplSpecEstimation"
 		rowIndexVar="rowIndex"
-		value="#{templateSpecBean.selectedSpecQuestion.tplSpecEstimations}"
+		value="#{templateSpecBackingBean.managedBean.selectedSpecQuestion.tplSpecEstimations}"
 		rowKey="#{tplSpecEstimation}">
 							
 		<ac:paginator for="estimationTbl" />
