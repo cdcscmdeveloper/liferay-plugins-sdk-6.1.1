@@ -10,9 +10,14 @@
 			<c:if
 				test="#{registrationBackingBean.managedBean.smSupp.businessType == SupplierManagementConst.INDIVIDUAL_FLAG}">
 				<div align="right">
-					<p:commandButton value="Submit"
+					<p:commandButton value="Submit" onstart="submissionDialog.show();" oncomplete="submissionDialog.hide();"
 						action="#{registrationBackingBean.submitRegistration}" update="@([id$=Msg])" />
 				</div>
+				
+				<p:dialog widgetVar="submissionDialog" modal="true" draggable="false"
+					closable="false" resizable="false" showHeader="false">
+					<p:graphicImage library="ep/images/" name="ajax-loader.gif" />
+				</p:dialog>
 			</c:if>
 		</c:if>
 	</p:outputPanel>
@@ -24,7 +29,7 @@
 					test="#{registrationBackingBean.managedBean.smAppl.applType == SupplierManagementConst.ACC_MOF}">
 
 					<td class="tdTitle"><p:outputLabel
-							value="* #{lbl['lbl.sm.mofsuppliertype']}" /></td>
+							value="#{lbl['lbl.sm.mofsuppliertype']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
 					<td class="tdContent"><p:selectOneMenu id="suppTypeId"
 							required="true"
 							value="#{registrationBackingBean.managedBean.smAppl.supplierType}"
@@ -41,7 +46,7 @@
 				</c:if>
 
 				<td class="tdTitle"><p:outputLabel
-						value="* #{lbl['lbl.sm.businesscomptype']}" /></td>
+						value="#{lbl['lbl.sm.businesscomptype']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td class="tdContent">
 					<p:selectOneMenu id="busTypeId" required="true" label="#{lbl['lbl.sm.businesscomptype']}"
 						value="#{registrationBackingBean.managedBean.smSupp.businessType}"
