@@ -942,6 +942,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		
 //		log.info("**********************BUSINESS_TYPE_LS*****************" + this.getManagedBean().getBusinessTypeLs().size());
 		if(resDTO.getSmSupp().getBusinessType().equals(SupplierManagementConst.INDIVIDUAL_FLAG)){
+			getIndividualServiceType();
 			this.getManagedBean().setSmPermenantAdd(resDTO.getSmSupp().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress());
 			this.populateStateByAddType("permenant");
 			this.populateDistrictByAddType("permenant");
@@ -1093,7 +1094,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		return true;
 	}
 
-	public void resetSessionData() {
+/*	public void resetSessionData() {
 		this.getManagedBean().setApplType(SupplierManagementConst.ACC_MOF);
 //		this.getManagedBean().setAgreeTC(false);
 		this.getManagedBean().setSmSupp(null);
@@ -1102,14 +1103,18 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		resetBusinessNatureSelection();
 		System.out.println("renewSesionObject");
 //		renewSesionObject();
-	}
-
-/*	public String resetSessionData() {
-		log.debug("renewing session object..");
-		renewSesionObject();
-		log.info("session renewed, forward to sign up page.");
-		return "signUp.xhtml";
 	}*/
+
+	public void resetSessionData() {
+		log.debug("renewing session object..");
+
+		renewSesionObject();
+		
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, "signUp");
+
+	}
 	
 	public String getCompanyId() {
 		return EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_COMPANY_ID);
