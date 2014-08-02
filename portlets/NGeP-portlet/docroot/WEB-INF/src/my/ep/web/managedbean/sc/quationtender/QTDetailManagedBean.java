@@ -152,7 +152,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<ScQt> selectedCloneTenderList;
 	private List<CloneAll> selectedCloneAllList;
 	private List<ScQtDeduction> selectedScQtDeductions;
-	private List<ScQtDeduction> selectedScQtDeduction;
+	//private List<ScQtDeduction> selectedScQtDeduction;
+	private ScQtDeduction selectedScQtDeduction;
 	private List<ScQtDeductionClause> selectedDeductionClauses;
 
 	private String qtNumber;
@@ -413,7 +414,12 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private ScQtDocReport selectedScQtDocReport;
 	private ScQtDocReport scQtDocReport;
 	private TplDocMaster tplDocMaster;
-
+	
+	private IPagingDataModel<ScQt> cloneDocumentDataModel;
+	private QtnTenderSearchBean cloneDocumentSearchBean;
+	private List<ScQtDocReport> cloneScQtDocReports;
+	private List<ScQtDocReport> selectedCloneScQtDocReports;
+	
 	private TreeNode[] selectedGeneralTreeNodes;
 
 	public ScQtSupplierCriteria supplierCriteria;
@@ -449,6 +455,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		
 		cloneBusinessOwnerSearchBean = new QtnTenderSearchBean();
 		userBusineeOwnerSearchBean = new UserCommitteeSearchBean();
+		
+		cloneDocumentSearchBean = new QtnTenderSearchBean();
 
 		root2 = new DefaultTreeNode("Root", null);
 		TreeNode node0 = new DefaultTreeNode("Clone All", root2);
@@ -1675,12 +1683,11 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.qtCategoryList = qtCategoryList;
 	}
 
-	public List<ScQtDeduction> getSelectedScQtDeduction() {
+	public ScQtDeduction getSelectedScQtDeduction() {
 		return selectedScQtDeduction;
 	}
 
-	public void setSelectedScQtDeduction(
-			List<ScQtDeduction> selectedScQtDeduction) {
+	public void setSelectedScQtDeduction(ScQtDeduction selectedScQtDeduction) {
 		this.selectedScQtDeduction = selectedScQtDeduction;
 	}
 
@@ -2578,6 +2585,41 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setTplDocMaster(TplDocMaster tplDocMaster) {
 		this.tplDocMaster = tplDocMaster;
+	}
+
+	public IPagingDataModel<ScQt> getCloneDocumentDataModel() {
+		return cloneDocumentDataModel;
+	}
+
+	public void setCloneDocumentDataModel(
+			IPagingDataModel<ScQt> cloneDocumentDataModel) {
+		this.cloneDocumentDataModel = cloneDocumentDataModel;
+	}
+
+	public QtnTenderSearchBean getCloneDocumentSearchBean() {
+		return cloneDocumentSearchBean;
+	}
+
+	public void setCloneDocumentSearchBean(
+			QtnTenderSearchBean cloneDocumentSearchBean) {
+		this.cloneDocumentSearchBean = cloneDocumentSearchBean;
+	}
+
+	public List<ScQtDocReport> getCloneScQtDocReports() {
+		return cloneScQtDocReports;
+	}
+
+	public void setCloneScQtDocReports(List<ScQtDocReport> cloneScQtDocReports) {
+		this.cloneScQtDocReports = cloneScQtDocReports;
+	}
+
+	public List<ScQtDocReport> getSelectedCloneScQtDocReports() {
+		return selectedCloneScQtDocReports;
+	}
+
+	public void setSelectedCloneScQtDocReports(
+			List<ScQtDocReport> selectedCloneScQtDocReports) {
+		this.selectedCloneScQtDocReports = selectedCloneScQtDocReports;
 	}
 
 }

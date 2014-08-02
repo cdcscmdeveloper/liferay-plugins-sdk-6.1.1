@@ -171,11 +171,7 @@ public class QTBusinessOwnerBackingBean extends
 			List<SearchFilterBean> searchFilterBean = new ArrayList<SearchFilterBean>();
 			String name = userBusinessOwnerSearchBean.getName();
 			if (!StringUtils.isBlank(name)) {
-				SearchFilterBean bean = new SearchFilterBean();
-				bean.setSearchField(QTConstants.USER_NAME);
-				bean.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
-				bean.setSearchValue(name);
-				searchFilterBean.add(bean);
+				userSearchBean.getDataFilterBeans().add(new SearchFilterBean(QTConstants.USER_NAME, SearchOperator.OPERATOR_LIKE.value(), name, true));
 			}
 			String idno = userBusinessOwnerSearchBean.getIdentificationNo();
 			if (!StringUtils.isBlank(idno)) {
@@ -246,11 +242,7 @@ public class QTBusinessOwnerBackingBean extends
 			
 			String qtTitle = cloneBusinessOwnerSearchBean.getQtTitle();
 			if (!StringUtils.isBlank(qtTitle)) {
-				SearchFilterBean bean = new SearchFilterBean();
-				bean.setSearchField(QTConstants.QT_TITILE);
-				bean.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
-				bean.setSearchValue(qtTitle);
-				searchFilterBean.add(bean);
+				qtSearchBean.getDataFilterBeans().add(new SearchFilterBean(QTConstants.QT_TITILE, SearchOperator.OPERATOR_LIKE.value(), qtTitle, true));
 			}
 
 			String qtNumber = cloneBusinessOwnerSearchBean.getQtNo();
@@ -264,12 +256,7 @@ public class QTBusinessOwnerBackingBean extends
 			
 			String procurementMode = cloneBusinessOwnerSearchBean.getProcurementMode();
 			if (!StringUtils.isBlank(procurementMode)) {
-				SearchFilterBean bean = new SearchFilterBean();
-				bean.setAndOr(SearchCondition.CONDITION_OR.value());
-				bean.setSearchField("procurementMode.parameterCode");
-				bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
-				bean.setSearchValue(procurementMode);
-				searchFilterBean.add(bean);
+				qtSearchBean.getDataFilterBeans().add(new SearchFilterBean("procurementMode.parameterCode", SearchOperator.OPERATOR_EQUALS.value(), procurementMode));
 			}
 
 			Date fromCreatedDate = cloneBusinessOwnerSearchBean.getFromCreatedDate();
@@ -278,24 +265,15 @@ public class QTBusinessOwnerBackingBean extends
 				SearchFilterBean bean = new SearchFilterBean();
 				bean.setSearchField(QTConstants.CREATED_DATE);
 				bean.setSearchOperator(SearchOperator.OPERATOR_BETWEEN.value());
-
-				SearchBetweenValue<Date> betweenVal = new SearchBetweenValue<Date>(
-						fromCreatedDate, toCreatedDate);
-
+				SearchBetweenValue<Date> betweenVal = new SearchBetweenValue<Date>(fromCreatedDate, toCreatedDate);
 				bean.setSearchValue(betweenVal);
 				searchFilterBean.add(bean);
 			}
 			
 			String status = cloneBusinessOwnerSearchBean.getQtStatus();
 			if (!StringUtils.isBlank(status)) {				
-				qtSearchBean.getDataFilterBeans().add(
-						new SearchFilterBean("scQtStatus.pmStatus.statusId",
-								SearchOperator.OPERATOR_EQUALS.value(),
-								status));				
-				qtSearchBean.getDataFilterBeans().add(
-						new SearchFilterBean("scQtStatus.current",
-								SearchOperator.OPERATOR_EQUALS.value(),
-								true));
+				qtSearchBean.getDataFilterBeans().add(new SearchFilterBean("scQtStatus.pmStatus.statusId", SearchOperator.OPERATOR_EQUALS.value(), status));				
+				qtSearchBean.getDataFilterBeans().add(new SearchFilterBean("scQtStatus.current", SearchOperator.OPERATOR_EQUALS.value(), true));
 			}
 			// Adding search filterbeans to searchbean.
 			qtSearchBean.getDataFilterBeans().addAll(searchFilterBean);
@@ -318,9 +296,9 @@ public class QTBusinessOwnerBackingBean extends
 	public void addBusinessOwner() {
 		debugLogger("addBusinessOwner");
 		// Search Criteria
-		/*getManagedBean().setName(null);
-		getManagedBean().setIdentificationType(null);
-		getManagedBean().setIdentificationNo(null);*/
+		getManagedBean().getUserBusineeOwnerSearchBean().setName(null);
+		getManagedBean().getUserBusineeOwnerSearchBean().setIdentificationType(null);
+		getManagedBean().getUserBusineeOwnerSearchBean().setIdentificationNo(null);
 		getManagedBean().setExternalUsers(null);
 		getManagedBean().setSelectedPmUser(null);
 		if (getManagedBean().getCommitteMember() == null) {
@@ -796,8 +774,7 @@ public class QTBusinessOwnerBackingBean extends
 		IQTDetailSO detailSO;
 		try {
 			detailSO = getDetailSO();	
-			ScQt scQt = prepareBOInfo();
-			scQt.setScQtStatus(null);
+			ScQt scQt = prepareBOInfo();			
 			QuationTenderReqDTO quationTenderReqDTO =new QuationTenderReqDTO() ;
 			quationTenderReqDTO.setQtdetail(scQt);			
 			quationTenderReqDTO.setDocType(QTConstants.DOCTYPE_QT);
@@ -914,8 +891,8 @@ public class QTBusinessOwnerBackingBean extends
 		
 		scQt.setQtNo(dto.getQtNo());
 		ScQtStatus qtStatus= new ScQtStatus();
-		qtStatus.setScQt(scQt);
-		qtStatus.setPmStatus(scQt.getQtStatus());
+		qtStatus.setScQt(scQt);			
+		qtStatus.setPmStatus(status);
 		qtStatus.setCurrent(true);
 		qtStatus.setDocType(QTConstants.DOCTYPE_QT);
 		List<ScQtStatus> qtStatuses= new ArrayList<ScQtStatus>();
