@@ -66,6 +66,8 @@
 			<f:param name="selectionMode" 	value="#{cc.attrs.selectionMode}" />
 			<f:param name="postUpdateListener" value="#{cc.attrs.postUpdateListener}" />
 			
+			<cc:insertChildren />
+			
 			<p:graphicImage library="ep/images/design" name="magnifier_zoom_in.png" />
 					
 		</p:commandLink>
@@ -89,6 +91,8 @@
 			<f:param name="update" 			value="#{cc.attrs.update}" />
 			<f:param name="selectionMode" 	value="#{cc.attrs.selectionMode}" />
 			<f:param name="postUpdateListener" value="#{cc.attrs.postUpdateListener}" />
+			
+			<cc:insertChildren />
 			
 			<c:if test="#{cc.attrs.buttonLabel != ''}">
 				<f:attribute name="value" value="#{cc.attrs.buttonLabel}" />
