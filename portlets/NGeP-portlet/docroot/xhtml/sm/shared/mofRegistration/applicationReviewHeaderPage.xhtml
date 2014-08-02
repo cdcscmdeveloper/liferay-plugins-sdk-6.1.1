@@ -4,46 +4,42 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<div align="left" class="header-info">
+		<table style="width: 100%">
+			<tr>
 
-	<table style="width: 99%;" class="header-info">
-		<tr>
-			<td><p:outputLabel value="#{lbl['lbl.sm.applnTypeLbl']}" /></td>
-			<td><p:inputText readonly="true" disabled="true"
-					value="#{lbl['lbl.sm.newMofAppln']}"
-					rendered="#{backingBean.managedBean.smAppl.applType eq 'N'}" /> <p:inputText
-					readonly="true" disabled="true" value="Apply Bumiputera Status"
-					rendered="#{backingBean.managedBean.smAppl.applType eq 'B'}" /> <p:inputText
-					readonly="true" disabled="true" value="Apply Additional Categories"
-					rendered="#{backingBean.managedBean.smAppl.applType eq 'A'}" /> <p:inputText
-					readonly="true" disabled="true" value="Renew MOF Account"
-					rendered="#{backingBean.managedBean.smAppl.applType eq 'R'}" /> <p:inputText
-					readonly="true" disabled="true" value="Update MOF Account Details"
-					rendered="#{backingBean.managedBean.smAppl.applType eq 'U'}" /></td>
-			<td><p:outputLabel value="Application NO." /></td>
-			<td><p:inputText readonly="true" disabled="true"
-					value="#{backingBean.managedBean.smAppl.applNo}" /></td>
-			<td><p:outputLabel value="Current Status" /></td>
-			<td><p:inputText readonly="true" disabled="true"
-					value="#{backingBean.managedBean.currentStatus}" /></td>
-		</tr>
-		<tr>
+				<td><h:outputLabel value="#{lbl['lbl.sm.applnTypeLbl']}" /></td>
+				<td class="header-info-text"><c:if
+						test="#{backingBean.managedBean.smAppl.applType eq 'N'}">#{lbl['lbl.sm.mofReg.headerLbl']}</c:if>
+					<c:if test="#{backingBean.managedBean.smAppl.applType eq 'A'}">#{lbl['lbl.sm.addnlCat.headerLbl']}</c:if>
+					<c:if test="#{backingBean.managedBean.smAppl.applType eq 'B'}">#{lbl['lbl.sm.bumi.headerLbl']}</c:if>
+					<c:if test="#{backingBean.managedBean.smAppl.applType eq 'R'}">#{lbl['lbl.sm.renewMof.headerLbl']}</c:if>
+					<c:if test="#{backingBean.managedBean.smAppl.applType eq 'R'}">#{lbl['lbl.sm.updateMof.headerLbl']}</c:if>
+				</td>
+				<td><h:outputLabel value="#{lbl['lbl.sm.application.no']}" /></td>
+				<td class="header-info-text">#{backingBean.managedBean.smAppl.applNo}</td>
+				<td><h:outputLabel value="#{lbl['lbl.sm.status']}" /></td>
+				<td class="header-info-text">#{backingBean.managedBean.currentStatus}</td>
+			</tr>
+			<tr>
 
-			<td><p:outputLabel value="Date Submitted :" /></td>
-			<td><p:inputText readonly="true"
-					value="#{backingBean.managedBean.smAppl.applSubmitDate}"
-					disabled="true">
-					<f:convertDateTime
-						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-				</p:inputText></td>
+				<td><h:outputLabel value="#{lbl['lbl.sm.dateSubmitted']}" /></td>
+				<td class="header-info-text"><h:outputLabel
+						value="#{backingBean.managedBean.smAppl.applSubmitDate}"
+						style="font-weight: normal;float: left;font-size: 100%;text-align: left;">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</h:outputLabel></td>
 
 
-			<c:if test="#{backingBean.managedBean.approverUser}">
-				<td><p:outputLabel value="PO Recommendation" /></td>
-				<td><p:inputText readonly="true" disabled="true"
-						value="#{backingBean.managedBean.poSecReview.recommendation}" /></td>
-			</c:if>
-		</tr>
-	</table>
+				<c:if test="#{backingBean.managedBean.approverUser}">
+					<td><h:outputLabel value="#{lbl['lbl.sm.po.recommend']}" /></td>
+					<td class="header-info-text">#{backingBean.managedBean.poSecReview.recommendation}</td>
+				</c:if>
+			</tr>
+		</table>
+	</div>
+	<p:spacer height="10px" />
 	<br />
 	<table style="width: 250px;">
 		<p:outputPanel

@@ -52,10 +52,7 @@
 							actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'8')}"
 							action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForRenew,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
 							update=":form" />
-						<p:menuitem value="#{lbl['lbl.sm.paymentLbl']}"
-							actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'9')}"
-							action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForRenew,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_PAYMENT)}"
-							update=":form" />
+						
 					</c:when>
 					<c:when test="#{backingBean.managedBean.poUser}">
 
@@ -105,10 +102,7 @@
 							actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'6')}"
 							action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForRenew,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
 							update=":form" />
-						<p:menuitem value="#{lbl['lbl.sm.paymentLbl']}"
-							actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'7')}"
-							action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForRenew,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_PAYMENT)}"
-							update=":form" />
+					
 					</c:when>
 					<c:when test="#{backingBean.managedBean.poUser}">
 

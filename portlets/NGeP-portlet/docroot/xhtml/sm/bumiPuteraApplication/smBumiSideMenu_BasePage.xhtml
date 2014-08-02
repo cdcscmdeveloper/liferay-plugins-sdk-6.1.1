@@ -20,8 +20,8 @@
 				src="/xhtml/sm/shared/mofRegistration/applicationReviewHeaderPage.xhtml" />
 		</p:outputPanel>
 		<ac:smPanel id="tt">
-			<p:messages id="messages" showDetail="true" showSummary="false" autoUpdate="true"
-				closable="true" />
+			<p:messages id="messages" showDetail="true" showSummary="false"
+				autoUpdate="true" closable="true" />
 
 			<c:if test="#{backingBean.managedBean.tabActiveIndex eq 0}">
 				<ui:include src="step1BumiAppln_CompanyInfo.xhtml" />
@@ -85,6 +85,8 @@
 				dynamic="true" resizable="false" width="700px" height="200"
 				styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
 				<p:fileUpload
+					allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|pdf|doc|docx)$/"
+					invalidFileMessage="Only JPG, GIF, PNG, BMP, PDF, DOC files are accepted"
 					fileUploadListener="#{backingBean.handleSupDocFileAttachment}"
 					update=":form:tt:onSdList" oncomplete="attachDlg1.hide();" />
 			</p:dialog>

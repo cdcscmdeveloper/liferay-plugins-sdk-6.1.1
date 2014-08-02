@@ -46,15 +46,15 @@
 						<tr>
 							<td><p:outputLabel value="Supplier Name" /></td>
 							<td><p:outputLabel value="   : " /></td>
-							<td><p:inputText readonly="true"
+							<td><p:inputText readonly="true" size="50"
 									value="#{backingBean.managedBean.smAppl.smCompanyBasic.companyName}"
 									disabled="true" /></td>
 
 						</tr>
 						<tr>
-							<td><p:outputLabel value="Date Submitted" /></td>
+							<td><p:outputLabel value="#{lbl['lbl.sm.dateSubmitted']}" /></td>
 							<td><p:outputLabel value="   : " /></td>
-							<td><p:inputText readonly="true"
+							<td><p:inputText readonly="true" size="50"
 									value="#{backingBean.managedBean.smAppl.applSubmitDate}"
 									disabled="true">
 									<f:convertDateTime
@@ -63,9 +63,9 @@
 
 						</tr>
 						<tr>
-							<td><p:outputLabel value="Current Status" /></td>
+							<td><p:outputLabel value="#{lbl['lbl.sm.status']}" /></td>
 							<td><p:outputLabel value="   : " /></td>
-							<td><p:inputText readonly="true"
+							<td><p:inputText readonly="true" size="50"
 									value="#{backingBean.managedBean.currentStatus}"
 									disabled="true" /></td>
 
@@ -80,12 +80,8 @@
 					</table>
 					<p:separator />
 					<div>
-						<p>
-							You have finished reviewing all the necessary information for MOF
-							account registration. Please perform one the below operations to
-							provide your decision<br /> 1.Click 'Approve'' to approve the
-							application.<br /> 2. Click ' Reject' to reject the application.
-						</p>
+						<p:outputLabel value="#{lbl['lbl.sm.apprvr.splNotes']}"
+							style="float :left;" escape="false" />
 					</div>
 					<p:separator />
 					<!-- <div align="center">

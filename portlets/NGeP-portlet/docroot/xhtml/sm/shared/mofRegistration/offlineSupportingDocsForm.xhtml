@@ -11,7 +11,7 @@
 		toggleable="true">
 		<table style="width: 30%">
 			<tr>
-				<td><h:outputText value="#{lbl['lbl.sm.submissionType']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.submissionType']}" /></td>
 				<td><p:selectOneRadio id="offLnSuppDocs"
 						value="#{backingBean.managedBean.smAppl.supportingDocMode}">
 						<f:selectItem itemLabel="Offline" itemValue="F" />
@@ -22,91 +22,89 @@
 
 		</table>
 		<br />
-		<table style="width: 30%">
+		<table style="width: 100%">
 			<tr>
-				<td colspan="2"><c:choose>
+				<td><c:choose>
 						<c:when
 							test="#{backingBean.managedBean.personCalc.halfBumiStatus and backingBean.managedBean.smAppl.applType ne 'C'}">
-							<h:outputText value="#{lbl['lbl.sm.recommendation.halfBumi']}"
-								style="color: green;font-weight: bold;font-size: 12px;" />
+							<p:outputLabel value="#{lbl['lbl.sm.recommendation.halfBumi']}"
+								style="color: green;font-weight: bold;float:left;" />
 						</c:when>
 						<c:when
 							test="#{backingBean.managedBean.personCalc.fullBumiStatus and backingBean.managedBean.smAppl.applType ne 'C'}">
-							<h:outputText value="#{lbl['lbl.sm.recommendation.fullBumi']}"
-								style="color: green;font-weight: bold;font-size: 12px;" />
+							<p:outputLabel value="#{lbl['lbl.sm.recommendation.fullBumi']}"
+								style="color: green;font-weight: bold;float:left;" />
 						</c:when>
 						<c:otherwise>
-							<h:outputText value="#{lbl['lbl.sm.recommendation.noBumi']}"
-								style="color: green;font-weight: bold;font-size: 12px;" />
+							<p:outputLabel value="#{lbl['lbl.sm.recommendation.noBumi']}"
+								style="color: green;font-weight: bold;float:left;" />
 						</c:otherwise>
 					</c:choose></td>
 			</tr>
+
 		</table>
 		<br />
 		<table style="width: 100%;">
 
 			<tr>
-				<td style="background-color: aqua; color: black; text-align: left;"><h6>
-						<h:outputText
-							value="* You choose to send the documents offline. Please send all the necessary documents mentioned in the check list." />
-						<br />
-						<h:outputText
-							value="* Please print the checklist along with Application number provided , given below and attach a copy with along with other documents being posted." />
-						<br />
-						<h:outputText
-							value="* All the offline documents should be sent via mail/postal to their corresponding address mentioned below :" />
-						<br />
-					</h6></td>
+				<td><p:outputLabel style="float:left"
+						value="#{lbl['lbl.sm.suppDoc.offline.note1']}" /> <br /> <p:outputLabel
+						style="float:left" value="#{lbl['lbl.sm.suppDoc.offline.note2']}" />
+					<br /> <p:outputLabel style="float:left"
+						value="#{lbl['lbl.sm.suppDoc.offline.note3']}" /> <br /></td>
 
 			</tr>
 
 		</table>
+		<p:spacer height="10px" />
 		<br />
 		<table style="width: 100%;">
 			<tr>
 				<td style="width: 33%">
 					<table>
 						<tr>
-							<td><b>For Peninsular Malaysia:</b><br /> (Contractor only
-								and all Peninsular Malaysian Consultant)</td>
+							<td><p:outputLabel style="float:left"
+									value="#{lbl['lbl.sm.suppDoc.offline.peninAddr1']}"
+									escape="false" /></td>
 						</tr>
 						<tr>
-							<td style="padding-top: 10px;">Unit Pendaftaran Syarikat<br />
-								Bahagian Perolehan Kerajaan<br /> Tingkat Bawah Blok Utara<br />
-								Kompleks Kementerian Kewangan<br /> Precint 2, Pusat
-								Pentadbiran Kerajaan Persekutuan<br /> 62592 Putrajay
-							</td>
+							<td style="padding-top: 10px;"><p:outputLabel
+									style="float:left"
+									value="#{lbl['lbl.sm.suppDoc.offline.peninAddr2']}"
+									escape="false" /></td>
 						</tr>
 					</table>
 				</td>
 
 				<td style="width: 33%"><table>
 						<tr>
-							<td><b>For Sabah:</b><br /> (Contractors in Sabah only)</td>
+							<td><p:outputLabel style="float:left"
+									value="#{lbl['lbl.sm.suppDoc.offline.sabahAddr1']}"
+									escape="false" /></td>
 						</tr>
 						<tr>
-							<td style="padding-top: 10px;">Unit Pendaftaran Kontraktor<br />
-								Bahagian Perolehan Kerajaan<br /> Perbendaharaan Malaysia Sabah<br />
-								Tingkat 2 Rumah Persekutuan<br /> Jalan Mat Salleh<br /> 88592
-								Kota Kinabalu Sabah
-							</td>
+							<td style="padding-top: 10px;"><p:outputLabel
+									style="float:left"
+									value="#{lbl['lbl.sm.suppDoc.offline.sabahAddr2']}"
+									escape="false" /></td>
 						</tr>
 					</table></td>
 				<td style="width: 33%"><table>
 						<tr>
-							<td><b>For Sarawak:</b><br /> (Contractors in Sarawak only)</td>
+							<td><p:outputLabel style="float:left"
+									value="#{lbl['lbl.sm.suppDoc.offline.sarawakAddr1']}"
+									escape="false" /></td>
 						</tr>
 						<tr>
-							<td style="padding-top: 10px;">Unit Pendaftaran Kontraktor<br />
-								Bahagian Perolehan Kerajaan<br /> Perbendaharaan Malaysia
-								Sarawak<br /> Tingkat 16 Bangunan Sultan Iskandar<br /> Jalan
-								Simpang Tiga<br /> 93592 Kuching Sarawak
-							</td>
+							<td style="padding-top: 10px;"><p:outputLabel
+									style="float:left"
+									value="#{lbl['lbl.sm.suppDoc.offline.sarawakAddr2']}"
+									escape="false" /></td>
 						</tr>
 					</table></td>
 			</tr>
 		</table>
-
+		<p:spacer height="10px" />
 
 
 		<p:dataTable var="table" id="offSdList"
@@ -114,7 +112,8 @@
 			<ac:paginator for="offSdList" />
 
 			<p:column headerText="Document Description">
-				<h:outputText value="#{table.pmDocument.docName}" />
+				<p:outputLabel value="#{table.pmDocument.docName}"
+					style="float: left;white-space: normal;" />
 			</p:column>
 
 
@@ -124,7 +123,7 @@
 		<p:spacer height="2px;" />
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.sm.printList']}">
-				<p:printer target=":form:tt:offSdList" />
+				<p:printer target=":form:tt:supDocPan" />
 			</p:commandButton>
 		</div>
 

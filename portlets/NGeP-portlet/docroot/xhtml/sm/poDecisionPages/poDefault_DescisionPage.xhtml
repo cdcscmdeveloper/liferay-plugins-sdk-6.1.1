@@ -56,15 +56,15 @@
 						<tr>
 							<td><p:outputLabel value="Supplier Name" /></td>
 							<td><p:outputLabel value="   : " /></td>
-							<td><p:inputText readonly="true"
+							<td><p:inputText readonly="true" size="50"
 									value="#{backingBean.managedBean.smAppl.smCompanyBasic.companyName}"
 									disabled="true" /></td>
 
 						</tr>
 						<tr>
-							<td><p:outputLabel value="Date Submitted" /></td>
+							<td><p:outputLabel value="#{lbl['lbl.sm.dateSubmitted']}" /></td>
 							<td><p:outputLabel value="   : " /></td>
-							<td><p:inputText readonly="true"
+							<td><p:inputText readonly="true" size="50"
 									value="#{backingBean.managedBean.smAppl.applSubmitDate}"
 									disabled="true">
 									<f:convertDateTime
@@ -73,9 +73,9 @@
 
 						</tr>
 						<tr>
-							<td><p:outputLabel value="Current Status" /></td>
+							<td><p:outputLabel value="#{lbl['lbl.sm.status']}" /></td>
 							<td><p:outputLabel value="   : " /></td>
-							<td><p:inputText readonly="true"
+							<td><p:inputText readonly="true" size="50"
 									value="#{backingBean.managedBean.currentStatus}"
 									disabled="true" /></td>
 
@@ -89,21 +89,25 @@
 										disabled="true" /></td>
 							</c:if>
 						</tr>
+					</table>
+					<table style="width: 100%">
 						<tr>
-							<td colspan="3"><c:choose>
+							<td><c:choose>
 									<c:when
 										test="#{backingBean.managedBean.personCalc.halfBumiStatus and backingBean.managedBean.smAppl.applType ne 'C'}">
-										<h:outputText value="#{lbl['lbl.sm.recommendation.halfBumi']}"
-											style="color: green;font-weight: bold;font-size: 12px;" />
+										<p:outputLabel
+											value="#{lbl['lbl.sm.recommendation.halfBumi']}"
+											style="color: green;font-weight: bold;float:left;" />
 									</c:when>
 									<c:when
 										test="#{backingBean.managedBean.personCalc.fullBumiStatus and backingBean.managedBean.smAppl.applType ne 'C'}">
-										<h:outputText value="#{lbl['lbl.sm.recommendation.fullBumi']}"
-											style="color: green;font-weight: bold;font-size: 12px;" />
+										<p:outputLabel
+											value="#{lbl['lbl.sm.recommendation.fullBumi']}"
+											style="color: green;font-weight: bold;float:left;" />
 									</c:when>
 									<c:otherwise>
-										<h:outputText value="#{lbl['lbl.sm.recommendation.noBumi']}"
-											style="color: green;font-weight: bold;font-size: 12px;" />
+										<p:outputLabel value="#{lbl['lbl.sm.recommendation.noBumi']}"
+											style="color: green;font-weight: bold;float:left;" />
 									</c:otherwise>
 								</c:choose></td>
 						</tr>
@@ -112,18 +116,8 @@
 
 					<p:separator />
 					<div>
-						<p>
-							You have finished reviewing all the necessary information for MOF
-							account registration. Please perform one the below operations to
-							provide your decision<br /> 1. Click ' Send Enquiry ' to submit
-							an enquiry to the supplier regarding missing / incomplete
-							supporting documents.<br /> 2. Click 'Recommend Site Visit' To
-							sugges for a site visit.<br /> 3.Click 'Approve'' to approve the
-							application.<br /> 4. Click ' Reject' to reject the application.<br />
-							5. Click 'Submit To Approver' for futher proceeding with the next
-							step of registration i.e. submitting the application to the
-							Approver
-						</p>
+						<p:outputLabel value="#{lbl['lbl.sm.po.splNotes']}"
+							style="float :left;" escape="false" />
 					</div>
 					<!-- <div align="center">
 			<p:splitButton value=" Select Decision ">

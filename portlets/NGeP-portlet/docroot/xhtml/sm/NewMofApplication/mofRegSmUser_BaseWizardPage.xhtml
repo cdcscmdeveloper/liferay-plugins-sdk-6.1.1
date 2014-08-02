@@ -115,15 +115,7 @@
 													update=":form"
 													rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 8}"
 													styleClass="#{backingBean.managedBean.tabActiveIndex eq 8 ? 'currentStep' : ''}" /></li>
-											<li><h:outputText
-													value="#{lbl['lbl.sm.wizard.paymentLbl']}"
-													rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 9}" />
-												<p:commandLink value="#{lbl['lbl.sm.wizard.paymentLbl']}"
-													actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'9')}"
-													action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_PAYMENT)}"
-													update=":form"
-													rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 9}"
-													styleClass="#{backingBean.managedBean.tabActiveIndex eq 9 ? 'currentStep' : ''}" /></li>
+
 										</c:when>
 										<c:otherwise>
 											<li><h:outputText
@@ -135,15 +127,7 @@
 													update=":form"
 													rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 6}"
 													styleClass="#{backingBean.managedBean.tabActiveIndex eq 6 ? 'currentStep' : ''}" /></li>
-											<li><h:outputText
-													value="#{lbl['lbl.sm.wizard.paymentLbl']}"
-													rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 7}" />
-												<p:commandLink value="#{lbl['lbl.sm.wizard.paymentLbl']}"
-													actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'7')}"
-													action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_PAYMENT)}"
-													update=":form"
-													rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 7}"
-													styleClass="#{backingBean.managedBean.tabActiveIndex eq 7 ? 'currentStep' : ''}" /></li>
+
 										</c:otherwise>
 									</c:choose>
 
@@ -171,17 +155,14 @@
 											<li
 												class="#{backingBean.managedBean.tabActiveIndex eq 7 ? 'space red-dot' :  (backingBean.managedBean.smAppl.currentActiveTab ge 7 ? 'space green-dot':'space black-dot')}" />
 											<li
-												class="#{backingBean.managedBean.tabActiveIndex eq 8 ? 'space red-dot' :  (backingBean.managedBean.smAppl.currentActiveTab ge 8 ? 'space green-dot':'space black-dot')}" />
-											<li
-												class="#{backingBean.managedBean.tabActiveIndex eq 9 ? 'red-dot' :  (backingBean.managedBean.smAppl.currentActiveTab ge 9 ? 'green-dot':'black-dot')}" />
+												class="#{backingBean.managedBean.tabActiveIndex eq 8 ? 'red-dot' :  (backingBean.managedBean.smAppl.currentActiveTab ge 8 ? 'green-dot':'black-dot')}" />
+
 
 
 										</c:when>
 										<c:otherwise>
 											<li
-												class="#{backingBean.managedBean.tabActiveIndex eq 6 ? 'space red-dot' :  (backingBean.managedBean.smAppl.currentActiveTab ge 6 ? 'space green-dot':'space black-dot')}" />
-											<li
-												class="#{backingBean.managedBean.tabActiveIndex eq 7 ? 'red-dot' :  (backingBean.managedBean.smAppl.currentActiveTab ge 7 ? 'green-dot':'black-dot')}" />
+												class="#{backingBean.managedBean.tabActiveIndex eq 6 ? 'red-dot' :  (backingBean.managedBean.smAppl.currentActiveTab ge 6 ? 'green-dot':'black-dot')}" />
 
 										</c:otherwise>
 									</c:choose>
@@ -220,6 +201,15 @@
 												style="margin-bottom:5px;" />
 										</div>
 									</td>
+									<c:if test="#{backingBean.managedBean.tabActiveIndex eq 8}">
+										<td>
+											<div align="right" style="width: 99%" class="button-wrapper">
+												<p:commandButton value="Submit For Payment"
+													action="#{backingBean.submitSmApplToBpm(ParameterConst.newSmApplnForMof)}"
+													style="margin-bottom:5px;" />
+											</div>
+										</td>
+									</c:if>
 								</tr>
 							</p:outputPanel>
 						</table>
@@ -241,6 +231,15 @@
 													style="margin-bottom:5px;" />
 											</div>
 										</td>
+										<c:if test="#{backingBean.managedBean.tabActiveIndex eq 6}">
+											<td>
+												<div align="right" style="width: 99%" class="button-wrapper">
+													<p:commandButton value="Submit For Payment"
+														action="#{backingBean.submitSmApplToBpm(ParameterConst.newSmApplnForMof)}"
+														style="margin-bottom:5px;" />
+												</div>
+											</td>
+										</c:if>
 									</tr>
 								</p:outputPanel>
 							</table>
@@ -250,7 +249,7 @@
 			</c:if>
 			<p:messages id="messages" showDetail="true" showSummary="false"
 				autoUpdate="#{backingBean.managedBean.showParentMsg}"
-				closable="true" />
+				closable="true" escape="false" />
 
 			<c:if test="#{backingBean.managedBean.tabActiveIndex eq 0}">
 				<ui:include src="step1CompanyInfo.xhtml" />
@@ -283,17 +282,13 @@
 					<c:if test="#{backingBean.managedBean.tabActiveIndex eq 8}">
 						<ui:include src="step7SupportingDocumentsInfo.xhtml" />
 					</c:if>
-					<c:if test="#{backingBean.managedBean.tabActiveIndex eq 9}">
-						<ui:include src="step8ProcessingFeePaymentInfo.xhtml" />
-					</c:if>
+
 				</c:when>
 				<c:otherwise>
 					<c:if test="#{backingBean.managedBean.tabActiveIndex eq 6}">
 						<ui:include src="step7SupportingDocumentsInfo.xhtml" />
 					</c:if>
-					<c:if test="#{backingBean.managedBean.tabActiveIndex eq 7}">
-						<ui:include src="step8ProcessingFeePaymentInfo.xhtml" />
-					</c:if>
+
 				</c:otherwise>
 			</c:choose>
 			<p:dialog id="attachDlg1" widgetVar="attachDlg1" modal="true"

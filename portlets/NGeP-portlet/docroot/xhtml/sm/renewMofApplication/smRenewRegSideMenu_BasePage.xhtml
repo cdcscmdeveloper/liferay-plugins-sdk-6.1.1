@@ -22,7 +22,7 @@
 		<ac:smPanel id="tt">
 			<p:messages id="messages" showDetail="true"
 				autoUpdate="#{backingBean.managedBean.showParentMsg}"
-				closable="true" showSummary="false" />
+				closable="true" showSummary="false" escape="false" />
 
 			<c:if test="#{backingBean.managedBean.tabActiveIndex eq 0}">
 				<ui:include src="step1RenewAppln_CompanyInfo.xhtml" />
@@ -157,6 +157,8 @@
 				dynamic="true" resizable="false" width="700px" height="200"
 				styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
 				<p:fileUpload
+					allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|pdf|doc|docx)$/"
+					invalidFileMessage="Only JPG, GIF, PNG, BMP, PDF, DOC files are accepted"
 					fileUploadListener="#{backingBean.handleSupDocFileAttachment}"
 					update=":form:tt:onSdList" oncomplete="attachDlg1.hide();" />
 			</p:dialog>

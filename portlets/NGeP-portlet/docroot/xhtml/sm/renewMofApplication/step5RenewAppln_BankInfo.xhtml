@@ -8,7 +8,8 @@
 		<tr>
 			<td style="width: 20%; vertical-align: baseline;" class="sidemenutd"><ui:include
 					src="smRenewApplnSideMenuItem.xhtml" /></td>
-			<td><p:outputPanel>
+			<td><p:outputPanel
+					rendered="#{backingBean.managedBean.supplierUser}">
 					<div align="right" style="width: 99%" class="button-wrapper">
 						<p:commandButton value="#{lbl['lbl.sm.saveAsDraft']}"
 							actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,backingBean.managedBean.tabActiveIndex)}"
