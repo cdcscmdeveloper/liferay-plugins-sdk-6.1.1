@@ -10,13 +10,21 @@
 	<ui:define name="contentSection">
 
 	<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
-
 	<table>
 		<tr>
 			<td colspan="2">
 				#{lbl['lbl.sm.activation.msg']}
 			</td>
 		</tr>
+		<tr>
+			<td>
+				<h:outputLabel value="#{lbl['lbl.sm.activation.loginid']}:" />
+			</td>
+			<td>
+				<p:inputText id="loginId" value="#{supplierUserActivationBackingBean.managedBean.smPersonnel.identificationNo}" disabled="true" />
+			</td>
+		</tr>
+		
 		<tr>
 			<td>
 				<h:outputLabel value="#{lbl['lbl.sm.activation.key']}:" />
@@ -44,14 +52,18 @@
 		<tr>
 			<td>
 				<p:commandButton 
-					value="#{lbl['lbl.btn.submit']}"
+					value="#{lbl['lbl.btn.submit']}" onstart="submissionDialog.show();" oncomplete="submissionDialog.hide();"
 					action="#{supplierUserActivationBackingBean.activateSupplierUser}" />
 			</td>
 			<td />
 		</tr>
-	</table>
-		
 
+	</table>
+
+		<p:dialog widgetVar="submissionDialog" modal="true" draggable="false"
+			closable="false" resizable="false" showHeader="false">
+			<p:graphicImage library="ep/images/" name="ajax-loader.gif" />
+		</p:dialog>
 
 	</ui:define>
 
