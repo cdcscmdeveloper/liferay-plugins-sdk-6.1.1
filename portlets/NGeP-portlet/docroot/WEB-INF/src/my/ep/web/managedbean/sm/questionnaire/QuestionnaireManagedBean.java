@@ -2,8 +2,8 @@ package my.ep.web.managedbean.sm.questionnaire;
 
 import java.util.List;
 
-import javax.ejb.Stateless;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmMofAccount;
@@ -13,7 +13,7 @@ import my.ep.persistence.entity.sm.SmSupplierAnswer;
 import my.ep.web.managedbean.BaseManagedBean;
 
 @ManagedBean(name="questionnaireMB")
-@Stateless
+@SessionScoped
 public class QuestionnaireManagedBean extends BaseManagedBean{
 	/**
 	 * 
