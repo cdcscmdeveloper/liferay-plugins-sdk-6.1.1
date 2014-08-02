@@ -3839,7 +3839,7 @@ public class SmApplicationBackingBean extends
 						}
 					}
 				}
-				if(reqDTO.getUserList() == null){
+				if(reqDTO.getUserList().size() == 0){
 					throw new EpException(MessageConst.ERROR_722546);
 				}
 			}
