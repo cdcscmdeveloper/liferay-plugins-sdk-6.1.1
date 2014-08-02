@@ -94,6 +94,14 @@
 		</navigation-case>
 	</navigation-rule>
 	
+	<navigation-rule>
+		<from-view-id>*</from-view-id>
+		<navigation-case>
+			<from-outcome>requestNoteByZone</from-outcome>
+			<to-view-id>/xhtml/sc/directpurchase/requestNoteByZone.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	
 	<converter>
 		<converter-id>procurementTypeConverter</converter-id>
 		<converter-class>my.ep.web.sc.converter.ProcumentTypeConverter</converter-class>
