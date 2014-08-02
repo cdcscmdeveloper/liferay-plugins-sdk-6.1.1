@@ -7,6 +7,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
@@ -56,9 +57,9 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 	 * 
 	 */
 	public void resetSearch() {
-
-		this.getManagedBean().setBodyCode(null);
-		this.getManagedBean().setBodyName(null);
+		debugLogger("resetSearch");
+		
+        RequestContext.getCurrentInstance().reset("profPanel");
 
 	}
 
