@@ -285,6 +285,11 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	}
 
 	public String addToMaintain() {
+		
+		CodificationBackingBean bb = new CodificationBackingBean();
+		if(bb.getManagedBean().getSelectedObject().length < 1) {
+			throw new EpException(MessageConst.ERROR_715014);
+		}
 
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
 				.getInstance().getServiceObject("cm", ICatalogueSO.class);
@@ -309,8 +314,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			
 			log.info("getSmSupplier: "
 					+ smResDTO.getResultBean().getResultList().get(0));
-	
-			CodificationBackingBean bb = new CodificationBackingBean();
 	
 			CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 			CodificationReqDTO codeReqDTO = new CodificationReqDTO();
@@ -2344,6 +2347,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	}
 
 	public String submitToReviewItems() {
+		log.debug("submitToReviewItems");
+		log.info("this.getManagedBean().getSelectedMaintainItems(): " + this.getManagedBean().getSelectedMaintainItems().length);
+		if(this.getManagedBean().getSelectedMaintainItems().length < 1) {
+			throw new EpException(MessageConst.ERROR_715013);
+		}
+		
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
 				.getInstance().getServiceObject("cm", ICatalogueSO.class);
 
