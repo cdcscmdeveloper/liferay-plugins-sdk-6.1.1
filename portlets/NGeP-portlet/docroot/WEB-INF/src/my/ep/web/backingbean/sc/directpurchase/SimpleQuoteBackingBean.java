@@ -581,7 +581,6 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			if(getManagedBean().getServiceTemplateSpecBean().getSpecMaster() != null){
 				if(getManagedBean().getServiceTemplateSpecBean().getSpecMaster().getTplSpecQuestions() != null && 
 						getManagedBean().getServiceTemplateSpecBean().getSpecMaster().getTplSpecQuestions().size() >0 ){
-					quoteDoc.setSpecMaster(getManagedBean().getServiceTemplateSpecBean().getSpecMaster());
 					 TplSpecMaster specMaster = getManagedBean().getServiceTemplateSpecBean().getSpecMaster();
 					 if(quote.getQuoteZone() != null){
 						 specMaster.setTplSpecZone(quote.getQuoteZone());
@@ -759,7 +758,12 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			if(getManagedBean().getProductTemplateSpecBean().getSpecMaster() != null){
 				if(getManagedBean().getProductTemplateSpecBean().getSpecMaster().getTplSpecQuestions() != null && 
 						getManagedBean().getProductTemplateSpecBean().getSpecMaster().getTplSpecQuestions().size() >0 ){
-					quoteDoc.setSpecMaster(getManagedBean().getProductTemplateSpecBean().getSpecMaster());
+					 TplSpecMaster specMaster = getManagedBean().getProductTemplateSpecBean().getSpecMaster();
+					 if(quote.getQuoteZone() != null){
+						 specMaster.setTplSpecZone(quote.getQuoteZone());
+					 }
+					quoteDoc.setSpecMaster(specMaster);
+					
 					quoteDoc.setQuote(quote);
 					quoteDocs.add(quoteDoc);
 					quote.setQuoteDocs(quoteDocs);
@@ -769,7 +773,12 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			if(getManagedBean().getServiceTemplateSpecBean().getSpecMaster() != null){
 				if(getManagedBean().getServiceTemplateSpecBean().getSpecMaster().getTplSpecQuestions() != null && 
 						getManagedBean().getServiceTemplateSpecBean().getSpecMaster().getTplSpecQuestions().size() >0 ){
-					quoteDoc.setSpecMaster(getManagedBean().getServiceTemplateSpecBean().getSpecMaster());
+					 TplSpecMaster specMaster = getManagedBean().getServiceTemplateSpecBean().getSpecMaster();
+					 if(quote.getQuoteZone() != null){
+						 specMaster.setTplSpecZone(quote.getQuoteZone());
+					 }
+					quoteDoc.setSpecMaster(specMaster);
+					
 					quoteDoc.setQuote(quote);
 					quoteDocs.add(quoteDoc);
 					quote.setQuoteDocs(quoteDocs);
