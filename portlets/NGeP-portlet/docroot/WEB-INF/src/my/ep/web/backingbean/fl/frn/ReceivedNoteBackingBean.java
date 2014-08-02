@@ -254,6 +254,10 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			if(getManagedBean().getFulfilmentNote().getFlSupplierEvaluation().size()==0) {
 				retrieveCriteriaList();
 			}
+			if(null == getManagedBean().getFulfilmentNote().getReceivedDate()){
+				getManagedBean().getFulfilmentNote().setReceivedDate(getCurrentDate());
+			}
+			
 		}
 	}
 	
