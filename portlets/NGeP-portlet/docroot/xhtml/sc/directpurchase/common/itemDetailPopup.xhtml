@@ -7,81 +7,79 @@
 	<p:dialog id="itemDtlPopup" widgetVar="itemDtlPopup" header="ITEM DETAIL" modal="true" dynamic="true"
 		resizable="false" styleClass="pop_up_top" width="570">
 		<p:spacer height="5px"/>
-		<table style="width: 550px">
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.product.code']}" /></td>
-				<td><p:inputText disabled="true" size="33"
+				<td><p:inputText disabled="true" size="46"
 						value="#{requestNoteBackingBean.managedBean.requestSupplierItem.requestNoteItem.cmItem.extensionCode}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.item.name']}" /></td>
-				<td><p:inputText disabled="true"  size="53"
+				<td><p:inputText disabled="true"  size="46"
 						value="#{requestNoteBackingBean.managedBean.requestSupplierItem.requestNoteItem.itemName}" /></td>
 			</tr>
 			<tr>
 				<td style="vertical-align:top; text-align:left;"><p:outputLabel value="#{lbl['lbl.sc.desc']}" /></td>
-				<td><p:inputTextarea disabled="true" rows="3" cols="55"
-						style="margin-bottom: 5px;"
+				<td><p:inputTextarea disabled="true" rows="2" cols="55"
+						style="margin-bottom: 5px; width: 300px;"
 						value="#{requestNoteBackingBean.managedBean.requestSupplierItem.requestNoteItem.itemDesc}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.uom']}" /></td>
-				<td valign="bottom"><p:inputText disabled="true" size="33"
+				<td valign="bottom"><p:inputText disabled="true" size="25"
 						value="#{requestNoteBackingBean.managedBean.requestSupplierItem.requestNoteItem.uom.uomName}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.item.dtl.price.type']}" /></td>
-				<td><p:inputText disabled="true" size="33"
+				<td><p:inputText disabled="true" size="25"
 						value="#{requestNoteBackingBean.getParameterDesc(ParameterTypeConst.priceType,requestNoteBackingBean.managedBean.requestSupplierItem.supplierItemPrice.priceType.parameterCode)}" />
 			   </td>
 			</tr>
 	
-			<tr>
-			  <td colspan="4">
-					<table style="width: 60.5%">
+			
 					 <ui:fragment rendered="#{requestNoteBackingBean.managedBean.itemCheck}">
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sc.frequency.per.uom']}"/></td>
-							<td><p:inputText disabled="true" size="33"  
+							<td><p:inputText styleClass="ppNumericAlign" disabled="true" size="25"  
 							       value="#{requestNoteBackingBean.managedBean.requestSupplierItem.requestNoteItem.tplSpecQuestion.clUomFrequency}"/>  
 						   </td>
 						</tr>
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sc.no.uom.per.day']}" /></td>
-							<td><p:inputText disabled="true" size="33" 
+							<td><p:inputText styleClass="ppNumericAlign" disabled="true" size="25" 
 							      value="#{requestNoteBackingBean.managedBean.requestSupplierItem.requestNoteItem.tplSpecQuestion.clUomPerDay}"/>
 						   </td>
 						</tr>
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sc.frequency.per.uom']}" /></td>
-							<td><p:inputText disabled="true" size="33" value="#{requestNoteBackingBean.managedBean.requestSupplierItem.requestNoteItem.tplSpecQuestion.clUomFrequency}"/>
+							<td><p:inputText styleClass="ppNumericAlign" disabled="true" size="25" value="#{requestNoteBackingBean.managedBean.requestSupplierItem.requestNoteItem.tplSpecQuestion.clUomFrequency}"/>
 						   </td>
 						</tr>
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sc.no.uom.per.month']}" /></td>
-							<td><p:inputText disabled="true" size="33" 
+							<td><p:inputText styleClass="ppNumericAlign" disabled="true" size="25" 
 							value="#{requestNoteBackingBean.managedBean.requestSupplierItem.requestNoteItem.tplSpecQuestion.clUomPerMonth}"/>
 						   </td>
 						</tr>
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sc.duration.month']}" /></td>
-							<td><p:inputText disabled="true" size="33" value="#{requestNoteBackingBean.managedBean.requestSupplierItem.requestNoteItem.tplSpecQuestion.clDurationMonth}"/>
+							<td><p:inputText styleClass="ppNumericAlign" disabled="true" size="25" value="#{requestNoteBackingBean.managedBean.requestSupplierItem.requestNoteItem.tplSpecQuestion.clDurationMonth}"/>
 						   </td>
 						</tr>
 						 </ui:fragment>
-					 </table>
-					
-				   </td>
-			 </tr>
+					 
             <tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.quantity']}" /></td>
-				<td><p:inputText disabled="true" size="33"
-				value="#{requestNoteBackingBean.managedBean.requestSupplierItem.requestNoteItem.quantity}"/>
+				<td>
+					<p:inputText disabled="true" size="25" styleClass="ppNumericAlign"
+						value="#{requestNoteBackingBean.managedBean.requestSupplierItem.requestNoteItem.quantity}">
+						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, requestNoteBackingBean.managedBean.requestSupplierItem.requestNoteItem.uom.uomName)}" maxIntegerDigits="10" />
+					</p:inputText>
 			   </td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.ceiling.price']}" rendered="#{requestNoteBackingBean.managedBean.itemCheck}"/></td>
-				<td><p:inputText disabled="true" size="33" rendered="#{requestNoteBackingBean.managedBean.itemCheck}"/>
+				<td><p:inputText styleClass="ppNumericAlign" disabled="true" size="25" rendered="#{requestNoteBackingBean.managedBean.itemCheck}"/>
 			   </td>
 			</tr>
 
