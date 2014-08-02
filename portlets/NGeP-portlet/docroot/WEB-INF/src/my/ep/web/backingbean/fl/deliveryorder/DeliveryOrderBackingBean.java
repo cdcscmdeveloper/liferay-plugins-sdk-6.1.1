@@ -195,11 +195,18 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 			}
 			if(resDTO.isSuccessful()) {
 				String messageId = MessageConst.INFO_700043;
-				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
-					messageId = MessageConst.INFO_700004;
+				if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+					String docNo = null;
+					if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
+						messageId = MessageConst.INFO_700004;
+						docNo = getManagedBean().getFulfilmentOrder().getDocNo();
+					} else {
+						messageId = MessageConst.INFO_700005;
+						docNo = getManagedBean().getFlDeliveryOrder().getDeliveryOrderNo();
+					}
 					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,	null,
 							MessageUtils.getMessage(messageId, 
-									new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_DELIVERY_ORDER), getManagedBean().getFulfilmentOrder().getDocNo()}, 
+									new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_DELIVERY_ORDER), docNo}, 
 									MessageUtils.BUNDLE_COMMON_MESSAGES, 
 									new FacesScopes().getUserLocale())));
 				} else {
