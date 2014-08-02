@@ -8,7 +8,7 @@
 	  <div align="right">
 	    <c:if test="#{requestNoteBackingBean.managedBean.taskId eq null}">
 	           <p:commandButton value="#{lbl['lbl.sc.action.back.to.search.catalogue']}" style="float:left;" icon="ui-icon-back" partialSubmit="true" process="@this"
-						immediate="true" action="#{requestNoteBackingBean.backToPervious}" />
+						immediate="true" action="#{requestNoteBackingBean.backToPervious}"  rendered="#{requestNoteBackingBean.managedBean.sourceMethod eq 'Search Catalogue'}"/>
 						
 				<p:commandButton value="#{lbl['lbl.sc.common.save']}" icon="ui-icon-save" process="@all"
 				   	action="#{requestNoteBackingBean.saveAction('')}" update="@([id$=requestNoteId])"/>
@@ -25,10 +25,10 @@
 				<table style="width:100%">
 					<tr>
 						<td align="right">
-						
-						      <c:if test="#{requestNoteBackingBean.managedBean.requestNoteStatus eq 'Pending Submission'}">
+						      
+						      <c:if test="#{requestNoteBackingBean.managedBean.requestNoteStatus eq 'Pending Submission' }">
 					               <p:commandButton value="#{lbl['lbl.sc.action.back.to.search.catalogue']}" icon="ui-icon-back" partialSubmit="true" 
-						                style="float:left;"  immediate="true" action="#{requestNoteBackingBean.backToPervious}" />
+						                style="float:left;"  immediate="true" action="#{requestNoteBackingBean.backToPervious}"   rendered="#{requestNoteBackingBean.managedBean.sourceMethod eq 'Search Catalogue'}"/>
 						      </c:if>
 						
 							  <c:if test="#{requestNoteBackingBean.managedBean.requestNoteStatus eq 'Pending Approval' 
@@ -45,21 +45,20 @@
 									<ui:param name="iconVar" value="ui-icon-submit" />
 								</c:if>
 
+								<c:if test="${action == 'APPROVE'}">
+									<ui:param name="iconVar" value="ui-icon-approve" />
+								</c:if>
+
 								<c:if test="${action == 'REJECT'}">
 									<ui:param name="iconVar" value="ui-icon-reject" />
 
 								</c:if>
+
 								<c:if test="${action == 'REVISE'}">
 									<ui:param name="iconVar" value="ui-icon-revise" />
 
 								</c:if>
-								<c:if test="${action == 'APPROVE'}">
-									<ui:param name="iconVar" value="ui-icon-approve" />
-								</c:if>
-								<c:if test="${action == 'ACCEPT'}">
-									<ui:param name="iconVar" value="ui-icon-approve" />
-
-								</c:if>
+							
 								<c:if test="${action == 'CANCEL'}">
 									<ui:param name="iconVar" value="ui-icon-cancel" />
 								</c:if>

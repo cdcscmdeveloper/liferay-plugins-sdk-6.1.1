@@ -544,6 +544,8 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 				quote.setScQuoteSuppliers(suppliers);
 			}
 			
+			// remarks
+			quote.setRemarks(initializeRemarks(quote));
 			if(quote.getRemarks() != null ){
 				for (int i = 0; i < quote.getRemarks().size(); i++) {
 					ScSQRemark remark = quote.getRemarks().get(i);
@@ -725,6 +727,8 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 				quote.setScQuoteSuppliers(suppliers);
 			}
 			
+			// remarks
+			quote.setRemarks(initializeRemarks(quote));
 			if(quote.getRemarks() != null ){
 				for (int i = 0; i < quote.getRemarks().size(); i++) {
 					ScSQRemark remark = quote.getRemarks().get(i);

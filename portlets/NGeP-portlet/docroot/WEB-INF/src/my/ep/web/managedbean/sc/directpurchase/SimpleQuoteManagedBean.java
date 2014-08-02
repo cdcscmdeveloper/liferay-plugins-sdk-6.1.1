@@ -147,6 +147,7 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	private Date  today = new Date();
 	private int tabActiveIndex = 0;
 	private Long defaultCountryId;
+	private boolean titleChecker = Boolean.TRUE;
 
 	public SimpleQuoteManagedBean() {
 		super();
@@ -1217,6 +1218,18 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	 */
 	public void setDefaultCountryId(Long defaultCountryId) {
 		this.defaultCountryId = defaultCountryId;
+	}
+	/**
+	 * @return the titleChecker
+	 */
+	public boolean isTitleChecker() {
+		return titleChecker;
+	}
+	/**
+	 * @param titleChecker the titleChecker to set
+	 */
+	public void setTitleChecker(boolean titleChecker) {
+		this.titleChecker = titleChecker;
 	}
 	
 }
