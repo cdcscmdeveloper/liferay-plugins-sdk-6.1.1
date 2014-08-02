@@ -6,7 +6,8 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel id="delAddrPanel" header="DELIVERY ADDRESS" toggleable="true">
+	<p:panel id="delAddrPanel" header="DELIVERY ADDRESS" toggleable="true" >
+		Please select the address to show the items.
 		<p:dataTable id="addressDataTable" var="address"
 			value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.flDeliveryAddresses}"
 			rowIndexVar="index"
