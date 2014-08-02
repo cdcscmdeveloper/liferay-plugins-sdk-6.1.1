@@ -165,8 +165,9 @@ public class BPMTaskListBackingBean extends
 		temp.put(SCProcessNameConst.SITE_VISIT_PROPOSAL_PROCESS_NAME +SCProcessNameConst.FINALIZE_ATTANDANCE , "sitevisit");
 		temp.put(SCProcessNameConst.SITE_VISIT_PROPOSAL_PROCESS_NAME +SCProcessNameConst.UPDATE_ATTANDANCE , "sitevisit");
 		temp.put(SCProcessNameConst.SUPPLIER_DP_AWARD_PROCESS_NAME +SCProcessNameConst.PREPARE_LOA , "dp-loa-list");
+		temp.put(SCProcessNameConst.EVALUATION_PROCESS_NAME +"Assign EC/OC Committee" , "qtdetails");
 
-
+		
 		this.getManagedBean().setBpmMap(temp);
 
 		System.out.println("testing BPM******");

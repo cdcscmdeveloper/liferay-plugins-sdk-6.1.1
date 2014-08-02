@@ -389,6 +389,7 @@ public class ApprovalBackingBean extends
 
 		try {
 			ScQt qt = this.getManagedBean().getQt();
+			qt.setScQtStatus(null);
 			CommitteResDTO committeResDto = null;
 			QuationTenderResDTO qtResDTO = null;
 			if (SCProcessNameConst.APPROVE_COMMITTEE.equalsIgnoreCase(taskName)

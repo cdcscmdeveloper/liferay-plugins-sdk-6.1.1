@@ -15,6 +15,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
+import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
@@ -28,9 +29,13 @@ import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTMeetingSO;
+import my.ep.bpm.dto.BpmRequestDTO;
+import my.ep.bpm.dto.BpmResponseDTO;
+import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
@@ -44,6 +49,7 @@ import my.ep.dto.sc.quationtender.MeetingReqDTO;
 import my.ep.dto.sc.quationtender.MeetingResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
+import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRole;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -67,6 +73,7 @@ import my.ep.persistence.entity.sc.quationtender.ScRemark;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -82,6 +89,8 @@ import org.apache.commons.lang.StringUtils;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
 
+import com.liferay.portal.util.PortalUtil;
+
 /**
  * @author ACER
  * 
@@ -95,7 +104,7 @@ public class EvaluationMeetingBackingBean extends
 	private IPagingDataModel<PmUser> searchExistingUser = new existingUserPagingDataModel();
 
 	public EvaluationMeetingBackingBean() {
-		
+
 		if (this.getManagedBean().getCloneQtnTenderSearchBean() == null) {
 			this.getManagedBean().setCloneQtnTenderSearchBean(
 					new QtnTenderSearchBean());
@@ -108,7 +117,7 @@ public class EvaluationMeetingBackingBean extends
 
 	@PostConstruct
 	public void init() {
-		retriveMeetingDetails();
+		// retriveMeetingDetails();
 	}
 
 	/**
@@ -147,7 +156,7 @@ public class EvaluationMeetingBackingBean extends
 		return items;
 	}
 
-	public void retriveMeetingDetails() {
+	public void retriveMeetingDetails(Long qtId, String commType) {
 		IQTMeetingSO meetingSO;
 		IQTDetailSO qtDetailSo;
 		try {
@@ -162,17 +171,18 @@ public class EvaluationMeetingBackingBean extends
 			qtDetailSo = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 			if (null == this.getManagedBean().getQt()) {
-				qtReqDTO.setQtId(146L);
+				qtReqDTO.setQtId(qtId);
 				qtResDTO = qtDetailSo.retriveQtById(qtReqDTO);
 				this.getManagedBean().setQt(qtResDTO.getQtDetail());
 			}
 			if (this.getManagedBean().getScQtMeetings() == null) {
 				reqDTO.setQtId(this.getManagedBean().getQt().getQtId());
-				PmParameter commType = this.getManagedBean().getQt()
-						.getScQtCommittees().get(0).getScCommittee()
-						.getCommitteeType();
-
-				reqDTO.setCommitteType(commType.getParameterCode());
+				/*
+				 * PmParameter commType = this.getManagedBean().getQt()
+				 * .getScQtCommittees().get(0).getScCommittee()
+				 * .getCommitteeType();
+				 */
+				reqDTO.setCommitteType(commType);
 				resDTO = meetingSO.retrieveMeetingDls(reqDTO);
 
 				if (null != resDTO.getMeetingDtls()) {
@@ -1055,6 +1065,67 @@ public class EvaluationMeetingBackingBean extends
 	public void setSearchExistingUser(
 			IPagingDataModel<PmUser> searchExistingUser) {
 		this.searchExistingUser = searchExistingUser;
+	}
+
+	public void submitMettingDetails(String outCome) {
+		FacesScopes facesScopes = new FacesScopes();
+		String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
+
+		IQTMeetingSO meetingso = BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						IQTMeetingSO.class);
+		MeetingReqDTO reqDTO = new MeetingReqDTO();
+		reqDTO.setTaskId(this.getManagedBean().getTaskId());
+		reqDTO.setToken(ctxToken);
+		reqDTO.setPayLoad(this.getManagedBean().getPayLoad());
+		reqDTO.setOutcome(outCome);
+		meetingso.updateBPMAction(reqDTO);
+	}
+
+	public void prerenderView() {
+		renewSesionObject();
+		HttpServletRequest servletRequest = PortalUtil
+				.getHttpServletRequest(new FacesScopes().getRequest());
+		HttpServletRequest originalServletRequest = PortalUtil
+				.getOriginalServletRequest(servletRequest);
+		String taskId = originalServletRequest.getParameter("taskId");
+		this.getManagedBean().setTaskId(taskId);
+		log.info("taskId : " + taskId);
+		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+				.getServiceObject(IBpmSO.class);
+		// TODO
+		FacesScopes facesScopes = new FacesScopes();
+		String ctx = facesScopes.getBPMAuthenticationCtxToken();
+		// String ctx = bpmSO.authenticate("roslan", "welcome1");
+		BpmRequestDTO reqDTO = new BpmRequestDTO();
+		reqDTO.setCtxToken(ctx);
+		reqDTO.setTaskId(taskId);
+		BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
+		Object obj = res.getPojo();
+		String taskName = res.getTaskName();
+		this.getManagedBean().setOutComes(res.getAction());
+		SCEvaluationDataType evaluationDataType = (SCEvaluationDataType) obj;
+		this.getManagedBean().setPayLoad(evaluationDataType);
+		FacesContext fc = FacesContext.getCurrentInstance();
+		retriveMeetingDetails(evaluationDataType.getQtId().longValue(),
+				evaluationDataType.getCommitteeType());
+		if (SCProcessNameConst.COORDINATE_EC_MEETING.equalsIgnoreCase(taskName)
+				|| SCProcessNameConst.COORDINATE_OC_MEETING
+						.equalsIgnoreCase(taskName)
+				|| SCProcessNameConst.COORDINATE_TEC_MEETING
+						.equalsIgnoreCase(taskName)
+				|| SCProcessNameConst.COORDINATE_FEC_MEETING
+						.equalsIgnoreCase(taskName)) {
+			fc.getApplication()
+					.getNavigationHandler()
+					.handleNavigation(fc, null,
+							"/xhtml/sc/confirmMeeting/confirmMeetingView.xhtml");
+		} else {
+			fc.getApplication()
+					.getNavigationHandler()
+					.handleNavigation(fc, null,
+							"/xhtml/sc/evaluation/xhtml/sc/evaluation/evaluationstage1view.xhtml");
+		}
 	}
 
 }

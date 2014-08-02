@@ -57,7 +57,7 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 	private List<ScQtCommitteRemarks> qtCommitteeRemarks;
 	private List<ScCommitteeMember> scCommitteeMemberList;
 	private ScQt qt;
-	
+	private Object payLoad;
 	/**
 	 * @return the scQtMeetings
 	 */
@@ -361,6 +361,12 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 	 */
 	public void setQt(ScQt qt) {
 		this.qt = qt;
+	}
+	public Object getPayLoad() {
+		return payLoad;
+	}
+	public void setPayLoad(Object payLoad) {
+		this.payLoad = payLoad;
 	}
 
 }
