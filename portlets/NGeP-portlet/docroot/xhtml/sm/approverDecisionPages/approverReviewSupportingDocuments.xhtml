@@ -29,14 +29,8 @@
 						src="/xhtml/sm/updateMofDetails/smUpdateMofApplnSideMenuItem.xhtml" />
 				</c:if></td>
 			<td><br /> <p:panel>
-					<p>NOTE : The supplier has submitted the documents</p>
-					<p>
-						<b>Online</b> - You may download and review the documents
-					</p>
-					<p>
-						<b>Offline</b> - You will receive a hard copy of all the below
-						documents via post
-					</p>
+					<p:outputLabel value="#{lbl['lbl.sm.suppDoc.reviewNote']}"
+						style="float :left" escape="false" />
 				</p:panel> <h:inputHidden
 					value="#{backingBean.managedBean.smAppl.applCategoryType}" /> <c:if
 					test="#{backingBean.managedBean.smAppl.supportingDocMode == 'F'}">

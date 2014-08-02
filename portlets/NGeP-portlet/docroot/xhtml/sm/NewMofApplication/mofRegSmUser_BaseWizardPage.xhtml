@@ -199,17 +199,13 @@
 												action="#{backingBean.saveApplicationAsDraft(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType)}"
 												update=":form" icon="ui-icon-save"
 												style="margin-bottom:5px;" />
-										</div>
-									</td>
-									<c:if test="#{backingBean.managedBean.tabActiveIndex eq 8}">
-										<td>
-											<div align="right" style="width: 99%" class="button-wrapper">
+											<c:if test="#{backingBean.managedBean.tabActiveIndex eq 8}">
 												<p:commandButton value="Submit For Payment"
 													action="#{backingBean.submitSmApplToBpm(ParameterConst.newSmApplnForMof)}"
 													style="margin-bottom:5px;" />
-											</div>
-										</td>
-									</c:if>
+											</c:if>
+										</div>
+									</td>
 								</tr>
 							</p:outputPanel>
 						</table>
@@ -229,17 +225,14 @@
 													action="#{backingBean.saveApplicationAsDraft(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType)}"
 													update=":form" icon="ui-icon-save"
 													style="margin-bottom:5px;" />
-											</div>
-										</td>
-										<c:if test="#{backingBean.managedBean.tabActiveIndex eq 6}">
-											<td>
-												<div align="right" style="width: 99%" class="button-wrapper">
+												<c:if test="#{backingBean.managedBean.tabActiveIndex eq 6}">
 													<p:commandButton value="Submit For Payment"
 														action="#{backingBean.submitSmApplToBpm(ParameterConst.newSmApplnForMof)}"
 														style="margin-bottom:5px;" />
-												</div>
-											</td>
-										</c:if>
+
+												</c:if>
+											</div>
+										</td>
 									</tr>
 								</p:outputPanel>
 							</table>
