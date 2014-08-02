@@ -22,7 +22,7 @@
 			closable="true" severity="error, info" />
 		<table style="width: 100%;">
 			<tr>
-				<td><p:commandButton value="Back" immediate="true"
+				<td><p:commandButton value="Back" immediate="true" rendered="#{createDOBackingBean.managedBean.taskId==null}" 
 						icon="ui-icon-back" oncomplete="window.history.back();" /></td>
 				<h:panelGroup
 					rendered="#{empty createDOBackingBean.managedBean.buttonVal}">
