@@ -1,6 +1,8 @@
 package my.ep.web.backingbean.sc.quatationtender;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -23,12 +25,13 @@ import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddress;
-import my.ep.persistence.entity.pm.common.PmCity;
-import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
+import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
 import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
 import my.ep.type.pm.RoleCode;
+import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -64,25 +67,6 @@ public class QTScheduleDetailBackingBean extends
 	}
 
 	public QTScheduleDetailBackingBean() {
-		if (this.getManagedBean().getScQtSampleSubmission().getAddress() == null) {
-			this.getManagedBean().getScQtSampleSubmission()
-					.setAddress(new PmAddress());
-		}
-		if (this.getManagedBean().getScQtSampleSubmission().getAddress()
-				.getPmState() == null) {
-			this.getManagedBean().getScQtSampleSubmission().getAddress()
-					.setPmState(new PmState());
-		}
-		if (this.getManagedBean().getScQtSampleSubmission().getAddress()
-				.getPmDistrict() == null) {
-			this.getManagedBean().getScQtSampleSubmission().getAddress()
-					.setPmDistrict(new PmDistrict());
-		}
-		if (this.getManagedBean().getScQtSampleSubmission().getAddress()
-				.getPmCity() == null) {
-			this.getManagedBean().getScQtSampleSubmission().getAddress()
-					.setPmCity(new PmCity());
-		}
 		retrievePmStateList();
 		getDeskOfficerAdminAssistant();
 	}
@@ -147,9 +131,9 @@ public class QTScheduleDetailBackingBean extends
 			}
 			contactperson.setOfficerType("C");
 			contactperson.setScQt(getManagedBean().getQt());
-			for (ScQtContactPerson scQtContactPerson : contactList) {
+			/*for (ScQtContactPerson scQtContactPerson : contactList) {
 				scQtContactPerson.setBrandNew(false);
-			}
+			}*/
 			contactList.add(contactperson);
 			this.getManagedBean().setScQtContactPersons(contactList);
 		} catch (Exception e) {
@@ -195,9 +179,9 @@ public class QTScheduleDetailBackingBean extends
 			contactPerson.setUser(new PmUser());
 			contactPerson.setOfficerType("A");
 			contactPerson.setScQt(getManagedBean().getQt());
-			for (ScQtContactPerson scQtContactPerson : contactList) {
+			/*for (ScQtContactPerson scQtContactPerson : contactList) {
 				scQtContactPerson.setBrandNew(false);
-			}
+			}*/
 			contactList.add(contactPerson);
 			this.getManagedBean().setPmuserContactpersonList(contactList);
 		} catch (Exception e) {
@@ -248,5 +232,12 @@ public class QTScheduleDetailBackingBean extends
 			list.set(index, scQtSampleSubmission);
 		}
 		this.getManagedBean().setScQtSampleSubmissionList(list);
+	}
+	
+	public void handleProposalValidityUtil() {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(getManagedBean().getQt().getClosingDate());
+		cal.add(Calendar.DATE, getManagedBean().getQt().getQtValidityPeriod());
+		getManagedBean().setProposalValidityUntil(cal.getTime());
 	}
 }
