@@ -546,7 +546,7 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		}
 	}
 
-	public void setUpdateMailingAddrSameAsPerm(AjaxBehaviorEvent e) {
+	public void setUpdateMailingAddrSameAsPerm() {
 		if (getManagedBean().getUpdateSmPersonnelMailingAddress().isSameAsPerm()) {
 			System.out.println("********* Duplicate Mail Addr ***********");
 			SmAddress address = cloneAddress(getManagedBean().getUpdateSmPersonnelPermanentAddress().getSmAddress());
@@ -1079,6 +1079,7 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 	
 	public String update(SmPersonnel smPersonnel){
 		
+		setUpdateMailingAddrSameAsPerm();
 //		boolean valid = true;
 		try{
 //			valid = validateUI(smPersonnel);
