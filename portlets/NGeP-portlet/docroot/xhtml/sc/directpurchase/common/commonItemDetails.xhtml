@@ -70,7 +70,7 @@
 				   <p:selectOneMenu value="#{requestNoteDtl.scRequestSupplierItem.supplierItemId}" 
 				        id="recSupplier" label="#{lbl['lbl.sc.request.note.rec.suppier']}"
 				        style="width:125px;" required="#{!requestNoteDtl.selected}">  
-					   <f:selectItem itemLabel="-Select One-" itemValue="#{null}" />
+					   <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 					   <f:selectItems
 							value="#{requestNoteDtl.requestItem.supplierItems}" 
 							var="supplierItem" itemLabel="#{supplierItem.smSupplier.companyName}"
@@ -102,7 +102,7 @@
 					<p:selectOneMenu id="priceType" style="width:100px;"
 						required="#{!requestNoteDtl.selected}" label="#{lbl['lbl.sc.request.note.price.type']}"
 						value="#{requestNoteDtl.priceType.parameterId}">
-						 <f:selectItem itemLabel="-Select One-" itemValue="#{null}" />
+						 <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 						<f:selectItems
 							value="#{requestNoteBackingBean.getPriceTypeByPrice(requestNoteDtl.scRequestSupplierItem.supplierItemPrices)}"
 							var="pmParameter"
@@ -155,7 +155,7 @@
 					<p:selectOneMenu value="#{requestNoteDtl.assignedUser.userId}" style="width:115px;" 
 					   id="prepareBy" label="#{lbl['lbl.sc.request.note.loa.prepare.by']}" 
 					   required="#{!requestNoteDtl.selected}">  
-					   <f:selectItem itemLabel="-Select One-" itemValue="#{null}" />
+					   <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 					   <f:selectItems
 							value="#{requestNoteBackingBean.managedBean.userList}" 
 							var="user" itemLabel="#{user.userName}"
