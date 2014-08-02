@@ -7,6 +7,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
@@ -52,7 +53,7 @@ public class SalutationBackingBean extends
 	}	
 	
 	/**
-	 * reload to professional cert search page 
+	 * reload to salutation search page 
 	 * 
 	 */		
 	public String redirectSalSearch() {
@@ -61,6 +62,16 @@ public class SalutationBackingBean extends
 		return "/xhtml/pm/salutation/salutationMain.xhtml";
 
 	}	
+	
+	/**
+	 * Reset salutation search 
+	 */
+	public void resetSalSearch() {
+		debugLogger("resetSalSearch");
+		
+        RequestContext.getCurrentInstance().reset("salPanel");
+		
+	}
 	
 	/**
 	 * reload to salutation maintain page
