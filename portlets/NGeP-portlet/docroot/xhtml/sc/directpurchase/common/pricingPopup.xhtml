@@ -5,35 +5,35 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
      <p:dialog  id="pricingPopup" widgetVar="pricingPopup" modal="true" header="PRICING"
-		width="700" height="350" resizable="false" >
+		width="700" height="380" resizable="false" >
 	   <h:panelGroup>
 		<table style="width: 550px">
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.supp.name']}" /></td>
-				<td><p:inputText disabled="true" size="33"
+				<td><p:inputText disabled="true" size="46"
 						value="#{requestNoteBackingBean.managedBean.requestSupplierItem.smSupplier.companyName}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.item.name']}" /></td>
-				<td><p:inputText disabled="true" size="33"
+				<td><p:inputText disabled="true" size="46"
 						value="#{requestNoteBackingBean.managedBean.requestSupplierItem.supplierItemPrice.pricing.cmSupplierItem.cmItem.itemName}" /></td>
 			</tr>
 
 			<tr>
 				<td style="vertical-align:top; text-align:left;"><p:outputLabel value="#{lbl['lbl.sc.desc']}" /></td>
-				<td><p:inputTextarea disabled="true" rows="3" cols="55" style="margin-bottom: 5px;"
+				<td><p:inputTextarea disabled="true" rows="2" cols="55" style="margin-bottom: 5px; width: 300px;"
 						value="#{requestNoteBackingBean.managedBean.requestSupplierItem.supplierItemPrice.pricing.cmSupplierItem.itemDesc}" /></td>
 			</tr>
 
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.uom']}" /></td>
-				<td><p:inputText disabled="true" size="33"
+				<td><p:inputText disabled="true" size="25"
 						value="#{requestNoteBackingBean.managedBean.requestSupplierItem.supplierItemPrice.pricing.cmSupplierItem.pmUom.uomName}" /></td>
 			</tr>
 
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.price.type']}" /></td>
-				<td><p:inputText disabled="true" size="33"
+				<td><p:inputText disabled="true" size="25"
 						value="#{requestNoteBackingBean.getParameterDesc(ParameterTypeConst.priceType,requestNoteBackingBean.managedBean.requestSupplierItem.supplierItemPrice.priceType.parameterCode)}" /></td>
 			</tr>
 		</table>
@@ -45,25 +45,30 @@
 			value="#{requestNoteBackingBean.managedBean.requestSupplierItem.supplierItemPrices}"
 			rowKey="#{itemPrice}" rowIndexVar="index">
 
-			<p:column headerText="#{lbl['lbl.sc.zone']}" style="width:30%">
-				<p:inputText value="#{itemPrice.tplSpecZone.zoneName}" disabled="true"  style="text-align:right;"/>
+			<p:column headerText="#{lbl['lbl.sc.zone']}" style="width:45%">
+				#{itemPrice.tplSpecZone.zoneName}
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.from.qty']}" style="width:10%"> 
-				<p:inputText value="#{itemPrice.pricing.fromQty}"  style="text-align:right;" disabled="true"/>
+			<p:column headerText="#{lbl['lbl.sc.from.qty']}" style="width:15%; text-align:right;"> 
+				<h:outputText value="#{itemPrice.pricing.fromQty}">
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, itemPrice.scRequestSupplierItem.requestNoteItem.uom.uomCode)}" />
+				</h:outputText>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.to.qty']}" style="width:10%">
-				<p:inputText value="#{itemPrice.pricing.toQty}"  style="text-align:right;" disabled="true"/>
+			<p:column headerText="#{lbl['lbl.sc.to.qty']}" style="width:15%; text-align:right;">
+				<h:outputText value="#{itemPrice.pricing.toQty}">
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, itemPrice.scRequestSupplierItem.requestNoteItem.uom.uomCode)}" />
+				</h:outputText>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.price.offered']}" style="width:20%">
-				<p:inputText value="#{itemPrice.itemPrice}"  style="text-align:right;" disabled="true"/>
+			<p:column headerText="#{lbl['lbl.sc.price.offered']}" style="width:25%; text-align:right;">
+				<h:outputText value="#{itemPrice.itemPrice}">
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
 			</p:column>
 
 		</p:dataTable>
 		</h:panelGroup>
-      <p:spacer height="4px"/>
 	  <p:panelGrid styleClass="noBorders tr,noBorders td">
 		 <p:row>
 			<p:column width="100%" style="text-align:right">
