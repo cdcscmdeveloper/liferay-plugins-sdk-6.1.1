@@ -9,7 +9,7 @@
 		<table class="customTbl">
 			<tr>
 				<td class="tdTitle"><p:outputLabel
-						value="* #{lbl['lbl.sm.businessregno']}" /></td>
+						value="#{lbl['lbl.sm.businessregno']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td class="tdContent"><p:inputText id="regNo" required="true" maxlength="20"
 						value="#{registrationBackingBean.managedBean.smSupp.regNo}"
 						disabled="#{!registrationBackingBean.managedBean.smSupp.brandNew}"
@@ -22,7 +22,7 @@
 					<p:message id="regNoMsg" for="regNo" display="icon" />
 				</td>
 
-				<td class="tdTitle"><p:outputLabel value="* #{lbl['lbl.sm.ownername']}" /></td>
+				<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.ownername']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td class="tdContent"><p:inputText id="ownerNameId" required="true" label="#{lbl['lbl.sm.ownername']}"
 						value="#{registrationBackingBean.managedBean.smSuppOwner.ownerName}"
 						size="40" maxlength="50"/>
@@ -37,7 +37,7 @@
 
 			<tr>
 				<td class="tdTitle"><p:outputLabel
-						value="* #{lbl['lbl.sm.identificationtype']}" /></td>
+						value="#{lbl['lbl.sm.identificationtype']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td class="tdContent">
 					<p:selectOneMenu id="cmbUsrIdenType" required="true" label="#{lbl['lbl.sm.identificationtype']}"
 						value="#{registrationBackingBean.managedBean.smSuppOwner.identificationTypeId}"
@@ -50,7 +50,7 @@
 					<p:message id="cmbUsrIdenTypeMsg" for="cmbUsrIdenType" display="icon" /></td>
 
 				<td class="tdTitle"><p:outputLabel
-						value="* #{lbl['lbl.sm.identificationno']}" /></td>
+						value="#{lbl['lbl.sm.identificationno']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td class="tdContent">
 					<p:inputText id="txtIdNumber" required="true" label="#{lbl['lbl.sm.identificationno']}"
 						value="#{registrationBackingBean.managedBean.smSuppOwner.identificationNo}"
@@ -68,7 +68,7 @@
 
 			<tr>
 				<td class="tdTitle"><p:outputLabel
-						value="* #{lbl['lbl.sm.companyname']}" /></td>
+						value="#{lbl['lbl.sm.companyname']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
 				<!-- 				<td class="tdContent"><p:inputText -->
 				<!-- 						value="#{registrationBackingBean.managedBean.smAppl.smCompanyBasic.companyName}" -->
 				<!-- 						size="40" id="companyNameId" validatorMessage="Value does not match pattern." required="true"> -->
@@ -81,12 +81,12 @@
 						for="companyNameId" display="icon" /></td>
 
 				<td class="tdTitle"><p:outputLabel
-						value="* #{lbl['lbl.sm.estdate']}" /></td>
+						value="#{lbl['lbl.sm.estdate']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td class="tdContent"><p:calendar id="estDateCalId"
 						navigator="true" required="true" label="#{lbl['lbl.sm.estdate']}"
 						value="#{registrationBackingBean.managedBean.smSupp.establishDate}"
 						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
-						readonlyInput="true" size="30" showOn="button" yearRange="c-99:c+0" />
+						readonlyInput="true" size="30" showOn="button" yearRange="-99:+0" maxdate="#{CommonConstants.CURRENT_DATE}" />
 					<p:message id="estDateCalIdMsg" for="estDateCalId" display="icon" /></td>
 			</tr>
 
@@ -104,7 +104,7 @@
 
 			<tr>
 				<td class="tdTitle"><p:outputLabel
-						value="* #{lbl['lbl.sm.companyaddress']}" /></td>
+						value="#{lbl['lbl.sm.companyaddress']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td class="tdContent" ><p:inputText size="40"
 						id="compAdd1" required="true" maxlength="35"
 						label="#{lbl['lbl.sm.companyaddress']}"
@@ -112,7 +112,7 @@
 					<p:message id="compAdd1Msg" for="compAdd1" display="icon" /></td>
 
 				<td class="tdTitle"><p:outputLabel
-						value="* #{lbl['lbl.sm.country']}" /></td>
+						value="#{lbl['lbl.sm.country']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td class="tdContent"><p:selectOneMenu id="compCountryId"
 						required="true" label="#{lbl['lbl.sm.country']}"
 						value="#{registrationBackingBean.managedBean.smBusinessAdd.pmCountry.countryId}">
@@ -134,7 +134,7 @@
 						value="#{registrationBackingBean.managedBean.smBusinessAdd.address2}" /></td>
 
 				<td class="tdTitle"><p:outputLabel
-						value="* #{lbl['lbl.sm.state']}" /></td>
+						value="#{lbl['lbl.sm.state']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td class="tdContent"><p:selectOneMenu id="busState"
 						required="true" label="#{lbl['lbl.sm.state']}"
 						value="#{registrationBackingBean.managedBean.smBusinessAdd.pmState.stateId}"
@@ -156,7 +156,7 @@
 						value="#{registrationBackingBean.managedBean.smBusinessAdd.address3}" /></td>
 
 				<td class="tdTitle"><p:outputLabel
-						value="* #{lbl['lbl.sm.district']}" /></td>
+						value="#{lbl['lbl.sm.district']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td class="tdContent"><p:selectOneMenu id="busDistrict"
 						required="true" label="#{lbl['lbl.sm.district']}"
 						value="#{registrationBackingBean.managedBean.smBusinessAdd.pmDistrict.districtId}"
@@ -178,7 +178,7 @@
 						value="#{registrationBackingBean.managedBean.smBusinessAdd.address4}" /></td>
 
 				<td class="tdTitle"><p:outputLabel
-						value="* #{lbl['lbl.sm.towncity']}" /></td>
+						value="#{lbl['lbl.sm.towncity']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td class="tdContent"><p:selectOneMenu id="busCity"
 						required="true" label="#{lbl['lbl.sm.towncity']}"
 						value="#{registrationBackingBean.managedBean.smBusinessAdd.pmCity.cityId}"
@@ -192,7 +192,7 @@
 
 			<tr>
 				<td class="tdTitle"><p:outputLabel
-						value="* #{lbl['lbl.sm.postcode']}" /></td>
+						value="#{lbl['lbl.sm.postcode']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td class="tdContent"><p:inputText id="compPostCode"
 						required="true" label="#{lbl['lbl.sm.postcode']}"
 						value="#{registrationBackingBean.managedBean.smBusinessAdd.postcode}"
@@ -202,10 +202,10 @@
 
 			<tr>
 				<td class="tdTitle"><p:outputLabel
-						value="* #{lbl['lbl.sm.telno']}" /></td>
+						value="#{lbl['lbl.sm.telno']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td class="tdContent"><p:inputText id="telNoId" required="true" label="#{lbl['lbl.sm.telno']}"
 						value="#{registrationBackingBean.managedBean.smAppl.smCompanyBasic.phoneNo}"
-						size="40" maxlength="14" 
+						size="40" maxlength="12"
 						validatorMessage="#{lbl['lbl.sm.telno']} - #{lbl['lbl.sm.invalidNo']}">
 						<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
 					</p:inputText>
@@ -215,7 +215,7 @@
 				<td class="tdContent">
 					<p:inputText id="faxNoId"
 						value="#{registrationBackingBean.managedBean.smAppl.smCompanyBasic.faxNo}"
-						size="40" maxlength="20" label="#{lbl['lbl.sm.faxno']}"
+						size="40" maxlength="12" label="#{lbl['lbl.sm.faxno']}"
 						validatorMessage="#{lbl['lbl.sm.faxno']} - #{lbl['lbl.sm.invalidNo']}">
 						<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
 					</p:inputText>

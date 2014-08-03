@@ -11,12 +11,22 @@
 		<p:panel header="Virtual Certificate">
 			<p:dataTable value="#{virtualCertBackingBean.managedBean.mofAccountLs}"
 				var="mofAcc">
-				<p:column headerText="Cert Type">
+				<p:column headerText="MOF No">
 					#{mofAcc.mofNo}
 				</p:column>
 
+				<p:column headerText="Type">
+						<p:outputPanel rendered="#{mofAcc.supplierType != SupplierManagementConst.STYPE_CONSULTANT}">
+						#{lbl['lbl.sm.consultant']}
+						</p:outputPanel>
+						
+						<p:outputPanel rendered="#{mofAcc.supplierType != SupplierManagementConst.STYPE_CONTRACTOR}}">
+						#{lbl['lbl.sm.contractor']}
+						</p:outputPanel>
+				</p:column>
+				
 				<p:column headerText="Serial No">
-					#{mofAcc.mofNo}
+					#{mofAcc.smMofCerts[0].certSerialNo}
 				</p:column>
 				
 				<p:column headerText="Download">
@@ -24,6 +34,7 @@
 						action="#{virtualCertBackingBean.generatePdf}" ajax="false"></p:commandButton>
 				</p:column>
 			</p:dataTable>
+			
 		</p:panel>
 	</ui:define>
 </ui:composition>
