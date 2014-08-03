@@ -2010,6 +2010,13 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 				scQuote.setRemarks(initializeRemarks(scQuote));
 				getManagedBean().setScQuote(scQuote);
 				
+				// country id
+				CountryReqDTO countryReqDTO = new CountryReqDTO();
+				countryReqDTO.setCountryCode("MY");
+				ICountrySO reqSO = (ICountrySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,ICountrySO.class);
+				CountryResDTO resDTO = reqSO.retrieveCountryByCode(countryReqDTO);
+				getManagedBean().setDefaultCountryId(resDTO.getPmCountry().getCountryId());
+				
 				// duration calc
 				dateListener();
 				procurementTypeEvent();

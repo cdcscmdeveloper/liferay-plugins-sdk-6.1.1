@@ -21,11 +21,10 @@
 			   
 			   
 	    </c:if>
-	     <table>
+	     <c:if test="#{simpleQuoteBackingBean.managedBean.taskId ne null}">
+	        <table>
 			   <tr>
 					<td align="right">
-					
-					  <c:if test="#{simpleQuoteBackingBean.managedBean.taskId ne null}">
 					     <c:if test="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending Submission'}">
 							<p:commandButton immediate="true" value="#{lbl['lbl.sc.action.back.to.search.catalogue']}" icon="ui-icon-back" partialSubmit="true" process="@this"
 								style="float:left;" action="#{simpleQuoteBackingBean.backToPervious}" />
@@ -75,9 +74,10 @@
 									styleClass="ui-button" icon="#{iconVar}"
 									actionListener="#{simpleQuoteBackingBean.submitSimpleQuote(action)}" />
 							</c:forEach>
-						</c:if></td>
+						</td>
 				</tr>
 		</table>
+		</c:if>
 	</div>
 </p:panel>
 </ui:composition>
