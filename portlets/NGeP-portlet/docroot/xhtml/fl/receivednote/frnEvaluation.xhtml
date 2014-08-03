@@ -35,12 +35,16 @@
 			value="#{receivedNoteBackingBean.managedBean.fulfilmentNote.flSupplierEvaluation}">
 			<ac:paginator for="suppEvalutionDt" />
 			<p:column>
-				<h:outputText value="Criteria" />
+				<f:facet name="header">
+	                <h:outputText value="Criteria" />
+	            </f:facet>
 				<h:outputText value="#{receivedNoteBackingBean.getCriteriaDesc(suppEvalution.pmCriteria)}" />
 			</p:column>
 			<p:column>
-				<p:outputLabel value="*" styleClass="mandatory" style="float : left" />
-				<h:outputText value="Score" />
+				<f:facet name="header">
+					<p:outputLabel value="*" styleClass="mandatory" style="float : left" />
+					<h:outputText value="Score" />
+				</f:facet>
 				<p:inputText validatorMessage="Maximum score is 5" 
 				 value="#{suppEvalution.score}" style="text-align:right" maxlength="1"  id="score" label="Score" required="true" >
 				<p:ajax update="score" listener="#{receivedNoteBackingBean.checkScore(suppEvalution)}"></p:ajax>
@@ -48,7 +52,9 @@
 				<p:message for="score" display="icon" />
 			</p:column>
 			<p:column>
-				<h:outputText value="Remarks" />
+				<f:facet name="header">
+					<h:outputText value="Remarks" />
+				</f:facet>
 				<p:inputText value="#{suppEvalution.remark}" maxlength="255" style="width:450px" />
 			</p:column>
 		</p:dataTable>

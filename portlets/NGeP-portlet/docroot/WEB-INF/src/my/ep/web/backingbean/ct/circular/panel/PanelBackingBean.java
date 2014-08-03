@@ -1122,15 +1122,8 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		
 		System.out.println("testing download SmardCardForm.");
 		FacesContext context = FacesContext.getCurrentInstance();   
-		 HttpServletRequest request = PortalUtil.getHttpServletRequest( (PortletRequest)context.getExternalContext().getRequest());  
-         HttpServletResponse response = PortalUtil.getHttpServletResponse((PortletResponse) context.getExternalContext().getResponse());  
-         RequestDispatcher dispatcher = request.getRequestDispatcher("/image?imageName=SmardCardForm.pdf");  
-         try {
-			dispatcher.forward(request, response);
-		} catch (ServletException e) {
-			e.printStackTrace();
-		}  
-		
+		 context.getExternalContext().redirect("/image?imageName=SmardCardForm.pdf");
+		 context.responseComplete();
 	}	
 	
 	public String getItemGeneralCode(Long parameterId){
