@@ -33,36 +33,29 @@
 			id="onSupTblPan">
 			<br />
 			<table style="width: 100%">
-
 				<tr>
-					<td style="background-color: aqua; color: black; text-align: left;">
-						<h:outputText
-							value="* You choose to send the documents online. Please send all the necessary documents mentioned in the check list." />
-						<br /> <h:outputText
-							value="* The system can only accommodate files in Word format and PDF:" />
-						<br />
-
-					</td>
-
+					<td><p:outputLabel style="float:left"
+							value="#{lbl['lbl.sm.suppDoc.online.notes']}" escape="false" /></td>
 				</tr>
-
 			</table>
+			<p:spacer height="10px" />
 
 			<p:dataTable var="table" id="onSdList"
 				value="#{backingBean.managedBean.smAppl.smApplSupportDocs}">
 				<ac:paginator for="onSdList" />
 
-				<p:column headerText="Document Description">
-					<h:outputText value="#{table.pmDocument.docName}"
-						rendered="#{table.verifiedFlg != 1}" />
+				<p:column headerText="Document Description" style="width : 60%;">
+					<p:outputLabel value="#{table.pmDocument.docName}"
+						rendered="#{table.verifiedFlg != 1}"
+						style="float: left;white-space: normal;" />
 				</p:column>
 
-				<p:column headerText="PO Remarks">
+				<p:column headerText="PO Remarks" style="width : 20%;">
 					<p:inputTextarea value="#{table.poRemarks}" readonly="true"
 						disabled="true" rendered="#{table.verifiedFlg != 1}" />
 				</p:column>
 
-				<p:column headerText="Upload Document ">
+				<p:column headerText="Upload Document " style="width : 10%;">
 					<p:commandLink oncomplete="attachDlg1.show();return false;"
 						action="#{backingBean.assignSelectedSupportDoc(table)}"
 						rendered="#{table.verifiedFlg != 1}">
@@ -71,9 +64,10 @@
 							style="margin-right:2px;" />
 					</p:commandLink>
 				</p:column>
-				<p:column headerText="Added Document Name">
-					<h:outputText value="#{table.smApplDocFiles[0].fileName}"
-						rendered="#{table.verifiedFlg != 1}" />
+				<p:column headerText="Added Document Name" style="width : 10%;">
+					<p:outputLabel value="#{table.smApplDocFiles[0].fileName}"
+						rendered="#{table.verifiedFlg != 1}"
+						style="float: left;white-space: normal;" />
 				</p:column>
 			</p:dataTable>
 
@@ -81,7 +75,8 @@
 		<p:dialog id="attachDlg1" widgetVar="attachDlg1" modal="true"
 			dynamic="true" resizable="false" width="700px" height="200"
 			styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
-			<p:fileUpload
+			<p:fileUpload allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|pdf|doc|docx)$/"
+				invalidFileMessage="Only JPG, GIF, PNG, BMP, PDF, DOC files are accepted"
 				fileUploadListener="#{backingBean.handleSupDocFileAttachment}"
 				update="onSdList" oncomplete="attachDlg1.hide();" />
 		</p:dialog>

@@ -29,87 +29,97 @@
 						src="/xhtml/sm/updateMofDetails/smUpdateMofApplnSideMenuItem.xhtml" />
 				</c:if></td>
 
-			<td><br /> <p:panel>
-					<p:outputLabel value="#{lbl['lbl.sm.suppDoc.reviewNote']}"
-						style="float :left" escape="false" />
-				</p:panel> <h:inputHidden
-					value="#{backingBean.managedBean.smAppl.applCategoryType}" /> <c:if
-					test="#{backingBean.managedBean.smAppl.supportingDocMode == 'F'}">
-					<ui:include
-						src="/xhtml/sm/shared/mofSdoSharedPages/offlineSupportingDocsForm.xhtml" />
-				</c:if> <c:if
-					test="#{backingBean.managedBean.smAppl.supportingDocMode == 'O'}">
-					<ui:include
-						src="/xhtml/sm/shared/mofSdoSharedPages/onlineSupportingDocsForm.xhtml" />
-				</c:if> <c:choose>
-					<c:when
-						test="#{backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForMof or backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForRenew or backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForApplcatcodes}">
-						<c:choose>
-							<c:when
-								test="#{backingBean.managedBean.smAppl.applCategoryType eq 'S'}">
+			<td>
+				<TABLE style="width: 100%">
+					<tr>
+						<td><p:outputLabel
+								value="#{lbl['lbl.sm.suppDoc.reviewNote']}" style="float :left"
+								escape="false" /> <h:inputHidden
+								value="#{backingBean.managedBean.smAppl.applCategoryType}" /> <p:spacer
+								height="10px" /></td>
+					</tr>
+					<tr>
+						<td><c:if
+								test="#{backingBean.managedBean.smAppl.supportingDocMode == 'F'}">
+								<ui:include
+									src="/xhtml/sm/shared/mofSdoSharedPages/offlineSupportingDocsForm.xhtml" />
+							</c:if> <c:if
+								test="#{backingBean.managedBean.smAppl.supportingDocMode == 'O'}">
+								<ui:include
+									src="/xhtml/sm/shared/mofSdoSharedPages/onlineSupportingDocsForm.xhtml" />
+							</c:if> <c:choose>
+								<c:when
+									test="#{backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForMof or backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForRenew or backingBean.managedBean.smAppl.applType eq ParameterConst.newSmApplnForApplcatcodes}">
+									<c:choose>
+										<c:when
+											test="#{backingBean.managedBean.smAppl.applCategoryType eq 'S'}">
 
-								<table style="width: 100%">
-									<tr>
-										<td><div align="left" style="width: 100%">
-												<p:commandButton value="#{lbl['lbl.sm.prev']}"
-													actionListener="#{backingBean.assignReviewSupportingNav('prev')}"
-													icon="ui-icon-prev"
-													action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP)}"
-													update=":form" />
-											</div></td>
-										<td><div align="right" style="width: 100%">
-												<p:commandButton value="#{lbl['lbl.sm.next']}"
-													icon="ui-icon-next" iconPos="right"
-													actionListener="#{backingBean.assignReviewSupportingNav('next')}"
-													action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC)}"
-													update=":form" />
-											</div></td>
-									</tr>
-								</table>
-							</c:when>
-							<c:otherwise>
-								<table style="width: 100%">
-									<tr>
-										<td><div align="left" style="width: 100%">
-												<p:commandButton value="#{lbl['lbl.sm.prev']}"
-													actionListener="#{backingBean.assignReviewSupportingNav('prev')}"
-													icon="ui-icon-prev"
-													action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)}"
-													update=":form" />
-											</div></td>
-										<td><div align="right" style="width: 100%">
-												<p:commandButton value="#{lbl['lbl.sm.next']}"
-													icon="ui-icon-next" iconPos="right"
-													actionListener="#{backingBean.assignReviewSupportingNav('next')}"
-													action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC)}"
-													update=":form" />
-											</div></td>
-									</tr>
-								</table>
-							</c:otherwise>
-						</c:choose>
-					</c:when>
-					<c:otherwise>
-						<table style="width: 100%">
-							<tr>
-								<td><div align="left" style="width: 100%">
-										<p:commandButton value="#{lbl['lbl.sm.prev']}"
-											actionListener="#{backingBean.assignReviewSupportingNav('prev')}"
-											icon="ui-icon-prev"
-											action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK)}"
-											update=":form" />
-									</div></td>
-								<td><div align="right" style="width: 100%">
-										<p:commandButton value="#{lbl['lbl.sm.next']}"
-											icon="ui-icon-next" iconPos="right"
-											actionListener="#{backingBean.assignReviewSupportingNav('next')}"
-											action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC)}"
-											update=":form" />
-									</div></td>
-							</tr>
-						</table>
-					</c:otherwise>
-				</c:choose></td>
+											<table style="width: 100%">
+												<tr>
+													<td><div align="left" style="width: 100%">
+															<p:commandButton value="#{lbl['lbl.sm.prev']}"
+																actionListener="#{backingBean.assignReviewSupportingNav('prev')}"
+																icon="ui-icon-prev"
+																action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUIP)}"
+																update=":form" />
+														</div></td>
+													<td><div align="right" style="width: 100%">
+															<p:commandButton value="#{lbl['lbl.sm.next']}"
+																icon="ui-icon-next" iconPos="right"
+																actionListener="#{backingBean.assignReviewSupportingNav('next')}"
+																action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC)}"
+																update=":form" />
+														</div></td>
+												</tr>
+											</table>
+										</c:when>
+										<c:otherwise>
+											<table style="width: 100%">
+												<tr>
+													<td><div align="left" style="width: 100%">
+															<p:commandButton value="#{lbl['lbl.sm.prev']}"
+																actionListener="#{backingBean.assignReviewSupportingNav('prev')}"
+																icon="ui-icon-prev"
+																action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)}"
+																update=":form" />
+														</div></td>
+													<td><div align="right" style="width: 100%">
+															<p:commandButton value="#{lbl['lbl.sm.next']}"
+																icon="ui-icon-next" iconPos="right"
+																actionListener="#{backingBean.assignReviewSupportingNav('next')}"
+																action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC)}"
+																update=":form" />
+														</div></td>
+												</tr>
+											</table>
+										</c:otherwise>
+									</c:choose>
+								</c:when>
+								<c:otherwise>
+									<table style="width: 100%">
+										<tr>
+											<td><div align="left" style="width: 100%">
+													<p:commandButton value="#{lbl['lbl.sm.prev']}"
+														actionListener="#{backingBean.assignReviewSupportingNav('prev')}"
+														icon="ui-icon-prev"
+														action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK)}"
+														update=":form" />
+												</div></td>
+											<td><div align="right" style="width: 100%">
+													<p:commandButton value="#{lbl['lbl.sm.next']}"
+														icon="ui-icon-next" iconPos="right"
+														actionListener="#{backingBean.assignReviewSupportingNav('next')}"
+														action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS,SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC)}"
+														update=":form" />
+												</div></td>
+										</tr>
+									</table>
+								</c:otherwise>
+							</c:choose></td>
+					</tr>
+				</TABLE> <br />
+
+			</td>
 		</tr>
 	</table>
 </ui:composition>

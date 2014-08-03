@@ -14,11 +14,12 @@
 			value="#{backingBean.managedBean.smAppl.smApplSupportDocs}">
 			<ac:paginator for="revOffSdList" />
 
-			<p:column headerText="Document Description">
-				<h:outputText value="#{offTable.pmDocument.docName}" />
+			<p:column headerText="Document Description" style="width :80%;">
+				<p:outputLabel value="#{offTable.pmDocument.docName}"
+					style="float: left;white-space: normal;" />
 			</p:column>
 
-			<p:column headerText="Document Valid?">
+			<p:column headerText="Document Valid?" style="width : 20%;">
 				<p:selectOneRadio value="#{offTable.verifiedFlg}"
 					layout="pageDirection">
 					<f:selectItem itemLabel="Valid" itemValue="1" />

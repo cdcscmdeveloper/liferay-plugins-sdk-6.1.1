@@ -7,20 +7,21 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel header="Online Supporting Documents List">
-	
+
 		<p:dataTable var="onTable" id="revOnSdList"
 			value="#{backingBean.managedBean.smAppl.smApplSupportDocs}">
 			<ac:paginator for="revOnSdList" />
 
-			<p:column headerText="Document Description">
-				<h:outputText value="#{onTable.pmDocument.docName}" />
+			<p:column headerText="Document Description" style="width : 70%;">
+				<p:outputLabel value="#{onTable.pmDocument.docName}"
+					style="float: left;white-space: normal;" />
 			</p:column>
 
-			<p:column headerText="Download Document ">
+			<p:column headerText="Download Document " style="width : 10%;">
 				<p:commandLink value="#{onTable.smApplDocFiles[0].fileName}" />
 			</p:column>
 
-			<p:column headerText="Document Valid?">
+			<p:column headerText="Document Valid?" style="width : 20%;">
 				<p:selectOneRadio value="#{onTable.verifiedFlg}"
 					layout="pageDirection">
 					<f:selectItem itemLabel="Valid" itemValue="1" />

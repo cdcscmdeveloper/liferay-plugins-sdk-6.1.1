@@ -46,9 +46,9 @@
 							onclick="svcDialog.show();" />
 					</c:if>
 					<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
-						<p:commandButton value="Send Enquiry"
+						<p:commandButton value="Send Inquiry"
 							action="#{backingBean.assignMissingDocsList}"
-							oncomplete="sendInqDialog.show();" />
+							update=":form:tt:sendInqDialog" />
 					</c:if>
 				</div> <p:panel header="PO Decision">
 					<table>
@@ -134,9 +134,9 @@
 		</tr>
 	</table>
 
-	<p:dialog width="1050px" header="Send Inquiry"
+	<p:dialog width="1050px" header="Send Inquiry" id="sendInqDialog"
 		widgetVar="sendInqDialog" resizable="false" showEffect="fade"
-		hideEffect="fade" modal="true">
+		hideEffect="fade" modal="true" closable="false">
 
 		<ui:include
 			src="/xhtml/sm/shared/mofSdoSharedPages/sdoSendEnquiry.xhtml" />
