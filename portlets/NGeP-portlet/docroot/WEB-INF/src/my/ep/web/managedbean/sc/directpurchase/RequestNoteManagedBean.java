@@ -97,6 +97,7 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     private List<Long> searchStatuses;
     private List<PmStatusDesc> statusDescs;
     private String createdBy;
+	private	List<ScRequestNoteDtl>	supplierRecList	=	new ArrayList<ScRequestNoteDtl>();
     
     private IPagingDataModel<ScRequestNote> reqNoteDataModel = new RequestNotePagingDataModel();
     
@@ -720,6 +721,18 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	 */
 	public void setCreatedBy(String createdBy) {
 		this.createdBy = createdBy;
+	}
+	/**
+	 * @return the supplierRecList
+	 */
+	public List<ScRequestNoteDtl> getSupplierRecList() {
+		return supplierRecList;
+	}
+	/**
+	 * @param supplierRecList the supplierRecList to set
+	 */
+	public void setSupplierRecList(List<ScRequestNoteDtl> supplierRecList) {
+		this.supplierRecList = supplierRecList;
 	}
 	
 }
