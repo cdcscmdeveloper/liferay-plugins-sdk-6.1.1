@@ -20,6 +20,8 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
+import javax.portlet.PortletRequest;
+import javax.portlet.PortletResponse;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -1120,8 +1122,8 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		
 		System.out.println("testing download SmardCardForm.");
 		FacesContext context = FacesContext.getCurrentInstance();   
-		 HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();  
-         HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();  
+		 HttpServletRequest request = PortalUtil.getHttpServletRequest( (PortletRequest)context.getExternalContext().getRequest());  
+         HttpServletResponse response = PortalUtil.getHttpServletResponse((PortletResponse) context.getExternalContext().getResponse());  
          RequestDispatcher dispatcher = request.getRequestDispatcher("/image?imageName=SmardCardForm.pdf");  
          try {
 			dispatcher.forward(request, response);
