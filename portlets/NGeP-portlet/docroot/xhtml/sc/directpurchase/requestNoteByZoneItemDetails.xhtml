@@ -87,7 +87,7 @@
 						<p:graphicImage library="ep/images/design" name="evaluate.png"
 							style="vertical-align:middle" />
 							<f:setPropertyActionListener value="#{requestNoteDtl.scRequestSupplierItem.smSupplier}" 
-						target="#{supplierDetailBackingBean.managedBean.smSupplier}" />
+						target="#{supplierDetailBackingBean.smSupplier}" />
 					</p:commandLink>
 
 
@@ -141,6 +141,11 @@
 							</p:commandLink>
 						</h:panelGroup>
 					</h:panelGroup>
+				</p:column>
+				
+			    <p:column headerText="#{lbl['lbl.sc.request.note.fulfill.type']}"  style="width:10%;">
+					<p:inputText value="#{requestNoteBackingBean.getParameterDesc(ParameterTypeConst.fulfilmentType ,requestNoteDtl.fulfilmentType.parameterCode)}" 
+					   disabled="true" size="4" style="margin-top: 8px;"  />
 				</p:column>
 				
 				<p:column style="width:10%;">
