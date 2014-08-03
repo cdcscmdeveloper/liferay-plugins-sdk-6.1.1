@@ -2978,10 +2978,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		this.getManagedBean().setMofNoFilterBean(new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value()));
 		this.getManagedBean().setEpNoFilterBean(new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value()));
 		this.getManagedBean().setBizRegNoFilterBean(new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value()));
-
+*/
 
 		// s1 module
-		getManagedBean().setSimpleQuoteFlag(Boolean.TRUE);
+//		getManagedBean().setSimpleQuoteFlag(Boolean.TRUE);
 		RequestNoteBackingBean requestNoteBackingBean = new RequestNoteBackingBean();
 		requestNoteBackingBean.renewSesionObject();
 
@@ -2992,7 +2992,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		purchaseInquiryBackingBean.renewSesionObject();
 		
 		PurchaseInDefaultBackingBean purchaseInDefaultBackingBean = new PurchaseInDefaultBackingBean();
-		purchaseInDefaultBackingBean.renewSesionObject();*/
+		purchaseInDefaultBackingBean.renewSesionObject();
 		
 		renewSesionObject();
 		
