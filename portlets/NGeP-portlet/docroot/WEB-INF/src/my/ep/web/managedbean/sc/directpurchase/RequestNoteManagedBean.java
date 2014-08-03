@@ -96,6 +96,8 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     private Date searchCreatedDateTo;
     private List<Long> searchStatuses;
     private List<PmStatusDesc> statusDescs;
+    private String createdBy;
+    
     private IPagingDataModel<ScRequestNote> reqNoteDataModel = new RequestNotePagingDataModel();
     
     public RequestNoteManagedBean() {
@@ -706,6 +708,18 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	 */
 	public void setTitleChecker(boolean titleChecker) {
 		this.titleChecker = titleChecker;
+	}
+	/**
+	 * @return the createdBy
+	 */
+	public String getCreatedBy() {
+		return createdBy;
+	}
+	/**
+	 * @param createdBy the createdBy to set
+	 */
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
 	}
 	
 }

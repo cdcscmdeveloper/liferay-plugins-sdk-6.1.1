@@ -318,6 +318,8 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		IQuoteSO quoteSO = (IQuoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQuoteSO.class);
+		IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
+		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
 		String taskId = originalServletRequest.getParameter("taskId");
 		if (StringUtils.isNotBlank(taskId)) {
 			this.getManagedBean().setTaskId(taskId);
@@ -335,6 +337,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			SCDirectPurchaseDataType directPurchaseDataType = (SCDirectPurchaseDataType) obj;
 			String	dpMode	=	directPurchaseDataType.getDpMode();
 			Long requestNoteId = null;
+			boolean zoneFlag = Boolean.FALSE;
 			
 			if(ParameterConst.REQUEST_NOTE_RN.equalsIgnoreCase(dpMode)){ 
 				 requestNoteId = Long.valueOf(directPurchaseDataType.getDpId());
@@ -346,21 +349,28 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 				quoteReqDTO.setQuoteId(quoteId);
 				ScQuote quote = quoteSO.getQuoteDtl(quoteReqDTO).getQuoteBidDtl();
 				if(quote != null){
-					IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
-					RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
+
+					if(quote.isZonal()){
+						zoneFlag = Boolean.TRUE;
+					}
 					requestNoteReqDTO.setRequestNoteId(quote.getRequestNote().getRequestNoteId());
 					RequestNoteResDTO requestNoteResDTO = directPurchaseSO.getRequestNote(requestNoteReqDTO);
 					if(requestNoteResDTO.getRequestNoteDetail() != null){
 						requestNoteId = requestNoteResDTO.getRequestNoteDetail().getRequestNoteId();
 					}
 				}
+			}
 
-				retrieveRequestNoteDetails(requestNoteId,res.getDocStatus().longValue());
-				// title checker
-				getManagedBean().setTitleChecker(Boolean.FALSE);
-				FacesContext fc = FacesContext.getCurrentInstance();
+			retrieveRequestNoteDetails(requestNoteId,res.getDocStatus().longValue());
+			// title checker
+			getManagedBean().setTitleChecker(Boolean.FALSE);
+			FacesContext fc = FacesContext.getCurrentInstance();
+
+			if(zoneFlag){
+				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "requestNoteByZone");
+			} else {
 				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "commonRequestNote");
-			}	
+			}
 		}
 	}
 
@@ -444,7 +454,11 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			}
 			
 			getManagedBean().setRequestNoteDtls(requestNoteDtls);
-						
+					
+			
+			// created by 
+			getManagedBean().setCreatedBy(getCreatedBy(requestNote.getCreatedBy()));
+			
 			// remarks
 			 requestNote.setRemarks(initializeRemarks(requestNote));
 			
@@ -577,7 +591,6 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		debugLogger("requestNoteAction");
 
 		FacesContext fc = FacesContext.getCurrentInstance();
-		//fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "requestNoteByZone");
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "commonRequestNote");
 	}
 
@@ -1034,7 +1047,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		}
 		
 		if(requestNote.getCreatedUser() == null){
-			requestNote.setCreatedUser(facesScopes.getUserSessionBean());
+			getManagedBean().setCreatedBy(getCreatedBy(facesScopes.getUserSessionBean().getUserId()));
 		}
 		
 		requestNote.setRemarks(initializeRemarks(requestNote));
