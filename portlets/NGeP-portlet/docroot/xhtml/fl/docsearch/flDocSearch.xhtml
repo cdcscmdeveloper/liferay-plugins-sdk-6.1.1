@@ -29,7 +29,7 @@
 						style="width: 185px;">
 						<f:selectItems
 							value="#{flDocumentBackingBean.getDropdownCodeValues(ParameterTypeConst.fulfilmentOrderType)}" />
-						<p:ajax event="change" update="searchDocTypeDD,docTypeSearch"
+						<p:ajax event="change" update="searchPanel"
 							listener="#{flDocumentBackingBean.selectedOrderType}" />
 					</p:selectOneMenu>
 					<p:outputLabel value="#{lbl['lbl.fl.doc.search.doc.type']}"
@@ -58,15 +58,11 @@
 					<p:selectOneMenu id="statusId"
 						value="#{flDocumentBackingBean.managedBean.statusDescId}"
 						style="width: 314px;">
-						<f:selectItem itemLabel="-- Select -- " itemValue="" />
-						<f:selectItems var="statusList"
-							value="#{flDocumentBackingBean.managedBean.docStatusList}"
-							itemLabel="#{statusList.statusName}"
-							itemValue="#{statusList.pmStatus.statusId}" />
+						<f:selectItems value="#{flDocumentBackingBean.getStatusDropdownValues('FL',flDocumentBackingBean.managedBean.searchDocType)}" />
 					</p:selectOneMenu>
 				</h:panelGrid>
 			</h:panelGroup>
-			<h:panelGrid columns="4" columnClasses="flWidth1">
+			<h:panelGrid columns="4" columnClasses="flWidth1" rendered="#{!flDocumentBackingBean.isFlFulfilmentSupplier()}">
 				<p:outputLabel value="#{lbl['lbl.fl.doc.search.supp.name']}" />
 				<p:inputText size="46"
 					value="#{flDocumentBackingBean.managedBean.searchSuppName}"></p:inputText>

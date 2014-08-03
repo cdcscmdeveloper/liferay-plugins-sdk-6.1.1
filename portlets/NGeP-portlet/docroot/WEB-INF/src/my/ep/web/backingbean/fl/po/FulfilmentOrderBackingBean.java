@@ -192,16 +192,6 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 		return resDTO;
 
 	}
-	
-	public String navigateToDO(int index) {
-		DeliveryOrderBackingBean doMB=new DeliveryOrderBackingBean();
-		FlFulfilmentOrder fulfilmentOrder=this.getManagedBean().getFulfilmentOrder();
-		doMB.getManagedBean().setFulfilmentOrder(fulfilmentOrder);
-		doMB.getManagedBean().setDeliveryAddress(this.getManagedBean().getDeliveryAddressList().get(index));
-		//this.getManagedBean().setDeliveryAddress(this.getManagedBean().getDeliveryAddressList().get(index));
-		return NAV_TO_CREATE_DO;
-
-	}
 
 	public String navigateToFlOrder(int index) {
 		IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
@@ -211,6 +201,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 		
 		DeliveryOrderBackingBean doMB = new DeliveryOrderBackingBean();
 		doMB.setDeliveryOrder(resDTO);
+		doMB.getManagedBean().setFromPageUrl("/xhtml/fl/dopending/doPendingTable.xhtml");
 		return NAV_TO_CREATE_DO;
 	}
 

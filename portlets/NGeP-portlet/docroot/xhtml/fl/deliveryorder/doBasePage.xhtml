@@ -23,7 +23,7 @@
 		<table style="width: 100%;">
 			<tr>
 				<td><p:commandButton value="Back" immediate="true" rendered="#{createDOBackingBean.managedBean.taskId==null}" 
-						icon="ui-icon-back" oncomplete="window.history.back();" /></td>
+						icon="ui-icon-back" action="#{createDOBackingBean.backAction}" /></td>
 				<h:panelGroup
 					rendered="#{empty createDOBackingBean.managedBean.buttonVal}">
 					<td colspan="4" style="text-align: right"><p:commandButton

@@ -434,4 +434,8 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		this.amountSectionItemRow = amountSectionItemRow;
 	}
 
+	public String backAction() {
+		return getManagedBean().getFromPageUrl()+"?faces-rediret=true";
+	}
+	
 }

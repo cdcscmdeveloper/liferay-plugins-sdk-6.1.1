@@ -88,6 +88,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	
 	private boolean modificationCancel;
 	private boolean docMaintainRemarks = false;
+	
+	private String fromPageUrl;
 
 	/**
 	 * @return the itemSelectedForCal
@@ -637,6 +639,14 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	 */
 	public void setDocMaintainRemarks(boolean docMaintainRemarks) {
 		this.docMaintainRemarks = docMaintainRemarks;
+	}
+
+	public String getFromPageUrl() {
+		return fromPageUrl;
+	}
+
+	public void setFromPageUrl(String fromPageUrl) {
+		this.fromPageUrl = fromPageUrl;
 	}
 
 	

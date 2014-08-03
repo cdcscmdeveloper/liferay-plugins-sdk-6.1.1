@@ -44,7 +44,6 @@ import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
-import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.persistence.entity.fl.FlAttachment;
@@ -433,21 +432,21 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			doBB.getManagedBean().setFulfilmentOrder(resDTO.getFlDeliveryOrder().getFlFulfilmentOrder());
 			doBB.getManagedBean().setPmUser(reqDTO.getPmUser());
 			doBB.getManagedBean().setDocMaintainRemarks(true);
-			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE) || buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
-				//flBB.initializeRemarkAndAttachement(new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
-				flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(),resDTO.getAttachmentList());
-				flBB.getManagedBean().setDocMaintainRemarks(true);
-			}	
+			doBB.getManagedBean().setFromPageUrl(navgPage);
+			
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
 				statusReqDTO = new StatusReqDTO();
 				statusReqDTO.setStatusId(FulfilmentStatusConst.DO_PENDING_CANCELLATION_SUBMISSION);
 				doBB.getManagedBean().getFulfilmentOrder().setStatus(statusSO.retrieveStatusByStatusId(statusReqDTO).getPmStatus());
+				flBB.initializeRemarkAndAttachement(new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 			} else if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE)) {
 				statusReqDTO = new StatusReqDTO();
 				statusReqDTO.setStatusId(FulfilmentStatusConst.CR_PENDING_SUBMISSION); //TODO Should change to DO_PENDING_SUBMISSION?
 				doBB.getManagedBean().getFulfilmentOrder().setStatus(statusSO.retrieveStatusByStatusId(statusReqDTO).getPmStatus());
-			} else {
+				flBB.initializeRemarkAndAttachement(new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
+			} else { // view
 				doBB.getManagedBean().getFulfilmentOrder().setStatus(deliveryOrderSO.retrieveDelOrderStatus(reqDTO).getPmStatus());
+				flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(),resDTO.getAttachmentList());
 			}
 			navgPage=NAV_TO_MAINTAIN_DO;
 		}else if(docType.equals(FulfilmentConst.DOC_TYPE_IN)){
@@ -525,51 +524,47 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 	}
 	
 	public void selectedDoctype(AjaxBehaviorEvent e) {
-		// doing some stuff here
-		//System.out.println("====enter process checked===="+ getManagedBean().getSearchDocType());
-		// String dueDate = (String) ((UIOutput)e.getSource()).getValue();
 		String id = (String) e.getComponent().getAttributes().get("value");
-		System.out.println("=======get Doc Type value=====" + id);
+		
+		// reset everything to false
+		this.getManagedBean().setCheckTitle(false);
+		this.getManagedBean().setCheckDocType(false);
+		this.getManagedBean().setCheckPoDocType(false);
+		this.getManagedBean().setCheckDoDocType(false);
+		this.getManagedBean().setCheckInDocType(false);
+		this.getManagedBean().setCheckDoInDocType(false);
+		
 		if(id!=null) {
-			if(id.equals(FulfilmentConst.DOC_TYPE_CO)){
+			if(id.equals(ParameterConst.DOCTYPE_CONTRACT_ORDER)){
 				this.getManagedBean().setCheckDocType(true);
-				this.getManagedBean().setCheckPoDocType(false);
 				this.getManagedBean().setCheckTitle(true);
-			}else if(id.equals(FulfilmentConst.DOC_TYPE_PO)){
+			}else if(id.equals(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
 				this.getManagedBean().setCheckPoDocType(true);
-				this.getManagedBean().setCheckDocType(false);
 				this.getManagedBean().setCheckTitle(true);
 				getProcurementTypeList();
-			}else if(id.equals(FulfilmentConst.DOC_TYPE_PA) || id.equals(FulfilmentConst.DOC_TYPE_CR) || id.equals(FulfilmentConst.DOC_TYPE_PR)){
+			}else if(id.equals(ParameterConst.DOCTYPE_PAYMENT_ADVICE) || id.equals(ParameterConst.DOCTYPE_CONTRACT_REQUEST) || id.equals(ParameterConst.DOCTYPE_PURCHASE_REQUEST)){
 				this.getManagedBean().setCheckTitle(true);
-				this.getManagedBean().setCheckDocType(false);
-				this.getManagedBean().setCheckPoDocType(false);
-			}else if(id.equals(FulfilmentConst.DOC_TYPE_DO)){
+			}else if(id.equals(ParameterConst.DOCTYPE_DELIVERY_ORDER)){
 				this.getManagedBean().setCheckDoDocType(true);
-				this.getManagedBean().setCheckInDocType(false);
-				this.getManagedBean().setCheckDocType(false);
-			}else if(id.equals(FulfilmentConst.DOC_TYPE_IN)){
+			}else if(id.equals(ParameterConst.DOCTYPE_INVOICE)){
 				this.getManagedBean().setCheckInDocType(true);
-				this.getManagedBean().setCheckDoDocType(false);
-				this.getManagedBean().setCheckDocType(false);
-			}else{
-				this.getManagedBean().setCheckDocType(false);
-				this.getManagedBean().setCheckPoDocType(false);
-				this.getManagedBean().setCheckDoDocType(false);
-				this.getManagedBean().setCheckInDocType(false);
-				this.getManagedBean().setCheckDoInDocType(false);
 			}
 		}
 		getManagedBean().setSearchDocType(id);
-		getStatusDescList(id, "FL", "en");
 	}
 	
 	public void selectedOrderType(AjaxBehaviorEvent e) {
 		getManagedBean().setSearchDocType(null);
-		getManagedBean().setCheckDocType(false);
-		getManagedBean().setCheckPoDocType(false);
+
+		// reset everything to false
 		this.getManagedBean().setCheckTitle(false);
+		this.getManagedBean().setCheckDocType(false);
+		this.getManagedBean().setCheckPoDocType(false);
+		this.getManagedBean().setCheckDoDocType(false);
+		this.getManagedBean().setCheckInDocType(false);
+		this.getManagedBean().setCheckDoInDocType(false);
 	}
+	
 	public void searchReset(){
 		this.getManagedBean().setSearchTitle(null);
 		this.getManagedBean().setSearchSuppName(null);
@@ -581,6 +576,15 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		this.getManagedBean().setSearchLoaNo(null);
 		this.getManagedBean().setSearchCircularNo(null);
 		this.getManagedBean().setSearchOrderType(null);
+		this.getManagedBean().setSearchDocType(null);
+		
+		// reset everything to false
+		this.getManagedBean().setCheckTitle(false);
+		this.getManagedBean().setCheckDocType(false);
+		this.getManagedBean().setCheckPoDocType(false);
+		this.getManagedBean().setCheckDoDocType(false);
+		this.getManagedBean().setCheckInDocType(false);
+		this.getManagedBean().setCheckDoInDocType(false);
 	}
 
 	public IPagingDataModel<VFlDocument> getFlDocumentDataModel() {
@@ -689,16 +693,6 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		}
 	}
 	
-	public void getStatusDescList(String docType, String moduleCode, String languageCode){
-		IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IStatusSO.class);
-		StatusReqDTO reqDTO = new StatusReqDTO();
-		reqDTO.setLanguageCode("en");//language code is "en"
-		reqDTO.setDocType(docType);
-		reqDTO.setModuleCode(moduleCode);
-		StatusResDTO resDTO = statusSO.retrieveStatusDescList(reqDTO);
-		resDTO.getStatusDescList();
-		getManagedBean().setDocStatusList(resDTO.getStatusDescList());
-	}
 	public void getProcurementTypeList(){
 		IParameterSO parameterSO = (IParameterSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 		ParameterReqDTO reqDTO = new ParameterReqDTO();
