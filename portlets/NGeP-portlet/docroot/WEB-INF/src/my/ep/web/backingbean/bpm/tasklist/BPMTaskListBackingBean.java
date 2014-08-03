@@ -2,7 +2,6 @@ package my.ep.web.backingbean.bpm.tasklist;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
@@ -12,7 +11,6 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.bean.search.ISearchBean;
-import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -20,10 +18,8 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constants.CTProcessNameConst;
 import my.ep.constants.FLProcessNameConst;
 import my.ep.constants.SCProcessNameConst;
-import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
-import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -43,8 +39,6 @@ import com.liferay.portal.theme.ThemeDisplay;
 @RequestScoped
 public class BPMTaskListBackingBean extends
 		BaseBackingBean<BPMTaskListManagedBean> {
-	
-	public	static	final	String	DIRECT_PURCHASE_REVIEW_PATH	=	"review-directpurchase";
 
 	private static Logger log = Logger.getLogger(BPMTaskListBackingBean.class);
 	
@@ -74,13 +68,18 @@ public class BPMTaskListBackingBean extends
 		temp.put("MOF Registration Cancellation","mof-application");
 		temp.put("MOF Application Cancellation","mof-application");
 		
-		temp.put(SCProcessNameConst.REVIEW_DIRECT_PURCHASE, DIRECT_PURCHASE_REVIEW_PATH);
-		temp.put(SCProcessNameConst.DIRECT_PURCHASE_PROCESS_NAME, DIRECT_PURCHASE_REVIEW_PATH);
-		temp.put(SCProcessNameConst.DIRECT_PURCHASE_DRAFT_NAME, DIRECT_PURCHASE_REVIEW_PATH);
+		// s1 module
+		temp.put(SCProcessNameConst.REVIEW_DIRECT_PURCHASE, "review-directpurchase");
+		temp.put(SCProcessNameConst.DIRECT_PURCHASE_PROCESS_NAME, "review-directpurchase");
+		temp.put(SCProcessNameConst.DIRECT_PURCHASE_DRAFT_NAME, "review-directpurchase");
+		
 		temp.put(SCProcessNameConst.PURCHASE_INQUIRY_PROCESS_NAME, "review-purchase-inq");
 		temp.put(SCProcessNameConst.PURCHASE_IN_DEFAULT_PROCESS_NAME, "review-purchase-in-default");
-		temp.put(SCProcessNameConst.SIMPLE_QUOTE_PROCESS_NAME, "review-simple-quote");
-		temp.put(SCProcessNameConst.SIMPLE_QUOTE_DRAFT_NAME, "review-simple-quote");
+		
+		temp.put(SCProcessNameConst.SIMPLE_QUOTE_DRAFT_NAME+SCProcessNameConst.CREATE_SIMPLE_QUOTE, "review-simple-quote");
+		temp.put(SCProcessNameConst.SIMPLE_QUOTE_PROCESS_NAME+SCProcessNameConst.PREPARE_REQUEST_NOTE, "review-directpurchase");
+		
+		
 
 		// Contract Management
 		temp.put(CTProcessNameConst.CIRCULAR_MAINTENANCE_INITIATION_PROCESS_NAME+ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR, "central-contract-circular");
