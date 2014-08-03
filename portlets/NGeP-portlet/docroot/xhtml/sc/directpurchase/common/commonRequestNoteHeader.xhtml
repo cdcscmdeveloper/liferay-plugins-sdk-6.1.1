@@ -1,0 +1,47 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	 <div align="left" class="header-info">
+		<table style="width: 100%">
+			<tr>
+				<td style="width: 10%">
+					<h:outputLabel value="#{lbl['lbl.sc.request.note.header.rn.no']}" />
+				</td>
+				<td style="width: 10%" class="header-info-text">
+					#{requestNoteBackingBean.managedBean.requestNote.requestNoteNo}
+				</td>
+				
+				<td style="width: 8%">
+					<h:outputLabel value="#{lbl['lbl.sc.request.note.header.ptj.name']}" />
+				</td>
+				<td style="width: 23%" class="header-info-text">
+				   #{requestNoteBackingBean.managedBean.requestNote.pmOrgProfile.orgName}
+				</td>
+				
+				<td style="width: 5%">
+					<h:outputLabel value="#{lbl['lbl.sc.request.note.header.method']}" />
+				</td>
+				<td style="width: 10%" class="header-info-text">
+				  #{requestNoteBackingBean.managedBean.sourceMethod}
+				</td>
+
+				<td style="width: 8%"><h:outputLabel
+						value="#{lbl['lbl.sc.request.note.created.by']}" /></td>
+				<td style="width: 10%" class="header-info-text">
+						Dariah Arshad
+				</td>
+					
+				<td style="width: 6%">
+					<h:outputLabel value="#{lbl['lbl.sc.request.note.header.status']}" />
+				</td>
+				<td style="width: 15%" class="header-info-text">
+				  #{requestNoteBackingBean.managedBean.requestNoteStatus}
+				</td>
+			</tr>
+		</table>
+	</div>
+	
+</ui:composition>
