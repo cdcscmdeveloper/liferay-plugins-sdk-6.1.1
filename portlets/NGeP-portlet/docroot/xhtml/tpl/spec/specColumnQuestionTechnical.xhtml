@@ -52,7 +52,7 @@
 			rendered="#{isQuestionTypeItem}"
 			required="#{!question.selected}"
 			size="12"
-			update="@form">
+			update="@this">
 			<f:setPropertyActionListener for="actionEvent" target="#{templateSpecBackingBean.managedBean.tplSpecQuestions}" value="#{templateSpecBean.specMaster.tplSpecQuestions}" />
 		</ac:lov>
 	</p:column>
