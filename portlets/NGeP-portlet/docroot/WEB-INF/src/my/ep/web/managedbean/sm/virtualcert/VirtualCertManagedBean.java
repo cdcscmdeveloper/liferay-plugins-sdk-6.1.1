@@ -2,14 +2,14 @@ package my.ep.web.managedbean.sm.virtualcert;
 
 import java.util.List;
 
-import javax.ejb.Stateless;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.managedbean.BaseManagedBean;
 @ManagedBean(name="virtualCertMB")
-@Stateless
+@SessionScoped
 public class VirtualCertManagedBean extends BaseManagedBean{
 	private SmSupplier smSupplier;
 	private String mofCertSerialNo;
