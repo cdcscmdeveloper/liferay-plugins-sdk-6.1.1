@@ -556,41 +556,53 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			}
 			quote.setWorkflowStatuses(null);
 			
-			// tpl spec - product
-			ScQuoteDoc quoteDoc;
+			// product and service
 			List<ScQuoteDoc> quoteDocs = new ArrayList<ScQuoteDoc>();
 			if(quote.getQuoteDocs() !=null && quote.getQuoteDocs().size() >0){
-				quoteDoc =quote.getQuoteDocs().get(0);
+				for(ScQuoteDoc doc : quote.getQuoteDocs()) {
+					
+					if(doc.getSpecMaster().getItemTypeCode().getParameterCode().equals(ParameterConst.ITEM_TYPE_PRODUCT)) {
+						 doc.setSpecMaster(getManagedBean().getProductTemplateSpecBean().getSpecMaster());
+						 quoteDocs.add(doc);
+					}
+					else if(doc.getSpecMaster().getItemTypeCode().getParameterCode().equals(ParameterConst.ITEM_TYPE_SERVICE)) {
+						 doc.setSpecMaster(getManagedBean().getServiceTemplateSpecBean().getSpecMaster());
+						 quoteDocs.add(doc);
+					}
+				}
 			} else {
-				quoteDoc = new ScQuoteDoc();
-			}
-			if(getManagedBean().getProductTemplateSpecBean().getSpecMaster() != null){
-				if(getManagedBean().getProductTemplateSpecBean().getSpecMaster().getTplSpecQuestions() != null && 
-						getManagedBean().getProductTemplateSpecBean().getSpecMaster().getTplSpecQuestions().size() >0 ){
-					 TplSpecMaster specMaster = getManagedBean().getProductTemplateSpecBean().getSpecMaster();
-					 if(quote.getQuoteZone() != null){
-						 specMaster.setTplSpecZone(quote.getQuoteZone());
-					 }
-					quoteDoc.setSpecMaster(specMaster);
-					quoteDoc.setQuote(quote);
-					quoteDocs.add(quoteDoc);
-					quote.setQuoteDocs(quoteDocs);
+				// tpl spec - product
+				if(getManagedBean().getProductTemplateSpecBean().getSpecMaster() != null){
+					if(getManagedBean().getProductTemplateSpecBean().getSpecMaster().getTplSpecQuestions() != null && 
+							getManagedBean().getProductTemplateSpecBean().getSpecMaster().getTplSpecQuestions().size() >0 ){
+						ScQuoteDoc quoteDoc = new ScQuoteDoc();
+						 TplSpecMaster specMaster = getManagedBean().getProductTemplateSpecBean().getSpecMaster();
+						 if(quote.getQuoteZone() != null){
+							 specMaster.setTplSpecZone(quote.getQuoteZone());
+						 }
+						quoteDoc.setSpecMaster(specMaster);
+						quoteDoc.setQuote(quote);
+						quoteDocs.add(quoteDoc);
+						quote.setQuoteDocs(quoteDocs);
+					}
+				}
+				// tpl spec - service
+				if(getManagedBean().getServiceTemplateSpecBean().getSpecMaster() != null){
+					if(getManagedBean().getServiceTemplateSpecBean().getSpecMaster().getTplSpecQuestions() != null && 
+							getManagedBean().getServiceTemplateSpecBean().getSpecMaster().getTplSpecQuestions().size() >0 ){
+						ScQuoteDoc quoteDoc = new ScQuoteDoc();
+						 TplSpecMaster specMaster = getManagedBean().getServiceTemplateSpecBean().getSpecMaster();
+						 if(quote.getQuoteZone() != null){
+							 specMaster.setTplSpecZone(quote.getQuoteZone());
+						 }
+						quoteDoc.setSpecMaster(specMaster);
+						quoteDoc.setQuote(quote);
+						quoteDocs.add(quoteDoc);
+						quote.setQuoteDocs(quoteDocs);
+					}
 				}
 			}
-			// tpl spec - service
-			if(getManagedBean().getServiceTemplateSpecBean().getSpecMaster() != null){
-				if(getManagedBean().getServiceTemplateSpecBean().getSpecMaster().getTplSpecQuestions() != null && 
-						getManagedBean().getServiceTemplateSpecBean().getSpecMaster().getTplSpecQuestions().size() >0 ){
-					 TplSpecMaster specMaster = getManagedBean().getServiceTemplateSpecBean().getSpecMaster();
-					 if(quote.getQuoteZone() != null){
-						 specMaster.setTplSpecZone(quote.getQuoteZone());
-					 }
-					quoteDoc.setSpecMaster(specMaster);
-					quoteDoc.setQuote(quote);
-					quoteDocs.add(quoteDoc);
-					quote.setQuoteDocs(quoteDocs);
-				}
-			}
+						
 			FacesScopes facesScopes = new FacesScopes();
 			String token = facesScopes.getBPMAuthenticationCtxToken();
 			reqDTO.setToken(token);
@@ -747,43 +759,54 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			}
 			quote.setWorkflowStatuses(null);
 
-			// tpl spec - product
-			ScQuoteDoc quoteDoc;
+			// product and service
 			List<ScQuoteDoc> quoteDocs = new ArrayList<ScQuoteDoc>();
 			if(quote.getQuoteDocs() !=null && quote.getQuoteDocs().size() >0){
-				quoteDoc =quote.getQuoteDocs().get(0);
+				for(ScQuoteDoc doc : quote.getQuoteDocs()) {
+					
+					if(doc.getSpecMaster().getItemTypeCode().getParameterCode().equals(ParameterConst.ITEM_TYPE_PRODUCT)) {
+						 doc.setSpecMaster(getManagedBean().getProductTemplateSpecBean().getSpecMaster());
+						 quoteDocs.add(doc);
+					}
+					else if(doc.getSpecMaster().getItemTypeCode().getParameterCode().equals(ParameterConst.ITEM_TYPE_SERVICE)) {
+						 doc.setSpecMaster(getManagedBean().getServiceTemplateSpecBean().getSpecMaster());
+						 quoteDocs.add(doc);
+					}
+				}
 			} else {
-				quoteDoc = new ScQuoteDoc();
-			}
-			if(getManagedBean().getProductTemplateSpecBean().getSpecMaster() != null){
-				if(getManagedBean().getProductTemplateSpecBean().getSpecMaster().getTplSpecQuestions() != null && 
-						getManagedBean().getProductTemplateSpecBean().getSpecMaster().getTplSpecQuestions().size() >0 ){
-					 TplSpecMaster specMaster = getManagedBean().getProductTemplateSpecBean().getSpecMaster();
-					 if(quote.getQuoteZone() != null){
-						 specMaster.setTplSpecZone(quote.getQuoteZone());
-					 }
-					quoteDoc.setSpecMaster(specMaster);
-					
-					quoteDoc.setQuote(quote);
-					quoteDocs.add(quoteDoc);
-					quote.setQuoteDocs(quoteDocs);
+				// tpl spec - product
+				if(getManagedBean().getProductTemplateSpecBean().getSpecMaster() != null){
+					if(getManagedBean().getProductTemplateSpecBean().getSpecMaster().getTplSpecQuestions() != null && 
+							getManagedBean().getProductTemplateSpecBean().getSpecMaster().getTplSpecQuestions().size() >0 ){
+						ScQuoteDoc quoteDoc = new ScQuoteDoc();
+						 TplSpecMaster specMaster = getManagedBean().getProductTemplateSpecBean().getSpecMaster();
+						 if(quote.getQuoteZone() != null){
+							 specMaster.setTplSpecZone(quote.getQuoteZone());
+						 }
+						quoteDoc.setSpecMaster(specMaster);
+						quoteDoc.setQuote(quote);
+						quoteDocs.add(quoteDoc);
+						quote.setQuoteDocs(quoteDocs);
+					}
+				}
+				// tpl spec - service
+				if(getManagedBean().getServiceTemplateSpecBean().getSpecMaster() != null){
+					if(getManagedBean().getServiceTemplateSpecBean().getSpecMaster().getTplSpecQuestions() != null && 
+							getManagedBean().getServiceTemplateSpecBean().getSpecMaster().getTplSpecQuestions().size() >0 ){
+						ScQuoteDoc quoteDoc = new ScQuoteDoc();
+						 TplSpecMaster specMaster = getManagedBean().getServiceTemplateSpecBean().getSpecMaster();
+						 if(quote.getQuoteZone() != null){
+							 specMaster.setTplSpecZone(quote.getQuoteZone());
+						 }
+						quoteDoc.setSpecMaster(specMaster);
+						quoteDoc.setQuote(quote);
+						quoteDocs.add(quoteDoc);
+						quote.setQuoteDocs(quoteDocs);
+					}
 				}
 			}
-			// tpl spec - service
-			if(getManagedBean().getServiceTemplateSpecBean().getSpecMaster() != null){
-				if(getManagedBean().getServiceTemplateSpecBean().getSpecMaster().getTplSpecQuestions() != null && 
-						getManagedBean().getServiceTemplateSpecBean().getSpecMaster().getTplSpecQuestions().size() >0 ){
-					 TplSpecMaster specMaster = getManagedBean().getServiceTemplateSpecBean().getSpecMaster();
-					 if(quote.getQuoteZone() != null){
-						 specMaster.setTplSpecZone(quote.getQuoteZone());
-					 }
-					quoteDoc.setSpecMaster(specMaster);
-					
-					quoteDoc.setQuote(quote);
-					quoteDocs.add(quoteDoc);
-					quote.setQuoteDocs(quoteDocs);
-				}
-			}
+			
+	
 			FacesScopes facesScopes = new FacesScopes();
 			String token = facesScopes.getBPMAuthenticationCtxToken();
 			reqDTO.setToken(token);
@@ -1064,6 +1087,9 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 		if (getManagedBean().getSelectedNodes() != null) {
 			for (TreeNode treeNode : getManagedBean().getSelectedNodes()) {
 				if (treeNode.getParent().isSelected()) {
+					List<TplSpecZoneLoc> locationDTO = getLocations(treeNode);
+					locationDTOs.addAll(locationDTO);
+				} else{
 					List<TplSpecZoneLoc> locationDTO = getLocations(treeNode);
 					locationDTOs.addAll(locationDTO);
 				}
@@ -1809,11 +1835,13 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 
 		// Locality Criteria
 		List<TplSpecZoneLoc> locationDTOs = new ArrayList<TplSpecZoneLoc>();
-		if (getManagedBean().getSelectedNodes() != null) {
+		if (getManagedBean().getLocationTrees() != null) {
 			for (TreeNode treeNode : getManagedBean().getLocationTrees()) {
-				if (treeNode.getParent().isSelected()) {
-					List<TplSpecZoneLoc> locationDTO = getLocations(treeNode);
-					locationDTOs.addAll(locationDTO);
+				if(treeNode.getParent() != null){
+					if (treeNode.getParent().isSelected()) {
+						List<TplSpecZoneLoc> locationDTO = getLocations(treeNode);
+						locationDTOs.addAll(locationDTO);
+					}	
 				}
 			}
 		}

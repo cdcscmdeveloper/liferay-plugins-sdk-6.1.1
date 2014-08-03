@@ -26,7 +26,7 @@
 					<td align="right">
 					
 					  <c:if test="#{simpleQuoteBackingBean.managedBean.taskId ne null}">
-					     <c:if test="#{requestNoteBackingBean.managedBean.requestNoteStatus eq 'Pending Submission'}">
+					     <c:if test="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending Submission'}">
 							<p:commandButton immediate="true" value="#{lbl['lbl.sc.action.back.to.search.catalogue']}" icon="ui-icon-back" partialSubmit="true" process="@this"
 								style="float:left;" action="#{simpleQuoteBackingBean.backToPervious}" />
 						</c:if>
