@@ -28,7 +28,8 @@
 	</context-param>
 	<context-param>
 		<param-name>javax.faces.PROJECT_STAGE</param-name>
-		<param-value>Development</param-value>
+		<!-- <param-value>Development</param-value> --> 
+		<param-value>Production</param-value>
 	</context-param>
 	 <context-param>
 	  <param-name>contextConfigLocation</param-name>
@@ -68,8 +69,16 @@
 	    <servlet-name>imageServlet</servlet-name>
 	    <servlet-class>my.ep.web.servlet.ImageServlet</servlet-class>
 	</servlet>
+	<servlet>
+	    <servlet-name>fileDownloadServlet</servlet-name>
+	    <servlet-class>my.ep.web.servlet.FileDownloadServlet</servlet-class>
+	</servlet>
 	<servlet-mapping>
 	    <servlet-name>imageServlet</servlet-name>
 	    <url-pattern>/image/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+	    <servlet-name>fileDownloadServlet</servlet-name>
+	    <url-pattern>/filedownload/*</url-pattern>
 	</servlet-mapping>
 </web-app>
