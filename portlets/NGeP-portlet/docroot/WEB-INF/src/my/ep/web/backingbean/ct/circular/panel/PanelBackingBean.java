@@ -3,9 +3,15 @@
  */
 package my.ep.web.backingbean.ct.circular.panel;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -20,10 +26,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
-import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -1089,41 +1092,36 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	}
 	
 	public void downloadFile() throws IOException {
-//		PortletResponse  portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();  
-//		HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
-//		
-//		String fileName = getManagedBean().getCircularVer().getCircularFileName();
-//		String filePath = getManagedBean().getCircularVer().getCircularFilePath();
-//		
-//		res.setHeader( "Content-Disposition", "attachment; filename=\"" + fileName + "\"" );//
-//		res.setHeader( "Content-Transfer-Encoding", "binary" );
-//		res.setContentType("application/octet-stream");
-//		res.flushBuffer();
-//		OutputStream out = res.getOutputStream();   
-//		if(filePath!=null) {
-//			InputStream input = null;
-//			try {
-//				URLConnection uc = new URL(filePath).openConnection();
-//				input = new BufferedInputStream(uc.getInputStream()); 
-//			} catch (Exception e) {
-//				// Cannot open connection, maybe local file
-//				input = new FileInputStream(filePath);
-//			}
-//			byte[] buffer = new byte[4096];
-//			int bytesRead;
-//			while ((bytesRead = input.read( buffer )) != -1){ 
-//				out.write( buffer, 0, bytesRead ); buffer = new byte[4096]; 
-//			}
-//			input.close();			
-//		}
-//		out.flush();
-//		out.close(); 
-//		FacesContext.getCurrentInstance().responseComplete();
+		PortletResponse  portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();  
+		HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
 		
-		System.out.println("testing download SmardCardForm.");
-		FacesContext context = FacesContext.getCurrentInstance();   
-		 context.getExternalContext().redirect("/image?imageName=SmardCardForm.pdf");
-		 context.responseComplete();
+		String fileName = getManagedBean().getCircularVer().getCircularFileName();
+		String filePath = getManagedBean().getCircularVer().getCircularFilePath();
+		
+		res.setHeader( "Content-Disposition", "attachment; filename=\"" + fileName + "\"" );//
+		res.setHeader( "Content-Transfer-Encoding", "binary" );
+		res.setContentType("application/octet-stream");
+		res.flushBuffer();
+		OutputStream out = res.getOutputStream();   
+		if(filePath!=null) {
+			InputStream input = null;
+			try {
+				URLConnection uc = new URL(filePath).openConnection();
+				input = new BufferedInputStream(uc.getInputStream()); 
+			} catch (Exception e) {
+				// Cannot open connection, maybe local file
+				input = new FileInputStream(filePath);
+			}
+			byte[] buffer = new byte[4096];
+			int bytesRead;
+			while ((bytesRead = input.read( buffer )) != -1){ 
+				out.write( buffer, 0, bytesRead ); buffer = new byte[4096]; 
+			}
+			input.close();			
+		}
+		out.flush();
+		out.close(); 
+		FacesContext.getCurrentInstance().responseComplete();
 	}	
 	
 	public String getItemGeneralCode(Long parameterId){
