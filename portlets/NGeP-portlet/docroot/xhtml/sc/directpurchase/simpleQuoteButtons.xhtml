@@ -4,41 +4,54 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-	<p:panel id="sqMain">
-    <div align="right">
-	    <c:if test="#{simpleQuoteBackingBean.managedBean.taskId eq null}">
-			  <p:commandButton immediate="true" value="#{lbl['lbl.sc.action.back.to.search.catalogue']}" icon="ui-icon-back" partialSubmit="true" process="@this"
-				style="float:left;" action="#{simpleQuoteBackingBean.backToPervious}"/>
-				
-		      <p:commandButton value="#{lbl['lbl.sc.common.save']}" icon="ui-icon-save" 
-					    action="#{simpleQuoteBackingBean.saveSimpleQuote('')}" process="@all" update="@form"/>
-				
-			 <p:commandButton value="#{lbl['lbl.sc.common.submit']}"  action="#{simpleQuoteBackingBean.submitSimpleQuote('')}"
-			   icon="ui-icon-submit" process="@all" update="@form" />
-			   
-			   	 <p:commandButton value="#{lbl['lbl.sc.common.cancel']}"  action="#{simpleQuoteBackingBean.cancel}"
-			   style="float:right;" icon="ui-icon-cancel" process="@this" partialSubmit="true"/>
-			   
-			   
-	    </c:if>
-	     <c:if test="#{simpleQuoteBackingBean.managedBean.taskId ne null}">
-	        <table>
-			   <tr>
-					<td align="right">
-					     <c:if test="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending Submission'}">
-							<p:commandButton immediate="true" value="#{lbl['lbl.sc.action.back.to.search.catalogue']}" icon="ui-icon-back" partialSubmit="true" process="@this"
-								style="float:left;" action="#{simpleQuoteBackingBean.backToPervious}" />
-						</c:if>
-					    
-					     <c:if test="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending Approval' 
-									  or simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending Submission'}">
-							<p:commandButton value="#{lbl['lbl.sc.common.save']}"  icon="ui-icon-save"
-								action="#{simpleQuoteBackingBean.saveSimpleQuote('Save')}"
-								update="@form" process="@all" />
+	<p:panel>
+		<div align="right">
+			<c:if test="#{simpleQuoteBackingBean.managedBean.taskId eq null}">
+				<p:commandButton immediate="true"
+					value="#{lbl['lbl.sc.action.back.to.search.catalogue']}"
+					icon="ui-icon-back" partialSubmit="true" process="@this"
+					style="float:left;"
+					action="#{simpleQuoteBackingBean.backToPervious}" />
 
-						</c:if>
-					    
-							<c:forEach items="#{simpleQuoteBackingBean.managedBean.outComes}"
+				<p:commandButton value="#{lbl['lbl.sc.common.save']}"
+					icon="ui-icon-save"
+					action="#{simpleQuoteBackingBean.saveSimpleQuote('')}"
+					process="@all" update="@form" />
+
+				<p:commandButton value="#{lbl['lbl.sc.common.submit']}"
+					action="#{simpleQuoteBackingBean.submitSimpleQuote('')}"
+					icon="ui-icon-submit" process="@all" update="@form" />
+
+				<p:commandButton value="#{lbl['lbl.sc.common.cancel']}"
+					action="#{simpleQuoteBackingBean.cancel}" style="float:right;"
+					icon="ui-icon-cancel" process="@this" partialSubmit="true" />
+
+
+			</c:if>
+		</div>
+
+		<div>
+			<c:if test="#{simpleQuoteBackingBean.managedBean.taskId ne null}">
+				<table>
+					<tr>
+						<td align="right">
+						   <c:if test="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending Submission'}">
+								<p:commandButton immediate="true"
+									value="#{lbl['lbl.sc.action.back.to.search.catalogue']}"
+									icon="ui-icon-back" partialSubmit="true" process="@this"
+									style="float:left;"
+									action="#{simpleQuoteBackingBean.backToPervious}" />
+							</c:if>
+						
+						      <c:if test="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending Approval' 
+									  or simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending Submission'}">
+								<p:commandButton value="#{lbl['lbl.sc.common.save']}"
+									icon="ui-icon-save"
+									action="#{simpleQuoteBackingBean.saveSimpleQuote('Save')}"
+									update="@form" process="@all" />
+
+							</c:if> <c:forEach
+								items="#{simpleQuoteBackingBean.managedBean.outComes}"
 								var="action">
 
 								<c:if test="${action == 'SUBMIT'}">
@@ -73,11 +86,11 @@
 									rendered="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending Submission'}"
 									styleClass="ui-button" icon="#{iconVar}"
 									actionListener="#{simpleQuoteBackingBean.submitSimpleQuote(action)}" />
-							</c:forEach>
-						</td>
-				</tr>
-		</table>
-		</c:if>
-	</div>
-</p:panel>
+							</c:forEach></td>
+					</tr>
+				</table>
+			</c:if>
+		</div>
+	</p:panel>
+
 </ui:composition>
