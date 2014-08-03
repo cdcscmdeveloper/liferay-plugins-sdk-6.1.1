@@ -53,35 +53,40 @@
 			<tr>
 				<td style="width: 250px;"><p:outputLabel value="#{lbl['lbl.sc.purchase.in.default.supp.name']}" /></td>
 				<td><p:inputText disabled="true" 
-				      value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.contractedItem.ctContractVer.ctContract.smSupplier.companyName}" size="46" /></td>
+				      value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.contractedItem.ctContractVer.ctContract.smSupplier.companyName}" 
+				      size="46" /></td>
 			</tr>
           	 <tr>
 				<td style="width: 250px;"><p:outputLabel value="#{lbl['lbl.sc.purchase.in.default.prod.code']}" /></td>
 				<td><p:inputText disabled="true"  
-				      value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.contractedItem.scRequestItem.cmItem.extensionCode}"/></td>
+				      value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.contractedItem.scRequestItem.cmItem.extensionCode}"
+				      size="46" /></td>
 				      
 				<td style="width: 250px;"><p:outputLabel value="#{lbl['lbl.sc.purchase.in.default.item.name']}" /></td>
 				<td style="width: 250px;"><p:inputText disabled="true"  
-				      value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.contractedItem.itemName}" size="40" /></td>      
+				      value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.contractedItem.itemName}" 
+				      size="46" /></td>      
 			</tr>
 			<tr>
 				<td style="width: 250px;"><p:outputLabel value="#{lbl['lbl.sc.purchase.in.default.min.qty']}" /></td>
 				<td><p:inputText disabled="true"  style="text-align:right;" 
-				      value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.contractedItem.minimumOrderQty}" >
+				      value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.contractedItem.minimumOrderQty}"
+				      size="25">
 				         <f:convertNumber  pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				      </p:inputText>
 				      </td>
 			</tr>
 			<tr>
 				<td style="width: 250px;"><p:outputLabel value="#{lbl['lbl.sc.purchase.in.default.val.period']}" /></td>
-				<td><p:inputText disabled="true" />
+				<td><p:inputText disabled="true" size="19" />
 				    <p:spacer width="2px"/>
-				    <p:inputText disabled="true" /></td>
+				    <p:inputText disabled="true" size="20" /></td>
 			</tr>
 			<tr>
 				<td style="width: 250px;"><p:outputLabel value="#{lbl['lbl.sc.purchase.in.default.max.proc.amt']}" /></td>
 				<td><p:inputText disabled="true" style="text-align:right;"
-				       value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.contractedItem.maxProcureAmt}">
+				       value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.contractedItem.maxProcureAmt}"
+				       size="25">
 				       <f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />  </p:inputText>
 				</td>
