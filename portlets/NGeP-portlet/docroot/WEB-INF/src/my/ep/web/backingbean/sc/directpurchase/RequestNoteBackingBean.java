@@ -24,6 +24,7 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.directpurchase.IDirectPurchaseSO;
 import my.ep.biz.service.sc.directpurchase.IPurchaseInDefaultSO;
+import my.ep.biz.service.sc.directpurchase.IQuoteSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -45,6 +46,7 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sc.directpurchase.PurchaseInDefaultReqDTO;
 import my.ep.dto.sc.directpurchase.PurchaseInDefaultResDTO;
+import my.ep.dto.sc.directpurchase.QuoteReqDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteResDTO;
 import my.ep.exception.EpException;
@@ -63,6 +65,7 @@ import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sc.directpurchase.ScPIDRemark;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefault;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefaultAttachment;
+import my.ep.persistence.entity.sc.directpurchase.ScQuote;
 import my.ep.persistence.entity.sc.directpurchase.ScQuoteZone;
 import my.ep.persistence.entity.sc.directpurchase.ScRNWorkFlowStatus;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
@@ -314,7 +317,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 	public void preRenderView() {
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
-		
+		IQuoteSO quoteSO = (IQuoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQuoteSO.class);
 		String taskId = originalServletRequest.getParameter("taskId");
 		if (StringUtils.isNotBlank(taskId)) {
 			this.getManagedBean().setTaskId(taskId);
@@ -330,14 +333,36 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			this.getManagedBean().setProcessName(res.getProcessName());
 			Object obj = res.getPojo();
 			SCDirectPurchaseDataType directPurchaseDataType = (SCDirectPurchaseDataType) obj;
-			retrieveRequestNoteDetails(Long.valueOf(directPurchaseDataType.getDpId()),res.getDocStatus().longValue());
+			String	dpMode	=	directPurchaseDataType.getDpMode();
+			Long requestNoteId = null;
+			
+			if(ParameterConst.REQUEST_NOTE_RN.equalsIgnoreCase(dpMode)){ 
+				 requestNoteId = Long.valueOf(directPurchaseDataType.getDpId());
 
-			// title checker
-			getManagedBean().setTitleChecker(Boolean.FALSE);
-			FacesContext fc = FacesContext.getCurrentInstance();
-			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "commonRequestNote");
+			} else if(ParameterConst.REQUEST_NOTE_SQ.equalsIgnoreCase(dpMode)){ 
+				// Simple Quote
+				QuoteReqDTO quoteReqDTO = new QuoteReqDTO();
+				Long quoteId = Long.valueOf(directPurchaseDataType.getDpId());
+				quoteReqDTO.setQuoteId(quoteId);
+				ScQuote quote = quoteSO.getQuoteDtl(quoteReqDTO).getQuoteBidDtl();
+				if(quote != null){
+					IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
+					RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
+					requestNoteReqDTO.setRequestNoteId(quote.getRequestNote().getRequestNoteId());
+					RequestNoteResDTO requestNoteResDTO = directPurchaseSO.getRequestNote(requestNoteReqDTO);
+					if(requestNoteResDTO.getRequestNoteDetail() != null){
+						requestNoteId = requestNoteResDTO.getRequestNoteDetail().getRequestNoteId();
+					}
+				}
+
+				retrieveRequestNoteDetails(requestNoteId,res.getDocStatus().longValue());
+				// title checker
+				getManagedBean().setTitleChecker(Boolean.FALSE);
+				FacesContext fc = FacesContext.getCurrentInstance();
+				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "commonRequestNote");
+			}	
 		}
-	}	
+	}
 
 	private void retrieveRequestNoteDetails(Long requestNoteId , Long docStatusId) {
 		IDirectPurchaseSO directPurchaseSO;
@@ -356,10 +381,12 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			if(requestNote.getRequestNoteDtls()  != null && requestNote.getRequestNoteDtls().size() >0){
 				for (ScRequestNoteDtl scRequestNoteDtl : requestNote.getRequestNoteDtls()) {
 					ScRequestSupplierItem scRequestSupplierItem = scRequestNoteDtl.getScRequestSupplierItem();
-					if(!scRequestSupplierItem.getSupplierItemPrices().isEmpty() && scRequestSupplierItem.getSupplierItemPrices() != null ){
-						scRequestSupplierItem.setSupplierItemPrice(scRequestSupplierItem.getSupplierItemPrices().get(0));
-						scRequestSupplierItem.setSupplierItemId(scRequestSupplierItem.getSmSupplier().getSupplierId());
-						scRequestNoteDtl.setScRequestSupplierItem(scRequestSupplierItem);
+					if(scRequestSupplierItem != null){
+						if(!scRequestSupplierItem.getSupplierItemPrices().isEmpty() && scRequestSupplierItem.getSupplierItemPrices() != null ){
+							scRequestSupplierItem.setSupplierItemPrice(scRequestSupplierItem.getSupplierItemPrices().get(0));
+							scRequestSupplierItem.setSupplierItemId(scRequestSupplierItem.getSmSupplier().getSupplierId());
+							scRequestNoteDtl.setScRequestSupplierItem(scRequestSupplierItem);
+						}
 					}
 					
 					if(scRequestNoteDtl.getFulfilmentType() == null){

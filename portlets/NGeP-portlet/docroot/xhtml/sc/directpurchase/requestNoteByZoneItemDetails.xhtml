@@ -143,11 +143,6 @@
 					</h:panelGroup>
 				</p:column>
 				
-			    <p:column headerText="#{lbl['lbl.sc.request.note.fulfill.type']}"  style="width:10%;">
-					<p:inputText value="#{requestNoteBackingBean.getParameterDesc(ParameterTypeConst.fulfilmentType ,requestNoteDtl.fulfilmentType.parameterCode)}" 
-					   disabled="true" size="4" style="margin-top: 8px;"  />
-				</p:column>
-				
 				<p:column style="width:10%;">
 					<f:facet name="header">
 						<h:outputText value="* " styleClass="mandatory" />
@@ -196,11 +191,6 @@
 		<p:panelGrid styleClass="noBorders tr,noBorders td"  id="prepareBy" >
 			<p:row>
 				<p:column>
-					<h:outputText value="#{lbl['lbl.sc.request.note.fulfill.type']}"></h:outputText>
-					<p:spacer width="6px;"/>
-					<p:inputText value="#{requestNoteBackingBean.getParameterDesc(ParameterTypeConst.fulfilmentType ,requestNoteBackingBean.managedBean.fulfillmentType)}"
-					 disabled="true"  size="10"/>
-					<p:spacer width="6px;"/>
 					<h:outputText value="#{lbl['lbl.sc.request.note.prepare.by']}"></h:outputText>
 					<p:spacer width="6px;"></p:spacer>
 					<p:selectOneMenu 
