@@ -30,6 +30,7 @@ import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.payment.PaymentReqDTO;
 import my.ep.dto.sm.payment.PaymentResDTO;
+import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
@@ -459,9 +460,16 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 					Long paymentId = smPayment.getPaymentId();
 					BigDecimal paymentAmount = smPayment.getPaymentAmt();
 					if((paymentId == ordId) && (paymentAmount.compareTo(txAmount) == 0) ){
-						log.info("Payment Success>>>>>" + orderId);
-						statusCode = SupplierManagementConst.PM_STAT_SUCCESS_PAYMENT;
-						validPayment = true;
+						if(smPayment.getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STAT_PENDING_PAYMENT) || 
+								smPayment.getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STAT_FAILED_PAYMENT)){
+							statusCode = SupplierManagementConst.PM_STAT_SUCCESS_PAYMENT;
+							validPayment = true;
+						}else{
+							statusCode = smPayment.getPmStatus().getStatusId();
+						}
+//						log.info("Payment Success>>>>>" + orderId);
+//						statusCode = SupplierManagementConst.PM_STAT_SUCCESS_PAYMENT;
+//						validPayment = true;
 					}
 					else{
 						statusCode = SupplierManagementConst.PM_STAT_FAILED_PAYMENT;
@@ -643,6 +651,28 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 	private FacesScopes getFacesScopes() {
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes;
+	}
+	
+	public String tempPaymentSuccess(){
+		String token = getFacesScopes().getBPMAuthenticationCtxToken();
+		PaymentReqDTO pymtReqDTO = new PaymentReqDTO();
+		
+		pymtReqDTO.setOutcome(SupplierManagementConst.BPM_SUBMIT);
+		pymtReqDTO.setTaskId(this.getManagedBean().getTaskId());
+		pymtReqDTO.setBpmPojo(this.getManagedBean().getBpmPojo());
+		pymtReqDTO.setToken(token);
+		
+		try{
+			IPaymentSO reqSO = (IPaymentSO) BusinessDelegate.getInstance().getServiceObject("sm", IPaymentSO.class);
+			reqSO.updatePaymentBpm(pymtReqDTO);
+			
+			showPaymentResponse(SupplierManagementConst.MOL_SUCCESS);
+
+		}catch(Exception ex){
+			throw new EpException(ex.getMessage());
+		}
+	
+		return null;
 	}
 }
 
