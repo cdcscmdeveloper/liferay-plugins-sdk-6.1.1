@@ -24,7 +24,6 @@ import my.ep.biz.service.sm.registration.IRegistrationSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
-import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
@@ -82,11 +81,11 @@ import my.ep.web.util.sm.helper.SmCommonUtil;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.primefaces.context.RequestContext;
-//import my.ep.util.lookupservice.EpNtfBusinessDelegate;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.service.UserLocalServiceUtil;
+
 
 @ManagedBean(name = "registrationBackingBean")
 @RequestScoped
@@ -221,6 +220,13 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		if(!validateBankInfo()){
 			return null;
 		}
+
+		SmSupplierOwner suppOwner = this.getManagedBean().getSmSuppOwner();
+		//verifyWithMyIdentity(this.getManagedBean().getSmSuppOwner().getOwnerName(), this.getManagedBean().getSmBusinessAdd().getPostcode());
+		System.out.println("-----------Owner ID Type---------" + suppOwner.getIdentificationType().getParameterCode());
+		System.out.println("-----------Owner ID---------" + suppOwner.getIdentificationNo());
+		
+		validateIDFormat(suppOwner.getIdentificationNo(),suppOwner.getIdentificationType().getParameterCode());
 		
 		if(this.getManagedBean().getSmPersonnel().getPmCountry().isBrandNew()){
 			PmCountry nationality = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
@@ -305,6 +311,11 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			smPersonnel.setPmCountry(indNationality);
 			this.getManagedBean().setSmBusinessAdd(this.getManagedBean().getSmPermenantAdd());
 		}
+		
+		//Validate IC Length
+		this.retrieveIdentityTypeMap();
+		PmParameter personnelIDType = (PmParameter) identityType.get(smPersonnel.getIdentificationTypeId());
+		validateIDFormat(smPersonnel.getIdentificationNo(), personnelIDType.getParameterCode());
 		
 		if(isExistEmailInPmUser(this.getManagedBean().getSmPersonnel().getEmail())){
 			throw new EpException(MessageConst.ERROR_721004);
@@ -1212,6 +1223,38 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			this.getManagedBean().getSmResAdd().setPmCity(new PmCity());
 		}
 	}
+	
+	private void validateIDFormat(String identNo, String identType){
+		if(identType.equals(SupplierManagementConst.BASIC_IND_IDENT_TYPE)){
+			if(identNo.length() != 12){
+				throw new EpException(MessageConst.ERROR_721013);
+			}
+		}
+	}
+	
+	/*public void verifyWithMyIdentity(String identificationNo, String postCode){
+		MyIdentityReqDTO reqDTO = new MyIdentityReqDTO();
+		IMyIdentitySO reqSO = BusinessDelegate.getInstance().getServiceObject("sm", IMyIdentitySO.class);
+		
+		reqDTO.setType("Online");
+		reqDTO.setNewIcNo(identificationNo);
+		reqDTO.setPostCode(postCode);
+		
+		MyIdentityResDTO resDTO = reqSO.myIdentityVerification(reqDTO);
+		System.out.println("verifyWithMyIdentity>>>>" + resDTO.getSeverity() + ">>code>>" + resDTO.getStatusCode());
+		if(!resDTO.getSeverity().equalsIgnoreCase(SupplierManagementConst.SM_MYIDENTITY_SEVERITY_SUCC)){
+			switch (resDTO.getStatusCode()) {
+			case "70019" :
+				throw new EpException(MessageConst.ERROR_MYIDENTITY_70019);
+			case "70020" :
+				throw new EpException(MessageConst.ERROR_MYIDENTITY_70020);
+			case "70031" :
+				throw new EpException(MessageConst.ERROR_MYIDENTITY_70031);
+			case "70032" :
+				throw new EpException(MessageConst.ERROR_MYIDENTITY_70032);
+			}
+		}
+	}*/
 }
 
 

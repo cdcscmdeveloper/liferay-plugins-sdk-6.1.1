@@ -9,7 +9,7 @@
 		<table class="customTbl">
 			<tr>
 				<td class="tdTitle"><p:outputLabel
-						value="* #{lbl['lbl.sm.individual.service']}" /></td>
+						value="#{lbl['lbl.sm.individual.service']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td class="tdContent"><p:selectOneMenu required="true"
 						label="#{lbl['lbl.sm.individual.service']}"
 						value="#{registrationBackingBean.managedBean.smSupp.serviceType}"
@@ -25,11 +25,11 @@
 			</tr>
 			<tr>
 				<td class="tdTitle"><p:outputLabel
-						value="* #{lbl['lbl.sm.individual.newicno']}" /></td>
+						value="#{lbl['lbl.sm.individual.newicno']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td class="tdContent">
 					<p:inputText id="individualRegNoId" required="true" label="#{lbl['lbl.sm.individual.newicno']}"
 						value="#{registrationBackingBean.managedBean.smSupp.regNo}"
-						size="40" maxlength="15"
+						size="40" maxlength="12"
 						disabled="#{!registrationBackingBean.managedBean.smSupp.brandNew}">
 						<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
 					</p:inputText>
@@ -38,11 +38,10 @@
 						<p:outputLabel escape="false" value="#{lbl['tt.sm.user.id.no']}" />
 					</p:tooltip> <p:message id="individualRegNoIdMsg" for="individualRegNoId"
 						display="icon" /></td>
-
 			</tr>
 			<tr>
 				<td class="tdTitle"><p:outputLabel
-						value="* #{lbl['lbl.sm.individual.nameasperic']}" /></td>
+						value="#{lbl['lbl.sm.individual.nameasperic']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td class="tdContent"><p:inputText size="40" maxlength="100"
 						id="individualNameId" required="true"
 						label="#{lbl['lbl.sm.individual.nameasperic']}"
@@ -59,7 +58,7 @@
 
 			<tr>
 				<td class="tdTitle"><p:outputLabel
-						value="* #{lbl['lbl.sm.permenantaddress']}" /></td>
+						value="#{lbl['lbl.sm.permenantaddress']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td class="tdContent"><p:inputText size="40" 
 						required="true" label="#{lbl['lbl.sm.permenantaddress']}"
 						id="txtPermAdd1" maxlength="35"
@@ -70,7 +69,7 @@
 					</p:tooltip> <p:message id="txtPermAdd1Msg" for="txtPermAdd1" display="icon" /></td>
 
 				<td class="tdTitle"><p:outputLabel
-						value="* #{lbl['lbl.sm.state']}" /></td>
+						value="#{lbl['lbl.sm.state']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td class="tdContent"><p:selectOneMenu id="cmbPermState"
 						required="true" label="#{lbl['lbl.sm.state']}"
 						value="#{registrationBackingBean.managedBean.smPermenantAdd.pmState.stateId}">
@@ -91,7 +90,7 @@
 						value="#{registrationBackingBean.managedBean.smPermenantAdd.address2}" /></td>
 
 				<td class="tdTitle"><p:outputLabel
-						value="* #{lbl['lbl.sm.district']}" /></td>
+						value="#{lbl['lbl.sm.district']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td class="tdContent"><p:selectOneMenu id="cmbPermDistrict"
 						required="true" label="#{lbl['lbl.sm.district']}"
 						value="#{registrationBackingBean.managedBean.smPermenantAdd.pmDistrict.districtId}">
@@ -113,7 +112,7 @@
 						value="#{registrationBackingBean.managedBean.smPermenantAdd.address3}" /></td>
 
 				<td class="tdTitle"><p:outputLabel
-						value="* #{lbl['lbl.sm.towncity']}" /></td>
+						value="#{lbl['lbl.sm.towncity']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td class="tdContent"><p:selectOneMenu id="cmbPermCity"
 						required="true" label="#{lbl['lbl.sm.towncity']}"
 						value="#{registrationBackingBean.managedBean.smPermenantAdd.pmCity.cityId}">
@@ -131,7 +130,7 @@
 						value="#{registrationBackingBean.managedBean.smPermenantAdd.address4}" /></td>
 
 				<td class="tdTitle"><p:outputLabel
-						value="* #{lbl['lbl.sm.postcode']}" /></td>
+						value="#{lbl['lbl.sm.postcode']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td class="tdContent"><p:inputText size="40" required="true" maxlength="10"
 						label="#{lbl['lbl.sm.postcode']}" id="txtPermPostcode"
 						value="#{registrationBackingBean.managedBean.smPermenantAdd.postcode}" />
