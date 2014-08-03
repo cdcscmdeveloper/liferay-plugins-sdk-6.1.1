@@ -318,8 +318,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 			CodificationReqDTO codeReqDTO = new CodificationReqDTO();
 	
-			System.out.println("addToMaintain:"
-					+ bb.getManagedBean().getSelectedObject().length);
+			log.debug("addToMaintain:" + bb.getManagedBean().getSelectedObject().length);
 	
 			bb.getManagedBean().setExtensionVoList(null);
 			for (int i = 0; i < bb.getManagedBean().getSelectedObject().length; i++) {
@@ -333,8 +332,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 						.setMeasurementId(Long.valueOf(String.valueOf(objects[2])));
 				extCodeVO.setColorId(Long.valueOf(String.valueOf(objects[3])));
 	
-				System.out.println("******type NAme******"
-						+ String.valueOf(objects[4]));
+				log.info("******type NAme******" + String.valueOf(objects[4]));
 				extCodeVO.setTypeName(String.valueOf(objects[4]));
 				extCodeVO.setBrandName(String.valueOf(objects[5]));
 				extCodeVO.setMeasurementName(String.valueOf(objects[6]));
@@ -379,7 +377,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 						}
 	
 					} else {
-						System.out.println("************else*******************");
+						log.debug("************else*******************");
 						CmType typeObj = bb.searchTypeOjbyTypeId(obj.getTypeId());
 						CmBrand brandObj = bb.searchBrandObjByBrandId(obj
 								.getBrandId());
@@ -412,7 +410,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 								+ meaObj.getMeasurementCode()
 								+ colorObj.getColorCode());
 	
-						System.out.println("item Name:" + item.getItemName());
+						log.info("item Name:" + item.getItemName());
 						codeReqDTO.setCmItem(item);
 						codeResDTO = codificationSO.saveNewItem(codeReqDTO);
 	
@@ -2759,13 +2757,17 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	 */
 
 	public void publishCatalogItem() {
+		
+		if(this.getManagedBean().getSelectedApprovedItems().length < 1) {
+			throw new EpException(MessageConst.ERROR_715015);
+		}
+		
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
 				.getInstance().getServiceObject("cm", ICatalogueSO.class);
 
 		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 
-		System.out
-				.println("this.getManagedBean().getSelectedApprovedItems().length:"
+		log.info("this.getManagedBean().getSelectedApprovedItems().length:"
 						+ this.getManagedBean().getSelectedApprovedItems().length);
 		for (int i = 0; i < this.getManagedBean().getSelectedApprovedItems().length; i++) {
 			CmSupplierItem catalog = this.getManagedBean()
