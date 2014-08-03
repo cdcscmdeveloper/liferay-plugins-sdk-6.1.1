@@ -53,10 +53,10 @@
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, question.clUom.uomCode)}" />
 			</h:outputText>
 			<p:commandButton icon="ui-icon-pencil" style="background-color:transparent !important; border:0px none;"  
-				oncomplete="tierQtyPopup.show();"
+				oncomplete="#{tierQtyPopup}.show();"
 				partialSubmit="true" process="@this" update="@([id$=tierQtyPopup])"
 				rendered="#{isQuestionTypeItem and !isPriceTypeAllStandard}">
-				<f:setPropertyActionListener target="#{templateSpecBackingBean.managedBean.selectedSpecQuestion}" value="#{question}" />
+				<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{question}" />
 			</p:commandButton>
 		</ui:insert>
 	</p:column>

@@ -8,10 +8,10 @@
 	
 	<p:column style="width:125px;" headerText="#{lbl[isSpecTypeFinancial ? 'lbl.tpl.spec.content.total.amount' : 'lbl.tpl.spec.content.answer']}" rendered="#{isScoringReq}">
 		<p:commandButton icon="ui-icon-pencil" style="background-color:transparent !important; border:0px none;" id="scoringBtn" 
-			action="#{templateSpecBackingBean.scoringPopupAction()}"
-			oncomplete="scoringSetPopup.show();"
+			action="#{templateSpecBackingBean.scoringPopupAction(templateSpecBean)}"
+			oncomplete="#{scoringSetPopup}.show();"
 			partialSubmit="true" process="@this" update="@([id$=scoringSetPopup])">
-			<f:setPropertyActionListener target="#{templateSpecBackingBean.managedBean.selectedSpecQuestion}" value="#{question}" />
+			<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{question}" />
 		</p:commandButton>
 	</p:column>
 	<p:column style="width:80px;text-align:right;" rendered="#{isEstCostReq and isSpecTypeFinancial}" headerText="#{lbl['lbl.tpl.spec.content.estimate.cost']}">

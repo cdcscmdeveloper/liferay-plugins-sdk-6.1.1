@@ -139,10 +139,10 @@
 			</p:inputText>
 			<p:message id="qtyMsg" for="qty" display="icon" />
 			<p:commandButton icon="ui-icon-pencil" style="background-color:transparent !important; border:0px none;"  
-				oncomplete="tierQtyPopup.show();"
+				oncomplete="#{tierQtyPopup}.show();"
 				partialSubmit="true" process="@this" update="@([id$=tierQtyPopup])"
 				rendered="#{!isPriceTypeAllStandard}">
-				<f:setPropertyActionListener target="#{templateSpecBackingBean.managedBean.selectedSpecQuestion}" value="#{question}" />
+				<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{question}" />
 			</p:commandButton>
 		</h:panelGroup>
 	</p:column>
@@ -176,10 +176,10 @@
 			<p:ajax event="change" listener="#{templateSpecBackingBean.answerTypeChange(question)}" update="scoringBtn" />
 		</h:selectOneMenu>	
 		<p:commandButton icon="ui-icon-pencil" style="background-color:transparent !important; border:0px none;" id="scoringBtn"
-			action="#{templateSpecBackingBean.scoringPopupAction()}"
-			oncomplete="scoringSetPopup.show();"
+			action="#{templateSpecBackingBean.scoringPopupAction(templateSpecBean)}"
+			oncomplete="#{scoringSetPopup}.show();"
 			partialSubmit="true" process="@this" update="@([id$=scoringSetPopup])">
-			<f:setPropertyActionListener target="#{templateSpecBackingBean.managedBean.selectedSpecQuestion}" value="#{question}" />
+			<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{question}" />
 		</p:commandButton>
 		<p:message id="answerTypeIdMsg" for="answerTypeId" display="icon" />
 	</p:column>
@@ -198,16 +198,16 @@
 			<p:message id="estCostMsg" for="estCost" display="icon" />
 			<p:commandButton icon="ui-icon-pencil" style="background-color:transparent !important; border:0px none;"  
 				action="#{templateSpecBackingBean.estimationPopupAction(question)}"
-				oncomplete="estimationPopup.show();"
+				oncomplete="#{estimationPopup}.show();"
 				partialSubmit="true" process="@this" update="@([id$=estimationPopup])"
 				rendered="#{!isPriceTypeStandard}">
-				<f:setPropertyActionListener target="#{templateSpecBackingBean.managedBean.selectedSpecQuestion}" value="#{question}" />
+				<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{question}" />
 			</p:commandButton>
 		</h:panelGroup>
 	</p:column>
 	<p:column style="width:40px;">
 		<f:facet name="header">
-			<p:commandButton icon="ui-icon-add" style="background-color:transparent !important; border:0px none; width:10px !important; height:10px !important;"
+			<p:commandButton icon="ui-icon-add" style="background-color:transparent !important; border:0px none; width:10px; height:10px !important;"
 				action="#{templateSpecBackingBean.addQuestion(templateSpecBean.specMaster, templateSpecBean.specMaster.tplSpecQuestions,-1,TplSpecConst.questionTypeItem)}"  
 				update="questionTbl" partialSubmit="true" process="questionTbl" />
 		</f:facet>
@@ -228,10 +228,10 @@
 				update="questionTbl" partialSubmit="true" process="questionTbl" />
 		</c:if>
 		<p:commandButton icon="ui-icon-delete" style="background-color:transparent !important; border:0px none; width:10px !important; height:10px !important;"
-			immediate="true" process="@form" oncomplete="delConfirmPopup.show();">
+			immediate="true" process="@form" oncomplete="#{delConfirmPopup}.show();">
 			<f:setPropertyActionListener target="#{templateSpecBackingBean.managedBean.tplSpecQuestions}" value="#{templateSpecBean.specMaster.tplSpecQuestions}" />
-			<f:setPropertyActionListener target="#{templateSpecBackingBean.managedBean.selectedSpecQuestion}" value="#{question}" />
-			<f:setPropertyActionListener target="#{templateSpecBackingBean.managedBean.selectedSpecQuestion.selected}" value="#{true}" />
+			<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{question}" />
+			<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion.selected}" value="#{true}" />
 		</p:commandButton>
 	</p:column>
 </ui:composition>

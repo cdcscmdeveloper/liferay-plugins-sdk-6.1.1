@@ -10,21 +10,21 @@
 	<tr>
 		<td width="17%"><p:outputLabel value="#{lbl['lbl.tpl.spec.content.scoring.settings.answer.type']}" /></td>
 		<td width="30%">
-			<p:inputText id="answerType" value="#{templateSpecBackingBean.getParameterDesc(templateSpecBackingBean.managedBean.selectedSpecQuestion.answerTypeCode)}" disabled="true" size="15" />
+			<p:inputText id="answerType" value="#{templateSpecBackingBean.getParameterDesc(templateSpecBean.selectedSpecQuestion.answerTypeCode)}" disabled="true" size="15" />
 		</td>
 		<td width="17%">
 			<p:outputLabel value="#{lbl['lbl.tpl.spec.content.scoring.settings.score.type']}" />
 			<p:outputLabel value="*" styleClass="mandatory" rendered="#{editable}" />
 		</td>
 		<td width="36%">
-			<h:selectOneMenu id="scoreType" value="#{templateSpecBackingBean.managedBean.selectedScoreTypeId}" 
+			<h:selectOneMenu id="scoreType" value="#{templateSpecBean.selectedScoreTypeId}" 
 				required="true"
 				label="#{lbl['lbl.tpl.spec.content.scoring.settings.score.type']}"
 				rendered="#{editable}">
 				<f:selectItems value="#{templateSpecBackingBean.getDropdownValues(ParameterTypeConst.scoreType)}" />
-				<p:ajax event="change" listener="#{templateSpecBackingBean.scoreTypeChange(templateSpecBackingBean.managedBean.selectedSpecQuestion, templateSpecBackingBean.managedBean.selectedSpecQuestion.scoreTypeCode.parameterId)}" update="scorePG" />
+				<p:ajax event="change" listener="#{templateSpecBackingBean.scoreTypeChange(templateSpecBean.selectedSpecQuestion, templateSpecBean.selectedScoreTypeId)}" update="scorePG" />
 			</h:selectOneMenu>
-			<p:inputText value="#{templateSpecBackingBean.getParameterDesc(templateSpecBackingBean.managedBean.selectedSpecQuestion.scoreTypeCode)}" 
+			<p:inputText value="#{templateSpecBackingBean.getParameterDesc(templateSpecBean.selectedSpecQuestion.scoreTypeCode)}" 
 				disabled="true" size="15"
 				rendered="#{!editable}" />
 		</td>
@@ -36,7 +36,7 @@
 		</td>
 		<td>
 			<p:inputText id="maxScore" styleClass="ppNumericAlign" 
-				value="#{templateSpecBackingBean.managedBean.selectedSpecQuestion.maxScore}" 
+				value="#{templateSpecBean.selectedSpecQuestion.maxScore}" 
 				required="true" size="15" maxlength="3"
 				disabled="#{!editable}"
 				label="#{lbl['lbl.tpl.spec.content.scoring.settings.max.score']}" />
@@ -45,17 +45,17 @@
 		<td>
 			<p:outputLabel value="#{lbl['lbl.tpl.spec.content.scoring.settings.weightage']}" />
 			<h:panelGroup id="weightageMan">
-				<p:outputLabel value="*" styleClass="mandatory" rendered="#{templateSpecBackingBean.managedBean.selectedSpecQuestion.weightageReq and editable}" />
+				<p:outputLabel value="*" styleClass="mandatory" rendered="#{templateSpecBean.selectedSpecQuestion.weightageReq and editable}" />
 			</h:panelGroup>
 		</td>
 		<td>
-			<p:selectBooleanCheckbox id="isWeightage" value="#{templateSpecBackingBean.managedBean.selectedSpecQuestion.weightageReq}" disabled="#{!editable}">
+			<p:selectBooleanCheckbox id="isWeightage" value="#{templateSpecBean.selectedSpecQuestion.weightageReq}" disabled="#{!editable}">
 				<p:ajax partialSubmit="true" process="@this" update="weightagePG, weightageMan" />
 			</p:selectBooleanCheckbox>
 			<h:panelGroup id="weightagePG">
-				<h:panelGroup rendered="#{templateSpecBackingBean.managedBean.selectedSpecQuestion.weightageReq}">
+				<h:panelGroup rendered="#{templateSpecBean.selectedSpecQuestion.weightageReq}">
 					<p:inputText id="weightage" styleClass="ppNumericAlign" 
-						value="#{templateSpecBackingBean.managedBean.selectedSpecQuestion.weightage}" 
+						value="#{templateSpecBean.selectedSpecQuestion.weightage}" 
 						required="true" size="15" maxlength="19"
 						disabled="#{!editable}"
 						label="#{lbl['lbl.tpl.spec.content.scoring.settings.weightage']}">
@@ -75,14 +75,14 @@
 	<p:panel id="scorePnl" 
 		header="#{lbl['lbl.tpl.spec.content.scoring.scoring.title']}" 
 		toggleable="true"
-		rendered="#{templateSpecBackingBean.managedBean.selectedSpecQuestion.scoreTypeCode.parameterCode == ParameterConst.scoreTypeAuto}">
+		rendered="#{templateSpecBean.selectedSpecQuestion.scoreTypeCode.parameterCode == ParameterConst.scoreTypeAuto}">
 		
-		<ui:param name="isCompliance" value="#{templateSpecBackingBean.managedBean.selectedSpecQuestion.answerTypeCode.parameterCode == ParameterConst.answerTypeDropdown}" />
+		<ui:param name="isCompliance" value="#{templateSpecBean.selectedSpecQuestion.answerTypeCode.parameterCode == ParameterConst.answerTypeDropdown}" />
 		
 		<p:dataTable id="scoringTbl" widgetVar="scoringWidget"
 			var="tplSpecScoring"
 			rowIndexVar="rowIndex"
-			value="#{templateSpecBackingBean.managedBean.selectedSpecQuestion.tplSpecScorings}"
+			value="#{templateSpecBean.selectedSpecQuestion.tplSpecScorings}"
 			rowKey="#{tplSpecScoring}"
 			selection="#{templateSpecBean.selectedScoringList}">
 								
@@ -139,14 +139,14 @@
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
 				process="@this, scoringTbl" partialSubmit="true"
-				action="#{templateSpecBackingBean.addScoringAction(templateSpecBackingBean.managedBean.selectedSpecQuestion)}"
+				action="#{templateSpecBackingBean.addScoringAction(templateSpecBean.selectedSpecQuestion)}"
 				oncomplete="scoringWidget.paginator.endLink.click();"
 				update="scoringTbl" icon="ui-icon-add"
 				rendered="#{!isCompliance and editable}" />
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				process="@this, scoringTbl" partialSubmit="true"
 				icon="ui-icon-delete"
-				action="#{templateSpecBackingBean.deleteRowsAction(templateSpecBackingBean.managedBean.selectedSpecQuestion.tplSpecScorings, templateSpecBean.selectedScoringList)}"
+				action="#{templateSpecBackingBean.deleteRowsAction(templateSpecBean.selectedSpecQuestion.tplSpecScorings, templateSpecBean.selectedScoringList)}"
 				update="scoringTbl"
 				rendered="#{!isCompliance and editable}" />
 		</div>

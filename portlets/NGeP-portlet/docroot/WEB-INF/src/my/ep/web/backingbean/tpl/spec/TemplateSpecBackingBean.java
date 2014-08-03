@@ -131,7 +131,7 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 				
 				templateSpecBean.setSpecMaster(specMaster);
 				templateSpecBean.setSpecAnswerList(resDTO.getSpecAnswerList());
-				getManagedBean().setSelectedSpecQuestion(null);
+				templateSpecBean.setSelectedSpecQuestion(null);
 				
 				if (resDTO.getSpecAnswerList() != null) {
 					calcGrandTotalAmount(templateSpecBean);	
@@ -215,9 +215,9 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 		}
 	}
 
-	public void deleteQuestion() {
-		List<TplSpecQuestion> specQuestionList = getManagedBean().getTplSpecQuestions();
-		TplSpecQuestion questionToDelete = getManagedBean().getSelectedSpecQuestion();
+	public void deleteQuestion(TemplateSpecBean templateSpecBean) {
+		List<TplSpecQuestion> specQuestionList = templateSpecBean.getSpecMaster().getTplSpecQuestions();
+		TplSpecQuestion questionToDelete = templateSpecBean.getSelectedSpecQuestion();
 		int selectedIndex = specQuestionList.indexOf(questionToDelete);
 
 		if(questionToDelete.getQuestionType().equalsIgnoreCase(TemplateSpecConst.QUESTION_TYPE_ITEM)) {
@@ -251,7 +251,7 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 		
 		templateSpecBean.setSpecMaster(specMaster);
 		
-		getManagedBean().setSelectedSpecQuestion(null);
+		templateSpecBean.setSelectedSpecQuestion(null);
 		getManagedBean().setTemplateSpecBean(templateSpecBean);
 		
 		return "maintenance"; 
@@ -592,13 +592,13 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 		}
 	}
 	
-	public void scoringPopupAction() {
+	public void scoringPopupAction(TemplateSpecBean templateSpecBean) {
 		debugLogger("scoringPopupAction");
 		
-		TplSpecQuestion tplSpecQuestion = getManagedBean().getSelectedSpecQuestion();
+		TplSpecQuestion tplSpecQuestion = templateSpecBean.getSelectedSpecQuestion();
 		
 		// update selected score type id
-		getManagedBean().setSelectedScoreTypeId(
+		templateSpecBean.setSelectedScoreTypeId(
 				tplSpecQuestion.getScoreTypeCode().getParameterId());
 		
 		// add compliance scoring.
@@ -717,12 +717,12 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 		tplSpecScorings.add(tplSpecScoring);
 	}
 	
-	public void tierQtyOkAction() {
+	public void tierQtyOkAction(TemplateSpecBean templateSpecBean) {
 		debugLogger("tierQtyOkAction");
 		
 		ITemplateSpecSO templateSpecSO = null;
 		try {
-			List<TplSpecTierQty> specTierQties = getManagedBean().getSelectedSpecQuestion().getTplSpecTierQties();
+			List<TplSpecTierQty> specTierQties = templateSpecBean.getSelectedSpecQuestion().getTplSpecTierQties();
 			
 			templateSpecSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
@@ -733,25 +733,28 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 			templateSpecSO = null;
 		}
 		
-		getManagedBean().setSelectedSpecQuestion(null);
+		templateSpecBean.setSelectedSpecQuestion(null);
 		
-		RequestContext.getCurrentInstance().execute("tierQtyPopup.hide()");
+		RequestContext.getCurrentInstance().execute(
+				templateSpecBean.getSpecComponentId() + "tierQtyPopup.hide()");
 	}
 	
-	public void scoringOkAction() {
+	public void scoringOkAction(TemplateSpecBean templateSpecBean) {
 		debugLogger("scoringOkAction");
 		
-		getManagedBean().setSelectedSpecQuestion(null);
+		templateSpecBean.setSelectedSpecQuestion(null);
 		
-		RequestContext.getCurrentInstance().execute("scoringSetPopup.hide()");
+		RequestContext.getCurrentInstance().execute(
+				templateSpecBean.getSpecComponentId() + "scoringSetPopup.hide()");
 	}
 	
-	public void estCostOkAction() {
+	public void estCostOkAction(TemplateSpecBean templateSpecBean) {
 		debugLogger("estCostOkAction");
 		
-		getManagedBean().setSelectedSpecQuestion(null);
+		templateSpecBean.setSelectedSpecQuestion(null);
 		
-		RequestContext.getCurrentInstance().execute("estimationPopup.hide()");
+		RequestContext.getCurrentInstance().execute(
+				templateSpecBean.getSpecComponentId() + "estimationPopup.hide()");
 	}
 	
 	private void calcGrandTotalAmount(TemplateSpecBean templateSpecBean) {

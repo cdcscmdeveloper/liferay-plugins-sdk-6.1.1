@@ -33,8 +33,6 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 	private Long searchItemTypeId;
 	private Long searchSpecTypeId;
 	
-	private Long selectedScoreTypeId;
-	private TplSpecQuestion selectedSpecQuestion;
 	private List<TplSpecQuestion> tplSpecQuestions;
 	private TemplateSpecBean templateSpecBean = new TemplateSpecBean();
 	
@@ -123,34 +121,6 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 	 */
 	public void setSearchSpecTypeId(Long searchSpecTypeId) {
 		this.searchSpecTypeId = searchSpecTypeId;
-	}
-
-	/**
-	 * @return the selectedScoreTypeId
-	 */
-	public Long getSelectedScoreTypeId() {
-		return selectedScoreTypeId;
-	}
-
-	/**
-	 * @param selectedScoreTypeId the selectedScoreTypeId to set
-	 */
-	public void setSelectedScoreTypeId(Long selectedScoreTypeId) {
-		this.selectedScoreTypeId = selectedScoreTypeId;
-	}
-
-	/**
-	 * @return the selectedSpecQuestion
-	 */
-	public TplSpecQuestion getSelectedSpecQuestion() {
-		return selectedSpecQuestion;
-	}
-
-	/**
-	 * @param selectedSpecQuestion the selectedSpecQuestion to set
-	 */
-	public void setSelectedSpecQuestion(TplSpecQuestion selectedSpecQuestion) {
-		this.selectedSpecQuestion = selectedSpecQuestion;
 	}
 
 	/**

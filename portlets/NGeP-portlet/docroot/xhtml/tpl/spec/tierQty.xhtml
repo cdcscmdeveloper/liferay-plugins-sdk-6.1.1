@@ -6,17 +6,17 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:p="http://primefaces.org/ui">
 	
-	<ui:param name="isSelectedPriceTypeTariff" value="#{templateSpecBackingBean.managedBean.selectedSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeTariff or templateSpecBackingBean.managedBean.selectedSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeZonalTariff}" />
+	<ui:param name="isSelectedPriceTypeTariff" value="#{templateSpecBean.selectedSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeTariff or templateSpecBean.selectedSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeZonalTariff}" />
 	
 	<p:dataTable id="tierQtyTbl" widgetVar="tierQtyWidget"
 		var="tplSpecTierQty"
 		rowIndexVar="rowIndex"
-		value="#{templateSpecBackingBean.managedBean.selectedSpecQuestion.tplSpecTierQties}"
+		value="#{templateSpecBean.selectedSpecQuestion.tplSpecTierQties}"
 		rowKey="#{tplSpecTierQty}"
 		selection="#{templateSpecBean.selectedTierQtyList}">
 							
 		<ac:paginator for="tierQtyTbl" />
-		<ui:param name="uomCode" value="#{templateSpecBackingBean.managedBean.selectedSpecQuestion.clUom.uomCode}" />
+		<ui:param name="uomCode" value="#{templateSpecBean.selectedSpecQuestion.clUom.uomCode}" />
 		
 		<p:column selectionMode="multiple" style="width:20px;" rendered="#{editable}" />
 		<p:column>
@@ -63,14 +63,14 @@
 	<div class="ppRightBtn">
 		<p:commandButton value="#{lbl['lbl.btn.add']}"
 			process="@this, tierQtyTbl" partialSubmit="true"
-			action="#{templateSpecBackingBean.addTierQtyAction(templateSpecBackingBean.managedBean.selectedSpecQuestion)}"
+			action="#{templateSpecBackingBean.addTierQtyAction(templateSpecBean.selectedSpecQuestion)}"
 			oncomplete="tierQtyWidget.paginator.endLink.click();"
 			update="tierQtyTbl" icon="ui-icon-add"
 			rendered="#{editable}" />
 		<p:commandButton value="#{lbl['lbl.btn.delete']}"
 			process="@this, tierQtyTbl" partialSubmit="true"
 			icon="ui-icon-delete"
-			action="#{templateSpecBackingBean.deleteRowsAction(templateSpecBackingBean.managedBean.selectedSpecQuestion.tplSpecTierQties, templateSpecBean.selectedTierQtyList)}"
+			action="#{templateSpecBackingBean.deleteRowsAction(templateSpecBean.selectedSpecQuestion.tplSpecTierQties, templateSpecBean.selectedTierQtyList)}"
 			update="tierQtyTbl"
 			rendered="#{editable}" />
 	</div>
