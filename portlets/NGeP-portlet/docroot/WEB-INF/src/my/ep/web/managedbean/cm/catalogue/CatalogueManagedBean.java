@@ -173,7 +173,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	
 	private List<VCmSupplierItem> tempSupplierList;
 	private List<VCmSupplierItem> ctRequestList;
-	private boolean simpleQuoteFlag; // enable or disable simple quote in search catalogue	
+	private boolean simpleQuoteFlag = true; // enable or disable simple quote in search catalogue	
 	private boolean displayCatalogue = false;
 	private int previousScreen = 0;//0=catSearch;1=catMaintenance;2=pendingTask;
 	
@@ -328,9 +328,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				setViewSupplierItemList(resDTO.getViewSuppItemResultBean().getResultList());
 				System.out.println("*********after***********");
 				
-				// enable or disable simple quote in search catalogue
-				setSimpleQuoteFlag(Boolean.FALSE);
-				
 				return resDTO.getViewSuppItemResultBean();
 
 			} finally {
@@ -342,6 +339,9 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 
 	public void searchCatalogue(){
+		// enable or disable simple quote in search catalogue
+		setSimpleQuoteFlag(Boolean.FALSE);
+		
 		searchDataModel.reloadData();
 	}
 
