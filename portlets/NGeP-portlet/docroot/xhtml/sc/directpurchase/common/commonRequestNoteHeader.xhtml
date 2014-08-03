@@ -25,7 +25,11 @@
 					<h:outputLabel value="#{lbl['lbl.sc.request.note.header.method']}" />
 				</td>
 				<td style="width: 10%" class="header-info-text">
-				  #{requestNoteBackingBean.managedBean.sourceMethod}
+				  #{requestNoteBackingBean.managedBean.sourceMethod}  
+					<p:commandLink  partialSubmit="true" process="@this"  rendered="#{requestNoteBackingBean.managedBean.sourceMethod ne 'Search Catalogue'}">
+						<p:graphicImage library="ep/images/design" name="evaluate.png"
+							style="vertical-align:middle" />
+					</p:commandLink>
 				</td>
 
 				<td style="width: 8%"><h:outputLabel

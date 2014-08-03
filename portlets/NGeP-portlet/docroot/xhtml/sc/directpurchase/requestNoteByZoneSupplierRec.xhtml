@@ -13,7 +13,7 @@
 
 		<h:panelGrid width="100%" style="margin-top:10px" id="suppRecId">
 			<p:dataTable id="supplierRecDataTable" var="requestNoteDtl" style="white-space: normal;"
-				value="#{requestNoteBackingBean.managedBean.requestNoteDtls}"
+				value="#{requestNoteBackingBean.managedBean.supplierRecList}"
 				rows="10"
 				selection="#{requestNoteBackingBean.managedBean.selectedRequestNoteDtls}"
 				rowKey="#{requestNoteDtl}" rowIndexVar="rowIndex">
