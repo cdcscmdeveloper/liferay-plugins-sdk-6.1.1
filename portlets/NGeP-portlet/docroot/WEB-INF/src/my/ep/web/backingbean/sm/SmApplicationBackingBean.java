@@ -4203,7 +4203,7 @@ public class SmApplicationBackingBean extends
 			// reqDTO.setUserName(new FacesScopes().getUserScreenName());
 			reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
 			reqDTO.setLangCode(new FacesScopes().getUserLocale().getLanguage());
-			
+
 			if (this.getManagedBean().getSmAppl().getSupportingDocMode()
 					.equalsIgnoreCase("O")) {
 				reqDTO.setOnlineDoc(true);
@@ -4276,45 +4276,35 @@ public class SmApplicationBackingBean extends
 					reqDTO.setPaymentReqd(setPaymentMode());
 				}
 
-/*				//Update PmUser details for the list of personnel from the application
-				for (SmPersonnel personnel : getManagedBean().getSmAppl()
-						.getSmPersonnels()) {
-					if (personnel.getEpRole() != null
-							&& !personnel.getEpRole().isEmpty()) {
-						SupplierUserActivationReqDTO userActivationReqDTO = new SupplierUserActivationReqDTO();
-						userActivationReqDTO.setSmPersonnel(personnel);
-						// reqDTO.setConfirmPassword(confirmPassword);
-						System.out
-								.println("Proceed to update user.............................");
-						ISupplierUserActivationSO userActivationSO = (ISupplierUserActivationSO) BusinessDelegate
-								.getInstance().getServiceObject("sm",
-										ISupplierUserActivationSO.class);
-						SupplierUserActivationResDTO userActivationResDTO = new SupplierUserActivationResDTO();
-						if (userActivationReqDTO
-								.getSmPersonnel()
-								.getEpRole()
-								.equalsIgnoreCase(
-										RoleCode.BASIC_SUPPLIER_USER.value())
-								|| userActivationReqDTO
-										.getSmPersonnel()
-										.getEpRole()
-										.equalsIgnoreCase(
-												RoleCode.MOF_SUPPLIER_USER
-														.value())
-								|| userActivationReqDTO
-										.getSmPersonnel()
-										.getEpRole()
-										.equalsIgnoreCase(
-												RoleCode.CM_USER.value())) {
-							userActivationResDTO = userActivationSO
-									.updatePmProfileForPersonnel(userActivationReqDTO);
-							if (userActivationResDTO.isSuccessful()) {
-								System.out
-										.println("PmUser updated successfully ........");
-							}
-						}
-					}
-				}*/
+				/*
+				 * //Update PmUser details for the list of personnel from the
+				 * application for (SmPersonnel personnel :
+				 * getManagedBean().getSmAppl() .getSmPersonnels()) { if
+				 * (personnel.getEpRole() != null &&
+				 * !personnel.getEpRole().isEmpty()) {
+				 * SupplierUserActivationReqDTO userActivationReqDTO = new
+				 * SupplierUserActivationReqDTO();
+				 * userActivationReqDTO.setSmPersonnel(personnel); //
+				 * reqDTO.setConfirmPassword(confirmPassword); System.out
+				 * .println
+				 * ("Proceed to update user.............................");
+				 * ISupplierUserActivationSO userActivationSO =
+				 * (ISupplierUserActivationSO) BusinessDelegate
+				 * .getInstance().getServiceObject("sm",
+				 * ISupplierUserActivationSO.class);
+				 * SupplierUserActivationResDTO userActivationResDTO = new
+				 * SupplierUserActivationResDTO(); if (userActivationReqDTO
+				 * .getSmPersonnel() .getEpRole() .equalsIgnoreCase(
+				 * RoleCode.BASIC_SUPPLIER_USER.value()) || userActivationReqDTO
+				 * .getSmPersonnel() .getEpRole() .equalsIgnoreCase(
+				 * RoleCode.MOF_SUPPLIER_USER .value()) || userActivationReqDTO
+				 * .getSmPersonnel() .getEpRole() .equalsIgnoreCase(
+				 * RoleCode.CM_USER.value())) { userActivationResDTO =
+				 * userActivationSO
+				 * .updatePmProfileForPersonnel(userActivationReqDTO); if
+				 * (userActivationResDTO.isSuccessful()) { System.out
+				 * .println("PmUser updated successfully ........"); } } } }
+				 */
 			}
 
 			System.out.println("Before final decision ---"
@@ -4323,9 +4313,9 @@ public class SmApplicationBackingBean extends
 					.getApplType(),
 					SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC, "", true);
 			if (res.equalsIgnoreCase("Approve")) {
-//				validSiteVisit = updateSmSupplierInfo(getManagedBean()
-//						.getSmAppl().getApplType());
-//				sendPersonnelActivationEmail();
+				// validSiteVisit = updateSmSupplierInfo(getManagedBean()
+				// .getSmAppl().getApplType());
+				// sendPersonnelActivationEmail();
 			}
 			if (validSiteVisit) {
 				String msgConst = "";
@@ -4438,7 +4428,8 @@ public class SmApplicationBackingBean extends
 			isError = valid;
 		}
 
-		finally {}
+		finally {
+		}
 		return isError;
 	}
 
@@ -4788,9 +4779,9 @@ public class SmApplicationBackingBean extends
 								.getSmApplSupportDocs()
 								.indexOf(getManagedBean().getSupportDoc()),
 								getManagedBean().getSupportDoc());
-				String filePath = "/"
-						+ Calendar.getInstance().get(Calendar.YEAR) + "/SM/"
-						+ getManagedBean().getSmAppl().getApplNo() + "/SD/";
+				String filePath = Calendar.getInstance().get(Calendar.YEAR)
+						+ "/SM/" + getManagedBean().getSmAppl().getApplNo()
+						+ "/SD/";
 				for (SmApplSupportDoc docs : getManagedBean().getSmAppl()
 						.getSmApplSupportDocs()) {
 					System.out.println(" *** The name is ****"
