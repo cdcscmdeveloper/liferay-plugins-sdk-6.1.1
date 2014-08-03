@@ -4202,7 +4202,8 @@ public class SmApplicationBackingBean extends
 					.getSupplierType().toUpperCase());
 			// reqDTO.setUserName(new FacesScopes().getUserScreenName());
 			reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
-
+			reqDTO.setLangCode(new FacesScopes().getUserLocale().getLanguage());
+			
 			if (this.getManagedBean().getSmAppl().getSupportingDocMode()
 					.equalsIgnoreCase("O")) {
 				reqDTO.setOnlineDoc(true);
@@ -4275,8 +4276,7 @@ public class SmApplicationBackingBean extends
 					reqDTO.setPaymentReqd(setPaymentMode());
 				}
 
-				// Update PmUser details for the list of personnel from the
-				// application
+/*				//Update PmUser details for the list of personnel from the application
 				for (SmPersonnel personnel : getManagedBean().getSmAppl()
 						.getSmPersonnels()) {
 					if (personnel.getEpRole() != null
@@ -4314,18 +4314,18 @@ public class SmApplicationBackingBean extends
 							}
 						}
 					}
-				}
+				}*/
 			}
 
 			System.out.println("Before final decision ---"
 					+ getManagedBean().getSmAppl().getPmStatus().getStatusId());
-			validSiteVisit = testUpdateSmAppl(getManagedBean().getSmAppl()
+			validSiteVisit = testSmAppl(getManagedBean().getSmAppl()
 					.getApplType(),
 					SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC, "", true);
 			if (res.equalsIgnoreCase("Approve")) {
-				validSiteVisit = updateSmSupplierInfo(getManagedBean()
-						.getSmAppl().getApplType());
-				sendPersonnelActivationEmail();
+//				validSiteVisit = updateSmSupplierInfo(getManagedBean()
+//						.getSmAppl().getApplType());
+//				sendPersonnelActivationEmail();
 			}
 			if (validSiteVisit) {
 				String msgConst = "";
@@ -4350,6 +4350,7 @@ public class SmApplicationBackingBean extends
 					} else if (res.equalsIgnoreCase("SITE_VISIT_AFTER_APPROVE")) {
 						msgConst = MessageConst.INFO_700017;
 					}
+					reqDTO.setSmAppl(this.getManagedBean().getSmAppl());
 					ReviewApplicationResDTO resDTO = reqSO
 							.submitPOorApproverReviewToBPM(reqDTO);
 					FacesContext
@@ -4394,11 +4395,51 @@ public class SmApplicationBackingBean extends
 		} catch (Exception e) {
 			e.printStackTrace();
 			retMsg = null;
+			retriveLatestApplAfterUpdate("");
 			throw new EpException(MessageConst.ERROR_722519);
 		} finally {
 			reqSO = null;
 		}
 		return retMsg;
+	}
+
+	public boolean testSmAppl(String applType, String currentPageType,
+			String outputPageType, Boolean isBpmSubmit) {
+		boolean valid = false;
+		boolean isError = false;
+		getManagedBean().setTabActiveIndex(outputTab);
+		try {
+
+			if (getManagedBean().isPoUser()
+					|| getManagedBean().isApproverUser()) {
+				setPoOrApprvrSectionReview();
+			}
+
+			valid = validateBeforeSave(applType, currentPageType);
+			// valid = true;
+			if (getManagedBean().getSmAppl().getCurrentActiveTab() < outputTab) {
+				getManagedBean().getSmAppl().setCurrentActiveTab(outputTab);
+			} else {
+				System.out.println(" ****** REMAIN PREV VALUE ********");
+			}
+			if (valid) {
+				// Save or update to DB
+				if (outputPageType
+						.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)) {
+					calculateCapital();
+				}
+				getManagedBean().setCurrentPageType(outputPageType);
+
+			} else {
+				getManagedBean().setTabActiveIndex(currentTab);
+				getManagedBean().getSmAppl().setCurrentActiveTab(currentTab);
+				getManagedBean().setCurrentPageType(currentPageType);
+			}
+			isError = valid;
+		}
+
+		finally {}
+		return isError;
 	}
 
 	private void sendPersonnelActivationEmail() {
