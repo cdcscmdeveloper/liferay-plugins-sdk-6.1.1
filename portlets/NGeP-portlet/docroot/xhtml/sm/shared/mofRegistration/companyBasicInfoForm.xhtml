@@ -57,9 +57,14 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.regtype']}" /></td>
-					<td><p:inputText disabled="true" readonly="true"
-							value="#{backingBean.managedBean.smSupplier.businessType}"
-							size="35" /> <!-- rendered="#{backingBean.managedBean.smSupplier.businessType == 1}" />
+					<td>
+					
+					<p:selectOneMenu value="#{backingBean.managedBean.smSupplier.businessType}" disabled="true">
+							<f:selectItems value="#{backingBean.managedBean.businessTypeLs}" var="busType" 
+							itemValue="#{busType.pmParameter.parameterId}" itemLabel="#{busType.codeName}" />
+					</p:selectOneMenu>
+						
+					<!-- rendered="#{backingBean.managedBean.smSupplier.businessType == 1}" />
 					<p:inputText disabled="true" readonly="true" value="ROC - BERHAD"
 						rendered="#{backingBean.managedBean.smSupplier.businessType == 2}" />
 					<p:inputText disabled="true" readonly="true"

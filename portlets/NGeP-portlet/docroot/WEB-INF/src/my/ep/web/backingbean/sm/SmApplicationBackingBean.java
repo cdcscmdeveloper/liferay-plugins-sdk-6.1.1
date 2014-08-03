@@ -106,6 +106,7 @@ import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmEduField;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
@@ -324,6 +325,7 @@ public class SmApplicationBackingBean extends
 
 			getManagedBean().setSmSupplier(smApplSupplier);
 
+			retrieveBusinessTypeList();
 			assignSupplierBusinessType(getManagedBean().getSmSupplier());
 
 			if (getManagedBean().isApproverUser()
@@ -772,6 +774,8 @@ public class SmApplicationBackingBean extends
 						.getSmPersonnels());
 			}
 
+			// TODO remove the below line if not reqd
+			retrieveBusinessTypeList();
 			// TODO remove the below line if not reqd
 			assignSupplierBusinessType(getManagedBean().getSmAppl()
 					.getSmSupplier());
@@ -7298,4 +7302,13 @@ public class SmApplicationBackingBean extends
 		return validSupportDocs;
 
 	}
+	
+	public void retrieveBusinessTypeList(){
+		List<PmParameterDesc> pmDesc = new ArrayList<PmParameterDesc>();
+		pmDesc = SmCommonUtil.retrieveParameterDescList(SupplierManagementConst.SUPPLIER_BUSINESS_TYPE, new FacesScopes().getUserLocale().getLanguage());
+		
+		System.out.println("**retrieveBusinessTypeList***" + pmDesc.size());
+		this.getManagedBean().setBusinessTypeLs(pmDesc);
+	}
+
 }

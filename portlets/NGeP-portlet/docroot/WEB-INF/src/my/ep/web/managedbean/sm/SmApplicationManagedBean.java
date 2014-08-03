@@ -18,6 +18,7 @@ import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmEduField;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
@@ -259,6 +260,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean removeEpRole;
 	private List<SmApplSupportDoc> missinDocs;
 	private boolean reviewSiteVisit;
+	private List<PmParameterDesc> businessTypeLs;
 
 	public SmApplicationManagedBean() {
 		// TODO Checking the user role
@@ -1956,6 +1958,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setReviewSiteVisit(boolean reviewSiteVisit) {
 		this.reviewSiteVisit = reviewSiteVisit;
+	}
+
+	public List<PmParameterDesc> getBusinessTypeLs() {
+		return businessTypeLs;
+	}
+
+	public void setBusinessTypeLs(List<PmParameterDesc> businessTypeLs) {
+		this.businessTypeLs = businessTypeLs;
 	}
 
 }
