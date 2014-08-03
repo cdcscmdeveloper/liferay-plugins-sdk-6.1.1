@@ -367,8 +367,10 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			FacesContext fc = FacesContext.getCurrentInstance();
 
 			if(zoneFlag){
+				// page nav. to requte note by zone 
 				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "requestNoteByZone");
 			} else {
+				// page nav. to common request note
 				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "commonRequestNote");
 			}
 		}
@@ -1444,7 +1446,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 						}
 					}
 				} else{
-					requestNoteDtl.getPriceType().setParameterId(null);
+					//requestNoteDtl.getPriceType().setParameterId(null);
 				}
 				
 				// selected rec.supplier
