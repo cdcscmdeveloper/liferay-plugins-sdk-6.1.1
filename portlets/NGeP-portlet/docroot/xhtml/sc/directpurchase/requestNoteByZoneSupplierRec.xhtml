@@ -1,0 +1,134 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	<p:panel id="supplierRecId" toggleable="true" toggleSpeed="500">
+		<f:facet name="header">
+			<h:outputText value="* " styleClass="mandatory" />
+			<h:outputText value="Supplier Recommendation" />
+		</f:facet>
+
+		<h:panelGrid width="100%" style="margin-top:10px" id="suppRecId">
+			<p:dataTable id="supplierRecDataTable" var="requestNoteDtl" style="white-space: normal;"
+				value="#{requestNoteBackingBean.managedBean.requestNoteDtls}"
+				rows="10"
+				selection="#{requestNoteBackingBean.managedBean.selectedRequestNoteDtls}"
+				rowKey="#{requestNoteDtl}" rowIndexVar="rowIndex">
+				
+				<ui:include src="/xhtml/cc/rowSelectionEvent.xhtml" />
+				
+				<p:column selectionMode="multiple" style="width:2%" /> 
+
+		        <p:column headerText="Zone" style="width:10%;white-space: normal;">
+					<h:outputText value="zone" disabled="true" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.request.note.item.name']}" style="width:25%;white-space: normal;">
+					<h:outputText value="#{requestNoteDtl.requestItem.itemName}"
+						disabled="true" />
+					<p:spacer width="2px;"/>
+					<p:commandLink partialSubmit="true" 
+						actionListener="#{requestNoteBackingBean.showPurchaseInDefault(requestNoteDtl)}"
+						rendered="#{!empty requestNoteDtl.scRequestSupplierItem.requestNoteItem.purchaseInDefault}">
+						<p:graphicImage value="/resources/ep/images/design/document.png" height="15px" width="15px" />
+					</p:commandLink>
+				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.sc.request.note.summary']}" style="width:10%;">
+				    <p:commandLink partialSubmit="true"  process="@this" >
+				       <p:graphicImage value="/resources/ep/images/design/document.png"  height="15px" width="15px"/>
+				  </p:commandLink> 
+				</p:column>
+
+				<p:column style="width:10%;">
+					<f:facet name="header">
+						<h:outputText value="* " styleClass="mandatory" />
+						<h:outputText value="#{lbl['lbl.sc.request.note.rec.suppier']}" />
+					</f:facet>
+				
+				   <p:selectOneMenu value="#{requestNoteDtl.scRequestSupplierItem.supplierItemId}" 
+				        id="recSupplier" label="#{lbl['lbl.sc.request.note.rec.suppier']}"
+				        style="width:120px;" required="#{!requestNoteDtl.selected}">  
+					   <f:selectItem itemLabel="-Select One-" itemValue="#{null}" />
+					   <f:selectItems
+							value="#{requestNoteDtl.requestItem.supplierItems}" 
+							var="supplierItem" itemLabel="#{supplierItem.smSupplier.companyName}"
+							itemValue="#{supplierItem.smSupplier.supplierId}"></f:selectItems>
+							
+							<p:ajax event="change" update="offerPriceId ,supplierViewId" partialSubmit="true"
+									process="@this"
+									listener="#{requestNoteBackingBean.supplierLister(requestNoteDtl.scRequestSupplierItem.supplierItemId, requestNoteDtl.priceType.parameterId, requestNoteDtl,requestNoteDtl.requestItem.supplierItems , requestNoteDtl.assignedUser.userId ,requestNoteDtl.deliverTermType.parameterId)}" />
+					</p:selectOneMenu>
+					<p:spacer width="2px"></p:spacer>
+					<p:commandLink oncomplete="suppDetailsPopup.show();return false;" partialSubmit="true" process="@this" id="supplierViewId"
+						update="@([id$=suppDetailsPopup])">
+						<p:graphicImage library="ep/images/design" name="evaluate.png"
+							style="vertical-align:middle" />
+							<f:setPropertyActionListener value="#{requestNoteDtl.scRequestSupplierItem.smSupplier}" 
+						target="#{supplierDetailBackingBean.managedBean.smSupplier}" />
+					</p:commandLink>
+
+
+					<p:message id="recSupplierMsg" for="recSupplier" display="icon" />
+				</p:column>
+			
+			    <p:column headerText="#{lbl['lbl.sc.request.note.price.offered']}"  style="width:10%;text-align:right">
+			    <h:panelGroup id="offerPriceId">
+						<h:panelGroup
+							rendered="#{requestNoteDtl.scRequestSupplierItem.supplierItemPrice.priceType.parameterCode eq ParameterConst.priceTypeStandard or
+						          requestNoteDtl.scRequestSupplierItem.supplierItemPrice.priceType.parameterCode eq ParameterConst.priceTypePromotion}">
+							<h:outputText
+								value="#{requestNoteDtl.scRequestSupplierItem.supplierItemPrice.itemPrice}"
+								disabled="true">
+								<f:convertNumber
+									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+							</h:outputText>
+						</h:panelGroup>
+
+						<h:panelGroup
+							rendered="#{requestNoteBackingBean.checkPriceOffered(requestNoteDtl.scRequestSupplierItem.supplierItemPrice.priceType.parameterCode)}">
+							<p:commandLink partialSubmit="true" update=":form:pricingPopup"
+								process="@this"
+								actionListener="#{requestNoteBackingBean.showReqNotePopUps(requestNoteDtl)}"
+								oncomplete="pricingPopup.show();">
+								<p:graphicImage value="/resources/ep/images/design/document.png"
+									height="15px" width="15px" />
+							</p:commandLink>
+						</h:panelGroup>
+					</h:panelGroup>
+				</p:column>
+			 
+			</p:dataTable>
+		</h:panelGrid>
+		
+		<p:panelGrid styleClass="noBorders tr,noBorders td"  id="supplierId" >
+			<p:row>
+				<p:column>
+					<h:outputText value="Supplier"></h:outputText>
+					<p:spacer width="6px;"></p:spacer>
+					<p:selectOneMenu
+						value="#{requestNoteBackingBean.managedBean.assignedToUserId}"
+						disabled="false">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+							itemValue="#{null}" />
+						<f:selectItems
+							value="#{requestNoteBackingBean.managedBean.userList}" var="user"
+							itemLabel="#{user.userName}" itemValue="#{user.userId}"></f:selectItems>
+					</p:selectOneMenu>
+
+					<p:spacer width="5px;" />
+					<p:commandButton value="#{lbl['lbl.sc.action.apply.btn']}"
+						partialSubmit="true" icon="ui-icon-submit"
+						process="@this supplierRecId"
+						action="#{requestNoteBackingBean.applyForRequestNote}"
+						update="@([id$=supplierRecDataTable])" />
+				</p:column>
+
+
+			</p:row>
+		</p:panelGrid>
+	</p:panel>
+</ui:composition>
