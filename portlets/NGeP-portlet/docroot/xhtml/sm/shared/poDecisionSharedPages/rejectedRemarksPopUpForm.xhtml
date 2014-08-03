@@ -7,25 +7,34 @@
 
 
 	<br />
+	<p:messages id="applicationRejectedRemarksMsg" showSummary="false"
+		showDetail="true" autoUpdate="true" closable="true" />
 	<table style="width: 100%">
 		<tr>
 			<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
 				<td><p:outputLabel value="Rejection Reason(s)" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 
-				<td><p:selectManyMenu showCheckbox="true"
+				<td><p:selectManyMenu showCheckbox="true" id="applRejectSelBox"
+						required="#{backingBean.managedBean.valueReqd}"
+						label="Rejection Reason(s)"
 						value="#{backingBean.managedBean.reasonId}"
 						style="height:200px;width:400px;">
 						<f:selectItems value="#{backingBean.managedBean.reasonDescList}"
 							var="res" itemLabel="#{res.reasonDesc}"
 							itemValue="#{res.pmReason.reasonId}" />
-					</p:selectManyMenu></td>
+					</p:selectManyMenu> <p:message id="applRejectSelBoxMsg" for="applRejectSelBox"
+						showSummary="true" showDetail="false" display="icon" /></td>
 			</c:if>
 		</tr>
 		<tr>
-			<td><p:outputLabel value="Remarks For Rejection" />
-				<p:outputLabel value="*" styleClass="mandatory" /></td>
-			<td style="padding-top: 5px;"><p:inputTextarea cols="90" /></td>
+			<td><p:outputLabel value="Remarks For Rejection" /> <p:outputLabel
+					value="*" styleClass="mandatory" /></td>
+			<td style="padding-top: 5px;"><p:inputTextarea cols="90"
+					id="rmrksForRejectTxtArea" label="Remarks For Rejection"
+					required="#{backingBean.managedBean.valueReqd}" /> <p:message
+					id="rmrksForRejectTxtAreaMsg" for="rmrksForRejectTxtArea"
+					showSummary="true" showDetail="false" display="icon" /></td>
 		</tr>
 	</table>
 

@@ -21,7 +21,8 @@
 		</p:outputPanel>
 		<ac:smPanel id="tt">
 			<p:messages id="messages" showDetail="true" showSummary="false"
-				autoUpdate="true" closable="true" />
+				autoUpdate="#{backingBean.managedBean.showParentMsg}"
+				closable="true" />
 
 			<c:if test="#{backingBean.managedBean.tabActiveIndex eq 0}">
 				<ui:include src="step1BumiAppln_CompanyInfo.xhtml" />

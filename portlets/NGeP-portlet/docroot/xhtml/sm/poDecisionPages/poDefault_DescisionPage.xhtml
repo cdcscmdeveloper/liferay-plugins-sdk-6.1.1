@@ -31,15 +31,17 @@
 					value="#{backingBean.managedBean.smAppl.applCategoryType}" />
 				<div style="width: 100%" align="right">
 
-					<p:commandButton value="Approve" onclick="approveDialog.show();" />
-					<p:commandButton value="Reject" onclick="rejectDialog.show();" />
+					<p:commandButton value="Approve" update=":form:tt:approveDialog"
+						action="#{backingBean.assignFinalApproveOrReject('approveDialog')}" />
+					<p:commandButton value="Reject" update=":form:tt:rejectDialog"
+						action="#{backingBean.assignFinalApproveOrReject('rejectDialog')}" />
 					<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
 						<p:commandButton value="Recommend To Approve"
-							onclick="submitApprvrDialog.show();" />
+							action="#{backingBean.submitPOEscalationToApprover('APPROVE')}" />
 					</c:if>
 					<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
 						<p:commandButton value="Recommend To Reject"
-							onclick="submitApprvrDialog.show();" />
+							action="#{backingBean.submitPOEscalationToApprover('REJECT')}" />
 					</c:if>
 					<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
 						<p:commandButton value="Recommend Site Visit"
@@ -142,6 +144,7 @@
 			src="/xhtml/sm/shared/mofSdoSharedPages/sdoSendEnquiry.xhtml" />
 		<div align="right">
 			<p:commandButton value="Submit Inquiry"
+				disabled="#{backingBean.managedBean.missinDocs.size() == 0}"
 				oncomplete="sendInqDialog.hide();"
 				action="#{backingBean.submitPOorApproverReviewToBPM('INQUIRY')}" />
 			<p:commandButton value="Cancel" onclick="sendInqDialog.hide();" />
@@ -155,9 +158,9 @@
 			src="/xhtml/sm/shared/poDecisionSharedPages/assignToSvcForm.xhtml" />
 
 	</p:dialog>
-	<p:dialog width="650px" header="Submit To Approver"
-		widgetVar="submitApprvrDialog" resizable="false" showEffect="fade"
-		hideEffect="fade" modal="true">
+	<p:dialog width="650px" header="Submit To Approver" closable="false"
+		id="submitApprvrDialog" widgetVar="submitApprvrDialog"
+		resizable="false" showEffect="fade" hideEffect="fade" modal="true">
 
 		<ui:include
 			src="/xhtml/sm/shared/poDecisionSharedPages/submitToApproverForm.xhtml" />
@@ -165,31 +168,38 @@
 			<p:commandButton value="Submit"
 				oncomplete="submitApprvrDialog.hide();"
 				action="#{backingBean.submitPOorApproverReviewToBPM('ESCALATE')}" />
-			<p:commandButton value="Cancel" onclick="submitApprvrDialog.hide();" />
+			<p:commandButton value="Cancel"
+				action="#{backingBean.cancelPOEscalationToApprover}" />
 		</div>
 	</p:dialog>
-	<p:dialog width="650px" header="Approve Application"
-		widgetVar="approveDialog" resizable="false" showEffect="fade"
-		hideEffect="fade" modal="true">
+	<p:dialog width="750px" header="Approve Application" closable="false"
+		id="approveDialog" widgetVar="approveDialog" resizable="false"
+		showEffect="fade" hideEffect="fade" modal="true">
 
 		<ui:include
 			src="/xhtml/sm/shared/poDecisionSharedPages/approvedRemarksPopUpForm.xhtml" />
 		<div align="right">
-			<p:commandButton value="Submit" oncomplete="approveDialog.hide();"
-				action="#{backingBean.submitPOorApproverReviewToBPM('APPROVE')}" />
-			<p:commandButton value="Cancel" onclick="approveDialog.hide();" />
+			<p:commandButton value="Submit" update="@([id$=Msg])"
+				action="#{backingBean.finalDecisionApproveOrRejectAppln('approveDialog','APPROVE')}"
+				partialSubmit="true" process="approveDialog" />
+			<p:commandButton value="Cancel"
+				action="#{backingBean.cancelFinalApproveOrReject('approveDialog')}"
+				partialSubmit="true" process="@this" />
 		</div>
 	</p:dialog>
-	<p:dialog width="850px" header="Reject Application"
-		widgetVar="rejectDialog" resizable="false" showEffect="fade"
-		hideEffect="fade" modal="true">
+	<p:dialog width="850px" header="Reject Application" closable="false"
+		id="rejectDialog" widgetVar="rejectDialog" resizable="false"
+		showEffect="fade" hideEffect="fade" modal="true">
 
 		<ui:include
 			src="/xhtml/sm/shared/poDecisionSharedPages/rejectedRemarksPopUpForm.xhtml" />
 		<div align="right">
-			<p:commandButton value="Submit" oncomplete="rejectDialog.hide();"
-				action="#{backingBean.submitPOorApproverReviewToBPM('REJECT')}" />
-			<p:commandButton value="Cancel" onclick="rejectDialog.hide();" />
+			<p:commandButton value="Submit" partialSubmit="true"
+				process="rejectDialog" update="@([id$=Msg])"
+				action="#{backingBean.finalDecisionApproveOrRejectAppln('rejectDialog','REJECT')}" />
+			<p:commandButton value="Cancel"
+				action="#{backingBean.cancelFinalApproveOrReject('rejectDialog')}"
+				partialSubmit="true" process="@this" />
 		</div>
 	</p:dialog>
 </ui:composition>

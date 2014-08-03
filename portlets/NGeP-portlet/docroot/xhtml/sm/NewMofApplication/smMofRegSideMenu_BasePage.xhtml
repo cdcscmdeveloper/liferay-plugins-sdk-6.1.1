@@ -20,8 +20,9 @@
 				src="/xhtml/sm/shared/mofRegistration/applicationReviewHeaderPage.xhtml" />
 		</p:outputPanel>
 		<ac:smPanel id="tt">
-			<p:messages id="messages" showDetail="true" autoUpdate="true"
-			closable="true" showSummary="false"/>
+			<p:messages id="messages" showDetail="true"
+				autoUpdate="#{backingBean.managedBean.showParentMsg}"
+				closable="true" showSummary="false" />
 
 			<c:if test="#{backingBean.managedBean.tabActiveIndex eq 0}">
 				<ui:include src="step1CompanyInfo.xhtml" />
@@ -151,14 +152,13 @@
 					</c:choose>
 				</c:otherwise>
 			</c:choose>
-			
+
 			<p:dialog id="attachDlg1" widgetVar="attachDlg1" modal="true"
 				dynamic="true" resizable="false" width="700px" height="200"
 				styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
 				<p:fileUpload
 					fileUploadListener="#{backingBean.handleSupDocFileAttachment}"
-					update=":form:tt:onSdList"
-					oncomplete="attachDlg1.hide();" />
+					update=":form:tt:onSdList" oncomplete="attachDlg1.hide();" />
 			</p:dialog>
 		</ac:smPanel>
 

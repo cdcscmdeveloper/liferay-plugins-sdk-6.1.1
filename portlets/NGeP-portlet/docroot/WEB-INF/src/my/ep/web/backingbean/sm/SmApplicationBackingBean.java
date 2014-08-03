@@ -3803,7 +3803,7 @@ public class SmApplicationBackingBean extends
 						getManagedBean().getSmAppl().getApplId()));
 			}
 
-			//Set list of users to send to BPM
+			// Set list of users to send to BPM
 			if (getManagedBean().getSmAppl().getApplType()
 					.equalsIgnoreCase("N")
 					|| getManagedBean().getSmAppl().getApplType()
@@ -3813,7 +3813,7 @@ public class SmApplicationBackingBean extends
 					|| getManagedBean().getSmAppl().getApplType()
 							.equalsIgnoreCase("U")
 					|| getManagedBean().getSmAppl().getApplType()
-							.equalsIgnoreCase("R")){
+							.equalsIgnoreCase("R")) {
 				reqDTO.setUserList(new ArrayList<String>());
 				for (SmPersonnel personnel : getManagedBean().getSmAppl()
 						.getSmPersonnels()) {
@@ -3835,11 +3835,12 @@ public class SmApplicationBackingBean extends
 													.value()))) {
 						if (personnel.getPmUser() != null
 								&& personnel.getPmUser().getUserId() != null) {
-							reqDTO.getUserList().add(personnel.getPmUser().getLoginId());
+							reqDTO.getUserList().add(
+									personnel.getPmUser().getLoginId());
 						}
 					}
 				}
-				if(reqDTO.getUserList().size() == 0){
+				if (reqDTO.getUserList().size() == 0) {
 					throw new EpException(MessageConst.ERROR_722546);
 				}
 			}
@@ -4119,6 +4120,7 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void assignMissingDocsList() {
+		System.out.println("*** Send Inquiry **** ");
 		getManagedBean().setMissinDocs(new ArrayList<SmApplSupportDoc>());
 		for (SmApplSupportDoc doc : getManagedBean().getSmAppl()
 				.getSmApplSupportDocs()) {
@@ -4126,6 +4128,9 @@ public class SmApplicationBackingBean extends
 				getManagedBean().getMissinDocs().add(doc);
 			}
 		}
+		System.out.println("**** Send Inquiry List Size ***** "
+				+ getManagedBean().getMissinDocs().size());
+		RequestContext.getCurrentInstance().execute("sendInqDialog.show()");
 	}
 
 	// public String submitPOSendInquiryToBPM(String res) {
@@ -4134,6 +4139,37 @@ public class SmApplicationBackingBean extends
 	// return output;
 	//
 	// }
+	public void submitPOEscalationToApprover(String recommendation) {
+		getManagedBean().getPoSecReview().setRecommendation(recommendation);
+		RequestContext.getCurrentInstance()
+				.execute("submitApprvrDialog.show()");
+	}
+
+	public void cancelPOEscalationToApprover() {
+		getManagedBean().getPoSecReview().setRecommendation("");
+		RequestContext.getCurrentInstance()
+				.execute("submitApprvrDialog.hide()");
+	}
+
+	public void assignFinalApproveOrReject(String dialog) {
+		assignValReqdToTrue();
+		RequestContext.getCurrentInstance().execute(dialog + ".show()");
+	}
+
+	public void cancelFinalApproveOrReject(String dialog) {
+		assignValReqdToFalse();
+		RequestContext.getCurrentInstance().reset(":form:tt:" + dialog);
+		RequestContext.getCurrentInstance().execute(dialog + ".hide()");
+	}
+
+	public String finalDecisionApproveOrRejectAppln(String dialog,
+			String decision) {
+		System.out.println("*** Submit Approve *** " + decision);
+		assignValReqdToFalse();
+		RequestContext.getCurrentInstance().execute(dialog + ".hide()");
+		return submitPOorApproverReviewToBPM(decision);
+
+	}
 
 	public String submitPOorApproverReviewToBPM(String res) {
 		IReviewApplicationSO reqSO = null;
@@ -4239,7 +4275,8 @@ public class SmApplicationBackingBean extends
 					reqDTO.setPaymentReqd(setPaymentMode());
 				}
 
-				//Update PmUser details for the list of personnel from the application
+				// Update PmUser details for the list of personnel from the
+				// application
 				for (SmPersonnel personnel : getManagedBean().getSmAppl()
 						.getSmPersonnels()) {
 					if (personnel.getEpRole() != null
