@@ -77,16 +77,16 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 			MofRegistrationResDTO resDto = new MofRegistrationResDTO();
 			
 			reqDto.setSupplierId(getSmSupplier().getSupplierId());
-			System.out.println("*********Supplier ID>" + reqDto.getSupplierId());
+			log.info("*********Supplier ID>" + reqDto.getSupplierId());
 			resDto = mofRegistrationSO.retrieveSupplierProfile(reqDto);
 			this.getManagedBean().setSmSupplier(resDto.getSmSupplier());
 			Date now = new Date();
 			this.getManagedBean().setMofAccountLs(new ArrayList<SmMofAccount>());
 			for(SmMofAccount mofAcc : this.getManagedBean().getSmSupplier().getSmMofAccounts()){
-				System.out.println("EFF>>>>>>>" + mofAcc.getEffDate());
-				System.out.println("EXF>>>>>>>" + mofAcc.getExpDate());
+				log.info("EFF>>>>>>>" + mofAcc.getEffDate());
+				log.info("EXF>>>>>>>" + mofAcc.getExpDate());
 				if(mofAcc.getEffDate().before(now) && mofAcc.getExpDate().after(now)){
-					System.out.println("viewVirtualCert within the range>>>>");
+					log.info("viewVirtualCert within the range>>>>");
 					this.getManagedBean().getMofAccountLs().add(mofAcc);
 				}
 			}
@@ -94,7 +94,7 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 //			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, xhtml);
 			quesBackingBean.validateQuestionnaire(supp.getSmAppl().getApplId(), xhtml);
 		} catch(Exception ex){
-			System.out.println("viewVirtualCert ex:" + ex.getMessage());
+			log.error("viewVirtualCert ex:" + ex.getMessage());
 		}
 		
 	}
@@ -102,11 +102,11 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 	public void generatePdf() throws Exception {
 		Long applId = getSmSupplier().getSmAppl().getApplId();
 		
-		System.out.println("******generatePdf>>>" + applId);
+		log.info("******generatePdf>>>" + applId);
 		IMofRegistrationSO mofRegistrationSO = null;
 //		SmAppl smAppl = null;
 		tmpPath = System.getProperty("java.io.tmpdir");
-		System.out.print("************tmp>>>" + tmpPath);
+		log.info("************tmp>>>" + tmpPath);
 		SmSupplier smSupplier = null;
 		try {
 			mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
@@ -119,7 +119,7 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 //			System.out.println("*********Supplier ID>" + reqDto.getSupplierId());
 			reqDto.setApplId(applId);
 			resDto = mofRegistrationSO.retrieveSupplierProfileByApplId(reqDto);
-			System.out.println("*********Supplier ID>" + resDto.getSmAppl().getApplId());
+			log.info("*********Supplier ID>" + resDto.getSmAppl().getApplId());
 			smSupplier = resDto.getSmAppl().getSmSupplier();
 		} finally {
 			mofRegistrationSO = null;
@@ -136,7 +136,7 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 		// generate pdf from html string
 		tmpCover = tmpPath + "cover_" + suppId + "_" + timeStamp + ".pdf";
 		tmpContent = tmpPath + "content_" + suppId + "_" + timeStamp + ".pdf";
-		System.out.println("-------tmpCover-------" + tmpCover);
+		log.info("-------tmpCover-------" + tmpCover);
 		OutputStream os1 = new FileOutputStream(tmpCover);
         OutputStream os2 = new FileOutputStream(tmpContent);
         generatePdf(os1, coverHtml);
@@ -189,7 +189,7 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 	
 	private SmSupplier getSmSupplier() {
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
-		System.out.println("******getSmSupplier******" + pmUser.getUserId());
+		log.info("******getSmSupplier******" + pmUser.getUserId());
 		SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
 		supplierSearchReqDTO.setUserId(pmUser.getUserId());
 
@@ -263,7 +263,7 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
     	log.info("template: " + template);
     	
     	VelocityContext context = new VelocityContext();
-    	System.out.println("*********Supplier Appl**********" + supplier.getSmAppl());
+    	log.info("*********Supplier Appl**********" + supplier.getSmAppl());
     	String supplierType = supplier.getSmAppl().getSupplierType();
     	
     	Date now = new Date();
@@ -271,18 +271,18 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
     	SmMofCert mofCert = null;
     	SmMofAccount smMofAccount = null;
     	for(SmMofAccount mofAccount : supplier.getSmMofAccounts()) {
-    		System.out.println("*********mofAccount**********" + mofAccount.getSmMofCerts().size());
+    		log.info("*********mofAccount**********" + mofAccount.getSmMofCerts().size());
     		if(mofAccount.getEffDate().before(now) && mofAccount.getExpDate().after(now)) {
     			if(mofAccount.getSupplierType().equals(supplierType)) {
     				smMofAccount = mofAccount; //added for to make it temporary runaable
     				mofCert = mofAccount.getSmMofCerts().get(0);
     				
     				for(SmMofCert cert : mofAccount.getSmMofCerts()) {
-    					System.out.println("****CERT ID****" + cert.getMofCertId());
-    					System.out.println("****MOF CERT ID****" + mofCert.getMofCertId());
+    					log.info("****CERT ID****" + cert.getMofCertId());
+    					log.info("****MOF CERT ID****" + mofCert.getMofCertId());
     					if(cert.isRecordStatus() && cert.getEffDate().before(now) && cert.getExpDate().after(now)) {
     						if(cert.getMofCertId() > mofCert.getMofCertId()) {
-    							System.out.println("****MOF Gretter****" + mofAccount);
+    							log.info("****MOF Gretter****" + mofAccount);
     							mofCert = cert;
     							smMofAccount = mofAccount;
     						}
@@ -291,22 +291,22 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
     			}
     		}
     		
-    		System.out.println(">>>>>MOF Account No>>>" + mofAccount.getMofAccountId());
+    		log.info(">>>>>MOF Account No>>>" + mofAccount.getMofAccountId());
     	}
     	
     	SimpleDateFormat ft = new SimpleDateFormat ("dd/MM/yyyy");
-    	System.out.println(">>>>>mofCertSerialNo>>>" + mofCert.getCertSerialNo());
-    	System.out.println(">>>>>mofAccountNo>>>" +  smMofAccount.getMofNo());
+    	log.info(">>>>>mofCertSerialNo>>>" + mofCert.getCertSerialNo());
+    	log.info(">>>>>mofAccountNo>>>" +  smMofAccount.getMofNo());
     	String mofCertSerialNo = mofCert.getCertSerialNo();
     	String mofAccountNo = smMofAccount.getMofNo();
     	String effDate = ft.format(smMofAccount.getEffDate());
     	String expDate = ft.format(smMofAccount.getExpDate());
-    	System.out.println("*****after expiry date****");
+    	log.info("*****after expiry date****");
     	this.getManagedBean().setMofCertSerialNo(mofCertSerialNo);
     	this.getManagedBean().setMofAccountNo(mofAccountNo);
     	this.getManagedBean().setEffDate(effDate);
     	this.getManagedBean().setExpDate(expDate);
-    	System.out.println("*****Before COmpany Basic****");
+    	log.info("*****Before COmpany Basic****");
     	String companyName = supplier.getSmAppl().getSmCompanyBasic().getCompanyName();
     	String bizRegNo = supplier.getRegNo();
     	
@@ -486,7 +486,7 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 	 */
 	public void downloadFile(String filePath) throws IOException{
 		File file = new File(filePath);
-		System.out.println("download file>>>>");
+		log.info("download file>>>>");
 		try{
 			PortletResponse  portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();  
 			HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
@@ -496,13 +496,13 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 			res.flushBuffer();
 			OutputStream out = res.getOutputStream();   
 			if(file.getPath()!=null) {
-				System.out.println("file path not null>>>>");
+				log.info("file path not null>>>>");
 				InputStream input = null;
 				try {
 					URLConnection uc = new URL(file.getPath()).openConnection();
 					input = new BufferedInputStream(uc.getInputStream()); 
 				} catch (Exception e) {
-					System.out.println("It's Local file>>>>");
+					log.info("It's Local file>>>>");
 					// Cannot open connection, maybe local file
 					input = new FileInputStream(file.getPath());
 				}
@@ -519,7 +519,7 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 			out.close(); 
 			FacesContext.getCurrentInstance().responseComplete();
 		}catch(Exception ex){
-			System.out.println("download exception>>>>" + ex.getMessage());
+			log.error("download exception>>>>" + ex.getMessage());
 		}
 	}
 	
