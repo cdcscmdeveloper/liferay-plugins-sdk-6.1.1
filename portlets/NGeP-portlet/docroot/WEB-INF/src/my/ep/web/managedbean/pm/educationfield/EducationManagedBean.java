@@ -1,8 +1,11 @@
 package my.ep.web.managedbean.pm.educationfield;
 
+import java.util.List;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmEduField;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -24,6 +27,10 @@ public class EducationManagedBean extends BaseManagedBean {
 	private String fieldCodes;
 	
 	private String fieldNames;
+	
+	private List<PmEduField> eduFieldLov;	
+	
+	private List<PmCategoryL3> categoryList;	
 	
 	/**
 	 * @return the pmEduField
@@ -65,7 +72,36 @@ public class EducationManagedBean extends BaseManagedBean {
 	 */
 	public void setFieldNames(String fieldNames) {
 		this.fieldNames = fieldNames;
+	}
+
+	/**
+	 * @return the eduFieldLov
+	 */
+	public List<PmEduField> getEduFieldLov() {
+		return eduFieldLov;
+	}
+
+	/**
+	 * @param eduFieldLov the eduFieldLov to set
+	 */
+	public void setEduFieldLov(List<PmEduField> eduFieldLov) {
+		this.eduFieldLov = eduFieldLov;
+	}
+
+	/**
+	 * @return the categoryList
+	 */
+	public List<PmCategoryL3> getCategoryList() {
+		return categoryList;
+	}
+
+	/**
+	 * @param categoryList the categoryList to set
+	 */
+	public void setCategoryList(List<PmCategoryL3> categoryList) {
+		this.categoryList = categoryList;
 	}	
+
 	
 
 }
