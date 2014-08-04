@@ -90,6 +90,7 @@ public class ReportConst {
 	public static final String LST_ITM_CODE_RPT_NAME = "List of Item Codes";
 	public static final String LST_ITM_CODE_RPT_VAL = "LstItmCodes";
 	//jsp
+	public static final String CM_PUB_CAT_ITM_JSP = "Pub_Catalog_Item.jsp";
 	public static final String CM_CAT_ITM_STD_PRC_JSP = "Catalog_Items_Std_Price.jsp";
 	public static final String CM_EXP_CAT_ITM_JSP = "Expired_Catalog_Item.jsp";
 	public static final String CM_TOT_CAT_ITM_STWISE_JSP = "Total_Catalog_Item_Statuswise.jsp";
@@ -99,6 +100,9 @@ public class ReportConst {
 	public static final String CM_CAT_ITEM_ZONAL_TIER_PRC_JSP = "Catalog_Items_Zonal_Tier_Price.jsp";
 	public static final String CM_REJ_CAT_ITM_SMRY_JSP = "Rejected_Catalog_Item_Smry.jsp";
 	public static final String CM_APPR_N_REJ_CAT_ITM_JSP = "Apprvd_Rejected_Catalog_Items.jsp";
+	public static final String CM_UNSPSC_CODE_REQ_JSP = "List_UNSPSCCode_Request.jsp";
+	public static final String CM_NEW_EXT_CODE_CREAT_JSP = "List_New_ExtensionCode_Creation.jsp";
+	public static final String CM_LST_ITEM_CODE_JSP = "List_Item_Codes.jsp";
 	//CM Module reports end
 	//FL Module reports start
 	//Min

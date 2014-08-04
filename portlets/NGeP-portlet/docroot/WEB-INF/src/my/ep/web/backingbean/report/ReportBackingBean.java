@@ -6,16 +6,14 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+import javax.faces.application.ViewHandler;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import org.apache.log4j.Logger;
-
 import com.lowagie.text.pdf.PdfDocument;
-
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.exception.EpException;
@@ -27,7 +25,6 @@ import my.ep.web.managedbean.report.ReportMangedBean;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.Closeable;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -2023,6 +2020,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		}else{
 			throw new EpException(ReportConst.PLZ_SEL_ONE_RPT_SEARCH);
 		}
+		//return "/xhtml/reports/reportmain.xhtml?faces-redirect=true";
 	}
 	/*
 	 *Generate SC module report  
@@ -2056,10 +2054,12 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			rptGenBean.setUrlReportJSPName(urlSCReportJsps.get(getManagedBean().getReportNameValue().trim()));
 			
 			String url =ReportConst.EXC_PREV_URL+rptGenBean.getUrlReportJSPName()+rptGenBean.getQuotationIdTotVar()+ReportConst.EXC_NEXT_URL;
+			
+			
 			try {
 				ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-				externalContext.redirect(url);				
-			
+				externalContext.redirect(url);			
+				
 			} catch (IOException e) {				
 				e.printStackTrace();
 			}			
@@ -2106,22 +2106,23 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			}
 			//-----------
 			Map<String, String> urlCMReportNameJsps = new HashMap<String, String>();
-			urlCMReportNameJsps.put(ReportConst.LST_PUB_CAT_ITM_RPT_VAL, ReportConst.CM_CAT_ITM_STD_PRC_JSP);
+			urlCMReportNameJsps.put(ReportConst.LST_PUB_CAT_ITM_RPT_VAL, ReportConst.CM_PUB_CAT_ITM_JSP);
 			urlCMReportNameJsps.put(ReportConst.LST_APPR_CAT_ITM_RPT_VAL, ReportConst.EMPTY_VAL);
 			urlCMReportNameJsps.put(ReportConst.LST_REJ_CAT_ITM_RPT_VAL, ReportConst.EMPTY_VAL);
-			urlCMReportNameJsps.put(ReportConst.LST_PEND_APPR_CAT_ITM_RPT_VAL, ReportConst.CM_EXP_CAT_ITM_JSP);
-			urlCMReportNameJsps.put(ReportConst.TOT_CAT_ITM_STS_RPT_VAL, ReportConst.CM_TOT_CAT_ITM_STWISE_JSP);
-			urlCMReportNameJsps.put(ReportConst.TOT_CAT_ITM_UNSPSC_CODE_RPT_VAL, ReportConst.CM_TOT_CAT_ITM_UNSPSCWISE_JSP);
-			urlCMReportNameJsps.put(ReportConst.LST_CAT_ITM_STD_PRC_RPT_VAL, ReportConst.CM_CAT_ITM_STD_PRC_JSP);
-			urlCMReportNameJsps.put(ReportConst.LST_CAT_ITM_TIER_PRC_RPT_VAL, ReportConst.CM_CAT_ITM_TIER_PRC_JSP);
-			urlCMReportNameJsps.put(ReportConst.LST_CAT_ITM_ZON_PRC_RPT_VAL, ReportConst.CM_CAT_ITEM_ZONAL_PRC_JSP);
-			urlCMReportNameJsps.put(ReportConst.LST_CAT_ITM_ZON_TIER_PRC_RPT_VAL, ReportConst.CM_CAT_ITEM_ZONAL_TIER_PRC_JSP);
-			urlCMReportNameJsps.put(ReportConst.LST_PEND_CODE_ASGN_AGNCY_RPT_VAL, ReportConst.EMPTY_VAL);
-			urlCMReportNameJsps.put(ReportConst.SUM_REJ_CAT_ITM_RPT_VAL, ReportConst.CM_REJ_CAT_ITM_SMRY_JSP);
-			urlCMReportNameJsps.put(ReportConst.TOT_CAT_ITM_APPR_REJ_RPT_VAL, ReportConst.CM_APPR_N_REJ_CAT_ITM_JSP);
-			urlCMReportNameJsps.put(ReportConst.LST_UNSPSC_CODE_REQ_RPT_VAL, ReportConst.EMPTY_VAL);
-			urlCMReportNameJsps.put(ReportConst.LST_NEW_EXT_CODE_CREA_RPT_VAL, ReportConst.EMPTY_VAL);
-			urlCMReportNameJsps.put(ReportConst.LST_ITM_CODE_RPT_VAL, ReportConst.EMPTY_VAL);
+			urlCMReportNameJsps.put(ReportConst.LST_PEND_APPR_CAT_ITM_RPT_VAL, ReportConst.EMPTY_VAL);
+			urlCMReportNameJsps.put(ReportConst.LST_EXP_CAT_ITM_RPT_VAL, ReportConst.CM_EXP_CAT_ITM_JSP);			
+			urlCMReportNameJsps.put(ReportConst.TOT_CAT_ITM_STS_RPT_VAL, ReportConst.CM_TOT_CAT_ITM_STWISE_JSP);			
+			urlCMReportNameJsps.put(ReportConst.TOT_CAT_ITM_UNSPSC_CODE_RPT_VAL, ReportConst.CM_TOT_CAT_ITM_UNSPSCWISE_JSP);			
+			urlCMReportNameJsps.put(ReportConst.LST_CAT_ITM_STD_PRC_RPT_VAL, ReportConst.CM_CAT_ITM_STD_PRC_JSP);			
+			urlCMReportNameJsps.put(ReportConst.LST_CAT_ITM_TIER_PRC_RPT_VAL, ReportConst.CM_CAT_ITM_TIER_PRC_JSP);			
+			urlCMReportNameJsps.put(ReportConst.LST_CAT_ITM_ZON_PRC_RPT_VAL, ReportConst.CM_CAT_ITEM_ZONAL_PRC_JSP);			
+			urlCMReportNameJsps.put(ReportConst.LST_CAT_ITM_ZON_TIER_PRC_RPT_VAL, ReportConst.CM_CAT_ITEM_ZONAL_TIER_PRC_JSP);			
+			urlCMReportNameJsps.put(ReportConst.LST_PEND_CODE_ASGN_AGNCY_RPT_VAL, ReportConst.EMPTY_VAL);			
+			urlCMReportNameJsps.put(ReportConst.SUM_REJ_CAT_ITM_RPT_VAL, ReportConst.CM_REJ_CAT_ITM_SMRY_JSP);			
+			urlCMReportNameJsps.put(ReportConst.TOT_CAT_ITM_APPR_REJ_RPT_VAL, ReportConst.CM_APPR_N_REJ_CAT_ITM_JSP);			
+			urlCMReportNameJsps.put(ReportConst.LST_UNSPSC_CODE_REQ_RPT_VAL, ReportConst.CM_UNSPSC_CODE_REQ_JSP);
+			urlCMReportNameJsps.put(ReportConst.LST_NEW_EXT_CODE_CREA_RPT_VAL, ReportConst.CM_NEW_EXT_CODE_CREAT_JSP);
+			urlCMReportNameJsps.put(ReportConst.LST_ITM_CODE_RPT_VAL, ReportConst.CM_LST_ITEM_CODE_JSP);
 			//-----------			
 			rptGenBean.setUrlReportJSPName(urlCMReportNameJsps.get(getManagedBean().getReportNameValue().trim()));			
 			String url=ReportConst.EXC_PREV_URL+rptGenBean.getUrlReportJSPName()+rptGenBean.getItemNameTotVar()+rptGenBean.getItemTypeTotVar()+rptGenBean.getItemStatusTotVar()+rptGenBean.getUnspscCodeTotVar()+rptGenBean.getUnspscTitleTotVar()+rptGenBean.getExtentionCodeTotVar()+rptGenBean.getCompanyNameTotVar()+rptGenBean.getRegistrationTypeTotVar()+rptGenBean.getItemCategoryTotVar()+rptGenBean.getProofIdentityTotVar()+ReportConst.EXC_NEXT_URL;
