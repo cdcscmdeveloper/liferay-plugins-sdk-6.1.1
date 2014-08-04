@@ -39,8 +39,7 @@
 		</div>
 		<p:spacer height="75"></p:spacer>
 		<!-- 	<ui:include src="/xhtml/sc/main/templateMaintenanceheader.xhtml"></ui:include> -->
-		<p:panel header="#{lbl['lbl.sc.tpl.head.section']}" toggleable="true"
-			style="width:100%;">
+		<p:panel header="#{lbl['lbl.sc.tpl.head.section']}" toggleable="true">
 
 
 			<table>
@@ -83,6 +82,7 @@
 
 					<td><h:outputLabel value="#{lbl['lbl.sc.spec.local.goods']}" /></td>
 					<td><p:selectOneRadio
+							disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
 							value="#{specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.itemOriginCode.parameterId}">
 							<f:selectItems
 								value="#{specificationBackingBean.getLocalGoodsRadioValues(ParameterTypeConst.itemOrigin)}" />
@@ -105,8 +105,9 @@
 
 
 
-		<ac:templateSpec
-			templateSpecBean="#{specificationBackingBean.managedBean.templateSpecBean}" />
+		<ac:templateSpec 
+			templateSpecBean="#{specificationBackingBean.managedBean.templateSpecBean}" 
+			editable="#{specificationBackingBean.managedBean.taskName ne 'Specification Approval'}" />
 
 
 
