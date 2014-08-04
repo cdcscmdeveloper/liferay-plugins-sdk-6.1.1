@@ -425,7 +425,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					}
 	
 				}
-				catalogueSO.saveSupplierItem(reqDTO);
+				CatalogueResDTO resDTO = catalogueSO.saveSupplierItem(reqDTO);
+				if(!resDTO.isSuccessful()) {					
+					throw new EpException(MessageConst.ERROR_715016);
+				}
 			}
 	
 			FacesContext facesContext = FacesContext.getCurrentInstance();
