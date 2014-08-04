@@ -297,11 +297,11 @@ public class QTBusinessOwnerBackingBean extends
 
 	public void addBusinessOwner() {
 		debugLogger("addBusinessOwner");
+		getManagedBean().getUserSearchBusinessOwnerDataModel().reloadData();
 		// Search Criteria
 		getManagedBean().getUserBusineeOwnerSearchBean().setName(null);
 		getManagedBean().getUserBusineeOwnerSearchBean().setIdentificationType(null);
 		getManagedBean().getUserBusineeOwnerSearchBean().setIdentificationNo(null);
-		getManagedBean().setExternalUsers(null);
 		getManagedBean().setSelectedPmUser(null);
 		if (getManagedBean().getCommitteMember() == null) {
 			this.getManagedBean().setCommitteMember(new ScCommitteeMember());
@@ -556,6 +556,11 @@ public class QTBusinessOwnerBackingBean extends
 
 					} else {
 						committees.setCommitteeMemberId(null);
+						setUserDetails(committees);
+						committees.setChangedDate(null);
+						if (committees.isConsolidate()) {
+							this.getManagedBean().setSelectScCommitteMember(committees);
+						}
 						memberList.add(committees);
 						this.getManagedBean().setScCommitteeMemberList(memberList);
 					}
@@ -573,6 +578,7 @@ public class QTBusinessOwnerBackingBean extends
 
 	public void cloneBusinessOwnerPopupAction() {
 		debugLogger("cloneBusinessOwnerPopupAction");
+		getManagedBean().getCloneBusinessOwnerDataModel().reloadData();
 		getManagedBean().getCloneBusinessOwnerSearchBean().setQtTitle(null);
 		getManagedBean().getCloneBusinessOwnerSearchBean().setQtNo(null);
 		getManagedBean().getCloneBusinessOwnerSearchBean().setProcurementMode(null);
@@ -845,6 +851,7 @@ public class QTBusinessOwnerBackingBean extends
 			quationTenderReqDTO.setToken(ctxToken);
 			quationTenderReqDTO.setTaskId(this.getManagedBean().getTaskId());
 			quationTenderReqDTO.setPayLoad(this.getManagedBean().getQuotationTenderDataType());
+			detailSO.validateateBODetails(quationTenderReqDTO);
 			quationTenderResDTO = detailSO.submitQT(quationTenderReqDTO);
 			// To renew the session object..
 			renewSesionObject();
