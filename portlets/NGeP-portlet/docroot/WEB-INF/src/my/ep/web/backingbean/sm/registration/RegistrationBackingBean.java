@@ -1229,6 +1229,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			if(identNo.length() != 12){
 				throw new EpException(MessageConst.ERROR_721013);
 			}
+
+			if(!identNo.matches("[0-9]+")){
+				throw new EpException(MessageConst.ERROR_721013);
+			}	
 		}
 	}
 	
