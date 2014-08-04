@@ -3844,6 +3844,7 @@ public class SmApplicationBackingBean extends
 						}
 					}
 				}
+				System.out.println("User List Size for pass to BPM:" + reqDTO.getUserList().size());
 				if (reqDTO.getUserList().size() == 0) {
 					throw new EpException(MessageConst.ERROR_722546);
 				}
