@@ -9,7 +9,8 @@
     <p:panel id="signingWitness" header="#{lbl['lbl.ct.ag.suppsingdtls']}" toggleable="true" toggleSpeed="500">
       <h:panelGrid style="width:100%">  
         <p:outputLabel value="#{lbl['lbl.ct.ag.signer']}" style="float:left;"/>
-         <p:dataTable id="agSupplierSigner" var="signSupplierVar" value="#{agreementBackingBean.managedBean.ctSupplierSigner}"
+         <p:dataTable id="agSupplierSigner" var="signSupplierVar" 
+            value="#{agreementBackingBean.managedBean.ctSupplierSigner}"
            selection="#{agreementBackingBean.selectedSupplierSigner}" rowKey="#{signSupplierVar}">
             <ac:paginator for="agSupplierSigner"/>
 			   <p:column selectionMode="multiple" style="width:2%"/> 

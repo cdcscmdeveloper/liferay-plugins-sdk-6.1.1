@@ -789,36 +789,51 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		FacesContext.getCurrentInstance().responseComplete();
 	}
     
-    public void downloadDocFile(String parameterCode) throws IOException {
-		IContractTemplateSO contractTemplateSO = null;
-		AttachmentFormat attachmentFormat = new AttachmentDateFormat();
+    public void downloadDocFile(ScLoaReport loaReport) throws IOException {
 		
-		String content = null;	
-		String filePath = getManagedBean().getFileDirectory() + "/temp";
-		String fileName = getTemplateFileName(parameterCode);
-		File file = new File(filePath);
-		file.mkdirs();
-		filePath = filePath + "/" + attachmentFormat.format(fileName, null);
+    	IContractTemplateSO contractTemplateSO = null;
+		AttachmentFormat attachmentFormat = null;
+		ContractTemplateResDTO resDTO = null;
+		 ContractTemplateReqDTO reqDTO  = null;
 		
-		try{
-			
-			if(ContractConst.TEMPLATE_JADUAL_HARGA.equalsIgnoreCase(parameterCode)){
-				formJadualHargaExcel(filePath);
-			}
-			else {
-				contractTemplateSO = (IContractTemplateSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractTemplateSO.class);
-				ContractTemplateReqDTO reqDTO = new ContractTemplateReqDTO();
-				ContractTemplateResDTO resDTO;
-				
-				reqDTO.setTemplateName(parameterCode.toUpperCase());
-				resDTO = contractTemplateSO.retrieveTemplateByName(reqDTO);
-				content = new String(resDTO.getCtTemplate().getContent(), "UTF-8");
-				content = getContent(content, parameterCode);
-				convertHtmlToDocFile(content, filePath);
-			}
-			downloadFile(filePath, fileName);
-		} catch(UnsupportedEncodingException e) {
+	    try{
+	    	 String fileName = getTemplateFileName(loaReport.getPmDocument().getDocName());
+		     if (fileName != null) {
+		        
+		    	   String content = null;	
+		           attachmentFormat = new AttachmentDateFormat();
+			       String filePath = getManagedBean().getFileDirectory() + "/temp";
+			   
+			        File file = new File(filePath);
+		            file.mkdirs();
+		            filePath = filePath + "/" + attachmentFormat.format(fileName, null);
+			       
+		            if(ContractConst.TEMPLATE_JADUAL_HARGA.equalsIgnoreCase(loaReport.getPmDocument().getDocName())) {
+				         formJadualHargaExcel(filePath);
+			       
+		            } else {
+				         contractTemplateSO = (IContractTemplateSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractTemplateSO.class);
+				         reqDTO = new ContractTemplateReqDTO();
+				         reqDTO.setTemplateName(loaReport.getPmDocument().getDocName().toUpperCase());
+				         resDTO = contractTemplateSO.retrieveTemplateByName(reqDTO);
+				         content = new String(resDTO.getCtTemplate().getContent(), "UTF-8");
+				         content = getContent(content, loaReport.getPmDocument().getDocName());
+				         convertHtmlToDocFile(content, filePath);
+			      }downloadFile(filePath, fileName);
+		    
+		    } else {
+		    	  if(loaReport.getScLoaReportAttachment().getFilePath() == null){
+		    		   throw new EpException(MessageConst.INFO_100052, new String[]{loaReport.getScLoaReportAttachment().getFileName()});
+		    	  }downloadFile(loaReport.getScLoaReportAttachment().getFilePath(), loaReport.getScLoaReportAttachment().getFileName());
+		    }
+		 }catch(UnsupportedEncodingException e) {
 			  e.printStackTrace();
+		}finally{
+			
+			contractTemplateSO = null;
+			attachmentFormat = null;
+			resDTO = null;
+			reqDTO  = null;
 		}
 	}
 	

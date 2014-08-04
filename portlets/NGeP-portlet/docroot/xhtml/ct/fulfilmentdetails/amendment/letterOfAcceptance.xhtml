@@ -37,7 +37,7 @@
 				   </h:commandLink>
 			    </h:panelGroup>
 			     <h:panelGroup  rendered="#{data.definationType.parameterCode == ParameterConst.documentDefinitionTypeSystemDefined}">
-			         <h:commandLink icon="ui-icon-download" action="#{amendmentBackingBean.downloadDocFile(data.pmDocument.docName)}">
+			         <h:commandLink icon="ui-icon-download" action="#{amendmentBackingBean.downloadDocFile(data)}">
 					    <p:graphicImage library="ep/images/design" name="download.png"
 						    value="/resources/ep/images/design/download.png" title="File Download" />
 				     </h:commandLink>

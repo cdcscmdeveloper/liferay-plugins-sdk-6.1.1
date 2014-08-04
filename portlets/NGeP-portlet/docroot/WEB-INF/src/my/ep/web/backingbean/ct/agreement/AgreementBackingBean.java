@@ -689,31 +689,44 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		FacesContext.getCurrentInstance().responseComplete();
 	}
 	
-	public void downloadDocFile(String parameterCode) throws IOException{
+	public void downloadDocFile(CtAgreementContent agreementContent) throws IOException{
+		
 		IContractTemplateSO contractTemplateSO = null;
-		AttachmentFormat attachmentFormat = new AttachmentDateFormat();
+		 ContractTemplateResDTO  resDTO = null;
+		 AttachmentFormat attachmentFormat = null;
 		
-		String content = null;	
-		String filePath = getManagedBean().getFileDirectory() + "/temp";
-		String fileName = getTemplateFileName(parameterCode);
-		File file = new File(filePath);
-		file.mkdirs();
-		filePath = filePath + "/" + attachmentFormat.format(fileName, null);
-		
-		try{
-			contractTemplateSO = (IContractTemplateSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractTemplateSO.class);
-			ContractTemplateReqDTO reqDTO = new ContractTemplateReqDTO();
-			ContractTemplateResDTO resDTO;
-			
-			reqDTO.setTemplateName(parameterCode.toUpperCase());
-			resDTO = contractTemplateSO.retrieveTemplateByName(reqDTO);
-			content = new String(resDTO.getCtTemplate().getContent(), "UTF-8");
-			content = getContent(content, parameterCode);
-			convertHtmlToDocFile(content, filePath);
-		 	downloadFile(filePath, fileName);
-		} catch(UnsupportedEncodingException e) {
-			  e.printStackTrace();
-		}
+		 try{
+		        String fileName = getTemplateFileName(agreementContent.getTitle());
+		        if(fileName != null){
+			          String content = null;	
+			          String filePath = getManagedBean().getFileDirectory() + "/temp";
+			          File file = new File(filePath);
+			          file.mkdirs();
+			 
+			          attachmentFormat = new AttachmentDateFormat();
+			          filePath = filePath + "/" + attachmentFormat.format(fileName, null);
+		             
+			         contractTemplateSO  = (IContractTemplateSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractTemplateSO.class);
+			         ContractTemplateReqDTO reqDTO = new ContractTemplateReqDTO();
+			         reqDTO.setTemplateName(agreementContent.getTitle().toUpperCase());
+			         resDTO = contractTemplateSO.retrieveTemplateByName(reqDTO);
+			         content = new String(resDTO.getCtTemplate().getContent(), "UTF-8");
+			         content = getContent(content, agreementContent.getTitle());
+			         convertHtmlToDocFile(content, filePath);
+		 	        downloadFile(filePath, fileName);
+		       
+		      } else {
+			     if(agreementContent.getFilePath() == null){
+			            throw new EpException(MessageConst.INFO_100052, new String[]{agreementContent.getTitle()});
+			     } downloadFile(agreementContent.getFilePath(), agreementContent.getFileName());
+		     }
+		 } catch(UnsupportedEncodingException e) {
+			         e.printStackTrace();
+		 } finally{
+			 contractTemplateSO = null;
+			 resDTO = null;
+			 attachmentFormat = null;
+		 }
 	}
 	
 	public void downloadAll(){
@@ -802,8 +815,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			return "AgreementPartyPage.docx";
 		} else if(templateType.equalsIgnoreCase(ContractConst.TEMPLATE_AGREEMENT_SIGNING_PAGE)) {
 			return "AgreementSigningPage.docx";
-		}
-		
+		} 
 		return null;
 	}
 	
