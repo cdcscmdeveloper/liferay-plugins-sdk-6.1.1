@@ -1634,7 +1634,7 @@ public class QTDetailBackingBean extends
 				qtReqDTO.setTaskId(this.getManagedBean().getTaskId());
 				qtReqDTO.setPayLoad(res.getPojo());
 				qtReqDTO.setDocType(QTConstants.DOCTYPE_QT);
-
+				qtReqDTO.setDeskOfficer(new FacesScopes().getUserSessionBean());
 				detailSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 
@@ -2670,37 +2670,45 @@ public class QTDetailBackingBean extends
 			this.getManagedBean().setQt(resDTO.getQtDetail());
 			retrieveApprovalTabDtl();
 			break;
-		case 4:
-			reqDTO = prepareQTInfo();
+		case 4:	
+			if (getManagedBean().getQt().getQtStatus().getStatusId() > QTStatusConst.QT_PENDING_QT_SUBMISSION) {			
+			reqDTO = prepareQTInfo();			
 			detailSO.validateBsvDetails(reqDTO);
 			resDTO = detailSO.saveQTDtl(reqDTO);
 			renewSesionObject();
 			this.getManagedBean().setQt(resDTO.getQtDetail());
 			retrieveBriefingSitevisitTabDtl();
+			}
 			break;
 		case 5:
+			if (getManagedBean().getQt().getQtStatus().getStatusId() > QTStatusConst.QT_PENDING_QT_SUBMISSION) {
 			reqDTO = prepareQTInfo();
 			detailSO.validateScheduleDetails(reqDTO);
 			resDTO = detailSO.saveQTDtl(reqDTO);
 			renewSesionObject();
 			this.getManagedBean().setQt(resDTO.getQtDetail());
 			retrieveScheduleTabDtl();
+			}
 			break;
 		case 6:
+			if (getManagedBean().getQt().getQtStatus().getStatusId() > QTStatusConst.QT_PENDING_QT_SUBMISSION) {
 			reqDTO = prepareQTInfo();
 			detailSO.validateDeductionDtls(reqDTO);
 			resDTO = detailSO.saveQTDtl(reqDTO);
 			renewSesionObject();
 			this.getManagedBean().setQt(resDTO.getQtDetail());
 			retrieveDeductionPaymentTabDtl();
+			}
 			break;
 		case 7:
+			if (getManagedBean().getQt().getQtStatus().getStatusId() > QTStatusConst.QT_PENDING_QT_SUBMISSION) {
 			reqDTO = prepareQTInfo();
 			resDTO = detailSO.saveQTDtl(reqDTO);
 			renewSesionObject();
 			this.getManagedBean().setQt(resDTO.getQtDetail());
 			retrieveDocumentTabDtl();
 			break;
+			}
 		}
 		this.getManagedBean().setActiveIndex(activeIndex);
 		this.getManagedBean().setTaskId(taskId);

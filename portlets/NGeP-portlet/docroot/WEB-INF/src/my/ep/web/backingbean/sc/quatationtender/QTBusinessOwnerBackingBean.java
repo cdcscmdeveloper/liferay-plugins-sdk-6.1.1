@@ -41,6 +41,7 @@ import my.ep.dto.sc.committe.CommitteResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRole;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -63,6 +64,7 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
+import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
@@ -774,7 +776,10 @@ public class QTBusinessOwnerBackingBean extends
 		IQTDetailSO detailSO;
 		try {
 			detailSO = getDetailSO();	
-			ScQt scQt = prepareBOInfo();			
+			ScQt scQt = prepareBOInfo();
+			if(!scQt.isBrandNew()){
+				scQt.setScQtStatus(null);
+			}
 			QuationTenderReqDTO quationTenderReqDTO =new QuationTenderReqDTO() ;
 			quationTenderReqDTO.setQtdetail(scQt);			
 			quationTenderReqDTO.setDocType(QTConstants.DOCTYPE_QT);
@@ -907,11 +912,19 @@ public class QTBusinessOwnerBackingBean extends
 	}
 
 	public String cancelQTDetails() {
-		
+		ScQt qt = this.getManagedBean().getQt();
+		qt.setRecordStatusFlg(DbValueConst.RECORD_STATUS_CANCELLED);
+		QuationTenderReqDTO quationTenderReqDTO= new QuationTenderReqDTO();
+		quationTenderReqDTO.setQtdetail(qt);
+		IQTDetailSO detailSO=EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+		QuationTenderResDTO resDTO = detailSO.saveQTDtl(quationTenderReqDTO);
+		if(resDTO.isSuccessful()){
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 								MessageUtils.getMessage(MessageConst.INFO_700010, new String[] {
 														getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION), this.getManagedBean().getQt().getQtNo() },
 												MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+		return CommonUIConst.ACKNOWLEDGE_PAGE;
+		}
 		return null;
 	}
 

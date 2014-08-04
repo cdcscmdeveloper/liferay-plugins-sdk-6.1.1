@@ -447,6 +447,7 @@ public class ApprovalBackingBean extends
 				}
 
 				qt.setScQtCommittees(null);
+				qtReqDTO.setDeskOfficer(new FacesScopes().getUserSessionBean());
 				qtReqDTO.setQtdetail(qt);
 				qtResDTO = (QuationTenderResDTO) detailSO
 						.updateBPMAction(qtReqDTO);
