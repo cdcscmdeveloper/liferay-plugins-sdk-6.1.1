@@ -987,6 +987,15 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 	}
 	
 	private void validatePersonnelBeforeSave(SmPersonnel smPersonnel) {
+		
+		if (smPersonnel.getIdentificationType().getParameterCode()
+				.equalsIgnoreCase("I")) {
+			if (smPersonnel.getIdentificationNo().length() != 12) {
+				throw new EpException(MessageConst.ERROR_722532,
+						new String[] { smPersonnel.getIdentificationNo() });
+			}
+		}
+		
 		if(isExistEmailInPmUser(smPersonnel.getEmail())){
 			throw new EpException(MessageConst.ERROR_722540);
 		}
