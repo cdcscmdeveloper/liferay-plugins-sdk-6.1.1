@@ -1,0 +1,65 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<table style="width: 100%">
+		<tr>
+			<td class="TableFieldLeft" width="24%"><h:outputLabel
+					value="Attachment" /></td>
+			<td class="TableFieldRight"><p:commandButton
+					oncomplete="doUploadDlg.show();return false;" icon="iconAttachment"
+					update="doMaintain" partialSubmit="true" value="Attach file(s)" /></td>
+		</tr>
+		<tr>
+			<td />
+			<td><p:dataGrid id="doMaintain"
+					value="#{fulfilmentBackingBean.managedBean.attachmentList}"
+					var="attachFile" rowIndexVar="attachFileIndex" columns="1"
+					style="width:100%">
+					<table>
+						<tr>
+							<td rowspan="2"><h:graphicImage library="ep/images/design"
+									name="#{fulfilmentBackingBean.determineIcon(attachFile)}"
+									height="30" width="30" /></td>
+							<td width="5"></td>
+							<td><h:outputText value=" #{attachFile.createdUsername}"></h:outputText>,
+								<h:outputText value="#{attachFile.createdDate}">
+									<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
+								</h:outputText></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td><h:commandLink value="#{attachFile.fileName}"
+									styleClass="blue_font"
+									action="#{fulfilmentBackingBean.downloadFile(attachFile)}" />
+								<p:commandLink
+									action="#{fulfilmentBackingBean.deleteAttachmentAction(attachFileIndex)}"
+									immediate="true"
+									rendered="#{fulfilmentBackingBean.compareAttachmentUserName(attachFile.createdUsername)}"
+									update="doMaintain">
+									<h:graphicImage library="ep/images/design"
+										name="icon_trash.png" styleClass="tasklist_title1" />
+								</p:commandLink></td>
+						</tr>
+					</table>
+				</p:dataGrid></td>
+		</tr>
+	</table>
+
+	<p:dialog id="doUploadDlg" widgetVar="doUploadDlg" appendToBody="false"
+		hideEffect="explode" resizable="false" width="700px"
+		height="350" styleClass="pop_up_top"
+		header="#{lbl['lbl.bpm.choose.file']}">
+		<p:ajax event="close" />
+		<p:fileUpload style="display:inline;"
+			fileUploadListener="#{fulfilmentBackingBean.handleFileUpload}"
+			mode="advanced" id="doupload" fileLimit="2"
+			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
+			invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
+			update="doMaintain">
+		</p:fileUpload>
+	</p:dialog>
+
+</ui:composition>

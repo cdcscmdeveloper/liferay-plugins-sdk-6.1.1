@@ -5,24 +5,24 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	<p:panel header="REQUEST DETAILS" toggleable="true" id="flDetails">
+	<p:panel header="REQUEST DETAILS" toggleable="true" id="flDoDetails">
 		<table style="width: 100%">
 			<tr>
 				<td style="width: 138px;"><p:outputLabel
 						value="#{lbl['lbl.fl.ministry']}" /></td>
-				<td><p:inputText size="50" id="ministry"
+				<td><p:inputText size="50" id="doministry"
 						value="#{createDOBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.parentOrgProfile.orgName}"
 						disabled="true" /></td>
 				<td rowspan="3" valign="top" style="width: 138px;"><p:outputLabel
 						value="#{lbl['lbl.fl.title']}" /></td>
-				<td rowspan="3"><p:inputTextarea cols="50" rows="4" id="title"
+				<td rowspan="3"><p:inputTextarea cols="50" rows="4" 
 						disabled="true" style=" margin-bottom:5px;"
 						value="#{createDOBackingBean.managedBean.fulfilmentRequest.title}" />
 					<h:outputText value="" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.prepared.ptj']}" /></td>
-				<td><p:inputText size="5" id="preparedOrgProfileId"
+				<td><p:inputText size="5" id="dopreparedOrgProfileId"
 						disabled="true"
 						value="#{createDOBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.pmOrgValidity.orgCode}" />
 					<p:spacer width="5" /> <p:inputText size="39" disabled="true"
@@ -30,7 +30,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /></td>
-				<td><p:inputText size="5" id="issuedOrgProfileId"
+				<td><p:inputText size="5" id="doissuedOrgProfileId"
 						disabled="true"
 						value="#{createDOBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.pmOrgValidity.orgCode}" />
 					<p:spacer width="5" /> <p:inputText size="39" disabled="true"
@@ -40,7 +40,7 @@
 				<td><p:outputLabel value="#{lbl['lbl.fl.charge.ptj']}" /></td>
 				<td><p:inputText size="5" disabled="true"
 						value="#{createDOBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile.pmOrgValidity.orgCode}" />
-					<p:spacer width="5" /> <p:inputText id="chargedPtj" size="39"
+					<p:spacer width="5" /> <p:inputText id="dochargedPtj" size="39"
 						disabled="true"
 						value="#{createDOBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile.orgName}" /></td>
 			</tr>
@@ -132,15 +132,14 @@
 			</tr>
 		</table>
 	</p:panel>
-	
-	<h:panelGroup rendered="#{createDOBackingBean.managedBean.docMaintainRemarks eq 'true'}">
-	<p:panel header="#{lbl['lbl.fl.remark.attachment']}" toggleable="true">
+	<h:panelGroup  rendered="#{createDOBackingBean.managedBean.isModificationCancel() or not empty createDOBackingBean.managedBean.buttonVal }">
+	<p:panel header="#{lbl['lbl.fl.remark.attachment']}" toggleable="true" >
 		<table style="width: 100%">
 			<tr>
 				<td width="50%" valign="top"><ui:include
 						src="/xhtml/fl/shared/remark.xhtml" /></td>
 				<td width="50%" valign="top"><ui:include
-						src="/xhtml/fl/shared/attachment.xhtml" /></td>				
+						src="/xhtml/fl/shared/doMaintainattachment.xhtml" /></td>				
 			</tr>
 		</table>
 	</p:panel>
