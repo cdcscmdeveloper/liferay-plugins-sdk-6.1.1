@@ -194,6 +194,20 @@
 		<p:panelGrid styleClass="noBorders tr,noBorders td"  id="prepareBy" >
 			<p:row>
 				<p:column>
+					<h:outputText value="#{lbl['lbl.sc.request.note.rec.suppier']}"></h:outputText>
+					<p:spacer width="6px;"></p:spacer>
+					<p:outputPanel autoUpdate="true">
+						<p:selectOneMenu value="#{requestNoteBackingBean.managedBean.supplierId}" 
+							style="width:155px;">  
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
+							<f:selectItems value="#{requestNoteBackingBean.suppliersBySelectedItems}" 
+								var="smSupplier" itemLabel="#{smSupplier.companyName}"
+								itemValue="#{smSupplier.supplierId}">
+							</f:selectItems>
+						</p:selectOneMenu>
+					</p:outputPanel>
+					
+					<p:spacer width="10px;"/>
 					<h:outputText value="#{lbl['lbl.sc.request.note.prepare.by']}"></h:outputText>
 					<p:spacer width="6px;"></p:spacer>
 					<p:selectOneMenu style="width:155px;" 
