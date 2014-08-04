@@ -65,7 +65,7 @@
 			<c:if test="#{!registrationBackingBean.managedBean.smAppl.brandNew}">
 				<tr>
 					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.accountstatus']}" /></td>
-					<td class="tdContent"><p:selectOneRadio>
+					<td class="tdContent"><p:selectOneRadio value="#{registrationBackingBean.managedBean.smSupp.recordStatusFlg}">
 							<f:selectItem itemLabel="Active" itemValue="1" />
 							<f:selectItem itemLabel="Deactivate" itemValue="0" />
 						</p:selectOneRadio></td>
