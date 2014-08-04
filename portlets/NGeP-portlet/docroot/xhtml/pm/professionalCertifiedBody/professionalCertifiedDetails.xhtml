@@ -13,10 +13,11 @@
    </p:panel>
 	
    <p:panel header="ASSOCIATION / CERTIFIED BODY" toggleable="true">
+   <p:spacer height="10"></p:spacer>	
 				
 	<table style="width:100%;">
 	  <tr>	  	
-		<td><p:outputLabel value="#{lbl['lbl.pm.search.codes']}" />
+		<td style="width:10%;"><p:outputLabel value="#{lbl['lbl.pm.search.codes']}" />
 			<p:outputLabel value="*" styleClass="mandatory" /></td>
 		<td><p:inputText size="30" value="#{profcertifiedbodyBackingBean.managedBean.certBody.bodyCode}" /></td>
 	  </tr>	
@@ -29,7 +30,7 @@
 		<td><p:outputLabel value="#{lbl['lbl.pm.search.desc']}" />
 			<p:outputLabel value="*" styleClass="mandatory" /></td>
 		<td><p:inputTextarea row="40" cols="80" value="#{profcertifiedbodyBackingBean.managedBean.certBody.description}" /></td>
-	  </tr>
+	  </tr>  
 	  <tr>
 	    <td></td>
 	  	<td><p:selectBooleanCheckbox value="#{profcertifiedbodyBackingBean.managedBean.certBody.professionalBody}" /><h:outputText value="Professional Body" />&#160;&#160;&#160;
@@ -42,5 +43,6 @@
     	    </p:selectOneMenu></td>				
 	    </tr>
 	</table>
+   <p:spacer height="50"></p:spacer>	
    </p:panel>	
 </ui:composition>
