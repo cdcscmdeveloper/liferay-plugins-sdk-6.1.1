@@ -1986,6 +1986,16 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			
 			//----------logic checking-----------------------------------------------------------------------------------------------//
 			
+			if(cmStandardPricing.getPrice().longValue()<1){
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+								MessageUtils.getMessage(MessageConst.ERROR_715017,
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+					return "editCatalogItem";
+			}
+			
 			if(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getStartDate()
 					.after(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getEndDate())){
 				FacesContext.getCurrentInstance().addMessage(
@@ -2390,6 +2400,17 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					// facesContext.getExternalContext().getFlash().setKeepMessages(true);
 
 					return "catalogMaintenanceFile";
+				}
+				
+				//price is less than Rm1
+				if(catalog.getCmStandardPricing().getPrice().longValue()<1){
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+									MessageUtils.getMessage(MessageConst.ERROR_715017,
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));
+						return "catalogMaintenanceFile";
 				}
 				
 				//end date before start date
