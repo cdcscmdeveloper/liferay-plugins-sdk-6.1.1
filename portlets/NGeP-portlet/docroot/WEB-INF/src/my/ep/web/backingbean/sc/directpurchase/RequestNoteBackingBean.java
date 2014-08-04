@@ -1524,8 +1524,6 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 					ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
 					requestNoteDtl.setDeliverTermType(resDTO.getPmParameter());
 				}
-				
-				break;
 			}
 		}
 	}
