@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,13 +19,17 @@ import javax.faces.context.FacesContext;
 import org.apache.log4j.Logger;
 import org.bouncycastle.crypto.tls.Certificate;
 
+import my.ep.biz.service.pm.common.digisign.IDigiSignSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.service.IBpmSO;
+import my.ep.dto.pm.common.digisign.DigiSignReqDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
+import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.pm.userprofile.UserprofileBackingBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -70,6 +75,37 @@ public class SpkiBackingBean {
 		}
 		logger.info(message);
 	}
+	
+	 public void testCreate() throws Exception {
+
+//		   UserCreate test = new UserCreate();
+//
+//		      try
+//		      {
+//		         test.execute();
+//		      }
+//		      catch (Exception ex)
+//		      {
+//		         test.log("EXCEPTION: " + ex.getMessage());
+//		      }
+		      DigiSignReqDTO reqDTO = new DigiSignReqDTO();
+		      IDigiSignSO digiSignSO = (IDigiSignSO) EpEjbBusinessDelegate.getInstance().getServiceObject("pm", IDigiSignSO.class);
+
+		      		PmDigiSign pmDigiSign = new PmDigiSign();
+		      		pmDigiSign.setCertificate("111111");
+		      		pmDigiSign.setDigiSignId(4);
+		      		pmDigiSign.setDocType("CT");
+		      		pmDigiSign.setCreatedBy(new BigDecimal(1));
+		      		pmDigiSign.setCreatedDate(null);
+		      		pmDigiSign.setDocId(new BigDecimal(11));
+		      		pmDigiSign.setDocType("CT");
+		      		pmDigiSign.setOrginalData("textbeforesign");
+		      		pmDigiSign.setSignedData("signedData");
+//		      		reqDTO.setPmDigiSign(pmDigiSign);
+		      		digiSignSO.saveOrUpdateDigiSign(reqDTO);
+			}
+	 
+	 
 	public void getChallengeQuestions(){ 
 	try{
 			// Create property file

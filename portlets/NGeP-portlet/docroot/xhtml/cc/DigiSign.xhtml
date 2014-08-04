@@ -1,0 +1,43 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui" 
+   	xmlns:ac="http://ac.my/jsf/composite/cc">
+    <ui:define name="resourceSection">
+  <h:outputScript library="ep/gpki_js" name="gpki-api.js" />
+<!--   <h:outputScript  name="//code.jquery.com/jquery-1.11.0.min.js" /> -->
+<!--       <h:outputScript  name="jquery/jquery-2.1.1.js" /> -->
+   
+        
+            
+
+	</ui:define>  
+   <ui:define name="contentSection">
+ <h:panelGrid columns="1" cellpadding="5">
+   <p:commandLink value="RequestChallRespUpdate" action="#{spkiBackingBean.RequestChallRespUpdate}">
+						 
+	</p:commandLink>
+	<p:spacer width="7" />
+      <p:commandLink value="RequestChangePIN" action="#{spkiBackingBean.RequestChangePIN}">
+						
+	</p:commandLink>
+	<p:spacer width="7" />
+	   <p:commandLink value="RequestResetPIN" action="#{spkiBackingBean.RequestResetPIN}">
+					
+	</p:commandLink>
+	<p:spacer width="7" />
+	   <p:commandLink value="RequestRevokeCert" action="#{spkiBackingBean.RequestRevokeCert}">
+					
+	</p:commandLink>
+	<p:spacer width="7" />
+   </h:panelGrid>
+	<h:panelGrid columns="1" cellpadding="5">
+<p:commandButton value="Submit"  action="#{spkiBackingBean.getChallengeQuestions}" update="asd" oncomplete="spki_dlg.show();"  />	 
+<p:commandButton value="Create"  action="#{spkiBackingBean.testCreate}"   />	 
+	</h:panelGrid>
+ <ac:spkiPopup  id="asd" textBeforeSign="123" postSignAction="#{gpkiBackingBean.gsignAction()}" /> 
+	</ui:define>
+		    
+</ui:composition>				
