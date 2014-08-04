@@ -44,7 +44,7 @@
 			<h:outputText value="* " styleClass="mandatory" />
 			<h:outputText value="#{lbl['lbl.tpl.spec.content.uom']}"/>
 		</f:facet>
-		<ac:lov id="#{cc.attrs.id}uomLovId" lovId="PM_UOM" 
+		<ac:lov id="#{templateSpecId}uomLovId" lovId="PM_UOM" 
 			headerText="UOM Lov"
 			saveObject="templateSpecBackingBean.managedBean.tplSpecQuestions[#{row}].clUom"
 			value="#{question.clUom.uomName}"
@@ -134,7 +134,7 @@
 				value="#{question.clQuantity}" 
 				rendered="#{isPriceTypeAllStandard}" required="#{!question.selected}" maxlength="14"
 				label="#{lbl['lbl.tpl.spec.content.quantity']}">
-				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, question)}" maxIntegerDigits="10" />
+				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, question.clUom.uomCode)}" maxIntegerDigits="10" />
 			</p:inputText>
 			<p:message id="qtyMsg" for="qty" display="icon" />
 			<p:commandButton icon="ui-icon-pencil" style="background-color:transparent !important; border:0px none;"  

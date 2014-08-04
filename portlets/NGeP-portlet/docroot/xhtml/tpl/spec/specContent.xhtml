@@ -7,10 +7,10 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:p="http://primefaces.org/ui">
 	
-	<ui:param name="delConfirmPopup" value="#{cc.attrs.id}delConfirmPopup" />
-	<ui:param name="tierQtyPopup" value="#{cc.attrs.id}tierQtyPopup" />
-	<ui:param name="scoringSetPopup" value="#{cc.attrs.id}scoringSetPopup" />
-	<ui:param name="estimationPopup" value="#{cc.attrs.id}estimationPopup" />
+	<ui:param name="delConfirmPopup" value="#{templateSpecId}delConfirmPopup" />
+	<ui:param name="tierQtyPopup" value="#{templateSpecId}tierQtyPopup" />
+	<ui:param name="scoringSetPopup" value="#{templateSpecId}scoringSetPopup" />
+	<ui:param name="estimationPopup" value="#{templateSpecId}estimationPopup" />
 	
 		<p:panel id="spg" header="#{title}" toggleable="true">
 			<h:panelGroup rendered="false">
@@ -146,7 +146,7 @@
 						partialSubmit="true"
 						process="@this, tierQtyPnl"
 						update="tierQtyPnl">
-						<f:setPropertyActionListener target="#{templateSpecBean.specComponentId}" value="#{cc.attrs.id}" />
+						<f:setPropertyActionListener target="#{templateSpecBean.specComponentId}" value="#{templateSpecId}" />
 					</p:commandButton>
 					<p:commandButton value="#{lbl['lbl.btn.cancel']}" icon="ui-icon-cancel" 
 						partialSubmit="true" process="@this" update="@this" 
@@ -174,7 +174,7 @@
 						partialSubmit="true"
 						process="@this, scoreSettPnl"
 						update="scoreSettPnl">
-						<f:setPropertyActionListener target="#{templateSpecBean.specComponentId}" value="#{cc.attrs.id}" />
+						<f:setPropertyActionListener target="#{templateSpecBean.specComponentId}" value="#{templateSpecId}" />
 					</p:commandButton>
 					<p:commandButton value="#{lbl['lbl.btn.cancel']}" icon="ui-icon-cancel" 
 						partialSubmit="true" process="@this" update="@this"
@@ -202,7 +202,7 @@
 						partialSubmit="true"
 						process="@this, estimationPnl"
 						update="estimationPnl">
-						<f:setPropertyActionListener target="#{templateSpecBean.specComponentId}" value="#{cc.attrs.id}" />
+						<f:setPropertyActionListener target="#{templateSpecBean.specComponentId}" value="#{templateSpecId}" />
 					</p:commandButton>
 					<p:commandButton value="#{lbl['lbl.btn.cancel']}" icon="ui-icon-cancel" 
 						partialSubmit="true" process="@this" update="@this"
