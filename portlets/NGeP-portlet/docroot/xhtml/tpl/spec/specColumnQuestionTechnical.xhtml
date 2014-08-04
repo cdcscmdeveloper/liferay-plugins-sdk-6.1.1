@@ -44,7 +44,7 @@
 			<h:outputText value="* " styleClass="mandatory" />
 			<h:outputText value="#{lbl['lbl.tpl.spec.content.uom']}"/>
 		</f:facet>
-		<ac:lov id="uomLovId" lovId="PM_UOM" 
+		<ac:lov id="#{cc.attrs.id}uomLovId" lovId="PM_UOM" 
 			headerText="UOM Lov"
 			saveObject="templateSpecBackingBean.managedBean.tplSpecQuestions[#{row}].clUom"
 			value="#{question.clUom.uomName}"
