@@ -2095,8 +2095,6 @@ public class SpecificationBackingBean extends
 						setUserDetails(list.getQtScoreWeightage());
 					}
 
-					
-
 					addScore = addScore
 							+ list.getQtScoreWeightage().getScore().intValue();
 					score = (int) addScore;
@@ -3276,6 +3274,9 @@ public class SpecificationBackingBean extends
 				.getDistrictFromLocationDTO(locationDTOs);
 		List<PmCity> cities = SourcingLocationHelper
 				.getCityFromLocationDTO(locationDTOs);
+		if (null == getManagedBean().getZoneTrees()) {
+			getManagedBean().setZoneTrees(new ArrayList<TreeNode>());
+		}
 
 		if (getManagedBean().getIndex() == -1) {
 
@@ -3572,6 +3573,8 @@ public class SpecificationBackingBean extends
 					&& null != scQt.getFulfilmentType().getParameterId()) {
 				this.getManagedBean().setFulfilmentType(
 						scQt.getFulfilmentType().getParameterCode());
+			} else {
+				scQt.setFulfilmentType(new PmParameter());
 			}
 			this.getManagedBean().setPanelChange(scQt.isPanel());
 			if (scQt.isZonal()
@@ -3899,12 +3902,14 @@ public class SpecificationBackingBean extends
 
 		this.getManagedBean().getScQt().getScQtSupplierCriteria()
 				.setAllState(state);
+		this.getManagedBean().setZoneTrees(null);
 		if (!state) {
 			if (null == this.getManagedBean().getScQt()
 					.getScQtSupplierCriteria().getLocationLevel()) {
 				this.getManagedBean().getScQt().getScQtSupplierCriteria()
 						.setLocationLevel(new PmParameter());
 			}
+
 		}
 	}
 
@@ -8713,7 +8718,13 @@ public class SpecificationBackingBean extends
 				if (QTConstants.PRESENTATION_DEMO.equalsIgnoreCase(checkList
 						.getDefinationType().getParameterCode())) {
 					scQt.setDemoRequired(true);
+				} else if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE
+						.equalsIgnoreCase(checkList.getDefinationType()
+								.getParameterCode())) {
+					scQt.setSampleReq(true);
+					break;
 				}
+
 			}
 			localChecklist.addAll(techCheckList);
 			scQt.setScQtChecklists(localChecklist);
