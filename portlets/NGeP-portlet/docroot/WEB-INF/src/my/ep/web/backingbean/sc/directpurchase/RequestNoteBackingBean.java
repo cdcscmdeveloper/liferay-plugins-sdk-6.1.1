@@ -6,6 +6,7 @@ package my.ep.web.backingbean.sc.directpurchase;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -394,6 +395,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			RequestNoteResDTO	resDTO	=	directPurchaseSO.getRequestNote(requestDTO);
 			ScRequestNote	requestNote	=	resDTO.getRequestNoteDetail();
 			List<ScRequestNoteDtl>  requestNoteDtls = new ArrayList<ScRequestNoteDtl>();
+			 List<String>	sortZoneNames	=	new ArrayList<String>();
 			if(requestNote.getRequestNoteDtls()  != null && requestNote.getRequestNoteDtls().size() >0){
 				for (ScRequestNoteDtl scRequestNoteDtl : requestNote.getRequestNoteDtls()) {
 					ScRequestSupplierItem scRequestSupplierItem = scRequestNoteDtl.getScRequestSupplierItem();
@@ -443,6 +445,10 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 						scRequestNoteDtl.setAssignedUser(new PmUser());	
 					}
 					
+					if(scRequestNoteDtl.getTplSpecZoneDtl() !=null){
+						sortZoneNames.add(scRequestNoteDtl.getTplSpecZoneDtl().getZoneName());
+					}
+					
 					if(scRequestNoteDtl.getScRequestSupplierItem() == null){
 						ScRequestSupplierItem  requestSupplierItem = new ScRequestSupplierItem();
 						SmSupplier  smSupplier = new SmSupplier();
@@ -460,16 +466,19 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			
 			if(zoneFlag){
 				// get grouped request note dtl objs for Item list
-				List<ScRequestNoteDtl> scRequestNoteDtls = groupRequestNoteDtls(requestNote.getRequestNoteDtls());
-				getManagedBean().setRequestNoteDtls(scRequestNoteDtls);
-				getManagedBean().setSupplierRecList(requestNoteDtls);
+				List<ScRequestNoteDtl> itemList = groupRequestNoteDtls(requestNote.getRequestNoteDtls());
+				getManagedBean().setRequestNoteDtls(itemList);
+				
+				// supplier rec list and sorting
+				Collections.sort(sortZoneNames);
+				getManagedBean().setSupplierRecList(sortSupplierRecs(requestNoteDtls ,sortZoneNames));
 				
 			} else{
 				getManagedBean().setRequestNoteDtls(requestNoteDtls);
 			}
 			
 			// created by 
-			getManagedBean().setCreatedBy(getCreatedBy(requestNote.getCreatedBy()));
+			getManagedBean().setCreatedBy(getCreatedBy(requestNote.getCreatedBy()).getUserName());
 			// remarks
 			requestNote.setRemarks(initializeRemarks(requestNote));
 
@@ -501,22 +510,55 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 	//Group all the request note dtls by request item 
 	public	List<ScRequestNoteDtl>	groupRequestNoteDtls(List<ScRequestNoteDtl>	requestNoteDtls){
 		List<ScRequestNoteDtl>	results	=	new ArrayList<ScRequestNoteDtl>();
-
-		Map<Long, ScRequestNoteDtl >	uniquePurchaseRequestRequestNoteDtls	=	new HashMap<Long,  ScRequestNoteDtl>();
+		
+		Map<Long, ScRequestNoteDtl >	uniqueRequestNoteDtls	=	new HashMap<Long,  ScRequestNoteDtl>();
 		for(ScRequestNoteDtl requestNoteDtl:requestNoteDtls){
-			uniquePurchaseRequestRequestNoteDtls.put(requestNoteDtl.getRequestItem().getRequestNoteItemId(), requestNoteDtl);
+			uniqueRequestNoteDtls.put(requestNoteDtl.getRequestItem().getRequestNoteItemId(), requestNoteDtl);
 		}
-
-		Set<Long> itemIds	=	uniquePurchaseRequestRequestNoteDtls.keySet();
+		 		
+		List<String>	sortItemList	=	new ArrayList<String>();
+		Set<Long> itemIds	=	uniqueRequestNoteDtls.keySet();
 		if(itemIds != null){
 			for(Long requestItemId: itemIds){
-				ScRequestNoteDtl	requestNoteDtl	=	uniquePurchaseRequestRequestNoteDtls.get(requestItemId);
+				ScRequestNoteDtl	requestNoteDtl	=	uniqueRequestNoteDtls.get(requestItemId);
 				results.add(requestNoteDtl);
+				sortItemList.add(requestNoteDtl.getRequestItem().getItemName());
+			}
+			
+			Collections.sort(sortItemList);
+			results = sortItemList(results ,sortItemList);
+		}
+		return results;
+	}
+
+	private	List<ScRequestNoteDtl>	sortItemList(List<ScRequestNoteDtl>	requestNoteDtls , List<String>	sortItemList){
+		List<ScRequestNoteDtl>	results	=	new ArrayList<ScRequestNoteDtl>();
+		for(String itemName:sortItemList){
+
+			for(ScRequestNoteDtl requestNoteDtl:requestNoteDtls){
+
+				if(itemName.equalsIgnoreCase(requestNoteDtl.getRequestItem().getItemName())){
+					results.add(requestNoteDtl);
+				}
 			}
 		}
 		return results;
 	}
-		
+
+	private	List<ScRequestNoteDtl>	sortSupplierRecs(List<ScRequestNoteDtl>	requestNoteDtls , List<String>	sortItemList){
+		List<ScRequestNoteDtl>	results	=	new ArrayList<ScRequestNoteDtl>();
+		for(String zoneName:sortItemList){
+
+			for(ScRequestNoteDtl requestNoteDtl:requestNoteDtls){
+
+				if(zoneName.equalsIgnoreCase(requestNoteDtl.getTplSpecZoneDtl().getZoneName())){
+					results.add(requestNoteDtl);
+				}
+			}
+		}
+		return results;
+	}
+
 	 public void approverAction(String outcome) {
 		debugLogger("approverAction");
 		RequestNoteResDTO requestNoteResDTO = null;
@@ -822,9 +864,11 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		
 		// zone dtl
 		if(pricing.getCmSupplierZone() != null){
-			TplSpecZoneDtl tplSpecZone = new TplSpecZoneDtl();
-			tplSpecZone.setZoneName(pricing.getCmSupplierZone().getSuppZoneName());
-			//result.setTplSpecZone(tplSpecZone);
+			//TplSpecZoneDtl tplSpecZoneDtl = new TplSpecZoneDtl();
+			//pricing.getCmSupplierZone().getCmSupplierZoneDtls();
+			//createTplSpecZone(pricing.getCmSupplierZone().getCmSupplierZoneDtls());
+			//tplSpecZoneDtl.setZoneName(pricing.getCmSupplierZone().getSuppZoneName());
+			//result.setTplSpecZone(createTplSpecZone(pricing.getCmSupplierZone().getCmSupplierZoneDtls()));
 		}
 		
 		IParameterSO parameterSO;
@@ -852,6 +896,26 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		result.setToQty(pricing.getToQty());
 		
 		return result;
+	}
+	
+	
+	private TplSpecZoneDtl createTplSpecZone(List<CmSupplierZoneDTL> cmSupplierZoneDTLs) {
+		TplSpecZoneDtl tplSpecZoneDtl = new TplSpecZoneDtl();
+		for(CmSupplierZoneDTL cmSupplierZoneDTL: cmSupplierZoneDTLs){
+			//tplSpecZoneDtl.setTplSpecZone(tplSpecZone)
+			tplSpecZoneDtl.setTplSpecZoneLocs(createTplSpecZoneLocs( tplSpecZoneDtl,cmSupplierZoneDTL));
+		}
+		return tplSpecZoneDtl;
+	}
+	private	List<TplSpecZoneLoc>	createTplSpecZoneLocs(TplSpecZoneDtl tplSpecZoneDtl ,CmSupplierZoneDTL cmSupplierZoneDTL){
+		TplSpecZoneLoc  specZoneLoc = new TplSpecZoneLoc();
+		List<TplSpecZoneLoc> results	=	new ArrayList<TplSpecZoneLoc>();
+		specZoneLoc.setPmDistrict(cmSupplierZoneDTL.getPmDistrict());
+		specZoneLoc.setPmState(cmSupplierZoneDTL.getPmState());
+		specZoneLoc.setPmDivision(cmSupplierZoneDTL.getPmDivision());
+		specZoneLoc.setTplSpecZoneDtl(tplSpecZoneDtl);
+		results.add(specZoneLoc);
+		return results;
 	}
 	
 	private TplSpecZoneDtl createSpecZone(CmSupplierZone supplierZone) {
@@ -1114,7 +1178,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		}
 		
 		if(requestNote.getCreatedUser() == null){
-			getManagedBean().setCreatedBy(getCreatedBy(facesScopes.getUserSessionBean().getUserId()));
+			getManagedBean().setCreatedBy(getCreatedBy(facesScopes.getUserSessionBean().getUserId()).getUserName());
 		}
 		
 		requestNote.setRemarks(initializeRemarks(requestNote));
@@ -1238,6 +1302,8 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 
 				if(scRequestSupplierItem.getSupplierItemPrices() != null && !scRequestSupplierItem.getSupplierItemPrices().isEmpty()){
 					scRequestSupplierItem.setSupplierItemPrice(scRequestSupplierItem.getSupplierItemPrices().get(0));
+				} else{
+					scRequestSupplierItem.getSupplierItemPrice().setPriceType(scRequestNoteDtl.getPriceType());
 				}
 				getManagedBean().setRequestSupplierItem(scRequestSupplierItem);
 				getManagedBean().setRequestNoteDtl(scRequestNoteDtl);
@@ -1332,8 +1398,8 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		}
 	}
 	
-	public String  getCreatedBy(Long createdBy) {
-		String user ="";
+	public PmUser  getCreatedBy(Long createdBy) {
+		PmUser user = null;
 		IUserSO userSO	=	(IUserSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 		UserReqDTO reqDTO = new UserReqDTO();
 		if(createdBy != null){
@@ -1341,7 +1407,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			UserResDTO resDTO = userSO.retrieveUserDetails(reqDTO);
 
 			if(resDTO.getPmUser() != null){
-				user = resDTO.getPmUser().getUserName();
+				 user = resDTO.getPmUser();
 			}
 		}
 		return user;
@@ -1530,18 +1596,15 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 										break;
 									}
 								}
-								
 							}
 						}
 					}
 				} else{
 					//requestNoteDtl.getPriceType().setParameterId(null);
 				}
-				
 				// selected rec.supplier
 				scRequestSupplierItem.setSupplierItemId(supplierId);
 				requestNoteDtl.setScRequestSupplierItem(scRequestSupplierItem);
-               
 				// prepared by
 				if(getManagedBean().getUserList() != null && getManagedBean().getUserList().size()>0){
 					for (PmUser user  : getManagedBean().getUserList()) {
@@ -1550,7 +1613,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 						}
 					}
 				}
-
+				
 				// delivery term
 				if(deliveryTermId != null){
 					IParameterSO  parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
@@ -1563,7 +1626,24 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		}
 	}
 
-	
+ /**
+  * selected assgned user to apply supplier recomendation list.
+  */
+	public void applyForSupplierRecs(ScRequestNoteDtl selectedReqDtl  , Long assignedUserId){ 
+		log.info("applyForSupplierRecs");
+		List<ScRequestNoteDtl>	requestNoteDtls	= new ArrayList<ScRequestNoteDtl>();
+		if(getManagedBean().getSupplierRecList() != null && getManagedBean().getSupplierRecList().size() >0) {
+			for(ScRequestNoteDtl requestNoteDtl : getManagedBean().getSupplierRecList()) {
+
+				if(requestNoteDtl.getRequestItem().getRequestNoteItemId().equals(selectedReqDtl.getRequestItem().getRequestNoteItemId())){
+					requestNoteDtl.setAssignedUser(getCreatedBy(assignedUserId));
+				}
+				requestNoteDtls.add(requestNoteDtl);
+			}
+			getManagedBean().setSupplierRecList(requestNoteDtls);
+		} 
+	}
+
 	/**
 	 * Get parameter code select items by parameter type for radio buttons.
 	 * 
