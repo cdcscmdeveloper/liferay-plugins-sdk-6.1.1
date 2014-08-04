@@ -451,9 +451,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 					supplierLister(scRequestNoteDtl.getScRequestSupplierItem().getSupplierItemId() ,scRequestNoteDtl.getPriceType().getParameterId() ,
 							scRequestNoteDtl,scRequestNoteDtl.getRequestItem().getSupplierItems() ,scRequestNoteDtl.getAssignedUser().getUserId() , scRequestNoteDtl.getDeliverTermType().getParameterId());
 					requestNoteDtls.add(scRequestNoteDtl);
-					
 				}
-			
 				getManagedBean().setRequestNote(requestNote);
 				fulfilmentTypeEvent(requestNote.getRequestNoteDtls().get(0));
 				getManagedBean().setRequestNoteDtl(requestNote.getRequestNoteDtls().get(0));
@@ -471,27 +469,28 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			
 			// created by 
 			getManagedBean().setCreatedBy(getCreatedBy(requestNote.getCreatedBy()));
-			
 			// remarks
-			 requestNote.setRemarks(initializeRemarks(requestNote));
-			
+			requestNote.setRemarks(initializeRemarks(requestNote));
+
 			if (requestNote.getSourceMethod().equalsIgnoreCase(ParameterConst.REQUEST_NOTE_SQ)) {
 				getManagedBean().setSourceMethod(ParameterConst.METHOD_SQ);
-				// For status 
-				getCurrentStatus(DPStatusConstants.RN_PENDING_SUBMISSION);
-				
+
 			} else {
 				getManagedBean().setSourceMethod(ParameterConst.METHOD_SC);
+				getManagedBean().setFulfillmentType(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
+			}
+			// For status 
+			if(getStatusDescById(docStatusId).equalsIgnoreCase("Pending RN Creation")){
+				getCurrentStatus(DPStatusConstants.RN_PENDING_SUBMISSION);
+			} else {
 				// For status 
 				if(docStatusId != null){
 					getCurrentStatus(docStatusId);
 				}
-			     getManagedBean().setFulfillmentType(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
 			}
-		   
-		   getManagedBean().setRequestNote(requestNote);
-		   initialInformation(requestNote);
-			
+			getManagedBean().setRequestNote(requestNote);
+			initialInformation(requestNote);
+
 		} finally {
 			directPurchaseSO = null;
 		}
@@ -1479,12 +1478,24 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 					if(scRequestSupplierItem.getSupplierItemPrices()!= null && scRequestSupplierItem.getSupplierItemPrices().size()>0){
 
 						for (ScSupplierItemPrice scSupplierItemPrice : scRequestSupplierItem.getSupplierItemPrices()) {
-							if(scSupplierItemPrice.getPriceType() != null){
-								if(scSupplierItemPrice.getPriceType().getParameterId().equals(priceTypeId)){
+							
+							// zonal item price  
+							if(requestNoteDtl.getTplSpecZoneDtl() !=null){
+								if(requestNoteDtl.getTplSpecZoneDtl().getSpecZoneId().equals(scSupplierItemPrice.getTplSpecZone().getSpecZoneId())){
 									scRequestSupplierItem.setSupplierItemPrice(scSupplierItemPrice);
 									requestNoteDtl.setPriceType(scSupplierItemPrice.getPriceType());
 									break;
 								}
+							}else {
+								 // non zonal item price 
+								if(scSupplierItemPrice.getPriceType() != null){
+									if(scSupplierItemPrice.getPriceType().getParameterId().equals(priceTypeId)){
+										scRequestSupplierItem.setSupplierItemPrice(scSupplierItemPrice);
+										requestNoteDtl.setPriceType(scSupplierItemPrice.getPriceType());
+										break;
+									}
+								}
+								
 							}
 						}
 					}

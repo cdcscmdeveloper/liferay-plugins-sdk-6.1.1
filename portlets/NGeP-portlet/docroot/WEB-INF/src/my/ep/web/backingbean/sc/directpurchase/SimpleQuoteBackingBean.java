@@ -2207,36 +2207,27 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 						for (TreeNode devisionNode : stateNode.getChildren()) {
 
 							if (devisionNode.getChildCount() > 0) {
-								
 								for (TreeNode districtNode : devisionNode.getChildren()) {
-									log.info("===divisions=====");
 									TplSpecZoneLoc tplSpecZoneLoc = (TplSpecZoneLoc) districtNode.getData();
 									tplSpecZoneDtl  = tplSpecZoneLoc.getTplSpecZoneDtl();
 									results.add(tplSpecZoneLoc);
 									tplSpecZoneDtl.setTplSpecZoneLocs(results);
-									//tplSpecZoneDtl.setTplSpecZone(scQuoteZone);
-									//tplSpecDtls.add(tplSpecZoneDtl);
 								}
 								
 							} else {
-								log.info("===districts=====");
 								TplSpecZoneLoc tplSpecZoneLoc = (TplSpecZoneLoc) devisionNode.getData();
 								tplSpecZoneDtl  = tplSpecZoneLoc.getTplSpecZoneDtl();
 								results.add(tplSpecZoneLoc);
 								tplSpecZoneDtl.setTplSpecZoneLocs(results);
-								//tplSpecZoneDtl.setTplSpecZone(scQuoteZone);
-								//tplSpecDtls.add(tplSpecZoneDtl);
 							}
 						}
 						
 					} else {
-						log.info("===states=====");
 						TplSpecZoneLoc tplSpecZoneLoc = (TplSpecZoneLoc) stateNode.getData();
 						tplSpecZoneDtl = tplSpecZoneLoc.getTplSpecZoneDtl();
 						results.add(tplSpecZoneLoc);
 						tplSpecZoneDtl.setTplSpecZoneLocs(results);
-						//tplSpecZoneDtl.setTplSpecZone(scQuoteZone);
-						//tplSpecDtls.add(tplSpecZoneDtl);
+						
 					}
 				}
 			}
@@ -2317,8 +2308,21 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			quoteZone.setScQuote(quote);
 			quote.setQuoteZone(quoteZone);
 			quote.setZonal(Boolean.TRUE);
+			
+			// product
+			if(getManagedBean().getProductTemplateSpecBean().getSpecMaster() != null){
+				getManagedBean().getProductTemplateSpecBean().getSpecMaster().setTplSpecZone(quoteZone);
+			}
+
+			// service 
+			if(getManagedBean().getProductTemplateSpecBean().getSpecMaster() != null){
+				getManagedBean().getProductTemplateSpecBean().getSpecMaster().setTplSpecZone(quoteZone);
+			}
+
 		} else {
 			quote.setZonal(Boolean.FALSE);
+			getManagedBean().getProductTemplateSpecBean().getSpecMaster().setTplSpecZone(null);
+			getManagedBean().getProductTemplateSpecBean().getSpecMaster().setTplSpecZone(null);
 		}
 		
 		this.getManagedBean().setScQuote(quote);
