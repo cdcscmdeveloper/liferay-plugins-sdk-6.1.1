@@ -9,18 +9,19 @@
 	
 		
    <p:panel header="EDUCATION FIELD" toggleable="true" styleClass="noBorders tr,noBorders td" >
+	<p:spacer height="10"></p:spacer>
 		
-	<table>
+	<table style="width:100%;">
 	  <tr>	  	
-		<td><p:outputLabel value="#{lbl['lbl.pm.ef.code']}" />
+		<td style="width:10%;"><p:outputLabel value="#{lbl['lbl.pm.ef.code']}" />
 			<p:outputLabel value="*" styleClass="mandatory" /></td>
 		<td><p:inputText value="#{educationBackingBean.managedBean.pmEduField.fieldCode}" size="30" /></td>
 	  </tr>	
 	  <tr>	  	
 		<td><p:outputLabel value="#{lbl['lbl.pm.ef.fname']}" />
 			<p:outputLabel value="*" styleClass="mandatory" /></td>
-		<td><p:inputText value="#{educationBackingBean.managedBean.pmEduField.fieldName}" size="100" /></td>
-	  </tr>	
+		<td><p:inputText value="#{educationBackingBean.managedBean.pmEduField.fieldName}" size="50" /></td>
+	  </tr>		  
 	   <tr> 
 		<td><p:outputLabel value="#{lbl['lbl.pm.search.status']}" /></td>
      	<td><p:selectOneMenu style="width:178px;margin-bottom:5px;"> 
@@ -28,5 +29,48 @@
 	    </tr>
 	</table>
    </p:panel>
-     	
+   
+	<p:panel header="EDUCATION FIELD RESTRICTION" toggleable="true">
+	<ac:lovPopup />
+	<p:dataTable id="educationfieldres" var="eduFieldRes">
+
+ 	  <ac:paginator /> 
+	   <p:column style="width:2%;text-align:center;" /> 
+		  	  	         
+       <p:column headerText="#{lbl['lbl.pm.ef.catcode']}" > 
+          <h:outputText />
+       </p:column>  
+       
+       <p:column headerText="#{lbl['lbl.pm.ef.catname']}" > 
+          <h:outputText />
+       </p:column> 
+
+       <p:column headerText="#{lbl['lbl.pm.search.status']}" > 
+          <h:outputText />
+       </p:column>            
+       
+     </p:dataTable>
+	<p:spacer height="15"></p:spacer>
+	
+	<div>
+		<table style="width: 100%">
+			<tr>
+			  <td class="TableFieldLeft" width="80%"></td>
+			  <td>
+				<table>
+				    <tr>
+				    <td class="TableFieldLeft">
+				      <ac:lov id="supplier" lovId="PM_CATEGORY_L3"
+            		     headerText="Category No Lov" buttonLabel="Add"
+	       				 buttonIcon="ui-icon-add" selectionMode="multiple"
+	        			 saveObject="educationBackingBean.managedBean.categoryList"
+	        			 update="@form" /></td>
+					<td><p:commandButton value="#{lbl['lbl.sc.action.delete']}" icon="ui-icon-delete" /></td>
+					</tr>
+				</table>
+			</td>
+		 </tr>
+	  </table>
+			</div>    
+   </p:panel>   	
 </ui:composition>
