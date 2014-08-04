@@ -201,19 +201,6 @@
 			</tr>
 		</table>
 	</p:panel>
-	<c:if test='#{invoiceBackingBean.managedBean.docMaintainRemarks eq "true"}'>
-	
-	<p:panel header="#{lbl['lbl.fl.remark.attachment']}" toggleable="true">
-		<table style="width: 100%">
-			<tr>
-				<td width="50%" valign="top"><ui:include
-						src="/xhtml/fl/shared/remark.xhtml" /></td>
-				
-			</tr>
-		</table>
-	</p:panel>
-	</c:if>
-	<c:if test='#{invoiceBackingBean.managedBean.docMaintainRemarks eq "false"}'>
 	<p:panel header="#{lbl['lbl.fl.remark.attachment']}" toggleable="true">
 		<table style="width: 100%">
 			<tr>
@@ -224,5 +211,4 @@
 			</tr>
 		</table>
 	</p:panel>
-	</c:if>
 </ui:composition>
