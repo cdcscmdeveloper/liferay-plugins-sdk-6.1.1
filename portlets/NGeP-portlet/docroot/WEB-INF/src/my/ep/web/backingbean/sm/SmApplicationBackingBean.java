@@ -4062,6 +4062,10 @@ public class SmApplicationBackingBean extends
 			}
 			MofRegistrationReqDTO reqDTO = setMofRegistrationReqDTO(bpmAppl,
 					outcome);
+			List<String> useList = new ArrayList<String>();
+			PmUser loginUser = new FacesScopes().getUserSessionBean();
+			useList.add(loginUser.getLoginId());
+			reqDTO.setUserList(useList);
 			if (reqDTO.getOutcome().equals("")) {
 				reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			}
@@ -7302,11 +7306,13 @@ public class SmApplicationBackingBean extends
 		return validSupportDocs;
 
 	}
-	
-	public void retrieveBusinessTypeList(){
+
+	public void retrieveBusinessTypeList() {
 		List<PmParameterDesc> pmDesc = new ArrayList<PmParameterDesc>();
-		pmDesc = SmCommonUtil.retrieveParameterDescList(SupplierManagementConst.SUPPLIER_BUSINESS_TYPE, new FacesScopes().getUserLocale().getLanguage());
-		
+		pmDesc = SmCommonUtil.retrieveParameterDescList(
+				SupplierManagementConst.SUPPLIER_BUSINESS_TYPE,
+				new FacesScopes().getUserLocale().getLanguage());
+
 		System.out.println("**retrieveBusinessTypeList***" + pmDesc.size());
 		this.getManagedBean().setBusinessTypeLs(pmDesc);
 	}
