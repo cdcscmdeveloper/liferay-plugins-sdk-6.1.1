@@ -79,7 +79,7 @@
 	</p:panel>
 
 
-	<p:panel>
+	<p:panel header="#{lbl['lbl.sc.spec.location.list.paidup.capital']}">
 
 		<table style="width: 100%">
 
@@ -96,7 +96,7 @@
 								value="#{specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState}">
 								<f:selectItem
 									itemValue="#{specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState}"></f:selectItem>
-								<p:ajax update="supplierallStae,minPaidCapital"
+								<p:ajax update="@form"
 									listener="#{specificationBackingBean.stateChange}" />
 							</p:selectBooleanCheckbox>
 						</h:panelGrid>
@@ -104,21 +104,23 @@
 				<td></td>
 			</tr>
 			<p:outputPanel id="minPaidCapital">
-				<tr>
-					<td style="width: 150px"><p:outputLabel
-							value="#{lbl['lbl.so.paidup']}"
-							rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState eq 'true'}" /></td>
-					<td><p:inputText size="30" maxlength="18"
-							disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
-							rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState eq 'true'}"
-							value="#{specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.minPaidUpCapital}"
-							style="margin-right:5px;text-align:right;">
-							<f:convertNumber
-								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}">
-							</f:convertNumber>
-						</p:inputText></td>
-				</tr>
-
+				<ui:fragment
+					rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState eq 'true'}">
+					<tr>
+						<td style="width: 150px"><p:outputLabel
+								value="#{lbl['lbl.so.paidup']}"
+								rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState eq 'true'}" /></td>
+						<td><p:inputText size="30" maxlength="18"
+								disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
+								rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState eq 'true'}"
+								value="#{specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.minPaidUpCapital}"
+								style="margin-right:5px;text-align:right;">
+								<f:convertNumber
+									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}">
+								</f:convertNumber>
+							</p:inputText></td>
+					</tr>
+				</ui:fragment>
 			</p:outputPanel>
 		</table>
 
@@ -128,13 +130,14 @@
 		<h:panelGroup id="supplierallStae">
 
 
-			<p:panel header="#{lbl['lbl.sc.spec.location.list.paidup.capital']}"
+			<p:panel
 				rendered="#{((specificationBackingBean.managedBean.scQt.estimatedAmount le '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false' and specificationBackingBean.managedBean.scQt.zonal =='false') or (specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false'  and specificationBackingBean.managedBean.scQt.zonal =='false') or (specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false'  and specificationBackingBean.managedBean.scQt.zonal))}">
 				<table style="width: 100%">
 					<tr>
 						<td style="width: 150px"><p:outputLabel
 								value="#{lbl['lbl.so.paidup']}" /></td>
 						<td><p:inputText size="30" maxlength="18"
+								rendered="#{specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false'}"
 								disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
 								value="#{specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.minPaidUpCapital}"
 								style="margin-right:5px;text-align:right;">
@@ -221,6 +224,7 @@
 						<td style="width: 150px"><p:outputLabel
 								value="#{lbl['lbl.so.paidup']}" /></td>
 						<td><p:inputText size="30" maxlength="18"
+								rendered="#{specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false'}"
 								disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
 								value="#{specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.minPaidUpCapital}"
 								style="margin-right:5px;text-align:right;">
@@ -287,7 +291,7 @@
 				widgetVar="ZoneLocation" modal="true" width="600" position="top"
 				height="400">
 				<p:panel id="zonePopupPanel">
-					<table  border="0">
+					<table border="0">
 						<TR>
 
 							<TD width="80%"><p:panel></p:panel>
