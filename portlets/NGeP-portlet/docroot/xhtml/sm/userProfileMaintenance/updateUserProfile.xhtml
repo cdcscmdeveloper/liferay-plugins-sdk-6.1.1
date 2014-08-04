@@ -28,7 +28,6 @@
 					<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.name']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
 					<td><p:inputText value="#{smPersonnelBackingBean.managedBean.updateSmPersonnel.name}" readonly="true" disabled="true" size="35" /></td>
-					<td></td>
 					<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.eprole']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
 					<td><p:selectOneMenu id="basicBURole"
@@ -39,7 +38,6 @@
 								<f:selectItem itemLabel="- Select One -" itemValue="" />
 								<f:selectItems value="#{smPersonnelBackingBean.managedBean.roleList}"/>
 							</p:selectOneMenu></td>
-					<td></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel
@@ -66,8 +64,6 @@
 								<f:selectItems
 									value="#{smPersonnelBackingBean.getDropdownValues('ID')}" />
 							</p:selectOneMenu></td>
-						<td><p:message id="updateBUIdTypeMsg" for="updateBUIdType"
-								showSummary="true" showDetail="false" display="icon" /></td>
 
 						<td><p:outputPanel
 								id="updateBUIdTypeLblPan">
@@ -84,8 +80,6 @@
 									size="35" maxlength="15"
 									readonly="true" disabled="true">
 								</p:inputText>
-								<p:message id="updateBUIcNumMsg" for="updateBUIcNum"
-									showSummary="true" showDetail="false" display="icon" />
 							</p:outputPanel></td>
 						<td></td>
 				</tr>
@@ -96,7 +90,6 @@
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</p:inputText></td>
-					<td></td>
 					
 					<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.designation']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
@@ -108,8 +101,6 @@
 					<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.email']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
 					<td><p:inputText id="updateBUEmail" value="#{smPersonnelBackingBean.managedBean.updateSmPersonnel.email}" size="40" required="true" readonly="true" disabled="true"/></td>
-						<td><p:message id="updateBUEmailMsg" for="updateBUEmail"
-								showSummary="true" showDetail="false" display="icon" /></td>
 
 					</tr>
 					<tr>
@@ -122,8 +113,8 @@
 								size="35" maxlength="12" required="true" 
 								validatorMessage="#{lbl['lbl.sm.userprofile.phone']} - #{lbl['lbl.sm.invalidNo']}">
 								<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
-								</p:inputText></td>
-						<td><p:message id="updateBUPhoneMsg" for="updateBUPhone"
+								</p:inputText>
+							<p:message id="updateBUPhoneMsg" for="updateBUPhone"
 								showSummary="true" showDetail="false" display="icon" /></td>
 
 						<td><p:outputLabel
@@ -135,8 +126,8 @@
 								size="35" maxlength="12" required="true" 
 								validatorMessage="#{lbl['lbl.sm.userprofile.mobile']} - #{lbl['lbl.sm.invalidNo']}">
 								<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
-								</p:inputText></td>
-						<td><p:message id="updateBUMobileMsg" for="updateBUMobile"
+								</p:inputText>
+							<p:message id="updateBUMobileMsg" for="updateBUMobile"
 								showSummary="true" showDetail="false" display="icon" /></td>
 					</tr>
 		</table>	
@@ -166,8 +157,8 @@
 										maxlength="35" required="true" id="permAdd1"
 										label="#{lbl['lbl.sm.address']}"
 										value="#{smPersonnelBackingBean.managedBean.updateSmPersonnelPermanentAddress.smAddress.address1}"
-										size="35" /></td>
-								<td><p:message id="permAdd1Msg" for="permAdd1"
+										size="35" />
+									<p:message id="permAdd1Msg" for="permAdd1"
 										showSummary="true" showDetail="false" display="icon" /></td>
 							</tr>
 							<tr>
@@ -183,7 +174,6 @@
 										maxlength="35"
 										value="#{smPersonnelBackingBean.managedBean.updateSmPersonnelPermanentAddress.smAddress.address3}"
 										size="35" /></td>
-								<td></td>
 							</tr>
 							<tr>
 								<td></td>
@@ -191,7 +181,6 @@
 										maxlength="35"
 										value="#{smPersonnelBackingBean.managedBean.updateSmPersonnelPermanentAddress.smAddress.address4}"
 										size="35" /></td>
-								<td></td>
 							</tr>
 							<tr>
 								<td><p:outputLabel
@@ -207,8 +196,8 @@
 										<p:ajax event="change"
 											update="updatePermAddStateList, updatePermAddDistrictList, updatePermAddCityList"
 											listener="#{smPersonnelBackingBean.updatePermAddLists(smPersonnelBackingBean.managedBean.updateSmPersonnelPermanentAddress.smAddress.pmCountry.countryId,null,null)}" />
-									</p:selectOneMenu></td>
-								<td><p:message id="updatePermAddCountryListMsg"
+									</p:selectOneMenu>
+									<p:message id="updatePermAddCountryListMsg"
 										for="updatePermAddCountryList" showSummary="true"
 										showDetail="false" display="icon" /></td>
 							</tr>
@@ -226,8 +215,8 @@
 										<p:ajax event="change"
 											update="updatePermAddDistrictList, updatePermAddCityList"
 											listener="#{smPersonnelBackingBean.updatePermAddLists(null,smPersonnelBackingBean.managedBean.updateSmPersonnelPermanentAddress.smAddress.pmState.stateId,null)}" />
-									</p:selectOneMenu></td>
-								<td><p:message id="updatePermAddStateListMsg"
+									</p:selectOneMenu>
+									<p:message id="updatePermAddStateListMsg"
 										for="updatePermAddStateList" showSummary="true"
 										showDetail="false" display="icon" /></td>
 							</tr>
@@ -244,8 +233,8 @@
 											value="#{smPersonnelBackingBean.managedBean.permAddDistrictList}" />
 										<p:ajax event="change" update="updatePermAddCityList"
 											listener="#{smPersonnelBackingBean.updatePermAddLists(null,null,smPersonnelBackingBean.managedBean.updateSmPersonnelPermanentAddress.smAddress.pmDistrict.districtId)}" />
-									</p:selectOneMenu></td>
-								<td><p:message id="updatePermAddDistrictListMsg"
+									</p:selectOneMenu>
+									<p:message id="updatePermAddDistrictListMsg"
 										for="updatePermAddDistrictList" showSummary="true"
 										showDetail="false" display="icon" /></td>
 							</tr>
@@ -260,17 +249,20 @@
 										<f:selectItem itemLabel="- Select One -" itemValue="" />
 										<f:selectItems
 											value="#{smPersonnelBackingBean.managedBean.permAddCityList}" />
-									</p:selectOneMenu></td>
-								<td><p:message id="updatePermAddCityListMsg"
+									</p:selectOneMenu>
+									<p:message id="updatePermAddCityListMsg"
 										for="updatePermAddCityList" showSummary="true"
 										showDetail="false" display="icon" /></td>
 							</tr>
 							<tr>
 								<td><p:outputLabel
-										value="#{lbl['lbl.sm.postcode']}" /></td>
-								<td ><p:inputText size="10" maxlength="10"
-										value="#{smPersonnelBackingBean.managedBean.updateSmPersonnelPermanentAddress.smAddress.postcode}" /></td>
-								<td></td>
+										value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
+									value="*" styleClass="mandatory" /></td>
+								<td ><p:inputText size="10" maxlength="10" id="updatePermAddPostCode" label="#{lbl['lbl.sm.postcode']}" required="true"
+										value="#{smPersonnelBackingBean.managedBean.updateSmPersonnelPermanentAddress.smAddress.postcode}" />
+									<p:message id="updatePermAddPostCodeMsg"
+									for="updatePermAddPostCode" showSummary="true"
+									showDetail="false" display="icon" /></td>
 							</tr>
 						</table>
 					</p:panel>
@@ -288,7 +280,6 @@
 											partialSubmit="true"
 											process="@this"/>
 									</p:selectBooleanCheckbox><p:outputLabel value="Same as permanent address" /></td>
-								<td></td>				
 							</tr>
 							<c:choose>
 								<c:when
@@ -309,8 +300,8 @@
 												size="35"
 												required="#{!smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.sameAsPerm}"
 												readonly="#{smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.sameAsPerm}"
-												disabled="#{smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.sameAsPerm}" /></td>
-										<td><p:message id="mailAdd1Msg" for="mailAdd1" showSummary="true"
+												disabled="#{smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.sameAsPerm}" />
+												<p:message id="mailAdd1Msg" for="mailAdd1" showSummary="true"
 												showDetail="false" display="icon" /></td>
 									</tr>
 									<tr>
@@ -321,7 +312,6 @@
 												size="35"
 												readonly="#{smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.sameAsPerm}"
 												disabled="#{smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.sameAsPerm}" /></td>
-										<td></td>
 									</tr>
 									<tr>
 										<td></td>
@@ -331,7 +321,6 @@
 												size="35"
 												readonly="#{smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.sameAsPerm}"
 												disabled="#{smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.sameAsPerm}" /></td>
-										<td></td>
 									</tr>
 									<tr>
 										<td></td>
@@ -341,7 +330,6 @@
 												size="35"
 												readonly="#{smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.sameAsPerm}"
 												disabled="#{smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.sameAsPerm}" /></td>
-										<td></td>
 									</tr>
 									<tr>
 										<td><p:outputLabel
@@ -361,8 +349,8 @@
 												<p:ajax event="change"
 													update="updateMailAddStateList, updateMailAddDistrictList, updateMailAddCityList"
 													listener="#{smPersonnelBackingBean.updateMailAddLists(smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.smAddress.pmCountry.countryId,null,null)}" />
-											</p:selectOneMenu></td>
-										<td><p:message id="updateMailAddCountryListMsg"
+											</p:selectOneMenu>
+											<p:message id="updateMailAddCountryListMsg"
 												for="updateMailAddCountryList" showSummary="true"
 												showDetail="false" display="icon" /></td>
 									</tr>
@@ -383,8 +371,8 @@
 												<p:ajax event="change"
 													update="updateMailAddDistrictList, updateMailAddCityList"
 													listener="#{smPersonnelBackingBean.updateMailAddLists(null,smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.smAddress.pmState.stateId,null)}" />
-											</p:selectOneMenu></td>
-										<td><p:message id="updateMailAddStateListMsg"
+											</p:selectOneMenu>
+											<p:message id="updateMailAddStateListMsg"
 												for="updateMailAddStateList" showSummary="true"
 												showDetail="false" display="icon" /></td>
 									</tr>
@@ -404,8 +392,8 @@
 													value="#{smPersonnelBackingBean.managedBean.mailAddDistrictList}" />
 												<p:ajax event="change" update="updateMailAddCityList"
 													listener="#{smPersonnelBackingBean.updateMailAddLists(null,null,smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.smAddress.pmDistrict.districtId)}" />
-											</p:selectOneMenu></td>
-										<td><p:message id="updateMailAddDistrictListMsg"
+											</p:selectOneMenu>
+											<p:message id="updateMailAddDistrictListMsg"
 												for="updateMailAddDistrictList" showSummary="true"
 												showDetail="false" display="icon" /></td>
 									</tr>
@@ -423,19 +411,23 @@
 												<f:selectItem itemLabel="- Select One -" itemValue="" />
 												<f:selectItems
 													value="#{smPersonnelBackingBean.managedBean.mailAddCityList}" />
-											</p:selectOneMenu></td>
-										<td><p:message id="updateMailAddCityListMsg"
+											</p:selectOneMenu>
+											<p:message id="updateMailAddCityListMsg"
 												for="updateMailAddCityList" showSummary="true"
 												showDetail="false" display="icon" /></td>
 									</tr>
 									<tr>
 										<td><p:outputLabel
-												value="#{lbl['lbl.sm.postcode']}" /></td>
-										<td ><p:inputText size="10" maxlength="10"
+												value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
+									value="*" styleClass="mandatory" /></td>
+										<td ><p:inputText size="10" maxlength="10" id="updateMailAddPostcode" label="#{lbl['lbl.sm.postcode']}"
+												required="#{!smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.sameAsPerm}"
 												readonly="#{smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.sameAsPerm}"
 												disabled="#{smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.sameAsPerm}"
-												value="#{smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.smAddress.postcode}" /></td>
-										<td></td>
+												value="#{smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.smAddress.postcode}" />
+											<p:message id="updateMailAddPostcodeMsg"
+											for="updateMailAddPostcode" showSummary="true"
+											showDetail="false" display="icon" /></td>
 									</tr>
 								</c:otherwise>
 							</c:choose>		

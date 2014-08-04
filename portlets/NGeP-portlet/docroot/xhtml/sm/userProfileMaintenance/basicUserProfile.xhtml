@@ -331,9 +331,13 @@
 							</tr>
 							<tr>
 								<td><p:outputLabel
-										value="#{lbl['lbl.sm.postcode']}" /></td>
-								<td ><p:inputText size="10" maxlength="10"
-										value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress.postcode}" /></td>
+										value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
+									value="*" styleClass="mandatory" /></td>
+								<td ><p:inputText size="10" maxlength="10" id="basicPermAddPostCode" label="#{lbl['lbl.sm.postcode']}" required="true"
+										value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelPermanentAddress.smAddress.postcode}" />
+									<p:message id="basicPermAddPostCodeMsg"
+											for="basicPermAddPostCode" showSummary="true"
+											showDetail="false" display="icon" /></td>
 							</tr>
 						</table>
 					</p:panel>
@@ -489,11 +493,16 @@
 								</tr>
 								<tr>
 									<td><p:outputLabel
-											value="#{lbl['lbl.sm.postcode']}" /></td>
-									<td ><p:inputText size="10" maxlength="10"
+											value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
+									value="*" styleClass="mandatory" /></td>
+									<td ><p:inputText size="10" maxlength="10" id="basicMailAddPostCode" label="#{lbl['lbl.sm.postcode']}"
+											required="#{!smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
 											readonly="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
 											disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.sameAsPerm}"
-											value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.smAddress.postcode}" /></td>
+											value="#{smPersonnelBackingBean.managedBean.basicSmPersonnelMailingAddress.smAddress.postcode}" />
+										<p:message id="basicMailAddPostCodeMsg"
+											for="basicMailAddPostCode" showSummary="true"
+											showDetail="false" display="icon" /></td>
 								</tr>
 							</c:otherwise>
 						</c:choose>	
