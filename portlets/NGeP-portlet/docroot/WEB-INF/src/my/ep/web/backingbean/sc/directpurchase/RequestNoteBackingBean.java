@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.faces.bean.ManagedBean;
@@ -582,6 +583,40 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		finally {
 			directPurchaseSO = null;
 		}
+	}
+	 
+	public List<SmSupplier> getSuppliersBySelectedItems() {
+		List<SmSupplier> suppliers = new ArrayList<SmSupplier>();
+		List<ScRequestNoteDtl>	selectedRequestNoteDtls	= getManagedBean().getSelectedRequestNoteDtls();
+		
+		if(selectedRequestNoteDtls != null) {
+			int itemSize = selectedRequestNoteDtls.size();
+			Map<SupplierPK, Integer> supplierMap = new HashMap<SupplierPK, Integer>();
+			
+			for (ScRequestNoteDtl requestNoteDtl : selectedRequestNoteDtls) {
+				if (requestNoteDtl.getRequestItem().getSupplierItems() != null) {
+					for (ScRequestSupplierItem supplierItem : requestNoteDtl.getRequestItem().getSupplierItems()) {
+						SupplierPK supplierPK = new SupplierPK(supplierItem.getSmSupplier());
+						
+						Integer itemCount = supplierMap.get(supplierPK);
+						if (itemCount != null) {
+							itemCount += 1;
+						} else {
+							itemCount = 1;
+						}
+						supplierMap.put(supplierPK, itemCount);
+					}
+				}
+			}
+			
+			for (Entry<SupplierPK, Integer> supplierEntry : supplierMap.entrySet()) {
+				if (supplierEntry.getValue().intValue() == itemSize) {
+					suppliers.add(supplierEntry.getKey().getSmSupplier());
+				}
+			}
+		}
+		
+		return suppliers;
 	}
 	
 	public void applyForRequestNote() {
@@ -1629,5 +1664,59 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			}	
 		}
 		return statusDescs;
+	}
+	
+	private class SupplierPK {
+		private SmSupplier smSupplier;
+		
+		public SupplierPK(SmSupplier smSupplier) {
+			this.smSupplier = smSupplier;
+		}
+		
+		/**
+		 * @return the smSupplier
+		 */
+		public SmSupplier getSmSupplier() {
+			return smSupplier;
+		}
+
+		/**
+		 * @param smSupplier the smSupplier to set
+		 */
+		public void setSmSupplier(SmSupplier smSupplier) {
+			this.smSupplier = smSupplier;
+		}
+
+		/**
+		 * @param other the another SmSupplier instance
+		 */
+		public boolean equals(Object other) {
+			if (other == null) {
+				return false;
+			}
+			if (this == other) {
+				return true;
+			}
+			if (!(other instanceof SupplierPK)) {
+				return false;
+			}
+			
+			final SupplierPK otherObject = (SupplierPK)other;
+
+			return this.getSmSupplier().getSupplierId().equals(otherObject.getSmSupplier().getSupplierId());
+		}
+
+		/**
+		 * @return the hashcode
+		 */
+		public int hashCode() {
+			int result = 3;
+			
+			if (this.getSmSupplier() != null && this.getSmSupplier().getSupplierId() != null) {
+				result = 31 * result + this.getSmSupplier().getSupplierId().hashCode();
+			}
+			
+			return result;
+		}
 	}
 }

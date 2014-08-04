@@ -57,6 +57,7 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	private List<ScRequestItem>	requestNoteItems = new ArrayList<ScRequestItem>();
 	private	DualListModel<PmUser>	approvalUsers = new DualListModel<PmUser>();
 	private	String	fulfillmentType;
+	private Long supplierId;
 	private	Long	assignedToUserId;
 	private	String	periodType;
 	private	int	periodValue;
@@ -180,6 +181,21 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	public void setFulfillmentType(String fulfillmentType) {
 		this.fulfillmentType = fulfillmentType;
 	}
+	
+	/**
+	 * @return the supplierId
+	 */
+	public Long getSupplierId() {
+		return supplierId;
+	}
+	
+	/**
+	 * @param supplierId the supplierId to set
+	 */
+	public void setSupplierId(Long supplierId) {
+		this.supplierId = supplierId;
+	}
+	
 	/**
 	 * @return the assignedToUserId
 	 */
