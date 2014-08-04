@@ -2,6 +2,7 @@ package my.ep.web.backingbean.sc.quatationtender;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -71,6 +72,7 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmCity;
+import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDo;
 import my.ep.persistence.entity.pm.common.PmDocument;
@@ -824,6 +826,7 @@ public class QTDetailBackingBean extends
 			}
 			scQt.setScQtApprovals(approvalList);
 		}
+		if(QTStatusConst.QT_PENDING_QT_SUBMISSION > scQt.getQtStatus().getStatusId()){
 		// Setting the qtBreifing details to Qtdetails
 		List<BriefingZoneBean> beansList = getManagedBean()
 				.getBriefingZoneBean();
@@ -920,24 +923,9 @@ public class QTDetailBackingBean extends
 				scQt.setScQtBriefings(scQtBsvs);
 			}
 		}
-		// Setting the contact person to qtdetails.
-		List<ScQtContactPerson> list = new ArrayList<ScQtContactPerson>();
-		List<ScQtContactPerson> contactPersonsList = this.getManagedBean()
-				.getScQtContactPersons();
-		List<ScQtContactPerson> deskOfficerAdminList = this.getManagedBean()
-				.getPmuserContactpersonList();
-		if (contactPersonsList != null && !contactPersonsList.isEmpty()) {
-			list.addAll(contactPersonsList);
-		}
-		if (deskOfficerAdminList != null && !deskOfficerAdminList.isEmpty()) {
-			list.addAll(deskOfficerAdminList);
-		}
-		if (list != null && !list.isEmpty()) {
-			scQt.setScQtContactPersons(list);
-		}
+		//Setting Sample Submission to qtDetails.
 		if (scQt.isZonal()) {
-			List<ScQtSampleSubmission> sampleSubmissionList = getManagedBean()
-					.getSelectedSubmissionList();
+			List<ScQtSampleSubmission> sampleSubmissionList = getManagedBean().getScQtSampleSubmissionList();
 			if (sampleSubmissionList != null && !sampleSubmissionList.isEmpty()) {
 				for (ScQtSampleSubmission scQtSampleSubmission : sampleSubmissionList) {
 					scQtSampleSubmission.setScQt(getManagedBean().getQt());
@@ -946,16 +934,33 @@ public class QTDetailBackingBean extends
 			}
 		} else {
 			List<ScQtSampleSubmission> sampleList = new ArrayList<ScQtSampleSubmission>();
-			PmAddress address = getManagedBean().getPmAddress();
-			// ScQtSampleSubmission submission =
-			// getManagedBean().getScQtSampleSubmission().setAddress(address);
-			for (ScQtSampleSubmission scQtSampleSubmission : sampleList) {
-				scQtSampleSubmission.setAddress(address);
-				scQtSampleSubmission.setScQt(getManagedBean().getQt());
-				int index = sampleList.indexOf(scQtSampleSubmission);
-				sampleList.set(index, scQtSampleSubmission);
+			if (sampleList != null) {
+				ScQtSampleSubmission qtSampleSubmission = getManagedBean().getScQtSampleSubmission();
+				if (null != qtSampleSubmission) {
+					this.getManagedBean().getPmAddress().setAddress1(this.getManagedBean().getAddress());
+					PmAddress address = this.getManagedBean().getPmAddress();
+					PmCountry pmCountry = new PmCountry();
+					pmCountry.setCountryId(1L);
+					address.setPmCountry(pmCountry);
+					qtSampleSubmission.setAddress(address);
+					qtSampleSubmission.setScQt(getManagedBean().getQt());
+					sampleList.add(qtSampleSubmission);
+				}
+				scQt.setScQtSampleSubmission(sampleList);
 			}
-			scQt.setScQtSampleSubmission(sampleList);
+		}
+		// Setting the contact person to qtdetails.
+		List<ScQtContactPerson> list = new ArrayList<ScQtContactPerson>();
+		List<ScQtContactPerson> contactPersonsList = this.getManagedBean().getScQtContactPersons();
+		List<ScQtContactPerson> deskOfficerAdminList = this.getManagedBean().getPmuserContactpersonList();
+		if (contactPersonsList != null && !contactPersonsList.isEmpty()) {
+			list.addAll(contactPersonsList);
+		}
+		if (deskOfficerAdminList != null && !deskOfficerAdminList.isEmpty()) {
+			list.addAll(deskOfficerAdminList);
+		}
+		if (list != null && !list.isEmpty()) {
+			scQt.setScQtContactPersons(list);
 		}
 		// Setting the Deductions to qtdetails.
 		List<ScQtDeduction> deductionList = getManagedBean()
@@ -974,6 +979,7 @@ public class QTDetailBackingBean extends
 		if (docReports != null && !docReports.isEmpty()) {
 			scQtDocReports.addAll(docReports);
 			scQt.setScQtDocReports(scQtDocReports);
+		}
 		}
 		scQt.setScQtStatus(null);
 		// save.
@@ -1905,65 +1911,73 @@ public class QTDetailBackingBean extends
 		 * this.getManagedBean().setActiveIndex(7); }
 		 */
 		if (getManagedBean().getScQtSampleSubmission() == null) {
-			getManagedBean()
-					.setScQtSampleSubmission(new ScQtSampleSubmission());
+			getManagedBean().setScQtSampleSubmission(new ScQtSampleSubmission());
 		}
-		if (getManagedBean().getPmAddress() == null) {
-			getManagedBean().setPmAddress(new PmAddress());
+		if (this.getManagedBean().getPmAddress() == null) {
+			PmAddress pmAddress = new PmAddress();
+			pmAddress.setPmCity(new PmCity());
+			pmAddress.setPmState(new PmState());
+			pmAddress.setPmDistrict(new PmDistrict());		
+			this.getManagedBean().setPmAddress(pmAddress);
 		}
-		if (getManagedBean().getPmAddress().getPmCity() == null) {
-			getManagedBean().getPmAddress().setPmCity(new PmCity());
-		}
-		if (getManagedBean().getPmAddress().getPmDistrict() == null) {
-			getManagedBean().getPmAddress().setPmDistrict(new PmDistrict());
-		}
-		if (getManagedBean().getPmAddress().getPmState() == null) {
-			getManagedBean().getPmAddress().setPmState(new PmState());
-		}
+	
 		if (getManagedBean().getQt() != null) {
-			/*
-			 * Calendar cal = Calendar.getInstance();
-			 * cal.setTime(getManagedBean().getQt().getPublishDate());
-			 * cal.add(Calendar.DATE, getManagedBean().getQt()
-			 * .getQtValidityPeriod()); //getManagedBean()
-			 * getManagedBean().setProposalValidityUntil(cal.getTime());
-			 */
+			
+			Calendar cal = Calendar.getInstance();
+			Date bsvDate = null;
+			List<BriefingZoneBean> briefingBeans = getManagedBean().getBriefingZoneBean();
+			if (null != briefingBeans && !briefingBeans.isEmpty()) {
+				for (BriefingZoneBean briefing : briefingBeans) {
+					briefing.getScQtBsv().getScQtBsvDtls();
+					ScQtBsv bsv = briefing.getScQtBsv();
+					for (ScQtBsvDtl bsvDtl : bsv.getScQtBsvDtls()) {
+						bsvDate = bsvDtl.getBsvDate();
+						cal.setTime(bsvDate);
+						cal.add(Calendar.DATE, getManagedBean().getQt().getPublishPeriod());
+						getManagedBean().getQt().setClosingDate(cal.getTime());
+					}
+				}
+			} else {
+				if (null != getManagedBean().getQt().getPublishDate()) {
+					cal.setTime(getManagedBean().getQt().getPublishDate());
+					cal.add(Calendar.DATE, getManagedBean().getQt().getPublishPeriod());
+					getManagedBean().getQt().setClosingDate(cal.getTime());
+				}
+			}
+			
+			if(null != getManagedBean().getQt().getClosingDate()) {
+				cal.setTime(getManagedBean().getQt().getClosingDate());
+				cal.add(Calendar.DATE, getManagedBean().getQt().getQtValidityPeriod());
+				getManagedBean().setProposalValidityUntil(cal.getTime());
+			}
 			IQTDetailSO detailSO;
 			try {
-				detailSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+				detailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 				reqDTO.setQtId(getManagedBean().getQt().getQtId());
-				QuationTenderResDTO resDTO = detailSO
-						.retriveQTScheduleDetails(reqDTO);
+				QuationTenderResDTO resDTO = detailSO.retriveQTScheduleDetails(reqDTO);
 				// Contact Person
-				List<ScQtContactPerson> contactPersonList = resDTO
-						.getContactPersons().getResultList();
+				List<ScQtContactPerson> contactPersonList = resDTO.getContactPersons().getResultList();
 				log.info("Contact Person list: " + contactPersonList.size());
 				getManagedBean().setScQtContactPersons(contactPersonList);
 				// Desk Officers
-				List<ScQtContactPerson> deskOfficer = resDTO.getDeskOfficers()
-						.getResultList();
+				List<ScQtContactPerson> deskOfficer = resDTO.getDeskOfficers().getResultList();
 				getManagedBean().setPmuserContactpersonList(deskOfficer);
 				if (getManagedBean().getQt().isZonal()) {
 					// Sample Submission
-					List<ScQtSampleSubmission> submissionList = resDTO
-							.getSampleSubmissionResultBean();
+					List<ScQtSampleSubmission> submissionList = resDTO.getSampleSubmissionResultBean();
 					if (submissionList != null) {
 						List<TplSpecZoneDtl> dtl = getManagedBean().getZones();
 						if (dtl != null) {
 							for (TplSpecZoneDtl tplSpecZoneDtl : dtl) {
 								ScQtSampleSubmission qtSampleSubmission = new ScQtSampleSubmission();
-								qtSampleSubmission
-										.setTplSpecZoneDtl(tplSpecZoneDtl);
+								qtSampleSubmission.setTplSpecZoneDtl(tplSpecZoneDtl);
 								submissionList.add(qtSampleSubmission);
 							}
 						}
 					}
-					getManagedBean()
-							.setScQtSampleSubmissionList(submissionList);
-					log.info("Submission List : "
-							+ getManagedBean().getScQtSampleSubmissionList());
+					getManagedBean().setScQtSampleSubmissionList(submissionList);
+					log.info("Submission List : " + getManagedBean().getScQtSampleSubmissionList());
 				}
 			} finally {
 				detailSO = null;
