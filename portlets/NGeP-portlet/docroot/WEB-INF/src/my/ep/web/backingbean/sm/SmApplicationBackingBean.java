@@ -3583,25 +3583,25 @@ public class SmApplicationBackingBean extends
 				}
 			}
 
-			if (getManagedBean().getShrHldrPermStates().isEmpty()) {
+			if ((getManagedBean().getShrHldrPermStates() == null) || (getManagedBean().getShrHldrPermStates() != null && getManagedBean().getShrHldrPermStates().isEmpty())) {
 				getManagedBean().setShrHldrPermStates(defStates);
 				getManagedBean().setShrHldrPermDistricts(
 						new ArrayList<PmDistrict>());
 				getManagedBean().setShrHldrPermCities(new ArrayList<PmCity>());
 			}
-			if (getManagedBean().getShrHldrMailStates().isEmpty()) {
+			if ((getManagedBean().getShrHldrMailStates() == null) || (getManagedBean().getShrHldrMailStates() != null && getManagedBean().getShrHldrMailStates().isEmpty())) {
 				getManagedBean().setShrHldrMailStates(defStates);
 				getManagedBean().setShrHldrMailDistricts(
 						new ArrayList<PmDistrict>());
 				getManagedBean().setShrHldrMailCities(new ArrayList<PmCity>());
 			}
-			if (getManagedBean().getShrHldrResdStates().isEmpty()) {
+			if ((getManagedBean().getShrHldrResdStates() == null) || (getManagedBean().getShrHldrResdStates() != null && getManagedBean().getShrHldrResdStates().isEmpty())) {
 				getManagedBean().setShrHldrResdStates(defStates);
 				getManagedBean().setShrHldrResdDistricts(
 						new ArrayList<PmDistrict>());
 				getManagedBean().setShrHldrResdCities(new ArrayList<PmCity>());
 			}
-			if (getManagedBean().getShrHldrOffStates().isEmpty()) {
+			if ((getManagedBean().getShrHldrOffStates() == null) || (getManagedBean().getShrHldrOffStates() != null && getManagedBean().getShrHldrOffStates().isEmpty())) {
 				getManagedBean().setShrHldrOffStates(defStates);
 				getManagedBean().setShrHldrOffDistricts(
 						new ArrayList<PmDistrict>());
