@@ -90,17 +90,10 @@ public class SalutationBackingBean extends
 	 * 
 	 */	
 	 public SelectItem[] getStatusList() {
-			
-			SelectItem[] items = null;     
-			try{
-			    items = new SelectItem[2];
-			    items[0] = new SelectItem(0, "Active");
-			    items[1] = new SelectItem(1, "Inactive");  
-			 }catch (Exception e) {
-				e.printStackTrace();
-				FacesContext.getCurrentInstance().addMessage
-				(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-			 }
+		 
+			SelectItem[] items =  new SelectItem[2];
+			items[0] = new SelectItem(1, "Active");
+			items[1] = new SelectItem(0, "Inactive");
 		    return items;
 		}
 
