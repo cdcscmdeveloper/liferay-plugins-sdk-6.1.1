@@ -447,7 +447,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public QTDetailManagedBean() {
 		log.info("inside ");
 
-		pmAddress = new PmAddress();
 		qtnTenderSearchBean = new QtnTenderSearchBean();
 		cloneQtnTenderSearchBean = new QtnTenderSearchBean();
 
