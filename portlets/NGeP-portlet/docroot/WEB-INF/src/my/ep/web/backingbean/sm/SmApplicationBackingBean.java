@@ -1550,7 +1550,7 @@ public class SmApplicationBackingBean extends
 			getManagedBean().setRemoveEpRole(false);
 		}
 		buildRoleList();
-		if (!getManagedBean().isRemoveEpRole() && getManagedBean().getSelectedShareHolder().getEpRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.value())) {		
+		if (!getManagedBean().isRemoveEpRole() && (getManagedBean().getSelectedShareHolder().getEpRole() != null && getManagedBean().getSelectedShareHolder().getEpRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.value()))) {		
 			SelectItem role = new SelectItem();
 			role.setLabel("Supplier Admin");
 			role.setValue(RoleCode.MOF_SUPPLIER_ADMIN.value());
@@ -2935,7 +2935,7 @@ public class SmApplicationBackingBean extends
 		else
 			getManagedBean().setRemoveEpRole(false);
 		buildRoleList();
-		if (!getManagedBean().isRemoveEpRole() && per.getEpRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.value())) {		
+		if (!getManagedBean().isRemoveEpRole() && (per.getEpRole() != null && per.getEpRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.value()))) {		
 			SelectItem role = new SelectItem();
 			role.setLabel("Supplier Admin");
 			role.setValue(RoleCode.MOF_SUPPLIER_ADMIN.value());
