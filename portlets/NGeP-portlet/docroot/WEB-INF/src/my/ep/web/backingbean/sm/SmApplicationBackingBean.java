@@ -3853,7 +3853,7 @@ public class SmApplicationBackingBean extends
 											RoleCode.BASIC_SUPPLIER_USER
 													.value()))) {
 						if (personnel.getPmUser() != null
-								&& personnel.getPmUser().getUserId() != null) {
+								&& personnel.getPmUser().getUserId() != null && personnel.getPmUser().getRecordStatusFlg() == 1) {
 							reqDTO.getUserList().add(
 									personnel.getPmUser().getLoginId());
 						}
@@ -4364,6 +4364,7 @@ public class SmApplicationBackingBean extends
 					} else if (res.equalsIgnoreCase("SITE_VISIT_AFTER_APPROVE")) {
 						msgConst = MessageConst.INFO_700017;
 					}
+					reqDTO.setPoOrApproverDecision(res);
 					reqDTO.setSmAppl(this.getManagedBean().getSmAppl());
 					ReviewApplicationResDTO resDTO = reqSO
 							.submitPOorApproverReviewToBPM(reqDTO);
