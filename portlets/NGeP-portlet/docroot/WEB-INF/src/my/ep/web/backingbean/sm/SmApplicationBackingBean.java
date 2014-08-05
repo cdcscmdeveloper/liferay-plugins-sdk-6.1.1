@@ -1550,6 +1550,12 @@ public class SmApplicationBackingBean extends
 			getManagedBean().setRemoveEpRole(false);
 		}
 		buildRoleList();
+		if (!getManagedBean().isRemoveEpRole() && getManagedBean().getSelectedShareHolder().getEpRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.value())) {		
+			SelectItem role = new SelectItem();
+			role.setLabel("Supplier Admin");
+			role.setValue(RoleCode.MOF_SUPPLIER_ADMIN.value());
+			getManagedBean().getePRoleList().add(role);
+		}
 		if (getManagedBean().getSelectedShareHolder().getSoftcertFlg() == 0) {
 			getManagedBean().getSelectedShareHolder().setContractSignerFlg(0);
 		}
@@ -2929,6 +2935,12 @@ public class SmApplicationBackingBean extends
 		else
 			getManagedBean().setRemoveEpRole(false);
 		buildRoleList();
+		if (!getManagedBean().isRemoveEpRole() && per.getEpRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.value())) {		
+			SelectItem role = new SelectItem();
+			role.setLabel("Supplier Admin");
+			role.setValue(RoleCode.MOF_SUPPLIER_ADMIN.value());
+			getManagedBean().getePRoleList().add(role);
+		}
 	}
 
 	public void addOrUpdateShareHolderAddress(SmPersonnel shareHolderBean)
@@ -3013,32 +3025,32 @@ public class SmApplicationBackingBean extends
 
 		SelectItem role = new SelectItem();
 
-		String applType = getManagedBean().getSmAppl().getApplType();
-		int roleCase = 0;
-
-		if (applType.equalsIgnoreCase("N")) {
-			roleCase = 1;
-		} else if (applType.equalsIgnoreCase("A")
-				|| applType.equalsIgnoreCase("B")
-				|| applType.equalsIgnoreCase("U")
-				|| applType.equalsIgnoreCase("R")) {
-			roleCase = 2;
-		}
-
-		switch (roleCase) {
-		case 1:
-			role = new SelectItem();
-			role.setLabel("Supplier User");
-			role.setValue(RoleCode.BASIC_SUPPLIER_USER.value());
-			if (!getManagedBean().isRemoveEpRole())
-				roles.add(role);
-
-			role = new SelectItem();
-			role.setLabel("Catalogue User");
-			role.setValue(RoleCode.CM_USER.value());
-			roles.add(role);
-			break;
-		case 2:
+//		String applType = getManagedBean().getSmAppl().getApplType();
+//		int roleCase = 0;
+//
+//		if (applType.equalsIgnoreCase("N")) {
+//			roleCase = 1;
+//		} else if (applType.equalsIgnoreCase("A")
+//				|| applType.equalsIgnoreCase("B")
+//				|| applType.equalsIgnoreCase("U")
+//				|| applType.equalsIgnoreCase("R")) {
+//			roleCase = 2;
+//		}
+//
+//		switch (roleCase) {
+//		case 1:
+//			role = new SelectItem();
+//			role.setLabel("Supplier User");
+//			role.setValue(RoleCode.BASIC_SUPPLIER_USER.value());
+//			if (!getManagedBean().isRemoveEpRole())
+//				roles.add(role);
+//
+//			role = new SelectItem();
+//			role.setLabel("Catalogue User");
+//			role.setValue(RoleCode.CM_USER.value());
+//			roles.add(role);
+//			break;
+//		case 2:
 			role = new SelectItem();
 			role.setLabel("Supplier User");
 			role.setValue(RoleCode.MOF_SUPPLIER_USER.value());
@@ -3049,10 +3061,10 @@ public class SmApplicationBackingBean extends
 			role.setLabel("Catalogue User");
 			role.setValue(RoleCode.CM_USER.value());
 			roles.add(role);
-			break;
-		default:
-			break;
-		}
+//			break;
+//		default:
+//			break;
+//		}
 
 		getManagedBean().setePRoleList(roles);
 	}
@@ -3087,7 +3099,10 @@ public class SmApplicationBackingBean extends
 		// getManagedBean().setSelectedPersonnel(null);
 		assignSelShareHolderAddress(shr);
 		getManagedBean().setSelectedShareHolder(shr);
-		getManagedBean().setRemoveEpRole(true);
+		if(getManagedBean().getAuthPerCount() < 5)
+			getManagedBean().setRemoveEpRole(false);
+		else
+			getManagedBean().setRemoveEpRole(true);
 		buildRoleList();
 		getManagedBean().setRedirectToPersonPage(true);
 
