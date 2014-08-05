@@ -2021,18 +2021,20 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				return "editCatalogItem";
 			}
 			
-			/*if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getEndDate().after(cmStandardPricing.getEndDate())||
-			   this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getStartDate().after(cmStandardPricing.getEndDate())||
-			   this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getEndDate().before(cmStandardPricing.getStartDate())||
-			   this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getStartDate().before(cmStandardPricing.getStartDate())){
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-								MessageUtils.getMessage(MessageConst.ERROR_715018,
-										MessageUtils.BUNDLE_COMMON_MESSAGES,
-										new FacesScopes().getUserLocale())));
-					return "editCatalogItem";
-			}*/
+			if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getStartDate()!=null && this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getEndDate()!=null){
+				if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getEndDate().after(cmStandardPricing.getEndDate())||
+				   this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getStartDate().after(cmStandardPricing.getEndDate())||
+				   this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getEndDate().before(cmStandardPricing.getStartDate())||
+				   this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getStartDate().before(cmStandardPricing.getStartDate())){
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+									MessageUtils.getMessage(MessageConst.ERROR_715018,
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));
+						return "editCatalogItem";
+				}
+			}
 
 			Map<Date, List<CmTierPricing>> tierMap = groupingTier(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings());
 			if (!tierMap.isEmpty() && tierMap.size() > 0) {
@@ -2437,18 +2439,20 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				}
 				
 				//promotion date is outside normal date
-				/*if(catalog.getCmPromotionPricing().getEndDate().after(catalog.getCmStandardPricing().getEndDate())||
-				   catalog.getCmPromotionPricing().getStartDate().after(catalog.getCmStandardPricing().getEndDate())||
-				   catalog.getCmPromotionPricing().getEndDate().before(catalog.getCmStandardPricing().getStartDate())||
-				   catalog.getCmPromotionPricing().getStartDate().before(catalog.getCmStandardPricing().getStartDate())){
-					FacesContext.getCurrentInstance().addMessage(
-							null,
-							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-									MessageUtils.getMessage(MessageConst.ERROR_715018,
-											MessageUtils.BUNDLE_COMMON_MESSAGES,
-											new FacesScopes().getUserLocale())));
-						return "catalogMaintenanceFile";
-				}*/
+				if(catalog.getCmPromotionPricing().getStartDate()!=null && catalog.getCmPromotionPricing().getEndDate()!=null){
+					if(catalog.getCmPromotionPricing().getEndDate().after(catalog.getCmStandardPricing().getEndDate())||
+					   catalog.getCmPromotionPricing().getStartDate().after(catalog.getCmStandardPricing().getEndDate())||
+					   catalog.getCmPromotionPricing().getEndDate().before(catalog.getCmStandardPricing().getStartDate())||
+					   catalog.getCmPromotionPricing().getStartDate().before(catalog.getCmStandardPricing().getStartDate())){
+						FacesContext.getCurrentInstance().addMessage(
+								null,
+								new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+										MessageUtils.getMessage(MessageConst.ERROR_715018,
+												MessageUtils.BUNDLE_COMMON_MESSAGES,
+												new FacesScopes().getUserLocale())));
+							return "catalogMaintenanceFile";
+					}
+				}
 				
 				Calendar c = new GregorianCalendar();
 				c.add(Calendar.DATE, -1);
