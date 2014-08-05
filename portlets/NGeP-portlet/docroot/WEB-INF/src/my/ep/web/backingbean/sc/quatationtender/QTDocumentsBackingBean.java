@@ -37,6 +37,7 @@ import my.ep.biz.service.tpl.doc.ITemplateDocSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
@@ -49,6 +50,7 @@ import my.ep.dto.tpl.doc.TemplateDocResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.quationtender.ScAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
@@ -547,6 +549,7 @@ public class QTDocumentsBackingBean extends
 				// clone TplDocMaster Details
 				TplDocMaster tplDocMaster = (TplDocMaster) BeanUtils.cloneBean(docMasters);
 				tplDocMaster.setDocMasterId(null);
+				tplDocMaster.setChangedDate(null);
 				tplDocMaster.setTplDocSections(new ArrayList<TplDocSection>());
 				setUserDetails(tplDocMaster);
 
@@ -555,11 +558,13 @@ public class QTDocumentsBackingBean extends
 				for (TplDocSection tplDocSection : docSections) {
 					TplDocSection section = (TplDocSection) BeanUtils.cloneBean(tplDocSection);
 					section.setDocSectionId(null);
+					section.setChangedDate(null);
 					section.setTplDocMaster(tplDocMaster);
 					setUserDetails(section);
 					tplDocMaster.getTplDocSections().add(section);
 				}
 				
+				tplDocMaster.setTplDocSectionCollection(null);
 				
 				/*List<TplDocSection> tplDocSectionList = new ArrayList<TplDocSection>();
 				List<TplDocSection> docSectionList = new ArrayList<TplDocSection>();
@@ -597,7 +602,10 @@ public class QTDocumentsBackingBean extends
 				ParameterResDTO resDTO1 = getParameterSO().retrieveParameterByTypeAndCode(reqDTO1);
 				tplDocMaster.setTemplateType(resDTO1.getPmParameter());
 				tplDocMaster.setDocName(scQtDocReport.getTitle());
-				tplDocMaster.setPmStatus(null);
+				
+				PmStatus status = new PmStatus();
+				status.setStatusId(QTStatusConst.QT_PENDING_APPOINT_BO);
+				tplDocMaster.setPmStatus(status);
 				//tplDocMaster.setPmStatus(1);
 				
 				List<ScQtDocReport> reports = new ArrayList<ScQtDocReport>();

@@ -2,7 +2,6 @@ package my.ep.web.backingbean.sc.quatationtender;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -25,13 +24,11 @@ import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddress;
+import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmState;
-import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
-import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
 import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
 import my.ep.type.pm.RoleCode;
-import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -206,38 +203,55 @@ public class QTScheduleDetailBackingBean extends
 
 	public void applySampleSubmission() {
 		debugLogger("applySampleSubmission");
-		List<ScQtSampleSubmission> sampleSubmissionsList = getManagedBean()
-				.getScQtSampleSubmissionList();
+		List<ScQtSampleSubmission> sampleSubmissionsList = getManagedBean().getScQtSampleSubmissionList();
 		log.info("List : " + sampleSubmissionsList);
 	}
 
 	public void okSubmission() {
 		debugLogger("okSubmission");
-		List<ScQtSampleSubmission> list = getManagedBean()
-				.getScQtSampleSubmissionList();
+		List<ScQtSampleSubmission> submisssionList = getManagedBean().getScQtSampleSubmissionList();
 		PmAddress pmAddress = getManagedBean().getPmAddress();
-		String address1 = pmAddress.getAddress1();
+		PmCountry pmCountry = new PmCountry();
+		pmCountry.setCountryId(1L);
+		pmAddress.setPmCountry(pmCountry);
+		/*String address1 = pmAddress.getAddress1();
 		String address2 = pmAddress.getAddress2();
 		String address3 = pmAddress.getAddress3();
 		String address4 = pmAddress.getAddress4();
 		String address = address1 + "," + address2 + "," + address3 + ","
 				+ address4;
-		log.info("PmAddress : " + address);
-		if (null == list) {
-			list = new ArrayList<ScQtSampleSubmission>();
+		log.info("PmAddress : " + address);*/
+		if (null == submisssionList) {
+			submisssionList = new ArrayList<ScQtSampleSubmission>();
 		}
-		for (ScQtSampleSubmission scQtSampleSubmission : list) {
+		for (ScQtSampleSubmission scQtSampleSubmission : submisssionList) {
 			scQtSampleSubmission.setAddress(pmAddress);
-			int index = list.indexOf(scQtSampleSubmission);
-			list.set(index, scQtSampleSubmission);
+			int index = submisssionList.indexOf(scQtSampleSubmission);
+			submisssionList.set(index, scQtSampleSubmission);
 		}
-		this.getManagedBean().setScQtSampleSubmissionList(list);
+		this.getManagedBean().setScQtSampleSubmissionList(submisssionList);
 	}
 	
+	public void handleClosingNProposalDate() {
+		Calendar cal = Calendar.getInstance();
+		if (null == getManagedBean().getQt().getClosingDate()) {
+			cal.setTime(getManagedBean().getQt().getPublishDate());
+			cal.add(Calendar.DATE, getManagedBean().getQt().getPublishPeriod());
+			getManagedBean().getQt().setClosingDate(cal.getTime());
+			handleProposalValidityUtil();
+		}
+	}
+
+	/**
+	 * 
+	 */
 	public void handleProposalValidityUtil() {
 		Calendar cal = Calendar.getInstance();
-		cal.setTime(getManagedBean().getQt().getClosingDate());
-		cal.add(Calendar.DATE, getManagedBean().getQt().getQtValidityPeriod());
-		getManagedBean().setProposalValidityUntil(cal.getTime());
+		if (null == getManagedBean().getProposalValidityUntil()) {
+			cal.setTime(getManagedBean().getQt().getClosingDate());
+			cal.add(Calendar.DATE, getManagedBean().getQt().getQtValidityPeriod());
+			getManagedBean().setProposalValidityUntil(cal.getTime());
+		}
+		
 	}
 }
