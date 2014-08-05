@@ -50,7 +50,7 @@
 		</p:inputText>
 		<p:message id="ratePerUomMsg" for="ratePerUom" display="icon" />
 	</p:column>
-	<p:column style="width:90px;white-space:normal;text-align:right;" rendered="#{isItemTypeService and isSpecTypeFinancial}" headerText="#{lbl['lbl.tpl.spec.content.amount.per.year']}">
+	<p:column style="width:90px;white-space:normal;text-align:right;" rendered="#{isItemTypeService and isSpecTypeFinancial and !isDurationByItem}" headerText="#{lbl['lbl.tpl.spec.content.amount.per.year']}">
 		<f:facet name="footer">
 			<h:outputText id="totalAmountPerYr" 
 				styleClass="calcAmount" 

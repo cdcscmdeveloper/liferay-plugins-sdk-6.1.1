@@ -13,7 +13,7 @@
 		
 		<p:inputText style="min-width:0px !important;width:96%;" rendered="#{isQuestionTypeItem}" disabled="true" />
 	</p:column>
-	<p:column style="width:95px;" rendered="#{isItemTypeService and isSpecTypeFinancial}" headerText="#{lbl['lbl.tpl.spec.content.amount.per.year']}">
+	<p:column style="width:95px;" rendered="#{isItemTypeService and isSpecTypeFinancial and !isDurationByItem}" headerText="#{lbl['lbl.tpl.spec.content.amount.per.year']}">
 		<p:inputText style="min-width:0px !important;width:96%;" styleClass="ppNumericAlign"
 			rendered="#{isQuestionTypeItem}" disabled="true" />
 	</p:column>
