@@ -2833,8 +2833,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}finally {
-			catalogueSO = null;
 		}
 
 		System.out.println("resDTO.isSuccessful():" + resDTO.isSuccessful());
@@ -2857,12 +2855,20 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 			reqDTO.setSupplierId(smResDTO.getResultBean().getResultList()
 					.get(0).getSupplierId());
+			
+			System.out.println("getSupplierId = "+smResDTO.getResultBean().getResultList().get(0).getSupplierId());
 
 			reqDTO.setItemStatus("A");
-			resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
+			try {
+				resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
+				this.getManagedBean().setApprovedItemList(resDTO.getSupplierItemList());
+			}catch(Exception e){
+				this.getManagedBean().setApprovedItemList(null);
+			}finally {
+				catalogueSO = null;
+			}
 
-			this.getManagedBean().setApprovedItemList(
-					resDTO.getSupplierItemList());
+			
 
 			FacesContext facesContext = FacesContext.getCurrentInstance();
 
