@@ -10,12 +10,12 @@
 			<tr>
 				<td style="width: 138px;"><p:outputLabel
 						value="#{lbl['lbl.fl.ministry']}" /></td>
-				<td><p:inputText size="53" id="doministry"
+				<td><p:inputText size="52" id="doministry"
 						value="#{createDOBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.parentOrgProfile.orgName}"
 						disabled="true" /></td>
 				<td rowspan="3" valign="top" style="width: 138px;"><p:outputLabel
 						value="#{lbl['lbl.fl.title']}" /></td>
-				<td rowspan="3"><p:inputTextarea cols="53" rows="4" 
+				<td rowspan="3"><p:inputTextarea cols="55" rows="4" 
 						disabled="true" style=" margin-bottom:5px;"
 						value="#{createDOBackingBean.managedBean.fulfilmentRequest.title}" />
 					<h:outputText value="" /></td>
@@ -46,7 +46,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="Requistioner" /></td>
-				<td><p:inputText size="53" disabled="true"
+				<td><p:inputText size="50" disabled="true"
 						value="#{createDOBackingBean.managedBean.fulfilmentRequest.requistioner.userName}" />
 				</td>
 			</tr>
@@ -62,7 +62,7 @@
 							<td style="width: 25px;"><p:inputText size="15"
 									disabled="true"
 									value="#{createDOBackingBean.managedBean.fulfilmentRequest.smSupplier.regNo}" /></td>
-							<td style="width: 74px;"><p:outputLabel
+							<td style="width: 92px;"><p:outputLabel
 									value="#{lbl['lbl.fl.supp.mof.no']}" /></td>
 							<td><p:inputText size="15" disabled="true"
 									value="#{createDOBackingBean.managedBean.fulfilmentRequest.smSupplier.smMofAccounts[0].mofNo}" /></td>
@@ -106,7 +106,7 @@
 							<td style="width: 25px;"><p:inputText size="15"
 									disabled="true"
 									value="#{createDOBackingBean.managedBean.fulfilmentRequest.flSupplierDtl.phoneNo}" /></td>
-							<td style="width: 74px;"><p:outputLabel
+							<td style="width: 92px;"><p:outputLabel
 									value="#{lbl['lbl.fl.supp.faxno']}" /></td>
 							<td><p:inputText size="15" disabled="true"
 									value="#{createDOBackingBean.managedBean.fulfilmentRequest.flSupplierDtl.faxNo}" /></td>
