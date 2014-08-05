@@ -16,6 +16,7 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.sc.directpurchase.PurchaseRequestReqDTO;
 import my.ep.dto.sc.directpurchase.PurchaseRequestResDTO;
 import my.ep.factory.EpLogger;
+import my.ep.jaxb.sc.awardsupplierdata.SCAwardSupplierDataType;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseRequest;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.managedbean.sc.loa.DpLOAManagedBean;
@@ -49,15 +50,15 @@ public class DpLOABackingBean extends
 		debugLogger("preRenderView");
 		
 		try {
-			/*SCAwardSupplierDataType dpDataType = getBpmTaskDetails(SCAwardSupplierDataType.class);
+			SCAwardSupplierDataType dpDataType = getBpmTaskDetails(SCAwardSupplierDataType.class);
 			
 			Long sourceId = Long.valueOf(dpDataType.getSourceId());
 			
 			retrieveLOAList(sourceId);
 			
-			new LOADetailBackingBean().getManagedBean().setSourceId(sourceId);*/
+			new LOADetailBackingBean().getManagedBean().setSourceId(sourceId);
 			
-			retrieveLOAList(2122L);
+			//retrieveLOAList(2122L);
 			
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()

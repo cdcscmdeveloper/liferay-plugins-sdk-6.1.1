@@ -363,13 +363,12 @@
 					label="#{lbl[lbleffDate]}"
 					size="25"
 					disabled="#{!isEditableStatus}">
-					<p:ajax event="dateSelect" update="expdate" />
+					<p:ajax event="dateSelect" listener="#{lOADetailBackingBean.contractEffDateChanged()}" update="expdate" />
 				</p:calendar>
 				<p:message id="effdateMsg" for="effdate" display="icon" />
 			</td>
 			<td>
 				<p:outputLabel value="#{lbl[lblexpDate]}" />
-				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
 			<td>
 				<p:calendar id="expdate"
@@ -380,8 +379,7 @@
 					required="true"
 					label="#{lbl[lblexpDate]}"
 					size="25"
-					disabled="#{!isEditableStatus}"	/>
-				<p:message id="expdateMsg" for="expdate" display="icon" />
+					disabled="true"	/>
 			</td>
 		</tr>
 		<c:if test="#{isDocTypeQuotation}">

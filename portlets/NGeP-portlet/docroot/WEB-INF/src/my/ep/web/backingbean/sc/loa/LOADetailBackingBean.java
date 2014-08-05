@@ -3,9 +3,11 @@ package my.ep.web.backingbean.sc.loa;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -1301,6 +1303,20 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 			userSO = null;
 		}
 
+	}
+	
+	public void contractEffDateChanged() {
+		debugLogger("contractEffDateChanged");
+		
+		ScLoa scLoa = getManagedBean().getScLoa();
+		Date contractEffDate = scLoa.getContractEffDate();
+		BigDecimal contractDuration = scLoa.getContractDuration();
+		
+		Calendar contractExpDate = Calendar.getInstance();
+		contractExpDate.setTime(contractEffDate);
+		contractExpDate.add(Calendar.MONTH, contractDuration.intValue());
+
+		scLoa.setContractExpDate(contractExpDate.getTime());
 	}
 	
 	public void approverChanged() {
