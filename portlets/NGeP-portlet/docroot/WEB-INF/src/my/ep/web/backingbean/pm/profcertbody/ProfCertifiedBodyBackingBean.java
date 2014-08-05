@@ -90,22 +90,13 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 	 * get status item dropdown
 	 * 
 	 */	
-	public SelectItem[] getStatusList() {
-
-		SelectItem[] items = null;
-		try {
-			items = new SelectItem[2];
-			items[0] = new SelectItem(0, "Active");
-			items[1] = new SelectItem(1, "Inactive");
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
-							e.getMessage()));
+	 public SelectItem[] getStatusList() {
+		 
+			SelectItem[] items =  new SelectItem[2];
+			items[0] = new SelectItem(1, "Active");
+			items[1] = new SelectItem(0, "Inactive");
+		    return items;
 		}
-		return items;
-	}
 
 	/**
 	 * get Professional / Certified body type
