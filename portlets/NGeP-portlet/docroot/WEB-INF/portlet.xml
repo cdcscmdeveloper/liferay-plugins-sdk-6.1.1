@@ -2058,7 +2058,7 @@
 	
 	<portlet>
 		<portlet-name>scDpLoaList</portlet-name>
-		<display-name>LOA List - Direct Purchase</display-name>
+		<display-name>Prepare LOA - Direct Purchase</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
@@ -2070,8 +2070,8 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>LOA List - Direct Purchase</title>
-			<short-title>LOA List - Direct Purchase</short-title>
+			<title>Prepare LOA - Direct Purchase</title>
+			<short-title>Prepare LOA - Direct Purchase</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
