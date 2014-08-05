@@ -79,7 +79,8 @@
 	</p:panel>
 
 
-	<p:panel header="#{lbl['lbl.sc.spec.location.list.paidup.capital']}">
+	<p:panel header="#{lbl['lbl.sc.spec.location.list.paidup.capital']}"
+		rendered="#{((specificationBackingBean.managedBean.scQt.estimatedAmount le '500000' and specificationBackingBean.managedBean.scQt.zonal =='false')  or (specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000'  and specificationBackingBean.managedBean.scQt.zonal) or (specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000'  and specificationBackingBean.managedBean.scQt.zonal =='false'))}">
 
 		<table style="width: 100%">
 
