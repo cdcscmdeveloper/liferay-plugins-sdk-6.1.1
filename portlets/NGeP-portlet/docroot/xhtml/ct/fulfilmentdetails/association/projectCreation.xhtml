@@ -113,21 +113,21 @@
                  widgetVar="dataTableObj" dynamic="true" selection="#{associationBackingBean.selectedContractList}" rowKey="#{data.contractId}">
                     <ac:paginator for="advanceCtSearch"/>
                 	<p:column selectionMode="multiple" style="width:2%;" />
-			        <p:column headerText="#{lbl['lbl.ct.asearch.model.table2.cno']}">
+			        <p:column headerText="#{lbl['lbl.ct.asearch.model.table2.cno']}" style="width:10%;">
 						<h:outputText value="#{data.contractNo}" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.ct.asearch.model.table2.cname']}" >
+					<p:column headerText="#{lbl['lbl.ct.asearch.model.table2.cname']}" style="width:35%;white-space:normal">
                        	<h:outputText value="#{data.contractName}" />
 					</p:column> 
-                    <p:column headerText="#{lbl['lbl.ct.asearch.model.table2.sname']}">
+                    <p:column headerText="#{lbl['lbl.ct.asearch.model.table2.sname']}" style="width:32%;white-space:normal">
                        	<h:outputText value="#{data.latestContractVer.ctContractValue.supplierName}" />
 					</p:column>
-                    <p:column headerText="#{lbl['lbl.ct.asearch.model.table2.cstart']}" >
+                    <p:column headerText="#{lbl['lbl.ct.asearch.model.table2.cstart']}"  style="width:10%;">
                        <h:outputText value="#{data.latestContractVer.ctContractValue.effDate}">
 					    	<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</h:outputText>
                    	</p:column> 
-					<p:column headerText="#{lbl['lbl.ct.asearch.model.table2.cend']}" >
+					<p:column headerText="#{lbl['lbl.ct.asearch.model.table2.cend']}" style="width:10%;">
                         <h:outputText value="#{data.latestContractVer.ctContractValue.expDate}">
 					    	<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</h:outputText>
