@@ -39,7 +39,7 @@
 				<p:column headerText="#{lbl['lbl.sc.request.note.delivery.term']}"
 					style="width:10%">
 					#{scPurchaseRequest.requestNoteDtls[0].deliverTerm} 
-					#{dpLOABackingBean.getParameterDesc(ParameterTypeConst.deliveryTerm, scPurchaseRequest.requestNoteDtls[0].deliverTermType)}
+					#{dpLOABackingBean.getParameterDesc(scPurchaseRequest.requestNoteDtls[0].deliverTermType)}
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.loiloa.loa.status']}"
