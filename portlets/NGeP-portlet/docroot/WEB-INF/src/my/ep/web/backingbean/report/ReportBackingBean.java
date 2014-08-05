@@ -1,42 +1,25 @@
 package my.ep.web.backingbean.report;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.faces.application.ViewHandler;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import org.apache.log4j.Logger;
-import com.lowagie.text.pdf.PdfDocument;
-import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.web.bean.report.ReportsGenerateBean;
-import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.report.ReportMangedBean;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.Closeable;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URL;
-import java.net.URLConnection;
-import java.io.FileOutputStream;
-import java.net.ConnectException;
-import javax.portlet.PortletResponse;
-import javax.portlet.ResourceResponse;
-import javax.servlet.http.HttpServletResponse;
-import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;;
+import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 /**
  * @Author Jangari Kondal Reddy
  */
@@ -46,8 +29,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	private static final Logger log = EpLogger.getLogger(ReportBackingBean.class);
 
 	public ReportBackingBean() {
-		log.info("inside constructor");
-
+		
 	}
 	private String userId;	
 	private Date fromDate;
@@ -96,11 +78,19 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	private String poAmount;
 	private String prNo;
 	private String pmo;
+	private String newTabVal=ReportConst.FORM_NEW_TAB;
+	
 	/*FL end*/
 	List<SelectItem> reportList;
 	ReportsGenerateBean rptGenBean = new ReportsGenerateBean();
 	private List<SelectItem> moduleList;
 	
+	public String getNewTabVal() {
+		return newTabVal;
+	}
+	public void setNewTabVal(String newTabVal) {
+		this.newTabVal = newTabVal;
+	}
 	public String getUserId() {
 		return userId;
 	}
@@ -2018,6 +2008,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 				generateFLReport();
 			}
 		}else{
+			this.setNewTabVal(ReportConst.FORM_SELF);
 			throw new EpException(ReportConst.PLZ_SEL_ONE_RPT_SEARCH);
 		}
 		//return "/xhtml/reports/reportmain.xhtml?faces-redirect=true";
@@ -2027,7 +2018,15 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	 */
 	public void generateSCReport(){		
 		if(((this.getQuotationId()!=null)&&(this.getQuotationId()!=ReportConst.EMPTY_VAL))||((this.getFromDate()!=null)&&(this.getFromDate().toString()!=ReportConst.EMPTY_VAL))||((this.getToDate()!=null)&&(this.getToDate().toString()!=ReportConst.EMPTY_VAL))){	
-			rptGenBean.setQuotationIdTotVar(ReportConst.AMP_QUOTE_ID_EQ+this.getQuotationId());	
+
+			rptGenBean.setQuotationIdTotVar(ReportConst.AMP_QUOTE_ID_EQ+this.getQuotationId());
+			SimpleDateFormat outputDateFormat = new SimpleDateFormat(ReportConst.URL_RPT_DATE_FORMAT);
+			if((this.getFromDate()!=null)&&(this.getFromDate().toString()!=ReportConst.EMPTY_VAL)){				 
+				rptGenBean.setFromDateVar(ReportConst.AMP_FROM_DATE_EQ+outputDateFormat.format(this.getFromDate()));
+			}
+			if((this.getToDate()!=null)&&(this.getToDate().toString()!=ReportConst.EMPTY_VAL)){				 
+				rptGenBean.setToDateVar(ReportConst.AMP_TO_DATE_EQ+outputDateFormat.format(this.getToDate()));
+			}
 			Map<String, String> urlSCReportJsps = new HashMap<String, String>();
 			urlSCReportJsps.put(ReportConst.SPPPP_PEMATUHAN_OC_RPT_VAL, "firststage.rdf");
 			urlSCReportJsps.put(ReportConst.KPPP1_PEMATUHAN_OC_RPT_VAL, ReportConst.EMPTY_VAL);
@@ -2053,18 +2052,20 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			urlSCReportJsps.put(ReportConst.PYMT_RCPT_RPT_VAL, ReportConst.EMPTY_VAL);
 			rptGenBean.setUrlReportJSPName(urlSCReportJsps.get(getManagedBean().getReportNameValue().trim()));
 			
-			String url =ReportConst.EXC_PREV_URL+rptGenBean.getUrlReportJSPName()+rptGenBean.getQuotationIdTotVar()+ReportConst.EXC_NEXT_URL;
+			String url =ReportConst.EXC_PREV_URL+rptGenBean.getUrlReportJSPName()+rptGenBean.getQuotationIdTotVar()+rptGenBean.getFromDateVar()+rptGenBean.getToDateVar()+ReportConst.EXC_NEXT_URL;
 			
 			
 			try {
 				ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 				externalContext.redirect(url);			
-				
-			} catch (IOException e) {				
+				this.setNewTabVal(ReportConst.FORM_NEW_TAB);
+			} catch (IOException e) {
+				this.setNewTabVal(ReportConst.FORM_SELF);
 				e.printStackTrace();
 			}			
-			log.info("url="+url);
+			log.info(url);
 		}else{
+			this.setNewTabVal(ReportConst.FORM_SELF);
 			throw new EpException(ReportConst.PLZ_SEL_ONE_RPT_CRITERIA_SEARCH);
 		}
 	}
@@ -2104,6 +2105,13 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			if((this.getProofIdentity()!=null)&&(this.getProofIdentity()!=ReportConst.EMPTY_VAL)){
 				rptGenBean.setProofIdentityTotVar(ReportConst.AMP_PROOF_IDNT_EQ+this.getProofIdentity());
 			}
+			SimpleDateFormat outputDateFormat = new SimpleDateFormat(ReportConst.URL_RPT_DATE_FORMAT);
+			if((this.getFromDate()!=null)&&(this.getFromDate().toString()!=ReportConst.EMPTY_VAL)){				 
+				rptGenBean.setFromDateVar(ReportConst.AMP_FROM_DATE_EQ+outputDateFormat.format(this.getFromDate()));
+			}
+			if((this.getToDate()!=null)&&(this.getToDate().toString()!=ReportConst.EMPTY_VAL)){				 
+				rptGenBean.setToDateVar(ReportConst.AMP_TO_DATE_EQ+outputDateFormat.format(this.getToDate()));
+			}
 			//-----------
 			Map<String, String> urlCMReportNameJsps = new HashMap<String, String>();
 			urlCMReportNameJsps.put(ReportConst.LST_PUB_CAT_ITM_RPT_VAL, ReportConst.CM_PUB_CAT_ITM_JSP);
@@ -2125,16 +2133,18 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			urlCMReportNameJsps.put(ReportConst.LST_ITM_CODE_RPT_VAL, ReportConst.CM_LST_ITEM_CODE_JSP);
 			//-----------			
 			rptGenBean.setUrlReportJSPName(urlCMReportNameJsps.get(getManagedBean().getReportNameValue().trim()));			
-			String url=ReportConst.EXC_PREV_URL+rptGenBean.getUrlReportJSPName()+rptGenBean.getItemNameTotVar()+rptGenBean.getItemTypeTotVar()+rptGenBean.getItemStatusTotVar()+rptGenBean.getUnspscCodeTotVar()+rptGenBean.getUnspscTitleTotVar()+rptGenBean.getExtentionCodeTotVar()+rptGenBean.getCompanyNameTotVar()+rptGenBean.getRegistrationTypeTotVar()+rptGenBean.getItemCategoryTotVar()+rptGenBean.getProofIdentityTotVar()+ReportConst.EXC_NEXT_URL;
+			String url=ReportConst.EXC_PREV_URL+rptGenBean.getUrlReportJSPName()+rptGenBean.getItemNameTotVar()+rptGenBean.getItemTypeTotVar()+rptGenBean.getItemStatusTotVar()+rptGenBean.getUnspscCodeTotVar()+rptGenBean.getUnspscTitleTotVar()+rptGenBean.getExtentionCodeTotVar()+rptGenBean.getCompanyNameTotVar()+rptGenBean.getRegistrationTypeTotVar()+rptGenBean.getItemCategoryTotVar()+rptGenBean.getProofIdentityTotVar()+rptGenBean.getFromDateVar()+rptGenBean.getToDateVar()+ReportConst.EXC_NEXT_URL;
 			try {				
 				ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 				externalContext.redirect(url);				
-			
-			} catch (IOException e) {				
+				this.setNewTabVal(ReportConst.FORM_NEW_TAB);
+			} catch (IOException e) {
+				this.setNewTabVal(ReportConst.FORM_SELF);
 				e.printStackTrace();
 			}
 			log.info(url);
 		}else{
+			this.setNewTabVal(ReportConst.FORM_SELF);
 			throw new EpException(ReportConst.PLZ_SEL_ONE_RPT_CRITERIA_SEARCH);
 		}
 	}
@@ -2259,6 +2269,13 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			if((this.getProofIdentity()!=null)&&(this.getProofIdentity()!=ReportConst.EMPTY_VAL)){
 				rptGenBean.setProofIdentityTotVar(ReportConst.AMP_PROOF_IDNT_EQ+this.getProofIdentity());
 			}
+			SimpleDateFormat outputDateFormat = new SimpleDateFormat(ReportConst.URL_RPT_DATE_FORMAT);
+			if((this.getFromDate()!=null)&&(this.getFromDate().toString()!=ReportConst.EMPTY_VAL)){				 
+				rptGenBean.setFromDateVar(ReportConst.AMP_FROM_DATE_EQ+outputDateFormat.format(this.getFromDate()));
+			}
+			if((this.getToDate()!=null)&&(this.getToDate().toString()!=ReportConst.EMPTY_VAL)){				 
+				rptGenBean.setToDateVar(ReportConst.AMP_TO_DATE_EQ+outputDateFormat.format(this.getToDate()));
+			}
 			//--
 			Map<String, String> urlFLReportNameJsps = new HashMap<String, String>();
 			urlFLReportNameJsps.put(ReportConst.CON_REQ_RPT_MIN_VAL, ReportConst.EMPTY_VAL);
@@ -2324,16 +2341,18 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			urlFLReportNameJsps.put(ReportConst.SUMM_RPT_PAN_ITM_VAL, ReportConst.EMPTY_VAL);			
 			rptGenBean.setUrlReportJSPName(urlFLReportNameJsps.get(getManagedBean().getReportNameValue().trim()));			
 			
-			String url=ReportConst.EXC_PREV_URL+rptGenBean.getUrlReportJSPName()+rptGenBean.getItemNameTotVar()+rptGenBean.getItemTypeTotVar()+rptGenBean.getItemStatusTotVar()+rptGenBean.getUnspscCodeTotVar()+rptGenBean.getUnspscTitleTotVar()+rptGenBean.getExtentionCodeTotVar()+rptGenBean.getCompanyNameTotVar()+rptGenBean.getRegistrationTypeTotVar()+rptGenBean.getItemCategoryTotVar()+rptGenBean.getProofIdentityTotVar()+rptGenBean.getPtjTotVar()+rptGenBean.getContractNoTotVar()+rptGenBean.getSstTotVar()+rptGenBean.getJabatanTotVar()+rptGenBean.getMinistryTotVar()+rptGenBean.getSupplierTotVar()+rptGenBean.getStatusTotVar()+rptGenBean.getDurationTotVar()+rptGenBean.getRecievingOfficerTotVar()+rptGenBean.getDeliveryAddressTotVar()+rptGenBean.getFlRecNoteNoTotVar()+rptGenBean.getContractTypeTotVar()+rptGenBean.getRequisitionerTotVar()+rptGenBean.getMtoContractTotVar()+rptGenBean.getInvoiceNoTotVar()+rptGenBean.getDeductionTypeTotVar()+rptGenBean.getCrNoTotVar()+rptGenBean.getApproverNameTotVar()+rptGenBean.getDocumentTypeTotVar()+rptGenBean.getCriteriaTotVar()+rptGenBean.getScoringTotVar()+rptGenBean.getPkpNoTotVar()+rptGenBean.getDeliveryOrderNoTotVar()+rptGenBean.getItemCodeTotVar()+rptGenBean.getPoAmountTotVar()+rptGenBean.getPrNoTotVar()+rptGenBean.getPmoTotVar()+ReportConst.EXC_NEXT_URL;
+			String url=ReportConst.EXC_PREV_URL+rptGenBean.getUrlReportJSPName()+rptGenBean.getItemNameTotVar()+rptGenBean.getItemTypeTotVar()+rptGenBean.getItemStatusTotVar()+rptGenBean.getUnspscCodeTotVar()+rptGenBean.getUnspscTitleTotVar()+rptGenBean.getExtentionCodeTotVar()+rptGenBean.getCompanyNameTotVar()+rptGenBean.getRegistrationTypeTotVar()+rptGenBean.getItemCategoryTotVar()+rptGenBean.getProofIdentityTotVar()+rptGenBean.getPtjTotVar()+rptGenBean.getContractNoTotVar()+rptGenBean.getSstTotVar()+rptGenBean.getJabatanTotVar()+rptGenBean.getMinistryTotVar()+rptGenBean.getSupplierTotVar()+rptGenBean.getStatusTotVar()+rptGenBean.getDurationTotVar()+rptGenBean.getRecievingOfficerTotVar()+rptGenBean.getDeliveryAddressTotVar()+rptGenBean.getFlRecNoteNoTotVar()+rptGenBean.getContractTypeTotVar()+rptGenBean.getRequisitionerTotVar()+rptGenBean.getMtoContractTotVar()+rptGenBean.getInvoiceNoTotVar()+rptGenBean.getDeductionTypeTotVar()+rptGenBean.getCrNoTotVar()+rptGenBean.getApproverNameTotVar()+rptGenBean.getDocumentTypeTotVar()+rptGenBean.getCriteriaTotVar()+rptGenBean.getScoringTotVar()+rptGenBean.getPkpNoTotVar()+rptGenBean.getDeliveryOrderNoTotVar()+rptGenBean.getItemCodeTotVar()+rptGenBean.getPoAmountTotVar()+rptGenBean.getPrNoTotVar()+rptGenBean.getPmoTotVar()+rptGenBean.getFromDateVar()+rptGenBean.getToDateVar()+ReportConst.EXC_NEXT_URL;
 			try {
 				ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 				externalContext.redirect(url);
-				
-			} catch (IOException e) {				
+				this.setNewTabVal(ReportConst.FORM_NEW_TAB);
+			} catch (IOException e) {
+				this.setNewTabVal(ReportConst.FORM_SELF);
 				e.printStackTrace();
 			}
 			log.info(url);
 		}else{
+			this.setNewTabVal(ReportConst.FORM_SELF);
 			throw new EpException(ReportConst.PLZ_SEL_ONE_RPT_CRITERIA_SEARCH);
 		}
 	}

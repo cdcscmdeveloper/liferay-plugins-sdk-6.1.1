@@ -88,6 +88,20 @@ public class ReportsGenerateBean {
 	private String poAmountTotVar=ReportConst.EMPTY_VAL;
 	private String prNoTotVar=ReportConst.EMPTY_VAL;
 	private String pmoTotVar=ReportConst.EMPTY_VAL;
+	private String fromDateVar=ReportConst.EMPTY_VAL;
+	private String toDateVar=ReportConst.EMPTY_VAL;
+	public String getFromDateVar() {
+		return fromDateVar;
+	}
+	public void setFromDateVar(String fromDateVar) {
+		this.fromDateVar = fromDateVar;
+	}
+	public String getToDateVar() {
+		return toDateVar;
+	}
+	public void setToDateVar(String toDateVar) {
+		this.toDateVar = toDateVar;
+	}
 	private String urlReportJSPName=ReportConst.EMPTY_VAL;
 	//URL variables end
 	

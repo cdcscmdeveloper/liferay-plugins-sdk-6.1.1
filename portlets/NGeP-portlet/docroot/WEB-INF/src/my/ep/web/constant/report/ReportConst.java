@@ -270,6 +270,8 @@ public class ReportConst {
 	public static final String AMP_PO_AMT_EQ = "&poamount=";
 	public static final String AMP_PR_NO_EQ = "&prno=";
 	public static final String AMP_PMO_EQ = "&pmo=";
+	public static final String AMP_FROM_DATE_EQ = "&frdt=";
+	public static final String AMP_TO_DATE_EQ = "&todt=";
 	public static final String EXC_PREV_URL = "http://ngepdevrps01.ngep.com:8891/reports/rwservlet?server=rptsvr_ngepdevrps01_asinst_2&report=";
 	public static final String EXC_NEXT_URL = "&destype=cache&desformat=pdf&userid=ngep_dev/ngep_dev@ngepdb";
 	public static final String PLZ_SEL_ONE_RPT_SEARCH = "Please select at least one report";
@@ -277,5 +279,8 @@ public class ReportConst {
 	public static final String CATLOG_ADMIN = "Catalogue Administrator";
 	public static final String SUPPL = "Supplier";
 	public static final String CODIF_ADMIN = "Codification Administrator";
+	public static final String URL_RPT_DATE_FORMAT = "dd/MM/YYYY";
+	public static final String FORM_NEW_TAB = "_blank";
+	public static final String FORM_SELF = "_self";
 	
 }
