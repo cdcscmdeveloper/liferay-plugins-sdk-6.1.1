@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<table style="width: 100%;">
 	  <tr>
-	     <td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" icon="ui-icon-back" oncomplete="window.history.back();" rendered="#{amendmentBackingBean.managedBean.taskId==null}" /></td>
+	     <td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" icon="ui-icon-back" rendered="#{amendmentBackingBean.managedBean.taskId==null}" action="#{amendmentBackingBean.backAction}" /></td>
 		 <td class="ppRightBtn">
 			<ui:repeat var="outcome" value="#{amendmentBackingBean.managedBean.action}">
 			  <p:commandButton value="#{outcome}" ajax="false" styleClass="ui-button" icon="ui-icon-#{fn:toLowerCase(outcome)}" 

@@ -171,6 +171,7 @@ import com.liferay.portal.util.PortalUtil;
 public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> {
     
 	private static Logger log = Logger.getLogger(AmendmentBackingBean.class);
+	private static final String CONTRACT_MAINT_PAGE = "/xhtml/ct/fulfilmentdetails/search/search.xhtml?faces-redirect=true";
 	
 	private String editorValue;
 	
@@ -332,7 +333,6 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		    	}
 		    }
 		    
-		    ConstructTabSideMenu();
 		    if(this.getManagedBean().isLetterOfAcceptance()){
 		    	   getLoaDocumentList();
 		     	  if(this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaAttachment() == null){
@@ -348,6 +348,10 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			contractSO = null;
 			contractTemplateSO = null;
 		}
+	}
+	
+	public String backAction() {
+		return CONTRACT_MAINT_PAGE;
 	}
 	
 	public void setAmendmentContractVer(ContractResDTO resDTO) {
@@ -567,9 +571,9 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 						    MessageUtils.getMessage(messageId, new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, this.getManagedBean().getContractVer().getDocType()), 
 								this.getManagedBean().getContractVer().getCtContract().getContractNo()}, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-			             if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId()==null)) { 				  
+			             if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 				  
 					          renewSesionObject();
-					      return CommonUIConst.ACKNOWLEDGE_PAGE;
+					          return CommonUIConst.ACKNOWLEDGE_PAGE;
 				        } else {
 					       setAmendmentContractVer(resDTO);
 				       }
@@ -583,6 +587,12 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	  }
 	 
 	 private void validateContractAmendment(String action) {
+		 if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
+			if(getManagedBean().getRemarkList().get(0).getRemark() == null || getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
+				throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
+			}
+		}
+		 
 		 if(!getManagedBean().getContractVer().getCtAmendment().isContractExtend() && !getManagedBean().getContractVer().getCtAmendment().isItemPriceChange()
 				 && !getManagedBean().getContractVer().getCtAmendment().isQuantityChange() && !getManagedBean().getContractVer().getCtAmendment().isValueChange()
 				 && !getManagedBean().getContractVer().getCtAmendment().isClauseChange()) {
@@ -2045,14 +2055,11 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		 return null;
 	 }
 	
-	public boolean validContractExtendPeriod() {
+	public boolean invalidContractExtendPeriod() {
 		Calendar c = Calendar.getInstance();
 		c.add(Calendar.DATE, ContractConst.CONTRACT_EXTEND_BEFORE_DAYS);
-		
-		if(getManagedBean().getContractVer().getCtContractValue().getExpDate().before(c.getTime())){
-			return false;
-		}
-		return true;
+
+		return (getManagedBean().getContractVer().getCtContractValue().getExpDate().before(c.getTime()));
 	}
 	
 	 public String getEditorValue() {

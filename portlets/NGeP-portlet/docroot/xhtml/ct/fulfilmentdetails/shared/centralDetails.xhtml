@@ -15,10 +15,14 @@
 		       value="#{contractDetailsBackingBean.managedBean.ctContract.contractPhysicalNo}"/>				
 		     <p:outputLabel id="centralEfDate" value="#{lbl['lbl.ct.effectiveDate']}" />
 		     <p:inputText for="centralEfDate" style="width:170px;" disabled="true"
-			    value="#{contractDetailsBackingBean.convertTime(contractDetailsBackingBean.managedBean.contractVer.ctContractValue.effDate)}" />
+			    value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.effDate}">
+			    <f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+			 </p:inputText>
 		     <p:outputLabel id="centralExpDate" value="#{lbl['lbl.ct.edate']}" />
 		     <p:inputText for="centralExpDate" style="width:170px;" disabled="true"
-			    value="#{contractDetailsBackingBean.convertTime(contractDetailsBackingBean.managedBean.contractVer.ctContractValue.expDate)}" />
+			    value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.expDate}">
+			    <f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+			 </p:inputText>
 		     <h:panelGrid columns="2" style="float:right;">
 				<p:outputLabel value="*" styleClass="mandatory" />
 		     	<p:outputLabel id="centralPeriod" value="#{lbl['lbl.ct.dperiod']}" />
@@ -35,7 +39,9 @@
 			</h:panelGrid>	
 			<p:outputLabel id="centralSignDate" value="#{lbl['lbl.ct.sdate']}" rendered="#{contractDetailsBackingBean.managedBean.ctContract.agreement}"/>
 			<p:inputText for="centralSignDate"  disabled="true" rendered="#{contractDetailsBackingBean.managedBean.ctContract.agreement}"
-			   style="width:170px;" value="#{contractDetailsBackingBean.convertTime(contractDetailsBackingBean.managedBean.ctContract.currentAgreement.signedDate)}"/>
+			   style="width:170px;" value="#{contractDetailsBackingBean.managedBean.ctContract.currentAgreement.signedDate}">
+			   <f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+			</p:inputText>
 			<f:verbatim   rendered="#{!contractDetailsBackingBean.managedBean.ctContract.agreement}"/>
 			<f:verbatim   rendered="#{!contractDetailsBackingBean.managedBean.ctContract.agreement}"/> 
 			<h:panelGroup>

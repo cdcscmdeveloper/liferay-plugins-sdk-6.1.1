@@ -19,7 +19,9 @@
 			 value="#{contractDetailsBackingBean.managedBean.ctContract.loaPhysicalNo}" />
 			<p:outputLabel value="#{lbl['lbl.ct.qt.loaAckDt']}" />
 			<p:inputText style="width:170px;" disabled="true"
-			  value="#{contractDetailsBackingBean.convertTime(contractDetailsBackingBean.managedBean.ctContract.ackDate)}" />
+			  value="#{contractDetailsBackingBean.managedBean.ctContract.ackDate}">
+			  <f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+			</p:inputText>
 			<p:outputLabel value="#{lbl['lbl.ct.fulfilmentType']}" />
 			<p:inputText style="width:170px;" disabled="true"  
 			  value="#{contractDetailsBackingBean.getParameterDesc(contractDetailsBackingBean.managedBean.ctContract.fulfillmentType)}" />			

@@ -17,7 +17,6 @@ import java.net.URLConnection;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.DateFormatSymbols;
-import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -57,7 +56,6 @@ import my.ep.constant.ct.ContractConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constants.CTProcessNameConst;
-import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
@@ -631,7 +629,7 @@ public void ConstructSideTabMenu(){
     public String saveContract(String action) throws Exception{
 	    IContractSO contractSO = null;
 		try{
-			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
+			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 				if(getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
 					throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
 				}
@@ -1525,9 +1523,10 @@ public void ConstructSideTabMenu(){
 		IContractSO contractSO = null;
 		AmendmentBackingBean amendBB = null;
 		try {
-			String latestContractVerId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("latestContractVerId");
-			Long contractVerId = (!latestContractVerId.isEmpty()) ? Long.parseLong(latestContractVerId) : null;
+			String versionId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("contractVerId");
+			Long contractVerId = (!versionId.isEmpty()) ? Long.parseLong(versionId) : null;
 			Long contractId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("contractId"));
+			String action = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("action");
 			
 			ContractReqDTO reqDTO = new ContractReqDTO();
 			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
@@ -1537,16 +1536,12 @@ public void ConstructSideTabMenu(){
 			}
 			reqDTO.setContractVerId(contractVerId);
 			reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
-			reqDTO.setUpdateAction(true);
+			if (action.equalsIgnoreCase("update"))
+				reqDTO.setUpdateAction(true);
 			ContractResDTO resDTO = contractSO.retrieveContractVer(reqDTO);
 			amendBB = new AmendmentBackingBean();
 			amendBB.getManagedBean().setSelectedTabIndex(0);
-			amendBB.setAmendmentContractVer(resDTO);
-			
-			amendBB.getManagedBean().setRemarkList(resDTO.getCtRemarks());
-			amendBB.getManagedBean().setAttachmentList(resDTO.getCtAttachments());
-			amendBB.getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, 
-			amendBB.getManagedBean().getContractVer().getDocType(), amendBB.getManagedBean().getCtContract().getContractNo()));	
+			amendBB.setAmendmentContractVer(resDTO);			
 		}finally {
 			contractSO = null;
 			ctBB = null;
@@ -1563,6 +1558,7 @@ public void ConstructSideTabMenu(){
 	    ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
 	    setValidateContractField(resDTO);  
 	    this.getManagedBean().setViewContract(true);
+	    this.getManagedBean().setSelectedTabIndex(0);
 		return CONTRACT_PAGE;
 	}
 	
@@ -1645,13 +1641,12 @@ public void ConstructSideTabMenu(){
 		this.getManagedBean().getContractVer().getAgencyAttachements().add(attachment);
 	}
 	
-	public String convertTime(Date time){ 
-        String str ="";
-    	Format format = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT); 
-        if(time == null)
-        	return str;
-        return format.format(time); 
-    }
+	public Long retrieveContractStatus(Long contractVerId) {
+		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
+	    ContractResDTO resDTO = contractSO.retrieveContractCurrentStatus(contractVerId);
+	    
+	    return resDTO.getCtContractVer().getStatus().getStatusId();
+	}
 	
 	public BigDecimal getPaidAdvancePercentage() {
 		paidAdvancePercentage = (this.getManagedBean().getPaidAdvancePaymentAmt().multiply(BigDecimal.valueOf(100)).divide(BigDecimal.valueOf(this.getManagedBean().getAdvancePaymentAmt()), 2, RoundingMode.HALF_UP));
