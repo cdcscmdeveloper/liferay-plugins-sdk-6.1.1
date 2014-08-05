@@ -1664,13 +1664,6 @@ public void ConstructSideTabMenu(){
 		this.getManagedBean().getContractVer().getAgencyAttachements().add(attachment);
 	}
 	
-	public Long retrieveContractStatus(Long contractVerId) {
-		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
-	    ContractResDTO resDTO = contractSO.retrieveContractCurrentStatus(contractVerId);
-	    
-	    return resDTO.getCtContractVer().getStatus().getStatusId();
-	}
-	
 	public BigDecimal getPaidAdvancePercentage() {
 		paidAdvancePercentage = (this.getManagedBean().getPaidAdvancePaymentAmt().multiply(BigDecimal.valueOf(100)).divide(BigDecimal.valueOf(this.getManagedBean().getAdvancePaymentAmt()), 2, RoundingMode.HALF_UP));
 		return paidAdvancePercentage;

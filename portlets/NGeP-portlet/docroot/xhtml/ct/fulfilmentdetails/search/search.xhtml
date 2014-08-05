@@ -103,7 +103,7 @@
 							<p:graphicImage library="ep/images/design" name="revise.png"
 						   		value="/resources/ep/images/design/revise.png" title="#{lbl['lbl.ct.search.amd']}" />
 						</p:commandLink>
-						<p:commandLink rendered="#{contractDetailsBackingBean.retrieveContractStatus(data.ctContractVer.contractVerId) eq CtStatusConst.faPendingSubmission}"
+						<p:commandLink rendered="#{data.ctContractVer.status.statusId eq CtStatusConst.faPendingSubmission}"
 							onclick="gotoAmendPage([{name:'contractVerId',value:'#{data.ctContractVer.contractVerId}'}, {name:'contractId',value:'#{data.ctContract.contractId}'}, {name:'action',value:'edit'}])">
 							<p:graphicImage library="ep/images/design" name="revise.png"
 						   		value="/resources/ep/images/design/revise.png" title="#{lbl['lbl.ct.search.amd']}" />
