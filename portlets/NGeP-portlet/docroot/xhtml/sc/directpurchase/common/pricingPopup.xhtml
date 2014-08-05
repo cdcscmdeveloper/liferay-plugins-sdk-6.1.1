@@ -16,19 +16,19 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.item.name']}" /></td>
 				<td><p:inputText disabled="true" size="46"
-						value="#{requestNoteBackingBean.managedBean.requestSupplierItem.supplierItemPrice.pricing.cmSupplierItem.cmItem.itemName}" /></td>
+						value="#{requestNoteBackingBean.managedBean.requestSupplierItem.requestNoteItem.itemName}" /></td>
 			</tr>
 
 			<tr>
 				<td style="vertical-align:top; text-align:left;"><p:outputLabel value="#{lbl['lbl.sc.desc']}" /></td>
 				<td><p:inputTextarea disabled="true" rows="2" cols="55" style="margin-bottom: 5px; width: 300px;"
-						value="#{requestNoteBackingBean.managedBean.requestSupplierItem.supplierItemPrice.pricing.cmSupplierItem.itemDesc}" /></td>
+						value="#{requestNoteBackingBean.managedBean.requestSupplierItem.requestNoteItem.itemDesc}" /></td>
 			</tr>
 
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.uom']}" /></td>
 				<td><p:inputText disabled="true" size="25"
-						value="#{requestNoteBackingBean.managedBean.requestSupplierItem.supplierItemPrice.pricing.cmSupplierItem.pmUom.uomName}" /></td>
+						value="#{requestNoteBackingBean.managedBean.requestSupplierItem.requestNoteItem.uom.uomName}" /></td>
 			</tr>
 
 			<tr>
@@ -46,7 +46,7 @@
 			rowKey="#{itemPrice}" rowIndexVar="index">
 
 			<p:column headerText="#{lbl['lbl.sc.zone']}" style="width:45%">
-				#{itemPrice.tplSpecZone.zoneName}
+				<h:outputText value="#{itemPrice.tplSpecZone.zoneName}">
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.from.qty']}" style="width:15%; text-align:right;"> 
