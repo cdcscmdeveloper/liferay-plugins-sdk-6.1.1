@@ -4,11 +4,7 @@
 package my.ep.web.managedbean.association;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -24,7 +20,7 @@ import my.ep.web.managedbean.BaseManagedBean;
  * @author Alam
  * @since 23/9/2013	 
  */
-@ManagedBean(name ="associationManagedBean")
+@ManagedBean(name ="associateManagedBean")
 @SessionScoped
 public class AssociationManagedBean extends BaseManagedBean{
 
