@@ -433,19 +433,13 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			doBB.getManagedBean().setPmUser(reqDTO.getPmUser());
 			doBB.getManagedBean().setDocMaintainRemarks(true);
 			doBB.getManagedBean().setFromPageUrl(navgPage);
+			doBB.getManagedBean().getFulfilmentOrder().setStatus(deliveryOrderSO.retrieveDelOrderStatus(reqDTO).getPmStatus());
 			
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
-				statusReqDTO = new StatusReqDTO();
-				statusReqDTO.setStatusId(FulfilmentStatusConst.DO_PENDING_CANCELLATION_SUBMISSION);
-				doBB.getManagedBean().getFulfilmentOrder().setStatus(statusSO.retrieveStatusByStatusId(statusReqDTO).getPmStatus());
 				flBB.initializeRemarkAndAttachement(new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 			} else if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE)) {
-				statusReqDTO = new StatusReqDTO();
-				statusReqDTO.setStatusId(FulfilmentStatusConst.CR_PENDING_SUBMISSION); //TODO Should change to DO_PENDING_SUBMISSION?
-				doBB.getManagedBean().getFulfilmentOrder().setStatus(statusSO.retrieveStatusByStatusId(statusReqDTO).getPmStatus());
 				flBB.initializeRemarkAndAttachement(new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 			} else { // view
-				doBB.getManagedBean().getFulfilmentOrder().setStatus(deliveryOrderSO.retrieveDelOrderStatus(reqDTO).getPmStatus());
 				flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(),resDTO.getAttachmentList());
 			}
 			navgPage=NAV_TO_MAINTAIN_DO;
