@@ -31,13 +31,13 @@
 		           <p:selectOneMenu id="fromMonth" value="#{schedVar.fromTranDate}" style="width:120px;"> 
 		              <f:selectItem itemLabel="-Select One-" itemValue=""/>
                       <f:selectItems value="#{contractDetailsBackingBean.monthList}"/>  
-                      <p:ajax event="change" update=":form:tableSchedule" process="@this" listener="#{contractDetailsBackingBean.validateDate(schedVar)}"/> 
+                      <p:ajax event="change" update=":form:tableSchedule" process="@form" listener="#{contractDetailsBackingBean.validateDate(schedVar)}"/> 
                    </p:selectOneMenu> 
                    <p:spacer width="1"/>
                    <p:selectOneMenu id="fromYear" value="#{schedVar.fromTranYear}" style="width:120px;"> 
                       <f:selectItem itemLabel="-Select One-" itemValue=""/>
                       <f:selectItems value="#{contractDetailsBackingBean.yearList}" var="year" itemValue="#{year}" itemLabel="#{year}"  />  
-                      <p:ajax event="change" update=":form:tableSchedule" process="@this" listener="#{contractDetailsBackingBean.validateDate(schedVar)}"/> 
+                      <p:ajax event="change" update=":form:tableSchedule" process="@form" listener="#{contractDetailsBackingBean.validateDate(schedVar)}"/> 
                    </p:selectOneMenu> 
 		        </p:column> 	
 		        <p:column style="width:40%;" headerText="#{lbl['lbl.ct.sched.eperiod']}">
@@ -51,7 +51,7 @@
                    <p:selectOneMenu id="toYear" value="#{schedVar.toTranYears}" style="width:120px;" >
             	      <f:selectItem itemLabel="-Select One-" itemValue=""/>
                       <f:selectItems value="#{contractDetailsBackingBean.yearList}" />
-                      <p:ajax event="change" update=":form:tableSchedule" process="@this" listener="#{contractDetailsBackingBean.validateDate(schedVar)}"/> 
+                      <p:ajax event="change" update=":form:tableSchedule" process="@form" listener="#{contractDetailsBackingBean.validateDate(schedVar)}"/> 
                    </p:selectOneMenu>
                    <p:spacer width="5"/>
 		               <p:graphicImage id="schedValidation" library="ep/images/design"   name="reject.png" 

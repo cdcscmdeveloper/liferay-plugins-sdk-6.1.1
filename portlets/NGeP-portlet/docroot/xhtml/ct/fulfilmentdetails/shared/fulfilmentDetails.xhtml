@@ -126,7 +126,7 @@
 	     </h:panelGroup>
 	  <h:panelGrid columns="2">
 	    <p:inputTextarea id="justificationLbl" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.justification}"
-		  rows="4" style="width:570px;" maxlength="200" validator="#{webappBean.checkSpaces}" label="#{lbl['lbl.ct.justification']}"
+		  rows="4" style="width:570px;" maxlength="200" label="#{lbl['lbl.ct.justification']}"
 		  required="true" autoResize="false">
 		   <p:ajax oncomplete="$('.ui-state-error').removeClass('ui-state-error');" update="justificationPanel"/></p:inputTextarea>
 		   <p:message for="justificationLbl" display="icon"/>	
