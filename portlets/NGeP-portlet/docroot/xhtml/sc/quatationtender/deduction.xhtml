@@ -33,7 +33,7 @@
 					<f:selectItems
 						value="#{qTDeductionPaymentBackingBean.getDropdownValues(ParameterTypeConst.deductionType)}" />
 					<p:ajax event="change" partialSubmit="true" process="@this"
-						update=":form:clausePnl"
+						update=":form:clausePnl, deductionamountid"
 						oncomplete="deductPaymentTblWidget.unselectAllRows(); deductPaymentTblWidget.selectRow(#{rowIndex}, true);"
 						listener="#{qTDeductionPaymentBackingBean.deductionTypeChange(scQtDeduction)}" />
 				</p:selectOneMenu>
@@ -41,13 +41,14 @@
 			</p:column>
 
 			<p:column headerText="Deduction Amount">
-				#{qTDeductionPaymentBackingBean.managedBean.selectedScQtDeduction.deductionType.parameterCode}
+				<h:panelGroup id="deductionamountid">
+				#{scQtDeduction.deductionType.parameterCode}
 				<p:inputText size="30" maxlength="18"
-					value="#{scQtDeduction.deductionAmount}"
-					style="margin-right:5px;text-align:right;"
-					rendered="#{qTDeductionPaymentBackingBean.managedBean.selectedScQtDeduction.deductionType.parameterCode eq ParameterConst.deductionTypeFixed}">
-					<p:ajax update=":form:deductPaymentTblId" />
-				</p:inputText>
+						value="#{scQtDeduction.deductionAmount}"
+						style="margin-right:5px;text-align:right;"
+						rendered="#{scQtDeduction.deductionType.parameterCode eq ParameterConst.deductionTypeFixed}">
+					</p:inputText>
+				</h:panelGroup>
 			</p:column>
 
 		</p:dataTable>

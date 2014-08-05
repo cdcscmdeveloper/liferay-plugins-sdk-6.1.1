@@ -17,7 +17,9 @@
 				style="float:left;" icon="ui-icon-back"
 				action="#{qTDetailBB.technicalSpecBackAction}" />
 		</div>
-		<p:spacer height="5" />
+		<p:spacer height="25" />
+		<br />
+		<br />
 		<p:panel header="#{lbl['lbl.sc.tpl.head.section']}" toggleable="true"
 			style="width:100%;">
 			<table>
@@ -25,7 +27,7 @@
 					<td valign="top"><h:outputLabel
 							value="#{lbl['lbl.sc.tpl.main.title']}" /></td>
 					<td colspan="3"><p:inputTextarea rows="2" cols="95"
-							style="margin-bottom:5px;" maxlength="200"
+							style="margin-bottom:5px;" maxlength="200" disabled="true"
 							value="#{qTDetailBB.managedBean.qtDoc.tplSpecMaster.specName}" /></td>
 				</tr>
 				<tr>
@@ -38,9 +40,10 @@
 				</tr>
 				<tr>
 					<td><h:outputLabel value="#{lbl['lbl.sc.spec.local.goods']}" /></td>
-					<td><p:selectOneRadio id="estimated">
+					<td><p:selectOneRadio id="estimated"
+							value="#{qTDetailBB.managedBean.qtDoc.tplSpecMaster.itemOriginCode.parameterId}">
 							<f:selectItems
-								value="#{qTDetailBB.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+								value="#{qTDetailBB.getLocalGoodsRadioValues(ParameterTypeConst.itemOrigin)}" />
 						</p:selectOneRadio></td>
 				</tr>
 				<tr>

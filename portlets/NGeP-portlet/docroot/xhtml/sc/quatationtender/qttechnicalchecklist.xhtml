@@ -18,11 +18,13 @@
 
 			<p:column headerText="#{lbl['lbl.sc.spec.stage.title']}"
 				style="width:50%">
-				<h:outputText value="#{technicalSpec.title}" size="50"></h:outputText>
+				<h:outputText value="#{technicalSpec.title}" size="50" />
 			</p:column>
 
 			<p:column headerText="Status" style="width:20%">
-				<h:outputText value="Pending" size="50"></h:outputText>
+				<h:outputText
+					value="qTDetailBB.getStatusDescById(technicalSpec.pmStatus.statusId)}"
+					size="50" />
 			</p:column>
 			<p:column headerText="Created By" style="width:20%">
 				<h:outputText
@@ -35,7 +37,6 @@
 					action="#{qTDetailBB.technicalSpecEditAction(technicalSpec)}">
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png" />
-
 				</p:commandLink>
 			</p:column>
 		</p:dataTable>
