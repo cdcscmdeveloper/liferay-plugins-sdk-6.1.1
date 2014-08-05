@@ -2573,7 +2573,7 @@ public class QTDetailBackingBean extends
 		int previousTabIndex = this.getManagedBean().getSelectedTabIndex();
 		TabBean selctedcommTabBean = this.getManagedBean().getScCommitteeMemberTabList().get(previousTabIndex);
 		ScCommittee committe = null;
-		if (null == this.getManagedBean().getFinalizationSecratary() || this.getManagedBean().getFinalizationSecratary().isEmpty()) {
+		/*if (null == this.getManagedBean().getFinalizationSecratary() || this.getManagedBean().getFinalizationSecratary().isEmpty()) {
 			List<PmParameter> finalizeList = retrieveFinalizationSecratryDtl(this.getManagedBean().getQt().getQtId());
 			this.getManagedBean().setFinalizationSecratary(finalizeList);
 		}
@@ -2592,7 +2592,7 @@ public class QTDetailBackingBean extends
 			reqDTO.setScCommittee(committe);
 			reqDTO.setScQt(this.getManagedBean().getQt());
 			committeSO.validateCommitteDtls(reqDTO);
-		}
+		}*/
 		this.getManagedBean().setSelectedTabIndex(selectedZoneTabIndex);
 		TabBean committeTabBean = this.getManagedBean().getScCommitteeMemberTabList().get(selectedZoneTabIndex);
 		this.getManagedBean().setSelectedTabBean(committeTabBean);
