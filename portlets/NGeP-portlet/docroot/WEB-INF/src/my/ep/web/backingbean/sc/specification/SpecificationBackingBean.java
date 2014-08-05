@@ -6062,9 +6062,10 @@ public class SpecificationBackingBean extends
 				localList.add(scoreOfYears);
 			}
 			int localScore = scoreYear + checklistScore;
+			
 
-			checkList.getQtScoreWeightage()
-					.setScore(new BigDecimal(localScore));
+			/*checkList.getQtScoreWeightage()
+					.setScore(new BigDecimal(localScore));*/
 			// itemIndex = checklist.indexOf(list); // checklist.remove(list);
 			// * checklist.set(itemIndex,list);
 			/*
@@ -6234,8 +6235,8 @@ public class SpecificationBackingBean extends
 
 			int localScore = scoreYear + checklistScore;
 
-			checkList.getQtScoreWeightage()
-					.setScore(new BigDecimal(localScore));
+			/*checkList.getQtScoreWeightage()
+					.setScore(new BigDecimal(localScore));*/
 			checkList.setScQt(this.getManagedBean().getScQt());
 			checkList.setScQtCheckListScores(localList);
 
@@ -6330,7 +6331,7 @@ public class SpecificationBackingBean extends
 			contractScore = finCompanyScore.getScore().intValue();
 			localList.add(finCompanyScore);
 		}
-		checkList.getQtScoreWeightage().setScore(new BigDecimal(contractScore));
+		/*checkList.getQtScoreWeightage().setScore(new BigDecimal(contractScore));*/
 		checkList.setScQt(this.getManagedBean().getScQt());
 		checkList.setScQtCheckListScores(localList);
 
@@ -6420,7 +6421,7 @@ public class SpecificationBackingBean extends
 			localList.add(finPrivateScore);
 		}
 
-		checkList.getQtScoreWeightage().setScore(new BigDecimal(contractScore));
+	/*	checkList.getQtScoreWeightage().setScore(new BigDecimal(contractScore));*/
 		checkList.setScQt(this.getManagedBean().getScQt());
 		checkList.setScQtCheckListScores(localList);
 
@@ -6510,7 +6511,7 @@ public class SpecificationBackingBean extends
 			training = checkListScore.getScore().intValue();
 			localList.add(checkListScore);
 		}
-		checkList.getQtScoreWeightage().setScore(new BigDecimal(training));
+		/*checkList.getQtScoreWeightage().setScore(new BigDecimal(training));*/
 		checkList.setScQt(this.getManagedBean().getScQt());
 		checkList.setScQtCheckListScores(localList);
 
@@ -6600,7 +6601,7 @@ public class SpecificationBackingBean extends
 			technical = technicalEmployee.getScore().intValue();
 			localList.add(technicalEmployee);
 		}
-		checkList.getQtScoreWeightage().setScore(new BigDecimal(technical));
+	/*	checkList.getQtScoreWeightage().setScore(new BigDecimal(technical));*/
 		checkList.setScQt(this.getManagedBean().getScQt());
 		checkList.setScQtCheckListScores(localList);
 		// this.getManagedBean().setCollectionScoring(localList);
@@ -6693,7 +6694,7 @@ public class SpecificationBackingBean extends
 			localList.add(employeeChecklist);
 		}
 
-		checkList.getQtScoreWeightage().setScore(new BigDecimal(employee));
+		/*checkList.getQtScoreWeightage().setScore(new BigDecimal(employee));*/
 		checkList.setScQt(this.getManagedBean().getScQt());
 		checkList.setScQtCheckListScores(localList);
 		// this.getManagedBean().setCollectionScoring(localList);
@@ -6785,7 +6786,7 @@ public class SpecificationBackingBean extends
 			credit = creditFacility.getScore().intValue();
 			localList.add(creditFacility);
 		}
-		checkList.getQtScoreWeightage().setScore(new BigDecimal(credit));
+		/*checkList.getQtScoreWeightage().setScore(new BigDecimal(credit));*/
 		checkList.setScQt(this.getManagedBean().getScQt());
 		checkList.setScQtCheckListScores(localList);
 		// this.getManagedBean().setCollectionScoring(localList);
@@ -6877,7 +6878,7 @@ public class SpecificationBackingBean extends
 			cash = acceptCash.getScore().intValue();
 			localList.add(acceptCash);
 		}
-		checkList.getQtScoreWeightage().setScore(new BigDecimal(cash));
+		/*checkList.getQtScoreWeightage().setScore(new BigDecimal(cash));*/
 		checkList.setScQt(this.getManagedBean().getScQt());
 		checkList.setScQtCheckListScores(localList);
 		// this.getManagedBean().setCollectionScoring(localList);
@@ -6969,7 +6970,7 @@ public class SpecificationBackingBean extends
 			bank = bankDetails.getScore().intValue();
 			localList.add(bankDetails);
 		}
-		checkList.getQtScoreWeightage().setScore(new BigDecimal(bank));
+		/*checkList.getQtScoreWeightage().setScore(new BigDecimal(bank));*/
 		String Startmonth = "";
 		String endmonth = "";
 		if (this.getManagedBean().getFromMonth().equalsIgnoreCase("0")) {
@@ -7153,7 +7154,7 @@ public class SpecificationBackingBean extends
 			asset = assetChecklist.getScore().intValue();
 			localList.add(assetChecklist);
 		}
-		checkList.getQtScoreWeightage().setScore(new BigDecimal(asset));
+		/*checkList.getQtScoreWeightage().setScore(new BigDecimal(asset));*/
 		checkList.setScQt(this.getManagedBean().getScQt());
 		checkList.setScQtCheckListScores(localList);
 		// this.getManagedBean().setCollectionScoring(localList);
@@ -7245,7 +7246,7 @@ public class SpecificationBackingBean extends
 			localList.add(paidUpChecklist);
 		}
 
-		checkList.getQtScoreWeightage().setScore(new BigDecimal(paidUp));
+		/*checkList.getQtScoreWeightage().setScore(new BigDecimal(paidUp));*/
 		checkList.setScQt(this.getManagedBean().getScQt());
 		checkList.setScQtCheckListScores(localList);
 
