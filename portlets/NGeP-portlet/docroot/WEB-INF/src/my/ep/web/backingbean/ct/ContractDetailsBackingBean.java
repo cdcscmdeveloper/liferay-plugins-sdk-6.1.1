@@ -248,6 +248,9 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		
 		try {
 			System.out.println("**********preRenderView**************");
+			 Calendar cal = Calendar.getInstance();
+			log.info("BackingBean: Performance Testing  preRenderView Function: Time taken to start >>>>"+ cal.getTime());
+			
 			HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 			HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 			String taskId = originalServletRequest.getParameter("taskId");
@@ -291,6 +294,9 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		    IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
 		    ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
 		    setValidateContractField(resDTO);
+		    
+		    log.info("BackingBean: Performance Testing  preRenderView Function: Time taken to End >>>>"+ Calendar.getInstance().getTime());
+			log.info("BackingBean: Performance Testing  preRenderView Function: Total Time taken (Second) >>>>"+ (Calendar.getInstance().getTime().getTime() - cal.getTime().getTime()) / 1000);
 		    
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null,  ContractManagementConst.NAV_TO_CONTRACT_DETAILS);
@@ -556,6 +562,8 @@ public void ConstructSideTabMenu(){
 			if (log.isDebugEnabled()) {
 				log.debug("pageChangeListener");
 			}
+			 Calendar cal = Calendar.getInstance();
+			log.info("BackingBean: Performance Testing  Search Function: Time taken to start >>>>"+ cal.getTime());
 			try {
 				if(getManagedBean().getCtNumber()!=null && getManagedBean().getCtNumber().length()>0) {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("contractNo",SearchOperator.OPERATOR_LIKE.value(),
@@ -616,6 +624,11 @@ public void ConstructSideTabMenu(){
 				reqDTO.setvCtContractSearchBean(searchBean);
 				ContractResDTO resDTO = contractSO.searchContractDocument(reqDTO);
 				getManagedBean().setSelectedIndex(0);
+				
+				log.info("BackingBean: Performance Testing  Search Function: Time taken to End >>>>"+ Calendar.getInstance().getTime());
+				log.info("BackingBean: Performance Testing  Search Function: Total Time taken (Second) >>>>"+ (Calendar.getInstance().getTime().getTime() - cal.getTime().getTime()) / 1000);
+				log.info("BackingBean: Performance Testing  Search Function: Total number of record>>>>" + resDTO.getvCtContractResultBean().getResultList().size());
+				
 				if(resDTO.isSuccessful()) {
 					return resDTO.getvCtContractResultBean();
 				}
@@ -628,6 +641,8 @@ public void ConstructSideTabMenu(){
 	
     public String saveContract(String action) throws Exception{
 	    IContractSO contractSO = null;
+	    Calendar cal = Calendar.getInstance();
+    	log.info("BackingBean: Performance Testing  saveContract Function: Time taken to start >>>>"+ cal.getTime());
 		try{
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 				if(getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
@@ -707,6 +722,9 @@ public void ConstructSideTabMenu(){
 		  } finally {
 			contractSO = null;
 		  }
+		log.info("BackingBean: Performance Testing  saveContract Function: Time taken to End >>>>"+ Calendar.getInstance().getTime());
+		log.info("BackingBean: Performance Testing  saveContract Function: Total Time taken (Second) >>>>"+ (Calendar.getInstance().getTime().getTime() - cal.getTime().getTime()) / 1000);
+		
 		return null;	
 	}
     
@@ -1565,6 +1583,8 @@ public void ConstructSideTabMenu(){
 	public String gotoUpdatePage(){
 		IContractSO contractSO = null;
 		try {
+			Calendar cal = Calendar.getInstance();
+			log.info("BackingBean: Performance Testing  gotoUpdatePage Function: Time taken to start >>>>"+ cal.getTime());
 			String latestContractVerId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("latestContractVerId");
 			Long contractVerId = (!latestContractVerId.isEmpty()) ? Long.parseLong(latestContractVerId) : null;
 			Long contractId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("contractId"));
@@ -1586,6 +1606,9 @@ public void ConstructSideTabMenu(){
 		    getManagedBean().setUpdateContract(true);
 	        getManagedBean().setViewContract(false);
 	        this.getManagedBean().setSelectedTabIndex(0);
+	        log.info("BackingBean: Performance Testing  gotoUpdatePage Function: Time taken to End >>>>"+ Calendar.getInstance().getTime());
+			log.info("BackingBean: Performance Testing  gotoUpdatePage Function: Total Time taken (Second) >>>>"+ (Calendar.getInstance().getTime().getTime() - cal.getTime().getTime()) / 1000);
+			
 			return CONTRACT_PAGE;
 		} finally {
 			contractSO = null;
