@@ -36,13 +36,13 @@ public class FileDownloadServlet extends HttpServlet {
 		String filePath = (StringUtils.isNotBlank(request.getParameter("filePath"))) ? request.getParameter("filePath") : null;
 	
 		StringBuilder uploadDir = new StringBuilder();
-		uploadDir.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)).append("/" + filePath);
-		String imageUrl = uploadDir.toString();
+		uploadDir.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)).append("/").append(filePath).append("/").append(filename);
+		String fullPath = uploadDir.toString();
 
 		log.info("filename: " + filename);
-		log.info("imageUrl: " + imageUrl);
+		log.info("full path: " + fullPath);
 		
-		File file = new File(imageUrl);
+		File file = new File(fullPath);
 		byte[] b = new byte[(int) file.length()];
 		
 		try {
