@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TreeMap;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -59,7 +60,6 @@ import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
 import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
-import my.ep.persistence.entity.cm.catalog.CmSupplierZone;
 import my.ep.persistence.entity.cm.catalog.CmSupplierZoneDTL;
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -71,8 +71,8 @@ import my.ep.persistence.entity.sc.directpurchase.ScPIDRemark;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefault;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefaultAttachment;
 import my.ep.persistence.entity.sc.directpurchase.ScQuote;
-import my.ep.persistence.entity.sc.directpurchase.ScQuoteZone;
 import my.ep.persistence.entity.sc.directpurchase.ScRNWorkFlowStatus;
+import my.ep.persistence.entity.sc.directpurchase.ScRNZone;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteApprovalUser;
@@ -395,7 +395,8 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			RequestNoteResDTO	resDTO	=	directPurchaseSO.getRequestNote(requestDTO);
 			ScRequestNote	requestNote	=	resDTO.getRequestNoteDetail();
 			List<ScRequestNoteDtl>  requestNoteDtls = new ArrayList<ScRequestNoteDtl>();
-			 List<String>	sortZoneNames	=	new ArrayList<String>();
+			
+			HashMap<String,Long> ZoneNames = new HashMap<String,Long>();
 			if(requestNote.getRequestNoteDtls()  != null && requestNote.getRequestNoteDtls().size() >0){
 				for (ScRequestNoteDtl scRequestNoteDtl : requestNote.getRequestNoteDtls()) {
 					ScRequestSupplierItem scRequestSupplierItem = scRequestNoteDtl.getScRequestSupplierItem();
@@ -446,7 +447,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 					}
 					
 					if(scRequestNoteDtl.getTplSpecZoneDtl() !=null){
-						sortZoneNames.add(scRequestNoteDtl.getTplSpecZoneDtl().getZoneName());
+						ZoneNames.put(scRequestNoteDtl.getTplSpecZoneDtl().getZoneName(), scRequestNoteDtl.getTplSpecZoneDtl().getSpecZoneId());
 					}
 					
 					if(scRequestNoteDtl.getScRequestSupplierItem() == null){
@@ -470,7 +471,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 				getManagedBean().setRequestNoteDtls(itemList);
 				
 				// supplier rec list and sorting
-				Collections.sort(sortZoneNames);
+				Map<String, Long> sortZoneNames = new TreeMap<String, Long>(ZoneNames);
 				getManagedBean().setSupplierRecList(sortSupplierRecs(requestNoteDtls ,sortZoneNames));
 				
 			} else{
@@ -545,9 +546,9 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		return results;
 	}
 
-	private	List<ScRequestNoteDtl>	sortSupplierRecs(List<ScRequestNoteDtl>	requestNoteDtls , List<String>	sortItemList){
+	private	List<ScRequestNoteDtl>	sortSupplierRecs(List<ScRequestNoteDtl>	requestNoteDtls, Map<String, Long>	sortSupplierRecs){
 		List<ScRequestNoteDtl>	results	=	new ArrayList<ScRequestNoteDtl>();
-		for(String zoneName:sortItemList){
+		for(String zoneName:sortSupplierRecs.keySet()){
 
 			for(ScRequestNoteDtl requestNoteDtl:requestNoteDtls){
 
@@ -858,89 +859,53 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 	
 	private ScSupplierItemPrice		createSupplierItemPrice(ScRequestSupplierItem	scRequestSupplierItem, CmPricing pricing){
 		ScSupplierItemPrice	result	=	new ScSupplierItemPrice();
-		
 		result.setScRequestSupplierItem(scRequestSupplierItem);
 		result.setPricing(pricing);
 		
 		// zone dtl
 		if(pricing.getCmSupplierZone() != null){
-			//TplSpecZoneDtl tplSpecZoneDtl = new TplSpecZoneDtl();
-			//pricing.getCmSupplierZone().getCmSupplierZoneDtls();
-			//createTplSpecZone(pricing.getCmSupplierZone().getCmSupplierZoneDtls());
-			//tplSpecZoneDtl.setZoneName(pricing.getCmSupplierZone().getSuppZoneName());
-			//result.setTplSpecZone(createTplSpecZone(pricing.getCmSupplierZone().getCmSupplierZoneDtls()));
+			List<TplSpecZoneDtl> tplSpecZoneDtls	=	new ArrayList<TplSpecZoneDtl>();
+			TplSpecZoneDtl tplSpecZoneDtl = new TplSpecZoneDtl();
+			ScRNZone zone = new ScRNZone(); 
+
+			tplSpecZoneDtl.setZoneName(pricing.getCmSupplierZone().getSuppZoneName());
+			zone.setScRequestNote(getManagedBean().getRequestNote());
+			tplSpecZoneDtl.setTplSpecZone(zone);
+			tplSpecZoneDtls.add(tplSpecZoneDtl);
+			zone.setTplSpecZoneDtls(tplSpecZoneDtls);
+			result.setTplSpecZone(createSpecZone(pricing.getCmSupplierZone().getCmSupplierZoneDtls() ,tplSpecZoneDtl ,zone));
 		}
-		
-		IParameterSO parameterSO;
-		try {
-			parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-			
-			ParameterReqDTO reqDTO = new ParameterReqDTO();
-			reqDTO.setParameterType(ParameterTypeConst.PRICE_TYPE);
-			reqDTO.setParameterCode(pricing.getPricingType());
-			
-			ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
-			
-			result.setPriceType(resDTO.getPmParameter());
-		} finally {
-			parameterSO = null;
-		}
-	
+		result.setPriceType(pricing.getPriceTypeId());
+
 		if (pricing.getPrice() != null) {
 			result.setItemPrice(pricing.getPrice());
 		} else {
 			result.setItemPrice(new BigDecimal(0));
 		}
-		
 		result.setFromQty(pricing.getFromQty());
 		result.setToQty(pricing.getToQty());
-		
+
 		return result;
 	}
 	
-	
-	private TplSpecZoneDtl createTplSpecZone(List<CmSupplierZoneDTL> cmSupplierZoneDTLs) {
-		TplSpecZoneDtl tplSpecZoneDtl = new TplSpecZoneDtl();
-		for(CmSupplierZoneDTL cmSupplierZoneDTL: cmSupplierZoneDTLs){
-			//tplSpecZoneDtl.setTplSpecZone(tplSpecZone)
-			tplSpecZoneDtl.setTplSpecZoneLocs(createTplSpecZoneLocs( tplSpecZoneDtl,cmSupplierZoneDTL));
-		}
-		return tplSpecZoneDtl;
-	}
-	private	List<TplSpecZoneLoc>	createTplSpecZoneLocs(TplSpecZoneDtl tplSpecZoneDtl ,CmSupplierZoneDTL cmSupplierZoneDTL){
-		TplSpecZoneLoc  specZoneLoc = new TplSpecZoneLoc();
-		List<TplSpecZoneLoc> results	=	new ArrayList<TplSpecZoneLoc>();
-		specZoneLoc.setPmDistrict(cmSupplierZoneDTL.getPmDistrict());
-		specZoneLoc.setPmState(cmSupplierZoneDTL.getPmState());
-		specZoneLoc.setPmDivision(cmSupplierZoneDTL.getPmDivision());
-		specZoneLoc.setTplSpecZoneDtl(tplSpecZoneDtl);
-		results.add(specZoneLoc);
-		return results;
-	}
-	
-	private TplSpecZoneDtl createSpecZone(CmSupplierZone supplierZone) {
-		TplSpecZoneDtl specZoneDtl = null;
-		if(supplierZone != null) {
-			if(supplierZone.getCmSupplierZoneDtls() != null) {
-				specZoneDtl = new TplSpecZoneDtl();
-				specZoneDtl.setZoneName(supplierZone.getSuppZoneName());
-				ScQuoteZone specZone = new ScQuoteZone();
-				List<TplSpecZoneLoc> zoneLocs = new ArrayList<TplSpecZoneLoc>();
-				for(CmSupplierZoneDTL zoneDtl : supplierZone.getCmSupplierZoneDtls()) {
-					TplSpecZoneLoc specZoneLoc = new TplSpecZoneLoc();
-					specZoneLoc.setPmDistrict(zoneDtl.getPmDistrict());
-					specZoneLoc.setPmState(zoneDtl.getPmState());
-					specZoneLoc.setPmDivision(zoneDtl.getPmDivision());
-					specZoneLoc.setTplSpecZoneDtl(specZoneDtl);
-					zoneLocs.add(specZoneLoc);
-				}
-				specZoneDtl.setTplSpecZone(specZone);
-				specZoneDtl.setTplSpecZoneLocs(zoneLocs);
+
+	private TplSpecZoneDtl createSpecZone(List<CmSupplierZoneDTL> cmSupplierZoneDTLs, TplSpecZoneDtl tplSpecZoneDtl, ScRNZone zone ) {
+		List<TplSpecZoneLoc> zoneLocs = new ArrayList<TplSpecZoneLoc>();
+		if(cmSupplierZoneDTLs !=null && cmSupplierZoneDTLs.size()>0){
+			for(CmSupplierZoneDTL zoneDtl : cmSupplierZoneDTLs) {
+				TplSpecZoneLoc specZoneLoc = new TplSpecZoneLoc();
+				specZoneLoc.setPmDistrict(zoneDtl.getPmDistrict());
+				specZoneLoc.setPmState(zoneDtl.getPmState());
+				specZoneLoc.setPmDivision(zoneDtl.getPmDivision());
+				specZoneLoc.setTplSpecZoneDtl(tplSpecZoneDtl);
+				zoneLocs.add(specZoneLoc);
 			}
 		}
-		return specZoneDtl;
+		tplSpecZoneDtl.setTplSpecZone(zone);
+		tplSpecZoneDtl.setTplSpecZoneLocs(zoneLocs);
+		return tplSpecZoneDtl;
 	}
-	
+
 	public SelectItem[] getPriceTypeDropdownValues(String parameterType,
 			List<String> priceTypes) {
 		SelectItem[] items = null;
