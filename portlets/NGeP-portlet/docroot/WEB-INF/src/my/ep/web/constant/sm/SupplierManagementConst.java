@@ -106,7 +106,7 @@ public class SupplierManagementConst {
 	public static final String STYPE_CONTRACTOR = "K";
 	public static final String STYPE_BASIC = "B";
 	public static final String ACC_BASIC = "O";
-	public static final String ACC_MOF = "M";
+	public static final String ACC_MOF = "N";
 	public static final String PERM_ADD = "I";
 	public static final String BUS_ADD = "C";
 	public static final String RES_ADD = "R";
@@ -129,6 +129,7 @@ public class SupplierManagementConst {
 	public static final String LOGIN_URL = "";
 	public static final String ORG_TYPE_SUPPLIER = "SUP";
 	public static final String SUPPLIER_BUSINESS_TYPE = "SBT";
+	public static final int PENDING_ACT_STATUS = 8;
 
 	// SDO BPM Action
 	public static final String BPM_INQUIRY = "INQUIRY";
@@ -151,6 +152,23 @@ public class SupplierManagementConst {
 	public static final String CAT_TYPE_MANUFACTURING = "M";
 	public static final String CAT_TYPE_PRINTING = "PC";
 	public static final String CAT_TYPE_TRAVEL = "PG";
+	
+	public static final String P221601 = "221601";
+	public static final String P221602 = "221602";
+	public static final String P221603 = "221603";
+	public static final String P221604 = "221604";
+	public static final String P221605 = "221605";
+	public static final String P221606 = "221606";
+	public static final String P221607 = "221607";
+	public static final String P221608 = "221608";
+	public static final String P221609 = "221609";
+	public static final String P221610 = "221610";
+	public static final String P221611 = "221611";
+	public static final String P221612 = "221612";
+	public static final String P221613 = "221613";
+	public static final String P221614 = "221614";
+	public static final String P222003 = "222003";
+	
 
 	// Payment
 	public static final String SOFTCERT_PAYMENT = "SF";
