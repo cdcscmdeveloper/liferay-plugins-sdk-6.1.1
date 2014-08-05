@@ -28,10 +28,18 @@
 						update=":form:itemDtlPopup" partialSubmit="true" process="@this"
 						oncomplete="itemDtlPopup.show();" />
 					  <p:spacer width="2px;"/>
-					<p:commandLink partialSubmit="true" 
+					<p:commandLink partialSubmit="true" process="@this"
 						actionListener="#{requestNoteBackingBean.showPurchaseInDefault(requestNoteDtl)}"
 						rendered="#{!empty requestNoteDtl.scRequestSupplierItem.requestNoteItem.purchaseInDefault}">
-						<p:graphicImage value="/resources/ep/images/design/document.png" height="15px" width="15px" />
+							<p:graphicImage library="ep/images/design" name="evaluate.png"
+							style="vertical-align:middle" />
+					</p:commandLink>
+					  <p:spacer width="2px;"/>
+					<p:commandLink partialSubmit="true" process="@this"
+						actionListener="#{requestNoteBackingBean.showPurchaseInquiry(requestNoteDtl)}"
+						rendered="#{!empty requestNoteDtl.scRequestSupplierItem.scPrInquiy}">
+							<p:graphicImage library="ep/images/design" name="evaluate.png"
+							style="vertical-align:middle" />
 					</p:commandLink>
 				</p:column>
 				  
