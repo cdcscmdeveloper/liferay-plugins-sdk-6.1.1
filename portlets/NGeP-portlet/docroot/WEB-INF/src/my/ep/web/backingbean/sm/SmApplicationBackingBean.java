@@ -3861,9 +3861,19 @@ public class SmApplicationBackingBean extends
 				}
 				System.out.println("User List Size for pass to BPM:" + reqDTO.getUserList().size());
 				if (reqDTO.getUserList().size() == 0) {
-					throw new EpException(MessageConst.ERROR_722546);
+					PmUser pmUser = new FacesScopes().getUserSessionBean();
+					reqDTO.getUserList().add(pmUser.getLoginId());
+					System.out.println("Login user added to the user list to BPM");
+//					throw new EpException(MessageConst.ERROR_722546);
 				}
+				
+				PmUser pmUser = new FacesScopes().getUserSessionBean();
+				if(!reqDTO.getUserList().contains(pmUser.getLoginId())){
+					reqDTO.getUserList().add(pmUser.getLoginId());
+				}
+				
 			}
+			
 			MofRegistrationResDTO resDTO;
 			regSo = (IMofRegistrationSO) BusinessDelegate.getInstance()
 					.getServiceObject("sm", IMofRegistrationSO.class);
