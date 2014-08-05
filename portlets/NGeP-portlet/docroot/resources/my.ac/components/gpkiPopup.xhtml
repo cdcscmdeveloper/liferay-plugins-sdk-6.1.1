@@ -17,6 +17,8 @@
 	<cc:implementation>
 		<p:remoteCommand name="postSignAction"
 			action="#{cc.attrs.postSignAction}" />
+		<p:remoteCommand name="errorAction"
+			action="#{gpkiBackingBean.showError}" />
 		<h:inputHidden id="inputTextBeforeSign" binding="#{textBeforeSign}"
 			value="#{cc.attrs.textBeforeSign}" />
 		<h:outputScript library="ep/gpki_js" name="gpki-api.js" />
@@ -79,7 +81,7 @@
 									var ic = obj.ic_no;
 									var signedData = encodeURIComponent(obj.signed_data);
 									if (statusCode == "0") {
-										var po = "dop";
+										
 										var textBeforeSign = $(
 												"[id='#{textBeforeSign.clientId}']")
 												.val();
@@ -108,7 +110,12 @@
 
 										/* put your logic to handle the result here */
 									} else if (statusCode == "50") {
-										Aegis.alert("Wrong PIN");
+										errorAction([ {
+											name : 'statusCode',
+											value : statusCode
+								
+										} ]);
+										 
 									} else if (statusCode == "40") {
 										Aegis.alert("CERT_EXPIRED");
 									} else if (statusCode == "41") {
@@ -116,16 +123,23 @@
 									} else if (statusCode == "43") {
 										Aegis.alert("CERT_NOT_YET_VALID");
 									} else {
-										Aegis.alert("Error No: " + statusCode
-												+ " \n" + statusMsg);
+										errorAction([ {
+											name : 'statusCode',
+											value : statusCode
+										}, {
+											name : 'statusMsg',
+											value : statusMsg
+										} ]);
 									}
 								});
 			}
 		</script>
 
-		<p:dialog widgetVar="gpki_dlg" resizable="false" modal="true">
-			<h:panelGrid columns="3" cellpadding="3">
-				<h:outputLabel for="password" value="*Digital Certificate PIN" />
+		<p:dialog header="Digital Certificate Signing" widgetVar="gpki_dlg" resizable="false" modal="true">
+			<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
+			<h:panelGrid columns="4" cellpadding="3">
+				<h:outputLabel value="*" styleClass="mandatory" />
+				<h:outputLabel for="password" value="Digital Certificate PIN" />
 				<p:password binding="#{pin}" id="password" />
 				<p:commandButton value="Sign" oncomplete="DigiSign();return false;" />
 			</h:panelGrid>

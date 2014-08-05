@@ -1,9 +1,11 @@
 package my.ep.web.backingbean.pm.cc;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.bean.ViewScoped;
@@ -21,6 +23,8 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.Http.Method;
 
 
@@ -116,15 +120,13 @@ public class gpkiBackingBean {
 	    debugLogger("reflectAction=====================================: "+obj);
 	}
 	
-	public void updatecert() {
 
-
-	    debugLogger("OriginalText====================================: ");
-	    debugLogger("SignedText====================================: ");
-	    debugLogger("ser====================================: ");
-
-		}
 		
+	public void showError() {
+	    String statusCode = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("statusCode");
+	    String statusMsg = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("statusMsg");
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error Code : ", statusMsg));
+	}
 	
 	public void signAction() {
 //	Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
@@ -133,9 +135,9 @@ public class gpkiBackingBean {
 	    String value2 = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("textBeforeSign");
 	    String value3 = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("serialNo");
 
-    debugLogger("OriginalText====================================: "+value);
-    debugLogger("SignedText====================================: "+value2);
-    debugLogger("ser====================================: "+value3);
+	    debugLogger("OriginalText====================================: "+value);
+	    debugLogger("SignedText====================================: "+value2);
+	    debugLogger("ser====================================: "+value3);
 
 	}
 
