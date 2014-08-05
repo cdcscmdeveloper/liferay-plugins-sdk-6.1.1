@@ -43,7 +43,7 @@ public class SupplierDetailBackingBean extends SourcingBaseBackingBean<SupplierD
 		
 		SmSupplier selectedSupplier = getManagedBean().getSmSupplier();
 		
-		if (selectedSupplier == null || (smSupplier != null && smSupplier.getSupplierId().longValue() != selectedSupplier.getSupplierId().longValue())) {
+		if (smSupplier != null && (selectedSupplier == null || smSupplier.getSupplierId().longValue() != selectedSupplier.getSupplierId().longValue())) {
 			IRegistrationSO registrationSO = null;
 			try {
 				registrationSO = BusinessDelegate.getInstance().getServiceObject(
@@ -59,6 +59,8 @@ public class SupplierDetailBackingBean extends SourcingBaseBackingBean<SupplierD
 			} finally {
 				registrationSO = null;
 			}	
+		} else if (smSupplier == null) {
+			log.warn("smSupplier is null.");
 		} else {
 			log.info("show supplier details from session.");
 		}
