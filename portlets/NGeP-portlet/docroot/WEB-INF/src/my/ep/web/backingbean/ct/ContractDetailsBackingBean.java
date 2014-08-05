@@ -733,8 +733,8 @@ public void ConstructSideTabMenu(){
     	 if(this.getManagedBean().getContractVer().getCtSchedules().size() > 0){
     		DateFormat dateFormat = new SimpleDateFormat("MM-yyyy");
     		 for(CtSchedule ctschedule : this.getManagedBean().getContractVer().getCtSchedules()){
-    			 String fromDate = String.valueOf(ctschedule.getFromTranDate())+"-"+ ctschedule.getFromTranYear();
-    			 String toDate = String.valueOf(ctschedule.getToTranDate()) +"-"+ctschedule.getToTranYears();
+    			 String fromDate = String.valueOf(ctschedule.getFromTranDate()+1)+"-"+ ctschedule.getFromTranYear();
+    			 String toDate = String.valueOf(ctschedule.getToTranDate()+1) +"-"+ctschedule.getToTranYears();
     			 Date date = dateFormat.parse((fromDate));
     			 ctschedule.setFromDate(date);
     			 Date date1 = dateFormat.parse((toDate));
@@ -751,8 +751,8 @@ public void ConstructSideTabMenu(){
     	 if(this.getManagedBean().getContractVer().getCtProgressivePayments().size() > 0){
     		DateFormat dateFormat = new SimpleDateFormat("MM-yyyy");
     		 for(CtProgressivePayment ctProgressivePayment : this.getManagedBean().getContractVer().getCtProgressivePayments()){
-    			 String fromDate = String.valueOf(ctProgressivePayment.getFromProDate())+"-"+ ctProgressivePayment.getFromProYear();
-    			 String toDate = String.valueOf(ctProgressivePayment.getToProDate())+"-"+ ctProgressivePayment.getToProYears();
+    			 String fromDate = String.valueOf(ctProgressivePayment.getFromProDate()+1)+"-"+ ctProgressivePayment.getFromProYear();
+    			 String toDate = String.valueOf(ctProgressivePayment.getToProDate()+1)+"-"+ ctProgressivePayment.getToProYears();
     			 Date date = dateFormat.parse((fromDate));
     			 ctProgressivePayment.setFromDate(date);
     			 Date date1 = dateFormat.parse((toDate));
