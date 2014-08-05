@@ -6,7 +6,7 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:ac="http://ac.my/jsf/composite/cc">
+	xmlns:ac="http://ac.my/jsf/composite/cc" >
     <ui:define name="contentSection">
     <style>
       .column-align-center { text-align: center !important;}
@@ -35,14 +35,14 @@
            label="#{lbl['lbl.ct.asearch.sname']}" value="#{associationBackingBean.managedBean.ctSupplierName}"/>
          
         <h:outputLabel value="#{lbl['lbl.ct.asearch.cstart']}"  />
-        <p:calendar style="width:130px;" id="calefdate" readonlyInput="true" showOn="button"
+        <p:calendar style="width:130px;margin-bottom:5px;" id="calefdate" readonlyInput="true" showOn="button"
             value="#{associationBackingBean.managedBean.ctDateStart}" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
         <p:outputLabel value="#{lbl['lbl.ct.asearch.cend']}" />
         <p:calendar id="calepdate" style="width:130px;"  readonlyInput="true" showOn="button"
           value="#{associationBackingBean.managedBean.ctDateEnd}"  pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
        
         <p:outputLabel value="#{lbl['lbl.ct.asearch.pcno']}"/>
-        <p:inputText  id="ProdName"  style="width:170px;"  maxlength="30"
+        <p:inputText  id="ProdName"  style="width:170px;margin-top:3px;"  maxlength="30"
            label="#{lbl['lbl.ct.asearch.pcno']}" value="#{associationBackingBean.managedBean.ctProductCode}" />
       </h:panelGrid>
       <div class="ppRightBtn"> 
