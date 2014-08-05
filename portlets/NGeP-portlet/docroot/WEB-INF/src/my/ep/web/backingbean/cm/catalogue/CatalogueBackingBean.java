@@ -1558,11 +1558,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		log.info("In saveCatalogItem");
 		PortletRequest request = (PortletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
 		System.out.println("******getTabActiveIndex:" + this.getManagedBean().getTabActiveIndex());
-		ICatalogueSO catalogueSO = null;
+		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
 
 		try {
-			//gg
-			catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
+			
 			CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 			
 			
@@ -1819,11 +1818,11 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 		System.out.println("******getTabActiveIndex:"+ this.getManagedBean().getTabActiveIndex());
 
-		ICatalogueSO catalogueSO = null;
+		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
 
 		try {
 
-			catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
+			
 			CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 
 			boolean inactiveFlag = false;
@@ -2883,12 +2882,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		log.info("this.getManagedBean().getSelectViewItems().size() = "+this.getManagedBean().getSelectViewItems().size());
 		this.getManagedBean().setSelectedSupplierItemList(null);
 		this.getManagedBean().setContractedExist(false);
-		ICatalogueSO catalogueSO = null;
+		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
 
 		try{
 			for (VCmSupplierItem view : this.getManagedBean().getSelectViewItems()) {
 	
-				catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
+				
 	
 				CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 				System.out.println("view.getDocId()" + view.getDocId());
