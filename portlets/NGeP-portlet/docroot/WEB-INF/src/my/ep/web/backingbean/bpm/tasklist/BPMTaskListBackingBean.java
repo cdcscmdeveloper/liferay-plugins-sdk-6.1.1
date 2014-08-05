@@ -150,7 +150,7 @@ public class BPMTaskListBackingBean extends
 		temp.put(SCProcessNameConst.QUOTATION_TENDER_PROCESS_NAME +SCProcessNameConst.CONSOLIDATE_SPECIFICATION , "businessowner");
 		temp.put(SCProcessNameConst.QUOTATION_TENDER_PROCESS_NAME +SCProcessNameConst.SPECIFICATION_APPROVAL , "businessowner");
 		temp.put(SCProcessNameConst.QUOTATION_TENDER_PROCESS_NAME +SCProcessNameConst.PREPARE_QT_DETAILS , "qtdetails");
-		temp.put(SCProcessNameConst.SOURCING_APPROVAL_PROCESS_NAME +SCProcessNameConst.APPROVE_BUDGET , "qtapprovals");
+		temp.put(SCProcessNameConst.BUDGET_APPROVAL_PROCESS_NAME +SCProcessNameConst.APPROVE_BUDGET , "qtapprovals");
 		temp.put(SCProcessNameConst.BPK_APPROVAL_PROCESS_NAME +SCProcessNameConst.APPROVE_BPK , "qtapprovals");
 		temp.put(SCProcessNameConst.SCORING_PREPARATION_PROCESS_NAME +SCProcessNameConst.UPDATE_SCORING ,"specpreparation");
 		temp.put(SCProcessNameConst.SCORING_PREPARATION_PROCESS_NAME +SCProcessNameConst.FINALISE_SCORING ,"specpreparation");
@@ -164,8 +164,13 @@ public class BPMTaskListBackingBean extends
 		temp.put(SCProcessNameConst.SITE_VISIT_PROPOSAL_PROCESS_NAME +SCProcessNameConst.FINALIZE_ATTANDANCE , "sitevisit");
 		temp.put(SCProcessNameConst.SITE_VISIT_PROPOSAL_PROCESS_NAME +SCProcessNameConst.UPDATE_ATTANDANCE , "sitevisit");
 		temp.put(SCProcessNameConst.SUPPLIER_DP_AWARD_PROCESS_NAME +SCProcessNameConst.PREPARE_LOA , "dp-loa-list");
-		temp.put(SCProcessNameConst.EVALUATION_PROCESS_NAME +"Assign EC/OC Committee" , "qtdetails");
-
+		temp.put(SCProcessNameConst.QUOTATION_TENDER_PROCESS_NAME+SCProcessNameConst.APPROVE_PUBLICATION, "qtapprovals");
+		
+		temp.put(SCProcessNameConst.EVALUATION_PROCESS_NAME +SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE , "qtdetails");
+		temp.put(SCProcessNameConst.EC_EVALUATION_PROCESS_NAME +SCProcessNameConst.COORDINATE_EC_MEETING , "coordinatemeeting");
+		temp.put(SCProcessNameConst.OC_EVALUATION_PROCESS_NAME +SCProcessNameConst.COORDINATE_OC_MEETING , "coordinatemeeting");
+		temp.put(SCProcessNameConst.TEC_EVALUATION_PROCESS_NAME +SCProcessNameConst.COORDINATE_TEC_MEETING , "coordinatemeeting");
+		temp.put(SCProcessNameConst.FEC_EVALUATION_PROCESS_NAME +SCProcessNameConst.COORDINATE_FEC_MEETING , "coordinatemeeting");
 		
 		this.getManagedBean().setBpmMap(temp);
 
