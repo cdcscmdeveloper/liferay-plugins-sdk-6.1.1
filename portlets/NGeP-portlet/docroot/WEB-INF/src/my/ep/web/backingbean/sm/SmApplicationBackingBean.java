@@ -3852,8 +3852,10 @@ public class SmApplicationBackingBean extends
 									.getEpRole().equalsIgnoreCase(
 											RoleCode.BASIC_SUPPLIER_USER
 													.value()))) {
+//						if (personnel.getPmUser() != null
+//								&& personnel.getPmUser().getUserId() != null && personnel.getPmUser().getRecordStatusFlg() == 1) {
 						if (personnel.getPmUser() != null
-								&& personnel.getPmUser().getUserId() != null && personnel.getPmUser().getRecordStatusFlg() == 1) {
+								&& personnel.getPmUser().getUserId() != null) {
 							reqDTO.getUserList().add(
 									personnel.getPmUser().getLoginId());
 						}
