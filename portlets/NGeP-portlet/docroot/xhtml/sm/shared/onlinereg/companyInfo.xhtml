@@ -25,7 +25,7 @@
 				<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.ownername']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td class="tdContent"><p:inputText id="ownerNameId" required="true" label="#{lbl['lbl.sm.ownername']}"
 						value="#{registrationBackingBean.managedBean.smSuppOwner.ownerName}"
-						size="40" maxlength="50"/>
+						size="40" maxlength="50" disabled="#{!registrationBackingBean.managedBean.smSuppOwner.brandNew}"/>
 					&#160;
 					<p:graphicImage id="ownNmti" library="ep/images/design" name="tooltips.png" />
 					<p:tooltip id="ownNmtt" for="ownNmti">
@@ -41,7 +41,7 @@
 				<td class="tdContent">
 					<p:selectOneMenu id="cmbUsrIdenType" required="true" label="#{lbl['lbl.sm.identificationtype']}"
 						value="#{registrationBackingBean.managedBean.smSuppOwner.identificationTypeId}"
-						style="width:200px" >
+						style="width:200px" disabled="#{!registrationBackingBean.managedBean.smSuppOwner.brandNew}">
 						<f:selectItems value="#{registrationBackingBean.pmIdTypeDropdownValues()}" />
 						<p:ajax event="change" update="txtIdNumber"
 							listener="#{registrationBackingBean.suppOwnerIdTypeChange}" />
@@ -54,7 +54,7 @@
 				<td class="tdContent">
 					<p:inputText id="txtIdNumber" required="true" label="#{lbl['lbl.sm.identificationno']}"
 						value="#{registrationBackingBean.managedBean.smSuppOwner.identificationNo}"
-						size="30" maxlength="15" >
+						size="30" maxlength="15" disabled="#{!registrationBackingBean.managedBean.smSuppOwner.brandNew}">
 					</p:inputText>
 					&#160;
 					<p:graphicImage id="icti" library="ep/images/design" name="tooltips.png" />
@@ -76,7 +76,7 @@
 				<td class="tdContent"><p:inputText required="true"
 						label="#{lbl['lbl.sm.companyname']}" maxlength="100"
 						value="#{registrationBackingBean.managedBean.smAppl.smCompanyBasic.companyName}"
-						size="40" id="companyNameId" /> <p:message id="companyNameIdMsg"
+						size="40" id="companyNameId"  disabled="#{!registrationBackingBean.managedBean.smAppl.smCompanyBasic.brandNew}" /> <p:message id="companyNameIdMsg"
 						for="companyNameId" display="icon" /></td>
 
 				<td class="tdTitle"><p:outputLabel
@@ -84,7 +84,7 @@
 				<td class="tdContent"><p:calendar id="estDateCalId"
 						navigator="true" required="true" label="#{lbl['lbl.sm.estdate']}"
 						value="#{registrationBackingBean.managedBean.smSupp.establishDate}"
-						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
+						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"  disabled="#{!registrationBackingBean.managedBean.smSupp.brandNew}"
 						readonlyInput="true" size="30" showOn="button" yearRange="-99:+0" maxdate="#{CommonConstants.CURRENT_DATE}" />
 					<p:message id="estDateCalIdMsg" for="estDateCalId" display="icon" /></td>
 			</tr>
