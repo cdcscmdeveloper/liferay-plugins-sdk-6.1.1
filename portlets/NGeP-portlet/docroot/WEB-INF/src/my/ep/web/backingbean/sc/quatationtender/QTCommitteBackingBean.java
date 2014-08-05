@@ -756,6 +756,8 @@ public class QTCommitteBackingBean extends
 						if (parameter.getPmParameter().getParameterId().equals(user.getMemberRole().getParameterId())) {
 							committeeMember.setMemberRole(parameter.getPmParameter());
 							break;
+						} else {
+							committeeMember.setMemberRole(user.getMemberRole());
 						}
 					}
 					
