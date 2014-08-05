@@ -34,10 +34,9 @@
 	<p:spacer width="7" />
    </h:panelGrid>
 	<h:panelGrid columns="1" cellpadding="5">
-<p:commandButton value="Submit"  action="#{spkiBackingBean.getChallengeQuestions}" update="asd" oncomplete="spki_dlg.show();"  />	 
-<p:commandButton value="Create"  action="#{spkiBackingBean.testCreate}"   />	 
-	</h:panelGrid>
- <ac:spkiPopup  id="asd" textBeforeSign="123" postSignAction="#{gpkiBackingBean.gsignAction()}" /> 
+<p:commandButton value="Submit" type="button"  onclick="gpki_dlg.show();" />
+</h:panelGrid>
+  <ac:gpkiPopup textBeforeSign="123" postSignAction="#{spkiBackingBean.signAction()}" />
 	</ui:define>
 		    
 </ui:composition>				

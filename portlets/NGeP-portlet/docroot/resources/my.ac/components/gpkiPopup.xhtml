@@ -109,19 +109,14 @@
 										alert("snga");
 
 										/* put your logic to handle the result here */
-									} else if (statusCode == "50") {
-										errorAction([ {
-											name : 'statusCode',
-											value : statusCode
-								
-										} ]);
-										 
-									} else if (statusCode == "40") {
-										Aegis.alert("CERT_EXPIRED");
-									} else if (statusCode == "41") {
-										Aegis.alert("CERT_REVOKED");
-									} else if (statusCode == "43") {
-										Aegis.alert("CERT_NOT_YET_VALID");
+// 									} else if (statusCode == "50") {
+// 										Aegis.alert("Wrong PIN");
+// 									} else if (statusCode == "40") {
+// 										Aegis.alert("CERT_EXPIRED");
+// 									} else if (statusCode == "41") {
+// 										Aegis.alert("CERT_REVOKED");
+// 									} else if (statusCode == "43") {
+// 										Aegis.alert("CERT_NOT_YET_VALID");
 									} else {
 										errorAction([ {
 											name : 'statusCode',
@@ -137,7 +132,7 @@
 
 		<p:dialog header="Digital Certificate Signing" widgetVar="gpki_dlg" resizable="false" modal="true">
 			<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
-			<h:panelGrid columns="4" cellpadding="3">
+			<h:panelGrid columns="4" cellpadding="4">
 				<h:outputLabel value="*" styleClass="mandatory" />
 				<h:outputLabel for="password" value="Digital Certificate PIN" />
 				<p:password binding="#{pin}" id="password" />

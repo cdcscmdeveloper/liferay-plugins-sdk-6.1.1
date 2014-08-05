@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.bean.SessionScoped;
@@ -89,20 +90,24 @@ public class SpkiBackingBean {
 //		         test.log("EXCEPTION: " + ex.getMessage());
 //		      }
 		      DigiSignReqDTO reqDTO = new DigiSignReqDTO();
+		      System.err.println("===============================================================1");
 		      IDigiSignSO digiSignSO = (IDigiSignSO) EpEjbBusinessDelegate.getInstance().getServiceObject("pm", IDigiSignSO.class);
-
+		      System.err.println("===============================================================1q");
 		      		PmDigiSign pmDigiSign = new PmDigiSign();
 		      		pmDigiSign.setCertificate("111111");
-		      		pmDigiSign.setDigiSignId(4);
+//		      		pmDigiSign.setDigiSignId(4);
 		      		pmDigiSign.setDocType("CT");
 		      		pmDigiSign.setCreatedBy(new BigDecimal(1));
 		      		pmDigiSign.setCreatedDate(null);
 		      		pmDigiSign.setDocId(new BigDecimal(11));
+		      		pmDigiSign.setDocNo("1");
 		      		pmDigiSign.setDocType("CT");
 		      		pmDigiSign.setOrginalData("textbeforesign");
 		      		pmDigiSign.setSignedData("signedData");
-//		      		reqDTO.setPmDigiSign(pmDigiSign);
-		      		digiSignSO.saveOrUpdateDigiSign(reqDTO);
+		      		reqDTO.setPmDigiSign(pmDigiSign);    
+		      		System.err.println("===============================================================1aa");
+		      		digiSignSO.saveOrUpdateDigiSign(reqDTO);		    
+		      	  System.err.println("===============================================================1aaa");
 			}
 	 
 	 
@@ -254,16 +259,19 @@ public class SpkiBackingBean {
 //https://kmcep-dev.digicert.com.my/RequestChallRespUpdate.aspx
 //https://kmcep-dev.digicert.com.my/RequestChangePIN.aspx
 //https://kmcep-dev.digicert.com.my/RequestResetPIN.aspx
-//https://kmcep-dev.digicert.com.my/RequestRevokeCert.aspx
-	    debugLogger("this.challengeQues1====================================: "+this.challengeQues1);
+//https://kmcep-dev.digicert.com.my/RequestRevokeCertaspx
+	    debugLogger("this.challengeQues1===============.=====================: "+this.challengeQues1);
 	    debugLogger("SignedText====================================: "+this.challsAnswer);
 	    debugLogger("this.password ====================================: "+this.password );
 
 		}
 	public void RequestChangePIN() throws IOException, PortalException, SystemException {
-		
-		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-		externalContext.redirect("https://kmcep-dev.digicert.com.my/RequestChallRespUpdate.aspx"+generateSecurityToken());
+	    String statusCode = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("statusCode");
+	    String statusMsg = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("statusMsg");
+	    debugLogger("this.statusCode====================================: "+statusCode);
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", "Contact admin."));
+//		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+//		externalContext.redirect("https://kmcep-dev.digicert.com.my/RequestChallRespUpdate.aspx"+generateSecurityToken()p);
 	}
 	
 	
