@@ -77,7 +77,7 @@ public class ReportConst {
 	public static final String LST_CAT_ITM_ZON_PRC_RPT_VAL = "LstCatItms(ZonalPrice)";
 	public static final String LST_CAT_ITM_ZON_TIER_PRC_RPT_NAME = "List of Catalogue Items (Zonal Tier Price)";
 	public static final String LST_CAT_ITM_ZON_TIER_PRC_RPT_VAL = "LstCatItms(ZonalTierPrice)";
-	public static final String LST_PEND_CODE_ASGN_AGNCY_RPT_NAME = "List of Pending Code AssignmentBy Agency";
+	public static final String LST_PEND_CODE_ASGN_AGNCY_RPT_NAME = "List of Pending Code Assignment By Agency";
 	public static final String LST_PEND_CODE_ASGN_AGNCY_RPT_VAL = "LstPendCodeAssignAgency";
 	public static final String SUM_REJ_CAT_ITM_RPT_NAME = "Summary of Rejected Catalogue Items";
 	public static final String SUM_REJ_CAT_ITM_RPT_VAL = "SummaryRejCatItms";
@@ -272,6 +272,10 @@ public class ReportConst {
 	public static final String AMP_PMO_EQ = "&pmo=";
 	public static final String AMP_FROM_DATE_EQ = "&frdt=";
 	public static final String AMP_TO_DATE_EQ = "&todt=";
+	public static final String AMP_EXT_TYPE_EQ = "&typeid=";
+	public static final String AMP_EXT_BRAND_EQ = "&brandid=";
+	public static final String AMP_EXT_MEASURMENT_EQ = "&measurementid=";
+	public static final String AMP_EXT_COLOUR_EQ = "&colorid=";
 	public static final String EXC_PREV_URL = "http://ngepdevrps01.ngep.com:8891/reports/rwservlet?server=rptsvr_ngepdevrps01_asinst_2&report=";
 	public static final String EXC_NEXT_URL = "&destype=cache&desformat=pdf&userid=ngep_dev/ngep_dev@ngepdb";
 	public static final String PLZ_SEL_ONE_RPT_SEARCH = "Please select at least one report";
@@ -282,5 +286,7 @@ public class ReportConst {
 	public static final String URL_RPT_DATE_FORMAT = "dd/MM/YYYY";
 	public static final String FORM_NEW_TAB = "_blank";
 	public static final String FORM_SELF = "_self";
+	public static final String RPT_REG_BASIC = "Basic";
+	public static final String RPT_REG_MOF = "MOF";
 	
 }

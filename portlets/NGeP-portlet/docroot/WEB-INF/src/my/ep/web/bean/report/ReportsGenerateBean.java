@@ -20,6 +20,9 @@ public class ReportsGenerateBean {
 	private boolean itemCategoryView = false;
 	private boolean itemNameView = false;
 	private boolean proofIdentityView = false;
+	private boolean basicRegView = false;
+	private boolean mofRegView = false;
+	
 	/*FL Start*/
 	private boolean ptjView = false;
 	private boolean contractNoView = false;
@@ -53,9 +56,14 @@ public class ReportsGenerateBean {
 	private String quotationIdTotVar=ReportConst.EMPTY_VAL;
 	private String itemTypeTotVar=ReportConst.EMPTY_VAL;
 	private String itemStatusTotVar=ReportConst.EMPTY_VAL;
+	
 	private String unspscCodeTotVar=ReportConst.EMPTY_VAL;
 	private String unspscTitleTotVar=ReportConst.EMPTY_VAL;
 	private String extentionCodeTotVar=ReportConst.EMPTY_VAL;
+	private String extentionTypeTotVar=ReportConst.EMPTY_VAL;
+	private String extentionBrandTotVar=ReportConst.EMPTY_VAL;
+	private String extentionMeasurmentTotVar=ReportConst.EMPTY_VAL;
+	private String extentionColourTotVar=ReportConst.EMPTY_VAL;
 	private String companyNameTotVar=ReportConst.EMPTY_VAL;
 	private String registrationTypeTotVar=ReportConst.EMPTY_VAL;	
 	private String itemCategoryTotVar=ReportConst.EMPTY_VAL;
@@ -90,6 +98,43 @@ public class ReportsGenerateBean {
 	private String pmoTotVar=ReportConst.EMPTY_VAL;
 	private String fromDateVar=ReportConst.EMPTY_VAL;
 	private String toDateVar=ReportConst.EMPTY_VAL;
+	
+	public boolean isBasicRegView() {
+		return basicRegView;
+	}
+	public void setBasicRegView(boolean basicRegView) {
+		this.basicRegView = basicRegView;
+	}
+	public boolean isMofRegView() {
+		return mofRegView;
+	}
+	public void setMofRegView(boolean mofRegView) {
+		this.mofRegView = mofRegView;
+	}
+	public String getExtentionTypeTotVar() {
+		return extentionTypeTotVar;
+	}
+	public void setExtentionTypeTotVar(String extentionTypeTotVar) {
+		this.extentionTypeTotVar = extentionTypeTotVar;
+	}
+	public String getExtentionBrandTotVar() {
+		return extentionBrandTotVar;
+	}
+	public void setExtentionBrandTotVar(String extentionBrandTotVar) {
+		this.extentionBrandTotVar = extentionBrandTotVar;
+	}
+	public String getExtentionMeasurmentTotVar() {
+		return extentionMeasurmentTotVar;
+	}
+	public void setExtentionMeasurmentTotVar(String extentionMeasurmentTotVar) {
+		this.extentionMeasurmentTotVar = extentionMeasurmentTotVar;
+	}
+	public String getExtentionColourTotVar() {
+		return extentionColourTotVar;
+	}
+	public void setExtentionColourTotVar(String extentionColourTotVar) {
+		this.extentionColourTotVar = extentionColourTotVar;
+	}
 	public String getFromDateVar() {
 		return fromDateVar;
 	}

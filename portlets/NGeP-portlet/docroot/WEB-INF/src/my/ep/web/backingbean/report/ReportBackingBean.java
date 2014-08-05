@@ -42,13 +42,21 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	private String itemType;
 	private String itemStatus;
 	private String unspscCode;
-	private String unspscTitle;
-	private String extentionCode;
+	private String unspscTitle;	
 	private String companyName;
 	private String registrationType;	
 	private String itemCategory;
 	private String itemName;
 	private String proofIdentity;
+	private String epNumber;
+	private String businessRegNo;
+	private String icNumber;
+	private String mofNumber;	
+	private String extentionCode;
+	private String extentionType;	
+	private String extentionBrand;
+	private String extentionMeasurment;
+	private String extentionColour;
 	/*CM end*/	
 	/*FL start*/
 	private String ptj;
@@ -85,6 +93,54 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	ReportsGenerateBean rptGenBean = new ReportsGenerateBean();
 	private List<SelectItem> moduleList;
 	
+	public String getMofNumber() {
+		return mofNumber;
+	}
+	public void setMofNumber(String mofNumber) {
+		this.mofNumber = mofNumber;
+	}
+	public String getEpNumber() {
+		return epNumber;
+	}
+	public void setEpNumber(String epNumber) {
+		this.epNumber = epNumber;
+	}
+	public String getBusinessRegNo() {
+		return businessRegNo;
+	}
+	public void setBusinessRegNo(String businessRegNo) {
+		this.businessRegNo = businessRegNo;
+	}
+	public String getIcNumber() {
+		return icNumber;
+	}
+	public void setIcNumber(String icNumber) {
+		this.icNumber = icNumber;
+	}
+	public String getExtentionType() {
+		return extentionType;
+	}
+	public void setExtentionType(String extentionType) {
+		this.extentionType = extentionType;
+	}
+	public String getExtentionBrand() {
+		return extentionBrand;
+	}
+	public void setExtentionBrand(String extentionBrand) {
+		this.extentionBrand = extentionBrand;
+	}
+	public String getExtentionMeasurment() {
+		return extentionMeasurment;
+	}
+	public void setExtentionMeasurment(String extentionMeasurment) {
+		this.extentionMeasurment = extentionMeasurment;
+	}
+	public String getExtentionColour() {
+		return extentionColour;
+	}
+	public void setExtentionColour(String extentionColour) {
+		this.extentionColour = extentionColour;
+	}
 	public String getNewTabVal() {
 		return newTabVal;
 	}
@@ -1995,6 +2051,15 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		}
 		
 	}
+	public void enableRegistrationType(){
+		if((this.getRegistrationType()!=null)&&(this.getRegistrationType()!=ReportConst.EMPTY_VAL)){
+			if(this.getRegistrationType().equalsIgnoreCase(ReportConst.RPT_REG_BASIC)){
+				rptGenBean.setBasicRegView(true);
+			}else if(this.getRegistrationType().equalsIgnoreCase(ReportConst.RPT_REG_MOF)){
+				rptGenBean.setMofRegView(true);
+			}
+		}
+	}
 	/*
 	 *Generate all modules reports 
 	 */
@@ -2010,8 +2075,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		}else{
 			this.setNewTabVal(ReportConst.FORM_SELF);
 			throw new EpException(ReportConst.PLZ_SEL_ONE_RPT_SEARCH);
-		}
-		//return "/xhtml/reports/reportmain.xhtml?faces-redirect=true";
+		}		
 	}
 	/*
 	 *Generate SC module report  
@@ -2073,7 +2137,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	 *Generate CM module report  
 	 */
 	public void generateCMReport(){		
-		if(((this.getItemName()!=null)&&(this.getItemName()!=ReportConst.EMPTY_VAL))||((this.getItemType()!=null)&&(this.getItemType()!=ReportConst.EMPTY_VAL))||((this.getItemStatus()!=null)&&(this.getItemStatus()!=ReportConst.EMPTY_VAL))||((this.getUnspscCode()!=null)&&(this.getUnspscCode()!=ReportConst.EMPTY_VAL))||((this.getUnspscTitle()!=null)&&(this.getUnspscTitle()!=ReportConst.EMPTY_VAL))||((this.getExtentionCode()!=null)&&(this.getExtentionCode()!=ReportConst.EMPTY_VAL))||((this.getCompanyName()!=null)&&(this.getCompanyName()!=ReportConst.EMPTY_VAL))||((this.getRegistrationType()!=null)&&(this.getRegistrationType()!=ReportConst.EMPTY_VAL))||((this.getItemCategory()!=null)&&(this.getItemCategory()!=ReportConst.EMPTY_VAL))||((this.getProofIdentity()!=null)&&(this.getProofIdentity()!=ReportConst.EMPTY_VAL)||((this.getFromDate()!=null)&&(this.getFromDate().toString()!=ReportConst.EMPTY_VAL))||((this.getToDate()!=null)&&(this.getToDate().toString()!=ReportConst.EMPTY_VAL)))){
+		if(((this.getItemName()!=null)&&(this.getItemName()!=ReportConst.EMPTY_VAL))||((this.getItemType()!=null)&&(this.getItemType()!=ReportConst.EMPTY_VAL))||((this.getItemStatus()!=null)&&(this.getItemStatus()!=ReportConst.EMPTY_VAL))||((this.getUnspscCode()!=null)&&(this.getUnspscCode()!=ReportConst.EMPTY_VAL))||((this.getUnspscTitle()!=null)&&(this.getUnspscTitle()!=ReportConst.EMPTY_VAL))||((this.getExtentionType()!=null)&&(this.getExtentionType()!=ReportConst.EMPTY_VAL))||((this.getExtentionBrand()!=null)&&(this.getExtentionBrand()!=ReportConst.EMPTY_VAL))||((this.getExtentionMeasurment()!=null)&&(this.getExtentionMeasurment()!=ReportConst.EMPTY_VAL))||((this.getExtentionColour()!=null)&&(this.getExtentionColour()!=ReportConst.EMPTY_VAL))||((this.getCompanyName()!=null)&&(this.getCompanyName()!=ReportConst.EMPTY_VAL))||((this.getRegistrationType()!=null)&&(this.getRegistrationType()!=ReportConst.EMPTY_VAL))||((this.getItemCategory()!=null)&&(this.getItemCategory()!=ReportConst.EMPTY_VAL))||((this.getProofIdentity()!=null)&&(this.getProofIdentity()!=ReportConst.EMPTY_VAL)||((this.getFromDate()!=null)&&(this.getFromDate().toString()!=ReportConst.EMPTY_VAL))||((this.getToDate()!=null)&&(this.getToDate().toString()!=ReportConst.EMPTY_VAL)))){
 			
 			if((this.getItemName()!=null)&&(this.getItemName()!=ReportConst.EMPTY_VAL)){
 				rptGenBean.setItemNameTotVar(ReportConst.AMP_ITM_NAME_EQ+this.getItemName());
@@ -2090,9 +2154,22 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			if((this.getUnspscTitle()!=null)&&(this.getUnspscTitle()!=ReportConst.EMPTY_VAL)){
 				rptGenBean.setUnspscTitleTotVar(ReportConst.AMP_UNSPSC_TIT_EQ+this.getUnspscTitle());
 			}
-			if((this.getExtentionCode()!=null)&&(this.getExtentionCode()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setExtentionCodeTotVar(ReportConst.AMP_EXT_CODE_EQ+this.getExtentionCode());
+			//extcode
+			if((this.getExtentionType()!=null)&&(this.getExtentionType()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setExtentionTypeTotVar(ReportConst.AMP_EXT_TYPE_EQ+this.getExtentionType());
 			}
+			if((this.getExtentionBrand()!=null)&&(this.getExtentionBrand()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setExtentionBrandTotVar(ReportConst.AMP_EXT_BRAND_EQ+this.getExtentionBrand());
+			}
+			if((this.getExtentionMeasurment()!=null)&&(this.getExtentionMeasurment()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setExtentionMeasurmentTotVar(ReportConst.AMP_EXT_MEASURMENT_EQ+this.getExtentionMeasurment());
+			}
+			if((this.getExtentionColour()!=null)&&(this.getExtentionColour()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setExtentionColourTotVar(ReportConst.AMP_EXT_COLOUR_EQ+this.getExtentionColour());
+			}
+			//extcode
+			
+			
 			if((this.getCompanyName()!=null)&&(this.getCompanyName()!=ReportConst.EMPTY_VAL)){
 				rptGenBean.setCompanyNameTotVar(ReportConst.AMP_COMP_NAME_EQ+this.getCompanyName());
 			}
@@ -2133,7 +2210,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			urlCMReportNameJsps.put(ReportConst.LST_ITM_CODE_RPT_VAL, ReportConst.CM_LST_ITEM_CODE_JSP);
 			//-----------			
 			rptGenBean.setUrlReportJSPName(urlCMReportNameJsps.get(getManagedBean().getReportNameValue().trim()));			
-			String url=ReportConst.EXC_PREV_URL+rptGenBean.getUrlReportJSPName()+rptGenBean.getItemNameTotVar()+rptGenBean.getItemTypeTotVar()+rptGenBean.getItemStatusTotVar()+rptGenBean.getUnspscCodeTotVar()+rptGenBean.getUnspscTitleTotVar()+rptGenBean.getExtentionCodeTotVar()+rptGenBean.getCompanyNameTotVar()+rptGenBean.getRegistrationTypeTotVar()+rptGenBean.getItemCategoryTotVar()+rptGenBean.getProofIdentityTotVar()+rptGenBean.getFromDateVar()+rptGenBean.getToDateVar()+ReportConst.EXC_NEXT_URL;
+			String url=ReportConst.EXC_PREV_URL+rptGenBean.getUrlReportJSPName()+rptGenBean.getItemNameTotVar()+rptGenBean.getItemTypeTotVar()+rptGenBean.getItemStatusTotVar()+rptGenBean.getUnspscCodeTotVar()+rptGenBean.getUnspscTitleTotVar()+rptGenBean.getExtentionTypeTotVar()+rptGenBean.getExtentionBrandTotVar()+rptGenBean.getExtentionMeasurmentTotVar()+rptGenBean.getExtentionColourTotVar()+rptGenBean.getCompanyNameTotVar()+rptGenBean.getRegistrationTypeTotVar()+rptGenBean.getItemCategoryTotVar()+rptGenBean.getProofIdentityTotVar()+rptGenBean.getFromDateVar()+rptGenBean.getToDateVar()+ReportConst.EXC_NEXT_URL;
 			try {				
 				ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 				externalContext.redirect(url);				
