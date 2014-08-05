@@ -26,7 +26,7 @@
 				<td><h:outputLabel value="#{lbl['lbl.sm.dateSubmitted']}" /></td>
 				<td class="header-info-text"><h:outputLabel
 						value="#{backingBean.managedBean.smAppl.applSubmitDate}"
-						style="font-weight: normal;float: left;font-size: 100%;text-align: left;">
+						style="font-weight: normal !important;float: left;font-size: 100%;text-align: left;">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</h:outputLabel></td>

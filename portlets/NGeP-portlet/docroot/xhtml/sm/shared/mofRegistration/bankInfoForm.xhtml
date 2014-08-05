@@ -96,7 +96,7 @@
 					update=":form:tt:bankDialog" />
 				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
 					action="#{backingBean.deleteSelectedBanks}" partialSubmit="true"
-					process="bankInfPan" update=":form:tt:bankDt" />
+					process="bankInfPan" update=":form:tt:bankDt ,:form:tt:sfieldset" />
 			</div>
 			<p:panel id="sfieldset"
 				header="#{lbl['lbl.sm.bankDtls.cheSignPanHdr']} 
