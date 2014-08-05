@@ -4011,6 +4011,7 @@ public class SpecificationBackingBean extends
 					resDTO = specSo.retrieveCheckListScoreNValue(reqDTO);
 					if (resDTO.getCheckListScoreResultBean() == null
 							|| resDTO.getScQtCheckListValue() == null) {
+						
 
 						ScQtCheckListValue checkListValue = new ScQtCheckListValue();
 						setUserDetails(checkListValue);
@@ -8555,7 +8556,7 @@ public class SpecificationBackingBean extends
 					.equalsIgnoreCase(taskName)) {
 				loadPrepareSpecDetails(quotationTenderDataType.getQtId()
 						.longValue(), getDocTypeByTaskName(taskName));
-				// this.getManagedBean().setActiveIndex(4);
+				 this.getManagedBean().setActiveIndex(4);
 			}
 			ScQt scQt = this.getManagedBean().getScQt();
 			if (null == scQt.getEstimatedAmount()) {
