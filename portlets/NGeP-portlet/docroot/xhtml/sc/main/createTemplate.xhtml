@@ -49,7 +49,7 @@
 									id="templateSpecItemType"
 									value="#{specificationBackingBean.managedBean.searchItemTypeId}">
 									<f:selectItems
-										value="#{specificationBackingBean.getDropdownValues(ParameterTypeConst.scItemType)}" />
+										value="#{specificationBackingBean.getRoleTypeDropdownValues(ParameterTypeConst.scItemType)}" />
 
 								</p:selectOneMenu> <p:message id="boItemType" for="templateSpecItemType"
 									display="icon"></p:message></td>
@@ -69,7 +69,7 @@
 									id="sourcingSpecItemType"
 									value="#{specificationBackingBean.managedBean.searchItemTypeId}">
 									<f:selectItems
-										value="#{specificationBackingBean.getDropdownValues(ParameterTypeConst.scItemType)}" />
+										value="#{specificationBackingBean.getRoleTypeDropdownValues(ParameterTypeConst.scItemType)}" />
 
 
 								</p:selectOneMenu> <p:message id="sourcingBoItemType" for="sourcingSpecItemType"

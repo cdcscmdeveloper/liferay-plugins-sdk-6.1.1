@@ -51,7 +51,7 @@
 									id="standardCommitteeItemType"
 									value="#{specificationBackingBean.managedBean.searchItemTypeId}">
 									<f:selectItems
-										value="#{specificationBackingBean.getDropdownValues(ParameterTypeConst.scItemType)}" />
+										value="#{specificationBackingBean.getRoleTypeDropdownValues(ParameterTypeConst.scItemType)}" />
 								</p:selectOneMenu> <p:message id="strdTemplateItemType"
 									for="standardCommitteeItemType" display="icon"></p:message></td>
 						</tr>
@@ -69,7 +69,7 @@
 									id="sourcingCommitteeItemType"
 									value="#{specificationBackingBean.managedBean.searchItemTypeId}">
 									<f:selectItems
-										value="#{specificationBackingBean.getDropdownValues(ParameterTypeConst.scItemType)}" />
+										value="#{specificationBackingBean.getRoleTypeDropdownValues(ParameterTypeConst.scItemType)}" />
 								</p:selectOneMenu> <p:message id="sourcingTemplateItemType"
 									for="sourcingCommitteeItemType" display="icon">
 								</p:message></td>
