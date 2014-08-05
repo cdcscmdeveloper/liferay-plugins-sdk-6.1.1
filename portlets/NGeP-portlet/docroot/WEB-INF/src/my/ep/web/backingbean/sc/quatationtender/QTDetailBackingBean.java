@@ -2569,10 +2569,10 @@ public class QTDetailBackingBean extends
 		if (log.isDebugEnabled()) {
 			log.debug("Committe Tab change Action");
 		}
-		ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
-		int previousTabIndex = this.getManagedBean().getSelectedTabIndex();
-		TabBean selctedcommTabBean = this.getManagedBean().getScCommitteeMemberTabList().get(previousTabIndex);
-		ScCommittee committe = null;
+		//ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
+		//int previousTabIndex = this.getManagedBean().getSelectedTabIndex();
+		//TabBean selctedcommTabBean = this.getManagedBean().getScCommitteeMemberTabList().get(previousTabIndex);
+	//	ScCommittee committe = null;
 		/*if (null == this.getManagedBean().getFinalizationSecratary() || this.getManagedBean().getFinalizationSecratary().isEmpty()) {
 			List<PmParameter> finalizeList = retrieveFinalizationSecratryDtl(this.getManagedBean().getQt().getQtId());
 			this.getManagedBean().setFinalizationSecratary(finalizeList);
@@ -2602,20 +2602,20 @@ public class QTDetailBackingBean extends
 		if (log.isDebugEnabled()) {
 			log.debug("ApprovalTabChange Action");
 		}
-		int previousTabIndex = this.getManagedBean()
-				.getSelectedApprovalTabIndex();
+		/*int previousTabIndex = this.getManagedBean()
+				.getSelectedApprovalTabIndex();*/
 		TabBean approvalTabBean = this.getManagedBean().getTabList()
 				.get(selectedZoneTabIndex);
 		this.getManagedBean().setSelectedApprovalTabIndex(selectedZoneTabIndex);
 		this.getManagedBean().setSelectedApprovalTabBean(approvalTabBean);
-		TabBean previousApprovalTab = this.getManagedBean().getTabList()
-				.get(previousTabIndex);
-		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
+		/*TabBean previousApprovalTab = this.getManagedBean().getTabList()
+				.get(previousTabIndex);*/
+		/*IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 						IQTDetailSO.class);
 		QuationTenderReqDTO reqDto = new QuationTenderReqDTO();
 		reqDto.setApproval(previousApprovalTab.getScQtApproval());
-		detailSO.validateApproval(reqDto);
+		detailSO.validateApproval(reqDto);*/
 	}
 
 	public void validateQtDetails() {
