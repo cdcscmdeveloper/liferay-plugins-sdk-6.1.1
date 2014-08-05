@@ -13,9 +13,9 @@
 		<p:panel id="searchPanel" header="Search" toggleable="true">
 			<h:panelGrid columns="4" style="width:100%">
 				<h:outputLabel value="#{lbl['lbl.ct.cc.cno']}" />
-				<p:inputText value="#{centralContractBackingBean.managedBean.searchCircularNo}" style="width:200px;" maxlength="50" />
+				<p:inputText value="#{centralContractBackingBean.managedBean.searchCircularNo}" style="width:170px;" maxlength="50" />
 				<h:outputLabel value="#{lbl['lbl.ct.cc.cname']}" />
-				<p:inputText value="#{centralContractBackingBean.managedBean.searchCircularName}" style="width:200px;" maxlength="200" />
+				<p:inputText value="#{centralContractBackingBean.managedBean.searchCircularName}" style="width:170px;" maxlength="200" />
 				<h:outputLabel value="#{lbl['lbl.ct.cc.cstartdt']}" />
 				<p:calendar style="width:150px;" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"   readonlyInput="true"
 					value="#{centralContractBackingBean.managedBean.searchStartDate}" id="popupButtonCal" showOn="button" />
@@ -23,9 +23,9 @@
 				<p:calendar style="width:150px;" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" readonlyInput="true"
 					value="#{centralContractBackingBean.managedBean.searchEndDate}" id="popupButtonCal1" showOn="button" />
 				<h:outputLabel value="#{lbl['lbl.ct.cc.frno']}" />
-				<p:inputText value="#{centralContractBackingBean.managedBean.searchFileRefNo}" style="width:200px;" maxlength="50" />					
+				<p:inputText value="#{centralContractBackingBean.managedBean.searchFileRefNo}" style="width:170px;margin-top:3px;" maxlength="50" />					
 				<p:outputLabel for="status" value="#{lbl['lbl.ct.status']}" />
-				<p:selectOneMenu id="status" value="#{centralContractBackingBean.managedBean.searchStatusId}" style="width:210px;">
+				<p:selectOneMenu id="status" value="#{centralContractBackingBean.managedBean.searchStatusId}" style="width:200px;">
 					<f:selectItems value="#{centralContractBackingBean.getStatusDropdown()}" />
 				</p:selectOneMenu>
 			</h:panelGrid>		

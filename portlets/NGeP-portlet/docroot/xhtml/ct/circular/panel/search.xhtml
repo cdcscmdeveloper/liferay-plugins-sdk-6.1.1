@@ -12,13 +12,13 @@
 		<p:panel id="searchPanel" header="Search" toggleable="true">
 			<h:panelGrid columns="4" style="width:100%">
 				<h:outputLabel value="#{lbl['lbl.ct.pc.cno']}" />
-				<p:inputText value="#{panelBackingBean.managedBean.searchCircularNo}" style="width:200px;" maxlength="50" />
+				<p:inputText value="#{panelBackingBean.managedBean.searchCircularNo}" style="width:170px;" maxlength="50" />
 				<h:outputLabel value="#{lbl['lbl.ct.pc.cname']}" />
-				<p:inputText value="#{panelBackingBean.managedBean.searchCircularName}" style="width:200px;" maxlength="200" />
+				<p:inputText value="#{panelBackingBean.managedBean.searchCircularName}" style="width:170px;" maxlength="200" />
 				<h:outputLabel value="#{lbl['lbl.ct.pc.item.sname']}" />
-				<p:inputText value="#{panelBackingBean.managedBean.searchSupplierName}" style="width:200px;" maxlength="100" />
+				<p:inputText value="#{panelBackingBean.managedBean.searchSupplierName}" style="width:170px;" maxlength="100" />
 				<h:outputLabel value="#{lbl['lbl.ct.pc.frno']}" />
-				<p:inputText value="#{panelBackingBean.managedBean.searchFileRefNo}" style="width:200px;" maxlength="50" />
+				<p:inputText value="#{panelBackingBean.managedBean.searchFileRefNo}" style="width:170px;" maxlength="50" />
 				<h:outputLabel value="#{lbl['lbl.ct.cc.cstartdt']}" />
 				<p:calendar style="width:150px;" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" readonlyInput="true"
 					value="#{panelBackingBean.managedBean.searchStartDate}" id="popupButtonCal" showOn="button" />
@@ -26,9 +26,9 @@
 				<p:calendar style="width:150px;" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" readonlyInput="true"
 					value="#{panelBackingBean.managedBean.searchEndDate}" id="popupButtonCal1" showOn="button" />
 				<h:outputLabel value="#{lbl['lbl.ct.pc.item.name']}" />
-				<p:inputText value="#{panelBackingBean.managedBean.searchItemName}" style="width:200px;" maxlength="100" />						
+				<p:inputText value="#{panelBackingBean.managedBean.searchItemName}" style="width:170px;margin-top:3px;" maxlength="100" />						
 				<p:outputLabel for="status" value="#{lbl['lbl.ct.status']}" />
-				<p:selectOneMenu id="status" value="#{panelBackingBean.managedBean.searchStatusId}" style="width:210px;">
+				<p:selectOneMenu id="status" value="#{panelBackingBean.managedBean.searchStatusId}" style="width:200px;">
 					<f:selectItems value="#{panelBackingBean.getStatusDropdown()}" />
 				</p:selectOneMenu>
 			</h:panelGrid>		

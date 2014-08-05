@@ -35,9 +35,9 @@
            <p:calendar style="width:130px;" value="#{contractDetailsBackingBean.managedBean.ctDateEnd}" id="popupButtonCal1" 
              pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"  showOn="button" readonlyInput="true" />
            <p:outputLabel value="#{lbl['lbl.ct.search.lno']}" />
-           <p:inputText value="#{contractDetailsBackingBean.managedBean.ctLOANo}" maxlength="100" style="width:170px;"/>                     
+           <p:inputText value="#{contractDetailsBackingBean.managedBean.ctLOANo}" maxlength="100" style="width:170px;margin-top:3px;"/>                     
            <p:outputLabel value="#{lbl['lbl.ct.search.pno']}" />
-           <p:inputText id="productCode" value="#{contractDetailsBackingBean.managedBean.ctPhysicalNo}" maxlength="30" style="width:170px;" />
+           <p:inputText id="productCode" value="#{contractDetailsBackingBean.managedBean.ctPhysicalNo}" maxlength="30" style="width:170px;margin-top:3px;" />
 		   <p:outputLabel for="status" value="#{lbl['lbl.ct.search.status']}" />
 		   <p:selectOneMenu id="status" value="#{contractDetailsBackingBean.managedBean.ctContractStatus}"	style="width:200px;">
 				<f:selectItems value="#{contractDetailsBackingBean.getSearchStatusDropdown()}" />
