@@ -53,7 +53,7 @@
       </div>
 	</p:panel>
 	<p:panel id="associateResultId" header="#{lbl['lbl.ct.asearch.panel.result']}"   toggleable="true"  toggleSpeed="500">
-      <p:dataTable id="associateSearch" var="data" 
+      <p:dataTable id="associateSearch" var="data" lazy="true"
          value="#{associationBackingBean.associationDataModel}"  
          rowKey="#{data}" selection="#{associationBackingBean.ctSelectAssociation}">
 	     <ac:paginator for="associateSearch"/>
