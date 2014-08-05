@@ -85,10 +85,10 @@
 	<p:panel header="PAYMENT DESCRIPTION" toggleable="true">
 		<table style="width: 100%">
 			<tr>
-				<td rowspan="4" valign="top" style="width: 127px;"><p:outputLabel
+				<td rowspan="4" valign="top" style="width: 128px;"><p:outputLabel
 						value="#{lbl['lbl.fl.pm.payment.desc']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td rowspan="4" style="width: 280px;"><p:inputTextarea cols="55" rows="6"
+				<td rowspan="4" style="width: 280px;"><p:inputTextarea cols="55" rows="8"
 						maxlength="255" style=" margin-bottom:5px;" id="paymentDesc"
 						label="#{lbl['lbl.fl.pm.payment.desc']}" required="true"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.description}" />
@@ -96,7 +96,7 @@
 				<td style="width: 106px;">
 					<p:message for="paymentDesc" display="icon" />
 				</td>
-				<td style="width: 124px;"><p:outputLabel
+				<td style="width: 137px;"><p:outputLabel
 						value="#{lbl['lbl.fl.pm.payment.pre.date']}" /></td>
 				<td><p:inputText size="25" disabled="true"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.createdDate}">
