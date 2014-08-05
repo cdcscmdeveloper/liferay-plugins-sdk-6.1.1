@@ -261,6 +261,15 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<SmApplSupportDoc> missinDocs;
 	private boolean reviewSiteVisit;
 	private List<PmParameterDesc> businessTypeLs;
+	private List<String> supplierToPOList;
+
+	public List<String> getSupplierToPOList() {
+		return supplierToPOList;
+	}
+
+	public void setSupplierToPOList(List<String> supplierToPOList) {
+		this.supplierToPOList = supplierToPOList;
+	}
 
 	public SmApplicationManagedBean() {
 		// TODO Checking the user role

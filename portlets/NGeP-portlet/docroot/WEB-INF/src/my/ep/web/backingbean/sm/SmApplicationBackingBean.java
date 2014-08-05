@@ -1550,7 +1550,10 @@ public class SmApplicationBackingBean extends
 			getManagedBean().setRemoveEpRole(false);
 		}
 		buildRoleList();
-		if (!getManagedBean().isRemoveEpRole() && (getManagedBean().getSelectedShareHolder().getEpRole() != null && getManagedBean().getSelectedShareHolder().getEpRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.value()))) {		
+		if (!getManagedBean().isRemoveEpRole()
+				&& (getManagedBean().getSelectedShareHolder().getEpRole() != null && getManagedBean()
+						.getSelectedShareHolder().getEpRole()
+						.equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.value()))) {
 			SelectItem role = new SelectItem();
 			role.setLabel("Supplier Admin");
 			role.setValue(RoleCode.MOF_SUPPLIER_ADMIN.value());
@@ -2935,7 +2938,9 @@ public class SmApplicationBackingBean extends
 		else
 			getManagedBean().setRemoveEpRole(false);
 		buildRoleList();
-		if (!getManagedBean().isRemoveEpRole() && (per.getEpRole() != null && per.getEpRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.value()))) {		
+		if (!getManagedBean().isRemoveEpRole()
+				&& (per.getEpRole() != null && per.getEpRole()
+						.equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.value()))) {
 			SelectItem role = new SelectItem();
 			role.setLabel("Supplier Admin");
 			role.setValue(RoleCode.MOF_SUPPLIER_ADMIN.value());
@@ -3025,46 +3030,46 @@ public class SmApplicationBackingBean extends
 
 		SelectItem role = new SelectItem();
 
-//		String applType = getManagedBean().getSmAppl().getApplType();
-//		int roleCase = 0;
-//
-//		if (applType.equalsIgnoreCase("N")) {
-//			roleCase = 1;
-//		} else if (applType.equalsIgnoreCase("A")
-//				|| applType.equalsIgnoreCase("B")
-//				|| applType.equalsIgnoreCase("U")
-//				|| applType.equalsIgnoreCase("R")) {
-//			roleCase = 2;
-//		}
-//
-//		switch (roleCase) {
-//		case 1:
-//			role = new SelectItem();
-//			role.setLabel("Supplier User");
-//			role.setValue(RoleCode.BASIC_SUPPLIER_USER.value());
-//			if (!getManagedBean().isRemoveEpRole())
-//				roles.add(role);
-//
-//			role = new SelectItem();
-//			role.setLabel("Catalogue User");
-//			role.setValue(RoleCode.CM_USER.value());
-//			roles.add(role);
-//			break;
-//		case 2:
-			role = new SelectItem();
-			role.setLabel("Supplier User");
-			role.setValue(RoleCode.MOF_SUPPLIER_USER.value());
-			if (!getManagedBean().isRemoveEpRole())
-				roles.add(role);
-
-			role = new SelectItem();
-			role.setLabel("Catalogue User");
-			role.setValue(RoleCode.CM_USER.value());
+		// String applType = getManagedBean().getSmAppl().getApplType();
+		// int roleCase = 0;
+		//
+		// if (applType.equalsIgnoreCase("N")) {
+		// roleCase = 1;
+		// } else if (applType.equalsIgnoreCase("A")
+		// || applType.equalsIgnoreCase("B")
+		// || applType.equalsIgnoreCase("U")
+		// || applType.equalsIgnoreCase("R")) {
+		// roleCase = 2;
+		// }
+		//
+		// switch (roleCase) {
+		// case 1:
+		// role = new SelectItem();
+		// role.setLabel("Supplier User");
+		// role.setValue(RoleCode.BASIC_SUPPLIER_USER.value());
+		// if (!getManagedBean().isRemoveEpRole())
+		// roles.add(role);
+		//
+		// role = new SelectItem();
+		// role.setLabel("Catalogue User");
+		// role.setValue(RoleCode.CM_USER.value());
+		// roles.add(role);
+		// break;
+		// case 2:
+		role = new SelectItem();
+		role.setLabel("Supplier User");
+		role.setValue(RoleCode.MOF_SUPPLIER_USER.value());
+		if (!getManagedBean().isRemoveEpRole())
 			roles.add(role);
-//			break;
-//		default:
-//			break;
-//		}
+
+		role = new SelectItem();
+		role.setLabel("Catalogue User");
+		role.setValue(RoleCode.CM_USER.value());
+		roles.add(role);
+		// break;
+		// default:
+		// break;
+		// }
 
 		getManagedBean().setePRoleList(roles);
 	}
@@ -3099,7 +3104,7 @@ public class SmApplicationBackingBean extends
 		// getManagedBean().setSelectedPersonnel(null);
 		assignSelShareHolderAddress(shr);
 		getManagedBean().setSelectedShareHolder(shr);
-		if(getManagedBean().getAuthPerCount() < 5)
+		if (getManagedBean().getAuthPerCount() < 5)
 			getManagedBean().setRemoveEpRole(false);
 		else
 			getManagedBean().setRemoveEpRole(true);
@@ -3598,25 +3603,33 @@ public class SmApplicationBackingBean extends
 				}
 			}
 
-			if ((getManagedBean().getShrHldrPermStates() == null) || (getManagedBean().getShrHldrPermStates() != null && getManagedBean().getShrHldrPermStates().isEmpty())) {
+			if ((getManagedBean().getShrHldrPermStates() == null)
+					|| (getManagedBean().getShrHldrPermStates() != null && getManagedBean()
+							.getShrHldrPermStates().isEmpty())) {
 				getManagedBean().setShrHldrPermStates(defStates);
 				getManagedBean().setShrHldrPermDistricts(
 						new ArrayList<PmDistrict>());
 				getManagedBean().setShrHldrPermCities(new ArrayList<PmCity>());
 			}
-			if ((getManagedBean().getShrHldrMailStates() == null) || (getManagedBean().getShrHldrMailStates() != null && getManagedBean().getShrHldrMailStates().isEmpty())) {
+			if ((getManagedBean().getShrHldrMailStates() == null)
+					|| (getManagedBean().getShrHldrMailStates() != null && getManagedBean()
+							.getShrHldrMailStates().isEmpty())) {
 				getManagedBean().setShrHldrMailStates(defStates);
 				getManagedBean().setShrHldrMailDistricts(
 						new ArrayList<PmDistrict>());
 				getManagedBean().setShrHldrMailCities(new ArrayList<PmCity>());
 			}
-			if ((getManagedBean().getShrHldrResdStates() == null) || (getManagedBean().getShrHldrResdStates() != null && getManagedBean().getShrHldrResdStates().isEmpty())) {
+			if ((getManagedBean().getShrHldrResdStates() == null)
+					|| (getManagedBean().getShrHldrResdStates() != null && getManagedBean()
+							.getShrHldrResdStates().isEmpty())) {
 				getManagedBean().setShrHldrResdStates(defStates);
 				getManagedBean().setShrHldrResdDistricts(
 						new ArrayList<PmDistrict>());
 				getManagedBean().setShrHldrResdCities(new ArrayList<PmCity>());
 			}
-			if ((getManagedBean().getShrHldrOffStates() == null) || (getManagedBean().getShrHldrOffStates() != null && getManagedBean().getShrHldrOffStates().isEmpty())) {
+			if ((getManagedBean().getShrHldrOffStates() == null)
+					|| (getManagedBean().getShrHldrOffStates() != null && getManagedBean()
+							.getShrHldrOffStates().isEmpty())) {
 				getManagedBean().setShrHldrOffStates(defStates);
 				getManagedBean().setShrHldrOffDistricts(
 						new ArrayList<PmDistrict>());
@@ -3852,8 +3865,9 @@ public class SmApplicationBackingBean extends
 									.getEpRole().equalsIgnoreCase(
 											RoleCode.BASIC_SUPPLIER_USER
 													.value()))) {
-//						if (personnel.getPmUser() != null
-//								&& personnel.getPmUser().getUserId() != null && personnel.getPmUser().getRecordStatusFlg() == 1) {
+						// if (personnel.getPmUser() != null
+						// && personnel.getPmUser().getUserId() != null &&
+						// personnel.getPmUser().getRecordStatusFlg() == 1) {
 						if (personnel.getPmUser() != null
 								&& personnel.getPmUser().getUserId() != null) {
 							reqDTO.getUserList().add(
@@ -3861,21 +3875,23 @@ public class SmApplicationBackingBean extends
 						}
 					}
 				}
-				System.out.println("User List Size for pass to BPM:" + reqDTO.getUserList().size());
+				System.out.println("User List Size for pass to BPM:"
+						+ reqDTO.getUserList().size());
 				if (reqDTO.getUserList().size() == 0) {
 					PmUser pmUser = new FacesScopes().getUserSessionBean();
 					reqDTO.getUserList().add(pmUser.getLoginId());
-					System.out.println("Login user added to the user list to BPM");
-//					throw new EpException(MessageConst.ERROR_722546);
+					System.out
+							.println("Login user added to the user list to BPM");
+					// throw new EpException(MessageConst.ERROR_722546);
 				}
-				
+
 				PmUser pmUser = new FacesScopes().getUserSessionBean();
-				if(!reqDTO.getUserList().contains(pmUser.getLoginId())){
+				if (!reqDTO.getUserList().contains(pmUser.getLoginId())) {
 					reqDTO.getUserList().add(pmUser.getLoginId());
 				}
-				
+
 			}
-			
+
 			MofRegistrationResDTO resDTO;
 			regSo = (IMofRegistrationSO) BusinessDelegate.getInstance()
 					.getServiceObject("sm", IMofRegistrationSO.class);
@@ -4094,6 +4110,9 @@ public class SmApplicationBackingBean extends
 			PmUser loginUser = new FacesScopes().getUserSessionBean();
 			useList.add(loginUser.getLoginId());
 			reqDTO.setUserList(useList);
+			System.out
+					.println("******* Save as draft User List to BPM Size *******"
+							+ reqDTO.getUserList());
 			if (reqDTO.getOutcome().equals("")) {
 				reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			}
@@ -4239,6 +4258,16 @@ public class SmApplicationBackingBean extends
 			// reqDTO.setUserName(new FacesScopes().getUserScreenName());
 			reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
 			reqDTO.setLangCode(new FacesScopes().getUserLocale().getLanguage());
+			if (getManagedBean().getSupplierToPOList() != null) {
+				System.out
+						.println("**** LIST of supp from BPM earlier task *******"
+								+ getManagedBean().getSupplierToPOList().size());
+				reqDTO.setUserList(getManagedBean().getSupplierToPOList());
+			} else {
+				System.out
+						.println("***** NO SUPPLIER LIST FROM BPM TO DECISION ***** ");
+				reqDTO.setUserList(new ArrayList<String>());
+			}
 
 			if (this.getManagedBean().getSmAppl().getSupportingDocMode()
 					.equalsIgnoreCase("O")) {
@@ -4378,6 +4407,11 @@ public class SmApplicationBackingBean extends
 					}
 					reqDTO.setPoOrApproverDecision(res);
 					reqDTO.setSmAppl(this.getManagedBean().getSmAppl());
+
+					FacesScopes fs = new FacesScopes();
+					reqDTO.setServerName(fs.getRequest().getServerName());
+					reqDTO.setServerPort(fs.getRequest().getServerPort());
+
 					ReviewApplicationResDTO resDTO = reqSO
 							.submitPOorApproverReviewToBPM(reqDTO);
 					FacesContext
