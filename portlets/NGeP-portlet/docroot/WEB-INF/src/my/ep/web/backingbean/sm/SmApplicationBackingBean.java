@@ -701,14 +701,6 @@ public class SmApplicationBackingBean extends
 			}
 			if (valid) {
 				// Save or update to DB
-				if (outputPageType
-						.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)) {
-					System.out.println("********* Values is capital *******");
-					calculateCapital();
-					System.out.println("**** Data to db *******"
-							+ this.getManagedBean().getSmAppl()
-									.getSmCompanyBasic().getBumiPercent());
-				}
 				MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
 				reqDto.setSmAppl(this.getManagedBean().getSmAppl());
 				MofRegistrationResDTO resDTO = mofRegistrationSO
@@ -741,6 +733,15 @@ public class SmApplicationBackingBean extends
 			if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
 					SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL)) {
 				calcPersonnelListCount();
+			}
+			if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
+					SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)) {
+				System.out
+						.println("*********OUPUT IS CAPITAL PAGE Values is capital *******");
+				calculateCapital();
+				System.out.println("**** Data to db *******"
+						+ this.getManagedBean().getSmAppl().getSmCompanyBasic()
+								.getBumiPercent());
 			}
 			assignValReqdToFalse();
 		}
@@ -4481,10 +4482,6 @@ public class SmApplicationBackingBean extends
 			}
 			if (valid) {
 				// Save or update to DB
-				if (outputPageType
-						.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)) {
-					calculateCapital();
-				}
 				getManagedBean().setCurrentPageType(outputPageType);
 
 			} else {
