@@ -4,9 +4,8 @@
 package my.ep.web.backingbean.ct.association;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
-
-import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -38,7 +37,7 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.CommonUIConst;
-import my.ep.web.managedbean.ct.association.AssociationManagedBean;
+import my.ep.web.managedbean.association.AssociationManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -66,14 +65,6 @@ public class AssociationBackingBean extends BaseBackingBean<AssociationManagedBe
    public AssociationBackingBean(){
 	   
    }
-   
-   @PostConstruct
-   public void init(){
-	   
-	   if(this.getManagedBean().getCtAssociation() == null)
-		   this.getManagedBean().setCtAssociation(new CtAssociation());
-   }
-
    
    public void searchAssociation() {
 	   try { 
@@ -138,6 +129,8 @@ public class AssociationBackingBean extends BaseBackingBean<AssociationManagedBe
  	
  	public String createAssociation() {
 		IContractAssociationSO contractAssociationSO = null;
+		 Calendar cal = Calendar.getInstance();
+		log.info("BackingBean: Performance Testing  CreateAssociation Function: Time taken to start >>>>"+ cal.getTime());
 		try {
 			CtAssocContract ctAssocContract = new CtAssocContract();
 			List<CtAssocContract> contractAssociationList = new ArrayList<CtAssocContract>();
@@ -159,6 +152,8 @@ public class AssociationBackingBean extends BaseBackingBean<AssociationManagedBe
  							MessageUtils.getMessage(MessageConst.INFO_700004, new String[]{"Project", getManagedBean().getCtAssociation().getProjectName()}, 
  							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()))); 				  
 				renewSesionObject();
+			    log.info("BackingBean: Performance Testing  createAssociation Function: Time taken to End >>>>"+ Calendar.getInstance().getTime());
+				log.info("BackingBean: Performance Testing  createAssociation Function: Total Time taken (Second) >>>>"+ (Calendar.getInstance().getTime().getTime() - cal.getTime().getTime()) / 1000);
 				return CommonUIConst.ACKNOWLEDGE_PAGE;
  			} 
 		} finally {
@@ -170,10 +165,13 @@ public class AssociationBackingBean extends BaseBackingBean<AssociationManagedBe
  	/*Implementation of search methode*/
 	public void searchContract() {
 
-		ISearchBean<CtContract> searchBean = new SearchBean<CtContract>();
+		ISearchBean<CtContract> searchBean = null;
 		IContractSO contractSO = null;
 		IParameterSO parameterSO = null;
+		 Calendar cal = Calendar.getInstance();
+	     log.info("BackingBean: Performance Testing  SearchContract Function: Time taken to start >>>>"+ cal.getTime());
 		try {
+			searchBean = new SearchBean<CtContract>();
 			parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 			ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
 			parameterReqDTO.setParameterType(ParameterTypeConst.CONTRACT_TYPE);
@@ -194,7 +192,8 @@ public class AssociationBackingBean extends BaseBackingBean<AssociationManagedBe
 			ContractResDTO ResDTO = contractSO.searchContract(reqDTO);
 			this.getManagedBean().setContractList(ResDTO.getContractResultBean().getResultList());
 			this.getManagedBean().setSelectedIndex(0);
-
+			 log.info("BackingBean: Performance Testing  SearchContract Function: Time taken to End >>>>"+ Calendar.getInstance().getTime());
+			log.info("BackingBean: Performance Testing  SearchContract Function: Total Time taken (Second) >>>>"+ (Calendar.getInstance().getTime().getTime() - cal.getTime().getTime()) / 1000);
 		} catch (Exception ex) {
 			log.error("Exception>>", ex);
 		} finally {
@@ -293,6 +292,8 @@ public class AssociationBackingBean extends BaseBackingBean<AssociationManagedBe
 		@Override
 		public ISearchResultBean<CtAssociation> pageChangeListener(ISearchBean<CtAssociation> searchBean) {
 			IContractAssociationSO contractAssociationSO = null;
+			 Calendar cal = Calendar.getInstance();
+		     log.info("BackingBean: Performance Testing SearchAssociation Function: Time taken to start >>>>"+ cal.getTime());
 			if (log.isDebugEnabled()) {
 				log.debug("pageChangeListener");
 			}
@@ -338,6 +339,9 @@ public class AssociationBackingBean extends BaseBackingBean<AssociationManagedBe
 				ContractAssociationResDTO resDTO = contractAssociationSO.searchAssociation(reqDTO);
 				getManagedBean().setAssociationList(resDTO.getResultBean().getResultList());
 				getManagedBean().setSelectedIndex(0);
+				 log.info("BackingBean: Performance Testing  SearchAssociation Function: Time taken to End >>>>"+ Calendar.getInstance().getTime());
+					log.info("BackingBean: Performance Testing  SearchAssociation Function: Total Time taken (Second) >>>>"+ (Calendar.getInstance().getTime().getTime() - cal.getTime().getTime()) / 1000);
+				
 				if(resDTO.isSuccessful()) {
 					return resDTO.getResultBean();
 				}
@@ -347,5 +351,4 @@ public class AssociationBackingBean extends BaseBackingBean<AssociationManagedBe
 			return null;
 		}
 	}
-	
 }

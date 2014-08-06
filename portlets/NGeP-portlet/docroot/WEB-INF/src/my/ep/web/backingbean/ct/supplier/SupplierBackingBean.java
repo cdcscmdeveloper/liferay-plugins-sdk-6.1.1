@@ -15,6 +15,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -162,11 +163,14 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	}
     
 	public void preRenderView() {
-		IContractSupplierSO contractSupplierSO;
-		IContractSO contractSO;
+		IContractSupplierSO contractSupplierSO = null;
+		IContractSO contractSO = null;
+		 Calendar cal = Calendar.getInstance();
+	     log.info("SupplierBackingBean: Performance Testing preRenderView Function: Time taken to start >>>>"+ cal.getTime());
 		
 		try {
 			System.out.println("**********preRenderView**************");
+			
 			HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 			HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 			String taskId = originalServletRequest.getParameter("taskId");
@@ -243,7 +247,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 				docType, getManagedBean().getCtContract().getContractNo()));
 			ContractBackingBean ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
 			ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
-
+			 
 			if (res.getProcessName().equalsIgnoreCase(CTProcessNameConst.BANK_ACCOUNT_CHANGE_PROCESS_NAME)) {
 				FacesContext fc = FacesContext.getCurrentInstance();
 				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, ContractManagementConst.NAV_TO_BANK_ACCOUNT);
@@ -257,6 +261,9 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		} finally {
 			contractSupplierSO = null;
 			contractSO = null;
+			log.info("SupplierBackingBean: Performance Testing preRenderView Function: Time taken to End >>>>"+ Calendar.getInstance().getTime());
+			log.info("SupplierBackingBean: Performance Testing preRenderView Function: Total Time taken (Second) >>>>"+ (Calendar.getInstance().getTime().getTime() - cal.getTime().getTime()) / 1000);
+				
 		}
 	}
     
@@ -349,6 +356,8 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
      
 	public String saveChangeBankRequest(String action) throws Exception {
 		IContractSO contractSO = null;
+		 Calendar cal = Calendar.getInstance();
+	     log.info("SupplierBackingBean: Performance Testing saveChangeBankRequest Function: Time taken to start >>>>"+ cal.getTime());
 		try {
 			if (getManagedBean().getOriginalAccountNo()!=null && getManagedBean().getOriginalAccountNo().equalsIgnoreCase(getManagedBean().getContractVer().getCtContractValue().getBankAccountNo())) {
 				throw new EpException(MessageConst.ERROR_750000);
@@ -399,6 +408,9 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 				throw new EpException("Failed.");
 			}
 		} finally {
+			 log.info("SupplierBackingBean: Performance Testing saveChangeBankRequest Function: Time taken to End >>>>"+ Calendar.getInstance().getTime());
+			log.info("SupplierBackingBean: Performance Testing saveChangeBankRequest Function: Total Time taken (Second) >>>>"+ (Calendar.getInstance().getTime().getTime() - cal.getTime().getTime()) / 1000);
+			
 			contractSO = null;
 		}
 		return null;
@@ -436,6 +448,9 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
       
 	public String saveFactoringRequest(String action) throws Exception {
 		IContractSupplierSO supplierSO = null;
+		 Calendar cal = Calendar.getInstance();
+	     log.info("SupplierBackingBean: Performance Testing saveFactoringRequest Function: Time taken to start >>>>"+ cal.getTime());
+	
 		try {
 			ContractSupplierReqDTO reqDTO = new ContractSupplierReqDTO();
 			supplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSupplierSO.class);
@@ -486,6 +501,9 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			}
 		} finally {
 			supplierSO = null;
+			log.info("SupplierBackingBean: Performance Testing saveFactoringRequest Function: Time taken to End >>>>"+ Calendar.getInstance().getTime());
+			log.info("SupplierBackingBean: Performance Testing saveFactoringRequest Function: Total Time taken (Second) >>>>"+ (Calendar.getInstance().getTime().getTime() - cal.getTime().getTime()) / 1000);
+			
 		}
 		return null;
 	}
@@ -771,6 +789,9 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	
 	public void previewAction() throws UnsupportedEncodingException {
 		IContractTemplateSO contractTemplateSO = null;
+		Calendar cal = Calendar.getInstance();
+	     log.info("SupplierBackingBean: Performance Testing previewAction Function: Time taken to start >>>>"+ cal.getTime());
+	
 		try {
 			contractTemplateSO = (IContractTemplateSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractTemplateSO.class);
 			ContractTemplateReqDTO reqDTO = new ContractTemplateReqDTO();
@@ -824,6 +845,8 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			}
 		} finally {
 			contractTemplateSO = null;
+			log.info("SupplierBackingBean: Performance Testing previewAction Function: Time taken to End >>>>"+ Calendar.getInstance().getTime());
+			log.info("SupplierBackingBean: Performance Testing previewAction Function: Total Time taken (Second) >>>>"+ (Calendar.getInstance().getTime().getTime() - cal.getTime().getTime()) / 1000);
 		}
 	}
 
