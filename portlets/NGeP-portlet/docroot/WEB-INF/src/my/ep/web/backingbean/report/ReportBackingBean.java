@@ -992,7 +992,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	public void criteriaVariablesByReport() {
 		this.getManagedBean().setRptGenBean(null);		
 		if((getManagedBean().getModuleName())!=null && (getManagedBean().getReportNameValue())!=null){
-			//rptGenBean = new ReportsGenerateBean();					
+			rptGenBean = new ReportsGenerateBean();					
 			if((getManagedBean().getModuleName().equalsIgnoreCase(ModuleCodeConst.CATALOGUE_MANAGEMENT))){ 
 				criteriaVariablesByReportByCM();					
 			}else if((getManagedBean().getModuleName().equalsIgnoreCase(ModuleCodeConst.SUPPLIER_SELECTION))){ 
@@ -2085,6 +2085,13 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 				this.setIcNumber(null);
 				this.setBusinessRegNo(null);
 			}			
+		}else{
+			getManagedBean().getRptGenBean().setMofRegView(false);
+			getManagedBean().getRptGenBean().setBasicRegView(false);
+			this.setEpNumber(null);
+			this.setIcNumber(null);
+			this.setBusinessRegNo(null);
+			this.setMofNumber(null);
 		}
 	}
 	/*
