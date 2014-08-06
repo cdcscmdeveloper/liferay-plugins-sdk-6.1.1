@@ -828,6 +828,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		} else {
 			price.setStand_group_id(1);
 		}
+		price.setFromQty(1);
 		price.setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
 		this.getManagedBean().getSelectedMaintainItem().getCmTierPricings()
 				.add(price);
@@ -858,6 +859,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		} else {
 			price.setStand_group_id(1);
 		}
+		price.setFromQty(1);
 		price.setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
 		this.getManagedBean().getSelectedMaintainItem()
 				.getCmZonalTierPricings().add(price);
@@ -3601,6 +3603,21 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}
 	}
 
+	public void updateZonalTierToQty(int index) {
+
+		if (index < this.getManagedBean().getSelectedMaintainItem()
+				.getCmZonalTierPricings().size() - 1) {
+			CmZonalTierPricing zonalTier = this.getManagedBean()
+					.getSelectedMaintainItem().getCmZonalTierPricings()
+					.get(index + 1);
+			if (zonalTier.getStand_group_id() == this.getManagedBean()
+					.getSelectedMaintainItem().getCmZonalTierPricings().get(index)
+					.getStand_group_id())
+				zonalTier.setFromQty(this.getManagedBean().getSelectedMaintainItem()
+						.getCmZonalTierPricings().get(index).getToQty() + 1);
+		}
+	}
+
 	public void updateValidateGroupingDates(int index) {
 
 		CmPromotionTierPricing promotionTierPricing = this.getManagedBean()
@@ -4379,8 +4396,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			index = cmPricings.indexOf(cmPricing);
 			if (index > 0) {
 				if (cmPricing.getToQty() == null
-						|| cmPricing.getFromQty() <= cmPricings.get(index - 1)
-								.getToQty()
+						|| (cmPricing.getStand_group_id() == cmPricings.get(index-1).getStand_group_id() && cmPricing.getFromQty() <= cmPricings.get(index - 1)
+								.getToQty())
 						|| cmPricing.getToQty() <= cmPricing.getFromQty()) {
 					valid = false;
 					break;
@@ -4950,7 +4967,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				}
 
 				for (T sorted : sortedList) {
-					System.out.println("sorted:" + sorted.getFromQty());
+//					System.out.println("sorted:" + sorted.getFromQty());
 				}
 
 				tierMap.put(dataList.get(0).getStartDate(), sortedList);

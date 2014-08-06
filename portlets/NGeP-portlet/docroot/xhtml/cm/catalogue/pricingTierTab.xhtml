@@ -19,14 +19,6 @@
 			<ac:paginator for="pricingTierID"></ac:paginator>
 			<p:column>
 				<f:facet name="header">
-					#{lbl['lbl.cm.price']}
-				</f:facet>
-				<p:inputText value="#{price.price}" size="10" disabled="#{price.standardDisabled}" >
-				 <p:ajax event="keyup" update="promoLink, cloneLink, deleteLink, errorLink" />
-                </p:inputText>
-			</p:column>
-			<p:column>
-				<f:facet name="header">
 					#{lbl['lbl.cm.from.qty']}
 				</f:facet>
 				<p:inputText id="fromQty" value="#{price.fromQty}" size="5" disabled="#{!price.showFlag || price.standardDisabled}">
@@ -42,6 +34,14 @@
 				<p:ajax event="change" listener="#{catalogueBackingBean.updateToQty(rowIndex)}" update=":form:pricingTabID:headerTabId:tierId:pricingTierID, deleteLink, errorLink" />
                 </p:inputText>
             </p:column>
+			<p:column>
+				<f:facet name="header">
+					#{lbl['lbl.cm.price']}
+				</f:facet>
+				<p:inputText value="#{price.price}" size="10" disabled="#{price.standardDisabled}" >
+				 <p:ajax event="keyup" update="promoLink, cloneLink, deleteLink, errorLink" />
+                </p:inputText>
+			</p:column>
 			<p:column>
 				<f:facet name="header">
 					#{lbl['lbl.cm.start.date']}
@@ -72,13 +72,6 @@
 				</f:facet>
 				<table width="5%">
 					<tr>
-						<td><p:commandLink id="promoLink" title="Promotion"
-								disabled="#{price.price eq null or price.fromQty eq null or price.toQty eq null or price.fromQty >= price.toQty or price.startDate eq null or price.endDate eq null or price.startDate >= price.endDate or !price.displayAction}" 
-								rendered="#{price.showFlag}"
-								action="#{catalogueBackingBean.addToPromotion(rowIndex)}"
-								update="@form, deleteLink, :form:pricingTabID:headerTabId:tierId:pricingPromotionTierID">
-								<p:graphicImage value="/css/images/design/add.png"></p:graphicImage>
-							</p:commandLink>&#160;</td>
 						<td><p:commandLink id="cloneLink" title="Clone" rendered="#{price.showFlag}"
 								disabled="#{price.standardDisabled or price.price eq null or price.fromQty eq null or price.toQty eq null or price.fromQty >= price.toQty or price.startDate eq null or price.endDate eq null or price.startDate >= price.endDate or !price.displayAction}" 
 								action="#{catalogueBackingBean.cloneTierPrice(rowIndex)}"
@@ -91,6 +84,13 @@
 								<f:param name="index" value="#{rowIndex}"></f:param>
 								<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
 							</p:commandLink></td>
+						<td><p:commandLink id="promoLink" title="Promotion"
+								disabled="#{price.price eq null or price.fromQty eq null or price.toQty eq null or price.fromQty >= price.toQty or price.startDate eq null or price.endDate eq null or price.startDate >= price.endDate or !price.displayAction}" 
+								rendered="#{price.showFlag}"
+								action="#{catalogueBackingBean.addToPromotion(rowIndex)}"
+								update="@form, deleteLink, :form:pricingTabID:headerTabId:tierId:pricingPromotionTierID">
+								<p:graphicImage value="/css/images/design/add.png"></p:graphicImage>
+							</p:commandLink>&#160;</td>
 						<td style="text-align: right;">
 							<p:commandLink id="errorLink" title="Error" process="@this" actionListener="#{catalogueBackingBean.updateErrorDialog(rowIndex)}" update=":form" 
 								oncomplete="errorDialog.show();" 

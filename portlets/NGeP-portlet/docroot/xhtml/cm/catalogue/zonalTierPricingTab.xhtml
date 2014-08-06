@@ -24,7 +24,7 @@
 				<f:facet name="header">
 					Zone Name
 				</f:facet>
-				<p:selectOneMenu value="#{tier.cmSupplierZone.suppZoneId}" style="width: 128px;" disabled="#{tier.standardDisabled}">
+				<p:selectOneMenu value="#{tier.cmSupplierZone.suppZoneId}" style="width: 128px;" disabled="#{!tier.showFlag || tier.standardDisabled}">
 					<f:selectItem itemLabel="Select One" itemValue="0" />
 					<f:selectItems
 						value="#{catalogueBackingBean.managedBean.supplierZoneList}"
@@ -36,15 +36,6 @@
 			</p:column>
 
 
-
-			<p:column>
-				<f:facet name="header">
-					#{lbl['lbl.cm.price']}
-				</f:facet>
-				<p:inputText value="#{tier.price}" size="10" disabled="#{tier.standardDisabled}">
-				<p:ajax event="keyup" update="zTPromoLink, zTCloneLink, zTErrorLink, zTDeleteLink" />
-				</p:inputText>
-			</p:column>
 
 			<p:column>
 				<f:facet name="header">
@@ -60,6 +51,14 @@
 					#{lbl['lbl.cm.to.qty']}
 				</f:facet>
 				<p:inputText value="#{tier.toQty}" size="4" disabled="#{tier.standardDisabled}">
+				<p:ajax event="change" listener="#{catalogueBackingBean.updateZonalTierToQty(rowIndex)}" update=":form:pricingTabID:headerTabId:zonalTierId:cmZonalTierPricingsId, zTPromoLink, zTCloneLink, zTErrorLink, zTDeleteLink" />
+				</p:inputText>
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					#{lbl['lbl.cm.price']}
+				</f:facet>
+				<p:inputText value="#{tier.price}" size="10" disabled="#{tier.standardDisabled}">
 				<p:ajax event="keyup" update="zTPromoLink, zTCloneLink, zTErrorLink, zTDeleteLink" />
 				</p:inputText>
 			</p:column>
@@ -94,12 +93,6 @@
 				
 				<table width="5%">
 					<tr>
-						<td><p:commandLink id="zTPromoLink" title="Promotion" rendered="#{tier.showFlag}"
-								disabled="#{tier.cmSupplierZone.suppZoneId eq 0 or tier.price eq null or tier.fromQty eq null or tier.toQty eq null or tier.fromQty >= tier.toQty or tier.startDate eq null or tier.endDate eq null or tier.startDate >= tier.endDate or !tier.displayAction}" 
-								action="#{catalogueBackingBean.addToZonalPromotion(rowIndex)}"
-								update="@form">
-								<p:graphicImage value="/css/images/design/add.png"></p:graphicImage>
-							</p:commandLink>&#160;</td>
 						<td><p:commandLink id="zTCloneLink" title="Clone" rendered="#{tier.showFlag}"
 								disabled="#{tier.cmSupplierZone.suppZoneId eq 0 or tier.standardDisabled or tier.price eq null or tier.fromQty eq null or tier.toQty eq null or tier.fromQty >= tier.toQty or tier.startDate eq null or tier.endDate eq null or tier.startDate >= tier.endDate or !tier.displayAction}" 
 								action="#{catalogueBackingBean.cloneZonalTierPrice(rowIndex)}"
@@ -112,6 +105,12 @@
 								<f:param name="index" value="#{rowIndex}"></f:param>
 								<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
 							</p:commandLink></td>
+						<td><p:commandLink id="zTPromoLink" title="Promotion" rendered="#{tier.showFlag}"
+								disabled="#{tier.cmSupplierZone.suppZoneId eq 0 or tier.price eq null or tier.fromQty eq null or tier.toQty eq null or tier.fromQty >= tier.toQty or tier.startDate eq null or tier.endDate eq null or tier.startDate >= tier.endDate or !tier.displayAction}" 
+								action="#{catalogueBackingBean.addToZonalPromotion(rowIndex)}"
+								update="@form">
+								<p:graphicImage value="/css/images/design/add.png"></p:graphicImage>
+							</p:commandLink>&#160;</td>
 						<td style="text-align: right;">
 							<p:commandLink id="zTErrorLink" title="Error" process="@this" actionListener="#{catalogueBackingBean.updateZonalTierErrorDialog(rowIndex)}" update=":form:pricingTabID:headerTabId:zonalTierId:cmZonalTierPricingsId, :form:errorDialog" 
 								disabled="#{!(tier.cmSupplierZone.suppZoneId eq 0 or tier.price eq null or tier.fromQty eq null or tier.toQty eq null or tier.fromQty >= tier.toQty or tier.startDate eq null or tier.endDate eq null or tier.startDate >= tier.endDate or !tier.displayAction)}"
