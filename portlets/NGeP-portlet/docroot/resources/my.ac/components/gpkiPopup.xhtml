@@ -32,11 +32,8 @@
 
 				//         	var $foo = $("[id='#{pin.clientId}']");
 				var pin = $("[id='#{pin.clientId}']").val();
-				if (pin != "") {
-					sign_st(pin, plainText);
-				}else{
-					alert("Please Insert Pin Number");
-				}
+			    sign_st(pin, plainText);
+			
 			}
 			function parseVerifyResult(msg) {
 				$(document).ready(
@@ -131,7 +128,7 @@
 		</script>
 
 		<p:dialog header="Digital Certificate Signing" widgetVar="gpki_dlg" resizable="false" modal="true">
-			<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
+			<p:messages id="dlgMessages" showDetail="true" autoUpdate="true" closable="true" />
 			<h:panelGrid columns="4" cellpadding="4">
 				<h:outputLabel value="*" styleClass="mandatory" />
 				<h:outputLabel for="password" value="Digital Certificate PIN" />
