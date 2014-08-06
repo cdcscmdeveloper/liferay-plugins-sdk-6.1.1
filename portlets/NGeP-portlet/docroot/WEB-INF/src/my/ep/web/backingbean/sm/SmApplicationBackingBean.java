@@ -4450,9 +4450,11 @@ public class SmApplicationBackingBean extends
 		} catch (Exception e) {
 			e.printStackTrace();
 			retMsg = null;
-			retriveLatestApplAfterUpdate("");
+			
 			throw new EpException(MessageConst.ERROR_722519);
 		} finally {
+			System.out.println("**** Retirve latest ****** ");
+			retriveLatestApplAfterUpdate("");
 			reqSO = null;
 		}
 		return retMsg;
