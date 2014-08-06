@@ -45,8 +45,9 @@
 			</p:column>
 			<p:column>
 				<p:inputText readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue}"
-					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.price}">
+					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.price}" style="text-align:right">
 					<p:ajax event="keyup" listener="#{catalogueBackingBean.updatePromotionErrorDialog()}" update="promotionErrorLink" />
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</p:inputText>
 			</p:column>
 			<p:column>

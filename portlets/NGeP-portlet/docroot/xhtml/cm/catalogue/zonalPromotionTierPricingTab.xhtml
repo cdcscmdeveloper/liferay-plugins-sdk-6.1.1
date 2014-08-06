@@ -39,8 +39,9 @@
 				<f:facet name="header">
 					#{lbl['lbl.cm.price']}
 				</f:facet>
-				<p:inputText value="#{tier.price}" size="10">
-					<p:ajax event="keyup" listener="#{catalogueBackingBean.validateZonalPromotionTierDates(rowIndex)}" update=":form" />
+				<p:inputText value="#{tier.price}" size="10" style="text-align:right">
+					<p:ajax event="change" listener="#{catalogueBackingBean.validateZonalPromotionTierDates(rowIndex)}" update=":form" />
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</p:inputText>
 			</p:column>
 
