@@ -3,6 +3,7 @@ package my.ep.web.managedbean.sc.bidding;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -67,7 +68,7 @@ public class BiddingManagedBean extends BaseManagedBean {
 	private List<ScBidSchedule> scheduledBidList;
 	
 	private String supplierNotes;
-
+	private Long remainingBidTime;
 	private ScBidSchedule scheduledBid;
 	private List<ScBidPrice> scBidPriceList;
 	private List<ScBidPrice> bidHistoryPriceList;
@@ -118,7 +119,37 @@ public class BiddingManagedBean extends BaseManagedBean {
 	}
 	
 	
+	/**
+	 * @return the remainingBidTime
+	 */
+	public Long getRemainingBidTime() {
+
+		if (scheduledBid != null) {
+
+			remainingBidTime = durationCalculator(new Date(),
+					scheduledBid.getEndDate());
+		}
+		return remainingBidTime;
+	}
 	
+	private Long durationCalculator(Date startDate, Date endDate) {
+
+		long durationInMills = endDate.getTime() - startDate.getTime();
+
+		long time = TimeUnit.SECONDS.convert(durationInMills,
+				TimeUnit.MILLISECONDS);
+
+		return time;
+	}
+
+	/**
+	 * @param remainingBidTime
+	 *            the remainingBidTime to set
+	 */
+	public void setRemainingBidTime(Long remainingBidTime) {
+		this.remainingBidTime = remainingBidTime;
+	}
+
 	/**
 	 * @return the lowestNonBumiOfferedPrice
 	 */
