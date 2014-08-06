@@ -162,13 +162,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					.add(new AdvanceSearchVO());
 		}
 
-		IStateSO stateSO = (IStateSO) BusinessDelegate.getInstance()
-				.getServiceObject("pm", IStateSO.class);
-		StateReqDTO reqStateDTO = new StateReqDTO();
-		reqStateDTO.setCountryCode("MY");
-		StateResDTO resStateDTO = stateSO.retriveStatesListByCountryCode(reqStateDTO);
-
-		this.getManagedBean().setStateList(resStateDTO.getStateList());
+		
 
 	}
 
@@ -3064,17 +3058,21 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					.add(new AdvanceSearchVO());
 		}
 
-		IStateSO stateSO = (IStateSO) BusinessDelegate.getInstance()
-				.getServiceObject("pm", IStateSO.class);
-		StateReqDTO reqStateDTO = new StateReqDTO();
-		reqStateDTO.setCountryCode("MY");
-		StateResDTO resStateDTO = stateSO.retriveStatesListByCountryCode(reqStateDTO);
-
-		this.getManagedBean().setStateList(resStateDTO.getStateList());
+		IStateSO stateSO = (IStateSO) BusinessDelegate.getInstance().getServiceObject("pm", IStateSO.class);
+		try{
+			StateReqDTO reqStateDTO = new StateReqDTO();
+			reqStateDTO.setCountryCode("MY");
+			StateResDTO resStateDTO = stateSO.retriveStatesListByCountryCode(reqStateDTO);
+	
+			this.getManagedBean().setStateList(resStateDTO.getStateList());
+		}finally {
+			stateSO = null;
+		}
 		
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, "supplierItemView");
+
 
 	}
 
@@ -5270,6 +5268,24 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 //		this.getManagedBean().getSearchDataModel().resetData();
 				
 		renewSesionObject();
+		
+		this.getManagedBean().setAdvanceSearchList(
+				new ArrayList<AdvanceSearchVO>());
+		for (int i = 0; i < 3; i++) {
+			this.getManagedBean().getAdvanceSearchList()
+					.add(new AdvanceSearchVO());
+		}
+		
+		IStateSO stateSO = (IStateSO) BusinessDelegate.getInstance().getServiceObject("pm", IStateSO.class);
+		try{
+			StateReqDTO reqStateDTO = new StateReqDTO();
+			reqStateDTO.setCountryCode("MY");
+			StateResDTO resStateDTO = stateSO.retriveStatesListByCountryCode(reqStateDTO);
+	
+			this.getManagedBean().setStateList(resStateDTO.getStateList());
+		}finally {
+			stateSO = null;
+		}
 	}
 	
 	public void addToList(VCmSupplierItem supplierItem,Integer optionListValue){
