@@ -47,6 +47,7 @@ import my.ep.persistence.entity.cm.catalog.CmRequestRemark;
 import my.ep.persistence.entity.cm.catalog.CmType;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
@@ -242,7 +243,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 			reqDTO.setOutCome(action);
 			reqDTO.setProcessId(CDProcessNameConst.UNSPSC_CODE_REQUEST_PROCESS_ID);
 
-			if(action.equalsIgnoreCase("RECOMMEND")){
+			if(action.equalsIgnoreCase("RECOMMEND TO SUPPLIER")){
 
 				if(!(this.getManagedBean().getRequestCode().getCmRecommendCodes()!=null && this.getManagedBean().getRequestCode().getCmRecommendCodes().size()>0)){
 					System.out.println("**********warning***************");
@@ -940,7 +941,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 				
 	
 				
-			}else if(outcome.equalsIgnoreCase("RECOMMEND")){
+			}else if(outcome.equalsIgnoreCase("RECOMMEND TO SUPPLIER")){
 
 
 				if(!(this.getManagedBean().getRequestCode().getCmRecommendCodes()!=null && this.getManagedBean().getRequestCode().getCmRecommendCodes().size()>0)){
@@ -2045,5 +2046,17 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, "unspscRequestForm");
 	}
+	
+	public int productOrServiceOperator() {
+		if (this.getManagedBean().getRequestCode() != null) {
+			if (this.getManagedBean().getRequestCode().getItemType().equalsIgnoreCase("P")) {
+				return 5; // means less than (76000000)
+			} else {
+				return 4; // means greater than (76000000)
+			}
+		}
+		return -1;
+	}
+	
 
 }

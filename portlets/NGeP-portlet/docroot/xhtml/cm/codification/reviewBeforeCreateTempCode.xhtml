@@ -165,7 +165,8 @@
 								headerText="Segment" update=":form:tablePanelId"
 								saveObject="unspscCodeBackingBean.managedBean.selectedLovUnspscSegment"
 								value="#{unspscCodeBackingBean.managedBean.selectedLovUnspscSegment.unspscCode}"
-								conditionField="recordStatus^1|unspscLevel^0">
+								conditionField="recordStatus^1|unspscLevel^0|unspscCode^76000000^#{unspscCodeBackingBean.productOrServiceOperator()}">
+								
 							</ac:lov>
 
 						</p:column>
