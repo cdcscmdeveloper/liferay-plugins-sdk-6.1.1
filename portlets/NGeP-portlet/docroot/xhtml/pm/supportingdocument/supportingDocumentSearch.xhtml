@@ -34,7 +34,9 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 				<td>
 					<p:selectOneMenu id="somSuppZone" styleClass="ppDropDownWidthM" label="#{lbl['lbl.pm.supplier.zone']}"
 					>
-						<f:selectItems  value="#{supportDocBackingBean.supplierZoneOptions()}"/>
+						<f:selectItem itemValue="#{null}" itemLabel="- Select One -"/>
+						<f:selectItems  value="#{supportDocBackingBean.supplierZoneOptions()}"  
+							var="zone" itemValue="#{zone.zoneId}" itemLabel="#{zone.zoneName}" />
 					</p:selectOneMenu>
 				</td>
 				<th>
