@@ -243,6 +243,10 @@ public class ReportConst {
 	public static final String AMP_REG_TYPE_EQ = "&registrationtype=";
 	public static final String AMP_ITM_CAT_EQ = "&itemcategory=";
 	public static final String AMP_PROOF_IDNT_EQ = "&proofidentity=";
+	public static final String AMP_IC_NO_EQ = "&icno=";
+	public static final String AMP_BUSI_REG_NO_EQ = "&businessregno=";
+	public static final String AMP_EP_NO_EQ = "&epno=";
+	public static final String AMP_MOF_NO_EQ = "&mofno=";
 	public static final String AMP_PTJ_EQ = "&ptj=";
 	public static final String AMP_CONTR_NO_EQ = "&contractno=";
 	public static final String AMP_SST_EQ = "&sst=";

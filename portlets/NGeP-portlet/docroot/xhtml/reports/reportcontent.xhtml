@@ -197,13 +197,27 @@
 			<p:outputLabel value="#{lbl['lbl.rpt.rgstType']}"  style="margin-bottom:5px;"/>			
 			<p:selectOneMenu value="#{reportBackingBean.registrationType}" style="width:134px;margin-bottom:5px;">
 				<f:selectItem itemLabel="--SelectOne--" itemValue="#{null}"></f:selectItem>
-				<f:selectItem itemLabel="#{lbl['lbl.rpt.regBasic']}" itemValue="#{lbl['lbl.rpt.regBasic']}"></f:selectItem>
-				<f:selectItem itemLabel="#{lbl['lbl.rpt.regMOF']}" itemValue="#{lbl['lbl.rpt.regMOF']}"></f:selectItem>				
+				<f:selectItems value="#{reportBackingBean.retriveRegTypeList()}"></f:selectItems>
+				<p:ajax event="change" listener="#{reportBackingBean.enableRegistrationType}"
+					 partialSubmit="true"  update="@form"/>			
 			</p:selectOneMenu>
 			</c:if>	
-			<c:if test="#{reportBackingBean.managedBean.rptGenBean.proofIdentityView}">
-			<p:outputLabel value="#{lbl['lbl.rpt.prfIdt']}"  style="margin-bottom:5px;"/>
-			<p:inputText value="#{reportBackingBean.proofIdentity}"  style="margin-bottom:5px;"/>
+			<c:if test="#{reportBackingBean.managedBean.rptGenBean.basicRegView}">
+			<p:outputLabel value="#{lbl['lbl.rpt.epNo']}"  style="margin-bottom:5px;"/>
+			<p:inputText value="#{reportBackingBean.epNumber}"  style="margin-bottom:5px;"/>
+			
+			<p:outputLabel value="#{lbl['lbl.rpt.busRegNo']}"  style="margin-bottom:5px;"/>
+			<p:inputText value="#{reportBackingBean.businessRegNo}"  style="margin-bottom:5px;"/>
+			
+			<p:outputLabel value="#{lbl['lbl.rpt.icNo']}"  style="margin-bottom:5px;"/>
+			<p:inputText value="#{reportBackingBean.icNumber}"  style="margin-bottom:5px;"/>
+			</c:if>
+			<c:if test="#{reportBackingBean.managedBean.rptGenBean.mofRegView}">
+			<p:outputLabel value="#{lbl['lbl.rpt.mofNo']}"  style="margin-bottom:5px;"/>
+			<p:inputText value="#{reportBackingBean.mofNumber}"  style="margin-bottom:5px;"/>
+			
+			<p:outputLabel value="#{lbl['lbl.rpt.epNo']}"  style="margin-bottom:5px;"/>
+			<p:inputText value="#{reportBackingBean.epNumber}"  style="margin-bottom:5px;"/>
 			</c:if>
 		</h:panelGrid>	
 		</h:panelGroup>	

@@ -69,6 +69,10 @@ public class ReportsGenerateBean {
 	private String itemCategoryTotVar=ReportConst.EMPTY_VAL;
 	private String itemNameTotVar=ReportConst.EMPTY_VAL;
 	private String proofIdentityTotVar=ReportConst.EMPTY_VAL;
+	private String epNumberTotVar=ReportConst.EMPTY_VAL;	
+	private String businessRegNoTotVar=ReportConst.EMPTY_VAL;
+	private String icNumberTotVar=ReportConst.EMPTY_VAL;
+	private String mofNumberTotVar=ReportConst.EMPTY_VAL;
 	private String ptjTotVar=ReportConst.EMPTY_VAL;
 	private String contractNoTotVar=ReportConst.EMPTY_VAL;
 	private String sstTotVar=ReportConst.EMPTY_VAL;
@@ -99,6 +103,30 @@ public class ReportsGenerateBean {
 	private String fromDateVar=ReportConst.EMPTY_VAL;
 	private String toDateVar=ReportConst.EMPTY_VAL;
 	
+	public String getEpNumberTotVar() {
+		return epNumberTotVar;
+	}
+	public void setEpNumberTotVar(String epNumberTotVar) {
+		this.epNumberTotVar = epNumberTotVar;
+	}
+	public String getBusinessRegNoTotVar() {
+		return businessRegNoTotVar;
+	}
+	public void setBusinessRegNoTotVar(String businessRegNoTotVar) {
+		this.businessRegNoTotVar = businessRegNoTotVar;
+	}
+	public String getIcNumberTotVar() {
+		return icNumberTotVar;
+	}
+	public void setIcNumberTotVar(String icNumberTotVar) {
+		this.icNumberTotVar = icNumberTotVar;
+	}
+	public String getMofNumberTotVar() {
+		return mofNumberTotVar;
+	}
+	public void setMofNumberTotVar(String mofNumberTotVar) {
+		this.mofNumberTotVar = mofNumberTotVar;
+	}
 	public boolean isBasicRegView() {
 		return basicRegView;
 	}
