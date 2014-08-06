@@ -53,6 +53,8 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	private boolean requisitionerFlag;
 	private boolean supplierFlag;
 	private Integer stockAvailable;
+	private boolean stockAvailabilityFlag;
+	private String pageNavToRequestNote;
 	
 	private boolean titleChecker = Boolean.TRUE;
 	
@@ -366,6 +368,34 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	 */
 	public void setTitleChecker(boolean titleChecker) {
 		this.titleChecker = titleChecker;
+	}
+
+	/**
+	 * @return the stockAvailabilityFlag
+	 */
+	public boolean isStockAvailabilityFlag() {
+		return stockAvailabilityFlag;
+	}
+
+	/**
+	 * @param stockAvailabilityFlag the stockAvailabilityFlag to set
+	 */
+	public void setStockAvailabilityFlag(boolean stockAvailabilityFlag) {
+		this.stockAvailabilityFlag = stockAvailabilityFlag;
+	}
+
+	/**
+	 * @return the pageNavToRequestNote
+	 */
+	public String getPageNavToRequestNote() {
+		return pageNavToRequestNote;
+	}
+
+	/**
+	 * @param pageNavToRequestNote the pageNavToRequestNote to set
+	 */
+	public void setPageNavToRequestNote(String pageNavToRequestNote) {
+		this.pageNavToRequestNote = pageNavToRequestNote;
 	}
 	
 }
