@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -20,6 +21,7 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.bpm.dto.BpmRequestDTO;
@@ -34,6 +36,8 @@ import my.ep.constant.sc.QTStatusConst;
 import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
@@ -48,7 +52,9 @@ import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRemark;
+import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
+import my.ep.persistence.entity.sc.quationtender.ScQtRemark;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.sc.ApprovalCategory;
 import my.ep.type.sc.CommitteType;
@@ -86,12 +92,13 @@ public class ApprovalBackingBean extends
 	 * 
 	 */
 	public ApprovalBackingBean() {
+
+	}
+
+	@PostConstruct
+	public void init() {
 		if (this.getManagedBean().getScQtApproval() == null) {
 			this.getManagedBean().setScQtApproval(new ScQtApproval());
-		}
-		
-		if (this.getManagedBean().getScQtApproval().getScQtApprovalRemarks() == null) {
-			this.getManagedBean().getScQtApproval().setScQtApprovalRemarks(new  ArrayList<ScQtApprovalRemark>());
 		}
 
 		if (this.getManagedBean().getScQtApproval().getApprovalCategory() == null) {
@@ -99,39 +106,48 @@ public class ApprovalBackingBean extends
 					.setApprovalCategory(new PmParameter());
 		}
 
-		initializeRemark(new ArrayList<ScQtApprovalRemark>());
-
-		// getBudgetApproverName();
 	}
 
 	/**
 	 * @param arrayList
 	 */
-	private void initializeRemark(ArrayList<ScQtApprovalRemark> scQtApprovalRemarks) {
+	private void initializeRemark(List<ScQtCommittee> scQtCommittees) {
 		FacesScopes facesScopes = new FacesScopes();
-		String screnName = null;
-		if (scQtApprovalRemarks != null && !scQtApprovalRemarks.isEmpty()) {
-			Long userId = scQtApprovalRemarks.get(0).getCreatedBy();
-			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-			UserReqDTO dto = new UserReqDTO();
-			dto.setUserId(userId);
-			UserResDTO userResDTO = userSO.retrieveUserDetails(dto);
-			screnName = userResDTO.getPmUser().getLoginId();
-		}
-		if (scQtApprovalRemarks.size() == 0 || !compareUserName(screnName)) {
-			ScQtApprovalRemark qtApprovalRemark = null;
-			if (null == qtApprovalRemark) {
-				qtApprovalRemark = new ScQtApprovalRemark();
+		IStatusSO iStatusSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IStatusSO.class);
+		if (null != scQtCommittees && !scQtCommittees.isEmpty()) {
+			for (ScQtCommittee committees : scQtCommittees) {
+				this.getManagedBean().setQtCommitteeRemarks(
+						committees.getQtCommitteRemarks());
+				List<ScQtCommitteRemarks> scQtApprovalRemarks = this
+						.getManagedBean().getQtCommitteeRemarks();
+				if (null == scQtApprovalRemarks) {
+					scQtApprovalRemarks = new ArrayList<ScQtCommitteRemarks>();
+				}
+
+				ScQtCommitteRemarks remark = null;
+
+				remark = new ScQtCommitteRemarks();
+
+				setUserDetails(remark);
+				remark.setCreatedUser(facesScopes.getUserSessionBean());
+				remark.setScQtCommittee(committees);
+				PmStatus status = new PmStatus();
+				status.setStatusId(1L);
+				StatusReqDTO statusReqDTO = new StatusReqDTO();
+				if (status != null) {
+					statusReqDTO.setStatusId(status.getStatusId());
+					StatusResDTO statusResDTO = iStatusSO
+							.retrieveStatusByStatusId(statusReqDTO);
+					remark.setPmStatus(statusResDTO.getPmStatus());
+
+				}
+				this.getManagedBean().getQtCommitteeRemarks().add(remark);
+
 			}
-			qtApprovalRemark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
-			qtApprovalRemark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-			qtApprovalRemark.setChangedBy(qtApprovalRemark.getCreatedBy());
-			qtApprovalRemark.setCreatedUsername(facesScopes.getUserSessionBean().getLoginId());
-			getManagedBean().getScQtApproval().getScQtApprovalRemarks().add(0, qtApprovalRemark);
-			getManagedBean().getScQtApproval().setScQtApprovalRemarks(scQtApprovalRemarks);
-		} else {
-			getManagedBean().getScQtApproval().setScQtApprovalRemarks(scQtApprovalRemarks);
 		}
+
 	}
 
 	/**
@@ -365,6 +381,8 @@ public class ApprovalBackingBean extends
 			List<TabBean> tabBeans = constructCommitteTabBean(qtcomSearchBean
 					.getResultList());
 			this.getManagedBean().setScCommitteeMemberTabList(tabBeans);
+			initializeRemark(this.getManagedBean().getQtCommittes()
+					.getResultList());
 
 		}
 		this.getManagedBean().setScQtApproval(scQtApproval);
@@ -377,7 +395,7 @@ public class ApprovalBackingBean extends
 	}
 
 	public String updateBpmTask(String outcome) {
-	
+
 		FacesScopes facesScopes = new FacesScopes();
 		String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
 
@@ -414,6 +432,7 @@ public class ApprovalBackingBean extends
 						}
 						scQtCommittee.getScCommittee().setCommitteStatus(
 								committeStatus);
+						scQtCommittee.setQtCommitteRemarks(this.getManagedBean().getQtCommitteeRemarks());
 					}
 					qt.setScQtCommittees(qtCommittes.getResultList());
 				}
