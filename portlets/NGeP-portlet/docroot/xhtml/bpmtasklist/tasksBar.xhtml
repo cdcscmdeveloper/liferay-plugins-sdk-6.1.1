@@ -18,7 +18,7 @@
 						</div>
 					</td>
 				</tr>
-				<tr />
+			
 				<ui:repeat value="#{bpmTaskDashSumBackingBean.dashboardSummary}"
 					var="task">
 					<tr>
@@ -63,64 +63,47 @@
 					</tr>
 				</ui:repeat>
 				<tr>
-						<td colspan="2"><hr class="horizontal_line" /></td>
+						<td colspan="2"><hr class="horizontal_dotted_line" /></td>
 					</tr>
 				<tr>
 						<td
 							style="text-align: left; font-size: 14px; color: green; padding-left: 40px;">
 							Supplier Delivery Listing
 						</td>
-						<td/>
+						<td style="align: right;"><p:commandLink action="#{bpmTaskDashSumBackingBean.redirectToPendingDeliveryList()}">
+								<p:graphicImage value="/css/images/design/next-icon2.jpg" />
+							</p:commandLink></td>
+						
 				</tr>
 				<tr>
 						<td
 							style="width: 80%; text-align: left; font-size: 14px; color: gray; padding-left: 60px;">
 							#{bpmTaskDashSumBackingBean.pendingDeliveryListNum} Pending Delivery List
 						</td>
-						<td style="align: right;"><p:commandLink action="#{bpmTaskDashSumBackingBean.redirectToPendingDeliveryList()}">
-								<p:graphicImage value="/css/images/design/next-icon2.jpg" />
-							</p:commandLink></td>
+						<td/>
 					</tr>
 					<tr>
-						<td colspan="2"><hr class="horizontal_line" /></td>
+						<td colspan="2"><hr class="horizontal_dotted_line" /></td>
 					</tr>
 					<tr>
 						<td
 							style="text-align: left; font-size: 14px; color: green; padding-left: 40px;">
 							Catalogue Items Approval
 						</td>
-						<td/>
+						<td style="align: right;"><p:commandLink action="#{bpmTaskDashSumBackingBean.redirectToCatalogueTaskList()}">
+								<p:graphicImage value="/css/images/design/next-icon2.jpg" />
+							</p:commandLink></td>
 				</tr>
 					<tr>
 						<td
 							style="width: 80%; text-align: left; font-size: 14px; color: gray; padding-left: 60px;">
 							#{bpmTaskDashSumBackingBean.pendingApprovalItemNum} Pending Approval Item 
 						</td>
-						<td style="align: right;"><p:commandLink action="#{bpmTaskDashSumBackingBean.redirectToCatalogueTaskList()}">
-								<p:graphicImage value="/css/images/design/next-icon2.jpg" />
-							</p:commandLink></td>
-					</tr>
-					<tr>
-						<td colspan="2"><hr class="horizontal_line" /></td>
-					</tr>
-					<tr>
-						<td
-							style="text-align: left; font-size: 14px; color: green; padding-left: 40px;">
-							Supplier Application
-						</td>
 						<td/>
-				</tr>
-					<tr>
-						<td
-							style="width: 80%; text-align: left; font-size: 14px; color: gray; padding-left: 60px;">
-							#{bpmTaskDashSumBackingBean.pendingMOFSubmissionNum} Pending MOF Submission
-						</td>
-						<td style="align: right;"><p:commandLink action="#">
-								<p:graphicImage value="/css/images/design/next-icon2.jpg" />
-							</p:commandLink></td>
+						
 					</tr>
+			
 			</table>
-			<hr class="horizontal_line" />
 			<p:spacer height="20px;" />
 		</h:panelGroup>
 
