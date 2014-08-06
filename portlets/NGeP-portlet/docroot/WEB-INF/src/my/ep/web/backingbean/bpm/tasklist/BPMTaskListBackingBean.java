@@ -83,9 +83,9 @@ public class BPMTaskListBackingBean extends
 
 		// Contract Management
 		temp.put(CTProcessNameConst.CIRCULAR_MAINTENANCE_INITIATION_PROCESS_NAME+ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR, "central-contract-circular");
-		temp.put(CTProcessNameConst.CIRCULAR_MAINTENANCE_INITIATION_PROCESS_NAME+ParameterConst.DOCTYPE_PANEL_CIRCULAR, "create-panel-circular");
+		temp.put(CTProcessNameConst.CIRCULAR_MAINTENANCE_INITIATION_PROCESS_NAME+ParameterConst.DOCTYPE_PANEL_CIRCULAR, "panel-circular");
 		temp.put(CTProcessNameConst.CIRCULAR_MAINTENANCE_PROCESS_NAME+ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR, "central-contract-circular");
-		temp.put(CTProcessNameConst.CIRCULAR_MAINTENANCE_PROCESS_NAME+ParameterConst.DOCTYPE_PANEL_CIRCULAR, "create-panel-circular");
+		temp.put(CTProcessNameConst.CIRCULAR_MAINTENANCE_PROCESS_NAME+ParameterConst.DOCTYPE_PANEL_CIRCULAR, "panel-circular");
 		temp.put(CTProcessNameConst.CIRCULAR_CANCELLATION_PROCESS_NAME, "cancel-circular");
 		temp.put(CTProcessNameConst.FACTORING_REQUEST_PROCESS_NAME+CTProcessNameConst.ACK_FACTORING_REQUEST_HT_NAME, "review-factoring-request");
 		temp.put(CTProcessNameConst.FACTORING_REQUEST_PROCESS_NAME+CTProcessNameConst.ENDORSE_FACTORING_REQUEST_HT_NAME, "review-factoring-request");
