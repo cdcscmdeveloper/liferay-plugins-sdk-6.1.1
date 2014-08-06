@@ -62,6 +62,7 @@
 						</td>
 					</tr>
 				</ui:repeat>
+				<h:panelGroup rendered="#{bpmTaskDashSumBackingBean.pendingDeliveryListNum > 0}">
 				<tr>
 						<td colspan="2"><hr class="horizontal_dotted_line" /></td>
 					</tr>
@@ -76,13 +77,15 @@
 						
 				</tr>
 				<tr>
-						<td
-							style="width: 80%; text-align: left; font-size: 14px; color: gray; padding-left: 60px;">
-							#{bpmTaskDashSumBackingBean.pendingDeliveryListNum} Pending Delivery List
-						</td>
-						<td/>
-					</tr>
-					<tr>
+					<td
+						style="width: 80%; text-align: left; font-size: 14px; color: gray; padding-left: 60px;">
+						#{bpmTaskDashSumBackingBean.pendingDeliveryListNum} Pending
+						Delivery List</td>
+					<td />
+				</tr>
+				</h:panelGroup>
+				<h:panelGroup rendered="#{bpmTaskDashSumBackingBean.pendingApprovalItemNum > 0}">
+				<tr>
 						<td colspan="2"><hr class="horizontal_dotted_line" /></td>
 					</tr>
 					<tr>
@@ -102,7 +105,7 @@
 						<td/>
 						
 					</tr>
-			
+			</h:panelGroup>
 			</table>
 			<p:spacer height="20px;" />
 		</h:panelGroup>

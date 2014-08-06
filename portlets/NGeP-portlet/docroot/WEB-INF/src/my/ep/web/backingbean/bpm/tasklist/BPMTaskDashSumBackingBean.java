@@ -100,10 +100,8 @@ public class BPMTaskDashSumBackingBean extends
 			System.out.println("responseDTO.getPendingDeliveryNum()*****" + responseDTO.getPendingDeliveryNum());
 			pendingApprovalItemNum = responseDTO.getPendingApprovalItemNum();
 			System.out.println("responseDTO.getPendingApprovalItemNum()*****" + responseDTO.getPendingApprovalItemNum());
-			pendingMOFSubmissionNum = responseDTO.getPendingMOFSubmissionNum();
-			System.out.println("responseDTO.getPendingMOFSubmissionNum()*****" + responseDTO.getPendingMOFSubmissionNum());
-			
 
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
