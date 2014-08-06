@@ -3976,13 +3976,18 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	public void validateZonalStandardDateOverlap(int index) {
 
-		List<CmZonalStandardPricing> previousList = new ArrayList<CmZonalStandardPricing>();
-		for (int i = 0; i < index; i++)
-			previousList.add(this.getManagedBean().getSelectedMaintainItem()
-					.getzStdPrices().get(i));
-
 		CmZonalStandardPricing zonalStandard = this.getManagedBean()
 				.getSelectedMaintainItem().getzStdPrices().get(index);
+		List<CmZonalStandardPricing> previousList = new ArrayList<CmZonalStandardPricing>();
+		for (int i = 0; i < index; i++){
+			if(this.getManagedBean().getSelectedMaintainItem()
+			.getzStdPrices().get(i).getCmSupplierZone() != null)
+			if(zonalStandard.getCmSupplierZone().getSuppZoneId() == this.getManagedBean().getSelectedMaintainItem()
+					.getzStdPrices().get(i).getCmSupplierZone().getSuppZoneId())
+				previousList.add(this.getManagedBean().getSelectedMaintainItem()
+					.getzStdPrices().get(i));
+		}	
+
 		if (zonalStandard.getStartDate() != null
 				&& zonalStandard.getEndDate() != null) {
 			for (CmZonalStandardPricing cmPricing : previousList) {
@@ -4007,14 +4012,20 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	public void validateZonalPromoDateOverlap(int index) {
 
-		List<CmZonalPromotionPricing> previousList = new ArrayList<CmZonalPromotionPricing>();
-		for (int i = 0; i < index; i++)
-			previousList.add(this.getManagedBean().getSelectedMaintainItem()
-					.getCmZonalPromotionPricings().get(i));
-
 		CmZonalPromotionPricing zonalPromo = this.getManagedBean()
 				.getSelectedMaintainItem().getCmZonalPromotionPricings()
 				.get(index);
+		List<CmZonalPromotionPricing> previousList = new ArrayList<CmZonalPromotionPricing>();
+		for (int i = 0; i < index; i++){
+			if(this.getManagedBean().getSelectedMaintainItem()
+					.getCmZonalPromotionPricings().get(i).getCmSupplierZone() != null)
+					if(zonalPromo.getCmSupplierZone().getSuppZoneId() == this.getManagedBean().getSelectedMaintainItem()
+							.getCmZonalPromotionPricings().get(i).getCmSupplierZone().getSuppZoneId()){
+						previousList.add(this.getManagedBean().getSelectedMaintainItem()
+								.getCmZonalPromotionPricings().get(i));
+					}
+		}
+
 		if (zonalPromo.getStartDate() != null
 				&& zonalPromo.getEndDate() != null) {
 			for (CmZonalPromotionPricing cmPricing : previousList) {
@@ -4497,7 +4508,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 						tempIndex = index;
 
 						while (this.getManagedBean().getSelectedMaintainItem()
-								.getCmTierPricings().get(tempIndex) != null) {
+								.getCmTierPricings().get(tempIndex) != null && this.getManagedBean().getSelectedMaintainItem()
+										.getCmTierPricings().get(tempIndex).getStartDate() != null) {
 							if (this.getManagedBean()
 									.getSelectedMaintainItem()
 									.getCmTierPricings()
@@ -4567,7 +4579,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					.getCmTierPricings().get(index).getStartDate();
 
 			for (CmTierPricing cmPricing : tierList) {
-				if (cmPricing.getStartDate().compareTo(stDate) == 0) {
+				if (cmPricing.getStartDate() != null && cmPricing.getStartDate().compareTo(stDate) == 0) {
 					checkList.add(cmPricing);
 				}
 			}
@@ -4613,7 +4625,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 						tempIndex = index;
 
 						while (this.getManagedBean().getSelectedMaintainItem()
-								.getCmTierPricings().get(tempIndex) != null) {
+								.getCmTierPricings().get(tempIndex) != null && this.getManagedBean().getSelectedMaintainItem()
+										.getCmTierPricings().get(tempIndex).getStartDate() != null) {
 							if (this.getManagedBean()
 									.getSelectedMaintainItem()
 									.getCmTierPricings()
@@ -4719,7 +4732,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 						tempIndex = index;
 
 						while (this.getManagedBean().getSelectedMaintainItem()
-								.getCmZonalTierPricings().get(tempIndex) != null) {
+								.getCmZonalTierPricings().get(tempIndex) != null && this.getManagedBean().getSelectedMaintainItem()
+										.getCmZonalTierPricings().get(tempIndex).getStartDate() != null) {
 							if (this.getManagedBean()
 									.getSelectedMaintainItem()
 									.getCmZonalTierPricings()
@@ -4788,7 +4802,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					.getCmZonalTierPricings().get(index).getStartDate();
 
 			for (CmZonalTierPricing cmPricing : tierList) {
-				if (cmPricing.getStartDate().compareTo(stDate) == 0) {
+				if (cmPricing.getStartDate() != null && cmPricing.getStartDate().compareTo(stDate) == 0) {
 					checkList.add(cmPricing);
 				}
 			}
@@ -4837,7 +4851,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 						tempIndex = index;
 
 						while (this.getManagedBean().getSelectedMaintainItem()
-								.getCmZonalTierPricings().get(tempIndex) != null) {
+								.getCmZonalTierPricings().get(tempIndex) != null && this.getManagedBean().getSelectedMaintainItem()
+										.getCmZonalTierPricings().get(tempIndex).getStartDate() != null) {
 							if (this.getManagedBean()
 									.getSelectedMaintainItem()
 									.getCmZonalTierPricings()
@@ -4983,7 +4998,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				}
 
 				for (T sorted : sortedList) {
-//					System.out.println("sorted:" + sorted.getFromQty());
+					if(sorted!= null && sorted.getFromQty() != null)
+						System.out.println("sorted:" + sorted.getFromQty());
 				}
 
 				tierMap.put(dataList.get(0).getStartDate(), sortedList);
