@@ -3862,6 +3862,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					.getCmTierPricings().get(markIndex).getToQty() != null){
 				tier.setFromQty(this.getManagedBean().getSelectedMaintainItem()
 						.getCmTierPricings().get(markIndex).getToQty() + 1);
+				
+				tier.setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
 				this.getManagedBean().getSelectedMaintainItem().getCmTierPricings()
 						.add(markIndex + 1, tier);
 			} else {
@@ -3870,6 +3872,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		} else {
 			tier.setFromQty(this.getManagedBean().getSelectedMaintainItem()
 					.getCmTierPricings().get(index).getToQty() + 1);
+			tier.setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
 			this.getManagedBean().getSelectedMaintainItem().getCmTierPricings()
 					.add(index + 1, tier);
 		}
@@ -4471,9 +4474,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 								.get(tempIndex++));
 						price.setPromo_group_id(promo_group_id + 1);
 						price.setStand_group_id(pricing.getStand_group_id());
+						price.setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
 
-						this.getManagedBean().getSelectedMaintainItem()
-								.getCmPromotionTierPricings().add(price);
+						this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings().add(price);
 
 					}
 					if (index < this.getManagedBean().getSelectedMaintainItem()
@@ -4588,9 +4591,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 								.get(tempIndex++));
 						price.setPromo_group_id(promo_group_id);
 						price.setStand_group_id(pricing.getStand_group_id());
+						price.setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
 
-						this.getManagedBean().getSelectedMaintainItem()
-								.getCmPromotionTierPricings().add(price);
+						this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings().add(price);
 					}
 					if (index < this.getManagedBean().getSelectedMaintainItem()
 							.getCmTierPricings().size() - 1) {
@@ -4693,9 +4696,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 								.getCmZonalTierPricings().get(tempIndex++));
 						price.setPromo_group_id(promo_group_id + 1);
 						price.setStand_group_id(pricing.getStand_group_id());
+						price.setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
 
-						this.getManagedBean().getSelectedMaintainItem()
-								.getCmZonalPromotionTierPricings().add(price);
+						this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings().add(price);
 
 					}
 					if (index < this.getManagedBean().getSelectedMaintainItem()
@@ -4812,9 +4815,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 								.getCmZonalTierPricings().get(tempIndex++));
 						price.setPromo_group_id(promo_group_id);
 						price.setStand_group_id(pricing.getStand_group_id());
+						price.setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
 
-						this.getManagedBean().getSelectedMaintainItem()
-								.getCmZonalPromotionTierPricings().add(price);
+						this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings().add(price);
 					}
 					if (index < this.getManagedBean().getSelectedMaintainItem()
 							.getCmZonalTierPricings().size() - 1) {
