@@ -4,7 +4,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -20,7 +19,6 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
@@ -34,8 +32,6 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constants.SCProcessNameConst;
-import my.ep.dto.pm.authorization.user.UserReqDTO;
-import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
@@ -46,15 +42,14 @@ import my.ep.jaxb.sc.committeedata.SCCommitteeDataType;
 import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.sc.quationtender.ScAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalAttachment;
-import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
-import my.ep.persistence.entity.sc.quationtender.ScQtRemark;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.sc.ApprovalCategory;
 import my.ep.type.sc.CommitteType;
@@ -224,28 +219,22 @@ public class ApprovalBackingBean extends
 		this.activeTabName = activeTabName;
 	}
 
-	public void handleFileUpload(FileUploadEvent event)
-			throws FileNotFoundException, IOException {
-
-		FacesScopes facesScopes = new FacesScopes();
-		List<ScQtApprovalAttachment> attachments = new ArrayList<ScQtApprovalAttachment>();
+	public void handleFileUpload(FileUploadEvent event) throws FileNotFoundException, IOException {
 		if (event.getFile() != null) {
+			ScAttachment scAttachment = null;
 			ScQtApproval scQtApproval = this.getManagedBean().getScQtApproval();
-			ScQtApprovalAttachment attachment = getManagedBean()
-					.getScQtApproval().getScQtApprovalAttachment();
+			ScQtApprovalAttachment attachment = scQtApproval.getScQtApprovalAttachment();
 			if (null == attachment) {
 				attachment = new ScQtApprovalAttachment();
 				attachment.setScQtApproval(scQtApproval);
-				attachment.setDocNo(scQtApproval.getScQt().getQtNo());
-				attachment.setPrefixFileName(scQtApproval.getApprovalCategory()
-						.getParameterCode());
+				scQtApproval.setScQtApprovalAttachment(attachment);
+			} else {
+				attachment.setScQtApproval(scQtApproval);
+				scQtApproval.setScQtApprovalAttachment(attachment);
 			}
-			attachment.setUser(facesScopes.getUserSessionBean());
-			attachment
-					.setChangedDate(new Timestamp(System.currentTimeMillis()));
-			uploadAttachment(event.getFile(), attachment);
-			attachments.add(attachment);
-			getManagedBean().setAttachments(attachments);
+			attachment.setDocNo(scQtApproval.getScQt().getQtNo());
+			scAttachment = attachment; 
+			uploadAttachment(event.getFile(), scAttachment);
 		}
 	}
 
@@ -383,7 +372,6 @@ public class ApprovalBackingBean extends
 			this.getManagedBean().setScCommitteeMemberTabList(tabBeans);
 			initializeRemark(this.getManagedBean().getQtCommittes()
 					.getResultList());
-
 		}
 		this.getManagedBean().setScQtApproval(scQtApproval);
 
