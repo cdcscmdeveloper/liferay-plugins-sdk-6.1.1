@@ -65,8 +65,16 @@
 				
 				<p:column headerText="#{lbl['lbl.sc.request.note.summary']}" style="width:6%;">
 				    <p:commandLink partialSubmit="true"  process="@this" >
-				       <p:graphicImage value="/resources/ep/images/design/document.png"  height="15px" width="15px"/>
+				      	<p:graphicImage library="ep/images/design" name="evaluate.png"
+							style="vertical-align:middle" />
 				  </p:commandLink> 
+				    <p:spacer width="2px;"/>
+				  <p:commandLink partialSubmit="true" process="@this"
+						actionListener="#{requestNoteBackingBean.showPurchaseInquiry(requestNoteDtl)}"
+						rendered="#{!empty requestNoteDtl.scRequestSupplierItem.scPrInquiy}">
+							<p:graphicImage library="ep/images/design" name="evaluate.png"
+							style="vertical-align:middle" />
+					</p:commandLink>
 				</p:column>
 
 				<p:column style="width:14%;">

@@ -105,10 +105,11 @@
 											listener="#{purchaseInquiryBackingBean.priceTypeChangeListener()}"
 											update="respDtl" process="@this" />
 									</p:selectOneMenu></td>
-								<td><p:commandLink>
-										<p:graphicImage
-											value="/resources/ep/images/design/document.png"
-											height="15px" />
+								<td>
+								<p:spacer width="2px"></p:spacer>
+								<p:commandLink>
+								     <p:graphicImage library="ep/images/design" name="evaluate.png"
+							                style="vertical-align:middle" />
 									</p:commandLink></td>
 								<td><p:message id="priceTypeMsg" for="priceType"
 										display="icon" /></td>
@@ -167,7 +168,7 @@
 						        id="procType" required="true" label="#{lbl['lbl.sc.procurement.type']}"
 								value="#{purchaseInquiryBackingBean.managedBean.requestNoteDtl.procurementType.parameterCode}">
 								<f:selectItems 
-									value="#{purchaseInquiryBackingBean.getRadioButtonCodeValues(ParameterTypeConst.procurementType)}" />
+									value="#{purchaseInquiryBackingBean.managedBean.procurementTypes}" />
 									<p:ajax event="change" update="justiId" 
 									listener="#{purchaseInquiryBackingBean.procurementTypeEvent}" process="@this" />
 							</p:selectOneRadio></td>
@@ -214,7 +215,7 @@
 			<tr>
 				<td style="width: 250px;">
 					<p:outputLabel value="#{lbl['lbl.sc.price.inquiry.stock.avail']}" />
-					<p:outputLabel value="*" styleClass="mandatory" />
+					<p:outputLabel value="*" styleClass="mandatory"  rendered="#{!purchaseInquiryBackingBean.managedBean.supplierFlag}"/>
 				</td>
 				<td>
 				<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%" columns="1">
@@ -225,6 +226,7 @@
 						     required="#{!unspscCodeBackingBean.isRequisitioner()}">
 							<f:selectItem itemLabel="#{lbl['lbl.sc.price.inquiry.yes']}" itemValue="1" />
 							<f:selectItem itemLabel="#{lbl['lbl.sc.price.inquiry.no']}" itemValue="0" />
+							 <p:ajax event="change" update="respDtl" process="@this" listener="#{purchaseInquiryBackingBean.stockAvailabilityEvent}"  partialSubmit="true"/>
 						</p:selectOneRadio>
 						<p:message id="stockAvailableMsg" for="stockAvailable" display="icon"/>
 					</h:column>
@@ -237,15 +239,15 @@
 			value="#{purchaseInquiryBackingBean.managedBean.scPrInquiry.requestSupplierItem.supplierItemPrices}"
 			rowKey="#{supplierItemPrice.pricing.pricingId}" rowIndexVar="index">
 			<p:column headerText="#{lbl['lbl.sc.price.inquiry.zone']}" style="width:25%">
-					<h:outputText value="#{supplierItemPrice.pricing.cmSupplierZone.suppZoneName}"/>
+					<h:outputText value="#{supplierItemPrice.tplSpecZone.zoneName}"/>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.price.inquiry.from.qty']}" style="width:10%">
-				<h:outputText value="#{supplierItemPrice.pricing.fromQty}" style="float:right"/>
+				<h:outputText value="#{supplierItemPrice.fromQty}" style="float:right"/>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.price.inquiry.to.qty']}" style="width:10%">
-				<h:outputText value="#{supplierItemPrice.pricing.toQty}" style="float:right"/>
+				<h:outputText value="#{supplierItemPrice.toQty}" style="float:right"/>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.price.inquiry.price.published']}" style="width:15%">
@@ -257,12 +259,12 @@
 
 			<p:column style="width:15%">
 			<f:facet name="header">
-				<h:outputText value="* " styleClass="mandatory" />
+				<h:outputText value="* " styleClass="mandatory"  rendered="#{purchaseInquiryBackingBean.managedBean.stockAvailabilityFlag and !purchaseInquiryBackingBean.managedBean.supplierFlag}"/>
 				<h:outputText value="#{lbl['lbl.sc.price.inquiry.price.offered']}" />
 			</f:facet>
 			
 				<p:inputText value="#{supplierItemPrice.itemPrice}" style="text-align:right;" label="#{lbl['lbl.sc.price.inquiry.price.offered']}" maxlength="23" size="30"  id="itemPrice"
-				  disabled="#{purchaseInquiryBackingBean.managedBean.supplierFlag}" required="#{!unspscCodeBackingBean.isRequisitioner()}">
+				  disabled="#{!purchaseInquiryBackingBean.managedBean.stockAvailabilityFlag or purchaseInquiryBackingBean.managedBean.supplierFlag}" required="#{purchaseInquiryBackingBean.managedBean.stockAvailabilityFlag}">
 				    <f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}"/>
 				  </p:inputText>

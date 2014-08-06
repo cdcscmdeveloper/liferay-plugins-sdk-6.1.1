@@ -44,7 +44,7 @@
 				        label="#{lbl['lbl.sc.sq.gen.info.proc.type']}"
 						value="#{simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode}">
 						<f:selectItems
-							value="#{simpleQuoteBackingBean.getRadioButtonCodeValues(ParameterTypeConst.procurementType)}" />
+							value="#{simpleQuoteBackingBean.managedBean.procurementTypes}" />
 							<p:ajax event="change" update="@([id$=justId])" 
 							listener="#{simpleQuoteBackingBean.procurementTypeEvent}" process="@this" />
 					</p:selectOneRadio>

@@ -22,33 +22,39 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 					action="#{purchaseInquiryBackingBean.submitPrInquiryDtl}" style="float:right;"
 					icon="ui-icon-submit"  update="mainPanel"/>
 	    </c:if>
-	     <table>
+
+	   <c:if test="#{purchaseInquiryBackingBean.managedBean.taskId ne null}">
+	     <table style="width:100%">
 			<tr>
 				<td align="right">
-				 
-						<c:forEach items="#{purchaseInquiryBackingBean.managedBean.outComes}"
-						var="action">
+					        <p:commandButton immediate="true"
+									value="#{lbl['lbl.sc.action.back.to.search.catalogue']}"
+									icon="ui-icon-back" style="float:left;"
+									action="#{purchaseInquiryBackingBean.backToPervious}"  rendered="#{purchaseInquiryBackingBean.managedBean.pageNavToRequestNote ne null}"/> 	
+										 	
+							<!-- to view purchase inquiry from the request note Item list Icon    -->
+                              <c:if test="#{purchaseInquiryBackingBean.managedBean.pageNavToRequestNote eq null || purchaseInquiryBackingBean.managedBean.pageNavToRequestNote eq ''}">		
+					             <c:forEach items="#{purchaseInquiryBackingBean.managedBean.outComes}" var="action">
 
-								<c:if test="${action == 'SUBMIT'}">
-									<ui:param name="iconVar" value="ui-icon-submit" />
-								</c:if>
-								<c:if test="${action == 'CANCEL'}">
-									<ui:param name="iconVar" value="ui-icon-submit" />
-									<c:if test="#{purchaseInquiryBackingBean.managedBean.taskId ne null and unspscCodeBackingBean.requisitioner}">
-									
-										<p:commandButton value="#{lbl['lbl.sc.common.proceed.btn']}"
-											icon="ui-icon-submit" style="float:left;"
-											action="#{purchaseInquiryBackingBean.requisitionerAction('Processed')}" />
-											
-										<p:commandButton value="#{lbl['lbl.sc.common.cancel']}"
-											icon="ui-icon-cancel" style="float:right;"
-											action="#{purchaseInquiryBackingBean.requisitionerAction(action)}" />
-
+									<c:if test="${action == 'SUBMIT'}">
+										<ui:param name="iconVar" value="ui-icon-submit" />
 									</c:if>
-								</c:if>
+									<c:if test="${action == 'CANCEL'}">
+										<ui:param name="iconVar" value="ui-icon-submit" />
+										
+										<c:if test="#{unspscCodeBackingBean.requisitioner}">
+											<p:commandButton value="#{lbl['lbl.sc.common.proceed.btn']}"
+												icon="ui-icon-submit"
+												action="#{purchaseInquiryBackingBean.requisitionerAction('Processed')}" />
 
-								<c:if
-									test="#{purchaseInquiryBackingBean.managedBean.processName eq 'Purchase Inquiry Creation'}">
+											<p:commandButton value="#{lbl['lbl.sc.common.cancel']}"
+												icon="ui-icon-cancel" style="float:right;"
+												action="#{purchaseInquiryBackingBean.requisitionerAction(action)}" />
+
+										</c:if>
+									</c:if>
+
+									<c:if test="#{purchaseInquiryBackingBean.managedBean.processName eq 'Purchase Inquiry Creation'}">
 									<p:commandButton value="#{action}" process="@all" partialSubmit="true"
 										rendered="#{!unspscCodeBackingBean.requisitioner}"
 										styleClass="ui-button" icon="#{iconVar}" update="mainPanel"
@@ -56,9 +62,11 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 								</c:if>
 							
 							</c:forEach>
+							</c:if>
 					</td>
 			</tr>
 		</table>
+		</c:if>
 	</div>
 	   <table style="border: 0px;align:center;width:100%;">
 			<tr>

@@ -55,6 +55,7 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	private Integer stockAvailable;
 	private boolean stockAvailabilityFlag;
 	private String pageNavToRequestNote;
+	private SelectItem[] procurementTypes; // for procuremment type dropdown
 	
 	private boolean titleChecker = Boolean.TRUE;
 	
@@ -396,6 +397,20 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	 */
 	public void setPageNavToRequestNote(String pageNavToRequestNote) {
 		this.pageNavToRequestNote = pageNavToRequestNote;
+	}
+
+	/**
+	 * @return the procurementTypes
+	 */
+	public SelectItem[] getProcurementTypes() {
+		return procurementTypes;
+	}
+
+	/**
+	 * @param procurementTypes the procurementTypes to set
+	 */
+	public void setProcurementTypes(SelectItem[] procurementTypes) {
+		this.procurementTypes = procurementTypes;
 	}
 	
 }

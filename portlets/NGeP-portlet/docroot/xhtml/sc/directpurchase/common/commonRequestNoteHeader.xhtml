@@ -26,7 +26,7 @@
 				</td>
 				<td style="width: 10%" class="header-info-text">
 				  #{requestNoteBackingBean.managedBean.sourceMethod}  
-					<p:commandLink  partialSubmit="true" process="@this"  rendered="#{requestNoteBackingBean.managedBean.sourceMethod ne 'Search Catalogue'}">
+					<p:commandLink  partialSubmit="true" process="@this" action="#{requestNoteBackingBean.showSimpleQuote}"  rendered="#{requestNoteBackingBean.managedBean.sourceMethod ne 'Search Catalogue'}">
 						<p:graphicImage library="ep/images/design" name="evaluate.png"
 							style="vertical-align:middle" />
 					</p:commandLink>

@@ -18,6 +18,7 @@ import javax.portlet.PortletRequest;
 import javax.portlet.PortletSession;
 import javax.servlet.http.HttpServletRequest;
 
+import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.cm.catalogue.IViewSupplierItemSO;
 import my.ep.biz.service.ct.supplier.IPanelSupplierSO;
@@ -56,8 +57,6 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sc.directpurchase.QuoteReqDTO;
 import my.ep.dto.sc.directpurchase.QuoteResDTO;
-import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
-import my.ep.dto.sc.directpurchase.RequestNoteResDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
@@ -89,8 +88,6 @@ import my.ep.persistence.entity.sc.directpurchase.ScQuoteSupplier;
 import my.ep.persistence.entity.sc.directpurchase.ScQuoteZone;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
-import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
-import my.ep.persistence.entity.sc.directpurchase.ScRequestSupplierItem;
 import my.ep.persistence.entity.sc.directpurchase.ScSQRemark;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
@@ -109,7 +106,6 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
-import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.sc.directpurchase.SimpleQuoteManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -179,7 +175,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			// panel item 
 			if(panelItemFlag){
 				// check non contract item list 
-				if(getManagedBean().getSupplierItems() ==null || getManagedBean().getSupplierItems().isEmpty()){
+				if(getManagedBean().getSupplierItems() == null || getManagedBean().getSupplierItems().isEmpty()){
 					scQuote.setPanel(Boolean.TRUE);
 					scQuote.setZonal(Boolean.FALSE);
 
@@ -190,6 +186,12 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 					if(panelItems == null){
 						panelItems = new ArrayList<CtPanelItem>();
 					}
+					
+					 // for checking govt.seller 
+					 if(resDTO.getCtPanelItem() !=null && resDTO.getCtPanelItem().getCtPanelSuppliers() != null && 
+							 resDTO.getCtPanelItem().getCtPanelSuppliers().size()>0){
+						 scQuote = checkGovtSeller(resDTO.getCtPanelItem().getCtPanelSuppliers().get(0).getSupplier().getPmOrgProfile(), scQuote);
+					 }
 
 					if(resDTO.getCtPanelItem() != null) {
 					   if(panelItems.isEmpty()){
@@ -228,7 +230,12 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 
 				   if(catalogueResDTO.getSupplierItemList() != null && !catalogueResDTO.getSupplierItemList().isEmpty()){
 					 CmSupplierItem selectedSupplierItem = catalogueResDTO.getSupplierItemList().get(0);
-
+					 
+					 // for checking govt.seller 
+					 if(selectedSupplierItem.getSmSupplier().getPmOrgProfile() != null){
+						 scQuote = checkGovtSeller(selectedSupplierItem.getSmSupplier().getPmOrgProfile(), scQuote);
+					 }
+					 
 					 // copy all selected suppliers from the catalogue search
 					 if(compareSupplierItems == null){
 						 IViewSupplierItemSO viewSupplierItemSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT, IViewSupplierItemSO.class);
@@ -251,7 +258,6 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 					 } else {
 						 supplierListListener(addSelectedSuppliers(compareSupplierItems) , scQuote);
 					 }
-
 
 					 List<CmSupplierItem> supplierItems = getManagedBean().getSupplierItems();
 					 if(supplierItems == null){
@@ -285,19 +291,12 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			     }
 			}
 		}
-		
 		scQuote.setMultipleQuote(Boolean.FALSE);
 		scQuote.setQuoteNo(quoteSO.generateQuoteNo());
 		scQuote.setWorkflowStatuses(null);
 		getCurrentStatus(DPStatusConstants.SQ_PENDING_SUBMISSION);
 		// Initializing Remarks
 		scQuote.setRemarks(initializeRemarks(scQuote));
-		
-		// procurement type by default as normal
-		PmParameter parameter = new PmParameter();
-		scQuote.setJustificationType(parameter);
-		parameter.setParameterCode(ParameterConst.PROC_TYPE_NORMAL);
-		scQuote.setProcurementType(parameter);
 		this.getManagedBean().setScQuote(scQuote);
 
 		getManagedBean().setLocLevelDropdown(getLocationLevelDropdown());
@@ -436,6 +435,24 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 		}
 	}
 	
+
+	private ScQuote  checkGovtSeller(PmOrgProfile pmOrgProfile ,ScQuote scQuote) {
+		PmParameter pmParameter = new PmParameter();
+		// TODO check supplier is government seller or not 
+		if(pmOrgProfile != null &&
+				pmOrgProfile.getSmSupplier().getPmOrgProfile().isGovtSeller()){
+			pmParameter.setParameterCode(ParameterConst.PROC_TYPE_G2G);
+			scQuote.setProcurementType(pmParameter);
+			getManagedBean().setProcurementTypes(getRadioButtonCodeValues(ParameterTypeConst.PROCUREMENT_TYPE , Boolean.TRUE));
+
+		} else {
+			pmParameter.setParameterCode(ParameterConst.PROC_TYPE_NORMAL);
+			scQuote.setProcurementType(pmParameter);
+			getManagedBean().setProcurementTypes(getRadioButtonCodeValues(ParameterTypeConst.PROCUREMENT_TYPE , Boolean.FALSE));
+		} 
+		return scQuote;
+	}
+
 	/**
 	 * saveSimpleQuote method to save SQ
 	 */
@@ -888,7 +905,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 	/**
 	 * initializing remarks in simpleQuote
 	 */
-	private List<ScSQRemark> initializeRemarks(ScQuote scQuote) {
+	public List<ScSQRemark> initializeRemarks(ScQuote scQuote) {
 		IStatusSO iStatusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 		List<ScSQRemark> results = scQuote.getRemarks();
 		if(results == null){
@@ -1476,11 +1493,16 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 	/**
 	 * Page navigation to catalogue search page in simpleQuote
 	 */
-	public String backToPervious() {
+	public void backToPervious() {
 		debugLogger("backToPervious");
-		// super.renewSesionObject();
-		
-		return "catalogueSearch";
+		 FacesContext fc = FacesContext.getCurrentInstance();
+		 if(getManagedBean().getPageNavToRequestNote() != null){
+			 fc.getApplication().getNavigationHandler().handleNavigation(fc, null, getManagedBean().getPageNavToRequestNote());  
+		 } else {
+			 // clear data
+			 super.renewSesionObject();
+			 fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "catalogueSearch");  
+		 }
 	}
 
 	 public void  getCurrentStatus(Long statusId) {
@@ -1907,8 +1929,6 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		TemplateSpecBean productTplSpecBean = getManagedBean().getProductTemplateSpecBean();
 		TemplateSpecBean serviceTplSpecBean = getManagedBean().getServiceTemplateSpecBean();
-		IParameterSO parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-		ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
 		IQuoteSO quoteSO = (IQuoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQuoteSO.class);
 		QuoteReqDTO quoteReqDTO = new QuoteReqDTO();
 		String taskId = originalServletRequest.getParameter("taskId");
@@ -1926,7 +1946,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			this.getManagedBean().setProcessName(res.getProcessName());
 			Object obj = res.getPojo();
 			SCDirectPurchaseDataType directPurchaseDataType = (SCDirectPurchaseDataType) obj;
-			if((getStatusDescById(res.getDocStatus().longValue()).equalsIgnoreCase("Pending Submission"))){
+			//if((getStatusDescById(res.getDocStatus().longValue()).equalsIgnoreCase("Pending Submission"))){
 				Long quoteId = Long.valueOf(directPurchaseDataType.getDpId());
 				quoteReqDTO.setQuoteId(quoteId);
 				quoteReqDTO.setFetchSubEntity(true);
@@ -2027,7 +2047,8 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 				FacesContext fc = FacesContext.getCurrentInstance();
 				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "simpleQuote");
 
-			} else if((getStatusDescById(res.getDocStatus().longValue()).equalsIgnoreCase("Pending RN Creation"))){
+				
+		/*	 if((getStatusDescById(res.getDocStatus().longValue()).equalsIgnoreCase("Pending RN Creation"))){
 				// page navigation from simple quote  to Request note 
 				quoteReqDTO = new QuoteReqDTO();
 				Long quoteId = Long.valueOf(directPurchaseDataType.getDpId());
@@ -2139,7 +2160,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 				// page navigation to request note
 				FacesContext fc = FacesContext.getCurrentInstance();
 				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "commonRequestNote");
-			}
+			}*/
 		}
 	}
 	
@@ -2288,7 +2309,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 				 // clear SQ data
 				 super.renewSesionObject();
 				FacesContext fc = FacesContext.getCurrentInstance();
-				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);	
+				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "supplerView");	
 			} else {
 				throw new EpException("Failed.");
 			}
@@ -2375,5 +2396,46 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 		super.renewSesionObject();
 		return "catalogueSearch";
 	}
+	
+	/**
+	 * Get parameter code select items by parameter type for radio buttons.
+	 * 
+	 * @param parameterType
+	 * 			the parameter type
+	 * @return array of SelectItem
+	 */
+	public SelectItem[] getRadioButtonCodeValues(String parameterType , boolean g2gSeller) {
+		return getRadioButtonCodeValuesBySearchBean(parameterType, null , g2gSeller);
+	}
+	
+	public SelectItem[] getRadioButtonCodeValuesBySearchBean(String parameterType, ISearchBean<PmParameterDesc> searchBean , boolean g2gSeller) {
+		SelectItem[] items = null;
+		List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance()
+				.getParameterDescListBySearchBean(parameterType, searchBean);
+
+		items = new SelectItem[parameterDescs.size()];
+		int i = 0;
+		for(PmParameterDesc parameterDesc : parameterDescs) {
+			if(g2gSeller){
+				if(parameterDesc.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)){
+					items[i] = new SelectItem(parameterDesc.getPmParameter().getParameterCode(), parameterDesc.getCodeName() , null , !g2gSeller );
+				} else {
+					items[i] = new SelectItem(parameterDesc.getPmParameter().getParameterCode(), parameterDesc.getCodeName() , null , g2gSeller);
+				}
+			} else{
+
+				if(parameterDesc.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)){
+					items[i] = new SelectItem(parameterDesc.getPmParameter().getParameterCode(), parameterDesc.getCodeName() , null , !g2gSeller);
+				} else{
+					items[i] = new SelectItem(parameterDesc.getPmParameter().getParameterCode(), parameterDesc.getCodeName() , null , g2gSeller);
+				}
+			}
+			
+			i++;
+		}
+		return items;
+	}
+	
+	
 }
 

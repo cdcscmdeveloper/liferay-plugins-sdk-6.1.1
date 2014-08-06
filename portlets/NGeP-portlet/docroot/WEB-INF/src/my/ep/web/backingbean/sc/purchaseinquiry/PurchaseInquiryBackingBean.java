@@ -9,6 +9,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
@@ -17,6 +19,7 @@ import javax.portlet.PortletRequest;
 import javax.portlet.PortletSession;
 import javax.servlet.http.HttpServletRequest;
 
+import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.cm.catalogue.IViewSupplierItemSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
@@ -52,6 +55,7 @@ import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.directpurchase.ScPRIRemark;
 import my.ep.persistence.entity.sc.directpurchase.ScPrInquiry;
@@ -72,6 +76,7 @@ import my.ep.web.managedbean.sc.purchaseinquiry.PurchaseInquiryManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.ParameterHelper;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -108,6 +113,7 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 	  * pricingDetails for getting pricing details in Purchase Inquiry
 	 * @return String
 	  */
+    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	  public String prInquiryAction(CmSupplierItem  cmSupplierItem){
 		  debugLogger("prInquiryAction");
 		  ScRequestSupplierItem requestSupplierItem = getManagedBean().getScRequestSupplierItem();
@@ -159,14 +165,19 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 		  ScRequestNoteDtl requestNoteDtl =  getManagedBean().getRequestNoteDtl();
 		  PmParameter pmParameter = new PmParameter();
 		  requestNoteDtl.setJustificationType(pmParameter);
-		  if(cmSupplierItem.getSmSupplier().getPmOrgProfile().isGovtSeller()){
+		  
+		  // TODO check supplier is government seller or not 
+		  if(cmSupplierItem.getSmSupplier().getPmOrgProfile() != null &&
+				  cmSupplierItem.getSmSupplier().getPmOrgProfile().isGovtSeller()){
 			  pmParameter.setParameterCode(ParameterConst.PROC_TYPE_G2G);
 			  requestNoteDtl.setProcurementType(pmParameter);
+			  getManagedBean().setProcurementTypes(getRadioButtonCodeValues(ParameterTypeConst.PROCUREMENT_TYPE , Boolean.TRUE));
+
 		  } else {
 			  pmParameter.setParameterCode(ParameterConst.PROC_TYPE_NORMAL);
 			  requestNoteDtl.setProcurementType(pmParameter);
-			  requestNoteDtl.setProcurementType(pmParameter);
-		  }
+			  getManagedBean().setProcurementTypes(getRadioButtonCodeValues(ParameterTypeConst.PROCUREMENT_TYPE , Boolean.FALSE));
+		  } 
 		  
 		  List<CmPricing>  cmPricings = new ArrayList<CmPricing>();
 		  if (cmSupplierItem.getCmPricings() != null
@@ -212,7 +223,7 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 		  
 		  requestItem.setSupplierItems(supplierItems);
 		  scPrInquiry.setRequestItem(requestItem);
-		  //scPrInquiry.setScRequestSupplierItems(supplierItems);
+		  scPrInquiry.setScRequestSupplierItems(supplierItems);
 		  scPrInquiry.setRequestSupplierItem(requestSupplierItem);
 		  getManagedBean().setScPrInquiry(scPrInquiry);
 		  
@@ -330,6 +341,8 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 		if(getManagedBean().getScPrInquiry().getScRequestSupplierItems() != null){
 			ScRequestSupplierItem requestSupplierItem = getManagedBean().getScPrInquiry().getScRequestSupplierItems().get(0);
 			requestSupplierItem.setSupplierItemPrices(createScSupplierItemPrices(requestSupplierItem, pricings , Boolean.FALSE));
+			getManagedBean().getScPrInquiry().setRequestSupplierItem(requestSupplierItem);
+			
 		}
 	}
 		
@@ -651,6 +664,9 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 				requestNoteBackingBean.getManagedBean().setSourceMethod(ParameterConst.METHOD_SC);
 				requestNoteBackingBean.getManagedBean().setTaskId(getManagedBean().getTaskId());
 				
+				// created by 
+				requestNoteBackingBean.getManagedBean().setCreatedBy(requestNoteBackingBean.getCreatedBy(facesScopes.getUserSessionBean().getUserId()).getUserName());
+				
 				requestNoteBackingBean.initialInformation(requestNote);
 				requestNoteBackingBean.getCurrentStatus(DPStatusConstants.RN_PENDING_SUBMISSION);
 				requestNoteBackingBean.getManagedBean().setFulfillmentType(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
@@ -772,17 +788,22 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 		 }
 	 }	
  }
-
-	/**
-	 * Page navigation to catalogue search page in Purchase inquiry
-	 */
-	public String backToPervious() {
-		log.info("backToPervious");
-		// clear data
-		super.renewSesionObject();
-		return "catalogueSearch";
-	}
-
+	
+	 /**
+	  * Page navigation to catalogue search page in Purchase inquiry
+	  */
+	 public void backToPervious() {
+		 log.info("backToPervious");
+		 FacesContext fc = FacesContext.getCurrentInstance();
+		 if(getManagedBean().getPageNavToRequestNote() != null){
+			 fc.getApplication().getNavigationHandler().handleNavigation(fc, null, getManagedBean().getPageNavToRequestNote());  
+		 } else {
+			 // clear data
+			 super.renewSesionObject();
+			 fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "catalogueSearch");  
+		 }
+	 }		
+	
 	private void debugLogger(Object message) {
 		if (log.isDebugEnabled()) {
 			log.debug(message);
@@ -840,4 +861,60 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 		result.setPriceType(resDTO.getPmParameter());
 		return result;
 	}
+	
+	 /**
+		 *  stockAvailabilityEvent to show item list in Purchase inquiry
+	    */
+		public void stockAvailabilityEvent() {
+			debugLogger("stockAvailabilityEvent");
+			
+			if(getManagedBean().getStockAvailable() != null){
+				
+				if(getManagedBean().getStockAvailable().equals(ParameterConst.PI_STOCK_AVAILABILITY)){
+					getManagedBean().setStockAvailabilityFlag(Boolean.TRUE);
+				} else{
+					getManagedBean().setStockAvailabilityFlag(Boolean.FALSE);
+				}
+				
+			}
+		}
+	
+		/**
+		 * Get parameter code select items by parameter type for radio buttons.
+		 * 
+		 * @param parameterType
+		 * 			the parameter type
+		 * @return array of SelectItem
+		 */
+		public SelectItem[] getRadioButtonCodeValues(String parameterType , boolean g2gSeller) {
+			return getRadioButtonCodeValuesBySearchBean(parameterType, null , g2gSeller);
+		}
+		
+		public SelectItem[] getRadioButtonCodeValuesBySearchBean(String parameterType, ISearchBean<PmParameterDesc> searchBean , boolean g2gSeller) {
+			SelectItem[] items = null;
+			List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance()
+					.getParameterDescListBySearchBean(parameterType, searchBean);
+
+			items = new SelectItem[parameterDescs.size()];
+			int i = 0;
+			for(PmParameterDesc parameterDesc : parameterDescs) {
+				if(g2gSeller){
+					if(parameterDesc.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)){
+						items[i] = new SelectItem(parameterDesc.getPmParameter().getParameterCode(), parameterDesc.getCodeName() , null , !g2gSeller );
+					} else {
+						items[i] = new SelectItem(parameterDesc.getPmParameter().getParameterCode(), parameterDesc.getCodeName() , null , g2gSeller);
+					}
+				} else{
+
+					if(parameterDesc.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)){
+						items[i] = new SelectItem(parameterDesc.getPmParameter().getParameterCode(), parameterDesc.getCodeName() , null , !g2gSeller);
+					} else{
+						items[i] = new SelectItem(parameterDesc.getPmParameter().getParameterCode(), parameterDesc.getCodeName() , null , g2gSeller);
+					}
+				}
+				
+				i++;
+			}
+			return items;
+		}
 }

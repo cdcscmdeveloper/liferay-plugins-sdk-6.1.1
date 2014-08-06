@@ -78,9 +78,9 @@
 			</tr>
 			<tr>
 				<td style="width: 250px;"><p:outputLabel value="#{lbl['lbl.sc.purchase.in.default.val.period']}" /></td>
-				<td><p:inputText disabled="true" size="19" />
+				<td><p:inputText disabled="true" size="19" value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.contractedItem.ctContractVer.ctContractValue.effDate}" />
 				    <p:spacer width="2px"/>
-				    <p:inputText disabled="true" size="20" /></td>
+				    <p:inputText disabled="true" size="20"  value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.contractedItem.ctContractVer.ctContractValue.expDate}"/></td>
 			</tr>
 			<tr>
 				<td style="width: 250px;"><p:outputLabel value="#{lbl['lbl.sc.purchase.in.default.max.proc.amt']}" /></td>

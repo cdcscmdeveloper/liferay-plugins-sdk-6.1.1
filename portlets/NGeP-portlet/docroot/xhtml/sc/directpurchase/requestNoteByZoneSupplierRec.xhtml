@@ -107,19 +107,20 @@
 		<p:panelGrid styleClass="noBorders tr,noBorders td"  id="supplierId" >
 			<p:row>
 				<p:column>
-					<h:outputText value="Supplier"></h:outputText>
+					
+				 <h:outputText value="#{lbl['lbl.sc.request.note.rec.suppier']}"></h:outputText>
 					<p:spacer width="6px;"></p:spacer>
-					<p:selectOneMenu
-						value="#{requestNoteBackingBean.managedBean.assignedToUserId}"
-						disabled="false">
-						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
-							itemValue="#{null}" />
-						<f:selectItems
-							value="#{requestNoteBackingBean.managedBean.userList}" var="user"
-							itemLabel="#{user.userName}" itemValue="#{user.userId}"></f:selectItems>
-					</p:selectOneMenu>
-
-					<p:spacer width="5px;" />
+					<p:outputPanel autoUpdate="true">
+						<p:selectOneMenu value="#{requestNoteBackingBean.managedBean.supplierId}" 
+							style="width:155px;">  
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
+							<f:selectItems value="#{requestNoteBackingBean.suppliersBySelectedItems}" 
+								var="smSupplier" itemLabel="#{smSupplier.companyName}"
+								itemValue="#{smSupplier.supplierId}">
+							</f:selectItems>
+						</p:selectOneMenu>
+					</p:outputPanel>
+					<p:spacer width="10px;"/>
 					<p:commandButton value="#{lbl['lbl.sc.action.apply.btn']}"
 						partialSubmit="true" icon="ui-icon-submit"
 						process="@this supplierRecId"

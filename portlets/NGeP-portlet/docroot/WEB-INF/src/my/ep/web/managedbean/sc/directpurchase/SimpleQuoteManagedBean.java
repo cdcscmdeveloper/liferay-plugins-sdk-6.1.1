@@ -148,6 +148,8 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	private int tabActiveIndex = 0;
 	private Long defaultCountryId;
 	private boolean titleChecker = Boolean.TRUE;
+	private String pageNavToRequestNote;
+	private SelectItem[] procurementTypes; // for procuremment type dropdown
 
 	public SimpleQuoteManagedBean() {
 		super();
@@ -1230,6 +1232,30 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	 */
 	public void setTitleChecker(boolean titleChecker) {
 		this.titleChecker = titleChecker;
+	}
+	/**
+	 * @return the pageNavToRequestNote
+	 */
+	public String getPageNavToRequestNote() {
+		return pageNavToRequestNote;
+	}
+	/**
+	 * @param pageNavToRequestNote the pageNavToRequestNote to set
+	 */
+	public void setPageNavToRequestNote(String pageNavToRequestNote) {
+		this.pageNavToRequestNote = pageNavToRequestNote;
+	}
+	/**
+	 * @return the procurementTypes
+	 */
+	public SelectItem[] getProcurementTypes() {
+		return procurementTypes;
+	}
+	/**
+	 * @param procurementTypes the procurementTypes to set
+	 */
+	public void setProcurementTypes(SelectItem[] procurementTypes) {
+		this.procurementTypes = procurementTypes;
 	}
 	
 }

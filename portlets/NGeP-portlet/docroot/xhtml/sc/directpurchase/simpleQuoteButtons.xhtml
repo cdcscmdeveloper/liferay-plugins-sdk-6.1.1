@@ -43,7 +43,9 @@
 									action="#{simpleQuoteBackingBean.backToPervious}" />
 							</c:if>
 						
-						      <c:if test="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending Approval' 
+							<!-- to view simple Quote from the request note header  Icon    -->
+                            <c:if test="#{simpleQuoteBackingBean.managedBean.pageNavToRequestNote eq null || simpleQuoteBackingBean.managedBean.pageNavToRequestNote eq ''}">	
+						       <c:if test="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending Approval' 
 									  or simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending Submission'}">
 								<p:commandButton value="#{lbl['lbl.sc.common.save']}"
 									icon="ui-icon-save"
@@ -86,7 +88,7 @@
 									rendered="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending Submission'}"
 									styleClass="ui-button" icon="#{iconVar}"
 									actionListener="#{simpleQuoteBackingBean.submitSimpleQuote(action)}" />
-							</c:forEach></td>
+							</c:forEach></c:if></td>
 					</tr>
 				</table>
 			</c:if>
