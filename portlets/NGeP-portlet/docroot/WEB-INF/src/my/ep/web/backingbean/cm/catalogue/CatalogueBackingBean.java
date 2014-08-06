@@ -2857,10 +2857,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			System.out.println("getSmSupplier"
 					+ smResDTO.getResultBean().getResultList().get(0));
 
-			reqDTO.setSupplierId(smResDTO.getResultBean().getResultList()
-					.get(0).getSupplierId());
+			reqDTO.setSupplierId(smResDTO.getResultBean().getResultList().get(0).getSupplierId());
 			
-			System.out.println("getSupplierId = "+smResDTO.getResultBean().getResultList().get(0).getSupplierId());
+			//System.out.println("getSupplierId = "+smResDTO.getResultBean().getResultList().get(0).getSupplierId());
 
 			reqDTO.setItemStatus("A");
 			try {
