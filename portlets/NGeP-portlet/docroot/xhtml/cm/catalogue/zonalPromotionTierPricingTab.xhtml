@@ -41,7 +41,6 @@
 				</f:facet>
 				<p:inputText value="#{tier.price}" size="10">
 					<p:ajax event="keyup" listener="#{catalogueBackingBean.validateZonalPromotionTierDates(rowIndex)}" update=":form" />
-					<p:ajax event="change" listener="#{catalogueBackingBean.validateZonalPromotionTierDates(rowIndex)}" update=":form" />
 				</p:inputText>
 			</p:column>
 
