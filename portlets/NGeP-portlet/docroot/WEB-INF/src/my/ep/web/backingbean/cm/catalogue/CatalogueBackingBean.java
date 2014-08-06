@@ -3057,6 +3057,21 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		
 		renewSesionObject();
 		
+		this.getManagedBean().setAdvanceSearchList(
+				new ArrayList<AdvanceSearchVO>());
+		for (int i = 0; i < 3; i++) {
+			this.getManagedBean().getAdvanceSearchList()
+					.add(new AdvanceSearchVO());
+		}
+
+		IStateSO stateSO = (IStateSO) BusinessDelegate.getInstance()
+				.getServiceObject("pm", IStateSO.class);
+		StateReqDTO reqStateDTO = new StateReqDTO();
+		reqStateDTO.setCountryCode("MY");
+		StateResDTO resStateDTO = stateSO.retriveStatesListByCountryCode(reqStateDTO);
+
+		this.getManagedBean().setStateList(resStateDTO.getStateList());
+		
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, "supplierItemView");
