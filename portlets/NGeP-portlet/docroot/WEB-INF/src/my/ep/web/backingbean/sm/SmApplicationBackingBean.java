@@ -4201,6 +4201,7 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void assignFinalApproveOrReject(String dialog) {
+		System.out.println("**** assignFinalApproveOrReject *** ");
 		assignValReqdToTrue();
 		RequestContext.getCurrentInstance().execute(dialog + ".show()");
 	}
@@ -4450,10 +4451,8 @@ public class SmApplicationBackingBean extends
 		} catch (Exception e) {
 			e.printStackTrace();
 			retMsg = null;
-			
 			throw new EpException(MessageConst.ERROR_722519);
 		} finally {
-			System.out.println("**** Retirve latest ****** ");
 			retriveLatestApplAfterUpdate("");
 			reqSO = null;
 		}
@@ -4464,7 +4463,6 @@ public class SmApplicationBackingBean extends
 			String outputPageType, Boolean isBpmSubmit) {
 		boolean valid = false;
 		boolean isError = false;
-		getManagedBean().setTabActiveIndex(outputTab);
 		try {
 
 			if (getManagedBean().isPoUser()
