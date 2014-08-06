@@ -674,7 +674,7 @@ public class SmApplicationBackingBean extends
 	public boolean testUpdateSmAppl(String applType, String currentPageType,
 			String outputPageType, Boolean isBpmSubmit) {
 		boolean valid = false;
-		boolean isError = false;
+		// boolean isError = false;
 		IMofRegistrationSO mofRegistrationSO = null;
 		System.out.println(" ***** Business  Type After hard code *********"
 				+ getManagedBean().getSmAppl().getSmSupplier()
@@ -720,18 +720,22 @@ public class SmApplicationBackingBean extends
 				getManagedBean().getSmAppl().setCurrentActiveTab(currentTab);
 				getManagedBean().setCurrentPageType(currentPageType);
 			}
-			isError = valid;
 		}
 
 		finally {
-			System.out
-					.println("******** Excecute Finally in testupdate sm appl ******* ");
-			isError = retriveLatestApplAfterUpdate(currentPageType);
+			if (currentPageType
+					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC)
+					&& !valid) {
+				saveOrUpdateAppl();
+			} else {
+				valid = retriveLatestApplAfterUpdate(currentPageType,
+						outputPageType);
+			}
+
 			mofRegistrationSO = null;
 			if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
 					SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)
 					&& getManagedBean().isSupplierUser()) {
-				System.out.println("*** This a personnel Page ********");
 				assignApplicationSupportingDocs();
 			}
 			if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
@@ -740,10 +744,11 @@ public class SmApplicationBackingBean extends
 			}
 			assignValReqdToFalse();
 		}
-		return isError;
+		return valid;
 	}
 
-	private boolean retriveLatestApplAfterUpdate(String currentPageType) {
+	private boolean retriveLatestApplAfterUpdate(String currentPageType,
+			String outputPageType) {
 
 		IMofRegistrationSO mofRegistrationSO = null;
 		mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate.getInstance()
@@ -1015,9 +1020,10 @@ public class SmApplicationBackingBean extends
 				}
 			}
 			if (validStfCont == 0 && !applType.equalsIgnoreCase("C")) {
-				getManagedBean().getSmAppl().setSmStaffTotals(
-						getStaffList(getManagedBean().getSmAppl()
-								.getSupplierType()));
+				// getManagedBean().getSmAppl().setSmStaffTotals(
+				// getStaffList(getManagedBean().getSmAppl()
+				// .getSupplierType()));
+				validSave = false;
 				setNavigationBackToCurrentPage();
 				throw new EpException(MessageConst.ERROR_722526);
 			}
@@ -2839,21 +2845,17 @@ public class SmApplicationBackingBean extends
 		IMofRegistrationSO mofRegistrationSO = null;
 
 		try {
-
 			mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
 					.getInstance().getServiceObject("sm",
 							IMofRegistrationSO.class);
 
 			MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
-
 			reqDto.setSmAppl(this.getManagedBean().getSmAppl());
-
 			MofRegistrationResDTO resDTO = mofRegistrationSO
 					.updateApplication(reqDto);
-			// getManagedBean().setSmAppl(resDTO.getSmAppl());
 		} finally {
 			mofRegistrationSO = null;
-			retriveLatestApplAfterUpdate("");
+			retriveLatestApplAfterUpdate("", "");
 		}
 	}
 
@@ -3892,7 +3894,7 @@ public class SmApplicationBackingBean extends
 			resDTO = regSo.initiateSmApplicationTask(reqDTO);
 		} finally {
 			regSo = null;
-			retriveLatestApplAfterUpdate("");
+			retriveLatestApplAfterUpdate("", "");
 		}
 
 	}
@@ -4128,7 +4130,7 @@ public class SmApplicationBackingBean extends
 		} finally {
 			regSo = null;
 			if (valid) {
-				return retriveLatestApplAfterUpdate(currentPageType);
+				return retriveLatestApplAfterUpdate(currentPageType, "");
 			} else {
 				return valid;
 			}
@@ -4453,7 +4455,7 @@ public class SmApplicationBackingBean extends
 			retMsg = null;
 			throw new EpException(MessageConst.ERROR_722519);
 		} finally {
-			retriveLatestApplAfterUpdate("");
+			retriveLatestApplAfterUpdate("", "");
 			reqSO = null;
 		}
 		return retMsg;
