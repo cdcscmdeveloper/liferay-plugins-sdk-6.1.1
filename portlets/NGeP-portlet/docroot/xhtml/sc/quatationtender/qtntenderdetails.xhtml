@@ -9,7 +9,7 @@
 	<p:panel id="qtdetailsid" header="Details" toggleable="true">
 		<table>
 			<tr>
-				<td style="width: 165px;"><p:outputLabel
+				<td style="width: 190px;"><p:outputLabel
 						value="#{lbl['lbl.so.qttentype']}" /></td>
 				<td colspan="3"><c:if
 						test="#{qTDetailBB.managedBean.qt.brandNew}">
@@ -34,7 +34,7 @@
 				<td colspan="4"><p:outputPanel id="testPanel">
 						<table style="width: 100%">
 							<tr>
-								<td style="width: 165px;"><p:outputLabel
+								<td style="width: 190px;"><p:outputLabel
 										value="#{lbl['lbl.so.panel']}"
 										rendered="#{qTDetailBB.managedBean.qt.qtType ne 'R' and qTDetailBB.managedBean.qt.qtType ne 'I'}" /></td>
 								<td><p:inputText
@@ -43,7 +43,7 @@
 										rendered="#{qTDetailBB.managedBean.qt.qtType ne 'R' and qTDetailBB.managedBean.qt.qtType ne 'I'}" /></td>
 								<ui:fragment
 									rendered="#{qTDetailBB.managedBean.qt.panel eq 'No'}">
-									<td style="width: 200px"><p:outputLabel
+									<td style="width: 210px"><p:outputLabel
 											value="#{lbl['lbl.so.open.for']}"
 											rendered="#{qTDetailBB.managedBean.qt.qtType ne 'R' and qTDetailBB.managedBean.qt.qtType ne 'I'}" /></td>
 									<td><p:inputText
@@ -73,7 +73,7 @@
 						required="true" value="#{qTDetailBB.managedBean.qt.publishPeriod}"
 						size="30" style="text-align:right" /> <p:message
 						id="publishperiodMsg" for="publishperiod" display="icon" /></td>
-				<td style="width: 200px;"><p:outputLabel
+				<td style="width: 210px;"><p:outputLabel
 						value="#{lbl['lbl.so.proposal.validity']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><p:inputMask id="proposalvalidity" mask="9?9999"
@@ -116,7 +116,7 @@
 		rendered="#{qTDetailBB.managedBean.qt.zonal and qTDetailBB.managedBean.qt.panel eq 'false'}">
 		<table style="width: 100%">
 			<tr>
-				<td style="width: 165px"><p:outputLabel
+				<td style="width: 190px"><p:outputLabel
 						value="#{lbl['lbl.so.location.level']}" /></td>
 				<td colspan="3"><p:inputText
 						value="#{qTDetailBB.getParameterDesc(qTDetailBB.managedBean.qt.zoneLocationLevel)}"
