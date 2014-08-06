@@ -1,0 +1,66 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<p:outputPanel id="opDefinedSearch">
+		<br/>
+		<table class="ppTwoTable">
+			<tr>
+				<th width="20%">
+					<p:outputLabel value="#{lbl['lbl.pm.profiles.search.name']}"/>
+				</th>
+				<td>
+					<p:inputText styleClass="ppDisplayTextM" value="#{profileManagementBackingBean.managedBean.userProfileSearchBean.userName}" maxlength="75"/>
+				</td>
+				<th>&#160;</th>
+				<td>&#160;</td>
+			</tr>
+			<tr>
+				<th width="20%">
+					<p:outputLabel value="#{lbl['lbl.pm.profiles.search.role']}"/>
+				</th>
+				<td>
+					<p:inputText styleClass="ppDisplayTextM" value="#{profileManagementBackingBean.managedBean.userProfileSearchBean.userRole}"/>
+				</td>
+				<th>&#160;</th>
+				<td>&#160;</td>
+			</tr>
+			<tr>
+				<th width="20%">
+					<p:outputLabel value="#{lbl['lbl.pm.profiles.search.orgname']}"/>
+				</th>
+				<td>
+					<p:inputText styleClass="ppDisplayTextM" value="#{profileManagementBackingBean.managedBean.userProfileSearchBean.userOrganizationName}"/>
+				</td>
+				<th>&#160;</th>
+				<td>&#160;</td>
+			</tr>
+			<tr>
+				<th width="20%">
+					<p:outputLabel value="#{lbl['lbl.pm.profiles.search.status']}"/>
+				</th>
+				<td>
+				 	<p:selectOneMenu styleClass="ppDropDownWidthM" value="#{profileManagementBackingBean.managedBean.userProfileSearchBean.userStatus}">  
+		            	<f:selectItems value="#{profileManagementBackingBean.getStatusOptions()}" />  
+	              	</p:selectOneMenu> 
+				</td>
+				<th>&#160;</th>
+				<td>&#160;</td>
+			</tr>
+			<tr>
+				<td colspan="4">
+					<div class="ppRightBtn">
+						<p:commandButton value="#{lbl['lbl.btn.search']}" action="#{profileManagementBackingBean.searchUserProfile}"
+							update=":form:dtUserResult" />
+				        <p:commandButton value="#{lbl['lbl.btn.reset']}" type="reset" update=":form:dtUserResult" process="@this" 
+				           	action="#{profileManagementBackingBean.resetUserProfileSearchBean}"/>
+				  	</div>
+				</td>
+			</tr>
+		</table>
+ 	</p:outputPanel>
+</ui:composition>

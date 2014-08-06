@@ -1,0 +1,52 @@
+<ui:composition	
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+
+	<p:panel id="pUserResult" header="#{lbl['lbl.pm.user.result']}" toggleable="true">
+		<p:dataTable id="dtUserResult" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
+			rowIndexVar="rowIndex"  lazy="true"
+			value="#{profileManagementBackingBean.userProfileDataModel}"
+			var="userprofile">
+			<ac:paginator for="dtUserResult" />
+			<p:column headerText="#{lbl['lbl.pm.profiles.search.result.loginid']}" width="15%">
+				#{userprofile.loginId}
+			</p:column>
+			<p:column headerText="#{lbl['lbl.pm.profiles.userdetails.salutation']}" width="15%">
+				#{userprofile.userName}
+			</p:column>
+			<p:column headerText="#{lbl['lbl.pm.profiles.search.result.username']}" width="15%">
+				#{userprofile.userName}
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.pm.profiles.search.result.cityname']}" width="15%">
+				#{userprofile.pmAddressTypes[0].pmAddress.pmCity!=null ? userprofile.pmAddressTypes[0].pmAddress.pmCity.cityName : ''}
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.pm.profiles.search.result.statename']}" width="15%">
+				#{userprofile.pmAddressTypes[0].pmAddress.pmState!=null ? userprofile.pmAddressTypes[0].pmAddress.pmState.stateName : ''}
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.pm.profiles.search.result.status']}" width="10%">
+				#{(userprofile.recordStatusFlg==1)? lbl['lbl.pm.active'] : lbl['lbl.pm.inactive']}
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.pm.action']}" width="5%">
+				<p:commandLink  action="#{profileManagementBackingBean.redirectToMaintainUser(userprofile.userId)}" >
+					<p:graphicImage value="/resources/ep/images/design/edit.png"/>
+				</p:commandLink>
+			</p:column>
+		</p:dataTable>
+		
+	</p:panel>
+	<br/>
+	<div class="ppRightBtn">
+		<p:commandButton value="#{lbl['lbl.btn.create']}" action="#{profileManagementBackingBean.redirectToMaintainUser(null)}" ajax="false"/>
+	</div>
+	<br/>
+</ui:composition>

@@ -11,7 +11,7 @@
     <h:panelGrid columns="2" >	
     
     <h:outputLabel value="#{lbl['lbl.pm.profiles.authorisation.attachment']}"></h:outputLabel>
-    <p:fileUpload fileUploadListener="#{userprofilesBackingBean.handleFileUpload}" mode="advanced"   
+    <p:fileUpload fileUploadListener="#{profileManagementBackingBean.handleFileUpload}" mode="advanced"   
             update="messages" sizeLimit="1000000" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"/>  
  
     <p:growl id="messages" showDetail="true"/>

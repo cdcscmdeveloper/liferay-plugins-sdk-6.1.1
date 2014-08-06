@@ -1,0 +1,68 @@
+<ui:composition	
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:outputPanel id="pRoleReceivingAddr" styleClass="receivingAddUpdate">
+		<p:tabView widgetVar="tvRoleReceivingAddr" id="tvRoleReceivingAddr" dynamic="false" cache="false" orientation="top">	
+			<!-- Roles -->
+		  	<p:tab title="#{lbl['lbl.pm.profiles.authorisation.roles']}">  
+			  	<p:dataTable id="dtRoles" var="role" styleClass="dtRoles"
+				     value="#{profileManagementBackingBean.managedBean.selectedUserOrg.pmUserRoles}"
+				     selection="#{profileManagementBackingBean.managedBean.deleteUserRoles}"
+				     rowIndexVar="index" rowKey="#{role}">   
+				    <p:ajax event="toggleSelect" update="@this" process="@this" />
+					<p:ajax event="rowSelectCheckbox" update="@this" />
+					<p:column selectionMode="multiple" disabledSelection="#{!role.brandNew}" style="width:2%" />
+				    <p:column headerText="#{lbl['lbl.pm.profiles.authorisation.role']}" >
+			          	#{profileManagementBackingBean.getRoleDescByRoleCode(role.roleCode)}
+			        </p:column>
+			        <p:column headerText="#{lbl['lbl.pm.profiles.authorisation.apprlimit']}" > 
+			          	<p:inputText styleClass="ppDisplayTextS" value="#{role.approverLimit}" />
+			        </p:column>
+			        <p:column headerText="#{lbl['lbl.pm.profiles.authorisation.Status']}"> 
+				  	 	<p:selectOneMenu value="#{orgUnit.recordStatusFlg}">  
+			            	<f:selectItems value="#{profileManagementBackingBean.getStatusOptions()}" />
+			          	</p:selectOneMenu> 
+			        </p:column>
+				</p:dataTable>
+	       		<br/>
+	       		<br/>
+				<div class="ppRightBtn">
+					<p:commandButton action="#{profileManagementBackingBean.getAvailbleUserRole}"
+					  	value="#{lbl['lbl.btn.add']}" oncomplete="dlRoleOptions.show();" update=":form:tvUserDetails:opRoleOptions"/>&#160;
+			        <p:commandButton value="#{lbl['lbl.btn.delete']}" />
+			        <p:commandButton action="#{profileManagementBackingBean.test}"
+					  	value="testtest" />&#160;
+				</div>	  
+	      	</p:tab>  
+	      		
+			        
+	      	<!-- Receiving Address -->
+		  	<p:tab title="#{lbl['lbl.pm.profiles.authorisation.receiving.address']}">	
+				<p:dataTable editable="true" style="width:100%" widgetVar="receivingAddService">	          
+				    <p:column headerText="#{lbl['lbl.pm.profiles.authorisation.addname']}" > 
+			        </p:column>
+			        <p:column headerText="#{lbl['lbl.pm.profiles.userdetails.status']}" > 
+			        </p:column>
+				</p:dataTable>
+		        <br/>
+				<br/>
+				<div class="ppRightBtn">
+					<p:commandButton value="#{lbl['lbl.btn.add']}"
+				     	oncomplete="receivingAddress.show();"/>&#160;
+		        	<p:commandButton value="#{lbl['lbl.btn.delete']}" />
+		      	 </div>
+	      	</p:tab> 	  	      
+	    </p:tabView>      		
+	</p:outputPanel>
+	
+	<!-- Role Selection Popup -->
+	<ui:include src="/xhtml/pm/profilemanagement/rolePopUpScreen.xhtml" />
+	
+	<!-- Address Selection Popup -->
+</ui:composition>	

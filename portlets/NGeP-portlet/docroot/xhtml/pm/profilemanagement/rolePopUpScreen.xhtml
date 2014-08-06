@@ -7,47 +7,32 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 
-	<p:dialog id="recRoleName" header="SELECT ROLE" widgetVar="roleReceiving" modal="true" width="1000" height="500">
-	
-		<p:panel toggleable="true" styleClass="roAddMember">
-		
-		<p:dataTable id="roleReceiving" var="rolelist"
-		  rowKey="#{rolelist}" rowIndexVar="index"
-		  value="#{userprofilesBackingBean.searchRoleNameList}"
-		  selection="#{userprofilesBackingBean.managedBean.userRoleSelect}"		  
-		  lazy="true">
-
-		<ac:paginator for="roleReceiving"></ac:paginator>
-		<p:column selectionMode="multiple"
-		  style="width:2%;text-align:center;" />
-		  						 	    		
-	    <p:column headerText="Role Name"> 
-          <h:outputText value="#{rolelist.roleName}" />
-        </p:column>
-        
-		</p:dataTable>
-       <p:spacer height="4"></p:spacer>    
-         
-	    <p:dataTable id="approverReceiving" var="approverList"
-	       rowKey="#{approverList}" rowIndexVar="index"
-		   value="#{userprofilesBackingBean.searchApproverTypeList}"
-		   selection="#{userprofilesBackingBean.managedBean.userApproverSelect}"		  
-		   lazy="true">
-		<ac:paginator for="approverReceiving"></ac:paginator>
-		<p:column selectionMode="multiple" style="width:2%;text-align:center;" />			   	          
-         <p:column headerText="Approval Type" >
-           <h:outputText value="#{approverList.roleName}" />       
-        </p:column>      
-		</p:dataTable>   
-      <p:spacer height="15"></p:spacer>	
-      	    
- 		<div align="right">
-		  <p:commandButton value="#{lbl['lbl.so.okbtn']}" icon="ui-icon-check" 
-		  onclick="roleReceiving.hide();"
-		  process="@this" />	
-		  <p:commandButton value="Cancel" icon="ui-icon-cancel" onclick="roleReceiving.hide()" />		
-		</div>      
-
-		</p:panel>
+	<p:dialog id="dlRoleOptions" header="#{lbl['lbl.pm.profiles.authorisation.role.opt']}" 
+		widgetVar="dlRoleOptions" dynamic="true" width="1000" height="250">
+		<p:outputPanel id="opRoleOptions">
+			<p:dataTable id="dtRoleOptions" var="roleDesc" lazy="true"
+				emptyMessage="#{lbl['lbl.pp.no.record.found']}"
+				rowKey="#{roleDesc}" rowIndexVar="index"
+				value="#{profileManagementBackingBean.roleDataModel}"
+				selection="#{profileManagementBackingBean.managedBean.selectedRoles}">
+				<p:ajax event="toggleSelect" update="@this" process="@this" />
+				<p:ajax event="rowSelectCheckbox" update="@this" />
+				<ac:paginator for="dtRoleOptions"/>
+				<p:column selectionMode="multiple" width="2%"  />
+			    <p:column headerText="#{lbl['lbl.pm.profiles.authorisation.role.name']}"> 
+		         	#{roleDesc.roleName}
+		       
+		        </p:column>
+			</p:dataTable>
+			<br/>
+			<br/>    
+	 		<div class="ppRightBtn">
+			  <p:commandButton value="#{lbl['lbl.btn.ok']}" oncomplete="dlRoleOptions.hide();" 
+			  	action="#{profileManagementBackingBean.confirmRoles()}"
+			  	update=":form:tvUserDetails:tvRoleReceivingAddr:dtRoles" />	
+			  <p:commandButton value="#{lbl['lbl.btn.cancel']}" oncomplete="dlRoleOptions.hide();" 
+			    />		
+			</div>      
+		</p:outputPanel>
 	</p:dialog>
 </ui:composition>

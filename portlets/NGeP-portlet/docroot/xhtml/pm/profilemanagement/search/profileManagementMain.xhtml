@@ -1,6 +1,3 @@
-<?xml version="1.0"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 <ui:composition
 template="/WEB-INF/facelets/templates/basic_template.xhtml"
 xmlns="http://www.w3.org/1999/xhtml"
@@ -13,12 +10,10 @@ xmlns:tp="http://java.sun.com/jsf/composite/ep"
 >
 	
 	<ui:define name="contentSection">
+		<!-- Validation Message -->
+		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 		
-		<table style="border:0px;width:100%;align:center">
-			<tr>
-		<td><ui:include src="/xhtml/pm/profilemanagement/userProfileSearch.xhtml" /></td>
-			</tr>
-		</table>
-  
+		<!-- Search User -->
+		<ui:include src="/xhtml/pm/profilemanagement/search/userProfileSearch.xhtml" />
 	</ui:define>
 </ui:composition>

@@ -1,0 +1,68 @@
+<ui:composition	
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+		
+	<p:panel id="pResponsibleOrg" header="#{lbl['lbl.pm.profiles.authorisation.responsible.org']}" toggleable="true">
+		<br/>
+	   	<p:dataTable id="dtOrgUnit" var="orgUnit" styleClass="dtOrgUnit"
+		     value="#{profileManagementBackingBean.managedBean.selectedUser.pmUserOrgs}"
+		     selection="#{profileManagementBackingBean.managedBean.selectedUserOrg}" 
+		     selectionMode="single"
+		     rowIndexVar="index" rowKey="#{orgUnit}">   
+			<p:ajax event="rowSelect" update="@this" />
+			
+		    <p:column headerText="#{lbl['lbl.pm.profiles.resorg.table.orgtype']}">
+				<p:selectOneMenu value="#{orgUnit.pmOrgProfile.orgTypeCode.parameterId}" styleClass="ppDropDownWidthM">  
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />      
+			     	<f:selectItems value="#{profileManagementBackingBean.getOrgTypeList()}" 
+			     		var="obj" itemValue="#{obj.pmParameter.parameterId}" itemLabel="#{obj.codeName}"/>  
+			     	<p:ajax event="change" update="lovResOrg:lovResOrg"/> 
+	            </p:selectOneMenu>		     
+	        </p:column>	 
+		    <p:column headerText="#{lbl['lbl.pm.profiles.resorg.table.code']}" >        
+	            <ac:lov id="lovResOrg" lovId="PM_ORG_PROFILE" styleClass="ppDisplayTextS" 
+	            	update=":form:tvUserDetails:dtOrgUnit"
+					headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
+					saveObject="orgUnit.pmOrgProfile"
+					value="#{orgUnit.pmOrgProfile.pmOrgValidity.orgCode}"
+					conditionField="orgTypeCode.parameterId^#{orgUnit.pmOrgProfile.orgTypeCode.parameterId}|recordStatus^1" >
+					<!-- conditionField="pmUserOrgs.pmUser.userId^#{planBackingBean.managedBean.userId}" -->
+				</ac:lov> 
+	        </p:column>
+	        <p:column headerText="#{lbl['lbl.pm.profiles.resorg.table.name']}" > 
+       			#{orgUnit.pmOrgProfile.pmOrgValidity.orgName}
+	        </p:column>
+	        <p:column headerText="#{lbl['lbl.pm.profiles.resorg.table.effdate']}" > 
+			  	<p:calendar id="effDateId" value="#{orgUnit.effDate}" styleClass="ppDisplayTextS" 
+					showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+	        </p:column>
+	        <p:column headerText="#{lbl['lbl.pm.profiles.resorg.table.expdate']}" > 
+			  	<p:calendar id="expDateId" value="#{orgUnit.expDate}" styleClass="ppDisplayTextS"
+					showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+	        </p:column>
+	        <p:column headerText="#{lbl['lbl.pm.profiles.userdetails.status']}" width="5%"> 
+		       	<p:selectOneMenu value="#{orgUnit.recordStatusFlg}">  
+	            	<f:selectItems value="#{profileManagementBackingBean.getStatusOptions()}" />
+	          	</p:selectOneMenu>         
+	        </p:column>        
+	        <p:column headerText="#{lbl['lbl.pm.action']}">  
+      		   <p:commandLink action="#{profileManagementBackingBean.deleteOrgUnit(orgUnit)}" >
+					<p:graphicImage value="/resources/ep/images/design/delete.png"/>
+				</p:commandLink>
+	        </p:column>  
+		</p:dataTable>
+       	<br/>
+       	<br/>
+		<div class="ppRightBtn">
+		 	<p:commandButton value="#{lbl['lbl.btn.add']}" process="@this" partialSubmit="true" immediate="true" 
+		   	 	update="dtOrgUnit" action="#{profileManagementBackingBean.addOrgUnit()}" />
+		   	 	
+		</div>
+    	<ac:lovPopup /> 		
+	</p:panel>
+</ui:composition>	
