@@ -1,4 +1,4 @@
-package my.ep.web.managedbean.pm.userprofile;
+package my.ep.web.managedbean.pm.profilepersonalization;
 
 
 import java.util.ArrayList;
@@ -14,15 +14,21 @@ import my.ep.persistence.entity.pm.authorization.PmOrgValidity;
 import my.ep.persistence.entity.pm.authorization.PmRole;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserGroup;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;
+import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
+import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmCriteria;
-import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
-import my.ep.persistence.entity.pm.common.PmCity;
-import my.ep.persistence.entity.pm.authorization.PmUserGroup;
+import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.web.bean.pm.AddressList;
+import my.ep.web.bean.pm.PreferenceList;
+import my.ep.web.bean.pm.RoleList;
+import my.ep.web.bean.pm.UserProfilesSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.apache.log4j.Logger;
@@ -32,17 +38,89 @@ import org.apache.log4j.Logger;
  * @author DK
  *
  */
-@ManagedBean(name="userprofilesManagedBean")
+@ManagedBean(name="profilePersonalizationManagedBean")
 @SessionScoped
-public class UserprofilesManagedBean extends BaseManagedBean {
+public class ProfilePersonalizationManagedBean extends BaseManagedBean {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
-	private static final Logger log= EpLogger.getLogger(UserprofilesManagedBean.class);	
+	private static final Logger log= EpLogger.getLogger(ProfilePersonalizationManagedBean.class);	
 	
+	
+	private PmUser selectedUser;
+	private PmAddress userAddress; //Address Type - C
+	private boolean divisionFlagC;
+//
+	/**
+	 * @return the selectedUser
+	 */
+	public PmUser getSelectedUser() {
+		return selectedUser;
+	}
+
+	/**
+	 * @param selectedUser the selectedUser to set
+	 */
+	public void setSelectedUser(PmUser selectedUser) {
+		this.selectedUser = selectedUser;
+	}
+
+	/**
+	 * @return the userAddress
+	 */
+	public PmAddress getUserAddress() {
+		return userAddress;
+	}
+
+	/**
+	 * @param userAddress the userAddress to set
+	 */
+	public void setUserAddress(PmAddress userAddress) {
+		this.userAddress = userAddress;
+	}
+
+	/**
+	 * @return the divisionFlagC
+	 */
+	public boolean isDivisionFlagC() {
+		return divisionFlagC;
+	}
+
+	/**
+	 * @param divisionFlagC the divisionFlagC to set
+	 */
+	public void setDivisionFlagC(boolean divisionFlagC) {
+		this.divisionFlagC = divisionFlagC;
+	}
+
+//	enable only for multi delete
+//	/**
+//	 * @return the deleteOrgUnits
+//	 */
+//	public List<PmUserOrg> getDeleteOrgUnits() {
+//		return deleteOrgUnits;
+//	}
+//
+//	/**
+//	 * @param deleteOrgUnits the deleteOrgUnits to set
+//	 */
+//	public void setDeleteOrgUnits(List<PmUserOrg> deleteOrgUnits) {
+//		this.deleteOrgUnits = deleteOrgUnits;
+//	}
+
+	
+
+
+
+
+
+
+
+	/**
+	 * TO BE VERIFIED
+	 */
+
+
 	private PmUser user;
 	
 	private PmUser pmUser;
@@ -59,6 +137,8 @@ public class UserprofilesManagedBean extends BaseManagedBean {
 	
 	private PmRole roles;
 				
+	
+	
     // user profile	search	
 	private String userNames;
 	
@@ -176,7 +256,7 @@ public class UserprofilesManagedBean extends BaseManagedBean {
 		this.userId = userId;
 	}	
 
-	public UserprofilesManagedBean(){
+	public ProfilePersonalizationManagedBean(){
 		log.info("inside ");
 		
 	
@@ -704,9 +784,9 @@ public class UserprofilesManagedBean extends BaseManagedBean {
 	
 	public void setAddressListss(List<AddressList> addresslistss) {
 		this.addresslistss = addresslistss;
-	}	
-	
-	
+	}
+
+
 }	
 	
 

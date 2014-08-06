@@ -124,6 +124,7 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 			IZoneSO reqSO = (IZoneSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IZoneSO.class);	
 			ZoneResDTO resDTO = reqSO.retrieveZoneList();
 			if(resDTO.isSuccessful()){
+				System.out.println(resDTO.getZoneList().size()); 
 				return resDTO.getZoneList();
 			}
 		} catch (Exception e) {

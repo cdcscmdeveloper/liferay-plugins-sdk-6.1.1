@@ -1,4 +1,4 @@
-package my.ep.web.managedbean.pm.userprofile;
+package my.ep.web.bean.pm;
 
 public class AddressList {
 

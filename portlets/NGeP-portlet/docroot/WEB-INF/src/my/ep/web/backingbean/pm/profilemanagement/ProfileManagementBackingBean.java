@@ -1,0 +1,1516 @@
+package my.ep.web.backingbean.pm.profilemanagement;
+
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.faces.event.AjaxBehaviorEvent;
+import javax.faces.model.SelectItem;
+
+import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchBean;
+import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.bean.search.SearchMultiFilterBean;
+import my.ep.biz.service.pm.authorization.role.IRoleSO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.common.address.IAddressSO;
+import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.pm.ProfileManagementConst;
+import my.ep.dto.pm.authorization.role.RoleReqDTO;
+import my.ep.dto.pm.authorization.role.RoleResDTO;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.common.address.AddressReqDTO;
+import my.ep.dto.pm.common.address.AddressResDTO;
+import my.ep.exception.EpException;
+import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmOrgValidity;
+import my.ep.persistence.entity.pm.authorization.PmRole;
+import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
+import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;
+import my.ep.persistence.entity.pm.authorization.PmUserRole;
+import my.ep.persistence.entity.pm.common.PmAddress;
+import my.ep.persistence.entity.pm.common.PmAddressType;
+import my.ep.persistence.entity.pm.common.PmCity;
+import my.ep.persistence.entity.pm.common.PmCountry;
+import my.ep.persistence.entity.pm.common.PmDistrict;
+import my.ep.persistence.entity.pm.common.PmDivision;
+import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmSalutation;
+import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.logging.LogKey;
+import my.ep.type.aut.SearchCondition;
+import my.ep.type.aut.SearchOperator;
+import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.bean.paginator.IPagingDataModel;
+import my.ep.web.bean.paginator.PagingDataModel;
+import my.ep.web.bean.pm.UserProfilesSearchBean;
+import my.ep.web.constant.sm.SupplierManagementConst;
+import my.ep.web.managedbean.pm.profilemanagement.ProfileManagementManagedBean;
+import my.ep.web.util.FacesScopes;
+import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.ParameterHelper;
+import my.ep.web.util.pm.helper.PmCommonUtil;
+import my.ep.web.util.pm.helper.RoleHelper;
+
+import org.apache.log4j.Logger;
+import org.primefaces.event.FileUploadEvent;
+
+/**
+ * Backing Bean for User Profiles (Management)
+ * 
+ * @author DK, RAIN POH
+ * @since 8/7/2013
+ *
+ */
+@ManagedBean(name = "profileManagementBackingBean")
+@ViewScoped //@RequestScoped
+public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagementManagedBean> {
+
+	private static final Logger logger = EpLogger
+			.getLogger(ProfileManagementBackingBean.class);
+
+	
+	//Navigation Details
+	public static final String NAV_TO_SEARCH = "/xhtml/pm/profilemanagement/search/profileManagementMain.xhtml"; // main page for portlet profile maintenance
+	public static final String NAV_TO_MAINTAIN = "/xhtml/pm/profilemanagement/userDetails/profileManagementMaintain.xhtml"; 
+	
+	
+	
+	//Default value
+	public static final boolean SEARCH_DEFAULT = false;
+	
+	
+	//Paging for listing
+	private IPagingDataModel<PmUser> userProfileDataModel = new UserProfilePagingDataModel();
+	private IPagingDataModel<PmRoleDesc> roleDataModel = new RolePagingDataModel();
+	
+	private IPagingDataModel<PmAddressType> searchReceivingAddress = new userAddressPagingDataModel();
+//	private IPagingDataModel<PmOrgProfile> orgDataModel = new OrgPagingDataModel();
+//	private IPagingDataModel<PmRoleDesc> searchApproverTypeList = new ApproverNamesPagingDataModel();
+
+	//Mapper for DDL object
+	private static Map<Long, Object> identityTypeMapper;
+
+	
+	public ProfileManagementBackingBean(){
+		
+		PmUser pmUser = new FacesScopes().getUserSessionBean();
+		if (pmUser != null && pmUser.getUserId() != null) {
+			System.out.println("***userId: " + pmUser.getUserId());
+
+			new LogKey(pmUser.getUserId()); 
+		}else{
+			new LogKey(1L); 
+		}
+	
+	}
+	
+	/**
+	 * get faces scopes
+	 * @return FacesScopes
+	 */
+	private FacesScopes getFacesScopes(){
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes;
+	}
+	
+
+	private void debugLogger(Object message) {
+		if (logger.isDebugEnabled()) {
+			logger.debug(message);
+		}
+		logger.info(message);
+	}
+	
+	/**
+	 * load clean view for Profile Maintenance
+	 */
+	public void preLoadingUserProfile(){
+		logger.info("preLoadingUserProfile");
+		this.resetUserProfileSearchBean();
+		FacesContext fc = FacesContext.getCurrentInstance(); 
+	    fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_SEARCH);
+	}
+
+	
+	/**
+	 * reset basic search bean
+	 */
+	public void resetUserProfileSearchBean() {
+		this.getManagedBean().setUserProfileSearchBean(new UserProfilesSearchBean());
+	}
+	
+	/**
+	 * USER PROFILE - START
+	 */
+	
+	/**
+	 * redirect to user details
+	 * @param pmUser
+	 * @return
+	 */
+	public String redirectToMaintainUser(Long id) {
+		logger.info("redirectToMaintainUser");
+		this.retrieveIdentityTypeMap();
+		
+		if(id!=null && id>0){
+			loadUserProfile(id);
+		}else{
+			initialUserProfile();
+		}
+		return NAV_TO_MAINTAIN;
+	}
+	
+	/**
+	 * redirect to main page
+	 * @return String
+	 */
+	public String redirectToMainPage() {
+		logger.info("redirectToMainPage");
+
+		return NAV_TO_SEARCH;
+	}
+	
+	/**
+	 * load pm user object by id
+	 * @param id
+	 */
+	private void loadUserProfile(Long id){
+		try {
+			//load user
+			PmUser pmUser = PmCommonUtil.retrieveUserById(id);
+			this.getManagedBean().setSelectedUser(pmUser);
+			if (pmUser!=null && pmUser.getPmAddressTypes() != null) {
+				populateUserAddress(pmUser);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new EpException("Unable to view User Profile.", new String[]{e.getMessage()}); //TODO exception
+		}	
+	}
+	
+	/**
+	 * initial new pmUser object
+	 */
+	private void initialUserProfile(){
+		logger.info("initialUserProfile");
+		PmCountry defaultCountry = PmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
+		PmUser pmUser = new PmUser();
+		pmUser.setSalutationCode(new PmSalutation());
+		pmUser.setPmCountry(defaultCountry);
+		pmUser.setIdentificationCode(new PmParameter());
+		pmUser.setSalutationCode(new PmSalutation());
+		pmUser.setPMP(false);
+		pmUser.setPmUserOrgs(new ArrayList<PmUserOrg>());
+		pmUser.setOrgTypeCode(new PmParameter());
+		this.getManagedBean().setSelectedUser(pmUser);
+		this.getManagedBean().setUserAddress(PmCommonUtil.getNewPmAddress());
+		System.out.println("login " + this.getManagedBean().getSelectedUser().getLoginId());
+	}
+	
+	
+	
+	/**
+	 * populate user address to managed bean
+	 * @param pmUser
+	 */
+	private void populateUserAddress(PmUser pmUser){
+		logger.info("populateUserAddress");
+		try {
+			for (PmAddressType addressTypeObj : pmUser.getPmAddressTypes()) {
+				if (addressTypeObj.getAddressType().equalsIgnoreCase(ProfileManagementConst.ADDRESS_USER)) {
+					this.getManagedBean().setUserAddress(addressTypeObj.getPmAddress());
+					break;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new EpException("Unable to retrieve/populate address.", new String[]{e.getMessage()}); //TODO exception
+		}
+	}
+
+	/**
+	 * retrieve salutation list
+	 * @return List<PmSalutation> 
+	 */
+	public SelectItem[] salutationOptions(){
+		logger.info("salutationOptions");
+		return getDropdownValues(ParameterTypeConst.SALUTATIONS);
+	}
+	
+
+	/**
+	 * get YES & NO options //TODO: to load dynamically
+	 * @return SelectItem[] 
+	 */
+	public SelectItem[] getYesNoOptions() {
+		return PmCommonUtil.getYesNoBooleanOptions();
+	}
+	
+
+	/**
+	 * get record status options //TODO: to load dynamically
+	 * @return SelectItem[] 
+	 */
+	public static SelectItem[] getStatusOptions() {
+		return PmCommonUtil.getStatusOptions();
+	}
+	
+	/**
+	 * get all country list
+	 * @return List<PmCountry>
+	 */
+	public List<PmCountry> getCountryList() {
+		logger.info("getCountryList");
+		return PmCommonUtil.retrievePmCountryList();
+	}
+	
+	/**
+	 * get state list by country id
+	 * @param countryId
+	 * @return List<PmState>
+	 */
+	public List<PmState> getStateList(Long countryId) {
+		logger.info("getStateList");
+		return PmCommonUtil.retrievePmStateList(countryId);
+	}
+	
+	/**
+	 * get division list by state id (only applicable for sarawak)
+	 * @param stateId
+	 * @return List<PmDivision>
+	 */
+	public List<PmDivision> getDivisionList(Long stateId) {
+		logger.info("getDivisionList");
+		return PmCommonUtil.retrievePmDivisionList(stateId);
+	}
+	
+	/**
+	 * get district list by state id
+	 * @param stateId
+	 * @return List<PmDistrict>
+	 */
+	public List<PmDistrict> getDistrictList(Long stateId) {
+		logger.info("getDistrictList");
+		return PmCommonUtil.retrievePmDistrictList(stateId);
+	}
+	
+	/**
+	 * get city list by district id
+	 * @param districtId
+	 * @return List<PmCity>
+	 */
+	public List<PmCity> getCityList(Long districtId) {
+		logger.info("getCityList");
+		return PmCommonUtil.retrievePmCityList(districtId);
+	}
+
+	/**
+	 * update division flag to either disable or enable division selection on UI
+	 * @param divisionType
+	 * @param stateId
+	 */
+	public void updateDivisionFlag(Long stateId){
+		logger.info("updateDivisionFlag");
+		if(stateId!=null){
+			PmState pmState = PmCommonUtil.retrievePmStateByStateId(stateId);
+			this.getManagedBean().setDivisionFlagC(
+					(pmState!=null && ParameterConst.SARAK_SK_CODE.equals(pmState.getStateCode())) ? true : false);
+		}
+	}
+	
+
+	/**
+	 * retrieve identity type from PM
+	 * @return SelectItem[]
+	 */
+	public SelectItem[] getIdentityTypeList() {
+		return getDropdownValues(ParameterTypeConst.IDENTIFICATION_TYPES);
+	}
+
+
+	/**
+	 * retrieve all identity type into mapper
+	 */
+	private void retrieveIdentityTypeMap(){
+		List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance()
+				.getParameterDescList(ParameterTypeConst.IDENTIFICATION_TYPES);
+		
+		identityTypeMapper = new HashMap<Long,Object>();
+		for(PmParameterDesc pmDesc: parameterDescs){
+			identityTypeMapper.put(pmDesc.getPmParameter().getParameterId(), pmDesc.getPmParameter());
+		}
+	}
+	/**
+	 * USER PROFILE - END
+	 */
+	
+	
+	/**
+	 * TAB Authorization - START
+	 */
+	
+	/**
+	 * retrieve org type from PM
+	 * @return List<PmParameterDesc> 
+	 */
+	public List<PmParameterDesc> getOrgTypeList() {
+		logger.info("getOrgTypeList");
+		return PmCommonUtil.retrieveFilteredOrgTypes(ParameterTypeConst.ORGANISATION_TYPES);
+	}
+	
+	
+	
+	/**
+	 * To add new org unit to responsible org. unit list
+	 */
+	public void addOrgUnit() {
+		logger.info("addOrgUnit");
+		if(this.getManagedBean().getSelectedUser().getPmUserOrgs()==null){
+			this.getManagedBean().getSelectedUser().setPmUserOrgs(new ArrayList<PmUserOrg>());
+		}
+		//validation on eff date & exp date
+		PmUserOrg pmUserOrg = new PmUserOrg();
+		PmOrgProfile pmOrgProfile = new PmOrgProfile();
+		pmOrgProfile.setOrgTypeCode(new PmParameter());
+		pmOrgProfile.setPmOrgValidity(new PmOrgValidity());
+	
+		pmUserOrg.setPmOrgProfile(pmOrgProfile);
+		pmUserOrg.setPmUserRoles(new ArrayList<PmUserRole>());
+		this.getManagedBean().getSelectedUser().addPmUserOrg(pmUserOrg);
+	}
+
+	/**
+	 * remove org unit from responsible org. unit list
+	 */
+	public void deleteOrgUnit(PmUserOrg pmUserOrg) {
+		logger.info("deleteOrgUnit");
+		if(pmUserOrg!=null && pmUserOrg.isBrandNew()){
+			if(this.getManagedBean().getSelectedUser().getPmUserOrgs()==null){
+				this.getManagedBean().getSelectedUser().setPmUserOrgs(new ArrayList<PmUserOrg>());
+			}
+			this.getManagedBean().getSelectedUser().getPmUserOrgs().remove(pmUserOrg);
+		}
+	}
+
+	/**
+	 * Get Role description by role code.
+	 * 
+	 * @param roleCode
+	 * 			the role code.
+	 * @return role description
+	 */
+	public String getRoleDescByRoleCode(String roleCode) {		
+		String roleDesc = null;
+		
+		if (roleCode != null) {
+			// Get the role description.
+			PmRoleDesc pmRoleDesc = RoleHelper.getInstance()
+					.getRoleDescByCode(roleCode);
+			
+			if (pmRoleDesc != null) {
+				roleDesc = pmRoleDesc.getRoleName();
+			}
+		}
+		
+		return roleDesc;
+	}
+	/**
+	 * TAB Authorization - END
+	 */
+	
+	
+	/** Roles & Paging - Start  */
+	/**
+	 * show user role options
+	 */
+	
+	private ISearchBean<PmRoleDesc> getRoleBeanData(ISearchBean<PmRoleDesc> searchBean, String parentCode){
+		logger.info("getRoleBeanData");
+		Long currentOrgTypeId = null;
+		
+		if(this.getManagedBean().getSelectedUserOrg()!=null && 
+				this.getManagedBean().getSelectedUserOrg().getPmOrgProfile()!=null && 
+				this.getManagedBean().getSelectedUserOrg().getPmOrgProfile().getOrgTypeCode()!=null){
+			currentOrgTypeId = this.getManagedBean().getSelectedUserOrg().getPmOrgProfile().getOrgTypeCode().getParameterId();
+		}
+		logger.info("currentOrgTypeId " + currentOrgTypeId);
+		
+		if(currentOrgTypeId!=null){
+			SearchFilterBean languageBean = new SearchFilterBean(
+					SearchOperator.OPERATOR_EQUALS.value());
+			languageBean.setSearchField("languageCode");
+			languageBean.setSearchValue(getFacesScopes().getUserLocale().getLanguage());
+			searchBean.getDataFilterBeans().add(languageBean);
+			
+			if(parentCode!=null){
+				logger.info("with parentCode");
+				searchBean.getDataFilterBeans().add(new SearchMultiFilterBean(
+				new SearchFilterBean("pmRole.pmOrgRoles.orgType.parameterId", SearchOperator.OPERATOR_EQUALS.value(), currentOrgTypeId), 
+				SearchCondition.CONDITION_OR.value(),
+				new SearchFilterBean("pmRole.parentRole.roleCode", SearchOperator.OPERATOR_EQUALS.value(), ProfileManagementConst.ROLE_APPROVER)));
+				
+//				SearchFilterBean orgBean = new SearchFilterBean(
+//						SearchOperator.OPERATOR_EQUALS.value());
+//				orgBean.setSearchField("pmRole.parentRole.roleCode");
+//				orgBean.setSearchValue(currentOrgTypeId);
+//				searchBean.getDataFilterBeans().add(orgBean);
+			}else{
+				logger.info("without parentCode");
+				SearchFilterBean orgBean = new SearchFilterBean(
+						SearchOperator.OPERATOR_EQUALS.value());
+				orgBean.setSearchField("pmRole.pmOrgRoles.orgType.parameterId");
+				orgBean.setSearchValue(currentOrgTypeId);
+				searchBean.getDataFilterBeans().add(orgBean);
+				
+				//remove parent role as children were selected
+				SearchFilterBean approverBean = new SearchFilterBean(
+						SearchOperator.OPERATOR_NOT_EQUALS.value());
+				approverBean.setSearchField("pmRole.roleCode");
+				approverBean.setSearchValue(ProfileManagementConst.ROLE_APPROVER);
+				searchBean.getDataFilterBeans().add(approverBean);
+			}
+			
+		
+		}
+		return searchBean;
+	}
+	
+//	private List<PmRoleDesc> getChildRoles(String parentCode){
+//		List<PmRoleDesc> childList = new ArrayList<PmRoleDesc>();
+//		try{
+//			if(parentCode!=null){
+//				RoleReqDTO roleReqDTO = new RoleReqDTO();
+//				roleReqDTO.setParentRole(parentCode);
+//				roleReqDTO.setLanguage(getFacesScopes().getUserLocale().getLanguage());
+//				IRoleSO roleSO = BusinessDelegate.getInstance().getServiceObject(
+//						ModuleCodeConst.PROFILE_MANAGEMENT, IRoleSO.class);
+//				RoleResDTO resDto = roleSO.searchRoleNameList(roleReqDTO);
+//				if(resDto!=null && resDto.isSuccessful()){
+//					childList = resDto.getRoleList();
+//				}
+//				
+//			}
+//		}catch(Exception e){
+//			e.printStackTrace();
+//		}
+//		return childList;
+//	}
+//	
+
+	/**
+	 * add new selected role to user role list
+	 */
+	public void confirmRoles(){
+		logger.info("confirmRoles");
+		this.getManagedBean().setAvailableRoles(this.getManagedBean().getSelectedRoles());
+//		if(this.getManagedBean().getSelectedRoles()!=null && !this.getManagedBean().getSelectedRoles().isEmpty()){
+//			if(this.getManagedBean().getSelectedUserOrg()!=null){
+//				for(PmRoleDesc pmRoleDesc : this.getManagedBean().getSelectedRoles()){
+//					PmUserRole pmUserRole = new PmUserRole();
+//					pmUserRole.setPmRole(pmRoleDesc.getPmRole());
+//					this.getManagedBean().getSelectedUserOrg().addPmUserRole(pmUserRole);
+//				}
+//			}else{
+//				throw new EpException("Please select a Reponsible Org. Unit."); //TODO exception
+//			}
+//		}else{
+//			throw new EpException("At least one role must be selected."); //TODO exception
+//		}
+		
+	}
+	
+	/**
+	 * remove role selection
+	 */
+	public void cancelRoles(){
+		logger.info("cancelRoles");
+//		this.getManagedBean().setSelectedRoles(null);
+	}
+	
+	/**
+	 * search user roles
+	 */
+	public void getAvailbleUserRole() {
+		logger.info("getAvailbleUserRole");
+//		if(this.getManagedBean().getSelectedUserOrg()!=null && this.getManagedBean().getSelectedUserOrg().getPmUserRoles()!=null){
+//			if(this.getManagedBean().getSelectedRoles()==null){
+//				this.getManagedBean().setSelectedRoles(new ArrayList<PmRoleDesc>());
+//			}
+//			for(PmUserRole pmUserRole: this.getManagedBean().getSelectedUserOrg().getPmUserRoles()){
+//				this.getManagedBean().getSelectedRoles().add();
+//			}
+//		}
+		roleDataModel.reloadData();
+	}
+	
+	
+	/**
+	 * @return the roleDataModel
+	 */
+	public IPagingDataModel<PmRoleDesc> getRoleDataModel() {
+		return roleDataModel;
+	}
+
+	/**
+	 * @param roleDataModel the roleDataModel to set
+	 */
+	public void setRoleDataModel(IPagingDataModel<PmRoleDesc> roleDataModel) {
+		this.roleDataModel = roleDataModel;
+	}
+
+	
+	// pagination for role search list
+	private class RolePagingDataModel extends PagingDataModel<PmRoleDesc> {
+		private static final long serialVersionUID = 1L;
+
+		public RolePagingDataModel() {
+			super("dtRoleOptions");
+		}
+
+		@Override
+		public ISearchResultBean<PmRoleDesc> pageChangeListener(ISearchBean<PmRoleDesc> searchBean) {
+			if(logger.isDebugEnabled()) {
+				logger.debug("pageChangeListener");
+			}
+			try {
+//				boolean isApprover = false;
+				ISearchBean<PmRoleDesc> searchBeanData = getRoleBeanData(searchBean, null);
+				RoleReqDTO roleReqDTO = new RoleReqDTO();
+				roleReqDTO.setSearchRoleBean(searchBeanData);
+				IRoleSO roleSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IRoleSO.class);
+				RoleResDTO resDto = roleSO.retrieveRoleDecsBySearchBean(roleReqDTO);
+				
+				if (resDto != null && resDto.isSuccessful()) {
+					/**
+					List <PmRoleDesc> roleResults = resDto.getSearchRoleResultBean().getResultList();
+					for(PmRoleDesc roleDesc: roleResults){
+						if(ProfileManagementConst.ROLE_APPROVER.equals(roleDesc.getPmRole().getRoleCode())){
+							isApprover = true;
+							break;
+						}
+					}
+					if(isApprover){
+						searchBeanData = getRoleBeanData(searchBean, ProfileManagementConst.ROLE_APPROVER);
+						resDto = roleSO.retrieveRoleDecsBySearchBean(roleReqDTO);
+						System.out.println("with parent "+resDto.getSearchRoleResultBean().getTotalRecord());
+					}
+					 */
+					getManagedBean().setAvailableRoles(resDto.getSearchRoleResultBean().getResultList());
+					return resDto.getSearchRoleResultBean();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+	}
+	/** Roles & Paging - End  */
+
+	
+	
+	/** User Search & Paging - Start  */
+	
+	/**
+	 * search user profiles
+	 */
+	public void searchUserProfile(){
+		logger.info("searchUserProfile");
+		userProfileDataModel.reloadData();
+	}
+	
+	/**
+	 * get search bean 
+	 * @return ISearchBean<PmUser>
+	 */
+	private ISearchBean<PmUser> getSearchBeanData(ISearchBean<PmUser> searchBean){
+		logger.info("getSearchBeanData - Start");
+		boolean isSearchable = SEARCH_DEFAULT;
+		boolean isEmpty = true;
+		UserProfilesSearchBean upSearchBean = this.getManagedBean().getUserProfileSearchBean();
+		//User Name
+		if (upSearchBean.getUserName() != null && !"".equalsIgnoreCase(upSearchBean.getUserName())) {
+			logger.info("+ userName "  +upSearchBean.getUserName());
+			SearchFilterBean userSearchBean = new SearchFilterBean(
+					SearchOperator.OPERATOR_LIKE.value());
+			userSearchBean.setSearchField("userName");
+			userSearchBean.setSearchValue(upSearchBean.getUserName());
+			searchBean.getDataFilterBeans().add(userSearchBean);
+			isEmpty = false;
+		}
+		//Org Name
+		if (upSearchBean.getUserOrganizationName() != null && !"".equalsIgnoreCase(upSearchBean.getUserOrganizationName())) {
+			logger.info("+ userOrganizationName "  +upSearchBean.getUserOrganizationName());
+			SearchFilterBean userSearchBean = new SearchFilterBean(
+					SearchOperator.OPERATOR_LIKE.value());
+			userSearchBean.setSearchField("pmUserOrgs.pmOrgProfile.pmOrgValidity.orgName");
+			userSearchBean.setSearchValue(upSearchBean.getUserOrganizationName());
+			searchBean.getDataFilterBeans().add(userSearchBean);
+			isEmpty = false;
+		}
+
+		//Role
+		if (upSearchBean.getUserRole() != null && !"".equalsIgnoreCase(upSearchBean.getUserRole())) {
+			logger.info("+ userRole "  +upSearchBean.getUserRole());
+			SearchFilterBean userSearchBean = new SearchFilterBean(
+					SearchOperator.OPERATOR_LIKE.value());
+			userSearchBean.setSearchField("pmUserOrgs.pmUserRoles.pmRole.pmRoleDescs.roleName");
+			userSearchBean.setSearchValue(upSearchBean.getUserRole());
+			searchBean.getDataFilterBeans().add(userSearchBean);
+			isEmpty = false;
+		}
+		
+		//Status if non provided then select default (active)
+		if(upSearchBean.getUserStatus()!=null){
+			logger.info("+ status "  +upSearchBean.getUserStatus());
+			SearchFilterBean userSearchBean = new SearchFilterBean();
+			userSearchBean.setSearchField("recordStatusFlg");
+			userSearchBean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+			userSearchBean.setSearchValue(upSearchBean.getUserStatus());
+			searchBean.getDataFilterBeans().add(userSearchBean);
+			isEmpty = false;
+		}
+		
+		logger.info("+ status try only "  + null);
+		//base on the flag, default list is either select all or empty
+		if(isEmpty && !isSearchable && upSearchBean.getUserStatus()==null){
+			logger.info("+ status "  + null);
+			SearchFilterBean bean = new SearchFilterBean();
+			bean.setSearchField("recordStatusFlg");
+			bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+			bean.setSearchValue(null);
+			searchBean.getDataFilterBeans().add(bean);
+		}
+		logger.info("getSearchBeanData - End");
+		return searchBean;
+	}
+	
+	public IPagingDataModel<PmUser> getUserProfileDataModel() {
+		return userProfileDataModel;
+	}
+
+	public void setUserProfileDataModel(
+			IPagingDataModel<PmUser> userProfileDataModel) {
+		this.userProfileDataModel = userProfileDataModel;
+
+	}
+	
+	// pagination for user search list
+	private class UserProfilePagingDataModel extends PagingDataModel<PmUser> {
+		private static final long serialVersionUID = 1L;
+
+		public UserProfilePagingDataModel() {
+			super("dtUserResult");
+		}
+
+		@Override
+		protected ISearchResultBean<PmUser> pageChangeListener(ISearchBean<PmUser> searchBean) {
+			try {	
+				ISearchBean<PmUser> searchBeanData = getSearchBeanData(searchBean);
+				UserReqDTO userReqDTO = new UserReqDTO();
+				userReqDTO.setUserSearchBean(searchBeanData);
+				IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);	
+				UserResDTO resDto = userSO.searchUserProfile(userReqDTO);
+				if (resDto != null && resDto.isSuccessful()) {
+					return resDto.getUserResultBean();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				//TODO
+			}
+			return null;
+		}
+
+	}
+	
+	/** User Search & Paging - End  */
+
+
+	private void dummyUser(PmUser pmUser){
+		System.out.println("dummyUser");
+		
+		//dummy a role here
+		if(!pmUser.isBrandNew()){
+			System.out.println("dummy user not brand new ");
+			if(pmUser.getPmUserOrgs()==null){
+				System.out.println("dummy user empty pmUserOrgs");
+				pmUser.setPmUserOrgs(new ArrayList<PmUserOrg>());
+				//pmUserOrg
+				PmUserOrg pmUserOrg = new PmUserOrg();
+				
+				
+				//pmUserOrg.pmOrgProfile
+				PmOrgProfile pmOrgProfile = new PmOrgProfile();
+				pmOrgProfile.setOrgProfileId(1L);
+				
+				//pmOrgProfile.orgTypeCode
+				PmParameter pmParameter = new PmParameter();
+				pmParameter.setParameterId(166L);
+				pmOrgProfile.setOrgTypeCode(pmParameter);
+				pmOrgProfile.setBrandNew(false);
+				pmUserOrg.setPmOrgProfile(pmOrgProfile);
+				
+				//pmUserOrg.pmUserRole.pmRole
+				PmRole pmRole = new PmRole();
+				pmRole.setRoleCode("BUDGET_APPROVER");
+				
+				PmRole pmRole2 = new PmRole();
+				pmRole2.setRoleCode("CD_OFFICER");
+				
+				//pmUserOrg.pmUserRole
+				PmUserRole pmUserRole = new PmUserRole();
+				pmUserRole.setPmRole(pmRole);
+				
+				PmUserRole pmUserRole2 = new PmUserRole();
+				pmUserRole2.setPmRole(pmRole2);
+				
+				pmUserOrg.setPmUserRoles(new ArrayList<PmUserRole>());
+				
+				pmUserOrg.addPmUserRole(pmUserRole);
+				pmUserOrg.addPmUserRole(pmUserRole2);
+				
+				pmUser.addPmUserOrg(pmUserOrg);
+				
+				
+			}else{
+				//ADD
+				PmUserOrg tempUserOrg = pmUser.getPmUserOrgs().get(0);
+				PmUserRole pmUserRole = new PmUserRole();
+				//pmUserOrg.pmUserRole.pmRole
+				PmRole pmRole = new PmRole();
+				pmRole.setRoleCode("CD_COMMITTEE");
+				pmUserRole.setPmRole(pmRole);
+				tempUserOrg.setPmUserRoles(new ArrayList<PmUserRole>());
+				tempUserOrg.addPmUserRole(pmUserRole);
+			}
+			
+		}else{
+			pmUser.getSalutationCode().setSalutationId(454L);
+			pmUser.getIdentificationCode().setParameterId(70L);
+			pmUser.setLoginId(pmUser.getIdentificationNo());
+			pmUser.setDesignation("test");
+			pmUser.setGrade("test");
+			pmUser.setFaxNo("1234567890");
+			pmUser.setMobileNo("1234567890");
+			pmUser.setPhoneNo("1234567890");
+			pmUser.setEmail(pmUser.getUserName() + "@test.com");
+			pmUser.getOrgTypeCode().setParameterId(166L);
+			
+			pmUser.setPmUserOrgs(new ArrayList<PmUserOrg>());
+			//pmUserOrg
+			PmUserOrg pmUserOrg = new PmUserOrg();
+			
+			
+			//pmUserOrg.pmOrgProfile
+			PmOrgProfile pmOrgProfile = new PmOrgProfile();
+			pmOrgProfile.setOrgProfileId(1L);
+			
+			//pmOrgProfile.orgTypeCode
+			PmParameter pmParameter = new PmParameter();
+			pmParameter.setParameterId(166L);
+			pmOrgProfile.setOrgTypeCode(pmParameter);
+			pmOrgProfile.setBrandNew(false);
+			pmUserOrg.setPmOrgProfile(pmOrgProfile);
+			pmUserOrg.setEffDate(new Timestamp(System.currentTimeMillis()));
+			//pmUserOrg.pmUserRole.pmRole
+			PmRole pmRole1 = new PmRole();
+			pmRole1.setRoleCode("BUDGET_APPROVER");
+			
+			PmRole pmRole2 = new PmRole();
+			pmRole2.setRoleCode("CD_OFFICER");
+			
+			//pmUserOrg.pmUserRole
+			PmUserRole pmUserRole1 = new PmUserRole();
+			pmUserRole1.setPmRole(pmRole1);
+			
+			PmUserRole pmUserRole2 = new PmUserRole();
+			pmUserRole2.setPmRole(pmRole2);
+			
+			pmUserOrg.setPmUserRoles(new ArrayList<PmUserRole>());
+			
+			pmUserOrg.addPmUserRole(pmUserRole1);
+			pmUserOrg.addPmUserRole(pmUserRole2);
+			
+			pmUser.addPmUserOrg(pmUserOrg);
+			
+		}
+		
+	
+	}
+	
+	private void dummyAddress(PmUser pmUser, PmAddress pmAdress){
+		System.out.println("dummyAddress");
+		pmAdress.setAddress1("add1");
+		pmAdress.setAddress2("add2");
+		pmAdress.setAddress3("add3");
+		pmAdress.setEmail(pmUser.getUserName() + "@test.com");
+		pmAdress.setFaxNo("1234567890");
+		pmAdress.setMobileNo("1234567890");
+		pmAdress.setPhoneNo("1234567890");
+		pmAdress.getPmState().setStateId(54L);
+		pmAdress.getPmDistrict().setDistrictId(402L);
+		pmAdress.getPmCity().setCityId(1869L);
+		pmAdress.setPmDivision(null);
+		pmAdress.setPostcode("12345");
+		
+	}
+	
+	private void dummyTestUpdateRole(UserReqDTO reqDTO){
+		//ADD
+		List <PmUserRole> newUserRoles = new ArrayList<PmUserRole>();
+		PmUserRole pmUserRole1 = new PmUserRole();
+		PmRole pmRole1 = new PmRole();
+		pmRole1.setRoleCode("CD_COMMITTEE");
+		pmUserRole1.setPmRole(pmRole1);
+		newUserRoles.add(pmUserRole1);
+		
+		List <PmUserRole> delUserRoles = new ArrayList<PmUserRole>();
+		PmUserRole pmUserRole2 = new PmUserRole();
+		PmRole pmRole2 = new PmRole();
+		pmRole2.setRoleCode("BUDGET_APPROVER");
+		pmUserRole2.setPmRole(pmRole2);
+		delUserRoles.add(pmUserRole2);
+
+		reqDTO.setNewRoleList(newUserRoles);
+		reqDTO.setRemoveRoleList(delUserRoles);
+	}
+	
+	private void loadUserAddress(PmUser user){
+		if(!user.isBrandNew()){
+			//update contact address
+			if(user.getPmAddressTypes()!=null && !user.getPmAddressTypes().isEmpty()){
+				System.out.println(1);
+				for (PmAddressType addressTypeObj : user.getPmAddressTypes()) {
+					System.out.println(2);
+					if (ProfileManagementConst.ADDRESS_USER.equalsIgnoreCase(addressTypeObj.getAddressType())) {
+						System.out.println(2);
+						addressTypeObj.setPmAddress(this.getManagedBean().getUserAddress());
+						break;
+					}
+				}
+			}
+		}else{
+			if(user.getPmAddressTypes()==null){
+				user.setPmAddressTypes(new ArrayList<PmAddressType>());
+			}
+			PmAddressType pmAddressType = new PmAddressType();
+			pmAddressType.setAddressType(ProfileManagementConst.ADDRESS_USER);
+			pmAddressType.setPmAddress(this.getManagedBean().getUserAddress());
+			pmAddressType.setPmOrgProfile(null);
+			if(this.getManagedBean().isDummy()){
+				dummyAddress(user, this.getManagedBean().getUserAddress()); //TODO REMOVE
+			}
+			user.addPmAddressType(pmAddressType);
+		}
+
+	}
+	/**
+	 * Method to update the user details
+	 */
+	public void saveUserProfile() {
+		debugLogger("saveUserProfile");
+		PmUser user = this.getManagedBean().getSelectedUser();
+		System.out.println(this.getManagedBean().isDummy());
+		if(this.getManagedBean().isDummy()){ //TODO REMOVE
+			dummyUser(user);
+		}
+		loadUserAddress(user);
+
+		IUserSO userSO = null;
+		try {
+			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			UserReqDTO reqDTO = new UserReqDTO();
+			if(this.getManagedBean().isDummy()){ //TODO REMOVE
+				dummyTestUpdateRole(reqDTO);
+			}
+			
+			reqDTO.setPmUser(user);
+
+			UserResDTO resDTO = userSO.saveUser2(reqDTO);
+
+			if (resDTO.isSuccessful()) {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO,
+								null, "Record save successfully for Login ID: "
+										+ resDTO.getPmUser().getLoginId()));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
+		} finally {
+			userSO = null;
+		}
+	}
+	
+	public void test(){
+		System.out.println("test start");
+	
+		for(PmRoleDesc obj:this.getManagedBean().getAvailableRoles()){
+			System.out.println(obj.getRoleName());
+		}
+		if(this.getManagedBean().getAvailableRoles().containsAll(this.getManagedBean().getSelectedRoles())){
+			System.out.println("YES IT IS HERE!!!!");
+		}else{
+			System.out.println("NOT HERE!!!!");
+		}
+		System.out.println("test end");
+	}
+	
+	
+	public void testSearch(String id){
+		System.out.println("testSearch - start");
+		System.out.println(id);
+		System.out.println(this.getManagedBean().getSelectedUser().getIdentificationNo());
+		IUserSO userSO = null;
+		try {
+			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			UserReqDTO reqDTO = new UserReqDTO();
+			PmUser pmUser = this.getManagedBean().getSelectedUser();
+			pmUser.setLoginId(this.getManagedBean().getSelectedUser().getIdentificationNo());
+			reqDTO.setPmUser(pmUser);
+
+			UserResDTO resDTO = userSO.test(reqDTO);
+
+			if (resDTO.isSuccessful()) {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO,
+								null, "Record save successfully for Login ID: "
+										+ resDTO.getResult()));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
+		} finally {
+			userSO = null;
+		}
+		System.out.println("testSearch - end");
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+
+	
+	
+	
+	
+	
+	/**
+	 * TO BE VERIFIED
+	 */
+	
+
+	
+	
+
+	
+	// pagination for user address search list
+	private class userAddressPagingDataModel extends PagingDataModel<PmAddressType> {
+		private static final long serialVersionUID = 1L;
+
+		public userAddressPagingDataModel() {
+			super("receivingAddress");
+		}
+
+		public ISearchResultBean<PmAddressType> pageChangeListener(
+			ISearchBean<PmAddressType> searchBean) {
+			IAddressSO addressSO;
+			AddressResDTO resDto;
+			System.out.println("====search by====="
+					+ getManagedBean().getStateCode());
+			try {
+				// SearchBean<PmAddressType> searchBean2=searchBean;
+				AddressReqDTO addressReqDTO = new AddressReqDTO();
+				addressReqDTO
+						.setSearchAddressBean(new SearchBean<PmAddressType>());
+				if (getManagedBean().getStateCode() != null
+						&& !getManagedBean().getStateCode().endsWith("")) {
+					SearchFilterBean stateSearchBean = new SearchFilterBean(
+							SearchOperator.OPERATOR_EQUALS.value());
+					stateSearchBean
+							.setSearchField("pmAddress.pmState.stateCode");
+					stateSearchBean.setSearchValue(getManagedBean()
+							.getStateCode());
+					searchBean.getDataFilterBeans().add(stateSearchBean);
+				}
+
+				if (getManagedBean().getDistrictId() != null) {
+					SearchFilterBean districtSearchBean = new SearchFilterBean(
+							SearchOperator.OPERATOR_EQUALS.value());
+					districtSearchBean
+							.setSearchField("pmAddress.pmDistrict.districtId");
+					districtSearchBean.setSearchValue(getManagedBean()
+							.getDistrictId());
+					searchBean.getDataFilterBeans().add(districtSearchBean);
+				}
+				addressReqDTO.setSearchAddressBean(searchBean);
+
+				addressSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
+				resDto = addressSO.searchDeliveryAddress(addressReqDTO);
+
+				if (resDto != null) {
+
+					return resDto.getSearchAddressResultBean();
+				}
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+	}
+	
+
+
+
+	public IPagingDataModel<PmAddressType> getSearchReceivingAddress() {
+		return searchReceivingAddress;
+	}
+
+	public void setSearchReceivingAddress(
+			IPagingDataModel<PmAddressType> searchReceivingAddress) {
+		this.searchReceivingAddress = searchReceivingAddress;
+	}	
+
+
+	public String backToMainPages() {
+		resetUserProfileSearchBean();
+
+		return "/xhtml/pm/profilemanagement/profileManagementMain.xhtml";
+	}
+
+	
+	
+	
+
+	public void handleFileUpload(FileUploadEvent event) {
+		FacesMessage msg = new FacesMessage("Succesful", event.getFile()
+				.getFileName() + " is uploaded.");
+		FacesContext.getCurrentInstance().addMessage(null, msg);
+	}
+
+
+		
+
+	public void districtCode(AjaxBehaviorEvent event) {
+		try {
+			Long districtId = (Long) event.getComponent().getAttributes()
+					.get("value");
+			if (null != districtId) {
+				List<PmDistrict> districtList = this.getManagedBean()
+						.getDistrictList();
+				for (PmDistrict district : districtList) {
+					if (district.getDistrictId().equals(districtId)) {
+						this.getManagedBean().setDistrictCode(
+								district.getDistrictCode());
+
+					}
+
+				}
+
+			}
+
+		} finally {
+
+		}
+
+	}	
+	
+	public void cityCode(AjaxBehaviorEvent event) {
+		try {
+			Long cityId = (Long) event.getComponent().getAttributes()
+					.get("value");
+			if (null != cityId) {
+				List<PmCity> cityList = this.getManagedBean()
+						.getCityList();
+				for (PmCity city : cityList) {
+					if (city.getCityId().equals(cityId)) {
+						this.getManagedBean().setCityCode(
+								city.getCityCode());
+
+					}
+
+				}
+
+			}
+
+		} finally {
+
+		}
+
+	}		
+//
+//
+//	// to create new profiles into database
+//	public void createNewProfiles(PmUser user) {
+//
+//		IUserSO userSO;
+//		user.getOrgTypeCode().setParameterId(166L); //TODO remove
+//		try {
+//			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
+//					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+//			UserReqDTO reqDTO = new UserReqDTO();
+//			reqDTO.setPmUser(this.getManagedBean().getUser());
+//
+//			UserResDTO resDTO = userSO.saveMyProfile(reqDTO);
+//
+//			if (resDTO.isSuccessful()) {
+//				FacesContext.getCurrentInstance().addMessage(
+//						null,
+//						new FacesMessage(FacesMessage.SEVERITY_INFO,
+//								"Record save successfully", "User ID: "
+//										+ resDTO.getPmUser().getUserId()));
+//			}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			FacesContext.getCurrentInstance().addMessage(
+//					null,
+//					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+//							e.getMessage()));
+//		} finally {
+//			userSO = null;
+//		}
+//	}
+
+	// to add roles names datatables
+	public void addRolesNames() {
+
+		// getManagedBean().setSelectedRolesList(new PmRoleDesc());
+
+		// getManagedBean().getSelectedRolesList().setPmRole(
+		// getManagedBean().getRoles());
+
+	}
+
+
+	
+	public void addSelectedRole() {
+		debugLogger("addSelectedRole");
+		List<PmRoleDesc> roledescList = this.getManagedBean()
+				.getSelectedUserRole();
+		if (roledescList == null) {
+			roledescList = new ArrayList<PmRoleDesc>();
+		}
+		PmRoleDesc roledesc = new PmRoleDesc();
+		this.getManagedBean().setSelectUserRole(roledesc);
+		getManagedBean().setSelectedUserRole(roledescList);
+	}	
+	
+	public void acceptRoleListAction() {
+		debugLogger("acceptRoleListAction");
+		
+		List<PmRoleDesc> roleList = getManagedBean()
+				.getSelectedUserRole();
+	
+		if (null == roleList) {
+			roleList = new ArrayList<PmRoleDesc>();
+		}
+		
+
+			PmRoleDesc name = new PmRoleDesc();
+			name.setRoleName(getManagedBean().getSelectUserRole()
+					.getRoleName());
+
+			roleList.add(name);
+		
+	}
+	
+	public void addRecevingAddress() {
+		debugLogger("addRecevingAddress");
+		List<PmAddressType> addressTypeList = this.getManagedBean()
+				.getPmRecevingAddressList();
+		if (addressTypeList == null) {
+			addressTypeList = new ArrayList<PmAddressType>();
+		}
+		PmAddressType addressname = new PmAddressType();
+		this.getManagedBean().setSelectRecevingAddress(addressname);
+		getManagedBean().setPmRecevingAddressList(addressTypeList);
+	}	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+
+	
+//	/**
+//	 * search user profiles
+//	 * 
+//	 * @return
+//	 */
+//	public void retriveUserProfile() {
+//		UserReqDTO userReqDTO = new UserReqDTO();
+//		SearchBean<PmUser> searchBean = new SearchBean<PmUser>();
+//		searchBean.setNavigatable(false);
+//		UserResDTO resDto = null;
+//
+//		if (getManagedBean().getUserNames() != null
+//				&& !"".equalsIgnoreCase(getManagedBean().getUserNames())) {
+//			SearchFilterBean usernameSearchBean = new SearchFilterBean(
+//					SearchOperator.OPERATOR_LIKE.value());
+//			usernameSearchBean.setSearchField("userName");
+//			usernameSearchBean.setSearchValue(getManagedBean().getUserNames());
+//			searchBean.getDataFilterBeans().add(usernameSearchBean);
+//
+//		}
+//
+//		userReqDTO.setUserSearchBean(searchBean);
+//
+//		try {
+//			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
+//					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+//			resDto = userSO.searchUserProfile(userReqDTO);
+//			if (resDto != null) {
+//				this.getManagedBean().setUsers(
+//						resDto.getUserResultBean().getResultList());
+//			}
+//			System.out.println("#########################################"
+//					+ resDto.getUserResultBean().getResultList().size());
+//		} catch (Exception ex) {
+//			ex.printStackTrace();
+//		}
+//
+//	}
+	
+	
+//	public String createUserProfiles() {
+        //create user detail
+//		PmUser pmUser = new PmUser();
+//		PmCountry country = new PmCountry();
+//		pmUser.setPmCountry(country);
+//		PmParameter parameter = new PmParameter();
+//		pmUser.setSalutationCode(parameter);
+//		PmParameter parameter2 = new PmParameter();
+//		pmUser.setIdentificationCode(parameter2);
+//		PmParameter parameter3 = new PmParameter();
+//		pmUser.setOrgTypeCode(parameter3);
+//		this.getManagedBean().setPmUser(pmUser);
+//		
+//		//create user address
+//		List<PmAddressType> pmAddressTypes = new ArrayList<PmAddressType>();		
+//		PmAddressType addressType = new PmAddressType();		
+//		addressType.setAddressType("C");		
+//		addressType.setPmUser(pmUser);
+//		PmAddress pmAddress = new PmAddress();
+//		addressType.setPmAddress(pmAddress);
+//		pmAddressTypes.add(addressType);
+//		pmUser.setPmAddressTypes(pmAddressTypes);
+//		this.getManagedBean().setPmUser(pmUser);
+		
+//		return "/xhtml/pm/profilemanagement/userProfileCreation.xhtml";
+//	}
+//	
+	
+//	public UserprofilesBackingBean() {
+//		retriveUserDtls();
+//		retriveStateList();
+//	}
+	
+	//
+//	public void districtBystate(AjaxBehaviorEvent event) {
+//		IDistrictSO districtSo = null;
+//		DistrictResDTO resDto = null;
+//		try {
+//			DistrictReqDTO reqDTO = new DistrictReqDTO();
+//			Long stateId = (Long) event.getComponent().getAttributes()
+//					.get("value");
+//			if (stateId != null) {
+//				List<PmState> stateList = this.getManagedBean().getStateList();
+//				for (PmState sate : stateList) {
+//					if (sate.getStateId().equals(stateId)) {
+//						this.getManagedBean().setStateCode(sate.getStateCode());
+//
+//					}
+//				}
+//			}
+//
+//			reqDTO.setStateId(stateId);
+//			districtSo = BusinessDelegate.getInstance().getServiceObject(
+//					ModuleCodeConst.PROFILE_MANAGEMENT, IDistrictSO.class);
+//			resDto = districtSo.retriveDistrictListByStateID(reqDTO);
+//
+//			if (resDto != null) {
+//				this.getManagedBean().setDistrictList(resDto.getDistrictList());
+//			}
+//
+//		} finally {
+//			districtSo = null;
+//		}
+//
+//	}
+//	
+//	public void cityBydistrict(AjaxBehaviorEvent event) {
+//		ICitySO citySo = null;
+//		CityResDTO resDto = null;
+//		try {
+//			CityReqDTO reqDTO = new CityReqDTO();
+//			Long districtId = (Long) event.getComponent().getAttributes()
+//					.get("value");
+//			if (districtId != null) {
+//				List<PmDistrict> districtList = this.getManagedBean().getDistrictList();
+//				for (PmDistrict distr : districtList) {
+//					if (distr.getDistrictId().equals(districtId)) {
+//						this.getManagedBean().setDistrictCode(distr.getDistrictCode());
+//
+//					}
+//				}
+//			}
+//
+//			reqDTO.setDistrictId(districtId);
+//			citySo = BusinessDelegate.getInstance().getServiceObject(
+//					ModuleCodeConst.PROFILE_MANAGEMENT, ICitySO.class);
+//			resDto = citySo.retriveCityListByDistrictId(reqDTO);
+//
+//			if (resDto != null) {
+//				this.getManagedBean().setCityList(resDto.getCityList());
+//			}
+//
+//		} finally {
+//			citySo = null;
+//		}
+//
+//	}
+	
+//	
+//	
+//	public List<PmParameterDesc> retrieveParameterDescByType(String type) {
+//		return ParameterHelper.getInstance().getParameterDescList(type);
+//
+//	}
+	
+
+//	// pagination for approver type list
+//	private class ApproverNamesPagingDataModel extends PagingDataModel<PmRoleDesc> {
+//		private static final long serialVersionUID = 1L;
+//
+//		public ApproverNamesPagingDataModel() {
+//			super("approverReceiving");
+//		}
+//
+//		@Override
+//		public ISearchResultBean<PmRoleDesc> pageChangeListener(
+//				ISearchBean<PmRoleDesc> searchBean) {
+//				IRoleSO roleSO;
+//				RoleResDTO resDto;
+//				System.out.println("====search by approver type=====");
+//				
+//				try {
+//					
+//					RoleReqDTO roleReqDTO = new RoleReqDTO();
+//					roleReqDTO.setLanguage("en");
+//					roleReqDTO.setParentRole("APPROVER");
+//					
+//					
+//					roleSO = BusinessDelegate.getInstance().getServiceObject(
+//							ModuleCodeConst.PROFILE_MANAGEMENT, IRoleSO.class);
+//					resDto = roleSO.searchRoleNameList(roleReqDTO);
+//
+//					if (resDto != null) {
+//                   System.out.println("Approver Type"+resDto
+//                		    .getSearchRoleResultBean().getTotalRecord());
+//						return resDto.getSearchRoleResultBean();
+//					}
+//
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//					
+//				}
+//				return null;
+//				
+//			}
+//
+//		}	
+//
+//	public IPagingDataModel<PmRoleDesc> getSearchApproverTypeList() {
+//		return searchApproverTypeList;
+//	}
+//
+//	public void setSearchApproverTypeList(
+//			IPagingDataModel<PmRoleDesc> searchApproverTypeList) {
+//		this.searchApproverTypeList = searchApproverTypeList;
+//	}
+//
+//	
+//
+//
+//	public void searchReceivingAddress() {
+//		searchReceivingAddress.reloadData();
+//	}	
+//	
+//	public void searchApproverTypeList() {
+//		searchApproverTypeList.reloadData();
+//	}	
+//	
+//	
+
+
+//	public IPagingDataModel<PmOrgProfile> getOrgDataModel() {
+//		return orgDataModel;
+//	}
+//
+//	public void setOrgDataModel(IPagingDataModel<PmOrgProfile> orgDataModel) {
+//		this.orgDataModel = orgDataModel;
+//	}
+//	
+//	// pagination for org search list
+//	private class OrgPagingDataModel extends PagingDataModel<PmOrgProfile> {
+//		private static final long serialVersionUID = 1L;
+//
+//		public OrgPagingDataModel() {
+//			super("searchOrgList");
+//		}
+//
+//		@Override
+//		protected ISearchResultBean<PmOrgProfile> pageChangeListener(
+//				ISearchBean<PmOrgProfile> searchBean) {
+//			// TODO Auto-generated method stub
+//			return null;
+//		}
+//
+//	}
+	
+	
+	
+}

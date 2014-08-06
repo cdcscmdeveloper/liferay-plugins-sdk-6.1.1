@@ -1,0 +1,276 @@
+package my.ep.web.backingbean.pm.profilepersonalization;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
+
+import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.pm.ProfileManagementConst;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.exception.EpException;
+import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmAddress;
+import my.ep.persistence.entity.pm.common.PmAddressType;
+import my.ep.persistence.entity.pm.common.PmCity;
+import my.ep.persistence.entity.pm.common.PmCountry;
+import my.ep.persistence.entity.pm.common.PmDistrict;
+import my.ep.persistence.entity.pm.common.PmDivision;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.managedbean.pm.profilepersonalization.ProfilePersonalizationManagedBean;
+import my.ep.web.util.FacesScopes;
+import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.ParameterHelper;
+import my.ep.web.util.pm.helper.PmCommonUtil;
+
+import org.apache.log4j.Logger;
+
+/**
+ * @author DK
+ * 
+ */
+@ManagedBean(name = "profilePersonalizationBackingBean")
+@RequestScoped
+public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePersonalizationManagedBean> {
+
+	
+	private static final Logger logger = EpLogger
+			.getLogger(ProfilePersonalizationBackingBean.class);
+	
+	public static final String NAV_TO_MYACCOUNT = "/xhtml/pm/profilePersonalization/userDetails/profileManagementMaintain.xhtml"; 
+	//Mapper for DDL object
+	private static Map<Long, Object> identityTypeMapper;
+	
+	private void debugLogger(Object message) {
+		if (logger.isDebugEnabled()) {
+			logger.debug(message);
+		}
+		logger.info(message);
+	}
+
+	/**
+	 * load clean view for my account
+	 */
+	public void preLoadingMyAccount(){
+		logger.info("preLoadingMyAccount");
+		FacesScopes facesScopes = new FacesScopes();
+		PmUser sUsers = facesScopes.getUserSessionBean();
+		if(sUsers==null){
+			throw new EpException("Unable to get the user details."); 
+		}
+		this.retrieveIdentityTypeMap();
+		loadUserProfile(sUsers.getUserId());
+		
+		FacesContext fc = FacesContext.getCurrentInstance();
+	    fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_MYACCOUNT);
+	}
+	
+
+	/**
+	 * load pm user object by id
+	 * @param id
+	 */
+	private void loadUserProfile(Long id){
+		try {
+			//load user
+			PmUser pmUser = PmCommonUtil.retrieveUserById(id);
+			this.getManagedBean().setSelectedUser(pmUser);
+			if (pmUser!=null && pmUser.getPmAddressTypes() != null) {
+				populateUserAddress(pmUser);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new EpException("Unable to view User Profile.", new String[]{e.getMessage()}); //TODO exception
+		}	
+	}
+	
+
+	/**
+	 * populate user address to managed bean
+	 * @param pmUser
+	 */
+	private void populateUserAddress(PmUser pmUser){
+		logger.info("populateUserAddress");
+		boolean hasAddress = false;
+		try {
+			for (PmAddressType addressTypeObj : pmUser.getPmAddressTypes()) {
+				if (addressTypeObj.getAddressType().equalsIgnoreCase(ProfileManagementConst.ADDRESS_USER)) {
+					this.getManagedBean().setUserAddress(addressTypeObj.getPmAddress());
+					hasAddress = true;
+					break;
+				}
+			}
+			if(!hasAddress){
+				this.getManagedBean().setUserAddress(PmCommonUtil.getNewPmAddress());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new EpException("Unable to retrieve/populate address.", new String[]{e.getMessage()}); //TODO exception
+		}
+	}
+	
+	/**
+	 * retrieve salutation list
+	 * @return List<PmSalutation> 
+	 */
+	public SelectItem[] salutationOptions(){
+		logger.info("salutationOptions");
+		return getDropdownValues(ParameterTypeConst.SALUTATIONS);
+	}
+	
+
+	/**
+	 * get YES & NO options //TODO: to load dynamically
+	 * @return SelectItem[] 
+	 */
+	public SelectItem[] getYesNoOptions() {
+		return PmCommonUtil.getYesNoBooleanOptions();
+	}
+	
+	
+	/**
+	 * get all country list
+	 * @return List<PmCountry>
+	 */
+	public List<PmCountry> getCountryList() {
+		logger.info("getCountryList");
+		return PmCommonUtil.retrievePmCountryList();
+	}
+	
+	/**
+	 * get state list by country id
+	 * @param countryId
+	 * @return List<PmState>
+	 */
+	public List<PmState> getStateList(Long countryId) {
+		logger.info("getStateList");
+		return PmCommonUtil.retrievePmStateList(countryId);
+	}
+	
+	/**
+	 * get division list by state id (only applicable for sarawak)
+	 * @param stateId
+	 * @return List<PmDivision>
+	 */
+	public List<PmDivision> getDivisionList(Long stateId) {
+		logger.info("getDivisionList");
+		return PmCommonUtil.retrievePmDivisionList(stateId);
+	}
+	
+	/**
+	 * get district list by state id
+	 * @param stateId
+	 * @return List<PmDistrict>
+	 */
+	public List<PmDistrict> getDistrictList(Long stateId) {
+		logger.info("getDistrictList");
+		return PmCommonUtil.retrievePmDistrictList(stateId);
+	}
+	
+	/**
+	 * get city list by district id
+	 * @param districtId
+	 * @return List<PmCity>
+	 */
+	public List<PmCity> getCityList(Long districtId) {
+		logger.info("getCityList");
+		return PmCommonUtil.retrievePmCityList(districtId);
+	}
+
+	/**
+	 * update division flag to either disable or enable division selection on UI
+	 * @param divisionType
+	 * @param stateId
+	 */
+	public void updateDivisionFlag(Long stateId){
+		logger.info("updateDivisionFlag");
+		if(stateId!=null){
+			PmState pmState = PmCommonUtil.retrievePmStateByStateId(stateId);
+			this.getManagedBean().setDivisionFlagC(
+					(pmState!=null && ParameterConst.SARAK_SK_CODE.equals(pmState.getStateCode())) ? true : false);
+		}
+	}
+	
+
+	/**
+	 * retrieve identity type from PM
+	 * @return SelectItem[]
+	 */
+	public SelectItem[] getIdentityTypeList() {
+		logger.info("getIdentityTypeList");
+		return getDropdownValues(ParameterTypeConst.IDENTIFICATION_TYPES);
+	}
+
+
+	/**
+	 * retrieve all identity type into mapper
+	 */
+	protected void retrieveIdentityTypeMap(){
+		List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance()
+				.getParameterDescList(ParameterTypeConst.IDENTIFICATION_TYPES);
+		
+		identityTypeMapper = new HashMap<Long,Object>();
+		for(PmParameterDesc pmDesc: parameterDescs){
+			identityTypeMapper.put(pmDesc.getPmParameter().getParameterId(), pmDesc.getPmParameter());
+		}
+	}
+
+
+	/**
+	 * Method to update the user details
+	 */
+	public void saveUserProfile() {
+		debugLogger("saveUserProfile");
+		PmUser user = this.getManagedBean().getSelectedUser();
+		
+		//update contact address
+		if(user.getPmAddressTypes()!=null && !user.getPmAddressTypes().isEmpty()){
+			for (PmAddressType addressTypeObj : user.getPmAddressTypes()) {
+				if (ProfileManagementConst.ADDRESS_USER.equalsIgnoreCase(addressTypeObj.getAddressType())) {
+					addressTypeObj.setPmAddress(this.getManagedBean().getUserAddress());
+					break;
+				}
+			}
+		}
+
+		IUserSO userSO = null;
+		try {
+			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			UserReqDTO reqDTO = new UserReqDTO();
+			reqDTO.setPmUser(user);
+
+			UserResDTO resDTO = userSO.saveUser2(reqDTO);
+
+			if (resDTO.isSuccessful()) {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO,
+								null, "Record save successfully for Login ID: "
+										+ resDTO.getPmUser().getLoginId()));
+				this.preLoadingMyAccount();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
+		} finally {
+			userSO = null;
+		}
+	}
+
+}
