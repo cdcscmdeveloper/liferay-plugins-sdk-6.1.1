@@ -32,24 +32,28 @@
 				<div style="width: 100%" align="right">
 
 					<p:commandButton value="Approve" update=":form:tt:approveDialog"
+						partialSubmit="true" process="@this"
 						action="#{backingBean.assignFinalApproveOrReject('approveDialog')}" />
 					<p:commandButton value="Reject" update=":form:tt:rejectDialog"
+						partialSubmit="true" process="@this"
 						action="#{backingBean.assignFinalApproveOrReject('rejectDialog')}" />
 					<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
-						<p:commandButton value="Recommend To Approve"
+						<p:commandButton value="Recommend To Approve" partialSubmit="true"
+							process="@this"
 							action="#{backingBean.submitPOEscalationToApprover('APPROVE')}" />
 					</c:if>
 					<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
-						<p:commandButton value="Recommend To Reject"
+						<p:commandButton value="Recommend To Reject" partialSubmit="true"
+							process="@this"
 							action="#{backingBean.submitPOEscalationToApprover('REJECT')}" />
 					</c:if>
 					<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
-						<p:commandButton value="Recommend Site Visit"
-							onclick="svcDialog.show();" />
+						<p:commandButton value="Recommend Site Visit" partialSubmit="true"
+							process="@this" onclick="svcDialog.show();" />
 					</c:if>
 					<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
-						<p:commandButton value="Send Inquiry"
-							action="#{backingBean.assignMissingDocsList}"
+						<p:commandButton value="Send Inquiry" partialSubmit="true"
+							process="@this" action="#{backingBean.assignMissingDocsList}"
 							update=":form:tt:sendInqDialog" />
 					</c:if>
 				</div> <p:panel header="PO Decision">
@@ -143,7 +147,7 @@
 		<ui:include
 			src="/xhtml/sm/shared/mofSdoSharedPages/sdoSendEnquiry.xhtml" />
 		<div align="right">
-			<p:commandButton value="Submit Inquiry"
+			<p:commandButton value="Submit Inquiry" update=":form"
 				disabled="#{backingBean.managedBean.missinDocs.size() == 0}"
 				oncomplete="sendInqDialog.hide();"
 				action="#{backingBean.submitPOorApproverReviewToBPM('INQUIRY')}" />
@@ -166,7 +170,7 @@
 			src="/xhtml/sm/shared/poDecisionSharedPages/submitToApproverForm.xhtml" />
 		<div align="right">
 			<p:commandButton value="Submit"
-				oncomplete="submitApprvrDialog.hide();"
+				oncomplete="submitApprvrDialog.hide();" update=":form"
 				action="#{backingBean.submitPOorApproverReviewToBPM('ESCALATE')}" />
 			<p:commandButton value="Cancel"
 				action="#{backingBean.cancelPOEscalationToApprover}" />
@@ -179,7 +183,7 @@
 		<ui:include
 			src="/xhtml/sm/shared/poDecisionSharedPages/approvedRemarksPopUpForm.xhtml" />
 		<div align="right">
-			<p:commandButton value="Submit" update="@([id$=Msg])"
+			<p:commandButton value="Submit" update=":form, @([id$=Msg])"
 				action="#{backingBean.finalDecisionApproveOrRejectAppln('approveDialog','APPROVE')}"
 				partialSubmit="true" process="approveDialog" />
 			<p:commandButton value="Cancel"
@@ -195,7 +199,7 @@
 			src="/xhtml/sm/shared/poDecisionSharedPages/rejectedRemarksPopUpForm.xhtml" />
 		<div align="right">
 			<p:commandButton value="Submit" partialSubmit="true"
-				process="rejectDialog" update="@([id$=Msg])"
+				process="rejectDialog" update=":form, @([id$=Msg])"
 				action="#{backingBean.finalDecisionApproveOrRejectAppln('rejectDialog','REJECT')}" />
 			<p:commandButton value="Cancel"
 				action="#{backingBean.cancelFinalApproveOrReject('rejectDialog')}"

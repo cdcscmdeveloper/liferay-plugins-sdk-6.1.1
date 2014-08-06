@@ -30,10 +30,11 @@
 			<td><h:inputHidden
 					value="#{backingBean.managedBean.smAppl.applCategoryType}" />
 				<div style="width: 100%" align="right">
-					<p:commandButton value="Approve"
-						update=":form:tt:approverAppDialog"
+					<p:commandButton value="Approve" partialSubmit="true"
+						process="@this" update=":form:tt:approverAppDialog"
 						action="#{backingBean.assignFinalApproveOrReject('approverAppDialog')}" />
 					<p:commandButton value="Reject" update=":form:tt:approverRejDialog"
+						partialSubmit="true" process="@this"
 						action="#{backingBean.assignFinalApproveOrReject('approverRejDialog')}" />
 
 				</div> <p:panel header="Approver Decision">
@@ -128,7 +129,7 @@
 		<ui:include
 			src="/xhtml/sm/shared/poDecisionSharedPages/approvedRemarksPopUpForm.xhtml" />
 		<div align="right">
-			<p:commandButton value="Submit" update="@([id$=Msg])"
+			<p:commandButton value="Submit" update=":form, @([id$=Msg])"
 				action="#{backingBean.finalDecisionApproveOrRejectAppln('approverAppDialog','APPROVE')}"
 				partialSubmit="true" process="approverAppDialog" />
 			<p:commandButton value="Cancel"
@@ -144,7 +145,7 @@
 			src="/xhtml/sm/shared/poDecisionSharedPages/rejectedRemarksPopUpForm.xhtml" />
 		<div align="right">
 			<p:commandButton value="Submit" partialSubmit="true"
-				process="approverRejDialog" update="@([id$=Msg])"
+				process="approverRejDialog" update=":form, @([id$=Msg])"
 				action="#{backingBean.finalDecisionApproveOrRejectAppln('approverRejDialog','REJECT')}" />
 			<p:commandButton value="Cancel"
 				action="#{backingBean.cancelFinalApproveOrReject('approverRejDialog')}"

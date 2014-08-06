@@ -156,10 +156,12 @@
 			<c:choose>
 				<c:when test="#{backingBean.managedBean.poSiteVisitType eq 'B'}">
 					<p:commandButton value="Submit" onclick="svcDialog.hide();"
+						update=":form"
 						action="#{backingBean.submitPOorApproverReviewToBPM('SITE_VISIT')}" />
 				</c:when>
 				<c:when test="#{backingBean.managedBean.poSiteVisitType eq 'A'}">
 					<p:commandButton value="Submit" onclick="svcDialog.hide();"
+						update=":form"
 						action="#{backingBean.submitPOorApproverReviewToBPM('SITE_VISIT_AFTER_APPROVE')}" />
 				</c:when>
 				<c:otherwise>
