@@ -38,8 +38,7 @@
 				</tr>
 			</table>
 		</p:panel>
-		<p:panel header="#{lbl['lbl.sc.spec.total.num.employees']}"
-			toggleable="true">
+		<p:panel header="#{lbl['lbl.sc.spec.total.num.employees']}">
 			<h:panelGrid>
 				<p:selectOneRadio
 					value="#{specificationBackingBean.managedBean.scQtChecklist.scQtCheckListValue.allEmployee}">
@@ -57,18 +56,21 @@
 			</h:panelGrid>
 		</p:panel>
 
-		<p:panel>
-			<h:panelGrid columns="2">
-				<p:outputLabel value="#{lbl['lbl.sc.spec.asset.score.type']}"></p:outputLabel>
-				<p:selectOneMenu
-					value="#{specificationBackingBean.managedBean.checklistScoreType}">
-					<f:selectItem itemLabel="Auto" itemValue="1"></f:selectItem>
-					<f:selectItem itemLabel="User" itemValue="2"></f:selectItem>
-					<p:ajax event="change" update="totalEmployees"
-						listener="#{specificationBackingBean.scoreTypeChange}"></p:ajax>
-				</p:selectOneMenu>
-			</h:panelGrid>
-		</p:panel>
+		<p:panel header="#{lbl['lbl.sc.spec.score.tot.employees']}">
+			<table>
+				<tr>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sc.spec.asset.score.type']}"></p:outputLabel></td>
+					<td><p:selectOneMenu
+							value="#{specificationBackingBean.managedBean.checklistScoreType}">
+							<f:selectItem itemLabel="Auto" itemValue="1"></f:selectItem>
+							<f:selectItem itemLabel="User" itemValue="2"></f:selectItem>
+							<p:ajax event="change" update="totalEmployees"
+								listener="#{specificationBackingBean.scoreTypeChange}"></p:ajax>
+						</p:selectOneMenu></td>
+				</tr>
+			</table>
+		
 		<h:panelGroup id="totalEmployees">
 			<p:panel
 				rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '1'}">
@@ -96,7 +98,7 @@
 					</div>
 				</h:panelGroup>
 			</p:panel>
-			<p:panel header="#{lbl['lbl.sc.spec.score.tot.employees']}"
+			<p:panel
 				rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '2'}">
 				<table>
 					<tr>
@@ -114,6 +116,7 @@
 				</table>
 			</p:panel>
 		</h:panelGroup>
+		</p:panel>
 
 	</ui:define>
 </ui:composition>

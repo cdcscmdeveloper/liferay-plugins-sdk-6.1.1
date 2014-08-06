@@ -30,7 +30,7 @@
 
 		</div>
 		<p:spacer height="50"></p:spacer>
-		
+
 		<p:panel>
 			<table>
 				<tr>
@@ -48,18 +48,21 @@
 				<p:inputText disabled="true"></p:inputText>
 			</h:panelGrid>
 		</p:panel>
-		<p:panel>
-			<h:panelGrid columns="2">
-				<p:outputLabel value="#{lbl['lbl.sc.spec.asset.score.type']}"></p:outputLabel>
-				<p:selectOneMenu
-					value="#{specificationBackingBean.managedBean.checklistScoreType}">
-					<f:selectItem itemLabel="Auto" itemValue="1"></f:selectItem>
-					<f:selectItem itemLabel="User" itemValue="2"></f:selectItem>
-					<p:ajax event="change" update="paidUpCapital"
-						listener="#{specificationBackingBean.scoreTypeChange}"></p:ajax>
-				</p:selectOneMenu>
-			</h:panelGrid>
-		</p:panel>
+		<p:panel header="Scoring For Paid Up Capital">
+			<table>
+				<tr>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sc.spec.asset.score.type']}"></p:outputLabel></td>
+					<td><p:selectOneMenu
+							value="#{specificationBackingBean.managedBean.checklistScoreType}">
+							<f:selectItem itemLabel="Auto" itemValue="1"></f:selectItem>
+							<f:selectItem itemLabel="User" itemValue="2"></f:selectItem>
+							<p:ajax event="change" update="paidUpCapital"
+								listener="#{specificationBackingBean.scoreTypeChange}"></p:ajax>
+						</p:selectOneMenu></td>
+				</tr>
+			</table>
+		
 		<h:panelGroup id="paidUpCapital">
 			<p:panel
 				rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '1'}">
@@ -72,8 +75,7 @@
 						value="#{specificationBackingBean.managedBean.paidUpSelectList}" />
 					<ui:param name="componentName" value="Paid Up Capital" />
 					<ui:param name="scoringPnlId" value="paidUpId" />
-					<ui:param name="scoringPnlName"
-						value="Scoring For Paid Up Capital"></ui:param>
+					<ui:param name="scoringPnlName" value="Scoring For Paid Up Capital"></ui:param>
 					<ui:include src="/xhtml/sc/specification/scoring.xhtml"></ui:include>
 					<div align="right">
 						<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
@@ -89,7 +91,7 @@
 				</h:panelGroup>
 
 			</p:panel>
-			<p:panel header="Scoring For Paid Up Capital"
+			<p:panel 
 				rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '2'}">
 				<table>
 					<tr>
@@ -106,6 +108,7 @@
 				</table>
 			</p:panel>
 		</h:panelGroup>
+		</p:panel>
 
 
 	</ui:define>

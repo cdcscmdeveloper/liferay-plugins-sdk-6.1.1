@@ -66,9 +66,13 @@
 		</p:panel>
 
 
-		<p:panel>
-			<h:panelGrid columns="2">
+		<p:panel header="#{lbl['lbl.sc.spec.asset.score.net.amount']}">
+			<table>
+			<tr>
+			<td>
 				<p:outputLabel value="#{lbl['lbl.sc.spec.asset.score.type']}"></p:outputLabel>
+				</td>
+				<td>
 				<p:selectOneMenu
 					value="#{specificationBackingBean.managedBean.checklistScoreType}">
 					<f:selectItem itemLabel="Auto" itemValue="1"></f:selectItem>
@@ -76,8 +80,10 @@
 					<p:ajax event="change" update="assetLiabilitie"
 						listener="#{specificationBackingBean.scoreTypeChange}"></p:ajax>
 				</p:selectOneMenu>
-			</h:panelGrid>
-		</p:panel>
+				</td>
+				</tr>
+			</table>
+		
 		<h:panelGroup id="assetLiabilitie">
 			<p:panel
 				rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '1'}">
@@ -107,7 +113,7 @@
 					</div>
 				</h:panelGroup>
 			</p:panel>
-			<p:panel header="#{lbl['lbl.sc.spec.asset.score.net.amount']}"
+			<p:panel 
 				rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '2'}">
 				<table>
 					<tr>
@@ -124,6 +130,7 @@
 				</table>
 			</p:panel>
 		</h:panelGroup>
+		</p:panel>
 
 
 	</ui:define>

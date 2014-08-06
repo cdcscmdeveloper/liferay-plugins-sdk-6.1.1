@@ -113,72 +113,70 @@
 			</h:panelGrid>
 		</h:panelGroup>
 
-		<p:panel>
-			<h:panelGrid columns="2">
-				<p:outputLabel value="#{lbl['lbl.sc.spec.asset.score.type']}"></p:outputLabel>
-				<p:selectOneMenu
-					value="#{specificationBackingBean.managedBean.checklistScoreType}">
-					<f:selectItem itemLabel="Auto" itemValue="1"></f:selectItem>
-					<f:selectItem itemLabel="User" itemValue="2"></f:selectItem>
-					<p:ajax event="change" update="bankDetails"
-						listener="#{specificationBackingBean.scoreTypeChange}"></p:ajax>
-				</p:selectOneMenu>
-			</h:panelGrid>
+		<p:panel header="#{lbl['lbl.sc.spec.score.avg.bank.statement']}">
+			<table>
+				<tr>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sc.spec.asset.score.type']}"></p:outputLabel></td>
+					<td><p:selectOneMenu
+							value="#{specificationBackingBean.managedBean.checklistScoreType}">
+							<f:selectItem itemLabel="Auto" itemValue="1"></f:selectItem>
+							<f:selectItem itemLabel="User" itemValue="2"></f:selectItem>
+							<p:ajax event="change" update="bankDetails"
+								listener="#{specificationBackingBean.scoreTypeChange}"></p:ajax>
+						</p:selectOneMenu></td>
+				</tr>
+			</table>
+
+			<h:panelGroup id="bankDetails">
+				<p:panel
+					rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '1'}">
+
+					<ui:param name="scoringPnlGroupId" value="contractorGroupId" />
+					<h:panelGroup id="bankGroupId">
+						<ui:param name="scoringList"
+							value="#{specificationBackingBean.managedBean.bankStamentScore}" />
+						<ui:param name="selectionList"
+							value="#{specificationBackingBean.managedBean.bankSelectList}" />
+						<ui:param name="componentName" value="bankStatememt" />
+						<ui:param name="scoringPnlId" value="bankStatememtId" />
+						<ui:param name="scoringPnlName"
+							value="#{lbl['lbl.sc.spec.score.avg.bank.statement']}"></ui:param>
+						<ui:include src="/xhtml/sc/specification/scoring.xhtml"></ui:include>
+						<div align="right">
+							<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
+								process="@this,#{scoringPnlId}" partialSubmit="true"
+								oncomplete="scoreWidget.paginator.endLink.click();"
+								actionListener="#{specificationBackingBean.addBankStatement}"
+								update="#{scoringPnlId}" icon="ui-icon-add" />
+							<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
+								icon="ui-icon-delete"
+								action="#{specificationBackingBean.deleteScoring}"
+								update="#{scoringPnlId}" />
+
+						</div>
+					</h:panelGroup>
+
+				</p:panel>
+				<p:panel header="#{lbl['lbl.sc.spec.score.avg.bank.statement']}"
+					rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '2'}">
+					<table>
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sc.spec.max.score']}"></p:outputLabel>
+								<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
+							</td>
+							<td><p:inputText id="bankStmtMaxScore" required="true"
+									label="#{lbl['lbl.sc.spec.max.score']}" maxlength="18"
+									value="#{specificationBackingBean.managedBean.scQtCheckListScore.score}">
+									<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
+								</p:inputText> <p:message id="bkStmtMaxScoreId" for="bankStmtMaxScore"
+									display="icon"></p:message></td>
+						</tr>
+					</table>
+				</p:panel>
+			</h:panelGroup>
+
 		</p:panel>
-		<h:panelGroup id="bankDetails">
-			<p:panel
-				rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '1'}">
-
-				<ui:param name="scoringPnlGroupId" value="contractorGroupId" />
-				<h:panelGroup id="bankGroupId">
-					<ui:param name="scoringList"
-						value="#{specificationBackingBean.managedBean.bankStamentScore}" />
-					<ui:param name="selectionList"
-						value="#{specificationBackingBean.managedBean.bankSelectList}" />
-					<ui:param name="componentName" value="bankStatememt" />
-					<ui:param name="scoringPnlId" value="bankStatememtId" />
-					<ui:param name="scoringPnlName"
-						value="#{lbl['lbl.sc.spec.score.avg.bank.statement']}"></ui:param>
-					<ui:include src="/xhtml/sc/specification/scoring.xhtml"></ui:include>
-					<div align="right">
-						<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
-							process="@this,#{scoringPnlId}" partialSubmit="true"
-							oncomplete="scoreWidget.paginator.endLink.click();"
-							actionListener="#{specificationBackingBean.addBankStatement}"
-							update="#{scoringPnlId}" icon="ui-icon-add" />
-						<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
-							icon="ui-icon-delete"
-							action="#{specificationBackingBean.deleteScoring}"
-							update="#{scoringPnlId}" />
-
-					</div>
-				</h:panelGroup>
-
-			</p:panel>
-			<p:panel header="#{lbl['lbl.sc.spec.score.avg.bank.statement']}"
-				rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '2'}">
-				<table>
-					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sc.spec.max.score']}"></p:outputLabel>
-							<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
-						</td>
-						<td><p:inputText id="bankStmtMaxScore" required="true"
-								label="#{lbl['lbl.sc.spec.max.score']}" maxlength="18"
-								value="#{specificationBackingBean.managedBean.scQtCheckListScore.score}">
-								<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
-							</p:inputText> <p:message id="bkStmtMaxScoreId" for="bankStmtMaxScore"
-								display="icon"></p:message></td>
-					</tr>
-				</table>
-			</p:panel>
-		</h:panelGroup>
-
-		<!-- <p:commandButton value="Cancel" style="float:right;"
-			onclick="bankStatement.hide();" icon="ui-icon-cancel"></p:commandButton>
-        <p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.ok']}"
-			style="float:right;" process="@all"  partialSubmit="true"
-			oncomplete="bankStatement.hide();" icon="ui-icon-accept"></p:commandButton>
- -->
 
 	</ui:define>
 </ui:composition>

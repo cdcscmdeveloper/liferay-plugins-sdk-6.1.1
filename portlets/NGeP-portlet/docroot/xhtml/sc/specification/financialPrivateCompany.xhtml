@@ -50,8 +50,7 @@
 							required="true" id="finPrivateYears"
 							value="#{specificationBackingBean.managedBean.scQtChecklist.scQtCheckListValue.year}">
 							<ac:validateNumber integerOnly="true" maxIntegerDigits="4"></ac:validateNumber>
-							</p:inputText>
-						<p:message id="finPrivateCmpnyYrs" for="finPrivateYears"
+						</p:inputText> <p:message id="finPrivateCmpnyYrs" for="finPrivateYears"
 							display="icon"></p:message></td>
 				</tr>
 			</table>
@@ -87,24 +86,27 @@
 			</p:dataTable>
 
 
-			<h:panelGrid columns="3">
+			<table>
+				<tr>
+					<td><h:outputText
+							value="#{lbl['lbl.sc.spec.total.no.contracts']}" /></td>
+					<td><p:inputText readonly="true" disabled="true"></p:inputText>
+					</td>
+				</tr>
+				<tr>
+					<td><h:outputText value="#{lbl['lbl.sc.spec.total.no.years']}" />
+					</td>
+					<td><p:inputText readonly="true" disabled="true"></p:inputText>
+					</td>
+				</tr>
+				<tr>
+					<td><h:outputText
+							value="#{lbl['lbl.sc.spec.total.contract.amount']}" /></td>
+					<td><p:inputText readonly="true" disabled="true"></p:inputText>
+					</td>
+				</tr>
 
-
-				<h:outputText value="#{lbl['lbl.sc.spec.total.no.contracts']}" />
-				<p:spacer width="10"></p:spacer>
-				<p:inputText readonly="true" disabled="true"></p:inputText>
-
-
-				<h:outputText value="#{lbl['lbl.sc.spec.total.no.years']}" />
-				<p:spacer width="10"></p:spacer>
-				<p:inputText readonly="true" disabled="true"></p:inputText>
-
-				<h:outputText value="#{lbl['lbl.sc.spec.total.contract.amount']}" />
-				<p:spacer width="10"></p:spacer>
-				<p:inputText readonly="true" disabled="true"></p:inputText>
-
-
-			</h:panelGrid>
+			</table>
 
 		</p:panel>
 
@@ -113,64 +115,67 @@
 
 
 
-		<p:panel>
-			<h:panelGrid columns="2">
-				<p:outputLabel value="#{lbl['lbl.sc.spec.asset.score.type']}"></p:outputLabel>
-				<p:selectOneMenu
-					value="#{specificationBackingBean.managedBean.checklistScoreType}">
-					<f:selectItem itemLabel="Auto" itemValue="1"></f:selectItem>
-					<f:selectItem itemLabel="User" itemValue="2"></f:selectItem>
-					<p:ajax event="change" update="finPrivateCompany"
-						listener="#{specificationBackingBean.scoreTypeChange}"></p:ajax>
-				</p:selectOneMenu>
-			</h:panelGrid>
-		</p:panel>
-		<h:panelGroup id="finPrivateCompany">
-			<p:panel
-				rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '1'}">
+		<p:panel header="#{lbl['lbl.sc.spec.score.total.contract.amount']}">
+			<table>
+				<tr>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sc.spec.asset.score.type']}"></p:outputLabel></td>
+					<td><p:selectOneMenu
+							value="#{specificationBackingBean.managedBean.checklistScoreType}">
+							<f:selectItem itemLabel="Auto" itemValue="1"></f:selectItem>
+							<f:selectItem itemLabel="User" itemValue="2"></f:selectItem>
+							<p:ajax event="change" update="finPrivateCompany"
+								listener="#{specificationBackingBean.scoreTypeChange}"></p:ajax>
+						</p:selectOneMenu></td>
+				</tr>
+			</table>
+
+			<h:panelGroup id="finPrivateCompany">
+				<p:panel
+					rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '1'}">
 
 
-				<ui:param name="finContractGroupId" value="fincontractorGroupId" />
-				<h:panelGroup id="contractAmountGroupId">
-					<ui:param name="scoringList"
-						value="#{specificationBackingBean.managedBean.nonFederalContractScore}" />
-					<ui:param name="selectionList"
-						value="#{specificationBackingBean.managedBean.finPrivateContractSelectList}" />
-					<ui:param name="componentName" value="finContractAmount" />
-					<ui:param name="scoringPnlId" value="fincontractAmountId" />
-					<ui:param name="scoringPnlName"
-						value="#{lbl['lbl.sc.spec.score.total.contract.amount']}"></ui:param>
-					<ui:include src="/xhtml/sc/specification/scoring.xhtml"></ui:include>
-					<div align="right">
-						<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
-							process="@this,#{scoringPnlId}" partialSubmit="true"
-							oncomplete="scoreWidget.paginator.endLink.click();"
-							actionListener="#{specificationBackingBean.addPrivateContratAmount}"
-							update="#{scoringPnlId}" icon="ui-icon-add" />
-						<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
-							icon="ui-icon-delete"
-							action="#{specificationBackingBean.deleteScoring}"
-							update="#{scoringPnlId}" />
+					<ui:param name="finContractGroupId" value="fincontractorGroupId" />
+					<h:panelGroup id="contractAmountGroupId">
+						<ui:param name="scoringList"
+							value="#{specificationBackingBean.managedBean.nonFederalContractScore}" />
+						<ui:param name="selectionList"
+							value="#{specificationBackingBean.managedBean.finPrivateContractSelectList}" />
+						<ui:param name="componentName" value="finContractAmount" />
+						<ui:param name="scoringPnlId" value="fincontractAmountId" />
+						<ui:param name="scoringPnlName"
+							value="#{lbl['lbl.sc.spec.score.total.contract.amount']}"></ui:param>
+						<ui:include src="/xhtml/sc/specification/scoring.xhtml"></ui:include>
+						<div align="right">
+							<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
+								process="@this,#{scoringPnlId}" partialSubmit="true"
+								oncomplete="scoreWidget.paginator.endLink.click();"
+								actionListener="#{specificationBackingBean.addPrivateContratAmount}"
+								update="#{scoringPnlId}" icon="ui-icon-add" />
+							<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
+								icon="ui-icon-delete"
+								action="#{specificationBackingBean.deleteScoring}"
+								update="#{scoringPnlId}" />
 
-					</div>
-				</h:panelGroup>
+						</div>
+					</h:panelGroup>
+				</p:panel>
+				<p:panel 
+					rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '2'}">
+					<table>
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sc.spec.max.score']}"></p:outputLabel></td>
+							<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
+							<td><p:inputText id="finprivateScore" required="true"
+									label="#{lbl['lbl.sc.spec.max.score']}" maxlength="18"
+									value="#{specificationBackingBean.managedBean.scQtCheckListScore.score}">
+									<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
+								</p:inputText> <p:message id="finPrivateMaxScore" for="finprivateScore"
+									display="icon"></p:message></td>
+						</tr>
+					</table>
+				</p:panel>
+			</h:panelGroup>
 			</p:panel>
-			<p:panel header="#{lbl['lbl.sc.spec.score.total.contract.amount']}"
-				rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '2'}">
-				<table>
-					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sc.spec.max.score']}"></p:outputLabel></td>
-						<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
-						<td><p:inputText id="finprivateScore" required="true"
-								label="#{lbl['lbl.sc.spec.max.score']}" maxlength="18"
-								value="#{specificationBackingBean.managedBean.scQtCheckListScore.score}">
-								<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
-							</p:inputText> <p:message id="finPrivateMaxScore" for="finprivateScore"
-								display="icon"></p:message></td>
-					</tr>
-				</table>
-			</p:panel>
-		</h:panelGroup>
-
 	</ui:define>
 </ui:composition>
