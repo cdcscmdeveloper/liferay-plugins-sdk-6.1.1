@@ -183,22 +183,22 @@
 								</h:panelGroup>
 							</p:column>
 
-							<p:column headerText="#{lbl['lbl.cm.item.name']}">								
+							<p:column headerText="#{lbl['lbl.cm.item.name']}" style="white-space: normal">								
 								<p:commandLink value="#{supplierItem.itemName}"
 									action="#{catalogueBackingBean.navigateToSupplierItemDet(supplierItem)}" />								
 							</p:column>
 
 							<p:column width="8%" headerText="#{lbl['lbl.cm.contact.no']}"
-										rendered="#{unspscCodeBackingBean.requisitioner}">
+										rendered="#{unspscCodeBackingBean.requisitioner}" style="white-space: normal">
 								#{supplierItem.contractNo}
 							</p:column>
 
 							<p:column width="8%" headerText="#{lbl['lbl.cm.circular.no']}"
-										rendered="#{unspscCodeBackingBean.requisitioner}">
+										rendered="#{unspscCodeBackingBean.requisitioner}" style="white-space: normal">
 								#{supplierItem.circularNo}
 							</p:column>
 
-							<p:column headerText="#{lbl['lbl.cm.supplier.name']}">
+							<p:column headerText="#{lbl['lbl.cm.supplier.name']}" style="white-space: normal">
 								<ui:remove>
 									<h:outputText value="#{supplierItem.companyName}"
 										rendered="#{supplierItem.contractNo != null or supplierItem.circularNo != null}"></h:outputText>
@@ -209,11 +209,11 @@
 								<h:outputText value="#{supplierItem.companyName}" ></h:outputText>
 							</p:column>
 
-							<p:column width="5%" headerText="UOM">
+							<p:column width="5%" headerText="UOM" style="white-space: normal">
 							#{supplierItem.uomName}
 							</p:column>
 							
-							<p:column width="8%" headerText="#{lbl['lbl.cm.best.price']}">
+							<p:column width="8%" headerText="#{lbl['lbl.cm.best.price']}" style="white-space: normal">
 								<h:outputLabel value="#{supplierItem.bestPrice}" >
 									<f:convertNumber pattern="#,###.##" />
 								</h:outputLabel>
