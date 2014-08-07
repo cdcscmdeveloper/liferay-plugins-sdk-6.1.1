@@ -43,6 +43,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRequest;
+import my.ep.persistence.entity.sc.quationtender.ScQtApproverSettings;
 import my.ep.persistence.entity.sc.quationtender.ScQtBSVRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvAttendance;
@@ -52,6 +53,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtBudget;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
@@ -152,7 +154,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<ScQt> selectedCloneTenderList;
 	private List<CloneAll> selectedCloneAllList;
 	private List<ScQtDeduction> selectedScQtDeductions;
-	//private List<ScQtDeduction> selectedScQtDeduction;
+	// private List<ScQtDeduction> selectedScQtDeduction;
 	private ScQtDeduction selectedScQtDeduction;
 	private List<ScQtDeductionClause> selectedDeductionClauses;
 
@@ -312,7 +314,10 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private DualListModel<PmUser> budgetApprovalUsers;
 	private DualListModel<PmUser> committeeApprovalUsers;
 	private DualListModel<PmUser> ptjApprovalUsers;
-	private DualListModel<PmUser> publicationApprovalUsers;
+	private DualListModel<ScQtApproverSettings> publicationApprovals;
+	private ScQtApproval publicationApproval;
+
+	private List<ScQtCommitteRemarks> qtCommitteeRemarks;
 
 	private List<PmUser> deskOfficerAdmin;
 
@@ -321,8 +326,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	private List<ScQtApprovalAttachment> attachments;
 	private List<ScQtCheckListAttachment> checklistAttachment;
-
-	private List<ScQtBsvDtl> test;
 
 	private List<BriefingZoneBean> briefingZoneBean = new ArrayList<BriefingZoneBean>();
 
@@ -342,20 +345,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private String selectedCommitte;
 	private TreeNode searchcommitteeNode;
 	private TreeNode[] selectSearchcommitteeNode;
-	private String evaluationType = "2";
 
 	private ScQt selectedCloneTender;
 	private ScQt selectedCloneBusinessTender;
 	private ScQt selectedDocumentCloneTender;
 	private List<ScQtCheckList> qtCheckLists;
 	private List<ScQtCheckList> selectedQtCheckLists;
-	private boolean ecType;
 
 	private List<PmParameterDesc> roleTypes; // Role type drop down
-
-	private SelectItem[] finalizeComm;
-
-	private String roleName;
 
 	private List<TabBean> scCommitteeMemberTabList;
 	private List<PmParameter> finalizationSecratary;
@@ -402,8 +399,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private Date proposalValidityUntil;
 	private Date closingDate;
 
-	private String address;
-
 	// Document
 	private ScQtCheckList scQtChecklist;
 	private TemplateSpecBean templateSpecBean = new TemplateSpecBean();
@@ -431,8 +426,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	private List<ScQtCheckList> technicalSpecList;
 	private List<ScQtCheckList> financialSpecList;
-	
-	//Added code to move to tabmenus..
+
+	// Added code to move to tabmenus..
 	private MenuModel menuModel;
 	public int selectedTabIndex;
 	public TabBean selectedTabBean;
@@ -440,6 +435,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public MenuModel approvalMenuModel;
 	public int selectedApprovalTabIndex;
 	public TabBean selectedApprovalTabBean;
+
 	public void setPanelSuppliers(List<SmSupplier> panelSuppliers) {
 		this.panelSuppliers = panelSuppliers;
 	}
@@ -451,10 +447,10 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		cloneQtnTenderSearchBean = new QtnTenderSearchBean();
 
 		userCommitteeSearchBean = new UserCommitteeSearchBean();
-		
+
 		cloneBusinessOwnerSearchBean = new QtnTenderSearchBean();
 		userBusineeOwnerSearchBean = new UserCommitteeSearchBean();
-		
+
 		cloneDocumentSearchBean = new QtnTenderSearchBean();
 
 		root2 = new DefaultTreeNode("Root", null);
@@ -468,21 +464,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		}
 
 		getPTJApproverNames();
-		getPublicationApprovalNames();
-
-	}
-
-	private void getPublicationApprovalNames() {
-		IUserSO iUserSO = (IUserSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IUserSO.class);
-		UserReqDTO userReqDto = new UserReqDTO();
-		userReqDto.setRoleCode(RoleCode.PUBLICATION_APPROVER.value());
-		UserResDTO userResDTO = iUserSO.retrieveUserListByRole(userReqDto);
-		List<PmUser> availableApprover = userResDTO.getUserList();
-		List<PmUser> selectedApprover = new ArrayList<PmUser>();
-		publicationApprovalUsers = new DualListModel<PmUser>(availableApprover,
-				selectedApprover);
 	}
 
 	private void getPTJApproverNames() {
@@ -529,14 +510,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setBriefingZoneBean(List<BriefingZoneBean> briefingZoneBean) {
 		this.briefingZoneBean = briefingZoneBean;
-	}
-
-	public List<ScQtBsvDtl> getTest() {
-		return test;
-	}
-
-	public void setTest(List<ScQtBsvDtl> test) {
-		this.test = test;
 	}
 
 	public List<PmUser> getComitteeUserName() {
@@ -1370,8 +1343,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		return quotationTenderDataType;
 	}
 
-	public void setQuotationTenderDataType(
-			Object quotationTenderDataType) {
+	public void setQuotationTenderDataType(Object quotationTenderDataType) {
 		this.quotationTenderDataType = quotationTenderDataType;
 	}
 
@@ -1739,15 +1711,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.ptjApprovalUsers = ptjApprovalUsers;
 	}
 
-	public DualListModel<PmUser> getPublicationApprovalUsers() {
-		return publicationApprovalUsers;
-	}
-
-	public void setPublicationApprovalUsers(
-			DualListModel<PmUser> publicationApprovalUsers) {
-		this.publicationApprovalUsers = publicationApprovalUsers;
-	}
-
 	public boolean isDurationField() {
 		return durationField;
 	}
@@ -1811,30 +1774,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setSelectedCommitte(String selectedCommitte) {
 		this.selectedCommitte = selectedCommitte;
-	}
-
-	public String getEvaluationType() {
-		return evaluationType;
-	}
-
-	public void setEvaluationType(String evaluationType) {
-		this.evaluationType = evaluationType;
-	}
-
-	public String getRoleName() {
-		return roleName;
-	}
-
-	public void setRoleName(String roleName) {
-		this.roleName = roleName;
-	}
-
-	public boolean isEcType() {
-		return ecType;
-	}
-
-	public void setEcType(boolean ecType) {
-		this.ecType = ecType;
 	}
 
 	public List<TabBean> getScCommitteeMemberTabList() {
@@ -2092,14 +2031,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setSelectpanelItem(List<CtPanelItem> selectpanelItem) {
 		this.selectpanelItem = selectpanelItem;
-	}
-
-	public SelectItem[] getFinalizeComm() {
-		return finalizeComm;
-	}
-
-	public void setFinalizeComm(SelectItem[] finalizeComm) {
-		this.finalizeComm = finalizeComm;
 	}
 
 	public ScQtSampleSubmission getScQtSampleSubmission() {
@@ -2395,14 +2326,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.scQtBriefingAttendance = scQtBriefingAttendance;
 	}
 
-	public String getAddress() {
-		return address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
-	}
-
 	public List<PmParameter> getFinalizationSecratary() {
 		return finalizationSecratary;
 	}
@@ -2497,7 +2420,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setSelectedCloneBOList(List<ScQt> selectedCloneBOList) {
 		this.selectedCloneBOList = selectedCloneBOList;
 	}
-	
+
 	public MenuModel getMenuModel() {
 		return menuModel;
 	}
@@ -2558,7 +2481,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		return selectedScQtDocReports;
 	}
 
-	public void setSelectedScQtDocReports(List<ScQtDocReport> selectedScQtDocReports) {
+	public void setSelectedScQtDocReports(
+			List<ScQtDocReport> selectedScQtDocReports) {
 		this.selectedScQtDocReports = selectedScQtDocReports;
 	}
 
@@ -2619,6 +2543,32 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setSelectedCloneScQtDocReports(
 			List<ScQtDocReport> selectedCloneScQtDocReports) {
 		this.selectedCloneScQtDocReports = selectedCloneScQtDocReports;
+	}
+
+	public DualListModel<ScQtApproverSettings> getPublicationApprovals() {
+		return publicationApprovals;
+	}
+
+	public void setPublicationApprovals(
+			DualListModel<ScQtApproverSettings> publicationApprovals) {
+		this.publicationApprovals = publicationApprovals;
+	}
+
+	public ScQtApproval getPublicationApproval() {
+		return publicationApproval;
+	}
+
+	public void setPublicationApproval(ScQtApproval publicationApproval) {
+		this.publicationApproval = publicationApproval;
+	}
+
+	public List<ScQtCommitteRemarks> getQtCommitteeRemarks() {
+		return qtCommitteeRemarks;
+	}
+
+	public void setQtCommitteeRemarks(
+			List<ScQtCommitteRemarks> qtCommitteeRemarks) {
+		this.qtCommitteeRemarks = qtCommitteeRemarks;
 	}
 
 }
