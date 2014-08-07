@@ -91,7 +91,7 @@
 			<p:spacer height="10px" />
 
 			<p:dataTable var="table" id="offSdList"
-				value="#{backingBean.managedBean.smAppl.smApplSupportDocs}">
+				value="#{backingBean.managedBean.missinDocs}">
 				<ac:paginator for="offSdList" />
 
 				<p:column headerText="Document Description" style="width : 70%;">
@@ -111,7 +111,7 @@
 			<p:spacer height="2px;" />
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.sm.printList']}">
-					<p:printer target=":form:tt:offSdList" />
+					<p:printer target=":form:offSdList" />
 				</p:commandButton>
 			</div>
 

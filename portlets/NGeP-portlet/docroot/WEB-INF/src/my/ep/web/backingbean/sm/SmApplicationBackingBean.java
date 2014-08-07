@@ -4127,14 +4127,12 @@ public class SmApplicationBackingBean extends
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			retriveLatestApplAfterUpdate(currentPageType, "");
+			valid = false;
 			throw new EpException(MessageConst.ERROR_722519);
 		} finally {
 			regSo = null;
-			if (valid) {
-				return retriveLatestApplAfterUpdate(currentPageType, "");
-			} else {
-				return valid;
-			}
+			return valid;
 
 		}
 
@@ -4454,9 +4452,9 @@ public class SmApplicationBackingBean extends
 		} catch (Exception e) {
 			e.printStackTrace();
 			retMsg = null;
+			retriveLatestApplAfterUpdate("", "");
 			throw new EpException(MessageConst.ERROR_722519);
 		} finally {
-			retriveLatestApplAfterUpdate("", "");
 			reqSO = null;
 		}
 		return retMsg;
