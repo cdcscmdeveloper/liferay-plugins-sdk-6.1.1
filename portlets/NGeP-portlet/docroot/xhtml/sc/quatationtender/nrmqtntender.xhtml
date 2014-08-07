@@ -68,8 +68,11 @@
 		<ac:lovPopup />
 	</p:panel>
 
-	<p:panel>
+	<p:panel header="#{lbl['lbl.sc.spec.location.list.paidup.capital']}"
+		rendered="#{((qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount le '500000' and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal =='false')  or (qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount gt '500000'  and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal) or (qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount gt '500000'  and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal =='false'))}">
+
 		<table style="width: 100%">
+
 			<tr>
 				<td style="width: 100px"><h:panelGroup id="allstate">
 						<h:panelGrid border="0" cellpadding="0" cellspacing="0"
@@ -79,11 +82,11 @@
 							<h:outputLabel value="#{lbl['lbl.so.allstate']}"
 								style="width : 80px" />
 							<p:selectBooleanCheckbox
-								disabled="#{qTSupplierQulCriteriaBackingBean.managedBean.allStateCode eq '3'}"
+								disabled="#{qTSupplierQulCriteriaBackingBean.managedBean.allStateCode eq '3' }"
 								value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState}">
 								<f:selectItem
 									itemValue="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState}" />
-								<p:ajax update="supplierallStae, minPaidCapital"
+								<p:ajax update="@form"
 									listener="#{qTSupplierQulCriteriaBackingBean.stateChange}" />
 							</p:selectBooleanCheckbox>
 						</h:panelGrid>
@@ -91,31 +94,37 @@
 				<td></td>
 			</tr>
 			<p:outputPanel id="minPaidCapital">
-				<tr>
-					<td style="width: 150px"><p:outputLabel
-							value="#{lbl['lbl.so.paidup']}"
-							rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount gt '500000' and qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState eq 'true'}" /></td>
-					<td><p:inputText size="30" maxlength="18"
-							rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount gt '500000' and qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState eq 'true'}"
-							value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.minPaidUpCapital}"
-							style="margin-right:5px;text-align:right;">
-							<f:convertNumber
-								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}"></f:convertNumber>
-						</p:inputText></td>
-				</tr>
+				<ui:fragment
+					rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount gt '500000' and qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState eq 'true'}">
+					<tr>
+						<td style="width: 180px"><p:outputLabel
+								value="#{lbl['lbl.so.paidup']}"
+								rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount gt '500000' and qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState eq 'true'}" /></td>
+						<td><p:inputText size="30" maxlength="18"
+								rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount gt '500000' and qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState eq 'true'}"
+								value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.minPaidUpCapital}"
+								style="margin-right:5px;text-align:right;">
+								<f:convertNumber
+									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}"></f:convertNumber>
+							</p:inputText></td>
+					</tr>
+				</ui:fragment>
 			</p:outputPanel>
 		</table>
 	</p:panel>
 
 	<p:panel>
 		<h:panelGroup id="supplierallStae">
-			<p:panel header="#{lbl['lbl.sc.spec.location.list.paidup.capital']}"
+
+
+			<p:panel
 				rendered="#{((qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount le '500000' and qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState=='false' and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal =='false') or (qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount gt '500000' and qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState=='false'  and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal =='false') or (qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount gt '500000' and qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState=='false' and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal))}">
 				<table style="width: 100%">
 					<tr>
-						<td style="width: 150px"><p:outputLabel
+						<td style="width: 180px"><p:outputLabel
 								value="#{lbl['lbl.so.paidup']}" /></td>
 						<td><p:inputText size="30" maxlength="18"
+								rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState=='false'}"
 								value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.minPaidUpCapital}"
 								style="margin-right:5px;text-align:right;">
 								<f:convertNumber
@@ -192,9 +201,10 @@
 				rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount le '500000' and qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState=='false' and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal}">
 				<table style="width: 100%">
 					<tr>
-						<td style="width: 150px"><p:outputLabel
+						<td style="width: 180px"><p:outputLabel
 								value="#{lbl['lbl.so.paidup']}" /></td>
 						<td><p:inputText size="30" maxlength="18"
+								rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState=='false'}"
 								value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.minPaidUpCapital}"
 								style="margin-right:5px;text-align:right;">
 								<f:convertNumber
@@ -296,7 +306,7 @@
 		header="#{lbl['lbl.sc.spec.supplier.criteria.qual.suppliers']}">
 		<table>
 			<tr>
-				<td style="width: 117px"><p:outputLabel
+				<td style="width: 125px"><p:outputLabel
 						value="#{lbl['lbl.so.totalsup']}" /></td>
 				<td style="width: 150px"><p:inputText style="margin-right:5px;"
 						disabled="true" /></td>
