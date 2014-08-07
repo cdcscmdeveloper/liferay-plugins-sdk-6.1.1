@@ -124,6 +124,17 @@ public class SalutationBackingBean extends
 						.getSalutationNames());
 				searchBean.getDataFilterBeans().add(codesSearchBean);
 			}	
+			
+			if(getManagedBean().getStatus() != null
+					&& !"".equals(getManagedBean().getStatus())) {
+				SearchFilterBean codesSearchBean = new SearchFilterBean(
+						SearchOperator.OPERATOR_EQUALS.value());
+				codesSearchBean
+						.setSearchField("recordStatusFlg");
+				codesSearchBean.setSearchValue(getManagedBean()
+						.getStatus());
+				searchBean.getDataFilterBeans().add(codesSearchBean);
+			}			
 
 			return searchBean;
 		}	 

@@ -25,6 +25,8 @@ public class SalutationManagedBean extends BaseManagedBean {
 	
 	private String salutationNames;
 	
+	private Long status;	
+	
 	/**
 	 * @return the salutationCodes
 	 */
@@ -66,6 +68,21 @@ public class SalutationManagedBean extends BaseManagedBean {
 	public void setPmSalutation(PmSalutation pmSalutation) {
 		this.pmSalutation = pmSalutation;
 	}
+
+	/**
+	 * @return the status
+	 */
+	public Long getStatus() {
+		return status;
+	}
+
+	/**
+	 * @param status the status to set
+	 */
+	public void setStatus(Long status) {
+		this.status = status;
+	}
+	
 		
 			
 }
