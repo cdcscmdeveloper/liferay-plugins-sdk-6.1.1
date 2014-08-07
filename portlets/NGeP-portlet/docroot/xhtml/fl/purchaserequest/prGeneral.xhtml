@@ -11,7 +11,7 @@
 			<tr>
 				<td style="width: 106px;"><p:outputLabel
 						value="#{lbl['lbl.fl.ministry']}" /></td>
-				<td><p:inputText size="50" id="ministry"
+				<td><p:inputText size="52" id="ministry"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.parentOrgProfile.orgName}"
 						disabled="true" /></td>
 			</tr>
@@ -61,7 +61,7 @@
 				<td><p:outputLabel value="#{lbl['lbl.fl.accounting.ofc']}" /></td>
 				<td><p:inputText size="5" disabled="true" id="agOffice"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.agOffice.officeCode}" />
-					<p:spacer width="5" /> <p:inputText size="39" disabled="true"
+					<p:spacer width="10" /> <p:inputText size="39" disabled="true"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.agOffice.officeName}" />
 				</td>
 			</tr>
@@ -148,14 +148,14 @@
 									value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.smSupplier.regNo}" /></td>
 							<td style="width: 71px;"><p:outputLabel
 									value="#{lbl['lbl.fl.supp.mof.no']}" /></td>
-							<td><p:inputText size="20" disabled="true"
+							<td><p:inputText size="15" disabled="true"
 									value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.smSupplier.smMofAccounts[0].mofNo}" /></td>
 						</tr>
 					</table></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.name']}" /></td>
-				<td><p:inputText disabled="true" size="50"
+				<td><p:inputText disabled="true" size="51"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.flSupplierDtl.supplierName}" /></td>
 			</tr>
 			<tr>
@@ -190,7 +190,7 @@
 									value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.flSupplierDtl.phoneNo}" /></td>
 							<td style="width: 67px;"><p:outputLabel
 									value="#{lbl['lbl.fl.supp.faxno']}" /></td>
-							<td><p:inputText size="20" disabled="true"
+							<td><p:inputText size="15" disabled="true"
 									value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.flSupplierDtl.faxNo}" /></td>
 						</tr>
 					</table></td>
@@ -198,7 +198,7 @@
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.del.ord.contact.person']}" /></td>
-				<td><p:inputText disabled="true" size="50"
+				<td><p:inputText disabled="true" size="52"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.flSupplierDtl.contactPerson}" /></td>
 			</tr>
 			<tr>
