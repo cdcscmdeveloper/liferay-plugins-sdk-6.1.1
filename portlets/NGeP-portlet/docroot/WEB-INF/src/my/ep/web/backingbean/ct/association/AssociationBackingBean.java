@@ -6,6 +6,8 @@ package my.ep.web.backingbean.ct.association;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+
+import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -13,7 +15,6 @@ import javax.faces.context.FacesContext;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
-import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.maintain.IContractAssociationSO;
@@ -61,9 +62,17 @@ public class AssociationBackingBean extends BaseBackingBean<AssociationManagedBe
    private CtContract[] deleteSelectedContractList;
    private CtAssociation[] ctSelectAssociation;
    private IPagingDataModel<CtAssociation> associationDataModel = new AssociationPagingDataModel();
+   private IPagingDataModel<CtContract> contractDataModel = new ContractPagingDataModel();
    
    public AssociationBackingBean(){
 	   
+   }
+   
+   @PostConstruct
+   public void init(){
+	   
+	   if(this.getManagedBean().getCtAssociation() == null)
+		   this.getManagedBean().setCtAssociation(new CtAssociation());
    }
    
    public void searchAssociation() {
@@ -165,41 +174,12 @@ public class AssociationBackingBean extends BaseBackingBean<AssociationManagedBe
  	/*Implementation of search methode*/
 	public void searchContract() {
 
-		ISearchBean<CtContract> searchBean = null;
-		IContractSO contractSO = null;
-		IParameterSO parameterSO = null;
-		 Calendar cal = Calendar.getInstance();
-	     log.info("BackingBean: Performance Testing  SearchContract Function: Time taken to start >>>>"+ cal.getTime());
-		try {
-			searchBean = new SearchBean<CtContract>();
-			parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-			ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
-			parameterReqDTO.setParameterType(ParameterTypeConst.CONTRACT_TYPE);
-			parameterReqDTO.setParameterCode(ParameterConst.CONTRACT_TYPE_MINISTRY);
-			ParameterResDTO parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
-			
-			searchBean.getDataFilterBeans().add(new SearchFilterBean("contractType", SearchOperator.OPERATOR_EQUALS.value(), parameterResDTO.getPmParameter()));
-			searchBean.getDataFilterBeans().add(new SearchFilterBean("latestContractVer.contractVerId",SearchOperator.OPERATOR_IS_NOT_NULL.value(), null));
-			
-			if(this.getManagedBean().getCtNumber()!=null && this.getManagedBean().getCtNumber().length()>0) {
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("contractNo", SearchOperator.OPERATOR_LIKE.value(), this.getManagedBean().getCtNumber()));
+		 try { 
+			 contractDataModel.reloadData();
+			} catch (Exception e) {
+				e.printStackTrace();
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), "contract search failed."));
 			}
-			
-			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
-			ContractReqDTO reqDTO = new ContractReqDTO();
-			reqDTO.setContractSearchBean(searchBean);
-			reqDTO.setFilterByAssocContract(true);
-			ContractResDTO ResDTO = contractSO.searchContract(reqDTO);
-			this.getManagedBean().setContractList(ResDTO.getContractResultBean().getResultList());
-			this.getManagedBean().setSelectedIndex(0);
-			 log.info("BackingBean: Performance Testing  SearchContract Function: Time taken to End >>>>"+ Calendar.getInstance().getTime());
-			log.info("BackingBean: Performance Testing  SearchContract Function: Total Time taken (Second) >>>>"+ (Calendar.getInstance().getTime().getTime() - cal.getTime().getTime()) / 1000);
-		} catch (Exception ex) {
-			log.error("Exception>>", ex);
-		} finally {
-			contractSO = null;
-			
-		}
 	}
 	
 	public CtAssociation[] getCtSelectAssociation() {
@@ -344,6 +324,64 @@ public class AssociationBackingBean extends BaseBackingBean<AssociationManagedBe
 				
 				if(resDTO.isSuccessful()) {
 					return resDTO.getResultBean();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+	}
+	
+	public IPagingDataModel<CtContract> getContractDataModel() {
+		return contractDataModel;
+	}
+
+	public void setContractDataModel(IPagingDataModel<CtContract> contractDataModel) {
+		this.contractDataModel = contractDataModel;
+	}
+
+	private class ContractPagingDataModel extends PagingDataModel<CtContract> {
+		private static final long serialVersionUID = 1L;
+
+		public ContractPagingDataModel() {
+			super("advanceCtSearch");
+		}
+		
+		@Override
+		public ISearchResultBean<CtContract> pageChangeListener(ISearchBean<CtContract> searchBean) {
+			IContractSO contractSO = null;
+			IParameterSO parameterSO = null;
+			if (log.isDebugEnabled()) {
+				log.debug("pageChangeListener");
+			}
+			 Calendar cal = Calendar.getInstance();
+			log.info("BackingBean: Performance Testing  Search Function: Time taken to start >>>>"+ cal.getTime());
+			try {
+				
+				parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+				ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
+				parameterReqDTO.setParameterType(ParameterTypeConst.CONTRACT_TYPE);
+				parameterReqDTO.setParameterCode(ParameterConst.CONTRACT_TYPE_MINISTRY);
+				ParameterResDTO parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
+				
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("contractType", SearchOperator.OPERATOR_EQUALS.value(), parameterResDTO.getPmParameter()));
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("latestContractVer.contractVerId",SearchOperator.OPERATOR_IS_NOT_NULL.value(), null));
+				
+				if(getManagedBean().getCtNumber()!=null && getManagedBean().getCtNumber().length()>0) {
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("contractNo", SearchOperator.OPERATOR_LIKE.value(), getManagedBean().getCtNumber()));
+				}
+				
+				contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+				ContractReqDTO reqDTO = new ContractReqDTO();
+				reqDTO.setContractSearchBean(searchBean);
+				ContractResDTO resDTO = contractSO.searchContract(reqDTO);
+				getManagedBean().setSelectedIndex(0);
+				
+				log.info("BackingBean: Performance Testing  Search Function: Time taken to End >>>>"+ Calendar.getInstance().getTime());
+				log.info("BackingBean: Performance Testing  Search Function: Total Time taken (Second) >>>>"+ (Calendar.getInstance().getTime().getTime() - cal.getTime().getTime()) / 1000);
+				
+				if(resDTO.isSuccessful()) {
+					return resDTO.getContractResultBean();
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

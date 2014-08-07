@@ -30,19 +30,19 @@
 			  <p:outputLabel value="*" styleClass="mandatory" />
 	          <p:outputLabel value="#{lbl['lbl.ct.asearch.model.pname']}" />
 	       </h:panelGrid>
-	       <h:panelGrid id="projectValidation" columns="2">
+	       <h:panelGrid columns="2">
            <p:inputText id="projectNames" style="width:300px;" required="true" label="#{lbl['lbl.ct.asearch.model.pname']}"
                value="#{associationBackingBean.managedBean.ctAssociation.projectName}" maxlength="100">
                </p:inputText>
+                <p:message for="projectNames" display="icon"/>
            </h:panelGrid>
            	<h:panelGrid columns="2" style="float:right;">
            	   <p:outputLabel value="*" styleClass="mandatory" />
                  <p:outputLabel value="#{lbl['lbl.ct.asearch.model.pdes']}" />
              </h:panelGrid>
-            <h:panelGrid id="descValidation" columns="2">
+            <h:panelGrid  columns="2">
 		   <p:inputText id="projectDesc" style="width:500px;" required="true" label="#{lbl['lbl.ct.asearch.model.pdes']}"
 		       value="#{associationBackingBean.managedBean.ctAssociation.description}" maxlength="200">
-		     <p:ajax event="blur" update=":form:panelHeader,:form:descValidation"/>
 		   </p:inputText>
 		    <p:message for="projectDesc" display="icon"/>
 		   </h:panelGrid>
@@ -106,11 +106,11 @@
                   <p:outputLabel value="#{lbl['lbl.ct.asearch.model.table2.cno']}" />
                   <p:inputText value="#{associationBackingBean.managedBean.ctNumber}" style="width:150px;"/>
                   <p:commandButton value="Search" process="modelDialog" icon="ui-icon-search"
-                    action="#{associationBackingBean.searchContract}" update="advanceCtSearch"/>
+                    action="#{associationBackingBean.searchContract}" update=":form:advanceCtSearch"/>
               </h:panelGrid>
 		     <p:spacer height="2"/>
-             <p:dataTable id="advanceCtSearch" var="data" value="#{associationBackingBean.managedBean.contractList}" rowIndexVar="index"
-                 widgetVar="dataTableObj" dynamic="true" selection="#{associationBackingBean.selectedContractList}" rowKey="#{data.contractId}">
+             <p:dataTable id="advanceCtSearch" var="data" value="#{associationBackingBean.contractDataModel}" 
+                rowIndexVar="index"  lazy="true" selection="#{associationBackingBean.selectedContractList}" rowKey="#{data}">
                     <ac:paginator for="advanceCtSearch"/>
                 	<p:column selectionMode="multiple" style="width:2%;" />
 			        <p:column headerText="#{lbl['lbl.ct.asearch.model.table2.cno']}" style="width:10%;">
