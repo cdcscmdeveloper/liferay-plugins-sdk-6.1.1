@@ -9,10 +9,10 @@
 	<p:panel header="#{lbl['lbl.sc.qt.req.dtls']}" toggleable="true">
 		<p:dataTable id="ptjreqdtlsid" var="ptjrequestdetails"
 			value="#{ptjApprovalDtlsList}" rowIndexVar="index" editable="true"
-			rowKey="#{ptjrequestdetails}" style="width:50%">
-
+			rowKey="#{ptjrequestdetails}">
 			<p:column headerText="#{lbl['lbl.sc.qt.type.reqdtls']}">
-				<h:outputText value="#{ptjrequestdetails.approvalType}" />
+				<h:outputText
+					value="#{approvalBackingBean.getParameterDesc(ptjrequestdetails.approvalType)}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.qt.from']}">
 				<h:outputText value="#{ptjrequestdetails.originalValue}" />
@@ -28,7 +28,7 @@
 		<div style="width: 100%">
 			<p:pickList id="ptjapproverid" value="#{ptjList}"
 				var="ptjapproverUser" showTargetControls="true"
-				itemLabel="#{ptjapproverUser.userName}"
+				itemLabel="#{ptjapproverUser.approver.userName}"
 				itemValue="#{ptjapproverUser}" converter="approverPickListConverter">
 				<f:facet name="sourceCaption">Available </f:facet>
 				<f:facet name="targetCaption">Selected</f:facet>
