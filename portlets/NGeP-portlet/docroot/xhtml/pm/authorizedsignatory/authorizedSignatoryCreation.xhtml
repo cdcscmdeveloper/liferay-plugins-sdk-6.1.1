@@ -14,8 +14,8 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.pm.as.search']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td><p:selectOneMenu
-						value="{authorizedsignatoryBackingBean.managedBean.zones.zoneId}"
+				<td><p:selectOneMenu value="#{authorizedsignatoryBackingBean.managedBean.zones.zoneId}"
+						
 						style="width:178px;margin-bottom:5px;">
 
 						<f:selectItems
@@ -46,6 +46,7 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.pm.search.status']}">
+  	   			 #{(user.recordStatusFlg==1)? lbl['lbl.pm.active'] : lbl['lbl.pm.inactive']}  			
 			</p:column>
 
 		</p:dataTable>
