@@ -3844,52 +3844,52 @@ public class SmApplicationBackingBean extends
 					|| getManagedBean().getSmAppl().getApplType()
 							.equalsIgnoreCase("R")) {
 				reqDTO.setUserList(new ArrayList<String>());
-				for (SmPersonnel personnel : getManagedBean().getSmAppl()
-						.getSmPersonnels()) {
-					if (personnel.getEpRole() != null
-							&& !personnel.getEpRole().isEmpty()
-							&& (personnel.getEpRole().equalsIgnoreCase(
-									RoleCode.MOF_SUPPLIER_ADMIN.value())
-									|| personnel.getEpRole()
-											.equalsIgnoreCase(
-													RoleCode.MOF_SUPPLIER_ADMIN
-															.value())
-									|| personnel.getEpRole().equalsIgnoreCase(
-											RoleCode.MOF_SUPPLIER_USER.value())
-									|| personnel.getEpRole().equalsIgnoreCase(
-											RoleCode.BASIC_SUPPLIER_ADMIN
-													.value()) || personnel
-									.getEpRole().equalsIgnoreCase(
-											RoleCode.BASIC_SUPPLIER_USER
-													.value()))) {
-						// if (personnel.getPmUser() != null
-						// && personnel.getPmUser().getUserId() != null &&
-						// personnel.getPmUser().getRecordStatusFlg() == 1) {
-						if (personnel.getPmUser() != null
-								&& personnel.getPmUser().getUserId() != null) {
-							reqDTO.getUserList().add(
-									personnel.getPmUser().getLoginId());
-						}
-					}
-				}
+//				for (SmPersonnel personnel : getManagedBean().getSmAppl()
+//						.getSmPersonnels()) {
+//					if (personnel.getEpRole() != null
+//							&& !personnel.getEpRole().isEmpty()
+//							&& (personnel.getEpRole().equalsIgnoreCase(
+//									RoleCode.MOF_SUPPLIER_ADMIN.value())
+//									|| personnel.getEpRole()
+//											.equalsIgnoreCase(
+//													RoleCode.MOF_SUPPLIER_ADMIN
+//															.value())
+//									|| personnel.getEpRole().equalsIgnoreCase(
+//											RoleCode.MOF_SUPPLIER_USER.value())
+//									|| personnel.getEpRole().equalsIgnoreCase(
+//											RoleCode.BASIC_SUPPLIER_ADMIN
+//													.value()) || personnel
+//									.getEpRole().equalsIgnoreCase(
+//											RoleCode.BASIC_SUPPLIER_USER
+//													.value()))) {
+//						// if (personnel.getPmUser() != null
+//						// && personnel.getPmUser().getUserId() != null &&
+//						// personnel.getPmUser().getRecordStatusFlg() == 1) {
+//						if (personnel.getPmUser() != null
+//								&& personnel.getPmUser().getUserId() != null) {
+//							reqDTO.getUserList().add(
+//									personnel.getPmUser().getLoginId());
+//						}
+//					}
+//				}
 				System.out.println("User List Size for pass to BPM:"
 						+ reqDTO.getUserList().size());
-				if (reqDTO.getUserList().size() == 0) {
+//				if (reqDTO.getUserList().size() == 0) {
 					PmUser pmUser = new FacesScopes().getUserSessionBean();
 					reqDTO.getUserList().add(pmUser.getLoginId());
 					System.out
 							.println("Login user added to the user list to BPM");
 					// throw new EpException(MessageConst.ERROR_722546);
-				}
+//				}
 
-				PmUser pmUser = new FacesScopes().getUserSessionBean();
-				if (!reqDTO.getUserList().contains(pmUser.getLoginId())) {
-					reqDTO.getUserList().add(pmUser.getLoginId());
-				}
+//				PmUser pmUser = new FacesScopes().getUserSessionBean();
+//				if (!reqDTO.getUserList().contains(pmUser.getLoginId())) {
+//					reqDTO.getUserList().add(pmUser.getLoginId());
+//				}
 
 			}
 
-			MofRegistrationResDTO resDTO;
+			MofRegistrationResDTO resDTO = new MofRegistrationResDTO();
 			regSo = (IMofRegistrationSO) BusinessDelegate.getInstance()
 					.getServiceObject("sm", IMofRegistrationSO.class);
 			resDTO = regSo.initiateSmApplicationTask(reqDTO);
