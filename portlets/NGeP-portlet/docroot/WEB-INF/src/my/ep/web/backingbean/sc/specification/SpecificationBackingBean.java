@@ -5409,23 +5409,46 @@ public class SpecificationBackingBean extends
 	public void deleteDeliveryZone(String deliveryZoneName) {
 		List<BriefingZoneBean> deliveryBean = this.getManagedBean()
 				.getDeliveryLocBean();
+		if (!this.getManagedBean().getScQt().isPanel()) {
+			for (BriefingZoneBean zonebean : deliveryBean) {
+				if (zonebean.getZoneName().equalsIgnoreCase(deliveryZoneName)) {
+					List<ScQtDeliveryLoc> deliveryList = zonebean
+							.getDeliveryLocList();
 
-		for (BriefingZoneBean zonebean : deliveryBean) {
-			if (zonebean.getZoneName().equalsIgnoreCase(deliveryZoneName)) {
-				List<ScQtDeliveryLoc> deliveryList = zonebean
-						.getDeliveryLocList();
+					List<ScQtDeliveryLoc> selectdeliveryList = this
+							.getManagedBean().getSelectDeliveryList();
 
-				List<ScQtDeliveryLoc> selectdeliveryList = this
-						.getManagedBean().getSelectDeliveryList();
+					if (deliveryList.size() == selectdeliveryList.size()) {
 
-				if (deliveryList.size() == selectdeliveryList.size()) {
+						deliveryList.clear();
 
-					deliveryList.clear();
+					} else {
 
-				} else {
+						for (ScQtDeliveryLoc delLoc : selectdeliveryList) {
+							deliveryList.remove(delLoc);
+						}
+					}
+				}
+			}
+		} else {
+			for (BriefingZoneBean zonebean : deliveryBean) {
+				if (zonebean.getTplSpecZoneDtl().getPanelZone().getName()
+						.equalsIgnoreCase(deliveryZoneName)) {
+					List<ScQtDeliveryLoc> deliveryList = zonebean
+							.getDeliveryLocList();
 
-					for (ScQtDeliveryLoc delLoc : selectdeliveryList) {
-						deliveryList.remove(delLoc);
+					List<ScQtDeliveryLoc> selectdeliveryList = this
+							.getManagedBean().getSelectDeliveryList();
+
+					if (deliveryList.size() == selectdeliveryList.size()) {
+
+						deliveryList.clear();
+
+					} else {
+
+						for (ScQtDeliveryLoc delLoc : selectdeliveryList) {
+							deliveryList.remove(delLoc);
+						}
 					}
 				}
 			}
