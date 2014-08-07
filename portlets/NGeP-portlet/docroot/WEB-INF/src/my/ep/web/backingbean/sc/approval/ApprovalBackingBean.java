@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -83,9 +84,6 @@ public class ApprovalBackingBean extends
 
 	private String activeTabName;
 
-	/**
-	 * 
-	 */
 	public ApprovalBackingBean() {
 
 	}
@@ -97,8 +95,7 @@ public class ApprovalBackingBean extends
 		}
 
 		if (this.getManagedBean().getScQtApproval().getApprovalCategory() == null) {
-			this.getManagedBean().getScQtApproval()
-					.setApprovalCategory(new PmParameter());
+			this.getManagedBean().getScQtApproval().setApprovalCategory(new PmParameter());
 		}
 
 	}
@@ -108,23 +105,15 @@ public class ApprovalBackingBean extends
 	 */
 	private void initializeRemark(List<ScQtCommittee> scQtCommittees) {
 		FacesScopes facesScopes = new FacesScopes();
-		IStatusSO iStatusSO = EpEjbBusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IStatusSO.class);
+		IStatusSO iStatusSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 		if (null != scQtCommittees && !scQtCommittees.isEmpty()) {
 			for (ScQtCommittee committees : scQtCommittees) {
-				this.getManagedBean().setQtCommitteeRemarks(
-						committees.getQtCommitteRemarks());
-				List<ScQtCommitteRemarks> scQtApprovalRemarks = this
-						.getManagedBean().getQtCommitteeRemarks();
+				this.getManagedBean().setQtCommitteeRemarks(committees.getQtCommitteRemarks());
+				List<ScQtCommitteRemarks> scQtApprovalRemarks = this.getManagedBean().getQtCommitteeRemarks();
 				if (null == scQtApprovalRemarks) {
 					scQtApprovalRemarks = new ArrayList<ScQtCommitteRemarks>();
 				}
-
-				ScQtCommitteRemarks remark = null;
-
-				remark = new ScQtCommitteRemarks();
-
+				ScQtCommitteRemarks remark = new ScQtCommitteRemarks();
 				setUserDetails(remark);
 				remark.setCreatedUser(facesScopes.getUserSessionBean());
 				remark.setScQtCommittee(committees);
@@ -133,16 +122,12 @@ public class ApprovalBackingBean extends
 				StatusReqDTO statusReqDTO = new StatusReqDTO();
 				if (status != null) {
 					statusReqDTO.setStatusId(status.getStatusId());
-					StatusResDTO statusResDTO = iStatusSO
-							.retrieveStatusByStatusId(statusReqDTO);
+					StatusResDTO statusResDTO = iStatusSO.retrieveStatusByStatusId(statusReqDTO);
 					remark.setPmStatus(statusResDTO.getPmStatus());
-
 				}
 				this.getManagedBean().getQtCommitteeRemarks().add(remark);
-
 			}
 		}
-
 	}
 
 	/**
@@ -152,8 +137,7 @@ public class ApprovalBackingBean extends
 		List<Long> appCatList = new ArrayList<Long>();
 		if (null != this.getManagedBean().getTabList()) {
 			for (TabBean tabBean : this.getManagedBean().getTabList()) {
-				appCatList.add(tabBean.getScQtApproval().getApprovalCategory()
-						.getParameterId());
+				appCatList.add(tabBean.getScQtApproval().getApprovalCategory().getParameterId());
 			}
 		}
 		return appCatList;
@@ -372,14 +356,20 @@ public class ApprovalBackingBean extends
 			this.getManagedBean().setScCommitteeMemberTabList(tabBeans);
 			initializeRemark(this.getManagedBean().getQtCommittes()
 					.getResultList());
+		} else if (SCProcessNameConst.APPROVE_PUBLICATION.equalsIgnoreCase(taskName)) {
+			this.getManagedBean().setApprovalType("Publication Approval");
+			scQtApproval = getApproval(qtId, ParameterConst.APPROVAL_CATEGORY_PTJ);
+			if(null != getManagedBean().getQt().getClosingDate()) {
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(getManagedBean().getQt().getClosingDate());
+				cal.add(Calendar.DATE, getManagedBean().getQt().getQtValidityPeriod());
+				getManagedBean().setProposalValidityUntil(cal.getTime());
+			}
 		}
 		this.getManagedBean().setScQtApproval(scQtApproval);
 
 		FacesContext context = FacesContext.getCurrentInstance();
-		context.getApplication()
-				.getNavigationHandler()
-				.handleNavigation(context, null,
-						"/xhtml/sc/quatationtender/Approver/approverMain.xhtml");
+		context.getApplication().getNavigationHandler().handleNavigation(context, null, "/xhtml/sc/quatationtender/Approver/approverMain.xhtml");
 	}
 
 	public String updateBpmTask(String outcome) {
