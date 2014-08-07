@@ -54,7 +54,7 @@
 	</p:panel>
 
 
-	<p:panel header="#{lbl['lbl.sc.spec.location.list.paidup.capital']}"
+	<p:panel header="#{lbl['lbl.sc.spec.location.list.paidup.capital']}" toggleable="true"
 		rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount le '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false' and specificationBackingBean.managedBean.scQt.zonal !='false'}">
 		<table style="width: 100%">
 			<tr>
@@ -123,7 +123,7 @@
 
 
 
-	<p:panel header="#{lbl['lbl.sc.spec.location.list.paidup.capital']}"
+	<p:panel header="#{lbl['lbl.sc.spec.location.list.paidup.capital']}" toggleable="true"
 		rendered="#{((specificationBackingBean.managedBean.scQt.estimatedAmount le '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false' and specificationBackingBean.managedBean.scQt.zonal =='false') or (specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false'  and specificationBackingBean.managedBean.scQt.zonal =='false') or (specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false'  and specificationBackingBean.managedBean.scQt.zonal !='false'))}">
 		<table style="width: 100%">
 			<tr>
@@ -183,7 +183,7 @@
 
 
 	</p:panel>
-	<p:panel header="#{lbl['lbl.sc.spec.location.list.paidup.capital']}"
+	<p:panel header="#{lbl['lbl.sc.spec.location.list.paidup.capital']}" toggleable="true"
 		rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState !='false'}">
 		<table>
 			<tr>
@@ -205,7 +205,7 @@
 	</p:panel>
 
 
-	<p:panel
+	<p:panel toggleable="true"
 		header=" #{lbl['lbl.sc.spec.supplier.criteria.qual.suppliers']}">
 		<table>
 			<tr>

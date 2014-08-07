@@ -7,7 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel>
-		<ui:include src="searchDeliveryAddress.xhtml"></ui:include>
+
 		<ui:fragment
 			rendered="#{specificationBackingBean.managedBean.scQt.zonal ne 'false'}">
 			<p:accordionPanel id="accordpnllist" dynamic="true"
@@ -49,12 +49,12 @@
 					process="@this" partialSubmit="true" icon="ui-icon-add"
 					update=":form:searDelivery" oncomplete="deliveryAddress.show();" />
 				<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
-					update=":form:pjtDelivered" process="@this,pjtDelivered" partialSubmit="true"
-					icon="ui-icon-delete"
+					update=":form:pjtDelivered" process="@this,pjtDelivered"
+					partialSubmit="true" icon="ui-icon-delete"
 					actionListener="#{specificationBackingBean.deleteDeliveryDtls}" />
 			</div>
 		</ui:fragment>
-
+		<ui:include src="searchDeliveryAddress.xhtml"></ui:include>
 	</p:panel>
 
 </ui:composition>

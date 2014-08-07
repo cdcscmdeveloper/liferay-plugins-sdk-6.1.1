@@ -19,9 +19,7 @@
 					disabled="true" />
 				<p:spacer width="5" />
 
-				<p:commandLink style="margin-right:20px;">
-					<h:outputText value="#{lbl['lbl.so.cirattach']}" />
-				</p:commandLink>
+
 			</h:column>
 
 			<h:column>
@@ -40,18 +38,13 @@
 			<h:column>
 				<p:inputText
 					value="#{specificationBackingBean.managedBean.circularExpDate}"
-					disabled="true" />
+					disabled="true">
+					<f:convertDateTime
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				</p:inputText>
 			</h:column>
 
-			<h:column>
-				<h:outputLabel value="Circular Type" />
-			</h:column>
 
-			<h:column>
-				<p:inputText
-					
-					disabled="true" />
-			</h:column>
 		</h:panelGrid>
 	</p:panel>
 
@@ -61,17 +54,49 @@
 
 
 		<p:dataTable id="panelDataItemList" var="panelItem"
-			rowIndexVar="index" 
-			value="#{specificationBackingBean.managedBean.panelItemList}"
+			rowIndexVar="index"
+			value="#{specificationBackingBean.managedBean.selectpanelItem}"
 			rowKey="#{panelItem}">
 
 			<ac:paginator for="panelDataItemList"></ac:paginator>
 
 			<p:column headerText="#{lbl['lbl.sc.spec.panel.item']}"
-				style="width:400px;">
+				style="width:20%">
 				<h:outputText value="#{panelItem.itemName}" />
 			</p:column>
 
+			<p:column headerText="#{lbl['lbl.tpl.spec.content.specification']}"
+				style="width:15%">
+				<h:outputText value="#{panelItem.specification}" />
+
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.spec.panel.item.category']}"
+				style="width:10%">
+				<h:outputText
+					value="#{specificationBackingBean.getParameterDesc(panelItem.itemCategoryId)}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.spec.panel.coverage']}"
+				style="width:5%">
+				<h:outputText
+					value="#{specificationBackingBean.getParameterDesc(panelItem.panelCoverageId)}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.tpl.spec.content.uom']}"
+				style="width:15%">
+				<h:outputText value="#{panelItem.pmUom.uomId}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.spec.min.order.quantity']}"
+				style="width:15%">
+				<h:outputText value="#{panelItem.minimumOrderQty}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.spec.luar.contract']}"
+				style="width:20%">
+
+			</p:column>
+          
 
 
 		</p:dataTable>
