@@ -9,7 +9,7 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
-import org.apache.commons.lang.SerializationUtils;
+import org.apache.log4j.Logger;
 
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.cm.codification.ICodificationSO;
@@ -25,10 +25,8 @@ import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.cm.catalog.VCmPubSuppItem;
-import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.backingbean.cm.codification.UnspscCodeBackingBean;
 import my.ep.web.managedbean.cm.catalogue.PublicCatalogueManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -37,7 +35,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 @RequestScoped
 public class PublicCatalogueBackingBean extends BaseBackingBean<PublicCatalogueManagedBean>{
 
-
+	private static Logger log = Logger.getLogger(PublicCatalogueBackingBean.class);
 
 
 	public List<String> autoCompleteItemName(String query) {
@@ -108,12 +106,7 @@ public class PublicCatalogueBackingBean extends BaseBackingBean<PublicCatalogueM
 		this.getManagedBean().setKeyWord(true);
 		this.getManagedBean().setCloneItemNames(null);
 		try {
-
-
-
 			reqDTO.setItemName(this.getManagedBean().getItemName());
-
-
 			CatalogueResDTO resDTO = catalogueSO.searchPublicCatalogueBy(reqDTO);
 			System.out.println("resDTO.getPublicCatalogueResultBean().getResultList():"+resDTO.getPublicCatalogueResultBean().getResultList());
 			List<String> itemNames = new ArrayList<String>();
@@ -126,7 +119,6 @@ public class PublicCatalogueBackingBean extends BaseBackingBean<PublicCatalogueM
 				}else{
 					itemNames.add(cat.getCmItem().getCmUnspsc().getUnspscCode());
 				}
-
 			}
 			
 			this.getManagedBean().setCloneItemNames(itemNames);
@@ -135,29 +127,23 @@ public class PublicCatalogueBackingBean extends BaseBackingBean<PublicCatalogueM
 			this.getManagedBean().setFamilyList(new ArrayList<CmUnspsc>());
 			CodificationReqDTO codeReqDTO = new CodificationReqDTO();
 			for(String code: itemNames){
-
 				System.out.println("*******code***********"+code);
 				codeReqDTO.setUnspscCode(code);
 				CodificationResDTO codeResDTO = codificationSO.searchUnspscObj(codeReqDTO);
-
 				this.getManagedBean().getFamilyList().add(codeResDTO.getUnspscObj());
 
 				if(code!=null && code.trim().length()>0){
-
 					this.getManagedBean().getFamilyCodeList().add(code);
 				}
-
-
-
 			}
 			
-		
-
-
 			this.getManagedBean().setCatalogueList(resDTO.getPublicCatalogueResultBean().getResultList());
 
 		}catch(Exception ex){
 
+		}finally{
+			catalogueSO = null;
+			codificationSO = null;
 		}
 		//return "publicCatalogueView";
 	}
@@ -277,38 +263,47 @@ public class PublicCatalogueBackingBean extends BaseBackingBean<PublicCatalogueM
 
 	public String navigateToSupplierItemDet(CmSupplierItem supplierItem) {
 
-		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
-				.getInstance().getServiceObject("cm", ICatalogueSO.class);
+		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
+		ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject("sm",ISupplierSearchSO.class);
+		
 		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 		CatalogueResDTO resDTO = null;
-		ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
-				.getInstance().getServiceObject("sm", ISupplierSearchSO.class);
+		
 		SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
+		SupplierSearchResDTO smResDTO = null;
+		
 		CatalogueBackingBean bb = new CatalogueBackingBean();
+		//PmUser pmUser = new FacesScopes().getUserSessionBean();
+		//supplierReqDTO.setUserId(pmUser.getUserId());
 
-		PmUser pmUser = new FacesScopes().getUserSessionBean();
-		supplierReqDTO.setUserId(pmUser.getUserId());
-
-		SupplierSearchResDTO smResDTO = supplierSearchSO
-				.retriveSupplierProfiles(supplierReqDTO);
-
-		System.out.println("getSmSupplier"
-				+ smResDTO.getResultBean().getResultList().get(0));
-
-		reqDTO.setSupplierId(smResDTO.getResultBean().getResultList().get(0)
-				.getSupplierId());
-
-		resDTO = catalogueSO.retrieveSupplierZoneBySuppId(reqDTO);
-
-		System.out.println("size:" + resDTO.getSupplierZoneLs().size());
-
-		bb.getManagedBean().setSupplierZoneList(resDTO.getSupplierZoneLs());
-
-
-
-		bb.getManagedBean().setSelectedMaintainItem(supplierItem);
+		try{
+			//smResDTO = supplierSearchSO.retriveSupplierProfiles(supplierReqDTO);
+	
+			//System.out.println("getSmSupplier" + smResDTO.getResultBean().getResultList().get(0));
+	
+			reqDTO.setSupplierId(supplierItem.getSmSupplier().getSupplierId());
+			log.info("supplierItem.getSmSupplier().getSupplierId() = "+supplierItem.getSmSupplier().getSupplierId());
+	
+			resDTO = catalogueSO.retrieveSupplierZoneBySuppId(reqDTO);
+	
+			System.out.println("size:" + resDTO.getSupplierZoneLs().size());
+			bb.getManagedBean().setSupplierZoneList(resDTO.getSupplierZoneLs());
+			
+			reqDTO.setSupplierItemId(supplierItem.getSupplierItemId());
+			resDTO = catalogueSO.findActivePricing(reqDTO);
+			supplierItem.setCmPricings(resDTO.getPriceLs());
+			log.info("supplierItem.getCmPricings().size() = "+supplierItem.getCmPricings().size());
+			bb.getManagedBean().setSelectedMaintainItem(supplierItem);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			catalogueSO = null;
+			supplierSearchSO = null;
+		}
 
 		return "addCatalogView";
+		//return "../catalogue/addCatalogView.xhtml";
 	}
 
 
