@@ -248,6 +248,9 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 					itemAddr.setDeliveredQty(itemAddr.getFlTempDoItem().getDeliveryQty());
 					itemAddr.setDeliveredAmt(itemAddr.getFlTempDoItem().getDeliveryAmt());
 				}
+				if(itemAddr.getOrderedQty().intValue() == 1 && itemAddr.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)){
+					itemAddr.setDeliveredQty(new BigDecimal(1));
+				}
 			}
 		}
 		
@@ -393,7 +396,6 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 				flBB.initializeRemarkAndAttachement(new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 		}
-		getManagedBean().getFulfilmentRequest();
 	}
 
 	public void retrieveRejectionData(FlFulfilmentItemAddr flFulfilmentItemAddr) {
