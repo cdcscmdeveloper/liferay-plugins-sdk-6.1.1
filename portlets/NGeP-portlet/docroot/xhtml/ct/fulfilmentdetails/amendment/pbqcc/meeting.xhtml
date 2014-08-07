@@ -15,7 +15,7 @@
               <p:column selectionMode="multiple" style="width:2%;" />
 			  <p:column style="width:25%;" headerText="#{lbl['lbl.ct.amend.dtofmeeting']}">
 			     <p:calendar value="#{ctMeetingsVar.meetingDate}" size="25" id="calMeeting"
-			         readonlyInput="true"  showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
+			         readonlyInput="true"  showOn="button" pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}"/>
 			  </p:column> 
 			  <p:column style="width:55%;" headerText="#{lbl['lbl.ct.amend.locofmeeting']}">
 				    <p:inputText value="#{ctMeetingsVar.meetingLocation}" style="width:95%;"/>

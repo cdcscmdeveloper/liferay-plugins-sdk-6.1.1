@@ -257,7 +257,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			
 	        if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME) || 
 	                res.getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME)) {
-			        this.getManagedBean().setMemberSignOff(true);  
+			        //this.getManagedBean().setMemberSignOff(true);  
 			        this.getManagedBean().setPbConfirmMeeting(true);
 			        if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME)){
 					    this.getManagedBean().setSignUpdateDecision(true);

@@ -49,6 +49,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private String selectedRadioButton="1";
 	private String name = null;
 	private String identificationNo = null;
+	private String identificationType;
 	private String witnessHeader;
 	private String editorValue;
 	private String fileDirectory;
@@ -426,6 +427,14 @@ public class AmendmentManagedBean extends BaseManagedBean {
 
 	public void setIdentificationNo(String identificationNo) {
 		this.identificationNo = identificationNo;
+	}
+	
+	public String getIdentificationType() {
+		return identificationType;
+	}
+	
+	public void setIdentificationType(String identificationType) {
+		this.identificationType = identificationType;
 	}
 
 	public List<PmUser> getExternalUsers() {
