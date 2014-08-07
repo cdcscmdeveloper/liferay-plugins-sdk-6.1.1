@@ -57,7 +57,8 @@
 						action="#{qTDetailBB.qtDetailsTabChange(8)}" update="@form"
 						process="@form"
 						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId gt QTStatusConst.QT_PENDING_QT_SUBMISSION)}" />
-					<p:menuitem value="#{lbl['lbl.qt.public.approval']}" update="@form"
+					<p:menuitem value="#{lbl['lbl.qt.public.approval']}"
+						action="#{qTDetailBB.qtDetailsTabChange(9)}" update="@form"
 						process="@form"
 						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId gt QTStatusConst.QT_PENDING_QT_SUBMISSION)}" />
 
