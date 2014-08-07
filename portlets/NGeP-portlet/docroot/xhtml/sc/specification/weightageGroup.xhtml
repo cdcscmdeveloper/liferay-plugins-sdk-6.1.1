@@ -21,7 +21,7 @@
 						value="#{specificationBackingBean.managedBean.technicalScoreSetting.weightageReq}">
 						<f:selectItems
 							value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
-						<p:ajax event="change" update="technicalWeigtage"></p:ajax>
+						<p:ajax event="change" update="technicalWeigtage,addpoints"></p:ajax>
 					</p:selectOneRadio> <p:message id="techScoring" for="techWeightage" display="icon"></p:message></td>
 			</tr>
 
@@ -52,7 +52,7 @@
 					rendered="#{tech.qtScoreWeightage.score=='0'}">
 					<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
 					<p:ajax event="blur" process="@this"
-						listener="#{specificationBackingBean.techScoreSum}" update="@form" />
+						listener="#{specificationBackingBean.techScoreSum}" update=":form:addpoints" />
 				</p:inputText>
 				<p:message id="techScoreId" for="techScoreWeight" display="icon"></p:message>
 			</p:column>
@@ -64,7 +64,7 @@
 
 					<p:ajax event="blur" process="@this"
 						listener="#{specificationBackingBean.techWeightageSum}"
-						update="@form" />
+						update=":form:addpoints" />
 				</p:inputText>
 			</p:column>
 
@@ -74,8 +74,7 @@
 		<p:spacer height="15"></p:spacer>
 
 
-	</p:panel>
-	<p:panel>
+
 		<h:panelGroup id="addpoints">
 			<table>
 				<tr>
@@ -86,24 +85,25 @@
 							style="text-align:right"
 							value="#{specificationBackingBean.managedBean.techPoints}"></p:inputText></td>
 				</tr>
+				<ui:fragment
+					rendered="#{specificationBackingBean.managedBean.technicalScoreSetting.weightageReq ne 'false'}">
 
+					<tr>
+						<td><h:outputText
+								value="#{lbl['lbl.sc.spec.total.weightage']}" /></td>
+						<td><p:inputText readonly="true" disabled="true"
+								style="text-align:right"
+								value="#{specificationBackingBean.managedBean.technicalWeightageScore}"></p:inputText></td>
+					</tr>
 
-				<tr>
-					<td><h:outputText
-							value="#{lbl['lbl.sc.spec.total.weightage']}" /></td>
-					<td><p:inputText readonly="true" disabled="true"
-							style="text-align:right"
-							value="#{specificationBackingBean.managedBean.technicalWeightageScore}"></p:inputText></td>
-				</tr>
-
-
+				</ui:fragment>
 
 
 			</table>
 
 		</h:panelGroup>
 	</p:panel>
-	<p:panel header="Passing Score">
+	<p:panel header="Passing Score" toggleable="true">
 
 		<table>
 			<tr>

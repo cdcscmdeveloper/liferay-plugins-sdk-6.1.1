@@ -19,7 +19,7 @@
 						value="#{specificationBackingBean.managedBean.financialScoreSetting.weightageReq}">
 						<f:selectItems
 							value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
-						<p:ajax event="change" update="financialweightage"></p:ajax>
+						<p:ajax event="change" update="financialweightage,finaddpoints"></p:ajax>
 					</p:selectOneRadio> <p:message id="finScoring" for="finScoreWeight" display="icon"></p:message>
 				</td>
 			</tr>
@@ -47,12 +47,14 @@
 					<h:outputText value="#{finance.qtScoreWeightage.score}" />
 				</ui:fragment>
 				<ui:fragment rendered="#{finance.qtScoreWeightage.score=='0'}">
-					<p:inputText value="#{finance.qtScoreWeightage.score}" maxlength="18"
-						required="true" label="#{lbl['lbl.sc.spec.stage2.score']}"
-						id="finScoreWeightage" style="text-align:right">
-					<ac:validateNumber integerOnly="true"  maxIntegerDigits="14" ></ac:validateNumber>
+					<p:inputText value="#{finance.qtScoreWeightage.score}"
+						maxlength="18" required="true"
+						label="#{lbl['lbl.sc.spec.stage2.score']}" id="finScoreWeightage"
+						style="text-align:right">
+						<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
 						<p:ajax event="blur" process="@this"
-							listener="#{specificationBackingBean.finScoreSum}" update=":form:finaddpoints,:form:offeredPrice" />
+							listener="#{specificationBackingBean.finScoreSum}"
+							update=":form:finaddpoints,:form:offeredPrice" />
 					</p:inputText>
 					<p:message id="finScoreCheckId" for="finScoreWeightage"
 						display="icon"></p:message>
@@ -60,13 +62,13 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.weight.weight']}"
 				style="width:20%;">
-				<p:inputText value="#{finance.qtScoreWeightage.weightage}" maxlength="5"
-					style="text-align:right"
+				<p:inputText value="#{finance.qtScoreWeightage.weightage}"
+					maxlength="5" style="text-align:right"
 					rendered="#{specificationBackingBean.managedBean.financialScoreSetting.weightageReq ne 'false'}">
-				
+
 					<p:ajax event="blur" process="@this"
 						listener="#{specificationBackingBean.finWeightageSum}"
-						update="@form" />
+						update=":form:finaddpoints" />
 				</p:inputText>
 			</p:column>
 
@@ -75,30 +77,36 @@
 		<p:spacer height="15"></p:spacer>
 
 
-	</p:panel>
-	<p:panel>
+
 		<h:panelGroup id="finaddpoints">
-			<h:panelGrid columns="3">
+			<table>
 
-
-				<h:outputText value="#{lbl['lbl.sc.spec.net.total.points']} " />
-				<p:spacer width="10"></p:spacer>
-				<p:inputText readonly="true" disabled="true"
-					style="text-align:right"
-					value="#{specificationBackingBean.managedBean.finPoints}"></p:inputText>
-
-				<h:outputText value="#{lbl['lbl.sc.spec.total.weightage']}" />
-				<p:spacer width="10"></p:spacer>
-				<p:inputText readonly="true" disabled="true"
-					style="text-align:right"
-					value="#{specificationBackingBean.managedBean.financialWeightageScore}"></p:inputText>
-
-			</h:panelGrid>
+				<tr>
+					<td><h:outputText
+							value="#{lbl['lbl.sc.spec.net.total.points']} " /></td>
+					<td><p:inputText readonly="true" disabled="true"
+							style="text-align:right"
+							value="#{specificationBackingBean.managedBean.finPoints}"></p:inputText>
+					</td>
+				</tr>
+				<ui:fragment
+					rendered="#{specificationBackingBean.managedBean.financialScoreSetting.weightageReq ne 'false'}">
+					<tr>
+						<td><h:outputText
+								value="#{lbl['lbl.sc.spec.total.weightage']}" /></td>
+						<td><p:inputText readonly="true" disabled="true"
+								style="text-align:right"
+								value="#{specificationBackingBean.managedBean.financialWeightageScore}"></p:inputText>
+						</td>
+					</tr>
+				</ui:fragment>
+			</table>
 		</h:panelGroup>
 	</p:panel>
 	<h:panelGroup id="offeredPrice">
 		<p:panel
-			header="#{lbl['lbl.sc.spec.fin.score.scoring.offered.price']}">
+			header="#{lbl['lbl.sc.spec.fin.score.scoring.offered.price']}"
+			toggleable="true">
 			<p:panelGrid style="margin-top:5px;width:100%;">
 				<f:facet name="header">
 
@@ -115,22 +123,22 @@
 					<p:column style="font-weight: bold;">#{lbl['lbl.sc.spec.fin.score.by.package']}</p:column>
 					<p:column style="font-weight: bold;">
 						<p:inputText style="text-align:right;" maxlength="18"
-							value="#{specificationBackingBean.managedBean.offerPricePackage.fromVariance}" >
-						
-							</p:inputText>
+							value="#{specificationBackingBean.managedBean.offerPricePackage.fromVariance}">
+
+						</p:inputText>
 					</p:column>
 
 					<p:column colspan="1" style="font-weight: bold;">
 						<p:inputText style="text-align:right;" maxlength="18"
-							value="#{specificationBackingBean.managedBean.offerPricePackage.toVariance}" >
-						
-							</p:inputText>
+							value="#{specificationBackingBean.managedBean.offerPricePackage.toVariance}">
+
+						</p:inputText>
 					</p:column>
 					<p:column colspan="1" style="font-weight: bold;">
 						<p:inputText style="text-align:right;" maxlength="18"
-							value="#{specificationBackingBean.managedBean.offerPricePackage.belowScore}" >
-						
-							</p:inputText>
+							value="#{specificationBackingBean.managedBean.offerPricePackage.belowScore}">
+
+						</p:inputText>
 					</p:column>
 					<p:column colspan="1" style="font-weight: bold;">
 						<h:outputText
@@ -138,32 +146,32 @@
 					</p:column>
 					<p:column colspan="1" style="font-weight: bold;">
 						<p:inputText style="text-align:right;" maxlength="18"
-							value="#{specificationBackingBean.managedBean.offerPricePackage.aboveScore}" >
-						
-							</p:inputText>
+							value="#{specificationBackingBean.managedBean.offerPricePackage.aboveScore}">
+
+						</p:inputText>
 					</p:column>
 				</p:row>
 				<p:row>
 					<p:column style="font-weight: bold;">#{lbl['lbl.sc.spec.fin.score.by.item']}</p:column>
 					<p:column style="font-weight: bold;">
 						<p:inputText style="text-align:right;" maxlength="18"
-							value="#{specificationBackingBean.managedBean.offerPriceItem.fromVariance}" >
-						
-							
-							</p:inputText>
+							value="#{specificationBackingBean.managedBean.offerPriceItem.fromVariance}">
+
+
+						</p:inputText>
 					</p:column>
 
 					<p:column colspan="1" style="font-weight: bold;">
 						<p:inputText style="text-align:right;" maxlength="18"
-							value="#{specificationBackingBean.managedBean.offerPriceItem.toVariance}" >
-						
-							</p:inputText>
+							value="#{specificationBackingBean.managedBean.offerPriceItem.toVariance}">
+
+						</p:inputText>
 					</p:column>
 					<p:column colspan="1" style="font-weight: bold;">
 						<p:inputText style="text-align:right;" maxlength="18"
-							value="#{specificationBackingBean.managedBean.offerPriceItem.belowScore}" >
-						
-							</p:inputText>
+							value="#{specificationBackingBean.managedBean.offerPriceItem.belowScore}">
+
+						</p:inputText>
 					</p:column>
 					<p:column colspan="1" style="font-weight: bold;">
 						<h:outputText
@@ -171,9 +179,9 @@
 					</p:column>
 					<p:column colspan="1" style="font-weight: bold;">
 						<p:inputText style="text-align:right;" maxlength="18"
-							value="#{specificationBackingBean.managedBean.offerPriceItem.aboveScore}" >
-						
-							</p:inputText>
+							value="#{specificationBackingBean.managedBean.offerPriceItem.aboveScore}">
+
+						</p:inputText>
 					</p:column>
 				</p:row>
 
@@ -182,7 +190,8 @@
 
 		</p:panel>
 	</h:panelGroup>
-	<p:panel header="#{lbl['lbl.sc.spec.fin.pasing.score']}">
+	<p:panel header="#{lbl['lbl.sc.spec.fin.pasing.score']}"
+		toggleable="true">
 
 		<table>
 			<tr>
@@ -190,14 +199,13 @@
 						value="#{lbl['lbl.sc.spec.fin.scoring.financial']}" /></td>
 				<td><p:inputText style="text-align:right" maxlength="5"
 						value="#{specificationBackingBean.managedBean.financialScoreSetting.passingScore}">
-						
-						</p:inputText>
-					<p:spacer width="5"></p:spacer> <h:outputText value="/100 " /></td>
+
+					</p:inputText> <p:spacer width="5"></p:spacer> <h:outputText value="/100 " /></td>
 			</tr>
 		</table>
 
 	</p:panel>
-	
+
 
 
 </ui:composition>

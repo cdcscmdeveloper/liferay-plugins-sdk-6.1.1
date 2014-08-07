@@ -12,7 +12,7 @@
 
 		<p:panel style="margin-left:5%"
 			rendered="#{((specificationBackingBean.managedBean.scQt.evaluationType eq '2' and specificationBackingBean.managedBean.scQt.techEvaluationReq eq 'false') or (specificationBackingBean.managedBean.scQt.evaluationType eq '2' and specificationBackingBean.managedBean.scQt.techEvaluationReq eq 'true') or (specificationBackingBean.managedBean.scQt.evaluationType eq '1' and specificationBackingBean.managedBean.scQt.techEvaluationReq eq 'true'))}">
-			<p:panel id="package" header="By Package">
+			<p:panel id="package" header="#{lbl['lbl.sc.spec.fin.score.by.package']}" toggleable="true">
 				<table>
 					<tr>
 						<td><h:outputLabel
@@ -58,7 +58,7 @@
 
 
 
-			<p:panel id="item" header="#{lbl['lbl.sc.spec.fin.score.by.item']}">
+			<p:panel id="item" header="#{lbl['lbl.sc.spec.fin.score.by.item']}" toggleable="true">
 				<table>
 					<tr>
 						<td><h:outputLabel
@@ -141,7 +141,7 @@
 		<p:panel
 			rendered="#{specificationBackingBean.managedBean.scQt.evaluationType eq '1' and specificationBackingBean.managedBean.scQt.techEvaluationReq eq 'false'}">
 			<p:panel id="recommendTechnicalItem"
-				header="#{lbl['lbl.sc.spec.fin.score.by.package']}">
+				header="#{lbl['lbl.sc.spec.fin.score.by.package']}" toggleable="true">
 				<table>
 
 					<tr>
@@ -156,7 +156,7 @@
 				</table>
 			</p:panel>
 
-			<p:panel header="#{lbl['lbl.sc.spec.fin.score.by.item']}">
+			<p:panel header="#{lbl['lbl.sc.spec.fin.score.by.item']}" toggleable="true">
 				<table>
 					<tr>
 						<td><h:outputLabel
