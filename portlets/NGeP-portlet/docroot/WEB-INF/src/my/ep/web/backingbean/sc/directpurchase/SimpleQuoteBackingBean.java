@@ -2051,6 +2051,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			getCurrentStatus(res.getDocStatus().longValue()); 
 			getManagedBean().setProcessName(res.getProcessName());
 			
+			 getManagedBean().setRnToSQFlag(Boolean.FALSE);
 			// page navigation to simple quote
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "simpleQuote");
