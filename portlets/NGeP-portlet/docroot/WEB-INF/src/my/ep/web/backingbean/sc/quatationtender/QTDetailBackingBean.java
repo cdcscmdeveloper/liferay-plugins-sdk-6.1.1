@@ -1521,8 +1521,8 @@ public class QTDetailBackingBean extends
 		Long qtId = null;
 
 		if (SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)
-				|| "Assign EC/OC Committee".equalsIgnoreCase(taskName)) {
-			if (!"Assign EC/OC Committee".equalsIgnoreCase(taskName)) {
+				|| SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE.equalsIgnoreCase(taskName)) {
+			if (! SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE.equalsIgnoreCase(taskName)) {
 				qtId = ((SCCommitteeDataType) obj).getQtId().longValue();
 			} else {
 				qtId = ((SCEvaluationDataType) obj).getQtId().longValue();
@@ -1655,7 +1655,7 @@ public class QTDetailBackingBean extends
 			detailSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
-			reqDTO.setQtdetail(getManagedBean().getQt());
+			reqDTO.setQtdetail(this.getManagedBean().getQt());
 			QuationTenderResDTO resDTO = detailSO
 					.retriveQTApprovalDetails(reqDTO);
 			List<ScQtApproval> requiredApproval = resDTO.getApproval();
@@ -1664,7 +1664,7 @@ public class QTDetailBackingBean extends
 					.getTabList();
 			MenuModel menuModel = new DefaultMenuModel();
 			if (requiredApproval != null) {
-				for (ScQtApproval qtApproval : requiredApproval) {
+				for (ScQtApproval qtApproval : requiredApproval) {											
 					qtApproval = checkIsApprovalExists(qtApproval,
 							existingApprovalTabs);
 					qtApproval.setApprovalType(ApprovalCategory
@@ -1680,10 +1680,8 @@ public class QTDetailBackingBean extends
 					qtRemarkList.add(remark);
 					qtApproval.setScQtApprovalRemarks(qtRemarkList);
 					//qtApproval.setScQtApprovalAttachment(null);
-					qtApproval.setScQt(this.getManagedBean().getQt());
-					List<ScQtApprovalRequest> qtApprovalRequests = qtApproval
-							.getScQtApprovalDtls();
-					qtApproval.setScQtApprovalDtls(qtApprovalRequests);
+					qtApproval.setScQt(this.getManagedBean().getQt());					
+					
 					// BUDGET_APPROVAL
 					if (qtApproval.getApprovalCategory().getParameterCode()
 							.equals(ParameterConst.APPROVAL_CATEGORY_BUDGET)) {
@@ -2876,6 +2874,7 @@ public class QTDetailBackingBean extends
 		if (null != existingApprovalTabs) {
 			for (TabBean approvalTab : existingApprovalTabs) {
 				if (qtApproval.getApprovalCategory().getParameterCode().equalsIgnoreCase(approvalTab.getScQtApproval().getApprovalCategory().getParameterCode())) {
+					 approvalTab.getScQtApproval().setScQtApprovalDtls(qtApproval.getScQtApprovalDtls());
 					return approvalTab.getScQtApproval();
 				}
 			}

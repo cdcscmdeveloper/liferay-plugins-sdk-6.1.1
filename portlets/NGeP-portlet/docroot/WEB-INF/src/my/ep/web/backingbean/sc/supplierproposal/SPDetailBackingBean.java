@@ -32,6 +32,7 @@ import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.dto.sc.quationtender.ProposalReqDTO;
 import my.ep.dto.sc.quationtender.ProposalResDTO;
@@ -68,6 +69,7 @@ import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.sc.supplierproposal.SPDetailManagedBean;
+import my.ep.web.sc.quationtender.common.QTConstants;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -109,6 +111,7 @@ public class SPDetailBackingBean extends
 	private static final String NAV_TO_NON_GOVT_COMPANY_EXPERIENCE_PAGE = "/xhtml/sc/supplierproposal/financialNonFederalGovt.xhtml";
 	private static final String NAV_TO_FINANCE_BANK_STATEMENT_PAGE = "/xhtml/sc/supplierproposal/financialBankStatement.xhtml";
 	private static final String NAV_TO_ASSET_LIABILITY_PAGE = "/xhtml/sc/supplierproposal/financialAssetLiability.xhtml";
+	private static final String NAV_TO_PROPOSAL_MAIN_PAGE="/xhtml/sc/supplierproposal/supplierProposalMain.xhtml";
 
 	public static Logger log = EpLogger.getLogger(SPDetailBackingBean.class);
 
@@ -151,13 +154,15 @@ public class SPDetailBackingBean extends
 
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
 			reqDTO.setQtSupplierId(supplierId);
-
+			reqDTO.setQtId(1l);
+			reqDTO.setDocCategory(SourcingConstants.TECHNICAL_DOCTYPE);
+			
 			ProposalResDTO resDTO = proposalSO
 					.retrieveProposalDtlByQtSupplierId(reqDTO);
 
 			// Technical Check List
 			List<ScQtProposalChecklist> tecCheckDetailsList = resDTO
-					.getTecChecklistResultBean().getResultList();
+					.getCheckListResultBean().getResultList();
 			log.info("Technical list: " + tecCheckDetailsList.size());
 			for (ScQtProposalChecklist scQtProposalChecklist : tecCheckDetailsList) {
 				this.getManagedBean().setQtProposalChecklist(
@@ -183,19 +188,21 @@ public class SPDetailBackingBean extends
 		this.getManagedBean().setPrepareActiveIndex(1);
 		IQTProposalSO proposalSO = null;
 
+		
 		try {
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
 
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
 			reqDTO.setQtSupplierId(supplierId);
-
+			reqDTO.setQtId(1l);
+			reqDTO.setDocCategory(SourcingConstants.FINANCIAL_DOCTYPE);
 			ProposalResDTO resDTO = proposalSO
 					.retrieveProposalDtlByQtSupplierId(reqDTO);
 
 			// Financial Check List
 			List<ScQtProposalChecklist> finCheckDetailsList = resDTO
-					.getFinChecklistResultBean().getResultList();
+					.getCheckListResultBean().getResultList();
 			log.info("Financial list: " + finCheckDetailsList.size());
 
 			this.getManagedBean().setQt(resDTO.getScQt());
@@ -1807,20 +1814,15 @@ public class SPDetailBackingBean extends
 				.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil
 				.getOriginalServletRequest(servletRequest);
-		String taskId = originalServletRequest.getParameter("taskId");
-		this.getManagedBean().setTaskId(taskId);
+		String qtId = originalServletRequest.getParameter("qtId");
+		String encodedSupplierId= originalServletRequest.getParameter("supplierId");
 		
-		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
-				.getServiceObject(IBpmSO.class);
-		// TODO
-		FacesScopes facesScopes = new FacesScopes();
-		String ctx = facesScopes.getBPMAuthenticationCtxToken();
-		// String ctx = bpmSO.authenticate("roslan", "welcome1");
-		BpmRequestDTO reqDTO = new BpmRequestDTO();
-		reqDTO.setCtxToken(ctx);
-		reqDTO.setTaskId(taskId);
-		BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
-		Object obj = res.getPojo();
-		this.getManagedBean().setOutComes(res.getAction());
+		retrieveTechnicalProposalList();
+		FacesContext fc = FacesContext.getCurrentInstance();
+		
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null,NAV_TO_PROPOSAL_MAIN_PAGE);
 	}
+	
+
 }
