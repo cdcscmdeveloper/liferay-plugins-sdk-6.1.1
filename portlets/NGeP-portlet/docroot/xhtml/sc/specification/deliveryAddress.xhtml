@@ -8,13 +8,27 @@
 
 	<p:panel>
 
+
 		<ui:fragment
 			rendered="#{specificationBackingBean.managedBean.scQt.zonal ne 'false'}">
-			<p:accordionPanel id="accordpnllist" dynamic="true"
+			<p:accordionPanel id="panelNoaccordpnllist" dynamic="true"
 				value="#{specificationBackingBean.managedBean.deliveryLocBean}"
 				var="zonePnlList">
 
-				<p:tab title="#{zonePnlList.tplSpecZoneDtl.zoneName}">
+
+
+				<c:if
+					test="#{specificationBackingBean.managedBean.scQt.panel ne 'false'}">
+					<ui:param name="zoneName"
+						value="#{zonePnlList.tplSpecZoneDtl.panelZone.name}"></ui:param>
+				</c:if>
+				<c:if
+					test="#{specificationBackingBean.managedBean.scQt.panel eq 'false'}">
+					<ui:param name="zoneName"
+						value="#{zonePnlList.tplSpecZoneDtl.zoneName}"></ui:param>
+				</c:if>
+
+				<p:tab title="#{zoneName}">
 					<ui:param name="deliveryList"
 						value="#{zonePnlList.deliveryLocList}"></ui:param>
 					<ui:param name="selectDeliveryList"
@@ -54,6 +68,10 @@
 					actionListener="#{specificationBackingBean.deleteDeliveryDtls}" />
 			</div>
 		</ui:fragment>
+
+
+
+
 		<ui:include src="searchDeliveryAddress.xhtml"></ui:include>
 	</p:panel>
 
