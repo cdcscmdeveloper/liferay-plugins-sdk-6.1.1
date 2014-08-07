@@ -2936,7 +2936,7 @@ public class SmApplicationBackingBean extends
 			getManagedBean().setRemoveEpRole(false);
 		buildRoleList();
 		if (!getManagedBean().isRemoveEpRole()
-				&& (per.getEpRole() != null && per.getEpRole()
+				&& (getManagedBean().getSelectedShareHolder().getEpRole() != null && getManagedBean().getSelectedShareHolder().getEpRole()
 						.equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.value()))) {
 			SelectItem role = new SelectItem();
 			role.setLabel("Supplier Admin");
