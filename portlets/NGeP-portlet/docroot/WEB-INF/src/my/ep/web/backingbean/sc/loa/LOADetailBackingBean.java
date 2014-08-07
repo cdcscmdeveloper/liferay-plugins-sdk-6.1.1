@@ -214,6 +214,8 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 			}
 			getManagedBean().setLoaSupplierWitness(loaSupplierWitness);
 			
+			scLoa.setAckBy(new FacesScopes().getUserSessionBean());
+			
 			generateDeclarationFromVelocity(scLoa);
 			
 			FacesContext fc = FacesContext.getCurrentInstance();
@@ -501,8 +503,11 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 				if (SourcingConstants.DOC_DEF_KEY_CONTRACT_SUMMARY.equals(docDefinitionKey)) {
 					generateContractSummaryPdfFromVelocity((ScAttachment)scLoaReportAttachment, 
 							getManagedBean().getScLoa());	
-				} else if (SourcingConstants.DOC_DEF_KEY_AGREEMENT_LETTER.equals(docDefinitionKey)) {
+				} else if (SourcingConstants.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER.equals(docDefinitionKey)) {
 					generateAgreementLetterPdfFromVelocity((ScAttachment)scLoaReportAttachment, 
+							getManagedBean().getScLoa());
+				} else if (SourcingConstants.DOC_DEF_KEY_INTEGRITY_PACT.equals(docDefinitionKey)) {
+					generateDeclarationPdfFromVelocity((ScAttachment)scLoaReportAttachment, 
 							getManagedBean().getScLoa());
 				}
 				// TODO - generate documents
@@ -692,15 +697,34 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
     			new FileOutputStream(attachment.getFilePath()));
 	}
 	
-	private void generateDeclarationFromVelocity(ScLoa scLoa) throws Exception {	
-		PmUser pmUser = new FacesScopes().getUserSessionBean();
+	public void generateDeclarationPdfFromVelocity(ScAttachment attachment, ScLoa scLoa) throws Exception {	    	
+    	String termsConditions = generateDeclarationFromVelocity(scLoa);
+    	
+    	populateAttachmentDetails(attachment);
+		attachment.setFileName("integrity_pact.pdf");
+    	
+    	DocumentGenerator.getInstance().generatePdf(
+    			new FileOutputStream(attachment.getFilePath()), 
+    			termsConditions);
+	}
+	
+	private String generateDeclarationFromVelocity(ScLoa scLoa) throws Exception {	
+		PmUser pmUser = scLoa.getAckBy();
 		ScLoiLoa scLoiLoa = scLoa.getScLoiLoa();
 		PmOrgProfile pmOrgProfile = scLoiLoa.getPmOrgProfile();
     	VelocityContext context = new VelocityContext();
     	
     	context.put("title", scLoiLoa.getTitle());
-    	context.put("userName", pmUser.getUserName());
-    	context.put("icNo", pmUser.getIdentificationNo());
+    	
+    	String userName = "&#60;supplier name&#62;";
+    	String icNo = "&#60;ic no&#62;";
+    	if (pmUser != null) {
+    		userName = pmUser.getUserName();
+    		icNo = pmUser.getIdentificationNo();
+    	}
+    	context.put("userName", userName);
+    	context.put("icNo", icNo);
+    	
     	context.put("supplierName", scLoiLoa.getSupplierName());
     	context.put("mofNo", "");	// TODO
     	context.put("agency", pmOrgProfile.getOrgName());
@@ -710,6 +734,8 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
     			context);
     	
     	getManagedBean().setTermsConditions(termsConditions);
+    	
+    	return termsConditions;
 	}
 	
 	public StreamedContent getLoaStreamContent() throws IOException {
@@ -1181,6 +1207,7 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 		
 		if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId)) {
 			scLoa.setAckDate(new Date());
+			scLoa.setAckBy(new FacesScopes().getUserSessionBean());
 		}
 		
 		PmUser contractSignerUser = getManagedBean().getContractSignerUser();
