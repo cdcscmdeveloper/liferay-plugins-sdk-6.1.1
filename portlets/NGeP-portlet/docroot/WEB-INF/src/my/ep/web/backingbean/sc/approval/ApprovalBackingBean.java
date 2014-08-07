@@ -356,15 +356,7 @@ public class ApprovalBackingBean extends
 			this.getManagedBean().setScCommitteeMemberTabList(tabBeans);
 			initializeRemark(this.getManagedBean().getQtCommittes()
 					.getResultList());
-		} else if (SCProcessNameConst.APPROVE_PUBLICATION
-				.equalsIgnoreCase(taskName)) {
-			this.getManagedBean().setApprovalType(
-					ApprovalCategory.BPK_APPROVAL.dispalyName());
-			/*
-			 * scQtApproval = getApproval(qtId, ParameterConst.);
-			 */
-
-		} else if (SCProcessNameConst.APPROVE_PUBLICATION.equalsIgnoreCase(taskName)) {
+		}  else if (SCProcessNameConst.APPROVE_PUBLICATION.equalsIgnoreCase(taskName)) {
 			this.getManagedBean().setApprovalType("Publication Approval");
 			scQtApproval = getApproval(qtId, ParameterConst.APPROVAL_CATEGORY_PTJ);
 			if(null != getManagedBean().getQt().getClosingDate()) {
