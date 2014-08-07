@@ -620,6 +620,11 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 							parameterResDTO  = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
 							scRequestNoteDtl.setDeliverTermType(parameterResDTO.getPmParameter());
 						}
+						
+						// get PI id to Request note
+						if(scRequestNoteDtl.getScRequestSupplierItem().getScPrInquiy() != null){
+							requestNoteBackingBean.getManagedBean().setPrInquiryId(scRequestNoteDtl.getScRequestSupplierItem().getScPrInquiy().getPrInquiryId());
+						}
 
 						if(scRequestNoteDtl.getAssignedUser() == null){
 							scRequestNoteDtl.setAssignedUser(new PmUser());
@@ -776,6 +781,7 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 		 getCurrentStatus(res.getDocStatus().longValue()); 
 		 // title checker
 		 getManagedBean().setTitleChecker(Boolean.FALSE);
+		 getManagedBean().setRnToPIFlag(Boolean.FALSE);
 
 		 FacesContext fc = FacesContext.getCurrentInstance();
 		 if(flag){ // page nav.to purchase inquiry

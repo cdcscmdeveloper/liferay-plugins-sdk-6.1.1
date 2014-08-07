@@ -427,6 +427,11 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 							scRequestSupplierItem.setSupplierItemId(scRequestSupplierItem.getSmSupplier().getSupplierId());
 							scRequestNoteDtl.setScRequestSupplierItem(scRequestSupplierItem);
 						}
+						
+						// get PI id to Request note
+						if(scRequestSupplierItem.getScPrInquiy() != null){
+							getManagedBean().setPrInquiryId(scRequestSupplierItem.getScPrInquiy().getPrInquiryId());
+						}
 					}
 					
 					if(scRequestNoteDtl.getFulfilmentType() == null){
@@ -600,13 +605,16 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 				}
 			}
 			
+			if(getManagedBean().getPrInquiryId() != null){
+				requestNoteReqDTO.setPurchaseInquiryId(getManagedBean().getPrInquiryId());
+			}
 			FacesScopes facesScopes = new FacesScopes();
 			String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
-			    requestNoteReqDTO.setRequestNote(requestNote);
-				requestNoteReqDTO.setTaskId(getManagedBean().getTaskId());
-				requestNoteReqDTO.setToken(ctxToken);
-				requestNoteReqDTO.setOutcome(outcome);
-				requestNoteResDTO = directPurchaseSO.updateRequestNote(requestNoteReqDTO);
+			requestNoteReqDTO.setRequestNote(requestNote);
+			requestNoteReqDTO.setTaskId(getManagedBean().getTaskId());
+			requestNoteReqDTO.setToken(ctxToken);
+			requestNoteReqDTO.setOutcome(outcome);
+			requestNoteResDTO = directPurchaseSO.updateRequestNote(requestNoteReqDTO);
 			
 			if (requestNoteResDTO.isSuccessful()) {
 				ScRequestNote scRequestNote = requestNoteResDTO.getRequestNoteDetail();
@@ -1734,6 +1742,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 				simpleQuoteBackingBean.getManagedBean().setTitleChecker(Boolean.FALSE);
 				
 				// TODO current page url for page navigation from pid to request note
+				simpleQuoteBackingBean.getManagedBean().setRnToSQFlag(Boolean.FALSE);
 				simpleQuoteBackingBean.getManagedBean().setPageNavToRequestNote(fc.getViewRoot().getViewId());
 				
 				// page navigation to simple quote
