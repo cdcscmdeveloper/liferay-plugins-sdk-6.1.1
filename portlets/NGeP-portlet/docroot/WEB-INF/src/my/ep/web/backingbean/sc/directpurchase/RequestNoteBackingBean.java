@@ -894,9 +894,8 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			tplSpecZoneDtl.setTplSpecZone(zone);
 			tplSpecZoneDtls.add(tplSpecZoneDtl);
 			zone.setTplSpecZoneDtls(tplSpecZoneDtls);
-			result.setTplSpecZone(createSpecZone(pricing.getCmSupplierZone().getCmSupplierZoneDtls() ,tplSpecZoneDtl ,zone));
+			//result.setTplSpecZone(createSpecZone(pricing.getCmSupplierZone().getCmSupplierZoneDtls() ,tplSpecZoneDtl ,zone));
 		}
-		//result.setPriceType(pricing.getPriceTypeId());
 		
 		IParameterSO parameterSO;
 		try {
@@ -1269,6 +1268,8 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 	 */
 	public void showReqNotePopUps(ScRequestNoteDtl scRequestNoteDtl){
 		log.info("showReqNotePopUps");
+		List<ScSupplierItemPrice>	supplierItemPrices = new ArrayList<ScSupplierItemPrice>();
+		
 		if(scRequestNoteDtl.getScRequestSupplierItem() != null){
 			ScRequestSupplierItem  scRequestSupplierItem = scRequestNoteDtl.getScRequestSupplierItem();
 
@@ -1288,11 +1289,16 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 				scRequestSupplierItem.setRequestNoteItem(scRequestNoteDtl.getRequestItem());
 			}
 
-			if(scRequestSupplierItem.getSupplierItemPrices() != null && !scRequestSupplierItem.getSupplierItemPrices().isEmpty()){
-				scRequestSupplierItem.setSupplierItemPrice(scRequestSupplierItem.getSupplierItemPrices().get(0));
-			} else{
-				scRequestSupplierItem.getSupplierItemPrice().setPriceType(scRequestNoteDtl.getPriceType());
+			if(scRequestSupplierItem.getSupplierItemPrices() != null && scRequestSupplierItem.getSupplierItemPrices().size() >0){
+				for (ScSupplierItemPrice scSupplierItemPrice : scRequestSupplierItem.getSupplierItemPrices()) {
+					if(scSupplierItemPrice.getPriceType().getParameterId() == scRequestNoteDtl.getPriceType().getParameterId()){
+						supplierItemPrices.add(scSupplierItemPrice);
+						scRequestSupplierItem.getSupplierItemPrice().setPriceType(scSupplierItemPrice.getPriceType());
+					}
+				}
 			}
+			scRequestSupplierItem.setSupplierItemPrices(supplierItemPrices);
+			
 			getManagedBean().setRequestSupplierItem(scRequestSupplierItem);
 			getManagedBean().setRequestNoteDtl(scRequestNoteDtl);
 		}
@@ -1595,6 +1601,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			// title checker
 			purchaseInquiryBackingBean.getManagedBean().setTitleChecker(Boolean.FALSE);
 			// TODO current page url for page navigation from pid to request note
+			purchaseInquiryBackingBean.getManagedBean().setRnToPIFlag(Boolean.TRUE);
 			purchaseInquiryBackingBean.getManagedBean().setPageNavToRequestNote(fc.getViewRoot().getViewId());
 			fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "prInquiryMain");
@@ -1697,8 +1704,16 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 				
 				// remarks
 				scQuote.setRemarks(simpleQuoteBackingBean.initializeRemarks(scQuote));
-				simpleQuoteBackingBean.getManagedBean().setScQuote(scQuote);
 				
+				// procurement type drop down.
+				if(scQuote.getProcurementType() != null){
+					if(scQuote.getProcurementType().getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)){
+						getManagedBean().setProcurementTypes(getRadioButtonCodeValues(ParameterTypeConst.PROCUREMENT_TYPE , Boolean.TRUE));
+					} else {
+						getManagedBean().setProcurementTypes(getRadioButtonCodeValues(ParameterTypeConst.PROCUREMENT_TYPE , Boolean.FALSE));
+					} 
+				}
+				simpleQuoteBackingBean.getManagedBean().setScQuote(scQuote);
 				// country id
 				CountryReqDTO countryReqDTO = new CountryReqDTO();
 				countryReqDTO.setCountryCode("MY");
@@ -1715,7 +1730,6 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 				}
 				
 				procurementTypeEvent();
-
 				// title checker
 				simpleQuoteBackingBean.getManagedBean().setTitleChecker(Boolean.FALSE);
 				
