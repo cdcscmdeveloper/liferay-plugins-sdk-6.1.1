@@ -29,10 +29,6 @@ public class ProfCertifiedBodyManagedBean extends BaseManagedBean {
 	
 	private String bodyName;
 	
-	private Long certifiedBody;
-	
-	private Long professionalBody;
-	
 	private Long status;
 
 	/**
@@ -68,34 +64,6 @@ public class ProfCertifiedBodyManagedBean extends BaseManagedBean {
 	 */
 	public void setBodyName(String bodyName) {
 		this.bodyName = bodyName;
-	}
-
-	/**
-	 * @return the certifiedBody
-	 */
-	public Long getCertifiedBody() {
-		return certifiedBody;
-	}
-
-	/**
-	 * @param certifiedBody the certifiedBody to set
-	 */
-	public void setCertifiedBody(Long certifiedBody) {
-		this.certifiedBody = certifiedBody;
-	}
-
-	/**
-	 * @return the professionalBody
-	 */
-	public Long getProfessionalBody() {
-		return professionalBody;
-	}
-
-	/**
-	 * @param professionalBody the professionalBody to set
-	 */
-	public void setProfessionalBody(Long professionalBody) {
-		this.professionalBody = professionalBody;
 	}
 
 	/**

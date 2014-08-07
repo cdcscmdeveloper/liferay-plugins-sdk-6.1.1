@@ -90,7 +90,7 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 	 * get status item dropdown
 	 * 
 	 */	
-	 public SelectItem[] getStatusList() {
+	 public SelectItem[] getCertStatusList() {
 		 
 			SelectItem[] items =  new SelectItem[2];
 			items[0] = new SelectItem(1, "Active");
@@ -174,12 +174,7 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 								SearchOperator.OPERATOR_EQUALS.value(),
 								getManagedBean().getStatus()));
 			}
-			if (null != getManagedBean().getCertifiedBody()) {
-				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("isProfessionalBody",
-								SearchOperator.OPERATOR_EQUALS.value(),
-								getManagedBean().getCertifiedBody()));
-			}
+
 			ICertBodySO bodySO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 							ICertBodySO.class);
