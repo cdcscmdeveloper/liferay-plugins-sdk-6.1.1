@@ -49,13 +49,14 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.so.bo.pp']}" style="widht: 1%">
-				<h:outputText value="#{specificationcommittee.PNP ? 'Yes' : 'No'}" />
+				<h:outputText
+					value="#{lbl[specificationcommittee.PNP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.so.bo.consolidate']}"
 				style="widht: 10%">
 				<h:outputText
-					value="#{specificationcommittee.consolidateValue ? 'Yes' : 'No'}" />
+					value="#{lbl[specificationcommittee.consolidateValue ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
 			</p:column>
 
 		</p:dataTable>
@@ -80,17 +81,15 @@
 		<h:panelGroup id="approvalSpec">
 			<p:panel
 				rendered="#{qTBusinessOwnerBackingBean.managedBean.qt.specApprovalReq ne '0'}">
-				<h:panelGrid border="0" cellpadding="0" cellspacing="0" columns="2"
-					columnClasses="columnWidth20">
-					<h:column>
-						<h:outputLabel value="#{lbl['lbl.so.ministry.spec.secretary']}" />
-					</h:column>
-					<h:column>
-						<p:inputText
-							value="#{qTBusinessOwnerBackingBean.managedBean.qt.ministrySpecSecrataryId.userName}"
-							disabled="true" />
-					</h:column>
-				</h:panelGrid>
+				<table>
+					<tr>
+						<td><h:outputLabel
+								value="#{lbl['lbl.so.ministry.spec.secretary']}" /></td>
+						<td><p:inputText
+								value="#{qTBusinessOwnerBackingBean.managedBean.qt.ministrySpecSecrataryId.userName}"
+								disabled="true" /></td>
+					</tr>
+				</table>
 			</p:panel>
 		</h:panelGroup>
 	</p:panel>
