@@ -46,6 +46,7 @@ import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
 import jxl.write.WriteException;
 import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.IContractSO;
@@ -130,6 +131,8 @@ import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.backingbean.ct.LocationDTO;
+import my.ep.web.bean.paginator.IPagingDataModel;
+import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentFormat;
@@ -158,6 +161,7 @@ import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.MenuModel;
 import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
+
 import com.liferay.portal.util.PortalUtil;
 
 /**
@@ -181,6 +185,8 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	private CtMeeting[] selectedMeetingUser;
     private CtPerformanceBond[] selectedBondList;
 	private CtCommitteeMember[] selectedCommitteMembers;
+	
+	private IPagingDataModel<PmUser> committeDataModel = new CommittePagingDataModel();	
 	
 	public AmendmentBackingBean(){
 		if(this.getManagedBean().getAction() == null) {
@@ -341,7 +347,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		    			 this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa());
 		    	   }
 		     }
-			
+		    ConstructTabSideMenu();
 		    FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, ContractConst.NAV_TO_CONTRACT_AMENDMENT);
 		} finally {
@@ -386,7 +392,6 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		
 			    retriveZonesByContractVer();
 			    initializeRemarks();
-			    ConstructTabSideMenu();
 			    getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, 
 						getManagedBean().getContractVer().getDocType(), getManagedBean().getCtContract().getContractNo()));
 			    ctBackingBean = new ContractBackingBean(getManagedBean().getFileDirectory());			     
@@ -576,6 +581,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 					          return CommonUIConst.ACKNOWLEDGE_PAGE;
 				        } else {
 					       setAmendmentContractVer(resDTO);
+					       ConstructTabSideMenu();
 				       }
 		       	 } else {
 				      throw new EpException("Failed.");
@@ -1672,42 +1678,12 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		 * @return
 		 */
 		public void existingCommitteMemberList() {
-			UserReqDTO userReqDTO = new UserReqDTO();
-			SearchBean<PmUser> searchBean = new SearchBean<PmUser>();
-			UserResDTO resDto = null;
-
-			if (getManagedBean().getName() != null
-					&& !"".equalsIgnoreCase(getManagedBean().getName())) {
-				SearchFilterBean usernameSearchBean = new SearchFilterBean(
-						SearchOperator.OPERATOR_LIKE.value());
-				usernameSearchBean.setSearchField("userName");
-				usernameSearchBean.setSearchValue(getManagedBean().getName());
-				searchBean.getDataFilterBeans().add(usernameSearchBean);
-
-			}
-
-			if (getManagedBean().getIdentificationNo() != null
-					&& !"".equalsIgnoreCase(getManagedBean().getIdentificationNo())) {
-				SearchFilterBean idNoSearchBean = new SearchFilterBean(
-						SearchOperator.OPERATOR_EQUALS.value());
-				idNoSearchBean.setSearchField("identificationNo");
-				idNoSearchBean.setSearchValue(getManagedBean()
-						.getIdentificationNo());
-				searchBean.getDataFilterBeans().add(idNoSearchBean);
-			}
-			userReqDTO.setUserSearchBean(searchBean);
-
-			try {
-				IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-				resDto = userSO.searchUserProfile(userReqDTO);
-				if (resDto != null) {
-					this.getManagedBean().setExternalUsers(
-							resDto.getUserResultBean().getResultList());
+			 try { 
+				 committeDataModel.reloadData();
+				} catch (Exception e) {
+					e.printStackTrace();
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), "contract search failed."));
 				}
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
 		}
 		
 		public void okCommitteMembers(){
@@ -2107,4 +2083,61 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		return  new Date();
 	}
 	
+	
+	public IPagingDataModel<PmUser> getCommitteDataModel() {
+		return committeDataModel;
+	}
+
+	public void setCommitteDataModel(IPagingDataModel<PmUser> committeDataModel) {
+		this.committeDataModel = committeDataModel;
+	}
+
+
+	private class CommittePagingDataModel extends PagingDataModel<PmUser> {
+		private static final long serialVersionUID = 1L;
+
+		public CommittePagingDataModel() {
+			super("newCommitteTable");
+		}
+		
+		@Override
+		public ISearchResultBean<PmUser> pageChangeListener(ISearchBean<PmUser> searchBean) {
+	
+			if (log.isDebugEnabled()) {
+				log.debug("pageChangeListener");
+			}
+			
+			UserReqDTO userReqDTO = null;
+			UserResDTO resDto = null;
+			IUserSO userSO  = null;
+			try {
+				    userReqDTO = new UserReqDTO();
+					if(getManagedBean().getName() != null && !"".equalsIgnoreCase(getManagedBean().getName())){
+					      searchBean.getDataFilterBeans().add(new SearchFilterBean(
+							  "userName", SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getName()));
+				
+					}if(getManagedBean().getIdentificationType() != null && !"".equalsIgnoreCase(getManagedBean().getIdentificationType())){
+						searchBean.getDataFilterBeans().add(new SearchFilterBean("identificationCode.parameterCode", SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getIdentificationType()));
+					}
+					
+					if(getManagedBean().getIdentificationNo() != null && !"".equalsIgnoreCase(getManagedBean().getIdentificationNo())){
+						searchBean.getDataFilterBeans().add(new SearchFilterBean("identificationNo", SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getIdentificationNo()));
+					}
+					
+				    userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+					userReqDTO.setUserSearchBean(searchBean);
+					resDto = userSO.searchUserProfile(userReqDTO);
+					if (resDto.isSuccessful()) {
+						return resDto.getUserResultBean();
+					}
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally{
+			    userReqDTO = null;
+			    resDto = null;
+				userSO = null;
+			}
+			return null;
+		}
+	}	
 }

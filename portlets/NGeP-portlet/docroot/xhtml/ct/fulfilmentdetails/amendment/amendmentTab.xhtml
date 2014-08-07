@@ -110,6 +110,7 @@
 				
 				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.amend.meetingDtl'] }">
 					<ui:include src="pbqcc/meeting.xhtml"/>
+					<ui:include src="pbqcc/committe.xhtml"/>
 				</p:outputPanel>
 				
 				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.amend.decision'] 
