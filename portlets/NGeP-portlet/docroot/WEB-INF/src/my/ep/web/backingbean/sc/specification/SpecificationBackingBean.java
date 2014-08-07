@@ -3450,6 +3450,8 @@ public class SpecificationBackingBean extends
 
 				scQt.getScQtSupplierCriteria().setQtZoneCriterias(zoneCriteria);
 
+			} else {
+				scQt.setZonal(false);
 			}
 			scQt.getScQtSupplierCriteria().setCtPanelItem(
 					this.getManagedBean().getCtPanelItem());
@@ -5263,7 +5265,8 @@ public class SpecificationBackingBean extends
 
 			List<BriefingZoneBean> zoneBean = this.getManagedBean()
 					.getDeliveryLocBean();
-			if (this.getManagedBean().getScQt().isZonal() == true) {
+			if (this.getManagedBean().getScQt().isZonal() == true
+					&& this.getManagedBean().getScQt().isPanel() == false) {
 				for (BriefingZoneBean deliverybean : zoneBean) {
 
 					if (deliverybean
@@ -5307,17 +5310,70 @@ public class SpecificationBackingBean extends
 							addressbean.add(deliverybean);
 							this.getManagedBean().setAddressZoneBean(
 									addressbean);
-							System.out
-									.println("====address zone bean list size=="
-											+ this.getManagedBean()
-													.getAddressZoneBean()
-													.size());
+
 						}
 						break;
 					}
 
 				}
-			} else {
+			}
+
+			else if (this.getManagedBean().getScQt().isZonal() == true
+					&& this.getManagedBean().getScQt().isPanel() == true) {
+				for (BriefingZoneBean deliverybean : zoneBean) {
+
+					if (deliverybean
+							.getTplSpecZoneDtl()
+							.getPanelZone()
+							.getName()
+							.equals(this.getManagedBean().getTplSpecZoneDtl()
+									.getPanelZone().getName())) {
+						List<ScQtDeliveryLoc> delLoc = deliverybean
+								.getDeliveryLocList();
+						if (delLoc == null) {
+							delLoc = new ArrayList<ScQtDeliveryLoc>();
+						}
+						for (PmAddressType addressType : deliveryList) {
+							ScQtDeliveryLoc loc = new ScQtDeliveryLoc();
+							// loc.setPmAddress(addressType.getPmAddress());
+							String address1 = addressType.getPmAddress()
+									.getAddress1();
+							String address2 = addressType.getPmAddress()
+									.getAddress2();
+							String address3 = addressType.getPmAddress()
+									.getAddress3();
+							String address4 = addressType.getPmAddress()
+									.getAddress4();
+							String address = address1 + "," + address2 + ","
+									+ address3 + "," + address4;
+							loc.setDeliveryAddress(address);
+							// loc.setPmOrgProfile(addressType.getPmOrgProfile());
+							loc.setPmAddressType(addressType);
+							loc.setTplSpecZoneDtl(this.getManagedBean()
+									.getTplSpecZoneDtl());
+							loc.setScQt(this.getManagedBean().getScQt());
+
+							setUserDetails(loc);
+							delLoc.add(loc);
+							deliverybean.setDeliveryLocList(delLoc);
+							List<BriefingZoneBean> addressbean = this
+									.getManagedBean().getAddressZoneBean();
+							if (addressbean == null) {
+								addressbean = new ArrayList<BriefingZoneBean>();
+							}
+							addressbean.add(deliverybean);
+							this.getManagedBean().setAddressZoneBean(
+									addressbean);
+
+						}
+						break;
+					}
+
+				}
+			} else if ((this.getManagedBean().getScQt().isZonal() == false && this
+					.getManagedBean().getScQt().isPanel() == true)
+					|| (this.getManagedBean().getScQt().isZonal() == false && this
+							.getManagedBean().getScQt().isPanel() == false)) {
 				List<ScQtDeliveryLoc> nonZone = this.getManagedBean()
 						.getDeliveryNonZoneList();
 				if (nonZone == null) {
