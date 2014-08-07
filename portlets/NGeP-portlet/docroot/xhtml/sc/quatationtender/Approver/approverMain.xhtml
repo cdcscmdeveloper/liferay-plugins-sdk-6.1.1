@@ -48,6 +48,11 @@
 				<ui:include src="requestPTJdetails.xhtml" />
 				<ui:include src="committeeApprovalTab.xhtml" />
 			</c:if>
+			<c:if
+				test="${approvalBackingBean.managedBean.approvalType == 'Publication Approval'}">
+				<ui:include src="requestPTJdetails.xhtml" />
+				<ui:include src="publicApproval.xhtml"/>
+			</c:if>
 		</p:panel>
 	</ui:define>
 </ui:composition>

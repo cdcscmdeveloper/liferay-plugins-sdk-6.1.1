@@ -1,0 +1,121 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:panel header="#{lbl['lbl.sc.qt.req.dtls']}" toggleable="true">
+		<p:dataTable id="publicrequestdtlid"
+			value="#{approvalBackingBean.managedBean.scQtApproval.scQtApprovalDtls}"
+			var="publicapproval" rowIndexVar="index" editable="true"
+			rowKey="#{publicapproval}">
+			<p:column headerText="#{lbl['lbl.sc.qt.type.reqdtls']}">
+				<h:outputText
+					value="#{approvalBackingBean.getParameterDesc(publicapproval.approvalType)}" />
+			</p:column>
+		</p:dataTable>
+	</p:panel>
+	<p:panel header="Schedule Details" toggleable="true">
+		<table style="width: 100%">
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.so.noticepublish']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:calendar label="#{lbl['lbl.so.noticepublish']}"
+						value="#{approvalBackingBean.managedBean.qt.publishDate}"
+						id="noticePublish" required="true"
+						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button">
+					</p:calendar> <h:inputText value="12:00PM" disabled="true" size="06" /> <p:message
+						id="noticePublishMsg" for="noticePublish" display="icon" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.so.publsihperiod']}" /></td>
+				<td><p:inputText
+						value="#{approvalBackingBean.managedBean.qt.publishPeriod}"
+						readonly="true" id="publishingperiod" disabled="true" size="30"
+						style="margin-top:5px; text-align:right" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.so.closingdate']}" /></td>
+				<td><p:calendar id="closingDate"
+						value="#{approvalBackingBean.managedBean.qt.closingDate}"
+						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" readonly="true"
+						showOn="button">
+					</p:calendar> <h:inputText value="12:00PM" disabled="true" size="06" /></td>
+			</tr>
+			<c:if
+				test="#{approvalBackingBean.managedBean.qt.sampleReq eq 'true'}">
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.so.sampleclosingdate']}" />
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td><p:calendar label="#{lbl['lbl.so.sampleclosingdate']}"
+							value="#{approvalBackingBean.managedBean.qt.proposalStartDate}"
+							id="proposalPreparation" required="true"
+							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button" />
+						<h:inputText value="12:00PM" disabled="true" size="06" /> <p:message
+							id="proposalPreparationMsg" for="proposalPreparation"
+							display="icon" /></td>
+				</tr>
+			</c:if>
+			<tr>
+				<td style="width: 200px;"><p:outputLabel
+						value="#{lbl['lbl.so.expectloadate']}" /></td>
+				<td><p:calendar
+						value="#{approvalBackingBean.managedBean.qt.expectedLoaDate}"
+						id="loaDate" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
+						disabled="#{!qTDetailBB.managedBean.editable}" showOn="button" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.so.proposal.validity']}" /></td>
+				<td><p:inputText
+						value="#{approvalBackingBean.managedBean.qt.qtValidityPeriod}"
+						readonly="true" disabled="true" size="30"
+						style="margin-top:5px;text-align:right" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.so.proposal.validity.until']}" /></td>
+				<td><p:inputText id="proposalvalidityid"
+						value="#{approvalBackingBean.managedBean.proposalValidityUntil}"
+						readonly="true" disabled="true" style="margin-top:5px;" size="30">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</p:inputText></td>
+			</tr>
+		</table>
+	</p:panel>
+	<p:panel header="Remark" toggleable="true">
+		<table style="width: 100%" id="publicremark">
+			<tr>
+				<td class="TableFieldLeft" style="width: 96px;"><p:outputLabel
+						value="#{lbl['lbl.sc.qt.remark']}" /></td>
+				<td class="TableFieldRight"><p:dataGrid id="publicremarklist"
+						value="#{approvalBackingBean.managedBean.scQtApproval.scQtApprovalRemarks}"
+						var="remarkVar" rowIndexVar="remarkIndex" columns="1">
+						<table>
+							<tr>
+								<td width="5"></td>
+								<td rowspan="2" valign="top"><h:graphicImage
+										value="#{approvalBackingBean.userImagePath(remarkVar.createdUser.loginId)}"
+										height="30" width="30" /></td>
+								<td width="5"></td>
+								<td><h:outputText value="#{remarkVar.createdUser.userName}" />,
+									<h:outputText id="publicremarkDates"
+										value="#{remarkVar.changedDate}">
+										<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
+									</h:outputText></td>
+							</tr>
+							<tr>
+								<td></td>
+								<td><h:inputTextarea cols="40" value="#{remarkVar.remark}"
+										rendered="#{remarkVar.remarkId eq null}" /> <h:outputText
+										value="#{remarkVar.remark}"
+										rendered="#{remarkVar.remarkId ne null}"
+										style="display: inline-block; width:220px;word-wrap: break-word;" /></td>
+							</tr>
+						</table>
+					</p:dataGrid></td>
+			</tr>
+		</table>
+	</p:panel>
+</ui:composition>
