@@ -1,56 +1,80 @@
-<ui:composition	
-	xmlns="http://www.w3.org/1999/xhtml"
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+
+	<p:panel header="AUTHORIZED SIGNATORY" toggleable="true">
+	<p:spacer height="10"></p:spacer>
 	
-	
-   <p:panel header="AUTHORIZED SIGNATORY" toggleable="true">
-		
-	<table>
-	  <tr>	  	
-		<td><p:outputLabel value="#{lbl['lbl.pm.as.search']}" />
-			<p:outputLabel value="*" styleClass="mandatory" /></td>
-		<td><p:selectOneMenu style="width:178px;margin-bottom:5px;">      
-            	<f:selectItem itemLabel="SABAH" itemValue="0" /> 
-            	<f:selectItem itemLabel="SARAWAK" itemValue="1" />  
-            	<f:selectItem itemLabel="SEMENANJUNG" itemValue="2" />              	
-    	    </p:selectOneMenu></td>	
-	  </tr>	
-	</table>
-	<br />
-	
-	<p:dataTable editable="true">
-	<ac:paginator for="searchProfCertResult" />
-       <p:column headerText="#{lbl['lbl.pm.as.name']}"> 
-        <h:outputText />       
-       </p:column>
-       
-       <p:column headerText="#{lbl['lbl.pm.as.effdate']}"> 
-        <h:outputText />
-       </p:column> 
-       
-        <p:column headerText="#{lbl['lbl.pm.as.expdate']}"> 
-        <h:outputText />
-       </p:column>                     
-     
-       <p:column headerText="#{lbl['lbl.pm.search.status']}">                
-       </p:column >
-       
-     </p:dataTable>
-	
-	<p:panel>
-       <p:spacer height="15"></p:spacer>
-		
-		<div align="right">
-		<p:commandButton value="#{lbl['lbl.so.addbtn']}" icon="ui-icon-add" />
-        <p:commandButton value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete" />
-       </div>
-	</p:panel>	
-	
-	
-   </p:panel>	
+		<table>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.pm.as.search']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:selectOneMenu
+						value="{authorizedsignatoryBackingBean.managedBean.zones.zoneId}"
+						style="width:178px;margin-bottom:5px;">
+
+						<f:selectItems
+							value="#{authorizedsignatoryBackingBean.retrieveZones()}"
+							var="zone" itemLabel="#{zone.zoneName}"
+							itemValue="#{zone.zoneId}" />
+							<p:ajax event="change" partialSubmit="true"></p:ajax>
+					</p:selectOneMenu></td>
+			</tr>
+		</table>
+		<br />
+		<ac:lovPopup />
+		<p:dataTable
+			value="#{authorizedsignatoryBackingBean.managedBean.users}"
+			var="user" id="searchSignatoryResults">
+			<ac:paginator for="searchSignatoryResults" />
+
+			<p:column headerText="#{lbl['lbl.pm.as.name']}">
+				<h:outputText value="#{user.userName}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.pm.as.effdate']}">
+				<h:outputText value="#{user.pmUserOrgs[0].effDate}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.pm.as.expdate']}">
+				<h:outputText value="#{user.pmUserOrgs[0].expDate}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.pm.search.status']}">
+			</p:column>
+
+		</p:dataTable>
+
+		<p:panel>
+			<p:spacer height="15"></p:spacer>
+
+			<div>
+				<table style="width: 100%">
+					<tr>
+						<td class="TableFieldLeft" width="80%"></td>
+						<td>
+							<table>
+								<tr>
+									<td class="TableFieldLeft"><ac:lov id="supplier"
+											lovId="PM_USER" headerText="User Selection" buttonLabel="Add"
+											buttonIcon="ui-icon-add" selectionMode="multiple"
+											saveObject="authorizedsignatoryBackingBean.managedBean.users"
+											update="@form" /></td>
+									<td><p:commandButton
+											value="#{lbl['lbl.sc.action.delete']}" icon="ui-icon-delete" /></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</p:panel>
+
+
+	</p:panel>
 </ui:composition>
