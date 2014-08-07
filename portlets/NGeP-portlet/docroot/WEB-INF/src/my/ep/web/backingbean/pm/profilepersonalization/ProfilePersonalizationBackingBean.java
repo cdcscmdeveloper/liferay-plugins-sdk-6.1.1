@@ -252,7 +252,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 			UserReqDTO reqDTO = new UserReqDTO();
 			reqDTO.setPmUser(user);
 
-			UserResDTO resDTO = userSO.saveUser2(reqDTO);
+			UserResDTO resDTO = userSO.saveUser(reqDTO);
 
 			if (resDTO.isSuccessful()) {
 				FacesContext.getCurrentInstance().addMessage(
