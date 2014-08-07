@@ -33,13 +33,13 @@
 	  </tr>  
 	  <tr>
 	    <td></td>
-	  	<td><p:selectBooleanCheckbox value="#{profcertifiedbodyBackingBean.managedBean.certBody.professionalBody}" /><h:outputText value="Professional Body" />&#160;&#160;&#160;
+	  	<td style="padding: 5px 0px;"><p:selectBooleanCheckbox value="#{profcertifiedbodyBackingBean.managedBean.certBody.professionalBody}" /><h:outputText value="Professional Body" />&#160;&#160;&#160;
 	  		<p:selectBooleanCheckbox value="#{profcertifiedbodyBackingBean.managedBean.certBody.certifiedBody}" /><h:outputText value="Certified Body" /></td>	  	
 	  </tr>
 	   <tr> 
 		<td><p:outputLabel value="Status :" /></td>
      	<td><p:selectOneMenu style="width:178px;margin-bottom:5px;" value="#{profcertifiedbodyBackingBean.managedBean.certBody.recordStatusFlg}">   
-			  <f:selectItems value="#{profcertifiedbodyBackingBean.getStatusList()}" /> 
+			  <f:selectItems value="#{profcertifiedbodyBackingBean.getCertStatusList()}" /> 
     	    </p:selectOneMenu></td>				
 	    </tr>
 	</table>

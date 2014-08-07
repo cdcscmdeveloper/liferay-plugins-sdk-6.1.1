@@ -11,7 +11,7 @@
 		<h:panelGrid columns="2">
 
 			<h:outputLabel value="#{lbl['lbl.pm.search.profcert']}"></h:outputLabel>
-		       <p:selectOneMenu value="#{profcertifiedbodyBackingBean.managedBean.certifiedBody}" 
+		       <p:selectOneMenu 
 		       					style="width:205px;margin-bottom:5px;">    
 				  <f:selectItems value="#{profcertifiedbodyBackingBean.getBodyType()}" /> 
               </p:selectOneMenu> 
@@ -23,8 +23,8 @@
 			<p:inputText value="#{profcertifiedbodyBackingBean.managedBean.bodyName}" size="30" />
 							
 		    <h:outputLabel value="#{lbl['lbl.pm.search.status']}"></h:outputLabel>
-		       <p:selectOneMenu style="width:205px">    
-				  <f:selectItems value="#{profcertifiedbodyBackingBean.getStatusList()}" />
+		       <p:selectOneMenu style="width:205px" value="#{profcertifiedbodyBackingBean.managedBean.status}">    
+				  <f:selectItems value="#{profcertifiedbodyBackingBean.getCertStatusList()}" />
               </p:selectOneMenu> 
 	
 		</h:panelGrid>
