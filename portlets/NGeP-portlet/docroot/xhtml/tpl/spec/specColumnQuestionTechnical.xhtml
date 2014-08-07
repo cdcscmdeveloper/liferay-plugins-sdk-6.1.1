@@ -51,7 +51,8 @@
 			conditionField="recordStatus^1"
 			rendered="#{isQuestionTypeItem}"
 			required="#{!question.selected}"
-			size="12">
+			size="12"
+			disabled="true">
 			<f:setPropertyActionListener for="actionEvent" target="#{templateSpecBackingBean.managedBean.tplSpecQuestions}" value="#{templateSpecBean.specMaster.tplSpecQuestions}" />
 		</ac:lov>
 	</p:column>
