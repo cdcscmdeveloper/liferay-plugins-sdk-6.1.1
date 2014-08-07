@@ -86,6 +86,7 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     private String priceType;
     
     private boolean titleChecker = Boolean.TRUE;
+    private Long prInquiryId; // To get PI id to cancel in request note 
     
     // BPM Task
     private SCDirectPurchaseDataType directPurchaseDataType;
@@ -749,6 +750,18 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	 */
 	public void setSupplierRecList(List<ScRequestNoteDtl> supplierRecList) {
 		this.supplierRecList = supplierRecList;
+	}
+	/**
+	 * @return the prInquiryId
+	 */
+	public Long getPrInquiryId() {
+		return prInquiryId;
+	}
+	/**
+	 * @param prInquiryId the prInquiryId to set
+	 */
+	public void setPrInquiryId(Long prInquiryId) {
+		this.prInquiryId = prInquiryId;
 	}
 	
 }

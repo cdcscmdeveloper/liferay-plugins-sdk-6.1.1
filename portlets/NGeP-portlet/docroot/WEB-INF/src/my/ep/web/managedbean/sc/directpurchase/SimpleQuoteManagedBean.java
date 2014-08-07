@@ -150,6 +150,7 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	private boolean titleChecker = Boolean.TRUE;
 	private String pageNavToRequestNote;
 	private SelectItem[] procurementTypes; // for procuremment type dropdown
+	private boolean rnToSQFlag = Boolean.TRUE;
 
 	public SimpleQuoteManagedBean() {
 		super();
@@ -1256,6 +1257,18 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	 */
 	public void setProcurementTypes(SelectItem[] procurementTypes) {
 		this.procurementTypes = procurementTypes;
+	}
+	/**
+	 * @return the rnToSQFlag
+	 */
+	public boolean isRnToSQFlag() {
+		return rnToSQFlag;
+	}
+	/**
+	 * @param rnToSQFlag the rnToSQFlag to set
+	 */
+	public void setRnToSQFlag(boolean rnToSQFlag) {
+		this.rnToSQFlag = rnToSQFlag;
 	}
 	
 }

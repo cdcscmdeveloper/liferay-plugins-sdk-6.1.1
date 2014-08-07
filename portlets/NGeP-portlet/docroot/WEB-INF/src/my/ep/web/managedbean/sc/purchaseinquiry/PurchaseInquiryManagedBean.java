@@ -58,6 +58,7 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	private SelectItem[] procurementTypes; // for procuremment type dropdown
 	
 	private boolean titleChecker = Boolean.TRUE;
+	private boolean rnToPIFlag;
 	
 	public PurchaseInquiryManagedBean() {
 		List<ScPRIRemark> remarks = new ArrayList<ScPRIRemark>();
@@ -411,6 +412,20 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	 */
 	public void setProcurementTypes(SelectItem[] procurementTypes) {
 		this.procurementTypes = procurementTypes;
+	}
+
+	/**
+	 * @return the rnToPIFlag
+	 */
+	public boolean isRnToPIFlag() {
+		return rnToPIFlag;
+	}
+
+	/**
+	 * @param rnToPIFlag the rnToPIFlag to set
+	 */
+	public void setRnToPIFlag(boolean rnToPIFlag) {
+		this.rnToPIFlag = rnToPIFlag;
 	}
 	
 }
