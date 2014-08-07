@@ -354,6 +354,14 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			identityTypeMapper.put(pmDesc.getPmParameter().getParameterId(), pmDesc.getPmParameter());
 		}
 	}
+	
+	/**
+	 * login id = identification no.
+	 */
+	public void updateLoginId(){
+		this.getManagedBean().getSelectedUser().setLoginId(this.getManagedBean().getSelectedUser().getIdentificationNo());
+	}
+	
 	/**
 	 * USER PROFILE - END
 	 */
@@ -925,6 +933,8 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	public void saveUserProfile() {
 		debugLogger("saveUserProfile");
 		PmUser user = this.getManagedBean().getSelectedUser();
+		user.setLoginId(user.getIdentificationNo());
+		
 		System.out.println(this.getManagedBean().isDummy());
 		if(this.getManagedBean().isDummy()){ //TODO REMOVE
 			dummyUser(user);
@@ -942,7 +952,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			
 			reqDTO.setPmUser(user);
 
-			UserResDTO resDTO = userSO.saveUser2(reqDTO);
+			UserResDTO resDTO = userSO.saveUser(reqDTO);
 
 			if (resDTO.isSuccessful()) {
 				FacesContext.getCurrentInstance().addMessage(
@@ -977,39 +987,39 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	}
 	
 	
-	public void testSearch(String id){
-		System.out.println("testSearch - start");
-		System.out.println(id);
-		System.out.println(this.getManagedBean().getSelectedUser().getIdentificationNo());
-		IUserSO userSO = null;
-		try {
-			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-			UserReqDTO reqDTO = new UserReqDTO();
-			PmUser pmUser = this.getManagedBean().getSelectedUser();
-			pmUser.setLoginId(this.getManagedBean().getSelectedUser().getIdentificationNo());
-			reqDTO.setPmUser(pmUser);
-
-			UserResDTO resDTO = userSO.test(reqDTO);
-
-			if (resDTO.isSuccessful()) {
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO,
-								null, "Record save successfully for Login ID: "
-										+ resDTO.getResult()));
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
-							e.getMessage()));
-		} finally {
-			userSO = null;
-		}
-		System.out.println("testSearch - end");
-	}
+//	public void testSearch(String id){
+//		System.out.println("testSearch - start");
+//		System.out.println(id);
+//		System.out.println(this.getManagedBean().getSelectedUser().getIdentificationNo());
+//		IUserSO userSO = null;
+//		try {
+//			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
+//					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+//			UserReqDTO reqDTO = new UserReqDTO();
+//			PmUser pmUser = this.getManagedBean().getSelectedUser();
+//			pmUser.setLoginId(this.getManagedBean().getSelectedUser().getIdentificationNo());
+//			reqDTO.setPmUser(pmUser);
+//
+//			UserResDTO resDTO = userSO.test(reqDTO);
+//
+//			if (resDTO.isSuccessful()) {
+//				FacesContext.getCurrentInstance().addMessage(
+//						null,
+//						new FacesMessage(FacesMessage.SEVERITY_INFO,
+//								null, "Record save successfully for Login ID: "
+//										+ resDTO.getResult()));
+//			}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			FacesContext.getCurrentInstance().addMessage(
+//					null,
+//					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+//							e.getMessage()));
+//		} finally {
+//			userSO = null;
+//		}
+//		System.out.println("testSearch - end");
+//	}
 	
 	
 	
@@ -1511,6 +1521,31 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 //
 //	}
 	
+	public void tempSearchUserProfile() throws Exception{
+		logger.info("tempSearchUserProfile start");
+		String userName = this.getManagedBean().getUserNames();
+		try{
+		if(userName!=null){
+			UserReqDTO userReqDTO = new UserReqDTO();
+			UserResDTO resDto = null;
+			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);	
+			userReqDTO.setLoginId(userName);
+			
+			resDto = userSO.tempSearchAll(userReqDTO);
+			if(resDto!=null && resDto.isSuccessful()){
+				this.getManagedBean().setResult(resDto.getAllResult());
+			}
+			
+		}
+		}catch (Exception e){
+			e.printStackTrace();
+			throw e;
+		}
+		logger.info("tempSearchUserProfile end");
+		
+	}
+
 	
 	
 }

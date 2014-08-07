@@ -58,6 +58,8 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	private List<PmRole> addedRoles;
 	private List<PmRole> deletedRoles;
 	
+	private List<String[]> result;//TODO : TEMP REMOVE
+	
 	
 	/**
 	 * @return the dummy
@@ -891,6 +893,18 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	public void setUserProfileSearchBean(
 			UserProfilesSearchBean userProfileSearchBean) {
 		this.userProfileSearchBean = userProfileSearchBean;
+	}
+	/**
+	 * @return the result
+	 */
+	public List<String[]> getResult() {
+		return result;
+	}
+	/**
+	 * @param result the result to set
+	 */
+	public void setResult(List<String[]> result) {
+		this.result = result;
 	}	
 	
 	
