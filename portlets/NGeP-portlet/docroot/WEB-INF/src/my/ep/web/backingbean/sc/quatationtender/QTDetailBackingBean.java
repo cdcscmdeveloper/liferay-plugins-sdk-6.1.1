@@ -2338,9 +2338,9 @@ public class QTDetailBackingBean extends
 					}
 					if (getManagedBean().getQt().getEstimatedAmount() != null) {
 						if (getManagedBean().getQt().getEstimatedAmount()
-								.intValue() > SourcingConstants.ESTMT_TWANTY_THOUSAND
+								.intValue() >= SourcingConstants.ESTMT_TWANTY_THOUSAND
 								&& getManagedBean().getQt()
-										.getEstimatedAmount().intValue() < SourcingConstants.ESTMT_FIFTY_THOUSAND) {
+										.getEstimatedAmount().intValue() <= SourcingConstants.ESTMT_FIFTY_THOUSAND) {
 							if (getManagedBean().getQt().getQtValidityPeriod() == null) {
 								getManagedBean().getQt().setQtValidityPeriod(
 										SourcingConstants.SIXTY_DAYS);
@@ -2352,7 +2352,7 @@ public class QTDetailBackingBean extends
 						} else if (getManagedBean().getQt()
 								.getEstimatedAmount().intValue() > SourcingConstants.ESTMT_FIFTY_THOUSAND
 								&& getManagedBean().getQt()
-										.getEstimatedAmount().intValue() < SourcingConstants.ESTMT_FIVE_HUNDERED_THOUSAND) {
+										.getEstimatedAmount().intValue() <= SourcingConstants.ESTMT_FIVE_HUNDERED_THOUSAND) {
 							if (getManagedBean().getQt().getQtValidityPeriod() == null) {
 								getManagedBean().getQt().setQtValidityPeriod(
 										SourcingConstants.NINTY_DAYS);

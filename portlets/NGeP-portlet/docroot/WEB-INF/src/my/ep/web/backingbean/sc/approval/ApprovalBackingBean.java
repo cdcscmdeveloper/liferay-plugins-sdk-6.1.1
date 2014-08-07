@@ -353,9 +353,12 @@ public class ApprovalBackingBean extends
 			this.getManagedBean().setQtCommittes(qtcomSearchBean);
 			List<TabBean> tabBeans = constructCommitteTabBean(qtcomSearchBean
 					.getResultList());
-			this.getManagedBean().setScCommitteeMemberTabList(tabBeans);
-			initializeRemark(this.getManagedBean().getQtCommittes()
+			initializeRemark(qtcomSearchBean
 					.getResultList());
+			this.getManagedBean().getQt().setScQtCommittees(qtcomSearchBean.getResultList());
+			this.getManagedBean().setScCommitteeMemberTabList(tabBeans);
+			
+		
 		}  else if (SCProcessNameConst.APPROVE_PUBLICATION.equalsIgnoreCase(taskName)) {
 			this.getManagedBean().setApprovalType("Publication Approval");
 			scQtApproval = getApproval(qtId, ParameterConst.APPROVAL_CATEGORY_PTJ);
@@ -422,8 +425,10 @@ public class ApprovalBackingBean extends
 				committeReqDTO.setTaskId(this.getManagedBean().getTaskId());
 				committeReqDTO.setPayLoad(this.getManagedBean()
 						.getQuotationTenderDataType());
-				committeReqDTO.setOutcome(outcome);
+				committeReqDTO.setOutcome(outcome);	
+				removeEmptyRemarks(qt);
 				committeReqDTO.setScQt(qt);
+				committeReqDTO.setUser(new FacesScopes().getUserSessionBean());
 				committeResDto = committeSO.updateBPMAction(committeReqDTO);
 			} else {
 				QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
@@ -490,6 +495,7 @@ public class ApprovalBackingBean extends
 
 	}
 
+	
 	public List<TabBean> constructCommitteTabBean(
 			List<ScQtCommittee> qtCommittees) {
 		List<TabBean> committeTabs = new ArrayList<TabBean>();
@@ -573,4 +579,21 @@ public class ApprovalBackingBean extends
 			scQtApproval.setScQtApprovalAttachment(attachment);
 		}
 	}
+	
+	/**
+	 * @param qt
+	 */
+	private void removeEmptyRemarks(ScQt qt) {
+		List<ScQtCommittee> qtcommittees= qt.getScQtCommittees();
+		for(ScQtCommittee qtCommittee : qtcommittees){
+			List<ScQtCommitteRemarks> remarks =  qtCommittee.getQtCommitteRemarks();
+			for(int i=0;i<remarks.size();i++){
+				if(remarks.get(i).getRemark() == null || "".equals(remarks.get(i).getRemark())){
+					remarks.remove(i);
+				}
+			}
+		}
+		
+	}
+
 }
