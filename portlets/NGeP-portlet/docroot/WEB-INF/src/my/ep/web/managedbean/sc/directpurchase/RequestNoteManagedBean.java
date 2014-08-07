@@ -25,6 +25,7 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
+import my.ep.persistence.entity.sc.directpurchase.ScQuote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
@@ -100,6 +101,7 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     private List<PmStatusDesc> statusDescs;
     private String createdBy;
 	private	List<ScRequestNoteDtl>	supplierRecList	=	new ArrayList<ScRequestNoteDtl>();
+    private ScQuote scQuote;
     
     private IPagingDataModel<ScRequestNote> reqNoteDataModel = new RequestNotePagingDataModel();
     
@@ -762,6 +764,18 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	 */
 	public void setPrInquiryId(Long prInquiryId) {
 		this.prInquiryId = prInquiryId;
+	}
+	/**
+	 * @return the scQuote
+	 */
+	public ScQuote getScQuote() {
+		return scQuote;
+	}
+	/**
+	 * @param scQuote the scQuote to set
+	 */
+	public void setScQuote(ScQuote scQuote) {
+		this.scQuote = scQuote;
 	}
 	
 }

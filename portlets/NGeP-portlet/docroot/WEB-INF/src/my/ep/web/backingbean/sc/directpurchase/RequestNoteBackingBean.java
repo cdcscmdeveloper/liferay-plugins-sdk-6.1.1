@@ -275,10 +275,9 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 						}
 					}
 					requestNoteDtls.add(requestNoteDtl);
-				}
-				requestNote.setRequestNoteDtls(this.getManagedBean().getRequestNoteDtls());
+				}	
 			}
-
+			requestNote.setRequestNoteDtls(requestNoteDtls);
 			// Target Approver
 			if (this.getManagedBean().getApprovalUsers().getTarget() != null && this.getManagedBean().getApprovalUsers().getTarget().size() > 0) {
 				requestNote.setApprovalUsers(createTargetApprover(requestNote));
@@ -300,6 +299,10 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 						requestNote.getRemarks().remove(remark);
 					}	
 				} 
+			}
+			
+			if(getManagedBean().getPrInquiryId() != null){
+				requestNoteReqDTO.setPurchaseInquiryId(getManagedBean().getPrInquiryId());
 			}
 			FacesScopes facesScopes = new FacesScopes();
 			String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
@@ -363,19 +366,26 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			SCDirectPurchaseDataType directPurchaseDataType = (SCDirectPurchaseDataType) obj;
 			String	dpMode	=	directPurchaseDataType.getDpMode();
 			Long requestNoteId = null;
+			Long dpId = null;
 			boolean zoneFlag = Boolean.FALSE;
 			
+			if(directPurchaseDataType.getRnId() == null){
+				dpId = Long.valueOf(directPurchaseDataType.getDpId());
+			} else{
+				requestNoteId = Long.valueOf(directPurchaseDataType.getRnId());
+			}
+			
 			if(ParameterConst.REQUEST_NOTE_RN.equalsIgnoreCase(dpMode)){ 
-				 requestNoteId = Long.valueOf(directPurchaseDataType.getDpId());
+				 requestNoteId = Long.valueOf(dpId);
 
 			} else if(ParameterConst.REQUEST_NOTE_SQ.equalsIgnoreCase(dpMode)){ 
 				// Simple Quote
 				QuoteReqDTO quoteReqDTO = new QuoteReqDTO();
-				Long quoteId = Long.valueOf(directPurchaseDataType.getDpId());
+				Long quoteId = Long.valueOf(dpId);
 				quoteReqDTO.setQuoteId(quoteId);
 				ScQuote quote = quoteSO.getQuoteDtl(quoteReqDTO).getQuoteBidDtl();
 				if(quote != null){
-
+                    getManagedBean().setScQuote(quote); // copy scQuote to sq view in request note
 					if(quote.isZonal()){
 						zoneFlag = Boolean.TRUE;
 					}
@@ -605,9 +615,6 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 				}
 			}
 			
-			if(getManagedBean().getPrInquiryId() != null){
-				requestNoteReqDTO.setPurchaseInquiryId(getManagedBean().getPrInquiryId());
-			}
 			FacesScopes facesScopes = new FacesScopes();
 			String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
 			requestNoteReqDTO.setRequestNote(requestNote);
@@ -1627,15 +1634,11 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		SimpleQuoteBackingBean simpleQuoteBackingBean = new SimpleQuoteBackingBean();
 		TemplateSpecBean productTplSpecBean = simpleQuoteBackingBean.getManagedBean().getProductTemplateSpecBean();
 		TemplateSpecBean serviceTplSpecBean = simpleQuoteBackingBean.getManagedBean().getServiceTemplateSpecBean();
-		IQuoteSO quoteSO = (IQuoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQuoteSO.class);
-		QuoteReqDTO quoteReqDTO = new QuoteReqDTO();
 		FacesContext fc = FacesContext.getCurrentInstance();
 		try{
-			if(getManagedBean().getRequestNote().getQuote() != null){
-				quoteReqDTO.setQuoteId(getManagedBean().getRequestNote().getQuote().getQuoteId());
-				quoteReqDTO.setFetchSubEntity(true);
-				QuoteResDTO  quoteResDTO = quoteSO.getQuoteDtl((quoteReqDTO));
-				ScQuote scQuote = quoteResDTO.getQuoteBidDtl();
+			if(getManagedBean().getScQuote() != null){
+				
+				ScQuote scQuote = getManagedBean().getScQuote();
 				
 				if(scQuote.getJustificationType() == null){
 					scQuote.setJustificationType(new PmParameter());
@@ -1713,12 +1716,17 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 				// remarks
 				scQuote.setRemarks(simpleQuoteBackingBean.initializeRemarks(scQuote));
 				
+				// status
+				if(scQuote.getWorkflowStatuses() !=null && scQuote.getWorkflowStatuses().size() >0){
+					simpleQuoteBackingBean.getCurrentStatus(scQuote.getWorkflowStatuses().get(0).getPmStatus().getStatusId());
+				}
+				
 				// procurement type drop down.
 				if(scQuote.getProcurementType() != null){
 					if(scQuote.getProcurementType().getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)){
-						getManagedBean().setProcurementTypes(getRadioButtonCodeValues(ParameterTypeConst.PROCUREMENT_TYPE , Boolean.TRUE));
+						simpleQuoteBackingBean.getManagedBean().setProcurementTypes(getRadioButtonCodeValues(ParameterTypeConst.PROCUREMENT_TYPE , Boolean.TRUE));
 					} else {
-						getManagedBean().setProcurementTypes(getRadioButtonCodeValues(ParameterTypeConst.PROCUREMENT_TYPE , Boolean.FALSE));
+						simpleQuoteBackingBean.getManagedBean().setProcurementTypes(getRadioButtonCodeValues(ParameterTypeConst.PROCUREMENT_TYPE , Boolean.FALSE));
 					} 
 				}
 				simpleQuoteBackingBean.getManagedBean().setScQuote(scQuote);
@@ -1729,6 +1737,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 				CountryResDTO resDTO = reqSO.retrieveCountryByCode(countryReqDTO);
 				simpleQuoteBackingBean.getManagedBean().setDefaultCountryId(resDTO.getPmCountry().getCountryId());
 				simpleQuoteBackingBean.getManagedBean().setRequestNote(getManagedBean().getRequestNote());
+				
 				
 				// duration calc
 				try {
@@ -1749,7 +1758,6 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "simpleQuote");
 			}
 		} finally {
-			quoteSO = null;
 		}
 	}
 	
