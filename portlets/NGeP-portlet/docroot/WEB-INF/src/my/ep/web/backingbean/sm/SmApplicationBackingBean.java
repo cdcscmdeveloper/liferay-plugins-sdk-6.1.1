@@ -432,7 +432,6 @@ public class SmApplicationBackingBean extends
 				setApplicationFailities(smAppl.getSmFacilities());
 				// TODO
 			}
-
 			return setNavigationForAppl(applicationType);
 
 			/*
@@ -6965,6 +6964,11 @@ public class SmApplicationBackingBean extends
 			getManagedBean()
 					.setBusinessTypeVal(
 							SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT);
+		}else if(sup.getBusinessType().equalsIgnoreCase(
+				SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP)){
+			getManagedBean()
+			.setBusinessTypeVal(
+					SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP_DEFAULT);
 		}
 	}
 

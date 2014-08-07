@@ -152,7 +152,7 @@ public class SupplierManagementConst {
 	public static final String CAT_TYPE_MANUFACTURING = "M";
 	public static final String CAT_TYPE_PRINTING = "PC";
 	public static final String CAT_TYPE_TRAVEL = "PG";
-	
+
 	public static final String P221601 = "221601";
 	public static final String P221602 = "221602";
 	public static final String P221603 = "221603";
@@ -168,7 +168,6 @@ public class SupplierManagementConst {
 	public static final String P221613 = "221613";
 	public static final String P221614 = "221614";
 	public static final String P222003 = "222003";
-	
 
 	// Payment
 	public static final String SOFTCERT_PAYMENT = "SF";
@@ -251,6 +250,7 @@ public class SupplierManagementConst {
 	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROS_DEFAULT = "ROS";
 	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROB_DEFAULT = "ROB";
 	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT = "ROC";
+	public static final String SM_SUPPLIER_BUSINESS_TYPE_LLP_DEFAULT = "LLP";
 
 	public static final String RESUBMIT_APPL_PATH = "/web/dashboard/resubmit-application?";
 
@@ -621,6 +621,10 @@ public class SupplierManagementConst {
 
 	public String getSTAFF_TYPE_CLERICAL() {
 		return STAFF_TYPE_CLERICAL;
+	}
+
+	public String getSM_SUPPLIER_BUSINESS_TYPE_LLP_DEFAULT() {
+		return SM_SUPPLIER_BUSINESS_TYPE_LLP_DEFAULT;
 	}
 
 }
