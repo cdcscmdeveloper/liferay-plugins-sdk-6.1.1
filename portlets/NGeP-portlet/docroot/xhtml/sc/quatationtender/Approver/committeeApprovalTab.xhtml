@@ -6,39 +6,26 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<p:panel>
-		<p:tabView id="committeeTabView" orientation="top"
-			var="committeeApproval"
-			activeIndex="#{approvalBackingBean.managedBean.subTabIndex}"
-			value="#{approvalBackingBean.managedBean.scCommitteeMemberTabList}">
+		<ui:param name="membersList"
+			value="#{qTDetailBB.managedBean.selectedTabBean.scQtCommittee.scCommittee}" />
+		<ui:param name="selectedMembersList"
+			value="#{qTDetailBB.managedBean.selectedTabBean.members}" />
 
-			<p:tab title="#{committeeApproval.titleName}">
+		<ui:include src="committeeApproval.xhtml" />
 
-				<ui:param name="membersList"
-					value="#{committeeApproval.scCommittee.scCommitteeMembers}" />
+		<div class="ppRightBtn">
+			<p:commandButton id="committeeapproveradd"
+				value="#{lbl['lbl.so.addbtn']}" process="@this"
+				actionListener="#{qTCommitteBackingBean.addCommitteMember(qTDetailBB.managedBean.selectedTabBean.scQtCommittee, committeeApproval.titleName)}"
+				oncomplete="newcommitteeapprover.show();"
+				update="@(.commiteeapprovermember)" icon="ui-icon-add" />
 
-				<ui:param name="selectedMembersList"
-					value="#{qTCommitteBackingBean.managedBean.selectedCommitteMemebers}" />
-
-				<ui:include src="committeeApproval.xhtml" />
-
-				<div class="ppRightBtn">
-					<p:commandButton id="committeeapproveradd"
-						value="#{lbl['lbl.so.addbtn']}" process="@this"
-						action="#{qTCommitteBackingBean.addCommitteMember(committeeApproval.scCommittee, committeeApproval.titleName)}"
-						oncomplete="newcommitteeapprover.show();"
-						update="@(.commiteeapprovermember)" icon="ui-icon-add" />
-
-					<p:commandButton value="#{lbl['lbl.so.delete']}"
-						icon="ui-icon-delete"
-						action="#{qTCommitteBackingBean.deleteSpecificationCommittee}"
-						update="committeeapprovalId" />
-
-				</div>
-
-			</p:tab>
-
-		</p:tabView>
-		<ui:include src="addCommitteeApproval.xhtml"></ui:include>
+			<p:commandButton value="#{lbl['lbl.so.delete']}"
+				process="@this, committeeapprovalId"
+				actionListener="#{qTCommitteBackingBean.deleteSpecificationCommittee}"
+				update="committeeapprovalId" icon="ui-icon-delete" />
+		</div>
+		<ui:include src="addCommitteeApproval.xhtml" />
 	</p:panel>
 
 	<p:panel header="#{lbl['lbl.sc.spec.approval.remark']}"

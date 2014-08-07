@@ -46,6 +46,10 @@
 			<c:if
 				test="${approvalBackingBean.managedBean.approvalType == 'Committee Appointment Approval'}">
 				<ui:include src="requestPTJdetails.xhtml" />
+				<p:tabMenu activeIndex="#{approvalBackingBean.managedBean.selectedTabIndex}" 
+					model="#{approvalBackingBean.managedBean.menuModel}"  >
+			
+				</p:tabMenu>
 				<ui:include src="committeeApprovalTab.xhtml" />
 			</c:if>
 			<c:if
