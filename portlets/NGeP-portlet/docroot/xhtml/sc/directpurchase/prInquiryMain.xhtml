@@ -30,10 +30,8 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 					        <p:commandButton immediate="true"
 									value="#{lbl['lbl.sc.action.back.to.search.catalogue']}"
 									icon="ui-icon-back" style="float:left;"
-									action="#{purchaseInquiryBackingBean.backToPervious}"  rendered="#{purchaseInquiryBackingBean.managedBean.pageNavToRequestNote ne null}"/> 	
+									action="#{purchaseInquiryBackingBean.backToPervious}"/> 	
 										 	
-							<!-- to view purchase inquiry from the request note Item list Icon    -->
-                              <c:if test="#{purchaseInquiryBackingBean.managedBean.pageNavToRequestNote eq null || purchaseInquiryBackingBean.managedBean.pageNavToRequestNote eq ''}">		
 					             <c:forEach items="#{purchaseInquiryBackingBean.managedBean.outComes}" var="action">
 
 									<c:if test="${action == 'SUBMIT'}">
@@ -62,7 +60,6 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 								</c:if>
 							
 							</c:forEach>
-							</c:if>
 					</td>
 			</tr>
 		</table>
