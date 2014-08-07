@@ -1448,6 +1448,7 @@ public class SpecificationBackingBean extends
 											.getScQtSupplierCriteria()
 											.getCtPanelItem()
 											.getCtCircularVer()) {
+
 								this.getManagedBean().setCircularExpDate(
 										this.getManagedBean().getScQt()
 												.getScQtSupplierCriteria()
@@ -2321,16 +2322,16 @@ public class SpecificationBackingBean extends
 							.isEmpty()) {
 				if (null == this.getManagedBean()
 						.getRecommendationPackageScore()) {
-					ScQtScoreSetting pkgScoreSetting=new ScQtScoreSetting();
+					ScQtScoreSetting pkgScoreSetting = new ScQtScoreSetting();
 					pkgScoreSetting.setSettingType(4);
 					pkgScoreSetting.setScQt(this.getManagedBean().getScQt());
 					pkgScoreSetting.setWeightageReq(false);
 					setUserDetails(pkgScoreSetting);
-					this.getManagedBean()
-					.setRecommendationPackageScore(pkgScoreSetting);
+					this.getManagedBean().setRecommendationPackageScore(
+							pkgScoreSetting);
 				}
 				if (null == this.getManagedBean().getRecommendationScore()) {
-					ScQtScoreSetting itemScoreSetting=new ScQtScoreSetting();
+					ScQtScoreSetting itemScoreSetting = new ScQtScoreSetting();
 					itemScoreSetting.setSettingType(5);
 					itemScoreSetting.setScQt(this.getManagedBean().getScQt());
 					itemScoreSetting.setWeightageReq(false);
@@ -6115,17 +6116,23 @@ public class SpecificationBackingBean extends
 					.getScQtCheckSt2techProposal()
 					.add(this.getManagedBean().getIndex(),
 							resDTO.getScQtCheckList());
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-							MessageUtils.getMessage(MessageConst.INFO_700004,
-									new String[] {
-											"Specification Score ",
-											resDTO.getScQtCheckList()
-													.getQtChecklistId()
-													.toString() },
-									MessageUtils.BUNDLE_COMMON_MESSAGES,
-									new FacesScopes().getUserLocale())));
+			FacesContext
+					.getCurrentInstance()
+					.addMessage(
+							null,
+							new FacesMessage(
+									FacesMessage.SEVERITY_INFO,
+									"Company Experience(For Federal Government) Successfully Saved. ",
+									"Company Experience(For Federal Government) Successfully Saved."));
+			/*
+			 * FacesContext.getCurrentInstance().addMessage( null, new
+			 * FacesMessage(FacesMessage.SEVERITY_INFO, null,
+			 * MessageUtils.getMessage(MessageConst.INFO_700004, new String[] {
+			 * "Specification Score ", resDTO.getScQtCheckList()
+			 * .getQtChecklistId() .toString() },
+			 * MessageUtils.BUNDLE_COMMON_MESSAGES, new
+			 * FacesScopes().getUserLocale())));
+			 */
 
 			// }ll
 		} finally {
@@ -6280,17 +6287,14 @@ public class SpecificationBackingBean extends
 					.getScQtCheckSt2techProposal()
 					.add(this.getManagedBean().getIndex(),
 							resDTO.getScQtCheckList());
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-							MessageUtils.getMessage(MessageConst.INFO_700004,
-									new String[] {
-											"Specification Score ",
-											resDTO.getScQtCheckList()
-													.getQtChecklistId()
-													.toString() },
-									MessageUtils.BUNDLE_COMMON_MESSAGES,
-									new FacesScopes().getUserLocale())));
+			FacesContext
+					.getCurrentInstance()
+					.addMessage(
+							null,
+							new FacesMessage(
+									FacesMessage.SEVERITY_INFO,
+									"Company Experience(For Federal Private) Successfully Saved. ",
+									"Company Experience(For Federal Private) Successfully Saved."));
 
 		} finally {
 
@@ -6378,15 +6382,14 @@ public class SpecificationBackingBean extends
 				.getScQtCheckSt2financeProposalList()
 				.add(this.getManagedBean().getIndex(),
 						resDTO.getScQtCheckList());
-		FacesContext.getCurrentInstance().addMessage(
-				null,
-				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
-						.getMessage(MessageConst.INFO_700004, new String[] {
-								"Specification Score ",
-								resDTO.getScQtCheckList().getQtChecklistId()
-										.toString() },
-								MessageUtils.BUNDLE_COMMON_MESSAGES,
-								new FacesScopes().getUserLocale())));
+		FacesContext
+				.getCurrentInstance()
+				.addMessage(
+						null,
+						new FacesMessage(
+								FacesMessage.SEVERITY_INFO,
+								"Company Experience(For Federal Government) Successfully Saved. ",
+								"Company Experience(For Federal Government) Successfully Saved."));
 
 	}
 
@@ -6471,15 +6474,14 @@ public class SpecificationBackingBean extends
 				.getScQtCheckSt2financeProposalList()
 				.add(this.getManagedBean().getIndex(),
 						resDTO.getScQtCheckList());
-		FacesContext.getCurrentInstance().addMessage(
-				null,
-				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
-						.getMessage(MessageConst.INFO_700004, new String[] {
-								"Specification Score ",
-								resDTO.getScQtCheckList().getQtChecklistId()
-										.toString() },
-								MessageUtils.BUNDLE_COMMON_MESSAGES,
-								new FacesScopes().getUserLocale())));
+		FacesContext
+				.getCurrentInstance()
+				.addMessage(
+						null,
+						new FacesMessage(
+								FacesMessage.SEVERITY_INFO,
+								"Company Experience(For Federal Private) Successfully Saved. ",
+								"Company Experience(For Federal Private) Successfully Saved."));
 
 	}
 
@@ -6655,13 +6657,9 @@ public class SpecificationBackingBean extends
 						resDTO.getScQtCheckList());
 		FacesContext.getCurrentInstance().addMessage(
 				null,
-				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
-						.getMessage(MessageConst.INFO_700004, new String[] {
-								"Specification Score ",
-								resDTO.getScQtCheckList().getQtChecklistId()
-										.toString() },
-								MessageUtils.BUNDLE_COMMON_MESSAGES,
-								new FacesScopes().getUserLocale())));
+				new FacesMessage(FacesMessage.SEVERITY_INFO,
+						"Technical Staff List Successfully Saved. ",
+						"Technical Staff List Successfully Saved."));
 
 	}
 
@@ -6748,13 +6746,9 @@ public class SpecificationBackingBean extends
 						resDTO.getScQtCheckList());
 		FacesContext.getCurrentInstance().addMessage(
 				null,
-				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
-						.getMessage(MessageConst.INFO_700004, new String[] {
-								"Specification Score ",
-								resDTO.getScQtCheckList().getQtChecklistId()
-										.toString() },
-								MessageUtils.BUNDLE_COMMON_MESSAGES,
-								new FacesScopes().getUserLocale())));
+				new FacesMessage(FacesMessage.SEVERITY_INFO,
+						"No Of Employees Successfully Saved. ",
+						"No Of Employees Successfully Saved."));
 
 	}
 
@@ -6840,13 +6834,9 @@ public class SpecificationBackingBean extends
 						resDTO.getScQtCheckList());
 		FacesContext.getCurrentInstance().addMessage(
 				null,
-				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
-						.getMessage(MessageConst.INFO_700004, new String[] {
-								"Specification Score ",
-								resDTO.getScQtCheckList().getQtChecklistId()
-										.toString() },
-								MessageUtils.BUNDLE_COMMON_MESSAGES,
-								new FacesScopes().getUserLocale())));
+				new FacesMessage(FacesMessage.SEVERITY_INFO,
+						"Credit Facilities Successfully Saved. ",
+						"Credit Facilities Successfully Saved."));
 
 	}
 
@@ -6932,13 +6922,9 @@ public class SpecificationBackingBean extends
 						resDTO.getScQtCheckList());
 		FacesContext.getCurrentInstance().addMessage(
 				null,
-				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
-						.getMessage(MessageConst.INFO_700004, new String[] {
-								"Specification Score ",
-								resDTO.getScQtCheckList().getQtChecklistId()
-										.toString() },
-								MessageUtils.BUNDLE_COMMON_MESSAGES,
-								new FacesScopes().getUserLocale())));
+				new FacesMessage(FacesMessage.SEVERITY_INFO,
+						"Cash On Hand Successfully Saved. ",
+						"Cash On Hand Successfully Saved."));
 
 	}
 
@@ -7116,13 +7102,9 @@ public class SpecificationBackingBean extends
 						resDTO.getScQtCheckList());
 		FacesContext.getCurrentInstance().addMessage(
 				null,
-				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
-						.getMessage(MessageConst.INFO_700004, new String[] {
-								"Specification Score ",
-								resDTO.getScQtCheckList().getQtChecklistId()
-										.toString() },
-								MessageUtils.BUNDLE_COMMON_MESSAGES,
-								new FacesScopes().getUserLocale())));
+				new FacesMessage(FacesMessage.SEVERITY_INFO,
+						"Bank Statements Successfully Saved. ",
+						"Bank Statements Successfully Saved."));
 
 	}
 
@@ -7208,13 +7190,9 @@ public class SpecificationBackingBean extends
 						resDTO.getScQtCheckList());
 		FacesContext.getCurrentInstance().addMessage(
 				null,
-				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
-						.getMessage(MessageConst.INFO_700004, new String[] {
-								"Specification Score ",
-								resDTO.getScQtCheckList().getQtChecklistId()
-										.toString() },
-								MessageUtils.BUNDLE_COMMON_MESSAGES,
-								new FacesScopes().getUserLocale())));
+				new FacesMessage(FacesMessage.SEVERITY_INFO,
+						"Assets And Liabilities Successfully Saved. ",
+						"Assets And Liabilities Successfully Saved."));
 
 	}
 
@@ -7298,13 +7276,9 @@ public class SpecificationBackingBean extends
 						resDTO.getScQtCheckList());
 		FacesContext.getCurrentInstance().addMessage(
 				null,
-				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
-						.getMessage(MessageConst.INFO_700004, new String[] {
-								"Specification Score ",
-								resDTO.getScQtCheckList().getQtChecklistId()
-										.toString() },
-								MessageUtils.BUNDLE_COMMON_MESSAGES,
-								new FacesScopes().getUserLocale())));
+				new FacesMessage(FacesMessage.SEVERITY_INFO,
+						"Paid Up Capital Successfully Saved. ",
+						"Paid Up Capital Successfully Saved."));
 
 	}
 
