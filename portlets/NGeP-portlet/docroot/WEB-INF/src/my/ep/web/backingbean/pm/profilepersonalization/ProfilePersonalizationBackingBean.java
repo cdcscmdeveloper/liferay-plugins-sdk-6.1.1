@@ -20,7 +20,6 @@ import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
@@ -36,6 +35,8 @@ import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
 import org.apache.log4j.Logger;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.UploadedFile;
 
 /**
  * @author DK
@@ -252,7 +253,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 			UserReqDTO reqDTO = new UserReqDTO();
 			reqDTO.setPmUser(user);
 
-			UserResDTO resDTO = userSO.saveUser(reqDTO);
+			UserResDTO resDTO = userSO.saveUser(reqDTO); //saveUser2
 
 			if (resDTO.isSuccessful()) {
 				FacesContext.getCurrentInstance().addMessage(
@@ -271,6 +272,65 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		} finally {
 			userSO = null;
 		}
+	}
+	
+	/**
+	 * login id = identification no.
+	 */
+	public void updateLoginId(){
+		this.getManagedBean().getSelectedUser().setLoginId(this.getManagedBean().getSelectedUser().getIdentificationNo());
+	}
+
+	public void handleFileUpload(FileUploadEvent event) {
+		System.out.println("handleFileUpload - start");
+		UploadedFile item = event.getFile();
+		FacesMessage msg = new FacesMessage("Succesful", event.getFile()
+				.getFileName() + " is uploaded.");
+		FacesContext.getCurrentInstance().addMessage(null, msg);
+		
+		this.getManagedBean().getSelectedUser().setPortrait(item.getContents());
+		System.out.println("handleFileUpload - end");
+	}
+
+	public void handleFileUploadTest(FileUploadEvent event) {
+		System.out.println("handleFileUploadTest - start");
+		UploadedFile item = event.getFile();
+
+
+		this.getManagedBean().getSelectedUser().setPortrait(item.getContents());
+		
+		IUserSO userSO = null;
+		try {
+			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			UserReqDTO reqDTO = new UserReqDTO();
+			reqDTO.setPmUser(this.getManagedBean().getSelectedUser());
+
+			UserResDTO resDTO = userSO.updatePortrait(reqDTO);
+
+			if (resDTO.isSuccessful()) {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO,
+								null, "Record save successfully for Login ID: "
+										+ resDTO.getPmUser().getLoginId()));
+				this.preLoadingMyAccount();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
+		} finally {
+			userSO = null;
+		}
+		
+		FacesMessage msg = new FacesMessage("Succesful", event.getFile()
+				.getFileName() + " is uploaded.");
+		FacesContext.getCurrentInstance().addMessage(null, msg);
+		
+		System.out.println("handleFileUploadTest - end");
 	}
 
 }

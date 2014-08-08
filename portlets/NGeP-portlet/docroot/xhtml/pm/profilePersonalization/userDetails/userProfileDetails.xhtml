@@ -15,9 +15,9 @@
 							<p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.loginid']}" />
 						</th>
 						<td>
-							<p:inputText styleClass="ppDisplayTextM"
+							<p:inputText styleClass="ppDisplayTextM" id="itLoginId"
 								value="#{profilePersonalizationBackingBean.managedBean.selectedUser.loginId}"
-								disabled="#{!profilePersonalizationBackingBean.managedBean.selectedUser.brandNew}"/>
+								disabled="true"/>
 						</td>
 						<!-- Profile Photo -->
 						<td colspan="2" rowspan="9">
@@ -65,7 +65,7 @@
 							<p:outputLabel value="*" styleClass="mandatory" />
 						</th>
 						<td>
-							<p:selectOneMenu styleClass="ppDropDownWidthM"
+							<p:selectOneMenu styleClass="ppDropDownWidthM" disabled="#{!profilePersonalizationBackingBean.managedBean.selectedUser.brandNew}"
 								value="#{profilePersonalizationBackingBean.managedBean.selectedUser.identificationCode.parameterId}">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" /> 
 								<f:selectItems value="#{profilePersonalizationBackingBean.getIdentityTypeList()}"/>
@@ -81,8 +81,10 @@
 							<p:outputLabel value="*" styleClass="mandatory" />
 						</th>
 						<td>
-							<p:inputText styleClass="ppDisplayTextM"
-								value="#{profilePersonalizationBackingBean.managedBean.selectedUser.identificationNo}"/>
+							<p:inputText styleClass="ppDisplayTextM" disabled="#{!profilePersonalizationBackingBean.managedBean.selectedUser.brandNew}"
+								value="#{profilePersonalizationBackingBean.managedBean.selectedUser.identificationNo}">
+								<p:ajax event="change" update="itLoginId" listener="#{profilePersonalizationBackingBean.updateLoginId()}"/>
+							</p:inputText>
 						</td>
 						<th></th>
 						<td></td>
