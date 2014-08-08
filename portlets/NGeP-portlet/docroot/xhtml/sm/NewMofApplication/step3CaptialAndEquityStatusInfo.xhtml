@@ -27,9 +27,11 @@
 								src="smMofApplnSideMenuItem.xhtml" /></td>
 						<td><ui:include
 								src="/xhtml/sm/shared/mofRegistration/captialOrEquityStatusInfoForm.xhtml" />
-							<ui:include
-								src="/xhtml/sm/shared/mofRegistration/captialOrEquityShareHolderInfoForm.xhtml" />
-							<ui:include
+							<c:if
+								test="#{backingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT and backingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP_DEFAULT}">
+								<ui:include
+									src="/xhtml/sm/shared/mofRegistration/captialOrEquityShareHolderInfoForm.xhtml" />
+							</c:if> <ui:include
 								src="/xhtml/sm/shared/mofRegistration/captialOrEquityShareHoldingCompanyInfoForm.xhtml" />
 							<div class="nav-wrapper">
 								<table style="width: 100%">
@@ -67,8 +69,11 @@
 			<c:otherwise>
 				<ui:include
 					src="/xhtml/sm/shared/mofRegistration/captialOrEquityStatusInfoForm.xhtml" />
-				<ui:include
-					src="/xhtml/sm/shared/mofRegistration/captialOrEquityShareHolderInfoForm.xhtml" />
+				<c:if
+					test="#{backingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT and backingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP_DEFAULT}">
+					<ui:include
+						src="/xhtml/sm/shared/mofRegistration/captialOrEquityShareHolderInfoForm.xhtml" />
+				</c:if>
 				<ui:include
 					src="/xhtml/sm/shared/mofRegistration/captialOrEquityShareHoldingCompanyInfoForm.xhtml" />
 				<div class="nav-wrapper">

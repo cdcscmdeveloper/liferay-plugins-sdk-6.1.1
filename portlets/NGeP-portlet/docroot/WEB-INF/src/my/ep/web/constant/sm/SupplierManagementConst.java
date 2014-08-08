@@ -220,6 +220,14 @@ public class SupplierManagementConst {
 	public static final String PERSONNEL_PROF_STAFF_CONSULTANT_PARAMCODE = "2";
 	public static final String PERSONNEL_SEMIPROF_STAFF_CONSULTANT_PARAMCODE = "3";
 	public static final String PERSONNEL_CLERICAL_STAFF_CONSULTANT_PARAMCODE = "4";
+	
+	public static final String PERSONNEL_MANAGEMENT_ROLENAME = "Management";
+	public static final String PERSONNEL_PROF_STAFF_ROLENAME = "Professionl Staff";
+	public static final String PERSONNEL_SEMIPROF_STAFF_ROLENAME = "Semi-Professional Staff";
+	public static final String PERSONNEL_CLERICAL_STAFF_ROLENAME = "Clerical Staff";
+	public static final String PERSONNEL_STAFF_ROLENAME = "Staff";
+	public static final String PERSONNEL_HGHR_ROLENAME = "Higher Management";
+	public static final String PERSONNEL_DIR_ROLENAME = "Director";
 
 	public static final String PERSONNEL_MANAGEMENT_STAFF_CONTRACTOR_PARAMCODE = "1";
 	public static final String PERSONNEL_NORMAL_STAFF_CONTRACTOR_PARAMCODE = "2";

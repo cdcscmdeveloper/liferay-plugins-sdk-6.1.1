@@ -329,6 +329,9 @@
 							<h:outputText value="Not Applied"
 								rendered="#{person.softcertFlg eq '0'}" />
 						</p:column>
+						<p:column headerText="Role">
+							<h:outputText value="#{person.roleName}" />
+						</p:column>
 						<p:column headerText="Action">
 							<p:commandLink
 								action="#{backingBean.assignSelShareHolder(person)}"
