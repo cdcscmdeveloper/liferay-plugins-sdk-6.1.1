@@ -83,7 +83,6 @@ import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
-import my.ep.persistence.entity.sc.quationtender.ScQtApprovalAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRequest;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproverSettings;
@@ -1969,6 +1968,12 @@ public class QTDetailBackingBean extends
 					}
 					getManagedBean().setScQtSampleSubmissionList(submissionList);
 					log.info("Submission List : " + getManagedBean().getScQtSampleSubmissionList());
+				} else {
+					List<ScQtSampleSubmission> list = resDTO.getSampleSubmissionResultBean();
+					for (ScQtSampleSubmission scQtSampleSubmission : list) {
+						getManagedBean().setScQtSampleSubmission(scQtSampleSubmission);
+					}
+					//getManagedBean().setScQtSampleSubmission(resDTO.getSampleSubmissionResultBean());
 				}
 			} finally {
 				detailSO = null;
