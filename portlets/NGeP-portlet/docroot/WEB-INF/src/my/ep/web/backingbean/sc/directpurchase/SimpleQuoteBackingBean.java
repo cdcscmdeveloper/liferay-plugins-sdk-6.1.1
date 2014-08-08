@@ -291,6 +291,13 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			     }
 			}
 		}
+		
+		 // for procurement type drop down 
+		 if(scQuote.getProcurementType() == null){
+			 scQuote = checkGovtSeller(null, scQuote);
+		 }
+
+		
 		scQuote.setMultipleQuote(Boolean.FALSE);
 		scQuote.setQuoteNo(quoteSO.generateQuoteNo());
 		scQuote.setWorkflowStatuses(null);
@@ -2178,6 +2185,15 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			if(getManagedBean().getServiceTemplateSpecBean().getSpecAnswerList() != null){
 				specAnswers.addAll(getManagedBean().getServiceTemplateSpecBean().getSpecAnswerList());
 			}
+			
+			// supplier id
+			if(getManagedBean().getSmSupplier() != null){
+				reqDTO.setSupplierId(getManagedBean().getSmSupplier().getSupplierId());
+			}
+			
+			// login id
+			FacesScopes facesScopes = new FacesScopes();
+			reqDTO.setUserId(facesScopes.getUserSessionBean().getUserId());
 			
 			// remarks
 			if(quote.getRemarks() != null ){
