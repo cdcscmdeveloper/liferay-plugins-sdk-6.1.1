@@ -990,7 +990,8 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	 *Enable  criteria variables by report name 
 	 */
 	public void criteriaVariablesByReport() {
-		this.getManagedBean().setRptGenBean(null);		
+		this.getManagedBean().setRptGenBean(null);
+		getManagedBean().setReportName(ReportConst.EMPTY_VAL);
 		if((getManagedBean().getModuleName())!=null && (getManagedBean().getReportNameValue())!=null){
 			rptGenBean = new ReportsGenerateBean();					
 			if((getManagedBean().getModuleName().equalsIgnoreCase(ModuleCodeConst.CATALOGUE_MANAGEMENT))){ 
