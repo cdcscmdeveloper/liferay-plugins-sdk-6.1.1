@@ -27,7 +27,7 @@
 					<td style="width: 100px"><p:outputLabel
 							value="#{lbl['lbl.sc.status']}" /></td>
 					<td rowspan="3"><p:selectManyMenu id="pickedStatus"
-							style="height:98px;width: 200px;"
+							style="height:108px;width: 200px;"
 							value="#{biddingBB.managedBean.selectedStatusDescList}">
 							<f:selectItems value="#{biddingBB.managedBean.statusDescs}"
 								var="status" itemLabel="#{status.statusName}"
@@ -74,7 +74,7 @@
 					<td style="width: 110px"><p:outputLabel
 							value="#{lbl['lbl.sc.bidding.date.to']}" /></td>
 					<td><p:calendar widgetVar="searchBiddingDateTo"
-							mindate="#{biddingBB.managedBean.mindate}"
+							mindate="#{biddingBB.managedBean.searchBiddingDateToMinDate}"
 							value="#{biddingBB.managedBean.searchBiddingDateTo}"
 							pattern="dd/MM/yyyy" id="bidToDate" showOn="button" /></td>
 					<td></td>
@@ -139,7 +139,7 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.status']}">
 
-				<h:outputText
+				<p:outputLabel style="float : left"
 					value="#{biddingBB.getStatusDescById(bid.pmStatus.statusId)}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.action']}">
@@ -148,9 +148,10 @@
 					action="#{biddingBB.bidManagementAction(bid)}" process="@this">
 
 					<p:graphicImage library="ep/images/design" name="edit.png"
-						value="/resources/ep/images/design/edit.png" />
+						value="/css/images/design/edit.png" />
+						<p:spacer width="5" ></p:spacer>
 				</p:commandLink>
-				<p:spacer width="5" ></p:spacer>
+				
 				<p:commandLink id="pauseButton"
 					rendered="#{biddingBB.getStatusDescById(bid.pmStatus.statusId) eq 'In Progress'}"
 					process="@this" partialSubmit="true"
@@ -158,9 +159,10 @@
 					update="@([id$=pauseCancelPopUp])"
 					oncomplete="bidPauseOrCancel.show();" size="5">
 					<p:graphicImage library="ep/images/design" name="pause.png"
-						value="/resources/ep/images/design/pause.png" />
+						value="/css/images/design/pause.png" />
+						<p:spacer width="5" ></p:spacer>
 				</p:commandLink>
-				<p:spacer width="5" ></p:spacer>
+				
 				<p:commandLink id="cancelButton"
 					rendered="#{biddingBB.getStatusDescById(bid.pmStatus.statusId) eq 'In Progress' or biddingBB.getStatusDescById(bid.pmStatus.statusId) eq 'Pending Bidding'}"
 					process="@this" partialSubmit="true"
@@ -169,9 +171,11 @@
 					oncomplete="bidPauseOrCancel.show();" size="5">
 
 					<p:graphicImage library="ep/images/design" name="cancel.png"
-						value="/resources/ep/images/design/cancel.png" />
+						value="/css/images/design/cancel.png" />
+						<p:spacer width="5" ></p:spacer>
 				</p:commandLink>
-				<p:spacer width="5" ></p:spacer>
+				
+				
 				<p:commandLink id="resumeButton"
 					rendered="#{biddingBB.getStatusDescById(bid.pmStatus.statusId) eq 'Paused'}"
 					process="@this" partialSubmit="true"
@@ -179,7 +183,7 @@
 					update="@([id$=rescheduleRebidPopUp])"
 					oncomplete="bidRescheduleOrResume.show();" size="5">
 					<p:graphicImage library="ep/images/design" name="play.png"
-						value="/resources/ep/images/design/play.png" />
+						value="/css/images/design/play.png" />
 				</p:commandLink>
 
 

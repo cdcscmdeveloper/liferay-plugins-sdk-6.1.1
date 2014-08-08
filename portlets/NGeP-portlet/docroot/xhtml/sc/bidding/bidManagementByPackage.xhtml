@@ -6,13 +6,18 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
+	<ui:param name="isRendered"
+		value="#{!item.scBidSupplier.smSupplier.bumi and biddingBB.managedBean.lowestNonBumiOfferedPrice eq 0}" />
+
 
 	<p:panel header="#{lbl['lbl.sc.item.details']}"
 		id="itemDetailsByPackage" toggleable="true">
-
+		
 		<p:dataTable id="scBidItemsList"
 			value="#{biddingBB.managedBean.scheduledBid.scBidItems}" var="item">
 			<ac:paginator for="scBidItemsList"></ac:paginator>
+
+
 			<p:column headerText="#{lbl['lbl.sc.item.name']}">
 				<h:outputText value="#{item.scRequestItem.itemName}" />
 			</p:column>
@@ -25,17 +30,17 @@
 				<h:outputText value="#{item.scRequestItem.uom.uomName}" />
 			</p:column>
 			<p:column style="width : 65px" headerText="#{lbl['lbl.sc.quantity']}">
-				<p:outputLabel style="textAllign : right" value="#{item.qty}">
+				<h:outputText style="float : right" value="#{item.qty}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, question.clUom.uomCode)}" />
-				</p:outputLabel>
+				</h:outputText>
 			</p:column>
 			<p:column style="width : 125px"
 				headerText="#{lbl['lbl.sc.min.decrement.block']}">
-				<p:outputLabel value="#{item.decrementAmt}">
+				<h:outputText style="float : right" value="#{item.decrementAmt}">
 					<f:convertNumber
-						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
-				</p:outputLabel>
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
 			</p:column>
 
 		</p:dataTable>
@@ -61,6 +66,8 @@
 				legendPosition="e" style="height:300px;" />
 		</div>
 		<p:spacer height="10"></p:spacer>
+
+		<p:spacer height="10"></p:spacer>
 		<p:dataTable id="bidPackagesListForBMBP"
 			value="#{biddingBB.managedBean.bidPackages}" var="item">
 			<ac:paginator for="bidPackagesListForBMBP"></ac:paginator>
@@ -80,98 +87,119 @@
 					value="#{(item.scBidSupplier.smSupplier.bumi)? 'Yes' : 'No' }" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.total.starting.price']}">
-				<p:outputLabel value="#{item.scBidSupplier.packageStartPrice}">
+				<h:outputText style="float : right"
+					value="#{item.scBidSupplier.packageStartPrice}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-				</p:outputLabel>
+				</h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.total.last.bid.price']}">
-				<p:outputLabel value="#{item.bidPrice}">
+				<h:outputText style="float : right" value="#{item.bidPrice}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-				</p:outputLabel>
+				</h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.difference.rm']}">
-				<p:outputLabel
-					value="#{item.bidPrice - biddingBB.managedBean.lowestNonBumiOfferedPrice}"
-					rendered="#{item.scBidSupplier.smSupplier.bumi and biddingBB.managedBean.lowestNonBumiOfferedPrice != 1}">
-					<f:convertNumber
-						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-				</p:outputLabel>
+				<c:if test="#{isRendered}">
+					<h:outputText style="float : right"
+						value="#{item.bidPrice - biddingBB.managedBean.lowestNonBumiOfferedPrice}">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</h:outputText>
+				</c:if>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.difference.perc']}">
-
-				<p:outputLabel
-					rendered="#{item.scBidSupplier.smSupplier.bumi and biddingBB.managedBean.lowestNonBumiOfferedPrice !=1}"
-					value="#{((item.bidPrice - biddingBB.managedBean.lowestNonBumiOfferedPrice)* 100)/biddingBB.managedBean.lowestNonBumiOfferedPrice }">
-					<f:convertNumber
-						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
-				</p:outputLabel>
-
+				<c:if test="#{isRendered}">
+					<h:outputText style="float : right"
+						value="#{((item.bidPrice - biddingBB.managedBean.lowestNonBumiOfferedPrice)* 100)/biddingBB.managedBean.lowestNonBumiOfferedPrice }">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
+					</h:outputText>
+				</c:if>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.pref.margin']}">
-				<p:outputLabel value="10"
+				<h:outputText style="float : right" value="10"
 					rendered="#{item.scBidSupplier.smSupplier.bumi}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
-				</p:outputLabel>
+				</h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.total.cost.saving']}">
-				<p:outputLabel value="100">
+				<h:outputText style="float : right" value="100">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-				</p:outputLabel>
+				</h:outputText>
 			</p:column>
 		</p:dataTable>
 	</p:panel>
 	<p:panel>
-			<div style="align: left">
-				<TABLE>
-					<tr>
-						<TD></TD>
-						<TD></TD>
-						<TD></TD>
-						<TD>#{lbl['lbl.sc.bidding.bumiputera.price']}</TD>
-						<p:spacer width="5%"></p:spacer>
-						<TD><h:outputText value="-" /></TD>
-						<p:spacer width="5%"></p:spacer>
-						<TD>#{lbl['lbl.sc.bidding.lowest.non.bumiputera.price']}</TD>
-						<TD></TD>
-						<TD></TD>
-					</tr>
-					<tr>
-						<TD>#{lbl['lbl.sc.note']}</TD>
-						<p:spacer width="5%"></p:spacer>
-						<TD>#{lbl['lbl.sc.difference.percentage']}</TD>
-						<p:spacer width="5%"></p:spacer>
-						<TD><h:outputText value="=" /></TD>
-						<p:spacer width="2%"></p:spacer>
-						<TD colspan="3"><h:outputText
-								value="--------------------------------------------------------------------" /></TD>
-						<p:spacer width="5%"></p:spacer>
-						<TD><h:outputText value="X" /></TD>
-						<p:spacer width="5%"></p:spacer>
-						<TD><h:outputText value="100" /></TD>
-					</tr>
-					<tr>
-						<TD></TD>
-						<TD></TD>
-						<TD></TD>
+		<div style="align: left">
+			<TABLE>
+				<tr>
+					<TD></TD>
+					<TD></TD>
+					<TD></TD>
+					<TD><h:outputLabel
+							value="#{lbl['lbl.sc.bidding.bumiputera.price']}">
+							<p:spacer width="5"></p:spacer>
+						</h:outputLabel></TD>
 
-						<TD style="align: center" colspan="3">#{lbl['lbl.sc.bidding.lowest.non.bumiputera.price']}</TD>
+					<TD><h:outputText value="-">
+							<p:spacer width="5"></p:spacer>
+						</h:outputText></TD>
 
-						<TD></TD>
-						<TD></TD>
-					</tr>
+					<TD><h:outputLabel
+							value="#{lbl['lbl.sc.bidding.lowest.non.bumiputera.price']}">
+							<p:spacer width="5"></p:spacer>
+						</h:outputLabel></TD>
+					<TD></TD>
+					<TD></TD>
+				</tr>
+				<tr>
+					<TD><h:outputLabel value="#{lbl['lbl.sc.note']}">
+							<p:spacer width="5"></p:spacer>
+						</h:outputLabel></TD>
 
-				</TABLE>
+					<TD><h:outputLabel
+							value="#{lbl['lbl.sc.difference.percentage']}">
+							<p:spacer width="5"></p:spacer>
+						</h:outputLabel></TD>
 
-			</div>
+					<TD><h:outputText value="=">
+							<p:spacer width="5"></p:spacer>
+						</h:outputText></TD>
 
-		</p:panel>
+					<TD colspan="3"><h:outputText
+							value="-------------------------------------------------------------------------------">
+							<p:spacer width="5"></p:spacer>
+						</h:outputText></TD>
+
+					<TD><h:outputText value="X">
+							<p:spacer width="5"></p:spacer>
+						</h:outputText></TD>
+
+					<TD><h:outputText value="100" /></TD>
+				</tr>
+				<tr>
+					<TD></TD>
+					<TD></TD>
+					<TD></TD>
+
+					<TD colspan="3"><h:outputText style="float : center"
+							value="#{lbl['lbl.sc.bidding.lowest.non.bumiputera.price']}" /></TD>
+
+					<TD></TD>
+					<TD></TD>
+				</tr>
+
+			</TABLE>
+
+		</div>
+
+	</p:panel>
 	<p:dialog closeOnEscape="true" header="#{lbl['lbl.sc.item.price']}"
-		widgetVar="pricePop" showEffect="fade" hideEffect="fade" modal="true"
-		id="itemPricePop">
+		 widgetVar="pricePop" showEffect="fade"
+		hideEffect="fade" modal="true" id="itemPricePop">
 		<ui:include src="/xhtml/sc/bidding/BMByZoneItemPricePopup.xhtml"></ui:include>
 	</p:dialog>
 </ui:composition>

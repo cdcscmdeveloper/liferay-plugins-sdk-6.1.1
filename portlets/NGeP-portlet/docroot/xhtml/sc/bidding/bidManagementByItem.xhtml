@@ -10,7 +10,7 @@
 
 		<p:dataTable id="biddingListBMBI" selectionMode="single"
 			value="#{biddingBB.managedBean.scheduledBid.scBidItems}"
-			var="bidItem" selection="#{biddingBB.managedBean.selectedtem}"
+			var="bidItem" 
 			rowKey="#{bidItem.bidItemId}">
 
 			<p:ajax event="rowSelect" listener="#{biddingBB.rowSelectListener}"
@@ -27,19 +27,20 @@
 			<p:column style="width : 60px" headerText="#{lbl['lbl.sc.uom']}">
 
 				<h:outputText value="#{bidItem.scRequestItem.uom.uomName}" />
+
 			</p:column>
 			<p:column style="width : 65px" headerText="#{lbl['lbl.sc.quantity']}">
-				<p:outputLabel value="#{bidItem.qty}">
+				<h:outputText style="float : right" value="#{bidItem.qty}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, question.clUom.uomCode)}" />
-				</p:outputLabel>
+				</h:outputText>
 			</p:column>
 			<p:column style="width : 125px"
 				headerText="#{lbl['lbl.sc.min.decrement.block']}">
-				<p:outputLabel value="#{bidItem.decrementAmt}">
+				<h:outputText style="float : right" value="#{bidItem.decrementAmt}">
 					<f:convertNumber
-						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
-				</p:outputLabel>
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
 			</p:column>
 		</p:dataTable>
 
@@ -67,19 +68,22 @@
 				legendPosition="e" style="height:300px;" />
 
 		</div>
-
+		
+		
+		<p:spacer height="10"></p:spacer>
+		
+		
 		<p:spacer height="10"></p:spacer>
 
-		<!-- count down timer -->
-
-		<p:dataTable id="rankingList" 
+		<p:dataTable id="rankingList"
 			value="#{biddingBB.managedBean.scBidPriceList}" var="bidPriceItem">
 			<ac:paginator for="rankingList"></ac:paginator>
-			<p:column  headerText="#{lbl['lbl.sc.ranking']}" style=" align : center; width : 14%">
+			<p:column headerText="#{lbl['lbl.sc.ranking']}"
+				style=" align : center; width : 14%">
 				<h:outputText value="#{bidPriceItem.ranking}" />
 			</p:column>
-			<p:column 
-				headerText="#{lbl['lbl.sc.supplier.code']}" style="align : center; width : 14%">
+			<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
+				style="align : center; width : 14%">
 				<h:outputText
 					value="#{bidPriceItem.scBidSupplierItem.scBidSupplier.smSupplier.supplierId}" />
 			</p:column>
@@ -90,38 +94,38 @@
 			</p:column>
 			<p:column style="align : center; width : 14%"
 				headerText="#{lbl['lbl.sc.starting.price']}">
-				<p:outputLabel
+				<h:outputText style="float : right"
 					value="#{bidPriceItem.scBidSupplierItem.itemStartPrice}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-				</p:outputLabel>
+				</h:outputText>
 			</p:column>
 			<p:column style=" align : center; width : 14%"
 				headerText="#{lbl['lbl.sc.last.bid.price']}">
 				<div style="align: right">
-					<p:commandLink value="#{bidPriceItem.bidPrice}"  style=" align : right"
-						oncomplete="priceHistory.show();"
-						actionListener="#{biddingBB.historyPricePopupAction(bidPriceItem)}"
+					<p:commandLink value="#{bidPriceItem.bidPrice}"
+						style="float : right" oncomplete="priceHistory.show();"
+						action="#{biddingBB.historyPricePopupAction(bidPriceItem)}"
 						update="@([id$=historyPricePopupPanel])">
-
+						
 					</p:commandLink>
 				</div>
 
 			</p:column>
 			<p:column style=" align : center; width : 15%"
 				headerText="#{lbl['lbl.sc.difference.rm']}">
-				<p:outputLabel
+				<h:outputText style="float : right"
 					value="#{bidPriceItem.scBidSupplierItem.itemStartPrice - bidPriceItem.bidPrice}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-				</p:outputLabel>
+				</h:outputText>
 			</p:column>
 			<p:column style=" align : center; width : 15%"
 				headerText="#{lbl['lbl.sc.cost.saving']}">
-				<p:outputLabel value="#{1000}">
+				<h:outputText style="float : right" value="#{1000}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-				</p:outputLabel>
+				</h:outputText>
 			</p:column>
 
 		</p:dataTable>

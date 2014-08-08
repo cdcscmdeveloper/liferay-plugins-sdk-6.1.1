@@ -7,11 +7,19 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<ui:define name="resourceSection">
+
 	</ui:define>
 
 	<ui:define name="contentSection">
-	
-	<ui:param name="isZonal" value="true" />
+		<ui:param name="isZonal"
+			value="#{!biddingBB.managedBean.scheduledBid.tplSpecZoneDtl.zoneName eq null}" />
+
+		<ui:param name="isViewByPackage"
+			value="#{biddingBB.managedBean.bidManagementViewBy eq 'P'}" />
+		<ui:param name="isViewByItem"
+			value="#{biddingBB.managedBean.bidManagementViewBy eq 'I'}" />
+
+
 
 		<div align="left" class="header-info">
 
@@ -78,39 +86,37 @@
 						<td></td>
 
 					</tr>
+					<c:if test="#{isZonal}">
+						<tr>
+							<td style="width: 100px"><p:outputLabel
+									value="#{lbl['lbl.sc.zone.name']}" /></td>
+							<td><p:inputText id="zoneNameLabel" disabled="true"
+									value="#{biddingBB.managedBean.scheduledBid.tplSpecZoneDtl.zoneName}" />
+								<p:spacer width="5"></p:spacer> <p:commandLink id="zoneName"
+									oncomplete="zoneLocPopup.show();" partialSubmit="true"
+									process="@this" update="@([id$=zoneLocPopup])">
+									<p:graphicImage library="ep/images/design" name="evaluate.png"
+										value="/resources/ep/images/design/evaluate.png" />
+									<f:setPropertyActionListener
+										target="#{zoneLocationBackingBean.tplSpecZoneDtl}"
+										value="#{biddingBB.managedBean.scheduledBid.tplSpecZoneDtl}" />
+								</p:commandLink></td>
+							<td></td>
+							<td></td>
+						</tr>
+					</c:if>
+
 
 					<tr>
-
-						<td style="width: 100px"><p:outputLabel
-								value="#{lbl['lbl.sc.zone.name']}" /></td>
-						<td><p:inputText id="zoneNameLabel"
-								disabled="true"
-								value="#{biddingBB.managedBean.scheduledBid.tplSpecZoneDtl.zoneName}" />
-								<p:spacer width="5" ></p:spacer>
-							<p:commandLink id="zoneName" oncomplete="zoneLocPopup.show();" rendered="#{isZonal}"
-								partialSubmit="true" process="@this"
-								update="@([id$=zoneLocPopup])">
-								<p:graphicImage library="ep/images/design" name="evaluate.png"
-									value="/resources/ep/images/design/evaluate.png" />
-								<f:setPropertyActionListener
-									target="#{zoneLocationBackingBean.tplSpecZoneDtl}"
-									value="#{biddingBB.managedBean.scheduledBid.tplSpecZoneDtl}" />
-							</p:commandLink></td>
-						<td></td>
-						<td></td>
-					</tr>
-
-					<tr>
-
 						<td style="width: 100px"><p:outputLabel
 								value="#{lbl['lbl.sc.view.by']}" /></td>
 						<td><p:selectOneMenu id="viewBy"
-								value="#{biddingBB.managedBean.bidManagementViewBy}" style="width : 135px">
-								<f:selectItem itemLabel="Package" itemValue="P"></f:selectItem>
-								<f:selectItem itemLabel="Item" itemValue="I"></f:selectItem>
-								<p:ajax event="change" process="@this" partialSubmit="true"
-									listener="#{biddingBB.viewByChangeListener}"
-									update="bidManagement"></p:ajax>
+								value="#{biddingBB.managedBean.bidManagementViewBy}"
+								style="width : 148px">
+								<f:selectItem itemLabel="#{lbl['lbl.sc.package']}" itemValue="P"></f:selectItem>
+								<f:selectItem itemLabel="#{lbl['lbl.sc.item']}" itemValue="I"></f:selectItem>
+								<p:ajax process="@this" partialSubmit="true" event="change"
+									listener="#{biddingBB.viewByChangeListener}" update="bidManagementPanel"></p:ajax>
 							</p:selectOneMenu></td>
 						<td></td>
 						<td></td>
@@ -119,28 +125,20 @@
 			</div>
 
 		</p:panel>
+		<p:panel id="bidManagementPanel">
+		<c:if test="#{isViewByPackage}">
+			<ui:include src="bidManagementByPackage.xhtml"></ui:include>
+		</c:if>
+		<c:if test="#{isViewByItem}">
+			<ui:include src="bidManagementByItem.xhtml"></ui:include>
+		</c:if>
+		</p:panel>
 
-		<h:panelGroup id="bidManagement">
-
-			<ui:fragment
-				rendered="#{biddingBB.managedBean.bidManagementViewBy eq 'P'}">
-				<ui:include src="bidManagementByPackage.xhtml"></ui:include>
-			</ui:fragment>
-
-			<ui:fragment
-				rendered="#{biddingBB.managedBean.bidManagementViewBy eq 'I'}">
-				<ui:include src="bidManagementByItem.xhtml"></ui:include>
-			</ui:fragment>
-
-		</h:panelGroup>
-
-		<p:dialog id="zoneLocPopup" widgetVar="zoneLocPopup"
+		<p:dialog id="zoneLocPopup" widgetVar="zoneLocPopup" rendered="false"
 			header="#{lbl['lbl.tpl.spec.zone.details']}" modal="true" width="350"
 			height="200">
-
 			<ui:include src="/xhtml/sc/bidding/BMByItemZoneLocationPopup.xhtml" />
 		</p:dialog>
-
 
 	</ui:define>
 </ui:composition>

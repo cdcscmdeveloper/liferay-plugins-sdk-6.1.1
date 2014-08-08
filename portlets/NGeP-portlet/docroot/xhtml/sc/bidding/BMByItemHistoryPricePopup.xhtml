@@ -24,7 +24,7 @@
 				<TD><p:outputLabel value="#{lbl['lbl.sc.quantity']}" /></TD>
 				<TD>
 					<div style="align: right">
-						<p:inputText id="hPopupQty"
+						<p:inputText id="hPopupQty" style="float : right"
 							value="#{biddingBB.managedBean.historyPrice.scBidSupplierItem.scBidItem.qty}"
 							size="20" disabled="true">
 							<f:convertNumber
@@ -68,10 +68,10 @@
 					</h:outputText>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.bid.price']}">
-					<p:outputLabel value="#{history.bidPrice}" >
+					<h:outputText style="float : right" value="#{history.bidPrice}" >
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					</p:outputLabel>
+					</h:outputText>
 				</p:column>
 			</p:dataTable>
 		</div>
