@@ -9,7 +9,8 @@
 		test="#{specificationBackingBean.managedBean.scQt.evaluationType eq '2'}">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
-				<td width="20%;" class="sidemenutd" style="vertical-align: baseline;"><p:tabMenu
+				<td width="20%;" class="sidemenutd"
+					style="vertical-align: baseline;"><p:tabMenu
 						id="specCommitteeId"
 						activeIndex="#{specificationBackingBean.managedBean.activeIndex}"
 						styleClass="sidemenu" style="display : table-caption;">
@@ -68,14 +69,19 @@
 							<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}"
 								actionListener="#{specificationBackingBean.qtChecklistTabChange(8)}"
 								update="@form" />
+							<p:menuitem value="#{lbl['lbl.sc.spec.committee.endorse']}"
+								actionListener="#{specificationBackingBean.qtChecklistTabChange(9)}"
+								update="@form" />
 						</c:if>
 
 
 
-
-						<p:menuitem value="#{lbl['lbl.sc.spec.committee.endorse']}"
-							actionListener="#{specificationBackingBean.qtChecklistTabChange(9)}"
-							update="@form" />
+						<c:if
+							test="#{specificationBackingBean.managedBean.fulfilmentType eq null or specificationBackingBean.managedBean.fulfilmentType eq 'OF'}">
+							<p:menuitem value="#{lbl['lbl.sc.spec.committee.endorse']}"
+								actionListener="#{specificationBackingBean.qtChecklistTabChange(8)}"
+								update="@form" />
+						</c:if>
 
 					</p:tabMenu></td>
 				<td width="80%;"><c:if
@@ -121,6 +127,10 @@
 
 						<ui:include src="recomondation.xhtml" />
 					</c:if> <c:if
+						test="#{specificationBackingBean.managedBean.activeIndex eq '7'}">
+
+						<ui:include src="deliveryAddress.xhtml" />
+					</c:if> <c:if
 						test="#{specificationBackingBean.managedBean.activeIndex eq '8'}">
 
 						<ui:fragment
@@ -128,10 +138,12 @@
 
 							<ui:include src="schedule.xhtml" />
 						</ui:fragment>
-					</c:if> <c:if
-						test="#{specificationBackingBean.managedBean.activeIndex eq '7'}">
 
-						<ui:include src="deliveryAddress.xhtml" />
+						<ui:fragment
+							rendered="#{specificationBackingBean.managedBean.fulfilmentType eq 'OF'}">
+
+							<ui:include src="specificationSignoff.xhtml" />
+						</ui:fragment>
 					</c:if> <c:if
 						test="#{specificationBackingBean.managedBean.activeIndex eq '9'}">
 
@@ -139,7 +151,7 @@
 					</c:if></td>
 			</tr>
 		</table>
-		
+
 	</c:if>
 
 
@@ -149,7 +161,8 @@
 
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
-				<td width="20%;" class="sidemenutd" style="vertical-align: baseline;"><p:tabMenu
+				<td width="20%;" class="sidemenutd"
+					style="vertical-align: baseline;"><p:tabMenu
 						id="specCommitteeOneTierId"
 						activeIndex="#{specificationBackingBean.managedBean.activeIndex}"
 						styleClass="sidemenu" style="display : table-caption;">
@@ -198,14 +211,21 @@
 							<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}"
 								actionListener="#{specificationBackingBean.qtChecklistTabChange(7)}"
 								update="@form" />
+
+							<p:menuitem value="#{lbl['lbl.sc.spec.committee.endorse']}"
+								actionListener="#{specificationBackingBean.qtChecklistTabChange(8)}"
+								update="@form" />
 						</c:if>
 
 
+						<c:if
+							test="#{specificationBackingBean.managedBean.fulfilmentType eq null or specificationBackingBean.managedBean.fulfilmentType eq 'OF'}">
+							<p:menuitem value="#{lbl['lbl.sc.spec.committee.endorse']}"
+								actionListener="#{specificationBackingBean.qtChecklistTabChange(7)}"
+								update="@form" />
+						</c:if>
 
 
-						<p:menuitem value="#{lbl['lbl.sc.spec.committee.endorse']}"
-							actionListener="#{specificationBackingBean.qtChecklistTabChange(8)}"
-							update="@form" />
 
 					</p:tabMenu></td>
 				<td width="80%;"><c:if
@@ -237,6 +257,10 @@
 
 						<ui:include src="recomondation.xhtml" />
 					</c:if> <c:if
+						test="#{specificationBackingBean.managedBean.activeIndex eq '6'}">
+
+						<ui:include src="deliveryAddress.xhtml" />
+					</c:if> <c:if
 						test="#{specificationBackingBean.managedBean.activeIndex eq '7'}">
 
 						<ui:fragment
@@ -244,10 +268,12 @@
 
 							<ui:include src="schedule.xhtml" />
 						</ui:fragment>
-					</c:if> <c:if
-						test="#{specificationBackingBean.managedBean.activeIndex eq '6'}">
 
-						<ui:include src="deliveryAddress.xhtml" />
+						<ui:fragment
+							rendered="#{specificationBackingBean.managedBean.fulfilmentType eq 'OF'}">
+
+							<ui:include src="specificationSignoff.xhtml" />
+						</ui:fragment>
 					</c:if> <c:if
 						test="#{specificationBackingBean.managedBean.activeIndex eq '8'}">
 
