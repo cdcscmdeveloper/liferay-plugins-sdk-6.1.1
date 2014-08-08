@@ -44,6 +44,7 @@ import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.jaxb.sc.awardsupplierdata.SCAwardSupplierDataType;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddress;
@@ -156,10 +157,11 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 		debugLogger("preRenderView");
 		
 		try {
-			//SCQuotationTenderDataType scDataType = getBpmTaskDetails(SCQuotationTenderDataType.class);
+			SCAwardSupplierDataType dpDataType = getBpmTaskDetails(SCAwardSupplierDataType.class);
 			
+			Long loaId = Long.valueOf(dpDataType.getAwardId());
 			ScLoa scLoa = new ScLoa();
-			scLoa.setLoaId(214L);	//251
+			scLoa.setLoaId(loaId);
 			editLOAAction(scLoa);
 			
 			FacesContext fc = FacesContext.getCurrentInstance();
@@ -179,10 +181,12 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
 			
-			//SCQuotationTenderDataType scDataType = getBpmTaskDetails(SCQuotationTenderDataType.class);
+			SCAwardSupplierDataType dpDataType = getBpmTaskDetails(SCAwardSupplierDataType.class);
+			
+			Long loaId = Long.valueOf(dpDataType.getAwardId());
 			
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
-			reqDTO.setLoaId(299L);
+			reqDTO.setLoaId(loaId);
 
 			AwardSupplierResDTO resDTO = qtAwardSO.retrieveSupplierLOADtl(reqDTO);
 			
@@ -499,6 +503,7 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 				
 				scLoaReportAttachment = new ScLoaReportAttachment();
 				scLoaReportAttachment.setScLoaReport(scLoaReport);
+				scLoaReportAttachment.setDocNo(scLoaReport.getScLoa().getLoaNo());
 				
 				if (SourcingConstants.DOC_DEF_KEY_CONTRACT_SUMMARY.equals(docDefinitionKey)) {
 					generateContractSummaryPdfFromVelocity((ScAttachment)scLoaReportAttachment, 
@@ -543,8 +548,8 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 	
 	public void generateContractSummaryPdfFromVelocity(ScAttachment attachment, ScLoa scLoa) throws Exception {
 		
-		populateAttachmentDetails(attachment);
 		attachment.setFileName("contract_summary.pdf");
+		populateAttachmentDetails(attachment);
 		
 		ScLoiLoa scLoiLoa = scLoa.getScLoiLoa();
 		CommonUtils commonUtils = new CommonUtils();
@@ -589,8 +594,8 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 	
 	public void generateAgreementLetterPdfFromVelocity(ScAttachment attachment, ScLoa scLoa) throws Exception {
 		
-		populateAttachmentDetails(attachment);
 		attachment.setFileName("agreement_letter.pdf");
+		populateAttachmentDetails(attachment);
 		
 		ScLoiLoa scLoiLoa = scLoa.getScLoiLoa();
 		PmOrgProfile pmOrgProfile = scLoiLoa.getPmOrgProfile();
@@ -700,8 +705,8 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 	public void generateDeclarationPdfFromVelocity(ScAttachment attachment, ScLoa scLoa) throws Exception {	    	
     	String termsConditions = generateDeclarationFromVelocity(scLoa);
     	
+    	attachment.setFileName("integrity_pact.pdf");
     	populateAttachmentDetails(attachment);
-		attachment.setFileName("integrity_pact.pdf");
     	
     	DocumentGenerator.getInstance().generatePdf(
     			new FileOutputStream(attachment.getFilePath()), 
@@ -1342,6 +1347,7 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 		Calendar contractExpDate = Calendar.getInstance();
 		contractExpDate.setTime(contractEffDate);
 		contractExpDate.add(Calendar.MONTH, contractDuration.intValue());
+		contractExpDate.add(Calendar.DATE, -1);
 
 		scLoa.setContractExpDate(contractExpDate.getTime());
 	}
