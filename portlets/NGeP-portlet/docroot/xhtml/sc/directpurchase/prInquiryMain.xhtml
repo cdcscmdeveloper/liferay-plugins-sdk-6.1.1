@@ -11,59 +11,62 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 			<ac:title value="#{lbl['lbl.sc.pr.inquiry']}" />
 	</c:if>
 
-	 <p:messages showDetail="true" autoUpdate="true" closable="true"  showSummary="false" severity="error, info" id="mainMsg"/>
+  <p:messages showDetail="true" autoUpdate="true" closable="true"  showSummary="false" severity="error, info" id="mainMsg"/>
   <p:panel id="mainPanel">
    <div align="right">
 	    <c:if test="#{purchaseInquiryBackingBean.managedBean.taskId eq null}">
+	    
 	            <p:commandButton  immediate="true" value="#{lbl['lbl.sc.action.back.to.search.catalogue']}" icon="ui-icon-back"
 					 style="float:left;" action="#{purchaseInquiryBackingBean.backToPervious}" />
 				
 				 <p:commandButton value="#{lbl['lbl.sc.common.submit']}"
 					action="#{purchaseInquiryBackingBean.submitPrInquiryDtl}" style="float:right;"
-					icon="ui-icon-submit"  update="mainPanel"/>
+					icon="ui-icon-submit"  update="mainPanel"  rendered="#{purchaseInquiryBackingBean.managedBean.rnToPIFlag}"/>
 	    </c:if>
 
 	   <c:if test="#{purchaseInquiryBackingBean.managedBean.taskId ne null}">
 	     <table style="width:100%">
 			<tr>
-				<td align="right">
-					        <p:commandButton immediate="true"
-									value="#{lbl['lbl.sc.action.back.to.search.catalogue']}"
-									icon="ui-icon-back" style="float:left;"
-									action="#{purchaseInquiryBackingBean.backToPervious}"  rendered="#{purchaseInquiryBackingBean.managedBean.rnToPIFlag}"/> 	
-										 	
-							<!-- to view purchase inquiry from the request note Item list Icon    -->
-                              <c:if test="#{!purchaseInquiryBackingBean.managedBean.rnToPIFlag}">		
-					             <c:forEach items="#{purchaseInquiryBackingBean.managedBean.outComes}" var="action">
+				<td align="right"><c:if
+									test="#{!purchaseInquiryBackingBean.managedBean.rnToPIFlag}">
+									<p:commandButton immediate="true"
+										value="#{lbl['lbl.sc.action.back.to.search.catalogue']}"
+										icon="ui-icon-back" style="float:left;"
+										action="#{purchaseInquiryBackingBean.backToPervious}" />
+								</c:if> <c:forEach
+											items="#{purchaseInquiryBackingBean.managedBean.outComes}"
+											var="action">
 
-									<c:if test="${action == 'SUBMIT'}">
-										<ui:param name="iconVar" value="ui-icon-submit" />
-									</c:if>
-									<c:if test="${action == 'CANCEL'}">
-										<ui:param name="iconVar" value="ui-icon-submit" />
-										
-										<c:if test="#{unspscCodeBackingBean.requisitioner}">
-											<p:commandButton value="#{lbl['lbl.sc.common.proceed.btn']}"
-												icon="ui-icon-submit"
-												action="#{purchaseInquiryBackingBean.requisitionerAction('Processed')}" />
+											<c:if test="${action == 'SUBMIT'}">
+												<ui:param name="iconVar" value="ui-icon-submit" />
+											</c:if>
+											<c:if test="${action == 'CANCEL'}">
+												<ui:param name="iconVar" value="ui-icon-submit" />
 
-											<p:commandButton value="#{lbl['lbl.sc.common.cancel']}"
-												icon="ui-icon-cancel" style="float:right;"
-												action="#{purchaseInquiryBackingBean.requisitionerAction(action)}" />
+												<c:if test="#{unspscCodeBackingBean.requisitioner and purchaseInquiryBackingBean.managedBean.rnToPIFlag}">
+													<p:commandButton
+														value="#{lbl['lbl.sc.common.proceed.btn']}"
+														icon="ui-icon-submit"
+														action="#{purchaseInquiryBackingBean.requisitionerAction('Processed')}" />
 
-										</c:if>
-									</c:if>
+													<p:commandButton value="#{lbl['lbl.sc.common.cancel']}"
+														icon="ui-icon-cancel" style="float:right;"
+														action="#{purchaseInquiryBackingBean.requisitionerAction(action)}" />
 
-									<c:if test="#{purchaseInquiryBackingBean.managedBean.processName eq 'Purchase Inquiry Creation'}">
-									<p:commandButton value="#{action}" process="@all" partialSubmit="true"
-										rendered="#{!unspscCodeBackingBean.requisitioner}"
-										styleClass="ui-button" icon="#{iconVar}" update="mainPanel"
-										actionListener="#{purchaseInquiryBackingBean.submitPrInquiryPrice(action)}" />
-								</c:if>
-							
-							</c:forEach>
-							</c:if>
-					</td>
+												</c:if>
+											</c:if>
+
+											<c:if
+												test="#{purchaseInquiryBackingBean.managedBean.processName eq 'Purchase Inquiry Creation'}">
+												<p:commandButton value="#{action}" process="@all"
+													partialSubmit="true"
+													rendered="#{!unspscCodeBackingBean.requisitioner}"
+													styleClass="ui-button" icon="#{iconVar}" update="mainPanel"
+													actionListener="#{purchaseInquiryBackingBean.submitPrInquiryPrice(action)}" />
+											</c:if>
+
+										</c:forEach>
+									</td>
 			</tr>
 		</table>
 		</c:if>

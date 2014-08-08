@@ -781,7 +781,7 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 		 getCurrentStatus(res.getDocStatus().longValue()); 
 		 // title checker
 		 getManagedBean().setTitleChecker(Boolean.FALSE);
-		 getManagedBean().setRnToPIFlag(Boolean.FALSE);
+		 getManagedBean().setRnToPIFlag(Boolean.TRUE);
 
 		 FacesContext fc = FacesContext.getCurrentInstance();
 		 if(flag){ // page nav.to purchase inquiry

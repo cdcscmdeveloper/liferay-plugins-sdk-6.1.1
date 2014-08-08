@@ -365,23 +365,22 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			Object obj = res.getPojo();
 			SCDirectPurchaseDataType directPurchaseDataType = (SCDirectPurchaseDataType) obj;
 			String	dpMode	=	directPurchaseDataType.getDpMode();
-			Long requestNoteId = null;
 			Long dpId = null;
 			boolean zoneFlag = Boolean.FALSE;
-			
+
 			if(directPurchaseDataType.getRnId() == null){
 				dpId = Long.valueOf(directPurchaseDataType.getDpId());
 			} else{
-				requestNoteId = Long.valueOf(directPurchaseDataType.getRnId());
+				dpId = Long.valueOf(directPurchaseDataType.getRnId());
 			}
 			
 			if(ParameterConst.REQUEST_NOTE_RN.equalsIgnoreCase(dpMode)){ 
-				 requestNoteId = Long.valueOf(dpId);
+				dpId = Long.valueOf(dpId);
 
 			} else if(ParameterConst.REQUEST_NOTE_SQ.equalsIgnoreCase(dpMode)){ 
 				// Simple Quote
 				QuoteReqDTO quoteReqDTO = new QuoteReqDTO();
-				Long quoteId = Long.valueOf(dpId);
+				Long quoteId = Long.valueOf(directPurchaseDataType.getDpId());
 				quoteReqDTO.setQuoteId(quoteId);
 				ScQuote quote = quoteSO.getQuoteDtl(quoteReqDTO).getQuoteBidDtl();
 				if(quote != null){
@@ -392,12 +391,12 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 					requestNoteReqDTO.setRequestNoteId(quote.getRequestNote().getRequestNoteId());
 					RequestNoteResDTO requestNoteResDTO = directPurchaseSO.getRequestNote(requestNoteReqDTO);
 					if(requestNoteResDTO.getRequestNoteDetail() != null){
-						requestNoteId = requestNoteResDTO.getRequestNoteDetail().getRequestNoteId();
+						dpId = requestNoteResDTO.getRequestNoteDetail().getRequestNoteId();
 					}
 				}
 			}
 
-			retrieveRequestNoteDetails(requestNoteId,res.getDocStatus().longValue() , zoneFlag);
+			retrieveRequestNoteDetails(dpId,res.getDocStatus().longValue() , zoneFlag);
 			// title checker
 			getManagedBean().setTitleChecker(Boolean.FALSE);
 			FacesContext fc = FacesContext.getCurrentInstance();
@@ -1587,6 +1586,10 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 				prInquiryReqDTO.setFetchSubEntity(true);
 				PrInquiryResDTO prInquiryResDTO = prInquirySO.getPrInquiry(prInquiryReqDTO);
 				ScPrInquiry  prInquiry  = prInquiryResDTO.getPrInquiryDetail();
+				// status
+				if(prInquiry.getWorkflowStatuses() != null && prInquiry.getWorkflowStatuses().size() >0){
+					purchaseInquiryBackingBean.getCurrentStatus(prInquiry.getWorkflowStatuses().get(0).getPmStatus().getStatusId());
+				}
 				// remarks
 				prInquiry.setRemarks(purchaseInquiryBackingBean.initializeRemarks(prInquiry));
 				if(prInquiry.getScRequestSupplierItems() != null && prInquiry.getScRequestSupplierItems().size()>0 ){
@@ -1616,7 +1619,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			// title checker
 			purchaseInquiryBackingBean.getManagedBean().setTitleChecker(Boolean.FALSE);
 			// TODO current page url for page navigation from pid to request note
-			purchaseInquiryBackingBean.getManagedBean().setRnToPIFlag(Boolean.TRUE);
+			purchaseInquiryBackingBean.getManagedBean().setRnToPIFlag(Boolean.FALSE);
 			purchaseInquiryBackingBean.getManagedBean().setPageNavToRequestNote(fc.getViewRoot().getViewId());
 			fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "prInquiryMain");
@@ -1717,7 +1720,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 				scQuote.setRemarks(simpleQuoteBackingBean.initializeRemarks(scQuote));
 				
 				// status
-				if(scQuote.getWorkflowStatuses() !=null && scQuote.getWorkflowStatuses().size() >0){
+				if(scQuote.getWorkflowStatuses() != null && scQuote.getWorkflowStatuses().size() >0){
 					simpleQuoteBackingBean.getCurrentStatus(scQuote.getWorkflowStatuses().get(0).getPmStatus().getStatusId());
 				}
 				
