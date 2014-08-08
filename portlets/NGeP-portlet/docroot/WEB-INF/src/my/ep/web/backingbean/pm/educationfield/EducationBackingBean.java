@@ -1,7 +1,10 @@
 package my.ep.web.backingbean.pm.educationfield;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
 
 import org.apache.log4j.Logger;
 
@@ -9,11 +12,13 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.common.educationfield.IEducationFieldSO;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.common.educationfield.EducationFieldReqDTO;
 import my.ep.dto.pm.common.educationfield.EducationFieldResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.common.PmEduField;
 import my.ep.type.aut.SearchOperator;
+import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -71,6 +76,19 @@ public class EducationBackingBean extends
 	}
 	
 	/**
+	 * get status item dropdown
+	 * 
+	 */	
+	 public SelectItem[] getEducationStatusList() {
+		 
+			SelectItem[] items =  new SelectItem[2];
+			items[0] = new SelectItem(1, "Active");
+			items[1] = new SelectItem(0, "Inactive");
+		    return items;
+		}	
+	 
+	
+	/**
 	 * search education field info based 
 	 * on education field names and codes search
 	 */
@@ -95,6 +113,17 @@ public class EducationBackingBean extends
 					.setSearchField("fieldName");
 			codesSearchBean.setSearchValue(getManagedBean()
 					.getFieldNames());
+			searchBean.getDataFilterBeans().add(codesSearchBean);
+		}
+		
+		if (getManagedBean().getStatus() != null
+				&& !"".equals(getManagedBean().getStatus())) {
+			SearchFilterBean codesSearchBean = new SearchFilterBean(
+					SearchOperator.OPERATOR_EQUALS.value());
+			codesSearchBean
+					.setSearchField("recordStatusFlg");
+			codesSearchBean.setSearchValue(getManagedBean()
+					.getStatus());
 			searchBean.getDataFilterBeans().add(codesSearchBean);
 		}	
 
@@ -157,4 +186,29 @@ public class EducationBackingBean extends
 		return "/xhtml/pm/educationfield/educationFieldMaintenance.xhtml";
 	}	
 	
-}
+	/**
+	 * save and update salutation details
+	 * 
+	 */
+	public void saveEducationDtls() {
+		debugLogger("saveEducationDtls");
+		
+		PmEduField eduField = this.getManagedBean().getPmEduField();
+		EducationFieldReqDTO reqDTO = new EducationFieldReqDTO();
+		reqDTO.setEduField(eduField);
+		
+		IEducationFieldSO iEducationfieldSO = EpEjbBusinessDelegate.getInstance().
+				getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IEducationFieldSO.class);
+		
+		 EducationFieldResDTO resDTO= iEducationfieldSO.saveOrUpdateEduFieldDtls(reqDTO);
+		 this.getManagedBean().setPmEduField(resDTO.getEduField());
+		 
+		 if(resDTO.isSuccessful()){
+			 FacesContext.getCurrentInstance().addMessage(null,
+				new FacesMessage(FacesMessage.SEVERITY_INFO,"","Saved Successfully"));
+			 
+			}
+	 }
+	
+	}
+	

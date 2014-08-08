@@ -28,6 +28,8 @@ public class EducationManagedBean extends BaseManagedBean {
 	
 	private String fieldNames;
 	
+	private Long status;
+	
 	private List<PmEduField> eduFieldLov;	
 	
 	private List<PmCategoryL3> categoryList;	
@@ -100,6 +102,20 @@ public class EducationManagedBean extends BaseManagedBean {
 	 */
 	public void setCategoryList(List<PmCategoryL3> categoryList) {
 		this.categoryList = categoryList;
+	}
+
+	/**
+	 * @return the status
+	 */
+	public Long getStatus() {
+		return status;
+	}
+
+	/**
+	 * @param status the status to set
+	 */
+	public void setStatus(Long status) {
+		this.status = status;
 	}	
 
 	
