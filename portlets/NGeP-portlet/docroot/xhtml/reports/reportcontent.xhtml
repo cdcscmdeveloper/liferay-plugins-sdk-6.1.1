@@ -79,7 +79,8 @@
 									</c:if>			
 									  <c:if test="#{reportBackingBean.managedBean.rptGenBean.unspscCodeView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.unspscCode']}" style="margin-top:5px;width:100px;"/>
-									<p:inputText value="#{reportBackingBean.unspscCode}" style="margin-top:5px;width:120px;"/>
+									<p:inputText  value="#{reportBackingBean.unspscCode}" style="margin-top:5px;width:120px;" maxlength="8">									
+									</p:inputText>
 									</c:if>			
 									<c:if test="#{reportBackingBean.managedBean.rptGenBean.unspscTitleView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.unspscTitle']}" style="margin-top:5px;width:100px;"/>
@@ -274,8 +275,8 @@
 						</c:if>	
 		            </div>
 		            <div align="right">
-				    
-					<p:commandButton value="Generate"  process="@all" action="#{reportBackingBean.generateReport}" update="@all" />
+				    <h:commandLink  target="#{reportBackingBean.newTabVal}" action="#{reportBackingBean.generateReport}" value="Generate" />
+					<p:commandButton value="Generate"  process="@all" action="#{reportBackingBean.generateReport}" icon="ui-icon-agree" update="@all" />
 					<p:commandButton value="Reset"  process="@all" action="#{reportBackingBean.resetReportForm}" icon="ui-icon-reset" update="@all" />
 				   </div>
             </p:panel>
