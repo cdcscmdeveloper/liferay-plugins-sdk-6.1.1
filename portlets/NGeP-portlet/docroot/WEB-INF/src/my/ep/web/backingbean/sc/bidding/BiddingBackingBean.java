@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.sc.bidding;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -11,7 +12,6 @@ import java.util.concurrent.TimeUnit;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 
 import my.ep.biz.service.pm.common.status.IStatusSO;
@@ -24,7 +24,6 @@ import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sc.bidding.BiddingReqDTO;
 import my.ep.dto.sc.bidding.BiddingResDTO;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
-import my.ep.persistence.entity.sc.bidding.ScBid;
 import my.ep.persistence.entity.sc.bidding.ScBidAction;
 import my.ep.persistence.entity.sc.bidding.ScBidItem;
 import my.ep.persistence.entity.sc.bidding.ScBidPackage;
@@ -69,7 +68,7 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 
 	public void startDateSelectListener(SelectEvent event) {
 
-		getManagedBean().setMindate((Date) event.getObject());
+		getManagedBean().setSearchBiddingDateToMinDate((Date) event.getObject());
 
 	}
 
@@ -258,11 +257,8 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 					* ONE_MINUTE_IN_MILLIS);
 
 			getManagedBean().getBidAction().setNewEndDate(newEndDate);
-			Long remainingTime = getManagedBean().getRemainingTime();
-			Long hours = remainingTime / 60;
-			Long minutes = remainingTime % 60;
-			String duration = hours + ":" + minutes;
-			getManagedBean().setNewBidDuration(duration);
+			//getManagedBean().setNewBidDuration(durationCalculator(startDate, newEndDate));
+			 getManagedBean().setNewBidDuration(getManagedBean().getDuration());
 
 		} else if (getManagedBean().getBidAction().getActionType()
 				.equalsIgnoreCase("B")) {
@@ -323,16 +319,12 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 	private String durationCalculator(Date pausedTime, Date endDate) {
 
 		long durationInMills = endDate.getTime() - pausedTime.getTime();
-
-		/*
-		 * long time = TimeUnit.MINUTES.convert(durationInMills,
-		 * TimeUnit.MILLISECONDS); Long hours = time / 60; Long minutes = time %
-		 * 60;
-		 */
+		
 		long diffSeconds = durationInMills / 1000 % 60;
 		long diffMinutes = durationInMills / (60 * 1000) % 60;
 		long diffHours = durationInMills / (60 * 60 * 1000) % 24;
-		String duration = diffHours + ":" + diffMinutes + ":" + diffSeconds;
+		DecimalFormat durationFormat = new DecimalFormat("#00");
+		String duration = durationFormat.format(diffHours)+":"+durationFormat.format(diffMinutes)+":"+durationFormat.format(diffSeconds);
 		System.out.println("**** Value from duration calc *******" + duration);
 		return duration;
 	}
@@ -350,16 +342,10 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 
 	}
 
-	/**
-	 * Get Bidding Schedule Details by id.
-	 * 
-	 * @param reqDTO
-	 *            ( Long bidScheduleId - bidding schedule id (mandatory) )
-	 * @return BiddingResDTO( ScBidSchedule scBidSchedule, List<ScBidItem>
-	 *         scBidSchedule.scBidItems, List<ScBidPackage> bidPackages )
-	 */
-
+	
 	public String bidManagementAction(ScBidSchedule bid) {
+		
+		getManagedBean().setScheduledBid(bid);
 
 		System.out.println("****inside bidManagementAction()*****");
 
@@ -371,34 +357,19 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 			BiddingReqDTO reqDto = new BiddingReqDTO();
 
 			reqDto.setBidScheduleId(bid.getBidScheduleId());
-			System.out.println("*******bidScheduleId set in reqDTO is***** "
-					+ reqDto.getBidScheduleId());
-
 			BiddingResDTO resDto = biddingSO.retrieveBidScheduleDtl(reqDto);
 
 			if (resDto.isSuccessful()) {
-				System.out.println("******resDTO payload fetch seccess******");
-
 				getManagedBean().setScheduledBid(resDto.getScBidSchedule());
-				System.out
-						.println("**********retrieved bidScheduled id is************"
-								+ resDto.getScBidSchedule().getBidScheduleId());
-
+				if(resDto.getBidPackages()!= null){
 				getManagedBean().setBidPackages(resDto.getBidPackages());
-				// getManagedBean().getScheduledBid().getScBidSuppliers()
-
-				System.out
-						.println("*********retrieved BidPackages List size is********"
-								+ resDto.getBidPackages().size());
-				System.out
-						.println("*********retrieved ScBidSupplier List size is********"
-								+ resDto.getScBidSchedule().getScBidSuppliers()
-										.size());
-
-				System.out
-						.println("*********retrieved BidItems List size is**********"
-								+ resDto.getScBidSchedule().getScBidItems()
-										.size());
+				}else{ System.out.println("*****ScBidPackages is null*****");}
+				if(resDto.getScBidSchedule().getScBidItems()== null){
+					System.out.println("***** ScBidItems is null*****");
+				}else if(resDto.getScBidSchedule().getScBidItems().size()==0){
+					System.out.println("***** ScBidItems size is zero*****");
+				}
+				
 			} else {
 				System.out
 						.println("*********resDTO ScBidSchedule ScBidPackages ScBidItemsfetch failed********");
@@ -433,7 +404,7 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 		}
 		if (nonBumiPriceList != null && nonBumiPriceList.size() != 0) {
 			Collections.sort(nonBumiPriceList);
-			if (nonBumiPriceList.get(0).intValue() != 0) {
+			if (nonBumiPriceList.get(0)!= null && nonBumiPriceList.get(0).doubleValue() != 0.00d) {
 				getManagedBean().setLowestNonBumiOfferedPrice(
 						nonBumiPriceList.get(0));
 			} else {
@@ -502,7 +473,7 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 				System.out.println("bidItem object is null");
 			}
 
-			System.out.println("getting initial values for viewByItem Page");
+			System.out.println("*****getting initial values for viewByItem Page*****");
 
 			IBiddingSO biddingSO = null;
 
@@ -520,6 +491,13 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 				if (resDTO.isSuccessful()) {
 
 					getManagedBean().setScBidPriceList(resDTO.getBidPrices());
+					if (resDTO.getBidPrices() == null) {
+						System.out.println(" *****ScBidPriceList is null*****");
+					}
+					if (resDTO.getBidPrices().size() == 0) {
+						System.out.println(" *****ScBidPriceList is empty*****");
+					}
+					
 				} else {
 					System.out.println("resDTO ScBidPriceList fetch failed");
 				}
@@ -529,9 +507,9 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 			finally {
 				biddingSO = null;
 			}
-
+			if (getManagedBean().getScBidPriceList() != null) {
 			createBidItemPriceLinearModel(getManagedBean().getScBidPriceList());
-
+			}
 			/*
 			 * if (getManagedBean().getHistoryPriceLinearModel() == null) {
 			 * 
@@ -545,6 +523,7 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 			 */
 
 		}
+		//return null;
 
 	}
 
@@ -556,62 +535,39 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 		getManagedBean().setSupplierCode(
 				packageItem.getScBidSupplier().getSmSupplier().getSupplierId());
 
-		/*
-		 * System.out .println(
-		 * "********the itemId used to retrieve supplier Items is**********" +
-		 * packageItem.getScBidSupplier() .getScBidSupplierItems().get(0)
-		 * .getScBidItem().getBidItemId());
-		 */
-
-		System.out
-				.println("********the itemId used to retrieve supplier Items is**********"
-						+ packageItem.getScBidSupplier().getScBidSchedule()
-								.getScBidItems().get(0).getBidItemId());
-
 		IBiddingSO biddingSO = null;
 
 		try {
 			biddingSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IBiddingSO.class);
-
 			BiddingReqDTO reqDTO = new BiddingReqDTO();
-
-			reqDTO.setBidItemId(packageItem.getScBidSupplier()
-					.getScBidSupplierItems().get(0).getScBidItem()
-					.getBidItemId());
-
-			System.out.println("********the itemId is set to reqDTO**********");
+			reqDTO.setSupplierId(packageItem.getScBidSupplier().getSmSupplier().getSupplierId());
+			reqDTO.setBidScheduleId(getManagedBean().getScheduledBid().getBidScheduleId());
 
 			BiddingResDTO resDTO = biddingSO
-					.retrieveLastBidPricesByItem(reqDTO);
+					.retrieveSupplierBidPriceList(reqDTO);
 
 			System.out
-					.println("********retrieveLastBidPricesByItem(reqDTO)called**********");
+					.println("********retrieveSupplierBidPriceList(reqDTO)called**********");
 
 			if (resDTO.isSuccessful()) {
-
 				getManagedBean().setScBidPriceList(resDTO.getBidPrices());
-
 				System.out.println(" ScBidPriceList fetch success and size is"
 						+ getManagedBean().getScBidPriceList().size());
-
 			} else {
 				System.out.println("resDTO ScBidPriceList fetch failed");
 			}
-
 		}
-
 		finally {
 			biddingSO = null;
 		}
-
 	}
 
 	public void rowSelectListener(SelectEvent event) {
 
 		ScBidItem bidItem = (ScBidItem) event.getObject();
 
-		System.out.println("inside rowSelectListener method");
+		System.out.println("*****inside rowSelectListener method*****");
 
 		IBiddingSO biddingSO = null;
 

@@ -51,6 +51,7 @@ public class BiddingManagedBean extends BaseManagedBean {
 	private String searchBidTitle;
 	private Date searchBiddingDateFrom;
 	private Date searchBiddingDateTo;
+	private Date searchBiddingDateToMinDate;
 	
 	
 	private Long remainingTime;
@@ -119,6 +120,15 @@ public class BiddingManagedBean extends BaseManagedBean {
 	}
 	
 	
+	
+	public Date getSearchBiddingDateToMinDate() {
+		return searchBiddingDateToMinDate;
+	}
+
+	public void setSearchBiddingDateToMinDate(Date searchBiddingDateToMinDate) {
+		this.searchBiddingDateToMinDate = searchBiddingDateToMinDate;
+	}
+
 	/**
 	 * @return the remainingBidTime
 	 */
