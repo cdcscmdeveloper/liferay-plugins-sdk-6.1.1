@@ -122,8 +122,8 @@
 				<td style="width: 250px;"><p:outputLabel
 						value="#{lbl['lbl.sc.price.inquiry.delivery.term']}" /></td>
 				<td><p:inputText disabled="true"
-						value="#{purchaseInquiryBackingBean.managedBean.scPrInquiry.requestSupplierItem.supplierItemPrice.pricing.cmSupplierItem.maxOrder}"
-						size="25" /></td>
+						value="#{purchaseInquiryBackingBean.managedBean.scPrInquiry.requestSupplierItem.supplierItemPrice.pricing.cmSupplierItem.leadTime}"
+						size="25" > <f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" /></p:inputText></td>
 			</tr>
 			<tr>
 				<td style="width: 250px;"><p:outputLabel
@@ -239,7 +239,7 @@
 			value="#{purchaseInquiryBackingBean.managedBean.scPrInquiry.requestSupplierItem.supplierItemPrices}"
 			rowKey="#{supplierItemPrice.pricing.pricingId}" rowIndexVar="index">
 			<p:column headerText="#{lbl['lbl.sc.price.inquiry.zone']}" style="width:25%">
-					<h:outputText value="#{supplierItemPrice.tplSpecZone.zoneName}"/>
+					#{supplierItemPrice.tplSpecZone.zoneName}
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.price.inquiry.from.qty']}" style="width:10%">
