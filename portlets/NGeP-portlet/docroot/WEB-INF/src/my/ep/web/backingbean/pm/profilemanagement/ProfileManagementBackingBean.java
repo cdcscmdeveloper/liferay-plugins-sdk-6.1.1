@@ -47,6 +47,7 @@ import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
+import my.ep.persistence.entity.pm.common.PmLanguage;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmSalutation;
@@ -396,6 +397,16 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	/**
 	 * USER PROFILE - END
 	 */
+	
+	/**
+	 * get all language list
+	 * @return List<PmLanguage>
+	 */
+	public List<PmLanguage> getLanguageList() {
+		logger.info("getLanguageList");
+		return PmCommonUtil.retrieveLanguageObjs();
+	}
+	
 	
 	
 	/**
