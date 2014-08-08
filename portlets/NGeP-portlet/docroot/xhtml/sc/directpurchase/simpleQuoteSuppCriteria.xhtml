@@ -71,7 +71,7 @@
 								</p:column>
 								<p:column headerText="Action">
 									<p:commandLink
-										actionListener="#{simpleQuoteBackingBean.editLocation(locationTree,index)}"
+										actionListener="#{simpleQuoteBackingBean.editLocation(locationTree,index)}" disabled="#{!simpleQuoteBackingBean.managedBean.rnToSQFlag}"
 										process="@this" update="@([id$=locPopupPanel])"
 										oncomplete="locationPopup.show();">
 										<p:graphicImage library="ep/images/design" name="edit.png"
@@ -81,11 +81,12 @@
 							</p:dataTable>
 						</h:panelGrid>
 						<div align="right" style="width: 100%">
+						 <c:if test="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}">	
 							<p:commandButton value="#{lbl['lbl.ct.ded.btn.add']}"
 								process="@this ,locLevels" update="@([id$=locPopupPanel])"
 								partialSubmit="true" oncomplete="locationPopup.show();"
 								actionListener="#{simpleQuoteBackingBean.showLocationPopup}"
-								icon="ui-icon-add" />
+								icon="ui-icon-add"/>
 
 							<p:commandButton
 								value="#{lbl['lbl.sc.sq.supp.criteria.delete.btn']}"
@@ -93,6 +94,7 @@
 								partialSubmit="true"
 								actionListener="#{simpleQuoteBackingBean.deleteLocationTreeNode}"
 								icon="ui-icon-delete" />
+						 </c:if>
 						</div>
 					</p:panel>
 					<ui:include
@@ -125,6 +127,7 @@
 					</p:dataTable>
 
                  <div>
+                  <c:if test="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}">	
 					<table style="width: 100%">
 					  <tr><td class="TableFieldLeft" width="80%"></td>
 						 <td>
@@ -135,19 +138,20 @@
 										headerText="Business Nature" buttonLabel="Add"
 										buttonIcon="ui-icon-add" selectionMode="multiple"
 										saveObject="simpleQuoteBackingBean.managedBean.businessNatures"
-										conditionField="recordStatus^1" update="@form" />
+										conditionField="recordStatus^1" update="@form"/>
 								   </td>
 									<td>
 									  <p:commandButton
 										value="#{lbl['lbl.sc.sq.supp.criteria.delete.btn']}"
 										process="@this,byBusNatureDtl" partialSubmit="true"
 										action="#{simpleQuoteBackingBean.deleteBusinessNature}"
-										update="byBusNatureDtl" icon="ui-icon-delete" />
+										update="byBusNatureDtl" icon="ui-icon-delete"/>
 									</td>
 								</tr></table>
 							</td>
 						    </tr>
 						</table>
+						</c:if>
 				     </div>
 				     </p:panel>
 				</p:tab>
@@ -179,6 +183,7 @@
 					</p:dataTable>
 
 				 <div>
+				   <c:if test="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}">	
 					<table style="width: 100%">
 					  <tr><td class="TableFieldLeft" width="80%"></td>
 						 <td>
@@ -197,12 +202,13 @@
 										value="#{lbl['lbl.sc.sq.supp.criteria.delete.btn']}"
 										process="@this,supplierItemDt" partialSubmit="true"
 										action="#{simpleQuoteBackingBean.deleteSupplier}"
-										update="supplierItemDt" icon="ui-icon-delete" />
+										update="supplierItemDt" icon="ui-icon-delete"/>
 									</td>
 								</tr></table>
 							</td>
 						    </tr>
 						</table>
+						</c:if>
 						</div>
 						</p:panel>
 				 </p:tab>
@@ -235,6 +241,7 @@
 					</p:dataTable>
 
                  <div>
+                  <c:if test="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}">	
 					<table style="width: 100%">
 					  <tr><td class="TableFieldLeft" width="80%"></td>
 						 <td>
@@ -254,12 +261,13 @@
 										value="#{lbl['lbl.sc.sq.supp.criteria.delete.btn']}"
 										process="@this,govtSellerId" partialSubmit="true"
 										action="#{simpleQuoteBackingBean.deleteGovtSeller}"
-										update="govtSellerId" icon="ui-icon-delete" />
+										update="govtSellerId" icon="ui-icon-delete"/>
 									</td>
 								</tr></table>
 							</td>
 						    </tr>
 						</table>
+					</c:if>
 					 </div>
                </p:panel>
 				</p:tab>
@@ -295,6 +303,7 @@
 					</p:dataTable>
 
                     <div>
+                    <c:if test="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}">	
 					<table style="width: 100%">
 					  <tr><td class="TableFieldLeft" width="80%"></td>
 						 <td>
@@ -312,12 +321,12 @@
 										value="#{lbl['lbl.sc.sq.supp.criteria.delete.btn']}"
 										process="@this,bypanelItemId" partialSubmit="true"
 										action="#{simpleQuoteBackingBean.deletePanelSupplier}"
-										update="bypanelItemId" icon="ui-icon-delete" />
+										update="bypanelItemId" icon="ui-icon-delete" rendered="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}"/>
 									</td>
 								</tr></table>
 							</td>
 						    </tr>
-						</table>
+						</table></c:if>
 					 </div>
 					 </p:panel>
 				</p:tab>

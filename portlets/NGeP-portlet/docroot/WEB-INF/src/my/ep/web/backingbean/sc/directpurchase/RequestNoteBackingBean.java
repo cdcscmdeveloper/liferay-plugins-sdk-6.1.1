@@ -14,8 +14,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
@@ -61,7 +59,6 @@ import my.ep.dto.sc.directpurchase.PrInquiryResDTO;
 import my.ep.dto.sc.directpurchase.PurchaseInDefaultReqDTO;
 import my.ep.dto.sc.directpurchase.PurchaseInDefaultResDTO;
 import my.ep.dto.sc.directpurchase.QuoteReqDTO;
-import my.ep.dto.sc.directpurchase.QuoteResDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteResDTO;
 import my.ep.exception.EpException;
@@ -774,7 +771,6 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 	/**
 	 * get AddtoCart details in Add To Cart PopUp
 	 */
-	@TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	public void addToCart(Long cmSupplierItemId , boolean cart) {
 		log.info("addToCart");
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT, ICatalogueSO.class);
@@ -1378,6 +1374,9 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 					getManagedBean().setRequestNoteDtls(reqNoteDtl);
 				}
 			}
+			
+		} else {
+			throw new EpException("Please select At least one Item");
 		}
 		
 		// update item details data table
@@ -1698,9 +1697,11 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 					}
 				}	
 				if(states.size() > 0 || divisions.size() > 0 || districts.size() > 0){
+					if(simpleQuoteBackingBean.getManagedBean().getLocationTrees() == null || simpleQuoteBackingBean.getManagedBean().getLocationTrees().isEmpty()){
 					simpleQuoteBackingBean.getManagedBean().getLocationTrees().add(
 							LocationSingleton.getInstance().buildLocationTree(null, states,
 									districts, divisions, null,TplSpecZoneLoc.class));
+					}
 				}
 				getManagedBean().getRequestNote().setPmOrgProfile(scQuote.getRequestNote().getPmOrgProfile());
 				// location level by default - district 

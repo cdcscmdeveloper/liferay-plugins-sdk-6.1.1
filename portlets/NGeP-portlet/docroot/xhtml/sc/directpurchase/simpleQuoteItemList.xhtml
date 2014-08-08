@@ -15,7 +15,7 @@
 		<p:commandButton value="Clone" style="float:right;"
 		   action="#{simpleQuoteBackingBean.cloneAction(ParameterConst.itemListProduct)}"
 			icon="ui-icon-clone" process="@this"
-			update="@([id$=cloneItemSpecId])"
+			update="@([id$=cloneItemSpecId])" rendered="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}"
 			oncomplete="cloneItemSpec.show();return false;" partialSubmit="true">
 		</p:commandButton>
     </h:panelGroup>
@@ -29,7 +29,7 @@
 		 <p:commandButton value="Clone" style="float:right;"
 		     action="#{simpleQuoteBackingBean.cloneAction(ParameterConst.itemListService)}"
 			icon="ui-icon-clone" process="@this"
-			update="@([id$=cloneItemSpecId])"
+			update="@([id$=cloneItemSpecId])" rendered="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}"
 			oncomplete="cloneItemSpec.show();return false;" partialSubmit="true">
 		</p:commandButton>
       </h:panelGroup>

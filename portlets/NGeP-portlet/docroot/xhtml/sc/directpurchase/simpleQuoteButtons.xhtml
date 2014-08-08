@@ -16,18 +16,16 @@
 				<p:commandButton value="#{lbl['lbl.sc.common.save']}"
 					icon="ui-icon-save"
 					action="#{simpleQuoteBackingBean.saveSimpleQuote('')}"
-					process="@all" update="@form" />
+					process="@all" update="@form" rendered="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}"/>
 
 				<p:commandButton value="#{lbl['lbl.sc.common.submit']}"
 					action="#{simpleQuoteBackingBean.submitSimpleQuote('')}"
-					icon="ui-icon-submit" process="@all" update="@form" />
+					icon="ui-icon-submit" process="@all" update="@form" rendered="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}"/>
 
 				<p:commandButton value="#{lbl['lbl.sc.common.cancel']}"
 					action="#{simpleQuoteBackingBean.cancel}" style="float:right;"
-					icon="ui-icon-cancel" process="@this" partialSubmit="true" />
-
-
-			</c:if>
+					icon="ui-icon-cancel" process="@this" partialSubmit="true"  rendered="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}"/>
+           </c:if>
 		</div>
 
 		<div>
@@ -35,16 +33,16 @@
 			<table style="width:100%">
 					<tr>
 						<td align="right">
-						   <c:if test="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending Submission'}">
+						   <c:if test="#{!simpleQuoteBackingBean.managedBean.rnToSQFlag}">
 								<p:commandButton immediate="true"
 									value="#{lbl['lbl.sc.action.back.to.search.catalogue']}"
 									icon="ui-icon-back" partialSubmit="true" process="@this"
-									style="float:left;"
+									style="float:left;" rendered="#{!simpleQuoteBackingBean.managedBean.rnToSQFlag}"
 									action="#{simpleQuoteBackingBean.backToPervious}" />
 							</c:if>
 						
 							<!-- to view simple Quote from the request note header  Icon    -->
-                            <c:if test="#{simpleQuoteBackingBean.managedBean.pageNavToRequestNote eq null || simpleQuoteBackingBean.managedBean.pageNavToRequestNote eq ''}">	
+                            <c:if test="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}">	
 						       <c:if test="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending Approval' 
 									  or simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending Submission'}">
 								<p:commandButton value="#{lbl['lbl.sc.common.save']}"

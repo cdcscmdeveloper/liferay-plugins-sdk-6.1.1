@@ -9,8 +9,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
@@ -113,7 +111,6 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 	  * pricingDetails for getting pricing details in Purchase Inquiry
 	 * @return String
 	  */
-    @TransactionAttribute(TransactionAttributeType.SUPPORTS)
 	  public String prInquiryAction(CmSupplierItem  cmSupplierItem){
 		  debugLogger("prInquiryAction");
 		  ScRequestSupplierItem requestSupplierItem = getManagedBean().getScRequestSupplierItem();
