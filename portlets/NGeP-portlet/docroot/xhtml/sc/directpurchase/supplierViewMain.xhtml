@@ -9,69 +9,53 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
     <ui:define name="contentSection">
     <p:messages showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
    <!--  <ac:title value="#{lbl['lbl.sc.sq.title']}"/> -->
-    
-    	  <div align="right">
-	    <c:if test="#{simpleQuoteBackingBean.managedBean.taskId eq null}">
-				<p:commandButton value="#{lbl['lbl.sc.common.submit']}" update="@form"
-					icon="ui-icon-submit"  action="#{simpleQuoteBackingBean.supplierSubmit}"/>
-	    </c:if>
-	    </div>
+
 		<div align="right">
-	     <table>
-			<tr>
-				<td align="right"><c:if
-						test="#{simpleQuoteBackingBean.managedBean.taskId ne null}">
-						<c:forEach items="#{simpleQuoteBackingBean.managedBean.outComes}"
-						var="action">
-
-						<c:if test="${action == 'SUBMIT'}">
-							<ui:param name="iconVar" value="ui-icon-submit" />
-
-						</c:if>
-
-						<c:if test="${action == 'REJECT'}">
-							<ui:param name="iconVar" value="ui-icon-reject" />
-
-						</c:if>
-						<c:if test="${action == 'REVISE'}">
-							<ui:param name="iconVar" value="ui-icon-revise" />
-
-						</c:if>
-						<c:if test="${action == 'APPROVE'}">
-							<ui:param name="iconVar" value="ui-icon-approve" />
-
-						</c:if>
-						<c:if test="${action == 'ACCEPT'}">
-							<ui:param name="iconVar" value="ui-icon-approve" />
-
-						</c:if>
-						<p:commandButton value="#{action}" process="@all"
-								styleClass="ui-button" icon="#{iconVar}"
-								actionListener="#{simpleQuoteBackingBean.supplierSubmit}" />
-						</c:forEach>
-					</c:if></td>
-			</tr>
-		</table>
-     </div>
-     <p:spacer height="5px"></p:spacer>	
-	 <div class="header-info">
-			<h:panelGrid border="0" width="100%" columns="6" id="supplierViewId">
-				<h:outputLabel
-					value="#{lbl['lbl.sc.sq.supp.view.header.simple.quote.no']}" />
-				<p:inputText disabled="true"
-					value="#{simpleQuoteBackingBean.managedBean.scQuote.quoteNo}" />
-
-				<h:outputLabel value="#{lbl['lbl.sc.sq.supp.view.header.ptj.name']}" />
-				<p:inputText disabled="true" size="45"
-					value="#{simpleQuoteBackingBean.managedBean.scQuote.requestNote.pmOrgProfile.orgName}" />
-
-				<h:outputLabel value="#{lbl['lbl.sc.sq.supp.view.header.req.date']}" />
-				<p:calendar  pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" value="#{simpleQuoteBackingBean.managedBean.scQuote.createdDate}" disabled="true"/>
-
-			</h:panelGrid>
+			<c:if test="#{simpleQuoteBackingBean.managedBean.taskId eq null}">
+				<p:commandButton value="#{lbl['lbl.sc.common.submit']}"
+					update="@form" icon="ui-icon-submit"
+					action="#{simpleQuoteBackingBean.supplierSubmit}" />
+			</c:if>
 		</div>
-	
-	<ui:include src="/xhtml/sc/directpurchase/supplierView.xhtml" />
+		<div align="right">
+			<table>
+				<tr>
+					<td align="right"><c:if
+							test="#{simpleQuoteBackingBean.managedBean.taskId ne null}">
+							<c:forEach items="#{simpleQuoteBackingBean.managedBean.outComes}"
+								var="action">
+
+								<c:if test="${action == 'SUBMIT'}">
+									<ui:param name="iconVar" value="ui-icon-submit" />
+
+								</c:if>
+
+								<c:if test="${action == 'REJECT'}">
+									<ui:param name="iconVar" value="ui-icon-reject" />
+
+								</c:if>
+								<c:if test="${action == 'REVISE'}">
+									<ui:param name="iconVar" value="ui-icon-revise" />
+
+								</c:if>
+								<c:if test="${action == 'APPROVE'}">
+									<ui:param name="iconVar" value="ui-icon-approve" />
+
+								</c:if>
+								<c:if test="${action == 'ACCEPT'}">
+									<ui:param name="iconVar" value="ui-icon-approve" />
+
+								</c:if>
+								<p:commandButton value="#{action}" process="@all"
+									styleClass="ui-button" icon="#{iconVar}"
+									actionListener="#{simpleQuoteBackingBean.supplierSubmit}" />
+							</c:forEach>
+						</c:if></td>
+				</tr>
+			</table>
+		</div>
+
+		<ui:include src="/xhtml/sc/directpurchase/supplierView.xhtml" />
 		
 </ui:define>
 </ui:composition>

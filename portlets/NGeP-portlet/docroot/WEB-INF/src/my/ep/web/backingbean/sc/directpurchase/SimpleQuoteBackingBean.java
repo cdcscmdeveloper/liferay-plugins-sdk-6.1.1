@@ -106,6 +106,7 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
+import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.sc.directpurchase.SimpleQuoteManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -296,7 +297,6 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 		 if(scQuote.getProcurementType() == null){
 			 scQuote = checkGovtSeller(null, scQuote);
 		 }
-
 		
 		scQuote.setMultipleQuote(Boolean.FALSE);
 		scQuote.setQuoteNo(quoteSO.generateQuoteNo());
@@ -2220,7 +2220,12 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 				 // clear SQ data
 				 super.renewSesionObject();
 				FacesContext fc = FacesContext.getCurrentInstance();
-				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "supplerView");	
+				if(scQuote.getMultipleQuote().equals(Boolean.TRUE)){
+					fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "supplerView");	
+				} else{
+					fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);	
+				}
+				
 			} else {
 				throw new EpException("Failed.");
 			}
