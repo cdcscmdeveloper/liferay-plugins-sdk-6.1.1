@@ -110,6 +110,9 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
             render.layout();
             render.createPDF(os);
         }
+        
+        os.flush();
+		os.close();
 	}
 	
 	private void debugLogger(Object message) {
