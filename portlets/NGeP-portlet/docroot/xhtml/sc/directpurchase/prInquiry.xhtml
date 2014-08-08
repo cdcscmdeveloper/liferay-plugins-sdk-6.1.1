@@ -121,9 +121,9 @@
 			<tr>
 				<td style="width: 250px;"><p:outputLabel
 						value="#{lbl['lbl.sc.price.inquiry.delivery.term']}" /></td>
-				<td><p:inputText disabled="true"
+				<td><p:inputText disabled="true"  style="text-align:right;"
 						value="#{purchaseInquiryBackingBean.managedBean.scPrInquiry.requestSupplierItem.supplierItemPrice.pricing.cmSupplierItem.leadTime}"
-						size="25" > <f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" /></p:inputText></td>
+						size="25"> </p:inputText></td>
 			</tr>
 			<tr>
 				<td style="width: 250px;"><p:outputLabel
