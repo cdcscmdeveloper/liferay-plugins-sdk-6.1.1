@@ -23,7 +23,8 @@
 			<p:inputText size="30" />
 													
 		    <h:outputLabel value="#{lbl['lbl.pm.search.status']}"></h:outputLabel>
-		       <p:selectOneMenu style="width:205px" >    
+		       <p:selectOneMenu style="width:205px" value="#{educationBackingBean.managedBean.status}" > 
+     	      	 <f:selectItems value="#{educationBackingBean.getEducationStatusList()}"></f:selectItems> 		          
               </p:selectOneMenu> 
               
 			<h:outputLabel value="#{lbl['lbl.pm.ef.subcatdiv']}"></h:outputLabel>

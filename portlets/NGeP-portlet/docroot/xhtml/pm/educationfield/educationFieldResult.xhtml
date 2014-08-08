@@ -34,7 +34,7 @@
 				var="educationList" rowIndexVar="index" lazy="true">	
 	   <ac:paginator for="educationSR" />
 		
-       <p:column headerText="#{lbl['lbl.pm.ef.code']}" style="width:15%;"> 
+       <p:column headerText="#{lbl['lbl.pm.ef.code']}" style="width:20%;"> 
 		<h:outputText value="#{educationList.fieldCode}" />      
        </p:column>
        
@@ -42,12 +42,8 @@
 		<h:outputText value="#{educationList.fieldName}" style="width:60%;" />
        </p:column> 
        
-        <p:column headerText="#{lbl['lbl.pm.ef.category']}" style="width:10%;"> 
-		<h:outputText />
-       </p:column>             
-     
-       <p:column headerText="#{lbl['lbl.pm.search.status']}" style="width:10%;"> 
-                 
+       <p:column headerText="#{lbl['lbl.pm.search.status']}" style="width:15%;"> 
+     	 #{(educationList.recordStatusFlg==1)? lbl['lbl.pm.active'] : lbl['lbl.pm.inactive']}                 
        </p:column >
         
     	<p:column headerText="#{lbl['lbl.pm.profiles.search.result.action']}" style="width:5%;">

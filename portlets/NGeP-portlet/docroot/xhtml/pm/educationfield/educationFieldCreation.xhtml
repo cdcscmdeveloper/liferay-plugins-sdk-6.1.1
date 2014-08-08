@@ -22,27 +22,31 @@
 			<p:outputLabel value="*" styleClass="mandatory" /></td>
 		<td><p:inputText value="#{educationBackingBean.managedBean.pmEduField.fieldName}" size="50" /></td>
 	  </tr>		  
+		<p:spacer height="5"></p:spacer>
 	   <tr> 
 		<td><p:outputLabel value="#{lbl['lbl.pm.search.status']}" /></td>
-     	<td><p:selectOneMenu style="width:178px;margin-bottom:5px;"> 
+     	<td><p:selectOneMenu style="width:178px;margin-bottom:5px;"
+     			value="#{educationBackingBean.managedBean.pmEduField.recordStatusFlg}" >
+     	       <f:selectItems value="#{educationBackingBean.getEducationStatusList()}"></f:selectItems> 	 	    	
   	        </p:selectOneMenu></td>				
-	    </tr>
+	    </tr>	    	    
 	</table>
+	<p:spacer height="50"></p:spacer>	
    </p:panel>
    
 	<p:panel header="EDUCATION FIELD RESTRICTION" toggleable="true">
 	<ac:lovPopup />
-	<p:dataTable id="educationfieldres" var="eduFieldRes">
-
- 	  <ac:paginator /> 
-	   <p:column style="width:2%;text-align:center;" /> 
+	<p:dataTable 
+		value="educationBackingBean.managedBean.categoryList"
+		id="educationfieldres" var="eduFieldRes">
+	 <ac:paginator for="educationfieldres" />
 		  	  	         
        <p:column headerText="#{lbl['lbl.pm.ef.catcode']}" > 
-          <h:outputText />
+	
        </p:column>  
        
        <p:column headerText="#{lbl['lbl.pm.ef.catname']}" > 
-          <h:outputText />
+
        </p:column> 
 
        <p:column headerText="#{lbl['lbl.pm.search.status']}" > 
@@ -60,7 +64,7 @@
 				<table>
 				    <tr>
 				    <td class="TableFieldLeft">
-				      <ac:lov id="supplier" lovId="PM_CATEGORY_L3"
+				      <ac:lov id="educate" lovId="PM_CATEGORY_L3"
             		     headerText="Category No Lov" buttonLabel="Add"
 	       				 buttonIcon="ui-icon-add" selectionMode="multiple"
 	        			 saveObject="educationBackingBean.managedBean.categoryList"
