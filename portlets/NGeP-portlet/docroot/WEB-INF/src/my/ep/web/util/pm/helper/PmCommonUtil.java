@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
@@ -14,11 +16,16 @@ import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.division.IDivisionSO;
+import my.ep.biz.service.pm.common.language.ILanguageSO;
+import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.salutation.ISalutationSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.ProfileManagementConst;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.city.CityReqDTO;
@@ -29,16 +36,21 @@ import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
 import my.ep.dto.pm.common.division.DivisionReqDTO;
 import my.ep.dto.pm.common.division.DivisionResDTO;
+import my.ep.dto.pm.common.language.LanguageResDTO;
+import my.ep.dto.pm.common.parameter.ParameterReqDTO;
+import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.salutation.SalutationResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserNotification;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
+import my.ep.persistence.entity.pm.common.PmLanguage;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.persistence.entity.pm.common.PmState;
@@ -63,6 +75,27 @@ public class PmCommonUtil {
 		pmAddress.setPmDivision(new PmDivision());
 		return pmAddress;
 	}
+	
+	/**
+	 * initialize a default notifications
+	 * @param pmUser
+	 */
+	
+	public static void generateDefaultPmUserNotifications(PmUser pmUser, String languageCode){
+		pmUser.setPmUserNotifications(new ArrayList<PmUserNotification>());
+		IParameterSO parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+		ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
+		parameterReqDTO.setParameterType(ParameterTypeConst.NOTIFICATION_TYPE);
+		parameterReqDTO.setLanguageCode(languageCode);
+		ParameterResDTO parameterResDTO = parameterSO.retrieveParameterDescListByType(parameterReqDTO);
+		List <PmParameterDesc> pmParameterDescs = parameterResDTO.getParameterDescList();
+		for(PmParameterDesc pmParameterDesc: pmParameterDescs){
+			PmUserNotification notification = new PmUserNotification();
+			notification.setPreferred(ParameterConst.NOTIFICATION_SMS.equals(pmParameterDesc.getPmParameter().getParameterCode())? false : true);
+			notification.setNotifyMode(pmParameterDesc.getPmParameter().getParameterCode());	
+			pmUser.addPmUserNotifications(notification);
+		}
+	}
 	/**
 	 * get YES & NO options //TODO: to load dynamically
 	 * @return SelectItem[] 
@@ -74,6 +107,30 @@ public class PmCommonUtil {
 	    return items;
 	}
 	
+	/**
+	 * retrieve all languages from pm
+	 * @param paramType
+	 * @return
+	 */
+	public static List <PmLanguage> retrieveLanguageObjs() {
+		log.info("retrieveLanguageObjs");
+		List<PmLanguage> languages = new ArrayList<PmLanguage>();
+		try {
+			ILanguageSO languageSO = (ILanguageSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ILanguageSO.class);
+			LanguageResDTO languagecResDTO = languageSO.retrieveLanguages();
+			languages = languagecResDTO.getLanguageList();
+				
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null, 
+					new FacesMessage(
+							FacesMessage.SEVERITY_ERROR,
+							e.toString(),
+							e.getMessage()));
+		}
+		return languages;
+	}
 
 	/**
 	 * get YES & NO options //TODO: to load dynamically
@@ -109,7 +166,7 @@ public class PmCommonUtil {
 		CountryReqDTO reqDTO = new CountryReqDTO();
 		reqDTO.setCountryCode(countryCode);
 		
-		ICountrySO reqSO = (ICountrySO) BusinessDelegate.getInstance().getServiceObject("pm",ICountrySO.class);
+		ICountrySO reqSO = (ICountrySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,ICountrySO.class);
 		CountryResDTO resDTO = reqSO.retrieveCountryByCode(reqDTO);
 		
 		return resDTO.getPmCountry();

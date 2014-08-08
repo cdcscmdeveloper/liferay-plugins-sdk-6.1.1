@@ -39,6 +39,7 @@ import my.ep.persistence.entity.pm.authorization.PmRole;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
+import my.ep.persistence.entity.pm.authorization.PmUserPreference;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
@@ -190,12 +191,27 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	 */
 	private void loadUserProfile(Long id){
 		try {
+			if(id==null){
+				throw new EpException("Please login."); //TODO
+			}
 			//load user
 			PmUser pmUser = PmCommonUtil.retrieveUserById(id);
-			this.getManagedBean().setSelectedUser(pmUser);
 			if (pmUser!=null && pmUser.getPmAddressTypes() != null) {
 				populateUserAddress(pmUser);
 			}
+			
+			//load preference
+			PmCommonUtil.generateDefaultPmUserNotifications(pmUser, getFacesScopes().getUserLocale().getLanguage());
+			if(pmUser.getPmUserPreference()==null){
+				pmUser.setPmUserPreference(new PmUserPreference());
+			}
+			
+			//load password
+			pmUser.setPassword(null);
+			pmUser.setOldPassword(null);
+			pmUser.setConfirmPassword(null);
+			
+			this.getManagedBean().setSelectedUser(pmUser);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new EpException("Unable to view User Profile.", new String[]{e.getMessage()}); //TODO exception
@@ -207,6 +223,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	 */
 	private void initialUserProfile(){
 		logger.info("initialUserProfile");
+		//load user attributes
 		PmCountry defaultCountry = PmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
 		PmUser pmUser = new PmUser();
 		pmUser.setSalutationCode(new PmSalutation());
@@ -216,8 +233,22 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		pmUser.setPMP(false);
 		pmUser.setPmUserOrgs(new ArrayList<PmUserOrg>());
 		pmUser.setOrgTypeCode(new PmParameter());
-		this.getManagedBean().setSelectedUser(pmUser);
+		
+		//initial preference
+		PmCommonUtil.generateDefaultPmUserNotifications(pmUser, getFacesScopes().getUserLocale().getLanguage());
+		if(pmUser.getPmUserPreference()==null){
+			pmUser.setPmUserPreference(new PmUserPreference());
+		}
+		
+		//initial address
 		this.getManagedBean().setUserAddress(PmCommonUtil.getNewPmAddress());
+		
+		//load password
+		pmUser.setPassword(null);
+		pmUser.setOldPassword(null);
+		pmUser.setConfirmPassword(null);
+		
+		this.getManagedBean().setSelectedUser(pmUser);
 		System.out.println("login " + this.getManagedBean().getSelectedUser().getLoginId());
 	}
 	

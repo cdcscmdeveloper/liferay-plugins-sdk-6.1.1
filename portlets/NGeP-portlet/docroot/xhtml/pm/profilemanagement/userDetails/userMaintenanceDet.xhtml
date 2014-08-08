@@ -15,7 +15,11 @@
 		</p:tab>
 		<!-- Personalization -->	
 		<p:tab title="#{lbl['lbl.pm.profiles.tab.name.pl']}" >	
-			<ui:include src="/xhtml/pm/profilemanagement/userUpdatePreference.xhtml"/>	
+			<ui:include src="/xhtml/pm/profilemanagement/userDetails/userPreference.xhtml"/>	
+		</p:tab>
+		<!-- Change Password -->	
+		<p:tab title="#{lbl['lbl.pm.profiles.tab.name.cp']}" rendered="#{!profileManagementBackingBean.managedBean.selectedUser.brandNew}">
+			<ui:include src="/xhtml/pm/profilemanagement/userDetails/userChangePassword.xhtml"/>
 		</p:tab>
 	</p:tabView>
 </ui:composition>

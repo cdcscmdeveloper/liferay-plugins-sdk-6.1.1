@@ -20,11 +20,13 @@ import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserPreference;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
+import my.ep.persistence.entity.pm.common.PmLanguage;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -60,6 +62,14 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		}
 		logger.info(message);
 	}
+	/**
+	 * get faces scopes
+	 * @return FacesScopes
+	 */
+	private FacesScopes getFacesScopes(){
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes;
+	}
 
 	/**
 	 * load clean view for my account
@@ -84,13 +94,30 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	 * @param id
 	 */
 	private void loadUserProfile(Long id){
+		logger.info("loadUserProfile");
 		try {
+			if(id==null){
+				throw new EpException("Please login."); //TODO
+			}
 			//load user
 			PmUser pmUser = PmCommonUtil.retrieveUserById(id);
-			this.getManagedBean().setSelectedUser(pmUser);
+			
+			//load address
 			if (pmUser!=null && pmUser.getPmAddressTypes() != null) {
 				populateUserAddress(pmUser);
 			}
+			//load preference
+			PmCommonUtil.generateDefaultPmUserNotifications(pmUser, getFacesScopes().getUserLocale().getLanguage());
+			if(pmUser.getPmUserPreference()==null){
+				pmUser.setPmUserPreference(new PmUserPreference());
+			}
+			
+			//load password
+			pmUser.setPassword(null);
+			pmUser.setOldPassword(null);
+			pmUser.setConfirmPassword(null);
+			
+			this.getManagedBean().setSelectedUser(pmUser);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new EpException("Unable to view User Profile.", new String[]{e.getMessage()}); //TODO exception
@@ -228,6 +255,15 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		}
 	}
 
+	/**
+	 * get all language list
+	 * @return List<PmLanguage>
+	 */
+	public List<PmLanguage> getLanguageList() {
+		logger.info("getLanguageList");
+		return PmCommonUtil.retrieveLanguageObjs();
+	}
+	
 
 	/**
 	 * Method to update the user details
@@ -282,23 +318,16 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	}
 
 	public void handleFileUpload(FileUploadEvent event) {
-		System.out.println("handleFileUpload - start");
-		UploadedFile item = event.getFile();
-		FacesMessage msg = new FacesMessage("Succesful", event.getFile()
-				.getFileName() + " is uploaded.");
-		FacesContext.getCurrentInstance().addMessage(null, msg);
-		
-		this.getManagedBean().getSelectedUser().setPortrait(item.getContents());
-		System.out.println("handleFileUpload - end");
-	}
-
-	public void handleFileUploadTest(FileUploadEvent event) {
 		System.out.println("handleFileUploadTest - start");
 		UploadedFile item = event.getFile();
 
+		System.out.println("login ID: " + this.getManagedBean().getSelectedUser().getLoginId());
+		System.out.println("username: " + this.getManagedBean().getSelectedUser().getUserName());
 
 		this.getManagedBean().getSelectedUser().setPortrait(item.getContents());
 		
+		System.out.println("login ID: " + this.getManagedBean().getSelectedUser().getLoginId());
+		System.out.println("username: " + this.getManagedBean().getSelectedUser().getUserName());
 		IUserSO userSO = null;
 		try {
 			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
@@ -333,4 +362,5 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		System.out.println("handleFileUploadTest - end");
 	}
 
+	
 }

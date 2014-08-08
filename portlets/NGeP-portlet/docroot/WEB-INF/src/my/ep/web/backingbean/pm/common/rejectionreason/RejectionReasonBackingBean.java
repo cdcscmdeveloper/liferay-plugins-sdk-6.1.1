@@ -20,12 +20,10 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.service.pm.common.language.ILanguageSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
-import my.ep.dto.pm.common.language.LanguageResDTO;
 import my.ep.dto.pm.common.reason.ReasonReqDTO;
 import my.ep.dto.pm.common.reason.ReasonResDTO;
 import my.ep.exception.EpException;
@@ -47,6 +45,7 @@ import my.ep.web.managedbean.pm.common.rejectionreason.RejectionReasonManagedBea
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
+import my.ep.web.util.pm.helper.PmCommonUtil;
 
 import org.apache.log4j.Logger;
 /**
@@ -147,7 +146,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		pmReason.setReasonCategoryCode(new PmParameter());
 		
 		//set languages into description
-		List<PmLanguage> languages = retrieveLanguageObjs();
+		List<PmLanguage> languages = PmCommonUtil.retrieveLanguageObjs();
 		pmReason.setPmReasonDescs(new ArrayList<PmReasonDesc>());
 		for(PmLanguage language: languages){
 			PmReasonDesc pmReasonDesc = new PmReasonDesc();
@@ -175,7 +174,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 					(pmReason.isByAppType() || pmReason.isByRegType() || pmReason.isBySupplierType()) 
 					? true : false);
 			//add all languages to description list
-			List <PmLanguage> languagues = retrieveLanguageObjs();
+			List <PmLanguage> languagues = PmCommonUtil.retrieveLanguageObjs();
 			if(pmReason.getPmReasonDescs().size() != languagues.size()){
 				for(PmLanguage langauge:languagues){
 					boolean isRequired = true;
@@ -764,29 +763,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	}
 
 	/**
-	 * retrieve all languages from pm
-	 * @param paramType
-	 * @return
-	 */
-	private List <PmLanguage> retrieveLanguageObjs() {
-		log.info("retrieveLanguageObjs");
-		List<PmLanguage> languages = new ArrayList<PmLanguage>();
-		try {
-			ILanguageSO languageSO = (ILanguageSO) BusinessDelegate.getInstance().getServiceObject("pm", ILanguageSO.class);
-			LanguageResDTO languagecResDTO = languageSO.retrieveLanguages();
-			languages = languagecResDTO.getLanguageList();
-				
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(
-					null, 
-					new FacesMessage(
-							FacesMessage.SEVERITY_ERROR,
-							e.toString(),
-							e.getMessage()));
-		}
-		return languages;
-	}
+
 	
 	/**
 	 * retrieve parameter desc obj list by param type
