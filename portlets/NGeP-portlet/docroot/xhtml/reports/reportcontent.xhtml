@@ -6,17 +6,17 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-<h:panelGroup id="reportCategoryViewID">
+<h:panelGroup id="reportCategoryViewID" border="0" cellpadding="0" cellspacing="0" >
  <p:messages id="rptmessages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />		
-		<table style="width: 100%" toggleable="true" >
+		<table style="width: 100%" border="0" cellpadding="0" cellspacing="0" >
 			<tr>
 				<td>
 				<p:panel style="width: 100%;" header="GENERATE REPORT"
-						toggleable="true" id="rptModuleId">
-						 <table style="margin-top: 10px; width: 100%;">
+						toggleable="true" id="rptModuleId"  border="0" cellpadding="0" cellspacing="0">
+						 <table style="margin-top: 10px; width: 100%;" border="0" cellpadding="0" cellspacing="0">
 						  <tr>
 						    <td width="100%">
-						    <h:panelGrid id="rptModule" columns="4"  style="margin-bottom:5px;width:85%;">
+						    <h:panelGrid id="rptModule" columns="4"  style="margin-bottom:5px;width:85%;" border="0" cellpadding="0" cellspacing="0">
 						    <p:outputLabel value="#{lbl['lbl.rpt.module']}" style="margin-bottom:5px;width:115px;"/>
 						    <p:selectOneMenu  value="#{reportBackingBean.managedBean.moduleName}" style="margin-bottom:5px;width:300px;">
 								<f:selectItem itemLabel="--SelectOne--" itemValue="#{null}"></f:selectItem>
@@ -43,10 +43,10 @@
 						  </table>					
 					
 		
-						 <table style="margin-top: 10px; width: 100%;">
+						 <table style="margin-top: 10px; width: 100%;" border="0" cellpadding="0" cellspacing="0" >
 						  <tr>
 						    <td width="100%">
-							    <h:panelGrid id="rptCriteria" columns="4" style="margin-bottom:5px;width:85%;">
+							    <h:panelGrid id="rptCriteria" columns="4" style="margin-bottom:5px;width:85%;" border="0" cellpadding="0" cellspacing="0">
 							    
 							        <c:if test="#{reportBackingBean.managedBean.rptGenBean.quotationIdView}" >			
 									<p:outputLabel value="#{lbl['lbl.rpt.qtId']}"   style="margin-top:5px;width:115px;"/>
@@ -255,10 +255,10 @@
 					</table>
 						<div>
 						<c:if test="#{reportBackingBean.managedBean.rptGenBean.fromDateView}">
-						<TABLE style="width:45%;">
+						<TABLE style="width:45%;" border="0" cellpadding="0" cellspacing="0">
 							<TR>
 								<TD>
-									<p:outputLabel value="#{lbl['lbl.rpt.dtRange']}" style="margin-left:0px;width:115px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.dtRange']}" style="margin-left:20px;width:115px;"/>
 								</TD>
 								<TD>
 									<p:calendar showOn="button" value="#{reportBackingBean.fromDate}" 
@@ -275,8 +275,9 @@
 						</c:if>	
 		            </div>
 		            <div align="right">
-				    
-					<p:commandButton value="Generate"  process="@all" action="#{reportBackingBean.generateReport}" icon="ui-icon-agree" update="@all" />
+		            
+				    <h:commandLink  target="_blank" action="#{reportBackingBean.generateReport}" value="Generate" />
+					<p:commandButton  value="Generate"  process="@all" action="#{reportBackingBean.generateReport}" icon="ui-icon-agree" update="@all" />
 					<p:commandButton value="Reset"  process="@all" action="#{reportBackingBean.resetReportForm}" icon="ui-icon-reset" update="@all" />
 				   </div>
             </p:panel>
