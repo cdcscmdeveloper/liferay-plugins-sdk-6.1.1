@@ -1101,9 +1101,14 @@ public class SpecificationBackingBean extends
 
 			if (QTConstants.EVALUATION_ONE_TIER
 					.equalsIgnoreCase(deliveryAddress.getEvaluationType())) {
+				if ("PS".equalsIgnoreCase(this.getManagedBean()
+						.getFulfilmentType())
+						|| "PA".equalsIgnoreCase(this.getManagedBean()
+								.getFulfilmentType())) {
 
-				specReqDTO.setScQt(deliveryAddress);
-				specSo.validateSCFulfillmentSchedules(specReqDTO);
+					specReqDTO.setScQt(deliveryAddress);
+					specSo.validateSCFulfillmentSchedules(specReqDTO);
+				}
 
 			}
 
@@ -1145,8 +1150,13 @@ public class SpecificationBackingBean extends
 
 			if (QTConstants.EVALUATION_TWO_TIER.equalsIgnoreCase(fulfilMentDtls
 					.getEvaluationType())) {
-				specReqDTO.setScQt(fulfilMentDtls);
-				specSo.validateSCFulfillmentSchedules(specReqDTO);
+				if ("PS".equalsIgnoreCase(this.getManagedBean()
+						.getFulfilmentType())
+						|| "PA".equalsIgnoreCase(this.getManagedBean()
+								.getFulfilmentType())) {
+					specReqDTO.setScQt(fulfilMentDtls);
+					specSo.validateSCFulfillmentSchedules(specReqDTO);
+				}
 			}
 
 			break;
@@ -1221,7 +1231,16 @@ public class SpecificationBackingBean extends
 		case 7:
 			if (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(this
 					.getManagedBean().getScQt().getEvaluationType())) {
-				retriveFulfilmentDtls();
+				if ("PS".equalsIgnoreCase(this.getManagedBean()
+						.getFulfilmentType())
+						|| "PA".equalsIgnoreCase(this.getManagedBean()
+								.getFulfilmentType())) {
+					retriveFulfilmentDtls();
+				} else if ("OF".equalsIgnoreCase(this.getManagedBean()
+						.getFulfilmentType())) {
+					retriveCommitteeEndorsment();
+
+				}
 			}
 			if (QTConstants.EVALUATION_TWO_TIER.equalsIgnoreCase(this
 					.getManagedBean().getScQt().getEvaluationType())) {
@@ -1236,7 +1255,16 @@ public class SpecificationBackingBean extends
 			}
 			if (QTConstants.EVALUATION_TWO_TIER.equalsIgnoreCase(this
 					.getManagedBean().getScQt().getEvaluationType())) {
-				retriveFulfilmentDtls();
+				if ("PS".equalsIgnoreCase(this.getManagedBean()
+						.getFulfilmentType())
+						|| "PA".equalsIgnoreCase(this.getManagedBean()
+								.getFulfilmentType())) {
+					retriveFulfilmentDtls();
+				} else if ("OF".equalsIgnoreCase(this.getManagedBean()
+						.getFulfilmentType())) {
+					retriveCommitteeEndorsment();
+
+				}
 			}
 			break;
 
@@ -1294,7 +1322,7 @@ public class SpecificationBackingBean extends
 		retriveFulfilmentDtls();
 		retriveDeliveryDetails();
 		retriveCommitteeEndorsment();
-		// this.getManagedBean().setActiveIndex(0);
+		this.getManagedBean().setActiveIndex(0);
 
 	}
 
@@ -2384,236 +2412,241 @@ public class SpecificationBackingBean extends
 
 			List<ScQtSchedule> scheduleList = this.getManagedBean()
 					.getScheduleList();
-			if (scheduleList == null) {
-				scheduleList = new ArrayList<ScQtSchedule>();
-			}
 
 			List<ScQtProgressivePayment> paymentList = this.getManagedBean()
 					.getProgressivePaymentList();
-			if (paymentList == null) {
-				paymentList = new ArrayList<ScQtProgressivePayment>();
-			}
 
-			if (null != resDTO.getScheduleResults()
-					&& null != resDTO.getScheduleResults().getResultList()
-					&& !resDTO.getScheduleResults().getResultList().isEmpty()) {
+			if (scheduleList == null) {
+				scheduleList = new ArrayList<ScQtSchedule>();
+				if (null != resDTO.getScheduleResults()
+						&& null != resDTO.getScheduleResults().getResultList()
+						&& !resDTO.getScheduleResults().getResultList()
+								.isEmpty()) {
 
-				this.getManagedBean().setTotalFrequency(
-						resDTO.getScheduleResults().getResultList().size());
-				String startMonth = "";
-				String endMonth = "";
-				for (ScQtSchedule scQtSchedule : resDTO.getScheduleResults()
-						.getResultList()) {
-					SimpleDateFormat dateFormat = new SimpleDateFormat(
-							"dd/MM/yyyy");
+					this.getManagedBean().setTotalFrequency(
+							resDTO.getScheduleResults().getResultList().size());
+					String startMonth = "";
+					String endMonth = "";
+					for (ScQtSchedule scQtSchedule : resDTO
+							.getScheduleResults().getResultList()) {
+						SimpleDateFormat dateFormat = new SimpleDateFormat(
+								"dd/MM/yyyy");
 
-					String fromdate = dateFormat.format(scQtSchedule
-							.getFromDate());
-					String todate = dateFormat.format(scQtSchedule.getToDate());
-					String startdate = fromdate.substring(3, 5);
-					String startYear = fromdate.substring(6, fromdate.length());
-					String enddate = todate.substring(3, 5);
-					String endYear = todate.substring(6, todate.length());
+						String fromdate = dateFormat.format(scQtSchedule
+								.getFromDate());
+						String todate = dateFormat.format(scQtSchedule
+								.getToDate());
+						String startdate = fromdate.substring(3, 5);
+						String startYear = fromdate.substring(6,
+								fromdate.length());
+						String enddate = todate.substring(3, 5);
+						String endYear = todate.substring(6, todate.length());
 
-					if (startdate.equalsIgnoreCase("01")) {
-						startMonth = "0";
-					}
-					if (startdate.equalsIgnoreCase("02")) {
-						startMonth = "1";
-					}
-					if (startdate.equalsIgnoreCase("03")) {
-						startMonth = "2";
-					}
-					if (startdate.equalsIgnoreCase("04")) {
-						startMonth = "3";
-					}
-					if (startdate.equalsIgnoreCase("05")) {
-						startMonth = "4";
-					}
-					if (startdate.equalsIgnoreCase("06")) {
-						startMonth = "5";
-					}
+						if (startdate.equalsIgnoreCase("01")) {
+							startMonth = "0";
+						}
+						if (startdate.equalsIgnoreCase("02")) {
+							startMonth = "1";
+						}
+						if (startdate.equalsIgnoreCase("03")) {
+							startMonth = "2";
+						}
+						if (startdate.equalsIgnoreCase("04")) {
+							startMonth = "3";
+						}
+						if (startdate.equalsIgnoreCase("05")) {
+							startMonth = "4";
+						}
+						if (startdate.equalsIgnoreCase("06")) {
+							startMonth = "5";
+						}
 
-					if (startdate.equalsIgnoreCase("07")) {
-						startMonth = "6";
-					}
-					if (startdate.equalsIgnoreCase("08")) {
-						startMonth = "7";
-					}
-					if (startdate.equalsIgnoreCase("09")) {
-						startMonth = "8";
-					}
-					if (startdate.equalsIgnoreCase("10")) {
-						startMonth = "9";
-					}
-					if (startdate.equalsIgnoreCase("11")) {
-						startMonth = "10";
-					}
-					if (startdate.equalsIgnoreCase("12")) {
-						startMonth = "11";
-					}
+						if (startdate.equalsIgnoreCase("07")) {
+							startMonth = "6";
+						}
+						if (startdate.equalsIgnoreCase("08")) {
+							startMonth = "7";
+						}
+						if (startdate.equalsIgnoreCase("09")) {
+							startMonth = "8";
+						}
+						if (startdate.equalsIgnoreCase("10")) {
+							startMonth = "9";
+						}
+						if (startdate.equalsIgnoreCase("11")) {
+							startMonth = "10";
+						}
+						if (startdate.equalsIgnoreCase("12")) {
+							startMonth = "11";
+						}
 
-					if (enddate.equalsIgnoreCase("01")) {
-						endMonth = "0";
-					}
-					if (enddate.equalsIgnoreCase("02")) {
-						endMonth = "1";
-					}
-					if (enddate.equalsIgnoreCase("03")) {
-						endMonth = "2";
-					}
-					if (enddate.equalsIgnoreCase("04")) {
-						endMonth = "3";
-					}
-					if (enddate.equalsIgnoreCase("05")) {
-						endMonth = "4";
-					}
-					if (enddate.equalsIgnoreCase("06")) {
-						endMonth = "5";
-					}
+						if (enddate.equalsIgnoreCase("01")) {
+							endMonth = "0";
+						}
+						if (enddate.equalsIgnoreCase("02")) {
+							endMonth = "1";
+						}
+						if (enddate.equalsIgnoreCase("03")) {
+							endMonth = "2";
+						}
+						if (enddate.equalsIgnoreCase("04")) {
+							endMonth = "3";
+						}
+						if (enddate.equalsIgnoreCase("05")) {
+							endMonth = "4";
+						}
+						if (enddate.equalsIgnoreCase("06")) {
+							endMonth = "5";
+						}
 
-					if (enddate.equalsIgnoreCase("07")) {
-						endMonth = "6";
-					}
-					if (enddate.equalsIgnoreCase("08")) {
-						endMonth = "7";
-					}
-					if (enddate.equalsIgnoreCase("09")) {
-						endMonth = "8";
-					}
-					if (enddate.equalsIgnoreCase("11")) {
-						endMonth = "10";
-					}
-					if (enddate.equalsIgnoreCase("12")) {
-						endMonth = "11";
-					}
-					int start = Integer.parseInt(startMonth);
-					int end = Integer.parseInt(endMonth);
-					int count = 0;
-					for (int i = start + 1; i <= end + 1; i++) {
-						count++;
-					}
+						if (enddate.equalsIgnoreCase("07")) {
+							endMonth = "6";
+						}
+						if (enddate.equalsIgnoreCase("08")) {
+							endMonth = "7";
+						}
+						if (enddate.equalsIgnoreCase("09")) {
+							endMonth = "8";
+						}
+						if (enddate.equalsIgnoreCase("11")) {
+							endMonth = "10";
+						}
+						if (enddate.equalsIgnoreCase("12")) {
+							endMonth = "11";
+						}
+						int start = Integer.parseInt(startMonth);
+						int end = Integer.parseInt(endMonth);
+						int count = 0;
+						for (int i = start + 1; i <= end + 1; i++) {
+							count++;
+						}
 
-					scQtSchedule.setStartMonth(startMonth);
-					scQtSchedule.setEndMonth(endMonth);
-					scQtSchedule.setStartYear(startYear);
-					scQtSchedule.setEndYear(endYear);
-					scQtSchedule.setTotalMonths(new BigDecimal(count));
-					scheduleList.add(scQtSchedule);
+						scQtSchedule.setStartMonth(startMonth);
+						scQtSchedule.setEndMonth(endMonth);
+						scQtSchedule.setStartYear(startYear);
+						scQtSchedule.setEndYear(endYear);
+						scQtSchedule.setTotalMonths(new BigDecimal(count));
+						scheduleList.add(scQtSchedule);
 
-					this.getManagedBean().setScheduleList(scheduleList);
+						this.getManagedBean().setScheduleList(scheduleList);
 
+					}
 				}
 			}
 
 			// this.getManagedBean().setProgressivePaymentList(resDTO.getProgressivePaymentResults().getResultList());
+			if (null == paymentList) {
+				paymentList = new ArrayList<ScQtProgressivePayment>();
+				if (null != resDTO.getProgressivePaymentResults()
+						&& null != resDTO.getProgressivePaymentResults()
+								.getResultList()
+						&& !resDTO.getProgressivePaymentResults()
+								.getResultList().isEmpty()) {
 
-			if (null != resDTO.getProgressivePaymentResults()
-					&& null != resDTO.getProgressivePaymentResults()
-							.getResultList()
-					&& !resDTO.getProgressivePaymentResults().getResultList()
-							.isEmpty()) {
+					this.getManagedBean().setTotalProgressivePayment(
+							resDTO.getProgressivePaymentResults()
+									.getResultList().size());
+					String startMonth = "";
+					String endMonth = "";
+					for (ScQtProgressivePayment payment : resDTO
+							.getProgressivePaymentResults().getResultList()) {
+						SimpleDateFormat dateFormat = new SimpleDateFormat(
+								"dd/MM/yyyy");
 
-				this.getManagedBean().setTotalProgressivePayment(
-						resDTO.getProgressivePaymentResults().getResultList()
-								.size());
-				String startMonth = "";
-				String endMonth = "";
-				for (ScQtProgressivePayment payment : resDTO
-						.getProgressivePaymentResults().getResultList()) {
-					SimpleDateFormat dateFormat = new SimpleDateFormat(
-							"dd/MM/yyyy");
+						String fromdate = dateFormat.format(payment
+								.getFromDate());
+						String todate = dateFormat.format(payment.getToDate());
+						String startdate = fromdate.substring(3, 5);
+						String startYear = fromdate.substring(6,
+								fromdate.length());
+						String enddate = todate.substring(3, 5);
+						String endYear = todate.substring(6, todate.length());
 
-					String fromdate = dateFormat.format(payment.getFromDate());
-					String todate = dateFormat.format(payment.getToDate());
-					String startdate = fromdate.substring(3, 5);
-					String startYear = fromdate.substring(6, fromdate.length());
-					String enddate = todate.substring(3, 5);
-					String endYear = todate.substring(6, todate.length());
+						if (startdate.equalsIgnoreCase("01")) {
+							startMonth = "0";
+						}
+						if (startdate.equalsIgnoreCase("02")) {
+							startMonth = "1";
+						}
+						if (startdate.equalsIgnoreCase("03")) {
+							startMonth = "2";
+						}
+						if (startdate.equalsIgnoreCase("04")) {
+							startMonth = "3";
+						}
+						if (startdate.equalsIgnoreCase("05")) {
+							startMonth = "4";
+						}
+						if (startdate.equalsIgnoreCase("06")) {
+							startMonth = "5";
+						}
 
-					if (startdate.equalsIgnoreCase("01")) {
-						startMonth = "0";
-					}
-					if (startdate.equalsIgnoreCase("02")) {
-						startMonth = "1";
-					}
-					if (startdate.equalsIgnoreCase("03")) {
-						startMonth = "2";
-					}
-					if (startdate.equalsIgnoreCase("04")) {
-						startMonth = "3";
-					}
-					if (startdate.equalsIgnoreCase("05")) {
-						startMonth = "4";
-					}
-					if (startdate.equalsIgnoreCase("06")) {
-						startMonth = "5";
-					}
+						if (startdate.equalsIgnoreCase("07")) {
+							startMonth = "6";
+						}
+						if (startdate.equalsIgnoreCase("08")) {
+							startMonth = "7";
+						}
+						if (startdate.equalsIgnoreCase("09")) {
+							startMonth = "8";
+						}
+						if (startdate.equalsIgnoreCase("10")) {
+							startMonth = "9";
+						}
+						if (startdate.equalsIgnoreCase("11")) {
+							startMonth = "10";
+						}
+						if (startdate.equalsIgnoreCase("12")) {
+							startMonth = "11";
+						}
 
-					if (startdate.equalsIgnoreCase("07")) {
-						startMonth = "6";
-					}
-					if (startdate.equalsIgnoreCase("08")) {
-						startMonth = "7";
-					}
-					if (startdate.equalsIgnoreCase("09")) {
-						startMonth = "8";
-					}
-					if (startdate.equalsIgnoreCase("10")) {
-						startMonth = "9";
-					}
-					if (startdate.equalsIgnoreCase("11")) {
-						startMonth = "10";
-					}
-					if (startdate.equalsIgnoreCase("12")) {
-						startMonth = "11";
-					}
+						if (enddate.equalsIgnoreCase("01")) {
+							endMonth = "0";
+						}
+						if (enddate.equalsIgnoreCase("02")) {
+							endMonth = "1";
+						}
+						if (enddate.equalsIgnoreCase("03")) {
+							endMonth = "2";
+						}
+						if (enddate.equalsIgnoreCase("04")) {
+							endMonth = "3";
+						}
+						if (enddate.equalsIgnoreCase("05")) {
+							endMonth = "4";
+						}
+						if (enddate.equalsIgnoreCase("06")) {
+							endMonth = "5";
+						}
 
-					if (enddate.equalsIgnoreCase("01")) {
-						endMonth = "0";
-					}
-					if (enddate.equalsIgnoreCase("02")) {
-						endMonth = "1";
-					}
-					if (enddate.equalsIgnoreCase("03")) {
-						endMonth = "2";
-					}
-					if (enddate.equalsIgnoreCase("04")) {
-						endMonth = "3";
-					}
-					if (enddate.equalsIgnoreCase("05")) {
-						endMonth = "4";
-					}
-					if (enddate.equalsIgnoreCase("06")) {
-						endMonth = "5";
-					}
+						if (enddate.equalsIgnoreCase("07")) {
+							endMonth = "6";
+						}
+						if (enddate.equalsIgnoreCase("08")) {
+							endMonth = "7";
+						}
+						if (enddate.equalsIgnoreCase("09")) {
+							endMonth = "8";
+						}
+						if (enddate.equalsIgnoreCase("10")) {
+							endMonth = "9";
+						}
+						if (enddate.equalsIgnoreCase("11")) {
+							endMonth = "10";
+						}
+						if (enddate.equalsIgnoreCase("12")) {
+							endMonth = "11";
+						}
+						payment.setStartMonth(startMonth);
+						payment.setEndMonth(endMonth);
+						payment.setStartYear(startYear);
+						payment.setEndYear(endYear);
+						paymentList.add(payment);
 
-					if (enddate.equalsIgnoreCase("07")) {
-						endMonth = "6";
 					}
-					if (enddate.equalsIgnoreCase("08")) {
-						endMonth = "7";
-					}
-					if (enddate.equalsIgnoreCase("09")) {
-						endMonth = "8";
-					}
-					if (enddate.equalsIgnoreCase("10")) {
-						endMonth = "9";
-					}
-					if (enddate.equalsIgnoreCase("11")) {
-						endMonth = "10";
-					}
-					if (enddate.equalsIgnoreCase("12")) {
-						endMonth = "11";
-					}
-					payment.setStartMonth(startMonth);
-					payment.setEndMonth(endMonth);
-					payment.setStartYear(startYear);
-					payment.setEndYear(endYear);
-					paymentList.add(payment);
-
+					this.getManagedBean()
+							.setProgressivePaymentList(paymentList);
 				}
-				this.getManagedBean().setProgressivePaymentList(paymentList);
 			}
 
 		} finally {
@@ -3947,6 +3980,14 @@ public class SpecificationBackingBean extends
 				checkList.setScQtCheckListScores(null);
 				checkList.setQtScoreWeightage(null);
 				this.getManagedBean().setScqtDoc(checkList.getScQtDoc());
+				ISearchResultBean<ScQtCheckList> finchecklist = retriveChecklistByIdAndTitle(checkList
+						.getTitle());
+
+				if (null != finchecklist.getResultList()
+						&& !finchecklist.getResultList().isEmpty()) {
+					this.getManagedBean().setFinspecChecklist(
+							finchecklist.getResultList());
+				}
 				TemplateSpecBackingBean specBB = new TemplateSpecBackingBean();
 				TemplateSpecBean templateSpecBean = getManagedBean()
 						.getTemplateSpecBean();
@@ -8677,11 +8718,15 @@ public class SpecificationBackingBean extends
 
 				this.getManagedBean().getScQt()
 						.setFulfilmentType(new PmParameter());
+			} else {
+				loadPrepareSpecCommitteeDetails(quotationTenderDataType
+						.getQtId().longValue(), getDocTypeByTaskName(taskName));
 			}
 			fc.getApplication()
 					.getNavigationHandler()
 					.handleNavigation(fc, null,
 							QTConstants.SPECIFICICATON_COMM_PREPARATION);
+
 		}
 
 	}
@@ -9383,14 +9428,18 @@ public class SpecificationBackingBean extends
 			ScQt fulfilMent = constructSpecCommitteDtls().getScQt();
 			if (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(fulfilMent
 					.getEvaluationType())) {
-
-				specReqDTO.setScQt(fulfilMent);
-				specSO.validateSCFulfillmentSchedules(specReqDTO);
-				resDTO = specSO.saveQTDtl(specReqDTO);
-				renewSesionObject();
-				this.getManagedBean().setScQt(resDTO.getScQt());
-				getfulfilmentDtls(resDTO.getScQt());
-				retriveFulfilmentDtls();
+				if ("PS".equalsIgnoreCase(this.getManagedBean()
+						.getFulfilmentType())
+						|| "PA".equalsIgnoreCase(this.getManagedBean()
+								.getFulfilmentType())) {
+					specReqDTO.setScQt(fulfilMent);
+					specSO.validateSCFulfillmentSchedules(specReqDTO);
+					resDTO = specSO.saveQTDtl(specReqDTO);
+					renewSesionObject();
+					this.getManagedBean().setScQt(resDTO.getScQt());
+					getfulfilmentDtls(resDTO.getScQt());
+					retriveFulfilmentDtls();
+				}
 
 			}
 
@@ -9430,14 +9479,18 @@ public class SpecificationBackingBean extends
 
 			if (QTConstants.EVALUATION_TWO_TIER.equalsIgnoreCase(fulfilMentdtls
 					.getEvaluationType())) {
-
-				specReqDTO.setScQt(fulfilMentdtls);
-				specSO.validateSCFulfillmentSchedules(specReqDTO);
-				resDTO = specSO.saveQTDtl(specReqDTO);
-				renewSesionObject();
-				this.getManagedBean().setScQt(resDTO.getScQt());
-				getfulfilmentDtls(resDTO.getScQt());
-				retriveFulfilmentDtls();
+				if ("PS".equalsIgnoreCase(this.getManagedBean()
+						.getFulfilmentType())
+						|| "PA".equalsIgnoreCase(this.getManagedBean()
+								.getFulfilmentType())) {
+					specReqDTO.setScQt(fulfilMentdtls);
+					specSO.validateSCFulfillmentSchedules(specReqDTO);
+					resDTO = specSO.saveQTDtl(specReqDTO);
+					renewSesionObject();
+					this.getManagedBean().setScQt(resDTO.getScQt());
+					getfulfilmentDtls(resDTO.getScQt());
+					retriveFulfilmentDtls();
+				}
 
 			}
 			break;
