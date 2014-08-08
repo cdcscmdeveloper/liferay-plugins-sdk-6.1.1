@@ -3927,7 +3927,7 @@ public class SmApplicationBackingBean extends
 		} else {
 			msgConst = MessageConst.INFO_700005;
 		}
-		System.out.println("Message value === "+msgConst);
+		System.out.println("Message value === " + msgConst);
 		FacesContext
 				.getCurrentInstance()
 				.addMessage(
@@ -4223,9 +4223,12 @@ public class SmApplicationBackingBean extends
 
 	public String finalDecisionApproveOrRejectAppln(String dialog,
 			String decision) {
+		List<String> updateIds = new ArrayList<String>();
+		updateIds.add(":form");
 		System.out.println("*** Submit Approve *** " + decision);
 		assignValReqdToFalse();
 		RequestContext.getCurrentInstance().execute(dialog + ".hide()");
+		RequestContext.getCurrentInstance().update(updateIds);
 		return submitPOorApproverReviewToBPM(decision);
 
 	}
