@@ -97,13 +97,13 @@
 							<p:graphicImage library="ep/images/design" name="terminate.png"
 						  		value="/resources/ep/images/design/terminate.png" title="#{lbl['lbl.ct.search.terminate']}" />
 						</p:commandLink>
-					   	<p:spacer width="5" rendered="#{data.fdStatus == 1 and data.ctContract.recordStatusFlg==1}" />
-					   	<p:commandLink rendered="#{data.fdStatus == 1 and data.ctContract.recordStatusFlg==1}"
+					   	<p:spacer width="5" rendered="#{data.fdStatus == 1 and data.ctContract.recordStatusFlg==1 and data.ctContract.procurementMode.parameterCode!=ParameterConst.procurementModeDirectPurchase}" />
+					   	<p:commandLink rendered="#{data.fdStatus == 1 and data.ctContract.recordStatusFlg==1 and data.ctContract.procurementMode.parameterCode!=ParameterConst.procurementModeDirectPurchase}"
 							onclick="gotoAmendPage([{name:'contractVerId',value:'#{data.ctContract.latestContractVer.contractVerId}'}, {name:'contractId',value:'#{data.ctContract.contractId}'}, {name:'action',value:'update'}])">
 							<p:graphicImage library="ep/images/design" name="revise.png"
 						   		value="/resources/ep/images/design/revise.png" title="#{lbl['lbl.ct.search.amd']}" />
 						</p:commandLink>
-						<p:commandLink rendered="#{data.ctContractVer.status.statusId eq CtStatusConst.faPendingSubmission}"
+						<p:commandLink rendered="#{data.ctContractVer.status.statusId eq CtStatusConst.faPendingSubmission and data.ctContract.procurementMode.parameterCode!=ParameterConst.procurementModeDirectPurchase}"
 							onclick="gotoAmendPage([{name:'contractVerId',value:'#{data.ctContractVer.contractVerId}'}, {name:'contractId',value:'#{data.ctContract.contractId}'}, {name:'action',value:'edit'}])">
 							<p:graphicImage library="ep/images/design" name="revise.png"
 						   		value="/resources/ep/images/design/revise.png" title="#{lbl['lbl.ct.search.amd']}" />

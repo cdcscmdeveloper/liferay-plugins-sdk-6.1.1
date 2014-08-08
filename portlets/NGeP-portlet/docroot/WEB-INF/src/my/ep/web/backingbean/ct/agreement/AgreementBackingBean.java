@@ -1110,14 +1110,6 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		 return getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value());
 	 }
 		
-	 public String convertTime(Date time){ 
-	     String str ="";
-	     Format format = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT); 
-	     if(time == null)
-	        return str;
-	     return format.format(time); 
-	 } 
-		
 	 private String getUserRole() {
 				
 		if(getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())) 

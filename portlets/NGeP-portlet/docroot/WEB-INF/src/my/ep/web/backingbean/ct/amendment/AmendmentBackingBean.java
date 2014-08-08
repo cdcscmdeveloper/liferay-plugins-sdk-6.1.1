@@ -594,7 +594,9 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	 
 	 private void validateContractAmendment(String action) {
 		 if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
-			if(getManagedBean().getRemarkList().get(0).getRemark() == null || getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
+			if((getManagedBean().getRemarkList().get(0).getRemark() == null || getManagedBean().getRemarkList().get(0).getRemark().length()==0) &&
+				(getManagedBean().getContractVer().getAp201Remark().get(0).getRemark() == null || getManagedBean().getContractVer().getAp201Remark().get(0).getRemark().length()==0) &&
+				(getManagedBean().getContractVer().getItemRemarks().get(0).getRemark() == null || getManagedBean().getContractVer().getItemRemarks().get(0).getRemark().length()==0)) {
 				throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
 			}
 		}
@@ -667,10 +669,6 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			     getManagedBean().getContractVer().getCtAmendment().setComplyAP201(false);
 		
 		 } else if(getManagedBean().getCtContract().getRecordStatusFlg().intValue()!=DbValueConst.RECORD_STATUS_ACTIVE) {
-			getManagedBean().getContractVer().getCtAmendment().setComplyAP201(false);
-		}
-		
-		if (getManagedBean().getContractVer().getCtContractValue().isAp201Exempt()) {
 			getManagedBean().getContractVer().getCtAmendment().setComplyAP201(false);
 		}
 	}

@@ -23,18 +23,24 @@
 		 	  </h:panelGrid>
 		 	  <p:outputLabel id="effectiveDate" value="#{lbl['lbl.ct.effectiveDate']}" />
 			  <p:inputText for="effectiveDate" style="width:170px;" disabled="true"
-				value="#{agreementBackingBean.convertTime(agreementBackingBean.managedBean.contractVer.ctContractValue.effDate)}" />
+				value="#{agreementBackingBean.managedBean.contractVer.ctContractValue.effDate}">
+			    <f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+			  </p:inputText>
 			  <p:outputLabel id="edate" value="#{lbl['lbl.ct.edate']}" />
 			  <p:inputText for="edate" style="width:170px;" disabled="true"
-				value="#{agreementBackingBean.convertTime(agreementBackingBean.managedBean.contractVer.ctContractValue.expDate)}" />
+				value="#{agreementBackingBean.managedBean.contractVer.ctContractValue.expDate}">
+				<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+			  </p:inputText>
 			  <p:outputLabel id="contractAmount" value="#{lbl['lbl.ct.contractAmount']}" />
 			  <p:inputText for="contractAmount" styleClass="ppRightBtn" value="#{agreementBackingBean.managedBean.contractVer.ctContractValue.contractAmount}"
 				 disabled="true" style="width:170px;">
 				   <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			</p:inputText>	
 			<p:outputLabel id="signBy" value="#{lbl['lbl.ct.sdate']}"  rendered="#{agreementBackingBean.managedBean.ctContract.agreement}" />
-			<p:inputText for="signBy"  value="#{agreementBackingBean.convertTime(agreementBackingBean.managedBean.ctContract.currentAgreement.signedDate)}"
-			   rendered="#{agreementBackingBean.managedBean.ctContract.agreement}" disabled="true" style="width:170px;"/>
+			<p:inputText for="signBy"  value="#{agreementBackingBean.managedBean.ctContract.currentAgreement.signedDate}"
+			   rendered="#{agreementBackingBean.managedBean.ctContract.agreement}" disabled="true" style="width:170px;">
+			   <f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+			</p:inputText>
 			<h:outputLabel id="dperiod" value="#{lbl['lbl.ct.dperiod']}" rendered="#{!agreementBackingBean.managedBean.ctContract.zonalPricing}" />
 	        <h:panelGrid columns="3" rendered="#{!agreementBackingBean.managedBean.ctContract.zonalPricing}">
 				<p:inputText for="dperiod" styleClass="ppRightBtn" style="width:65px;" disabled="true" 
