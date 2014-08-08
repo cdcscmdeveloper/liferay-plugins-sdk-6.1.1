@@ -5,18 +5,21 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
+	<ui:param name="isPackage"
+		value="#{onlineBiddingBB.managedBean.scBidSchedule.scBid.recommendedTypeId.parameterId eq ParameterConst.RECOMMEND_TYPE_PACKAGE}" />
 	<p:panel header="#{lbl['lbl.sc.bid.price']}" toggleable="true">
+
 		<p:spacer height="5"></p:spacer>
-		<script src="#{resource['countdown.js']}"></script>
-		<!-- This is the one worked -->
 		<div style="align: left">
 			<table style="width: 50%;">
 				<tr>
-					<td style="width: 15%;">
-							<p:outputLabel value="#{lbl['lbl.sc.remaining.time']}" />
-						</td>
-					<td style="width: 85%;align:left"><script type="application/javascript">
-			var myCountdown = new Countdown({time:"#{onlineBiddingBB.managedBean.remainingBidTime}",hideLine: true,rangeHi: "hour",rangeLo: "second",width: 250,height: 70}); 
+					<td style="width: 15%;"><p:outputLabel
+							value="#{lbl['lbl.sc.remaining.time']}" /></td>
+					<td style="width: 85%; align: left"><script
+							type="application/javascript">
+						
+			var myCountdownBidding = new Countdown({time:"#{onlineBiddingBB.managedBean.remainingBidTime}",hideLine: true,rangeHi: "hour",rangeLo: "second",width: 250,height: 70}); 
+					
 					</script></td>
 				</tr>
 			</table>
@@ -114,30 +117,33 @@
 			</p:column>
 			<p:column>
 				<p:spinner widgetVar="decrementSpinner"  size="10"
-					value="#{onlineBiddingBB.managedBean.selectedDecrementAmt}"
+					value="#{bidPriceItem.newPrice}"
 					min="#{bidPriceItem.scBidSupplierItem.scBidItem.decrementAmt}"
 					max="#{bidPriceItem.bidPrice /10}"
 					stepFactor="#{bidPriceItem.scBidSupplierItem.scBidItem.decrementAmt}">
 					<p:ajax event="change" process="@this" partialSubmit="true"
+						update="itemWiseBidList"
 						listener="#{onlineBiddingBB.decrementAmountValueChangeListener(bidPriceItem)}"></p:ajax>
 				</p:spinner>
 				<p:spacer width="5"></p:spacer>
-				<p:commandLink action="#{onlineBiddingBB.submitBidPrice()}">
+				<p:commandLink action="#{onlineBiddingBB.submitBidPrice}"
+					update="itemWiseBidList">
 					<p:graphicImage library="ep/images/design" name="submit.png"
-						value="/resources/ep/images/design/submit.png" />
+						value="/css/images/design/submit.png" />
 				</p:commandLink>
-
 			</p:column>
 			<p:column>
 				<h:outputText id="newPrice" style="float : right"
-					value="#{onlineBiddingBB.managedBean.newBidPrice}">
+					rendered="#{bidPriceItem.newBidPrice != null }"
+					value="#{bidPriceItem.newBidPrice.bidPrice}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
 			<p:column>
 				<h:outputText id="newPriceSubTotal" style="float : right"
-					value="#{onlineBiddingBB.managedBean.newBidPrice * bidPriceItem.scBidSupplierItem.scBidItem.qty}">
+					rendered="#{bidPriceItem.newBidPrice != null }"
+					value="#{bidPriceItem.newBidPrice.bidPrice * bidPriceItem.scBidSupplierItem.scBidItem.qty}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
@@ -156,17 +162,25 @@
 						footerText="#{onlineBiddingBB.managedBean.itemLastBidPriceTotal}" />
 					<p:column colspan="2" footerText="Total" style="text-align:right" />
 					<p:column
-						footerText="#{onlineBiddingBB.managedBean.itemLastBidPriceTotal}" />
+						footerText="#{onlineBiddingBB.managedBean.itemNewBidPriceTotal}" />
 					<p:column />
 				</p:row>
 			</p:columnGroup>
 		</p:dataTable>
 
 	</p:panel>
-
+	<c:if test="isPackage">
+		<div style="align: right">
+			<TABLE>
+				<TR>
+					<TD><p:outputLabel value="#{lbl['lbl.sc.package.ranking']}" /></TD>
+					<TD><p:inputText disabled="true" size="5" value="1"></p:inputText></TD>
+				</TR>
+			</TABLE>
+		</div>
+	</c:if>
 	<p:panel header="#{lbl['lbl.sc.contact.person.details']}"
 		toggleable="true">
-
 		<p:dataTable id="contactPersonDT"
 			value="#{onlineBiddingBB.managedBean.bidContactPersons}"
 			var="contact">
@@ -180,24 +194,5 @@
 		</p:dataTable>
 
 	</p:panel>
-	<p:panel id="spinnerTestPanel">
-	<table>
-	<tr><p:spinner widgetVar="decrementSpinner1" size="5"
-					value="#{onlineBiddingBB.managedBean.testDecrementAmt1}"
-					min="#{onlineBiddingBB.managedBean.testminAmt1}"
-					max="#{onlineBiddingBB.managedBean.testmaxAmt1}"
-					stepFactor="#{onlineBiddingBB.managedBean.testDecrementAmt1}" ></p:spinner></tr>
-					<tr><p:spinner widgetVar="decrementSpinner2" size="10"
-					value="#{onlineBiddingBB.managedBean.testDecrementAmt2}"
-					min="#{onlineBiddingBB.managedBean.testminAmt1}"
-					max="#{onlineBiddingBB.managedBean.testmaxAmt1}"
-					stepFactor="#{onlineBiddingBB.managedBean.testDecrementAmt2}"></p:spinner></tr>
-					<tr><p:spinner widgetVar="decrementSpinner3" size="15"
-					value="#{onlineBiddingBB.managedBean.testDecrementAmt3}"
-					min="#{onlineBiddingBB.managedBean.testminAmt1}"
-					max="#{onlineBiddingBB.managedBean.testmaxAmt1}"
-					stepFactor="#{onlineBiddingBB.managedBean.testDecrementAmt3}"></p:spinner></tr>
-	</table>
-	</p:panel>
-
+	
 </ui:composition>

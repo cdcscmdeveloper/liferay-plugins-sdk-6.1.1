@@ -7,17 +7,22 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
+	<ui:define name="resourceSection">
+		<script src="#{resource['countdown.js']}" />
+	</ui:define>
 
 	<ui:define name="contentSection">
 
+
 		<p:messages id="onlineBidding" showDetail="true" autoUpdate="true"
 			closable="true" />
-
+		<ui:param name="isZonal"
+			value="#{!biddingBB.managedBean.scheduledBid.tplSpecZoneDtl.zoneName eq null}" />
 		<ui:param name="isPending"
 			value="#{onlineBiddingBB.getStatusDescById(onlineBiddingBB.managedBean.scBidSchedule.pmStatus.statusId) eq 'Pending Bidding'}" />
 		<ui:param name="isInProgress"
 			value="#{onlineBiddingBB.getStatusDescById(onlineBiddingBB.managedBean.scBidSchedule.pmStatus.statusId) eq 'In Progress'}" />
-		
+
 		<div align="right" style="width: 100%">
 			<TABLE>
 				<TR>
@@ -126,7 +131,7 @@
 			<ui:include
 				src="/xhtml/sc/bidding/onlineBiddingItemDetailsPopup.xhtml"></ui:include>
 		</p:dialog>
-		<p:dialog header="#{lbl['lbl.sc.notification']}"
+		<p:dialog header="#{lbl['lbl.sc.notification']}" rendered="false"
 			widgetVar="onlineBiddingNotification" showEffect="fade"
 			hideEffect="fade" modal="true" id="onlineBiddingNotification">
 			<ui:include
@@ -134,5 +139,4 @@
 		</p:dialog>
 
 	</ui:define>
-
 </ui:composition>
