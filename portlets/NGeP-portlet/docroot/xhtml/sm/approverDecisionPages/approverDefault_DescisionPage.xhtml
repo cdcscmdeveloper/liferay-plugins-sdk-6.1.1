@@ -129,7 +129,7 @@
 		<ui:include
 			src="/xhtml/sm/shared/poDecisionSharedPages/approvedRemarksPopUpForm.xhtml" />
 		<div align="right">
-			<p:commandButton value="Submit" update=":form, @([id$=Msg])"
+			<p:commandButton value="Submit"
 				action="#{backingBean.finalDecisionApproveOrRejectAppln('approverAppDialog','APPROVE')}"
 				partialSubmit="true" process="approverAppDialog" />
 			<p:commandButton value="Cancel"
@@ -145,7 +145,7 @@
 			src="/xhtml/sm/shared/poDecisionSharedPages/rejectedRemarksPopUpForm.xhtml" />
 		<div align="right">
 			<p:commandButton value="Submit" partialSubmit="true"
-				process="approverRejDialog" update=":form, @([id$=Msg])"
+				process="approverRejDialog"
 				action="#{backingBean.finalDecisionApproveOrRejectAppln('approverRejDialog','REJECT')}" />
 			<p:commandButton value="Cancel"
 				action="#{backingBean.cancelFinalApproveOrReject('approverRejDialog')}"
