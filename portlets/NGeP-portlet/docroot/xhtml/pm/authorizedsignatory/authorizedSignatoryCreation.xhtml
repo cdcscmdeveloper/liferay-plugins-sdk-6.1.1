@@ -62,12 +62,14 @@
 							<table>
 								<tr>
 									<td class="TableFieldLeft"><ac:lov id="supplier"
-											lovId="PM_USER" headerText="User Selection" buttonLabel="Add"
+								 			lovId="PM_USER" headerText="User Selection" buttonLabel="Add"
 											buttonIcon="ui-icon-add" selectionMode="multiple"
 											saveObject="authorizedsignatoryBackingBean.managedBean.users"
 											update="@form" /></td>
 									<td><p:commandButton
-											value="#{lbl['lbl.sc.action.delete']}" icon="ui-icon-delete" /></td>
+											value="#{lbl['lbl.sc.action.delete']}" icon="ui-icon-delete"
+											update="searchSignatoryResults"
+				                            action="#{authorizedsignatoryBackingBean.deleteAuthorizedSignatory}" /></td>
 								</tr>
 							</table>
 						</td>
