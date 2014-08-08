@@ -1559,7 +1559,8 @@ public void ConstructSideTabMenu(){
 			ContractResDTO resDTO = contractSO.retrieveContractVer(reqDTO);
 			amendBB = new AmendmentBackingBean();
 			amendBB.getManagedBean().setSelectedTabIndex(0);
-			amendBB.setAmendmentContractVer(resDTO);			
+			amendBB.setAmendmentContractVer(resDTO);
+			amendBB.ConstructTabSideMenu();
 		}finally {
 			contractSO = null;
 			ctBB = null;

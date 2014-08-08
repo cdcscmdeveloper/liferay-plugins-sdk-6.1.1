@@ -40,24 +40,7 @@
 			<p:inputText for="signBy"  value="#{agreementBackingBean.managedBean.ctContract.currentAgreement.signedDate}"
 			   rendered="#{agreementBackingBean.managedBean.ctContract.agreement}" disabled="true" style="width:170px;">
 			   <f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-			</p:inputText>
-			<h:outputLabel id="dperiod" value="#{lbl['lbl.ct.dperiod']}" rendered="#{!agreementBackingBean.managedBean.ctContract.zonalPricing}" />
-	        <h:panelGrid columns="3" rendered="#{!agreementBackingBean.managedBean.ctContract.zonalPricing}">
-				<p:inputText for="dperiod" styleClass="ppRightBtn" style="width:65px;" disabled="true" 
-				   value="#{agreementBackingBean.managedBean.contractVer.ctContractValue.deliveryTerm}" />
-				<p:spacer width="2"/>
-				<p:selectOneMenu  style="width:100px;"  disabled="true" 
-				   value="#{agreementBackingBean.managedBean.contractVer.ctContractValue.deliveryTermUom.parameterId}">
-			       <f:selectItems value="#{agreementBackingBean.getDropdownValues(ParameterTypeConst.deliveryTerm)}" />
-			   </p:selectOneMenu>
-			</h:panelGrid>	
-			<f:verbatim rendered="#{agreementBackingBean.managedBean.ctContract.zonalPricing and !agreementBackingBean.managedBean.ctContract.agreement}"/>
-			<f:verbatim rendered="#{agreementBackingBean.managedBean.ctContract.zonalPricing and !agreementBackingBean.managedBean.ctContract.agreement}"/>
-			 <p:outputLabel for="astatus" value="Agreement Status" rendered="#{agreementBackingBean.managedBean.ctContract.agreement and 
-			    !agreementBackingBean.managedBean.ctContract.zonalPricing}" />
-			 <p:inputText id="astatus" style="width:170px;" disabled="true" 
-			  value="#{agreementBackingBean.getStatusDescById(agreementBackingBean.managedBean.ctContract.currentAgreement.status.statusId)}"
-			  rendered="#{agreementBackingBean.managedBean.ctContract.agreement and !agreementBackingBean.managedBean.ctContract.zonalPricing}" />
+			</p:inputText>			
 			<h:panelGroup>
 		      <div style="height: 40px; vertical-align: top;">
 			  <p:outputLabel for="contractName" value="#{lbl['lbl.ct.ctitle']}" />
@@ -68,11 +51,11 @@
 				value="#{agreementBackingBean.managedBean.ctContract.contractName}"
 				      rows="3" disabled="true" style="width:170px;margin-bottom: 5px;" autoResize="false" />	
 			</h:panelGrid>	
-			<p:outputLabel id="astatus1" value="#{lbl['lbl.ct.ag.agstatus']}" 
-			   rendered="#{agreementBackingBean.managedBean.ctContract.agreement and  agreementBackingBean.managedBean.ctContract.zonalPricing}" />
+			<p:outputLabel id="astatus" value="#{lbl['lbl.ct.ag.agstatus']}" 
+			   rendered="#{agreementBackingBean.managedBean.ctContract.agreement}" />
 		
-			<p:inputText for="astatus1" style="width:170px;" disabled="true" 
-			     rendered="#{agreementBackingBean.managedBean.ctContract.agreement and agreementBackingBean.managedBean.ctContract.zonalPricing}"
+			<p:inputText for="astatus" style="width:170px;" disabled="true" 
+			     rendered="#{agreementBackingBean.managedBean.ctContract.agreement}"
 			     value="#{agreementBackingBean.getStatusDescById(agreementBackingBean.managedBean.ctContract.currentAgreement.status.statusId)}"/>
 	    </h:panelGrid>
 		<h:panelGrid  style="width:150px;">
