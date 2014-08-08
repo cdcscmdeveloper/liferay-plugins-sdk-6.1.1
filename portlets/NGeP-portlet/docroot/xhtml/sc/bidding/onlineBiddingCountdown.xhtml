@@ -7,8 +7,6 @@
 
 	<p:panel header="#{lbl['lbl.sc.bid.price']}" toggleable="true">
 		<p:spacer height="5"></p:spacer>
-		<script src="#{resource['countdown.js']}"></script>
-		<!-- This is the one worked -->
 		<div style="align: left">
 			<table style="width: 50%;">
 				<tr>
@@ -17,12 +15,15 @@
 					<td style="width: 85%; align: left"><script
 							type="application/javascript">
 						
-			var myCountdown = new Countdown({time:"#{onlineBiddingBB.managedBean.remainingTimeToBid}",hideLine: true,rangeHi: "day",rangeLo: "second",width: 250,height: 70}); 
+						
+			var myCountdownPreBidding = new Countdown({time:"#{onlineBiddingBB.managedBean.remainingTimeToBid}",hideLine: true,rangeHi: "day",rangeLo: "second",width: 250,height: 70}); 
+					
 					
 					</script></td>
 				</tr>
 			</table>
 		</div>
+
 		<p:spacer height="5"></p:spacer>
 
 		<div style="width: 100%">
