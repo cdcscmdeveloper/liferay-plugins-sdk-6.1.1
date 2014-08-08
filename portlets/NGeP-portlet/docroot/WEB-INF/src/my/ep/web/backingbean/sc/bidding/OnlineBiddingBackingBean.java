@@ -138,26 +138,35 @@ public class OnlineBiddingBackingBean extends
 
 	public void decrementAmountValueChangeListener(ScBidPrice scBidPrice){
 		
+		System.out.println("***** inside decrementAmountValueChangeListener() *****");
+		if (scBidPrice != null){
+			System.out.println("***** scBidPrice passed to backing bean is not null *****");
+		}
+		
+		ScBidPrice newBidPrice = new ScBidPrice();
+		BigDecimal bidPrice;
+		///TODO 
+		if(scBidPrice.getNewPrice() != null){
+			 bidPrice = BigDecimal.valueOf(scBidPrice.getBidPrice()
+					.doubleValue()
+					-scBidPrice.getNewPrice().doubleValue());
+		}else {
+			bidPrice = scBidPrice.getBidPrice();
+		}
+		newBidPrice.setBidPrice(bidPrice);
+		newBidPrice.setScBidSupplierItem(scBidPrice.getScBidSupplierItem());
+		scBidPrice.setNewBidPrice(newBidPrice);
+		int index = getManagedBean().getBidPrices().indexOf(scBidPrice);
+		getManagedBean().getBidPrices().set(index, scBidPrice);
+		getManagedBean().setNewScBidPrice(newBidPrice);
 		getManagedBean().setScBidPrice(scBidPrice);
+		//itemNewBidPriceTotal();
 		
 	}
 	
 	public void submitBidPrice() {
-		ScBidPrice scBidPrice = getManagedBean().getScBidPrice();
 		
-		System.out.println("****new  bid price is ****** "
-				+ scBidPrice.getBidPrice());
-		System.out.println("****new  decrementAmount Value is ****** "
-				+ getManagedBean().getSelectedDecrementAmt().doubleValue());
-		BigDecimal bidPrice = BigDecimal.valueOf(scBidPrice.getBidPrice()
-				.doubleValue()
-				- getManagedBean().getSelectedDecrementAmt().doubleValue());
-		System.out.println("****new  bid price is ****** "
-				+ bidPrice.doubleValue());
-		getManagedBean().setNewBidPrice(bidPrice);
-		scBidPrice.setBidPrice(bidPrice);
-		// scBidPrice.setNewBidPrice();
-
+		
 		IBiddingSO biddingSO = null;
 
 		try {
@@ -166,18 +175,19 @@ public class OnlineBiddingBackingBean extends
 
 			BiddingReqDTO reqDTO = new BiddingReqDTO();
 
-			reqDTO.setNewBidPrice(scBidPrice);
+			reqDTO.setNewBidPrice(getManagedBean().getNewScBidPrice());
 
 			BiddingResDTO resDTO = biddingSO.submitBidPrice(reqDTO);
 
 			if (resDTO.isSuccessful()) {
 				getManagedBean().setScBidSchedule(resDTO.getScBidSchedule());
-				getManagedBean().setRendered(resDTO.isSuccessful());
+				int index = getManagedBean().getBidPrices().indexOf(getManagedBean().getScBidPrice());
+				getManagedBean().getBidPrices().set(index,resDTO.getScBidPrice());
+				
 				System.out.println("***** bidPrice submitted Sucessfuly *****");
-
+				
 			} else {
 
-				getManagedBean().setRendered(resDTO.isSuccessful());
 				System.out.println("*****bidPrice submission failed*****");
 			}
 
@@ -222,24 +232,29 @@ public class OnlineBiddingBackingBean extends
 		getManagedBean().setItemStartPriceTotal(nf.format(lastBidPriceTotal));
 		
 	}
+	
+	private void itemNewBidPriceTotal() {
 
-	/**
-	 * Get a list of supplier bidding price.
-	 * 
-	 * @param reqDTO
-	 *            ( Long bidScheduleId - bid schedule id (mandatory), Long
-	 *            supplierId - supplier id (mandatory) )
-	 * @return BiddingResDTO(List<ScBidPrice> bidPrices)
-	 */
-	// public BiddingResDTO retrieveSupplierBidPriceList(BiddingReqDTO reqDTO);
+		Double itemNewBidPriceTotal = 0D;
+		if (getManagedBean().getBidPrices() != null
+				&& getManagedBean().getBidPrices().size() != 0) {
+			for (ScBidPrice bidPrice : getManagedBean().getBidPrices()) {
+				Double newBidPrice;
+				if(bidPrice.getNewBidPrice().getBidPrice().doubleValue() == 0){
+					newBidPrice = bidPrice.getBidPrice().doubleValue();
+					
+				}else{
+					
+					newBidPrice = bidPrice.getNewBidPrice().getBidPrice().doubleValue();
+				}
+				
+				itemNewBidPriceTotal += (newBidPrice * bidPrice
+						.getScBidSupplierItem().getScBidItem().getQty());
+			}
+		}
+		getManagedBean().setItemStartPriceTotal(nf.format(itemNewBidPriceTotal));
+		
+	}
 
-	/**
-	 * Submit Bidding Price
-	 * 
-	 * @param reqDTO
-	 *            ( ScBidPrice scBidPrice - bid price instance (mandatory) )
-	 * @return BiddingResDTO(ScBidPrice scBidPrice)
-	 */
-	// public BiddingResDTO submitBidPrice(BiddingReqDTO reqDTO);
-
+	
 }
