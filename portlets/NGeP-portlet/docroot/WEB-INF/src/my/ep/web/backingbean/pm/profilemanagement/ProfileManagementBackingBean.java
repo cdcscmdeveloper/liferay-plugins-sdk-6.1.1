@@ -1521,30 +1521,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 //
 //	}
 	
-	public void tempSearchUserProfile() throws Exception{
-		logger.info("tempSearchUserProfile start");
-		String userName = this.getManagedBean().getUserNames();
-		try{
-		if(userName!=null){
-			UserReqDTO userReqDTO = new UserReqDTO();
-			UserResDTO resDto = null;
-			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);	
-			userReqDTO.setLoginId(userName);
-			
-			resDto = userSO.tempSearchAll(userReqDTO);
-			if(resDto!=null && resDto.isSuccessful()){
-				this.getManagedBean().setResult(resDto.getAllResult());
-			}
-			
-		}
-		}catch (Exception e){
-			e.printStackTrace();
-			throw e;
-		}
-		logger.info("tempSearchUserProfile end");
-		
-	}
 
 	
 	
