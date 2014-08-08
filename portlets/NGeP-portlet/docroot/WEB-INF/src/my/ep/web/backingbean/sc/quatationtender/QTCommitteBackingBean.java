@@ -757,9 +757,6 @@ public class QTCommitteBackingBean extends
 		scCommittee.setScCommitteeMembers(memberList);
 		selectedCommitteTabBean.getScQtCommittee().setScCommittee(scCommittee);				
 
-		// Specification Committee validation
-		RequestContext.getCurrentInstance().execute(
-				"newspecificationcommittee.hide()");
 	}
 
 	public void reset() {
