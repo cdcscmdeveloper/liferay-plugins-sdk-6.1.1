@@ -1,6 +1,7 @@
 package my.ep.web.managedbean.sc.bidding;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -8,10 +9,12 @@ import java.util.concurrent.TimeUnit;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.constants.CommonConstants;
 import my.ep.persistence.entity.sc.bidding.ScBidContactPerson;
 import my.ep.persistence.entity.sc.bidding.ScBidPrice;
 import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.util.CommonUtils;
 
 /**
  * @author Venkat Chanumolu
@@ -29,64 +32,44 @@ public class OnlineBiddingManagedBean extends BaseManagedBean {
 	private List<ScBidPrice> bidPrices;
 	private List<ScBidContactPerson> bidContactPersons;
 	private ScBidPrice scBidPrice;
+	private ScBidPrice newScBidPrice;
 	private BigDecimal selectedDecrementAmt;
 	private BigDecimal newBidPrice;
 	private String itemStartPriceTotal;
 	private String itemLastBidPriceTotal;
-	private boolean rendered;
+	private String itemNewBidPriceTotal;
+
 	private Long remainingBidTime;
 	private Long remainingTimeToBid;
-	
-	
-	private BigDecimal testDecrementAmt1 =BigDecimal.valueOf(1000.00)  ;
-	private BigDecimal testminAmt1 = BigDecimal.valueOf(1000.00);
-	private BigDecimal testmaxAmt1= BigDecimal.valueOf(10000.00);
-	
-	private Double testDecrementAmt3 = 1000.00d;
-	private Double testminAmt3 = 1000.00d;
-	private Double testmaxAmt3 = 10000.00d;
-	
-	
-	private Long testDecrementAmt2 = 1000l;
-	private Long testminAmt2 = 1000l;
-	private Long testmaxAmt2 = 10000l;
-	
 
-	
-	public BigDecimal getTestDecrementAmt1() {
-		return testDecrementAmt1;
+	/**
+	 * @return the newScBidPrice
+	 */
+	public ScBidPrice getNewScBidPrice() {
+		return newScBidPrice;
 	}
 
-	public BigDecimal getTestminAmt1() {
-		return testminAmt1;
+	/**
+	 * @param newScBidPrice
+	 *            the newScBidPrice to set
+	 */
+	public void setNewScBidPrice(ScBidPrice newScBidPrice) {
+		this.newScBidPrice = newScBidPrice;
 	}
 
-	public BigDecimal getTestmaxAmt1() {
-		return testmaxAmt1;
+	/**
+	 * @return the itemNewBidPriceTotal
+	 */
+	public String getItemNewBidPriceTotal() {
+		return itemNewBidPriceTotal;
 	}
 
-	public Double getTestDecrementAmt3() {
-		return testDecrementAmt3;
-	}
-
-	public Double getTestminAmt3() {
-		return testminAmt3;
-	}
-
-	public Double getTestmaxAmt3() {
-		return testmaxAmt3;
-	}
-
-	public Long getTestDecrementAmt2() {
-		return testDecrementAmt2;
-	}
-
-	public Long getTestminAmt2() {
-		return testminAmt2;
-	}
-
-	public Long getTestmaxAmt2() {
-		return testmaxAmt2;
+	/**
+	 * @param itemNewBidPriceTotal
+	 *            the itemNewBidPriceTotal to set
+	 */
+	public void setItemNewBidPriceTotal(String itemNewBidPriceTotal) {
+		this.itemNewBidPriceTotal = itemNewBidPriceTotal;
 	}
 
 	/**
@@ -98,8 +81,8 @@ public class OnlineBiddingManagedBean extends BaseManagedBean {
 
 			remainingTimeToBid = durationCalculator(new Date(),
 					scBidSchedule.getStartDate());
-		} 
-		
+		}
+
 		return remainingTimeToBid;
 	}
 
@@ -133,24 +116,18 @@ public class OnlineBiddingManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the rendered
-	 */
-	public boolean isRendered() {
-		return rendered;
-	}
-
-	/**
-	 * @param rendered
-	 *            the rendered to set
-	 */
-	public void setRendered(boolean rendered) {
-		this.rendered = rendered;
-	}
-
-	/**
 	 * @return the itemLastBidPriceTotal
 	 */
 	public String getItemLastBidPriceTotal() {
+
+		Double lastBidPriceTotal = 0D;
+		if (this.getBidPrices() != null && this.getBidPrices().size() != 0) {
+			for (ScBidPrice bidPrice : this.getBidPrices()) {
+				lastBidPriceTotal += (bidPrice.getBidPrice().doubleValue() * bidPrice
+						.getScBidSupplierItem().getScBidItem().getQty());
+			}
+		}
+		this.setItemStartPriceTotal(nf.format(lastBidPriceTotal));
 		return itemLastBidPriceTotal;
 	}
 
@@ -291,5 +268,9 @@ public class OnlineBiddingManagedBean extends BaseManagedBean {
 
 		return time;
 	}
+	CommonUtils commonUtils = new CommonUtils();
+	DecimalFormat nf = new DecimalFormat(
+			commonUtils
+					.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
 
 }
