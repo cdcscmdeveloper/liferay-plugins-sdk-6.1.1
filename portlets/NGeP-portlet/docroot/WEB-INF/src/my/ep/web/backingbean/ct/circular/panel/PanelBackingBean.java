@@ -1151,6 +1151,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	public void setPanelListner(){
 		if(getItemGeneralCode(this.getManagedBean().getSelectedPanelItems().getPanelCoverageId().getParameterId()).equalsIgnoreCase(ParameterConst.CIRCULAR_PANEL_COVERAGE_ZONE)){
 			this.getManagedBean().setSelectionOfZone(true);
+			this.getManagedBean().setSelectedPanelZone(null);
 		}else if(getItemGeneralCode(this.getManagedBean().getSelectedPanelItems().getPanelCoverageId().getParameterId()).equalsIgnoreCase(ParameterConst.CIRCULAR_PANEL_COVERAGE_ALL)){
 			this.getManagedBean().setSelectionOfZone(false);
 		}else{
