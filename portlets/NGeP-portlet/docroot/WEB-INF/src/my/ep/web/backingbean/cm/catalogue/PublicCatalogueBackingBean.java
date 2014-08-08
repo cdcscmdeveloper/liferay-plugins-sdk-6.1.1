@@ -77,14 +77,14 @@ public class PublicCatalogueBackingBean extends BaseBackingBean<PublicCatalogueM
 
 				Object[] obj = (Object[]) resDTO.getList().get(i);
 
-				String commodityCode = (String)obj[0];
+				String familyCode = (String)obj[0] + "0000";
 
-				System.out.println("*********commodityCode**********"+commodityCode);
-				codeReqDTO.setUnspscCode(commodityCode);
+				System.out.println("*********familyCode**********"+familyCode);
+				codeReqDTO.setUnspscCode(familyCode);
 
 				CodificationResDTO codeResDTO =  codeSO.searchUnspscObj(codeReqDTO);
 
-				this.getManagedBean().getPopularCommodityList().add(codeResDTO.getUnspscObj());
+				this.getManagedBean().getPopularCommodityList().add(codeResDTO.getUnspscObj());//.set Popular family code
 			}
 		}
 

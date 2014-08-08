@@ -168,7 +168,7 @@ public class CodificationBackingBean extends
 		
 		titleFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
 		codeFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
-		
+		this.setSearchDataModel(new SearchPagingDataModel());
 		this.getManagedBean().setAutoCompleteUnspscCode(null);
 		System.out.println("after reset.........................");
 		return null;
