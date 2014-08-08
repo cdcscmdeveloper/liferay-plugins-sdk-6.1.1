@@ -130,7 +130,8 @@
 
 			<p:column headerText="#{lbl['lbl.sc.spec.specification.status']}"
 				style="width:10%">
-				<h:outputText value="InProgress"></h:outputText>
+				<h:outputText
+					value="#{specificationBackingBean.getStatusDescById(stageTwoTechnical.pmStatus.statusId)}"></h:outputText>
 
 			</p:column>
 
