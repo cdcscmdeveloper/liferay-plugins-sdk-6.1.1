@@ -2186,15 +2186,6 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 				specAnswers.addAll(getManagedBean().getServiceTemplateSpecBean().getSpecAnswerList());
 			}
 			
-			// supplier id
-			if(getManagedBean().getSmSupplier() != null){
-				reqDTO.setSupplierId(getManagedBean().getSmSupplier().getSupplierId());
-			}
-			
-			// login id
-			FacesScopes facesScopes = new FacesScopes();
-			reqDTO.setUserId(facesScopes.getUserSessionBean().getUserId());
-			
 			// remarks
 			if(quote.getRemarks() != null ){
 				for (int i = 0; i < quote.getRemarks().size(); i++) {
@@ -2209,7 +2200,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			QuoteResDTO quoteResDTO = quoteSO.saveSupplierResponse(reqDTO);
 			if (quoteResDTO.isSuccessful()) {
 				ScQuote scQuote = getManagedBean().getScQuote();
-				retrieveSupplierView(scQuote);
+				
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
 						FacesMessage.SEVERITY_INFO, 
 						null,
@@ -2217,13 +2208,15 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_SIMPLE_QUOTE), scQuote.getQuoteNo()}, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, 
 								new FacesScopes().getUserLocale())));
-				 // clear SQ data
-				 super.renewSesionObject();
+				
 				FacesContext fc = FacesContext.getCurrentInstance();
 				if(scQuote.getMultipleQuote().equals(Boolean.TRUE)){
+					retrieveSupplierView(scQuote);
 					fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "supplerView");	
 				} else{
 					fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);	
+					 // clear SQ data
+					 super.renewSesionObject();
 				}
 				
 			} else {
@@ -2238,46 +2231,44 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 	/**
 	 * retrieve Supplier details in the supplier View
 	 */
-   public void retrieveSupplierView(ScQuote scQuote) {
-		HttpServletRequest servletRequest = new FacesScopes().getOriginalServletRequest();
-		String hashSupplierIdStr = servletRequest.getParameter(SourcingConstants.SUPPLIER_QUOTE_PARAM_SUPPLIER_ID);
+	public void retrieveSupplierView(ScQuote scQuote) {
 		TemplateSpecBean productTplSpecBean = getManagedBean().getProductTemplateSpecBean();
 		TemplateSpecBean serviceTplSpecBean = getManagedBean().getServiceTemplateSpecBean();
-		
-			IQuoteSO quoteSO = (IQuoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQuoteSO.class);
-			FacesScopes facesScopes = new FacesScopes();
-			QuoteReqDTO quoteReqDTO = new QuoteReqDTO();
-			quoteReqDTO.setQuoteId(scQuote.getQuoteId());
-			quoteReqDTO.setUserId(facesScopes.getUserSessionBean().getUserId());
-			quoteReqDTO.setHashSupplierId(hashSupplierIdStr);
-			quoteReqDTO.setFetchSubEntity(true);
-			QuoteResDTO  quoteResDTO = quoteSO.getQuoteDtlForSupplier(quoteReqDTO);
-		    scQuote = quoteResDTO.getQuoteBidDtl();
-			
-			// remarks
-			scQuote.setRemarks(initializeRemarks(scQuote));
-            // service and product
-			if(quoteResDTO.getProductAnswersTpl() != null && quoteResDTO.getProductAnswersTpl().size() >0){
-				productTplSpecBean.setSpecAnswerList(quoteResDTO.getProductAnswersTpl());
-				productTplSpecBean.setSpecMaster(scQuote.getQuoteDocs().get(0).getSpecMaster());
-				productTplSpecBean.setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
-				getManagedBean().setProductTemplateSpecBean(productTplSpecBean);
-			}
-			
-			 if(quoteResDTO.getServiceAnswersTpl() != null && quoteResDTO.getServiceAnswersTpl().size() >0){
-				serviceTplSpecBean.setSpecAnswerList(quoteResDTO.getServiceAnswersTpl());
-				serviceTplSpecBean.setSpecMaster(scQuote.getQuoteDocs().get(0).getSpecMaster());
-				serviceTplSpecBean.setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
-				getManagedBean().setServiceTemplateSpecBean(serviceTplSpecBean);
-			} 
-			 
-		    if(quoteResDTO.getSupplier() != null){
-		    	getManagedBean().setSmSupplier(quoteResDTO.getSupplier());
-		    }
-			getManagedBean().setScQuote(scQuote);
-			initializeRemarks(scQuote);
+
+		IQuoteSO quoteSO = (IQuoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQuoteSO.class);
+		FacesScopes facesScopes = new FacesScopes();
+		QuoteReqDTO quoteReqDTO = new QuoteReqDTO();
+		quoteReqDTO.setQuoteId(scQuote.getQuoteId());
+		quoteReqDTO.setUserId(facesScopes.getUserSessionBean().getUserId());
+		quoteReqDTO.setSupplierId(getManagedBean().getSmSupplier().getSupplierId());
+		quoteReqDTO.setFetchSubEntity(true);
+		QuoteResDTO  quoteResDTO = quoteSO.getQuoteDtlForSupplier(quoteReqDTO);
+		scQuote = quoteResDTO.getQuoteBidDtl();
+
+		// remarks
+		scQuote.setRemarks(initializeRemarks(scQuote));
+		// service and product
+		if(quoteResDTO.getProductAnswersTpl() != null && quoteResDTO.getProductAnswersTpl().size() >0){
+			productTplSpecBean.setSpecAnswerList(quoteResDTO.getProductAnswersTpl());
+			productTplSpecBean.setSpecMaster(scQuote.getQuoteDocs().get(0).getSpecMaster());
+			productTplSpecBean.setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
+			getManagedBean().setProductTemplateSpecBean(productTplSpecBean);
 		}
-	
+
+		if(quoteResDTO.getServiceAnswersTpl() != null && quoteResDTO.getServiceAnswersTpl().size() >0){
+			serviceTplSpecBean.setSpecAnswerList(quoteResDTO.getServiceAnswersTpl());
+			serviceTplSpecBean.setSpecMaster(scQuote.getQuoteDocs().get(0).getSpecMaster());
+			serviceTplSpecBean.setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
+			getManagedBean().setServiceTemplateSpecBean(serviceTplSpecBean);
+		} 
+
+		if(quoteResDTO.getSupplier() != null){
+			getManagedBean().setSmSupplier(quoteResDTO.getSupplier());
+		}
+		getManagedBean().setScQuote(scQuote);
+		initializeRemarks(scQuote);
+	}
+
 	/**
 	 * Event for Zone in SQ
 	 */
