@@ -7,7 +7,6 @@ import my.ep.ntf.dto.NtfRequestDTO;
 import my.ep.ntf.dto.NtfResponseDTO;
 import my.ep.ntf.service.INtfSO;
 import my.ep.persistence.entity.sm.SmAppl;
-import my.ep.persistence.entity.sm.SmApplRejectReason;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.lookupservice.EpNtfBusinessDelegate;
@@ -72,7 +71,7 @@ public class SmEmailNotificationHelper {
 	}
 
 	public static void sendApplicaitonRejectNotifMail(SmAppl smAppl,
-			Long senderId) {
+			Long senderId, String reasonDesc) {
 		String templateId = "400001";
 		String senderIdVal = null;
 		List<String> receiverList = new ArrayList<String>();
@@ -117,15 +116,16 @@ public class SmEmailNotificationHelper {
 
 		contList.add(smAppl.getApplNo());
 		contList.add(getApplicationDesc(smAppl.getApplType()));
-		StringBuffer sb = new StringBuffer();
-		int count = 0;
-		for (SmApplRejectReason res : smAppl.getSmApplRejectReasons()) {
-			sb.append(++count).append(".)");
-			sb.append(res.getPmReason().getPmReasonDescs().get(0)
-					.getReasonDesc());
-			sb.append("\n");
-		}
-		contList.add(sb.toString());
+		// StringBuffer sb = new StringBuffer();
+		// int count = 0;
+		// for (SmApplRejectReason res : smAppl.getSmApplRejectReasons()) {
+		// sb.append(++count).append(".)");
+		// sb.append(res.getPmReason().getPmReasonDescs().get(0)
+		// .getReasonDesc());
+		// sb.append("\n");
+		// }
+		System.out.println("*** Reason Desc Before email ****" + reasonDesc);
+		contList.add(reasonDesc);
 		contList.add("<br/><a href=" + activationUrl
 				+ ">Click to resubmit</a><br />");
 

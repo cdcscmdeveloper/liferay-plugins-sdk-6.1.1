@@ -655,6 +655,11 @@ public class SmApplicationBackingBean extends
 				|| currentPageType
 						.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)) {
 			retriveCurrentAppl();
+		} else if (getManagedBean().getSmAppl().getSmApplRejectReasons() != null
+				&& !getManagedBean().getSmAppl().getSmApplRejectReasons()
+						.isEmpty()) {
+			System.out.println("*** Clear the rejection list ******* ");
+			getManagedBean().getSmAppl().getSmApplRejectReasons().clear();
 		}
 		if (currentPageType
 				.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)
@@ -734,7 +739,8 @@ public class SmApplicationBackingBean extends
 				calcPersonnelListCount();
 			}
 			if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
-					SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)) {
+					SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)
+					&& valid) {
 				System.out
 						.println("*********OUPUT IS CAPITAL PAGE Values is capital *******");
 				calculateCapital();
@@ -833,6 +839,8 @@ public class SmApplicationBackingBean extends
 	}
 
 	private void setSmApplRejectionReasons() {
+		StringBuffer sb = new StringBuffer();
+		int count = 0;
 		List<SmApplRejectReason> resList = new ArrayList<SmApplRejectReason>();
 		for (Long resId : getManagedBean().getReasonId()) {
 			for (PmReasonDesc desc : getManagedBean().getReasonDescList()) {
@@ -841,10 +849,40 @@ public class SmApplicationBackingBean extends
 					rej.setPmReason(desc.getPmReason());
 					rej.setSmAppl(getManagedBean().getSmAppl());
 					resList.add(rej);
+					System.out.println("Reason Id === " + resId);
+					sb.append(++count).append(".)");
+					sb.append(desc.getReasonDesc());
+					sb.append("\n");
 				}
 			}
+
 		}
-		getManagedBean().getSmAppl().setSmApplRejectReasons(resList);
+		if (getManagedBean().getSmAppl().getSmApplRejectReasons() != null
+				&& !getManagedBean().getSmAppl().getSmApplRejectReasons()
+						.isEmpty()) {
+			System.out.println(" ***** Already exisiting records ******* "
+					+ getManagedBean().getSmAppl().getSmApplRejectReasons()
+							.size());
+			getManagedBean().getSmAppl().getSmApplRejectReasons().clear();
+			System.out.println(" *****Size after reset******* "
+					+ getManagedBean().getSmAppl().getSmApplRejectReasons()
+							.size());
+		}
+		getManagedBean().getSmAppl().getSmApplRejectReasons().addAll(resList);
+
+		// for (SmApplRejectReason res : getManagedBean().getSmAppl()
+		// .getSmApplRejectReasons()) {
+		// System.out.println("Reason Id === "
+		// + res.getPmReason().getReasonId());
+		// PmReasonDesc desc = retrieveReasonDescriptionByReasonId(res
+		// .getPmReason().getReasonId());
+		// if (desc != null) {
+		// sb.append(++count).append(".)");
+		// sb.append(desc.getReasonDesc());
+		// sb.append("\n");
+		// }
+		// }
+		getManagedBean().setReasonDesc(sb.toString());
 	}
 
 	private boolean siteVisitDataUpdate() {
@@ -1032,30 +1070,32 @@ public class SmApplicationBackingBean extends
 		case SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY:
 			// assignEnteredStaffValues();
 			if (getManagedBean().getSmapplShareHolders() == null
-					|| getManagedBean().getSmapplShareHolders().isEmpty()) {
+					|| (getManagedBean().getSmapplShareHolders() != null && getManagedBean()
+							.getSmapplShareHolders().isEmpty())) {
 
 				validSave = false;
 				setNavigationBackToCurrentPage();
 				if (getManagedBean().getBusinessTypeVal() != null
-						&& getManagedBean()
+						&& !getManagedBean()
 								.getBusinessTypeVal()
 								.equalsIgnoreCase(
 										SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT)) {
-					throw new EpException(MessageConst.ERROR_722508);
-				} else {
+					// throw new EpException(MessageConst.ERROR_722508);
+					// } else {
 					throw new EpException(MessageConst.ERROR_722507);
 				}
-			} else if (getManagedBean().getBusinessTypeVal() != null
-					&& getManagedBean()
-							.getBusinessTypeVal()
-							.equalsIgnoreCase(
-									SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT)
-					&& getManagedBean().getSmapplShareHolders().size() < 2) {
-
-				validSave = false;
-				setNavigationBackToCurrentPage();
-				throw new EpException(MessageConst.ERROR_722508);
 			}
+			// else if (getManagedBean().getBusinessTypeVal() != null
+			// && getManagedBean()
+			// .getBusinessTypeVal()
+			// .equalsIgnoreCase(
+			// SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT)
+			// && getManagedBean().getSmapplShareHolders().size() < 2) {
+			//
+			// validSave = false;
+			// setNavigationBackToCurrentPage();
+			// throw new EpException(MessageConst.ERROR_722508);
+			// }
 			if (getManagedBean()
 					.getSmAppl()
 					.getSmCompanyBasic()
@@ -1238,11 +1278,11 @@ public class SmApplicationBackingBean extends
 					payAccCnt = payAccCnt + 1;
 					regAccCnt = regAccCnt + 1;
 				}
-				if (bank.isDefaultAccount()) {
-					designatedAccCnt = designatedAccCnt + 1;
-
-				}
-				if (payAccCnt > 0 && regAccCnt > 0 && designatedAccCnt > 0) {
+				// if (bank.isDefaultAccount()) {
+				// designatedAccCnt = designatedAccCnt + 1;
+				//
+				// }
+				if (payAccCnt > 0 && regAccCnt > 0) {
 					break;
 				}
 			}
@@ -1256,11 +1296,12 @@ public class SmApplicationBackingBean extends
 				setNavigationBackToCurrentPage();
 				throw new EpException(MessageConst.ERROR_722544);
 			}
-			if (designatedAccCnt == 0) {
-				validSave = false;
-				setNavigationBackToCurrentPage();
-				throw new EpException(MessageConst.ERROR_722545);
-			}
+			// if (designatedAccCnt == 0) {
+			// validSave = false;
+			// setNavigationBackToCurrentPage();
+			// throw new EpException(MessageConst.ERROR_722545);
+			// }
+			getManagedBean().setSelectedSignatoryBankAcct(new SmSupplierBank());
 			break;
 		case SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY:
 			if (getManagedBean().getSmAppl().getSmSupplierCategories() != null
@@ -2043,11 +2084,13 @@ public class SmApplicationBackingBean extends
 			RequestContext.getCurrentInstance().execute(
 					"suppEquiCompDtWidVar.paginator.endLink.click()");
 		}
+		saveOrUpdateAppl();
 		assignValReqdToFalse();
 		RequestContext.getCurrentInstance().execute("eqiCompDialog.hide()");
 	}
 
 	public void assignSelEquiCompany(SmEquityCompany equiCompBean) {
+		validatePaidCaptialAmt();
 		populateStatesByCountry(equiCompBean.getSmAddress().getPmCountry()
 				.getCountryId(), SupplierManagementConst.SM_EQUI_COMPANY_PANEL,
 				new PmState(), new PmDistrict(), new PmCity());
@@ -2063,7 +2106,7 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void assignNewEquiCompBean() {
-
+		validatePaidCaptialAmt();
 		getManagedBean().setSelectedEquityCompany(new SmEquityCompany());
 		getManagedBean().getSelectedEquityCompany().setRevNo(1);
 		getManagedBean().getSelectedEquityCompany().setSmAddress(
@@ -2080,6 +2123,7 @@ public class SmApplicationBackingBean extends
 	public void deleteSelectedEquiCompanies() {
 
 		if (getManagedBean().getSelectedEquityCompanies().size() > 0) {
+			validatePaidCaptialAmt();
 			for (SmEquityCompany equi : getManagedBean()
 					.getSelectedEquityCompanies()) {
 				getManagedBean().getSmAppl().getSmEquityCompanies()
@@ -2814,7 +2858,11 @@ public class SmApplicationBackingBean extends
 
 				System.out.println(" **** THIS IS AN UPDATE Personnel ******");
 			} else {
-				if (getManagedBean().getSelectedShareHolder().isEquityOwner()) {
+				if (getManagedBean().getSelectedShareHolder().isEquityOwner()
+						&& getManagedBean()
+								.getCurrentPageType()
+								.equalsIgnoreCase(
+										SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)) {
 					RequestContext.getCurrentInstance().execute(
 							"suppCapShrHldrDtWidVar.paginator.endLink.click()");
 				} else {
@@ -2829,6 +2877,7 @@ public class SmApplicationBackingBean extends
 			}
 			saveOrUpdateAppl();
 			if (fromPage.equalsIgnoreCase("captialInfo")) {
+				calculateCapital();
 				getManagedBean().setRedirectToPersonPage(false);
 			}
 			if (fromPage.equalsIgnoreCase("personnelInfo")) {
@@ -2861,6 +2910,10 @@ public class SmApplicationBackingBean extends
 
 	public void backFromPersonnelPage() {
 		System.out.println("*** Back to perssonel page ******");
+		if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
+				SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)) {
+			calculateCapital();
+		}
 		if (getManagedBean().getSmAppl().getSmPersonnels()
 				.contains(getManagedBean().getSelectedShareHolder())) {
 
@@ -2882,7 +2935,10 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void assignSelShareHolder(SmPersonnel shareHolderBean) {
-
+		if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
+				SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)) {
+			validatePaidCaptialAmt();
+		}
 		if (shareHolderBean.getAuthorizedFlg() == 1) {
 			getManagedBean().setAuthPerCount(0);
 		} else {
@@ -3095,6 +3151,7 @@ public class SmApplicationBackingBean extends
 					"Management / Staff Personnel Information");
 		} else if (personelType
 				.equalsIgnoreCase(SupplierManagementConst.PERSONNEL_TYPE_EQUITY)) {
+			validatePaidCaptialAmt();
 			shr.setEquityOwner(true);
 			getManagedBean().setPersonnelInfoHeader("Share Holder Information");
 		}
@@ -3122,14 +3179,22 @@ public class SmApplicationBackingBean extends
 		System.out.println("*** Delete Share Holders ******* "
 				+ getManagedBean().getSelectedShareHolders().size());
 		if (getManagedBean().getSelectedShareHolders().size() > 0) {
-
+			if (personType
+					.equalsIgnoreCase(SupplierManagementConst.PERSONNEL_TYPE_EQUITY)) {
+				validatePaidCaptialAmt();
+			}
 			for (SmPersonnel shr : getManagedBean().getSelectedShareHolders()) {
 				getManagedBean().getSmAppl().getSmPersonnels().remove(shr);
 				getManagedBean().getSmapplShareHolders().remove(shr);
 			}
 			saveOrUpdateAppl();
 			getManagedBean().getSelectedShareHolders().clear();
-			calcPersonnelListCount();
+			if (!personType
+					.equalsIgnoreCase(SupplierManagementConst.PERSONNEL_TYPE_EQUITY)) {
+				calcPersonnelListCount();
+			} else {
+				calculateCapital();
+			}
 		} else {
 			throw new EpException(MessageConst.ERROR_722534,
 					new String[] { "Personnel" });
@@ -3739,7 +3804,8 @@ public class SmApplicationBackingBean extends
 				getManagedBean().getSmAppl().getSmSupplierBanks().remove(bank);
 			}
 			saveOrUpdateAppl();
-			getManagedBean().getSelectedBranches().clear();
+			getManagedBean().getSelectedBanks().clear();
+			getManagedBean().setSelectedSignatoryBankAcct(new SmSupplierBank());
 		} else {
 			throw new EpException(MessageConst.ERROR_722534,
 					new String[] { "Supplier Bank" });
@@ -3920,9 +3986,9 @@ public class SmApplicationBackingBean extends
 		}
 		initiateSmApplicationTask();
 		String msgConst = "";
-		if (applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)
-				|| applType
-						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
+		if ((applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF) || applType
+				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW))
+				&& !getManagedBean().getSmAppl().isResubmit()) {
 			msgConst = MessageConst.INFO_700053;
 		} else {
 			msgConst = MessageConst.INFO_700005;
@@ -4401,7 +4467,8 @@ public class SmApplicationBackingBean extends
 								.sendApplicaitonRejectNotifMail(
 										getManagedBean().getSmAppl(),
 										new FacesScopes().getUserSessionBean()
-												.getUserId());
+												.getUserId(), getManagedBean()
+												.getReasonDesc());
 						msgConst = MessageConst.INFO_700008;
 					} else if (res.equalsIgnoreCase("Escalate")) {
 						msgConst = MessageConst.INFO_700014;
@@ -4887,6 +4954,20 @@ public class SmApplicationBackingBean extends
 		System.out.println(" *** Reject List ****** "
 				+ resDTO.getReasonDescList().size());
 		this.getManagedBean().setReasonDescList(resDTO.getReasonDescList());
+	}
+
+	private PmReasonDesc retrieveReasonDescriptionByReasonId(Long reasonId) {
+		IReasonSO reqSO = (IReasonSO) BusinessDelegate.getInstance()
+				.getServiceObject("pm", IReasonSO.class);
+		ReasonReqDTO reqDTO = new ReasonReqDTO();
+		reqDTO.setReasonId(reasonId);
+		reqDTO.setLanguage(new FacesScopes().getUserLocale().getLanguage());
+		ReasonResDTO resDTO = reqSO.retrieveReasonDescById(reqDTO);
+		if (resDTO.getReasonDesc() != null) {
+			System.out.println(" *** Reject Description ****** "
+					+ resDTO.getReasonDesc().getReasonDesc());
+		}
+		return resDTO.getReasonDesc();
 	}
 
 	private void retrieveRegistrationStatusList() {
@@ -7204,4 +7285,23 @@ public class SmApplicationBackingBean extends
 		this.getManagedBean().setBusinessTypeLs(pmDesc);
 	}
 
+	private void validatePaidCaptialAmt() {
+		if (getManagedBean().getSmAppl() != null
+				&& getManagedBean().getSmAppl().getSmCompanyBasic() != null
+				&& getManagedBean().getSmAppl().getSmCompanyBasic()
+						.getPaidUpCapital() != null
+				&& getManagedBean().getSmAppl().getSmCompanyBasic() != null
+				&& getManagedBean().getSmAppl().getSmCompanyBasic()
+						.getAuthorizedCapital() != null
+				&& getManagedBean()
+						.getSmAppl()
+						.getSmCompanyBasic()
+						.getPaidUpCapital()
+						.compareTo(
+								getManagedBean().getSmAppl()
+										.getSmCompanyBasic()
+										.getAuthorizedCapital()) > 0) {
+			throw new EpException(MessageConst.ERROR_722523);
+		}
+	}
 }

@@ -262,6 +262,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean reviewSiteVisit;
 	private List<PmParameterDesc> businessTypeLs;
 	private List<String> supplierToPOList;
+	private String reasonDesc;
 
 	public List<String> getSupplierToPOList() {
 		return supplierToPOList;
@@ -1975,6 +1976,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setBusinessTypeLs(List<PmParameterDesc> businessTypeLs) {
 		this.businessTypeLs = businessTypeLs;
+	}
+
+	public String getReasonDesc() {
+		return reasonDesc;
+	}
+
+	public void setReasonDesc(String reasonDesc) {
+		this.reasonDesc = reasonDesc;
 	}
 
 }
