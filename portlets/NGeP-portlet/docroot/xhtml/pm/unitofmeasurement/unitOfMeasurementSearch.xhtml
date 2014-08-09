@@ -1,0 +1,26 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<p:panel id="measurementPanel">
+
+		<h:panelGrid columns="2" >
+	
+	        <h:outputLabel value="#{lbl['lbl.pm.uom.uomcode']}"></h:outputLabel>
+            <p:inputText size="30"  />
+			
+			<h:outputLabel value="#{lbl['lbl.pm.uom.uomname']}"></h:outputLabel>
+			<p:inputText size="50" />
+							
+		    <h:outputLabel value="#{lbl['lbl.pm.search.status']}"></h:outputLabel>
+		       <p:selectOneMenu style="width:205px" >    
+			 	 
+              </p:selectOneMenu> 
+	
+		</h:panelGrid>
+ </p:panel>
+</ui:composition>
