@@ -571,7 +571,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			
 		Long bizNatId  = this.getManagedBean().getSelectedBusinessNature().getLvl5();
 		
-		if(validateNatureBusiness(bizNatId,"N")){
+		if(validateNatureBusiness(bizNatId)){
 			PmBusinessNature bizNatObj = retrieveBusinessNatureById(this.getManagedBean().getSelectedBusinessNature().getLvl5());
 			if(bizNatObj != null){
 				SmSupplierBusiness suppBusiness = new SmSupplierBusiness();
@@ -588,7 +588,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 
 	}
 
-	private boolean validateNatureBusiness(Long bizNatureId, String type){
+	private boolean validateNatureBusiness(Long bizNatureId){
 		List<String> bizNatureLs = new ArrayList<String>();
 		boolean valid = true;
 		
@@ -597,9 +597,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			log.info("----validateNatureBusiness - bizNatId----" + bizNatId);
 			for(SmSupplierBusiness suppBiz : this.getManagedBean().getSmSupp().getSmSupplierBusinesses()){
 				
-				if(type.equals("N")){
-					bizNatureLs.add(suppBiz.getPmBusinessNature().getBusinessNatureId().toString());
-				}
+				bizNatureLs.add(suppBiz.getPmBusinessNature().getBusinessNatureId().toString());
 				
 				log.info("----SuppBiz----" + suppBiz.getPmBusinessNature().getBusinessNatureId().toString());
 				if(bizNatureLs.contains(bizNatId)){
@@ -608,9 +606,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					break;
 				}
 				
-				if(type.equals("U")){
-					bizNatureLs.add(suppBiz.getPmBusinessNature().getBusinessNatureId().toString());
-				}
 			}
 			
 			log.info("----bizNatureLs----" + bizNatureLs.size());
@@ -676,19 +671,23 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		log.info("---------updateBusinessNature-------------" + this.getManagedBean().getSelectedBusinessNature().getPmBusinessNature().getBusinessNatureId());
 
 		Long bizNatId = this.getManagedBean().getSelectedBusinessNature().getPmBusinessNature().getBusinessNatureId();
-		if(bizNatId !=null){		
-			if(validateNatureBusiness(bizNatId,"U")){
-				PmBusinessNature bizNatObj = retrieveBusinessNatureById(this.getManagedBean().getSelectedBusinessNature().getLvl5());
-				if(bizNatObj != null){
-					this.getManagedBean().getSelectedBusinessNature().setPmBusinessNature(bizNatObj);
-					RequestContext.getCurrentInstance().execute("bizDlg.hide()");
-				}
+		
+		if(bizNatId !=null){
+			if(bizNatId.longValue() == this.getManagedBean().getSelectedBusinessNature().getLvl5().longValue()){
+				RequestContext.getCurrentInstance().execute("bizDlg.hide()");
 			}else{
-				//show error msg on dialog
-				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR,null,
-						MessageUtils.getMessage(MessageConst.ERROR_721007,MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
+				if(validateNatureBusiness(bizNatId)){
+					PmBusinessNature bizNatObj = retrieveBusinessNatureById(this.getManagedBean().getSelectedBusinessNature().getLvl5());
+					if(bizNatObj != null){
+						this.getManagedBean().getSelectedBusinessNature().setPmBusinessNature(bizNatObj);
+						RequestContext.getCurrentInstance().execute("bizDlg.hide()");
+					}
+				}else{
+					//show error msg on dialog
+					FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR,null,
+							MessageUtils.getMessage(MessageConst.ERROR_721007,MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
+				}
 			}
-			
 		}
 	}
 	
