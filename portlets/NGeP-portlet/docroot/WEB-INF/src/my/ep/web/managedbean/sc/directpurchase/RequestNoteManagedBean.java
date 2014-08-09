@@ -26,6 +26,7 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sc.directpurchase.ScQuote;
+import my.ep.persistence.entity.sc.directpurchase.ScRNZone;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
@@ -88,6 +89,7 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     
     private boolean titleChecker = Boolean.TRUE;
     private Long prInquiryId; // To get PI id to cancel in request note 
+    private ScRNZone scRNZone = new ScRNZone(); 
     
     // BPM Task
     private SCDirectPurchaseDataType directPurchaseDataType;
@@ -776,6 +778,18 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	 */
 	public void setScQuote(ScQuote scQuote) {
 		this.scQuote = scQuote;
+	}
+	/**
+	 * @return the scRNZone
+	 */
+	public ScRNZone getScRNZone() {
+		return scRNZone;
+	}
+	/**
+	 * @param scRNZone the scRNZone to set
+	 */
+	public void setScRNZone(ScRNZone scRNZone) {
+		this.scRNZone = scRNZone;
 	}
 	
 }
