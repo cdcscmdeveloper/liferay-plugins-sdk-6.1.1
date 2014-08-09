@@ -91,9 +91,9 @@
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText></td>
-				<td><p:outputLabel value="#{lbl['lbl.fl.factored']} " /><p:outputLabel value="*"
+				<td><p:outputLabel value="#{lbl['lbl.fl.factored']} " /><p:outputLabel value="*" rendered="#{flOrderBB.managedBean.fulfilmentOrder.status.statusId ne FulfilmentStatusCont.poPendingRejAck}"
 						styleClass="mandatory" /></td>
-				<td><p:selectOneRadio disabled="#{flOrderBB.managedBean.buttonVal!=null}" 
+				<td><p:selectOneRadio disabled="#{flOrderBB.managedBean.buttonVal!=null or flOrderBB.managedBean.fulfilmentOrder.status.statusId eq FulfilmentStatusCont.poPendingRejAck}" 
 						value="#{flOrderBB.managedBean.factoringCheck}">
 						<f:selectItem itemLabel="Yes" itemValue="true" />
 						<f:selectItem itemLabel="No" itemValue="false" />
