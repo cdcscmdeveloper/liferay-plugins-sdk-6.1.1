@@ -75,7 +75,7 @@ public class SearchAllUserBackingBean extends BaseBackingBean<SearchAllUserManag
 					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);	
 			userReqDTO.setLoginId(userName);
 			
-			resDto = userSO.tempSearchAll(userReqDTO);
+			resDto = userSO.isUserExist(userReqDTO);
 			if(resDto!=null && resDto.isSuccessful()){
 				this.getManagedBean().setResult(resDto.getAllResult());
 			}
