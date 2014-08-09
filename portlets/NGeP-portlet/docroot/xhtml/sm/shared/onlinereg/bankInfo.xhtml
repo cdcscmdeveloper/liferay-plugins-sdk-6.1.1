@@ -12,7 +12,7 @@
 			id="bankInfoId" rowKey="#{bankInfo}">
 
 			<p:column selectionMode="multiple" style="width:2%" />
-			<p:ajax event="rowSelectCheckbox" />
+
 			<p:column>
 				<f:facet name="header">
 					#{lbl['lbl.sm.bankname']}
@@ -46,11 +46,11 @@
 		</p:dataTable>
 
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.btn.add']}" immediate="true"
+			<p:commandButton value="#{lbl['lbl.btn.add']}" partialSubmit="true" process="@this,bankInfoId"
 				action="#{registrationBackingBean.addSupplierBank}"
 				update="bankInfoId" />
-			<p:commandButton value="#{lbl['lbl.btn.delete']}" immediate="true"
-				action="#{registrationBackingBean.removeSupplierBank}"
+			<p:commandButton value="#{lbl['lbl.btn.delete']}"  partialSubmit="true" process="@this,bankInfoId"
+				action="#{registrationBackingBean.removeSupplierBank}" 
 				update="bankInfoId" />
 		</div>
 	</p:panel>
