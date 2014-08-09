@@ -321,8 +321,8 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 				sumOrderedAmt = sumOrderedAmt.add(itemAddr.getOrderedAmt());
 				sumReceivedQty = sumReceivedQty.add(itemAddr.getChargeReceivedQty());
 				sumReceivedAmt = sumReceivedAmt.add(itemAddr.getChargeReceivedAmt());
-				if(itemAddr.getStopInstrItems()!=null && !itemAddr.getStopInstrItems().isEmpty()){
-					for(FlStopInstrItem stopInstrItem : itemAddr.getStopInstrItems()){
+				if(itemAddr.getTempStopInstrItems()!=null && !itemAddr.getTempStopInstrItems().isEmpty()){
+					for(FlStopInstrItem stopInstrItem : itemAddr.getTempStopInstrItems()){
 						sumRecalledQty = sumRecalledQty.add(stopInstrItem.getRecalledQty());
 						sumRecalledAmt = sumRecalledAmt.add(stopInstrItem.getRecalledAmt());
 					}
