@@ -136,7 +136,8 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 					if(flDeliveryAddress.getFlTempDoAddr().isSelected()) {
 						FlDeliveryOrder flDeliveryOrder = new FlDeliveryOrder();
 						flDeliveryOrder.setSupplierDoRef(flDeliveryAddress.getFlTempDoAddr().getSupplierDoRef());
-						flDeliveryOrder.setEstStartDate(new Timestamp(System.currentTimeMillis()));
+						flDeliveryOrder.setEstStartDate(flDeliveryAddress.getStartDate());
+						flDeliveryOrder.setEstEndDate(flDeliveryAddress.getEndDate());
 						flDeliveryOrder.setFlRequest(getManagedBean().getFulfilmentRequest());
 						flDeliveryOrder.setFlFulfilmentOrder(getManagedBean().getFulfilmentOrder());
 						flDeliveryOrder.setFlDeliveryAddress(flDeliveryAddress);
@@ -247,9 +248,6 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 				} else {
 					itemAddr.setDeliveredQty(itemAddr.getFlTempDoItem().getDeliveryQty());
 					itemAddr.setDeliveredAmt(itemAddr.getFlTempDoItem().getDeliveryAmt());
-				}
-				if(itemAddr.getOrderedQty().intValue() == 1 && itemAddr.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)){
-					itemAddr.setDeliveredQty(new BigDecimal(1));
 				}
 			}
 		}
