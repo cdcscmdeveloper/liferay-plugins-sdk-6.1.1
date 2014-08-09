@@ -15,6 +15,8 @@
 		
 		<ui:include src="loaSupplierHeader.xhtml" />
 		
+		<ui:param name="isSupplierAckStatus" value="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT}" />
+		
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
 			<td width="20%" valign="top">
