@@ -42,7 +42,7 @@
       <h:panelGroup>
 		<p:spacer height="15px" />
 		<p:dataTable id="priceDtl" var="itemPrice"
-			value="#{requestNoteBackingBean.managedBean.requestSupplierItem.supplierItemPrices}"
+			value="#{requestNoteBackingBean.managedBean.pricingList}"
 			rowKey="#{itemPrice}" rowIndexVar="index">
 
 			<p:column headerText="#{lbl['lbl.sc.zone']}" style="width:45%">

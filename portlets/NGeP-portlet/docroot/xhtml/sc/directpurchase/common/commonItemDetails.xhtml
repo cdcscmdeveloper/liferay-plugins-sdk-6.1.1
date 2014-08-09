@@ -148,7 +148,7 @@
 							rendered="#{requestNoteBackingBean.checkPriceOffered(requestNoteDtl.scRequestSupplierItem.supplierItemPrice.priceType.parameterCode)}">
 							<p:commandLink partialSubmit="true" update=":form:pricingPopup"
 								process="@this"
-								actionListener="#{requestNoteBackingBean.showReqNotePopUps(requestNoteDtl)}"
+								actionListener="#{requestNoteBackingBean.showPricing(requestNoteDtl)}"
 								oncomplete="pricingPopup.show();">
 							   <p:graphicImage library="ep/images/design" name="evaluate.png"
 							    style="vertical-align:middle" />
