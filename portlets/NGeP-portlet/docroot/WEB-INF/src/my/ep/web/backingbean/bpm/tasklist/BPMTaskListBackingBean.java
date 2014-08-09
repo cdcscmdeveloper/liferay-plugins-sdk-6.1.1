@@ -165,8 +165,8 @@ public class BPMTaskListBackingBean extends
 		temp.put(SCProcessNameConst.SITE_VISIT_PROPOSAL_PROCESS_NAME +SCProcessNameConst.FINALIZE_ATTANDANCE , "sitevisit");
 		temp.put(SCProcessNameConst.SITE_VISIT_PROPOSAL_PROCESS_NAME +SCProcessNameConst.UPDATE_ATTANDANCE , "sitevisit");
 		temp.put(SCProcessNameConst.SUPPLIER_DP_AWARD_PROCESS_NAME + SCProcessNameConst.PREPARE_LOA , SourcingConstants.LOA_LIST_DP_PAGE);
-		temp.put(SCProcessNameConst.SUPPLIER_DP_AWARD_PROCESS_NAME + SCProcessNameConst.APPROVE_LOA , SourcingConstants.LOA_PTJ_PAGE);
-		temp.put(SCProcessNameConst.SUPPLIER_DP_AWARD_PROCESS_NAME + SCProcessNameConst.REVISE_LOA , SourcingConstants.LOA_PTJ_PAGE);
+		temp.put("Supplier DP Acceptance" + SCProcessNameConst.APPROVE_LOA , SourcingConstants.LOA_PTJ_PAGE);
+		temp.put("Supplier DP Acceptance" + SCProcessNameConst.REVISE_LOA , SourcingConstants.LOA_PTJ_PAGE);
 		temp.put("Supplier DP Acceptance" + SCProcessNameConst.ACCEPT_LOA, SourcingConstants.LOA_SUPPLIER_PAGE);
 		temp.put(SCProcessNameConst.QUOTATION_TENDER_PROCESS_NAME+SCProcessNameConst.APPROVE_PUBLICATION, "qtapprovals");
 		
