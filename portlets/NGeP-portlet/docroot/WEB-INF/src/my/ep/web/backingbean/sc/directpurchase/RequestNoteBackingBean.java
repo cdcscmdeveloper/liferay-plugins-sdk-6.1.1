@@ -1143,7 +1143,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 	    // validating suppliers
 	    RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
 	    requestNoteReqDTO.setRequestNoteDtl(scRequestNoteDtl);
-	    directPurchaseSO.validateNumberOfSupplier(requestNoteReqDTO);
+	    directPurchaseSO.validateAddToCart(requestNoteReqDTO);
 	    
 		//TODO have to compare duplicate items in request note
 		if (getManagedBean().getRequestNoteDtls().isEmpty()){
