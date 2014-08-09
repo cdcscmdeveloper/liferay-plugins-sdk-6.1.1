@@ -1278,7 +1278,6 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 	 */
 	public void showReqNotePopUps(ScRequestNoteDtl scRequestNoteDtl){
 		log.info("showReqNotePopUps");
-		List<ScSupplierItemPrice>	supplierItemPrices = new ArrayList<ScSupplierItemPrice>();
 		
 		if(scRequestNoteDtl.getScRequestSupplierItem() != null){
 			ScRequestSupplierItem  scRequestSupplierItem = scRequestNoteDtl.getScRequestSupplierItem();
@@ -1302,18 +1301,36 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			if(scRequestSupplierItem.getSupplierItemPrices() != null && scRequestSupplierItem.getSupplierItemPrices().size() >0){
 				for (ScSupplierItemPrice scSupplierItemPrice : scRequestSupplierItem.getSupplierItemPrices()) {
 					if(scSupplierItemPrice.getPriceType().getParameterId() == scRequestNoteDtl.getPriceType().getParameterId()){
-						supplierItemPrices.add(scSupplierItemPrice);
 						scRequestSupplierItem.getSupplierItemPrice().setPriceType(scSupplierItemPrice.getPriceType());
 					}
 				}
 			}
-			scRequestSupplierItem.setSupplierItemPrices(supplierItemPrices);
-			
 			getManagedBean().setRequestSupplierItem(scRequestSupplierItem);
 			getManagedBean().setRequestNoteDtl(scRequestNoteDtl);
 		}
 	}
 
+	/**
+	 * show pricing details in Request Note
+	 */
+	public void showPricing(ScRequestNoteDtl scRequestNoteDtl){
+		log.info("showPricing");
+		List<ScSupplierItemPrice>	supplierItemPrices = new ArrayList<ScSupplierItemPrice>();
+		if(scRequestNoteDtl.getScRequestSupplierItem() != null){
+			ScRequestSupplierItem  scRequestSupplierItem = scRequestNoteDtl.getScRequestSupplierItem();
+
+			if(scRequestSupplierItem.getSupplierItemPrices() != null && scRequestSupplierItem.getSupplierItemPrices().size() >0){
+				for (ScSupplierItemPrice scSupplierItemPrice : scRequestSupplierItem.getSupplierItemPrices()) {
+
+					if(scSupplierItemPrice.getPriceType().getParameterId() == scRequestNoteDtl.getPriceType().getParameterId()){
+						supplierItemPrices.add(scSupplierItemPrice);
+					}
+				}
+			}
+			getManagedBean().setPricingList(supplierItemPrices);
+		}
+	}
+	
 	/**
 	 * Event for fulfilment type drop down in request note
 	 */
