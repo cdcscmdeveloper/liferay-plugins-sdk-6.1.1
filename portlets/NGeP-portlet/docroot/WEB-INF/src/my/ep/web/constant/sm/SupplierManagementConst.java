@@ -129,7 +129,6 @@ public class SupplierManagementConst {
 	public static final String LOGIN_URL = "";
 	public static final String ORG_TYPE_SUPPLIER = "SUP";
 	public static final String SUPPLIER_BUSINESS_TYPE = "SBT";
-	public static final int PENDING_ACT_STATUS = 8;
 
 	// SDO BPM Action
 	public static final String BPM_INQUIRY = "INQUIRY";
