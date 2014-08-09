@@ -1135,6 +1135,7 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
 			
 			ScLoa scLoa = this.getManagedBean().getScLoa();
+			Long statusId = scLoa.getPmStatus().getStatusId().longValue();
 			
 			validateLOADetails(scLoa);
 			
@@ -1150,7 +1151,6 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 				
 				renewSesionObject();
 				
-				Long statusId = scLoa.getPmStatus().getStatusId().longValue();
 				String messageCode = null;
 				
 				if (QTStatusConst.LOA_PENDING_APPROVAL.equals(statusId)) {
