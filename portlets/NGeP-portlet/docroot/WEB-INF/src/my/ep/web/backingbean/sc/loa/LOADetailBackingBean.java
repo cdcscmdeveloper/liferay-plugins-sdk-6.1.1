@@ -216,7 +216,11 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 		try {
 			SCAwardSupplierDataType dpDataType = getBpmTaskDetails(SCAwardSupplierDataType.class);
 			
+			Long sourceId = Long.valueOf(dpDataType.getSourceId());
 			Long loaId = Long.valueOf(dpDataType.getAwardId());
+			
+			getManagedBean().setSourceId(sourceId);
+			
 			ScLoa scLoa = new ScLoa();
 			scLoa.setLoaId(loaId);
 			editLOAAction(scLoa);
@@ -235,7 +239,10 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 		try {
 			SCAwardSupplierDataType dpDataType = getBpmTaskDetails(SCAwardSupplierDataType.class);
 			
+			Long sourceId = Long.valueOf(dpDataType.getSourceId());
 			Long loaId = Long.valueOf(dpDataType.getAwardId());
+			
+			getManagedBean().setSourceId(sourceId);
 			
 			editSupplierLOAAction(loaId);
 			
@@ -1090,7 +1097,7 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 			
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setScLoa(scLoa);
-			reqDTO.setSubmit(true);
+			reqDTO.setOutcome(BpmOutcomeConst.BPM_SUBMIT);
 			reqDTO.setSourceId(getManagedBean().getSourceId());
 
 			AwardSupplierResDTO resDTO = qtAwardSO.saveLOADtl(reqDTO);
@@ -1143,6 +1150,10 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 			
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setScLoa(scLoa);
+			reqDTO.setSourceId(getManagedBean().getSourceId());
+			reqDTO.setOutcome(outcome);
+			reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
+			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 
 			AwardSupplierResDTO resDTO = qtAwardSO.saveLOADtl(reqDTO);
 			
