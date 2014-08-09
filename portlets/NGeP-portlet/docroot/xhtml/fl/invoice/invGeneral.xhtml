@@ -13,7 +13,7 @@
 				<td><p:inputText size="45"
 						value="#{invoiceBackingBean.managedBean.invoice.flRequest.issuedOrgProfile.parentOrgProfile.orgName}"
 						disabled="true" /></td>
-				<td rowspan="2" valign="top" style="width: 140px;"><p:outputLabel
+				<td rowspan="2" valign="top" style="width: 165px;"><p:outputLabel
 						value="#{lbl['lbl.fl.title']}" /></td>
 				<td rowspan="2" colspan="3"><p:inputTextarea cols="40" rows="2"
 						style=" margin-bottom:5px;"
@@ -147,9 +147,9 @@
 		rendered="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factored eq 'true'}">
 		<table>
 			<tr>
-				<td style="width: 133px;"><p:outputLabel value="#{lbl['lbl.fl.supp.fact.com']}" /></td>
+				<td style="width: 141px;"><p:outputLabel value="#{lbl['lbl.fl.supp.fact.com']}" /></td>
 				<td><p:inputText size="45" disabled="true" value="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.pmFinancialOrg.finOrgName}" /></td>
-				<td style="width: 133px;"><p:outputLabel
+				<td style="width: 170px;"><p:outputLabel
 						value="#{lbl['lbl.fl.payment.bank.name']}" /></td>
 				<td><p:inputText size="35" disabled="true" value="#{invoiceBackingBean.managedBean.invoice.paymentBank.finOrgName}" /></td>
 			</tr>
