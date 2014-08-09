@@ -15,6 +15,7 @@ import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CTProcessNameConst;
 import my.ep.constants.FLProcessNameConst;
 import my.ep.constants.SCProcessNameConst;
@@ -163,9 +164,10 @@ public class BPMTaskListBackingBean extends
 		temp.put(SCProcessNameConst.COMMITTEE_APPROVAL_PROCESS_NAME +SCProcessNameConst.REVISE_COMMITTEE , "qtdetails");
 		temp.put(SCProcessNameConst.SITE_VISIT_PROPOSAL_PROCESS_NAME +SCProcessNameConst.FINALIZE_ATTANDANCE , "sitevisit");
 		temp.put(SCProcessNameConst.SITE_VISIT_PROPOSAL_PROCESS_NAME +SCProcessNameConst.UPDATE_ATTANDANCE , "sitevisit");
-		temp.put(SCProcessNameConst.SUPPLIER_DP_AWARD_PROCESS_NAME + SCProcessNameConst.PREPARE_LOA , "dp-loa-list");
-		temp.put(SCProcessNameConst.SUPPLIER_DP_AWARD_PROCESS_NAME , "review-loa");
-		temp.put(SCProcessNameConst.SUPPLIER_DP_AWARD_PROCESS_NAME + SCProcessNameConst.ACCEPT_LOA , "loa-supplier-response");
+		temp.put(SCProcessNameConst.SUPPLIER_DP_AWARD_PROCESS_NAME + SCProcessNameConst.PREPARE_LOA , SourcingConstants.LOA_LIST_DP_PAGE);
+		temp.put(SCProcessNameConst.SUPPLIER_DP_AWARD_PROCESS_NAME + SCProcessNameConst.APPROVE_LOA , SourcingConstants.LOA_PTJ_PAGE);
+		temp.put(SCProcessNameConst.SUPPLIER_DP_AWARD_PROCESS_NAME + SCProcessNameConst.REVISE_LOA , SourcingConstants.LOA_PTJ_PAGE);
+		temp.put("Supplier DP Acceptance" + SCProcessNameConst.ACCEPT_LOA, SourcingConstants.LOA_SUPPLIER_PAGE);
 		temp.put(SCProcessNameConst.QUOTATION_TENDER_PROCESS_NAME+SCProcessNameConst.APPROVE_PUBLICATION, "qtapprovals");
 		
 		temp.put(SCProcessNameConst.EVALUATION_PROCESS_NAME +SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE , "qtdetails");
