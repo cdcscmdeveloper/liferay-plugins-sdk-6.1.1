@@ -454,7 +454,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		smSupp.getSmAppls().add(smAppl);
 		smSupp.setPmStatus(new PmStatus());
 		smSupp.getPmStatus().setStatusId(20101L);
-		smSupp.setRecordStatusFlg(SupplierManagementConst.PENDING_ACT_STATUS);
+
 		smSuppOwner.setSmSupplier(this.getManagedBean().getSmSupp());
 		smSupp.getSmSupplierOwners().add(smSuppOwner);
 
