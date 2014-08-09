@@ -98,8 +98,8 @@
 			<p:ajax event="close" />
 			<p:fileUpload style="display:inline;" mode="advanced"
 				fileUploadListener="#{amendmentBackingBean.letterOfAcceptenceUpload}"
-				allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
-				invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
+				allowTypes="/(\.|\/)(pdf)$/"
+				invalidFileMessage="Only PDF files are accepted"
 				update=":form:uploadLoaPg">
 			</p:fileUpload>
 		</p:dialog>		

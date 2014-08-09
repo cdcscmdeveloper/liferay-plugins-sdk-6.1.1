@@ -398,16 +398,14 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			    ctBackingBean.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 			    getManagedBean().setRemarkList(resDTO.getCtRemarks());
 			    getManagedBean().setAttachmentList(resDTO.getCtAttachments());
-			
-		        if(getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value())){
-		    	        contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
-		    	        ContractReqDTO reqDTO = new ContractReqDTO();
-		    	        reqDTO.setContractVerId(resDTO.getCtContractVer().getContractVerId());
-		    	        reqDTO.setContractId(resDTO.getCtContractVer().getCtContract().getContractId());
-				        reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
-				        ContractResDTO amendResDTO = contractSO.retrieveExtensionHistory(reqDTO);
-				        getManagedBean().setAmendHistoryList(amendResDTO.getExtensionHistoryList());
-		         }
+			    
+    	        contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+    	        ContractReqDTO reqDTO = new ContractReqDTO();
+    	        reqDTO.setContractVerId(resDTO.getCtContractVer().getContractVerId());
+    	        reqDTO.setContractId(resDTO.getCtContractVer().getCtContract().getContractId());
+		        reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
+		        ContractResDTO amendResDTO = contractSO.retrieveExtensionHistory(reqDTO);
+		        getManagedBean().setAmendHistoryList(amendResDTO.getExtensionHistoryList());
 	   	    } finally {
 		     	contractSO = null;
 		    }
@@ -556,20 +554,22 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				      log.info("Record saved successfully");
 				      String messageId = MessageConst.INFO_700005;
 			      	  if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
-					          messageId = MessageConst.INFO_700025;
-				      }else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
-					         messageId = MessageConst.INFO_700009;
-				      }else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
-					         messageId = MessageConst.INFO_700007;
-				     }else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
+			      		  messageId = MessageConst.INFO_700025;
+				      } else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
+				    	  messageId = MessageConst.INFO_700009;
+				      } else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+					         messageId = MessageConst.INFO_700007;				
+				      } else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 					        messageId = MessageConst.INFO_700008;
-				     }else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
+				      } else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
 					       messageId = MessageConst.INFO_700011;
-				     }else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACCEPT)) {
+				      } else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACCEPT)) {
 					       messageId = MessageConst.INFO_700013;
-				     }else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getTaskName() != null) {
+				      } else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getTaskName() != null) {
 					      messageId = MessageConst.INFO_700026;
-				     }
+				      } else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_COMPLETE)) {
+							messageId = MessageConst.INFO_700001;
+				      }
 				    
 			      	  log.info("Record saved successfully");
 				      FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
@@ -593,7 +593,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	  }
 	 
 	 private void validateContractAmendment(String action) {
-		 if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
+		 if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT) || isBpkApprover()) {
 			if((getManagedBean().getRemarkList().get(0).getRemark() == null || getManagedBean().getRemarkList().get(0).getRemark().length()==0) &&
 				(getManagedBean().getContractVer().getAp201Remark().get(0).getRemark() == null || getManagedBean().getContractVer().getAp201Remark().get(0).getRemark().length()==0) &&
 				(getManagedBean().getContractVer().getItemRemarks().get(0).getRemark() == null || getManagedBean().getContractVer().getItemRemarks().get(0).getRemark().length()==0)) {
@@ -657,6 +657,10 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		else 
 			return null;
 	 }
+	 
+	 public boolean isBpkApprover(){
+		return getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value());
+	}
 	 
 	// Manually check AP201 rule. Should call BPM or rules engine 
 	public void chkComplyAP201Rule() {

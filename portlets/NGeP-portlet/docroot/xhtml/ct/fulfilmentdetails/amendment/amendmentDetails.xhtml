@@ -180,7 +180,7 @@
 		</h:panelGrid>
 		<h:panelGrid columns="2" style="width:100%"
 			columnClasses="columnWidth225" rendered="#{amendmentBackingBean.managedBean.amendHistoryList != null and 
-			!empty amendmentBackingBean.managedBean.amendHistoryList}">
+			!empty amendmentBackingBean.managedBean.amendHistoryList and amendmentBackingBean.bpkApprover}">
 			<h:panelGroup>
 				<div style="height: 35px; vertical-align: top;">
 					<p:outputLabel for="contractHistory"
