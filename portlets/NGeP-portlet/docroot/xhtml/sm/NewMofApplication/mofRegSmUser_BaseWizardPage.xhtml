@@ -173,13 +173,11 @@
 						<td></td>
 					</tr>
 				</table>
-				<table style="width: 99%">
+				<table style="width: 98%">
 					<tr>
-						<td
-							style="color: red; font-weight: bolder; padding-right: 10px; text-align: right;"><h:outputText
-								value="Last Submission Date : " /></td>
-						<td
-							style="color: red; font-weight: bolder; padding-right: 10px; width: 85px;"><h:outputText
+						<td class="smLastSubmitLabel"><h:outputText
+								value="#{lbl['lbl.sm.lastSubmitDate']}" /></td>
+						<td class="smLastSubmitDateVal"><h:outputText
 								value="#{backingBean.managedBean.smAppl.draftExpiryDate}">
 								<f:convertDateTime type="date" pattern="dd-MMM-yyyy" />
 							</h:outputText></td>
