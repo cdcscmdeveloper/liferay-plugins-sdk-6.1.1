@@ -2017,6 +2017,32 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				return "editCatalogItem";
 			}
 			
+			boolean promotionError = false;
+			if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getPrice()==null){
+				if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getStartDate()==null){
+					if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getEndDate()!=null)
+						promotionError = true;
+				}else{
+						promotionError = true;
+				}
+			}else{
+				if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getStartDate()==null)
+					promotionError = true;
+				else{
+					if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getEndDate()==null)
+						promotionError = true;
+				}
+			}
+			
+			if(promotionError){
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,MessageUtils.getMessage(MessageConst.ERROR_715009, 
+						new String[]{ResourceBundleUtils.getMessage("lbl.cm.promotion",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())},
+						MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				return "editCatalogItem";
+			}
+					
+			
 			if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getStartDate()!=null && this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getEndDate()!=null){
 				if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getEndDate().after(cmStandardPricing.getEndDate())||
 				   this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getStartDate().after(cmStandardPricing.getEndDate())||
