@@ -231,6 +231,12 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 					}
 				}
 				
+				// validate  quantity
+				
+		    	if(scPurchaseInDefault.getQuantity() != null && scPurchaseInDefault.getQuantity().intValue() < 0){
+		    		throw new EpException(MessageConst.INFO_100033, new String[]{"Quatity" ,"0"});
+		    	}
+				
 				if(scPurchaseInDefault.getContractedItem() != null) {
 					if(scPurchaseInDefault.getContractedItem().getCtContractVer().getCtContract().getContractType() != null){
 						if(scPurchaseInDefault.getContractedItem().getCtContractVer().getCtContract().

@@ -408,7 +408,13 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 		    	requestNoteDtls.add(requestNoteDtl);
 
 		    	List<ScRequestSupplierItem> requestSupplierItems =  new  ArrayList<ScRequestSupplierItem>();
-		    	ScRequestSupplierItem scRequestSupplierItem   = prInquiry.getRequestSupplierItem() ;
+		    	ScRequestSupplierItem scRequestSupplierItem   = prInquiry.getRequestSupplierItem();
+		    	
+		    	// validate order quantity
+		    	if(scRequestSupplierItem.getRequestNoteItem().getQuantity() !=null && scRequestSupplierItem.getRequestNoteItem().getQuantity().intValue() <0){
+		    		throw new EpException(MessageConst.INFO_100033, new String[]{" Order Quatity" ,"0"});
+		    	}
+
 		    	scRequestSupplierItem.setScRequestNoteDtl(requestNoteDtls);
 		    	requestSupplierItems.add(scRequestSupplierItem);
 		    	prInquiry.setScRequestSupplierItems(requestSupplierItems);
