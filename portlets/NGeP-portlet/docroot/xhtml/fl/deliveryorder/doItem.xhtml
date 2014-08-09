@@ -161,14 +161,14 @@
 					</p:column>
 					<p:column headerText="Received &lt;br /&gt; Qty."
 						style="text-align:right">
-						<h:outputText value="#{doItems.receivedQty}">
+						<h:outputText value="#{doItems.chargeReceivedQty}">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, doItems.scRequestItem.uom.uomCode)}" />
 						</h:outputText>
 					</p:column>
 					<p:column headerText="Received &lt;br /&gt; Amt.(RM)"
 						style="text-align:right">
-						<h:outputText value="#{doItems.receivedAmt}">
+						<h:outputText value="#{doItems.chargeReceivedAmt}">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</h:outputText>
