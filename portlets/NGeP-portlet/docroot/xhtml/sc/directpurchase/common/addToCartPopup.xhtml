@@ -51,7 +51,7 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.order.qty']}" /></td>
-					<td><p:inputText size="25" styleClass="ppRightBtn"  label="#{lbl['lbl.sc.order.qty']}" maxlength="14" id="oderQtyId" required="#{requestNoteBackingBean.managedBean.required}"
+					<td><p:inputText size="25" styleClass="ppRightBtn"  label="#{lbl['lbl.sc.order.qty']}" maxlength="14" id="oderQtyId" 
 					       validatorMessage="Order Qty : must be a decimal number between 0.0 and 9999999999.999"
 							value="#{requestNoteBackingBean.managedBean.requestSupplierItem.requestNoteItem.quantity}">
 						</p:inputText><p:message id="oderQtyMsg" for="oderQtyId" display="icon" /></td>
