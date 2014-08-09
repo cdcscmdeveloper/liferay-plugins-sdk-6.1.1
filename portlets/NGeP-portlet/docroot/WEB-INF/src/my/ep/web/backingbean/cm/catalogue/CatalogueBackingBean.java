@@ -1859,7 +1859,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 						this.getManagedBean().getSelectedMaintainItem().setItemStatus("P");
 					}
 				}
-				System.out.println("isReviewRequired:"
+				/*System.out.println("isReviewRequired:"
 						+ this.getManagedBean().getSelectedMaintainItem()
 								.isReviewRequired());
 
@@ -1870,7 +1870,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				} else {
 					this.getManagedBean().getSelectedMaintainItem()
 							.setItemStatus("U");
-				}
+				}*/
 
 			}
 
@@ -1981,7 +1981,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			
 			//----------logic checking-----------------------------------------------------------------------------------------------//
 			
-			if(cmStandardPricing.getPrice().longValue()==0){
+			if(cmStandardPricing.getPrice().longValue()<=-1){
 				FacesContext.getCurrentInstance().addMessage(
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
@@ -2292,6 +2292,22 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			
 			//----------logic checking end-------------------------------------------------------------------------------------------//
 			
+			if (!inactiveFlag) {
+				log.info("-------------------------------------------------------------------------------------------here");
+				System.out.println("isReviewRequired:"
+						+ this.getManagedBean().getSelectedMaintainItem()
+								.isReviewRequired());
+
+				if (this.getManagedBean().getSelectedMaintainItem()
+						.isReviewRequired()) {
+					this.getManagedBean().getSelectedMaintainItem()
+							.setItemStatus("P");
+				} else {
+					this.getManagedBean().getSelectedMaintainItem()
+							.setItemStatus("U");
+				}
+			}
+			
 			//record status = active
 			this.getManagedBean().getSelectedMaintainItem().setRecordStatusFlg(1);
 			
@@ -2412,8 +2428,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					return "catalogMaintenanceFile";
 				}
 				
-				//price is less than Rm1
-				if(catalog.getCmStandardPricing().getPrice().longValue()==0){
+				//price 
+				if(catalog.getCmStandardPricing().getPrice().longValue()<=-1){
 					FacesContext.getCurrentInstance().addMessage(
 							null,
 							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
