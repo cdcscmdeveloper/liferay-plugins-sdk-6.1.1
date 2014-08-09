@@ -1,13 +1,9 @@
 package my.ep.web.managedbean.sm.registration;
 
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-
-import org.primefaces.model.UploadedFile;
 
 import my.ep.persistence.entity.pm.common.PmBusinessNature;
 import my.ep.persistence.entity.pm.common.PmCertBody;
@@ -81,7 +77,6 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	//private List<SmSupplierBusiness> suppBusinessNatureLs;
 	private SmSupplierBusiness[] selectedBusinessNatureLs;
 	private SmSupplierBusiness selectedBusinessNature;
-	private SmSupplierBusiness suppBusinessNature;
 	
 	private Long bizIdL1;
 	private Long bizIdL2;
@@ -398,14 +393,6 @@ public class RegistrationManagedBean extends BaseManagedBean {
 
 	public void setBusinessNatureL5(List<PmBusinessNature> businessNatureL5) {
 		this.businessNatureL5 = businessNatureL5;
-	}
-
-	public SmSupplierBusiness getSuppBusinessNature() {
-		return suppBusinessNature;
-	}
-
-	public void setSuppBusinessNature(SmSupplierBusiness suppBusinessNature) {
-		this.suppBusinessNature = suppBusinessNature;
 	}
 	
 //	public List<SmSupplierBusiness> getSuppBusinessNatureLs() {
