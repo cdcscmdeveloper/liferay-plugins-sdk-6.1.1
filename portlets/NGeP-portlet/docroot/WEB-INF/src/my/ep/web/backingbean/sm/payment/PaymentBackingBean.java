@@ -132,8 +132,8 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 		/*
 		 * for testing Purpose
 		 */
-/*		System.out.println(">>>>>>>InitPayment Stert>>>>");
-		MofRegistrationReqDTO mofReqDTO = new MofRegistrationReqDTO();
+		System.out.println(">>>>>>>InitPayment Stert>>>>");
+		/*MofRegistrationReqDTO mofReqDTO = new MofRegistrationReqDTO();
 		mofReqDTO.setApplId(1009);
 		IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate.getInstance().getServiceObject("sm", IMofRegistrationSO.class);
 		MofRegistrationResDTO mofResDTO  = mofRegistrationSO.retrieveSupplierProfileByApplId(mofReqDTO);
@@ -459,17 +459,35 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 				if(status.equals(SupplierManagementConst.MOL_SUCCESS)){
 					Long paymentId = smPayment.getPaymentId();
 					BigDecimal paymentAmount = smPayment.getPaymentAmt();
-					if((paymentId == ordId) && (paymentAmount.compareTo(txAmount) == 0) ){
-						if(smPayment.getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STAT_PENDING_PAYMENT) || 
-								smPayment.getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STAT_FAILED_PAYMENT)){
-							statusCode = SupplierManagementConst.PM_STAT_SUCCESS_PAYMENT;
-							validPayment = true;
-						}else{
-							statusCode = smPayment.getPmStatus().getStatusId();
+					
+					System.out.println("paymentId>>>>" + paymentId);
+					System.out.println("orderId>>>>" + orderId);
+					System.out.println("paymentAmount>>>>" + paymentAmount);
+					System.out.println("txAmount>>>>" + txAmount);
+					
+					boolean test = (paymentId == ordId && paymentAmount.compareTo(txAmount) == 0);
+					boolean payOrd = (paymentId == ordId);
+					boolean px = (paymentAmount.compareTo(txAmount) == 0);
+					System.out.println("test<>>>>>" + test);
+					System.out.println("payOrd<>>>>>" + payOrd);
+					System.out.println("px<>>>>>" + px);
+					
+					if(paymentId.longValue() == ordId.longValue() && paymentAmount.compareTo(txAmount) == 0){
+						System.out.println("current status>>>>" + smPayment.getPmStatus().getStatusId());
+						if(smPayment.getPmStatus().getStatusId() == SupplierManagementConst.PM_STAT_PENDING_PAYMENT || 
+								smPayment.getPmStatus().getStatusId() == SupplierManagementConst.PM_STAT_FAILED_PAYMENT){
+							System.out.println("current payment>>>>" + smPayment.getPmStatus().getStatusId());
+							
+							if(!smPayment.getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STAT_SUCCESS_PAYMENT)){
+								statusCode = SupplierManagementConst.PM_STAT_SUCCESS_PAYMENT;
+								validPayment = true;
+							}else{
+								statusCode = smPayment.getPmStatus().getStatusId();
+							}
 						}
-//						log.info("Payment Success>>>>>" + orderId);
-//						statusCode = SupplierManagementConst.PM_STAT_SUCCESS_PAYMENT;
-//						validPayment = true;
+						//						log.info("Payment Success>>>>>" + orderId);
+						//						statusCode = SupplierManagementConst.PM_STAT_SUCCESS_PAYMENT;
+						//						validPayment = true;
 					}
 					else{
 						statusCode = SupplierManagementConst.PM_STAT_FAILED_PAYMENT;
@@ -508,9 +526,14 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 				pymtReqDTO.setValidPayment(validPayment);
 				pymtReqDTO.setSmPayment(smPayment);
 				pymtReqDTO.setOutcome(SupplierManagementConst.BPM_SUBMIT);
-				pymtReqDTO.setTaskId(this.getManagedBean().getTaskId());
+
+				pymtReqDTO.setTaskId(this.getManagedBean().getTaskId()); 
 				pymtReqDTO.setBpmPojo(this.getManagedBean().getBpmPojo());
 				pymtReqDTO.setToken(token);
+				
+				FacesScopes fs = new FacesScopes();
+				pymtReqDTO.setServerName(fs.getRequest().getServerName());
+				pymtReqDTO.setServerPort(fs.getRequest().getServerPort());
 				
 				PaymentResDTO pymtResDTO = reqSO.updatePayment(pymtReqDTO);
 				
@@ -526,7 +549,6 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 		}
 		PortalUtil.getHttpServletRequest(new FacesScopes().getRequest()).getSession().removeAttribute("paymentTaskId");
 		PortalUtil.getHttpServletRequest(new FacesScopes().getRequest()).getSession().removeAttribute("paymentBpmPojo");
-//		return "paymentAcknowledge";
 	}
 	
 	private void curlIPN(HttpServletRequest httpServletRequest) throws Exception{
@@ -657,6 +679,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 		String token = getFacesScopes().getBPMAuthenticationCtxToken();
 		PaymentReqDTO pymtReqDTO = new PaymentReqDTO();
 		
+		pymtReqDTO.setSmAppl(this.getManagedBean().getSmAppl());
 		pymtReqDTO.setOutcome(SupplierManagementConst.BPM_SUBMIT);
 		pymtReqDTO.setTaskId(this.getManagedBean().getTaskId());
 		pymtReqDTO.setBpmPojo(this.getManagedBean().getBpmPojo());
