@@ -103,6 +103,8 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     private List<PmStatusDesc> statusDescs;
     private String createdBy;
 	private	List<ScRequestNoteDtl>	supplierRecList	=	new ArrayList<ScRequestNoteDtl>();
+	private	List<ScSupplierItemPrice>	pricingList	=	new ArrayList<ScSupplierItemPrice>(); // For pricing pop to show all pricing
+	
     private ScQuote scQuote;
     
     private IPagingDataModel<ScRequestNote> reqNoteDataModel = new RequestNotePagingDataModel();
@@ -790,6 +792,18 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	 */
 	public void setScRNZone(ScRNZone scRNZone) {
 		this.scRNZone = scRNZone;
+	}
+	/**
+	 * @return the pricingList
+	 */
+	public List<ScSupplierItemPrice> getPricingList() {
+		return pricingList;
+	}
+	/**
+	 * @param pricingList the pricingList to set
+	 */
+	public void setPricingList(List<ScSupplierItemPrice> pricingList) {
+		this.pricingList = pricingList;
 	}
 	
 }
