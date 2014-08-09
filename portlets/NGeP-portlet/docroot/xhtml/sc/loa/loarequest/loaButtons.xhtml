@@ -12,7 +12,7 @@
 			process="@form" update="@form" />
 			
 		<c:choose>
-			<c:when test="#{empty lOADetailBackingBean.managedBean.taskId}">
+			<c:when test="#{isPendingSubmissionStatus}">
 				<p:commandButton value="#{lbl['lbl.so.submit']}" icon="ui-icon-submit" 
 					action="#{lOADetailBackingBean.submitAction}" 
 					process="@form" update="@form"  />
@@ -20,11 +20,15 @@
 			<c:when test="#{!empty lOADetailBackingBean.managedBean.taskId}">
 				<ui:repeat var="bpmAction" value="#{lOADetailBackingBean.managedBean.outComes}">
 					<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+					<ui:param name="isReject" value="#{bpmAction == 'REJECT'}" />
 					
 					<p:commandButton value="#{lbl[buttonLabel]}" update="@form" 
 						styleClass="ui-button"
 						icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
-						action="#{lOADetailBackingBean.updateBpmTaskAction(bpmAction)}" />
+						action="#{lOADetailBackingBean.updateBpmTaskAction(bpmAction)}"
+						partialSubmit="true"
+						process="#{isReject ? '@this' : '@form'}"
+						update="#{isReject ? '@this' : '@form'}" />
 				</ui:repeat>
 			</c:when>
 		</c:choose>

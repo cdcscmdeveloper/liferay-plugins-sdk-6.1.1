@@ -1086,9 +1086,10 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
 			
+			String outcome = BpmOutcomeConst.BPM_SUBMIT;
 			ScLoa scLoa = this.getManagedBean().getScLoa();
 			
-			validateLOADetails(scLoa);
+			validateLOADetails(scLoa, outcome);
 			
 			parseLOADetails(scLoa);
 			
@@ -1097,7 +1098,7 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 			
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setScLoa(scLoa);
-			reqDTO.setOutcome(BpmOutcomeConst.BPM_SUBMIT);
+			reqDTO.setOutcome(outcome);
 			reqDTO.setSourceId(getManagedBean().getSourceId());
 
 			AwardSupplierResDTO resDTO = qtAwardSO.saveLOADtl(reqDTO);
@@ -1144,7 +1145,7 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 			ScLoa scLoa = this.getManagedBean().getScLoa();
 			Long statusId = scLoa.getPmStatus().getStatusId().longValue();
 			
-			validateLOADetails(scLoa);
+			validateLOADetails(scLoa, outcome);
 			
 			parseLOADetails(scLoa);
 			
@@ -1165,7 +1166,7 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 				String messageCode = null;
 				
 				if (QTStatusConst.LOA_PENDING_APPROVAL.equals(statusId)) {
-					if (BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome)) {
+					if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
 						messageCode = MessageConst.INFO_700007;
 					} else if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)) {
 						messageCode = MessageConst.INFO_700008;	
@@ -1194,10 +1195,12 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 		return null;	
 	}
 	
-	private void validateLOADetails(ScLoa scLoa) {
+	private void validateLOADetails(ScLoa scLoa, String outcome) {
 		Long statusId = scLoa.getPmStatus().getStatusId().longValue();
 		
-		if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId)) {
+		if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId) 
+				&& BpmOutcomeConst.BPM_ACCEPT.equals(outcome)) {
+			
 			if (!getManagedBean().isAgreeWithTermsConditions()) {
 				throw new EpException(MessageConst.ERROR_750002);
 			}	

@@ -10,12 +10,12 @@
 
 	<ui:define name="contentSection">
 		<p:messages id="loaMaintMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
-				
+		
+		<ui:param name="isSupplierAckStatus" value="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT}" />
+		
 		<ui:include src="/xhtml/sc/loa/loarequest/loaButtons.xhtml" />
 		
 		<ui:include src="loaSupplierHeader.xhtml" />
-		
-		<ui:param name="isSupplierAckStatus" value="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT}" />
 		
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
