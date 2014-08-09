@@ -400,8 +400,8 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 
 	public void retrieveRejectionData(FlFulfilmentItemAddr flFulfilmentItemAddr) {
 		getManagedBean().setRejectionList(new ArrayList<FlFulfilmentNoteItem>());
-		for(FlDelOrderItem delOrderItem : flFulfilmentItemAddr.getFlDelOrderItems()) {
-			for(FlFulfilmentNoteItem frnItem : delOrderItem.getFlFulfilmentNoteItem()) {
+		for(FlDelOrderItem delOrderItem : flFulfilmentItemAddr.getTempFlDelOrderItems()) {
+			for(FlFulfilmentNoteItem frnItem : delOrderItem.getTempFlFulfilmentNoteItem()) {
 				if(frnItem.getRejectedQty().doubleValue()>0 || frnItem.getRejectedAmt().doubleValue()>0) {
 					getManagedBean().getRejectionList().add(frnItem);
 				}
