@@ -10,7 +10,7 @@
 			<tr>
 				<td style="width: 139px"><p:outputLabel
 						value="#{lbl['lbl.fl.ministry']}" /></td>
-				<td><p:inputText size="45"
+				<td><p:inputText size="52"
 						value="#{invoiceBackingBean.managedBean.invoice.flRequest.issuedOrgProfile.parentOrgProfile.orgName}"
 						disabled="true" /></td>
 				<td rowspan="2" valign="top" style="width: 140px;"><p:outputLabel
@@ -30,7 +30,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.requisitioner']}" /></td>
-				<td><p:inputText size="45"
+				<td><p:inputText size="52"
 						value="#{invoiceBackingBean.managedBean.invoice.flRequest.requistioner.userName}"
 						disabled="true" /></td>
 				<td><h:outputLabel value="#{lbl['lbl.fl.factored']}" /></td>
@@ -39,7 +39,7 @@
 			</tr>
 			<tr>			
 				<td><p:outputLabel value="#{lbl['lbl.fl.inv.contract.no']}" rendered="#{invoiceBackingBean.managedBean.invoice.flRequest.docType eq 'CR'}" /></td>
-				<td><p:inputText disabled="true" size="45" value="#{invoiceBackingBean.managedBean.invoice.flRequest.ctContract.contractNo}" 
+				<td><p:inputText disabled="true" size="52" value="#{invoiceBackingBean.managedBean.invoice.flRequest.ctContract.contractNo}" 
 				rendered="#{invoiceBackingBean.managedBean.invoice.flRequest.docType eq 'CR'}"/></td>
 			</tr>
 		</table>
@@ -77,22 +77,22 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.name']}" /></td>
-				<td><p:inputText size="45" disabled="true" id="suppName"
+				<td><p:inputText size="52" disabled="true" id="suppName"
 						value="#{invoiceBackingBean.managedBean.invoice.flRequest.flSupplierDtl.supplierName}" /></td>
 				<td style="width: 148px;"><p:outputLabel
 						rendered="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factored eq 'false'}"
 						value="#{lbl['lbl.fl.payment.bank.name']}" /></td>
-				<td><p:inputText size="45" disabled="true" id="suppBankName"
+				<td><p:inputText size="52" disabled="true" id="suppBankName"
 						rendered="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factored eq 'false' and invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.docType eq 'PO'}"
 						value="#{invoiceBackingBean.managedBean.invoice.paymentBank.finOrgName}" />
-						<p:inputText size="45" disabled="true"
+						<p:inputText size="52" disabled="true"
 						rendered="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factored eq 'false' and invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.docType eq 'CO'}"
 						value="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.flFulfilmentRequest.ctContract.latestContractVer.ctContractValue.bankName}" />
 						</td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.branch']}" /></td>
-				<td><p:inputText size="45" disabled="true"
+				<td><p:inputText size="52" disabled="true"
 						value="#{invoiceBackingBean.managedBean.invoice.flRequest.flSupplierDtl.branchName}" /></td>
 			</tr>
 			<tr>
@@ -120,24 +120,24 @@
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.del.ord.contact.person']}" /></td>
-				<td><p:inputText size="45" disabled="true"
+				<td><p:inputText size="52" disabled="true"
 						value="#{invoiceBackingBean.managedBean.invoice.flRequest.flSupplierDtl.contactPerson}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.del.ord.contact.email']}" /></td>
-				<td><p:inputText size="45" disabled="true"
+				<td><p:inputText size="52" disabled="true"
 						value="#{invoiceBackingBean.managedBean.invoice.flRequest.flSupplierDtl.contactEmail}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.del.ord.contact.no']}" /></td>
-				<td><p:inputText size="45" disabled="true"
+				<td><p:inputText size="52" disabled="true"
 						value="#{invoiceBackingBean.managedBean.invoice.flRequest.flSupplierDtl.contactPhoneNo}" /></td>
 			</tr>
 			<tr>
 				<td style="width: 72px;"><p:outputLabel
 						value="#{lbl['lbl.fl.supp.inv.no']}" /></td>
-				<td><p:inputText size="45"
+				<td><p:inputText size="52"
 						value="#{invoiceBackingBean.managedBean.invoice.supplierInvoiceRef}" /></td>
 			</tr>
 		</table>
@@ -148,16 +148,16 @@
 		<table>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.fact.com']}" /></td>
-				<td><p:inputText size="45" disabled="true" value="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.pmFinancialOrg.finOrgName}" /></td>
+				<td><p:inputText size="52" disabled="true" value="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.pmFinancialOrg.finOrgName}" /></td>
 				<td style="width: 133px;"><p:outputLabel
 						value="#{lbl['lbl.fl.payment.bank.name']}" /></td>
-				<td><p:inputText size="45" disabled="true" value="#{invoiceBackingBean.managedBean.invoice.paymentBank.finOrgName}" /></td>
+				<td><p:inputText size="52" disabled="true" value="#{invoiceBackingBean.managedBean.invoice.paymentBank.finOrgName}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.factoring.branch']}" /></td>
-				<td><p:inputText size="45" disabled="true" value="#{invoiceBackingBean.managedBean.branchName}" /></td>
+				<td><p:inputText size="52" disabled="true" value="#{invoiceBackingBean.managedBean.branchName}" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.bank.acc.no']}" /></td>
-				<td><p:inputText size="45" disabled="true" value="#{invoiceBackingBean.managedBean.invoice.accountNo}" /></td>
+				<td><p:inputText size="52" disabled="true" value="#{invoiceBackingBean.managedBean.invoice.accountNo}" /></td>
 			</tr>
 			<tr>
 				<td valign="top" style="width: 137px;"><p:outputLabel
@@ -174,7 +174,7 @@
 							<td style="width: 25px;"><p:inputText size="13"
 									disabled="true"
 									value="#{invoiceBackingBean.managedBean.phoneNo}" /></td>
-							<td style="width: 65px;"><p:outputLabel
+							<td style="width: 80px;"><p:outputLabel
 									value="#{lbl['lbl.fl.supp.faxno']}" /></td>
 							<td><p:inputText size="11" disabled="true"
 									value="#{invoiceBackingBean.managedBean.faxNo}" /></td>
@@ -184,19 +184,19 @@
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.del.ord.contact.person']}" /></td>
-				<td><p:inputText size="45" disabled="true"
+				<td><p:inputText size="52" disabled="true"
 						value="#{invoiceBackingBean.managedBean.contactPerson}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.del.ord.contact.email']}" /></td>
-				<td><p:inputText size="45"
+				<td><p:inputText size="52"
 						value="#{invoiceBackingBean.managedBean.contactEmail}"
 						disabled="true" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.del.ord.contact.no']}" /></td>
-				<td><p:inputText size="45" disabled="true"
+				<td><p:inputText size="52" disabled="true"
 						value="#{invoiceBackingBean.managedBean.contactPhoneNo}" /></td>
 			</tr>
 		</table>
