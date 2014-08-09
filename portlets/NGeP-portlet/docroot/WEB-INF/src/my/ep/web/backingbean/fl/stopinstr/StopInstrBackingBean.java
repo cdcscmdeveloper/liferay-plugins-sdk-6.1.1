@@ -22,6 +22,7 @@ import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
+import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -96,6 +97,11 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 			String messageId = MessageConst.INFO_700005;
 			if(reqDTO.isApprover()) {
 				messageId = MessageConst.INFO_700026;
+			}
+			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
+				messageId = MessageConst.INFO_700008;
+			} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+				messageId = MessageConst.INFO_700007;
 			}
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
 					FacesMessage.SEVERITY_INFO, null,
