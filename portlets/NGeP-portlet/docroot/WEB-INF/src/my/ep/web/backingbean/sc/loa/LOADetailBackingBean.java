@@ -153,37 +153,14 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 		return QTConstants.LOA_PAGE;
 	}
 	
-	public void preRenderView() {
-		debugLogger("preRenderView");
-		
-		try {
-			SCAwardSupplierDataType dpDataType = getBpmTaskDetails(SCAwardSupplierDataType.class);
-			
-			Long loaId = Long.valueOf(dpDataType.getAwardId());
-			ScLoa scLoa = new ScLoa();
-			scLoa.setLoaId(loaId);
-			editLOAAction(scLoa);
-			
-			FacesContext fc = FacesContext.getCurrentInstance();
-			fc.getApplication().getNavigationHandler()
-					.handleNavigation(fc, null, QTConstants.LOA_PAGE);	
-		} catch (Exception e) {
-			handleException(e);
-		}
-	}
-	
-	public void preRenderSupplierView() {
-		debugLogger("preRenderSupplierView");
+	public void editSupplierLOAAction(Long loaId) {
+		debugLogger("editSupplierLOAAction");
 		
 		IQTAwardSO qtAwardSO = null;
 		
 		try {
 			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
-			
-			SCAwardSupplierDataType dpDataType = getBpmTaskDetails(SCAwardSupplierDataType.class);
-			
-			Long loaId = Long.valueOf(dpDataType.getAwardId());
 			
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setLoaId(loaId);
@@ -230,6 +207,40 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 			handleException(e);
 		} finally {
 			qtAwardSO = null;
+		}
+	}
+	
+	public void preRenderView() {
+		debugLogger("preRenderView");
+		
+		try {
+			SCAwardSupplierDataType dpDataType = getBpmTaskDetails(SCAwardSupplierDataType.class);
+			
+			Long loaId = Long.valueOf(dpDataType.getAwardId());
+			ScLoa scLoa = new ScLoa();
+			scLoa.setLoaId(loaId);
+			editLOAAction(scLoa);
+			
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler()
+					.handleNavigation(fc, null, QTConstants.LOA_PAGE);	
+		} catch (Exception e) {
+			handleException(e);
+		}
+	}
+	
+	public void preRenderSupplierView() {
+		debugLogger("preRenderSupplierView");
+		
+		try {
+			SCAwardSupplierDataType dpDataType = getBpmTaskDetails(SCAwardSupplierDataType.class);
+			
+			Long loaId = Long.valueOf(dpDataType.getAwardId());
+			
+			editSupplierLOAAction(loaId);
+			
+		} catch (Exception e) {
+			handleException(e);
 		}
 	}
 	
@@ -1013,8 +1024,9 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 		try {
 			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
-			
+		
 			ScLoa scLoa = this.getManagedBean().getScLoa();
+			Long statusId = scLoa.getPmStatus().getStatusId().longValue();
 			
 			parseLOADetails(scLoa);
 			
@@ -1026,9 +1038,13 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 			if (resDTO.isSuccessful()) {
 				scLoa = resDTO.getScLoa();
 				
-				renewSesionObject();
+				//renewSesionObject();
 				
-				editLOAAction(scLoa);
+				if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId)) {
+					editSupplierLOAAction(scLoa.getLoaId());
+				} else {
+					editLOAAction(scLoa);
+				}
 				
 				FacesContext.getCurrentInstance().addMessage(
 						null,
