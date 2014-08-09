@@ -1981,7 +1981,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			
 			//----------logic checking-----------------------------------------------------------------------------------------------//
 			
-			if(cmStandardPricing.getPrice().longValue()<1){
+			if(cmStandardPricing.getPrice().longValue()==0){
 				FacesContext.getCurrentInstance().addMessage(
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
@@ -2413,7 +2413,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				}
 				
 				//price is less than Rm1
-				if(catalog.getCmStandardPricing().getPrice().longValue()<1){
+				if(catalog.getCmStandardPricing().getPrice().longValue()==0){
 					FacesContext.getCurrentInstance().addMessage(
 							null,
 							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
