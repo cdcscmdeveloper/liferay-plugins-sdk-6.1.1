@@ -10,7 +10,7 @@
 		<p:commandButton value="#{lbl['lbl.so.save']}" icon="ui-icon-save" 
 			action="#{lOADetailBackingBean.saveAction}" 
 			process="@form" update="@form" />
-		
+			
 		<c:choose>
 			<c:when test="#{empty lOADetailBackingBean.managedBean.taskId}">
 				<p:commandButton value="#{lbl['lbl.so.submit']}" icon="ui-icon-submit" 
@@ -18,7 +18,7 @@
 					process="@form" update="@form"  />
 			</c:when>
 			<c:when test="#{!empty lOADetailBackingBean.managedBean.taskId}">
-				<ui:repeat var="bpmAction" value="#{qTDetailBB.managedBean.outComes}">
+				<ui:repeat var="bpmAction" value="#{lOADetailBackingBean.managedBean.outComes}">
 					<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 					
 					<p:commandButton value="#{lbl[buttonLabel]}" update="@form" 
