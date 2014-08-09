@@ -7,6 +7,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
 
 import org.apache.log4j.Logger;
 
@@ -51,6 +52,18 @@ public class AuthorizedSignatoryBackingBean extends
 		}
 		log.info(message);
 	}
+	
+	/**
+	 * get status item dropdown
+	 * 
+	 */	
+	 public SelectItem[] getSignatoryStatusList() {
+		 
+			SelectItem[] items =  new SelectItem[2];
+			items[0] = new SelectItem(1, "Active");
+			items[1] = new SelectItem(0, "Inactive");
+		    return items;
+		}	
 	
 	/**
 	 * get zone list for dropdown

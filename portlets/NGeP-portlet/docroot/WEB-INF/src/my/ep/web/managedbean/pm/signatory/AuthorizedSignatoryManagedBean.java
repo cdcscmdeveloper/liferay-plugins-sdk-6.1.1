@@ -6,6 +6,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmCertSignatory;
 import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -22,6 +23,8 @@ public class AuthorizedSignatoryManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
 	
 	private PmZone zones;
+	
+	private PmCertSignatory pmCertSignatory;
 	
 	private List<PmUser> users;
 
@@ -53,4 +56,20 @@ public class AuthorizedSignatoryManagedBean extends BaseManagedBean {
 	public void setUsers(List<PmUser> users) {
 		this.users = users;
 	}
+
+	/**
+	 * @return the pmCertSignatory
+	 */	
+	public PmCertSignatory getPmCertSignatory() {
+		return pmCertSignatory;
+	}
+
+	/**
+	 * @param pmCertSignatory the pmCertSignatory to set
+	 */
+	public void setPmCertSignatory(PmCertSignatory pmCertSignatory) {
+		this.pmCertSignatory = pmCertSignatory;
+	}
+	
+	
 }
