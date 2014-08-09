@@ -63,7 +63,6 @@
 						oncomplete="participants.show();"
 						action="#{scheduleBiddingBB.retrieveParticipantsListAction(bidItem)}"
 						size="30" />
-
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.item.description']}">
 					<h:outputText value="#{bidItem.scRequestItem.itemDesc}" size="30" />
@@ -72,10 +71,14 @@
 					<h:outputText value="#{bidItem.scRequestItem.uom.uomName}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.quantity']}">
-					<p:outputLabel value="#{bidItem.scRequestItem.quantity}" />
+					<h:outputText style="float : right"
+						value="#{bidItem.scRequestItem.quantity}">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, question.clUom.uomCode)}" />
+					</h:outputText>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.bidding.start']}">
-					<p:calendar value="#{bidItem.scBidSchedule.startDate}" 
+					<p:calendar value="#{bidItem.scBidSchedule.startDate}"
 						showOn="button" id="bidStartDate"
 						mindate="#{scheduleBiddingBB.managedBean.minStartDate}"
 						pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}">
@@ -89,7 +92,7 @@
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.bidding.end']}">
 
-					<p:calendar value="#{bidItem.scBidSchedule.endDate}" 
+					<p:calendar value="#{bidItem.scBidSchedule.endDate}"
 						mindate="#{scheduleBiddingBB.managedBean.minEndDate}"
 						showOn="button" id="bidEndDate"
 						maxdate="#{scheduleBiddingBB.managedBean.maxEndDate}"
@@ -107,7 +110,11 @@
 						value="#{scheduleBiddingBB.managedBean.duration}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.min.decrement.block']}">
-					<p:outputLabel value="#{bidItem.decrementAmt }" disabled="true" />
+					<h:outputText style="float : right"
+						value="#{bidItem.decrementAmt }" disabled="true">
+						<f:convertNumber for="decrementAmt"
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</h:outputText>
 				</p:column>
 
 			</p:dataTable>
@@ -202,7 +209,8 @@
 							</p:calendar></td>
 						<td><p:outputLabel value="#{lbl['lbl.sc.duration.hours']}" /></td>
 
-						<TD><p:inputText id="bidSchedulePackageDuration" disabled="true"
+						<TD><p:inputText id="bidSchedulePackageDuration"
+								disabled="true"
 								value="#{scheduleBiddingBB.managedBean.duration}" /></TD>
 					</tr>
 				</table>
@@ -227,17 +235,25 @@
 					<h:outputText value="#{bidItem.scRequestItem.uom.uomName}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.quantity']}">
-					<p:outputLabel value="#{bidItem.scRequestItem.quantity}" />
+					<h:outputText style="float : right" value="#{bidItem.scRequestItem.quantity}" >
+					<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, question.clUom.uomCode)}" />
+					
+					</h:outputText>
+					
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.min.decrement.block']}">
-					<p:outputLabel value="#{bidItem.decrementAmt }" />
+					<h:outputText style="float : right" value="#{bidItem.decrementAmt }" >
+					<f:convertNumber for="decrementAmt"
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</h:outputText>
 				</p:column>
 
 			</p:dataTable>
 		</p:panel>
 
-		<p:dialog closeOnEscape="true" 
+		<p:dialog closeOnEscape="true"
 			header="#{lbl['lbl.sc.participant.list']}" widgetVar="participants"
 			resizable="true" showEffect="fade" hideEffect="fade" modal="true"
 			id="participants">

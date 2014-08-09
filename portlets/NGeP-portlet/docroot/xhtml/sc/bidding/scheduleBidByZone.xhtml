@@ -51,7 +51,7 @@
 		<p:panel header="#{lbl['lbl.sc.bidding.schedule']}" toggleable="true">
 
 			<p:dataTable id="bidScheduleByZonal"
-				value="#{scheduleBiddingBB.managedBean.zoneBid.scBidSchedules}"
+				value="#{scheduleBiddingBB.managedBean.scBid.scBidSchedules}"
 				var="scheduleZoneBid">
 
 				<ac:paginator for="bidScheduleByZonal"></ac:paginator>
@@ -70,7 +70,7 @@
 						<p:ajax event="dateSelect" process="zoneBidStartDate"
 							partialSubmit="true"
 							listener="#{scheduleBiddingBB.bidStartDateSelectListener}"
-							update=":form:bidScheduleZonal:zoneBidEndDate" />
+							update=":form:bidScheduleByZonal:zoneBidEndDate" />
 					</p:calendar>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.bidding.end']}">
@@ -80,12 +80,10 @@
 						mindate="#{scheduleBiddingBB.managedBean.minEndDate}"
 						maxdate="#{scheduleBiddingBB.managedBean.maxEndDate}"
 						pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}">
-
-						<p:ajax event="dateSelect" process="bidEndDate"
+						<p:ajax event="dateSelect" process="zoneBidEndDate"
 							partialSubmit="true"
 							listener="#{scheduleBiddingBB.bidEndDateSelectListener}"
-							update=":form:bidScheduleZonal:bidDuration" />
-
+							update=":form:bidScheduleByZonal:bidDuration" />
 					</p:calendar>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.duration.hours']}">
@@ -110,7 +108,7 @@
 		<p:panel header="#{lbl['lbl.sc.item.list']}" toggleable="true">
 
 			<p:dataTable id="bidScheduleByZoneBidItems"
-				value="#{scheduleBiddingBB.managedBean.zoneBid.scBidSchedules[0].scBidItems}"
+				value="#{scheduleBiddingBB.managedBean.scBid.scBidSchedules[0].scBidItems}"
 				var="item">
 
 				<ac:paginator for="bidScheduleByZoneBidItems"></ac:paginator>
@@ -124,11 +122,18 @@
 					<h:outputText value="#{item.scRequestItem.uom.uomName}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.quantity']}">
-					<p:outputLabel value="#{item.scRequestItem.quantity}" />
+					<h:outputText style="float : right" value="#{item.scRequestItem.quantity}" >
+					<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, question.clUom.uomCode)}" />
+					
+					</h:outputText>
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.min.decrement.block']}">
-					<p:outputLabel value="#{item.decrementAmt}" />
+					<h:outputText style="float : right" value="#{item.decrementAmt}" >
+					<f:convertNumber for="decrementAmt"
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</h:outputText>
 				</p:column>
 
 			</p:dataTable>
