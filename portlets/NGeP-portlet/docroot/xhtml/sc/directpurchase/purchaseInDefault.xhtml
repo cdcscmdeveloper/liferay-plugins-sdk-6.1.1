@@ -78,9 +78,15 @@
 			</tr>
 			<tr>
 				<td style="width: 250px;"><p:outputLabel value="#{lbl['lbl.sc.purchase.in.default.val.period']}" /></td>
-				<td><p:inputText disabled="true" size="19" value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.contractedItem.ctContractVer.ctContractValue.effDate}" />
+				<td><p:inputText disabled="true" size="19" value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.contractedItem.ctContractVer.ctContractValue.effDate}" >
+				       <f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				    </p:inputText>
 				    <p:spacer width="2px"/>
-				    <p:inputText disabled="true" size="20"  value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.contractedItem.ctContractVer.ctContractValue.expDate}"/></td>
+				     <p:inputText disabled="true" size="20"  value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.contractedItem.ctContractVer.ctContractValue.expDate}"> 
+				          <f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				     </p:inputText>
+				    
+				    </td>
 			</tr>
 			<tr>
 				<td style="width: 250px;"><p:outputLabel value="#{lbl['lbl.sc.purchase.in.default.max.proc.amt']}" /></td>
@@ -234,9 +240,9 @@
 											partialSubmit="true" process="@this"
 											listener="#{purchaseInDefaultBackingBean.justificationTypeEvent}" />
 									</p:selectOneMenu> <p:commandLink style="text-align:left">
-										<p:graphicImage
-											value="/resources/ep/images/design/document.png" height="18"
-											width="18" />
+									<p:spacer width="2px"></p:spacer>
+										<p:graphicImage library="ep/images/design" name="evaluate.png"
+											style="vertical-align:middle" />
 									</p:commandLink></td>
 								<td><p:message id="justIdMsg" for="justId" display="icon" /></td>
 							</tr>
