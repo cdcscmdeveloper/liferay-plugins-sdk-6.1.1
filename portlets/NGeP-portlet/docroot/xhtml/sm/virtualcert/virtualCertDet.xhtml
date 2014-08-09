@@ -31,7 +31,7 @@
 				
 				<p:column headerText="Download">
 					<p:commandButton value="Download"
-						action="#{virtualCertBackingBean.generatePdf}" ajax="false"></p:commandButton>
+						action="#{virtualCertBackingBean.generatePdf(mofAcc.mofNo)}" ajax="false"></p:commandButton>
 				</p:column>
 			</p:dataTable>
 			

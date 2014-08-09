@@ -12,6 +12,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
@@ -24,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
+import my.ep.constant.EpPropertiesConst;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
@@ -35,6 +37,7 @@ import my.ep.persistence.entity.sm.SmMofCert;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.sm.questionnaire.QuestionnaireBackingBean;
 import my.ep.web.managedbean.sm.virtualcert.VirtualCertManagedBean;
@@ -99,13 +102,25 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 		
 	}
 	
-	public void generatePdf() throws Exception {
+	public void generatePdf(String mofNo) throws Exception {
+		
+//		log.info("mofNo: " + mofNo);
+		
 		Long applId = getSmSupplier().getSmAppl().getApplId();
 		
 		log.info("******generatePdf>>>" + applId);
 		IMofRegistrationSO mofRegistrationSO = null;
 //		SmAppl smAppl = null;
-		tmpPath = System.getProperty("java.io.tmpdir");
+//		tmpPath = System.getProperty("java.io.tmpdir");
+		
+//		log.info("mofNo: " + mofNo);
+		
+		tmpPath = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
+		tmpPath = tmpPath + "/" + Calendar.getInstance().get(Calendar.YEAR) + "/" + "SAP/cert/" + mofNo + "/";
+		
+		File dir = new File(tmpPath);
+		if(!dir.exists()) dir.mkdirs();
+		
 		log.info("************tmp>>>" + tmpPath);
 		SmSupplier smSupplier = null;
 		try {
@@ -126,7 +141,7 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 		}
 		// instantiate velocity template
 		// replace value in velocity template
-		String coverHtml = getCoverHtmlFromVelocity(smSupplier);
+		String coverHtml = getCoverHtmlFromVelocity(smSupplier, mofNo);
 		String contentHtml = getContentHtmlFromVelocity(smSupplier);
 		String lampiranBHtml = getLampiranBFromVelocity();
 		
@@ -251,7 +266,7 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
         return null;
 	}*/
 	
-    public String getCoverHtmlFromVelocity(SmSupplier supplier) throws Exception {
+    public String getCoverHtmlFromVelocity(SmSupplier supplier, String mofNo) throws Exception {
     	String myTemplatePath = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/WEB-INF/templates");
 
     	Properties p = new Properties();
@@ -273,21 +288,24 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
     	for(SmMofAccount mofAccount : supplier.getSmMofAccounts()) {
     		log.info("*********mofAccount**********" + mofAccount.getSmMofCerts().size());
     		if(mofAccount.getEffDate().before(now) && mofAccount.getExpDate().after(now)) {
-    			if(mofAccount.getSupplierType().equals(supplierType)) {
-    				smMofAccount = mofAccount; //added for to make it temporary runaable
-    				mofCert = mofAccount.getSmMofCerts().get(0);
-    				
-    				for(SmMofCert cert : mofAccount.getSmMofCerts()) {
-    					log.info("****CERT ID****" + cert.getMofCertId());
-    					log.info("****MOF CERT ID****" + mofCert.getMofCertId());
-    					if(cert.isRecordStatus() && cert.getEffDate().before(now) && cert.getExpDate().after(now)) {
-    						if(cert.getMofCertId() > mofCert.getMofCertId()) {
-    							log.info("****MOF Gretter****" + mofAccount);
-    							mofCert = cert;
-    							smMofAccount = mofAccount;
-    						}
-    					}
-    				}
+    			if(mofAccount.getMofNo().equals(mofNo)) {
+	    			if(mofAccount.getSupplierType().equals(supplierType)) {
+	    				smMofAccount = mofAccount; //added for to make it temporary runaable
+	    				log.info("mofAccount.getMofNo(): " + mofAccount.getMofNo());
+	    				mofCert = mofAccount.getSmMofCerts().get(0);
+	    				
+	    				for(SmMofCert cert : mofAccount.getSmMofCerts()) {
+	    					log.info("****CERT ID****" + cert.getMofCertId());
+	    					log.info("****MOF CERT ID****" + mofCert.getMofCertId());
+	    					if(cert.isRecordStatus() && cert.getEffDate().before(now) && cert.getExpDate().after(now)) {
+	    						if(cert.getMofCertId() > mofCert.getMofCertId()) {
+	    							log.info("****MOF Gretter****" + mofAccount);
+	    							mofCert = cert;
+	    							smMofAccount = mofAccount;
+	    						}
+	    					}
+	    				}
+	    			}
     			}
     		}
     		
