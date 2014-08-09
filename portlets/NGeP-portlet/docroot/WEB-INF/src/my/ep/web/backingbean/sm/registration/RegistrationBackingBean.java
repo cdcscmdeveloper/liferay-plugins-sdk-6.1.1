@@ -9,7 +9,6 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -184,10 +183,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			
 			//this.getManagedBean().setSuppBusinessNature(new SmSupplierBusiness());
 			this.getManagedBean().setBusinessNatureL1(this.retrieveBusinessNatureByLevelParent("10",0));
-			this.retrieveBusinessNatureL5Map();
+			//TODO: temporary comment this.retrieveBusinessNatureL5Map();
 			this.retrieveIdentityTypeMap();
-			this.getManagedBean().setSuppBusinessNature(new SmSupplierBusiness());	
-			this.getManagedBean().getSuppBusinessNature().setPmBusinessNature(new PmBusinessNature());
+		
 			
 			log.info("**********permenant"+ this.getManagedBean().getPermenantStateLs().size());
 			log.info("**********residential" + this.getManagedBean().getResidentialStateLs().size());
@@ -388,6 +386,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		smPersonnel.setBumiFlg(SupplierManagementConst.REG_BUMI);
 		smPersonnel.setContractSignerFlg(SupplierManagementConst.FIRST_USER_CONT_SIGNER);
 		smPersonnel.setEpRole(RoleCode.BASIC_SUPPLIER_ADMIN.value());
+		smPersonnel.setRecordStatusFlg(SupplierManagementConst.PENDING_ACT_STATUS);
 		SmPersonnelAddress personnelAddRes = new SmPersonnelAddress();
 		SmPersonnelAddress personnelAddPerm = new SmPersonnelAddress();
 		
@@ -455,6 +454,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		smSupp.getSmAppls().add(smAppl);
 		smSupp.setPmStatus(new PmStatus());
 		smSupp.getPmStatus().setStatusId(20101L);
+		smSupp.setRecordStatusFlg(SupplierManagementConst.PENDING_ACT_STATUS);
 		smSuppOwner.setSmSupplier(this.getManagedBean().getSmSupp());
 		smSupp.getSmSupplierOwners().add(smSuppOwner);
 
@@ -557,64 +557,66 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	}
 	
 	public void addBusinessNature() {
-		resetBusinessNatureSelection();
-		this.getManagedBean().setSuppBusinessNature(new SmSupplierBusiness());	
-		this.getManagedBean().getSuppBusinessNature().setPmBusinessNature(new PmBusinessNature());
+		this.getManagedBean().setSelectedBusinessNature(new SmSupplierBusiness());	
+		this.getManagedBean().getSelectedBusinessNature().setPmBusinessNature(new PmBusinessNature());
 		
+		resetBusinessNatureSelection();
+		//RequestContext.getCurrentInstance().update(":form:bizDialog");
+		
+		log.info("---------addBusinessNature Lvl 1 ------" +this.getManagedBean().getSelectedBusinessNature().getLvl1());
 	}
 	
 	public void addSupplierBusinessNature(){
-		//log.info("----------addSupplierBusiness Nature--------------" + bizNatureL5Map.size());
-		log.info("----------addSupplierBusiness Nature--------------" + this.getManagedBean().getSuppBusinessNature().getPmBusinessNature().getBusinessNatureId());
+		log.info("----------addSupplierBusinessNature--------------" +this.getManagedBean().getSelectedBusinessNature().getLvl5());
+			
+		Long bizNatId  = this.getManagedBean().getSelectedBusinessNature().getLvl5();
 		
-		//validate nature of business
-		if(validateNatureBusiness(this.getManagedBean().getSmSupp().getSmSupplierBusinesses(), this.getManagedBean().getSuppBusinessNature().getPmBusinessNature().getBusinessNatureId(), true)){
-			//retrieve object and set object
-			PmBusinessNature bizNatObj = (PmBusinessNature) bizNatureL5Map.get(this.getManagedBean().getSuppBusinessNature().getPmBusinessNature().getBusinessNatureId());
-			log.info("**********retrieve bizNatObj***********"+bizNatObj.getBusinessNatureId());
-			this.getManagedBean().getSuppBusinessNature().setPmBusinessNature(bizNatObj);
-			this.getManagedBean().getSmSupp().getSmSupplierBusinesses().add(this.getManagedBean().getSuppBusinessNature());
-			RequestContext.getCurrentInstance().execute("bizDlg.hide()");
+		if(validateNatureBusiness(bizNatId,"N")){
+			PmBusinessNature bizNatObj = retrieveBusinessNatureById(this.getManagedBean().getSelectedBusinessNature().getLvl5());
+			if(bizNatObj != null){
+				SmSupplierBusiness suppBusiness = new SmSupplierBusiness();
+				suppBusiness.setPmBusinessNature(bizNatObj);
+				this.getManagedBean().getSmSupp().getSmSupplierBusinesses().add(suppBusiness);
+				RequestContext.getCurrentInstance().execute("bizDlg.hide()");
+			}else{
+				//throw new EpException();
+			}
 		}else{
-			//show error message on dialog
-			throw new EpException(MessageConst.ERROR_721007);
-	
+			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR,null,
+					MessageUtils.getMessage(MessageConst.ERROR_721007,MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
 		}
 
 	}
-	/**
-	 * validation for duplicate nature of business
-	 * @param natureBusinesses
-	 * @param bizNatObj
-	 * @param isNew
-	 * @return boolean
-	 */
-	private boolean validateNatureBusiness(List<SmSupplierBusiness>natureBusinesses, Long bizId, boolean isNew){
-		boolean isValid = true;
-		//Validate selected Nature of Business
-		for(SmSupplierBusiness bn: natureBusinesses){
-			if(isNew){
-				if(bizId.equals(bn.getPmBusinessNature().getBusinessNatureId())){
-					isValid = false;
+
+	private boolean validateNatureBusiness(Long bizNatureId, String type){
+		List<String> bizNatureLs = new ArrayList<String>();
+		boolean valid = true;
+		
+		if(this.getManagedBean().getSmSupp().getSmSupplierBusinesses().size() > 0){
+			String bizNatId = bizNatureId.toString();
+			log.info("----validateNatureBusiness - bizNatId----" + bizNatId);
+			for(SmSupplierBusiness suppBiz : this.getManagedBean().getSmSupp().getSmSupplierBusinesses()){
+				
+				if(type.equals("N")){
+					bizNatureLs.add(suppBiz.getPmBusinessNature().getBusinessNatureId().toString());
+				}
+				
+				log.info("----SuppBiz----" + suppBiz.getPmBusinessNature().getBusinessNatureId().toString());
+				if(bizNatureLs.contains(bizNatId)){
+					log.info("----Contain Duplicate Business Nature----");
+					valid = false;
 					break;
 				}
-			}else{
-				//compare with current object (compare old value with new value)
-				if(bn.getPmBusinessNature().getTempBusinessNatureId()!=null && bn.getPmBusinessNature().getTempBusinessNatureId()!=0L){
-					if(bizId.equals(bn.getPmBusinessNature().getTempBusinessNatureId())){
-						isValid = false;
-						break;
-					}
-				}else{
-					//compare with object in list
-					if(bizId.equals(bn.getPmBusinessNature().getBusinessNatureId())){
-						isValid = false;
-						break;
-					}
+				
+				if(type.equals("U")){
+					bizNatureLs.add(suppBiz.getPmBusinessNature().getBusinessNatureId().toString());
 				}
 			}
+			
+			log.info("----bizNatureLs----" + bizNatureLs.size());
 		}
-		return isValid;
+		
+		return valid;
 	}
 	
 	public void removeBusinessNature() {
@@ -625,14 +627,17 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 	}
 	
-	public void editBusinessNature(){
-		resetBusinessNatureSelection();
-		log.info("-----editBusinessNature-----" + this.getManagedBean().getSelectedBusinessNature().getPmBusinessNature().getBusinessNatureId());
-		log.info("-----editBusinessNature-----" + this.getManagedBean().getSelectedBusinessNature().getPmBusinessNature().getLevelName());
-		log.info("********edit Parent ID*********"  + this.getManagedBean().getSelectedBusinessNature().getPmBusinessNature().getParentBusinessNature().getBusinessNatureId());
+	public void editBusinessNature(SmSupplierBusiness suppBusinessNat){
+		//TODO:resetBusinessNatureSelection();
+		log.info("-----editBusinessNature-----" + suppBusinessNat.getPmBusinessNature().getBusinessNatureId());
+		log.info("-----editBusinessNature-----" + suppBusinessNat.getPmBusinessNature().getLevelName());
+		log.info("********edit Parent ID*********"  + suppBusinessNat.getPmBusinessNature().getParentBusinessNature().getBusinessNatureId());
 		
-		PmBusinessNature pmBizNat = this.getManagedBean().getSelectedBusinessNature().getPmBusinessNature();
-		this.getManagedBean().setSuppBusinessNature(this.getManagedBean().getSelectedBusinessNature());
+		//SmSupplierBusiness selectedBiz = this.getManagedBean().getSelectedBusinessNature();
+		//PmBusinessNature pmBizNat = selectedBiz.getPmBusinessNature();
+		
+		SmSupplierBusiness selectedBiz = suppBusinessNat;
+		PmBusinessNature pmBizNat = selectedBiz.getPmBusinessNature();
 		
 		//Get Parent Obj of L5(lv 4) value and List of Level 5
 		PmBusinessNature pmBizObjL4 = pmBizNat.getParentBusinessNature();
@@ -640,15 +645,21 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		PmBusinessNature pmBizObjL2 = pmBizObjL3.getParentBusinessNature();
 		PmBusinessNature pmBizObjL1 = pmBizObjL2.getParentBusinessNature();
 		
-		this.getManagedBean().setBizIdL4(pmBizObjL4.getBusinessNatureId());
-		this.getManagedBean().setBizIdL3(pmBizObjL3.getBusinessNatureId());
-		this.getManagedBean().setBizIdL2(pmBizObjL2.getBusinessNatureId());
-		this.getManagedBean().setBizIdL1(pmBizObjL1.getBusinessNatureId());
+		this.getManagedBean().setSelectedBusinessNature(selectedBiz);
+		this.getManagedBean().getSelectedBusinessNature().setLvl5(selectedBiz.getPmBusinessNature().getBusinessNatureId());
+		this.getManagedBean().getSelectedBusinessNature().setLvl4(pmBizObjL4.getBusinessNatureId());
+		this.getManagedBean().getSelectedBusinessNature().setLvl3(pmBizObjL3.getBusinessNatureId());
+		this.getManagedBean().getSelectedBusinessNature().setLvl2(pmBizObjL2.getBusinessNatureId());
+		this.getManagedBean().getSelectedBusinessNature().setLvl1(pmBizObjL1.getBusinessNatureId());
 		
 		List<PmBusinessNature> bizNatureLs5 = retrieveBusinessNatureByLevelParent("50",pmBizNat.getParentBusinessNature().getBusinessNatureId());
-		List<PmBusinessNature> bizNatureLs4 = retrieveBusinessNatureByLevelParent("40",this.getManagedBean().getBizIdL3());
-		List<PmBusinessNature> bizNatureLs3 = retrieveBusinessNatureByLevelParent("30",this.getManagedBean().getBizIdL2());
-		List<PmBusinessNature> bizNatureLs2 = retrieveBusinessNatureByLevelParent("20",this.getManagedBean().getBizIdL1());
+//		List<PmBusinessNature> bizNatureLs4 = retrieveBusinessNatureByLevelParent("40",selectedBiz.getLvl3());
+//		List<PmBusinessNature> bizNatureLs3 = retrieveBusinessNatureByLevelParent("30",selectedBiz.getLvl2());
+//		List<PmBusinessNature> bizNatureLs2 = retrieveBusinessNatureByLevelParent("20",selectedBiz.getLvl1());
+		
+		List<PmBusinessNature> bizNatureLs4 = retrieveBusinessNatureByLevelParent("40",pmBizObjL3.getBusinessNatureId());
+		List<PmBusinessNature> bizNatureLs3 = retrieveBusinessNatureByLevelParent("30",pmBizObjL2.getBusinessNatureId());
+		List<PmBusinessNature> bizNatureLs2 = retrieveBusinessNatureByLevelParent("20",pmBizObjL1.getBusinessNatureId());
 		
 		this.getManagedBean().setBusinessNatureL5(bizNatureLs5);
 		this.getManagedBean().setBusinessNatureL4(bizNatureLs4);
@@ -662,37 +673,29 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	
 	
 	public void updateBusinessNature(){
-		log.info("---------updateBusinessNature-------------");
-		String invalidMsg = "Duplicate Nature of Business being added to the list.";
-		
-		if(this.getManagedBean().getSuppBusinessNature().getPmBusinessNature().getBusinessNatureId()!=null){
-			//validate for value changed
-			if(this.getManagedBean().getSuppBusinessNature().getPmBusinessNature().getTempBusinessNatureId()!=null 
-					&& !this.getManagedBean().getSuppBusinessNature().getPmBusinessNature().getBusinessNatureId().equals(this.getManagedBean().getSuppBusinessNature().getPmBusinessNature().getTempBusinessNatureId())){
-				//validate selected nature of business
-				if(validateNatureBusiness(this.getManagedBean().getSmSupp().getSmSupplierBusinesses(), this.getManagedBean().getSuppBusinessNature().getPmBusinessNature().getBusinessNatureId(), false)){ 
-					//retrieve new obj and replace old obj
-					PmBusinessNature bizNatObj = (PmBusinessNature) bizNatureL5Map.get(this.getManagedBean().getSuppBusinessNature().getPmBusinessNature().getBusinessNatureId());
-					this.getManagedBean().getSuppBusinessNature().setPmBusinessNature(bizNatObj);
-					RequestContext.getCurrentInstance().execute("bizDlg.hide()");
-				}else{
-					//show error msg on dialog
-					this.getManagedBean().getSuppBusinessNature().getPmBusinessNature().setBusinessNatureId(this.getManagedBean().getSuppBusinessNature().getPmBusinessNature().getTempBusinessNatureId()); // reset
-					throw new EpException(MessageConst.ERROR_721007);
+		log.info("---------updateBusinessNature-------------" + this.getManagedBean().getSelectedBusinessNature().getPmBusinessNature().getBusinessNatureId());
 
+		Long bizNatId = this.getManagedBean().getSelectedBusinessNature().getPmBusinessNature().getBusinessNatureId();
+		if(bizNatId !=null){		
+			if(validateNatureBusiness(bizNatId,"U")){
+				PmBusinessNature bizNatObj = retrieveBusinessNatureById(this.getManagedBean().getSelectedBusinessNature().getLvl5());
+				if(bizNatObj != null){
+					this.getManagedBean().getSelectedBusinessNature().setPmBusinessNature(bizNatObj);
+					RequestContext.getCurrentInstance().execute("bizDlg.hide()");
 				}
 			}else{
-				//close dialog for no changes
-				RequestContext.getCurrentInstance().execute("bizDlg.hide()");
+				//show error msg on dialog
+				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR,null,
+						MessageUtils.getMessage(MessageConst.ERROR_721007,MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
 			}
 			
 		}
 	}
 	
-	/**
+/*	*//**
 	 * business nature change listener 
 	 * @param event
-	 */
+	 *//*
 	public void bizNatChangeListener(ValueChangeEvent event){
 		log.info("---------bizNatChangeListener---------0");
 		Object oldValueObj = event.getOldValue();
@@ -701,48 +704,54 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			//hold the old value for validation purpose
 			this.getManagedBean().getSuppBusinessNature().getPmBusinessNature().setTempBusinessNatureId(oldValue);
 		}
-	}
+	}*/
 	
 	public void businessLvlOnChange(String bizLvl){
+		SmSupplierBusiness selectedBiz = this.getManagedBean().getSelectedBusinessNature();
+
 		switch (bizLvl) {
 			case "20" : 
 				this.getManagedBean().setBusinessNatureL2(new ArrayList<PmBusinessNature>());
 				this.getManagedBean().setBusinessNatureL3(new ArrayList<PmBusinessNature>());
 				this.getManagedBean().setBusinessNatureL4(new ArrayList<PmBusinessNature>());
 				this.getManagedBean().setBusinessNatureL5(new ArrayList<PmBusinessNature>());
-				this.getManagedBean().setBizIdL2(null);
-				this.getManagedBean().setBizIdL3(null);
-				this.getManagedBean().setBizIdL4(null);
-				this.getManagedBean().getSuppBusinessNature().getPmBusinessNature().setBusinessNatureId(null);
-				if(this.getManagedBean().getBizIdL1()!=null){
-					this.getManagedBean().setBusinessNatureL2(retrieveBusinessNatureByLevelParent(bizLvl,this.getManagedBean().getBizIdL1()));
+//				this.getManagedBean().setBizIdL2(null);
+//				this.getManagedBean().setBizIdL3(null);
+//				this.getManagedBean().setBizIdL4(null);
+				selectedBiz.setLvl2(null);
+				selectedBiz.setLvl3(null);
+				
+				selectedBiz.setLvl5(null);
+				//this.getManagedBean().getSelectedBusinessNature().getPmBusinessNature().setBusinessNatureId(null);
+				if(selectedBiz.getLvl1() != null){
+					this.getManagedBean().setBusinessNatureL2(retrieveBusinessNatureByLevelParent(bizLvl,selectedBiz.getLvl1()));
 				}
 			break;
 			case "30" :
 				this.getManagedBean().setBusinessNatureL3(new ArrayList<PmBusinessNature>());
 				this.getManagedBean().setBusinessNatureL4(new ArrayList<PmBusinessNature>());
 				this.getManagedBean().setBusinessNatureL5(new ArrayList<PmBusinessNature>());
-				this.getManagedBean().setBizIdL3(null);
-				this.getManagedBean().setBizIdL4(null);
-				this.getManagedBean().getSuppBusinessNature().getPmBusinessNature().setBusinessNatureId(null);
-				if(this.getManagedBean().getBizIdL2()!=null){
-					this.getManagedBean().setBusinessNatureL3(retrieveBusinessNatureByLevelParent(bizLvl,this.getManagedBean().getBizIdL2()));
+				selectedBiz.setLvl3(null);
+				selectedBiz.setLvl4(null);
+				//this.getManagedBean().getSelectedBusinessNature().getPmBusinessNature().setBusinessNatureId(null);
+				if(selectedBiz.getLvl2() !=null){
+					this.getManagedBean().setBusinessNatureL3(retrieveBusinessNatureByLevelParent(bizLvl,selectedBiz.getLvl2()));
 				}
 			break;
 			case "40" : 
 				this.getManagedBean().setBusinessNatureL4(new ArrayList<PmBusinessNature>());
 				this.getManagedBean().setBusinessNatureL5(new ArrayList<PmBusinessNature>());
-				this.getManagedBean().setBizIdL4(null);
-				this.getManagedBean().getSuppBusinessNature().getPmBusinessNature().setBusinessNatureId(null);
-				if(this.getManagedBean().getBizIdL3()!=null){
-					this.getManagedBean().setBusinessNatureL4(retrieveBusinessNatureByLevelParent(bizLvl,this.getManagedBean().getBizIdL3()));
+				selectedBiz.setLvl4(null);
+				//this.getManagedBean().getSelectedBusinessNature().getPmBusinessNature().setBusinessNatureId(null);
+				if(selectedBiz.getLvl3()!=null){
+					this.getManagedBean().setBusinessNatureL4(retrieveBusinessNatureByLevelParent(bizLvl,selectedBiz.getLvl3()));
 				}
 			break;
 			case "50" : 
 				this.getManagedBean().setBusinessNatureL5(new ArrayList<PmBusinessNature>());
-				this.getManagedBean().getSuppBusinessNature().getPmBusinessNature().setBusinessNatureId(null);
-				if(this.getManagedBean().getBizIdL4()!=null){
-					this.getManagedBean().setBusinessNatureL5(retrieveBusinessNatureByLevelParent(bizLvl,this.getManagedBean().getBizIdL4()));
+				//this.getManagedBean().getSelectedBusinessNature().getPmBusinessNature().setBusinessNatureId(null);
+				if(selectedBiz.getLvl4()!=null){
+					this.getManagedBean().setBusinessNatureL5(retrieveBusinessNatureByLevelParent(bizLvl,selectedBiz.getLvl4()));
 				}
 			break;
 		}
@@ -949,8 +958,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		this.getManagedBean().setSmAppl(this.getManagedBean().getSmSupp().getSmAppl());
 		this.getManagedBean().setSmSuppOwner(resDTO.getSmSupp().getSmSupplierOwners().get(0));
 		
-		this.getManagedBean().setSuppBusinessNature(new SmSupplierBusiness());	
-		this.getManagedBean().getSuppBusinessNature().setPmBusinessNature(new PmBusinessNature());
+		//this.getManagedBean().setSuppBusinessNature(new SmSupplierBusiness());	
+		//this.getManagedBean().getSuppBusinessNature().setPmBusinessNature(new PmBusinessNature());
 	
 		log.info("---------Supplier Type-----------"
 				+ this.getManagedBean().getSmAppl().getSupplierType());
@@ -975,7 +984,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 		this.retrievePmCountryList();
 		this.retrieveFinancialOrgList();
-		this.retrieveBusinessNatureL5Map();
+		//this.retrieveBusinessNatureL5Map();
 		retrieveIdentityTypeMap();
 		this.getManagedBean().setBusinessNatureL1(this.retrieveBusinessNatureByLevelParent("10",0));
 		
@@ -1054,10 +1063,12 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	}
 
 	public void resetBusinessNatureSelection(){
-		this.getManagedBean().setBizIdL1(null);
-		this.getManagedBean().setBizIdL2(null);
-		this.getManagedBean().setBizIdL3(null);
-		this.getManagedBean().setBizIdL4(null);
+		this.getManagedBean().getSelectedBusinessNature().setLvl1(null);
+		this.getManagedBean().getSelectedBusinessNature().setLvl2(null);
+		this.getManagedBean().getSelectedBusinessNature().setLvl3(null);
+		this.getManagedBean().getSelectedBusinessNature().setLvl4(null);
+		this.getManagedBean().getSelectedBusinessNature().setLvl5(null);
+		
 		//this.getManagedBean().setBusinessNatureL1(new ArrayList<PmBusinessNature>());
 		this.getManagedBean().setBusinessNatureL2(new ArrayList<PmBusinessNature>());
 		this.getManagedBean().setBusinessNatureL3(new ArrayList<PmBusinessNature>());
@@ -1235,7 +1246,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			}	
 		}
 	}
-	
+
 	/*public void verifyWithMyIdentity(String identificationNo, String postCode){
 		MyIdentityReqDTO reqDTO = new MyIdentityReqDTO();
 		IMyIdentitySO reqSO = BusinessDelegate.getInstance().getServiceObject("sm", IMyIdentitySO.class);
@@ -1259,6 +1270,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			}
 		}
 	}*/
+
 }
 
 
