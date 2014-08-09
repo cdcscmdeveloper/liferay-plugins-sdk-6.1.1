@@ -48,6 +48,7 @@
 			<portlet id="pmOrganisation"></portlet>	
 			<portlet id="pmEducationField"></portlet>	
 			<portlet id="tempUserSearch"></portlet>	
+		    <portlet id="pmUOM"></portlet>	
 			
 		</category>
 		<!-- Profile Management - END -->		

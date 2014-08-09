@@ -5126,7 +5126,7 @@
 		
 	<portlet>
 		<portlet-name>pmSalutation</portlet-name>
-		<display-name>Unit of Measurement Search</display-name>
+		<display-name>Salutation</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
@@ -5138,8 +5138,8 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>Unit of Measurement Search</title>
-			<short-title>Unit of Measurement Search</short-title>
+			<title>Salutation</title>
+			<short-title>Salutation</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
@@ -5443,5 +5443,37 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>
+	
+	<portlet>
+		<portlet-name>pmUOM</portlet-name>
+		<display-name>Unit of Measurement</display-name>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
+		<init-param>
+			<name>javax.portlet.faces.defaultViewId.view</name>
+			<value>/xhtml/pm/unitofmeasurement/unitOfMeasurementMain.xhtml</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Unit of Measurement</title>
+			<short-title>Unit of Measurement</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>	
 	<!-- PM Profile related porlets - End -->		
 </portlet-app>
