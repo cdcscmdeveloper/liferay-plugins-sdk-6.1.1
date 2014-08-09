@@ -140,12 +140,13 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 		this.getManagedBean().setSmAppl(mofResDTO.getSmAppl());
 		this.getManagedBean().setAppId(mofReqDTO.getApplId());*/ //dummy test
 
+		//this.getManagedBean().setAppId(1009L);
 		log.info("*******retrieveBillInfo Start******");
 		IPaymentSO reqSO = (IPaymentSO) BusinessDelegate.getInstance().getServiceObject("sm", IPaymentSO.class);
 		PaymentReqDTO reqDTO = new PaymentReqDTO();
 		reqDTO.setApplId(this.getManagedBean().getAppId());
-		//reqDTO.setSmAppl(this.getManagedBean().getSmAppl());
 		PaymentResDTO resDTO = reqSO.retrieveSmBillByApplId(reqDTO);
+		this.getManagedBean().setSmAppl(resDTO.getSmBill().getSmAppl());
 		
 		log.info("*******Bill Object**********" + resDTO.getSmBill().getBillId());
 		this.getManagedBean().setSmBill(resDTO.getSmBill());
