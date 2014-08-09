@@ -66,6 +66,7 @@ import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
 import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
+import my.ep.persistence.entity.cm.catalog.CmSupplierZone;
 import my.ep.persistence.entity.cm.catalog.CmSupplierZoneDTL;
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -184,9 +185,8 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		ScRequestNote requestNote = getManagedBean().getRequestNote();
 		RequestNoteResDTO requestNoteResDTO = null;
     try {
-		if (this.getManagedBean().getRequestNoteDtls() != null && getManagedBean().getRequestNoteDtls().size() > 0) {
-			requestNote.setRequestNoteDtls(this.getManagedBean().getRequestNoteDtls());
-		}
+    	 requestNote.setRequestNoteDtls(this.getManagedBean().getRequestNoteDtls());
+
 		// Target Approver
 		if (this.getManagedBean().getApprovalUsers().getTarget() != null && this.getManagedBean().getApprovalUsers().getTarget().size() > 0) {
 		    requestNote.setApprovalUsers(createTargetApprover(requestNote));
@@ -787,8 +787,10 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			ScRequestItem requestItem = createRequestItem(cmSupplierItem);
 
 			requestSupplierItem = createScRequestSupplierItem(requestItem, cmSupplierItem.getSmSupplier(), cmPricings);
-			ScSupplierItemPrice supplierItemPrice = createSupplierItemPrice(requestSupplierItem, cmPricings.get(0));
-			requestSupplierItem.setSupplierItemPrice(supplierItemPrice);
+			//ScSupplierItemPrice supplierItemPrice = createSupplierItemPrice(requestSupplierItem, cmPricings.get(0));
+			if(requestSupplierItem.getSupplierItemPrices() != null && requestSupplierItem.getSupplierItemPrices().size()>0){
+				requestSupplierItem.setSupplierItemPrice(requestSupplierItem.getSupplierItemPrices().get(0));
+			}
 			requestSupplierItem.setSupplierItemId(cmSupplierItem.getSmSupplier().getSupplierId());
 
 			// TODO check supplier is government seller or not 
@@ -895,16 +897,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		
 		// zone dtl
 		if(pricing.getCmSupplierZone() != null){
-			List<TplSpecZoneDtl> tplSpecZoneDtls	=	new ArrayList<TplSpecZoneDtl>();
-			TplSpecZoneDtl tplSpecZoneDtl = new TplSpecZoneDtl();
-			ScRNZone zone = new ScRNZone(); 
-
-			tplSpecZoneDtl.setZoneName(pricing.getCmSupplierZone().getSuppZoneName());
-			zone.setScRequestNote(getManagedBean().getRequestNote());
-			tplSpecZoneDtl.setTplSpecZone(zone);
-			tplSpecZoneDtls.add(tplSpecZoneDtl);
-			zone.setTplSpecZoneDtls(tplSpecZoneDtls);
-			//result.setTplSpecZone(createSpecZone(pricing.getCmSupplierZone().getCmSupplierZoneDtls() ,tplSpecZoneDtl ,zone));
+			result.setTplSpecZone(createSpecZone(pricing.getCmSupplierZone()));
 		}
 		
 		IParameterSO parameterSO;
@@ -933,22 +926,29 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		return result;
 	}
 	
-
-	private TplSpecZoneDtl createSpecZone(List<CmSupplierZoneDTL> cmSupplierZoneDTLs, TplSpecZoneDtl tplSpecZoneDtl, ScRNZone zone ) {
-		List<TplSpecZoneLoc> zoneLocs = new ArrayList<TplSpecZoneLoc>();
-		if(cmSupplierZoneDTLs !=null && cmSupplierZoneDTLs.size()>0){
-			for(CmSupplierZoneDTL zoneDtl : cmSupplierZoneDTLs) {
-				TplSpecZoneLoc specZoneLoc = new TplSpecZoneLoc();
-				specZoneLoc.setPmDistrict(zoneDtl.getPmDistrict());
-				specZoneLoc.setPmState(zoneDtl.getPmState());
-				specZoneLoc.setPmDivision(zoneDtl.getPmDivision());
-				specZoneLoc.setTplSpecZoneDtl(tplSpecZoneDtl);
-				zoneLocs.add(specZoneLoc);
+	private TplSpecZoneDtl createSpecZone(CmSupplierZone supplierZone) {
+		TplSpecZoneDtl specZoneDtl = null;
+		if(supplierZone != null) {
+			if(supplierZone.getCmSupplierZoneDtls() != null) {
+				specZoneDtl = new TplSpecZoneDtl();
+				specZoneDtl.setZoneName(supplierZone.getSuppZoneName());
+				ScRNZone zone = getManagedBean().getScRNZone(); 
+				List<TplSpecZoneLoc> zoneLocs = new ArrayList<TplSpecZoneLoc>();
+				for(CmSupplierZoneDTL zoneDtl : supplierZone.getCmSupplierZoneDtls()) {
+					TplSpecZoneLoc specZoneLoc = new TplSpecZoneLoc();
+					specZoneLoc.setPmDistrict(zoneDtl.getPmDistrict());
+					specZoneLoc.setPmState(zoneDtl.getPmState());
+					specZoneLoc.setPmDivision(zoneDtl.getPmDivision());
+					specZoneLoc.setTplSpecZoneDtl(specZoneDtl);
+					zoneLocs.add(specZoneLoc);
+				}
+				zone.setScRequestNote(getManagedBean().getRequestNote());
+				getManagedBean().getRequestNote().setScRNZone(zone);
+				specZoneDtl.setTplSpecZone(zone);
+				specZoneDtl.setTplSpecZoneLocs(zoneLocs);
 			}
 		}
-		tplSpecZoneDtl.setTplSpecZone(zone);
-		tplSpecZoneDtl.setTplSpecZoneLocs(zoneLocs);
-		return tplSpecZoneDtl;
+		return specZoneDtl;
 	}
 
 	public SelectItem[] getPriceTypeDropdownValues(String parameterType,
@@ -1037,8 +1037,8 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 		getManagedBean().setRequired(Boolean.FALSE);
 		getManagedBean().setJustRequired(Boolean.FALSE);
 		
-		if(scRequestItem.getQuantity().intValue() == 0){
-			//throw new EpException(MessageConst.INFO_700027, new String[]{"Order Quatity: must be more than 0",""});
+		if(scRequestItem.getQuantity() !=null && scRequestItem.getQuantity().intValue() < 0){
+			throw new EpException(MessageConst.INFO_100033, new String[]{" Order Quatity" ,"0"});
 		}
 		
 		ScSupplierItemPrice scSupplierItemPrice = requestSupplierItem.getSupplierItemPrice();
@@ -1363,7 +1363,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 	
 	public void deleteRequestNoteDtl() {
 		log.info("deleteRequestNoteDtl");
-		if (getManagedBean().getSelectedRequestNoteDtls() != null) {
+		if (getManagedBean().getSelectedRequestNoteDtls() != null && !getManagedBean().getSelectedRequestNoteDtls().isEmpty()) {
 			for (ScRequestNoteDtl requestNoteDtl : getManagedBean()
 					.getSelectedRequestNoteDtls()) {
 				if (getManagedBean().getRequestNoteDtls().contains(
