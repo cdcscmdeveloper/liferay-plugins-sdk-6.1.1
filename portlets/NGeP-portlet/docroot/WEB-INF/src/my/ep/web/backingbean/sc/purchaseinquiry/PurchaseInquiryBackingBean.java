@@ -50,11 +50,14 @@ import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
 import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
+import my.ep.persistence.entity.cm.catalog.CmSupplierZone;
+import my.ep.persistence.entity.cm.catalog.CmSupplierZoneDTL;
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.sc.directpurchase.ScPIZone;
 import my.ep.persistence.entity.sc.directpurchase.ScPRIRemark;
 import my.ep.persistence.entity.sc.directpurchase.ScPrInquiry;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
@@ -64,6 +67,7 @@ import my.ep.persistence.entity.sc.directpurchase.ScRequestSupplierItem;
 import my.ep.persistence.entity.sc.directpurchase.ScSupplierItemPrice;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.pm.OrganizationType;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
@@ -856,9 +860,7 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
     	ScSupplierItemPrice	result	=	new ScSupplierItemPrice();
     	// zone dtl
     	if(pricing.getCmSupplierZone() != null){
-    		TplSpecZoneDtl tplSpecZone = new TplSpecZoneDtl();
-    		tplSpecZone.setZoneName(pricing.getCmSupplierZone().getSuppZoneName());
-    		//result.setTplSpecZone(tplSpecZone);
+    		result.setTplSpecZone(createSpecZone(pricing.getCmSupplierZone()));
     	}
 		
 		result.setScRequestSupplierItem(scRequestSupplierItem);
@@ -888,6 +890,32 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 			}
 		}
 	
+		
+		private TplSpecZoneDtl createSpecZone(CmSupplierZone supplierZone) {
+			TplSpecZoneDtl specZoneDtl = null;
+			if(supplierZone != null) {
+				if(supplierZone.getCmSupplierZoneDtls() != null) {
+					specZoneDtl = new TplSpecZoneDtl();
+					specZoneDtl.setZoneName(supplierZone.getSuppZoneName());
+					ScPIZone zone = getManagedBean().getScPIZone();
+					List<TplSpecZoneLoc> zoneLocs = new ArrayList<TplSpecZoneLoc>();
+					for(CmSupplierZoneDTL zoneDtl : supplierZone.getCmSupplierZoneDtls()) {
+						TplSpecZoneLoc specZoneLoc = new TplSpecZoneLoc();
+						specZoneLoc.setPmDistrict(zoneDtl.getPmDistrict());
+						specZoneLoc.setPmState(zoneDtl.getPmState());
+						specZoneLoc.setPmDivision(zoneDtl.getPmDivision());
+						specZoneLoc.setTplSpecZoneDtl(specZoneDtl);
+						zoneLocs.add(specZoneLoc);
+					}
+					 zone.setScPrInquiry(getManagedBean().getScPrInquiry());
+					 specZoneDtl.setTplSpecZone(zone);
+					 getManagedBean().getScPrInquiry().setScPIZone(zone);
+					specZoneDtl.setTplSpecZoneLocs(zoneLocs);
+				}
+			}
+			return specZoneDtl;
+		}
+		
 		/**
 		 * Get parameter code select items by parameter type for radio buttons.
 		 * 

@@ -14,6 +14,7 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.sc.directpurchase.ScPIZone;
 import my.ep.persistence.entity.sc.directpurchase.ScPRIRemark;
 import my.ep.persistence.entity.sc.directpurchase.ScPrInquiry;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
@@ -59,6 +60,7 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	
 	private boolean titleChecker = Boolean.TRUE;
 	private boolean rnToPIFlag = Boolean.TRUE;
+	 private ScPIZone scPIZone = new ScPIZone(); 
 	
 	public PurchaseInquiryManagedBean() {
 		List<ScPRIRemark> remarks = new ArrayList<ScPRIRemark>();
@@ -426,6 +428,20 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	 */
 	public void setRnToPIFlag(boolean rnToPIFlag) {
 		this.rnToPIFlag = rnToPIFlag;
+	}
+
+	/**
+	 * @return the scPIZone
+	 */
+	public ScPIZone getScPIZone() {
+		return scPIZone;
+	}
+
+	/**
+	 * @param scPIZone the scPIZone to set
+	 */
+	public void setScPIZone(ScPIZone scPIZone) {
+		this.scPIZone = scPIZone;
 	}
 	
 }
