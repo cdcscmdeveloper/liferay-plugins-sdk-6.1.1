@@ -17,7 +17,7 @@
 							value="#{catalogueBackingBean.managedBean.statusDescList}"
 							var="remark" itemLabel="#{remark.statusName}"
 							itemValue="#{remark.statusDescId}"></f:selectItems>
-						<p:ajax listener="#{catalogueBackingBean.enableRemark()}" process="@this :form:pricingTabID:remarkpg"
+						<p:ajax listener="#{catalogueBackingBean.enableRemark}" 
 							update="@([id$=remarkpg])" />
 					</p:selectManyCheckbox></td>
 				<td style="vertical-align: bottom;"><h:panelGroup id="remarkpg">
