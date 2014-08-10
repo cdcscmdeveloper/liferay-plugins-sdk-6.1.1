@@ -10,7 +10,11 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
-
+<style type="text/css">
+input.ui-autocomplete-input {
+font-size: 16px !important;width: 600px;
+}
+</style>
 
 		<p:messages id="publicCatMesId" autoUpdate="true" closable="true"
 			showSummary="true"></p:messages>
@@ -20,7 +24,7 @@
 				<table style="width: 100%; margin-top: 8px;">
 					<tr>
 						<td style="width: 20%;">
-						<p:autoComplete size="120" style="width:400px;"
+						<p:autoComplete size="120" 
 								required="true" id="itemNameId"
 								requiredMessage="Item name is Required"
 								value="#{pCatalogueBackingBean.managedBean.itemName}"
