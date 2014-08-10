@@ -3430,8 +3430,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	public boolean isRemarkRendered() {
 
 		for (int i = 0; i < this.getManagedBean().getRejectReasonIds().size(); i++) {
-			String id = String.valueOf(this.getManagedBean()
-					.getRejectReasonIds().get(i));
+			String id = String.valueOf(this.getManagedBean().getRejectReasonIds().get(i));
+			log.info("id isRemarkRendered = "+id);
 			if (id.equals("10010")) {
 				return true;
 			}
