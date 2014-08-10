@@ -77,8 +77,9 @@
 				 </td>
 			</tr>
 			<tr>
-				<td style="width: 250px;"><p:outputLabel
-						value="#{lbl['lbl.sc.price.inquiry.order.qty']}" /></td>
+				<td style="width: 250px;">
+				<p:outputLabel
+						value="#{lbl['lbl.sc.price.inquiry.order.qty']}" /> <p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td ><p:inputText disabled="#{purchaseInquiryBackingBean.managedBean.requisitionerFlag}"  
 				           label="#{lbl['lbl.sc.price.inquiry.order.qty']}" maxlength="14" id="oderQtyId"  required="true"
 					       validatorMessage="Order Qty: must be a decimal number between 0.0 and 9999999999.999"
