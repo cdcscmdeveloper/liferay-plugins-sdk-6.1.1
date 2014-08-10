@@ -528,9 +528,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			}
 			
 			// zone details
-			if(!getManagedBean().getZoneTrees().isEmpty()){
 				quote.setQuoteZone(getQuoteZones(getManagedBean().getZoneTrees()));
-			}
 			
 			//by location
 			if(!getManagedBean().getLocationTrees().isEmpty()){
@@ -1979,12 +1977,14 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			}
 			// zone details
 			if(scQuote.getQuoteZone() != null){
+				 List<TreeNode>	zoneTrees = new ArrayList<TreeNode>();
 				if(scQuote.getQuoteZone().getTplSpecZoneDtls() != null && scQuote.getQuoteZone().getTplSpecZoneDtls().size() >0){
 					for (TplSpecZoneDtl tplSpecZoneDtl : scQuote.getQuoteZone().getTplSpecZoneDtls() ) {
 						if(tplSpecZoneDtl.getTplSpecZoneLocs() != null && tplSpecZoneDtl.getTplSpecZoneLocs().size()>0){
-							getManagedBean().getZoneTrees().add(LocationSingleton.getInstance().constuctTreeNode(tplSpecZoneDtl, tplSpecZoneDtl.getTplSpecZoneLocs()));
+							zoneTrees.add(LocationSingleton.getInstance().constuctTreeNode(tplSpecZoneDtl, tplSpecZoneDtl.getTplSpecZoneLocs()));
 						}
 					}
+					getManagedBean().setZoneTrees(zoneTrees);
 				}
 			}
 
@@ -2058,7 +2058,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			getCurrentStatus(res.getDocStatus().longValue()); 
 			getManagedBean().setProcessName(res.getProcessName());
 			
-			 getManagedBean().setRnToSQFlag(Boolean.FALSE);
+			 getManagedBean().setRnToSQFlag(Boolean.TRUE);
 			// page navigation to simple quote
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "simpleQuote");

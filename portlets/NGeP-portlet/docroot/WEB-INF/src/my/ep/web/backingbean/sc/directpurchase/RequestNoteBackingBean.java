@@ -1327,6 +1327,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 					}
 				}
 			}
+			getManagedBean().setRequestSupplierItem(scRequestSupplierItem);
 			getManagedBean().setPricingList(supplierItemPrices);
 		}
 	}
