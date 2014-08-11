@@ -35,7 +35,7 @@ import my.ep.web.managedbean.BaseManagedBean;
  * @author Alam
  * @since 1/13/2014	 
  */
-@ManagedBean(name ="amendmentManagedBean")
+@ManagedBean(name ="amendManagedBean")
 @SessionScoped
 public class AmendmentManagedBean extends BaseManagedBean {
 
@@ -111,6 +111,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private CtContractItem selectedItem;
 	private CtItemPrice ctServiceItemPrices;
 	private List<String> finalListOfSideMenu;
+	private CtCommitteeMember newCommitteMembers;
 	
 	public CtContractVer getContractVer() {
 		return contractVer;
@@ -665,5 +666,12 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	public void setAmendMenuModel(MenuModel amendMenuModel) {
 		this.amendMenuModel = amendMenuModel;
 	}
-	
+
+	public CtCommitteeMember getNewCommitteMembers() {
+		return newCommitteMembers;
+	}
+
+	public void setNewCommitteMembers(CtCommitteeMember newCommitteMembers) {
+		this.newCommitteMembers = newCommitteMembers;
+	}
 }

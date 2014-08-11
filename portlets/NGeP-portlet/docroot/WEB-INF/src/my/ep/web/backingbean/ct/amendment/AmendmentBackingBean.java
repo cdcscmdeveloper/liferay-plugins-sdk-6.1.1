@@ -29,7 +29,7 @@ import java.util.zip.ZipOutputStream;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.naming.NamingException;
@@ -109,7 +109,10 @@ import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
 import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
 import my.ep.persistence.entity.ct.dtl.zone.CtContractZoneDtl;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmRole;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;
+import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
@@ -171,7 +174,7 @@ import com.liferay.portal.util.PortalUtil;
  * @since 1/13/2014
  */
 @ManagedBean (name = "amendmentBackingBean")
-@RequestScoped
+@ViewScoped
 public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> {
     
 	private static Logger log = Logger.getLogger(AmendmentBackingBean.class);
@@ -398,14 +401,16 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			    ctBackingBean.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 			    getManagedBean().setRemarkList(resDTO.getCtRemarks());
 			    getManagedBean().setAttachmentList(resDTO.getCtAttachments());
-			    
-    	        contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
-    	        ContractReqDTO reqDTO = new ContractReqDTO();
-    	        reqDTO.setContractVerId(resDTO.getCtContractVer().getContractVerId());
-    	        reqDTO.setContractId(resDTO.getCtContractVer().getCtContract().getContractId());
-		        reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
-		        ContractResDTO amendResDTO = contractSO.retrieveExtensionHistory(reqDTO);
-		        getManagedBean().setAmendHistoryList(amendResDTO.getExtensionHistoryList());
+			
+		        if(getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value())){
+		    	        contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+		    	        ContractReqDTO reqDTO = new ContractReqDTO();
+		    	        reqDTO.setContractVerId(resDTO.getCtContractVer().getContractVerId());
+		    	        reqDTO.setContractId(resDTO.getCtContractVer().getCtContract().getContractId());
+				        reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
+				        ContractResDTO amendResDTO = contractSO.retrieveExtensionHistory(reqDTO);
+				        getManagedBean().setAmendHistoryList(amendResDTO.getExtensionHistoryList());
+		         }
 	   	    } finally {
 		     	contractSO = null;
 		    }
@@ -554,22 +559,20 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				      log.info("Record saved successfully");
 				      String messageId = MessageConst.INFO_700005;
 			      	  if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
-			      		  messageId = MessageConst.INFO_700025;
-				      } else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
-				    	  messageId = MessageConst.INFO_700009;
-				      } else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
-					         messageId = MessageConst.INFO_700007;				
-				      } else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
+					          messageId = MessageConst.INFO_700025;
+				      }else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
+					         messageId = MessageConst.INFO_700009;
+				      }else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+					         messageId = MessageConst.INFO_700007;
+				     }else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 					        messageId = MessageConst.INFO_700008;
-				      } else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
+				     }else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
 					       messageId = MessageConst.INFO_700011;
-				      } else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACCEPT)) {
+				     }else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACCEPT)) {
 					       messageId = MessageConst.INFO_700013;
-				      } else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getTaskName() != null) {
+				     }else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getTaskName() != null) {
 					      messageId = MessageConst.INFO_700026;
-				      } else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_COMPLETE)) {
-							messageId = MessageConst.INFO_700001;
-				      }
+				     }
 				    
 			      	  log.info("Record saved successfully");
 				      FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
@@ -593,18 +596,8 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	  }
 	 
 	 private void validateContractAmendment(String action) {
-		 
-		 if(getManagedBean().getContractVer().getCtAmendment()!=null && 
-			 getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa()!=null && 
-			 getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaAttachment()!=null &&
-			 getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaAttachment().getFileName()==null) {
-			 throw new EpException(MessageConst.ERROR_100022, new String[]{"Letter of Acceptance"});
-		 }
-		 
-		 if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT) || isBpkApprover()) {
-			if((getManagedBean().getRemarkList().get(0).getRemark() == null || getManagedBean().getRemarkList().get(0).getRemark().length()==0) &&
-				(getManagedBean().getContractVer().getAp201Remark().get(0).getRemark() == null || getManagedBean().getContractVer().getAp201Remark().get(0).getRemark().length()==0) &&
-				(getManagedBean().getContractVer().getItemRemarks().get(0).getRemark() == null || getManagedBean().getContractVer().getItemRemarks().get(0).getRemark().length()==0)) {
+		 if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
+			if(getManagedBean().getRemarkList().get(0).getRemark() == null || getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
 				throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
 			}
 		}
@@ -666,10 +659,6 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			return null;
 	 }
 	 
-	 public boolean isBpkApprover(){
-		return getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value());
-	}
-	 
 	// Manually check AP201 rule. Should call BPM or rules engine 
 	public void chkComplyAP201Rule() {
 		
@@ -681,6 +670,10 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			     getManagedBean().getContractVer().getCtAmendment().setComplyAP201(false);
 		
 		 } else if(getManagedBean().getCtContract().getRecordStatusFlg().intValue()!=DbValueConst.RECORD_STATUS_ACTIVE) {
+			getManagedBean().getContractVer().getCtAmendment().setComplyAP201(false);
+		}
+		
+		if (getManagedBean().getContractVer().getCtContractValue().isAp201Exempt()) {
 			getManagedBean().getContractVer().getCtAmendment().setComplyAP201(false);
 		}
 	}
@@ -1666,29 +1659,73 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	    		 this.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().remove(committeMember);
 	    	} selectedCommitteMembers = null;
 	    }
-	    /*Schedule Start*/
+	    
+        
 	    public void radioButtonForMeeting() {
-			
-	       this.getManagedBean().setExistingUsers(false);
-	  	   this.getManagedBean().setNewUsers(false);
-	  	   
-		   if(this.getManagedBean().getSelectedRadioButton().equalsIgnoreCase("1"))
-			   this.getManagedBean().setExistingUsers(true);
-		   else if(this.getManagedBean().getSelectedRadioButton().equalsIgnoreCase("2"))
-			  this.getManagedBean().setNewUsers(true);
+		      this.getManagedBean().setExistingUsers(false);
+	  	      this.getManagedBean().setNewUsers(false);
+	  	      if(this.getManagedBean().getSelectedRadioButton().equalsIgnoreCase("1")){
+			        this.getManagedBean().setExistingUsers(true);
+		      }
 		   
-		}
+	  	      else if(this.getManagedBean().getSelectedRadioButton().equalsIgnoreCase("2")){
+			            this.getManagedBean().setNewUsers(true);
+			        	this.getManagedBean().setNewCommitteMembers(new CtCommitteeMember());
+			        	this.getManagedBean().getNewCommitteMembers().setMemberRole(new PmParameter());
+			        	this.getManagedBean().getNewCommitteMembers().setPmUser(new PmUser());
+			        	this.getManagedBean().getNewCommitteMembers().getPmUser().setIdentificationCode(new PmParameter());
+			    }
+		  }  
 	    
 	    public void addNewUserMemberCommitte(){
+	    	
+	    	PmUser user = new PmUser();
+			user.setLoginId(this.getFacesScopes().getUserSessionBean().getLoginId());
+			user.setUserName(getManagedBean().getNewCommitteMembers().getMemberName());
+			user.setEmail(getManagedBean().getNewCommitteMembers().getEmail());
+			user.setIdentificationCode(getManagedBean().getNewCommitteMembers().getPmUser().getIdentificationCode());
+			user.setIdentificationNo(getManagedBean().getNewCommitteMembers().getIcPassport());	
+			user.setDesignation(getManagedBean().getNewCommitteMembers().getDesignation());
+			user.setDesignation(getManagedBean().getNewCommitteMembers().getDesignation());
+			user.setEmail(getManagedBean().getNewCommitteMembers().getEmail());
+			user.setPMP(getManagedBean().getNewCommitteMembers().isPnp());
+			user.setMemberRole(getManagedBean().getNewCommitteMembers().getMemberRole());
+			
+			// User Orgs
+			List<PmUserOrg> pmUserOrgs = new ArrayList<PmUserOrg>();
+			PmUserOrg userOrg = new PmUserOrg();
+			userOrg.setPmUser(user);
+			userOrg.setPmOrgProfile(getManagedBean().getCtContract().getOwnerOrgProfile());
+			Date startDate = this.getManagedBean().getContractVer().getCtAmendment().getExtendStartDate();
+			Date endDate = this.getManagedBean().getContractVer().getCtAmendment().getExtendEndDate();
+			userOrg.setEffDate(new java.sql.Timestamp(startDate.getTime()));
+			userOrg.setExpDate(new java.sql.Timestamp(endDate.getTime()));
+		   
+			List<PmUserRole> pmUserRoles = new ArrayList<PmUserRole>();
+			PmUserRole pmUserRole = new PmUserRole();
+			pmUserRole.setPmUserOrg(userOrg);
+			PmRole pmRole = new PmRole();
+			pmRole.setRoleCode(getManagedBean().getNewCommitteMembers().getMemberRole().getParameterCode());
+			pmUserRole.setPmRole(pmRole);
+			pmUserRoles.add(pmUserRole);
+			userOrg.setPmUserRoles(pmUserRoles);
+			pmUserOrgs.add(userOrg);
+			user.setPmUserOrgs(pmUserOrgs);
+			user.setOrgTypeCode(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgTypeCode());
+			
+			
+			this.getManagedBean().getNewCommitteMembers().setExternalUser(true);
+			this.getManagedBean().getNewCommitteMembers().setCtAmendment(this.getManagedBean().getContractVer().getCtAmendment());
 	    	this.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().add(
-	    			this.getManagedBean().getCtCommitteeMember());
+	    			  this.getManagedBean().getNewCommitteMembers());
 	    }
 	    
 	    /**
 		 * @return
 		 */
 		public void existingCommitteMemberList() {
-			 try { 
+	
+			try { 
 				 committeDataModel.reloadData();
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -1697,36 +1734,35 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		}
 		
 		public void okCommitteMembers(){
-		
-			List<CtCommitteeMember> memberList = getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers();
-			if (null == memberList) {
-				memberList = new ArrayList<CtCommitteeMember>();
-			}
+			
+			Map<Long, CtCommitteeMember> duplicatePmUserMap = new HashMap<Long, CtCommitteeMember>();
+			  if( getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().size() > 0){
+				   for(CtCommitteeMember members : getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()){
+					     duplicatePmUserMap.put(members.getPmUser().getUserId(), members);
+				   }
+			  }   
 			
 			for (int i=0; i<selectedPmUser.length; i++) {
-				    PmUser user = selectedPmUser[i];
-				         CtCommitteeMember committeeMember = new CtCommitteeMember();
-				        committeeMember.setMemberName(user.getUserName());
-				        committeeMember.setIcPassport(user.getIdentificationNo());
-				        committeeMember.setDesignation(user.getDesignation());
-				        if(null!=user.getPmAddressTypes()){
-					      for(PmAddressType address:user.getPmAddressTypes()){
-						    if(null!=address.getPmAddress()){
-						    	committeeMember.setEmail(address.getPmAddress().getEmail());
-							break;
-						  }
-					    }
-			  	      }
-				     committeeMember.setGrade(user.getGrade());
+				     PmUser user = selectedPmUser[i];
+				     CtCommitteeMember committeeMember = new CtCommitteeMember();
 				     committeeMember.setCtAmendment(this.getManagedBean().getContractVer().getCtAmendment());
-				     committeeMember.setMemberRole(new PmParameter());
-				     committeeMember.setPnp(user.isPMP());
 				     committeeMember.setPmUser(user);
-				     committeeMember.setExternalUser(true);
-			         memberList.add(committeeMember);					     
+				     committeeMember.setMemberRole(new PmParameter());
+				     committeeMember.setExternalUser(false);
+				     committeeMember.setMemberName(user.getUserName());
+				     committeeMember.setIcPassport(user.getIdentificationNo());
+				     committeeMember.setGrade(user.getGrade());
+				     committeeMember.setPnp(user.isPMP());
+				     committeeMember.setDesignation(user.getDesignation());
+				     committeeMember.setEmail(user.getEmail());
+				     duplicatePmUserMap.put(user.getUserId(), committeeMember);
+				  }
+			
+			   getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().clear();
+			    for(Long key: duplicatePmUserMap.keySet()){
+			    	 getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().add(duplicatePmUserMap.get(key));
 			    }
-			getManagedBean().getContractVer().getCtAmendment().setCtCommitteeMembers(memberList);
-		}
+			}
 		
 		public SelectItem[] getcontractSignerDropdown(){
 			SelectItem[] items = null;     
@@ -1779,24 +1815,23 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			 DocumentResDTO resDTO = null;
 			try{
 				
-				if(getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaReports() == null) {
+				if(getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaReports() == null)
 			    	 getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().setScLoaReports(new ArrayList<ScLoaReport>());
 				
-					 reqDTO = new DocumentReqDTO();
-				     documentSO = (IDocumentSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDocumentSO.class);
-				     reqDTO.setDocCategoryCode(ParameterConst.DOCUMENT_CATEGORY_LOA_FOR_CONTRACT_AMENDMENT);
-				     resDTO = documentSO.retrieveDocumentCheckList(reqDTO);
-				     for(PmDocument document : resDTO.getDocumentList()){
-				      	 ScLoaReport reports = new ScLoaReport();
-				    	 reports.setPmDocument(document);
-				    	 reports.setTitle(document.getDocName());
-				    	 reports.setDefinationType(document.getDocDefinitionTypeCode());
-				    	 reports.setDocType(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
-				    	 reports.setDocCategory(ParameterConst.DOCUMENT_CATEGORY_LOA_FOR_CONTRACT_AMENDMENT);
-				    	 reports.setScLoa( this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa());
-				    	 this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaReports().add(reports);	
-				     }
-				}
+				reqDTO = new DocumentReqDTO();
+			     documentSO = (IDocumentSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDocumentSO.class);
+			     reqDTO.setDocCategoryCode(ParameterConst.DOCUMENT_CATEGORY_LOA_FOR_CONTRACT_AMENDMENT);
+			     resDTO = documentSO.retrieveDocumentCheckList(reqDTO);
+			     for(PmDocument document : resDTO.getDocumentList()){
+			      	 ScLoaReport reports = new ScLoaReport();
+			    	 reports.setPmDocument(document);
+			    	 reports.setTitle(document.getDocName());
+			    	 reports.setDefinationType(document.getDocDefinitionTypeCode());
+			    	 reports.setDocType(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
+			    	 reports.setDocCategory(ParameterConst.DOCUMENT_CATEGORY_LOA_FOR_CONTRACT_AMENDMENT);
+			    	 reports.setScLoa( this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa());
+			    	 this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaReports().add(reports);	
+			     }
 			    
 			}catch(Exception e){
 				e.printStackTrace();
@@ -1826,16 +1861,9 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			 if(this.getManagedBean().getContractVer().getCtContractValue().getBankAccountNo() != null) {
 				 for(SmSupplierBank supplierBank : this.getManagedBean().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks()){
 					 if(supplierBank.getAccountNo().equalsIgnoreCase(this.getManagedBean().getContractVer().getCtContractValue().getBankAccountNo())){
-						 this.getManagedBean().getContractVer().getCtContractValue().setBankName(supplierBank.getPmFinancialOrg().getFinOrgName()); 
-						 if(supplierBank.getSmSupplierBranch()!=null)
-							 this.getManagedBean().getContractVer().getCtContractValue().setBankBranch(supplierBank.getSmSupplierBranch().getBranchName());
-						 else
-							 this.getManagedBean().getContractVer().getCtContractValue().setBankBranch(null);
-						 
-						 if(supplierBank.getSmAddress()!=null)
-							this.getManagedBean().getContractVer().getCtContractValue().setBankAddress(supplierBank.getSmAddress());
-						 else
-							 this.getManagedBean().getContractVer().getCtContractValue().setBankAddress(null);
+						 this.getManagedBean().getContractVer().getCtContractValue().setBankName(supplierBank.getPmFinancialOrg().getFinOrgName());  
+						 this.getManagedBean().getContractVer().getCtContractValue().setBankBranch(supplierBank.getSmSupplierBranch().getBranchName());
+						 this.getManagedBean().getContractVer().getCtContractValue().setBankAddress(supplierBank.getSmAddress());
 				    }
 			    }
 		    }else{
