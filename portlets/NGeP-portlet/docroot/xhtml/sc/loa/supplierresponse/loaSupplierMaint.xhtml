@@ -27,11 +27,14 @@
 					<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.details']}" update="@form">
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="0" />
 					</p:menuitem>
-					<p:menuitem value="#{lbl['lbl.sc.loiloa.letter.of.acceptance']}" update="@form">
+					<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.contents']}" update="@form">
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="1" />
 					</p:menuitem>
-					<p:menuitem value="#{lbl['lbl.sc.loiloa.declaration']}" update="@form">
+					<p:menuitem value="#{lbl['lbl.sc.loiloa.letter.of.acceptance']}" update="@form">
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="2" />
+					</p:menuitem>
+					<p:menuitem value="#{lbl['lbl.sc.loiloa.declaration']}" update="@form">
+						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="3" />
 					</p:menuitem>
 				</p:tabMenu>
 			</td>
@@ -40,12 +43,16 @@
 					<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == 0}">
 						<ui:include src="loaDetailsSupplierMenu.xhtml" />
 					</c:if>
-		
+					
 					<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == 1}">
+						<ui:include src="/xhtml/sc/loa/loarequest/loaLetterOfAcceptance.xhtml" />
+					</c:if>
+		
+					<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == 2}">
 						<ui:include src="loaLetterOfAcceptanceView.xhtml" />
 					</c:if>
 					
-					<h:panelGroup rendered="#{lOADetailBackingBean.managedBean.selectedTabIndex == 2}">
+					<h:panelGroup rendered="#{lOADetailBackingBean.managedBean.selectedTabIndex == 3}">
 						<ui:include src="loaDeclarationMenu.xhtml" />
 					</h:panelGroup>
 				</h:panelGroup>
