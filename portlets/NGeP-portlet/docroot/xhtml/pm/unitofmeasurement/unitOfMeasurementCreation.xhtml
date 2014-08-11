@@ -8,30 +8,34 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	
 	
-   <p:panel header="UNIT OF MEASUREMENT" toggleable="true" styleClass="noBorders tr,noBorders td" >
+   <p:panel header="UNIT OF MEASUREMENT" toggleable="true" styleClass="noBorders tr,noBorders td">
 	<p:spacer height="10"></p:spacer>
 			
 	<table style="width:100%;">
 	  <tr>	  	
 		<td style="width:10%;"><p:outputLabel value="#{lbl['lbl.pm.uom.uomcode']}" />
 			<p:outputLabel value="*" styleClass="mandatory" /></td>
-		<td><p:inputText size="30" /></td>
+		<td><p:inputText value="#{unitOfMeasurementBackingBean.managedBean.pmUom.uomCode}" size="30" /></td>
 	  </tr>	
 	  <tr>
-		<td><p:outputLabel value="#{lbl['lbl.pm.sa.name']}" />
+		<td><p:outputLabel value="#{lbl['lbl.pm.uom.uomname']}" />
 			<p:outputLabel value="*" styleClass="mandatory" /></td>
-		<td><p:inputText size="50" /></td>
+		<td><p:inputText value="#{unitOfMeasurementBackingBean.managedBean.pmUom.uomName}" size="50" /></td>
 	  </tr>
+		<p:spacer height="5"></p:spacer>	  
 	   <tr> 
 		<td><p:outputLabel value="#{lbl['lbl.pm.uom.uomdecimal']}" /></td>
-     	<td><p:selectOneMenu style="width:178px;margin-bottom:5px;"> 
-  	   
+     	<td><p:selectOneMenu style="width:178px;margin-bottom:5px;"
+     			value="#{unitOfMeasurementBackingBean.managedBean.pmUom.decimalScale}"> 
+      			<f:selectItems value="#{unitOfMeasurementBackingBean.getMeasurementDecimal()}"></f:selectItems>  	   	
     	    </p:selectOneMenu></td>				
-	    </tr>	  
+	    </tr>
+		<p:spacer height="5"></p:spacer>	    	  
 	   <tr> 
 		<td><p:outputLabel value="#{lbl['lbl.pm.search.status']}" /></td>
-     	<td><p:selectOneMenu style="width:178px;margin-bottom:5px;"> 
-  	   
+     	<td><p:selectOneMenu style="width:178px;margin-bottom:5px;"
+     			value="#{unitOfMeasurementBackingBean.managedBean.pmUom.recordStatusFlg}">
+     			<f:selectItems value="#{unitOfMeasurementBackingBean.getMeasurementStatusList()}"></f:selectItems>       
     	    </p:selectOneMenu></td>				
 	    </tr>
 	</table>

@@ -13,35 +13,41 @@
 	 <ui:include src="/xhtml/pm/unitofmeasurement/unitOfMeasurementSearch.xhtml" />
 			
       <div align="right">
-			<p:commandButton value="#{lbl['lbl.btn.search']}" icon="ui-icon-search" />
-            <p:commandButton value="#{lbl['lbl.btn.reset']}" icon="ui-icon-reset" />
+			<p:commandButton value="#{lbl['lbl.btn.search']}" icon="ui-icon-search" 
+							 action="#{unitOfMeasurementBackingBean.retrieveMeasurement}"
+						     update="measurementSR" process="measurementSearch"/>
+            <p:commandButton value="#{lbl['lbl.btn.reset']}" icon="ui-icon-reset"
+            				 type="reset" actionListener="#{unitOfMeasurementBackingBean.resetMeasurementSearch}"
+            				 process="@this" update="measurementPanel" />
 	  </div>
     <br/>
 	<br/>
 	</p:panel>
 	
 	<p:panel id="measurementResult" header="RESULT" toggleable="true">
-	<p:dataTable id="measurementSR">	
+	<p:dataTable id="measurementSR" value="#{unitOfMeasurementBackingBean.unitOfMeasurementDataModel}"
+				var="measurementList" rowIndexVar="index" lazy="true">	
 	   <ac:paginator for="measurementSR" />
 		
        <p:column headerText="#{lbl['lbl.pm.uom.uomcode']}" style="width:15%"> 
-   
+		<h:outputText value="#{measurementList.uomCode}" />    
        </p:column>
        
        <p:column headerText="#{lbl['lbl.pm.uom.uomname']}" style="width:50%"> 
-
+		<h:outputText value="#{measurementList.uomName}" /> 
        </p:column>  
        
         <p:column headerText="#{lbl['lbl.pm.uom.uomdecimal']}" style="width:20%"> 
-
+		<h:outputText value="#{measurementList.decimalScale}" /> 
        </p:column>              
      
        <p:column headerText="#{lbl['lbl.pm.search.status']}" style="width:10%"> 
-            
+   	    #{(measurementList.recordStatusFlg==1)? lbl['lbl.pm.active'] : lbl['lbl.pm.inactive']}             
        </p:column >
         
     	<p:column headerText="#{lbl['lbl.pm.profiles.search.result.action']}" style="width:5%">
-   		 <p:commandLink>
+   		 <p:commandLink action="#{unitOfMeasurementBackingBean.goToUnitMaintaincePage(measurementList)}" 
+   		 	process="@this" partialSubmit="true">
      		<p:graphicImage library="ep/images/design" name="edit.png"
      		 value="/resources/ep/images/design/edit.png" />
     	 </p:commandLink>
