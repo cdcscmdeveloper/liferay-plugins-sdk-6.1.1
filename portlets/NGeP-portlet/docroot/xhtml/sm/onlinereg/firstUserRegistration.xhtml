@@ -28,7 +28,7 @@
 							value="#{lbl['lbl.sm.fullname']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
 					<td class="tdContent" colspan="3">
 						<p:inputText size="40" required="true" label="#{lbl['lbl.sm.fullname']}"
-							id="fullName"
+							id="fullName" maxlength="80"
 							value="#{registrationBackingBean.managedBean.smPersonnel.name}" />
 						&#160;
 						<p:graphicImage id="fNmti" library="ep/images/design" name="tooltips.png" />
@@ -52,6 +52,16 @@
 								itemValue="#{counLs.countryId}" />
 						</p:selectOneMenu>
 						<p:message id="nationalityIdMsg" for="nationalityId" display="icon" /></td>
+				
+					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.userprofile.dob']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td class="tdContent">
+						<p:calendar id="dobCalId"
+							navigator="true" required="true" label="#{lbl['lbl.sm.userprofile.dob']}"
+							value="#{registrationBackingBean.managedBean.smPersonnel.birthDate}"
+							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline" 
+							readonlyInput="true" size="30" showOn="button" yearRange="-99:-16">
+						</p:calendar>
+					</td>
 				</tr>
 
 				<tr>
@@ -69,23 +79,40 @@
 					<td class="tdTitle"><p:outputLabel
 							value="#{lbl['lbl.sm.identificationno']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
 					<td class="tdContent">
-						<p:inputText id="txtIdNumber" required="true" label="#{lbl['lbl.sm.identificationno']}"
-							value="#{registrationBackingBean.managedBean.smPersonnel.identificationNo}"
-							size="40" maxlength="15">
-						</p:inputText>
+						<c:choose>
+						<c:when test="#{registrationBackingBean.managedBean.smPersonnel.identificationType.parameterCode == SupplierManagementConst.NEW_IC}">
+							<p:inputText id="txtIdNumber" required="true"
+								label="#{lbl['lbl.sm.identificationno']}"
+								value="#{registrationBackingBean.managedBean.smPersonnel.identificationNo}"
+								size="30" maxlength="12" validatorMessage="#{lbl['lbl.sm.individual.newicno']} - #{lbl['lbl.sm.invalidIcNo']}">
+								<f:validateRegex pattern="[0-9]+" />
+								<f:validateLength minimum="12"></f:validateLength>
+							</p:inputText>
+						</c:when>
+						
+						<c:otherwise>
+							<p:inputText id="txtIdNumber" required="true"
+								label="#{lbl['lbl.sm.identificationno']}"
+								value="#{registrationBackingBean.managedBean.smPersonnel.identificationNo}"
+								size="30" maxlength="15">
+							</p:inputText>
+						</c:otherwise>
+					</c:choose>
 						&#160;
 						<p:graphicImage id="uidti" library="ep/images/design" name="tooltips.png" />
 						<p:tooltip id="uidtt" for="uidti">
 							<p:outputLabel escape="false" value="#{lbl['tt.sm.user.id.no']}"  />
 						</p:tooltip>
 						<p:message id="txtIdNumberMsg" for="txtIdNumber" display="icon" />
+						
+						
 					</td>
 				</tr>
 
 				<tr>
 					<td class="tdTitle"><p:outputLabel
 							value="#{lbl['lbl.sm.permenantaddress']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
-					<td class="tdContent"><p:inputText size="40"
+					<td class="tdContent"><p:inputText size="40" maxlength="35"
 							required="true" label="#{lbl['lbl.sm.permenantaddress']}"
 							value="#{registrationBackingBean.managedBean.smPermenantAdd.address1}"
 							id="txtPermAdd1" /> &#160; <p:graphicImage id="addti"
@@ -117,7 +144,7 @@
 				<tr>
 					<td class="tdTitle"></td>
 					<td class="tdContent"><p:inputText size="40" value="#{registrationBackingBean.managedBean.smPermenantAdd.address2}"
-							id="txtPermAdd2" /></td>
+							id="txtPermAdd2" maxlength="35" /></td>
 							
 					<td class="tdTitle"><p:outputLabel
 							value="* #{lbl['lbl.sm.state']}" /></td>
@@ -137,7 +164,7 @@
 				<tr>
 					<td class="tdTitle"></td>
 					<td class="tdContent"><p:inputText size="40" value="#{registrationBackingBean.managedBean.smPermenantAdd.address3}"
-							id="txtPermAdd3" /></td>
+							id="txtPermAdd3" maxlength="35" /></td>
 							
 					<td class="tdTitle"><p:outputLabel
 							value="* #{lbl['lbl.sm.district']}" /></td>
@@ -157,7 +184,7 @@
 				<tr>
 					<td class="tdTitle"></td>
 					<td class="tdContent"><p:inputText size="40" value="#{registrationBackingBean.managedBean.smPermenantAdd.address4}"
-							id="txtPermAdd4" /></td>
+							id="txtPermAdd4" maxlength="35" /></td>
 					<td class="tdTitle"><p:outputLabel
 							value="* #{lbl['lbl.sm.towncity']}" /></td>
 					<td class="tdContent"><p:selectOneMenu id="cmbPermCity" required="true" label="#{lbl['lbl.sm.towncity']}"
@@ -173,14 +200,14 @@
 				<tr>
 					<td class="tdTitle"><p:outputLabel
 							value="#{lbl['lbl.sm.postcode']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
-					<td class="tdContent"><p:inputText size="40" required="true" label="#{lbl['lbl.sm.postcode']}"
+					<td class="tdContent"><p:inputText size="40" required="true" label="#{lbl['lbl.sm.postcode']}" maxlength="10"
 					value="#{registrationBackingBean.managedBean.smPermenantAdd.postcode}" id="txtPermPostcode" /></td>
 				</tr>
 
 
 				<tr>
-					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.designation']}" /></td>
-					<td class="tdContent"><p:inputText value="#{registrationBackingBean.managedBean.smPersonnel.designation}"/></td>
+					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.designation']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td class="tdContent"><p:inputText value="#{registrationBackingBean.managedBean.smPersonnel.designation}" required="true" maxlength="30" /></td>
 				</tr>
 
 			</table>
