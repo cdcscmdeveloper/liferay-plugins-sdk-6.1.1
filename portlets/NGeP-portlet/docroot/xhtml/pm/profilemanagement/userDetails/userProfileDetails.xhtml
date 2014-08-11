@@ -24,7 +24,11 @@
 							<h:graphicImage
 								value="#{profileManagementBackingBean.userImagePath(profileManagementBackingBean.managedBean.selectedUser.loginId)}"
 								style="margin-left:25px;" width="140" height="160" />
-					
+							<p:fileUpload id="fuPortrait2" 
+							 	fileUploadListener="#{profileManagementBackingBean.handleFileUpload}" mode="advance" 
+            					sizeLimit="1000000" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" multiple="false"
+            					invalidFileMessage="Only JPG, GIF, PNG files are accepted" 
+            					fileLimit="1" dragDropSupport="false" uploadLabel="Confirm" label="Browse"/>
 							<div align="left">
 								<p:commandButton icon="ui-icon-image" value="#{lbl['lbl.pm.profiles.userdetails.changepic']}" />
 								<p:commandButton icon="ui-icon-delete" value="#{lbl['lbl.pm.profiles.userdetails.deletepic']}" />
