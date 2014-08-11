@@ -34,8 +34,11 @@
 
 
 			<div align="right">
-				
-				<p:commandButton value="Proceed" id="btnSubmit" action="#{paymentBackingBean.submitPayment}" />
+			
+			<p:commandButton value="Proceed" id="btnProceed"
+					action="#{paymentBackingBean.tempPaymentSuccess}"></p:commandButton>
+		
+			<p:commandButton value="Proceed - Payment Gateway" id="btnSubmit" action="#{paymentBackingBean.submitPayment}" />
 				
 			</div>
 

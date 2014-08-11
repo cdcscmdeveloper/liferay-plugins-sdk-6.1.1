@@ -155,8 +155,8 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 
 		
 		if(resDTO.getSmBill().getSmPayments().size() > 0){
-			System.out.println("******check is it Offline Payment*****");
-			if(checkOfflinePayment(billId)){
+			//System.out.println("******check is it Offline Payment*****");
+			/*if(checkOfflinePayment(billId)){
 				//this.getManagedBean().setOfflinePayment(true);
 				System.out.println("*****is Offline Payment*****");
 				BigDecimal ttlAmount = new BigDecimal(0);
@@ -172,12 +172,12 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 				
 				FacesContext fc = FacesContext.getCurrentInstance();
 				fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/payment/paymentSummary.xhtml");		
-			}else{
+			}else{*/
 				//this.getManagedBean().setOfflinePayment(false);
 				System.out.println("*****is Online Payment*****");
 				
 				proceedToItemList(smBillDtls);
-			}
+			//}
 		}else{
 			proceedToItemList(smBillDtls);
 		}
@@ -611,7 +611,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 		}
 	}
 	
-	private boolean checkOfflinePayment(Long billId){
+	/*private boolean checkOfflinePayment(Long billId){
 		boolean result = false;
 		
 		IPaymentSO reqSO = (IPaymentSO) BusinessDelegate.getInstance().getServiceObject("sm", IPaymentSO.class);
@@ -626,7 +626,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 		}
 		
 		return result;
-	}
+	}*/
 	
 	public List<SelectItem> getPaymentModeDropDown(){
     	List<SelectItem> list = new ArrayList<SelectItem>();
@@ -685,6 +685,16 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 		pymtReqDTO.setTaskId(this.getManagedBean().getTaskId());
 		pymtReqDTO.setBpmPojo(this.getManagedBean().getBpmPojo());
 		pymtReqDTO.setToken(token);
+		
+		String paymentType = "";
+		
+		for(SmBillDtl billDtl : this.getManagedBean().getNewSmBillDtlLs()){
+			if(billDtl.getPmParameter().getParameterCode().equals("MF") || billDtl.getPmParameter().getParameterCode().equals("RF")){
+				paymentType = billDtl.getPmParameter().getParameterCode();
+			}
+		}
+		
+		pymtReqDTO.setPaymentType(paymentType);
 		
 		try{
 			IPaymentSO reqSO = (IPaymentSO) BusinessDelegate.getInstance().getServiceObject("sm", IPaymentSO.class);
