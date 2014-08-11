@@ -73,7 +73,7 @@ public class SearchAllUserBackingBean extends BaseBackingBean<SearchAllUserManag
 			UserResDTO resDto = null;
 			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);	
-			userReqDTO.setLoginId(userName);
+			userReqDTO.setLoginId(userName.toLowerCase());
 			
 			resDto = userSO.isUserExist(userReqDTO);
 			if(resDto!=null && resDto.isSuccessful()){
