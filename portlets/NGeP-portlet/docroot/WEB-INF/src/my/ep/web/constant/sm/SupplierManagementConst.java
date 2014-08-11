@@ -123,6 +123,7 @@ public class SupplierManagementConst {
 	public static final Long BASIC_IND_IDENT_TYPE_ID = 88L;
 	public static final String SPECIAL_SERVICE_CODE = "ISS";
 	public static final String PROF_SERVICE_CODE = "IPS";
+	public static final String NEW_IC = "I";
 
 	public static final String SECTION_REV_ROLE_PO = "P";
 	public static final String SECTION_REV_ROLE_APP = "A";
@@ -632,6 +633,10 @@ public class SupplierManagementConst {
 
 	public String getSM_SUPPLIER_BUSINESS_TYPE_LLP_DEFAULT() {
 		return SM_SUPPLIER_BUSINESS_TYPE_LLP_DEFAULT;
+	}
+
+	public String getNEW_IC() {
+		return NEW_IC;
 	}
 
 }
