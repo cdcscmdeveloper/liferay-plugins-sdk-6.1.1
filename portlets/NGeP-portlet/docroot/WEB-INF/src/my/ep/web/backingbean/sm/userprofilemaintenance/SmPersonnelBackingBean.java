@@ -708,7 +708,7 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 			List<SmPersonnelAddress> smPersonnelAddresses = new ArrayList<SmPersonnelAddress>();
 			SmPersonnelAddress permPersonnelAddress = new SmPersonnelAddress();
 			permPersonnelAddress.setAddressType(SupplierManagementConst.PERM_ADD);
-			permPersonnelAddress.setSmAddress(s1);
+			permPersonnelAddress.setSmAddress(s2);
 			permPersonnelAddress.setSmPersonnel(smPersonnel);
 			getManagedBean().setBasicSmPersonnelPermanentAddress(permPersonnelAddress);
 			SmPersonnelAddress mailPersonnelAddress = new SmPersonnelAddress();
