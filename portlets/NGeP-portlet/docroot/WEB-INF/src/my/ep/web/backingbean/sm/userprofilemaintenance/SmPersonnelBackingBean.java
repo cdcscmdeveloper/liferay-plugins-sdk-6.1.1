@@ -532,27 +532,6 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		}
 	}
 
-	public void setMailingAddrSameAsPerm() {
-
-		if (getManagedBean().getBasicSmPersonnelMailingAddress().isSameAsPerm()) {
-			System.out.println("********* Duplicate Mail Addr ***********");
-			SmAddress address = cloneAddress(getManagedBean().getBasicSmPersonnelPermanentAddress().getSmAddress());
-			this.getManagedBean().getBasicSmPersonnelMailingAddress().setSmAddress(address);
-			updateMailAddLists(this.getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress().getPmCountry().getCountryId().toString(), this.getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress().getPmState().getStateId().toString(), this.getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress().getPmDistrict().getDistrictId().toString());
-		} else {
-			if(getManagedBean().getTempAddress() != null){
-				System.out.println("*********** Prev Addr ************** ");
-				getManagedBean().getBasicSmPersonnelMailingAddress().setSmAddress(
-						getManagedBean().getTempAddress());
-			} else {
-				System.out.println("*********** Not same Addr ************** ");
-				getManagedBean().getBasicSmPersonnelMailingAddress().setSmAddress(
-						setDefaultAddr());
-//				updateMailAddLists(getManagedBean().getDefaultCountryId().toString(),null,null);
-			}
-		}
-	}
-
 	public void setUpdateMailingAddrSameAsPerm() {
 		if (getManagedBean().getUpdateSmPersonnelMailingAddress().isSameAsPerm()) {
 			System.out.println("********* Duplicate Mail Addr ***********");
@@ -665,18 +644,34 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 			smPersonnel.getSmPersonnelAddresses().size();
 			smPAList.addAll(smPersonnel.getSmPersonnelAddresses()); 
 			for(SmPersonnelAddress smPA : smPAList){
-//				SmAddress address = new SmAddress();
-//				address.setPmCountry(new PmCountry());
-//				address.setPmState(new PmState());
-//				address.setPmDistrict(new PmDistrict());
-//				address.setPmCity(new PmCity());
+				SmAddress address = new SmAddress();
+				address.setPmCountry(new PmCountry());
+				address.setPmState(new PmState());
+				address.setPmDistrict(new PmDistrict());
+				address.setPmCity(new PmCity());
 				if(smPA.getAddressType().equalsIgnoreCase(SupplierManagementConst.MAIL_ADD)){
-//					address.setAddress1(smPA.getSmAddress().getAddress1());
-//					address.setAddress2(smPA.getSmAddress().getAddress2());
-//					address.setAddress3(smPA.getSmAddress().getAddress3());
-//					address.setAddress4(smPA.getSmAddress().getAddress4());
+					address.setAddress1(smPA.getSmAddress().getAddress1());
+					address.setAddress2(smPA.getSmAddress().getAddress2());
+					address.setAddress3(smPA.getSmAddress().getAddress3());
+					address.setAddress4(smPA.getSmAddress().getAddress4());
+					address.getPmCountry().setCountryId(smPA.getSmAddress().getPmCountry().getCountryId());
+					address.getPmState().setStateId(smPA.getSmAddress().getPmState().getStateId());
+					address.getPmDistrict().setDistrictId(smPA.getSmAddress().getPmDistrict().getDistrictId());
+					address.getPmCity().setCityId(smPA.getSmAddress().getPmCity().getCityId());
+					address.setPostcode(smPA.getSmAddress().getPostcode());
+					smPA.setSmAddress(address);
 					this.getManagedBean().setBasicSmPersonnelMailingAddress(smPA);
 				} else if(smPA.getAddressType().equalsIgnoreCase(SupplierManagementConst.PERM_ADD)){
+					address.setAddress1(smPA.getSmAddress().getAddress1());
+					address.setAddress2(smPA.getSmAddress().getAddress2());
+					address.setAddress3(smPA.getSmAddress().getAddress3());
+					address.setAddress4(smPA.getSmAddress().getAddress4());
+					address.getPmCountry().setCountryId(smPA.getSmAddress().getPmCountry().getCountryId());
+					address.getPmState().setStateId(smPA.getSmAddress().getPmState().getStateId());
+					address.getPmDistrict().setDistrictId(smPA.getSmAddress().getPmDistrict().getDistrictId());
+					address.getPmCity().setCityId(smPA.getSmAddress().getPmCity().getCityId());
+					address.setPostcode(smPA.getSmAddress().getPostcode());
+					smPA.setSmAddress(address);
 					this.getManagedBean().setBasicSmPersonnelPermanentAddress(smPA);
 				}
 			}
@@ -813,7 +808,6 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		else if(getManagedBean().getBasicSmPersonnel().getEpRole().equalsIgnoreCase(RoleCode.CM_USER.value()))
 			getManagedBean().getBasicSmPersonnel().setAuthorized(false);
 		
-//		setMailingAddrSameAsPerm();
 		if(getManagedBean().getBasicSmPersonnel().getPersonnelId() == null){
 			returnValue = saveNewUser(getManagedBean().getBasicSmPersonnel());
 		} else {
@@ -824,7 +818,7 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 
 	public String saveUser(SmPersonnel smPersonnel){
 //		validatePersonnelBeforeSave(smPersonnel);
-		setPersonnelAddress(smPersonnel);
+//		setPersonnelAddress(smPersonnel);
 		if(getManagedBean().getBasicSmPersonnelMailingAddress().isSameAsPerm()){
 			System.out.println("********* Duplicate Mail Addr ***********");
 			SmAddress address = cloneAddress(getManagedBean().getBasicSmPersonnelPermanentAddress().getSmAddress());
