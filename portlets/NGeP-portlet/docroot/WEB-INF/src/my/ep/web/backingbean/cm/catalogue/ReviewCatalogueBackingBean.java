@@ -154,58 +154,58 @@ public class ReviewCatalogueBackingBean extends
 
 	public String rejectCatalogueItem() {
 
-		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
-				.getInstance().getServiceObject("cm", ICatalogueSO.class);
-
-		CatalogueBackingBean bb = new CatalogueBackingBean();
-		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
-
-		bb.getManagedBean().getSelectedMaintainItem().setItemStatus("R");
-		this.getManagedBean().setRejectReason(false);
-
-		bb.getManagedBean().getSelectedMaintainItem().setReviewRequired(true);
-		System.out.println("bb.getManagedBean().getRejectReasonIds(): "
-				+ bb.getManagedBean().getRejectReasonIds());
-
-		for (int i = 0; i < bb.getManagedBean().getRejectReasonIds().size(); i++) {
-			Long id = Long.valueOf(String.valueOf(bb.getManagedBean()
-					.getRejectReasonIds().get(i)));
-
-			// Long id = new
-			// Long(bb.getManagedBean().getRejectReasonIds().get(i));
-			CmItemRejectReason reason = new CmItemRejectReason();
-			PmStatus reasonStatus = new PmStatus();
-			reasonStatus.setStatusId(id);
-			reasonStatus.setBrandNew(false);
-
-			reason.setRemark(bb.getManagedBean().getRejectReason());
-			reason.setCmSupplierItem(bb.getManagedBean()
-					.getSelectedMaintainItem());
-			reason.setPmStatus(reasonStatus);
-			bb.getManagedBean().getSelectedMaintainItem()
-					.getCmItemRejectReasons().add(reason);
-		}
-
-		reqDTO.getSaveSupplierItems().add(
-				bb.getManagedBean().getSelectedMaintainItem());
-
-		if (bb.getManagedBean().getRejectReasonIds().isEmpty()) {
-
-			this.getManagedBean().setCatDetTabActiveIndex(2);
-
-			FacesContext facesContext = FacesContext.getCurrentInstance();
-			facesContext.addMessage(null, new FacesMessage(
-					FacesMessage.SEVERITY_ERROR,
-					" Item Reject Reason Required!", ""));
-
-			return "addCatalogView";
-		}
+		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
+		IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject("pm", IStatusSO.class);
 
 		try {
+			CatalogueBackingBean bb = new CatalogueBackingBean();
+			CatalogueReqDTO reqDTO = new CatalogueReqDTO();
+			StatusReqDTO statusReqDTO = new StatusReqDTO();
+	
+			bb.getManagedBean().getSelectedMaintainItem().setItemStatus("R");
+			this.getManagedBean().setRejectReason(false);
+	
+			bb.getManagedBean().getSelectedMaintainItem().setReviewRequired(true);
+			System.out.println("bb.getManagedBean().getRejectReasonIds(): "
+					+ bb.getManagedBean().getRejectReasonIds());
+	
+			for (int i = 0; i < bb.getManagedBean().getRejectReasonIds().size(); i++) {
+				Long id = Long.valueOf(String.valueOf(bb.getManagedBean().getRejectReasonIds().get(i)));
+	
+				CmItemRejectReason reason = new CmItemRejectReason();
+				
+				statusReqDTO.setStatusId(id);
+				StatusResDTO resDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
+				PmStatus reasonStatus = resDTO.getPmStatus();
+	
+				reason.setRemark(bb.getManagedBean().getRejectReason());
+				reason.setCmSupplierItem(bb.getManagedBean().getSelectedMaintainItem());
+				reason.setPmStatus(reasonStatus);
+				bb.getManagedBean().getSelectedMaintainItem().getCmItemRejectReasons().add(reason);
+			}
+	
+			reqDTO.getSaveSupplierItems().add(
+					bb.getManagedBean().getSelectedMaintainItem());
+	
+			if (bb.getManagedBean().getRejectReasonIds().isEmpty()) {
+	
+				this.getManagedBean().setCatDetTabActiveIndex(2);
+	
+				FacesContext facesContext = FacesContext.getCurrentInstance();
+				facesContext.addMessage(null, new FacesMessage(
+						FacesMessage.SEVERITY_ERROR,
+						" Item Reject Reason Required!", ""));
+	
+				return "addCatalogView";
+			}
+		
 			catalogueSO.updateSupplierItem(reqDTO);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally{
+			catalogueSO = null;
+			statusSO = null;
 		}
 		refreshCatalogueList();
 		FacesContext facesContext = FacesContext.getCurrentInstance();
