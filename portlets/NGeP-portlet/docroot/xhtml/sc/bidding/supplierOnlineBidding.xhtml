@@ -13,9 +13,9 @@
 		<div style="align: left">
 			<table style="width: 50%;">
 				<tr>
-					<td style="width: 15%;"><p:outputLabel
+					<td style="width: 18%;"><p:outputLabel
 							value="#{lbl['lbl.sc.remaining.time']}" /></td>
-					<td style="width: 85%; align: left"><script
+					<td style="width: 82%; align: left"><script
 							type="application/javascript">
 						
 			var myCountdownBidding = new Countdown({time:"#{onlineBiddingBB.managedBean.remainingBidTime}",hideLine: true,rangeHi: "hour",rangeLo: "second",width: 250,height: 70}); 
@@ -37,7 +37,7 @@
 					<p:column rowspan="2" headerText="#{lbl['lbl.sc.quantity']}"
 						width="7%" />
 
-					<p:column rowspan="2"
+					<p:column rowspan="2" style="white-space : normal"
 						headerText="#{lbl['lbl.sc.min.decrement.block']}" width="4%" />
 
 					<p:column colspan="2" headerText="#{lbl['lbl.sc.starting']}"
@@ -49,7 +49,7 @@
 					<p:column colspan="3" headerText="#{lbl['lbl.sc.new.bid']}"
 						width="19%" style=" text-align:center" />
 
-					<p:column rowspan="2" headerText="#{lbl['lbl.sc.current.ranking']}"
+					<p:column rowspan="2" headerText="#{lbl['lbl.sc.current.ranking']}" style="white-space : normal"
 						width="4%" />
 				</p:row>
 				<p:row>
@@ -116,7 +116,7 @@
 				</h:outputText>
 			</p:column>
 			<p:column>
-				<p:spinner widgetVar="decrementSpinner"  size="10"
+				<p:spinner   size="10"
 					value="#{bidPriceItem.newPrice}"
 					min="#{bidPriceItem.scBidSupplierItem.scBidItem.decrementAmt}"
 					max="#{bidPriceItem.bidPrice /10}"
