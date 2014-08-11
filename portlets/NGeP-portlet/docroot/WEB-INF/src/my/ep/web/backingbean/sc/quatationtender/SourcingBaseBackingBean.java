@@ -573,13 +573,14 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			reqDTO.setCtxToken(facesScopes.getBPMAuthenticationCtxToken());
 			reqDTO.setTaskId(taskId);
 			
-			BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
+			BpmResponseDTO resDTO = bpmSO.getTaskDetails(reqDTO);
 			
 			this.renewSesionObject();
 			this.getManagedBean().setTaskId(taskId);
-			this.getManagedBean().setOutComes(res.getAction());
+			this.getManagedBean().setOutComes(resDTO.getAction());
+			this.getManagedBean().setStatusId(Long.valueOf(resDTO.getDocStatus()));
 			
-			return (BPM_DATA_TYPE)res.getPojo();
+			return (BPM_DATA_TYPE)resDTO.getPojo();
 			
 		} finally {
 			bpmSO = null;

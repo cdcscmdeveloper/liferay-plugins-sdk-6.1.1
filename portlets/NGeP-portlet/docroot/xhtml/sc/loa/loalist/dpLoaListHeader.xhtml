@@ -24,7 +24,7 @@
 						<h:outputLabel value="#{lbl['lbl.sc.status']}" />
 					</td>
 					<td class="header-info-text" width="20%">
-						<h:outputText value1="#{dpLOABackingBean.getStatusDescById(dpLOABackingBean.managedBean.scRequestNote.workFlowStatuses[0].statusId)}" disabled="true" size="30" />
+						#{dpLOABackingBean.getStatusDescById(dpLOABackingBean.managedBean.statusId)}
 					</td>
 				</tr>
 			</table>
