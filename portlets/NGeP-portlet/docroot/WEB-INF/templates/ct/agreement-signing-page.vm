@@ -1,0 +1,78 @@
+<html>
+   <head>
+      <style>
+         @page { size: A4 portrait;}
+         .footer {
+         display: block; text-align: center;
+         position: running(footer);
+         }
+      </style>
+   </head>
+   <body>
+      Dengan disaksikan di bawah ini, pihak-pihak di sini telah menandatangani nama masing-masing pada _____________ haribulan ______________ tahun ${currentYear}.
+      <br/>
+      <br/>
+      Untuk dan bagi pihak <strong>KERAJAAN MALAYSIA</strong>
+      <br/>
+      <br/>
+      <strong>${ministryName}</strong>
+      <br/>
+      <br/>
+      <br/>
+      #foreach( $ctAgencySigner in $ctAgencySignerList )
+      Di hadapan		: $ctAgencySigner.officerName 
+      <br/>
+      Nama			:  $ctAgencySigner.officerName
+      <br/>
+      No. K/Pengenalan	: $ctAgencySigner.officerIc 
+      <br/>
+      Jawatan		:  $ctAgencySigner.officerPosition
+      <br/>
+      <br/>
+      #end
+      #foreach( $ctSignAgencyWitness in $ctSignAgencyWitnessList )
+      Di hadapan		: $ctSignAgencyWitness.officerName 
+      <br/>
+      Nama			:  $ctSignAgencyWitness.officerName
+      <br/>
+      No. K/Pengenalan	: $ctSignAgencyWitness.officerIc 
+      <br/>
+      Jawatan		:  $ctSignAgencyWitness.officerPosition
+      <br/>
+      <br/>
+      #end
+      <br/>
+      <br/>
+      Untuk dan bagi pihak <strong>KONTRAKTOR</strong>
+      <br/>
+      <br/>
+      <strong>${companyName}</strong>
+      <br/>
+      <strong>(No. Syarikat: ${companyRegNo})</strong>
+      <br/>
+      <br/>
+      <br/>
+      #foreach( $ctSupplierSigner in $ctSupplierSignerList )
+      Di hadapan		: $ctSupplierSigner.officerName 
+      <br/>
+      Nama			:  $ctSupplierSigner.officerName
+      <br/>
+      No. K/Pengenalan	: $ctSupplierSigner.officerIc 
+      <br/>
+      Jawatan		:  $ctSupplierSigner.officerPosition
+      <br/>
+      <br/>
+      #end
+      #foreach( $ctSupplierWitness in $ctSupplierWitnessList )
+      Di hadapan		: $ctSupplierWitness.officerName 
+      <br/>
+      Nama			:  $ctSupplierWitness.officerName
+      <br/>
+      No. K/Pengenalan	: $ctSupplierWitness.officerIc 
+      <br/>
+      Jawatan		:  $ctSupplierWitness.officerPosition
+      <br/>
+      <br/>
+      #end
+   </body>
+</html>

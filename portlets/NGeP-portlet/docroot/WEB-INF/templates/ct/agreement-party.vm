@@ -1,0 +1,35 @@
+<html>
+   <head>
+      <style>
+         @page { size: A4 portrait;}
+         .footer {
+         display: block; text-align: center;
+         position: running(footer);
+         }
+      </style>
+   </head>
+   <body>
+      <div>
+         <strong>PERJANJIAN</strong> ini dibuat pada $userInputDate hari bulan $userInputMonth $currentYear
+      </div>
+      <br/><br/>
+      <div align="center">
+         <strong>ANTARA</strong>
+      </div>
+      <br/>
+      <strong>KERAJAAN MALAYSIA</strong> yang bagi tujuan ini diwakili oleh $jabatanName, $ministryName yang beralamat di $jabatanAddress (selepas ini dirujuk sebagai "Kerajaan") di satu Pihak.
+      <br/><br/>
+      <div align="center">
+         <strong>DAN</strong>
+      </div>
+      <br/>
+      <strong>$supplierName</strong> (<strong>$supplierRegNo</strong>), sebuah perniagaan yang diperbadankan di Malaysia di bawah Akta Perniagaan 1956 mempunyai pejabat berdaftar di <strong>$supplierAddress</strong>. (kemudian daripada ini disebut sebagai 'Kontraktor') bagi pihak yang satu lagi.
+      <br/><br/>
+      Kerajaan dan Kontraktor secara individu boleh dirujuk sebagai 'Pihak' dan secara kolektifnya dirujuk sebagai 'Pihak-pihak'.
+      <br/><br/><br/>
+      <strong>BAHAWASANYA</strong>
+      <br/>
+      <strong>Kerajaan</strong> berniat untuk melantik <strong>Kontraktor</strong> untuk $contractTitle.
+      <br/><br/>Pengarah, atau mana-mana pegawai yang telah diberi kuasa olehnya secara bertulis adalah pegawai yang akan melaksanakan peruntukan dalam Perjanjian ini bagi pihak Kerajaan selamat tempoh Perjanjian ini berkuatkuasa, kecuali peruntukan-peruntukan mengenai penamatan Perjanjian.
+   </body>
+</html>

@@ -1,0 +1,50 @@
+<html>
+   <head>
+      <style>
+         @page { size: A4 portrait;}
+	
+         .footer {
+         display: block; text-align: center;
+         position: running(footer);
+         }
+      </style>
+   </head>
+   <body>
+      <table style="text-align: center;" width="100%">
+         <tbody>
+            <tr>
+               <td>
+                  <img src="$imgUrl" align="middle" height="100" width="120"/>
+               </td>
+            </tr>
+         </tbody>
+      </table>
+      <div align="center">
+         <br/><br/>
+         <span><strong>PERJANJIAN KONTRAK $contractTitle</strong></span><br/>
+         <br/><br/>
+         <span><strong>ANTARA</strong></span><br/>
+         <span><strong>KERAJAAN MALAYSIA</strong></span><br/>
+         <span><strong>DAN</strong></span><br/>
+         <span><strong>$supplierName</strong></span><br/>
+         <span><strong>(NO. SYARIKAT : $supplierRegistrationNo)</strong></span><br/>
+         <br/><br/>
+         <span><strong>NO. KONTRAK:</strong></span><br/>
+         <span><strong>$physicalContactNo</strong></span><br/>
+         <br/><br/>
+         <span><strong>TEMPOH PERJANJIAN:</strong></span><br/>
+         <span><strong>$contractStartDate HINGGA $contractEndDate</strong></span><br/>
+         <span><strong>$contractPeriod</strong></span><br/>
+         <br/><br/>
+         <span><strong>NILAI PERJANJIAN:</strong></span><br/>
+         <span><strong>$contractValue</strong></span><br/>
+         <span><strong>(RINGGIT MALAYSIA :$contractValueText)</strong></span><br/>
+         <br/><br/>
+      </div>
+      #if ( $isBondReq == 'true' )
+      <div style="font-weight: normal; text-align: center;"><strong>JUMLAH BON PELAKSANAAN:</strong></div>
+      <div style="font-weight: normal; text-align: center;"><strong>RM $performanceBondValue</strong></div>
+      <div style="font-weight: normal; text-align: center;"><strong>(RINGGIT MALAYSIA :$performanceBondValueText)</strong></div>
+      #end
+   </body>
+</html>
