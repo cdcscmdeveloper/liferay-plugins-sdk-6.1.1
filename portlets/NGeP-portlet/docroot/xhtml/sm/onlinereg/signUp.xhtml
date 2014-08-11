@@ -25,7 +25,7 @@
 							value="#{registrationBackingBean.managedBean.applType}">
 							<f:selectItem itemLabel="#{lbl['lbl.sm.basic.account.basic']}" itemValue="#{SupplierManagementConst.ACC_BASIC}" />
 							<f:selectItem itemLabel="#{lbl['lbl.sm.basic.account.mof']}" itemValue="#{SupplierManagementConst.ACC_MOF}" />
-							<p:ajax event="change" update="agreementId" />
+							<p:ajax event="change" update="agreementId,btnProceed" />
 						</p:selectOneRadio></td>
 				</tr>
 			</table>
@@ -85,9 +85,9 @@
 			</p:selectBooleanCheckbox>
 			I have agreed the <a href="">Terms &#38; Conditions</a>
 		</p:panel>
-
 		<div align="right">
-			<p:commandButton id="btnProceed" value="#{lbl['lbl.sm.next']}" disabled="#{!registrationBackingBean.managedBean.agreeTC}"
+			<p:commandButton id="btnProceed" value="#{lbl['lbl.sm.next']}" 
+			disabled="#{(!registrationBackingBean.managedBean.agreeTC || registrationBackingBean.managedBean.applType == null)}"
 				action="#{registrationBackingBean.proceedToCompanyInfo}" />
 		</div>
 
