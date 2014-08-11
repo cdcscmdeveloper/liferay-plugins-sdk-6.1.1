@@ -51,8 +51,16 @@
 							value="#{lbl['tt.sm.user.full.name']}" />
 					</p:tooltip> <p:message id="individualNameIdMsg" for="individualNameId"
 						display="icon" /></td>
-				<td></td>
-				<td></td>
+				<td class="tdTitle"><p:outputLabel
+						value="#{lbl['lbl.sm.userprofile.dob']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td class="tdContent"><p:calendar id="dobCalId"
+						navigator="true" required="true"
+						label="#{lbl['lbl.sm.userprofile.dob']}"
+						value="#{registrationBackingBean.managedBean.smPersonnel.birthDate}"
+						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
+						readonlyInput="true" size="30" showOn="button" yearRange="-99:-16">
+					</p:calendar></td>
 			</tr>
 
 			<tr>
