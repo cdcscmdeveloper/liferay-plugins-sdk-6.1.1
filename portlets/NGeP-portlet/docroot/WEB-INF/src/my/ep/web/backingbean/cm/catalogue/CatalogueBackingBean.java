@@ -141,6 +141,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	private TreeNode root1;
 	private TreeNode root2;
 	private StreamedContent file;
+	private boolean remarkRendered = false;
 
 	private SearchFilterBean statusFilterBean = new SearchFilterBean(
 			SearchOperator.OPERATOR_EQUALS.value());
@@ -3363,8 +3364,19 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	public void enableRemark() {
 
 		ReviewCatalogueBackingBean bb = new ReviewCatalogueBackingBean();
-
 		bb.getManagedBean().setCatDetTabActiveIndex(2);
+		boolean remark = false;
+		
+		for (int i = 0; i < this.getManagedBean().getRejectReasonIds().size(); i++) {
+			String id = String.valueOf(this.getManagedBean().getRejectReasonIds().get(i));
+			if (id.equals("10010")) {
+				setRemarkRendered(true);
+				remark = true;
+			}
+		}
+		
+		if(!remark)
+			setRemarkRendered(false);
 
 	}
 
@@ -3434,15 +3446,21 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	public boolean isRemarkRendered() {
 
-		for (int i = 0; i < this.getManagedBean().getRejectReasonIds().size(); i++) {
-			String id = String.valueOf(this.getManagedBean().getRejectReasonIds().get(i));
-			log.info("id isRemarkRendered = "+id);
-			if (id.equals("10010")) {
-				return true;
+		if(!this.remarkRendered){
+			for (int i = 0; i < this.getManagedBean().getRejectReasonIds().size(); i++) {
+				String id = String.valueOf(this.getManagedBean().getRejectReasonIds().get(i));
+				log.info("id isRemarkRendered = "+id);
+				if (id.equals("10010")) {
+					return true;
+				}
 			}
 		}
 
-		return false;
+		return this.remarkRendered;
+	}
+
+	public void setRemarkRendered(boolean remarkRendered) {
+		this.remarkRendered = remarkRendered;
 	}
 
 	public void setRowIndex() {
