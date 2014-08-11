@@ -22,7 +22,8 @@
 				<h:outputText  value="#{agencyData.orgProfile.orgName}"/>
 			 </p:column>
 			 <p:column headerText="#{lbl['lbl.ct.agn.tree.ptj.amount']}" style="width:130px;">
-				<p:inputText value="#{agencyData.ceilingAmount}" maxlength="23" styleClass="ppRightBtn" style="width:110px;" label="#{lbl['lbl.ct.agn.tree.ptj.amount']}">
+				<p:inputText value="#{agencyData.ceilingAmount}" maxlength="23" 
+				     styleClass="ppRightBtn" style="width:110px;" label="#{lbl['lbl.ct.agn.tree.ptj.amount']}">
 				 	<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" /> 
 				</p:inputText>
 		   	 </p:column>
@@ -35,7 +36,9 @@
 				  <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></h:outputText>
 		   	 </p:column>
 		   	 <p:column headerText="#{lbl['lbl.ct.agn.ap178']}" style="width:50px;">
-		   	    <p:selectBooleanCheckbox value="#{agencyData.ap178}" style="width:50px;float:center;"/>
+		   	    <p:selectBooleanCheckbox value="#{agencyData.ap178}" style="width:50px;float:center;"
+		   	      rendered="#{contractDetailsBackingBean.managedBean.ctContract.ownerOrgProfile.parentOrgProfile.orgName != 
+		   	           agencyData.orgProfile.parentOrgProfile.orgName}"/>
 		   	 </p:column>
 			</p:dataTable> 
        	</div>
@@ -44,7 +47,8 @@
        			fn:length(contractDetailsBackingBean.managedBean.contractVer.ctAgencies.get(0).ctAgencyAddresses)==0}"/> 
 			<p:commandButton id="delBtn" value="Delete" icon="ui-icon-delete" process="@form" onclick="dlgDel.show();"  rendered="#{!contractDetailsBackingBean.managedBean.directPurchase and
        			fn:length(contractDetailsBackingBean.managedBean.contractVer.ctAgencies.get(0).ctAgencyAddresses)==0}"/>
-			<p:commandButton value="#{lbl['lbl.ct.agn.table.da']}" disabled="#{fn:length(contractDetailsBackingBean.selectedListOfAgency)!=1}" onclick="deliveryAddressDlg.show();"/>
+			<p:commandButton value="#{lbl['lbl.ct.agn.table.da']}"  id="agAddressBtn"
+			  disabled="#{fn:length(contractDetailsBackingBean.selectedListOfAgency)!=1}" onclick="deliveryAddressDlg.show();"/>
 	  	</div>
 	  	    
         <p:dialog id="dlgDel" widgetVar="dlgDel" header="#{lbl['lbl.ct.dialong.cofirm.header']}" styleClass="screen-title"  
@@ -98,11 +102,12 @@
 			  	<div class="ppRightBtn">
        		         <p:commandButton value="#{lbl['lbl.btn.search']}" update=":form:tableAgency"
        		            action="#{contractDetailsBackingBean.searchAgencyDetails}" icon="ui-icon-search" /> 
-			         <p:commandButton id="resetlBtn" value="#{lbl['lbl.btn.reset']}"/>
+			         <p:commandButton id="resetlBtn" value="#{lbl['lbl.btn.reset']}"
+			            action="#{contractDetailsBackingBean.resetAgencyDetails}" update=":form:agencyies"   />
 		       </div>
 			   <p:spacer height="2"/>
-              <p:dataTable id="tableAgency" var="pmVar" value="#{contractDetailsBackingBean.agencyDataModel}" rowIndexVar="rowIndex"
-				selection="#{contractDetailsBackingBean.selectedPmOrgProfile}" rowKey="#{pmVar}" lazy="true">
+              <p:dataTable id="tableAgency" var="pmVar" value="#{contractDetailsBackingBean.agencyDataModel}" 
+                 rowIndexVar="rowIndex" selection="#{contractDetailsBackingBean.selectedPmOrgProfile}" rowKey="#{pmVar}" lazy="true">
                   <ac:paginator for="tableAgency"/>
                     <p:column selectionMode="multiple" style="width:18px;"/>        
                     <p:column headerText="#{lbl['lbl.ct.agn.model.table.code']}">

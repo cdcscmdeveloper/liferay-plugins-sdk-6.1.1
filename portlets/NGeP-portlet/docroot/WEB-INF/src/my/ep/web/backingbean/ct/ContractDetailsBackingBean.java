@@ -314,10 +314,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	    this.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
 		 
 	    if(this.getManagedBean().getContractVer().getCtContractItems().size() > 0){
-		     if(this.getManagedBean().getCtItemList() == null && this.getManagedBean().getCtItemServiceList() == null){
-		        this.getManagedBean().setCtItemList(new ArrayList<CtContractItem>());
-		        this.getManagedBean().setCtItemServiceList(new ArrayList<CtContractItem>());
-		             
+		     if(this.getManagedBean().getCtItemList().size() == 0 && this.getManagedBean().getCtItemServiceList().size() == 0){
 		        for(CtContractItem item : getManagedBean().getContractVer().getCtContractItems()) {
 				    if(item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) 
 					   this.getManagedBean().getCtItemServiceList().add(item);
@@ -417,37 +414,38 @@ public void ConstructSideTabMenu(){
 			   this.getManagedBean().getFinalListOfSideMenu().clear();
 		
 		if(this.getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)){
-		      if (this.getManagedBean().getCtContract().isZonalPricing()) {
-	 		          this.getManagedBean().getFinalListOfSideMenu().addAll(menu.menuWithZone);
-	                  if (getManagedBean().isDirectPurchase()) {
-			    	                  this.getManagedBean().getFinalListOfSideMenu().addAll(menu.menuWithDirectPurchase);
-	                            }else{
-	            	                  this.getManagedBean().getFinalListOfSideMenu().addAll(menu.menuWithNoPurchase);
-	                            }if(this.getManagedBean().getCtContract().isFactored()){
-	            	                 this.getManagedBean().getFinalListOfSideMenu().addAll(menu.menuWithFactoring);
-	                           }if(this.getManagedBean().isFlgPaymentTracking()){
-	            	                 this.getManagedBean().getFinalListOfSideMenu().addAll(menu.menuWithPayment);
-	                           } this.getManagedBean().getFinalListOfSideMenu().addAll(menu.menuWithSetting);
+		    	  getManagedBean().getFinalListOfSideMenu().addAll(menu.menuFulfilement);
+			      getManagedBean().getFinalListOfSideMenu().addAll(menu.menuAgency);
+			      if(getManagedBean().getCtContract().isZonalPricing()) {
+		 		          getManagedBean().getFinalListOfSideMenu().addAll(menu.menuZone);
+			      }
+		 		  getManagedBean().getFinalListOfSideMenu().addAll(menu.menuItem);
+		          if (getManagedBean().isDirectPurchase() && !getManagedBean().getCtContract().
+		        		  getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)) {
+				    	  getManagedBean().getFinalListOfSideMenu().addAll(menu.menuSchedule);
+			      } else{
+		            	  getManagedBean().getFinalListOfSideMenu().addAll(menu.menuDeduction);
+		            	  if (!getManagedBean().getCtContract().
+				        		getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)) {
+		            	        getManagedBean().getFinalListOfSideMenu().addAll(menu.menuSchedule);
+		            	  }
+			       }
+	 		          
+		           if(getManagedBean().getCtContract().isFactored()) {
+	            	      getManagedBean().getFinalListOfSideMenu().addAll(menu.menuFactoring);
+	                     
+		           } if(getManagedBean().isFlgPaymentTracking()) {
+	            	         getManagedBean().getFinalListOfSideMenu().addAll(menu.menuPaymentTracking);
+	                } 
+		            getManagedBean().getFinalListOfSideMenu().addAll(menu.menuSetting);
 	                
-		      }else if(!getManagedBean().getCtContract().isZonalPricing()){
-	    	                  this.getManagedBean().getFinalListOfSideMenu().addAll(menu.menuWithNoZone);
-	                          if(this.getManagedBean().isDirectPurchase()){
-			    	                this.getManagedBean().getFinalListOfSideMenu().addAll(menu.menuWithDirectPurchase);
-	                          }else{
-	            	                 this.getManagedBean().getFinalListOfSideMenu().addAll(menu.menuWithNoPurchase);
-	                          }if(this.getManagedBean().getCtContract().isFactored()){
-	            	                this.getManagedBean().getFinalListOfSideMenu().addAll(menu.menuWithFactoring);
-	                          }if(this.getManagedBean().isFlgPaymentTracking()){
-	            	                this.getManagedBean().getFinalListOfSideMenu().addAll(menu.menuWithPayment);
-	                          }
-	            	         this.getManagedBean().getFinalListOfSideMenu().addAll(menu.menuWithSetting);   
-	          }
-		 }if(this.getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)){
-		               this.getManagedBean().getFinalListOfSideMenu().addAll(menu.menuCentralFulfilment);
+		  } if(this.getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)){
+		               this.getManagedBean().getFinalListOfSideMenu().addAll(menu.menuFulfilement);
+		               this.getManagedBean().getFinalListOfSideMenu().addAll(menu.menuItem);
 	                   if(this.getManagedBean().getCtContract().isFactored()){
-	            	         this.getManagedBean().getFinalListOfSideMenu().addAll(menu.menuWithFactoring);
+	            	         this.getManagedBean().getFinalListOfSideMenu().addAll(menu.menuPaymentTracking);
 		                }
-        	          this.getManagedBean().getFinalListOfSideMenu().addAll(menu.menuWithSetting);   
+        	          this.getManagedBean().getFinalListOfSideMenu().addAll(menu.menuSetting);   
 		      }
 		      
 	 	    for( String str : this.getManagedBean().getFinalListOfSideMenu()){
@@ -1164,19 +1162,20 @@ public void ConstructSideTabMenu(){
 		  CtAgency ctAgency = new CtAgency();
 		  ctAgency.setEffDate(getManagedBean().getContractVer().getCtContractValue().getEffDate());
 		  ctAgency.setExpDate(getManagedBean().getContractVer().getCtContractValue().getExpDate());
+		  ctAgency.setCeilingAmount(new BigDecimal(0));
 		  ctAgency.setOrgProfile(pmOrgProfile);
 		  this.getManagedBean().getContractVer().getCtAgencies().add(ctAgency);
 		  if(this.getManagedBean().getCtItemList() != null &&  this.getManagedBean().getCtItemList().size() > 1){
 			     for(CtContractItem contractItem: this.getManagedBean().getCtItemList()){
-			    	             CtItemCeilingQty itemCeilingQty = new CtItemCeilingQty();
-			    		  	      itemCeilingQty.setCtAgency(ctAgency);
-			    			      itemCeilingQty.setCtContractItem(contractItem);
-			    		  	      itemCeilingQty.setCeilingQuantity(new BigDecimal(0));
-			    			      itemCeilingQty.setEffDate(getManagedBean().getContractVer().getCtContractValue().getEffDate());
-			    			      itemCeilingQty.setExpDate(getManagedBean().getContractVer().getCtContractValue().getExpDate());
-			    			      contractItem.getCtItemCeilingQties().add(itemCeilingQty);
-							}
-						}
+			    	      CtItemCeilingQty itemCeilingQty = new CtItemCeilingQty();
+			    		  itemCeilingQty.setCtAgency(ctAgency);
+			    		  itemCeilingQty.setCtContractItem(contractItem);
+			    		  itemCeilingQty.setCeilingQuantity(new BigDecimal(0));
+			    		  itemCeilingQty.setEffDate(getManagedBean().getContractVer().getCtContractValue().getEffDate());
+			    		  itemCeilingQty.setExpDate(getManagedBean().getContractVer().getCtContractValue().getExpDate());
+			    		  contractItem.getCtItemCeilingQties().add(itemCeilingQty);
+				   }
+			}
 	   }selectedPmOrgProfile = null;
 	}
 	 
@@ -1669,7 +1668,7 @@ public void ConstructSideTabMenu(){
 		paidAdvancePercentage = (this.getManagedBean().getPaidAdvancePaymentAmt().multiply(BigDecimal.valueOf(100)).divide(BigDecimal.valueOf(this.getManagedBean().getAdvancePaymentAmt()), 2, RoundingMode.HALF_UP));
 		return paidAdvancePercentage;
 	}
-
+	
 	public void setPaidAdvancePercentage(BigDecimal paidAdvancePercentage) {
 		this.paidAdvancePercentage = paidAdvancePercentage;
 	}
@@ -1792,6 +1791,13 @@ public void ConstructSideTabMenu(){
 			this.getManagedBean().setSmAddress(this.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress());
 		}
 		getManagedBean().setSupplierAddress(AddressUtils.getFullAddress(getManagedBean().getSmAddress()));
+	}
+	
+	public void resetAgencyDetails(){
+		getManagedBean().setMinistryProfileId(null);
+		getManagedBean().setPtjCodeName(null);
+		getManagedBean().setPtjCodeName(null);
+		agencyDataModel.resetData();
 	}
 	
 	/*Implementation of search method for agency*/
