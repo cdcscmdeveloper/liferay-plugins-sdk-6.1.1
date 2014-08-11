@@ -4057,6 +4057,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 						zonalStandard.setDisplayAction(false);
 						this.getManagedBean().setError8(true);
 						break;
+					} else {
+						zonalStandard.setDisplayAction(true);
+						this.getManagedBean().setError8(false);
 					}
 				} else {
 					zonalStandard.setDisplayAction(true);
@@ -4097,6 +4100,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 						zonalPromo.setDisplayAction(false);
 						this.getManagedBean().setError8(true);
 						break;
+					} else {
+						zonalPromo.setDisplayAction(true);
+						this.getManagedBean().setError8(false);
 					}
 				} else {
 					zonalPromo.setDisplayAction(true);
@@ -4136,6 +4142,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 							tier.setDisplayAction(false);
 							this.getManagedBean().setError8(true);
 							break;
+						} else {
+							tier.setDisplayAction(true);
+							this.getManagedBean().setError8(false);
 						}
 					} else {
 						tier.setDisplayAction(true);
