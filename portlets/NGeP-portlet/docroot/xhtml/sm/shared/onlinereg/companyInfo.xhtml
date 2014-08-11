@@ -52,10 +52,28 @@
 				<td class="tdTitle"><p:outputLabel
 						value="#{lbl['lbl.sm.identificationno']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td class="tdContent">
-					<p:inputText id="txtIdNumber" required="true" label="#{lbl['lbl.sm.identificationno']}"
-						value="#{registrationBackingBean.managedBean.smSuppOwner.identificationNo}"
-						size="30" maxlength="15" disabled="#{!registrationBackingBean.managedBean.smSuppOwner.brandNew}">
-					</p:inputText>
+					<c:choose>
+						<c:when test="#{registrationBackingBean.managedBean.smSuppOwner.identificationType.parameterCode == SupplierManagementConst.NEW_IC}">
+							<p:inputText id="txtIdNumber" required="true"
+								label="#{lbl['lbl.sm.identificationno']}"
+								value="#{registrationBackingBean.managedBean.smSuppOwner.identificationNo}"
+								size="30" maxlength="12" validatorMessage="#{lbl['lbl.sm.individual.newicno']} - #{lbl['lbl.sm.invalidIcNo']}"
+								disabled="#{!registrationBackingBean.managedBean.smSuppOwner.brandNew}">
+								<f:validateRegex pattern="[0-9]+" />
+								<f:validateLength minimum="12"></f:validateLength>
+							</p:inputText>
+						</c:when>
+						
+						<c:otherwise>
+							<p:inputText id="txtIdNumber" required="true"
+								label="#{lbl['lbl.sm.identificationno']}"
+								value="#{registrationBackingBean.managedBean.smSuppOwner.identificationNo}"
+								size="30" maxlength="15"
+								disabled="#{!registrationBackingBean.managedBean.smSuppOwner.brandNew}">
+							</p:inputText>
+						</c:otherwise>
+					</c:choose>
+					
 					&#160;
 					<p:graphicImage id="icti" library="ep/images/design" name="tooltips.png" />
 					<p:tooltip id="ictt" for="icti">
