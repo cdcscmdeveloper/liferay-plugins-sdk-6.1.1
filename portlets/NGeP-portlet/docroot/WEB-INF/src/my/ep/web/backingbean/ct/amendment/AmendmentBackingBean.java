@@ -593,6 +593,14 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	  }
 	 
 	 private void validateContractAmendment(String action) {
+		 
+		 if(getManagedBean().getContractVer().getCtAmendment()!=null && 
+			 getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa()!=null && 
+			 getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaAttachment()!=null &&
+			 getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaAttachment().getFileName()==null) {
+			 throw new EpException(MessageConst.ERROR_100022, new String[]{"Letter of Acceptance"});
+		 }
+		 
 		 if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT) || isBpkApprover()) {
 			if((getManagedBean().getRemarkList().get(0).getRemark() == null || getManagedBean().getRemarkList().get(0).getRemark().length()==0) &&
 				(getManagedBean().getContractVer().getAp201Remark().get(0).getRemark() == null || getManagedBean().getContractVer().getAp201Remark().get(0).getRemark().length()==0) &&
@@ -1771,23 +1779,24 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			 DocumentResDTO resDTO = null;
 			try{
 				
-				if(getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaReports() == null)
+				if(getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaReports() == null) {
 			    	 getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().setScLoaReports(new ArrayList<ScLoaReport>());
 				
-				reqDTO = new DocumentReqDTO();
-			     documentSO = (IDocumentSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDocumentSO.class);
-			     reqDTO.setDocCategoryCode(ParameterConst.DOCUMENT_CATEGORY_LOA_FOR_CONTRACT_AMENDMENT);
-			     resDTO = documentSO.retrieveDocumentCheckList(reqDTO);
-			     for(PmDocument document : resDTO.getDocumentList()){
-			      	 ScLoaReport reports = new ScLoaReport();
-			    	 reports.setPmDocument(document);
-			    	 reports.setTitle(document.getDocName());
-			    	 reports.setDefinationType(document.getDocDefinitionTypeCode());
-			    	 reports.setDocType(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
-			    	 reports.setDocCategory(ParameterConst.DOCUMENT_CATEGORY_LOA_FOR_CONTRACT_AMENDMENT);
-			    	 reports.setScLoa( this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa());
-			    	 this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaReports().add(reports);	
-			     }
+					 reqDTO = new DocumentReqDTO();
+				     documentSO = (IDocumentSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDocumentSO.class);
+				     reqDTO.setDocCategoryCode(ParameterConst.DOCUMENT_CATEGORY_LOA_FOR_CONTRACT_AMENDMENT);
+				     resDTO = documentSO.retrieveDocumentCheckList(reqDTO);
+				     for(PmDocument document : resDTO.getDocumentList()){
+				      	 ScLoaReport reports = new ScLoaReport();
+				    	 reports.setPmDocument(document);
+				    	 reports.setTitle(document.getDocName());
+				    	 reports.setDefinationType(document.getDocDefinitionTypeCode());
+				    	 reports.setDocType(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
+				    	 reports.setDocCategory(ParameterConst.DOCUMENT_CATEGORY_LOA_FOR_CONTRACT_AMENDMENT);
+				    	 reports.setScLoa( this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa());
+				    	 this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaReports().add(reports);	
+				     }
+				}
 			    
 			}catch(Exception e){
 				e.printStackTrace();
@@ -1817,9 +1826,16 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			 if(this.getManagedBean().getContractVer().getCtContractValue().getBankAccountNo() != null) {
 				 for(SmSupplierBank supplierBank : this.getManagedBean().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks()){
 					 if(supplierBank.getAccountNo().equalsIgnoreCase(this.getManagedBean().getContractVer().getCtContractValue().getBankAccountNo())){
-						 this.getManagedBean().getContractVer().getCtContractValue().setBankName(supplierBank.getPmFinancialOrg().getFinOrgName());  
-						 this.getManagedBean().getContractVer().getCtContractValue().setBankBranch(supplierBank.getSmSupplierBranch().getBranchName());
-						 this.getManagedBean().getContractVer().getCtContractValue().setBankAddress(supplierBank.getSmAddress());
+						 this.getManagedBean().getContractVer().getCtContractValue().setBankName(supplierBank.getPmFinancialOrg().getFinOrgName()); 
+						 if(supplierBank.getSmSupplierBranch()!=null)
+							 this.getManagedBean().getContractVer().getCtContractValue().setBankBranch(supplierBank.getSmSupplierBranch().getBranchName());
+						 else
+							 this.getManagedBean().getContractVer().getCtContractValue().setBankBranch(null);
+						 
+						 if(supplierBank.getSmAddress()!=null)
+							this.getManagedBean().getContractVer().getCtContractValue().setBankAddress(supplierBank.getSmAddress());
+						 else
+							 this.getManagedBean().getContractVer().getCtContractValue().setBankAddress(null);
 				    }
 			    }
 		    }else{
