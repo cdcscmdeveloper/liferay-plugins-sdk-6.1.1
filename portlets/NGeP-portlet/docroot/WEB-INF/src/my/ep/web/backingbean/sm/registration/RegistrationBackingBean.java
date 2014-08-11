@@ -108,9 +108,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 //			MDC.put(LogKey.USER_ID, 1L);
 //		}
 //
-		if (this.getManagedBean().getApplType() == null) {
+/*		if (this.getManagedBean().getApplType() == null) {
 			this.getManagedBean().setApplType(SupplierManagementConst.ACC_MOF);
-		}
+		}*/
 		
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
 		if (pmUser != null && pmUser.getUserId() != null) {
@@ -719,7 +719,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 //				this.getManagedBean().setBizIdL4(null);
 				selectedBiz.setLvl2(null);
 				selectedBiz.setLvl3(null);
-				
+				selectedBiz.setLvl4(null);
 				selectedBiz.setLvl5(null);
 				//this.getManagedBean().getSelectedBusinessNature().getPmBusinessNature().setBusinessNatureId(null);
 				if(selectedBiz.getLvl1() != null){
@@ -732,6 +732,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				this.getManagedBean().setBusinessNatureL5(new ArrayList<PmBusinessNature>());
 				selectedBiz.setLvl3(null);
 				selectedBiz.setLvl4(null);
+				selectedBiz.setLvl5(null);
 				//this.getManagedBean().getSelectedBusinessNature().getPmBusinessNature().setBusinessNatureId(null);
 				if(selectedBiz.getLvl2() !=null){
 					this.getManagedBean().setBusinessNatureL3(retrieveBusinessNatureByLevelParent(bizLvl,selectedBiz.getLvl2()));
@@ -741,6 +742,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				this.getManagedBean().setBusinessNatureL4(new ArrayList<PmBusinessNature>());
 				this.getManagedBean().setBusinessNatureL5(new ArrayList<PmBusinessNature>());
 				selectedBiz.setLvl4(null);
+				selectedBiz.setLvl5(null);
 				//this.getManagedBean().getSelectedBusinessNature().getPmBusinessNature().setBusinessNatureId(null);
 				if(selectedBiz.getLvl3()!=null){
 					this.getManagedBean().setBusinessNatureL4(retrieveBusinessNatureByLevelParent(bizLvl,selectedBiz.getLvl3()));
@@ -748,6 +750,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			break;
 			case "50" : 
 				this.getManagedBean().setBusinessNatureL5(new ArrayList<PmBusinessNature>());
+				selectedBiz.setLvl5(null);
 				//this.getManagedBean().getSelectedBusinessNature().getPmBusinessNature().setBusinessNatureId(null);
 				if(selectedBiz.getLvl4()!=null){
 					this.getManagedBean().setBusinessNatureL5(retrieveBusinessNatureByLevelParent(bizLvl,selectedBiz.getLvl4()));
@@ -936,59 +939,71 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 
 	public void viewOnlineAccount() {
 		log.info("--------------------viewOnlineAccount----------------" + MDC.get(LogKey.USER_ID));
-		
-		SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
-		//846846516516
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
-		supplierSearchReqDTO.setUserId(pmUser.getUserId());
-		
-		ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject("sm", ISupplierSearchSO.class);
-		SupplierSearchResDTO smResDTO =supplierSearchSO.retriveSupplierProfiles(supplierSearchReqDTO);
-		SmSupplier smSupp = (SmSupplier)smResDTO.getResultBean().getResultList().get(0); 
-		log.info("-------smResDTO-------" + smSupp.getSupplierId()); 
-		
-		RegistrationReqDTO reqDTO = new RegistrationReqDTO();
-		reqDTO.setSupplierId(smSupp.getSupplierId());
 
-		IRegistrationSO reqSO = (IRegistrationSO) BusinessDelegate.getInstance().getServiceObject("sm", IRegistrationSO.class);
-		RegistrationResDTO resDTO = reqSO.retrieveSuppOnlineAcc(reqDTO);
+		if(pmUser.getUserId().longValue() != 1 || pmUser == null){
+			SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
+			//846846516516
+			//PmUser pmUser = new FacesScopes().getUserSessionBean();
+			supplierSearchReqDTO.setUserId(pmUser.getUserId());
 
-		this.getManagedBean().setSmSupp(resDTO.getSmSupp());
-		this.getManagedBean().setSmAppl(this.getManagedBean().getSmSupp().getSmAppl());
-		this.getManagedBean().setSmSuppOwner(resDTO.getSmSupp().getSmSupplierOwners().get(0));
-		
-		//this.getManagedBean().setSuppBusinessNature(new SmSupplierBusiness());	
-		//this.getManagedBean().getSuppBusinessNature().setPmBusinessNature(new PmBusinessNature());
-	
-		log.info("---------Supplier Type-----------"
-				+ this.getManagedBean().getSmAppl().getSupplierType());
-		
-//		log.info("**********************BUSINESS_TYPE_LS*****************" + this.getManagedBean().getBusinessTypeLs().size());
-		if(resDTO.getSmSupp().getBusinessType().equals(SupplierManagementConst.INDIVIDUAL_FLAG)){
-			getIndividualServiceType();
-			this.getManagedBean().setSmPermenantAdd(resDTO.getSmSupp().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress());
-			this.populateStateByAddType("permenant");
-			this.populateDistrictByAddType("permenant");
-			this.populateCityByAddType("permenant");
-			
-			this.getManagedBean().setSmBusinessAdd(resDTO.getSmSupp().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress());
-			this.populateStateByAddType("business");
-			this.populateDistrictByAddType("business");
-			this.populateCityByAddType("business");
+			ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject("sm", ISupplierSearchSO.class);
+			SupplierSearchResDTO smResDTO =supplierSearchSO.retriveSupplierProfiles(supplierSearchReqDTO);
+			SmSupplier smSupp = (SmSupplier)smResDTO.getResultBean().getResultList().get(0); 
+			log.info("-------smResDTO-------" + smSupp.getSupplierId()); 
+
+			RegistrationReqDTO reqDTO = new RegistrationReqDTO();
+			reqDTO.setSupplierId(smSupp.getSupplierId());
+
+			IRegistrationSO reqSO = (IRegistrationSO) BusinessDelegate.getInstance().getServiceObject("sm", IRegistrationSO.class);
+			RegistrationResDTO resDTO = reqSO.retrieveSuppOnlineAcc(reqDTO);
+
+			this.getManagedBean().setSmSupp(resDTO.getSmSupp());
+			this.getManagedBean().setSmAppl(this.getManagedBean().getSmSupp().getSmAppl());
+			this.getManagedBean().setSmSuppOwner(resDTO.getSmSupp().getSmSupplierOwners().get(0));
+
+			//this.getManagedBean().setSuppBusinessNature(new SmSupplierBusiness());	
+			//this.getManagedBean().getSuppBusinessNature().setPmBusinessNature(new PmBusinessNature());
+
+			log.info("---------Supplier Type-----------"
+					+ this.getManagedBean().getSmAppl().getSupplierType());
+
+			//		log.info("**********************BUSINESS_TYPE_LS*****************" + this.getManagedBean().getBusinessTypeLs().size());
+			if(resDTO.getSmSupp().getBusinessType().equals(SupplierManagementConst.INDIVIDUAL_FLAG)){
+				getIndividualServiceType();
+				this.getManagedBean().setSmPermenantAdd(resDTO.getSmSupp().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress());
+				this.populateStateByAddType("permenant");
+				this.populateDistrictByAddType("permenant");
+				this.populateCityByAddType("permenant");
+
+				this.getManagedBean().setSmBusinessAdd(resDTO.getSmSupp().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress());
+				this.populateStateByAddType("business");
+				this.populateDistrictByAddType("business");
+				this.populateCityByAddType("business");
+			}else{
+				this.getManagedBean().setSmBusinessAdd(resDTO.getSmSupp().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress());
+				this.populateStateByAddType("business");
+				this.populateDistrictByAddType("business");
+				this.populateCityByAddType("business");
+			}
+			this.retrievePmCountryList();
+			this.retrieveFinancialOrgList();
+			//this.retrieveBusinessNatureL5Map();
+			retrieveIdentityTypeMap();
+			this.getManagedBean().setBusinessNatureL1(this.retrieveBusinessNatureByLevelParent("10",0));
+
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/onlineAccount/accountMaintenanceDet.xhtml");
 		}else{
-			this.getManagedBean().setSmBusinessAdd(resDTO.getSmSupp().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress());
-			this.populateStateByAddType("business");
-			this.populateDistrictByAddType("business");
-			this.populateCityByAddType("business");
+			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
+					FacesMessage.SEVERITY_ERROR,
+					null,
+					MessageUtils.getMessage(MessageConst.ERROR_721017, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/onlinereg/outputMsg.xhtml");
+
 		}
-		this.retrievePmCountryList();
-		this.retrieveFinancialOrgList();
-		//this.retrieveBusinessNatureL5Map();
-		retrieveIdentityTypeMap();
-		this.getManagedBean().setBusinessNatureL1(this.retrieveBusinessNatureByLevelParent("10",0));
-		
-		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/onlineAccount/accountMaintenanceDet.xhtml");
 	}
 	
 	public SelectItem[] pmBusinessTypeDropDown(){
