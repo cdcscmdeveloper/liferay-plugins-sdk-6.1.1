@@ -4051,39 +4051,52 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		CmZonalStandardPricing zonalStandard = this.getManagedBean()
 				.getSelectedMaintainItem().getzStdPrices().get(index);
 		List<CmZonalStandardPricing> previousList = new ArrayList<CmZonalStandardPricing>();
-		for (int i = 0; i < index; i++){
-			if(this.getManagedBean().getSelectedMaintainItem()
-			.getzStdPrices().get(i).getCmSupplierZone() != null)
-			if(zonalStandard.getCmSupplierZone().getSuppZoneId() == this.getManagedBean().getSelectedMaintainItem()
-					.getzStdPrices().get(i).getCmSupplierZone().getSuppZoneId())
-				previousList.add(this.getManagedBean().getSelectedMaintainItem()
+//		for (int i = 0; i < index; i++){
+//			if(this.getManagedBean().getSelectedMaintainItem()
+//			.getzStdPrices().get(i).getCmSupplierZone() != null)
+//			if(zonalStandard.getCmSupplierZone().getSuppZoneId() == this.getManagedBean().getSelectedMaintainItem()
+//					.getzStdPrices().get(i).getCmSupplierZone().getSuppZoneId())
+//				previousList.add(this.getManagedBean().getSelectedMaintainItem()
+//					.getzStdPrices().get(i));
+//		}	
+
+		for (int i = 0; i < index; i++)
+			previousList.add(this.getManagedBean().getSelectedMaintainItem()
 					.getzStdPrices().get(i));
-		}	
 
 		if (zonalStandard.getStartDate() != null
 				&& zonalStandard.getEndDate() != null) {
 			for (CmZonalStandardPricing cmPricing : previousList) {
-				if ((zonalStandard.getStartDate().compareTo(
-						cmPricing.getStartDate()) >= 0 && zonalStandard
-						.getStartDate().compareTo(cmPricing.getEndDate()) <= 0)
-						|| (zonalStandard.getEndDate().compareTo(
-								cmPricing.getStartDate()) >= 0 && zonalStandard
-								.getEndDate().compareTo(cmPricing.getEndDate()) <= 0)
-						|| cmPricing.getStartDate().compareTo(
-								zonalStandard.getStartDate()) >= 0) {
-					if(compareZonesForSameDistricts(zonalStandard.getCmSupplierZone(), cmPricing.getCmSupplierZone())){
+				if(zonalStandard.getCmSupplierZone().getSuppZoneId() == cmPricing
+						.getCmSupplierZone().getSuppZoneId()){
+					if ((zonalStandard.getStartDate().compareTo(
+							cmPricing.getStartDate()) >= 0 && zonalStandard
+							.getStartDate().compareTo(cmPricing.getEndDate()) <= 0)
+							|| (zonalStandard.getEndDate().compareTo(
+									cmPricing.getStartDate()) >= 0 && zonalStandard
+									.getEndDate().compareTo(cmPricing.getEndDate()) <= 0)
+							|| cmPricing.getStartDate().compareTo(
+									zonalStandard.getStartDate()) >= 0) {
 						zonalStandard.setDisplayAction(false);
-						this.getManagedBean().setError8(true);
+						this.getManagedBean().setError4(true);
 						break;
 					} else {
 						zonalStandard.setDisplayAction(true);
-						this.getManagedBean().setError8(false);
+						this.getManagedBean().setError4(false);
 					}
+				} else if(compareZonesForSameDistricts(zonalStandard.getCmSupplierZone(), cmPricing.getCmSupplierZone())){
+					zonalStandard.setDisplayAction(false);
+					this.getManagedBean().setError8(true);
+					break;
 				} else {
 					zonalStandard.setDisplayAction(true);
 					this.getManagedBean().setError8(false);
 				}
 			}
+		} else {
+			zonalStandard.setDisplayAction(true);
+			this.getManagedBean().setError8(false);
+			this.getManagedBean().setError4(false);
 		}
 	}
 
@@ -4093,40 +4106,53 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				.getSelectedMaintainItem().getCmZonalPromotionPricings()
 				.get(index);
 		List<CmZonalPromotionPricing> previousList = new ArrayList<CmZonalPromotionPricing>();
-		for (int i = 0; i < index; i++){
-			if(this.getManagedBean().getSelectedMaintainItem()
-					.getCmZonalPromotionPricings().get(i).getCmSupplierZone() != null)
-					if(zonalPromo.getCmSupplierZone().getSuppZoneId() == this.getManagedBean().getSelectedMaintainItem()
-							.getCmZonalPromotionPricings().get(i).getCmSupplierZone().getSuppZoneId()){
-						previousList.add(this.getManagedBean().getSelectedMaintainItem()
-								.getCmZonalPromotionPricings().get(i));
-					}
-		}
+//		for (int i = 0; i < index; i++){
+//			if(this.getManagedBean().getSelectedMaintainItem()
+//					.getCmZonalPromotionPricings().get(i).getCmSupplierZone() != null)
+//					if(zonalPromo.getCmSupplierZone().getSuppZoneId() == this.getManagedBean().getSelectedMaintainItem()
+//							.getCmZonalPromotionPricings().get(i).getCmSupplierZone().getSuppZoneId()){
+//						previousList.add(this.getManagedBean().getSelectedMaintainItem()
+//								.getCmZonalPromotionPricings().get(i));
+//					}
+//		}
+
+		for (int i = 0; i < index; i++)
+			previousList.add(this.getManagedBean().getSelectedMaintainItem()
+					.getCmZonalPromotionPricings().get(i));
 
 		if (zonalPromo.getStartDate() != null
 				&& zonalPromo.getEndDate() != null) {
 			for (CmZonalPromotionPricing cmPricing : previousList) {
-				if ((zonalPromo.getStartDate().compareTo(
-						cmPricing.getStartDate()) >= 0 && zonalPromo
-						.getStartDate().compareTo(cmPricing.getEndDate()) <= 0)
-						|| (zonalPromo.getEndDate().compareTo(
-								cmPricing.getStartDate()) >= 0 && zonalPromo
-								.getEndDate().compareTo(cmPricing.getEndDate()) <= 0)
-						|| cmPricing.getStartDate().compareTo(
-								zonalPromo.getStartDate()) >= 0) {
-					if(compareZonesForSameDistricts(zonalPromo.getCmSupplierZone(), cmPricing.getCmSupplierZone())){
-						zonalPromo.setDisplayAction(false);
-						this.getManagedBean().setError8(true);
-						break;
-					} else {
-						zonalPromo.setDisplayAction(true);
-						this.getManagedBean().setError8(false);
-					}
+				if (zonalPromo.getCmSupplierZone().getSuppZoneId() == cmPricing
+						.getCmSupplierZone().getSuppZoneId()){
+					if ((zonalPromo.getStartDate().compareTo(
+							cmPricing.getStartDate()) >= 0 && zonalPromo
+							.getStartDate().compareTo(cmPricing.getEndDate()) <= 0)
+							|| (zonalPromo.getEndDate().compareTo(
+									cmPricing.getStartDate()) >= 0 && zonalPromo
+									.getEndDate().compareTo(cmPricing.getEndDate()) <= 0)
+							|| cmPricing.getStartDate().compareTo(
+									zonalPromo.getStartDate()) >= 0) {
+							zonalPromo.setDisplayAction(false);
+							this.getManagedBean().setError4(true);
+							break;
+						} else {
+							zonalPromo.setDisplayAction(true);
+							this.getManagedBean().setError4(false);
+						}
+				} else if(compareZonesForSameDistricts(zonalPromo.getCmSupplierZone(), cmPricing.getCmSupplierZone())){
+					zonalPromo.setDisplayAction(false);
+					this.getManagedBean().setError8(true);
+					break;
 				} else {
 					zonalPromo.setDisplayAction(true);
 					this.getManagedBean().setError8(false);
 				}
 			}
+		} else {
+			zonalPromo.setDisplayAction(true);
+			this.getManagedBean().setError8(false);
+			this.getManagedBean().setError4(false);
 		}
 	}
 
@@ -4156,25 +4182,27 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 									cmPricing.getStartDate()) >= 0 && tier
 									.getEndDate().compareTo(
 											cmPricing.getEndDate()) <= 0)) {
-						if(compareZonesForSameDistricts(tier.getCmSupplierZone(), cmPricing.getCmSupplierZone())){
 							tier.setDisplayAction(false);
-							this.getManagedBean().setError8(true);
+							this.getManagedBean().setError4(true);
 							break;
 						} else {
 							tier.setDisplayAction(true);
-							this.getManagedBean().setError8(false);
+							this.getManagedBean().setError4(false);
 						}
+					} else if(compareZonesForSameDistricts(tier.getCmSupplierZone(), cmPricing.getCmSupplierZone())){
+						tier.setDisplayAction(false);
+						this.getManagedBean().setError8(true);
+						break;
 					} else {
 						tier.setDisplayAction(true);
 						this.getManagedBean().setError8(false);
 					}
-				} else {
-					
-					tier.setDisplayAction(true);
-					this.getManagedBean().setError8(false);
 				}
+			} else {
+				tier.setDisplayAction(true);
+				this.getManagedBean().setError8(false);
+				this.getManagedBean().setError4(false);
 			}
-		}
 	}
 
 	public boolean compareZonesForSameDistricts(CmSupplierZone zone1, CmSupplierZone zone2){
