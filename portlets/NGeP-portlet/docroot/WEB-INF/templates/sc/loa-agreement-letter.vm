@@ -113,6 +113,266 @@
 			________________________________ <br />
 			$contractSigner <br />
 			$contractSignerDesignation
+			<br /><br /><br />
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Dengan ini yang bertandatangan di bawah ini mengakui penerimaan surat tersebut dan mengesahkan tiada apa apa terma, syarat atau stipulasi tambahan telah dikenakan dengan keluaran surat tersebut oleh yang bertandatangan di bawah ini.
+			<br /><br />
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<table border="0" cellpadding="0" cellspacing="0" width="100%">
+			<tr>
+				<td colspan="3">
+					<br />________________________________
+				</td>
+				<td colspan="3">
+					<br />________________________________
+				</td>
+			</tr>
+			<tr>
+				<td colspan="3" style='font-weight:bold;'>
+					Tandatangan bagi pihak Pembekal
+				</td>
+				<td colspan="3" style='font-weight:bold;'>
+					Tandatangan bagi pihak saksi Pembekal
+				</td>
+			</tr>
+			<tr>
+				<td width="17%">
+					Nama Penuh 
+				</td>
+				<td width="1%">
+					: 
+				</td>
+				<td width="32%">
+					$supplierUser
+				</td>
+				<td width="17%">
+					Nama Penuh
+				</td>
+				<td width="1%">
+					: 
+				</td>
+				<td width="32%">
+					$supplierWitnessUser
+				</td>
+			</tr>
+			<tr>
+				<td>
+					No KP
+				</td>
+				<td>
+					: 
+				</td>
+				<td>
+					$supplierIcNo
+				</td>
+				<td>
+					No KP
+				</td>
+				<td>
+					: 
+				</td>
+				<td>
+					$supplierWitnessIcNo
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Jawatan
+				</td>
+				<td>
+					: 
+				</td>
+				<td>
+					$supplierDesignation
+				</td>
+				<td>
+					Jawatan
+				</td>
+				<td>
+					: 
+				</td>
+				<td>
+					$supplierWitnessDesignation
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Nama Pembekal
+				</td>
+				<td>
+					: 
+				</td>
+				<td colspan="3">
+					$supplierName
+				</td>
+			</tr>
+			<tr valign="top">
+				<td>
+					Alamat
+				</td>
+				<td>
+					: 
+				</td>
+				<td style="white-space: normal;">
+					$supplierAddress
+				</td>
+				<td>
+					Alamat
+				</td>
+				<td>
+					: 
+				</td>
+				<td style="white-space: normal;">
+					$supplierWitnessAddress
+				</td>
+			</tr>
+			<tr>
+				<td>
+					No Tel
+				</td>
+				<td>
+					: 
+				</td>
+				<td>
+					$supplierPhoneNo
+				</td>
+				<td>
+					No Tel
+				</td>
+				<td>
+					: 
+				</td>
+				<td>
+					$supplierWitnessPhoneNo
+				</td>
+			</tr>
+			<tr>
+				<td>
+					No Faks
+				</td>
+				<td>
+					: 
+				</td>
+				<td>
+					$supplierFaxNo
+				</td>
+				<td>
+					No Faks
+				</td>
+				<td>
+					: 
+				</td>
+				<td>
+					$supplierWitnessFaxNo
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Tel Bimbit
+				</td>
+				<td>
+					: 
+				</td>
+				<td>
+					$supplierMobNo
+				</td>
+				<td>
+					Tel Bimbit
+				</td>
+				<td>
+					: 
+				</td>
+				<td>
+					$supplierWitnessMobNo
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Alamat emel
+				</td>
+				<td>
+					: 
+				</td>
+				<td>
+					$supplierEmail
+				</td>
+				<td>
+					Alamat emel
+				</td>
+				<td>
+					: 
+				</td>
+				<td>
+					$supplierWitnessEmail
+				</td>
+			</tr>	
+			<tr>
+				<td colspan="6">
+					<br /><br />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					No. Akaun Bank
+				</td>
+				<td>
+					: 
+				</td>
+				<td colspan="3">
+					$bankAccNo
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Nama Bank
+				</td>
+				<td>
+					: 
+				</td>
+				<td colspan="3">
+					$bankName
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Nama Branch
+				</td>
+				<td>
+					: 
+				</td>
+				<td colspan="3">
+					$bankBranch
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Alamat Bank
+				</td>
+				<td>
+					: 
+				</td>
+				<td colspan="3">
+					$bankAddress
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Tarikh
+				</td>
+				<td>
+					: 
+				</td>
+				<td colspan="3">
+					$ackDate
+				</td>
+			</tr>
+			</table>
 		</td>
 	</tr>
 	</table>

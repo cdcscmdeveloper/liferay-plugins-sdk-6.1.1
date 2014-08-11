@@ -221,6 +221,8 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 			
 			getManagedBean().setSourceId(sourceId);
 			
+			//Long loaId = 299L;
+			
 			ScLoa scLoa = new ScLoa();
 			scLoa.setLoaId(loaId);
 			editLOAAction(scLoa);
@@ -243,7 +245,13 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 			Long loaId = Long.valueOf(dpDataType.getAwardId());
 			
 			getManagedBean().setSourceId(sourceId);
+						
+			/*String[] outComes = new String[]{BpmOutcomeConst.BPM_ACCEPT, BpmOutcomeConst.BPM_REJECT};
+			getManagedBean().setOutComes(outComes);
+			getManagedBean().setTaskId("123");
 			
+			long loaId = 299L;*/
+					
 			editSupplierLOAAction(loaId);
 			
 		} catch (Exception e) {
@@ -617,6 +625,7 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 		
 		ScLoiLoa scLoiLoa = scLoa.getScLoiLoa();
 		PmOrgProfile pmOrgProfile = scLoiLoa.getPmOrgProfile();
+		PmUser ackByUser = scLoa.getAckBy();
 		CommonUtils commonUtils = new CommonUtils();
 		SimpleDateFormat dateSDF = new SimpleDateFormat(commonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE));
 		DecimalFormat amountDF = new DecimalFormat(commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
@@ -673,6 +682,27 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
     		supplierAddress = supplierAddress.replaceAll("\r\n", "<br />");
     	}
     	context.put("supplierAddress", supplierAddress);
+    	String supplierPhoneNo = scLoa.getSupplierPhoneNo();
+    	if (supplierPhoneNo == null) {
+    		supplierPhoneNo = "";
+    	}
+    	context.put("supplierPhoneNo", supplierPhoneNo);
+    	String supplierFaxNo = scLoa.getSupplierFaxNo();
+    	if (supplierFaxNo == null) {
+    		supplierFaxNo = "";
+    	}
+    	context.put("supplierFaxNo", supplierFaxNo);
+    	String supplierMobNo = scLoa.getSupplierMobNo();
+    	if (supplierMobNo == null) {
+    		supplierMobNo = "";
+    	}
+    	context.put("supplierMobNo", supplierMobNo);
+    	String supplierEmail = scLoa.getSupplierEmail();
+    	if (supplierEmail == null) {
+    		supplierEmail = "";
+    	}
+    	context.put("supplierEmail", supplierEmail);
+    	
     	context.put("procurementMode", "Direct Purchase");	// TODO
     	context.put("title", scLoiLoa.getTitle());
     	context.put("hasLoi", false);	//TODO
@@ -714,6 +744,80 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
     	context.put("contractSigner", scLoa.getContractSigner().getUserName());
     	context.put("contractSignerDesignation", scLoa.getContractSigner().getDesignation());
     	
+    	// Supplier user details
+    	String supplierUser = "";
+    	String supplierIcNo = "";
+    	String supplierDesignation = "";
+    	if (ackByUser != null) {
+    		supplierUser = ackByUser.getUserName();
+    		supplierIcNo = ackByUser.getIdentificationNo();
+    		supplierDesignation = ackByUser.getDesignation();
+    	}
+    	context.put("supplierUser", supplierUser);
+    	context.put("supplierIcNo", supplierIcNo);
+    	context.put("supplierDesignation", supplierDesignation);
+    	
+    	// Supplier Witness
+    	String supplierWitnessUser = "";
+    	String supplierWitnessIcNo = "";
+    	String supplierWitnessDesignation = "";
+    	String supplierWitnessAddress = "";
+    	String supplierWitnessPhoneNo = "";
+    	String supplierWitnessFaxNo = "";
+    	String supplierWitnessMobNo = "";
+    	String supplierWitnessEmail = "";
+    	ScLoaWitness supplierWitness = null;
+		for (ScLoaWitness scLoaWitness : scLoa.getScLoaWitnesses()) {
+			String partyType = scLoaWitness.getPartyType();
+			
+			if (ParameterConst.WITNESS_PARTY_TYPE_SUPPLIER.equals(partyType)) {
+				supplierWitness = scLoaWitness;
+				
+				break;
+			}
+		}
+    	if (supplierWitness != null) {
+    		supplierWitnessUser = supplierWitness.getWitnessName();
+        	supplierWitnessIcNo = supplierWitness.getIdentificationNo();
+        	supplierWitnessDesignation = supplierWitness.getDesignation();
+        	supplierWitnessAddress = supplierWitness.getAddress();
+        	supplierWitnessPhoneNo = supplierWitness.getPhoneNo();
+        	supplierWitnessFaxNo = supplierWitness.getFaxNo();
+        	supplierWitnessMobNo = supplierWitness.getMobileNo();
+        	supplierWitnessEmail = supplierWitness.getEmail();
+    	}
+    	context.put("supplierWitnessUser", supplierWitnessUser);
+    	context.put("supplierWitnessIcNo", supplierWitnessIcNo);
+    	context.put("supplierWitnessDesignation", supplierWitnessDesignation);
+    	context.put("supplierWitnessAddress", supplierWitnessAddress);
+    	context.put("supplierWitnessPhoneNo", supplierWitnessPhoneNo);
+    	context.put("supplierWitnessFaxNo", supplierWitnessFaxNo);
+    	context.put("supplierWitnessMobNo", supplierWitnessMobNo);
+    	context.put("supplierWitnessEmail", supplierWitnessEmail);
+    	
+    	// Bank account details.
+    	String bankAccNo = scLoa.getBankAccNo();
+    	if (bankAccNo == null) {
+    		bankAccNo = "";
+    	}
+    	context.put("bankAccNo", bankAccNo);
+    	String bankName = scLoa.getBankName();
+    	if (bankName == null) {
+    		bankName = "";
+    	}
+    	context.put("bankName", bankName);
+    	String bankBranch = scLoa.getBankBranch();
+    	if (bankBranch == null) {
+    		bankBranch = "";
+    	}
+    	context.put("bankBranch", bankBranch);
+    	String bankAddress = "";
+    	if (scLoa.getBankAddress() != null) {
+    		bankAddress = getFullAddress(scLoa.getBankAddress());	
+    		bankAddress = bankAddress.replaceAll("\r\n", "<br />");
+    	}
+    	context.put("bankAddress", bankAddress);
+    	
     	DocumentGenerator.getInstance().generatePdfFromVelocity(
     			"/sc/loa-agreement-letter.vm", 
     			context, 
@@ -739,7 +843,7 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
     	
     	context.put("title", scLoiLoa.getTitle());
     	
-    	String userName = "&#60;supplier name&#62;";
+    	String userName = "&#60;supplier user name&#62;";
     	String icNo = "&#60;ic no&#62;";
     	if (pmUser != null) {
     		userName = pmUser.getUserName();
@@ -765,10 +869,26 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 		StreamedContent loaStreamContent = getManagedBean().getLoaStreamContent();
 		
 		if (loaStreamContent == null) {
-			loaStreamContent = getAttachmentStreamContent(
-					getManagedBean().getScLoa().getScLoaAttachment(), CommonConstants.FILE_CONTENT_TYPE_PDF);
+			ScLoaReport agreementLetterReport = null;
+			for (ScLoaReport scLoaReport : getManagedBean().getScLoa().getScLoaReports()) {
+				String docDefinitionKey = scLoaReport.getPmDocument().getDocDefinitionKey();
+				
+				if (SourcingConstants.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER.equals(docDefinitionKey)) {
+					agreementLetterReport = scLoaReport;
+					
+					break;
+				}
+			}
 			
-			getManagedBean().setLoaStreamContent(loaStreamContent);
+			if (agreementLetterReport != null) {
+				ScLoaReportAttachment agreementLetterAttachment = generateDocumentAttachment(agreementLetterReport);
+				agreementLetterReport.setScLoaReportAttachment(agreementLetterAttachment);
+				
+				loaStreamContent = getAttachmentStreamContent(
+						agreementLetterAttachment, CommonConstants.FILE_CONTENT_TYPE_PDF);
+				
+				getManagedBean().setLoaStreamContent(loaStreamContent);	
+			}
 		} else {
 			loaStreamContent.getStream().reset();
 		}
