@@ -31,6 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
+import my.ep.biz.service.cm.catalogue.IZoneMaintenanceSO;
 import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -45,6 +46,8 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
+import my.ep.dto.cm.catalogue.ZoneMaintenanceReqDTO;
+import my.ep.dto.cm.catalogue.ZoneMaintenanceResDTO;
 import my.ep.dto.cm.codification.CodificationReqDTO;
 import my.ep.dto.cm.codification.CodificationResDTO;
 import my.ep.dto.ct.ContractReqDTO;
@@ -71,6 +74,8 @@ import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.cm.catalog.CmPromotionTierPricing;
 import my.ep.persistence.entity.cm.catalog.CmStandardPricing;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
+import my.ep.persistence.entity.cm.catalog.CmSupplierZone;
+import my.ep.persistence.entity.cm.catalog.CmSupplierZoneDTL;
 import my.ep.persistence.entity.cm.catalog.CmTierPricing;
 import my.ep.persistence.entity.cm.catalog.CmType;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
@@ -4048,12 +4053,14 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 								.getEndDate().compareTo(cmPricing.getEndDate()) <= 0)
 						|| cmPricing.getStartDate().compareTo(
 								zonalStandard.getStartDate()) >= 0) {
-					zonalStandard.setDisplayAction(false);
-					this.getManagedBean().setError4(true);
-					break;
+					if(compareZonesForSameDistricts(zonalStandard.getCmSupplierZone(), cmPricing.getCmSupplierZone())){
+						zonalStandard.setDisplayAction(false);
+						this.getManagedBean().setError8(true);
+						break;
+					}
 				} else {
 					zonalStandard.setDisplayAction(true);
-					this.getManagedBean().setError4(false);
+					this.getManagedBean().setError8(false);
 				}
 			}
 		}
@@ -4086,12 +4093,14 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 								.getEndDate().compareTo(cmPricing.getEndDate()) <= 0)
 						|| cmPricing.getStartDate().compareTo(
 								zonalPromo.getStartDate()) >= 0) {
-					zonalPromo.setDisplayAction(false);
-					this.getManagedBean().setError4(true);
-					break;
+					if(compareZonesForSameDistricts(zonalPromo.getCmSupplierZone(), cmPricing.getCmSupplierZone())){
+						zonalPromo.setDisplayAction(false);
+						this.getManagedBean().setError8(true);
+						break;
+					}
 				} else {
 					zonalPromo.setDisplayAction(true);
-					this.getManagedBean().setError4(false);
+					this.getManagedBean().setError8(false);
 				}
 			}
 		}
@@ -4123,21 +4132,64 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 									cmPricing.getStartDate()) >= 0 && tier
 									.getEndDate().compareTo(
 											cmPricing.getEndDate()) <= 0)) {
-						tier.setDisplayAction(false);
-						this.getManagedBean().setError4(true);
-						break;
+						if(compareZonesForSameDistricts(tier.getCmSupplierZone(), cmPricing.getCmSupplierZone())){
+							tier.setDisplayAction(false);
+							this.getManagedBean().setError8(true);
+							break;
+						}
 					} else {
 						tier.setDisplayAction(true);
-						this.getManagedBean().setError4(false);
+						this.getManagedBean().setError8(false);
 					}
 				} else {
+					
 					tier.setDisplayAction(true);
-					this.getManagedBean().setError4(false);
+					this.getManagedBean().setError8(false);
 				}
 			}
 		}
 	}
 
+	public boolean compareZonesForSameDistricts(CmSupplierZone zone1, CmSupplierZone zone2){
+		List<Long> districts1 = new ArrayList<Long>();
+		boolean inValid = false;
+		
+		IZoneMaintenanceSO zoneMaintenanceSO = null;
+		zoneMaintenanceSO = (IZoneMaintenanceSO) BusinessDelegate
+				.getInstance().getServiceObject("cm", IZoneMaintenanceSO.class);
+		ZoneMaintenanceReqDTO reqDTO = new ZoneMaintenanceReqDTO();
+		reqDTO.setCmSupplierZoneId(zone1.getSuppZoneId());
+		ZoneMaintenanceResDTO resDTO = zoneMaintenanceSO.getSupplierZoneById(reqDTO);
+		
+		CmSupplierZone z1 = resDTO.getSelectedCmSupplierZone();
+		
+		reqDTO.setCmSupplierZoneId(zone2.getSuppZoneId());
+		resDTO = zoneMaintenanceSO.getSupplierZoneById(reqDTO);
+		
+		CmSupplierZone z2 = resDTO.getSelectedCmSupplierZone();
+		
+		if(z1.getCmSupplierZoneDtls() != null && z2.getCmSupplierZoneDtls() != null)
+		{
+			List<CmSupplierZoneDTL> cmSupplierZoneDTLs1 = z1.getCmSupplierZoneDtls();
+			List<CmSupplierZoneDTL> cmSupplierZoneDTLs2 = z2.getCmSupplierZoneDtls();
+			for(CmSupplierZoneDTL dtl : cmSupplierZoneDTLs1){
+				if(dtl.getPmDistrict() != null && dtl.getPmDistrict().getDistrictId() != null){
+					districts1.add(dtl.getPmDistrict().getDistrictId());
+				}
+			}
+			
+			for(CmSupplierZoneDTL dtl : cmSupplierZoneDTLs2){
+				if(dtl.getPmDistrict() != null && dtl.getPmDistrict().getDistrictId() != null){
+					if(districts1.contains(dtl.getPmDistrict().getDistrictId())){
+						inValid = true;
+						break;
+					}
+				}
+			}
+		}
+		return inValid;
+	}
+	
 	public void updateErrorDialog(int index) {
 		CmTierPricing cmTierPricing = this.getManagedBean()
 				.getSelectedMaintainItem().getCmTierPricings().get(index);
