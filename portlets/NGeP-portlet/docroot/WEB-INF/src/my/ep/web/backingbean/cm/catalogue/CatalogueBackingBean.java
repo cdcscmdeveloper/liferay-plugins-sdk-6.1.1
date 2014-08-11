@@ -4244,6 +4244,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		List<Long> districts1 = new ArrayList<Long>();
 		boolean inValid = false;
 		
+		if(zone1.getSuppZoneId() == 0 || zone2.getSuppZoneId() == 0)
+			return inValid;
+		
 		IZoneMaintenanceSO zoneMaintenanceSO = null;
 		zoneMaintenanceSO = (IZoneMaintenanceSO) BusinessDelegate
 				.getInstance().getServiceObject("cm", IZoneMaintenanceSO.class);
