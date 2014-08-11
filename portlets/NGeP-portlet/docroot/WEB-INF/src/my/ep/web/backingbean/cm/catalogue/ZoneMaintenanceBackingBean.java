@@ -110,7 +110,7 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 			System.out.println("Checking for Delete");
 			while(ite.hasNext()){
 				CmSupplierZone cmZone = ite.next(); 
-				if(cmZone.getSuppZoneId() == zone.getSuppZoneId()){
+				if(cmZone.getSuppZoneName().equalsIgnoreCase(zone.getSuppZoneName())){
 					System.out.println("Found it");
 					if(cmZone.getCmPricings() != null && cmZone.getCmPricings().size() > 0){
 						throw new EpException(MessageConst.ERROR_716005);
