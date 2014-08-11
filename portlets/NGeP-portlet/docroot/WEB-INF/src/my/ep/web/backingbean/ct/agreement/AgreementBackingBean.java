@@ -857,10 +857,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	}
 
 	public void downloadDocFile(CtAgreementContent agreementContent)
-			throws IOException, Exception {
-
-		IContractTemplateSO contractTemplateSO = null;
-		ContractTemplateResDTO resDTO = null;
+			throws IOException, Exception {		
 		AttachmentFormat attachmentFormat = null;
 
 		try {
@@ -875,17 +872,6 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 				filePath = filePath + "/"
 						+ attachmentFormat.format(fileName, null);
 
-				contractTemplateSO = (IContractTemplateSO) BusinessDelegate
-						.getInstance().getServiceObject(
-								ModuleCodeConst.CONTRACT_MANAGEMENT,
-								IContractTemplateSO.class);
-				ContractTemplateReqDTO reqDTO = new ContractTemplateReqDTO();
-				reqDTO.setTemplateName(agreementContent.getTitle()
-						.toUpperCase().trim());
-				resDTO = contractTemplateSO.retrieveTemplateByName(reqDTO);
-				// content = new String(resDTO.getCtTemplate().getContent(),
-				// "UTF-8");
-				// content = getContent(content, agreementContent.getTitle());
 				content = getContent(agreementContent.getTitle());
 				if (content != null) {
 					convertHtmlToDocFile(content, filePath);
@@ -907,8 +893,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			e.printStackTrace();
 			throw new EpException(e.getMessage());
 		} finally {
-			contractTemplateSO = null;
-			resDTO = null;
+	
 			attachmentFormat = null;
 		}
 	}
@@ -1053,193 +1038,6 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		}
 	}
 
-	// private String getContent(String content, String parameterCode) {
-	// CommonUtils commonUtils = new CommonUtils();
-	// SimpleDateFormat df = new SimpleDateFormat(
-	// CommonConstants.DEFAULT_DATE_FORMAT);
-	// DecimalFormat nf = new DecimalFormat(
-	// commonUtils
-	// .getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
-	// Map<String, String> valuesMap = new HashMap<String, String>();
-	// Calendar c = Calendar.getInstance();
-	//
-	// if (ContractConst.TEMPLATE_AGREEMENT_COVER_PAGE
-	// .equalsIgnoreCase(parameterCode)) {
-	// valuesMap.put("CONTRACT_TITLE", getManagedBean().getCtContract()
-	// .getQuotationTender().getQtTitle());
-	// valuesMap.put("SUPPLIER_NAME", getManagedBean().getCtContract()
-	// .getCurrentContractVer().getCtContractValue()
-	// .getSupplierName());
-	// valuesMap.put("SUPPLIER_REGISTRATION_NO", getManagedBean()
-	// .getCtContract().getSmSupplier().getRegNo());
-	// valuesMap.put("PHYSICAL_CONTRACT_NO", getManagedBean()
-	// .getCtContract().getContractPhysicalNo());
-	// valuesMap.put(
-	// "CONTRACT_START_DATE",
-	// df.format(getManagedBean().getCtContract()
-	// .getCurrentContractVer().getCtContractValue()
-	// .getEffDate()));
-	// valuesMap.put(
-	// "CONTRACT_END_DATE",
-	// df.format(getManagedBean().getCtContract()
-	// .getCurrentContractVer().getCtContractValue()
-	// .getExpDate()));
-	// valuesMap.put("CONTRACT_PERIOD", getManagedBean().getCtContract()
-	// .getCurrentContractVer().getCtContractValue()
-	// .getContractPeriod()
-	// + "");
-	// valuesMap.put(
-	// "CONTRACT_VALUE",
-	// nf.format(getManagedBean().getCtContract()
-	// .getCurrentContractVer().getCtContractValue()
-	// .getContractAmount())
-	// + "");
-	// valuesMap.put("CONTRACT_VALUE_TEXT", getManagedBean()
-	// .getCtContract().getCurrentContractVer()
-	// .getCtContractValue().getContractAmount()
-	// + "");
-	// if (getManagedBean().getCtContract().isBondReq()) {
-	// content = content
-	// +
-	// "<div style=\"font-weight: normal; text-align: center;\"><strong>JUMLAH BON PELAKSANAAN:</strong></div>"
-	// +
-	// "<div style=\"font-weight: normal; text-align: center;\"><strong>RM ${PERFORMANCE_BOND_VALUE}</strong></div>"
-	// +
-	// "<div style=\"font-weight: normal; text-align: center;\"><strong>(RINGGIT MALAYSIA :${PERFORMANCE_BOND_VALUE_TEXT})</strong></div>";
-	// if (getManagedBean().getCtContract().getLoa().getBondAmt() != null)
-	// valuesMap.put(
-	// "PERFORMANCE_BOND_VALUE",
-	// nf.format(getManagedBean().getCtContract().getLoa()
-	// .getBondAmt())
-	// + "");
-	// valuesMap.put("PERFORMANCE_BOND_VALUE_TEXT", getManagedBean()
-	// .getCtContract().getLoa().getBondAmt()
-	// + "");
-	// }
-	//
-	// StrSubstitutor sub = new StrSubstitutor(valuesMap);
-	// content = sub.replace(content);
-	// } else if (ContractConst.TEMPLATE_AGREEMENT_PARTY
-	// .equalsIgnoreCase(parameterCode)) {
-	// IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance()
-	// .getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-	// IAddressSO.class);
-	// AddressReqDTO addressReqDTO = new AddressReqDTO();
-	// addressReqDTO.setAddressType(AddressType.CONTACT_ADDRESS.value());
-	// addressReqDTO.setOrgProfileId(getManagedBean().getCtContract()
-	// .getOwnerOrgProfile().getOrgProfileId());
-	// AddressResDTO addressResDTO = addressSO
-	// .retrieveAddressTypeList(addressReqDTO);
-	// PmAddressType pmAddressType = null;
-	// if (addressResDTO.getAddressTypeList().size() > 0) {
-	// pmAddressType = addressResDTO.getAddressTypeList().get(0);
-	// }
-	//
-	// valuesMap.put("USER_INPUT_DATE", c.get(Calendar.DATE) + "");
-	// valuesMap.put("USER_INPUT_MONTH", c.get(Calendar.MONTH) + "");
-	// valuesMap.put("CURRENT_YEAR", c.get(Calendar.YEAR) + "");
-	// valuesMap.put("JABATAN_NAME", getManagedBean().getCtContract()
-	// .getOwnerOrgProfile().getOrgName());
-	// if (getManagedBean().getCtContract().getOwnerOrgProfile()
-	// .getParentOrgProfile() != null) {
-	// valuesMap.put("MINISTRY_NAME", getManagedBean().getCtContract()
-	// .getOwnerOrgProfile().getParentOrgProfile()
-	// .getOrgName());
-	// } else {
-	// valuesMap.put("MINISTRY_NAME", "");
-	// }
-	// if (pmAddressType != null) {
-	// valuesMap.put("JABATAN_ADDRESS", AddressUtils
-	// .getFullAddress(pmAddressType.getPmAddress()));
-	// } else {
-	// valuesMap.put("JABATAN_ADDRESS", "");
-	// }
-	// valuesMap.put("SUPPLIER_NAME", getManagedBean().getCtContract()
-	// .getCurrentContractVer().getCtContractValue()
-	// .getSupplierName());
-	// valuesMap.put("SUPPLIER_REG_NO", getManagedBean().getCtContract()
-	// .getSmSupplier().getRegNo());
-	// valuesMap.put(
-	// "SUPPLIER_ADDRESS",
-	// AddressUtils.getFullAddress(getManagedBean()
-	// .getCtContract().getCurrentContractVer()
-	// .getCtContractValue().getSupplierAddress()));
-	// valuesMap.put("CONTRACT_TITLE", getManagedBean().getCtContract()
-	// .getQuotationTender().getQtTitle());
-	//
-	// StrSubstitutor sub = new StrSubstitutor(valuesMap);
-	// content = sub.replace(content);
-	// } else if (ContractConst.TEMPLATE_AGREEMENT_SIGNING_PAGE
-	// .equalsIgnoreCase(parameterCode)) {
-	// for (CtAgreementParty agreementParty : getManagedBean()
-	// .getCtAgencySigner()) {
-	// content = content + "Di hadapan		: "
-	// + agreementParty.getOfficerName() + "<br/>"
-	// + "Nama			: " + agreementParty.getOfficerName()
-	// + "<br/>" + "No. K/Pengenalan	: "
-	// + agreementParty.getOfficerIc() + "<br/>"
-	// + "Jawatan		: " + agreementParty.getOfficerPosition()
-	// + "<br/><br/>";
-	// }
-	// for (CtAgreementParty agreementParty : getManagedBean()
-	// .getCtSignAgencyWitness()) {
-	// content = content + "Di hadapan		: "
-	// + agreementParty.getOfficerName() + "<br/>"
-	// + "Nama			: " + agreementParty.getOfficerName()
-	// + "<br/>" + "No. K/Pengenalan	: "
-	// + agreementParty.getOfficerIc() + "<br/>"
-	// + "Jawatan		: " + agreementParty.getOfficerPosition()
-	// + "<br/><br/>";
-	// }
-	// content = content
-	// + "<br/><br/>Untuk dan bagi pihak <strong>KONTRAKTOR</strong><br/><br/>";
-	// content = content + "<strong>${COMPANY_NAME}</strong><br/>";
-	// content = content
-	// +
-	// "<strong>(No. Syarikat: ${COMPANY_REGISTER_ID})</strong><br/><br/><br/>";
-	//
-	// for (CtAgreementParty agreementParty : getManagedBean()
-	// .getCtSupplierSigner()) {
-	// content = content + "Di hadapan		: "
-	// + agreementParty.getOfficerName() + "<br/>"
-	// + "Nama			: " + agreementParty.getOfficerName()
-	// + "<br/>" + "No. K/Pengenalan	: "
-	// + agreementParty.getOfficerIc() + "<br/>"
-	// + "Jawatan		: " + agreementParty.getOfficerPosition()
-	// + "<br/><br/>";
-	// }
-	// for (CtAgreementParty agreementParty : getManagedBean()
-	// .getCtSupplierWitness()) {
-	// content = content + "Di hadapan		: "
-	// + agreementParty.getOfficerName() + "<br/>"
-	// + "Nama			: " + agreementParty.getOfficerName()
-	// + "<br/>" + "No. K/Pengenalan	: "
-	// + agreementParty.getOfficerIc() + "<br/>"
-	// + "Jawatan		: " + agreementParty.getOfficerPosition()
-	// + "<br/><br/>";
-	// }
-	//
-	// valuesMap.put("CURRENT_YEAR", c.get(Calendar.YEAR) + "");
-	// if (getManagedBean().getCtContract().getOwnerOrgProfile()
-	// .getParentOrgProfile() != null) {
-	// valuesMap.put("MINISTRY_NAME", getManagedBean().getCtContract()
-	// .getOwnerOrgProfile().getParentOrgProfile()
-	// .getOrgName());
-	// } else {
-	// valuesMap.put("MINISTRY_NAME", "");
-	//
-	// }
-	// valuesMap.put("COMPANY_NAME", getManagedBean().getCtContract()
-	// .getCurrentContractVer().getCtContractValue()
-	// .getSupplierName());
-	// valuesMap.put("COMPANY_REGISTER_ID", getManagedBean()
-	// .getCtContract().getSmSupplier().getRegNo());
-	//
-	// StrSubstitutor sub = new StrSubstitutor(valuesMap);
-	// content = sub.replace(content);
-	// }
-	// return content;
-	// }
 
 	public void downloadTemplateDoc() throws IOException {
 		// TODO download the templateDoc file

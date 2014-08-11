@@ -34,7 +34,7 @@
          <br/><br/>
          <span><strong>TEMPOH PERJANJIAN:</strong></span><br/>
          <span><strong>$contractStartDate HINGGA $contractEndDate</strong></span><br/>
-         <span><strong>$contractPeriod</strong></span><br/>
+         <span><strong>$contractPeriod bulan</strong></span><br/>
          <br/><br/>
          <span><strong>NILAI PERJANJIAN:</strong></span><br/>
          <span><strong>$contractValue</strong></span><br/>
