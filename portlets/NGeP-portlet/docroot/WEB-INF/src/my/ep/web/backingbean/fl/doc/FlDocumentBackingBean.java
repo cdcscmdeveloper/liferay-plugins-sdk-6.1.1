@@ -30,6 +30,7 @@ import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
+import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.fl.FulfilmentConst;
 import my.ep.constant.fl.FulfilmentStatusConst;
@@ -46,6 +47,7 @@ import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
+import my.ep.exception.EpException;
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.VFlDocument;
@@ -117,6 +119,11 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 	}
 
 	public void searchDocument(){
+		
+		if(null == getManagedBean().getSearchOrderType() || null ==getManagedBean().getSearchDocType()){
+			throw new EpException(MessageConst.ERROR_740023);
+		}
+		
 		flDocumentDataModel.reloadData();
 		if(isFlFulfilmentRequisitioner()) {
 			FacesScopes facesScopes = new FacesScopes();
