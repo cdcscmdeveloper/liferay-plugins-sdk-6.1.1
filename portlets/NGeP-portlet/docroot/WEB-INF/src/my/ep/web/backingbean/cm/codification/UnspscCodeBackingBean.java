@@ -1659,6 +1659,9 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		}else if(res.getTaskName().equalsIgnoreCase("Publish Extension Code")){
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "reviewApproveExtensionCodeII.xhtml");
+		}else if(res.getTaskName().equalsIgnoreCase("Result Notification")){
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "resultNotification.xhtml");
 		}else{
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "reviewExtensionCodeFlow.xhtml");
@@ -1666,7 +1669,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 		//
 
-
+		
 	}
 
 
