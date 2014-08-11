@@ -1069,17 +1069,18 @@ public class SmApplicationBackingBean extends
 			break;
 		case SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY:
 			// assignEnteredStaffValues();
+			if (getManagedBean().getBusinessTypeVal() != null
+			&& !getManagedBean()
+					.getBusinessTypeVal()
+					.equalsIgnoreCase(
+							SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT)) {
 			if (getManagedBean().getSmapplShareHolders() == null
 					|| (getManagedBean().getSmapplShareHolders() != null && getManagedBean()
 							.getSmapplShareHolders().isEmpty())) {
 
 				validSave = false;
 				setNavigationBackToCurrentPage();
-				if (getManagedBean().getBusinessTypeVal() != null
-						&& !getManagedBean()
-								.getBusinessTypeVal()
-								.equalsIgnoreCase(
-										SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT)) {
+			
 					// throw new EpException(MessageConst.ERROR_722508);
 					// } else {
 					throw new EpException(MessageConst.ERROR_722507);
