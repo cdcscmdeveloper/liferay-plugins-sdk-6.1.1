@@ -132,6 +132,8 @@
 						maxdate="#{purchaseRequestBackingBean.managedBean.maxDate}"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.endDate}">
+						<p:ajax event="dateSelect"
+							listener="#{purchaseRequestBackingBean.updateDeliveryEndDate}" />
 					</p:calendar></td>
 			</tr>
 		</table>
