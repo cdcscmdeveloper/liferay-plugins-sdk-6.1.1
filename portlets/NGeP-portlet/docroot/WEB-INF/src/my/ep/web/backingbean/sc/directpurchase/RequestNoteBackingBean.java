@@ -1610,21 +1610,20 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 				// remarks
 				prInquiry.setRemarks(purchaseInquiryBackingBean.initializeRemarks(prInquiry));
 				if(prInquiry.getScRequestSupplierItems() != null && prInquiry.getScRequestSupplierItems().size()>0 ){
+
 					// get selected supplier 
 					ScRequestSupplierItem requestSupplierItem = prInquiry.getScRequestSupplierItems().get(0);
-					ScSupplierItemPrice supplierItemPrice =requestSupplierItem.getSupplierItemPrices().get(0);
 					ScRequestNoteDtl requestNoteDtl = requestSupplierItem.getScRequestNoteDtl().get(0);
 
-					requestSupplierItem.setSupplierItemPrice(supplierItemPrice);
-					prInquiry.setRequestSupplierItem(requestSupplierItem);
-
-					getManagedBean().setRequestNoteDtl(requestNoteDtl);
-
+					// price type drop down
 					List<String> priceTypes= new ArrayList<String>();
-					priceTypes.add(supplierItemPrice.getPricing().getPricingType());
-					purchaseInquiryBackingBean.getManagedBean().setPriceType(supplierItemPrice.getPricing().getPricingType());
+					priceTypes.add(requestNoteDtl.getPriceType().getParameterCode());
+					purchaseInquiryBackingBean.getManagedBean().setPriceType(requestNoteDtl.getPriceType().getParameterCode());
 					purchaseInquiryBackingBean.getManagedBean().setPriceTypes(getPriceTypeDropdownValues(ParameterTypeConst.PRICE_TYPE, priceTypes));
+
 					purchaseInquiryBackingBean.getManagedBean().setPmOrgProfile(requestNoteDtl.getScRequestNote().getPmOrgProfile());
+					purchaseInquiryBackingBean.getManagedBean().setRequestNoteDtl(requestNoteDtl);
+					purchaseInquiryBackingBean. getManagedBean().setScRequestSupplierItem(requestSupplierItem);
 
 					prInquiry.setDayToResponse(ParameterConst.PIQ_RESP_DAYS); // by default days
 					purchaseInquiryBackingBean.getManagedBean().setStockAvailable(prInquiry.getIsStockAvailable());
