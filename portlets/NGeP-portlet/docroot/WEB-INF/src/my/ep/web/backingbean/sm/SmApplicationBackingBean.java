@@ -7118,6 +7118,12 @@ public class SmApplicationBackingBean extends
 		try {
 			SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
 			PmUser pmUser = new FacesScopes().getUserSessionBean();
+			
+			if (pmUser == null || (pmUser != null && pmUser.getUserId() == null)) {
+				System.out.println("**** Invalid user from the session scope ******");
+		    	throw new EpException(MessageConst.ERROR_721017);
+			}
+			
 			supplierSearchReqDTO.setUserId(pmUser.getUserId());
 
 			ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
