@@ -60,9 +60,7 @@
 					<td><p:selectOneMenu
 							value="#{backingBean.managedBean.smSupplier.businessType}"
 							disabled="true">
-							<f:selectItems value="#{backingBean.managedBean.businessTypeLs}"
-								var="busType" itemValue="#{busType.pmParameter.parameterId}"
-								itemLabel="#{busType.codeName}" />
+							<f:selectItems value="#{backingBean.managedBean.businessTypeLs}"/>
 						</p:selectOneMenu> <!-- rendered="#{backingBean.managedBean.smSupplier.businessType == 1}" />
 					<p:inputText disabled="true" readonly="true" value="ROC - BERHAD"
 						rendered="#{backingBean.managedBean.smSupplier.businessType == 2}" />

@@ -260,7 +260,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean removeEpRole;
 	private List<SmApplSupportDoc> missinDocs;
 	private boolean reviewSiteVisit;
-	private List<PmParameterDesc> businessTypeLs;
+	private SelectItem[] businessTypeLs;
 	private List<String> supplierToPOList;
 	private String reasonDesc;
 
@@ -1970,11 +1970,11 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.reviewSiteVisit = reviewSiteVisit;
 	}
 
-	public List<PmParameterDesc> getBusinessTypeLs() {
+	public SelectItem[] getBusinessTypeLs() {
 		return businessTypeLs;
 	}
 
-	public void setBusinessTypeLs(List<PmParameterDesc> businessTypeLs) {
+	public void setBusinessTypeLs(SelectItem[] businessTypeLs) {
 		this.businessTypeLs = businessTypeLs;
 	}
 

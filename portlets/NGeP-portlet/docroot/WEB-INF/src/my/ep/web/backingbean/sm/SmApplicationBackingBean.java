@@ -7277,13 +7277,8 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void retrieveBusinessTypeList() {
-		List<PmParameterDesc> pmDesc = new ArrayList<PmParameterDesc>();
-		pmDesc = SmCommonUtil.retrieveParameterDescList(
-				SupplierManagementConst.SUPPLIER_BUSINESS_TYPE,
-				new FacesScopes().getUserLocale().getLanguage());
-
-		System.out.println("**retrieveBusinessTypeList***" + pmDesc.size());
-		this.getManagedBean().setBusinessTypeLs(pmDesc);
+		SelectItem[] selectItems = getDropdownCodeValues(SupplierManagementConst.SUPPLIER_BUSINESS_TYPE);
+		this.getManagedBean().setBusinessTypeLs(selectItems);
 	}
 
 	private void validatePaidCaptialAmt() {
