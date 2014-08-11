@@ -1916,6 +1916,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	
 	public void onTabChange(int selectedTabIndex){
 		if(selectedTabIndex==3){
+			validateOrderQty();
 			populateChargeLineData(false);	
 			setClassName("@(.prChargeLinePnlClass)");
 			onNodeSelect();
@@ -1925,6 +1926,28 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			if(getManagedBean().getSelectedDelAddr()==null) { 
 				addPurchsedItems();
 				retrieveCountryList();
+			}
+		}
+	}
+	
+	private void validateOrderQty() {
+		BigDecimal requestedQty = null;
+		BigDecimal sumorderedQty = null;
+		for(FlFulfilmentItem fulfilmentItem : getManagedBean().getFulfilmentRequest().getFlFulfilmentItems()){
+			sumorderedQty = new BigDecimal(0);
+			requestedQty = null;
+			for(FlFulfilmentItemAddr itemAddr : fulfilmentItem.getFlFulfilmentItemAddr()){
+				if(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses().contains(itemAddr.getFlDeliveryAddress())) {
+					sumorderedQty = sumorderedQty.add(itemAddr.getOrderedQty());
+				}
+				requestedQty = itemAddr.getScRequestItem().getQuantity();
+			}
+			if(requestedQty!=null && requestedQty.intValue() != 0){
+				if(requestedQty.intValue() > sumorderedQty.intValue()){
+					throw new EpException(MessageConst.ERROR_740007,new String[]{sumorderedQty.toString() ,requestedQty.toString(),fulfilmentItem.getCmItem().getItemName()});
+				}else if(requestedQty.intValue() < sumorderedQty.intValue()){
+					throw new EpException(MessageConst.ERROR_740007,new String[]{sumorderedQty.toString() ,requestedQty.toString(),fulfilmentItem.getCmItem().getItemName()});
+				}//TODO waiting for another validation call from s1 
 			}
 		}
 	}
