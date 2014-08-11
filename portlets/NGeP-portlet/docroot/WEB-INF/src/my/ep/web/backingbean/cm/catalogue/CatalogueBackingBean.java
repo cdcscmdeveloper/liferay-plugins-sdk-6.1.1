@@ -4084,7 +4084,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 						zonalStandard.setDisplayAction(true);
 						this.getManagedBean().setError4(false);
 					}
-				} else if(compareZonesForSameDistricts(zonalStandard.getCmSupplierZone(), cmPricing.getCmSupplierZone())){
+				} else if(zonalStandard.getCmSupplierZone() != null && cmPricing.getCmSupplierZone() != null && compareZonesForSameDistricts(zonalStandard.getCmSupplierZone(), cmPricing.getCmSupplierZone())){
 					if ((zonalStandard.getStartDate().compareTo(
 							cmPricing.getStartDate()) >= 0 && zonalStandard
 							.getStartDate().compareTo(cmPricing.getEndDate()) <= 0)
@@ -4152,7 +4152,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 							zonalPromo.setDisplayAction(true);
 							this.getManagedBean().setError4(false);
 						}
-				} else if(compareZonesForSameDistricts(zonalPromo.getCmSupplierZone(), cmPricing.getCmSupplierZone())){
+				} else if(zonalPromo.getCmSupplierZone() != null && cmPricing.getCmSupplierZone() != null && compareZonesForSameDistricts(zonalPromo.getCmSupplierZone(), cmPricing.getCmSupplierZone())){
 					if ((zonalPromo.getStartDate().compareTo(
 							cmPricing.getStartDate()) >= 0 && zonalPromo
 							.getStartDate().compareTo(cmPricing.getEndDate()) <= 0)
@@ -4213,7 +4213,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 							tier.setDisplayAction(true);
 							this.getManagedBean().setError4(false);
 						}
-					} else if(compareZonesForSameDistricts(tier.getCmSupplierZone(), cmPricing.getCmSupplierZone())){
+					} else if(tier.getCmSupplierZone() != null && cmPricing.getCmSupplierZone() != null && compareZonesForSameDistricts(tier.getCmSupplierZone(), cmPricing.getCmSupplierZone())){
 						if ((tier.getStartDate()
 								.compareTo(cmPricing.getStartDate()) >= 0 && tier
 								.getStartDate().compareTo(cmPricing.getEndDate()) <= 0)
