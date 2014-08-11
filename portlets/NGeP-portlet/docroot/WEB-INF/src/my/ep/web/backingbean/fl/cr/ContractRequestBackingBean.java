@@ -2099,4 +2099,11 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes.hasRoleUser(RoleCode.REQUISITIONER.value());
 	}
+	
+	//update delivery address based on endDate change
+	public void updateDeliveryEndDate() {
+		for(FlDeliveryAddress flDeliveryAddress : getManagedBean().getFlRequest().getFlDeliveryAddresses()) {
+			flDeliveryAddress.setEndDate(getManagedBean().getFlRequest().getEndDate());
+		}
+	}
 }

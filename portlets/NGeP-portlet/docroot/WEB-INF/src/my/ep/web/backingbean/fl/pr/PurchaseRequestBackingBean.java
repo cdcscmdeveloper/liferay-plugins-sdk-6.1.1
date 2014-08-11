@@ -1980,4 +1980,11 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		}
 	}
 	
+	//update delivery address based on endDate change
+	public void updateDeliveryEndDate() {
+		for(FlDeliveryAddress flDeliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()) {
+			flDeliveryAddress.setEndDate(getManagedBean().getFulfilmentRequest().getEndDate());
+		}
+	}
+	
 }
