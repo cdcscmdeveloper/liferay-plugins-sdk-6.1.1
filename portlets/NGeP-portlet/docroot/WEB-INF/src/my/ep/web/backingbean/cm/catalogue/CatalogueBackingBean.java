@@ -4085,9 +4085,21 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 						this.getManagedBean().setError4(false);
 					}
 				} else if(compareZonesForSameDistricts(zonalStandard.getCmSupplierZone(), cmPricing.getCmSupplierZone())){
-					zonalStandard.setDisplayAction(false);
-					this.getManagedBean().setError8(true);
-					break;
+					if ((zonalStandard.getStartDate().compareTo(
+							cmPricing.getStartDate()) >= 0 && zonalStandard
+							.getStartDate().compareTo(cmPricing.getEndDate()) <= 0)
+							|| (zonalStandard.getEndDate().compareTo(
+									cmPricing.getStartDate()) >= 0 && zonalStandard
+									.getEndDate().compareTo(cmPricing.getEndDate()) <= 0)
+							|| cmPricing.getStartDate().compareTo(
+									zonalStandard.getStartDate()) >= 0) {
+						zonalStandard.setDisplayAction(false);
+						this.getManagedBean().setError8(true);
+						break;
+					} else {
+						zonalStandard.setDisplayAction(true);
+						this.getManagedBean().setError8(false);
+					}
 				} else {
 					zonalStandard.setDisplayAction(true);
 					this.getManagedBean().setError8(false);
@@ -4141,9 +4153,21 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 							this.getManagedBean().setError4(false);
 						}
 				} else if(compareZonesForSameDistricts(zonalPromo.getCmSupplierZone(), cmPricing.getCmSupplierZone())){
-					zonalPromo.setDisplayAction(false);
-					this.getManagedBean().setError8(true);
-					break;
+					if ((zonalPromo.getStartDate().compareTo(
+							cmPricing.getStartDate()) >= 0 && zonalPromo
+							.getStartDate().compareTo(cmPricing.getEndDate()) <= 0)
+							|| (zonalPromo.getEndDate().compareTo(
+									cmPricing.getStartDate()) >= 0 && zonalPromo
+									.getEndDate().compareTo(cmPricing.getEndDate()) <= 0)
+							|| cmPricing.getStartDate().compareTo(
+									zonalPromo.getStartDate()) >= 0) {
+						zonalPromo.setDisplayAction(false);
+						this.getManagedBean().setError8(true);
+						break;
+					} else {
+						zonalPromo.setDisplayAction(true);
+						this.getManagedBean().setError8(false);
+					}
 				} else {
 					zonalPromo.setDisplayAction(true);
 					this.getManagedBean().setError8(false);
@@ -4190,9 +4214,20 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 							this.getManagedBean().setError4(false);
 						}
 					} else if(compareZonesForSameDistricts(tier.getCmSupplierZone(), cmPricing.getCmSupplierZone())){
-						tier.setDisplayAction(false);
-						this.getManagedBean().setError8(true);
-						break;
+						if ((tier.getStartDate()
+								.compareTo(cmPricing.getStartDate()) >= 0 && tier
+								.getStartDate().compareTo(cmPricing.getEndDate()) <= 0)
+								|| (tier.getEndDate().compareTo(
+										cmPricing.getStartDate()) >= 0 && tier
+										.getEndDate().compareTo(
+												cmPricing.getEndDate()) <= 0)) {
+							tier.setDisplayAction(false);
+							this.getManagedBean().setError8(true);
+							break;
+						} else {
+							tier.setDisplayAction(true);
+							this.getManagedBean().setError8(false);
+						}
 					} else {
 						tier.setDisplayAction(true);
 						this.getManagedBean().setError8(false);
