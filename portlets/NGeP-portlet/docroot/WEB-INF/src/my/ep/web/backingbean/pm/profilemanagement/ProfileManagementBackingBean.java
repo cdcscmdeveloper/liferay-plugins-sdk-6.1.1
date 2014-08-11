@@ -88,24 +88,55 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	//Navigation Details
 	public static final String NAV_TO_SEARCH = "/xhtml/pm/profilemanagement/search/profileManagementMain.xhtml"; // main page for portlet profile maintenance
 	public static final String NAV_TO_MAINTAIN = "/xhtml/pm/profilemanagement/userDetails/profileManagementMaintain.xhtml"; 
-	
-	
-	
+
 	//Default value
 	public static final boolean SEARCH_DEFAULT = false;
+	
+	//Tab values
+	public static final int TAB_USER_PROFILE = 0;
+	public static final int TAB_AUTHORIZATION = 1;
+	public static final int TAB_PERSONALIZATION = 2;
+	public static final int TAB_CHANGE_PASSWORD = 3;
 	
 	
 	//Paging for listing
 	private IPagingDataModel<PmUser> userProfileDataModel = new UserProfilePagingDataModel();
-	private IPagingDataModel<PmRoleDesc> roleDataModel = new RolePagingDataModel();
-	
+	private IPagingDataModel<PmRoleDesc> roleDataModel = new RolePagingDataModel();	
 	private IPagingDataModel<PmAddressType> searchReceivingAddress = new userAddressPagingDataModel();
-//	private IPagingDataModel<PmOrgProfile> orgDataModel = new OrgPagingDataModel();
-//	private IPagingDataModel<PmRoleDesc> searchApproverTypeList = new ApproverNamesPagingDataModel();
+
 
 	//Mapper for DDL object
 	private static Map<Long, Object> identityTypeMapper;
 
+	/**
+	 * @return the tabUserProfile
+	 */
+	public int getTabUserProfile() {
+		return TAB_USER_PROFILE;
+	}
+
+	/**
+	 * @return the tabAuthorization
+	 */
+	public int getTabAuthorization() {
+		return TAB_AUTHORIZATION;
+	}
+
+	/**
+	 * @return the tabPersonalization
+	 */
+	public int getTabPersonalization() {
+		return TAB_PERSONALIZATION;
+	}
+
+	/**
+	 * @return the tabChangePassword
+	 */
+	public int getTabChangePassword() {
+		return TAB_CHANGE_PASSWORD;
+	}
+	
+	
 	
 	public ProfileManagementBackingBean(){
 		
@@ -143,6 +174,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	public void preLoadingUserProfile(){
 		logger.info("preLoadingUserProfile");
 		this.resetUserProfileSearchBean();
+		this.getManagedBean().setSelectedTabIndex(TAB_USER_PROFILE);
 		FacesContext fc = FacesContext.getCurrentInstance(); 
 	    fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_SEARCH);
 	}
@@ -167,7 +199,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	public String redirectToMaintainUser(Long id) {
 		logger.info("redirectToMaintainUser");
 		this.retrieveIdentityTypeMap();
-		
+		this.getManagedBean().setSelectedTabIndex(TAB_USER_PROFILE);
 		if(id!=null && id>0){
 			loadUserProfile(id);
 		}else{
@@ -192,19 +224,29 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	 */
 	private void loadUserProfile(Long id){
 		try {
+			initialUserProfile();
 			if(id==null){
 				throw new EpException("Please login."); //TODO
 			}
 			//load user
 			PmUser pmUser = PmCommonUtil.retrieveUserById(id);
+			pmUser.setPMP(pmUser.isPMP()?true:false);
+			pmUser.setIdentificationCode(pmUser.getIdentificationCode()==null ? new PmParameter() : pmUser.getIdentificationCode());
+			pmUser.setSalutationCode(pmUser.getSalutationCode()==null ? new PmSalutation() : pmUser.getSalutationCode());
+			pmUser.setOrgTypeCode(pmUser.getOrgTypeCode()==null ? new PmParameter() : pmUser.getOrgTypeCode());
+			
 			if (pmUser!=null && pmUser.getPmAddressTypes() != null) {
 				populateUserAddress(pmUser);
 			}
 			
-			//load preference
+			//load preference - notification
 			PmCommonUtil.generateDefaultPmUserNotifications(pmUser, getFacesScopes().getUserLocale().getLanguage());
+			
+			//load preference
 			if(pmUser.getPmUserPreference()==null){
-				pmUser.setPmUserPreference(new PmUserPreference());
+				PmUserPreference pmUserPreference = new PmUserPreference();
+				pmUserPreference.setPmUser(pmUser);
+				pmUser.setPmUserPreference(pmUserPreference);
 			}
 			
 			//load password
@@ -235,10 +277,14 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		pmUser.setPmUserOrgs(new ArrayList<PmUserOrg>());
 		pmUser.setOrgTypeCode(new PmParameter());
 		
-		//initial preference
+		//initial preference - notification
 		PmCommonUtil.generateDefaultPmUserNotifications(pmUser, getFacesScopes().getUserLocale().getLanguage());
+
+		//initial preference
 		if(pmUser.getPmUserPreference()==null){
-			pmUser.setPmUserPreference(new PmUserPreference());
+			PmUserPreference pmUserPreference = new PmUserPreference();
+			pmUserPreference.setPmUser(pmUser);
+			pmUser.setPmUserPreference(pmUserPreference);
 		}
 		
 		//initial address
@@ -692,6 +738,16 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		boolean isSearchable = SEARCH_DEFAULT;
 		boolean isEmpty = true;
 		UserProfilesSearchBean upSearchBean = this.getManagedBean().getUserProfileSearchBean();
+		//Login Id
+		if (upSearchBean.getLoginId() != null && !"".equalsIgnoreCase(upSearchBean.getLoginId())) {
+			logger.info("+ loginId "  +upSearchBean.getLoginId());
+			SearchFilterBean userSearchBean = new SearchFilterBean(
+					SearchOperator.OPERATOR_LIKE.value());
+			userSearchBean.setSearchField("loginId");
+			userSearchBean.setSearchValue(upSearchBean.getLoginId());
+			searchBean.getDataFilterBeans().add(userSearchBean);
+			isEmpty = false;
+		}
 		//User Name
 		if (upSearchBean.getUserName() != null && !"".equalsIgnoreCase(upSearchBean.getUserName())) {
 			logger.info("+ userName "  +upSearchBean.getUserName());
@@ -997,11 +1053,17 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			UserResDTO resDTO = userSO.saveUser(reqDTO); //saveuser2
 
 			if (resDTO.isSuccessful()) {
+				System.out.println("before reload");
+				loadUserProfile(user.getUserId());
 				FacesContext.getCurrentInstance().addMessage(
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO,
 								null, "Record save successfully for Login ID: "
 										+ resDTO.getPmUser().getLoginId()));
+				
+				
+//				this.preLoadingMyAccount();
+				
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

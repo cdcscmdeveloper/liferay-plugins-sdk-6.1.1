@@ -58,6 +58,8 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	private List<PmRole> addedRoles;
 	private List<PmRole> deletedRoles;
 	
+	private int selectedTabIndex;
+	
 	private List<String[]> result;//TODO : TEMP REMOVE
 	
 	
@@ -905,6 +907,18 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	 */
 	public void setResult(List<String[]> result) {
 		this.result = result;
+	}
+	/**
+	 * @return the selectedTabIndex
+	 */
+	public int getSelectedTabIndex() {
+		return selectedTabIndex;
+	}
+	/**
+	 * @param selectedTabIndex the selectedTabIndex to set
+	 */
+	public void setSelectedTabIndex(int selectedTabIndex) {
+		this.selectedTabIndex = selectedTabIndex;
 	}	
 	
 	

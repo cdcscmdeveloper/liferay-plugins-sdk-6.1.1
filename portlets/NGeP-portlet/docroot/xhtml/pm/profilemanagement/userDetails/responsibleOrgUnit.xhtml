@@ -26,7 +26,7 @@
 	        </p:column>	 
 		    <p:column headerText="#{lbl['lbl.pm.profiles.resorg.table.code']}" >        
 	            <ac:lov id="lovResOrg" lovId="PM_ORG_PROFILE" styleClass="ppDisplayTextS" 
-	            	update=":form:tvUserDetails:dtOrgUnit"
+	            	update="dtOrgUnit"
 					headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
 					saveObject="orgUnit.pmOrgProfile"
 					value="#{orgUnit.pmOrgProfile.pmOrgValidity.orgCode}"

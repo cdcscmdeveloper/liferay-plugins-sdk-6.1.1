@@ -34,7 +34,7 @@
 	       		<br/>
 				<div class="ppRightBtn">
 					<p:commandButton action="#{profileManagementBackingBean.getAvailbleUserRole}"
-					  	value="#{lbl['lbl.btn.add']}" oncomplete="dlRoleOptions.show();" update=":form:tvUserDetails:opRoleOptions"/>&#160;
+					  	value="#{lbl['lbl.btn.add']}" oncomplete="dlRoleOptions.show();" update=":form:opRoleOptions"/>&#160;
 			        <p:commandButton value="#{lbl['lbl.btn.delete']}" />
 			        <p:commandButton action="#{profileManagementBackingBean.test}"
 					  	value="testtest" />&#160;
@@ -62,7 +62,7 @@
 	</p:outputPanel>
 	
 	<!-- Role Selection Popup -->
-	<ui:include src="/xhtml/pm/profilemanagement/rolePopUpScreen.xhtml" />
+	<ui:include src="/xhtml/pm/profilemanagement/common/rolePopUp.xhtml" />
 	
 	<!-- Address Selection Popup -->
 </ui:composition>	

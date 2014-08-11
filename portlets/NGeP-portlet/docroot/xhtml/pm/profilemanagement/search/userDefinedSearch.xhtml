@@ -11,6 +11,16 @@
 		<table class="ppTwoTable">
 			<tr>
 				<th width="20%">
+					<p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.loginid']}"/>
+				</th>
+				<td>
+					<p:inputText styleClass="ppDisplayTextM" value="#{profileManagementBackingBean.managedBean.userProfileSearchBean.loginId}" maxlength="75"/>
+				</td>
+				<th>&#160;</th>
+				<td>&#160;</td>
+			</tr>
+			<tr>
+				<th width="20%">
 					<p:outputLabel value="#{lbl['lbl.pm.profiles.search.name']}"/>
 				</th>
 				<td>

@@ -50,6 +50,8 @@ public class ProfilePersonalizationManagedBean extends BaseManagedBean {
 	private PmUser selectedUser;
 	private PmAddress userAddress; //Address Type - C
 	private boolean divisionFlagC;
+	
+	private int selectedTabIndex;
 //
 	/**
 	 * @return the selectedUser
@@ -92,6 +94,21 @@ public class ProfilePersonalizationManagedBean extends BaseManagedBean {
 	public void setDivisionFlagC(boolean divisionFlagC) {
 		this.divisionFlagC = divisionFlagC;
 	}
+	
+	/**
+	 * @return the selectedTabIndex
+	 */
+	public int getSelectedTabIndex() {
+		return selectedTabIndex;
+	}
+
+	/**
+	 * @param selectedTabIndex the selectedTabIndex to set
+	 */
+	public void setSelectedTabIndex(int selectedTabIndex) {
+		this.selectedTabIndex = selectedTabIndex;
+	}
+
 
 //	enable only for multi delete
 //	/**
@@ -122,6 +139,7 @@ public class ProfilePersonalizationManagedBean extends BaseManagedBean {
 
 
 	private PmUser user;
+	
 	
 	private PmUser pmUser;
 	

@@ -1,5 +1,6 @@
 package my.ep.web.backingbean.pm.profilepersonalization;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,7 @@ import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.authorization.PmUserPreference;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmCity;
@@ -27,9 +29,12 @@ import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmLanguage;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.pm.profilepersonalization.ProfilePersonalizationManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -52,9 +57,36 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	private static final Logger logger = EpLogger
 			.getLogger(ProfilePersonalizationBackingBean.class);
 	
+	//Navigation Details
 	public static final String NAV_TO_MYACCOUNT = "/xhtml/pm/profilePersonalization/userDetails/profileManagementMaintain.xhtml"; 
 	//Mapper for DDL object
 	private static Map<Long, Object> identityTypeMapper;
+	
+	//Tab values
+	public static final int TAB_USER_PROFILE = 0;
+	public static final int TAB_PERSONALIZATION = 1;
+	public static final int TAB_CHANGE_PASSWORD = 2;
+	
+	/**
+	 * @return the tabUserProfile
+	 */
+	public int getTabUserProfile() {
+		return TAB_USER_PROFILE;
+	}
+	
+	/**
+	 * @return the tabPersonalization
+	 */
+	public int getTabPersonalization() {
+		return TAB_PERSONALIZATION;
+	}
+
+	/**
+	 * @return the tabChangePassword
+	 */
+	public int getTabChangePassword() {
+		return TAB_CHANGE_PASSWORD;
+	}
 	
 	private void debugLogger(Object message) {
 		if (logger.isDebugEnabled()) {
@@ -82,10 +114,48 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 			throw new EpException("Unable to get the user details."); 
 		}
 		this.retrieveIdentityTypeMap();
+		this.getManagedBean().setSelectedTabIndex(TAB_USER_PROFILE);
 		loadUserProfile(sUsers.getUserId());
 		
 		FacesContext fc = FacesContext.getCurrentInstance();
 	    fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_MYACCOUNT);
+	}
+	/**
+	 * initial new pmUser object
+	 */
+	private void initialUserProfile(){
+		logger.info("initialUserProfile");
+		//load user attributes
+		PmCountry defaultCountry = PmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
+		PmUser pmUser = new PmUser();
+		pmUser.setSalutationCode(new PmSalutation());
+		pmUser.setPmCountry(defaultCountry);
+		pmUser.setIdentificationCode(new PmParameter());
+		pmUser.setSalutationCode(new PmSalutation());
+		pmUser.setPMP(false);
+		pmUser.setPmUserOrgs(new ArrayList<PmUserOrg>());
+		pmUser.setOrgTypeCode(new PmParameter());
+		
+		//initial preference - notification
+		PmCommonUtil.generateDefaultPmUserNotifications(pmUser, getFacesScopes().getUserLocale().getLanguage());
+
+		//initial preference
+		if(pmUser.getPmUserPreference()==null){
+			PmUserPreference pmUserPreference = new PmUserPreference();
+			pmUserPreference.setPmUser(pmUser);
+			pmUser.setPmUserPreference(pmUserPreference);
+		}
+		
+		//initial address
+		this.getManagedBean().setUserAddress(PmCommonUtil.getNewPmAddress());
+		
+		//load password
+		pmUser.setPassword(null);
+		pmUser.setOldPassword(null);
+		pmUser.setConfirmPassword(null);
+		
+		this.getManagedBean().setSelectedUser(pmUser);
+		System.out.println("login " + this.getManagedBean().getSelectedUser().getLoginId());
 	}
 	
 
@@ -96,20 +166,29 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	private void loadUserProfile(Long id){
 		logger.info("loadUserProfile");
 		try {
+			initialUserProfile();
 			if(id==null){
 				throw new EpException("Please login."); //TODO
 			}
 			//load user
 			PmUser pmUser = PmCommonUtil.retrieveUserById(id);
+			pmUser.setPMP(pmUser.isPMP()?true:false);
+			pmUser.setIdentificationCode(pmUser.getIdentificationCode()==null ? new PmParameter() : pmUser.getIdentificationCode());
+			pmUser.setSalutationCode(pmUser.getSalutationCode()==null ? new PmSalutation() : pmUser.getSalutationCode());
+			pmUser.setOrgTypeCode(pmUser.getOrgTypeCode()==null ? new PmParameter() : pmUser.getOrgTypeCode());
 			
 			//load address
 			if (pmUser!=null && pmUser.getPmAddressTypes() != null) {
 				populateUserAddress(pmUser);
 			}
-			//load preference
+			//load preference - notification
 			PmCommonUtil.generateDefaultPmUserNotifications(pmUser, getFacesScopes().getUserLocale().getLanguage());
+			
+			//load preference 
 			if(pmUser.getPmUserPreference()==null){
-				pmUser.setPmUserPreference(new PmUserPreference());
+				PmUserPreference pmUserPreference = new PmUserPreference();
+				pmUserPreference.setPmUser(pmUser);
+				pmUser.setPmUserPreference(pmUserPreference);
 			}
 			
 			//load password
@@ -292,12 +371,14 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 			UserResDTO resDTO = userSO.saveUser(reqDTO); //saveUser2
 
 			if (resDTO.isSuccessful()) {
+				System.out.println("before reload");
+				loadUserProfile(user.getUserId());
 				FacesContext.getCurrentInstance().addMessage(
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO,
 								null, "Record save successfully for Login ID: "
 										+ resDTO.getPmUser().getLoginId()));
-				this.preLoadingMyAccount();
+
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -317,6 +398,9 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		this.getManagedBean().getSelectedUser().setLoginId(this.getManagedBean().getSelectedUser().getIdentificationNo());
 	}
 
+	
+	
+	//TODO: testing
 	public void handleFileUpload(FileUploadEvent event) {
 		System.out.println("handleFileUploadTest - start");
 		UploadedFile item = event.getFile();

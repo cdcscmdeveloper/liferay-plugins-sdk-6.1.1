@@ -9,14 +9,6 @@
 	<p:panel header="#{lbl['lbl.pm.profiles.user.profile']}" toggleable="true">
 		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%" columns="2">
 			<p:outputPanel id="opUserProfileDet">
-				<!-- remove - start 
-				dummy
-				<p:selectBooleanCheckbox id="chkAddMode"
-					value="#{profileManagementBackingBean.managedBean.dummy}">
-				</p:selectBooleanCheckbox>
-				 -->
-				
-				<!-- remove - end -->
 				<table class="ppTwoTable">
 					<tr>
 						<th width="20%">
@@ -39,39 +31,7 @@
 							</div>
 						</td>
 					</tr>
-					<!-- PASSWORD - START -->
-					<tr>
-						<th width="20%">
-							<p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.password']}" />
-							<p:outputLabel value="*" styleClass="mandatory" />
-						</th>
-						<td>
-							<p:inputText styleClass="ppDisplayTextM"/>
-							<!-- 
-							<p:password styleClass="ppDisplayTextM" id="pwd1" 
-								feedback="false" match="pwd2" label="#{lbl['lbl.pm.profiles.userdetails.password']}"/>
-								 -->
-						</td>
-						<th></th>
-						<td></td>
-					</tr>
-					
-					<tr>
-						<th>
-							<p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.confirm.password']}" />
-							<p:outputLabel value="*" styleClass="mandatory" />
-						</th>
-						<td>
-							<p:inputText styleClass="ppDisplayTextM"/>
-						<!-- 
-							<p:password styleClass="ppDisplayTextM" id="pwd2" 
-							 	feedback="false" label="#{lbl['lbl.pm.profiles.userdetails.confirm.password']}"/> -->
-						</td>
-						<th></th>
-						<td></td>
-					</tr>
-					
-					<!-- PASSWORD - END -->
+				
 					<tr>
 						<th width="20%">
 							<p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.salutation']}" /> 

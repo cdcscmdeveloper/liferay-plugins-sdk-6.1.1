@@ -4,18 +4,44 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-	<p:tabView id="tvUserDetails" dynamic="true" cache="true" orientation="left">
-		<!-- User Profile -->
-		<p:tab title="#{lbl['lbl.pm.profiles.tab.name.up']}" >
-			<ui:include src="/xhtml/pm/profilePersonalization/userDetails/userProfileDetails.xhtml" />
-		</p:tab>
-		<!-- Personalization -->	
-		<p:tab title="#{lbl['lbl.pm.profiles.tab.name.pl']}" >	
-			<ui:include src="/xhtml/pm/profilePersonalization/userDetails/userPreference.xhtml"/>	
-		</p:tab>
-		<!-- Change Password -->	
-		<p:tab title="#{lbl['lbl.pm.profiles.tab.name.cp']}">
-			<ui:include src="/xhtml/pm/profilePersonalization/userDetails/userChangePassword.xhtml"/>
-		</p:tab>
-	</p:tabView>
+	
+	
+	<table border="0" cellspacing="0" cellpadding="0" width="100%">
+		  <tr>
+			<td width="20%" valign="top" class="sidemenutd">
+				<p:tabMenu styleClass="sidemenu" id="tUserDetails"
+					activeIndex="#{profilePersonalizationBackingBean.managedBean.selectedTabIndex}">
+					<!-- User Profile -->
+                    <p:menuitem value="#{lbl['lbl.pm.profiles.tab.name.up']}" update="@form">
+						<f:setPropertyActionListener target="#{profilePersonalizationBackingBean.managedBean.selectedTabIndex}" 
+							value="#{profilePersonalizationBackingBean.tabUserProfile}" />
+					</p:menuitem>
+					<!-- Personalization -->	
+					<p:menuitem value="#{lbl['lbl.pm.profiles.tab.name.pl']}" update="@form">
+						<f:setPropertyActionListener target="#{profilePersonalizationBackingBean.managedBean.selectedTabIndex}" 
+							value="#{profilePersonalizationBackingBean.tabPersonalization}" />
+					</p:menuitem>
+					<!-- Change Password -->
+					<p:menuitem value="#{lbl['lbl.pm.profiles.tab.name.cp']}" update="@form">
+						<f:setPropertyActionListener target="#{profilePersonalizationBackingBean.managedBean.selectedTabIndex}" 
+							value="#{profilePersonalizationBackingBean.tabChangePassword}" />
+					</p:menuitem>
+				</p:tabMenu>
+			</td>
+			<td width="80%">
+				<!-- User Profile -->
+				<p:outputPanel rendered="#{profilePersonalizationBackingBean.managedBean.selectedTabIndex == profilePersonalizationBackingBean.tabUserProfile}">
+					<ui:include src="/xhtml/pm/profilePersonalization/userDetails/userProfileDetails.xhtml" /> 
+				</p:outputPanel>
+				<!-- Personalization -->
+				<p:outputPanel rendered="#{profilePersonalizationBackingBean.managedBean.selectedTabIndex == profilePersonalizationBackingBean.tabPersonalization}">
+					<ui:include src="/xhtml/pm/profilePersonalization/userDetails/userPreference.xhtml" />
+				</p:outputPanel>
+				<!-- Change Password -->	
+				<p:outputPanel rendered="#{profilePersonalizationBackingBean.managedBean.selectedTabIndex == profilePersonalizationBackingBean.tabChangePassword}">
+					<ui:include src="/xhtml/pm/profilePersonalization/userDetails/userChangePassword.xhtml" />
+				</p:outputPanel>
+			</td>
+		</tr>
+	</table>
 </ui:composition>
