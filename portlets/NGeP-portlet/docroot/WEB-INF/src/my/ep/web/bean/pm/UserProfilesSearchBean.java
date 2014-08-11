@@ -8,7 +8,7 @@ package my.ep.web.bean.pm;
  *
  */
 public class UserProfilesSearchBean {
-	
+	private String loginId;
 	private String userName;
 	private String userRole;	
 	private String userOrganizationName;	
@@ -61,6 +61,19 @@ public class UserProfilesSearchBean {
 	public void setUserStatus(Long userStatus) {
 		this.userStatus = userStatus;
 	}
+	/**
+	 * @return the loginId
+	 */
+	public String getLoginId() {
+		return loginId;
+	}
+	/**
+	 * @param loginId the loginId to set
+	 */
+	public void setLoginId(String loginId) {
+		this.loginId = loginId;
+	}
+	
 
 	
 }
