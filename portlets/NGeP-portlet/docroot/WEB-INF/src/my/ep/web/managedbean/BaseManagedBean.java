@@ -17,7 +17,7 @@ public abstract class BaseManagedBean implements Serializable {
 	private String taskId;
 	private String[] outComes;
 	private String title;
-	private Long statusId;
+	private Long currentStatusId;
 
 	public String[] getOutComes() {
 		return outComes;
@@ -58,17 +58,17 @@ public abstract class BaseManagedBean implements Serializable {
 	}
 
 	/**
-	 * @return the statusId
+	 * @return the currentStatusId
 	 */
-	public Long getStatusId() {
-		return statusId;
+	public Long getCurrentStatusId() {
+		return currentStatusId;
 	}
 
 	/**
-	 * @param statusId the statusId to set
+	 * @param currentStatusId the currentStatusId to set
 	 */
-	public void setStatusId(Long statusId) {
-		this.statusId = statusId;
+	public void setCurrentStatusId(Long currentStatusId) {
+		this.currentStatusId = currentStatusId;
 	}
 	
 }
