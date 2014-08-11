@@ -18,7 +18,8 @@
 					<p:selectOneMenu
 						value="#{lOADetailBackingBean.managedBean.selectedBankId}"
 						style="width: 280px;margin-bottom: 5px;"
-						required="true">
+						required="true"
+						label="#{lbl['lbl.sc.loiloa.loa.acc.no']}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems
 							value="#{lOADetailBackingBean.managedBean.bankList}"
