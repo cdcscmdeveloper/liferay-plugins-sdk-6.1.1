@@ -377,6 +377,8 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	
 
 	public List<CtContractItem> getCtItemList() {
+		if(ctItemList == null)
+			ctItemList = new ArrayList<CtContractItem>();
 		return ctItemList;
 	}
 
@@ -385,6 +387,8 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	}
 
 	public List<CtContractItem> getCtItemServiceList() {
+		if(ctItemServiceList == null)
+			ctItemServiceList = new ArrayList<CtContractItem>();
 		return ctItemServiceList;
 	}
 
