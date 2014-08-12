@@ -348,6 +348,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private String newItemCategory;
 	private CtPanelItem existingpanelitem;
 	private String bankstmntTomonth;
+	private int tempIndex;
 
 	public SpecificationManagedBean() {
 		
@@ -3968,6 +3969,20 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	 */
 	public void setBankstmntTomonth(String bankstmntTomonth) {
 		this.bankstmntTomonth = bankstmntTomonth;
+	}
+
+	/**
+	 * @return the tempIndex
+	 */
+	public int getTempIndex() {
+		return tempIndex;
+	}
+
+	/**
+	 * @param tempIndex the tempIndex to set
+	 */
+	public void setTempIndex(int tempIndex) {
+		this.tempIndex = tempIndex;
 	}
 
 }
