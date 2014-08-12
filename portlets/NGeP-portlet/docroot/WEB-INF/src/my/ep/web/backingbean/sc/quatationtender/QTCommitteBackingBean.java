@@ -703,7 +703,7 @@ public class QTCommitteBackingBean extends
 
 			userReqDTO.setPmUser(user);
 			UserResDTO resDTO = getUserSO().saveUser(userReqDTO);
-			System.out.println("done");
+		
 			member.setPmUser(resDTO.getPmUser());
 			setUserDetails(member);
 			memberList.add(member);
@@ -728,7 +728,7 @@ public class QTCommitteBackingBean extends
 				committeeMember.setPmUser(user);
 				committeeMember.setPmOrgProfile(scQt.getPmOrgProfile());
 
-				if (committeeMember.isPNP() == true) {
+				if (user.isPMP() == true) {
 					ParameterReqDTO reqDTO = new ParameterReqDTO();
 					reqDTO.setParameterType(ParameterTypeConst.COMMITTEE_ROLE);
 					reqDTO.setParameterCode(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON);
@@ -739,11 +739,14 @@ public class QTCommitteBackingBean extends
 					List<PmParameterDesc> roles = getManagedBean().getRoleTypes();
 					for (PmParameterDesc parameter : roles) {
 						if (parameter.getPmParameter().getParameterId().equals(user.getMemberRole().getParameterId())) {
-							committeeMember.setMemberRole(parameter.getPmParameter());
+							ParameterReqDTO reqDTO = new ParameterReqDTO();
+							reqDTO.setParameterId(user.getMemberRole().getParameterId());							
+							ParameterResDTO resDTO = getParameterSO()
+									.retrieveParameterById(reqDTO);
+							committeeMember.setMemberRole(resDTO.getPmParameter());
+							
 							break;
-						} else {
-							committeeMember.setMemberRole(user.getMemberRole());
-						}
+						} 
 					}
 					
 				}
@@ -757,6 +760,9 @@ public class QTCommitteBackingBean extends
 		scCommittee.setScCommitteeMembers(memberList);
 		selectedCommitteTabBean.getScQtCommittee().setScCommittee(scCommittee);				
 
+		// Specification Committee validation
+		RequestContext.getCurrentInstance().execute(
+				"newspecificationcommittee.hide()");
 	}
 
 	public void reset() {

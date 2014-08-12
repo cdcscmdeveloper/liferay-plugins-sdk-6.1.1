@@ -21,7 +21,6 @@ import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
@@ -44,8 +43,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRequest;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproverSettings;
-import my.ep.persistence.entity.sc.quationtender.ScQtBSVRemark;
-import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvRegistration;
@@ -84,7 +81,6 @@ import my.ep.web.type.sc.quationtender.CloneAll;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
-import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.MenuModel;
 import org.primefaces.model.TreeNode;
@@ -143,7 +139,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<ScQtRemark> scQtRemarks;
 	private List<ScQtCheckList> scQtChecklists;
 	private List<ScQtDeduction> scQtDeductionList;
-	private List<ScQtDeductionClause> scQtDeductionClauses;
 	private List<CtPanelSupplier> panelSupplierList;
 
 	private List<ScQtBsvDtl> selectedBriefingDetails;
@@ -363,9 +358,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	// Briefing & Site Visit Details
 	private ScQtBsvDtl qtBriefing;
-	private ScQtBsvDtl qtSiteBriefing = new ScQtBsvDtl();
-	public List<ScQtBsvDtl> briefings;
-	public List<ScQtBsvDtl> siteBriefings;
+	
 	private String briefingZoneName;
 	private String previousPage;
 	private List<ScQtBsvRegistration> briefingRegistrationList;
@@ -375,11 +368,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<TplSpecZoneDtl> zones;
 	private List<ScRemark> remarks;
 	private TplSpecZoneDtl selectedZone;
-	private ScQtBsvRegistration scQtBsvRegistration;
-	private ScQtBsv scQtBsv;
-	private ScQtBsv scQtBriefing;
-	private ScQtBsv scQtSitevisit;
-	private ScQtBSVRemark scQtBSVRemark;
+	private ScQtBsvRegistration scQtBsvRegistration;	
+	
 	private boolean required = false;
 	private List<ScQtBsvAttendance> briefingAttendanceList;
 	private ScQtBsvAttendance scQtBriefingAttendance;
@@ -394,8 +384,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<ScQtSampleSubmission> scQtSampleSubmissionList;
 	private List<ScQtSampleSubmission> selectedSubmissionList;
 	private List<ScQtContactPerson> scQtContactPersons;
-	private List<ScQtContactPerson> selectedContactPersons;
-	private PmAddress pmAddress;
+	private List<ScQtContactPerson> selectedContactPersons;	
 	private Date proposalValidityUntil;
 	private Date closingDate;
 
@@ -435,6 +424,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public MenuModel approvalMenuModel;
 	public int selectedApprovalTabIndex;
 	public TabBean selectedApprovalTabBean;
+	
+	private BriefingZoneBean bsvDtlBean;
+	private String bsvType;
+	private boolean showBsvText;
+	private boolean showSitVistitText;
+	private int bsvIndex;
+	private int sampleAddressIndex;
+	private String actionType;
 
 	public void setPanelSuppliers(List<SmSupplier> panelSuppliers) {
 		this.panelSuppliers = panelSuppliers;
@@ -444,7 +441,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		log.info("inside ");
 
 		qtnTenderSearchBean = new QtnTenderSearchBean();
-		cloneQtnTenderSearchBean = new QtnTenderSearchBean();
+		//cloneQtnTenderSearchBean = new QtnTenderSearchBean();
 
 		userCommitteeSearchBean = new UserCommitteeSearchBean();
 
@@ -453,16 +450,16 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 		cloneDocumentSearchBean = new QtnTenderSearchBean();
 
-		root2 = new DefaultTreeNode("Root", null);
+		/*root2 = new DefaultTreeNode("Root", null);
 		TreeNode node0 = new DefaultTreeNode("Clone All", root2);
-		node0.setExpanded(true);
+		node0.setExpanded(true);*/
 
-		CloneAll[] enumValues = CloneAll.values();
+		/*CloneAll[] enumValues = CloneAll.values();
 		for (CloneAll cloneValue : enumValues) {
 			TreeNode node1 = new DefaultTreeNode(cloneValue.getDisplayName(),
 					node0);
 		}
-
+*/
 		getPTJApproverNames();
 	}
 
@@ -1163,13 +1160,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.qtBriefing = qtBriefing;
 	}
 
-	public ScQtBsvDtl getQtSiteBriefing() {
-		return qtSiteBriefing;
-	}
 
-	public void setQtSiteBriefing(ScQtBsvDtl qtSiteBriefing) {
-		this.qtSiteBriefing = qtSiteBriefing;
-	}
 
 	public ScQtDoc getQtDoc() {
 		return qtDoc;
@@ -1179,21 +1170,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.qtDoc = qtDoc;
 	}
 
-	public List<ScQtBsvDtl> getBriefings() {
-		return briefings;
-	}
 
-	public void setBriefings(List<ScQtBsvDtl> briefings) {
-		this.briefings = briefings;
-	}
-
-	public List<ScQtBsvDtl> getSiteBriefings() {
-		return siteBriefings;
-	}
-
-	public void setSiteBriefings(List<ScQtBsvDtl> siteBriefings) {
-		this.siteBriefings = siteBriefings;
-	}
 
 	public List<ScQtDoc> getScQtDocs() {
 		return scQtDocs;
@@ -1492,15 +1469,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.selectedScQtDeductions = selectedScQtDeductions;
 	}
 
-	public List<ScQtDeductionClause> getScQtDeductionClauses() {
-		return scQtDeductionClauses;
-	}
-
-	public void setScQtDeductionClauses(
-			List<ScQtDeductionClause> scQtDeductionClauses) {
-		this.scQtDeductionClauses = scQtDeductionClauses;
-	}
-
+	
 	public List<ScQtDeductionClause> getSelectedDeductionClauses() {
 		return selectedDeductionClauses;
 	}
@@ -2068,30 +2037,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.scQtBsvRegistration = scQtBsvRegistration;
 	}
 
-	public ScQtBsv getScQtBsv() {
-		return scQtBsv;
-	}
-
-	public void setScQtBsv(ScQtBsv scQtBsv) {
-		this.scQtBsv = scQtBsv;
-	}
-
-	public ScQtBsv getScQtBriefing() {
-		return scQtBriefing;
-	}
-
-	public void setScQtBriefing(ScQtBsv scQtBriefing) {
-		this.scQtBriefing = scQtBriefing;
-	}
-
-	public ScQtBsv getScQtSitevisit() {
-		return scQtSitevisit;
-	}
-
-	public void setScQtSitevisit(ScQtBsv scQtSitevisit) {
-		this.scQtSitevisit = scQtSitevisit;
-	}
-
+	
 	public List<ScQtSampleSubmission> getScQtSampleSubmissionList() {
 		return scQtSampleSubmissionList;
 	}
@@ -2187,14 +2133,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.qtCommittes = qtCommittes;
 	}
 
-	public ScQtBSVRemark getScQtBSVRemark() {
-		return scQtBSVRemark;
-	}
-
-	public void setScQtBSVRemark(ScQtBSVRemark scQtBSVRemark) {
-		this.scQtBSVRemark = scQtBSVRemark;
-	}
-
+	
 	public List<ScQtCheckList> getTechnicalSpecList() {
 		return technicalSpecList;
 	}
@@ -2220,13 +2159,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.scQtBsvAttendanceList = scQtBsvAttendanceList;
 	}
 
-	public PmAddress getPmAddress() {
-		return pmAddress;
-	}
-
-	public void setPmAddress(PmAddress pmAddress) {
-		this.pmAddress = pmAddress;
-	}
+	
 
 	public String getSupplierBranch() {
 		return supplierBranch;
@@ -2570,5 +2503,63 @@ public class QTDetailManagedBean extends BaseManagedBean {
 			List<ScQtCommitteRemarks> qtCommitteeRemarks) {
 		this.qtCommitteeRemarks = qtCommitteeRemarks;
 	}
+
+	public BriefingZoneBean getBsvDtlBean() {
+		return bsvDtlBean;
+	}
+
+	public void setBsvDtlBean(BriefingZoneBean bsvDtlBean) {
+		this.bsvDtlBean = bsvDtlBean;
+	}
+
+	public String getBsvType() {
+		return bsvType;
+	}
+
+	public void setBsvType(String bsvType) {
+		this.bsvType = bsvType;
+	}
+
+	public boolean isShowBsvText() {
+		return showBsvText;
+	}
+
+	public void setShowBsvText(boolean showBsvText) {
+		this.showBsvText = showBsvText;
+	}
+
+	public boolean isShowSitVistitText() {
+		return showSitVistitText;
+	}
+
+	public void setShowSitVistitText(boolean showSitVistitText) {
+		this.showSitVistitText = showSitVistitText;
+	}
+
+	public int getBsvIndex() {
+		return bsvIndex;
+	}
+
+	public void setBsvIndex(int bsvIndex) {
+		this.bsvIndex = bsvIndex;
+	}
+
+	public int getSampleAddressIndex() {
+		return sampleAddressIndex;
+	}
+
+	public void setSampleAddressIndex(int sampleAddressIndex) {
+		this.sampleAddressIndex = sampleAddressIndex;
+	}
+
+	public String getActionType() {
+		return actionType;
+	}
+
+	public void setActionType(String actionType) {
+		this.actionType = actionType;
+	}
+
+	
 
 }

@@ -1,5 +1,6 @@
 package my.ep.web.bean.sc.quatationtender;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +13,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
  * @author Viswanath
  * 
  */
-public class BriefingZoneBean {
+public class BriefingZoneBean implements Serializable {
 
 	private String zoneName;
 	private TplSpecZoneDtl tplSpecZoneDtl;

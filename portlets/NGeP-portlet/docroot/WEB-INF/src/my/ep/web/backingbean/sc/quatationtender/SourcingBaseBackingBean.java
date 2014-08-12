@@ -54,6 +54,7 @@ import my.ep.jaxb.sc.sitevisitproposaldata.SCSiteVisitProposalDataType;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScAttachment;
@@ -620,6 +621,26 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		
 	}
 	   
+	public PmDigiSign retrieveGPKIData() {
+		String signedData = FacesContext.getCurrentInstance()
+				.getExternalContext().getRequestParameterMap()
+				.get("signedText");
+		String originalData = FacesContext.getCurrentInstance()
+				.getExternalContext().getRequestParameterMap()
+				.get("textBeforeSign");
+		String serialNo = FacesContext.getCurrentInstance()
+				.getExternalContext().getRequestParameterMap().get("serialNo");
+		PmDigiSign pmDigiSign = null;
+		if (null != signedData && null != originalData && null != serialNo) {
+			pmDigiSign = new PmDigiSign();
+			pmDigiSign.setSignedData(signedData);
+			pmDigiSign.setOrginalData(originalData);
+			pmDigiSign.setCertificate(serialNo);
+		}
+		return pmDigiSign;
+
+	}
+	
 
 
 }
