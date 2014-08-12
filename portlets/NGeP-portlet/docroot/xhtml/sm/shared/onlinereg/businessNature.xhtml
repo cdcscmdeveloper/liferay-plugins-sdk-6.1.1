@@ -45,7 +45,7 @@
 				update="natureBusinessId,bizDialog"
 				action="#{registrationBackingBean.addBusinessNature}" />
 
-			<p:commandButton id="btnRemove" update="natureBusinessId" process="@this"
+			<p:commandButton id="btnRemove" update="natureBusinessId" partialSubmit="true" process="@this,suppBizNatureId"
 				value="#{lbl['lbl.btn.delete']}"
 				action="#{registrationBackingBean.removeBusinessNature}" />
 		</div>
