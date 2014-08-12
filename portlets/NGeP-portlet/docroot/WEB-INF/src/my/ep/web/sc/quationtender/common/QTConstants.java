@@ -19,7 +19,7 @@ public interface QTConstants {
 
 	public static final String MAINTANANCE_PAGE = "quatationtendercreation";
 	public static final String BO_MAINTANANCE_PAGE = "/xhtml/sc/quatationtender/businessowner/businessownercreation.xhtml";
-
+	public static final String SEARCH_PAGE = "/xhtml/sc/quatationtender/qtntendermain.xhtml";
 	public static final String CREATE_COMMITTE = "committeemaintanancepage";
 
 	public static final String QT_DETAILS_TAB = "Quotation Details";

@@ -73,6 +73,7 @@ import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentDefaultFormat;
 import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.sc.quationtender.common.QTConstants;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -101,9 +102,10 @@ import com.liferay.portal.util.PortalUtil;
  */
 public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		extends BaseBackingBean<T> {
-	
-	public static Logger log = EpLogger.getLogger(SourcingBaseBackingBean.class);
-	
+
+	public static Logger log = EpLogger
+			.getLogger(SourcingBaseBackingBean.class);
+
 	/**
 	 * Method to retrive orgprofiles based on user id and parent org id
 	 * 
@@ -140,36 +142,38 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return userList;
 	}
 
-	protected void uploadAttachment(UploadedFile file, ScAttachment attachment) throws FileNotFoundException, IOException {
+	protected void uploadAttachment(UploadedFile file, ScAttachment attachment)
+			throws FileNotFoundException, IOException {
 		String fileName = file.getFileName();
 		byte[] fileBytes = file.getContents();
-		
+
 		attachment.setFileName(fileName);
 		attachment.setFileDesc("File uploded");
-		
+
 		populateAttachmentDetails(attachment);
-		
+
 		FileOutputStream fos;
-		
+
 		fos = new FileOutputStream(attachment.getFilePath());
 		fos.write(fileBytes);
 		fos.close();
-		
+
 		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO,
 				"The file was uploaded successfully.", null);
-		
+
 		FacesContext.getCurrentInstance().addMessage(null, message);
 	}
-	
-	protected void populateAttachmentDetails(ScAttachment attachment) throws FileNotFoundException, IOException {
+
+	protected void populateAttachmentDetails(ScAttachment attachment)
+			throws FileNotFoundException, IOException {
 		Timestamp date = new Timestamp(System.currentTimeMillis());
 		PmUser createdUser = new FacesScopes().getUserSessionBean();
-		
+
 		attachment.setCreatedBy(createdUser.getUserId());
 		attachment.setCreatedDate(date);
 		attachment.setChangedBy(createdUser.getUserId());
 		attachment.setCreatedUser(createdUser);
-		
+
 		String docRepoBaseDir = EpPropertiesUtils.getInstance().getProperty(
 				EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
 		StringBuilder filePath = new StringBuilder(docRepoBaseDir);
@@ -181,39 +185,39 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		filePath.append(attachment.getDocNo());
 		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
 		filePath.append(attachment.getDocType());
-		
+
 		File theDir = new File(filePath.toString());
 		theDir.mkdirs();
-		
+
 		AttachmentFormat scFormat = getAttachmentFormat(attachment);
-		String formatedFileName = scFormat.format(
-				attachment.getFileName(), attachment.getPrefixFileName());
-		
+		String formatedFileName = scFormat.format(attachment.getFileName(),
+				attachment.getPrefixFileName());
+
 		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
 		filePath.append(formatedFileName);
 		attachment.setFilePath(filePath.toString());
-		
-		log.info("=======get File path===="
-				+ attachment.getFilePath());
+
+		log.info("=======get File path====" + attachment.getFilePath());
 	}
-	
+
 	private AttachmentFormat getAttachmentFormat(ScAttachment scAttachment) {
-		if (scAttachment instanceof ScLoaReportAttachment ||
-			scAttachment instanceof ScQtCheckListAttachment ||
-			scAttachment instanceof ScQtProposalChecklistAttachment ||
-			scAttachment instanceof ScQtRptBriefingPaperAttachment) {
-			
-			return new AttachmentDateFormat(); 
+		if (scAttachment instanceof ScLoaReportAttachment
+				|| scAttachment instanceof ScQtCheckListAttachment
+				|| scAttachment instanceof ScQtProposalChecklistAttachment
+				|| scAttachment instanceof ScQtRptBriefingPaperAttachment) {
+
+			return new AttachmentDateFormat();
 		} else {
-			
+
 			return new AttachmentDefaultFormat();
 		}
 	}
-	
+
 	/**
 	 * determineIcon for displaying image icon
 	 */
-	public <ATTACHMENT extends ScAttachment> String determineIcon(ATTACHMENT attachment) {
+	public <ATTACHMENT extends ScAttachment> String determineIcon(
+			ATTACHMENT attachment) {
 		String imageFileName = "icon_file_default.png";
 		String ext = "";
 
@@ -241,58 +245,68 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 		return imageFileName;
 	}
-	
-	public <ATTACHMENT extends ScAttachment> File downloadFile(ATTACHMENT scAttachment) throws IOException {
-		if (scAttachment != null && StringUtils.isNotBlank(scAttachment.getFileName())) {
-			return downloadFile(scAttachment.getFilePath(), scAttachment.getFileName());	
+
+	public <ATTACHMENT extends ScAttachment> File downloadFile(
+			ATTACHMENT scAttachment) throws IOException {
+		if (scAttachment != null
+				&& StringUtils.isNotBlank(scAttachment.getFileName())) {
+			return downloadFile(scAttachment.getFilePath(),
+					scAttachment.getFileName());
 		} else {
 			throw new EpException("Attachment not found.");
 		}
 	}
-	
-	public File downloadFile(String filePath, String fileName) throws IOException {
-		log.info("Inside downloadFile(..)");
-		PortletResponse  portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();  
-		HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
 
-		res.setHeader( "Content-Disposition", "attachment; filename=\"" + fileName + "\"" );//
-		res.setHeader( "Content-Transfer-Encoding", "binary" );
+	public File downloadFile(String filePath, String fileName)
+			throws IOException {
+		log.info("Inside downloadFile(..)");
+		PortletResponse portletResponse = (PortletResponse) FacesContext
+				.getCurrentInstance().getExternalContext().getResponse();
+		HttpServletResponse res = com.liferay.portal.util.PortalUtil
+				.getHttpServletResponse(portletResponse);
+
+		res.setHeader("Content-Disposition", "attachment; filename=\""
+				+ fileName + "\"");//
+		res.setHeader("Content-Transfer-Encoding", "binary");
 		res.setContentType("application/octet-stream");
 		res.flushBuffer();
-		OutputStream out = res.getOutputStream();   
-		
-		if(filePath!=null) {
+		OutputStream out = res.getOutputStream();
+
+		if (filePath != null) {
 			InputStream input = null;
 			try {
 				URLConnection uc = new URL(filePath).openConnection();
-				input = new BufferedInputStream(uc.getInputStream()); 
-			    
+				input = new BufferedInputStream(uc.getInputStream());
+
 			} catch (Exception e) {
 				// Cannot open connection, maybe local file
 				input = new FileInputStream(filePath);
 			}
 			byte[] buffer = new byte[4096];
 			int bytesRead;
-			while ((bytesRead = input.read( buffer )) != -1){ 
-				out.write( buffer, 0, bytesRead ); 
-				buffer = new byte[4096]; 
+			while ((bytesRead = input.read(buffer)) != -1) {
+				out.write(buffer, 0, bytesRead);
+				buffer = new byte[4096];
 			}
-			input.close();	
+			input.close();
 		}
 		out.flush();
-		out.close(); 
+		out.close();
 		FacesContext.getCurrentInstance().responseComplete();
-		
-		//use to upload back to database
+
+		// use to upload back to database
 		File file = new File(filePath);
 		return file;
 	}
-	
-	protected <ATTACHMENT extends ScAttachment> void downloadAllFiles(String zipFileName, List<ATTACHMENT> scAttachments) throws IOException {
+
+	protected <ATTACHMENT extends ScAttachment> void downloadAllFiles(
+			String zipFileName, List<ATTACHMENT> scAttachments)
+			throws IOException {
 		List<File> files = new ArrayList<File>();
-		
+
 		for (ScAttachment scAttachment : scAttachments) {
-			if (null != scAttachment && StringUtils.isNotBlank(scAttachment.getFilePath())) {
+			if (null != scAttachment
+					&& StringUtils.isNotBlank(scAttachment.getFilePath())) {
 				files.add(new File(scAttachment.getFilePath()));
 			}
 		}
@@ -302,8 +316,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		HttpServletResponse response = PortalUtil
 				.getHttpServletResponse(portalresponse);
 		response.setContentType("Content-type: text/zip");
-		response.setHeader("Content-Disposition",
-				"attachment; filename=" + zipFileName + ".zip");
+		response.setHeader("Content-Disposition", "attachment; filename="
+				+ zipFileName + ".zip");
 
 		ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(
 				response.getOutputStream()));
@@ -331,31 +345,34 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 		zos.close();
 		response.flushBuffer();
-		
+
 		FacesContext.getCurrentInstance().responseComplete();
 	}
-	
-	public void converthtmlToDocFile(String content, String filePath){
+
+	public void converthtmlToDocFile(String content, String filePath) {
 		log.info("Inside converthtmlToDocFile(..)");
 		WordprocessingMLPackage wordMLPackage;
-	 	try {
-	 		wordMLPackage = WordprocessingMLPackage.createPackage();
-	 		AlternativeFormatInputPart afiPart = new AlternativeFormatInputPart(new PartName("/hw.html"));
-	 		afiPart.setBinaryData(content.getBytes());
-	 		afiPart.setContentType(new ContentType("text/html"));
-	 		Relationship altChunkRel = wordMLPackage.getMainDocumentPart().addTargetPart(afiPart);
-	 		 
-	 		CTAltChunk ac = Context.getWmlObjectFactory().createCTAltChunk();
-	 		ac.setId(altChunkRel.getId() );
-	 		wordMLPackage.getMainDocumentPart().addObject(ac);
-	 		wordMLPackage.getContentTypeManager().addDefaultContentType("html", "text/html");
-	 		wordMLPackage.save(new java.io.File(filePath));
-	 	} catch (InvalidFormatException e) {
-	 		e.printStackTrace();
-	 	}catch (Docx4JException e) {
- 			e.printStackTrace();
- 		}
-	 	log.info("Exit converthtmlToDocFile(..)");
+		try {
+			wordMLPackage = WordprocessingMLPackage.createPackage();
+			AlternativeFormatInputPart afiPart = new AlternativeFormatInputPart(
+					new PartName("/hw.html"));
+			afiPart.setBinaryData(content.getBytes());
+			afiPart.setContentType(new ContentType("text/html"));
+			Relationship altChunkRel = wordMLPackage.getMainDocumentPart()
+					.addTargetPart(afiPart);
+
+			CTAltChunk ac = Context.getWmlObjectFactory().createCTAltChunk();
+			ac.setId(altChunkRel.getId());
+			wordMLPackage.getMainDocumentPart().addObject(ac);
+			wordMLPackage.getContentTypeManager().addDefaultContentType("html",
+					"text/html");
+			wordMLPackage.save(new java.io.File(filePath));
+		} catch (InvalidFormatException e) {
+			e.printStackTrace();
+		} catch (Docx4JException e) {
+			e.printStackTrace();
+		}
+		log.info("Exit converthtmlToDocFile(..)");
 	}
 
 	public void preRenderView() {
@@ -400,8 +417,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			SPDetailBackingBean backingBean = new SPDetailBackingBean();
 			backingBean.getManagedBean().setProposalData(proposalDateType);
 			// detailBackingBean.populateParentOrgProfile(tenderResDTO.getQtDetail());
-		//	backingBean.retrieveTechnicalProposalList(proposalDateType
-			//		.getQtId().longValue());
+			// backingBean.retrieveTechnicalProposalList(proposalDateType
+			// .getQtId().longValue());
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication()
 					.getNavigationHandler()
@@ -423,8 +440,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			detailBackingBean.getManagedBean().setTaskId(taskId);
 			detailBackingBean.getManagedBean().setQuotationTenderDataType(
 					datatype);
-			//populateParentOrgProfile(tenderResDTO.getQtDetail());
-			//detailBackingBean.onChangeAction();
+			// populateParentOrgProfile(tenderResDTO.getQtDetail());
+			// detailBackingBean.onChangeAction();
 			tenderResDTO = detailSO.retriveQTApprovalDetails(tenderReqDTO);
 			ApprovalBackingBean approvalBackingBean = new ApprovalBackingBean();
 
@@ -478,149 +495,161 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		baseObject.setChangedBy(user.getUserId());
 		baseObject.setCreatedBy(user.getUserId());
 		baseObject.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-	
+
 	}
-	
-	public String getMessgeConstant(String outCome){
-		String msgCode=null;
-		if(outCome.equalsIgnoreCase("SUBMIT")){
-			 msgCode=MessageConst.INFO_700005;
-		 }else if(outCome.equalsIgnoreCase("REJECT")){
-			 msgCode=MessageConst.INFO_700008;
-		 }else if(outCome.equalsIgnoreCase("REVISE")){
-			 msgCode=MessageConst.INFO_700012;
-		 }else if(outCome.equalsIgnoreCase("APPROVE")){
-			 msgCode=MessageConst.INFO_700007;
-		 }else if(outCome.equalsIgnoreCase("ACCEPT")){
-			 msgCode=MessageConst.INFO_700013;
-		 }
+
+	public String getMessgeConstant(String outCome) {
+		String msgCode = null;
+		if (outCome.equalsIgnoreCase("SUBMIT")) {
+			msgCode = MessageConst.INFO_700005;
+		} else if (outCome.equalsIgnoreCase("REJECT")) {
+			msgCode = MessageConst.INFO_700008;
+		} else if (outCome.equalsIgnoreCase("REVISE")) {
+			msgCode = MessageConst.INFO_700012;
+		} else if (outCome.equalsIgnoreCase("APPROVE")) {
+			msgCode = MessageConst.INFO_700007;
+		} else if (outCome.equalsIgnoreCase("ACCEPT")) {
+			msgCode = MessageConst.INFO_700013;
+		}
 		return msgCode;
 	}
-	
-	public String retriveUserName(Long userId){
-		IUserSO userSo=null;
-		String userName="";
-		try{
+
+	public String retriveUserName(Long userId) {
+		IUserSO userSo = null;
+		String userName = "";
+		try {
 			userSo = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-			UserReqDTO reqDTo=new UserReqDTO();
+			UserReqDTO reqDTo = new UserReqDTO();
 			reqDTo.setUserId(userId);
-			UserResDTO resDTO=userSo.retrieveUserByUserId(reqDTo);
-			if(resDTO.isSuccessful()==true){
-			PmUser user=resDTO.getPmUser();
-			userName=user.getUserName();
+			UserResDTO resDTO = userSo.retrieveUserByUserId(reqDTo);
+			if (resDTO.isSuccessful() == true) {
+				PmUser user = resDTO.getPmUser();
+				userName = user.getUserName();
 			}
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return userName;
 	}
-	
+
 	protected <PARENT_ENTITY extends BaseEntity, REMARK_CLASS extends ScRemark> List<REMARK_CLASS> initializeRemarks(
-			PARENT_ENTITY parent, List<REMARK_CLASS> scRemarks, Class<REMARK_CLASS> clazz) {
-		
+			PARENT_ENTITY parent, List<REMARK_CLASS> scRemarks,
+			Class<REMARK_CLASS> clazz) {
+
 		try {
 			if (scRemarks == null) {
 				scRemarks = new ArrayList<REMARK_CLASS>();
 			}
-			
+
 			FacesScopes facesScopes = new FacesScopes();
-			if (scRemarks.size() == 0 || !compareUserName(scRemarks.get(0).getCreatedUser().getLoginId())) {
+			if (scRemarks.size() == 0
+					|| !compareUserName(scRemarks.get(0).getCreatedUser()
+							.getLoginId())) {
 				REMARK_CLASS remark = clazz.newInstance();
-				remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+				remark.setCreatedBy(facesScopes.getUserSessionBean()
+						.getUserId());
 				remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 				remark.setChangedBy(remark.getCreatedBy());
 				remark.setCreatedUser(facesScopes.getUserSessionBean());
 				remark.setParent(parent);
-				
+
 				scRemarks.add(0, remark);
 			}
-			
-			return scRemarks;	
+
+			return scRemarks;
 		} catch (InstantiationException ie) {
 			throw new EpException(ie.getMessage());
 		} catch (IllegalAccessException ia) {
 			throw new EpException(ia.getMessage());
 		}
 	}
-	
-	protected <REMARK_CLASS extends ScRemark> List<REMARK_CLASS> finalizeRemarks(List<REMARK_CLASS> scRemarks) {
+
+	protected <REMARK_CLASS extends ScRemark> List<REMARK_CLASS> finalizeRemarks(
+			List<REMARK_CLASS> scRemarks) {
 		if (scRemarks != null && scRemarks.size() > 0) {
 			ScRemark scRemark = scRemarks.get(0);
-			
+
 			if (StringUtils.isBlank(scRemark.getRemark())) {
 				scRemarks.remove(0);
 			}
 		}
-		
+
 		return scRemarks;
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	protected <BPM_DATA_TYPE> BPM_DATA_TYPE getBpmTaskDetails(Class<BPM_DATA_TYPE> clazz) {
+	protected <BPM_DATA_TYPE> BPM_DATA_TYPE getBpmTaskDetails(
+			Class<BPM_DATA_TYPE> clazz) {
 		FacesScopes facesScopes = new FacesScopes();
-		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(facesScopes.getRequest());
-		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
-		
+		HttpServletRequest servletRequest = PortalUtil
+				.getHttpServletRequest(facesScopes.getRequest());
+		HttpServletRequest originalServletRequest = PortalUtil
+				.getOriginalServletRequest(servletRequest);
+
 		String taskId = originalServletRequest.getParameter("taskId");
-		
+
 		IBpmSO bpmSO;
-		
+
 		try {
-			bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-			
+			bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+					.getServiceObject(IBpmSO.class);
+
 			BpmRequestDTO reqDTO = new BpmRequestDTO();
 			reqDTO.setCtxToken(facesScopes.getBPMAuthenticationCtxToken());
 			reqDTO.setTaskId(taskId);
-			
+
 			BpmResponseDTO resDTO = bpmSO.getTaskDetails(reqDTO);
-			
+
 			this.renewSesionObject();
 			this.getManagedBean().setTaskId(taskId);
 			this.getManagedBean().setOutComes(resDTO.getAction());
-			this.getManagedBean().setCurrentStatusId(Long.valueOf(resDTO.getDocStatus()));
-			
-			return (BPM_DATA_TYPE)resDTO.getPojo();
-			
+			this.getManagedBean().setCurrentStatusId(
+					Long.valueOf(resDTO.getDocStatus()));
+
+			return (BPM_DATA_TYPE) resDTO.getPojo();
+
 		} finally {
 			bpmSO = null;
 		}
 	}
-	
-	protected <ATTACHMENT extends ScAttachment> StreamedContent getAttachmentStreamContent(ATTACHMENT scAttachment, String contentType) throws IOException {
+
+	protected <ATTACHMENT extends ScAttachment> StreamedContent getAttachmentStreamContent(
+			ATTACHMENT scAttachment, String contentType) throws IOException {
 		if (scAttachment != null) {
 			File file = new File(scAttachment.getFilePath());
 			ByteArrayOutputStream tmpOut = new ByteArrayOutputStream();
-	        FileInputStream in = new FileInputStream(file);
-	        byte[] buf = new byte[512];
-	        int len;
-	        while (true) {
-	            len = in.read(buf);
-	            if (len == -1) {
-	                break;
-	            }
-	            tmpOut.write(buf, 0, len);
-	        }
-	        in.close();
-	        tmpOut.close();
-	        ByteBuffer bb = ByteBuffer.wrap(tmpOut.toByteArray(), 0,
-	                                        tmpOut.size());
+			FileInputStream in = new FileInputStream(file);
+			byte[] buf = new byte[512];
+			int len;
+			while (true) {
+				len = in.read(buf);
+				if (len == -1) {
+					break;
+				}
+				tmpOut.write(buf, 0, len);
+			}
+			in.close();
+			tmpOut.close();
+			ByteBuffer bb = ByteBuffer.wrap(tmpOut.toByteArray(), 0,
+					tmpOut.size());
 
-	        ByteArrayInputStream stream = new ByteArrayInputStream(bb.array());
-			
-			return new DefaultStreamedContent(stream, contentType);	
+			ByteArrayInputStream stream = new ByteArrayInputStream(bb.array());
+
+			return new DefaultStreamedContent(stream, contentType);
 		} else {
 			return null;
 		}
 	}
-	
-	protected List<PmParameterDesc> retrieveParametersBySearchBean(String parameterType,ISearchBean<PmParameterDesc> searchBean){
-		 return ParameterHelper.getInstance()
-				.getParameterDescListBySearchBean(parameterType, searchBean);
-		
+
+	protected List<PmParameterDesc> retrieveParametersBySearchBean(
+			String parameterType, ISearchBean<PmParameterDesc> searchBean) {
+		return ParameterHelper.getInstance().getParameterDescListBySearchBean(
+				parameterType, searchBean);
+
 	}
-	   
+
 	public PmDigiSign retrieveGPKIData() {
 		String signedData = FacesContext.getCurrentInstance()
 				.getExternalContext().getRequestParameterMap()
@@ -640,7 +669,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return pmDigiSign;
 
 	}
-	
 
+	public String gotoQtSearchPage() {
+		return QTConstants.SEARCH_PAGE;
+	}
 
 }
