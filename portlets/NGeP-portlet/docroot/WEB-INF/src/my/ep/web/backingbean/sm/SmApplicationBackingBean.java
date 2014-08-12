@@ -1070,17 +1070,17 @@ public class SmApplicationBackingBean extends
 		case SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY:
 			// assignEnteredStaffValues();
 			if (getManagedBean().getBusinessTypeVal() != null
-			&& !getManagedBean()
-					.getBusinessTypeVal()
-					.equalsIgnoreCase(
-							SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT)) {
-			if (getManagedBean().getSmapplShareHolders() == null
-					|| (getManagedBean().getSmapplShareHolders() != null && getManagedBean()
-							.getSmapplShareHolders().isEmpty())) {
+					&& !getManagedBean()
+							.getBusinessTypeVal()
+							.equalsIgnoreCase(
+									SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT)) {
+				if (getManagedBean().getSmapplShareHolders() == null
+						|| (getManagedBean().getSmapplShareHolders() != null && getManagedBean()
+								.getSmapplShareHolders().isEmpty())) {
 
-				validSave = false;
-				setNavigationBackToCurrentPage();
-			
+					validSave = false;
+					setNavigationBackToCurrentPage();
+
 					// throw new EpException(MessageConst.ERROR_722508);
 					// } else {
 					throw new EpException(MessageConst.ERROR_722507);
@@ -1120,11 +1120,12 @@ public class SmApplicationBackingBean extends
 			for (SmPersonnel per : getManagedBean().getSmAppl()
 					.getSmPersonnels()) {
 				PmParameter param = null;
-				if (per.getPmStaffRole() != null
-						&& per.getPmStaffRole().getPmParameterType() != null) {
-					param = per.getPmStaffRole();
-
-				} else if (per.getStaffRoleFlg() != null) {
+				// if (per.getPmStaffRole() != null
+				// && per.getPmStaffRole().getPmParameterType() != null) {
+				// param = per.getPmStaffRole();
+				//
+				// } else
+				if (per.getStaffRoleFlg() != null) {
 					param = new PmParameter();
 					param = retrievePmParameterById(per.getStaffRoleFlg());
 				}
@@ -2882,6 +2883,7 @@ public class SmApplicationBackingBean extends
 				getManagedBean().setRedirectToPersonPage(false);
 			}
 			if (fromPage.equalsIgnoreCase("personnelInfo")) {
+				System.out.println("****** Calc countf ******* ");
 				calcPersonnelListCount();
 				getManagedBean().setRedirectToPersonPage(false);
 
@@ -3473,6 +3475,7 @@ public class SmApplicationBackingBean extends
 			}
 		}
 		saveOrUpdateAppl();
+		calcPersonnelListCount();
 
 	}
 
@@ -4125,10 +4128,7 @@ public class SmApplicationBackingBean extends
 			if (valid) {
 				valid = intializeSaveDraftBpm(currentPageType);
 			}
-			if (!valid) {
-				System.out.println("******* Process No Valid ******");
-				throw new EpException(MessageConst.ERROR_722519);
-			} else {
+			if (valid) {
 				FacesContext
 						.getCurrentInstance()
 						.addMessage(
@@ -4153,6 +4153,8 @@ public class SmApplicationBackingBean extends
 																.getUserLocale())));
 				renewSesionObject();
 				return CommonUIConst.ACKNOWLEDGE_PAGE;
+			} else {
+				return null;
 			}
 		} finally {
 
@@ -4196,9 +4198,14 @@ public class SmApplicationBackingBean extends
 				System.out.println("******* From SO ******** "
 						+ resDTO.isBpmSuccess());
 				valid = resDTO.isBpmSuccess();
+				if (!valid) {
+					System.out.println("******* Process No Valid ******");
+					throw new EpException(MessageConst.ERROR_700020);
+				}
 			} else {
 				System.out.println("*** The Save as draft returned null **** ");
 				valid = false;
+				throw new EpException(MessageConst.ERROR_722519);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -5987,6 +5994,9 @@ public class SmApplicationBackingBean extends
 								getManagedBean().getSmAppl()
 										.getSmCompanyBasic().getBumiEquity()
 										.setScale(2, RoundingMode.HALF_UP));
+			} else {
+				getManagedBean().getSmAppl().getSmCompanyBasic()
+						.setBumiEquity(new BigDecimal(0));
 			}
 			if (getManagedBean().getSmAppl().getSmCompanyBasic()
 					.getNonBumiEquity() != null) {
@@ -5997,6 +6007,9 @@ public class SmApplicationBackingBean extends
 								getManagedBean().getSmAppl()
 										.getSmCompanyBasic().getNonBumiEquity()
 										.setScale(2, RoundingMode.HALF_UP));
+			} else {
+				getManagedBean().getSmAppl().getSmCompanyBasic()
+						.setNonBumiEquity(new BigDecimal(0));
 			}
 			if (getManagedBean().getSmAppl().getSmCompanyBasic()
 					.getGovtEquity() != null) {
@@ -6007,6 +6020,9 @@ public class SmApplicationBackingBean extends
 								getManagedBean().getSmAppl()
 										.getSmCompanyBasic().getGovtEquity()
 										.setScale(2, RoundingMode.HALF_UP));
+			} else {
+				getManagedBean().getSmAppl().getSmCompanyBasic()
+						.setGovtEquity(new BigDecimal(0));
 			}
 			if (getManagedBean().getSmAppl().getSmCompanyBasic()
 					.getGovtUnitrustEquity() != null) {
@@ -6018,6 +6034,9 @@ public class SmApplicationBackingBean extends
 										.getSmCompanyBasic()
 										.getGovtUnitrustEquity()
 										.setScale(2, RoundingMode.HALF_UP));
+			} else {
+				getManagedBean().getSmAppl().getSmCompanyBasic()
+						.setGovtUnitrustEquity(new BigDecimal(0));
 			}
 			if (getManagedBean().getSmAppl().getSmCompanyBasic()
 					.getForeignCompanyEquity() != null) {
@@ -6029,6 +6048,9 @@ public class SmApplicationBackingBean extends
 										.getSmCompanyBasic()
 										.getForeignCompanyEquity()
 										.setScale(2, RoundingMode.HALF_UP));
+			} else {
+				getManagedBean().getSmAppl().getSmCompanyBasic()
+						.setForeignCompanyEquity(new BigDecimal(0));
 			}
 			if (getManagedBean().getSmAppl().getSmCompanyBasic()
 					.getForeignerEquity() != null) {
@@ -6040,6 +6062,9 @@ public class SmApplicationBackingBean extends
 										.getSmCompanyBasic()
 										.getForeignerEquity()
 										.setScale(2, RoundingMode.HALF_UP));
+			} else {
+				getManagedBean().getSmAppl().getSmCompanyBasic()
+						.setForeignerEquity(new BigDecimal(0));
 			}
 			if (getManagedBean().getSmAppl().getSmCompanyBasic()
 					.getLocalCompanyEquity() != null) {
@@ -6051,6 +6076,9 @@ public class SmApplicationBackingBean extends
 										.getSmCompanyBasic()
 										.getLocalCompanyEquity()
 										.setScale(2, RoundingMode.HALF_UP));
+			} else {
+				getManagedBean().getSmAppl().getSmCompanyBasic()
+						.setLocalCompanyEquity(new BigDecimal(0));
 			}
 			if (getManagedBean().getSmAppl().getSmCompanyBasic()
 					.getAuthorizedCapital() != null) {
@@ -6062,6 +6090,9 @@ public class SmApplicationBackingBean extends
 										.getSmCompanyBasic()
 										.getAuthorizedCapital()
 										.setScale(2, RoundingMode.HALF_UP));
+			} else {
+				getManagedBean().getSmAppl().getSmCompanyBasic()
+						.setAuthorizedCapital(new BigDecimal(0));
 			}
 			getManagedBean()
 					.getSmAppl()
@@ -6609,11 +6640,12 @@ public class SmApplicationBackingBean extends
 		}
 
 		PmParameter param = null;
-		if (per.getPmStaffRole() != null
-				&& per.getPmStaffRole().getPmParameterType() != null) {
-			param = per.getPmStaffRole();
-
-		} else if (per.getStaffRoleFlg() != null) {
+		// if (per.getPmStaffRole() != null
+		// && per.getPmStaffRole().getPmParameterType() != null) {
+		// param = per.getPmStaffRole();
+		//
+		// } else
+		if (per.getStaffRoleFlg() != null) {
 			param = new PmParameter();
 			param = retrievePmParameterById(per.getStaffRoleFlg());
 		}
