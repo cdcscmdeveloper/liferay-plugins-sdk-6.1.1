@@ -10030,7 +10030,6 @@ public class SpecificationBackingBean extends
 					tpl1.setSpecQuestionId(null);
 					tpl1.setTplSpecMaster(specMaster);
 					tpl1.setTplSpecAnswers(null);
-					tpl1.setTplSpecEstimations(null);
 					setUserDetails(tpl1);
 					tpl1.setChangedDate(null);
 					questions2.add(tpl1);
@@ -10158,7 +10157,6 @@ public class SpecificationBackingBean extends
 						tpl1.setSpecQuestionId(null);
 						tpl1.setTplSpecMaster(specMaster);
 						tpl1.setTplSpecAnswers(null);
-						tpl1.setTplSpecEstimations(null);
 						setUserDetails(tpl1);
 						tpl1.setChangedDate(null);
 						questions2.add(tpl1);
@@ -10586,7 +10584,6 @@ public class SpecificationBackingBean extends
 						tpl1.setSpecQuestionId(null);
 						tpl1.setTplSpecMaster(specMaster);
 						tpl1.setTplSpecAnswers(null);
-						tpl1.setTplSpecEstimations(null);
 						setUserDetails(tpl1);
 						tpl1.setChangedDate(null);
 						questions2.add(tpl1);
