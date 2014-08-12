@@ -28,8 +28,6 @@
 				var textBeforeSign = $("[id='#{textBeforeSign.clientId}']")
 						.val();
 				var plainText = encodeURIComponent(Aegis.hash(textBeforeSign));
-				//         	var plainText =  $("[id='#{bs.clientId}']").val();
-				//         	var $foo = $("[id='#{pin.clientId}']");
 				var pin = $("[id='#{pin.clientId}']").val();
 			    sign_st(pin, plainText);
 			
@@ -51,7 +49,7 @@
 										+ "serialNo = " + serialNo + "\n"
 										+ "validity = " + validity + "\n"
 										+ "subjectDn = " + subjectDn;
-								Aegis.alert(msg);
+// 								Aegis.alert(msg);
 							} else {
 								Aegis.alert("This signature is *INVALID* :"
 										+ statusMsg);
@@ -61,13 +59,10 @@
 			}
 
 			function parseSignResult(msg) {
-				alert("ss");
 				$(document)
 						.ready(
 								function() {
-									alert("dd");
 									var obj = jQuery.parseJSON(msg);
-									alert("sng");
 									var statusCode = obj.status_code;
 									var statusMsg = obj.status_message;
 									var startDate = obj.start_date;
@@ -85,10 +80,9 @@
 										var signedText = encodeURIComponent(signedData);
 										var serialNo = obj.serial_no;
 										verify(originalText, signedText);
-										Aegis.alert(signedText);
+// 										Aegis.alert(signedText);
 
-										Aegis.alert(signedData);
-										alert("sngz");
+// 										Aegis.alert(signedData);
 
 										postSignAction([ {
 											name : 'textBeforeSign',
@@ -101,7 +95,6 @@
 											value : serialNo
 										} ]);
 
-										alert("snga");
 
 										/* put your logic to handle the result here */
 // 									} else if (statusCode == "50") {
