@@ -128,8 +128,6 @@ import org.primefaces.model.DualListModel;
 import org.primefaces.model.MenuModel;
 import org.primefaces.model.TreeNode;
 
-
-
 import com.liferay.portal.util.PortalUtil;
 
 /**
@@ -885,7 +883,20 @@ public class QTDetailBackingBean extends
 			// Setting the Deductions to qtdetails.
 			List<ScQtDeduction> deductionList = getManagedBean()
 					.getScQtDeductionList();
+			if (null != deductionList && !deductionList.isEmpty()) {
+				for (ScQtDeduction deduction : deductionList) {
+					List<ScQtDeductionClause> deductionClauses = deduction
+							.getScQtDeductionClauses();
+					if (null != deductionClauses && !deductionClauses.isEmpty()) {
+						for (ScQtDeductionClause deductionClause : deductionClauses) {
+							deductionClause.setScQtDeduction(deduction);
+							
+						}
+						deduction.setScQtDeductionClauses(deductionClauses);
+					}
+				}
 
+			}
 			scQt.setScQtDeductions(deductionList);
 
 			// Setting the Documents to qtdetails.

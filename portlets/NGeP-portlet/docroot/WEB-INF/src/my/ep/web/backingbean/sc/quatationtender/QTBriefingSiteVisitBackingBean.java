@@ -1,6 +1,5 @@
 package my.ep.web.backingbean.sc.quatationtender;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +10,6 @@ import javax.faces.event.AjaxBehaviorEvent;
 import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
-import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.MessageConst;
@@ -24,8 +22,6 @@ import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
-import my.ep.dto.pm.common.status.StatusReqDTO;
-import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sc.quationtender.BriefingReqDTO;
 import my.ep.dto.sc.quationtender.BriefingResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
@@ -37,17 +33,14 @@ import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
-import my.ep.persistence.entity.sc.quationtender.ScQtBSVRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvRegistration;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
-import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
-import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -98,9 +91,9 @@ public class QTBriefingSiteVisitBackingBean extends
 
 			List<PmState> list = resDTO.getStateList();
 			this.getManagedBean().setStates(list);
-			retrievePmDistrictList();
-		}
 
+		}
+		retrievePmDistrictList();
 	}
 
 	public void retrievePmDistrictList() {
@@ -119,9 +112,10 @@ public class QTBriefingSiteVisitBackingBean extends
 				DistrictResDTO resDTO = reqSO
 						.retriveDistrictListByStateID(reqDTO);
 				this.getManagedBean().setDistricts(resDTO.getDistrictList());
-				retrievePmCityList();
+				
 			}
 		}
+		retrievePmCityList();
 	}
 
 	public void retrievePmCityList() {
@@ -140,8 +134,6 @@ public class QTBriefingSiteVisitBackingBean extends
 			}
 		}
 	}
-
-	
 
 	public void processChecked(AjaxBehaviorEvent e) {
 		Boolean selectedValue = (Boolean) e.getComponent().getAttributes()
@@ -583,6 +575,7 @@ public class QTBriefingSiteVisitBackingBean extends
 		this.getManagedBean().setBsvIndex(index);
 		this.getManagedBean().setQtBriefing(bsvDtl);
 		RequestContext.getCurrentInstance().execute("addbsvdtls.show();");
+		retrievePmStateList();
 	}
 
 	public int getIndex() {
