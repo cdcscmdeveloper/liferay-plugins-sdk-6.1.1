@@ -7130,17 +7130,17 @@ public class SmApplicationBackingBean extends
 			System.out.println("************Supplier PmUser Login Id:" + pmUser.getLoginId());
 			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
 					.getServiceObject("pm", IUserSO.class);
-			UserResDTO userResDTO = userSO.isUserExist(userReqDTO);
+//			UserResDTO userResDTO = userSO.isUserExist(userReqDTO);
 
-			if (!userResDTO.isExist()) {
-				if(userResDTO.getAllResult() != null && !userResDTO.getAllResult().isEmpty()) {
-					System.out.println("******** Pm Profile" + userResDTO.getAllResult().get(0)[0]);
-					System.out.println("******** Liferay Profile" + userResDTO.getAllResult().get(0)[1]);
-					System.out.println("******** LDAP Profile" + userResDTO.getAllResult().get(0)[2]);
-				}
-				System.out.println("**** User doesn't exist in LDAP/PM/Liferay ******");
-		    	throw new EpException(MessageConst.ERROR_721018);
-			}
+//			if (!userResDTO.isExist()) {
+//				if(userResDTO.getAllResult() != null && !userResDTO.getAllResult().isEmpty()) {
+//					System.out.println("******** Pm Profile" + userResDTO.getAllResult().get(0)[0]);
+//					System.out.println("******** Liferay Profile" + userResDTO.getAllResult().get(0)[1]);
+//					System.out.println("******** LDAP Profile" + userResDTO.getAllResult().get(0)[2]);
+//				}
+//				System.out.println("**** User doesn't exist in LDAP/PM/Liferay ******");
+//		    	throw new EpException(MessageConst.ERROR_721018);
+//			}
 
 			supplierSearchReqDTO.setUserId(pmUser.getUserId());
 
