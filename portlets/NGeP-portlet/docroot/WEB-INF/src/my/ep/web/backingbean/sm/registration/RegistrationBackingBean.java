@@ -676,7 +676,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			if(bizNatId.longValue() == this.getManagedBean().getSelectedBusinessNature().getLvl5().longValue()){
 				RequestContext.getCurrentInstance().execute("bizDlg.hide()");
 			}else{
-				if(validateNatureBusiness(bizNatId)){
+				if(validateNatureBusiness(this.getManagedBean().getSelectedBusinessNature().getLvl5().longValue())){
 					PmBusinessNature bizNatObj = retrieveBusinessNatureById(this.getManagedBean().getSelectedBusinessNature().getLvl5());
 					if(bizNatObj != null){
 						this.getManagedBean().getSelectedBusinessNature().setPmBusinessNature(bizNatObj);
