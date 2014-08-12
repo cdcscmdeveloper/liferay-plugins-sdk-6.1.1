@@ -742,9 +742,34 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 			smPersonnel.getSmPersonnelAddresses().size();
 			smPAList.addAll(smPersonnel.getSmPersonnelAddresses()); 
 			for(SmPersonnelAddress smPA : smPAList){
+				SmAddress address = new SmAddress();
+				address.setPmCountry(new PmCountry());
+				address.setPmState(new PmState());
+				address.setPmDistrict(new PmDistrict());
+				address.setPmCity(new PmCity());
 				if(smPA.getAddressType().equalsIgnoreCase(SupplierManagementConst.MAIL_ADD)){
+					address.setAddress1(smPA.getSmAddress().getAddress1());
+					address.setAddress2(smPA.getSmAddress().getAddress2());
+					address.setAddress3(smPA.getSmAddress().getAddress3());
+					address.setAddress4(smPA.getSmAddress().getAddress4());
+					address.getPmCountry().setCountryId(smPA.getSmAddress().getPmCountry().getCountryId());
+					address.getPmState().setStateId(smPA.getSmAddress().getPmState().getStateId());
+					address.getPmDistrict().setDistrictId(smPA.getSmAddress().getPmDistrict().getDistrictId());
+					address.getPmCity().setCityId(smPA.getSmAddress().getPmCity().getCityId());
+					address.setPostcode(smPA.getSmAddress().getPostcode());
+					smPA.setSmAddress(address);
 					this.getManagedBean().setUpdateSmPersonnelMailingAddress(smPA);
 				} else if(smPA.getAddressType().equalsIgnoreCase(SupplierManagementConst.PERM_ADD)){
+					address.setAddress1(smPA.getSmAddress().getAddress1());
+					address.setAddress2(smPA.getSmAddress().getAddress2());
+					address.setAddress3(smPA.getSmAddress().getAddress3());
+					address.setAddress4(smPA.getSmAddress().getAddress4());
+					address.getPmCountry().setCountryId(smPA.getSmAddress().getPmCountry().getCountryId());
+					address.getPmState().setStateId(smPA.getSmAddress().getPmState().getStateId());
+					address.getPmDistrict().setDistrictId(smPA.getSmAddress().getPmDistrict().getDistrictId());
+					address.getPmCity().setCityId(smPA.getSmAddress().getPmCity().getCityId());
+					address.setPostcode(smPA.getSmAddress().getPostcode());
+					smPA.setSmAddress(address);
 					this.getManagedBean().setUpdateSmPersonnelPermanentAddress(smPA);
 				}
 			}
