@@ -512,9 +512,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			smSupp.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).setSmAddress(this.getManagedBean().getSmBusinessAdd());
 		}
 
-		for(SmSupplierBusiness ssb : smSupp.getSmSupplierBusinesses()){
-			ssb.setSmSupplier(smSupp);
-		}
+//		for(SmSupplierBusiness ssb : smSupp.getSmSupplierBusinesses()){
+//			ssb.setSmSupplier(smSupp);
+//		}
 
 		reqDTO.setSmSupp(this.getManagedBean().getSmSupp());
 		IRegistrationSO reqSO = (IRegistrationSO) BusinessDelegate
@@ -578,6 +578,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			if(bizNatObj != null){
 				SmSupplierBusiness suppBusiness = new SmSupplierBusiness();
 				suppBusiness.setPmBusinessNature(bizNatObj);
+				suppBusiness.setSmSupplier(this.getManagedBean().getSmSupp());
 				this.getManagedBean().getSmSupp().getSmSupplierBusinesses().add(suppBusiness);
 				RequestContext.getCurrentInstance().execute("bizDlg.hide()");
 			}else{
@@ -598,16 +599,13 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			String bizNatId = bizNatureId.toString();
 			log.info("----validateNatureBusiness - bizNatId----" + bizNatId);
 			for(SmSupplierBusiness suppBiz : this.getManagedBean().getSmSupp().getSmSupplierBusinesses()){
-				
-				bizNatureLs.add(suppBiz.getPmBusinessNature().getBusinessNatureId().toString());
-				
 				log.info("----SuppBiz----" + suppBiz.getPmBusinessNature().getBusinessNatureId().toString());
-				if(bizNatureLs.contains(bizNatId)){
-					log.info("----Contain Duplicate Business Nature----");
-					valid = false;
-					break;
-				}
-				
+				bizNatureLs.add(suppBiz.getPmBusinessNature().getBusinessNatureId().toString());
+			}
+			
+			if(bizNatureLs.contains(bizNatId)){
+				log.info("----Contain Duplicate Business Nature----");
+				valid = false;
 			}
 			
 			log.info("----bizNatureLs----" + bizNatureLs.size());
