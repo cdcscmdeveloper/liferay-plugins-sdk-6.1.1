@@ -57,23 +57,28 @@
 				style="width:10%">
 
 				<ui:fragment
-					rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2financeProposalList.size()-1 and stageTwofunctional.title ==null}">
+					rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2financeProposalList.size()-1 and stageTwofunctional.title eq  null}">
 					<p:selectOneMenu value="#{stageTwofunctional.action.parameterId}"
 						style="width:100px;">
 						<f:selectItems
 							value="#{specificationBackingBean.getFinChecklIstActionValues(ParameterTypeConst.scSupplierAction)}"></f:selectItems>
 						<p:ajax event="change" process="@this" partialSubmit="true"
-							update="financeProposaltwo"
+							update="scoreFinanceView,uploadFinance"
 							listener="#{specificationBackingBean.financialCheckListAction(index,specificationBackingBean.managedBean.scQtCheckSt2financeProposalList)}"></p:ajax>
 					</p:selectOneMenu>
 				</ui:fragment>
-				<ui:fragment rendered="#{stageTwofunctional.qtChecklistId==null}">
+				<ui:fragment rendered="#{stageTwofunctional.qtChecklistId eq null}">
 					<h:outputText
 						value="#{specificationBackingBean.getParameterDesc(stageTwofunctional.action)}"
 						rendered="#{index lt specificationBackingBean.managedBean.scQtCheckSt2financeProposalList.size()-1 }" />
 				</ui:fragment>
+				<ui:fragment
+					rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2financeProposalList.size()-1 and stageTwofunctional.title ne  null}">
+					<h:outputText
+						value="#{specificationBackingBean.getParameterDesc(stageTwofunctional.action)}"></h:outputText>
+				</ui:fragment>
 
-				<ui:fragment rendered="#{stageTwofunctional.qtChecklistId!=null}">
+				<ui:fragment rendered="#{stageTwofunctional.qtChecklistId ne null}">
 					<h:outputText
 						value="#{specificationBackingBean.getParameterDesc(stageTwofunctional.action)}"></h:outputText>
 
@@ -82,15 +87,17 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.stage2.score.head']}"
 				style="width:10%">
-				<p:selectBooleanCheckbox value="#{stageTwofunctional.scoringReq}"
-					disabled="true"
-					rendered="#{stageTwofunctional.action.parameterCode ne 'O' }">
+				<h:panelGroup id="scoreFinanceView">
+					<p:selectBooleanCheckbox value="#{stageTwofunctional.scoringReq}"
+						disabled="true"
+						rendered="#{stageTwofunctional.action.parameterCode ne 'O' }">
 
-				</p:selectBooleanCheckbox>
-				<p:selectBooleanCheckbox value="#{stageTwofunctional.scoringReq}"
-					rendered="#{stageTwofunctional.action.parameterCode eq 'O'}">
+					</p:selectBooleanCheckbox>
+					<p:selectBooleanCheckbox value="#{stageTwofunctional.scoringReq}"
+						rendered="#{stageTwofunctional.action.parameterCode eq 'O'}">
 
-				</p:selectBooleanCheckbox>
+					</p:selectBooleanCheckbox>
+				</h:panelGroup>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.spec.specification.status']}"
@@ -102,19 +109,20 @@
 
 			<p:column headerText="#{lbl['lbl.sc.spec.stage.document']}"
 				style="width:30%">
+				<h:panelGroup id="uploadFinance">
+					<p:commandLink oncomplete="uploadS1Fin.show();return false;"
+						update="financeProposaltwo"
+						rendered="#{stageTwofunctional.definationType.parameterCode eq 'UP'}">
+						<p:graphicImage library="ep/images/design" name="upload.png"
+							value="/resources/ep/images/design/upload.png" />
+						<f:setPropertyActionListener value="#{stageTwofunctional}"
+							target="#{specificationBackingBean.managedBean.scQtChecklist}" />
 
-				<p:commandLink oncomplete="uploadS1Fin.show();return false;"
-					update="financeProposaltwo"
-					rendered="#{stageTwofunctional.definationType.parameterCode eq 'UP'}">
-					<p:graphicImage library="ep/images/design" name="upload.png"
-						value="/resources/ep/images/design/upload.png" />
-					<f:setPropertyActionListener value="#{stageTwofunctional}"
-						target="#{specificationBackingBean.managedBean.scQtChecklist}" />
-
-				</p:commandLink>
-				<p:spacer width="10" height="5" />
-				<h:outputText
-					value="#{stageTwofunctional.scQtCheckListAttachment.fileName}"></h:outputText>
+					</p:commandLink>
+					<p:spacer width="10" height="5" />
+					<h:outputText
+						value="#{stageTwofunctional.scQtCheckListAttachment.fileName}"></h:outputText>
+				</h:panelGroup>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.spec.stage.action']}"

@@ -16,9 +16,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -128,9 +131,12 @@ import my.ep.persistence.entity.sc.quationtender.ScRemark;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmPersonnel;
+import my.ep.persistence.entity.tpl.spec.TplSpecEstimation;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
+import my.ep.persistence.entity.tpl.spec.TplSpecScoring;
+import my.ep.persistence.entity.tpl.spec.TplSpecTierQty;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.type.aut.SearchOperator;
@@ -374,15 +380,11 @@ public class SpecificationBackingBean extends
 		CtCircularVer circularVer = null;
 		List<CtPanelItem> panelList = this.getManagedBean()
 				.getSelectpanelItem();
-		if (null == panelList) {
-			panelList = new ArrayList<CtPanelItem>();
-		}
-		if (null != this.getManagedBean().getCtPanelItem()) {
-			panelItem = this.getManagedBean().getCtPanelItem();
-		}
-		if (null != this.getManagedBean().getCtCircularVer()) {
-			circularVer = this.getManagedBean().getCtCircularVer();
-		}
+
+		panelItem = this.getManagedBean().getCtPanelItem();
+
+		circularVer = this.getManagedBean().getCtCircularVer();
+
 		SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
 		switch (activeIndex) {
 		case 0:
@@ -518,8 +520,10 @@ public class SpecificationBackingBean extends
 					this.getManagedBean().getScQt().getScQtSupplierCriteria()
 							.setAllState(true);
 				}
-				getManagedBean().setZoneGeneralTrees(new ArrayList<TreeNode>());
+				getManagedBean().setZoneGeneralTrees(null);
+				getManagedBean().setZoneTrees(null);
 			}
+
 			return "specificationCreation.xhtml?faces-redirect=true";
 
 		} else if (this.getManagedBean().getScQt().isPanel()
@@ -529,6 +533,7 @@ public class SpecificationBackingBean extends
 						.getManagedBean().getPanelItemCategory())
 				|| QTConstants.ITEM_GENERAL_TYPE.equalsIgnoreCase(this
 						.getManagedBean().getPanelItemCategory())) {
+			this.getManagedBean().getScQt().setZonal(false);
 
 			if (this.getManagedBean().getScQt().isPanel() != this
 					.getManagedBean().isPanelChange()) {
@@ -541,8 +546,8 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().getScQt().getScQtSupplierCriteria()
 						.setScQtLocCriteria(null);
 				this.getManagedBean().getScQt().setScQtCategorys(null);
-				getManagedBean().setZoneGeneralTrees(new ArrayList<TreeNode>());
-				getManagedBean().setZoneTrees(new ArrayList<TreeNode>());
+				getManagedBean().setZoneGeneralTrees(null);
+				getManagedBean().setZoneTrees(null);
 			}
 
 			return "specificationCreation.xhtml?faces-redirect=true";
@@ -778,6 +783,7 @@ public class SpecificationBackingBean extends
 
 			// saveTempleateSpecDtls(finanicalScQtDoc, "2");
 			retriveTechnicalSpecification();
+			retriveTechnicalCheckList();
 
 		} finally {
 
@@ -1396,6 +1402,14 @@ public class SpecificationBackingBean extends
 									.getPanelItemId() != this.getManagedBean()
 									.getScQt().getScQtSupplierCriteria()
 									.getCtPanelItem().getPanelItemId()) {
+								List<CtPanelItem> panelList = this
+										.getManagedBean().getSelectpanelItem();
+								panelList = new ArrayList<CtPanelItem>();
+
+								panelList.add(this.getManagedBean()
+										.getCtPanelItem());
+								this.getManagedBean().setSelectpanelItem(
+										panelList);
 
 								removespecDtls();
 
@@ -1525,6 +1539,43 @@ public class SpecificationBackingBean extends
 				} else if (scQt.isPanel() && !scQt.isZonal()) {
 
 					try {
+						if (null != this.getManagedBean().getScQt()
+								.getScQtSupplierCriteria()
+								&& null != this.getManagedBean().getScQt()
+										.getScQtSupplierCriteria()
+										.getCtPanelItem()
+								&& null != this.getManagedBean().getScQt()
+										.getScQtSupplierCriteria()
+										.getCtPanelItem().getCtCircularVer()) {
+							this.getManagedBean().setCtPanelItem(
+									this.getManagedBean().getScQt()
+											.getScQtSupplierCriteria()
+											.getCtPanelItem());
+							this.getManagedBean()
+									.getScQt()
+									.getScQtSupplierCriteria()
+									.getCtPanelItem()
+									.setCtCircularVer(
+											this.getManagedBean().getScQt()
+													.getScQtSupplierCriteria()
+													.getCtPanelItem()
+													.getCtCircularVer());
+							this.getManagedBean().setPanelItemCategory(
+									getParameterDesc(this.getManagedBean()
+											.getScQt()
+											.getScQtSupplierCriteria()
+											.getCtPanelItem()
+											.getItemCategoryId()));
+							List<CtPanelItem> panelList = this.getManagedBean()
+									.getSelectpanelItem();
+							panelList = new ArrayList<CtPanelItem>();
+							panelList
+									.add(this.getManagedBean().getScQt()
+											.getScQtSupplierCriteria()
+											.getCtPanelItem());
+							this.getManagedBean().setSelectpanelItem(panelList);
+
+						}
 						if (QTConstants.ITEM_SPECIFIC_TYPE
 								.equalsIgnoreCase(this.getManagedBean()
 										.getPanelItemCategory())) {
@@ -1571,12 +1622,6 @@ public class SpecificationBackingBean extends
 			ScQtCheckList checkList = new ScQtCheckList();
 			ScQtDoc scqtDocDest = new ScQtDoc();
 			TplSpecMaster specMaster = new TplSpecMaster();
-
-			List<TplSpecQuestion> questionsList = new ArrayList<TplSpecQuestion>();
-			new TemplateSpecBackingBean().addQuestion(specMaster,
-					questionsList, questionsList.size() - 1,
-					TemplateSpecConst.QUESTION_TYPE_ITEM);
-			TplSpecQuestion tplSpecQuestion = questionsList.get(0);
 
 			ParameterReqDTO specType = new ParameterReqDTO();
 			specType.setParameterType(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE);
@@ -1683,6 +1728,11 @@ public class SpecificationBackingBean extends
 			specMaster.setStatus(templateStaus);
 			specMaster.setItemOriginCode(localGoodsResDTO.getPmParameter());
 			setUserDetails(specMaster);
+			List<TplSpecQuestion> questionsList = new ArrayList<TplSpecQuestion>();
+			new TemplateSpecBackingBean().addQuestion(specMaster,
+					questionsList, questionsList.size() - 1,
+					TemplateSpecConst.QUESTION_TYPE_ITEM);
+			TplSpecQuestion tplSpecQuestion = questionsList.get(0);
 
 			// tplSpecQuestion.setTplSpecMaster(specMaster);
 			tplSpecQuestion.setClItem(panelItem.getItemName());
@@ -1888,6 +1938,7 @@ public class SpecificationBackingBean extends
 
 			reqDTO.setProcurementCatCode(this.getManagedBean()
 					.getProcuremntCategory());
+
 			List<ScQtCheckList> checkListList = new ArrayList<ScQtCheckList>();
 			if (this.getManagedBean().getScQtCheckSt2techProposal() == null
 					|| this.getManagedBean().getScQtCheckSt2techProposal()
@@ -1905,9 +1956,66 @@ public class SpecificationBackingBean extends
 					checkListList.addAll(resDTO.getSpecResultBean()
 							.getResultList());
 
+					this.getManagedBean().setScQtCheckSt2techProposal(
+							new ArrayList<ScQtCheckList>());
+					List<ScQtCheckList> specChecklist = new ArrayList<ScQtCheckList>();
+					List<ScQtCheckList> otherList = new ArrayList<ScQtCheckList>();
+					if (null != checkListList && !checkListList.isEmpty()) {
+						for (ScQtCheckList checklist : checkListList) {
+							if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
+									.equalsIgnoreCase(checklist
+											.getDefinationType()
+											.getParameterCode())) {
+								specChecklist.add(checklist);
+
+							} else {
+								otherList.add(checklist);
+
+							}
+
+						}
+					}
+					for (int i = 0; i < specChecklist.size(); i++) {
+						this.getManagedBean().getScQtCheckSt2techProposal()
+								.add(i, specChecklist.get(i));
+
+					}
+					List<ScQtCheckList> others1List = new ArrayList<ScQtCheckList>();
+					List<ScQtCheckList> nonSequenceList = new ArrayList<ScQtCheckList>();
+
+					Map<Integer, ScQtCheckList> SequenceList = new TreeMap<Integer, ScQtCheckList>();
+					for (ScQtCheckList othersList : otherList) {
+						if (null != othersList.getPmDocument()
+								&& null != othersList.getPmDocument()
+										.getDocumentId()) {
+							if (null != othersList.getPmDocument()
+									.getDisplaySeq()) {
+								SequenceList.put(othersList.getPmDocument()
+										.getDisplaySeq(), othersList);
+
+							} else {
+								nonSequenceList.add(othersList);
+							}
+
+						} else {
+							others1List.add(othersList);
+						}
+
+					}
+
+					Map<Integer, ScQtCheckList> displayNames = new TreeMap<Integer, ScQtCheckList>(
+							SequenceList);
+					List<ScQtCheckList> convertList = new ArrayList<ScQtCheckList>(
+							displayNames.values());
+					this.getManagedBean().getScQtCheckSt2techProposal()
+							.addAll(convertList);
+					this.getManagedBean().getScQtCheckSt2techProposal()
+							.addAll(nonSequenceList);
+
+					this.getManagedBean().getScQtCheckSt2techProposal()
+							.addAll(others1List);
+
 				}
-				this.getManagedBean()
-						.setScQtCheckSt2techProposal(checkListList);
 
 			}
 
@@ -1979,12 +2087,79 @@ public class SpecificationBackingBean extends
 				}
 				if (null != resDTO.getSpecResultBean()
 						&& resDTO.getSpecResultBean().getTotalRecord() > 0) {
+
 					checkListList.addAll(resDTO.getSpecResultBean()
 							.getResultList());
 
+					this.getManagedBean().setScQtCheckSt2financeProposalList(
+							new ArrayList<ScQtCheckList>());
+					List<ScQtCheckList> specChecklist = new ArrayList<ScQtCheckList>();
+					List<ScQtCheckList> otherList = new ArrayList<ScQtCheckList>();
+					if (null != checkListList && !checkListList.isEmpty()) {
+						for (ScQtCheckList checklist : checkListList) {
+							if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
+									.equalsIgnoreCase(checklist
+											.getDefinationType()
+											.getParameterCode())) {
+								specChecklist.add(checklist);
+
+							} else {
+								otherList.add(checklist);
+
+							}
+
+						}
+					}
+					for (int i = 0; i < specChecklist.size(); i++) {
+						this.getManagedBean()
+								.getScQtCheckSt2financeProposalList()
+								.add(i, specChecklist.get(i));
+
+					}
+					List<ScQtCheckList> others1List = new ArrayList<ScQtCheckList>();
+					List<ScQtCheckList> nonSequenceList = new ArrayList<ScQtCheckList>();
+
+					Map<Integer, ScQtCheckList> SequenceList = new TreeMap<Integer, ScQtCheckList>();
+					for (ScQtCheckList othersList : otherList) {
+						if (null != othersList.getPmDocument()
+								&& null != othersList.getPmDocument()
+										.getDocumentId()) {
+							if (null != othersList.getPmDocument()
+									.getDisplaySeq()) {
+								SequenceList.put(othersList.getPmDocument()
+										.getDisplaySeq(), othersList);
+								/*
+								 * this.getManagedBean()
+								 * .getScQtCheckSt2financeProposalList()
+								 * .add(index++, othersList);
+								 */
+
+							} else {
+								nonSequenceList.add(othersList);
+							}
+
+						} else {
+							others1List.add(othersList);
+						}
+
+					}
+					Map<Integer, ScQtCheckList> displayNames = new TreeMap<Integer, ScQtCheckList>(
+							SequenceList);
+					List<ScQtCheckList> convertList = new ArrayList<ScQtCheckList>(
+							displayNames.values());
+					this.getManagedBean().getScQtCheckSt2financeProposalList()
+							.addAll(convertList);
+					this.getManagedBean().getScQtCheckSt2financeProposalList()
+							.addAll(nonSequenceList);
+
+					this.getManagedBean().getScQtCheckSt2financeProposalList()
+							.addAll(others1List);
+
 				}
-				this.getManagedBean().setScQtCheckSt2financeProposalList(
-						checkListList);
+				/*
+				 * this.getManagedBean().setScQtCheckSt2financeProposalList(
+				 * checkListList);
+				 */
 
 			}
 
@@ -2054,22 +2229,27 @@ public class SpecificationBackingBean extends
 			if (resDTO.getScoreSettingResultBean().getResultList() != null
 					&& resDTO.getScoreSettingResultBean().getResultList()
 							.isEmpty()) {
-				this.getManagedBean().setTechnicalScoreSetting(
-						new ScQtScoreSetting());
-				this.getManagedBean().getTechnicalScoreSetting()
-						.setSettingType(1);
+				if (null == this.getManagedBean().getTechnicalScoreSetting()) {
+					ScQtScoreSetting technicalScoresetting = new ScQtScoreSetting();
+					technicalScoresetting.setSettingType(1);
+					technicalScoresetting.setScQt(this.getManagedBean()
+							.getScQt());
 
-				setUserDetails(this.getManagedBean().getTechnicalScoreSetting());
-				this.getManagedBean().getTechnicalScoreSetting()
-						.setScQt(this.getManagedBean().getScQt());
-				this.getManagedBean().setDemoScoreSetting(
-						new ScQtScoreSetting());
-				this.getManagedBean().getDemoScoreSetting().setSettingType(3);
-				setUserDetails(this.getManagedBean().getDemoScoreSetting());
-				this.getManagedBean().getDemoScoreSetting()
-						.setScQt(this.getManagedBean().getScQt());
-				this.getManagedBean().getDemoScoreSetting()
-						.setWeightageReq(false);
+					setUserDetails(technicalScoresetting);
+					this.getManagedBean().setTechnicalScoreSetting(
+							technicalScoresetting);
+
+				}
+
+				if (null == this.getManagedBean().getDemoScoreSetting()) {
+					ScQtScoreSetting demoScoresetting = new ScQtScoreSetting();
+					demoScoresetting.setSettingType(3);
+					demoScoresetting.setScQt(this.getManagedBean().getScQt());
+
+					setUserDetails(demoScoresetting);
+					this.getManagedBean().setDemoScoreSetting(demoScoresetting);
+
+				}
 
 			}
 
@@ -2093,6 +2273,8 @@ public class SpecificationBackingBean extends
 			}
 
 			if (null != checklist && !checklist.isEmpty()) {
+				List<ScQtCheckList> specChecklist = new ArrayList<ScQtCheckList>();
+				List<ScQtCheckList> otherList = new ArrayList<ScQtCheckList>();
 
 				int score = 0;
 				float addScore = 0;
@@ -2107,14 +2289,64 @@ public class SpecificationBackingBean extends
 					addScore = addScore
 							+ list.getQtScoreWeightage().getScore().intValue();
 					score = (int) addScore;
+					if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
+							.equalsIgnoreCase(list.getDefinationType()
+									.getParameterCode())) {
+						specChecklist.add(list);
+
+					} else {
+						otherList.add(list);
+
+					}
 
 				}
+				this.getManagedBean().setTechnicalScoring(
+						new ArrayList<ScQtCheckList>());
+				for (int i = 0; i < specChecklist.size(); i++) {
+					this.getManagedBean().getTechnicalScoring()
+							.add(i, specChecklist.get(i));
+
+				}
+				List<ScQtCheckList> others1List = new ArrayList<ScQtCheckList>();
+				List<ScQtCheckList> nonSequenceList = new ArrayList<ScQtCheckList>();
+
+				Map<Integer, ScQtCheckList> SequenceList = new HashMap<Integer, ScQtCheckList>();
+				for (ScQtCheckList othersList : otherList) {
+					if (null != othersList.getPmDocument()
+							&& null != othersList.getPmDocument()
+									.getDocumentId()) {
+						if (null != othersList.getPmDocument().getDisplaySeq()) {
+							SequenceList.put(othersList.getPmDocument()
+									.getDisplaySeq(), othersList);
+							/*
+							 * this.getManagedBean().getTechnicalScoring()
+							 * .add(index++, othersList);
+							 */
+
+						} else {
+							nonSequenceList.add(othersList);
+						}
+
+					} else {
+						others1List.add(othersList);
+					}
+
+				}
+				Map<Integer, ScQtCheckList> displayNames = new TreeMap<Integer, ScQtCheckList>(
+						SequenceList);
+				List<ScQtCheckList> convertList = new ArrayList<ScQtCheckList>(
+						displayNames.values());
+				this.getManagedBean().getTechnicalScoring().addAll(convertList);
+				this.getManagedBean().getTechnicalScoring()
+						.addAll(nonSequenceList);
+
+				this.getManagedBean().getTechnicalScoring().addAll(others1List);
 
 				this.getManagedBean().setTechPoints(score);
 
-				this.getManagedBean().setTechnicalScoring(checklist);
 				techWeightageSum();
 				techScoreSum();
+
 			}
 
 		} finally {
@@ -2257,6 +2489,8 @@ public class SpecificationBackingBean extends
 										.getScore());
 					}
 					tmpCheckList.setTitle(sb.toString());
+					this.getManagedBean().setFinancialScoring(
+							new ArrayList<ScQtCheckList>());
 
 					List<ScQtScoreOfferPrice> offerPrice = tmpCheckList
 							.getQtScoreWeightage().getScQtScoreOfferPrices();
@@ -2310,12 +2544,48 @@ public class SpecificationBackingBean extends
 						}
 
 					}
-					localChecklist.add(0, tmpCheckList);
+					this.getManagedBean().getFinancialScoring()
+							.add(0, tmpCheckList);
 				}
 
 				// this.getManagedBean().setScQtCheckSt2financeProposalList(checklist);
+
 				this.getManagedBean().setFinSpecList(specChecklist);
-				this.getManagedBean().setFinancialScoring(localChecklist);
+				List<ScQtCheckList> others1List = new ArrayList<ScQtCheckList>();
+				List<ScQtCheckList> nonSequenceList = new ArrayList<ScQtCheckList>();
+				List<ScQtCheckList> otherList = new ArrayList<ScQtCheckList>();
+				Map<Integer, ScQtCheckList> SequenceList = new HashMap<Integer, ScQtCheckList>();
+				for (ScQtCheckList othersList : localChecklist) {
+					if (null != othersList.getPmDocument()
+							&& null != othersList.getPmDocument()
+									.getDocumentId()) {
+						if (null != othersList.getPmDocument().getDisplaySeq()) {
+							SequenceList.put(othersList.getPmDocument()
+									.getDisplaySeq(), othersList);
+							/*
+							 * this.getManagedBean().getTechnicalScoring()
+							 * .add(index++, othersList);
+							 */
+
+						} else {
+							nonSequenceList.add(othersList);
+						}
+
+					} else {
+						others1List.add(othersList);
+					}
+
+				}
+				Map<Integer, ScQtCheckList> displayNames = new TreeMap<Integer, ScQtCheckList>(
+						SequenceList);
+				List<ScQtCheckList> convertList = new ArrayList<ScQtCheckList>(
+						displayNames.values());
+				this.getManagedBean().getFinancialScoring().addAll(convertList);
+				this.getManagedBean().getFinancialScoring()
+						.addAll(nonSequenceList);
+
+				this.getManagedBean().getFinancialScoring().addAll(others1List);
+
 				finWeightageSum();
 				finScoreSum();
 
@@ -3321,6 +3591,9 @@ public class SpecificationBackingBean extends
 
 		List<PmCity> cities = SourcingLocationHelper
 				.getCityFromLocationDTO(allNodes);
+		if (null == getManagedBean().getZoneGeneralTrees()) {
+			getManagedBean().setZoneGeneralTrees(new ArrayList<TreeNode>());
+		}
 
 		if (getManagedBean().getIndex() == -1) {
 
@@ -3388,6 +3661,7 @@ public class SpecificationBackingBean extends
 			}
 
 		} else {
+
 			ScQtSupplierCriteria qtSupplierCriteria = scQt
 					.getScQtSupplierCriteria();
 			qtSupplierCriteria.setScQt(scQt);
@@ -3457,6 +3731,7 @@ public class SpecificationBackingBean extends
 			}
 
 		} else {
+
 			if (null != this.getManagedBean().getCtPanelZones()
 					&& !this.getManagedBean().getCtPanelZones().isEmpty()) {
 				if (null == scQt.getScQtSupplierCriteria().getQtZoneCriterias()) {
@@ -3484,8 +3759,10 @@ public class SpecificationBackingBean extends
 				scQt.getScQtSupplierCriteria().setQtZoneCriterias(zoneCriteria);
 
 			} else {
+
 				scQt.setZonal(false);
 			}
+
 			scQt.getScQtSupplierCriteria().setCtPanelItem(
 					this.getManagedBean().getCtPanelItem());
 			scQt.getScQtSupplierCriteria().setScQt(scQt);
@@ -3961,6 +4238,35 @@ public class SpecificationBackingBean extends
 		this.getManagedBean().setFromMonth(formvalue);
 		int n = Integer.parseInt(this.getManagedBean().getFromMonth());
 		int j = n + 2;
+		String Startmonth = "";
+		if (j == 0) {
+			Startmonth = "January";
+		} else if (j == 1) {
+			Startmonth = "February";
+		} else if (j == 2) {
+			Startmonth = "March";
+		} else if (j == 3) {
+			Startmonth = "April";
+		} else if (j == 4) {
+			Startmonth = "May";
+		} else if (j == 5) {
+			Startmonth = "June";
+		}
+
+		else if (j == 6) {
+			Startmonth = "July";
+		} else if (j == 7) {
+			Startmonth = "August";
+		} else if (j == 8) {
+			Startmonth = "September";
+		} else if (j == 9) {
+			Startmonth = "October";
+		} else if (j == 10) {
+			Startmonth = "November";
+		} else if (j == 11) {
+			Startmonth = "December";
+		}
+		this.getManagedBean().setBankstmntTomonth(Startmonth);
 		this.getManagedBean().setToMonth(String.valueOf(j));
 	}
 
@@ -4643,7 +4949,9 @@ public class SpecificationBackingBean extends
 				else if (QTConstants.FINANCIAL_BANK_STMT_CODE
 						.equalsIgnoreCase(checkList.getPmDocument()
 								.getDocDefinitionKey())) {
-
+					int year = Calendar.getInstance().get(Calendar.YEAR);
+					this.getManagedBean().setStartYear(String.valueOf(year));
+					this.getManagedBean().setEndYear(String.valueOf(year));
 					reqDTO.setCheckListId(checkList.getQtChecklistId());
 					resDTO = specSo.retrieveCheckListScoreNValue(reqDTO);
 					if (resDTO.getCheckListScoreResultBean() == null
@@ -5253,7 +5561,7 @@ public class SpecificationBackingBean extends
 			reqDTO.setProcurementCatCode(this.getManagedBean()
 					.getProcuremntCategory());
 			reqDTO.setIsMandatory(false);
-			reqDTO.setDocCategoryCode(QTConstants.TECHNICAL_SPEC_TYPE);
+			reqDTO.setDocCategoryCode(ParameterConst.DOCUMENT_CATEGORY_TECHNICAL_CHECKLIST);
 
 			resDTO = documentSo.retrieveDocumentCheckList(reqDTO);
 
@@ -5535,7 +5843,7 @@ public class SpecificationBackingBean extends
 			reqDTO.setProcurementCatCode(this.getManagedBean()
 					.getProcuremntCategory());
 			reqDTO.setIsMandatory(false);
-			reqDTO.setDocCategoryCode(QTConstants.FINANCIAL_SPEC_TYPE);
+			reqDTO.setDocCategoryCode(ParameterConst.DOCUMENT_CATEGORY_FINANCIAL_CHECKLIST);
 
 			resDTO = documentSo.retrieveDocumentCheckList(reqDTO);
 			this.getManagedBean().setStageTwoFinComplianceSelect(
@@ -9601,15 +9909,102 @@ public class SpecificationBackingBean extends
 				questions1.addAll(questions);
 				List<TplSpecQuestion> questions2 = new ArrayList<TplSpecQuestion>();
 				for (TplSpecQuestion tpl : questions1) {
-
+					List<TplSpecEstimation> specEstimaredList = new ArrayList<TplSpecEstimation>();
 					// TplSpecQuestion tpl2 = new TplSpecQuestion();
 					TplSpecQuestion tpl1 = (TplSpecQuestion) BeanUtils
 							.cloneBean(tpl);
+					if (null != tpl1.getTplSpecTierQties()
+							&& !tpl1.getTplSpecTierQties().isEmpty()) {
+						List<TplSpecTierQty> specTierQuantity = new ArrayList<TplSpecTierQty>();
+						for (TplSpecTierQty tierQnty : tpl1
+								.getTplSpecTierQties()) {
+							TplSpecTierQty tierquantitys = null;
+							try {
+								tierquantitys = (TplSpecTierQty) BeanUtils
+										.cloneBean(tierQnty);
+							} catch (IllegalAccessException
+									| InstantiationException
+									| InvocationTargetException
+									| NoSuchMethodException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							if (null != tierquantitys) {
+								tierquantitys.setSpecTierQtyId(null);
+								tierquantitys.setTplSpecQuestion(tpl1);
+								setUserDetails(tierquantitys);
+								specTierQuantity.add(tierquantitys);
+							}
+						}
+
+						tpl1.setTplSpecTierQties(specTierQuantity);
+
+					} else {
+						tpl1.setTplSpecTierQties(null);
+					}
+					if (null != tpl1.getTplSpecEstimations()
+							&& !tpl1.getTplSpecEstimations().isEmpty()) {
+						for (TplSpecEstimation estimation : tpl1
+								.getTplSpecEstimations()) {
+							TplSpecEstimation specestimation = null;
+							try {
+								specestimation = (TplSpecEstimation) BeanUtils
+										.cloneBean(estimation);
+							} catch (IllegalAccessException
+									| InstantiationException
+									| InvocationTargetException
+									| NoSuchMethodException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							if (null != specestimation) {
+								specestimation.setEstimatedCost(null);
+								specestimation.setSpecEstimationId(null);
+								specestimation.setTplSpecQuestion(tpl1);
+								setUserDetails(specestimation);
+								specEstimaredList.add(estimation);
+							}
+
+						}
+						tpl1.setTplSpecEstimations(specEstimaredList);
+
+					} else {
+						tpl1.setTplSpecEstimations(null);
+					}
+
+					if (null != tpl1.getTplSpecScorings()
+							&& !tpl1.getTplSpecScorings().isEmpty()) {
+						List<TplSpecScoring> specScoringList = new ArrayList<TplSpecScoring>();
+						for (TplSpecScoring specScore : tpl1
+								.getTplSpecScorings()) {
+							TplSpecScoring scorequantitys = null;
+							try {
+								scorequantitys = (TplSpecScoring) BeanUtils
+										.cloneBean(specScore);
+							} catch (IllegalAccessException
+									| InstantiationException
+									| InvocationTargetException
+									| NoSuchMethodException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							if (null != scorequantitys) {
+								scorequantitys.setSpecScoringId(null);
+								scorequantitys.setTplSpecQuestion(tpl1);
+								setUserDetails(scorequantitys);
+								specScoringList.add(scorequantitys);
+							}
+						}
+
+						tpl1.setTplSpecScorings(specScoringList);
+
+					} else {
+						tpl1.setTplSpecScorings(null);
+					}
 					tpl1.setSpecQuestionId(null);
 					tpl1.setTplSpecMaster(specMaster);
 					tpl1.setTplSpecAnswers(null);
-					tpl1.setTplSpecScorings(null);
-					tpl1.setTplSpecTierQties(null);
+					tpl1.setTplSpecEstimations(null);
 					setUserDetails(tpl1);
 					tpl1.setChangedDate(null);
 					questions2.add(tpl1);
@@ -9636,6 +10031,7 @@ public class SpecificationBackingBean extends
 				questions1.addAll(questions);
 				List<TplSpecQuestion> questions2 = new ArrayList<TplSpecQuestion>();
 				for (TplSpecQuestion tpl : questions1) {
+					List<TplSpecEstimation> specEstimaredList = new ArrayList<TplSpecEstimation>();
 
 					// TplSpecQuestion tpl2 = new TplSpecQuestion();
 					if (TemplateSpecConst.QUESTION_TYPE_ITEM
@@ -9643,12 +10039,100 @@ public class SpecificationBackingBean extends
 
 						TplSpecQuestion tpl1 = (TplSpecQuestion) BeanUtils
 								.cloneBean(tpl);
+						if (null != tpl1.getTplSpecTierQties()
+								&& !tpl1.getTplSpecTierQties().isEmpty()) {
+							List<TplSpecTierQty> specTierQuantity = new ArrayList<TplSpecTierQty>();
+							for (TplSpecTierQty tierQnty : tpl1
+									.getTplSpecTierQties()) {
+								TplSpecTierQty tierquantitys = null;
+								try {
+									tierquantitys = (TplSpecTierQty) BeanUtils
+											.cloneBean(tierQnty);
+								} catch (IllegalAccessException
+										| InstantiationException
+										| InvocationTargetException
+										| NoSuchMethodException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+								if (null != tierquantitys) {
+									tierquantitys.setSpecTierQtyId(null);
+									tierquantitys.setTplSpecQuestion(tpl1);
+									setUserDetails(tierquantitys);
+									specTierQuantity.add(tierquantitys);
+								}
+							}
+
+							tpl1.setTplSpecTierQties(specTierQuantity);
+
+						} else {
+							tpl1.setTplSpecTierQties(null);
+						}
+
+						if (null != tpl1.getTplSpecEstimations()
+								&& !tpl1.getTplSpecEstimations().isEmpty()) {
+							for (TplSpecEstimation estimation : tpl1
+									.getTplSpecEstimations()) {
+								TplSpecEstimation specestimation = null;
+								try {
+									specestimation = (TplSpecEstimation) BeanUtils
+											.cloneBean(estimation);
+								} catch (IllegalAccessException
+										| InstantiationException
+										| InvocationTargetException
+										| NoSuchMethodException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+								if (null != specestimation) {
+									specestimation.setEstimatedCost(null);
+									specestimation.setSpecEstimationId(null);
+									specestimation.setTplSpecQuestion(tpl1);
+									setUserDetails(specestimation);
+									specEstimaredList.add(estimation);
+								}
+
+							}
+							tpl1.setTplSpecEstimations(specEstimaredList);
+
+						} else {
+							tpl1.setTplSpecEstimations(null);
+						}
+
+						if (null != tpl1.getTplSpecScorings()
+								&& !tpl1.getTplSpecScorings().isEmpty()) {
+							List<TplSpecScoring> specScoringList = new ArrayList<TplSpecScoring>();
+							for (TplSpecScoring specScore : tpl1
+									.getTplSpecScorings()) {
+								TplSpecScoring scorequantitys = null;
+								try {
+									scorequantitys = (TplSpecScoring) BeanUtils
+											.cloneBean(specScore);
+								} catch (IllegalAccessException
+										| InstantiationException
+										| InvocationTargetException
+										| NoSuchMethodException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+								if (null != scorequantitys) {
+									scorequantitys.setSpecScoringId(null);
+									scorequantitys.setTplSpecQuestion(tpl1);
+									setUserDetails(scorequantitys);
+									specScoringList.add(scorequantitys);
+								}
+							}
+
+							tpl1.setTplSpecScorings(specScoringList);
+
+						} else {
+							tpl1.setTplSpecScorings(null);
+						}
 
 						tpl1.setSpecQuestionId(null);
 						tpl1.setTplSpecMaster(specMaster);
 						tpl1.setTplSpecAnswers(null);
-						tpl1.setTplSpecScorings(null);
-						tpl1.setTplSpecTierQties(null);
+						tpl1.setTplSpecEstimations(null);
 						setUserDetails(tpl1);
 						tpl1.setChangedDate(null);
 						questions2.add(tpl1);
@@ -9845,11 +10329,107 @@ public class SpecificationBackingBean extends
 					e.printStackTrace();
 				}
 				if (null != tpl1) {
+					List<TplSpecEstimation> specEstimaredList = new ArrayList<TplSpecEstimation>();
+
+					if (null != tpl1.getTplSpecTierQties()
+							&& !tpl1.getTplSpecTierQties().isEmpty()) {
+
+						List<TplSpecTierQty> specTierQuantity = new ArrayList<TplSpecTierQty>();
+						for (TplSpecTierQty tierQnty : tpl1
+								.getTplSpecTierQties()) {
+							TplSpecTierQty tierquantitys = null;
+							try {
+								tierquantitys = (TplSpecTierQty) BeanUtils
+										.cloneBean(tierQnty);
+							} catch (IllegalAccessException
+									| InstantiationException
+									| InvocationTargetException
+									| NoSuchMethodException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							if (null != tierquantitys) {
+
+								tierquantitys.setSpecTierQtyId(null);
+								tierquantitys.setTplSpecQuestion(tpl1);
+								setUserDetails(tierquantitys);
+								specTierQuantity.add(tierquantitys);
+
+							}
+						}
+
+						tpl1.setTplSpecTierQties(specTierQuantity);
+
+					} else {
+
+						tpl1.setTplSpecTierQties(null);
+					}
+
+					if (null != tpl1.getTplSpecEstimations()
+							&& !tpl1.getTplSpecEstimations().isEmpty()) {
+						for (TplSpecEstimation estimation : tpl1
+								.getTplSpecEstimations()) {
+							TplSpecEstimation specestimation = null;
+							try {
+								specestimation = (TplSpecEstimation) BeanUtils
+										.cloneBean(estimation);
+							} catch (IllegalAccessException
+									| InstantiationException
+									| InvocationTargetException
+									| NoSuchMethodException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							if (null != specestimation) {
+								specestimation.setEstimatedCost(null);
+								specestimation.setSpecEstimationId(null);
+								specestimation.setTplSpecQuestion(tpl1);
+								setUserDetails(specestimation);
+								specEstimaredList.add(estimation);
+							}
+
+						}
+						tpl1.setTplSpecEstimations(specEstimaredList);
+
+					} else {
+						tpl1.setTplSpecEstimations(null);
+					}
+
+					if (null != tpl1.getTplSpecScorings()
+							&& !tpl1.getTplSpecScorings().isEmpty()) {
+						List<TplSpecScoring> specScoringList = new ArrayList<TplSpecScoring>();
+						for (TplSpecScoring specScore : tpl1
+								.getTplSpecScorings()) {
+							TplSpecScoring scorequantitys = null;
+							try {
+								scorequantitys = (TplSpecScoring) BeanUtils
+										.cloneBean(specScore);
+							} catch (IllegalAccessException
+									| InstantiationException
+									| InvocationTargetException
+									| NoSuchMethodException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							if (null != scorequantitys) {
+
+								scorequantitys.setSpecScoringId(null);
+								scorequantitys.setTplSpecQuestion(tpl1);
+								setUserDetails(scorequantitys);
+								specScoringList.add(scorequantitys);
+							}
+						}
+
+						tpl1.setTplSpecScorings(specScoringList);
+
+					} else {
+
+						tpl1.setTplSpecScorings(null);
+					}
+
 					tpl1.setSpecQuestionId(null);
 					tpl1.setTplSpecMaster(specMaster);
 					tpl1.setTplSpecAnswers(null);
-					tpl1.setTplSpecScorings(null);
-					tpl1.setTplSpecTierQties(null);
 					setUserDetails(tpl1);
 					tpl1.setChangedDate(null);
 					questions2.add(tpl1);
@@ -9885,11 +10465,101 @@ public class SpecificationBackingBean extends
 						e.printStackTrace();
 					}
 					if (null != tpl1) {
+						List<TplSpecEstimation> specEstimaredList = new ArrayList<TplSpecEstimation>();
+						if (null != tpl1.getTplSpecTierQties()
+								&& !tpl1.getTplSpecTierQties().isEmpty()) {
+							List<TplSpecTierQty> specTierQuantity = new ArrayList<TplSpecTierQty>();
+							for (TplSpecTierQty tierQnty : tpl1
+									.getTplSpecTierQties()) {
+								TplSpecTierQty tierquantitys = null;
+								try {
+									tierquantitys = (TplSpecTierQty) BeanUtils
+											.cloneBean(tierQnty);
+								} catch (IllegalAccessException
+										| InstantiationException
+										| InvocationTargetException
+										| NoSuchMethodException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+								if (null != tierquantitys) {
+									tierquantitys.setSpecTierQtyId(null);
+									tierquantitys.setTplSpecQuestion(tpl1);
+									setUserDetails(tierquantitys);
+									specTierQuantity.add(tierquantitys);
+
+								}
+							}
+
+							tpl1.setTplSpecTierQties(specTierQuantity);
+
+						} else {
+
+							tpl1.setTplSpecTierQties(null);
+						}
+						if (null != tpl1.getTplSpecEstimations()
+								&& !tpl1.getTplSpecEstimations().isEmpty()) {
+							for (TplSpecEstimation estimation : tpl1
+									.getTplSpecEstimations()) {
+								TplSpecEstimation specestimation = null;
+								try {
+									specestimation = (TplSpecEstimation) BeanUtils
+											.cloneBean(estimation);
+								} catch (IllegalAccessException
+										| InstantiationException
+										| InvocationTargetException
+										| NoSuchMethodException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+								if (null != specestimation) {
+									specestimation.setEstimatedCost(null);
+									specestimation.setSpecEstimationId(null);
+									specestimation.setTplSpecQuestion(tpl1);
+									setUserDetails(specestimation);
+									specEstimaredList.add(estimation);
+								}
+
+							}
+							tpl1.setTplSpecEstimations(specEstimaredList);
+
+						} else {
+							tpl1.setTplSpecEstimations(null);
+						}
+
+						if (null != tpl1.getTplSpecScorings()
+								&& !tpl1.getTplSpecScorings().isEmpty()) {
+							List<TplSpecScoring> specScoringList = new ArrayList<TplSpecScoring>();
+							for (TplSpecScoring specScore : tpl1
+									.getTplSpecScorings()) {
+								TplSpecScoring scorequantitys = null;
+								try {
+									scorequantitys = (TplSpecScoring) BeanUtils
+											.cloneBean(specScore);
+								} catch (IllegalAccessException
+										| InstantiationException
+										| InvocationTargetException
+										| NoSuchMethodException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+								if (null != scorequantitys) {
+									scorequantitys.setSpecScoringId(null);
+									scorequantitys.setTplSpecQuestion(tpl1);
+									setUserDetails(scorequantitys);
+									specScoringList.add(scorequantitys);
+								}
+							}
+
+							tpl1.setTplSpecScorings(specScoringList);
+
+						} else {
+
+							tpl1.setTplSpecScorings(null);
+						}
 						tpl1.setSpecQuestionId(null);
 						tpl1.setTplSpecMaster(specMaster);
 						tpl1.setTplSpecAnswers(null);
-						tpl1.setTplSpecScorings(null);
-						tpl1.setTplSpecTierQties(null);
 						tpl1.setTplSpecEstimations(null);
 						setUserDetails(tpl1);
 						tpl1.setChangedDate(null);

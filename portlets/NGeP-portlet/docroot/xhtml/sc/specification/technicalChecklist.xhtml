@@ -58,7 +58,7 @@
 
 
 				<ui:fragment rendered="#{stageTwoTechnical.qtChecklistId eq null}">
-                
+
 					<h:outputText
 						value="#{specificationBackingBean.getParameterDesc(stageTwoTechnical.definationType)}"
 						rendered="#{index lt specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1}"></h:outputText>
@@ -68,7 +68,14 @@
 				</ui:fragment>
 
 				<ui:fragment
-					rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 and stageTwoTechnical.title == null}">
+					rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 and stageTwoTechnical.title ne null}">
+					<h:outputText
+						value="#{specificationBackingBean.getParameterDesc(stageTwoTechnical.definationType)}"></h:outputText>
+				</ui:fragment>
+
+
+				<ui:fragment
+					rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 and stageTwoTechnical.title eq null}">
 
 
 					<p:selectOneMenu style="width:100px;"
@@ -86,13 +93,13 @@
 				style="width:8%">
 				<!--  <h:panelGroup id="supplier">  -->
 				<ui:fragment
-					rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 and stageTwoTechnical.title == null}">
+					rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 and stageTwoTechnical.title eq null}">
 					<p:selectOneMenu styleClass="sample#{index}" style="width:100px;"
 						value="#{stageTwoTechnical.action.parameterId}">
 						<f:selectItems
 							value="#{specificationBackingBean.managedBean.technicalChecklistAction}" />
 						<p:ajax event="change" process="@this" partialSubmit="true"
-							update="stageTwotechProposal"
+							update="scoreView,uploadtech"
 							listener="#{specificationBackingBean.checklistActionChange(index,specificationBackingBean.managedBean.scQtCheckSt2techProposal)}"></p:ajax>
 					</p:selectOneMenu>
 				</ui:fragment>
@@ -102,6 +109,11 @@
 						value="#{specificationBackingBean.getParameterDesc(stageTwoTechnical.action)}"
 						rendered="#{index lt specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 }"></h:outputText>
 
+				</ui:fragment>
+				<ui:fragment
+					rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 and stageTwoTechnical.title ne null}">
+					<h:outputText
+						value="#{specificationBackingBean.getParameterDesc(stageTwoTechnical.action)}"></h:outputText>
 				</ui:fragment>
 
 
@@ -114,18 +126,20 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.spec.stage2.score.head']}"
-				style="width:10%">
-				<p:selectBooleanCheckbox styleClass="action#{index}"
+				style="width:10%" >
+				<h:panelGroup id="scoreView">
+				<p:selectBooleanCheckbox 
 					value="#{stageTwoTechnical.scoringReq}" disabled="true"
 					rendered="#{stageTwoTechnical.action.parameterCode  ne 'O'}">
 
 				</p:selectBooleanCheckbox>
 
-				<p:selectBooleanCheckbox styleClass="action#{index}"
+				<p:selectBooleanCheckbox 
 					value="#{stageTwoTechnical.scoringReq}"
 					rendered="#{stageTwoTechnical.action.parameterCode eq 'O'}">
 
 				</p:selectBooleanCheckbox>
+				</h:panelGroup>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.spec.specification.status']}"
@@ -136,10 +150,12 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.spec.stage.document']}"
-				style="width:20%">
+				style="width:20%" >
 
 				<!-- <h:panelGroup id="document"> rendered="#{stageTwoTechnical.definationType.parameterId eq '184'}"-->
-				<p:commandLink oncomplete="uploadDlg.show();return false;"
+				<h:panelGroup id="uploadtech">
+				<p:commandLink 
+					oncomplete="uploadDlg.show();return false;"
 					styleClass="sample#{index}"
 					rendered="#{stageTwoTechnical.definationType.parameterCode eq 'UP'}"
 					update="stageTwotechProposal">
@@ -153,6 +169,7 @@
 				<h:outputText
 					value="#{stageTwoTechnical.scQtCheckListAttachment.fileName}"></h:outputText>
 				<!-- 	</h:panelGroup> -->
+				</h:panelGroup>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.stage.action']}"
 				style="width:10%">

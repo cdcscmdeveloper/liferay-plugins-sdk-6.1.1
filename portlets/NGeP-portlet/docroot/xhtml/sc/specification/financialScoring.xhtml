@@ -61,7 +61,8 @@
 				</ui:fragment>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.weight.weight']}"
-				style="width:20%;">
+				style="width:20%;"
+				rendered="#{specificationBackingBean.managedBean.financialScoreSetting.weightageReq ne 'false'}">
 				<p:inputText value="#{finance.qtScoreWeightage.weightage}"
 					maxlength="5" style="text-align:right"
 					rendered="#{specificationBackingBean.managedBean.financialScoreSetting.weightageReq ne 'false'}">

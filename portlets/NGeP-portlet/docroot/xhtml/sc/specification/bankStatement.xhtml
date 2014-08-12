@@ -55,7 +55,9 @@
 						</p:selectOneMenu> <p:selectOneMenu
 							value="#{specificationBackingBean.managedBean.startYear}">
 
-							<f:selectItem itemLabel="2014" itemValue="2014">
+							<f:selectItem
+								itemLabel="#{specificationBackingBean.managedBean.startYear}"
+								itemValue="#{specificationBackingBean.managedBean.startYear}">
 							</f:selectItem>
 						</p:selectOneMenu></td>
 
@@ -63,27 +65,22 @@
 							value="#{lbl['lbl.sc.spec.to.month']}"></p:outputLabel> <p:outputLabel
 							value="*" styleClass="mandatory"></p:outputLabel></td>
 					<td><h:panelGroup id="toDetailsUpdate">
-							<p:selectOneMenu style="margin-bottom:5px;" readOnly="true"
-								value="#{specificationBackingBean.managedBean.toMonth}">
 
-								<f:selectItems value="#{specificationBackingBean.yearDetails}"></f:selectItems>
-								<p:ajax event="change"
-									listener="#{specificationBackingBean. toChange}"></p:ajax>
-
-							</p:selectOneMenu>
+							<p:inputText readonly="true"
+								value="#{specificationBackingBean.managedBean.bankstmntTomonth}"></p:inputText>
 							<p:selectOneMenu readOnly="true"
 								value="#{specificationBackingBean.managedBean.endYear}">
 
-								<f:selectItem itemLabel="2014" itemValue="2014">
+								<f:selectItem
+									itemLabel="#{specificationBackingBean.managedBean.endYear}"
+									itemValue="#{specificationBackingBean.managedBean.endYear}">
 								</f:selectItem>
 							</p:selectOneMenu>
 						</h:panelGroup></td>
 				</tr>
 			</table>
 			<h:panelGroup id="bankInfo">
-				<h:panelGrid>
-					<h:outputLabel value="* #{lbl['lbl.sc.spec.bank.statement.month']}"></h:outputLabel>
-				</h:panelGrid>
+				
 				<p:dataTable id="specbank" var="banking"
 					rendered="#{specificationBackingBean.managedBean.toMonth !=null}"
 					value="#{specificationBackingBean.managedBean.bankList}"
@@ -105,10 +102,10 @@
 		<h:panelGroup id="amountdetails">
 			<h:panelGrid columns="2">
 				<h:outputLabel value="#{lbl['lbl.sc.spec.total.amount']}"></h:outputLabel>
-				<p:inputText
+				<p:inputText disabled="true"
 					value="#{specificationBackingBean.managedBean.totalAmount}"></p:inputText>
 				<h:outputLabel value="#{lbl['lbl.sc.spec.avg.bank.statement']}"></h:outputLabel>
-				<p:inputText
+				<p:inputText disabled="true"
 					value="#{specificationBackingBean.managedBean.totalAmountAvg}"></p:inputText>
 			</h:panelGrid>
 		</h:panelGroup>
@@ -158,7 +155,7 @@
 					</h:panelGroup>
 
 				</p:panel>
-				<p:panel header="#{lbl['lbl.sc.spec.score.avg.bank.statement']}"
+				<p:panel
 					rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '2'}">
 					<table>
 						<tr>
