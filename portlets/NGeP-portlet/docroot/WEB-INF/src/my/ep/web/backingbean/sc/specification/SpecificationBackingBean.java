@@ -789,7 +789,7 @@ public class SpecificationBackingBean extends
 
 			// saveTempleateSpecDtls(finanicalScQtDoc, "2");
 			retriveTechnicalSpecification();
-			retriveTechnicalCheckList();
+			
 
 		} finally {
 
