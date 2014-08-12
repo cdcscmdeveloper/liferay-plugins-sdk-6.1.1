@@ -551,7 +551,7 @@ public class SpecificationBackingBean extends
 						.setQtZoneCriterias(null);
 				this.getManagedBean().getScQt().getScQtSupplierCriteria()
 						.setScQtLocCriteria(null);
-				this.getManagedBean().getScQt().setScQtCategorys(null);
+				//this.getManagedBean().getScQt().setScQtCategorys(null);
 				getManagedBean().setZoneGeneralTrees(null);
 				getManagedBean().setZoneTrees(null);
 			}
