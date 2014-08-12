@@ -89,8 +89,9 @@ public class SupplierUserActivationBackingBean extends
 				long applDateInMilis = personnel.getCreatedDate().getTime();
 				long dayInMilis = 1000 * 60 * 60 * 24;
 
-				Date expiryDate = new Date(applDateInMilis + (30 * dayInMilis));
-				
+				Date expiryDate = new Date(applDateInMilis + (7 * dayInMilis));
+				System.out.println("----Activation Personnel ID----" + personnel.getPersonnelId());
+				System.out.println("----Activation Expiry Date----" + expiryDate);
 				if(new Date().before(expiryDate)) { 
 					this.getManagedBean().setValidActivation(true);
 /*					this.getManagedBean().setPersonnelId(Long.parseLong(personnelId));
