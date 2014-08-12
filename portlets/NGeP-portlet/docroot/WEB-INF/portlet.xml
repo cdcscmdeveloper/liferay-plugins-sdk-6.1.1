@@ -2186,12 +2186,12 @@
 
 
 <portlet>
-		<portlet-name>scEvaluation Stage1</portlet-name>
-		<display-name>Evaluation Stage 1</display-name>
+		<portlet-name>Proposal Evaluation</portlet-name>
+		<display-name>Proposal Evaluation</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/sc/evaluation/evaluationstage1view.xhtml</value>
+			<value>/xhtml/sc/evaluation/stageoneprerenderview.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -2199,8 +2199,8 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>Evaluation Stage 1</title>
-			<short-title>Evaluation Stage 1</short-title>
+			<title>Proposal Evaluation</title>
+			<short-title>Proposal Evaluation</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>

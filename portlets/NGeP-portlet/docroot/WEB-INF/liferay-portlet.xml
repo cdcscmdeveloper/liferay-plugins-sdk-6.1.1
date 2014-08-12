@@ -601,7 +601,7 @@
 	</portlet>
 	
 	<portlet>
-		<portlet-name>scEvaluation Stage1</portlet-name>
+		<portlet-name>Proposal Evaluation</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<ajaxable>false</ajaxable>

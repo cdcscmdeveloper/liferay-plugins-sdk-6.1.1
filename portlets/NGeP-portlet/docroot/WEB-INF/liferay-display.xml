@@ -87,7 +87,7 @@
 			<portlet id="scLoaReview" />
 			<portlet id="scLoaSupplierResponse" />
 			<portlet id="scEvaluation Stage2" />
-			<portlet id="scEvaluation Stage1" />
+			<portlet id="Proposal Evaluation" />
 			<portlet id="Evaluation Meeting" />
 			<portlet id="scBidding" />
 			<portlet id="scTemplateMaint" />
