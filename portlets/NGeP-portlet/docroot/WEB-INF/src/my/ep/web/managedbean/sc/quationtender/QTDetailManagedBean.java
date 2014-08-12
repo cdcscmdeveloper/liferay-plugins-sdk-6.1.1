@@ -441,7 +441,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		log.info("inside ");
 
 		qtnTenderSearchBean = new QtnTenderSearchBean();
-		//cloneQtnTenderSearchBean = new QtnTenderSearchBean();
+		cloneQtnTenderSearchBean = new QtnTenderSearchBean();
 
 		userCommitteeSearchBean = new UserCommitteeSearchBean();
 
