@@ -58,6 +58,8 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 	private List<ScCommitteeMember> scCommitteeMemberList;
 	private ScQt qt;
 	private Object payLoad;
+	private String committeeType;
+	private String committeeTypeDesc;
 	/**
 	 * @return the scQtMeetings
 	 */
@@ -367,6 +369,30 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 	}
 	public void setPayLoad(Object payLoad) {
 		this.payLoad = payLoad;
+	}
+	/**
+	 * @return the committeeType
+	 */
+	public String getCommitteeType() {
+		return committeeType;
+	}
+	/**
+	 * @param committeeType the committeeType to set
+	 */
+	public void setCommitteeType(String committeeType) {
+		this.committeeType = committeeType;
+	}
+	/**
+	 * @return the committeeTypeDesc
+	 */
+	public String getCommitteeTypeDesc() {
+		return committeeTypeDesc;
+	}
+	/**
+	 * @param committeeTypeDesc the committeeTypeDesc to set
+	 */
+	public void setCommitteeTypeDesc(String committeeTypeDesc) {
+		this.committeeTypeDesc = committeeTypeDesc;
 	}
 
 }
