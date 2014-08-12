@@ -26,24 +26,21 @@
 						lovId="PM_ORG_PROFILE" headerText="Prepared PTJ Lov"
 						saveObject="purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgName}"
-						update=":form:preparedOrgProfileId" readonly="true" size="39"
+						update=":form:preparedOrgProfileId,:form:issuedOrgCode,:form:issuedOrgName" readonly="true" size="39"
+						postUpdateListener="purchaseRequestBackingBean.getAgAccount()"
 						conditionField="parentOrgProfile.orgProfileId^#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.parentOrgProfile.orgProfileId}">
 					</ac:lov></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>
-				<td><p:inputText size="5" id="issuedOrgProfileId"
+				<td><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /> </td>
+				<td><p:inputText size="5" id="issuedOrgCode"
 						readonly="true"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.pmOrgValidity.orgCode}" />
-					<p:spacer width="5" /> <ac:lov id="issuePtj"
-						lovId="PM_ORG_PROFILE" headerText="Issue PTJ Lov"
-						saveObject="purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile"
-						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.orgName}"
-						update=":form:issuedOrgProfileId,:form:agOffice" readonly="true" size="39"
-						postUpdateListener="purchaseRequestBackingBean.getAgAccount()"
-						conditionField="parentOrgProfile.orgProfileId^#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.parentOrgProfile.orgProfileId}">
-					</ac:lov></td>
+						<p:spacer width="8"></p:spacer>
+						<p:inputText size="39" id="issuedOrgName"
+						readonly="true"
+						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.orgName}"></p:inputText>
+				</td>
 			</tr>										
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.charge.ptj']}" /></td>

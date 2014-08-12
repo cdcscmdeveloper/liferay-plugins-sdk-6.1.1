@@ -64,7 +64,8 @@
 						<p:menuitem value="Charge Line Summary" update="@form" actionListener="#{purchaseRequestBackingBean.onTabChange(3)}">
 							<f:setPropertyActionListener target="#{purchaseRequestBackingBean.managedBean.selectedTabIndex}" value="3" />
 						</p:menuitem>	
-						<p:menuitem value="Approval Setting" update="@form" rendered="#{purchaseRequestBackingBean.isFlFulfilmentRequisitioner()}" >
+						<p:menuitem value="Approval Setting" update="@form" actionListener="#{purchaseRequestBackingBean.onTabChange(4)}"
+						rendered="#{purchaseRequestBackingBean.isFlFulfilmentRequisitioner()}" >
 							<f:setPropertyActionListener target="#{purchaseRequestBackingBean.managedBean.selectedTabIndex}" value="4" />
 						</p:menuitem>																								
 					</p:tabMenu></td>

@@ -4,7 +4,6 @@
 package my.ep.web.backingbean.fl.pr;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -259,10 +258,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		if(isFlFulfilmentRequisitioner()) {
 			FacesScopes facesScopes = new FacesScopes();
 			getManagedBean().setFulfilmentRequisitioner(facesScopes.getUserSessionBean().getLoginId());
-		}
-		
-		if(getManagedBean().getUserGroupMap()==null && isFlFulfilmentRequisitioner()) {
-			initializeApproverGroup();
 		}
 		
 		getManagedBean().setDeleteButtonHide(true);
@@ -826,54 +821,44 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	private void initializeApproverGroup() {
 		IUserSO userSO = null;
 		try {
-			userSO = (IUserSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-			
-			UserReqDTO reqDTO = new UserReqDTO();
-			FacesScopes facesScopes = new FacesScopes();
-			reqDTO.setUserId(facesScopes.getUserSessionBean().getUserId());
-			UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
-			Date currentDate = new Timestamp(System.currentTimeMillis());
-			PmOrgProfile pmOrgProfile = null;
-			for(PmUserOrg pmUserOrg : resDTO.getUserOrgList()){
-				if(pmUserOrg.getEffDate().before(currentDate)){
-					if(pmUserOrg.getExpDate() == null || pmUserOrg.getExpDate().after(currentDate)){
-						pmOrgProfile = pmUserOrg.getPmOrgProfile();
-						break;
-					}
+			if(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId() != getManagedBean().getCurrentPreparedOrgId()){
+				userSO = (IUserSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+
+				UserReqDTO reqDTO = new UserReqDTO();
+				UserResDTO resDTO = new UserResDTO();
+
+				reqDTO.setOrgProfileId(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId());
+				resDTO = userSO.retrieveUserGroupList(reqDTO);
+				if(getManagedBean().getFulfilmentRequest().getPmUserGroup()==null) {
+					PmUserGroup pmUserGroup = new PmUserGroup();
+					getManagedBean().getFulfilmentRequest().setPmUserGroup(pmUserGroup);
 				}
-			}
-			
-			reqDTO.setOrgProfileId(pmOrgProfile.getOrgProfileId());
-			resDTO = userSO.retrieveUserGroupList(reqDTO);
-			if(getManagedBean().getFulfilmentRequest().getPmUserGroup()==null) {
-				PmUserGroup pmUserGroup = new PmUserGroup();
-				getManagedBean().getFulfilmentRequest().setPmUserGroup(pmUserGroup);
-			}
-			if(getManagedBean().getApproverModel()==null) {
-				List<String> source = new ArrayList<String>(); 
-		        List<String> target = new ArrayList<String>();  
-		        getManagedBean().setApproverModel(new DualListModel<String>(source, target));
-			}			
-			getManagedBean().setUserGroupMap(new HashMap<Long, PmUserGroup>());
-			int i = 0;
-			for(PmUserGroup userGroup : resDTO.getUserGroupList()) {
-				getManagedBean().getUserGroupMap().put(userGroup.getUserGroupId(), userGroup);
-				getManagedBean().getUserGroupList().add(userGroup);
-				
-				for(PmUserGroupUser user : userGroup.getPmUserGroupUsers()) {
-					getManagedBean().getApproverMap().put(user.getPmUser().getUserName(), user);
-				}
-				if(i==0) {
-					getManagedBean().getFulfilmentRequest().getPmUserGroup().setUserGroupId(userGroup.getUserGroupId());
-					List<String> source = new ArrayList<String>();
+				if(getManagedBean().getApproverModel()==null) {
+					List<String> source = new ArrayList<String>(); 
+					List<String> target = new ArrayList<String>();  
+					getManagedBean().setApproverModel(new DualListModel<String>(source, target));
+				}			
+				getManagedBean().setUserGroupMap(new HashMap<Long, PmUserGroup>());
+				int i = 0;
+				for(PmUserGroup userGroup : resDTO.getUserGroupList()) {
+					getManagedBean().getUserGroupMap().put(userGroup.getUserGroupId(), userGroup);
+					getManagedBean().getUserGroupList().add(userGroup);
+
 					for(PmUserGroupUser user : userGroup.getPmUserGroupUsers()) {
-						source.add(user.getPmUser().getUserName());
+						getManagedBean().getApproverMap().put(user.getPmUser().getUserName(), user);
 					}
-					if(getManagedBean().getApproverModel().getSource().size()==0) {
-						getManagedBean().getApproverModel().setSource(source);
+					if(i==0) {
+						getManagedBean().getFulfilmentRequest().getPmUserGroup().setUserGroupId(userGroup.getUserGroupId());
+						List<String> source = new ArrayList<String>();
+						for(PmUserGroupUser user : userGroup.getPmUserGroupUsers()) {
+							source.add(user.getPmUser().getUserName());
+						}
+						if(getManagedBean().getApproverModel().getSource().size()==0) {
+							getManagedBean().getApproverModel().setSource(source);
+						}
 					}
+					i++;
 				}
-				i++;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1746,8 +1731,9 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		return resDTO;
 	}
 	
-	public AgOfficeResDTO getAgAccount(){
-		getManagedBean().getFulfilmentRequest().getIssuedOrgProfile().getOrgProfileId();
+	public void getAgAccount(){
+		checkPtjGroupAndInitialize();
+		getManagedBean().getFulfilmentRequest().setIssuedOrgProfile(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile());
 		IAgOfficeSO glAccountSO = (IAgOfficeSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IAgOfficeSO.class);
 		AgOfficeReqDTO reqDTO = new AgOfficeReqDTO();
 		reqDTO.setOrgProfileId(getManagedBean().getFulfilmentRequest().getIssuedOrgProfile().getOrgProfileId());
@@ -1756,10 +1742,27 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			getManagedBean().getFulfilmentRequest().setAgOffice(new PmAgOffice());
 		}
 		getManagedBean().getFulfilmentRequest().setAgOffice(resDTO.getAgOffice());
-
-		return resDTO;
+		
 	}
 	
+	private void checkPtjGroupAndInitialize() {
+		getManagedBean().setCurrentPtjGroupId(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getPmPtjGroup().getPtjGroupId());
+		if(getManagedBean().getFulfilmentRequest().getIssuedOrgProfile().getPmPtjGroup().getPtjGroupId() != getManagedBean().getCurrentPtjGroupId()){
+			if(getManagedBean().getFulfilmentRequest().getFlFulfilmentItems() != null && !getManagedBean().getFulfilmentRequest().getFlFulfilmentItems().isEmpty()){
+				for(FlFulfilmentItem fulfilmentItem : getManagedBean().getFulfilmentRequest().getFlFulfilmentItems()){
+					for(FlFulfilmentItemAddr itemAddr : fulfilmentItem.getFlFulfilmentItemAddr()){
+						itemAddr.setPmVotFund(null);
+						itemAddr.setPmGlAccount(null);
+						itemAddr.setPmSubSetia(null);
+						itemAddr.setPmPrgActivity(null);
+						itemAddr.setAssetInd(null);
+						itemAddr.setCoaValue("N");
+					}
+				}
+			}
+		}
+	}
+
 	private void setManualAddressList(){
 		Map<Long, List<PmAddressType>> addressTypeMap = new HashMap<Long, List<PmAddressType>>();
 		if(getManagedBean().getAddressTypesList()==null || getManagedBean().getAddressTypesList().size()==0) {
@@ -1916,8 +1919,8 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	
 	public void onTabChange(int selectedTabIndex){
 		if(selectedTabIndex==3){
-			validateOrderQty();
 			populateChargeLineData(false);	
+			validateOrderQty();
 			setClassName("@(.prChargeLinePnlClass)");
 			onNodeSelect();
 			getVotFundList(getManagedBean().getFulfilmentRequest().getIssuedOrgProfile().getOrgProfileId());
@@ -1928,28 +1931,69 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 				retrieveCountryList();
 			}
 		}
+		if(selectedTabIndex==4){
+			initializeApproverGroup();
+		}
 	}
 	
 	private void validateOrderQty() {
+		
 		BigDecimal requestedQty = null;
 		BigDecimal sumorderedQty = null;
+		BigDecimal newQty = null;
+		Map<Long, BigDecimal> sumOrderedQtyMap = new HashMap<Long,BigDecimal>(); 
+		List<FlFulfilmentItemAddr> itemAddrList = new ArrayList<FlFulfilmentItemAddr>();
 		for(FlFulfilmentItem fulfilmentItem : getManagedBean().getFulfilmentRequest().getFlFulfilmentItems()){
-			sumorderedQty = new BigDecimal(0);
-			requestedQty = null;
+		sumorderedQty = new BigDecimal(0);
 			for(FlFulfilmentItemAddr itemAddr : fulfilmentItem.getFlFulfilmentItemAddr()){
-				if(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses().contains(itemAddr.getFlDeliveryAddress())) {
-					sumorderedQty = sumorderedQty.add(itemAddr.getOrderedQty());
+				if(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses().contains(itemAddr.getFlDeliveryAddress())){
+					if(sumOrderedQtyMap.get(itemAddr.getScRequestItem().getRequestNoteItemId()) != null ){
+						newQty = sumOrderedQtyMap.get(itemAddr.getScRequestItem().getRequestNoteItemId()).add(itemAddr.getOrderedQty());
+						sumOrderedQtyMap.put(itemAddr.getScRequestItem().getRequestNoteItemId(), newQty);
+					}else{
+						sumOrderedQtyMap.put(itemAddr.getScRequestItem().getRequestNoteItemId(), itemAddr.getOrderedQty());
+						itemAddrList.add(itemAddr);
+					}
 				}
-				requestedQty = itemAddr.getScRequestItem().getQuantity();
-			}
-			if(requestedQty!=null && requestedQty.intValue() != 0){
-				if(requestedQty.intValue() > sumorderedQty.intValue()){
-					throw new EpException(MessageConst.ERROR_740007,new String[]{sumorderedQty.toString() ,requestedQty.toString(),fulfilmentItem.getCmItem().getItemName()});
-				}else if(requestedQty.intValue() < sumorderedQty.intValue()){
-					throw new EpException(MessageConst.ERROR_740007,new String[]{sumorderedQty.toString() ,requestedQty.toString(),fulfilmentItem.getCmItem().getItemName()});
-				}//TODO waiting for another validation call from s1 
 			}
 		}
+		
+//		for(Map.Entry<Long,BigDecimal> entry : sumOrderedQtyMap.entrySet()){//TODO tbd by gustia from lilian
+//			requestReqDTO.setRequestItemId(entry.getKey());
+//			requestReqDTO.setOrderQuantity(entry.getValue());
+//			purchaseRequestSO.checkIsOrderQuantityMet(requestReqDTO);
+//			
+//		}
+		
+		for(FlFulfilmentItemAddr itemAddr : itemAddrList){
+			requestedQty = itemAddr.getScRequestItem().getQuantity();
+			sumorderedQty = sumOrderedQtyMap.get(itemAddr.getScRequestItem().getRequestNoteItemId());
+			if(requestedQty!=null && requestedQty.intValue() != 0){
+				if(requestedQty.intValue() > sumorderedQty.intValue()){
+					throw new EpException(MessageConst.ERROR_740007,new String[]{sumorderedQty.toString() ,requestedQty.toString(),itemAddr.getFlFulfilmentItem().getCmItem().getItemName()});
+				}else if(requestedQty.intValue() < sumorderedQty.intValue()){
+					throw new EpException(MessageConst.ERROR_740007,new String[]{sumorderedQty.toString() ,requestedQty.toString(),itemAddr.getFlFulfilmentItem().getCmItem().getItemName()});
+				}
+			}
+		}
+		
+//		for(FlFulfilmentItem fulfilmentItem : getManagedBean().getFulfilmentRequest().getFlFulfilmentItems()){
+//			sumorderedQty = new BigDecimal(0);
+//			requestedQty = null;
+//			for(FlFulfilmentItemAddr itemAddr : fulfilmentItem.getFlFulfilmentItemAddr()){
+//				if(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses().contains(itemAddr.getFlDeliveryAddress())) {
+//					sumorderedQty = sumorderedQty.add(itemAddr.getOrderedQty());
+//				}
+//				requestedQty = itemAddr.getScRequestItem().getQuantity();
+//			}
+//			if(requestedQty!=null && requestedQty.intValue() != 0){
+//				if(requestedQty.intValue() > sumorderedQty.intValue()){
+//					throw new EpException(MessageConst.ERROR_740007,new String[]{sumorderedQty.toString() ,requestedQty.toString(),fulfilmentItem.getCmItem().getItemName()});
+//				}else if(requestedQty.intValue() < sumorderedQty.intValue()){
+//					throw new EpException(MessageConst.ERROR_740007,new String[]{sumorderedQty.toString() ,requestedQty.toString(),fulfilmentItem.getCmItem().getItemName()});
+//				}
+//			}
+//		}
 	}
 	
 	public void updateDeliveryDate() {

@@ -104,6 +104,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private Long issuedPtjId;
 	private Long receivedPtjId;
 	private Long chargedPtjId;
+	private Long currentPtjGroupId;
+	private Long currentPreparedOrgId;
 	
 	private PmUserOrg pmUserOrg = new PmUserOrg();
 	
@@ -1690,6 +1692,34 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setMaxDate(Date maxDate) {
 		this.maxDate = maxDate;
+	}
+
+	/**
+	 * @return the currentPtjGroupId
+	 */
+	public Long getCurrentPtjGroupId() {
+		return currentPtjGroupId;
+	}
+
+	/**
+	 * @param currentPtjGroupId the currentPtjGroupId to set
+	 */
+	public void setCurrentPtjGroupId(Long currentPtjGroupId) {
+		this.currentPtjGroupId = currentPtjGroupId;
+	}
+
+	/**
+	 * @return the currentPreparedOrgId
+	 */
+	public Long getCurrentPreparedOrgId() {
+		return currentPreparedOrgId;
+	}
+
+	/**
+	 * @param currentPreparedOrgId the currentPreparedOrgId to set
+	 */
+	public void setCurrentPreparedOrgId(Long currentPreparedOrgId) {
+		this.currentPreparedOrgId = currentPreparedOrgId;
 	}
 
 }
