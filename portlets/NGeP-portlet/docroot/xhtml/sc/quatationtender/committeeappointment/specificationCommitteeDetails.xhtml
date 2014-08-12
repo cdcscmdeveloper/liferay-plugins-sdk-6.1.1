@@ -64,20 +64,21 @@
 
 				<ui:fragment rendered="#{specificationcommittee.PNP}">
 					<h:outputText value="Chairperson"
-						rendered="#{specificationcommittee.memberRole.parameterCode eq 'C'}" />
+						rendered="#{specificationcommittee.memberRole.parameterCode eq 'C'}"
+						disabled="#{committe.committeStatus.statusId eq 60202}" />
 				</ui:fragment>
 				<ui:fragment rendered="#{!specificationcommittee.PNP}">
 					<p:selectOneMenu id="roleid" label="#{lbl['lbl.so.role']}"
 						value="#{specificationcommittee.memberRole.parameterId}"
-						style="width: 110px;margin-bottom: 5px;">
-							<p:ajax event="change" partialSubmit="true" process="@this"
-							listener="#{qTCommitteBackingBean.roleChangeListner(specificationcommittee)}"></p:ajax>
-						<f:selectItem itemLabel="-Select One-" itemValue="#{null}"></f:selectItem>
+						style="width: 110px;margin-bottom: 5px;"
+						disabled="#{committe.committeStatus.statusId eq 60202}">
+						<p:ajax event="change" partialSubmit="true" process="@this"
+							listener="#{qTCommitteBackingBean.roleChangeListner(specificationcommittee)}" />
+						<f:selectItem itemLabel="-Select One-" itemValue="#{null}" />
 						<f:selectItems var="role"
 							value="#{qTCommitteBackingBean.managedBean.roleTypes}"
 							itemLabel="#{role.codeName}"
 							itemValue="#{role.pmParameter.parameterId}" />
-
 					</p:selectOneMenu>
 					<p:message id="roleidMsg" for="roleid" display="icon" />
 				</ui:fragment>
