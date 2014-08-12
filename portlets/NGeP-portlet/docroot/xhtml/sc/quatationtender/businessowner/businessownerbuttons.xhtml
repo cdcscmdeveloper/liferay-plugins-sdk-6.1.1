@@ -7,22 +7,25 @@
 
 	<p:panel>
 		<div align="right">
+<p:commandButton value="#{lbl['lbl.sc.notice.board.backbtn']}"
+							icon="ui-icon-back" action="#{qTBusinessOwnerBackingBean.gotoQtSearchPage}"
+							style="float:left;" />
+			<p:commandButton value="#{lbl['lbl.so.save']}"
+				rendered="#{qTBusinessOwnerBackingBean.managedBean.qt.recordStatusFlg ne QTStatusConst.CANCEL_STATUS}"
+				action="#{qTBusinessOwnerBackingBean.saveBusinessOwnerAction}"
+				process="@all" icon="ui-icon-save" update="@all" />
+			<p:commandButton value="#{lbl['lbl.so.submit']}"
+				action="#{qTBusinessOwnerBackingBean.submitBusinessOwnerAction}"
+				rendered="#{qTBusinessOwnerBackingBean.managedBean.qt.recordStatusFlg ne QTStatusConst.CANCEL_STATUS and qTBusinessOwnerBackingBean.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_APPOINT_BO}"
+				process="@all" icon="ui-icon-submit" update="@all" />
 
-	
-				<p:commandButton value="#{lbl['lbl.so.save']}"
-					action="#{qTBusinessOwnerBackingBean.saveBusinessOwnerAction}"
-					process="@all" icon="ui-icon-save" update="@all" />
-				<p:commandButton value="#{lbl['lbl.so.submit']}"
-					action="#{qTBusinessOwnerBackingBean.submitBusinessOwnerAction}"
-					process="@all" icon="ui-icon-submit" update="@all" rendered="#{qTBusinessOwnerBackingBean.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_APPOINT_BO}"/>
+			<p:commandButton value="#{lbl['lbl.so.cancelbtn']}"
+				action="#{qTBusinessOwnerBackingBean.cancelQTDetails}"
+				process="@all" style="float:right;margin-right: 12px;"
+				icon="ui-icon-cancel" update="@all"
+				rendered="#{!qTBusinessOwnerBackingBean.managedBean.qt.brandNew}" />
 
-				<p:commandButton value="#{lbl['lbl.so.cancelbtn']}"
-					action="#{qTBusinessOwnerBackingBean.cancelQTDetails}"
-					process="@all" style="float:right;margin-right: 12px;"
-					icon="ui-icon-cancel" update="@all"
-					rendered="#{!qTBusinessOwnerBackingBean.managedBean.qt.brandNew}" />
 
-			
 
 
 		</div>
