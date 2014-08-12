@@ -551,7 +551,7 @@ public class SpecificationBackingBean extends
 						.setQtZoneCriterias(null);
 				this.getManagedBean().getScQt().getScQtSupplierCriteria()
 						.setScQtLocCriteria(null);
-				//this.getManagedBean().getScQt().setScQtCategorys(null);
+				// this.getManagedBean().getScQt().setScQtCategorys(null);
 				getManagedBean().setZoneGeneralTrees(null);
 				getManagedBean().setZoneTrees(null);
 			}
@@ -789,7 +789,6 @@ public class SpecificationBackingBean extends
 
 			// saveTempleateSpecDtls(finanicalScQtDoc, "2");
 			retriveTechnicalSpecification();
-			
 
 		} finally {
 
@@ -10262,11 +10261,11 @@ public class SpecificationBackingBean extends
 		if (null != selectedTreeNode) {
 			List<TreeNode> zoneTrees = this.getManagedBean()
 					.getZoneGeneralTrees();
-			for (TreeNode node : zoneTrees) {
+			for (int i = 0; i < zoneTrees.size(); i++) {
 				if (zoneDtls.getZoneName().equalsIgnoreCase(
-						((TplSpecZoneDtl) node.getChildren().get(0).getData())
-								.getZoneName())) {
-					zoneTrees.remove(node);
+						((TplSpecZoneDtl) zoneTrees.get(i).getChildren().get(0)
+								.getData()).getZoneName())) {
+					zoneTrees.remove(i);
 					break;
 				}
 			}
