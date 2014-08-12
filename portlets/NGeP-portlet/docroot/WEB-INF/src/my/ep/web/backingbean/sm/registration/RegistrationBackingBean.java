@@ -488,8 +488,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	}
 
 	public String updateOnlineAccount() {
-		if(this.getManagedBean().getSmSupp().getSmSupplierBusinesses().size() < 1){
-			throw new EpException(MessageConst.ERROR_721011);
+		if(!this.getManagedBean().getSmSupp().getBusinessType().equals(SupplierManagementConst.INDIVIDUAL_FLAG)){
+			if(this.getManagedBean().getSmSupp().getSmSupplierBusinesses().size() < 1){
+				throw new EpException(MessageConst.ERROR_721011);
+			}
 		}
 
 		if(this.getManagedBean().getSmAppl().getSmSupplierBanks().size() < 1){
@@ -1284,6 +1286,54 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			}
 		}
 	}*/
+	
+	public void pmStateDropdownValues() {
+		//List<SelectItem> itemList = new ArrayList<SelectItem>();
+		log.info("------pmStateDropdownValues------" + this.getManagedBean().getSmBusinessAdd().getPmCountry().getCountryId());
+		Long countryid = this.getManagedBean().getSmBusinessAdd().getPmCountry().getCountryId();
+		
+		if(this.getManagedBean().getSmBusinessAdd().getPmCountry().getCountryCode().equals(SupplierManagementConst.COUNTRY_MALAYSIA_CODE) ){
+			if(this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK) || 
+					this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK) ||
+					this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH) || 
+					this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH)){
+				
+				List<PmState> stateLs = retrievePmStateList(countryid);
+				this.getManagedBean().setBusinessStateLs(new ArrayList<PmState>());
+				
+				for(PmState state : stateLs){
+					if(this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK) || 
+							this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK)){
+						if(state.getStateName().equalsIgnoreCase("SARAWAK")){
+							this.getManagedBean().getBusinessStateLs().add(state);
+							this.getManagedBean().getSmBusinessAdd().setPmState(state);
+							this.getManagedBean().setBusinessDistrictLs(retrievePmDistrictList(state.getStateId()));
+							System.out.println("----SAEAWAK BusinessDistric----" + this.getManagedBean().getBusinessDistrictLs());
+						}
+					}else if(this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH) || 
+							this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH)){
+						if(state.getStateName().equalsIgnoreCase("SABAH")){
+							this.getManagedBean().getBusinessStateLs().add(state);
+							this.getManagedBean().getSmBusinessAdd().setPmState(state);
+							this.getManagedBean().setBusinessDistrictLs(retrievePmDistrictList(state.getStateId()));
+							System.out.println("----SABAH BusinessDistric----" + this.getManagedBean().getBusinessDistrictLs());
+						}
+					}
+				}
+			}
+		}
+			
+/*		if(this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK) || 
+				this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK)){
+			
+		}else if(this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH) || 
+				this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH)){
+
+		}else{
+
+		}*/
+
+	}
 
 }
 
