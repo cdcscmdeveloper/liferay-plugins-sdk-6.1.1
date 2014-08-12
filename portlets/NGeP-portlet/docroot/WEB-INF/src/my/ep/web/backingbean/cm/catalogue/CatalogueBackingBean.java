@@ -1850,7 +1850,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				for (CmImage image : this.getManagedBean().getSelectedMaintainItem().getCmImages()) {
 					if (image.isBrandNew()) {
 						this.getManagedBean().getSelectedMaintainItem().setReviewRequired(true);
-						this.getManagedBean().getSelectedMaintainItem().setItemStatus("P");
+						//this.getManagedBean().getSelectedMaintainItem().setItemStatus("P");
 						break;
 					}
 				}
@@ -1862,13 +1862,13 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 							.getManagedBean().getSelectedMaintainItem()
 							.getItemDesc()))) {
 						this.getManagedBean().getSelectedMaintainItem().setReviewRequired(true);
-						this.getManagedBean().getSelectedMaintainItem().setItemStatus("P");
+						//this.getManagedBean().getSelectedMaintainItem().setItemStatus("P");
 					}
 				} else {
 					if (this.getManagedBean().getSelectedMaintainItem().getItemDesc() != null
 					&& this.getManagedBean().getSelectedMaintainItem().getItemDesc().trim().length() > 0) {
 						this.getManagedBean().getSelectedMaintainItem().setReviewRequired(true);
-						this.getManagedBean().getSelectedMaintainItem().setItemStatus("P");
+						//this.getManagedBean().getSelectedMaintainItem().setItemStatus("P");
 					}
 				}
 
