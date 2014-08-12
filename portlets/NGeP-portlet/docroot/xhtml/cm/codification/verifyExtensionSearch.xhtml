@@ -23,7 +23,7 @@
 
 		<p:panel header="Request Info" toggleable="true">
 
-			<table style="width: 66%; margin-bottom: 4px;">
+			<table style="width: 100%; margin-bottom: 4px;">
 				<tr>
 					<td><p:outputLabel value="Item Type"></p:outputLabel></td>
 					<td><p:selectOneMenu
@@ -32,12 +32,9 @@
 							<f:selectItem itemValue="P" itemLabel="Product " />
 							<f:selectItem itemValue="S" itemLabel="Service" />
 						</p:selectOneMenu></td>
+						<td></td>
+						<td></td>
 				</tr>
-			</table>
-
-
-
-			<table style="width: 100%;">
 
 
 				<tr>
@@ -50,8 +47,7 @@
 							value="#{unspscCodeBackingBean.managedBean.requestCode.itemDetail}"
 							disabled="true" size="40"></p:inputText></td>
 				</tr>
-				<h:panelGroup id="extensionFiledsId"
-						rendered="#{unspscCodeBackingBean.managedBean.requestCode.itemType != 'S'}">
+				
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.cm.type']}"></p:outputLabel></td>
 					<td><p:inputText
@@ -72,7 +68,7 @@
 							value="#{unspscCodeBackingBean.managedBean.requestCode.colorName}"
 							disabled="true" size="40"></p:inputText></td>
 				</tr>
-               </h:panelGroup>
+               
 			</table>
 
 		</p:panel>

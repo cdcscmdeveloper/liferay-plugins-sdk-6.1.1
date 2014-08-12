@@ -1538,7 +1538,20 @@ public class CodificationBackingBean extends
 	public List<String> autoCompleteUnspsc(String query) {
 
 		System.out.println("query:::::::::::::::::::::::::::::: " + query);
-
+		
+//		FacesContext facesContext = FacesContext.getCurrentInstance();
+//		
+//		Char firstLetter = query.charAt(0);
+//		if ((Integer.parseInt((firstLetter))) > 7) || !query.startsWith("76")) {
+//			facesContext.addMessage(
+//					null,
+//					new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+//							MessageUtils.getMessage(MessageConst.ERROR_715004,
+//									MessageUtils.BUNDLE_COMMON_MESSAGES,
+//									new FacesScopes().getUserLocale())));
+//			return "";
+//		}
+		
 		ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate
 				.getInstance().getServiceObject("cm", ICodificationSO.class);
 
@@ -1636,6 +1649,28 @@ public class CodificationBackingBean extends
 		}
 
 		return "verifyExtensionSearch?faces-redirect=true";
+	}
+	
+	public String returnToRecommendService(CmUnspsc unspscObj) {
+		System.out.println("**********returnToRecommendService************");
+		UnspscCodeBackingBean ubb = new UnspscCodeBackingBean();
+		CmRecommendCode recommend = new CmRecommendCode();
+		recommend.setUnspscCode(unspscObj.getUnspscCode());
+		recommend.setUnspscTitle(unspscObj.getUnspscTitle());
+		ubb.getManagedBean().getRequestCode().getCmRecommendCodes().add(recommend);
+		
+		FacesScopes fs = new FacesScopes();
+		System.out.println("CM_ADMIN:" + fs.hasRoleUser("CM_ADMIN"));
+		System.out.println("CD_OFFICER:" + fs.hasRoleUser("CD_OFFICER"));
+
+		if (fs.hasRoleUser("CM_ADMIN")) {
+			return "reviewUnspscCode?faces-redirect=true";
+		} else if (fs.hasRoleUser("CD_OFFICER")) {
+			return "reviewBeforeCreateTempCode?faces-redirect=true";
+		}
+		
+		return "";
+		
 	}
 
 	public String requestExtensionWithUNSPSC() {
@@ -2220,7 +2255,7 @@ public class CodificationBackingBean extends
 	}
 
 	public boolean productCode(String unspscCode) {
-
+		System.out.println("............productCode..........");
 		boolean flag = true;
 		String segmentCode = "";
 

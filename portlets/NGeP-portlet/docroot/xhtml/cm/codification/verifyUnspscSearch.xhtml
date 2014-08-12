@@ -9,7 +9,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
-       <p:messages id="searchToRecommendMsgId" showDetail="true"
+		<p:messages id="searchToRecommendMsgId" showDetail="true"
 			autoUpdate="true" closable="true" showSummary="false"></p:messages>
 		<h:panelGroup id="cmUNSPSCsearchID">
 
@@ -19,7 +19,7 @@
 
 			<p:panel header="Request Info" toggleable="true">
 
-				<table style="width: 66%; margin-bottom: 4px;">
+				<table style="width: 100%; margin-bottom: 4px;">
 					<tr>
 						<td><p:outputLabel value="Item Type"></p:outputLabel></td>
 						<td><p:selectOneMenu disabled="true"
@@ -28,12 +28,9 @@
 								<f:selectItem itemValue="P" itemLabel="Product " />
 								<f:selectItem itemValue="S" itemLabel="Service" />
 							</p:selectOneMenu></td>
+						<td></td>
+						<td></td>
 					</tr>
-				</table>
-
-
-
-				<table style="width: 100%;">
 
 
 					<tr>
@@ -122,11 +119,18 @@
 					<p:column>
 						<f:facet name="header">
 					#{lbl['lbl.cm.unspsc.code']}
-				</f:facet>
+			        	</f:facet>
+						<p:commandLink
+							action="#{codificationBackingBean.returnToRecommendService(unspscObj)}"
+							rendered="#{!(codificationBackingBean.productCode(unspscObj.unspscCode)) and (unspscObj.unspscLevel eq 3)}">
+						
+							#{unspscObj.unspscCode}
+							</p:commandLink>
 
 						<p:commandLink
 							action="#{codificationBackingBean.verifyExtensionSearch(unspscObj)}"
-							rendered="#{unspscObj.unspscLevel eq 3}">
+							rendered="#{codificationBackingBean.productCode(unspscObj.unspscCode) and (unspscObj.unspscLevel eq 3)}">
+						
 							#{unspscObj.unspscCode}
 							</p:commandLink>
 

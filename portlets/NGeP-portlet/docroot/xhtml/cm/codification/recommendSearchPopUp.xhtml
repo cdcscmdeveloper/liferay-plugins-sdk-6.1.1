@@ -9,39 +9,39 @@
 	<h:panelGroup id="codificationPopUpId">
 
 		<table width="100%;">
-			
-					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.cm.segment.code']}"></p:outputLabel></td>
-						<td colspan="1"><p:inputText
-								value="#{codificationBackingBean.managedBean.segmentCode}"
-								size="50" disabled="true" /></td>
-						<td><p:outputLabel value="#{lbl['lbl.cm.segment.title']}"></p:outputLabel></td>
-						<td colspan="1"><p:inputText
-								value="#{codificationBackingBean.managedBean.segmentTitle}"
-								size="50" disabled="true" /></td>
-					</tr>
-					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.cm.family.code']}"></p:outputLabel></td>
-						<td colspan="1"><p:inputText
-								value="#{codificationBackingBean.managedBean.familyCode}"
-								size="50" disabled="true" /></td>
-						<td><p:outputLabel value="#{lbl['lbl.cm.family.title']}"></p:outputLabel></td>
-						<td colspan="1"><p:inputText
-								value="#{codificationBackingBean.managedBean.familyTitle}"
-								size="50" disabled="true" /></td>
-					</tr>
-					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.cm.class.code']}"></p:outputLabel></td>
-						<td colspan="1"><p:inputText
-								value="#{codificationBackingBean.managedBean.classCode}"
-								size="50" disabled="true" /></td>
-						<td><p:outputLabel value="#{lbl['lbl.cm.class.title']}"></p:outputLabel></td>
-						<td colspan="1"><p:inputText
-								value="#{codificationBackingBean.managedBean.classTitle}"
-								size="50" disabled="true" /></td>
-					</tr>
+
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.cm.segment.code']}"></p:outputLabel></td>
+				<td colspan="1"><p:inputText
+						value="#{codificationBackingBean.managedBean.segmentCode}"
+						size="50" disabled="true" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.cm.segment.title']}"></p:outputLabel></td>
+				<td colspan="1"><p:inputText
+						value="#{codificationBackingBean.managedBean.segmentTitle}"
+						size="50" disabled="true" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.cm.family.code']}"></p:outputLabel></td>
+				<td colspan="1"><p:inputText
+						value="#{codificationBackingBean.managedBean.familyCode}"
+						size="50" disabled="true" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.cm.family.title']}"></p:outputLabel></td>
+				<td colspan="1"><p:inputText
+						value="#{codificationBackingBean.managedBean.familyTitle}"
+						size="50" disabled="true" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.cm.class.code']}"></p:outputLabel></td>
+				<td colspan="1"><p:inputText
+						value="#{codificationBackingBean.managedBean.classCode}" size="50"
+						disabled="true" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.cm.class.title']}"></p:outputLabel></td>
+				<td colspan="1"><p:inputText
+						value="#{codificationBackingBean.managedBean.classTitle}"
+						size="50" disabled="true" /></td>
+			</tr>
 		</table>
-		
+
 		<div style="padding: 2px;"></div>
 
 
@@ -59,8 +59,14 @@
 				</f:facet>
 
 				<p:commandLink
+					action="#{codificationBackingBean.returnToRecommendService(unspscObj1)}"
+					rendered="#{!(codificationBackingBean.productCode(unspscObj1.unspscCode)) and (unspscObj1.unspscLevel eq 3)}">
+							#{unspscObj1.unspscCode}
+							</p:commandLink>
+
+				<p:commandLink
 					action="#{codificationBackingBean.verifyExtensionSearch(unspscObj1)}"
-					rendered="#{unspscObj1.unspscLevel eq 3}">
+					rendered="#{codificationBackingBean.productCode(unspscObj1.unspscCode) and (unspscObj1.unspscLevel eq 3)}">
 							#{unspscObj1.unspscCode}
 							</p:commandLink>
 
