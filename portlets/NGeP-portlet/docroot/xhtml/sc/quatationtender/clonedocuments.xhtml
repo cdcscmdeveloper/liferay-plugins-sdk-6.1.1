@@ -40,7 +40,8 @@
 					<td><p:outputLabel value="#{lbl['lbl.so.creatdtfrom']}" /></td>
 					<td><p:calendar id="crdateFrm" showOn="button"
 							value="#{qTDocumentsBackingBean.managedBean.cloneDocumentSearchBean.fromCreatedDate}"
-							size="30" readonlyInput="true">
+							size="30" readonlyInput="true"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 							<p:ajax event="dateSelect" update="createdtTo" />
 						</p:calendar></td>
 				</tr>
@@ -49,7 +50,8 @@
 					<td><p:calendar id="createdtTo" showOn="button"
 							value="#{qTDocumentsBackingBean.managedBean.cloneDocumentSearchBean.toCreatedDate}"
 							mindate="#{qTDocumentsBackingBean.managedBean.cloneDocumentSearchBean.fromCreatedDate}"
-							size="30" readonlyInput="true">
+							size="30" readonlyInput="true" 
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 							<f:attribute name="startDate"
 								value="#{qTDocumentsBackingBean.managedBean.cloneDocumentSearchBean.fromCreatedDate}" />
 							<f:validator validatorId="dateRangeValidator" />
