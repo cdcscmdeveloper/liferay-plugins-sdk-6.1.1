@@ -1871,27 +1871,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 						this.getManagedBean().getSelectedMaintainItem().setItemStatus("P");
 					}
 				}
-				/*System.out.println("isReviewRequired:"
-						+ this.getManagedBean().getSelectedMaintainItem()
-								.isReviewRequired());
-
-				if (this.getManagedBean().getSelectedMaintainItem()
-						.isReviewRequired()) {
-					this.getManagedBean().getSelectedMaintainItem()
-							.setItemStatus("P");
-				} else {
-					this.getManagedBean().getSelectedMaintainItem()
-							.setItemStatus("U");
-				}*/
 
 			}
 
 			log.info("*********getItemStatus*********"+ this.getManagedBean().getSelectedMaintainItem().getItemStatus());
-			/*throw new EpException(MessageConst.ERROR_715009, 
-			new String[]{ResourceBundleUtils.getMessage("lbl.cm.tier", 
-			ResourceBundleUtils.BUNDLE_COMMON_LABELS, 
-			new FacesScopes().getUserLocale())});*/
-			
 			
 			//----------mandatory checking-------------------------------------------------------------------------------------------//
 			
@@ -1908,7 +1891,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			}
 			
 			//Standard Pricing
-			//promotion.setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
 			CmStandardPricing cmStandardPricing = this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing();
 			if(cmStandardPricing.getPrice()==null || cmStandardPricing.getStartDate()==null || cmStandardPricing.getEndDate()==null){
 				FacesContext.getCurrentInstance().addMessage(null,
@@ -2072,6 +2054,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			}
 			
 			//same item with existed one cannot overlap the date
+			//check db
 			
 
 			Map<Date, List<CmTierPricing>> tierMap = groupingTier(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings());
@@ -5052,15 +5035,16 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	public String itemRejectReason(long id) {
 
-		for (PmStatusDesc desc : this.getManagedBean().getStatusDescList()) {
-
-			if (desc.getStatusDescId().equals(id)) {
-				return desc.getStatusName();
-			}
-
+		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
+		try{
+			return catalogueSO.findPmStatusDesc(id, new FacesScopes().getUserLocale().getLanguage());
+		}catch(Exception e){
+			e.printStackTrace();
+			return "";
+		}finally{
+			catalogueSO = null;
 		}
-
-		return "";
+		
 	}
 
 	public <T extends CmPricing> Map groupingTier(List<T> commonList) {

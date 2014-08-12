@@ -168,6 +168,23 @@ public class ReviewCatalogueBackingBean extends
 			bb.getManagedBean().getSelectedMaintainItem().setReviewRequired(true);
 			System.out.println("bb.getManagedBean().getRejectReasonIds(): "
 					+ bb.getManagedBean().getRejectReasonIds());
+			
+			for (int i = 0; i < bb.getManagedBean().getRejectReasonIds().size(); i++) {
+				Long id = Long.valueOf(String.valueOf(bb.getManagedBean().getRejectReasonIds().get(i)));
+				
+				if(id==10010){
+					if(bb.getManagedBean().getRejectReason()==null || bb.getManagedBean().getRejectReason().isEmpty()){
+						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+							FacesMessage.SEVERITY_ERROR,
+							"Remark is required!", ""));
+						return "addCatalogView";
+					}
+				}
+				
+			}
+			
+			
+			
 	
 			for (int i = 0; i < bb.getManagedBean().getRejectReasonIds().size(); i++) {
 				Long id = Long.valueOf(String.valueOf(bb.getManagedBean().getRejectReasonIds().get(i)));
