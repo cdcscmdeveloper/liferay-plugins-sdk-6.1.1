@@ -720,6 +720,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 		IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject("pm", IStatusSO.class);
 		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject("pm", IUserSO.class);
+		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
 		this.getManagedBean().setPreviousScreen(1);//catMaintenance
 
 		try{
@@ -743,19 +744,23 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			 * ().add(reason.getPmStatus().getStatusId());
 			 * this.getManagedBean().setRejectReason(reason.getRemark()); }
 			 */
+			CatalogueReqDTO catReqDTO = new CatalogueReqDTO();
+			
+			CatalogueResDTO catResDTO = null;
+			
+			catReqDTO.setToken(languageCode);
+			catReqDTO.setSupplierItemId(this.getManagedBean().getRejectedItemList().get(index).getSupplierItemId());
+			catReqDTO.setCmSupplierItemObj(this.getManagedBean().getRejectedItemList().get(index));
+			catResDTO = catalogueSO.findItemRejectReasons(catReqDTO);
+			this.getManagedBean().getRejectedItemList().get(index).setCmItemRejectReasons(catResDTO.getSupplierItem().getCmItemRejectReasons());
 	
-			this.getManagedBean().setSelectedMaintainItem(
-					this.getManagedBean().getRejectedItemList().get(index));
-			this.getManagedBean()
-					.getSelectedMaintainItem()
-					.setCompareDesc(
-							this.getManagedBean().getRejectedItemList().get(index)
-									.getItemDesc());
+			this.getManagedBean().setSelectedMaintainItem(this.getManagedBean().getRejectedItemList().get(index));
+			this.getManagedBean().getSelectedMaintainItem()
+			.setCompareDesc(this.getManagedBean().getRejectedItemList().get(index).getItemDesc());
 	
 			UserReqDTO userReqDTO = new UserReqDTO();
 	
-			for (CmItemRejectReason remark : this.getManagedBean()
-					.getSelectedMaintainItem().getCmItemRejectReasons()) {
+			for (CmItemRejectReason remark : this.getManagedBean().getSelectedMaintainItem().getCmItemRejectReasons()) {
 	
 				userReqDTO.setUserId(remark.getChangedBy());
 				System.out.println("remark.getChangedBy()" + remark.getChangedBy());
@@ -774,6 +779,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}finally {
 			userSO = null;
 			statusSO = null;
+			catalogueSO = null;
 		}
 
 		//return "addCatalogItem";
@@ -2023,6 +2029,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				return "editCatalogItem";
 			}
 			
+			//validate promotion's mandatory case if one field is inserted
 			boolean promotionError = false;
 			if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getPrice()==null){
 				if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getStartDate()==null){
@@ -2048,7 +2055,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				return "editCatalogItem";
 			}
 					
-			
+			//promotion price date is not in standard date range 
 			if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getStartDate()!=null && this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getEndDate()!=null){
 				if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getEndDate().after(cmStandardPricing.getEndDate())||
 				   this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getStartDate().after(cmStandardPricing.getEndDate())||
@@ -2063,6 +2070,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 						return "editCatalogItem";
 				}
 			}
+			
+			//same item with existed one cannot overlap the date
+			
 
 			Map<Date, List<CmTierPricing>> tierMap = groupingTier(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings());
 			if (!tierMap.isEmpty() && tierMap.size() > 0) {
