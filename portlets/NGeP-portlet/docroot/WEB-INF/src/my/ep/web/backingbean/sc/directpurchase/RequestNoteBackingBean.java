@@ -611,6 +611,10 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 				}
 			}
 			
+			if(getManagedBean().getPrInquiryId() != null){
+				requestNoteReqDTO.setPurchaseInquiryId(getManagedBean().getPrInquiryId());
+			}
+			
 			FacesScopes facesScopes = new FacesScopes();
 			String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
 			requestNoteReqDTO.setRequestNote(requestNote);
