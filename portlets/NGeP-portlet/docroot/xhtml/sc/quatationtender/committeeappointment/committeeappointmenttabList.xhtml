@@ -34,12 +34,12 @@
 					value="#{lbl['lbl.so.addbtn']}" process="@this"
 					actionListener="#{qTCommitteBackingBean.addCommitteMember(qTDetailBB.managedBean.selectedTabBean.scQtCommittee, committeeApproval.titleName)}"
 					oncomplete="newspecificationcommittee.show();"
-					update="@(.scAddMember)" icon="ui-icon-add" rendered="#{committeeApproval.scQtCommittee.scCommittee.committeStatus.statusId eq 60202}" />
+					update="@(.scAddMember)" icon="ui-icon-add"  />
 
 				<p:commandButton value="#{lbl['lbl.so.delete']}"
 					process="@this, specificationcommitteeid"
 					actionListener="#{qTCommitteBackingBean.deleteSpecificationCommittee}"
-					update="specificationcommitteeid" icon="ui-icon-delete" rendered="#{committeeApproval.scQtCommittee.scCommittee.committeStatus.statusId eq 60202}" />
+					update="specificationcommitteeid" icon="ui-icon-delete" />
 
 				<p:commandButton value="#{lbl['lbl.so.clone.to.tec']}"
 					process="@this, specificationcommitteeid" update="@(.clonetecid)"
