@@ -185,7 +185,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			this.getManagedBean().setBusinessNatureL1(this.retrieveBusinessNatureByLevelParent("10",0));
 			//TODO: temporary comment this.retrieveBusinessNatureL5Map();
 			this.retrieveIdentityTypeMap();
-		
+			this.getManagedBean().setSelectedBusinessNature(new SmSupplierBusiness());
 			
 			log.info("**********permenant"+ this.getManagedBean().getPermenantStateLs().size());
 			log.info("**********residential" + this.getManagedBean().getResidentialStateLs().size());
