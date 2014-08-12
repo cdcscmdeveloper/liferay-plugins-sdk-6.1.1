@@ -13,14 +13,14 @@
 	<p:panel>
 		<table>
 			<tr>
-				<td style="width: 100px;" valign="top"><p:outputLabel
+				<td  valign="top"><p:outputLabel
 						value="#{lbl['lbl.sc.spec.stage.title']}" /></td>
-				<td><p:inputTextarea readonly="true" rows="2" cols="100"
+				<td ><p:inputTextarea readonly="true" rows="2" cols="100" style="width: 100px;"
 						value="#{specificationBackingBean.managedBean.scQt.qtTitle}"
 						disabled="true"></p:inputTextarea></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.spec.panel']}" /> <p:outputLabel
+				<td ><p:outputLabel value="#{lbl['lbl.sc.spec.panel']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneRadio required="true"
 						label="#{lbl['lbl.sc.spec.panel']}" id="panelTitle"
