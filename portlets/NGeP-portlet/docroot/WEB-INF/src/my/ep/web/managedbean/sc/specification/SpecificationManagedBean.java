@@ -347,6 +347,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private boolean isPanelChange;
 	private String newItemCategory;
 	private CtPanelItem existingpanelitem;
+	private String bankstmntTomonth;
 
 	public SpecificationManagedBean() {
 		
@@ -3953,6 +3954,20 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	 */
 	public void setYearsDisplayList(List<SelectItem> yearsDisplayList) {
 		this.yearsDisplayList = yearsDisplayList;
+	}
+
+	/**
+	 * @return the bankstmntTomonth
+	 */
+	public String getBankstmntTomonth() {
+		return bankstmntTomonth;
+	}
+
+	/**
+	 * @param bankstmntTomonth the bankstmntTomonth to set
+	 */
+	public void setBankstmntTomonth(String bankstmntTomonth) {
+		this.bankstmntTomonth = bankstmntTomonth;
 	}
 
 }
