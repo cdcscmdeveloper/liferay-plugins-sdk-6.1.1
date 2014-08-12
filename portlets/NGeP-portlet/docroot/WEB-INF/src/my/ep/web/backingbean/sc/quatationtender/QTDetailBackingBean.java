@@ -795,6 +795,7 @@ public class QTDetailBackingBean extends
 			}
 		}
 		scQt.setScQtApprovals(approvalList);
+		scQt.setScQtBriefings(null);
 		if (scQt.getQtStatus().getStatusId() > QTStatusConst.QT_PENDING_QT_SUBMISSION) {
 			// Setting the qtBreifing details to Qtdetails
 			List<BriefingZoneBean> beansList = this.getManagedBean()

@@ -3813,6 +3813,7 @@ public class SpecificationBackingBean extends
 		}
 		// scQt.setScQtRemarks(specRemarks);
 		scQt.setScQtCommittees(null);
+		scQt.setScQtBriefings(null);
 		reqDTO.setScQt(scQt);
 
 		return reqDTO;
@@ -9485,6 +9486,7 @@ public class SpecificationBackingBean extends
 
 		scQt.setScQtCommittees(null);
 		scQt.setScQtStatus(null);
+		scQt.setScQtBriefings(null);
 		reqDTO.setScQt(scQt);
 		return reqDTO;
 	}
@@ -10641,6 +10643,7 @@ public class SpecificationBackingBean extends
 		}
 		scQt.setScQtCommittees(null);
 		scQt.setScQtStatus(null);
+		scQt.setScQtBriefings(null);
 		specReqDTO.setScQt(scQt);
 		return specReqDTO;
 	}

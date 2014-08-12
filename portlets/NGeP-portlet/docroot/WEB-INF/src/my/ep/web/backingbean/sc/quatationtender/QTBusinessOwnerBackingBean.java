@@ -825,6 +825,7 @@ public class QTBusinessOwnerBackingBean extends
 		List<ScQtCommittee> qtCommittees = new ArrayList<ScQtCommittee>();
 		qtCommittees.add(this.getManagedBean().getScQtCommittee());
 		scQt.setScQtCommittees(qtCommittees);
+		scQt.setScQtBriefings(null);
 		// Constructing reqDto
 		/*QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
 		quationTenderReqDTO.setQtdetail(scQt);*/
