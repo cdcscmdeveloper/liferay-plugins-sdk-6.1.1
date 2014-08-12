@@ -9,7 +9,6 @@
 	<p:dialog id="cloneid" header="Clone Committee" widgetVar="screen2"
 		width="950" height="600" position="top"
 		styleClass="cloneCommitteMember">
-		<c:if test="#{!empty qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean}">
 		<p:panel id="clonesearchpnlid" header="#{lbl['lbl.so.searchbtn']}"
 			toggleable="true">
 			<table>
@@ -187,6 +186,5 @@
 					icon="ui-icon-cancel" onclick="screen2.hide();" />
 			</div>
 		</p:panel>
-		</c:if>
 	</p:dialog>
 </ui:composition>
