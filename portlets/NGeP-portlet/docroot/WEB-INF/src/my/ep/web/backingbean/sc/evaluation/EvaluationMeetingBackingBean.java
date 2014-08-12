@@ -103,6 +103,8 @@ public class EvaluationMeetingBackingBean extends
 	private IPagingDataModel<ScQt> searchQuotatioTender = new clonePagingDataModel();
 	private IPagingDataModel<PmUser> searchExistingUser = new existingUserPagingDataModel();
 
+	
+	
 	public EvaluationMeetingBackingBean() {
 
 		if (this.getManagedBean().getCloneQtnTenderSearchBean() == null) {
@@ -1105,5 +1107,7 @@ public class EvaluationMeetingBackingBean extends
 							"/xhtml/sc/evaluation/xhtml/sc/evaluation/evaluationstage1view.xhtml");
 		}
 	}
+
+	
 
 }

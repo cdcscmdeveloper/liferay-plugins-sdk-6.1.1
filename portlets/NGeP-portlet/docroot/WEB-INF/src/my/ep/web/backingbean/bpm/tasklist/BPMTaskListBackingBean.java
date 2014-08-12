@@ -176,6 +176,12 @@ public class BPMTaskListBackingBean extends
 		temp.put(SCProcessNameConst.TEC_EVALUATION_PROCESS_NAME +SCProcessNameConst.COORDINATE_TEC_MEETING , "coordinatemeeting");
 		temp.put(SCProcessNameConst.FEC_EVALUATION_PROCESS_NAME +SCProcessNameConst.COORDINATE_FEC_MEETING , "coordinatemeeting");
 		
+		temp.put(SCProcessNameConst.EC_EVALUATION_PROCESS_NAME + SCProcessNameConst.FINALISE_EC_EVALUATION , "proposal-evaluation");
+		temp.put(SCProcessNameConst.EC_EVALUATION_PROCESS_NAME + SCProcessNameConst.UPDATE_EC_EVALUATION , "proposal-evaluation");
+		temp.put(SCProcessNameConst.EC_EVALUATION_PROCESS_NAME + SCProcessNameConst.ENDORSE_EC_EVALUATION , "proposal-evaluation");
+		temp.put(SCProcessNameConst.EC_EVALUATION_PROCESS_NAME + SCProcessNameConst.SIGNOFF_EC_EVALUATION , "proposal-evaluation");
+		
+		
 		this.getManagedBean().setBpmMap(temp);
 
 		System.out.println("testing BPM******");

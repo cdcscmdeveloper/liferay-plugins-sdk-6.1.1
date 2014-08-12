@@ -197,6 +197,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private BigDecimal bankTotalAmt;
 
 	private TemplateSpecBean templateSpecBean = new TemplateSpecBean();
+	//payload
+	private Object evaluationPayLoad;
 
 	// private String stage1committeeType="OC";
 	public EvaluationManagedBean() {
@@ -2244,6 +2246,14 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	 */
 	public void setComplianceSummaryCount(int complianceSummaryCount) {
 		this.complianceSummaryCount = complianceSummaryCount;
+	}
+
+	public Object getEvaluationPayLoad() {
+		return evaluationPayLoad;
+	}
+
+	public void setEvaluationPayLoad(Object evaluationPayLoad) {
+		this.evaluationPayLoad = evaluationPayLoad;
 	}
 
 }
