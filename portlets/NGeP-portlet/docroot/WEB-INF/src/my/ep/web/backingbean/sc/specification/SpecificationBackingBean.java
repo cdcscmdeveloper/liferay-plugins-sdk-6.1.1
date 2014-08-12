@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.math.MathContext;
-import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -439,6 +438,9 @@ public class SpecificationBackingBean extends
 			this.getManagedBean().setScQt(resDTO.getScQt());
 			retriveApprovalRemarks();
 			break;
+		}
+		if (getManagedBean().getTempIndex() < activeIndex) {
+			getManagedBean().setTempIndex(activeIndex);
 		}
 		this.getManagedBean().setActiveIndex(activeIndex);
 		this.getManagedBean().setTaskId(taskId);
@@ -920,6 +922,9 @@ public class SpecificationBackingBean extends
 			break;
 
 		}
+		if (getManagedBean().getTempIndex() < activeIndex) {
+			getManagedBean().setTempIndex(activeIndex);
+		}
 		this.getManagedBean().setActiveIndex(activeIndex);
 
 	}
@@ -1111,10 +1116,12 @@ public class SpecificationBackingBean extends
 
 			if (QTConstants.EVALUATION_ONE_TIER
 					.equalsIgnoreCase(deliveryAddress.getEvaluationType())) {
-				if ("PS".equalsIgnoreCase(this.getManagedBean()
-						.getFulfilmentType())
-						|| "PA".equalsIgnoreCase(this.getManagedBean()
-								.getFulfilmentType())) {
+				if (ParameterConst.FULFILMENT_TYPE_SCHEDULED
+						.equalsIgnoreCase(this.getManagedBean()
+								.getFulfilmentType())
+						|| ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN
+								.equalsIgnoreCase(this.getManagedBean()
+										.getFulfilmentType())) {
 
 					specReqDTO.setScQt(deliveryAddress);
 					specSo.validateSCFulfillmentSchedules(specReqDTO);
@@ -1160,10 +1167,12 @@ public class SpecificationBackingBean extends
 
 			if (QTConstants.EVALUATION_TWO_TIER.equalsIgnoreCase(fulfilMentDtls
 					.getEvaluationType())) {
-				if ("PS".equalsIgnoreCase(this.getManagedBean()
-						.getFulfilmentType())
-						|| "PA".equalsIgnoreCase(this.getManagedBean()
-								.getFulfilmentType())) {
+				if (ParameterConst.FULFILMENT_TYPE_SCHEDULED
+						.equalsIgnoreCase(this.getManagedBean()
+								.getFulfilmentType())
+						|| ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN
+								.equalsIgnoreCase(this.getManagedBean()
+										.getFulfilmentType())) {
 					specReqDTO.setScQt(fulfilMentDtls);
 					specSo.validateSCFulfillmentSchedules(specReqDTO);
 				}
@@ -1241,13 +1250,16 @@ public class SpecificationBackingBean extends
 		case 7:
 			if (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(this
 					.getManagedBean().getScQt().getEvaluationType())) {
-				if ("PS".equalsIgnoreCase(this.getManagedBean()
-						.getFulfilmentType())
-						|| "PA".equalsIgnoreCase(this.getManagedBean()
-								.getFulfilmentType())) {
+				if (ParameterConst.FULFILMENT_TYPE_SCHEDULED
+						.equalsIgnoreCase(this.getManagedBean()
+								.getFulfilmentType())
+						|| ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN
+								.equalsIgnoreCase(this.getManagedBean()
+										.getFulfilmentType())) {
 					retriveFulfilmentDtls();
-				} else if ("OF".equalsIgnoreCase(this.getManagedBean()
-						.getFulfilmentType())) {
+				} else if (ParameterConst.FULFILMENT_TYPE_ONE_OFF
+						.equalsIgnoreCase(this.getManagedBean()
+								.getFulfilmentType())) {
 					retriveCommitteeEndorsment();
 
 				}
@@ -1265,13 +1277,16 @@ public class SpecificationBackingBean extends
 			}
 			if (QTConstants.EVALUATION_TWO_TIER.equalsIgnoreCase(this
 					.getManagedBean().getScQt().getEvaluationType())) {
-				if ("PS".equalsIgnoreCase(this.getManagedBean()
-						.getFulfilmentType())
-						|| "PA".equalsIgnoreCase(this.getManagedBean()
-								.getFulfilmentType())) {
+				if (ParameterConst.FULFILMENT_TYPE_SCHEDULED
+						.equalsIgnoreCase(this.getManagedBean()
+								.getFulfilmentType())
+						|| ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN
+								.equalsIgnoreCase(this.getManagedBean()
+										.getFulfilmentType())) {
 					retriveFulfilmentDtls();
-				} else if ("OF".equalsIgnoreCase(this.getManagedBean()
-						.getFulfilmentType())) {
+				} else if (ParameterConst.FULFILMENT_TYPE_ONE_OFF
+						.equalsIgnoreCase(this.getManagedBean()
+								.getFulfilmentType())) {
 					retriveCommitteeEndorsment();
 
 				}
@@ -1289,6 +1304,9 @@ public class SpecificationBackingBean extends
 			}
 			break;
 
+		}
+		if (getManagedBean().getTempIndex() < activeIndex) {
+			getManagedBean().setTempIndex(activeIndex);
 		}
 
 		this.getManagedBean().setActiveIndex(activeIndex);
@@ -1865,47 +1883,11 @@ public class SpecificationBackingBean extends
 				}
 				this.getManagedBean().setScQtRemarksList(remarkList);
 			}
-
-			initializeRemarks();
+			initializeRemarks(this.getManagedBean().getScQt(), this
+					.getManagedBean().getScQtRemarksList(), ScQtRemark.class);
 
 		} finally {
 			qtDetailSO = null;
-		}
-	}
-
-	public void initializeRemarks() {
-		IStatusSO iStatusSO;
-
-		try {
-
-			FacesScopes facesScopes = new FacesScopes();
-			iStatusSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
-			ScQtRemark remark = null;
-
-			remark = new ScQtRemark();
-
-			remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
-			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-			remark.setChangedBy(remark.getCreatedBy());
-			remark.setCreatedUser(facesScopes.getUserSessionBean());
-			remark.setScQt(this.getManagedBean().getScQt());
-			PmStatus status = new PmStatus();
-			status.setStatusId(60550L);
-			StatusReqDTO statusReqDTO = new StatusReqDTO();
-			if (status != null) {
-				statusReqDTO.setStatusId(status.getStatusId());
-				StatusResDTO statusResDTO = iStatusSO
-						.retrieveStatusByStatusId(statusReqDTO);
-				remark.setPmStatus(statusResDTO.getPmStatus());
-
-			}
-			// qtRemarkList.add(remark);
-
-			this.getManagedBean().getScQtRemarksList().add(remark);
-
-		} finally {
-			iStatusSO = null;
 		}
 	}
 
@@ -1982,6 +1964,15 @@ public class SpecificationBackingBean extends
 					for (int i = 0; i < specChecklist.size(); i++) {
 						this.getManagedBean().getScQtCheckSt2techProposal()
 								.add(i, specChecklist.get(i));
+						if (!isAtleastOneSeriveReq(specChecklist)) {
+							for (ScQtCheckList otherschecklist : otherList) {
+								if (otherschecklist.getPmDocument()
+										.getDocDefinitionKey()
+										.equalsIgnoreCase("SS")) {
+									otherList.remove(otherschecklist);
+								}
+							}
+						}
 
 					}
 					List<ScQtCheckList> others1List = new ArrayList<ScQtCheckList>();
@@ -2026,6 +2017,21 @@ public class SpecificationBackingBean extends
 		} finally {
 			specSo = null;
 		}
+	}
+
+	private boolean isAtleastOneSeriveReq(List<ScQtCheckList> checklist) {
+		int i = 0;
+		for (ScQtCheckList specChecklist : checklist) {
+			if (specChecklist.getScQtDoc().getTplSpecMaster().getItemTypeCode()
+					.getParameterCode().equalsIgnoreCase("2")) {
+				i++;
+				if (i >= 1) {
+					return true;
+				}
+			}
+		}
+
+		return false;
 	}
 
 	public List<ScQtCheckList> convertCheckListByDocument(
@@ -2297,6 +2303,15 @@ public class SpecificationBackingBean extends
 							.equalsIgnoreCase(list.getDefinationType()
 									.getParameterCode())) {
 						specChecklist.add(list);
+						if (!isAtleastOneSeriveReq(specChecklist)) {
+							for (ScQtCheckList otherschecklist : otherList) {
+								if (otherschecklist.getPmDocument()
+										.getDocDefinitionKey()
+										.equalsIgnoreCase("SS")) {
+									otherList.remove(otherschecklist);
+								}
+							}
+						}
 
 					} else {
 						otherList.add(list);
@@ -3791,18 +3806,12 @@ public class SpecificationBackingBean extends
 
 		List<ScQtRemark> remarksList = this.getManagedBean()
 				.getScQtRemarksList();
-		List<ScQtRemark> specRemarks = null;
-		if (isNotNullOREmpty(remarksList)) {
-			specRemarks = new ArrayList<ScQtRemark>();
-			for (ScQtRemark remarks : remarksList) {
-				if (remarks.getRemark() != null && "" != remarks.getRemark()) {
-					specRemarks.add(remarks);
-				}
 
-			}
+		if (isNotNullOREmpty(remarksList)) {
+			scQt.setScQtRemarks(finalizeRemarks(remarksList));
 
 		}
-		scQt.setScQtRemarks(specRemarks);
+		// scQt.setScQtRemarks(specRemarks);
 		scQt.setScQtCommittees(null);
 		reqDTO.setScQt(scQt);
 
@@ -3827,40 +3836,44 @@ public class SpecificationBackingBean extends
 		// this.getManagedBean().setActiveIndex(0);
 
 		try {
+			if (this.getManagedBean().getTempIndex() == 0) {
+				QtDetailsSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+				QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
+				tenderReqDTO.setQtId(qtId);
+				tenderReqDTO.setDocType(docType);
+				QuationTenderResDTO tenderResDTO = new QuationTenderResDTO();
+				tenderResDTO = QtDetailsSO.retriveQTDetails(tenderReqDTO);
+				ScQt scQt = tenderResDTO.getQtDetail();
 
-			QtDetailsSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-			QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
-			tenderReqDTO.setQtId(qtId);
-			tenderReqDTO.setDocType(docType);
-			QuationTenderResDTO tenderResDTO = new QuationTenderResDTO();
-			tenderResDTO = QtDetailsSO.retriveQTDetails(tenderReqDTO);
-			ScQt scQt = tenderResDTO.getQtDetail();
+				if (null != scQt.getFulfilmentType()
+						&& null != scQt.getFulfilmentType().getParameterId()) {
+					this.getManagedBean().setFulfilmentType(
+							scQt.getFulfilmentType().getParameterCode());
+				} else {
+					scQt.setFulfilmentType(new PmParameter());
+				}
+				this.getManagedBean().setPanelChange(scQt.isPanel());
+				if (scQt.isZonal()
+						&& null != this.getManagedBean().getZoneGeneralTrees()
+						&& this.getManagedBean().getZoneGeneralTrees()
+								.isEmpty()) {
 
-			if (null != scQt.getFulfilmentType()
-					&& null != scQt.getFulfilmentType().getParameterId()) {
-				this.getManagedBean().setFulfilmentType(
-						scQt.getFulfilmentType().getParameterCode());
-			} else {
-				scQt.setFulfilmentType(new PmParameter());
-			}
-			this.getManagedBean().setPanelChange(scQt.isPanel());
-			if (scQt.isZonal()
-					&& this.getManagedBean().getZoneGeneralTrees().isEmpty()) {
+					if (isNotNullOREmpty(tenderResDTO.getZoneDetails())) {
+						for (TplSpecZoneDtl zone : tenderResDTO
+								.getZoneDetails()) {
+							getManagedBean().getZoneGeneralTrees().add(
+									LocationSingleton.getInstance()
+											.constuctTreeNode(zone,
+													zone.getTplSpecZoneLocs()));
 
-				if (isNotNullOREmpty(tenderResDTO.getZoneDetails())) {
-					for (TplSpecZoneDtl zone : tenderResDTO.getZoneDetails()) {
-						getManagedBean().getZoneGeneralTrees().add(
-								LocationSingleton.getInstance()
-										.constuctTreeNode(zone,
-												zone.getTplSpecZoneLocs()));
-
+						}
 					}
 				}
-			}
-			getManagedBean().setScQt(scQt);
-			if (null != scQt.getEstimatedAmount()) {
-				setProcurementMode(scQt);
+				getManagedBean().setScQt(scQt);
+				if (null != scQt.getEstimatedAmount()) {
+					setProcurementMode(scQt);
+				}
 			}
 
 		} finally {
@@ -9740,10 +9753,12 @@ public class SpecificationBackingBean extends
 			ScQt fulfilMent = constructSpecCommitteDtls().getScQt();
 			if (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(fulfilMent
 					.getEvaluationType())) {
-				if ("PS".equalsIgnoreCase(this.getManagedBean()
-						.getFulfilmentType())
-						|| "PA".equalsIgnoreCase(this.getManagedBean()
-								.getFulfilmentType())) {
+				if (ParameterConst.FULFILMENT_TYPE_SCHEDULED
+						.equalsIgnoreCase(this.getManagedBean()
+								.getFulfilmentType())
+						|| ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN
+								.equalsIgnoreCase(this.getManagedBean()
+										.getFulfilmentType())) {
 					specReqDTO.setScQt(fulfilMent);
 					specSO.validateSCFulfillmentSchedules(specReqDTO);
 					resDTO = specSO.saveQTDtl(specReqDTO);
@@ -9791,10 +9806,12 @@ public class SpecificationBackingBean extends
 
 			if (QTConstants.EVALUATION_TWO_TIER.equalsIgnoreCase(fulfilMentdtls
 					.getEvaluationType())) {
-				if ("PS".equalsIgnoreCase(this.getManagedBean()
-						.getFulfilmentType())
-						|| "PA".equalsIgnoreCase(this.getManagedBean()
-								.getFulfilmentType())) {
+				if (ParameterConst.FULFILMENT_TYPE_SCHEDULED
+						.equalsIgnoreCase(this.getManagedBean()
+								.getFulfilmentType())
+						|| ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN
+								.equalsIgnoreCase(this.getManagedBean()
+										.getFulfilmentType())) {
 					specReqDTO.setScQt(fulfilMentdtls);
 					specSO.validateSCFulfillmentSchedules(specReqDTO);
 					resDTO = specSO.saveQTDtl(specReqDTO);
@@ -9810,6 +9827,9 @@ public class SpecificationBackingBean extends
 		case 9:
 			break;
 
+		}
+		if (getManagedBean().getTempIndex() < activeIndex) {
+			getManagedBean().setTempIndex(activeIndex);
 		}
 		this.getManagedBean().setActiveIndex(activeIndex);
 		this.getManagedBean().setTaskId(taskId);
@@ -10746,59 +10766,59 @@ public class SpecificationBackingBean extends
 		sb.append(new FacesScopes().getUserSessionBean().getUserId());
 		this.textBeforeSign = sb.toString();
 	}
-	
-	   
-	   public String updateSpecCommitteDtls(String action,boolean isSign){
-		   SpecificationReqDTO spReqDTO = constructSpecCommitteDtls();
-			spReqDTO.setOutcome(action);
-			spReqDTO.setTaskId(this.getManagedBean().getTaskId());
-			spReqDTO.setPayLoad(this.getManagedBean().getSpecificationDataType());
-			FacesScopes facesScopes = new FacesScopes();
-			String ctx = facesScopes.getBPMAuthenticationCtxToken();
-			spReqDTO.setToken(ctx);
-			IQTSpecSO specSO = getSpecSO();
-			//COde to get sign Data..
-			if(isSign){			
+
+	public String updateSpecCommitteDtls(String action, boolean isSign) {
+		SpecificationReqDTO spReqDTO = constructSpecCommitteDtls();
+		spReqDTO.setOutcome(action);
+		spReqDTO.setTaskId(this.getManagedBean().getTaskId());
+		spReqDTO.setPayLoad(this.getManagedBean().getSpecificationDataType());
+		FacesScopes facesScopes = new FacesScopes();
+		String ctx = facesScopes.getBPMAuthenticationCtxToken();
+		spReqDTO.setToken(ctx);
+		IQTSpecSO specSO = getSpecSO();
+		// COde to get sign Data..
+		if (isSign) {
 			PmDigiSign signData = retrieveGPKIData();
 			spReqDTO.setSignRequired(true);
 			spReqDTO.setDigiSignData(signData);
+		}
+		try {
+			SpecificationResDTO resDTO = specSO.updateBPMAction(spReqDTO);
+			if (resDTO.isSuccessful()) {
+				ScQt qt = resDTO.getScQt();
+				FacesContext
+						.getCurrentInstance()
+						.addMessage(
+								null,
+								new FacesMessage(
+										FacesMessage.SEVERITY_INFO,
+										null,
+										MessageUtils
+												.getMessage(
+														getMessgeConstant(action),
+														new String[] {
+																"Specification Preparation And Scoring For",
+																qt.getQtNo() },
+														MessageUtils.BUNDLE_COMMON_MESSAGES,
+														new FacesScopes()
+																.getUserLocale())));
+
+				return CommonUIConst.ACKNOWLEDGE_PAGE;
+
 			}
-			try {
-				SpecificationResDTO resDTO = specSO.updateBPMAction(spReqDTO);
-				if (resDTO.isSuccessful()) {
-					ScQt qt = resDTO.getScQt();
-					FacesContext
-							.getCurrentInstance()
-							.addMessage(
-									null,
-									new FacesMessage(
-											FacesMessage.SEVERITY_INFO,
-											null,
-											MessageUtils
-													.getMessage(
-															getMessgeConstant(action),
-															new String[] {
-																	"Specification Preparation And Scoring For",
-																	qt.getQtNo() },
-															MessageUtils.BUNDLE_COMMON_MESSAGES,
-															new FacesScopes()
-																	.getUserLocale())));
+		} finally {
+			specSO = null;
+		}
+		return null;
+	}
 
-					return CommonUIConst.ACKNOWLEDGE_PAGE;
-
-				}
-			} finally {
-				specSO = null;
+	private boolean isSpecChairPerson(List<PmRoleDesc> roleDesc) {
+		for (PmRoleDesc pmRoleDesc : roleDesc) {
+			if (RoleCode.SC_CHAIRPERSON.toString().equalsIgnoreCase(
+					pmRoleDesc.getPmRole().getRoleCode())) {
+				return true;
 			}
-			return null;
-	   }
-
-	   private boolean isSpecChairPerson(List<PmRoleDesc> roleDesc){
-		   for(PmRoleDesc pmRoleDesc : roleDesc){
-			 if(RoleCode.SC_CHAIRPERSON.toString().equalsIgnoreCase(pmRoleDesc.getPmRole().getRoleCode())){
-				 return true;
-			 }
-		   }
-		   return false;
-	   }
+		}
+		return false;
+	}
 }
