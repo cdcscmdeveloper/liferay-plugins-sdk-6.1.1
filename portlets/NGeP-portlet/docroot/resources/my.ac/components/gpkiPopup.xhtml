@@ -10,13 +10,13 @@
 	<cc:interface>
 		<cc:attribute name="beforeSignText" />
 		<cc:attribute name="postSignAction"
-			method-signature="java.lang.String action()" />
+			method-signature="void action(my.ep.persistence.entity.pm.common.PmDigiSign)" />
 	</cc:interface>
 
 
 	<cc:implementation>
 		<p:remoteCommand name="postSignAction"
-			action="#{cc.attrs.postSignAction}" />
+			action="#{gpkiBackingBean.gpkiSignAction(cc.attrs.postSignAction)}" />
 		<p:remoteCommand name="errorAction"
 			action="#{gpkiBackingBean.showError}" />
 		<h:inputHidden id="inputTextBeforeSign" binding="#{textBeforeSign}"
@@ -29,7 +29,6 @@
 						.val();
 				var plainText = encodeURIComponent(Aegis.hash(textBeforeSign));
 				//         	var plainText =  $("[id='#{bs.clientId}']").val();
-
 				//         	var $foo = $("[id='#{pin.clientId}']");
 				var pin = $("[id='#{pin.clientId}']").val();
 			    sign_st(pin, plainText);
@@ -79,8 +78,7 @@
 									var signedData = encodeURIComponent(obj.signed_data);
 									if (statusCode == "0") {
 										
-										var textBeforeSign = $(
-												"[id='#{textBeforeSign.clientId}']")
+										var textBeforeSign = $("[id='#{textBeforeSign.clientId}']")
 												.val();
 										var originalText = encodeURIComponent(Aegis
 												.hash(textBeforeSign));
