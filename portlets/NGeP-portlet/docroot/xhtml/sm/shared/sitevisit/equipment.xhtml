@@ -1,0 +1,65 @@
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:panel header="Tool/Equipment for Maintenance and Overhaul">
+		<p:dataTable value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.equipmentMain}" var="equipMaint">
+			<p:column>
+					<f:facet name="header">
+						Equipment Type
+					</f:facet>
+				
+					<h:outputText value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.equipmentParamMap[equipMaint.pmParameter.parameterId].codeName}"></h:outputText>
+			</p:column>
+			
+			<p:column>
+					<f:facet name="header">
+						Available
+					</f:facet>
+					
+					<p:selectBooleanCheckbox value="#{equipMaint.equipmentAvailable}"></p:selectBooleanCheckbox>
+					
+			</p:column>
+			
+			<p:column>
+					<f:facet name="header">
+						Quantity/ Set
+					</f:facet>
+					<p:inputText value="#{equipMaint.equipmentQty}"></p:inputText>
+			</p:column>
+		</p:dataTable>
+	</p:panel>
+	
+	<p:panel header="Equipment for Panel Beating and Spray Painting">
+		<p:dataTable value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.equipmentBeating}" var="equipBinding">
+			<p:column>
+					<f:facet name="header">
+						Equipment Type
+					</f:facet>
+				
+					<h:outputText value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.equipmentParamMap[equipBinding.pmParameter.parameterId].codeName}"></h:outputText>
+			</p:column>
+			
+			<p:column>
+					<f:facet name="header">
+						Available
+					</f:facet>
+					
+					<p:selectBooleanCheckbox value="#{equipBinding.equipmentAvailable}"></p:selectBooleanCheckbox>
+					
+			</p:column>
+			
+			<p:column>
+					<f:facet name="header">
+						Quantity/ Set
+					</f:facet>
+					<p:inputText value="#{equipBinding.equipmentQty}"></p:inputText>
+			</p:column>
+		</p:dataTable>
+	</p:panel>
+	
+</ui:composition>

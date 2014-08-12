@@ -1,0 +1,49 @@
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	<p:panel id="pnlPremiseLocation" header="#{lbl['lbl.sm.sitevisit.premiselocation']}" toggleable="true">
+	<table class="customTbl">
+		<tr>
+			<td class="tdTitle">Ownership</td>
+			<td class="tdContent">
+				<p:selectOneMenu value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.ownershipType}">
+					<f:selectItem itemLabel = "---Select---" itemValue=""></f:selectItem>
+					<f:selectItem itemLabel = "Private" itemValue="P" />
+					<f:selectItem itemLabel = "Rent" itemValue="R" />
+				</p:selectOneMenu>
+			</td>
+			
+			<td class="tdTitle">Purchasing Price/ Monthly Rate(RM)</td>
+			<td class="tdContent">
+				<p:inputText  id="pmPriceRate" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.purchaseRentPrice}" />
+			</td>
+		</tr>
+		
+		<tr>
+		
+			<td class="tdTitle">Overall Square Feet/ Meter</td>
+			<td class="tdContent"><p:inputText value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.overallSqft}" /></td>
+			
+			<td class="tdTitle">Enclosed Square Feet/ Meter</td>
+			<td class="tdContent"><p:inputText value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.enclosedSqft}" /></td>
+		</tr>
+		
+		<tr>
+			<td class="tdTitle" valign="top">Floor</td>
+			<td class="tdContent">
+				<p:inputTextarea rows="5" cols="50" autoResize="false" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.otherFloor}" />
+			</td>
+			
+			<td class="tdTitle" valign="top">Environment</td>
+			<td class="tdContent">
+				<p:inputTextarea rows="5" cols="50" autoResize="false" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.envOther}" />
+			</td>
+		</tr>
+	</table>
+	</p:panel>
+</ui:composition>

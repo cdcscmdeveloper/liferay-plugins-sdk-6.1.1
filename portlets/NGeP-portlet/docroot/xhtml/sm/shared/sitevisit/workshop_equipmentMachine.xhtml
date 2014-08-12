@@ -1,0 +1,122 @@
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	
+	<p:panel header="Tool/Equipment for Maintenance and Overhaul">
+		<p:dataTable value="#{svoSiteVisitBackingBean.managedBean.workshopEquipMain}" var="equipMaint">
+			<p:column>
+					<f:facet name="header">
+						Equipment Type
+					</f:facet>
+				
+					<h:outputText value="#{svoSiteVisitBackingBean.managedBean.workshopEquipmentMap[equipMaint.pmParameter.parameterId].codeName}"></h:outputText>
+			</p:column>
+			
+			<p:column>
+					<f:facet name="header">
+						Available
+					</f:facet>
+					
+					<p:selectBooleanCheckbox value="#{equipMaint.equipmentAvailable}"></p:selectBooleanCheckbox>
+					
+			</p:column>
+			
+			<p:column>
+					<f:facet name="header">
+						Quantity/ Set
+					</f:facet>
+					<p:inputText value="#{equipMaint.equipmentQty}"></p:inputText>
+			</p:column>
+		</p:dataTable>
+	</p:panel>
+	
+	<p:panel header="Equipment for Panel Beating and Spray Painting">
+		<p:dataTable value="#{svoSiteVisitBackingBean.managedBean.workshopEquipBeating}" var="equipBinding">
+			<p:column>
+					<f:facet name="header">
+						Equipment Type
+					</f:facet>
+				
+					<h:outputText value="#{svoSiteVisitBackingBean.managedBean.workshopEquipmentMap[equipBinding.pmParameter.parameterId].codeName}"></h:outputText>
+			</p:column>
+			
+			<p:column>
+					<f:facet name="header">
+						Available
+					</f:facet>
+					
+					<p:selectBooleanCheckbox value="#{equipBinding.equipmentAvailable}"></p:selectBooleanCheckbox>
+					
+			</p:column>
+			
+			<p:column>
+					<f:facet name="header">
+						Quantity/ Set
+					</f:facet>
+					<p:inputText value="#{equipBinding.equipmentQty}"></p:inputText>
+			</p:column>
+		</p:dataTable>
+	</p:panel>
+
+	<p:panel header="Machine/ Equipment List">
+		<p:dataTable value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smAppl.smMachineDtls}" var="machineDtl"
+				selection="#{svoSiteVisitBackingBean.managedBean.selectedWorkshopMachine}"
+				rowKey="#{machineDtl}">
+			<p:column>
+					<f:facet name="header">
+						Type of Machine/ Equipment
+					</f:facet>
+				
+					<h:outputText value="#{machineDtl.machineType}"></h:outputText>
+			</p:column>
+			
+			<p:column>
+					<f:facet name="header">
+						Brand
+					</f:facet>
+					<h:outputText value="#{machineDtl.brandName}"></h:outputText>			
+			</p:column>
+			
+			<p:column>
+					<f:facet name="header">
+						Function
+					</f:facet>
+					<h:outputText value="#{machineDtl.machineFunction}"></h:outputText>			
+			</p:column>
+			
+			<p:column>
+					<f:facet name="header">
+						Qty
+					</f:facet>
+					<h:outputText value="#{machineDtl.qty}"></h:outputText>			
+			</p:column>
+			
+			<p:column>
+					<f:facet name="header">
+						Value(RM)
+					</f:facet>
+					<h:outputText value="#{machineDtl.value}"></h:outputText>			
+			</p:column>
+			
+			<p:column>
+					<f:facet name="header">
+						Purchasing Method
+					</f:facet>
+					<h:outputText value="#{machineDtl.purchaseMethod}"></h:outputText>			
+			</p:column>
+			
+			<p:column>
+					<f:facet name="header">
+						Guarantor Name
+					</f:facet>
+					<h:outputText value="#{machineDtl.guarantorName}"></h:outputText>			
+			</p:column>
+		</p:dataTable>
+		
+	</p:panel>
+</ui:composition>

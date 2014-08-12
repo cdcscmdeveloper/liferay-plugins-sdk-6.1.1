@@ -10,8 +10,7 @@
 		<p:menuitem value="Financial Information" update="pnlDisplay,tabIndex" actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(1,'')}" />
 		<p:menuitem value="Category Applicable" update="pnlDisplay,tabIndex" actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(2,'')}" />
 		
-		<c:forEach var="catType" 
-			items="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvTemplates}">
+		<c:forEach var="catType" items="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvTemplates}">
 				<p:menuitem value="#{lbl['lbl.sm.sitevisit.category.transportation']}"
 					update="pnlDisplay,tabIndex" rendered="#{catType.pmParameter.parameterCode == SupplierManagementConst.CAT_TYPE_TRANSPORTATION}"
 					actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(11,catType.pmParameter.parameterCode)}" />
@@ -39,9 +38,17 @@
 				<p:menuitem value="#{lbl['lbl.sm.sitevisit.category.travel']}" 
 					update="pnlDisplay,tabIndex" rendered="#{catType.pmParameter.parameterCode == SupplierManagementConst.CAT_TYPE_TRAVEL}"
 					actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(17,catType.pmParameter.parameterCode)}" />
+					
 		</c:forEach>
-		<p:menuitem value="Comments" update="pnlDisplay,tabIndex" actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(3,'')}" />
-
+		<p:menuitem value="Report Submission" update="pnlDisplay,tabIndex" actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(20,'')}" />
 	</p:tabMenu>
-	
+<!-- 							<c:if -->
+<!-- 							test="#{svoSiteVisitBackingBean.managedBean.activeIndex == 18}"> -->
+<!-- 							<ui:include src="/xhtml/sm/svositevisit/overseaReadingMaterial.xhtml" /> -->
+<!-- 						</c:if> -->
+						
+<!-- 						<c:if -->
+<!-- 							test="#{svoSiteVisitBackingBean.managedBean.activeIndex == 19}"> -->
+<!-- 							<ui:include src="/xhtml/sm/svositevisit/bumiputera.xhtml" /> -->
+<!-- 						</c:if> -->
 </ui:composition>

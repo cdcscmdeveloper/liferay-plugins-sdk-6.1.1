@@ -1,0 +1,93 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	<p:panel header="Financial"> 
+		<p:dataTable id="dtFinanceDoc" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.financialDocLs}" var="finDoc">
+			<p:column>
+					<f:facet name="header">
+						Documents
+					</f:facet>
+					<h:outputText value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.financialDocParamMap[finDoc.pmParameter.parameterId].codeName}"></h:outputText>
+			</p:column>
+			
+			<p:column>
+					<f:facet name="header">
+						Reference
+					</f:facet>
+					
+					<p:inputText value="#{finDoc.docRef}" />
+					
+			</p:column>
+			
+			<p:column>
+					<f:facet name="header">
+						Data Issued
+					</f:facet>
+					<p:calendar id="dateIssuedCalId"
+						navigator="true" label="Date Issued"
+						value="#{finDoc.docDate}"
+						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
+						readonlyInput="true" size="30" showOn="button" />
+			</p:column>
+			
+			<p:column>
+					<f:facet name="header">
+						Note
+					</f:facet>
+					<p:inputText value="#{finDoc.remark}"></p:inputText>
+			</p:column>
+			</p:dataTable>
+	</p:panel>
+	
+	<p:panel header="Additional Documents" id="pnlAddFinancialDoc">
+		<p:dataTable id="dtAddFinDocId" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.additionalDocLs}"
+			var="addFinDoc" selection="#{svoSiteVisitBackingBean.managedBean.selectedAddFinancialDoc}" rowKey="#{addFinDoc}">
+
+			<p:column selectionMode="multiple" style="width:2%" />
+			<p:column>
+				<f:facet name="header">
+						Documents
+					</f:facet>
+				<p:inputText value="#{addFinDoc.docName}"></p:inputText>
+			</p:column>
+
+			<p:column>
+				<f:facet name="header">
+						Reference
+					</f:facet>
+				<p:inputText value="#{addFinDoc.docRef}" />
+			</p:column>
+
+			<p:column>
+				<f:facet name="header">
+						Data Issued
+					</f:facet>
+				<p:calendar id="dateIssuedCalId" navigator="true"
+					label="Date Issued" value="#{addFinDoc.docDate}"
+					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
+					readonlyInput="true" size="15" showOn="button" />
+			</p:column>
+
+			<p:column>
+				<f:facet name="header">
+						Note
+					</f:facet>
+				<p:inputTextarea rows="3" cols="35" autoResize="false"
+					value="#{addFinDoc.remark}"></p:inputTextarea>
+			</p:column>
+		</p:dataTable>
+
+		<div align="right">
+				<p:commandButton value="#{lbl['lbl.btn.add']}" 
+					action="#{svoSiteVisitBackingBean.addFinancialDoc}"
+					update="dtAddFinDocId" />
+				<p:commandButton value="#{lbl['lbl.btn.delete']}"
+					action="#{svoSiteVisitBackingBean.removeFinancialDoc}"
+					update="dtAddFinDocId" />
+			</div>
+	</p:panel>
+</ui:composition>

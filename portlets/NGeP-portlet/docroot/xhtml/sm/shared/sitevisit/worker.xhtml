@@ -1,0 +1,51 @@
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	<p:panel header="Employee" id="pnlSvWorkerId">
+	<p:dataTable id="dtWorkerId" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvWorkers}" var="svWorker"
+		selection="#{svoSiteVisitBackingBean.managedBean.selectedWorkers}" rowKey="#{svWorker}">
+		<p:column selectionMode="multiple" style="width:2%" />
+		<p:ajax event="rowSelectCheckbox" />
+			<p:column>
+					<f:facet name="header">
+						Specialization
+					</f:facet>
+					<p:inputText id="workerSpecializationId" value="#{svWorker.expertise}" />
+			</p:column>
+
+			<p:column>
+				<f:facet name="header">
+						Name
+					</f:facet>
+				<p:inputText id="workerNameId" value="#{svWorker.name}" />
+			</p:column>
+
+			<p:column>
+				<f:facet name="header">
+						IC No.
+					</f:facet>
+				<p:inputText id="identificationNoId" value="#{svWorker.identificationNo}" />
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+						Experience
+				</f:facet>
+				<p:inputText id="workExpYearId" value="#{svWorker.workExpYear}" />
+			</p:column>
+		</p:dataTable>
+		
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.btn.add']}" immediate="true"
+				action="#{svoSiteVisitBackingBean.addWorkshopWorker}"
+				update="pnlSvWorkerId" />
+			<p:commandButton value="#{lbl['lbl.btn.delete']}"
+				action="#{svoSiteVisitBackingBean.removeWorkshopWorker}"
+				update="pnlSvWorkerId" />
+		</div>
+	</p:panel>
+</ui:composition>
