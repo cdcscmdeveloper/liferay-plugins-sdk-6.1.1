@@ -62,6 +62,8 @@ import org.apache.log4j.Logger;
 
 public class PmCommonUtil {
 	private static Logger log = Logger.getLogger(PmCommonUtil.class);
+
+	
 	/**
 	 * initialize a complete Pm Address
 	 */
@@ -82,20 +84,59 @@ public class PmCommonUtil {
 	 */
 	
 	public static void generateDefaultPmUserNotifications(PmUser pmUser, String languageCode){
-		pmUser.setPmUserNotifications(new ArrayList<PmUserNotification>());
 		IParameterSO parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 		ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
 		parameterReqDTO.setParameterType(ParameterTypeConst.NOTIFICATION_TYPE);
 		parameterReqDTO.setLanguageCode(languageCode);
 		ParameterResDTO parameterResDTO = parameterSO.retrieveParameterDescListByType(parameterReqDTO);
 		List <PmParameterDesc> pmParameterDescs = parameterResDTO.getParameterDescList();
-		for(PmParameterDesc pmParameterDesc: pmParameterDescs){
-			PmUserNotification notification = new PmUserNotification();
-			notification.setPreferred(ParameterConst.NOTIFICATION_SMS.equals(pmParameterDesc.getPmParameter().getParameterCode())? false : true);
-			notification.setNotifyMode(pmParameterDesc.getPmParameter().getParameterCode());	
-			pmUser.addPmUserNotifications(notification);
+		
+		//this is to sync back the notification list
+		if(pmUser.getPmUserNotifications()!=null){
+			//Temp remove SMS from UI - Start
+			PmUserNotification deleteUserNotification = null;
+			for(PmUserNotification pmUserNotification:pmUser.getPmUserNotifications()){
+				if(ParameterConst.NOTIFICATION_SMS.equals(pmUserNotification.getNotifyMode())){
+					deleteUserNotification = pmUserNotification;
+					break;
+				}
+			}
+			if(deleteUserNotification!=null){
+				pmUser.getPmUserNotifications().remove(deleteUserNotification);
+			}
+			//Temp remove SMS from UI - End
+			if(pmParameterDescs!=null && (pmParameterDescs.size() != pmUser.getPmUserNotifications().size())){
+				for(PmParameterDesc pmParameterDesc: pmParameterDescs){
+					if(!ParameterConst.NOTIFICATION_SMS.equals(pmParameterDesc.getPmParameter().getParameterCode())){ 
+						boolean isRequired = true;
+						for(PmUserNotification pmUserNotification:pmUser.getPmUserNotifications()){
+							if(pmUserNotification.getNotifyMode().equals(pmParameterDesc.getPmParameter().getParameterCode())){
+								isRequired = false;
+								break;
+							}
+						}
+						if(isRequired){
+							PmUserNotification notification = new PmUserNotification();
+							notification.setPreferred(ParameterConst.NOTIFICATION_SMS.equals(pmParameterDesc.getPmParameter().getParameterCode())? false : true);
+							notification.setNotifyMode(pmParameterDesc.getPmParameter().getParameterCode());	
+							pmUser.addPmUserNotifications(notification);
+						}
+					}
+				}
+			}
+		}else{
+			pmUser.setPmUserNotifications(new ArrayList<PmUserNotification>());
+			for(PmParameterDesc pmParameterDesc: pmParameterDescs){
+				if(!ParameterConst.NOTIFICATION_SMS.equals(pmParameterDesc.getPmParameter().getParameterCode())){ 
+					PmUserNotification notification = new PmUserNotification();
+					notification.setPreferred(ParameterConst.NOTIFICATION_SMS.equals(pmParameterDesc.getPmParameter().getParameterCode())? false : true);
+					notification.setNotifyMode(pmParameterDesc.getPmParameter().getParameterCode());	
+					pmUser.addPmUserNotifications(notification);
+				}
+			}
 		}
 	}
+	
 	/**
 	 * get YES & NO options //TODO: to load dynamically
 	 * @return SelectItem[] 
@@ -303,4 +344,7 @@ public class PmCommonUtil {
 		}		
 		return pmUser;
 	}
+
+	
+	
 }

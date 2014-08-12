@@ -11,11 +11,11 @@
 			  <div class="rowBtnRight">
 				   <c:choose>
 				  		<c:when test="#{profilePersonalizationBackingBean.managedBean.selectedUser.brandNew}">
-				  			<p:commandButton value="#{lbl['lbl.btn.save']}" update="@form"
+				  			<p:commandButton disabled="true" value="#{lbl['lbl.btn.save']}" update="@form"
 				  				action="#{profilePersonalizationBackingBean.saveUserProfile()}"/>
 				  		</c:when>
 				  		<c:otherwise>
-				  			<p:commandButton value="#{lbl['lbl.btn.update']}" update="@form"
+				  			<p:commandButton disabled="true" value="#{lbl['lbl.btn.update']}" update="@form"
 				  				action="#{profilePersonalizationBackingBean.saveUserProfile()}"/>
 				  		</c:otherwise>
 					</c:choose>

@@ -12,10 +12,11 @@
 			<tr>
 				<th width="40%">
 					<p:outputLabel value="#{lbl['lbl.pm.profiles.preferences.language']}"/>
+					<p:outputLabel value="*" styleClass="mandatory" />
 				</th>
 				<td>	        
           			<p:selectOneMenu styleClass="ppDropDownWidthM"  value="#{profilePersonalizationBackingBean.managedBean.selectedUser.pmUserPreference.preferredLanguage}">
-          				<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />  
+          				<!-- <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" /> -->  
 	            		<f:selectItems value="#{profilePersonalizationBackingBean.getLanguageList()}" 
 	            			var="language" itemLabel="#{language.languageName}" itemValue="#{language.languageCode}" />    
                   	</p:selectOneMenu>

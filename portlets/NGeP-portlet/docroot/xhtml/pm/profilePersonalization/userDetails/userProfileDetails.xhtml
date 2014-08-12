@@ -38,7 +38,8 @@
 							<p:outputLabel value="*" styleClass="mandatory" />
 						</th>
 						<td>
-							<p:selectOneMenu styleClass="ppDropDownWidthM" value="#{profilePersonalizationBackingBean.managedBean.selectedUser.salutationCode.salutationId}">
+							<p:selectOneMenu styleClass="ppDropDownWidthM" disabled="true"
+								value="#{profilePersonalizationBackingBean.managedBean.selectedUser.salutationCode.salutationId}">
 								<f:selectItems value="#{profilePersonalizationBackingBean.salutationOptions()}" />
 							</p:selectOneMenu>
 						</td>
@@ -52,7 +53,7 @@
 							<p:outputLabel value="*" styleClass="mandatory" />
 						</th>
 						<td>
-							<p:inputText styleClass="ppDisplayTextM"
+							<p:inputText styleClass="ppDisplayTextM" disabled="true"
 								value="#{profilePersonalizationBackingBean.managedBean.selectedUser.userName}"/>
 						</td>
 						<th></th>
@@ -97,7 +98,7 @@
 							<p:outputLabel value="*" styleClass="mandatory" />
 						</th>
 						<td>
-							<p:selectOneMenu styleClass="ppDropDownWidthM"
+							<p:selectOneMenu styleClass="ppDropDownWidthM" disabled="true"
 								value="#{profilePersonalizationBackingBean.managedBean.selectedUser.pmCountry.countryId}">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" /> 
 								<f:selectItems
@@ -115,7 +116,8 @@
 							<p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.designation']}" />
 						</th>
 						<td>
-							<p:inputText styleClass="ppDisplayTextM" value="#{profilePersonalizationBackingBean.managedBean.selectedUser.designation}" />
+							<p:inputText disabled="true" styleClass="ppDisplayTextM" 
+								value="#{profilePersonalizationBackingBean.managedBean.selectedUser.designation}" />
 						</td>
 						<th></th>
 						<td></td>
@@ -126,7 +128,7 @@
 							<p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.promanagement']}" />
 						</th>
 						<td>
-							<p:selectOneRadio value="#{profilePersonalizationBackingBean.managedBean.selectedUser.PMP}" >
+							<p:selectOneRadio disabled="true" value="#{profilePersonalizationBackingBean.managedBean.selectedUser.PMP}" >
 								<f:selectItems value="#{profilePersonalizationBackingBean.getYesNoOptions()}" />
 							</p:selectOneRadio>
 						</td>
@@ -139,7 +141,8 @@
 							<p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.grade']}" />
 						</th>
 						<td>
-							<p:inputText styleClass="ppDisplayTextM" value="#{profilePersonalizationBackingBean.managedBean.selectedUser.grade}"/>
+							<p:inputText styleClass="ppDisplayTextM" disabled="true" 
+								value="#{profilePersonalizationBackingBean.managedBean.selectedUser.grade}"/>
 						</td>
 						<th></th>
 						<td></td>
@@ -277,8 +280,17 @@
       			<td></td>
  			</tr>	
 			<tr> 
-  				<th width="20%"><p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.email']}" /></th>  
-			    <td><p:inputText value="#{profilePersonalizationBackingBean.managedBean.selectedUser.email}" styleClass="ppDisplayTextM"  /></td>
+  				<th width="20%">
+  					<p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.email']}" />
+  					<p:outputLabel value="*" styleClass="mandatory" />
+				</th>  
+			    <td>
+			    	<p:inputText value="#{profilePersonalizationBackingBean.managedBean.selectedUser.email}" styleClass="ppDisplayTextM"  />
+		    		&#160;&#160;   
+	                <p:graphicImage id="giEmail" library="ep/images/design" name="tooltips.png"
+		                   value="/resources/ep/images/design/tooltips.png" />
+					<p:tooltip for="giEmail" value="#{lbl['lbl.pm.profiles.userdetails.email.tooltip']}" showEffect="fade" hideEffect="fade" />
+		    	</td>
 			    <th></th>
                	<td></td>
 			</tr>    
