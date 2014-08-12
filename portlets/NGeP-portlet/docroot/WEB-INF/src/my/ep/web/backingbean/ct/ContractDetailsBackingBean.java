@@ -420,9 +420,10 @@ public void ConstructSideTabMenu(){
 		 		          getManagedBean().getFinalListOfSideMenu().addAll(menu.menuZone);
 			      }
 		 		  getManagedBean().getFinalListOfSideMenu().addAll(menu.menuItem);
-		          if (getManagedBean().isDirectPurchase() && !getManagedBean().getCtContract().
-		        		  getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)) {
-				    	  getManagedBean().getFinalListOfSideMenu().addAll(menu.menuSchedule);
+		          if (getManagedBean().isDirectPurchase()) {
+		        	    if(!getManagedBean().getCtContract(). getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)){
+				    	         getManagedBean().getFinalListOfSideMenu().addAll(menu.menuSchedule);
+		        	    }
 			      } else{
 		            	  getManagedBean().getFinalListOfSideMenu().addAll(menu.menuDeduction);
 		            	  if (!getManagedBean().getCtContract().
