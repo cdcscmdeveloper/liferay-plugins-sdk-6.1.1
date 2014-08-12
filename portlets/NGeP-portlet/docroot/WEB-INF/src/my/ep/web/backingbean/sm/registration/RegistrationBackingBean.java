@@ -991,6 +991,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			//this.retrieveBusinessNatureL5Map();
 			retrieveIdentityTypeMap();
 			this.getManagedBean().setBusinessNatureL1(this.retrieveBusinessNatureByLevelParent("10",0));
+			this.getManagedBean().setSelectedBusinessNature(new SmSupplierBusiness());
 
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/onlineAccount/accountMaintenanceDet.xhtml");
