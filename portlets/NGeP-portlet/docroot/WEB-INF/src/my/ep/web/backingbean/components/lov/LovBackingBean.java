@@ -400,17 +400,16 @@ public class LovBackingBean implements Serializable {
 	public List<SelectItem> getSearchOperators() {
 		List<SelectItem> operatorList = new ArrayList<SelectItem>();
 		
-		SelectItem item1 = new SelectItem(SearchOperator.OPERATOR_LIKE.value(), "EQUALS");
-//		SelectItem item1 = new SelectItem(SearchOperator.OPERATOR_EQUALS.value(), "EQUALS");
+		SelectItem item1 = new SelectItem(SearchOperator.OPERATOR_EQUALS.value(), "EQUALS");
 		SelectItem item2 = new SelectItem(SearchOperator.OPERATOR_STARTS_WITH.value(), "STARTS WITH");
 		SelectItem item3 = new SelectItem(SearchOperator.OPERATOR_END_WITH.value(), "END WITH");
 //		SelectItem item4 = new SelectItem(SearchOperator.OPERATOR_BETWEEN.value(), "BETWEEN");
-//		SelectItem item4 = new SelectItem(SearchOperator.OPERATOR_LIKE.value(), "LIKE");
+		SelectItem item4 = new SelectItem(SearchOperator.OPERATOR_LIKE.value(), "LIKE");
 		
 		operatorList.add(item1);
 		operatorList.add(item2);
 		operatorList.add(item3);
-//		operatorList.add(item4);
+		operatorList.add(item4);
 		
 		return operatorList;
 	}
