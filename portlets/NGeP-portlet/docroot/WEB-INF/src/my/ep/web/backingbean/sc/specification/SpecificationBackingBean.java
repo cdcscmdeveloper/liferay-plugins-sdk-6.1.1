@@ -3766,6 +3766,7 @@ public class SpecificationBackingBean extends
 				for (CtPanelZone panelzone : this.getManagedBean()
 						.getCtPanelZones()) {
 					TplSpecZoneDtl zoneDtl = new TplSpecZoneDtl();
+					zoneDtl.setZoneName(panelzone.getName());
 					setUserDetails(zoneDtl);
 					zoneDtl.setTplSpecZone(zoneCriteria);
 					zoneDtl.setPanelZone(panelzone);
@@ -9987,14 +9988,21 @@ public class SpecificationBackingBean extends
 								specestimation.setSpecEstimationId(null);
 								specestimation.setTplSpecQuestion(tpl1);
 								setUserDetails(specestimation);
-								specEstimaredList.add(estimation);
+								specEstimaredList.add(specestimation);
 							}
 
 						}
 						tpl1.setTplSpecEstimations(specEstimaredList);
 
 					} else {
-						tpl1.setTplSpecEstimations(null);
+
+						TplSpecEstimation specestimation = new TplSpecEstimation();
+						specestimation.setEstimatedCost(null);
+						specestimation.setSpecEstimationId(null);
+						specestimation.setTplSpecQuestion(tpl1);
+						setUserDetails(specestimation);
+						specEstimaredList.add(specestimation);
+						tpl1.setTplSpecEstimations(specEstimaredList);
 					}
 
 					if (null != tpl1.getTplSpecScorings()
@@ -10113,14 +10121,20 @@ public class SpecificationBackingBean extends
 									specestimation.setSpecEstimationId(null);
 									specestimation.setTplSpecQuestion(tpl1);
 									setUserDetails(specestimation);
-									specEstimaredList.add(estimation);
+									specEstimaredList.add(specestimation);
 								}
 
 							}
 							tpl1.setTplSpecEstimations(specEstimaredList);
 
 						} else {
-							tpl1.setTplSpecEstimations(null);
+							TplSpecEstimation specestimation = new TplSpecEstimation();
+							specestimation.setEstimatedCost(null);
+							specestimation.setSpecEstimationId(null);
+							specestimation.setTplSpecQuestion(tpl1);
+							setUserDetails(specestimation);
+							specEstimaredList.add(specestimation);
+							tpl1.setTplSpecEstimations(specEstimaredList);
 						}
 
 						if (null != tpl1.getTplSpecScorings()
@@ -10408,14 +10422,20 @@ public class SpecificationBackingBean extends
 								specestimation.setSpecEstimationId(null);
 								specestimation.setTplSpecQuestion(tpl1);
 								setUserDetails(specestimation);
-								specEstimaredList.add(estimation);
+								specEstimaredList.add(specestimation);
 							}
 
 						}
 						tpl1.setTplSpecEstimations(specEstimaredList);
 
 					} else {
-						tpl1.setTplSpecEstimations(null);
+						TplSpecEstimation specestimation = new TplSpecEstimation();
+						specestimation.setEstimatedCost(null);
+						specestimation.setSpecEstimationId(null);
+						specestimation.setTplSpecQuestion(tpl1);
+						setUserDetails(specestimation);
+						specEstimaredList.add(specestimation);
+						tpl1.setTplSpecEstimations(specEstimaredList);
 					}
 
 					if (null != tpl1.getTplSpecScorings()
@@ -10540,14 +10560,20 @@ public class SpecificationBackingBean extends
 									specestimation.setSpecEstimationId(null);
 									specestimation.setTplSpecQuestion(tpl1);
 									setUserDetails(specestimation);
-									specEstimaredList.add(estimation);
+									specEstimaredList.add(specestimation);
 								}
 
 							}
 							tpl1.setTplSpecEstimations(specEstimaredList);
 
 						} else {
-							tpl1.setTplSpecEstimations(null);
+							TplSpecEstimation specestimation = new TplSpecEstimation();
+							specestimation.setEstimatedCost(null);
+							specestimation.setSpecEstimationId(null);
+							specestimation.setTplSpecQuestion(tpl1);
+							setUserDetails(specestimation);
+							specEstimaredList.add(specestimation);
+							tpl1.setTplSpecEstimations(specEstimaredList);
 						}
 
 						if (null != tpl1.getTplSpecScorings()
