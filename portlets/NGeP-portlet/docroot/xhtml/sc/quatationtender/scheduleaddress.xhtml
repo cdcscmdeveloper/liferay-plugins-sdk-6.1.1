@@ -1,0 +1,26 @@
+	<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<p:dialog id="sampledlg" header="Sample Submission" modal="true"
+		dynamic="true" position="top" styleClass="pop_up_top"
+		widgetVar="sampledlg" width="646px" height="218px" resizable="false">
+		<c:if test="#{qTScheduleDetailBackingBean.managedBean.qt.zonal}">
+		<p:messages id="sampleaddressmsg" showDetail="true" autoUpdate="true"
+				closable="true" showSummary="false" />
+			<ui:include
+				src="/xhtml/sc/quatationtender/briefingsitevisit/samplesubmission.xhtml" />
+
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.so.okbtn']}" update="@([id$=sampleid])"
+					process="@this, @(.sampleDetails)" 
+					icon="ui-icon-check"
+					action="#{qTScheduleDetailBackingBean.okSubmission}" />
+				<p:commandButton value="#{lbl['lbl.so.cancelbtn']}"
+					icon="ui-icon-cancel"  action="#{qTScheduleDetailBackingBean.closeSampleAddressPopUp}" />
+			</div>
+		</c:if>
+	</p:dialog>
+	</ui:composition>

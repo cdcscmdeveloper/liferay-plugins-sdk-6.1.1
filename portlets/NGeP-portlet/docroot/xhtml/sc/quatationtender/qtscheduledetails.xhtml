@@ -17,7 +17,7 @@
 						id="noticePublish" required="true"
 						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button">
 
-						<p:ajax event="blur" process="@this"
+						<p:ajax event="dateSelect" process="@this"
 							listener="#{qTScheduleDetailBackingBean.handleClosingNProposalDate}"
 							update="proposalvalidityid, closingDate" />
 
@@ -37,6 +37,10 @@
 						value="#{qTScheduleDetailBackingBean.managedBean.qt.closingDate}"
 						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" readonly="true"
 						showOn="button">
+
+						<p:ajax event="dateSelect" process="@this"
+							listener="#{qTScheduleDetailBackingBean.handleClosingNProposalDate}"
+							update="proposalvalidityid" />
 					</p:calendar> <h:inputText value="12:00PM" disabled="true" size="06" /></td>
 			</tr>
 			<c:if
@@ -45,12 +49,11 @@
 					<td><p:outputLabel value="#{lbl['lbl.so.sampleclosingdate']}" />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
 					<td><p:calendar label="#{lbl['lbl.so.sampleclosingdate']}"
-							value="#{qTScheduleDetailBackingBean.managedBean.qt.proposalStartDate}"
-							id="proposalPreparation" required="true"
+							value="#{qTScheduleDetailBackingBean.managedBean.qt.sampleClosingDate}"
+							id="sampleclsdate" required="true"
 							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button" />
 						<h:inputText value="12:00PM" disabled="true" size="06" /> <p:message
-							id="proposalPreparationMsg" for="proposalPreparation"
-							display="icon" /></td>
+							id="sampledate" for="sampleclsdate" display="icon" /></td>
 				</tr>
 			</c:if>
 
@@ -83,124 +86,132 @@
 		</table>
 	</p:panel>
 	<p:spacer height="3" />
-	<p:panel id="samplezoneid" header="Sample Submission" toggleable="true"
-		rendered="#{qTScheduleDetailBackingBean.managedBean.qt.zonal eq 'true'}">
-		<p:dataTable id="sampleid" var="samplesubmissiondtl"
-			style="width : 100%" editable="true" rowIndexVar="rowIndex"
-			value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmissionList}"
-			selection="#{qTScheduleDetailBackingBean.managedBean.selectedSubmissionList}"
-			styleClass="submissionlist" rowKey="#{samplesubmissiondtl}">
+	<c:if
+		test="#{qTScheduleDetailBackingBean.managedBean.qt.sampleReq eq 'true'}">
+		<p:panel id="samplezoneid" header="Sample Submission"
+			toggleable="true"
+			rendered="#{qTScheduleDetailBackingBean.managedBean.qt.zonal eq 'true'}">
+			<p:dataTable id="sampleid" var="samplesubmissiondtl"
+				style="width : 100%" editable="true" rowIndexVar="rowIndex"
+				value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmissionList}"
+				selection="#{qTScheduleDetailBackingBean.managedBean.selectedSubmissionList}"
+				styleClass="submissionlist" rowKey="#{samplesubmissiondtl}">
 
-			<p:column selectionMode="multiple" style="width:2%" />
+				<p:column selectionMode="multiple" style="width:2%" />
 
-			<p:column headerText="Zone/Location">
-				<h:outputText value="#{samplesubmissiondtl.tplSpecZoneDtl.zoneName}" />
-			</p:column>
-			<p:column headerText="Address">
-				<h:outputText value="#{samplesubmissiondtl.address.address1}" />
-			</p:column>
-			<p:column headerText="#{lbl['lbl.so.action']}" style="width:10%">
-				<p:commandLink>
-					<p:graphicImage library="ep/images/design" name="edit.png"
-						value="/resources/ep/images/design/edit.png" />
-				</p:commandLink>
-			</p:column>
-		</p:dataTable>
-		<div align="right" style="width: 100%;">
-			<p:commandButton value="Apply" process="@this" partialSubmit="true"
-				action="#{qTScheduleDetailBackingBean.applySampleSubmission}"
-				update="samplePopup" icon="ui-icon-add"
-				oncomplete="sampledlg.show();" />
+				<p:column headerText="Zone/Location">
+					<h:outputText
+						value="#{samplesubmissiondtl.tplSpecZoneDtl.zoneName}" />
+				</p:column>
+				<p:column headerText="Address">
+					<h:outputText value="#{samplesubmissiondtl.address.address1}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.so.action']}" style="width:10%">
+					<p:commandLink
+						action="#{qTScheduleDetailBackingBean.editAddress(samplesubmissiondtl,rowIndex)}"
+						style="margin-right:20px;" partialSubmit="true" process="@this">
+						<p:graphicImage library="ep/images/design" name="edit.png"
+							value="/resources/ep/images/design/edit.png" />
+					</p:commandLink>
+				</p:column>
+			</p:dataTable>
+			<div align="right" style="width: 100%;">
+				<p:commandButton value="Apply" process="@this,sampleid" 
+					action="#{qTScheduleDetailBackingBean.applyAddessToSelectedZonesAction}"
+					update="sampledlg" icon="ui-icon-add" oncomplete="sampledlg.show();"
+					 />
 
-		</div>
-	</p:panel>
-	<p:panel header="Sample Submission" toggleable="true"
-		rendered="#{qTScheduleDetailBackingBean.managedBean.qt.zonal ne 'true'}">
-		<table>
-			<tr>
-				<td style="width: 82px;"><p:outputLabel
-						value="#{lbl['lbl.so.add1']}" /> <p:outputLabel value="*"
-						styleClass="mandatory" /></td>
-				<td><p:inputText id="sampleaddress1"
-						required="#{qTScheduleDetailBackingBean.managedBean.required}"
-						label="#{lbl['lbl.so.add1']}"
-						value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.address.address1}"
-						size="30" maxlength="255" /> <p:message id="sampleaddress1Msg"
-						for="sampleaddress1" display="icon" /></td>
-				<td style="width: 200px;"><p:outputLabel
-						value="#{lbl['lbl.so.state']}" /> <p:outputLabel value="*"
-						styleClass="mandatory" /></td>
-				<td><p:selectOneMenu style="width: 218px;margin-bottom: 5px;"
-						id="samplestate1"
-						required="#{qTScheduleDetailBackingBean.managedBean.required}"
-						label="#{lbl['lbl.so.state']}"
-						value="#{qTDetailBB.managedBean.scQtSampleSubmission.address.pmState.stateId}">
-						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-						<f:selectItems var="state"
-							value="#{qTScheduleDetailBackingBean.managedBean.states}"
-							itemLabel="#{state.stateName}" itemValue="#{state.stateId}" />
-						<p:ajax event="change"
-							listener="#{qTScheduleDetailBackingBean.retrievePmDistrictList}"
-							update="@(.stateDistrict)" />
-					</p:selectOneMenu> <p:message id="samplestate1Msg" for="samplestate1" display="icon" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.so.add2']}" /></td>
-				<td><p:inputText
-						value="#{qTDetailBB.managedBean.scQtSampleSubmission.address.address2}" size="30"
-						maxlength="255" /></td>
-				<td><p:outputLabel value="#{lbl['lbl.so.district']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>
-				<td><p:selectOneMenu styleClass="stateDistrict"
-						style="width: 218px;margin-bottom: 5px;" id="sampledistrict1"
-						required="#{qTScheduleDetailBackingBean.managedBean.required}"
-						label="#{lbl['lbl.so.district']}"
-						value="#{qTDetailBB.managedBean.scQtSampleSubmission.address.pmDistrict.districtId}">
-						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-						<f:selectItems var="district"
-							value="#{qTScheduleDetailBackingBean.managedBean.districts}"
-							itemValue="#{district.districtId}"
-							itemLabel="#{district.districtName}" />
-						<p:ajax event="change"
-							listener="#{qTScheduleDetailBackingBean.retrievePmCityList}"
-							update="@(.districtCity)" />
-					</p:selectOneMenu> <p:message id="sampledistrict1Msg" for="sampledistrict1"
-						display="icon" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.so.add3']}" /></td>
-				<td><p:inputText
-						value="#{qTDetailBB.managedBean.scQtSampleSubmission.address.address3}" size="30"
-						maxlength="255" /></td>
-				<td><p:outputLabel value="#{lbl['lbl.so.city']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>
-				<td><p:selectOneMenu styleClass="districtCity"
-						style="width: 218px;margin-bottom: 5px;" id="samplecity1"
-						required="#{qTScheduleDetailBackingBean.managedBean.required}"
-						label="#{lbl['lbl.so.city']}"
-						value="#{qTDetailBB.managedBean.scQtSampleSubmission.address.pmCity.cityId}">
-						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-						<f:selectItems var="city"
-							value="#{qTScheduleDetailBackingBean.managedBean.citys}"
-							itemValue="#{city.cityId}" itemLabel="#{city.cityName}" />
-					</p:selectOneMenu> <p:message id="samplecity1Msg" for="samplecity1" display="icon" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.so.add4']}" /></td>
-				<td><p:inputText
-						value="#{qTDetailBB.managedBean.scQtSampleSubmission.address.address4}" size="30"
-						maxlength="255" /></td>
-				<td><p:outputLabel value="#{lbl['lbl.so.postcode']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>
-				<td><p:inputText id="samplepost1"
-						required="#{qTScheduleDetailBackingBean.managedBean.required}"
-						label="#{lbl['lbl.so.postcode']}"
-						value="#{qTDetailBB.managedBean.scQtSampleSubmission.address.postcode}" size="38"
-						maxlength="10" /> <p:message id="samplepostpost1Msg"
-						for="samplepost1" display="icon" /></td>
-			</tr>
-		</table>
-	</p:panel>
+			</div>
+			
+		</p:panel>
+		<p:panel header="Sample Submission" toggleable="true"
+			rendered="#{qTScheduleDetailBackingBean.managedBean.qt.zonal ne 'true'}">
+			<table>
+				<tr>
+					<td style="width: 82px;"><p:outputLabel
+							value="#{lbl['lbl.so.add1']}" /> <p:outputLabel value="*"
+							styleClass="mandatory" /></td>
+					<td><p:inputText id="sampleaddress1"
+							required="#{qTScheduleDetailBackingBean.managedBean.required}"
+							label="#{lbl['lbl.so.add1']}"
+							value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.address.address1}"
+							size="30" maxlength="255" /> <p:message id="sampleaddress1Msg"
+							for="sampleaddress1" display="icon" /></td>
+					<td style="width: 200px;"><p:outputLabel
+							value="#{lbl['lbl.so.state']}" /> <p:outputLabel value="*"
+							styleClass="mandatory" /></td>
+					<td><p:selectOneMenu style="width: 218px;margin-bottom: 5px;"
+							id="samplestate1"
+							required="#{qTScheduleDetailBackingBean.managedBean.required}"
+							label="#{lbl['lbl.so.state']}"
+							value="#{qTDetailBB.managedBean.scQtSampleSubmission.address.pmState.stateId}">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+							<f:selectItems var="state"
+								value="#{qTScheduleDetailBackingBean.managedBean.states}"
+								itemLabel="#{state.stateName}" itemValue="#{state.stateId}" />
+							<p:ajax event="change"
+								listener="#{qTScheduleDetailBackingBean.retrievePmDistrictList}"
+								update="@(.stateDistrict)" />
+						</p:selectOneMenu> <p:message id="samplestate1Msg" for="samplestate1" display="icon" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.so.add2']}" /></td>
+					<td><p:inputText
+							value="#{qTDetailBB.managedBean.scQtSampleSubmission.address.address2}"
+							size="30" maxlength="255" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.so.district']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td><p:selectOneMenu styleClass="stateDistrict"
+							style="width: 218px;margin-bottom: 5px;" id="sampledistrict1"
+							required="#{qTScheduleDetailBackingBean.managedBean.required}"
+							label="#{lbl['lbl.so.district']}"
+							value="#{qTDetailBB.managedBean.scQtSampleSubmission.address.pmDistrict.districtId}">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+							<f:selectItems var="district"
+								value="#{qTScheduleDetailBackingBean.managedBean.districts}"
+								itemValue="#{district.districtId}"
+								itemLabel="#{district.districtName}" />
+							<p:ajax event="change"
+								listener="#{qTScheduleDetailBackingBean.retrievePmCityList}"
+								update="@(.districtCity)" />
+						</p:selectOneMenu> <p:message id="sampledistrict1Msg" for="sampledistrict1"
+							display="icon" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.so.add3']}" /></td>
+					<td><p:inputText
+							value="#{qTDetailBB.managedBean.scQtSampleSubmission.address.address3}"
+							size="30" maxlength="255" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.so.city']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td><p:selectOneMenu styleClass="districtCity"
+							style="width: 218px;margin-bottom: 5px;" id="samplecity1"
+							required="#{qTScheduleDetailBackingBean.managedBean.required}"
+							label="#{lbl['lbl.so.city']}"
+							value="#{qTDetailBB.managedBean.scQtSampleSubmission.address.pmCity.cityId}">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+							<f:selectItems var="city"
+								value="#{qTScheduleDetailBackingBean.managedBean.citys}"
+								itemValue="#{city.cityId}" itemLabel="#{city.cityName}" />
+						</p:selectOneMenu> <p:message id="samplecity1Msg" for="samplecity1" display="icon" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.so.add4']}" /></td>
+					<td><p:inputText
+							value="#{qTDetailBB.managedBean.scQtSampleSubmission.address.address4}"
+							size="30" maxlength="255" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.so.postcode']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td><p:inputText id="samplepost1"
+							required="#{qTScheduleDetailBackingBean.managedBean.required}"
+							label="#{lbl['lbl.so.postcode']}"
+							value="#{qTDetailBB.managedBean.scQtSampleSubmission.address.postcode}"
+							size="38" maxlength="10" /> <p:message id="samplepostpost1Msg"
+							for="samplepost1" display="icon" /></td>
+				</tr>
+			</table>
+		</p:panel>
+	</c:if>
 	<p:spacer height="3" />
 	<p:panel header="Contact Person Details" toggleable="true">
 		<p:dataTable var="contactpersondetails" id="cpersondetailsid"
@@ -275,18 +286,6 @@
 		</div>
 	</p:panel>
 
-	<p:dialog id="samplePopup" header="Sample Submission"
-		widgetVar="sampledlg" width="680" height="240">
-		<ui:include
-			src="/xhtml/sc/quatationtender/briefingsitevisit/samplesubmission.xhtml" />
-		<br />
-		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.so.okbtn']}" update="sampleid"
-				process="@this, @(.sampleDetails)" partialSubmit="true"
-				oncomplete="sampledlg.hide()" icon="ui-icon-check"
-				action="#{qTScheduleDetailBackingBean.okSubmission}" />
-			<p:commandButton value="#{lbl['lbl.so.cancelbtn']}"
-				icon="ui-icon-cancel" oncomplete="sampledlg.hide()" />
-		</div>
-	</p:dialog>
+
+
 </ui:composition>

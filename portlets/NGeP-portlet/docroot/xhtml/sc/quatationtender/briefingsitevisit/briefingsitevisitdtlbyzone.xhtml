@@ -10,86 +10,11 @@
 	<p:accordionPanel id="accordpnllist"
 		value="#{qTBriefingSiteVisitBackingBean.managedBean.briefingZoneBean}"
 		var="zonePnlList">
+		<ui:param name="bsvdtlbean"
+			value="#{qTBriefingSiteVisitBackingBean.managedBean.bsvDtlBean}" />
 
-		<p:tab title="#{zonePnlList.tplSpecZoneDtl.zoneName}">
-
-			<!-- Briefing Details -->
-			<ui:param name="briefingList" value="#{zonePnlList.briefingList}" />
-			<ui:param name="selectedbriefingList"
-				value="#{qTBriefingSiteVisitBackingBean.managedBean.selectedBriefingDetails}" />
-			<ui:include src="briefingIncludeDetails.xhtml" />
-			<div align="right">
-				<h:panelGroup id="addtositebuttonid">
-					<p:commandButton id="addtositevisitdtlid"
-						process="@this, zonebriefdtlsid" partialSubmit="true"
-						value="#{lbl['lbl.so.addtositevisit']}" icon="ui-icon-add"
-						actionListener="#{qTBriefingSiteVisitBackingBean.addToSiteVisitZoneDtl}"
-						rendered="#{zonePnlList.scQtBsv.sameBsv eq 'fasle'}" />
-				</h:panelGroup>
-				<p:commandButton id="briefaddid" value="#{lbl['lbl.so.addbtn']}"
-					process="@this"
-					action="#{qTBriefingSiteVisitBackingBean.addZoneBriefingDetails(zonePnlList.tplSpecZoneDtl.zoneName)}"
-					oncomplete="zonebriefing.show();" update="@(.qtBriefDetails)"
-					icon="ui-icon-add" />
-
-				<p:commandButton value="#{lbl['lbl.so.delete']}"
-					icon="ui-icon-delete" process="@this, zonebriefdtlsid"
-					action="#{qTBriefingSiteVisitBackingBean.deleteZoneBriefingDetails}"
-					partialSubmit="true" update="zonebriefdtlsid" />
-			</div>
-			<table style="width: 100%" border="0">
-				<tr>
-					<td style="width: 160px;"><p:outputLabel
-							value="#{lbl['lbl.so.attendance.brief']}" /></td>
-					<td style="width: 130px;"><p:selectOneRadio
-							value="#{zonePnlList.scQtBsv.allBriefingReq}">
-							<f:selectItem itemLabel="All" itemValue="true" />
-							<f:selectItem itemLabel="At Least" itemValue="false" />
-						</p:selectOneRadio></td>
-					<td><p:inputText size="5"
-							value="#{zonePnlList.scQtBsv.minBriefingAttend}" /></td>
-					<td />
-				</tr>
-			</table>
-
-			<!-- Site Visit Details -->
-			<h:panelGroup id="samebsvrequireid">
-				<ui:fragment rendered="#{zonePnlList.scQtBsv.sameBsv eq 'false'}">
-					<ui:param name="sitevisitList" value="#{zonePnlList.sitevisitList}" />
-					<ui:param name="selectedSitevisitList"
-						value="#{qTBriefingSiteVisitBackingBean.managedBean.selectedSiteVisitDetails}" />
-					<ui:include src="sitevistIncludeDetails.xhtml" />
-					<div align="right">
-						<p:commandButton id="sitevisitaddid"
-							value="#{lbl['lbl.so.addbtn']}" process="@this"
-							action="#{qTBriefingSiteVisitBackingBean.addZoneSiteDetails(zonePnlList.tplSpecZoneDtl.zoneName)}"
-							oncomplete="zonesitevisit.show();"
-							update="@(.qtSitevisitDetails)" icon="ui-icon-add" />
-						<p:commandButton value="#{lbl['lbl.so.delete']}"
-							icon="ui-icon-delete" process="@this, sitevisitdetaillistid"
-							action="#{qTBriefingSiteVisitBackingBean.deleteZoneSiteVisitDetails}"
-							partialSubmit="true" update="sitevisitdetaillistid" />
-					</div>
-					<table style="width: 100%" border="0">
-						<tr>
-							<td style="width: 160px;"><p:outputLabel
-									value="#{lbl['lbl.so.attendance.site']}" /></td>
-							<td style="width: 130px;"><p:selectOneRadio
-									value="#{zonePnlList.scQtBsv.allSiteVisitReq}">
-									<f:selectItem itemLabel="All" itemValue="true" />
-									<f:selectItem itemLabel="At Least" itemValue="false" />
-								</p:selectOneRadio></td>
-							<td><p:inputText size="5"
-									value="#{zonePnlList.scQtBsv.minSiteVisitAttend}" /></td>
-							<td />
-						</tr>
-					</table>
-				</ui:fragment>
-			</h:panelGroup>
-
-			<!-- Sample Submission and Remark -->
-			<ui:param name="remarks" value="#{zonePnlList.scQtBsv.bsvRemarks}"></ui:param>
-			<ui:include src="briefingsampleremark.xhtml" />
+		<p:tab title="#{bsvdtlbean.tplSpecZoneDtl.zoneName}">
+			<ui:include src="bsvdetails.xhtml"></ui:include>
 
 		</p:tab>
 	</p:accordionPanel>
