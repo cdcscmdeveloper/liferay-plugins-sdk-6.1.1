@@ -4,7 +4,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:ac="http://ac.my/jsf/composite/cc">
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 
 	<p:messages id="evaluationMeeting" showDetail="true" autoUpdate="true"
 		closable="true" />
@@ -15,10 +16,16 @@
 			partialSubmit="true"
 			action="#{evaluationMeetingBackingBean.saveCommitteeAction}"
 			icon="ui-icon-save" />
-		<p:commandButton value="#{lbl['lbl.sc.eva.btn.submit']}"
-			process="@this" partialSubmit="true"
-			action="#{evaluationMeetingBackingBean.saveCommitteeAction}"
-			icon="ui-icon-submit" />
+
+		<ui:repeat var="bpmAction"
+			value="#{evaluationMeetingBackingBean.managedBean.outComes}">
+			<ui:param name="buttonLabel"
+				value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+			<p:commandButton value="#{lbl[buttonLabel]}" 
+				styleClass="ui-button" style="float:right;" process="@all"
+				partialSubmit="true" icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
+				action="#{evaluationMeetingBackingBean.submitMettingDetails(bpmAction)}" />
+		</ui:repeat>
 	</div>
 	<ui:include src="evaluationMeetingHeader.xhtml"></ui:include>
 
