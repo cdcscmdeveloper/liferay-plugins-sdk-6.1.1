@@ -97,11 +97,13 @@ import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
+import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmCity;
+import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmDocument;
@@ -142,6 +144,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
@@ -189,6 +192,7 @@ public class SpecificationBackingBean extends
 	private String selctValue;
 	private int currentTab;
 	private int outputTab;
+	private String textBeforeSign;
 
 	public SpecificationBackingBean() {
 
@@ -10731,4 +10735,70 @@ public class SpecificationBackingBean extends
 		return items;
 	}
 
+	public String getTextBeforeSign() {
+		return textBeforeSign;
+	}
+
+	public void setTextBeforeSign(String textBeforeSign) {
+		// Temp : QtNumber + userId
+		StringBuilder sb = new StringBuilder();
+		sb.append(getManagedBean().getScQt().getQtNo());
+		sb.append(new FacesScopes().getUserSessionBean().getUserId());
+		this.textBeforeSign = sb.toString();
+	}
+	
+	   
+	   public String updateSpecCommitteDtls(String action,boolean isSign){
+		   SpecificationReqDTO spReqDTO = constructSpecCommitteDtls();
+			spReqDTO.setOutcome(action);
+			spReqDTO.setTaskId(this.getManagedBean().getTaskId());
+			spReqDTO.setPayLoad(this.getManagedBean().getSpecificationDataType());
+			FacesScopes facesScopes = new FacesScopes();
+			String ctx = facesScopes.getBPMAuthenticationCtxToken();
+			spReqDTO.setToken(ctx);
+			IQTSpecSO specSO = getSpecSO();
+			//COde to get sign Data..
+			if(isSign){			
+			PmDigiSign signData = retrieveGPKIData();
+			spReqDTO.setSignRequired(true);
+			spReqDTO.setDigiSignData(signData);
+			}
+			try {
+				SpecificationResDTO resDTO = specSO.updateBPMAction(spReqDTO);
+				if (resDTO.isSuccessful()) {
+					ScQt qt = resDTO.getScQt();
+					FacesContext
+							.getCurrentInstance()
+							.addMessage(
+									null,
+									new FacesMessage(
+											FacesMessage.SEVERITY_INFO,
+											null,
+											MessageUtils
+													.getMessage(
+															getMessgeConstant(action),
+															new String[] {
+																	"Specification Preparation And Scoring For",
+																	qt.getQtNo() },
+															MessageUtils.BUNDLE_COMMON_MESSAGES,
+															new FacesScopes()
+																	.getUserLocale())));
+
+					return CommonUIConst.ACKNOWLEDGE_PAGE;
+
+				}
+			} finally {
+				specSO = null;
+			}
+			return null;
+	   }
+
+	   private boolean isSpecChairPerson(List<PmRoleDesc> roleDesc){
+		   for(PmRoleDesc pmRoleDesc : roleDesc){
+			 if(RoleCode.SC_CHAIRPERSON.toString().equalsIgnoreCase(pmRoleDesc.getPmRole().getRoleCode())){
+				 return true;
+			 }
+		   }
+		   return false;
+	   }
 }
