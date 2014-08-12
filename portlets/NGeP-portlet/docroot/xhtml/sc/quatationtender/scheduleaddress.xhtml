@@ -5,8 +5,8 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<p:dialog id="sampledlg" header="Sample Submission" modal="true"
-		dynamic="true" position="top" styleClass="pop_up_top"
-		widgetVar="sampledlg" width="646px" height="218px" resizable="false">
+		dynamic="true" position="top" styleClass="pop_up_top" style="width:646px;height:218px;"
+		widgetVar="sampledlg" resizable="false">
 		<c:if test="#{qTScheduleDetailBackingBean.managedBean.qt.zonal}">
 		<p:messages id="sampleaddressmsg" showDetail="true" autoUpdate="true"
 				closable="true" showSummary="false" />

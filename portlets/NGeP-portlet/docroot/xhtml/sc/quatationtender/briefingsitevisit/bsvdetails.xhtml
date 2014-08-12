@@ -30,7 +30,7 @@
 			<p:column headerText="#{lbl['lbl.so.desc']}">
 				<p:commandLink
 					action="#{qTBriefingSiteVisitBackingBean.gotoAttandanceDtl(briefingdtls)}"
-					style="margin-right:20px;" partialSubmit="true" process="@this">
+					style="margin-right:20px;" partialSubmit="true" process="@this"  update="@([id$=briefdlgId])">
 					<h:outputText value="#{briefingdtls.bsvDesc}" />
 				</p:commandLink>
 			</p:column>
@@ -61,7 +61,7 @@
 			<p:column headerText="#{lbl['lbl.so.action']}" style="width:6%">
 				<p:commandLink
 					action="#{qTBriefingSiteVisitBackingBean.editAction(briefingdtls,index)}"
-					style="margin-right:20px;" partialSubmit="true" process="@this">
+					style="margin-right:20px;" partialSubmit="true" process="@this" update="@([id$=briefdlgId])">
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png" />
 				</p:commandLink>
