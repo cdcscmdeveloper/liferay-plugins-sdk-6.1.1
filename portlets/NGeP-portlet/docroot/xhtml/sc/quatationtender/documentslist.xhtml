@@ -38,7 +38,7 @@
 				<ui:fragment rendered="#{scQtDocReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload}">
 					<h:outputText value="#{scQtDocReport.scQtDocReportAttachment.fileName}" />
 					<p:commandButton oncomplete="attachDlg1.show();"
-						value="#{lbl['lbl.txt.attachment']}" icon="ui-icon-attachment"
+						value="#{lbl['lbl.txt.attachment']}" icon="iconAttachment"
 						partialSubmit="true" process="@this" update="@([id$=attach])">
 						<f:setPropertyActionListener target="#{qTDocumentsBackingBean.managedBean.selectedScQtDocReport}" value="#{scQtDocReport}" />
 					</p:commandButton>
