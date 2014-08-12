@@ -8,6 +8,7 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
 import my.ep.web.bean.report.ReportsGenerateBean;
+import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.BaseManagedBean;
 /**
  * @Author Jangari Kondal Reddy
@@ -22,6 +23,13 @@ public class ReportMangedBean extends BaseManagedBean{
 	private String moduleName;
 	private String reportName;
 	private String reportNameValue;
+	private String newTabVal=ReportConst.FORM_SELF;
+	public String getNewTabVal() {
+		return newTabVal;
+	}
+	public void setNewTabVal(String newTabVal) {
+		this.newTabVal = newTabVal;
+	}
 	public String getReportNameValue() {
 		return reportNameValue;
 	}
