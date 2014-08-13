@@ -31,7 +31,7 @@
 
 			<div class="ppRightBtn">
 				<p:commandButton id="specificationcommitteeadd"
-					value="#{lbl['lbl.so.addbtn']}" process="@this"
+					value="#{lbl['lbl.so.addbtn']}" process="@this" rendered="#{committe.committeStatus.statusId ne QTStatusConst.CM_COMPLETE}"
 					actionListener="#{qTCommitteBackingBean.addCommitteMember(qTDetailBB.managedBean.selectedTabBean.scQtCommittee, committeeApproval.titleName)}"
 					oncomplete="newspecificationcommittee.show();"
 					update="@(.scAddMember)" icon="ui-icon-add"  />
@@ -39,7 +39,7 @@
 				<p:commandButton value="#{lbl['lbl.so.delete']}"
 					process="@this, specificationcommitteeid"
 					actionListener="#{qTCommitteBackingBean.deleteSpecificationCommittee}"
-					update="specificationcommitteeid" icon="ui-icon-delete" />
+					update="specificationcommitteeid" icon="ui-icon-delete"  rendered="#{committe.committeStatus.statusId ne QTStatusConst.CM_COMPLETE}"/>
 
 				<p:commandButton value="#{lbl['lbl.so.clone.to.tec']}"
 					process="@this, specificationcommitteeid" update="@(.clonetecid)"
