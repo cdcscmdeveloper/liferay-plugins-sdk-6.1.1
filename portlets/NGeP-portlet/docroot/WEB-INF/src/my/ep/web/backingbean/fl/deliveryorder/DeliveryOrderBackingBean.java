@@ -115,6 +115,10 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 				flOrderId = getManagedBean().getFulfilmentOrder().getFulfilmentOrderId();
 			}
 			
+			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
+				reValidateRetrieveDelAmt();
+			}
+			
 			// do validation for selected address have items with delmount and delQty or not....
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
 				checkItemsWithDoAddress(actionName);
@@ -234,6 +238,21 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		return null;
 	}
 	
+	private void reValidateRetrieveDelAmt() {
+		BigDecimal remainingQty=new BigDecimal(0.0);
+		for(FlDeliveryAddress flDeliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
+			for(FlFulfilmentItemAddr itemAddr : flDeliveryAddress.getFlFulfilmentItemAddr()){
+				remainingQty = itemAddr.getOrderedQty().subtract(itemAddr.getSumDeliveredQty()).add(itemAddr.getRejectedQty());
+
+				if(itemAddr.getDeliveredQty().doubleValue()>remainingQty.doubleValue()) {
+					itemAddr.setDeliveredQty(new BigDecimal(0));
+					throw new EpException(MessageConst.ERROR_100032, new String[]{"Delivery Quantity","Remaining Quantity"});
+				}
+			}
+		}
+		
+	}
+
 	public void setDeliveryOrder(FulfilmentResDTO resDTO) {
 		FlFulfilmentOrder flOrder = resDTO.getFlOrder();
 		
