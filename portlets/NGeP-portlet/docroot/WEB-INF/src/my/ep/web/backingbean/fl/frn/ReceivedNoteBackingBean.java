@@ -306,13 +306,13 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			if(frnItem.getReceivedQty().doubleValue() < frnItem.getFlDelOrderItem().getDeliveredQty().doubleValue()) {
 				frnItem.setRejectedQty(frnItem.getFlDelOrderItem().getDeliveredQty().subtract(frnItem.getReceivedQty()));
 				if(frnItem.getRejectionRemark()==null || frnItem.getRejectionRemark().length()==0) {
-					throw new EpException(MessageConst.ERROR_100051, new String[]{"Remark",frnItem.getFlDelOrderItem().getFlFulfilmentItemAddr().getScRequestItem().getItemName()});
+					throw new EpException(MessageConst.ERROR_740024, new String[]{"Remark",frnItem.getFlDelOrderItem().getFlFulfilmentItemAddr().getScRequestItem().getItemName()});
 				}
 			}
 			if(frnItem.getReceivedAmt().doubleValue() < frnItem.getFlDelOrderItem().getDeliveredAmt().doubleValue()) {
 				frnItem.setRejectedAmt(frnItem.getFlDelOrderItem().getDeliveredAmt().subtract(frnItem.getReceivedAmt()));
 				if(frnItem.getRejectionRemark()==null || frnItem.getRejectionRemark().length()==0) {
-					throw new EpException(MessageConst.ERROR_100051, new String[]{"Remark",frnItem.getFlDelOrderItem().getFlFulfilmentItemAddr().getScRequestItem().getItemName()});
+					throw new EpException(MessageConst.ERROR_740024, new String[]{"Remark",frnItem.getFlDelOrderItem().getFlFulfilmentItemAddr().getScRequestItem().getItemName()});
 				}
 			}			
 		}
