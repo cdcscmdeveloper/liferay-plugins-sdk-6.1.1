@@ -64,7 +64,7 @@
 							    	<c:if test="#{reportBackingBean.managedBean.rptGenBean.itemTypeView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.itemType']}" style="margin-top:5px;width:115px;margin-left:-100px;"/>									
 									<p:selectOneMenu value="#{reportBackingBean.itemType}" style="margin-top:5px;width:150px;">
-										<f:selectItem itemLabel="- Select One -" itemValue="#{null}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.itmProduct']}" itemValue="#{lbl['lbl.rpt.itmProduct']}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.itmService']}" itemValue="#{lbl['lbl.rpt.itmService']}"></f:selectItem>													
 									</p:selectOneMenu>
@@ -72,7 +72,7 @@
 								    <c:if test="#{reportBackingBean.managedBean.rptGenBean.itemStatusView}">
 									<h:outputLabel value="#{lbl['lbl.rpt.itemStatus']}" style="margin-top:5px;width:115px;"/>									
 									<p:selectOneMenu value="#{reportBackingBean.itemStatus}" style="margin-top:5px;width:150px;">
-										<f:selectItem itemLabel="-Select One-" itemValue="#{null}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.itmActive']}" itemValue="#{lbl['lbl.rpt.itmActive']}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.itmInactive']}" itemValue="#{lbl['lbl.rpt.itmInactive']}"></f:selectItem>													
 									</p:selectOneMenu>
