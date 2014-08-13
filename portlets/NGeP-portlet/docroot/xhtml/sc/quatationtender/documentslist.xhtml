@@ -7,12 +7,6 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel header="Document List" toggleable="true">
-		<table style="width: 100%">
-			<tr>
-				<td style="text-align: right;"><p:commandLink value="Sample Salinan Kontrak" /></td>
-			</tr>
-		</table>
-
 		<p:dataTable var="scQtDocReport" id="doctbl" widgetVar="documentWidget"
 			value="#{qTDocumentsBackingBean.managedBean.scQtDocReportList}"
 			selection="#{qTDocumentsBackingBean.managedBean.selectedScQtDocReports}"
