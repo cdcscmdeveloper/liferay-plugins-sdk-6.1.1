@@ -1619,6 +1619,11 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 					ScRequestSupplierItem requestSupplierItem = prInquiry.getScRequestSupplierItems().get(0);
 					ScRequestNoteDtl requestNoteDtl = requestSupplierItem.getScRequestNoteDtl().get(0);
 
+					// lead time 
+					if(requestSupplierItem.getSupplierItemPrices() != null && requestSupplierItem.getSupplierItemPrices().size() >0){
+						requestSupplierItem.getRequestNoteItem().setLeadTime( requestSupplierItem.getSupplierItemPrices().get(0).getPricing().getCmSupplierItem().getLeadTime());
+					}
+
 					// price type drop down
 					List<String> priceTypes= new ArrayList<String>();
 					priceTypes.add(requestNoteDtl.getPriceType().getParameterCode());
