@@ -271,6 +271,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		SmAddress smPermAdd = this.getManagedBean().getSmPermenantAdd();
 		SmAddress smResAdd = this.getManagedBean().getSmResAdd();
 		
+		if(!smPersonnel.getEmail().equals(this.getManagedBean().getConfirmEmail())){
+			throw new EpException(MessageConst.ERROR_721020);
+		}
+		
 		if(!smSupp.getBusinessType().equals(SupplierManagementConst.INDIVIDUAL_FLAG)){
 			if(this.getManagedBean().getSmSupp().getSmSupplierBusinesses().size() < 1){
 				throw new EpException(MessageConst.ERROR_721011);
@@ -1289,7 +1293,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	public void pmStateDropdownValues() {
 		//List<SelectItem> itemList = new ArrayList<SelectItem>();
 		log.info("------pmStateDropdownValues------" + this.getManagedBean().getSmBusinessAdd().getPmCountry().getCountryId());
-		Long countryid = this.getManagedBean().getSmBusinessAdd().getPmCountry().getCountryId();
+		Long countryId = this.getManagedBean().getSmBusinessAdd().getPmCountry().getCountryId();
 		
 		if(this.getManagedBean().getSmBusinessAdd().getPmCountry().getCountryCode().equals(SupplierManagementConst.COUNTRY_MALAYSIA_CODE) ){
 			if(this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK) || 
@@ -1297,7 +1301,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH) || 
 					this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH)){
 				
-				List<PmState> stateLs = retrievePmStateList(countryid);
+				List<PmState> stateLs = retrievePmStateList(countryId);
 				this.getManagedBean().setBusinessStateLs(new ArrayList<PmState>());
 				
 				for(PmState state : stateLs){
@@ -1319,6 +1323,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						}
 					}
 				}
+			}else{
+				this.getManagedBean().setBusinessStateLs(retrievePmStateList(countryId));
 			}
 		}
 			
