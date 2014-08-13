@@ -30,6 +30,7 @@
 						<tr>
 							<td><p:inputText size="110" id="title" required="true" maxlength="100"
 									label="#{lbl['lbl.sc.sq.gen.info.title']}"
+									disabled="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending RN Creation'}"
 									value="#{simpleQuoteBackingBean.managedBean.scQuote.title}"
 									style="margin-bottom: 5px;" /></td>
 							<td><p:message id="titleMsg" for="title" display="icon" /></td>
@@ -39,11 +40,11 @@
 			<tr>
 				<td>
 				<p:outputLabel value="#{lbl['lbl.sc.sq.gen.info.proc.type']}" /> <p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td><p:selectOneRadio style="margin-bottom: 5px;"  
+				<td><p:selectOneRadio style="margin-bottom: 5px;"  disabled="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending RN Creation'}"
 				        id="procurementType" required="true"
 				        label="#{lbl['lbl.sc.sq.gen.info.proc.type']}"
 						value="#{simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode}">
-						<f:selectItems
+						<f:selectItems 
 							value="#{simpleQuoteBackingBean.managedBean.procurementTypes}" />
 							<p:ajax event="change" update="@([id$=justId])" 
 							listener="#{simpleQuoteBackingBean.procurementTypeEvent}" process="@this" />
@@ -89,9 +90,9 @@
 				<td style="width: 150px;">
 				<p:outputLabel value="#{lbl['lbl.sc.sq.gen.info.zonal']}" /> <p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td>
-					<p:selectOneRadio id="zonal" required="true"
+					<p:selectOneRadio id="zonal" required="true" 
 				         value="#{simpleQuoteBackingBean.managedBean.scQuote.zonal}" 
-				         label="#{lbl['lbl.sc.sq.gen.info.zonal']}" disabled="false">
+				         label="#{lbl['lbl.sc.sq.gen.info.zonal']}" disabled="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending RN Creation'}">
 						<f:selectItems
 							value="#{simpleQuoteBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 						<p:ajax event="change" update="@([id$=mainTabMenu])" process="@this" listener="#{simpleQuoteBackingBean.zoneEvent}" />
@@ -106,9 +107,10 @@
 					<table>
 						<tr>
 						 <td> 
-							<p:calendar showOn="button" id="startDate" 
+							<p:calendar showOn="button" id="startDate"  
 							        mindate="#{simpleQuoteBackingBean.managedBean.today}"
 							        required="true"
+							        disabled="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending RN Creation'}"
 									label="#{lbl['lbl.sc.sq.gen.info.start.date']}" 
 									readonlyInput="true"
 									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}"
@@ -126,6 +128,7 @@
 				<td><p:calendar showOn="button" id="endDate" label="#{lbl['lbl.sc.sq.gen.info.end.date']}"
 				       mindate="#{simpleQuoteBackingBean.managedBean.scQuote.startDate}"
 				       readonlyInput="true"  required="true" 
+				       disabled="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending RN Creation'}"
 				       pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" 
 				       value="#{simpleQuoteBackingBean.managedBean.scQuote.endDate}">
 				     <p:ajax event="dateSelect" update="durationId"  process="@this" partialSubmit="true" 
@@ -155,6 +158,7 @@
 				<td style="width: 150px;">
 				<p:outputLabel value="#{lbl['lbl.sc.sq.gen.info.no.of.quote']}" /> <p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneRadio id="noOfQuote" label="#{lbl['lbl.sc.sq.gen.info.no.of.quote']}" required="true"
+				      disabled="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending RN Creation'}"
 				      value="#{simpleQuoteBackingBean.managedBean.scQuote.multipleQuote}">
 						<f:selectItem itemLabel="#{lbl['lbl.sc.sq.gen.info.single']}"
 							itemValue="false" />
@@ -189,7 +193,9 @@
 						<tr>
 							<td></td>
 							<td>
-								<p:inputTextarea style="width:350px;" id="remarks" label="Remarks" maxlength="1000" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}"/>
+								<p:inputTextarea style="width:350px;" id="remarks" label="Remarks" maxlength="1000" value="#{remarkVar.remark}" 
+								  disabled="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending RN Creation'}"
+								 rendered="#{remarkIndex==0}"/>
 								<h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}"  style="display: inline-block; width:220px;word-wrap: break-word;" />
 							</td>
 							 <td style="vertical-align: top;padding-right: 1px;text-align: right;">  

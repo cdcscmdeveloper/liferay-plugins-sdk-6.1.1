@@ -10,8 +10,14 @@
 				<p:commandButton immediate="true"
 					value="#{lbl['lbl.sc.action.back.to.search.catalogue']}"
 					icon="ui-icon-back" partialSubmit="true" process="@this"
-					style="float:left;"
+					style="float:left;" rendered="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending Submission'}"
 					action="#{simpleQuoteBackingBean.backToPervious}" />
+				
+				<p:commandButton immediate="true"
+						value="#{lbl['lbl.sc.common.back']}" icon="ui-icon-back"
+						partialSubmit="true" process="@this" style="float:left;"
+						rendered="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending RN Creation'}"
+						action="#{simpleQuoteBackingBean.backToPervious}" />
 
 				<p:commandButton value="#{lbl['lbl.sc.common.save']}"
 					icon="ui-icon-save"
@@ -33,14 +39,14 @@
 			<table style="width:100%">
 					<tr>
 						<td align="right">
-						  <c:if test="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending RN Creation' 
-									  or simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending Submission'}">
+							 <c:if test="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending Submission'}">
 								<p:commandButton immediate="true"
 									value="#{lbl['lbl.sc.action.back.to.search.catalogue']}"
 									icon="ui-icon-back" partialSubmit="true" process="@this"
 									style="float:left;" 
 									action="#{simpleQuoteBackingBean.backToPervious}" />
 							</c:if>
+							
 						
 							<!-- to view simple Quote from the request note header  Icon    -->
                             <c:if test="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}">	

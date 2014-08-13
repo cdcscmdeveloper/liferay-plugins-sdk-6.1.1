@@ -18,8 +18,8 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	    
 	            <p:commandButton  immediate="true" value="#{lbl['lbl.sc.action.back.to.search.catalogue']}" icon="ui-icon-back"
 					 style="float:left;" action="#{purchaseInquiryBackingBean.backToPervious}" />
-				
-				 <p:commandButton value="#{lbl['lbl.sc.common.submit']}"
+
+					<p:commandButton value="#{lbl['lbl.sc.common.submit']}"
 					action="#{purchaseInquiryBackingBean.submitPrInquiryDtl}" style="float:right;"
 					icon="ui-icon-submit"  update="mainPanel"  rendered="#{purchaseInquiryBackingBean.managedBean.rnToPIFlag}"/>
 	    </c:if>
@@ -27,13 +27,26 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	   <c:if test="#{purchaseInquiryBackingBean.managedBean.taskId ne null}">
 	     <table style="width:100%">
 			<tr>
-				<td align="right"><c:if
-									test="#{!purchaseInquiryBackingBean.managedBean.rnToPIFlag}">
+				<td align="right">
+				
+					          <!-- 	view back button -->
+				               <c:if
+									test="#{purchaseInquiryBackingBean.managedBean.priStatus eq 'Pending RN Creation'}">
+									<p:commandButton immediate="true"
+										value="#{lbl['lbl.sc.common.back']}"
+										icon="ui-icon-back" style="float:left;"
+										action="#{purchaseInquiryBackingBean.backToPervious}" />
+								</c:if> 
+						
+								<c:if
+									test="#{purchaseInquiryBackingBean.managedBean.priStatus eq 'Pending Submission'}">
 									<p:commandButton immediate="true"
 										value="#{lbl['lbl.sc.action.back.to.search.catalogue']}"
 										icon="ui-icon-back" style="float:left;"
 										action="#{purchaseInquiryBackingBean.backToPervious}" />
-								</c:if> <c:forEach
+								</c:if> 
+								
+								<c:forEach
 											items="#{purchaseInquiryBackingBean.managedBean.outComes}"
 											var="action">
 
