@@ -86,9 +86,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	private String itemCode;
 	private String poAmount;
 	private String prNo;
-	private String pmo;
-
-	
+	private String pmo;	
 	/*FL end*/
 	List<SelectItem> reportList;
 	ReportsGenerateBean rptGenBean = new ReportsGenerateBean();
@@ -468,6 +466,13 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	 *Retrieve report list by SC module 
 	 */
 	public void retriveReportListBySCModule() {
+		if(this.getUserId()==ReportConst.CATLOG_ADMIN){
+			
+		}else if(this.getUserId()==ReportConst.SUPPL){
+			
+		}else if(this.getUserId()==ReportConst.CODIF_ADMIN){
+			
+		}
 		SelectItem selectItem= new SelectItem();
 		selectItem.setLabel(CommonMethod.getMessageCommon(ReportConst.SPPPP_PEMATUHAN_OC_RPT_NAME));
 		selectItem.setValue(ReportConst.SPPPP_PEMATUHAN_OC_RPT_VAL);
@@ -582,9 +587,11 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	 *Retrieve report list by CM module 
 	 */
 	public void retriveReportListByCMModule() {
-		if(this.getUserId()=="Catalogue Administrator"){
+		if(this.getUserId()==ReportConst.CATLOG_ADMIN){
 			
-		}else if(this.getUserId()=="Supplier"){
+		}else if(this.getUserId()==ReportConst.SUPPL){
+			
+		}else if(this.getUserId()==ReportConst.CODIF_ADMIN){
 			
 		}
 		SelectItem selectItem= new SelectItem();		
@@ -676,7 +683,14 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	 * Retrieve report list by FL module
 	 */
 	public void retriveReportListByFLModule() {
-				
+		
+		if(this.getUserId()==ReportConst.CATLOG_ADMIN){
+			
+		}else if(this.getUserId()==ReportConst.SUPPL){
+			
+		}else if(this.getUserId()==ReportConst.CODIF_ADMIN){
+			
+		}
 		SelectItem selectItem1= new SelectItem();
 		selectItem1.setLabel(CommonMethod.getMessageCommon(ReportConst.CON_REQ_RPT_MIN_NAME));
 		selectItem1.setValue(ReportConst.CON_REQ_RPT_MIN_VAL);
@@ -2095,7 +2109,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		if((getManagedBean().getModuleName()!=null)&&(getManagedBean().getReportNameValue()!=null)){
 			if(((this.getFromDate()==null)&&(this.getToDate()!=null))||((this.getFromDate()!=null)&&(this.getToDate()==null))){
 				getManagedBean().setNewTabVal(ReportConst.FORM_SELF);
-				throw new EpException(ReportConst.PLZ_SEL_BOTH_DTS_RPT_SEARCH);
+				throw new EpException(CommonMethod.getMessageCommon(ReportConst.PLZ_SEL_BOTH_DTS_RPT_SEARCH));
 			}
 			if(getManagedBean().getModuleName().equalsIgnoreCase(ModuleCodeConst.SUPPLIER_SELECTION)){			
 				generateSCReport();			
@@ -2106,7 +2120,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			}
 		}else{
 			getManagedBean().setNewTabVal(ReportConst.FORM_SELF);
-			throw new EpException(ReportConst.PLZ_SEL_ONE_RPT_SEARCH);
+			throw new EpException(CommonMethod.getMessageCommon(ReportConst.PLZ_SEL_ONE_RPT_SEARCH));
 		}		
 	}
 	/*
@@ -2161,7 +2175,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			log.info(url);
 		}else{
 			getManagedBean().setNewTabVal(ReportConst.FORM_SELF);
-			throw new EpException(ReportConst.PLZ_SEL_ONE_RPT_CRITERIA_SEARCH);
+			throw new EpException(CommonMethod.getMessageCommon(ReportConst.PLZ_SEL_ONE_RPT_CRITERIA_SEARCH));
 		}
 	}
 	/*
@@ -2262,7 +2276,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			log.info(url);
 		}else{
 			getManagedBean().setNewTabVal(ReportConst.FORM_SELF);
-			throw new EpException(ReportConst.PLZ_SEL_ONE_RPT_CRITERIA_SEARCH);
+			throw new EpException(CommonMethod.getMessageCommon(ReportConst.PLZ_SEL_ONE_RPT_CRITERIA_SEARCH));
 		}
 	}
 	
@@ -2470,7 +2484,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			log.info(url);
 		}else{
 			getManagedBean().setNewTabVal(ReportConst.FORM_SELF);
-			throw new EpException(ReportConst.PLZ_SEL_ONE_RPT_CRITERIA_SEARCH);
+			throw new EpException(CommonMethod.getMessageCommon(ReportConst.PLZ_SEL_ONE_RPT_CRITERIA_SEARCH));
 		}
 	}
 	/*
