@@ -9,9 +9,8 @@
 	<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
 			<td width="20%" style="vertical-align: baseline;"><p:tabMenu
-					styleClass="sidemenu"
 					activeIndex="#{supplierProposalDetailBackingBean.managedBean.prepareActiveIndex}"
-					style="display : table-caption;">
+					styleClass="sidemenu" style="display : table-caption;">
 					<p:menuitem value="#{lbl['lbl.sc.sp.menu.tech.proposal']}"
 						action="#{supplierProposalDetailBackingBean.retrieveTechnicalProposalList}"
 						update="@form" />
@@ -22,19 +21,21 @@
 						action="#{supplierProposalDetailBackingBean.retrieveDeclarationList}"
 						update="@form" />
 				</p:tabMenu></td>
-			<td width="80%" style="vertical-align: top;"><c:if
-					test="#{supplierProposalDetailBackingBean.managedBean.prepareActiveIndex eq '0'}">
-
-					<ui:include src="sptechdetails.xhtml" />
-				</c:if> <c:if
-					test="#{supplierProposalDetailBackingBean.managedBean.prepareActiveIndex eq '1'}">
-
-					<ui:include src="spfinancedetails.xhtml" />
-				</c:if> <c:if
-					test="#{supplierProposalDetailBackingBean.managedBean.prepareActiveIndex eq '2'}">
-
-					<ui:include src="spdeclaration.xhtml" />
-				</c:if></td>
+			<td width="80%" style="vertical-align: top;"><h:panelGroup
+					id="menuSPContent">
+					<c:if
+						test="#{supplierProposalDetailBackingBean.managedBean.prepareActiveIndex eq '0'}">
+						<ui:include src="sptechdetails.xhtml" />
+					</c:if>
+					<c:if
+						test="#{supplierProposalDetailBackingBean.managedBean.prepareActiveIndex eq '1'}">
+						<ui:include src="spfinancedetails.xhtml" />
+					</c:if>
+					<c:if
+						test="#{supplierProposalDetailBackingBean.managedBean.prepareActiveIndex eq '2'}">
+						<ui:include src="spdeclaration.xhtml" />
+					</c:if>
+				</h:panelGroup></td>
 		</tr>
 	</table>
 </ui:composition>
