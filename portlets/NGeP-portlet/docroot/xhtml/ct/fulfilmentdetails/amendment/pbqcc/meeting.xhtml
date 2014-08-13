@@ -7,46 +7,52 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
     <p:panel id="meetingPanel" header="#{lbl['lbl.ct.amend.meetingDtl']}" toggleable="true"  toggleSpeed="500">
-      <div style="overflow-x:auto">
-      <p:dataTable id="meetingTable" var="ctMeetingsVar" 
-        value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.ctMeetings}"
-         selection="#{amendmentBackingBean.selectedMeetingUser}" rowKey="#{ctMeetingsVar}">
-             <ac:paginator for="meetingTable" />
-              <p:column selectionMode="multiple" style="width:2%;" />
-			  <p:column style="width:25%;" headerText="#{lbl['lbl.ct.amend.dtofmeeting']}">
-			     <p:calendar value="#{ctMeetingsVar.meetingDate}" size="25" id="calMeeting"
-			         readonlyInput="true"  showOn="button" pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}"/>
-			  </p:column> 
-			  <p:column style="width:55%;" headerText="#{lbl['lbl.ct.amend.locofmeeting']}">
-				    <p:inputText value="#{ctMeetingsVar.meetingLocation}" style="width:95%;"/>
-			  </p:column> 
-			  <p:column style="width:20%;" headerText="Status">
-				 <p:selectOneMenu value="#{ctMeetingsVar.meetingStatusId}" style="with:150px;">
-			          <f:selectItems value="#{amendmentBackingBean.getMeetingStatusDropdown()}"/>
-			     </p:selectOneMenu>
-			  </p:column> 	
-        </p:dataTable>
-        </div>
-          <div class="ppRightBtn"> 
-		       <p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" 
-		          action="#{amendmentBackingBean.addPbQccMeetingDetails}" icon="ui-icon-add" update="meetingTable"/>
+           <p:dataTable id="meetingTable" var="ctMeetingsVar" 
+                value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.ctMeetings}"
+                selection="#{amendmentBackingBean.selectedMeetingUser}" rowKey="#{ctMeetingsVar}">
+                <ac:paginator for="meetingTable" />
+                <p:column selectionMode="multiple" style="width:2%;"/>
+                
+                <p:column style="width:25%;white-space:normal;" headerText="#{lbl['lbl.ct.amend.dtofmeeting']}">
+			          <p:calendar value="#{ctMeetingsVar.meetingDate}" size="25" id="calMeeting"
+			              readonlyInput="true"  showOn="button" pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}">
+			          </p:calendar>
+			    </p:column> 
+			 
+			     <p:column style="width:55%;white-space:normal;" headerText="#{lbl['lbl.ct.amend.locofmeeting']}">
+				      <p:inputText value="#{ctMeetingsVar.meetingLocation}" style="width:95%;"/>
+			     </p:column> 
+			   
+			     <p:column style="width:20%;white-space:normal;" headerText="Status">
+				      <p:selectOneMenu value="#{ctMeetingsVar.meetingStatusId}" style="with:150px;">
+			              <f:selectItems value="#{amendmentBackingBean.getMeetingStatusDropdown()}"/>
+			          </p:selectOneMenu>
+			     </p:column> 	
+           </p:dataTable>
+    
+            <div class="ppRightBtn"> 
+		       <p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" icon="ui-icon-add"
+		          action="#{amendmentBackingBean.addPbQccMeetingDetails}"  update="meetingTable"/>
 		       <p:commandButton value="Delete" process="@form" partialSubmit="true"  
 		          onclick="dlgMeetingDetails.show();"  icon="ui-icon-delete" update="meetingTable"/>
-		  </div>
-		  <p:dialog id="dlgMeetingDetails" widgetVar="dlgMeetingDetails" header="#{lbl['lbl.ct.dialong.cofirm.header']}" styleClass="screen-title"  
-              resizable="false" modal="true" width="350" height="95">  
-              <h:panelGrid columns="3">
-                 <p:graphicImage library="ep/images/design" name="exclamation.png"
-			        value="/resources/ep/images/design/exclamation.png" styleClass="ui-icon-complain"></p:graphicImage>
-			     <p:spacer width="10"/>
-                 <p:inputTextarea value="Are you sure you want to delete this record?"  rows="2" cols="48" 
-                    styleClass="ui-inputtextarea"></p:inputTextarea>
-              </h:panelGrid>
-              <div class="ppRightBtn">
-		        <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.yes']}" icon="ui-icon-accept" update="meetingTable" process="@form" 
-			      action="#{amendmentBackingBean.delPbQccMeetingDetails}" onclick="dlgMeetingDetails.hide();"/>
-			    <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.no']}" icon="ui-icon-reject" onclick="dlgMeetingDetails.hide();" type="button" />
-		      </div>
-         </p:dialog>
+		    </div>
+		    
+		    <p:dialog id="dlgMeetingDetails" widgetVar="dlgMeetingDetails" styleClass="screen-title" 
+		         header="#{lbl['lbl.ct.dialong.cofirm.header']}" resizable="false" modal="true" width="350" height="95">  
+               
+                 <h:panelGrid columns="3">
+                      <p:graphicImage library="ep/images/design" name="exclamation.png"
+			             value="/resources/ep/images/design/exclamation.png" styleClass="ui-icon-complain"/>
+			          <p:spacer width="10"/>
+                      <p:inputTextarea   styleClass="ui-inputtextarea"
+                           value="Are you sure you want to delete this record?"  rows="2" cols="48" />
+                  </h:panelGrid>
+                 
+                  <div class="ppRightBtn">
+		               <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.yes']}" icon="ui-icon-accept" update="meetingTable" 
+		                    process="@form"  action="#{amendmentBackingBean.delPbQccMeetingDetails}" onclick="dlgMeetingDetails.hide();"/>
+			           <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.no']}" icon="ui-icon-reject" onclick="dlgMeetingDetails.hide();" type="button" />
+		           </div>
+             </p:dialog>
       	</p:panel>
 </ui:composition>
