@@ -99,7 +99,6 @@ import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmEduField;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
-import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
@@ -433,13 +432,6 @@ public class SmApplicationBackingBean extends
 				// TODO
 			}
 			return setNavigationForAppl(applicationType);
-
-			/*
-			 * } catch (Exception e) {
-			 * System.out.println(" **** Unknown Expection ******* ");
-			 * e.printStackTrace(); return
-			 * setExceptionNavigationForAppl(applicationType);
-			 */
 		} finally {
 			// mofRegistrationSO = null;
 		}
@@ -634,11 +626,8 @@ public class SmApplicationBackingBean extends
 			// return SupplierManagementConst.PROCEED_MOF_REG;
 
 		} catch (Exception e) {
-			// System.out.println("this is error");
-			// e.printStackTrace();
 			getManagedBean().setTabActiveIndex(currentTab);
 			throw new EpException(MessageConst.ERROR_722505);
-			// return SupplierManagementConst.PROCEED_MOF_REG;
 		}
 
 	}
@@ -960,7 +949,6 @@ public class SmApplicationBackingBean extends
 			SiteAssignResDTO resDTO = siteSO.updateSiteVisitAssignment(reqDto);
 			updateSuccess = resDTO.isSuccessful();
 		} catch (Exception e) {
-			// System.out.println("this is error");
 			e.printStackTrace();
 			updateSuccess = false;
 			throw new EpException(MessageConst.ERROR_722506);
@@ -1442,33 +1430,6 @@ public class SmApplicationBackingBean extends
 		docu.setSmApplDocFiles(files);
 		return docu;
 	}
-
-	// public void createNewApplication() throws Exception {
-	// try {
-	// System.out.println("**** New BEAN  *************"
-	// + getManagedBean().getSmSupplier().getSmAppls().size());
-	// System.out.println("**** Latest Appl Id   *************"
-	// + getManagedBean().getSmSupplier().getSmAppls().get(0)
-	// .getApplId());
-	// SmAppl app = getManagedBean().getSmSupplier().getSmAppls().get(0);
-	// System.out.println(" ******* New Objectr == >> " + app.getApplId()
-	// + " Name == " + app.getApplNo());
-	// getManagedBean().setSmAppl(app);
-	// // TODO to be confirmed whether reqd to save the appln as draft
-	// getManagedBean().setTabActiveIndex(outputTab);
-	//
-	// } catch (Exception e) {
-	// System.out.println("this is error");
-	// e.printStackTrace();
-	// FacesContext.getCurrentInstance().addMessage(
-	// null,
-	// new FacesMessage(FacesMessage.SEVERITY_ERROR,
-	// "Sample error message",
-	// "PrimeFaces makes no mistakes"));
-	// getManagedBean().setTabActiveIndex(currentTab);
-	// }
-	//
-	// }
 
 	public void setTabValue(int currentTab, int outputTab) {
 		this.currentTab = currentTab;
@@ -3836,25 +3797,6 @@ public class SmApplicationBackingBean extends
 		RequestContext.getCurrentInstance().execute("bankDialog.show()");
 	}
 
-	// -- Process Bank Info End
-	/**
-	 * Test BPM Connect
-	 */
-	// public boolean initialBpmTask() {
-	// IMofRegistrationSO regSo = null;
-	// try {
-	// regSo = (IMofRegistrationSO) BusinessDelegate.getInstance()
-	// .getServiceObject("sm", IMofRegistrationSO.class);
-	// return regSo.initialBpmTask();
-	// } catch (Exception e) {
-	// e.printStackTrace();
-	// return false;
-	// } finally {
-	// regSo = null;
-	// }
-	//
-	// }
-
 	/**
 	 * Make a call to the BPM for MofRegistration
 	 */
@@ -3862,8 +3804,6 @@ public class SmApplicationBackingBean extends
 		IMofRegistrationSO regSo = null;
 		try {
 			// TODO to be used while doing the iteration2
-			// SmAppl bpmAppl = getManagedBean().getSmSupplier().getSmAppls()
-			// .get(0);
 			SmAppl bpmAppl = getManagedBean().getSmAppl();
 			if (getManagedBean().getSmAppl().isResubmit()) {
 				setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_RE_REVIEW);
@@ -3872,11 +3812,6 @@ public class SmApplicationBackingBean extends
 				setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_VERIFICATION);
 			}
 			getManagedBean().getSmAppl().setApplSubmitDate(new Date());
-
-			// updateSmAppl(bpmAppl.getApplType(),
-			// SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC, "");
-
-			// }
 			System.out.println(" **** SUPPORTING DOC MODE ****"
 					+ bpmAppl.getSupportingDocMode());
 
@@ -3914,34 +3849,6 @@ public class SmApplicationBackingBean extends
 					|| getManagedBean().getSmAppl().getApplType()
 							.equalsIgnoreCase("R")) {
 				reqDTO.setUserList(new ArrayList<String>());
-				// for (SmPersonnel personnel : getManagedBean().getSmAppl()
-				// .getSmPersonnels()) {
-				// if (personnel.getEpRole() != null
-				// && !personnel.getEpRole().isEmpty()
-				// && (personnel.getEpRole().equalsIgnoreCase(
-				// RoleCode.MOF_SUPPLIER_ADMIN.value())
-				// || personnel.getEpRole()
-				// .equalsIgnoreCase(
-				// RoleCode.MOF_SUPPLIER_ADMIN
-				// .value())
-				// || personnel.getEpRole().equalsIgnoreCase(
-				// RoleCode.MOF_SUPPLIER_USER.value())
-				// || personnel.getEpRole().equalsIgnoreCase(
-				// RoleCode.BASIC_SUPPLIER_ADMIN
-				// .value()) || personnel
-				// .getEpRole().equalsIgnoreCase(
-				// RoleCode.BASIC_SUPPLIER_USER
-				// .value()))) {
-				// // if (personnel.getPmUser() != null
-				// // && personnel.getPmUser().getUserId() != null &&
-				// // personnel.getPmUser().getRecordStatusFlg() == 1) {
-				// if (personnel.getPmUser() != null
-				// && personnel.getPmUser().getUserId() != null) {
-				// reqDTO.getUserList().add(
-				// personnel.getPmUser().getLoginId());
-				// }
-				// }
-				// }
 				System.out.println("User List Size for pass to BPM:"
 						+ reqDTO.getUserList().size());
 				// if (reqDTO.getUserList().size() == 0) {
@@ -3962,6 +3869,9 @@ public class SmApplicationBackingBean extends
 			regSo = (IMofRegistrationSO) BusinessDelegate.getInstance()
 					.getServiceObject("sm", IMofRegistrationSO.class);
 			resDTO = regSo.initiateSmApplicationTask(reqDTO);
+			// if(resDTO!=null && !resDTO.isBpmSuccess()){
+			// throw new EpException(MessageConst.ERROR_700020);
+			// }
 		} finally {
 			regSo = null;
 			retriveLatestApplAfterUpdate("", "");
@@ -4021,11 +3931,6 @@ public class SmApplicationBackingBean extends
 		// TODO remove if effect flow
 		renewSesionObject();
 		return CommonUIConst.ACKNOWLEDGE_PAGE;
-		// } catch (Exception e) {
-		// e.printStackTrace();
-		// // return SupplierManagementConst.MOF_APPL_FAIL;
-		// throw new EpException(MessageConst.ERROR_722519);
-		// }
 	}
 
 	public String submitCancelMofApplToBpm() {
@@ -7151,28 +7056,35 @@ public class SmApplicationBackingBean extends
 			SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
 
 			PmUser pmUser = new FacesScopes().getUserSessionBean();
-			
-			if (pmUser == null || (pmUser != null && pmUser.getUserId() == null)) {
-				System.out.println("**** Invalid user from the session scope ******");
-		    	throw new EpException(MessageConst.ERROR_721017);
+
+			if (pmUser == null
+					|| (pmUser != null && pmUser.getUserId() == null)) {
+				System.out
+						.println("**** Invalid user from the session scope ******");
+				throw new EpException(MessageConst.ERROR_721017);
 			}
-			
+
 			UserReqDTO userReqDTO = new UserReqDTO();
 			userReqDTO.setLoginId(pmUser.getLoginId());
-			System.out.println("************Supplier PmUser Login Id:" + pmUser.getLoginId());
+			System.out.println("************Supplier PmUser Login Id:"
+					+ pmUser.getLoginId());
 			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
 					.getServiceObject("pm", IUserSO.class);
-//			UserResDTO userResDTO = userSO.isUserExist(userReqDTO);
+			// UserResDTO userResDTO = userSO.isUserExist(userReqDTO);
 
-//			if (!userResDTO.isExist()) {
-//				if(userResDTO.getAllResult() != null && !userResDTO.getAllResult().isEmpty()) {
-//					System.out.println("******** Pm Profile" + userResDTO.getAllResult().get(0)[0]);
-//					System.out.println("******** Liferay Profile" + userResDTO.getAllResult().get(0)[1]);
-//					System.out.println("******** LDAP Profile" + userResDTO.getAllResult().get(0)[2]);
-//				}
-//				System.out.println("**** User doesn't exist in LDAP/PM/Liferay ******");
-//		    	throw new EpException(MessageConst.ERROR_721018);
-//			}
+			// if (!userResDTO.isExist()) {
+			// if(userResDTO.getAllResult() != null &&
+			// !userResDTO.getAllResult().isEmpty()) {
+			// System.out.println("******** Pm Profile" +
+			// userResDTO.getAllResult().get(0)[0]);
+			// System.out.println("******** Liferay Profile" +
+			// userResDTO.getAllResult().get(0)[1]);
+			// System.out.println("******** LDAP Profile" +
+			// userResDTO.getAllResult().get(0)[2]);
+			// }
+			// System.out.println("**** User doesn't exist in LDAP/PM/Liferay ******");
+			// throw new EpException(MessageConst.ERROR_721018);
+			// }
 
 			supplierSearchReqDTO.setUserId(pmUser.getUserId());
 
