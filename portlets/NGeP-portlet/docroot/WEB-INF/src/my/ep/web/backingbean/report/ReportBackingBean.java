@@ -998,9 +998,6 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 				criteriaVariablesByReportByFL();
 			}
 			this.getManagedBean().setRptGenBean(rptGenBean);
-		}else{
-			getManagedBean().setNewTabVal(ReportConst.FORM_SELF);
-			throw new EpException(ReportConst.PLZ_SEL_ONE_RPT_SEARCH);
 		}
 	}
 	/*

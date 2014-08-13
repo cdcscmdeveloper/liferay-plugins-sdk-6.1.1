@@ -19,14 +19,14 @@
 						    <h:panelGrid id="rptModule" columns="4"  style="margin-bottom:5px;width:85%;">
 						    <p:outputLabel value="#{lbl['lbl.rpt.module']}" style="margin-bottom:5px;width:115px;"/>
 						    <p:selectOneMenu  value="#{reportBackingBean.managedBean.moduleName}" style="margin-bottom:5px;width:300px;">
-								<f:selectItem itemLabel="-Select One-" itemValue="#{null}"></f:selectItem>
+								<f:selectItem itemLabel="- Select One -" itemValue="#{null}"></f:selectItem>
 								<f:selectItems value="#{reportBackingBean.retriveModuleList()}"></f:selectItems>
 								<p:ajax event="change" listener="#{reportBackingBean.retriveReportListBymoduleName}"
 								 partialSubmit="true"  update="@form"/>
 							</p:selectOneMenu>
 							<p:outputLabel value="#{lbl['lbl.rpt.rptName']}" style="margin-bottom:5px;width:115px;"/>
 							<p:selectOneMenu value="#{reportBackingBean.managedBean.reportNameValue}" style="margin-bottom:5px;width:300px;">
-								<f:selectItem itemLabel="-Select One-" itemValue="#{null}"></f:selectItem>
+								<f:selectItem itemLabel="- Select One -" itemValue="#{null}"></f:selectItem>
 								<f:selectItems value="#{reportBackingBean.managedBean.reportList}"></f:selectItems>
 								<p:ajax event="change" listener="#{reportBackingBean.criteriaVariablesByReport}"
 					 			partialSubmit="true" update="@form"/>
@@ -64,7 +64,7 @@
 							    	<c:if test="#{reportBackingBean.managedBean.rptGenBean.itemTypeView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.itemType']}" style="margin-top:5px;width:115px;margin-left:-100px;"/>									
 									<p:selectOneMenu value="#{reportBackingBean.itemType}" style="margin-top:5px;width:150px;">
-										<f:selectItem itemLabel="-Select One-" itemValue="#{null}"></f:selectItem>
+										<f:selectItem itemLabel="- Select One -" itemValue="#{null}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.itmProduct']}" itemValue="#{lbl['lbl.rpt.itmProduct']}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.itmService']}" itemValue="#{lbl['lbl.rpt.itmService']}"></f:selectItem>													
 									</p:selectOneMenu>
