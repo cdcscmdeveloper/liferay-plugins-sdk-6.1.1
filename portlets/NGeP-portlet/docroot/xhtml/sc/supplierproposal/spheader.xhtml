@@ -7,31 +7,25 @@
 
 	<p:panel>
 		<div align="left" class="header-info">
-			<table>
+			<table style="width: 100%">
 				<tr>
-					<td style="width: 245px"><h:outputLabel
-							value="#{lbl['lbl.sc.sp.qtno']}" /></td>
-					<td><p:inputText
-							value="#{supplierProposalDetailBackingBean.managedBean.qt.qtNo}"
-							disabled="true" size="30" /></td>
-					<td style="width: 210px"><h:outputLabel
-							value="#{lbl['lbl.sc.sp.proposal.no']}" /></td>
-					<td><p:inputText
-							value="#{supplierProposalDetailBackingBean.managedBean.tecCheckDetailsList[0].scQtProposal.proposalNo}"
-							disabled="true" size="30" /></td>
-					<td style="width: 210px"><h:outputLabel
-							value="#{lbl['lbl.sc.sp.closing.date']}" /></td>
-					<td><p:inputText
-							value="#{supplierProposalDetailBackingBean.managedBean.qt.closingDate}"
-							disabled="true" size="30">
+					<td style="width: 12%"><h:outputLabel
+							value="#{lbl['lbl.sc.quotation.tender.no']}" /></td>
+					<td style="width: 13%">#{supplierProposalDetailBackingBean.managedBean.qt.qtNo}</td>
+					<td style="width: 12%"><h:outputLabel
+							value="#{lbl['lbl.sc.proposal.no']}" /></td>
+					<td style="width: 13%">#{supplierProposalDetailBackingBean.managedBean.tecCheckDetailsList[0].scQtProposal.proposalNo}
+					</td>
+					<td style="width: 12%"><h:outputLabel
+							value="#{lbl['lbl.sc.closing.date']}" /></td>
+					<td style="width: 13%"><h:outputLabel
+							value="#{supplierProposalDetailBackingBean.managedBean.qt.closingDate}">
 							<f:convertDateTime
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-						</p:inputText></td>
-					<td style="width: 198px"><h:outputLabel
-							value="#{lbl['lbl.sc.sp.remaining.day']}" /></td>
-					<td><p:inputText
-							value="#{supplierProposalDetailBackingBean.managedBean.days}"
-							disabled="true" size="30" /></td>
+						</h:outputLabel></td>
+					<td style="width: 12%"><h:outputLabel
+							value="#{lbl['lbl.sc.remaining.day']}" /></td>
+					<td style="width: 13%">#{supplierProposalDetailBackingBean.managedBean.days}</td>
 				</tr>
 			</table>
 		</div>
