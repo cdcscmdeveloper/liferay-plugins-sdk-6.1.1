@@ -4376,12 +4376,12 @@ public class SmApplicationBackingBean extends
 					if (res.equalsIgnoreCase("Approve")) {
 						msgConst = MessageConst.INFO_700007;
 					} else if (res.equalsIgnoreCase("Reject")) {
-						SmEmailNotificationHelper
-								.sendApplicaitonRejectNotifMail(
-										getManagedBean().getSmAppl(),
-										new FacesScopes().getUserSessionBean()
-												.getUserId(), getManagedBean()
-												.getReasonDesc());
+						// SmEmailNotificationHelper
+						// .sendApplicaitonRejectNotifMail(
+						// getManagedBean().getSmAppl(),
+						// new FacesScopes().getUserSessionBean()
+						// .getUserId(), getManagedBean()
+						// .getReasonDesc());
 						msgConst = MessageConst.INFO_700008;
 					} else if (res.equalsIgnoreCase("Escalate")) {
 						msgConst = MessageConst.INFO_700014;
