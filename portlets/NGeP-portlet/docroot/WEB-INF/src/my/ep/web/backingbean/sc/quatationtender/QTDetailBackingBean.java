@@ -973,11 +973,7 @@ public class QTDetailBackingBean extends
 			List<SearchFilterBean> searchFilterBean = new ArrayList<SearchFilterBean>();
 			String qtTitle = qtnTenderSearchBean.getQtTitle();
 			if (!StringUtils.isBlank(qtTitle)) {
-				SearchFilterBean bean = new SearchFilterBean();
-				bean.setSearchField(QTConstants.QT_TITILE);
-				bean.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
-				bean.setSearchValue(qtTitle);
-				searchFilterBean.add(bean);
+				qtSearchBean.getDataFilterBeans().add(new SearchFilterBean(QTConstants.QT_TITILE, SearchOperator.OPERATOR_LIKE.value(), qtTitle, true));
 			}
 			String qtNumber = qtnTenderSearchBean.getQtNo();
 			if (!StringUtils.isBlank(qtNumber)) {
@@ -989,10 +985,7 @@ public class QTDetailBackingBean extends
 			}
 			String procurementMode = qtnTenderSearchBean.getProcurementMode();
 			if (!StringUtils.isBlank(procurementMode)) {
-				qtSearchBean.getDataFilterBeans().add(
-						new SearchFilterBean("procurementMode.parameterCode",
-								SearchOperator.OPERATOR_EQUALS.value(),
-								procurementMode));
+				qtSearchBean.getDataFilterBeans().add(new SearchFilterBean("procurementMode.parameterCode", SearchOperator.OPERATOR_EQUALS.value(), procurementMode));
 			}
 			Date fromCreatedDate = qtnTenderSearchBean.getFromCreatedDate();
 			Date toCreatedDate = qtnTenderSearchBean.getToCreatedDate();
@@ -1939,6 +1932,7 @@ public class QTDetailBackingBean extends
 	}
 
 	public void reset() {
+		this.getManagedBean().getQtnTenderSearchBean().setQtTitle(null);
 		this.getManagedBean().getQtnTenderSearchBean().setQtNo(null);
 		this.getManagedBean().getQtnTenderSearchBean().setProcurementMode(null);
 		this.getManagedBean().getQtnTenderSearchBean().setFromCreatedDate(null);
