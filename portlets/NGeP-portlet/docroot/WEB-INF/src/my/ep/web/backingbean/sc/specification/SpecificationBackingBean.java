@@ -1964,11 +1964,11 @@ public class SpecificationBackingBean extends
 						this.getManagedBean().getScQtCheckSt2techProposal()
 								.add(i, specChecklist.get(i));
 						if (!isAtleastOneSeriveReq(specChecklist)) {
-							for (ScQtCheckList otherschecklist : otherList) {
-								if (otherschecklist.getPmDocument()
+							for (int j=0;j<otherList.size();j++) {
+								if (otherList.get(j).getPmDocument()
 										.getDocDefinitionKey()
 										.equalsIgnoreCase("SS")) {
-									otherList.remove(otherschecklist);
+									otherList.remove(j);
 								}
 							}
 						}
