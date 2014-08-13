@@ -8,6 +8,10 @@
 	<p:panel>
 
 		<p:tabView id="supplierinfotabViewid" dynamic="true">
+			<ui:param name="smSupplier"
+				value="#{supplierProposalDetailBackingBean.managedBean.smSupplier}" />
+			<ui:param name="smAppl"
+				value="#{supplierProposalDetailBackingBean.managedBean.smAppl}" />
 
 			<p:tab id="tab1" title="#{lbl['lbl.sc.sp.supp.info']}"
 				styleClass="noBorders tr,noBorders td">
