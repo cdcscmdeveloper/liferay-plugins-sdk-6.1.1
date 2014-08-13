@@ -1884,7 +1884,9 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 	public String requestExtensionCode(){
 
-
+		if(this.getManagedBean().getRequestExtCodeList() != null) {
+			this.getManagedBean().getRequestExtCodeList().clear();
+		}
 
 		CodificationBackingBean codeBB = new CodificationBackingBean();
 
@@ -1939,7 +1941,9 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 
 	public String requestUnspscCode(){
-		this.getManagedBean().getRequestExtCodeList().clear();
+		if(this.getManagedBean().getRequestExtCodeList() != null) {
+			this.getManagedBean().getRequestExtCodeList().clear();
+		}
         this.getManagedBean().getRequestCode().setItemType("P");
 		return "unspscRequestForm";
 	}
