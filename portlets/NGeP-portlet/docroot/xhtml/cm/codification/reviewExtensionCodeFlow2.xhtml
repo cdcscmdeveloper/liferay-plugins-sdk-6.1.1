@@ -1,0 +1,155 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+
+
+
+	<ui:define name="contentSection">
+
+		<h:panelGroup id="extensionFlowReviewID">
+
+			<div style="text-align: right;">
+				<ui:repeat var="action"
+					value="#{unspscCodeBackingBean.managedBean.action}">
+					<p:commandButton value="#{action}"
+						action="#{unspscCodeBackingBean.submitToReviewExt(action)}"></p:commandButton>
+				</ui:repeat>
+			</div>
+
+
+			<ui:include src="DocumentHeader.xhtml"></ui:include>
+
+			<p:panel header="Request Info" toggleable="true">
+
+				<table style="width: 100%;">
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.code']}"></p:outputLabel></td>
+						<td><p:inputText
+								value="#{unspscCodeBackingBean.managedBean.reviewExtCodeList[0].tempCode}"
+								size="40" disabled="true" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.title']}"></p:outputLabel></td>
+						<td><p:inputText
+								value="#{unspscCodeBackingBean.managedBean.reviewExtCodeList[0].tempTitle}"
+								size="40" disabled="true" /></td>
+					</tr>
+				</table>
+
+				<p:dataTable style="width:100%;"
+					value="#{unspscCodeBackingBean.managedBean.reviewExtCodeList}"
+					var="review">
+
+					<p:column>
+						<f:facet name="header">
+						Extension
+					</f:facet>
+
+						<table style="height: 140px;">
+							<tr>
+								<td>#{lbl['lbl.cm.type']}</td>
+							</tr>
+							<tr>
+								<td>#{lbl['lbl.cm.brand']}</td>
+							</tr>
+							<tr>
+								<td>#{lbl['lbl.cm.measurement']}</td>
+							</tr>
+							<tr>
+								<td>#{lbl['lbl.cm.color']}</td>
+							</tr>
+						</table>
+
+
+
+					</p:column>
+
+
+					<p:column>
+						<f:facet name="header">
+							Supplier
+						</f:facet>
+
+						<table>
+							<tr>
+								<td><h:panelGrid columns="2"
+										columnClasses="cmColumnWidth">
+										<p:inputText value="#{review.typeName}"
+											disabled="#{!review.requestType}"></p:inputText>
+										<p:selectOneMenu rendered="#{review.requestType}"
+											style="width: 128px;" value="#{review.typeNameDD}">
+											<f:selectItem itemLabel="Select One" itemValue="" />
+											<f:selectItems
+												value="#{unspscCodeBackingBean.managedBean.typeList}"
+												var="type" itemLabel="#{type.typeName}"
+												itemValue="#{type.typeId}"></f:selectItems>
+										</p:selectOneMenu>
+									</h:panelGrid></td>
+							</tr>
+							<tr>
+								<td><h:panelGrid columns="2"
+										columnClasses="cmColumnWidth">
+										<p:inputText value="#{review.brandName}"
+											disabled="#{!review.requestBrand}"></p:inputText>
+										<p:selectOneMenu rendered="#{review.requestBrand}"
+											style="width: 128px;" value="#{review.brandNameDD}">
+											<f:selectItem itemLabel="Select One" itemValue="" />
+											<f:selectItems
+												value="#{unspscCodeBackingBean.managedBean.brandList}"
+												var="brand" itemLabel="#{brand.brandName}"
+												itemValue="#{brand.brandId}"></f:selectItems>
+										</p:selectOneMenu>
+									</h:panelGrid></td>
+							</tr>
+							<tr>
+
+								<td><h:panelGrid columns="2"
+										columnClasses="cmColumnWidth">
+										<p:inputText value="#{review.measurementName}"
+											disabled="#{!review.requestMeasurement}"></p:inputText>
+										<p:selectOneMenu rendered="#{review.requestMeasurement}"
+											style="width: 128px;" value="#{review.measurementNameDD}">
+											<f:selectItem itemLabel="Select One" itemValue="" />
+											<f:selectItems
+												value="#{unspscCodeBackingBean.managedBean.measurementList}"
+												var="measurement" itemLabel="#{measurement.measurementName}"
+												itemValue="#{measurement.measurementId}"></f:selectItems>
+										</p:selectOneMenu>
+									</h:panelGrid></td>
+							</tr>
+							<tr>
+
+								<td><h:panelGrid columns="2"
+										columnClasses="cmColumnWidth">
+										<p:inputText value="#{review.colorName}"
+											disabled="#{!review.requestColor}"></p:inputText>
+										<p:selectOneMenu rendered="#{review.requestColor}"
+											style="width: 128px;" value="#{review.colorNameDD}">
+											<f:selectItem itemLabel="Select One" itemValue="" />
+											<f:selectItems
+												value="#{unspscCodeBackingBean.managedBean.colorList}"
+												var="color" itemLabel="#{color.colorName}"
+												itemValue="#{color.colorId}"></f:selectItems>
+										</p:selectOneMenu>
+									</h:panelGrid></td>
+							</tr>
+						</table>
+
+					</p:column>
+
+
+				</p:dataTable>
+
+			</p:panel>
+
+
+		</h:panelGroup>
+
+
+	</ui:define>
+
+</ui:composition>

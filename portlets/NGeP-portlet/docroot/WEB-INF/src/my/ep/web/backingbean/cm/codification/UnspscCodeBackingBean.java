@@ -1665,7 +1665,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 			if(unspsc.isPublished()) {
 				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "resultNotification.xhtml");
 			} else {
-				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "reviewExtensionCodeFlow.xhtml");
+				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "reviewExtensionCodeFlow2.xhtml");
 			}
 		}else{
 			FacesContext fc = FacesContext.getCurrentInstance();
