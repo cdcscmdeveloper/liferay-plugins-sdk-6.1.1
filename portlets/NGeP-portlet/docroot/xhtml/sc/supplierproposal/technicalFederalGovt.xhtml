@@ -38,12 +38,14 @@
 				value="#{supplierProposalDetailBackingBean.managedBean.scLoaList}"
 				rowKey="#{techgovt}" rowIndexVar="rowIndex">
 
+				<ac:paginator for="techgovtid" />
+
 				<p:column headerText="#{lbl['lbl.sc.sp.agencyname']}">
 					<h:outputText />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.sp.contracttitle']}">
-					<h:outputText value="#{techgovt.title}" />
+					<h:outputText value="#{techgovt.scLoiLoa.title}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.sp.contractno']}">
@@ -51,15 +53,21 @@
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.sp.effectivedt']}">
-					<h:outputText value="#{techgovt.contractEffDate}" />
+					<h:outputText value="#{techgovt.contractEffDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</h:outputText>
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.sp.expirydt']}">
-					<h:outputText value="#{techgovt.contractExpDate}" />
+					<h:outputText value="#{techgovt.contractExpDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</h:outputText>
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.sp.contractperiod']}">
-					<h:outputText />
+					<h:outputText value="#{techgovt.contractDuration}" />
 				</p:column>
 
 			</p:dataTable>
@@ -74,8 +82,9 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.sp.ttlnoofyears']}" /></td>
-					<td colspan="3"><p:inputText readonly="true" disabled="true"
-							size="30" /></td>
+					<td colspan="3"><p:inputText
+							value="#{supplierProposalDetailBackingBean.managedBean.noOfYears}"
+							readonly="true" disabled="true" size="30" /></td>
 				</tr>
 			</table>
 		</p:panel>

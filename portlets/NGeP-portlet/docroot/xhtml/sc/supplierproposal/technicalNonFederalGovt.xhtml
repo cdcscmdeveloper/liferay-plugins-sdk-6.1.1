@@ -71,14 +71,20 @@
 
 				<p:column headerText="#{lbl['lbl.sc.sp.effectivedt']}">
 					<h:outputText value="#{technongovt.effectiveDate}"
-						rendered="#{technongovt.brandNew eq false}" />
+						rendered="#{technongovt.brandNew eq false}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</h:outputText>
 					<p:calendar value="#{technongovt.effectiveDate}" showOn="button"
 						size="20" rendered="#{technongovt.brandNew eq true}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.sp.expirydt']}">
 					<h:outputText value="#{technongovt.expiryDate}"
-						rendered="#{technongovt.brandNew eq false}" />
+						rendered="#{technongovt.brandNew eq false}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</h:outputText>
 					<p:calendar value="#{technongovt.expiryDate}" showOn="button"
 						size="20" rendered="#{technongovt.brandNew eq true}" />
 				</p:column>
@@ -109,7 +115,7 @@
 					update="technongovtid, totalcontractyrs" icon="ui-icon-add" />
 
 				<p:commandButton value="#{lbl['lbl.so.delete']}"
-					icon="ui-icon-delete" update="technongovtid"
+					icon="ui-icon-delete" update="technongovtid, totalcontractyrs"
 					action="#{supplierProposalDetailBackingBean.deleteNonFederalGovtExperience}" />
 			</div>
 
