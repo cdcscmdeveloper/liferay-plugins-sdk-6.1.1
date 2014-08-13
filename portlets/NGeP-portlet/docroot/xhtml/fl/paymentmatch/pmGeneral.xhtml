@@ -9,14 +9,14 @@
 	<p:panel header="FULFILMENT DETAIL" toggleable="true">
 		<table style="width: 100%">
 			<tr>
-				<td style="width: 130px;"><p:outputLabel
+				<td style="width: 86px;"><p:outputLabel
 						value="#{lbl['lbl.fl.ministry']}" /></td>
-				<td style="width: 360px;"><p:inputText size="53"
+				<td style="width: 140px;"><p:inputText size="53"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flFulfilmentOrder.flFulfilmentRequest.issuedOrgProfile.parentOrgProfile.orgName}"
 						disabled="true" /></td>
-				<td style="width: 150px;"><p:outputLabel value="#{lbl['lbl.fl.pm.supp.inv.no']}" /></td>
-				<td><p:inputText size="33" disabled="true"
-						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.supplierInvoiceRef}" /></td>
+				<td ><p:outputLabel value="#{lbl['lbl.fl.pm.adj.no']}" /></td>
+				<td style="width: 146px;"><p:inputText disabled="true" size="20"
+						value="#{paymentMatchBackingBean.managedBean.adjustmentDocNo}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.prepared.for.ptj']}" /></td>
@@ -25,19 +25,9 @@
 					<p:spacer width="5" /> <p:inputText size="39" id="preparedPtj"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flFulfilmentOrder.flFulfilmentRequest.preparedOrgProfile.orgName}"
 						disabled="true" /></td>
-				<td style="width: 117px;"><p:outputLabel
-						value="#{lbl['lbl.fl.pm.inv.no']}" /></td>
-				<td><table style="width: 100%">
-						<tr>
-							<td style="width: 25px;"><p:inputText size="20"
-									disabled="true"
-									value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.invoiceNo}" /></td>
-							<td style="width: 80px;"><p:outputLabel
-									value="#{lbl['lbl.fl.pm.factored']}" /></td>
-							<td><p:selectBooleanCheckbox disabled="true"
-									value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flFulfilmentOrder.factored}" /></td>
-						</tr>
-					</table></td>
+				<td ><p:outputLabel value="#{lbl['lbl.fl.pm.stop.instr.no']}" /></td>
+				<td><p:inputText disabled="true" size="20"
+						value="#{paymentMatchBackingBean.managedBean.stopInstrNo}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /></td>
@@ -46,9 +36,12 @@
 					<p:spacer width="5" /> <p:inputText size="39" id="issuePtj"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flFulfilmentOrder.flFulfilmentRequest.issuedOrgProfile.orgName}"
 						disabled="true" /></td>
-				<td><p:outputLabel value="#{lbl['lbl.fl.pm.adj.no']}" /></td>
-				<td><p:inputText disabled="true" size="20" value="#{paymentMatchBackingBean.managedBean.adjustmentDocNo}" /></td>
-			</tr>
+				<td style="width: 117px;"><p:outputLabel
+						value="#{lbl['lbl.fl.pm.contr.no']}" /></td>
+				<td style="width: 25px;"><p:inputText size="20"
+						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flFulfilmentOrder.flFulfilmentRequest.ctContract.contractNo}"
+						disabled="true" /></td>
+			</tr>			
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.charge.ptj']}" /></td>
 				<td><p:inputText size="5" disabled="true"
@@ -56,8 +49,11 @@
 					<p:spacer width="5" /> <p:inputText size="39" id="chargedPtj"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flFulfilmentOrder.flFulfilmentRequest.chargeOrgProfile.orgName}"
 						disabled="true" /></td>
-				<td><p:outputLabel value="#{lbl['lbl.fl.pm.stop.instr.no']}" /></td>
-				<td><p:inputText disabled="true" size="20" value="#{paymentMatchBackingBean.managedBean.stopInstrNo}" /></td>
+				<td><p:outputLabel
+						value="#{lbl['lbl.fl.pm.mto']}" /></td>
+				<td><p:selectBooleanCheckbox
+						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flFulfilmentOrder.flFulfilmentRequest.mto}"
+						disabled="true" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.accounting.ofc']}" /></td>
@@ -65,65 +61,68 @@
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flFulfilmentOrder.flFulfilmentRequest.agOffice.officeCode}" />
 					<p:spacer width="5" /> <p:inputText size="39" disabled="true"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flFulfilmentOrder.flFulfilmentRequest.agOffice.officeName}" /></td>
-
-				<td style="width: 117px;"><p:outputLabel
-						value="#{lbl['lbl.fl.pm.contr.no']}" /></td>
-				<td><table style="width: 100%">
-						<tr>
-							<td style="width: 25px;"><p:inputText size="20"
-									value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flFulfilmentOrder.flFulfilmentRequest.ctContract.contractNo}"
-									disabled="true" /></td>
-							<td style="width: 75px;"><p:outputLabel
-									value="#{lbl['lbl.fl.pm.mto']}" /></td>
-							<td><p:selectBooleanCheckbox value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flFulfilmentOrder.flFulfilmentRequest.mto}" disabled="true" /></td>
-						</tr>
-					</table></td>
-
 			</tr>
 		</table>
 	</p:panel>
 	<p:panel header="PAYMENT DESCRIPTION" toggleable="true">
 		<table style="width: 100%">
 			<tr>
-				<td rowspan="4" valign="top" style="width: 128px;"><p:outputLabel
-						value="#{lbl['lbl.fl.pm.payment.desc']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>
-				<td rowspan="4" style="width: 280px;"><p:inputTextarea cols="55" rows="8"
-						maxlength="255" style=" margin-bottom:5px;" id="paymentDesc"
-						label="#{lbl['lbl.fl.pm.payment.desc']}" required="true"
-						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.description}" />
-				</td>
-				<td style="width: 106px;">
-					<p:message for="paymentDesc" display="icon" />
-				</td>
+				<td style="width: 135px;"><p:outputLabel
+						value="#{lbl['lbl.fl.pm.supp.inv.no']}" /></td>
+				<td><table style="width: 100%">
+						<tr>
+							<td style="width: 25px;"><p:inputText size="20"
+									disabled="true"
+									value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.supplierInvoiceRef}" /></td>
+							<td style="width: 152px;"><p:outputLabel
+									value="#{lbl['lbl.fl.pm.factored']}" /></td>
+							<td><p:selectBooleanCheckbox disabled="true"
+									value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flFulfilmentOrder.factored}" /></td>
+						</tr>
+					</table></td>
 				<td style="width: 137px;"><p:outputLabel
 						value="#{lbl['lbl.fl.pm.payment.pre.date']}" /></td>
-				<td><p:inputText size="25" disabled="true"
+				<td><p:inputText size="20" disabled="true"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.createdDate}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText></td>
 			</tr>
 			<tr>
-				<td></td>
+				<td ><p:outputLabel
+						value="#{lbl['lbl.fl.pm.inv.no']}" /></td>
+				<td><p:inputText size="20" disabled="true"
+						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.invoiceNo}" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.pm.payment.sub.date']}" /></td>
-				<td><p:inputText size="25" disabled="true" 
-				value="#{paymentMatchBackingBean.managedBean.paymentAdvice.submissionDate}">
+				<td><p:inputText size="20" disabled="true"
+						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.submissionDate}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText></td>
 			</tr>
 			<tr>
-				<td></td>
-				<td><p:outputLabel value="#{lbl['lbl.fl.pm.payment.date']}" /></td>
-				<td><p:inputText size="25" disabled="true"
-						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.paymentDate}">
+				<td><p:outputLabel value="#{lbl['lbl.fl.pm.payment.inv.date']}" /></td>
+				<td><p:inputText size="20" disabled="true"
+					value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.submissionDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</p:inputText></td>
+				<td style="width: 137px;"><p:outputLabel
+						value="#{lbl['lbl.fl.pm.payment.pre.date']}" /></td>
+				<td><p:inputText size="20" disabled="true"
+						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.createdDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText></td>
 			</tr>
 			<tr>
-				<td></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.pm.payment.desc']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td><p:inputText size="53" maxlength="225"
+						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.description}">
+					</p:inputText></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.pm.payment.ref']}" /></td>
-				<td><p:inputText size="12" disabled="true"
+				<td><p:inputText size="20" disabled="true"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.paymentRefNo}" /></td>
 			</tr>
 		</table>
@@ -200,7 +199,7 @@
 		rendered="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flFulfilmentOrder.factored eq 'true'}">
 		<table style="width: 100%">
 			<tr>
-				<td style="width: 236px;"><p:outputLabel
+				<td style="width: 135px;"><p:outputLabel
 						value="#{lbl['lbl.fl.supp.fact.com']}" /></td>
 				<td><p:inputText disabled="true" size="53"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flFulfilmentOrder.pmFinancialOrg.finOrgName}" /></td>
