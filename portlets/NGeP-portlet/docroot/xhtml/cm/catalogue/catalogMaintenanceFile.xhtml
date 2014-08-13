@@ -20,6 +20,10 @@
 	</script>
 
 		<p:messages id="catalogFileMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="true" ></p:messages>
+		
+		<p:blockUI block="form" widgetVar="blockWidget">
+			<p:graphicImage value="/resources/ep/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
 
 		<h:panelGroup>
 			<p:tabMenu id="maintenanceTabId"
@@ -27,22 +31,22 @@
 
 				<p:menuitem value="#{lbl['lbl.cm.draft']}"
 					action="#{catalogueBackingBean.onTabChange1('Draft')}"
-					update="@form" />
+					update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 				<p:menuitem value="#{lbl['lbl.cm.approval']}"
 					action="#{catalogueBackingBean.onTabChange1('Approval')}"
-					update="@form" />
+					update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 				<p:menuitem value="#{lbl['lbl.cm.approved']}"
 					action="#{catalogueBackingBean.onTabChange1('Approved')}"
-					update="@form" />
+					update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 				<p:menuitem value="#{lbl['lbl.cm.reject']}"
 					action="#{catalogueBackingBean.onTabChange1('Rejected')}"
-					update="@form" />
+					update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 				<p:menuitem value="#{lbl['lbl.cm.published']}"
 					action="#{catalogueBackingBean.onTabChange1('Published')}"
-					update="@form" />
+					update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 				<p:menuitem value="#{lbl['lbl.cm.expired']}"
 					action="#{catalogueBackingBean.onTabChange1('Expired')}"
-					update="@form" />
+					update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 			</p:tabMenu>
 
 
