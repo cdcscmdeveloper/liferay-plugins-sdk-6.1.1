@@ -1932,6 +1932,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 
 	public String requestUnspscCode(){
+		this.getManagedBean().getRequestExtCodeList().clear();
         this.getManagedBean().getRequestCode().setItemType("P");
 		return "unspscRequestForm";
 	}
