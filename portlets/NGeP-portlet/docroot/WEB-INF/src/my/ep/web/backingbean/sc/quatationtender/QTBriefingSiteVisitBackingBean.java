@@ -47,6 +47,7 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
+import org.primefaces.event.TabChangeEvent;
 
 /**
  * @author Viswanath
@@ -112,7 +113,7 @@ public class QTBriefingSiteVisitBackingBean extends
 				DistrictResDTO resDTO = reqSO
 						.retriveDistrictListByStateID(reqDTO);
 				this.getManagedBean().setDistricts(resDTO.getDistrictList());
-				
+
 			}
 		}
 		retrievePmCityList();
@@ -164,6 +165,7 @@ public class QTBriefingSiteVisitBackingBean extends
 		pmStatus.setStatusId(QTStatusConst.BSV_PENDING);
 		bsvDtl.setBsvStatus(pmStatus);
 		this.getManagedBean().setQtBriefing(bsvDtl);
+		retrievePmStateList();
 
 	}
 
@@ -235,7 +237,6 @@ public class QTBriefingSiteVisitBackingBean extends
 		} else {
 			this.getManagedBean().setBsvDtlBean(briefingBean);
 		}
-
 		this.getManagedBean().setQtBriefing(null);
 		RequestContext.getCurrentInstance().execute("addbsvdtls.hide();");
 	}
@@ -584,5 +585,15 @@ public class QTBriefingSiteVisitBackingBean extends
 
 	public void setIndex(int index) {
 		this.index = index;
+	}
+	
+	/** 
+	 * Will be called on change of accordian panel..
+	 * @param event
+	 */
+	public void onZoneTabChange(TabChangeEvent event){
+	BriefingZoneBean zoneBean = (BriefingZoneBean) event.getData();
+	//this.getManagedBean().setBsvZoneindx(1);
+	this.getManagedBean().setBsvDtlBean(zoneBean);
 	}
 }

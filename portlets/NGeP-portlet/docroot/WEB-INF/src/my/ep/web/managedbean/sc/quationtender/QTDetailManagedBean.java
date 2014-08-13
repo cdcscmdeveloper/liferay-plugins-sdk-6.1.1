@@ -432,6 +432,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private int bsvIndex;
 	private int sampleAddressIndex;
 	private String actionType;
+	private int bsvZoneindx=-1;
 
 	public void setPanelSuppliers(List<SmSupplier> panelSuppliers) {
 		this.panelSuppliers = panelSuppliers;
@@ -2558,6 +2559,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setActionType(String actionType) {
 		this.actionType = actionType;
+	}
+
+	public int getBsvZoneindx() {
+		return bsvZoneindx;
+	}
+
+	public void setBsvZoneindx(int bsvZoneindx) {
+		this.bsvZoneindx = bsvZoneindx;
 	}
 
 	
