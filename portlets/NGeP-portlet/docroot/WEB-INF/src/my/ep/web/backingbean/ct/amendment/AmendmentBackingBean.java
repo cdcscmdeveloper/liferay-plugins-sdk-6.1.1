@@ -394,15 +394,15 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			  getManagedBean().setAttachmentList(resDTO.getCtAttachments());
 			  ctBackingBean = new ContractBackingBean(getManagedBean().getFileDirectory());			     
 			  ctBackingBean.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
-			  if(getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value())){
-		    	   contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
-		    	   ContractReqDTO reqDTO = new ContractReqDTO();
-		    	   reqDTO.setContractVerId(resDTO.getCtContractVer().getContractVerId());
-		    	   reqDTO.setContractId(resDTO.getCtContractVer().getCtContract().getContractId());
-				   reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
-				   ContractResDTO amendResDTO = contractSO.retrieveExtensionHistory(reqDTO);
-				   getManagedBean().setAmendHistoryList(amendResDTO.getExtensionHistoryList());
-		       }
+			  
+			  contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+	    	  ContractReqDTO reqDTO = new ContractReqDTO();
+	    	  reqDTO.setContractVerId(resDTO.getCtContractVer().getContractVerId());
+	    	  reqDTO.setContractId(resDTO.getCtContractVer().getCtContract().getContractId());
+			  reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
+			  ContractResDTO amendResDTO = contractSO.retrieveExtensionHistory(reqDTO);
+			  getManagedBean().setAmendHistoryList(amendResDTO.getExtensionHistoryList());
+		    
 	   	    } finally {
 		     	contractSO = null;
 		    }
@@ -535,7 +535,9 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 					        messageId = MessageConst.INFO_700013;
 				         }else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getTaskName() != null) {
 					         messageId = MessageConst.INFO_700026;
-				         }
+				         }else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_COMPLETE)) {
+								messageId = MessageConst.INFO_700001;
+					      }
 				    
 			      	     log.info("Record saved successfully");
 				         FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
@@ -559,17 +561,29 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	 
 	   private void validateContractAmendment(String action) {
 		   
-		   if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
-			    if(getManagedBean().getRemarkList().get(0).getRemark() == null || getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
-				     throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
-		        }
-	     
-		   } if(!getManagedBean().getContractVer().getCtAmendment().isContractExtend() && !getManagedBean().getContractVer().getCtAmendment().isItemPriceChange()
+		   if(getManagedBean().getContractVer().getCtAmendment()!=null && 
+				   getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa()!=null && 
+				   getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaAttachment()!=null &&
+				   getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaAttachment().getFileName()==null) {
+			   throw new EpException(MessageConst.ERROR_100022, new String[]{"Letter of Acceptance"});
+		   }
+		   
+		   if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT) || isBpkApprover()) {
+				if((getManagedBean().getRemarkList().get(0).getRemark() == null || getManagedBean().getRemarkList().get(0).getRemark().length()==0) &&
+						(getManagedBean().getContractVer().getAp201Remark().get(0).getRemark() == null || getManagedBean().getContractVer().getAp201Remark().get(0).getRemark().length()==0) &&
+						(getManagedBean().getContractVer().getItemRemarks().get(0).getRemark() == null || getManagedBean().getContractVer().getItemRemarks().get(0).getRemark().length()==0)) {
+						throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
+				}
+		   }
+		   
+		   if(!getManagedBean().getContractVer().getCtAmendment().isContractExtend() && !getManagedBean().getContractVer().getCtAmendment().isItemPriceChange()
 				 && !getManagedBean().getContractVer().getCtAmendment().isQuantityChange() && !getManagedBean().getContractVer().getCtAmendment().isValueChange()
 				 && !getManagedBean().getContractVer().getCtAmendment().isClauseChange()) {
 			        throw new EpException(MessageConst.INFO_100022, new String[]{"Amendment Type"});
 		 
-		   } if (getManagedBean().getTaskName()!=null && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)) {
+		   }
+		   
+		   if (getManagedBean().getTaskName()!=null && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)) {
 			     if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE) && !getManagedBean().isTermAndConditionFlg()) {
 				     throw new EpException(MessageConst.ERROR_750002);
 		         }
@@ -652,6 +666,10 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 					return null;
 	 }
 	 
+    public boolean isBpkApprover(){
+		return getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value());
+	}
+	    
 	// Manually check AP201 rule. Should call BPM or rules engine 
 	public void chkComplyAP201Rule() {
 		   getManagedBean().getContractVer().getCtAmendment().setComplyAP201(true);
@@ -665,10 +683,6 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		   } else if(getManagedBean().getCtContract().getRecordStatusFlg().intValue()!=DbValueConst.RECORD_STATUS_ACTIVE) {
 			    getManagedBean().getContractVer().getCtAmendment().setComplyAP201(false);
 		   }
-		
-		  if (getManagedBean().getContractVer().getCtContractValue().isAp201Exempt()) {
-			   getManagedBean().getContractVer().getCtAmendment().setComplyAP201(false);
-		  } 
   	 }
 	 
 	public void addContractValue() {
@@ -1802,23 +1816,24 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			 DocumentResDTO resDTO = null;
 			try{
 				
-				if(getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaReports() == null)
+				if(getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaReports() == null) {
 			    	 getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().setScLoaReports(new ArrayList<ScLoaReport>());
 				
-				reqDTO = new DocumentReqDTO();
-			     documentSO = (IDocumentSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDocumentSO.class);
-			     reqDTO.setDocCategoryCode(ParameterConst.DOCUMENT_CATEGORY_LOA_FOR_CONTRACT_AMENDMENT);
-			     resDTO = documentSO.retrieveDocumentCheckList(reqDTO);
-			     for(PmDocument document : resDTO.getDocumentList()){
-			      	 ScLoaReport reports = new ScLoaReport();
-			    	 reports.setPmDocument(document);
-			    	 reports.setTitle(document.getDocName());
-			    	 reports.setDefinationType(document.getDocDefinitionTypeCode());
-			    	 reports.setDocType(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
-			    	 reports.setDocCategory(ParameterConst.DOCUMENT_CATEGORY_LOA_FOR_CONTRACT_AMENDMENT);
-			    	 reports.setScLoa( this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa());
-			    	 this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaReports().add(reports);	
-			     }
+			    	 reqDTO = new DocumentReqDTO();
+			    	 documentSO = (IDocumentSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDocumentSO.class);
+			    	 reqDTO.setDocCategoryCode(ParameterConst.DOCUMENT_CATEGORY_LOA_FOR_CONTRACT_AMENDMENT);
+			    	 resDTO = documentSO.retrieveDocumentCheckList(reqDTO);
+			    	 for(PmDocument document : resDTO.getDocumentList()){
+				      	 ScLoaReport reports = new ScLoaReport();
+				    	 reports.setPmDocument(document);
+				    	 reports.setTitle(document.getDocName());
+				    	 reports.setDefinationType(document.getDocDefinitionTypeCode());
+				    	 reports.setDocType(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
+				    	 reports.setDocCategory(ParameterConst.DOCUMENT_CATEGORY_LOA_FOR_CONTRACT_AMENDMENT);
+				    	 reports.setScLoa( this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa());
+				    	 this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaReports().add(reports);	
+				     }
+				}
 			    
 			}catch(Exception e){
 				e.printStackTrace();
@@ -1849,8 +1864,15 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				 for(SmSupplierBank supplierBank : this.getManagedBean().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks()){
 					 if(supplierBank.getAccountNo().equalsIgnoreCase(this.getManagedBean().getContractVer().getCtContractValue().getBankAccountNo())){
 						 this.getManagedBean().getContractVer().getCtContractValue().setBankName(supplierBank.getPmFinancialOrg().getFinOrgName());  
-						 this.getManagedBean().getContractVer().getCtContractValue().setBankBranch(supplierBank.getSmSupplierBranch().getBranchName());
-						 this.getManagedBean().getContractVer().getCtContractValue().setBankAddress(supplierBank.getSmAddress());
+						 if(supplierBank.getSmSupplierBranch()!=null)
+							 this.getManagedBean().getContractVer().getCtContractValue().setBankBranch(supplierBank.getSmSupplierBranch().getBranchName());
+						 else
+							 this.getManagedBean().getContractVer().getCtContractValue().setBankBranch(null);
+						 
+						 if(supplierBank.getSmAddress()!=null)
+							this.getManagedBean().getContractVer().getCtContractValue().setBankAddress(supplierBank.getSmAddress());
+						 else
+							 this.getManagedBean().getContractVer().getCtContractValue().setBankAddress(null);
 				    }
 			    }
 		    }else{
