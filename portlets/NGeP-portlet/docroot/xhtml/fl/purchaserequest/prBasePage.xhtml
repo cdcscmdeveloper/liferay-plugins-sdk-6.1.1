@@ -21,7 +21,7 @@
 						var="bpmAction"
 						value="#{purchaseRequestBackingBean.managedBean.outComes}">
 						<p:commandButton value="#{bpmAction}" update="@form" 
-							styleClass="ui-button" immediate="#{fn:toLowerCase(bpmAction) eq 'cancel'?'true':'false'}"
+							styleClass="ui-button" 
 							icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
 							action="#{purchaseRequestBackingBean.fulfillmentRequestAction(bpmAction)}" />
 					</ui:repeat></td>
