@@ -2768,7 +2768,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			supplierSearchSO = null;
 		}
 
-		return "catalogMaintenanceFile?faces-redirect=true";
+		return "catalogMaintenanceFile";
+		//return "catalogMaintenanceFile?faces-redirect=true";
 	}
 
 	/*
