@@ -125,47 +125,45 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	private static String baseDir = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
 	
 	public PanelBackingBean(){
+		 
 		if(getManagedBean().getOutComes()==null) {
-			getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
-			getManagedBean().setCircularVer(new CtCircularVer());
-			getManagedBean().setCancelCircularReq(new CtCancelCircularReq());
-			PmStatus status = new PmStatus();
-			status.setStatusId(ContractStatusConst.PQ_PENDING_SUBMISSION);
-			getManagedBean().getCircularVer().setStatus(status);
-			status = new PmStatus();
-			status.setStatusId(ContractStatusConst.CR_PENDING_SUBMISSION);
-			getManagedBean().getCancelCircularReq().setStatus(status);
-			
-			initializeRemarks();
-			ContractBackingBean ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
-			ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
-		}
+				getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
+				getManagedBean().setCircularVer(new CtCircularVer());
+				getManagedBean().setCancelCircularReq(new CtCancelCircularReq());
+				PmStatus status = new PmStatus();
+				status.setStatusId(ContractStatusConst.PQ_PENDING_SUBMISSION);
+				getManagedBean().getCircularVer().setStatus(status);
+				status = new PmStatus();
+				status.setStatusId(ContractStatusConst.CR_PENDING_SUBMISSION);
+				getManagedBean().getCancelCircularReq().setStatus(status);
+				
+				initializeRemarks();
+				ContractBackingBean ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
+				ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 		
-		if(getManagedBean().getUserMap().size()==0) {
-			 initializeApproverList();
-			 this.getManagedBean().getApproverModel().setSource(getAvailableApproverList());	
-	    }
+	    	} if(getManagedBean().getUserMap().size()==0) {
+			   initializeApproverList();
+			   this.getManagedBean().getApproverModel().setSource(getAvailableApproverList());	
+	       
+	    	} if(getManagedBean().getCircularDocType()==null) {
+			      getManagedBean().setCircularDocType(ContractConst.CIRCULAR_DOC_TYPE_PANEL);
 		
-		if(getManagedBean().getCircularDocType()==null) {
-			getManagedBean().setCircularDocType(ContractConst.CIRCULAR_DOC_TYPE_PANEL);
-		}
-		
-		if(isPanelAdmin() || isCentralContractAdmin()) {
-			FacesScopes facesScopes = new FacesScopes();
-			getManagedBean().setCircularAdmin(facesScopes.getUserSessionBean().getLoginId());
-		}
-	}
+	    	} if(isPanelAdmin() || isCentralContractAdmin()) {
+			      FacesScopes facesScopes = new FacesScopes();
+			      getManagedBean().setCircularAdmin(facesScopes.getUserSessionBean().getLoginId());
+		    }
+	  }
 	
-	private FacesScopes getFacesScopes() {
-		return new FacesScopes();
-	}
+	  private FacesScopes getFacesScopes() {
+		     return new FacesScopes();
+	  }
 	
-	public void preRenderCircular() {
-		renewSesionObject();
-		getManagedBean().setFileDirectory(baseDir+"/CT/Circulars/"+ParameterConst.DOCTYPE_PANEL_CIRCULAR);
-		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "circularBase.xhtml?faces-redirect=true");
-	}
+	  public void preRenderCircular() {
+		    renewSesionObject();
+		    getManagedBean().setFileDirectory(baseDir+"/CT/Circulars/"+ParameterConst.DOCTYPE_PANEL_CIRCULAR);
+		    FacesContext fc = FacesContext.getCurrentInstance();
+		    fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "circularBase.xhtml?faces-redirect=true");
+	  }
 	
 	public void preRenderSearch() {
 		renewSesionObject();
@@ -178,15 +176,12 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		ICircularSO circularSO = null;
 		try {
 			System.out.println("**********preRenderView**************");
-			// BPMTaskListBackingBean bb = new BPMTaskListBackingBean();
 			HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 			HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 			String taskId = originalServletRequest.getParameter("taskId");
-			System.out.println("taskId:" + taskId);
-
-			if(taskId==null) {
-				return;
-			}
+			if(taskId==null) 
+			return;
+			
 			
 			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
 			FacesScopes face = new FacesScopes();
@@ -196,45 +191,37 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			BpmRequestDTO reqDTO = new BpmRequestDTO();
 			reqDTO.setCtxToken(token);
 			reqDTO.setTaskId(taskId);
+			getManagedBean().setTaskId(taskId);
+			getManagedBean().setSelectedTabIndex(0);
+			
 			BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
 			Object obj = res.getPojo();			
 			CTCircularContractDataType dataType = (CTCircularContractDataType) obj;
-			
 			getManagedBean().setCircularAdmin(dataType.getCircularAdmin().getUserName());
-			getManagedBean().setTaskId(taskId);
+			
 			String[] outcome = new String[res.getAction().length+1];
 			outcome[0] = BpmOutcomeConst.BPM_SAVE;
 			int i = 1;
 			for(String action : res.getAction()) {
 				outcome[i++]= action;
-			}
-			getManagedBean().setOutComes(outcome);			
+			}getManagedBean().setOutComes(outcome);			
 			
 			CircularReqDTO circularReqDTO = new CircularReqDTO();
 			circularReqDTO.setCircularVerId(dataType.getDocId().longValue());
 			
 			CircularResDTO resDTO = circularSO.retrieveCircularVerById(circularReqDTO);
-								
+			getManagedBean().setCircularVer(resDTO.getCircularVer());
+			getManagedBean().setCircular(resDTO.getCircularVer().getCtCircular());
 			
-			/*for(CtPanelItem panelItem : resDTO.getCircularVer().getCtPanelItems()) {
-				for(CtPanelSupplier panelSupplier : panelItem.getCtPanelSuppliers()) {
-					if(panelSupplier.getCtCircularZone()==null) {
-						panelSupplier.setCtCircularZone(new CtCircularZone());
-					}
-				}
-			}*/
-
-			getManagedBean().setSelectedTabIndex(0);
+			getManagedBean().setRemarkList(resDTO.getRemarkList());
+			getManagedBean().setAttachmentList(resDTO.getAttachmentList());
+			
 			getManagedBean().getApproverModel().setSource(getAvailableApproverList());
 			if(resDTO.getApproverList()!=null && resDTO.getApproverList().size()>0) {
 				getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
 				getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
 			}
-			getManagedBean().setRemarkList(resDTO.getRemarkList());
-			getManagedBean().setAttachmentList(resDTO.getAttachmentList());
-			getManagedBean().setCircular(resDTO.getCircularVer().getCtCircular());
-			getManagedBean().setCircularVer(resDTO.getCircularVer());
-			
+
 			getManagedBean().setFileDirectory(baseDir+"/CT/Circulars/"+ParameterConst.DOCTYPE_PANEL_CIRCULAR);
 			initializeRemarks();
 			ContractBackingBean ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
@@ -258,13 +245,11 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	public void preRenderViewCancelReq() {
 		ICircularSO circularSO = null;
 		try {
+		
 			System.out.println("**********preRenderView**************");
-			// BPMTaskListBackingBean bb = new BPMTaskListBackingBean();
 			HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 			HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 			String taskId = originalServletRequest.getParameter("taskId");
-			System.out.println("taskId:" + taskId);
-
 			if(taskId==null) {
 				if(isPanelAdmin() || isCentralContractAdmin()) {
 					getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SUBMIT});	
@@ -280,6 +265,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			BpmRequestDTO reqDTO = new BpmRequestDTO();
 			reqDTO.setCtxToken(token);
 			reqDTO.setTaskId(taskId);
+			
 			BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
 			Object obj = res.getPojo();			
 			CTCircularCancellationDataType dataType = (CTCircularCancellationDataType) obj;
@@ -287,33 +273,33 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			getManagedBean().setCircularAdmin(dataType.getCircularAdmin().getUserName());
 			getManagedBean().setTaskId(taskId);
 			String[] outcome = new String[res.getAction().length];
-			//outcome[0] = BpmOutcomeConst.BPM_SAVE;
 			int i = 0;
 			for(String action : res.getAction()) {
 				outcome[i++]= action;
-			}
-			getManagedBean().setOutComes(outcome);	
+			}getManagedBean().setOutComes(outcome);	
 			
 			CircularReqDTO cancelReqDTO = new CircularReqDTO();
 			cancelReqDTO.setCancelCircularReqId(dataType.getDocId().longValue());
 			
 			CircularResDTO resDTO = circularSO.retrieveCancelCircularReqById(cancelReqDTO);
+			getManagedBean().setCancelCircularReq(resDTO.getCancelCircularReq());
+			List <CtCancelCircular> ctCancelCircularList = resDTO.getCancelCircularReq().getCtCancelCircularList();
+			if(ctCancelCircularList.get(0).getCircularVer().getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CENTRAL_CONTRACT_CIRCULAR))
+				getManagedBean().setCircularDocType(ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT);
+		    else 
+				getManagedBean().setCircularDocType(ContractConst.CIRCULAR_DOC_TYPE_PANEL);
+			
+			
 			getManagedBean().getApproverModel().setSource(getAvailableApproverList());
 			if(resDTO.getApproverList()!=null && resDTO.getApproverList().size()>0) {
 				getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
 				getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
 			}
+			
 			getManagedBean().setRemarkList(resDTO.getRemarkList());
 			getManagedBean().setAttachmentList(resDTO.getAttachmentList());
-			getManagedBean().setCancelCircularReq(resDTO.getCancelCircularReq());
-			List <CtCancelCircular> ctCancelCircularList = resDTO.getCancelCircularReq().getCtCancelCircularList();
-			if(ctCancelCircularList.get(0).getCircularVer().getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CENTRAL_CONTRACT_CIRCULAR)) {
-				getManagedBean().setCircularDocType(ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT);
-			} else {
-				getManagedBean().setCircularDocType(ContractConst.CIRCULAR_DOC_TYPE_PANEL);
-			}
+		
 			getManagedBean().setFileDirectory(baseDir+"/CT/Circulars/"+ParameterConst.DOCTYPE_CANCEL_CIRCULAR_REQUEST);
-			
 			initializeRemarks();
 			ContractBackingBean ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
 			ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
@@ -419,31 +405,31 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				CircularResDTO resDTO = circularSO.searchCircularVer(reqDTO);
 				if(resDTO.isSuccessful()) {
 					if(resDTO.getCircularVerResultBean() != null && resDTO.getCircularVerResultBean().getResultList() != null) {
+						
 						for(CtCircularVer circularVer : resDTO.getCircularVerResultBean().getResultList()) {
 							CircularReqDTO circularReqDTO = new CircularReqDTO();
 							circularReqDTO.setCircularId(circularVer.getCtCircular().getCircularId());
-							circularVer.getCtCircular().setLatestCircularVer(
-									circularSO.getLatestCircularVer(circularReqDTO).getCircularVer());
+							circularVer.getCtCircular().setLatestCircularVer(circularSO.getLatestCircularVer(circularReqDTO).getCircularVer());
 							
 							if(circularVer.getCtCircular().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_CANCELLED) {
 								PmStatus cancelStatus = new PmStatus();
 								cancelStatus.setStatusId(0L);
 								circularVer.setStatus(cancelStatus);
-							}
-							if(circularVer.getStatus() != null && circularVer.getStatus().getStatusId().equals(ContractStatusConst.PQ_REJECTED)) {
+							
+						  }if(circularVer.getStatus() != null && circularVer.getStatus().getStatusId().equals(ContractStatusConst.PQ_REJECTED)) {
 								if(circularVer.getCtCircular().getLatestCircularVer() != null)
 									circularVer.setCircularVerId(circularVer.getCtCircular().getLatestCircularVer().getCircularVerId());
-							}
-						}
-					}
-					return resDTO.getCircularVerResultBean();
-				}
-			} catch (Exception e) {
+						  }
+					  }
+				  }
+				return resDTO.getCircularVerResultBean();
+			}
+		} catch (Exception e) {
 				e.printStackTrace();
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-			}
-			return null;
 		}
+			return null;
+	   }
 	}
 	
 	public String savePanelCircular(String action) {
@@ -1149,32 +1135,57 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	}
 	
 	public void setPanelListner(){
-		if(getItemGeneralCode(this.getManagedBean().getSelectedPanelItems().getPanelCoverageId().getParameterId()).equalsIgnoreCase(ParameterConst.CIRCULAR_PANEL_COVERAGE_ZONE)){
-			this.getManagedBean().setSelectionOfZone(true);
-			this.getManagedBean().setSelectedPanelZone(null);
-		}else if(getItemGeneralCode(this.getManagedBean().getSelectedPanelItems().getPanelCoverageId().getParameterId()).equalsIgnoreCase(ParameterConst.CIRCULAR_PANEL_COVERAGE_ALL)){
-			this.getManagedBean().setSelectionOfZone(false);
-		}else{
-			this.getManagedBean().setSelectionOfZone(false);
-			this.getManagedBean().setSelectedPanelItems(null);
-		}
+		
+		 String panelCoverageICode = getItemGeneralCode(this.getManagedBean().getSelectedPanelItems().getPanelCoverageId().getParameterId());
+		 if(panelCoverageICode.equalsIgnoreCase(ParameterConst.CIRCULAR_PANEL_COVERAGE_ZONE)){
+			  this.getManagedBean().setSelectionOfZone(true);
+			  this.getManagedBean().setSelectedPanelZone(null);
+		
+		 }else if(panelCoverageICode.equalsIgnoreCase(ParameterConst.CIRCULAR_PANEL_COVERAGE_ALL)){
+			  this.getManagedBean().setSelectionOfZone(false);
+		
+		 }else {
+			   this.getManagedBean().setSelectionOfZone(false);
+			   this.getManagedBean().setSelectedPanelItems(null);
+		 }
 	}
 	
 	public void setCtPanelZoneListner(CtPanelItem panelItem){
-		this.getManagedBean().setSelectedPanelItems(panelItem);
-	 	if(getItemGeneralCode(this.getManagedBean().getSelectedPanelItems().getPanelCoverageId().getParameterId()).equalsIgnoreCase(ParameterConst.CIRCULAR_PANEL_COVERAGE_ZONE)){
-	 		this.getManagedBean().setSelectedPanelZone(null);
-			this.getManagedBean().setSelectionOfZone(true);
-			if(this.getManagedBean().getSelectedPanelItems().getLocationLevelId() == null){
-				this.getManagedBean().getSelectedPanelItems().setLocationLevelId(new PmParameter());
-			}
-		}else if(getItemGeneralCode(this.getManagedBean().getSelectedPanelItems().getPanelCoverageId().getParameterId()).equalsIgnoreCase(ParameterConst.CIRCULAR_PANEL_COVERAGE_ALL)){
-			this.getManagedBean().setSelectionOfZone(false);
-		}else{
+		   this.getManagedBean().setSelectedPanelItems(panelItem);
+		   String panelCoverageICode = getItemGeneralCode(this.getManagedBean().getSelectedPanelItems().getPanelCoverageId().getParameterId());
+	 	 
+		   if(panelCoverageICode.equalsIgnoreCase(ParameterConst.CIRCULAR_PANEL_COVERAGE_ZONE)){
+	 		      this.getManagedBean().setSelectedPanelZone(null);
+			      this.getManagedBean().setSelectionOfZone(true);
+			      if(this.getManagedBean().getSelectedPanelItems().getLocationLevelId() == null)
+			    	    this.getManagedBean().getSelectedPanelItems().setLocationLevelId(new PmParameter());
+			      this.getManagedBean().getSelectedPanelItems().getLocationLevelId().setParameterId(retrieveParameterByTypeAndCode());
+			   
+	 	   } else if(panelCoverageICode.equalsIgnoreCase(ParameterConst.CIRCULAR_PANEL_COVERAGE_ALL)) {
+			           this.getManagedBean().setSelectionOfZone(false);
+		   } else{
 			this.getManagedBean().setSelectionOfZone(false);
 			this.getManagedBean().setSelectedPanelItems(null);
 			this.getManagedBean().setSelectedPanelZone(null);
 		}
+	}
+	
+	public Long retrieveParameterByTypeAndCode()  {
+		     IParameterSO parameterSO = null;
+		     ParameterReqDTO reqDTO  = null;
+		     try{
+			           reqDTO = new ParameterReqDTO();
+			       	   parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+	             	   reqDTO.setParameterType(ParameterTypeConst.LOCATION_LEVEL);
+		               reqDTO.setParameterCode(ParameterConst.LOCATION_LEVEL_STATE);
+		               ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
+		               return resDTO.getPmParameter().getParameterId();
+		     } catch(Exception ex){
+		    	 
+		     }finally{
+		    	 parameterSO = null;
+		     }
+		     return null;   
 	}
 	
 	public void showGeneralZoneLocationPopup() {
@@ -1210,21 +1221,15 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		List<String> types = new ArrayList<String>();
 		types.add(ParameterConst.LOCATION_LEVEL_STATE);
 		types.add(ParameterConst.LOCATION_LEVEL_DISTRICT);
-
 		SelectItem[] items = null;
 		try {
-			items = new SelectItem[types.size() + 1];
-			items[0] = new SelectItem(null, "- Select One -");
-			int i = 1;
+			items = new SelectItem[types.size()];
+			int i = 0;
 			for (String location : types) {
 				List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(locationLevel);
-
 				for (PmParameterDesc paramDesc : localParamDesc) {
-					if (paramDesc.getPmParameter().getParameterCode()
-							.equals(location)) {
-
-						items[i++] = new SelectItem(paramDesc.getPmParameter()
-								.getParameterId(), paramDesc.getCodeName());
+					if (paramDesc.getPmParameter().getParameterCode().equals(location)) {
+						items[i++] = new SelectItem(paramDesc.getPmParameter()	.getParameterId(), paramDesc.getCodeName());
 					}
 				}
 			}
@@ -1406,9 +1411,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	}
 
 	public void selectLocation(AjaxBehaviorEvent event) {
-		Long location = (Long) event.getComponent().getAttributes()
-				.get("value");
-	
+		Long location = (Long) event.getComponent().getAttributes().get("value");
 		this.getManagedBean().getSelectedPanelItems().getLocationLevelId().setParameterId(location);
 	}
 	

@@ -6,67 +6,86 @@ xmlns:ui="http://java.sun.com/jsf/facelets"
 xmlns:p="http://primefaces.org/ui"
 xmlns:c="http://java.sun.com/jsp/jstl/core"
 xmlns:ac="http://ac.my/jsf/composite/cc">
-
-	<p:panel id="itemId" header="#{lbl['lbl.ct.pc.panel.item']}" toggleable="true" toggleSpeed="500">
+<p:panel id="itemId" header="#{lbl['lbl.ct.pc.panel.item']}" toggleable="true" toggleSpeed="500">
 	 <h:panelGrid style="width:100%">
-		<p:dataTable id="panelItemDt" var="panelItemsVar"  value="#{panelBackingBean.managedBean.circularVer.ctPanelItems}" 
-		  selectionMode="single" rowKey="#{panelItemsVar}" selection="#{panelBackingBean.managedBean.selectedPanelItems}" 
-		  rowIndexVar="index">
-		   <ac:paginator for="panelItemDt" />
-            <p:ajax event="rowSelect" update="@([id$=itemZone],[id$=itemSupplier],[id$=deleteItemBtn])"
-		     process="@this"  listener="#{panelBackingBean.setPanelListner()}"/>	
-		     <p:column style="width:2%;">
-		     <p:selectBooleanCheckbox value="#{panelItemsVar.selectedCheckBox}"
-				styleClass="myCustomChekBox">
-					<p:ajax event="change" update="@([id$=deleteItemBtn])"
-						listener="#{panelBackingBean.selectOneCheckboxSelect}"></p:ajax>
-			 </p:selectBooleanCheckbox>
-		     </p:column>
+		  <p:dataTable id="panelItemDt" var="panelItemsVar"  value="#{panelBackingBean.managedBean.circularVer.ctPanelItems}" 
+		      selectionMode="single" rowKey="#{panelItemsVar}" selection="#{panelBackingBean.managedBean.selectedPanelItems}"
+		      rowIndexVar="index">
+		      <ac:paginator for="panelItemDt" />
+              <p:ajax event="rowSelect"  listener="#{panelBackingBean.setPanelListner()}" 
+                  process="@this" update="@([id$=itemZone],[id$=itemSupplier],[id$=deleteItemBtn])"   />	
+		      
+		      <p:column style="width:2%;">
+		           <p:selectBooleanCheckbox value="#{panelItemsVar.selectedCheckBox}" styleClass="myCustomChekBox">
+				       <p:ajax event="change" update=":form:deleteItemBtn" listener="#{panelBackingBean.selectOneCheckboxSelect}"></p:ajax>
+			       </p:selectBooleanCheckbox>
+		      </p:column>
+			 
 			  <p:column headerText="Panel Coverage" style="white-space:pre-line;width:6%;">
-			     <p:selectOneMenu value="#{panelItemsVar.panelCoverageId.parameterId}" style="width:95%;" >
-			      <f:selectItems value="#{panelBackingBean.getDropdownValues(ParameterTypeConst.panelCoverageType)}"/>
-			       <p:ajax event="change"  update="@([id$=panelItemDt],[id$=itemZone],[id$=itemSupplier],[id$=deleteItemBtn])" process="@this" 
-			       listener="#{panelBackingBean.setCtPanelZoneListner(panelItemsVar)}"/> 
-			     </p:selectOneMenu>
+			       <p:selectOneMenu value="#{panelItemsVar.panelCoverageId.parameterId}" style="width:95%;" >
+			             <f:selectItems value="#{panelBackingBean.getDropdownValues(ParameterTypeConst.panelCoverageType)}"/>
+			             <p:ajax event="change"   listener="#{panelBackingBean.setCtPanelZoneListner(panelItemsVar)}" 
+			                 process="@this"   update="@([id$=panelItemDt],[id$=itemZone],[id$=itemSupplier],[id$=deleteItemBtn])" /> 
+			       </p:selectOneMenu>
 	  	      </p:column>
+			 
 			  <p:column headerText="Item Category" style="white-space:pre-line;width:6%">
-			     <p:selectOneMenu value="#{panelItemsVar.itemCategoryId.parameterId}" style="width:95%">
-			       <f:selectItems value="#{panelBackingBean.getDropdownValues(ParameterTypeConst.itemCategoryType)}"/>
-			       <p:ajax event="change" update="spec" process="@this"/> 
-			     </p:selectOneMenu>
+			      <p:selectOneMenu value="#{panelItemsVar.itemCategoryId.parameterId}" style="width:95%">
+			           <f:selectItems value="#{panelBackingBean.getDropdownValues(ParameterTypeConst.itemCategoryType)}"/>
+			           <p:ajax event="change" update="spec" process="@this"/> 
+			      </p:selectOneMenu>
 			  </p:column>
-		 	  <p:column headerText="#{lbl['lbl.ct.pc.item.name']}" style="width:10%;"><p:inputText value="#{panelItemsVar.itemName}" style="width:95%;" maxlength="100" /></p:column>
+		 	
+              <p:column headerText="#{lbl['lbl.ct.pc.item.name']}" style="width:10%;">
+                  <p:inputText value="#{panelItemsVar.itemName}" style="width:95%;" maxlength="100" />
+              </p:column>
+              
 			  <p:column headerText="Specification" style="width:11%;">
 			     <p:inputText id="spec" value="#{panelItemsVar.specification}"   style="width:95%;" maxlength="200"
-				    disabled="#{panelBackingBean.getItemGeneralCode(panelItemsVar.itemCategoryId.parameterId) == ParameterConst.itemCategoryTypeGeneral}"/>
+				      disabled="#{panelBackingBean.getItemGeneralCode(panelItemsVar.itemCategoryId.parameterId) == ParameterConst.itemCategoryTypeGeneral}"/>
 			  </p:column>
+			
 			  <p:column headerText="UOM" style="width: 11%;">
-			      <ac:lov id="uomLovId" lovId="PM_UOM" size="8" 
-				     headerText="UOM Lov" 
-				     value="#{panelItemsVar.pmUom.uomName}" conditionField="recordStatus^1"
-				     saveObject="panelBackingBean.managedBean.circularVer.ctPanelItems[#{index}].pmUom">
-			      </ac:lov>
+			       <ac:lov id="uomLovId" lovId="PM_UOM" size="8"  headerText="UOM Lov" 
+				       value="#{panelItemsVar.pmUom.uomName}" conditionField="recordStatus^1"
+				       saveObject="panelBackingBean.managedBean.circularVer.ctPanelItems[#{index}].pmUom">
+			       </ac:lov>
 			  </p:column>
+			  
 			  <p:column headerText="Min. Order Qty" style="white-space:pre-line;width:5%;">
-			  <p:inputText value="#{panelItemsVar.minimumOrderQty}" style="width:90%;text-align:right;" label="Min. Order Qty">
-			     <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, panelItemsVar.pmUom.uomCode)}" /> </p:inputText>
+			       <p:inputText value="#{panelItemsVar.minimumOrderQty}" style="width:90%;text-align:right;" label="Min. Order Qty">
+			           <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, panelItemsVar.pmUom.uomCode)}" /> 
+			       </p:inputText>
 			  </p:column>
+			 
 			  <p:column headerText="Had Pembelian Luar Kontrak" style="white-space:pre-line;width:7%;">
-			    <p:inputText value="#{panelItemsVar.maxProcureAmt}" style="width:90%;text-align:right;" label="Had Pembelian Luar Kontrak">
-			       <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" /></p:inputText>
-			    </p:column>
-			  <p:column headerText="Direct Nego" style="white-space:pre-line;width:5%;"><p:selectBooleanCheckbox value="#{panelItemsVar.directNego}" /></p:column>			
-			  <p:column headerText="Direct Purchase" style="white-space:pre-line;width:6%;"><p:selectBooleanCheckbox value="#{panelItemsVar.directPurchase}" /></p:column>	
-			  <p:column headerText="Quotation /Tender" style="white-space:pre-line;width:6%;"><p:selectBooleanCheckbox value="#{panelItemsVar.qt}" /></p:column>
+			       <p:inputText value="#{panelItemsVar.maxProcureAmt}" style="width:90%;text-align:right;" label="Had Pembelian Luar Kontrak">
+			          <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+			       </p:inputText>
+			  </p:column>
+			  
+			  <p:column headerText="Direct Nego" styleClass="column-align-center"  style="white-space:pre-line;width:5%;">
+			    <p:selectBooleanCheckbox value="#{panelItemsVar.directNego}" />
+			  </p:column>		
+			  	
+			  <p:column headerText="Direct Purchase" styleClass="column-align-center"  style="white-space:pre-line;width:6%;">
+			       <p:selectBooleanCheckbox value="#{panelItemsVar.directPurchase}" />
+			  </p:column>	
+			  
+			  <p:column headerText="Quotation /Tender" styleClass="column-align-center"  style="white-space:pre-line;width:6%;">
+			       <p:selectBooleanCheckbox value="#{panelItemsVar.qt}" />
+			  </p:column>
+			  
 			  <p:column headerText="Status" style="width:6%;">
-		        <p:selectOneMenu  value="#{panelItemsVar.recordStatusFlg}"
-		          disabled="#{!panelBackingBean.managedBean.updateAction}" style="width:95%;">
-				  <f:selectItem itemValue="0" itemLabel="Inactive" />
-			      <f:selectItem itemValue="1" itemLabel="Active" />
-			    </p:selectOneMenu>
-			  </p:column>													
-		  </p:dataTable>
-		</h:panelGrid>
+		           <p:selectOneMenu  value="#{panelItemsVar.recordStatusFlg}" disabled="#{!panelBackingBean.managedBean.updateAction}" style="width:95%;">
+				       <f:selectItem itemValue="0" itemLabel="Inactive" />
+			           <f:selectItem itemValue="1" itemLabel="Active" />
+			       </p:selectOneMenu>
+			  </p:column>	
+			  												
+		    </p:dataTable>
+	 </h:panelGrid>
+		
 		<p:spacer height="2" />
 		<div class="ppRightBtn">
 		<p:commandButton value="Bulk Update" process="@this" icon="ui-icon-add" onsuccess="bulkUpdateDlg.show()"/>
@@ -117,14 +136,12 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			 <table style="width: 100%">
 				<tr>
 					<td style="width: 94px"><p:outputLabel value="Location Level" /></td>
-					<td><p:selectOneMenu id="locationLevels"
-							value="#{panelBackingBean.managedBean.selectedPanelItems.locationLevelId.parameterId}"
-							style="width: 178px;">
-							<f:selectItems
-								value="#{panelBackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel)}" />
-							<p:ajax event="change"
-								listener="#{panelBackingBean.selectLocation}"></p:ajax>
-						</p:selectOneMenu></td>
+					<td><p:selectOneMenu id="locationLevels" style="width: 178px;"
+							value="#{panelBackingBean.managedBean.selectedPanelItems.locationLevelId.parameterId}">
+							<f:selectItems value="#{panelBackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel)}" />
+							<p:ajax event="change" listener="#{panelBackingBean.selectLocation}"></p:ajax>
+						</p:selectOneMenu>
+					</td>
 				</tr>
 			</table>
 		  

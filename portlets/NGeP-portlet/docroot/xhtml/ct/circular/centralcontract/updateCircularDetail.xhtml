@@ -54,7 +54,7 @@
 		    <td>
 		      <p:outputLabel value="#{lbl['lbl.ct.pc.extperiod']}" /></td>
 		    <td><h:panelGrid columns="3"  style="margin-top:5px;">
-		           <p:inputText id="extendPeriod"  style="text-align:right;width:130px;" 
+		           <p:inputText id="extendPeriod"  style="text-align:right;margin-top:2px;width:130px;" 
 		              label="#{lbl['lbl.ct.pc.extperiod']}" value="#{centralContractBackingBean.managedBean.circularVer.extendPeriod}">
 		             <p:ajax event="blur" process="@this" 
 				        listener="#{centralContractBackingBean.extendStartEndDate()}" update=":form:popupButtonCal5,:form:popupButtonCal6"></p:ajax>

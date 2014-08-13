@@ -12,31 +12,31 @@
            selection="#{amendmentBackingBean.selectedCommitteMembers}" rowKey="#{ctCommitteeVar}">
             <ac:paginator for="committeTable" />
                  <p:column selectionMode="multiple" style="width:2%;" />
-				 <p:column style="width:20%;" headerText="Name">
+				 <p:column style="width:20%;white-space:normal" headerText="Name">
 				   <p:outputLabel value="#{ctCommitteeVar.memberName}" style="float:left;"/>
 				 </p:column> 
 				 <p:column style="width:15%;" headerText="Identification No.">
 				    <p:outputLabel value="#{ctCommitteeVar.icPassport}" style="float:left;"/>
 				 </p:column>  
-				 <p:column style="width:15%;" headerText="Designation">
+				 <p:column style="width:20%;white-space:normal" headerText="Designation" >
 				   <p:outputLabel value="#{ctCommitteeVar.designation}" style="float:left;"/>
 				 </p:column> 
-				 <p:column style="width:15%;" headerText="Email">
+				 <p:column style="width:20%;white-space:normal" headerText="Email">
 				    <p:outputLabel value="#{ctCommitteeVar.email}" style="float:left;"/>
 				 </p:column> 
-				 <p:column style="width:10%;" headerText="Grade">
+				 <p:column style="width:5%;" headerText="Grade">
 				     <p:outputLabel value="#{ctCommitteeVar.grade}" style="float:left;"/>
 				 </p:column> 
-				 <p:column headerText="PNP">
+				 <p:column headerText="PNP" style="width:5%;">
 				     <h:outputText value="#{ctCommitteeVar.pnp ? 'Yes' : 'No'}"  style="float:left;"/>
 				 </p:column>
-				 <p:column headerText="Role">
+				 <p:column headerText="Role" style="width:13%;">
 					 <ui:fragment rendered="#{ctCommitteeVar.pnp == true}">
 							<h:outputText value="Chairperson" />
 					 </ui:fragment>
-					<ui:fragment rendered="#{ctCommitteeVar.pnp == false}">
+					<ui:fragment rendered="#{ctCommitteeVar.pnp == false}" >
 						<p:selectOneMenu id="appaction" value="#{ctCommitteeVar.memberRole.parameterId}"
-							style="width: 110px;margin-bottom: 5px;">
+							style="width: 110px;margin-bottom: 5px;" required="true" label="Role">
 							 <f:selectItems
 								value="#{amendmentBackingBean.getDropdownValues(ParameterTypeConst.committeeRole)}" />
 							</p:selectOneMenu>
@@ -128,31 +128,78 @@
 		    </p:panel>
 	        <p:panel id="newUser" header="New User" toggleable="true"  toggleSpeed="500" rendered="#{amendmentBackingBean.managedBean.newUsers}">
 		        <h:panelGrid columns="2" width="100%" columnClasses="columnWidth20">
-		                  <p:outputLabel for="newNameId" value="Name" />
-	                      <p:inputText id="newNameId" style="width:260px;" value="#{amendmentBackingBean.managedBean.newCommitteMembers.memberName}"/>
-                          <p:outputLabel for="newIdenType" value="Identification Type" />
+		             
+		                <h:panelGrid columns="2">
+		                    <p:outputLabel value="*" styleClass="mandatory" />
+		                    <p:outputLabel for="newNameId" value="Name" />
+		                </h:panelGrid>
+	                         <p:inputText id="newNameId" style="width:260px;" value="#{amendmentBackingBean.managedBean.newCommitteMembers.memberName}"/>
+	                         
+	                     <h:panelGrid columns="2">
+		                     <p:outputLabel value="*" styleClass="mandatory" />
+	                         <p:outputLabel for="loginId" value="Login Id" />
+	                     </h:panelGrid>
+	                     <p:inputText id="loginId" style="width:170px;" value="#{amendmentBackingBean.managedBean.newCommitteMembers.pmUser.loginId}"/>
+                     
+                         <h:panelGrid columns="2">
+		                     <p:outputLabel value="*" styleClass="mandatory" />
+                             <p:outputLabel for="newIdenType" value="Identification Type" />
+                         </h:panelGrid>
 	                      <p:selectOneMenu id="newIdenType" style="width:180px;margin-bottom: 5px;"
 	                         value="#{amendmentBackingBean.managedBean.newCommitteMembers.pmUser.identificationCode.parameterId}">
 	                        <f:selectItems value="#{amendmentBackingBean.getDropdownValues(ParameterTypeConst.identificationTypes)}"/>
 	                      </p:selectOneMenu>
-	                      <p:outputLabel for="newIdenNo" value="Identification No." />
+	                      
+	                      <h:panelGrid columns="2">
+		                     <p:outputLabel value="*" styleClass="mandatory" />
+	                         <p:outputLabel for="newIdenNo" value="Identification No." />
+	                      </h:panelGrid>
 	                      <p:inputText id="newIdenNo" style="width:170px;" value="#{amendmentBackingBean.managedBean.newCommitteMembers.icPassport}"/>
-	                      <p:outputLabel for="newGrade" value="Grade" />
+	                     
+	                      <h:panelGrid columns="2">
+		                     <p:outputLabel value="*" styleClass="mandatory" />
+	                         <p:outputLabel for="newGrade" value="Grade" />
+	                      </h:panelGrid>
 	                      <p:inputText id="newGrade" style="width:170px;" value="#{amendmentBackingBean.managedBean.newCommitteMembers.grade}"/>
+	                     
+	                      <h:panelGrid columns="2">
+		                     <p:outputLabel value="*" styleClass="mandatory" />
 	                         <p:outputLabel for="newRole" value="Role" />
+	                      </h:panelGrid>
 	                      <p:selectOneMenu id="newRole" style="width:180px;" value="#{amendmentBackingBean.managedBean.newCommitteMembers.memberRole.parameterId}">
 	                           <f:selectItems value="#{amendmentBackingBean.getDropdownValues(ParameterTypeConst.committeeRole)}"/>
 	                      </p:selectOneMenu>
-	                      <p:outputLabel value="PNP"/>
+	                   
+	                      <h:panelGrid columns="2">
+		                     <p:outputLabel value="*" styleClass="mandatory" />
+	                         <p:outputLabel value="PNP"/>
+	                      </h:panelGrid>
 		                  <h:panelGrid columns="4">
 		                      <p:selectOneRadio id="pandp" required="true" value="#{amendmentBackingBean.managedBean.newCommitteMembers.pnp}">  
                                     <f:selectItem itemLabel="Yes" itemValue="true"/>  
                                     <f:selectItem itemLabel="No" itemValue="false" /> 
                               </p:selectOneRadio> 
 	                      </h:panelGrid>
-	                      <p:outputLabel for="newDesignation" value="Designation" />
+	                   
+	                      <h:panelGrid columns="2">
+		                     <p:outputLabel value="*" styleClass="mandatory" />
+	                         <p:outputLabel for="countryId" value="Country"/> 
+	                      </h:panelGrid>
+	                       <p:selectOneMenu id="countryId" style="width:180px;margin-bottom: 5px;"
+	                           value="#{amendmentBackingBean.managedBean.newCommitteMembers.pmUser.pmCountry.countryId}">
+                                      <f:selectItems value="#{amendmentBackingBean.getAllCountryList()}"/>
+                           </p:selectOneMenu>
+                         
+                           <h:panelGrid columns="2">
+		                     <p:outputLabel value="*" styleClass="mandatory" />
+	                         <p:outputLabel for="newDesignation" value="Designation" />
+	                       </h:panelGrid>
 	                      <p:inputText id="newDesignation" style="width:260px;" value="#{amendmentBackingBean.managedBean.newCommitteMembers.designation}"/>
-	                      <p:outputLabel for="newEmail" value="Email" />
+	                      
+	                      <h:panelGrid columns="2">
+		                     <p:outputLabel value="*" styleClass="mandatory" />
+	                         <p:outputLabel for="newEmail" value="Email" />
+	                      </h:panelGrid>
 	                      <p:inputText id="newEmail" style="width:260px;" value="#{amendmentBackingBean.managedBean.newCommitteMembers.email}"/>
                 </h:panelGrid>
                   <f:facet name="footer">
