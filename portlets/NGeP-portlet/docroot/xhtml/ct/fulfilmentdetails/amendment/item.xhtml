@@ -48,7 +48,7 @@
 					<p:spacer width="5"/>
 					<p:commandLink update=":form:dlgItemMaxQty,itemTable" oncomplete="dlgItemMaxQty.show();return false;">
 						<f:setPropertyActionListener value="#{ctItemVar}" target="#{amendmentBackingBean.managedBean.selectedItem}" />
-						<p:graphicImage library="ep/images/design" name="edit.png" value="/resources/ep/images/design/edit.png" title="Edit" style="margin-bottom: -4px;" />
+						<p:graphicImage library="ep/images/design" name="edit.png" value="/css/images/design/edit.png" title="Edit" style="margin-bottom: -4px;" />
 					</p:commandLink>
 				</p:column>
 				
@@ -87,11 +87,11 @@
 						<p:commandLink update=":form:ctItemMaxQtyTable" process="@form" rendered="#{!itemMaxQtiesVar.changeQuantity and itemMaxQtiesVar.editable}"
 							action="#{amendmentBackingBean.editItemMaxQtyOnIndexs()}">
 							<f:setPropertyActionListener value="#{itemMaxQtiesVar}" target="#{amendmentBackingBean.managedBean.ctItemMaxQty}" />
-							<p:graphicImage library="ep/images/design" name="edit.png" value="/resources/ep/images/design/edit.png" title="Edit" />
+							<p:graphicImage library="ep/images/design" name="edit.png" value="/css/images/design/edit.png" title="Edit" />
 						</p:commandLink>
 						<p:commandLink rendered="#{itemMaxQtiesVar.changeQuantity}" oncomplete="dlgDelItemMaxQty.show();return false;">
 							<f:setPropertyActionListener value="#{itemMaxQtiesVar}" target="#{amendmentBackingBean.managedBean.ctItemMaxQty}" />
-							<p:graphicImage library="ep/images/design" name="delete.png" value="/resources/ep/images/design/delete.png" title="Delete" />
+							<p:graphicImage library="ep/images/design" name="delete.png" value="/css/images/design/delete.png" title="Delete" />
 						</p:commandLink>
 					</p:column>					
 				</p:dataTable>
@@ -107,7 +107,7 @@
 				resizable="false" modal="true" width="350" height="95">
 				<h:panelGrid columns="3">
 					<p:graphicImage library="ep/images/design" name="exclamation.png"
-						value="/resources/ep/images/design/exclamation.png"
+						value="/css/images/design/exclamation.png"
 						styleClass="ui-icon-complain"></p:graphicImage>
 					<p:spacer width="10" />
 					<p:inputTextarea cols="48" styleClass="ui-inputtextarea"
@@ -188,11 +188,11 @@
 						<p:commandLink update=":form:itemId" process="@form" rendered="#{!itemPriceVar.changePrice and itemPriceVar.editable}"
 							action="#{amendmentBackingBean.editItemPriceOnIndexs()}">
 							<f:setPropertyActionListener value="#{itemPriceVar}" target="#{amendmentBackingBean.managedBean.ctItemPrices}" />
-							<p:graphicImage library="ep/images/design" name="edit.png" value="/resources/ep/images/design/edit.png" title="Edit" />
+							<p:graphicImage library="ep/images/design" name="edit.png" value="/css/images/design/edit.png" title="Edit" />
 						</p:commandLink>
 						<p:commandLink rendered="#{itemPriceVar.changePrice}" oncomplete="dlgItemPrices.show();return false;">
 							<f:setPropertyActionListener value="#{itemPriceVar}" target="#{amendmentBackingBean.managedBean.ctItemPrices}" />
-							<p:graphicImage library="ep/images/design" name="delete.png" value="/resources/ep/images/design/delete.png" title="Delete" />
+							<p:graphicImage library="ep/images/design" name="delete.png" value="/css/images/design/delete.png" title="Delete" />
 						</p:commandLink>
 					</p:column>
 				</p:dataTable>
@@ -200,7 +200,7 @@
 					resizable="false" modal="true" width="350" height="95">
 					<h:panelGrid columns="3">
 						<p:graphicImage library="ep/images/design" name="exclamation.png"
-							value="/resources/ep/images/design/exclamation.png"
+							value="/css/images/design/exclamation.png"
 							styleClass="ui-icon-complain"></p:graphicImage>
 						<p:spacer width="10" />
 						<p:inputTextarea cols="48" styleClass="ui-inputtextarea"
@@ -250,11 +250,11 @@
 						<p:commandLink update=":form:ceilingTable" rendered="#{!itemCeilingQtiesVar.changeCeilQuantity and itemCeilingQtiesVar.editable}"
 							action="#{amendmentBackingBean.editCeilingQuantityOnIndexs()}">
 							<f:setPropertyActionListener value="#{itemCeilingQtiesVar}" target="#{amendmentBackingBean.managedBean.ctItemCeilingQtys}" />
-							<p:graphicImage library="ep/images/design" name="edit.png" value="/resources/ep/images/design/edit.png" title="Edit" />
+							<p:graphicImage library="ep/images/design" name="edit.png" value="/css/images/design/edit.png" title="Edit" />
 						</p:commandLink>
 						<p:commandLink oncomplete="dlgCeilQuantity.show();return false;" rendered="#{itemCeilingQtiesVar.changeCeilQuantity}">
 							<f:setPropertyActionListener value="#{itemCeilingQtiesVar}" target="#{amendmentBackingBean.managedBean.ctItemCeilingQtys}" />
-							<p:graphicImage library="ep/images/design" name="delete.png" value="/resources/ep/images/design/delete.png" title="Delete" />
+							<p:graphicImage library="ep/images/design" name="delete.png" value="/css/images/design/delete.png" title="Delete" />
 						</p:commandLink>
 					</p:column>
 				</p:dataTable>
@@ -263,7 +263,7 @@
 				resizable="false" modal="true" width="350" height="95">
 				<h:panelGrid columns="3">
 					<p:graphicImage library="ep/images/design" name="exclamation.png"
-						value="/resources/ep/images/design/exclamation.png"
+						value="/css/images/design/exclamation.png"
 						styleClass="ui-icon-complain"></p:graphicImage>
 					<p:spacer width="10" />
 					<p:inputTextarea
@@ -336,11 +336,11 @@
 						<p:commandLink update=":form:servicePriceTable" process="@form" rendered="#{!ItemPricesVar.changePrice and ItemPricesVar.editable}"
 							action="#{amendmentBackingBean.editServiceItemPriceOnIndexs()}">
 							<f:setPropertyActionListener value="#{ItemPricesVar}" target="#{amendmentBackingBean.managedBean.ctServiceItemPrices}" />
-							<p:graphicImage library="ep/images/design" name="edit.png" value="/resources/ep/images/design/edit.png" title="Edit" />
+							<p:graphicImage library="ep/images/design" name="edit.png" value="/css/images/design/edit.png" title="Edit" />
 						</p:commandLink>
 						<p:commandLink rendered="#{ItemPricesVar.changePrice}" oncomplete="dlgSvcItemPrices.show();return false;">
 							<f:setPropertyActionListener value="#{ItemPricesVar}" target="#{amendmentBackingBean.managedBean.ctServiceItemPrices}" />
-							<p:graphicImage library="ep/images/design" name="delete.png" value="/resources/ep/images/design/delete.png" title="Delete" />
+							<p:graphicImage library="ep/images/design" name="delete.png" value="/css/images/design/delete.png" title="Delete" />
 						</p:commandLink>
 					</p:column>
 				</p:dataTable>
@@ -348,7 +348,7 @@
 					resizable="false" modal="true" width="350" height="95">
 					<h:panelGrid columns="3">
 						<p:graphicImage library="ep/images/design" name="exclamation.png"
-							value="/resources/ep/images/design/exclamation.png"
+							value="/css/images/design/exclamation.png"
 							styleClass="ui-icon-complain"></p:graphicImage>
 						<p:spacer width="10" />
 						<p:inputTextarea cols="48" styleClass="ui-inputtextarea"

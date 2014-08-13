@@ -68,7 +68,7 @@
 		 <p:column style="width:10%;" headerText="#{lbl['lbl.ct.asearch.table1.action']}" styleClass="column-align-center">
 		   <p:commandLink action="#{associationBackingBean.gotoUpdateAssociatePage}" process="@this" styleClass="column-align-center">
 			  <f:setPropertyActionListener value="#{data}" target="#{associationBackingBean.managedBean.ctUpdateAssociation}" />
-			  <p:graphicImage library="ep/images/design" name="edit.png" value="/resources/ep/images/design/edit.png" title="Edit" />
+			  <p:graphicImage library="ep/images/design" name="edit.png" value="/css/images/design/edit.png" title="Edit" />
 		   </p:commandLink> 
 		  </p:column> 
 		</p:dataTable>
@@ -83,7 +83,7 @@
 		    header="#{lbl['lbl.ct.dialong.cofirm.header']}"  resizable="false" modal="true" width="350" height="95">  
            <h:panelGrid columns="3">
             <p:graphicImage library="ep/images/design" name="exclamation.png"
-			   value="/resources/ep/images/design/exclamation.png" styleClass="ui-icon-complain"/>
+			   value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
 			   <p:spacer width="10"/>
              <p:inputTextarea value="Are you sure you want to delete this record?"  rows="2" cols="48"  styleClass="ui-inputtextarea"/>
            </h:panelGrid>

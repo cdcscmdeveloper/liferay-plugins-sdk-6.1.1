@@ -27,7 +27,7 @@
 			    <p:ajax event="dateSelect" update="agencyDetailsTable" process="@this" listener="#{suspensionBackingBean.validateAgencyDate(data)}"/> 
 			 </p:calendar>
 			 <p:graphicImage id="curDateIdAgency" library="ep/images/design" 
-			    style="margin-bottom: -5px;" value="/resources/ep/images/design/reject.png"
+			    style="margin-bottom: -5px;" value="/css/images/design/reject.png"
 			    name="reject.png"  styleClass="ui-icon-reject" rendered="#{data.dateLessThanCurDate}"></p:graphicImage>
 		       <p:tooltip for="curDateIdAgency" showEffect="fade" value="#{lbl['lbl.ct.sus.curdate.validation']}"/>
 		    </h:panelGroup>
@@ -46,7 +46,7 @@
 			   <p:spacer width="5"/>
                <p:graphicImage id="validateAgnActions" library="ep/images/design" 
                  name="reject.png" style="margin-bottom: -5px;" styleClass="ui-icon-reject" 
-                  value="/resources/ep/images/design/reject.png" rendered="#{data.validateScheduleDate}"/>
+                  value="/css/images/design/reject.png" rendered="#{data.validateScheduleDate}"/>
                 <p:tooltip for="validateAgnActions" showEffect="fade" value="#{lbl['lbl.ct.sus.expdate.validation']}"/> 
 		    </h:panelGroup>
 	     </p:column> 	

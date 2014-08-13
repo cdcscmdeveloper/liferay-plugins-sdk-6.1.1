@@ -10,7 +10,7 @@
 				<p:outputLabel value="Sample Contract" />
 				<h:commandLink action="#{agreementBackingBean.downloadFile('', 'sample')}">
 					<p:graphicImage library="ep/images/design" name="download.png"
-						value="/resources/ep/images/design/download.png" title="File Download" />
+						value="/css/images/design/download.png" title="File Download" />
 				</h:commandLink>				
 			</h:panelGrid>
 			<p:spacer height="5" />
@@ -33,21 +33,21 @@
 					 <p:commandLink process="@this" partialSubmit="true"
 							action="#{agreementBackingBean.downloadTemplateDoc(contentsVar)}">
 							<p:graphicImage library="ep/images/design" name="download.png"
-								value="/resources/ep/images/design/download.png"
+								value="/css/images/design/download.png"
 								title="File Download" />
 						</p:commandLink>
 						<p:spacer width="2"/>
 					   <p:commandLink
 							action="#{agreementBackingBean.gotoTemplateDoc(contentsVar)}">
 							<p:graphicImage library="ep/images/design" name="document.png"
-								value="/resources/ep/images/design/document.png"
+								value="/css/images/design/document.png"
 								title="View Document" />
 						</p:commandLink>	
 					</h:panelGroup>
 					<h:panelGroup rendered="#{contentsVar.contentType.parameterCode eq ParameterConst.agreementSystemDefineDoc}">
 						<h:commandLink action="#{agreementBackingBean.downloadDocFile(contentsVar)}">
 							<p:graphicImage library="ep/images/design" name="download.png"
-								value="/resources/ep/images/design/download.png"
+								value="/css/images/design/download.png"
 								title="File Download" />
 						</h:commandLink>
 					</h:panelGroup>
@@ -87,7 +87,7 @@
 	      styleClass="screen-title" resizable="false" modal="true" width="350" height="95">  
            <h:panelGrid columns="3">
               <p:graphicImage library="ep/images/design" name="exclamation.png"
-			     value="/resources/ep/images/design/exclamation.png" styleClass="ui-icon-complain"/>
+			     value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
 			   <p:spacer width="10"/>
               <p:inputTextarea rows="2" cols="48" 
                  styleClass="ui-inputtextarea" value="Are you sure you want to delete this record?"/>

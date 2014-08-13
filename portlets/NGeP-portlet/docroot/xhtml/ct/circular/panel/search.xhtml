@@ -66,19 +66,19 @@
 				<p:column headerText="#{lbl['lbl.ct.action']}" styleClass="column-align-center">
 					<p:commandLink rendered="#{data.status.statusId == CtStatusConst.pqPendingSubmission}"
 							onclick="gotoPage([{name:'action',value:'save'},{name:'circularVerId',value:'#{data.circularVerId}'}])">
-					 <p:graphicImage library="ep/images/design" name="edit.png" value="/resources/ep/images/design/edit.png" title="Update" />
+					 <p:graphicImage library="ep/images/design" name="edit.png" value="/css/images/design/edit.png" title="Update" />
 					</p:commandLink>
 					<p:commandLink rendered="#{data.status.statusId == CtStatusConst.pqApproved or 
 						(data.status.statusId == CtStatusConst.pqRejected and data.ctCircular.latestCircularVer != null)}" 
 						onclick="gotoPage([{name:'action',value:'update'},{name:'circularVerId',value:'#{data.circularVerId}'}])">
-					 <p:graphicImage library="ep/images/design" name="edit.png" value="/resources/ep/images/design/edit.png" title="Update" />
+					 <p:graphicImage library="ep/images/design" name="edit.png" value="/css/images/design/edit.png" title="Update" />
 					</p:commandLink>
 					<p:spacer width="5" rendered="#{!(data.status.statusId == CtStatusConst.pqPendingSubmission) or
 						data.status.statusId == CtStatusConst.pqApproved or 
 						(data.status.statusId == CtStatusConst.pqRejected and data.ctCircular.latestCircularVer != null)}" />	
 					<p:commandLink rendered="#{!(data.status.statusId == CtStatusConst.pqPendingSubmission)}"
 					onclick="gotoPage([{name:'action',value:'view'},{name:'circularVerId',value:'#{data.circularVerId}'}])">
-					 <p:graphicImage library="ep/images/design" name="document.png" value="/resources/ep/images/design/document.png" title="View" />
+					 <p:graphicImage library="ep/images/design" name="document.png" value="/css/images/design/document.png" title="View" />
 					</p:commandLink>	
 						<!-- 
 						<p:spacer width="1" />
