@@ -1,0 +1,102 @@
+<html>
+   <head>
+      <style>
+         @page { size: A4 portrait;}      
+      </style>
+   </head>
+   <body>
+      <table border="1" width="100%" style="font-weight: normal;">
+         <tbody>
+            <tr>
+               <td>
+                  <table width="100%">
+                     <tbody>
+                        <tr>
+                           <td width="20%">
+                              <img width="120" height="100" src="$imgUrl"/>
+                           </td>
+                           <td>
+                              <table>
+                                 <tbody>
+                                    <tr>
+                                       <td>$ptjName</td>
+                                    </tr>
+                                    <tr>
+                                       <td>$jabatanName / $ministryName</td>
+                                    </tr>
+                                    <tr>
+                                       <td>$ptjAddress/td>
+                                    </tr>
+                                    <tr>
+                                       <td>$telNo</td>
+                                    </tr>
+                                    <tr>
+                                       <td>$faxNo</td>
+                                    </tr>
+                                 </tbody>
+                              </table>
+                           </td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </td>
+            </tr>
+         </tbody>
+      </table>
+      <br/>
+      <div style="font-weight: normal; text-align: center;"><strong><u>NOTIS PERINGATAN</u></strong></div>
+      <div style="font-weight: normal; text-align: center;"><strong><u><br/></u></strong></div>
+      <div style="font-weight: normal; text-align: right;">Rujukan: $fileRefNo</div>
+      <div style="font-weight: normal; text-align: right;">Tarikh: $noticeDate</div>
+      <div style="font-weight: normal; text-align: right;"><br/></div>
+      <div style="font-weight: normal; text-align: left;">Kepada:&nbsp;</div>
+      <div style="text-align: left;"><strong>$supplierName</strong></div>
+      <div style="text-align: left;"><strong>$supplierAddress</strong></div>
+      <div style="font-weight: normal; text-align: left;"><br/></div>
+      <div style="font-weight: normal; text-align: left;"><br/></div>
+      <div style="font-weight: normal; text-align: left;">Tuan/Puan,</div>
+      <div style="font-weight: normal; text-align: left;"><br/></div>
+      <div style="font-weight: normal; text-align: left;"><strong>PERINGATAN BAGI $contractTitle</strong></div>
+      <div style="text-align: left;"><strong>NO. KONTRAK : $contractNo</strong></div>
+      <div style="text-align: left;"><strong>TARIKH KUATKUASA : $terminateEffDate</strong></div>
+      <div style="text-align: left;"><strong><br/></strong></div>
+      <hr/>
+      <div style="font-weight: normal; text-align: left;"><br/></div>
+      <div style="font-weight: normal; text-align: left;">Dengan hormatnya saya diarahkan merujuk kepada perkara di atas.</div>
+      <div style="font-weight: normal; text-align: left;"><br/></div>
+      <div style="text-align: left;"><span style="font-weight: normal;">2.<span class="Apple-tab-span" style="white-space:pre">	</span>Dimaklumkan bahawa sehingga kini&nbsp;pihak tuan/puan&nbsp;</span><strong>gagal</strong> untuk melaksanakan perjanjian tersebut seperti yang dikemukakan di dalam kontrak $contractTitle $contractNo.</div>
+      <div style="font-weight: normal; text-align: left;"><br/></div>
+      <div style="font-weight: normal; text-align: left;">3<span class="Apple-tab-span" style="white-space:pre">	</span>Pihak kami telah mendapati&nbsp;bahawa pihak tuan/puan telah melanggar klausa di dalam perjanjian seperti yang berikut:</div>
+      <div style="font-weight: normal; text-align: left;">
+         #foreach( $reason in $reasonList ) 
+         <span class="Apple-tab-span" style="white-space:pre">	</span>$reasonDescMap.get($reason.reasonType.reasonId) - $reason.description <br/>
+         #end
+      </div>
+      <div style="font-weight: normal; text-align: left;"><br/></div>
+      <div style="font-weight: normal; text-align: left;">4<span class="Apple-tab-span" style="white-space:pre">	</span>Sehubungan itu, pihak tuan/puan adalah diingatkan supaya dapat mengambil tindakan segera berhubung perkara ini bagi memastikan segala yang dikemukakan di dalam kontrak telah dilaksanakan dalam tempoh bermula $remedyStartDate dan berakhir pada $remedyEndDate.</div>
+      <div style="font-weight: normal; text-align: left;"><br/></div>
+      <div style="font-weight: normal; text-align: left;">5<span class="Apple-tab-span" style="white-space:pre">	</span>Sekiranya pihak tuan/puan tidak berjaya untuk memperbaiki segala kegagalan yang telah dilakukan di dalam kontrak $contractTitle $contractNo, pihak kerajaan akan menamatkan kontrak seperti tarikh yang dinyatakan seperti di atas.</div>
+      <div style="font-weight: normal; text-align: left;"><br/></div>
+      <div style="font-weight: normal; text-align: left;">Kerjasama dan tindakan segera pihak tuan/puan berhubung perkara di atas amatlah dihargai.</div>
+      <div style="font-weight: normal; text-align: left;"><br/></div>
+      <div style="font-weight: normal; text-align: left;"><br/></div>
+      <div style="font-weight: normal; text-align: left;">Sekian, terima kasih.</div>
+      <div style="font-weight: normal; text-align: left;"><br/></div>
+      <div style="text-align: left; font-weight: normal;"><strong>"BERKHIDMAT UNTUK NEGARA"</strong></div>
+      <div style="text-align: left;"><strong>"1MALAYSIA: RAKYAT DIDAHULUKAN, PENCAPAIAN DIUTAMAKAN"</strong></div>
+      <div style="font-weight: normal; text-align: left;"><br/></div>
+      <div style="font-weight: normal; text-align: left;"><br/></div>
+      <div style="font-weight: normal; text-align: left;">Saya yang menurut perintah,&nbsp;</div>
+      <div style="font-weight: normal; text-align: left;"><br/></div>
+      <div style="font-weight: normal; text-align: left;"><br/></div>
+      <div style="font-weight: normal; text-align: left;">------------------------------------------------------</div>
+      <div style="font-weight: normal; text-align: left;">$approverName</div>
+      <div style="font-weight: normal; text-align: left;">$ptjName</div>
+      <div style="font-weight: normal; text-align: left;">$jabatanName</div>
+      <div style="font-weight: normal; text-align: left;">b.p. Ketua Setiausaha</div>
+      <div style="font-weight: normal; text-align: left;">$ministryName</div>
+      <div style="font-weight: normal; text-align: left;">$phoneNo</div>
+      <div style="font-weight: normal; text-align: left;">$faxNo</div>
+      <div style="font-weight: normal; text-align: left;">$email</div>
+   </body>
+</html>
