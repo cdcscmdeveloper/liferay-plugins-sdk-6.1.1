@@ -2536,6 +2536,23 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 										new FacesScopes().getUserLocale())));
 					return "catalogMaintenanceFile";
 				}
+				
+				//same item with existed one cannot overlap the date
+				reqDTO.setUomId(catalog.getPmUom().getUomId());
+				reqDTO.setExtensionCode(catalog.getCmItem().getExtensionCode());
+				reqDTO.setStartDate1(catalog.getCmStandardPricing().getStartDate());
+				reqDTO.setEndDate1(catalog.getCmStandardPricing().getEndDate());
+				if(catalogueSO.checkExistedItem(reqDTO)){
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+									MessageUtils.getMessage(MessageConst.ERROR_715019,
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));
+						return "catalogMaintenanceFile";
+				}
+				
+				
 					
 
 				if (catalog.isReviewRequired()) {
