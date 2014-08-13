@@ -190,9 +190,8 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 				  }
 			  }
 			  if(priceTypes != null && priceTypes.size() > 0){
-				  String	priceType	=	priceTypes.get(0);
 				  for (CmPricing princing : cmSupplierItem.getCmPricings()) {
-					  if(princing.getPricingType().equalsIgnoreCase(priceType)){
+					  if(ParameterConst.PRICE_TYPE_STANDARD.equalsIgnoreCase(princing.getPricingType())){
 						  cmPricings.add(princing);
 					  }
 				  }
