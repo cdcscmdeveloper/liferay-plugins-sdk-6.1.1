@@ -23,6 +23,8 @@ import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPEmployee;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPExperience;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalScore;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtSampleItem;
+import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -81,6 +83,7 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	// Federal Government
 	private List<ScLoa> scLoaList;
 	private int contractSize;
+	private int noOfYears;
 
 	// Non-Federal Government
 	private List<ScQtPRPExperience> scQtPRPExperiences;
@@ -120,6 +123,10 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	private ScQtSampleSubmission scQtSampleSubmission;
 	private List<ScQtSampleSubmission> scQtSampleSubmissionList;
 	private List<ScQtSampleItem> scQtSampleItemList;
+	
+	// Supplier Information
+	private SmSupplier smSupplier;
+	private SmAppl smAppl;
 
 	public SPDetailManagedBean() {
 		log.info("inside ");
@@ -475,6 +482,14 @@ public class SPDetailManagedBean extends BaseManagedBean {
 		this.contractSize = contractSize;
 	}
 
+	public int getNoOfYears() {
+		return noOfYears;
+	}
+
+	public void setNoOfYears(int noOfYears) {
+		this.noOfYears = noOfYears;
+	}
+
 	public BigDecimal getAcidRatio() {
 		return acidRatio;
 	}
@@ -545,6 +560,22 @@ public class SPDetailManagedBean extends BaseManagedBean {
 
 	public void setProposalIndex(int proposalIndex) {
 		this.proposalIndex = proposalIndex;
+	}
+
+	public SmSupplier getSmSupplier() {
+		return smSupplier;
+	}
+
+	public void setSmSupplier(SmSupplier smSupplier) {
+		this.smSupplier = smSupplier;
+	}
+
+	public SmAppl getSmAppl() {
+		return smAppl;
+	}
+
+	public void setSmAppl(SmAppl smAppl) {
+		this.smAppl = smAppl;
 	}
 
 }
