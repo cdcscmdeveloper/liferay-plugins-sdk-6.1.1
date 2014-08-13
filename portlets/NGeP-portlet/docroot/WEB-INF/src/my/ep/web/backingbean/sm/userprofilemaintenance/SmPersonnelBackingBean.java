@@ -196,8 +196,27 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		getManagedBean().setSearchRoleList(roles);
 	}
 
+	private boolean validatePersonLimit() {
+		boolean validPerCount = true;
+		int authPerCount = 0;
+		List<SmPersonnel> personnels = getManagedBean().getUpdateSmPersonnel().getSmAppl().getSmPersonnels();
+		for (SmPersonnel per : personnels) {
+			if (per.getAuthorizedFlg() == 1) {
+				authPerCount++;
+			}
+		}
+		if (authPerCount == 2) {
+			validPerCount = false;
+			throw new EpException(MessageConst.ERROR_722520);
+		}
+		return validPerCount;
+	}
+
+	
 	public String navigateToAddNewUserPage(){  
 		System.out.println("********************SmPersonnelBackingBean navigateToAddNewUserPage***************");
+		
+		
 		getManagedBean().setEditMode(false);
 		removeEPRole();
 		buildRoleList();
@@ -869,7 +888,7 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		
 			validatePersonnelBeforeSave(smPersonnel);
 		
-//			setPersonnelAddress(smPersonnel);
+			setPersonnelAddress(smPersonnel);
 //			smPersonnel.setAuthorizedFlg(1);
 //			smPersonnel.setContractSignerFlg(1);
 //			smPersonnel.setSoftcertFlg(1);
