@@ -2014,9 +2014,10 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 				}
 			}	
 			if(states.size() > 0 || divisions.size() > 0 || districts.size() > 0){
-				getManagedBean().getLocationTrees().add(
-						LocationSingleton.getInstance().buildLocationTree(null, states,
-								districts, divisions, null,TplSpecZoneLoc.class));
+				 List<TreeNode>	LocTrees = new ArrayList<TreeNode>();
+				 LocTrees.add(LocationSingleton.getInstance().buildLocationTree(null, states,
+									districts, divisions, null,TplSpecZoneLoc.class));
+				getManagedBean().setLocationTrees(LocTrees);
 			}
 
 			if(scQuote.getProcurementType() != null){
