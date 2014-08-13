@@ -2054,8 +2054,19 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			}
 			
 			//same item with existed one cannot overlap the date
-			//check db
-			
+			reqDTO.setUomId(this.getManagedBean().getSelectedMaintainItem().getPmUom().getUomId());
+			reqDTO.setExtensionCode(this.getManagedBean().getSelectedMaintainItem().getCmItem().getExtensionCode());
+			reqDTO.setStartDate1(cmStandardPricing.getStartDate());
+			reqDTO.setEndDate1(cmStandardPricing.getEndDate());
+			if(catalogueSO.checkExistedItem(reqDTO)){
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+								MessageUtils.getMessage(MessageConst.ERROR_715019,
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+					return "editCatalogItem";
+			}
 
 			Map<Date, List<CmTierPricing>> tierMap = groupingTier(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings());
 			if (!tierMap.isEmpty() && tierMap.size() > 0) {
