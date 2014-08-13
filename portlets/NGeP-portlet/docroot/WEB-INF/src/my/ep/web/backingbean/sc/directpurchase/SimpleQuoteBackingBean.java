@@ -1395,8 +1395,8 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 	  }	
 		
 	private List<ScLocationDistrictCriteria> getLocationDistrictCriterias(List<TreeNode> treeNodes ,ScQuote quote){
-			List<ScLocationDistrictCriteria>	results = new ArrayList<ScLocationDistrictCriteria>();
-			for (TreeNode treeNode : treeNodes) {
+		List<ScLocationDistrictCriteria>	results = new ArrayList<ScLocationDistrictCriteria>();
+		for (TreeNode treeNode : treeNodes) {
 			List<PmDistrict>	districts	=	getPmDistricts(treeNode.getChildren());
 			if(districts != null && districts.size() > 0){
 				for(PmDistrict district: districts){
@@ -1407,58 +1407,46 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 					results.add(districtCriteria);
 				}
 			}
-			}
-			return results;
-	  }	
-	
+		}
+		return results;
+	}	
+
 	/**
 	 * To delete the selected TreeNode from the zone
 	 */
-	public void deleteZoneTreeNode() {
-		TreeNode selectedTreeNode = this.getManagedBean().getSelectedTreeNode();
-		if (null == selectedTreeNode) {
-			throw new EpException("Please select At least one Zone");
-		}
-		TplSpecZoneDtl zoneDtls = (TplSpecZoneDtl) selectedTreeNode
-				.getChildren().get(0).getData();
-		if (null != selectedTreeNode) {
-			List<TreeNode> zoneTrees = this.getManagedBean()
-					.getZoneTrees();
-			for (TreeNode node : zoneTrees) {
-				if (zoneDtls.getZoneName().equalsIgnoreCase(
-						((TplSpecZoneDtl) node.getChildren().get(0).getData())
-						.getZoneName())) {
-					zoneTrees.remove(node);
-					break;
-				}
+	public void deleteZoneTreeNode(TreeNode selectedTreeNode) {
+		List<TreeNode>	zones = new ArrayList<TreeNode>();
+		if (selectedTreeNode.getChildren() != null) {
+			TplSpecZoneDtl zoneDtl = (TplSpecZoneDtl) selectedTreeNode.getChildren().get(0).getData();
+
+			for (TreeNode node : getManagedBean().getZoneTrees()) {
+
+				if (!zoneDtl.equals(((TplSpecZoneDtl) node.getChildren().get(0).getData()))) {
+					zones.add(node);
+				} 
 			}
-			this.getManagedBean().setZoneTrees(zoneTrees);
+			this.getManagedBean().setZoneTrees(zones);
 		}
 	}
-	
+
 	/**
 	 * To delete the selected TreeNode from the location
 	 */
-	public void deleteLocationTreeNode() {
-		TreeNode selectedTreeNode = this.getManagedBean().getSelectedTreeNode();
-		if (null == selectedTreeNode) {
-			throw new EpException("Please select At least one state");
-		}
-		TplSpecZoneLoc zoneLoc = (TplSpecZoneLoc) selectedTreeNode
-				.getChildren().get(0).getData();
-		if (null != selectedTreeNode) {
-			List<TreeNode> locTrees = this.getManagedBean()
-					.getLocationTrees();
-			for (TreeNode node : locTrees) {
-				if (zoneLoc == (((TplSpecZoneLoc) node.getChildren().get(0).getData()))) {
-					locTrees.remove(node);
-					break;
-				}
+	public void deleteLocationTreeNode(TreeNode selectedTreeNode) {
+		List<TreeNode>	locs = new ArrayList<TreeNode>();
+		if (selectedTreeNode.getChildren() != null) {
+			TplSpecLoc tplSpecLoc = (TplSpecLoc) selectedTreeNode.getChildren().get(0).getData();
+
+			for (TreeNode node : getManagedBean().getLocationTrees()) {
+
+				if (!tplSpecLoc.equals(((TplSpecLoc) node.getChildren().get(0).getData()))) {
+					locs.add(node);
+				} 
 			}
-			this.getManagedBean().setLocationTrees(locTrees);
+			this.getManagedBean().setLocationTrees(locs);
 		}
 	}
-	 
+
 	public SelectItem[] getPriceTypeDropdownValues(String parameterType,
 			List<String> priceTypes) {
 		SelectItem[] items = null;
