@@ -10,11 +10,11 @@
 			styleClass="noBorders tr,noBorders td">
 			<p:row>
 				<p:column width="100%" style="text-align:right">
-					<p:commandButton value="#{lbl['lbl.sc.sp.save']}"
+					<p:commandButton value="#{lbl['lbl.btn.save']}"
 						action="#{supplierProposalDetailBackingBean.saveSPDetailsAction}" process="@all"
 						icon="ui-icon-save" />
 
-					<p:commandButton value="#{lbl['lbl.sc.sp.submit']}" process="@all"
+					<p:commandButton value="#{lbl['lbl.btn.submit']}" process="@all"
 						icon="ui-icon-submit" />
 
 					<c:forEach items="#{supplierProposalDetailBackingBean.managedBean.outComes}"

@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="#{lbl['lbl.sc.sp.header.tech.proposal']}"
+	<p:panel header="#{lbl['lbl.sc.technical.proposal']}"
 		toggleable="true">
 		<p:dataTable id="techDeailsId" var="techList"
 			value="#{supplierProposalDetailBackingBean.managedBean.tecCheckDetailsList}"
@@ -19,13 +19,13 @@
 				<p:row>
 					<p:column headerText="" />
 
-					<p:column headerText="#{lbl['lbl.sc.sp.desc']}"
+					<p:column headerText="#{lbl['lbl.sc.descriptions']}"
 						style="width:68%; white-space: normal;" />
 
-					<p:column headerText="#{lbl['lbl.sc.sp.instruction']}"
+					<p:column headerText="#{lbl['lbl.sc.instruction']}"
 						style="width:15%" />
 
-					<p:column headerText="#{lbl['lbl.sc.sp.action']}" style="width:10%" />
+					<p:column headerText="#{lbl['lbl.sc.action']}" style="width:10%" />
 
 				</p:row>
 			</p:columnGroup>
@@ -75,7 +75,7 @@
 
 	<p:dialog id="attachmentDlgid" widgetVar="attachmentDlg" modal="true"
 		resizable="false" width="700px" height="200" styleClass="pop_up_top"
-		header="#{lbl['lbl.bpm.choose.file']}">
+		header="#{lbl['lbl.sc.choose.files']}">
 		<p:ajax event="close" />
 		<p:fileUpload style="display:inline;"
 			fileUploadListener="#{supplierProposalDetailBackingBean.handleFileUpload}"
