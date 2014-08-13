@@ -290,6 +290,7 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 		  scRequestItem.setItemDesc(cmSupplierItem.getItemDesc());
 		  scRequestItem.setMinqty(cmSupplierItem.getMinOrder());
 		  scRequestItem.setUom(cmSupplierItem.getPmUom());
+		  scRequestItem.setLeadTime(cmSupplierItem.getLeadTime());
 
 		  return scRequestItem;
 	  }
@@ -757,6 +758,11 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 			 ScRequestSupplierItem requestSupplierItem = prInquiry.getScRequestSupplierItems().get(0);
 			 ScRequestNoteDtl requestNoteDtl = requestSupplierItem.getScRequestNoteDtl().get(0);
 			 
+			 // lead time 
+			  if(requestSupplierItem.getSupplierItemPrices() != null && requestSupplierItem.getSupplierItemPrices().size() >0){
+				  requestSupplierItem.getRequestNoteItem().setLeadTime( requestSupplierItem.getSupplierItemPrices().get(0).getPricing().getCmSupplierItem().getLeadTime());
+			  }
+			  
 			 // price type drop down
 			 List<String> priceTypes= new ArrayList<String>();
 			 priceTypes.add(requestNoteDtl.getPriceType().getParameterCode());
@@ -774,8 +780,8 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 				 flag = Boolean.FALSE;
 			 }
 	    }
-		 
-		 prInquiry.setDayToResponse(ParameterConst.PIQ_RESP_DAYS); // by default days
+		// no of response days
+		 prInquiry.setDayToResponse((int)DateUtils.getDaysDifference(prInquiry.getCreatedDate(), prInquiry.getDateToResponse()));
 		 
 		 getManagedBean().setTaskId(taskId);
 		 getManagedBean().setProcessName(res.getProcessName());
