@@ -369,7 +369,13 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 				BigDecimal ttlAmt = resDTO.getSmBill().getSmPayments().get(0).getPaymentAmt();
 				this.setvCode(vc);
 				this.getManagedBean().setTotalAmount(ttlAmt);
-
+				
+				String taskId = (String)PortalUtil.getHttpServletRequest(new FacesScopes().getRequest()).getSession().getAttribute("paymentTaskId");
+				Object bpmPojo = (Object)PortalUtil.getHttpServletRequest(new FacesScopes().getRequest()).getSession().getAttribute("paymentBpmPojo");
+				
+				System.out.println("*****taskId*****" + taskId);
+				System.out.println("*****bpmPojo*****" + bpmPojo);
+				
 				return "paymentRequestSubmission";
 			//}
 		}
