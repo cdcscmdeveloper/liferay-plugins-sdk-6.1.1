@@ -1996,6 +1996,17 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				return "editCatalogItem";
 			}
 			
+			//end date already passed
+			if(cmStandardPricing.getEndDate().before(new Date())){
+				FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+							MessageUtils.getMessage(MessageConst.ERROR_715021,
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+				return "editCatalogItem";
+			}
+			
 			//1 year period between start and end date
 			Calendar cal = Calendar.getInstance();  
 			cal.setTime(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getStartDate());
@@ -2036,8 +2047,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 						MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 				return "editCatalogItem";
 			}
+			
+			//---------------------------------- start comparison each date with standard date range ----------------------------------------------------
 					
-			//promotion price date is not in standard date range 
+			//Promotion
 			if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getStartDate()!=null && this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getEndDate()!=null){
 				if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getEndDate().after(cmStandardPricing.getEndDate())||
 				   this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getStartDate().after(cmStandardPricing.getEndDate())||
@@ -2052,6 +2065,99 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 						return "editCatalogItem";
 				}
 			}
+			
+			//Tier Pricing
+			for (CmTierPricing tierPricing : this.getManagedBean().getSelectedMaintainItem().getCmTierPricings()) {
+				if(tierPricing.getEndDate().after(cmStandardPricing.getEndDate())||
+				   tierPricing.getStartDate().after(cmStandardPricing.getEndDate())||
+				   tierPricing.getEndDate().before(cmStandardPricing.getStartDate())||
+				   tierPricing.getStartDate().before(cmStandardPricing.getStartDate())){
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+									MessageUtils.getMessage(MessageConst.ERROR_715020,
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));
+						return "editCatalogItem";
+				}
+			}
+			//Tier Promotion Pricing
+			for (CmPromotionTierPricing tierPromotionPricing : this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings()) {
+				if(tierPromotionPricing.getEndDate().after(cmStandardPricing.getEndDate())||
+				   tierPromotionPricing.getStartDate().after(cmStandardPricing.getEndDate())||
+				   tierPromotionPricing.getEndDate().before(cmStandardPricing.getStartDate())||
+				   tierPromotionPricing.getStartDate().before(cmStandardPricing.getStartDate())){
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+									MessageUtils.getMessage(MessageConst.ERROR_715020,
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));
+						return "editCatalogItem";
+				}
+			}
+			//Zonal Pricing
+			for (CmZonalStandardPricing zStdPrice : this.getManagedBean().getSelectedMaintainItem().getzStdPrices()) {
+				if(zStdPrice.getEndDate().after(cmStandardPricing.getEndDate())||
+				   zStdPrice.getStartDate().after(cmStandardPricing.getEndDate())||
+				   zStdPrice.getEndDate().before(cmStandardPricing.getStartDate())||
+				   zStdPrice.getStartDate().before(cmStandardPricing.getStartDate())){
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+									MessageUtils.getMessage(MessageConst.ERROR_715020,
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));
+						return "editCatalogItem";
+				}
+			}
+			//Zonal Promotion Pricing
+			for (CmZonalPromotionPricing zonalPromotion : this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionPricings()) {
+				if(zonalPromotion.getEndDate().after(cmStandardPricing.getEndDate())||
+				   zonalPromotion.getStartDate().after(cmStandardPricing.getEndDate())||
+				   zonalPromotion.getEndDate().before(cmStandardPricing.getStartDate())||
+				   zonalPromotion.getStartDate().before(cmStandardPricing.getStartDate())){
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+									MessageUtils.getMessage(MessageConst.ERROR_715020,
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));
+						return "editCatalogItem";
+				}
+			}
+			//Zonal Tier Pricing
+			for (CmZonalTierPricing zonalTier : this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings()) {
+				if(zonalTier.getEndDate().after(cmStandardPricing.getEndDate())||
+				   zonalTier.getStartDate().after(cmStandardPricing.getEndDate())||
+				   zonalTier.getEndDate().before(cmStandardPricing.getStartDate())||
+				   zonalTier.getStartDate().before(cmStandardPricing.getStartDate())){
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+									MessageUtils.getMessage(MessageConst.ERROR_715020,
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));
+						return "editCatalogItem";
+				}
+			}
+			//Zonal Tier Promotion Pricing
+			for (CmZonalPromotionTierPricing zonalPromotionTier : this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings()) {
+				if(zonalPromotionTier.getEndDate().after(cmStandardPricing.getEndDate())||
+				   zonalPromotionTier.getStartDate().after(cmStandardPricing.getEndDate())||
+				   zonalPromotionTier.getEndDate().before(cmStandardPricing.getStartDate())||
+				   zonalPromotionTier.getStartDate().before(cmStandardPricing.getStartDate())){
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+									MessageUtils.getMessage(MessageConst.ERROR_715020,
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));
+						return "editCatalogItem";
+				}
+			}
+			
+			//---------------------------------- end comparison each date with standard date range ----------------------------------------------------
 			
 			//same item with existed one cannot overlap the date
 			reqDTO.setSupplierItemId(this.getManagedBean().getSelectedMaintainItem().getSupplierItemId());
@@ -2450,8 +2556,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			System.out
 					.println("this.getManagedBean().getSelectedMaintainItems().length:"
 							+ this.getManagedBean().getSelectedMaintainItems().length);
-			for (int i = 0; i < this.getManagedBean()
-					.getSelectedMaintainItems().length; i++) {
+			
+			for (int i = 0; i < this.getManagedBean().getSelectedMaintainItems().length; i++) {
 				CmSupplierItem catalog = this.getManagedBean()
 						.getSelectedMaintainItems()[i];
 				System.out.println("catalog.getPmUom().getUomName():"
@@ -2498,6 +2604,17 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					return "catalogMaintenanceFile";
 				}
 				
+				//end date already passed
+				if(catalog.getCmStandardPricing().getEndDate().before(new Date())){
+					FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+								MessageUtils.getMessage(MessageConst.ERROR_715021,
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+					return "catalogMaintenanceFile";
+				}
+				
 				//promotion date is outside normal date
 				if(catalog.getCmPromotionPricing().getStartDate()!=null && catalog.getCmPromotionPricing().getEndDate()!=null){
 					if(catalog.getCmPromotionPricing().getEndDate().after(catalog.getCmStandardPricing().getEndDate())||
@@ -2513,6 +2630,99 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 							return "catalogMaintenanceFile";
 					}
 				}
+				
+				//comparison each date with standard date range
+				//Tier Pricing
+				for (CmTierPricing tierPricing : catalog.getCmTierPricings()) {
+					if(tierPricing.getEndDate().after(catalog.getCmStandardPricing().getEndDate())||
+					   tierPricing.getStartDate().after(catalog.getCmStandardPricing().getEndDate())||
+					   tierPricing.getEndDate().before(catalog.getCmStandardPricing().getStartDate())||
+					   tierPricing.getStartDate().before(catalog.getCmStandardPricing().getStartDate())){
+						FacesContext.getCurrentInstance().addMessage(
+								null,
+								new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+										MessageUtils.getMessage(MessageConst.ERROR_715020,
+												MessageUtils.BUNDLE_COMMON_MESSAGES,
+												new FacesScopes().getUserLocale())));
+							return "catalogMaintenanceFile";
+					}
+				}
+				//Tier Promotion Pricing
+				for (CmPromotionTierPricing tierPromotionPricing : catalog.getCmPromotionTierPricings()) {
+					if(tierPromotionPricing.getEndDate().after(catalog.getCmStandardPricing().getEndDate())||
+					   tierPromotionPricing.getStartDate().after(catalog.getCmStandardPricing().getEndDate())||
+					   tierPromotionPricing.getEndDate().before(catalog.getCmStandardPricing().getStartDate())||
+					   tierPromotionPricing.getStartDate().before(catalog.getCmStandardPricing().getStartDate())){
+						FacesContext.getCurrentInstance().addMessage(
+								null,
+								new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+										MessageUtils.getMessage(MessageConst.ERROR_715020,
+												MessageUtils.BUNDLE_COMMON_MESSAGES,
+												new FacesScopes().getUserLocale())));
+							return "catalogMaintenanceFile";
+					}
+				}
+				//Zonal Pricing
+				for (CmZonalStandardPricing zStdPrice : catalog.getzStdPrices()) {
+					if(zStdPrice.getEndDate().after(catalog.getCmStandardPricing().getEndDate())||
+					   zStdPrice.getStartDate().after(catalog.getCmStandardPricing().getEndDate())||
+					   zStdPrice.getEndDate().before(catalog.getCmStandardPricing().getStartDate())||
+					   zStdPrice.getStartDate().before(catalog.getCmStandardPricing().getStartDate())){
+						FacesContext.getCurrentInstance().addMessage(
+								null,
+								new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+										MessageUtils.getMessage(MessageConst.ERROR_715020,
+												MessageUtils.BUNDLE_COMMON_MESSAGES,
+												new FacesScopes().getUserLocale())));
+							return "catalogMaintenanceFile";
+					}
+				}
+				//Zonal Promotion Pricing
+				for (CmZonalPromotionPricing zonalPromotion : catalog.getCmZonalPromotionPricings()) {
+					if(zonalPromotion.getEndDate().after(catalog.getCmStandardPricing().getEndDate())||
+					   zonalPromotion.getStartDate().after(catalog.getCmStandardPricing().getEndDate())||
+					   zonalPromotion.getEndDate().before(catalog.getCmStandardPricing().getStartDate())||
+					   zonalPromotion.getStartDate().before(catalog.getCmStandardPricing().getStartDate())){
+						FacesContext.getCurrentInstance().addMessage(
+								null,
+								new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+										MessageUtils.getMessage(MessageConst.ERROR_715020,
+												MessageUtils.BUNDLE_COMMON_MESSAGES,
+												new FacesScopes().getUserLocale())));
+							return "catalogMaintenanceFile";
+					}
+				}
+				//Zonal Tier Pricing
+				for (CmZonalTierPricing zonalTier : catalog.getCmZonalTierPricings()) {
+					if(zonalTier.getEndDate().after(catalog.getCmStandardPricing().getEndDate())||
+					   zonalTier.getStartDate().after(catalog.getCmStandardPricing().getEndDate())||
+					   zonalTier.getEndDate().before(catalog.getCmStandardPricing().getStartDate())||
+					   zonalTier.getStartDate().before(catalog.getCmStandardPricing().getStartDate())){
+						FacesContext.getCurrentInstance().addMessage(
+								null,
+								new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+										MessageUtils.getMessage(MessageConst.ERROR_715020,
+												MessageUtils.BUNDLE_COMMON_MESSAGES,
+												new FacesScopes().getUserLocale())));
+							return "catalogMaintenanceFile";
+					}
+				}
+				//Zonal Tier Promotion Pricing
+				for (CmZonalPromotionTierPricing zonalPromotionTier : catalog.getCmZonalPromotionTierPricings()) {
+					if(zonalPromotionTier.getEndDate().after(catalog.getCmStandardPricing().getEndDate())||
+					   zonalPromotionTier.getStartDate().after(catalog.getCmStandardPricing().getEndDate())||
+					   zonalPromotionTier.getEndDate().before(catalog.getCmStandardPricing().getStartDate())||
+					   zonalPromotionTier.getStartDate().before(catalog.getCmStandardPricing().getStartDate())){
+						FacesContext.getCurrentInstance().addMessage(
+								null,
+								new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+										MessageUtils.getMessage(MessageConst.ERROR_715020,
+												MessageUtils.BUNDLE_COMMON_MESSAGES,
+												new FacesScopes().getUserLocale())));
+							return "catalogMaintenanceFile";
+					}
+				}
+				//end date checking
 				
 				Calendar c = new GregorianCalendar();
 				c.add(Calendar.DATE, -1);
@@ -2560,7 +2770,11 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 						return "catalogMaintenanceFile";
 				}
 				
-				
+				//Past Start Date should change to current date
+				Date dateNow = new Date();
+				if(catalog.getCmStandardPricing().getStartDate().before(dateNow)){
+					catalog.getCmStandardPricing().setStartDate(dateNow);
+				}
 					
 
 				if (catalog.isReviewRequired()) {
