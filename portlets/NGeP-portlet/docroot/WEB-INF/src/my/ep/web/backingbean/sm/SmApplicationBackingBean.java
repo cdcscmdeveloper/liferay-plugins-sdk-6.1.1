@@ -1091,10 +1091,13 @@ public class SmApplicationBackingBean extends
 		case SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY:
 			// assignEnteredStaffValues();
 			if (getManagedBean().getBusinessTypeVal() != null
-					&& !getManagedBean()
+					&& (!getManagedBean()
 							.getBusinessTypeVal()
 							.equalsIgnoreCase(
-									SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT)) {
+									SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT) || !getManagedBean()
+							.getBusinessTypeVal()
+							.equalsIgnoreCase(
+									SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP_DEFAULT))) {
 				if (getManagedBean().getSmapplShareHolders() == null
 						|| (getManagedBean().getSmapplShareHolders() != null && getManagedBean()
 								.getSmapplShareHolders().isEmpty())) {
@@ -7065,8 +7068,8 @@ public class SmApplicationBackingBean extends
 
 		resDTO = reqSO.retrieveStatusDescById(reqDTO);
 		if (resDTO != null && resDTO.getPmStatusDesc() != null) {
-//			getManagedBean().setCurrentStatus(
-//					resDTO.getPmStatusDesc().getStatusName());
+			// getManagedBean().setCurrentStatus(
+			// resDTO.getPmStatusDesc().getStatusName());
 		}
 	}
 
