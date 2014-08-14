@@ -138,6 +138,7 @@ import my.ep.persistence.entity.sm.SmSvCategory;
 import my.ep.persistence.entity.sm.SmSvOffice;
 import my.ep.persistence.entity.sm.SmSvTask;
 import my.ep.persistence.entity.sm.SmSvTemplate;
+import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
@@ -368,7 +369,23 @@ public class SmApplicationBackingBean extends
 			if (!fromBpm) {
 				setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_DECLARATION);
 			} else {
-				setPmStatusDesc(smAppl.getPmStatus().getStatusId().toString());
+				SmWorkflowStatus sts = getCurrentActiveWokFlowStatus(smAppl
+						.getApplId());
+				if (sts != null && sts.getPmStatus() != null
+						&& sts.getPmStatus().getStatusId() != null) {
+					System.out
+							.println("** PM Status retrived from work flow *******");
+					setPmStatusDesc(sts.getPmStatus().getStatusId().toString());
+					System.out.println("*** Status ******* "
+							+ getManagedBean().getCurrentStatus());
+				} else {
+					System.out
+							.println("** PM Status retrived from SM appl only *******");
+					setPmStatusDesc(smAppl.getPmStatus().getStatusId()
+							.toString());
+					System.out.println("*** SM appl  Status ******* "
+							+ getManagedBean().getCurrentStatus());
+				}
 			}
 			if (fromBpm
 					&& (getManagedBean().isPoUser() || getManagedBean()
@@ -507,6 +524,22 @@ public class SmApplicationBackingBean extends
 			}
 		}
 		return poLogin;
+	}
+
+	private SmWorkflowStatus getCurrentActiveWokFlowStatus(Long applId) {
+		System.out.println("*** This is resubmit to get po ****** ");
+		SmWorkFlowStatusReqDTO reqDTO = new SmWorkFlowStatusReqDTO();
+		reqDTO.setApplId(applId);
+		ISmWorkFlowStatusSO reqSO = (ISmWorkFlowStatusSO) BusinessDelegate
+				.getInstance()
+				.getServiceObject("sm", ISmWorkFlowStatusSO.class);
+		SmWorkFlowStatusResDTO resDTO = reqSO
+				.retrieveCurrentWorkFlowStatusByDocId(reqDTO);
+		if (resDTO != null && resDTO.getWorkflowStatus() != null) {
+			return resDTO.getWorkflowStatus();
+		} else {
+			return null;
+		}
 	}
 
 	private boolean validateBeforeProceed(Long supplierId,
@@ -7032,12 +7065,13 @@ public class SmApplicationBackingBean extends
 
 		resDTO = reqSO.retrieveStatusDescById(reqDTO);
 		if (resDTO != null && resDTO.getPmStatusDesc() != null) {
-			getManagedBean().setCurrentStatus(
-					resDTO.getPmStatusDesc().getStatusName());
+//			getManagedBean().setCurrentStatus(
+//					resDTO.getPmStatusDesc().getStatusName());
 		}
 	}
 
 	private void setPmStatusDesc(String statusId) {
+		System.out.println("****** Status Id ******" + statusId);
 		StatusReqDTO reqDTO = new StatusReqDTO();
 		reqDTO.setStatusId(Long.parseLong(statusId));
 		reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
