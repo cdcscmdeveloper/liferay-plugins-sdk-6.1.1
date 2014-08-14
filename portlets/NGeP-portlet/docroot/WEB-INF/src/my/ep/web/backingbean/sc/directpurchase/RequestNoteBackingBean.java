@@ -109,6 +109,7 @@ import my.ep.web.backingbean.sc.purchaseindefault.PurchaseInDefaultBackingBean;
 import my.ep.web.backingbean.sc.purchaseinquiry.PurchaseInquiryBackingBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.sc.directpurchase.RequestNoteManagedBean;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
@@ -1634,7 +1635,9 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 					purchaseInquiryBackingBean.getManagedBean().setRequestNoteDtl(requestNoteDtl);
 					purchaseInquiryBackingBean. getManagedBean().setScRequestSupplierItem(requestSupplierItem);
 
-					prInquiry.setDayToResponse(ParameterConst.PIQ_RESP_DAYS); // by default days
+					// no of response days
+					 prInquiry.setDayToResponse((int)DateUtils.getDaysDifference(prInquiry.getCreatedDate(),prInquiry.getDateToResponse()));
+					 
 					purchaseInquiryBackingBean.getManagedBean().setStockAvailable(prInquiry.getIsStockAvailable());
 					purchaseInquiryBackingBean.getManagedBean().setScPrInquiry(prInquiry);
 					purchaseInquiryBackingBean.initializeRemarks(prInquiry);
