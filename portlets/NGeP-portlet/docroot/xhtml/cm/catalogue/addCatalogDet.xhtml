@@ -48,7 +48,7 @@
 					</p:commandButton>
 				</div>
 
-			<h:panelGroup rendered="#{unspscCodeBackingBean.catalogueAdmin}">
+			<h:panelGroup rendered="#{unspscCodeBackingBean.catalogueAdmin and catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus!='U'}">
 
 				<p:commandButton value="Approve" icon="ui-icon-approve"
 					action="#{reviewCatBackingBean.approveCatalogueItem}"></p:commandButton>
