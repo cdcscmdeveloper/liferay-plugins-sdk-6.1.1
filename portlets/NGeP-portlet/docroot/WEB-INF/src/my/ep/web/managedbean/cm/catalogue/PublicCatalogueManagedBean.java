@@ -41,6 +41,7 @@ public class PublicCatalogueManagedBean extends BaseManagedBean {
 	private BigDecimal priceForm;
 	private BigDecimal priceTo;
 	private String familyCode;
+	private String commodityCode;
 	private List<String> familyCodeList;
 	private List<SelectItem> brandCriteria;
 	private Long brandId;
@@ -205,6 +206,14 @@ public class PublicCatalogueManagedBean extends BaseManagedBean {
 
 	public void setCloneItemNames(List<String> cloneItemNames) {
 		this.cloneItemNames = cloneItemNames;
+	}
+
+	public String getCommodityCode() {
+		return commodityCode;
+	}
+
+	public void setCommodityCode(String commodityCode) {
+		this.commodityCode = commodityCode;
 	}
 
 	
