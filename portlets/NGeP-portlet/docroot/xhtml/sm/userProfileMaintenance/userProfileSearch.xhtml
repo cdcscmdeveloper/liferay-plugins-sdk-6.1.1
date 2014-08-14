@@ -87,7 +87,7 @@
 	    <p:column headerText="#{lbl['lbl.sm.userprofile.action']}" >
 	    	<p:commandLink title="Edit" ajax="false"
 					action="#{smPersonnelBackingBean.navigateToUpdateUserPage(personnel.personnelId)}">
-				<p:graphicImage value="/resources/ep/images/design/edit.png"></p:graphicImage>
+				<p:graphicImage value="/css/images/design/edit.png"></p:graphicImage>
 			</p:commandLink>
 		</p:column>
      </p:dataTable>
@@ -95,10 +95,13 @@
 	
 	<p:panel>
 	<h:panelGrid columns="2" style="width:100%;" styleClass="noBorders tr,noBorders td">
-      <p:commandButton value="Add New User" oncomplete="confirmDialog.show();" style="float:right;" icon="ui-icon-add">
-	  </p:commandButton>
-	  
-	   	
+    
+    	<p:commandButton value="Add New User" oncomplete="confirmDialog.show();" style="float:right;" icon="ui-icon-add" disabled="#{smPersonnelBackingBean.managedBean.disableAddNewUser}">
+		</p:commandButton>
+		<p:graphicImage id="uidti" value="/css/images/design/tooltips.png" style="float:right;"/>
+		<p:tooltip id="uidtt" for="uidti">
+			<p:outputLabel escape="false" value="#{lbl['lbl.sm.userprofile.search.userlimit']}"  />
+		</p:tooltip>
 	 </h:panelGrid>	
 	 </p:panel>
 </h:panelGrid>
@@ -108,7 +111,7 @@
 	     <table>
 	    	<tr>
 	    	<td>
-	    	<p:outputLabel value="Add new Login/Online user for Basic account. Maximum 4 users can be added as Supplier Basic User. Do you wish to continue?" />
+	    	<p:outputLabel value="Add new Login/Online user for Basic account. Maximum 5 users can be added. Do you wish to continue?" />
 	    	</td>
 	    	</tr>
 	    	<tr>

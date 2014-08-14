@@ -85,6 +85,7 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		this.getManagedBean().setSearchCompanyRole(null);
 		this.getManagedBean().setSearchEPRole(null);
 		this.getManagedBean().setSearchUsername(null);
+		getManagedBean().setDisableAddNewUser(validatePersonLimit());
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, "userProfileSearch.xhtml");
@@ -198,17 +199,20 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 
 	private boolean validatePersonLimit() {
 		boolean validPerCount = true;
-		int authPerCount = 0;
-		List<SmPersonnel> personnels = getManagedBean().getUpdateSmPersonnel().getSmAppl().getSmPersonnels();
-		for (SmPersonnel per : personnels) {
-			if (per.getAuthorizedFlg() == 1) {
-				authPerCount++;
-			}
-		}
-		if (authPerCount == 2) {
+
+		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+		reqDTO.setSmSupplierId(getManagedBean().getUpdateSmPersonnel().getSmAppl().getSmSupplier().getSupplierId());
+
+		IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate
+				.getInstance().getServiceObject("sm", IPersonnelSO.class);
+		PersonnelResDTO resDTO = smPersonnelSO.retrievePersonnelCountForSuppUserMaint(reqDTO);
+
+		if(resDTO.getSmPersonnelList() != null && resDTO.getSmPersonnelList().size() < 5){
 			validPerCount = false;
-			throw new EpException(MessageConst.ERROR_722520);
+		} else {
+			validPerCount = true;
 		}
+		
 		return validPerCount;
 	}
 

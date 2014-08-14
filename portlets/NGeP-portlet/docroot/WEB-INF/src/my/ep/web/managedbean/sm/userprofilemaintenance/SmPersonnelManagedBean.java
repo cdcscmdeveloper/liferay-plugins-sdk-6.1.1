@@ -89,6 +89,8 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	
 	private List<SelectItem> searchRoleList;
 
+	private boolean disableAddNewUser;
+	
 	public SmPersonnelManagedBean() {
 		// TODO Auto-generated constructor stub
 		super();
@@ -386,6 +388,14 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 
 	public void setSearchRoleList(List<SelectItem> searchRoleList) {
 		this.searchRoleList = searchRoleList;
+	}
+
+	public boolean isDisableAddNewUser() {
+		return disableAddNewUser;
+	}
+
+	public void setDisableAddNewUser(boolean disableAddNewUser) {
+		this.disableAddNewUser = disableAddNewUser;
 	}
 
 	
