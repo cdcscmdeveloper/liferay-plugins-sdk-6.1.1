@@ -76,7 +76,7 @@
 							update="@([id$=sitevisitdtlid])"
 							value="#{lbl['lbl.so.addtositevisit']}" icon="ui-icon-add"
 							process="@this, briefingdtlid" partialSubmit="true"
-							actionListener="#{qTBriefingSiteVisitBackingBean.addToSiteVisitDtl}"
+							actionListener="#{qTBriefingSiteVisitBackingBean.addToSiteVisitDtl(bsvdtlbean)}"
 							rendered="#{bsvdtlbean.scQtBsv.sameBsv eq 'fasle'}" />
 					</h:panelGroup>
 					<p:commandButton id="briefingaddid" value="#{lbl['lbl.so.addbtn']}"
@@ -86,7 +86,7 @@
 						icon="ui-icon-add" />
 
 					<p:commandButton value="#{lbl['lbl.so.delete']}"
-						icon="ui-icon-delete"
+						icon="ui-icon-delete" process="briefingdtlid" partialSubmit="true"
 						action="#{qTBriefingSiteVisitBackingBean.deleteBsvDetails('B')}"
 						update= "@([id$=briefingdtlid])" />
 				</div>
