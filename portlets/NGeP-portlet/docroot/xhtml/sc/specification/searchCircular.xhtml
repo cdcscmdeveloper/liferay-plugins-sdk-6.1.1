@@ -11,11 +11,11 @@
 	<ui:include
 		src="/xhtml/sc/presentationDemo/presentationDemoHeader.xhtml"></ui:include>
 	<p:panel>
-		<table>
+		<table style="width: 60%">
 			<tr>
-				<td  valign="top"><p:outputLabel
+				<td  valign="top" style="width: 40%"><p:outputLabel
 						value="#{lbl['lbl.sc.spec.stage.title']}" /></td>
-				<td ><p:inputTextarea readonly="true" rows="2" cols="100" style="width:100%;"
+				<td ><p:inputTextarea readonly="true" rows="2" cols="100" 
 						value="#{specificationBackingBean.managedBean.scQt.qtTitle}"
 						disabled="true"></p:inputTextarea></td>
 			</tr>

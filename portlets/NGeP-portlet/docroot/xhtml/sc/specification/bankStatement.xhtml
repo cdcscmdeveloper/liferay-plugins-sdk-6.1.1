@@ -68,19 +68,14 @@
 
 							<p:inputText readonly="true"
 								value="#{specificationBackingBean.managedBean.bankstmntTomonth}"></p:inputText>
-							<p:selectOneMenu readOnly="true"
-								value="#{specificationBackingBean.managedBean.endYear}">
 
-								<f:selectItem
-									itemLabel="#{specificationBackingBean.managedBean.endYear}"
-									itemValue="#{specificationBackingBean.managedBean.endYear}">
-								</f:selectItem>
-							</p:selectOneMenu>
+							<p:inputText readonly="true"
+								value="#{specificationBackingBean.managedBean.endYear}"></p:inputText>
 						</h:panelGroup></td>
 				</tr>
 			</table>
 			<h:panelGroup id="bankInfo">
-				
+
 				<p:dataTable id="specbank" var="banking"
 					rendered="#{specificationBackingBean.managedBean.toMonth !=null}"
 					value="#{specificationBackingBean.managedBean.bankList}"
