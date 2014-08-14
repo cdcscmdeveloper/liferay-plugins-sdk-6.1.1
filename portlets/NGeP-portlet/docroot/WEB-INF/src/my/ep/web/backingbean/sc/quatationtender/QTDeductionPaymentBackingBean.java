@@ -9,6 +9,7 @@ import javax.faces.bean.ViewScoped;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
@@ -23,6 +24,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
 import org.primefaces.event.SelectEvent;
+import org.primefaces.event.UnselectEvent;
 
 /**
  * @author Sudheer Kumar
@@ -130,5 +132,13 @@ public class QTDeductionPaymentBackingBean extends
 		}
 		deduction.setScQtDeductionClauses(deductionCluases);
 		this.getManagedBean().setSelectedScQtDeduction(deduction);
+	}
+	
+	public void rowUnselectEvent(UnselectEvent selectEvent) {
+		ScQtDeduction deduction = (ScQtDeduction) selectEvent.getObject();
+		if(ParameterConst.DEDUCTION_TYPE_OTHERS.equalsIgnoreCase(deduction.getDeductionType().getParameterCode())){
+			
+		}
+		
 	}
 }
