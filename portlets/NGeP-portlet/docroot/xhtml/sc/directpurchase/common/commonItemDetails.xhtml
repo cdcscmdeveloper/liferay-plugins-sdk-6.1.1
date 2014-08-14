@@ -84,7 +84,7 @@
 					</f:facet>
 				
 				   <p:selectOneMenu value="#{requestNoteDtl.scRequestSupplierItem.supplierItemId}" 
-				        id="recSupplier" label="#{lbl['lbl.sc.request.note.rec.suppier']}"
+				        id="recSupplier" label="#{lbl['lbl.sc.request.note.rec.suppier']}" disabled="#{requestNoteDtl.requestItem.quote ne null and requestNoteDtl.requestItem.quote.multipleQuote eq 'true'}"
 				        style="width:125px;" required="#{!requestNoteDtl.selected}">  
 					   <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 					   <f:selectItems
