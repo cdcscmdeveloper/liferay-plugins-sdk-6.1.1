@@ -9,7 +9,7 @@
 		<table style="width: 100%">
 			<tr>
 				<td style="width: 117px;"><p:outputLabel
-						value="2222222222222222222222222222222 #{lbl['lbl.fl.ministry']}" /></td>
+						value="#{lbl['lbl.fl.ministry']}" /></td>
 				<td><p:inputText size="50" id="ministry"
 						value="#{flOrderBB.managedBean.flRequest.issuedOrgProfile.parentOrgProfile.orgName}"
 						disabled="true" /></td>
@@ -92,14 +92,8 @@
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.factored']} " /></td>
-				<td><p:selectOneRadio disabled="#{flOrderBB.managedBean.buttonVal!=null}" 
-						value="#{flOrderBB.managedBean.factoringCheck}">
-						<f:selectItem itemLabel="Yes" itemValue="true" />
-						<f:selectItem itemLabel="No" itemValue="false" />
-						<p:ajax event="change" process="@this"
-							listener="#{flOrderBB.factoringChecked}" update="@(.factStyle)"
-							partialSubmit="true" />
-					</p:selectOneRadio></td>
+				<td><p:selectBooleanCheckbox disabled="true"
+									value="#{flOrderBB.managedBean.fulfilmentOrder.factored}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.end.delivery.date']}" /></td>
@@ -181,38 +175,19 @@
 	</p:panel>
 	<h:panelGroup styleClass="factStyle" id="factStyle">
 		<p:panel header="FACTORING DETAILS" toggleable="true" id="factoringCompPnl"
-			rendered="#{flOrderBB.managedBean.factoringCheck eq 'true'}">
+			rendered="#{flOrderBB.managedBean.fulfilmentOrder.factored}">
 			<table style="width: 100%">
 				<tr>
 					<td style="width: 117px;"><p:outputLabel
 							value="#{lbl['lbl.fl.supp.fact.com']}" /></td>
-					<td><p:selectOneMenu id="factoringComp" 
-					value="#{flOrderBB.managedBean.fulfilmentOrder.pmFinancialOrg.financialOrgId}" 
-					style="width: 325px;margin-bottom:5px;">
-							<f:selectItem itemLabel="-- Select -- " itemValue="" />
-							<f:selectItems var="factoringComp"
-							value="#{flOrderBB.managedBean.pmFinancialOrgs}"
-							itemLabel="#{factoringComp.finOrgName}"
-							itemValue="#{factoringComp.financialOrgId}" />
-						<p:ajax event="change"
-							listener="#{flOrderBB.getSelectedFactoringCompDtl}"
-							update="factoringCompPnl" />
-						</p:selectOneMenu></td>
+					<td><p:inputText disabled="true" size="53"
+						value="#{flOrderBB.managedBean.fulfilmentOrder.pmFinancialOrg.finOrgName}" /></td>
 				</tr>
 				<tr>
 					<td style="width: 117px;"><p:outputLabel
 							value="#{lbl['lbl.fl.supp.fact.branch']}" /></td>
-					<td><p:selectOneMenu id="factoringBranch" disabled="#{empty flOrderBB.managedBean.factoringBranchList}"
-					value="#{flOrderBB.managedBean.fulfilmentOrder.pmFinancialBranch.financialBranchId}" style="width: 325px;margin-bottom:5px;">
-							<f:selectItem itemLabel="-- Select -- " itemValue="" />
-							<f:selectItems var="factoringBranch"
-							value="#{flOrderBB.managedBean.factoringBranchList}"
-							itemLabel="#{factoringBranch.branchName}"
-							itemValue="#{factoringBranch.financialBranchId}" />
-						<p:ajax event="change"
-							listener="#{flOrderBB.getSelectedFactoringBranchDtl}"
-							update="factoringCompPnl" />
-						</p:selectOneMenu></td>
+					<td><p:inputText size="45" disabled="true"
+						value="#{flOrderBB.managedBean.fulfilmentOrder.pmFinancialBranch.pmFinancialOrg.finOrgName}" /></td>
 				</tr>
 				<tr>
 					<td valign="top"><p:outputLabel
