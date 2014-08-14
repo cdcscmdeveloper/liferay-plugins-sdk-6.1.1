@@ -100,7 +100,7 @@
          </h:panelGrid>
           <h:panelGrid columns="2">
 		      <p:selectOneMenu id="factoringId" disabled="#{supplierBackingBean.managedBean.removeFactoring}" required="true"
-		        style="width:210px;"  label="Factoring Company"  value="#{supplierBackingBean.managedBean.factoring.financialOrg.financialOrgId}">
+		        style="width:260px;"  label="Factoring Company"  value="#{supplierBackingBean.managedBean.factoring.financialOrg.financialOrgId}">
                    <f:selectItems value="#{supplierBackingBean.retrieveFinancialOrgList()}" /> 
                   <p:ajax event="change" process="@this" update="branchId,bankName,accNo,clausePanel" listener="#{supplierBackingBean.reset}"/>
                </p:selectOneMenu>
