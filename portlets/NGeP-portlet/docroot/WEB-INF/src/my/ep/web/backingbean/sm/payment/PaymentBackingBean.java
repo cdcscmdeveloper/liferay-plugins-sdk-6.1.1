@@ -357,10 +357,16 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 
 				//PortalUtil.getHttpServletRequest(new FacesScopes().getRequest()).getSession().setAttribute("paymentTaskId", this.getManagedBean().getTaskId());
 				//PortalUtil.getHttpServletRequest(new FacesScopes().getRequest()).getSession().setAttribute("paymentBpmPojo", this.getManagedBean().getBpmPojo());
-				PortletSession portletSession = (PortletSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
+//				PortletSession portletSession = (PortletSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
+//				portletSession.setAttribute("paymentTaskId", this.getManagedBean().getTaskId(),PortletSession.APPLICATION_SCOPE);
+//				portletSession.setAttribute("paymentBpmPojo", this.getManagedBean().getBpmPojo(),PortletSession.APPLICATION_SCOPE);
+				
+				PortletSession portletSession = new FacesScopes().getRequest().getPortletSession();
+				portletSession.setAttribute("paymentTaskIdSess", this.getManagedBean().getTaskId());
+				portletSession.setAttribute("paymentBpmPojoSess", this.getManagedBean().getBpmPojo());
+				
 				portletSession.setAttribute("paymentTaskId", this.getManagedBean().getTaskId(),PortletSession.APPLICATION_SCOPE);
 				portletSession.setAttribute("paymentBpmPojo", this.getManagedBean().getBpmPojo(),PortletSession.APPLICATION_SCOPE);
-				
 				
 				this.getManagedBean().setOrderId(resDTO.getSmBill().getSmPayments().get(0).getPaymentId());
 				this.getManagedBean().setBillMobile(pmUser.getMobileNo());
@@ -378,12 +384,14 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 				//String taskId = (String)PortalUtil.getHttpServletRequest(new FacesScopes().getRequest()).getSession().getAttribute("paymentTaskId");
 				//Object bpmPojo = (Object)PortalUtil.getHttpServletRequest(new FacesScopes().getRequest()).getSession().getAttribute("paymentBpmPojo");
 				
-				String taskId = (String)portletSession.getAttribute("paymentTaskId");
-				Object bpmPojo = (Object)portletSession.getAttribute("paymentBpmPojo");
+				String taskId = (String)portletSession.getAttribute("paymentTaskId",PortletSession.APPLICATION_SCOPE);
+				Object bpmPojo = (Object)portletSession.getAttribute("paymentBpmPojo",PortletSession.APPLICATION_SCOPE);
 						
 				System.out.println("*****taskId*****" + taskId);
 				System.out.println("*****bpmPojo*****" + bpmPojo);
 				
+				System.out.println("*****PortletSession taskId*****" + portletSession.getAttribute("paymentTaskIdSess"));
+				System.out.println("*****PortletSession bpmPojo*****" + portletSession.getAttribute("paymentBpmPojoSess"));
 				return "paymentRequestSubmission";
 			//}
 		}
@@ -392,17 +400,24 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 	}
 	
 	public void responsePreRender() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
-		//String taskId = (String)PortalUtil.getHttpServletRequest(new FacesScopes().getRequest()).getSession().getAttribute("paymentTaskId");
-		//Object bpmPojo = (Object)PortalUtil.getHttpServletRequest(new FacesScopes().getRequest()).getSession().getAttribute("paymentBpmPojo");
 		
-		PortletSession portletSession = (PortletSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
+		//httpServlet
+		String taskIdServlet = (String)PortalUtil.getHttpServletRequest(new FacesScopes().getRequest()).getSession().getAttribute("paymentTaskId");
+		Object bpmPojoServlet = (Object)PortalUtil.getHttpServletRequest(new FacesScopes().getRequest()).getSession().getAttribute("paymentBpmPojo");
+		System.out.println("*********taskIdServlet********" + taskIdServlet);
+		System.out.println("*********bpmPojoServlet********" + bpmPojoServlet);
+		PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
+	
+		PortletSession portletSession = new FacesScopes().getRequest().getPortletSession();
 		String taskId = (String)portletSession.getAttribute("paymentTaskId", PortletSession.APPLICATION_SCOPE);
 		Object bpmPojo = (Object)portletSession.getAttribute("paymentBpmPojo",PortletSession.APPLICATION_SCOPE);
 
-		
 		log.info("************responsePreRender Start********");
 		log.info("-----------BPM TaskId-----------" + taskId);
 		log.info("-----------BPM POJO-----------" + bpmPojo);
+		
+		System.out.println("*****PortletSession taskId*****" + portletSession.getAttribute("paymentTaskIdSess"));
+		System.out.println("*****PortletSession bpmPojo*****" + portletSession.getAttribute("paymentBpmPojoSess"));
 		
 		this.getManagedBean().setTaskId(taskId);
 		this.getManagedBean().setBpmPojo(bpmPojo);
