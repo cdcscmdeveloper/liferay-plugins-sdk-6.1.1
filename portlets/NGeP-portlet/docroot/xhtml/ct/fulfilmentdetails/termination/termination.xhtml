@@ -129,7 +129,7 @@
 			  <p:spacer width="2" />
 			  <p:commandLink value="View Notice" update="editorDisplay" action="#{terminationBackingBean.previewNoticeAction}"
 			  	rendered="#{terminationBackingBean.managedBean.termination || terminationBackingBean.managedBean.remedy || terminationBackingBean.managedBean.mutualTermination}" 
-			  	oncomplete="noticeDlg.show()"/>
+			  	oncomplete="if (args &amp;&amp; !args.validationFailed) noticeDlg.show()"/>
 		  </h:panelGrid>
 		  
 		  <h:panelGrid columns="2" style="float:right;">

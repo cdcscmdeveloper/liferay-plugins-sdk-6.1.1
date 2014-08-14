@@ -1,0 +1,34 @@
+<html>
+   <head>
+      <style>
+         @page { size: A4 portrait;}
+         .footer {
+         display: block; text-align: center;
+         position: running(footer);
+         }
+      </style>
+   </head>
+   <body>
+      <strong>APPENDIKS: RINGKASAN KONTRAK</strong><br/><br/>
+      Terma-terma yang dipersetujui sebagai sebahagian dari terma terma kontrak<br/><br/>
+      i. No Rujukan $fileNo $sourcingNo<br/>
+      ii. Skop / Tajuk $sourcingTitle<br/>
+      iii. Pembekal $successfulSupplierName<br/>
+      iv. Nilai Kontrak Asal $contractValue<br/>
+      iv. Nilai Baru KontrakTambahan $newContractValue<br/>
+      xx. Jenis Pemenuhan $fulfillmentType<br/>
+      xx. Jadual Penghantaran Refer Attachment <br/>
+      xx. Potongan Pembayaran $deductionAmount **applicable for fixed deduction only<br/>
+      vi.  Tempoh Kontrak Asal $months <br/>
+      $effstartDate $effEndDate<br/>
+      vii. Tempoh Kontrak Tambahan $months<br/>
+      $amendEffExpDate<br/>
+      viii. Effective Date<br/>
+      $effDate<br/>
+      vii. Nilai Bon Pelaksanaan Asal $bondValue<br/>
+      vii. Nilai Baru Bon Pelaksanaan $bondValue<br/>
+      viii. Spesifikasi Tugas / Skop Kerja Refer Attachment<br/>
+      xx. Cara Pembayaran : Secara Elektronik iaitu menggunakan Sistem eperolehan (eP)<br/>
+      xx. Lain-lain Terma Refer Attachment
+   </body>
+</html>

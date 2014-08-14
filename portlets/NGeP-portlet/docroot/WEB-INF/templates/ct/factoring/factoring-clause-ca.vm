@@ -1,0 +1,22 @@
+<html>
+   <head>
+      <style>
+         @page { size: A4 portrait;}
+         .footer {
+         display: block; text-align: center;
+         position: running(footer);
+         }
+      </style>
+   </head>
+   <body>
+      <div>i)<span class="Apple-tab-span" style="white-space:pre">	</span>Tertakluk kepada syarat-syarat yang tersebut di atas, kami bersetuju untuk membuat bayaran seperti yang diarahkan.<div>
+      <div><br/></div>
+      <div>ii)<span class="Apple-tab-span" style="white-space:pre">	</span>Tertakluk kepada syarat-syarat yang tersebut di atas, kami bersetuju supaya semua bayaran bagi Kontrak No $contractNo dibuat terus kepada $factoringCompName A/C No. $factoringAccountNo (dengan syarat rujukan akaun ini dicatatkan di atas tiap-tiap inbois, sijil akuan penerimaan dan bil-bil)</div>
+      <div><br/></div>
+      <div>Nama : $contractAdminName</div>
+      <div><br/></div>
+      <div>Jawatan : $contractAdminDesignation</div>
+      <div><br/></div>
+      <div>Jabatan/Kementerian : $jabatanMinistry</div>
+   </body>
+</html>

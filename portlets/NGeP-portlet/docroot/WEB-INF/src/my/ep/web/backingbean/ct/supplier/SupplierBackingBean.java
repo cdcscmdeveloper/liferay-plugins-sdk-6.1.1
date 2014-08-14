@@ -95,9 +95,11 @@ import my.ep.web.managedbean.ct.supplier.SupplierManagedBean;
 import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.template.DocumentGenerator;
 
 import org.apache.commons.lang.text.StrSubstitutor;
 import org.apache.log4j.Logger;
+import org.apache.velocity.VelocityContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
@@ -787,67 +789,129 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		}
 	}
 	
-	public void previewAction() throws UnsupportedEncodingException {
-		IContractTemplateSO contractTemplateSO = null;
-		Calendar cal = Calendar.getInstance();
-	     log.info("SupplierBackingBean: Performance Testing previewAction Function: Time taken to start >>>>"+ cal.getTime());
+//	public void previewAction() throws UnsupportedEncodingException {
+//		IContractTemplateSO contractTemplateSO = null;
+//		Calendar cal = Calendar.getInstance();
+//	     log.info("SupplierBackingBean: Performance Testing previewAction Function: Time taken to start >>>>"+ cal.getTime());
+//	
+//		try {
+//			contractTemplateSO = (IContractTemplateSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractTemplateSO.class);
+//			ContractTemplateReqDTO reqDTO = new ContractTemplateReqDTO();
+//			if(getUserRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value()) || getUserRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.value())
+//				|| getUserRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_USER.value()) || getUserRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_ADMIN.value())) {
+//				reqDTO.setTemplateName(ContractConst.TEMPLATE_FACTORING_CLAUSE_SUPPLIER);	
+//			} else if(getUserRole().equalsIgnoreCase(RoleCode.MIN_CONTRACT_ADMIN.value()) || getUserRole().equalsIgnoreCase(RoleCode.BPK_CCA.value())) {
+//				reqDTO.setTemplateName(ContractConst.TEMPLATE_FACTORING_CLAUSE_CA);	
+//			}
+//			
+//			ContractTemplateResDTO resDTO = contractTemplateSO.retrieveTemplateByName(reqDTO);
+//			setEditorValue("");
+//			if(resDTO.getCtTemplate()!=null) {
+//				SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+//				String content = new String(resDTO.getCtTemplate().getContent(), "UTF-8");
+//				
+//				Map<String, String> valuesMap = new HashMap<String, String>();
+//				valuesMap.put("FACTORING_COMP_NAME", getFactoringCompany());
+//				valuesMap.put("FACTORING_ACCOUNT_NO", getManagedBean().getAccountNo());
+//				
+//				if(reqDTO.getTemplateName().equalsIgnoreCase(ContractConst.TEMPLATE_FACTORING_CLAUSE_SUPPLIER)) {
+//					valuesMap.put("CURRENT_DATE", df.format(new Date()));
+//					valuesMap.put("FACTORING_BANK_NAME", getManagedBean().getFactoringBankName());
+//					valuesMap.put("FACTORING_BANK_ADDRESS", getManagedBean().getFactoringBankAddress());
+//					valuesMap.put("SUPPLIER_OFFICER_NAME", getFacesScopes().getUserSessionBean().getUserName());
+//					valuesMap.put("SUPPLIER_OFFICER_DESIGNATION", getFacesScopes().getUserSessionBean().getDesignation());
+//				}
+//				
+//				if(reqDTO.getTemplateName().equalsIgnoreCase(ContractConst.TEMPLATE_FACTORING_CLAUSE_CA)) {
+//					valuesMap.put("CONTRAT_ADMIN_NAME", getFacesScopes().getUserSessionBean().getUserName());
+//					valuesMap.put("CONTRACT_ADMIN_DESIGNATION", getFacesScopes().getUserSessionBean().getDesignation());
+//					String jabatanMinistry = null;
+//						if(getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile()==null) {
+//							jabatanMinistry = getManagedBean().getCtContract().getOwnerOrgProfile().getOrgName();
+//						}
+//						else {
+//							jabatanMinistry = getManagedBean().getCtContract().getOwnerOrgProfile().getOrgName() + " / " + getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getOrgName();
+//						}
+//								
+//					valuesMap.put("JABATAN_MINISTRY", jabatanMinistry);
+//					if(getManagedBean().getCtContract().getContractPhysicalNo()==null) {
+//						valuesMap.put("CONTRACT_PHYSICAL_NO",getManagedBean().getCtContract().getContractNo());
+//					} else {
+//						valuesMap.put("CONTRACT_PHYSICAL_NO",getManagedBean().getCtContract().getContractPhysicalNo());
+//					}
+//					valuesMap.put("CONTRACT_NO",getManagedBean().getCtContract().getContractNo());
+//				}
+//				
+//				StrSubstitutor sub = new StrSubstitutor(valuesMap);
+//				setEditorValue(sub.replace(content));
+//			}
+//		} finally {
+//			contractTemplateSO = null;
+//			log.info("SupplierBackingBean: Performance Testing previewAction Function: Time taken to End >>>>"+ Calendar.getInstance().getTime());
+//			log.info("SupplierBackingBean: Performance Testing previewAction Function: Total Time taken (Second) >>>>"+ (Calendar.getInstance().getTime().getTime() - cal.getTime().getTime()) / 1000);
+//		}
+//	}
 	
-		try {
-			contractTemplateSO = (IContractTemplateSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractTemplateSO.class);
-			ContractTemplateReqDTO reqDTO = new ContractTemplateReqDTO();
+	public void previewAction() {		  
+		VelocityContext context = null;
+		String vmFile = null;
+		String content = null;
+		String templateName = null;
+		try {			
+			context = new VelocityContext();	
 			if(getUserRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value()) || getUserRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.value())
 				|| getUserRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_USER.value()) || getUserRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_ADMIN.value())) {
-				reqDTO.setTemplateName(ContractConst.TEMPLATE_FACTORING_CLAUSE_SUPPLIER);	
+				vmFile = "/ct/factoring/factoring-clause-supplier.vm";
+				templateName = ContractConst.TEMPLATE_FACTORING_CLAUSE_SUPPLIER;
 			} else if(getUserRole().equalsIgnoreCase(RoleCode.MIN_CONTRACT_ADMIN.value()) || getUserRole().equalsIgnoreCase(RoleCode.BPK_CCA.value())) {
-				reqDTO.setTemplateName(ContractConst.TEMPLATE_FACTORING_CLAUSE_CA);	
-			}
-			
-			ContractTemplateResDTO resDTO = contractTemplateSO.retrieveTemplateByName(reqDTO);
+				vmFile = "/ct/factoring/factoring-clause-ca.vm";
+				templateName = ContractConst.TEMPLATE_FACTORING_CLAUSE_CA;	
+			}			
+	
 			setEditorValue("");
-			if(resDTO.getCtTemplate()!=null) {
-				SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
-				String content = new String(resDTO.getCtTemplate().getContent(), "UTF-8");
+			if(vmFile !=null && templateName != null) {
+				SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);		
+				context.put("factoringCompName", getFactoringCompany());
+				context.put("factoringAccountNo", getManagedBean().getAccountNo());
 				
-				Map<String, String> valuesMap = new HashMap<String, String>();
-				valuesMap.put("FACTORING_COMP_NAME", getFactoringCompany());
-				valuesMap.put("FACTORING_ACCOUNT_NO", getManagedBean().getAccountNo());
-				
-				if(reqDTO.getTemplateName().equalsIgnoreCase(ContractConst.TEMPLATE_FACTORING_CLAUSE_SUPPLIER)) {
-					valuesMap.put("CURRENT_DATE", df.format(new Date()));
-					valuesMap.put("FACTORING_BANK_NAME", getManagedBean().getFactoringBankName());
-					valuesMap.put("FACTORING_BANK_ADDRESS", getManagedBean().getFactoringBankAddress());
-					valuesMap.put("SUPPLIER_OFFICER_NAME", getFacesScopes().getUserSessionBean().getUserName());
-					valuesMap.put("SUPPLIER_OFFICER_DESIGNATION", getFacesScopes().getUserSessionBean().getDesignation());
+				if(ContractConst.TEMPLATE_FACTORING_CLAUSE_SUPPLIER.equalsIgnoreCase(templateName)) {
+					context.put("currentDate", df.format(new Date()));
+					context.put("factoringBankName", getManagedBean().getFactoringBankName());
+					context.put("factoringBankAddress", getManagedBean().getFactoringBankAddress());
+					context.put("supplierOfficerName", getFacesScopes().getUserSessionBean().getUserName());
+					context.put("supplierOfficerDesignation", getFacesScopes().getUserSessionBean().getDesignation());
 				}
 				
-				if(reqDTO.getTemplateName().equalsIgnoreCase(ContractConst.TEMPLATE_FACTORING_CLAUSE_CA)) {
-					valuesMap.put("CONTRAT_ADMIN_NAME", getFacesScopes().getUserSessionBean().getUserName());
-					valuesMap.put("CONTRACT_ADMIN_DESIGNATION", getFacesScopes().getUserSessionBean().getDesignation());
+				if(ContractConst.TEMPLATE_FACTORING_CLAUSE_CA.equalsIgnoreCase(templateName)) {
+					context.put("contractAdminName", getFacesScopes().getUserSessionBean().getUserName());
+					context.put("contractAdminDesignation", getFacesScopes().getUserSessionBean().getDesignation());
 					String jabatanMinistry = null;
-						if(getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile()==null) {
-							jabatanMinistry = getManagedBean().getCtContract().getOwnerOrgProfile().getOrgName();
-						}
-						else {
-							jabatanMinistry = getManagedBean().getCtContract().getOwnerOrgProfile().getOrgName() + " / " + getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getOrgName();
-						}
-								
-					valuesMap.put("JABATAN_MINISTRY", jabatanMinistry);
-					if(getManagedBean().getCtContract().getContractPhysicalNo()==null) {
-						valuesMap.put("CONTRACT_PHYSICAL_NO",getManagedBean().getCtContract().getContractNo());
-					} else {
-						valuesMap.put("CONTRACT_PHYSICAL_NO",getManagedBean().getCtContract().getContractPhysicalNo());
+					if(getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile()==null) {
+					   jabatanMinistry = getManagedBean().getCtContract().getOwnerOrgProfile().getOrgName();
 					}
-					valuesMap.put("CONTRACT_NO",getManagedBean().getCtContract().getContractNo());
+					else {
+					   jabatanMinistry = getManagedBean().getCtContract().getOwnerOrgProfile().getOrgName() + " / " + getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getOrgName();
+					}
+								
+					context.put("jabatanMinistry", jabatanMinistry);
+					if(getManagedBean().getCtContract().getContractPhysicalNo()==null) {
+						context.put("contractPhysicalNo",getManagedBean().getCtContract().getContractNo());
+					} else {
+						context.put("contractPhycicalNo",getManagedBean().getCtContract().getContractPhysicalNo());
+					}
+					context.put("contractNo",getManagedBean().getCtContract().getContractNo());
 				}
 				
-				StrSubstitutor sub = new StrSubstitutor(valuesMap);
-				setEditorValue(sub.replace(content));
+				if (vmFile != null && context != null) {
+					content = DocumentGenerator.getInstance().getHtmlFromVelocity(
+							vmFile, context);
+				}				
+				setEditorValue(content);
+				
 			}
-		} finally {
-			contractTemplateSO = null;
-			log.info("SupplierBackingBean: Performance Testing previewAction Function: Time taken to End >>>>"+ Calendar.getInstance().getTime());
-			log.info("SupplierBackingBean: Performance Testing previewAction Function: Total Time taken (Second) >>>>"+ (Calendar.getInstance().getTime().getTime() - cal.getTime().getTime()) / 1000);
-		}
+		}  catch (Exception e) {
+			throw new EpException(e.toString());
+		} 
 	}
 
 	public String getPortletTitle() {

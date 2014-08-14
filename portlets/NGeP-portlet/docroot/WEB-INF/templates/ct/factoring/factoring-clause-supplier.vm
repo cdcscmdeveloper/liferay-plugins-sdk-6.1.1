@@ -1,0 +1,40 @@
+<html>
+   <head>
+      <style>
+         @page { size: A4 portrait;}
+         .footer {
+         display: block; text-align: center;
+         position: running(footer);
+         }
+      </style>
+   </head>
+   <body>
+      <div>Adalah dimaklumkan bahawa di dalam melaksanakan kontrak tersebut di atas, kami telah, melalui satu Perjanjian Pemfaktoran bertarikh $currentDate mendapat perkhidmatan pemfaktoran daripada $factoringCompName. Melalui perkhidmatan pemfaktoran tersebut, kami akan memfaktorkan inbois jualan kami di bawah kontrak tersebut kepada $factoringCompName. Setiap inbois yang terlibat akan dicopkan seperti berikut:-</div>
+      <div><br/></div>
+      <div>Inbois ini telah dijual dan pindahmilik kepada $factoringCompName.</div>
+      <div><br/></div>
+      <div>Sila bayar terus kepada:</div>
+      <div><br/></div>
+      <div>$factoringCompName</div>
+      <div>$factoringBankName</div>
+      <div>$factoringBankAddress</div>
+      <div>$factoringAccountNo</div>
+      <div><br/></div>
+      <div>2.<span class="Apple-tab-span" style="white-space:pre">	</span>Maka dengan ini kami, tertakluk kepada syarat-syarat mengenai pembayaran di bawah kontrak tersebut, membuat arahan agar segala bayaran yang perlu dibuat terhadap inbois-inbois tersebut hendaklah terus dibayar kepada $factoringCompName, sehingga arahan ini dibatalkan oleh kami secara bertulis dengan persetujuan syarikat pemfaktoran.</div>
+      <div><br/></div>
+      <div>3.<span class="Apple-tab-span" style="white-space:pre">	</span>Apa-apa bayaran yang dibuat oleh Kerajaan kepada $factoringCompName di bawah arahan ini hendaklah dianggap di sisi undang-undang seolah-olah bayaran itu dibuat kepada kami di bawah kontrak tersebut adalah merupakan satu penyelesaian yang cukup dan sah bagi tanggungan Kerajaan terhadap bayaran di bawah kontrak itu.</div>
+      <div><br/></div>
+      <div>4.<span class="Apple-tab-span" style="white-space:pre">	</span>Arahan bayaran tersebut tidaklah dengan apa juga cara memudaratkan atau menyentuh apa-apa hak Kerajaan terhadap kami di bawah kontrak tersebut.</div>
+      <div><br/></div>
+      <div>5.<span class="Apple-tab-span" style="white-space:pre">	</span>Kami dengan ini mengesahkan bahawa sebelum ini kami tidak pernah membuat arahan yang sama terhadap kontrak yang sama bagi faedah lain-lain syarikat pemfaktoran atau institusi-institusi kewangan yang lain.</div>
+      <div><br/></div>
+      <div><br/></div>
+      <div>Sekian. Terima kasih.</div>
+      <div><br/></div>
+      <div>Yang benar,</div>
+      <div><br/></div>
+      <div>.......................</div>
+      <div>Nama: $supplierOfficerName</div>
+      <div>Jawatan: $supplierOfficerDesignation</div>
+   </body>
+</html>

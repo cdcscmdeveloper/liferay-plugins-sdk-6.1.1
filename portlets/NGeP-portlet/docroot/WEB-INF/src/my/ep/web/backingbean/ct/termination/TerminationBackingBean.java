@@ -336,11 +336,11 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 			String imgUrl = getServerUrl()
 					+ "images/letter/gov.png";
 			if(getManagedBean().isTermination()) {				
-				vmFile = "/ct/termination-notice.vm";
+				vmFile = "/ct/termination/termination-notice.vm";
 			}else if(getManagedBean().isMutualTermination()) {
-				vmFile = "/ct/mutual-termination-notice.vm";
+				vmFile = "/ct/termination/mutual-termination-notice.vm";
 			}if(getManagedBean().isRemedy()) {			
-				vmFile = "/ct/remedy-notice.vm";
+				vmFile = "/ct/termination/remedy-notice.vm";
 			}
 			
 			getManagedBean().setEditorValue("");

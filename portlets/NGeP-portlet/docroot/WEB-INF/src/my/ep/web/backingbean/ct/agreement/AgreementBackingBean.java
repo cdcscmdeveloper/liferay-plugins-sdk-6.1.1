@@ -1387,7 +1387,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			String imgUrl = getServerUrl()
 					+ "NGeP-portlet/images/letter/gov.png";
 			context = new VelocityContext();
-			vmFile = "/ct/agreement-cover-page.vm";
+			vmFile = "/ct/agreement/agreement-cover-page.vm";
 			context.put("imgUrl", imgUrl);
 			context.put("contractTitle", getManagedBean().getCtContract()
 					.getQuotationTender().getQtTitle());
@@ -1439,7 +1439,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		} else if (ContractConst.TEMPLATE_AGREEMENT_PARTY
 				.equalsIgnoreCase(parameterCode)) {
 			context = new VelocityContext();
-			vmFile = "/ct/agreement-party.vm";
+			vmFile = "/ct/agreement/agreement-party.vm";
 			IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 							IAddressSO.class);
@@ -1489,7 +1489,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		} else if (ContractConst.TEMPLATE_AGREEMENT_SIGNING_PAGE
 				.equalsIgnoreCase(parameterCode)) {
 			context = new VelocityContext();
-			vmFile = "/ct/agreement-signing-page.vm";
+			vmFile = "/ct/agreement/agreement-signing-page.vm";
 			context.put("ctAgencySignerList", getManagedBean()
 					.getCtAgencySigner());
 			context.put("ctSignAgencyWitnessList", getManagedBean()

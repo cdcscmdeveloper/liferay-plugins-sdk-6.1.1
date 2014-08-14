@@ -1,0 +1,28 @@
+<html>
+   <head>
+      <style>
+         @page { size: A4 portrait;}
+         .footer {
+         display: block; text-align: center;
+         position: running(footer);
+         }
+      </style>
+   </head>
+   <body>
+      <table></table>
+      <font face="Arial, Verdana" size="2">SURAT AKUAN PEMBIDA Bagi $loaTitle</font>
+      <div style="font-family: Arial, Verdana; font-size: 10pt; font-style: normal; font-variant: normal; font-weight: normal; line-height: normal;"><br/></div>
+      <div>
+         <div><font face="Arial, Verdana" size="2">Saya, $supplierUserName nombor K.P. $supplierUserIcNo yang mewakili $supplierName nombor Pendaftaran</font></div>
+         <div><font face="Arial, Verdana" size="2">$supplierMofRegNo dengan ini mengisytiharkan bahawa saya atau mana-mana individu yang mewakili syarikat ini tidak akan menawar atau memberi rasuah kepada mana-mana individu dalam $ptjName atau mana-mana individu lain, sebagai sogokan untuk dipilih dalam $loaTitle seperti di atas. Bersama-sama ini dilampirkan Surat Perwakilan Kuasa bagi saya mewakili syarikat&nbsp;</font><span style="font-family: Arial, Verdana; font-size: small;">seperti tercatat di atas untuk membuat pengisytiharan ini.</span></div>
+         <div><font face="Arial, Verdana" size="2"><br/></font></div>
+         <div><font face="Arial, Verdana" size="2">2.<span class="Apple-tab-span" style="white-space:pre">	</span>Sekiranya saya atau mana-mana individu yang mewakili syarikat ini didapati bersalah menawar atau memberi rasuah kepada &nbsp; mana-mana individu dalam $ptjName</font><span style="font-family: Arial, Verdana; font-size: small;">&nbsp;atau mana-mana individu lain sebagai sogokan untuk dipilih dalam $loaTitle, maka saya sebagai wakil syarikat bersetuju t</span><span style="font-family: Arial, Verdana; font-size: small;">indakan-tindakan berikut diambil:</span></div>
+         <div><font face="Arial, Verdana" size="2"><br/></font></div>
+         <div><font face="Arial, Verdana" size="2">2.1<span class="Apple-tab-span" style="white-space:pre">	</span>penarikan balik tawaran kontrak bagi $loaTitle; atau</font></div>
+         <div><font face="Arial, Verdana" size="2">2.2<span class="Apple-tab-span" style="white-space:pre">	</span>penamatan kontrak bagi $loaTitle; dan</font></div>
+         <div><font face="Arial, Verdana" size="2">2.3<span class="Apple-tab-span" style="white-space:pre">	</span>lain-lain tindakan tatatertib mengikut peraturan perolehan Kerajaan.</font></div>
+         <div><font face="Arial, Verdana" size="2"><br/></font></div>
+         <div><font face="Arial, Verdana" size="2">3.<span class="Apple-tab-span" style="white-space:pre">	</span>Sekiranya terdapat mana-mana individu cuba meminta rasuah daripada saya atau mana-mana individu yang berkaitan dengan syarikat ini sebagai sogokan untuk dipilih dalam $loaTitle</font><span style="font-family: Arial, Verdana; font-size: small;">, maka saya berjanji akan dengan segera melaporkan perbuatan tersebut kepada pejabat Suruhanjaya Perkhidmatan Rasuah Malaysia (SPRM).</span></div>
+      </div>
+   </body>
+</html>

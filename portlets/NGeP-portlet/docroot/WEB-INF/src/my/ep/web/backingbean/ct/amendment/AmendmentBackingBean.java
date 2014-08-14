@@ -146,9 +146,11 @@ import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.template.DocumentGenerator;
 
 import org.apache.commons.lang.text.StrSubstitutor;
 import org.apache.log4j.Logger;
+import org.apache.velocity.VelocityContext;
 import org.docx4j.jaxb.Context;
 import org.docx4j.openpackaging.contenttype.ContentType;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
@@ -844,7 +846,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				         reqDTO.setTemplateName(loaReport.getPmDocument().getDocName().toUpperCase());
 				         resDTO = contractTemplateSO.retrieveTemplateByName(reqDTO);
 				         content = new String(resDTO.getCtTemplate().getContent(), "UTF-8");
-				         content = getContent(content, loaReport.getPmDocument().getDocName());
+				         content = getContent(loaReport.getPmDocument().getDocName());
 				         convertHtmlToDocFile(content, filePath);
 			      }downloadFile(filePath, fileName);
 		    
@@ -898,7 +900,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 						templateReqDTO.setTemplateName(scLoaReport.getTitle().toUpperCase());
 						ContractTemplateResDTO templateResDTO = contractTemplateSO.retrieveTemplateByName(templateReqDTO);					
 						content = new String(templateResDTO.getCtTemplate().getContent(), "UTF-8");
-						content = getContent(content, scLoaReport.getTitle());					
+						content = getContent(scLoaReport.getTitle());					
 						convertHtmlToDocFile(content, filePath);
 						fileList.add(new File(filePath));
 					}
@@ -1247,6 +1249,70 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			valuesMap.put("SUPPLIER_MOF_REG_NO", getManagedBean().getCtContract().getSmSupplier().getRegNo());
 			StrSubstitutor sub = new StrSubstitutor(valuesMap);
 			content = sub.replace(content);
+		}
+		return content;
+	}
+	
+	private String getContent(String parameterCode) {
+		SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+		VelocityContext context = null;
+		String vmFile = null;
+		String content = null;
+		try{
+			if(ContractConst.TEMPLATE_RINGKASAN_KONTRAK.equalsIgnoreCase(parameterCode)) {
+				context = new VelocityContext();	
+				vmFile = "/ct/loaContent/ringkasan-kontrak.vm";
+				context.put("fileNo", getManagedBean().getCtContract().getQuotationTender().getFileNo());
+				context.put("sourcingNo", getManagedBean().getCtContract().getLoa().getFileExtNo());
+				context.put("sourcingTitle",  getManagedBean().getCtContract().getLoa().getScLoiLoa().getTitle());
+				context.put("successfulSupplierName", getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getSupplierName());
+				context.put("contractValue",  getManagedBean().getContractVer().getCtContractValue().getContractAmount()+"");
+				double contractValue = this.getManagedBean().getContractVer().getCtAmendment().getAdditionalAmount().doubleValue() + this.getManagedBean().getContractVer().getCtContractValue().getContractAmount().doubleValue();
+				context.put("newContractValue", contractValue + "");
+				IParameterSO parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+				ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
+				parameterReqDTO.setParameterId(getManagedBean().getCtContract().getFulfillmentType().getParameterId());
+				context.put("fulfillmentType", parameterSO.retrieveParameterById(parameterReqDTO).getPmParameter().getPmParameterType().getParameterName());
+				context.put("referAttachment", "Refer Attachment");
+				for(CtDeduction deduction : getManagedBean().getContractVer().getCtDeductions()){
+					if(deduction.getDeductionType().getParameterCode().equals(ParameterConst.DEDUCTION_TYPE_FIXED_DEPOSIT)){
+						context.put("deductionAmount", deduction.getAmount()+"");
+					}
+					else{
+						context.put("deductionAmount", "");
+					}
+				}
+				context.put("months", getManagedBean().getContractVer().getCtContractValue().getContractPeriod()+"");
+				context.put("effStartDate", df.format(getManagedBean().getContractVer().getCtContractValue().getEffDate()));
+				context.put("effEndDate", df.format(getManagedBean().getContractVer().getCtContractValue().getExpDate()));
+				if(getManagedBean().getContractVer().getCtAmendment().isContractExtend()){
+					context.put("amendEffExpDate", df.format(getManagedBean().getContractVer().getCtAmendment().getExtendStartDate()) 
+							+ " " + df.format(getManagedBean().getContractVer().getCtAmendment().getExtendEndDate()));
+				}
+				else {
+					context.put("amendEffExpDate", "");
+				}
+				context.put("effDate", df.format(getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate()));
+				context.put("bondValue", getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getBondAmt() + "");
+		
+			}
+			else if(ContractConst.TEMPLATE_INTEGRITY_PACT.equalsIgnoreCase(parameterCode)) {
+				context = new VelocityContext();	
+				vmFile = "/ct/loaContent/integrity-pact.vm";
+				context.put("ptjName", getManagedBean().getCtContract().getOwnerOrgProfile().getOrgName());
+				context.put("loaTitle", getManagedBean().getContractVer().getCtAmendment().getTitle());
+				context.put("supplierUserName", getFacesScopes().getUserScreenName());
+				context.put("supplierUserIcNo", getFacesScopes().getUserSessionBean().getIdentificationNo());
+				context.put("supplierName", getManagedBean().getContractVer().getCtContractValue().getSupplierName());
+				context.put("supplierMofRegNo", getManagedBean().getCtContract().getSmSupplier().getRegNo());
+		
+			}
+			if (vmFile != null && context != null) {
+				content = DocumentGenerator.getInstance().getHtmlFromVelocity(
+						vmFile, context);
+			}	
+		}catch (Exception e) {
+			throw new EpException(e.toString());
 		}
 		return content;
 	}
