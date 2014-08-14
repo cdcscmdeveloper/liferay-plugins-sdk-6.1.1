@@ -40,9 +40,7 @@
 							 	style="width:100%;font-size:17px;margin-top:17px;font-weight:bold;white-space:normal;float:left;"/>
 							</td>
 						  </tr>						    
-						  </table>					
-					
-		
+						  </table>	
 						 <table style="margin-top: 10px; width: 100%;" >
 						  <tr>
 						    <td width="100%">
@@ -274,17 +272,16 @@
 						</TABLE>
 						</c:if>	
 		            </div>
-		            <div align="right">
-		            
-				    <h:commandLink  target="_blank" action="#{reportBackingBean.generateReport}" value="Generate" />
-					<p:commandButton  value="Generate"  process="@all" action="#{reportBackingBean.generateReport}" icon="ui-icon-agree" update="@all" />
-					<p:commandButton value="Reset"  process="@all" action="#{reportBackingBean.resetReportForm}" icon="ui-icon-reset" update="@all" />
+		            <div align="right">			    
+				    <h:commandLink  target="_blank" action="#{reportBackingBean.generateReport}">
+				    <h:graphicImage library="ep/images/design"	name="icon_generate.png" styleClass="tasklist_title1" />
+					</h:commandLink>				   
+				    <h:commandLink  target="_self" action="#{reportBackingBean.resetReportForm}">
+				    <h:graphicImage library="ep/images/design"	name="icon_reset.png" styleClass="tasklist_title1" />
+				    </h:commandLink>					
 				   </div>
             </p:panel>
 		</td>
 	</tr>
-  </table>				
-
-	
-
-</ui:composition>
+  </table>
+  </ui:composition>
