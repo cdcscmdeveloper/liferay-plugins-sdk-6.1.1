@@ -9,13 +9,13 @@
 
 	<p:accordionPanel id="accordpnllist"
 		value="#{qTBriefingSiteVisitBackingBean.managedBean.briefingZoneBean}"
-		var="zonePnlList" dynamic="true"
+		var="zonePnlList" 
 		activeIndex="#{qTBriefingSiteVisitBackingBean.managedBean.bsvZoneindx}">
-		<p:ajax event="tabChange"
+		<p:ajax event="tabChange" 
 			listener="#{qTBriefingSiteVisitBackingBean.onZoneTabChange}"
 			immediate="true" />
 		<p:tab id="bsvzonetabs" title="#{zonePnlList.tplSpecZoneDtl.zoneName}">
-			<ui:param name="bsvdtlbean" value="#{qTBriefingSiteVisitBackingBean.managedBean.bsvDtlBean}" />
+			<ui:param name="bsvdtlbean" value="#{zonePnlList}" />
 			<ui:include src="bsvdetails.xhtml"></ui:include>
 
 		</p:tab>

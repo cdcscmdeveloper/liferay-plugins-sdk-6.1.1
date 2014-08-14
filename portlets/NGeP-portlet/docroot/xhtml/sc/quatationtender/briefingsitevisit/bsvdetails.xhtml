@@ -20,6 +20,7 @@
 			</tr>
 		</table>
 		<p:spacer height="3px" />
+		
 		<p:dataTable id="briefingdtlid" var="briefingdtls"
 			value="#{bsvdtlbean.briefingList}" rowKey="#{briefingdtls}"
 			rowIndexVar="index" 
@@ -75,7 +76,7 @@
 						<p:commandButton id="addtositevisitid"
 							update="@([id$=sitevisitdtlid])"
 							value="#{lbl['lbl.so.addtositevisit']}" icon="ui-icon-add"
-							process="@this, briefingdtlid" partialSubmit="true"
+							process="@this,briefingdtlid" partialSubmit="true"
 							actionListener="#{qTBriefingSiteVisitBackingBean.addToSiteVisitDtl(bsvdtlbean)}"
 							rendered="#{bsvdtlbean.scQtBsv.sameBsv eq 'fasle'}" />
 					</h:panelGroup>
@@ -86,7 +87,7 @@
 						icon="ui-icon-add" />
 
 					<p:commandButton value="#{lbl['lbl.so.delete']}"
-						icon="ui-icon-delete" process="briefingdtlid" partialSubmit="true"
+						icon="ui-icon-delete" process="@this,briefingdtlid" partialSubmit="true"
 						action="#{qTBriefingSiteVisitBackingBean.deleteBsvDetails('B')}"
 						update= "@([id$=briefingdtlid])" />
 				</div>
@@ -177,7 +178,7 @@
 								icon="ui-icon-add" />
 
 							<p:commandButton value="#{lbl['lbl.so.delete']}"
-								icon="ui-icon-delete"
+								icon="ui-icon-delete" process="@this, sitevisitdtlid" partialSubmit="true"
 								action="#{qTBriefingSiteVisitBackingBean.deleteBsvDetails('S')}"
 								update="@([id$=sitevisitdtlid])" />
 
