@@ -953,7 +953,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 						this.getManagedBean().getCloneCmSupplierItem());
 		// this.getManagedBean().setSelectedMaintainItem(this.getManagedBean().getCloneCmSupplierItem());
 
-		return "catalogMaintenanceFile?faces-redirect=true";
+		return "catalogMaintenanceFile";
 	}
 
 	public String cancelBackToMaintenanceFile() {
@@ -1816,8 +1816,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 		log.info("Exit saveCatalogItem");
 
-		// return "catalogMaintenanceFile?faces-redirect=true";
-		return "preRenderCatalogueMaintenanceFile";
+		return "catalogMaintenanceFile";
+		//return "preRenderCatalogueMaintenanceFile";
 	}
 
 	public String singleSubmitToReviewItems() {
@@ -2421,8 +2421,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 		log.info("Exit saveCatalogItem");
 
-		// return "catalogMaintenanceFile?faces-redirect=true";
-		return "preRenderCatalogueMaintenanceFile";
+		return "catalogMaintenanceFile";
+		//return "preRenderCatalogueMaintenanceFile";
 	}
 
 	public String submitToReviewItems() {
