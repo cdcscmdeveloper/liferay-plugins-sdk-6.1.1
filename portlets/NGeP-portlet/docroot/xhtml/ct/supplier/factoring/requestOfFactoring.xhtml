@@ -187,21 +187,18 @@
        <p:spacer height="8"/>
 	      <table style="width: 100%">
 			 <tr>
-				<td style="width: 15%;"><f:verbatim/></td>
-				<td><p:outputLabel
-					   value="Therefore, according to the terms related to the payment for the requisition below, 
-					   The Government need to pay all that is needed to Us under the specific requisition directly to the #{supplierBackingBean.getFactoringCompany()}"/></td>
+				<td style="width: 15%;vertical-align: top;text-align: right"><p:selectBooleanCheckbox id="checkBox" required="true" value="#{supplierBackingBean.managedBean.agreeFactoringClause}" /> </td>
+				  <td><h:panelGrid columns="2">
+				      <p:outputLabel
+					   value="I Agree, according to the terms related to the payment for the requisition below, 
+					   The Government need to pay all that is needed to Us under the specific requisition directly to the #{supplierBackingBean.getFactoringCompany()}"/>
+				        <p:message for="checkBox" display="icon"/>
+				       </h:panelGrid></td>
 				</tr>
 				<tr><td />
 				 <td>
-				 <p:commandButton value="View Factoring Clauses" process="@this" immediate="true" update="editorDisplay" actionListener="#{supplierBackingBean.previewAction()}" oncomplete="factoringClauseDlg.show();"/>
+				       <p:commandButton value="View Factoring Clauses" process="@this" immediate="true" update="editorDisplay" actionListener="#{supplierBackingBean.previewAction()}" oncomplete="factoringClauseDlg.show();"/>
 			  	</td>
-				</tr>
-				<tr><td />
-				  <td> <h:panelGrid columns="3"><p:selectBooleanCheckbox id="checkBox" required="true" value="#{supplierBackingBean.managedBean.agreeFactoringClause}" /> 
-				      <h:outputText value="I Agree"/>
-				        <p:message for="checkBox" display="icon"/>
-				       </h:panelGrid></td>
 				</tr>
 			</table>
 	        <p:dialog id="factoringClauseDlg" header="Factoring Clause" widgetVar="factoringClauseDlg" modal="true" width="820" height="450">
