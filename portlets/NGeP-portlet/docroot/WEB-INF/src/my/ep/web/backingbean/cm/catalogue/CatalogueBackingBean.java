@@ -2345,6 +2345,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				}
 			}
 			
+			//Past Start Date should change to current date
+			Date dateNow = new Date();
+			if(cmStandardPricing.getStartDate().before(dateNow)){
+				cmStandardPricing.setStartDate(dateNow);
+			}
+			
 			//record status = active
 			this.getManagedBean().getSelectedMaintainItem().setRecordStatusFlg(1);
 			
@@ -2901,6 +2907,13 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					.getSelectedApprovedItems()[i];
 
 			catalog.setItemStatus("U");
+			
+			//Past Start Date should change to current date
+			Date dateNow = new Date();
+			if(catalog.getCmStandardPricing().getStartDate().before(dateNow)){
+				catalog.getCmStandardPricing().setStartDate(dateNow);
+			}
+			
 			reqDTO.getSaveSupplierItems().add(catalog);
 		}
 
