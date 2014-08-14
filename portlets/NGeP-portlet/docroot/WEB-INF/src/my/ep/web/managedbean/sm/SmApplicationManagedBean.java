@@ -154,7 +154,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private String poSiteVisitType;
 	private boolean testBlock;
 	private int maxReviewCount;
-	private int authPerCount;
+	//private int authPerCount;
 	private SmApplSectionReview poSecReview;
 	private SmApplSectionReview apprvrSecReview;
 	private boolean termsAccepted;
@@ -263,6 +263,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private SelectItem[] businessTypeLs;
 	private List<String> supplierToPOList;
 	private String reasonDesc;
+	private boolean validSmUserLimit;
+	private boolean userWithRole;
 
 	public List<String> getSupplierToPOList() {
 		return supplierToPOList;
@@ -1728,13 +1730,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.reasonId = reasonId;
 	}
 
-	public int getAuthPerCount() {
-		return authPerCount;
-	}
-
-	public void setAuthPerCount(int authPerCount) {
-		this.authPerCount = authPerCount;
-	}
+//	public int getAuthPerCount() {
+//		return authPerCount;
+//	}
+//
+//	public void setAuthPerCount(int authPerCount) {
+//		this.authPerCount = authPerCount;
+//	}
 
 	public SmPersonnleCalcVO getPersonCalc() {
 		return personCalc;
@@ -1984,6 +1986,22 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setReasonDesc(String reasonDesc) {
 		this.reasonDesc = reasonDesc;
+	}
+
+	public boolean isValidSmUserLimit() {
+		return validSmUserLimit;
+	}
+
+	public void setValidSmUserLimit(boolean validSmUserLimit) {
+		this.validSmUserLimit = validSmUserLimit;
+	}
+
+	public boolean isUserWithRole() {
+		return userWithRole;
+	}
+
+	public void setUserWithRole(boolean userWithRole) {
+		this.userWithRole = userWithRole;
 	}
 
 }

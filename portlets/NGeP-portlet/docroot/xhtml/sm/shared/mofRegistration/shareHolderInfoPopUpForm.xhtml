@@ -279,7 +279,7 @@
 	</p:panel>
 	<p:panel header="#{lbl['lbl.sm.person.shrPrvHdr']}" toggleable="true"
 		id="shrPrivPanel"
-		rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' or backingBean.managedBean.authPerCount lt '5'}">
+		rendered="#{backingBean.managedBean.validSmUserLimit or backingBean.managedBean.userWithRole}">
 		<table>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.person.isAuth']}" /></td>
@@ -321,10 +321,10 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.person.isContrSign']}"
-						rendered="#{backingBean.managedBean.selectedShareHolder.softcertFlg eq '2'}" /></td>
+						rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER' and backingBean.managedBean.selectedShareHolder.softcertFlg eq '2'}" /></td>
 				<td><p:selectOneRadio
 						value="#{backingBean.managedBean.selectedShareHolder.contractSignerFlg}"
-						rendered="#{backingBean.managedBean.selectedShareHolder.softcertFlg eq '2'}">
+						rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER' and backingBean.managedBean.selectedShareHolder.softcertFlg eq '2'}">
 						<f:selectItem itemLabel="Yes" itemValue="1" />
 						<f:selectItem itemLabel="No" itemValue="0" />
 					</p:selectOneRadio></td>
@@ -332,29 +332,7 @@
 		</table>
 
 	</p:panel>
-	<p:panel header="#{lbl['lbl.sm.person.shrPrvHdr']}" toggleable="true"
-		id="shrPrivPanel1"
-		rendered="#{backingBean.managedBean.authPerCount eq '5' and backingBean.managedBean.selectedShareHolder.authorizedFlg ne '1' }">
-		<table>
-			<tr>
-				<td><h:outputText value="#{lbl['lbl.sm.person.authMsg']}" /></td>
-			</tr>
-		</table>
-		<table style="width: 50%">
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.eprole']}" /></td>
-				<td><p:selectOneMenu id="smUnAuthPersnEpRole"
-						label="#{lbl['lbl.sm.userprofile.eprole']}"
-						value="#{backingBean.managedBean.selectedShareHolder.epRole}"
-						style="width: 207px;margin: 5px 0px 5px 0px;">
-						<f:selectItem itemLabel="-- Select --" itemValue="" />
-						<f:selectItems value="#{backingBean.managedBean.ePRoleList}" />
-					</p:selectOneMenu> <p:message id="smUnAuthPersnEpRoleMsg" for="smUnAuthPersnEpRole"
-						showSummary="true" showDetail="false" display="icon" /></td>
-			</tr>
-		</table>
 
-	</p:panel>
 	<p:panel header="#{lbl['lbl.sm.person.shrDtls']}" toggleable="true"
 		id="shareAmtPanel"
 		rendered="#{backingBean.managedBean.selectedShareHolder.equityOwner}">

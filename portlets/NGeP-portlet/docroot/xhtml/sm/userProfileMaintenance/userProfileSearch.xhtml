@@ -13,119 +13,142 @@
 
 
 	<ui:define name="contentSection">
-	
-	
-	<p:panel id="searchSmUserProfile" header="Search Users" styleClass="noBorders tr,noBorders td">
-		<table style="width: 100%;">
-			<tr>
-				<td style="width: 10%;"><p:outputLabel value="#{lbl['lbl.sm.userprofile.search.username']}" /></td>
-				<td><p:inputText id="username" value="#{smPersonnelBackingBean.managedBean.searchUsername}" size="35" /></td>
-			</tr>
-			<tr>
-				<td style="width: 10%;"><p:outputLabel value="#{lbl['lbl.sm.userprofile.search.userrole']}" /></td>
-				<td><p:selectOneMenu id="userEPRole" value="#{smPersonnelBackingBean.managedBean.searchEPRole}" style="width: 207px; margin-bottom: 5px;">
-						<f:selectItem itemLabel="-- Select One--" itemValue="" />
-						<f:selectItems value="#{smPersonnelBackingBean.managedBean.searchRoleList}"/>
-					</p:selectOneMenu></td>
-			</tr>
-			<!-- <tr>
+
+
+		<p:panel id="searchSmUserProfile" header="Search Users"
+			styleClass="noBorders tr,noBorders td">
+			<table style="width: 100%;">
+				<tr>
+					<td style="width: 10%;"><p:outputLabel
+							value="#{lbl['lbl.sm.userprofile.search.username']}" /></td>
+					<td><p:inputText id="username"
+							value="#{smPersonnelBackingBean.managedBean.searchUsername}"
+							size="35" /></td>
+				</tr>
+				<tr>
+					<td style="width: 10%;"><p:outputLabel
+							value="#{lbl['lbl.sm.userprofile.search.userrole']}" /></td>
+					<td><p:selectOneMenu id="userEPRole"
+							value="#{smPersonnelBackingBean.managedBean.searchEPRole}"
+							style="width: 207px; margin-bottom: 5px;">
+							<f:selectItem itemLabel="-- Select One--" itemValue="" />
+							<f:selectItems
+								value="#{smPersonnelBackingBean.managedBean.searchRoleList}" />
+						</p:selectOneMenu></td>
+				</tr>
+				<!-- <tr>
 				<td style="width: 350px;"/>
 				<td style="float: left; padding-top: 5px;"><p:outputLabel value="Company Role" /></td>
 				<td style="width: 500px;"><p:selectOneMenu id="companyRole" value="#{smPersonnelBackingBean.managedBean.searchCompanyRole}" style="width: 207px; margin-bottom: 5px;">
 						<f:selectItem itemLabel="- Select One -" itemValue="" />
 					</p:selectOneMenu></td>
 			</tr> -->
-		</table>
-		
-		<div align="right">		
-			<p:commandButton value="#{lbl['lbl.btn.search']}" action="#{smPersonnelBackingBean.managedBean.searchSmPersonnel}"
-				update="smPersonnelDataModelId" icon="ui-icon-search" />
-			<p:commandButton value="#{lbl['lbl.btn.reset']}" icon="ui-icon-reset"
-								action="#{smPersonnelBackingBean.resetSmPersonnelSearch}"
-								update="searchSmUserProfile"/>
-  		</div>
-	
-	</p:panel>
-	
-	<h:panelGrid id="search" style="width:100%;">
-	 
-	<p:panel header="Results" toggleable="true">
- 		
- 	<p:dataTable id="smPersonnelDataModelId" lazy="true"
-					value="#{smPersonnelBackingBean.managedBean.smPersonnelDataModel2}" var="personnel"
-					rowKey="#{personnel}"
-					rowIndexVar="index">
-		<ac:paginator for="smPersonnelDataModelId" />
-       <p:column headerText="#{lbl['lbl.sm.userprofile.num']}" > 
-        <h:outputText value="#{index+1}" /> 
-       </p:column>
-       
-       <p:column headerText="#{lbl['lbl.sm.userprofile.name']}" >
-        <h:outputText value="#{personnel.name}" />  
-       </p:column>
-       
-       <p:column headerText="#{lbl['lbl.sm.userprofile.nationality']}" >
-        <h:outputText value="#{personnel.pmCountry.countryName}" />    
-       </p:column>
-    
-       <p:column headerText="#{lbl['lbl.sm.userprofile.isauthorized']}" > 
-        <h:outputText value="Yes" rendered="#{personnel.authorized}"/>
-        <h:outputText value="No" rendered="!#{personnel.authorized}"/>
-       </p:column>
-       
-       <p:column headerText="#{lbl['lbl.sm.userprofile.accountstatus']}" > 
-        <h:outputText value="Active" rendered="#{personnel.recordStatus}"/>
-        <h:outputText value="Inactive" rendered="!#{personnel.recordStatus}"/>
-       </p:column>
-       
-       <p:column headerText="#{lbl['lbl.sm.userprofile.eprole']}" > 
-        <h:outputText value="Supplier Admin" rendered="#{personnel.epRole eq 'BASIC_SUPPLIER_ADMIN'}"/>
-        <h:outputText value="Supplier User" rendered="#{personnel.epRole eq 'BASIC_SUPPLIER_USER'}"/>
-        <h:outputText value="Catalogue User" rendered="#{personnel.epRole eq 'CM_USER'}"/>
-       </p:column>
-       
-	    <p:column headerText="#{lbl['lbl.sm.userprofile.action']}" >
-	    	<p:commandLink title="Edit" ajax="false"
-					action="#{smPersonnelBackingBean.navigateToUpdateUserPage(personnel.personnelId)}">
-				<p:graphicImage value="/css/images/design/edit.png"></p:graphicImage>
-			</p:commandLink>
-		</p:column>
-     </p:dataTable>
-	</p:panel>
-	
-	<p:panel>
-	<h:panelGrid columns="2" style="width:100%;" styleClass="noBorders tr,noBorders td">
-    
-    	<p:commandButton value="Add New User" oncomplete="confirmDialog.show();" style="float:right;" icon="ui-icon-add" disabled="#{smPersonnelBackingBean.managedBean.disableAddNewUser}">
-		</p:commandButton>
-		<p:graphicImage id="uidti" value="/css/images/design/tooltips.png" style="float:right;"/>
-		<p:tooltip id="uidtt" for="uidti">
-			<p:outputLabel escape="false" value="#{lbl['lbl.sm.userprofile.search.userlimit']}"  />
-		</p:tooltip>
-	 </h:panelGrid>	
-	 </p:panel>
-</h:panelGrid>
-    
-     <p:dialog id="confirmDialog" header="Confirmation" widgetVar="confirmDialog" modal="true" width="500" height="100">
-     <p:panel id="dPanel" style="width:100%">
-	     <table>
-	    	<tr>
-	    	<td>
-	    	<p:outputLabel value="Add new Login/Online user for Basic account. Maximum 5 users can be added. Do you wish to continue?" />
-	    	</td>
-	    	</tr>
-	    	<tr>
-			<td>
-				<div align="center">
-				<p:commandButton value="Yes" onclick="confirmDialog.hide();"
-				action="#{smPersonnelBackingBean.navigateToAddNewUserPage}"/>
-				<p:commandButton value="No" onclick="confirmDialog.hide();"/>
-				</div>
-			</td>		
-			</tr>		
-		</table>
-	</p:panel>			
-	</p:dialog>
-    
-</ui:define>
+			</table>
+
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.btn.search']}"
+					action="#{smPersonnelBackingBean.managedBean.searchSmPersonnel}"
+					update="smPersonnelDataModelId" icon="ui-icon-search" />
+				<p:commandButton value="#{lbl['lbl.btn.reset']}"
+					icon="ui-icon-reset"
+					action="#{smPersonnelBackingBean.resetSmPersonnelSearch}"
+					update="searchSmUserProfile" />
+			</div>
+
+		</p:panel>
+
+		<h:panelGrid id="search" style="width:100%;">
+
+			<p:panel header="Results" toggleable="true">
+
+				<p:dataTable id="smPersonnelDataModelId" lazy="true"
+					value="#{smPersonnelBackingBean.managedBean.smPersonnelDataModel2}"
+					var="personnel" rowKey="#{personnel}" rowIndexVar="index">
+					<ac:paginator for="smPersonnelDataModelId" />
+					<p:column headerText="#{lbl['lbl.sm.userprofile.num']}">
+						<h:outputText value="#{index+1}" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sm.userprofile.name']}">
+						<h:outputText value="#{personnel.name}" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sm.userprofile.nationality']}">
+						<h:outputText value="#{personnel.pmCountry.countryName}" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sm.userprofile.isauthorized']}">
+						<h:outputText value="Yes" rendered="#{personnel.authorized}" />
+						<h:outputText value="No" rendered="!#{personnel.authorized}" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sm.userprofile.accountstatus']}">
+						<h:outputText value="Active" rendered="#{personnel.recordStatus}" />
+						<h:outputText value="Inactive"
+							rendered="!#{personnel.recordStatus}" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sm.userprofile.eprole']}">
+						<h:outputText value="Supplier Admin"
+							rendered="#{personnel.epRole eq 'BASIC_SUPPLIER_ADMIN'}" />
+						<h:outputText value="Supplier User"
+							rendered="#{personnel.epRole eq 'BASIC_SUPPLIER_USER'}" />
+						<h:outputText value="Catalogue User"
+							rendered="#{personnel.epRole eq 'CM_USER'}" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sm.userprofile.action']}">
+						<p:commandLink title="Edit" ajax="false"
+							action="#{smPersonnelBackingBean.navigateToUpdateUserPage(personnel.personnelId)}">
+							<p:graphicImage value="/css/images/design/edit.png"></p:graphicImage>
+						</p:commandLink>
+					</p:column>
+				</p:dataTable>
+			</p:panel>
+
+			<p:panel>
+				<table style="width: 100%">
+					<tr>
+						<td><p:commandButton value="Add New User"
+								oncomplete="confirmDialog.show();" style="float:right;"
+								icon="ui-icon-add"
+								disabled="#{smPersonnelBackingBean.managedBean.disableAddNewUser}">
+							</p:commandButton></td>
+						<td style="width: 20px"><p:graphicImage id="uidti"
+								value="/css/images/design/tooltips.png"  />
+							<p:tooltip id="uidtt" for="uidti">
+								<p:outputLabel escape="false"
+									value="#{lbl['lbl.sm.userprofile.search.userlimit']}" />
+							</p:tooltip></td>
+					</tr>
+				</table>
+
+
+
+			</p:panel>
+		</h:panelGrid>
+
+		<p:dialog id="confirmDialog" header="Confirmation"
+			widgetVar="confirmDialog" modal="true" width="500" height="100">
+			<p:panel id="dPanel" style="width:100%">
+				<table>
+					<tr>
+						<td><p:outputLabel
+								value="Add new Login/Online user for Basic account. Maximum 5 users can be added. Do you wish to continue?" />
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<div align="center">
+								<p:commandButton value="Yes" onclick="confirmDialog.hide();"
+									action="#{smPersonnelBackingBean.navigateToAddNewUserPage}" />
+								<p:commandButton value="No" onclick="confirmDialog.hide();" />
+							</div>
+						</td>
+					</tr>
+				</table>
+			</p:panel>
+		</p:dialog>
+
+	</ui:define>
 </ui:composition>

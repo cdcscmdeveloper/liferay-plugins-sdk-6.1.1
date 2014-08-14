@@ -2928,6 +2928,16 @@ public class SmApplicationBackingBean extends
 					per.getIdentificationNo());
 			getManagedBean().getSelectedShareHolder().setSmPersonnelAddresses(
 					per.getSmPersonnelAddresses());
+			if (per.getEpRole() != null) {
+				getManagedBean().getSelectedShareHolder().setEpRole(
+						per.getEpRole());
+			}
+			getManagedBean().getSelectedShareHolder().setAuthorizedFlg(
+					per.getAuthorizedFlg());
+			getManagedBean().getSelectedShareHolder().setContractSignerFlg(
+					per.getContractSignerFlg());
+			getManagedBean().getSelectedShareHolder().setSoftcertFlg(
+					per.getSoftcertFlg());
 
 		}
 		getManagedBean().setRedirectToPersonPage(false);
@@ -2939,10 +2949,20 @@ public class SmApplicationBackingBean extends
 				SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)) {
 			validatePaidCaptialAmt();
 		}
-		if (shareHolderBean.getAuthorizedFlg() == 1) {
-			getManagedBean().setAuthPerCount(0);
+		// if (shareHolderBean.getAuthorizedFlg() == 1) {
+		// getManagedBean().setAuthPerCount(0);
+		// } else {
+		// getManagedBean().setAuthPerCount(getAuthUserCount());
+		// }
+		if (shareHolderBean.getEpRole() != null
+				&& (shareHolderBean.getEpRole().equalsIgnoreCase(
+						RoleCode.MOF_SUPPLIER_USER.value())
+						|| shareHolderBean.getEpRole().equalsIgnoreCase(
+								RoleCode.MOF_SUPPLIER_ADMIN.value()) || shareHolderBean
+						.getEpRole().equalsIgnoreCase(RoleCode.CM_USER.value()))) {
+			getManagedBean().setUserWithRole(true);
 		} else {
-			getManagedBean().setAuthPerCount(getAuthUserCount());
+			getManagedBean().setUserWithRole(false);
 		}
 		if (shareHolderBean.getPmCountry() == null) {
 			shareHolderBean.setPmCountry(new PmCountry());
@@ -2984,6 +3004,12 @@ public class SmApplicationBackingBean extends
 		per.setIdentificationType(shareHolderBean.getIdentificationType());
 		per.setIdentificationNo(shareHolderBean.getIdentificationNo());
 		per.setSmPersonnelAddresses(shareHolderBean.getSmPersonnelAddresses());
+		if (shareHolderBean.getEpRole() != null) {
+			per.setEpRole(shareHolderBean.getEpRole());
+		}
+		per.setAuthorizedFlg(shareHolderBean.getAuthorizedFlg());
+		per.setContractSignerFlg(shareHolderBean.getContractSignerFlg());
+		per.setSoftcertFlg(shareHolderBean.getSoftcertFlg());
 		getManagedBean().setSelectedPersonnel(per);
 		if (getManagedBean().getSelectedShareHolder().getAuthorizedFlg() != 1)
 			getManagedBean().setRemoveEpRole(true);
@@ -3129,7 +3155,7 @@ public class SmApplicationBackingBean extends
 
 	public void assignNewShareHolder(String personelType) {
 		System.out.println("********* assignNewShareHolder *****");
-		getManagedBean().setAuthPerCount(getAuthUserCount());
+		// getManagedBean().setAuthPerCount(getAuthUserCount());
 		SmPersonnel shr = new SmPersonnel();
 		shr.setEpRole("");
 		shr.setShareAmt(new BigDecimal(0));
@@ -3158,10 +3184,15 @@ public class SmApplicationBackingBean extends
 		// getManagedBean().setSelectedPersonnel(null);
 		assignSelShareHolderAddress(shr);
 		getManagedBean().setSelectedShareHolder(shr);
-		if (getManagedBean().getAuthPerCount() < 5)
-			getManagedBean().setRemoveEpRole(false);
-		else
-			getManagedBean().setRemoveEpRole(true);
+		// if (getManagedBean().getAuthPerCount() < 5)
+		// getManagedBean().setRemoveEpRole(false);
+		// else
+		// getManagedBean().setRemoveEpRole(true);
+		if (getManagedBean().isValidSmUserLimit()) {
+			getManagedBean().setUserWithRole(true);
+		} else {
+			getManagedBean().setUserWithRole(false);
+		}
 		buildRoleList();
 		getManagedBean().setRedirectToPersonPage(true);
 
@@ -5788,15 +5819,15 @@ public class SmApplicationBackingBean extends
 		return validAuthPerCount;
 	}
 
-	private int getAuthUserCount() {
-		int authPerCount = 0;
-		for (SmPersonnel per : getManagedBean().getSmAppl().getSmPersonnels()) {
-			if (per.getAuthorizedFlg() == 1) {
-				authPerCount = authPerCount + 1;
-			}
-		}
-		return authPerCount;
-	}
+	// private int getAuthUserCount() {
+	// int authPerCount = 0;
+	// for (SmPersonnel per : getManagedBean().getSmAppl().getSmPersonnels()) {
+	// if (per.getAuthorizedFlg() == 1) {
+	// authPerCount = authPerCount + 1;
+	// }
+	// }
+	// return authPerCount;
+	// }
 
 	public void calculateShareHolderPercent() {
 		System.out.println("********* calculateShareHolderPercent ********  ");
@@ -6559,6 +6590,7 @@ public class SmApplicationBackingBean extends
 
 	private void calcPersonnelListCount() {
 		resetAllPersonnelCount();
+		getManagedBean().setValidSmUserLimit(validatePersonLimit());
 		for (SmPersonnel per : getManagedBean().getSmAppl().getSmPersonnels()) {
 			calcSumUpByPersonnel(per);
 		}
@@ -7305,4 +7337,27 @@ public class SmApplicationBackingBean extends
 			throw new EpException(MessageConst.ERROR_722523);
 		}
 	}
+
+	private boolean validatePersonLimit() {
+		boolean validPerCount = true;
+
+		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+		reqDTO.setSmSupplierId(getManagedBean().getSmAppl().getSmSupplier()
+				.getSupplierId());
+
+		IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate
+				.getInstance().getServiceObject("sm", IPersonnelSO.class);
+		PersonnelResDTO resDTO = smPersonnelSO
+				.retrievePersonnelCountForSuppUserMaint(reqDTO);
+
+		if (resDTO.getSmPersonnelList() != null
+				&& resDTO.getSmPersonnelList().size() < 5) {
+			validPerCount = true;
+		} else {
+			validPerCount = false;
+		}
+
+		return validPerCount;
+	}
+
 }
