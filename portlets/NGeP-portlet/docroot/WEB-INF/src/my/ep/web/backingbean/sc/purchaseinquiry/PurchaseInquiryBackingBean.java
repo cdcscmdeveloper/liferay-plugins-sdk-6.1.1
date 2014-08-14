@@ -7,6 +7,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -677,9 +678,8 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 				requestNoteBackingBean.getManagedBean().setRequestNoteDtls(requestNoteDtls);
 				requestNoteBackingBean.getManagedBean().setSourceMethod(ParameterConst.METHOD_SC);
 				requestNoteBackingBean.getManagedBean().setTaskId(getManagedBean().getTaskId());
-				
 				// created by 
-				requestNoteBackingBean.getManagedBean().setCreatedBy(requestNoteBackingBean.getCreatedBy(facesScopes.getUserSessionBean().getUserId()).getUserName());
+				requestNoteBackingBean.getManagedBean().setCreatedBy(requestNoteBackingBean.getCreatedBy(requestNote.getCreatedBy()).getUserName());
 				
 				requestNoteBackingBean.initialInformation(requestNote);
 				requestNoteBackingBean.getCurrentStatus(DPStatusConstants.RN_PENDING_SUBMISSION);
@@ -781,7 +781,7 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 			 }
 	    }
 		// no of response days
-		 prInquiry.setDayToResponse((int)DateUtils.getDaysDifference(prInquiry.getCreatedDate(), prInquiry.getDateToResponse()));
+		 prInquiry.setDayToResponse((int)DateUtils.getDaysDifference(prInquiry.getCreatedDate(), getCurrentDateWithoutTime(prInquiry.getDateToResponse())));
 		 
 		 getManagedBean().setTaskId(taskId);
 		 getManagedBean().setProcessName(res.getProcessName());
@@ -805,7 +805,21 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 		 }
 	 }	
  }
-	
+ 
+ 
+ /*
+  * Getting a java.util.Date Object without time
+  */
+ public static Date getCurrentDateWithoutTime(Date respDate) {
+	 Calendar c1 = new GregorianCalendar();
+	 c1.setTime(respDate);
+	 Calendar c2 = Calendar.getInstance();
+	 c2.set(c1.get(Calendar.YEAR), c1.get(Calendar.MONTH), c1.get(Calendar.DAY_OF_MONTH),0,0,0);
+	 c2.set(Calendar.MILLISECOND, 0);
+
+	 return c2.getTime();
+ }
+ 
 	 /**
 	  * Page navigation to catalogue search page in Purchase inquiry
 	  */
