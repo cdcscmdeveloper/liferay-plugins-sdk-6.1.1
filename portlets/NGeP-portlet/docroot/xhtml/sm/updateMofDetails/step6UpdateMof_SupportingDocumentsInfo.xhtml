@@ -9,17 +9,18 @@
 		<tr>
 			<td style="width: 20%; vertical-align: baseline;" class="sidemenutd"><ui:include
 					src="smUpdateMofApplnSideMenuItem.xhtml" /></td>
-			<td><table style="width: 98%">
-					<tr>
-						<td class="smLastSubmitLabel"><h:outputText
-								value="#{lbl['lbl.sm.lastSubmitDate']}" /></td>
-						<td class="smLastSubmitDateVal"><h:outputText
-								value="#{backingBean.managedBean.smAppl.draftExpiryDate}">
-								<f:convertDateTime type="date" pattern="dd-MMM-yyyy" />
-							</h:outputText></td>
-					</tr>
-				</table>
-				<p:outputPanel rendered="#{backingBean.managedBean.supplierUser}">
+			<td><p:outputPanel id="updtMofStep6OnlySuppPan"
+					rendered="#{backingBean.managedBean.supplierUser}">
+					<table style="width: 98%">
+						<tr>
+							<td class="smLastSubmitLabel"><h:outputText
+									value="#{lbl['lbl.sm.lastSubmitDate']}" /></td>
+							<td class="smLastSubmitDateVal"><h:outputText
+									value="#{backingBean.managedBean.smAppl.draftExpiryDate}">
+									<f:convertDateTime type="date" pattern="dd-MMM-yyyy" />
+								</h:outputText></td>
+						</tr>
+					</table>
 					<div align="right" style="width: 99%" class="button-wrapper">
 						<p:commandButton value="#{lbl['lbl.sm.saveAsDraft']}"
 							actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,backingBean.managedBean.tabActiveIndex)}"

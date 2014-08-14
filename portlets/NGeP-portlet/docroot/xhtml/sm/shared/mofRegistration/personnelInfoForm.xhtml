@@ -7,8 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<h:panelGroup id="perDataPanGroup">
-		<p:panel
-			header="Composition of the Board of Directors / Management / Staff Company"
+		<p:panel header="#{lbl['lbl.sm.person.compositionHdr']}"
 			toggleable="true" id="stfSummaryPan">
 
 			<br />
@@ -18,23 +17,21 @@
 							<c:if
 								test="#{backingBean.managedBean.smAppl.supplierType eq 'K'}">
 								<p:panelGrid styleClass="tablePanel" id="contrPerSumTable">
-									<f:facet name="header">
 
-										<p:row>
-											<p:column rowspan="2" />
-											<p:column rowspan="2">Board Of Director</p:column>
-											<p:column rowspan="2">Higher Management (CEO,CBO,CTO,CFO,etc)</p:column>
-											<p:column rowspan="2">Management</p:column>
-											<p:column colspan="2">Staff Total</p:column>
-										</p:row>
-										<p:row>
-											<p:column>Entered</p:column>
-											<p:column>Actual</p:column>
+									<p:row id="contrPerSumTableHdrRow1">
+										<p:column rowspan="2" />
+										<p:column rowspan="2">#{lbl['lbl.sm.person.composition.bod']}</p:column>
+										<p:column rowspan="2" style="width:20%">#{lbl['lbl.sm.person.composition.hghMngt']}</p:column>
+										<p:column rowspan="2">#{lbl['lbl.sm.person.composition.mngt']}</p:column>
+										<p:column colspan="2" style="text-align:center">#{lbl['lbl.sm.person.composition.stfTtl']}</p:column>
+									</p:row>
+									<p:row id="contrPerSumTableHdrRow2">
+										<p:column>#{lbl['lbl.sm.person.composition.entered']}</p:column>
+										<p:column>#{lbl['lbl.sm.person.composition.actual']}</p:column>
 
-										</p:row>
-									</f:facet>
+									</p:row>
 									<p:row>
-										<p:column>Bumiputera</p:column>
+										<p:column>#{lbl['lbl.sm.person.composition.bumi']}</p:column>
 										<p:column>
 											<h:outputText
 												value="#{backingBean.managedBean.personCalc.bodBumiCnt}" />
@@ -57,7 +54,7 @@
 										</p:column>
 									</p:row>
 									<p:row>
-										<p:column>Non-Bumiputera</p:column>
+										<p:column>#{lbl['lbl.sm.person.composition.nonBumi']}</p:column>
 										<p:column>
 											<h:outputText
 												value="#{backingBean.managedBean.personCalc.bodNonBumiCnt}" />
@@ -80,7 +77,7 @@
 										</p:column>
 									</p:row>
 									<p:row>
-										<p:column>Non-Malaysian</p:column>
+										<p:column>#{lbl['lbl.sm.person.composition.Frg']}</p:column>
 										<p:column>
 											<h:outputText
 												value="#{backingBean.managedBean.personCalc.bodFrgCnt}" />
@@ -107,29 +104,26 @@
 							<c:if
 								test="#{backingBean.managedBean.smAppl.supplierType eq 'J'}">
 								<p:panelGrid styleClass="tablePanel" id="consultPerSumTable">
-									<f:facet name="header" id="facetId">
+									<p:row id="consultPerSumHdrRow">
+										<p:column rowspan="2" />
+										<p:column rowspan="2">#{lbl['lbl.sm.person.composition.bod']}</p:column>
+										<p:column rowspan="2" style="width:15%">#{lbl['lbl.sm.person.composition.hghMngt']}</p:column>
+										<p:column rowspan="2">#{lbl['lbl.sm.person.composition.mngt']}</p:column>
+										<p:column colspan="2" style="text-align:center">#{lbl['lbl.sm.person.composition.prfStf']}</p:column>
+										<p:column colspan="2" style="text-align:center">#{lbl['lbl.sm.person.composition.semiPrfStf']}</p:column>
+										<p:column colspan="2" style="text-align:center">#{lbl['lbl.sm.person.composition.clrStf']}</p:column>
+									</p:row>
+									<p:row id="consultPerEntActSumHdrRow">
+										<p:column>#{lbl['lbl.sm.person.composition.entered']}</p:column>
+										<p:column>#{lbl['lbl.sm.person.composition.actual']}</p:column>
+										<p:column>#{lbl['lbl.sm.person.composition.entered']}</p:column>
+										<p:column>#{lbl['lbl.sm.person.composition.actual']}</p:column>
+										<p:column>#{lbl['lbl.sm.person.composition.entered']}</p:column>
+										<p:column>#{lbl['lbl.sm.person.composition.actual']}</p:column>
 
-										<p:row id="consultPerSumHdrRow">
-											<p:column rowspan="2" />
-											<p:column rowspan="2">Board Of Director</p:column>
-											<p:column rowspan="2">Higher Management (CEO,CBO,CTO,CFO,etc)</p:column>
-											<p:column rowspan="2">Management</p:column>
-											<p:column colspan="2">Prof Staff</p:column>
-											<p:column colspan="2">Semi Prof Staff</p:column>
-											<p:column colspan="2">Clerical Staff</p:column>
-										</p:row>
-										<p:row>
-											<p:column>Entered</p:column>
-											<p:column>Actual</p:column>
-											<p:column>Entered</p:column>
-											<p:column>Actual</p:column>
-											<p:column>Entered</p:column>
-											<p:column>Actual</p:column>
-
-										</p:row>
-									</f:facet>
+									</p:row>
 									<p:row>
-										<p:column>Bumiputera</p:column>
+										<p:column>#{lbl['lbl.sm.person.composition.bumi']} </p:column>
 										<p:column>
 											<h:outputText
 												value="#{backingBean.managedBean.personCalc.bodBumiCnt}" />
@@ -171,7 +165,7 @@
 
 									</p:row>
 									<p:row>
-										<p:column>Non-Bumiputera</p:column>
+										<p:column>#{lbl['lbl.sm.person.composition.nonBumi']}</p:column>
 										<p:column>
 											<h:outputText
 												value="#{backingBean.managedBean.personCalc.bodNonBumiCnt}" />
@@ -211,7 +205,7 @@
 
 									</p:row>
 									<p:row>
-										<p:column>Non-Malaysian</p:column>
+										<p:column>#{lbl['lbl.sm.person.composition.Frg']}</p:column>
 										<p:column>
 											<h:outputText
 												value="#{backingBean.managedBean.personCalc.bodFrgCnt}" />
@@ -256,8 +250,7 @@
 				</tr>
 			</table>
 		</p:panel>
-		<p:panel
-			header=" List of Company's Board of Directors / Management / Staff"
+		<p:panel header="#{lbl['lbl.sm.person.composition.listDtHdr']}"
 			toggleable="true" id="smPersonnelParentPan">
 
 			<table style="width: 250px">
@@ -304,24 +297,25 @@
 						<ac:paginator for="personDt" />
 						<p:column selectionMode="multiple" width="5%" />
 
-						<p:column headerText="Name">
+						<p:column headerText="#{lbl['lbl.sm.person.composition.name']}">
 							<h:outputText value="#{person.name}" />
 						</p:column>
 
-						<p:column headerText="Identification Num">
+						<p:column headerText="#{lbl['lbl.sm.person.composition.idenNum']}">
 							<h:outputText value="#{person.identificationNo}" />
 						</p:column>
-						<p:column headerText="Is Equity Owner">
+						<p:column headerText="#{lbl['lbl.sm.person.composition.isEqui']}">
 							<h:outputText value="Yes" rendered="#{person.equityOwner}" />
 							<h:outputText value="No" rendered="#{!person.equityOwner}" />
 						</p:column>
-						<p:column headerText="Is Authorized">
+						<p:column headerText="#{lbl['lbl.sm.person.composition.isAuth']}">
 							<h:outputText value="Yes"
 								rendered="#{person.authorizedFlg eq '1'}" />
 							<h:outputText value="No"
 								rendered="#{person.authorizedFlg eq '0'}" />
 						</p:column>
-						<p:column headerText="Cert Status">
+						<p:column
+							headerText="#{lbl['lbl.sm.person.composition.certStatus']}">
 							<h:outputText value="Requested"
 								rendered="#{person.softcertFlg eq '2'}" />
 							<h:outputText value="Issued"
@@ -329,10 +323,10 @@
 							<h:outputText value="Not Applied"
 								rendered="#{person.softcertFlg eq '0'}" />
 						</p:column>
-						<p:column headerText="Role">
+						<p:column headerText="#{lbl['lbl.sm.person.composition.role']}">
 							<h:outputText value="#{person.roleName}" />
 						</p:column>
-						<p:column headerText="Action">
+						<p:column headerText="#{lbl['lbl.sm.label.action']}">
 							<p:commandLink
 								action="#{backingBean.assignSelShareHolder(person)}"
 								process="@this" partialSubmit="true" update=":form"
@@ -347,21 +341,24 @@
 
 					<p:spacer height="2px;" />
 					<div align="right">
-						<p:commandButton value="Add Management / Staff" process="@this"
-							partialSubmit="true"
+						<p:commandButton
+							value="#{lbl['lbl.sm.person.composition.addMangOrStf']}"
+							process="@this" partialSubmit="true"
 							action="#{backingBean.assignNewShareHolder(SupplierManagementConst.PERSONNEL_TYPE_STAFF)}"
 							update=":form" />
-						<p:commandButton value="Add Director / Higher Management"
+						<p:commandButton
+							value="#{lbl['lbl.sm.person.composition.addDir']}"
 							process="@this" partialSubmit="true"
 							action="#{backingBean.assignNewShareHolder(SupplierManagementConst.PERSONNEL_TYPE_DIRECTOR)}"
 							update=":form" />
-						<p:commandButton value="Delete" process="persInfoDtPanel"
-							partialSubmit="true"
+						<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
+							process="persInfoDtPanel" partialSubmit="true"
 							action="#{backingBean.deleteSelectedShareHolders(SupplierManagementConst.PERSONNEL_TYPE_STAFF)}"
 							update=":form:tt:personDt , :form:tt:stfSummaryPan ,:form:tt:persBranMapInfo" />
 					</div>
 				</p:panel>
-				<p:panel id="persBranMapInfo" header="Branches - Point Of Contact"
+				<p:panel id="persBranMapInfo"
+					header="#{lbl['lbl.sm.person.composition.brnchPoc']}"
 					rendered="#{backingBean.managedBean.smAppl.smSupplierBranches.size() gt 0}">
 					<p:dataTable var="branch" id="perBrDt"
 						value="#{backingBean.managedBean.smAppl.smSupplierBranches}"
@@ -369,13 +366,14 @@
 						<ac:paginator for="perBrDt" />
 
 
-						<p:column headerText="Branch Name">
+						<p:column
+							headerText="#{lbl['lbl.sm.person.composition.brnName']} ">
 							<h:outputText value="#{branch.branchName}" />
 						</p:column>
-						<p:column headerText="Point Of Contact">
+						<p:column headerText="#{lbl['lbl.sm.person.composition.poc']}">
 							<p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
 								required="true"
-								label="Point of contact for : #{branch.branchName}"
+								label="#{lbl['lbl.sm.person.composition.poc']} : #{branch.branchName}"
 								id="brnPerVal" value="#{branch.contactPersonId}">
 								<f:selectItem itemLabel="---Select---" itemValue="" />
 								<f:selectItems
@@ -396,7 +394,7 @@
 				<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 					<table style="width: 50%">
 						<tr>
-							<td><p:outputLabel value="PO Remarks" /></td>
+							<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
 							<td><p:inputTextarea autoResize="true" cols="41"
 									value="#{backingBean.managedBean.poSecReview.personnelRemark}" /></td>
 						</tr>
@@ -405,11 +403,11 @@
 				<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
 					<table style="width: 100%">
 						<tr>
-							<td><p:outputLabel value="PO Remarks" /></td>
+							<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
 							<td><p:inputTextarea autoResize="true" readonly="true"
 									disabled="true" cols="41"
 									value="#{backingBean.managedBean.poSecReview.personnelRemark}" /></td>
-							<td><p:outputLabel value="Approver Remarks" /></td>
+							<td><p:outputLabel value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
 							<td><p:inputTextarea autoResize="true" cols="41"
 									value="#{backingBean.managedBean.apprvrSecReview.personnelRemark}" /></td>
 

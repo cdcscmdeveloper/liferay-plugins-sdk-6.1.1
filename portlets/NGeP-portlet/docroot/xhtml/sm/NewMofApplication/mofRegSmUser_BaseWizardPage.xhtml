@@ -46,21 +46,21 @@
 									</li>
 
 									<li><h:outputText
-											value="#{lbl['lbl.sm.wizard.capitalStepLbl']}"
+											value="#{lbl['lbl.sm.wizard.personStepLbl']}"
 											rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 2}" />
-										<p:commandLink value="#{lbl['lbl.sm.wizard.capitalStepLbl']}"
+										<p:commandLink value="#{lbl['lbl.sm.wizard.personStepLbl']}"
 											actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'2')}"
-											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)}"
+											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL)}"
 											update=":form"
 											rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 2}"
 											styleClass="#{backingBean.managedBean.tabActiveIndex eq 2 ? 'currentStep' : ''}" /></li>
 
 									<li><h:outputText
-											value="#{lbl['lbl.sm.wizard.personStepLbl']}"
+											value="#{lbl['lbl.sm.wizard.capitalStepLbl']}"
 											rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 3}" />
-										<p:commandLink value="#{lbl['lbl.sm.wizard.personStepLbl']}"
+										<p:commandLink value="#{lbl['lbl.sm.wizard.capitalStepLbl']}"
 											actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'3')}"
-											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL)}"
+											action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)}"
 											update=":form"
 											rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 3}"
 											styleClass="#{backingBean.managedBean.tabActiveIndex eq 3 ? 'currentStep' : ''}" /></li>
@@ -249,10 +249,11 @@
 				<ui:include src="step2BranchCompanyInfo.xhtml" />
 			</c:if>
 			<c:if test="#{backingBean.managedBean.tabActiveIndex eq 2}">
-				<ui:include src="step3CaptialAndEquityStatusInfo.xhtml" />
+				<ui:include src="step4PersonnelInfo.xhtml" />
 			</c:if>
 			<c:if test="#{backingBean.managedBean.tabActiveIndex eq 3}">
-				<ui:include src="step4PersonnelInfo.xhtml" />
+
+				<ui:include src="step3CaptialAndEquityStatusInfo.xhtml" />
 			</c:if>
 			<c:if test="#{backingBean.managedBean.tabActiveIndex eq 4}">
 				<ui:include src="step5BankInfo.xhtml" />

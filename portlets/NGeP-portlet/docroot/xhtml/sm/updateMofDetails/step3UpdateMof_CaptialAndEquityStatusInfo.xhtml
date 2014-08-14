@@ -23,17 +23,18 @@
 					<td style="width: 20%; vertical-align: baseline;"
 						class="sidemenutd"><ui:include
 							src="smUpdateMofApplnSideMenuItem.xhtml" /></td>
-					<td><table style="width: 98%">
-							<tr>
-								<td class="smLastSubmitLabel"><h:outputText
-										value="#{lbl['lbl.sm.lastSubmitDate']}" /></td>
-								<td class="smLastSubmitDateVal"><h:outputText
-										value="#{backingBean.managedBean.smAppl.draftExpiryDate}">
-										<f:convertDateTime type="date" pattern="dd-MMM-yyyy" />
-									</h:outputText></td>
-							</tr>
-						</table>
-						<p:outputPanel rendered="#{backingBean.managedBean.supplierUser}">
+					<td><p:outputPanel id="updtMofStep3OnlySuppPan"
+							rendered="#{backingBean.managedBean.supplierUser}">
+							<table style="width: 98%">
+								<tr>
+									<td class="smLastSubmitLabel"><h:outputText
+											value="#{lbl['lbl.sm.lastSubmitDate']}" /></td>
+									<td class="smLastSubmitDateVal"><h:outputText
+											value="#{backingBean.managedBean.smAppl.draftExpiryDate}">
+											<f:convertDateTime type="date" pattern="dd-MMM-yyyy" />
+										</h:outputText></td>
+								</tr>
+							</table>
 							<div align="right" style="width: 99%" class="button-wrapper">
 								<p:commandButton value="#{lbl['lbl.sm.saveAsDraft']}"
 									actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,backingBean.managedBean.tabActiveIndex)}"
@@ -53,14 +54,14 @@
 								<tr>
 									<td><div align="left" style="width: 100%">
 											<p:commandButton value="#{lbl['lbl.sm.prev']}"
-												actionListener="#{backingBean.setTabValue('2','1')}"
-												action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForUpdate,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY,SupplierManagementConst.SM_APPL_PAGE_TYPE_BRANCH)}"
+												actionListener="#{backingBean.setTabValue('3','2')}"
+												action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForUpdate,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY,SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL)}"
 												update=":form" icon="ui-icon-prev" />
 										</div></td>
 									<td><div align="right" style="width: 100%">
 											<p:commandButton value="#{lbl['lbl.sm.next']}"
-												actionListener="#{backingBean.setTabValue('2','3')}"
-												action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForUpdate,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY,SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL)}"
+												actionListener="#{backingBean.setTabValue('3','4')}"
+												action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForUpdate,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY,SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK)}"
 												update=":form" icon="ui-icon-next" iconPos="right" />
 										</div></td>
 								</tr>

@@ -91,14 +91,12 @@
 					<td colspan="4">
 						<div style="width: 98%" align="center">
 							<p:panelGrid styleClass="tablePanel">
-								<f:facet name="header">
-									<p:row>
-										<p:column>#{lbl['lbl.sm.equiStatus.compTabHdr']}</p:column>
-										<!-- <p:column>NO. Of Members</p:column> -->
-										<p:column>#{lbl['lbl.sm.equiStatus.valTabHdr']}</p:column>
-										<p:column>%</p:column>
-									</p:row>
-								</f:facet>
+								<p:row>
+									<p:column>#{lbl['lbl.sm.equiStatus.compTabHdr']}</p:column>
+									<!-- <p:column>NO. Of Members</p:column> -->
+									<p:column>#{lbl['lbl.sm.equiStatus.valTabHdr']}</p:column>
+									<p:column>%</p:column>
+								</p:row>
 								<p:row>
 									<p:column>#{lbl['lbl.sm.equiStatus.bumi']}</p:column>
 
@@ -112,7 +110,8 @@
 										</p:inputText>
 									</p:column>
 									<p:column>
-										<p:inputText readonly="true" id="bumiPerc" size="10" disabled="true"
+										<p:inputText readonly="true" id="bumiPerc" size="10"
+											disabled="true"
 											value="#{backingBean.managedBean.smAppl.smCompanyBasic.bumiPercent}">
 											<f:convertNumber
 												pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -132,7 +131,8 @@
 										</p:inputText>
 									</p:column>
 									<p:column>
-										<p:inputText readonly="true" id="nonBumPer" size="10" disabled="true"
+										<p:inputText readonly="true" id="nonBumPer" size="10"
+											disabled="true"
 											value="#{backingBean.managedBean.smAppl.smCompanyBasic.nonBumiPercent}">
 											<f:convertNumber
 												pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
