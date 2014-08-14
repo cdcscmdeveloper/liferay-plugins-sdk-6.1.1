@@ -2110,6 +2110,8 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 		List<TplSpecZoneDtl> tplSpecDtls = new ArrayList<TplSpecZoneDtl>();
 		
 		for (TreeNode rootNode : treeNodes) {
+			results = new ArrayList<TplSpecZoneLoc>();
+			
 			for (TreeNode ZoneNode : rootNode.getChildren()) {
 
 				for (TreeNode stateNode : ZoneNode.getChildren()) {
