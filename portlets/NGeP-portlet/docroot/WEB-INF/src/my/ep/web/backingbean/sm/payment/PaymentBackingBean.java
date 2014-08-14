@@ -21,6 +21,7 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.portlet.PortletRequest;
+import javax.portlet.PortletSession;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
@@ -354,8 +355,12 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 			}else{*/
 				PmUser pmUser = new FacesScopes().getUserSessionBean();
 
-				PortalUtil.getHttpServletRequest(new FacesScopes().getRequest()).getSession().setAttribute("paymentTaskId", this.getManagedBean().getTaskId());
-				PortalUtil.getHttpServletRequest(new FacesScopes().getRequest()).getSession().setAttribute("paymentBpmPojo", this.getManagedBean().getBpmPojo());
+				//PortalUtil.getHttpServletRequest(new FacesScopes().getRequest()).getSession().setAttribute("paymentTaskId", this.getManagedBean().getTaskId());
+				//PortalUtil.getHttpServletRequest(new FacesScopes().getRequest()).getSession().setAttribute("paymentBpmPojo", this.getManagedBean().getBpmPojo());
+				PortletSession portletSession = (PortletSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
+				portletSession.setAttribute("paymentTaskId", this.getManagedBean().getTaskId(),PortletSession.APPLICATION_SCOPE);
+				portletSession.setAttribute("paymentBpmPojo", this.getManagedBean().getBpmPojo(),PortletSession.APPLICATION_SCOPE);
+				
 				
 				this.getManagedBean().setOrderId(resDTO.getSmBill().getSmPayments().get(0).getPaymentId());
 				this.getManagedBean().setBillMobile(pmUser.getMobileNo());
@@ -370,9 +375,12 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 				this.setvCode(vc);
 				this.getManagedBean().setTotalAmount(ttlAmt);
 				
-				String taskId = (String)PortalUtil.getHttpServletRequest(new FacesScopes().getRequest()).getSession().getAttribute("paymentTaskId");
-				Object bpmPojo = (Object)PortalUtil.getHttpServletRequest(new FacesScopes().getRequest()).getSession().getAttribute("paymentBpmPojo");
+				//String taskId = (String)PortalUtil.getHttpServletRequest(new FacesScopes().getRequest()).getSession().getAttribute("paymentTaskId");
+				//Object bpmPojo = (Object)PortalUtil.getHttpServletRequest(new FacesScopes().getRequest()).getSession().getAttribute("paymentBpmPojo");
 				
+				String taskId = (String)portletSession.getAttribute("paymentTaskId");
+				Object bpmPojo = (Object)portletSession.getAttribute("paymentBpmPojo");
+						
 				System.out.println("*****taskId*****" + taskId);
 				System.out.println("*****bpmPojo*****" + bpmPojo);
 				
@@ -384,9 +392,13 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 	}
 	
 	public void responsePreRender() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
-		String taskId = (String)PortalUtil.getHttpServletRequest(new FacesScopes().getRequest()).getSession().getAttribute("paymentTaskId");
-		Object bpmPojo = (Object)PortalUtil.getHttpServletRequest(new FacesScopes().getRequest()).getSession().getAttribute("paymentBpmPojo");
+		//String taskId = (String)PortalUtil.getHttpServletRequest(new FacesScopes().getRequest()).getSession().getAttribute("paymentTaskId");
+		//Object bpmPojo = (Object)PortalUtil.getHttpServletRequest(new FacesScopes().getRequest()).getSession().getAttribute("paymentBpmPojo");
 		
+		PortletSession portletSession = (PortletSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
+		String taskId = (String)portletSession.getAttribute("paymentTaskId", PortletSession.APPLICATION_SCOPE);
+		Object bpmPojo = (Object)portletSession.getAttribute("paymentBpmPojo",PortletSession.APPLICATION_SCOPE);
+
 		
 		log.info("************responsePreRender Start********");
 		log.info("-----------BPM TaskId-----------" + taskId);
@@ -554,8 +566,14 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 			showPaymentResponse(SupplierManagementConst.PAYMENT_INVALID_RES);		
 			this.renewSesionObject();
 		}
-		PortalUtil.getHttpServletRequest(new FacesScopes().getRequest()).getSession().removeAttribute("paymentTaskId");
-		PortalUtil.getHttpServletRequest(new FacesScopes().getRequest()).getSession().removeAttribute("paymentBpmPojo");
+		//PortalUtil.getHttpServletRequest(new FacesScopes().getRequest()).getSession().removeAttribute("paymentTaskId");
+		//PortalUtil.getHttpServletRequest(new FacesScopes().getRequest()).getSession().removeAttribute("paymentBpmPojo");
+		portletSession.removeAttribute("paymentTaskId",PortletSession.APPLICATION_SCOPE);
+		portletSession.removeAttribute("paymentBpmPojo",PortletSession.APPLICATION_SCOPE);
+		
+		System.out.println("------end taskId-----" + portletSession.getAttribute("paymentTaskId", PortletSession.APPLICATION_SCOPE));
+		System.out.println("------end bpmPojo-----" + portletSession.getAttribute("paymentBpmPojo",PortletSession.APPLICATION_SCOPE));
+
 	}
 	
 	private void curlIPN(HttpServletRequest httpServletRequest) throws Exception{
