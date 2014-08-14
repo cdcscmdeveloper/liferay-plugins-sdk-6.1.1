@@ -2054,6 +2054,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			}
 			
 			//same item with existed one cannot overlap the date
+			reqDTO.setSupplierItemId(this.getManagedBean().getSelectedMaintainItem().getSupplierItemId());
 			reqDTO.setUomId(this.getManagedBean().getSelectedMaintainItem().getPmUom().getUomId());
 			reqDTO.setExtensionCode(this.getManagedBean().getSelectedMaintainItem().getCmItem().getExtensionCode());
 			reqDTO.setStartDate1(cmStandardPricing.getStartDate());
@@ -2538,6 +2539,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				}
 				
 				//same item with existed one cannot overlap the date
+				reqDTO.setSupplierItemId(catalog.getSupplierItemId());
 				reqDTO.setUomId(catalog.getPmUom().getUomId());
 				reqDTO.setExtensionCode(catalog.getCmItem().getExtensionCode());
 				reqDTO.setStartDate1(catalog.getCmStandardPricing().getStartDate());
