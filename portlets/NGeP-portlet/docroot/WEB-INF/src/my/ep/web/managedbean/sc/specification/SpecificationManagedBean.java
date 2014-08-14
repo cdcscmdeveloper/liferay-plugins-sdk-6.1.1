@@ -349,6 +349,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private CtPanelItem existingpanelitem;
 	private String bankstmntTomonth;
 	private int tempIndex;
+	private boolean ctzones = Boolean.FALSE;
 
 	public SpecificationManagedBean() {
 		
@@ -3983,6 +3984,20 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	 */
 	public void setTempIndex(int tempIndex) {
 		this.tempIndex = tempIndex;
+	}
+
+	/**
+	 * @return the ctzones
+	 */
+	public boolean isCtzones() {
+		return ctzones;
+	}
+
+	/**
+	 * @param ctzones the ctzones to set
+	 */
+	public void setCtzones(boolean ctzones) {
+		this.ctzones = ctzones;
 	}
 
 }
