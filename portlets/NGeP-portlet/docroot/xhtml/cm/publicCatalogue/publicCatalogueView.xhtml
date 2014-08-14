@@ -14,27 +14,29 @@
 input.ui-autocomplete-input {
 	font-size: 16px !important;
 	width: 600px;
+	
 }
 </style>
 
+
 		<p:messages id="publicCatMesId" autoUpdate="true" closable="true"
-			showSummary="true"></p:messages>
+			showSummary="false"></p:messages>
 
 		<p:tabView id="catalogueTabId">
 			<p:tab title="Keyword Search">
 				<table style="width: 100%; margin-top: 8px;">
 					<tr>
 						<td style="width: 20%;"><p:inputText size="120"
-								required="true" id="itemNameId"
-								requiredMessage="Item name is Required"
+								id="itemNameId"
 								value="#{pCatalogueBackingBean.managedBean.itemName}"
 								/> <p:watermark
 								for="itemNameId"
 								value="Search by item name keywords. Eg, Personal computer"></p:watermark></td>
-						<td style="padding-left: 5px;"><p:commandLink title="Search"
+						<td style="padding-left: 5px;"><p:commandLink title="Search" id="searchBtnId"
 								update=":form" action="#{pCatalogueBackingBean.searchCatalogue}">
 								<p:graphicImage value="/resources/ep/images/design/search.png"></p:graphicImage>
 							</p:commandLink>
+							<p:defaultCommand target="searchBtnId" />
 							<p:spacer width="10px;" />
 							<p:commandLink title="Clear" update=":form"
 								action="#{pCatalogueBackingBean.clearSerach}">
@@ -81,7 +83,7 @@ input.ui-autocomplete-input {
 									<tr>
 										<td style="background-color: #D3D3D3;"><p:outputLabel
 												value="Categories"
-												style="font-weight:bold;padding-bottom: 10px;float:left;font-size:16px;" /></td>
+												style="font-weight:bold;padding-bottom: 10px;float:left;font-size:16px;vertical-align: middle;" /></td>
 									</tr>
 									<tr>
 										<td style="padding-top: 8px; padding-bottom: 8px;"><ui:repeat
@@ -104,7 +106,7 @@ input.ui-autocomplete-input {
 									</tr>
 									<tr height="30px;">
 										<td><h:panelGroup style="width:100%;"
-												rendered="#{!(fn:length(pCatalogueBackingBean.managedBean.familyList) > 1) }">
+												rendered="#{(fn:length(pCatalogueBackingBean.managedBean.familyList) == 1) }">
 
 												<table style="width: 100%;">
 													<tr height="30px;">
