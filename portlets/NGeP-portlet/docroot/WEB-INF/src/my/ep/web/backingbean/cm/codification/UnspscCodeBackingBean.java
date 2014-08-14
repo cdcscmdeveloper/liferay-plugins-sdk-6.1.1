@@ -1662,14 +1662,14 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		}else if(res.getTaskName().equalsIgnoreCase("Result Notification")){
 			FacesContext fc = FacesContext.getCurrentInstance();
 			
-			boolean isPublished;
-			if(unspsc.isPublished() == null) {
-				isPublished = true;
-			} else {
-				isPublished = unspsc.isPublished().booleanValue();
-			}
+//			boolean isPublished;
+//			if(unspsc.isPublished() == null) {
+//				isPublished = true;
+//			} else {
+//				isPublished = unspsc.isPublished().booleanValue();
+//			}
 			
-			if(isPublished) {
+			if(unspsc.isPublished()) {
 				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "resultNotification.xhtml");
 			} else {
 				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "reviewExtensionCodeFlow2.xhtml");
