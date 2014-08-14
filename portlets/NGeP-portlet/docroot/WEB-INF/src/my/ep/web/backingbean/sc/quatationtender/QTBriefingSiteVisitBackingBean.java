@@ -262,7 +262,8 @@ public class QTBriefingSiteVisitBackingBean extends
 					}
 				}
 			}
-
+			briefingDtlBean
+			.setSelectedBriefingDtls(null);
 		} else if (SourcingConstants.BSV_TYPE_SITEVISIT
 				.equalsIgnoreCase(bsvType)) {
 			List<ScQtBsvDtl> siteVisitDetails = briefingDtlBean
@@ -283,6 +284,8 @@ public class QTBriefingSiteVisitBackingBean extends
 					}
 				}
 			}
+			briefingDtlBean
+			.setSelectedSiteVisitDtls(null);
 		}
 		this.getManagedBean().setBsvDtlBean(briefingDtlBean);
 	}
