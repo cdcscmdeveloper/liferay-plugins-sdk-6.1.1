@@ -232,9 +232,7 @@ public class QTBriefingSiteVisitBackingBean extends
 					zoneBeans.add(i, briefingBean);
 					break;
 				}
-			}
-			this.getManagedBean().setBriefingZoneBean(zoneBeans);
-		} else {
+			}		
 			this.getManagedBean().setBsvDtlBean(briefingBean);
 		}
 		this.getManagedBean().setQtBriefing(null);
@@ -593,6 +591,7 @@ public class QTBriefingSiteVisitBackingBean extends
 	 */
 	public void onZoneTabChange(TabChangeEvent event){
 	BriefingZoneBean zoneBean = (BriefingZoneBean) event.getData();
+
 	//this.getManagedBean().setBsvZoneindx(1);
 	this.getManagedBean().setBsvDtlBean(zoneBean);
 	}

@@ -329,5 +329,7 @@ public class QTScheduleDetailBackingBean extends
 		this.getManagedBean().setScQtSampleSubmission(null);
 		RequestContext.getCurrentInstance().execute("sampledlg.hide();");
 	}
+	
+	
 
 }

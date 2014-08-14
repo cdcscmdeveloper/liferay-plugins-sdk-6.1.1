@@ -915,6 +915,9 @@ public class QTDetailBackingBean extends
 
 			ScQtApproval approval = getManagedBean().getPublicationApproval();
 			if (null != approval) {
+				if (null == approvalList) {
+					approvalList = new ArrayList<ScQtApproval>();
+				}
 				List<ScQtApprovalRequest> approvalDtls = new ArrayList<ScQtApprovalRequest>();
 				ScQtApprovalRequest scQtApprovalDtl = new ScQtApprovalRequest();
 				ParameterReqDTO reqDTO1 = new ParameterReqDTO();
@@ -973,7 +976,11 @@ public class QTDetailBackingBean extends
 			List<SearchFilterBean> searchFilterBean = new ArrayList<SearchFilterBean>();
 			String qtTitle = qtnTenderSearchBean.getQtTitle();
 			if (!StringUtils.isBlank(qtTitle)) {
-				qtSearchBean.getDataFilterBeans().add(new SearchFilterBean(QTConstants.QT_TITILE, SearchOperator.OPERATOR_LIKE.value(), qtTitle, true));
+				SearchFilterBean bean = new SearchFilterBean();
+				bean.setSearchField(QTConstants.QT_TITILE);
+				bean.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
+				bean.setSearchValue(qtTitle);
+				searchFilterBean.add(bean);
 			}
 			String qtNumber = qtnTenderSearchBean.getQtNo();
 			if (!StringUtils.isBlank(qtNumber)) {
@@ -985,7 +992,10 @@ public class QTDetailBackingBean extends
 			}
 			String procurementMode = qtnTenderSearchBean.getProcurementMode();
 			if (!StringUtils.isBlank(procurementMode)) {
-				qtSearchBean.getDataFilterBeans().add(new SearchFilterBean("procurementMode.parameterCode", SearchOperator.OPERATOR_EQUALS.value(), procurementMode));
+				qtSearchBean.getDataFilterBeans().add(
+						new SearchFilterBean("procurementMode.parameterCode",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								procurementMode));
 			}
 			Date fromCreatedDate = qtnTenderSearchBean.getFromCreatedDate();
 			Date toCreatedDate = qtnTenderSearchBean.getToCreatedDate();
@@ -1123,7 +1133,7 @@ public class QTDetailBackingBean extends
 			try {
 				qTBriefingSO = (IQTBriefingSO) BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-								IQTBriefingSO.class);
+							IQTBriefingSO.class);
 				String languageCode = new FacesScopes().getUserLocale()
 						.getLanguage();
 				BriefingReqDTO reqDTO = new BriefingReqDTO();
@@ -1155,11 +1165,11 @@ public class QTDetailBackingBean extends
 							zoneBeans.add(briefingZoneBean);
 						}
 					}
-					this.getManagedBean().setBriefingZoneBean(zoneBeans);
-					this.getManagedBean().setBsvDtlBean(zoneBeans.get(0));
+					this.getManagedBean().setBriefingZoneBean(zoneBeans);					
 					initializeRemarks(zoneBeans.get(0).getScQtBsv(), zoneBeans
 							.get(0).getScQtBsv().getBsvRemarks(),
 							ScQtBSVRemark.class);
+					this.getManagedBean().setBsvDtlBean(zoneBeans.get(0));
 				} else {
 					ScQtBsv qtBsv = resDTO.getScQtBsv();
 					initializeRemarks(qtBsv, qtBsv.getBsvRemarks(),
@@ -1932,7 +1942,6 @@ public class QTDetailBackingBean extends
 	}
 
 	public void reset() {
-		this.getManagedBean().getQtnTenderSearchBean().setQtTitle(null);
 		this.getManagedBean().getQtnTenderSearchBean().setQtNo(null);
 		this.getManagedBean().getQtnTenderSearchBean().setProcurementMode(null);
 		this.getManagedBean().getQtnTenderSearchBean().setFromCreatedDate(null);
