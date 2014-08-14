@@ -19,15 +19,17 @@
 								<p:panelGrid styleClass="tablePanel" id="contrPerSumTable">
 
 									<p:row id="contrPerSumTableHdrRow1">
-										<p:column rowspan="2" />
-										<p:column rowspan="2">#{lbl['lbl.sm.person.composition.bod']}</p:column>
-										<p:column rowspan="2" style="width:20%">#{lbl['lbl.sm.person.composition.hghMngt']}</p:column>
-										<p:column rowspan="2">#{lbl['lbl.sm.person.composition.mngt']}</p:column>
-										<p:column colspan="2" style="text-align:center">#{lbl['lbl.sm.person.composition.stfTtl']}</p:column>
+										<p:column rowspan="2" styleClass="tableheaderrow" />
+										<p:column rowspan="2" styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.bod']}</p:column>
+										<p:column rowspan="2" style="width:20%"
+											styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.hghMngt']}</p:column>
+										<p:column rowspan="2" styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.mngt']}</p:column>
+										<p:column colspan="2" style="text-align:center"
+											styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.stfTtl']}</p:column>
 									</p:row>
 									<p:row id="contrPerSumTableHdrRow2">
-										<p:column>#{lbl['lbl.sm.person.composition.entered']}</p:column>
-										<p:column>#{lbl['lbl.sm.person.composition.actual']}</p:column>
+										<p:column styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.entered']}</p:column>
+										<p:column styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.actual']}</p:column>
 
 									</p:row>
 									<p:row>
@@ -105,21 +107,25 @@
 								test="#{backingBean.managedBean.smAppl.supplierType eq 'J'}">
 								<p:panelGrid styleClass="tablePanel" id="consultPerSumTable">
 									<p:row id="consultPerSumHdrRow">
-										<p:column rowspan="2" />
-										<p:column rowspan="2">#{lbl['lbl.sm.person.composition.bod']}</p:column>
-										<p:column rowspan="2" style="width:15%">#{lbl['lbl.sm.person.composition.hghMngt']}</p:column>
-										<p:column rowspan="2">#{lbl['lbl.sm.person.composition.mngt']}</p:column>
-										<p:column colspan="2" style="text-align:center">#{lbl['lbl.sm.person.composition.prfStf']}</p:column>
-										<p:column colspan="2" style="text-align:center">#{lbl['lbl.sm.person.composition.semiPrfStf']}</p:column>
-										<p:column colspan="2" style="text-align:center">#{lbl['lbl.sm.person.composition.clrStf']}</p:column>
+										<p:column rowspan="2" styleClass="tableheaderrow" />
+										<p:column rowspan="2" styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.bod']}</p:column>
+										<p:column rowspan="2" style="width:15%"
+											styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.hghMngt']}</p:column>
+										<p:column rowspan="2" styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.mngt']}</p:column>
+										<p:column colspan="2" style="text-align:center"
+											styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.prfStf']}</p:column>
+										<p:column colspan="2" style="text-align:center"
+											styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.semiPrfStf']}</p:column>
+										<p:column colspan="2" style="text-align:center"
+											styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.clrStf']}</p:column>
 									</p:row>
 									<p:row id="consultPerEntActSumHdrRow">
-										<p:column>#{lbl['lbl.sm.person.composition.entered']}</p:column>
-										<p:column>#{lbl['lbl.sm.person.composition.actual']}</p:column>
-										<p:column>#{lbl['lbl.sm.person.composition.entered']}</p:column>
-										<p:column>#{lbl['lbl.sm.person.composition.actual']}</p:column>
-										<p:column>#{lbl['lbl.sm.person.composition.entered']}</p:column>
-										<p:column>#{lbl['lbl.sm.person.composition.actual']}</p:column>
+										<p:column styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.entered']}</p:column>
+										<p:column styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.actual']}</p:column>
+										<p:column styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.entered']}</p:column>
+										<p:column styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.actual']}</p:column>
+										<p:column styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.entered']}</p:column>
+										<p:column styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.actual']}</p:column>
 
 									</p:row>
 									<p:row>
