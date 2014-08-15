@@ -105,18 +105,11 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 	public SelectItem[] getBodyType() {
 
 		SelectItem[] items = null;
-		try {
 			items = new SelectItem[3];
 			items[0] = new SelectItem(0, "Select One");
 			items[1] = new SelectItem(1, "Professional");
 			items[2] = new SelectItem(2, "Certified");
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
-							e.getMessage()));
-		}
+
 		return items;
 	}
 
