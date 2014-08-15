@@ -661,10 +661,11 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	public void retrieveOrderAmount(FlFulfilmentItemAddr flItemAddr){
 		IPurchaseRequestSO purchaseRequestSO = (IPurchaseRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,	IPurchaseRequestSO.class);
 		PurchaseRequestReqDTO reqDTO = new PurchaseRequestReqDTO();
-		
-		if(getManagedBean().getPmPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_ZONAL_STANDARD)){
-			reqDTO.setPriceType(getManagedBean().getPmPriceType());
-			reqDTO.setRequestSupplierItemId(getManagedBean().getScRequestSupplierItemId());
+		if(getManagedBean().getPmPriceType() != null){
+			if(getManagedBean().getPmPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_ZONAL_STANDARD)){
+				reqDTO.setPriceType(getManagedBean().getPmPriceType());
+				reqDTO.setRequestSupplierItemId(getManagedBean().getScRequestSupplierItemId());
+			}
 		}else{
 			reqDTO.setRequestSupplierItemId(flItemAddr.getScSupplierItemPrice().getScRequestSupplierItem().getRequestSupplierItemId());
 			reqDTO.setPriceType(flItemAddr.getScSupplierItemPrice().getPriceType());
