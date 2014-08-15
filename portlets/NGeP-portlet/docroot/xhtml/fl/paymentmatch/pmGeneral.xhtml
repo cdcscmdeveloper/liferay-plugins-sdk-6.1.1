@@ -107,6 +107,7 @@
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText></td>
+				<h:panelGroup rendered="#{paymentMatchBackingBean.managedBean.paymentAdvice.status.statusId eq FulfilmentStatusCont.poPendingPaymentmatch}">
 				<td style="width: 137px;"><p:outputLabel
 						value="#{lbl['lbl.fl.pm.payment.pre.date']}" /></td>
 				<td><p:inputText size="20" disabled="true"
@@ -114,16 +115,19 @@
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText></td>
+				</h:panelGroup>	
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.pm.payment.desc']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td><p:inputText size="53" maxlength="225"
+				<td><p:inputText size="53" maxlength="25"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.description}">
 					</p:inputText></td>
+				<h:panelGroup rendered="#{paymentMatchBackingBean.managedBean.paymentAdvice.status.statusId eq FulfilmentStatusCont.poPendingPaymentmatch}">	
 				<td><p:outputLabel value="#{lbl['lbl.fl.pm.payment.ref']}" /></td>
 				<td><p:inputText size="20" disabled="true"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.paymentRefNo}" /></td>
+				</h:panelGroup>		
 			</tr>
 		</table>
 	</p:panel>
