@@ -207,7 +207,7 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 				.getInstance().getServiceObject("sm", IPersonnelSO.class);
 		PersonnelResDTO resDTO = smPersonnelSO.retrievePersonnelCountForSuppUserMaint(reqDTO);
 
-		if(resDTO.getSmPersonnelList() != null && resDTO.getSmPersonnelList().size() < 5){
+		if(resDTO.getSmPersonnelList() != null && resDTO.getSmPersonnelList().size() < 3){
 			validPerCount = false;
 		} else {
 			validPerCount = true;
