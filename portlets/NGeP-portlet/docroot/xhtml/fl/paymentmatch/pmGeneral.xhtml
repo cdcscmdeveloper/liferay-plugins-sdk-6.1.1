@@ -107,7 +107,7 @@
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText></td>
-				<h:panelGroup rendered="#{paymentMatchBackingBean.managedBean.paymentAdvice.status.statusId eq FulfilmentStatusCont.poPendingPaymentmatch}">
+				<h:panelGroup rendered="#{paymentMatchBackingBean.managedBean.paymentAdvice.status.statusId ne FulfilmentStatusCont.poPendingPaymentmatch}">
 				<td style="width: 137px;"><p:outputLabel
 						value="#{lbl['lbl.fl.pm.payment.pre.date']}" /></td>
 				<td><p:inputText size="20" disabled="true"
@@ -123,7 +123,7 @@
 				<td><p:inputText size="53" maxlength="25"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.description}">
 					</p:inputText></td>
-				<h:panelGroup rendered="#{paymentMatchBackingBean.managedBean.paymentAdvice.status.statusId eq FulfilmentStatusCont.poPendingPaymentmatch}">	
+				<h:panelGroup rendered="#{paymentMatchBackingBean.managedBean.paymentAdvice.status.statusId ne FulfilmentStatusCont.paPendingPaymentMatch}">	
 				<td><p:outputLabel value="#{lbl['lbl.fl.pm.payment.ref']}" /></td>
 				<td><p:inputText size="20" disabled="true"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.paymentRefNo}" /></td>
