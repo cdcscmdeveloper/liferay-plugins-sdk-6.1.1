@@ -69,10 +69,16 @@
 									styleClass="ui-button" icon="#{iconVar}"
 									actionListener="#{requestNoteBackingBean.approverAction(action)}" />
 
-								<p:commandButton value="#{action}" process="@all" update="@form"
+
+                               <ui:param name="isCancel" value="${action == 'CANCEL'}" />
+
+								<p:commandButton value="#{action}" 
 									rendered="#{unspscCodeBackingBean.isRequisitioner()}"
-									styleClass="ui-button" icon="#{iconVar}"
+									styleClass="ui-button" icon="#{iconVar}" partialSubmit="true"
+									process="#{isCancel ? '@this' : '@form'}"
+									update="#{isCancel ? '@this' : '@form'}"
 									actionListener="#{requestNoteBackingBean.submitAction(action)}" />
+									
 							</c:forEach></td>
 					</tr>
 				</table>
