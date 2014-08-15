@@ -49,7 +49,7 @@
 			<portlet id="pmEducationField"></portlet>	
 			<portlet id="tempUserSearch"></portlet>	
 		    <portlet id="pmUOM"></portlet>	
-			
+			<portlet id="pmBusinessNature"></portlet>	
 		</category>
 		<!-- Profile Management - END -->		
 
