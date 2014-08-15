@@ -2165,6 +2165,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			reqDTO.setExtensionCode(this.getManagedBean().getSelectedMaintainItem().getCmItem().getExtensionCode());
 			reqDTO.setStartDate1(cmStandardPricing.getStartDate());
 			reqDTO.setEndDate1(cmStandardPricing.getEndDate());
+			reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
 			if(catalogueSO.checkExistedItem(reqDTO)){
 				FacesContext.getCurrentInstance().addMessage(
 						null,
@@ -2760,6 +2761,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				reqDTO.setExtensionCode(catalog.getCmItem().getExtensionCode());
 				reqDTO.setStartDate1(catalog.getCmStandardPricing().getStartDate());
 				reqDTO.setEndDate1(catalog.getCmStandardPricing().getEndDate());
+				reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
 				if(catalogueSO.checkExistedItem(reqDTO)){
 					FacesContext.getCurrentInstance().addMessage(
 							null,
