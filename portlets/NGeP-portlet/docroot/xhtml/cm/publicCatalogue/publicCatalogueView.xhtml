@@ -20,7 +20,7 @@ input.ui-autocomplete-input {
 
 
 		<p:messages id="publicCatMesId" autoUpdate="true" closable="true"
-			showSummary="false"></p:messages>
+			showSummary="true"></p:messages>
 
 		<p:tabView id="catalogueTabId">
 			<p:tab title="Keyword Search">
@@ -83,7 +83,7 @@ input.ui-autocomplete-input {
 									<tr>
 										<td style="background-color: #D3D3D3;"><p:outputLabel
 												value="Categories"
-												style="font-weight:bold;padding-bottom: 10px;float:left;font-size:16px;vertical-align: middle;" /></td>
+												style="font-weight:bold;padding-bottom: 5px;float:left;font-size:16px;vertical-align: middle;" /></td>
 									</tr>
 									<tr>
 										<td style="padding-top: 8px; padding-bottom: 8px;"><ui:repeat
@@ -111,7 +111,7 @@ input.ui-autocomplete-input {
 												<table style="width: 100%;">
 													<tr height="30px;">
 														<td
-															style="border-bottom: 1px solid #CFD62A; border-top: 1px solid #CFD62A;"><p:outputLabel
+															style="border-top: 1px solid #CFD62A;"><p:outputLabel
 																style="font-weight:bold;float:left;font-size:15px;"
 																value="#{lbl['lbl.cm.brand']}"></p:outputLabel></td>
 													</tr>
@@ -134,12 +134,12 @@ input.ui-autocomplete-input {
 
 									<tr height="30px;">
 										<td
-											style="border-bottom: 1px solid #CFD62A; border-top: 1px solid #CFD62A;"><p:outputLabel
+											style="border-top: 1px solid #CFD62A;"><p:outputLabel
 												value="Price Range"
 												style="font-weight:bold;float:left;font-size:15px;" /></td>
 									</tr>
 									<tr height="40px;">
-										<td>RM <p:inputText
+										<td style="border-bottom: 1px solid #CFD62A;">RM <p:inputText
 												value="#{pCatalogueBackingBean.managedBean.priceForm}"
 												size="10" /> - RM <p:inputText
 												value="#{pCatalogueBackingBean.managedBean.priceTo}"
@@ -183,7 +183,7 @@ input.ui-autocomplete-input {
 														<div align="center" style="width: 100%">
 														<div align="center"  style="height: 100px; width: 100px;padding-top: 20px;">
 															<p:outputPanel
-																style="width:100px; border: 1px solid #808080; display: block; vertical-align: middle; padding: 20px 4px; text-align: center;">
+																style="width:100px; border: 1px solid #808080; display: block; vertical-align: top; padding: 20px 4px; text-align: center;">
 													#{lbl['lbl.cm.no.image.available']}
 													</p:outputPanel>
 														</div>

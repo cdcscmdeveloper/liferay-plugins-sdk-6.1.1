@@ -189,9 +189,9 @@ public class BPMTaskListBackingBean extends
 		String viewBy = "";
 //		this.getManagedBean().setViewBy("ALL");
 //		this.getManagedBean().setAssignment("ALL");
+		this.getManagedBean().setDocType("");
 		FacesScopes facesScope = new FacesScopes();
-		
-      	System.out.println("............facesScope.getRequestScope(docTypeId)="+facesScope.getRequestScope("docTypeId"));
+		filterViewbyNAssignment();
 		try{
 //			 retrieveWorklistItems("ASSIGNED",this.getManagedBean().getViewBy(), this.getManagedBean().getAssignment());
 		

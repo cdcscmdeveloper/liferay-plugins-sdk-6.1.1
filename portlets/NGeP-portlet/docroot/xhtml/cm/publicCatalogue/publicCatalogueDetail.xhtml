@@ -40,24 +40,19 @@
 
 		<div style="text-align: left;">
 
-
-
 			<p:commandButton value="#{lbl['lbl.cm.back']}" icon="ui-icon-back"
-				action="#{pCatalogueBackingBean.cancelToPublicSearch()}"
-				immediate="true"></p:commandButton>
-
-
+				action="#{pCatalogueBackingBean.cancelToPublicSearch}"></p:commandButton>
 
 		</div>
 
 
 		<p:panel>
 
-			<table style="width: 100%; margin-top: 10px;">
+			<table style="width: 100%;">
 				<tr style="height: 30px;">
 					<td rowspan="10" style="vertical-align:top; width: 30%;">
 
-						<div id="slides" style="width: 250px;">
+						<div id="slides" style="width: 250px;float: right; margin-right: 50px;">
 
 							<h:panelGroup
 								rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) == 0 }">
@@ -79,18 +74,19 @@
 						</div>
 
 					</td>
-					<td colspan="4"><h:outputText style="text-align:left;"
+					<td colspan="4"><h:outputText style="text-align:left;vertical-align:top;"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.itemName}"
-							styleClass="screen-title" /></td>
+							styleClass="item-title" /></td>
 
 
 				</tr>
 
 				<tr style="height: 30px;">
+				   
 					<td><h:outputText value="#{lbl['lbl.cm.item.code']} : "
-							style="text-align:left;" /></td>
-					<td colspan="3"><h:outputText style="text-align:left;"
+							style="text-align:left;" /><h:outputText style="text-align:left;"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.extensionCode}"/></td>
+					<td colspan="4"></td>
 
 				</tr>
 				<tr style="height: 15px; width: 100%">
@@ -100,7 +96,7 @@
 				</tr>
 				<tr style="height: 40px;">
 					<td colspan="4" style="background-color: #D3D3D3;"><h:outputText
-							value="#{lbl['lbl.cm.normal.price']}   #{catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.price} RM"
+							value="#{lbl['lbl.cm.normal.price']}  RM #{catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.price}"
 							style="font-weight:bold;padding-bottom: 10px;float:left;font-size:16px;padding-left: 8px;" />
 					</td>
 				</tr>
@@ -108,43 +104,47 @@
 
 					<td style="width:25%;"><h:outputText value="#{lbl['lbl.cm.uom']}" /></td>
 
-					<td style="width:25%;"></td>
+				
 					<td style="width:25%;"><h:outputText value="#{lbl['lbl.cm.min.order']}" /></td>
 					<td style="width:25%;"></td>
+						<td style="width:25%;"></td>
 				</tr>
 				<tr style="height: 30px;">
-					<td><h:outputText
+					<td><h:outputText style="margin-left: 10px;"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.pmUom.uomName}"></h:outputText>
 					</td>
 
-					<td></td>
-					<td><h:outputText
+					
+					<td><h:outputText style="margin-left: 10px;"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.minOrder}"></h:outputText></td>
+					<td></td>
 					<td></td>
 				</tr>
 				<tr style="height: 30px;">
 					<td><h:outputText value="#{lbl['lbl.cm.delivery.term.days']}" /></td>
 
-					<td></td>
+				
 					<td><h:outputText value="#{lbl['lbl.cm.model']}" /></td>
 					<td></td>
+						<td></td>
 				</tr>
 				<tr style="height: 30px;">
 
-					<td colspan="1"><h:outputText
+					<td colspan="1"><h:outputText style="margin-left: 10px;"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.leadTime}" /></td>
 
-					<td></td>
-					<td colspan="1"><h:outputText
+					
+					<td colspan="1"><h:outputText style="margin-left: 10px;"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.modelNumber}" /></td>
+					<td></td>
 					<td></td>
 				</tr>
 
 
 				<tr style="height: 50px;">
-					<td><p:outputLabel
+					<td><h:outputText style="vertical-align: top;"
 							value="#{lbl['lbl.cm.additional.item.description']} : " /></td>
-					<td colspan="3"><h:outputText
+					<td colspan="4"><h:outputText
 							style="width:660px !important;border : 0px;"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemDesc}"
 							readonly="true" /></td>
@@ -205,14 +205,7 @@
 											value="#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmDistrict.districtName}" /></td>
 								</tr>
 
-								<tr>
-									<td><h:outputText value="#{lbl['lbl.cm.tel.no']} " /></td>
-									<td><h:outputText
-											value="#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.smAppl.smCompanyBasic.phoneNo}" /></td>
-									<td><h:outputText value="#{lbl['lbl.cm.fax.no']} " /></td>
-									<td><h:outputText
-											value="#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.smAppl.smCompanyBasic.faxNo}" /></td>
-								</tr>
+								
 							</table>
 						</p:panel></td>
 				</tr>

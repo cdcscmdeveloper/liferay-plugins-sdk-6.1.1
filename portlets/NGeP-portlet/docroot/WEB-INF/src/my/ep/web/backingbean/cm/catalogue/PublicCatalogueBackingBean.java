@@ -13,12 +13,14 @@ import javax.faces.model.SelectItem;
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
+import my.ep.constant.MessageConst;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
 import my.ep.dto.cm.codification.CodificationReqDTO;
 import my.ep.dto.cm.codification.CodificationResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
+import my.ep.exception.EpException;
 import my.ep.persistence.entity.cm.catalog.CmBrand;
 import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
@@ -40,6 +42,9 @@ public class PublicCatalogueBackingBean extends
 	private static Logger log = Logger
 			.getLogger(PublicCatalogueBackingBean.class);
 
+	public PublicCatalogueBackingBean(){
+		this.getManagedBean().setItemName(null);
+	}
 	public List<String> autoCompleteItemName(String query) {
 
 		System.out.println("query:::::::::::::::::::::::::::::: " + query);
@@ -98,20 +103,13 @@ public class PublicCatalogueBackingBean extends
 
 	public void searchCatalogue() {
 		FacesContext facesContext = FacesContext.getCurrentInstance();
-  if(this.getManagedBean().getItemName() == null || this.getManagedBean().getItemName().isEmpty()){
-	  
-	  facesContext
-		.addMessage(
+      if(this.getManagedBean().getItemName() == null || this.getManagedBean().getItemName().isEmpty()){
+	  facesContext.addMessage(
 				null,
-				new FacesMessage(
-						FacesMessage.SEVERITY_ERROR,
-						null,
-						MessageUtils
-								.getMessage(
-										"Item Name Required.",
-										MessageUtils.BUNDLE_COMMON_MESSAGES,
-										new FacesScopes()
-												.getUserLocale())));
+				new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+						MessageUtils.getMessage(MessageConst.ERROR_716008,
+								MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
 	  return ;
    }
 		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
