@@ -1830,6 +1830,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		System.out.println("******getTabActiveIndex:"+ this.getManagedBean().getTabActiveIndex());
 
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
+		ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject("sm",ISupplierSearchSO.class);
 
 		try {
 
@@ -2163,12 +2164,16 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			//---------------------------------- end comparison each date with standard date range ----------------------------------------------------
 			
 			//same item with existed one cannot overlap the date
+			SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
+			supplierReqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
+			SupplierSearchResDTO smResDTO = supplierSearchSO.retriveSupplierProfiles(supplierReqDTO);
+			
 			reqDTO.setSupplierItemId(this.getManagedBean().getSelectedMaintainItem().getSupplierItemId());
 			reqDTO.setUomId(this.getManagedBean().getSelectedMaintainItem().getPmUom().getUomId());
 			reqDTO.setExtensionCode(this.getManagedBean().getSelectedMaintainItem().getCmItem().getExtensionCode());
 			reqDTO.setStartDate1(cmStandardPricing.getStartDate());
 			reqDTO.setEndDate1(cmStandardPricing.getEndDate());
-			reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
+			reqDTO.setSupplierId(smResDTO.getResultBean().getResultList().get(0).getSupplierId());
 			if(catalogueSO.checkExistedItem(reqDTO)){
 				FacesContext.getCurrentInstance().addMessage(
 						null,
@@ -2474,12 +2479,11 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 									MessageUtils.BUNDLE_COMMON_MESSAGES,
 									new FacesScopes().getUserLocale())));
 
-			ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject("sm",ISupplierSearchSO.class);
-			SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
+			supplierReqDTO = new SupplierSearchReqDTO();
 
 			PmUser pmUser = new FacesScopes().getUserSessionBean();
 			supplierReqDTO.setUserId(pmUser.getUserId());
-			SupplierSearchResDTO smResDTO = supplierSearchSO.retriveSupplierProfiles(supplierReqDTO);
+			smResDTO = supplierSearchSO.retriveSupplierProfiles(supplierReqDTO);
 			reqDTO.setSupplierId(smResDTO.getResultBean().getResultList().get(0).getSupplierId());
 
 			if (this.getManagedBean().getTabActiveIndex() == 0) {
@@ -2533,6 +2537,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			return "editCatalogItem";
 		} finally {
 			catalogueSO = null;
+			supplierSearchSO = null;
 		}
 
 		log.info("Exit saveCatalogItem");
@@ -2550,6 +2555,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
 				.getInstance().getServiceObject("cm", ICatalogueSO.class);
+		ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
+				.getInstance().getServiceObject("sm", ISupplierSearchSO.class);
 
 		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 		CatalogueResDTO resDTO = new CatalogueResDTO();
@@ -2759,12 +2766,16 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				}
 				
 				//same item with existed one cannot overlap the date
+				SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
+				supplierReqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
+				SupplierSearchResDTO smResDTO = supplierSearchSO.retriveSupplierProfiles(supplierReqDTO);
+				
 				reqDTO.setSupplierItemId(catalog.getSupplierItemId());
 				reqDTO.setUomId(catalog.getPmUom().getUomId());
 				reqDTO.setExtensionCode(catalog.getCmItem().getExtensionCode());
 				reqDTO.setStartDate1(catalog.getCmStandardPricing().getStartDate());
 				reqDTO.setEndDate1(catalog.getCmStandardPricing().getEndDate());
-				reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
+				reqDTO.setSupplierId(smResDTO.getResultBean().getResultList().get(0).getSupplierId());
 				if(catalogueSO.checkExistedItem(reqDTO)){
 					FacesContext.getCurrentInstance().addMessage(
 							null,
@@ -2808,9 +2819,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					.println("resDTO.isSuccessful():" + resDTO.isSuccessful());
 			if (resDTO.isSuccessful()) {
 
-				ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
-						.getInstance().getServiceObject("sm",
-								ISupplierSearchSO.class);
 				SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
 
 				PmUser pmUser = new FacesScopes().getUserSessionBean();
@@ -2839,6 +2847,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			e.printStackTrace();
 		}finally {
 			catalogueSO = null;
+			supplierSearchSO = null;
 		}
 
 		return "catalogMaintenanceFile";
