@@ -1703,6 +1703,7 @@ public class CodificationBackingBean extends
 			unspscBB.getManagedBean().getRequestCode()
 					.setColorName(resDTO.getColorList().get(0).getColorName());
 
+			unspscBB.getManagedBean().getRequestCode().setColorId(resDTO.getColorList().get(0).getColorId());
 			unspscBB.getManagedBean().getRequestCode().setRequestColor(false);
 		} else {
 			unspscBB.getManagedBean().getRequestCode().setRequestColor(true);
@@ -1720,6 +1721,8 @@ public class CodificationBackingBean extends
 			unspscBB.getManagedBean().getRequestCode()
 					.setTypeName(resDTO.getTypeList().get(0).getTypeName());
 
+			unspscBB.getManagedBean().getRequestCode()
+				.setTypeId(resDTO.getTypeList().get(0).getTypeId());
 			unspscBB.getManagedBean().getRequestCode().setRequestType(false);
 		} else {
 			unspscBB.getManagedBean().getRequestCode().setRequestType(true);
@@ -1735,7 +1738,8 @@ public class CodificationBackingBean extends
 
 			unspscBB.getManagedBean().getRequestCode()
 					.setBrandName(resDTO.getBrandList().get(0).getBrandName());
-
+			unspscBB.getManagedBean().getRequestCode()
+				.setBrandId(resDTO.getBrandList().get(0).getBrandId());
 			unspscBB.getManagedBean().getRequestCode().setRequestBrand(false);
 
 		} else {
@@ -1751,13 +1755,11 @@ public class CodificationBackingBean extends
 
 			resDTO = unspscSO.searchMeasurementObj(reqDTO);
 
-			unspscBB.getManagedBean()
-					.getRequestCode()
-					.setMeasurementName(
-							resDTO.getMeasurementList().get(0)
-									.getMeasurementName());
-			unspscBB.getManagedBean().getRequestCode()
-					.setRequestMeasurement(false);
+			unspscBB.getManagedBean().getRequestCode().setMeasurementName(
+							resDTO.getMeasurementList().get(0).getMeasurementName());
+			unspscBB.getManagedBean().getRequestCode().setMeasurementId(
+					resDTO.getMeasurementList().get(0).getMeasurementId());
+			unspscBB.getManagedBean().getRequestCode().setRequestMeasurement(false);
 		} else {
 			unspscBB.getManagedBean().getRequestCode()
 					.setRequestMeasurement(true);
