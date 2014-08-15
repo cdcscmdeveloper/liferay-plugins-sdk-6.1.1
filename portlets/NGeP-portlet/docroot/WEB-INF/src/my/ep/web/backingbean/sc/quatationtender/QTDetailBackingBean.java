@@ -901,18 +901,41 @@ public class QTDetailBackingBean extends
 			scQt.setScQtDeductions(deductionList);
 
 			// Setting the Documents to qtdetails.
-			List<ScQtDocReport> scQtDocReports = null;
-			List<ScQtDocReport> docReports = getManagedBean()
-					.getScQtDocReportList();
-			if (docReports != null && !docReports.isEmpty()) {
-				scQtDocReports = new ArrayList<ScQtDocReport>();
-				scQtDocReports.addAll(docReports);
+			List<ScQtDocReport> scQtDocReportsList = null;
+			List<ScQtDocReport> docReportsList = getManagedBean().getScQtDocReportList();
+			if (docReportsList != null && !docReportsList.isEmpty()) {
+				scQtDocReportsList = new ArrayList<ScQtDocReport>();
+				scQtDocReportsList.addAll(docReportsList);
+				
+				//for (int i = 0; i < docReportsList.size(); i++) {
+					for (int j = 0; j < scQtDocReportsList.size(); j++) {
+						if (scQt.getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED) && scQt.getScheduleType().equals(SourcingConstants.FREQUENCY_SCHEDULE)) {
+							// Schedule
+							if (null != scQtDocReportsList.get(j).getPmDocument())
+								if (scQtDocReportsList.get(j).getPmDocument().getDocDefinitionKey().equalsIgnoreCase(SourcingConstants.DOC_DEF_KEY_FREQUENCY_SCHEDULE)) {
+									scQtDocReportsList.remove(j);
+									break;
+								}
+						} else if (scQt.getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED) && scQt.getScheduleType().equals(SourcingConstants.PROGRESSIVE_PAYMENT)) {
+							// Progressive
+							if (null != scQtDocReportsList.get(j).getPmDocument())
+								if (scQtDocReportsList.get(j).getPmDocument().getDocDefinitionKey().equalsIgnoreCase(SourcingConstants.DOC_DEF_KEY_PROGRESSIVE_PAYMENT)) {
+									scQtDocReportsList.remove(j);
+									break;
+								}
+						} else if (scQt.getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN)) {
+							// Progressive
+							if (null != scQtDocReportsList.get(j).getPmDocument())
+								if (scQtDocReportsList.get(j).getPmDocument().getDocDefinitionKey().equalsIgnoreCase(SourcingConstants.DOC_DEF_KEY_PROGRESSIVE_PAYMENT)) {
+									scQtDocReportsList.remove(j);
+									break;
+								}
+						}
+					}
+				//}
 			}
-			scQt.setScQtDocReports(scQtDocReports);
+			scQt.setScQtDocReports(scQtDocReportsList);
 			// Setting the Publication Approvals to QtDetails
-			// List<ScQtApproval> publicApprovalList = new
-			// ArrayList<ScQtApproval>();
-
 			ScQtApproval approval = getManagedBean().getPublicationApproval();
 			if (null != approval) {
 				if (null == approvalList) {
@@ -976,11 +999,7 @@ public class QTDetailBackingBean extends
 			List<SearchFilterBean> searchFilterBean = new ArrayList<SearchFilterBean>();
 			String qtTitle = qtnTenderSearchBean.getQtTitle();
 			if (!StringUtils.isBlank(qtTitle)) {
-				SearchFilterBean bean = new SearchFilterBean();
-				bean.setSearchField(QTConstants.QT_TITILE);
-				bean.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
-				bean.setSearchValue(qtTitle);
-				searchFilterBean.add(bean);
+				qtSearchBean.getDataFilterBeans().add(new SearchFilterBean(QTConstants.QT_TITILE, SearchOperator.OPERATOR_LIKE.value(), qtTitle, true));
 			}
 			String qtNumber = qtnTenderSearchBean.getQtNo();
 			if (!StringUtils.isBlank(qtNumber)) {
@@ -992,10 +1011,7 @@ public class QTDetailBackingBean extends
 			}
 			String procurementMode = qtnTenderSearchBean.getProcurementMode();
 			if (!StringUtils.isBlank(procurementMode)) {
-				qtSearchBean.getDataFilterBeans().add(
-						new SearchFilterBean("procurementMode.parameterCode",
-								SearchOperator.OPERATOR_EQUALS.value(),
-								procurementMode));
+				qtSearchBean.getDataFilterBeans().add(new SearchFilterBean("procurementMode.parameterCode", SearchOperator.OPERATOR_EQUALS.value(), procurementMode));
 			}
 			Date fromCreatedDate = qtnTenderSearchBean.getFromCreatedDate();
 			Date toCreatedDate = qtnTenderSearchBean.getToCreatedDate();
@@ -1813,34 +1829,26 @@ public class QTDetailBackingBean extends
 			IQTDetailSO detailSO;
 			QuationTenderResDTO resDTO = null;
 			try {
-				detailSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+				detailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 				reqDTO.setQtId(getManagedBean().getQt().getQtId());
 				List<ScQtDocReport> scQtDocReports = new ArrayList<ScQtDocReport>();
 				if (this.getManagedBean().getScQtDocReportList() == null) {
 					resDTO = detailSO.retriveQTDocDetails(reqDTO);
-					if (resDTO.getReports() != null
-							&& !resDTO.getReports().isEmpty()) {
-						this.getManagedBean().setScQtDocReportList(
-								resDTO.getReports());
-					} else if (resDTO.getQtDocuments() != null
-							&& resDTO.getQtDocuments().size() > 0) {
+					if (resDTO.getReports() != null && !resDTO.getReports().isEmpty()) {
+						this.getManagedBean().setScQtDocReportList(resDTO.getReports());
+					} else if (resDTO.getQtDocuments() != null && resDTO.getQtDocuments().size() > 0) {
 						for (PmDocument pmDoc : resDTO.getQtDocuments()) {
 							ScQtDocReport scQtDocReport = new ScQtDocReport();
-							scQtDocReport
-									.setScQt(this.getManagedBean().getQt());
-							scQtDocReport.setDocCategory(pmDoc
-									.getDocCategoryCode().getParameterCode());
+							scQtDocReport .setScQt(this.getManagedBean().getQt());
+							scQtDocReport.setDocCategory(pmDoc.getDocCategoryCode().getParameterCode());
 							scQtDocReport.setPmDocument(pmDoc);
 							scQtDocReport.setTitle(pmDoc.getDocName());
-							scQtDocReport.setDefinationType(pmDoc
-									.getDocDefinitionTypeCode());
+							scQtDocReport.setDefinationType(pmDoc.getDocDefinitionTypeCode());
 							scQtDocReport.setBrandNew(false);
 							scQtDocReports.add(scQtDocReport);
 						}
-						this.getManagedBean().setScQtDocReportList(
-								scQtDocReports);
+						this.getManagedBean().setScQtDocReportList(scQtDocReports);
 					}
 				}
 			} finally {
@@ -1942,6 +1950,7 @@ public class QTDetailBackingBean extends
 	}
 
 	public void reset() {
+		this.getManagedBean().getQtnTenderSearchBean().setQtTitle(null);
 		this.getManagedBean().getQtnTenderSearchBean().setQtNo(null);
 		this.getManagedBean().getQtnTenderSearchBean().setProcurementMode(null);
 		this.getManagedBean().getQtnTenderSearchBean().setFromCreatedDate(null);

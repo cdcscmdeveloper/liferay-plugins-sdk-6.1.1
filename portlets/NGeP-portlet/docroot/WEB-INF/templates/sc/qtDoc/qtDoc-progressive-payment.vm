@@ -12,5 +12,36 @@
 	</style>
 </head>
 <body>
+	<table border="0" cellpadding="0" cellspacing="0" width="100%">
+	<tr>
+        <td align="left">
+            Total Phase : $totalPhase<br/>
+        </td>
+    </tr>
+    <tr align='left'>
+        <td>
+            <span style='font-weight:bold;font-size:10px;font-family: Times New Roman;'>
+				<table width='100%' border="1">
+					<tr>
+						<td>Phase</td>
+						<td>Description</td>
+						<td>Start Period</td>
+						<td>End Period</td>
+						<td>Percentage</td>
+					</tr>
+					#foreach( $payment in $paymentList )
+					<tr>
+            			<td>$payment.phaseNo</td>
+            			<td>$payment.phaseDesc</td>
+            			<td>$payment.fromDate</td>
+            			<td>$payment.toDate</td>
+            			<td>$payment.percentage</td>
+            		</tr>
+					#end
+				</table>
+            </span>
+        </td>
+    </tr>
+	</table>
 </body>
 </html>

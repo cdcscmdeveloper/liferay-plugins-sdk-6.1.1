@@ -115,50 +115,61 @@
     <tr align='left'>
         <td>
             <span style='font-weight:bold;font-size:10px;font-family: Times New Roman;'>
-            	<table width='100%'>
-            		<tr>
-            			<td>Description</td>
-            			<td>Date/Time</td>
-            			<td>Locationy</td>
-            			<td>Coordinationg Officer</td>
-            			<td>Max Attendance</td>
-            		</tr>
-            		#foreach( $bsvDetails in $bsvDetailsList )
-            		<tr>
-            			<td>$briefing.bsvDesc</td>
-            			<td>$briefing.bsvDate</td>
-            			<td>$briefing.location</td>
-            			<td>$briefing.coordinatingOfficer</td>
-            			<td>$briefing.maxNoOfAttendance</td>
-            		</tr>
-             		#end
-            	</table>
+            	
+            		 #foreach( $zoneList in $zoneBeans )
+						#if( $null.isNull($zoneList.tplSpecZoneDtl) )
+		            		$zoneList.tplSpecZoneDtl.zoneName<br/>
+		            	#end
+						#if( $zoneList.tplSpecZoneDtl != "" )
+		            		$zoneList.tplSpecZoneDtl.zoneName<br/>
+		            	#end
+            		 	Site Visit Same As Briefing : $zoneList.scQtBsv.sameBsv<br/>
+            		 	<table width='100%' border="1">
+		            		<tr>
+		            			<td>Description</td>
+		            			<td>Date/Time</td>
+		            			<td>Location</td>
+		            			<td>Coordinationg Officer</td>
+		            			<td>Max Attendance</td>
+		            		</tr>
+		            		#foreach( $briefingdtls in $zoneList.briefingList )
+		            		<tr>
+		            			<td>$briefingdtls.bsvDesc</td>
+		            			<td>$briefingdtls.bsvDate</td>
+		            			<td>$briefingdtls.location</td>
+		            			<td>$briefingdtls.coordinatingOfficer</td>
+		            			<td>$briefingdtls.maxNoOfAttendance</td>
+		            		</tr>
+		             		#end
+		            	</table>
+						Attendance for Briefing : $zoneList.scQtBsv.allBriefingReq<br/>
+						<br />
+						<table width='100%' border="1">
+		            		<tr>
+		            			<td>Description</td>
+		            			<td>Date/Time</td>
+		            			<td>Location</td>
+		            			<td>Coordinationg Officer</td>
+		            			<td>Max Attendance</td>
+		            		</tr>
+		            		#foreach( $sitevisitdtls in $zoneList.sitevisitList )
+		            		<tr>
+		            			<td>$sitevisitdtls.bsvDesc</td>
+		            			<td>$sitevisitdtls.bsvDate</td>
+		            			<td>$sitevisitdtls.location</td>
+		            			<td>$sitevisitdtls.coordinatingOfficer</td>
+		            			<td>$sitevisitdtls.maxNoOfAttendance</td>
+		            		</tr>
+		             		#end
+		            	</table>
+						Attendance for Site Visit : $zoneList.scQtBsv.allSiteVisitReq<br/>
+					#end
+            	
             </span>
         </td>
     </tr>
-    <tr align='left'>
-        <td>
-            <span style='font-weight:bold;font-size:10px;font-family: Times New Roman;'>
-            	<table width='100%'>
-            		<tr>
-            			<td>Description</td>
-            			<td>Date/Time</td>
-            			<td>Locationy</td>
-            			<td>Coordinationg Officer</td>
-            			<td>Max Attendance</td>
-            		</tr>
-            		#foreach( $bsvDetails in $bsvDetailsList )
-            		<tr>
-            			<td>$bsvDetails.bsvDesc</td>
-            			<td>$bsvDetails.bsvDate</td>
-            			<td>$bsvDetails.location</td>
-            			<td>$bsvDetails.coordinatingOfficer</td>
-            			<td>$bsvDetails.maxNoOfAttendance</td>
-            		</tr>
-            		#end
-            	</table>
-            </span>
-        </td>
+     <tr>
+    	<td /><br/>
     </tr>
     <tr align='left'>
         <td>

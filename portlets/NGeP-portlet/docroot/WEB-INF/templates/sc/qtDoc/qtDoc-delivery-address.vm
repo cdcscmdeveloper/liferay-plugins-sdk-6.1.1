@@ -12,5 +12,33 @@
 	</style>
 </head>
 <body>
+	<table border="0" cellpadding="0" cellspacing="0" width="100%">
+	<tr align='left'>
+        <td>
+            <span style='font-weight:bold;font-size:10px;font-family: Times New Roman;'>
+        		#foreach( $deliveryaddress in $deliveryAddressBean )
+					#if( $null.isNull($zoneList.tplSpecZoneDtl) )
+	            		$deliveryaddress.tplSpecZoneDtl.panelZone.name<br/>
+	            	#end
+					#if( $deliveryaddress.tplSpecZoneDtl != "" )
+	            		$deliveryaddress.tplSpecZoneDtl.panelZone.name<br/>
+	            	#end
+					<table width='100%' border="1">
+	            		<tr>
+	            			<td>PTJ</td>
+	            			<td>Delivery Address</td>
+	            		</tr>
+	            		#foreach( $deliveryLoc in $deliveryaddress.deliveryLocList )
+	            		<tr>
+	            			<td>$deliveryLoc.pmAddressType.pmOrgProfile.orgName</td>
+	            			<td>$deliveryLoc.deliveryAddress</td>
+	            		</tr>
+	             		#end
+	            	</table>
+	            #end
+		    </span>
+		 </td>
+	</tr>
+	</table>
 </body>
 </html>

@@ -28,6 +28,32 @@
             Local Goods : $localGoods<br/>
         </td>
     </tr>
+    <tr align='left'>
+        <td>
+            <span style='font-weight:bold;font-size:10px;font-family: Times New Roman;'>
+				<table width='100%' border="1">
+					<tr>
+						<td>Item</td>
+						<td>Specification</td>
+						<td>UOM</td>
+						<td>Quantity</td>
+						<td>Answer</td>
+						<td>Note</td>
+					</tr>
+					#foreach( $tplSpecQuestions in $tplSpecQuestionsList )
+					<tr>
+            			<td>$tplSpecQuestions.clItem</td>
+            			<td>$tplSpecQuestions.clSpecDetail</td>
+						<td>$tplSpecQuestions.clUom.uomName</td>
+						<td>$tplSpecQuestions.clQuantity</td>
+						<td>$tplSpecQuestions.clAnswerRequired</td>
+						<td>$tplSpecQuestions.clReviewRemark</td>
+            		</tr>
+					#end
+				</table>
+            </span>
+        </td>
+    </tr>
     </table>
 </body>
 </html>

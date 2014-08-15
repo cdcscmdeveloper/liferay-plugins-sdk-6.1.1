@@ -32,7 +32,6 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.SourcingConstants;
-import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
@@ -58,24 +57,26 @@ import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.quationtender.ScAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
-import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtDocReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtDocReportAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
+import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
 import my.ep.persistence.entity.tpl.doc.TplDocMaster;
 import my.ep.persistence.entity.tpl.doc.TplDocSection;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
+import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.web.backingbean.tpl.doc.TemplateDocBackingBean;
-import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
+import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
-import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.sc.quationtender.common.QTConstants;
 import my.ep.web.util.CommonUtils;
@@ -95,13 +96,9 @@ import org.primefaces.event.SelectEvent;
  */
 @ManagedBean(name = "qTDocumentsBackingBean")
 @RequestScoped
-public class QTDocumentsBackingBean extends
-		SourcingBaseBackingBean<QTDetailManagedBean> {
+public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailManagedBean> {
 
-	//private static final String NAV_TO_TEMPLATE_DOC_MAINTENANACE = "/xhtml/sc/quatationtender/templateDocument/templateDocMaintenance.xhtml";
-
-	private static final Logger log = EpLogger
-			.getLogger(QTDocumentsBackingBean.class);
+	private static final Logger log = EpLogger.getLogger(QTDocumentsBackingBean.class);
 
 	private void debugLogger(Object message) {
 		if (log.isDebugEnabled()) {
@@ -111,14 +108,12 @@ public class QTDocumentsBackingBean extends
 	}
 
 	public QTDocumentsBackingBean() {
-		
 		// PagingDataModel for Clone Quotation Tender List
 		IPagingDataModel<ScQt> cloneSearchDocumentDataModel = getManagedBean().getCloneDocumentDataModel();
 		
 		if (cloneSearchDocumentDataModel == null) {
 			getManagedBean().setCloneDocumentDataModel(new DocumentPagingDataModel("clonesearchboid", getManagedBean().getCloneDocumentSearchBean()));
 		}
-
 	}
 	
 	private class DocumentPagingDataModel extends PagingDataModel<ScQt> {
@@ -126,15 +121,13 @@ public class QTDocumentsBackingBean extends
 
 		private QtnTenderSearchBean cloneDocumentSearchBean;
 
-		public DocumentPagingDataModel(String componentId,
-				QtnTenderSearchBean cloneDocumentSearchBean) {
+		public DocumentPagingDataModel(String componentId, QtnTenderSearchBean cloneDocumentSearchBean) {
 			super(componentId);
 			this.cloneDocumentSearchBean = cloneDocumentSearchBean;
 		}
 		
 		@Override
-		public ISearchResultBean<ScQt> pageChangeListener(
-				ISearchBean<ScQt> searchBean) {
+		public ISearchResultBean<ScQt> pageChangeListener(ISearchBean<ScQt> searchBean) {
 			if (log.isDebugEnabled()) {
 				log.debug("pageChangeListener");
 			}
@@ -156,9 +149,7 @@ public class QTDocumentsBackingBean extends
 	 * @param cloneBusinessOwnerSearchBean
 	 * @param searchBean
 	 */
-	private void populateCloneQTSearchCriteria(
-			QtnTenderSearchBean cloneDocumentSearchBean,
-			ISearchBean<ScQt> qtSearchBean) {
+	private void populateCloneQTSearchCriteria(QtnTenderSearchBean cloneDocumentSearchBean, ISearchBean<ScQt> qtSearchBean) {
 		if (cloneDocumentSearchBean != null) {
 			List<SearchFilterBean> searchFilterBean = new ArrayList<SearchFilterBean>();
 			
@@ -239,7 +230,7 @@ public class QTDocumentsBackingBean extends
 		ScQtDocReport scQtDocReport = new ScQtDocReport();
 		scQtDocReport.setDocCategory(ParameterConst.DOCUMENT_CATEGORY_QUOTATION_TENDER_DOCUMENTS);
 		scQtDocReport.setScQt(scQt);
-		scQtDocReport.setScQtDocReportAttachment(new ScQtDocReportAttachment());
+		//scQtDocReport.setScQtDocReportAttachment(new ScQtDocReportAttachment());
 		IParameterSO parameterSO = null;
 		try {
 			parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
@@ -320,15 +311,12 @@ public class QTDocumentsBackingBean extends
 	public String determineIcon(ScQtCheckListAttachment attachment) {
 		String imageFileName = "icon_file_default.png";
 		String ext = "";
-
 		if (attachment != null) {
 			String fileName = attachment.getFileName();
-
 			if (fileName != null) {
 				int mid = fileName.lastIndexOf(".");
 				ext = fileName.substring(mid + 1, fileName.length());
 			}
-
 			if ("doc".equals(ext) || "docx".equals(ext)) {
 				imageFileName = "icon_doc.png";
 			} else if ("pdf".equals(ext)) {
@@ -453,6 +441,15 @@ public class QTDocumentsBackingBean extends
 		return "/xhtml/sc/quatationtender/quatationtendercreation.xhtml?faces-redirect=true";
 	}
 	
+	public void downloadReport(ScQtDocReport scQtDocReport) throws IOException {
+		debugLogger("downloadReport");
+		ScQtDocReportAttachment scQtDocReportAttachment = scQtDocReport.getScQtDocReportAttachment();
+		if (scQtDocReportAttachment == null) {
+			scQtDocReportAttachment = generateDocumentAttachment(scQtDocReport);
+		}
+		downloadFile(scQtDocReportAttachment);
+	}
+	
 	public void downloadAllReports() throws IOException {
 		debugLogger("downloadAllReports");
 		List<ScQtDocReport> scQtDocReports = getManagedBean().getScQtDocReportList();
@@ -489,11 +486,11 @@ public class QTDocumentsBackingBean extends
 				} else if (SourcingConstants.DOC_DEF_KEY_SPECIFICATION.equals(docDefinitionKey)) {
 					generateSpesifikasiPdfFromVelocity((ScAttachment)scQtDocReportAttachment, getManagedBean().getQt());
 				} else if (SourcingConstants.DOC_DEF_KEY_TECH_COMPLIANCE_CHECKLIST.equals(docDefinitionKey)) {
-					
+					generateSenaraiSemakUntukPematuhanTeknikalPdfFromVelocity((ScAttachment)scQtDocReportAttachment, getManagedBean().getQt());
 				} else if (SourcingConstants.DOC_DEF_KEY_SAMPLE_COMPLIANCE_CHECKLIST.equals(docDefinitionKey)) {
 					
 				} else if (SourcingConstants.DOC_DEF_KEY_FIN_COMPLIANCE_CHECKLIST.equals(docDefinitionKey)) {
-					
+					generateSenaraiSemakUntukPematuhanKewanganPdfFromVelocity((ScAttachment)scQtDocReportAttachment, getManagedBean().getQt());
 				} else if (SourcingConstants.DOC_DEF_KEY_LOA_SAMPLE.equals(docDefinitionKey)) {
 					generateSampleSuratSetujuTerimaPdfFromVelocity((ScAttachment)scQtDocReportAttachment, getManagedBean().getQt());
 				} else if (SourcingConstants.DOC_DEF_KEY_CONTRACT_COPY_SAMPLE.equals(docDefinitionKey)) {
@@ -523,16 +520,113 @@ public class QTDocumentsBackingBean extends
 	 * @param scQtDocReportAttachment
 	 * @param qt
 	 */
+	private void generateSenaraiSemakUntukPematuhanKewanganPdfFromVelocity(ScAttachment attachment, ScQt qt) throws Exception {
+		attachment.setFileName("Senarai_Semak_Untuk_Pematuhan_Kewangan.pdf");
+		populateAttachmentDetails(attachment);
+		
+		VelocityContext context = new VelocityContext();
+		
+		List<ScQtCheckList> uploadFinanceSpecList = new ArrayList<ScQtCheckList>();
+		List<ScQtCheckList> financeSpecList = new ArrayList<ScQtCheckList>();
+		IQTSpecSO specSO;
+		try {
+			specSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
+			reqDTO.setQtId(qt.getQtId());
+			reqDTO.setSpecType(QTConstants.FINANCIAL_DOC_TYPE);
+			SpecificationResDTO resDto = specSO.retrieveCheckLists(reqDTO);
+			financeSpecList = resDto.getSpecResultBean().getResultList();
+		} finally {
+			specSO = null;
+		}
+		if (uploadFinanceSpecList != null) {
+			for (ScQtCheckList checkList : financeSpecList) {
+				if (checkList.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD)) {
+					uploadFinanceSpecList.add(checkList);
+				}
+			}
+		}
+		context.put("uploadFinanceSpecList", uploadFinanceSpecList);
+		
+		DocumentGenerator.getInstance().generatePdfFromVelocity("/sc/qtDoc/qtDoc-senarai-semak-untuk-pematuhan-Kewangan.vm", 
+    			context, new FileOutputStream(attachment.getFilePath()));
+	}
+
+	/**
+	 * @param scQtDocReportAttachment
+	 * @param qt
+	 */
+	private void generateSenaraiSemakUntukPematuhanTeknikalPdfFromVelocity(ScAttachment attachment, ScQt qt) throws Exception {
+		attachment.setFileName("Senarai_Semak_Untuk_Pematuhan_Teknikal.pdf");
+		populateAttachmentDetails(attachment);
+		
+		VelocityContext context = new VelocityContext();
+		
+		List<ScQtCheckList> uploadTechSpecList = new ArrayList<ScQtCheckList>();
+		List<ScQtCheckList> techSpecList = new ArrayList<ScQtCheckList>();
+		IQTSpecSO specSO;
+		try {
+			specSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
+			reqDTO.setQtId(qt.getQtId());
+			reqDTO.setSpecType(QTConstants.TECHNICAL_DOC_TYPE);
+			SpecificationResDTO resDto = specSO.retrieveCheckLists(reqDTO);
+			techSpecList = resDto.getSpecResultBean().getResultList();
+		} finally {
+			specSO = null;
+		}
+		if (uploadTechSpecList != null) {
+			for (ScQtCheckList checkList : techSpecList) {
+				if (checkList.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD)) {
+					uploadTechSpecList.add(checkList);
+				}
+			}
+		}
+		context.put("uploadTechSpecList", uploadTechSpecList);
+		
+		DocumentGenerator.getInstance().generatePdfFromVelocity("/sc/qtDoc/qtDoc-senarai-semak-untuk-pematuhan-teknikal.vm", 
+    			context, new FileOutputStream(attachment.getFilePath()));
+	}
+
+	/**
+	 * @param scQtDocReportAttachment
+	 * @param qt
+	 */
 	private void generateDeliveryAddressPdfFromVelocity(ScAttachment attachment, ScQt qt) throws Exception {
 		attachment.setFileName("Delivery_Address.pdf");
 		populateAttachmentDetails(attachment);
 		
 		VelocityContext context = new VelocityContext();
 		
+		IQTSpecSO specSo;
+		List<BriefingZoneBean> deliveryAddressBean = new ArrayList<BriefingZoneBean>();
+		try {
+			specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
+			reqDTO.setQtId(qt.getQtId());
+			SpecificationResDTO resDTO = specSo.retrieveDeliverSeriviceAddress(reqDTO);
+			List<TplSpecZoneDtl> zones = resDTO.getSpecZoneDtls();
+			if ( zones != null && !zones.isEmpty()) {
+				for (TplSpecZoneDtl specZoneDtl : zones) {
+					reqDTO.setQtId(this.getManagedBean().getQt().getQtId());
+					reqDTO.setZoneId(specZoneDtl.getSpecZoneId());
+					resDTO = specSo.retrieveDeliveryAddressDtls(reqDTO);
+					BriefingZoneBean bean = new BriefingZoneBean(specZoneDtl, resDTO.getAddressResultBean());
+					deliveryAddressBean.add(bean);
+				}
+			} else {
+				BriefingZoneBean bean = new BriefingZoneBean(null, resDTO.getAddressResultBean());
+				deliveryAddressBean.add(bean);
+			}
+		} finally {
+			specSo = null;
+		}
+		context.put("deliveryAddressBean", deliveryAddressBean);
+		
 		DocumentGenerator.getInstance().generatePdfFromVelocity("/sc/qtDoc/qtDoc-delivery-address.vm", 
     			context, new FileOutputStream(attachment.getFilePath()));
 	}
-
+	
 	/**
 	 * @param scQtDocReportAttachment
 	 * @param qt
@@ -542,6 +636,25 @@ public class QTDocumentsBackingBean extends
 		populateAttachmentDetails(attachment);
 		
 		VelocityContext context = new VelocityContext();
+		
+		List<ScQtSchedule> scheduleList = new ArrayList<ScQtSchedule>();
+		IQTSpecSO specSo;
+		SpecificationResDTO resDTO = null;
+		try {
+			specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
+			reqDTO.setQtId(qt.getQtId());
+			resDTO = specSo.retrieveFulFilMentScheduleDtls(reqDTO);
+			scheduleList = resDTO.getScheduleResults().getResultList();	
+		} finally {
+			specSo = null;
+		}
+		int totalFrequency = 0;
+		if (scheduleList != null) {
+			totalFrequency = scheduleList.size();
+		}
+		context.put("totalFrequency", totalFrequency);
+		context.put("scheduleList", scheduleList);
 		
 		DocumentGenerator.getInstance().generatePdfFromVelocity("/sc/qtDoc/qtDoc-frequency-schedule.vm", 
     			context, new FileOutputStream(attachment.getFilePath()));
@@ -557,6 +670,25 @@ public class QTDocumentsBackingBean extends
 		
 		VelocityContext context = new VelocityContext();
 		
+		List<ScQtProgressivePayment> paymentList = new ArrayList<ScQtProgressivePayment>();
+		IQTSpecSO specSo;
+		SpecificationResDTO resDTO = null;
+		try {
+			specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
+			reqDTO.setQtId(qt.getQtId());
+			resDTO = specSo.retrieveFulFilMentScheduleDtls(reqDTO);
+			paymentList = resDTO.getProgressivePaymentResults().getResultList();
+		} finally {
+			specSo = null;
+		}
+		int totalPhase = 0;
+		if (paymentList != null) {
+			totalPhase = paymentList.size();
+		}
+		context.put("totalPhase", totalPhase);
+		context.put("paymentList", paymentList);
+		
 		DocumentGenerator.getInstance().generatePdfFromVelocity("/sc/qtDoc/qtDoc-progressive-payment.vm", 
     			context, new FileOutputStream(attachment.getFilePath()));
 	}
@@ -571,13 +703,14 @@ public class QTDocumentsBackingBean extends
 		
 		VelocityContext context = new VelocityContext();
 		
+		List<TplSpecQuestion> tplSpecQuestionsList = new ArrayList<TplSpecQuestion>();
 		List<ScQtCheckList> techSpecList = new ArrayList<ScQtCheckList>();
 		IQTSpecSO specSO;
 		try {
 			specSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
-			reqDTO.setQtId(this.getManagedBean().getQt().getQtId());
-			reqDTO.setSpecType("T");
+			reqDTO.setQtId(qt.getQtId());
+			reqDTO.setSpecType(QTConstants.TECHNICAL_SPEC_TYPE);
 			SpecificationResDTO resDto = specSO.retrieveSpecDetails(reqDTO);
 			techSpecList = resDto.getSpecResultBean().getResultList();
 		} finally {
@@ -603,22 +736,16 @@ public class QTDocumentsBackingBean extends
     	}
 		context.put("localGoods", localGoods);
 		
-		TemplateSpecBackingBean specBB = new TemplateSpecBackingBean();
-		TemplateSpecBean templateSpecBean = new TemplateSpecBean();
-		templateSpecBean.setSpecMaster(master);
-		templateSpecBean.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);
-		specBB.retrieveTemplateSpecMaster(templateSpecBean);
+		if (tplSpecQuestionsList != null) {
+			tplSpecQuestionsList = master.getTplSpecQuestions();
+		}
+		context.put("tplSpecQuestionsList", tplSpecQuestionsList);
 		
 		DocumentGenerator.getInstance().generatePdfFromVelocity("/sc/qtDoc/qtDoc-spesifikasi.vm", 
     			context, new FileOutputStream(attachment.getFilePath()));
 	}
 
-	/**
-	 * @param scQtDocReportAttachment
-	 * @param qt
-	 */
-	// TODO 
-	private void generateSamplesamplesalinankontrakPdfFromVelocity(ScAttachment attachment, ScQt qt) throws Exception {
+	/*private void generateSamplesamplesalinankontrakPdfFromVelocity(ScAttachment attachment, ScQt qt) throws Exception {
 		attachment.setFileName("Sample_Surat_Setuju_Terima.pdf");
 		populateAttachmentDetails(attachment);
 		
@@ -628,7 +755,7 @@ public class QTDocumentsBackingBean extends
 		
 		DocumentGenerator.getInstance().generatePdfFromVelocity("/sc/qtDoc/qtDoc-sample-surat-setuju-terima.vm", 
     			context, new FileOutputStream(attachment.getFilePath()));
-	}
+	}*/
 
 	/**
 	 * @param scQtDocReportAttachment
@@ -640,9 +767,7 @@ public class QTDocumentsBackingBean extends
 		
 		PmOrgProfile pmOrgProfile = qt.getPmOrgProfile();
 		CommonUtils commonUtils = new CommonUtils();
-		//SimpleDateFormat dateSDF = new SimpleDateFormat(commonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE));
 		DecimalFormat amountDF = new DecimalFormat(commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
-		//DecimalFormat percentageDF = new DecimalFormat(commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE));
     	VelocityContext context = new VelocityContext();
     	
     	IAddressSO addressSO = null;
@@ -667,7 +792,6 @@ public class QTDocumentsBackingBean extends
     	String agencyFaxNo = "";
     	if (pmAddressType != null) {
     		PmAddress pmAddress = pmAddressType.getPmAddress();
-    		
     		agencyAddress = getFullAddress(pmAddress);
     		agencyAddress = agencyAddress.replaceAll("\r\n", "<br />");
     		agencyPhoneNo = pmAddress.getPhoneNo();
@@ -692,8 +816,7 @@ public class QTDocumentsBackingBean extends
     	context.put("estimatedPrice", estimatedPrice);
 
     	DocumentGenerator.getInstance().generatePdfFromVelocity("/sc/qtDoc/qtDoc-sample-surat-setuju-terima.vm", 
-    			context, 
-    			new FileOutputStream(attachment.getFilePath()));
+    			context, new FileOutputStream(attachment.getFilePath()));
 	}
 
 	private void generateSampleSuratPdfFromVelocity(ScAttachment attachment, ScQt qt) throws Exception {
@@ -706,17 +829,14 @@ public class QTDocumentsBackingBean extends
     	context.put("title", qt.getQtTitle());
     	context.put("qtNo", qt.getQtNo());
 
-    	DocumentGenerator.getInstance().generatePdfFromVelocity(
-    			"/sc/qtDoc/qtDoc-sample-surat-akuan-pembida.vm", 
-    			context, 
-    			new FileOutputStream(attachment.getFilePath()));
+    	DocumentGenerator.getInstance().generatePdfFromVelocity("/sc/qtDoc/qtDoc-sample-surat-akuan-pembida.vm", 
+    			context, new FileOutputStream(attachment.getFilePath()));
 	}
 
 	private void generateKenyataanTawaranPembekalPdfFromVelocity(ScAttachment attachment, ScQt qt) throws Exception {
 		attachment.setFileName("Kenyataan_Tawaran_Pembekal.pdf");
 		populateAttachmentDetails(attachment);
 		
-		//ScQt scQt = qt.getScQt();
 		CommonUtils commonUtils = new CommonUtils();
 		SimpleDateFormat dateSDF = new SimpleDateFormat(commonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE));
     	VelocityContext context = new VelocityContext();
@@ -760,31 +880,39 @@ public class QTDocumentsBackingBean extends
     	
        	IQTBriefingSO qTBriefingSO = null;
     	ScQtBsv qtBsv = null;
+    	BriefingZoneBean briefingZoneBean = null;
+    	List<BriefingZoneBean> zoneBeans = new ArrayList<BriefingZoneBean>();
 		try {
 			qTBriefingSO = (IQTBriefingSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTBriefingSO.class);
 			BriefingReqDTO reqDTO = new BriefingReqDTO();
 			reqDTO.setQtId(getManagedBean().getQt().getQtId());
 			BriefingResDTO resDTO = qTBriefingSO.retrieveBriefingSiteVisitDtl(reqDTO);
-			qtBsv = resDTO.getScQtBsv();
+			ScQt scQt = resDTO.getScQt();
+			if (scQt.isZonal()) {
+				List<TplSpecZoneDtl> zones = resDTO.getZonesList();
+				if (null != zones) {
+					BriefingReqDTO briefingReqDTO = new BriefingReqDTO();
+					briefingReqDTO.setQtId(getManagedBean().getQt().getQtId());
+					for (TplSpecZoneDtl specZoneDtl : zones) {
+						briefingReqDTO.setSpecZoneId(specZoneDtl.getSpecZoneId());
+						BriefingResDTO briefingResDTO = qTBriefingSO.retrieveBriefingSiteVisitDtls(briefingReqDTO);
+						ScQtBsv scQtBsv = briefingResDTO.getScQtBsv();
+						briefingZoneBean = new BriefingZoneBean(specZoneDtl, briefingResDTO.getBriefingList(), briefingResDTO.getSiteVisitList(), scQtBsv);
+						zoneBeans.add(briefingZoneBean);
+					}
+				}
+			} else {
+				qtBsv = resDTO.getScQtBsv();
+				briefingZoneBean = new BriefingZoneBean(null, resDTO.getBriefingList(), resDTO.getSiteVisitList(), qtBsv);
+				zoneBeans.add(briefingZoneBean);
+			}
 		} finally {
 			qTBriefingSO = null;
 		}
 		
-		List<ScQtBsvDtl> briefingList = new ArrayList<ScQtBsvDtl>();
-		List<ScQtBsvDtl> bsvDetailsList = new ArrayList<ScQtBsvDtl>();
-    	if (qt.isBsvRequired()) {
-    		if (qtBsv != null) {
-    			if (qtBsv.isSameBsv()) {
-    				briefingList = qtBsv.getScQtBsvDtls();
-    			} else {
-    				bsvDetailsList = qtBsv.getScQtBsvDtls();
-    			}
-    		}
-    		context.put("briefingList", briefingList);
-    		context.put("bsvDetailsList", bsvDetailsList);
-    	}
-    	
-    	boolean isOneOff = false;
+		context.put("zoneBeans", zoneBeans);
+
+		boolean isOneOff = false;
     	if (qt.getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_ONE_OFF)) {
     		isOneOff = true;
     		context.put("fulfilmentType", isOneOff);
@@ -793,22 +921,10 @@ public class QTDocumentsBackingBean extends
     		context.put("fulfilmentType", isOneOff);
     	}
     	
-    	DocumentGenerator.getInstance().generatePdfFromVelocity(
-    			"/sc/qtDoc/qtDoc-kenyataan-tawaran-pembekal.vm", 
-    			context, 
-    			new FileOutputStream(attachment.getFilePath()));
-    	
+    	DocumentGenerator.getInstance().generatePdfFromVelocity("/sc/qtDoc/qtDoc-kenyataan-tawaran-pembekal.vm", 
+    			context, new FileOutputStream(attachment.getFilePath()));
 	}
 
-	public void downloadReport(ScQtDocReport scQtDocReport) throws IOException {
-		debugLogger("downloadReport");
-		ScQtDocReportAttachment scQtDocReportAttachment = scQtDocReport.getScQtDocReportAttachment();
-		if (scQtDocReportAttachment == null) {
-			scQtDocReportAttachment = generateDocumentAttachment(scQtDocReport);
-		}
-		downloadFile(scQtDocReportAttachment);
-	}
-	
 	private IParameterSO getParameterSO() {
 		return BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
