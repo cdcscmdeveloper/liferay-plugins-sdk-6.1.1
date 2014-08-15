@@ -30,7 +30,7 @@
 						var="zone" itemLabel="#{zone.suppZoneName}"
 						itemValue="#{zone.suppZoneId}"></f:selectItems>
 
-					<p:ajax event="change" update="zonalPromoErrorLink" />
+					<p:ajax event="change" listener="#{catalogueBackingBean.validateZonalPromoDateOverlap(rowIndex)}" update="zonalPromoErrorLink" />
 
 				</p:selectOneMenu>
 
