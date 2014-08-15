@@ -25,24 +25,26 @@
 		<br />
 		<ac:lovPopup />
 		<p:dataTable
-			value="#{authorizedsignatoryBackingBean.managedBean.users}"
-			var="user" id="searchSignatoryResults">
+			value="#{authorizedsignatoryBackingBean.managedBean.signatoryUser}"
+			var="SignUser" id="searchSignatoryResults">
 			<ac:paginator for="searchSignatoryResults" />
 
 			<p:column headerText="#{lbl['lbl.pm.as.name']}">
-				<h:outputText value="#{user.userName}" />
+				<h:outputText value="#{SignUser.userName}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.pm.as.effdate']}">
-				<h:outputText value="#{user.pmUserOrgs[0].effDate}" />
+			  	<h:outputText value="#{SignUser.pmUserOrgs[0].effDate}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.pm.as.expdate']}">
-				<h:outputText value="#{user.pmUserOrgs[0].expDate}" />
+			  	<h:outputText value="#{SignUser.pmUserOrgs[0].expDate}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.pm.search.status']}">
-  	   			 #{(user.recordStatusFlg==1)? lbl['lbl.pm.active'] : lbl['lbl.pm.inactive']}  			
+		       	<p:selectOneMenu value="#{SignUser.pmUserOrgs[0].recordStatusFlg}">  
+	            	<f:selectItems value="#{authorizedsignatoryBackingBean.getSignatoryStatusList()}" />
+	          	</p:selectOneMenu>  		
 			</p:column>
 
 		</p:dataTable>
@@ -60,7 +62,7 @@
 									<td class="TableFieldLeft"><ac:lov id="supplier"
 								 			lovId="PM_USER" headerText="User Selection" buttonLabel="Add"
 											buttonIcon="ui-icon-add" selectionMode="multiple"
-											saveObject="authorizedsignatoryBackingBean.managedBean.users"
+											saveObject="authorizedsignatoryBackingBean.managedBean.signatoryUser"
 											update="@form" /></td>
 									<td><p:commandButton
 											value="#{lbl['lbl.sc.action.delete']}" icon="ui-icon-delete"
