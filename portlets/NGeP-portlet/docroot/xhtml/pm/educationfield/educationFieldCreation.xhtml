@@ -36,17 +36,16 @@
    
 	<p:panel header="EDUCATION FIELD RESTRICTION" toggleable="true">
 	<ac:lovPopup />
-	<p:dataTable 
-		value="educationBackingBean.managedBean.categoryList"
+	<p:dataTable value="educationBackingBean.managedBean.eduRestrList"
 		id="educationfieldres" var="eduFieldRes">
 	 <ac:paginator for="educationfieldres" />
 		  	  	         
-       <p:column headerText="#{lbl['lbl.pm.ef.catcode']}" > 
-	
+       <p:column headerText="#{lbl['lbl.pm.ef.catcode']}" >
+       	  <h:outputText />	
        </p:column>  
        
        <p:column headerText="#{lbl['lbl.pm.ef.catname']}" > 
-
+       	  <h:outputText />	
        </p:column> 
 
        <p:column headerText="#{lbl['lbl.pm.search.status']}" > 
@@ -65,9 +64,9 @@
 				    <tr>
 				    <td class="TableFieldLeft">
 				      <ac:lov id="educate" lovId="PM_CATEGORY_L3"
-            		     headerText="Category No Lov" buttonLabel="Add"
+            		     headerText="Category Lov" buttonLabel="Add"
 	       				 buttonIcon="ui-icon-add" selectionMode="multiple"
-	        			 saveObject="educationBackingBean.managedBean.categoryList"
+	        			 saveObject="educationBackingBean.managedBean.eduRestrList[#{index}].pmCategoryL3"
 	        			 update="@form" /></td>
 					<td><p:commandButton value="#{lbl['lbl.sc.action.delete']}" icon="ui-icon-delete" /></td>
 					</tr>
