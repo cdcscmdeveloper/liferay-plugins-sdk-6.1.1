@@ -33,6 +33,7 @@ import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmGlAccount;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmPrgActivity;
 import my.ep.persistence.entity.pm.common.PmProject;
 import my.ep.persistence.entity.pm.common.PmSetia;
@@ -42,6 +43,8 @@ import my.ep.persistence.entity.pm.common.PmVotFund;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
+import my.ep.persistence.entity.sc.directpurchase.ScRequestSupplierItem;
+import my.ep.persistence.entity.sc.directpurchase.ScSupplierItemPrice;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.apache.log4j.Logger;
@@ -63,6 +66,7 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private FlRemark flRemark = new FlRemark();
 	private FlAttachment flAttachment = new FlAttachment();
 	private FlFulfilmentRequest fulfilmentRequest;
+	private PmParameter pmPriceType;
 
 	//remove multiple selection from data table
 	private List<FlDeliveryAddress> selectedAddressRows;
@@ -106,6 +110,7 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private Long chargedPtjId;
 	private Long currentPtjGroupId;
 	private Long currentPreparedOrgId;
+	private Long scRequestSupplierItemId;
 	
 	private PmUserOrg pmUserOrg = new PmUserOrg();
 	
@@ -1720,6 +1725,35 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setCurrentPreparedOrgId(Long currentPreparedOrgId) {
 		this.currentPreparedOrgId = currentPreparedOrgId;
+	}
+
+
+	/**
+	 * @return the pmPriceType
+	 */
+	public PmParameter getPmPriceType() {
+		return pmPriceType;
+	}
+
+	/**
+	 * @param pmPriceType the pmPriceType to set
+	 */
+	public void setPmPriceType(PmParameter pmPriceType) {
+		this.pmPriceType = pmPriceType;
+	}
+
+	/**
+	 * @return the scRequestSupplierItemId
+	 */
+	public Long getScRequestSupplierItemId() {
+		return scRequestSupplierItemId;
+	}
+
+	/**
+	 * @param scRequestSupplierItemId the scRequestSupplierItemId to set
+	 */
+	public void setScRequestSupplierItemId(Long scRequestSupplierItemId) {
+		this.scRequestSupplierItemId = scRequestSupplierItemId;
 	}
 
 }
