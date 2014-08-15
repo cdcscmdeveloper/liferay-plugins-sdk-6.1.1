@@ -48,6 +48,7 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.VFlDocument;
@@ -658,11 +659,13 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 						roleDesc.getPmRole().getRoleCode();
 					}
 					for(PmUserOrg pmUserOrg : getManagedBean().getPmUser().getPmUserOrgs()){
-						if(pmUserOrg.getEffDate().before(currentDate)){
-							if(pmUserOrg.getExpDate().after(currentDate)){
-								defaultOrgProfile = pmUserOrg.getPmOrgProfile();
-								
-								break;
+						if(pmUserOrg.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE){
+							if(pmUserOrg.getEffDate().before(currentDate)){
+								if(pmUserOrg.getExpDate().after(currentDate)){
+									defaultOrgProfile = pmUserOrg.getPmOrgProfile();
+									
+									break;
+								}
 							}
 						}
 					}
