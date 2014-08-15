@@ -499,6 +499,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				.getInstance().getServiceObject("cm", ICatalogueSO.class);
 
 		try{
+			if(index<0)
+				index = this.getManagedBean().getTierRowIndex();
+			
 			CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 	
 			reqDTO.setCmSupplierItemObj(this.getManagedBean().getMaintainItemList()

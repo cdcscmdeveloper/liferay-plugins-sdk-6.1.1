@@ -101,15 +101,15 @@
 				#{lbl['lbl.cm.action']}
 			</f:facet>
 
-			<p:commandLink title="Edit"
+			<p:commandLink title="Edit" 
 				action="#{catalogueBackingBean.navigateToCatalogDet(rowIndex)}">
 				<p:graphicImage value="/css/images/design/edit.png"></p:graphicImage>
 			</p:commandLink>
-			<p:commandLink style="margin-left: 10px;" title="Delete"
-				action="#{catalogueBackingBean.deleteDraftItem(rowIndex)}"
-				update="@form">
+			<p:commandLink style="margin-left: 10px;" title="Delete" oncomplete="confirmation1.show();" action="#{catalogueBackingBean.setRowIndex}" >
 				<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
+				<f:param name="index" value="#{rowIndex}"></f:param>
 			</p:commandLink>
+			 
 		</p:column>
 	</p:dataTable>
 
@@ -133,4 +133,12 @@
 		</p:fileUpload>
 
 	</p:dialog>
+	<p:confirmDialog message="Are you sure ?" header="Confirmation Message" widgetVar="confirmation1">
+		<p:commandButton id="conf" value="Yes"
+			actionListener="#{catalogueBackingBean.deleteDraftItem(-1)}" update="draftSupplierItemID"
+			oncomplete="confirmation1.hide()" />
+		<p:commandButton id="decline" value="No"
+			onclick="confirmation1.hide()" />
+			<h:inputHidden id="rowIndex"></h:inputHidden>
+	</p:confirmDialog>
 </ui:composition>
