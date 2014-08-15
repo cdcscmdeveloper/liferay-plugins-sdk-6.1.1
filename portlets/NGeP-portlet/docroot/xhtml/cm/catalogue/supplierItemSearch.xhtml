@@ -259,7 +259,7 @@
 								<p:spacer width="5px" />
 							    
 								<p:commandLink disabled="#{!supplierItem.atcRequired}" 
-									action="#{requestNoteBackingBean.addToCart(supplierItem.docId , false)}"
+									action="#{requestNoteBackingBean.addToCart(supplierItem.docId , false , null)}"
 									update="@([id$=addToCartPopup])"
 									rendered="#{supplierItem.contractNo == null and supplierItem.circularNo == null }">
 									<p:graphicImage library="ep/images/design"

@@ -63,7 +63,7 @@
 										rendered="#{unspscCodeBackingBean.requisitioner}" />
 									<p:menuitem value="#{lbl['lbl.cm.catalogue.cart']}"
 										icon="ui-icon-plus"
-										action="#{requestNoteBackingBean.addToCart(supplierItem.supplierItemId ,true)}"
+										action="#{requestNoteBackingBean.addToCart(supplierItem.supplierItemId ,true ,catalogueBackingBean.managedBean.selectedSupplierItemList)}"
 										partialSubmit="true" process="@this"
 										update="@([id$=addToCartPopup])"
 										rendered="#{unspscCodeBackingBean.requisitioner}" />
