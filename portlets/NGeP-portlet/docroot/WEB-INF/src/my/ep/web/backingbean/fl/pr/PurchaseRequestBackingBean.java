@@ -657,7 +657,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		PurchaseRequestReqDTO reqDTO = new PurchaseRequestReqDTO();
 		reqDTO.setRequestSupplierItemId(flItemAddr.getScSupplierItemPrice().getScRequestSupplierItem().getRequestSupplierItemId());
 		reqDTO.setPriceType(flItemAddr.getScSupplierItemPrice().getPriceType());
-//		reqDTO.setAddressId(getManagedBean().getSelectedDelAddr().getPmAddress().getAddressId());//when anjie api is ready to pass in addressId test this
+		reqDTO.setPmAddress(getManagedBean().getSelectedDelAddr().getPmAddress());
 		  
 		if(null == flItemAddr.getOrderedQty()){
 			flItemAddr.setOrderedAmt(new BigDecimal("0"));
