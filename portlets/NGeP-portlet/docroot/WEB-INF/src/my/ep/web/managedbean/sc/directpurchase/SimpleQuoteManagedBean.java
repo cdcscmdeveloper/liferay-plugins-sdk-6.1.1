@@ -151,6 +151,7 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	private String pageNavToRequestNote;
 	private SelectItem[] procurementTypes; // for procuremment type dropdown
 	private boolean rnToSQFlag = Boolean.TRUE;
+	private boolean supplierViewBtn = Boolean.TRUE;
 
 	public SimpleQuoteManagedBean() {
 		super();
@@ -1269,6 +1270,18 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	 */
 	public void setRnToSQFlag(boolean rnToSQFlag) {
 		this.rnToSQFlag = rnToSQFlag;
+	}
+	/**
+	 * @return the supplierViewBtn
+	 */
+	public boolean isSupplierViewBtn() {
+		return supplierViewBtn;
+	}
+	/**
+	 * @param supplierViewBtn the supplierViewBtn to set
+	 */
+	public void setSupplierViewBtn(boolean supplierViewBtn) {
+		this.supplierViewBtn = supplierViewBtn;
 	}
 	
 }

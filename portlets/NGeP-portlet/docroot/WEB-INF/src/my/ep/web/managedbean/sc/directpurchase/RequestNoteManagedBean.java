@@ -21,6 +21,7 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteResDTO;
 import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
+import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmParameter;
@@ -104,10 +105,10 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     private String createdBy;
 	private	List<ScRequestNoteDtl>	supplierRecList	=	new ArrayList<ScRequestNoteDtl>();
 	private	List<ScSupplierItemPrice>	pricingList	=	new ArrayList<ScSupplierItemPrice>(); // For pricing pop to show all pricing
-	
     private ScQuote scQuote;
     
     private IPagingDataModel<ScRequestNote> reqNoteDataModel = new RequestNotePagingDataModel();
+    private List<CmSupplierItem> compareSupplierItems = new ArrayList<CmSupplierItem>(); // copy supplier items from the compare screen
     
     public RequestNoteManagedBean() {
     	PmParameter pmParameter = new PmParameter();
@@ -805,5 +806,18 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	public void setPricingList(List<ScSupplierItemPrice> pricingList) {
 		this.pricingList = pricingList;
 	}
+	/**
+	 * @return the compareSupplierItems
+	 */
+	public List<CmSupplierItem> getCompareSupplierItems() {
+		return compareSupplierItems;
+	}
+	/**
+	 * @param compareSupplierItems the compareSupplierItems to set
+	 */
+	public void setCompareSupplierItems(List<CmSupplierItem> compareSupplierItems) {
+		this.compareSupplierItems = compareSupplierItems;
+	}
+	
 	
 }
