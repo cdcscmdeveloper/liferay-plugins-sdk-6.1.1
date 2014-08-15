@@ -41,7 +41,7 @@
 		<div style="text-align: left;">
 
 			<p:commandButton value="#{lbl['lbl.cm.back']}" icon="ui-icon-back"
-				action="#{pCatalogueBackingBean.cancelToPublicSearch}"></p:commandButton>
+				action="#{pCatalogueBackingBean.cancelToPublicSearch()}"></p:commandButton>
 
 		</div>
 
@@ -52,7 +52,7 @@
 				<tr style="height: 30px;">
 					<td rowspan="10" style="vertical-align:top; width: 30%;">
 
-						<div id="slides" style="width: 250px;float: right; margin-right: 50px;">
+						<div id="slides" style="width: 250px;float: right; margin-right: 65px;">
 
 							<h:panelGroup
 								rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) == 0 }">
@@ -95,9 +95,9 @@
 					</td>
 				</tr>
 				<tr style="height: 40px;">
-					<td colspan="4" style="background-color: #D3D3D3;"><h:outputText
+					<td colspan="4" style="background-color: #DBDBDB;"><h:outputText
 							value="#{lbl['lbl.cm.normal.price']}  RM #{catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.price}"
-							style="font-weight:bold;padding-bottom: 10px;float:left;font-size:16px;padding-left: 8px;" />
+							style="font-weight:bold;vertical-align: middle;float:left;font-size:16px;padding-left: 8px;" />
 					</td>
 				</tr>
 				<tr style="height: 30px;">

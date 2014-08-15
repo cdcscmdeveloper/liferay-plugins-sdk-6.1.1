@@ -187,8 +187,8 @@ public class BPMTaskListBackingBean extends
 		System.out.println("testing BPM******");
 
 		String viewBy = "";
-//		this.getManagedBean().setViewBy("ALL");
-//		this.getManagedBean().setAssignment("ALL");
+		this.getManagedBean().setViewBy("");
+		this.getManagedBean().setAssignment("ALL");
 		this.getManagedBean().setDocType("");
 		FacesScopes facesScope = new FacesScopes();
 		filterViewbyNAssignment();

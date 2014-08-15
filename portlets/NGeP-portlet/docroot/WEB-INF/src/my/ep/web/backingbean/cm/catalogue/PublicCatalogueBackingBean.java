@@ -101,7 +101,7 @@ public class PublicCatalogueBackingBean extends
 
 	}
 
-	public void searchCatalogue() {
+	public String searchCatalogue() {
 		FacesContext facesContext = FacesContext.getCurrentInstance();
       if(this.getManagedBean().getItemName() == null || this.getManagedBean().getItemName().isEmpty()){
 	  facesContext.addMessage(
@@ -110,7 +110,7 @@ public class PublicCatalogueBackingBean extends
 						MessageUtils.getMessage(MessageConst.ERROR_716008,
 								MessageUtils.BUNDLE_COMMON_MESSAGES,
 								new FacesScopes().getUserLocale())));
-	  return ;
+	  return null;
    }
 		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
@@ -183,6 +183,7 @@ public class PublicCatalogueBackingBean extends
 			codificationSO = null;
 		}
 		// return "publicCatalogueView";
+		return null;
 	}
 
 	public void clearSerach() {

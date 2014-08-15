@@ -55,7 +55,7 @@ input.ui-autocomplete-input {
 					<p:panel header="Popular UNSPSC Categories in Commodity level"
 						style="margin-top:10px;">
 
-						<p:dataGrid columns="4" rows="4" styleClass="publicCatGridCol"
+						<p:dataGrid columns="4" rows="8" styleClass="publicCatGridCol"
 							value="#{pCatalogueBackingBean.managedBean.popularCommodityList}"
 							var="popular">
 							<table>
@@ -81,9 +81,9 @@ input.ui-autocomplete-input {
 
 								<table style="width: 90%;">
 									<tr>
-										<td style="background-color: #D3D3D3;"><p:outputLabel
+										<td style="background-color: #DBDBDB;height: 40px;"><p:outputLabel
 												value="Categories"
-												style="font-weight:bold;padding-bottom: 5px;float:left;font-size:16px;vertical-align: middle;" /></td>
+												style="font-weight:bold;font-size:17px;text-align : left;float:left; vertical-align: middle;margin-left : 5px;" /></td>
 									</tr>
 									<tr>
 										<td style="padding-top: 8px; padding-bottom: 8px;"><ui:repeat
