@@ -83,7 +83,7 @@ public class AuthorizedSignatoryBackingBean extends
 	public void deleteAuthorizedSignatory() {
 		debugLogger("deleteAuthorizedSignatory");
 		
-		List<PmUser> signatoryData = this.getManagedBean().getUsers();
+		List<PmUser> signatoryData = this.getManagedBean().getSignatoryUser();
 		if (signatoryData.size() == signatoryData.size()) {
 			signatoryData.clear();
 		} else {
@@ -100,7 +100,7 @@ public class AuthorizedSignatoryBackingBean extends
 	public void saveCertSignatoryDetials() {
 		debugLogger("saveCertSignatoryDetials");
 		
-		List<PmUser> users = this.getManagedBean().getUsers();
+		List<PmUser> users = this.getManagedBean().getSignatoryUser();
 		if (null == users || users.isEmpty()) {
 			throw new EpException("Please select Users");
 		}
@@ -113,11 +113,13 @@ public class AuthorizedSignatoryBackingBean extends
 		List<PmCertSignatory> certSignatories = new ArrayList<PmCertSignatory>();
 		for (PmUser user : users) {
 			PmCertSignatory certSignatory = new PmCertSignatory();
-			certSignatory.setUser(user);
+			certSignatory.setPmUser(user);
 			if(null != user.getPmUserOrgs() && null != user.getPmUserOrgs().get(0)){
 				PmUserOrg  userOrg = user.getPmUserOrgs().get(0);
-				certSignatory.setEffectiveDate(userOrg.getEffDate());
+				certSignatory.setEffDate(userOrg.getEffDate());
 				certSignatory.setExpDate(userOrg.getExpDate());
+				certSignatory.setRecordStatusFlg(userOrg.getRecordStatusFlg());
+				
 			}
 			
 			certSignatory.setPmZone(pmZone);

@@ -26,8 +26,10 @@ public class AuthorizedSignatoryManagedBean extends BaseManagedBean {
 	
 	private PmCertSignatory pmCertSignatory;
 	
-	private List<PmUser> users;
-
+	private List<PmUser> signatoryUser;
+	
+	private int status;
+	
 
 	/**
 	 * @return the zones
@@ -44,17 +46,17 @@ public class AuthorizedSignatoryManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the users
+	 * @return the signatoryUser
 	 */	
-	public List<PmUser> getUsers() {
-		return users;
+	public List<PmUser> getSignatoryUser() {
+		return signatoryUser;
 	}
 
 	/**
-	 * @param users the users to set
+	 * @param signatoryUser the signatoryUser to set
 	 */
-	public void setUsers(List<PmUser> users) {
-		this.users = users;
+	public void setSignatoryUser(List<PmUser> signatoryUser) {
+		this.signatoryUser = signatoryUser;
 	}
 
 	/**
@@ -70,6 +72,13 @@ public class AuthorizedSignatoryManagedBean extends BaseManagedBean {
 	public void setPmCertSignatory(PmCertSignatory pmCertSignatory) {
 		this.pmCertSignatory = pmCertSignatory;
 	}
-	
-	
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}	
+		
 }
