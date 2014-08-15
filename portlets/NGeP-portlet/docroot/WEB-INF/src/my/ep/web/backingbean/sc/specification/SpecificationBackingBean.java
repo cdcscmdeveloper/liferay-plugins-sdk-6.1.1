@@ -207,9 +207,11 @@ public class SpecificationBackingBean extends
 
 	public String businessOwnerBackAction() {
 		this.getManagedBean().setActiveIndex(0);
+		this.getManagedBean().setTempIndex(0);
 		this.getManagedBean().setCircularType("");
 		this.getManagedBean().setPanelItemList(new ArrayList<CtPanelItem>());
 		this.getManagedBean().setPanelItemCategory(null);
+		this.getManagedBean().setSelectPanelItem(false);
 		return "specificationview.xhtml";
 	}
 
@@ -379,6 +381,7 @@ public class SpecificationBackingBean extends
 		SpecificationResDTO resDTO = null;
 		String taskId = this.getManagedBean().getTaskId();
 		String[] outComes = this.getManagedBean().getOutComes();
+		boolean selectPanelItem = this.getManagedBean().isSelectPanelItem();
 		CtPanelItem panelItem = null;
 		CtCircularVer circularVer = null;
 		List<CtPanelItem> panelList = this.getManagedBean()
@@ -442,6 +445,7 @@ public class SpecificationBackingBean extends
 		if (getManagedBean().getTempIndex() < activeIndex) {
 			getManagedBean().setTempIndex(activeIndex);
 		}
+		this.getManagedBean().setSelectPanelItem(selectPanelItem);
 		this.getManagedBean().setActiveIndex(activeIndex);
 		this.getManagedBean().setTaskId(taskId);
 		this.getManagedBean().setOutComes(outComes);
@@ -511,23 +515,28 @@ public class SpecificationBackingBean extends
 					.getManagedBean().isPanelChange()) {
 
 				removespecDtls();
-				this.getManagedBean().getScQt()
-						.setScQtSupplierCriteria(new ScQtSupplierCriteria());
-				this.getManagedBean().getScQt().setZonal(false);
-				this.getManagedBean().getScQt().getScQtSupplierCriteria()
-						.setQtZoneCriterias(null);
 				if (null == this.getManagedBean().getScQt()
-						.getScQtSupplierCriteria().getLocationLevel()) {
+						.getScQtSupplierCriteria()) {
+					this.getManagedBean()
+							.getScQt()
+							.setScQtSupplierCriteria(new ScQtSupplierCriteria());
+					this.getManagedBean().getScQt().setZonal(false);
 					this.getManagedBean().getScQt().getScQtSupplierCriteria()
-							.setLocationLevel(new PmParameter());
+							.setQtZoneCriterias(null);
+					if (null == this.getManagedBean().getScQt()
+							.getScQtSupplierCriteria().getLocationLevel()) {
+						this.getManagedBean().getScQt()
+								.getScQtSupplierCriteria()
+								.setLocationLevel(new PmParameter());
+					}
+					if (this.getManagedBean().getScQt().getEstimatedAmount()
+							.intValue() > 500000) {
+						this.getManagedBean().getScQt()
+								.getScQtSupplierCriteria().setAllState(true);
+					}
+					getManagedBean().setZoneGeneralTrees(null);
+					getManagedBean().setZoneTrees(null);
 				}
-				if (this.getManagedBean().getScQt().getEstimatedAmount()
-						.intValue() > 500000) {
-					this.getManagedBean().getScQt().getScQtSupplierCriteria()
-							.setAllState(true);
-				}
-				getManagedBean().setZoneGeneralTrees(null);
-				getManagedBean().setZoneTrees(null);
 			}
 
 			return "specificationCreation.xhtml?faces-redirect=true";
@@ -545,15 +554,19 @@ public class SpecificationBackingBean extends
 					.getManagedBean().isPanelChange()) {
 
 				removespecDtls();
-				this.getManagedBean().getScQt()
-						.setScQtSupplierCriteria(new ScQtSupplierCriteria());
-				this.getManagedBean().getScQt().getScQtSupplierCriteria()
-						.setQtZoneCriterias(null);
-				this.getManagedBean().getScQt().getScQtSupplierCriteria()
-						.setScQtLocCriteria(null);
-				// this.getManagedBean().getScQt().setScQtCategorys(null);
-				getManagedBean().setZoneGeneralTrees(null);
-				getManagedBean().setZoneTrees(null);
+				if (null == this.getManagedBean().getScQt()
+						.getScQtSupplierCriteria()) {
+					this.getManagedBean()
+							.getScQt()
+							.setScQtSupplierCriteria(new ScQtSupplierCriteria());
+					this.getManagedBean().getScQt().getScQtSupplierCriteria()
+							.setQtZoneCriterias(null);
+					this.getManagedBean().getScQt().getScQtSupplierCriteria()
+							.setScQtLocCriteria(null);
+					// this.getManagedBean().getScQt().setScQtCategorys(null);
+					getManagedBean().setZoneGeneralTrees(null);
+					getManagedBean().setZoneTrees(null);
+				}
 			}
 
 			return "specificationCreation.xhtml?faces-redirect=true";
@@ -1414,101 +1427,61 @@ public class SpecificationBackingBean extends
 			} else {
 
 				if (scQt.isZonal() && scQt.isPanel()) {
-
-					if (QTConstants.ITEM_SPECIFIC_TYPE.equalsIgnoreCase(this
-							.getManagedBean().getPanelItemCategory())) {
-
-						try {
-							if (null != this.getManagedBean().getScQt()
+					if (null != this.getManagedBean().getScQt()
+							.getScQtSupplierCriteria()
+							&& null != this.getManagedBean().getScQt()
 									.getScQtSupplierCriteria().getCtPanelItem()
-									.getPanelItemId()) {
-								List<CtPanelItem> panelList = this
-										.getManagedBean().getSelectpanelItem();
-								panelList = new ArrayList<CtPanelItem>();
-								panelList.add(this.getManagedBean().getScQt()
-										.getScQtSupplierCriteria()
-										.getCtPanelItem());
-								this.getManagedBean().setSelectpanelItem(
-										panelList);
-							}
+							&& null != this.getManagedBean().getScQt()
+									.getScQtSupplierCriteria().getCtPanelItem()
+									.getCtCircularVer()) {
 
-							if (this.getManagedBean().getCtPanelItem()
-									.getPanelItemId() != this.getManagedBean()
-									.getScQt().getScQtSupplierCriteria()
-									.getCtPanelItem().getPanelItemId()) {
-
-								List<CtPanelItem> panelList = this
-										.getManagedBean().getSelectpanelItem();
-								panelList = new ArrayList<CtPanelItem>();
-
-								panelList.add(this.getManagedBean()
-										.getCtPanelItem());
-								this.getManagedBean().setSelectpanelItem(
-										panelList);
-
-								removespecDtls();
-
-								this.getManagedBean()
-										.getScQt()
-										.setScQtSupplierCriteria(
-												new ScQtSupplierCriteria());
+						this.getManagedBean().setCtPanelItem(
 								this.getManagedBean().getScQt()
 										.getScQtSupplierCriteria()
-										.setQtZoneCriterias(null);
-
-								createCircularItemSpec(this.getManagedBean()
 										.getCtPanelItem());
-							}
-							this.getManagedBean().setCtZoneSuppliers(
-									new ArrayList<TreeNode>());
-							retriveZonesByCircularNo();
-						} finally {
 
-						}
+						this.getManagedBean().setCtCircularVer(
+								this.getManagedBean().getScQt()
+										.getScQtSupplierCriteria()
+										.getCtPanelItem().getCtCircularVer());
+						this.getManagedBean().setPanelItemCategory(
+								getParameterDesc(this.getManagedBean()
+										.getScQt().getScQtSupplierCriteria()
+										.getCtPanelItem().getItemCategoryId()));
+						List<CtPanelItem> panelList = this.getManagedBean()
+								.getSelectpanelItem();
+						panelList = new ArrayList<CtPanelItem>();
+
+						panelList.add(this.getManagedBean().getScQt()
+								.getScQtSupplierCriteria().getCtPanelItem());
+
+						this.getManagedBean().setSelectpanelItem(panelList);
 
 					}
 
-					else if (QTConstants.ITEM_GENERAL_TYPE
-							.equalsIgnoreCase(this.getManagedBean()
-									.getPanelItemCategory())) {
+					if (QTConstants.ITEM_SPECIFIC_TYPE.equalsIgnoreCase(this
+							.getManagedBean().getPanelItemCategory())
+							&& this.getManagedBean().isSelectPanelItem()) {
 
 						try {
-							if (null != this.getManagedBean().getScQt()
-									.getScQtSupplierCriteria().getCtPanelItem()
-									.getPanelItemId()) {
-								List<CtPanelItem> panelList = this
-										.getManagedBean().getSelectpanelItem();
-								panelList = new ArrayList<CtPanelItem>();
-								panelList.add(this.getManagedBean().getScQt()
-										.getScQtSupplierCriteria()
-										.getCtPanelItem());
-								this.getManagedBean().setSelectpanelItem(
-										panelList);
-							}
 
-							if (this.getManagedBean().getCtPanelItem()
-									.getPanelItemId() != this.getManagedBean()
-									.getScQt().getScQtSupplierCriteria()
-									.getCtPanelItem().getPanelItemId()) {
-
+							if (this.getManagedBean().getTempIndex() == 0) {
 								removespecDtls();
 
-								this.getManagedBean()
-										.getScQt()
-										.setScQtSupplierCriteria(
-												new ScQtSupplierCriteria());
-								this.getManagedBean().getScQt()
-										.getScQtSupplierCriteria()
-										.setQtZoneCriterias(null);
+								if (null == this.getManagedBean().getScQt()
+										.getScQtSupplierCriteria()) {
+									this.getManagedBean()
+											.getScQt()
+											.setScQtSupplierCriteria(
+													new ScQtSupplierCriteria());
+									this.getManagedBean().getScQt()
+											.getScQtSupplierCriteria()
+											.setQtZoneCriterias(null);
+								}
 
-								List<CtPanelItem> panelList = this
-										.getManagedBean().getSelectpanelItem();
-								panelList = new ArrayList<CtPanelItem>();
-
-								panelList.add(this.getManagedBean()
+								createCircularItemSpec(this.getManagedBean()
 										.getCtPanelItem());
-								this.getManagedBean().setSelectpanelItem(
-										panelList);
+
 								this.getManagedBean().setCtZoneSuppliers(
 										new ArrayList<TreeNode>());
 								retriveZonesByCircularNo();
@@ -1519,7 +1492,40 @@ public class SpecificationBackingBean extends
 
 					}
 
-					else if (null == this.getManagedBean().getCtPanelItem()) {
+					else if (QTConstants.ITEM_GENERAL_TYPE
+							.equalsIgnoreCase(this.getManagedBean()
+									.getPanelItemCategory())
+							&& this.getManagedBean().isSelectPanelItem()) {
+
+						try {
+
+							if (this.getManagedBean().getTempIndex() == 0) {
+
+								removespecDtls();
+
+								if (null == this.getManagedBean().getScQt()
+										.getScQtSupplierCriteria()) {
+									this.getManagedBean()
+											.getScQt()
+											.setScQtSupplierCriteria(
+													new ScQtSupplierCriteria());
+									this.getManagedBean().getScQt()
+											.getScQtSupplierCriteria()
+											.setQtZoneCriterias(null);
+								}
+
+								this.getManagedBean().setCtZoneSuppliers(
+										new ArrayList<TreeNode>());
+								retriveZonesByCircularNo();
+							}
+
+						} finally {
+
+						}
+
+					}
+
+					else if (null != this.getManagedBean().getCtPanelItem()) {
 						try {
 
 							List<CtPanelItem> panelList = this.getManagedBean()
@@ -1584,7 +1590,7 @@ public class SpecificationBackingBean extends
 						} finally {
 
 						}
-					} 
+					}
 				} else if (scQt.isPanel() && !scQt.isZonal()) {
 
 					try {
@@ -1601,15 +1607,12 @@ public class SpecificationBackingBean extends
 									this.getManagedBean().getScQt()
 											.getScQtSupplierCriteria()
 											.getCtPanelItem());
-							this.getManagedBean()
-									.getScQt()
-									.getScQtSupplierCriteria()
-									.getCtPanelItem()
-									.setCtCircularVer(
-											this.getManagedBean().getScQt()
-													.getScQtSupplierCriteria()
-													.getCtPanelItem()
-													.getCtCircularVer());
+
+							this.getManagedBean().setCtCircularVer(
+									this.getManagedBean().getScQt()
+											.getScQtSupplierCriteria()
+											.getCtPanelItem()
+											.getCtCircularVer());
 							this.getManagedBean().setPanelItemCategory(
 									getParameterDesc(this.getManagedBean()
 											.getScQt()
@@ -1628,10 +1631,11 @@ public class SpecificationBackingBean extends
 							this.getManagedBean().setSelectpanelItem(panelList);
 
 						}
+
 						if (QTConstants.ITEM_SPECIFIC_TYPE
 								.equalsIgnoreCase(this.getManagedBean()
-										.getPanelItemCategory()))
-								 {
+										.getPanelItemCategory())
+								&& this.getManagedBean().isSelectPanelItem()) {
 
 							if (this.getManagedBean().getTempIndex() == 0) {
 
@@ -1646,8 +1650,8 @@ public class SpecificationBackingBean extends
 									this.getManagedBean().getScQt()
 											.getScQtSupplierCriteria()
 											.setQtZoneCriterias(null);
-								}
 
+								}
 								createCircularItemSpec(this.getManagedBean()
 										.getCtPanelItem());
 							}
@@ -8527,6 +8531,7 @@ public class SpecificationBackingBean extends
 				getParameterDesc(ctPanelItem.getItemCategoryId()));
 		panelList.add(ctPanelItem);
 		this.getManagedBean().setSelectpanelItem(panelList);
+		this.getManagedBean().setSelectPanelItem(true);
 
 	}
 
