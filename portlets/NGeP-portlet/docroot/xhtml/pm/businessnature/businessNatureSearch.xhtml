@@ -1,0 +1,45 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<p:panel id="businessNaturePanel">
+
+		<h:panelGrid columns="4" style="width:100%;">
+	
+	        <h:outputLabel value="#{lbl['lbl.pm.bn.seccode']}"></h:outputLabel>
+            <p:inputText size="30"  />
+			
+			<h:outputLabel value="#{lbl['lbl.pm.bn.secname']}"></h:outputLabel>
+			<p:inputText size="50" />
+			
+	        <h:outputLabel value="#{lbl['lbl.pm.bn.divcode']}"></h:outputLabel>
+            <p:inputText size="30"  />
+			
+			<h:outputLabel value="#{lbl['lbl.pm.bn.divname']}"></h:outputLabel>
+			<p:inputText size="50" />
+			
+	        <h:outputLabel value="#{lbl['lbl.pm.bn.groupcode']}"></h:outputLabel>
+            <p:inputText size="30"  />
+			
+			<h:outputLabel value="#{lbl['lbl.pm.bn.groupname']}"></h:outputLabel>
+			<p:inputText size="50" />
+			
+	        <h:outputLabel value="#{lbl['lbl.pm.bn.classcode']}"></h:outputLabel>
+            <p:inputText size="30"  />
+			
+			<h:outputLabel value="#{lbl['lbl.pm.bn.classname']}"></h:outputLabel>
+			<p:inputText size="50" />
+			
+	        <h:outputLabel value="#{lbl['lbl.pm.bn.itemcode']}"></h:outputLabel>
+            <p:inputText size="30"  />
+			
+			<h:outputLabel value="#{lbl['lbl.pm.bn.itemname']}"></h:outputLabel>
+			<p:inputText size="50" />																
+	
+		</h:panelGrid>
+ </p:panel>
+</ui:composition>

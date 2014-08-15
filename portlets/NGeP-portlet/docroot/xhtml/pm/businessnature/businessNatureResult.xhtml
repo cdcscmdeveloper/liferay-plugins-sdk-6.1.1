@@ -1,0 +1,63 @@
+<ui:composition	
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+		
+	
+	<p:panel id="businessNatureSearch" header="SEARCH" toggleable="true">
+	
+	 <ui:include src="/xhtml/pm/businessnature/businessNatureSearch.xhtml" />
+			
+      <div align="right">
+			<p:commandButton value="#{lbl['lbl.btn.search']}" icon="ui-icon-search" 
+							 action="#{businessNatureBackingBean.retrieveBusinessNature}"
+						     update="businessNatureSR" process="businessNatureSearch"/>
+            <p:commandButton value="#{lbl['lbl.btn.reset']}" icon="ui-icon-reset" />
+	  </div>
+    <br/>
+	<br/>
+	</p:panel>
+	
+	<p:panel id="businessResult" header="RESULT" toggleable="true">
+	<p:dataTable id="businessNatureSR" value="#{businessNatureBackingBean.businessNatureDataModel}"
+				var="businessNatureList" rowIndexVar="index" lazy="true">	
+	   <ac:paginator for="businessNatureSR" />
+		
+       <p:column headerText="#{lbl['lbl.pm.bn.level']}" style="width:10%">
+ 		<h:outputText value="#{businessNatureList.businessLevel}" />           
+       </p:column>
+       
+       <p:column headerText="#{lbl['lbl.pm.bn.code']}" style="width:10%"> 
+		<h:outputText value="#{businessNatureList.levelCode}" />        
+       </p:column>  
+       
+        <p:column headerText="#{lbl['lbl.pm.bn.name']}" style="width:65%"> 
+ 		<h:outputText value="#{businessNatureList.levelName}" />        
+       </p:column>              
+     
+       <p:column headerText="#{lbl['lbl.pm.search.status']}" style="width:10%">  
+   	    #{(businessNatureList.recordStatusFlg==1)? lbl['lbl.pm.active'] : lbl['lbl.pm.inactive']}                    
+       </p:column >
+        
+    	<p:column headerText="#{lbl['lbl.pm.profiles.search.result.action']}" style="width:5%">
+   		 <p:commandLink action="#{businessNatureBackingBean.goToBusinessMaintaincePage(businessNatureList)}"
+   		 			   process="@this" partialSubmit="true">
+     		<p:graphicImage library="ep/images/design" name="edit.png"
+     		 value="/resources/ep/images/design/edit.png" />
+    	 </p:commandLink>
+   	 	</p:column>    
+     </p:dataTable>
+	</p:panel>
+	
+	<p:panel>
+	<h:panelGrid columns="2" style="width:100%;">
+	     <p:commandButton value="#{lbl['lbl.btn.create']}" action="#{businessNatureBackingBean.createBusinessNature}" 
+	    				  style="float:right;" icon="ui-icon-add" />
+	 </h:panelGrid>	
+	</p:panel>
+	
+</ui:composition>

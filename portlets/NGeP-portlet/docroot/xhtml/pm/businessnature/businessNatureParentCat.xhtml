@@ -1,0 +1,25 @@
+<ui:composition	
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	
+   <p:panel header="PARENT CATEGORY" toggleable="true">
+	<p:spacer height="10"></p:spacer>
+			
+	<table style="width:100%;">
+	  <tr>	  	
+		<td style="width:10%;"><p:outputLabel value="#{lbl['lbl.pm.bn.code']}" /></td>
+         <td><p:inputText size="30" /></td>
+	  </tr>	
+	  <tr>
+		<td><p:outputLabel value="#{lbl['lbl.pm.bn.name']}" /></td>
+		<td><p:inputText size="30" /></td>
+	  </tr>
+	</table>
+   </p:panel>	
+</ui:composition>
