@@ -72,7 +72,7 @@ public class gpkiBackingBean {
 		this.pmDigiSign = pmDigiSign;
 	}
 	
-	public void gpkiSignAction(com.sun.faces.facelets.el.ContextualCompositeMethodExpression obj) {
+	public String gpkiSignAction(com.sun.faces.facelets.el.ContextualCompositeMethodExpression obj) {
         String textBeforeSign = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("textBeforeSign");
 	    String signedText = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("signedText");
 	    String serialNo = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("serialNo");
@@ -80,16 +80,16 @@ public class gpkiBackingBean {
 	    Long userId = (Long) MDC.get(LogKey.USER_ID);
 		Timestamp date = new Timestamp(System.currentTimeMillis());
 		
+		debugLogger("userId====================================: "+userId);
+		debugLogger("reflectAction=====================================: "+obj);
+		
 		pmDigiSign.setCreatedBy(userId);
         pmDigiSign.setCertificate("111111");
         pmDigiSign.setCreatedDate(date);
         pmDigiSign.setOrginalData(textBeforeSign);
         pmDigiSign.setSignedData(signedText);
-		obj.invoke(FacesContext.getCurrentInstance().getELContext(), new Object[]{pmDigiSign});
-
-
-	    debugLogger("userId====================================: "+userId);
-	    debugLogger("reflectAction=====================================: "+obj);
+        
+        return obj.invoke(FacesContext.getCurrentInstance().getELContext(), new Object[]{pmDigiSign}).toString(); 	  
 	}
 	
 
