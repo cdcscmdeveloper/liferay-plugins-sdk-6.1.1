@@ -38,7 +38,9 @@ import my.ep.dto.sm.registration.RegistrationReqDTO;
 import my.ep.dto.sm.registration.RegistrationResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
@@ -123,7 +125,7 @@ public class SPDetailBackingBean extends
 	public void init() {
 		try {
 			if (this.getManagedBean().getTecCheckDetailsList() == null) {
-				retrieveTechnicalProposalList();
+				//retrieveTechnicalProposalList();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -138,61 +140,60 @@ public class SPDetailBackingBean extends
 	}
 
 	/**
-	 * retrieving Technical Proposal CheckList
+	 * retrieving Technical & Financial Proposal CheckList
 	 */
-	public void retrieveTechnicalProposalList() {
-		debugLogger("retrieveTechnicalProposalList");
-		Long supplierId = 1L;
-		this.getManagedBean().setPrepareActiveIndex(0);
+	public void retrieveProposalChecklistDtls(Long qtID,String supplierID,Long userId) {
+		debugLogger("retrieveProposalChecklistDtls");
+		
+		getManagedBean().setPrepareActiveIndex(0);
 		IQTProposalSO proposalSO = null;
 		try {
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
-			reqDTO.setQtSupplierId(supplierId);
-			reqDTO.setQtId(2343l);
-			reqDTO.setDocCategory(SourcingConstants.TECHNICAL_DOCTYPE);
-			ProposalResDTO resDTO = proposalSO.retrieveProposalDtlByQtSupplierId(reqDTO);
+			
+			reqDTO.setQtId(qtID);
+			reqDTO.setUserId(userId);
+			reqDTO.setHashSupplierId(supplierID);
+			ProposalResDTO resDTO = proposalSO.retrieveProposalCheckListByQtIdNSupplierId(reqDTO);
+			getManagedBean().setQt(resDTO.getScQt());
+			System.out.println("*****~~~~~~qt id is~~~~~*****"+resDTO.getScQt().getQtId());
+			
 			// Technical Check List
-			List<ScQtProposalChecklist> tecCheckDetailsList = resDTO.getCheckListResultBean().getResultList();
-			log.info("Technical list: " + tecCheckDetailsList.size());
-			for (ScQtProposalChecklist scQtProposalChecklist : tecCheckDetailsList) {
-				this.getManagedBean().setQtProposalChecklist(scQtProposalChecklist);
+			if(resDTO.getTechnicalCheckLists() != null){
+				getManagedBean().setTecCheckDetailsList(resDTO.getTechnicalCheckLists());
+				log.info("Technical Check list: " + resDTO.getTechnicalCheckLists().size());
+				for (ScQtProposalChecklist scQtProposalChecklist : resDTO.getTechnicalCheckLists()) {
+					//this.getManagedBean().setQtProposalChecklist(scQtProposalChecklist);
+					System.out.println("*****ScQtProposalChecklist---proposal checklist id is"+scQtProposalChecklist.getQtProposalChecklistId());
+					System.out.println("*****proposalChecklist--- qt checklist id is"+scQtProposalChecklist.getScQtCheckList().getQtChecklistId());
+					System.out.println("*****proposalChecklist---qt id is"+scQtProposalChecklist.getScQtCheckList().getScQt().getQtId());
+				}
 			}
-			this.getManagedBean().setQt(resDTO.getScQt());
+			// Financial Check List
+			if(resDTO.getFinancialCheckLists() != null){
+				getManagedBean().setFinanceCheckDetailsList(resDTO.getFinancialCheckLists());
+				log.info("Financial Check list: " + resDTO.getFinancialCheckLists().size());
+				for (ScQtProposalChecklist scQtProposalChecklist : resDTO.getFinancialCheckLists()) {
+					System.out.println("*****ScQtProposalChecklist---proposal checklist id is"+scQtProposalChecklist.getQtProposalChecklistId());
+					System.out.println("*****proposalChecklist---checklist id is"+scQtProposalChecklist.getScQtCheckList().getQtChecklistId());
+					System.out.println("*****proposalChecklist---qt id is"+scQtProposalChecklist.getScQtCheckList().getScQt().getQtId());
+				}
+			}
+			
 			if (null != getManagedBean().getQt().getClosingDate()) {
 				Date today = new Date();
 				long days = DateUtils.getDaysDifference(today, getManagedBean().getQt().getClosingDate());
 				this.getManagedBean().setDays(days);
 			}
-			this.getManagedBean().setTecCheckDetailsList(tecCheckDetailsList);
+			
 		} finally {
 			proposalSO = null;
 		}
 	}
 
-	/**
-	 * retrieving Financial Proposal CheckList
-	 */
 	public void retrieveFinancialProposalList() {
 		debugLogger("retrieveFinancialProposalList");
-		Long supplierId = 1L;
 		this.getManagedBean().setPrepareActiveIndex(1);
-		IQTProposalSO proposalSO = null;
-		try {
-			proposalSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
-			ProposalReqDTO reqDTO = new ProposalReqDTO();
-			reqDTO.setQtSupplierId(supplierId);
-			reqDTO.setQtId(2343l);
-			reqDTO.setDocCategory(SourcingConstants.FINANCIAL_DOCTYPE);
-			ProposalResDTO resDTO = proposalSO.retrieveProposalDtlByQtSupplierId(reqDTO);
-			// Financial Check List
-			List<ScQtProposalChecklist> finCheckDetailsList = resDTO.getCheckListResultBean().getResultList();
-			log.info("Financial list: " + finCheckDetailsList.size());
-			this.getManagedBean().setQt(resDTO.getScQt());
-			this.getManagedBean().setFinanceCheckDetailsList(finCheckDetailsList);
-		} finally {
-			proposalSO = null;
-		}
 	}
 
 	public void retrieveDeclarationList() {
@@ -1571,8 +1572,7 @@ public class SPDetailBackingBean extends
 				.getOriginalServletRequest(servletRequest);
 		String qtId = originalServletRequest.getParameter("qtId");
 		String encodedSupplierId= originalServletRequest.getParameter("supplierId");
-		
-		retrieveTechnicalProposalList();
+		retrieveProposalChecklistDtls(Long.parseLong(qtId),encodedSupplierId,((PmUser)(new FacesScopes().getUserSessionBean())).getUserId());
 		FacesContext fc = FacesContext.getCurrentInstance();
 		
 		fc.getApplication().getNavigationHandler()
