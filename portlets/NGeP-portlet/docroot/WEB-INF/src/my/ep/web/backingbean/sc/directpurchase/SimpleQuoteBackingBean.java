@@ -1416,8 +1416,9 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 	/**
 	 * To delete the selected TreeNode from the zone
 	 */
-	public void deleteZoneTreeNode(TreeNode selectedTreeNode) {
+	public void deleteZoneTreeNode() {
 		List<TreeNode>	zones = new ArrayList<TreeNode>();
+		TreeNode selectedTreeNode = getManagedBean().getSelectedTreeNode();
 		if (selectedTreeNode.getChildren() != null) {
 			TplSpecZoneDtl zoneDtl = (TplSpecZoneDtl) selectedTreeNode.getChildren().get(0).getData();
 

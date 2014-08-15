@@ -45,15 +45,7 @@
 						<p:graphicImage library="ep/images/design" name="edit.png"
 							value="/resources/ep/images/design/edit.png" />
 					</p:commandLink>
-
-					<p:commandLink process="@this"
-						update="@([id$=zoneLocationDataTable])"
-						rendered="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}"
-						actionListener="#{simpleQuoteBackingBean.deleteZoneTreeNode(zoneTree)}">
-						<p:graphicImage library="ep/images/design" name="trash.png"
-							value="/resources/ep/images/design/trash.png" />
-					</p:commandLink>
-
+					
 				</p:column>
 			</p:dataTable>
 		</h:panelGrid>
@@ -63,6 +55,12 @@
 		     update="@([id$=zonePopupPanel])" partialSubmit="true" 
 			 oncomplete="ZoneLocation.show();"
 			 actionListener="#{simpleQuoteBackingBean.showZonePopup}" icon="ui-icon-add"/>
+			 
+		   <p:commandButton value="#{lbl['lbl.sc.sq.supp.criteria.delete.btn']}" 
+		     process="@all, zoneLocationDataTable" partialSubmit="true"
+		     action="#{simpleQuoteBackingBean.deleteZoneTreeNode()}"
+		     update="@([id$=zoneLocationDataTable])" icon="ui-icon-delete"/> 	
+			 			 
 		 </c:if>
       
 		</div>
