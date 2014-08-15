@@ -5,8 +5,8 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
-import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmEduField;
+import my.ep.persistence.entity.pm.common.PmEduFieldRestr;
 import my.ep.web.managedbean.BaseManagedBean;
 
 /**
@@ -30,9 +30,11 @@ public class EducationManagedBean extends BaseManagedBean {
 	
 	private Long status;
 	
-	private List<PmEduField> eduFieldLov;	
+	private List<PmEduField> eduFieldLov;
 	
-	private List<PmCategoryL3> categoryList;	
+	private List<PmEduFieldRestr> eduRestrList;
+	
+	private List<PmEduFieldRestr> eduRestrSelectList;
 	
 	/**
 	 * @return the pmEduField
@@ -91,20 +93,6 @@ public class EducationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the categoryList
-	 */
-	public List<PmCategoryL3> getCategoryList() {
-		return categoryList;
-	}
-
-	/**
-	 * @param categoryList the categoryList to set
-	 */
-	public void setCategoryList(List<PmCategoryL3> categoryList) {
-		this.categoryList = categoryList;
-	}
-
-	/**
 	 * @return the status
 	 */
 	public Long getStatus() {
@@ -116,6 +104,34 @@ public class EducationManagedBean extends BaseManagedBean {
 	 */
 	public void setStatus(Long status) {
 		this.status = status;
+	}
+
+	/**
+	 * @return the eduRestrList
+	 */
+	public List<PmEduFieldRestr> getEduRestrList() {
+		return eduRestrList;
+	}
+
+	/**
+	 * @param eduRestrList the eduRestrList to set
+	 */
+	public void setEduRestrList(List<PmEduFieldRestr> eduRestrList) {
+		this.eduRestrList = eduRestrList;
+	}
+
+	/**
+	 * @return the eduRestrSelectList
+	 */
+	public List<PmEduFieldRestr> getEduRestrSelectList() {
+		return eduRestrSelectList;
+	}
+	
+	/**
+	 * @param eduRestrSelectList the eduRestrSelectList to set
+	 */
+	public void setEduRestrSelectList(List<PmEduFieldRestr> eduRestrSelectList) {
+		this.eduRestrSelectList = eduRestrSelectList;
 	}	
 
 	
