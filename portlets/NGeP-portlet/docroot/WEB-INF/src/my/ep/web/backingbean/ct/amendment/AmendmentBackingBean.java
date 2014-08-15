@@ -1800,14 +1800,9 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		
 		public void okCommitteMembers(){
 			
-			//Map<Long, CtCommitteeMember> duplicatePmUserMap = new HashMap<Long, CtCommitteeMember>();
-			List<CtCommitteeMember> memberList = getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers();
-			 /* if( getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().size() > 0){
-				   for(CtCommitteeMember members : getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()){
-					     duplicatePmUserMap.put(members.getCommitteeMemberId(), members);
-				   }
-			  }   */
-			
+			Map<String, CtCommitteeMember> duplicatePmUserMap = new HashMap<String, CtCommitteeMember>();
+			List<CtCommitteeMember> memberList = new ArrayList<CtCommitteeMember>();
+		
 			for(int i=0; i<selectedPmUser.length; i++) {
 				   PmUser user = selectedPmUser[i];
 				   CtCommitteeMember committeeMember = new CtCommitteeMember();
@@ -1821,16 +1816,31 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				   committeeMember.setPnp(user.isPMP());
 				   committeeMember.setDesignation(user.getDesignation());
 				   committeeMember.setEmail(user.getEmail());
-				    // duplicatePmUserMap.put(user.getUserId(), committeeMember);
-				   memberList.add(committeeMember);
+				   
+				    if(getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().size() == 0)
+				          memberList.add(committeeMember);
+				    else
+				    	 duplicatePmUserMap.put(user.getIdentificationNo(), committeeMember);
 			  } 
-			getManagedBean().getContractVer().getCtAmendment().setCtCommitteeMembers(memberList);
-			 /*  getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().clear();
-			    for(Long key: duplicatePmUserMap.keySet()){
-			    	 getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().add(duplicatePmUserMap.get(key));
-			    }*/
-			}
-		
+			
+		 	if(getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().size() == 0){
+		  	     	getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().addAll(memberList);
+			
+			} else {
+				        List<CtCommitteeMember> committeMember = new ArrayList<CtCommitteeMember>();
+				    	  for (Map.Entry<String, CtCommitteeMember> entry : duplicatePmUserMap.entrySet()) {
+				    		    boolean chkDataDuplication = false;
+			         		    for(CtCommitteeMember ctMember : getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()){
+			         	                 if(entry.getKey().equalsIgnoreCase(ctMember.getIcPassport())){
+			         	                	chkDataDuplication = true;
+				                         }
+			         		    } if(!chkDataDuplication){
+			         		    	 committeMember.add(entry.getValue());
+			         		    }	    
+			         	} getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().addAll(committeMember);
+		     	}       
+	    }
+
 		public SelectItem[] getcontractSignerDropdown(){
 			SelectItem[] items = null;     
 			try{
