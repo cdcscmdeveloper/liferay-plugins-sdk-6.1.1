@@ -1785,6 +1785,12 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	    	this.getManagedBean().setExistingUsers(true);
 	    }
 	    
+	    public void searchExistingCommitteMemberReset(){
+			this.getManagedBean().setName(null);
+			this.getManagedBean().setIdentificationType(null);	
+			this.getManagedBean().setIdentificationNo(null);	
+		}
+	    
 	    /**
 		 * @return
 		 */
@@ -2265,7 +2271,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				    userReqDTO = new UserReqDTO();
 					if(getManagedBean().getName() != null && !"".equalsIgnoreCase(getManagedBean().getName())){
 					      searchBean.getDataFilterBeans().add(new SearchFilterBean(
-							  "userName", SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getName()));
+							  "userName", SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getName()));
 				
 					}if(getManagedBean().getIdentificationType() != null && !"".equalsIgnoreCase(getManagedBean().getIdentificationType())){
 						searchBean.getDataFilterBeans().add(new SearchFilterBean("identificationCode.parameterCode", SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getIdentificationType()));

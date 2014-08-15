@@ -111,7 +111,7 @@
                        <div class="ppRightBtn"> 
                   	      <p:commandButton value="Search" icon="ui-icon-search" process="@form" 
                   	          action="#{amendmentBackingBean.existingCommitteMemberList}" update=":form:newCommitteTable" />
-		                  <p:commandButton value="Reset" process="@this" partialSubmit="true"  icon="ui-icon-reset" update="changeCommitteMember"/>
+		                  <p:commandButton value="Reset"  icon="ui-icon-reset" action="#{amendmentBackingBean.searchExistingCommitteMemberReset}" update=":form:changeCommitteMember"/>
 		               </div> 
 		         </p:panel>
 		         
@@ -143,7 +143,7 @@
 				                  <p:outputLabel value="#{data.grade}" style="float:left;"/>
 				             </p:column> 
 				       
-				             <p:column style="width:7%;white-space:normal;" headerText="PMP">
+				             <p:column style="width:7%;white-space:normal;" headerText="P&P">
 				                 <p:outputLabel value="#{data.PMP ? 'Yes' : 'No'}" style="float:left;"/>
 				             </p:column> 
 	                </p:dataTable>
@@ -204,7 +204,7 @@
 	                   
 	                      <h:panelGrid columns="2">
 		                     <p:outputLabel value="*" styleClass="mandatory" />
-	                         <p:outputLabel value="PNP"/>
+	                         <p:outputLabel value="P&P"/>
 	                      </h:panelGrid>
 		                  <h:panelGrid columns="4">
 		                      <p:selectOneRadio id="pandp" required="true" value="#{amendmentBackingBean.managedBean.newCommitteMembers.pnp}">  
