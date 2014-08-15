@@ -497,6 +497,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
 			quote.setProcurementType(resDTO.getPmParameter());
 
+			// location level 
 			if(getManagedBean().getLocationLevel() != null){
 				parameterReqDTO = new ParameterReqDTO();
 				parameterReqDTO.setParameterType(ParameterTypeConst.LOCATION_LEVEL);
@@ -528,7 +529,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			}
 			
 			// zone details
-				quote.setQuoteZone(getQuoteZones(getManagedBean().getZoneTrees()));
+			quote.setQuoteZone(getQuoteZones(getManagedBean().getZoneTrees()));
 			
 			//by location
 			if(!getManagedBean().getLocationTrees().isEmpty()){
@@ -688,6 +689,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 				ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
 				quote.setProcurementType(resDTO.getPmParameter());
 			
+			// location level
 			if(getManagedBean().getLocationLevel() != null){
 				parameterReqDTO = new ParameterReqDTO();
 				parameterReqDTO.setParameterType(ParameterTypeConst.LOCATION_LEVEL);
@@ -1428,7 +1430,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			this.getManagedBean().setZoneTrees(zones);
 		}
 	}
-
+		
 	/**
 	 * To delete the selected TreeNode from the location
 	 */
@@ -1446,7 +1448,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			this.getManagedBean().setLocationTrees(locs);
 		}
 	}
-
+	
 	public SelectItem[] getPriceTypeDropdownValues(String parameterType,
 			List<String> priceTypes) {
 		SelectItem[] items = null;
@@ -2040,7 +2042,12 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			ICountrySO reqSO = (ICountrySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,ICountrySO.class);
 			CountryResDTO resDTO = reqSO.retrieveCountryByCode(countryReqDTO);
 			getManagedBean().setDefaultCountryId(resDTO.getPmCountry().getCountryId());
-
+            
+			// location level
+			if(scQuote.getZoneLocatonLevel() != null){
+				getManagedBean().setLocationLevel(scQuote.getZoneLocatonLevel().getParameterCode());
+			}
+			
 			// duration calc
 			dateListener();
 			procurementTypeEvent();
