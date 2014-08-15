@@ -82,7 +82,6 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.component.tabview.TabView;
-import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.TabChangeEvent;
 import org.primefaces.model.DefaultTreeNode;
@@ -744,11 +743,11 @@ public class QTCommitteBackingBean extends
 							ParameterResDTO resDTO = getParameterSO()
 									.retrieveParameterById(reqDTO);
 							committeeMember.setMemberRole(resDTO.getPmParameter());
-							
 							break;
-						} 
+						} else {
+							committeeMember.setMemberRole(user.getMemberRole());
+						}
 					}
-					
 				}
 				committeeMember.setAccessRight("E");
 				committeeMember.setScCommittee(scCommittee);
@@ -756,13 +755,11 @@ public class QTCommitteBackingBean extends
 				memberList.add(committeeMember);				
 			}
 		}
-
 		scCommittee.setScCommitteeMembers(memberList);
 		selectedCommitteTabBean.getScQtCommittee().setScCommittee(scCommittee);				
 
 		// Specification Committee validation
-		RequestContext.getCurrentInstance().execute(
-				"newspecificationcommittee.hide()");
+		//RequestContext.getCurrentInstance().execute("newspecificationcommittee.hide()");
 	}
 
 	public void reset() {
