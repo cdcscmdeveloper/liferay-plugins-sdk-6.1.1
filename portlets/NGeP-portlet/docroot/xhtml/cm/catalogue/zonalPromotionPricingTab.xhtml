@@ -36,17 +36,6 @@
 
 			</p:column>
 
-
-			<p:column>
-				<f:facet name="header">
-					#{lbl['lbl.cm.price']}
-				</f:facet>
-				<p:inputText value="#{zPromotion.price}" size="10" disabled="#{zPromotion.standardDisabled}" style="text-align:right">
-					<p:ajax event="keyup" update="zonalPromoErrorLink" />
-					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-				</p:inputText>
-			</p:column>
-
 			<p:column>
 				<f:facet name="header">
 					#{lbl['lbl.cm.start.date']}
@@ -68,6 +57,15 @@
 					<p:ajax event="dateSelect" listener="#{catalogueBackingBean.validateZonalPromoDateOverlap(rowIndex)}" update="zonalPromoErrorLink" />
 					</p:calendar>
 
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					#{lbl['lbl.cm.price']}
+				</f:facet>
+				<p:inputText value="#{zPromotion.price}" size="10" disabled="#{zPromotion.standardDisabled}" style="text-align:right">
+					<p:ajax event="keyup" update="zonalPromoErrorLink" />
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</p:inputText>
 			</p:column>
 
 			<p:column>
