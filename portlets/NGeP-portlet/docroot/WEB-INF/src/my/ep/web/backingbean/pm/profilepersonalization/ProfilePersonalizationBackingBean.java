@@ -12,7 +12,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.service.pm.authorization.user.IUserSO;
-import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
@@ -34,7 +33,6 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.persistence.entity.pm.common.PmState;
-import my.ep.util.EpPropertiesUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.pm.profilepersonalization.ProfilePersonalizationManagedBean;
@@ -46,9 +44,6 @@ import my.ep.web.util.pm.helper.PmCommonUtil;
 import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
-
-import com.liferay.portal.model.User;
-import com.liferay.portal.service.UserServiceUtil;
 
 /**
  * @author DK
@@ -145,7 +140,11 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		PmCommonUtil.generateDefaultPmUserNotifications(pmUser, getFacesScopes().getUserLocale().getLanguage());
 
 		//initial preference
-		PmCommonUtil.loadPmUserPreference(pmUser, pmUser.getPmUserPreference());
+		if(pmUser.getPmUserPreference()==null){
+			PmUserPreference pmUserPreference = new PmUserPreference();
+			pmUserPreference.setPmUser(pmUser);
+			pmUser.setPmUserPreference(pmUserPreference);
+		}
 		
 		//initial address
 		this.getManagedBean().setUserAddress(PmCommonUtil.getNewPmAddress());
@@ -369,15 +368,10 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 			UserReqDTO reqDTO = new UserReqDTO();
 			reqDTO.setPmUser(user);
 
-			UserResDTO resDTO = userSO.saveUser3(reqDTO); //saveUser2
+			UserResDTO resDTO = userSO.saveUser(reqDTO); //saveUser2
 
 			if (resDTO.isSuccessful()) {
-				//upload liferay photo
-				//TODO: upload liferay photo locally
-				if(user.getPortrait()!=null){
-					uploadPortrait(resDTO.getPmUser());
-				}
-				
+				System.out.println("before reload");
 				loadUserProfile(user.getUserId());
 				FacesContext.getCurrentInstance().addMessage(
 						null,
@@ -404,80 +398,53 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		this.getManagedBean().getSelectedUser().setLoginId(this.getManagedBean().getSelectedUser().getIdentificationNo());
 	}
 
-	/**
-	 * Get user portrait 
-	 * @param event
-	 * @throws Exception
-	 */
-	public void handleFileUpload(FileUploadEvent event) throws Exception{
-		logger.info("handleFileUploadTest - START");
+	
+	
+	//TODO: testing
+	public void handleFileUpload(FileUploadEvent event) {
+		System.out.println("handleFileUploadTest - start");
 		UploadedFile item = event.getFile();
-		byte[] bytes = item.getContents();
-		this.getManagedBean().getSelectedUser().setPortrait(bytes);
-		logger.info("handleFileUploadTest - END");
-	}
-	
-	/**
-	 * TODO: fix the remote updatePortrait
-	 * @param pmUser
-	 * @throws Exception
-	 */
-	private void uploadPortrait(PmUser pmUser) throws Exception{
-		logger.info("uploadPortrait - START");
-		long companyId = Long.parseLong(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_COMPANY_ID));
-		byte[] bytes = pmUser.getPortrait();
-		User user = UserServiceUtil.getUserByScreenName(companyId ,pmUser.getLoginId());
-		UserServiceUtil.updatePortrait(user.getUserId(), bytes);
-		logger.info("uploadPortrait - END");
-	}
-			
+
+		System.out.println("login ID: " + this.getManagedBean().getSelectedUser().getLoginId());
+		System.out.println("username: " + this.getManagedBean().getSelectedUser().getUserName());
+
+		this.getManagedBean().getSelectedUser().setPortrait(item.getContents());
 		
-	
-//	//TODO: testing
-//	public void handleFileUpload(FileUploadEvent event) {
-//		System.out.println("handleFileUploadTest - start");
-//		UploadedFile item = event.getFile();s
-//
-//		System.out.println("login ID: " + this.getManagedBean().getSelectedUser().getLoginId());
-//		System.out.println("username: " + this.getManagedBean().getSelectedUser().getUserName());
-//
-//		this.getManagedBean().getSelectedUser().setPortrait(item.getContents());
-//		
-//		System.out.println("login ID: " + this.getManagedBean().getSelectedUser().getLoginId());
-//		System.out.println("username: " + this.getManagedBean().getSelectedUser().getUserName());
-//		IUserSO userSO = null;
-//		try {
-//			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
-//					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-//			UserReqDTO reqDTO = new UserReqDTO();
-//			reqDTO.setPmUser(this.getManagedBean().getSelectedUser());
-//
-//			UserResDTO resDTO = userSO.updatePortrait(reqDTO);
-//
-//			if (resDTO.isSuccessful()) {
-//				FacesContext.getCurrentInstance().addMessage(
-//						null,
-//						new FacesMessage(FacesMessage.SEVERITY_INFO,
-//								null, "Record save successfully for Login ID: "
-//										+ resDTO.getPmUser().getLoginId()));
-//				this.preLoadingMyAccount();
-//			}
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			FacesContext.getCurrentInstance().addMessage(
-//					null,
-//					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
-//							e.getMessage()));
-//		} finally {
-//			userSO = null;
-//		}
-//		
-//		FacesMessage msg = new FacesMessage("Succesful", event.getFile()
-//				.getFileName() + " is uploaded.");
-//		FacesContext.getCurrentInstance().addMessage(null, msg);
-//		
-//		System.out.println("handleFileUploadTest - end");
-//	}
+		System.out.println("login ID: " + this.getManagedBean().getSelectedUser().getLoginId());
+		System.out.println("username: " + this.getManagedBean().getSelectedUser().getUserName());
+		IUserSO userSO = null;
+		try {
+			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			UserReqDTO reqDTO = new UserReqDTO();
+			reqDTO.setPmUser(this.getManagedBean().getSelectedUser());
+
+			UserResDTO resDTO = userSO.updatePortrait(reqDTO);
+
+			if (resDTO.isSuccessful()) {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO,
+								null, "Record save successfully for Login ID: "
+										+ resDTO.getPmUser().getLoginId()));
+				this.preLoadingMyAccount();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
+		} finally {
+			userSO = null;
+		}
+		
+		FacesMessage msg = new FacesMessage("Succesful", event.getFile()
+				.getFileName() + " is uploaded.");
+		FacesContext.getCurrentInstance().addMessage(null, msg);
+		
+		System.out.println("handleFileUploadTest - end");
+	}
 
 	
 }
