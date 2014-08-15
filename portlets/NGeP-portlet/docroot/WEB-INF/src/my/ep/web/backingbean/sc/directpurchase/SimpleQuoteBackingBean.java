@@ -258,7 +258,8 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 						 selectedSuppliers.add(selectedSupplierItem.getSmSupplier());
 						 supplierListListener(selectedSuppliers , scQuote);
 					 } else {
-						 supplierListListener(addSelectedSuppliers(compareSupplierItems) , scQuote);
+						 // copy suppliers from the compare screen
+						 supplierListListener(addSelectedSuppliers(compareSupplierItems , selectedSupplierItem) , scQuote);
 					 }
 
 					 List<CmSupplierItem> supplierItems = getManagedBean().getSupplierItems();
@@ -339,14 +340,15 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 		 
 	}
 	
-	private List<SmSupplier>  addSelectedSuppliers(List<CmSupplierItem> compareSupplierItems) {
+	private List<SmSupplier>  addSelectedSuppliers(List<CmSupplierItem> compareSupplierItems , CmSupplierItem selectedSupplierItem) {
 		List<SmSupplier> suppliers = getManagedBean().getCompareSuppliers();
-		for(CmSupplierItem selectedSupplier : compareSupplierItems){
-				suppliers.add(selectedSupplier.getSmSupplier());
+		for(CmSupplierItem supplierItem : compareSupplierItems){
+			if(supplierItem.getCmItem().getItemId().equals(selectedSupplierItem.getCmItem().getItemId())){
+				suppliers.add(supplierItem.getSmSupplier());
+			}
 		}
 		return suppliers;
 	}
-	
 	public void prepareQuestions(CtPanelItem ctPanelItem, CmSupplierItem cmSupplierItem) {
 		int itemCode = 0;
 		CmItem cmItem = null;
@@ -1717,7 +1719,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			question.setTplSpecAnswers(null);
 			question.setTplSpecScorings(null);
 			question.setTplSpecTierQties(null);
-			question.setTplSpecEstimations(null);
+			//question.setTplSpecEstimations(null);
 			questions.add(question);
 		}
 		return questions;
@@ -2130,11 +2132,11 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 							new FacesMessage(FacesMessage.SEVERITY_INFO, 
 								null,
 								message));
-					
-					// TODO - hide submit button in managedbean.	
-						
+					// hide the submit button in supplier view when sq is closed
+					getManagedBean().setSupplierViewBtn(Boolean.FALSE);
 				} else if (MessageConst.ERROR_760033.equals(message)) {
-					// TODO - hide submit button in managedbean.	
+					// hide the submit button in supplier view when sq is closed
+					getManagedBean().setSupplierViewBtn(Boolean.FALSE);
 					
 				} else {
 					handleException(e);	
