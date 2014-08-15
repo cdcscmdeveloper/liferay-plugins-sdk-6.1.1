@@ -350,6 +350,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private String bankstmntTomonth;
 	private int tempIndex;
 	private boolean ctzones = Boolean.FALSE;
+	private boolean selectPanelItem = Boolean.FALSE;
 
 	public SpecificationManagedBean() {
 		
@@ -3998,6 +3999,20 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	 */
 	public void setCtzones(boolean ctzones) {
 		this.ctzones = ctzones;
+	}
+
+	/**
+	 * @return the selectPanelItem
+	 */
+	public boolean isSelectPanelItem() {
+		return selectPanelItem;
+	}
+
+	/**
+	 * @param selectPanelItem the selectPanelItem to set
+	 */
+	public void setSelectPanelItem(boolean selectPanelItem) {
+		this.selectPanelItem = selectPanelItem;
 	}
 
 }
