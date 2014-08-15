@@ -9,10 +9,14 @@
 		<p:panel id="zonePopupPanel">
 			<table styleClass="noBorders tr,noBorders td" >
 				<TR>
-					<TD width="20%" valign="top"><p:outputLabel value="Zone Name"></p:outputLabel>
+					<TD width="20%" valign="top">
+					 <p:outputLabel value="Zone Name"></p:outputLabel>
 					</TD>
 					<TD width="80%"><p:inputText id="zoneNameId" size="65"
-							value="#{simpleQuoteBackingBean.managedBean.zoneName}" ></p:inputText>
+							value="#{simpleQuoteBackingBean.managedBean.zoneName}" >
+							<p:ajax event="keyup" update=":form:zoneOkBtn"></p:ajax>
+							<p:ajax event="change" update=":form:zoneOkBtn"></p:ajax>
+							</p:inputText>
 					</TD>
 				</TR>
 				<TR>
@@ -41,7 +45,7 @@
 				</TR>
 			</table>
 		</p:panel>
-		<p:panelGrid styleClass="noBorders tr,noBorders td">
+		<p:panelGrid styleClass="noBorders tr,noBorders td" id="zoneOkBtn">
 			<p:row>
 				<p:column width="60%" style="text-align:right">
 					<p:commandButton
@@ -49,6 +53,8 @@
 						icon="ui-icon-submit" onclick="ZoneLocation.hide();" process="@all"
 						update="@this, zoneLocationDataTable,zonePopupPanel"
 						partialSubmit="true"
+						disabled="#{simpleQuoteBackingBean.managedBean.zoneName eq null 
+						  or simpleQuoteBackingBean.managedBean.zoneName.length() eq 0}"
 						actionListener="#{simpleQuoteBackingBean.updateZone}" />
 
 					<p:commandButton
