@@ -7,13 +7,11 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
     <ui:define name="contentSection">
-    <p:messages showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
-   <!--  <ac:title value="#{lbl['lbl.sc.sq.title']}"/> -->
-
+    <p:messages showDetail="true" autoUpdate="true" closable="true" severity="error, info"  showSummary="false"/>
 		<div align="right">
 			<c:if test="#{simpleQuoteBackingBean.managedBean.taskId eq null}">
 				<p:commandButton value="#{lbl['lbl.sc.common.submit']}"
-					update="@form" icon="ui-icon-submit"
+					update="@form" icon="ui-icon-submit" rendered="#{simpleQuoteBackingBean.managedBean.supplierViewBtn}"
 					action="#{simpleQuoteBackingBean.supplierSubmit}" />
 			</c:if>
 		</div>
@@ -48,6 +46,7 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 								</c:if>
 								<p:commandButton value="#{action}" process="@all"
 									styleClass="ui-button" icon="#{iconVar}"
+									rendered="#{simpleQuoteBackingBean.managedBean.supplierViewBtn}"
 									actionListener="#{simpleQuoteBackingBean.supplierSubmit}" />
 							</c:forEach>
 						</c:if></td>
