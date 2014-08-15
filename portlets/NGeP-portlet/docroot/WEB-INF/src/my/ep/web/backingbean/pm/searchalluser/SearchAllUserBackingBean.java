@@ -15,12 +15,13 @@ import my.ep.web.managedbean.pm.searchalluser.SearchAllUserManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 /**
  * Backing Bean for User Profiles (Management)
  * 
- * @author DK, RAIN POH
+ * @author RAIN POH
  * @since 8/7/2013
  *
  */
@@ -66,21 +67,29 @@ public class SearchAllUserBackingBean extends BaseBackingBean<SearchAllUserManag
 
 	public void tempSearchUserProfile() throws Exception{
 		logger.info("tempSearchUserProfile start");
-		String userName = this.getManagedBean().getUserNames();
+		String loginId = this.getManagedBean().getLoginId();
+		
+		if(StringUtils.isBlank(loginId)){
+			throw new IllegalArgumentException("Login ID is mandatory.");
+		}
+		
 		try{
-		if(userName!=null){
+	
 			UserReqDTO userReqDTO = new UserReqDTO();
 			UserResDTO resDto = null;
 			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);	
-			userReqDTO.setLoginId(userName.toLowerCase());
-			
+			userReqDTO.setLoginId(loginId.toLowerCase());
+			userReqDTO.setRoleRequired(true);
 			resDto = userSO.isUserExist(userReqDTO);
 			if(resDto!=null && resDto.isSuccessful()){
-				this.getManagedBean().setResult(resDto.getAllResult());
+				this.getManagedBean().setResultStatus(resDto.getAllResult());
+				this.getManagedBean().setOimRoleList(resDto.getOimRoleNames());
+				this.getManagedBean().setPmRoleList(resDto.getPmRoleNames());
+				this.getManagedBean().setLiferayRoleList(resDto.getLiferayRoleNames());
 			}
+				
 			
-		}
 		}catch (Exception e){
 			e.printStackTrace();
 			throw e;

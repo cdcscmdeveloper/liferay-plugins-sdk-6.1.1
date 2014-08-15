@@ -47,36 +47,79 @@ public class SearchAllUserManagedBean extends BaseManagedBean {
 	private static final Logger log= EpLogger.getLogger(SearchAllUserManagedBean.class);	
 
 	
-	private List<String[]> result;//TODO : TEMP REMOVE
+	private List<String[]> resultStatus;
+	
+	
     // user profile	search	
-	private String userNames;
+	private String loginId;
+	
+	private List<String> pmRoleList;
+	private List<String> liferayRoleList;
+	private List<String> oimRoleList;
 	
 	
+
 	/**
-	 * @return the result
+	 * @return the resultStatus
 	 */
-	public List<String[]> getResult() {
-		return result;
+	public List<String[]> getResultStatus() {
+		return resultStatus;
 	}
 	/**
-	 * @param result the result to set
+	 * @param resultStatus the resultStatus to set
 	 */
-	public void setResult(List<String[]> result) {
-		this.result = result;
+	public void setResultStatus(List<String[]> resultStatus) {
+		this.resultStatus = resultStatus;
 	}
 	/**
-	 * @return the userNames
+	 * @return the loginId
 	 */
-	public String getUserNames() {
-		return userNames;
+	public String getLoginId() {
+		return loginId;
 	}
 	/**
-	 * @param userNames the userNames to set
+	 * @param loginId the loginId to set
 	 */
-	public void setUserNames(String userNames) {
-		this.userNames = userNames;
-	}	
-	
+	public void setLoginId(String loginId) {
+		this.loginId = loginId;
+	}
+	/**
+	 * @return the pmRoleList
+	 */
+	public List<String> getPmRoleList() {
+		return pmRoleList;
+	}
+	/**
+	 * @param pmRoleList the pmRoleList to set
+	 */
+	public void setPmRoleList(List<String> pmRoleList) {
+		this.pmRoleList = pmRoleList;
+	}
+	/**
+	 * @return the liferayRoleList
+	 */
+	public List<String> getLiferayRoleList() {
+		return liferayRoleList;
+	}
+	/**
+	 * @param liferayRoleList the liferayRoleList to set
+	 */
+	public void setLiferayRoleList(List<String> liferayRoleList) {
+		this.liferayRoleList = liferayRoleList;
+	}
+	/**
+	 * @return the oimRoleList
+	 */
+	public List<String> getOimRoleList() {
+		return oimRoleList;
+	}
+	/**
+	 * @param oimRoleList the oimRoleList to set
+	 */
+	public void setOimRoleList(List<String> oimRoleList) {
+		this.oimRoleList = oimRoleList;
+	}
+
 	
 	
 	

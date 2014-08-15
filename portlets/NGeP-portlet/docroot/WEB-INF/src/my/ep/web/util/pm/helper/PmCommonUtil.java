@@ -13,6 +13,7 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.city.ICitySO;
+import my.ep.biz.service.pm.common.confgeneral.IConfigGeneralSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.division.IDivisionSO;
@@ -25,11 +26,12 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.ProfileManagementConst;
-import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.city.CityReqDTO;
 import my.ep.dto.pm.common.city.CityResDTO;
+import my.ep.dto.pm.common.confgeneral.ConfigGeneralReqDTO;
+import my.ep.dto.pm.common.confgeneral.ConfigGeneralResDTO;
 import my.ep.dto.pm.common.country.CountryReqDTO;
 import my.ep.dto.pm.common.country.CountryResDTO;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
@@ -45,8 +47,10 @@ import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserNotification;
+import my.ep.persistence.entity.pm.authorization.PmUserPreference;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmCity;
+import my.ep.persistence.entity.pm.common.PmConfigGeneral;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
@@ -134,6 +138,38 @@ public class PmCommonUtil {
 					pmUser.addPmUserNotifications(notification);
 				}
 			}
+		}
+	}
+	
+	/**
+	 * set default notification mode and preferences
+	 * @param pmUser
+	 */
+	public static void loadPmUserPreference(PmUser pmUser, PmUserPreference pmUserPreference) {
+		IConfigGeneralSO configGeneralSO = (IConfigGeneralSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IConfigGeneralSO.class);
+		ConfigGeneralReqDTO configGeneralReqDTO = new ConfigGeneralReqDTO();
+		ConfigGeneralResDTO configGeneralResDTO = configGeneralSO.getConfigGeneral(configGeneralReqDTO);
+		PmConfigGeneral configGeneral = null;
+		if(configGeneralResDTO!=null && configGeneralResDTO.isSuccessful()){
+			configGeneral = configGeneralResDTO.getPmConfigGeneral();
+		}
+		if(configGeneral==null){
+			throw new IllegalArgumentException("Pm Config General is null.");
+		}
+		if(pmUserPreference == null){
+			pmUserPreference= new PmUserPreference();
+			pmUserPreference.setPreferredLanguage(configGeneral.getPreferredLanguage());
+			pmUserPreference.setNotifyRemovalDay(configGeneral.getNotifyFreq());
+			pmUserPreference.setFormatDate(configGeneral.getFormatdate());
+			pmUserPreference.setFormatNumber(configGeneral.getFormatNumber());
+			pmUserPreference.setFormatTime(configGeneral.getFormatTime());
+			pmUserPreference.setPmUser(pmUser);
+			pmUser.setPmUserPreference(pmUserPreference);
+		}else{
+			pmUserPreference.setFormatDate(configGeneral.getFormatdate());
+			pmUserPreference.setFormatNumber(configGeneral.getFormatNumber());
+			pmUserPreference.setFormatTime(configGeneral.getFormatTime());
+			pmUserPreference.setPmUser(pmUser);
 		}
 	}
 	
