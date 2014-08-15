@@ -50,7 +50,7 @@
 			value="#{zoneBackingBean.managedBean.zoneStateList}" var="state"
 			rowIndexVar="index" rowKey="#{state}"
 			selection="#{zoneBackingBean.managedBean.selectedZones}">
-			<ac:paginator for="selectedStateId"></ac:paginator>
+			<ac:paginator for="selectedStateId"></ac:paginator>			
 			<p:column selectionMode="multiple" style="width:2%" />
 			<p:column headerText="#{lbl['lbl.pm.state.code']}" style="width :15%">
 				<h:outputText value="#{state.pmState.stateCode}" />
@@ -66,8 +66,10 @@
 				action="#{zoneBackingBean.addState}"
 				oncomplete="statelistpopup.show();" icon="ui-icon-add" />
 
-			<p:commandButton value="Delete" icon="ui-icon-delete"
-				action="#{zoneBackingBean.addState}" update="selectedStateId" />
+			<p:commandButton value="Delete" icon="ui-icon-delete" 	
+			process="@this,selectedStateId" partialSubmit="true"		
+				action="#{zoneBackingBean.deleteState}" update="selectedStateId" />
+				
 
 		</div>
 	</p:panel>

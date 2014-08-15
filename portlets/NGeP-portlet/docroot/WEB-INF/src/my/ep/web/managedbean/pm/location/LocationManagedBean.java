@@ -64,6 +64,8 @@ public class LocationManagedBean extends BaseManagedBean {
 	private Long districtId;
 	
 	private int status;
+	
+	private VPmLocation location;
 
 	
 	private String stateCode;
@@ -340,6 +342,20 @@ public class LocationManagedBean extends BaseManagedBean {
 	 */
 	public void setRecordStatus(String recordStatus) {
 		this.recordStatus = recordStatus;
+	}
+
+	/**
+	 * @return the location
+	 */
+	public VPmLocation getLocation() {
+		return location;
+	}
+
+	/**
+	 * @param location the location to set
+	 */
+	public void setLocation(VPmLocation location) {
+		this.location = location;
 	}
 
 	

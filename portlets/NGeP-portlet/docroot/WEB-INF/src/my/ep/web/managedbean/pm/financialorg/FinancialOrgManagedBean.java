@@ -7,6 +7,7 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmCity;
@@ -33,7 +34,7 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 	private String orgName;
 	private String regNumber;
 	private String regTypeId;
-	private String status;
+	private String orgStatus;
 	private String serviceType;
 	private int financialActiveIndex;
 
@@ -44,12 +45,13 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 	private boolean byFactoring = true;
 	private int activeIndex = 0;
 	// Financial Org
-	private List<PmFinancialOrg> pmFinancialOrg;
+	private List<PmFinancialOrg> pmFinancialOrg = new ArrayList<PmFinancialOrg>();
 	private PmFinancialOrg financialOrg = new PmFinancialOrg();
+
 
 	// Financial Acc
 	private PmFinancialAcc financialAcc;
-	private List<PmFinancialAcc> pmFinancialAcc;
+	private List<PmFinancialAcc> pmFinancialAcc =  new ArrayList<PmFinancialAcc>();
 	private List<PmFinancialAcc> selectedPmFinancialAcc;
 
 	// Financial Branch
@@ -66,13 +68,91 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 	private List<PmCountry> countries;
 	private List<PmDistrict> districts;
 	private List<PmCity> citys;
-	
+
 	// Financial Branch Address
 	private PmAddressType branchAddressType;;
 	private List<PmAddressType> branchAddressTypeList;
 	private PmAddress branchAddress;
 	private PmContact branchContactPerson;
-	private List<PmContact> branchContact;	
+	private List<PmContact> branchContact;
+
+	// Financial Branch Acc
+	private PmFinancialAcc financialBranchAcc;
+	private List<PmFinancialAcc> pmFinancialBranchAcc;
+	private List<PmFinancialAcc> selectedPmFinancialBranchAcc;
+	
+	private List<PmOrgProfile> orgProfileList;
+	
+	
+	public FinancialOrgManagedBean() {
+
+		pmAddress = new PmAddress();
+		pmAddressType = new PmAddressType();
+		contactPerson = new PmContact();
+		pmAddress.setPmCity(new PmCity());
+		pmAddress.setPmDistrict(new PmDistrict());
+		pmAddress.setPmCountry(new PmCountry());
+		pmAddress.setPmState(new PmState());
+		pmAddressType.setPmAddress(pmAddress);
+		financialOrg.setPmCountry(new PmCountry());
+		// Branch Address
+		branchAddress = new PmAddress();
+		branchAddressType = new PmAddressType();
+		branchContactPerson = new PmContact();
+		branchAddress.setPmCity(new PmCity());
+		branchAddress.setPmDistrict(new PmDistrict());
+		branchAddress.setPmCountry(new PmCountry());
+		branchAddress.setPmState(new PmState());
+		branchAddressType.setPmAddress(branchAddress);
+
+	}
+
+	/**
+	 * @return the financialBranchAcc
+	 */
+	public PmFinancialAcc getFinancialBranchAcc() {
+		return financialBranchAcc;
+	}
+
+	/**
+	 * @param financialBranchAcc
+	 *            the financialBranchAcc to set
+	 */
+	public void setFinancialBranchAcc(PmFinancialAcc financialBranchAcc) {
+		this.financialBranchAcc = financialBranchAcc;
+	}
+
+	/**
+	 * @return the pmFinancialBranchAcc
+	 */
+	public List<PmFinancialAcc> getPmFinancialBranchAcc() {
+		return pmFinancialBranchAcc;
+	}
+
+	/**
+	 * @param pmFinancialBranchAcc
+	 *            the pmFinancialBranchAcc to set
+	 */
+	public void setPmFinancialBranchAcc(
+			List<PmFinancialAcc> pmFinancialBranchAcc) {
+		this.pmFinancialBranchAcc = pmFinancialBranchAcc;
+	}
+
+	/**
+	 * @return the selectedPmFinancialBranchAcc
+	 */
+	public List<PmFinancialAcc> getSelectedPmFinancialBranchAcc() {
+		return selectedPmFinancialBranchAcc;
+	}
+
+	/**
+	 * @param selectedPmFinancialBranchAcc
+	 *            the selectedPmFinancialBranchAcc to set
+	 */
+	public void setSelectedPmFinancialBranchAcc(
+			List<PmFinancialAcc> selectedPmFinancialBranchAcc) {
+		this.selectedPmFinancialBranchAcc = selectedPmFinancialBranchAcc;
+	}
 
 	/**
 	 * @return the branchAddressType
@@ -166,30 +246,7 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 		this.pmContact = pmContact;
 	}
 
-	public FinancialOrgManagedBean() {
-		
-		pmAddress = new PmAddress();
-		pmAddressType = new PmAddressType();
-		contactPerson = new PmContact();
-		pmAddress.setPmCity(new PmCity());
-		pmAddress.setPmDistrict(new PmDistrict());
-		pmAddress.setPmCountry(new PmCountry());
-		pmAddress.setPmState(new PmState());
-		pmAddressType.setPmAddress(pmAddress);
-		financialOrg.setPmCountry(new PmCountry());
-		// Branch Address
-		branchAddress = new PmAddress();
-		branchAddressType = new PmAddressType();
-		branchContactPerson = new PmContact();
-		branchAddress.setPmCity(new PmCity());
-		branchAddress.setPmDistrict(new PmDistrict());
-		branchAddress.setPmCountry(new PmCountry());
-		branchAddress.setPmState(new PmState());
-		branchAddressType.setPmAddress(branchAddress);
-		
-		
-
-	}
+	
 
 	public PmFinancialSvc getFinancialSvc() {
 		return financialSvc;
@@ -271,12 +328,19 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 		this.citys = citys;
 	}
 
-	public String getStatus() {
-		return status;
+	/**
+	 * @return the orgStatus
+	 */
+	public String getOrgStatus() {
+		return orgStatus;
 	}
 
-	public void setStatus(String status) {
-		this.status = status;
+	/**
+	 * @param orgStatus
+	 *            the orgStatus to set
+	 */
+	public void setOrgStatus(String orgStatus) {
+		this.orgStatus = orgStatus;
 	}
 
 	public List<PmFinancialSvc> getPmFinancialSvc() {
@@ -449,6 +513,20 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 	 */
 	public void setAddressType(List<PmAddressType> addressType) {
 		this.addressType = addressType;
+	}
+
+	/**
+	 * @return the orgProfileList
+	 */
+	public List<PmOrgProfile> getOrgProfileList() {
+		return orgProfileList;
+	}
+
+	/**
+	 * @param orgProfileList the orgProfileList to set
+	 */
+	public void setOrgProfileList(List<PmOrgProfile> orgProfileList) {
+		this.orgProfileList = orgProfileList;
 	}
 
 }

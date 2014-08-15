@@ -1,6 +1,7 @@
 package my.ep.web.managedbean.pm.organisation;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -17,6 +18,8 @@ import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmContact;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
+import my.ep.persistence.entity.pm.common.PmFinancialAcc;
+import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmPtjGroup;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmZone;
@@ -37,6 +40,7 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	private String status;
 	private PmOrgValidity orgValidity;
 	private PmOrgProfile orgProfile;
+	private List<PmOrgProfile> orgProfileList;
 	private PmOrgValidity pmOrgValidity;
 	private List<PmPtjGroup> ptjGroup;
 	private PmPtjGroup pmPtjGroup;
@@ -65,6 +69,38 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	private Date expDate;
 	private Date effDate;
 	private Date currentDate= new Date();
+	private List<PmFinancialOrg> pmFinancialOrg = new ArrayList<PmFinancialOrg>();
+	private List<PmFinancialAcc> pmFinancialAcc =  new ArrayList<PmFinancialAcc>();
+	private List<PmFinancialAcc> selectedPmFinancialAcc;
+
+	/**
+	 * @return the pmFinancialAcc
+	 */
+	public List<PmFinancialAcc> getPmFinancialAcc() {
+		return pmFinancialAcc;
+	}
+
+	/**
+	 * @param pmFinancialAcc the pmFinancialAcc to set
+	 */
+	public void setPmFinancialAcc(List<PmFinancialAcc> pmFinancialAcc) {
+		this.pmFinancialAcc = pmFinancialAcc;
+	}
+
+	/**
+	 * @return the selectedPmFinancialAcc
+	 */
+	public List<PmFinancialAcc> getSelectedPmFinancialAcc() {
+		return selectedPmFinancialAcc;
+	}
+
+	/**
+	 * @param selectedPmFinancialAcc the selectedPmFinancialAcc to set
+	 */
+	public void setSelectedPmFinancialAcc(
+			List<PmFinancialAcc> selectedPmFinancialAcc) {
+		this.selectedPmFinancialAcc = selectedPmFinancialAcc;
+	}
 
 	public OrganisationManagedBean() {
 		setPmOrgValidity(new PmOrgValidity());		
@@ -79,7 +115,7 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 		pmAddress.setPmCountry(new PmCountry());
 		pmAddress.setPmState(new PmState());
 		pmAddressType.setPmAddress(pmAddress);
-		pmAddressType.setPmContacts(pmContacts);
+		pmAddressType.setPmContacts(pmContacts);		
 		orgProfile.setPmOrgValidity(pmOrgValidity);
 
 	}
@@ -644,6 +680,34 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	 */
 	public void setSelectedPmAddressType(PmAddressType selectedPmAddressType) {
 		this.selectedPmAddressType = selectedPmAddressType;
+	}
+
+	/**
+	 * @return the pmFinancialOrg
+	 */
+	public List<PmFinancialOrg> getPmFinancialOrg() {
+		return pmFinancialOrg;
+	}
+
+	/**
+	 * @param pmFinancialOrg the pmFinancialOrg to set
+	 */
+	public void setPmFinancialOrg(List<PmFinancialOrg> pmFinancialOrg) {
+		this.pmFinancialOrg = pmFinancialOrg;
+	}
+
+	/**
+	 * @return the orgProfileList
+	 */
+	public List<PmOrgProfile> getOrgProfileList() {
+		return orgProfileList;
+	}
+
+	/**
+	 * @param orgProfileList the orgProfileList to set
+	 */
+	public void setOrgProfileList(List<PmOrgProfile> orgProfileList) {
+		this.orgProfileList = orgProfileList;
 	}
 
 

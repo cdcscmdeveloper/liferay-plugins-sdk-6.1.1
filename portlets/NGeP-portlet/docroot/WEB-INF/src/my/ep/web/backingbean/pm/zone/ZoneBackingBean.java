@@ -8,6 +8,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
@@ -32,6 +33,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
+import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
 
 @ManagedBean(name = "zoneBackingBean")
 @ViewScoped
@@ -39,6 +41,7 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 	private static Logger log = Logger.getLogger(ZoneBackingBean.class);
 	private IPagingDataModel<PmZone> searchZone = new SearchZonePagingDataModel();
 	boolean result = false;
+	private boolean flag;
 
 	public ZoneBackingBean() {
 		retrievePmStateList();
@@ -60,7 +63,11 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 		getManagedBean().getPmZone().setZoneName(null);
 		getManagedBean().getPmZone().setRecordStatusFlg(null);
 		getManagedBean().setSelectedZone(null);
-		// this.getManagedBean().setZoneStateList(null);
+		
+		if (getManagedBean().getPmZone() == null) {
+			this.getManagedBean().setPmZone(new PmZone());
+		}		
+		getSelectionTypes();
 		return "/xhtml/pm/zonesearch/zoneMaintenance.xhtml";
 	}
 
@@ -74,6 +81,10 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 	}
 
 	public void saveZone() {
+		
+		if (this.getManagedBean().getPmZone().getZoneCode() == null) {
+			this.getManagedBean().setPmZone(new PmZone());
+		}
 
 		ZoneReqDTO reqDTO = new ZoneReqDTO();
 		IZoneSO zoneSO = (IZoneSO) BusinessDelegate.getInstance()
@@ -87,17 +98,17 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 		zone.setRecordStatusFlg(getManagedBean().getPmZone()
 				.getRecordStatusFlg());
 
-		List<PmZoneState> szones = getManagedBean().getZoneStateList();
+		List<PmZoneState> stateZones = getManagedBean().getZoneStateList();
 
-		for (PmZoneState addType : szones) {
+		for (PmZoneState addType : stateZones) {
 
 			addType.setPmZone(zone);
 		}
-        // PmZoneState zoneState= getManagedBean().getSelectedZone();
-		 //zoneState.setPmZone(zone);
+		// PmZoneState zoneState= getManagedBean().getSelectedZone();
+		// zoneState.setPmZone(zone);
 		List<PmZoneState> zones = new ArrayList<PmZoneState>();
-		//zones.add(zoneState);
-		zones.addAll(szones);
+		// zones.add(zoneState);
+		zones.addAll(stateZones);
 		zone.setPmZoneStates(zones);
 		reqDTO.setPmZone(zone);
 
@@ -167,7 +178,7 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 									SearchOperator.OPERATOR_EQUALS.value(),
 									getManagedBean().getStatus()));
 				}
-
+				log.info("Status :" + getManagedBean().getStatus());
 				zoneReqDTO.setZoneSearchBean(searchBean);
 				zoneSO = (IZoneSO) BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -193,11 +204,8 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 		this.getManagedBean().setStates(resDTO.getStateList());
 	}
 
-	public void addState() {
-
-		// getManagedBean().setZoneStateList(null);
-
-		// getManagedBean().setSelectedStates(null);
+	public void addState() {		
+		
 		if (getManagedBean().getPmState() == null) {
 			this.getManagedBean().setPmState(new PmState());
 		}
@@ -205,20 +213,34 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 		getSelectionTypes();
 	}
 
+	
 	public void deleteState() {
-
+		
 		List<PmZoneState> zoneList = getManagedBean().getZoneStateList();
-		List<PmZoneState> selectedList = new ArrayList<PmZoneState>();
-		for (PmZoneState zone : zoneList) {
-			if (zone.isSelected()) {
-				selectedList.add(zone);
+		List<PmZoneState> selectedList = getManagedBean().getSelectedZones();
+		for (PmZoneState zonelist : zoneList) {
+			if (zonelist.isSelected()) {
+				selectedList.add(zonelist);
 			}
 		}
 		if (zoneList.size() == selectedList.size()) {
 			zoneList.clear();
 		} else {
-			for (PmZoneState zones : selectedList) {
-				zoneList.remove(zones);
+			for (PmZoneState zoneState : selectedList) {
+				zoneList.remove(zoneState);
+			}
+		}
+	}
+	public void selectAll(AjaxBehaviorEvent event) {
+		boolean flag = ((SelectBooleanCheckbox) event.getSource()).isSelected();
+		List<PmZoneState> pmZoneList = getManagedBean().getZoneStateList();
+		if (pmZoneList != null) {
+			for (PmZoneState zoneState : pmZoneList) {
+				if (flag) {
+					zoneState.setSelected(true);
+				} else {
+					zoneState.setSelected(false);
+				}
 			}
 		}
 	}
@@ -248,22 +270,6 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 			}
 		}
 
-		/*
-		 * scCommittee.setScCommitteeMembers(memberList); PmStatus
-		 * committeStatus = new PmStatus(); committeStatus.setStatusId(60202l);
-		 * scCommittee.setCommitteStatus(committeStatus); for (PmZoneState
-		 * scCommitteeMember : zoneList) { scCommitteeMember.set(scCommittee); }
-		 */
-		/*
-		 * System.out.println("Size of Selected list::" +
-		 * getManagedBean().getSelectedStates().size()); for (PmState state :
-		 * getManagedBean().getSelectedStates()) { PmZoneState zoneState = new
-		 * PmZoneState(); zoneState.setPmState(state);
-		 * 
-		 * } for (PmZoneState scCommitteeMember : memberList) {
-		 * scCommitteeMember.setScCommittee(scCommittee); }
-		 */
-
 	}
 
 	private void getSelectionTypes() {
@@ -271,8 +277,7 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 		List<SelectItem> selectionTypes = new ArrayList<SelectItem>();
 		for (SelectionType selectionType : type) {
 			selectionTypes.add(new SelectItem(selectionType.value(),
-					selectionType.name()));
-		}
+					selectionType.name()));		}
 		this.getManagedBean().setSelections(selectionTypes);
 	}
 
@@ -287,6 +292,20 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 	private FacesScopes getFacesScopes() {
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes;
+	}
+
+	/**
+	 * @return the flag
+	 */
+	public boolean isFlag() {
+		return flag;
+	}
+
+	/**
+	 * @param flag the flag to set
+	 */
+	public void setFlag(boolean flag) {
+		this.flag = flag;
 	}
 
 }

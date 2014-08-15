@@ -50,8 +50,10 @@ import org.apache.log4j.Logger;
 public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 	private static Logger log = Logger.getLogger(LocationBackingBean.class);
 	private IPagingDataModel<VPmLocation> searchLocation = new SearchLocatonPagingDataModel();
+	private SearchFilterBean locationCodeFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+	private SearchFilterBean locationNameFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
 	boolean result = false;
-
+	private long[] districtId;
 	public LocationBackingBean() {
 
 	}
@@ -72,6 +74,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 		this.getManagedBean().setLocationName(null);
 		this.getManagedBean().setSelectedType(null);
 		this.getManagedBean().setRecordStatus(null);
+		this.getManagedBean().setStatus(-1);
 
 	}
 
@@ -470,9 +473,19 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 		public ISearchResultBean<VPmLocation> pageChangeListener(
 				ISearchBean<VPmLocation> searchBean) {
 			ILocationSO locationSO;
+			/*if(StringUtils.isBlank((String)locationCodeFilterBean.getSearchValue())
+					&&StringUtils.isBlank((String)locationNameFilterBean.getSearchValue())
+					
+					
+					&&districtId == null) {
+				System.out.println("******SearchResultBean******");
+				return new SearchResultBean();
+			}*/
 			try {
+				
 
 				LocationReqDTO locationReqDTO = new LocationReqDTO();
+				
 
 				if (getManagedBean().getSelectedType() != null) {
 					searchBean.getDataFilterBeans().add(
@@ -486,6 +499,11 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 									SearchOperator.OPERATOR_LIKE.value(),
 									getManagedBean().getLocationCode()));
 				}
+				/*if (StringUtils.isNotBlank((String)getManagedBean().getLocationCode())) {
+					locationCodeFilterBean.setSearchField("locationCode");
+					locationCodeFilterBean.setCaseInsensitive(true);
+					searchBean.getDataFilterBeans().add(locationCodeFilterBean);
+				}*/
 				if (getManagedBean().getLocationName() != null) {
 					searchBean.getDataFilterBeans().add(
 							new SearchFilterBean("locationName",
@@ -550,6 +568,48 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 
 	public void setSearchLocation(IPagingDataModel<VPmLocation> searchLocation) {
 		this.searchLocation = searchLocation;
+	}
+
+	/**
+	 * @return the locationCodeFilterBean
+	 */
+	public SearchFilterBean getLocationCodeFilterBean() {
+		return locationCodeFilterBean;
+	}
+
+	/**
+	 * @param locationCodeFilterBean the locationCodeFilterBean to set
+	 */
+	public void setLocationCodeFilterBean(SearchFilterBean locationCodeFilterBean) {
+		this.locationCodeFilterBean = locationCodeFilterBean;
+	}
+
+	/**
+	 * @return the locationNameFilterBean
+	 */
+	public SearchFilterBean getLocationNameFilterBean() {
+		return locationNameFilterBean;
+	}
+
+	/**
+	 * @param locationNameFilterBean the locationNameFilterBean to set
+	 */
+	public void setLocationNameFilterBean(SearchFilterBean locationNameFilterBean) {
+		this.locationNameFilterBean = locationNameFilterBean;
+	}
+
+	/**
+	 * @return the districtId
+	 */
+	public long[] getDistrictId() {
+		return districtId;
+	}
+
+	/**
+	 * @param districtId the districtId to set
+	 */
+	public void setDistrictId(long[] districtId) {
+		this.districtId = districtId;
 	}
 
 }

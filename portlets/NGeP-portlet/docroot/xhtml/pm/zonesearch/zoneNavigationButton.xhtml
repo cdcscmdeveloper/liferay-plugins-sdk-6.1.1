@@ -11,7 +11,7 @@
 				action="#{zoneBackingBean.backToSearch}" immediate="true" />
 		</div>
 		<p:commandButton value="Save" icon="ui-icon-save" style="float:right;"
-			action="#{zoneBackingBean.saveZone}" />
+			action="#{zoneBackingBean.saveZone}" update="@([id$=Msg])" />
 		<br />
 		<br />
 	</p:panel>
