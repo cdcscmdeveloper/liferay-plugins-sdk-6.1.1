@@ -1678,22 +1678,18 @@ public class CodificationBackingBean extends
 		UnspscCodeBackingBean unspscBB = new UnspscCodeBackingBean();
 		FacesScopes face = new FacesScopes();
 		String token = face.getBPMAuthenticationCtxToken();
-		System.out.println("token:" + token);
+		log.info("token:" + token);
+		
 		ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate
 				.getInstance().getServiceObject("cm", ICodificationSO.class);
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
 		CodificationResDTO resDTO = null;
 
-		System.out.println("getUnspscCode:"
-				+ this.getManagedBean().getSelectedUNSPSCObj().getUnspscCode());
-
-		System.out
-				.println("color:" + (String) colorFilterBean.getSearchValue());
-		System.out.println("type:" + (String) typeFilterBean.getSearchValue());
-		System.out
-				.println("brand:" + (String) brandFilterBean.getSearchValue());
-		System.out.println("measurement:"
-				+ (String) measurementFilterBean.getSearchValue());
+		log.info("getUnspscCode:" + this.getManagedBean().getSelectedUNSPSCObj().getUnspscCode());
+		log.info("color:" + colorFilterBean.getSearchValue());
+		log.info("type:" + typeFilterBean.getSearchValue());
+		log.info("brand:" +  brandFilterBean.getSearchValue());
+		log.info("measurement:" + measurementFilterBean.getSearchValue());
 
 		if (StringUtils.isNotBlank((String) colorFilterBean.getSearchValue())) {
 
@@ -1703,8 +1699,7 @@ public class CodificationBackingBean extends
 			reqDTO.setColorSearchBean(searchBeanColor);
 			resDTO = unspscSO.searchColorObj(reqDTO);
 
-			System.out.println("**getColorName**"
-					+ resDTO.getColorList().get(0).getColorName());
+			log.info("**getColorName**"	+ resDTO.getColorList().get(0).getColorName());
 			unspscBB.getManagedBean().getRequestCode()
 					.setColorName(resDTO.getColorList().get(0).getColorName());
 
@@ -1720,8 +1715,8 @@ public class CodificationBackingBean extends
 			searchBeanColor.getDataFilterBeans().add(typeFilterBean);
 			reqDTO.setTypeSearchBean(searchBeanColor);
 			resDTO = unspscSO.searchTypeObj(reqDTO);
-			System.out.println("**typeName**"
-					+ resDTO.getTypeList().get(0).getTypeName());
+			
+			log.info("**typeName**"	+ resDTO.getTypeList().get(0).getTypeName());
 			unspscBB.getManagedBean().getRequestCode()
 					.setTypeName(resDTO.getTypeList().get(0).getTypeName());
 
@@ -1747,8 +1742,7 @@ public class CodificationBackingBean extends
 			unspscBB.getManagedBean().getRequestCode().setRequestBrand(true);
 		}
 
-		if (StringUtils.isNotBlank((String) measurementFilterBean
-				.getSearchValue())) {
+		if (StringUtils.isNotBlank((String) measurementFilterBean.getSearchValue())) {
 
 			ISearchBean<CmMeasurement> searchBeanColor = new SearchBean<CmMeasurement>();
 			measurementFilterBean.setSearchField("measurementId");
@@ -1784,10 +1778,12 @@ public class CodificationBackingBean extends
 		reqDTO.setTaskId(unspscBB.getManagedBean().getTaskId());
 
 		if (unspscBB.isCatalogueAdmin()) {
-			System.out.println("***catalogue admin***");
+			
+			log.info("***catalogue admin*** REQUEST EXTENSION");
 			reqDTO.setOutCome("REQUEST EXTENSION");
 		} else if (unspscBB.isCodeAdmin()) {
-			System.out.println("***code admin***");
+			
+			log.info("***code admin*** SUBMIT");
 			reqDTO.setOutCome("SUBMIT");
 		}
 
@@ -1797,6 +1793,7 @@ public class CodificationBackingBean extends
 		FacesContext facesContext = FacesContext.getCurrentInstance();
 		facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,null, MessageUtils.getMessage(MessageConst.INFO_710001,
 				MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
+		
 		return "BPMtesting";
 	}
 
