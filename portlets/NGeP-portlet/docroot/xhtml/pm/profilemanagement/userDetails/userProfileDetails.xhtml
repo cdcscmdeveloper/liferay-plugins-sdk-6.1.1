@@ -9,6 +9,13 @@
 	<p:panel header="#{lbl['lbl.pm.profiles.user.profile']}" toggleable="true">
 		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%" columns="2">
 			<p:outputPanel id="opUserProfileDet">
+				<!-- remove - start -->
+				dummy
+				<p:selectBooleanCheckbox id="chkAddMode"
+					value="#{profileManagementBackingBean.managedBean.dummy}">
+				</p:selectBooleanCheckbox>
+				<br/> 
+				<!-- remove - end -->
 				<table class="ppTwoTable">
 					<tr>
 						<th width="20%">
@@ -29,10 +36,6 @@
             					sizeLimit="1000000" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" multiple="false"
             					invalidFileMessage="Only JPG, GIF, PNG files are accepted" 
             					fileLimit="1" dragDropSupport="false" uploadLabel="Confirm" label="Browse"/>
-							<div align="left">
-								<p:commandButton icon="ui-icon-image" value="#{lbl['lbl.pm.profiles.userdetails.changepic']}" />
-								<p:commandButton icon="ui-icon-delete" value="#{lbl['lbl.pm.profiles.userdetails.deletepic']}" />
-							</div>
 						</td>
 					</tr>
 				
@@ -295,7 +298,13 @@
  			</tr>	
 			<tr> 
   				<th width="20%"><p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.email']}" /></th>  
-			    <td><p:inputText value="#{profileManagementBackingBean.managedBean.selectedUser.email}" styleClass="ppDisplayTextM"  /></td>
+			    <td>
+			    	<p:inputText value="#{profileManagementBackingBean.managedBean.selectedUser.email}" styleClass="ppDisplayTextM"  />
+			    	&#160;&#160;   
+	                <p:graphicImage id="giEmail" library="ep/images/design" name="tooltips.png"
+		                   value="/css/images/design/tooltips.png" />
+					<p:tooltip for="giEmail" value="#{lbl['lbl.pm.profiles.userdetails.email.tooltip']}" showEffect="fade" hideEffect="fade" />
+			    </td>
 			    <th></th>
                	<td></td>
 			</tr>    

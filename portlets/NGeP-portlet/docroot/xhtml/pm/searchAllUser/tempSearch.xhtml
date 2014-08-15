@@ -13,47 +13,99 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 		
 		<!-- Search User -->
-		<p:outputPanel id="opDefinedSearch">
-				<br/>
-				<table class="ppTwoTable">
-					<tr>
-						<th width="20%">
-							<p:outputLabel value="Login ID"/>
-						</th>
-						<td>
-							<p:inputText styleClass="ppDisplayTextM" value="#{searchAllUserBackingBean.managedBean.userNames}" maxlength="75"/>
-						</td>
-						<th>&#160;</th>
-						<td>&#160;</td>
-					</tr>
-					<tr>
-						<td colspan="4">
-							<div class="ppRightBtn">
-								<p:commandButton value="#{lbl['lbl.btn.search']}" 
-									action="#{searchAllUserBackingBean.tempSearchUserProfile()}"
-									update="dtUserResult2" />
-						  	</div>
-						</td>
-					</tr>
-				</table>
-				
-				<br/>
-			
-				<!-- User Result -->
-				<p:dataTable id="dtUserResult2" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
-						value="#{searchAllUserBackingBean.managedBean.result}"
-						var="result">
-						<p:column headerText="PM" width="15%">
-							#{result[0]}
-						</p:column>
-						<p:column headerText="LIFERAY" width="15%">
-							#{result[1]}
-						</p:column>
-						<p:column headerText="LDAP" width="15%">
-							#{result[2]}
-						</p:column>
-				</p:dataTable>
-  
+		<p:outputPanel id="opSearchAll">
+			<br/>
+			<table class="ppTwoTable">
+				<tr>
+					<th width="20%">
+						<p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.loginid']}"/>
+					</th>
+					<td>
+						<p:inputText styleClass="ppDisplayTextM" value="#{searchAllUserBackingBean.managedBean.loginId}" maxlength="75"/>
+					</td>
+					<th>&#160;</th>
+					<td>&#160;</td>
+				</tr>
+				<tr>
+					<td colspan="4">
+						<div class="ppRightBtn">
+							<p:commandButton value="#{lbl['lbl.btn.search']}" 
+								action="#{searchAllUserBackingBean.tempSearchUserProfile()}"
+								update="opSearchAllResult" />
+					  	</div>
+					</td>
+				</tr>
+			</table>
+		</p:outputPanel>
+		<p:outputPanel id="opSearchAllResult">			
+			<br/>
+		
+			<!-- User Status Result -->
+			<p:dataTable id="dtUserStatusResult" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
+					value="#{searchAllUserBackingBean.managedBean.resultStatus}"
+					var="result">
+					<p:column headerText="PM" width="15%">
+						#{result[0]}
+					</p:column>
+					<p:column headerText="LIFERAY" width="15%">
+						#{result[1]}
+					</p:column>
+					<p:column headerText="LDAP/OIM" width="15%">
+						#{result[2]}
+					</p:column>
+			</p:dataTable>
+ 			<br/>
+ 			<br/>
+ 			<!-- User Roles -->
+			<table class="ppTwoTable">
+				<tr>
+					<th width="30%">
+						<div class="screen-title">
+							PM
+						</div>
+					</th>
+					<th width="30%">
+						<div class="screen-title">
+							Liferay
+						</div>
+					</th>
+					<th width="30%">
+						<div class="screen-title">
+							LDAP/OIM
+						</div>
+					</th>
+				</tr>
+				<tr>
+					<td width="30%">
+						<p:dataTable id="dtUserPmRoleResult" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
+							value="#{searchAllUserBackingBean.managedBean.pmRoleList}"
+							var="result">
+							<p:column headerText="Role Name" width="15%">
+								#{result}
+							</p:column>
+						</p:dataTable>
+					</td>
+					<td width="30%">
+						<p:dataTable id="dtUserLfRoleResult" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
+							value="#{searchAllUserBackingBean.managedBean.liferayRoleList}"
+							var="result">
+							<p:column headerText="Role Name" width="15%">
+								#{result}
+							</p:column>
+						</p:dataTable>
+						
+					</td>
+					<td width="30%">
+						<p:dataTable id="dtUserOimRoleResult" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
+							value="#{searchAllUserBackingBean.managedBean.oimRoleList}"
+							var="result">
+							<p:column headerText="Role Name" width="15%">
+								#{result}
+							</p:column>
+						</p:dataTable>
+					</td>
+				</tr>
+			</table>
 	 	</p:outputPanel>
 	</ui:define>
 </ui:composition>
