@@ -2091,18 +2091,29 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 				QuoteResDTO  quoteResDTO = quoteSO.getQuoteDtlForSupplier(quoteReqDTO);
 				ScQuote scQuote = quoteResDTO.getQuoteBidDtl();
 				
+				// clear session data.
+				renewSesionObject();
+				
 				// remarks
 				scQuote.setRemarks(initializeRemarks(scQuote));
+				
+				List<TplSpecAnswer> specAnswers  = new ArrayList<TplSpecAnswer>();
 	            // service and product
 				if(quoteResDTO.getProductAnswersTpl() != null && quoteResDTO.getProductAnswersTpl().size() >0){
-					productTplSpecBean.setSpecAnswerList(quoteResDTO.getProductAnswersTpl());
+					List<TplSpecAnswer> productAnswersTpl = quoteResDTO.getProductAnswersTpl();
+					specAnswers.addAll(productAnswersTpl);
+					
+					productTplSpecBean.setSpecAnswerList(productAnswersTpl);
 					productTplSpecBean.setSpecMaster(scQuote.getQuoteDocs().get(0).getSpecMaster());
 					productTplSpecBean.setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
 					getManagedBean().setProductTemplateSpecBean(productTplSpecBean);
 				}
 				
 				 if(quoteResDTO.getServiceAnswersTpl() != null && quoteResDTO.getServiceAnswersTpl().size() >0){
-					serviceTplSpecBean.setSpecAnswerList(quoteResDTO.getServiceAnswersTpl());
+					List<TplSpecAnswer> serviceAnswersTpl = quoteResDTO.getServiceAnswersTpl();
+					specAnswers.addAll(serviceAnswersTpl);
+					 
+					serviceTplSpecBean.setSpecAnswerList(serviceAnswersTpl);
 					serviceTplSpecBean.setSpecMaster(scQuote.getQuoteDocs().get(0).getSpecMaster());
 					serviceTplSpecBean.setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
 					getManagedBean().setServiceTemplateSpecBean(serviceTplSpecBean);
@@ -2115,6 +2126,8 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 				initializeRemarks(scQuote);
 				
 				quoteReqDTO.setQuoteBidDtl(scQuote);
+				quoteReqDTO.setSpecAnswers(specAnswers);
+				
 				quoteSO.validateSupplierResponse(quoteReqDTO);
 				
 			} catch (EpException e) {	
