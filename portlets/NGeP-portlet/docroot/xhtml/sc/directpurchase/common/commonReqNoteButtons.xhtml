@@ -75,8 +75,8 @@
 								<p:commandButton value="#{action}" 
 									rendered="#{unspscCodeBackingBean.isRequisitioner()}"
 									styleClass="ui-button" icon="#{iconVar}" partialSubmit="true"
-									process="#{isCancel ? '@this' : '@form'}"
-									update="#{isCancel ? '@this' : '@form'}"
+									process="#{isCancel ? '@this, remark' : '@form'}"
+									update="#{isCancel ? '@this, remark' : '@form'}"
 									actionListener="#{requestNoteBackingBean.submitAction(action)}" />
 									
 							</c:forEach></td>

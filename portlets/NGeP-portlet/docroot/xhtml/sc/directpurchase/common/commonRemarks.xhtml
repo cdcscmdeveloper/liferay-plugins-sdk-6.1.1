@@ -9,6 +9,7 @@
 		<tr>
 			<td class="TableFieldLeft" width="12%"></td>
 			<td class="TableFieldRight">
+				<h:panelGroup id="remark">
 				<p:dataGrid id="catatan" value="#{requestNoteBackingBean.managedBean.requestNote.remarks}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
 					<table>
 						<tr>
@@ -33,6 +34,7 @@
 						</tr>
 					</table>
 				</p:dataGrid>
+				</h:panelGroup>
 			</td>
 		</tr>
 	</table>
