@@ -301,15 +301,6 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 				}
 			}
 			
-			if(requestNote.getRemarks() != null ){
-				for (int i = 0; i < requestNote.getRemarks().size(); i++) {
-					ScRequestNoteRemark remark = requestNote.getRemarks().get(i);
-					if(StringUtils.isBlank(remark.getRemark())){
-						requestNote.getRemarks().remove(remark);
-					}	
-				} 
-			}
-			
 			if(getManagedBean().getPrInquiryId() != null){
 				requestNoteReqDTO.setPurchaseInquiryId(getManagedBean().getPrInquiryId());
 			}
