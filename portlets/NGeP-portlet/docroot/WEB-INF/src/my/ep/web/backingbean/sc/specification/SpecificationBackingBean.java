@@ -517,7 +517,7 @@ public class SpecificationBackingBean extends
 			if (this.getManagedBean().getScQt().isPanel() != this
 					.getManagedBean().isPanelChange()) {
 				removespecDtls();
-				this.getManagedBean().getScQt().setZonal(false);				
+				this.getManagedBean().getScQt().setZonal(false);
 				getManagedBean().setZoneGeneralTrees(null);
 				getManagedBean().setZoneTrees(null);
 			}
@@ -562,9 +562,9 @@ public class SpecificationBackingBean extends
 						.getCtPanelItem());
 				setUserDetails(supplierCriteria);
 				this.getManagedBean().getScQt()
-				.setScQtSupplierCriteria(supplierCriteria);
-			}			
-			
+						.setScQtSupplierCriteria(supplierCriteria);
+			}
+
 			this.getManagedBean().setTechnicalSpecList(null);
 			return "specificationCreation.xhtml?faces-redirect=true";
 			// return "searchCircularPanelContract.xhtml?faces-redirect=true";
@@ -3637,14 +3637,16 @@ public class SpecificationBackingBean extends
 
 		List<ScQtCheckList> techSpecList = this.getManagedBean()
 				.getTechnicalSpecList();
+		List<ScQtCheckList> localSpecList = new ArrayList<ScQtCheckList>();
 		if (null != techSpecList && !techSpecList.isEmpty()) {
-			scQt.setScQtChecklists(techSpecList);
+			localSpecList.addAll(techSpecList);
+
 		}
 
 		List<ScQtCheckList> finSpecList = this.getManagedBean()
 				.getFinancialSpecList();
 		if (null != finSpecList && !finSpecList.isEmpty()) {
-			scQt.setScQtChecklists(finSpecList);
+			localSpecList.addAll(finSpecList);
 		}
 
 		List<ScQtRemark> remarksList = this.getManagedBean()
@@ -3654,10 +3656,10 @@ public class SpecificationBackingBean extends
 			scQt.setScQtRemarks(finalizeRemarks(remarksList));
 
 		}
+		scQt.setScQtChecklists(localSpecList);
 		scQt.setScQtCommittees(null);
 		scQt.setScQtBriefings(null);
 		reqDTO.setScQt(scQt);
-
 		return reqDTO;
 
 	}
