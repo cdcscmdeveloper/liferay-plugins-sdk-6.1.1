@@ -7,17 +7,17 @@
 	<p:dialog header="ZONE LOCATION" widgetVar="ZoneLocation" modal="true" 
 		width="520" height="480">
 		<p:panel id="zonePopupPanel">
+		<p:messages id="zoneMsgId" showDetail="true" autoUpdate="true" closable="true" showSummary="false"  severity="error, info"/>
 			<table styleClass="noBorders tr,noBorders td" >
 				<TR>
 					<TD width="20%" valign="top">
 					 <p:outputLabel value="Zone Name"></p:outputLabel>
+				     <p:outputLabel	value="*" styleClass="mandatory" />
 					</TD>
 					<TD width="80%"><p:inputText id="zoneNameId" size="65"
-							value="#{simpleQuoteBackingBean.managedBean.zoneName}" >
-							<p:ajax event="keyup" update=":form:zoneOkBtn"></p:ajax>
-							<p:ajax event="change" update=":form:zoneOkBtn"></p:ajax>
-							</p:inputText>
-					</TD>
+							value="#{simpleQuoteBackingBean.managedBean.zoneName}"
+							required="#{simpleQuoteBackingBean.managedBean.required}">
+						</p:inputText> <p:message id="zoneNameMsg" for="zoneNameId" display="icon" /> </TD>
 				</TR>
 				<TR>
 					<TD width="20%" valign="top"><p:outputLabel value="Zone Location"></p:outputLabel>
@@ -50,19 +50,18 @@
 				<p:column width="60%" style="text-align:right">
 					<p:commandButton
 						value="#{lbl['lbl.ss.simple.quote.purchase.btn.ok']}"
-						icon="ui-icon-submit" onclick="ZoneLocation.hide();" process="@all"
+						icon="ui-icon-submit"  process="@all"
 						update="@this, zoneLocationDataTable,zonePopupPanel"
 						partialSubmit="true"
-						disabled="#{simpleQuoteBackingBean.managedBean.zoneName eq null 
-						  or simpleQuoteBackingBean.managedBean.zoneName.length() eq 0}"
 						actionListener="#{simpleQuoteBackingBean.updateZone}" />
 
 					<p:commandButton
 						value="#{lbl['lbl.ss.simple.quote.purchase.btn.cancel']}"
-						icon="ui-icon-cancel" onclick="ZoneLocation.hide();" />
+						icon="ui-icon-cancel" action="#{simpleQuoteBackingBean.cancelZonePopUp}" />
 
 				</p:column>
 			</p:row>
 		</p:panelGrid>
+		  <p:ajax event="close" listener="#{simpleQuoteBackingBean.cancelZonePopUp}"/>
 	</p:dialog>
 </ui:composition>
