@@ -28,7 +28,7 @@
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
 				style="float:right;" update="@all"
 				disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
-				action="#{specificationBackingBean.saveEditTemplateSpec}"
+				action="#{specificationBackingBean.saveEditTemplateSpec(null)}"
 				icon="ui-icon-save" />
 
 
