@@ -39,7 +39,8 @@
 				
 				<p:column headerText="#{lbl['lbl.sc.request.note.summary']}" style="width:10%;">
 				    <p:commandLink partialSubmit="true"  process="@this" >
-				       <p:graphicImage value="/resources/ep/images/design/document.png"  height="15px" width="15px"/>
+				      <p:graphicImage library="ep/images/design" name="evaluate.png"
+									style="vertical-align:middle" />
 				  </p:commandLink> 
 				</p:column>
 
@@ -92,12 +93,13 @@
 							rendered="#{requestNoteBackingBean.checkPriceOffered(requestNoteDtl.scRequestSupplierItem.supplierItemPrice.priceType.parameterCode)}">
 							<p:commandLink partialSubmit="true" update=":form:pricingPopup"
 								process="@this"
-								actionListener="#{requestNoteBackingBean.showReqNotePopUps(requestNoteDtl)}"
+								actionListener="#{requestNoteBackingBean.showPricing(requestNoteDtl)}"
 								oncomplete="pricingPopup.show();">
-								<p:graphicImage value="/resources/ep/images/design/document.png"
-									height="15px" width="15px" />
+								<p:graphicImage library="ep/images/design" name="evaluate.png"
+									style="vertical-align:middle" />
 							</p:commandLink>
 						</h:panelGroup>
+						
 					</h:panelGroup>
 				</p:column>
 			 
