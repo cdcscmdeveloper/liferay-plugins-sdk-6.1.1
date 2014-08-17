@@ -21,7 +21,7 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 
 					<p:commandButton value="#{lbl['lbl.sc.common.submit']}"
 					action="#{purchaseInquiryBackingBean.submitPrInquiryDtl}" style="float:right;"
-					icon="ui-icon-submit"  update="mainPanel"  rendered="#{purchaseInquiryBackingBean.managedBean.rnToPIFlag}"/>
+					icon="ui-icon-submit"  update="mainPanel"/>
 	    </c:if>
 
 	   <c:if test="#{purchaseInquiryBackingBean.managedBean.taskId ne null}">
@@ -31,17 +31,9 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 				
 					          <!-- 	view back button -->
 				               <c:if
-									test="#{purchaseInquiryBackingBean.managedBean.priStatus eq 'Pending RN Creation'}">
+									test="#{purchaseInquiryBackingBean.managedBean.rnToPIFlag}">
 									<p:commandButton immediate="true"
 										value="#{lbl['lbl.sc.common.back']}"
-										icon="ui-icon-back" style="float:left;"
-										action="#{purchaseInquiryBackingBean.backToPervious}" />
-								</c:if> 
-						
-								<c:if
-									test="#{purchaseInquiryBackingBean.managedBean.priStatus eq 'Pending Submission'}">
-									<p:commandButton immediate="true"
-										value="#{lbl['lbl.sc.action.back.to.search.catalogue']}"
 										icon="ui-icon-back" style="float:left;"
 										action="#{purchaseInquiryBackingBean.backToPervious}" />
 								</c:if> 
@@ -56,7 +48,7 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 											<c:if test="${action == 'CANCEL'}">
 												<ui:param name="iconVar" value="ui-icon-submit" />
 
-												<c:if test="#{unspscCodeBackingBean.requisitioner and purchaseInquiryBackingBean.managedBean.rnToPIFlag}">
+												<c:if test="#{!purchaseInquiryBackingBean.managedBean.rnToPIFlag}">
 													<p:commandButton
 														value="#{lbl['lbl.sc.common.proceed.btn']}"
 														icon="ui-icon-submit"

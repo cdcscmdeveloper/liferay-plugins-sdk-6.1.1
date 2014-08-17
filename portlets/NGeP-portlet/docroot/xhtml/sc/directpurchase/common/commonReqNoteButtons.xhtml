@@ -8,7 +8,7 @@
 	  <div align="right">
 	    <c:if test="#{requestNoteBackingBean.managedBean.taskId eq null}">
 	           <p:commandButton value="#{lbl['lbl.sc.action.back.to.search.catalogue']}" style="float:left;" icon="ui-icon-back" partialSubmit="true" process="@this"
-						immediate="true" action="#{requestNoteBackingBean.backToPervious}"  rendered="#{requestNoteBackingBean.managedBean.sourceMethod eq 'Search Catalogue'}"/>
+						immediate="true" action="#{requestNoteBackingBean.backToPervious}"  rendered="#{requestNoteBackingBean.managedBean.sourceMethod eq 'Search Catalogue' and requestNoteBackingBean.managedBean.piRNChecker}"/>
 						
 				<p:commandButton value="#{lbl['lbl.sc.common.save']}" icon="ui-icon-save" process="@all"
 				   	action="#{requestNoteBackingBean.saveAction('')}" update="@([id$=requestNoteId])"/>
@@ -28,7 +28,7 @@
 						      
 						      <c:if test="#{requestNoteBackingBean.managedBean.requestNoteStatus eq 'Pending Submission' }">
 					               <p:commandButton value="#{lbl['lbl.sc.action.back.to.search.catalogue']}" icon="ui-icon-back" partialSubmit="true" 
-						                style="float:left;"  immediate="true" action="#{requestNoteBackingBean.backToPervious}"   rendered="#{requestNoteBackingBean.managedBean.sourceMethod eq 'Search Catalogue'}"/>
+						                style="float:left;"  immediate="true" action="#{requestNoteBackingBean.backToPervious}"   rendered="#{requestNoteBackingBean.managedBean.sourceMethod eq 'Search Catalogue' and requestNoteBackingBean.managedBean.piRNChecker}"/>
 						      </c:if>
 						
 							  <c:if test="#{requestNoteBackingBean.managedBean.requestNoteStatus eq 'Pending Approval' 
