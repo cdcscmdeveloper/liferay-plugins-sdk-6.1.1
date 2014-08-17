@@ -558,13 +558,13 @@ public class SpecificationBackingBean extends
 					.getScQtSupplierCriteria()) {
 				supplierCriteria = new ScQtSupplierCriteria();
 				supplierCriteria.setScQt(scQt);
+				supplierCriteria.setCtPanelItem(this.getManagedBean()
+						.getCtPanelItem());
 				setUserDetails(supplierCriteria);
-			}
-
-			supplierCriteria.setCtPanelItem(this.getManagedBean()
-					.getCtPanelItem());
-			this.getManagedBean().getScQt()
-					.setScQtSupplierCriteria(supplierCriteria);
+				this.getManagedBean().getScQt()
+				.setScQtSupplierCriteria(supplierCriteria);
+			}			
+			
 			this.getManagedBean().setTechnicalSpecList(null);
 			return "specificationCreation.xhtml?faces-redirect=true";
 			// return "searchCircularPanelContract.xhtml?faces-redirect=true";
