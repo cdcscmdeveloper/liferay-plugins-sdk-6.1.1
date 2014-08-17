@@ -109,6 +109,7 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     
     private IPagingDataModel<ScRequestNote> reqNoteDataModel = new RequestNotePagingDataModel();
     private List<CmSupplierItem> compareSupplierItems = new ArrayList<CmSupplierItem>(); // copy supplier items from the compare screen
+    private boolean piRNChecker = Boolean.TRUE;
     
     public RequestNoteManagedBean() {
     	PmParameter pmParameter = new PmParameter();
@@ -817,6 +818,18 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	 */
 	public void setCompareSupplierItems(List<CmSupplierItem> compareSupplierItems) {
 		this.compareSupplierItems = compareSupplierItems;
+	}
+	/**
+	 * @return the piRNChecker
+	 */
+	public boolean isPiRNChecker() {
+		return piRNChecker;
+	}
+	/**
+	 * @param piRNChecker the piRNChecker to set
+	 */
+	public void setPiRNChecker(boolean piRNChecker) {
+		this.piRNChecker = piRNChecker;
 	}
 	
 	

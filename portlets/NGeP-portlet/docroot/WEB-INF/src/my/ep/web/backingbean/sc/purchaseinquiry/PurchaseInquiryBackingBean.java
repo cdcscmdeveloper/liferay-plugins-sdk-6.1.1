@@ -684,6 +684,9 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 				requestNoteBackingBean.initialInformation(requestNote);
 				requestNoteBackingBean.getCurrentStatus(DPStatusConstants.RN_PENDING_SUBMISSION);
 				requestNoteBackingBean.getManagedBean().setFulfillmentType(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
+				
+				// back to search catalouge button hide
+				requestNoteBackingBean.getManagedBean().setPiRNChecker(Boolean.FALSE);
 				//redirect to RequestNote screen
 				return "commonRequestNote";
 			} else {
@@ -792,7 +795,6 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 		 getCurrentStatus(res.getDocStatus().longValue()); 
 		 // title checker
 		 getManagedBean().setTitleChecker(Boolean.FALSE);
-		 getManagedBean().setRnToPIFlag(Boolean.TRUE);
 
 		 FacesContext fc = FacesContext.getCurrentInstance();
 		 if(flag){ // page nav.to purchase inquiry

@@ -440,6 +440,8 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 						// get PI id to Request note
 						if(scRequestSupplierItem.getScPrInquiy() != null){
 							getManagedBean().setPrInquiryId(scRequestSupplierItem.getScPrInquiy().getPrInquiryId());
+							// back to search catalouge button hide and show
+							getManagedBean().setPiRNChecker(Boolean.FALSE);
 						}
 					}
 					
@@ -942,11 +944,12 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 	private TplSpecZoneDtl createSpecZone(CmSupplierZone supplierZone) {
 		TplSpecZoneDtl specZoneDtl = null;
 		if(supplierZone != null) {
-			if(supplierZone.getCmSupplierZoneDtls() != null) {
+			if(supplierZone.getCmSupplierZoneDtls() != null && supplierZone.getCmSupplierZoneDtls().size()>0) {
 				specZoneDtl = new TplSpecZoneDtl();
 				specZoneDtl.setZoneName(supplierZone.getSuppZoneName());
 				ScRNZone zone = getManagedBean().getScRNZone(); 
 				List<TplSpecZoneLoc> zoneLocs = new ArrayList<TplSpecZoneLoc>();
+				
 				for(CmSupplierZoneDTL zoneDtl : supplierZone.getCmSupplierZoneDtls()) {
 					TplSpecZoneLoc specZoneLoc = new TplSpecZoneLoc();
 					specZoneLoc.setPmDistrict(zoneDtl.getPmDistrict());
@@ -1671,7 +1674,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			// title checker
 			purchaseInquiryBackingBean.getManagedBean().setTitleChecker(Boolean.FALSE);
 			// TODO current page url for page navigation from pid to request note
-			purchaseInquiryBackingBean.getManagedBean().setRnToPIFlag(Boolean.FALSE);
+			purchaseInquiryBackingBean.getManagedBean().setRnToPIFlag(Boolean.TRUE);
 			purchaseInquiryBackingBean.getManagedBean().setPageNavToRequestNote(fc.getViewRoot().getViewId());
 			fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "prInquiryMain");

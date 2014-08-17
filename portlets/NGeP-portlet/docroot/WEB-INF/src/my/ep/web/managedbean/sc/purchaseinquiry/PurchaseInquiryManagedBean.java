@@ -59,7 +59,7 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	private SelectItem[] procurementTypes; // for procuremment type dropdown
 	
 	private boolean titleChecker = Boolean.TRUE;
-	private boolean rnToPIFlag = Boolean.TRUE;
+	private boolean rnToPIFlag;
 	 private ScPIZone scPIZone = new ScPIZone(); 
 	
 	public PurchaseInquiryManagedBean() {
