@@ -11,16 +11,17 @@
 			<table styleClass="noBorders tr,noBorders td" >
 				<TR>
 					<TD width="20%" valign="top">
-					 <p:outputLabel value="Zone Name"></p:outputLabel>
-				     <p:outputLabel	value="*" styleClass="mandatory" />
+					 <p:outputLabel	value="*" styleClass="mandatory" />
+					 <p:outputLabel value="#{lbl['lbl.sc.sq.zone.name']}"></p:outputLabel>
+				    
 					</TD>
-					<TD width="80%"><p:inputText id="zoneNameId" size="65"
+					<TD width="80%"><p:inputText id="zoneNameId" size="65" label="#{lbl['lbl.sc.sq.zone.location']}"
 							value="#{simpleQuoteBackingBean.managedBean.zoneName}"
 							required="#{simpleQuoteBackingBean.managedBean.required}">
 						</p:inputText> <p:message id="zoneNameMsg" for="zoneNameId" display="icon" /> </TD>
 				</TR>
 				<TR>
-					<TD width="20%" valign="top"><p:outputLabel value="Zone Location"></p:outputLabel>
+					<TD width="20%" valign="top"><p:outputLabel value="#{lbl['lbl.sc.sq.zone.location']}" ></p:outputLabel>
 					</TD>
 					<TD width="80%">
 						<div style="height: 300px; overflow-y: scroll;">
