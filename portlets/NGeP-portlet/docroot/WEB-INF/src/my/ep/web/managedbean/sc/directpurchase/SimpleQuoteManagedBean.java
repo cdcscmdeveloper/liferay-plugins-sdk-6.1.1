@@ -152,6 +152,7 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	private SelectItem[] procurementTypes; // for procuremment type dropdown
 	private boolean rnToSQFlag = Boolean.TRUE;
 	private boolean supplierViewBtn = Boolean.TRUE;
+	private boolean required;
 
 	public SimpleQuoteManagedBean() {
 		super();
@@ -1282,6 +1283,18 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	 */
 	public void setSupplierViewBtn(boolean supplierViewBtn) {
 		this.supplierViewBtn = supplierViewBtn;
+	}
+	/**
+	 * @return the required
+	 */
+	public boolean isRequired() {
+		return required;
+	}
+	/**
+	 * @param required the required to set
+	 */
+	public void setRequired(boolean required) {
+		this.required = required;
 	}
 	
 }

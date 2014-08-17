@@ -1089,6 +1089,8 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 		getManagedBean().setRootZoneTree(
 				LocationSingleton.getInstance().buildLocationPopupTree(getManagedBean().getDefaultCountryId(), null,
 						null, null, null, locationLevel, TplSpecZoneLoc.class));
+		// zone required validation
+		getManagedBean().setRequired(Boolean.TRUE);
 	}
 	
    /**
@@ -1157,6 +1159,9 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 							districts, divisions, cities ,TplSpecZoneLoc.class));
 		}
 		this.getManagedBean().setZoneIndex(-1);
+		
+		// hide zone location popup
+		RequestContext.getCurrentInstance().execute("ZoneLocation.hide();");
 	}
 	
    /**
@@ -2401,6 +2406,14 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 		return "catalogueSearch";
 	}
 	
+	
+	public void cancelZonePopUp() {
+		log.info("cancelZonePopUp");
+		RequestContext.getCurrentInstance().execute("ZoneLocation.hide();");
+		// zone required validation
+		getManagedBean().setRequired(Boolean.FALSE);
+	}
+
 	/**
 	 * Get parameter code select items by parameter type for radio buttons.
 	 * 
