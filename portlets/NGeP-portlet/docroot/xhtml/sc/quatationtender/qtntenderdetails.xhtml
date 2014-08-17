@@ -15,7 +15,7 @@
 						test="#{qTDetailBB.managedBean.qt.brandNew}">
 						<p:selectOneMenu value="#{qTDetailBB.managedBean.qt.qtType}"
 							style="width: 178px;margin-bottom: 5px;"
-							disabled="#{qTDetailBB.managedBean.panelItem eq 'Yes'}">
+							disabled="#{qTDetailBB.managedBean.qt.panel eq true}">
 							<f:selectItems
 								value="#{qTDetailBB.retrieveParameterDescByType(ParameterTypeConst.quotationTenderType)}"
 								var="parameter" itemLabel="#{parameter.codeName}"

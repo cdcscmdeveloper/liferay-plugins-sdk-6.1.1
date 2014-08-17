@@ -14,7 +14,8 @@
 					<c:if
 						test="#{specificationBackingBean.managedBean.taskName ne 'Specification Approval'}">
 						<p:commandButton value="#{lbl['lbl.sc.spec.back']}"
-							style="float:left;" icon="ui-icon-back" update="@form"
+							style="float:left;" icon="ui-icon-back"
+							update="@([id$=panelItemGroupList])"
 							action="#{specificationBackingBean.businessOwnerBackAction}" />
 
 					</c:if>

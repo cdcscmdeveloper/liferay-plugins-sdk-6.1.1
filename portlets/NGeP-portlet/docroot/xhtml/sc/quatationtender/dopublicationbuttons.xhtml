@@ -7,35 +7,38 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<p:panel>
-		<div align="right">
-			<table>
-				<tr>
-					<td align="right"><p:commandButton
-							value="#{lbl['lbl.so.save']}"
-							action="#{qTDetailBB.saveQtDetailsAction}" process="@all"
-							icon="ui-icon-save" update="@all" /> <c:if
-							test="#{qTDetailBB.managedBean.taskId eq null}">
-							<p:commandButton value="#{lbl['lbl.so.submit']}"
-								action="#{qTDetailBB.submitQTDetailsAction}" process="@all"
-								icon="ui-icon-submit" update="@all" />
-						</c:if> <c:if test="#{qTDetailBB.managedBean.taskId ne null}">
-							<ui:repeat var="bpmAction"
-								value="#{qTDetailBB.managedBean.outComes}">
-								<ui:param name="buttonLabel"
-									value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-								<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
-									styleClass="ui-button"
-									icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
-									action="#{qTDetailBB.updateBpmTask(bpmAction)}" />
-							</ui:repeat>
-						</c:if> <p:button value="#{lbl['lbl.so.cancelbtn']}"
-							style="float:right;margin-right: 12px;" icon="ui-icon-cancel" />
-					</td>
-				</tr>
-			</table>
-		</div>
-		
-		
+		<c:if
+			test="#{qTDetailBB.managedBean.qt.qtStatus.statusId ne QTStatusConst.QT_CANCELLED}">
+			<div align="right">
+				<table>
+					<tr>
+
+						<td align="right"><p:commandButton
+								value="#{lbl['lbl.so.save']}"
+								action="#{qTDetailBB.saveQtDetailsAction}" process="@all"
+								icon="ui-icon-save" update="@all" /> <c:if
+								test="#{qTDetailBB.managedBean.taskId eq null}">
+								<p:commandButton value="#{lbl['lbl.so.submit']}"
+									action="#{qTDetailBB.submitQTDetailsAction}" process="@all"
+									icon="ui-icon-submit" update="@all" />
+							</c:if> <c:if test="#{qTDetailBB.managedBean.taskId ne null}">
+								<ui:repeat var="bpmAction"
+									value="#{qTDetailBB.managedBean.outComes}">
+									<ui:param name="buttonLabel"
+										value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+									<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
+										styleClass="ui-button"
+										icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
+										action="#{qTDetailBB.updateBpmTask(bpmAction)}" />
+								</ui:repeat>
+							</c:if> <p:button value="#{lbl['lbl.so.cancelbtn']}"
+								style="float:right;margin-right: 12px;" icon="ui-icon-cancel" />
+						</td>
+					</tr>
+				</table>
+			</div>
+		</c:if>
+
 
 
 	</p:panel>

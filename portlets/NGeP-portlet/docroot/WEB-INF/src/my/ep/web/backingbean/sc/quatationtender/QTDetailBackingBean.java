@@ -514,7 +514,10 @@ public class QTDetailBackingBean extends
 			if (QTStatusConst.QT_PENDING_APPOINT_BO.equals(selectedScQt
 					.getQtStatus().getStatusId())
 					|| QTStatusConst.QT_PENDING_SPECIFICATION_PREPARATION
-							.equals(selectedScQt.getQtStatus().getStatusId())) {
+							.equals(selectedScQt.getQtStatus().getStatusId())
+					|| (QTStatusConst.QT_CANCELLED.equals(selectedScQt
+							.getQtStatus().getStatusId()) && null == selectedScQt
+							.getQtType())) {
 				ScQtCommittee committee = getQtCommiteDtlsByQtIdNType("BO",
 						selectedScQt.getQtId());
 				List<ScQtCommittee> qtCommittee = new ArrayList<ScQtCommittee>();
@@ -891,7 +894,7 @@ public class QTDetailBackingBean extends
 					if (null != deductionClauses && !deductionClauses.isEmpty()) {
 						for (ScQtDeductionClause deductionClause : deductionClauses) {
 							deductionClause.setScQtDeduction(deduction);
-							
+
 						}
 						deduction.setScQtDeductionClauses(deductionClauses);
 					}
@@ -901,6 +904,7 @@ public class QTDetailBackingBean extends
 			scQt.setScQtDeductions(deductionList);
 
 			// Setting the Documents to qtdetails.
+			
 			List<ScQtDocReport> scQtDocReportsList = null;
 			List<ScQtDocReport> docReportsList = getManagedBean().getScQtDocReportList();
 			if (docReportsList != null && !docReportsList.isEmpty()) {
@@ -999,6 +1003,10 @@ public class QTDetailBackingBean extends
 			List<SearchFilterBean> searchFilterBean = new ArrayList<SearchFilterBean>();
 			String qtTitle = qtnTenderSearchBean.getQtTitle();
 			if (!StringUtils.isBlank(qtTitle)) {
+				qtSearchBean.getDataFilterBeans().add(
+						new SearchFilterBean(QTConstants.QT_TITILE,
+								SearchOperator.OPERATOR_LIKE.value(), qtTitle,
+								true));
 				qtSearchBean.getDataFilterBeans().add(new SearchFilterBean(QTConstants.QT_TITILE, SearchOperator.OPERATOR_LIKE.value(), qtTitle, true));
 			}
 			String qtNumber = qtnTenderSearchBean.getQtNo();
@@ -1011,7 +1019,10 @@ public class QTDetailBackingBean extends
 			}
 			String procurementMode = qtnTenderSearchBean.getProcurementMode();
 			if (!StringUtils.isBlank(procurementMode)) {
-				qtSearchBean.getDataFilterBeans().add(new SearchFilterBean("procurementMode.parameterCode", SearchOperator.OPERATOR_EQUALS.value(), procurementMode));
+				qtSearchBean.getDataFilterBeans().add(
+						new SearchFilterBean("procurementMode.parameterCode",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								procurementMode));
 			}
 			Date fromCreatedDate = qtnTenderSearchBean.getFromCreatedDate();
 			Date toCreatedDate = qtnTenderSearchBean.getToCreatedDate();
@@ -1149,7 +1160,7 @@ public class QTDetailBackingBean extends
 			try {
 				qTBriefingSO = (IQTBriefingSO) BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-							IQTBriefingSO.class);
+								IQTBriefingSO.class);
 				String languageCode = new FacesScopes().getUserLocale()
 						.getLanguage();
 				BriefingReqDTO reqDTO = new BriefingReqDTO();
@@ -1181,7 +1192,7 @@ public class QTDetailBackingBean extends
 							zoneBeans.add(briefingZoneBean);
 						}
 					}
-					this.getManagedBean().setBriefingZoneBean(zoneBeans);					
+					this.getManagedBean().setBriefingZoneBean(zoneBeans);
 					initializeRemarks(zoneBeans.get(0).getScQtBsv(), zoneBeans
 							.get(0).getScQtBsv().getBsvRemarks(),
 							ScQtBSVRemark.class);
@@ -1829,7 +1840,8 @@ public class QTDetailBackingBean extends
 			IQTDetailSO detailSO;
 			QuationTenderResDTO resDTO = null;
 			try {
-				detailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+				detailSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 				reqDTO.setQtId(getManagedBean().getQt().getQtId());
 				List<ScQtDocReport> scQtDocReports = new ArrayList<ScQtDocReport>();

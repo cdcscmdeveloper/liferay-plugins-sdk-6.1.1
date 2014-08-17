@@ -13,13 +13,17 @@
 			value="#{qTDeductionPaymentBackingBean.managedBean.scQtDeductionList}"
 			selection="#{qTDeductionPaymentBackingBean.managedBean.selectedScQtDeduction}"
 			rowKey="#{scQtDeduction}" rowIndexVar="rowIndex"
-			selectionMode="single" rowSelectListener="#{qTDeductionPaymentBackingBean.retrieveDeductionCluses}"  
-                 onRowSelectUpdate="@([id$=clausePnl])" >
+			selectionMode="single">
 
 			<p:ajax event="rowSelect" partialSubmit="true" process="@this"
 				listener="#{qTDeductionPaymentBackingBean.retrieveDeductionCluses}"
 				update="@([id$=clausePnl])" />
-			
+
+			<p:ajax event="rowUnselect" partialSubmit="true"
+				process="@this,:form:clausePnl" update="@([id$=clausePnl])"
+				listener="#{qTDeductionPaymentBackingBean.rowUnselectEvent}" />
+			<p:ajax event="rowUnselect" partialSubmit="true"
+				process="@this,:form:clausePnl" update=":form:clausePnl" />
 
 			<ac:paginator for="deductPaymentTblId" />
 
@@ -84,16 +88,16 @@
 						<h:outputText value="* " styleClass="mandatory" />
 						<h:outputText value="#{lbl['lbl.sc.deduction.clause']}" />
 					</f:facet>
-					<ui:fragment						rendered="#{qTDeductionPaymentBackingBean.managedBean.selectedScQtDeduction.deductionType.parameterCode eq ParameterConst.deductionTypeOthers}">
+					<ui:fragment
+						rendered="#{qTDeductionPaymentBackingBean.managedBean.selectedScQtDeduction.deductionType.parameterCode eq ParameterConst.deductionTypeOthers}">
 
 						<p:inputTextarea value="#{scQtDeductionClause.clauseDesc}"
 							cols="170" rows="2" maxlength="500" style=" margin-bottom:5px;" />
 					</ui:fragment>
-					<ui:fragment						rendered="#{qTDeductionPaymentBackingBean.managedBean.selectedScQtDeduction.deductionType.parameterCode ne ParameterConst.deductionTypeOthers}">
+					<ui:fragment
+						rendered="#{qTDeductionPaymentBackingBean.managedBean.selectedScQtDeduction.deductionType.parameterCode ne ParameterConst.deductionTypeOthers}">
 
-						<h:outputText
-							value="#{scQtDeductionClause.pmClause.clauseDesc}" 
-							  />
+						<h:outputText value="#{scQtDeductionClause.pmClause.clauseDesc}" />
 
 
 					</ui:fragment>

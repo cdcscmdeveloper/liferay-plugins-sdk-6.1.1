@@ -1045,14 +1045,23 @@ public class QTBusinessOwnerBackingBean extends
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 	}
 
-	/** 
+	/**
 	 * To cancle the QT. need to add logic for cancel update bpm
+	 * 
 	 * @return
 	 */
 	public String cancelQTDetails() {
 		ScQt qt = prepareBOInfo();
-		qt.setScQtStatus(null);
-		qt.setRecordStatusFlg(DbValueConst.RECORD_STATUS_CANCELLED);
+		ScQtStatus qtStatus = new ScQtStatus();
+		qtStatus.setScQt(qt);
+		PmStatus status = new PmStatus();
+		status.setStatusId(QTStatusConst.QT_CANCELLED);
+		qtStatus.setPmStatus(status);
+		qtStatus.setCurrent(true);
+		qtStatus.setDocType(QTConstants.DOCTYPE_QT);
+		List<ScQtStatus> qtStatuses = new ArrayList<ScQtStatus>();
+		qtStatuses.add(qtStatus);
+		qt.setScQtStatus(qtStatuses);
 		QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
 		quationTenderReqDTO.setQtdetail(qt);
 
@@ -1075,13 +1084,11 @@ public class QTBusinessOwnerBackingBean extends
 															getParameterDesc(
 																	ParameterTypeConst.DOCUMENT_TYPES,
 																	ParameterConst.DOCTYPE_QUOTATION),
-															this.getManagedBean()
-																	.getQt()
+															resDTO.getQtDetail()
 																	.getQtNo() },
 													MessageUtils.BUNDLE_COMMON_MESSAGES,
 													new FacesScopes()
 															.getUserLocale())));
-			return CommonUIConst.ACKNOWLEDGE_PAGE;
 		}
 		return null;
 	}
