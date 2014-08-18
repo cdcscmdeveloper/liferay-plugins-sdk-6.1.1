@@ -320,9 +320,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			this.getManagedBean().setSmBusinessAdd(this.getManagedBean().getSmPermenantAdd());
 		}
 		
-		//validate email in smPersonnel
-		this.checkExistEmailInPersonnel(smPersonnel.getEmail());
-		
 		//Validate IC Length
 		this.retrieveIdentityTypeMap();
 		PmParameter personnelIDType = (PmParameter) identityType.get(smPersonnel.getIdentificationTypeId());
@@ -384,6 +381,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			log.info(e.getMessage());
 		}
 		
+		//check Exist email in smPersonnel
+		this.checkExistEmailInPersonnel(smPersonnel.getEmail());
 		
 		if (smAppl.getApplType().equals(SupplierManagementConst.ACC_BASIC)) {
 			smAppl.setSupplierType(SupplierManagementConst.STYPE_BASIC);
