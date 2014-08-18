@@ -19,13 +19,13 @@
 					<p:ajax event="rowSelectCheckbox" update="@this" />
 					<p:column selectionMode="multiple" disabledSelection="#{!role.brandNew}" style="width:2%" />
 				    <p:column headerText="#{lbl['lbl.pm.profiles.authorisation.role']}" >
-			          	#{profileManagementBackingBean.getRoleDescByRoleCode(role.roleCode)}
+			          	#{profileManagementBackingBean.getRoleDescByRoleCode(role.pmRole.roleCode)}
 			        </p:column>
 			        <p:column headerText="#{lbl['lbl.pm.profiles.authorisation.apprlimit']}" > 
-			          	<p:inputText styleClass="ppDisplayTextS" value="#{role.approverLimit}" />
+			          	<p:inputText styleClass="ppDisplayTextS" value="#{role.approvalLimit}" />
 			        </p:column>
 			        <p:column headerText="#{lbl['lbl.pm.profiles.authorisation.Status']}"> 
-				  	 	<p:selectOneMenu value="#{orgUnit.recordStatusFlg}">  
+				  	 	<p:selectOneMenu value="#{role.recordStatusFlg}">  
 			            	<f:selectItems value="#{profileManagementBackingBean.getStatusOptions()}" />
 			          	</p:selectOneMenu> 
 			        </p:column>
@@ -36,15 +36,14 @@
 					<p:commandButton action="#{profileManagementBackingBean.getAvailbleUserRole}"
 					  	value="#{lbl['lbl.btn.add']}" oncomplete="dlRoleOptions.show();" update=":form:opRoleOptions"/>&#160;
 			        <p:commandButton value="#{lbl['lbl.btn.delete']}" />
-			        <p:commandButton action="#{profileManagementBackingBean.test}"
-					  	value="testtest" />&#160;
-				</div>	  
+			  
+		        </div>
 	      	</p:tab>  
 	      		
 			        
 	      	<!-- Receiving Address -->
 		  	<p:tab title="#{lbl['lbl.pm.profiles.authorisation.receiving.address']}">	
-				<p:dataTable editable="true" style="width:100%" widgetVar="receivingAddService">	          
+				<p:dataTable id="dtReceiveAddr" editable="true" style="width:100%" widgetVar="receivingAddService">	          
 				    <p:column headerText="#{lbl['lbl.pm.profiles.authorisation.addname']}" > 
 			        </p:column>
 			        <p:column headerText="#{lbl['lbl.pm.profiles.userdetails.status']}" > 
@@ -53,8 +52,7 @@
 		        <br/>
 				<br/>
 				<div class="ppRightBtn">
-					<p:commandButton value="#{lbl['lbl.btn.add']}"
-				     	oncomplete="receivingAddress.show();"/>&#160;
+					<p:commandButton value="#{lbl['lbl.btn.add']}" oncomplete="receivingAddress.show();"/>&#160;
 		        	<p:commandButton value="#{lbl['lbl.btn.delete']}" />
 		      	 </div>
 	      	</p:tab> 	  	      

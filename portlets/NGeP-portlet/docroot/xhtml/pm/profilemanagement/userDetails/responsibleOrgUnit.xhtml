@@ -21,32 +21,32 @@
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />      
 			     	<f:selectItems value="#{profileManagementBackingBean.getOrgTypeList()}" 
 			     		var="obj" itemValue="#{obj.pmParameter.parameterId}" itemLabel="#{obj.codeName}"/>  
-			     	<p:ajax event="change" update="lovResOrg:lovResOrg"/> 
+			     	<p:ajax event="change" listener="#{profileManagementBackingBean.changeResOrg(index)}" 
+			     		update="lovResOrg:lovResOrg, dtOrgUnit, :form:tvRoleReceivingAddr:dtRoles, :form:tvRoleReceivingAddr:dtReceiveAddr"/> 
 	            </p:selectOneMenu>		     
 	        </p:column>	 
 		    <p:column headerText="#{lbl['lbl.pm.profiles.resorg.table.code']}" >        
-	            <ac:lov id="lovResOrg" lovId="PM_ORG_PROFILE" styleClass="ppDisplayTextS" 
+	            <ac:lov id="lovResOrg" lovId="PM_ORG_PROFILE" styleClass="ppDisplayCalS" 
 	            	update=":form:dtOrgUnit"
 					headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
 					saveObject="orgUnit.pmOrgProfile"
-					value="#{orgUnit.pmOrgProfile.pmOrgValidity.orgCode}"
+					value="#{orgUnit[index].pmOrgProfile.pmOrgValidity.orgCode}"
 					conditionField="orgTypeCode.parameterId^#{orgUnit.pmOrgProfile.orgTypeCode.parameterId}|recordStatus^1" >
-					<!-- conditionField="pmUserOrgs.pmUser.userId^#{planBackingBean.managedBean.userId}" -->
 				</ac:lov> 
 	        </p:column>
 	        <p:column headerText="#{lbl['lbl.pm.profiles.resorg.table.name']}" > 
        			#{orgUnit.pmOrgProfile.pmOrgValidity.orgName}
 	        </p:column>
 	        <p:column headerText="#{lbl['lbl.pm.profiles.resorg.table.effdate']}" > 
-			  	<p:calendar id="effDateId" value="#{orgUnit.effDate}" styleClass="ppDisplayTextS" 
+			  	<p:calendar id="effDateId" value="#{orgUnit.effDate}" styleClass="ppDisplayCalS" 
 					showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 	        </p:column>
 	        <p:column headerText="#{lbl['lbl.pm.profiles.resorg.table.expdate']}" > 
-			  	<p:calendar id="expDateId" value="#{orgUnit.expDate}" styleClass="ppDisplayTextS"
+			  	<p:calendar id="expDateId" value="#{orgUnit.expDate}" styleClass="ppDisplayCalS"
 					showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 	        </p:column>
 	        <p:column headerText="#{lbl['lbl.pm.profiles.userdetails.status']}" width="5%"> 
-		       	<p:selectOneMenu value="#{orgUnit.recordStatusFlg}">  
+		       	<p:selectOneMenu value="#{orgUnit.recordStatusFlg}" styleClass="ppDropDownWidthXS">  
 	            	<f:selectItems value="#{profileManagementBackingBean.getStatusOptions()}" />
 	          	</p:selectOneMenu>         
 	        </p:column>        
