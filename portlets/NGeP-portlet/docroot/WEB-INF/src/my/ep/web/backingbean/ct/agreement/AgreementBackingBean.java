@@ -103,6 +103,7 @@ import my.ep.web.util.AddressUtils;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.NumberWordUtil;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.template.DocumentGenerator;
 
@@ -1418,10 +1419,10 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 							.getCurrentContractVer().getCtContractValue()
 							.getContractAmount())
 							+ "");
-			context.put("contractValueText", getManagedBean().getCtContract()
+			context.put("contractValueText", NumberWordUtil.convert(getManagedBean().getCtContract()
 					.getCurrentContractVer().getCtContractValue()
-					.getContractAmount()
-					+ "");
+					.getContractAmount().toString())
+					);
 			context.put("isBondReq", getManagedBean().getCtContract()
 					.isBondReq());
 			if (getManagedBean().getCtContract().isBondReq()) {
@@ -1431,9 +1432,9 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 							nf.format(getManagedBean().getCtContract().getLoa()
 									.getBondAmt())
 									+ "");
-					context.put("performanceBondValueText", getManagedBean()
-							.getCtContract().getLoa().getBondAmt()
-							+ "");
+					context.put("performanceBondValueText", NumberWordUtil.convert(getManagedBean()
+							.getCtContract().getLoa().getBondAmt().toString())
+							);
 				}
 			}
 		} else if (ContractConst.TEMPLATE_AGREEMENT_PARTY
