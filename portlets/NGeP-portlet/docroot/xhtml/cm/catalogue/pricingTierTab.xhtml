@@ -31,7 +31,7 @@
 					#{lbl['lbl.cm.to.qty']}
 				</f:facet>
 				<p:inputText value="#{price.toQty}" size="5" disabled="#{price.standardDisabled}">
-				<p:ajax event="change" listener="#{catalogueBackingBean.updateToQty(rowIndex)}" update=":form:pricingTabID:headerTabId:tierId:pricingTierID, deleteLink, errorLink" />
+				<p:ajax event="change" listener="#{catalogueBackingBean.updateToQty(rowIndex)}" update="promoLink, cloneLink, deleteLink, errorLink" />
                 </p:inputText>
             </p:column>
 			<p:column>

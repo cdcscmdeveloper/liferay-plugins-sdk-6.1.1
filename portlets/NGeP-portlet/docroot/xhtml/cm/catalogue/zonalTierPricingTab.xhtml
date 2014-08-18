@@ -51,7 +51,7 @@
 					#{lbl['lbl.cm.to.qty']}
 				</f:facet>
 				<p:inputText value="#{tier.toQty}" size="4" disabled="#{tier.standardDisabled}">
-				<p:ajax event="change" listener="#{catalogueBackingBean.updateZonalTierToQty(rowIndex)}" update=":form:pricingTabID:headerTabId:zonalTierId:cmZonalTierPricingsId, zTPromoLink, zTCloneLink, zTErrorLink, zTDeleteLink" />
+				<p:ajax event="change" listener="#{catalogueBackingBean.updateZonalTierToQty(rowIndex)}" update="zTPromoLink, zTCloneLink, zTErrorLink, zTDeleteLink" />
 				</p:inputText>
 			</p:column>
 			<p:column>
