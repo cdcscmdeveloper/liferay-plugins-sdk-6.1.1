@@ -1466,6 +1466,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				cell.setCellValue((Date) colVal);
 			} else if (colVal instanceof Long) {
 				cell.setCellValue(((Long) colVal).doubleValue());
+			} else if (colVal instanceof Integer) {
+				cell.setCellValue(((Integer) colVal).intValue());
 			}
 
 		}
