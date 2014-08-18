@@ -1866,6 +1866,9 @@ public class SpecificationBackingBean extends
 							SequenceList);
 					List<ScQtCheckList> convertList = new ArrayList<ScQtCheckList>(
 							displayNames.values());
+					if(null==convertList){
+						convertList=new ArrayList<ScQtCheckList>();
+					}
 					this.getManagedBean().getScQtCheckSt2techProposal()
 							.addAll(convertList);
 					this.getManagedBean().getScQtCheckSt2techProposal()
@@ -2021,6 +2024,9 @@ public class SpecificationBackingBean extends
 							SequenceList);
 					List<ScQtCheckList> convertList = new ArrayList<ScQtCheckList>(
 							displayNames.values());
+					if(null==convertList){
+						convertList=new ArrayList<ScQtCheckList>();
+					}
 					this.getManagedBean().getScQtCheckSt2financeProposalList()
 							.addAll(convertList);
 					this.getManagedBean().getScQtCheckSt2financeProposalList()
@@ -2220,6 +2226,9 @@ public class SpecificationBackingBean extends
 						SequenceList);
 				List<ScQtCheckList> convertList = new ArrayList<ScQtCheckList>(
 						displayNames.values());
+				if (null == convertList) {
+					convertList = new ArrayList<ScQtCheckList>();
+				}
 				this.getManagedBean().getTechnicalScoring().addAll(convertList);
 				this.getManagedBean().getTechnicalScoring()
 						.addAll(nonSequenceList);
@@ -2318,7 +2327,8 @@ public class SpecificationBackingBean extends
 				}
 
 			}
-
+			this.getManagedBean().setFinancialScoring(
+					new ArrayList<ScQtCheckList>());
 			if (null != checklist && !checklist.isEmpty()) {
 
 				List<ScQtCheckList> localChecklist = new ArrayList<ScQtCheckList>();
@@ -2373,8 +2383,7 @@ public class SpecificationBackingBean extends
 										.getScore());
 					}
 					tmpCheckList.setTitle(sb.toString());
-					this.getManagedBean().setFinancialScoring(
-							new ArrayList<ScQtCheckList>());
+					
 
 					List<ScQtScoreOfferPrice> offerPrice = tmpCheckList
 							.getQtScoreWeightage().getScQtScoreOfferPrices();
@@ -2464,6 +2473,9 @@ public class SpecificationBackingBean extends
 						SequenceList);
 				List<ScQtCheckList> convertList = new ArrayList<ScQtCheckList>(
 						displayNames.values());
+				if (null == convertList) {
+					convertList = new ArrayList<ScQtCheckList>();
+				}
 				this.getManagedBean().getFinancialScoring().addAll(convertList);
 				this.getManagedBean().getFinancialScoring()
 						.addAll(nonSequenceList);
@@ -7894,39 +7906,44 @@ public class SpecificationBackingBean extends
 
 		this.getManagedBean().setCtpanelSupplier(panelSupplier);
 
-		List<SmPersonnel> list = panelSupplier.getSupplier().getSmAppl()
-				.getSmPersonnels();
-		if (null != list) {
+		if (null != panelSupplier.getSupplier()
+				&& null != panelSupplier.getSupplier().getSmAppl()
+				&& null != panelSupplier.getSupplier().getSmAppl()
+						.getSmPersonnels()) {
+			List<SmPersonnel> list = panelSupplier.getSupplier().getSmAppl()
+					.getSmPersonnels();
+			if (null != list) {
 
-			for (SmPersonnel smPersonnel : list) {
-				getManagedBean().setPersonnel(smPersonnel);
-			}
-			SmPersonnel supplierHQPersonnel = this.getManagedBean()
-					.getPersonnel();
-			// SmAppl appll= supplierHQPersonnel.getSmAppl();
+				for (SmPersonnel smPersonnel : list) {
+					getManagedBean().setPersonnel(smPersonnel);
+				}
+				SmPersonnel supplierHQPersonnel = this.getManagedBean()
+						.getPersonnel();
+				// SmAppl appll= supplierHQPersonnel.getSmAppl();
 
-			SmCompanyBasic smCompanyBasic = panelSupplier.getSupplier()
-					.getSmAppl().getSmCompanyBasic();
+				SmCompanyBasic smCompanyBasic = panelSupplier.getSupplier()
+						.getSmAppl().getSmCompanyBasic();
 
-			// System.out.println("INcomeTax No : " +
-			// smCompanyBasic.getIncomeTaxNo());
-			if (null != smCompanyBasic) {
-				if (null != smCompanyBasic.getSmCompanyAddresses()) {
-					for (SmCompanyAddress smCompanyAddress : smCompanyBasic
-							.getSmCompanyAddresses()) {
-						if (null != smCompanyAddress)
-							if (AddressType.CONTACT_ADDRESS.value().equals(
-									smCompanyAddress.getAddressType())) {
+				// System.out.println("INcomeTax No : " +
+				// smCompanyBasic.getIncomeTaxNo());
+				if (null != smCompanyBasic) {
+					if (null != smCompanyBasic.getSmCompanyAddresses()) {
+						for (SmCompanyAddress smCompanyAddress : smCompanyBasic
+								.getSmCompanyAddresses()) {
+							if (null != smCompanyAddress)
+								if (AddressType.CONTACT_ADDRESS.value().equals(
+										smCompanyAddress.getAddressType())) {
 
-								getManagedBean().setSupplierBranch("HQ");
-								getManagedBean().setSupplierAddress(
-										smCompanyAddress.getSmAddress());
-								getManagedBean().setSupplierContact(
-										supplierHQPersonnel.getName());
-								getManagedBean().setSupplierEmail(
-										supplierHQPersonnel.getEmail());
-								break;
-							}
+									getManagedBean().setSupplierBranch("HQ");
+									getManagedBean().setSupplierAddress(
+											smCompanyAddress.getSmAddress());
+									getManagedBean().setSupplierContact(
+											supplierHQPersonnel.getName());
+									getManagedBean().setSupplierEmail(
+											supplierHQPersonnel.getEmail());
+									break;
+								}
+						}
 					}
 				}
 			}
