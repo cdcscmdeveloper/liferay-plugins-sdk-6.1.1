@@ -2,6 +2,7 @@ package my.ep.web.backingbean.pm.searchalluser;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.constant.ModuleCodeConst;
@@ -28,12 +29,10 @@ import org.apache.log4j.Logger;
 @ManagedBean(name = "searchAllUserBackingBean")
 @ViewScoped //@RequestScoped
 public class SearchAllUserBackingBean extends BaseBackingBean<SearchAllUserManagedBean> {
-
+	public static final String NAV_TO_SEARCH = "/xhtml/pm/searchAllUser/tempSearch.xhtml"; // main page for portlet
 	private static final Logger logger = EpLogger
 			.getLogger(SearchAllUserBackingBean.class);
 
-	
-	
 	
 	public SearchAllUserBackingBean(){
 		
@@ -48,15 +47,6 @@ public class SearchAllUserBackingBean extends BaseBackingBean<SearchAllUserManag
 	
 	}
 	
-	/**
-	 * get faces scopes
-	 * @return FacesScopes
-	 */
-	private FacesScopes getFacesScopes(){
-		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes;
-	}
-	
 
 	private void debugLogger(Object message) {
 		if (logger.isDebugEnabled()) {
@@ -64,9 +54,29 @@ public class SearchAllUserBackingBean extends BaseBackingBean<SearchAllUserManag
 		}
 		logger.info(message);
 	}
+	
+	/**
+	 * load clean view for search all user
+	 */
+	public void preLoadingSearchUser(){
+		logger.info("preLoadingUserProfile");
+		this.getManagedBean().setLoginId(null);
+		this.resetSearchInfo();
+		FacesContext fc = FacesContext.getCurrentInstance(); 
+	    fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_SEARCH);
+	}
 
+	private void resetSearchInfo(){
+		this.getManagedBean().setResultStatus(null);
+		this.getManagedBean().setOimRoleList(null);
+		this.getManagedBean().setPmRoleList(null);
+		this.getManagedBean().setLiferayRoleList(null);
+	}
+	
 	public void tempSearchUserProfile() throws Exception{
 		logger.info("tempSearchUserProfile start");
+		this.resetSearchInfo();
+		
 		String loginId = this.getManagedBean().getLoginId();
 		
 		if(StringUtils.isBlank(loginId)){
@@ -74,7 +84,6 @@ public class SearchAllUserBackingBean extends BaseBackingBean<SearchAllUserManag
 		}
 		
 		try{
-	
 			UserReqDTO userReqDTO = new UserReqDTO();
 			UserResDTO resDto = null;
 			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
