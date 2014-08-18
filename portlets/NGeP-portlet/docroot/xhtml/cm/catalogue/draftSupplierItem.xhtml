@@ -17,10 +17,10 @@
 
 	<div style="text-align: right;">
 		<p:commandButton value="#{lbl['lbl.cm.upload']}" icon="ui-icon-upload"
-			onclick="excelDialog.show(); clearInvalidFileMsg();" disabled="true" />
+			onclick="excelDialog.show(); clearInvalidFileMsg();"  />
 
 		<p:commandButton id="downloadLink" value="#{lbl['lbl.cm.download']}"
-			disabled="true"
+			
 			update=":form" icon="ui-icon-download" ajax="false">
 			<p:fileDownload value="#{catalogueBackingBean.file}" />
 		</p:commandButton>

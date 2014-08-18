@@ -1050,17 +1050,15 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 				row = rowIterator.next();
 
-				if ((row.getCell(12) == null || row.getCell(12)
-						.getStringCellValue().isEmpty())
-						&& (row.getCell(0) != null && !row.getCell(0)
-								.toString().isEmpty())) {
+				//uom
+				if ((row.getCell(12) == null || row.getCell(12).getStringCellValue().isEmpty())
+						&& (row.getCell(0) != null && !row.getCell(0).toString().isEmpty())) {
 					invalidDataMsg = invalidDataMsg.concat("Row" + rowNum
 							+ "\n");
 					count++;
 				} else {
 
-					if (row.getCell(0) != null
-							&& !row.getCell(0).toString().isEmpty()) {
+					if (row.getCell(0) != null && !row.getCell(0).toString().isEmpty()) {
 						supplierItemId = row.getCell(0).getNumericCellValue();
 						System.out.println("Supp Item Id");
 					} else {
@@ -1068,8 +1066,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					}
 
 					// CmSupplierItem catalogItem = new CmSupplierItem();
-					System.out.println("***********supplierItemId"
-							+ supplierItemId);
+					System.out.println("***********supplierItemId" + supplierItemId);
 					if (supplierItemId > 0) {
 						for (CmSupplierItem supplierItem : cmSupplierItems) {
 							if (supplierItem.getSupplierItemId() == supplierItemId) {
@@ -1093,58 +1090,69 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 											.setCmStandardPricing(cmStandardPricing);
 								}
 
-								if (row.getCell(7) != null) {
-									price = row.getCell(7)
-											.getNumericCellValue();
-									cmStandardPricing.setPrice(new BigDecimal(
-											price));
+								//price
+								if (row.getCell(7) != null && row.getCell(7).getCellType()==Cell.CELL_TYPE_NUMERIC) {
+									//log.info("row.getCell(7).getCellType() = "+row.getCell(7).getCellType());
+									price = row.getCell(7).getNumericCellValue();
+									cmStandardPricing.setPrice(new BigDecimal(price));
 								}
 
-								if (row.getCell(8) != null) {
-									if (row.getCell(8).getCellType() == Cell.CELL_TYPE_NUMERIC)
-										startDate = row.getCell(8)
-												.getDateCellValue();
-									else if (row.getCell(8).getCellType() == Cell.CELL_TYPE_STRING)
-										startDate = new SimpleDateFormat(
-												"dd/mm/yyyy").parse(row
-												.getCell(8)
-												.getStringCellValue());
+								//start date
+								if (row.getCell(8) != null && row.getCell(8).getCellType() == Cell.CELL_TYPE_NUMERIC) {
+									startDate = row.getCell(8).getDateCellValue();
+									cmStandardPricing.setStartDate(startDate);
+								}else if (row.getCell(8) != null && row.getCell(8).getCellType() == Cell.CELL_TYPE_STRING &&
+											!row.getCell(8).getStringCellValue().isEmpty()) {
+									startDate = new SimpleDateFormat("dd/mm/yyyy").parse(row.getCell(8).getStringCellValue());
 									cmStandardPricing.setStartDate(startDate);
 								}
+								
+								/*if (row.getCell(8) != null && !row.getCell(8).getStringCellValue().isEmpty()) {
+									//log.info("row.getCell(8).getCellType() = "+row.getCell(8).getCellType());
+									if (row.getCell(8).getCellType() == Cell.CELL_TYPE_NUMERIC)
+										startDate = row.getCell(8).getDateCellValue();
+									else if (row.getCell(8).getCellType() == Cell.CELL_TYPE_STRING)
+										startDate = new SimpleDateFormat("dd/mm/yyyy").parse(row.getCell(8).getStringCellValue());
+									
+									cmStandardPricing.setStartDate(startDate);
+								}*/
 
-								if (row.getCell(9) != null) {
-									if (row.getCell(9).getCellType() == Cell.CELL_TYPE_NUMERIC)
-										endDate = row.getCell(9)
-												.getDateCellValue();
-									else if (row.getCell(9).getCellType() == Cell.CELL_TYPE_STRING)
-										endDate = new SimpleDateFormat(
-												"dd/mm/yyyy").parse(row
-												.getCell(9)
-												.getStringCellValue());
+								//end date
+								if (row.getCell(9) != null && row.getCell(9).getCellType() == Cell.CELL_TYPE_NUMERIC) {
+									endDate = row.getCell(9).getDateCellValue();
+									cmStandardPricing.setEndDate(endDate);
+								}else if (row.getCell(9) != null && row.getCell(9).getCellType() == Cell.CELL_TYPE_STRING &&
+											!row.getCell(9).getStringCellValue().isEmpty()) {
+									startDate = new SimpleDateFormat("dd/mm/yyyy").parse(row.getCell(9).getStringCellValue());
 									cmStandardPricing.setEndDate(endDate);
 								}
+								
+								/*if (row.getCell(9) != null && !row.getCell(9).getStringCellValue().isEmpty()) {
+									//log.info("row.getCell(9).getCellType() = "+row.getCell(9).getCellType());
+									if (row.getCell(9).getCellType() == Cell.CELL_TYPE_NUMERIC)
+										endDate = row.getCell(9).getDateCellValue();
+									else if (row.getCell(9).getCellType() == Cell.CELL_TYPE_STRING)
+										endDate = new SimpleDateFormat("dd/mm/yyyy").parse(row.getCell(9).getStringCellValue());
+									
+									cmStandardPricing.setEndDate(endDate);
+								}*/
 
-								if (row.getCell(10) != null
-										&& !row.getCell(10).toString()
-												.isEmpty()) {
-									additionalItemDesc = row.getCell(10)
-											.toString();
-									supplierItem
-											.setItemDesc(additionalItemDesc);
+								//item desc
+								if (row.getCell(10) != null && !row.getCell(10).toString().isEmpty()) {
+									additionalItemDesc = row.getCell(10).toString();
+									supplierItem.setItemDesc(additionalItemDesc);
 								}
 
-								if (row.getCell(11) != null
-										&& !row.getCell(11).toString()
-												.isEmpty()) {
+								//frequency
+								if (row.getCell(11) != null && !row.getCell(11).toString().isEmpty()) {
 									frequency = row.getCell(11)
 											.getNumericCellValue();
 									supplierItem.setFrequency(new BigDecimal(
 											frequency));
 								}
-
-								if (row.getCell(12) != null
-										&& !row.getCell(12)
-												.getStringCellValue().isEmpty()) {
+								
+								//uom
+								if (row.getCell(12) != null && !row.getCell(12).getStringCellValue().isEmpty()) {
 
 									IUomSO uomSO = (IUomSO) BusinessDelegate
 											.getInstance().getServiceObject(
@@ -1179,6 +1187,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 									}
 								}
 
+								//model
 								if (row.getCell(13) != null
 										&& !row.getCell(13).toString()
 												.isEmpty()) {
@@ -1186,6 +1195,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 									supplierItem.setModelNumber(modelNo);
 								}
 
+								//sku number
 								if (row.getCell(14) != null
 										&& !row.getCell(14).toString()
 												.isEmpty()) {
@@ -1193,6 +1203,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 									supplierItem.setSkuNumber(skuNo);
 								}
 
+								//manufacturer no
 								if (row.getCell(15) != null
 										&& !row.getCell(15).toString()
 												.isEmpty()) {
@@ -1200,6 +1211,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 									supplierItem.setManufacturer(manfPartNo);
 								}
 
+								//min order
 								if (row.getCell(16) != null
 										&& !row.getCell(16).toString()
 												.isEmpty()) {
@@ -1209,6 +1221,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 											.intValue());
 								}
 
+								//max order
 								if (row.getCell(17) != null
 										&& !row.getCell(17).toString()
 												.isEmpty()) {
@@ -1218,6 +1231,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 											.intValue());
 								}
 
+								//lead time
 								if (row.getCell(18) != null
 										&& !row.getCell(18).toString()
 												.isEmpty()) {
