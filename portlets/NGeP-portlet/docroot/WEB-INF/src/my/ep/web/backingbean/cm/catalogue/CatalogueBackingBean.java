@@ -3671,16 +3671,21 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	public void popUpPricing(CmSupplierItem item) {
 
 		System.out.println("***************item*********************");
-		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
-				.getInstance().getServiceObject("cm", ICatalogueSO.class);
-
-		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
-		reqDTO.setSupplierId(item.getSmSupplier().getSupplierId());
-		CatalogueResDTO resDTO = catalogueSO.retrieveSupplierZoneBySuppId(reqDTO);
-		System.out.println("size:" + resDTO.getSupplierZoneLs().size());
-		this.getManagedBean().setSupplierZoneList(resDTO.getSupplierZoneLs());
-		this.getManagedBean().setSupplierItemObj(item);
-		this.getManagedBean().setTabActiveIndex(0);
+		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
+		
+		try{
+			CatalogueReqDTO reqDTO = new CatalogueReqDTO();
+			reqDTO.setSupplierId(item.getSmSupplier().getSupplierId());
+			CatalogueResDTO resDTO = catalogueSO.retrieveSupplierZoneBySuppId(reqDTO);
+			System.out.println("size:" + resDTO.getSupplierZoneLs().size());
+			this.getManagedBean().setSupplierZoneList(resDTO.getSupplierZoneLs());
+			this.getManagedBean().setSupplierItemObj(item);
+			this.getManagedBean().setTabActiveIndex(0);
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			catalogueSO = null;
+		}
 	}
 
 	public void findDistrict() {

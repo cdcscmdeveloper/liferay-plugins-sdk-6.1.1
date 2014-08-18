@@ -41,7 +41,7 @@
 							</h:panelGroup>
 							
 							<h:panelGroup rendered="#{fn:length(supplierItem.cmImages) > 0 }">
-								<p:graphicImage value="/image?imageName=#{supplierItem.smSupplier.epNo}/#{supplierItem.cmImages[0].imageName}" height="80px"></p:graphicImage>
+								<img src="/image?imageName=#{supplierItem.smSupplier.epNo}/#{supplierItem.cmImages[0].imagePath}" height="80px" />
 							</h:panelGroup>
 							
 							<ui:remove>
@@ -89,13 +89,13 @@
 						<tr height="31px"
 							style="border-bottom: 2px solid #FFFFFF !important;">
 							<td colspan="5" style="background-color: #f5f5f5;width:270px;">#{supplierItem.cmStandardPricing.price} 
-								<ui:remove>
+								
 								<p:commandLink
 									value="View All Prices"
 									action="#{catalogueBackingBean.popUpPricing(supplierItem)}"
 									oncomplete="morePrice.show()"
 									update=":form:morePrice"></p:commandLink>&#160;
-								</ui:remove>
+								
 							</td>
 						</tr>
 						<tr height="31px"
