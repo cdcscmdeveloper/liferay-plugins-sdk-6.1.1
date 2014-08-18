@@ -351,6 +351,8 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private int tempIndex;
 	private boolean ctzones = Boolean.FALSE;
 	private boolean selectPanelItem = Boolean.FALSE;
+	private Long specStatusId;
+	private boolean specSelectStats= Boolean.FALSE;
 
 	public SpecificationManagedBean() {
 		
@@ -4013,6 +4015,34 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectPanelItem(boolean selectPanelItem) {
 		this.selectPanelItem = selectPanelItem;
+	}
+
+	/**
+	 * @return the specStatusId
+	 */
+	public Long getSpecStatusId() {
+		return specStatusId;
+	}
+
+	/**
+	 * @param specStatusId the specStatusId to set
+	 */
+	public void setSpecStatusId(Long specStatusId) {
+		this.specStatusId = specStatusId;
+	}
+
+	/**
+	 * @return the specSelectStats
+	 */
+	public boolean isSpecSelectStats() {
+		return specSelectStats;
+	}
+
+	/**
+	 * @param specSelectStats the specSelectStats to set
+	 */
+	public void setSpecSelectStats(boolean specSelectStats) {
+		this.specSelectStats = specSelectStats;
 	}
 
 }
