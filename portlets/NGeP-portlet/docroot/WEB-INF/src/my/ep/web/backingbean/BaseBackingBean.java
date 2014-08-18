@@ -578,7 +578,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 
 	}
 	
-	public StreamedContent commonDownload(String path, String fileName) throws IOException {
+	public StreamedContent commonDownload(String path, String displayFileName) throws IOException {
 		String filePath = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
 		filePath += "/" + path;
 		
@@ -590,7 +590,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		response.setDateHeader("Expires", 0);
 //		response.setContentType("application/vnd.ms-excel");
 //		response.setHeader("Content-Transfer-Encoding", "binary");
-		response.setHeader("Content-Disposition", "attachment; filename="+fileName);
+		response.setHeader("Content-Disposition", "attachment; filename="+displayFileName);
 		response.setContentType("application/octet-stream");
 		response.flushBuffer();
 		
