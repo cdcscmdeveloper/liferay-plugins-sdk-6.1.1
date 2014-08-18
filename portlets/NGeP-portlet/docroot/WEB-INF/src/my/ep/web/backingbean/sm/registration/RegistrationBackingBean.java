@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.sm.registration;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,8 @@ import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
+import my.ep.biz.service.sm.common.myidentity.IMyIdentitySO;
+import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.registration.IRegistrationSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.EpPropertiesConst;
@@ -38,6 +41,10 @@ import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
+import my.ep.dto.sm.common.myidentity.MyIdentityReqDTO;
+import my.ep.dto.sm.common.myidentity.MyIdentityResDTO;
+import my.ep.dto.sm.personnel.PersonnelReqDTO;
+import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.registration.RegistrationReqDTO;
 import my.ep.dto.sm.registration.RegistrationResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
@@ -220,11 +227,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 
 		SmSupplierOwner suppOwner = this.getManagedBean().getSmSuppOwner();
-		//verifyWithMyIdentity(this.getManagedBean().getSmSuppOwner().getOwnerName(), this.getManagedBean().getSmBusinessAdd().getPostcode());
 		System.out.println("-----------Owner ID Type---------" + suppOwner.getIdentificationType().getParameterCode());
 		System.out.println("-----------Owner ID---------" + suppOwner.getIdentificationNo());
 		
-		validateIDFormat(suppOwner.getIdentificationNo(),suppOwner.getIdentificationType().getParameterCode());
+		this.validateIDFormat(suppOwner.getIdentificationNo(),suppOwner.getIdentificationType().getParameterCode());
 		
 		if(this.getManagedBean().getSmPersonnel().getPmCountry().isBrandNew()){
 			PmCountry nationality = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
@@ -314,14 +320,20 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			this.getManagedBean().setSmBusinessAdd(this.getManagedBean().getSmPermenantAdd());
 		}
 		
+		//validate email in smPersonnel
+		this.checkExistEmailInPersonnel(smPersonnel.getEmail());
+		
 		//Validate IC Length
 		this.retrieveIdentityTypeMap();
 		PmParameter personnelIDType = (PmParameter) identityType.get(smPersonnel.getIdentificationTypeId());
-		validateIDFormat(smPersonnel.getIdentificationNo(), personnelIDType.getParameterCode());
+		this.validateIDFormat(smPersonnel.getIdentificationNo(), personnelIDType.getParameterCode());
+		
+		//validate IC with MyIdentity
+		this.verifyWithMyIdentity(smPersonnel.getName(), smPersonnel.getIdentificationNo(), this.getManagedBean().getSmPermenantAdd().getPostcode());
 		
 		if(isExistEmailInPmUser(this.getManagedBean().getSmPersonnel().getEmail())){
+			System.out.println("In Pm User....");
 			throw new EpException(MessageConst.ERROR_721004);
-
 		}
 		
 		String loginID = smSupp.getBusinessType().equals(SupplierManagementConst.INDIVIDUAL_FLAG) ? smSupp.getRegNo() : this.getManagedBean().getSmPersonnel().getIdentificationNo();
@@ -329,6 +341,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			throw new EpException(MessageConst.ERROR_721005);
 
 		}
+
 		
 		// validate user's email existence at Liferay. 
 		try {
@@ -349,6 +362,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 //			e.printStackTrace();
 			log.info(e.getMessage());
 		}
+
 		
 		try {
 			
@@ -1109,6 +1123,31 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			return false;
 		}
 	}
+	
+	public void checkExistEmailInPersonnel(String email){
+		IPersonnelSO personnelSO = (IPersonnelSO) BusinessDelegate.getInstance().getServiceObject("sm", IPersonnelSO.class);
+		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+		reqDTO.setEmail(email);
+		log.info("******checkExistEmailInPersonnel STart********" + new Date());
+		PersonnelResDTO resDTO = personnelSO.retrievePersonnelByEmail(reqDTO);
+		log.info("******checkExistEmailInPersonnel end********" + new Date());
+		if(resDTO.getSmPersonnelList().size() > 0){
+			SmPersonnel personnel = resDTO.getSmPersonnelList().get(0);
+			System.out.println("---personnel email---" + personnel.getEmail());
+			System.out.println("---personnel created---" + personnel.getCreatedDate());
+			if(personnel.getRecordStatusFlg() == SupplierManagementConst.PENDING_ACT_STATUS){
+				long applDateInMilis = personnel.getCreatedDate().getTime();
+				long dayInMilis = 1000 * 60 * 60 * 24;
+				Date expiryDate = new Date(applDateInMilis + (7 * dayInMilis));
+
+				if(new Date().before(expiryDate)){
+					throw new EpException(MessageConst.ERROR_721019);
+				}
+			}else{
+				throw new EpException(MessageConst.ERROR_721004);
+			}
+		}
+	}
 
 	public boolean isExistUserByIdentificationNo(String idNo) {
 		System.out.println("*********retrieveUserByIdentificationNo**********" + idNo);
@@ -1262,17 +1301,19 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 
 			if(!identNo.matches("[0-9]+")){
 				throw new EpException(MessageConst.ERROR_721013);
-			}	
+			}
+			
 		}
 	}
 
-	/*public void verifyWithMyIdentity(String identificationNo, String postCode){
+	public void verifyWithMyIdentity(String name, String identificationNo, String postCode){
 		MyIdentityReqDTO reqDTO = new MyIdentityReqDTO();
 		IMyIdentitySO reqSO = BusinessDelegate.getInstance().getServiceObject("sm", IMyIdentitySO.class);
 		
 		reqDTO.setType("Online");
 		reqDTO.setNewIcNo(identificationNo);
 		reqDTO.setPostCode(postCode);
+		reqDTO.setName(name);
 		
 		MyIdentityResDTO resDTO = reqSO.myIdentityVerification(reqDTO);
 		System.out.println("verifyWithMyIdentity>>>>" + resDTO.getSeverity() + ">>code>>" + resDTO.getStatusCode());
@@ -1288,7 +1329,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				throw new EpException(MessageConst.ERROR_MYIDENTITY_70032);
 			}
 		}
-	}*/
+	}
 	
 	public void pmStateDropdownValues() {
 		//List<SelectItem> itemList = new ArrayList<SelectItem>();
