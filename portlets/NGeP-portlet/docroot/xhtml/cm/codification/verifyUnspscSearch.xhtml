@@ -9,13 +9,12 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
-		<p:messages id="searchToRecommendMsgId" showDetail="true"
-			autoUpdate="true" closable="true" showSummary="false"></p:messages>
+	
+		<p:messages id="searchToRecommendMsgId" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
+			
 		<h:panelGroup id="cmUNSPSCsearchID">
 
-
-			<ui:include src="DocumentHeader.xhtml"></ui:include>
-
+			<ui:include src="DocumentHeader.xhtml" />
 
 			<p:panel header="Request Info" toggleable="true">
 
@@ -125,14 +124,16 @@
 							rendered="#{!(codificationBackingBean.productCode(unspscObj.unspscCode)) and (unspscObj.unspscLevel eq 3)}">
 						
 							#{unspscObj.unspscCode}
-							</p:commandLink>
+							<f:param name="currentTaskName" value="#{unspscCodeBackingBean.managedBean.taskName}" />	
+						</p:commandLink>
 
 						<p:commandLink
 							action="#{codificationBackingBean.verifyExtensionSearch(unspscObj)}"
 							rendered="#{codificationBackingBean.productCode(unspscObj.unspscCode) and (unspscObj.unspscLevel eq 3)}">
 						
 							#{unspscObj.unspscCode}
-							</p:commandLink>
+							<f:param name="currentTaskName" value="#{unspscCodeBackingBean.managedBean.taskName}" />
+						</p:commandLink>
 
 						<p:commandLink
 							action="#{codificationBackingBean.unspscPopUpSearch(unspscObj)}"

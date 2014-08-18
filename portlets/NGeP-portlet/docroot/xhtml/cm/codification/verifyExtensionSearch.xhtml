@@ -11,11 +11,11 @@
 
 
 	<ui:define name="contentSection">
-		<p:messages showDetail="true" autoUpdate="true" closable="true" showSummary="true"></p:messages>
+		<p:messages showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 
 		<div style="text-align: right;">
 			<p:commandButton value="REQUEST EXTENSION"
-				action="#{codificationBackingBean.requestExtensionWithUNSPSC()}"></p:commandButton>
+				action="#{codificationBackingBean.requestExtensionWithUNSPSC()}" />
 		</div>
 
 		<ui:include src="DocumentHeader.xhtml"></ui:include>

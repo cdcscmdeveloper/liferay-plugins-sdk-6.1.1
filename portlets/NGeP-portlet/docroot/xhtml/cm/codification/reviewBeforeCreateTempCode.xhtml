@@ -11,16 +11,17 @@
 	<ui:define name="contentSection">
 
 		<p:messages id="tempCodeReviewMsgId" showDetail="true"	autoUpdate="true" closable="true" showSummary="false" />
+		
 		<ac:lovPopup />
+		
 		<h:panelGroup id="cmReviewUnspsc">
 			<div style="text-align: right;">
-				<ui:repeat var="action"
-					value="#{unspscCodeBackingBean.managedBean.action}">
-					<p:commandButton value="#{action}"
+				<ui:repeat var="action"	value="#{unspscCodeBackingBean.managedBean.action}">
+					<p:commandButton 
+						value="#{action}"
 						action="#{unspscCodeBackingBean.savetempCode(action)}"
-						update="@form"></p:commandButton>
+						update="@form" />
 				</ui:repeat>
-
 			</div>
 
 
