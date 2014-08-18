@@ -18,12 +18,15 @@
 	    <h:panelGrid width="100%" style="margin-top:20px">
 			<p:dataTable id="zoneLocationDataTable" 
 			        value="#{simpleQuoteBackingBean.managedBean.zoneTrees}" var="zoneTree"
-			        rowIndexVar="index" selectionMode="single" rowKey="#{zoneTree}">
+			        rowIndexVar="index">
 				 <p:column headerText="Location">
 				 
 					<p:tree value="#{zoneTree}" var="location" id="treeid"  
-					   selection="#{simpleQuoteBackingBean.managedBean.selectedTreeNode}"
 					   selectionMode="checkbox">
+					   
+					   <p:ajax event="select" listener="#{simpleQuoteBackingBean.selectZoneTreeNode}" />
+					   <p:ajax event="unselect" listener="#{simpleQuoteBackingBean.unSelectZoneTreeNode}" />
+					   
 						<p:treeNode type="zone" >
 							<h:outputText value="#{location.zoneName}" />
 						</p:treeNode>

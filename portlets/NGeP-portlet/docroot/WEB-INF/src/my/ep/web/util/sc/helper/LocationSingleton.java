@@ -1938,4 +1938,48 @@ public class LocationSingleton {
 		}
 		return root;
 	}
+	
+	public void deleteTreeNodes(List<TreeNode> rootTrees) {
+		if (rootTrees != null) {
+			for (int row = 0; row < rootTrees.size(); row++) {
+				TreeNode rootTree = rootTrees.get(row);
+				
+				for (TreeNode zoneTree : rootTree.getChildren()) {
+					if (zoneTree.isSelected()) {
+						rootTrees.remove(row--);
+					} else {
+						deleteChildTreeNodes(zoneTree.getChildren());
+						
+						if (zoneTree.getChildren().size() == 0) {
+							rootTrees.remove(row--);
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	private void deleteChildTreeNodes(List<TreeNode> treeNodes) {
+		if (treeNodes != null) {
+			List<TreeNode> nodesToRemoved = new ArrayList<TreeNode>();
+			
+			for (TreeNode treeNode : treeNodes) {
+				if (treeNode.isSelected()) {
+					nodesToRemoved.add(treeNode);
+				} else {
+					if (treeNode.getChildren() != null && treeNode.getChildren().size() > 0) {
+						deleteChildTreeNodes(treeNode.getChildren());
+						
+						if (treeNode.getChildren().size() == 0) {
+							nodesToRemoved.add(treeNode);
+						}
+					}
+				}
+			}
+			
+			if (nodesToRemoved.size() > 0) {
+				treeNodes.removeAll(nodesToRemoved);
+			}	
+		}
+	}
 }

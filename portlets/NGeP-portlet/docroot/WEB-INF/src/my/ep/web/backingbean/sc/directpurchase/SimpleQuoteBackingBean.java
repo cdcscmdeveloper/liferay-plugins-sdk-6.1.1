@@ -120,6 +120,8 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.NodeSelectEvent;
+import org.primefaces.event.NodeUnselectEvent;
 import org.primefaces.model.TreeNode;
 
 import com.liferay.portal.kernel.util.WebKeys;
@@ -1419,25 +1421,27 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			}
 		}
 		return results;
-	}	
+	}
+	
+	public void selectZoneTreeNode(NodeSelectEvent event) {
+		TreeNode selectedTreeNode = event.getTreeNode();
+		
+		selectedTreeNode.setSelected(true);
+	}
+	
+	public void unSelectZoneTreeNode(NodeUnselectEvent event) {
+		TreeNode selectedTreeNode = event.getTreeNode();
+		
+		selectedTreeNode.setSelected(false);
+	}
 
 	/**
 	 * To delete the selected TreeNode from the zone
 	 */
 	public void deleteZoneTreeNode() {
-		List<TreeNode>	zones = new ArrayList<TreeNode>();
-		TreeNode selectedTreeNode = getManagedBean().getSelectedTreeNode();
-		if (selectedTreeNode.getChildren() != null) {
-			TplSpecZoneDtl zoneDtl = (TplSpecZoneDtl) selectedTreeNode.getChildren().get(0).getData();
-
-			for (TreeNode node : getManagedBean().getZoneTrees()) {
-
-				if (!zoneDtl.equals(((TplSpecZoneDtl) node.getChildren().get(0).getData()))) {
-					zones.add(node);
-				} 
-			}
-			this.getManagedBean().setZoneTrees(zones);
-		}
+		List<TreeNode> rootTrees = getManagedBean().getZoneTrees();
+		
+		LocationSingleton.getInstance().deleteTreeNodes(rootTrees);
 	}
 		
 	/**
