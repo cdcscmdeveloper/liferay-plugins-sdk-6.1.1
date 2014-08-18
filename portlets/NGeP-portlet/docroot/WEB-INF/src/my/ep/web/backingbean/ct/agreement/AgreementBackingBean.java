@@ -873,9 +873,9 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 				filePath = filePath + "/"
 						+ attachmentFormat.format(fileName, null);
 
-				content = getContent(agreementContent.getTitle());
+				content = getContent(agreementContent.getTitle(),filePath);
 				if (content != null) {
-					convertHtmlToDocFile(content, filePath);
+//					convertHtmlToDocFile(content, filePath);
 					downloadFile(filePath, fileName);
 				}
 
@@ -939,11 +939,10 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 							&& fileName != null) {
 						content = new String(templateResDTO.getCtTemplate()
 								.getContent(), "UTF-8");
-						content = getContent(agreementContent.getTitle());
 						filePath = tempDirectory + "/"
 								+ attachmentFormat.format(fileName, null);
-
-						convertHtmlToDocFile(content, filePath);
+						content = getContent(agreementContent.getTitle(),filePath);
+//						convertHtmlToDocFile(content, filePath);
 						fileList.add(new File(filePath));
 					} else {
 						// TODO: get from LOA, external link
@@ -1004,13 +1003,13 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	private String getTemplateFileName(String templateType) {
 		if (templateType.trim().equalsIgnoreCase(
 				ContractConst.TEMPLATE_AGREEMENT_COVER_PAGE)) {
-			return "AgreementCoverPage.docx";
+			return "AgreementCoverPage.pdf";
 		} else if (templateType.trim().equalsIgnoreCase(
 				ContractConst.TEMPLATE_AGREEMENT_PARTY)) {
-			return "AgreementPartyPage.docx";
+			return "AgreementPartyPage.pdf";
 		} else if (templateType.trim().equalsIgnoreCase(
 				ContractConst.TEMPLATE_AGREEMENT_SIGNING_PAGE)) {
-			return "AgreementSigningPage.docx";
+			return "AgreementSigningPage.pdf";
 		}
 		return null;
 	}
@@ -1370,7 +1369,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		}
 	}
 
-	public String getContent(String parameterCode) throws Exception {
+	public String getContent(String parameterCode,String filePath) throws Exception {
 		CommonUtils commonUtils = new CommonUtils();
 		SimpleDateFormat df = new SimpleDateFormat(
 				CommonConstants.DEFAULT_DATE_FORMAT);
@@ -1520,6 +1519,10 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		if (vmFile != null && context != null) {
 			content = DocumentGenerator.getInstance().getHtmlFromVelocity(
 					vmFile, context);
+			DocumentGenerator.getInstance().generatePdfFromVelocity(
+					vmFile, 
+	    			context, 
+	    			new FileOutputStream(filePath));
 		}
 
 		return content;
