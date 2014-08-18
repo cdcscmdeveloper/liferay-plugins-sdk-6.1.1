@@ -160,20 +160,16 @@ public class QTCommitteBackingBean extends
 
 				populateUserSearchCriteria(userCommitteeSearchBean, searchBean);
 				userReqDTO.setUserSearchBean(searchBean);
-
 				UserResDTO resDto = userSO.searchUserProfile(userReqDTO);
 
-				if (resDto != null) {
-					getManagedBean().setExternalUsers(
-							resDto.getUserResultBean().getResultList());
-
+				if (null != resDto.getUserResultBean().getResultList()) {
+					getManagedBean().setExternalUsers(resDto.getUserResultBean().getResultList());
 					for (PmUser user : getManagedBean().getExternalUsers()) {
 						if (user.getMemberRole() == null) {
 							user.setMemberRole(new PmParameter());
 						}
 					}
 				}
-
 				return resDto.getUserResultBean();
 			} finally {
 				userSO = null;
@@ -479,6 +475,7 @@ public class QTCommitteBackingBean extends
 
 	public void cloneCommitteePopupAction() {
 		debugLogger("cloneCommitteePopupAction");
+		getManagedBean().getCloneSearchQTDataModel().reloadData();
 		getManagedBean().getCloneQtnTenderSearchBean().setQtTitle(null);
 		getManagedBean().getCloneQtnTenderSearchBean().setQtNo(null);
 		getManagedBean().getCloneQtnTenderSearchBean().setProcurementMode(null);
@@ -491,13 +488,7 @@ public class QTCommitteBackingBean extends
 
 	public void addCommitteMember(ScQtCommittee committee, String titleName) {
 		debugLogger("addCommitteMember");
-		/*
-		 * getManagedBean().getUserCommitteeSearchBean().setName(null);
-		 * getManagedBean
-		 * ().getUserCommitteeSearchBean().setIdentificationType(null);
-		 * getManagedBean
-		 * ().getUserCommitteeSearchBean().setIdentificationNo(null);
-		 */
+		getManagedBean().getUserSearchCommitteeDataModel().reloadData();
 		getManagedBean().setExternalUsers(null);
 		getManagedBean().setSelectedPmUser(null);
 		this.getManagedBean().setCommitteMember(null);
@@ -764,19 +755,19 @@ public class QTCommitteBackingBean extends
 
 	public void reset() {
 		debugLogger("reset");
-		this.getManagedBean().setName(null);
-		this.getManagedBean().setIdentificationType(null);
-		this.getManagedBean().setIdentificationNo(null);
+		this.getManagedBean().getUserCommitteeSearchBean().setName(null);
+		this.getManagedBean().getUserCommitteeSearchBean().setIdentificationType(null);
+		this.getManagedBean().getUserCommitteeSearchBean().setIdentificationNo(null);
 	}
 
 	public void resetClone() {
 		debugLogger("resetClone");
-		this.getManagedBean().setTitle(null);
-		this.getManagedBean().setQtNo(null);
-		this.getManagedBean().setProcurementMode(null);
-		this.getManagedBean().setCreatedDtFrom(null);
-		this.getManagedBean().setCreatedDtTo(null);
-		this.getManagedBean().setStatus(null);
+		this.getManagedBean().getCloneQtnTenderSearchBean().setQtTitle(null);
+		this.getManagedBean().getCloneQtnTenderSearchBean().setQtNo(null);
+		this.getManagedBean().getCloneQtnTenderSearchBean().setProcurementMode(null);
+		this.getManagedBean().getCloneQtnTenderSearchBean().setFromCreatedDate(null);
+		this.getManagedBean().getCloneQtnTenderSearchBean().setToCreatedDate(null);
+		this.getManagedBean().getCloneQtnTenderSearchBean().setQtStatus(null);
 	}
 
 	private IUserSO getUserSO() {

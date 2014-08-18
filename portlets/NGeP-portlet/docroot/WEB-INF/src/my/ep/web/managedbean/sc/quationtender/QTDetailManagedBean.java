@@ -232,6 +232,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<ScQtSupplier> selectedQtSupplierList;
 	private List<SmPersonnel> smPersonnelsList;
 	private SmPersonnel personnel;
+	private boolean ctzones = Boolean.FALSE;
 
 	private String supplierBranch;
 	private String supplierContact;
@@ -2568,6 +2569,13 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setBsvZoneindx(String bsvZoneindx) {
 		this.bsvZoneindx = bsvZoneindx;
 	}
-	
+
+	public boolean isCtzones() {
+		return ctzones;
+	}
+
+	public void setCtzones(boolean ctzones) {
+		this.ctzones = ctzones;
+	}
 
 }

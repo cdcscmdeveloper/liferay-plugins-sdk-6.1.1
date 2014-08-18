@@ -8,9 +8,10 @@
 	<p:panel styleClass="scmemberdtls">
 		<p:spacer height="2" />
 
-		<p:dataTable id="committeeapprovalId" value="#{membersList.scCommitteeMembers}"
-			var="committeeapprover" rowIndexVar="index" editable="true"
-			rowKey="#{committeeapprover}" selection="#{selectedMembersList}">
+		<p:dataTable id="committeeapprovalId"
+			value="#{membersList.scCommitteeMembers}" var="committeeapprover"
+			rowIndexVar="index" editable="true" rowKey="#{committeeapprover}"
+			selection="#{selectedMembersList}">
 
 			<p:column selectionMode="multiple" style="width:2%" />
 
@@ -36,19 +37,35 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.so.bo.pp']}" style="width: 5%">
-				<h:outputText value="#{committeeapprover.PNP ? 'Yes' : 'No'}" />
+				<h:outputText
+					value="#{lbl[committeeapprover.PNP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.committe.clonetable.role']}"
-				style="width: 15%">
+			<p:column style="width: 15%">
+				<f:facet name="header">
+					<h:outputText value="* " styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.so.role']}" />
+				</f:facet>
+
 				<ui:fragment rendered="#{committeeapprover.PNP}">
 					<h:outputText value="Chairperson"
-						rendered="#{committeeapprover.memberRole.parameterCode eq 'C'}" />
+						rendered="#{committeeapprover.memberRole.parameterCode eq 'C'}"
+						disabled="#{committe.committeStatus.statusId eq 60202}" />
 				</ui:fragment>
 				<ui:fragment rendered="#{!committeeapprover.PNP}">
-					
-					<h:outputText value="#{approvalBackingBean.getParameterDesc(committeeapprover.memberRole)}"></h:outputText>
-					
+					<p:selectOneMenu id="roleid" label="#{lbl['lbl.so.role']}"
+						value="#{committeeapprover.memberRole.parameterId}"
+						style="width: 110px;margin-bottom: 5px;"
+						disabled="#{committe.committeStatus.statusId eq 60202}">
+						<p:ajax event="change" partialSubmit="true" process="@this"
+							listener="#{approvalBackingBean.roleChangeListner(committeeapprover)}" />
+						<f:selectItem itemLabel="-Select One-" itemValue="#{null}" />
+						<f:selectItems var="role"
+							value="#{approvalBackingBean.managedBean.roleTypes}"
+							itemLabel="#{role.codeName}"
+							itemValue="#{role.pmParameter.parameterId}" />
+					</p:selectOneMenu>
+					<p:message id="roleidMsg" for="roleid" display="icon" />
 				</ui:fragment>
 			</p:column>
 

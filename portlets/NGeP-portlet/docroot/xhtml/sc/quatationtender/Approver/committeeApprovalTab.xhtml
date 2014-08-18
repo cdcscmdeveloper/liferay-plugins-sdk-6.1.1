@@ -14,9 +14,13 @@
 		<ui:include src="committeeApproval.xhtml" />
 
 		<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.so.clonebtn']}"
+				actionListener="#{qTCommitteBackingBean.cloneCommitteePopupAction}"
+				oncomplete="screen2.show();" process="@this" icon="ui-icon-clone"
+				update="@(.cloneCommitteMember)" />
 			<p:commandButton id="committeeapproveradd"
 				value="#{lbl['lbl.so.addbtn']}" process="@this"
-				actionListener="#{qTCommitteBackingBean.addCommitteMember(qTDetailBB.managedBean.selectedTabBean.scQtCommittee, committeeApproval.titleName)}"
+				actionListener="#{qTCommitteBackingBean.addCommitteMember(qTDetailBB.managedBean.selectedTabBean.scQtCommittee, qTDetailBB.managedBean.selectedTabBean.titleName)}"
 				oncomplete="newcommitteeapprover.show();"
 				update="@(.commiteeapprovermember)" icon="ui-icon-add" />
 
@@ -26,6 +30,7 @@
 				update="committeeapprovalId" icon="ui-icon-delete" />
 		</div>
 		<ui:include src="addCommitteeApproval.xhtml" />
+		<ui:include src="/xhtml/sc/quatationtender/committeeappointment/clonecommitteeappointment.xhtml" />
 	</p:panel>
 
 	<p:panel header="#{lbl['lbl.sc.spec.approval.remark']}"

@@ -915,6 +915,9 @@ public class QTSupplierQulCriteriaBackingBean extends
 						IPanelSupplierSO.class);
 		PanelSupplierResDTO resDTO = panelSupplierSO
 				.retrieveSupplierByZone(reqDTO);
+		this.getManagedBean().setCtZoneSupplierList(
+				new ArrayList<CtPanelSupplier>());
+		this.getManagedBean().setTotalSupplier(0);
 		if (null != resDTO.getPanelSuppliers()
 				&& !resDTO.getPanelSuppliers().isEmpty()) {
 			this.getManagedBean().setTotalSupplier(

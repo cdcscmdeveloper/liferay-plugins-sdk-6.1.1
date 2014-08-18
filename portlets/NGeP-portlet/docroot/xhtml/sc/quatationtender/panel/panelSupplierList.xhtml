@@ -6,32 +6,36 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel id="ctZonepnlid" header="Location Details" toggleable="true">
-	
-		<p:dataTable id="ctSupplierTreeZones"
-			value="#{qTSupplierQulCriteriaBackingBean.managedBean.ctZoneSuppliers}"
-			var="ctZones" rowIndexVar="index" dynamic="true">
+	<ui:fragment
+		rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.ctzones eq 'true'}">
 
-			<p:column headerText="#{lbl['lbl.sc.spec.supplier.zone']}"
-				style="width:90%">
-				<p:tree value="#{ctZones}" var="location" selectionMode="single">
-					<p:ajax event="select" update=":form:paneltabView:totalSupplierid"
-						listener="#{qTSupplierQulCriteriaBackingBean.retriveZoneBySupplier}" />
-					<p:treeNode type="zone">
-						<h:outputText value="#{location.name}" />
-					</p:treeNode>
-					<p:treeNode type="state">
-						<h:outputText value="#{location.stateId.stateName}" />
-					</p:treeNode>
-					<p:treeNode type="district">
-						<h:outputText value="#{location.districtId.districtName}" />
-					</p:treeNode>
-				</p:tree>
-			</p:column>
+		<p:panel id="ctZonepnlid" header="Location Details" toggleable="true">
 
-		</p:dataTable>
+			<p:dataTable id="ctSupplierTreeZones"
+				value="#{qTSupplierQulCriteriaBackingBean.managedBean.ctZoneSuppliers}"
+				var="ctZones" rowIndexVar="index" dynamic="true">
 
-	</p:panel>
+				<p:column headerText="#{lbl['lbl.sc.spec.supplier.zone']}"
+					style="width:90%">
+					<p:tree value="#{ctZones}" var="location" selectionMode="single">
+						<p:ajax event="select" update=":form:paneltabView:totalSupplierid"
+							listener="#{qTSupplierQulCriteriaBackingBean.retriveZoneBySupplier}" />
+						<p:treeNode type="zone">
+							<h:outputText value="#{location.name}" />
+						</p:treeNode>
+						<p:treeNode type="state">
+							<h:outputText value="#{location.stateId.stateName}" />
+						</p:treeNode>
+						<p:treeNode type="district">
+							<h:outputText value="#{location.districtId.districtName}" />
+						</p:treeNode>
+					</p:tree>
+				</p:column>
+
+			</p:dataTable>
+
+		</p:panel>
+	</ui:fragment>
 	<br />
 	<ui:include src="supplierlist.xhtml" />
 

@@ -19,6 +19,7 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.ct.supplier.IPanelSupplierSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.object.IObjectSO;
@@ -38,6 +39,8 @@ import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.constants.SCProcessNameConst;
+import my.ep.dto.ct.supplier.PanelSupplierReqDTO;
+import my.ep.dto.ct.supplier.PanelSupplierResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -60,6 +63,7 @@ import my.ep.jaxb.sc.committeedata.SCCommitteeDataType;
 import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
 import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
+import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -718,7 +722,7 @@ public class QTDetailBackingBean extends
 
 			}
 		}
-		if (!scQt.isZonal()) {
+		if (!scQt.isZonal() && !scQt.isPanel()) {
 			scQt.setZoneLocationLevel(null);
 			List<ScQtLocCriteria> locCriteria = (List<ScQtLocCriteria>) getQuoteZones(
 					this.getManagedBean().getZoneTrees(), null);
@@ -735,7 +739,7 @@ public class QTDetailBackingBean extends
 				}
 				qtSupplierCriteria.setQtZoneCriterias(null);
 			}
-		} else {
+		} else if (scQt.isZonal() && !scQt.isPanel()) {
 			List<TplSpecZoneDtl> businessOwnerZone = getZoneBusinessOwnerLocations(
 					this.getManagedBean().getZoneGeneralTrees(), null);
 			if (businessOwnerZone != null && !businessOwnerZone.isEmpty()) {
@@ -1667,6 +1671,7 @@ public class QTDetailBackingBean extends
 
 	public void retrieveSuppQualificationTabDtl() {
 		debugLogger("retrieveSuppQualificationTabDtl");
+		IPanelSupplierSO panelSupplierSO;
 		IQTDetailSO QtDetailsSO;
 		// this.getManagedBean().setActiveIndex(2);
 		try {
@@ -1676,6 +1681,9 @@ public class QTDetailBackingBean extends
 			 * getManagedBean().getZoneTrees().isEmpty() &&
 			 * getManagedBean().getCtZoneSuppliers().isEmpty()) {
 			 */
+			panelSupplierSO = (IPanelSupplierSO) BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,
+							IPanelSupplierSO.class);
 			QtDetailsSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 			QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
@@ -1734,6 +1742,7 @@ public class QTDetailBackingBean extends
 					itemsList.add(scQt.getScQtSupplierCriteria()
 							.getCtPanelItem());
 					this.getManagedBean().setSelectpanelItem(itemsList);
+					this.getManagedBean().setCtzones(true);
 					List<CtPanelZone> ctPanelZone = new ArrayList<CtPanelZone>();
 					if (isNotNullOREmpty(tenderResDTO.getZoneDetails())) {
 						for (TplSpecZoneDtl zoneDtl : tenderResDTO
@@ -1741,16 +1750,31 @@ public class QTDetailBackingBean extends
 							ctPanelZone.add(zoneDtl.getPanelZone());
 						}
 					}
-					if (null != ctPanelZone && !ctPanelZone.isEmpty()) {
+					if (null != getManagedBean().getCtZoneSuppliers() && getManagedBean().getCtZoneSuppliers().isEmpty()) {
 						getManagedBean().getCtZoneSuppliers().add(
 								LocationSingleton.getInstance()
 										.constuctPanelTreeNodes(ctPanelZone));
 					}
 				} else if (scQt.isPanel() && !scQt.isZonal()) {
-
+					if (null != scQt.getScQtSupplierCriteria().getCtPanelItem() && null != scQt.getScQtSupplierCriteria().getCtPanelItem().getPanelItemId()) {
+						List<CtPanelItem> itemsList = new ArrayList<>();
+						itemsList.add(scQt.getScQtSupplierCriteria()
+								.getCtPanelItem());
+						this.getManagedBean().setSelectpanelItem(itemsList);
+						this.getManagedBean().setCtzones(false);
+						PanelSupplierReqDTO supplierreqDTO = new PanelSupplierReqDTO();
+						supplierreqDTO.setPanelItemId(scQt.getScQtSupplierCriteria().getCtPanelItem().getPanelItemId());
+						PanelSupplierResDTO panelSupplierResDTO = panelSupplierSO.retrievePanelItem(supplierreqDTO);
+						this.getManagedBean().setTotalSupplier(0);
+						this.getManagedBean().setCtZoneSupplierList(new ArrayList<CtPanelSupplier>());
+						if (null != panelSupplierResDTO.getCtPanelItem() && null != panelSupplierResDTO.getCtPanelItem().getCtPanelSuppliers() && !panelSupplierResDTO.getCtPanelItem().getCtPanelSuppliers().isEmpty()) {
+							this.getManagedBean().setTotalSupplier(panelSupplierResDTO.getCtPanelItem().getCtPanelSuppliers().size());
+							this.getManagedBean().setCtZoneSupplierList(new ArrayList<CtPanelSupplier>());
+							this.getManagedBean().setCtZoneSupplierList(panelSupplierResDTO.getCtPanelItem().getCtPanelSuppliers());
+						}
+					}
 				}
 			}
-			// }
 		} finally {
 			QtDetailsSO = null;
 		}

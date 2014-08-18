@@ -40,8 +40,10 @@ import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.jaxb.sc.committeedata.SCCommitteeDataType;
 import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
 import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.quationtender.ScAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalAttachment;
@@ -476,6 +478,21 @@ public class ApprovalBackingBean extends
 			for(int i=0;i<remarks.size();i++){
 				if(remarks.get(i).getRemark() == null || "".equals(remarks.get(i).getRemark())){
 					remarks.remove(i);
+				}
+			}
+		}
+	}
+	
+	public void roleChangeListner(ScCommitteeMember member) {
+		List<ScCommitteeMember> members = this.getManagedBean().getSelectedTabBean().getScQtCommittee().getScCommittee().getScCommitteeMembers();
+		for(ScCommitteeMember committeeMember :members){
+			if(	committeeMember.getIcPassport().equalsIgnoreCase(member.getIcPassport())){
+				List<PmParameterDesc> roles = getManagedBean().getRoleTypes();
+				for (PmParameterDesc parameter : roles) {
+					if (parameter.getPmParameter().getParameterId().equals(member.getMemberRole().getParameterId())) {
+						member.setMemberRole(parameter.getPmParameter());
+						break;
+					}
 				}
 			}
 		}
