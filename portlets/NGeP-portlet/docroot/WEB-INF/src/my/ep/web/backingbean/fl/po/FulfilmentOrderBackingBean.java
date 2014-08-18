@@ -138,15 +138,19 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			reqDTO.setUserRole(getUserRole());
 			
 			FulfilmentResDTO resDTO = null;
-			if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL) && !action.equalsIgnoreCase(FulfilmentConst.STOP_FULFILMENT)){
+			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)){
 				resDTO = fulfilmentOrderSO.acknowledgeFulfillmentOrder(reqDTO);
-			}else if(action.equalsIgnoreCase(FulfilmentConst.STOP_FULFILMENT)){
+			}else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_STOP_FULFILMENT)){
 				if(isFlFulfilmentApprover()) {
 					reqDTO.setApprover(Boolean.TRUE);
 				}
 				reqDTO.setStopIns(getManagedBean().getStopIns());
 				resDTO = fulfilmentOrderSO.stopFulfilment(reqDTO);
-			}else{
+			}else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REMOVE_FACTORING)){
+				System.out.println("Remove factoring");
+				//TODO waiting for KK API
+				
+			}else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
 				reqDTO.setFulfilmentOrder(flRequest.getFlFulfilmentOrder());
 				resDTO = fulfilmentOrderSO.cancelFulfillmentOrder(reqDTO);
 			}
