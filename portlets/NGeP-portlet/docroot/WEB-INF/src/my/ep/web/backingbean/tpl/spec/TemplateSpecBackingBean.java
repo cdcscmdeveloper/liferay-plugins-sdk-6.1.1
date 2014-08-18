@@ -119,6 +119,13 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 						registrationReqDTO.setSupplierId(profileResDTO.getOrgProfileList().get(0).getOrgProfileId());
 						RegistrationResDTO registrationResDTO = registrationSO.retrieveSuppOnlineAcc(registrationReqDTO);
 						smSupplier = registrationResDTO.getSmSupp();	
+					} else {
+						IRegistrationSO registrationSO = BusinessDelegate.getInstance().getServiceObject(
+								ModuleCodeConst.SUPPLIER_MANAGEMENT, IRegistrationSO.class);
+						RegistrationReqDTO registrationReqDTO = new RegistrationReqDTO();
+						registrationReqDTO.setSupplierId(27L);
+						RegistrationResDTO registrationResDTO = registrationSO.retrieveSuppOnlineAcc(registrationReqDTO);
+						smSupplier = registrationResDTO.getSmSupp();
 					}
 				}*/
 				
@@ -870,7 +877,7 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 				}
 
 				// Order by created date
-				searchBean.getSortColumns().add(new SearchOrderBean("createdDate", false));
+				searchBean.getSortColumns().add(new SearchOrderBean("specMasterId", false));
 				
 				TemplateSpecReqDTO reqDTO = new TemplateSpecReqDTO();
 				reqDTO.setSearchBean(searchBean);
