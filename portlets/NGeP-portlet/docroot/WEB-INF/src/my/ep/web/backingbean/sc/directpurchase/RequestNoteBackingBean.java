@@ -1872,15 +1872,6 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 						}
 					}
 				}
-				
-				// delivery term
-				if(deliveryTermId != null){
-					IParameterSO  parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-					ParameterReqDTO reqDTO = new ParameterReqDTO();
-					reqDTO.setParameterId(deliveryTermId);
-					ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
-					requestNoteDtl.setDeliverTermType(resDTO.getPmParameter());
-				}
 			}
 		}
 	}
