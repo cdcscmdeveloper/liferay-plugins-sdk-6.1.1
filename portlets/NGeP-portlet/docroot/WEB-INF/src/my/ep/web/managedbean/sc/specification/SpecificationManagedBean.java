@@ -353,6 +353,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private boolean selectPanelItem = Boolean.FALSE;
 	private Long specStatusId;
 	private boolean specSelectStats= Boolean.FALSE;
+	private boolean recommendationStats= Boolean.FALSE;
 
 	public SpecificationManagedBean() {
 		
@@ -4043,6 +4044,20 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	 */
 	public void setSpecSelectStats(boolean specSelectStats) {
 		this.specSelectStats = specSelectStats;
+	}
+
+	/**
+	 * @return the recommendationStats
+	 */
+	public boolean isRecommendationStats() {
+		return recommendationStats;
+	}
+
+	/**
+	 * @param recommendationStats the recommendationStats to set
+	 */
+	public void setRecommendationStats(boolean recommendationStats) {
+		this.recommendationStats = recommendationStats;
 	}
 
 }
