@@ -26,14 +26,17 @@
 				style="float:right;" icon="ui-icon-cancel"
 				disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
 				action="#{specificationBackingBean.backAction}"></p:commandButton>
-			<p:commandButton value="#{lbl['lbl.sc.spec.btn.complete']}"
-				style="float:right;" icon="ui-icon-check" update="@all"
-				disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
-				action="#{specificationBackingBean.completeTemplateSpec(null)}" />
+			<ui:fragment
+				rendered="#{specificationBackingBean.managedBean.specStatusId ne '62702'}">
+				<p:commandButton value="#{lbl['lbl.sc.spec.btn.complete']}"
+					style="float:right;" icon="ui-icon-check" update="@all"
+					disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
+					action="#{specificationBackingBean.completeTemplateSpec(null)}" />
+			</ui:fragment>
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
 				style="float:right;"
 				disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
-				action="#{specificationBackingBean.saveTemplateSpec(null,'1',null)}"
+				action="#{specificationBackingBean.saveEditTemplateSpec(null)}"
 				icon="ui-icon-save" update="@all" />
 
 		</div>
@@ -105,8 +108,8 @@
 
 
 
-		<ac:templateSpec 
-			templateSpecBean="#{specificationBackingBean.managedBean.templateSpecBean}" 
+		<ac:templateSpec
+			templateSpecBean="#{specificationBackingBean.managedBean.templateSpecBean}"
 			editable="#{specificationBackingBean.managedBean.taskName ne 'Specification Approval'}" />
 
 
