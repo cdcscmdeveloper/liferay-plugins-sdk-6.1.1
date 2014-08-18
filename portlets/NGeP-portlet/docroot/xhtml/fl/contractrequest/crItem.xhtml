@@ -351,11 +351,14 @@
 							<td><p:message for="postCode" display="icon" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="Address Name" /></td>
-					<td><p:inputText size="35" id="contactPerson" maxlength="255"
-							value="#{contractRequestBackingBean.managedBean.flManulaAddress.pmAddress.addressName}"
-							label="Address Name" /></td>
-					<td></td>
+					<td><p:outputLabel value="Email" /> <p:outputLabel value="*"
+							styleClass="mandatory" /></td>
+					<td><p:inputText id="email"
+							required="#{contractRequestBackingBean.managedBean.required}"
+							label="Email" maxlength="80"
+							value="#{contractRequestBackingBean.managedBean.flManulaAddress.pmAddress.email}"
+							size="35" /></td>
+					<td><p:message for="email" display="icon" /></td>
 					<td><p:outputLabel value="Delivery Address" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 							<!-- required="#{contractRequestBackingBean.managedBean.required}" -->
@@ -367,16 +370,6 @@
 								value="#{contractRequestBackingBean.managedBean.manualAddrList}" />
 						</p:selectOneMenu></td>
 					<td><p:message for="manAddress" display="icon" /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="Email" /> <p:outputLabel value="*"
-							styleClass="mandatory" /></td>
-					<td><p:inputText id="email"
-							required="#{contractRequestBackingBean.managedBean.required}"
-							label="Email" maxlength="80"
-							value="#{contractRequestBackingBean.managedBean.flManulaAddress.pmAddress.email}"
-							size="35" /></td>
-					<td><p:message for="email" display="icon" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Tel.No." /> <p:outputLabel
