@@ -43,6 +43,7 @@
 			<ui:param name="isSpecificationReq" value="#{templateSpecBean.specMaster.specificationReq}" />
 			<ui:param name="isScoringReq" value="#{templateSpecBean.specMaster.scoringReq}" />
 			<ui:param name="isDurationByItem" value="#{templateSpecBean.specMaster.durationByItem}" />
+			<ui:param name="isZonal" value="#{!empty templateSpecBean.specMaster.tplSpecZone}" />
 			<ui:param name="durationMonth" value="#{templateSpecBean.specMaster.durationMonth}" />
 			
 			<c:if test="#{isContentTypeQuestion or isContentTypeReview}">
@@ -54,6 +55,7 @@
 					value="#{templateSpecBean.specMaster.tplSpecQuestions}"
 					scrollable1="true" scrollWidth1="#{scrollWidth}">
 					
+					<ui:param name="prevSpecQuestion" value="#{row > 0 ? templateSpecBean.specMaster.tplSpecQuestions[row-1] : null}" />
 					<ui:param name="isQuestionTypeItem" value="#{question.questionType == TplSpecConst.questionTypeItem}" />
 					<ui:param name="isPriceTypeStandard" value="#{question.clPriceTypeCode.parameterCode == ParameterConst.priceTypeStandard}" />
 					<ui:param name="isPriceTypeAllStandard" value="#{isPriceTypeStandard or question.clPriceTypeCode.parameterCode == ParameterConst.priceTypeZonalStandard}" />
@@ -82,6 +84,7 @@
 					value="#{templateSpecBean.specAnswerList}"
 					scrollable1="true" scrollWidth1="#{scrollWidth}">
 					
+					<ui:param name="prevSpecQuestion" value="#{row > 0 ? templateSpecBean.specAnswerList[row-1].tplSpecQuestion : null}" />
 					<ui:param name="question" value="#{tplSpecAnswer.tplSpecQuestion}" />
 					<ui:param name="isQuestionTypeItem" value="#{question.questionType == TplSpecConst.questionTypeItem}" />
 					<ui:param name="isPriceTypeStandard" value="#{question.clPriceTypeCode.parameterCode == ParameterConst.priceTypeStandard}" />
@@ -106,6 +109,10 @@
 						<ui:decorate template="specColumnScore.xhtml" />
 					</c:if>
 				</p:dataTable>
+				
+				<c:if test="#{isSpecTypeFinancial and isZonal}">
+					<ui:include src="/xhtml/tpl/spec/zoneLocPopup.xhtml" />
+				</c:if>
 			</c:if>
 		</p:panel>
 		
