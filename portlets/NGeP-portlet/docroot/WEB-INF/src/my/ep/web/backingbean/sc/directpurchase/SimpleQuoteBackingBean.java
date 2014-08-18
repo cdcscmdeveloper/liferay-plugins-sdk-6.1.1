@@ -1449,23 +1449,27 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 		
 		LocationSingleton.getInstance().deleteTreeNodes(rootTrees);
 	}
+	
+	
+	public void selectLocationTreeNode(NodeSelectEvent event) {
+		TreeNode selectedTreeNode = event.getTreeNode();
 		
+		selectedTreeNode.setSelected(true);
+	}
+	
+	public void unSelectLocationTreeNode(NodeUnselectEvent event) {
+		TreeNode selectedTreeNode = event.getTreeNode();
+		
+		selectedTreeNode.setSelected(false);
+	}
+
 	/**
 	 * To delete the selected TreeNode from the location
 	 */
-	public void deleteLocationTreeNode(TreeNode selectedTreeNode) {
-		List<TreeNode>	locs = new ArrayList<TreeNode>();
-		if (selectedTreeNode.getChildren() != null) {
-			TplSpecLoc tplSpecLoc = (TplSpecLoc) selectedTreeNode.getChildren().get(0).getData();
-
-			for (TreeNode node : getManagedBean().getLocationTrees()) {
-
-				if (!tplSpecLoc.equals(((TplSpecLoc) node.getChildren().get(0).getData()))) {
-					locs.add(node);
-				} 
-			}
-			this.getManagedBean().setLocationTrees(locs);
-		}
+	public void deleteLocationTreeNode() {
+		List<TreeNode> rootTrees = getManagedBean().getLocationTrees();
+		
+		LocationSingleton.getInstance().deleteTreeNodes(rootTrees);
 	}
 	
 	public SelectItem[] getPriceTypeDropdownValues(String parameterType,

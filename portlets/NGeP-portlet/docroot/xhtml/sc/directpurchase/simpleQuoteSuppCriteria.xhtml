@@ -50,13 +50,19 @@
 							</tr>
 						</table>
 						<h:panelGrid width="100%" style="margin-top:20px">
+
 							<p:dataTable id="locationDataTable"
 								value="#{simpleQuoteBackingBean.managedBean.locationTrees}"
-								var="locationTree" rowIndexVar="index" rowKey="#{locationTree}"
-								selection="#{simpleQuoteBackingBean.managedBean.selectedTreeNode}"
-								selectionMode="single">
+								var="locationTree" rowIndexVar="index">
+
 								<p:column headerText="Location">
-									<p:tree value="#{locationTree}" var="location">
+									<p:tree value="#{locationTree}" var="location"
+										selectionMode="checkbox">
+										<p:ajax event="select"
+											listener="#{simpleQuoteBackingBean.selectLocationTreeNode}" />
+										<p:ajax event="unselect"
+											listener="#{simpleQuoteBackingBean.unSelectLocationTreeNode}" />
+
 										<p:treeNode type="state">
 											<h:outputText value="#{location.pmState.stateName}" />
 										</p:treeNode>
@@ -79,14 +85,6 @@
 											value="/resources/ep/images/design/edit.png" />
 									</p:commandLink>
 
-									<p:commandLink process="@this"
-										update="@([id$=locationDataTable])"
-										rendered="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}"
-										actionListener="#{simpleQuoteBackingBean.deleteLocationTreeNode(locationTree)}">
-										<p:graphicImage library="ep/images/design" name="trash.png"
-											value="/resources/ep/images/design/trash.png" />
-									</p:commandLink>
-
 								</p:column>
 							</p:dataTable>
 						</h:panelGrid>
@@ -97,8 +95,14 @@
 								partialSubmit="true" oncomplete="locationPopup.show();"
 								actionListener="#{simpleQuoteBackingBean.showLocationPopup}"
 								icon="ui-icon-add"/>
-							
-						 </c:if>
+
+								<p:commandButton
+									value="#{lbl['lbl.sc.sq.supp.criteria.delete.btn']}"
+									process="@all, locationDataTable" partialSubmit="true"
+									action="#{simpleQuoteBackingBean.deleteLocationTreeNode()}"
+									update="@([id$=locationDataTable])" icon="ui-icon-delete" />
+
+							</c:if>
 						</div>
 					</p:panel>
 					<ui:include
