@@ -758,7 +758,9 @@ public class SpecificationBackingBean extends
 			qtTemplateSO.saveOrUpdateTemplateDoc(docReqDTO);
 
 			// saveTempleateSpecDtls(finanicalScQtDoc, "2");
+			this.getManagedBean().setTechnicalSpecList(null);
 			retriveTechnicalSpecification();
+			
 
 		} finally {
 
@@ -1658,7 +1660,7 @@ public class SpecificationBackingBean extends
 						&& this.getManagedBean().isSelectPanelItem()) {
 					createCircularItemSpec(this.getManagedBean()
 							.getCtPanelItem());
-
+					this.getManagedBean().setSelectPanelItem(false);
 				}
 
 				SpecificationReqDTO reqDTO = new SpecificationReqDTO();
