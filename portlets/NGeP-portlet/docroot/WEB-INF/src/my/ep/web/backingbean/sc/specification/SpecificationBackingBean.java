@@ -2508,68 +2508,73 @@ public class SpecificationBackingBean extends
 		IQTSpecSO specSo = null;
 
 		try {
+			if (!this.getManagedBean().isRecommendationStats()) {
+				this.getManagedBean().setRecommendationStats(true);
+				SpecificationReqDTO reqDTO = new SpecificationReqDTO();
+				reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+				// reqDTO.setSpecType("T");
 
-			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
-			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
-			// reqDTO.setSpecType("T");
+				List<Integer> settinglist = new ArrayList<Integer>();
+				settinglist.add(4);
+				settinglist.add(5);
+				reqDTO.setSettingTypes(settinglist);
+				specSo = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+				SpecificationResDTO resDTO = specSo
+						.retrieveScoreSettingDtls(reqDTO);
 
-			List<Integer> settinglist = new ArrayList<Integer>();
-			settinglist.add(4);
-			settinglist.add(5);
-			reqDTO.setSettingTypes(settinglist);
-			specSo = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
-			SpecificationResDTO resDTO = specSo
-					.retrieveScoreSettingDtls(reqDTO);
+				if (resDTO.getScoreSettingResultBean().getResultList() != null
+						&& resDTO.getScoreSettingResultBean().getResultList()
+								.isEmpty()) {
 
-			if (resDTO.getScoreSettingResultBean().getResultList() != null
-					&& resDTO.getScoreSettingResultBean().getResultList()
-							.isEmpty()) {
-
-				if (null == this.getManagedBean()
-						.getRecommendationPackageScore()) {
-					ScQtScoreSetting pkgScoreSetting = new ScQtScoreSetting();
-					pkgScoreSetting.setSettingType(4);
-					pkgScoreSetting.setScQt(this.getManagedBean().getScQt());
-					pkgScoreSetting.setWeightageReq(false);
-					setUserDetails(pkgScoreSetting);
-					this.getManagedBean().setRecommendationPackageScore(
-							pkgScoreSetting);
-				}
-				if (null == this.getManagedBean().getRecommendationScore()) {
-
-					ScQtScoreSetting itemScoreSetting = new ScQtScoreSetting();
-					itemScoreSetting.setSettingType(5);
-					itemScoreSetting.setScQt(this.getManagedBean().getScQt());
-					itemScoreSetting.setWeightageReq(false);
-					setUserDetails(itemScoreSetting);
-					this.getManagedBean().setRecommendationScore(
-							itemScoreSetting);
-				}
-
-			} else {
-
-				for (ScQtScoreSetting recommnendationSetting : resDTO
-						.getScoreSettingResultBean().getResultList()) {
-
-					if (recommnendationSetting.getSettingType() == 4) {
+					if (null == this.getManagedBean()
+							.getRecommendationPackageScore()) {
+						ScQtScoreSetting pkgScoreSetting = new ScQtScoreSetting();
+						pkgScoreSetting.setSettingType(4);
+						pkgScoreSetting
+								.setScQt(this.getManagedBean().getScQt());
+						pkgScoreSetting.setWeightageReq(false);
+						setUserDetails(pkgScoreSetting);
 						this.getManagedBean().setRecommendationPackageScore(
-								recommnendationSetting);
-						calculateTotalPackage(this.getManagedBean()
-								.getRecommendationPackageScore());
+								pkgScoreSetting);
+					}
+					if (null == this.getManagedBean().getRecommendationScore()) {
+
+						ScQtScoreSetting itemScoreSetting = new ScQtScoreSetting();
+						itemScoreSetting.setSettingType(5);
+						itemScoreSetting.setScQt(this.getManagedBean()
+								.getScQt());
+						itemScoreSetting.setWeightageReq(false);
+						setUserDetails(itemScoreSetting);
+						this.getManagedBean().setRecommendationScore(
+								itemScoreSetting);
 					}
 
-					if (recommnendationSetting.getSettingType() == 5) {
-						this.getManagedBean().setRecommendationScore(
-								recommnendationSetting);
-						calculateRecommendtechnicalScore(this.getManagedBean()
-								.getRecommendationScore());
-						calculateRecommendFinancialScore(this.getManagedBean()
-								.getRecommendationScore());
+				} else {
+
+					for (ScQtScoreSetting recommnendationSetting : resDTO
+							.getScoreSettingResultBean().getResultList()) {
+
+						if (recommnendationSetting.getSettingType() == 4) {
+							this.getManagedBean()
+									.setRecommendationPackageScore(
+											recommnendationSetting);
+							calculateTotalPackage(this.getManagedBean()
+									.getRecommendationPackageScore());
+						}
+
+						if (recommnendationSetting.getSettingType() == 5) {
+							this.getManagedBean().setRecommendationScore(
+									recommnendationSetting);
+							calculateRecommendtechnicalScore(this
+									.getManagedBean().getRecommendationScore());
+							calculateRecommendFinancialScore(this
+									.getManagedBean().getRecommendationScore());
+						}
+
 					}
 
 				}
-
 			}
 
 		} finally {
