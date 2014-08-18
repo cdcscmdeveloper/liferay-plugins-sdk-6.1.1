@@ -6,32 +6,34 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:p="http://primefaces.org/ui">
 	
-	<p:column style="width:80px;" rendered="#{isSpecTypeFinancial and isZonal}" headerText="#{lbl['lbl.sc.zone']}">
-		<p:commandLink id="zoneName"
-			oncomplete="zoneLocPopup.show();"
-			partialSubmit="true" process="@this" update="@([id$=zoneLocPopup])">
-			<f:setPropertyActionListener target="#{zoneLocationBackingBean.tplSpecZoneDtl}" value="#{tplSpecAnswer.tplSpecSuppAnswer.tplSpecZoneDtl}" />
-			<h:outputText value="#{tplSpecAnswer.tplSpecSuppAnswer.tplSpecZoneDtl.zoneName}" />
-		</p:commandLink>
-	</p:column>
-	
 	<ui:decorate template="specColumnQuestionView.xhtml">
 		<ui:define name="qtySection">
-			<h:panelGroup rendered="#{isPriceTypeTier and isSpecTypeFinancial}">
-				<h:outputText value="#{tplSpecAnswer.tplSpecTierQty.fromQty}" rendered="#{isQuestionTypeItem}">
-					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, tplSpecAnswer.tplSpecQuestion.clUom.uomCode)}" />
-				</h:outputText>
-				<h:outputText value=" - " rendered="#{isQuestionTypeItem}">
-				</h:outputText> 
-				<h:outputText value="#{tplSpecAnswer.tplSpecTierQty.toQty}" rendered="#{isQuestionTypeItem}">
-					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, tplSpecAnswer.tplSpecQuestion.clUom.uomCode)}" />
-				</h:outputText>
-			</h:panelGroup>
-			<h:panelGroup rendered="#{((!isPriceTypeTier and isSpecTypeFinancial) or !isSpecTypeFinancial) and !isRepeated}">
-				<h:outputText value="#{tplSpecAnswer.tplSpecQuestion.clQuantity}" rendered="#{isQuestionTypeItem}">
-					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, tplSpecAnswer.tplSpecQuestion.clUom.uomCode)}" />
-				</h:outputText>
-			</h:panelGroup>
+			<p:column style="width:65px;text-align:right;" headerText="#{lbl['lbl.tpl.spec.content.quantity']}">
+				<h:panelGroup rendered="#{isPriceTypeTier and isSpecTypeFinancial}">
+					<h:outputText value="#{tplSpecAnswer.tplSpecTierQty.fromQty}" rendered="#{isQuestionTypeItem}">
+						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, tplSpecAnswer.tplSpecQuestion.clUom.uomCode)}" />
+					</h:outputText>
+					<h:outputText value=" - " rendered="#{isQuestionTypeItem}">
+					</h:outputText> 
+					<h:outputText value="#{tplSpecAnswer.tplSpecTierQty.toQty}" rendered="#{isQuestionTypeItem}">
+						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, tplSpecAnswer.tplSpecQuestion.clUom.uomCode)}" />
+					</h:outputText>
+				</h:panelGroup>
+				<h:panelGroup rendered="#{((!isPriceTypeTier and isSpecTypeFinancial) or !isSpecTypeFinancial) and !isRepeated}">
+					<h:outputText value="#{tplSpecAnswer.tplSpecQuestion.clQuantity}" rendered="#{isQuestionTypeItem}">
+						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, tplSpecAnswer.tplSpecQuestion.clUom.uomCode)}" />
+					</h:outputText>
+				</h:panelGroup>
+			</p:column>
+			
+			<p:column style="width:80px;" rendered="#{isSpecTypeFinancial and isZonal}" headerText="#{lbl['lbl.sc.zone']}">
+				<p:commandLink id="zoneName"
+					oncomplete="zoneLocPopup.show();"
+					partialSubmit="true" process="@this" update="@([id$=zoneLocPopup])">
+					<f:setPropertyActionListener target="#{zoneLocationBackingBean.tplSpecZoneDtl}" value="#{tplSpecAnswer.tplSpecSuppAnswer.tplSpecZoneDtl}" />
+					<h:outputText value="#{tplSpecAnswer.tplSpecSuppAnswer.tplSpecZoneDtl.zoneName}" />
+				</p:commandLink>
+			</p:column>
 		</ui:define>
 	</ui:decorate>
 	
