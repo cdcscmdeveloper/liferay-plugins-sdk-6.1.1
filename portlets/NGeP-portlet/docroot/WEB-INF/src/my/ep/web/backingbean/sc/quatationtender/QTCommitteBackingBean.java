@@ -554,8 +554,9 @@ public class QTCommitteBackingBean extends
 			InstantiationException, InvocationTargetException,
 			NoSuchMethodException {
 		debugLogger("addCloneToTecDtl");
-		List<TabBean> beans = getManagedBean().getScCommitteeMemberTabList();
-		TabBean bean = beans.get(this.getManagedBean().getSubTabIndex());
+		// List<TabBean> beans = getManagedBean().getScCommitteeMemberTabList();
+		// TabBean bean = beans.get(this.getManagedBean().getSubTabIndex());
+		TabBean bean = getManagedBean().getSelectedTabBean();
 		List<ScCommitteeMember> selectedList = bean.getMembers();
 		List<TabBean> tabs = this.getManagedBean()
 				.getScCommitteeMemberTabList();
