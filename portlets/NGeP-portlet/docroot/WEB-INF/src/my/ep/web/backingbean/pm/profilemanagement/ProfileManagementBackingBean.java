@@ -69,14 +69,15 @@ import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.pm.helper.RoleHelper;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
+import com.liferay.portal.UserPortraitSizeException;
+import com.liferay.portal.kernel.util.PrefsPropsUtil;
+import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.model.User;
-import com.liferay.portal.service.UserServiceUtil;
-import com.liferay.portal.util.PortalUtil;
+import com.liferay.portal.service.UserLocalServiceUtil;
 
 /**
  * Backing Bean for User Profiles (Management)
@@ -300,6 +301,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		pmUser.setConfirmPassword(null);
 		
 		this.getManagedBean().setSelectedUser(pmUser);
+		this.getManagedBean().setSelectedUserOrg(null);
 		System.out.println("login " + this.getManagedBean().getSelectedUser().getLoginId());
 	}
 	
@@ -482,7 +484,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		if(this.getManagedBean().getSelectedUser().getPmUserOrgs()==null){
 			this.getManagedBean().getSelectedUser().setPmUserOrgs(new ArrayList<PmUserOrg>());
 		}
-		//validation on eff date & exp date
+		//validation on eff date & exp date TODO
 		PmUserOrg pmUserOrg = new PmUserOrg();
 		PmOrgProfile pmOrgProfile = new PmOrgProfile();
 		pmOrgProfile.setOrgTypeCode(new PmParameter());
@@ -492,6 +494,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		pmUserOrg.setPmUserRoles(new ArrayList<PmUserRole>());
 		this.getManagedBean().getSelectedUser().addPmUserOrg(pmUserOrg);
 	}
+
 
 	/**
 	 * remove org unit from responsible org. unit list
@@ -527,6 +530,35 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		}
 		
 		return roleDesc;
+	}
+	
+	public void changeResOrg(int index){
+		if(this.getManagedBean().getSelectedUser().getPmUserOrgs()!=null && !this.getManagedBean().getSelectedUser().getPmUserOrgs().isEmpty()){
+			this.getManagedBean().getSelectedUser().getPmUserOrgs().get(index).getPmOrgProfile().setPmOrgValidity(new PmOrgValidity());
+			this.getManagedBean().getSelectedUser().getPmUserOrgs().get(index).setPmUserRoles(new ArrayList<PmUserRole>());
+		}
+		
+	}
+	public void test(){
+		System.out.println("test start---");
+		if(this.getManagedBean().getSelectedUserOrg()!=null && !this.getManagedBean().getSelectedUserOrg().getPmUserRoles().isEmpty()){
+			List <PmRole> oriPmRoles = new ArrayList<PmRole>();
+			List <PmRole> newPmRoles = new ArrayList<PmRole>();
+			for(PmUserRole obj:this.getManagedBean().getSelectedUserOrg().getPmUserRoles()){
+				oriPmRoles.add(obj.getPmRole());
+			}
+			for(PmRoleDesc obj:this.getManagedBean().getSelectedRoles()){
+				newPmRoles.add(obj.getPmRole());
+			}
+			if(oriPmRoles.containsAll(newPmRoles)){
+				System.out.println("2YES IT IS HERE!!!!");
+			}else{
+				System.out.println("2NOT HERE!!!!");
+			}
+		}
+		
+		
+		System.out.println("test end");
 	}
 	/**
 	 * TAB Authorization - END
@@ -616,20 +648,20 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	 */
 	public void confirmRoles(){
 		logger.info("confirmRoles");
-		this.getManagedBean().setAvailableRoles(this.getManagedBean().getSelectedRoles());
-//		if(this.getManagedBean().getSelectedRoles()!=null && !this.getManagedBean().getSelectedRoles().isEmpty()){
-//			if(this.getManagedBean().getSelectedUserOrg()!=null){
-//				for(PmRoleDesc pmRoleDesc : this.getManagedBean().getSelectedRoles()){
-//					PmUserRole pmUserRole = new PmUserRole();
-//					pmUserRole.setPmRole(pmRoleDesc.getPmRole());
-//					this.getManagedBean().getSelectedUserOrg().addPmUserRole(pmUserRole);
-//				}
-//			}else{
-//				throw new EpException("Please select a Reponsible Org. Unit."); //TODO exception
-//			}
-//		}else{
-//			throw new EpException("At least one role must be selected."); //TODO exception
-//		}
+//		this.getManagedBean().setAvailableRoles(this.getManagedBean().getSelectedRoles());
+		if(this.getManagedBean().getSelectedRoles()!=null && !this.getManagedBean().getSelectedRoles().isEmpty()){
+			if(this.getManagedBean().getSelectedUserOrg()!=null){
+				for(PmRoleDesc pmRoleDesc : this.getManagedBean().getSelectedRoles()){
+					PmUserRole pmUserRole = new PmUserRole();
+					pmUserRole.setPmRole(pmRoleDesc.getPmRole());
+					this.getManagedBean().getSelectedUserOrg().addPmUserRole(pmUserRole);
+				}
+			}else{
+				throw new EpException("Please select a Reponsible Org. Unit."); //TODO exception
+			}
+		}else{
+			throw new EpException("At least one role must be selected."); //TODO exception
+		}
 		
 	}
 	
@@ -908,6 +940,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				pmUserRole.setPmRole(pmRole);
 				tempUserOrg.setPmUserRoles(new ArrayList<PmUserRole>());
 				tempUserOrg.addPmUserRole(pmUserRole);
+				
 			}
 			
 		}else{
@@ -1083,19 +1116,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		}
 	}
 	
-	public void test(){
-		System.out.println("test start");
-	
-		for(PmRoleDesc obj:this.getManagedBean().getAvailableRoles()){
-			System.out.println(obj.getRoleName());
-		}
-		if(this.getManagedBean().getAvailableRoles().containsAll(this.getManagedBean().getSelectedRoles())){
-			System.out.println("YES IT IS HERE!!!!");
-		}else{
-			System.out.println("NOT HERE!!!!");
-		}
-		System.out.println("test end");
-	}
+
 	
 	
 //	public void testSearch(String id){
@@ -1637,11 +1658,14 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	 * @throws Exception
 	 */
 	public void handleFileUpload(FileUploadEvent event) throws Exception{
-		logger.info("handleFileUploadTest - START");
+		logger.info("handleFileUpload - START");
 		UploadedFile item = event.getFile();
 		byte[] bytes = item.getContents();
 		this.getManagedBean().getSelectedUser().setPortrait(bytes);
-		logger.info("handleFileUploadTest - END");
+		long imageMaxSize = PrefsPropsUtil.getLong(PropsKeys.USERS_IMAGE_MAX_SIZE);
+		System.out.println("size = " + imageMaxSize);
+		System.out.println("bytes.length = " + bytes.length);   
+		logger.info("handleFileUpload - END");
 	}
 	
 	/**
@@ -1653,8 +1677,13 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		logger.info("uploadPortrait - START");
 		long companyId = Long.parseLong(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_COMPANY_ID));
 		byte[] bytes = pmUser.getPortrait();
-		User user = UserServiceUtil.getUserByScreenName(companyId ,pmUser.getLoginId());
-		UserServiceUtil.updatePortrait(user.getUserId(), bytes);
+//		User user = UserServiceUtil.getUserByScreenName(companyId ,pmUser.getLoginId());
+		User user = UserLocalServiceUtil.getUserByScreenName(companyId ,pmUser.getLoginId());
+		long imageMaxSize = PrefsPropsUtil.getLong(PropsKeys.USERS_IMAGE_MAX_SIZE);
+		System.out.println("size = " + imageMaxSize);
+		System.out.println("bytes.length = " + bytes.length);   
+		
+		UserLocalServiceUtil.updatePortrait(user.getUserId(), bytes);
 		logger.info("uploadPortrait - END");
 	}
 			
