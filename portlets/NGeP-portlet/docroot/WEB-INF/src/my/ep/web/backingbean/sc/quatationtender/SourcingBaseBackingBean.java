@@ -650,25 +650,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 	}
 
-	public PmDigiSign retrieveGPKIData() {
-		/*String signedData = FacesContext.getCurrentInstance()
-				.getExternalContext().getRequestParameterMap()
-				.get("signedText");
-		String originalData = FacesContext.getCurrentInstance()
-				.getExternalContext().getRequestParameterMap()
-				.get("textBeforeSign");
-		String serialNo = FacesContext.getCurrentInstance()
-				.getExternalContext().getRequestParameterMap().get("serialNo");*/
-		PmDigiSign pmDigiSign = null;
-		/*if (null != signedData && null != originalData && null != serialNo) {
-			pmDigiSign = new PmDigiSign();
-			pmDigiSign.setSignedData(signedData);
-			pmDigiSign.setOrginalData(originalData);
-			pmDigiSign.setCertificate(serialNo);
-		}*/
-		return pmDigiSign;
 
-	}
 
 	public String gotoQtSearchPage() {
 		return QTConstants.SEARCH_PAGE;

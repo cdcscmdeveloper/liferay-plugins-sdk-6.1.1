@@ -39,6 +39,7 @@ import my.ep.biz.service.ct.circular.ICircularDetailSO;
 import my.ep.biz.service.ct.circular.ICircularSO;
 import my.ep.biz.service.ct.supplier.IPanelSupplierSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.document.IDocumentSO;
@@ -68,6 +69,8 @@ import my.ep.dto.ct.supplier.PanelSupplierReqDTO;
 import my.ep.dto.ct.supplier.PanelSupplierResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
@@ -164,6 +167,7 @@ import my.ep.web.util.sc.helper.LocationSingleton;
 import my.ep.web.util.sc.helper.SourcingLocationHelper;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.event.SelectEvent;
@@ -193,6 +197,7 @@ public class SpecificationBackingBean extends
 	private int outputTab;
 	private String textBeforeSign;
 
+	private PmDigiSign pmDigiSign;
 	public SpecificationBackingBean() {
 
 	}
@@ -9742,18 +9747,19 @@ public class SpecificationBackingBean extends
 
 	}
 
-	public String updateSpecCommitteBpmTask(String action) {
-		SpecificationReqDTO spReqDTO = constructSpecCommitteDtls();
-		spReqDTO.setOutcome(action);
-		spReqDTO.setTaskId(this.getManagedBean().getTaskId());
-		spReqDTO.setPayLoad(this.getManagedBean().getSpecificationDataType());
-		FacesScopes facesScopes = new FacesScopes();
-		String ctx = facesScopes.getBPMAuthenticationCtxToken();
-		spReqDTO.setToken(ctx);
-		IQTSpecSO specSO = getSpecSO();
-		// QuationTenderResDTO resDTO = new QuationTenderResDTO();
-		try {
-			SpecificationResDTO resDTO = specSO.updateBPMAction(spReqDTO);
+	public String specCommitteBpmTask(String action) {
+
+		IUserSO userSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		UserReqDTO reqDTO = new UserReqDTO();
+		reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
+		reqDTO.setLanguageCode("en");
+		UserResDTO userResDTO = userSO.retrieveUserRoleDescListByUserId(reqDTO);
+		List<PmRoleDesc> roleDesc = userResDTO.getRoleDescList();
+		if (isSpecChairPerson(roleDesc)) {
+			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+		} else {
+			SpecificationResDTO resDTO = updateSpecCommitteDtls(action, null);
 			if (resDTO.isSuccessful()) {
 				ScQt qt = resDTO.getScQt();
 				FacesContext
@@ -9765,7 +9771,7 @@ public class SpecificationBackingBean extends
 										null,
 										MessageUtils
 												.getMessage(
-														getMessgeConstant(action),
+														getMessgeConstant("SUBMIT"),
 														new String[] {
 																"Specification Preparation And Scoring For",
 																qt.getQtNo() },
@@ -9774,10 +9780,7 @@ public class SpecificationBackingBean extends
 																.getUserLocale())));
 
 				return CommonUIConst.ACKNOWLEDGE_PAGE;
-
 			}
-		} finally {
-			specSO = null;
 		}
 		return null;
 
@@ -10688,56 +10691,35 @@ public class SpecificationBackingBean extends
 		this.textBeforeSign = sb.toString();
 	}
 
-	public String updateSpecCommitteDtls(String action, boolean isSign) {
+	public SpecificationResDTO updateSpecCommitteDtls(String action,
+			PmDigiSign digiSign) {
 		SpecificationReqDTO spReqDTO = constructSpecCommitteDtls();
 		spReqDTO.setOutcome(action);
+		spReqDTO.setDigiSignData(digiSign);
 		spReqDTO.setTaskId(this.getManagedBean().getTaskId());
 		spReqDTO.setPayLoad(this.getManagedBean().getSpecificationDataType());
 		FacesScopes facesScopes = new FacesScopes();
 		String ctx = facesScopes.getBPMAuthenticationCtxToken();
 		spReqDTO.setToken(ctx);
 		IQTSpecSO specSO = getSpecSO();
-		// COde to get sign Data..
-		if (isSign) {
-			PmDigiSign signData = retrieveGPKIData();
-			spReqDTO.setSignRequired(true);
-			spReqDTO.setDigiSignData(signData);
-		}
+		SpecificationResDTO resDTO = null;
 		try {
-			SpecificationResDTO resDTO = specSO.updateBPMAction(spReqDTO);
-			if (resDTO.isSuccessful()) {
-				ScQt qt = resDTO.getScQt();
-				FacesContext
-						.getCurrentInstance()
-						.addMessage(
-								null,
-								new FacesMessage(
-										FacesMessage.SEVERITY_INFO,
-										null,
-										MessageUtils
-												.getMessage(
-														getMessgeConstant(action),
-														new String[] {
-																"Specification Preparation And Scoring For",
-																qt.getQtNo() },
-														MessageUtils.BUNDLE_COMMON_MESSAGES,
-														new FacesScopes()
-																.getUserLocale())));
+			resDTO = specSO.updateBPMAction(spReqDTO);
 
-				return CommonUIConst.ACKNOWLEDGE_PAGE;
-
-			}
 		} finally {
 			specSO = null;
 		}
-		return null;
+		return resDTO;
 	}
 
 	private boolean isSpecChairPerson(List<PmRoleDesc> roleDesc) {
-		for (PmRoleDesc pmRoleDesc : roleDesc) {
-			if (RoleCode.SC_CHAIRPERSON.toString().equalsIgnoreCase(
-					pmRoleDesc.getPmRole().getRoleCode())) {
-				return true;
+		if (null != roleDesc) {
+			for (PmRoleDesc pmRoleDesc : roleDesc) {
+				if (RoleCode.SC_CHAIRPERSON.toString().equalsIgnoreCase(
+						pmRoleDesc.getPmRole().getRoleCode())) {
+					return true;
+
+				}
 			}
 		}
 		return false;
@@ -10792,4 +10774,40 @@ public class SpecificationBackingBean extends
 		return CommonUIConst.ACKNOWLEDGE_PAGE;
 
 	}
+
+	public String gpkiSignAction(PmDigiSign digiSign) {
+		SpecificationResDTO resDTO = updateSpecCommitteDtls(
+				BpmOutcomeConst.BPM_SUBMIT, digiSign);
+		if (resDTO.isSuccessful()) {
+			ScQt qt = resDTO.getScQt();
+			FacesContext
+					.getCurrentInstance()
+					.addMessage(
+							null,
+							new FacesMessage(
+									FacesMessage.SEVERITY_INFO,
+									null,
+									MessageUtils
+											.getMessage(
+													getMessgeConstant(BpmOutcomeConst.BPM_SUBMIT),
+													new String[] {
+															"Specification Preparation And Scoring For",
+															qt.getQtNo() },
+													MessageUtils.BUNDLE_COMMON_MESSAGES,
+													new FacesScopes()
+															.getUserLocale())));
+
+			return CommonUIConst.ACKNOWLEDGE_PAGE;
+		}
+		return null;
+	}
+
+	public PmDigiSign getPmDigiSign() {
+		return pmDigiSign;
+	}
+
+	public void setPmDigiSign(PmDigiSign pmDigiSign) {
+		this.pmDigiSign = pmDigiSign;
+	}
+
 }
