@@ -1354,7 +1354,7 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			if(scRequestSupplierItem.getSupplierItemPrices() != null && scRequestSupplierItem.getSupplierItemPrices().size() >0){
 				for (ScSupplierItemPrice scSupplierItemPrice : scRequestSupplierItem.getSupplierItemPrices()) {
 
-					if(scSupplierItemPrice.getPriceType().getParameterId() == scRequestNoteDtl.getPriceType().getParameterId()){
+					if(scSupplierItemPrice.getPriceType().getParameterId().equals(scRequestNoteDtl.getPriceType().getParameterId())){
 						supplierItemPrices.add(scSupplierItemPrice);
 					}
 				}
