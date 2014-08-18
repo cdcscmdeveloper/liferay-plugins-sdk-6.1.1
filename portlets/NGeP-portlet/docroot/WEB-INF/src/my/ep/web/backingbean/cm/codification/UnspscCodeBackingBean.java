@@ -703,7 +703,6 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 	public String navigateToSearch(){
 		log.info("*****navigateToSearch******");
 
-
 		if(this.getManagedBean().getRequestCode().getCmRecommendCodes()!=null && this.getManagedBean().getRequestCode().getCmRecommendCodes().size()>0){
 
 
@@ -727,8 +726,6 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 	public String navigateCodeAdminToSearch(){
 		log.info("*****navigateCodeAdminToSearch******");
 
-
-
 		return "verifyUnspscSearch?faces-redirect=true";
 	}
 
@@ -748,6 +745,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
 		CodificationResDTO resDTO = null;
 		CodificationBackingBean bb = new CodificationBackingBean();
+		
 		try {
 
 			if(outcome.equalsIgnoreCase("SUBMIT")){
@@ -758,16 +756,12 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 						|| this.getManagedBean().getSelectedLovUnspscClass().getUnspscCode().isEmpty()
 						||this.getManagedBean().getSelectedLovUnspsc().getUnspscCode().isEmpty()){
 
-
-
 					FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR,null,
 							MessageUtils.getMessage(MessageConst.ERROR_715002,MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
 
 					return "reviewBeforeCreateTempCode";
 
 				}
-
-
 
 				if(this.getManagedBean().getSelectedLovUnspscSegment().isBrandNew()){
 					CmUnspsc unspsc = new CmUnspsc();
@@ -1684,29 +1678,26 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		
 	}
 
-
-
 	public void preRenderView() {
-		System.out.println("**********preRenderView**************");
+		log.debug("**********preRenderView**************");
+		
 		BPMTaskListBackingBean bb = new BPMTaskListBackingBean();
 		CodificationBackingBean codeBB = new CodificationBackingBean();
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter("taskId");
-		System.out.println("taskId:"+taskId);
+		log.info("taskId:"+taskId);
 
 		FacesScopes face = new FacesScopes();
 		String token =face.getBPMAuthenticationCtxToken();
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 
 		BpmRequestDTO reqDTO = new BpmRequestDTO();
-
-
 		reqDTO.setCtxToken(token);
 		reqDTO.setTaskId(taskId);
+		
 		BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
 		Object obj = res.getPojo();
-
 		CDRequestDataType unspsc = (CDRequestDataType)obj;
 
 		IRequestCodeSO requestSO = (IRequestCodeSO) BusinessDelegate.getInstance().getServiceObject("cm",IRequestCodeSO.class);
@@ -1716,11 +1707,11 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		
 		if(unspsc.getItemId()!=null && unspsc.getItemId().size()>0){
 			for(String itemId:unspsc.getItemId()){
-				System.out.println("itemId:"+itemId);
+				log.info("itemId:"+itemId);
+				
 				codeDTO.setRequestId(new Long(itemId));
 				RequestCodeResDTO resDTO = requestSO.retrieveUnspscCodeReview(codeDTO);
 				this.getManagedBean().getReviewExtCodeList().add(resDTO.getRequestCode());
-
 				this.getManagedBean().setRequestCode(resDTO.getRequestCode());
 			}
 		}else{
@@ -1728,9 +1719,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 			RequestCodeResDTO resDTO = requestSO.retrieveUnspscCodeReview(codeDTO);
 			this.getManagedBean().getReviewExtCodeList().add(resDTO.getRequestCode());
 			this.getManagedBean().setRequestCode(resDTO.getRequestCode());
-		}
-		
-		
+		}		
 
 
 		this.getManagedBean().setTaskName(res.getTaskName());
@@ -1742,19 +1731,15 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		this.getManagedBean().setTaskId(taskId);
 		this.getManagedBean().setAction(res.getAction());
 
-
 		IStatusSO statusSO = (IStatusSO)BusinessDelegate.getInstance().getServiceObject("pm",IStatusSO.class);
 		String languageCode = new FacesScopes().getUserLocale().getLanguage();
 
 		StatusReqDTO reqStatusDTO = new StatusReqDTO();
-
 		reqStatusDTO.setLanguageCode(languageCode);
 		reqStatusDTO.setStatusId(res.getDocStatus().longValue()); 
 		StatusResDTO resStatusDTO = statusSO.retrieveStatusDescById(reqStatusDTO);
 
-
 		this.getManagedBean().setDocStatus(resStatusDTO.getPmStatusDesc()!=null?resStatusDTO.getPmStatusDesc().getStatusName():"Review");
-
 
 		if(res.getTaskName().equalsIgnoreCase("Create Temporary Code")){
 			FacesContext fc = FacesContext.getCurrentInstance();

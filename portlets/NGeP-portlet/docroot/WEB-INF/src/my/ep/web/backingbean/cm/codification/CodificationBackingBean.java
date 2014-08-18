@@ -658,7 +658,7 @@ public class CodificationBackingBean extends
 		CodificationResDTO resDTO = null;
 
 		// System.out.println("index:"+obj);
-		System.out.println("length:" + objects);
+		log.info("length:" + objects);
 
 		ExtensionCodeVO extCodeVO = new ExtensionCodeVO();
 		// Object[] objects =
@@ -669,31 +669,25 @@ public class CodificationBackingBean extends
 		extCodeVO.setMeasurementId(Long.valueOf(String.valueOf(objects[2])));
 		extCodeVO.setColorId(Long.valueOf(String.valueOf(objects[3])));
 
-		System.out
-				.println("******type NAme******" + String.valueOf(objects[4]));
+		log.info("******type NAme******" + String.valueOf(objects[4]));
 		extCodeVO.setTypeName(String.valueOf(objects[4]));
 		extCodeVO.setBrandName(String.valueOf(objects[5]));
 		extCodeVO.setMeasurementName(String.valueOf(objects[6]));
 		extCodeVO.setColorName(String.valueOf(objects[7]));
 
 		CmColor colorObj = searchColorObjByColorId(extCodeVO.getColorId());
-
 		String colorCode = colorObj.getColorCode();
 		String colorName = colorObj.getColorName();
 
 		CmType typeObj = searchTypeOjbyTypeId(extCodeVO.getTypeId());
-
 		String typeCode = typeObj.getTypeCode();
 		String typeName = typeObj.getTypeName();
 
 		CmBrand brandObj = searchBrandObjByBrandId(extCodeVO.getBrandId());
-
 		String brandCode = brandObj.getBrandCode();
 		String brandName = brandObj.getBrandName();
 
-		CmMeasurement meaObj = searchMeasurementByMeasurementId(extCodeVO
-				.getMeasurementId());
-
+		CmMeasurement meaObj = searchMeasurementByMeasurementId(extCodeVO.getMeasurementId());
 		String measurementCode = meaObj.getMeasurementCode();
 		String measurementName = meaObj.getMeasurementName();
 
@@ -718,16 +712,22 @@ public class CodificationBackingBean extends
 				.add(recommend);
 
 		FacesScopes fs = new FacesScopes();
-		System.out.println("CM_ADMIN:" + fs.hasRoleUser("CM_ADMIN"));
-		System.out.println("CD_OFFICER:" + fs.hasRoleUser("CD_OFFICER"));
+		log.info("CM_ADMIN:" + fs.hasRoleUser("CM_ADMIN"));
+		log.info("CD_OFFICER:" + fs.hasRoleUser("CD_OFFICER"));
 
-		if (fs.hasRoleUser("CM_ADMIN")) {
-			return "reviewUnspscCode?faces-redirect=true";
-		} else if (fs.hasRoleUser("CD_OFFICER")) {
+//		if (fs.hasRoleUser("CM_ADMIN")) {
+//			return "reviewUnspscCode?faces-redirect=true";
+//		} else if (fs.hasRoleUser("CD_OFFICER")) {
+//			return "reviewBeforeCreateTempCode?faces-redirect=true";
+//		}
+
+		if(this.getManagedBean().getCurrentTaskName().equals(my.ep.constant.cm.CmConst.TASK_CREATE_TEMP_CODE)) {
 			return "reviewBeforeCreateTempCode?faces-redirect=true";
+		} else {
+			return "reviewUnspscCode?faces-redirect=true";
 		}
-
-		return "";
+		
+//		return "";
 
 	}
 
@@ -1436,10 +1436,18 @@ public class CodificationBackingBean extends
 	public String backToReviewUnspsc() {
 		FacesScopes fs = new FacesScopes();
 
-		System.out.println("CD_ADMIN" + fs.hasRoleUser("CM_ADMIN"));
+		log.info("CD_ADMIN" + fs.hasRoleUser("CM_ADMIN"));
+		log.info("Current Task Name: " + this.getManagedBean().getCurrentTaskName());
 
-		return fs.hasRoleUser("CM_ADMIN") == true ? "reviewUnspscCode?faces-redirect=true"
-				: "reviewBeforeCreateTempCode?faces-redirect=true";
+		if(this.getManagedBean().getCurrentTaskName() != null &&
+				this.getManagedBean().getCurrentTaskName().equals(my.ep.constant.cm.CmConst.TASK_CREATE_TEMP_CODE)) {
+			return "reviewBeforeCreateTempCode?faces-redirect=true";
+		} else {
+			return "reviewUnspscCode?faces-redirect=true";
+		}
+		
+//		return fs.hasRoleUser("CM_ADMIN") == true ? "reviewUnspscCode?faces-redirect=true"
+//				: "reviewBeforeCreateTempCode?faces-redirect=true";
 	}
 
 	public void onNodeSelect(NodeSelectEvent event) {
@@ -1571,7 +1579,12 @@ public class CodificationBackingBean extends
 	}
 
 	public String verifyExtensionSearch(CmUnspsc unspscObj) {
-		System.out.println("**********goToExtensionSearch************");
+		log.debug("**********goToExtensionSearch************");
+		
+		FacesScopes fs = new FacesScopes();
+		log.info("fs.getParameter(\"currentTaskName\")" + fs.getParameter("currentTaskName"));
+		this.getManagedBean().setCurrentTaskName(fs.getParameter("currentTaskName"));
+		
 		this.getManagedBean().setMeasurementCriteria(null);
 		this.getManagedBean().setColorCriteria(null);
 		this.getManagedBean().setBrandCriteria(null);
@@ -1660,16 +1673,24 @@ public class CodificationBackingBean extends
 		ubb.getManagedBean().getRequestCode().getCmRecommendCodes().add(recommend);
 		
 		FacesScopes fs = new FacesScopes();
-		System.out.println("CM_ADMIN:" + fs.hasRoleUser("CM_ADMIN"));
-		System.out.println("CD_OFFICER:" + fs.hasRoleUser("CD_OFFICER"));
+		log.info("CM_ADMIN:" + fs.hasRoleUser("CM_ADMIN"));
+		log.info("CD_OFFICER:" + fs.hasRoleUser("CD_OFFICER"));
 
-		if (fs.hasRoleUser("CM_ADMIN")) {
-			return "reviewUnspscCode?faces-redirect=true";
-		} else if (fs.hasRoleUser("CD_OFFICER")) {
+		String currentTaskName = fs.getParameter("currentTaskName");
+		
+//		if (fs.hasRoleUser("CM_ADMIN")) {
+//			return "reviewUnspscCode?faces-redirect=true";
+//		} else if (fs.hasRoleUser("CD_OFFICER")) {
+//			return "reviewBeforeCreateTempCode?faces-redirect=true";
+//		}
+		
+		if(currentTaskName != null && currentTaskName.equalsIgnoreCase(my.ep.constant.cm.CmConst.TASK_CREATE_TEMP_CODE)) {
 			return "reviewBeforeCreateTempCode?faces-redirect=true";
+		} else {
+			return "reviewUnspscCode?faces-redirect=true";
 		}
 		
-		return "";
+//		return "";
 		
 	}
 
@@ -1779,14 +1800,23 @@ public class CodificationBackingBean extends
 		reqDTO.setToken(token);
 		reqDTO.setTaskId(unspscBB.getManagedBean().getTaskId());
 
-		if (unspscBB.isCatalogueAdmin()) {
-			
+//		if (unspscBB.isCatalogueAdmin()) {
+//			
+//			log.info("***catalogue admin*** REQUEST EXTENSION");
+//			reqDTO.setOutCome("REQUEST EXTENSION");
+//		} else if (unspscBB.isCodeAdmin()) {
+//			
+//			log.info("***code admin*** SUBMIT");
+//			reqDTO.setOutCome("SUBMIT");
+//		}
+		
+		if(this.getManagedBean().getCurrentTaskName() != null
+				&& this.getManagedBean().getCurrentTaskName().equalsIgnoreCase(my.ep.constant.cm.CmConst.TASK_CREATE_TEMP_CODE)) {
+			log.info("***code admin*** SUBMIT");
+			reqDTO.setOutCome("SUBMIT");			
+		} else {
 			log.info("***catalogue admin*** REQUEST EXTENSION");
 			reqDTO.setOutCome("REQUEST EXTENSION");
-		} else if (unspscBB.isCodeAdmin()) {
-			
-			log.info("***code admin*** SUBMIT");
-			reqDTO.setOutCome("SUBMIT");
 		}
 
 		reqDTO.getRequestExtList().add(

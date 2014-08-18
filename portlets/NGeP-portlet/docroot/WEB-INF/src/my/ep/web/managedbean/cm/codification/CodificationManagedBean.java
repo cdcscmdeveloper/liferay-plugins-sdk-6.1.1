@@ -120,6 +120,8 @@ public class CodificationManagedBean extends BaseManagedBean {
 	private String assignPopUpWidth="680";
 	private String assignPopUpHeight="550";
 	
+	private String currentTaskName;
+	
 //	private String typeName;
 //	private String colorName;
 //	private String measurementName;
@@ -695,6 +697,14 @@ public class CodificationManagedBean extends BaseManagedBean {
 
 	public void setAssignPopUpHeight(String assignPopUpHeight) {
 		this.assignPopUpHeight = assignPopUpHeight;
+	}
+
+	public String getCurrentTaskName() {
+		return currentTaskName;
+	}
+
+	public void setCurrentTaskName(String currentTaskName) {
+		this.currentTaskName = currentTaskName;
 	}
 
 

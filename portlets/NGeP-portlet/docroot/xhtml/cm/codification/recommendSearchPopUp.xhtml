@@ -61,14 +61,16 @@
 				<p:commandLink
 					action="#{codificationBackingBean.returnToRecommendService(unspscObj1)}"
 					rendered="#{!(codificationBackingBean.productCode(unspscObj1.unspscCode)) and (unspscObj1.unspscLevel eq 3)}">
-							#{unspscObj1.unspscCode}
-							</p:commandLink>
+					#{unspscObj1.unspscCode}
+					<f:param name="currentTaskName" value="#{unspscCodeBackingBean.managedBean.taskName}" />
+				</p:commandLink>
 
 				<p:commandLink
 					action="#{codificationBackingBean.verifyExtensionSearch(unspscObj1)}"
 					rendered="#{codificationBackingBean.productCode(unspscObj1.unspscCode) and (unspscObj1.unspscLevel eq 3)}">
-							#{unspscObj1.unspscCode}
-							</p:commandLink>
+					#{unspscObj1.unspscCode}
+					<f:param name="currentTaskName" value="#{unspscCodeBackingBean.managedBean.taskName}" />
+				</p:commandLink>
 
 				<p:commandLink
 					action="#{codificationBackingBean.unspscPopUpSearch(unspscObj1)}"
