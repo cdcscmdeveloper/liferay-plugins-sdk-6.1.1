@@ -5,7 +5,10 @@ package my.ep.web.backingbean;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.List;
@@ -15,6 +18,8 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.context.ExceptionHandler;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import javax.portlet.PortletResponse;
+import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
@@ -39,12 +44,14 @@ import my.ep.web.util.pm.helper.StatusHelper;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.StreamedContent;
 import org.primefaces.model.UploadedFile;
 
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portal.util.PortalUtil;
 
 
 /**
@@ -569,6 +576,35 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		
 		genFile(uploadDir, file.getContents());
 
+	}
+	
+	public StreamedContent commonDownload(String path, String fileName) throws IOException {
+		String filePath = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
+		filePath += "/" + path;
+		
+		PortletResponse resp = (PortletResponse) FacesContext
+				.getCurrentInstance().getExternalContext().getResponse();
+		HttpServletResponse response = PortalUtil.getHttpServletResponse(resp);
+		
+		response.setHeader("Pragma", "no-cache");
+		response.setDateHeader("Expires", 0);
+//		response.setContentType("application/vnd.ms-excel");
+//		response.setHeader("Content-Transfer-Encoding", "binary");
+		response.setHeader("Content-Disposition", "attachment; filename="+fileName);
+		response.setContentType("application/octet-stream");
+		response.flushBuffer();
+		
+		FileInputStream docInputStream = new FileInputStream(new File(filePath));
+		
+		OutputStream out = response.getOutputStream();
+		byte[] buffer = new byte[4096];
+		int bytesRead;
+		while ((bytesRead = docInputStream.read(buffer)) != -1) {
+			out.write(buffer, 0, bytesRead);
+			buffer = new byte[4096];
+		}
+		
+		return null;
 	}
 	
 	/**
