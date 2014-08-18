@@ -348,7 +348,7 @@
 		header="#{lbl['lbl.sm.catCodes.cmfrmHdr']}"
 		widgetVar="typeConfirmation">
 
-		<p:commandButton id="conf" value="Yes" update=":form:tt:catCodeInfPan"
+		<p:commandButton id="conf" value="Yes" update="@form"
 			action="#{backingBean.assignApplnCategoryType}"
 			oncomplete="typeConfirmation.hide()" />
 		<p:commandButton id="decline" value="No" process="@this"

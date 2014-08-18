@@ -304,9 +304,6 @@ public class SmApplicationBackingBean extends
 									+ smAppl.getApplId()
 									+ " *** Num ***"
 									+ smAppl.getApplNo());
-					// TODO Set default not null values -- End insert appl ---
-					// TODo Remove hard code later
-					smAppl.setApplCategoryType(null);
 				}
 			} else {
 				System.out
@@ -761,6 +758,18 @@ public class SmApplicationBackingBean extends
 				calcPersonnelListCount();
 			}
 			if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
+					SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)) {
+				if (getManagedBean().getSmAppl().getApplCategoryType()
+						.equalsIgnoreCase("N"))
+					getManagedBean()
+							.setCatTypeConfirm(
+									"NOTE :  'Normal' categories can only be added in this applicaiton");
+			} else {
+				getManagedBean()
+						.setCatTypeConfirm(
+								"NOTE :  'Special' categories can only be added in this applicaiton");
+			}
+			if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
 					SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)
 					&& valid) {
 				System.out
@@ -812,11 +821,11 @@ public class SmApplicationBackingBean extends
 			if (getManagedBean().isApproverUser()) {
 				setDefaultApproverReviewSection();
 			}
-			if (getManagedBean().getSmAppl().getPmStatus() != null) {
-				System.out.println("***** After final Retrieve ****"
-						+ getManagedBean().getSmAppl().getPmStatus()
-								.getStatusId());
-			}
+			// if (getManagedBean().getSmAppl().getPmStatus() != null) {
+			// System.out.println("***** After final Retrieve ****"
+			// + getManagedBean().getSmAppl().getPmStatus()
+			// .getStatusId());
+			// }
 			return true;
 		} catch (Exception e) {
 			getManagedBean().setCurrentPageType(currentPageType);
@@ -1614,18 +1623,8 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void applicationCategorySelected(AjaxBehaviorEvent e) {
-		StringBuffer sb = new StringBuffer();
-		String desc = null;
 		getManagedBean().getSmAppl().setCurrentActiveTab(
 				getManagedBean().getTabActiveIndex());
-		if (getManagedBean().getSmAppl().getApplCategoryType().equals("N")) {
-			desc = "Normal";
-		} else {
-			desc = "Special";
-		}
-		sb.append("NOTE : '").append(desc)
-				.append("' categories can only be added in this applicaiton'");
-		getManagedBean().setCatTypeConfirm(sb.toString());
 		if (getManagedBean().isPoUser() || getManagedBean().isApproverUser()) {
 			assignMaxReviewCount(getManagedBean().getSmAppl().getApplType(),
 					getManagedBean().getSmAppl().getApplCategoryType(),
@@ -1656,6 +1655,16 @@ public class SmApplicationBackingBean extends
 			getManagedBean().getSmAppl().getSmSupplierCategories()
 					.removeAll(catList);
 		}
+		StringBuffer sb = new StringBuffer();
+		String desc = null;
+		if (getManagedBean().getSmAppl().getApplCategoryType().equals("N")) {
+			desc = "Normal";
+		} else {
+			desc = "Special";
+		}
+		sb.append("NOTE : '").append(desc)
+				.append("' categories can only be added in this applicaiton'");
+		getManagedBean().setCatTypeConfirm(sb.toString());
 		System.out.println("***** After confirm +++++++"
 				+ getManagedBean().getSmAppl().getSupportingDocMode());
 		// TODO fix the bug and remove this hard code
@@ -1664,12 +1673,19 @@ public class SmApplicationBackingBean extends
 						.equals("")) {
 			getManagedBean().getSmAppl().setSupportingDocMode("O");
 		}
+		saveOrUpdateAppl();
 	}
 
 	public void resetApplnCategoryType() {
 		System.out.println("********* Reset the Values ********");
-		// getManagedBean().getSmAppl().setApplCategoryType(null);
-		getManagedBean().setCatTypeConfirm(null);
+		if (getManagedBean().getSmAppl().getApplCategoryType() != null
+				&& getManagedBean().getSmAppl().getApplCategoryType()
+						.equals("S")) {
+			getManagedBean().getSmAppl().setApplCategoryType("N");
+		} else {
+			getManagedBean().getSmAppl().setApplCategoryType("S");
+		}
+		// getManagedBean().setCatTypeConfirm(null);
 		// TODO fix the bug and remove this hard code
 		if (getManagedBean().getSmAppl().getSupportingDocMode() == null
 				|| getManagedBean().getSmAppl().getSupportingDocMode()
