@@ -45,7 +45,6 @@
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.officeFacilityVerfied : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.officeFacilityVerfied : false)}" />
 
 			<table style="width: 100%">
-
 				<tr>
 					<td width="134px;"><p:outputLabel
 							value="#{lbl['lbl.sm.facility.ownerType']}" /> <p:outputLabel
@@ -63,10 +62,8 @@
 							showSummary="true" display="icon" /></td>
 
 				</tr>
-			</table>
-			<ui:fragment
-				rendered="#{backingBean.managedBean.basicCompanyFacility.ownershipType eq 'R'}">
-				<table style="width: 100%">
+				<c:if
+					test="#{backingBean.managedBean.basicCompanyFacility.ownershipType eq 'R'}">
 					<tr>
 						<td width="134px;"><p:outputLabel
 								value="#{lbl['lbl.sm.facility.facilityType']}" /> <p:outputLabel
@@ -245,34 +242,10 @@
 							<p:message id="companyPostCodeMsg" for="companyPostCode"
 								showSummary="true" showDetail="false" display="icon" /></td>
 					</tr>
-					<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 
-						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
-							<td colspan="3"><p:inputTextarea autoResize="true" cols="41"
-									value="#{backingBean.managedBean.poSecReview.officeFacilityRemark}" /></td>
-						</tr>
-
-					</p:outputPanel>
-					<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
-
-						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
-							<td><p:inputTextarea autoResize="true" readonly="true"
-									disabled="true" cols="41"
-									value="#{backingBean.managedBean.poSecReview.officeFacilityRemark}" /></td>
-							<td><p:outputLabel value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
-							<td><p:inputTextarea autoResize="true" cols="41"
-									value="#{backingBean.managedBean.apprvrSecReview.officeFacilityRemark}" /></td>
-
-						</tr>
-
-					</p:outputPanel>
-				</table>
-			</ui:fragment>
-			<ui:fragment
-				rendered="#{backingBean.managedBean.basicCompanyFacility.ownershipType eq 'O'}">
-				<table style="width: 100%">
+				</c:if>
+				<c:if
+					test="#{backingBean.managedBean.basicCompanyFacility.ownershipType eq 'O'}">
 					<tr>
 						<td width="134px;"><p:outputLabel
 								value="#{lbl['lbl.sm.facility.facilityType']}" /> <p:outputLabel
@@ -327,28 +300,29 @@
 								showSummary="true" showDetail="false" display="icon" /></td>
 
 					</tr>
-					<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 
-						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
-							<td colspan="3"><p:inputTextarea autoResize="true" cols="41" /></td>
-						</tr>
+				</c:if>
+				<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 
-					</p:outputPanel>
-					<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
+						<td colspan="3"><p:inputTextarea autoResize="true" cols="41" /></td>
+					</tr>
 
-						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
-							<td><p:inputTextarea autoResize="true" readonly="true"
-									disabled="true" cols="41" /></td>
-							<td><p:outputLabel value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
-							<td><p:inputTextarea autoResize="true" cols="41" /></td>
+				</p:outputPanel>
+				<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
 
-						</tr>
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
+						<td><p:inputTextarea autoResize="true" readonly="true"
+								disabled="true" cols="41" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
+						<td><p:inputTextarea autoResize="true" cols="41" /></td>
 
-					</p:outputPanel>
-				</table>
-			</ui:fragment>
+					</tr>
+
+				</p:outputPanel>
+			</table>
 		</p:panel>
 	</p:panel>
 </ui:composition>
