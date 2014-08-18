@@ -44,8 +44,7 @@
 					<ui:fragment rendered="#{ctCommitteeVar.pnp == false}" >
 						<p:selectOneMenu id="appaction" value="#{ctCommitteeVar.memberRole.parameterId}"
 							style="width: 110px;margin-bottom: 5px;" required="true" label="Role">
-							 <f:selectItems
-								value="#{amendmentBackingBean.getDropdownValues(ParameterTypeConst.committeeRole)}" />
+							<f:selectItems value="#{amendmentBackingBean.getCommitteDropdown()}" />
 							</p:selectOneMenu>
 						 </ui:fragment>
 				 </p:column>

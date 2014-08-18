@@ -697,7 +697,36 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		   this.getManagedBean().getContractVer().getCtContractValue().setContractAmount(new BigDecimal(contractValue));
 	 }
 	 
-     public SelectItem[] getMinistryDropdown() {
+	public SelectItem[] getCommitteDropdown() {
+		
+		SelectItem[] items = null;     
+		try {
+		        int i = 1;
+		        IParameterSO parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+		        ParameterReqDTO reqDTO = new ParameterReqDTO();
+				reqDTO.setParameterType(ParameterTypeConst.COMMITTEE_ROLE);
+				reqDTO.setLanguageCode("en");
+				
+				ParameterResDTO resDTO = parameterSO.retrieveParameterDescListByType(reqDTO);
+				
+				List<PmParameterDesc> list = resDTO.getParameterDescList();
+				 items = new SelectItem[list.size()];
+			     items[0] = new SelectItem(null, "- Select One -");
+				System.out.println("list: " + list.size());
+				
+				for (PmParameterDesc parameterDesc : list) {
+					  if(!parameterDesc.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON))
+						    items[i++] = new SelectItem( parameterDesc.getPmParameter().getParameterId(),parameterDesc.getCodeName());       
+				}
+				
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		}
+	    return items;
+	}
+
+	public SelectItem[] getMinistryDropdown() {
 			
 			SelectItem[] items = null;     
 			try {

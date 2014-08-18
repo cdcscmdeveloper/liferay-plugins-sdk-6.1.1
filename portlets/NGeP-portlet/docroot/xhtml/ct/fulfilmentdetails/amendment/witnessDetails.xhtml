@@ -13,8 +13,8 @@
 			    <p:outputLabel value="Full Name" />
 		    </h:panelGrid>
 		    <h:panelGrid columns="2">
-			   <p:inputText id="fullName"  required="true" label="Full Name"
-			        value="#{amendmentBackingBean.managedBean.scLoaWitness.witnessName}"  style="width:170px;"/>
+			   <p:inputText id="fullName"  required="true" label="Full Name" style="width:170px;"
+			        value="#{amendmentBackingBean.managedBean.scLoaWitness.witnessName}" validator="#{webappBean.checkInputField}"  />
 			    <p:message for="fullName" display="icon"/>
 			</h:panelGrid>
 		    
@@ -39,13 +39,13 @@
 			</h:panelGrid>
 			
 			<h:panelGroup>
-				<div style="height: 90px; vertical-align: top;">
+				<div style="height: 80px; vertical-align: top;">
 					<p:outputLabel for="agencyAddress" value="Address " />
 				</div>
 			</h:panelGroup>
 			<h:panelGrid columns="2" style="width:100%;" columnClasses="columnWidth20,columnWidth20">
-				 <p:inputTextarea id="agencyAddress" 	rows="4" style="width:170px;margin-bottom: 5px;" 
-				   value="#{amendmentBackingBean.managedBean.scLoaWitness.address}"  maxlength="200" autoResize="false" />
+				 <p:inputTextarea id="agencyAddress" 	rows="4" style="width:170px;" maxlength="200" 
+				   value="#{amendmentBackingBean.managedBean.scLoaWitness.address}"  autoResize="false" />
 				   <h:panelGrid columns="2" columnClasses="columnWidth30,columnWidth30">
 				  
 				        <h:panelGrid columns="2" style="float:right;">
@@ -54,7 +54,7 @@
 				        </h:panelGrid>
 				        <h:panelGrid columns="2">
 					         <p:inputText id="tellNo" style="width:150px;" required="true"   label="Tell No"
-					             value="#{amendmentBackingBean.managedBean.scLoaWitness.phoneNo}"  />
+					             value="#{amendmentBackingBean.managedBean.scLoaWitness.phoneNo}"  validator="#{webappBean.checkPhoneNumber}"/>
 					         <p:message for="tellNo" display="icon"/>
 					    </h:panelGrid>
 					    
@@ -64,7 +64,7 @@
 			           </h:panelGrid>
 			           <h:panelGrid columns="2">
 					        <p:inputText id="faxNo" style="width:150px;" required="true"  label="Fax No"
-					            value="#{amendmentBackingBean.managedBean.scLoaWitness.faxNo}"   />
+					            value="#{amendmentBackingBean.managedBean.scLoaWitness.faxNo}" validator="#{webappBean.checkFaxNumber}"   />
 					        <p:message for="faxNo" display="icon"/>
 					   </h:panelGrid>
 					   
@@ -74,7 +74,7 @@
 				  	   </h:panelGrid>
 				        <h:panelGrid columns="2">
 					       <p:inputText id="mobileNo" style="width:150px;"  required="true"  label="Mobile No" 
-					           value="#{amendmentBackingBean.managedBean.scLoaWitness.mobileNo}" />
+					           value="#{amendmentBackingBean.managedBean.scLoaWitness.mobileNo}"  validator="#{webappBean.checkMobileNumber}"/>
 					       <p:message for="mobileNo" display="icon"/>
 					   </h:panelGrid>
 				</h:panelGrid>
@@ -85,7 +85,7 @@
 			 </h:panelGrid>
 			 <h:panelGrid columns="2">
 			     <p:inputText  id="email" style="width:170px;" required="true"   label="Email" 
-			        value="#{amendmentBackingBean.managedBean.scLoaWitness.email}"/>
+			        value="#{amendmentBackingBean.managedBean.scLoaWitness.email}" validator="#{webappBean.checkEmail}"/>
 			      <p:message for="email" display="icon"/>
 		     </h:panelGrid>
 		</h:panelGrid>

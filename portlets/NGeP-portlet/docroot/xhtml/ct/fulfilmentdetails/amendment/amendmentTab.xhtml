@@ -105,7 +105,7 @@
 			    
 				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.amend.letterOfAcc']
 				        and amendmentBackingBean.managedBean.ackFA == CtConst.supplierAckLoa}">
-					<ui:include src="supplier/supplierLoa.xhtml" />
+					<ui:include src="supplier/supplierLoa.xhtml"  />
 				</p:outputPanel>
 	
 				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.amend.declaration'] }">

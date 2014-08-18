@@ -50,7 +50,7 @@ public class WebappBean {
         String inputValue=(String)obj;
         inputValue=inputValue==null? "":inputValue;
         if(!inputValue.isEmpty()){
-           String errMsg="Only alphabets,underscore,hyphen are allowed";
+           String errMsg="Only alphabets and space are allowed";
            String pattern="^[a-zA-Z\\s]+$";  
           if(!inputValue.matches(pattern)){
             throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "", errMsg));
@@ -81,6 +81,30 @@ public class WebappBean {
            throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "", errMsg));
        }
     }
+
+    public void checkMobileNumber(FacesContext ctx, UIComponent fieldName, Object obj){
+        
+        String inputValue=(String)obj;
+        if(inputValue == null || inputValue.equalsIgnoreCase(""))
+     	   return;
+        String errMsg="Invalid mobile number";
+        String pattern = "\\d{10}";
+        if(!inputValue.matches(pattern)){
+            throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "", errMsg));
+        }
+     }
+
+    public void checkFaxNumber(FacesContext ctx, UIComponent fieldName, Object obj){
+        
+        String inputValue=(String)obj;
+        if(inputValue == null || inputValue.equalsIgnoreCase(""))
+     	   return;
+        String errMsg="Invalid fax number";
+        String pattern = "\\d{10}";
+        if(!inputValue.matches(pattern)){
+            throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "", errMsg));
+        }
+     }
 
     public void checkEmail(FacesContext ctx, UIComponent fieldName, Object obj){
         String inputValue=(String)obj;
