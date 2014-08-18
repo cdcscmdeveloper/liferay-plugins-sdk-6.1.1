@@ -92,6 +92,7 @@ import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.directpurchase.ScSQRemark;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
+import my.ep.persistence.entity.tpl.spec.TplSpecEstimation;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
@@ -441,6 +442,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 					}
 				}
 				prodTpl.setTplSpecQuestions(productQuestions);
+				prodTpl.setBrandNew(Boolean.FALSE);
 				productTemplateSpecBean.setSpecMaster(prodTpl);
 				getManagedBean().setProductTemplateSpecBean(productTemplateSpecBean);
 			}
@@ -1507,8 +1509,6 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 		 if(getManagedBean().getPageNavToRequestNote() != null){
 			 fc.getApplication().getNavigationHandler().handleNavigation(fc, null, getManagedBean().getPageNavToRequestNote());  
 		 } else {
-			 // clear data
-			 super.renewSesionObject();
 			 fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "catalogueSearch");  
 		 }
 	}
@@ -1683,56 +1683,124 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 	
 	public void addCloneItemSpec() throws IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchMethodException {
 		log.info("addCloneItemSpec");
+		TplSpecMaster prodSpecMaster =null;
+		TplSpecMaster serviceSpecMaster = null;
 		ITemplateSpecSO templateSpecSO = (ITemplateSpecSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.COMMON_COMPONENT,ITemplateSpecSO.class);
 		TemplateSpecReqDTO reqDTO = new TemplateSpecReqDTO();
 		TemplateSpecBean productTplSpecBean = getManagedBean().getProductTemplateSpecBean();
 		TemplateSpecBean serviceTplSpecBean = getManagedBean().getServiceTemplateSpecBean();
 		try {
-		    if(getManagedBean().getSelectedQuote() != null) {
-			   reqDTO.setSpecMaster(getManagedBean().getSelectedQuote().getQuoteDocs().get(0).getSpecMaster());
-			   reqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);
-			   TemplateSpecResDTO resDTO = templateSpecSO.getTemplateMaster(reqDTO);
-			   TplSpecMaster specMaster = resDTO.getSpecMaster();
+			if(getManagedBean().getSelectedQuote() != null) {
+				reqDTO.setSpecMaster(getManagedBean().getSelectedQuote().getQuoteDocs().get(0).getSpecMaster());
+				reqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);
+				TemplateSpecResDTO resDTO = templateSpecSO.getTemplateMaster(reqDTO);
+				TplSpecMaster specMaster = resDTO.getSpecMaster();
 
-			// product Tpl Spe
-			if(ParameterConst.SQ_ITEM_LIST_PRODUCT.equalsIgnoreCase(specMaster.getItemTypeCode().getParameterCode())){
-				TplSpecMaster cloneSpecMaster = (TplSpecMaster) BeanUtils.cloneBean(specMaster);
-				cloneSpecMaster.setSpecMasterId(null);
-				cloneSpecMaster.setTplSpecQuestions(cloneTplSpecQuetions(cloneSpecMaster));
-				cloneSpecMaster.setBrandNew(Boolean.TRUE);
-				productTplSpecBean.setSpecMaster(cloneSpecMaster);
-				getManagedBean().setProductTemplateSpecBean(productTplSpecBean);
+				// product Tpl Spec master
+				if(ParameterConst.SQ_ITEM_LIST_PRODUCT.equalsIgnoreCase(specMaster.getItemTypeCode().getParameterCode())){
+					List<TplSpecQuestion> questions = new ArrayList<TplSpecQuestion>();
+					List<TplSpecQuestion>  cloneQuestions  = new ArrayList<TplSpecQuestion>();
+					
+					// non clone spec master
+					if(productTplSpecBean.getSpecMaster() !=null && productTplSpecBean.getSpecMaster().getTplSpecQuestions() !=null){
+						prodSpecMaster = productTplSpecBean.getSpecMaster();
+						if(getManagedBean().getProdQuestions().isEmpty()){
+							getManagedBean().setProdQuestions(prodSpecMaster.getTplSpecQuestions());
+						}
+					}else{ 
+						// clone tpl spec master
+						prodSpecMaster = (TplSpecMaster) BeanUtils.cloneBean(specMaster);
+						prodSpecMaster.setSpecMasterId(null);
+					}
 
-			   // service Tpl Spe
-			} else  if(ParameterConst.SQ_ITEM_LIST_SERVICE.equalsIgnoreCase(specMaster.getItemTypeCode().getParameterCode())){
-				TplSpecMaster cloneSpecMaster = (TplSpecMaster) BeanUtils.cloneBean(specMaster);
-				cloneSpecMaster.setSpecMasterId(null);
-				cloneSpecMaster.setTplSpecQuestions(cloneTplSpecQuetions(cloneSpecMaster));
-				cloneSpecMaster.setBrandNew(Boolean.TRUE);
-				serviceTplSpecBean.setSpecMaster(cloneSpecMaster);
-				serviceTplSpecBean.setSpecMaster(specMaster);
-				getManagedBean().setServiceTemplateSpecBean(serviceTplSpecBean);
+					if(getManagedBean().getProdQuestions() != null && getManagedBean().getProdQuestions().size()>0){
+						List<TplSpecQuestion> prodQuestions = getManagedBean().getProdQuestions();
+						questions.addAll(prodQuestions);
+					}
+
+					cloneQuestions  = cloneTplSpecQuetions(specMaster ,prodSpecMaster);
+					if(cloneQuestions.size() >0){
+						questions.addAll(cloneQuestions);
+					}
+
+					prodSpecMaster.setBrandNew(Boolean.TRUE);
+					prodSpecMaster.setTplSpecQuestions(questions);
+					productTplSpecBean.setSpecMaster(prodSpecMaster);
+					getManagedBean().setProductTemplateSpecBean(productTplSpecBean);
+
+					// service Tpl Spec master
+				} else  if(ParameterConst.SQ_ITEM_LIST_SERVICE.equalsIgnoreCase(specMaster.getItemTypeCode().getParameterCode())){
+					List<TplSpecQuestion> questions = new ArrayList<TplSpecQuestion>();
+					List<TplSpecQuestion>  cloneQuestions  = new ArrayList<TplSpecQuestion>();
+
+					// non clone spec master
+					if(serviceTplSpecBean.getSpecMaster() !=null && serviceTplSpecBean.getSpecMaster().getTplSpecQuestions() !=null){
+						serviceSpecMaster = serviceTplSpecBean.getSpecMaster();
+						if(getManagedBean().getServiceQuestions().isEmpty()){
+							getManagedBean().setServiceQuestions(serviceSpecMaster.getTplSpecQuestions());
+						}
+
+					}else{ 
+						// clone tpl spec master
+						serviceSpecMaster = (TplSpecMaster) BeanUtils.cloneBean(specMaster);
+						serviceSpecMaster.setSpecMasterId(null);
+					}
+
+					if(getManagedBean().getProdQuestions() != null && getManagedBean().getProdQuestions().size()>0){
+						List<TplSpecQuestion> serviceQuestions = getManagedBean().getServiceQuestions();
+						questions.addAll(serviceQuestions);
+					}
+
+					cloneQuestions  = cloneTplSpecQuetions(specMaster ,serviceSpecMaster);
+					if(cloneQuestions.size() >0){
+						questions.addAll(cloneQuestions);
+					}
+					serviceSpecMaster.setBrandNew(Boolean.TRUE);
+					serviceSpecMaster.setTplSpecQuestions(questions);
+					serviceTplSpecBean.setSpecMaster(serviceSpecMaster);
+					getManagedBean().setServiceTemplateSpecBean(serviceTplSpecBean);
+				}
 			}
-		   }
 		} finally {
 			templateSpecSO = null;
 		}
 	}
 	
-	private List<TplSpecQuestion>  cloneTplSpecQuetions(TplSpecMaster master) throws IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchMethodException{
+	private List<TplSpecQuestion>  cloneTplSpecQuetions(TplSpecMaster cloneMaster ,TplSpecMaster tplSpecMaster) throws IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchMethodException{
 		List<TplSpecQuestion> questions = new ArrayList<TplSpecQuestion>();
-		for (TplSpecQuestion tplSpecQuestion : master.getTplSpecQuestions()) {
+		for (TplSpecQuestion tplSpecQuestion : cloneMaster.getTplSpecQuestions()) {
 			TplSpecQuestion question = (TplSpecQuestion) BeanUtils.cloneBean(tplSpecQuestion);
 			question.setSpecQuestionId(null);
-			question.setTplSpecMaster(master);
-			question.setTplSpecAnswers(null);
+			//question.setTplSpecAnswers(null);
 			question.setTplSpecScorings(null);
 			question.setTplSpecTierQties(null);
-			//question.setTplSpecEstimations(null);
+			question.setBrandNew(Boolean.TRUE);
+			if(tplSpecMaster !=null){
+				question.setTplSpecMaster(tplSpecMaster);
+			} else{
+				question.setTplSpecMaster(cloneMaster);
+			}
+			
+			if(question.getTplSpecEstimations() !=null && question.getTplSpecEstimations().size() >0 ){
+				question.setTplSpecEstimations(cloneTplSpecEstimations(question));	
+			}
 			questions.add(question);
 		}
 		return questions;
 	}
+	
+	private List<TplSpecEstimation>  cloneTplSpecEstimations(TplSpecQuestion question) throws IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchMethodException{
+		List<TplSpecEstimation> specEstimations = new ArrayList<TplSpecEstimation>();
+		for (TplSpecEstimation specEstimation : question.getTplSpecEstimations()) {
+			 specEstimation = (TplSpecEstimation) BeanUtils.cloneBean(specEstimation);
+			 specEstimation.setSpecEstimationId(null);
+			 specEstimation.setEstimatedCost(null);
+			 specEstimation.setBrandNew(Boolean.TRUE);
+			 specEstimations.add(specEstimation);
+		}
+		return specEstimations;
+	}
+	
 	
 	public void cloneAction(String productOrService){
 		if(productOrService != null){

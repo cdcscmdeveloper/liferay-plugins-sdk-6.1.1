@@ -34,6 +34,7 @@ import my.ep.persistence.entity.sc.directpurchase.ScQuoteSupplier;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -153,6 +154,8 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	private boolean rnToSQFlag = Boolean.TRUE;
 	private boolean supplierViewBtn = Boolean.TRUE;
 	private boolean required;
+	private List<TplSpecQuestion> prodQuestions = new ArrayList<TplSpecQuestion>();
+	private List<TplSpecQuestion> serviceQuestions = new ArrayList<TplSpecQuestion>();
 
 	public SimpleQuoteManagedBean() {
 		super();
@@ -1295,6 +1298,30 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	 */
 	public void setRequired(boolean required) {
 		this.required = required;
+	}
+	/**
+	 * @return the prodQuestions
+	 */
+	public List<TplSpecQuestion> getProdQuestions() {
+		return prodQuestions;
+	}
+	/**
+	 * @param prodQuestions the prodQuestions to set
+	 */
+	public void setProdQuestions(List<TplSpecQuestion> prodQuestions) {
+		this.prodQuestions = prodQuestions;
+	}
+	/**
+	 * @return the serviceQuestions
+	 */
+	public List<TplSpecQuestion> getServiceQuestions() {
+		return serviceQuestions;
+	}
+	/**
+	 * @param serviceQuestions the serviceQuestions to set
+	 */
+	public void setServiceQuestions(List<TplSpecQuestion> serviceQuestions) {
+		this.serviceQuestions = serviceQuestions;
 	}
 	
 }
