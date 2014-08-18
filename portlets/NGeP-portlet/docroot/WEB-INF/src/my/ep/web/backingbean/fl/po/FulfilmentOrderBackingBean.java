@@ -148,7 +148,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 				resDTO = fulfilmentOrderSO.stopFulfilment(reqDTO);
 			}else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REMOVE_FACTORING)){
 				System.out.println("Remove factoring");
-				//TODO waiting for KK API
+				resDTO = fulfilmentOrderSO.removeFactoringComp(reqDTO);
 				
 			}else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
 				reqDTO.setFulfilmentOrder(flRequest.getFlFulfilmentOrder());
