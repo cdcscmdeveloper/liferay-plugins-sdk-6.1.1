@@ -24,6 +24,7 @@ import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.cm.catalogue.IViewSupplierItemSO;
 import my.ep.biz.service.ct.supplier.IPanelSupplierSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
@@ -48,6 +49,8 @@ import my.ep.dto.ct.supplier.PanelSupplierReqDTO;
 import my.ep.dto.ct.supplier.PanelSupplierResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.country.CountryReqDTO;
@@ -123,6 +126,7 @@ import org.apache.log4j.MDC;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.event.NodeUnselectEvent;
+import org.primefaces.event.TabChangeEvent;
 import org.primefaces.model.TreeNode;
 
 import com.liferay.portal.kernel.util.WebKeys;
@@ -1845,7 +1849,6 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 					}
 				}
 			}
-
 		}
 	}
 	
@@ -1935,12 +1938,8 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 		List<TplSpecZoneLoc> locationDTOs = new ArrayList<TplSpecZoneLoc>();
 		if (getManagedBean().getLocationTrees() != null) {
 			for (TreeNode treeNode : getManagedBean().getLocationTrees()) {
-				if(treeNode.getParent() != null){
-					if (treeNode.getParent().isSelected()) {
 						List<TplSpecZoneLoc> locationDTO = getLocations(treeNode);
 						locationDTOs.addAll(locationDTO);
-					}	
-				}
 			}
 		}
 		List<PmState> states = SourcingLocationHelper
@@ -2524,7 +2523,27 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 		}
 		return items;
 	}
-	
-	
+
+	public String  showCreatedBy(Long createdBy) {
+		String userName ="";
+		IUserSO userSO	=	(IUserSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		UserReqDTO reqDTO = new UserReqDTO();
+		if(createdBy != null){
+			reqDTO.setUserId(createdBy);
+			UserResDTO resDTO = userSO.retrieveUserDetails(reqDTO);
+
+			if(resDTO.getPmUser() != null){
+				userName = resDTO.getPmUser().getUserName();
+			}
+		}
+		return userName;
+	}
+
+	public void onTabChange(TabChangeEvent event) {
+		if(event.getTab().getTitle().equalsIgnoreCase("Supplier List")){
+			//call supplier criteria 
+			getSupplierListCriteria();
+		}
+	}
 }
 

@@ -17,7 +17,7 @@
 						listener="#{simpleQuoteBackingBean.byLocAndBusinessEvent}"
 						process="@this byLocId" />
 				</p:selectBooleanCheckbox>
-				<h:outputText value="By Location" />
+				<h:outputText value="#{lbl['lbl.sc.sq.supp.by.locality']}" />
 
 				<p:selectBooleanCheckbox id="byBussNatureId"
 					value="#{simpleQuoteBackingBean.managedBean.byBusinessNature}">
@@ -25,16 +25,16 @@
 						listener="#{simpleQuoteBackingBean.byLocAndBusinessEvent}"
 						process="@this byBussNatureId" />
 				</p:selectBooleanCheckbox>
-				<h:outputText value="By Business Nature" />
+				<h:outputText value="#{lbl['lbl.sc.sq.supp.by.busi.nature']}" />
 			</h:panelGrid>
 		</h:panelGroup>
 
 		<p:panel id="suppCriteriasId">
 			<p:tabView
 				activeIndex="#{simpleQuoteBackingBean.managedBean.tabActiveIndex}">
-
+                <p:ajax event="tabChange" listener="#{simpleQuoteBackingBean.onTabChange}"/>
 				<!-- BY LOCATION -->
-				<p:tab title="Locality"
+				<p:tab title="#{lbl['lbl.sc.sq.supp.tab.locality']}"
 					rendered="#{simpleQuoteBackingBean.managedBean.locAndBusinessFlag}">
 					<p:panel id="locPanel">
 						<table style="width: 100%">
@@ -87,7 +87,6 @@
 											value="/resources/ep/images/design/trash.png" />
 									</p:commandLink>
 
-
 								</p:column>
 							</p:dataTable>
 						</h:panelGrid>
@@ -107,7 +106,7 @@
 				</p:tab>
 
 				<!-- BY BUSINESS NATURE -->
-				<p:tab title="Business Nature"
+				<p:tab title="#{lbl['lbl.sc.sq.supp.tab.busi.nature']}"
 					rendered="#{simpleQuoteBackingBean.managedBean.byBusinessNature}">
                    <p:panel>
 					<p:dataTable id="byBusNatureDtl" var="busiNatureCriteria"
@@ -162,7 +161,7 @@
 				</p:tab>
 
 				<!--  BY SUPPLIER   -->
-				<p:tab title="Supplier List"
+				<p:tab title="#{lbl['lbl.sc.sq.supp.tab.supp.list']}"
 					rendered="#{simpleQuoteBackingBean.managedBean.locAndBusinessFlag}">
 					<p:panel>
 					<p:dataTable id="supplierItemDt" var="quoteSupplier"
@@ -219,7 +218,7 @@
 				 </p:tab>
 
 				<!--  BY Government Seller   -->
-				<p:tab title="Government Seller"
+				<p:tab title="#{lbl['lbl.sc.sq.supp.tab.govt.seller']}"
 					rendered="#{simpleQuoteBackingBean.managedBean.g2GFlag}">
 					<p:panel>
 					<p:dataTable id="govtSellerId" var="data" rowKey="#{data}"
@@ -278,7 +277,7 @@
 				</p:tab>
 
 				<!-- Panel Supplier   -->
-				<p:tab title="Panel Supplier"
+				<p:tab title="#{lbl['lbl.sc.sq.supp.tab.panel.supplier']}"
 					rendered="#{simpleQuoteBackingBean.managedBean.scQuote.panel}">
 					<p:panel>
 					<p:dataTable id="bypanelItemId" var="data" rowKey="#{data}"
@@ -296,7 +295,7 @@
 
 						<p:column headerText="#{lbl['lbl.sc.sq.supp.criteria.mof.no']}"
 							style="width:10%">
-							<h:outputText value="#{data.smSupplier.epNo}" />
+							<h:outputText value="#{data.smSupplier.smMofAccounts[0].mofNo}" rendered="false" />
 
 						</p:column>
 

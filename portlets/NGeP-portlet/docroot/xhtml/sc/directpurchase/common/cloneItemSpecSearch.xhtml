@@ -82,15 +82,18 @@
 					</p:column>
 					
 					<p:column headerText="#{lbl['lbl.sc.sq.clone.item.spec.proc.type']}">
-						<h:outputText value="#{scQuote.procurementType.parameterCode}" />
+						<h:outputText value="#{requestNoteBackingBean.getParameterDesc(scQuote.procurementType)}" />
 					</p:column>
 					
 					<p:column headerText="#{lbl['lbl.sc.sq.clone.item.spec.created.date']}">
-						<h:outputText value="#{scQuote.createdDate}" />
+						<h:outputText value="#{scQuote.createdDate}">
+							<f:convertDateTime
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</h:outputText>
 					</p:column>
 					
 					<p:column headerText="#{lbl['lbl.sc.sq.clone.item.spec.created.by']}">
-						<h:outputText value="#{scQuote.createdBy}" />
+						<h:outputText value="#{simpleQuoteBackingBean.showCreatedBy(scQuote.createdBy)}" />
 					</p:column>
 				</p:dataTable>
 				
