@@ -6,38 +6,44 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel id="ctZoneList"
-		header="#{lbl['lbl.sc.spec.panel.location.details']}"
-		toggleable="true">
+	<ui:fragment
+		rendered="#{specificationBackingBean.managedBean.ctzones eq 'true'}">
+
+		<p:panel id="ctZoneList"
+			header="#{lbl['lbl.sc.spec.panel.location.details']}"
+			toggleable="true">
 
 
-		<p:dataTable id="ctSupplierZones"
-			value="#{specificationBackingBean.managedBean.ctZoneSuppliers}"
-			var="Zones" rowIndexVar="index"
-			selection="#{specificationBackingBean.managedBean.panelZoneSelect}"
-			dynamic="true" >
+			<p:dataTable id="ctSupplierZones"
+				value="#{specificationBackingBean.managedBean.ctZoneSuppliers}"
+				var="Zones" rowIndexVar="index"
+				selection="#{specificationBackingBean.managedBean.panelZoneSelect}"
+				dynamic="true">
 
 
-			<p:column headerText="#{lbl['lbl.sc.spec.supplier.zone']}"
-				style="width:90%">
-				<p:tree value="#{Zones}" var="location" selectionMode="single">
-					<p:ajax event="select"  update="@([id$=totalSupplier])" process="@this" partialSubmit="true"
-						listener="#{specificationBackingBean.retriveZoneBySupplier}" />
-						
-					<p:treeNode type="zone">
-						<h:outputText value="#{location.name}" />
-					</p:treeNode>
-					<p:treeNode type="state">
-						<h:outputText value="#{location.stateId.stateName}" />
-					</p:treeNode>
-					<p:treeNode type="district">
-						<h:outputText value="#{location.districtId.districtName}" />
-					</p:treeNode>
-				</p:tree>
-			</p:column>
-		</p:dataTable>
+				<p:column headerText="#{lbl['lbl.sc.spec.supplier.zone']}"
+					style="width:90%">
+					<p:tree value="#{Zones}" var="location" selectionMode="single">
+						<p:ajax event="select" update="@([id$=totalSupplier])"
+							process="@this" partialSubmit="true"
+							listener="#{specificationBackingBean.retriveZoneBySupplier}" />
+
+						<p:treeNode type="zone">
+							<h:outputText value="#{location.name}" />
+						</p:treeNode>
+						<p:treeNode type="state">
+							<h:outputText value="#{location.stateId.stateName}" />
+						</p:treeNode>
+						<p:treeNode type="district">
+							<h:outputText value="#{location.districtId.districtName}" />
+						</p:treeNode>
+					</p:tree>
+				</p:column>
+			</p:dataTable>
 
 
-	<ui:include src="supplierlist.xhtml" />	
-	</p:panel>
+
+		</p:panel>
+	</ui:fragment>
+	<ui:include src="supplierlist.xhtml" />
 </ui:composition>
