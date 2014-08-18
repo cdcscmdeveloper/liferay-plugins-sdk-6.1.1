@@ -44,6 +44,10 @@
 									oncomplete="supportAttachDlg.show();return false;"
 									icon="iconAttachment" update="bpkremarksupDtls"
 									value="Attach Files">
+									<f:setPropertyActionListener
+										value="#{approvalBackingBean.managedBean.scQtApproval}"
+										target="#{approvalBackingBean.managedBean.scQtApproval}" />
+									
 								</p:commandButton></td>
 						</tr>
 						<tr>

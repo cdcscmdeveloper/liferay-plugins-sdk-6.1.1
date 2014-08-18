@@ -9,6 +9,7 @@
 	<p:dialog id="cloneid" header="Clone Committee" widgetVar="screen2"
 		width="950" height="600" position="top"
 		styleClass="cloneCommitteMember">
+		<p:panel id="pnlid">
 		<p:panel id="clonesearchpnlid" header="#{lbl['lbl.so.searchbtn']}"
 			toggleable="true">
 			<table>
@@ -83,7 +84,7 @@
 					update="clonesearchCommitteid" process="@this, clonesearchpnlid" />
 				<p:commandButton value="#{lbl['lbl.so.reset']}"
 					action="#{qTCommitteBackingBean.resetClone}"
-					update="clonesearchpnlid" icon="ui-icon-reset" resetValues="true"
+					update="pnlid" icon="ui-icon-reset" resetValues="true"
 					partialSubmit="true" process="@this" />
 			</div>
 		</p:panel>
@@ -185,6 +186,7 @@
 				<p:commandButton value="#{lbl['lbl.so.cancelbtn']}"
 					icon="ui-icon-cancel" onclick="screen2.hide();" />
 			</div>
+		</p:panel>
 		</p:panel>
 	</p:dialog>
 </ui:composition>

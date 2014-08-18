@@ -22,6 +22,7 @@
 				<h:outputText value="#{requestdetails.changedValue}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.qt.appby']}">
+				<h:outputText value="#{approvalBackingBean.getParameterDesc(requestdetails.decessionType)}"/>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.qt.status']}">
 			</p:column>

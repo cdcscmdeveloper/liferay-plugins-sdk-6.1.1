@@ -47,6 +47,8 @@ import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRemark;
+import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRequest;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.type.aut.SearchOperator;
@@ -242,6 +244,14 @@ public class ApprovalBackingBean extends
 			this.getManagedBean().setApprovalType(ApprovalCategory.BPK_APPROVAL.dispalyName());
 			scQtApproval = getApproval(qtId, ParameterConst.APPROVAL_CATEGORY_BPK);
 			scQtApproval.setApproverSettings(null);
+			scQtApproval.setScQtApprovalRemarks(initializeRemarks(
+					scQtApproval, scQtApproval.getScQtApprovalRemarks(),
+					ScQtApprovalRemark.class));
+			for (ScQtApprovalRequest approvalRequest : scQtApproval.getScQtApprovalDtls()) {
+				if (approvalRequest.getDecessionType() == null) {
+					approvalRequest.setDecessionType(new PmParameter());
+				}
+			}
 		} else if (SCProcessNameConst.REVISE_BPK.equalsIgnoreCase(taskName)) {
 			this.getManagedBean().setApprovalType(ApprovalCategory.BPK_APPROVAL.dispalyName());
 			scQtApproval = getApproval(qtId, ParameterConst.APPROVAL_CATEGORY_BPK);

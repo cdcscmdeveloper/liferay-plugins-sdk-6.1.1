@@ -23,10 +23,10 @@
 			</p:column>
 			<p:column headerText="Decision">
 				<p:selectOneMenu id="decisiontypeid"
-					value="#{requestdetails.decessionType}"
+					value="#{requestdetails.decessionType.parameterId}"
 					style="width: 178px;margin-bottom: 5px;">
 					<f:selectItems
-						value="#{approvalBackingBean.getDropdownCodeValues(ParameterTypeConst.approvalDecisionType)}" />
+						value="#{approvalBackingBean.getDropdownValues(ParameterTypeConst.approvalDecisionType)}" />
 				</p:selectOneMenu>
 			</p:column>
 		</p:dataTable>

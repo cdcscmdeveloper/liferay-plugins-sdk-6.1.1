@@ -60,7 +60,6 @@ import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
-import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
@@ -252,16 +251,10 @@ public class QTCommitteBackingBean extends
 			ISearchBean<ScQt> qtSearchBean) {
 		if (cloneQtnTenderSearchBean != null) {
 			List<SearchFilterBean> searchFilterBean = new ArrayList<SearchFilterBean>();
-
 			String qtTitle = cloneQtnTenderSearchBean.getQtTitle();
 			if (!StringUtils.isBlank(qtTitle)) {
-				SearchFilterBean bean = new SearchFilterBean();
-				bean.setSearchField(QTConstants.QT_TITILE);
-				bean.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
-				bean.setSearchValue(qtTitle);
-				searchFilterBean.add(bean);
+				qtSearchBean.getDataFilterBeans().add(new SearchFilterBean(QTConstants.QT_TITILE, SearchOperator.OPERATOR_LIKE.value(), qtTitle, true));
 			}
-
 			String qtNumber = cloneQtnTenderSearchBean.getQtNo();
 			if (!StringUtils.isBlank(qtNumber)) {
 				SearchFilterBean bean = new SearchFilterBean();
@@ -270,33 +263,22 @@ public class QTCommitteBackingBean extends
 				bean.setSearchValue(qtNumber);
 				searchFilterBean.add(bean);
 			}
-
 			String procurementMode = cloneQtnTenderSearchBean
 					.getProcurementMode();
 			if (!StringUtils.isBlank(procurementMode)) {
-				SearchFilterBean bean = new SearchFilterBean();
-				bean.setAndOr(SearchCondition.CONDITION_OR.value());
-				bean.setSearchField("procurementMode.parameterCode");
-				bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
-				bean.setSearchValue(procurementMode);
-				searchFilterBean.add(bean);
+				qtSearchBean.getDataFilterBeans().add(new SearchFilterBean("procurementMode.parameterCode", SearchOperator.OPERATOR_EQUALS.value(), procurementMode));
 			}
-
-			Date fromCreatedDate = cloneQtnTenderSearchBean
-					.getFromCreatedDate();
+			Date fromCreatedDate = cloneQtnTenderSearchBean.getFromCreatedDate();
 			Date toCreatedDate = cloneQtnTenderSearchBean.getToCreatedDate();
 			if (null != fromCreatedDate || toCreatedDate != null) {
 				SearchFilterBean bean = new SearchFilterBean();
 				bean.setSearchField(QTConstants.CREATED_DATE);
 				bean.setSearchOperator(SearchOperator.OPERATOR_BETWEEN.value());
-
 				SearchBetweenValue<Date> betweenVal = new SearchBetweenValue<Date>(
 						fromCreatedDate, toCreatedDate);
-
 				bean.setSearchValue(betweenVal);
 				searchFilterBean.add(bean);
 			}
-
 			String status = cloneQtnTenderSearchBean.getQtStatus();
 			if (!StringUtils.isBlank(status)) {
 				qtSearchBean
@@ -769,6 +751,7 @@ public class QTCommitteBackingBean extends
 		this.getManagedBean().getCloneQtnTenderSearchBean().setFromCreatedDate(null);
 		this.getManagedBean().getCloneQtnTenderSearchBean().setToCreatedDate(null);
 		this.getManagedBean().getCloneQtnTenderSearchBean().setQtStatus(null);
+		this.getManagedBean().setSearchcommitteeNode(null);
 	}
 
 	private IUserSO getUserSO() {
