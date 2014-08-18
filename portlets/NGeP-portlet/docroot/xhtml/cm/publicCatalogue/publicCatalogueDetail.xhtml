@@ -1,7 +1,7 @@
-<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<ui:composition xmlns:p="http://primefaces.org/ui"
-	xmlns="http://www.w3.org/1999/xhtml"
+
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:p="http://primefaces.org/ui" xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
@@ -10,214 +10,219 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
+	<ui:define name="contentSection">
 
-	<!-- <p:remoteCommand name="updateCoinSlider" update="imageUploadID2" ></p:remoteCommand> -->
+		<h:outputScript library="jquery/slides" name="jquery.slides.js" />
 
-	<h:outputScript library="jquery/slides" name="jquery.slides.js" />
-
-	<script>
-		$(function() {
-			$('#slides').slidesjs({
-				width : 940,
-				height : 528,
-				navigation : {
-					effect : "fade"
-				},
-				pagination : {
-					effect : "fade"
-				},
-				effect : {
-					fade : {
-						speed : 400
+		<script>
+			$(function() {
+				$('#slides').slidesjs({
+					width : 940,
+					height : 528,
+					navigation : {
+						effect : "fade"
+					},
+					pagination : {
+						effect : "fade"
+					},
+					effect : {
+						fade : {
+							speed : 400
+						}
 					}
-				}
+				});
 			});
-		});
-	</script>
+		</script>
 
 
-	<p:outputPanel id="publicCatalogDetPageId">
+		<p:outputPanel id="publicCatalogDetPageId">
 
-		<div style="text-align: left;">
+			<div style="text-align: left;">
 
-			<p:commandButton value="#{lbl['lbl.cm.back']}" icon="ui-icon-back"
-				action="#{pCatalogueBackingBean.cancelToPublicSearch()}"></p:commandButton>
+				<p:commandButton value="Back" icon="ui-icon-back"
+					action="#{catalogueBackingBean.backToPublicCatalogue}"></p:commandButton>
 
-		</div>
+			</div>
 
 
-		<p:panel>
+			<p:panel>
 
-			<table style="width: 100%;">
-				<tr style="height: 30px;">
-					<td rowspan="10" style="vertical-align:top; width: 30%;">
+				<table style="width: 100%;">
+					<tr style="height: 30px;">
+						<td rowspan="10" style="vertical-align: top; width: 30%;">
 
-						<div id="slides" style="width: 250px;float: right; margin-right: 65px;">
+							<div id="slides"
+								style="width: 250px; float: right; margin-right: 65px;">
 
-							<h:panelGroup
-								rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) == 0 }">
+								<h:panelGroup
+									rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) == 0 }">
 
-								<img src="/NGeP-portlet/images/noImage.jpg"
-									style="height: 150px; left: 0px !important;" />
-
-							</h:panelGroup>
-
-							<h:panelGroup
-								rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) > 0 }">
-								<ui:repeat var="cmImage"
-									value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmImages}">
-									<img src="/NGeP-portlet/images/#{cmImage.imageName}"
+									<img src="/NGeP-portlet/images/noImage.jpg"
 										style="height: 150px; left: 0px !important;" />
-								</ui:repeat>
-							</h:panelGroup>
 
-						</div>
+								</h:panelGroup>
 
-					</td>
-					<td colspan="4"><h:outputText style="text-align:left;vertical-align:top;"
-							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.itemName}"
-							styleClass="item-title" /></td>
+								<h:panelGroup
+									rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) > 0 }">
+									<ui:repeat var="cmImage"
+										value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmImages}">
+										<img src="/NGeP-portlet/images/#{cmImage.imageName}"
+											style="height: 150px; left: 0px !important;" />
+									</ui:repeat>
+								</h:panelGroup>
+
+							</div>
+
+						</td>
+						<td colspan="4"><h:outputText
+								style="text-align:left;vertical-align:top;"
+								value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.itemName}"
+								styleClass="item-title" /></td>
 
 
-				</tr>
+					</tr>
 
-				<tr style="height: 30px;">
-				   
-					<td><h:outputText value="#{lbl['lbl.cm.item.code']} : "
-							style="text-align:left;" /><h:outputText style="text-align:left;"
-							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.extensionCode}"/></td>
-					<td colspan="4"></td>
+					<tr style="height: 30px;">
 
-				</tr>
-				<tr style="height: 15px; width: 100%">
-					<td style="width: 100%" colspan="4">
-						<div style="border: 2px solid #CFD62A; margin-top: 5px;"></div>
-					</td>
-				</tr>
-				<tr style="height: 40px;">
-					<td colspan="4" style="background-color: #DBDBDB;"><h:outputText
-							value="#{lbl['lbl.cm.normal.price']}  RM #{catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.price}"
-							style="font-weight:bold;vertical-align: middle;float:left;font-size:16px;padding-left: 8px;" />
-					</td>
-				</tr>
-				<tr style="height: 30px;">
+						<td><h:outputText value="#{lbl['lbl.cm.item.code']} : "
+								style="text-align:left;" />
+							<h:outputText style="text-align:left;"
+								value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.extensionCode}" /></td>
+						<td colspan="4"></td>
 
-					<td style="width:25%;"><h:outputText value="#{lbl['lbl.cm.uom']}" /></td>
+					</tr>
+					<tr style="height: 15px; width: 100%">
+						<td style="width: 100%" colspan="4">
+							<div style="border: 2px solid #CFD62A; margin-top: 5px;"></div>
+						</td>
+					</tr>
+					<tr style="height: 40px;">
+						<td colspan="4" style="background-color: #DBDBDB;"><h:outputText
+								value="#{lbl['lbl.cm.normal.price']}  RM #{catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.price}"
+								style="font-weight:bold;vertical-align: middle;float:left;font-size:16px;padding-left: 8px;" />
+						</td>
+					</tr>
+					<tr style="height: 30px;">
 
-				
-					<td style="width:25%;"><h:outputText value="#{lbl['lbl.cm.min.order']}" /></td>
-					<td style="width:25%;"></td>
-						<td style="width:25%;"></td>
-				</tr>
-				<tr style="height: 30px;">
-					<td><h:outputText style="margin-left: 10px;"
-							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.pmUom.uomName}"></h:outputText>
-					</td>
+						<td style="width: 25%;"><h:outputText
+								value="#{lbl['lbl.cm.uom']}" /></td>
 
-					
-					<td><h:outputText style="margin-left: 10px;"
-							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.minOrder}"></h:outputText></td>
-					<td></td>
-					<td></td>
-				</tr>
-				<tr style="height: 30px;">
-					<td><h:outputText value="#{lbl['lbl.cm.delivery.term.days']}" /></td>
 
-				
-					<td><h:outputText value="#{lbl['lbl.cm.model']}" /></td>
-					<td></td>
+						<td style="width: 25%;"><h:outputText
+								value="#{lbl['lbl.cm.min.order']}" /></td>
+						<td style="width: 25%;"></td>
+						<td style="width: 25%;"></td>
+					</tr>
+					<tr style="height: 30px;">
+						<td><h:outputText style="margin-left: 10px;"
+								value="#{catalogueBackingBean.managedBean.selectedMaintainItem.pmUom.uomName}"></h:outputText>
+						</td>
+
+
+						<td><h:outputText style="margin-left: 10px;"
+								value="#{catalogueBackingBean.managedBean.selectedMaintainItem.minOrder}"></h:outputText></td>
 						<td></td>
-				</tr>
-				<tr style="height: 30px;">
-
-					<td colspan="1"><h:outputText style="margin-left: 10px;"
-							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.leadTime}" /></td>
-
-					
-					<td colspan="1"><h:outputText style="margin-left: 10px;"
-							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.modelNumber}" /></td>
-					<td></td>
-					<td></td>
-				</tr>
+						<td></td>
+					</tr>
+					<tr style="height: 30px;">
+						<td><h:outputText value="#{lbl['lbl.cm.delivery.term.days']}" /></td>
 
 
-				<tr style="height: 50px;">
-					<td><h:outputText style="vertical-align: top;"
-							value="#{lbl['lbl.cm.additional.item.description']} : " /></td>
-					<td colspan="4"><h:outputText
-							style="width:660px !important;border : 0px;"
-							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemDesc}"
-							readonly="true" /></td>
+						<td><h:outputText value="#{lbl['lbl.cm.model']}" /></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr style="height: 30px;">
 
-				</tr>
-				<tr>
-					<td colspan="4"><p:panel header="Supplier Info" toggleable="true">
-							<table width="100%">
-								<tr>
-									<td><h:outputText value="#{lbl['lbl.cm.supplier.name']} " /></td>
-									<td><h:outputText
-											value="#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.companyName}"></h:outputText></td>
-									<td></td>
-									<td></td>
-								</tr>
-
-								<tr>
-									<td><h:outputText
-											value="#{lbl['lbl.sm.companyaddress']} " /></td>
-									<td colspan="3"><h:outputText
-											value="#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address1}" /></td>
-
-								</tr>
-
-								<tr>
-									<td></td>
-									<td colspan="3"><h:outputText
-											value="#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address2}" /></td>
-								</tr>
-
-								<tr>
-									<td></td>
-									<td colspan="3"><h:outputText
-											value="#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address3}" /></td>
-								</tr>
-
-								<tr>
-									<td></td>
-									<td colspan="3"><h:outputText
-											value="#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address4}" /></td>
-								</tr>
-
-								<tr>
-									<td><h:outputText value="#{lbl['lbl.sm.postcode']} " /></td>
-									<td><h:outputText
-											value="#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.postcode}" /></td>
-									<td><h:outputText value="#{lbl['lbl.sm.state']} " /></td>
-									<td><h:outputText
-											value="#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState.stateName}" /></td>
-								</tr>
-
-								<tr>
-									<td><h:outputText value="#{lbl['lbl.sm.district']} " /></td>
-									<td><h:outputText
-											value="#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCity.cityName}" /></td>
-									<td><h:outputText value="#{lbl['lbl.sm.towncity']} " /></td>
-									<td><h:outputText
-											value="#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmDistrict.districtName}" /></td>
-								</tr>
-
-								
-							</table>
-						</p:panel></td>
-				</tr>
-
-			</table>
-		</p:panel>
+						<td colspan="1"><h:outputText style="margin-left: 10px;"
+								value="#{catalogueBackingBean.managedBean.selectedMaintainItem.leadTime}" /></td>
 
 
+						<td colspan="1"><h:outputText style="margin-left: 10px;"
+								value="#{catalogueBackingBean.managedBean.selectedMaintainItem.modelNumber}" /></td>
+						<td></td>
+						<td></td>
+					</tr>
+
+
+					<tr style="height: 50px;">
+						<td><h:outputText style="vertical-align: top;"
+								value="#{lbl['lbl.cm.additional.item.description']} : " /></td>
+						<td colspan="4"><h:outputText
+								style="width:660px !important;border : 0px;"
+								value="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemDesc}"
+								readonly="true" /></td>
+
+					</tr>
+					<tr>
+						<td colspan="4"><p:panel header="Supplier Info"
+								toggleable="true">
+								<table width="100%">
+									<tr>
+										<td><h:outputText value="#{lbl['lbl.cm.supplier.name']} " /></td>
+										<td><h:outputText
+												value="#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.companyName}"></h:outputText></td>
+										<td></td>
+										<td></td>
+									</tr>
+
+									<tr>
+										<td><h:outputText
+												value="#{lbl['lbl.sm.companyaddress']} " /></td>
+										<td colspan="3"><h:outputText
+												value="#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address1}" /></td>
+
+									</tr>
+
+									<tr>
+										<td></td>
+										<td colspan="3"><h:outputText
+												value="#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address2}" /></td>
+									</tr>
+
+									<tr>
+										<td></td>
+										<td colspan="3"><h:outputText
+												value="#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address3}" /></td>
+									</tr>
+
+									<tr>
+										<td></td>
+										<td colspan="3"><h:outputText
+												value="#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address4}" /></td>
+									</tr>
+
+									<tr>
+										<td><h:outputText value="#{lbl['lbl.sm.postcode']} " /></td>
+										<td><h:outputText
+												value="#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.postcode}" /></td>
+										<td><h:outputText value="#{lbl['lbl.sm.state']} " /></td>
+										<td><h:outputText
+												value="#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState.stateName}" /></td>
+									</tr>
+
+									<tr>
+										<td><h:outputText value="#{lbl['lbl.sm.district']} " /></td>
+										<td><h:outputText
+												value="#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCity.cityName}" /></td>
+										<td><h:outputText value="#{lbl['lbl.sm.towncity']} " /></td>
+										<td><h:outputText
+												value="#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmDistrict.districtName}" /></td>
+									</tr>
+
+
+								</table>
+							</p:panel></td>
+					</tr>
+
+				</table>
+			</p:panel>
 
 
 
-	</p:outputPanel>
 
+
+		</p:outputPanel>
+	</ui:define>
 
 </ui:composition>

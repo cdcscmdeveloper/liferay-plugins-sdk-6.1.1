@@ -5645,6 +5645,11 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}
 	}
 	
+	public String backToPublicCatalogue(){
+		 System.out.println("..................cancelToPublicSearch..............");
+			return "publicCatalogueView";
+	}
+	
 	public void resetCatalogueSearch() {
 //		this.getManagedBean().getItemNameFilterBean().setSearchValue("");
 //		this.getManagedBean().getItemCodeFilterBean().setSearchValue("");
