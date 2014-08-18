@@ -25,6 +25,7 @@ import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -80,7 +81,7 @@ public class PanelManagedBean extends BaseManagedBean {
 	private CtCancelCircularReq cancelCircularReq;
 	private CtPanelItem selectedPanelItems;
 	private CtPanelZone selectedPanelZone;
-	private CtPanelSupplier selectedPanelSupplier;
+	private List <CtPanelSupplier> selectedPanelSuppliers;
 	private List<CtContactPerson> selectedContactPersons;
 	private List<CtCancelCircular> selectedCancelCirculars;
 	private List<CtCancelCircular> cancelledCircularList;
@@ -92,6 +93,7 @@ public class PanelManagedBean extends BaseManagedBean {
 	private CtCircularVer[] selectedCircularVerList;
 	private DualListModel<String> approverModel;
 	private Map<String, PmUser> userMap;
+	private List<SmSupplier> supplierList; 
 	
 	public CtCircular getCircular() {
 		return circular;
@@ -326,12 +328,13 @@ public class PanelManagedBean extends BaseManagedBean {
 		this.panelSupplierList = panelSupplierList;
 	}
 
-	public CtPanelSupplier getSelectedPanelSupplier() {
-		return selectedPanelSupplier;
+	public List<CtPanelSupplier> getSelectedPanelSuppliers() {
+		return selectedPanelSuppliers;
 	}
 
-	public void setSelectedPanelSupplier(CtPanelSupplier selectedPanelSupplier) {
-		this.selectedPanelSupplier = selectedPanelSupplier;
+	public void setSelectedPanelSuppliers(
+			List<CtPanelSupplier> selectedPanelSuppliers) {
+		this.selectedPanelSuppliers = selectedPanelSuppliers;
 	}
 
 	public TreeNode getRootZoanlTree() {
@@ -455,5 +458,13 @@ public class PanelManagedBean extends BaseManagedBean {
 
 	public void setFileDirectory(String fileDirectory) {
 		this.fileDirectory = fileDirectory;
+	}
+
+	public List<SmSupplier> getSupplierList() {
+		return supplierList;
+	}
+
+	public void setSupplierList(List<SmSupplier> supplierList) {
+		this.supplierList = supplierList;
 	}
 }

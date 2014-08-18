@@ -777,21 +777,52 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		}
 	}
 	
-	public void addPanelSupplier(){
-		    CtPanelSupplier panelSupplier = new CtPanelSupplier();
-			panelSupplier.setSupplier(new SmSupplier());
-			if(this.getManagedBean().isSelectionOfZone() && this.getManagedBean().getSelectedPanelZone() != null){
-				this.getManagedBean().getSelectedPanelZone().getCtPanelSuppliers().add(panelSupplier);
-			}else if(!this.getManagedBean().isSelectionOfZone() && this.getManagedBean().getSelectedPanelItems() != null){
-				this.getManagedBean().getSelectedPanelItems().getCtPanelSuppliers().add(panelSupplier);
+	public void addPanelSupplier(List<SmSupplier> supplierList){
+		log.info("PanelBackingBean.addPanelSupplier()");
+		try {
+			if (supplierList != null){
+				List<CtPanelSupplier> ctPanelSuppliers = new ArrayList<CtPanelSupplier>();
+				List<CtPanelSupplier> panelSupplierList = new ArrayList<CtPanelSupplier>();
+				
+				 if (this.getManagedBean().isSelectionOfZone() && this.getManagedBean().getSelectedPanelZone() != null) {
+					 ctPanelSuppliers = this.getManagedBean().getSelectedPanelZone().getCtPanelSuppliers();
+				 }
+				 else if (!this.getManagedBean().isSelectionOfZone() && this.getManagedBean().getSelectedPanelItems() != null) {
+					 ctPanelSuppliers =  this.getManagedBean().getSelectedPanelItems().getCtPanelSuppliers();
+				 }
+				
+				for (SmSupplier smSupplier : supplierList) {
+					CtPanelSupplier panelSupplier = new CtPanelSupplier();
+					panelSupplier.setSupplier(smSupplier);
+					panelSupplierList.add(panelSupplier);
+				   
+					//Remove if already exist, avoid duplicate
+					for(CtPanelSupplier ctPanelSupplier : ctPanelSuppliers) {
+						if(ctPanelSupplier.getSupplier().getSupplierId().equals(smSupplier.getSupplierId())) {
+							panelSupplierList.remove(panelSupplier);
+						}
+					}
+				}
+				ctPanelSuppliers.addAll(panelSupplierList);
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		}
+	}
 	
 	public void deletePanelSupplier(){
-		if(this.getManagedBean().isSelectionOfZone() && this.getManagedBean().getSelectedPanelZone() != null){
-			this.getManagedBean().getSelectedPanelZone().getCtPanelSuppliers().remove(this.getManagedBean().getSelectedPanelSupplier());
-		}else if(!this.getManagedBean().isSelectionOfZone() && this.getManagedBean().getSelectedPanelItems() != null){
-			this.getManagedBean().getSelectedPanelItems().getCtPanelSuppliers().remove(this.getManagedBean().getSelectedPanelSupplier());
+		
+		try {
+			if(this.getManagedBean().isSelectionOfZone() && this.getManagedBean().getSelectedPanelZone() != null) {
+				this.getManagedBean().getSelectedPanelZone().getCtPanelSuppliers().removeAll(this.getManagedBean().getSelectedPanelSuppliers());
+			}
+			else if(!this.getManagedBean().isSelectionOfZone() && this.getManagedBean().getSelectedPanelItems() != null) {
+				this.getManagedBean().getSelectedPanelItems().getCtPanelSuppliers().removeAll(this.getManagedBean().getSelectedPanelSuppliers());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		}
 	}
 	

@@ -934,11 +934,21 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		log.info("CentralContractBackingBean.addExemptedOrg()");
 		try {
 			if (orgProfiles != null){
-			   for (PmOrgProfile orgProfile : orgProfiles) {
-				   CtExemptedOrg ctExemptedOrg = new CtExemptedOrg();
-				   ctExemptedOrg.setOrgProfile(orgProfile);
-				   getManagedBean().getCircularVer().getCtExemptedOrgs().add(ctExemptedOrg);
+				
+				List<CtExemptedOrg> exemptedOrgList = new ArrayList<CtExemptedOrg>();
+				for (PmOrgProfile orgProfile : orgProfiles) {
+					CtExemptedOrg ctExemptedOrg = new CtExemptedOrg();
+					ctExemptedOrg.setOrgProfile(orgProfile);
+					exemptedOrgList.add(ctExemptedOrg);
+					
+					//Remove if already exist, avoid duplicate
+					for(CtExemptedOrg exemptedOrg : getManagedBean().getCircularVer().getCtExemptedOrgs()) {
+						if(exemptedOrg.getOrgProfile().getOrgProfileId().equals(orgProfile.getOrgProfileId())) {
+							exemptedOrgList.remove(ctExemptedOrg);
+						}
+					}
 				}
+				getManagedBean().getCircularVer().getCtExemptedOrgs().addAll(exemptedOrgList);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

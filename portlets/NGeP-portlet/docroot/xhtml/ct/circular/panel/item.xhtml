@@ -249,25 +249,15 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 		 (panelBackingBean.managedBean.selectedPanelItems != null and !panelBackingBean.managedBean.selectionOfZone)}">
 			<p:dataTable id="itemSupplierDt" var="supVar" 
 			value="#{panelBackingBean.managedBean.selectionOfZone ? panelBackingBean.managedBean.selectedPanelZone.ctPanelSuppliers : panelBackingBean.managedBean.selectedPanelItems.ctPanelSuppliers}"
-		    selectionMode="single" selection="#{panelBackingBean.managedBean.selectedPanelSupplier}" rowKey="#{supVar}" rowIndexVar="index">
-				<p:ajax event="rowSelect" />
+		    selection="#{panelBackingBean.managedBean.selectedPanelSuppliers}" rowKey="#{supVar}" rowIndexVar="index">
+				<ac:paginator for="itemSupplierDt" />
+				<p:column selectionMode="multiple" style="width:3%" />
 				<p:column headerText="Supplier Name">
-				<c:if test="#{panelBackingBean.managedBean.selectionOfZone}">
-				   <ac:lov id="loaSupId"  lovId="SM_SUPPLIER" headerText="Supplier List" 
-					   saveObject="panelBackingBean.managedBean.selectedPanelZone.ctPanelSuppliers[#{index}].supplier"
-					   value="#{supVar.supplier.companyName}" update="@form" >
-				   </ac:lov>
-				  </c:if>
-				  <c:if test="#{!panelBackingBean.managedBean.selectionOfZone}">
-				   <ac:lov id="loaSupId1"  lovId="SM_SUPPLIER" headerText="Supplier List" 
-					   saveObject="panelBackingBean.managedBean.selectedPanelItems.ctPanelSuppliers[#{index}].supplier"
-					   value="#{supVar.supplier.companyName}"  update="@form" >
-				   </ac:lov>
-				  </c:if>
+				  <p:outputLabel value="#{supVar.supplier.companyName}" style="float:left;"/>
 			    </p:column>
 				<p:column headerText="Business Reg. No."> <p:outputLabel value="#{supVar.supplier.regNo}" style="float:left;"/></p:column>
 				<p:column headerText="MOF No."><p:outputLabel /></p:column>
-				<p:column headerText="Address"> <p:outputLabel value="#{panelBackingBean.getSupAddress(supVar)}"/></p:column>
+				<p:column headerText="Address"><p:outputLabel value="#{panelBackingBean.getSupAddress(supVar)}"/></p:column>
 				<p:column headerText="Status">
 				 <p:selectOneMenu  value="#{supVar.recordStatusFlg}"  
                          disabled="#{!panelBackingBean.managedBean.updateAction}" style="width:100px;">
@@ -276,11 +266,29 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			          </p:selectOneMenu>
 				</p:column>
 			</p:dataTable>
-		   <div class="ppRightBtn">
-		     <p:commandButton value="Add" process="@form" icon="ui-icon-add"
-		       update="itemSupplierDt" action="#{panelBackingBean.addPanelSupplier()}"/>
-		     <p:commandButton id="deleteSupplierBtn" value="Delete" 
-		       icon="ui-icon-delete" process="@this" onclick="delSupplierDlg.show()"/>
+		   <div>
+		   	<table style="width: 100%">
+				<tr><td class="TableFieldLeft" width="80%"></td>
+			 	<td>
+			   	<table><tr>
+			   		<td>		   	
+				     <ac:lov id="loaSupId" lovId="SM_SUPPLIER"
+						postUpdateListener="panelBackingBean.addPanelSupplier(panelBackingBean.managedBean.supplierList)"
+						headerText="Supplier List" 
+						buttonLabel="Add"
+						buttonIcon="ui-icon-add" 
+						selectionMode="multiple"
+						saveObject="panelBackingBean.managedBean.supplierList"
+						update="@form" />
+					</td>
+					<td>
+				    <p:commandButton id="deleteSupplierBtn" value="Delete" 
+				     	icon="ui-icon-delete" process="@this" onclick="delSupplierDlg.show()"/>
+					</td>
+				</tr></table>
+				</td>
+			    </tr>
+			</table>
 	      </div>
 	      <p:dialog id="delSupplierDlg" widgetVar="delSupplierDlg" header="Delete Confirmation" 
 		   styleClass="screen-title" resizable="false" modal="true" width="350" height="95">  
