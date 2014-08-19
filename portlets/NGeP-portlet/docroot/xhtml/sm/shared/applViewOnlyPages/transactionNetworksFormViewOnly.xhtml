@@ -1,0 +1,45 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:panel header="#{lbl['lbl.sm.busNtw.panHdr']}" toggleable="true">
+		<p:panel id="trxInfPan">
+			<p:blockUI block=":form:tt:trxInfPan" widgetVar="buiPoTrx"
+				id="poTrxBlc"
+				blocked="true" />
+
+			<table style="width: 100%">
+
+				<tr>
+					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
+							value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.withFederal}" /></td>
+					<td valign="middle" width="150px;"><p:outputLabel
+							value="#{lbl['lbl.sm.busNtw.fdrGov']}" /></td>
+
+					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
+							value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.withState}" /></td>
+					<td valign="middle" width="150px;"><p:outputLabel
+							value="#{lbl['lbl.sm.busNtw.stateGov']}" /></td>
+
+					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
+							value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.withStatutory}" /></td>
+					<td valign="middle" width="150px;"><p:outputLabel
+							value="#{lbl['lbl.sm.busNtw.statBody']}" /></td>
+
+					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
+							value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.withGlc}" /></td>
+					<td valign="middle" width="100px;"><p:outputLabel
+							value="#{lbl['lbl.sm.busNtw.glc']}" /></td>
+
+					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
+							value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.withOthers}" /></td>
+					<td valign="middle"><p:outputLabel
+							value="#{lbl['lbl.sm.busNtw.others']}" /></td>
+				</tr>
+			</table>
+		</p:panel>
+	</p:panel>
+</ui:composition>

@@ -1,0 +1,48 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:panel header="#{lbl['lbl.sm.panHdr.stfInfo']}" toggleable="true">
+		<p:panel id="stfInfPan">
+			<p:dataGrid value="#{viewSmApplBackingBean.managedBean.smAppl.smStaffTotals}"
+				var="staff" columns="1" rowIndexVar="index" id="dtfGrd">
+
+				<table style="width: 100%">
+					<tr>
+						<td width="200px"><p:outputLabel
+								value="#{lbl['lbl.sm.staff.totalStaff']} "
+								rendered="#{staff.staffCategory eq SupplierManagementConst.STAFF_TYPE_CONTRACTOR}" />
+							<p:outputLabel value="#{lbl['lbl.sm.staff.profStaff']}"
+								rendered="#{staff.staffCategory eq SupplierManagementConst.STAFF_TYPE_PROFESSIONAL}" />
+							<p:outputLabel value="#{lbl['lbl.sm.staff.semiProfStaff']}"
+								rendered="#{staff.staffCategory eq SupplierManagementConst.STAFF_TYPE_SEMIPROF}" />
+							<p:outputLabel value="#{lbl['lbl.sm.staff.clericalStaff']}"
+								rendered="#{staff.staffCategory eq SupplierManagementConst.STAFF_TYPE_CLERICAL}" /></td>
+						<td width="90px">
+							<p:outputLabel value="#{lbl['lbl.sm.staff.bumi']}" />
+						</td>
+						<td width="55px">
+							<p:outputLabel value="#{staff.totalBumi}"/>
+						</td>
+						<td width="100px">
+							<p:outputLabel value="#{lbl['lbl.sm.staff.nonBumi']}" />
+						</td>
+						<td width="55px">
+							<p:outputLabel value="#{staff.totalNonBumi}" />
+						</td>
+						<td width="100px">
+							<p:outputLabel value="#{lbl['lbl.sm.staff.frgnr']}" />
+						</td>
+						<td width="55px">
+							<p:outputLabel value="#{staff.totalForeigner}" />
+						</td>
+					</tr>
+				</table>
+			</p:dataGrid>
+		</p:panel>
+	</p:panel>
+</ui:composition>
