@@ -175,6 +175,18 @@ public class PublicCatalogueBackingBean extends
 				}
 			}
 
+			if(this.getManagedBean().getFamilyCodeList().size() == 1){
+				CmUnspsc commodity = this.getManagedBean().getFamilyList().get(0);
+				System.out.println("getCmBrand:" + commodity.getCmBrand().size());
+
+				for (CmBrand brand : commodity.getCmBrand()) {
+					System.out.println("getBrandName:" + brand.getBrandName());
+					this.getManagedBean()
+							.getBrandCriteria()
+							.add(new SelectItem(brand.getBrandId(), brand
+									.getBrandName()));
+				}
+			}
 			for (VCmPubSuppItem view : resDTO.getViewPublicSuppItemResultBean()
 					.getResultList()) {
 //                System.out.println("................................view.getCmSupplierItem()="+view.getCmSupplierItem());

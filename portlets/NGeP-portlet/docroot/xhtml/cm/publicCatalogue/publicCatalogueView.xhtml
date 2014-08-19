@@ -12,7 +12,11 @@
 	<ui:define name="contentSection">
 
 			
-			
+			<style type="text/css">
+
+		div.tbclass:hover { background-color: #EDF0AF; }
+
+	</style>
 			<p:messages id="publicCatMesId" showDetail="true" autoUpdate="true" closable="true" showSummary="true" />
 
 		<p:tabView id="catalogueTabId">
@@ -168,10 +172,14 @@
 									value="#{pCatalogueBackingBean.managedBean.catalogueList}"
 									id="catalogueGridViewID" var="supplierItem">
 									<ac:paginator for="catalogueGridViewID"></ac:paginator>
-									
+									<div class="tbclass">
+										<p:commandLink
+											action="#{pCatalogueBackingBean.navigateToSupplierItemDet(supplierItem)}"
+											process="@this" >
+										
 										<table  style="width:100%;height:100%;padding-left:10px;padding-right:10px;padding-bottom: 10px;padding-top: 10px;vertical-align: top; ">
 											<tr>
-												<td align="center" style="text-align: center;"><h:panelGroup
+												<td align="center" style="text-align: center;padding-top: 14px;"><h:panelGroup
 														rendered="#{fn:length(supplierItem.cmImages) == 0 }">
 														<div align="center" style="width: 100%">
 														<div align="center"  style="height: 100px; width: 100px;left: 0px !important;">
@@ -189,16 +197,20 @@
 													</h:panelGroup></td>
 											</tr>
 											<tr>
-												<td align="center" style="text-align: center;width:100%;height:100%; padding-left: 20px;padding-right: 20px;"><p:commandLink
-														action="#{pCatalogueBackingBean.navigateToSupplierItemDet(supplierItem)}"
-														process="@this" value="#{supplierItem.cmItem.itemName}" /></td>
+												<td align="center" style="text-align: center;width:100%;height:100%; padding-left: 20px;padding-right: 20px;"><h:outputText
+														 value="#{supplierItem.cmItem.itemName}" /></td>
+											</tr>
+											<tr>
+												<td align="center" style="text-align: center;width:100%;height:100%; padding-left: 20px;padding-right: 20px;">By <h:outputText
+														 value="#{supplierItem.smSupplier.companyName}" /></td>
 											</tr>
 											<tr>
 												<td style="text-align: center;">RM <h:outputText
 														value="#{supplierItem.cmStandardPricing.price}" /></td>
 											</tr>
 										</table>
-									
+									</p:commandLink>
+										</div>
 								</p:dataGrid></td>
 						</tr>
 
