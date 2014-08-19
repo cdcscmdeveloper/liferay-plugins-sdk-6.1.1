@@ -822,11 +822,9 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 					}
 				}
 				// TODO PriceType drop down list in AddToCart
-				getManagedBean().setPriceType(ParameterConst.PRICE_TYPE_STANDARD);
 				getManagedBean().setPriceTypes(getPriceTypeDropdownValues(ParameterTypeConst.PRICE_TYPE, priceTypes));
 				// required validation
 				getManagedBean().setRequired(Boolean.TRUE);
-				// TODO PriceType drop down list in request note
 			}
 		} else {
 			// TODO - remove after catalogue team had add the filtering in view.
