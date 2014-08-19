@@ -11,7 +11,7 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierCert;
 import my.ep.web.managedbean.BaseManagedBean;
 
-@ManagedBean(name = "smApplMB")
+@ManagedBean(name = "viewSmApplMB")
 @SessionScoped
 public class ViewSmApplManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
