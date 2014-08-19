@@ -12,7 +12,7 @@
 
 		<p:dataTable id="financialSpecification" var="financialSpec"
 			style="width:100%" rowIndexVar="index"
-			value="#{specificationBackingBean.managedBean.technicalSpecList}"
+			value="#{specificationBackingBean.managedBean.scQtCheckSt2techProposal}"
 			rowKey="#{financialSpec}">
 			<ac:paginator for="financialSpecification" />
 
@@ -33,7 +33,7 @@
 			<p:column headerText="#{lbl['lbl.sc.spec.stage.action']}"
 				style="width:10%">
 				<p:commandLink process="@this" partialSubmit="true"
-					action="#{specificationBackingBean.committeeSpecEditAction(financialSpec)}">
+					action="#{specificationBackingBean.committeeSpecEditAction(index,financialSpec,'T')}">
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png" />
 

@@ -176,7 +176,7 @@
 
 				<p:commandLink
 					rendered="#{stageTwoTechnical.definationType.parameterCode eq 'TS' or stageTwoTechnical.definationType.parameterCode eq 'SD' or stageTwoTechnical.definationType.parameterCode eq 'WF'}"
-					action="#{specificationBackingBean.technicalChecklistEditAction(index,stageTwoTechnical)}">
+					action="#{specificationBackingBean.technicalChecklistEditAction(index,stageTwoTechnical,'T')}">
 
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png" />

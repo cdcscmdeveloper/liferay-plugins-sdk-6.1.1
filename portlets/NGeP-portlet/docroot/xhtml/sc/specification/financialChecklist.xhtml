@@ -128,7 +128,7 @@
 			<p:column headerText="#{lbl['lbl.sc.spec.stage.action']}"
 				style="width:10%">
 				<p:commandLink
-					action="#{specificationBackingBean.financialChecklistEditAction(index,stageTwofunctional)}"
+					action="#{specificationBackingBean.financialChecklistEditAction(index,stageTwofunctional,'F')}"
 					rendered="#{stageTwofunctional.definationType.parameterCode eq 'WF' or stageTwofunctional.definationType.parameterCode eq 'SD' or stageTwofunctional.definationType.parameterCode eq 'TS'}">
 
 					<p:graphicImage library="ep/images/design" name="edit.png"
