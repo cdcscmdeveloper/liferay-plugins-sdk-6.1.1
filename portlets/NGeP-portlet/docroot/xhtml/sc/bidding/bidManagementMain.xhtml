@@ -26,24 +26,24 @@
 			<table style="width: 100%">
 
 				<tr>
-					<td style="width: 7%"><p:outputLabel
+					<td ><p:outputLabel
 							value="#{lbl['lbl.sc.bidding.no']}" /></td>
-					<td style="width: 14%" class="header-info-text">
+					<td  class="header-info-text">
 						#{biddingBB.managedBean.scheduledBid.bidNo}</td>
-					<td style="width: 8%"><p:outputLabel
+					<td ><p:outputLabel
 							value="#{lbl['lbl.sc.document.no']}" /></td>
 					<td style="width: 14%" class="header-info-text">#{biddingBB.managedBean.scheduledBid.scBid.docNo}
 					</td>
 
-					<td style="width: 6%"><p:outputLabel
+					<td ><p:outputLabel
 							value="#{lbl['lbl.sc.ptj.name']}" /></td>
-					<td style="width: 36%" class="header-info-text">#{biddingBB.managedBean.scheduledBid.scBid.pmOrgProfile.orgName}
+					<td  class="header-info-text">#{biddingBB.managedBean.scheduledBid.scBid.pmOrgProfile.orgName}
 					</td>
 
-					<td style="width: 5%"><p:outputLabel
+					<td ><p:outputLabel
 							value="#{lbl['lbl.sc.status']}" /></td>
 
-					<td style="width: 10%" class="header-info-text">#{biddingBB.getStatusDescById(biddingBB.managedBean.scheduledBid.pmStatus.statusId)}
+					<td  class="header-info-text">#{biddingBB.getStatusDescById(biddingBB.managedBean.scheduledBid.pmStatus.statusId)}
 					</td>
 
 				</tr>
@@ -112,7 +112,7 @@
 								value="#{lbl['lbl.sc.view.by']}" /></td>
 						<td><p:selectOneMenu id="viewBy"
 								value="#{biddingBB.managedBean.bidManagementViewBy}"
-								style="width : 148px">
+								style="width : 138px">
 								<f:selectItem itemLabel="#{lbl['lbl.sc.package']}" itemValue="P"></f:selectItem>
 								<f:selectItem itemLabel="#{lbl['lbl.sc.item']}" itemValue="I"></f:selectItem>
 								<p:ajax process="@this" partialSubmit="true" event="change"

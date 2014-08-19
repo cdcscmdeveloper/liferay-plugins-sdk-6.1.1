@@ -26,21 +26,21 @@
 		<div align="left" class="header-info" style="width: 100%">
 			<table style="width: 100%">
 				<tr>
-					<td style="width: 8%"><p:outputLabel
+					<td><p:outputLabel
 							value="#{lbl['lbl.sc.document.no']}" /></td>
-					<td style="width: 10%" class="header-info-text">
+					<td class="header-info-text">
 						#{scheduleBiddingBB.managedBean.scQt.qtNo}</td>
 
-					<td style="width: 6%"><p:outputLabel
+					<td ><p:outputLabel
 							value="#{lbl['lbl.sc.ptj.name']}" /></td>
 
-					<td style="width: 50%" class="header-info-text">
+					<td  class="header-info-text">
 						#{scheduleBiddingBB.managedBean.scQt.pmOrgProfile.orgName}</td>
 
-					<td style="width: 5%"><p:outputLabel
+					<td ><p:outputLabel
 							value="#{lbl['lbl.sc.status']}" /></td>
 
-					<td style="width: 31%" class="header-info-text">#{scheduleBiddingBB.getStatusDescById(scheduleBiddingBB.managedBean.scQt.qtStatus.statusId)}
+					<td class="header-info-text">#{scheduleBiddingBB.getStatusDescById(scheduleBiddingBB.managedBean.scQt.qtStatus.statusId)}
 					</td>
 				</tr>
 

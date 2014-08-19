@@ -11,16 +11,17 @@
 
 		<p:spacer height="5"></p:spacer>
 		<div style="align: left">
-			<table style="width: 50%;">
+			<table style="width: 100%;">
 				<tr>
-					<td style="width: 18%;"><p:outputLabel
+					<td style="width: 9%;"><p:outputLabel
 							value="#{lbl['lbl.sc.remaining.time']}" /></td>
-					<td style="width: 82%; align: left"><script
+					<td style="width: 41%; align: left"><script
 							type="application/javascript">
 						
 			var myCountdownBidding = new Countdown({time:"#{onlineBiddingBB.managedBean.remainingBidTime}",hideLine: true,rangeHi: "hour",rangeLo: "second",width: 250,height: 70}); 
 					
 					</script></td>
+					<TD style="width: 50%;"><h:outputLabel value="#{lbl['lbl.sc.notes']}" /></TD>
 				</tr>
 			</table>
 		</div>
