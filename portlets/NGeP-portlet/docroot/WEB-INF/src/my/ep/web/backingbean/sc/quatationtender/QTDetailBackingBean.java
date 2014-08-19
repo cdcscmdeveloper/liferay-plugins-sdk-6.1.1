@@ -1625,10 +1625,15 @@ public class QTDetailBackingBean extends
 					} else if (qtApproval.getApprovalCategory()
 							.getParameterCode()
 							.equals(ParameterConst.APPROVAL_CATEGORY_PTJ)) {
-						DualListModel<ScQtApproverSettings> ptjApprovals = approverSettingDtls(
-								RoleCode.PUBLICATION_APPROVER, qtApproval);
-						tabBeans.add(new TabBean(qtApproval.getApprovalType(),
-								qtApproval, ptjApprovals));
+						if (SourcingConstants.APPROVE_ACTION
+								.equalsIgnoreCase(qtApproval
+										.getApproverAction())) {
+							DualListModel<ScQtApproverSettings> ptjApprovals = approverSettingDtls(
+									RoleCode.PUBLICATION_APPROVER, qtApproval);
+							tabBeans.add(new TabBean(qtApproval
+									.getApprovalType(), qtApproval,
+									ptjApprovals));
+						}
 					} else if (qtApproval
 							.getApprovalCategory()
 							.getParameterCode()

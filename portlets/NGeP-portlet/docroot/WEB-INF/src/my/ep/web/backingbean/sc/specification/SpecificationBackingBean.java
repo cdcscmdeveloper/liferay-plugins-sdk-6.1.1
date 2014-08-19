@@ -100,6 +100,7 @@ import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
@@ -120,6 +121,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListScore;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListValue;
+import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeliveryLoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
@@ -3066,11 +3068,10 @@ public class SpecificationBackingBean extends
 					ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
 			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 			reqDTO.setCommitteeType(QTConstants.DOCTYPE_SPEC_COMMITTE);
-			resDTO = committeSO
-					.retrieveCommitteMembersByQtIdAndCommType(reqDTO);
+			resDTO = committeSO.retrieveCommitteActivityDtls(reqDTO);
 
-			this.getManagedBean().setCommitteeMemberList(
-					resDTO.getCommMemberResultBean().getResultList());
+			this.getManagedBean().setCommitteeActivities(
+					resDTO.getCommitteActivities());
 
 		} finally {
 			committeSO = null;
@@ -3691,6 +3692,20 @@ public class SpecificationBackingBean extends
 		scQt.setScQtCommittees(null);
 		scQt.setScQtBriefings(null);
 		reqDTO.setScQt(scQt);
+		List<ScQtCommitteeActivity> committeActivities = this.getManagedBean()
+				.getCommitteeActivities();
+		if (null != committeActivities) {
+			PmUser pmUser = new FacesScopes().getUserSessionBean();
+			for (int i = 0; i < committeActivities.size(); i++) {
+				if (pmUser.getIdentificationNo().equals(
+						committeActivities.get(i).getScCommitteeMember()
+								.getPmUser().getIdentificationNo())) {
+					committeActivities.get(i).setSignedOff(true);
+				}
+
+			}
+		}
+		reqDTO.setCommitteActivities(committeActivities);
 		return reqDTO;
 
 	}
@@ -8964,8 +8979,8 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().getScQt()
 						.setFulfilmentType(new PmParameter());
 			} else {
-				loadPrepareSpecCommitteeDetails(quotationTenderDataType
-						.getQtId().longValue(), getDocTypeByTaskName(taskName));
+				/*loadPrepareSpecCommitteeDetails(quotationTenderDataType
+						.getQtId().longValue(), getDocTypeByTaskName(taskName));*/
 			}
 			fc.getApplication()
 					.getNavigationHandler()

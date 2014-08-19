@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -356,6 +357,8 @@ public class ApprovalBackingBean extends
 				ScQtApproval approval = this.getManagedBean().getScQtApproval();
 				if (null != approval && null != approval.getQtApprovalId()) {
 					approval.setApproverAction("A");
+					approval.setApproverId(new FacesScopes().getUserSessionBean());	
+					approval.setApproverActionDate(new Date());
 					List<ScQtApproval> qtApproval = new ArrayList<ScQtApproval>();
 					qtApproval.add(approval);
 					qt.setScQtApprovals(qtApproval);

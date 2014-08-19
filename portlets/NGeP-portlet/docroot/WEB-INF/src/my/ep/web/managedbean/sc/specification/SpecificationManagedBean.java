@@ -23,11 +23,11 @@ import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmReportSection;
 import my.ep.persistence.entity.pm.common.PmState;
-import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListScore;
+import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeliveryLoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
@@ -90,7 +90,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private List<SelectItem> comitteeUsers;
 	private List<SelectItem> currencyListDetails;
 	private List<SelectItem> procurementListDetails;
-	private List<ScCommitteeMember> committeeMemberList;
+	private List<ScQtCommitteeActivity> committeeActivities;
 
 	private Object specificationDataType;
 
@@ -651,22 +651,6 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	public void setProcurementListDetails(
 			List<SelectItem> procurementListDetails) {
 		this.procurementListDetails = procurementListDetails;
-	}
-
-	/**
-	 * @return the committeeMemberList
-	 */
-	public List<ScCommitteeMember> getCommitteeMemberList() {
-		return committeeMemberList;
-	}
-
-	/**
-	 * @param committeeMemberList
-	 *            the committeeMemberList to set
-	 */
-	public void setCommitteeMemberList(
-			List<ScCommitteeMember> committeeMemberList) {
-		this.committeeMemberList = committeeMemberList;
 	}
 
 	public Object getSpecificationDataType() {
@@ -4018,6 +4002,15 @@ public class SpecificationManagedBean extends BaseManagedBean {
 		this.selectPanelItem = selectPanelItem;
 	}
 
+	public List<ScQtCommitteeActivity> getCommitteeActivities() {
+		return committeeActivities;
+	}
+
+	public void setCommitteeActivities(
+			List<ScQtCommitteeActivity> committeeActivities) {
+		this.committeeActivities = committeeActivities;
+	}
+
 	/**
 	 * @return the specStatusId
 	 */
@@ -4059,5 +4052,4 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	public void setRecommendationStats(boolean recommendationStats) {
 		this.recommendationStats = recommendationStats;
 	}
-
 }
