@@ -29,9 +29,10 @@
 	            <ac:lov id="lovResOrg" lovId="PM_ORG_PROFILE" styleClass="ppDisplayCalS" 
 	            	update=":form:dtOrgUnit"
 					headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
-					saveObject="orgUnit.pmOrgProfile"
-					value="#{orgUnit[index].pmOrgProfile.pmOrgValidity.orgCode}"
-					conditionField="orgTypeCode.parameterId^#{orgUnit.pmOrgProfile.orgTypeCode.parameterId}|recordStatus^1" >
+					value="#{orgUnit.pmOrgProfile.pmOrgValidity.orgCode}" 
+					saveObject="profileManagementBackingBean.managedBean.selectedUser.pmUserOrgs[#{index}].pmOrgProfile"
+					conditionField="orgTypeCode.parameterId^#{orgUnit.pmOrgProfile.orgTypeCode.parameterId}|recordStatus^1" 
+					>
 				</ac:lov> 
 	        </p:column>
 	        <p:column headerText="#{lbl['lbl.pm.profiles.resorg.table.name']}" > 

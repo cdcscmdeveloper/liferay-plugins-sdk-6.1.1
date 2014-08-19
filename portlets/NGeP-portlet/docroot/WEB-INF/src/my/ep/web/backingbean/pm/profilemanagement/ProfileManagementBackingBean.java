@@ -474,8 +474,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		return PmCommonUtil.retrieveFilteredOrgTypes(ParameterTypeConst.ORGANISATION_TYPES);
 	}
 	
-	
-	
 	/**
 	 * To add new org unit to responsible org. unit list
 	 */
@@ -1088,7 +1086,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			
 			reqDTO.setPmUser(user);
 
-			UserResDTO resDTO = userSO.saveUser3(reqDTO); //saveuser2
+			UserResDTO resDTO = userSO.saveUser(reqDTO); //saveuser2
 
 			if (resDTO.isSuccessful()) {
 				//TODO: upload liferay photo locally
