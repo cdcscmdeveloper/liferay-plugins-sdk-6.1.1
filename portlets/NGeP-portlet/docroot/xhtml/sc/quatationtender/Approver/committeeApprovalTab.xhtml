@@ -15,7 +15,7 @@
 
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.so.clonebtn']}"
-				actionListener="#{qTCommitteBackingBean.cloneCommitteePopupAction}"
+				actionListener="#{qTCommitteBackingBean.committeeclonePopupAction(qTDetailBB.managedBean.selectedTabBean.scQtCommittee)}"
 				oncomplete="screen2.show();" process="@this" icon="ui-icon-clone"
 				update="@(.cloneCommitteMember)" />
 			<p:commandButton id="committeeapproveradd"
@@ -30,7 +30,7 @@
 				update="committeeapprovalId" icon="ui-icon-delete" />
 		</div>
 		<ui:include src="addCommitteeApproval.xhtml" />
-		<ui:include src="/xhtml/sc/quatationtender/committeeappointment/clonecommitteeappointment.xhtml" />
+		<ui:include src="cloneDetails.xhtml" />
 	</p:panel>
 
 	<p:panel header="#{lbl['lbl.sc.spec.approval.remark']}"
