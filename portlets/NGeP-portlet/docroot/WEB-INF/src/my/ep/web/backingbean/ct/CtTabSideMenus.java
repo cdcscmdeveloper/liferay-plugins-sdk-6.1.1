@@ -59,6 +59,11 @@ public  class CtTabSideMenus {
 					   ResourceBundleUtils.getMessage("lbl.ct.menu.factoring", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
 		  }
 		   
+		   if(menuPaymentTracking == null){
+			   menuPaymentTracking =  new ArrayList<String>(Arrays.asList(
+					   ResourceBundleUtils.getMessage("lbl.ct.menu.advPaymentTracking", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
+		  }
+		   
 		   if(menuSetting == null){
 			   menuSetting =  new ArrayList<String>(Arrays.asList(
 					   ResourceBundleUtils.getMessage("lbl.ct.menu.sett", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
