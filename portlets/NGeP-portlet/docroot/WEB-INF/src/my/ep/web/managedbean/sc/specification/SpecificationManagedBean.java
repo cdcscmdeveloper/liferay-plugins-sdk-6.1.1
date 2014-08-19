@@ -354,6 +354,9 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private Long specStatusId;
 	private boolean specSelectStats= Boolean.FALSE;
 	private boolean recommendationStats= Boolean.FALSE;
+	
+	private int selectedCheckList;
+	private String specType;
 
 	public SpecificationManagedBean() {
 		
@@ -4051,5 +4054,21 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	 */
 	public void setRecommendationStats(boolean recommendationStats) {
 		this.recommendationStats = recommendationStats;
+	}
+
+	public String getSpecType() {
+		return specType;
+	}
+
+	public void setSpecType(String specType) {
+		this.specType = specType;
+	}
+
+	public int getSelectedCheckList() {
+		return selectedCheckList;
+	}
+
+	public void setSelectedCheckList(int selectedCheckList) {
+		this.selectedCheckList = selectedCheckList;
 	}
 }
