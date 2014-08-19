@@ -38,7 +38,7 @@
 				<p:column width="60%" style="text-align:right">
 					<p:commandButton
 						value="#{lbl['lbl.ss.simple.quote.purchase.btn.ok']}"  onclick="locationPopup.hide();"
-						process="@all" update="@this, locationDataTable,locPopupPanel"
+						process="@all" update="@all"
 						partialSubmit="true" icon="ui-icon-submit"
 						actionListener="#{simpleQuoteBackingBean.updateLocation}" />
 						<p:commandButton
