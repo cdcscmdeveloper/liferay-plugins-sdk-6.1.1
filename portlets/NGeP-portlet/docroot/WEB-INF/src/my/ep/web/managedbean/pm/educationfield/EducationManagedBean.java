@@ -30,7 +30,9 @@ public class EducationManagedBean extends BaseManagedBean {
 	
 	private Long status;
 	
-	private List<PmEduField> eduFieldLov;
+	private List<PmEduField> eduList;	
+	
+	private List<PmEduField> eduListSelect;
 	
 	private List<PmEduFieldRestr> eduRestrList;
 	
@@ -79,20 +81,6 @@ public class EducationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the eduFieldLov
-	 */
-	public List<PmEduField> getEduFieldLov() {
-		return eduFieldLov;
-	}
-
-	/**
-	 * @param eduFieldLov the eduFieldLov to set
-	 */
-	public void setEduFieldLov(List<PmEduField> eduFieldLov) {
-		this.eduFieldLov = eduFieldLov;
-	}
-
-	/**
 	 * @return the status
 	 */
 	public Long getStatus() {
@@ -106,34 +94,36 @@ public class EducationManagedBean extends BaseManagedBean {
 		this.status = status;
 	}
 
-	/**
-	 * @return the eduRestrList
-	 */
 	public List<PmEduFieldRestr> getEduRestrList() {
 		return eduRestrList;
 	}
 
-	/**
-	 * @param eduRestrList the eduRestrList to set
-	 */
 	public void setEduRestrList(List<PmEduFieldRestr> eduRestrList) {
 		this.eduRestrList = eduRestrList;
 	}
 
-	/**
-	 * @return the eduRestrSelectList
-	 */
 	public List<PmEduFieldRestr> getEduRestrSelectList() {
 		return eduRestrSelectList;
 	}
-	
-	/**
-	 * @param eduRestrSelectList the eduRestrSelectList to set
-	 */
+
 	public void setEduRestrSelectList(List<PmEduFieldRestr> eduRestrSelectList) {
 		this.eduRestrSelectList = eduRestrSelectList;
-	}	
+	}
 
+	public List<PmEduField> getEduList() {
+		return eduList;
+	}
+
+	public void setEduList(List<PmEduField> eduList) {
+		this.eduList = eduList;
+	}
+
+	public List<PmEduField> getEduListSelect() {
+		return eduListSelect;
+	}
+
+	public void setEduListSelect(List<PmEduField> eduListSelect) {
+		this.eduListSelect = eduListSelect;
+	}			
 	
-
 }

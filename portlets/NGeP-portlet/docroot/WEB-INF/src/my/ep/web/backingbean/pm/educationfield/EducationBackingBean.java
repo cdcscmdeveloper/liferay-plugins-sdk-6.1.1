@@ -177,7 +177,7 @@ public class EducationBackingBean extends
 	}	
 
 	/**
-	 * get salutation info into maintenance page
+	 * get pmEduField object info into maintenance page
 	 */
 	public String goToMaintaincePage(PmEduField pmEduField) {
 		debugLogger("goToMaintaincePage");
@@ -187,7 +187,7 @@ public class EducationBackingBean extends
 	}	
 	
 	/**
-	 * save and update salutation details
+	 * save and update education field details
 	 * 
 	 */
 	public void saveEducationDtls() {
