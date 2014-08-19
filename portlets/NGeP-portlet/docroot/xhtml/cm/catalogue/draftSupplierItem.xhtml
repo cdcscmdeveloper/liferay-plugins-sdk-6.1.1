@@ -19,14 +19,13 @@
 		<p:commandButton value="#{lbl['lbl.cm.upload']}" icon="ui-icon-upload"
 			onclick="excelDialog.show(); clearInvalidFileMsg();"  />
 
-		<p:commandButton id="downloadLink" value="#{lbl['lbl.cm.download']}"
-			
+		<p:commandButton id="downloadLink" value="#{lbl['lbl.cm.download']}" disabled="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItems)&lt;1}"
 			update=":form" icon="ui-icon-download" ajax="false">
 			<p:fileDownload value="#{catalogueBackingBean.file}" />
 		</p:commandButton>
 
 
-		<p:commandButton value="#{lbl['lbl.cm.submit']}" icon="ui-icon-submit"
+		<p:commandButton id="submitLink" value="#{lbl['lbl.cm.submit']}" icon="ui-icon-submit" disabled="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItems)&lt;1}"
 			action="#{catalogueBackingBean.submitToReviewItems}" update="@form"></p:commandButton>
 	</div>
 
@@ -42,11 +41,11 @@
 
 		<p:column selectionMode="multiple" style="width:2%" />
 
-		<p:ajax event="rowSelectCheckbox" update="@(.ui-button[id$=downloadLink])"></p:ajax>
-		<p:ajax event="rowUnselectCheckbox" update="@(.ui-button[id$=downloadLink])"></p:ajax>
-		<p:ajax event="rowUnselect" update="@(.ui-button[id$=downloadLink])"></p:ajax>
-		<p:ajax event="rowSelect" update="@(.ui-button[id$=downloadLink])"></p:ajax>
-		<p:ajax event="toggleSelect" update="@(.ui-button[id$=downloadLink])" />
+		<p:ajax event="rowSelectCheckbox" update=":form:downloadLink,:form:submitLink"></p:ajax>
+		<p:ajax event="rowUnselectCheckbox" update=":form:downloadLink,:form:submitLink"></p:ajax>
+		<p:ajax event="rowUnselect" update=":form:downloadLink,:form:submitLink"></p:ajax>
+		<p:ajax event="rowSelect" update=":form:downloadLink,:form:submitLink"></p:ajax>
+		<p:ajax event="toggleSelect" update=":form:downloadLink,:form:submitLink" />
 
 		<p:column width="30%">
 			<f:facet name="header">
