@@ -33,7 +33,7 @@
 				     <p:outputLabel value="#{ctCommitteeVar.grade}" style="float:left;"/>
 				 </p:column> 
 				
-				 <p:column headerText="PNP" style="width:5%;">
+				 <p:column headerText="P&amp;P" style="width:5%;">
 				     <h:outputText value="#{ctCommitteeVar.pnp ? 'Yes' : 'No'}"  style="float:left;"/>
 				 </p:column>
 				 
@@ -142,7 +142,7 @@
 				                  <p:outputLabel value="#{data.grade}" style="float:left;"/>
 				             </p:column> 
 				       
-				             <p:column style="width:7%;white-space:normal;" headerText="P&P">
+				             <p:column style="width:7%;white-space:normal;" headerText="P&amp;P">
 				                 <p:outputLabel value="#{data.PMP ? 'Yes' : 'No'}" style="float:left;"/>
 				             </p:column> 
 	                </p:dataTable>
@@ -203,7 +203,7 @@
 	                   
 	                      <h:panelGrid columns="2">
 		                     <p:outputLabel value="*" styleClass="mandatory" />
-	                         <p:outputLabel value="P&P"/>
+	                         <p:outputLabel value="P&amp;P"/>
 	                      </h:panelGrid>
 		                  <h:panelGrid columns="4">
 		                      <p:selectOneRadio id="pandp" required="true" value="#{amendmentBackingBean.managedBean.newCommitteMembers.pnp}">  
