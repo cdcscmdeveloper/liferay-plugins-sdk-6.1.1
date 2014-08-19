@@ -1,0 +1,49 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:panel header="#{lbl['lbl.sm.branch.panHdr']} " toggleable="true"
+		id="sample">
+		<p:panel id="brnInfPan">
+			<p:dataTable var="branchBean" id="dt" widgetVar="suppBrnachDtWidVar"
+				value="#{viewSmApplBackingBean.managedBean.smAppl.smSupplierBranches}"
+				rowKey="#{branchBean}" rowIndexVar="index">
+				<ac:paginator for="dt" />
+
+				<p:column headerText="#{lbl['lbl.sm.branch.branchName']}">
+					<h:outputText value="#{branchBean.branchName}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sm.companyaddress']}">
+					<h:outputText
+						value="#{branchBean.smAddress.address1},#{branchBean.smAddress.address2}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sm.label.action']}">
+					<p:commandLink id="selectButton" update=":form:tt:banchDialog"
+						partialSubmit="true" process="@this"
+						action="#{viewSmApplBackingBean.assignSelBranch(branchBean)}">
+						<p:graphicImage library="ep/images/design" name="edit.png"
+							value="/resources/ep/images/design/edit.png"
+							style="margin-right:2px;" />
+					</p:commandLink>
+
+				</p:column>
+			</p:dataTable>
+		</p:panel>
+	</p:panel>
+	<p:dialog width="450px" height="430px"
+		header="#{lbl['lbl.sm.branch.branchDiaHdr']}" widgetVar="banchDialog"
+		id="banchDialog" resizable="false" showEffect="fade" hideEffect="fade"
+		modal="true">
+		<p:messages id="suppBranchMsg" showSummary="false" showDetail="true"
+			autoUpdate="true" closable="true" />
+		<ui:fragment
+			rendered="#{viewSmApplBackingBean.managedBean.smAppl.supplierType eq 'K' or viewSmApplBackingBean.managedBean.smAppl.supplierType eq 'J'}">
+			<ui:include src="branchDetailsTablePageViewOnly.xhtml" />
+		</ui:fragment>
+	</p:dialog>
+</ui:composition>

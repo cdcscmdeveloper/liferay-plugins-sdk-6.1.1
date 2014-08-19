@@ -1,0 +1,164 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:panel header="#{lbl['lbl.sm.projDtls.panHdr']}" toggleable="true">
+		<p:panel id="contrInfPan">
+			<p:dataTable var="contrBean" widgetVar="suppContrExpDtWidVar"
+				value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyExperiences}"
+				rowKey="#{contrBean}" rowIndexVar="index" id="contDt">
+				<ac:paginator for="contDt" />
+
+				<p:column headerText="#{lbl['lbl.sm.projDtls.projTitle']}">
+					<h:outputText value="#{contrBean.title}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sm.projDtls.contrVal']}">
+					<h:outputText value="#{contrBean.contractValue}">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sm.projDtls.procDate']}">
+					<h:outputText value="#{contrBean.procurementDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sm.projDtls.workProgress']}">
+					<h:outputText value="#{lbl['lbl.sm.projDtls.inProgress']} "
+						rendered="#{contrBean.progressStatus eq 'P'}" />
+					<h:outputText value="#{lbl['lbl.sm.projDtls.success']}"
+						rendered="#{contrBean.progressStatus eq 'S'}" />
+					<h:outputText value="#{lbl['lbl.sm.projDtls.fail']}"
+						rendered="#{contrBean.progressStatus eq 'F'}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sm.label.action']}">
+					<p:commandLink partialSubmit="true" process="@this"
+						action="#{viewSmApplBackingBean.assignSelCompanyExperience(contrBean)}"
+						update=":form:tt:contDialog">
+						<p:graphicImage library="ep/images/design" name="edit.png"
+							value="/resources/ep/images/design/edit.png" />
+					</p:commandLink>
+				</p:column>
+			</p:dataTable>
+		</p:panel>
+	</p:panel>
+	<p:dialog header="#{lbl['lbl.sm.projDtls.projDiaHdr']}"
+		widgetVar="contDialog" resizable="false" showEffect="fade"
+		closable="false" hideEffect="fade" modal="true" id="contDialog"
+		width="550px" height="500px">
+		<table style="width: 100%">
+			<tr>
+				<td valign="top">
+
+					<table style="width: 100%">
+						<tr>
+							<td><p:outputLabel
+									value="#{lbl['lbl.sm.projDtls.projTitle']}" /></td>
+							<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.title}"/></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel
+									value="#{lbl['lbl.sm.projDtls.contrVal']}" /></td>
+
+							<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.contractValue}"/></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel
+									value="#{lbl['lbl.sm.projDtls.procMode']}" /></td>
+							<td><p:selectOneMenu value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.procurementModeId}"
+									style="width: 207px;margin-bottom: 5px;" disabled="true">
+									<f:selectItems value="#{viewSmApplBackingBean.getDropdownValues('PM')}" />
+								</p:selectOneMenu></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel
+									value=" #{lbl['lbl.sm.projDtls.doneFor']}" /></td>
+							<td><p:selectOneRadio disabled="true"
+									value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.clientType}">
+									<f:selectItem itemLabel="Federal Govt" itemValue="F" />
+									<f:selectItem itemLabel="Others" itemValue="O" />
+								</p:selectOneRadio></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel
+									value="#{lbl['lbl.sm.projDtls.statBody']}" /></td>
+							<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.clientName}"
+									cols="36" /></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel
+									value="#{lbl['lbl.sm.projDtls.workProgress']}" /></td>
+							<td><p:selectOneRadio disabled="true" value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.progressStatus}">
+									<f:selectItem itemLabel="In Progress" itemValue="P" />
+									<f:selectItem itemLabel="Success" itemValue="S" />
+									<f:selectItem itemLabel="Fail" itemValue="F" />
+								</p:selectOneRadio></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel
+									value="#{lbl['lbl.sm.projDtls.procDate']}" /></td>
+							<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.procurementDate}" /></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel
+									value="
+										#{lbl['lbl.sm.projDtls.mainCat']}" /></td>
+							<td><p:selectOneMenu id="supCntrMainCatCode"
+									value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats[0].pmCategoryL1.categoryL1Id}"
+									style="width: 207px;margin-bottom: 5px;">
+									<f:selectItem itemLabel="-- Select  -- " itemValue="" />
+									<f:selectItems
+										value="#{viewSmApplBackingBean.managedBean.supplierParentCatList}"
+										var="parent" itemLabel="#{parent.categoryName}"
+										itemValue="#{parent.categoryL1Id}" />
+									<p:ajax event="change"
+										listener="#{viewSmApplBackingBean.populateChildCategoryByParent(viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats[0].pmCategoryL1.categoryL1Id,
+								viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats[0].pmCategoryL2,
+								viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats[0].pmCategoryL3)}"
+										update="contrChild,contrSubChild" />
+								</p:selectOneMenu></td>
+
+
+						</tr>
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.subCat']}" /></td>
+							<td><p:selectOneMenu value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats[0].pmCategoryL2.categoryL2Id}"
+									id="contrChild" style="width: 207px;margin-bottom: 5px;">
+									<f:selectItem itemLabel=" -- Select  -- " itemValue="" />
+									<f:selectItems
+										value="#{viewSmApplBackingBean.managedBean.supplierChildCatList}"
+										var="contrChild" itemLabel="#{contrChild.categoryName}"
+										itemValue="#{contrChild.categoryL2Id}" />
+									<p:ajax event="change"
+										listener="#{viewSmApplBackingBean.populateSubChildCategoryByChild(viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats[0].pmCategoryL2.categoryL2Id,viewSmApplBackingBean.managedBean.selectedCategory.pmCategoryL3)}"
+										update="contrSubChild" />
+								</p:selectOneMenu></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel
+									value="#{lbl['lbl.sm.projDtls.subCatDiv']}" /></td>
+							<td><p:selectOneMenu value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats[0].pmCategoryL3.categoryL3Id}"
+									id="contrSubChild" style="width: 207px;margin-bottom: 5px;">
+									<f:selectItem itemLabel=" -- Select  --  " itemValue="" />
+									<f:selectItems
+										value="#{viewSmApplBackingBean.managedBean.supplierSubChildCatList}"
+										var="contrSubChild" itemLabel="#{contrSubChild.categoryName}"
+										itemValue="#{contrSubChild.categoryL3Id}" />
+								</p:selectOneMenu></td>
+						</tr>
+
+
+					</table>
+				</td>
+			</tr>
+		</table>
+	</p:dialog>
+</ui:composition>
