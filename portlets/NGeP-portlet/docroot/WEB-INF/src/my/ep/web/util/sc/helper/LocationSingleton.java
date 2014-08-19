@@ -1982,4 +1982,165 @@ public class LocationSingleton {
 			}	
 		}
 	}
+	
+	/**
+	 * 
+	 * @param listStates
+	 * @param listDistricts
+	 * @param listDivisions
+	 * @param listCities
+	 * * @param locClass
+	 * @return
+	 */
+	public <LOCATION_CLASS extends TplSpecLoc> TreeNode constuctLocationTree(List<PmState> listStates,
+			List<PmDistrict> listDistricts, List<PmDivision> listDivisions,
+			List<PmCity> listCities, Class<LOCATION_CLASS> locClass) {
+		TreeNode mainNode = new DefaultTreeNode("Main", null);
+
+		try {
+			Map<PmState, Map<PmDistrict, List<PmCity>>> mapStatesDistrictsCities = getUniqueStateDistrictsCities(
+					listDistricts, listCities);
+			Map<PmState, Map<PmDivision, Map<PmDistrict, List<PmCity>>>> mapStatesDivisionsDistrictsCities = getUniqueStatesDivisionsDistrictsCities(
+					listDistricts, listCities);
+			Map<PmState, List<PmDivision>> mapStatesDivision = getUniqueStatesDivision(listDivisions);
+
+
+			if (listStates != null && listStates.size() > 0) {
+				for (PmState state : listStates) {
+					LOCATION_CLASS stateLocation = locClass.newInstance();
+					stateLocation.setPmState(state);
+					TreeNode stateNode = new DefaultTreeNode(QTConstants.NODE_STATE, stateLocation,
+							mainNode);
+				}
+			}
+			Set<PmState> statesDivisionKeySet = mapStatesDivision.keySet();
+			if (statesDivisionKeySet != null && !statesDivisionKeySet.isEmpty()) {
+				for (PmState state : statesDivisionKeySet) {
+					LOCATION_CLASS stateLocation = locClass.newInstance();
+					stateLocation.setPmState(state);
+					TreeNode stateNode = new DefaultTreeNode(QTConstants.NODE_STATE, stateLocation,
+							mainNode);
+
+					List<PmDivision> divisions = mapStatesDivision.get(state);
+					if (divisions != null && !divisions.isEmpty()) {
+						for (PmDivision division : divisions) {
+							LOCATION_CLASS divisionLocation = locClass
+									.newInstance();
+							divisionLocation.setPmDivision(division);
+							divisionLocation.setPmState(state);
+							TreeNode divisionNode = new DefaultTreeNode(
+									QTConstants.NODE_DIVISION, divisionLocation, stateNode);
+						}
+					}
+				}
+			}
+
+			// build zone - state - district - city
+			Set<PmState> statesDistrictsCitiesKeySet = mapStatesDistrictsCities
+					.keySet();
+			if (statesDistrictsCitiesKeySet != null
+					&& !statesDistrictsCitiesKeySet.isEmpty()) {
+				for (PmState state : statesDistrictsCitiesKeySet) {
+					LOCATION_CLASS stateLocation = locClass.newInstance();
+					stateLocation.setPmState(state);
+
+					TreeNode rootLocationTree = new DefaultTreeNode(QTConstants.NODE_ROOT, mainNode);
+					TreeNode stateNode = new DefaultTreeNode(QTConstants.NODE_STATE, stateLocation,
+							rootLocationTree);
+
+					Map<PmDistrict, List<PmCity>> mapDistrictsCities = mapStatesDistrictsCities
+							.get(state);
+					Set<PmDistrict> districtsCitiesKeySet = mapDistrictsCities
+							.keySet();
+					if (districtsCitiesKeySet != null
+							&& !districtsCitiesKeySet.isEmpty()) {
+						for (PmDistrict district : districtsCitiesKeySet) {
+							LOCATION_CLASS districtLocation = locClass
+									.newInstance();
+							districtLocation.setPmDistrict(district);
+							districtLocation.setPmState(state);
+
+							TreeNode districtNode = new DefaultTreeNode(
+									QTConstants.NODE_DISTRICT, districtLocation, stateNode);
+							List<PmCity> cities = mapDistrictsCities
+									.get(district);
+							if (cities != null && !cities.isEmpty()) {
+								for (PmCity city : cities) {
+									LocationDTO cityLocation = new LocationDTO(
+											city);
+									TreeNode cityNode = new DefaultTreeNode(
+											"city", cityLocation, districtNode);
+								}
+							}
+						}
+					}
+				}
+			}
+			// build zone - state - division - city
+			Set<PmState> statesDivisionsDistrictsCitiesKeySet = mapStatesDivisionsDistrictsCities
+					.keySet();
+			if (statesDivisionsDistrictsCitiesKeySet != null
+					&& !statesDivisionsDistrictsCitiesKeySet.isEmpty()) {
+				for (PmState state : statesDivisionsDistrictsCitiesKeySet) {
+					LOCATION_CLASS stateLocation = locClass.newInstance();
+					stateLocation.setPmState(state);
+					
+					TreeNode rootLocationTree = new DefaultTreeNode(QTConstants.NODE_ROOT, mainNode);
+					TreeNode stateNode = new DefaultTreeNode(QTConstants.NODE_STATE, stateLocation,
+							rootLocationTree);
+					Map<PmDivision, Map<PmDistrict, List<PmCity>>> mapDivisionsDistrictsCities = mapStatesDivisionsDistrictsCities
+							.get(state);
+					Set<PmDivision> divisionsDistrictsCitiesKeySet = mapDivisionsDistrictsCities
+							.keySet();
+					if (divisionsDistrictsCitiesKeySet != null
+							&& !divisionsDistrictsCitiesKeySet.isEmpty()) {
+						for (PmDivision division : divisionsDistrictsCitiesKeySet) {
+							LOCATION_CLASS divisionLocation = locClass
+									.newInstance();
+							divisionLocation.setPmDivision(division);
+							divisionLocation.setPmState(state);
+
+							TreeNode divisionNode = new DefaultTreeNode(
+									QTConstants.NODE_DIVISION, divisionLocation, stateNode);
+							Map<PmDistrict, List<PmCity>> mapDistrictsCities = mapDivisionsDistrictsCities
+									.get(division);
+							Set<PmDistrict> districtsCitiesKeySet = mapDistrictsCities
+									.keySet();
+							if (districtsCitiesKeySet != null
+									&& !districtsCitiesKeySet.isEmpty()) {
+								for (PmDistrict district : districtsCitiesKeySet) {
+									LOCATION_CLASS districtLocation = locClass
+											.newInstance();
+									districtLocation.setPmDistrict(district);
+									districtLocation.setPmState(state);
+									districtLocation.setPmDivision(division);
+
+									TreeNode districtNode = new DefaultTreeNode(
+											QTConstants.NODE_DISTRICT, districtLocation,
+											divisionNode);
+									List<PmCity> cities = mapDistrictsCities
+											.get(district);
+									if (cities != null && !cities.isEmpty()) {
+										for (PmCity city : cities) {
+											LocationDTO cityLocation = new LocationDTO(
+													city);
+											TreeNode cityNode = new DefaultTreeNode(
+													"city", cityLocation,
+													districtNode);
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		} catch (InstantiationException e) {
+			throw new EpException(e.getMessage());
+		} catch (IllegalAccessException e) {
+			throw new EpException(e.getMessage());
+		}
+
+		return mainNode;
+	}
 }
