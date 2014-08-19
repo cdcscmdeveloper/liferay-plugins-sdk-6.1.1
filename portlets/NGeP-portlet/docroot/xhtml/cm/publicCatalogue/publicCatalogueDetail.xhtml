@@ -55,11 +55,17 @@
 								style="width: 250px; float: right; margin-right: 65px;">
 
 								<h:panelGroup
+								
 									rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) == 0 }">
 
-									<img src="/NGeP-portlet/images/noImage.jpg"
-										style="height: 150px; left: 0px !important;" />
-
+									
+										
+											<p:outputPanel
+												style="height: 150px;width: 150px; left: 1px !important; border: 1px solid #808080; display: block; vertical-align: top; padding: 20px 4px; text-align: center;">
+													#{lbl['lbl.cm.no.image.available']}
+											</p:outputPanel>
+										
+									
 								</h:panelGroup>
 
 								<h:panelGroup
@@ -85,8 +91,8 @@
 					<tr style="height: 30px;">
 
 						<td><h:outputText value="#{lbl['lbl.cm.item.code']} : "
-								style="text-align:left;" />
-							<h:outputText style="text-align:left;"
+								style="text-align:left;" /> <h:outputText
+								style="text-align:left;"
 								value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.extensionCode}" /></td>
 						<td colspan="4"></td>
 

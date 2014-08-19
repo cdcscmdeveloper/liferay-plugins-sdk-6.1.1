@@ -10,11 +10,8 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
-	<style type="text/css">
 
-		div.tbclass:hover { background-color: #D3D3D3; }
-
-	</style>
+			
 			
 			<p:messages id="publicCatMesId" showDetail="true" autoUpdate="true" closable="true" showSummary="true" />
 
@@ -171,16 +168,13 @@
 									value="#{pCatalogueBackingBean.managedBean.catalogueList}"
 									id="catalogueGridViewID" var="supplierItem">
 									<ac:paginator for="catalogueGridViewID"></ac:paginator>
-										<div class="tbclass">
-										<p:commandLink
-											action="#{pCatalogueBackingBean.navigateToSupplierItemDet(supplierItem)}"
-											process="@this" >
-										<table  style="width:100%;height:100%;padding-left:10px;padding-right:10px;padding-bottom: 10px;padding-top: 10px;">
+									
+										<table  style="width:100%;height:100%;padding-left:10px;padding-right:10px;padding-bottom: 10px;padding-top: 10px;vertical-align: top; ">
 											<tr>
 												<td align="center" style="text-align: center;"><h:panelGroup
 														rendered="#{fn:length(supplierItem.cmImages) == 0 }">
 														<div align="center" style="width: 100%">
-														<div align="center"  style="height: 100px; width: 100px;padding-top: 20px;">
+														<div align="center"  style="height: 100px; width: 100px;left: 0px !important;">
 															<p:outputPanel
 																style="width:100px; border: 1px solid #808080; display: block; vertical-align: top; padding: 20px 4px; text-align: center;">
 													#{lbl['lbl.cm.no.image.available']}
@@ -195,7 +189,7 @@
 													</h:panelGroup></td>
 											</tr>
 											<tr>
-												<td style="text-align: center;"><p:commandLink
+												<td align="center" style="text-align: center;width:100%;height:100%; padding-left: 20px;padding-right: 20px;"><p:commandLink
 														action="#{pCatalogueBackingBean.navigateToSupplierItemDet(supplierItem)}"
 														process="@this" value="#{supplierItem.cmItem.itemName}" /></td>
 											</tr>
@@ -204,8 +198,6 @@
 														value="#{supplierItem.cmStandardPricing.price}" /></td>
 											</tr>
 										</table>
-										</p:commandLink>
-										</div>
 									
 								</p:dataGrid></td>
 						</tr>

@@ -20,6 +20,7 @@ import my.ep.dto.cm.codification.CodificationReqDTO;
 import my.ep.dto.cm.codification.CodificationResDTO;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
+import my.ep.persistence.entity.cm.catalog.VCmPubSuppItem;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.cm.codification.UnspscCodeBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -74,20 +75,16 @@ public class PublicCatalogueManagedBean extends BaseManagedBean {
 		this.familyList = familyList;
 	}
 
-
 	public List<CmSupplierItem> getCatalogueList() {
-		if(catalogueList==null)
-			catalogueList = new ArrayList<CmSupplierItem>();
+		if(this.catalogueList == null){
+			this.catalogueList = new ArrayList<CmSupplierItem>();
+		}
 		return catalogueList;
 	}
-
 
 	public void setCatalogueList(List<CmSupplierItem> catalogueList) {
 		this.catalogueList = catalogueList;
 	}
-
-
-
 
 	public boolean isFrontPage() {
 		return frontPage;
