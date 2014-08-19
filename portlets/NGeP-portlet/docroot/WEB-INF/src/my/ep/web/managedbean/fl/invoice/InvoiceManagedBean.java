@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.Map.Entry;
 
 import javax.faces.bean.ManagedBean;
@@ -92,33 +93,35 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	public void populateChargeLineData(){
 		this.chargeLineItemRoot = new DefaultTreeNode("root", null);
 		
-		Map<Long, List<FlInvoiceItem>> invoiceItemsMap = new HashMap<Long, List<FlInvoiceItem>>();
+		//Map<Long, List<FlInvoiceItem>> invoiceItemsMap = new HashMap<Long, List<FlInvoiceItem>>();
+		Map<String, List<FlInvoiceItem>> invoiceItemsMap = new TreeMap<String, List<FlInvoiceItem>>();
 		List<FlInvoiceItem> flInvoiceItemList = null;
 		for (FlInvoiceItem flInvoiceItem : invoice.getFlInvoiceItem()) {
-			if (invoiceItemsMap.containsKey(flInvoiceItem.getFlFulfilmentItem().getCmItem().getItemId())) {
+			if (invoiceItemsMap.containsKey(flInvoiceItem.getFlFulfilmentItem().getCmItem().getExtensionCode())) {
 				flInvoiceItemList = invoiceItemsMap.get(flInvoiceItem.getFlFulfilmentItem().getCmItem().getItemId());
 			} else {
 				flInvoiceItemList = new ArrayList<FlInvoiceItem>();
 			}
 			flInvoiceItemList.add(flInvoiceItem);
-			invoiceItemsMap.put(flInvoiceItem.getFlFulfilmentItem().getCmItem().getItemId(), flInvoiceItemList);
+			invoiceItemsMap.put(flInvoiceItem.getFlFulfilmentItem().getCmItem().getExtensionCode(), flInvoiceItemList);
 		}
 		
 		BigDecimal grandTotalOrderAmt = new BigDecimal(0);
 		BigDecimal grandTotalReceivedAmt = new BigDecimal(0);
 		BigDecimal grandTotalInvAmt = new BigDecimal(0);
-		for(Entry<Long, List<FlInvoiceItem>> itemEntry : invoiceItemsMap.entrySet()){
+		//for(Entry<Long, List<FlInvoiceItem>> itemEntry : invoiceItemsMap.entrySet()){
+		for(Entry<String, List<FlInvoiceItem>> itemEntry : invoiceItemsMap.entrySet()){	
 			List<FlInvoiceItem> invoiceItems = itemEntry.getValue();
 			FlInvoiceItem flInvoiceItem = (FlInvoiceItem) invoiceItems.get(0).cloneEntity(); // parent entity, no need stored in DB.
 			flInvoiceItem.setParent(true);
-			TreeNode childItemNode = new DefaultTreeNode(flInvoiceItem.getFlFulfilmentItem().getCmItem().getItemId().toString(), flInvoiceItem, chargeLineItemRoot);
+			TreeNode childItemNode = new DefaultTreeNode(flInvoiceItem.getFlFulfilmentItem().getCmItem().getExtensionCode(), flInvoiceItem, chargeLineItemRoot);
 			
 			BigDecimal totalOrderAmt = new BigDecimal(0);
 			BigDecimal totalReceiveAmt = new BigDecimal(0);
 			BigDecimal totalRecallAmt = new BigDecimal(0);
 			BigDecimal totalInvAmt = new BigDecimal(0);
 			for(FlInvoiceItem chargeLineItem : invoiceItems) {
-				new DefaultTreeNode(chargeLineItem.getFlFulfilmentItem().getCmItem().getItemId().toString(),chargeLineItem,childItemNode);
+				new DefaultTreeNode(chargeLineItem.getFlFulfilmentItem().getCmItem().getExtensionCode(),chargeLineItem,childItemNode);
 				totalOrderAmt=totalOrderAmt.add(chargeLineItem.getOrderedAmt());
 				totalReceiveAmt=totalReceiveAmt.add(chargeLineItem.getReceivedAmt());
 				totalRecallAmt=totalRecallAmt.add(chargeLineItem.getRecalledAmt());

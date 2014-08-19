@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -1337,17 +1338,18 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	
 	private void populateChargeLineData(boolean retainPreviousSelection) {
 		getManagedBean().setChargeLineItemRoot(new DefaultTreeNode("root", null));
-		Map<Long, List<FlFulfilmentItemAddr>> chargeLineItemsMap = new HashMap<Long, List<FlFulfilmentItemAddr>>();
+		//Map<Long, List<FlFulfilmentItemAddr>> chargeLineItemsMap = new HashMap<Long, List<FlFulfilmentItemAddr>>();
 		
+		Map<String, List<FlFulfilmentItemAddr>> chargeLineItemsMap = new TreeMap<String, List<FlFulfilmentItemAddr>>();
 		for(FlDeliveryAddress  deliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
 			for(FlFulfilmentItemAddr itemAddress : deliveryAddress.getFlFulfilmentItemAddr()){
 				itemAddress.setChargeOrderedAmt(itemAddress.getOrderedAmt());
 				itemAddress.setChargeOrderedQty(itemAddress.getOrderedQty());
 				itemAddress.setChargeUnitPrice(itemAddress.getUnitPrice());
-				if(chargeLineItemsMap.containsKey(itemAddress.getScRequestItem().getRequestNoteItemId())){
+				if(chargeLineItemsMap.containsKey(itemAddress.getCmItem().getExtensionCode())){
 					//code for calculating duplicate charge line order amount and quantity for same unit price  Condition for checking unit price same.
 					boolean notContained=true;
-					for(FlFulfilmentItemAddr containedItem : chargeLineItemsMap.get(itemAddress.getScRequestItem().getRequestNoteItemId())){
+					for(FlFulfilmentItemAddr containedItem : chargeLineItemsMap.get(itemAddress.getCmItem().getExtensionCode())){
 						if(containedItem.getChargeUnitPrice().equals(itemAddress.getUnitPrice())){
 							containedItem.setChargeOrderedAmt( containedItem.getChargeOrderedAmt().add(itemAddress.getOrderedAmt()));
 							containedItem.setChargeOrderedQty(containedItem.getChargeOrderedQty().add(itemAddress.getOrderedQty()));
@@ -1355,12 +1357,13 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 						}
 					}
 					if(notContained){
-						chargeLineItemsMap.get(itemAddress.getScRequestItem().getRequestNoteItemId()).add(itemAddress);
+						chargeLineItemsMap.get(itemAddress.getCmItem().getExtensionCode()).add(itemAddress);
 					}
 				} else {
 					List<FlFulfilmentItemAddr> itemAddressList=new ArrayList<FlFulfilmentItemAddr>();
 					itemAddressList.add(itemAddress);
-					chargeLineItemsMap.put(itemAddress.getScRequestItem().getRequestNoteItemId(),itemAddressList);
+					//chargeLineItemsMap.put(itemAddress.getScRequestItem().getRequestNoteItemId(),itemAddressList);
+					chargeLineItemsMap.put(itemAddress.getCmItem().getExtensionCode(),itemAddressList);
 				}
 			}
 		}
@@ -1371,7 +1374,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		BigDecimal grandTotalOrderAmt=new BigDecimal(0);
 		getManagedBean().setOrderedAmtGrandTotal(grandTotalOrderAmt);
 		int i=0;
-		for(Entry<Long, List<FlFulfilmentItemAddr>> itemEntry : chargeLineItemsMap.entrySet()){
+		for(Entry<String, List<FlFulfilmentItemAddr>> itemEntry : chargeLineItemsMap.entrySet()){
 			flItemAddress = (FlFulfilmentItemAddr) itemEntry.getValue().get(0).cloneEntity();
 			flItemAddress.setParent(true);
 			if(null != flItemAddress.getPmVotFund() && null != flItemAddress.getPmVotFund().getVotFundId()){
@@ -1396,8 +1399,8 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 				childItemNode.setSelected(true);
 				i++;
 			}
-			
-			for(FlFulfilmentItemAddr itemAddr : itemEntry.getValue()) {
+			List<FlFulfilmentItemAddr> itemAddress=itemEntry.getValue();
+			for(FlFulfilmentItemAddr itemAddr : itemAddress) {
 				new DefaultTreeNode(itemAddr.getScRequestItem().getRequestNoteItemId().toString(), itemAddr, childItemNode);
 				totalOrderAmt = totalOrderAmt.add(itemAddr.getChargeOrderedAmt());
 			}

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.Map.Entry;
 
 import javax.faces.bean.ManagedBean;
@@ -98,31 +99,34 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	public void populateChargeLineData(){
 		this.chargeLineItemRoot = new DefaultTreeNode("root", null);
 		
-		Map<Long, List<FlFulfilmentItemAddr>> siItemsMap = new HashMap<Long, List<FlFulfilmentItemAddr>>();
+		//Map<Long, List<FlFulfilmentItemAddr>> siItemsMap = new HashMap<Long, List<FlFulfilmentItemAddr>>();
+		Map<String, List<FlFulfilmentItemAddr>> siItemsMap = new TreeMap<String, List<FlFulfilmentItemAddr>>();
 		List<FlFulfilmentItemAddr> flStopInstrItemList = null;
 		for (FlDeliveryAddress flDelAddress :this.getFlRequest().getFlDeliveryAddresses()) {
 			for (FlFulfilmentItemAddr flStopInstrItem : flDelAddress.getFlFulfilmentItemAddr()) {
-				if (siItemsMap.containsKey(flStopInstrItem.getFlFulfilmentItem().getCmItem().getItemId())) {
+				if (siItemsMap.containsKey(flStopInstrItem.getFlFulfilmentItem().getCmItem().getExtensionCode())) {
 					flStopInstrItemList = siItemsMap.get(flStopInstrItem.getFlFulfilmentItem().getCmItem().getItemId());
 				} else {
 					flStopInstrItemList = new ArrayList<FlFulfilmentItemAddr>();
 				}
 				flStopInstrItemList.add(flStopInstrItem);
-				siItemsMap.put(flStopInstrItem.getFlFulfilmentItem().getCmItem().getItemId(), flStopInstrItemList);
+				//siItemsMap.put(flStopInstrItem.getFlFulfilmentItem().getCmItem().getItemId(), flStopInstrItemList);
+				siItemsMap.put(flStopInstrItem.getFlFulfilmentItem().getCmItem().getExtensionCode(),flStopInstrItemList);
 			}
 			
 		}
-		for(Entry<Long, List<FlFulfilmentItemAddr>> itemEntry : siItemsMap.entrySet()){
+		for(Entry<String, List<FlFulfilmentItemAddr>> itemEntry : siItemsMap.entrySet()){
+		//for(Entry<Long, List<FlFulfilmentItemAddr>> itemEntry : siItemsMap.entrySet()){
 			List<FlFulfilmentItemAddr> stopInstrItems = itemEntry.getValue();
 			FlFulfilmentItemAddr flsiItem = (FlFulfilmentItemAddr) stopInstrItems.get(0).cloneEntity(); // parent entity, no need stored in DB.
 			flsiItem.setParent(true);
-			TreeNode childItemNode = new DefaultTreeNode(flsiItem.getFlFulfilmentItem().getCmItem().getItemId().toString(), flsiItem, chargeLineItemRoot);
+			TreeNode childItemNode = new DefaultTreeNode(flsiItem.getFlFulfilmentItem().getCmItem().getExtensionCode().toString(), flsiItem, chargeLineItemRoot);
 			
 			BigDecimal totalOrderAmt = new BigDecimal(0);
 			BigDecimal totalReceiveAmt = new BigDecimal(0);
 			
 			for(FlFulfilmentItemAddr chargeLineItem : stopInstrItems) {
-				new DefaultTreeNode(chargeLineItem.getFlFulfilmentItem().getCmItem().getItemId().toString(),chargeLineItem,childItemNode);
+				new DefaultTreeNode(chargeLineItem.getFlFulfilmentItem().getCmItem().getExtensionCode().toString(),chargeLineItem,childItemNode);
 				totalOrderAmt=totalOrderAmt.add(chargeLineItem.getOrderedAmt());
 				totalReceiveAmt=totalReceiveAmt.add(chargeLineItem.getReceivedAmt());
 			}			

@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.Map.Entry;
 
 import javax.annotation.PostConstruct;
@@ -58,6 +59,7 @@ import my.ep.persistence.entity.fl.payment.FlPaymentDeduction;
 import my.ep.persistence.entity.fl.payment.FlPaymentItem;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
+import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmContact;
@@ -441,26 +443,28 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 	private void populateChargeLineData(){
 		getManagedBean().setChargeLineItemRoot(new DefaultTreeNode("root", null));
 		 
-		Map<Long, List<FlPaymentItem>> paymentItemsMap = new HashMap<Long, List<FlPaymentItem>>();
+		//Map<Long, List<FlPaymentItem>> paymentItemsMap = new HashMap<Long, List<FlPaymentItem>>();
+		Map<String, List<FlPaymentItem>> paymentItemsMap = new TreeMap<String, List<FlPaymentItem>>();
 		List<FlPaymentItem> flPaymentItemList = null;
 		for (FlPaymentItem flPaymentItem : getManagedBean().getPaymentAdvice().getFlPaymentItems()) {
-			if (paymentItemsMap.containsKey(flPaymentItem.getFlItem().getCmItem().getItemId())) {
-				flPaymentItemList = paymentItemsMap.get(flPaymentItem.getFlItem().getCmItem().getItemId());
+			if (paymentItemsMap.containsKey(flPaymentItem.getFlItem().getCmItem().getExtensionCode())) {
+				flPaymentItemList = paymentItemsMap.get(flPaymentItem.getFlItem().getCmItem().getExtensionCode());
 			} else {
 				flPaymentItemList = new ArrayList<FlPaymentItem>();
 			}
 			flPaymentItemList.add(flPaymentItem);
-			paymentItemsMap.put(flPaymentItem.getFlItem().getCmItem().getItemId(), flPaymentItemList);
+			paymentItemsMap.put(flPaymentItem.getFlItem().getCmItem().getExtensionCode(), flPaymentItemList);
 		}
 		
 		BigDecimal grandTotalOrderAmt = new BigDecimal(0);
 		BigDecimal grandTotalReceivedAmt = new BigDecimal(0);
 		BigDecimal grandTotalInvAmt = new BigDecimal(0);
-		for(Entry<Long, List<FlPaymentItem>> itemEntry : paymentItemsMap.entrySet()){
+		for(Entry<String, List<FlPaymentItem>> itemEntry : paymentItemsMap.entrySet()){
+		//for(Entry<Long, List<FlPaymentItem>> itemEntry : paymentItemsMap.entrySet()){
 			List<FlPaymentItem> paymentItems = itemEntry.getValue();
 			FlPaymentItem flPaymentItem = (FlPaymentItem) paymentItems.get(0).cloneEntity(); // parent entity, no need stored in DB.
 			flPaymentItem.setParent(true);
-			TreeNode childItemNode = new DefaultTreeNode(flPaymentItem.getFlItem().getCmItem().getItemId().toString(), flPaymentItem, getManagedBean().getChargeLineItemRoot());
+			TreeNode childItemNode = new DefaultTreeNode(flPaymentItem.getFlItem().getCmItem().getExtensionCode(), flPaymentItem, getManagedBean().getChargeLineItemRoot());
 			
 			BigDecimal totalOrderAmt = new BigDecimal(0);
 			BigDecimal totalReceiveAmt = new BigDecimal(0);
@@ -468,7 +472,7 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			BigDecimal totalInvAmt = new BigDecimal(0);
 			BigDecimal totalDanAmt = new BigDecimal(0);
 			for(FlPaymentItem chargeLineItem : paymentItems) {
-				new DefaultTreeNode(chargeLineItem.getFlItem().getCmItem().getItemId().toString(),chargeLineItem,childItemNode);
+				new DefaultTreeNode(chargeLineItem.getFlItem().getCmItem().getExtensionCode(),chargeLineItem,childItemNode);
 				totalOrderAmt=totalOrderAmt.add(chargeLineItem.getFlInvoiceItem().getOrderedAmt());
 				totalReceiveAmt=totalReceiveAmt.add(chargeLineItem.getFlInvoiceItem().getReceivedAmt());
 				totalRecallAmt=totalRecallAmt.add(chargeLineItem.getFlInvoiceItem().getRecalledAmt());
