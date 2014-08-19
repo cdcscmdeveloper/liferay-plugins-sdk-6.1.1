@@ -1,19 +1,30 @@
 package my.ep.web.backingbean.sm.applicationView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 
+import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.pm.common.certbody.ICertBodySO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.revision.ISmApplRevisionSO;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
+import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
 import my.ep.dto.pm.common.certbody.CertBodyResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
 import my.ep.dto.sm.revision.SmApplRevisionResDTO;
+import my.ep.persistence.entity.pm.common.PmCategoryL2;
+import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmAssociateCompany;
+import my.ep.persistence.entity.sm.SmCompanyExperience;
+import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierCert;
 import my.ep.persistence.logging.LogKey;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -156,6 +167,107 @@ public class ViewSmApplBackingBean extends
 		return s;
 	}
 
+	public void assignSelAssoc(SmAssociateCompany assocBean) {
+		getManagedBean().setSelectedAssocCompany(assocBean);
+		RequestContext.getCurrentInstance().execute("assocDialog.show()");
+	}
 	
-	
+	public void assignSelBranch(SmSupplierBranch branchBean) {
+		getManagedBean().setSelectedBranch(branchBean);
+		RequestContext.getCurrentInstance().execute("banchDialog.show()");
+	}
+
+	public void assignSelCompanyExperience(SmCompanyExperience consultantBean) {
+		getManagedBean().setSelectedCompanyExperience(consultantBean);
+		if (consultantBean.getSmCompanyExperienceCats() != null
+				&& !consultantBean.getSmCompanyExperienceCats().isEmpty()) {
+			populateChildCategoryByParent(consultantBean
+					.getSmCompanyExperienceCats().get(0).getPmCategoryL1()
+					.getCategoryL1Id(), new PmCategoryL2(), new PmCategoryL3());
+			populateSubChildCategoryByChild(consultantBean
+					.getSmCompanyExperienceCats().get(0).getPmCategoryL2()
+					.getCategoryL2Id(), new PmCategoryL3());
+		}
+		if (getManagedBean().getSmAppl().getSupplierType()
+				.equals(SupplierManagementConst.STYPE_CONSULTANT)) {
+			RequestContext.getCurrentInstance().execute("consDialog.show()");
+		}
+		if (getManagedBean().getSmAppl().getSupplierType()
+				.equals(SupplierManagementConst.STYPE_CONTRACTOR)) {
+			RequestContext.getCurrentInstance().execute("contDialog.show()");
+		}
+	}
+
+	public void populateChildCategoryByParent(long parentId,
+			PmCategoryL2 catL2, PmCategoryL3 catL3) {
+		try {
+			List<PmCategoryL2> categoryL2s = this
+					.retrieveChildCategoryList(parentId);
+
+			this.getManagedBean().setSupplierChildCatList(categoryL2s);
+			this.getManagedBean().setSupplierSubChildCatList(
+					new ArrayList<PmCategoryL3>());
+
+			resetChildCategory(catL2);
+			resetSubChildCategory(catL3);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void populateSubChildCategoryByChild(long childId, PmCategoryL3 catL3) {
+		try {
+			List<PmCategoryL3> categoryL3s = this
+					.retrieveSubChildCategoryList(childId);
+
+			this.getManagedBean().setSupplierSubChildCatList(categoryL3s);
+
+			resetSubChildCategory(catL3);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	private List<PmCategoryL2> retrieveChildCategoryList(long categoryL1Id) {
+		ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate
+				.getInstance().getServiceObject("pm", ICategoryCodeSO.class);
+		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+		reqDTO.setCategoryL1Id(categoryL1Id);
+		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL2ListByL1Id(reqDTO);
+
+		return resDTO.getCategoryL2List();
+	}
+
+	private List<PmCategoryL3> retrieveSubChildCategoryList(long categoryL2Id) {
+		ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate
+				.getInstance().getServiceObject("pm", ICategoryCodeSO.class);
+		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+		reqDTO.setCategoryL2Id(categoryL2Id);
+		System.out.println("** getSupplierType type ***"
+				+ getManagedBean().getSmAppl().getSupplierType());
+		System.out.println("** getApplCategoryType type ***"
+				+ getManagedBean().getSmAppl().getApplCategoryType());
+		// reqDTO.setSupplierTypeCode(getManagedBean().getSmAppl()
+		// .getSupplierType());
+		// if (getManagedBean().getSmAppl().getApplCategoryType().equals("N")) {
+		// reqDTO.setIsSpecialCategory(false);
+		// } else {
+		// reqDTO.setIsSpecialCategory(true);
+		// }
+		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL3ListByL2Id(reqDTO);
+
+		return resDTO.getCategoryL3List();
+	}
+
+	private void resetChildCategory(PmCategoryL2 catL2) {
+		catL2.setCategoryL2Id(null);
+
+	}
+
+	private void resetSubChildCategory(PmCategoryL3 catL3) {
+		catL3.setCategoryL3Id(null);
+
+	}
+
 }
