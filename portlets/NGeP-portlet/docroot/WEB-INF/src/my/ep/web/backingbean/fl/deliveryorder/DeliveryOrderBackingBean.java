@@ -308,7 +308,7 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 						}
 						Matcher m = p.matcher(selectedDelAddress.getFlTempDoAddr().getSupplierDoRef());
 						if(!m.matches()) {
-							throw new EpException(MessageConst.ERROR_100053, new String[]{"Supplier DO. No. "+selectedDelAddress.getFlTempDoAddr().getSupplierDoRef()});
+							throw new EpException(MessageConst.ERROR_100053, new String[]{"Supplier DO. No. \""+selectedDelAddress.getFlTempDoAddr().getSupplierDoRef()+"\""});
 						}
 						totalDeliveryQty = 0;
 						totalDeliveryAmount = 0;
