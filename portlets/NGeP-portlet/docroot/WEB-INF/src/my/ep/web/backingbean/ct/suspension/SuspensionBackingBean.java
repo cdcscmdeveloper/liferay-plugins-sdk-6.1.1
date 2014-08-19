@@ -3,6 +3,13 @@
  */
 package my.ep.web.backingbean.ct.suspension;
 
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -13,7 +20,9 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.bpm.dto.BpmRequestDTO;
@@ -344,5 +353,36 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 
 	public void setCtContractItems(List<CtContractItem> ctContractItems) {
 		this.ctContractItems = ctContractItems;
+	}
+	
+	public void downloadFile(String filePath, String fileName) throws IOException {
+		PortletResponse  portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();  
+		HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
+		
+		res.setHeader( "Content-Disposition", "attachment; filename=\"" + fileName + "\"" );//
+		res.setHeader( "Content-Transfer-Encoding", "binary" );
+		res.setContentType("application/octet-stream");
+		res.flushBuffer();
+		OutputStream out = res.getOutputStream();   
+		if(filePath!=null) {
+			InputStream input = null;
+			try {
+				URLConnection uc = new URL(filePath).openConnection();
+				input = new BufferedInputStream(uc.getInputStream()); 
+			} catch (Exception e) {
+				// Cannot open connection, maybe local file
+				input = new FileInputStream(filePath);
+			}
+			byte[] buffer = new byte[4096];
+			int bytesRead;
+			while ((bytesRead = input.read( buffer )) != -1){ 
+				out.write( buffer, 0, bytesRead );
+				buffer = new byte[4096]; 
+			}
+			input.close();			
+		}
+		out.flush();
+		out.close(); 
+		FacesContext.getCurrentInstance().responseComplete();
 	}
 }
