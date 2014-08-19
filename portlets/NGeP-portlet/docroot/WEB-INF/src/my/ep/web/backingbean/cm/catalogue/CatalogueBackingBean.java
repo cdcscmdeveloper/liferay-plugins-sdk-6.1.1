@@ -3679,6 +3679,89 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			CatalogueResDTO resDTO = catalogueSO.retrieveSupplierZoneBySuppId(reqDTO);
 			System.out.println("size:" + resDTO.getSupplierZoneLs().size());
 			this.getManagedBean().setSupplierZoneList(resDTO.getSupplierZoneLs());
+			
+			//Prices (Tier/Zonal/Zonal Tier) with future date should not be displayed.
+			Date dateNow = new Date();
+			//tier
+			Iterator<CmTierPricing> iter = item.getCmTierPricings().iterator();
+			while (iter.hasNext()) {
+				CmTierPricing cmTierPricing = iter.next();
+				if(cmTierPricing.getStartDate().after(dateNow)){
+					iter.remove();
+				}
+			        
+			}
+			//tier promotion
+			Iterator<CmPromotionTierPricing> iter2 = item.getCmPromotionTierPricings().iterator();
+			while (iter2.hasNext()) {
+				CmPromotionTierPricing cmTierPricing = iter2.next();
+				if(cmTierPricing.getStartDate().after(dateNow)){
+					iter2.remove();
+				}
+			        
+			}
+			/*for (CmPromotionTierPricing cmTierPricing : item.getCmPromotionTierPricings()){
+				if(cmTierPricing.getStartDate().after(dateNow)){
+					item.getCmPromotionTierPricings().remove(cmTierPricing);
+				}
+			}*/
+			//zonal
+			Iterator<CmZonalStandardPricing> iter3 = item.getzStdPrices().iterator();
+			while (iter3.hasNext()) {
+				CmZonalStandardPricing cmTierPricing = iter3.next();
+				if(cmTierPricing.getStartDate().after(dateNow)){
+					iter3.remove();
+				}
+			        
+			}
+			/*for (CmZonalStandardPricing cmTierPricing : item.getzStdPrices()){
+				if(cmTierPricing.getStartDate().after(dateNow)){
+					item.getzStdPrices().remove(cmTierPricing);
+				}
+			}*/
+			//zonal promotion
+			Iterator<CmZonalPromotionPricing> iter4 = item.getCmZonalPromotionPricings().iterator();
+			while (iter4.hasNext()) {
+				CmZonalPromotionPricing cmTierPricing = iter4.next();
+				if(cmTierPricing.getStartDate().after(dateNow)){
+					iter4.remove();
+				}
+			        
+			}
+			/*for (CmZonalPromotionPricing cmTierPricing : item.getCmZonalPromotionPricings()){
+				if(cmTierPricing.getStartDate().after(dateNow)){
+					item.getCmZonalPromotionPricings().remove(cmTierPricing);
+				}
+			}*/
+			//zonal tier
+			Iterator<CmZonalTierPricing> iter5 = item.getCmZonalTierPricings().iterator();
+			while (iter5.hasNext()) {
+				CmZonalTierPricing cmTierPricing = iter5.next();
+				if(cmTierPricing.getStartDate().after(dateNow)){
+					iter5.remove();
+				}
+			        
+			}
+			/*for (CmZonalTierPricing cmTierPricing : item.getCmZonalTierPricings()){
+				if(cmTierPricing.getStartDate().after(dateNow)){
+					item.getCmZonalTierPricings().remove(cmTierPricing);
+				}
+			}*/
+			//zonal tier promotion
+			Iterator<CmZonalPromotionTierPricing> iter6 = item.getCmZonalPromotionTierPricings().iterator();
+			while (iter6.hasNext()) {
+				CmZonalPromotionTierPricing cmTierPricing = iter6.next();
+				if(cmTierPricing.getStartDate().after(dateNow)){
+					iter6.remove();
+				}
+			        
+			}
+			/*for (CmZonalPromotionTierPricing cmTierPricing : item.getCmZonalPromotionTierPricings()){
+				if(cmTierPricing.getStartDate().after(dateNow)){
+					item.getCmZonalPromotionTierPricings().remove(cmTierPricing);
+				}
+			}*/
+			
 			this.getManagedBean().setSupplierItemObj(item);
 			this.getManagedBean().setTabActiveIndex(0);
 		}catch(Exception e){
