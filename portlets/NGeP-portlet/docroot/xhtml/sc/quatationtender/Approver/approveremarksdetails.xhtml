@@ -41,19 +41,16 @@
 					<table style="width: 150px;">
 						<tr>
 							<td colspan="2"><p:commandButton
-									oncomplete="supportAttachDlg.show();return false;"
-									icon="iconAttachment" update="bpkremarksupDtls"
-									value="Attach Files">
-									<f:setPropertyActionListener
-										value="#{approvalBackingBean.managedBean.scQtApproval}"
-										target="#{approvalBackingBean.managedBean.scQtApproval}" />
-									
+									oncomplete="supportAttachDlg.show();"
+									value="#{lbl['lbl.txt.attach.files']}" icon="iconAttachment"
+									partialSubmit="true" process="@this"
+									update="@([id$=bpkremarksupDtls])">
 								</p:commandButton></td>
 						</tr>
 						<tr>
 							<td />
 							<td><p:dataGrid id="attachedIds"
-									value="#{approvalBackingBean.managedBean.attachments}"
+									value="#{approvalBackingBean.managedBean.scQtApproval.scQtApprovalAttachment}"
 									var="attachFile" rowIndexVar="attachFileIndex" columns="1"
 									style="width:100%">
 									<table>
