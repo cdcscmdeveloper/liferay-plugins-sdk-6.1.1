@@ -110,12 +110,13 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private Long chargedPtjId;
 	private Long currentPtjGroupId;
 	private Long currentPreparedOrgId;
-	private Long scRequestSupplierItemId;
+	
 	
 	private PmUserOrg pmUserOrg = new PmUserOrg();
 	
 	private DualListModel<String> approverModel;
 	private HashMap<String, PmUserGroupUser> approverMap;
+	private HashMap<Long, Long> scRequestSupplierItemIdMap;
 	
 	//getcontract
 	private CtContract ctContract = new CtContract();
@@ -1743,17 +1744,21 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the scRequestSupplierItemId
+	 * @return the scRequestSupplierItemIdMap
 	 */
-	public Long getScRequestSupplierItemId() {
-		return scRequestSupplierItemId;
+	public HashMap<Long, Long> getScRequestSupplierItemIdMap() {
+		if(scRequestSupplierItemIdMap == null){
+			scRequestSupplierItemIdMap = new HashMap<Long,Long>();
+		}
+		return scRequestSupplierItemIdMap;
 	}
 
 	/**
-	 * @param scRequestSupplierItemId the scRequestSupplierItemId to set
+	 * @param scRequestSupplierItemIdMap the scRequestSupplierItemIdMap to set
 	 */
-	public void setScRequestSupplierItemId(Long scRequestSupplierItemId) {
-		this.scRequestSupplierItemId = scRequestSupplierItemId;
+	public void setScRequestSupplierItemIdMap(
+			HashMap<Long, Long> scRequestSupplierItemIdMap) {
+		this.scRequestSupplierItemIdMap = scRequestSupplierItemIdMap;
 	}
 
 }

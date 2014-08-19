@@ -612,7 +612,10 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 				
 				for(FlFulfilmentItemAddr itemAddr : itemsList){
 					reqDTO.setPriceType(getManagedBean().getPmPriceType());
-					reqDTO.setRequestSupplierItemId(getManagedBean().getScRequestSupplierItemId());
+					if(getManagedBean().getScRequestSupplierItemIdMap().get(itemAddr.getScRequestItem().getRequestNoteItemId()) != null){
+						reqDTO.setRequestSupplierItemId(getManagedBean().getScRequestSupplierItemIdMap().get(itemAddr.getScRequestItem().getRequestNoteItemId()));
+					}
+					
 					reqDTO.setPmAddress(getManagedBean().getSelectedDelAddr().getPmAddress());
 
 					PurchaseRequestResDTO purResDTO = purchaseRequestSO.getUnitPriceByQuantityAndPriceType(reqDTO);
@@ -683,7 +686,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		noteDtlList.addAll(purResDTO.getPurchaseRequest().getRequestNoteDtls());
 		getManagedBean().setRequestNoteWithDtlsList(noteDtlList);
 		List<FlFulfilmentItemAddr> allItemsList = new ArrayList<FlFulfilmentItemAddr>();
-		
+		getManagedBean().setScRequestSupplierItemIdMap(null);
 		for (ScRequestNoteDtl purchaseItem : getManagedBean().getRequestNoteWithDtlsList()) {
 			flItemAddr = new FlFulfilmentItemAddr();
 			flItemAddr.setItemType(purchaseItem.getScRequestSupplierItem().getRequestNoteItem().getItemType());
@@ -691,7 +694,9 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			flItemAddr.setCmItem(purchaseItem.getScRequestSupplierItem().getRequestNoteItem().getCmItem());
 			if(purchaseItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_STANDARD)){
 				getManagedBean().setPmPriceType(purchaseItem.getPriceType());
-				getManagedBean().setScRequestSupplierItemId(purchaseItem.getScRequestSupplierItem().getRequestSupplierItemId());
+				if(!getManagedBean().getScRequestSupplierItemIdMap().containsKey(purchaseItem.getScRequestSupplierItem().getRequestNoteItem().getRequestNoteItemId())){
+					getManagedBean().getScRequestSupplierItemIdMap().put(purchaseItem.getScRequestSupplierItem().getRequestNoteItem().getRequestNoteItemId(), purchaseItem.getScRequestSupplierItem().getRequestSupplierItemId());
+				}
 			}
 			if(!purchaseItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_STANDARD)){
 				reqDTO.setRequestSupplierItemId(purchaseItem.getScRequestSupplierItem().getRequestSupplierItemId());
