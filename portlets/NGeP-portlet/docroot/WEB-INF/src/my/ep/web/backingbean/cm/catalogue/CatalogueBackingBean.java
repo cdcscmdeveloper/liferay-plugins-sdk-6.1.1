@@ -5556,7 +5556,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}
 
 		for (T sorted : sortedList) {
-			System.out.println("sorted:" + sorted.getStartDate());
+			if(sorted!= null)
+				System.out.println("sorted:" + sorted.getStartDate());
 		}
 
 		return sortedList;
