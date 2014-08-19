@@ -17,6 +17,7 @@
 					'.portlet-title-text').html(
 					'#{flOrderBB.getPortletTitle()}');
 		</script>
+		<f:event listener="#{flOrderBB.preRenderViewPR}" type="preRenderView" />
 		<p:messages id="messages" showDetail="true" autoUpdate="true"
 			showSummary="false" closable="true" severity="error, info" />
 		<table style="width: 100%;">

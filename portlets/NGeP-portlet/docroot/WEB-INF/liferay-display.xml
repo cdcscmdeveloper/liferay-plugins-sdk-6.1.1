@@ -138,6 +138,7 @@
 			<portlet id="flDebitAdjustmentNote" />
 			<portlet id="flAp59" />
 			<portlet id="flAp59Search" />
+			<portlet id="flRemoveFacctoringComp" />
 		</category>
 		<!-- Fulfilment End Added by Giri -->
 		<portlet id="NGeP" />

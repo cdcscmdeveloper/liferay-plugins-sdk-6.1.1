@@ -41,6 +41,7 @@ import my.ep.dto.pm.common.reason.ReasonReqDTO;
 import my.ep.dto.pm.common.reason.ReasonResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.fl.codata.FLContractOrderDataType;
+import my.ep.jaxb.fl.fc.FLFactoringRemoveReqType;
 import my.ep.jaxb.fl.podata.FLPurchaseOrderDataType;
 import my.ep.jaxb.fl.stopfullfillmentdata.FLStopFullfillmentDataType;
 import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
@@ -294,7 +295,21 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 				getManagedBean().setFulfilmentOrder(resDTO.getFlOrder());
 				getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
 				getManagedBean().setContractRequest(Boolean.TRUE);
-			} else {
+			} else if(FLProcessNameConst.FC_REMOVAL_REQUEST_PROCESS_NAME.equalsIgnoreCase(res.getProcessName())){
+				FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
+				FulfilmentResDTO resDTO = new FulfilmentResDTO();
+				FLFactoringRemoveReqType removeReqType = (FLFactoringRemoveReqType)obj;
+				flReqDTO.setFlOrderId(removeReqType.getOrderId());
+				resDTO = getFulfilmentOrderSO().retrieveFulfilmentOrderById(flReqDTO);
+				getManagedBean().setFulfilmentOrder(resDTO.getFlOrder());
+				getManagedBean().setFlRequest(resDTO.getFlOrder().getFlFulfilmentRequest());
+				getManagedBean().setTaskId(taskId);
+				getManagedBean().setOutComes(res.getAction());
+				getManagedBean().setDocType(resDTO.getFlOrder().getFlFulfilmentRequest().getDocType());
+				
+				FulfilmentBackingBean flBB = new FulfilmentBackingBean(resDTO.getFlOrder().getDocType(), resDTO.getFlOrder().getFlFulfilmentRequest().getScPurchaseRequest().getRequestNote().getRequestNoteNo());
+				flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
+			}else {
 				FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
 				FulfilmentResDTO resDTO = new FulfilmentResDTO();
 				FLPurchaseOrderDataType flPurchaseOrd = (FLPurchaseOrderDataType)obj;

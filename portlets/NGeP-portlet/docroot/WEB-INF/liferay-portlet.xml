@@ -378,6 +378,13 @@
 		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<css-class-wrapper>flAp59Search-portlet</css-class-wrapper>
 	</portlet>
+	<portlet>
+		<portlet-name>flRemoveFactoringComp</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
+		<css-class-wrapper>flRemoveFactoringComp-portlet</css-class-wrapper>
+	</portlet>
 	<!-- Fulfilment End Added by Giri -->
 
 	<portlet>

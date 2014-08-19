@@ -142,7 +142,7 @@ public class BPMTaskListBackingBean extends
 		temp.put(FLProcessNameConst.INVOICE_AND_PAYMENT_CREATION_PROCESS_NAME+FLProcessNameConst.ACK_MODIFIED_INVOICE_HT, "invoice");
 		temp.put(FLProcessNameConst.DO_CANCELLATION_PROCESS_NAME+FLProcessNameConst.REVIEW_CANCEL_DO_HT, "delivery-order");
 		temp.put(FLProcessNameConst.INVOICE_AND_PAYMENT_CREATION_PROCESS_NAME+FLProcessNameConst.REVIEW_CANCEL_INVOICE_HT, "invoice");
-		
+		temp.put(FLProcessNameConst.FC_REMOVAL_REQUEST_PROCESS_NAME, "remove-factoring-company");
 		
 
 				
