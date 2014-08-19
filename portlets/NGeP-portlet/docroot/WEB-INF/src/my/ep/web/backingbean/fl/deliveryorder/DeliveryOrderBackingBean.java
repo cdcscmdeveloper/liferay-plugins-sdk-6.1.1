@@ -4,8 +4,9 @@
 package my.ep.web.backingbean.fl.deliveryorder;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -295,6 +296,7 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		
 		double totalDeliveryQty = 0;
 		double totalDeliveryAmount = 0;
+		Pattern p = Pattern.compile("^[a-zA-Z0-9]+$");
 		if(!anyAddressSelected){
 			throw new EpException(MessageConst.ERROR_100050, new String[]{"Delivery Address"});
 		}else{
@@ -303,6 +305,10 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 					if(selectedDelAddress.getFlTempDoAddr().isSelected()) {
 						if(selectedDelAddress.getFlTempDoAddr().getSupplierDoRef()==null || selectedDelAddress.getFlTempDoAddr().getSupplierDoRef().length()==0) {
 							throw new EpException(MessageConst.ERROR_100051, new String[]{"Supplier DO. No.","Delivery Address "+getFullAddress(selectedDelAddress.getPmAddress())});
+						}
+						Matcher m = p.matcher(selectedDelAddress.getFlTempDoAddr().getSupplierDoRef());
+						if(!m.matches()) {
+							throw new EpException(MessageConst.ERROR_100053, new String[]{"Supplier DO. No. "+selectedDelAddress.getFlTempDoAddr().getSupplierDoRef()});
 						}
 						totalDeliveryQty = 0;
 						totalDeliveryAmount = 0;
