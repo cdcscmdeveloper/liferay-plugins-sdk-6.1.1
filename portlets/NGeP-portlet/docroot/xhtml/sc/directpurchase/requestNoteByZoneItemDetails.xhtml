@@ -36,7 +36,7 @@
 					</p:commandLink>
 				</p:column>
 				  
-				<p:column headerText="#{lbl['lbl.sc.request.note.proc.type']}" style="width:10%;">
+				<p:column headerText="#{lbl['lbl.sc.request.note.proc.type']}" style="width:12%;">
 					<ui:fragment rendered="#{requestNoteDtl.procurementType.parameterCode eq 'E'}">
 						<p:commandLink value="Emergency" partialSubmit="true" process="@this"
 							update=":form:justPopup"
@@ -56,7 +56,7 @@
 					</ui:fragment>
 				</p:column>
 				
-				<p:column style="width:10%;">
+				<p:column style="width:15%;">
 					<f:facet name="header">
 				    	<h:outputText value="#{lbl['lbl.sc.request.note.price.type']}" />
 					</f:facet>
