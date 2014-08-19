@@ -2458,6 +2458,55 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				}
 			}
 			
+			//check overlap zone with same district
+			for(int i=0;i<this.getManagedBean().getSelectedMaintainItem().getzStdPrices().size();i++){
+				this.getManagedBean().setError8(false);
+				this.getManagedBean().setError4(false);
+				validateZonalStandardDateOverlap(i);
+				if(this.getManagedBean().isError4()){
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+							MessageUtils.getMessage(MessageConst.ERROR_715022,
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+					return "editCatalogItem";
+				}else if(this.getManagedBean().isError8()){
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+							MessageUtils.getMessage(MessageConst.ERROR_715024,
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+					return "editCatalogItem";
+				}
+			}
+			
+			//check overlap zone tier with same district
+			/*for(int i=0;i<this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings().size();i++){
+				this.getManagedBean().setError8(false);
+				this.getManagedBean().setError4(false);
+				validateZonalTierDateOverlap(i);
+				if(this.getManagedBean().isError4()){
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+							MessageUtils.getMessage(MessageConst.ERROR_715023,
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+					return "editCatalogItem";
+				}else if(this.getManagedBean().isError8()){
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+							MessageUtils.getMessage(MessageConst.ERROR_715025,
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+					return "editCatalogItem";
+				}
+			}*/
+			
+			
 			//----------logic checking end-------------------------------------------------------------------------------------------//
 			
 			if (!inactiveFlag) {
