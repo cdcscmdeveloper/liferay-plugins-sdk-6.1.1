@@ -2510,7 +2510,9 @@ public class SpecificationBackingBean extends
 		IQTSpecSO specSo = null;
 
 		try {
-			if (!this.getManagedBean().isRecommendationStats()) {
+			if (null == this.getManagedBean().getRecommendationPackageScore()
+					&& null == this.getManagedBean().getRecommendationScore()) {
+
 				this.getManagedBean().setRecommendationStats(true);
 				SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 				reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
@@ -2553,27 +2555,81 @@ public class SpecificationBackingBean extends
 					}
 
 				} else {
+					if (resDTO.getScoreSettingResultBean().getResultList()
+							.size() == 2) {
+						for (ScQtScoreSetting recommnendationSetting : resDTO
+								.getScoreSettingResultBean().getResultList()) {
 
-					for (ScQtScoreSetting recommnendationSetting : resDTO
-							.getScoreSettingResultBean().getResultList()) {
+							if (recommnendationSetting.getSettingType() == 4) {
+								this.getManagedBean()
+										.setRecommendationPackageScore(
+												recommnendationSetting);
+								calculateTotalPackage(this.getManagedBean()
+										.getRecommendationPackageScore());
+							}
 
-						if (recommnendationSetting.getSettingType() == 4) {
-							this.getManagedBean()
-									.setRecommendationPackageScore(
-											recommnendationSetting);
-							calculateTotalPackage(this.getManagedBean()
-									.getRecommendationPackageScore());
+							if (recommnendationSetting.getSettingType() == 5) {
+								this.getManagedBean().setRecommendationScore(
+										recommnendationSetting);
+								calculateRecommendtechnicalScore(this
+										.getManagedBean()
+										.getRecommendationScore());
+								calculateRecommendFinancialScore(this
+										.getManagedBean()
+										.getRecommendationScore());
+							}
+
 						}
+					}
+					if (resDTO.getScoreSettingResultBean().getResultList()
+							.size() == 1) {
+						for (ScQtScoreSetting recommnendationSetting : resDTO
+								.getScoreSettingResultBean().getResultList()) {
+							if (recommnendationSetting.getSettingType() == 4) {
+								this.getManagedBean()
+										.setRecommendationPackageScore(
+												recommnendationSetting);
+								calculateTotalPackage(this.getManagedBean()
+										.getRecommendationPackageScore());
+								if (null == this.getManagedBean()
+										.getRecommendationScore()) {
 
-						if (recommnendationSetting.getSettingType() == 5) {
-							this.getManagedBean().setRecommendationScore(
-									recommnendationSetting);
-							calculateRecommendtechnicalScore(this
-									.getManagedBean().getRecommendationScore());
-							calculateRecommendFinancialScore(this
-									.getManagedBean().getRecommendationScore());
+									ScQtScoreSetting itemScoreSetting = new ScQtScoreSetting();
+									itemScoreSetting.setSettingType(5);
+									itemScoreSetting.setScQt(this
+											.getManagedBean().getScQt());
+									itemScoreSetting.setWeightageReq(false);
+									setUserDetails(itemScoreSetting);
+									this.getManagedBean()
+											.setRecommendationScore(
+													itemScoreSetting);
+								}
+							}
+
+							if (recommnendationSetting.getSettingType() == 5) {
+								this.getManagedBean().setRecommendationScore(
+										recommnendationSetting);
+								calculateRecommendtechnicalScore(this
+										.getManagedBean()
+										.getRecommendationScore());
+								calculateRecommendFinancialScore(this
+										.getManagedBean()
+										.getRecommendationScore());
+								if (null == this.getManagedBean()
+										.getRecommendationPackageScore()) {
+									ScQtScoreSetting pkgScoreSetting = new ScQtScoreSetting();
+									pkgScoreSetting.setSettingType(4);
+									pkgScoreSetting.setScQt(this
+											.getManagedBean().getScQt());
+									pkgScoreSetting.setWeightageReq(false);
+									setUserDetails(pkgScoreSetting);
+									this.getManagedBean()
+											.setRecommendationPackageScore(
+													pkgScoreSetting);
+								}
+							}
+
 						}
-
 					}
 
 				}
@@ -8979,8 +9035,10 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().getScQt()
 						.setFulfilmentType(new PmParameter());
 			} else {
-				/*loadPrepareSpecCommitteeDetails(quotationTenderDataType
-						.getQtId().longValue(), getDocTypeByTaskName(taskName));*/
+
+				loadPrepareSpecCommitteeDetails(quotationTenderDataType
+						.getQtId().longValue(), getDocTypeByTaskName(taskName));
+
 			}
 			fc.getApplication()
 					.getNavigationHandler()
