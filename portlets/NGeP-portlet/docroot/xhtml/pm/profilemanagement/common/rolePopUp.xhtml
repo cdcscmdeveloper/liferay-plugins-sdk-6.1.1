@@ -14,7 +14,6 @@
 		<p:outputPanel id="opRoleOptions">
 			<p:dataTable id="dtRoleOptions" var="roleDesc" lazy="true"
 				emptyMessage="#{lbl['lbl.pp.no.record.found']}"
-				rowKey="#{roleDesc}" rowIndexVar="index"
 				value="#{profileManagementBackingBean.roleDataModel}"
 				selection="#{profileManagementBackingBean.managedBean.selectedRoles}">
 				<p:ajax event="toggleSelect" update="@this" process="@this" />

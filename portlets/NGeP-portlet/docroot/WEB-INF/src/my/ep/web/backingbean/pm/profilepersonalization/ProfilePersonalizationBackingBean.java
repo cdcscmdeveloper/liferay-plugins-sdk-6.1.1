@@ -47,6 +47,8 @@ import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
+import com.liferay.portal.kernel.util.PrefsPropsUtil;
+import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.UserServiceUtil;
 
@@ -372,7 +374,6 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 			UserResDTO resDTO = userSO.saveUser(reqDTO); //saveUser2
 
 			if (resDTO.isSuccessful()) {
-				//upload liferay photo
 				//TODO: upload liferay photo locally
 				if(user.getPortrait()!=null){
 					uploadPortrait(resDTO.getPmUser());
@@ -405,32 +406,47 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	}
 
 	/**
-	 * Get user portrait 
-	 * @param event
-	 * @throws Exception
-	 */
-	public void handleFileUpload(FileUploadEvent event) throws Exception{
-		logger.info("handleFileUploadTest - START");
-		UploadedFile item = event.getFile();
-		byte[] bytes = item.getContents();
-		this.getManagedBean().getSelectedUser().setPortrait(bytes);
-		logger.info("handleFileUploadTest - END");
-	}
-	
-	/**
 	 * TODO: fix the remote updatePortrait
 	 * @param pmUser
 	 * @throws Exception
 	 */
 	private void uploadPortrait(PmUser pmUser) throws Exception{
 		logger.info("uploadPortrait - START");
+		long imageMaxSize = PrefsPropsUtil.getLong(PropsKeys.USERS_IMAGE_MAX_SIZE);
 		long companyId = Long.parseLong(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_COMPANY_ID));
 		byte[] bytes = pmUser.getPortrait();
-		User user = UserServiceUtil.getUserByScreenName(companyId ,pmUser.getLoginId());
-		UserServiceUtil.updatePortrait(user.getUserId(), bytes);
+		long userId;
+		logger.debug("imageMaxSize: " + imageMaxSize);
+		logger.debug("companyId: " + companyId);
+		logger.debug("bytes: " + bytes);
+		logger.debug("pmUser.getLoginId(): " + pmUser.getLoginId());
+		if(bytes!=null){
+			User user = UserServiceUtil.getUserByScreenName(companyId, pmUser.getLoginId());
+			if(user!=null){
+				System.out.println("user id" + user.getUserId());
+			}else{
+				System.out.println("user null");
+			}
+			userId = user.getUserId();
+			logger.debug("userId: " + userId);
+			UserServiceUtil.updatePortrait(user.getUserId(), bytes);
+		}
 		logger.info("uploadPortrait - END");
 	}
-			
+	/**
+	 * Get user portrait 
+	 * @param event
+	 * @throws Exception
+	 */
+	public void handleFileUpload(FileUploadEvent event) throws Exception{
+		logger.info("handleFileUpload - START");
+		UploadedFile item = event.getFile();
+		byte[] bytes = item.getContents();
+		this.getManagedBean().getSelectedUser().setPortrait(bytes);  
+		logger.info("handleFileUpload - END");
+	}
+	
+		
 		
 	
 //	//TODO: testing

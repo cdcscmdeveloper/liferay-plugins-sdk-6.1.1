@@ -14,7 +14,7 @@
 		     selection="#{profileManagementBackingBean.managedBean.selectedUserOrg}" 
 		     selectionMode="single"
 		     rowIndexVar="index" rowKey="#{orgUnit}">   
-			<p:ajax event="rowSelect" update="@this" />
+			<p:ajax event="rowSelect" update="@this, :form:tvRoleReceivingAddr" />
 			
 		    <p:column headerText="#{lbl['lbl.pm.profiles.resorg.table.orgtype']}">
 				<p:selectOneMenu value="#{orgUnit.pmOrgProfile.orgTypeCode.parameterId}" styleClass="ppDropDownWidthM">  

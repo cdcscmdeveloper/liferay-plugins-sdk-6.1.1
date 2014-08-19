@@ -35,6 +35,7 @@ import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmOrgValidity;
 import my.ep.persistence.entity.pm.authorization.PmRole;
@@ -694,7 +695,24 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		}
 		return isUnique;
 	}
-	
+	public void userRoleStatusChange(PmUserRole pmUserRole){
+		logger.info("userRoleStatusChange");
+		if(pmUserRole!=null){
+			 if(pmUserRole.getRecordStatusFlg()==DbValueConst.RECORD_STATUS_DELETED){
+				 if(!pmUserRole.isModified()){
+					 pmUserRole.setModified(true);
+				 }else{
+					 pmUserRole.setModified(false);
+				 }
+			 }else if(pmUserRole.getRecordStatusFlg()==DbValueConst.RECORD_STATUS_ACTIVE){
+		 		if(!pmUserRole.isModified()){
+		 			pmUserRole.setModified(true);
+				}else{
+					pmUserRole.setModified(false);
+				}
+			 }
+		}
+	}
 	/**
 	 * search user roles
 	 */
@@ -1029,23 +1047,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		
 	
 	}
-	
-	private void dummyAddress(PmUser pmUser, PmAddress pmAdress){
-		System.out.println("dummyAddress");
-		pmAdress.setAddress1("add1");
-		pmAdress.setAddress2("add2");
-		pmAdress.setAddress3("add3");
-		pmAdress.setEmail(pmUser.getUserName() + "@test.com");
-		pmAdress.setFaxNo("1234567890");
-		pmAdress.setMobileNo("1234567890");
-		pmAdress.setPhoneNo("1234567890");
-		pmAdress.getPmState().setStateId(54L);
-		pmAdress.getPmDistrict().setDistrictId(402L);
-		pmAdress.getPmCity().setCityId(1869L);
-		pmAdress.setPmDivision(null);
-		pmAdress.setPostcode("12345");
-		
-	}
+
 	
 	private void dummyTestUpdateRole(UserReqDTO reqDTO){
 		//ADD
@@ -1068,6 +1070,27 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	}
 	*/
 	
+	
+	public void dummyAddressSample(){
+		PmAddress pmAdress =this.getManagedBean().getUserAddress();
+		
+		System.out.println("dummyAddress");
+		pmAdress.setAddress1("add1");
+		pmAdress.setAddress2("add2");
+		pmAdress.setAddress3("add3");
+		pmAdress.setEmail(this.getManagedBean().getSelectedUser().getUserName() + "@test.com");
+		pmAdress.setFaxNo("1234567890");
+		pmAdress.setMobileNo("1234567890");
+		pmAdress.setPhoneNo("1234567890");
+		pmAdress.getPmState().setStateId(54L);
+		pmAdress.getPmDistrict().setDistrictId(402L);
+		pmAdress.getPmCity().setCityId(1869L);
+		pmAdress.setPmDivision(null);
+		pmAdress.setPostcode("12345");
+		this.getManagedBean().setUserAddress(pmAdress);
+		
+	}
+	
 	/**
 	 * load user address - C
 	 * @param user
@@ -1079,6 +1102,9 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				for (PmAddressType addressTypeObj : user.getPmAddressTypes()) {
 					if (ProfileManagementConst.ADDRESS_USER.equalsIgnoreCase(addressTypeObj.getAddressType())) {
 						addressTypeObj.setPmAddress(this.getManagedBean().getUserAddress());
+						if(addressTypeObj.getPmAddress().getPmDivision()!=null && addressTypeObj.getPmAddress().getPmDivision().getDivisionId()==null){
+							addressTypeObj.getPmAddress().setPmDivision(null);
+						}
 						break;
 					}
 				}
@@ -1090,6 +1116,9 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			PmAddressType pmAddressType = new PmAddressType();
 			pmAddressType.setAddressType(ProfileManagementConst.ADDRESS_USER);
 			pmAddressType.setPmAddress(this.getManagedBean().getUserAddress());
+			if(pmAddressType.getPmAddress().getPmDivision()!=null && pmAddressType.getPmAddress().getPmDivision().getDivisionId()==null){
+				pmAddressType.getPmAddress().setPmDivision(null);
+			}
 			pmAddressType.setPmOrgProfile(null);
 //			if(this.getManagedBean().isDummy()){
 //				dummyAddress(user, this.getManagedBean().getUserAddress()); //TODO REMOVE
@@ -1106,10 +1135,35 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	private void loadUserOrgType(PmUser user){
 		user.getOrgTypeCode().setParameterId(56L);//TODO temp
 		if(user.getPmUserOrgs()!=null && !user.getPmUserOrgs().isEmpty()){
+//			System.out.println("user roles size" + user.getPmUserOrgs().get(0).getPmUserRoles().size());
+//			for(PmUserRole pmUserRole:user.getPmUserOrgs().get(0).getPmUserRoles()){
+//				System.out.println(pmUserRole.getPmRole().getRoleCode());
+//			}
+//			
 			int size = user.getPmUserOrgs().size();
 			user.setOrgTypeCode(user.getPmUserOrgs().get(size-1).getPmOrgProfile().getOrgTypeCode());
 		}else{
 			throw new EpException("At least one Responsible Org. is required."); //TODO
+		}
+	}
+	
+	private void loadUserRoles(PmUser user, UserReqDTO reqDTO){
+		if(user.getPmUserOrgs()!=null && !user.getPmUserOrgs().isEmpty()){
+			List<PmUserRole> newRoleList = reqDTO.getNewRoleList();
+			List<PmUserRole> deleteRoleList = reqDTO.getRemoveRoleList();
+			for(PmUserOrg pmUserOrg:user.getPmUserOrgs()){
+				for(PmUserRole pmUserRole: pmUserOrg.getPmUserRoles()){
+					if(pmUserRole.isBrandNew() || (pmUserRole.isModified() && pmUserRole.getRecordStatusFlg()==DbValueConst.RECORD_STATUS_ACTIVE)){
+						newRoleList.add(pmUserRole);
+						System.out.println("ADD NEW: " + pmUserRole.getPmRole().getRoleCode());
+					}else if(pmUserRole.getRecordStatusFlg()==DbValueConst.RECORD_STATUS_DELETED && pmUserRole.isModified()){
+						deleteRoleList.add(pmUserRole);
+						System.out.println("DELETE OLD: " + pmUserRole.getPmRole().getRoleCode());
+					}
+				}
+			}
+			reqDTO.setNewRoleList(newRoleList);
+			reqDTO.setRemoveRoleList(deleteRoleList);
 		}
 	}
 	/**
@@ -1117,10 +1171,13 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	 */
 	public void saveUserProfile() {
 		debugLogger("saveUserProfile");
+		UserReqDTO reqDTO = new UserReqDTO();
+		
+		
 		PmUser user = this.getManagedBean().getSelectedUser();
 		user.setLoginId(user.getIdentificationNo());
 		
-		System.out.println(this.getManagedBean().isDummy());
+		
 //		if(this.getManagedBean().isDummy()){ //TODO REMOVE
 //			dummyUser(user);
 //		}
@@ -1128,11 +1185,13 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		
 		loadUserOrgType(user);
 		
+		loadUserRoles(user, reqDTO);
+		
 		IUserSO userSO = null;
 		try {
 			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-			UserReqDTO reqDTO = new UserReqDTO();
+			
 			
 //			if(this.getManagedBean().isDummy()){ //TODO REMOVE
 //				dummyTestUpdateRole(reqDTO);

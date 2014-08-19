@@ -27,6 +27,7 @@
 			        <p:column headerText="#{lbl['lbl.pm.profiles.authorisation.Status']}"> 
 				  	 	<p:selectOneMenu value="#{role.recordStatusFlg}">  
 			            	<f:selectItems value="#{profileManagementBackingBean.getStatusOptions()}" />
+			            	<p:ajax event="change" listener="#{profileManagementBackingBean.userRoleStatusChange(role)}" />
 			          	</p:selectOneMenu> 
 			        </p:column>
 				</p:dataTable>
