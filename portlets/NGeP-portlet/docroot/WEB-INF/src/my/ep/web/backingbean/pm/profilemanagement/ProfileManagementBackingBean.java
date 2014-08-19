@@ -88,7 +88,8 @@ import com.liferay.portal.service.UserServiceUtil;
  *
  */
 @ManagedBean(name = "profileManagementBackingBean")
-@RequestScoped //@ViewScoped
+//@RequestScoped 
+@ViewScoped
 public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagementManagedBean> {
 
 	private static final Logger logger = EpLogger
@@ -112,7 +113,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	//Paging for listing
 	private IPagingDataModel<PmUser> userProfileDataModel = new UserProfilePagingDataModel();
 	private IPagingDataModel<PmRoleDesc> roleDataModel = new RolePagingDataModel();	
-	private IPagingDataModel<PmAddressType> searchReceivingAddress = new userAddressPagingDataModel();
+//	private IPagingDataModel<PmAddressType> searchReceivingAddress = new userAddressPagingDataModel();
 
 
 	//Mapper for DDL object
@@ -303,6 +304,8 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		
 		this.getManagedBean().setSelectedUser(pmUser);
 		this.getManagedBean().setSelectedUserOrg(null);
+		this.getManagedBean().setSelectedRoles(null);
+		this.getManagedBean().setDeleteUserRoles(null);
 		System.out.println("login " + this.getManagedBean().getSelectedUser().getLoginId());
 	}
 	
@@ -753,7 +756,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 						System.out.println("with parent "+resDto.getSearchRoleResultBean().getTotalRecord());
 					}
 					 */
-					getManagedBean().setAvailableRoles(resDto.getSearchRoleResultBean().getResultList());
+//					getManagedBean().setAvailableRoles(resDto.getSearchRoleResultBean().getResultList());
 					
 					// disabled selected roles
 					if(resDto.getSearchRoleResultBean()!=null 
@@ -913,7 +916,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	
 	/** User Search & Paging - End  */
 
-
+/*
 	private void dummyUser(PmUser pmUser){
 		System.out.println("dummyUser");
 		
@@ -1063,16 +1066,18 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		reqDTO.setNewRoleList(newUserRoles);
 		reqDTO.setRemoveRoleList(delUserRoles);
 	}
+	*/
 	
+	/**
+	 * load user address - C
+	 * @param user
+	 */
 	private void loadUserAddress(PmUser user){
 		if(!user.isBrandNew()){
 			//update contact address
 			if(user.getPmAddressTypes()!=null && !user.getPmAddressTypes().isEmpty()){
-				System.out.println(1);
 				for (PmAddressType addressTypeObj : user.getPmAddressTypes()) {
-					System.out.println(2);
 					if (ProfileManagementConst.ADDRESS_USER.equalsIgnoreCase(addressTypeObj.getAddressType())) {
-						System.out.println(2);
 						addressTypeObj.setPmAddress(this.getManagedBean().getUserAddress());
 						break;
 					}
@@ -1086,12 +1091,26 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			pmAddressType.setAddressType(ProfileManagementConst.ADDRESS_USER);
 			pmAddressType.setPmAddress(this.getManagedBean().getUserAddress());
 			pmAddressType.setPmOrgProfile(null);
-			if(this.getManagedBean().isDummy()){
-				dummyAddress(user, this.getManagedBean().getUserAddress()); //TODO REMOVE
-			}
+//			if(this.getManagedBean().isDummy()){
+//				dummyAddress(user, this.getManagedBean().getUserAddress()); //TODO REMOVE
+//			}
 			user.addPmAddressType(pmAddressType);
 		}
 
+	}
+	
+	/**
+	 * load user org type with the last PmUserOrgs
+	 * @param user
+	 */
+	private void loadUserOrgType(PmUser user){
+		user.getOrgTypeCode().setParameterId(56L);//TODO temp
+		if(user.getPmUserOrgs()!=null && !user.getPmUserOrgs().isEmpty()){
+			int size = user.getPmUserOrgs().size();
+			user.setOrgTypeCode(user.getPmUserOrgs().get(size-1).getPmOrgProfile().getOrgTypeCode());
+		}else{
+			throw new EpException("At least one Responsible Org. is required."); //TODO
+		}
 	}
 	/**
 	 * Method to update the user details
@@ -1102,22 +1121,23 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		user.setLoginId(user.getIdentificationNo());
 		
 		System.out.println(this.getManagedBean().isDummy());
-		if(this.getManagedBean().isDummy()){ //TODO REMOVE
-			dummyUser(user);
-		}
+//		if(this.getManagedBean().isDummy()){ //TODO REMOVE
+//			dummyUser(user);
+//		}
 		loadUserAddress(user);
 		
-		user.getOrgTypeCode().setParameterId(56L);//TODO temp
+		loadUserOrgType(user);
+		
 		IUserSO userSO = null;
 		try {
 			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			UserReqDTO reqDTO = new UserReqDTO();
 			
-			if(this.getManagedBean().isDummy()){ //TODO REMOVE
-				dummyTestUpdateRole(reqDTO);
-			}
-			
+//			if(this.getManagedBean().isDummy()){ //TODO REMOVE
+//				dummyTestUpdateRole(reqDTO);
+//			}
+//			
 			reqDTO.setPmUser(user);
 
 			UserResDTO resDTO = userSO.saveUser(reqDTO); //saveuser2
@@ -1158,12 +1178,20 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		long imageMaxSize = PrefsPropsUtil.getLong(PropsKeys.USERS_IMAGE_MAX_SIZE);
 		long companyId = Long.parseLong(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_COMPANY_ID));
 		byte[] bytes = pmUser.getPortrait();
+		long userId;
 		logger.debug("imageMaxSize: " + imageMaxSize);
 		logger.debug("companyId: " + companyId);
 		logger.debug("bytes: " + bytes);
 		logger.debug("pmUser.getLoginId(): " + pmUser.getLoginId());
 		if(bytes!=null){
 			User user = UserServiceUtil.getUserByScreenName(companyId, pmUser.getLoginId());
+			if(user!=null){
+				System.out.println("user id" + user.getUserId());
+			}else{
+				System.out.println("user null");
+			}
+			userId = user.getUserId();
+			logger.debug("userId: " + userId);
 			UserServiceUtil.updatePortrait(user.getUserId(), bytes);
 		}
 		logger.info("uploadPortrait - END");
@@ -1188,6 +1216,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	 * @throws Exception
 	 */
 	public void handleFileUpload1() throws Exception{
+		try{
 		logger.info("handleFileUpload - START - UserServiceUtil");
 		byte[] bytes = this.getManagedBean().getSelectedUser().getPortrait();
 		long imageMaxSize = PrefsPropsUtil.getLong(PropsKeys.USERS_IMAGE_MAX_SIZE);
@@ -1200,7 +1229,17 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 					: this.getManagedBean().getSelectedUser().getLoginId();
 		long companyId = Long.parseLong(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_COMPANY_ID));
 		User user = UserServiceUtil.getUserByScreenName(companyId , screenName);
-		UserServiceUtil.updatePortrait(user.getUserId(), bytes);
+		if(user!=null){
+			System.out.println("user id" + user.getUserId());
+		}else{
+			System.out.println("user null");
+		}
+		long userId = user.getUserId();
+		UserServiceUtil.updatePortrait(userId, bytes); 
+		}catch(Exception e){
+			e.printStackTrace();
+			throw e;
+		}
 		logger.info("handleFileUpload - END");
 	}
 
@@ -1228,7 +1267,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 
 	
 	
-
+/*
 	
 	// pagination for user address search list
 	private class userAddressPagingDataModel extends PagingDataModel<PmAddressType> {
@@ -1353,7 +1392,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 
 		}
 
-	}		
+	}	*/	
 //
 //
 //	// to create new profiles into database
@@ -1386,7 +1425,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 //			userSO = null;
 //		}
 //	}
-
+/*
 	// to add roles names datatables
 	public void addRolesNames() {
 
@@ -1442,7 +1481,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		getManagedBean().setPmRecevingAddressList(addressTypeList);
 	}	
 	
-
+*/
 	
 	
 	
