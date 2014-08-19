@@ -73,11 +73,11 @@ import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
-import com.liferay.portal.UserPortraitSizeException;
 import com.liferay.portal.kernel.util.PrefsPropsUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.UserLocalServiceUtil;
+import com.liferay.portal.service.UserServiceUtil;
 
 /**
  * Backing Bean for User Profiles (Management)
@@ -1659,10 +1659,47 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		logger.info("handleFileUpload - START");
 		UploadedFile item = event.getFile();
 		byte[] bytes = item.getContents();
-		this.getManagedBean().getSelectedUser().setPortrait(bytes);
+		this.getManagedBean().getSelectedUser().setPortrait(bytes);  
+		logger.info("handleFileUpload - END");
+	}
+	/**
+	 * Get user portrait 
+	 * @param event
+	 * @throws Exception
+	 */
+	public void handleFileUpload1() throws Exception{
+		logger.info("handleFileUpload - START - UserServiceUtil");
+		byte[] bytes = this.getManagedBean().getSelectedUser().getPortrait();
 		long imageMaxSize = PrefsPropsUtil.getLong(PropsKeys.USERS_IMAGE_MAX_SIZE);
 		System.out.println("size = " + imageMaxSize);
 		System.out.println("bytes.length = " + bytes.length);   
+		
+		long companyId = Long.parseLong(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_COMPANY_ID));
+		User user = UserServiceUtil.getUserByScreenName(companyId ,this.getManagedBean().getSelectedUser().getLoginId());
+		UserServiceUtil.updatePortrait(user.getUserId(), bytes);
+		
+//		User user = UserLocalServiceUtil.getUserByScreenName(companyId ,this.getManagedBean().getSelectedUser().getLoginId());
+//		UserLocalServiceUtil.updatePortrait(user.getUserId(), bytes);
+		
+		
+		logger.info("handleFileUpload - END");
+	}
+	
+	/**
+	 * Get user portrait 
+	 * @param event
+	 * @throws Exception
+	 */
+	public void handleFileUpload2() throws Exception{
+		logger.info("handleFileUpload - START- UserLocalServiceUtil");
+		byte[] bytes = this.getManagedBean().getSelectedUser().getPortrait();
+		long imageMaxSize = PrefsPropsUtil.getLong(PropsKeys.USERS_IMAGE_MAX_SIZE);
+		System.out.println("size = " + imageMaxSize);
+		System.out.println("bytes.length = " + bytes.length);   
+		
+		long companyId = Long.parseLong(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_COMPANY_ID));
+		User user = UserLocalServiceUtil.getUserByScreenName(companyId ,this.getManagedBean().getSelectedUser().getLoginId());
+		UserLocalServiceUtil.updatePortrait(user.getUserId(), bytes);
 		logger.info("handleFileUpload - END");
 	}
 	
