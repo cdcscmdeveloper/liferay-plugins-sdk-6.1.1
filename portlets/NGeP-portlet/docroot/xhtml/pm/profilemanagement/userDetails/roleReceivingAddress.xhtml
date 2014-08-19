@@ -35,7 +35,7 @@
 				<div class="ppRightBtn">
 					<p:commandButton action="#{profileManagementBackingBean.getAvailbleUserRole}"
 					  	value="#{lbl['lbl.btn.add']}" oncomplete="dlRoleOptions.show();" update=":form:opRoleOptions"/>&#160;
-			        <p:commandButton value="#{lbl['lbl.btn.delete']}" />
+			        <p:commandButton value="#{lbl['lbl.btn.delete']}" action="#{profileManagementBackingBean.deleteRole}" />
 			  
 		        </div>
 	      	</p:tab>  

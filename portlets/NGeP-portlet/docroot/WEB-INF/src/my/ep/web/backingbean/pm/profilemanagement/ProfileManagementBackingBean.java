@@ -70,6 +70,7 @@ import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.pm.helper.RoleHelper;
 
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
@@ -537,27 +538,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		}
 		
 	}
-	public void test(){
-		System.out.println("test start---");
-		if(this.getManagedBean().getSelectedUserOrg()!=null && !this.getManagedBean().getSelectedUserOrg().getPmUserRoles().isEmpty()){
-			List <PmRole> oriPmRoles = new ArrayList<PmRole>();
-			List <PmRole> newPmRoles = new ArrayList<PmRole>();
-			for(PmUserRole obj:this.getManagedBean().getSelectedUserOrg().getPmUserRoles()){
-				oriPmRoles.add(obj.getPmRole());
-			}
-			for(PmRoleDesc obj:this.getManagedBean().getSelectedRoles()){
-				newPmRoles.add(obj.getPmRole());
-			}
-			if(oriPmRoles.containsAll(newPmRoles)){
-				System.out.println("2YES IT IS HERE!!!!");
-			}else{
-				System.out.println("2NOT HERE!!!!");
-			}
-		}
-		
-		
-		System.out.println("test end");
-	}
+
 	/**
 	 * TAB Authorization - END
 	 */
@@ -649,10 +630,15 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 //		this.getManagedBean().setAvailableRoles(this.getManagedBean().getSelectedRoles());
 		if(this.getManagedBean().getSelectedRoles()!=null && !this.getManagedBean().getSelectedRoles().isEmpty()){
 			if(this.getManagedBean().getSelectedUserOrg()!=null){
-				for(PmRoleDesc pmRoleDesc : this.getManagedBean().getSelectedRoles()){
-					PmUserRole pmUserRole = new PmUserRole();
-					pmUserRole.setPmRole(pmRoleDesc.getPmRole());
-					this.getManagedBean().getSelectedUserOrg().addPmUserRole(pmUserRole);
+				//Validation for unique roles added to list
+				if(isUniqueRoles()){
+					for(PmRoleDesc pmRoleDesc : this.getManagedBean().getSelectedRoles()){
+						PmUserRole pmUserRole = new PmUserRole();
+						pmUserRole.setPmRole(pmRoleDesc.getPmRole());
+						this.getManagedBean().getSelectedUserOrg().addPmUserRole(pmUserRole);
+					}
+				}else{
+					throw new EpException("Duplicate roles."); //TODO exception
 				}
 			}else{
 				throw new EpException("Please select a Reponsible Org. Unit."); //TODO exception
@@ -660,15 +646,50 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		}else{
 			throw new EpException("At least one role must be selected."); //TODO exception
 		}
+		RequestContext.getCurrentInstance().execute("dlRoleOptions.hide()");
 		
 	}
 	
-	/**
-	 * remove role selection
-	 */
-	public void cancelRoles(){
-		logger.info("cancelRoles");
-//		this.getManagedBean().setSelectedRoles(null);
+	public void deleteRole(){
+		logger.info("deleteRole");
+		if(this.getManagedBean().getDeleteUserRoles()!=null && !this.getManagedBean().getDeleteUserRoles().isEmpty()){
+			if(this.getManagedBean().getSelectedUserOrg().getPmUserRoles()==null){
+				this.getManagedBean().getSelectedUserOrg().setPmUserRoles(new ArrayList<PmUserRole>());
+			}
+			for(PmUserRole userRole: this.getManagedBean().getDeleteUserRoles()){
+				this.getManagedBean().getSelectedUserOrg().getPmUserRoles().remove(userRole);
+			}
+			this.getManagedBean().getDeleteUserRoles().clear();
+		}else{
+			throw new EpException("At least one role must be selected."); //TODO
+		}
+	
+	}
+	
+	private boolean isUniqueRoles(){
+		logger.info("isUniqueRoles");
+		boolean isUnique = true;
+		if(this.getManagedBean().getSelectedUserOrg().getPmUserRoles()!=null 
+				&& !this.getManagedBean().getSelectedUserOrg().getPmUserRoles().isEmpty()){
+			List <PmRole> oriPmRoles = new ArrayList<PmRole>();
+//			List <PmRole> newPmRoles = new ArrayList<PmRole>();
+			
+			for(PmUserRole obj:this.getManagedBean().getSelectedUserOrg().getPmUserRoles()){
+				oriPmRoles.add(obj.getPmRole());
+			}
+			for(PmRoleDesc obj:this.getManagedBean().getSelectedRoles()){
+				if(oriPmRoles.contains(obj.getPmRole())){
+					isUnique = false;
+					break;
+				}
+//				newPmRoles.add(obj.getPmRole());
+			}
+			
+//			if(oriPmRoles.containsAll(newPmRoles)){
+//				isUnique = false;
+//			}
+		}
+		return isUnique;
 	}
 	
 	/**
@@ -676,14 +697,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	 */
 	public void getAvailbleUserRole() {
 		logger.info("getAvailbleUserRole");
-//		if(this.getManagedBean().getSelectedUserOrg()!=null && this.getManagedBean().getSelectedUserOrg().getPmUserRoles()!=null){
-//			if(this.getManagedBean().getSelectedRoles()==null){
-//				this.getManagedBean().setSelectedRoles(new ArrayList<PmRoleDesc>());
-//			}
-//			for(PmUserRole pmUserRole: this.getManagedBean().getSelectedUserOrg().getPmUserRoles()){
-//				this.getManagedBean().getSelectedRoles().add();
-//			}
-//		}
 		roleDataModel.reloadData();
 	}
 	
@@ -726,7 +739,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				RoleResDTO resDto = roleSO.retrieveRoleDecsBySearchBean(roleReqDTO);
 				
 				if (resDto != null && resDto.isSuccessful()) {
-					/**
+					/*
 					List <PmRoleDesc> roleResults = resDto.getSearchRoleResultBean().getResultList();
 					for(PmRoleDesc roleDesc: roleResults){
 						if(ProfileManagementConst.ROLE_APPROVER.equals(roleDesc.getPmRole().getRoleCode())){
@@ -741,6 +754,25 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 					}
 					 */
 					getManagedBean().setAvailableRoles(resDto.getSearchRoleResultBean().getResultList());
+					
+					// disabled selected roles
+					if(resDto.getSearchRoleResultBean()!=null 
+							&& resDto.getSearchRoleResultBean().getResultList()!=null 
+							&& !resDto.getSearchRoleResultBean().getResultList().isEmpty()){
+						if(getManagedBean().getSelectedUserOrg()!=null 
+								&& getManagedBean().getSelectedUserOrg().getPmUserRoles()!=null){
+							List <PmRole> selectedRoles = new ArrayList<PmRole>();
+							for(PmUserRole obj:getManagedBean().getSelectedUserOrg().getPmUserRoles()){
+								selectedRoles.add(obj.getPmRole());
+								
+							}
+							for(PmRoleDesc obj:resDto.getSearchRoleResultBean().getResultList()){
+								if(selectedRoles.contains(obj.getPmRole())){
+									obj.setSelected(true);
+								}
+							}
+						}
+					}
 					return resDto.getSearchRoleResultBean();
 				}
 			} catch (Exception e) {
@@ -1080,6 +1112,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			UserReqDTO reqDTO = new UserReqDTO();
+			
 			if(this.getManagedBean().isDummy()){ //TODO REMOVE
 				dummyTestUpdateRole(reqDTO);
 			}
@@ -1114,8 +1147,56 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		}
 	}
 	
-
+	/**
+	 * TODO: fix the remote updatePortrait
+	 * @param pmUser
+	 * @throws Exception
+	 */
+	private void uploadPortrait(PmUser pmUser) throws Exception{
+		logger.info("uploadPortrait - START");
+		long companyId = Long.parseLong(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_COMPANY_ID));
+		byte[] bytes = pmUser.getPortrait();
+		if(bytes!=null){
+			User user = UserServiceUtil.getUserByScreenName(companyId ,pmUser.getLoginId());
+			UserServiceUtil.updatePortrait(user.getUserId(), bytes);
+		}
+		logger.info("uploadPortrait - END");
+	}
+	/**
+	 * Get user portrait 
+	 * @param event
+	 * @throws Exception
+	 */
+	public void handleFileUpload(FileUploadEvent event) throws Exception{
+		logger.info("handleFileUpload - START");
+		UploadedFile item = event.getFile();
+		byte[] bytes = item.getContents();
+		this.getManagedBean().getSelectedUser().setPortrait(bytes);  
+		logger.info("handleFileUpload - END");
+	}
 	
+	
+	/**
+	 * Get user portrait 
+	 * @param event
+	 * @throws Exception
+	 */
+	public void handleFileUpload1() throws Exception{
+		logger.info("handleFileUpload - START - UserServiceUtil");
+		byte[] bytes = this.getManagedBean().getSelectedUser().getPortrait();
+		long imageMaxSize = PrefsPropsUtil.getLong(PropsKeys.USERS_IMAGE_MAX_SIZE);
+		System.out.println("size = " + imageMaxSize);
+		System.out.println("bytes.length = " + bytes.length);   
+		System.out.println("screen name = " + this.getManagedBean().getSelectedUser().getLoginId());
+		System.out.println("identity no = " + this.getManagedBean().getSelectedUser().getIdentificationNo());
+		String screenName =  this.getManagedBean().getSelectedUser().getLoginId()==null
+					? this.getManagedBean().getSelectedUser().getIdentificationNo() 
+					: this.getManagedBean().getSelectedUser().getLoginId();
+		long companyId = Long.parseLong(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_COMPANY_ID));
+		User user = UserServiceUtil.getUserByScreenName(companyId , screenName);
+		UserServiceUtil.updatePortrait(user.getUserId(), bytes);
+		logger.info("handleFileUpload - END");
+	}
 	
 //	public void testSearch(String id){
 //		System.out.println("testSearch - start");
@@ -1255,19 +1336,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 
 		return "/xhtml/pm/profilemanagement/profileManagementMain.xhtml";
 	}
-
-	
-	
-	
-
-//	public void handleFileUpload(FileUploadEvent event) {
-//		FacesMessage msg = new FacesMessage("Succesful", event.getFile()
-//				.getFileName() + " is uploaded.");
-//		FacesContext.getCurrentInstance().addMessage(null, msg);
-//	}
-//
-
-		
 
 	public void districtCode(AjaxBehaviorEvent event) {
 		try {
@@ -1650,77 +1718,11 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 //		}
 //
 //	}
-	/**
-	 * Get user portrait 
-	 * @param event
-	 * @throws Exception
-	 */
-	public void handleFileUpload(FileUploadEvent event) throws Exception{
-		logger.info("handleFileUpload - START");
-		UploadedFile item = event.getFile();
-		byte[] bytes = item.getContents();
-		this.getManagedBean().getSelectedUser().setPortrait(bytes);  
-		logger.info("handleFileUpload - END");
-	}
-	/**
-	 * Get user portrait 
-	 * @param event
-	 * @throws Exception
-	 */
-	public void handleFileUpload1() throws Exception{
-		logger.info("handleFileUpload - START - UserServiceUtil");
-		byte[] bytes = this.getManagedBean().getSelectedUser().getPortrait();
-		long imageMaxSize = PrefsPropsUtil.getLong(PropsKeys.USERS_IMAGE_MAX_SIZE);
-		System.out.println("size = " + imageMaxSize);
-		System.out.println("bytes.length = " + bytes.length);   
-		
-		long companyId = Long.parseLong(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_COMPANY_ID));
-		User user = UserServiceUtil.getUserByScreenName(companyId ,this.getManagedBean().getSelectedUser().getLoginId());
-		UserServiceUtil.updatePortrait(user.getUserId(), bytes);
-		
-//		User user = UserLocalServiceUtil.getUserByScreenName(companyId ,this.getManagedBean().getSelectedUser().getLoginId());
-//		UserLocalServiceUtil.updatePortrait(user.getUserId(), bytes);
-		
-		
-		logger.info("handleFileUpload - END");
-	}
 	
-	/**
-	 * Get user portrait 
-	 * @param event
-	 * @throws Exception
-	 */
-	public void handleFileUpload2() throws Exception{
-		logger.info("handleFileUpload - START- UserLocalServiceUtil");
-		byte[] bytes = this.getManagedBean().getSelectedUser().getPortrait();
-		long imageMaxSize = PrefsPropsUtil.getLong(PropsKeys.USERS_IMAGE_MAX_SIZE);
-		System.out.println("size = " + imageMaxSize);
-		System.out.println("bytes.length = " + bytes.length);   
-		
-		long companyId = Long.parseLong(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_COMPANY_ID));
-		User user = UserLocalServiceUtil.getUserByScreenName(companyId ,this.getManagedBean().getSelectedUser().getLoginId());
-		UserLocalServiceUtil.updatePortrait(user.getUserId(), bytes);
-		logger.info("handleFileUpload - END");
-	}
+
 	
-	/**
-	 * TODO: fix the remote updatePortrait
-	 * @param pmUser
-	 * @throws Exception
-	 */
-	private void uploadPortrait(PmUser pmUser) throws Exception{
-		logger.info("uploadPortrait - START");
-		long companyId = Long.parseLong(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_COMPANY_ID));
-		byte[] bytes = pmUser.getPortrait();
-//		User user = UserServiceUtil.getUserByScreenName(companyId ,pmUser.getLoginId());
-		User user = UserLocalServiceUtil.getUserByScreenName(companyId ,pmUser.getLoginId());
-		long imageMaxSize = PrefsPropsUtil.getLong(PropsKeys.USERS_IMAGE_MAX_SIZE);
-		System.out.println("size = " + imageMaxSize);
-		System.out.println("bytes.length = " + bytes.length);   
-		
-		UserLocalServiceUtil.updatePortrait(user.getUserId(), bytes);
-		logger.info("uploadPortrait - END");
-	}
+
+	
 			
 		
 //			System.out.println("handleFileUploadTest - start");

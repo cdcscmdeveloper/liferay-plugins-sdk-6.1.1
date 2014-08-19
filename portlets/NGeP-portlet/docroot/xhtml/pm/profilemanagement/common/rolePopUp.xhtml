@@ -8,7 +8,9 @@
 
 
 	<p:dialog id="dlRoleOptions" header="#{lbl['lbl.pm.profiles.authorisation.role.opt']}" 
-		widgetVar="dlRoleOptions" dynamic="true" width="1000" height="250">
+		widgetVar="dlRoleOptions" dynamic="true" width="1000" height="300">
+		<!-- Validation Message -->
+		<p:messages id="messagesRole" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 		<p:outputPanel id="opRoleOptions">
 			<p:dataTable id="dtRoleOptions" var="roleDesc" lazy="true"
 				emptyMessage="#{lbl['lbl.pp.no.record.found']}"
@@ -18,22 +20,19 @@
 				<p:ajax event="toggleSelect" update="@this" process="@this" />
 				<p:ajax event="rowSelectCheckbox" update="@this" />
 				<ac:paginator for="dtRoleOptions"/>
-				<p:column selectionMode="multiple" width="2%"  />
+				<p:column selectionMode="multiple" width="2%" disabledSelection="#{roleDesc.selected}" />
 			    <p:column headerText="#{lbl['lbl.pm.profiles.authorisation.role.name']}"> 
 		         	#{roleDesc.roleName}
-		       
 		        </p:column>
 			</p:dataTable>
 			<br/>
 			<br/>    
 	 		<div class="ppRightBtn">
-			  <p:commandButton value="#{lbl['lbl.btn.ok']}" oncomplete="dlRoleOptions.hide();" 
+			  <p:commandButton value="#{lbl['lbl.btn.ok']}" 
 			  	action="#{profileManagementBackingBean.confirmRoles()}"
 			  	update="tvRoleReceivingAddr:dtRoles" />	
-			  <p:commandButton value="#{lbl['lbl.btn.cancel']}" oncomplete="dlRoleOptions.hide();" 
-			    />		
-			           <p:commandButton action="#{profileManagementBackingBean.test}"
-					  	value="Check Role" />&#160;
+			  <p:commandButton value="#{lbl['lbl.btn.cancel']}" oncomplete="dlRoleOptions.hide();" />		
+		
 			</div>      
 		</p:outputPanel>
 	</p:dialog>
