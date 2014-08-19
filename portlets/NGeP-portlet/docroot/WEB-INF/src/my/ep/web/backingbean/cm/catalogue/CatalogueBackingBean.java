@@ -1855,7 +1855,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 			boolean inactiveFlag = false;
 
-			if (!this.getManagedBean().getSelectedMaintainItem().getItemStatus().equalsIgnoreCase("D")) {
+			if (!this.getManagedBean().getSelectedMaintainItem().getItemStatus().equalsIgnoreCase("D") && !this.getManagedBean().getSelectedMaintainItem().getItemStatus().equalsIgnoreCase("R")) {
 				if (!this.getManagedBean().getSelectedMaintainItem().isRecordStatus()) {
 					this.getManagedBean().getSelectedMaintainItem().setRecordStatusFlg(0);
 					this.getManagedBean().getSelectedMaintainItem().setItemStatus("D");
