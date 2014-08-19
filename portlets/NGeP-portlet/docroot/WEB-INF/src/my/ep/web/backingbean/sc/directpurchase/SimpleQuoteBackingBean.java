@@ -1779,7 +1779,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 		for (TplSpecQuestion tplSpecQuestion : cloneMaster.getTplSpecQuestions()) {
 			TplSpecQuestion question = (TplSpecQuestion) BeanUtils.cloneBean(tplSpecQuestion);
 			question.setSpecQuestionId(null);
-			//question.setTplSpecAnswers(null);
+			question.setTplSpecAnswers(null);
 			question.setTplSpecScorings(null);
 			question.setTplSpecTierQties(null);
 			question.setBrandNew(Boolean.TRUE);
@@ -2249,48 +2249,50 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 	private ScQuoteZone getQuoteZones(List<TreeNode> treeNodes) {
 		TplSpecZoneDtl tplSpecZoneDtl = null;
 		ScQuoteZone scQuoteZone = getManagedBean().getScQuote().getQuoteZone();
-		List<TplSpecZoneLoc> results = new ArrayList<TplSpecZoneLoc>();
-		List<TplSpecZoneDtl> tplSpecDtls = new ArrayList<TplSpecZoneDtl>();
-		
-		for (TreeNode rootNode : treeNodes) {
-			results = new ArrayList<TplSpecZoneLoc>();
-			
-			for (TreeNode ZoneNode : rootNode.getChildren()) {
+		if(scQuoteZone!=null){
+			List<TplSpecZoneLoc> results = new ArrayList<TplSpecZoneLoc>();
+			List<TplSpecZoneDtl> tplSpecDtls = new ArrayList<TplSpecZoneDtl>();
 
-				for (TreeNode stateNode : ZoneNode.getChildren()) {
+			for (TreeNode rootNode : treeNodes) {
+				results = new ArrayList<TplSpecZoneLoc>();
 
-					if (null != stateNode.getChildren() && !stateNode.getChildren().isEmpty()) {
-						for (TreeNode devisionNode : stateNode.getChildren()) {
+				for (TreeNode ZoneNode : rootNode.getChildren()) {
 
-							if (devisionNode.getChildCount() > 0) {
-								for (TreeNode districtNode : devisionNode.getChildren()) {
-									TplSpecZoneLoc tplSpecZoneLoc = (TplSpecZoneLoc) districtNode.getData();
+					for (TreeNode stateNode : ZoneNode.getChildren()) {
+
+						if (null != stateNode.getChildren() && !stateNode.getChildren().isEmpty()) {
+							for (TreeNode devisionNode : stateNode.getChildren()) {
+
+								if (devisionNode.getChildCount() > 0) {
+									for (TreeNode districtNode : devisionNode.getChildren()) {
+										TplSpecZoneLoc tplSpecZoneLoc = (TplSpecZoneLoc) districtNode.getData();
+										tplSpecZoneDtl  = tplSpecZoneLoc.getTplSpecZoneDtl();
+										results.add(tplSpecZoneLoc);
+										tplSpecZoneDtl.setTplSpecZoneLocs(results);
+									}
+
+								} else {
+									TplSpecZoneLoc tplSpecZoneLoc = (TplSpecZoneLoc) devisionNode.getData();
 									tplSpecZoneDtl  = tplSpecZoneLoc.getTplSpecZoneDtl();
 									results.add(tplSpecZoneLoc);
 									tplSpecZoneDtl.setTplSpecZoneLocs(results);
 								}
-								
-							} else {
-								TplSpecZoneLoc tplSpecZoneLoc = (TplSpecZoneLoc) devisionNode.getData();
-								tplSpecZoneDtl  = tplSpecZoneLoc.getTplSpecZoneDtl();
-								results.add(tplSpecZoneLoc);
-								tplSpecZoneDtl.setTplSpecZoneLocs(results);
 							}
+
+						} else {
+							TplSpecZoneLoc tplSpecZoneLoc = (TplSpecZoneLoc) stateNode.getData();
+							tplSpecZoneDtl = tplSpecZoneLoc.getTplSpecZoneDtl();
+							results.add(tplSpecZoneLoc);
+							tplSpecZoneDtl.setTplSpecZoneLocs(results);
+
 						}
-						
-					} else {
-						TplSpecZoneLoc tplSpecZoneLoc = (TplSpecZoneLoc) stateNode.getData();
-						tplSpecZoneDtl = tplSpecZoneLoc.getTplSpecZoneDtl();
-						results.add(tplSpecZoneLoc);
-						tplSpecZoneDtl.setTplSpecZoneLocs(results);
-						
 					}
 				}
-			}
-			if(tplSpecZoneDtl != null){
-				tplSpecZoneDtl.setTplSpecZoneLocs(results);
-				tplSpecDtls.add(tplSpecZoneDtl);
-				scQuoteZone.setTplSpecZoneDtls(tplSpecDtls);
+				if(tplSpecZoneDtl != null){
+					tplSpecZoneDtl.setTplSpecZoneLocs(results);
+					tplSpecDtls.add(tplSpecZoneDtl);
+					scQuoteZone.setTplSpecZoneDtls(tplSpecDtls);
+				}
 			}
 		}
 		return scQuoteZone;
@@ -2446,7 +2448,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			if (templateSpecBackingBean == null) {
 				templateSpecBackingBean = new TemplateSpecBackingBean();
 			}
-			TplSpecMaster  serviceTplSpec = getManagedBean().getProductTemplateSpecBean().getSpecMaster();
+			TplSpecMaster  serviceTplSpec = getManagedBean().getServiceTemplateSpecBean().getSpecMaster();
 			TplSpecMaster  productTplSpec = getManagedBean().getProductTemplateSpecBean().getSpecMaster();
 			
 			// product
