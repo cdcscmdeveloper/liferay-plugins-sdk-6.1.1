@@ -34,7 +34,7 @@
 			<p:column headerText="#{lbl['lbl.sc.spec.stage.action']}"
 				style="width:10%">
 				<p:commandLink ajax="false"
-					action="#{specificationBackingBean.technicalSpecEditAction(technicalSpec)}">
+					action="#{specificationBackingBean.technicalSpecEditAction(index,technicalSpec,'T')}">
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png" />
 
