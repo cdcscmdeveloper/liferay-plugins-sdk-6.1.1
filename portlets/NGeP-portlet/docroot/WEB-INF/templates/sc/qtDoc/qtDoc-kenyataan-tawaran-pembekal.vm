@@ -62,7 +62,7 @@
     <tr align='left'>
         <td>
             <span style='font-weight:bold;font-size:10px;font-family: Times New Roman;'>
-            	<table width='100%'>
+            	<table width='100%' border="1">
             		<tr>
             			<td>Category Code</td>
             			<td>Main-Category</td>
@@ -117,11 +117,8 @@
             <span style='font-weight:bold;font-size:10px;font-family: Times New Roman;'>
             	
             		 #foreach( $zoneList in $zoneBeans )
-						#if( $null.isNull($zoneList.tplSpecZoneDtl) )
-		            		$zoneList.tplSpecZoneDtl.zoneName<br/>
-		            	#end
-						#if( $zoneList.tplSpecZoneDtl != "" )
-		            		$zoneList.tplSpecZoneDtl.zoneName<br/>
+            		 	#if ( $isZone)
+							$zoneList.tplSpecZoneDtl.zoneName<br/>
 		            	#end
             		 	Site Visit Same As Briefing : $zoneList.scQtBsv.sameBsv<br/>
             		 	<table width='100%' border="1">

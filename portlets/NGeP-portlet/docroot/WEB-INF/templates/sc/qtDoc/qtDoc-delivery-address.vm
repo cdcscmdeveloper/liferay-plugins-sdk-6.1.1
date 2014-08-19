@@ -17,11 +17,8 @@
         <td>
             <span style='font-weight:bold;font-size:10px;font-family: Times New Roman;'>
         		#foreach( $deliveryaddress in $deliveryAddressBean )
-					#if( $null.isNull($zoneList.tplSpecZoneDtl) )
-	            		$deliveryaddress.tplSpecZoneDtl.panelZone.name<br/>
-	            	#end
-					#if( $deliveryaddress.tplSpecZoneDtl != "" )
-	            		$deliveryaddress.tplSpecZoneDtl.panelZone.name<br/>
+					#if ( $isOneOff)
+						$deliveryaddress.tplSpecZoneDtl.zoneName<br/>
 	            	#end
 					<table width='100%' border="1">
 	            		<tr>
