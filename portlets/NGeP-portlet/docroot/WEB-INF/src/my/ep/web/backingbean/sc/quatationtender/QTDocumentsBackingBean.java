@@ -598,6 +598,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		
 		VelocityContext context = new VelocityContext();
 		
+		boolean isOneOff = false;
 		IQTSpecSO specSo;
 		List<BriefingZoneBean> deliveryAddressBean = new ArrayList<BriefingZoneBean>();
 		try {
@@ -607,6 +608,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 			SpecificationResDTO resDTO = specSo.retrieveDeliverSeriviceAddress(reqDTO);
 			List<TplSpecZoneDtl> zones = resDTO.getSpecZoneDtls();
 			if ( zones != null && !zones.isEmpty()) {
+				isOneOff = true;
 				for (TplSpecZoneDtl specZoneDtl : zones) {
 					reqDTO.setQtId(this.getManagedBean().getQt().getQtId());
 					reqDTO.setZoneId(specZoneDtl.getSpecZoneId());
@@ -615,12 +617,14 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 					deliveryAddressBean.add(bean);
 				}
 			} else {
+				//isOneOff = true;
 				BriefingZoneBean bean = new BriefingZoneBean(null, resDTO.getAddressResultBean());
 				deliveryAddressBean.add(bean);
 			}
 		} finally {
 			specSo = null;
 		}
+		context.put("isOneOff", isOneOff);
 		context.put("deliveryAddressBean", deliveryAddressBean);
 		
 		DocumentGenerator.getInstance().generatePdfFromVelocity("/sc/qtDoc/qtDoc-delivery-address.vm", 
@@ -878,6 +882,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
     	context.put("closingDate", closingDate);
     	context.put("validityPeriod", qt.getQtValidityPeriod());
     	
+    	boolean isZone = false;
        	IQTBriefingSO qTBriefingSO = null;
     	ScQtBsv qtBsv = null;
     	BriefingZoneBean briefingZoneBean = null;
@@ -891,6 +896,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 			if (scQt.isZonal()) {
 				List<TplSpecZoneDtl> zones = resDTO.getZonesList();
 				if (null != zones) {
+					isZone = true;
 					BriefingReqDTO briefingReqDTO = new BriefingReqDTO();
 					briefingReqDTO.setQtId(getManagedBean().getQt().getQtId());
 					for (TplSpecZoneDtl specZoneDtl : zones) {
@@ -909,7 +915,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		} finally {
 			qTBriefingSO = null;
 		}
-		
+		context.put("isZone", isZone);
 		context.put("zoneBeans", zoneBeans);
 
 		boolean isOneOff = false;

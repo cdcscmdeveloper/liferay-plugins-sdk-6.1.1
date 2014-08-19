@@ -32,6 +32,7 @@ import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -350,6 +351,7 @@ public class QTCommitteBackingBean extends
 		ScQt scQt = (ScQt) event.getObject();
 
 		CommitteReqDTO reqDTO = new CommitteReqDTO();
+		reqDTO.setCommitteeType(getManagedBean().getCommType());
 		reqDTO.setQtId(scQt.getQtId());
 		CommitteResDTO resDTO = null;
 		try {
@@ -467,6 +469,22 @@ public class QTCommitteBackingBean extends
 		getManagedBean().setCloneTenderList(null);
 		getManagedBean().setSearchcommitteeNode(null);
 	}
+	
+	public void committeeclonePopupAction(ScQtCommittee committee) {
+		debugLogger("committeeclonePopupAction");
+		getManagedBean().getCloneSearchQTDataModel().reloadData();
+		getManagedBean().getCloneQtnTenderSearchBean().setQtTitle(null);
+		getManagedBean().getCloneQtnTenderSearchBean().setQtNo(null);
+		getManagedBean().getCloneQtnTenderSearchBean().setProcurementMode(null);
+		getManagedBean().getCloneQtnTenderSearchBean().setFromCreatedDate(null);
+		getManagedBean().getCloneQtnTenderSearchBean().setToCreatedDate(null);
+		getManagedBean().getCloneQtnTenderSearchBean().setQtStatus(null);
+		getManagedBean().setCloneTenderList(null);
+		getManagedBean().setSearchcommitteeNode(null);
+		String commType = committee.getScCommittee().getCommitteeType().getParameterCode();
+		this.getManagedBean().setCommType(commType);
+		log.info("Committee Type : " + getManagedBean().getCommType());
+	}
 
 	public void addCommitteMember(ScQtCommittee committee, String titleName) {
 		debugLogger("addCommitteMember");
@@ -536,14 +554,30 @@ public class QTCommitteBackingBean extends
 			InstantiationException, InvocationTargetException,
 			NoSuchMethodException {
 		debugLogger("addCloneToTecDtl");
+		IParameterSO parameterSO = BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IParameterSO.class);
+		ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
+		ParameterResDTO parameterResDTO = null;
 		// List<TabBean> beans = getManagedBean().getScCommitteeMemberTabList();
 		// TabBean bean = beans.get(this.getManagedBean().getSubTabIndex());
+		ScCommittee scCommittee = new ScCommittee();
+		parameterReqDTO = new ParameterReqDTO();
+		parameterReqDTO.setParameterType(ParameterTypeConst.SC_COMMITTEE_TYPE);
+		parameterReqDTO.setParameterCode(ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE);
+		parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
+		scCommittee.setCommitteeType(parameterResDTO.getPmParameter());
+		setUserDetails(scCommittee);
+		PmStatus committeStatus = new PmStatus();
+		committeStatus.setStatusId(QTStatusConst.CM_PENDING_SUBMISSION);
+		scCommittee.setCommitteStatus(committeStatus);
 		TabBean bean = getManagedBean().getSelectedTabBean();
 		List<ScCommitteeMember> selectedList = bean.getMembers();
 		List<TabBean> tabs = this.getManagedBean()
 				.getScCommitteeMemberTabList();
 		for (TabBean tabBean : tabs) {
-			if (tabBean.getTitleName().equalsIgnoreCase("TEC")) {
+			if (tabBean.getTitleName().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE)) {
+				List<ScCommitteeMember> committeeMembersList = new ArrayList<ScCommitteeMember>();
 				for (ScCommitteeMember member : selectedList) {
 					ScCommitteeMember member1 = null;
 					try {
@@ -556,10 +590,13 @@ public class QTCommitteBackingBean extends
 					}
 					if (null != member1) {
 						member1.setScCommittee(null);
-						tabBean.getScQtCommittee().getScCommittee()
-								.getScCommitteeMembers().add(member1);
+						//scCommittee = member1.getScCommittee();
+						member1.setScCommittee(scCommittee);
+						committeeMembersList.add(member1);
 					}
 				}
+				scCommittee.setScCommitteeMembers(committeeMembersList);
+				tabBean.getScQtCommittee().setScCommittee(scCommittee);
 				break;
 			}
 		}

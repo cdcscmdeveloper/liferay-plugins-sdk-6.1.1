@@ -356,6 +356,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	// Existing Committee Search
 	private IPagingDataModel<PmUser> userSearchCommitteeDataModel;
 	private UserCommitteeSearchBean userCommitteeSearchBean;
+	private String commType;
 
 	// Briefing & Site Visit Details
 	private ScQtBsvDtl qtBriefing;
@@ -2576,6 +2577,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setCtzones(boolean ctzones) {
 		this.ctzones = ctzones;
+	}
+
+	public String getCommType() {
+		return commType;
+	}
+
+	public void setCommType(String commType) {
+		this.commType = commType;
 	}
 
 }
