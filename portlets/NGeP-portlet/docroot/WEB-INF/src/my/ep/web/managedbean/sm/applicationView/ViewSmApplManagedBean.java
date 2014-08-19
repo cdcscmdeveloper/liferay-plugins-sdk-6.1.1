@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.model.SelectItem;
 
 import my.ep.persistence.entity.pm.common.PmCertBody;
 import my.ep.persistence.entity.sm.SmAppl;
@@ -21,6 +22,7 @@ public class ViewSmApplManagedBean extends BaseManagedBean {
 
 	private SmSupplierCert selectedCert;
 	private List<PmCertBody> certBodyLs;
+	private SelectItem[] businessTypeLs;
 
 	public ViewSmApplManagedBean() {
 		System.out.println(" ********* END MANAGED BEAN CREATION ****** ");
@@ -64,6 +66,14 @@ public class ViewSmApplManagedBean extends BaseManagedBean {
 
 	public void setCertBodyLs(List<PmCertBody> certBodyLs) {
 		this.certBodyLs = certBodyLs;
+	}
+
+	public SelectItem[] getBusinessTypeLs() {
+		return businessTypeLs;
+	}
+
+	public void setBusinessTypeLs(SelectItem[] businessTypeLs) {
+		this.businessTypeLs = businessTypeLs;
 	}
 
 

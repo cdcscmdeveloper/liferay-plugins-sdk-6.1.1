@@ -46,22 +46,23 @@ public class ViewSmApplBackingBean extends
 		
 		ISmApplRevisionSO applRevisionSO = null;
 
-		try{
+//		try{
 			applRevisionSO = (ISmApplRevisionSO) BusinessDelegate
 					.getInstance().getServiceObject("sm",
 							ISmApplRevisionSO.class);
 
 			SmApplRevisionReqDTO reqDTO = new SmApplRevisionReqDTO();
-			reqDTO.setDeSerFileName("");
+			reqDTO.setDeSerFileName("/TestHistRev/Appl_JN-20140812-0002.ser");
 			SmApplRevisionResDTO resDTO = applRevisionSO.readApplicationHist(reqDTO);
 
 			getManagedBean().setSmAppl(resDTO.getSmAppl());
-			FacesContext fc = FacesContext.getCurrentInstance();
-			fc.getApplication().getNavigationHandler()
-					.handleNavigation(fc, null, "smViewApplnSideMenu_BasePage.xhtml");
-		} finally {
-			applRevisionSO = null;
-		}
+			RequestContext.getCurrentInstance().execute("viewApplPopUp.show();");
+//			FacesContext fc = FacesContext.getCurrentInstance();
+//			fc.getApplication().getNavigationHandler()
+//					.handleNavigation(fc, null, "smViewApplnSideMenu_BasePage.xhtml");
+//		} finally {
+//			applRevisionSO = null;
+//		}
 	}
 	
 	public void viewApplication(){

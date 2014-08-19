@@ -15,8 +15,8 @@
 							value="#{lbl['lbl.sm.facility.ownerType']}" />
 					</td>
 					<td style="width: 100px; padding-bottom: 2px;">
-						<p:outputLabel value="Own" value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.ownershipType eq 'O'}"/>
-						<p:outputLabel value="Rent" value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.ownershipType eq 'R'}"/>
+						<p:outputLabel value="Own" rendered="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.ownershipType eq 'O'}"/>
+						<p:outputLabel value="Rent" rendered="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.ownershipType eq 'R'}"/>
 					</td>
 				</tr>
 			</table>
