@@ -562,29 +562,37 @@ public class CodificationBackingBean extends
 		for (CmColor color : resDTO.getColorList()) {
 			// log.info("color:"+color);
 			// log.info("color:"+color.getColorId());
-			this.getManagedBean()
-					.getColorCriteria()
-					.add(new SelectItem(color.getColorId(), color
-							.getColorName()));
+			if(!StringUtils.isBlank(color.getColorName())) {
+				this.getManagedBean()
+						.getColorCriteria()
+						.add(new SelectItem(color.getColorId(), color
+								.getColorName()));
+			}
 		}
 
 		for (CmBrand brand : unspscObj.getCmBrand()) {
-			this.getManagedBean()
-					.getBrandCriteria()
-					.add(new SelectItem(brand.getBrandId(), brand
-							.getBrandName()));
+			if(!StringUtils.isBlank(brand.getBrandName())) {
+				this.getManagedBean()
+						.getBrandCriteria()
+						.add(new SelectItem(brand.getBrandId(), brand
+								.getBrandName()));
+			}
 		}
 
 		for (CmType type : unspscObj.getCmType()) {
-			this.getManagedBean().getTypeCriteria()
-					.add(new SelectItem(type.getTypeId(), type.getTypeName()));
+			if(!StringUtils.isBlank(type.getTypeName())) {
+				this.getManagedBean().getTypeCriteria()
+						.add(new SelectItem(type.getTypeId(), type.getTypeName()));
+			}
 		}
 
 		for (CmMeasurement measurement : unspscObj.getCmMeasurement()) {
-			this.getManagedBean()
-					.getMeasurementCriteria()
-					.add(new SelectItem(measurement.getMeasurementId(),
-							measurement.getMeasurementName()));
+			if(!StringUtils.isBlank(measurement.getMeasurementName())) {
+				this.getManagedBean()
+						.getMeasurementCriteria()
+						.add(new SelectItem(measurement.getMeasurementId(),
+								measurement.getMeasurementName()));
+			}
 		}
 
 		return NAV_TO_EXTENSION_SEARCH + "?faces-redirect=true";
@@ -890,31 +898,39 @@ public class CodificationBackingBean extends
 
 		for (CmBrand brand : resDTO.getCommodityObj().getCmBrand()) {
 			log.info("code:" + brand.getBrandCode());
-			this.getManagedBean()
-					.getBrandCriteria()
-					.add(new SelectItem(brand.getBrandId(), brand
-							.getBrandName()));
+			if(!StringUtils.isBlank(brand.getBrandName())) {
+				this.getManagedBean()
+						.getBrandCriteria()
+						.add(new SelectItem(brand.getBrandId(), brand
+								.getBrandName()));
+			}
 		}
 
 		for (CmType type : resDTO.getCommodityObj().getCmType()) {
-			this.getManagedBean().getTypeCriteria()
-					.add(new SelectItem(type.getTypeId(), type.getTypeName()));
+			if(!StringUtils.isBlank(type.getTypeName())) {
+				this.getManagedBean().getTypeCriteria()
+						.add(new SelectItem(type.getTypeId(), type.getTypeName()));
+			}
 		}
 
 		for (CmMeasurement measurement : resDTO.getCommodityObj()
 				.getCmMeasurement()) {
-			this.getManagedBean()
-					.getMeasurementCriteria()
-					.add(new SelectItem(measurement.getMeasurementId(),
-							measurement.getMeasurementName()));
+			if(!StringUtils.isBlank(measurement.getMeasurementName())) {
+				this.getManagedBean()
+						.getMeasurementCriteria()
+						.add(new SelectItem(measurement.getMeasurementId(),
+								measurement.getMeasurementName()));
+			}
 		}
 
 		resDTO = codificationSO.searchColor(reqDTO);
 		for (CmColor color : resDTO.getColorList()) {
-			this.getManagedBean()
-					.getColorCriteria()
-					.add(new SelectItem(color.getColorId(), color
-							.getColorName()));
+			if(!StringUtils.isBlank(color.getColorName())) {
+				this.getManagedBean()
+						.getColorCriteria()
+						.add(new SelectItem(color.getColorId(), color
+								.getColorName()));
+			}
 		}
 
 	}
@@ -1636,29 +1652,37 @@ public class CodificationBackingBean extends
 		for (CmColor color : resDTO.getColorList()) {
 			// log.info("color:"+color);
 			// log.info("color:"+color.getColorId());
-			this.getManagedBean()
-					.getColorCriteria()
-					.add(new SelectItem(color.getColorId(), color
-							.getColorName()));
+			if(!StringUtils.isBlank(color.getColorName())) {
+				this.getManagedBean()
+						.getColorCriteria()
+						.add(new SelectItem(color.getColorId(), color
+								.getColorName()));
+			}
 		}
 
 		for (CmBrand brand : unspscObj.getCmBrand()) {
-			this.getManagedBean()
-					.getBrandCriteria()
-					.add(new SelectItem(brand.getBrandId(), brand
-							.getBrandName()));
+			if(!StringUtils.isBlank(brand.getBrandName())) {
+				this.getManagedBean()
+						.getBrandCriteria()
+						.add(new SelectItem(brand.getBrandId(), brand
+								.getBrandName()));
+			}
 		}
 
 		for (CmType type : unspscObj.getCmType()) {
-			this.getManagedBean().getTypeCriteria()
-					.add(new SelectItem(type.getTypeId(), type.getTypeName()));
+			if(!StringUtils.isBlank(type.getTypeName())) {
+				this.getManagedBean().getTypeCriteria()
+						.add(new SelectItem(type.getTypeId(), type.getTypeName()));
+			}
 		}
 
 		for (CmMeasurement measurement : unspscObj.getCmMeasurement()) {
-			this.getManagedBean()
-					.getMeasurementCriteria()
-					.add(new SelectItem(measurement.getMeasurementId(),
-							measurement.getMeasurementName()));
+			if(!StringUtils.isBlank(measurement.getMeasurementName())) {
+				this.getManagedBean()
+						.getMeasurementCriteria()
+						.add(new SelectItem(measurement.getMeasurementId(),
+								measurement.getMeasurementName()));
+			}
 		}
 
 		return "verifyExtensionSearch?faces-redirect=true";
@@ -1929,10 +1953,12 @@ public class CodificationBackingBean extends
 			for (CmColor color : resDTO.getColorList()) {
 				// log.info("color:"+color);
 				// log.info("color:"+color.getColorId());
-				this.getManagedBean()
-						.getColorCriteria()
-						.add(new SelectItem(color.getColorId(), color
-								.getColorName()));
+				if(!StringUtils.isBlank(color.getColorName())) {
+					this.getManagedBean()
+							.getColorCriteria()
+							.add(new SelectItem(color.getColorId(), color
+									.getColorName()));
+				}
 			}
 
 			reqDTO.setUnspscCode(this.getManagedBean().getSelectedUNSPSCObj()
@@ -1940,25 +1966,31 @@ public class CodificationBackingBean extends
 			resDTO = unspscSO.searchCommodityObj(reqDTO);
 
 			for (CmBrand brand : resDTO.getCommodityObj().getCmBrand()) {
-				this.getManagedBean()
-						.getBrandCriteria()
-						.add(new SelectItem(brand.getBrandId(), brand
-								.getBrandName()));
+				if(!StringUtils.isBlank(brand.getBrandName())) {
+					this.getManagedBean()
+							.getBrandCriteria()
+							.add(new SelectItem(brand.getBrandId(), brand
+									.getBrandName()));
+				}
 			}
 
 			for (CmType type : resDTO.getCommodityObj().getCmType()) {
-				this.getManagedBean()
-						.getTypeCriteria()
-						.add(new SelectItem(type.getTypeId(), type
-								.getTypeName()));
+				if(!StringUtils.isBlank(type.getTypeName())) {
+					this.getManagedBean()
+							.getTypeCriteria()
+							.add(new SelectItem(type.getTypeId(), type
+									.getTypeName()));
+				}
 			}
 
 			for (CmMeasurement measurement : resDTO.getCommodityObj()
 					.getCmMeasurement()) {
-				this.getManagedBean()
-						.getMeasurementCriteria()
-						.add(new SelectItem(measurement.getMeasurementId(),
-								measurement.getMeasurementName()));
+				if(!StringUtils.isBlank(measurement.getMeasurementName())) {
+					this.getManagedBean()
+							.getMeasurementCriteria()
+							.add(new SelectItem(measurement.getMeasurementId(),
+									measurement.getMeasurementName()));
+				}
 			}
 		}
 	}
