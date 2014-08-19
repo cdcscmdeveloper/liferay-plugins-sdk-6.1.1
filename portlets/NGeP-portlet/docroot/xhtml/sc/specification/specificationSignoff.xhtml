@@ -9,29 +9,57 @@
 	<p:panel header="#{lbl['lbl.sc.spec.committee.endorse']}"
 		toggleable="true">
 
-		<p:dataTable id="specificationSignOff" var="scCommittee"
-			value="#{specificationBackingBean.managedBean.committeeMemberList}"
-			rowKey="#{scCommittee.committeeMemberId}" rowIndexVar="index"
-			style="width:100%">
-			<ac:paginator for="specificationSignOff" />
-			<p:column headerText="#{lbl['lbl.sc.spec.tech.name']}"
-				style="width:30%">
-				<h:outputText value="#{scCommittee.memberName}"></h:outputText>
-			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.spec.tech.identification.no']}"
-				style="width:20%">
-				<h:outputText value="#{scCommittee.icPassport}"></h:outputText>
-			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.spec.committee.role']}"
-				style="width:30%">
+		<p:dataTable id="scEndorsement" var="committeActivity"
+			widgetVar="prepareCommittee"
+			value="#{specificationBackingBean.managedBean.committeeActivities}">
+			<ac:paginator for="scEndorsement" />
+
+			<p:column headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.name']}">
 				<h:outputText
-					value="#{specificationBackingBean.getParameterDesc(scCommittee.memberRole)}"></h:outputText>
+					value="#{committeActivity.scCommitteeMember.memberName}"></h:outputText>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.spec.status']}" style="width:20%">
+			<p:column headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.idn.no']}">
 				<h:outputText
-					value="#{specificationBackingBean.getStatusDescById(scCommittee.scCommittee.committeStatus.statusId)}"></h:outputText>
+					value="#{committeActivity.scCommitteeMember.icPassport}"></h:outputText>
 			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.designation']}">
+				<h:outputText
+					value="#{committeActivity.scCommitteeMember.designation}"></h:outputText>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.email']}">
+				<h:outputText value="#{committeActivity.scCommitteeMember.email}"></h:outputText>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.grade']}">
+				<h:outputText value="#{committeActivity.scCommitteeMember.grade}"></h:outputText>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.pp']}">
+				<h:outputText
+					value="#{lbl[committeActivity.scCommitteeMember.PNP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}"></h:outputText>
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="*" styleClass="mandatory"></h:outputText>
+					<h:outputText value="#{lbl['lbl.sc.eva.committee.role']}"></h:outputText>
+				</f:facet>
+
+				<h:outputText value="#{committeActivity.scCommitteeMember.grade}" />
+
+
+			</p:column>
+
+			<p:column headerText="Action">
+
+
+				<h:outputText
+					value="#{lbl[committeActivity.signedOff ? 'lbl.btn.complete' : 'lbl.sc.pending' ]}" />
+
+
+			</p:column>
+
 		</p:dataTable>
 		<p:spacer height="20"></p:spacer>
 		<div align="right">
