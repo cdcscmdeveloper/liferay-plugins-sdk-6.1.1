@@ -682,7 +682,9 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 			reqDTO.setQtId(qt.getQtId());
 			resDTO = specSo.retrieveFulFilMentScheduleDtls(reqDTO);
-			paymentList = resDTO.getProgressivePaymentResults().getResultList();
+			if (resDTO.getProgressivePaymentResults() != null && !resDTO.getProgressivePaymentResults().getResultList().isEmpty()) {
+				paymentList = resDTO.getProgressivePaymentResults().getResultList();
+			}
 		} finally {
 			specSo = null;
 		}
