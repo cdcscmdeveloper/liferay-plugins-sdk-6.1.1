@@ -51,33 +51,32 @@
 					<tr style="height: 30px;">
 						<td rowspan="10" style="vertical-align: top; width: 30%;">
 
-							<div id="slides"
-								style="width: 250px; float: right; margin-right: 65px;">
-
-								<h:panelGroup
-								
-									rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) == 0 }">
-
-									
-										
-											<p:outputPanel
-												style="height: 150px;left: 0px !important; border: 1px solid #808080; display: block; vertical-align: top;text-align: center;">
-													#{lbl['lbl.cm.no.image.available']}
-											</p:outputPanel>
-										
-									
-								</h:panelGroup>
-
+							
 								<h:panelGroup
 									rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) > 0 }">
+									<div id="slides" style="width: 250px; float: right; margin-right: 60px;">
 									<ui:repeat var="cmImage"
 										value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmImages}">
-										<img src="/NGeP-portlet/images/#{cmImage.imageName}"
-											style="height: 150px; left: 0px !important;" />
+										
+												<img src="/NGeP-portlet/image?imageName=#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.epNo}/#{cmImage.imageName}" 	style="height: 150px; left: 0px !important;"  />
+									
 									</ui:repeat>
+									</div>
 								</h:panelGroup>
+								
+								<h:panelGroup
+									rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) == 0 }">
 
-							</div>
+									<div align="center"
+										style="height:200px; width: 200px; border: 1px solid #808080; left: 0px !important;float: right;margin-right: 70px;">
+										<p:outputPanel 
+											style="display: block; vertical-align: top; padding: 20px 4px; text-align: center;">
+													#{lbl['lbl.cm.no.image.available']}
+											</p:outputPanel>
+
+									</div>
+								</h:panelGroup>
+							
 
 						</td>
 						<td colspan="4"><h:outputText
@@ -91,7 +90,7 @@
 					<tr style="height: 30px;">
 
 						<td><h:outputText value="#{lbl['lbl.cm.item.code']} : "
-								style="text-align:left;" /> <h:outputText
+								style="text-align:left;font-weight: bold;" /> <h:outputText
 								style="text-align:left;"
 								value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.extensionCode}" /></td>
 						<td colspan="4"></td>
@@ -111,11 +110,11 @@
 					<tr style="height: 30px;">
 
 						<td style="width: 25%;"><h:outputText
-								value="#{lbl['lbl.cm.uom']}" /></td>
+								style="font-weight: bold;" value="#{lbl['lbl.cm.uom']}" /></td>
 
 
 						<td style="width: 25%;"><h:outputText
-								value="#{lbl['lbl.cm.min.order']}" /></td>
+								style="font-weight: bold;" value="#{lbl['lbl.cm.min.order']}" /></td>
 						<td style="width: 25%;"></td>
 						<td style="width: 25%;"></td>
 					</tr>
@@ -131,10 +130,12 @@
 						<td></td>
 					</tr>
 					<tr style="height: 30px;">
-						<td><h:outputText value="#{lbl['lbl.cm.delivery.term.days']}" /></td>
+						<td><h:outputText value="#{lbl['lbl.cm.delivery.term.days']}"
+								style="font-weight: bold;" /></td>
 
 
-						<td><h:outputText value="#{lbl['lbl.cm.model']}" /></td>
+						<td><h:outputText value="#{lbl['lbl.cm.model']}"
+								style="font-weight: bold;" /></td>
 						<td></td>
 						<td></td>
 					</tr>
@@ -152,7 +153,8 @@
 
 
 					<tr style="height: 50px;">
-						<td><h:outputText style="vertical-align: top;"
+						<td><h:outputText
+								style="vertical-align: top;font-weight: bold;"
 								value="#{lbl['lbl.cm.additional.item.description']} : " /></td>
 						<td colspan="4"><h:outputText
 								style="width:660px !important;border : 0px;"
@@ -165,7 +167,8 @@
 								toggleable="true">
 								<table width="100%">
 									<tr>
-										<td><h:outputText value="#{lbl['lbl.cm.supplier.name']} " /></td>
+										<td><h:outputText value="#{lbl['lbl.cm.supplier.name']} "
+												style="font-weight: bold;" /></td>
 										<td><h:outputText
 												value="#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.companyName}"></h:outputText></td>
 										<td></td>
@@ -174,7 +177,8 @@
 
 									<tr>
 										<td><h:outputText
-												value="#{lbl['lbl.sm.companyaddress']} " /></td>
+												value="#{lbl['lbl.sm.companyaddress']} "
+												style="font-weight: bold;" /></td>
 										<td colspan="3"><h:outputText
 												value="#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address1}" /></td>
 
@@ -199,19 +203,23 @@
 									</tr>
 
 									<tr>
-										<td><h:outputText value="#{lbl['lbl.sm.postcode']} " /></td>
+										<td><h:outputText value="#{lbl['lbl.sm.postcode']} "
+												style="font-weight: bold;" /></td>
 										<td><h:outputText
 												value="#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.postcode}" /></td>
-										<td><h:outputText value="#{lbl['lbl.sm.state']} " /></td>
+										<td><h:outputText value="#{lbl['lbl.sm.state']} "
+												style="font-weight: bold;" /></td>
 										<td><h:outputText
 												value="#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState.stateName}" /></td>
 									</tr>
 
 									<tr>
-										<td><h:outputText value="#{lbl['lbl.sm.district']} " /></td>
+										<td><h:outputText value="#{lbl['lbl.sm.district']} "
+												style="font-weight: bold;" /></td>
 										<td><h:outputText
 												value="#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCity.cityName}" /></td>
-										<td><h:outputText value="#{lbl['lbl.sm.towncity']} " /></td>
+										<td><h:outputText value="#{lbl['lbl.sm.towncity']} "
+												style="font-weight: bold;" /></td>
 										<td><h:outputText
 												value="#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmDistrict.districtName}" /></td>
 									</tr>

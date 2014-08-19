@@ -180,7 +180,7 @@
 										<table  style="width:100%;height:100%;padding-left:10px;padding-right:10px;padding-bottom: 10px;padding-top: 10px;vertical-align: top; ">
 											<tr>
 												<td align="center" style="text-align: center;padding-top: 14px;"><h:panelGroup
-														rendered="#{fn:length(supplierItem.cmImages) == 0 }">
+														rendered="#{supplierItem.imagePath == null }">
 														<div align="center" style="width: 100%">
 														<div align="center"  style="height: 100px; width: 100px;left: 0px !important;">
 															<p:outputPanel
@@ -190,23 +190,21 @@
 														</div>
 														</div>
 													</h:panelGroup> <h:panelGroup
-														rendered="#{fn:length(supplierItem.cmImages) > 0 }">
-														<img
-															src="/NGeP-portlet/images/#{supplierItem.cmImages[0].imageName}"
-															style="height: 100px; width: 100px; left: 0px !important;" />
+														rendered="#{supplierItem.imagePath != null }">
+														<img src="/NGeP-portlet/image?imageName=#{supplierItem.epNo}/#{supplierItem.imagePath}" style="height: 100px; width: 100px; left: 0px !important;" />
 													</h:panelGroup></td>
 											</tr>
 											<tr>
 												<td align="center" style="text-align: center;width:100%;height:100%; padding-left: 20px;padding-right: 20px;"><h:outputText
-														 value="#{supplierItem.cmItem.itemName}" /></td>
+														 value="#{supplierItem.itemName}" /></td>
 											</tr>
 											<tr>
 												<td align="center" style="text-align: center;width:100%;height:100%; padding-left: 20px;padding-right: 20px;">By <h:outputText
-														 value="#{supplierItem.smSupplier.companyName}" /></td>
+														 value="#{supplierItem.companyName}" /></td>
 											</tr>
 											<tr>
-												<td style="text-align: center;">RM <h:outputText
-														value="#{supplierItem.cmStandardPricing.price}" /></td>
+												<td style="text-align: center;padding-bottom: 14px;">RM <h:outputText
+														value="#{supplierItem.price}" /></td>
 											</tr>
 										</table>
 									</p:commandLink>

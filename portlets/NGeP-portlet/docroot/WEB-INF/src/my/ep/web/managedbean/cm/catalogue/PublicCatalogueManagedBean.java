@@ -36,7 +36,7 @@ public class PublicCatalogueManagedBean extends BaseManagedBean {
 
 	private String itemName;
 	private List <CmUnspsc> familyList;
-	private List <CmSupplierItem> catalogueList;
+	private List <VCmPubSuppItem> catalogueList;
 	private List <CmUnspsc> popularCommodityList;
 	private boolean frontPage = true;
 	private BigDecimal priceForm;
@@ -75,14 +75,14 @@ public class PublicCatalogueManagedBean extends BaseManagedBean {
 		this.familyList = familyList;
 	}
 
-	public List<CmSupplierItem> getCatalogueList() {
+	public List<VCmPubSuppItem> getCatalogueList() {
 		if(this.catalogueList == null){
-			this.catalogueList = new ArrayList<CmSupplierItem>();
+			this.catalogueList = new ArrayList<VCmPubSuppItem>();
 		}
 		return catalogueList;
 	}
 
-	public void setCatalogueList(List<CmSupplierItem> catalogueList) {
+	public void setCatalogueList(List<VCmPubSuppItem> catalogueList) {
 		this.catalogueList = catalogueList;
 	}
 

@@ -191,7 +191,7 @@ public class PublicCatalogueBackingBean extends
 					.getResultList()) {
 //                System.out.println("................................view.getCmSupplierItem()="+view.getCmSupplierItem());
 				this.getManagedBean().getCatalogueList()
-						.add(view.getCmSupplierItem());
+						.add(view);
 			}
 
 		} catch (Exception ex) {
@@ -284,7 +284,7 @@ public class PublicCatalogueBackingBean extends
 //			System.out.println("******view.getCmSupplierItem().getCmStandardPricing().getPrice()="+view.getCmSupplierItem().getCmStandardPricing().getPrice());
 			
 			this.getManagedBean().getCatalogueList()
-					.add(view.getCmSupplierItem());
+					.add(view);
 		}
 
 	}
@@ -354,7 +354,7 @@ public class PublicCatalogueBackingBean extends
 				.getResultList()) {
 
 			this.getManagedBean().getCatalogueList()
-					.add(view.getCmSupplierItem());
+					.add(view);
 		}
 
 		this.getManagedBean().setFamilyList(null);
@@ -362,13 +362,13 @@ public class PublicCatalogueBackingBean extends
 
 	}
 
-	public String navigateToSupplierItemDet(CmSupplierItem supplierItem) {
+	public String navigateToSupplierItemDet(VCmPubSuppItem vpsi) {
 		log.info("...............navigateToSupplierItemDet................");
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
 				.getInstance().getServiceObject("cm", ICatalogueSO.class);
 		CatalogueResDTO resDTO = null;
 		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
-		reqDTO.setSupplierItemId(supplierItem.getSupplierItemId());
+		reqDTO.setSupplierItemId(vpsi.getCmSupplierItem().getSupplierItemId());
 		resDTO = catalogueSO.getSupplierItem(reqDTO);
 		
 
@@ -386,7 +386,7 @@ public class PublicCatalogueBackingBean extends
 
 //			reqDTO.setSupplierId(supplierItem.getSmSupplier().getSupplierId());
 			log.info("supplierItem.getSmSupplier().getSupplierId() = "
-					+ supplierItem.getSmSupplier().getSupplierId());
+					+ vpsi.getCmSupplierItem().getSmSupplier().getSupplierId());
 
 //			resDTO = catalogueSO.retrieveSupplierZoneBySuppId(reqDTO);
 
@@ -484,7 +484,7 @@ public class PublicCatalogueBackingBean extends
 					.getResultList()) {
 				
 				this.getManagedBean().getCatalogueList()
-						.add(view.getCmSupplierItem());
+						.add(view);
 			}
 
 		}
@@ -533,7 +533,7 @@ public class PublicCatalogueBackingBean extends
 				.getResultList()) {
 
 			this.getManagedBean().getCatalogueList()
-					.add(view.getCmSupplierItem());
+					.add(view);
 		}
 
 		System.out.println("getCmBrand:" + commodityCode.getCmBrand().size());
