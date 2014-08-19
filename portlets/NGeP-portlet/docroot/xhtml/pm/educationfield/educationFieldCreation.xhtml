@@ -36,16 +36,20 @@
    
 	<p:panel header="EDUCATION FIELD RESTRICTION" toggleable="true">
 	<ac:lovPopup />
-	<p:dataTable value="educationBackingBean.managedBean.eduRestrList"
-		id="educationfieldres" var="eduFieldRes">
-	 <ac:paginator for="educationfieldres" />
+	<p:dataTable value="#{educationBackingBean.managedBean.eduRestrList}"
+		id="educationfieldres" var="eduFieldRes" styleClass="educationfieldres"
+		selection="#{educationBackingBean.managedBean.eduRestrSelectList}" 
+		rowIndexVar="index" update=":form:educationfieldres"
+		rowKey="#{eduFieldRes}">
+	 
+	   <p:column style="width:2%;text-align:center;" selectionMode="multiple" /> 
 		  	  	         
        <p:column headerText="#{lbl['lbl.pm.ef.catcode']}" >
-       	  <h:outputText />	
+       	  <h:outputText value="#{eduFieldRes.pmCategoryL3.categoryL3Code}" />	
        </p:column>  
        
        <p:column headerText="#{lbl['lbl.pm.ef.catname']}" > 
-       	  <h:outputText />	
+       	  <h:outputText value="#{eduFieldRes.pmCategoryL3.categoryName}" />	
        </p:column> 
 
        <p:column headerText="#{lbl['lbl.pm.search.status']}" > 
@@ -66,8 +70,8 @@
 				      <ac:lov id="educate" lovId="PM_CATEGORY_L3"
             		     headerText="Category Lov" buttonLabel="Add"
 	       				 buttonIcon="ui-icon-add" selectionMode="multiple"
-	        			 saveObject="educationBackingBean.managedBean.eduRestrList[#{index}].pmCategoryL3"
-	        			 update="@form" /></td>
+	        			 saveObject="educationBackingBean.managedBean.eduRestrList"
+	        			 update="@this" /></td>
 					<td><p:commandButton value="#{lbl['lbl.sc.action.delete']}" icon="ui-icon-delete" /></td>
 					</tr>
 				</table>

@@ -14,8 +14,9 @@
 	<table style="width:100%;">
 	   <tr> 
 		<td style="width:10%;"><p:outputLabel value="#{lbl['lbl.pm.bn.level']}" /></td>
-     	<td><p:selectOneMenu style="width:178px;margin-bottom:5px;" > 
-  	   
+     	<td><p:selectOneMenu style="width:178px;margin-bottom:5px;"
+     			value="#{businessNatureBackingBean.managedBean.pmBusinessNature.businessLevel}" > 
+  	   			<f:selectItems value="#{businessNatureBackingBean.getBusinessNatureCategoryLv()}"></f:selectItems>
     	    </p:selectOneMenu></td>				
 	    </tr>	
 	  <tr>	  	
@@ -26,13 +27,15 @@
 	  <tr>
 		<td><p:outputLabel value="#{lbl['lbl.pm.bn.name']}" />
 			<p:outputLabel value="*" styleClass="mandatory" /></td>
-		<td><p:inputTextarea row="40" cols="80" 
+		<td style="padding: 5px 0px;"><p:inputTextarea row="40" cols="80" 
 				value="#{businessNatureBackingBean.managedBean.pmBusinessNature.levelName}" size="30" /></td>
 	  </tr>
+		<p:spacer height="5"></p:spacer>	  
 	   <tr> 
 		<td><p:outputLabel value="#{lbl['lbl.pm.profiles.search.status']}" /></td>
-     	<td><p:selectOneMenu style="width:178px;margin-bottom:5px;" > 
-  	   
+     	<td><p:selectOneMenu style="width:178px;margin-bottom:5px;" 
+     			value="#{businessNatureBackingBean.managedBean.pmBusinessNature.recordStatusFlg}" > 
+  	   			<f:selectItems value="#{businessNatureBackingBean.getBusinessNatureStatus()}"></f:selectItems>
     	    </p:selectOneMenu></td>				
 	    </tr>
 	</table>
