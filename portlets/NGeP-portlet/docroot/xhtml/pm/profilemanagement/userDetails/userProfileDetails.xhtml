@@ -11,8 +11,9 @@
 			<p:outputPanel id="opUserProfileDet">
 				<!-- remove - start -->
 				dummy
-				<p:selectBooleanCheckbox id="chkAddMode"
+				<p:selectBooleanCheckbox id="chkAddMode" 
 					value="#{profileManagementBackingBean.managedBean.dummy}">
+					<p:ajax event="change" listener="#{profileManagementBackingBean.dummyAddressSample}" update="pUserAddress" />
 				</p:selectBooleanCheckbox>
 				<br/> 
 				<!-- remove - end -->
@@ -33,8 +34,8 @@
 								style="margin-left:25px;" width="140" height="160" />
 							<p:fileUpload id="fuPortrait2" 
 							 	fileUploadListener="#{profileManagementBackingBean.handleFileUpload}" mode="advance" 
-            					sizeLimit="1000000" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" multiple="false"
-            					invalidFileMessage="Only JPG, GIF, PNG files are accepted" 
+            					sizeLimit="1000000" allowTypes="/(\.|\/)(png)$/" multiple="false"
+            					invalidFileMessage="Only PNG file is accepted" 
             					fileLimit="1" dragDropSupport="false" uploadLabel="Confirm" label="Browse"/>
             					
             					<p:commandButton  value="local" action="#{profileManagementBackingBean.handleFileUpload1}" />
@@ -175,7 +176,7 @@
     <br />	  
     
     <!-- Address & Contact -->
-	<p:panel header="#{lbl['lbl.pm.profiles.address.contact']}" toggleable="true">		                		             				    		   		     
+	<p:panel id="pUserAddress" header="#{lbl['lbl.pm.profiles.address.contact']}" toggleable="true">		                		             				    		   		     
 		<table class="ppTwoTable">
 			<tr>		    
   				<th width="20%">
@@ -300,7 +301,10 @@
       			<td></td>
  			</tr>	
 			<tr> 
-  				<th width="20%"><p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.email']}" /></th>  
+  				<th width="20%">
+  					<p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.email']}" />
+  					<p:outputLabel value="*" styleClass="mandatory" />
+				</th>  
 			    <td>
 			    	<p:inputText value="#{profileManagementBackingBean.managedBean.selectedUser.email}" styleClass="ppDisplayTextM"  />
 			    	&#160;&#160;   
