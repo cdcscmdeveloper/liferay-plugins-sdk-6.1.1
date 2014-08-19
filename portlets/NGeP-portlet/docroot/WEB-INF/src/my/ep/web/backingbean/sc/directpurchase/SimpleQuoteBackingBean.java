@@ -544,16 +544,9 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			
 			//by location
 			if(!getManagedBean().getLocationTrees().isEmpty()){
-
-				if(quote.getLocationStateCriterias() == null || quote.getLocationStateCriterias().isEmpty()){
-					quote.setLocationStateCriterias(getLocationStateCriterias(getManagedBean().getLocationTrees(), quote));	
-				}
-				if(quote.getLocationDivisionCriterias() == null || quote.getLocationDivisionCriterias().isEmpty()){
-					quote.setLocationDivisionCriterias(getLocationDivisionCriterias(getManagedBean().getLocationTrees(), quote));
-				}
-				if(quote.getLocationDistrictCriterias() == null || quote.getLocationDistrictCriterias().isEmpty()){
-					quote.setLocationDistrictCriterias(getLocationDistrictCriterias(getManagedBean().getLocationTrees(), quote));
-				}
+				quote.setLocationStateCriterias(getLocationStateCriterias(getManagedBean().getLocationTrees(), quote));	
+				quote.setLocationDivisionCriterias(getLocationDivisionCriterias(getManagedBean().getLocationTrees(), quote));
+				quote.setLocationDistrictCriterias(getLocationDistrictCriterias(getManagedBean().getLocationTrees(), quote));
 			}
 
 			// by business nature
@@ -747,16 +740,9 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			
 			//by location
 			if(!getManagedBean().getLocationTrees().isEmpty()){
-
-				if(quote.getLocationStateCriterias() == null || quote.getLocationStateCriterias().isEmpty()){
-					quote.setLocationStateCriterias(getLocationStateCriterias(getManagedBean().getLocationTrees(), quote));	
-				}
-				if(quote.getLocationDivisionCriterias() == null || quote.getLocationDivisionCriterias().isEmpty()){
-					quote.setLocationDivisionCriterias(getLocationDivisionCriterias(getManagedBean().getLocationTrees(), quote));
-				}
-				if(quote.getLocationDistrictCriterias() == null || quote.getLocationDistrictCriterias().isEmpty()){
-					quote.setLocationDistrictCriterias(getLocationDistrictCriterias(getManagedBean().getLocationTrees(), quote));
-				}
+				quote.setLocationStateCriterias(getLocationStateCriterias(getManagedBean().getLocationTrees(), quote));	
+				quote.setLocationDivisionCriterias(getLocationDivisionCriterias(getManagedBean().getLocationTrees(), quote));
+				quote.setLocationDistrictCriterias(getLocationDistrictCriterias(getManagedBean().getLocationTrees(), quote));
 			}
 
 			// by business nature
@@ -840,7 +826,6 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 					}
 				}
 			}
-			
 	
 			FacesScopes facesScopes = new FacesScopes();
 			String token = facesScopes.getBPMAuthenticationCtxToken();
@@ -1176,6 +1161,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 	 * updateZone for location selection  in simple quote
     */
 	public void updateLocation() {
+		 List<TreeNode>	LocTrees = new ArrayList<TreeNode>();
 		List<TplSpecLoc> locationDTOs = new ArrayList<TplSpecLoc>();
 		if (getManagedBean().getSelectedLocNodes() != null) {
 			for (TreeNode treeNode : getManagedBean().getSelectedLocNodes()) {
@@ -1188,29 +1174,22 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 				}
 			}
 		}
-		TplSpecZoneDtl zone = null;
-		List<PmState> states = SourcingLocationHelper
-				.getStateFromLocationDTO(locationDTOs);
-		List<PmDivision> divisions = SourcingLocationHelper
-				.getDivisionFromLocationDTO(locationDTOs);
-		List<PmDistrict> districts = SourcingLocationHelper
-				.getDistrictFromLocationDTO(locationDTOs);
-		List<PmCity> cities = SourcingLocationHelper
-				.getCityFromLocationDTO(locationDTOs);
+		//List<PmState> states = SourcingLocationHelper.getStateFromLocationDTO(locationDTOs);
+		List<PmDivision> divisions = SourcingLocationHelper.getDivisionFromLocationDTO(locationDTOs);
+		List<PmDistrict> districts = SourcingLocationHelper.getDistrictFromLocationDTO(locationDTOs);
 
 		if (getManagedBean().getLocIndex() == -1) {
-			
-			getManagedBean().getLocationTrees().add(
-					LocationSingleton.getInstance().buildLocationTree(zone, states,
-							districts, divisions, cities,TplSpecZoneLoc.class));
 
-			
+			LocTrees.add(LocationSingleton.getInstance().constuctLocationTree(null,
+					districts, divisions, null,TplSpecZoneLoc.class));
+			getManagedBean().getLocationTrees().addAll(LocTrees.get(0).getChildren());
+
 		} else if (getManagedBean().getLocIndex() >= 0) {
 			getManagedBean().getLocationTrees().remove(getManagedBean().getLocIndex());
-			getManagedBean().getLocationTrees().add(
-					getManagedBean().getLocIndex(),
-					LocationSingleton.getInstance().buildLocationTree(zone, states,
-							districts, divisions, cities ,TplSpecZoneLoc.class));
+			LocTrees.add(LocationSingleton.getInstance().constuctLocationTree(null,
+					districts, divisions, null,TplSpecZoneLoc.class));
+			getManagedBean().getLocationTrees().addAll(LocTrees.get(0).getChildren());
+
 		}
 		this.getManagedBean().setLocIndex(-1);
 	}
@@ -1328,7 +1307,6 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
     	}
     	return results;
     }
-	
 
 	private List<PmState> getPmStates(List<TreeNode> treeNodes) {
 		List<PmState> results = new ArrayList<PmState>();
@@ -1380,33 +1358,51 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 		return results;
 	}
 
-	
-
 	private	List<ScLocationStateCriteria>	getLocationStateCriterias(List<TreeNode> treeNodes ,ScQuote quote){
-			List<ScLocationStateCriteria>	results = new ArrayList<ScLocationStateCriteria>();
-			List<PmState>	states	=	getPmStates(treeNodes);
-			if(states != null && states.size() > 0){
-				for(PmState state: states){
+		List<ScLocationStateCriteria>	results = new ArrayList<ScLocationStateCriteria>();
+		List<PmState>	states	=	getPmStates(treeNodes);
+		if(states != null && states.size() > 0){
+			for(PmState state: states){
+				boolean isState = false;
+				if(quote.getLocationStateCriterias()!=null && quote.getLocationStateCriterias().size()>0){
+					for (ScLocationStateCriteria criteriaState : quote.getLocationStateCriterias()) {
+						if(state.getStateId().equals(criteriaState.getPmState().getStateId())){
+							isState = true;
+							results.add(criteriaState);
+						}
+					}
+				} 
+				if(!isState){
 					ScLocationStateCriteria stateCriteria	=	new ScLocationStateCriteria();
-					//stateCriteria.setCriteriaValue(state.getStateId());
 					stateCriteria.setPmState(state);
 					stateCriteria.setQuote(quote);
 					results.add(stateCriteria);
 				}
 			}
-			return results;
-	  }
+		}
+		return results;
+	}
 		
 	private	List<ScLocationDivisionCriteria> getLocationDivisionCriterias(List<TreeNode> treeNodes ,ScQuote quote){
 			List<ScLocationDivisionCriteria>	results = new ArrayList<ScLocationDivisionCriteria>();
 			List<PmDivision>	divisions	=	getPmDivisions(treeNodes);
 			if(divisions != null && divisions.size() > 0){
 				for(PmDivision division: divisions){
-					ScLocationDivisionCriteria  divisionCriteria = new ScLocationDivisionCriteria();
-					//divisionCriteria.setCriteriaValue(division.getDivisionId());
-					divisionCriteria.setPmDivision(division);
-					divisionCriteria.setQuote(quote);
-					results.add(divisionCriteria);
+					boolean isDivision = false;
+					if(quote.getLocationDivisionCriterias() !=null && quote.getLocationDivisionCriterias().size()>0){
+						for (ScLocationDivisionCriteria criteriaDiv : quote.getLocationDivisionCriterias()) {
+							if(division.getDivisionId().equals(criteriaDiv.getPmDivision().getDivisionId())){
+								isDivision = true;
+								results.add(criteriaDiv);
+							}
+						} 
+					} 
+					if(!isDivision){
+						ScLocationDivisionCriteria  divisionCriteria = new ScLocationDivisionCriteria();
+						divisionCriteria.setPmDivision(division);
+						divisionCriteria.setQuote(quote);
+						results.add(divisionCriteria);
+					}
 				}
 			}
 			return results;
@@ -1418,11 +1414,21 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			List<PmDistrict>	districts	=	getPmDistricts(treeNode.getChildren());
 			if(districts != null && districts.size() > 0){
 				for(PmDistrict district: districts){
-					ScLocationDistrictCriteria districtCriteria	=	new ScLocationDistrictCriteria();
-					//districtCriteria.setCriteriaValue(district.getDistrictId());
-					districtCriteria.setQuote(quote);
-					districtCriteria.setPmDistrict(district);
-					results.add(districtCriteria);
+					boolean isDistict = false;
+					if(quote.getLocationDistrictCriterias()!=null && quote.getLocationDistrictCriterias().size()>0){
+						for (ScLocationDistrictCriteria criteriaDist : quote.getLocationDistrictCriterias()) {
+							if(district.getDistrictId().equals(criteriaDist.getPmDistrict().getDistrictId())){
+								isDistict = true;
+								results.add(criteriaDist);
+							}
+						} 
+					} 
+					if(!isDistict){
+						ScLocationDistrictCriteria districtCriteria	=	new ScLocationDistrictCriteria();
+						districtCriteria.setQuote(quote);
+						districtCriteria.setPmDistrict(district);
+						results.add(districtCriteria);
+					}
 				}
 			}
 		}
@@ -2089,9 +2095,9 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			}	
 			if(states.size() > 0 || divisions.size() > 0 || districts.size() > 0){
 				 List<TreeNode>	LocTrees = new ArrayList<TreeNode>();
-				 LocTrees.add(LocationSingleton.getInstance().buildLocationTree(null, states,
+				 LocTrees.add(LocationSingleton.getInstance().constuctLocationTree(states,
 									districts, divisions, null,TplSpecZoneLoc.class));
-				getManagedBean().setLocationTrees(LocTrees);
+				getManagedBean().setLocationTrees(LocTrees.get(0).getChildren());
 			}
 
 			if(scQuote.getProcurementType() != null){
