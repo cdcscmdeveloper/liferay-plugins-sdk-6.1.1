@@ -23,13 +23,7 @@ public class ReportMangedBean extends BaseManagedBean{
 	private String moduleName;
 	private String reportName;
 	private String reportNameValue;
-	private String newTabVal=ReportConst.FORM_SELF;
-	public String getNewTabVal() {
-		return newTabVal;
-	}
-	public void setNewTabVal(String newTabVal) {
-		this.newTabVal = newTabVal;
-	}
+	
 	public String getReportNameValue() {
 		return reportNameValue;
 	}
