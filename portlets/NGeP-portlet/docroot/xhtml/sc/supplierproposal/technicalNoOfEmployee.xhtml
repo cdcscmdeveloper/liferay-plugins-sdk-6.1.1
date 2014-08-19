@@ -27,7 +27,7 @@
 				<tr>
 					<td><h:outputLabel value="#{lbl['lbl.sc.sp.title']}" /></td>
 					<td colspan="3"><p:inputText
-							value="#{supplierProposalDetailBackingBean.managedBean.scQtCheckList.title}"
+							value="#{supplierProposalDetailBackingBean.managedBean.qtProposalChecklist.scQtCheckList.title}"
 							disabled="true" size="150" /></td>
 				</tr>
 			</table>
@@ -36,19 +36,26 @@
 		<p:panel header="#{lbl['lbl.sc.sp.noofemployees']}" toggleable="true">
 			<table>
 				<tr>
-					<td><p:selectOneRadio
-							value="#{supplierProposalDetailBackingBean.managedBean.scQtCheckList.scQtCheckListValue.allEmployee}">
+					<td><p:selectOneRadio id="allEmployees"
+							value="#{supplierProposalDetailBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee}">
 							<f:selectItem itemLabel="#{lbl['lbl.sc.sp.employeesinvolve']}"
 								itemValue="fasle" />
 							<f:selectItem itemLabel="#{lbl['lbl.sc.sp.allemployees']}"
 								itemValue="true" />
+							<p:ajax event="change" process="@this,allEmployees"
+								partialSubmit="true" update=":form:totalNoOfEmployeesInvolved"></p:ajax>
 						</p:selectOneRadio></td>
 				</tr>
 			</table>
 
-			<h:panelGrid columns="2">
+			<h:panelGrid id="totalNoOfEmployeesInvolved" columns="2">
 				<h:outputLabel value="#{lbl['lbl.sc.sp.ttlemployees']}" />
+				<p:inputText style="text-align:right" size="30" disabled="true"
+					rendered="#{supplierProposalDetailBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee eq 'true'}"
+					value="#{supplierProposalDetailBackingBean.managedBean.qtProposalChecklist.scQtPRPEmployee.totalEmployees}">
+				</p:inputText>
 				<p:inputText style="text-align:right" size="30"
+					rendered="#{supplierProposalDetailBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee eq 'false'}"
 					value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPEmployee.totalEmployees}">
 				</p:inputText>
 			</h:panelGrid>
