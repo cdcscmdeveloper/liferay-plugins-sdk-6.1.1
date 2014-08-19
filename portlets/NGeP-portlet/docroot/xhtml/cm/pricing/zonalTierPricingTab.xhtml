@@ -41,7 +41,9 @@
 				<f:facet name="header">
 					#{lbl['lbl.cm.price']}
 				</f:facet>
-				<h:inputText value="#{tier.price}" size="10" disabled="true"></h:inputText>
+				<h:inputText value="#{tier.price}" size="10" disabled="true" style="text-align:right">
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:inputText>
 			</p:column>
 
 			<p:column>

@@ -23,7 +23,7 @@
 							Pricing Type
 						</p:column>
 				<p:column>
-							Price
+							Price (RM) 
 						</p:column>
 				<p:column>
 							Start Date
@@ -40,8 +40,10 @@
 				<p:outputLabel value="Standard" />
 			</p:column>
 			<p:column>
-				<p:inputText
-					value="#{catalogueBackingBean.managedBean.supplierItemObj.cmStandardPricing.price}" disabled="true"></p:inputText>
+				<p:inputText style="text-align:right"
+					value="#{catalogueBackingBean.managedBean.supplierItemObj.cmStandardPricing.price}" disabled="true">
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</p:inputText>
 			</p:column>
 			<p:column>
 				<p:calendar
