@@ -520,9 +520,9 @@ public class SpecificationBackingBean extends
 	}
 
 	public String newProceedAction() {
-		this.getManagedBean().setTechnicalSpecList(
+		this.getManagedBean().setScQtCheckSt2techProposal(
 				new ArrayList<ScQtCheckList>());
-		this.getManagedBean().setFinancialSpecList(
+		this.getManagedBean().setScQtCheckSt2financeProposalList(
 				new ArrayList<ScQtCheckList>());
 
 		if (!this.getManagedBean().getScQt().isPanel()) {
@@ -578,7 +578,7 @@ public class SpecificationBackingBean extends
 						.setScQtSupplierCriteria(supplierCriteria);
 			}
 
-			this.getManagedBean().setTechnicalSpecList(null);
+			this.getManagedBean().setScQtCheckSt2techProposal(null);
 			return "specificationCreation.xhtml?faces-redirect=true";
 			// return "searchCircularPanelContract.xhtml?faces-redirect=true";
 		}
@@ -771,16 +771,29 @@ public class SpecificationBackingBean extends
 			qtTemplateSO.saveOrUpdateTemplateDoc(docReqDTO);
 
 			// saveTempleateSpecDtls(finanicalScQtDoc, "2");
-			this.getManagedBean().setTechnicalSpecList(null);
-			retriveTechnicalSpecification();
 
 		} finally {
 
 		}
 		if (null == processName || "".equals(processName)) {
+			this.getManagedBean().setScQtCheckSt2techProposal(
+					new ArrayList<ScQtCheckList>());
+			retriveTechnicalSpecification();
 			return "/xhtml/sc/specification/specificationCreation.xhtml?faces-redirect=true";
 		} else {
-			retriveTechnicalCheckList();
+			this.getManagedBean().setScQtCheckSt2techProposal(
+					new ArrayList<ScQtCheckList>());
+			if (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(this
+					.getManagedBean().getScQt().getEvaluationType())) {
+
+				retriveTechnicalSpecification();
+
+			} else if (QTConstants.EVALUATION_TWO_TIER.equalsIgnoreCase(this
+					.getManagedBean().getScQt().getEvaluationType())) {
+
+				retriveTechnicalSpecification();
+
+			}
 			return "/xhtml/sc/specification/specificationCommitteeView.xhtml?faces-redirect=true";
 
 		}
@@ -880,14 +893,16 @@ public class SpecificationBackingBean extends
 			}
 			int index = this.getManagedBean().getSelectedCheckList();
 			if (SourcingConstants.TECHINICAL_STAGE.equalsIgnoreCase(specType)) {
-				this.getManagedBean().getTechnicalSpecList().remove(index);
-				this.getManagedBean().getTechnicalSpecList()
+				this.getManagedBean().getScQtCheckSt2techProposal()
+						.remove(index);
+				this.getManagedBean().getScQtCheckSt2techProposal()
 						.add(index, savedCheckList);
 
 			} else if (SourcingConstants.FINANCIAL_STAGE
 					.equalsIgnoreCase(specType)) {
-				this.getManagedBean().getFinancialSpecList().remove(index);
-				this.getManagedBean().getFinancialSpecList()
+				this.getManagedBean().getScQtCheckSt2financeProposalList()
+						.remove(index);
+				this.getManagedBean().getScQtCheckSt2financeProposalList()
 						.add(index, savedCheckList);
 			}
 
@@ -901,7 +916,7 @@ public class SpecificationBackingBean extends
 			}
 		} finally {
 			qtTemplateSO = null;
-			
+
 		}
 		if (null == processName || "".equals(processName)) {
 
@@ -924,10 +939,27 @@ public class SpecificationBackingBean extends
 							"Record saved successfully.", ""
 
 					));
-			retriveTechnicalSpecification();
+
 			if (null == processName || "".equals(processName)) {
+				this.getManagedBean().setScQtCheckSt2techProposal(
+						new ArrayList<ScQtCheckList>());
+				retriveTechnicalSpecification();
 				return "/xhtml/sc/specification/specificationCreation.xhtml?faces-redirect=true";
 			} else {
+				this.getManagedBean().setScQtCheckSt2techProposal(
+						new ArrayList<ScQtCheckList>());
+				if (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(this
+						.getManagedBean().getScQt().getEvaluationType())) {
+
+					retriveTechnicalSpecification();
+
+				} else if (QTConstants.EVALUATION_TWO_TIER
+						.equalsIgnoreCase(this.getManagedBean().getScQt()
+								.getEvaluationType())) {
+
+					retriveTechnicalSpecification();
+
+				}
 				return "/xhtml/sc/specification/specificationCommitteeView.xhtml?faces-redirect=true";
 
 			}
@@ -1706,8 +1738,9 @@ public class SpecificationBackingBean extends
 		// this.getManagedBean().setActiveIndex(2);
 
 		try {
-			if (null == this.getManagedBean().getTechnicalSpecList()
-					|| this.getManagedBean().getTechnicalSpecList().isEmpty()) {
+			if (null == this.getManagedBean().getScQtCheckSt2techProposal()
+					|| this.getManagedBean().getScQtCheckSt2techProposal()
+							.isEmpty()) {
 				if (QTConstants.ITEM_SPECIFIC_TYPE.equalsIgnoreCase(this
 						.getManagedBean().getPanelItemCategory())
 						&& this.getManagedBean().isSelectPanelItem()) {
@@ -1727,7 +1760,7 @@ public class SpecificationBackingBean extends
 						&& !resDto.getSpecResultBean().getResultList()
 								.isEmpty()) {
 
-					this.getManagedBean().setTechnicalSpecList(
+					this.getManagedBean().setScQtCheckSt2techProposal(
 							resDto.getSpecResultBean().getResultList());
 
 				}
@@ -1753,7 +1786,7 @@ public class SpecificationBackingBean extends
 			resDto = specSO.retrieveSpecDetails(reqDTO);
 
 			List<ScQtCheckList> financialSpecList = this.getManagedBean()
-					.getFinancialSpecList();
+					.getScQtCheckSt2financeProposalList();
 			if (financialSpecList == null) {
 				financialSpecList = new ArrayList<ScQtCheckList>();
 			}
@@ -1761,7 +1794,7 @@ public class SpecificationBackingBean extends
 			if (null != resDto.getSpecResultBean()
 					&& !resDto.getSpecResultBean().getResultList().isEmpty()) {
 
-				this.getManagedBean().setFinancialSpecList(
+				this.getManagedBean().setScQtCheckSt2financeProposalList(
 						resDto.getSpecResultBean().getResultList());
 			}
 
@@ -3709,7 +3742,7 @@ public class SpecificationBackingBean extends
 		}
 
 		List<ScQtCheckList> techSpecList = this.getManagedBean()
-				.getTechnicalSpecList();
+				.getScQtCheckSt2techProposal();
 		List<ScQtCheckList> localSpecList = new ArrayList<ScQtCheckList>();
 		if (null != techSpecList && !techSpecList.isEmpty()) {
 			localSpecList.addAll(techSpecList);
@@ -3717,7 +3750,7 @@ public class SpecificationBackingBean extends
 		}
 
 		List<ScQtCheckList> finSpecList = this.getManagedBean()
-				.getFinancialSpecList();
+				.getScQtCheckSt2financeProposalList();
 		if (null != finSpecList && !finSpecList.isEmpty()) {
 			localSpecList.addAll(finSpecList);
 		}
@@ -4208,7 +4241,7 @@ public class SpecificationBackingBean extends
 	}
 
 	public String technicalChecklistEditAction(int index,
-			ScQtCheckList checkList) {
+			ScQtCheckList checkList, String specType) {
 		IQTSpecSO specSo = null;
 		SpecificationResDTO resDTO = new SpecificationResDTO();
 
@@ -4220,11 +4253,13 @@ public class SpecificationBackingBean extends
 
 			if (QTConstants.TEMPLETE_SPEC_CODE.equalsIgnoreCase(checkList
 					.getDefinationType().getParameterCode())) {
+				checkList.setScQtCheckListScores(null);
+				checkList.setQtScoreWeightage(null);
 				this.getManagedBean().setSpecStatusId(
 						checkList.getPmStatus().getStatusId());
 				this.getManagedBean().setSpecSelectStats(true);
-				checkList.setScQtCheckListScores(null);
-				checkList.setQtScoreWeightage(null);
+				this.getManagedBean().setSpecType(specType);
+				this.getManagedBean().setSelectedCheckList(index);
 				this.getManagedBean().setScqtDoc(checkList.getScQtDoc());
 				ISearchResultBean<ScQtCheckList> finchecklist = retriveChecklistByIdAndTitle(checkList
 						.getTitle());
@@ -4617,7 +4652,7 @@ public class SpecificationBackingBean extends
 	}
 
 	public String financialChecklistEditAction(int index,
-			ScQtCheckList checkList) {
+			ScQtCheckList checkList, String specType) {
 		IQTSpecSO specSo = null;
 		SpecificationResDTO resDTO = new SpecificationResDTO();
 
@@ -4631,6 +4666,10 @@ public class SpecificationBackingBean extends
 					.getDefinationType().getParameterCode())) {
 				checkList.setScQtCheckListScores(null);
 				checkList.setQtScoreWeightage(null);
+				this.getManagedBean().setSpecStatusId(
+						checkList.getPmStatus().getStatusId());
+				this.getManagedBean().setSpecType(specType);
+				this.getManagedBean().setSelectedCheckList(index);
 				this.getManagedBean().setScqtDoc(checkList.getScQtDoc());
 				TemplateSpecBackingBean specBB = new TemplateSpecBackingBean();
 				TemplateSpecBean templateSpecBean = getManagedBean()
@@ -5141,8 +5180,13 @@ public class SpecificationBackingBean extends
 				.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);
 
 		specBB.retrieveTemplateSpecMaster(templateSpecBean);
+		if (SourcingConstants.TECHINICAL_STAGE.equalsIgnoreCase(specType)) {
 
-		return "/xhtml/sc/main/BusinessOwnerTechnicalSpecEdit.xhtml?faces-redirect=true";
+			return "/xhtml/sc/main/BusinessOwnerTechnicalSpecEdit.xhtml?faces-redirect=true";
+		} else if (SourcingConstants.FINANCIAL_STAGE.equalsIgnoreCase(specType)) {
+			return "/xhtml/sc/main/financialTemplate.xhtml?faces-redirect=true";
+		}
+		return null;
 
 	}
 
@@ -5196,12 +5240,18 @@ public class SpecificationBackingBean extends
 		return "/xhtml/sc/main/financialTemplate.xhtml?faces-redirect=true";
 	}
 
-	public String committeeSpecEditAction(ScQtCheckList checklist) {
+	public String committeeSpecEditAction(int index,ScQtCheckList checklist,
+			String specType) {
 
 		IQTTemplateSO qtTemplateSO;
 		try {
 
 			QTTemplateDocResDTO resDto = null;
+			this.getManagedBean().setSpecStatusId(
+					checklist.getPmStatus().getStatusId());
+			this.getManagedBean().setSpecSelectStats(true);
+			this.getManagedBean().setSpecType(specType);
+			this.getManagedBean().setSelectedCheckList(index);
 
 			this.getManagedBean().setScqtDoc(checklist.getScQtDoc());
 			ISearchResultBean<ScQtCheckList> finchecklist = retriveChecklistByIdAndTitle(checklist
@@ -9025,6 +9075,7 @@ public class SpecificationBackingBean extends
 	public String createCommitteeTemplateSpec(TplSpecMaster tplSpecMaster) {
 		ScQtDoc scqtDocDest = null;
 		try {
+			this.getManagedBean().setSpecSelectStats(false);
 			scqtDocDest = constructQtDocByType(tplSpecMaster, "1");
 			this.getManagedBean().setScqtDoc(scqtDocDest);
 
@@ -9050,6 +9101,7 @@ public class SpecificationBackingBean extends
 
 	public String createTemplateSpec(TplSpecMaster tplSpecMaster) {
 		ScQtDoc scqtDocDest = null;
+		this.getManagedBean().setSpecSelectStats(false);
 		try {
 
 			TplSpecMaster specMaster = null;
@@ -9157,12 +9209,7 @@ public class SpecificationBackingBean extends
 			localChecklist.addAll(techCheckList);
 			scQt.setScQtChecklists(localChecklist);
 		}
-		List<ScQtCheckList> techSpecList = this.getManagedBean()
-				.getTechnicalSpecList();
-		if (null != techSpecList && !techSpecList.isEmpty()) {
-			localChecklist.addAll(techSpecList);
-			scQt.setScQtChecklists(localChecklist);
-		}
+
 		List<ScQtCheckList> financialCheckList = this.getManagedBean()
 				.getScQtCheckSt2financeProposalList();
 		if (financialCheckList != null && !financialCheckList.isEmpty()) {
