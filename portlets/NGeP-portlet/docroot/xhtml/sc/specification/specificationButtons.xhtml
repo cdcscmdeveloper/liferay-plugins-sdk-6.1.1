@@ -21,12 +21,14 @@
 					</c:if>
 					<ui:repeat var="bpmAction"
 						value="#{specificationBackingBean.managedBean.outComes}">
+						<c:if test="${bpmAction != '~'}">
 						<ui:param name="buttonLabel"
 							value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 						<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
 							styleClass="ui-button" style="float:right;"
 							icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
 							action="#{specificationBackingBean.updateBpmTask(bpmAction)}" />
+							</c:if>
 					</ui:repeat>
 					<c:if
 						test="#{specificationBackingBean.managedBean.taskName ne 'Specification Approval'}">
