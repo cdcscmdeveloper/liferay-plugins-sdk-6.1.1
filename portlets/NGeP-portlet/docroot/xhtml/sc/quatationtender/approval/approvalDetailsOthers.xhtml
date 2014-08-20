@@ -17,6 +17,12 @@
 					value="#{otherrequestdetails.approvalType.parameterCode}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.qt.status']}">
+			<p:selectOneMenu id="decisiontypeid"
+					value="#{otherrequestdetails.decessionType.parameterId}"
+					style="width: 178px;margin-bottom: 5px;">
+					<f:selectItems
+						value="#{approvalBackingBean.getDropdownValues(ParameterTypeConst.approvalDecisionType)}" />
+				</p:selectOneMenu>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.qt.document']}">
 				<p:commandButton oncomplete="attachDlg1.show();return false;"
@@ -26,7 +32,7 @@
 				</p:commandButton>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.qt.remark']}">
-				<p:inputTextarea cols="30" rows="4" />
+				<p:inputTextarea value="#{otherrequestdetails.appRequestRemark.remark}" cols="30" rows="4" />
 			</p:column>
 		</p:dataTable>
 	</p:panel>
