@@ -60,10 +60,10 @@
 	<p:panel header="DELIVERY ADDRESS" toggleable="true">
 		<table style="width: 100%">
 			<tr>
-				<td style="width: 130px;" rowspan="3" valign="top"><p:outputLabel
+				<td style="width: 130px;" rowspan="4" valign="top"><p:outputLabel
 						value="#{lbl['lbl.fl.supp.address']}" /></td>
-				<td style="width: 350px;" rowspan="3"><p:inputTextarea
-						id="delAddrText1" cols="55" rows="4" maxlength="500"
+				<td style="width: 350px;" rowspan="4"><p:inputTextarea
+						id="delAddrText1" cols="55" rows="7" maxlength="500"
 						style=" margin-bottom:5px;" disabled="true"
 						value="#{receivedNoteBackingBean.getFullAddress(receivedNoteBackingBean.managedBean.fulfilmentNote.flDeliveryOrder.flDeliveryAddress.pmAddress)}" />
 				</td>
@@ -95,6 +95,11 @@
 					</p:calendar>
 				</td>
 				<td><p:message for="receivedDate" display="icon" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.frn.supp.do.no']}" /></td>
+				<td><p:inputText size="25" disabled="true" value="#{receivedNoteBackingBean.managedBean.fulfilmentNote.flDeliveryOrder.supplierDoRef}">
+				</p:inputText></td>
 			</tr>
 		</table>
 	</p:panel>
