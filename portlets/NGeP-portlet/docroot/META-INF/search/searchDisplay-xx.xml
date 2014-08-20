@@ -459,5 +459,56 @@
 			</list>
 		</property>
 	</bean>	
-
+	
+	<bean id="PM_ADDRESS_TYPE" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="addressTypeId" />
+		<property name="daoClass" value="my.ep.persistence.dao.pm.common.address.AddressTypeDAO" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmAddress.address1" />
+					<property name="bundleFile" value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.profiles.authorisation.add1" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmAddress.address2" />
+					<property name="bundleFile" value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.profiles.authorisation.add2" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmAddress.address3" />
+					<property name="bundleFile" value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.profiles.authorisation.add3" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmAddress.address4" />
+					<property name="bundleFile" value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.profiles.authorisation.add4" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmAddress.pmState.stateName" />
+					<property name="bundleFile" value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.state" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmAddress.pmDistrict.districtName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.district" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmAddress.pmDivision.divisionName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.division" />
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmAddress.pmCity.cityName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.city" />
+				</bean>
+			</list>
+		</property>
+	</bean>	
 </beans>
