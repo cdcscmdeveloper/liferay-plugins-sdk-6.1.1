@@ -81,7 +81,7 @@ public class CodificationBackingBean extends
 	public static final String NAV_TO_DELETE_EXTENSION = "deleteExtension";
 	public static final String NAV_TO_CONTRACTED_ITEM = "contractedItem";
 	public static final String NAV_TO_ASSIGN_PRODUCT_CODE = "assignProductCode";
-	public static final String NO_75 = "75";
+	public static final String NO_69 = "69";
 
 	private static Logger log = Logger.getLogger(CodificationBackingBean.class);
 
@@ -2335,7 +2335,7 @@ public class CodificationBackingBean extends
 			segmentCode = unspscCode.substring(0, 2);
 		}
 
-		if (segmentCode.compareTo(NO_75) > 0) {
+		if (segmentCode.compareTo(NO_69) > 0) {
 			flag = false;
 		}
 

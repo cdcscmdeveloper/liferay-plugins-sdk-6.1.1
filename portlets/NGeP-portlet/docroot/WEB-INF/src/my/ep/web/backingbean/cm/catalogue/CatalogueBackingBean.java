@@ -222,9 +222,43 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 			} else {
 				  System.out.println(">>>>>>>>>>>>>>>>else>>>>>>>>>coudnt find cmItem");
-				CmType typeObj = commodity.getCmType().get(0);
-				CmBrand brandObj = commodity.getCmBrand().get(0);
-				CmMeasurement meaObj = commodity.getCmMeasurement().get(0);
+				  
+				  CmType typeObj = null;
+				  if(commodity.getCmType()!=null && commodity.getCmType().size()>0)
+					  typeObj = commodity.getCmType().get(0);
+				  else{
+					  typeObj = new CmType();
+					  typeObj.setTypeCode("00");
+					  typeObj.setTypeName("NA");
+					  typeObj.setUnspscId(commodity);
+					  codeReqDTO.setCmType(typeObj);
+					  typeObj = codificationSO.addNewType(codeReqDTO).getCmType();
+				  }
+				
+				CmBrand brandObj = null;
+				if(commodity.getCmBrand()!=null && commodity.getCmBrand().size()>0)
+					brandObj = commodity.getCmBrand().get(0);
+				else{
+					brandObj = new CmBrand();
+					brandObj.setBrandCode("000");
+					brandObj.setBrandName("NA");
+					brandObj.setUnspscId(commodity);
+					codeReqDTO.setCmBrand(brandObj);
+					brandObj = codificationSO.addNewBrand(codeReqDTO).getCmBrand();
+				}
+				
+				CmMeasurement meaObj = null;
+				if(commodity.getCmMeasurement()!=null && commodity.getCmMeasurement().size()>0)
+					meaObj = commodity.getCmMeasurement().get(0);
+				else{
+					meaObj = new CmMeasurement();
+					meaObj.setMeasurementCode("000");
+					meaObj.setMeasurementName("NA");
+					meaObj.setUnspscId(commodity);
+					codeReqDTO.setCmMeasurement(meaObj);
+					meaObj = codificationSO.addNewMeasurement(codeReqDTO).getCmMeasurement();
+				}
+				
 				CmColor colorObj = bb.searchColorObjByColorId(1L);//first record of table reserved for NA
 
 				codeReqDTO.setUnspscCode(commodity.getUnspscCode());
