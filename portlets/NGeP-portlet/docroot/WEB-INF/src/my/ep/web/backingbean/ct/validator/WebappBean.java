@@ -120,7 +120,7 @@ public class WebappBean {
    
     public void validateDPeriod(FacesContext context, UIComponent component, Object value) throws ValidatorException {
     	Integer inputValue = (Integer) value;
-    	 String errMsg="Delivery perion must greater than 0";
+    	 String errMsg="Delivery Term must greater than 0.";
         if(inputValue >= 1)
           return;
         else
