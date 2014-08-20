@@ -2307,6 +2307,13 @@ important;
 	border-radius: 0px;
 	height: 16px !important;
 }
+
+.ui-icon-address {
+	background-image: url('../images/design/house.png') !important;
+	background-position:center;
+	border-radius:0px;
+	height:16px !important;
+}
 /*--------------------------       End Custom Icons    ------------------------------ */
 
 /*--------------------------       Custom CSS          ------------------------------ */
