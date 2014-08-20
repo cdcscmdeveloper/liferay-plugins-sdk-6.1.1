@@ -117,6 +117,7 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private DualListModel<String> approverModel;
 	private HashMap<String, PmUserGroupUser> approverMap;
 	private HashMap<Long, Long> scRequestSupplierItemIdMap;
+	private HashMap<String, List<FlFulfilmentItemAddr>> zonalTierMap;
 	
 	//getcontract
 	private CtContract ctContract = new CtContract();
@@ -127,6 +128,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private List<ScRequestNoteDtl> requestNoteWithDtlsList;
 	private List<ScRequestNoteDtl> selectedPurchasedItemList;
 	private FlFulfilmentItem  selectedItemRow;
+	private List<FlFulfilmentItemAddr> zonalTierItemList;
+	private FlFulfilmentItemAddr zonalTierItem;
 	
 	public List<ScRequestItem> requestNoteItems;
 	//ScRequestNoteDtl
@@ -1759,6 +1762,54 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	public void setScRequestSupplierItemIdMap(
 			HashMap<Long, Long> scRequestSupplierItemIdMap) {
 		this.scRequestSupplierItemIdMap = scRequestSupplierItemIdMap;
+	}
+
+	/**
+	 * @return the zonalTierMap
+	 */
+	public HashMap<String, List<FlFulfilmentItemAddr>> getZonalTierMap() {
+		if(zonalTierMap == null){
+			zonalTierMap = new HashMap<String,List<FlFulfilmentItemAddr>>();
+		}
+		return zonalTierMap;
+	}
+
+	/**
+	 * @param zonalTierMap the zonalTierMap to set
+	 */
+	public void setZonalTierMap(HashMap<String, List<FlFulfilmentItemAddr>> zonalTierMap) {
+		this.zonalTierMap = zonalTierMap;
+	}
+
+	/**
+	 * @return the zonalTierItemList
+	 */
+	public List<FlFulfilmentItemAddr> getZonalTierItemList() {
+		if(zonalTierItemList == null){
+			zonalTierItemList = new ArrayList<FlFulfilmentItemAddr>();
+		}
+		return zonalTierItemList;
+	}
+
+	/**
+	 * @param zonalTierItemList the zonalTierItemList to set
+	 */
+	public void setZonalTierItemList(List<FlFulfilmentItemAddr> zonalTierItemList) {
+		this.zonalTierItemList = zonalTierItemList;
+	}
+
+	/**
+	 * @return the zonalTierItem
+	 */
+	public FlFulfilmentItemAddr getZonalTierItem() {
+		return zonalTierItem;
+	}
+
+	/**
+	 * @param zonalTierItem the zonalTierItem to set
+	 */
+	public void setZonalTierItem(FlFulfilmentItemAddr zonalTierItem) {
+		this.zonalTierItem = zonalTierItem;
 	}
 
 }
