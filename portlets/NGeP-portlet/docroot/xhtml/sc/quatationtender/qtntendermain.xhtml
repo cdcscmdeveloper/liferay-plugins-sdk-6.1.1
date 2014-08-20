@@ -181,7 +181,7 @@
 							label="#{lbl['lbl.sc.select.ptj']}"
 							value="#{qTDetailBB.managedBean.qt.pmOrgProfile.orgProfileId}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-							<f:selectItems value="#{qTDetailBB.managedBean.userDivisionList}"
+							<f:selectItems value="#{qTDetailBB.handlePTJName()}"
 								var="pmOrgProfile"
 								itemLabel="#{pmOrgProfile.orgCode} - #{pmOrgProfile.orgName}"
 								itemValue="#{pmOrgProfile.orgProfileId}" />
