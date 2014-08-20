@@ -1126,14 +1126,16 @@ public class SpecificationBackingBean extends
 				List<ScQtScoreSetting> scoreSetting = new ArrayList<ScQtScoreSetting>();
 				ScQtScoreSetting packageScoreSetting = this.getManagedBean()
 						.getRecommendationPackageScore();
-				if (packageScoreSetting != null) {
+				if (null != packageScoreSetting
+						&& packageScoreSetting.getSettingType() == 4) {
 					scoreSetting.add(packageScoreSetting);
 
 				}
 
 				ScQtScoreSetting itemScoreSetting = this.getManagedBean()
 						.getRecommendationScore();
-				if (itemScoreSetting != null) {
+				if (null != itemScoreSetting
+						&& itemScoreSetting.getSettingType() == 5) {
 					scoreSetting.add(itemScoreSetting);
 
 				}
@@ -1150,7 +1152,8 @@ public class SpecificationBackingBean extends
 				ScQtScoreSetting financialScoreSetting = this.getManagedBean()
 						.getFinancialScoreSetting();
 
-				if (null != financialScoreSetting) {
+				if (null != financialScoreSetting
+						&& financialScoreSetting.getSettingType() == 2) {
 					specReqDTO.setScoreSetting(financialScoreSetting);
 				}
 
@@ -1194,14 +1197,16 @@ public class SpecificationBackingBean extends
 				List<ScQtScoreSetting> scoreSetting = new ArrayList<ScQtScoreSetting>();
 				ScQtScoreSetting packageScoreSetting = this.getManagedBean()
 						.getRecommendationPackageScore();
-				if (packageScoreSetting != null) {
+				if (null != packageScoreSetting
+						&& packageScoreSetting.getSettingType() == 4) {
 					scoreSetting.add(packageScoreSetting);
 
 				}
 
 				ScQtScoreSetting itemScoreSetting = this.getManagedBean()
 						.getRecommendationScore();
-				if (itemScoreSetting != null) {
+				if (null != itemScoreSetting
+						&& itemScoreSetting.getSettingType() == 5) {
 					scoreSetting.add(itemScoreSetting);
 
 				}
@@ -2136,6 +2141,20 @@ public class SpecificationBackingBean extends
 		}
 	}
 
+	public ScQtScoreSetting constructScoreSetting(int settingType) {
+		ScQtScoreSetting scQtScoreSetting = new ScQtScoreSetting();
+		scQtScoreSetting.setPassingScore(new BigDecimal(0));
+		scQtScoreSetting.setOverallFin(new BigDecimal(0));
+		scQtScoreSetting.setOverallOtherFin(new BigDecimal(0));
+		scQtScoreSetting.setOverallTechnical(new BigDecimal(0));
+		scQtScoreSetting.setOverallOtherTechnical(new BigDecimal(0));
+		scQtScoreSetting.setSettingType(settingType);
+		scQtScoreSetting.setScQt(this.getManagedBean().getScQt());
+		setUserDetails(scQtScoreSetting);
+		return scQtScoreSetting;
+
+	}
+
 	public String retriveTechnicalScoring() {
 		IQTSpecSO specSo = null;
 
@@ -2198,23 +2217,14 @@ public class SpecificationBackingBean extends
 					&& resDTO.getScoreSettingResultBean().getResultList()
 							.isEmpty()) {
 				if (null == this.getManagedBean().getTechnicalScoreSetting()) {
-					ScQtScoreSetting technicalScoresetting = new ScQtScoreSetting();
-					technicalScoresetting.setSettingType(1);
-					technicalScoresetting.setScQt(this.getManagedBean()
-							.getScQt());
-
-					setUserDetails(technicalScoresetting);
+					ScQtScoreSetting technicalScoresetting = constructScoreSetting(1);
 					this.getManagedBean().setTechnicalScoreSetting(
 							technicalScoresetting);
 
 				}
 
 				if (null == this.getManagedBean().getDemoScoreSetting()) {
-					ScQtScoreSetting demoScoresetting = new ScQtScoreSetting();
-					demoScoresetting.setSettingType(3);
-					demoScoresetting.setScQt(this.getManagedBean().getScQt());
-
-					setUserDetails(demoScoresetting);
+					ScQtScoreSetting demoScoresetting = constructScoreSetting(3);
 					this.getManagedBean().setDemoScoreSetting(demoScoresetting);
 
 				}
@@ -2401,10 +2411,7 @@ public class SpecificationBackingBean extends
 			if (resDTO.getScoreSettingResultBean().getResultList() != null
 					&& resDTO.getScoreSettingResultBean().getResultList()
 							.isEmpty()) {
-				ScQtScoreSetting scoreSetting = new ScQtScoreSetting();
-				scoreSetting.setSettingType(2);
-				scoreSetting.setScQt(this.getManagedBean().getScQt());
-				setUserDetails(scoreSetting);
+				ScQtScoreSetting scoreSetting = constructScoreSetting(2);
 				this.getManagedBean().setFinancialScoreSetting(scoreSetting);
 
 			} else {
@@ -2605,23 +2612,13 @@ public class SpecificationBackingBean extends
 
 					if (null == this.getManagedBean()
 							.getRecommendationPackageScore()) {
-						ScQtScoreSetting pkgScoreSetting = new ScQtScoreSetting();
-						pkgScoreSetting.setSettingType(4);
-						pkgScoreSetting
-								.setScQt(this.getManagedBean().getScQt());
-						pkgScoreSetting.setWeightageReq(false);
-						setUserDetails(pkgScoreSetting);
+						ScQtScoreSetting pkgScoreSetting = constructScoreSetting(4);
+
 						this.getManagedBean().setRecommendationPackageScore(
 								pkgScoreSetting);
 					}
 					if (null == this.getManagedBean().getRecommendationScore()) {
-
-						ScQtScoreSetting itemScoreSetting = new ScQtScoreSetting();
-						itemScoreSetting.setSettingType(5);
-						itemScoreSetting.setScQt(this.getManagedBean()
-								.getScQt());
-						itemScoreSetting.setWeightageReq(false);
-						setUserDetails(itemScoreSetting);
+						ScQtScoreSetting itemScoreSetting = constructScoreSetting(5);
 						this.getManagedBean().setRecommendationScore(
 								itemScoreSetting);
 					}
@@ -4147,6 +4144,12 @@ public class SpecificationBackingBean extends
 		}
 	}
 
+	public void scheduleTypeChange(AjaxBehaviorEvent event) {
+		String scheduletype = (String) event.getComponent().getAttributes()
+				.get("value");
+
+	}
+
 	public void templateChange(AjaxBehaviorEvent event) {
 		String template = (String) event.getComponent().getAttributes()
 				.get("value");
@@ -5240,7 +5243,7 @@ public class SpecificationBackingBean extends
 		return "/xhtml/sc/main/financialTemplate.xhtml?faces-redirect=true";
 	}
 
-	public String committeeSpecEditAction(int index,ScQtCheckList checklist,
+	public String committeeSpecEditAction(int index, ScQtCheckList checklist,
 			String specType) {
 
 		IQTTemplateSO qtTemplateSO;
@@ -6176,7 +6179,7 @@ public class SpecificationBackingBean extends
 	public void addScheduleDetails() {
 
 		try {
-			/* System.out.println("=enter addscore method==="); */
+
 			int year = Calendar.getInstance().get(Calendar.YEAR);
 			List<ScQtSchedule> freqSchedule = this.getManagedBean()
 					.getScheduleList();
@@ -6185,39 +6188,28 @@ public class SpecificationBackingBean extends
 
 			}
 
-			int total = freqSchedule.size()
-					+ this.getManagedBean().getTotalFrequency();
-			/*
-			 * if(freqSchedule.size()>this.getManagedBean().getTotalFrequency()){
-			 * ScQtFreqSchedule schedule = new ScQtFreqSchedule();
-			 * System.out.println("=====greater===");
-			 * freqSchedule.add(schedule); }
-			 */
 			if (freqSchedule.size() > this.getManagedBean().getTotalFrequency()) {
-				int listsize = freqSchedule.size();
-				int textsize = this.getManagedBean().getTotalFrequency();
-				int lesstotal = listsize - textsize;
-				System.out.println("==========if loop====");
-				freqSchedule = new ArrayList<ScQtSchedule>();
-				for (int j = 0; j < textsize; j++) {
-					ScQtSchedule schedule = new ScQtSchedule();
 
+				List<ScQtSchedule> localSchedule = new ArrayList<ScQtSchedule>();
+				for (int j = 0; j < this.getManagedBean().getTotalFrequency(); j++) {
+					localSchedule.add(freqSchedule.get(j));
+
+				}
+				this.getManagedBean().setScheduleList(localSchedule);
+			} else {
+				for (int i = freqSchedule.size(); i < this.getManagedBean()
+						.getTotalFrequency(); i++) {
+
+					ScQtSchedule schedule = new ScQtSchedule();
+					schedule.setStartYear(String.valueOf(year));
+					schedule.setEndYear(String.valueOf(year));
+					PmParameter parameter = new PmParameter();
+					schedule.setScheduleType(parameter);
+					setUserDetails(schedule);
 					freqSchedule.add(schedule);
 				}
+				this.getManagedBean().setScheduleList(freqSchedule);
 			}
-			for (int i = freqSchedule.size(); i < this.getManagedBean()
-					.getTotalFrequency(); i++) {
-
-				;
-				ScQtSchedule schedule = new ScQtSchedule();
-				schedule.setStartYear(String.valueOf(year));
-				schedule.setEndYear(String.valueOf(year));
-				PmParameter parameter = new PmParameter();
-				schedule.setScheduleType(parameter);
-				setUserDetails(schedule);
-				freqSchedule.add(schedule);
-			}
-			this.getManagedBean().setScheduleList(freqSchedule);
 
 		} finally {
 
@@ -6281,42 +6273,33 @@ public class SpecificationBackingBean extends
 				progressive = new ArrayList<ScQtProgressivePayment>();
 
 			}
-			int total = progressive.size()
-					+ this.getManagedBean().getTotalProgressivePayment();
 
 			if (progressive.size() > this.getManagedBean()
 					.getTotalProgressivePayment()) {
-				int listsize = progressive.size();
-				int textsize = this.getManagedBean()
-						.getTotalProgressivePayment();
-				int lesstotal = listsize - textsize;
 
-				progressive = new ArrayList<ScQtProgressivePayment>();
-				for (int j = 0; j < textsize; j++) {
+				List<ScQtProgressivePayment> progressiveList = new ArrayList<ScQtProgressivePayment>();
+				for (int j = 0; j < this.getManagedBean()
+						.getTotalProgressivePayment(); j++) {
+					progressiveList.add(progressive.get(j));
+
+				}
+				this.getManagedBean()
+						.setProgressivePaymentList(progressiveList);
+			} else {
+				for (int i = progressive.size(); i < this.getManagedBean()
+						.getTotalProgressivePayment(); i++) {
+
 					ScQtProgressivePayment payment = new ScQtProgressivePayment();
+					payment.setStartYear(String.valueOf(year));
+					payment.setEndYear(String.valueOf(year));
+					// payment.setScheduleType(new BigDecimal(1));
 
+					setUserDetails(payment);
 					progressive.add(payment);
 				}
+				this.getManagedBean().setProgressivePaymentList(progressive);
 			}
-			for (int i = progressive.size(); i < this.getManagedBean()
-					.getTotalProgressivePayment(); i++) {
-				System.out.println("=====dispaly  payment year===" + year);
-				ScQtProgressivePayment payment = new ScQtProgressivePayment();
-				payment.setStartYear(String.valueOf(year));
-				payment.setEndYear(String.valueOf(year));
-				// payment.setScheduleType(new BigDecimal(1));
 
-				setUserDetails(payment);
-				progressive.add(payment);
-			}
-			this.getManagedBean().setProgressivePaymentList(progressive);
-
-			// progressive.add(payment);
-			// this.getManagedBean().setProgressivePaymentList(progressive);
-			/*
-			 * System.out.println("===exit add score=="+ this.getManagedBean()
-			 * .getCheckListScore().size());
-			 */
 		} finally {
 
 		}
@@ -9189,8 +9172,17 @@ public class SpecificationBackingBean extends
 	private SpecificationReqDTO constructSpecCommitteDtls() {
 		SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 		ScQt scQt = this.getManagedBean().getScQt();
+		if (this.getManagedBean().getFulfilmentType()
+				.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN)) {
+			scQt.setScheduleType("P");
+		}
+		if (this.getManagedBean().getFulfilmentType()
+				.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)) {
+			scQt.setScheduleType("O");
+		}
 
 		List<ScQtCheckList> localChecklist = new ArrayList<ScQtCheckList>();
+
 		List<ScQtCheckList> techCheckList = this.getManagedBean()
 				.getScQtCheckSt2techProposal();
 		if (techCheckList != null && !techCheckList.isEmpty()) {
@@ -9245,219 +9237,225 @@ public class SpecificationBackingBean extends
 			localChecklist.addAll(financialScoring);
 			scQt.setScQtChecklists(localChecklist);
 		}
+		if ("F".equalsIgnoreCase(scQt.getScheduleType())) {
+			List<ScQtSchedule> freqschedule = this.getManagedBean()
+					.getScheduleList();
+			List<ScQtSchedule> localScheduleList = new ArrayList<ScQtSchedule>();
+			if (freqschedule != null && !freqschedule.isEmpty()) {
+				String Startmonth = "";
+				String endmonth = "";
+				for (ScQtSchedule schedule : freqschedule) {
+					if (schedule.getStartMonth().equalsIgnoreCase("0")) {
+						Startmonth = "01";
+					} else if (schedule.getStartMonth().equalsIgnoreCase("1")) {
+						Startmonth = "02";
+					} else if (schedule.getStartMonth().equalsIgnoreCase("2")) {
+						Startmonth = "03";
+					} else if (schedule.getStartMonth().equalsIgnoreCase("3")) {
+						Startmonth = "04";
+					} else if (schedule.getStartMonth().equalsIgnoreCase("4")) {
+						Startmonth = "05";
+					} else if (schedule.getStartMonth().equalsIgnoreCase("5")) {
+						Startmonth = "06";
+					}
 
-		List<ScQtSchedule> freqschedule = this.getManagedBean()
-				.getScheduleList();
-		List<ScQtSchedule> localScheduleList = new ArrayList<ScQtSchedule>();
-		if (freqschedule != null && !freqschedule.isEmpty()) {
-			String Startmonth = "";
-			String endmonth = "";
-			for (ScQtSchedule schedule : freqschedule) {
-				if (schedule.getStartMonth().equalsIgnoreCase("0")) {
-					Startmonth = "01";
-				} else if (schedule.getStartMonth().equalsIgnoreCase("1")) {
-					Startmonth = "02";
-				} else if (schedule.getStartMonth().equalsIgnoreCase("2")) {
-					Startmonth = "03";
-				} else if (schedule.getStartMonth().equalsIgnoreCase("3")) {
-					Startmonth = "04";
-				} else if (schedule.getStartMonth().equalsIgnoreCase("4")) {
-					Startmonth = "05";
-				} else if (schedule.getStartMonth().equalsIgnoreCase("5")) {
-					Startmonth = "06";
+					else if (schedule.getStartMonth().equalsIgnoreCase("6")) {
+						Startmonth = "07";
+					} else if (schedule.getStartMonth().equalsIgnoreCase("7")) {
+						Startmonth = "08";
+					} else if (schedule.getStartMonth().equalsIgnoreCase("8")) {
+						Startmonth = "09";
+					} else if (schedule.getStartMonth().equalsIgnoreCase("9")) {
+						Startmonth = "10";
+					} else if (schedule.getStartMonth().equalsIgnoreCase("10")) {
+						Startmonth = "11";
+					} else if (schedule.getStartMonth().equalsIgnoreCase("11")) {
+						Startmonth = "12";
+					}
+					if (schedule.getEndMonth().equalsIgnoreCase("0")) {
+						endmonth = "01";
+					} else if (schedule.getEndMonth().equalsIgnoreCase("1")) {
+						endmonth = "02";
+					} else if (schedule.getEndMonth().equalsIgnoreCase("2")) {
+						endmonth = "03";
+					}
+
+					else if (schedule.getEndMonth().equalsIgnoreCase("3")) {
+						endmonth = "04";
+					} else if (schedule.getEndMonth().equalsIgnoreCase("4")) {
+						endmonth = "05";
+					} else if (schedule.getEndMonth().equalsIgnoreCase("5")) {
+						endmonth = "06";
+					}
+
+					else if (schedule.getEndMonth().equalsIgnoreCase("6")) {
+						endmonth = "07";
+					} else if (schedule.getEndMonth().equalsIgnoreCase("7")) {
+						endmonth = "08";
+					} else if (schedule.getEndMonth().equalsIgnoreCase("8")) {
+						endmonth = "09";
+					} else if (schedule.getEndMonth().equalsIgnoreCase("9")) {
+						endmonth = "10";
+					} else if (schedule.getEndMonth().equalsIgnoreCase("10")) {
+						endmonth = "11";
+					} else if (schedule.getEndMonth().equalsIgnoreCase("11")) {
+						endmonth = "12";
+					}
+					Date d1 = new Date();
+
+					SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+					DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+					String localDate = format.format(d1);
+					String date = localDate.substring(0, 2);
+					String fromdate = date + "/" + Startmonth + "/"
+							+ schedule.getStartYear();
+					String toDate = date + "/" + endmonth + "/"
+							+ schedule.getEndYear();
+
+					schedule.setScheduleNo(schedule.getScheduleNo());
+
+					try {
+						schedule.setFromDate(df.parse(fromdate));
+						schedule.setToDate(df.parse(toDate));
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+					schedule.setScQt(this.getManagedBean().getScQt());
+					localScheduleList.add(schedule);
+					scQt.setScQtSchedules(localScheduleList);
+
 				}
-
-				else if (schedule.getStartMonth().equalsIgnoreCase("6")) {
-					Startmonth = "07";
-				} else if (schedule.getStartMonth().equalsIgnoreCase("7")) {
-					Startmonth = "08";
-				} else if (schedule.getStartMonth().equalsIgnoreCase("8")) {
-					Startmonth = "09";
-				} else if (schedule.getStartMonth().equalsIgnoreCase("9")) {
-					Startmonth = "10";
-				} else if (schedule.getStartMonth().equalsIgnoreCase("10")) {
-					Startmonth = "11";
-				} else if (schedule.getStartMonth().equalsIgnoreCase("11")) {
-					Startmonth = "12";
-				}
-				if (schedule.getEndMonth().equalsIgnoreCase("0")) {
-					endmonth = "01";
-				} else if (schedule.getEndMonth().equalsIgnoreCase("1")) {
-					endmonth = "02";
-				} else if (schedule.getEndMonth().equalsIgnoreCase("2")) {
-					endmonth = "03";
-				}
-
-				else if (schedule.getEndMonth().equalsIgnoreCase("3")) {
-					endmonth = "04";
-				} else if (schedule.getEndMonth().equalsIgnoreCase("4")) {
-					endmonth = "05";
-				} else if (schedule.getEndMonth().equalsIgnoreCase("5")) {
-					endmonth = "06";
-				}
-
-				else if (schedule.getEndMonth().equalsIgnoreCase("6")) {
-					endmonth = "07";
-				} else if (schedule.getEndMonth().equalsIgnoreCase("7")) {
-					endmonth = "08";
-				} else if (schedule.getEndMonth().equalsIgnoreCase("8")) {
-					endmonth = "09";
-				} else if (schedule.getEndMonth().equalsIgnoreCase("9")) {
-					endmonth = "10";
-				} else if (schedule.getEndMonth().equalsIgnoreCase("10")) {
-					endmonth = "11";
-				} else if (schedule.getEndMonth().equalsIgnoreCase("11")) {
-					endmonth = "12";
-				}
-				Date d1 = new Date();
-
-				SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-				DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-				String localDate = format.format(d1);
-				String date = localDate.substring(0, 2);
-				String fromdate = date + "/" + Startmonth + "/"
-						+ schedule.getStartYear();
-				String toDate = date + "/" + endmonth + "/"
-						+ schedule.getEndYear();
-
-				schedule.setScheduleNo(schedule.getScheduleNo());
-
-				try {
-					schedule.setFromDate(df.parse(fromdate));
-					schedule.setToDate(df.parse(toDate));
-				} catch (ParseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
-				schedule.setScQt(this.getManagedBean().getScQt());
-				localScheduleList.add(schedule);
-				scQt.setScQtSchedules(localScheduleList);
-
+			} else {
+				scQt.setScQtSchedules(null);
 			}
-		} else {
-			scQt.setScQtSchedules(null);
 		}
 
-		List<ScQtProgressivePayment> progressivePayemnt = this.getManagedBean()
-				.getProgressivePaymentList();
-		List<ScQtProgressivePayment> paymentList = new ArrayList<ScQtProgressivePayment>();
-		if (progressivePayemnt != null && !progressivePayemnt.isEmpty()) {
-			String Startmonth = "";
-			String endmonth = "";
-			for (ScQtProgressivePayment schedule : progressivePayemnt) {
-				if (schedule.getStartMonth().equalsIgnoreCase("0")) {
-					Startmonth = "01";
-				} else if (schedule.getStartMonth().equalsIgnoreCase("1")) {
-					Startmonth = "02";
-				} else if (schedule.getStartMonth().equalsIgnoreCase("2")) {
-					Startmonth = "03";
-				} else if (schedule.getStartMonth().equalsIgnoreCase("3")) {
-					Startmonth = "04";
-				} else if (schedule.getStartMonth().equalsIgnoreCase("4")) {
-					Startmonth = "05";
-				} else if (schedule.getStartMonth().equalsIgnoreCase("5")) {
-					Startmonth = "06";
-				}
+		if ("P".equalsIgnoreCase(scQt.getScheduleType())) {
+			List<ScQtProgressivePayment> progressivePayemnt = this
+					.getManagedBean().getProgressivePaymentList();
+			List<ScQtProgressivePayment> paymentList = new ArrayList<ScQtProgressivePayment>();
+			if (progressivePayemnt != null && !progressivePayemnt.isEmpty()) {
+				String Startmonth = "";
+				String endmonth = "";
+				for (ScQtProgressivePayment schedule : progressivePayemnt) {
+					if (schedule.getStartMonth().equalsIgnoreCase("0")) {
+						Startmonth = "01";
+					} else if (schedule.getStartMonth().equalsIgnoreCase("1")) {
+						Startmonth = "02";
+					} else if (schedule.getStartMonth().equalsIgnoreCase("2")) {
+						Startmonth = "03";
+					} else if (schedule.getStartMonth().equalsIgnoreCase("3")) {
+						Startmonth = "04";
+					} else if (schedule.getStartMonth().equalsIgnoreCase("4")) {
+						Startmonth = "05";
+					} else if (schedule.getStartMonth().equalsIgnoreCase("5")) {
+						Startmonth = "06";
+					}
 
-				else if (schedule.getStartMonth().equalsIgnoreCase("6")) {
-					Startmonth = "07";
-				} else if (schedule.getStartMonth().equalsIgnoreCase("7")) {
-					Startmonth = "08";
-				} else if (schedule.getStartMonth().equalsIgnoreCase("8")) {
-					Startmonth = "09";
-				} else if (schedule.getStartMonth().equalsIgnoreCase("9")) {
-					Startmonth = "10";
-				} else if (schedule.getStartMonth().equalsIgnoreCase("10")) {
-					Startmonth = "11";
-				} else if (schedule.getStartMonth().equalsIgnoreCase("11")) {
-					Startmonth = "12";
-				}
-				if (schedule.getEndMonth().equalsIgnoreCase("0")) {
-					endmonth = "01";
-				} else if (schedule.getEndMonth().equalsIgnoreCase("1")) {
-					endmonth = "02";
-				} else if (schedule.getEndMonth().equalsIgnoreCase("2")) {
-					endmonth = "03";
-				}
+					else if (schedule.getStartMonth().equalsIgnoreCase("6")) {
+						Startmonth = "07";
+					} else if (schedule.getStartMonth().equalsIgnoreCase("7")) {
+						Startmonth = "08";
+					} else if (schedule.getStartMonth().equalsIgnoreCase("8")) {
+						Startmonth = "09";
+					} else if (schedule.getStartMonth().equalsIgnoreCase("9")) {
+						Startmonth = "10";
+					} else if (schedule.getStartMonth().equalsIgnoreCase("10")) {
+						Startmonth = "11";
+					} else if (schedule.getStartMonth().equalsIgnoreCase("11")) {
+						Startmonth = "12";
+					}
+					if (schedule.getEndMonth().equalsIgnoreCase("0")) {
+						endmonth = "01";
+					} else if (schedule.getEndMonth().equalsIgnoreCase("1")) {
+						endmonth = "02";
+					} else if (schedule.getEndMonth().equalsIgnoreCase("2")) {
+						endmonth = "03";
+					}
 
-				else if (schedule.getEndMonth().equalsIgnoreCase("3")) {
-					endmonth = "04";
-				} else if (schedule.getEndMonth().equalsIgnoreCase("4")) {
-					endmonth = "05";
-				} else if (schedule.getEndMonth().equalsIgnoreCase("5")) {
-					endmonth = "06";
+					else if (schedule.getEndMonth().equalsIgnoreCase("3")) {
+						endmonth = "04";
+					} else if (schedule.getEndMonth().equalsIgnoreCase("4")) {
+						endmonth = "05";
+					} else if (schedule.getEndMonth().equalsIgnoreCase("5")) {
+						endmonth = "06";
+					}
+
+					else if (schedule.getEndMonth().equalsIgnoreCase("6")) {
+						endmonth = "07";
+					} else if (schedule.getEndMonth().equalsIgnoreCase("7")) {
+						endmonth = "08";
+					} else if (schedule.getEndMonth().equalsIgnoreCase("8")) {
+						endmonth = "09";
+					} else if (schedule.getEndMonth().equalsIgnoreCase("9")) {
+						endmonth = "10";
+					} else if (schedule.getEndMonth().equalsIgnoreCase("10")) {
+						endmonth = "11";
+					} else if (schedule.getEndMonth().equalsIgnoreCase("11")) {
+						endmonth = "12";
+					}
+					Date d1 = new Date();
+
+					SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+					DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+					String localDate = format.format(d1);
+					String date = localDate.substring(0, 2);
+					String fromdate = date + "/" + Startmonth + "/"
+							+ schedule.getStartYear();
+					String toDate = date + "/" + endmonth + "/"
+							+ schedule.getEndYear();
+					try {
+						schedule.setFromDate(df.parse(fromdate));
+						schedule.setToDate(df.parse(toDate));
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+					schedule.setScQt(this.getManagedBean().getScQt());
+					paymentList.add(schedule);
+					scQt.setScQtProgressivePayments(paymentList);
+
 				}
-
-				else if (schedule.getEndMonth().equalsIgnoreCase("6")) {
-					endmonth = "07";
-				} else if (schedule.getEndMonth().equalsIgnoreCase("7")) {
-					endmonth = "08";
-				} else if (schedule.getEndMonth().equalsIgnoreCase("8")) {
-					endmonth = "09";
-				} else if (schedule.getEndMonth().equalsIgnoreCase("9")) {
-					endmonth = "10";
-				} else if (schedule.getEndMonth().equalsIgnoreCase("10")) {
-					endmonth = "11";
-				} else if (schedule.getEndMonth().equalsIgnoreCase("11")) {
-					endmonth = "12";
-				}
-				Date d1 = new Date();
-
-				SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-				DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-				String localDate = format.format(d1);
-				String date = localDate.substring(0, 2);
-				String fromdate = date + "/" + Startmonth + "/"
-						+ schedule.getStartYear();
-				String toDate = date + "/" + endmonth + "/"
-						+ schedule.getEndYear();
-				try {
-					schedule.setFromDate(df.parse(fromdate));
-					schedule.setToDate(df.parse(toDate));
-				} catch (ParseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
-				schedule.setScQt(this.getManagedBean().getScQt());
-				paymentList.add(schedule);
-				scQt.setScQtProgressivePayments(paymentList);
-
+			} else {
+				scQt.setScQtProgressivePayments(null);
 			}
-		} else {
-			scQt.setScQtProgressivePayments(null);
 		}
 
 		List<ScQtScoreSetting> scoreSetting = new ArrayList<ScQtScoreSetting>();
 		ScQtScoreSetting technicalScoreSetting = this.getManagedBean()
 				.getTechnicalScoreSetting();
-		if (technicalScoreSetting != null) {
+		if (null != technicalScoreSetting
+				&& technicalScoreSetting.getSettingType() == 1) {
 			scoreSetting.add(technicalScoreSetting);
 			scQt.setScQtScoreSettings(scoreSetting);
 		}
 		ScQtScoreSetting financialScoreSetting = this.getManagedBean()
 				.getFinancialScoreSetting();
-		if (financialScoreSetting != null) {
+		if (null != financialScoreSetting
+				&& financialScoreSetting.getSettingType() == 2) {
 			scoreSetting.add(financialScoreSetting);
 			scQt.setScQtScoreSettings(scoreSetting);
 		}
 		ScQtScoreSetting demoScoreSetting = this.getManagedBean()
 				.getDemoScoreSetting();
-		if (demoScoreSetting != null) {
+		if (null != demoScoreSetting && demoScoreSetting.getSettingType() == 3) {
 			scoreSetting.add(demoScoreSetting);
 			scQt.setScQtScoreSettings(scoreSetting);
 		}
 		ScQtScoreSetting packageScoreSetting = this.getManagedBean()
 				.getRecommendationPackageScore();
-		if (packageScoreSetting != null) {
+		if (null != packageScoreSetting
+				&& packageScoreSetting.getSettingType() == 4) {
 			scoreSetting.add(packageScoreSetting);
 			scQt.setScQtScoreSettings(scoreSetting);
 		}
 
 		ScQtScoreSetting itemScoreSetting = this.getManagedBean()
 				.getRecommendationScore();
-		if (itemScoreSetting != null) {
+		if (null != itemScoreSetting && itemScoreSetting.getSettingType() == 5) {
 			scoreSetting.add(itemScoreSetting);
 			scQt.setScQtScoreSettings(scoreSetting);
 		}
@@ -9658,14 +9656,16 @@ public class SpecificationBackingBean extends
 				List<ScQtScoreSetting> scoreSetting = new ArrayList<ScQtScoreSetting>();
 				ScQtScoreSetting packageScoreSetting = this.getManagedBean()
 						.getRecommendationPackageScore();
-				if (packageScoreSetting != null) {
+				if (null != packageScoreSetting
+						&& packageScoreSetting.getSettingType() == 4) {
 					scoreSetting.add(packageScoreSetting);
 
 				}
 
 				ScQtScoreSetting itemScoreSetting = this.getManagedBean()
 						.getRecommendationScore();
-				if (itemScoreSetting != null) {
+				if (null != itemScoreSetting
+						&& itemScoreSetting.getSettingType() == 5) {
 					scoreSetting.add(itemScoreSetting);
 
 				}
@@ -9689,7 +9689,8 @@ public class SpecificationBackingBean extends
 				ScQtScoreSetting financialScoreSetting = this.getManagedBean()
 						.getFinancialScoreSetting();
 
-				if (null != financialScoreSetting) {
+				if (null != financialScoreSetting
+						&& financialScoreSetting.getSettingType() == 2) {
 					specReqDTO.setScoreSetting(financialScoreSetting);
 				}
 
@@ -9740,14 +9741,16 @@ public class SpecificationBackingBean extends
 				List<ScQtScoreSetting> scoreSetting = new ArrayList<ScQtScoreSetting>();
 				ScQtScoreSetting packageScoreSetting = this.getManagedBean()
 						.getRecommendationPackageScore();
-				if (packageScoreSetting != null) {
+				if (null != packageScoreSetting
+						&& packageScoreSetting.getSettingType() == 4) {
 					scoreSetting.add(packageScoreSetting);
 
 				}
 
 				ScQtScoreSetting itemScoreSetting = this.getManagedBean()
 						.getRecommendationScore();
-				if (itemScoreSetting != null) {
+				if (null != itemScoreSetting
+						&& itemScoreSetting.getSettingType() == 5) {
 					scoreSetting.add(itemScoreSetting);
 
 				}
