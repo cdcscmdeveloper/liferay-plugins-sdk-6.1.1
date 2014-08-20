@@ -620,6 +620,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	
 			this.getManagedBean().setDisplayCatalogue(true);
 			updateStandardErrorDialog(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing());
+			this.getManagedBean().setPricingTabIndex(0);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
