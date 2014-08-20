@@ -9,16 +9,13 @@
 
 	<ui:define name="contentSection">
  
- <f:event listener="#{bpmTasklistBackingBean.preRenderTaskListView}"
-			type="preRenderView" />
-
 		<h:panelGroup id="tasksListViewId">
 
 			<div class="clear"></div>
 			<ui:include src="taskListTable.xhtml" />
 
 		</h:panelGroup>
-
+		
 	</ui:define>
 
 </ui:composition>
