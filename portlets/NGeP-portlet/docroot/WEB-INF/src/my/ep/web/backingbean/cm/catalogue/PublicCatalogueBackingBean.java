@@ -177,6 +177,7 @@ public class PublicCatalogueBackingBean extends
 
 			if(this.getManagedBean().getFamilyCodeList().size() == 1){
 				CmUnspsc commodity = this.getManagedBean().getFamilyList().get(0);
+				this.getManagedBean().setCommodityCode(commodity.getUnspscCode());
 				System.out.println("getCmBrand:" + commodity.getCmBrand().size());
 
 				for (CmBrand brand : commodity.getCmBrand()) {
