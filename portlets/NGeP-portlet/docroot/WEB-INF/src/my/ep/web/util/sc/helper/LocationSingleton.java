@@ -234,6 +234,9 @@ public class LocationSingleton {
 				TreeNode stateNode = new DefaultTreeNode(QTConstants.NODE_STATE, locCriteria,
 						rootLocationTree);
 				// build state tree
+				if (stateIds.contains(state.getStateId())) {
+					stateNode.setSelected(Boolean.TRUE);
+				}
 
 				if (ParameterConst.LOCATION_LEVEL_DIVISION
 						.equals(locationLevelCode)) {
