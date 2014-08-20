@@ -35,7 +35,7 @@
                 <p:ajax event="tabChange" listener="#{simpleQuoteBackingBean.onTabChange}"/>
 				<!-- BY LOCATION -->
 				<p:tab title="#{lbl['lbl.sc.sq.supp.tab.locality']}"
-					rendered="#{simpleQuoteBackingBean.managedBean.locAndBusinessFlag}">
+					rendered="#{simpleQuoteBackingBean.managedBean.byLocality}">
 					<p:panel id="locPanel">
 						<table style="width: 100%">
 							<tr>
@@ -181,7 +181,7 @@
 
 						<p:column headerText="#{lbl['lbl.sc.sq.supp.criteria.mof.no']}"
 							style="width:10%">
-							<h:outputText value="#{quoteSupplier.smSupplier.smMofAccounts[0].mofNo}" rendered="false" />
+							<h:outputText value="#{simpleQuoteBackingBean.showMofNor(quoteSupplier.smSupplier.supplierId)}" />
 						</p:column>
 
 						<p:column headerText="#{lbl['lbl.sc.sq.supp.criteria.supp.name']}"
@@ -299,7 +299,7 @@
 
 						<p:column headerText="#{lbl['lbl.sc.sq.supp.criteria.mof.no']}"
 							style="width:10%">
-							<h:outputText value="#{data.smSupplier.smMofAccounts[0].mofNo}" rendered="false" />
+							<h:outputText value="#{simpleQuoteBackingBean.showMofNor(data.smSupplier.supplierId)}"/>
 
 						</p:column>
 
