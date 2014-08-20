@@ -14,7 +14,8 @@
 				value="#{specificationBackingBean.managedBean.scQt.scheduleType}">
 				<f:selectItem itemLabel="Frequency Schedule" itemValue="F"></f:selectItem>
 				<f:selectItem itemLabel="Progressive Payment" itemValue="P"></f:selectItem>
-				<p:ajax event="change" update="progressive,schedule" listener="#{specificationBackingBean.scheduleTypeChange}"></p:ajax>
+				<p:ajax event="change" update="progressive,schedule"
+					listener="#{specificationBackingBean.scheduleTypeChange}"></p:ajax>
 			</p:selectOneRadio>
 
 		</h:panelGrid>
@@ -74,7 +75,8 @@
 					<p:column
 						headerText="#{lbl['lbl.sc.spec.freq.schedule.start.year']}"
 						style="width:15%">
-						<p:selectOneMenu value="#{frequency.startYear}">
+						<p:selectOneMenu value="#{frequency.startYear}"
+							style="width:100px;">
 							<f:selectItems
 								value="#{specificationBackingBean.yearsDisplayDtls}"></f:selectItems>
 						</p:selectOneMenu>
@@ -95,7 +97,7 @@
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.spec.freq.schedule.end.year']}"
 						style="width:15%">
-						<p:selectOneMenu value="#{frequency.endYear}">
+						<p:selectOneMenu value="#{frequency.endYear}" style="width:100px;">
 							<f:selectItems
 								value="#{specificationBackingBean.yearsDisplayDtls}"></f:selectItems>
 						</p:selectOneMenu>
@@ -106,8 +108,7 @@
 						headerText="#{lbl['lbl.sc.spec.freq.schedule.total.months']}"
 						style="width:10%">
 						<h:panelGroup id="scheduleDetails">
-							<h:outputText 
-								value="#{frequency.totalMonths}"></h:outputText>
+							<h:outputText value="#{frequency.totalMonths}"></h:outputText>
 						</h:panelGroup>
 					</p:column>
 
@@ -162,7 +163,7 @@
 					value="#{specificationBackingBean.managedBean.progressivePaymentList}">
 					<ac:paginator for="progressivePayment" />
 
-					<p:column style="width:20%">
+					<p:column style="width:10%">
 						<f:facet name="header">
 							<h:outputText value="* " styleClass="mandatory" />
 							<h:outputText value="#{lbl['lbl.sc.spec.phase']}" />
@@ -174,7 +175,7 @@
 						</p:inputText>
 						<p:message id="phaseNumId" for="progressivePhase" display="icon"></p:message>
 					</p:column>
-					<p:column style="width:30%">
+					<p:column style="width:20%">
 						<f:facet name="header">
 							<h:outputText value="* " styleClass="mandatory" />
 							<h:outputText value="#{lbl['lbl.sc.spec.description']}" />
@@ -197,10 +198,11 @@
 						</p:selectOneMenu>
 
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sc.spec.freq.schedule.end.year']}"
+					<p:column
+						headerText="#{lbl['lbl.sc.spec.freq.schedule.start.year']}"
 						style="width:15%">
 
-						<p:selectOneMenu value="#{payment.startYear}">
+						<p:selectOneMenu value="#{payment.startYear}" style="width:100px;">
 							<f:selectItems
 								value="#{specificationBackingBean.yearsDisplayDtls}"></f:selectItems>
 						</p:selectOneMenu>
@@ -220,7 +222,7 @@
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.spec.freq.schedule.end.year']}"
 						style="width:15%">
-						<p:selectOneMenu value="#{payment.endYear}">
+						<p:selectOneMenu value="#{payment.endYear}" style="width:100px;">
 							<f:selectItems
 								value="#{specificationBackingBean.yearsDisplayDtls}"></f:selectItems>
 						</p:selectOneMenu>
