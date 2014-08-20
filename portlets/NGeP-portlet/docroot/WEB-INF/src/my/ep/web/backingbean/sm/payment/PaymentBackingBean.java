@@ -17,6 +17,7 @@ import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
@@ -24,14 +25,10 @@ import javax.portlet.PortletRequest;
 import javax.portlet.PortletSession;
 import javax.servlet.http.HttpServletRequest;
 
-import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.payment.IPaymentSO;
 import my.ep.constant.MessageConst;
-import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
-import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.payment.PaymentReqDTO;
 import my.ep.dto.sm.payment.PaymentResDTO;
-import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
@@ -71,6 +68,9 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 	
 	private Map<String, PmParameterDesc> supplierPaymentItemMap;
 
+	@ManagedProperty(value="#{paymentBean}")
+	private PaymentBean paymentBean;
+	
 	public PaymentBackingBean(){
 		this.getManagedBean().setCountry("MY");
 //		PmUser pmUser = new FacesScopes().getUserSessionBean();
@@ -392,6 +392,12 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 				
 				System.out.println("*****PortletSession taskId*****" + portletSession.getAttribute("paymentTaskIdSess"));
 				System.out.println("*****PortletSession bpmPojo*****" + portletSession.getAttribute("paymentBpmPojoSess"));
+				
+				
+				paymentBean.setPaymentTaskId(this.getManagedBean().getTaskId());
+				paymentBean.setPaymentBpmPojo(this.getManagedBean().getBpmPojo());
+				
+				
 				return "paymentRequestSubmission";
 			//}
 		}
@@ -400,6 +406,10 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 	}
 	
 	public void responsePreRender() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
+		
+		System.out.println("paymentBean.getPaymentTaskId(): " + paymentBean.getPaymentTaskId());
+		System.out.println("paymentBean.getPaymentBpmPojo(): " + paymentBean.getPaymentBpmPojo());
+		
 		
 		//httpServlet
 		String taskIdServlet = (String)PortalUtil.getHttpServletRequest(new FacesScopes().getRequest()).getSession().getAttribute("paymentTaskId");
@@ -419,8 +429,8 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 		System.out.println("*****PortletSession taskId*****" + portletSession.getAttribute("paymentTaskIdSess"));
 		System.out.println("*****PortletSession bpmPojo*****" + portletSession.getAttribute("paymentBpmPojoSess"));
 		
-		this.getManagedBean().setTaskId(taskId);
-		this.getManagedBean().setBpmPojo(bpmPojo);
+		this.getManagedBean().setTaskId(paymentBean.getPaymentTaskId());
+		this.getManagedBean().setBpmPojo(paymentBean.getPaymentBpmPojo());
 		
 		PortletRequest pr = (PortletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get("javax.portlet.request");
 		Method method = pr.getClass().getMethod("getOriginalHttpServletRequest");
@@ -580,7 +590,13 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 		}else{
 			showPaymentResponse(SupplierManagementConst.PAYMENT_INVALID_RES);		
 			this.renewSesionObject();
+			
 		}
+		
+		paymentBean.setPaymentBpmPojo(null);
+		paymentBean.setPaymentTaskId(null);
+		
+		
 		//PortalUtil.getHttpServletRequest(new FacesScopes().getRequest()).getSession().removeAttribute("paymentTaskId");
 		//PortalUtil.getHttpServletRequest(new FacesScopes().getRequest()).getSession().removeAttribute("paymentBpmPojo");
 		portletSession.removeAttribute("paymentTaskId",PortletSession.APPLICATION_SCOPE);
