@@ -107,6 +107,7 @@ import my.ep.persistence.logging.LogKey;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
+import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
 import my.ep.web.backingbean.sc.purchaseindefault.PurchaseInDefaultBackingBean;
 import my.ep.web.backingbean.sc.purchaseinquiry.PurchaseInquiryBackingBean;
@@ -190,7 +191,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		ScRequestNote requestNote = getManagedBean().getRequestNote();
 		RequestNoteResDTO requestNoteResDTO = null;
     try {
-    	 requestNote.setRequestNoteDtls(this.getManagedBean().getRequestNoteDtls());
+    	
+    	if(getManagedBean().getSupplierRecList() != null && getManagedBean().getSupplierRecList().size()>0){
+    		requestNote.setRequestNoteDtls(getManagedBean().getSupplierRecList());
+    	} else{
+    		requestNote.setRequestNoteDtls(this.getManagedBean().getRequestNoteDtls());
+    	}
 
 		// Target Approver
 		if (this.getManagedBean().getApprovalUsers().getTarget() != null && this.getManagedBean().getApprovalUsers().getTarget().size() > 0) {
@@ -267,19 +273,27 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
 		ScRequestNote requestNote = getManagedBean().getRequestNote();
+		List<ScRequestNoteDtl>	requestNoteDtls = null;
 		try {
-			List<ScRequestNoteDtl>	requestNoteDtls = new ArrayList<ScRequestNoteDtl>();
-			if (this.getManagedBean().getRequestNoteDtls() != null && getManagedBean().getRequestNoteDtls().size() > 0) {
-				for (ScRequestNoteDtl requestNoteDtl : getManagedBean().getRequestNoteDtls()) {
+			
+			if(getManagedBean().getSupplierRecList() != null && getManagedBean().getSupplierRecList().size()>0){
+				requestNoteDtls = getManagedBean().getSupplierRecList();
+			} else{
+				requestNoteDtls = this.getManagedBean().getRequestNoteDtls();
+			}
+			
+			List<ScRequestNoteDtl>	scRequestNoteDtls = new ArrayList<ScRequestNoteDtl>();
+			if (requestNoteDtls != null && requestNoteDtls.size() > 0) {
+				for (ScRequestNoteDtl requestNoteDtl : requestNoteDtls) {
 					for (ScRequestSupplierItem  supplierItem : requestNoteDtl.getRequestItem().getSupplierItems()) {
 						if(supplierItem.getSmSupplier().getSupplierId().equals(requestNoteDtl.getScRequestSupplierItem().getSmSupplier().getSupplierId())){
 							requestNoteDtl.setScRequestSupplierItem(supplierItem);
 						}
 					}
-					requestNoteDtls.add(requestNoteDtl);
+					scRequestNoteDtls.add(requestNoteDtl);
 				}	
 			}
-			requestNote.setRequestNoteDtls(requestNoteDtls);
+			requestNote.setRequestNoteDtls(scRequestNoteDtls);
 			// Target Approver
 			if (this.getManagedBean().getApprovalUsers().getTarget() != null && this.getManagedBean().getApprovalUsers().getTarget().size() > 0) {
 				requestNote.setApprovalUsers(createTargetApprover(requestNote));
