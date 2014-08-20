@@ -21,6 +21,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -81,6 +83,7 @@ import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeductionClause;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.ct.dtl.item.CtItemCeilingQty;
+import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
 import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
 import my.ep.persistence.entity.ct.dtl.zone.CtContractZoneDtl;
 import my.ep.persistence.entity.ct.terminate.CtTermination;
@@ -1032,6 +1035,10 @@ public void ConstructSideTabMenu(){
 			   this.getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY)){
 		     refreshAgencyCeilingQuantityList();
 	   }
+	  
+	  if(this.getManagedBean().getSelectedItem().getCtItemPrices() != null && this.getManagedBean().getSelectedItem().getCtItemPrices().size() > 0 ){
+		     Collections.sort(this.getManagedBean().getSelectedItem().getCtItemPrices(), new ItemZonePriceComparator());
+	  }
     }
     
     public void changeItemTypes(){
@@ -1815,6 +1822,38 @@ public void ConstructSideTabMenu(){
 			}
 			return null;
 		}
+	}
+	
+	public class ItemZonePriceComparator implements Comparator<CtItemPrice>{
+
+		   @Override
+		   public int compare(CtItemPrice obj1, CtItemPrice obj2) {
+			   
+			   if(obj1.getCtContractZone() != null && obj1.getCtContractZone().getZoneName() != null) {
+			        String x1 = ((CtItemPrice) obj1).getCtContractZone().getZoneName();
+                    String x2 = ((CtItemPrice) obj2).getCtContractZone().getZoneName();
+                    int zone = x1.compareTo(x2);
+                    if( zone != 0){
+                    	return zone;
+			         } else if(obj1 != null && obj1.getFromQty() != null){
+                         Integer quantity = ((CtItemPrice) obj1).getFromQty().intValue();
+                         Integer quantity2 = ((CtItemPrice) obj2).getFromQty().intValue();
+                         return quantity.compareTo(quantity2);
+			      }
+		     } else if(obj1 != null && obj1.getFromQty() != null){
+                 Integer quantity = ((CtItemPrice) obj1).getFromQty().intValue();
+                 Integer quantity2 = ((CtItemPrice) obj2).getFromQty().intValue();
+                 return quantity.compareTo(quantity2);
+		     
+		     } else if(obj1 != null && obj1.getFromQty() != null){
+                 Integer quantity = ((CtItemPrice) obj1).getFromQty().intValue();
+                 Integer quantity2 = ((CtItemPrice) obj2).getFromQty().intValue();
+                 return quantity.compareTo(quantity2);
+		     }
+			   
+			   return 0;
+		}
+		
 	}
 	
 	public BigDecimal getPaidAdvancePercentage() {
