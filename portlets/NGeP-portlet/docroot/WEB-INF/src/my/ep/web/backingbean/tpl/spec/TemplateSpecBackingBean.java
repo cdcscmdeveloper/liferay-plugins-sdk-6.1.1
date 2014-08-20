@@ -315,7 +315,12 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 				
 				reqDTO = new ParameterReqDTO();
 				reqDTO.setParameterType(ParameterTypeConst.PRICE_TYPE);
-				reqDTO.setParameterCode(ParameterConst.PRICE_TYPE_STANDARD);
+				if (tplSpecMaster.getTplSpecZone() != null) {
+					reqDTO.setParameterCode(ParameterConst.PRICE_TYPE_ZONAL_STANDARD);
+				} else {
+					reqDTO.setParameterCode(ParameterConst.PRICE_TYPE_STANDARD);
+				}
+				
 				resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
 				newQuestion.setClPriceTypeCode(resDTO.getPmParameter());
 				resetPriceTypeDtl(newQuestion);
