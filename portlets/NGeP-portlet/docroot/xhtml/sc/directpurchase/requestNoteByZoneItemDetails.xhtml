@@ -56,17 +56,17 @@
 					</ui:fragment>
 				</p:column>
 				
-				<p:column style="width:15%;">
+				<p:column style="width:12%;">
 					<f:facet name="header">
 				    	<h:outputText value="#{lbl['lbl.sc.request.note.price.type']}" />
 					</f:facet>
 					<p:inputText value="#{requestNoteBackingBean.getParameterDesc(requestNoteDtl.priceType)}" 
-					   disabled="true" style="margin-top: 8px;" size="8" />
+					   disabled="true" style="margin-top: 8px;" size="15" />
 				</p:column>
 				
 			    <p:column headerText="#{lbl['lbl.sc.request.note.fulfill.type']}"  style="width:10%;">
 					<p:inputText value="#{requestNoteBackingBean.getParameterDesc(requestNoteDtl.fulfilmentType)}" 
-					   disabled="true" size="4" style="margin-top: 8px;"  />
+					   disabled="true" size="6" style="margin-top: 8px;"  />
 				</p:column>
 				
 				<p:column style="width:10%;">
