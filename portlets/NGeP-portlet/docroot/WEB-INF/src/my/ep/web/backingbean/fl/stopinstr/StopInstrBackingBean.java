@@ -174,7 +174,11 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 				flStopInstrItem.setFlFulfilmentItem(itemAddr.getFlFulfilmentItem());
 				flStopInstrItem.setFlStopInstr(getManagedBean().getStopInstr());
 				flStopInstrItem.setRecalledQty(itemAddr.getOrderedQty().subtract(itemAddr.getChargeReceivedQty()));
-				flStopInstrItem.setRecalledAmt(itemAddr.getOrderedAmt().subtract(itemAddr.getChargeReceivedAmt()));
+				if(itemAddr.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) {
+					flStopInstrItem.setRecalledAmt(flStopInstrItem.getRecalledQty().multiply(itemAddr.getUnitPrice()));
+				} else {
+					flStopInstrItem.setRecalledAmt(itemAddr.getOrderedAmt().subtract(itemAddr.getChargeReceivedAmt()));
+				}
 				stopInstrItems.add(flStopInstrItem);
 			}
 		}
