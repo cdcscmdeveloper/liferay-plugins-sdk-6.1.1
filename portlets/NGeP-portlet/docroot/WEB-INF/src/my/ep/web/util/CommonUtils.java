@@ -146,4 +146,8 @@ public class CommonUtils {
 		
 		return numberFormat.toString();
 	}
+	
+	public int convertStringToInteger(String word){
+		return Integer.parseInt(word);
+	}
 }
