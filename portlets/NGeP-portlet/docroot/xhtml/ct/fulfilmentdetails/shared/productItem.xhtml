@@ -308,6 +308,6 @@
            </h:panelGrid>
 		</p:dialog>
   	 </p:panel>
-  	 <p:spacer height="50"/>
+  	 <p:spacer rendered="#{contractDetailsBackingBean.managedBean.ctItemList.size() > 0}" height="50"/>
  </ui:composition>
 
