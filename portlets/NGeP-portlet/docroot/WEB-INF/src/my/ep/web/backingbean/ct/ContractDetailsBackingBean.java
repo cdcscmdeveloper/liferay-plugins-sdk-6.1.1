@@ -430,7 +430,9 @@ public void ConstructSideTabMenu(){
 				    	         getManagedBean().getFinalListOfSideMenu().addAll(menu.menuSchedule);
 		        	    }
 			      } else{
-		            	  getManagedBean().getFinalListOfSideMenu().addAll(menu.menuDeduction);
+			    	  	  if (getManagedBean().getContractVer().getCtDeductions().size() > 0) {
+			    	  		  getManagedBean().getFinalListOfSideMenu().addAll(menu.menuDeduction);
+			    	  	  }
 		            	  if (!getManagedBean().getCtContract().
 				        		getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)) {
 		            	        getManagedBean().getFinalListOfSideMenu().addAll(menu.menuSchedule);
