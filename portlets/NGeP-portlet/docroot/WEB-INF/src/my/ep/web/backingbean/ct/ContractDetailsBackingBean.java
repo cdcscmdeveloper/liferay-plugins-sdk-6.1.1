@@ -497,8 +497,11 @@ public void ConstructSideTabMenu(){
 		ContractResDTO resDTO = new ContractResDTO();
 		resDTO = contractSO.calAdvancePaymentTracking(contractId);
 		
-		this.getManagedBean().setPaidAdvancePaymentAmt(resDTO.getPaidAdvancePaymentAmt());
-		this.getManagedBean().setPaidInvoiceAmt(resDTO.getPaidInvoiceAmt());
+		BigDecimal paidAdvancePaymentAmt = (resDTO.getPaidAdvancePaymentAmt() == null) ? BigDecimal.valueOf(0) : resDTO.getPaidAdvancePaymentAmt();
+		BigDecimal paidInvoiceAmt = (resDTO.getPaidInvoiceAmt() == null) ? BigDecimal.valueOf(0) : resDTO.getPaidInvoiceAmt();
+		
+		this.getManagedBean().setPaidAdvancePaymentAmt(paidAdvancePaymentAmt);
+		this.getManagedBean().setPaidInvoiceAmt(paidInvoiceAmt);
 	}
 	
 	private SmAddress retrieveLatestSupplierAddress() {
