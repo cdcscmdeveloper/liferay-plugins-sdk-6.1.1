@@ -53,7 +53,7 @@
 				<td rowspan="3"><p:inputTextarea cols="50" rows="4"
 						style=" margin-bottom:5px;"
 						value="#{flOrderBB.managedBean.flRequest.title}" disabled="true" /></td>
-				<td style="width: 131px;"><p:outputLabel
+				<td style="width: 134px;"><p:outputLabel
 						value="#{lbl['lbl.fl.procurement.type']}" /></td>
 				<td><p:inputText size="25"
 						value="#{purchaseRequestBackingBean.getParameterDesc(flOrderBB.managedBean.flRequest.procurementType)}"
@@ -115,9 +115,9 @@
 							<td style="width: 25px;"><p:inputText size="16"
 									disabled="true"
 									value="#{flOrderBB.managedBean.flRequest.smSupplier.regNo}" /></td>
-							<td style="width: 69px;"><p:outputLabel
+							<td style="width: 71px;"><p:outputLabel
 									value="#{lbl['lbl.fl.supp.mof.no']}" /></td>
-							<td><p:inputText size="19" disabled="true"
+							<td><p:inputText size="15" disabled="true"
 									value="#{flOrderBB.managedBean.flRequest.smSupplier.smMofAccounts[0].mofNo}" /></td>
 						</tr>
 					</table></td>
@@ -147,9 +147,9 @@
 							<td style="width: 25px;"><p:inputText size="16"
 									disabled="true"
 									value="#{flOrderBB.managedBean.flRequest.flSupplierDtl.phoneNo}" /></td>
-							<td style="width: 65px;"><p:outputLabel
+							<td style="width: 71px;"><p:outputLabel
 									value="#{lbl['lbl.fl.supp.faxno']}" /></td>
-							<td><p:inputText size="19" disabled="true"
+							<td><p:inputText size="51" disabled="true"
 									value="#{flOrderBB.managedBean.flRequest.flSupplierDtl.faxNo}" /></td>
 						</tr>
 					</table></td>
@@ -178,7 +178,7 @@
 			rendered="#{flOrderBB.managedBean.fulfilmentOrder.factored}">
 			<table style="width: 100%">
 				<tr>
-					<td style="width: 117px;"><p:outputLabel
+					<td style="width: 141px;"><p:outputLabel
 							value="#{lbl['lbl.fl.supp.fact.com']}" /></td>
 					<td><p:inputText disabled="true" size="53"
 						value="#{flOrderBB.managedBean.fulfilmentOrder.pmFinancialOrg.finOrgName}" /></td>
@@ -204,9 +204,9 @@
 								<td style="width: 25px;"><p:inputText size="15"
 										disabled="true"
 										value="#{flOrderBB.managedBean.phoneNo}" /></td>
-								<td style="width: 65px;"><p:outputLabel
+								<td style="width: 71px;"><p:outputLabel
 										value="#{lbl['lbl.fl.supp.faxno']}" /></td>
-								<td><p:inputText size="19" disabled="true"
+								<td><p:inputText size="15" disabled="true"
 										value="#{flOrderBB.managedBean.faxNo}" /></td>
 							</tr>
 						</table></td>
