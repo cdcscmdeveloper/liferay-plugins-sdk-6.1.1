@@ -520,11 +520,16 @@ public class QTBriefingSiteVisitBackingBean extends
 		if (null == siteVisitDetails) {
 			siteVisitDetails = new ArrayList<ScQtBsvDtl>();
 		}
-		if (siteVisitDetails.containsAll(selectedBsvDtls)) {
-			throw new EpException(MessageConst.ERROR_760099);
-		}
-		if (selectedBsvDtls != null) {
+		if (selectedBsvDtls != null && !selectedBsvDtls.isEmpty()) {
+			for (ScQtBsvDtl bsvDtls : selectedBsvDtls) {
+				if (siteVisitDetails.contains(bsvDtls)) {
+					//briefingZoneBean.setSitevisitList(null);
+					throw new EpException(MessageConst.ERROR_760099);
+				}
+			}					
+	
 			for (ScQtBsvDtl bsvDtl : selectedBsvDtls) {
+				
 				try {
 					ScQtBsvDtl siteVisitDtl = (ScQtBsvDtl) BeanUtils
 							.cloneBean(bsvDtl);
