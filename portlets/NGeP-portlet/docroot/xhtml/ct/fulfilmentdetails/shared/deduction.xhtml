@@ -31,21 +31,25 @@
         	   rowKey="#{data}" selectionMode="single" selection="#{contractDetailsBackingBean.managedBean.selectedDeductionClauses}" > 
                <ac:paginator for="tableClause" />   
                    <p:column headerText="#{lbl['lbl.ct.ded.table1.desc']}">
+                     <p:outputLabel value="#{data.clauseDescription}" rendered="#{contractDetailsBackingBean.managedBean.selectedDeduction.deductionType.parameterCode !=
+        	      ParameterConst.deductionTypeAdvancePayment}" style="float:left;"/>
                     <p:inputTextarea value="#{data.clauseDescription}" maxlength="500" rows="1" cols="180"
-                       disabled="#{!contractDetailsBackingBean.managedBean.flgPaymentTracking}" styleClass="ui-inputtextarea"></p:inputTextarea>
+                       disabled="#{!contractDetailsBackingBean.managedBean.flgPaymentTracking}"
+                       rendered="#{contractDetailsBackingBean.managedBean.selectedDeduction.deductionType.parameterCode ==
+        	             ParameterConst.deductionTypeAdvancePayment}" styleClass="ui-inputtextarea">
+        	             <p:ajax process="@this"/>
+        	             </p:inputTextarea>
                     </p:column>    
            </p:dataTable>
            <p:spacer height="2" />
            <div class="ppRightBtn"> 
-           <c:if test="#{contractDetailsBackingBean.managedBean.selectedDeduction != null}">
+           <c:if test="#{contractDetailsBackingBean.managedBean.selectedDeduction != null and 
+                   contractDetailsBackingBean.managedBean.selectedDeduction.deductionType.parameterCode eq 
+        	         ParameterConst.deductionTypeAdvancePayment}">
         	  <p:commandButton value="#{lbl['lbl.ct.ded.btn.add']}" process="@form" icon="ui-icon-add" 
-        	     action="#{contractDetailsBackingBean.addDeductionClause()}" update="@([id$=tableClause])"
-        	     rendered="#{contractDetailsBackingBean.managedBean.selectedDeduction.deductionType.parameterCode eq 
-        	      ParameterConst.deductionTypeAdvancePayment}" >
+        	     action="#{contractDetailsBackingBean.addDeductionClause()}" update=":form:tableClause">
 		  	  </p:commandButton>
-		  	  <p:commandButton value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete" partialSubmit="true" process="@form"
-		    	rendered="#{contractDetailsBackingBean.managedBean.selectedDeduction.deductionType.parameterCode eq ParameterConst.deductionTypeAdvancePayment}" 
-		    	onclick="dlgDeduction.show()" />
+		  	  <p:commandButton value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete" process="@form" onclick="dlgDeduction.show()" />
            </c:if>
          </div>
          </h:panelGroup>
