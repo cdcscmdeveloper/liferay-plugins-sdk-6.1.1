@@ -34,20 +34,40 @@
 		      <p:dataTable id="servicePriceTable" var="itemPricesVar"
 		         value="#{contractDetailsBackingBean.managedBean.selectedServiceItem.ctItemPrices}">
 			    <ac:paginator for="servicePriceTable"/>
-			     <p:column headerText="#{lbl['lbl.ct.item.table1.price.zone']}">
-			        <p:outputLabel value="#{itemPricesVar.ctContractZone.zoneName}" style="float:left;" />
-			     </p:column>                   
-			     <p:column headerText="#{lbl['lbl.ct.item.table1.price.price']}" style="text-align: right;">
-			        <p:outputLabel value="#{itemPricesVar.unitPrice}"/>
-			     </p:column>            
-			     <p:column headerText="#{lbl['lbl.ct.item.table1.price.efdate']}">
-				   <p:calendar style="width:130px;" value="#{itemPricesVar.effDate}"
-				       pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" disabled="true" />
-			     </p:column>       
-			     <p:column headerText="#{lbl['lbl.ct.item.table1.price.edate']}">
-			         <p:calendar style="width:130px;" value="#{itemPricesVar.expDate}"
-			             pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" disabled="true"  />
-			    </p:column>       
+			    <c:if test="#{contractDetailsBackingBean.managedBean.selectedServiceItem.priceType.parameterCode eq ParameterConst.priceTypeStandard}">
+			            <p:column headerText="#{lbl['lbl.ct.item.table1.price.price']}" style="text-align: right;">
+			                   <p:outputLabel value="#{itemPricesVar.unitPrice}"/>
+			            </p:column>            
+			            <p:column headerText="#{lbl['lbl.ct.item.table1.price.efdate']}">
+				              <p:calendar style="width:130px;" value="#{itemPricesVar.effDate}"
+				                      pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" disabled="true" />
+			            </p:column>       
+			            <p:column headerText="#{lbl['lbl.ct.item.table1.price.edate']}">
+			                 <p:calendar style="width:130px;" value="#{itemPricesVar.expDate}"
+			                       pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" disabled="true"  />
+			             </p:column> 
+			   </c:if>
+			   <c:if test="#{contractDetailsBackingBean.managedBean.selectedServiceItem.priceType.parameterCode eq ParameterConst.priceTypeZonalStandard}">
+			           <p:column headerText="#{lbl['lbl.ct.item.table1.price.zone']}">
+			                 <p:outputLabel value="#{itemPricesVar.ctContractZone.zoneName}" style="float:left;" />
+			            </p:column>    
+			            <p:column headerText="#{lbl['lbl.ct.item.table1.price.price']}" style="text-align: right;">
+			               <h:outputText value="#{itemPricesVar.unitPrice}">
+			                   <f:convertNumber
+						         pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+			                </h:outputText>
+			            </p:column>
+			            <p:column headerText="#{lbl['lbl.ct.item.table1.price.efdate']}">
+			                <h:outputText value="#{itemPricesVar.effDate}" style="float:left;">
+                             <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+                           </h:outputText>
+			             </p:column>       
+			             <p:column headerText="#{lbl['lbl.ct.item.table1.price.edate']}">
+			                <h:outputText value="#{itemPricesVar.expDate}" style="float:left;">
+                              <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+                            </h:outputText>
+			            </p:column>   
+			      </c:if>                
 		    </p:dataTable>
 		</h:panelGrid>
 	  </p:outputPanel>
