@@ -5440,6 +5440,7 @@ public class SpecificationBackingBean extends
 				scqtlist.setScoringReq(true);
 				scqtlist.setDocCategory(QTConstants.TECHNICAL_DOC_TYPE);
 				scqtlist.setChecklistSeq(1);
+				scqtlist.setPmDocument(document);
 				setUserDetails(scqtlist);
 
 				scqtlist.setScQt(this.getManagedBean().getScQt());
@@ -5539,6 +5540,7 @@ public class SpecificationBackingBean extends
 				// scqtlist.setEvaluationStage("2");
 				scqtlist.setManditory(false);
 				scqtlist.setChecklistSeq(1);
+				scqtlist.setPmDocument(document);
 
 				scqtlist.setScQt(this.getManagedBean().getScQt());
 
