@@ -139,7 +139,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			reqDTO.setUserRole(getUserRole());
 			
 			FulfilmentResDTO resDTO = null;
-			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)){
+			if(getManagedBean().getProcessName() == null && action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)){
 				resDTO = fulfilmentOrderSO.acknowledgeFulfillmentOrder(reqDTO);
 			}else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_STOP_FULFILMENT)){
 				if(isFlFulfilmentApprover()) {
@@ -147,13 +147,11 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 				}
 				reqDTO.setStopIns(getManagedBean().getStopIns());
 				resDTO = fulfilmentOrderSO.stopFulfilment(reqDTO);
-			}else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REMOVE_FACTORING)){
-				System.out.println("Remove factoring");
-				resDTO = fulfilmentOrderSO.removeFactoringComp(reqDTO);
-				
 			}else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
 				reqDTO.setFulfilmentOrder(flRequest.getFlFulfilmentOrder());
 				resDTO = fulfilmentOrderSO.cancelFulfillmentOrder(reqDTO);
+			}else if(getManagedBean().getProcessName() != null && getManagedBean().getProcessName().equalsIgnoreCase(FLProcessNameConst.FC_REMOVAL_REQUEST_PROCESS_NAME)){
+				resDTO = fulfilmentOrderSO.removeFactoringComp(reqDTO);
 			}
 			
 			if(resDTO.isSuccessful()) {
@@ -306,7 +304,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 				getManagedBean().setTaskId(taskId);
 				getManagedBean().setOutComes(res.getAction());
 				getManagedBean().setDocType(resDTO.getFlOrder().getFlFulfilmentRequest().getDocType());
-				
+				getManagedBean().setProcessName(res.getProcessName());
 				FulfilmentBackingBean flBB = new FulfilmentBackingBean(resDTO.getFlOrder().getDocType(), resDTO.getFlOrder().getFlFulfilmentRequest().getScPurchaseRequest().getRequestNote().getRequestNoteNo());
 				flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
 			}else {
