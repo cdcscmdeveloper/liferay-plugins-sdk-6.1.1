@@ -3535,6 +3535,7 @@ public class SpecificationBackingBean extends
 		}
 
 		if (getManagedBean().getIndex() >= 0) {
+			
 			getManagedBean().getZoneTrees().remove(getManagedBean().getIndex());
 			getManagedBean().getZoneTrees().add(
 					getManagedBean().getIndex(),
@@ -3654,7 +3655,7 @@ public class SpecificationBackingBean extends
 
 			}
 
-			 if ((!scQt.isZonal()
+			if ((!scQt.isZonal()
 					&& scQt.getQtType().equals(QTConstants.OPEN_TYPE) && !this
 					.getManagedBean().getScQt().getScQtSupplierCriteria()
 					.isAllState())
@@ -3674,7 +3675,8 @@ public class SpecificationBackingBean extends
 
 				}
 
-			}  if (scQt.getQtType().equals(QTConstants.OPEN_TYPE)
+			}
+			if (scQt.getQtType().equals(QTConstants.OPEN_TYPE)
 					&& this.getManagedBean().getScQt().getEstimatedAmount()
 							.intValue() > 500000
 					&& this.getManagedBean().getScQt()
@@ -4055,10 +4057,30 @@ public class SpecificationBackingBean extends
 									.setEvaluationType(
 											paramDesc.getPmParameter()
 													.getParameterCode());
+							scQt.setQtType(ParameterConst.QUOTATION_TENDER_TYPE_OPEN);
+							scQt.setOpenFor(SourcingConstants.OPERN_FOR_BUMI);
+							this.getManagedBean().setScQt(scQt);
 						}
 					}
 				}
 			} else if (scQt.getEstimatedAmount().intValue() > 50000
+					&& scQt.getEstimatedAmount().intValue() <= 100000) {
+
+				ParameterReqDTO quotationReqDTO = new ParameterReqDTO();
+				quotationReqDTO
+						.setParameterType(ParameterTypeConst.SC_PROCUREMENT_MODE);
+				quotationReqDTO
+						.setParameterCode(ParameterConst.PROCUREMENT_MODE_QUOTATION);
+				ParameterResDTO quotationResDTO = parameterSo
+						.retrieveParameterByTypeAndCode(quotationReqDTO);
+				this.getManagedBean().getScQt()
+						.setProcurementMode(quotationResDTO.getPmParameter());
+				scQt.setQtType(ParameterConst.QUOTATION_TENDER_TYPE_OPEN);
+				scQt.setOpenFor(SourcingConstants.OPERN_FOR_BUMI);
+				this.getManagedBean().setScQt(scQt);
+			}
+
+			else if (scQt.getEstimatedAmount().intValue() > 100000
 					&& scQt.getEstimatedAmount().intValue() <= 500000) {
 
 				ParameterReqDTO quotationReqDTO = new ParameterReqDTO();
@@ -4070,6 +4092,9 @@ public class SpecificationBackingBean extends
 						.retrieveParameterByTypeAndCode(quotationReqDTO);
 				this.getManagedBean().getScQt()
 						.setProcurementMode(quotationResDTO.getPmParameter());
+				scQt.setQtType(ParameterConst.QUOTATION_TENDER_TYPE_OPEN);
+				scQt.setOpenFor(SourcingConstants.OPERN_FOR_ALL);
+				this.getManagedBean().setScQt(scQt);
 			}
 
 			else if (scQt.getEstimatedAmount().intValue() > 500000) {
@@ -4083,6 +4108,9 @@ public class SpecificationBackingBean extends
 						.retrieveParameterByTypeAndCode(tenderReqDTO);
 				this.getManagedBean().getScQt()
 						.setProcurementMode(tenderResDTO.getPmParameter());
+				scQt.setQtType(ParameterConst.QUOTATION_TENDER_TYPE_OPEN);
+				scQt.setOpenFor(SourcingConstants.OPERN_FOR_ALL);
+				this.getManagedBean().setScQt(scQt);
 			}
 		} finally {
 			parameterSo = null;
