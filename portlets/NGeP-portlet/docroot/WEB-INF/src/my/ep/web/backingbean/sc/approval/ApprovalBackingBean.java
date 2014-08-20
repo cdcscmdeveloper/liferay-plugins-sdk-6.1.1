@@ -144,13 +144,13 @@ public class ApprovalBackingBean extends
 	}
 
 	public SelectItem[] getApprovalCategories() {
-		SelectItem[] selectItems = new SelectItem[6];
-		selectItems[0] = new SelectItem(ApprovalCategory.BUDGET_APPROVAL.value(), "Budget Approval");
-		selectItems[1] = new SelectItem(ApprovalCategory.BPK_APPROVAL.value(), "BPK Approval");
-		selectItems[2] = new SelectItem(ApprovalCategory.COMMITTEE_APPROVAL.value(), "Committee Appointment Approval");
-		selectItems[3] = new SelectItem(ApprovalCategory.PTJ_APPROVAL.value(), "PTJ Approval");
-		selectItems[4] = new SelectItem(ApprovalCategory.FINALAIZATION_COMMITTEE_APPROVAL.value(), "Finalization Committee Approval");
-		selectItems[5] = new SelectItem(ApprovalCategory.OTHER_APPROVAL.value(), "Others Approval");
+		SelectItem[] selectItems = new SelectItem[5];
+		//selectItems[0] = new SelectItem(ApprovalCategory.BUDGET_APPROVAL.value(), "Budget Approval");
+		selectItems[0] = new SelectItem(ApprovalCategory.BPK_APPROVAL.value(), "BPK Approval");
+		selectItems[1] = new SelectItem(ApprovalCategory.COMMITTEE_APPROVAL.value(), "Committee Appointment Approval");
+		selectItems[2] = new SelectItem(ApprovalCategory.PTJ_APPROVAL.value(), "PTJ Approval");
+		selectItems[3] = new SelectItem(ApprovalCategory.FINALAIZATION_COMMITTEE_APPROVAL.value(), "Finalization Committee Approval");
+		selectItems[4] = new SelectItem(ApprovalCategory.OTHER_APPROVAL.value(), "Others Approval");
 		return selectItems;
 	}
 
@@ -170,7 +170,6 @@ public class ApprovalBackingBean extends
 			attachment.setDocNo(scQtApproval.getScQt().getQtNo());
 			scAttachment = attachment; 
 			uploadAttachment(event.getFile(), scAttachment);
-			getManagedBean().setScQtApproval(scQtApproval);
 		}
 	}
 

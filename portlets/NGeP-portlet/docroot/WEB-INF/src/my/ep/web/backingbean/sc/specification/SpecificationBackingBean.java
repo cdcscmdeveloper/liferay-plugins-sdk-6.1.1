@@ -9509,6 +9509,7 @@ public class SpecificationBackingBean extends
 						committeActivities.get(i).getScCommitteeMember()
 								.getPmUser().getIdentificationNo())) {
 					committeActivities.get(i).setSignedOff(true);
+					break;
 				}
 
 			}
@@ -9527,21 +9528,7 @@ public class SpecificationBackingBean extends
 		SpecificationResDTO resDTO = null;
 		String taskId = this.getManagedBean().getTaskId();
 		String[] outComes = this.getManagedBean().getOutComes();
-		/*
-		 * List<ScQtCheckList> checklist = this.getManagedBean()
-		 * .getScQtCheckSt2financeProposalList(); if (checklist == null) {
-		 * checklist = new ArrayList<ScQtCheckList>(); } List<ScQtCheckList>
-		 * techchecklistScore = this.getManagedBean()
-		 * .getScQtCheckSt2techProposal(); if (techchecklistScore == null) {
-		 * techchecklistScore = new ArrayList<ScQtCheckList>(); }
-		 * List<ScQtCheckList> financialScoring = this.getManagedBean()
-		 * .getFinancialScoring(); if (financialScoring == null) {
-		 * financialScoring = new ArrayList<ScQtCheckList>(); }
-		 * List<ScQtCheckList> technicalScoringList = this.getManagedBean()
-		 * .getTechnicalScoring(); if (technicalScoringList == null) {
-		 * technicalScoringList = new ArrayList<ScQtCheckList>(); }
-		 */
-
+	
 		SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
 		switch (activeIndex) {
 		case 0:
