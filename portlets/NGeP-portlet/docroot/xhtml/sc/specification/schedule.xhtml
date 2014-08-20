@@ -14,7 +14,7 @@
 				value="#{specificationBackingBean.managedBean.scQt.scheduleType}">
 				<f:selectItem itemLabel="Frequency Schedule" itemValue="F"></f:selectItem>
 				<f:selectItem itemLabel="Progressive Payment" itemValue="P"></f:selectItem>
-				<p:ajax event="change" update="progressive,schedule"></p:ajax>
+				<p:ajax event="change" update="progressive,schedule" listener="#{specificationBackingBean.scheduleTypeChange}"></p:ajax>
 			</p:selectOneRadio>
 
 		</h:panelGrid>
@@ -88,7 +88,7 @@
 							value="#{frequency.endMonth}">
 
 							<f:selectItems value="#{specificationBackingBean.yearDetails}"></f:selectItems>
-							<p:ajax event="change" update="frequencySchedule"
+							<p:ajax event="change" update="scheduleDetails"
 								listener="#{specificationBackingBean.calculateSchedulePercentage(frequency)}"></p:ajax>
 						</p:selectOneMenu>
 
@@ -105,8 +105,10 @@
 					<p:column
 						headerText="#{lbl['lbl.sc.spec.freq.schedule.total.months']}"
 						style="width:10%">
-						<h:outputText id="scheduleDetails"
-							value="#{frequency.totalMonths}"></h:outputText>
+						<h:panelGroup id="scheduleDetails">
+							<h:outputText 
+								value="#{frequency.totalMonths}"></h:outputText>
+						</h:panelGroup>
 					</p:column>
 
 					<p:column style="width:15%">

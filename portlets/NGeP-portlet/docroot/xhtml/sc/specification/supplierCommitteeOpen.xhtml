@@ -45,8 +45,9 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.mandatory']}"
 				style="width:10%">
-				
-				<h:outputText value="#{lbl[cateGory.mandatory ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
+
+				<h:outputText
+					value="#{lbl[cateGory.mandatory ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
 			</p:column>
 
 		</p:dataTable>
@@ -54,12 +55,14 @@
 	</p:panel>
 
 
-	<p:panel header="#{lbl['lbl.sc.spec.location.list.paidup.capital']}" toggleable="true"
+	<p:panel header="#{lbl['lbl.sc.spec.location.list.paidup.capital']}"
+		toggleable="true"
 		rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount le '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false' and specificationBackingBean.managedBean.scQt.zonal !='false'}">
 		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.so.paidup']}" /></td>
-				<td><p:inputText disabled="true" size="30" maxlength="18" 
+				<td style="width: 160px;"><p:outputLabel
+						value="#{lbl['lbl.so.paidup']}" /></td>
+				<td><p:inputText disabled="true" size="30" maxlength="18"
 						value="#{specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.minPaidUpCapital}"
 						style="margin-right:5px;text-align:right;">
 						<f:convertNumber
@@ -123,11 +126,13 @@
 
 
 
-	<p:panel header="#{lbl['lbl.sc.spec.location.list.paidup.capital']}" toggleable="true"
+	<p:panel header="#{lbl['lbl.sc.spec.location.list.paidup.capital']}"
+		toggleable="true"
 		rendered="#{((specificationBackingBean.managedBean.scQt.estimatedAmount le '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false' and specificationBackingBean.managedBean.scQt.zonal =='false') or (specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false'  and specificationBackingBean.managedBean.scQt.zonal =='false') or (specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false'  and specificationBackingBean.managedBean.scQt.zonal !='false'))}">
 		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.so.paidup']}" /></td>
+				<td style="width: 160px;"><p:outputLabel
+						value="#{lbl['lbl.so.paidup']}" /></td>
 				<td><p:inputText size="30" maxlength="18" disabled="true"
 						value="#{specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.minPaidUpCapital}"
 						style="margin-right:5px;text-align:right;">
@@ -183,11 +188,13 @@
 
 
 	</p:panel>
-	<p:panel header="#{lbl['lbl.sc.spec.location.list.paidup.capital']}" toggleable="true"
+	<p:panel header="#{lbl['lbl.sc.spec.location.list.paidup.capital']}"
+		toggleable="true"
 		rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState !='false'}">
 		<table>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.so.allstate']}" /></td>
+				<td style="width: 160px;"><p:outputLabel
+						value="#{lbl['lbl.so.allstate']}" /></td>
 				<td><p:inputText
 						value="#{lbl[specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState ? 'lbl.btn.yes' : 'lbl.btn.no' ]}"
 						disabled="true" style="margin-right:5px;" /></td>
