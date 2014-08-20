@@ -615,7 +615,7 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
     	DocumentGenerator.getInstance().generatePdfFromVelocity(
     			"/sc/loa-contract-summary.vm", 
     			context, 
-    			new FileOutputStream(attachment.getFilePath()));
+    			new FileOutputStream(getActualFilePath(attachment)));
 	}
 	
 	public void generateAgreementLetterPdfFromVelocity(ScAttachment attachment, ScLoa scLoa) throws Exception {
@@ -821,7 +821,7 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
     	DocumentGenerator.getInstance().generatePdfFromVelocity(
     			"/sc/loa-agreement-letter.vm", 
     			context, 
-    			new FileOutputStream(attachment.getFilePath()));
+    			new FileOutputStream(getActualFilePath(attachment)));
 	}
 	
 	public void generateDeclarationPdfFromVelocity(ScAttachment attachment, ScLoa scLoa) throws Exception {	    	
@@ -831,7 +831,7 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
     	populateAttachmentDetails(attachment);
     	
     	DocumentGenerator.getInstance().generatePdf(
-    			new FileOutputStream(attachment.getFilePath()), 
+    			new FileOutputStream(getActualFilePath(attachment)), 
     			termsConditions);
 	}
 	

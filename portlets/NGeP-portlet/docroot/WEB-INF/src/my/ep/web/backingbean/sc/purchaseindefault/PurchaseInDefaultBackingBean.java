@@ -3,15 +3,8 @@
  */
 package my.ep.web.backingbean.sc.purchaseindefault;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URL;
-import java.net.URLConnection;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,9 +14,7 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.portlet.PortletRequest;
-import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.service.ct.dtl.IContractItemSO;
 import my.ep.biz.service.ct.supplier.IPanelSupplierSO;
@@ -640,45 +631,7 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 		   FacesContext fc = FacesContext.getCurrentInstance();
 		   fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "purchaseInDefaultMain");
 	   }
-   }	
-	 
-   /**
-    * downloadFile method for file download in pid
-    */ 
-   public void downloadFile(String filePath) throws IOException {
-	   PortletResponse  portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();  
-	   HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
-
-	   String fileName = null;
-	   File file = new File(filePath);
-	   fileName = file.getName().substring(0, file.getName().lastIndexOf('.'));
-
-	   res.setHeader( "Content-Disposition", "attachment; filename=\"" + fileName + "\"" );//
-	   res.setHeader( "Content-Transfer-Encoding", "binary" );
-	   res.setContentType("application/octet-stream");
-	   res.flushBuffer();
-	   OutputStream out = res.getOutputStream();   
-	   if(filePath!=null) {
-		   InputStream input = null;
-		   try {
-			   URLConnection uc = new URL(filePath).openConnection();
-			   input = new BufferedInputStream(uc.getInputStream()); 
-		   } catch (Exception e) {
-			   // Cannot open connection, maybe local file
-			   input = new FileInputStream(filePath);
-		   }
-		   byte[] buffer = new byte[4096];
-		   int bytesRead;
-		   while ((bytesRead = input.read( buffer )) != -1){ 
-			   out.write( buffer, 0, bytesRead ); buffer = new byte[4096]; 
-		   }
-		   input.close();			
-	   }
-	   out.flush();
-	   out.close(); 
-	   FacesContext.getCurrentInstance().responseComplete();
-   }	
-
+   }
 
    /**
     *  deleteUploadFile method for deleting upload fine in pid

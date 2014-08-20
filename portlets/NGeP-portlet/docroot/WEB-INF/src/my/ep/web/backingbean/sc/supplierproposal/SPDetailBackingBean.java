@@ -658,47 +658,9 @@ public class SPDetailBackingBean extends
 	public void downloadPTJFile(ScQtProposalChecklist scQtProposalChecklist)
 			throws IOException {
 		debugLogger("downloadPTJFile");
-		File file = new File(scQtProposalChecklist.getScQtCheckList()
-				.getScQtCheckListAttachment().getFilePath());
-		InputStream input = new FileInputStream(file);
-
-		PortletResponse portletResponse = (PortletResponse) FacesContext
-				.getCurrentInstance().getExternalContext().getResponse();
-		HttpServletResponse res = com.liferay.portal.util.PortalUtil
-				.getHttpServletResponse(portletResponse);
-		res.setHeader("Content-Disposition", "attachment; filename=\""
-				+ scQtProposalChecklist.getScQtCheckList()
-						.getScQtCheckListAttachment().getFileName() + "\"");
-		res.setHeader("Content-Transfer-Encoding", "binary");
-		res.setContentType("application/octet-stream");
-		res.flushBuffer();
-		OutputStream out = res.getOutputStream();
-		if (scQtProposalChecklist.getScQtCheckList()
-				.getScQtCheckListAttachment().getFilePath() != null) {
-			try {
-				URLConnection uc = new URL(scQtProposalChecklist
-						.getScQtCheckList().getScQtCheckListAttachment()
-						.getFilePath()).openConnection();
-				input = new BufferedInputStream(uc.getInputStream());
-			} catch (Exception e) {
-				// Cannot open connection, maybe local file
-				input = new FileInputStream(scQtProposalChecklist
-						.getScQtCheckList().getScQtCheckListAttachment()
-						.getFilePath());
-			}
-			byte[] buffer = new byte[4096];
-			int bytesRead;
-			while ((bytesRead = input.read(buffer)) != -1) {
-				out.write(buffer, 0, bytesRead);
-				buffer = new byte[4096];
-			}
-			input.close();
-		} else {
-			// out.write(attachment.getFileByte());
-		}
-		out.flush();
-		out.close();
-		FacesContext.getCurrentInstance().responseComplete();
+		
+		downloadFile(scQtProposalChecklist.getScQtCheckList()
+				.getScQtCheckListAttachment());
 	}
 
 	public void onlineAction(ScQtProposalChecklist scQtProposalChecklist) {

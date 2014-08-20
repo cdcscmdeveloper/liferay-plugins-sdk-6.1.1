@@ -64,7 +64,7 @@
 				</p:column>
 				
 				<p:column headerText="#{lbl['lbl.sc.request.note.summary']}" style="width:6%;">
-				    <p:commandLink partialSubmit="true"  process="@this" >
+				    <p:commandLink partialSubmit="true" process="@this" action="#{requestNoteBackingBean.downloadMarketResearchSummary(requestNoteDtl)}">
 				      	<p:graphicImage library="ep/images/design" name="evaluate.png"
 							style="vertical-align:middle" />
 				  </p:commandLink> 

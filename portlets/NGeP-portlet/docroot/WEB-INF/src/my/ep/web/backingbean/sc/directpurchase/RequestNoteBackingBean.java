@@ -3,6 +3,7 @@
  */
 package my.ep.web.backingbean.sc.directpurchase;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -81,6 +82,7 @@ import my.ep.persistence.entity.sc.directpurchase.ScLocationDistrictCriteria;
 import my.ep.persistence.entity.sc.directpurchase.ScLocationDivisionCriteria;
 import my.ep.persistence.entity.sc.directpurchase.ScLocationStateCriteria;
 import my.ep.persistence.entity.sc.directpurchase.ScPIDRemark;
+import my.ep.persistence.entity.sc.directpurchase.ScPIReportAttachment;
 import my.ep.persistence.entity.sc.directpurchase.ScPrInquiry;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefault;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefaultAttachment;
@@ -89,12 +91,14 @@ import my.ep.persistence.entity.sc.directpurchase.ScQuoteDoc;
 import my.ep.persistence.entity.sc.directpurchase.ScRNWorkFlowStatus;
 import my.ep.persistence.entity.sc.directpurchase.ScRNZone;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
+import my.ep.persistence.entity.sc.directpurchase.ScRequestItemAttachment;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteApprovalUser;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteRemark;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestSupplierItem;
 import my.ep.persistence.entity.sc.directpurchase.ScSupplierItemPrice;
+import my.ep.persistence.entity.sc.quationtender.ScAttachment;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
@@ -103,10 +107,10 @@ import my.ep.persistence.logging.LogKey;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
-import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
 import my.ep.web.backingbean.sc.purchaseindefault.PurchaseInDefaultBackingBean;
 import my.ep.web.backingbean.sc.purchaseinquiry.PurchaseInquiryBackingBean;
+import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.sc.directpurchase.RequestNoteManagedBean;
 import my.ep.web.util.DateUtils;
@@ -132,7 +136,7 @@ import com.liferay.portal.util.PortalUtil;
  */
 @ManagedBean(name = "requestNoteBackingBean")
 @RequestScoped
-public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBean> {
+public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteManagedBean> {
 	private static Logger log = Logger.getLogger(RequestNoteBackingBean.class);
 	 
 	public RequestNoteBackingBean() {
@@ -1996,6 +2000,82 @@ public class RequestNoteBackingBean extends BaseBackingBean<RequestNoteManagedBe
 			}	
 		}
 		return statusDescs;
+	}
+	
+	public void downloadMarketResearchSummary(ScRequestNoteDtl scRequestNoteDtl) throws IOException {
+		debugLogger("downloadMarketResearchSummary");
+		
+		ScRequestItem requestItem = scRequestNoteDtl.getRequestItem();
+		ScRequestItemAttachment requestItemAttachment = requestItem.getScRequestItemAttachment();
+		
+		if (requestItemAttachment == null) {
+			try {
+				requestItemAttachment = new ScRequestItemAttachment();
+				requestItemAttachment.setScRequestItem(requestItem);
+				requestItemAttachment.setDocNo(scRequestNoteDtl.getScRequestNote().getRequestNoteNo());
+				requestItemAttachment.setPrefixFileName(getItemCode(requestItem));
+				
+				generateMarketSummaryPdfFromVelocity((ScAttachment)requestItemAttachment, 
+						requestItem);
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new EpException(e.getMessage());
+			}
+			
+			requestItem.setScRequestItemAttachment(requestItemAttachment);
+		}
+		
+		downloadFile(requestItemAttachment);	
+	}
+	
+	public void downloadPurchaseInqReport(ScRequestNoteDtl scRequestNoteDtl) throws IOException {
+		debugLogger("downloadPurchaseInqReport");
+		
+		ScRequestItem requestItem = scRequestNoteDtl.getRequestItem();
+		ScPIReportAttachment scPIReportAttachment = scRequestNoteDtl.getScPIReportAttachment();
+		
+		if (scPIReportAttachment == null) {
+			try {
+				scPIReportAttachment = new ScPIReportAttachment();
+				scPIReportAttachment.setScRequestNoteDtl(scRequestNoteDtl);
+				scPIReportAttachment.setDocNo(scRequestNoteDtl.getScRequestNote().getRequestNoteNo());
+				scPIReportAttachment.setPrefixFileName(getItemCode(requestItem));
+				
+				generatePurchaseInqPdfFromVelocity((ScAttachment)scPIReportAttachment, 
+						requestItem.getSupplierItems());
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new EpException(e.getMessage());
+			}
+			
+			scRequestNoteDtl.setScPIReportAttachment(scPIReportAttachment);
+		}
+		
+		downloadFile(scPIReportAttachment);
+	}
+	
+	private String getItemCode(ScRequestItem scRequestItem) {
+		CmItem cmItem = scRequestItem.getCmItem();
+		
+		if (cmItem != null) {
+			return cmItem.getExtensionCode();
+		} else {
+			return scRequestItem.getTempUnspscCode();
+		}
+	}
+	
+	private void generateMarketSummaryPdfFromVelocity(ScAttachment attachment, ScRequestItem scRequestItem) throws IOException {
+		attachment.setFileName("market_summary.pdf");
+		populateAttachmentDetails(attachment);
+		
+		// TODO
+	}
+	
+	private void generatePurchaseInqPdfFromVelocity(ScAttachment attachment, List<ScRequestSupplierItem> scRequestSupplierItems) throws IOException {
+		attachment.setFileName("pi_report.pdf");
+		populateAttachmentDetails(attachment);
+		
+		// TODO
 	}
 	
 	private class SupplierPK {

@@ -54,7 +54,6 @@ import my.ep.jaxb.sc.sitevisitproposaldata.SCSiteVisitProposalDataType;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScAttachment;
@@ -153,8 +152,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		populateAttachmentDetails(attachment);
 
 		FileOutputStream fos;
-
-		fos = new FileOutputStream(attachment.getFilePath());
+		fos = new FileOutputStream(getActualFilePath(attachment));
 		fos.write(fileBytes);
 		fos.close();
 
@@ -174,10 +172,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		attachment.setChangedBy(createdUser.getUserId());
 		attachment.setCreatedUser(createdUser);
 
-		String docRepoBaseDir = EpPropertiesUtils.getInstance().getProperty(
-				EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
-		StringBuilder filePath = new StringBuilder(docRepoBaseDir);
-		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
+		StringBuilder filePath = new StringBuilder();
 		filePath.append(DateUtils.getLast2DigitOfYear());
 		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
 		filePath.append(ModuleCodeConst.SUPPLIER_SELECTION.toUpperCase());
@@ -185,8 +180,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		filePath.append(attachment.getDocNo());
 		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
 		filePath.append(attachment.getDocType());
+		attachment.setFilePath(filePath.toString());
 
-		File theDir = new File(filePath.toString());
+		File theDir = new File(getActualFilePath(attachment));
 		theDir.mkdirs();
 
 		AttachmentFormat scFormat = getAttachmentFormat(attachment);
@@ -197,7 +193,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		filePath.append(formatedFileName);
 		attachment.setFilePath(filePath.toString());
 
-		log.info("=======get File path====" + attachment.getFilePath());
+		log.info("=======get File path====" + getActualFilePath(attachment));
 	}
 
 	private AttachmentFormat getAttachmentFormat(ScAttachment scAttachment) {
@@ -211,6 +207,16 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 			return new AttachmentDefaultFormat();
 		}
+	}
+	
+	protected String getActualFilePath(ScAttachment attachment) {
+		String docRepoBaseDir = EpPropertiesUtils.getInstance().getProperty(
+				EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
+		StringBuilder actualFilePath = new StringBuilder(docRepoBaseDir);
+		actualFilePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
+		actualFilePath.append(attachment.getFilePath());
+		
+		return actualFilePath.toString();
 	}
 
 	/**
@@ -250,7 +256,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			ATTACHMENT scAttachment) throws IOException {
 		if (scAttachment != null
 				&& StringUtils.isNotBlank(scAttachment.getFileName())) {
-			return downloadFile(scAttachment.getFilePath(),
+			
+			return downloadFile(getActualFilePath(scAttachment),
 					scAttachment.getFileName());
 		} else {
 			throw new EpException("Attachment not found.");
@@ -262,15 +269,18 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		log.info("Inside downloadFile(..)");
 		PortletResponse portletResponse = (PortletResponse) FacesContext
 				.getCurrentInstance().getExternalContext().getResponse();
-		HttpServletResponse res = com.liferay.portal.util.PortalUtil
+		HttpServletResponse response = com.liferay.portal.util.PortalUtil
 				.getHttpServletResponse(portletResponse);
 
-		res.setHeader("Content-Disposition", "attachment; filename=\""
-				+ fileName + "\"");//
-		res.setHeader("Content-Transfer-Encoding", "binary");
-		res.setContentType("application/octet-stream");
-		res.flushBuffer();
-		OutputStream out = res.getOutputStream();
+		response.setHeader("Pragma", "no-cache");
+		response.setDateHeader("Expires", 0);
+//		response.setContentType("application/vnd.ms-excel");
+//		response.setHeader("Content-Transfer-Encoding", "binary");
+		response.setHeader("Content-Disposition", "attachment; filename="+fileName);
+		response.setContentType("application/octet-stream");
+		response.flushBuffer();
+		
+		OutputStream out = response.getOutputStream();
 
 		if (filePath != null) {
 			InputStream input = null;
@@ -307,7 +317,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		for (ScAttachment scAttachment : scAttachments) {
 			if (null != scAttachment
 					&& StringUtils.isNotBlank(scAttachment.getFilePath())) {
-				files.add(new File(scAttachment.getFilePath()));
+				files.add(new File(getActualFilePath(scAttachment)));
 			}
 		}
 
@@ -618,7 +628,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	protected <ATTACHMENT extends ScAttachment> StreamedContent getAttachmentStreamContent(
 			ATTACHMENT scAttachment, String contentType) throws IOException {
 		if (scAttachment != null) {
-			File file = new File(scAttachment.getFilePath());
+			File file = new File(getActualFilePath(scAttachment));
 			ByteArrayOutputStream tmpOut = new ByteArrayOutputStream();
 			FileInputStream in = new FileInputStream(file);
 			byte[] buf = new byte[512];

@@ -326,7 +326,7 @@
 					 </h:outputText></td>
 				 </tr>
 				 <tr>
-					<td><h:commandLink value="#{attachFile.fileName}" styleClass="blue_font"  action="#{purchaseInDefaultBackingBean.downloadFile(attachFile.filePath)}"/>
+					<td><h:commandLink value="#{attachFile.fileName}" styleClass="blue_font" immediate="true" action="#{purchaseInDefaultBackingBean.downloadFile(attachFile)}"/>
 						<p:commandLink action="#{purchaseInDefaultBackingBean.deleteUploadFile}" immediate="true"  update="attachId"  
 						disabled="#{purchaseInDefaultBackingBean.managedBean.pidStatus ne 'Pending Submission'}">
 			   			<h:graphicImage library="ep/images/design" name="trash.png" styleClass="tasklist_title1"/>

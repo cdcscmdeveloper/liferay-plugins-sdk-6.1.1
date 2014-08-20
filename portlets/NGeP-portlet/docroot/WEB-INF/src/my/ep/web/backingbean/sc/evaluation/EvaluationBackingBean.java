@@ -3150,9 +3150,7 @@ public class EvaluationBackingBean extends
 	public void downloadDocuments(ScQtProposalChecklist proposalCheckList) {
 		try {
 
-			downloadFile(proposalCheckList.getScQtProposalChecklistAttachment()
-					.getFileName(), proposalCheckList
-					.getScQtProposalChecklistAttachment().getFilePath());
+			downloadFile(proposalCheckList.getScQtProposalChecklistAttachment());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
