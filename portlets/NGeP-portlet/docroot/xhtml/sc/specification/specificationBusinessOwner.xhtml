@@ -50,7 +50,7 @@
 			<tr>
 
 				<td><h:outputLabel value=" #{lbl['lbl.sc.spec.justification']}" /></td>
-				<td colspan="3"><p:inputTextarea rows="2" cols="143"
+				<td colspan="3"><p:inputTextarea rows="2" cols="143" style="margin-bottom:5px;width: 100%;"
 						disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
 						maxlength="200"
 						value="#{specificationBackingBean.managedBean.scQt.justificationRemark}"></p:inputTextarea></td>
