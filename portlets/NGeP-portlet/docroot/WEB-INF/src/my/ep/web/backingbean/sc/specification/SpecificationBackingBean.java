@@ -3654,7 +3654,7 @@ public class SpecificationBackingBean extends
 
 			}
 
-			else if ((!scQt.isZonal()
+			 if ((!scQt.isZonal()
 					&& scQt.getQtType().equals(QTConstants.OPEN_TYPE) && !this
 					.getManagedBean().getScQt().getScQtSupplierCriteria()
 					.isAllState())
@@ -3674,7 +3674,7 @@ public class SpecificationBackingBean extends
 
 				}
 
-			} else if (scQt.getQtType().equals(QTConstants.OPEN_TYPE)
+			}  if (scQt.getQtType().equals(QTConstants.OPEN_TYPE)
 					&& this.getManagedBean().getScQt().getEstimatedAmount()
 							.intValue() > 500000
 					&& this.getManagedBean().getScQt()
