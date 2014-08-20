@@ -52,14 +52,10 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	private boolean divisionFlagC;
 	private PmUserOrg selectedUserOrg;
 	private List<PmUserRole> deleteUserRoles;
-//	private List<PmRoleDesc> availableRoles;
 	private List<PmRoleDesc> selectedRoles;
-	
-//	private List<PmRole> addedRoles;
-//	private List<PmRole> deletedRoles;
-	
 	private int selectedTabIndex;
-	
+	private List<PmAddress> selectedReceivingAddrs; //Address Type - R
+	private List<PmAddress> selectedDeliveringAddrs; //Address Type - D
 	private List<String[]> result;//TODO : TEMP REMOVE
 	
 	
@@ -75,6 +71,8 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	public void setDummy(boolean dummy) {
 		this.dummy = dummy;
 	}
+	
+	
 //	/**
 //	 * @return the addedRoles
 //	 */
@@ -101,6 +99,7 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 //	}
 
 	
+
 	/**
 	 * @return the selectedUser
 	 */
@@ -108,6 +107,30 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 		return selectedUser;
 	}
 
+	/**
+	 * @return the selectedReceivingAddrs
+	 */
+	public List<PmAddress> getSelectedReceivingAddrs() {
+		return selectedReceivingAddrs;
+	}
+	/**
+	 * @param selectedReceivingAddrs the selectedReceivingAddrs to set
+	 */
+	public void setSelectedReceivingAddrs(List<PmAddress> selectedReceivingAddrs) {
+		this.selectedReceivingAddrs = selectedReceivingAddrs;
+	}
+	/**
+	 * @return the selectedDeliveringAddrs
+	 */
+	public List<PmAddress> getSelectedDeliveringAddrs() {
+		return selectedDeliveringAddrs;
+	}
+	/**
+	 * @param selectedDeliveringAddrs the selectedDeliveringAddrs to set
+	 */
+	public void setSelectedDeliveringAddrs(List<PmAddress> selectedDeliveringAddrs) {
+		this.selectedDeliveringAddrs = selectedDeliveringAddrs;
+	}
 	/**
 	 * @param selectedUser the selectedUser to set
 	 */

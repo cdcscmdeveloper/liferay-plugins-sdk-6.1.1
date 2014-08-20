@@ -14,14 +14,14 @@
 		     selection="#{profileManagementBackingBean.managedBean.selectedUserOrg}" 
 		     selectionMode="single"
 		     rowIndexVar="index" rowKey="#{orgUnit}">   
-			<p:ajax event="rowSelect" update="@this, :form:tvRoleReceivingAddr" />
+			<p:ajax event="rowSelect" listener="#{profileManagementBackingBean.showReceivingAddress}" update="@this, :form:tvRoleReceivingAddr" />
 			
 		    <p:column headerText="#{lbl['lbl.pm.profiles.resorg.table.orgtype']}">
 				<p:selectOneMenu value="#{orgUnit.pmOrgProfile.orgTypeCode.parameterId}" styleClass="ppDropDownWidthM">  
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />      
 			     	<f:selectItems value="#{profileManagementBackingBean.getOrgTypeList()}" 
 			     		var="obj" itemValue="#{obj.pmParameter.parameterId}" itemLabel="#{obj.codeName}"/>  
-			     	<p:ajax event="change" listener="#{profileManagementBackingBean.changeResOrg(index)}" 
+			     	<p:ajax event="change" listener="#{profileManagementBackingBean.changeResOrgType(index)}" 
 			     		update="lovResOrg:lovResOrg, dtOrgUnit, :form:tvRoleReceivingAddr:dtRoles, :form:tvRoleReceivingAddr:dtReceiveAddr"/> 
 	            </p:selectOneMenu>		     
 	        </p:column>	 

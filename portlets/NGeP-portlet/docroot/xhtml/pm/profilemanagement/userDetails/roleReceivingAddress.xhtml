@@ -44,22 +44,41 @@
 			        
 	      	<!-- Receiving Address -->
 		  	<p:tab title="#{lbl['lbl.pm.profiles.authorisation.receiving.address']}">	
-				<p:dataTable id="dtReceiveAddr" editable="true" style="width:100%" widgetVar="receivingAddService">	          
+				<p:dataTable id="dtReceiveAddr" value="#{profileManagementBackingBean.managedBean.selectedReceivingAddrs}"
+						emptyMessage="#{lbl['lbl.pp.no.record.found']}"  var="receivAddr">	          
 				    <p:column headerText="#{lbl['lbl.pm.profiles.authorisation.addname']}" > 
+				    	#{profileManagementBackingBean.getFullAddress(receivAddr)}
 			        </p:column>
 			        <p:column headerText="#{lbl['lbl.pm.profiles.userdetails.status']}" > 
+		        		<p:selectOneMenu value="#{receivAddr.recordStatusFlg}">  
+			            	<f:selectItems value="#{profileManagementBackingBean.getStatusOptions()}" />
+			          	</p:selectOneMenu> 
 			        </p:column>
 				</p:dataTable>
 		        <br/>
 				<br/>
 				<div class="ppRightBtn">
-					<p:commandButton value="#{lbl['lbl.btn.add']}" oncomplete="receivingAddress.show();"/>&#160;
-		        	<p:commandButton value="#{lbl['lbl.btn.delete']}" />
+					<table style="float:right;">
+						<tr>
+							<td>
+								<ac:lov id="lovAddrType" lovId="PM_ADDRESS_TYPE" styleClass="ppDisplayCalS" 
+					            	readonly="true" selectionMode="multiple" buttonLabel="#{lbl['lbl.btn.add']}"
+									headerText="#{lbl['lbl.pm.profiles.authorisation.select.address']}" update=":form:tvRoleReceivingAddr:dtReceiveAddr"
+									saveObject="profileManagementBackingBean.managedBean.selectedDeliveringAddrs"
+									postUpdateListener="profileManagementBackingBean.updateReceivingAddr(profileManagementBackingBean.managedBean.selectedDeliveringAddrs)"
+									conditionField="pmOrgProfile.orgTypeCode.parameterId^#{profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterId}|addressType^D|recordStatus^1" 
+									/>
+							</td>
+							<td>
+								<p:commandButton value="#{lbl['lbl.btn.delete']}" />
+							</td>
+						</tr>
+					</table>
 		      	 </div>
 	      	</p:tab> 	  	      
 	    </p:tabView>      		
 	</p:outputPanel>
-  
+  			 	
 	<!-- Role Selection Popup -->
 	<ui:include src="/xhtml/pm/profilemanagement/common/rolePopUp.xhtml" />
 	

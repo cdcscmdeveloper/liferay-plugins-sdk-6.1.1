@@ -320,7 +320,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		logger.info("populateUserAddress");
 		try {
 			for (PmAddressType addressTypeObj : pmUser.getPmAddressTypes()) {
-				if (addressTypeObj.getAddressType().equalsIgnoreCase(ProfileManagementConst.ADDRESS_USER)) {
+				if (ProfileManagementConst.ADDRESS_USER.equalsIgnoreCase(addressTypeObj.getAddressType())) {
 					this.getManagedBean().setUserAddress(addressTypeObj.getPmAddress());
 					break;
 				}
@@ -519,7 +519,8 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	 * 			the role code.
 	 * @return role description
 	 */
-	public String getRoleDescByRoleCode(String roleCode) {		
+	public String getRoleDescByRoleCode(String roleCode) {	
+		logger.info("getRoleDescByRoleCode");
 		String roleDesc = null;
 		
 		if (roleCode != null) {
@@ -535,14 +536,186 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		return roleDesc;
 	}
 	
-	public void changeResOrg(int index){
+	/**
+	 * reset PmUserOrg info
+	 * @param index
+	 */
+	public void changeResOrgType(int index){
+		logger.info("changeResOrgType");
 		if(this.getManagedBean().getSelectedUser().getPmUserOrgs()!=null && !this.getManagedBean().getSelectedUser().getPmUserOrgs().isEmpty()){
-			this.getManagedBean().getSelectedUser().getPmUserOrgs().get(index).getPmOrgProfile().setPmOrgValidity(new PmOrgValidity());
-			this.getManagedBean().getSelectedUser().getPmUserOrgs().get(index).setPmUserRoles(new ArrayList<PmUserRole>());
+			PmUserOrg selectedPmUserOrg = this.getManagedBean().getSelectedUser().getPmUserOrgs().get(index);
+			if(selectedPmUserOrg!=null){
+				selectedPmUserOrg.getPmOrgProfile().setPmOrgValidity(new PmOrgValidity());
+				selectedPmUserOrg.setPmUserRoles(new ArrayList<PmUserRole>());
+			}
+		}	
+	}
+	/**
+	 * Show receiving addresses and user roles for selected responsible org.
+	 * @param index
+	 */
+	public void showReceivingAddress(){
+		logger.info("showReceivingAddress");
+		try {
+			
+			if(this.getManagedBean().getSelectedUserOrg()!=null && this.getManagedBean().getSelectedUser().getPmAddressTypes()!=null){
+				if(this.getManagedBean().getSelectedReceivingAddrs()==null){
+					this.getManagedBean().setSelectedReceivingAddrs(new ArrayList<PmAddress>());
+				}
+				for (PmAddressType addressTypeObj : this.getManagedBean().getSelectedUser().getPmAddressTypes()){
+					if (ProfileManagementConst.ADDRESS_RECEIVING.equalsIgnoreCase(addressTypeObj.getAddressType())) {
+						this.getManagedBean().getSelectedReceivingAddrs().add(addressTypeObj.getPmAddress());
+						break;
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new EpException("Unable to retrieve/populate receiving address.", new String[]{e.getMessage()}); //TODO exception
 		}
+	}
+	
+	/**
+	 * Add selected delivering address to receiving address
+	 * @param deliveringAddrs
+	 */
+	public void updateReceivingAddr(List<PmAddressType>deliveringAddrs){
+		logger.info("updateReceivingAddr");
+		if(deliveringAddrs!=null){
+			if(this.getManagedBean().getSelectedReceivingAddrs()==null){
+				this.getManagedBean().setSelectedReceivingAddrs(new ArrayList<PmAddress>());
+			}
+			for(PmAddressType pmAddressType: deliveringAddrs){
+				this.getManagedBean().getSelectedReceivingAddrs().add(pmAddressType.getPmAddress());
+			}
+			
+		}
+	}
+	
+	
+//	private List<PmRoleDesc> getChildRoles(String parentCode){
+//		List<PmRoleDesc> childList = new ArrayList<PmRoleDesc>();
+//		try{
+//			if(parentCode!=null){
+//				RoleReqDTO roleReqDTO = new RoleReqDTO();
+//				roleReqDTO.setParentRole(parentCode);
+//				roleReqDTO.setLanguage(getFacesScopes().getUserLocale().getLanguage());
+//				IRoleSO roleSO = BusinessDelegate.getInstance().getServiceObject(
+//						ModuleCodeConst.PROFILE_MANAGEMENT, IRoleSO.class);
+//				RoleResDTO resDto = roleSO.searchRoleNameList(roleReqDTO);
+//				if(resDto!=null && resDto.isSuccessful()){
+//					childList = resDto.getRoleList();
+//				}
+//				
+//			}
+//		}catch(Exception e){
+//			e.printStackTrace();
+//		}
+//		return childList;
+//	}
+//	
+
+	/**
+	 * add new selected role to user role list
+	 */
+	public void confirmRoles(){
+		logger.info("confirmRoles");
+//		this.getManagedBean().setAvailableRoles(this.getManagedBean().getSelectedRoles());
+		if(this.getManagedBean().getSelectedRoles()!=null && !this.getManagedBean().getSelectedRoles().isEmpty()){
+			if(this.getManagedBean().getSelectedUserOrg()!=null){
+				//Validation for unique roles added to list
+				if(isUniqueRoles()){
+					for(PmRoleDesc pmRoleDesc : this.getManagedBean().getSelectedRoles()){
+						PmUserRole pmUserRole = new PmUserRole();
+						pmUserRole.setPmRole(pmRoleDesc.getPmRole());
+						this.getManagedBean().getSelectedUserOrg().addPmUserRole(pmUserRole);
+					}
+				}else{
+					throw new EpException("Duplicate roles."); //TODO exception
+				}
+			}else{
+				throw new EpException("Please select a Reponsible Org. Unit."); //TODO exception
+			}
+		}else{
+			throw new EpException("At least one role must be selected."); //TODO exception
+		}
+		RequestContext.getCurrentInstance().execute("dlRoleOptions.hide()");
 		
 	}
+	
+	/**
+	 * delete selected role
+	 */
+	public void deleteRole(){
+		logger.info("deleteRole");
+		if(this.getManagedBean().getDeleteUserRoles()!=null && !this.getManagedBean().getDeleteUserRoles().isEmpty()){
+			if(this.getManagedBean().getSelectedUserOrg().getPmUserRoles()==null){
+				this.getManagedBean().getSelectedUserOrg().setPmUserRoles(new ArrayList<PmUserRole>());
+			}
+			for(PmUserRole userRole: this.getManagedBean().getDeleteUserRoles()){
+				this.getManagedBean().getSelectedUserOrg().getPmUserRoles().remove(userRole);
+			}
+			this.getManagedBean().getDeleteUserRoles().clear();
+		}else{
+			throw new EpException("At least one role must be selected."); //TODO
+		}
+	
+	}
+	
+	/**
+	 * validate if selected roles are not duplicated
+	 * @return boolean
+	 */
+	private boolean isUniqueRoles(){
+		logger.info("isUniqueRoles");
+		boolean isUnique = true;
+		if(this.getManagedBean().getSelectedUserOrg().getPmUserRoles()!=null 
+				&& !this.getManagedBean().getSelectedUserOrg().getPmUserRoles().isEmpty()){
+			List <PmRole> oriPmRoles = new ArrayList<PmRole>();
+//			List <PmRole> newPmRoles = new ArrayList<PmRole>();
+			
+			for(PmUserRole obj:this.getManagedBean().getSelectedUserOrg().getPmUserRoles()){
+				oriPmRoles.add(obj.getPmRole());
+			}
+			for(PmRoleDesc obj:this.getManagedBean().getSelectedRoles()){
+				if(oriPmRoles.contains(obj.getPmRole())){
+					isUnique = false;
+					break;
+				}
+//				newPmRoles.add(obj.getPmRole());
+			}
+			
+//			if(oriPmRoles.containsAll(newPmRoles)){
+//				isUnique = false;
+//			}
+		}
+		return isUnique;
+	}
+	
+	/**
+	 * track user role status
+	 * @param pmUserRole
+	 */
+	public void userRoleStatusChange(PmUserRole pmUserRole){
+		logger.info("userRoleStatusChange");
+		if(pmUserRole!=null){
+			 if(pmUserRole.getRecordStatusFlg()==DbValueConst.RECORD_STATUS_DELETED){
+				 if(!pmUserRole.isModified()){
+					 pmUserRole.setModified(true);
+				 }else{
+					 pmUserRole.setModified(false);
+				 }
+			 }else if(pmUserRole.getRecordStatusFlg()==DbValueConst.RECORD_STATUS_ACTIVE){
+		 		if(!pmUserRole.isModified()){
+		 			pmUserRole.setModified(true);
+				}else{
+					pmUserRole.setModified(false);
+				}
+			 }
+		}
+	}
 
+	
 	/**
 	 * TAB Authorization - END
 	 */
@@ -604,115 +777,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		return searchBean;
 	}
 	
-//	private List<PmRoleDesc> getChildRoles(String parentCode){
-//		List<PmRoleDesc> childList = new ArrayList<PmRoleDesc>();
-//		try{
-//			if(parentCode!=null){
-//				RoleReqDTO roleReqDTO = new RoleReqDTO();
-//				roleReqDTO.setParentRole(parentCode);
-//				roleReqDTO.setLanguage(getFacesScopes().getUserLocale().getLanguage());
-//				IRoleSO roleSO = BusinessDelegate.getInstance().getServiceObject(
-//						ModuleCodeConst.PROFILE_MANAGEMENT, IRoleSO.class);
-//				RoleResDTO resDto = roleSO.searchRoleNameList(roleReqDTO);
-//				if(resDto!=null && resDto.isSuccessful()){
-//					childList = resDto.getRoleList();
-//				}
-//				
-//			}
-//		}catch(Exception e){
-//			e.printStackTrace();
-//		}
-//		return childList;
-//	}
-//	
-
-	/**
-	 * add new selected role to user role list
-	 */
-	public void confirmRoles(){
-		logger.info("confirmRoles");
-//		this.getManagedBean().setAvailableRoles(this.getManagedBean().getSelectedRoles());
-		if(this.getManagedBean().getSelectedRoles()!=null && !this.getManagedBean().getSelectedRoles().isEmpty()){
-			if(this.getManagedBean().getSelectedUserOrg()!=null){
-				//Validation for unique roles added to list
-				if(isUniqueRoles()){
-					for(PmRoleDesc pmRoleDesc : this.getManagedBean().getSelectedRoles()){
-						PmUserRole pmUserRole = new PmUserRole();
-						pmUserRole.setPmRole(pmRoleDesc.getPmRole());
-						this.getManagedBean().getSelectedUserOrg().addPmUserRole(pmUserRole);
-					}
-				}else{
-					throw new EpException("Duplicate roles."); //TODO exception
-				}
-			}else{
-				throw new EpException("Please select a Reponsible Org. Unit."); //TODO exception
-			}
-		}else{
-			throw new EpException("At least one role must be selected."); //TODO exception
-		}
-		RequestContext.getCurrentInstance().execute("dlRoleOptions.hide()");
-		
-	}
 	
-	public void deleteRole(){
-		logger.info("deleteRole");
-		if(this.getManagedBean().getDeleteUserRoles()!=null && !this.getManagedBean().getDeleteUserRoles().isEmpty()){
-			if(this.getManagedBean().getSelectedUserOrg().getPmUserRoles()==null){
-				this.getManagedBean().getSelectedUserOrg().setPmUserRoles(new ArrayList<PmUserRole>());
-			}
-			for(PmUserRole userRole: this.getManagedBean().getDeleteUserRoles()){
-				this.getManagedBean().getSelectedUserOrg().getPmUserRoles().remove(userRole);
-			}
-			this.getManagedBean().getDeleteUserRoles().clear();
-		}else{
-			throw new EpException("At least one role must be selected."); //TODO
-		}
-	
-	}
-	
-	private boolean isUniqueRoles(){
-		logger.info("isUniqueRoles");
-		boolean isUnique = true;
-		if(this.getManagedBean().getSelectedUserOrg().getPmUserRoles()!=null 
-				&& !this.getManagedBean().getSelectedUserOrg().getPmUserRoles().isEmpty()){
-			List <PmRole> oriPmRoles = new ArrayList<PmRole>();
-//			List <PmRole> newPmRoles = new ArrayList<PmRole>();
-			
-			for(PmUserRole obj:this.getManagedBean().getSelectedUserOrg().getPmUserRoles()){
-				oriPmRoles.add(obj.getPmRole());
-			}
-			for(PmRoleDesc obj:this.getManagedBean().getSelectedRoles()){
-				if(oriPmRoles.contains(obj.getPmRole())){
-					isUnique = false;
-					break;
-				}
-//				newPmRoles.add(obj.getPmRole());
-			}
-			
-//			if(oriPmRoles.containsAll(newPmRoles)){
-//				isUnique = false;
-//			}
-		}
-		return isUnique;
-	}
-	public void userRoleStatusChange(PmUserRole pmUserRole){
-		logger.info("userRoleStatusChange");
-		if(pmUserRole!=null){
-			 if(pmUserRole.getRecordStatusFlg()==DbValueConst.RECORD_STATUS_DELETED){
-				 if(!pmUserRole.isModified()){
-					 pmUserRole.setModified(true);
-				 }else{
-					 pmUserRole.setModified(false);
-				 }
-			 }else if(pmUserRole.getRecordStatusFlg()==DbValueConst.RECORD_STATUS_ACTIVE){
-		 		if(!pmUserRole.isModified()){
-		 			pmUserRole.setModified(true);
-				}else{
-					pmUserRole.setModified(false);
-				}
-			 }
-		}
-	}
 	/**
 	 * search user roles
 	 */
