@@ -3,9 +3,11 @@
  */
 package my.ep.web.backingbean.sc.directpurchase;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -43,6 +45,7 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.DPStatusConstants;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
@@ -114,15 +117,18 @@ import my.ep.web.backingbean.sc.purchaseinquiry.PurchaseInquiryBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.sc.directpurchase.RequestNoteManagedBean;
+import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sc.helper.LocationSingleton;
+import my.ep.web.util.template.DocumentGenerator;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
+import org.apache.velocity.VelocityContext;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.DualListModel;
 
@@ -2078,11 +2084,66 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 	}
 	
-	private void generateMarketSummaryPdfFromVelocity(ScAttachment attachment, ScRequestItem scRequestItem) throws IOException {
+	private void generateMarketSummaryPdfFromVelocity(ScAttachment attachment, ScRequestItem scRequestItem) throws Exception {
 		attachment.setFileName("market_summary.pdf");
 		populateAttachmentDetails(attachment);
+		CommonUtils commonUtils = new CommonUtils();
+		DecimalFormat amountDF = new DecimalFormat(commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
 		
-		// TODO
+		VelocityContext context = new VelocityContext();
+		context.put("productCode", scRequestItem.getCmItem().getExtensionCode());
+		context.put("itemName", scRequestItem.getCmItem().getItemName());
+		context.put("desc", scRequestItem.getItemDesc() != null ? scRequestItem.getItemDesc() : "" );
+		context.put("uom", scRequestItem.getUom().getUomName());
+		List<MarketSummaryBean> requestNoteVOList = new ArrayList<>();
+		MarketSummaryBean marketSummaryBean = null;
+		Long supplierId = null;
+		Long prevSupplierId = null;
+		ScSupplierItemPrice supplierItemPrice= null;
+		for(ScRequestSupplierItem supplierItem: scRequestItem.getSupplierItems()){			
+			for(int i = 0; i<supplierItem.getSupplierItemPrices().size();i++){
+				supplierItemPrice = supplierItem.getSupplierItemPrices().get(i);
+				marketSummaryBean = new MarketSummaryBean();
+				if(i==0){
+					supplierId = supplierItem.getSmSupplier().getSupplierId();
+					marketSummaryBean.setSupplierName(supplierItem.getSmSupplier().getCompanyName());
+					marketSummaryBean.setMinQty(scRequestItem.getMinqty().toString());
+					marketSummaryBean.setDeliveryTerm(supplierItemPrice.getPricing().getCmSupplierItem().getLeadTime() != null ? supplierItemPrice.getPricing().getCmSupplierItem().getLeadTime().toString() : "");
+					marketSummaryBean.setAddItemDesc(supplierItemPrice.getPricing().getCmSupplierItem().getItemDesc() != null ? supplierItemPrice.getPricing().getCmSupplierItem().getItemDesc() : "");
+					marketSummaryBean.setFrQty(supplierItemPrice.getFromQty() != null ? supplierItemPrice.getFromQty().toString() : "");
+				    marketSummaryBean.setToQty(supplierItemPrice.getToQty() != null ? supplierItemPrice.getToQty().toString() : "");
+				    marketSummaryBean.setPriceType(supplierItemPrice.getPriceType() != null ? getParameterDesc(supplierItemPrice.getPriceType()) : "");
+				    marketSummaryBean.setUnitPrice(amountDF.format(supplierItemPrice.getItemPrice()).toString());			    
+				    marketSummaryBean.setZone(supplierItemPrice.getTplSpecZone() !=null ? supplierItemPrice.getTplSpecZone().getZoneName() : "");
+				    requestNoteVOList.add(marketSummaryBean);
+				    prevSupplierId = supplierItem.getSmSupplier().getSupplierId();
+				}else{					
+					if(supplierId != prevSupplierId){
+						marketSummaryBean.setSupplierName(supplierItem.getSmSupplier().getCompanyName());
+						marketSummaryBean.setMinQty(scRequestItem.getMinqty().toString());
+						marketSummaryBean.setDeliveryTerm(supplierItemPrice.getPricing().getCmSupplierItem().getLeadTime() != null ? supplierItemPrice.getPricing().getCmSupplierItem().getLeadTime().toString() : "");
+						marketSummaryBean.setAddItemDesc(supplierItemPrice.getPricing().getCmSupplierItem().getItemDesc() != null ? supplierItemPrice.getPricing().getCmSupplierItem().getItemDesc() : "");
+					}else{
+						marketSummaryBean.setSupplierName("");
+						marketSummaryBean.setMinQty("");
+						marketSummaryBean.setDeliveryTerm("");
+						marketSummaryBean.setAddItemDesc("");						
+					}
+				    marketSummaryBean.setFrQty(supplierItemPrice.getFromQty() != null ? supplierItemPrice.getFromQty().toString() : "");
+				    marketSummaryBean.setToQty(supplierItemPrice.getToQty() != null ? supplierItemPrice.getToQty().toString() : "");
+				    marketSummaryBean.setPriceType(supplierItemPrice.getPriceType() != null ? getParameterDesc(supplierItemPrice.getPriceType()) : "");
+				    marketSummaryBean.setUnitPrice(amountDF.format(supplierItemPrice.getItemPrice()).toString());	    
+				    marketSummaryBean.setZone(supplierItemPrice.getTplSpecZone() !=null ? supplierItemPrice.getTplSpecZone().getZoneName() : "");
+				    requestNoteVOList.add(marketSummaryBean);
+				    prevSupplierId = supplierItem.getSmSupplier().getSupplierId();
+				}
+			}
+		}		
+		context.put("requestNoteVOList", requestNoteVOList);		
+    	DocumentGenerator.getInstance().generatePdfFromVelocity(
+    			"/sc/directPurchase/market-summary.vm", 
+    			context, 
+    			new FileOutputStream(getActualFilePath(attachment)));
 	}
 	
 	private void generatePurchaseInqPdfFromVelocity(ScAttachment attachment, List<ScRequestSupplierItem> scRequestSupplierItems) throws IOException {
