@@ -117,6 +117,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import org.apache.log4j.Logger;
 import org.primefaces.component.menuitem.MenuItem;
 import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.RowEditEvent;
 import org.primefaces.event.SelectEvent;
@@ -1158,26 +1159,40 @@ public void ConstructSideTabMenu(){
 	}
     
 	public void addAgencyDetails(){
-	   for(int i=0; i<selectedPmOrgProfile.length; i++){
-		  PmOrgProfile pmOrgProfile = selectedPmOrgProfile[i];
-		  CtAgency ctAgency = new CtAgency();
-		  ctAgency.setEffDate(getManagedBean().getContractVer().getCtContractValue().getEffDate());
-		  ctAgency.setExpDate(getManagedBean().getContractVer().getCtContractValue().getExpDate());
-		  ctAgency.setCeilingAmount(new BigDecimal(0));
-		  ctAgency.setOrgProfile(pmOrgProfile);
-		  this.getManagedBean().getContractVer().getCtAgencies().add(ctAgency);
-		  if(this.getManagedBean().getCtItemList() != null &&  this.getManagedBean().getCtItemList().size() > 1){
-			     for(CtContractItem contractItem: this.getManagedBean().getCtItemList()){
-			    	      CtItemCeilingQty itemCeilingQty = new CtItemCeilingQty();
-			    		  itemCeilingQty.setCtAgency(ctAgency);
-			    		  itemCeilingQty.setCtContractItem(contractItem);
-			    		  itemCeilingQty.setCeilingQuantity(new BigDecimal(0));
-			    		  itemCeilingQty.setEffDate(getManagedBean().getContractVer().getCtContractValue().getEffDate());
-			    		  itemCeilingQty.setExpDate(getManagedBean().getContractVer().getCtContractValue().getExpDate());
-			    		  contractItem.getCtItemCeilingQties().add(itemCeilingQty);
-				   }
+		List<CtAgency> ctAgencyList = new ArrayList<CtAgency>();
+		
+		for(int i=0; i<selectedPmOrgProfile.length; i++){
+			PmOrgProfile pmOrgProfile = selectedPmOrgProfile[i];
+			CtAgency ctAgency = new CtAgency();
+			ctAgency.setEffDate(getManagedBean().getContractVer().getCtContractValue().getEffDate());
+			ctAgency.setExpDate(getManagedBean().getContractVer().getCtContractValue().getExpDate());
+			ctAgency.setCeilingAmount(new BigDecimal(0));
+		  	ctAgency.setOrgProfile(pmOrgProfile);
+		  	ctAgencyList.add(ctAgency);
+		  
+		  	//Remove if already exist, avoid duplicate
+		  	for(CtAgency agency : this.getManagedBean().getContractVer().getCtAgencies()) {
+		  		if(agency.getOrgProfile().getOrgProfileId().equals(selectedPmOrgProfile[i].getOrgProfileId())) {
+		  			ctAgencyList.remove(ctAgency);
+		  			ctAgency = null;
+		  		}
+		  	}
+		  
+		  	if(ctAgency != null && this.getManagedBean().getCtItemList() != null &&  this.getManagedBean().getCtItemList().size() > 1){
+		  		for(CtContractItem contractItem: this.getManagedBean().getCtItemList()){
+		  			CtItemCeilingQty itemCeilingQty = new CtItemCeilingQty();
+		    		itemCeilingQty.setCtAgency(ctAgency);
+		    		itemCeilingQty.setCtContractItem(contractItem);
+		    		itemCeilingQty.setCeilingQuantity(new BigDecimal(0));
+		    		itemCeilingQty.setEffDate(getManagedBean().getContractVer().getCtContractValue().getEffDate());
+		    		itemCeilingQty.setExpDate(getManagedBean().getContractVer().getCtContractValue().getExpDate());
+		    		contractItem.getCtItemCeilingQties().add(itemCeilingQty);
+		  		}
 			}
-	   }selectedPmOrgProfile = null;
+		}
+		if (selectedPmOrgProfile.length>0)
+			this.getManagedBean().getContractVer().getCtAgencies().addAll(ctAgencyList);
+		selectedPmOrgProfile = null;
 	}
 	 
 	public void deleteAgencyDetails(){
@@ -1699,6 +1714,10 @@ public void ConstructSideTabMenu(){
 		agencyDataModel.resetData();
 	}
 	
+	public void assignSelAgency(CtAgency agency) {
+		getManagedBean().setSelectedAgency(agency);
+		RequestContext.getCurrentInstance().execute("deliveryAddressDlg.show()");
+	}
 	/*Implementation of search method for agency*/
 	public void searchAgencyDetails() {
 		try { 

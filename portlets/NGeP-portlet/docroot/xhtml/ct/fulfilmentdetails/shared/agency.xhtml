@@ -20,6 +20,13 @@
 			 </p:column>
 			  <p:column headerText="#{lbl['lbl.ct.agn.ptj']}">
 				<h:outputText  value="#{agencyData.orgProfile.orgName}"/>
+				<p:spacer width="5"/>
+				<p:commandLink partialSubmit="true" process="@this" update=":form:deliveryAddressDlg"
+					rendered="#{fn:length(agencyData.ctAgencyAddresses)!=0}"
+					action="#{contractDetailsBackingBean.assignSelAgency(agencyData)}">
+					<p:graphicImage value="/css/images/design/address.png" styleClass="ui-icon-address"
+						title="#{lbl['lbl.ct.agn.table.da']}" style="margin-bottom: -5px;" />
+				</p:commandLink>
 			 </p:column>
 			 <p:column headerText="#{lbl['lbl.ct.agn.tree.ptj.amount']}" style="width:130px;">
 				<p:inputText value="#{agencyData.ceilingAmount}" maxlength="23" 
@@ -47,8 +54,6 @@
        			fn:length(contractDetailsBackingBean.managedBean.contractVer.ctAgencies.get(0).ctAgencyAddresses)==0}"/> 
 			<p:commandButton id="delBtn" value="Delete" icon="ui-icon-delete" process="@form" onclick="dlgDel.show();"  rendered="#{!contractDetailsBackingBean.managedBean.directPurchase and
        			fn:length(contractDetailsBackingBean.managedBean.contractVer.ctAgencies.get(0).ctAgencyAddresses)==0}"/>
-			<p:commandButton value="#{lbl['lbl.ct.agn.table.da']}"  id="agAddressBtn"
-			  disabled="#{fn:length(contractDetailsBackingBean.selectedListOfAgency)!=1}" onclick="deliveryAddressDlg.show();"/>
 	  	</div>
 	  	    
         <p:dialog id="dlgDel" widgetVar="dlgDel" header="#{lbl['lbl.ct.dialong.cofirm.header']}" styleClass="screen-title"  
@@ -127,11 +132,11 @@
            </p:panel>
 	</p:dialog>
 	<p:dialog id="deliveryAddressDlg" header="#{lbl['lbl.ct.agn.table.da']}" widgetVar="deliveryAddressDlg" modal="true" width="600" height="400">
-	  <p:dataTable id="deliveryAddressTbl" var="deliveryAddress" value="#{contractDetailsBackingBean.selectedListOfAgency[0].ctAgencyAddresses}"
+	  <p:dataTable id="deliveryAddressTbl" var="deliveryAddress" value="#{contractDetailsBackingBean.managedBean.selectedAgency.ctAgencyAddresses}"
 		rowKey="#{deliveryAddress}">
 		<ac:paginator for="deliveryAddressTbl"/>
 		<p:column headerText="#{lbl['lbl.ct.agn.table.da']}">
-		   <p:outputLabel value="#{deliveryAddress.addressType.pmAddress.address1}" style="float:left;" />
+		   <p:outputLabel value="#{contractDetailsBackingBean.getFullAddress(deliveryAddress.addressType.pmAddress)}" style="float:left;" />
 		</p:column>
 	   </p:dataTable>
 	</p:dialog>
@@ -153,7 +158,7 @@
 											<td>
 												<h:outputText value="#{remarkVar.createdUser.userName}"></h:outputText>,
 												<h:outputText value="#{remarkVar.changedDate}">
-													<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
+													<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
 												</h:outputText>
 											</td>
 										</tr>

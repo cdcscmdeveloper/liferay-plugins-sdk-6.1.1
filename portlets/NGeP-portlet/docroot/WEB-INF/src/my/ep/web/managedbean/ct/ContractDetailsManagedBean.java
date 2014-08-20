@@ -147,6 +147,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private Map<String,Object> radioButtonSchedule;
 	private List<String> finalListOfSideMenu;
 	private String fileDirectory;
+	private CtAgency selectedAgency;
 	
 	public String[] getAction() {
 		return action;
@@ -904,5 +905,13 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 
 	public void setFinalListOfSideMenu(List<String> finalListOfSideMenu) {
 		this.finalListOfSideMenu = finalListOfSideMenu;
+	}
+
+	public CtAgency getSelectedAgency() {
+		return selectedAgency;
+	}
+
+	public void setSelectedAgency(CtAgency selectedAgency) {
+		this.selectedAgency = selectedAgency;
 	}
 }
