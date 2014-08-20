@@ -76,10 +76,14 @@
 			       </c:if>  
 			       <c:if test="#{contractDetailsBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeTier}">
 			             <p:column headerText="#{lbl['lbl.ct.item.fromqty']}" style="text-align: right;">
-				              <p:outputLabel value="#{data.fromQty}"/>
+					          <h:outputText value="#{data.fromQty}">
+			     		           <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, contractDetailsBackingBean.managedBean.selectedItem.uom.uomCode)}" />					
+					          </h:outputText>				              
 			             </p:column>       
 			             <p:column headerText="#{lbl['lbl.ct.item.toqty']}" style="text-align: right;">
-				           <p:outputLabel value="#{data.toQty}"/>
+					          <h:outputText value="#{data.toQty}">
+			     		           <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, contractDetailsBackingBean.managedBean.selectedItem.uom.uomCode)}" />					
+					          </h:outputText>				           
 			            </p:column> 
 			            <p:column headerText="#{lbl['lbl.ct.item.table1.price.price']}" style="text-align: right;">
 			              <h:outputText value="#{data.unitPrice}">
@@ -127,10 +131,14 @@
 			               <p:outputLabel value="#{data.ctContractZone.zoneName}" style="float:left;" />
 			            </p:column> 
 			            <p:column headerText="#{lbl['lbl.ct.item.fromqty']}" style="text-align: right;">
-				              <p:outputLabel value="#{data.fromQty}"/>
+					          <h:outputText value="#{data.fromQty}">
+			     		           <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, contractDetailsBackingBean.managedBean.selectedItem.uom.uomCode)}" />					
+					          </h:outputText>						              
 			             </p:column>       
 			             <p:column headerText="#{lbl['lbl.ct.item.toqty']}" style="text-align: right;">
-				           <p:outputLabel value="#{data.toQty}"/>
+					          <h:outputText value="#{data.toQty}">
+			     		           <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, contractDetailsBackingBean.managedBean.selectedItem.uom.uomCode)}" />					
+					          </h:outputText>					           
 			            </p:column>    
 			            <p:column headerText="#{lbl['lbl.ct.item.table1.price.price']}" style="text-align: right;">
 			                <h:outputText value="#{data.unitPrice}">
@@ -152,16 +160,25 @@
                      <c:if test="#{contractDetailsBackingBean.managedBean.selectedItem.priceType.parameterCode
 			            eq ParameterConst.priceTypeTariff}">
 			             <p:column headerText="#{lbl['lbl.ct.item.fromqty']}" style="text-align: right;">
-				            <p:outputLabel value="#{data.fromQty}"/>
+					          <h:outputText value="#{data.fromQty}">
+			     		           <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, contractDetailsBackingBean.managedBean.selectedItem.uom.uomCode)}" />					
+					          </h:outputText>					            
 			            </p:column>       
 			            <p:column headerText="#{lbl['lbl.ct.item.toqty']}" style="text-align: right;">
-				            <p:outputLabel value="#{data.toQty}"/>
+					          <h:outputText value="#{data.toQty}">
+			     		           <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, contractDetailsBackingBean.managedBean.selectedItem.uom.uomCode)}" />					
+					          </h:outputText>					            
 			            </p:column>  
 			            <p:column headerText="#{lbl['lbl.ct.item.subseq']}" style="text-align: right;">
-				           <p:outputLabel/>
+					          <h:outputText value="#{data.subSequence}">
+			     		           <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, contractDetailsBackingBean.managedBean.selectedItem.uom.uomCode)}" />					
+					          </h:outputText>							           
 			            </p:column> 
 			            <p:column headerText="#{lbl['lbl.ct.item.table1.price.price']}" style="text-align: right;">
-			                <p:outputLabel value="#{data.unitPrice}"/>
+			                <h:outputText value="#{data.unitPrice}">
+			                   <f:convertNumber
+						         pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+			                </h:outputText>			                
 			            </p:column>            
 			            <p:column headerText="#{lbl['lbl.ct.item.table1.price.efdate']}">
 			              <h:outputText value="#{data.effDate}" style="float:left;">
@@ -180,13 +197,19 @@
 			               <p:outputLabel value="#{data.ctContractZone.zoneName}" style="float:left;" />
 			            </p:column> 
 			            <p:column headerText="#{lbl['lbl.ct.item.fromqty']}" style="text-align: right;">
-				              <p:outputLabel value="#{data.fromQty}"/>
+					          <h:outputText value="#{data.fromQty}">
+			     		           <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, contractDetailsBackingBean.managedBean.selectedItem.uom.uomCode)}" />					
+					          </h:outputText>					              
 			             </p:column>       
 			             <p:column headerText="#{lbl['lbl.ct.item.toqty']}" style="text-align: right;">
-				           <p:outputLabel value="#{data.toQty}"/>
+					          <h:outputText value="#{data.toQty}">
+			     		           <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, contractDetailsBackingBean.managedBean.selectedItem.uom.uomCode)}" />					
+					          </h:outputText>					           
 			            </p:column>
 			             <p:column headerText="#{lbl['lbl.ct.item.subseq']}" style="text-align: right;">
-				           <p:outputLabel/>
+					          <h:outputText value="#{data.subSequence}">
+			     		           <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, contractDetailsBackingBean.managedBean.selectedItem.uom.uomCode)}" />					
+					          </h:outputText>		
 			            </p:column>     
 			            <p:column headerText="#{lbl['lbl.ct.item.table1.price.price']}" style="text-align: right;">
 			                <h:outputText value="#{data.unitPrice}">
