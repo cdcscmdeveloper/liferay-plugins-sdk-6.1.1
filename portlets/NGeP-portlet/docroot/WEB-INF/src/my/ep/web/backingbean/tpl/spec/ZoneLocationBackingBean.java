@@ -3,6 +3,7 @@
  */
 package my.ep.web.backingbean.tpl.spec;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -13,10 +14,6 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.dto.tpl.spec.SpecZoneLocReqDTO;
 import my.ep.dto.tpl.spec.SpecZoneLocResDTO;
-import my.ep.persistence.entity.pm.common.PmCity;
-import my.ep.persistence.entity.pm.common.PmDistrict;
-import my.ep.persistence.entity.pm.common.PmDivision;
-import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
@@ -24,9 +21,9 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.tpl.spec.ZoneLocationManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sc.helper.LocationSingleton;
-import my.ep.web.util.sc.helper.SourcingLocationHelper;
 
 import org.apache.log4j.Logger;
+import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
 /**
@@ -66,20 +63,21 @@ public class ZoneLocationBackingBean extends BaseBackingBean<ZoneLocationManaged
 			reqDTO.setDocId(tplSpecZoneDtl.getSpecZoneId());
 			
 			SpecZoneLocResDTO resDTO = specZoneLocSO.retrieveLocationDtlsByDocIdNType(reqDTO);
-			List<TplSpecLoc> tplSpecLocs = resDTO.getLocationsList();
+			List<TplSpecZoneLoc> tplSpecZoneLocs = new ArrayList<TplSpecZoneLoc>();
 			
-			List<PmState> states = SourcingLocationHelper.getStateFromLocationDTO(tplSpecLocs);
-			List<PmDivision> divisions = SourcingLocationHelper.getDivisionFromLocationDTO(tplSpecLocs);
-			List<PmDistrict> districts = SourcingLocationHelper.getDistrictFromLocationDTO(tplSpecLocs);
-			List<PmCity> cities = SourcingLocationHelper.getCityFromLocationDTO(tplSpecLocs);
+			for (TplSpecLoc tplSpecLoc : resDTO.getLocationsList()) {
+				if (tplSpecLoc instanceof TplSpecZoneLoc) {
+					tplSpecZoneLocs.add((TplSpecZoneLoc)tplSpecLoc);
+				}
+			}
 			
-			TreeNode locationTree = LocationSingleton.getInstance().buildLocationTree(
-					null, 
-					states, 
-					districts, 
-					divisions, 
-					cities, 
-					TplSpecZoneLoc.class);
+			List<TreeNode> locTreeNodes = LocationSingleton.getInstance().constuctTreeNode(
+					tplSpecZoneDtl, 
+					tplSpecZoneLocs).getChildren().get(0).getChildren();
+			TreeNode locationTree = new DefaultTreeNode();
+			for (TreeNode treeNode : locTreeNodes) {
+				locationTree.getChildren().add(treeNode);
+			}
 			
 			expandTreeNode(locationTree);
 			
