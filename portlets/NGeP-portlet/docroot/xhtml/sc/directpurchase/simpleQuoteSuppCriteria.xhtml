@@ -181,7 +181,7 @@
 
 						<p:column headerText="#{lbl['lbl.sc.sq.supp.criteria.mof.no']}"
 							style="width:10%">
-							<h:outputText value="#{simpleQuoteBackingBean.showMofNor(quoteSupplier.smSupplier.supplierId)}" />
+							<h:outputText value="#{quoteSupplier.mofNumber}" />
 						</p:column>
 
 						<p:column headerText="#{lbl['lbl.sc.sq.supp.criteria.supp.name']}"
@@ -299,7 +299,7 @@
 
 						<p:column headerText="#{lbl['lbl.sc.sq.supp.criteria.mof.no']}"
 							style="width:10%">
-							<h:outputText value="#{simpleQuoteBackingBean.showMofNor(data.smSupplier.supplierId)}"/>
+							<h:outputText value="#{quoteSupplier.mofNumber}"/>
 
 						</p:column>
 
