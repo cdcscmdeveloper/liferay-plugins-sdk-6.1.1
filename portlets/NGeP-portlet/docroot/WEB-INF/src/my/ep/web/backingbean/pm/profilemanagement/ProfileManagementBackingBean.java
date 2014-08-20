@@ -1227,6 +1227,45 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		}
 	}
 	
+
+	/**
+	 * delete portrait
+	 * @throws Exception
+	 */
+	public void deletePortrait() throws Exception{
+		logger.info("deletePortrait - START");
+		this.getManagedBean().getSelectedUser().setPortrait(null);
+		this.getManagedBean().getSelectedUser().setReplacePortrait(true);
+		/*
+		IUserSO userSO = null;
+		UserReqDTO reqDTO = new UserReqDTO();
+		try {
+			PmUser pmUser = this.getManagedBean().getSelectedUser();
+			reqDTO.setPmUser(pmUser);
+			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			UserResDTO resDTO = userSO.deletePortrait(reqDTO); //saveuser2
+			if(resDTO!=null && resDTO.isSuccessful()){
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO,
+								null, "Delete Portrait Successfull for Login ID: "
+										+ resDTO.getPmUser().getLoginId()));
+				
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
+		} finally {
+			userSO = null;
+		}*/
+		logger.info("deletePortrait - END");
+	}
+	
 	/**
 	 * TODO: fix the remote updatePortrait
 	 * @param pmUser
@@ -1265,6 +1304,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		UploadedFile item = event.getFile();
 		byte[] bytes = item.getContents();
 		this.getManagedBean().getSelectedUser().setPortrait(bytes);  
+		this.getManagedBean().getSelectedUser().setReplacePortrait(true);
 		logger.info("handleFileUpload - END");
 	}
 	
@@ -1276,25 +1316,25 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	 */
 	public void handleFileUpload1() throws Exception{
 		try{
-		logger.info("handleFileUpload - START - UserServiceUtil");
-		byte[] bytes = this.getManagedBean().getSelectedUser().getPortrait();
-		long imageMaxSize = PrefsPropsUtil.getLong(PropsKeys.USERS_IMAGE_MAX_SIZE);
-		System.out.println("size = " + imageMaxSize);
-		System.out.println("bytes.length = " + bytes.length);   
-		System.out.println("screen name = " + this.getManagedBean().getSelectedUser().getLoginId());
-		System.out.println("identity no = " + this.getManagedBean().getSelectedUser().getIdentificationNo());
-		String screenName =  this.getManagedBean().getSelectedUser().getLoginId()==null
-					? this.getManagedBean().getSelectedUser().getIdentificationNo() 
-					: this.getManagedBean().getSelectedUser().getLoginId();
-		long companyId = Long.parseLong(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_COMPANY_ID));
-		User user = UserServiceUtil.getUserByScreenName(companyId , screenName);
-		if(user!=null){
-			System.out.println("user id" + user.getUserId());
-		}else{
-			System.out.println("user null");
-		}
-		long userId = user.getUserId();
-		UserServiceUtil.updatePortrait(userId, bytes); 
+			logger.info("handleFileUpload - START - UserServiceUtil");
+			byte[] bytes = this.getManagedBean().getSelectedUser().getPortrait();
+			long imageMaxSize = PrefsPropsUtil.getLong(PropsKeys.USERS_IMAGE_MAX_SIZE);
+			System.out.println("size = " + imageMaxSize);
+			System.out.println("bytes.length = " + bytes.length);   
+			System.out.println("screen name = " + this.getManagedBean().getSelectedUser().getLoginId());
+			System.out.println("identity no = " + this.getManagedBean().getSelectedUser().getIdentificationNo());
+			String screenName =  this.getManagedBean().getSelectedUser().getLoginId()==null
+						? this.getManagedBean().getSelectedUser().getIdentificationNo() 
+						: this.getManagedBean().getSelectedUser().getLoginId();
+			long companyId = Long.parseLong(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_COMPANY_ID));
+			User user = UserServiceUtil.getUserByScreenName(companyId , screenName);
+			if(user!=null){
+				System.out.println("user id" + user.getUserId());
+			}else{
+				System.out.println("user null");
+			}
+			long userId = user.getUserId();
+			UserServiceUtil.updatePortrait(userId, bytes); 
 		}catch(Exception e){
 			e.printStackTrace();
 			throw e;
@@ -1302,6 +1342,48 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		logger.info("handleFileUpload - END");
 	}
 
+	/**
+	 * Get user portrait 
+	 * @param event
+	 * @throws Exception
+	 */
+	public void handleFileUpload2() throws Exception{
+		logger.info("handleFileUpload2 - START - Remote");
+		byte[] bytes = this.getManagedBean().getSelectedUser().getPortrait();
+		long imageMaxSize = PrefsPropsUtil.getLong(PropsKeys.USERS_IMAGE_MAX_SIZE);
+		System.out.println("size = " + imageMaxSize);
+		System.out.println("bytes.length = " + bytes.length);   
+		System.out.println("screen name = " + this.getManagedBean().getSelectedUser().getLoginId());
+		System.out.println("identity no = " + this.getManagedBean().getSelectedUser().getIdentificationNo());
+	
+		IUserSO userSO = null;
+		UserReqDTO reqDTO = new UserReqDTO();
+		try {
+			PmUser pmUser = this.getManagedBean().getSelectedUser();
+			reqDTO.setPmUser(pmUser);
+			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			UserResDTO resDTO = userSO.updatePortrait(reqDTO); //saveuser2
+			if(resDTO!=null && resDTO.isSuccessful()){
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO,
+								null, "Delete Portrait Successfull for Login ID: "
+										+ resDTO.getPmUser().getLoginId()));
+				
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
+		} finally {
+			userSO = null;
+		}
+		logger.info("handleFileUpload - END");
+	}
 	
 	
 	
