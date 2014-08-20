@@ -101,7 +101,7 @@
            <br /> <br />
 
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.sc.sq.clone.item.spec.ok']}" action="#{simpleQuoteBackingBean.addCloneItemSpec()}"
+				<p:commandButton value="#{lbl['lbl.sc.sq.clone.item.spec.ok']}" action="#{simpleQuoteBackingBean.addCloneItemSpec(simpleQuoteBackingBean.managedBean.productOrService)}"
 					partialSubmit="true" process="@this citemId" update="@([id$=itemListMainId])" 
 					icon="ui-icon-submit" oncomplete="cloneItemSpec.hide()" />
 
