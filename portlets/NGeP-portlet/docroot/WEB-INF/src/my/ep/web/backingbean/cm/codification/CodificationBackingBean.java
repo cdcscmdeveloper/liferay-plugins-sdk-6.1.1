@@ -462,6 +462,10 @@ public class CodificationBackingBean extends
 			throw new EpException(MessageConst.ERROR_716006);			
 		}
 		
+		if(!unspscCode.isEmpty() && unspscCode.length()!=8){
+			throw new EpException(MessageConst.ERROR_715026);	
+		}
+		
 		searchDataModel.reloadData();
 	}
 
@@ -1576,19 +1580,26 @@ public class CodificationBackingBean extends
 //			return "";
 //		}
 		
-		ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate
-				.getInstance().getServiceObject("cm", ICodificationSO.class);
-
-		CodificationReqDTO reqDTO = new CodificationReqDTO();
-		reqDTO.setUnspscCode(query);
-
-		CodificationResDTO resDTO = codificationSO
-				.searchUnspscCodeByAuto(reqDTO);
-
+		ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm", ICodificationSO.class);
+		
 		List<String> unspscCodes = new ArrayList<String>();
+		
+		try{
+			CodificationReqDTO reqDTO = new CodificationReqDTO();
+			reqDTO.setUnspscCode(query);
 
-		for (CmUnspsc unspsc : resDTO.getUnspscList()) {
-			unspscCodes.add(unspsc.getUnspscCode());
+			CodificationResDTO resDTO = codificationSO
+					.searchUnspscCodeByAuto(reqDTO);
+
+			if(resDTO.getUnspscList()!=null)
+				for (CmUnspsc unspsc : resDTO.getUnspscList()) {
+					unspscCodes.add(unspsc.getUnspscCode());
+				}
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally {
+			codificationSO = null;
 		}
 
 		return unspscCodes;

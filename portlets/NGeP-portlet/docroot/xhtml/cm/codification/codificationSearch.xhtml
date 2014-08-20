@@ -43,7 +43,7 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.code']}"></p:outputLabel></td>
 					<td colspan="1"><p:autoComplete size="40"
-							title="UNSPSC Code is 8 digits"
+							title="UNSPSC Code is 8 digits" maxlength="8"
 							value="#{codificationBackingBean.managedBean.autoCompleteUnspscCode.unspscCode}"
 							completeMethod="#{codificationBackingBean.autoCompleteUnspsc}"
 							maxResults="15" dropdown="false" forceSelection="true" /></td>
