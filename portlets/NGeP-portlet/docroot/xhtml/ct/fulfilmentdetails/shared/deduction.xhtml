@@ -20,10 +20,13 @@
 		                <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 		             </h:outputText>
 		         </p:column>  
-		    </p:dataTable>
-	 </p:panel>        
-	 <p:panel id="clauseId" header="#{lbl['lbl.ct.ded.panel1.name']}" toggleable="true"  toggleSpeed="500">
+		    </p:dataTable>  
 	    <p:outputPanel id="clauseDescp">  
+	      <h:panelGroup rendered="#{contractDetailsBackingBean.managedBean.selectedDeduction != null and 
+	         (contractDetailsBackingBean.managedBean.selectedDeduction.ctDeductionClauses.size() > 0 or
+	          contractDetailsBackingBean.managedBean.selectedDeduction.deductionType.parameterCode eq 
+        	      ParameterConst.deductionTypeAdvancePayment)}">
+	       <p:spacer height="20"/>
      	   <p:dataTable id="tableClause" var="data" value="#{contractDetailsBackingBean.managedBean.selectedDeduction.ctDeductionClauses}"  
         	   rowKey="#{data}" selectionMode="single" selection="#{contractDetailsBackingBean.managedBean.selectedDeductionClauses}" > 
                <ac:paginator for="tableClause" />   
@@ -45,8 +48,9 @@
 		    	onclick="dlgDeduction.show()" />
            </c:if>
          </div>
+         </h:panelGroup>
        </p:outputPanel>
-	  </p:panel>
+        </p:panel>      
 	  <p:dialog id="dlgDeduction" widgetVar="dlgDeduction" header="Delete Confirmation" styleClass="screen-title"  
          resizable="false" modal="true" width="350" height="95">  
            <h:panelGrid columns="3">
