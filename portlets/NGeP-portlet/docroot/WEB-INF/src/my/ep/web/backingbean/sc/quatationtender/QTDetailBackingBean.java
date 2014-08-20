@@ -77,6 +77,7 @@ import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQtAppRequestRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRequest;
@@ -167,7 +168,7 @@ public class QTDetailBackingBean extends
 		if (this.getManagedBean().getQt().getPmOrgProfile() == null) {
 			this.getManagedBean().getQt().setPmOrgProfile(new PmOrgProfile());
 		}
-		//handlePTJName();
+		// handlePTJName();
 		IPagingDataModel<ScQt> searchQTDataModel = getManagedBean()
 				.getSearchQTDataModel();
 		if (searchQTDataModel == null) {
@@ -461,7 +462,6 @@ public class QTDetailBackingBean extends
 		}
 		return goList;
 	}
-	
 
 	/**
 	 * 
@@ -480,13 +480,9 @@ public class QTDetailBackingBean extends
 			OrgProfileResDTO resDTO = orgProfileSO
 					.retrieveOrgProfileListByOrgType(reqDTO);
 			List<PmOrgProfile> pmOrgProfiles = resDTO.getOrgProfileList();
+			this.getManagedBean().setUserDivisionList(pmOrgProfiles);
 			return pmOrgProfiles;
-		/*	// auto populate the PTJ if only 1 PTJ found.
-			if (pmOrgProfiles.size() == 1) {
-				this.getManagedBean().getQt()
-						.setPmOrgProfile(pmOrgProfiles.iterator().next());
-			}
-			this.getManagedBean().setUserDivisionList(pmOrgProfiles);*/
+			
 		}
 		return null;
 	}
@@ -494,10 +490,14 @@ public class QTDetailBackingBean extends
 	public void handlePTJNameChanged(PmOrgProfile orgProfile) {
 		List<PmOrgProfile> orgProfileList = getManagedBean()
 				.getUserDivisionList();
+		if(null != orgProfileList){
 		for (PmOrgProfile list : orgProfileList) {
 			if (list.getOrgProfileId().equals(orgProfile.getOrgProfileId())) {
 				getManagedBean().setOrgProfile(list);
 			}
+		}
+		}else{
+			debugLogger("org profile list should not be empty");
 		}
 	}
 
@@ -663,6 +663,12 @@ public class QTDetailBackingBean extends
 							.getParameterCode())) {
 						if (null != committeMembers
 								&& !committeMembers.isEmpty()) {
+							for (int i = 0; i < committeMembers.size(); i++) {
+								committeMembers.get(i).setScCommittee(
+										tabBean.getScQtCommittee()
+												.getScCommittee());
+							}
+
 							if (QTStatusConst.CM_PENDING_SUBMISSION
 									.equals(tabBean.getScQtCommittee()
 											.getScCommittee()
@@ -1678,6 +1684,30 @@ public class QTDetailBackingBean extends
 								qtApproval,
 								approverSettingDtls(
 										RoleCode.COMMITTEE_APPROVER, qtApproval)));
+					} else if (qtApproval.getApprovalCategory()
+							.getParameterCode()
+							.equals(ParameterConst.APPROVAL_CATEGORY_OTHERS)) {
+						List<ScQtApprovalRequest> approvalRequest = qtApproval
+								.getScQtApprovalDtls();
+						if (null != approvalRequest
+								&& !approvalRequest.isEmpty()) {
+							for (int i = 0; i < approvalRequest.size(); i++) {
+								PmParameter parameter = approvalRequest.get(i)
+										.getDecessionType();
+								if (null == parameter) {
+									approvalRequest.get(i).setDecessionType(
+											new PmParameter());
+									ScQtAppRequestRemark approvalRemark = new ScQtAppRequestRemark();
+									approvalRemark
+											.setApprovalRequest(approvalRequest
+													.get(i));
+									approvalRequest.get(i).setAppRequestRemark(
+											approvalRemark);
+								}
+							}
+						}
+						tabBeans.add(new TabBean(qtApproval.getApprovalType(),
+								qtApproval, null));
 					}
 
 				}
