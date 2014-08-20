@@ -715,8 +715,137 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 		return facesScopes;
 	}
 	
-	public String tempPaymentSuccess(){
-		String token = getFacesScopes().getBPMAuthenticationCtxToken();
+	public void tempPaymentSuccess(){
+		System.out.println("********submitPayment******");
+		if(this.getManagedBean().getSmBill() != null){
+			List<PmParameterDesc> paymentModeLs =SmCommonUtil.retrieveParameterDescList(SupplierManagementConst.PM_PAYMENT_MODE, new FacesScopes().getUserLocale().getLanguage());
+			List<PmStatusDesc> paymentStatusLs = SmCommonUtil.retrievePmStatusList("SM",SupplierManagementConst.PM_STATUS_PAYMENT, new FacesScopes().getUserLocale().getLanguage());
+			PmParameter paymentMode = new PmParameter();
+			SmPayment payment = new SmPayment();
+			PmStatus paymentStatus = new PmStatus();
+			
+			for(PmParameterDesc pMethod : paymentModeLs){
+				if(pMethod.getPmParameter().getParameterCode().equals(SupplierManagementConst.ONLINE_PAYMENT)){
+					paymentMode = pMethod.getPmParameter();
+				}
+			}
+			
+			for(PmStatusDesc pStat : paymentStatusLs){
+				if(pStat.getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STAT_PENDING_PAYMENT)){
+					paymentStatus = pStat.getPmStatus();
+				}
+			}
+			
+			payment.setPmParameter1(paymentMode);
+			payment.setPmStatus(paymentStatus);
+
+			SmBill smBill = this.getManagedBean().getSmBill();
+			smBill.setSmPayments(new ArrayList<SmPayment>());
+			List<SmPaymentDtl> pymDtlList = new ArrayList<SmPaymentDtl>();
+			BigDecimal totalAmount = new BigDecimal(0);
+
+			for(SmBillDtl newBillDtl : this.getManagedBean().getNewSmBillDtlLs()){
+				SmPaymentDtl paymentDtl = new SmPaymentDtl();
+				paymentDtl.setSmBillDtl(newBillDtl);
+				paymentDtl.setSmPayment(payment);
+				pymDtlList.add(paymentDtl);
+				totalAmount = totalAmount.add(newBillDtl.getItemPrice());
+			}
+			
+			totalAmount = totalAmount.setScale(2,BigDecimal.ROUND_UP);
+			payment.setSmPaymentDtls(pymDtlList);
+			payment.setSmBill(smBill);
+			payment.setPaymentAmt(totalAmount);
+
+			System.out.println("***Total Amount***" +totalAmount);
+
+//			if(this.getManagedBean().getPaymentMode().equals(SupplierManagementConst.ONLINE_PAYMENT)){
+			SmPaymentOrder pymtOrder = new SmPaymentOrder();
+			pymtOrder.setSmPayment(payment);
+			pymtOrder.setPaymentGateway("MOL");
+			//pymtOrder.setChannelName("TESTING");
+
+			payment.setSmPaymentOrder(pymtOrder);
+
+
+			List<SmPayment> smPaymentLs = new ArrayList<SmPayment>();
+			smPaymentLs.add(payment);
+			smBill.setSmPayments(smPaymentLs);
+			
+			PaymentReqDTO reqDTO = new PaymentReqDTO();
+			reqDTO.setSmBill(smBill);
+			
+			//create Payment
+			IPaymentSO reqSO = (IPaymentSO) BusinessDelegate.getInstance().getServiceObject("sm", IPaymentSO.class);
+			PaymentResDTO resDTO = new PaymentResDTO();
+			resDTO = reqSO.createPayment(reqDTO);
+			
+			/*****************************************************************************************************************/
+			//retrieve from smPayment
+			IPaymentSO paymentSO = (IPaymentSO) BusinessDelegate.getInstance().getServiceObject("sm", IPaymentSO.class);
+			PaymentReqDTO paymentReqDTO = new PaymentReqDTO();
+			Long ordId = Long.valueOf(resDTO.getSmBill().getSmPayments().get(0).getPaymentId());
+			BigDecimal txAmount = new BigDecimal(0);
+			txAmount = totalAmount.setScale(2,BigDecimal.ROUND_UP);
+			Long txID = Long.valueOf("123456");
+			paymentReqDTO.setPaymentId(ordId);
+			
+			PaymentResDTO paymentResDTO = paymentSO.retrievePaymentInfoByPaymentId(paymentReqDTO);
+			boolean validPayment = false;
+			String status = "00";
+			
+			SmPayment smPayment = paymentResDTO.getSmPayment();
+			
+			List<PmStatusDesc> pmStatLs = SmCommonUtil.retrievePmStatusList("SM",SupplierManagementConst.PM_STATUS_PAYMENT, new FacesScopes().getUserLocale().getLanguage());
+			Map<Long,PmStatusDesc> pmStatusDescMap = SmCommonUtil.converPmStatusListToMap(pmStatLs);
+			
+			System.out.println("pmStatLs>>>>>" + pmStatLs.size());
+			SmPaymentResponse smPaymentRes = new SmPaymentResponse();
+			SmPaymentOrder paymentOrder = smPayment.getSmPaymentOrder();
+			Long statusCode = null;
+			
+			statusCode = SupplierManagementConst.PM_STAT_SUCCESS_PAYMENT;
+			validPayment = true;
+			
+			String token = getFacesScopes().getBPMAuthenticationCtxToken();
+			PaymentReqDTO pymtReqDTO = new PaymentReqDTO();
+			
+//			SmPaymentResponse smPaymentRes = new SmPaymentResponse();
+//			SmPaymentOrder paymentOrder = smPayment.getSmPaymentOrder();
+			
+			
+			PmStatusDesc pmStatDesc = pmStatusDescMap.get(statusCode);
+			smPayment.setPmStatus(pmStatDesc.getPmStatus());
+			
+			paymentOrder.setChannelName("");
+			smPaymentRes.setTransactionId(txID);
+			smPaymentRes.setErrorCode("");
+			smPaymentRes.setErrorDesc("");
+			smPaymentRes.setTransactionDate(new Date());
+			smPaymentRes.setSmPaymentOrder(paymentOrder);
+			smPaymentRes.setPaymentStatus(status);
+			smPaymentRes.setPaidAmt(txAmount);
+			paymentOrder.getSmPaymentResponses().add(smPaymentRes);
+			
+			pymtReqDTO.setValidPayment(validPayment);
+			pymtReqDTO.setSmPayment(smPayment);
+			pymtReqDTO.setOutcome(SupplierManagementConst.BPM_SUBMIT);
+
+			pymtReqDTO.setTaskId(this.getManagedBean().getTaskId()); 
+			pymtReqDTO.setBpmPojo(this.getManagedBean().getBpmPojo());
+			pymtReqDTO.setToken(token);
+			
+			FacesScopes fs = new FacesScopes();
+			pymtReqDTO.setServerName(fs.getRequest().getServerName());
+			pymtReqDTO.setServerPort(fs.getRequest().getServerPort());
+			
+			PaymentResDTO pymtResDTO = reqSO.updatePayment(pymtReqDTO);
+			
+			showPaymentResponse(status);
+			this.renewSesionObject();
+		}
+		
+		/*String token = getFacesScopes().getBPMAuthenticationCtxToken();
 		PaymentReqDTO pymtReqDTO = new PaymentReqDTO();
 		
 		pymtReqDTO.setSmAppl(this.getManagedBean().getSmAppl());
@@ -745,7 +874,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 			throw new EpException(ex.getMessage());
 		}
 	
-		return null;
+		return null;*/
 	}
 }
 
