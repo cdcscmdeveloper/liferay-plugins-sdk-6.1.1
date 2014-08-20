@@ -130,7 +130,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private CtDeduction ctDeductionDel;
 	private CtDeduction selectedDeduction;
 	private List<CtDeductionClause> ctDeductionClauseList;
-	private CtDeductionClause selectedDeductionClauses;
 	private CtSchedule ctSchedulesDel;
 	private CtProgressivePayment ctProgressivePaymentDel;
 	private DualListModel<String> approverModel;
@@ -598,15 +597,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 
 	public void setSelectedDeduction(CtDeduction selectedDeduction) {
 		this.selectedDeduction = selectedDeduction;
-	}
-
-	public CtDeductionClause getSelectedDeductionClauses() {
-		return selectedDeductionClauses;
-	}
-
-	public void setSelectedDeductionClauses(
-			CtDeductionClause selectedDeductionClauses) {
-		this.selectedDeductionClauses = selectedDeductionClauses;
 	}
 
 	public List<CtDeductionClause> getCtDeductionClauseList() {

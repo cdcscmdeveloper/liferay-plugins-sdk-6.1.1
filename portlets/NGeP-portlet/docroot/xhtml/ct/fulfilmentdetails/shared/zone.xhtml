@@ -37,9 +37,11 @@
         <p:column style="width:30%;">
             <f:facet name="header"> * Delivery Term </f:facet>
              <p:treeNode type="zone">
-                <p:inputText value="#{zoneTree.deliveryTerm}" rendered="#{zoneTree.zone != null}"  style="width:40px;" />
+                <p:inputText value="#{zoneTree.deliveryTerm}"  rendered="#{zoneTree.zone != null}"  
+                     style="width:40px;" styleClass="ppRightBtn" validator="#{webappBean.validateDPeriod}" />
                 <p:spacer width="2" />
-                <p:selectOneMenu id="dTerms" value="#{zoneTree.uomId}" rendered="#{zoneTree.zone != null}"  style="width:100px;" >
+                <p:selectOneMenu id="dTerms" value="#{zoneTree.uomId}"
+                  required="true" rendered="#{zoneTree.zone != null}"  style="width:100px;" >
 			       <f:selectItems value="#{contractDetailsBackingBean.getDropdownValues(ParameterTypeConst.deliveryTerm)}" />
 			    </p:selectOneMenu>
              </p:treeNode>

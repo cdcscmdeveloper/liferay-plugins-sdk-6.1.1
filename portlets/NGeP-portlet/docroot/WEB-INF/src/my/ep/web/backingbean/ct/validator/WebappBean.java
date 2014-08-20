@@ -117,11 +117,16 @@ public class WebappBean {
             throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "", errMsg));
         }
     }
-    /**
-     * Added by: Amar
-     * Date: 9/7/12
-     * validation for date 
-     */
+   
+    public void validateDPeriod(FacesContext context, UIComponent component, Object value) throws ValidatorException {
+    	Integer inputValue = (Integer) value;
+    	 String errMsg="Delivery perion must greater than 0";
+        if(inputValue >= 1)
+          return;
+        else
+            throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "", errMsg));
+    }
+    
     public void validateDate(FacesContext context, UIComponent component, Object value) throws ValidatorException {
     	String errMsg = "From date cannot be greater than to date";
         if (value == null || component.getAttributes().get("fromDate") == null) {

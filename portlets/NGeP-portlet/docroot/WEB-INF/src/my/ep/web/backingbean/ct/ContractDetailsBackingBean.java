@@ -161,6 +161,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	private CtProgressivePayment[] selectedProgressive;
 	private PmOrgProfile[] selectedPmOrgProfile;
 	private CtPerformanceBond[] selectedBondList;
+	private CtDeductionClause[] selectedDeductionClauses;
 	private IPagingDataModel<VCtContract> contractDataModel = new ContractPagingDataModel();
 	private IPagingDataModel<PmOrgProfile> agencyDataModel = new AgencyPagingDataModel();	
 	
@@ -629,8 +630,7 @@ public void ConstructSideTabMenu(){
 				
 				log.info("BackingBean: Performance Testing  Search Function: Time taken to End >>>>"+ Calendar.getInstance().getTime());
 				log.info("BackingBean: Performance Testing  Search Function: Total Time taken (Second) >>>>"+ (Calendar.getInstance().getTime().getTime() - cal.getTime().getTime()) / 1000);
-				log.info("BackingBean: Performance Testing  Search Function: Total number of record>>>>" + resDTO.getvCtContractResultBean().getResultList().size());
-				
+					
 				if(resDTO.isSuccessful()) {
 					return resDTO.getvCtContractResultBean();
 				}
@@ -1098,7 +1098,10 @@ public void ConstructSideTabMenu(){
 	}
 
 	public void deleteClauseDetails() {
-		this.getManagedBean().getSelectedDeduction().getCtDeductionClauses().remove(this.getManagedBean().getSelectedDeductionClauses());
+		for(int i=0; i < selectedDeductionClauses.length; i++){
+			 CtDeductionClause clause = selectedDeductionClauses[i];
+			 this.getManagedBean().getSelectedDeduction().getCtDeductionClauses().remove(clause);
+		}selectedDeductionClauses= null;
 	}
 	
     /*Schedule Start*/
@@ -1668,109 +1671,7 @@ public void ConstructSideTabMenu(){
 		this.getManagedBean().getContractVer().getAgencyAttachements().add(attachment);
 	}
 	
-	public BigDecimal getPaidAdvancePercentage() {
-		paidAdvancePercentage = (this.getManagedBean().getPaidAdvancePaymentAmt().multiply(BigDecimal.valueOf(100)).divide(BigDecimal.valueOf(this.getManagedBean().getAdvancePaymentAmt()), 2, RoundingMode.HALF_UP));
-		return paidAdvancePercentage;
-	}
 	
-	public void setPaidAdvancePercentage(BigDecimal paidAdvancePercentage) {
-		this.paidAdvancePercentage = paidAdvancePercentage;
-	}
-
-	public BigDecimal getBalanceToPaid() {
-		balanceToPaid = (BigDecimal.valueOf(this.getManagedBean().getAdvancePaymentAmt()).subtract(this.getManagedBean().getPaidAdvancePaymentAmt()));
-		return balanceToPaid;
-	}
-
-	public void setBalanceToPaid(BigDecimal balanceToPaid) {
-		this.balanceToPaid = balanceToPaid;
-	}
-
-	public BigDecimal getPaidPercentage() {
-		paidPercentage = (this.getManagedBean().getPaidInvoiceAmt().multiply(BigDecimal.valueOf(100)).divide(this.getManagedBean().getContractVer().getCtContractValue().getContractAmount(), 2, RoundingMode.HALF_UP));
-		return paidPercentage;
-	}
-
-	public void setPaidPercentage(BigDecimal paidPercentage) {
-		this.paidPercentage = paidPercentage;
-	}
-	
-	public CtDeductionClause[] getChkDeductionClause() {
-		return chkDeductionClause;
-	}
-
-	public void setChkDeductionClause(CtDeductionClause[] chkDeductionClause) {
-		this.chkDeductionClause = chkDeductionClause;
-	}
-
-	public String getEditorValue() {
-		return editorValue;
-	}
-
-	public void setEditorValue(String editorValue) {
-		this.editorValue = editorValue;
-	}
-	
-	public boolean isShowZoneDetails() {
-		return showZoneDetails;
-	}
-
-	public void setShowZoneDetails(boolean showZoneDetails) {
-		this.showZoneDetails = showZoneDetails;
-	}
-	
-	public CtSchedule[] getSelectedSchedule() {
-		return selectedSchedule;
-	}
-
-	public void setSelectedSchedule(CtSchedule[] selectedSchedule) {
-		this.selectedSchedule = selectedSchedule;
-	}
-	
-	public CtProgressivePayment[] getSelectedProgressive() {
-		return selectedProgressive;
-	}
-
-	public void setSelectedProgressive(CtProgressivePayment[] selectedProgressive) {
-		this.selectedProgressive = selectedProgressive;
-	}
-
-	public CtPerformanceBond[] getSelectedBondList() {
-		return selectedBondList;
-	}
-
-	public void setSelectedBondList(CtPerformanceBond[] selectedBondList) {
-		this.selectedBondList = selectedBondList;
-	}
-
-	public PmOrgProfile[] getSelectedPmOrgProfile() {
-		return selectedPmOrgProfile;
-	}
-
-	public void setSelectedPmOrgProfile(PmOrgProfile[] selectedPmOrgProfile) {
-		this.selectedPmOrgProfile = selectedPmOrgProfile;
-	}
-
-	public CtAgency[] getSelectedListOfAgency() {
-		return selectedListOfAgency;
-	}
-
-	public void setSelectedListOfAgency(CtAgency[] selectedListOfAgency) {
-		this.selectedListOfAgency = selectedListOfAgency;
-	}	
-	
-	public boolean isValidateScheduleDate() {
-			return validateScheduleDate;
-	}
-
-    public void setValidateScheduleDate(boolean validateScheduleDate) {
-		this.validateScheduleDate = validateScheduleDate;
-	}
-    
-    public List<CtContractItem> getContractItemServiceList() {
-		return ContractItemServiceList;
-	}
-
 	public void setContractItemServiceList(
 			List<CtContractItem> contractItemServiceList) {
 		ContractItemServiceList = contractItemServiceList;
@@ -1901,5 +1802,117 @@ public void ConstructSideTabMenu(){
 			}
 			return null;
 		}
+	}
+	
+	public BigDecimal getPaidAdvancePercentage() {
+		paidAdvancePercentage = (this.getManagedBean().getPaidAdvancePaymentAmt().multiply(BigDecimal.valueOf(100)).divide(BigDecimal.valueOf(this.getManagedBean().getAdvancePaymentAmt()), 2, RoundingMode.HALF_UP));
+		return paidAdvancePercentage;
+	}
+
+	public CtDeductionClause[] getSelectedDeductionClauses() {
+		return selectedDeductionClauses;
+	}
+
+	public void setSelectedDeductionClauses(
+			CtDeductionClause[] selectedDeductionClauses) {
+		this.selectedDeductionClauses = selectedDeductionClauses;
+	}
+
+	public void setPaidAdvancePercentage(BigDecimal paidAdvancePercentage) {
+		this.paidAdvancePercentage = paidAdvancePercentage;
+	}
+
+	public BigDecimal getBalanceToPaid() {
+		balanceToPaid = (BigDecimal.valueOf(this.getManagedBean().getAdvancePaymentAmt()).subtract(this.getManagedBean().getPaidAdvancePaymentAmt()));
+		return balanceToPaid;
+	}
+
+	public void setBalanceToPaid(BigDecimal balanceToPaid) {
+		this.balanceToPaid = balanceToPaid;
+	}
+
+	public BigDecimal getPaidPercentage() {
+		paidPercentage = (this.getManagedBean().getPaidInvoiceAmt().multiply(BigDecimal.valueOf(100)).divide(this.getManagedBean().getContractVer().getCtContractValue().getContractAmount(), 2, RoundingMode.HALF_UP));
+		return paidPercentage;
+	}
+
+	public void setPaidPercentage(BigDecimal paidPercentage) {
+		this.paidPercentage = paidPercentage;
+	}
+	
+	public CtDeductionClause[] getChkDeductionClause() {
+		return chkDeductionClause;
+	}
+
+	public void setChkDeductionClause(CtDeductionClause[] chkDeductionClause) {
+		this.chkDeductionClause = chkDeductionClause;
+	}
+
+	public String getEditorValue() {
+		return editorValue;
+	}
+
+	public void setEditorValue(String editorValue) {
+		this.editorValue = editorValue;
+	}
+	
+	public boolean isShowZoneDetails() {
+		return showZoneDetails;
+	}
+
+	public void setShowZoneDetails(boolean showZoneDetails) {
+		this.showZoneDetails = showZoneDetails;
+	}
+	
+	public CtSchedule[] getSelectedSchedule() {
+		return selectedSchedule;
+	}
+
+	public void setSelectedSchedule(CtSchedule[] selectedSchedule) {
+		this.selectedSchedule = selectedSchedule;
+	}
+	
+	public CtProgressivePayment[] getSelectedProgressive() {
+		return selectedProgressive;
+	}
+
+	public void setSelectedProgressive(CtProgressivePayment[] selectedProgressive) {
+		this.selectedProgressive = selectedProgressive;
+	}
+
+	public CtPerformanceBond[] getSelectedBondList() {
+		return selectedBondList;
+	}
+
+	public void setSelectedBondList(CtPerformanceBond[] selectedBondList) {
+		this.selectedBondList = selectedBondList;
+	}
+
+	public PmOrgProfile[] getSelectedPmOrgProfile() {
+		return selectedPmOrgProfile;
+	}
+
+	public void setSelectedPmOrgProfile(PmOrgProfile[] selectedPmOrgProfile) {
+		this.selectedPmOrgProfile = selectedPmOrgProfile;
+	}
+
+	public CtAgency[] getSelectedListOfAgency() {
+		return selectedListOfAgency;
+	}
+
+	public void setSelectedListOfAgency(CtAgency[] selectedListOfAgency) {
+		this.selectedListOfAgency = selectedListOfAgency;
+	}	
+	
+	public boolean isValidateScheduleDate() {
+			return validateScheduleDate;
+	}
+
+    public void setValidateScheduleDate(boolean validateScheduleDate) {
+		this.validateScheduleDate = validateScheduleDate;
+	}
+    
+    public List<CtContractItem> getContractItemServiceList() {
+		return ContractItemServiceList;
 	}
 }
