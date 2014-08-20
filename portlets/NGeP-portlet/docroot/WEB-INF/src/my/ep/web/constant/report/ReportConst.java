@@ -68,7 +68,7 @@ public class ReportConst {
 	public static final String FINANCE_POSITION_RPT_NAME = "lbl.rpt.sc.FINANCE_POSITION_RPT_NAME";
 	public static final String FINANCE_POSITION_RPT_VAL = "FinacialPosition";
 	//JSP
-	public static final String SC_SPPPP_PEMATUHAN_OC_RPT_JSP = "firststage.jsp";
+	public static final String SC_SPPPP_PEMATUHAN_OC_RPT_JSP = "sc_oc_shlist_1a.jsp";
 	public static final String SC_KPPP1_PEMATUHAN_OC_RPT_JSP = "sc_oc_method_of_asses_1b.jsp";
 	public static final String SC_PDDW_OC_RPT_JSP = "sc_oc_compliance_docs_1c.jsp";
 	public static final String SC_SPPSAP2_TEC_RPT_JSP = "sc_tec_shlisttech_eval_2a.jsp";
@@ -95,7 +95,7 @@ public class ReportConst {
 	public static final String SC_COMP_EXP_NON_GOVT_AGEN_NO_OF_CONTR_RPT_JSP = "sc_tecec_exp_non_govt_5b.jsp";
 	public static final String SC_COMP_EXP_GOVT_AGEN_CONTR_RPT_JSP = "sc_fecec_exp_govt_6a.jsp";
 	public static final String SC_COMP_EXP_NON_GOVT_AGEN_CONTR_RPT_JSP = "sc_fecec_exp_non_govt_6b.jsp";
-	public static final String SC_FINANCE_POSITION_RPT_JSP = "";	
+	public static final String SC_FINANCE_POSITION_RPT_JSP = "sc_fecec_fin_position_6c.jsp";	
 	//SC Module reports start
 	//CM Module reports start		
 	public static final String LST_PUB_CAT_ITM_RPT_NAME = "lbl.rpt.cm.LST_PUB_CAT_ITM_RPT_NAME";
