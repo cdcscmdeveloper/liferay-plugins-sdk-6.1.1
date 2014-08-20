@@ -462,7 +462,7 @@ public class CodificationBackingBean extends
 			throw new EpException(MessageConst.ERROR_716006);			
 		}
 		
-		if(!unspscCode.isEmpty() && unspscCode.length()!=8){
+		if(unspscCode != null && !unspscCode.isEmpty() && unspscCode.length()!=8){
 			throw new EpException(MessageConst.ERROR_715026);	
 		}
 		
