@@ -667,12 +667,6 @@ public void ConstructSideTabMenu(){
             this.getManagedBean().getContractVer().getCtContractItems().addAll(this.getManagedBean().getCtItemList());
             this.getManagedBean().getContractVer().getCtContractItems().addAll(this.getManagedBean().getCtItemServiceList());
             
-            if(this.getManagedBean().getSelectedDeduction() != null && this.getManagedBean().getSelectedDeduction().getCtDeductionClauses().size() > 0){
-                CtDeduction ctDeduction = this.getManagedBean().getSelectedDeduction();
-                ctDeduction.setCtDeductionClauses(this.getManagedBean().getSelectedDeduction().getCtDeductionClauses());
-                this.getManagedBean().getContractVer().getCtDeductions().add(ctDeduction);
-            }  
-            
             getZoneObjDetails();
             if(getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
             	convertScheduleDate();
