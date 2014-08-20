@@ -1843,6 +1843,8 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 				getManagedBean().setProductOrService(productOrService);
 			}
 		}
+		
+		getManagedBean().searchCloneItemSpec();
 	}
 	
 	public void supplierListListener(List<SmSupplier> suppliers  , ScQuote quote){
