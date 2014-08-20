@@ -1486,6 +1486,11 @@ public class SpecificationBackingBean extends
 			this.getManagedBean().setAllStateCode(tenderResDTO.getStateCode());
 			this.getManagedBean().setScQt(scQt);
 			if (!scQt.isPanel()) {
+				if (scQt.getEstimatedAmount().intValue() > 500000
+						&& this.getManagedBean().getAllStateCode() == 3
+						&& !scQt.getScQtSupplierCriteria().isAllState()) {
+					scQt.getScQtSupplierCriteria().setAllState(true);
+				}
 				if ((!scQt.isZonal())
 						|| (scQt.getEstimatedAmount().intValue() > 500000 && !scQt
 								.getScQtSupplierCriteria().isAllState())) {
@@ -2591,7 +2596,8 @@ public class SpecificationBackingBean extends
 		IQTSpecSO specSo = null;
 
 		try {
-			if (!this.getManagedBean().isRecommendationStats()) {
+			if (null == this.getManagedBean().getRecommendationPackageScore()
+					&& null == this.getManagedBean().getRecommendationScore()) {
 				this.getManagedBean().setRecommendationStats(true);
 				SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 				reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
@@ -3673,8 +3679,11 @@ public class SpecificationBackingBean extends
 							.intValue() > 500000
 					&& this.getManagedBean().getScQt()
 							.getScQtSupplierCriteria().isAllState()) {
+				if (null != qtSupplierCriteria) {
 
-				qtSupplierCriteria.setLocationLevel(null);
+					qtSupplierCriteria.setLocationLevel(null);
+					qtSupplierCriteria.setScQtLocCriteria(null);
+				}
 			}
 
 			qtSupplierCriteria.setScQt(scQt);
@@ -4133,14 +4142,20 @@ public class SpecificationBackingBean extends
 
 		this.getManagedBean().getScQt().getScQtSupplierCriteria()
 				.setAllState(state);
-		this.getManagedBean().setZoneTrees(null);
+
 		if (!state) {
+			if (null != this.getManagedBean().getZoneTrees()
+					&& this.getManagedBean().getZoneTrees().isEmpty()) {
+				this.getManagedBean().setZoneTrees(null);
+			}
 			if (null == this.getManagedBean().getScQt()
 					.getScQtSupplierCriteria().getLocationLevel()) {
 				this.getManagedBean().getScQt().getScQtSupplierCriteria()
 						.setLocationLevel(new PmParameter());
 			}
 
+		} else {
+			this.getManagedBean().setZoneTrees(null);
 		}
 	}
 
@@ -9526,7 +9541,7 @@ public class SpecificationBackingBean extends
 		SpecificationResDTO resDTO = null;
 		String taskId = this.getManagedBean().getTaskId();
 		String[] outComes = this.getManagedBean().getOutComes();
-	
+
 		SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
 		switch (activeIndex) {
 		case 0:
