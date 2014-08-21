@@ -83,23 +83,17 @@
 									<table>
 										<tr>
 											<td rowspan="2" style="vertical-align: top;" align="left">
-												<h:graphicImage library="ep/images/design"
-													name="#{approvalBackingBean.determineIcon(attachFile)}"
-													height="30" width="30" />
+												<h:graphicImage library="ep/images/design" name="#{approvalBackingBean.determineIcon(attachFile)}" height="30" width="30" />
 											</td>
-											<td><h:outputText value="#{attachFile.user.userName}" />,
-												<h:outputText value="#{attachFile.changedDate}">
-													<f:convertDateTime
-														pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+											<td><h:outputText value="#{attachFile.createdUser.userName}" />,
+												<h:outputText value="#{attachFile.createdDate}">
+													<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
 												</h:outputText></td>
 										</tr>
 										<tr>
-											<td><h:commandLink value="#{attachFile.fileName}"
-													styleClass="blue_font" /> <p:commandLink
-													action="#{approvalBackingBean.deleteUploadFile}"
-													immediate="true" update="attachFileIds">
-													<h:graphicImage library="ep/images/design"
-														name="icon_trash.png" styleClass="tasklist_title1" />
+											<td><h:commandLink value="#{attachFile.fileName}" styleClass="blue_font" immediate="true" action="#{approvalBackingBean.downloadFile(attachFile)}"/>
+												<p:commandLink action="#{approvalBackingBean.deleteUploadFile}" immediate="true" update="@([id$=attachFileIds])">
+													<h:graphicImage library="ep/images/design" name="icon_trash.png" styleClass="tasklist_title1" />
 												</p:commandLink></td>
 										</tr>
 									</table>

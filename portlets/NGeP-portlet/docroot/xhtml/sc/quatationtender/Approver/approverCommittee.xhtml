@@ -1,0 +1,39 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<c:if
+		test="#{!approvalBackingBean.managedBean.qt.scQtGosodoBudgets eq 'null'}">
+		<p:panel header="#{lbl['lbl.so.goso.list']}" toggleable="true">
+			<p:dataTable id="gosoList"
+				value="#{approvalBackingBean.managedBean.qt.scQtGosodoBudgets}"
+				var="goso" style="width : 100%">
+
+				<ac:paginator for="gosoList" />
+
+				<p:column headerText="#{lbl['lbl.so.gocode']}">
+					<h:inputText value="#{goso.pmGo.goCode}" disabled="true" size="30" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.so.socode']}">
+					<h:inputText value="#{goso.pmSo.soCode}" disabled="true" size="30" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.so.goso.amount']}">
+					<h:inputText value="#{goso.budgetAmt}" disabled="true" size="30" />
+				</p:column>
+
+			</p:dataTable>
+		</p:panel>
+	</c:if>
+	<p:spacer height="3" />
+	<p:tabMenu
+		activeIndex="#{approvalBackingBean.managedBean.selectedTabIndex}"
+		model="#{approvalBackingBean.managedBean.menuModel}">
+
+	</p:tabMenu>
+	<ui:include src="committeeApprovalTab.xhtml" />
+</ui:composition>

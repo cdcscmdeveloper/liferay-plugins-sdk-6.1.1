@@ -14,11 +14,11 @@
 				styleClass="noBorders tr,noBorders td">
 				<p:row>
 					<p:column width="100%" style="text-align:right">
-						<ui:repeat
-							var="bpmAction"
+						<ui:repeat var="bpmAction"
 							value="#{approvalBackingBean.managedBean.outComes}">
-							<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-							<p:commandButton value="#{lbl[buttonLabel]}" update="@form" 
+							<ui:param name="buttonLabel"
+								value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+							<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
 								styleClass="ui-button"
 								icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
 								action="#{approvalBackingBean.updateBpmTask(bpmAction)}" />
@@ -46,16 +46,12 @@
 			<c:if
 				test="${approvalBackingBean.managedBean.approvalType == 'Committee Appointment Approval'}">
 				<ui:include src="requestPTJdetails.xhtml" />
-				<p:tabMenu activeIndex="#{approvalBackingBean.managedBean.selectedTabIndex}" 
-					model="#{approvalBackingBean.managedBean.menuModel}"  >
-			
-				</p:tabMenu>
-				<ui:include src="committeeApprovalTab.xhtml" />
+				<ui:include src="approverCommittee.xhtml" />
 			</c:if>
 			<c:if
 				test="${approvalBackingBean.managedBean.approvalType == 'Publication Approval'}">
 				<ui:include src="requestPTJdetails.xhtml" />
-				<ui:include src="publicApproval.xhtml"/>
+				<ui:include src="publicApproval.xhtml" />
 			</c:if>
 		</p:panel>
 	</ui:define>

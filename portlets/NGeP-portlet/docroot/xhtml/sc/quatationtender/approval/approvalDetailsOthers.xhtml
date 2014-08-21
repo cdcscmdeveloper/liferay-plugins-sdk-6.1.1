@@ -16,8 +16,13 @@
 				<h:outputText
 					value="#{otherrequestdetails.approvalType.parameterCode}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.qt.status']}">
-			<p:selectOneMenu id="decisiontypeid"
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="* " styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.sc.qt.status']}" />
+				</f:facet>
+
+				<p:selectOneMenu id="decisiontypeid" required="true"
 					value="#{otherrequestdetails.decessionType.parameterId}"
 					style="width: 178px;margin-bottom: 5px;">
 					<f:selectItems
@@ -25,28 +30,39 @@
 				</p:selectOneMenu>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.qt.document']}">
-				<p:commandButton oncomplete="attachDlg1.show();return false;"
-					icon="iconAttachment" update="otherreqdtlsid" value="Attach Files">
+				<h:outputText
+					value="#{otherrequestdetails.approvalRequestAttachement.fileName}" />
+				<p:commandButton oncomplete="otherApprovalAttachDlg.show();"
+					value="#{lbl['lbl.txt.attach.files']}" icon="iconAttachment"
+					partialSubmit="true" process="@this" update="otherreqdtlsid">
 					<f:setPropertyActionListener value="#{otherrequestdetails.approvalRequestAttachement}"
-						target="#{approvalBackingBean.managedBean.scQtApproval}" />
+						target="#{approvalBackingBean.managedBean.scQtApproval.scQtApprovalDtls}" />
 				</p:commandButton>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.qt.remark']}">
-				<p:inputTextarea value="#{otherrequestdetails.appRequestRemark.remark}" cols="30" rows="4" />
+			
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="* " styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.sc.qt.remark']}" />
+				</f:facet>
+				<p:inputTextarea required="true"
+					value="#{otherrequestdetails.appRequestRemark.remark}" cols="30"
+					rows="4" />
 			</p:column>
 		</p:dataTable>
 	</p:panel>
 
-	<p:dialog id="approvalattachDlg1" widgetVar="attachDlg1" modal="true"
-		dynamic="true" width="700px" height="200" styleClass="pop_up_top"
-		header="#{lbl['lbl.bpm.choose.file']}">
+	<p:dialog id="otherApproval" widgetVar="otherApprovalAttachDlg"
+		modal="true" resizable="false" width="700px" height="200"
+		styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}">
+
 		<p:ajax event="close" />
 		<p:fileUpload style="display:inline;"
-			fileUploadListener="#{approvalBackingBean.handleFileAttachment}"
+			fileUploadListener="#{approvalBackingBean.handleOtherFileUpload}"
 			mode="advanced" id="approvalsupload1"
 			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
 			invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
-			update="otherreqdtlsid" oncomplete="attachDlg1.hide()">
+			update="otherreqdtlsid" oncomplete="otherApprovalAttachDlg.hide()">
 		</p:fileUpload>
 	</p:dialog>
 

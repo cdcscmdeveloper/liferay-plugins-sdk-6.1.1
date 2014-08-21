@@ -7,7 +7,7 @@
 
 	<p:spacer height="5" />
 	<p:panel header="#{lbl['lbl.sc.qt.req.dtls']}" toggleable="true">
-		<p:dataTable id="reqdtlsid" value="#{approvalDtlsList}"
+		<p:dataTable id="reqdtlsid" value="#{approvalDtlsList.scQtApprovalDtls}"
 			var="requestdetails" rowIndexVar="index" editable="true"
 			rowKey="#{requestdetails}">
 
@@ -27,6 +27,7 @@
 			<p:column headerText="#{lbl['lbl.sc.qt.status']}">
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.qt.date']}">
+				<h:outputText value="#{approvalDtlsList.approverActionDate}" />
 			</p:column>
 		</p:dataTable>
 	</p:panel>
@@ -84,24 +85,18 @@
 									<table>
 										<tr>
 											<td rowspan="2" style="vertical-align: top;" align="left">
-												<h:graphicImage library="ep/images/design"
-													name="#{approvalBackingBean.determineIcon(attachFile)}"
-													height="30" width="30" />
+												<h:graphicImage library="ep/images/design" name="#{approvalBackingBean.determineIcon(attachFile)}" height="30" width="30" />
 											</td>
-											<td><h:outputText value="#{attachFile.user.userName}" />,
-												<h:outputText value="#{attachFile.changedDate}">
-													<f:convertDateTime
-														pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+											<td><h:outputText value="#{attachFile.createdUser.userName}" />,
+												<h:outputText value="#{attachFile.createdDate}">
+													<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
 												</h:outputText></td>
 										</tr>
 										<tr>
-											<td><h:commandLink value="#{attachFile.fileName}"
-													styleClass="blue_font" /> <p:commandLink
-													action="#{approvalBackingBean.deleteUploadFile}"
-													immediate="true" update="attachId">
-													<h:graphicImage library="ep/images/design"
-														name="icon_trash.png" styleClass="tasklist_title1" />
-												</p:commandLink></td>
+											<td><h:commandLink value="#{attachFile.fileName}" styleClass="blue_font" immediate="true" action="#{approvalBackingBean.downloadFile(attachFile)}"/>
+												<p:commandLink action="#{approvalBackingBean.deleteUploadFile}" immediate="true" update="@([id$=attachId])">
+													<h:graphicImage library="ep/images/design" name="trash.png" styleClass="tasklist_title1"/>
+									 	 		</p:commandLink></td>
 										</tr>
 									</table>
 								</p:dataGrid></td>

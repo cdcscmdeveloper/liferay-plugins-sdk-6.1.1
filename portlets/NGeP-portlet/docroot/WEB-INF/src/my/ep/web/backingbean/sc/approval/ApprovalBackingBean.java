@@ -49,6 +49,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRemark;
+import my.ep.persistence.entity.sc.quationtender.ScQtApprovalReqAttachement;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRequest;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
@@ -155,6 +156,7 @@ public class ApprovalBackingBean extends
 	}
 
 	public void handleFileUpload(FileUploadEvent event) throws FileNotFoundException, IOException {
+		 List<ScQtApprovalAttachment> attachments = new ArrayList<ScQtApprovalAttachment>();
 		if (event.getFile() != null) {
 			ScAttachment scAttachment = null;
 			ScQtApproval scQtApproval = this.getManagedBean().getScQtApproval();
@@ -169,6 +171,32 @@ public class ApprovalBackingBean extends
 			}
 			attachment.setDocNo(scQtApproval.getScQt().getQtNo());
 			scAttachment = attachment; 
+			uploadAttachment(event.getFile(), scAttachment);
+			getManagedBean().setScQtApproval(scQtApproval);
+			getManagedBean().setAttachments(attachments);
+		}
+	}
+	
+	public void handleOtherFileUpload(FileUploadEvent event) throws FileNotFoundException, IOException {
+		if (event.getFile() != null) {
+			ScAttachment scAttachment = null;
+			ScQtApprovalRequest scQtApprovalRequest = null;
+			List<ScQtApprovalRequest> list = this.getManagedBean().getSelectedApprovalTabBean().getScQtApproval().getScQtApprovalDtls();
+			System.out.println("Size : " + list.size());
+			for (ScQtApprovalRequest approvalRequest : list) {
+				scQtApprovalRequest = approvalRequest;
+			}
+			ScQtApprovalReqAttachement approvalReqAttachement = scQtApprovalRequest.getApprovalRequestAttachement();
+			if (null == approvalReqAttachement) {
+				approvalReqAttachement = new ScQtApprovalReqAttachement();
+				approvalReqAttachement.setApprovalRequest(scQtApprovalRequest);
+				scQtApprovalRequest.setApprovalRequestAttachement(approvalReqAttachement);
+			} else {
+				approvalReqAttachement.setApprovalRequest(scQtApprovalRequest);
+				scQtApprovalRequest.setApprovalRequestAttachement(approvalReqAttachement);
+			}
+			approvalReqAttachement.setDocNo(String.valueOf(scQtApprovalRequest.getQtApprovalRequestId()));
+			scAttachment = approvalReqAttachement;
 			uploadAttachment(event.getFile(), scAttachment);
 		}
 	}
