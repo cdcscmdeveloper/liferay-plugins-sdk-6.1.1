@@ -2903,6 +2903,7 @@ label>span.ui-button-text {
 
 .sidemenu {
 	display: table-caption;
+	display: block; /* IE10+ */
 	border: none;
 	width: 98%;
 }
