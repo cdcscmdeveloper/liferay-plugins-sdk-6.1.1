@@ -56,5 +56,14 @@ public class DocumentRepositoryUtils {
 		
 		return uploadPath.toString();
 	}
+	
+	public static String getDBFilePath(String filePath) {
+		String baseDir = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
+		return filePath.replaceFirst(baseDir+"/", "");
+	}
 
+	public static String getBaseDir() {
+		return EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)+"/";
+	}
+	
 }
