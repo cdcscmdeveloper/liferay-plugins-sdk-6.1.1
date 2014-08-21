@@ -892,5 +892,15 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 	
 		return null;*/
 	}
+
+	public PaymentBean getPaymentBean() {
+		return paymentBean;
+	}
+
+	public void setPaymentBean(PaymentBean paymentBean) {
+		this.paymentBean = paymentBean;
+	}
+	
+	
 }
 
