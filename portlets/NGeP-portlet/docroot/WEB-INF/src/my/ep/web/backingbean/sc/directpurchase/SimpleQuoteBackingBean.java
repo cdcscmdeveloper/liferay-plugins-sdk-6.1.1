@@ -1872,7 +1872,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 							getManagedBean().setSupplierList(supplierList);
 
 						} else{
-							throw new EpException(MessageConst.INFO_700027, new String[]{"Supplier","in the Supplier List"});
+							//throw new EpException(MessageConst.INFO_700027, new String[]{"Supplier","in the Supplier List"});
 						}
 					}
 				}
