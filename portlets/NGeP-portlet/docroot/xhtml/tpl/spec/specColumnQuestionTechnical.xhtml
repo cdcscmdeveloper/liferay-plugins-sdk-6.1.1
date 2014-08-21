@@ -57,6 +57,8 @@
 		</ac:lov>
 	</p:column>
 	
+	<ui:param name="isFulfilmentTypeOneOff" value="#{question.clFulfilmentTypeCode.parameterCode == ParameterConst.fulfilmentTypeOneOff}" />
+	<ui:param name="isShowService" value="#{(!isFulfilmentTypeReq or (isFulfilmentTypeReq and !isFulfilmentTypeOneOff))}" />
 	<c:if test="#{isItemTypeService}">
 		<p:column style="width:50px;white-space:normal;">
 			<f:facet name="header">
@@ -65,7 +67,7 @@
 			</f:facet>
 			<p:inputText id="freqUOM" style="min-width:0px !important;width:96%;" styleClass="ppNumericAlign" 
 				value="#{question.clUomFrequency}" 
-				rendered="#{isQuestionTypeItem}" required="#{!question.selected}" maxlength="4"
+				rendered="#{isQuestionTypeItem and isShowService}" required="#{!question.selected}" maxlength="4"
 				label="#{lbl['lbl.tpl.spec.content.frequency.per.uom']}">
 				<ac:validateNumber  maxIntegerDigits="4" integerOnly="true" />
 			</p:inputText>
@@ -78,7 +80,7 @@
 			</f:facet>
 			<p:inputText id="dayUOM" style="min-width:0px !important;width:96%;" styleClass="ppNumericAlign"
 				value="#{question.clUomPerDay}" 
-				rendered="#{isQuestionTypeItem and isUOMHours}" required="#{!question.selected}" maxlength="4"
+				rendered="#{isQuestionTypeItem and isUOMHours and isShowService}" required="#{!question.selected}" maxlength="4"
 				label="#{lbl['lbl.tpl.spec.content.no.uom.per.day']}">
 				<ac:validateNumber  maxIntegerDigits="4" integerOnly="true" />
 			</p:inputText>
@@ -91,7 +93,7 @@
 			</f:facet>
 			<p:inputText id="monthUOM" style="min-width:0px !important;width:96%;" styleClass="ppNumericAlign"
 				value="#{question.clUomPerMonth}" 
-				rendered="#{isQuestionTypeItem and (isUOMHours or isUOMDays)}" required="#{!question.selected}" maxlength="4"
+				rendered="#{isQuestionTypeItem and (isUOMHours or isUOMDays) and isShowService}" required="#{!question.selected}" maxlength="4"
 				label="#{lbl['lbl.tpl.spec.content.no.uom.per.month']}">
 				<ac:validateNumber maxIntegerDigits="4" integerOnly="true" />
 			</p:inputText>
@@ -104,7 +106,7 @@
 			</f:facet>
 			<p:inputText id="duration" style="min-width:0px !important;width:96%;" styleClass="ppNumericAlign"
 				value="#{question.clDurationMonth}" 
-				rendered="#{isQuestionTypeItem}" required="#{!question.selected}" maxlength="4"
+				rendered="#{isQuestionTypeItem and isShowService}" required="#{!question.selected}" maxlength="4"
 				label="#{lbl['lbl.tpl.spec.content.duration.month']}">
 				<ac:validateNumber maxIntegerDigits="4" integerOnly="true" />
 			</p:inputText>
@@ -141,7 +143,7 @@
 			<p:commandButton icon="ui-icon-pencil" style="background-color:transparent !important; border:0px none;"  
 				oncomplete="#{tierQtyPopup}.show();"
 				partialSubmit="true" process="@this" update="@([id$=tierQtyPopup])"
-				rendered="#{!isPriceTypeAllStandard}">
+				rendered="#{!isPriceTypeAllStandard and !empty question.clPriceTypeCode.parameterId}">
 				<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{question}" />
 			</p:commandButton>
 		</h:panelGroup>
