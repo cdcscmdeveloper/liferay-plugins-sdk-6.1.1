@@ -364,6 +364,7 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 		res.setContentType("application/octet-stream");
 		res.flushBuffer();
 		OutputStream out = res.getOutputStream();   
+		filePath = DocumentRepositoryUtils.getBaseDir()+filePath;
 		if(filePath!=null) {
 			InputStream input = null;
 			try {

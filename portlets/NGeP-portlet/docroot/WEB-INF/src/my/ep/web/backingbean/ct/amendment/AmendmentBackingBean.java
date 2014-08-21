@@ -184,7 +184,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	private static final String CONTRACT_MAINT_PAGE = "/xhtml/ct/fulfilmentdetails/search/search.xhtml?faces-redirect=true";
 	
 	private String editorValue;
-	private ContractBackingBean ctBackingBean;
+	private ContractBackingBean ctBackingBean = null;
 	private PmUser[] selectedPmUser;
 	private CtMeeting[] selectedMeetingUser;
 	private CtPerformanceBond[] selectedBondList;
@@ -516,7 +516,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	               
 	               //this.getManagedBean().getRemarkList().get(0)
 	        
-	               reqDTO.setCtRemark(new CtRemark());
+	               reqDTO.setCtRemark(this.getManagedBean().getRemarkList().get(0));
 		           reqDTO.setAttachments(this.getManagedBean().getAttachmentList());
 		           
 		           ContractResDTO resDTO = contractSO.saveContractVer(reqDTO);
@@ -825,6 +825,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		res.setContentType("application/octet-stream");
 		res.flushBuffer();
 		OutputStream out = res.getOutputStream();   
+	    filePath = DocumentRepositoryUtils.getBaseDir()+filePath;
 		if(filePath!=null) {
 			InputStream input = null;
 			try {
@@ -861,7 +862,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		    	   String content = null;	
 		           attachmentFormat = new AttachmentDateFormat();
 			       String filePath = getManagedBean().getFileDirectory() + "/temp";
-			   
+			      
 			        File file = new File(filePath);
 		            file.mkdirs();
 		            filePath = filePath + "/" + attachmentFormat.format(fileName, null);
@@ -1362,7 +1363,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	    for(CtPerformanceBond ctPerformanceBond : this.getManagedBean().getContractVer().getCtPerformanceBonds()) {
 	    	if(ctPerformanceBond.equals(this.getManagedBean().getCtPerformanceBond())) {
 	    		ctPerformanceBond.setFileName(item.getFileName());
-	    		ctPerformanceBond.setFilePath(filePath);
+	    		ctPerformanceBond.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
 	        }
 	    }
 	}
@@ -1383,7 +1384,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	    for(ScLoaReport reports : this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaReports()) {
 	    	if(reports.equals(this.getManagedBean().getSelectedScLoaReports())) {
 	    		reports.getScLoaReportAttachment().setFileName(item.getFileName());
-	    		reports.getScLoaReportAttachment().setFilePath(filePath);
+	    		reports.getScLoaReportAttachment().setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
 	    		reports.getScLoaReportAttachment().setFileDesc(item.getFileName());
 	        }
 	    }
@@ -1404,7 +1405,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	    
 		this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaAttachment().setFileName(item.getFileName());
 		this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaAttachment().setFileDesc(item.getFileName());
-		this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaAttachment().setFilePath(filePath);	
+		this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaAttachment().setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));	
 		this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaAttachment().setDocType(ParameterConst.DOCUMENT_CATEGORY_LOA_FOR_CONTRACT_AMENDMENT);
 		this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaAttachment().setScLoa(this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa());
 	}
