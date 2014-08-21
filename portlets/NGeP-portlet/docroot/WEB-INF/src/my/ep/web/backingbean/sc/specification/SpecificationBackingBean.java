@@ -2253,8 +2253,7 @@ public class SpecificationBackingBean extends
 				for (ScQtScoreSetting recommnendationSetting : resDTO
 						.getScoreSettingResultBean().getResultList()) {
 					if (recommnendationSetting.getSettingType() == 1) {
-						this.getManagedBean().setRecommendationPackageScore(
-								recommnendationSetting);
+						
 						this.getManagedBean().setTechnicalScoreSetting(
 								recommnendationSetting);
 					}
