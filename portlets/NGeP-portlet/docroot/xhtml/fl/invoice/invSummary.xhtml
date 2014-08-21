@@ -9,7 +9,7 @@
 	<p:panel header="INVOICE SUMMARY" toggleable="true" styleClass="invItemSummaryPnlClass" >
 		<table>
 			<tr>
-				<td style="width:159px"><p:outputLabel value="#{lbl['lbl.fl.new.inv.amt']}" /></td>
+				<td style="width:180px"><p:outputLabel value="#{lbl['lbl.fl.new.inv.amt']}" /></td>
 				<td><p:inputText size="35" value="#{invoiceBackingBean.managedBean.invoice.invoiceAmtNew}"  disabled="true" style="text-align:right">
 				<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" /></p:inputText></td>
