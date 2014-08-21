@@ -44,11 +44,12 @@
 						</p:outputPanel> <ui:include
 							src="/xhtml/sm/shared/mofRegistration/captialOrEquityStatusInfoForm.xhtml" />
 						<c:if
-							test="#{backingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT and backingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP_DEFAULT}">
+							test="#{backingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_DEFAULT}">
 							<ui:include
 								src="/xhtml/sm/shared/mofRegistration/captialOrEquityShareHolderInfoForm.xhtml" />
-						</c:if> <ui:include
-							src="/xhtml/sm/shared/mofRegistration/captialOrEquityShareHoldingCompanyInfoForm.xhtml" />
+							<ui:include
+								src="/xhtml/sm/shared/mofRegistration/captialOrEquityShareHoldingCompanyInfoForm.xhtml" />
+						</c:if>
 						<div class="nav-wrapper">
 							<table style="width: 100%">
 								<tr>

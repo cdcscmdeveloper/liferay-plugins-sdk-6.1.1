@@ -87,112 +87,14 @@
 						value="#{backingBean.managedBean.selectedShareHolder.birthDate}" />
 					<p:message id="equiPerDobMsg" for="equiPerDob" showSummary="true"
 						showDetail="false" display="icon" /></td>
-
-				<c:choose>
-					<c:when
-						test="#{backingBean.managedBean.selectedShareHolder.equityOwner}">
-						<td><p:outputLabel value="#{lbl['lbl.sm.person.role']} : " /></td>
-						<td>
-							<table>
-								<tr>
-									<td><p:selectBooleanCheckbox disabled="true"
-											value="#{backingBean.managedBean.selectedShareHolder.equityOwner}" /></td>
-									<td><p:outputLabel
-											value="#{lbl['lbl.sm.person.equiOwner']}"
-											style="margin-bottom: 5px;" /></td>
-									<td><p:selectBooleanCheckbox
-											rendered="#{backingBean.managedBean.smAppl.smSupplier.businessType eq '2'}"
-											value="#{backingBean.managedBean.selectedShareHolder.director}" /></td>
-									<td><p:outputLabel value="#{lbl['lbl.sm.person.dir']}"
-											rendered="#{backingBean.managedBean.smAppl.smSupplier.businessType eq '2'}" /></td>
-									<td><p:selectBooleanCheckbox
-											rendered="#{backingBean.managedBean.smAppl.smSupplier.businessType eq '2'}"
-											value="#{backingBean.managedBean.selectedShareHolder.higherManagement}" /></td>
-									<td><p:outputLabel
-											value="#{lbl['lbl.sm.person.hghMngmt']}"
-											rendered="#{backingBean.managedBean.smAppl.smSupplier.businessType eq '2'}" /></td>
-								</tr>
-
-							</table>
-						</td>
-					</c:when>
-					<c:otherwise>
-						<c:choose>
-							<c:when
-								test="#{backingBean.managedBean.selectedShareHolder.dirOrHghrMngmt or backingBean.managedBean.selectedShareHolder.director or backingBean.managedBean.selectedShareHolder.higherManagement}">
-								<td><p:outputLabel value="#{lbl['lbl.sm.person.role']} : " /></td>
-								<td>
-									<table>
-										<tr>
-											<td><p:selectBooleanCheckbox
-													value="#{backingBean.managedBean.selectedShareHolder.director}" /></td>
-											<td><p:outputLabel value="Director" /></td>
-											<td><p:selectBooleanCheckbox
-													value="#{backingBean.managedBean.selectedShareHolder.higherManagement}" /></td>
-											<td><p:outputLabel value="Higher Management" /></td>
-										</tr>
-
-									</table>
-								</td>
-							</c:when>
-							<c:otherwise>
-								<c:choose>
-									<c:when
-										test="#{backingBean.managedBean.smAppl.supplierType eq 'K'}">
-										<td><p:outputLabel value="#{lbl['lbl.sm.person.role']}" />
-											<p:outputLabel value="*" styleClass="mandatory" /></td>
-										<td>
-											<table>
-												<tr>
-													<td><p:selectOneMenu required="true"
-															id="equiCntrctRoleFlg"
-															label="#{lbl['lbl.sm.person.role']}"
-															value="#{backingBean.managedBean.selectedShareHolder.staffRoleFlg}">
-															<f:selectItems
-																value="#{backingBean.getDropdownValues('KPT')}" />
-														</p:selectOneMenu> <p:message id="equiCntrctRoleFlgMsg"
-															for="equiCntrctRoleFlg" showSummary="true"
-															showDetail="false" display="icon" /></td>
-												</tr>
-
-											</table>
-										</td>
-									</c:when>
-									<c:otherwise>
-										<td><p:outputLabel value="#{lbl['lbl.sm.person.role']}" />
-											<p:outputLabel value="*" styleClass="mandatory" /></td>
-										<td>
-											<table>
-												<tr>
-													<td><p:selectOneMenu required="true"
-															label="#{lbl['lbl.sm.person.role']}"
-															id="equiConsultRoleFlg"
-															value="#{backingBean.managedBean.selectedShareHolder.staffRoleFlg}">
-															<f:selectItems
-																value="#{backingBean.getDropdownValues('JPT')}" />
-														</p:selectOneMenu> <p:message id="equiConsultRoleFlgMsg"
-															for="equiConsultRoleFlg" showSummary="true"
-															showDetail="false" display="icon" /></td>
-												</tr>
-
-											</table>
-										</td>
-									</c:otherwise>
-
-								</c:choose>
-
-							</c:otherwise>
-						</c:choose>
-					</c:otherwise>
-				</c:choose>
-			</tr>
-
-			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.person.designation']}" /></td>
 				<td><p:inputText label="#{lbl['lbl.sm.person.designation']}"
 						maxlength="30"
 						value="#{backingBean.managedBean.selectedShareHolder.designation}"
 						size="35" /></td>
+			</tr>
+
+			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.person.epfNo']}" /></td>
 				<td><p:inputText title="For Malaysian Only" maxlength="10"
 						label="#{lbl['lbl.sm.person.epfNo']}"
@@ -202,9 +104,6 @@
 						<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
 					</p:inputText> <p:message id="equiEpfNoMsg" for="equiEpfNo" showSummary="true"
 						showDetail="false" display="icon" /></td>
-
-			</tr>
-			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.person.exp']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><p:inputText label="#{lbl['lbl.sm.person.exp']}"
@@ -214,6 +113,9 @@
 						<f:validateLongRange minimum="0" maximum="99" />
 					</p:inputText> <p:message id="equiExperMsg" for="equiExper" showSummary="true"
 						showDetail="false" display="icon" /></td>
+
+			</tr>
+			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.person.email']} " /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><p:inputText label="#{lbl['lbl.sm.person.email']}"
@@ -225,10 +127,6 @@
 							pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
 					</p:inputText> <p:message id="equiEmailMsg" for="equiEmail" showSummary="true"
 						showDetail="false" display="icon" /></td>
-
-
-			</tr>
-			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.mobileNo']}" /></td>
 				<td><p:inputText size="35" maxlength="12"
 						value="#{backingBean.managedBean.selectedShareHolder.mobileNo}"
@@ -237,6 +135,10 @@
 						<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
 					</p:inputText> <p:message id="equiPerMobMsg" for="equiPerMob" showSummary="true"
 						showDetail="false" display="icon" /></td>
+
+
+			</tr>
+			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
 				<td><p:inputText size="35" maxlength="12"
 						value="#{backingBean.managedBean.selectedShareHolder.phoneNo}"
@@ -245,9 +147,6 @@
 						<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
 					</p:inputText> <p:message id="equiPerPhnNoMsg" for="equiPerPhnNo"
 						showSummary="true" showDetail="false" display="icon" /></td>
-			</tr>
-
-			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.faxno']}" /></td>
 				<td><p:inputText size="35" maxlength="12"
 						validatorMessage="#{lbl['lbl.sm.faxno']} - #{lbl['lbl.sm.invalidNo']}"
@@ -256,6 +155,9 @@
 						<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
 					</p:inputText> <p:message id="equiPerFaxNoMsg" for="equiPerFaxNo"
 						showSummary="true" showDetail="false" display="icon" /></td>
+			</tr>
+
+			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.person.bumi']}"
 						title="For Malaysian Only" /></td>
 				<td><p:selectOneRadio
@@ -263,8 +165,6 @@
 						<f:selectItem itemLabel="Yes" itemValue="1" />
 						<f:selectItem itemLabel="No" itemValue="0" />
 					</p:selectOneRadio></td>
-			</tr>
-			<tr>
 				<td><p:outputLabel value=" #{lbl['lbl.sm.person.religion']}"
 						title="For Malaysian Only" /></td>
 				<td colspan="3"><p:selectOneRadio
@@ -276,6 +176,9 @@
 			</tr>
 
 		</table>
+	</p:panel>
+	<p:panel header="User Roles" toggleable="true" id="shrRolesPanel">
+		<ui:include src="personnelRolesPanel.xhtml" />
 	</p:panel>
 	<p:panel header="#{lbl['lbl.sm.person.shrPrvHdr']}" toggleable="true"
 		id="shrPrivPanel"
@@ -332,10 +235,9 @@
 		</table>
 
 	</p:panel>
-
 	<p:panel header="#{lbl['lbl.sm.person.shrDtls']}" toggleable="true"
 		id="shareAmtPanel"
-		rendered="#{backingBean.managedBean.selectedShareHolder.equityOwner}">
+		rendered="#{backingBean.managedBean.currentPageType eq SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY}">
 		<table style="width: 100%">
 			<tr>
 				<td style="width: 13%;"><p:outputLabel

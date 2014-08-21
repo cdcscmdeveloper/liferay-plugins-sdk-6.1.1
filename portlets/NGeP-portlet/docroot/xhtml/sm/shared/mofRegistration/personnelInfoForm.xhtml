@@ -20,6 +20,7 @@
 
 									<p:row id="contrPerSumTableHdrRow1">
 										<p:column rowspan="2" styleClass="tableheaderrow" />
+										<p:column rowspan="2" styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.equiOwn']}</p:column>
 										<p:column rowspan="2" styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.bod']}</p:column>
 										<p:column rowspan="2" style="width:20%"
 											styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.hghMngt']}</p:column>
@@ -34,6 +35,10 @@
 									</p:row>
 									<p:row>
 										<p:column>#{lbl['lbl.sm.person.composition.bumi']}</p:column>
+										<p:column>
+											<h:outputText
+												value="#{backingBean.managedBean.personCalc.equiOwnrBumiCnt}" />
+										</p:column>
 										<p:column>
 											<h:outputText
 												value="#{backingBean.managedBean.personCalc.bodBumiCnt}" />
@@ -59,6 +64,10 @@
 										<p:column>#{lbl['lbl.sm.person.composition.nonBumi']}</p:column>
 										<p:column>
 											<h:outputText
+												value="#{backingBean.managedBean.personCalc.equiOwnrNonBumiCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
 												value="#{backingBean.managedBean.personCalc.bodNonBumiCnt}" />
 										</p:column>
 										<p:column>
@@ -82,6 +91,10 @@
 										<p:column>#{lbl['lbl.sm.person.composition.Frg']}</p:column>
 										<p:column>
 											<h:outputText
+												value="#{backingBean.managedBean.personCalc.equiOwnrFrgCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
 												value="#{backingBean.managedBean.personCalc.bodFrgCnt}" />
 										</p:column>
 										<p:column>
@@ -101,6 +114,33 @@
 												value="#{backingBean.managedBean.personCalc.stfFrgActCnt}" />
 										</p:column>
 									</p:row>
+									<p:row>
+										<p:column>Total / Summary</p:column>
+										<p:column>
+											<h:outputText
+												value="#{backingBean.managedBean.personCalc.equityOwnerTotalCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{backingBean.managedBean.personCalc.bodTotalCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{backingBean.managedBean.personCalc.hghrMngmtTotalCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{backingBean.managedBean.personCalc.mngmtTotalCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{backingBean.managedBean.personCalc.stfTotalCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{backingBean.managedBean.personCalc.stfActualTotalCnt}" />
+										</p:column>
+									</p:row>
 								</p:panelGrid>
 							</c:if>
 							<c:if
@@ -108,6 +148,7 @@
 								<p:panelGrid styleClass="tablePanel" id="consultPerSumTable">
 									<p:row id="consultPerSumHdrRow">
 										<p:column rowspan="2" styleClass="tableheaderrow" />
+										<p:column rowspan="2" styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.equiOwn']}</p:column>
 										<p:column rowspan="2" styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.bod']}</p:column>
 										<p:column rowspan="2" style="width:15%"
 											styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.hghMngt']}</p:column>
@@ -130,6 +171,10 @@
 									</p:row>
 									<p:row>
 										<p:column>#{lbl['lbl.sm.person.composition.bumi']} </p:column>
+										<p:column>
+											<h:outputText
+												value="#{backingBean.managedBean.personCalc.equiOwnrBumiCnt}" />
+										</p:column>
 										<p:column>
 											<h:outputText
 												value="#{backingBean.managedBean.personCalc.bodBumiCnt}" />
@@ -174,6 +219,10 @@
 										<p:column>#{lbl['lbl.sm.person.composition.nonBumi']}</p:column>
 										<p:column>
 											<h:outputText
+												value="#{backingBean.managedBean.personCalc.equiOwnrNonBumiCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
 												value="#{backingBean.managedBean.personCalc.bodNonBumiCnt}" />
 										</p:column>
 										<p:column>
@@ -214,6 +263,10 @@
 										<p:column>#{lbl['lbl.sm.person.composition.Frg']}</p:column>
 										<p:column>
 											<h:outputText
+												value="#{backingBean.managedBean.personCalc.equiOwnrFrgCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
 												value="#{backingBean.managedBean.personCalc.bodFrgCnt}" />
 										</p:column>
 										<p:column>
@@ -247,6 +300,49 @@
 										<p:column>
 											<h:outputText
 												value="#{backingBean.managedBean.personCalc.stfFrgActCnt}" />
+										</p:column>
+									</p:row>
+									<p:row>
+										<p:column>Total / Summary</p:column>
+										<p:column>
+											<h:outputText
+												value="#{backingBean.managedBean.personCalc.equityOwnerTotalCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{backingBean.managedBean.personCalc.bodTotalCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{backingBean.managedBean.personCalc.hghrMngmtTotalCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{backingBean.managedBean.personCalc.mngmtTotalCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{backingBean.managedBean.personCalc.profTotalCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{backingBean.managedBean.personCalc.profActualTotalCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{backingBean.managedBean.personCalc.semiTotalCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{backingBean.managedBean.personCalc.semiActualTotalCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{backingBean.managedBean.personCalc.stfTotalCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{backingBean.managedBean.personCalc.stfActualTotalCnt}" />
 										</p:column>
 									</p:row>
 								</p:panelGrid>
@@ -332,6 +428,16 @@
 						<p:column headerText="#{lbl['lbl.sm.person.composition.role']}">
 							<h:outputText value="#{person.roleName}" />
 						</p:column>
+						<p:column headerText="#{lbl['lbl.sm.person.composition.eprole']}">
+							<h:outputText
+								value="#{lbl['lbl.sm.person.composition.suppAdmin']}"
+								rendered="#{person.epRole eq 'MOF_SUPPLIER_ADMIN' or person.epRole eq 'BASIC_SUPPLIER_ADMIN'}" />
+							<h:outputText
+								value="#{lbl['lbl.sm.person.composition.suppUser']}"
+								rendered="#{person.epRole eq 'BASIC_SUPPLIER_USER' or person.epRole eq 'MOF_SUPPLIER_USER'}" />
+							<h:outputText value="#{lbl['lbl.sm.person.composition.catUser']}"
+								rendered="#{person.epRole eq 'CM_USER'}" />
+						</p:column>
 						<p:column headerText="#{lbl['lbl.sm.label.action']}">
 							<p:commandLink
 								action="#{backingBean.assignSelShareHolder(person)}"
@@ -347,15 +453,9 @@
 
 					<p:spacer height="2px;" />
 					<div align="right">
-						<p:commandButton
-							value="#{lbl['lbl.sm.person.composition.addMangOrStf']}"
+						<p:commandButton value="#{lbl['lbl.sm.button.add']}"
 							process="@this" partialSubmit="true"
 							action="#{backingBean.assignNewShareHolder(SupplierManagementConst.PERSONNEL_TYPE_STAFF)}"
-							update=":form" />
-						<p:commandButton
-							value="#{lbl['lbl.sm.person.composition.addDir']}"
-							process="@this" partialSubmit="true"
-							action="#{backingBean.assignNewShareHolder(SupplierManagementConst.PERSONNEL_TYPE_DIRECTOR)}"
 							update=":form" />
 						<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
 							process="persInfoDtPanel" partialSubmit="true"

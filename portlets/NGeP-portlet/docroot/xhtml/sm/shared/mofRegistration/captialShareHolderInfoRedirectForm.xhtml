@@ -17,20 +17,9 @@
 			<ui:include
 				src="/xhtml/sm/shared/mofRegistration/shareHolderInfoPopUpForm.xhtml" />
 			<div align="right" style="padding-top: 10px;">
-				<c:choose>
-					<c:when
-						test="#{backingBean.managedBean.selectedShareHolder.equityOwner}">
-						<p:commandButton value="Save"
-							action="#{backingBean.addOrUpdateShareHolderToSmAppl('captialInfo')}"
-							update=":form" />
-
-					</c:when>
-					<c:otherwise>
-						<p:commandButton value="Save"
-							action="#{backingBean.addOrUpdateShareHolderToSmAppl('personnelInfo')}"
-							update=":form" />
-					</c:otherwise>
-				</c:choose>
+				<p:commandButton value="Save"
+					action="#{backingBean.addOrUpdateShareHolderToSmAppl}"
+					update=":form" />
 			</div>
 		</p:panel>
 	</h:panelGroup>

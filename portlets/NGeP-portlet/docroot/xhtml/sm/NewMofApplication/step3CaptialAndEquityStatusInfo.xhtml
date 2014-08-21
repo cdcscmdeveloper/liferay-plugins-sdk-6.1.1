@@ -28,11 +28,12 @@
 						<td><ui:include
 								src="/xhtml/sm/shared/mofRegistration/captialOrEquityStatusInfoForm.xhtml" />
 							<c:if
-								test="#{backingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT and backingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP_DEFAULT}">
+								test="#{backingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_DEFAULT}">
 								<ui:include
 									src="/xhtml/sm/shared/mofRegistration/captialOrEquityShareHolderInfoForm.xhtml" />
-							</c:if> <ui:include
-								src="/xhtml/sm/shared/mofRegistration/captialOrEquityShareHoldingCompanyInfoForm.xhtml" />
+								<ui:include
+									src="/xhtml/sm/shared/mofRegistration/captialOrEquityShareHoldingCompanyInfoForm.xhtml" />
+							</c:if>
 							<div class="nav-wrapper">
 								<table style="width: 100%">
 									<tr>
@@ -70,18 +71,17 @@
 				<ui:include
 					src="/xhtml/sm/shared/mofRegistration/captialOrEquityStatusInfoForm.xhtml" />
 				<c:if
-					test="#{backingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT and backingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP_DEFAULT}">
+					test="#{backingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_DEFAULT}">
 					<ui:include
 						src="/xhtml/sm/shared/mofRegistration/captialOrEquityShareHolderInfoForm.xhtml" />
+					<ui:include
+						src="/xhtml/sm/shared/mofRegistration/captialOrEquityShareHoldingCompanyInfoForm.xhtml" />
 				</c:if>
-				<ui:include
-					src="/xhtml/sm/shared/mofRegistration/captialOrEquityShareHoldingCompanyInfoForm.xhtml" />
 				<div class="nav-wrapper">
 					<table style="width: 100%">
 						<tr>
 							<td><div align="left" style="width: 99%">
-									<p:commandButton 
-										value="#{lbl['lbl.sm.prev']}"
+									<p:commandButton value="#{lbl['lbl.sm.prev']}"
 										actionListener="#{backingBean.setTabValue('3','2')}"
 										action="#{backingBean.updateSmAppl(ParameterConst.newSmApplnForMof,SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY,SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL)}"
 										update=":form" icon="ui-icon-prev" />
