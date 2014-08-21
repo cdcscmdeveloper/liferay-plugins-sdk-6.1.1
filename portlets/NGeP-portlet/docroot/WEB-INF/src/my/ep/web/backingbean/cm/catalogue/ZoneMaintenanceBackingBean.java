@@ -335,7 +335,7 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 						newCmSupplierZoneDTLs.add(cmDtl);
 					}
 				}
-			} else if(selectedNode.getType().equals("division")){
+			} else if(selectedNode.getType().equals("division") && selectedNode.getChildCount() == 0){
 				CmSupplierZoneStateDistrictDTO stateNodeDto2 = (CmSupplierZoneStateDistrictDTO) selectedNode.getParent().getData();
 				CmSupplierZoneDTL cmDtl5 = new CmSupplierZoneDTL();
 				cmDtl5.setCmSupplierZone(selZone);

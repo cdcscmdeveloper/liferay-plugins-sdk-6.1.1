@@ -170,6 +170,9 @@ public class CmSupplierZoneSingleton {
 							CmSupplierZoneStateDistrictDTO districtLocation = new CmSupplierZoneStateDistrictDTO(district);
 							TreeNode districtNode = new DefaultTreeNode("district",districtLocation, divisionNode);
 							// build district tree
+							if (districtIds.contains(district.getDistrictId())) {
+								districtNode.setSelected(Boolean.TRUE);
+							}
 						}
 						if (divisionIds.contains(division.getDivisionId())) {
 							divisionNode.setSelected(Boolean.TRUE);
@@ -331,7 +334,7 @@ public class CmSupplierZoneSingleton {
 				}
 				
 				if(cmSupplierZoneDTL.getPmDivision() != null){
-					districtIds.add(cmSupplierZoneDTL.getPmDivision().getDivisionId());
+					divisionIds.add(cmSupplierZoneDTL.getPmDivision().getDivisionId());
 					
 					List<Long> divIdList = new ArrayList<Long>();
 					for(PmDivision div : listDivisions){
@@ -362,24 +365,26 @@ public class CmSupplierZoneSingleton {
 					stateNode.setSelected(Boolean.TRUE);
 				}
 								
-				for (PmDistrict district : listDistricts) {
-					if(district.getPmDivision() == null){
-						
-						PmState dSt = district.getPmState();
-						
-						if(dSt.getStateId() == state.getStateId()){
-							CmSupplierZoneStateDistrictDTO districtSDDTO = new CmSupplierZoneStateDistrictDTO(district);
-							TreeNode districtNode = new DefaultTreeNode("district",districtSDDTO, stateNode);
-							// build district tree
-							if (districtIds.contains(district.getDistrictId())) {
-								districtNode.setSelected(Boolean.TRUE);
+				if(listDistricts != null && listDistricts.size() > 0){
+					for (PmDistrict district : listDistricts) {
+						if(district.getPmDivision() == null){
+							
+							PmState dSt = district.getPmState();
+							
+							if(dSt.getStateId() == state.getStateId()){
+								CmSupplierZoneStateDistrictDTO districtSDDTO = new CmSupplierZoneStateDistrictDTO(district);
+								TreeNode districtNode = new DefaultTreeNode("district",districtSDDTO, stateNode);
+								// build district tree
+								if (districtIds.contains(district.getDistrictId())) {
+									districtNode.setSelected(Boolean.TRUE);
+								}
 							}
 						}
 					}
-				}
+				}	
 				
 				
-				/*if(listDivisions != null && listDivisions.size() > 0){
+				if(listDivisions != null && listDivisions.size() > 0){
 					for (PmDivision division : listDivisions) {
 							
 						PmState div = division.getPmState();
@@ -409,7 +414,7 @@ public class CmSupplierZoneSingleton {
 							}
 						}
 					}
-				}*/
+				}
 			}	
 		}
 		
