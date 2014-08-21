@@ -650,7 +650,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	public void userRoleStatusChange(PmUserRole pmUserRole){
 		logger.info("userRoleStatusChange");
 		if(pmUserRole!=null){
-			 if(pmUserRole.getRecordStatusFlg()==DbValueConst.RECORD_STATUS_DELETED){
+			 if(pmUserRole.getRecordStatusFlg()==DbValueConst.RECORD_STATUS_SUSPENDED){
 				 if(!pmUserRole.isModified()){
 					 pmUserRole.setModified(true);
 				 }else{
@@ -719,8 +719,11 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	public void updateReceivingAddr(List<PmAddressType>deliveringAddrs){
 		logger.info("updateReceivingAddr");
 		if(deliveringAddrs!=null){
-			if(this.getManagedBean().getSelectedReceivingAddrTypes()==null){
-				this.getManagedBean().setSelectedReceivingAddrTypes(new ArrayList<PmAddressType>());
+//			if(this.getManagedBean().getSelectedReceivingAddrTypes()==null){
+//				this.getManagedBean().setSelectedReceivingAddrTypes(new ArrayList<PmAddressType>());
+//			}
+			if(this.getManagedBean().getSelectedUser().getPmAddressTypes()==null){
+				this.getManagedBean().getSelectedUser().setPmAddressTypes(new ArrayList<PmAddressType>());
 			}
 			if(isUniqueAddress()){
 				System.out.println("selected size " + deliveringAddrs.size());
