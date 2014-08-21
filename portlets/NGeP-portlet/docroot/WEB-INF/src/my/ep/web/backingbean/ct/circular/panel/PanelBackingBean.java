@@ -39,6 +39,8 @@ import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
+import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -60,6 +62,10 @@ import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
+import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
+import my.ep.dto.sm.mofAccount.MofAccountResDTO;
+import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
+import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.circular.CTCircularContractDataType;
 import my.ep.jaxb.ct.circular.cancellation.CTCircularCancellationDataType;
@@ -82,9 +88,11 @@ import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmUom;
+import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
@@ -103,6 +111,7 @@ import my.ep.web.util.pm.helper.ParameterHelper;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.TreeNode;
@@ -1432,8 +1441,20 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	}
 	
 	public String getSupAddress(CtPanelSupplier panelSupplier){
-		System.out.println(panelSupplier);
-		return " ";
+		IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, IMofRegistrationSO.class);
+		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+		reqDTO.setSupplierId(panelSupplier.getSupplier().getSupplierId());
+		MofRegistrationResDTO resDTO = mofRegistrationSO.retrieveSupplierProfile(reqDTO);
+		
+		if(resDTO.getSmSupplier().getSmAppl()!=null && resDTO.getSmSupplier().getSmAppl().getSmCompanyBasic()!=null && 
+			resDTO.getSmSupplier().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses()!=null) {
+			for(SmCompanyAddress address : resDTO.getSmSupplier().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses()) {
+				if(address.getAddressType().equalsIgnoreCase(AddressType.CONTACT_ADDRESS.value())) {
+					return getFullAddress(address.getSmAddress());
+				}
+			}
+		}
+		return "";
 	}
 
 	public List<PmParameterDesc> retrieveParameterDescByType(String type) {
@@ -1444,6 +1465,33 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	public void selectLocation(AjaxBehaviorEvent event) {
 		Long location = (Long) event.getComponent().getAttributes().get("value");
 		this.getManagedBean().getSelectedPanelItems().getLocationLevelId().setParameterId(location);
+	}
+	
+	public void bulkUpdateItem(){
+		getManagedBean().setPanelCoverageId(null);
+		getManagedBean().setItemCategoryId(null);
+		boolean itemSelected = false;
+		for(CtPanelItem ctPanelItem : getManagedBean().getCircularVer().getCtPanelItems()) {
+			if(ctPanelItem.isSelectedCheckBox()) {
+				itemSelected = true;
+				break;
+			}
+		}
+		if(!itemSelected) {
+			throw new EpException(MessageConst.ERROR_750003);
+		}
+		RequestContext.getCurrentInstance().execute("bulkUpdateDlg.show()");
+	}
+	
+	public String retrieveMofNo(SmSupplier smSupplier) {
+		IMofAccountSO mofAccountSO = (IMofAccountSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, IMofAccountSO.class);
+		MofAccountReqDTO reqDTO = new MofAccountReqDTO();
+		reqDTO.setSupplierId(smSupplier.getSupplierId());
+		MofAccountResDTO resDTO = mofAccountSO.retrieveMofNoBySupplierId(reqDTO);
+		if(resDTO.isSuccessful() && resDTO.getMofAccount()!=null) {
+			return resDTO.getMofAccount().getMofNo();
+		}
+		return null;
 	}
 	
 	public IPagingDataModel<CtCircularVer> getCircularVerPagingDataModel() {

@@ -8,6 +8,9 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 xmlns:ac="http://ac.my/jsf/composite/cc">
 <p:panel id="itemId" header="#{lbl['lbl.ct.pc.panel.item']}" toggleable="true" toggleSpeed="500">
 	 <h:panelGrid style="width:100%">
+	 	  <h:outputText value="DN : Direct Nego" />
+	 	  <h:outputText value="DP : Direct Purchase" />
+	 	  <h:outputText value="QT : Quotation Tender" />
 		  <p:dataTable id="panelItemDt" var="panelItemsVar"  value="#{panelBackingBean.managedBean.circularVer.ctPanelItems}" 
 		      selectionMode="single" rowKey="#{panelItemsVar}" selection="#{panelBackingBean.managedBean.selectedPanelItems}"
 		      rowIndexVar="index">
@@ -46,33 +49,33 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			  </p:column>
 			
 			  <p:column headerText="UOM" style="width: 11%;">
-			       <ac:lov id="uomLovId" lovId="PM_UOM" size="8"  headerText="UOM Lov" 
+			       <ac:lov id="uomLovId" lovId="PM_UOM" size="8" headerText="UOM Lov" readonly="true" 
 				       value="#{panelItemsVar.pmUom.uomName}" conditionField="recordStatus^1"
 				       saveObject="panelBackingBean.managedBean.circularVer.ctPanelItems[#{index}].pmUom">
 			       </ac:lov>
 			  </p:column>
 			  
-			  <p:column headerText="Min. Order Qty" style="white-space:pre-line;width:5%;">
+			  <p:column headerText="Min. Order Qty" style="white-space:pre-line;width:8%;">
 			       <p:inputText value="#{panelItemsVar.minimumOrderQty}" style="width:90%;text-align:right;" label="Min. Order Qty">
 			           <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, panelItemsVar.pmUom.uomCode)}" /> 
 			       </p:inputText>
 			  </p:column>
 			 
-			  <p:column headerText="Had Pembelian Luar Kontrak" style="white-space:pre-line;width:7%;">
+			  <p:column headerText="Purchase Limit (RM)" style="white-space:pre-line;width:7%;">
 			       <p:inputText value="#{panelItemsVar.maxProcureAmt}" style="width:90%;text-align:right;" label="Had Pembelian Luar Kontrak">
 			          <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			       </p:inputText>
 			  </p:column>
 			  
-			  <p:column headerText="Direct Nego" styleClass="column-align-center"  style="white-space:pre-line;width:5%;">
+			  <p:column headerText="DN" styleClass="column-align-center"  style="white-space:pre-line;width:2%;">
 			    <p:selectBooleanCheckbox value="#{panelItemsVar.directNego}" />
 			  </p:column>		
 			  	
-			  <p:column headerText="Direct Purchase" styleClass="column-align-center"  style="white-space:pre-line;width:6%;">
+			  <p:column headerText="DP" styleClass="column-align-center"  style="white-space:pre-line;width:2%;">
 			       <p:selectBooleanCheckbox value="#{panelItemsVar.directPurchase}" />
 			  </p:column>	
 			  
-			  <p:column headerText="Quotation /Tender" styleClass="column-align-center"  style="white-space:pre-line;width:6%;">
+			  <p:column headerText="QT" styleClass="column-align-center"  style="white-space:pre-line;width:2%;">
 			       <p:selectBooleanCheckbox value="#{panelItemsVar.qt}" />
 			  </p:column>
 			  
@@ -88,7 +91,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 		
 		<p:spacer height="2" />
 		<div class="ppRightBtn">
-		<p:commandButton value="Bulk Update" process="@this" icon="ui-icon-add" onsuccess="bulkUpdateDlg.show()"/>
+		<p:commandButton value="Bulk Update" process="@this" update="bulkUpdateDlg" icon="ui-icon-add" action="#{panelBackingBean.bulkUpdateItem}" />
 		   <p:commandButton value="Add" process="@all" icon="ui-icon-add"
 		      update="@([id$=panelItemDt])" action="#{panelBackingBean.addPanelItem()}"/>
 		   <p:commandButton id="deleteItemBtn" value="Delete" icon="ui-icon-delete"  process="@this"
@@ -255,9 +258,11 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 				<p:column headerText="Supplier Name">
 				  <p:outputLabel value="#{supVar.supplier.companyName}" style="float:left;"/>
 			    </p:column>
-				<p:column headerText="Business Reg. No."> <p:outputLabel value="#{supVar.supplier.regNo}" style="float:left;"/></p:column>
-				<p:column headerText="MOF No."><p:outputLabel /></p:column>
-				<p:column headerText="Address"><p:outputLabel value="#{panelBackingBean.getSupAddress(supVar)}"/></p:column>
+				<p:column headerText="Business Reg. No."> <h:outputText value="#{supVar.supplier.regNo}" style="float:left;"/></p:column>
+				<p:column headerText="MOF No."><h:outputText value="#{panelBackingBean.retrieveMofNo(supVar.supplier)}" /></p:column>
+				<p:column headerText="Address" style="white-space:normal;">
+					<h:outputText value="#{panelBackingBean.getSupAddress(supVar)}"/>
+				</p:column>
 				<p:column headerText="Status">
 				 <p:selectOneMenu  value="#{supVar.recordStatusFlg}"  
                          disabled="#{!panelBackingBean.managedBean.updateAction}" style="width:100px;">
