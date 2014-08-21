@@ -105,7 +105,7 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 		for (FlDeliveryAddress flDelAddress :this.getFlRequest().getFlDeliveryAddresses()) {
 			for (FlFulfilmentItemAddr flStopInstrItem : flDelAddress.getFlFulfilmentItemAddr()) {
 				if (siItemsMap.containsKey(flStopInstrItem.getFlFulfilmentItem().getCmItem().getExtensionCode())) {
-					flStopInstrItemList = siItemsMap.get(flStopInstrItem.getFlFulfilmentItem().getCmItem().getItemId());
+					flStopInstrItemList = siItemsMap.get(flStopInstrItem.getFlFulfilmentItem().getCmItem().getExtensionCode());
 				} else {
 					flStopInstrItemList = new ArrayList<FlFulfilmentItemAddr>();
 				}
