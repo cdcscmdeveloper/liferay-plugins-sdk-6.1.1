@@ -43,7 +43,7 @@
 							onclick="deliveryAddress.show();" />
 						<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
 							icon="ui-icon-delete" process="@this,pjtDelivered"
-							partialSubmit="true" update=":form:pjtDelivered"
+							partialSubmit="true" update="@form"
 							actionListener="#{specificationBackingBean.deleteDeliveryZone(zoneName)}" />
 
 					</div>
@@ -63,7 +63,7 @@
 					process="@this" partialSubmit="true" icon="ui-icon-add"
 					update=":form:searDelivery" oncomplete="deliveryAddress.show();" />
 				<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
-					update=":form:pjtDelivered" process="@this,pjtDelivered"
+					update="@form" process="@this,pjtDelivered"
 					partialSubmit="true" icon="ui-icon-delete"
 					actionListener="#{specificationBackingBean.deleteDeliveryDtls}" />
 			</div>
