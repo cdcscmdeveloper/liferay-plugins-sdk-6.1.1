@@ -216,7 +216,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		boolean hasAddress = false;
 		try {
 			for (PmAddressType addressTypeObj : pmUser.getPmAddressTypes()) {
-				if (addressTypeObj.getAddressType().equalsIgnoreCase(ProfileManagementConst.ADDRESS_USER)) {
+				if (ProfileManagementConst.ADDRESS_USER.equalsIgnoreCase(addressTypeObj.getAddressType())) {
 					this.getManagedBean().setUserAddress(addressTypeObj.getPmAddress());
 					hasAddress = true;
 					break;
@@ -374,11 +374,11 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 			UserResDTO resDTO = userSO.saveUser(reqDTO); //saveUser2
 
 			if (resDTO.isSuccessful()) {
-				//TODO: upload liferay photo locally
+				/*
 				if(user.getPortrait()!=null){
 					uploadPortrait(resDTO.getPmUser());
 				}
-				
+				*/
 				loadUserProfile(user.getUserId());
 				FacesContext.getCurrentInstance().addMessage(
 						null,
@@ -405,6 +405,44 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		this.getManagedBean().getSelectedUser().setLoginId(this.getManagedBean().getSelectedUser().getIdentificationNo());
 	}
 
+	/**
+	 * delete portrait
+	 * @throws Exception
+	 */
+	public void deletePortrait() throws Exception{
+		logger.info("deletePortrait - START");
+		this.getManagedBean().getSelectedUser().setPortrait(null);
+		this.getManagedBean().getSelectedUser().setReplacePortrait(true);
+		/*
+		IUserSO userSO = null;
+		UserReqDTO reqDTO = new UserReqDTO();
+		try {
+			PmUser pmUser = this.getManagedBean().getSelectedUser();
+			reqDTO.setPmUser(pmUser);
+			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			UserResDTO resDTO = userSO.deletePortrait(reqDTO); //saveuser2
+			if(resDTO!=null && resDTO.isSuccessful()){
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO,
+								null, "Delete Portrait Successfull for Login ID: "
+										+ resDTO.getPmUser().getLoginId()));
+				
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
+		} finally {
+			userSO = null;
+		}*/
+		logger.info("deletePortrait - END");
+	}
+	
 	/**
 	 * TODO: fix the remote updatePortrait
 	 * @param pmUser
@@ -443,6 +481,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		UploadedFile item = event.getFile();
 		byte[] bytes = item.getContents();
 		this.getManagedBean().getSelectedUser().setPortrait(bytes);  
+		this.getManagedBean().getSelectedUser().setReplacePortrait(true);
 		logger.info("handleFileUpload - END");
 	}
 	

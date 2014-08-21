@@ -17,17 +17,19 @@
 			<p:ajax event="rowSelect" listener="#{profileManagementBackingBean.showReceivingAddress}" update="@this, :form:tvRoleReceivingAddr" />
 			
 		    <p:column headerText="#{lbl['lbl.pm.profiles.resorg.table.orgtype']}">
-				<p:selectOneMenu value="#{orgUnit.pmOrgProfile.orgTypeCode.parameterId}" styleClass="ppDropDownWidthM">  
+				<p:selectOneMenu value="#{orgUnit.pmOrgProfile.orgTypeCode.parameterId}" styleClass="ppDropDownWidthM" 
+					disabled="#{!orgUnit.brandNew}">  
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />      
 			     	<f:selectItems value="#{profileManagementBackingBean.getOrgTypeList()}" 
 			     		var="obj" itemValue="#{obj.pmParameter.parameterId}" itemLabel="#{obj.codeName}"/>  
 			     	<p:ajax event="change" listener="#{profileManagementBackingBean.changeResOrgType(index)}" 
-			     		update="lovResOrg:lovResOrg, dtOrgUnit, :form:tvRoleReceivingAddr:dtRoles, :form:tvRoleReceivingAddr:dtReceiveAddr"/> 
+			     		update="lovResOrg:lovResOrg, :form:tvRoleReceivingAddr:lovAddrType:lovAddrType, dtOrgUnit, 
+			     			:form:tvRoleReceivingAddr:dtRoles, :form:tvRoleReceivingAddr:dtReceiveAddr"/> 
 	            </p:selectOneMenu>		     
 	        </p:column>	 
 		    <p:column headerText="#{lbl['lbl.pm.profiles.resorg.table.code']}" >        
-	            <ac:lov id="lovResOrg" lovId="PM_ORG_PROFILE" styleClass="ppDisplayCalS" 
-	            	update=":form:dtOrgUnit" readonly="true"
+	            <ac:lov id="lovResOrg" lovId="PM_ORG_PROFILE" styleClass="ppDisplayCalXS" 
+	            	update=":form:dtOrgUnit" readonly="true" disabled="#{!orgUnit.brandNew}"
 					headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
 					value="#{orgUnit.pmOrgProfile.pmOrgValidity.orgCode}" 
 					saveObject="profileManagementBackingBean.managedBean.selectedUser.pmUserOrgs[#{index}].pmOrgProfile"

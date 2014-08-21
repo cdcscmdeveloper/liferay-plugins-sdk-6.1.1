@@ -110,12 +110,9 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	public static final int TAB_PERSONALIZATION = 2;
 	public static final int TAB_CHANGE_PASSWORD = 3;
 	
-	
 	//Paging for listing
 	private IPagingDataModel<PmUser> userProfileDataModel = new UserProfilePagingDataModel();
 	private IPagingDataModel<PmRoleDesc> roleDataModel = new RolePagingDataModel();	
-//	private IPagingDataModel<PmAddressType> searchReceivingAddress = new userAddressPagingDataModel();
-
 
 	//Mapper for DDL object
 	private static Map<Long, Object> identityTypeMapper;
@@ -175,7 +172,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 
 	private void debugLogger(Object message) {
 		if (logger.isDebugEnabled()) {
-			logger.debug(message);
+			logger.info(message);
 		}
 		logger.info(message);
 	}
@@ -471,7 +468,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	 */
 	
 	/**
-	 * retrieve org type from PM
+	 * Retrieve Org. Type from PM
 	 * @return List<PmParameterDesc> 
 	 */
 	public List<PmParameterDesc> getOrgTypeList() {
@@ -480,7 +477,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	}
 	
 	/**
-	 * To add new org unit to responsible org. unit list
+	 * To add new item to Responsible Org. Unit list
 	 */
 	public void addOrgUnit() {
 		logger.info("addOrgUnit");
@@ -500,7 +497,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 
 
 	/**
-	 * remove org unit from responsible org. unit list
+	 * Remove selected Responsible Org. Unit
 	 */
 	public void deleteOrgUnit(PmUserOrg pmUserOrg) {
 		logger.info("deleteOrgUnit");
@@ -537,7 +534,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	}
 	
 	/**
-	 * reset PmUserOrg info
+	 * Reset PmUserOrg info
 	 * @param index
 	 */
 	public void changeResOrgType(int index){
@@ -550,101 +547,38 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			}
 		}	
 	}
-	/**
-	 * Show receiving addresses and user roles for selected responsible org.
-	 * @param index
-	 */
-	public void showReceivingAddress(){
-		logger.info("showReceivingAddress");
-		try {
-			
-			if(this.getManagedBean().getSelectedUserOrg()!=null && this.getManagedBean().getSelectedUser().getPmAddressTypes()!=null){
-				if(this.getManagedBean().getSelectedReceivingAddrs()==null){
-					this.getManagedBean().setSelectedReceivingAddrs(new ArrayList<PmAddress>());
-				}
-				for (PmAddressType addressTypeObj : this.getManagedBean().getSelectedUser().getPmAddressTypes()){
-					if (ProfileManagementConst.ADDRESS_RECEIVING.equalsIgnoreCase(addressTypeObj.getAddressType())) {
-						this.getManagedBean().getSelectedReceivingAddrs().add(addressTypeObj.getPmAddress());
-						break;
-					}
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new EpException("Unable to retrieve/populate receiving address.", new String[]{e.getMessage()}); //TODO exception
-		}
-	}
 	
 	/**
-	 * Add selected delivering address to receiving address
-	 * @param deliveringAddrs
-	 */
-	public void updateReceivingAddr(List<PmAddressType>deliveringAddrs){
-		logger.info("updateReceivingAddr");
-		if(deliveringAddrs!=null){
-			if(this.getManagedBean().getSelectedReceivingAddrs()==null){
-				this.getManagedBean().setSelectedReceivingAddrs(new ArrayList<PmAddress>());
-			}
-			for(PmAddressType pmAddressType: deliveringAddrs){
-				this.getManagedBean().getSelectedReceivingAddrs().add(pmAddressType.getPmAddress());
-			}
-			
-		}
-	}
-	
-	
-//	private List<PmRoleDesc> getChildRoles(String parentCode){
-//		List<PmRoleDesc> childList = new ArrayList<PmRoleDesc>();
-//		try{
-//			if(parentCode!=null){
-//				RoleReqDTO roleReqDTO = new RoleReqDTO();
-//				roleReqDTO.setParentRole(parentCode);
-//				roleReqDTO.setLanguage(getFacesScopes().getUserLocale().getLanguage());
-//				IRoleSO roleSO = BusinessDelegate.getInstance().getServiceObject(
-//						ModuleCodeConst.PROFILE_MANAGEMENT, IRoleSO.class);
-//				RoleResDTO resDto = roleSO.searchRoleNameList(roleReqDTO);
-//				if(resDto!=null && resDto.isSuccessful()){
-//					childList = resDto.getRoleList();
-//				}
-//				
-//			}
-//		}catch(Exception e){
-//			e.printStackTrace();
-//		}
-//		return childList;
-//	}
-//	
-
-	/**
-	 * add new selected role to user role list
+	 * Add new selected role to user role list
 	 */
 	public void confirmRoles(){
 		logger.info("confirmRoles");
-//		this.getManagedBean().setAvailableRoles(this.getManagedBean().getSelectedRoles());
+
 		if(this.getManagedBean().getSelectedRoles()!=null && !this.getManagedBean().getSelectedRoles().isEmpty()){
 			if(this.getManagedBean().getSelectedUserOrg()!=null){
 				//Validation for unique roles added to list
 				if(isUniqueRoles()){
 					for(PmRoleDesc pmRoleDesc : this.getManagedBean().getSelectedRoles()){
 						PmUserRole pmUserRole = new PmUserRole();
+						pmUserRole.setPmUser(this.getManagedBean().getSelectedUser());
 						pmUserRole.setPmRole(pmRoleDesc.getPmRole());
 						this.getManagedBean().getSelectedUserOrg().addPmUserRole(pmUserRole);
 					}
 				}else{
-					throw new EpException("Duplicate roles."); //TODO exception
+					throw new EpException("Duplicate Roles are selected."); //TODO exception
 				}
 			}else{
 				throw new EpException("Please select a Reponsible Org. Unit."); //TODO exception
 			}
 		}else{
-			throw new EpException("At least one role must be selected."); //TODO exception
+			throw new EpException("At least one Role must be selected."); //TODO exception
 		}
 		RequestContext.getCurrentInstance().execute("dlRoleOptions.hide()");
 		
 	}
 	
 	/**
-	 * delete selected role
+	 * Delete selected Role
 	 */
 	public void deleteRole(){
 		logger.info("deleteRole");
@@ -657,13 +591,13 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			}
 			this.getManagedBean().getDeleteUserRoles().clear();
 		}else{
-			throw new EpException("At least one role must be selected."); //TODO
+			throw new EpException("At least one Role must be selected."); //TODO
 		}
 	
 	}
 	
 	/**
-	 * validate if selected roles are not duplicated
+	 * Validate if selected roles are not duplicated
 	 * @return boolean
 	 */
 	private boolean isUniqueRoles(){
@@ -693,7 +627,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	}
 	
 	/**
-	 * track user role status
+	 * Track user role status
 	 * @param pmUserRole
 	 */
 	public void userRoleStatusChange(PmUserRole pmUserRole){
@@ -715,6 +649,120 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		}
 	}
 
+	/**
+	 * Show receiving addresses and user roles for selected responsible org.
+	 * @param index
+	 */
+	public void showReceivingAddress(){
+		logger.info("showReceivingAddress");
+		try {
+			/* add address back to user*/
+			if(this.getManagedBean().getSelectedReceivingAddrTypes()!=null){
+				if(this.getManagedBean().getSelectedUser().getPmAddressTypes()==null){
+					this.getManagedBean().getSelectedUser().setPmAddressTypes(new ArrayList<PmAddressType>());
+				}
+				for(PmAddressType addressTypeObj :this.getManagedBean().getSelectedReceivingAddrTypes()){
+					if(addressTypeObj.isBrandNew()){
+						System.out.println("d>>>" + addressTypeObj.getPmAddress().getAddressId());
+						System.out.println("add");
+						this.getManagedBean().getSelectedUser().addPmAddressType(addressTypeObj);
+					}
+				}
+				this.getManagedBean().getSelectedReceivingAddrTypes().clear();
+			}
+			
+			
+			/* show selected org's receiving addr */ 
+			if(this.getManagedBean().getSelectedUserOrg()!=null && this.getManagedBean().getSelectedUser().getPmAddressTypes()!=null){
+				if(this.getManagedBean().getSelectedReceivingAddrTypes()==null){
+					this.getManagedBean().setSelectedReceivingAddrTypes(new ArrayList<PmAddressType>());
+				}
+				System.out.println("size add type " +this.getManagedBean().getSelectedUser().getPmAddressTypes().size());
+				for (PmAddressType addressTypeObj : this.getManagedBean().getSelectedUser().getPmAddressTypes()){
+					System.out.println("d>>>" + addressTypeObj.getPmAddress().getAddressId());
+					if (ProfileManagementConst.ADDRESS_RECEIVING.equalsIgnoreCase(addressTypeObj.getAddressType())
+							&& (addressTypeObj.getPmOrgProfile()!=null && this.getManagedBean().getSelectedUserOrg().getPmOrgProfile().getOrgProfileId() 
+							== addressTypeObj.getPmOrgProfile().getOrgProfileId())) {
+						System.out.println("show");
+						this.getManagedBean().getSelectedReceivingAddrTypes().add(addressTypeObj);
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new EpException("Unable to retrieve/populate Receiving Address.", new String[]{e.getMessage()}); //TODO exception
+		}
+	}
+	
+	/**
+	 * Add selected delivering address to receiving address
+	 * @param deliveringAddrs
+	 */
+	public void updateReceivingAddr(List<PmAddressType>deliveringAddrs){
+		logger.info("updateReceivingAddr");
+		if(deliveringAddrs!=null){
+			if(this.getManagedBean().getSelectedReceivingAddrTypes()==null){
+				this.getManagedBean().setSelectedReceivingAddrTypes(new ArrayList<PmAddressType>());
+			}
+			if(isUniqueAddress()){
+				for(PmAddressType pmAddressType: deliveringAddrs){
+					PmAddressType tempAddTypeObj = new PmAddressType();
+					tempAddTypeObj.setAddressType(ProfileManagementConst.ADDRESS_RECEIVING);
+					tempAddTypeObj.setPmAddress(pmAddressType.getPmAddress());
+					tempAddTypeObj.setPmUser(this.getManagedBean().getSelectedUser());
+					tempAddTypeObj.setPmOrgProfile(this.getManagedBean().getSelectedUserOrg().getPmOrgProfile());
+					this.getManagedBean().getSelectedReceivingAddrTypes().add(tempAddTypeObj);
+				}
+			}else{
+				throw new EpException("Duplicate Addresses are selected."); //TODO exception
+			}
+		}
+	}
+
+	/**
+	 * Delete selected receiving address
+	 */
+	public void deleteReceivingAddr(){
+		logger.info("deleteReceivingAddr");
+		if(this.getManagedBean().getDeleteReceivingAddrTypes()!=null && !this.getManagedBean().getDeleteReceivingAddrTypes().isEmpty()){
+			if(this.getManagedBean().getSelectedReceivingAddrTypes()==null){
+				this.getManagedBean().setSelectedReceivingAddrTypes(new ArrayList<PmAddressType>());
+			}
+			for(PmAddressType pmAddressType: this.getManagedBean().getDeleteReceivingAddrTypes()){
+				this.getManagedBean().getSelectedReceivingAddrTypes().remove(pmAddressType);
+			}
+			this.getManagedBean().getDeleteReceivingAddrTypes().clear();
+		}else{
+			throw new EpException("At least one Receiving Address must be selected."); //TODO
+		}
+	
+	}
+	
+	/**
+	 * Validate if selected delivering address are not duplicated
+	 * @return boolean
+	 */
+	private boolean isUniqueAddress(){
+		logger.info("isUniqueAddress");
+		boolean isUnique = true;
+		if(this.getManagedBean().getSelectedDeliveringAddrTypes()!=null 
+				&& !this.getManagedBean().getSelectedDeliveringAddrTypes().isEmpty()){
+			
+			List <Long> deliveringAddr = new ArrayList<Long>();
+			
+			for(PmAddressType pmAddressType: this.getManagedBean().getSelectedDeliveringAddrTypes()){
+				deliveringAddr.add(pmAddressType.getPmAddress().getAddressId());
+			}
+			
+			for(PmAddressType pmAddressType: this.getManagedBean().getSelectedReceivingAddrTypes()){
+				if(deliveringAddr.contains(pmAddressType.getPmAddress().getAddressId())){
+					isUnique = false;
+					break;
+				}
+			}
+		}
+		return isUnique;
+	}
 	
 	/**
 	 * TAB Authorization - END
@@ -813,7 +861,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		@Override
 		public ISearchResultBean<PmRoleDesc> pageChangeListener(ISearchBean<PmRoleDesc> searchBean) {
 			if(logger.isDebugEnabled()) {
-				logger.debug("pageChangeListener");
+				logger.info("pageChangeListener");
 			}
 			try {
 //				boolean isApprover = false;
@@ -999,162 +1047,8 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	
 	/** User Search & Paging - End  */
 
-/*
-	private void dummyUser(PmUser pmUser){
-		System.out.println("dummyUser");
-		
-		//dummy a role here
-		if(!pmUser.isBrandNew()){
-			System.out.println("dummy user not brand new ");
-			if(pmUser.getPmUserOrgs()==null){
-				System.out.println("dummy user empty pmUserOrgs");
-				pmUser.setPmUserOrgs(new ArrayList<PmUserOrg>());
-				//pmUserOrg
-				PmUserOrg pmUserOrg = new PmUserOrg();
-				
-				
-				//pmUserOrg.pmOrgProfile
-				PmOrgProfile pmOrgProfile = new PmOrgProfile();
-				pmOrgProfile.setOrgProfileId(1L);
-				
-				//pmOrgProfile.orgTypeCode
-				PmParameter pmParameter = new PmParameter();
-				pmParameter.setParameterId(166L);
-				pmOrgProfile.setOrgTypeCode(pmParameter);
-				pmOrgProfile.setBrandNew(false);
-				pmUserOrg.setPmOrgProfile(pmOrgProfile);
-				
-				//pmUserOrg.pmUserRole.pmRole
-				PmRole pmRole = new PmRole();
-				pmRole.setRoleCode("BUDGET_APPROVER");
-				
-				PmRole pmRole2 = new PmRole();
-				pmRole2.setRoleCode("CD_OFFICER");
-				
-				//pmUserOrg.pmUserRole
-				PmUserRole pmUserRole = new PmUserRole();
-				pmUserRole.setPmRole(pmRole);
-				
-				PmUserRole pmUserRole2 = new PmUserRole();
-				pmUserRole2.setPmRole(pmRole2);
-				
-				pmUserOrg.setPmUserRoles(new ArrayList<PmUserRole>());
-				
-				pmUserOrg.addPmUserRole(pmUserRole);
-				pmUserOrg.addPmUserRole(pmUserRole2);
-				
-				pmUser.addPmUserOrg(pmUserOrg);
-				
-				
-			}else{
-				//ADD
-				PmUserOrg tempUserOrg = pmUser.getPmUserOrgs().get(0);
-				PmUserRole pmUserRole = new PmUserRole();
-				//pmUserOrg.pmUserRole.pmRole
-				PmRole pmRole = new PmRole();
-				pmRole.setRoleCode("CD_COMMITTEE");
-				pmUserRole.setPmRole(pmRole);
-				tempUserOrg.setPmUserRoles(new ArrayList<PmUserRole>());
-				tempUserOrg.addPmUserRole(pmUserRole);
-				
-			}
-			
-		}else{
-			pmUser.getSalutationCode().setSalutationId(454L);
-			pmUser.getIdentificationCode().setParameterId(70L);
-			pmUser.setLoginId(pmUser.getIdentificationNo());
-			pmUser.setDesignation("test");
-			pmUser.setGrade("test");
-			pmUser.setFaxNo("1234567890");
-			pmUser.setMobileNo("1234567890");
-			pmUser.setPhoneNo("1234567890");
-			pmUser.setEmail(pmUser.getUserName() + "@test.com");
-			pmUser.getOrgTypeCode().setParameterId(166L);
-			
-			pmUser.setPmUserOrgs(new ArrayList<PmUserOrg>());
-			//pmUserOrg
-			PmUserOrg pmUserOrg = new PmUserOrg();
-			
-			
-			//pmUserOrg.pmOrgProfile
-			PmOrgProfile pmOrgProfile = new PmOrgProfile();
-			pmOrgProfile.setOrgProfileId(1L);
-			
-			//pmOrgProfile.orgTypeCode
-			PmParameter pmParameter = new PmParameter();
-			pmParameter.setParameterId(166L);
-			pmOrgProfile.setOrgTypeCode(pmParameter);
-			pmOrgProfile.setBrandNew(false);
-			pmUserOrg.setPmOrgProfile(pmOrgProfile);
-			pmUserOrg.setEffDate(new Timestamp(System.currentTimeMillis()));
-			//pmUserOrg.pmUserRole.pmRole
-			PmRole pmRole1 = new PmRole();
-			pmRole1.setRoleCode("BUDGET_APPROVER");
-			
-			PmRole pmRole2 = new PmRole();
-			pmRole2.setRoleCode("CD_OFFICER");
-			
-			//pmUserOrg.pmUserRole
-			PmUserRole pmUserRole1 = new PmUserRole();
-			pmUserRole1.setPmRole(pmRole1);
-			
-			PmUserRole pmUserRole2 = new PmUserRole();
-			pmUserRole2.setPmRole(pmRole2);
-			
-			pmUserOrg.setPmUserRoles(new ArrayList<PmUserRole>());
-			
-			pmUserOrg.addPmUserRole(pmUserRole1);
-			pmUserOrg.addPmUserRole(pmUserRole2);
-			
-			pmUser.addPmUserOrg(pmUserOrg);
-			
-		}
-		
-	
-	}
 
-	
-	private void dummyTestUpdateRole(UserReqDTO reqDTO){
-		//ADD
-		List <PmUserRole> newUserRoles = new ArrayList<PmUserRole>();
-		PmUserRole pmUserRole1 = new PmUserRole();
-		PmRole pmRole1 = new PmRole();
-		pmRole1.setRoleCode("CD_COMMITTEE");
-		pmUserRole1.setPmRole(pmRole1);
-		newUserRoles.add(pmUserRole1);
-		
-		List <PmUserRole> delUserRoles = new ArrayList<PmUserRole>();
-		PmUserRole pmUserRole2 = new PmUserRole();
-		PmRole pmRole2 = new PmRole();
-		pmRole2.setRoleCode("BUDGET_APPROVER");
-		pmUserRole2.setPmRole(pmRole2);
-		delUserRoles.add(pmUserRole2);
 
-		reqDTO.setNewRoleList(newUserRoles);
-		reqDTO.setRemoveRoleList(delUserRoles);
-	}
-	*/
-	
-	
-	public void dummyAddressSample(){
-		PmAddress pmAdress =this.getManagedBean().getUserAddress();
-		
-		System.out.println("dummyAddress");
-		pmAdress.setAddress1("add1");
-		pmAdress.setAddress2("add2");
-		pmAdress.setAddress3("add3");
-		pmAdress.setEmail(this.getManagedBean().getSelectedUser().getUserName() + "@test.com");
-		pmAdress.setFaxNo("1234567890");
-		pmAdress.setMobileNo("1234567890");
-		pmAdress.setPhoneNo("1234567890");
-		pmAdress.getPmState().setStateId(54L);
-		pmAdress.getPmDistrict().setDistrictId(402L);
-		pmAdress.getPmCity().setCityId(1869L);
-		pmAdress.setPmDivision(null);
-		pmAdress.setPostcode("12345");
-		this.getManagedBean().setUserAddress(pmAdress);
-		
-	}
 	
 	/**
 	 * load user address - C
@@ -1185,9 +1079,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				pmAddressType.getPmAddress().setPmDivision(null);
 			}
 			pmAddressType.setPmOrgProfile(null);
-//			if(this.getManagedBean().isDummy()){
-//				dummyAddress(user, this.getManagedBean().getUserAddress()); //TODO REMOVE
-//			}
 			user.addPmAddressType(pmAddressType);
 		}
 
@@ -1198,13 +1089,8 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	 * @param user
 	 */
 	private void loadUserOrgType(PmUser user){
-		user.getOrgTypeCode().setParameterId(56L);//TODO temp
+		logger.info("loadUserOrgType");
 		if(user.getPmUserOrgs()!=null && !user.getPmUserOrgs().isEmpty()){
-//			System.out.println("user roles size" + user.getPmUserOrgs().get(0).getPmUserRoles().size());
-//			for(PmUserRole pmUserRole:user.getPmUserOrgs().get(0).getPmUserRoles()){
-//				System.out.println(pmUserRole.getPmRole().getRoleCode());
-//			}
-//			
 			int size = user.getPmUserOrgs().size();
 			user.setOrgTypeCode(user.getPmUserOrgs().get(size-1).getPmOrgProfile().getOrgTypeCode());
 		}else{
@@ -1212,7 +1098,13 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		}
 	}
 	
+	/**
+	 * Generate new role and deleted role to update Liferay and OIM
+	 * @param user
+	 * @param reqDTO
+	 */
 	private void loadUserRoles(PmUser user, UserReqDTO reqDTO){
+		logger.info("loadUserRoles");
 		if(user.getPmUserOrgs()!=null && !user.getPmUserOrgs().isEmpty()){
 			List<PmUserRole> newRoleList = reqDTO.getNewRoleList();
 			List<PmUserRole> deleteRoleList = reqDTO.getRemoveRoleList();
@@ -1231,46 +1123,71 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			reqDTO.setRemoveRoleList(deleteRoleList);
 		}
 	}
+	
+	/**
+	 * check if there are idle receiving address
+	 * @param user
+	 * @param reqDTO
+	 */
+	private void loadAndCheckReceiving(PmUser user){
+		logger.info("loadAndCheckReceiving");
+		if(this.getManagedBean().getSelectedReceivingAddrTypes()!=null 
+				&& !this.getManagedBean().getSelectedReceivingAddrTypes().isEmpty()){
+				/* add address back to user*/
+				if(user.getPmAddressTypes()==null){
+					user.setPmAddressTypes(new ArrayList<PmAddressType>());
+				}
+				for(PmAddressType addressTypeObj :this.getManagedBean().getSelectedReceivingAddrTypes()){
+					if(addressTypeObj.isBrandNew()){
+						System.out.println("d>>>" + addressTypeObj.getPmAddress().getAddressId());
+						System.out.println("add");
+						user.addPmAddressType(addressTypeObj);
+					}
+				}
+				this.getManagedBean().getSelectedReceivingAddrTypes().clear();
+		}
+	}
+	
 	/**
 	 * Method to update the user details
 	 */
 	public void saveUserProfile() {
-		debugLogger("saveUserProfile");
-		UserReqDTO reqDTO = new UserReqDTO();
+		logger.info("saveUserProfile");
 		
-		
-		PmUser user = this.getManagedBean().getSelectedUser();
-		user.setLoginId(user.getIdentificationNo());
-		
-		
-//		if(this.getManagedBean().isDummy()){ //TODO REMOVE
-//			dummyUser(user);
-//		}
-		loadUserAddress(user);
-		
-		loadUserOrgType(user);
-		
-		loadUserRoles(user, reqDTO);
-		
+		UserReqDTO reqDTO = null;
 		IUserSO userSO = null;
+		PmUser user =  null; 
+
+		
 		try {
+			reqDTO = new UserReqDTO();
+			user = this.getManagedBean().getSelectedUser();
+			user.setLoginId(user.getIdentificationNo());
+			
+			loadUserAddress(user);
+			
+			loadUserOrgType(user);
+			
+			if(!user.isBrandNew()){
+				reqDTO.setNewRoleList(new ArrayList<PmUserRole>());
+				reqDTO.setRemoveRoleList(new ArrayList<PmUserRole>());
+				loadUserRoles(user, reqDTO);
+			}
+			
+			loadAndCheckReceiving(user);
+			
+			
+			
 			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-			
-			
-//			if(this.getManagedBean().isDummy()){ //TODO REMOVE
-//				dummyTestUpdateRole(reqDTO);
-//			}
-//			
 			reqDTO.setPmUser(user);
-
-			UserResDTO resDTO = userSO.saveUser(reqDTO); //saveuser2
+			UserResDTO resDTO = userSO.saveUser(reqDTO); 
 
 			if (resDTO.isSuccessful()) {
-				//TODO: upload liferay photo locally
+				/*
 				if(user.getPortrait()!=null){
 					uploadPortrait(resDTO.getPmUser());
-				}
+				}*/
 				
 				loadUserProfile(resDTO.getPmUser().getUserId());
 				FacesContext.getCurrentInstance().addMessage(
@@ -1342,10 +1259,10 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		long companyId = Long.parseLong(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_COMPANY_ID));
 		byte[] bytes = pmUser.getPortrait();
 		long userId;
-		logger.debug("imageMaxSize: " + imageMaxSize);
-		logger.debug("companyId: " + companyId);
-		logger.debug("bytes: " + bytes);
-		logger.debug("pmUser.getLoginId(): " + pmUser.getLoginId());
+		logger.info("imageMaxSize: " + imageMaxSize);
+		logger.info("companyId: " + companyId);
+		logger.info("bytes: " + bytes);
+		logger.info("pmUser.getLoginId(): " + pmUser.getLoginId());
 		if(bytes!=null){
 			User user = UserServiceUtil.getUserByScreenName(companyId, pmUser.getLoginId());
 			if(user!=null){
@@ -1354,7 +1271,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				System.out.println("user null");
 			}
 			userId = user.getUserId();
-			logger.debug("userId: " + userId);
+			logger.info("userId: " + userId);
 			UserServiceUtil.updatePortrait(user.getUserId(), bytes);
 		}
 		logger.info("uploadPortrait - END");
@@ -1453,152 +1370,26 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	
 	
 	
-	
-	
-	
-	
-
-
-
-
-	
-	
-	
-	
-	
-	/**
-	 * TO BE VERIFIED
-	 */
-	
-
-	
-	
-/*
-	
-	// pagination for user address search list
-	private class userAddressPagingDataModel extends PagingDataModel<PmAddressType> {
-		private static final long serialVersionUID = 1L;
-
-		public userAddressPagingDataModel() {
-			super("receivingAddress");
-		}
-
-		public ISearchResultBean<PmAddressType> pageChangeListener(
-			ISearchBean<PmAddressType> searchBean) {
-			IAddressSO addressSO;
-			AddressResDTO resDto;
-			System.out.println("====search by====="
-					+ getManagedBean().getStateCode());
-			try {
-				// SearchBean<PmAddressType> searchBean2=searchBean;
-				AddressReqDTO addressReqDTO = new AddressReqDTO();
-				addressReqDTO
-						.setSearchAddressBean(new SearchBean<PmAddressType>());
-				if (getManagedBean().getStateCode() != null
-						&& !getManagedBean().getStateCode().endsWith("")) {
-					SearchFilterBean stateSearchBean = new SearchFilterBean(
-							SearchOperator.OPERATOR_EQUALS.value());
-					stateSearchBean
-							.setSearchField("pmAddress.pmState.stateCode");
-					stateSearchBean.setSearchValue(getManagedBean()
-							.getStateCode());
-					searchBean.getDataFilterBeans().add(stateSearchBean);
-				}
-
-				if (getManagedBean().getDistrictId() != null) {
-					SearchFilterBean districtSearchBean = new SearchFilterBean(
-							SearchOperator.OPERATOR_EQUALS.value());
-					districtSearchBean
-							.setSearchField("pmAddress.pmDistrict.districtId");
-					districtSearchBean.setSearchValue(getManagedBean()
-							.getDistrictId());
-					searchBean.getDataFilterBeans().add(districtSearchBean);
-				}
-				addressReqDTO.setSearchAddressBean(searchBean);
-
-				addressSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
-				resDto = addressSO.searchDeliveryAddress(addressReqDTO);
-
-				if (resDto != null) {
-
-					return resDto.getSearchAddressResultBean();
-				}
-
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			return null;
-		}
-
-	}
-	
-
-
-
-	public IPagingDataModel<PmAddressType> getSearchReceivingAddress() {
-		return searchReceivingAddress;
+	public void dummyAddressSample(){
+		PmAddress pmAdress =this.getManagedBean().getUserAddress();
+		
+		System.out.println("dummyAddress");
+		pmAdress.setAddress1("add1");
+		pmAdress.setAddress2("add2");
+		pmAdress.setAddress3("add3");
+		pmAdress.setEmail(this.getManagedBean().getSelectedUser().getUserName() + "@test.com");
+		pmAdress.setFaxNo("1234567890");
+		pmAdress.setMobileNo("1234567890");
+		pmAdress.setPhoneNo("1234567890");
+		pmAdress.getPmState().setStateId(54L);
+		pmAdress.getPmDistrict().setDistrictId(402L);
+		pmAdress.getPmCity().setCityId(1869L);
+		pmAdress.setPmDivision(null);
+		pmAdress.setPostcode("12345");
+		this.getManagedBean().setUserAddress(pmAdress);
+		
 	}
 
-	public void setSearchReceivingAddress(
-			IPagingDataModel<PmAddressType> searchReceivingAddress) {
-		this.searchReceivingAddress = searchReceivingAddress;
-	}	
-
-
-	public String backToMainPages() {
-		resetUserProfileSearchBean();
-
-		return "/xhtml/pm/profilemanagement/profileManagementMain.xhtml";
-	}
-
-	public void districtCode(AjaxBehaviorEvent event) {
-		try {
-			Long districtId = (Long) event.getComponent().getAttributes()
-					.get("value");
-			if (null != districtId) {
-				List<PmDistrict> districtList = this.getManagedBean()
-						.getDistrictList();
-				for (PmDistrict district : districtList) {
-					if (district.getDistrictId().equals(districtId)) {
-						this.getManagedBean().setDistrictCode(
-								district.getDistrictCode());
-
-					}
-
-				}
-
-			}
-
-		} finally {
-
-		}
-
-	}	
-	
-	public void cityCode(AjaxBehaviorEvent event) {
-		try {
-			Long cityId = (Long) event.getComponent().getAttributes()
-					.get("value");
-			if (null != cityId) {
-				List<PmCity> cityList = this.getManagedBean()
-						.getCityList();
-				for (PmCity city : cityList) {
-					if (city.getCityId().equals(cityId)) {
-						this.getManagedBean().setCityCode(
-								city.getCityCode());
-
-					}
-
-				}
-
-			}
-
-		} finally {
-
-		}
-
-	}	*/	
 //
 //
 //	// to create new profiles into database
@@ -1983,7 +1774,166 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 //			
 //			System.out.println("handleFileUploadTest - end");
 //		}
+	
+	
+	
+//	private List<PmRoleDesc> getChildRoles(String parentCode){
+//		List<PmRoleDesc> childList = new ArrayList<PmRoleDesc>();
+//		try{
+//			if(parentCode!=null){
+//				RoleReqDTO roleReqDTO = new RoleReqDTO();
+//				roleReqDTO.setParentRole(parentCode);
+//				roleReqDTO.setLanguage(getFacesScopes().getUserLocale().getLanguage());
+//				IRoleSO roleSO = BusinessDelegate.getInstance().getServiceObject(
+//						ModuleCodeConst.PROFILE_MANAGEMENT, IRoleSO.class);
+//				RoleResDTO resDto = roleSO.searchRoleNameList(roleReqDTO);
+//				if(resDto!=null && resDto.isSuccessful()){
+//					childList = resDto.getRoleList();
+//				}
+//				
+//			}
+//		}catch(Exception e){
+//			e.printStackTrace();
+//		}
+//		return childList;
+//	}
+//	
 
+	/*
+	private void dummyUser(PmUser pmUser){
+		System.out.println("dummyUser");
+		
+		//dummy a role here
+		if(!pmUser.isBrandNew()){
+			System.out.println("dummy user not brand new ");
+			if(pmUser.getPmUserOrgs()==null){
+				System.out.println("dummy user empty pmUserOrgs");
+				pmUser.setPmUserOrgs(new ArrayList<PmUserOrg>());
+				//pmUserOrg
+				PmUserOrg pmUserOrg = new PmUserOrg();
+				
+				
+				//pmUserOrg.pmOrgProfile
+				PmOrgProfile pmOrgProfile = new PmOrgProfile();
+				pmOrgProfile.setOrgProfileId(1L);
+				
+				//pmOrgProfile.orgTypeCode
+				PmParameter pmParameter = new PmParameter();
+				pmParameter.setParameterId(166L);
+				pmOrgProfile.setOrgTypeCode(pmParameter);
+				pmOrgProfile.setBrandNew(false);
+				pmUserOrg.setPmOrgProfile(pmOrgProfile);
+				
+				//pmUserOrg.pmUserRole.pmRole
+				PmRole pmRole = new PmRole();
+				pmRole.setRoleCode("BUDGET_APPROVER");
+				
+				PmRole pmRole2 = new PmRole();
+				pmRole2.setRoleCode("CD_OFFICER");
+				
+				//pmUserOrg.pmUserRole
+				PmUserRole pmUserRole = new PmUserRole();
+				pmUserRole.setPmRole(pmRole);
+				
+				PmUserRole pmUserRole2 = new PmUserRole();
+				pmUserRole2.setPmRole(pmRole2);
+				
+				pmUserOrg.setPmUserRoles(new ArrayList<PmUserRole>());
+				
+				pmUserOrg.addPmUserRole(pmUserRole);
+				pmUserOrg.addPmUserRole(pmUserRole2);
+				
+				pmUser.addPmUserOrg(pmUserOrg);
+				
+				
+			}else{
+				//ADD
+				PmUserOrg tempUserOrg = pmUser.getPmUserOrgs().get(0);
+				PmUserRole pmUserRole = new PmUserRole();
+				//pmUserOrg.pmUserRole.pmRole
+				PmRole pmRole = new PmRole();
+				pmRole.setRoleCode("CD_COMMITTEE");
+				pmUserRole.setPmRole(pmRole);
+				tempUserOrg.setPmUserRoles(new ArrayList<PmUserRole>());
+				tempUserOrg.addPmUserRole(pmUserRole);
+				
+			}
+			
+		}else{
+			pmUser.getSalutationCode().setSalutationId(454L);
+			pmUser.getIdentificationCode().setParameterId(70L);
+			pmUser.setLoginId(pmUser.getIdentificationNo());
+			pmUser.setDesignation("test");
+			pmUser.setGrade("test");
+			pmUser.setFaxNo("1234567890");
+			pmUser.setMobileNo("1234567890");
+			pmUser.setPhoneNo("1234567890");
+			pmUser.setEmail(pmUser.getUserName() + "@test.com");
+			pmUser.getOrgTypeCode().setParameterId(166L);
+			
+			pmUser.setPmUserOrgs(new ArrayList<PmUserOrg>());
+			//pmUserOrg
+			PmUserOrg pmUserOrg = new PmUserOrg();
+			
+			
+			//pmUserOrg.pmOrgProfile
+			PmOrgProfile pmOrgProfile = new PmOrgProfile();
+			pmOrgProfile.setOrgProfileId(1L);
+			
+			//pmOrgProfile.orgTypeCode
+			PmParameter pmParameter = new PmParameter();
+			pmParameter.setParameterId(166L);
+			pmOrgProfile.setOrgTypeCode(pmParameter);
+			pmOrgProfile.setBrandNew(false);
+			pmUserOrg.setPmOrgProfile(pmOrgProfile);
+			pmUserOrg.setEffDate(new Timestamp(System.currentTimeMillis()));
+			//pmUserOrg.pmUserRole.pmRole
+			PmRole pmRole1 = new PmRole();
+			pmRole1.setRoleCode("BUDGET_APPROVER");
+			
+			PmRole pmRole2 = new PmRole();
+			pmRole2.setRoleCode("CD_OFFICER");
+			
+			//pmUserOrg.pmUserRole
+			PmUserRole pmUserRole1 = new PmUserRole();
+			pmUserRole1.setPmRole(pmRole1);
+			
+			PmUserRole pmUserRole2 = new PmUserRole();
+			pmUserRole2.setPmRole(pmRole2);
+			
+			pmUserOrg.setPmUserRoles(new ArrayList<PmUserRole>());
+			
+			pmUserOrg.addPmUserRole(pmUserRole1);
+			pmUserOrg.addPmUserRole(pmUserRole2);
+			
+			pmUser.addPmUserOrg(pmUserOrg);
+			
+		}
+		
+	
+	}
+
+	
+	private void dummyTestUpdateRole(UserReqDTO reqDTO){
+		//ADD
+		List <PmUserRole> newUserRoles = new ArrayList<PmUserRole>();
+		PmUserRole pmUserRole1 = new PmUserRole();
+		PmRole pmRole1 = new PmRole();
+		pmRole1.setRoleCode("CD_COMMITTEE");
+		pmUserRole1.setPmRole(pmRole1);
+		newUserRoles.add(pmUserRole1);
+		
+		List <PmUserRole> delUserRoles = new ArrayList<PmUserRole>();
+		PmUserRole pmUserRole2 = new PmUserRole();
+		PmRole pmRole2 = new PmRole();
+		pmRole2.setRoleCode("BUDGET_APPROVER");
+		pmUserRole2.setPmRole(pmRole2);
+		delUserRoles.add(pmUserRole2);
+
+		reqDTO.setNewRoleList(newUserRoles);
+		reqDTO.setRemoveRoleList(delUserRoles);
+	}
+	*/
 	
 	
 }

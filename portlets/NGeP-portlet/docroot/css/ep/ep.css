@@ -1859,9 +1859,15 @@ table.ppTwoTable td {
 .ppDisplayTextXS{
 	width: 60px;
 }
-
+.ppDisplayCalS input {
+	width: 100px;
+}
 .ppDisplayCalM input {
 	width: 180px;
+}
+
+.ppDisplayCalXS{
+	width: 60px;
 }
 
 .ui-selectonemenu.ppDropDownWidthM {

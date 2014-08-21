@@ -12,6 +12,7 @@
 			<!-- Roles -->
 		  	<p:tab title="#{lbl['lbl.pm.profiles.authorisation.roles']}">  
 			  	<p:dataTable id="dtRoles" var="role" styleClass="dtRoles"
+			  		 emptyMessage="#{lbl['lbl.pp.no.record.found']}" 
 				     value="#{profileManagementBackingBean.managedBean.selectedUserOrg.pmUserRoles}"
 				     selection="#{profileManagementBackingBean.managedBean.deleteUserRoles}"
 				     rowIndexVar="index" rowKey="#{role}">   
@@ -22,7 +23,7 @@
 			          	#{profileManagementBackingBean.getRoleDescByRoleCode(role.pmRole.roleCode)}
 			        </p:column>
 			        <p:column headerText="#{lbl['lbl.pm.profiles.authorisation.apprlimit']}" > 
-			          	<p:inputText styleClass="ppDisplayTextS" value="#{role.approvalLimit}" />
+			          	<p:inputText styleClass="ppDisplayTextS" value="#{role.approvalLimit}" disabled="#{!role.pmRole.limitRequired}" />
 			        </p:column>
 			        <p:column headerText="#{lbl['lbl.pm.profiles.authorisation.Status']}"> 
 				  	 	<p:selectOneMenu value="#{role.recordStatusFlg}">  
@@ -36,7 +37,7 @@
 				<div class="ppRightBtn">
 					<p:commandButton action="#{profileManagementBackingBean.getAvailbleUserRole}"
 					  	value="#{lbl['lbl.btn.add']}" oncomplete="dlRoleOptions.show();" update=":form:opRoleOptions"/>&#160;
-			        <p:commandButton value="#{lbl['lbl.btn.delete']}" action="#{profileManagementBackingBean.deleteRole}" />
+			        <p:commandButton value="#{lbl['lbl.btn.delete']}" action="#{profileManagementBackingBean.deleteRole}" update=":form:tvRoleReceivingAddr:dtRoles" />
 			  
 		        </div>
 	      	</p:tab>  
@@ -44,13 +45,15 @@
 			        
 	      	<!-- Receiving Address -->
 		  	<p:tab title="#{lbl['lbl.pm.profiles.authorisation.receiving.address']}">	
-				<p:dataTable id="dtReceiveAddr" value="#{profileManagementBackingBean.managedBean.selectedReceivingAddrs}"
-						emptyMessage="#{lbl['lbl.pp.no.record.found']}"  var="receivAddr">	          
+				<p:dataTable id="dtReceiveAddr" value="#{profileManagementBackingBean.managedBean.selectedReceivingAddrTypes}"
+						emptyMessage="#{lbl['lbl.pp.no.record.found']}"  var="receivAddrType"
+						rowIndexVar="index" rowKey="#{dtReceiveAddr}">	
+					
 				    <p:column headerText="#{lbl['lbl.pm.profiles.authorisation.addname']}" > 
-				    	#{profileManagementBackingBean.getFullAddress(receivAddr)}
+				    	#{profileManagementBackingBean.getFullAddress(receivAddrType.pmAddress)}
 			        </p:column>
 			        <p:column headerText="#{lbl['lbl.pm.profiles.userdetails.status']}" > 
-		        		<p:selectOneMenu value="#{receivAddr.recordStatusFlg}">  
+		        		<p:selectOneMenu value="#{receivAddrType.recordStatusFlg}">  
 			            	<f:selectItems value="#{profileManagementBackingBean.getStatusOptions()}" />
 			          	</p:selectOneMenu> 
 			        </p:column>
@@ -61,16 +64,18 @@
 					<table style="float:right;">
 						<tr>
 							<td>
+								<!-- Receiving Address Selection Popup -->
 								<ac:lov id="lovAddrType" lovId="PM_ADDRESS_TYPE" styleClass="ppDisplayCalS" 
 					            	readonly="true" selectionMode="multiple" buttonLabel="#{lbl['lbl.btn.add']}"
 									headerText="#{lbl['lbl.pm.profiles.authorisation.select.address']}" update=":form:tvRoleReceivingAddr:dtReceiveAddr"
-									saveObject="profileManagementBackingBean.managedBean.selectedDeliveringAddrs"
-									postUpdateListener="profileManagementBackingBean.updateReceivingAddr(profileManagementBackingBean.managedBean.selectedDeliveringAddrs)"
+									saveObject="profileManagementBackingBean.managedBean.selectedDeliveringAddrTypes"
+									postUpdateListener="profileManagementBackingBean.updateReceivingAddr(profileManagementBackingBean.managedBean.selectedDeliveringAddrTypes)"
 									conditionField="pmOrgProfile.orgTypeCode.parameterId^#{profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterId}|addressType^D|recordStatus^1" 
 									/>
 							</td>
 							<td>
-								<p:commandButton value="#{lbl['lbl.btn.delete']}" />
+								<p:commandButton value="#{lbl['lbl.btn.delete']}" action="#{profileManagementBackingBean.deleteReceivingAddr}"
+									update=":form:tvRoleReceivingAddr:dtReceiveAddr"/>
 							</td>
 						</tr>
 					</table>
@@ -82,5 +87,5 @@
 	<!-- Role Selection Popup -->
 	<ui:include src="/xhtml/pm/profilemanagement/common/rolePopUp.xhtml" />
 	
-	<!-- Address Selection Popup -->
+
 </ui:composition>	
