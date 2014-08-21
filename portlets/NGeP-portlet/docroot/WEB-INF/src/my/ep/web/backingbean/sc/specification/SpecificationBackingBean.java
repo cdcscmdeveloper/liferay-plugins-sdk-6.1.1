@@ -1486,6 +1486,18 @@ public class SpecificationBackingBean extends
 			this.getManagedBean().setAllStateCode(tenderResDTO.getStateCode());
 			this.getManagedBean().setScQt(scQt);
 			if (!scQt.isPanel()) {
+				if (scQt.isZonal()
+						&& scQt.getEstimatedAmount().intValue() <= 500000
+						&& !scQt.getScQtSupplierCriteria().isAllState()
+
+						&& null != this.getManagedBean().getZoneGeneralTrees()
+						&& this.getManagedBean().getZoneGeneralTrees()
+								.isEmpty()) {
+					retriveNonpanelZoneDtls(this.getManagedBean().getScQt()
+							.getQtId(), "QT");
+
+				}
+
 				if (scQt.getEstimatedAmount().intValue() > 500000
 						&& this.getManagedBean().getAllStateCode() == 3
 						&& !scQt.getScQtSupplierCriteria().isAllState()) {
@@ -3535,7 +3547,7 @@ public class SpecificationBackingBean extends
 		}
 
 		if (getManagedBean().getIndex() >= 0) {
-			
+
 			getManagedBean().getZoneTrees().remove(getManagedBean().getIndex());
 			getManagedBean().getZoneTrees().add(
 					getManagedBean().getIndex(),
@@ -3819,17 +3831,8 @@ public class SpecificationBackingBean extends
 						&& null != this.getManagedBean().getZoneGeneralTrees()
 						&& this.getManagedBean().getZoneGeneralTrees()
 								.isEmpty()) {
+					retriveNonpanelZoneDtls(qtId, docType);
 
-					if (isNotNullOREmpty(tenderResDTO.getZoneDetails())) {
-						for (TplSpecZoneDtl zone : tenderResDTO
-								.getZoneDetails()) {
-							getManagedBean().getZoneGeneralTrees().add(
-									LocationSingleton.getInstance()
-											.constuctTreeNode(zone,
-													zone.getTplSpecZoneLocs()));
-
-						}
-					}
 				}
 				this.getManagedBean().setScQt(scQt);
 				if (null != scQt.getEstimatedAmount()) {
@@ -3841,6 +3844,30 @@ public class SpecificationBackingBean extends
 			QtDetailsSO = null;
 		}
 
+	}
+
+	public void retriveNonpanelZoneDtls(Long qtId, String docType) {
+		IQTDetailSO QtDetailsSO;
+		try {
+			QtDetailsSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
+			tenderReqDTO.setQtId(qtId);
+			tenderReqDTO.setDocType(docType);
+			QuationTenderResDTO tenderResDTO = new QuationTenderResDTO();
+			tenderResDTO = QtDetailsSO.retriveQTDetails(tenderReqDTO);
+			if (isNotNullOREmpty(tenderResDTO.getZoneDetails())) {
+				for (TplSpecZoneDtl zone : tenderResDTO.getZoneDetails()) {
+					getManagedBean().getZoneGeneralTrees().add(
+							LocationSingleton.getInstance().constuctTreeNode(
+									zone, zone.getTplSpecZoneLocs()));
+
+				}
+			}
+
+		} finally {
+
+		}
 	}
 
 	public void tierEvent(AjaxBehaviorEvent event) {
@@ -10768,7 +10795,7 @@ public class SpecificationBackingBean extends
 			supplierCriteria.setLocationLevel(scQt.getZoneLocationLevel());
 			supplierCriteria.setScQtLocCriteria(null);
 			scQt.setZoneLocationLevel(new PmParameter());
-			
+
 			this.getManagedBean().setZoneTrees(new ArrayList<TreeNode>());
 		} else {
 			this.getManagedBean()
