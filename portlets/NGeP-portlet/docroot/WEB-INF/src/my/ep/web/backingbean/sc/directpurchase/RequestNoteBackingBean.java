@@ -110,7 +110,6 @@ import my.ep.persistence.logging.LogKey;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
-import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
 import my.ep.web.backingbean.sc.purchaseindefault.PurchaseInDefaultBackingBean;
 import my.ep.web.backingbean.sc.purchaseinquiry.PurchaseInquiryBackingBean;
@@ -2052,23 +2051,37 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		debugLogger("downloadPurchaseInqReport");
 		
 		ScRequestItem requestItem = scRequestNoteDtl.getRequestItem();
+		ScPrInquiry scPrInquiry = scRequestNoteDtl.getScRequestSupplierItem().getScPrInquiy();
 		ScPIReportAttachment scPIReportAttachment = scRequestNoteDtl.getScPIReportAttachment();
 		
 		if (scPIReportAttachment == null) {
+			IPrInquirySO prInquirySO = null;
+			
 			try {
+				prInquirySO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IPrInquirySO.class);
+				
+				PrInquiryReqDTO reqDTO = new PrInquiryReqDTO();
+				reqDTO.setPrInquiryId(scPrInquiry.getPrInquiryId());
+
+				PrInquiryResDTO resDTO = prInquirySO.retrievePurchaseInquiryPricesById(reqDTO);
+				
 				scPIReportAttachment = new ScPIReportAttachment();
 				scPIReportAttachment.setScRequestNoteDtl(scRequestNoteDtl);
 				scPIReportAttachment.setDocNo(scRequestNoteDtl.getScRequestNote().getRequestNoteNo());
 				scPIReportAttachment.setPrefixFileName(getItemCode(requestItem));
 				
 				generatePurchaseInqPdfFromVelocity((ScAttachment)scPIReportAttachment, 
-						requestItem.getSupplierItems());
+						resDTO.getSupplierItemPrices());
+				
+				scRequestNoteDtl.setScPIReportAttachment(scPIReportAttachment);
+				
 			} catch (Exception e) {
 				e.printStackTrace();
 				throw new EpException(e.getMessage());
+			} finally {
+				prInquirySO = null;
 			}
-			
-			scRequestNoteDtl.setScPIReportAttachment(scPIReportAttachment);
 		}
 		
 		downloadFile(scPIReportAttachment);
@@ -2146,7 +2159,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
     			new FileOutputStream(getActualFilePath(attachment)));
 	}
 	
-	private void generatePurchaseInqPdfFromVelocity(ScAttachment attachment, List<ScRequestSupplierItem> scRequestSupplierItems) throws IOException {
+	private void generatePurchaseInqPdfFromVelocity(ScAttachment attachment, List<ScSupplierItemPrice> scSupplierItemPrices) throws IOException {
 		attachment.setFileName("pi_report.pdf");
 		populateAttachmentDetails(attachment);
 		
