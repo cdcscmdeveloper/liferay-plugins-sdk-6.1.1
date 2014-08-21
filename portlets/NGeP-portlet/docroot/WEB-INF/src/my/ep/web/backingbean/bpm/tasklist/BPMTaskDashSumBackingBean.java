@@ -68,6 +68,7 @@ public class BPMTaskDashSumBackingBean extends
 	private int pendingDeliveryListNum;
 	private long pendingApprovalItemNum;
 	private int pendingMOFSubmissionNum;
+	private long pendingCodifiedItemsNum;
 	private ISearchBean<PmParameterDesc> docTypeSearchBean;
 	public BPMTaskDashSumBackingBean() {
 		super();
@@ -91,16 +92,18 @@ public class BPMTaskDashSumBackingBean extends
 			reqDTO.setCtxToken(token);
 			reqDTO.setUserId(userId);
 			DashSummaryResDTO responseDTO = dashSummarySO.getTaskSummary(reqDTO);
-			System.out.println("responseDTO*****" + responseDTO);
-			System.out.println("responseDTO.getTaskSummaryDTOList()*****" + responseDTO.getTaskSummaryDTOList());
+	    	log.info("responseDTO*****" + responseDTO);
+	    	log.info("responseDTO.getTaskSummaryDTOList()*****" + responseDTO.getTaskSummaryDTOList());
 			dashboardSummary = responseDTO.getTaskSummaryDTOList();
-			System.out.println("responseDTO.getTotalTask()*****" + responseDTO.getTotalTask());
+			log.info("responseDTO.getTotalTask()*****" + responseDTO.getTotalTask());
 			totalTask = responseDTO.getTotalTask();
 			pendingDeliveryListNum = responseDTO.getPendingDeliveryNum();
-			System.out.println("responseDTO.getPendingDeliveryNum()*****" + responseDTO.getPendingDeliveryNum());
+			log.info("responseDTO.getPendingDeliveryNum()*****" + responseDTO.getPendingDeliveryNum());
 			pendingApprovalItemNum = responseDTO.getPendingApprovalItemNum();
-			System.out.println("responseDTO.getPendingApprovalItemNum()*****" + responseDTO.getPendingApprovalItemNum());
-
+			log.info("responseDTO.getPendingApprovalItemNum()*****" + responseDTO.getPendingApprovalItemNum());
+			pendingCodifiedItemsNum = responseDTO.getPendingCodifiedItemsNum();
+			log.info("responseDTO.getPendingCodifiedItemsNum()*****" + responseDTO.getPendingCodifiedItemsNum());
+            
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -167,6 +170,27 @@ public class BPMTaskDashSumBackingBean extends
 			System.out.println("commonUrl" + commonUrl);
 	      	
 		 externalContext.redirect(commonUrl+"/" + "pending-approval-item");
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void redirectToPendingCodifiedItems() throws PortalException, SystemException{
+		System.out.println(">>>>>>>>>>redirectToPendingCodifiedItems<<<<<<<<<<");
+		try {
+			FacesScopes facesScope = new FacesScopes();
+			
+			ThemeDisplay themeDisplay = (ThemeDisplay)facesScope.getRequestScope(WebKeys.THEME_DISPLAY);
+			
+			ExternalContext externalContext = FacesContext.getCurrentInstance()
+					.getExternalContext();
+
+			String commonUrl = themeDisplay.getURLCurrent().substring(0,themeDisplay.getURLCurrent().indexOf(themeDisplay.getLayout().getGroup().getFriendlyURL())+ themeDisplay.getLayout().getGroup().getFriendlyURL().length());
+			System.out.println("commonUrl" + commonUrl);
+	      	
+		 externalContext.redirect(commonUrl+"/" + "contracted-item");
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -245,6 +269,14 @@ public class BPMTaskDashSumBackingBean extends
 
 	public void setPendingMOFSubmissionNum(int pendingMOFSubmissionNum) {
 		this.pendingMOFSubmissionNum = pendingMOFSubmissionNum;
+	}
+
+	public long getPendingCodifiedItemsNum() {
+		return pendingCodifiedItemsNum;
+	}
+
+	public void setPendingCodifiedItemsNum(long pendingCodifiedItemsNum) {
+		this.pendingCodifiedItemsNum = pendingCodifiedItemsNum;
 	}
 
 	public ISearchBean<PmParameterDesc> getDocTypeSearchBean() {
