@@ -81,7 +81,7 @@
 						<td><p:commandLink id="cloneLink" title="Clone" rendered="#{price.showFlag}"
 								disabled="#{price.standardDisabled or price.price eq null or price.fromQty eq null or price.toQty eq null or price.fromQty >= price.toQty or price.startDate eq null or price.endDate eq null or price.startDate >= price.endDate or !price.displayAction}" 
 								action="#{catalogueBackingBean.cloneTierPrice(rowIndex)}"
-								update=":form:pricingTabID:headerTabId:tierId:pricingTierID">
+								update=":form:pricingTabID:headerTabId:tierId:pricingTierID, :form:pricingTabID:headerTabId:tierId:addTierButton">
 								<p:graphicImage value="/css/images/design/add.png"></p:graphicImage>
 							</p:commandLink>&#160;</td>
 						<td style="text-align: right;">
@@ -115,11 +115,11 @@
 		<div class="clear"></div>
 
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.cm.add']}" icon="ui-icon-add" 
+			<p:commandButton value="#{lbl['lbl.cm.add']}" icon="ui-icon-add" id="addTierButton"
 			rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'D' || 
 			(catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'U' and (unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.supplierAdmin or unspscCodeBackingBean.allSupplier))}"
-				action="#{catalogueBackingBean.addNewTierPricing()}"
-				update=":form:pricingTabID:headerTabId:tierId:pricingTierID, :form:pricingTabID:headerTabId:tierId:pricingPromotionTierID"
+				action="#{catalogueBackingBean.addNewTierPricing()}" disabled="#{catalogueBackingBean.disableAddTier()}"
+				update=":form:pricingTabID:headerTabId:tierId:pricingTierID, :form:pricingTabID:headerTabId:tierId:pricingPromotionTierID, :form:pricingTabID:headerTabId:tierId:addTierButton"
 				process="@this :form:pricingTabID:headerTabId:tierId:pricingTierID"></p:commandButton>
 		</div>
 

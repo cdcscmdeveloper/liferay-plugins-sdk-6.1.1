@@ -2391,7 +2391,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			for (int i = 0; i < zPromotionPricing.size(); i++) {
 				CmZonalPromotionPricing standard = zPromotionPricing.get(i);
 				if (previousZPromotionObj != null && standard!=null) {
-					if (previousZPromotionObj.getEndDate().compareTo(standard.getStartDate()) > 0) {
+					if ((previousZPromotionObj.getCmSupplierZone() != null && standard.getCmSupplierZone() != null) && (previousZPromotionObj.getCmSupplierZone().getSuppZoneId() == standard.getCmSupplierZone().getSuppZoneId()) && previousZPromotionObj.getEndDate().compareTo(standard.getStartDate()) > 0) {
 						FacesContext facesContext = FacesContext.getCurrentInstance();
 						facesContext.addMessage(null, new FacesMessage(
 								FacesMessage.SEVERITY_ERROR,
