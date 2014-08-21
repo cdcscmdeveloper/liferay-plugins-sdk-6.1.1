@@ -264,6 +264,20 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			pmUser.setConfirmPassword(null);
 			
 			this.getManagedBean().setSelectedUser(pmUser);
+			this.getManagedBean().setDeleteUserRoles(null);
+			this.getManagedBean().setDeleteReceivingAddrTypes(null);
+			this.getManagedBean().setSelectedDeliveringAddrTypes(null);
+			this.getManagedBean().setSelectedUserOrg(null);
+			this.getManagedBean().setSelectedRoles(null);
+			this.getManagedBean().setSelectedReceivingAddrTypes(null);
+			
+			//for the initial load
+			if(pmUser.getPmUserOrgs()!=null && !pmUser.getPmUserOrgs().isEmpty()){
+				this.getManagedBean().setSelectedUserOrg(pmUser.getPmUserOrgs().get(0));
+				showReceivingAddress();
+			}
+		
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new EpException("Unable to view User Profile.", new String[]{e.getMessage()}); //TODO exception
@@ -304,6 +318,10 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		this.getManagedBean().setSelectedUserOrg(null);
 		this.getManagedBean().setSelectedRoles(null);
 		this.getManagedBean().setDeleteUserRoles(null);
+		this.getManagedBean().setDeleteReceivingAddrTypes(null);
+		this.getManagedBean().setSelectedDeliveringAddrTypes(null);
+		this.getManagedBean().setSelectedReceivingAddrTypes(null);
+
 		System.out.println("login " + this.getManagedBean().getSelectedUser().getLoginId());
 	}
 	
@@ -656,20 +674,20 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		logger.info("showReceivingAddress");
 		try {
 			/* add address back to user*/
-			if(this.getManagedBean().getSelectedReceivingAddrTypes()!=null){
-				if(this.getManagedBean().getSelectedUser().getPmAddressTypes()==null){
-					this.getManagedBean().getSelectedUser().setPmAddressTypes(new ArrayList<PmAddressType>());
-				}
-				for(PmAddressType addressTypeObj :this.getManagedBean().getSelectedReceivingAddrTypes()){
-					if(addressTypeObj.isBrandNew()){
-						System.out.println("d>>>" + addressTypeObj.getPmAddress().getAddressId());
-						System.out.println("add");
-						this.getManagedBean().getSelectedUser().addPmAddressType(addressTypeObj);
-					}
-				}
-				this.getManagedBean().getSelectedReceivingAddrTypes().clear();
-			}
-			
+//			if(this.getManagedBean().getSelectedReceivingAddrTypes()!=null){
+//				if(this.getManagedBean().getSelectedUser().getPmAddressTypes()==null){
+//					this.getManagedBean().getSelectedUser().setPmAddressTypes(new ArrayList<PmAddressType>());
+//				}
+//				for(PmAddressType addressTypeObj :this.getManagedBean().getSelectedReceivingAddrTypes()){
+//					if(addressTypeObj.isBrandNew()){
+//						System.out.println("d>>>" + addressTypeObj.getPmAddress().getAddressId());
+//						System.out.println("add");
+//						this.getManagedBean().getSelectedUser().addPmAddressType(addressTypeObj);
+//					}
+//				}
+//				this.getManagedBean().getSelectedReceivingAddrTypes().clear();
+//			}
+//			
 			
 			/* show selected org's receiving addr */ 
 			if(this.getManagedBean().getSelectedUserOrg()!=null && this.getManagedBean().getSelectedUser().getPmAddressTypes()!=null){
@@ -710,8 +728,11 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 					tempAddTypeObj.setPmAddress(pmAddressType.getPmAddress());
 					tempAddTypeObj.setPmUser(this.getManagedBean().getSelectedUser());
 					tempAddTypeObj.setPmOrgProfile(this.getManagedBean().getSelectedUserOrg().getPmOrgProfile());
-					this.getManagedBean().getSelectedReceivingAddrTypes().add(tempAddTypeObj);
+					this.getManagedBean().getSelectedUser().addPmAddressType(tempAddTypeObj);
+//					this.getManagedBean().getSelectedReceivingAddrTypes().add(tempAddTypeObj);
 				}
+				this.getManagedBean().getSelectedDeliveringAddrTypes().clear();
+				showReceivingAddress();
 			}else{
 				throw new EpException("Duplicate Addresses are selected."); //TODO exception
 			}
@@ -728,9 +749,11 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				this.getManagedBean().setSelectedReceivingAddrTypes(new ArrayList<PmAddressType>());
 			}
 			for(PmAddressType pmAddressType: this.getManagedBean().getDeleteReceivingAddrTypes()){
-				this.getManagedBean().getSelectedReceivingAddrTypes().remove(pmAddressType);
+				this.getManagedBean().getSelectedUser().getPmAddressTypes().remove(pmAddressType);
+//				this.getManagedBean().getSelectedReceivingAddrTypes().remove(pmAddressType);
 			}
 			this.getManagedBean().getDeleteReceivingAddrTypes().clear();
+			showReceivingAddress();
 		}else{
 			throw new EpException("At least one Receiving Address must be selected."); //TODO
 		}
@@ -1122,30 +1145,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			reqDTO.setRemoveRoleList(deleteRoleList);
 		}
 	}
-	
-	/**
-	 * check if there are idle receiving address
-	 * @param user
-	 * @param reqDTO
-	 */
-	private void loadAndCheckReceiving(PmUser user){
-		logger.info("loadAndCheckReceiving");
-		if(this.getManagedBean().getSelectedReceivingAddrTypes()!=null 
-				&& !this.getManagedBean().getSelectedReceivingAddrTypes().isEmpty()){
-				/* add address back to user*/
-				if(user.getPmAddressTypes()==null){
-					user.setPmAddressTypes(new ArrayList<PmAddressType>());
-				}
-				for(PmAddressType addressTypeObj :this.getManagedBean().getSelectedReceivingAddrTypes()){
-					if(addressTypeObj.isBrandNew()){
-						System.out.println("d>>>" + addressTypeObj.getPmAddress().getAddressId());
-						System.out.println("add");
-						user.addPmAddressType(addressTypeObj);
-					}
-				}
-				this.getManagedBean().getSelectedReceivingAddrTypes().clear();
-		}
-	}
+
 	
 	/**
 	 * Method to update the user details
@@ -1172,11 +1172,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				reqDTO.setRemoveRoleList(new ArrayList<PmUserRole>());
 				loadUserRoles(user, reqDTO);
 			}
-			
-			loadAndCheckReceiving(user);
-			
-			
-			
+
 			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			reqDTO.setPmUser(user);
