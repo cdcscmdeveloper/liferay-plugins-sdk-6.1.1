@@ -63,8 +63,9 @@
 				</h:outputText>
 			</p:column>
 			<p:column headerText="Received &lt;br /&gt; Amt.(RM)" style="text-align:right">
-				<p:inputText styleClass="colFloatRight"
+				<p:inputText styleClass="colFloatRight" id="receivedAmtVal"
 					rendered="#{item.flItem.itemType.parameterCode eq ParameterConst.itemTypeService}" value="#{item.receivedAmt}">
+					<p:ajax update="receivedAmtVal" listener="#{receivedNoteBackingBean.receivedAmtValidation(item)}"></p:ajax>
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</p:inputText>
 				<h:outputText id="receivedAmt" value="#{item.receivedAmt}" styleClass="colFloatRight"
