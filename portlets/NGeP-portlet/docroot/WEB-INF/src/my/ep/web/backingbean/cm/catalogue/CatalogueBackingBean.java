@@ -4511,17 +4511,22 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		if (tier.getStartDate() != null && tier.getEndDate() != null) {
 			for (CmTierPricing cmPricing : previousList) {
 
-				if ((tier.getStand_group_id() != cmPricing.getStand_group_id()) && ((tier.getStartDate().compareTo(cmPricing.getStartDate()) < 0 && tier
-						.getEndDate().compareTo(cmPricing.getStartDate()) < 0)
-						|| (tier.getStartDate().compareTo(
-								cmPricing.getEndDate()) > 0 && tier
-								.getEndDate().compareTo(cmPricing.getEndDate()) > 0))) {
+				if(tier.getStand_group_id() != cmPricing.getStand_group_id()){
+					if ((tier.getStartDate().compareTo(cmPricing.getStartDate()) < 0 && tier
+							.getEndDate().compareTo(cmPricing.getStartDate()) < 0)
+							|| (tier.getStartDate().compareTo(
+									cmPricing.getEndDate()) > 0 && tier
+									.getEndDate().compareTo(cmPricing.getEndDate()) > 0)) {
+						tier.setDisplayAction(true);
+						this.getManagedBean().setError4(false);
+					} else {
+						tier.setDisplayAction(false);
+						this.getManagedBean().setError4(true);
+						break;
+					}
+				} else {
 					tier.setDisplayAction(true);
 					this.getManagedBean().setError4(false);
-				} else {
-					tier.setDisplayAction(false);
-					this.getManagedBean().setError4(true);
-					break;
 				}
 			}
 		}
