@@ -300,6 +300,9 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 				flReqDTO.setFlOrderId(removeReqType.getOrderId());
 				resDTO = getFulfilmentOrderSO().retrieveFulfilmentOrderById(flReqDTO);
 				getManagedBean().setFulfilmentOrder(resDTO.getFlOrder());
+				if(null != resDTO.getFlOrder().getPmFinancialOrg().getFinancialOrgId()){
+					getRfcAddress(resDTO.getFlOrder().getPmFinancialOrg().getFinancialOrgId());
+				}
 				getManagedBean().setFlRequest(resDTO.getFlOrder().getFlFulfilmentRequest());
 				getManagedBean().setTaskId(taskId);
 				getManagedBean().setOutComes(res.getAction());
@@ -381,7 +384,6 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 		FinancialOrgResDTO resDTO = financialOrgSO.retrieveFinancialOrgListByServiceType(reqDTO);
 		getManagedBean().setPmFinancialOrgs(resDTO.getFinancialOrgList());
 	}
-		
 	public void getSelectedFactoringCompDtl(AjaxBehaviorEvent e){
 		IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
 		Long financialOrgId = (Long) e.getComponent().getAttributes().get("value");
@@ -471,6 +473,36 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			}				
 		}
 	}
+	
+	 public void getRfcAddress(Long financialOrgId){
+		 IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
+		
+		 getManagedBean().setRfcAddress(null);
+		 getManagedBean().setRfcPhoneNo(null);
+		 getManagedBean().setRfcFaxNo(null);
+		 getManagedBean().setRfcContactPerson(null);
+		 getManagedBean().setRfcContactEmail(null);
+		 getManagedBean().setRfcContactPhoneNo(null);
+		 if(financialOrgId!=null) {
+				AddressReqDTO reqDTO = new AddressReqDTO();
+				reqDTO.setFinancialOrgId(financialOrgId);
+				reqDTO.setAddressType(AddressType.BILLING_ADDRESS.value());
+				
+				AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
+				if(!resDTO.getAddressTypeList().isEmpty()){
+					getManagedBean().setRfcAddress(getFullAddress(resDTO.getAddressTypeList().get(0).getPmAddress()));
+					getManagedBean().setRfcPhoneNo(resDTO.getAddressTypeList().get(0).getPmAddress().getPhoneNo());
+					getManagedBean().setRfcFaxNo(resDTO.getAddressTypeList().get(0).getPmAddress().getFaxNo());
+					if(!resDTO.getAddressTypeList().get(0).getPmContacts().isEmpty() ){
+						PmContact pmContact = resDTO.getAddressTypeList().get(0).getPmContacts().get(0);
+						getManagedBean().setRfcContactPerson(pmContact.getContactName());
+						getManagedBean().setRfcContactEmail(pmContact.getEmail());
+						getManagedBean().setRfcContactPhoneNo(pmContact.getPhoneNo());
+					}
+					
+				}
+			}
+	}	
 		
 	public String getPortletTitle() {
 		String portletTitle = " Fulfilment Document Maintenance";

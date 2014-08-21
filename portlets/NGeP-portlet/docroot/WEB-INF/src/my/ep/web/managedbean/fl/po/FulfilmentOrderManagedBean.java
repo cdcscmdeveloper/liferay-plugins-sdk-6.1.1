@@ -94,6 +94,13 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	private FlFulfilmentItemAddr stopInstr;
 	
 	private boolean docMaintainRemarks = false;
+	// rfc address 
+	private String rfcAddress;
+	private String rfcPhoneNo;
+	private String rfcFaxNo;
+	private String rfcContactEmail;
+	private String rfcContactPerson;
+	private String rfcContactPhoneNo;
 	
 	
 	public void populateChargeLineData(){
@@ -731,6 +738,90 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	 */
 	public void setDocMaintainRemarks(boolean docMaintainRemarks) {
 		this.docMaintainRemarks = docMaintainRemarks;
+	}
+
+	/**
+	 * @return the rfcAddress
+	 */
+	public String getRfcAddress() {
+		return rfcAddress;
+	}
+
+	/**
+	 * @param rfcAddress the rfcAddress to set
+	 */
+	public void setRfcAddress(String rfcAddress) {
+		this.rfcAddress = rfcAddress;
+	}
+
+	/**
+	 * @return the rfcPhoneNo
+	 */
+	public String getRfcPhoneNo() {
+		return rfcPhoneNo;
+	}
+
+	/**
+	 * @return the rfcFaxNo
+	 */
+	public String getRfcFaxNo() {
+		return rfcFaxNo;
+	}
+
+	/**
+	 * @return the rfcContactEmail
+	 */
+	public String getRfcContactEmail() {
+		return rfcContactEmail;
+	}
+
+	/**
+	 * @return the rfcContactPerson
+	 */
+	public String getRfcContactPerson() {
+		return rfcContactPerson;
+	}
+
+	/**
+	 * @return the rfcContactPhoneNo
+	 */
+	public String getRfcContactPhoneNo() {
+		return rfcContactPhoneNo;
+	}
+
+	/**
+	 * @param rfcPhoneNo the rfcPhoneNo to set
+	 */
+	public void setRfcPhoneNo(String rfcPhoneNo) {
+		this.rfcPhoneNo = rfcPhoneNo;
+	}
+
+	/**
+	 * @param rfcFaxNo the rfcFaxNo to set
+	 */
+	public void setRfcFaxNo(String rfcFaxNo) {
+		this.rfcFaxNo = rfcFaxNo;
+	}
+
+	/**
+	 * @param rfcContactEmail the rfcContactEmail to set
+	 */
+	public void setRfcContactEmail(String rfcContactEmail) {
+		this.rfcContactEmail = rfcContactEmail;
+	}
+
+	/**
+	 * @param rfcContactPerson the rfcContactPerson to set
+	 */
+	public void setRfcContactPerson(String rfcContactPerson) {
+		this.rfcContactPerson = rfcContactPerson;
+	}
+
+	/**
+	 * @param rfcContactPhoneNo the rfcContactPhoneNo to set
+	 */
+	public void setRfcContactPhoneNo(String rfcContactPhoneNo) {
+		this.rfcContactPhoneNo = rfcContactPhoneNo;
 	}
 
 }

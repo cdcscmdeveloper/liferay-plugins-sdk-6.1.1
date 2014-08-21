@@ -194,7 +194,7 @@
 							value="#{lbl['lbl.fl.supp.address']}" /></td>
 					<td><p:inputTextarea cols="50" rows="8" disabled="true"
 							style=" margin-bottom:5px;"
-							value="#{flOrderBB.managedBean.supplierAddress}" /></td>
+							value="#{flOrderBB.managedBean.rfcAddress}" /></td>
 				</tr>
 				<tr>
 					<td style="width: 100px;"><p:outputLabel
@@ -203,11 +203,11 @@
 							<tr>
 								<td style="width: 25px;"><p:inputText size="15"
 										disabled="true"
-										value="#{flOrderBB.managedBean.phoneNo}" /></td>
+										value="#{flOrderBB.managedBean.rfcPhoneNo}" /></td>
 								<td style="width: 71px;"><p:outputLabel
 										value="#{lbl['lbl.fl.supp.faxno']}" /></td>
 								<td><p:inputText size="15" disabled="true"
-										value="#{flOrderBB.managedBean.faxNo}" /></td>
+										value="#{flOrderBB.managedBean.rfcFaxNo}" /></td>
 							</tr>
 						</table></td>
 				</tr>
@@ -215,18 +215,18 @@
 					<td><p:outputLabel
 							value="#{lbl['lbl.fl.del.ord.contact.person']}" /></td>
 					<td><p:inputText disabled="true" size="50"
-							value="#{flOrderBB.managedBean.contactPerson}" /></td>
+							value="#{flOrderBB.managedBean.rfcContactPerson}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel
 							value="#{lbl['lbl.fl.del.ord.contact.email']}" /></td>
 					<td><p:inputText disabled="true" size="50"
-							value="#{flOrderBB.managedBean.contactEmail}" /></td>
+							value="#{flOrderBB.managedBean.rfcContactEmail}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.del.ord.contact.no']}" /></td>
 					<td><p:inputText disabled="true" size="25"
-							value="#{flOrderBB.managedBean.contactPhoneNo}" /></td>
+							value="#{flOrderBB.managedBean.rfcContactPhoneNo}" /></td>
 				</tr>
 			</table>
 		</p:panel>
@@ -265,17 +265,6 @@
 			</table>
 		</p:panel>
 	</h:panelGroup>
-	<c:if test='#{flOrderBB.managedBean.docMaintainRemarks eq "true"}'>
-		<p:panel header="#{lbl['lbl.fl.remark.attachment']}" toggleable="true">
-			<table style="width: 100%">
-				<tr>
-					<td width="50%" valign="top"><ui:include
-							src="/xhtml/fl/shared/remark.xhtml" /></td>
-				</tr>
-			</table>
-		</p:panel>
-	</c:if>
-	<c:if test='#{flOrderBB.managedBean.docMaintainRemarks eq "false"}'>
 		<p:panel header="#{lbl['lbl.fl.remark.attachment']}" toggleable="true">
 			<table style="width: 100%">
 				<tr>
@@ -286,6 +275,4 @@
 				</tr>
 			</table>
 		</p:panel>
-	</c:if>	
-
 </ui:composition>
