@@ -7,7 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<c:if
-		test="#{approvalBackingBean.managedBean.qt.scQtGosodoBudgets ne null and approvalBackingBean.managedBean.qt.scQtGosodoBudgets.size > 0}">
+		test="#{approvalBackingBean.managedBean.qt.scQtGosodoBudgets ne null and approvalBackingBean.managedBean.qt.scQtGosodoBudgets.size() > 0}">
 		<p:panel header="#{lbl['lbl.so.goso.list']}" toggleable="true">
 			<p:dataTable id="gosoList"
 				value="#{approvalBackingBean.managedBean.qt.scQtGosodoBudgets}"
