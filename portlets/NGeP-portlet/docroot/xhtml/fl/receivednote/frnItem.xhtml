@@ -29,7 +29,7 @@
 				</h:outputText>
 			</p:column>
 			<p:column headerText="Ordered &lt;br /&gt; Qty." style="text-align:right">
-				<h:outputText styleClass="colFloatRight" value="#{item.flDelOrderItem.flFulfilmentItemAddr.orderedQty}" >
+				<h:outputText styleClass="colFloatRight" value="#{item.flDelOrderItem.flFulfilmentItemAddr.orderedQty}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.uom.uomCode)}" />
 				</h:outputText>
 			</p:column>
@@ -51,7 +51,7 @@
 				</h:panelGroup>
 			</p:column>
 			<p:column headerText="Received &lt;br /&gt; Qty." style="text-align:right">
-				<p:inputText id="receivedQty" styleClass="colFloatRight" value="#{item.receivedQty}" size="8" maxlength="14"
+				<p:inputText id="receivedQty" styleClass="colFloatRight" value="#{item.receivedQty}" size="8" maxlength="14" disabled="#{receivedNoteBackingBean.managedBean.isDocMaintainRemarks()}"
 					rendered="#{item.flItem.itemType.parameterCode eq ParameterConst.itemTypeProduct}">
 					<p:ajax update="receivedAmt,receivedQty" listener="#{receivedNoteBackingBean.retrieveReceivedAmt(item)}"></p:ajax>
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.uom.uomCode)}" />
@@ -79,7 +79,7 @@
 				<tr>
 					<td valign="top"><p:outputLabel value="#{lbl['lbl.txt.remarks']}" /></td>
 					<td>
-						<p:inputTextarea cols="40" maxlength="200" value="#{receivedNoteBackingBean.managedBean.selectedItem.rejectionRemark}" >
+						<p:inputTextarea cols="40" maxlength="200" value="#{receivedNoteBackingBean.managedBean.selectedItem.rejectionRemark}" disabled="#{receivedNoteBackingBean.managedBean.isDocMaintainRemarks()}">
 							<p:ajax process="@this" />
 						</p:inputTextarea>
 					</td>
