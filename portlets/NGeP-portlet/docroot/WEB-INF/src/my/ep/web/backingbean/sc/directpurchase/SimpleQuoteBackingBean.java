@@ -1111,7 +1111,6 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 	 * updateZone for zone selection  in simple quote
     */
 	public void updateZone() {
-		FacesScopes facesScopes = new FacesScopes();
 		List<TplSpecZoneLoc> locationDTOs = new ArrayList<TplSpecZoneLoc>();
 		if (getManagedBean().getSelectedNodes() != null) {
 			for (TreeNode treeNode : getManagedBean().getSelectedNodes()) {
@@ -1130,9 +1129,6 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 		quoteZone.setScQuote(getManagedBean().getScQuote());
 		tplSpecZoneDtl.setTplSpecZone(quoteZone);
 		tplSpecZoneDtl.setZoneName(getManagedBean().getZoneName());
-		tplSpecZoneDtl.setChangedBy(facesScopes.getUserSessionBean().getUserId());
-		tplSpecZoneDtl.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
-		tplSpecZoneDtl.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		getManagedBean().setZoneName(null);
 
 		List<PmState> states = SourcingLocationHelper
@@ -2191,18 +2187,19 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 	 * render the supplier view based on the task id
 	 */
 	public void supplierView() {
+		TplSpecMaster  serviceMaster = null;
+		TplSpecMaster  productMaster = null;		
 		HttpServletRequest servletRequest = new FacesScopes().getOriginalServletRequest();
 		String quoteIdStr = servletRequest.getParameter(SourcingConstants.SUPPLIER_QUOTE_PARAM_QUOTE_ID);
 		String hashSupplierIdStr = servletRequest.getParameter(SourcingConstants.SUPPLIER_QUOTE_PARAM_SUPPLIER_ID);
 		TemplateSpecBean productTplSpecBean = getManagedBean().getProductTemplateSpecBean();
 		TemplateSpecBean serviceTplSpecBean = getManagedBean().getServiceTemplateSpecBean();
-		
+
 		if (StringUtils.isNotBlank(quoteIdStr) && StringUtils.isNotBlank(hashSupplierIdStr)) {
 			IQuoteSO quoteSO;
-			
+
 			try {
 				quoteSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQuoteSO.class);
-				
 				FacesScopes facesScopes = new FacesScopes();
 				QuoteReqDTO quoteReqDTO = new QuoteReqDTO();
 				Long quoteId = Long.valueOf(quoteIdStr);
@@ -2212,82 +2209,93 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 				quoteReqDTO.setFetchSubEntity(true);
 				QuoteResDTO  quoteResDTO = quoteSO.getQuoteDtlForSupplier(quoteReqDTO);
 				ScQuote scQuote = quoteResDTO.getQuoteBidDtl();
-				
+
 				// clear session data.
 				renewSesionObject();
-				
+
 				// remarks
 				scQuote.setRemarks(initializeRemarks(scQuote));
-				
+
+				if(scQuote.getQuoteDocs() != null && scQuote.getQuoteDocs().size()>0){
+					for (ScQuoteDoc quoteDoc : scQuote.getQuoteDocs()) {
+						// adding selected product or service question only
+						if(quoteDoc.getSpecMaster().getItemTypeCode().getParameterCode().equals(ParameterConst.SQ_ITEM_LIST_PRODUCT)){
+							productMaster = quoteDoc.getSpecMaster();
+						} else if(quoteDoc.getSpecMaster().getItemTypeCode().getParameterCode().equals(ParameterConst.SQ_ITEM_LIST_SERVICE)){
+							serviceMaster = quoteDoc.getSpecMaster();
+						}
+					}
+				}
+
 				List<TplSpecAnswer> specAnswers  = new ArrayList<TplSpecAnswer>();
-	            // service and product
+				// service and product
 				if(quoteResDTO.getProductAnswersTpl() != null && quoteResDTO.getProductAnswersTpl().size() >0){
 					List<TplSpecAnswer> productAnswersTpl = quoteResDTO.getProductAnswersTpl();
 					specAnswers.addAll(productAnswersTpl);
-					
+
 					productTplSpecBean.setSpecAnswerList(productAnswersTpl);
-					productTplSpecBean.setSpecMaster(scQuote.getQuoteDocs().get(0).getSpecMaster());
+					productTplSpecBean.setSpecMaster(productMaster);
 					productTplSpecBean.setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
 					getManagedBean().setProductTemplateSpecBean(productTplSpecBean);
 				}
-				
-				 if(quoteResDTO.getServiceAnswersTpl() != null && quoteResDTO.getServiceAnswersTpl().size() >0){
+
+				if(quoteResDTO.getServiceAnswersTpl() != null && quoteResDTO.getServiceAnswersTpl().size() >0){
 					List<TplSpecAnswer> serviceAnswersTpl = quoteResDTO.getServiceAnswersTpl();
 					specAnswers.addAll(serviceAnswersTpl);
-					 
+
 					serviceTplSpecBean.setSpecAnswerList(serviceAnswersTpl);
-					serviceTplSpecBean.setSpecMaster(scQuote.getQuoteDocs().get(0).getSpecMaster());
+					serviceTplSpecBean.setSpecMaster(serviceMaster);
 					serviceTplSpecBean.setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
 					getManagedBean().setServiceTemplateSpecBean(serviceTplSpecBean);
 				} 
-				 
-			    if(quoteResDTO.getSupplier() != null){
-			    	getManagedBean().setSmSupplier(quoteResDTO.getSupplier());
-			    }
+
+				if(quoteResDTO.getSupplier() != null){
+					getManagedBean().setSmSupplier(quoteResDTO.getSupplier());
+				}
 				getManagedBean().setScQuote(scQuote);
 				initializeRemarks(scQuote);
-				
+
 				quoteReqDTO.setQuoteBidDtl(scQuote);
 				quoteReqDTO.setSpecAnswers(specAnswers);
-				
+
 				quoteSO.validateSupplierResponse(quoteReqDTO);
-				
+
 			} catch (EpException e) {	
 				String message = e.getMessage();
-				
+
 				if (MessageConst.ERROR_760034.equals(message)) {
 					Locale userLocale = new FacesScopes().getUserLocale();
 					message = MessageUtils.getMessage(
 							e.getMessage(), e.getParameters(),
 							MessageUtils.BUNDLE_COMMON_MESSAGES, 
 							userLocale);
-					
+
 					FacesContext.getCurrentInstance().addMessage(
 							null,
 							new FacesMessage(FacesMessage.SEVERITY_INFO, 
-								null,
-								message));
+									null,
+									message));
 					// hide the submit button in supplier view when sq is closed
 					getManagedBean().setSupplierViewBtn(Boolean.FALSE);
 				} else if (MessageConst.ERROR_760033.equals(message)) {
 					// hide the submit button in supplier view when sq is closed
 					getManagedBean().setSupplierViewBtn(Boolean.FALSE);
-					
+
 				} else {
 					handleException(e);	
 				}
-				
+
 			} catch (Exception e) {
 				handleException(e);
 			} finally {
 				quoteSO = null;
 			}
-			
+
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "supplerView");
 		}
 	}
-	
+
 	private ScQuoteZone getQuoteZones(List<TreeNode> treeNodes) {
 		TplSpecZoneDtl tplSpecZoneDtl = null;
 		ScQuoteZone scQuoteZone = getManagedBean().getScQuote().getQuoteZone();
