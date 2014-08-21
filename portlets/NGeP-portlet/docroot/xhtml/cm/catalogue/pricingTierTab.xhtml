@@ -39,7 +39,8 @@
 					#{lbl['lbl.cm.price']}
 				</f:facet>
 				<p:inputText value="#{price.price}" size="10" disabled="#{price.standardDisabled}" style="text-align:right">
-				 <p:ajax event="keyup" update="promoLink, cloneLink, deleteLink, errorLink" />
+				 <p:ajax event="keyup" listener="#{catalogueBackingBean.validateTierPrice(rowIndex)}" update="promoLink, cloneLink, deleteLink, errorLink" />
+				 <p:ajax event="change" listener="#{catalogueBackingBean.validateDateOverlap(rowIndex)}" update="promoLink, cloneLink, deleteLink, errorLink" />
 				 <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
                 </p:inputText>
 			</p:column>
@@ -52,6 +53,8 @@
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
 				 <p:ajax event="dateSelect" listener="#{catalogueBackingBean.validateDateOverlap(rowIndex)}" update="promoLink, cloneLink, deleteLink, errorLink" />
 				 <p:ajax event="keyup" listener="#{catalogueBackingBean.validateDateOverlap(rowIndex)}" update="promoLink, cloneLink, deleteLink, errorLink" />
+				 <p:ajax event="dateSelect" listener="#{catalogueBackingBean.validateTierPrice(rowIndex)}" update="promoLink, cloneLink, deleteLink, errorLink" />
+				 <p:ajax event="keyup" listener="#{catalogueBackingBean.validateTierPrice(rowIndex)}" update="promoLink, cloneLink, deleteLink, errorLink" />
                 </p:calendar>
 
 			</p:column>
@@ -64,6 +67,8 @@
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
 				 <p:ajax event="dateSelect" listener="#{catalogueBackingBean.validateDateOverlap(rowIndex)}" update="promoLink, cloneLink, deleteLink, errorLink" />
 				 <p:ajax event="keyup" listener="#{catalogueBackingBean.validateDateOverlap(rowIndex)}" update="promoLink, cloneLink, deleteLink, errorLink" />
+				 <p:ajax event="dateSelect" listener="#{catalogueBackingBean.validateTierPrice(rowIndex)}" update="promoLink, cloneLink, deleteLink, errorLink" />
+				 <p:ajax event="keyup" listener="#{catalogueBackingBean.validateTierPrice(rowIndex)}" update="promoLink, cloneLink, deleteLink, errorLink" />
                 </p:calendar>
 			</p:column>
 
