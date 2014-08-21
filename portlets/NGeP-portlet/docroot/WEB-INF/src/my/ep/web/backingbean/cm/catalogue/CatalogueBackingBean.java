@@ -2151,36 +2151,44 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			}
 			
 			//Tier Pricing
+			int groupPrevious = 0;
 			for (CmTierPricing tierPricing : this.getManagedBean().getSelectedMaintainItem().getCmTierPricings()) {
-				if(tierPricing.getEndDate().after(cmStandardPricing.getEndDate())||
-				   tierPricing.getStartDate().after(cmStandardPricing.getEndDate())||
-				   tierPricing.getEndDate().before(cmStandardPricing.getStartDate())||
-				   tierPricing.getStartDate().before(cmStandardPricing.getStartDate())){
-					log.info("---------------------------------------------------- Tier ERROR_715020");
-					FacesContext.getCurrentInstance().addMessage(
-							null,
-							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-									MessageUtils.getMessage(MessageConst.ERROR_715020,
-											MessageUtils.BUNDLE_COMMON_MESSAGES,
-											new FacesScopes().getUserLocale())));
-						return "editCatalogItem";
-				}
+				
+				if(tierPricing.getStand_group_id()==null || tierPricing.getStand_group_id()!=groupPrevious)
+					if(tierPricing.getEndDate().after(cmStandardPricing.getEndDate())||
+					   tierPricing.getStartDate().after(cmStandardPricing.getEndDate())||
+					   tierPricing.getEndDate().before(cmStandardPricing.getStartDate())||
+					   tierPricing.getStartDate().before(cmStandardPricing.getStartDate())){
+						log.info("---------------------------------------------------- Tier ERROR_715020");
+						FacesContext.getCurrentInstance().addMessage(
+								null,
+								new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+										MessageUtils.getMessage(MessageConst.ERROR_715020,
+												MessageUtils.BUNDLE_COMMON_MESSAGES,
+												new FacesScopes().getUserLocale())));
+							return "editCatalogItem";
+					}
+				groupPrevious = tierPricing.getStand_group_id();
 			}
 			//Tier Promotion Pricing
+			groupPrevious = 0;
 			for (CmPromotionTierPricing tierPromotionPricing : this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings()) {
-				if(tierPromotionPricing.getEndDate().after(cmStandardPricing.getEndDate())||
-				   tierPromotionPricing.getStartDate().after(cmStandardPricing.getEndDate())||
-				   tierPromotionPricing.getEndDate().before(cmStandardPricing.getStartDate())||
-				   tierPromotionPricing.getStartDate().before(cmStandardPricing.getStartDate())){
-					log.info("---------------------------------------------------- Tier Promotion ERROR_715020");
-					FacesContext.getCurrentInstance().addMessage(
-							null,
-							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-									MessageUtils.getMessage(MessageConst.ERROR_715020,
-											MessageUtils.BUNDLE_COMMON_MESSAGES,
-											new FacesScopes().getUserLocale())));
-						return "editCatalogItem";
-				}
+				
+				if(tierPromotionPricing.getStand_group_id()==null || tierPromotionPricing.getStand_group_id()!=groupPrevious)
+					if(tierPromotionPricing.getEndDate().after(cmStandardPricing.getEndDate())||
+					   tierPromotionPricing.getStartDate().after(cmStandardPricing.getEndDate())||
+					   tierPromotionPricing.getEndDate().before(cmStandardPricing.getStartDate())||
+					   tierPromotionPricing.getStartDate().before(cmStandardPricing.getStartDate())){
+						log.info("---------------------------------------------------- Tier Promotion ERROR_715020");
+						FacesContext.getCurrentInstance().addMessage(
+								null,
+								new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+										MessageUtils.getMessage(MessageConst.ERROR_715020,
+												MessageUtils.BUNDLE_COMMON_MESSAGES,
+												new FacesScopes().getUserLocale())));
+							return "editCatalogItem";
+					}
+				groupPrevious = tierPromotionPricing.getStand_group_id();
 			}
 			//Zonal Pricing
 			for (CmZonalStandardPricing zStdPrice : this.getManagedBean().getSelectedMaintainItem().getzStdPrices()) {
@@ -2215,36 +2223,51 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				}
 			}
 			//Zonal Tier Pricing
+			groupPrevious = 0;
 			for (CmZonalTierPricing zonalTier : this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings()) {
-				if(zonalTier.getEndDate().after(cmStandardPricing.getEndDate())||
-				   zonalTier.getStartDate().after(cmStandardPricing.getEndDate())||
-				   zonalTier.getEndDate().before(cmStandardPricing.getStartDate())||
-				   zonalTier.getStartDate().before(cmStandardPricing.getStartDate())){
-					log.info("---------------------------------------------------- Zonal Tier ERROR_715020");
-					FacesContext.getCurrentInstance().addMessage(
-							null,
-							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-									MessageUtils.getMessage(MessageConst.ERROR_715020,
-											MessageUtils.BUNDLE_COMMON_MESSAGES,
-											new FacesScopes().getUserLocale())));
-						return "editCatalogItem";
-				}
+				log.info("zonalTier.getPricingId() = "+zonalTier.getPricingId());
+				
+				if(zonalTier.getStand_group_id()==null || zonalTier.getStand_group_id()!=groupPrevious)
+					if(zonalTier.getEndDate().after(cmStandardPricing.getEndDate())||
+					   zonalTier.getStartDate().after(cmStandardPricing.getEndDate())||
+					   zonalTier.getEndDate().before(cmStandardPricing.getStartDate())||
+					   zonalTier.getStartDate().before(cmStandardPricing.getStartDate())){
+
+						log.info("---------------------------------------------------- Zonal Tier ERROR_715020");
+						/*log.info("zonalTier.getEndDate().after(cmStandardPricing.getEndDate() "+zonalTier.getEndDate().after(cmStandardPricing.getEndDate()));
+						log.info("zonalTier.getStartDate().after(cmStandardPricing.getEndDate() "+zonalTier.getStartDate().after(cmStandardPricing.getEndDate()));
+						log.info("zonalTier.getEndDate().before(cmStandardPricing.getStartDate() "+zonalTier.getEndDate().before(cmStandardPricing.getStartDate()));
+						log.info("zonalTier.getStartDate().before(cmStandardPricing.getStartDate() "+zonalTier.getStartDate().before(cmStandardPricing.getStartDate()));*/
+						
+						FacesContext.getCurrentInstance().addMessage(
+								null,
+								new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+										MessageUtils.getMessage(MessageConst.ERROR_715020,
+												MessageUtils.BUNDLE_COMMON_MESSAGES,
+												new FacesScopes().getUserLocale())));
+							return "editCatalogItem";
+					}
+				groupPrevious = zonalTier.getStand_group_id();
 			}
 			//Zonal Tier Promotion Pricing
+			groupPrevious = 0;
 			for (CmZonalPromotionTierPricing zonalPromotionTier : this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings()) {
-				if(zonalPromotionTier.getEndDate().after(cmStandardPricing.getEndDate())||
-				   zonalPromotionTier.getStartDate().after(cmStandardPricing.getEndDate())||
-				   zonalPromotionTier.getEndDate().before(cmStandardPricing.getStartDate())||
-				   zonalPromotionTier.getStartDate().before(cmStandardPricing.getStartDate())){
-					log.info("---------------------------------------------------- Zonal tier Promotion ERROR_715020");
-					FacesContext.getCurrentInstance().addMessage(
-							null,
-							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-									MessageUtils.getMessage(MessageConst.ERROR_715020,
-											MessageUtils.BUNDLE_COMMON_MESSAGES,
-											new FacesScopes().getUserLocale())));
-						return "editCatalogItem";
-				}
+				
+				if(zonalPromotionTier.getStand_group_id()==null || zonalPromotionTier.getStand_group_id()!=groupPrevious)
+					if(zonalPromotionTier.getEndDate().after(cmStandardPricing.getEndDate())||
+					   zonalPromotionTier.getStartDate().after(cmStandardPricing.getEndDate())||
+					   zonalPromotionTier.getEndDate().before(cmStandardPricing.getStartDate())||
+					   zonalPromotionTier.getStartDate().before(cmStandardPricing.getStartDate())){
+						log.info("---------------------------------------------------- Zonal tier Promotion ERROR_715020");
+						FacesContext.getCurrentInstance().addMessage(
+								null,
+								new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+										MessageUtils.getMessage(MessageConst.ERROR_715020,
+												MessageUtils.BUNDLE_COMMON_MESSAGES,
+												new FacesScopes().getUserLocale())));
+							return "editCatalogItem";
+					}
+				groupPrevious = zonalPromotionTier.getStand_group_id();
 			}
 			
 			//---------------------------------- end comparison each date with standard date range ----------------------------------------------------
