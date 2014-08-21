@@ -560,7 +560,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				if(isUniqueRoles()){
 					for(PmRoleDesc pmRoleDesc : this.getManagedBean().getSelectedRoles()){
 						PmUserRole pmUserRole = new PmUserRole();
-						pmUserRole.setPmUser(this.getManagedBean().getSelectedUser());
 						pmUserRole.setPmRole(pmRoleDesc.getPmRole());
 						this.getManagedBean().getSelectedUserOrg().addPmUserRole(pmUserRole);
 					}
