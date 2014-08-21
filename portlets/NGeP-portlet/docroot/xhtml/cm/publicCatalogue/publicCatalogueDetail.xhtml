@@ -54,11 +54,12 @@
 							
 								<h:panelGroup
 									rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) > 0 }">
-									<div id="slides" style="width: 250px; float: right; margin-right: 60px;">
+									<div id="slides" style="width: 300px; float: right; margin-right: 60px;">
 									<ui:repeat var="cmImage"
 										value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmImages}">
 										
-												<img src="/NGeP-portlet/image?imageName=#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.epNo}/#{cmImage.imageName}" 	style="height: 150px; left: 0px !important;"  />
+												<img src="/NGeP-portlet/image?imageName=#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.epNo}/#{cmImage.imageName}" 	
+													style="width: 300px; left: 0px !important;"  />
 									
 									</ui:repeat>
 									</div>
@@ -68,9 +69,9 @@
 									rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) == 0 }">
 
 									<div align="center"
-										style="height:200px; width: 200px; border: 1px solid #808080; left: 0px !important;float: right;margin-right: 70px;">
+										style="height:200px; width: 300px; border: 1px solid #808080; left: 0px !important;float: right;margin-right: 70px;">
 										<p:outputPanel 
-											style="display: block; vertical-align: top; padding: 20px 4px; text-align: center;">
+											style="display: block; vertical-align:middle; padding: 20px 4px; text-align: center;">
 													#{lbl['lbl.cm.no.image.available']}
 											</p:outputPanel>
 
@@ -80,7 +81,7 @@
 
 						</td>
 						<td colspan="4"><h:outputText
-								style="text-align:left;vertical-align:top;"
+								style="text-align:left;vertical-align:top; padding: 0 0 0 0;"
 								value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.itemName}"
 								styleClass="item-title" /></td>
 
