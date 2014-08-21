@@ -2139,6 +2139,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				   this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getStartDate().after(cmStandardPricing.getEndDate())||
 				   this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getEndDate().before(cmStandardPricing.getStartDate())||
 				   this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getStartDate().before(cmStandardPricing.getStartDate())){
+					log.info("---------------------------------------------------- Promotion ERROR_715020");
 					FacesContext.getCurrentInstance().addMessage(
 							null,
 							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
@@ -2155,6 +2156,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				   tierPricing.getStartDate().after(cmStandardPricing.getEndDate())||
 				   tierPricing.getEndDate().before(cmStandardPricing.getStartDate())||
 				   tierPricing.getStartDate().before(cmStandardPricing.getStartDate())){
+					log.info("---------------------------------------------------- Tier ERROR_715020");
 					FacesContext.getCurrentInstance().addMessage(
 							null,
 							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
@@ -2170,6 +2172,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				   tierPromotionPricing.getStartDate().after(cmStandardPricing.getEndDate())||
 				   tierPromotionPricing.getEndDate().before(cmStandardPricing.getStartDate())||
 				   tierPromotionPricing.getStartDate().before(cmStandardPricing.getStartDate())){
+					log.info("---------------------------------------------------- Tier Promotion ERROR_715020");
 					FacesContext.getCurrentInstance().addMessage(
 							null,
 							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
@@ -2185,6 +2188,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				   zStdPrice.getStartDate().after(cmStandardPricing.getEndDate())||
 				   zStdPrice.getEndDate().before(cmStandardPricing.getStartDate())||
 				   zStdPrice.getStartDate().before(cmStandardPricing.getStartDate())){
+					log.info("---------------------------------------------------- Zonal ERROR_715020");
 					FacesContext.getCurrentInstance().addMessage(
 							null,
 							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
@@ -2200,6 +2204,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				   zonalPromotion.getStartDate().after(cmStandardPricing.getEndDate())||
 				   zonalPromotion.getEndDate().before(cmStandardPricing.getStartDate())||
 				   zonalPromotion.getStartDate().before(cmStandardPricing.getStartDate())){
+					log.info("---------------------------------------------------- Zonal Promotion ERROR_715020");
 					FacesContext.getCurrentInstance().addMessage(
 							null,
 							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
@@ -2215,6 +2220,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				   zonalTier.getStartDate().after(cmStandardPricing.getEndDate())||
 				   zonalTier.getEndDate().before(cmStandardPricing.getStartDate())||
 				   zonalTier.getStartDate().before(cmStandardPricing.getStartDate())){
+					log.info("---------------------------------------------------- Zonal Tier ERROR_715020");
 					FacesContext.getCurrentInstance().addMessage(
 							null,
 							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
@@ -2230,6 +2236,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				   zonalPromotionTier.getStartDate().after(cmStandardPricing.getEndDate())||
 				   zonalPromotionTier.getEndDate().before(cmStandardPricing.getStartDate())||
 				   zonalPromotionTier.getStartDate().before(cmStandardPricing.getStartDate())){
+					log.info("---------------------------------------------------- Zonal tier Promotion ERROR_715020");
 					FacesContext.getCurrentInstance().addMessage(
 							null,
 							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
@@ -2383,7 +2390,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			CmZonalPromotionPricing previousZPromotionObj = null;
 			for (int i = 0; i < zPromotionPricing.size(); i++) {
 				CmZonalPromotionPricing standard = zPromotionPricing.get(i);
-				if (previousZPromotionObj != null) {
+				if (previousZPromotionObj != null && standard!=null) {
 					if (previousZPromotionObj.getEndDate().compareTo(standard.getStartDate()) > 0) {
 						FacesContext facesContext = FacesContext.getCurrentInstance();
 						facesContext.addMessage(null, new FacesMessage(
@@ -2394,7 +2401,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 						return "editCatalogItem";
 					}
 				}
-				if (standard.getStartDate().compareTo(standard.getEndDate()) > 0) {
+				if (standard!=null && standard.getStartDate().compareTo(standard.getEndDate()) > 0) {
 					FacesContext facesContext = FacesContext.getCurrentInstance();
 					facesContext.addMessage(
 									null,
@@ -5723,7 +5730,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					count = count + 1;
 				}
 			}
-			obj[count] = commonList.get(i);
+			if(count != 0)
+				obj[count] = commonList.get(i);
+			else
+				obj[i] = commonList.get(i);
 		}
 
 		List<T> sortedList = new ArrayList<T>();
