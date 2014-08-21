@@ -74,9 +74,9 @@
 						rendered="#{creditfacilities.brandNew eq false}" />
 					<p:inputText value="#{creditfacilities.creditAmt}" size="30"
 						rendered="#{creditfacilities.brandNew eq true}">
-						<p:ajax event="blur" process="@this"
+						<p:ajax event="blur" process="@this" partialSubmit="true"
 							listener="#{supplierProposalDetailBackingBean.totalCreditSum}"
-							update=":form:totalcredit" />
+							update=":form:totalcredit,:form:totalamtpaid,:form:percentagePaidID" />
 					</p:inputText>
 				</p:column>
 
@@ -85,9 +85,9 @@
 						rendered="#{creditfacilities.brandNew eq false}" />
 					<p:inputText value="#{creditfacilities.amtPaid}" size="30"
 						rendered="#{creditfacilities.brandNew eq true}">
-						<p:ajax event="blur" process="@this"
+						<p:ajax event="blur" process="@this" partialSubmit="true"
 							listener="#{supplierProposalDetailBackingBean.totalAmtPaidSum}"
-							update=":form:totalamtpaid" />
+							update=":form:totalcredit,:form:totalamtpaid,:form:percentagePaidID" />
 					</p:inputText>
 				</p:column>
 
@@ -100,9 +100,10 @@
 
 				<p:commandButton value="#{lbl['lbl.so.delete']}"
 					icon="ui-icon-delete" update="creditfaciitiesid"
-					action="#{supplierProposalDetailBackingBean.deleteCreditFacilities}" />
+					action="#{supplierProposalDetailBackingBean.deleteCreditFacilities}"  />
 
 			</div>
+			
 
 			<table style="width: 100%">
 				<tr>
@@ -130,11 +131,11 @@
 				<tr>
 					<td style="width: 140px"><p:outputLabel
 							value="#{lbl['lbl.sc.sp.percentage.paid']}" /></td>
-					<td colspan="3"><p:inputText style="text-align:right"
+					<td colspan="3"><p:inputText style="text-align:right" id="percentagePaidID"
 							value="#{supplierProposalDetailBackingBean.managedBean.totalPercentagePaid}"
 							readonly="true" disabled="true" size="30">
 							<f:convertNumber
-								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
 						</p:inputText></td>
 				</tr>
 			</table>

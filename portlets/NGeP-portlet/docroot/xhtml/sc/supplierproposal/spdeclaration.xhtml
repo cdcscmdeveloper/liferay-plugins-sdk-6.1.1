@@ -5,14 +5,14 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel header="#{lbl['lbl.sc.integrity.pact']}"
-		toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.integrity.pact']}" toggleable="true">
+		<p:inputTextarea disabled="true" value="declaration text from velocity goes here"></p:inputTextarea>
 		<p:selectBooleanCheckbox style="margin-right: 5px;" />
-		<h:outputLabel value="#{lbl['lbl.sc.integrity.note']}" />
+		<h:outputText value="#{lbl['lbl.sc.integrity.note']}" />
 	</p:panel>
 	<p:panel header="#{lbl['lbl.sc.sp.others']}" toggleable="true">
 		<p:selectBooleanCheckbox style="margin-right: 5px;" />
-		<p:outputLabel value="#{lbl['lbl.sc.others.note']}" />
+		<h:outputText value="#{lbl['lbl.sc.others.note']}" />
 	</p:panel>
 
 </ui:composition>

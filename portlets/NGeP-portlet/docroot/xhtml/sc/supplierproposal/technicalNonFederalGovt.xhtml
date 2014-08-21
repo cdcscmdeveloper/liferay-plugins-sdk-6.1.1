@@ -75,47 +75,48 @@
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</h:outputText>
-					<p:calendar value="#{technongovt.effectiveDate}" showOn="button"
-						size="20" rendered="#{technongovt.brandNew eq true}" />
+					<p:calendar value="#{technongovt.effectiveDate}" showOn="button" navigator="true" 
+						size="15" rendered="#{technongovt.brandNew eq true}" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" >
+						<p:ajax event="dateSelect" partialSubmit="true"  update=":form:totalcontractyrs,@([id$=contractDurationID]"
+							listener="#{supplierProposalDetailBackingBean.expiryDateSelectListener(rowIndex)}" 
+							 />
+						
+						</p:calendar>
 				</p:column>
-
 				<p:column headerText="#{lbl['lbl.sc.sp.expirydt']}">
 					<h:outputText value="#{technongovt.expiryDate}"
 						rendered="#{technongovt.brandNew eq false}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</h:outputText>
-					<p:calendar value="#{technongovt.expiryDate}" showOn="button"
-						size="20" rendered="#{technongovt.brandNew eq true}" />
+					<p:calendar value="#{technongovt.expiryDate}" showOn="button" navigator="true"
+						size="15" rendered="#{technongovt.brandNew eq true}" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" >
+						<p:ajax event="dateSelect" partialSubmit="true"
+							listener="#{supplierProposalDetailBackingBean.expiryDateSelectListener(rowIndex)}"
+							 update=":form:totalcontractyrs,@([id$=contractDurationID]" />
+						</p:calendar>
 				</p:column>
-
 				<p:column headerText="#{lbl['lbl.sc.sp.contractperiod']}">
-					<h:outputText value="#{technongovt.contractPeriod}"
+					<h:outputText value="#{technongovt.contractPeriod/12}"
 						rendered="#{technongovt.brandNew eq false}" />
-					<p:inputText value="#{technongovt.contractPeriod}" size="20"
-						rendered="#{technongovt.brandNew eq true}">
-						<p:ajax event="blur" process="@this"
-							listener="#{supplierProposalDetailBackingBean.totalContractYears}"
-							update=":form:totalcontractyrs" />
-					</p:inputText>
+					<p:inputText value="#{technongovt.contractPeriod/12}" size="20" disabled="true" id="contractDurationID"
+ 						rendered="#{technongovt.brandNew eq true}" />
 				</p:column>
-
 				<p:column headerText="#{lbl['lbl.sc.sp.remarks']}">
 					<h:outputText value="#{technongovt.remark}"
 						rendered="#{technongovt.brandNew eq false}" />
 					<p:inputTextarea value="#{technongovt.remark}"
 						rendered="#{technongovt.brandNew eq true}" rows="3" cols="20" />
 				</p:column>
-
 			</p:dataTable>
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.so.addbtn']}"
 					process="@this,technongovtid" partialSubmit="true"
 					action="#{supplierProposalDetailBackingBean.addNonFederalGovtExperience}"
-					update="technongovtid, totalcontractyrs" icon="ui-icon-add" />
+					update=":form:technongovtid,:form:totalcontractyrs" icon="ui-icon-add" />
 
 				<p:commandButton value="#{lbl['lbl.so.delete']}"
-					icon="ui-icon-delete" update="technongovtid, totalcontractyrs"
+					icon="ui-icon-delete" update=":form:technongovtid,:form:totalcontractyrs"
 					action="#{supplierProposalDetailBackingBean.deleteNonFederalGovtExperience}" />
 			</div>
 
@@ -132,12 +133,11 @@
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sc.sp.ttlnoofyears']}" /></td>
 						<td colspan="3"><p:inputText style="text-align:right"
-								value="#{supplierProposalDetailBackingBean.managedBean.totalYears}"
+								value="#{supplierProposalDetailBackingBean.managedBean.totalYears/12}"
 								readonly="true" disabled="true" size="30" /></td>
 					</tr>
 				</table>
 			</h:panelGroup>
 		</p:panel>
-
 	</ui:define>
 </ui:composition>
