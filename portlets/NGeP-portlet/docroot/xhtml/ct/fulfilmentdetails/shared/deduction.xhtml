@@ -9,8 +9,8 @@
     <p:panel id="deductionId" header="#{lbl['lbl.ct.ded.panel.name']}"   toggleable="true"  toggleSpeed="500">
 	
 		<p:dataTable id="tableDeduction" var="datas" 
-		    value="#{contractDetailsBackingBean.managedBean.contractVer.ctDeductions}" 
-		   	rowKey="#{datas}" selectionMode="single" selection="#{contractDetailsBackingBean.managedBean.selectedDeduction}" > 
+		    value="#{contractDetailsBackingBean.managedBean.contractVer.ctDeductions}" rowKey="#{datas}" 
+		      selectionMode="single" selection="#{contractDetailsBackingBean.managedBean.selectedDeduction}"> 
 		       	
 		       	<ac:paginator for="tableDeduction" />
 		   	    <p:ajax event="rowSelect" update=":form:clauseDescp"  />

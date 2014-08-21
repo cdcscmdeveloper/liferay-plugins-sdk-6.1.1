@@ -28,7 +28,7 @@
 		     	<p:outputLabel id="centralPeriod" value="#{lbl['lbl.ct.dperiod']}" />
 		     </h:panelGrid>
 		     <h:panelGrid columns="4">
-		       <p:inputText for="centralDelPeriod" styleClass="ppRightBtn" style="width:45px;" 
+		       <p:inputText for="centralDelPeriod" styleClass="ppRightBtn" style="width:45px;" validator="#{webappBean.validateDPeriod}"
 		          maxlength="4" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.deliveryTerm}"/>
                <p:spacer width="2" />
                <p:selectOneMenu id="centralDelPeriod" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.deliveryTermUom.parameterId}" 

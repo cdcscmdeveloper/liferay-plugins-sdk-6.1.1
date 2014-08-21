@@ -5,7 +5,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<p:panel id="advancePayment" header="ADVANCED PAYMENT TRACKING"    toggleable="true"  toggleSpeed="500">     
-     <h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth20" >  
+     <h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth250" >  
        <p:outputLabel  value="Advanced Payment Amount"/>  
        <p:inputText style="width:170px;" styleClass="ppRightBtn" disabled="true"
           value="#{contractDetailsBackingBean.managedBean.advancePaymentAmt}">
@@ -26,7 +26,7 @@
      </h:panelGrid>
 	  </p:panel>
 	  <p:panel id="contractCompletion" header="CONTRACT COMPLETION"    toggleable="true"  toggleSpeed="500">     
-	  <h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth20" >  
+	  <h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth250" >  
        <p:outputLabel  value="Contract Amount (RM)" />  
        <p:inputText style="width:170px;" styleClass="ppRightBtn" disabled="true"
          value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.contractAmount}">
