@@ -1,0 +1,120 @@
+<html>
+   <head>
+      <style>
+         @page { size: B3 landscape;}
+  		        body {	 
+  		        font-size: 0.7em !important;
+   				font-family: Arial !important;
+  		        } 
+		 
+		 .table2 {
+    border-collapse: collapse;
+	width:100%;
+}
+		.table2 th, .table2 td {
+			border: 1px solid black;
+		}
+		 th{
+			background-color: #BCE18A;
+		 }
+
+      </style>
+   </head>   
+   <body>
+
+   <table width="100%">
+   <tr>
+   <td>
+   Product Code
+   </td>
+   <td>
+  $productCode
+   </td>
+   </tr>
+   
+   <tr>
+   <td>
+   Item Name
+   </td>
+   <td>
+     $itemName
+   </td>
+   </tr>
+   
+   <tr>
+   <td>
+   Description
+   </td>
+   <td>
+    $desc
+   </td>
+   </tr>
+   
+      <tr>
+   <td>
+   UOM
+      </td>
+   <td>
+    $uom
+   </td>
+   </tr>
+
+   </table>
+   <br/>
+   <br/>
+   
+   <table class="table2">
+<tr>
+<th width="17%">
+Supplier Name
+</th>
+<th width="8%">
+Delivery Term
+</th>
+<th width="7%">
+Min. Qty.
+</th>
+<th width="15%">
+Additional Item Desc.
+</th>
+<th width="10%">
+Price Type
+</th>
+<th width="13%">
+Stock Availability
+</th>
+<th width="7%">
+Zone
+</th>
+<th width="7%">
+From Qty.
+</th>
+<th width="6%">
+To Qty.
+</th>
+<th width="10%">
+Unit Price (RM)
+</th>
+
+</tr>
+      #foreach( $requestNoteVo in $requestNoteVOList ) 
+      	<tr>
+			<td>$requestNoteVo.supplierName</td>
+		    <td style="text-align:right">$requestNoteVo.deliveryTerm</td>
+			<td style="text-align:right">$requestNoteVo.minQty</td>
+		    <td>$requestNoteVo.addItemDesc</td>
+		    <td>$requestNoteVo.priceType</td>
+		    <td>$requestNoteVo.stockAvailability</td>
+		    <td>$requestNoteVo.zone</td>
+		    <td style="text-align:right">$requestNoteVo.frQty</td>
+		    <td style="text-align:right">$requestNoteVo.toQty</td>
+		    <td style="text-align:right">$requestNoteVo.unitPrice</td>
+		</tr>
+      	
+      #end
+
+
+   </table>
+   
+   </body>   
+ </html>

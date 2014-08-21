@@ -2158,11 +2158,79 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
     			new FileOutputStream(getActualFilePath(attachment)));
 	}
 	
-	private void generatePurchaseInqPdfFromVelocity(ScAttachment attachment, List<ScSupplierItemPrice> scSupplierItemPrices) throws IOException {
+	private void generatePurchaseInqPdfFromVelocity(ScAttachment attachment, List<ScSupplierItemPrice> scSupplierItemPrices) throws Exception {
 		attachment.setFileName("pi_report.pdf");
 		populateAttachmentDetails(attachment);
 		
-		// TODO
+		CommonUtils commonUtils = new CommonUtils();
+		DecimalFormat amountDF = new DecimalFormat(commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
+		
+		VelocityContext context = new VelocityContext();
+		List<MarketSummaryBean> requestNoteVOList = new ArrayList<>();
+		MarketSummaryBean marketSummaryBean = null;
+		Long supplierItemId = null;
+		Long prevSupplierItemId = null;
+		ScSupplierItemPrice supplierItemPrice= null;
+		ScRequestSupplierItem supplierItem = null;	
+			for(int i = 0; i< scSupplierItemPrices.size();i++){
+				supplierItemPrice = scSupplierItemPrices.get(i);
+				supplierItem = supplierItemPrice.getScRequestSupplierItem();
+				marketSummaryBean = new MarketSummaryBean();
+				if(i==0){
+					context.put("productCode", supplierItem.getRequestNoteItem().getCmItem().getExtensionCode());
+					context.put("itemName", supplierItem.getRequestNoteItem().getCmItem().getItemName());
+					context.put("desc", supplierItem.getRequestNoteItem().getItemDesc() != null ? supplierItem.getRequestNoteItem().getItemDesc() : "" );
+					context.put("uom", supplierItem.getRequestNoteItem().getUom().getUomName());
+					
+					supplierItemId = supplierItem.getSupplierItemId();
+					marketSummaryBean.setSupplierName(supplierItem.getSmSupplier().getCompanyName());
+					marketSummaryBean.setMinQty(supplierItem.getRequestNoteItem().getMinqty() != null ? supplierItem.getRequestNoteItem().getMinqty().toString() :"");
+					marketSummaryBean.setDeliveryTerm(supplierItemPrice.getPricing().getCmSupplierItem().getLeadTime() != null ? supplierItemPrice.getPricing().getCmSupplierItem().getLeadTime().toString() : "");
+					marketSummaryBean.setAddItemDesc(supplierItemPrice.getPricing().getCmSupplierItem().getItemDesc() != null ? supplierItemPrice.getPricing().getCmSupplierItem().getItemDesc() : "");
+					marketSummaryBean.setFrQty(supplierItemPrice.getFromQty() != null ? supplierItemPrice.getFromQty().toString() : "");
+				    marketSummaryBean.setToQty(supplierItemPrice.getToQty() != null ? supplierItemPrice.getToQty().toString() : "");
+				    marketSummaryBean.setPriceType(supplierItemPrice.getPriceType() != null ? getParameterDesc(supplierItemPrice.getPriceType()) : "");
+				    marketSummaryBean.setUnitPrice(amountDF.format(supplierItemPrice.getItemPrice()).toString());			    
+				    marketSummaryBean.setZone(supplierItemPrice.getTplSpecZone() !=null ? supplierItemPrice.getTplSpecZone().getZoneName() : "");
+				    if(supplierItem.getScPrInquiy().getIsStockAvailable() != null){
+				    	marketSummaryBean.setStockAvailability(supplierItem.getScPrInquiy().getIsStockAvailable() == 0 ? "No" : "Yes");
+				    }else {
+				    	marketSummaryBean.setStockAvailability("");
+				    }
+				    requestNoteVOList.add(marketSummaryBean);
+				    prevSupplierItemId = supplierItem.getSupplierItemId();
+				}else{					
+					if(supplierItemId != prevSupplierItemId){
+						marketSummaryBean.setSupplierName(supplierItem.getSmSupplier().getCompanyName());
+						marketSummaryBean.setMinQty(supplierItem.getRequestNoteItem().getMinqty() != null ? supplierItem.getRequestNoteItem().getMinqty().toString() :"");
+						marketSummaryBean.setDeliveryTerm(supplierItemPrice.getPricing().getCmSupplierItem().getLeadTime() != null ? supplierItemPrice.getPricing().getCmSupplierItem().getLeadTime().toString() : "");
+						marketSummaryBean.setAddItemDesc(supplierItemPrice.getPricing().getCmSupplierItem().getItemDesc() != null ? supplierItemPrice.getPricing().getCmSupplierItem().getItemDesc() : "");
+					}else{
+						marketSummaryBean.setSupplierName("");
+						marketSummaryBean.setMinQty("");
+						marketSummaryBean.setDeliveryTerm("");
+						marketSummaryBean.setAddItemDesc("");						
+					}
+				    marketSummaryBean.setFrQty(supplierItemPrice.getFromQty() != null ? supplierItemPrice.getFromQty().toString() : "");
+				    marketSummaryBean.setToQty(supplierItemPrice.getToQty() != null ? supplierItemPrice.getToQty().toString() : "");
+				    marketSummaryBean.setPriceType(supplierItemPrice.getPriceType() != null ? getParameterDesc(supplierItemPrice.getPriceType()) : "");
+				    marketSummaryBean.setUnitPrice(amountDF.format(supplierItemPrice.getItemPrice()).toString());	    
+				    marketSummaryBean.setZone(supplierItemPrice.getTplSpecZone() !=null ? supplierItemPrice.getTplSpecZone().getZoneName() : "");
+				    if(supplierItem.getScPrInquiy().getIsStockAvailable() != null){
+				    	marketSummaryBean.setStockAvailability(supplierItem.getScPrInquiy().getIsStockAvailable() == 0 ? "No" : "Yes");
+				    }else {
+				    	marketSummaryBean.setStockAvailability("");
+				    }
+				    requestNoteVOList.add(marketSummaryBean);
+				    prevSupplierItemId = supplierItem.getSupplierItemId();
+				}
+			}
+				
+		context.put("requestNoteVOList", requestNoteVOList);		
+    	DocumentGenerator.getInstance().generatePdfFromVelocity(
+    			"/sc/directPurchase/pi-report.vm", 
+    			context, 
+    			new FileOutputStream(getActualFilePath(attachment)));
 	}
 	
 	private class SupplierPK {

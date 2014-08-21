@@ -17,6 +17,7 @@ public class MarketSummaryBean implements Serializable {
 	private String frQty;
 	private String toQty;
 	private String unitPrice;
+	private String stockAvailability;
 	
 	public MarketSummaryBean(){}
 	
@@ -90,6 +91,14 @@ public class MarketSummaryBean implements Serializable {
 
 	public void setUnitPrice(String unitPrice) {
 		this.unitPrice = unitPrice;
+	}
+
+	public String getStockAvailability() {
+		return stockAvailability;
+	}
+
+	public void setStockAvailability(String stockAvailability) {
+		this.stockAvailability = stockAvailability;
 	}
 		
 	
