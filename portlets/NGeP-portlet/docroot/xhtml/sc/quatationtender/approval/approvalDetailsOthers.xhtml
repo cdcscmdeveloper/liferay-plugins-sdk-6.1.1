@@ -27,7 +27,7 @@
 			<p:column headerText="#{lbl['lbl.sc.qt.document']}">
 				<p:commandButton oncomplete="attachDlg1.show();return false;"
 					icon="iconAttachment" update="otherreqdtlsid" value="Attach Files">
-					<f:setPropertyActionListener value="#{otherrequestdetails}"
+					<f:setPropertyActionListener value="#{otherrequestdetails.approvalRequestAttachement}"
 						target="#{approvalBackingBean.managedBean.scQtApproval}" />
 				</p:commandButton>
 			</p:column>

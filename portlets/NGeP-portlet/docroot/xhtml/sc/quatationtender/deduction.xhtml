@@ -36,7 +36,7 @@
 				<p:selectOneMenu id="deductionType"
 					value="#{scQtDeduction.deductionType.parameterId}" required="true">
 					<f:selectItems
-						value="#{qTDeductionPaymentBackingBean.getDropdownValues(ParameterTypeConst.deductionType)}" />
+						value="#{qTDeductionPaymentBackingBean.getDeductionTypes()}" />
 					<p:ajax event="change" partialSubmit="true" process="@this"
 						update=":form:clausePnl, deductionamountid"
 						listener="#{qTDeductionPaymentBackingBean.deductionTypeChange(scQtDeduction)}" />
