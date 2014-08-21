@@ -91,7 +91,7 @@
 		<h:panelGrid width="100%">
 			<p:dataTable id="zoneyesDataTable"
 				value="#{specificationBackingBean.managedBean.zoneGeneralTrees}"
-				var="zoneTree" style="width:65%" rowIndexVar="index">
+				var="zoneTree" style="width:100%" rowIndexVar="index">
 				<p:column headerText="Location">
 					<p:tree value="#{zoneTree}" var="location">
 
@@ -131,6 +131,17 @@
 		rendered="#{((specificationBackingBean.managedBean.scQt.estimatedAmount le '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false' and specificationBackingBean.managedBean.scQt.zonal =='false') or (specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false'  and specificationBackingBean.managedBean.scQt.zonal =='false') or (specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false'  and specificationBackingBean.managedBean.scQt.zonal !='false'))}">
 		<table style="width: 100%">
 			<tr>
+				<td style="width: 94px"><p:outputLabel
+						value="#{lbl['lbl.so.allstate']}"
+						rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState =='false'}" />
+				</td>
+				<td><p:inputText
+						value="#{lbl[specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState ? 'lbl.btn.yes' : 'lbl.btn.no' ]}"
+						rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState =='false'}" />
+				</td>
+
+			</tr>
+			<tr>
 				<td style="width: 160px;"><p:outputLabel
 						value="#{lbl['lbl.so.paidup']}" /></td>
 				<td><p:inputText size="30" maxlength="18" disabled="true"
@@ -159,13 +170,10 @@
 	<p:panel
 		rendered="#{((specificationBackingBean.managedBean.scQt.estimatedAmount le '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false' and specificationBackingBean.managedBean.scQt.zonal =='false') or (specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false'  and specificationBackingBean.managedBean.scQt.zonal =='false') or (specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false'  and specificationBackingBean.managedBean.scQt.zonal !='false'))}">
 		<h:panelGrid width="100%">
-			<p:outputLabel value="#{lbl['lbl.so.allstate']}"
-				rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState =='false'}" />
-			<p:inputText value="No" style="margin-right:5px;"
-				rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState =='false'}" />
+
 			<p:dataTable id="zoneLocationDataTable"
 				value="#{specificationBackingBean.managedBean.zoneTrees}"
-				var="zoneTree" style="width:65%" rowIndexVar="index">
+				var="zoneTree" style="width:100%" rowIndexVar="index">
 				<p:column headerText="Location">
 					<p:tree value="#{zoneTree}" var="location">
 						<p:treeNode type="state">
