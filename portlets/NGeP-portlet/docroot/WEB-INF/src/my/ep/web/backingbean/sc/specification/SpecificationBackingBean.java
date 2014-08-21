@@ -2253,7 +2253,7 @@ public class SpecificationBackingBean extends
 				for (ScQtScoreSetting recommnendationSetting : resDTO
 						.getScoreSettingResultBean().getResultList()) {
 					if (recommnendationSetting.getSettingType() == 1) {
-						
+
 						this.getManagedBean().setTechnicalScoreSetting(
 								recommnendationSetting);
 					}
@@ -2985,6 +2985,7 @@ public class SpecificationBackingBean extends
 						BriefingZoneBean bean = new BriefingZoneBean(
 								tplSpecZoneDtl, resDTO.getAddressResultBean());
 						this.getManagedBean().getDeliveryLocBean().add(bean);
+						
 					}
 				}
 			}
@@ -5828,9 +5829,12 @@ public class SpecificationBackingBean extends
 	public void deleteDeliveryZone(String deliveryZoneName) {
 		List<BriefingZoneBean> deliveryBean = this.getManagedBean()
 				.getDeliveryLocBean();
+		
 		if (!this.getManagedBean().getScQt().isPanel()) {
 			for (BriefingZoneBean zonebean : deliveryBean) {
-				if (zonebean.getZoneName().equalsIgnoreCase(deliveryZoneName)) {
+				if (zonebean.getTplSpecZoneDtl().getZoneName()
+						.equalsIgnoreCase(deliveryZoneName)) {
+
 					List<ScQtDeliveryLoc> deliveryList = zonebean
 							.getDeliveryLocList();
 
@@ -5845,6 +5849,7 @@ public class SpecificationBackingBean extends
 
 						for (ScQtDeliveryLoc delLoc : selectdeliveryList) {
 							deliveryList.remove(delLoc);
+
 						}
 					}
 				}
