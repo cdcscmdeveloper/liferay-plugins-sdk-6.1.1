@@ -2097,17 +2097,17 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		context.put("uom", scRequestItem.getUom().getUomName());
 		List<MarketSummaryBean> requestNoteVOList = new ArrayList<>();
 		MarketSummaryBean marketSummaryBean = null;
-		Long supplierId = null;
-		Long prevSupplierId = null;
+		Long supplierItemId = null;
+		Long prevSupplierItemId = null;
 		ScSupplierItemPrice supplierItemPrice= null;
 		for(ScRequestSupplierItem supplierItem: scRequestItem.getSupplierItems()){			
 			for(int i = 0; i<supplierItem.getSupplierItemPrices().size();i++){
 				supplierItemPrice = supplierItem.getSupplierItemPrices().get(i);
 				marketSummaryBean = new MarketSummaryBean();
 				if(i==0){
-					supplierId = supplierItem.getSmSupplier().getSupplierId();
+					supplierItemId = supplierItem.getSupplierItemId();
 					marketSummaryBean.setSupplierName(supplierItem.getSmSupplier().getCompanyName());
-					marketSummaryBean.setMinQty(scRequestItem.getMinqty().toString());
+					marketSummaryBean.setMinQty(scRequestItem.getMinqty() != null ? scRequestItem.getMinqty().toString() :"");
 					marketSummaryBean.setDeliveryTerm(supplierItemPrice.getPricing().getCmSupplierItem().getLeadTime() != null ? supplierItemPrice.getPricing().getCmSupplierItem().getLeadTime().toString() : "");
 					marketSummaryBean.setAddItemDesc(supplierItemPrice.getPricing().getCmSupplierItem().getItemDesc() != null ? supplierItemPrice.getPricing().getCmSupplierItem().getItemDesc() : "");
 					marketSummaryBean.setFrQty(supplierItemPrice.getFromQty() != null ? supplierItemPrice.getFromQty().toString() : "");
@@ -2116,11 +2116,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				    marketSummaryBean.setUnitPrice(amountDF.format(supplierItemPrice.getItemPrice()).toString());			    
 				    marketSummaryBean.setZone(supplierItemPrice.getTplSpecZone() !=null ? supplierItemPrice.getTplSpecZone().getZoneName() : "");
 				    requestNoteVOList.add(marketSummaryBean);
-				    prevSupplierId = supplierItem.getSmSupplier().getSupplierId();
+				    prevSupplierItemId = supplierItem.getSupplierItemId();
 				}else{					
-					if(supplierId != prevSupplierId){
+					if(supplierItemId != prevSupplierItemId){
 						marketSummaryBean.setSupplierName(supplierItem.getSmSupplier().getCompanyName());
-						marketSummaryBean.setMinQty(scRequestItem.getMinqty().toString());
+						marketSummaryBean.setMinQty(scRequestItem.getMinqty() != null ? scRequestItem.getMinqty().toString() :"");
 						marketSummaryBean.setDeliveryTerm(supplierItemPrice.getPricing().getCmSupplierItem().getLeadTime() != null ? supplierItemPrice.getPricing().getCmSupplierItem().getLeadTime().toString() : "");
 						marketSummaryBean.setAddItemDesc(supplierItemPrice.getPricing().getCmSupplierItem().getItemDesc() != null ? supplierItemPrice.getPricing().getCmSupplierItem().getItemDesc() : "");
 					}else{
@@ -2135,7 +2135,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				    marketSummaryBean.setUnitPrice(amountDF.format(supplierItemPrice.getItemPrice()).toString());	    
 				    marketSummaryBean.setZone(supplierItemPrice.getTplSpecZone() !=null ? supplierItemPrice.getTplSpecZone().getZoneName() : "");
 				    requestNoteVOList.add(marketSummaryBean);
-				    prevSupplierId = supplierItem.getSmSupplier().getSupplierId();
+				    prevSupplierItemId = supplierItem.getSupplierItemId();
 				}
 			}
 		}		
