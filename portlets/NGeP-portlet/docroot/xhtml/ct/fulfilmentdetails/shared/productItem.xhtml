@@ -241,8 +241,8 @@
 				<p:column headerText="#{lbl['lbl.ct.item.table2.ceil.ptj']}">
 				  <p:outputLabel value="#{itemCeilingQtiesVar.ctAgency.orgProfile.orgName}" style="float:left;" />
 				</p:column>              
-				<p:column headerText="#{lbl['lbl.ct.item.table2.ceil.quan']}" style="text-align: right;" label="#{lbl['lbl.ct.item.table2.ceil.quan']}">
-					<p:inputText style="width:70px;" styleClass="ppRightBtn" maxlength="24" value="#{itemCeilingQtiesVar.ceilingQuantity}" required="true">
+				<p:column headerText="#{lbl['lbl.ct.item.table2.ceil.quan']}" style="text-align: right;">
+					<p:inputText style="width:70px;" styleClass="ppRightBtn" maxlength="24" value="#{itemCeilingQtiesVar.ceilingQuantity}" required="true" label="#{lbl['lbl.ct.item.table2.ceil.quan']}">
 					    <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, itemCeilingQtiesVar.ctContractItem.uom.uomCode)}" />
 					   <p:ajax process="@this"/>
 					 </p:inputText>
