@@ -1734,11 +1734,10 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 					List<TplSpecQuestion>  cloneQuestions  = new ArrayList<TplSpecQuestion>();
 					
 					// non clone spec master
-					if(productTplSpecBean.getSpecMaster() !=null && productTplSpecBean.getSpecMaster().getTplSpecQuestions() !=null){
+					if(productTplSpecBean.getSpecMaster() !=null && productTplSpecBean.getSpecMaster().getTplSpecQuestions() != null){
 						prodSpecMaster = productTplSpecBean.getSpecMaster();
-						if(getManagedBean().getProdQuestions().isEmpty()){
-							getManagedBean().setProdQuestions(prodSpecMaster.getTplSpecQuestions());
-						}
+						getManagedBean().setProdQuestions(prodSpecMaster.getTplSpecQuestions());
+						
 					}else{ 
 						// clone tpl spec master
 						prodSpecMaster = (TplSpecMaster) BeanUtils.cloneBean(specMaster);
@@ -1768,9 +1767,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 					// non clone spec master
 					if(serviceTplSpecBean.getSpecMaster() !=null && serviceTplSpecBean.getSpecMaster().getTplSpecQuestions() !=null){
 						serviceSpecMaster = serviceTplSpecBean.getSpecMaster();
-						if(getManagedBean().getServiceQuestions().isEmpty()){
-							getManagedBean().setServiceQuestions(serviceSpecMaster.getTplSpecQuestions());
-						}
+						getManagedBean().setServiceQuestions(serviceSpecMaster.getTplSpecQuestions());
 
 					}else{ 
 						// clone tpl spec master
