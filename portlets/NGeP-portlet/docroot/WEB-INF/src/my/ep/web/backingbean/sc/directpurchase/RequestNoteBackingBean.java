@@ -542,7 +542,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			// remarks
 			requestNote.setRemarks(initializeRemarks(requestNote));
 
-			if (requestNote.getSourceMethod().equalsIgnoreCase(ParameterConst.REQUEST_NOTE_SQ)) {
+			if (requestNote.getQuote() != null) {
 				getManagedBean().setSourceMethod(ParameterConst.METHOD_SQ);
 
 			} else {
