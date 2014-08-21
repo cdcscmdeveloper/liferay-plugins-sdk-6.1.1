@@ -18,9 +18,12 @@
 			<ac:paginator for="stageTwotechProposal" />
 
 			<p:column selectionMode="multiple" style="text-align:left;"
-				rendered="#{stageTwoTechnical.manditory !='true'}" />
+				rendered="#{stageTwoTechnical.manditory !='true' and stageTwoTechnical.definationType.parameterCode ne 'TS'}" />
+
 			<p:column style="text-align:left;"
-				rendered="#{stageTwoTechnical.manditory =='true'}" />
+				rendered="#{stageTwoTechnical.manditory ==true and stageTwoTechnical.definationType.parameterCode ne 'TS' }" />
+			<p:column style="text-align:left;"
+				rendered="#{stageTwoTechnical.manditory !=true and stageTwoTechnical.definationType.parameterCode eq 'TS'}" />
 
 
 			<p:column style="width:20%;white-space: normal;">
@@ -126,19 +129,18 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.spec.stage2.score.head']}"
-				style="width:10%" >
+				style="width:10%">
 				<h:panelGroup id="scoreView">
-				<p:selectBooleanCheckbox 
-					value="#{stageTwoTechnical.scoringReq}" disabled="true"
-					rendered="#{stageTwoTechnical.action.parameterCode  ne 'O'}">
+					<p:selectBooleanCheckbox value="#{stageTwoTechnical.scoringReq}"
+						disabled="true"
+						rendered="#{stageTwoTechnical.action.parameterCode  ne 'O'}">
 
-				</p:selectBooleanCheckbox>
+					</p:selectBooleanCheckbox>
 
-				<p:selectBooleanCheckbox 
-					value="#{stageTwoTechnical.scoringReq}"
-					rendered="#{stageTwoTechnical.action.parameterCode eq 'O'}">
+					<p:selectBooleanCheckbox value="#{stageTwoTechnical.scoringReq}"
+						rendered="#{stageTwoTechnical.action.parameterCode eq 'O'}">
 
-				</p:selectBooleanCheckbox>
+					</p:selectBooleanCheckbox>
 				</h:panelGroup>
 			</p:column>
 
@@ -150,25 +152,24 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.spec.stage.document']}"
-				style="width:20%" >
+				style="width:20%">
 
 				<!-- <h:panelGroup id="document"> rendered="#{stageTwoTechnical.definationType.parameterId eq '184'}"-->
 				<h:panelGroup id="uploadtech">
-				<p:commandLink 
-					oncomplete="uploadDlg.show();return false;"
-					styleClass="sample#{index}"
-					rendered="#{stageTwoTechnical.definationType.parameterCode eq 'UP'}"
-					update="stageTwotechProposal">
-					<p:graphicImage library="ep/images/design" name="upload.png"
-						value="/resources/ep/images/design/upload.png" />
-					<f:setPropertyActionListener value="#{stageTwoTechnical}"
-						target="#{specificationBackingBean.managedBean.scQtChecklist}" />
+					<p:commandLink oncomplete="uploadDlg.show();return false;"
+						styleClass="sample#{index}"
+						rendered="#{stageTwoTechnical.definationType.parameterCode eq 'UP'}"
+						update="stageTwotechProposal">
+						<p:graphicImage library="ep/images/design" name="upload.png"
+							value="/resources/ep/images/design/upload.png" />
+						<f:setPropertyActionListener value="#{stageTwoTechnical}"
+							target="#{specificationBackingBean.managedBean.scQtChecklist}" />
 
-				</p:commandLink>
-				<p:spacer width="10" height="5" />
-				<h:outputText
-					value="#{stageTwoTechnical.scQtCheckListAttachment.fileName}"></h:outputText>
-				<!-- 	</h:panelGroup> -->
+					</p:commandLink>
+					<p:spacer width="10" height="5" />
+					<h:outputText
+						value="#{stageTwoTechnical.scQtCheckListAttachment.fileName}"></h:outputText>
+					<!-- 	</h:panelGroup> -->
 				</h:panelGroup>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.stage.action']}"

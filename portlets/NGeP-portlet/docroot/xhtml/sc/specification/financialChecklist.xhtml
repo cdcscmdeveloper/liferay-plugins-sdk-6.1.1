@@ -18,10 +18,12 @@
 			rowKey="#{stageTwofunctional}">
 			<ac:paginator for="financeProposaltwo" />
 			<p:column selectionMode="multiple" style="text-align:left;"
-				rendered="#{stageTwofunctional.manditory !=true}" />
+				rendered="#{stageTwofunctional.manditory !=true and stageTwofunctional.definationType.parameterCode ne 'TS'}" />
 
 			<p:column style="text-align:left;"
-				rendered="#{stageTwofunctional.manditory ==true}" />
+				rendered="#{stageTwofunctional.manditory ==true and stageTwofunctional.definationType.parameterCode ne 'TS' }" />
+			<p:column style="text-align:left;"
+				rendered="#{stageTwofunctional.manditory !=true and stageTwofunctional.definationType.parameterCode eq 'TS'}" />
 			<p:column style="width:30%;white-space: normal;">
 
 				<f:facet name="header">
