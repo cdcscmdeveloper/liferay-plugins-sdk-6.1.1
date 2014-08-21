@@ -29,6 +29,7 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.ct.ContractManagedBean;
+import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
 
 import org.apache.log4j.Logger;
@@ -117,15 +118,16 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		res.setHeader( "Content-Transfer-Encoding", "binary" );
 		res.setContentType("application/octet-stream");
 		res.flushBuffer();
-		OutputStream out = res.getOutputStream();   
-		if(attachment.getFilePath()!=null) {
+		OutputStream out = res.getOutputStream();  
+		String filePath = DocumentRepositoryUtils.getBaseDir()+attachment.getFilePath();
+		if(filePath!=null) {
 			InputStream input = null;
 			try {
-				URLConnection uc = new URL(attachment.getFilePath()).openConnection();
+				URLConnection uc = new URL(filePath).openConnection();
 				input = new BufferedInputStream(uc.getInputStream()); 
 			} catch (Exception e) {
 				// Cannot open connection, maybe local file
-				input = new FileInputStream(attachment.getFilePath());
+				input = new FileInputStream(filePath);
 			}
 			byte[] buffer = new byte[4096];
 			int bytesRead;
@@ -134,7 +136,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			}
 			input.close();			
 		} else {
-			//out.write(attachment.getFileByte());
+			/*out.write(filePath.getFileByte()); */
 		}
 		out.flush();
 		out.close(); 
@@ -162,7 +164,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	    
 		CtAttachment attachment = new CtAttachment();
 		attachment.setFileName(item.getFileName());
-		attachment.setFilePath(filePath);
+		attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
 		attachment.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
 		attachment.setCreatedUser(facesScopes.getUserSessionBean());
 		attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));

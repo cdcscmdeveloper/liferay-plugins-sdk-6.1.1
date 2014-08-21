@@ -842,7 +842,6 @@ public void ConstructSideTabMenu(){
 		File file = new File(filePath);
 		file.mkdirs();
 		filePath = filePath + "/" + attachmentFormat.format(item.getFileName(), null);
-		
 		FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
 	    fileOuputStream.write(item.getContents());
 	    fileOuputStream.close();
@@ -850,7 +849,7 @@ public void ConstructSideTabMenu(){
 	    for(CtPerformanceBond ctPerformanceBond : getManagedBean().getContractVer().getCtPerformanceBonds()){
 	    	if(ctPerformanceBond.equals(getManagedBean().getCtPerformanceBond())){
 	    		ctPerformanceBond.setFileName(item.getFileName());
-	    		ctPerformanceBond.setFilePath(filePath);
+	    		ctPerformanceBond.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
 	    	 }
 	     }
 	}
@@ -864,7 +863,8 @@ public void ConstructSideTabMenu(){
 		res.setContentType("application/octet-stream");
 		res.flushBuffer();
 		OutputStream out = res.getOutputStream();   
-		if(filePath!=null) {
+	    filePath = DocumentRepositoryUtils.getBaseDir()+filePath;
+	    if(filePath!=null) {
 			InputStream input = null;
 			try {
 				URLConnection uc = new URL(filePath).openConnection();
@@ -1682,7 +1682,7 @@ public void ConstructSideTabMenu(){
 	    
 		CtAttachment attachment = new CtAttachment();
 		attachment.setFileName(item.getFileName());
-		attachment.setFilePath(filePath);
+		attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
 		attachment.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
 		attachment.setCreatedUser(facesScopes.getUserSessionBean());
 		attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
