@@ -52,6 +52,7 @@ public class ReportsGenerateBean {
 	private boolean prNoView = false;
 	private boolean pmoView = false;
 	/*FL end*/
+	
 	//URL variables start
 	private String quotationIdTotVar=ReportConst.EMPTY_VAL;
 	private String itemTypeTotVar=ReportConst.EMPTY_VAL;
@@ -102,6 +103,7 @@ public class ReportsGenerateBean {
 	private String pmoTotVar=ReportConst.EMPTY_VAL;
 	private String fromDateVar=ReportConst.EMPTY_VAL;
 	private String toDateVar=ReportConst.EMPTY_VAL;
+	
 	
 	public String getEpNumberTotVar() {
 		return epNumberTotVar;
