@@ -5,11 +5,16 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.model.SelectItem;
 
+import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchBean;
+import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
@@ -17,8 +22,10 @@ import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
+import my.ep.type.aut.SearchOperator;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -140,5 +147,19 @@ public class QTDeductionPaymentBackingBean extends
 			
 		}
 		
+	}
+	
+	public SelectItem[] getDeductionTypes(){
+		SearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+		
+		List<String> deductionTypes = new ArrayList<String>();
+		deductionTypes.add(ParameterConst.DEDUCTION_TYPE_ADVANCE_PAYMENT);
+		deductionTypes.add(ParameterConst.DEDUCTION_TYPE_TRANSACTION_FEE);		
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("pmParameter.parameterCode",
+						SearchOperator.OPERATOR_NOT_IN.value(),
+						deductionTypes));
+
+		return getDropdownValuesBySearchBean(ParameterTypeConst.DEDUCTION_TYPE,searchBean);
 	}
 }

@@ -482,7 +482,7 @@ public class QTDetailBackingBean extends
 			List<PmOrgProfile> pmOrgProfiles = resDTO.getOrgProfileList();
 			this.getManagedBean().setUserDivisionList(pmOrgProfiles);
 			return pmOrgProfiles;
-			
+
 		}
 		return null;
 	}
@@ -490,13 +490,13 @@ public class QTDetailBackingBean extends
 	public void handlePTJNameChanged(PmOrgProfile orgProfile) {
 		List<PmOrgProfile> orgProfileList = getManagedBean()
 				.getUserDivisionList();
-		if(null != orgProfileList){
-		for (PmOrgProfile list : orgProfileList) {
-			if (list.getOrgProfileId().equals(orgProfile.getOrgProfileId())) {
-				getManagedBean().setOrgProfile(list);
+		if (null != orgProfileList) {
+			for (PmOrgProfile list : orgProfileList) {
+				if (list.getOrgProfileId().equals(orgProfile.getOrgProfileId())) {
+					getManagedBean().setOrgProfile(list);
+				}
 			}
-		}
-		}else{
+		} else {
 			debugLogger("org profile list should not be empty");
 		}
 	}
@@ -683,6 +683,7 @@ public class QTDetailBackingBean extends
 						}
 					}
 				}
+
 			}
 		}
 		scQt.setScQtCommittees(qtCommitteList);
@@ -1635,8 +1636,8 @@ public class QTDetailBackingBean extends
 			MenuModel menuModel = new DefaultMenuModel();
 			if (requiredApproval != null) {
 				for (ScQtApproval qtApproval : requiredApproval) {
-					qtApproval = checkIsApprovalExists(qtApproval,
-							existingApprovalTabs);
+					//qtApproval = checkIsApprovalExists(qtApproval,
+						//	existingApprovalTabs);
 					qtApproval.setApprovalType(ApprovalCategory
 							.getDisplayName(qtApproval.getApprovalCategory()
 									.getParameterId()));
