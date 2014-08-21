@@ -10,6 +10,12 @@ public class SmPersonnleCalcVO implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	private int equiOwnrNonBumiCnt;
+
+	private int equiOwnrBumiCnt;
+
+	private int equiOwnrFrgCnt;
+
 	private int bodNonBumiCnt;
 
 	private int bodBumiCnt;
@@ -75,10 +81,20 @@ public class SmPersonnleCalcVO implements Serializable {
 	private int semiTotalCnt;
 
 	private int profTotalCnt;
+	
+	private int stfActualTotalCnt;
+
+	private int semiActualTotalCnt;
+
+	private int profActualTotalCnt;
+
+	private int equityOwnerTotalCnt;
 
 	private int totalStaffEntered;
 
 	private int totalKeyRolesEntered;
+
+	private SmPersonnelSummaryCountVO summaryCountVO;
 
 	private BigDecimal totalStaffBumiPerc = new BigDecimal(0);
 
@@ -408,6 +424,70 @@ public class SmPersonnleCalcVO implements Serializable {
 
 	public void setFullBumiStatus(boolean fullBumiStatus) {
 		this.fullBumiStatus = fullBumiStatus;
+	}
+
+	public int getEquiOwnrNonBumiCnt() {
+		return equiOwnrNonBumiCnt;
+	}
+
+	public void setEquiOwnrNonBumiCnt(int equiOwnrNonBumiCnt) {
+		this.equiOwnrNonBumiCnt = equiOwnrNonBumiCnt;
+	}
+
+	public int getEquiOwnrBumiCnt() {
+		return equiOwnrBumiCnt;
+	}
+
+	public void setEquiOwnrBumiCnt(int equiOwnrBumiCnt) {
+		this.equiOwnrBumiCnt = equiOwnrBumiCnt;
+	}
+
+	public int getEquiOwnrFrgCnt() {
+		return equiOwnrFrgCnt;
+	}
+
+	public void setEquiOwnrFrgCnt(int equiOwnrFrgCnt) {
+		this.equiOwnrFrgCnt = equiOwnrFrgCnt;
+	}
+
+	public SmPersonnelSummaryCountVO getSummaryCountVO() {
+		return summaryCountVO;
+	}
+
+	public void setSummaryCountVO(SmPersonnelSummaryCountVO summaryCountVO) {
+		this.summaryCountVO = summaryCountVO;
+	}
+
+	public int getEquityOwnerTotalCnt() {
+		return equityOwnerTotalCnt;
+	}
+
+	public void setEquityOwnerTotalCnt(int equityOwnerTotalCnt) {
+		this.equityOwnerTotalCnt = equityOwnerTotalCnt;
+	}
+
+	public int getStfActualTotalCnt() {
+		return stfActualTotalCnt;
+	}
+
+	public void setStfActualTotalCnt(int stfActualTotalCnt) {
+		this.stfActualTotalCnt = stfActualTotalCnt;
+	}
+
+	public int getSemiActualTotalCnt() {
+		return semiActualTotalCnt;
+	}
+
+	public void setSemiActualTotalCnt(int semiActualTotalCnt) {
+		this.semiActualTotalCnt = semiActualTotalCnt;
+	}
+
+	public int getProfActualTotalCnt() {
+		return profActualTotalCnt;
+	}
+
+	public void setProfActualTotalCnt(int profActualTotalCnt) {
+		this.profActualTotalCnt = profActualTotalCnt;
 	}
 
 }

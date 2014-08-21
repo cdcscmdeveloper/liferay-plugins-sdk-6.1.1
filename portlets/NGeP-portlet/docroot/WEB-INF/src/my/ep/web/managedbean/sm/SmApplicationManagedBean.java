@@ -18,7 +18,6 @@ import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmEduField;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
-import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
@@ -265,6 +264,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private String reasonDesc;
 	private boolean validSmUserLimit;
 	private boolean userWithRole;
+	private boolean validEquityLimit;
 
 	public List<String> getSupplierToPOList() {
 		return supplierToPOList;
@@ -2002,6 +2002,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setUserWithRole(boolean userWithRole) {
 		this.userWithRole = userWithRole;
+	}
+
+	public boolean isValidEquityLimit() {
+		return validEquityLimit;
+	}
+
+	public void setValidEquityLimit(boolean validEquityLimit) {
+		this.validEquityLimit = validEquityLimit;
 	}
 
 }

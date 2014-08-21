@@ -221,7 +221,7 @@ public class SupplierManagementConst {
 	public static final String PERSONNEL_PROF_STAFF_CONSULTANT_PARAMCODE = "2";
 	public static final String PERSONNEL_SEMIPROF_STAFF_CONSULTANT_PARAMCODE = "3";
 	public static final String PERSONNEL_CLERICAL_STAFF_CONSULTANT_PARAMCODE = "4";
-	
+
 	public static final String PERSONNEL_MANAGEMENT_ROLENAME = "Management";
 	public static final String PERSONNEL_PROF_STAFF_ROLENAME = "Professionl Staff";
 	public static final String PERSONNEL_SEMIPROF_STAFF_ROLENAME = "Semi-Professional Staff";
@@ -229,6 +229,7 @@ public class SupplierManagementConst {
 	public static final String PERSONNEL_STAFF_ROLENAME = "Staff";
 	public static final String PERSONNEL_HGHR_ROLENAME = "Higher Management";
 	public static final String PERSONNEL_DIR_ROLENAME = "Director";
+	public static final String PERSONNEL_EQUI_OWNER = "Share Holder";
 
 	public static final String PERSONNEL_MANAGEMENT_STAFF_CONTRACTOR_PARAMCODE = "1";
 	public static final String PERSONNEL_NORMAL_STAFF_CONTRACTOR_PARAMCODE = "2";
@@ -257,7 +258,8 @@ public class SupplierManagementConst {
 	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROS_PERSATUAN = "M";
 
 	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROS_DEFAULT = "ROS";
-	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROB_DEFAULT = "ROB";
+	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT = "ROB_I";
+	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT = "ROB_P";
 	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT = "ROC";
 	public static final String SM_SUPPLIER_BUSINESS_TYPE_LLP_DEFAULT = "LLP";
 
@@ -500,8 +502,12 @@ public class SupplierManagementConst {
 		return SM_SUPPLIER_BUSINESS_TYPE_ROS_DEFAULT;
 	}
 
-	public String getSM_SUPPLIER_BUSINESS_TYPE_ROB_DEFAULT() {
-		return SM_SUPPLIER_BUSINESS_TYPE_ROB_DEFAULT;
+	public String getSM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT() {
+		return SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT;
+	}
+
+	public String getSM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT() {
+		return SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT;
 	}
 
 	public String getSM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT() {
