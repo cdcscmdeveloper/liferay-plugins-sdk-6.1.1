@@ -10768,9 +10768,7 @@ public class SpecificationBackingBean extends
 			supplierCriteria.setLocationLevel(scQt.getZoneLocationLevel());
 			supplierCriteria.setScQtLocCriteria(null);
 			scQt.setZoneLocationLevel(new PmParameter());
-			if (scQt.getEstimatedAmount().intValue() > 500000) {
-				supplierCriteria.setAllState(true);
-			}
+			
 			this.getManagedBean().setZoneTrees(new ArrayList<TreeNode>());
 		} else {
 			this.getManagedBean()
