@@ -225,7 +225,7 @@ public class QTDetailBackingBean extends
 	/*
 	 * Onchange of gos to fetch the so's list
 	 */
-	public void handleGoChanged(ScQtBudget qtGosodoBudget) {
+	public List<PmSo> handleGoChanged(ScQtBudget qtGosodoBudget) {
 		debugLogger("handleGoChanged");
 		PmGo pmGo = qtGosodoBudget.getPmGo();
 		if (pmGo != null && pmGo.getGoId() != null) {
@@ -245,11 +245,13 @@ public class QTDetailBackingBean extends
 							IObjectSO.class);
 			ObjectResDTO objResDTO = objectSO.retrieveSOListByGOCode(reqDTO);
 			this.getManagedBean().setSoList(objResDTO.getPmSoList());
+			return objResDTO.getPmSoList();
 		} else {
 			this.getManagedBean().setSoList(new ArrayList<PmSo>());
 		}
-		qtGosodoBudget.setPmSo(new PmSo());
+		// qtGosodoBudget.setPmSo(new PmSo());
 		// handleSoChanged(qtGosodoBudget);
+		return null;
 	}
 
 	/*
@@ -460,6 +462,7 @@ public class QTDetailBackingBean extends
 			goList = objResDTO.getPmGoList();
 			this.getManagedBean().setGoList(goList);
 		}
+		
 		return goList;
 	}
 
@@ -1636,8 +1639,8 @@ public class QTDetailBackingBean extends
 			MenuModel menuModel = new DefaultMenuModel();
 			if (requiredApproval != null) {
 				for (ScQtApproval qtApproval : requiredApproval) {
-					//qtApproval = checkIsApprovalExists(qtApproval,
-						//	existingApprovalTabs);
+					// qtApproval = checkIsApprovalExists(qtApproval,
+					// existingApprovalTabs);
 					qtApproval.setApprovalType(ApprovalCategory
 							.getDisplayName(qtApproval.getApprovalCategory()
 									.getParameterId()));
@@ -2240,6 +2243,7 @@ public class QTDetailBackingBean extends
 				tenderReqDTO.setDocType(docType);
 			}
 			tenderReqDTO.setQtId(qtId);
+			tenderReqDTO.setBdgDtlsReq(true);
 			QuationTenderResDTO tenderResDTO = new QuationTenderResDTO();
 			if (getManagedBean().getQt() == null) {
 				tenderResDTO = QtDetailsSO.retriveQTDetails(tenderReqDTO);
@@ -2300,6 +2304,10 @@ public class QTDetailBackingBean extends
 							}
 						}
 					}
+				}
+				if (this.getManagedBean().getGosodos() == null) {
+					this.getManagedBean().setGosodos(
+							tenderResDTO.getBudgetDtls());
 				}
 			}
 		} finally {

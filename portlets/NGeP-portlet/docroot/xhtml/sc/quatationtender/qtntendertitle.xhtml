@@ -104,7 +104,7 @@
 						rendered="#{rowIndex eq qTDetailBB.managedBean.qt.scQtGosodoBudgets.size()-1}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 							itemValue="#{null}" />
-						<f:selectItems value="#{qTDetailBB.managedBean.soList}" var="so"
+						<f:selectItems value="#{qTDetailBB.handleGoChanged(gosodo)}" var="so"
 							itemLabel="#{so.soCode}" itemValue="#{so.soId}" />
 						<p:ajax event="change"
 							listener="#{qTDetailBB.handleSoChanged(gosodo)}"
