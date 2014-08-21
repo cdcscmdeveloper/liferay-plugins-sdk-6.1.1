@@ -23,7 +23,7 @@
 						value="#{branchBean.smAddress.address1},#{branchBean.smAddress.address2}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.label.action']}">
-					<p:commandLink id="selectButton" update=":form:tt:banchDialog"
+					<p:commandLink id="selectButton"
 						partialSubmit="true" process="@this"
 						action="#{viewSmApplBackingBean.assignSelBranch(branchBean)}">
 						<p:graphicImage library="ep/images/design" name="edit.png"

@@ -14,7 +14,6 @@
 				value="#{viewSmApplBackingBean.managedBean.smAppl.smSupplierCerts}"
 				rowKey="#{certBean}" rowIndexVar="index" id="certDt">
 				<ac:paginator for="certDt" />
-				<p:column selectionMode="multiple" width="5%" />
 
 				<p:column headerText="#{lbl['lbl.sm.cert.certName']}">
 					<h:outputText value="#{certBean.certName}" />
