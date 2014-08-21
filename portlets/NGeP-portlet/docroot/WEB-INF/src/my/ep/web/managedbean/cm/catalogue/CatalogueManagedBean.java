@@ -171,6 +171,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private boolean error6 = false;
 	private boolean error7 = false;
 	private boolean error8 = false;
+	private boolean error9 = false;
 	
 	private List<VCmSupplierItem> tempSupplierList;
 	private List<VCmSupplierItem> ctRequestList;
@@ -1401,6 +1402,16 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 	public void setError8(boolean error8) {
 		this.error8 = error8;
+	}
+
+
+	public boolean isError9() {
+		return error9;
+	}
+
+
+	public void setError9(boolean error9) {
+		this.error9 = error9;
 	}
 
 	

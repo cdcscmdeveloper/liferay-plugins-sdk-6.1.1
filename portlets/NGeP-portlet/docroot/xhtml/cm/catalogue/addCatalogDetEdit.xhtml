@@ -386,6 +386,10 @@
 			        <p:column style="width:2%;"><p:graphicImage value="/css/images/messages/error.png"></p:graphicImage></p:column>
 			        <p:column><h:outputText value="Start and end dates of this tier cannot overlap with zones containing same district(s)."></h:outputText></p:column>
 			    </p:row>
+			     <p:row rendered="#{catalogueBackingBean.managedBean.error9}">
+			        <p:column style="width:2%;"><p:graphicImage value="/css/images/messages/error.png"></p:graphicImage></p:column>
+			        <p:column><h:outputText value="Price cannot be greater than previous price of same group."></h:outputText></p:column>
+			    </p:row>
 			 
 			    <p:row>
 			        <p:column colspan="2">

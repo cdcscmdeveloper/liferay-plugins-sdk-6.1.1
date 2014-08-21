@@ -59,7 +59,8 @@
 					#{lbl['lbl.cm.price']}
 				</f:facet>
 				<p:inputText value="#{tier.price}" size="10" disabled="#{tier.standardDisabled}" style="text-align:right">
-					<p:ajax event="keyup" update="zTPromoLink, zTCloneLink, zTErrorLink, zTDeleteLink" />
+					<p:ajax event="keyup" listener="#{catalogueBackingBean.validateZonalTierPrice(rowIndex)}" update="zTPromoLink, zTCloneLink, zTErrorLink, zTDeleteLink" />
+					<p:ajax event="change" listener="#{catalogueBackingBean.validateZonalTierDateOverlap(rowIndex)}" update="zTPromoLink, zTCloneLink, zTErrorLink, zTDeleteLink" />
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</p:inputText>
 			</p:column>
@@ -72,6 +73,8 @@
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
 					<p:ajax event="dateSelect" listener="#{catalogueBackingBean.validateZonalTierDateOverlap(rowIndex)}" update="zTPromoLink, zTCloneLink, zTErrorLink, zTDeleteLink" />
 					<p:ajax event="keyup" listener="#{catalogueBackingBean.validateZonalTierDateOverlap(rowIndex)}" update="zTPromoLink, zTCloneLink, zTErrorLink, zTDeleteLink" />
+					<p:ajax event="dateSelect" listener="#{catalogueBackingBean.validateZonalTierPrice(rowIndex)}" update="zTPromoLink, zTCloneLink, zTErrorLink, zTDeleteLink" />
+					<p:ajax event="keyup" listener="#{catalogueBackingBean.validateZonalTierPrice(rowIndex)}" update="zTPromoLink, zTCloneLink, zTErrorLink, zTDeleteLink" />
 				</p:calendar>
 
 			</p:column>
@@ -83,6 +86,8 @@
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
 					<p:ajax event="dateSelect" listener="#{catalogueBackingBean.validateZonalTierDateOverlap(rowIndex)}" update="zTPromoLink, zTCloneLink, zTErrorLink, zTDeleteLink" />
 					<p:ajax event="keyup" listener="#{catalogueBackingBean.validateZonalTierDateOverlap(rowIndex)}" update="zTPromoLink, zTCloneLink, zTErrorLink, zTDeleteLink" />
+					<p:ajax event="dateSelect" listener="#{catalogueBackingBean.validateZonalTierPrice(rowIndex)}" update="zTPromoLink, zTCloneLink, zTErrorLink, zTDeleteLink" />
+					<p:ajax event="keyup" listener="#{catalogueBackingBean.validateZonalTierPrice(rowIndex)}" update="zTPromoLink, zTCloneLink, zTErrorLink, zTDeleteLink" />
 				</p:calendar>
 
 			</p:column>
@@ -97,7 +102,7 @@
 						<td><p:commandLink id="zTCloneLink" title="Clone" rendered="#{tier.showFlag}"
 								disabled="#{tier.cmSupplierZone.suppZoneId eq 0 or tier.standardDisabled or tier.price eq null or tier.fromQty eq null or tier.toQty eq null or tier.fromQty >= tier.toQty or tier.startDate eq null or tier.endDate eq null or tier.startDate >= tier.endDate or !tier.displayAction}" 
 								action="#{catalogueBackingBean.cloneZonalTierPrice(rowIndex)}"
-								update=":form:pricingTabID:headerTabId:zonalTierId:cmZonalTierPricingsId">
+								update=":form:pricingTabID:headerTabId:zonalTierId:cmZonalTierPricingsId, :form:pricingTabID:headerTabId:zonalTierId:addZonalTierButton">
 								<p:graphicImage value="/css/images/design/add.png"></p:graphicImage>
 							</p:commandLink>&#160;</td>
 						<td style="text-align: right;"><p:commandLink title="Delete" id="zTDeleteLink" rendered="#{tier.showFlag}" 
@@ -130,11 +135,12 @@
 		<div class="clear"></div>
 
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.cm.add']}"   
+			<p:commandButton value="#{lbl['lbl.cm.add']}" id="addZonalTierButton"  
 			rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'D' ||
 			(catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'U' and (unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.supplierAdmin or unspscCodeBackingBean.allSupplier))}"
+				disabled="#{catalogueBackingBean.disableAddZonalTier()}"
 				action="#{catalogueBackingBean.addNewZonalTierPricing()}" icon="ui-icon-add"
-				update="cmZonalTierPricingsId" process="@this cmZonalTierPricingsId"></p:commandButton>
+				update="cmZonalTierPricingsId, :form:pricingTabID:headerTabId:zonalTierId:addZonalTierButton" process="@this cmZonalTierPricingsId"></p:commandButton>
 		</div>
 		
 		<p:confirmDialog id="confirmDeleteZonalTierId" message="Are you sure ?"
