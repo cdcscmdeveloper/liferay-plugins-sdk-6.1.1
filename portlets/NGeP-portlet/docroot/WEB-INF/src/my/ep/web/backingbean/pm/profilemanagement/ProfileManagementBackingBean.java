@@ -691,9 +691,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			
 			/* show selected org's receiving addr */ 
 			if(this.getManagedBean().getSelectedUserOrg()!=null && this.getManagedBean().getSelectedUser().getPmAddressTypes()!=null){
-				if(this.getManagedBean().getSelectedReceivingAddrTypes()==null){
-					this.getManagedBean().setSelectedReceivingAddrTypes(new ArrayList<PmAddressType>());
-				}
+				this.getManagedBean().getSelectedReceivingAddrTypes().clear();
 				System.out.println("size add type " +this.getManagedBean().getSelectedUser().getPmAddressTypes().size());
 				for (PmAddressType addressTypeObj : this.getManagedBean().getSelectedUser().getPmAddressTypes()){
 					System.out.println("d>>>" + addressTypeObj.getPmAddress().getAddressId());
@@ -722,6 +720,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				this.getManagedBean().setSelectedReceivingAddrTypes(new ArrayList<PmAddressType>());
 			}
 			if(isUniqueAddress()){
+				System.out.println("selected size " + deliveringAddrs.size());
 				for(PmAddressType pmAddressType: deliveringAddrs){
 					PmAddressType tempAddTypeObj = new PmAddressType();
 					tempAddTypeObj.setAddressType(ProfileManagementConst.ADDRESS_RECEIVING);
