@@ -10,19 +10,16 @@
 			width: 80px;
 		}
 	</style>
-	<p:panel id="bondId" header="#{lbl['lbl.ct.pbd.panel.name']}"
-		toggleable="true" toggleSpeed="500"
-		rendered="#{(contractDetailsBackingBean.managedBean.contractVer.ctPerformanceBonds.size() != 0  or contractDetailsBackingBean.managedBean.updateContract) and
-			!contractDetailsBackingBean.managedBean.directPurchase}">
-		<p:dataTable id="tableBond" var="varBond"
-			value="#{contractDetailsBackingBean.managedBean.contractVer.ctPerformanceBonds}"
-			rowKey="#{varBond}"
-			selection="#{contractDetailsBackingBean.selectedBondList}">
-			<ac:paginator for="tableBond" />
-			<p:columnGroup type="header">
+	<p:panel id="bondId" header="#{lbl['lbl.ct.pbd.panel.name']}" toggleable="true" toggleSpeed="500"
+		rendered="#{(contractDetailsBackingBean.managedBean.contractVer.ctPerformanceBonds.size() != 0  
+	     or contractDetailsBackingBean.managedBean.updateContract) and !contractDetailsBackingBean.managedBean.directPurchase}">
+		 <p:dataTable id="tableBond" var="varBond"
+			  value="#{contractDetailsBackingBean.managedBean.contractVer.ctPerformanceBonds}"
+			  rowKey="#{varBond}" selection="#{contractDetailsBackingBean.selectedBondList}">
+			  <ac:paginator for="tableBond" />
+			  <p:columnGroup type="header">
 				<p:row>
-					<p:column headerText="Select"
-						rendered="#{contractDetailsBackingBean.managedBean.updateContract}" />
+					<p:column headerText="Select" rendered="#{contractDetailsBackingBean.managedBean.updateContract}" />
 					<p:column headerText="#{lbl['lbl.ct.pbd.table.rno']}" />
 					<p:column headerText="#{lbl['lbl.ct.pbd.table.fi']}" />
 					<p:column headerText="#{lbl['lbl.ct.pbd.table.amt']}" />
@@ -31,52 +28,52 @@
 					<p:column headerText="Attachment" />
 					<p:column headerText="Status" />
 				</p:row>
-			</p:columnGroup>
-
-			<p:column selectionMode="multiple" style="width:18px;"
-				disabledSelection="true"
+			 </p:columnGroup>
+			<p:column selectionMode="multiple" style="width:18px;" disabledSelection="true"
 				rendered="#{varBond.performanceBondId != null and contractDetailsBackingBean.managedBean.updateContract}" />
+			
 			<p:column selectionMode="multiple" style="width:18px;"
 				rendered="#{varBond.performanceBondId == null and contractDetailsBackingBean.managedBean.updateContract}" />
+			
 			<p:column>
 				<p:inputText value="#{varBond.refNo}" maxlength="50"
 					disabled="#{varBond.performanceBondId != null}" style="width:70px;" />
 			</p:column>
+		
 			<p:column>
-				<p:selectOneMenu id="orgName"
-					value="#{varBond.financialOrg.financialOrgId}" style="width:180px;"
-					disabled="#{varBond.performanceBondId != null}">
-					<f:selectItems
-						value="#{contractDetailsBackingBean.retrieveFinancialOrgList()}" />
+				<p:selectOneMenu id="orgName"  value="#{varBond.financialOrg.financialOrgId}" 
+				    style="width:180px;" disabled="#{varBond.performanceBondId != null}">
+					<f:selectItems value="#{contractDetailsBackingBean.retrieveFinancialOrgList()}" />
 				</p:selectOneMenu>
 			</p:column>
+			
 			<p:column>
-				<p:inputText value="#{varBond.bondAmount}" styleClass="ppRightBtn"
-					maxlength="23" disabled="#{varBond.performanceBondId != null}"
-					style="width:100px;" label="#{lbl['lbl.ct.pbd.table.amt']}">
+				<p:inputText value="#{varBond.bondAmount}" styleClass="ppRightBtn" maxlength="23"
+				    disabled="#{varBond.performanceBondId != null}" style="width:100px;" label="#{lbl['lbl.ct.pbd.table.amt']}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</p:inputText>
 			</p:column>
+			
 			<p:column>
 				<p:calendar value="#{varBond.effDate}" id="popupButtonCal4" styleClass="calendarDateField"
 					showOn="button" readonlyInput="true" size="12" 
 					disabled="#{varBond.performanceBondId != null}"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 			</p:column>
+			
 			<p:column>
 				<p:calendar value="#{varBond.expDate}" id="popupButtonCal5" styleClass="calendarDateField"
-					showOn="button" readonlyInput="true"
-					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-					disabled="#{varBond.performanceBondId != null}" size="12" />
+					showOn="button" readonlyInput="true" disabled="#{varBond.performanceBondId != null}" size="12" 
+					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"/>
 			</p:column>
+			
 			<p:column styleClass="column-align-center">
 				<h:panelGroup id="uploadBondPg">
 					<p:commandButton oncomplete="uploadBondDlg.show();return false;"
 						icon="iconAttachment" update=":form:tableBond"
 						rendered="#{varBond.filePath == null and contractDetailsBackingBean.managedBean.updateContract}">
-						<f:setPropertyActionListener value="#{varBond}"
-							target="#{contractDetailsBackingBean.managedBean.ctPerformanceBond}" />
+						<f:setPropertyActionListener value="#{varBond}" target="#{contractDetailsBackingBean.managedBean.ctPerformanceBond}" />
 					</p:commandButton>
 					<h:commandLink
 						value="#{varBond.fileName}"
