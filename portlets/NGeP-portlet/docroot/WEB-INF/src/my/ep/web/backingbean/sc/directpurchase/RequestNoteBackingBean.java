@@ -407,8 +407,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			if(requestNote.getQuote() != null){
 				// Simple Quote
 				QuoteReqDTO quoteReqDTO = new QuoteReqDTO();
-				Long quoteId = Long.valueOf(directPurchaseDataType.getDpId());
-				quoteReqDTO.setQuoteId(quoteId);
+				quoteReqDTO.setQuoteId(requestNote.getQuote().getQuoteId());
 				ScQuote quote = quoteSO.getQuoteDtl(quoteReqDTO).getQuoteBidDtl();
 				if(quote != null){
 					getManagedBean().setScQuote(quote); // copy scQuote to sq view in request note
