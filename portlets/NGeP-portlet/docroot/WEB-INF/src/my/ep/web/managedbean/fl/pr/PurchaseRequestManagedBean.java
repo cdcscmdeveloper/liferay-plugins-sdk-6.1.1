@@ -118,6 +118,7 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private HashMap<String, PmUserGroupUser> approverMap;
 	private HashMap<Long, Long> scRequestSupplierItemIdMap;
 	private HashMap<String, List<FlFulfilmentItemAddr>> zonalTierMap;
+	private HashMap<Long, List<FlFulfilmentItemAddr>> tierMap;
 	
 	//getcontract
 	private CtContract ctContract = new CtContract();
@@ -1810,6 +1811,23 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setZonalTierItem(FlFulfilmentItemAddr zonalTierItem) {
 		this.zonalTierItem = zonalTierItem;
+	}
+
+	/**
+	 * @return the tierMap
+	 */
+	public HashMap<Long, List<FlFulfilmentItemAddr>> getTierMap() {
+		if(tierMap == null){
+			tierMap = new HashMap<Long, List<FlFulfilmentItemAddr>>();
+		}
+		return tierMap;
+	}
+
+	/**
+	 * @param tierMap the tierMap to set
+	 */
+	public void setTierMap(HashMap<Long, List<FlFulfilmentItemAddr>> tierMap) {
+		this.tierMap = tierMap;
 	}
 
 }
