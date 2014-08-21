@@ -122,12 +122,23 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 				String messageId = MessageConst.INFO_700011;
 				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 					messageId = MessageConst.INFO_700004;
+				}else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE)){
+					messageId = MessageConst.INFO_700050;
 				}
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-						MessageUtils.getMessage(messageId, 
-								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_FULFILMENT_NOTE), resDTO.getFulfilmentNoteNo()}, 
-								MessageUtils.BUNDLE_COMMON_MESSAGES, 
-								new FacesScopes().getUserLocale())));
+				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE)){
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+							MessageUtils.getMessage(messageId, 
+									new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_FULFILMENT_NOTE), fulfilmentNote.getFulfilmentNoteNo()}, 
+									MessageUtils.BUNDLE_COMMON_MESSAGES, 
+									new FacesScopes().getUserLocale())));
+				}else{
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+							MessageUtils.getMessage(messageId, 
+									new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_FULFILMENT_NOTE), resDTO.getFulfilmentNoteNo()}, 
+									MessageUtils.BUNDLE_COMMON_MESSAGES, 
+									new FacesScopes().getUserLocale())));
+				}
+				
 				if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
 					renewSesionObject();
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
@@ -327,6 +338,12 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			String score = supplierEvaluation.getScore().toString();
 			supplierEvaluation.setScore(null);
 			throw new EpException(MessageConst.ERROR_100039, new String[]{score,"1","5"});
+		}
+	}
+	public void receivedAmtValidation(FlFulfilmentNoteItem item) {
+		if(item.getReceivedAmt().doubleValue() > item.getFlDelOrderItem().getDeliveredAmt().doubleValue()) {
+			item.setReceivedAmt(new BigDecimal(0));
+			throw new EpException(MessageConst.ERROR_100032, new String[]{"Received Amount","Delivery Amount"});
 		}
 	}
 }
