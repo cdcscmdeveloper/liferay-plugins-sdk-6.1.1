@@ -691,6 +691,9 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			
 			/* show selected org's receiving addr */ 
 			if(this.getManagedBean().getSelectedUserOrg()!=null && this.getManagedBean().getSelectedUser().getPmAddressTypes()!=null){
+				if(this.getManagedBean().getSelectedReceivingAddrTypes()==null){
+					this.getManagedBean().setSelectedReceivingAddrTypes(new ArrayList<PmAddressType>());
+				}
 				this.getManagedBean().getSelectedReceivingAddrTypes().clear();
 				System.out.println("size add type " +this.getManagedBean().getSelectedUser().getPmAddressTypes().size());
 				for (PmAddressType addressTypeObj : this.getManagedBean().getSelectedUser().getPmAddressTypes()){
