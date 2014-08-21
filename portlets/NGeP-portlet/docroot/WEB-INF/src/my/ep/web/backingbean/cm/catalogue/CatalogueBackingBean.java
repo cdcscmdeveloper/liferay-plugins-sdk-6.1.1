@@ -4103,8 +4103,22 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	}
 
 	public void deleteZonalStandardPrice(int index) {
+		
+		boolean zonalStdRemove = true;
+		CmZonalStandardPricing pricing = this.getManagedBean().getSelectedMaintainItem().getzStdPrices().get(index);
+		for(CmZonalPromotionPricing promotionPricing : this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionPricings()){
+			if(pricing.getCmSupplierZone() != null && promotionPricing.getCmSupplierZone() != null && pricing.getCmSupplierZone().getSuppZoneId() > 0 && promotionPricing.getCmSupplierZone().getSuppZoneId() > 0)
+				if(promotionPricing.getCmSupplierZone().getSuppZoneId() == pricing.getCmSupplierZone().getSuppZoneId()){
+					if(promotionPricing.getStartDate().compareTo(pricing.getStartDate()) == 0 && pricing.getEndDate().compareTo(promotionPricing.getEndDate()) == 0)
+						zonalStdRemove = false;
+				}
+		}
+		if(zonalStdRemove){
 		this.getManagedBean().getSelectedMaintainItem().getzStdPrices()
 				.remove(index);
+		} else {
+			throw new EpException(MessageConst.ERROR_715027);
+		}
 	}
 
 	public void deleteZonalPromotionPrice(int index) {
