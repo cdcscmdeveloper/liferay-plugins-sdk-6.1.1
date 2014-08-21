@@ -63,7 +63,8 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	private Boolean checkDocType =false;
 	private Boolean checkPoDocType =false;
 	private Boolean checkPaDocType =false;
-	private Boolean checkTitle =false;
+	//private Boolean checkTitle =false;
+	private Boolean checkDocNo =false;
 	private Boolean  checkDoInDocType=false;
 	private Boolean  checkDoDocType=false;
 	private Boolean  checkInDocType=false;
@@ -224,17 +225,17 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the checkTitle
+	 * @return the checkDocNo
 	 */
-	public Boolean getCheckTitle() {
-		return checkTitle;
+	public Boolean getCheckDocNo() {
+		return checkDocNo;
 	}
 
 	/**
-	 * @param checkTitle the checkTitle to set
+	 * @param checkDocNo the checkDocNo to set
 	 */
-	public void setCheckTitle(Boolean checkTitle) {
-		this.checkTitle = checkTitle;
+	public void setCheckDocNo(Boolean checkDocNo) {
+		this.checkDocNo = checkDocNo;
 	}
 
 	/**

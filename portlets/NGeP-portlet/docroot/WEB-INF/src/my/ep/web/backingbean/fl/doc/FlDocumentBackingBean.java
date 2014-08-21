@@ -107,7 +107,6 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 	public static final String NAV_TO_COMPLAIN_CC_ITEM = "/xhtml/fl/complaincontractitem/complainCentralContractItem.xhtml";
 	public static final String NAV_TO_MAINTAIN_PA = "/xhtml/fl/paymentmatch/pmBasePage.xhtml";
 	public static final String NAV_TO_REMOVE_FACTORING_COMPANY = "/xhtml/fl/removefactoringcomp/rfcBasePage.xhtml";
-
 	private IPagingDataModel<VFlDocument> flDocumentDataModel = new FlDocumentPagingDataModel();
 	
 	private FacesScopes getFacesScopes() {
@@ -120,11 +119,9 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 	}
 
 	public void searchDocument(){
-		
 		if(null == getManagedBean().getSearchOrderType() || null ==getManagedBean().getSearchDocType()){
 			throw new EpException(MessageConst.ERROR_740023);
 		}
-		
 		flDocumentDataModel.reloadData();
 		if(isFlFulfilmentRequisitioner()) {
 			FacesScopes facesScopes = new FacesScopes();
@@ -200,7 +197,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 						flDocTypes.add(ParameterConst.DOCTYPE_CONTRACT_REQUEST);
 						flDocTypes.add(ParameterConst.DOCTYPE_CONTRACT_ORDER);
 						flDocTypes.add(ParameterConst.DOCTYPE_SHIPPING_INSTRUCTION);
-						flDocTypes.add(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
+						//flDocTypes.add(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
 					}else{
 						flDocTypes.add(ParameterConst.DOCTYPE_CONTRACT_REQUEST);
 						flDocTypes.add(ParameterConst.DOCTYPE_CONTRACT_ORDER);
@@ -210,7 +207,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 					if(isFlFulfilmentPaymentOfficer()){
 						flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_REQUEST);
 						flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_ORDER);
-						flDocTypes.add(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
+						//flDocTypes.add(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
 					}else{
 						flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_REQUEST);
 						flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_ORDER);
@@ -315,9 +312,8 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			crBB.getManagedBean().getApproverModel().setTarget(resDTO.getSelectedApproverList());
 			crBB.getManagedBean().getApproverModel().getSource().removeAll(resDTO.getSelectedApproverList());
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE)){
-				String[] outcome = new String[2];
-				outcome[0] = BpmOutcomeConst.BPM_SAVE;
-				outcome[1] = BpmOutcomeConst.BPM_SUBMIT;
+				String[] outcome = new String[1];
+				outcome[0] = BpmOutcomeConst.BPM_UPDATE;
 				crBB.getManagedBean().setOutComes(outcome);
 			}
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE) || buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
@@ -531,7 +527,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		String id = (String) e.getComponent().getAttributes().get("value");
 		
 		// reset everything to false
-		this.getManagedBean().setCheckTitle(false);
+		this.getManagedBean().setCheckDocNo(false);
 		this.getManagedBean().setCheckDocType(false);
 		this.getManagedBean().setCheckPoDocType(false);
 		this.getManagedBean().setCheckDoDocType(false);
@@ -541,13 +537,13 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		if(id!=null) {
 			if(id.equals(ParameterConst.DOCTYPE_CONTRACT_ORDER)){
 				this.getManagedBean().setCheckDocType(true);
-				this.getManagedBean().setCheckTitle(true);
+				this.getManagedBean().setCheckDocNo(true);
 			}else if(id.equals(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
 				this.getManagedBean().setCheckPoDocType(true);
-				this.getManagedBean().setCheckTitle(true);
+				this.getManagedBean().setCheckDocNo(true);
 				getProcurementTypeList();
 			}else if(id.equals(ParameterConst.DOCTYPE_PAYMENT_ADVICE) || id.equals(ParameterConst.DOCTYPE_CONTRACT_REQUEST) || id.equals(ParameterConst.DOCTYPE_PURCHASE_REQUEST)){
-				this.getManagedBean().setCheckTitle(true);
+				this.getManagedBean().setCheckDocNo(true);
 			}else if(id.equals(ParameterConst.DOCTYPE_DELIVERY_ORDER)){
 				this.getManagedBean().setCheckDoDocType(true);
 			}else if(id.equals(ParameterConst.DOCTYPE_INVOICE)){
@@ -561,7 +557,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		getManagedBean().setSearchDocType(null);
 
 		// reset everything to false
-		this.getManagedBean().setCheckTitle(false);
+		this.getManagedBean().setCheckDocNo(false);
 		this.getManagedBean().setCheckDocType(false);
 		this.getManagedBean().setCheckPoDocType(false);
 		this.getManagedBean().setCheckDoDocType(false);
@@ -583,7 +579,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		this.getManagedBean().setSearchDocType(null);
 		
 		// reset everything to false
-		this.getManagedBean().setCheckTitle(false);
+		this.getManagedBean().setCheckDocNo(false);
 		this.getManagedBean().setCheckDocType(false);
 		this.getManagedBean().setCheckPoDocType(false);
 		this.getManagedBean().setCheckDoDocType(false);
@@ -689,7 +685,13 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 				
 				IFulfilmentDocumentSO flDocumentSO = (IFulfilmentDocumentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentDocumentSO.class);
 				FlDocumentResDTO resDTO = flDocumentSO.searchFulfilmentDoc(reqDTO);
+				
 				if(resDTO.isSuccessful()) {
+					if(null != resDTO.getResultBean()){
+						if(resDTO.getResultBean().getTotalRecord() >0){
+							filterSearchResults(resDTO.getResultBean().getResultList());
+						}
+					}
 					return resDTO.getResultBean();
 				}
 			} catch (Exception e) {
@@ -699,6 +701,156 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		}
 	}
 	
+	public void filterSearchResults(List<VFlDocument> searchResultList){
+		IFulfilmentDocumentSO flDocumentSO  = null;
+			for(VFlDocument docsearchResult:searchResultList){
+				docsearchResult.setUpdateAction(false);
+				docsearchResult.setViewAction(false);
+				docsearchResult.setCancelAction(false);
+				if(null == docsearchResult.getStatus() || ParameterConst.DOCTYPE_PURCHASE_REQUEST.equalsIgnoreCase(docsearchResult.getDocType()) ){
+					docsearchResult.setViewAction(true);
+				}else if(ParameterConst.DOCTYPE_CONTRACT_REQUEST.equalsIgnoreCase(docsearchResult.getDocType()) && FulfilmentStatusConst.CR_PENDING_SUBMISSION.equals(docsearchResult.getStatus().getStatusId())){
+					docsearchResult.setUpdateAction(true);
+					docsearchResult.setViewAction(true);
+				}else if(ParameterConst.DOCTYPE_CONTRACT_REQUEST.equalsIgnoreCase(docsearchResult.getDocType())){
+					docsearchResult.setViewAction(true);
+				}else{
+					docsearchResult.setViewAction(true);
+					boolean isUpdate=false;
+					boolean isCancel=false;
+					boolean isStopFulfilment=false;
+					boolean isRemoveFactoring=false;
+					FLOrderInfo orderInfo=null;
+					orderInfo=getStatusInfo(docsearchResult.getDocId(),docsearchResult.getDocType());
+						if(null != orderInfo){
+							flDocumentSO  = (IFulfilmentDocumentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentDocumentSO.class);
+							isUpdate = flDocumentSO.canDocumentUpdate(docsearchResult.getStatus().getStatusId(), orderInfo.getOrderStatusId(), orderInfo.getRole());
+							isCancel = flDocumentSO.canDocumentCancel(docsearchResult.getStatus().getStatusId(), orderInfo.getOrderStatusId(), orderInfo.getRole());
+							isStopFulfilment = flDocumentSO.canDocumentStopFulfilment(docsearchResult.getStatus().getStatusId(),docsearchResult.getDocId(),orderInfo.getRole());
+							if(docsearchResult.getDocType().equals(FulfilmentConst.DOC_TYPE_PO)){
+								isRemoveFactoring = flDocumentSO.canDocumentRemoveFactoring(docsearchResult.getStatus().getStatusId(),docsearchResult.getDocId(), orderInfo.getRole(),orderInfo.isFactored());
+							}	
+							if(isUpdate){
+								docsearchResult.setUpdateAction(true);
+								docsearchResult.setViewAction(true);
+								//System.out.println("final action update ### :: "+docsearchResult.isUpdateAction());
+							}
+							if(isCancel){
+								docsearchResult.setCancelAction(true);
+								docsearchResult.setViewAction(true);
+								//System.out.println("final action  cancel @@@@@@@:: "+docsearchResult.isCancelAction());
+							}
+							if(isStopFulfilment){
+								docsearchResult.setStopFulfilmentAction(true);
+								docsearchResult.setViewAction(true);
+								//System.out.println("final action  StopFulfilmen %%%%%%:: "+docsearchResult.isStopFulfilmentAction());
+							}
+							if(isRemoveFactoring){
+								docsearchResult.setRemoveFactoringAction(true);
+								docsearchResult.setViewAction(true);
+								//System.out.println("final action  RemoveFactoring @@@@@@@:: "+docsearchResult.isRemoveFactoringAction());
+							}
+					  }
+			     }
+		 }		
+	}
+	
+	private FLOrderInfo getStatusInfo(Long docId,String docType){
+		IReceivedNoteSO receivedNoteSO  = null;
+		IFulfilmentOrderSO fulfilmentOrderSO = null;
+		IDeliveryOrderSO deliveryOrderSO = null;
+		IInvoiceSO invoiceSO = null;
+		FLOrderInfo orderInfo = new FLOrderInfo();
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		
+		if(null != docId && null != docType){
+			if(ParameterConst.DOCTYPE_FULFILMENT_NOTE.equalsIgnoreCase(docType)){
+				reqDTO.setFulfilmentNoteId(Long.valueOf(docId));
+				receivedNoteSO  = (IReceivedNoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IReceivedNoteSO.class);
+				resDTO = receivedNoteSO.retrieveReceivedNoteByReceivedNoteId(reqDTO);
+				if(null != resDTO.getFulfilmentNote()){
+					if(null != resDTO.getFulfilmentNote().getFlRequest().getFlFulfilmentOrder()){
+						reqDTO.setFlOrderId(resDTO.getFulfilmentNote().getFlRequest().getFlFulfilmentOrder().getFulfilmentOrderId());
+						fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
+						resDTO = fulfilmentOrderSO.retrieveFulfilmentOrder(reqDTO);
+							if(null != resDTO.getFlOrder()){
+								if(null != resDTO.getFlOrder().getStatus()){
+									if(null !=resDTO.getFlOrder().getStatus().getStatusId()){
+										orderInfo.setOrderStatusId(resDTO.getFlOrder().getStatus().getStatusId());
+										orderInfo.setRole( RoleCode.RECEIVING_OFFICER.value());
+									}
+								}
+							}
+					}
+				}
+			}else if(ParameterConst.DOCTYPE_DELIVERY_ORDER.equalsIgnoreCase(docType)){
+				deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IDeliveryOrderSO.class);
+				reqDTO.setDeliveryOrderId(Long.valueOf(docId));
+				resDTO = deliveryOrderSO.retrieveDeliveryOrderById(reqDTO);
+				if(null != resDTO.getFlDeliveryOrder()){
+					if(null != resDTO.getFlDeliveryOrder().getFlFulfilmentOrder()){
+						reqDTO.setFlOrderId(resDTO.getFlDeliveryOrder().getFlFulfilmentOrder().getFulfilmentOrderId());
+						fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
+						resDTO = fulfilmentOrderSO.retrieveFulfilmentOrder(reqDTO);
+							if(null != resDTO.getFlOrder()){
+								if(null != resDTO.getFlOrder().getStatus()){
+									if(null !=resDTO.getFlOrder().getStatus().getStatusId()){
+										orderInfo.setOrderStatusId(resDTO.getFlOrder().getStatus().getStatusId());
+										orderInfo.setRole( RoleCode.BASIC_SUPPLIER_USER.value());
+									}
+								}
+							}
+					}
+				}
+				
+			}else if(ParameterConst.DOCTYPE_INVOICE.equalsIgnoreCase(docType)){
+				invoiceSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IInvoiceSO.class);
+				reqDTO.setInvoiceId(Long.valueOf(docId));
+				resDTO = invoiceSO.retrieveInvoiceByInvoiceId(reqDTO);
+				if(null != resDTO.getInvoice()){
+					if(null != resDTO.getInvoice().getFlFulfilmentOrder()){
+						reqDTO.setFlOrderId(resDTO.getFlDeliveryOrder().getFlFulfilmentOrder().getFulfilmentOrderId());
+						fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
+							if(null != resDTO.getFlOrder()){
+								if(null != resDTO.getFlOrder().getStatus()){
+									if(null !=resDTO.getFlOrder().getStatus().getStatusId()){
+										orderInfo.setOrderStatusId(resDTO.getFlOrder().getStatus().getStatusId());
+										orderInfo.setRole( RoleCode.BASIC_SUPPLIER_USER.value());
+									}
+								}
+							}
+					}
+				}
+			}else if(ParameterConst.DOCTYPE_PURCHASE_ORDER.equalsIgnoreCase(docType) || ParameterConst.DOCTYPE_CONTRACT_ORDER.equalsIgnoreCase(docType)){
+				fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
+				reqDTO.setFlOrderId(Long.valueOf(docId));
+		        resDTO = fulfilmentOrderSO.retrieveFulfilmentOrder(reqDTO);			
+				if(null != resDTO.getFlOrder()){
+					if(null != resDTO.getFlOrder()){
+						if(null != resDTO.getFlOrder().getStatus()){
+							if(null !=resDTO.getFlOrder().getStatus().getStatusId()){
+								//System.out.println("2222222222222222   po/co staus id is :::: "+resDTO.getFlOrder().getStatus().getStatusId());
+								orderInfo.setOrderStatusId(resDTO.getFlOrder().getStatus().getStatusId());
+								if(isFlFulfilmentApprover()){
+									orderInfo.setRole(RoleCode.FL_APPROVER.value());
+								}else if(isFlFulfilmentSupplier()){
+									orderInfo.setRole(RoleCode.BASIC_SUPPLIER_USER.value());
+								}
+								
+								if(ParameterConst.DOCTYPE_PURCHASE_ORDER.equalsIgnoreCase(docType)){
+									orderInfo.setFactored(resDTO.getFlOrder().isFactored());
+								}
+								
+							}
+						}
+					}
+					
+				}
+			}
+		}
+		return orderInfo;
+	}
 	public void getProcurementTypeList(){
 		IParameterSO parameterSO = (IParameterSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 		ParameterReqDTO reqDTO = new ParameterReqDTO();
@@ -740,4 +892,54 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			}
 		}
 	}
+	
+	private class FLOrderInfo {
+		private Long orderStatusId;
+		private String role;
+		private boolean factored = false;
+
+		/**
+		 * @return the role
+		 */
+		public String getRole() {
+			return role;
+		}
+
+		/**
+		 * @return the factored
+		 */
+		public boolean isFactored() {
+			return factored;
+		}
+
+		/**
+		 * @param role the role to set
+		 */
+		public void setRole(String role) {
+			this.role = role;
+		}
+
+		/**
+		 * @param factored the factored to set
+		 */
+		public void setFactored(boolean factored) {
+			this.factored = factored;
+		}
+
+		/**
+		 * @return the orderStatusId
+		 */
+		public Long getOrderStatusId() {
+			return orderStatusId;
+		}
+
+		/**
+		 * @param orderStatusId the orderStatusId to set
+		 */
+		public void setOrderStatusId(Long orderStatusId) {
+			this.orderStatusId = orderStatusId;
+		}
+		
+	}
+	
 }
