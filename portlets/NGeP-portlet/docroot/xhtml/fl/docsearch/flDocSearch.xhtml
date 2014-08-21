@@ -178,10 +178,10 @@
 									onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'Cancel'}])"/>
 							        <p:menuitem value="#{lbl['lbl.fl.doc.search.action.stop.fulfilment']}"  
 							        rendered="#{flDocument.isStopFulfilmentAction()}"
-							        onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'View'}])"/>
+							        onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'Stop Fulfilment'}])"/>
 							        <p:menuitem value="#{lbl['lbl.fl.doc.search.action.factory.comp.removal']}"  
 							        rendered="#{flDocument.isRemoveFactoringAction()}"
-							        onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'View'}])"/>
+							        onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'Remove Factoring'}])"/>
 					</p:menuButton>
 				</p:column>
 			</p:dataTable>
