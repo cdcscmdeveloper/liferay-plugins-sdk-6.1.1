@@ -53,7 +53,6 @@ import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.cm.catalog.CmSupplierZone;
 import my.ep.persistence.entity.cm.catalog.CmSupplierZoneDTL;
-import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
@@ -73,7 +72,6 @@ import my.ep.persistence.logging.LogKey;
 import my.ep.type.pm.OrganizationType;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
 import my.ep.web.backingbean.sc.directpurchase.RequestNoteBackingBean;
 import my.ep.web.managedbean.sc.purchaseinquiry.PurchaseInquiryManagedBean;
 import my.ep.web.util.DateUtils;
@@ -116,7 +114,7 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 	  * pricingDetails for getting pricing details in Purchase Inquiry
 	 * @return String
 	  */
-	  public String prInquiryAction(CmSupplierItem  cmSupplierItem){
+	  public String prInquiryAction(CmSupplierItem  cmSupplierItem, List<CmSupplierItem> compareSupplierItems){
 		  debugLogger("prInquiryAction");
 		  ScRequestSupplierItem requestSupplierItem = getManagedBean().getScRequestSupplierItem();
 		  ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT, ICatalogueSO.class);
@@ -201,26 +199,22 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 			  // TODO PriceType drop down list in AddToCart
 			  getManagedBean().setPriceTypes(getPriceTypeDropdownValues(ParameterTypeConst.PRICE_TYPE, priceTypes));
 		  }
-		  // prepare  requestSupplierItems , request item and supplier item price 
-		  IViewSupplierItemSO viewSupplierItemSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT, IViewSupplierItemSO.class);
-		  CatalogueReqDTO catalogueReqDTO = new CatalogueReqDTO();
-		  catalogueReqDTO.setViewSearchBean(new CatalogueBackingBean().getManagedBean().getSearchDataModel().getSearchBean());
-		  catalogueReqDTO.setSupplierItemId(cmSupplierItem.getSupplierItemId());
-		  catalogueReqDTO.setExtensionCode(cmSupplierItem.getCmItem().getExtensionCode());
-		  CatalogueResDTO catalogueResDTO = viewSupplierItemSO.getSuppliersItemPricingByExtensionCode(catalogueReqDTO);
 		  ScRequestItem requestItem = createRequestItem(cmSupplierItem);
+		  // copy suppliers from compare screen
 		  List<ScRequestSupplierItem> supplierItems = new ArrayList<ScRequestSupplierItem>();
-		  for (VCmSupplierItem vCmSupplierItem : catalogueResDTO.getViewSuppItemResultBean().getResultList()) {
-			  if (vCmSupplierItem.getCmPricings() != null && vCmSupplierItem.getCmPricings().size() > 0) {
-				  CmSupplierItem supplierItem = vCmSupplierItem.getCmPricings().get(0).getCmSupplierItem();
-				  ScRequestSupplierItem scRequestSupplierItem = createScRequestSupplierItem(
-						  requestItem, supplierItem.getSmSupplier(), vCmSupplierItem.getCmPricings());
-				  supplierItems.add(scRequestSupplierItem);	
-			  }
-		  }
+		  if(compareSupplierItems != null){
+	    		for (CmSupplierItem supplierItem : compareSupplierItems) {
+	    			if(supplierItem.getCmItem().getItemId().equals(cmSupplierItem.getCmItem().getItemId())){
+	    				ScRequestSupplierItem scRequestSupplierItem = createScRequestSupplierItem(
+	    						requestItem, supplierItem.getSmSupplier(), supplierItem.getCmPricings());
+	    				supplierItems.add(scRequestSupplierItem);	
+	    			}
+	    		}
+	    	}
+		  
+		 
 		  // Add selected supplier item.
 		  requestSupplierItem.setScPrInquiy(scPrInquiry);
-		  supplierItems.add(requestSupplierItem);
 		  
 		  requestItem.setSupplierItems(supplierItems);
 		  scPrInquiry.setRequestItem(requestItem);

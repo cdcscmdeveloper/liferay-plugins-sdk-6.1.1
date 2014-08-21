@@ -59,7 +59,7 @@
 										rendered="#{unspscCodeBackingBean.requisitioner}" />
 									<p:menuitem value="#{lbl['lbl.sc.purchae.inquiry']}"
 										icon="ui-icon-plus"
-										action="#{purchaseInquiryBackingBean.prInquiryAction(supplierItem)}"
+										action="#{purchaseInquiryBackingBean.prInquiryAction(supplierItem, catalogueBackingBean.managedBean.selectedSupplierItemList)}"
 										rendered="#{unspscCodeBackingBean.requisitioner}" />
 									<p:menuitem value="#{lbl['lbl.cm.catalogue.cart']}"
 										icon="ui-icon-plus"
