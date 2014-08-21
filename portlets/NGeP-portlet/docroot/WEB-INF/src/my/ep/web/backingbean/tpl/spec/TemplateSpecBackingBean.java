@@ -644,54 +644,56 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 	public void estimationPopupAction(TplSpecQuestion tplSpecQuestion) {
 		debugLogger("estimationPopupAction");
 		
-		List<TplSpecEstimation> specEstimations = tplSpecQuestion.getTplSpecEstimations();
-		if (specEstimations == null || specEstimations.size() == 0) {
-			List<TplSpecZoneDtl> specZoneDtls = null;
-			TplSpecZone specZone = tplSpecQuestion.getTplSpecMaster().getTplSpecZone();
+		TplSpecZone specZone = tplSpecQuestion.getTplSpecMaster().getTplSpecZone();
+		if (specZone != null) {
+			List<TplSpecZoneDtl> specZoneDtls = specZone.getTplSpecZoneDtls();
+			List<TplSpecEstimation> specEstimations = tplSpecQuestion.getTplSpecEstimations();
 			
-			specEstimations = new ArrayList<TplSpecEstimation>();
-			
-			if (specZone != null) {
-				ISpecZoneLocSO specZoneLocSO;
-				try {
-					specZoneLocSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.COMMON_COMPONENT, ISpecZoneLocSO.class);
-					
-					SpecZoneLocReqDTO reqDTO = new SpecZoneLocReqDTO();
-					reqDTO.setDocType(specZone.getDocType());
-					reqDTO.setDocId(specZone.getDocId());
-					
-					// Get zone details list from db.
-					SpecZoneLocResDTO resDTO = specZoneLocSO.retrieveZoneDtlsByDocIdNType(reqDTO);
-					
-					specZoneDtls = resDTO.getZonesList();
-				} finally {
-					specZoneLocSO = null;
-				}	
-			}
-			
-			for (int zoneRow = 0; zoneRow < (specZoneDtls == null || specZoneDtls.size() == 0 ? 1 : specZoneDtls.size()); zoneRow++) {
-				if (isPriceTypeTier(tplSpecQuestion.getClPriceTypeCode().getParameterCode())) {		
-					for (TplSpecTierQty specTierQty : tplSpecQuestion.getTplSpecTierQties()) {
-						TplSpecEstimation specEstimation = new TplSpecEstimation();
+			if (specEstimations == null || specEstimations.size() == 0 || specEstimations.size() != specZoneDtls.size()) {
+				specEstimations = new ArrayList<TplSpecEstimation>();
+				
+				if (specZoneDtls == null || specZoneDtls.size() == 0) {
+					ISpecZoneLocSO specZoneLocSO;
+					try {
+						specZoneLocSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.COMMON_COMPONENT, ISpecZoneLocSO.class);
 						
-						if (specZoneDtls != null && specZoneDtls.size() > 0) {
-							specEstimation.setTplSpecZoneDtl(specZoneDtls.get(zoneRow));	
+						SpecZoneLocReqDTO reqDTO = new SpecZoneLocReqDTO();
+						reqDTO.setDocType(specZone.getDocType());
+						reqDTO.setDocId(specZone.getDocId());
+						
+						// Get zone details list from db.
+						SpecZoneLocResDTO resDTO = specZoneLocSO.retrieveZoneDtlsByDocIdNType(reqDTO);
+						
+						specZoneDtls = resDTO.getZonesList();
+					} finally {
+						specZoneLocSO = null;
+					}	
+				}
+				
+				for (int zoneRow = 0; zoneRow < (specZoneDtls == null || specZoneDtls.size() == 0 ? 1 : specZoneDtls.size()); zoneRow++) {
+					if (isPriceTypeTier(tplSpecQuestion.getClPriceTypeCode().getParameterCode())) {		
+						for (TplSpecTierQty specTierQty : tplSpecQuestion.getTplSpecTierQties()) {
+							TplSpecEstimation specEstimation = new TplSpecEstimation();
+							
+							if (specZoneDtls != null && specZoneDtls.size() > 0) {
+								specEstimation.setTplSpecZoneDtl(specZoneDtls.get(zoneRow));	
+							}
+							specEstimation.setTplSpecQuestion(tplSpecQuestion);
+							specEstimation.setTplSpecTierQty(specTierQty);
+							specEstimations.add(specEstimation);
 						}
-						specEstimation.setTplSpecQuestion(tplSpecQuestion);
-						specEstimation.setTplSpecTierQty(specTierQty);
-						specEstimations.add(specEstimation);
-					}
-				} else {
-					if (specZoneDtls != null && specZoneDtls.size() > 0) {
-						TplSpecEstimation specEstimation = new TplSpecEstimation();
-						specEstimation.setTplSpecQuestion(tplSpecQuestion);
-						specEstimation.setTplSpecZoneDtl(specZoneDtls.get(zoneRow));
-						
-						specEstimations.add(specEstimation);
+					} else {
+						if (specZoneDtls != null && specZoneDtls.size() > 0) {
+							TplSpecEstimation specEstimation = new TplSpecEstimation();
+							specEstimation.setTplSpecQuestion(tplSpecQuestion);
+							specEstimation.setTplSpecZoneDtl(specZoneDtls.get(zoneRow));
+							
+							specEstimations.add(specEstimation);
+						}
 					}
 				}
+				tplSpecQuestion.setTplSpecEstimations(specEstimations);
 			}
-			tplSpecQuestion.setTplSpecEstimations(specEstimations);
 		}
 	}
 	
@@ -791,9 +793,7 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 	
 	private boolean isPriceTypeStandard(String priceType) {
 		return ParameterConst.PRICE_TYPE_STANDARD.equals(priceType)
-				|| ParameterConst.PRICE_TYPE_PROMOTION.equals(priceType)
-				|| ParameterConst.PRICE_TYPE_ZONAL_STANDARD.equals(priceType)
-				|| ParameterConst.PRICE_TYPE_ZONAL_PROMOTION.equals(priceType);
+				|| ParameterConst.PRICE_TYPE_PROMOTION.equals(priceType);
 	}
 	
 	private boolean isPriceTypeTier(String priceType) {

@@ -544,9 +544,6 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 				quote.setJustificationType(null);
 			}
 			
-			// zone details
-			quote.setQuoteZone(getQuoteZones(getManagedBean().getZoneTrees()));
-			
 			//by location
 			if(!getManagedBean().getLocationTrees().isEmpty()){
 				quote.setLocationStateCriterias(getLocationStateCriterias(getManagedBean().getLocationTrees(), quote));	
@@ -736,11 +733,6 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 
 			} else{
 				quote.setJustificationType(null);
-			}
-			
-			// zone details
-			if(!getManagedBean().getZoneTrees().isEmpty()){
-				quote.setQuoteZone(getQuoteZones(getManagedBean().getZoneTrees()));
 			}
 			
 			//by location
@@ -1168,6 +1160,11 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 		}
 		this.getManagedBean().setZoneIndex(-1);
 		
+		// zone details
+		if(!getManagedBean().getZoneTrees().isEmpty()){
+			getManagedBean().getScQuote().setQuoteZone(getQuoteZones(getManagedBean().getZoneTrees()));
+		}
+		
 		// hide zone location popup
 		RequestContext.getCurrentInstance().execute("ZoneLocation.hide();");
 	}
@@ -1472,6 +1469,11 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 		List<TreeNode> rootTrees = getManagedBean().getZoneTrees();
 		
 		LocationSingleton.getInstance().deleteTreeNodes(rootTrees);
+		
+		// zone details
+		if(!getManagedBean().getZoneTrees().isEmpty()){
+			getManagedBean().getScQuote().setQuoteZone(getQuoteZones(getManagedBean().getZoneTrees()));
+		}
 	}
 	
 	
