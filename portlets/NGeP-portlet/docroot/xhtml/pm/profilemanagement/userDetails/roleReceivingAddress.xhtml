@@ -46,9 +46,12 @@
 	      	<!-- Receiving Address -->
 		  	<p:tab title="#{lbl['lbl.pm.profiles.authorisation.receiving.address']}">	
 				<p:dataTable id="dtReceiveAddr" value="#{profileManagementBackingBean.managedBean.selectedReceivingAddrTypes}"
+						selection="#{profileManagementBackingBean.managedBean.deleteReceivingAddrTypes}"
 						emptyMessage="#{lbl['lbl.pp.no.record.found']}"  var="receivAddrType"
-						rowIndexVar="index" rowKey="#{dtReceiveAddr}">	
-					
+						rowIndexVar="index" rowKey="#{receivAddrType}">	     
+					<p:ajax event="toggleSelect" update="@this" process="@this" />
+					<p:ajax event="rowSelectCheckbox" update="@this" />  
+					<p:column selectionMode="multiple" style="width:2%" disabledSelection="#{!receivAddrType.brandNew}" />
 				    <p:column headerText="#{lbl['lbl.pm.profiles.authorisation.addname']}" > 
 				    	#{profileManagementBackingBean.getFullAddress(receivAddrType.pmAddress)}
 			        </p:column>

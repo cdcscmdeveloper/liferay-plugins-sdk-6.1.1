@@ -54,7 +54,8 @@
 	          	</p:selectOneMenu>         
 	        </p:column>        
 	        <p:column headerText="#{lbl['lbl.pm.action']}">  
-      		   <p:commandLink action="#{profileManagementBackingBean.deleteOrgUnit(orgUnit)}" >
+      		    <p:commandLink action="#{profileManagementBackingBean.deleteOrgUnit(orgUnit)}" disabled="#{!orgUnit.brandNew}"
+      		    	update="dtOrgUnit">
 					<p:graphicImage value="/resources/ep/images/design/delete.png"/>
 				</p:commandLink>
 	        </p:column>  
