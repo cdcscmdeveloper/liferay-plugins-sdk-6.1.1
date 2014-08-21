@@ -1715,6 +1715,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 	
 	public void addCloneItemSpec(String productOrService) throws IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchMethodException {
 		log.info("addCloneItemSpec");
+		TplSpecMaster cloneSpecMaster = null;
 		TplSpecMaster prodSpecMaster =null;
 		TplSpecMaster serviceSpecMaster = null;
 		ITemplateSpecSO templateSpecSO = (ITemplateSpecSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.COMMON_COMPONENT,ITemplateSpecSO.class);
@@ -1722,12 +1723,19 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 		TemplateSpecBean productTplSpecBean = getManagedBean().getProductTemplateSpecBean();
 		TemplateSpecBean serviceTplSpecBean = getManagedBean().getServiceTemplateSpecBean();
 		try {
-			if(getManagedBean().getSelectedQuote() != null) {
-				reqDTO.setSpecMaster(getManagedBean().getSelectedQuote().getQuoteDocs().get(0).getSpecMaster());
+			if(getManagedBean().getSelectedQuote() != null && getManagedBean().getSelectedQuote().getQuoteDocs().size()>0) {
+				List<ScQuoteDoc>	quoteDocs = getManagedBean().getSelectedQuote().getQuoteDocs();
+				for (ScQuoteDoc quoteDoc : quoteDocs) {
+					// adding selected product or service question only
+					if(quoteDoc.getSpecMaster().getItemTypeCode().getParameterCode().equals(productOrService)){
+						reqDTO.setSpecMaster(quoteDoc.getSpecMaster());
+					} 
+				}
+				
 				reqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);
 				TemplateSpecResDTO resDTO = templateSpecSO.getTemplateMaster(reqDTO);
-				TplSpecMaster specMaster = resDTO.getSpecMaster();
-
+				cloneSpecMaster = resDTO.getSpecMaster();
+				
 				// product Tpl Spec master
 				if(productOrService.equals(ParameterConst.SQ_ITEM_LIST_PRODUCT)){
 					List<TplSpecQuestion> questions = new ArrayList<TplSpecQuestion>();
@@ -1740,7 +1748,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 						
 					}else{ 
 						// clone tpl spec master
-						prodSpecMaster = (TplSpecMaster) BeanUtils.cloneBean(specMaster);
+						prodSpecMaster = (TplSpecMaster) BeanUtils.cloneBean(cloneSpecMaster);
 						prodSpecMaster.setSpecMasterId(null);
 					}
 
@@ -1749,7 +1757,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 						questions.addAll(prodQuestions);
 					}
 
-					cloneQuestions  = cloneTplSpecQuetions(specMaster ,prodSpecMaster);
+					cloneQuestions  = cloneTplSpecQuetions(cloneSpecMaster ,prodSpecMaster);
 					if(cloneQuestions.size() >0){
 						questions.addAll(cloneQuestions);
 					}
@@ -1764,14 +1772,14 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 					List<TplSpecQuestion> questions = new ArrayList<TplSpecQuestion>();
 					List<TplSpecQuestion>  cloneQuestions  = new ArrayList<TplSpecQuestion>();
 
-					// non clone spec master
+					// non clone spec master - already selected list
 					if(serviceTplSpecBean.getSpecMaster() !=null && serviceTplSpecBean.getSpecMaster().getTplSpecQuestions() !=null){
 						serviceSpecMaster = serviceTplSpecBean.getSpecMaster();
 						getManagedBean().setServiceQuestions(serviceSpecMaster.getTplSpecQuestions());
 
 					}else{ 
 						// clone tpl spec master
-						serviceSpecMaster = (TplSpecMaster) BeanUtils.cloneBean(specMaster);
+						serviceSpecMaster = (TplSpecMaster) BeanUtils.cloneBean(cloneSpecMaster);
 						serviceSpecMaster.setSpecMasterId(null);
 					}
 
@@ -1780,7 +1788,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 						questions.addAll(serviceQuestions);
 					}
 
-					cloneQuestions  = cloneTplSpecQuetions(specMaster ,serviceSpecMaster);
+					cloneQuestions  = cloneTplSpecQuetions(cloneSpecMaster ,serviceSpecMaster);
 					if(cloneQuestions.size() >0){
 						questions.addAll(cloneQuestions);
 					}
