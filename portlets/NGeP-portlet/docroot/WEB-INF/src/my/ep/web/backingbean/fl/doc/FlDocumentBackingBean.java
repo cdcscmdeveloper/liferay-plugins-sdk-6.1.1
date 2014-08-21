@@ -405,6 +405,8 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 				flBB.initializeRemarkAndAttachement(new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 				flBB.getManagedBean().setDocMaintainRemarks(true);
 				getSumOrderedQty(flOrderBB.getManagedBean().getFlRequest());
+			} else {
+				flBB.initializeRemarkAndAttachement(new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 			}
 			flOrderBB.getManagedBean().getFulfilmentOrder();
 			navgPage=NAV_TO_MAINTAIN_PO;
@@ -421,6 +423,8 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			flOrderBB.getManagedBean().setFlRequest(resFlDTO.getFlFulfilmentRequest());
 			flOrderBB.getManagedBean().setPmUser(reqDTO.getPmUser());
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE) || buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
+				flBB.initializeRemarkAndAttachement(new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
+			} else {
 				flBB.initializeRemarkAndAttachement(new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 			}	
 			navgPage=NAV_TO_MAINTAIN_CO;
