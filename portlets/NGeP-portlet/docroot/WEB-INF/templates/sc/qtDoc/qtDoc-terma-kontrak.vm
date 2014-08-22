@@ -1,0 +1,46 @@
+<html>
+<head>
+	<style>
+		@page { size: A4 portrait;}
+		@page { @bottom-center { content: element(footer) }}
+				
+		.footer {
+			display: block; text-align: center;
+			position: running(footer);
+		}
+		
+	</style>
+</head>
+<body>
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+        <td>
+            <span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'><u>TERMA KONTRAK</u></span>
+            <br/> <br/>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <span style='font-weight:bold;font-size:18px;font-family: Albertus Medium;'>TAFSIRAN</span>
+            <br/> <br/>
+        </td>
+    </tr>
+    <tr>
+    	<td><p>Tawaran  ini dan apa-apa  kontrak  yang  timbul  daripadanya hendaklah  diertikan  mengikut dan dikawal oleh undang-undang Malaysia, dan Pembekal bersetuju tertakluk hanya kepada bidangkuasa  Mahkamah  Malaysia  sahaja  dalam apa-apa  pertikaian  atau  perselisihan jua pun yang  mungkin  timbul  mengenai  Tawaran  ini atau apa-apa  kontrak yang timbul daripadanya.</p>
+    	</td>
+    </tr>
+    <tr>
+        <td>
+            <span style='font-weight:bold;font-size:18px;font-family: Albertus Medium;'>KONTRAK</span>
+            <br/> <br/>
+        </td>
+    </tr>
+    <tr>
+    	<td>
+    		<p>Semua syarat-syarat yang terkandung di dalam dokumen atau di mana-mana Lampiran yang terdahulu bersama-sama dengan dokumen Tawaran ini adalah merupakan sebahagian daripada kontrak yang akan ditandatangani di antara Kerajaan Malaysia dan Pembekal yang berjaya. Pembekal yang berjaya dikehendaki menadatangani kontrak dengan Kerajaan dan membayar segala gantirugi jika tidak memenuhi syarat-syarat kontrak. Sebarang bantahan kepada syarat-syarat kontrak hendaklah dibuat semasa mengemukakan cadangan tawaran.</p>
+    		<p> Kerajaan  mempunyai hak untuk menamatkan kontrak pada bila-bila masa sekiranya Pembekal yang berjaya gagal memenuhi obligasi mengikut Kontrak.</p>
+    	</td>
+    </tr>
+</table>
+</body>
+</html>

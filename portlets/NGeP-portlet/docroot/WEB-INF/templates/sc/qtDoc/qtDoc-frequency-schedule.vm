@@ -14,8 +14,14 @@
 <body>
 	<table border="0" cellpadding="0" cellspacing="0" width="100%">
 	<tr>
+        <td>
+            <span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'>Fulfilment Schedule</span>
+            <br/> <br/>
+        </td>
+    </tr>
+	<tr>
         <td align="left">
-            Total Frequency : $totalFrequency<br/>
+            Total Fulfilment : $totalFrequency<br/>
         </td>
     </tr>
     <tr align='left'>
