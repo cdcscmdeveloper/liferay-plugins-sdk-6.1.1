@@ -10,6 +10,8 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -2152,6 +2154,13 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			
 			//Tier Pricing
 			int groupPrevious = 0;
+			Collections.sort(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings(), new Comparator<CmTierPricing>(){
+				@Override public int compare(CmTierPricing p1, CmTierPricing p2) {
+		            return Long.compare(p1.getPricingId(),p2.getPricingId());
+		        }
+			}
+			);
+			
 			for (CmTierPricing tierPricing : this.getManagedBean().getSelectedMaintainItem().getCmTierPricings()) {
 				
 				if(tierPricing.getStand_group_id()==null || tierPricing.getStand_group_id()!=groupPrevious)
@@ -2172,6 +2181,13 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			}
 			//Tier Promotion Pricing
 			groupPrevious = 0;
+			Collections.sort(this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings(), new Comparator<CmPromotionTierPricing>(){
+				@Override public int compare(CmPromotionTierPricing p1, CmPromotionTierPricing p2) {
+		            return Long.compare(p1.getPricingId(),p2.getPricingId());
+		        }
+			}
+			);
+			
 			for (CmPromotionTierPricing tierPromotionPricing : this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings()) {
 				
 				if(tierPromotionPricing.getStand_group_id()==null || tierPromotionPricing.getStand_group_id()!=groupPrevious)
@@ -2224,6 +2240,13 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			}
 			//Zonal Tier Pricing
 			groupPrevious = 0;
+			Collections.sort(this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings(), new Comparator<CmZonalTierPricing>(){
+				@Override public int compare(CmZonalTierPricing p1, CmZonalTierPricing p2) {
+		            return Long.compare(p1.getPricingId(),p2.getPricingId());
+		        }
+			}
+			);
+			
 			for (CmZonalTierPricing zonalTier : this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings()) {
 				log.info("zonalTier.getPricingId() = "+zonalTier.getPricingId());
 				
@@ -2251,6 +2274,13 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			}
 			//Zonal Tier Promotion Pricing
 			groupPrevious = 0;
+			Collections.sort(this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings(), new Comparator<CmZonalPromotionTierPricing>(){
+				@Override public int compare(CmZonalPromotionTierPricing p1, CmZonalPromotionTierPricing p2) {
+		            return Long.compare(p1.getPricingId(),p2.getPricingId());
+		        }
+			}
+			);
+			
 			for (CmZonalPromotionTierPricing zonalPromotionTier : this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings()) {
 				
 				if(zonalPromotionTier.getStand_group_id()==null || zonalPromotionTier.getStand_group_id()!=groupPrevious)
@@ -2448,7 +2478,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					CmZonalTierPricing previousObj = null;
 					for (int i = 0; i < dataList.size(); i++) {
 						CmZonalTierPricing tier = dataList.get(i);
-						if (previousObj != null) {
+						if (previousObj != null && tier!=null) {
 							if (previousObj.getToQty() >= tier.getFromQty()) {
 								FacesContext facesContext = FacesContext.getCurrentInstance();
 								facesContext.addMessage(
@@ -2462,17 +2492,19 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 								return "editCatalogItem";
 							}
 						}
-						if (tier.getFromQty() >= tier.getToQty()) {
-							FacesContext facesContext = FacesContext.getCurrentInstance();
-							facesContext.addMessage(
-											null,
-											new FacesMessage(
-													FacesMessage.SEVERITY_ERROR,
-													" Zonal Standard Tier To Qty must be greater than Zonal Standard Tier From Qty",
-													""));
-							this.getManagedBean().setPricingTabIndex(3);
-							this.getManagedBean().setZonalTierPricingIndex(0);
-							return "editCatalogItem";
+						if (previousObj != null && tier!=null) {
+							if (tier.getFromQty() >= tier.getToQty()) {
+								FacesContext facesContext = FacesContext.getCurrentInstance();
+								facesContext.addMessage(
+												null,
+												new FacesMessage(
+														FacesMessage.SEVERITY_ERROR,
+														" Zonal Standard Tier To Qty must be greater than Zonal Standard Tier From Qty",
+														""));
+								this.getManagedBean().setPricingTabIndex(3);
+								this.getManagedBean().setZonalTierPricingIndex(0);
+								return "editCatalogItem";
+							}
 						}
 						previousObj = tier;
 					}
