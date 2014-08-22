@@ -27,6 +27,7 @@
 					style="width: 178px;margin-bottom: 5px;">
 					<f:selectItems
 						value="#{approvalBackingBean.getDropdownValues(ParameterTypeConst.approvalDecisionType)}" />
+			<p:ajax event="change" listener="#{approvalBackingBean.updatePmParameter(requestdetails)}" ></p:ajax>
 				</p:selectOneMenu>
 			</p:column>
 		</p:dataTable>
