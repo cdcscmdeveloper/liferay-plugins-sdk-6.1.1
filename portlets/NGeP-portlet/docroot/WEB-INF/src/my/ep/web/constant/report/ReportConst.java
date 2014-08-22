@@ -336,5 +336,6 @@ public class ReportConst {
 	public static final String RPT_REG_BASIC = "Basic";
 	public static final String RPT_REG_MOF = "MOF";
 	public static final String PLZ_SEL_BOTH_DTS_RPT_SEARCH = "lbl.rpt.search.date.PLZ_SEL_BOTH_DTS_RPT_SEARCH";
+	public static final String NOT_VALID_QOTATION_NO = "lbl.rpt.search.criteria.NOT_VALID_QUOTATION_NO";
 	
 }

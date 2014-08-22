@@ -15,7 +15,7 @@ public class ReportsGenerateBean {
 	private boolean registrationTypeView = false;
 	private boolean fromDateView = false;
 	private boolean toDateView = false;
-	private boolean quotationIdView = false;
+	private boolean quotationNoView = false;
 	private boolean paymentIdView = false;
 	private boolean itemCategoryView = false;
 	private boolean itemNameView = false;
@@ -597,11 +597,11 @@ public class ReportsGenerateBean {
 	public void setItemNameView(boolean itemNameView) {
 		this.itemNameView = itemNameView;
 	}		
-	public boolean isQuotationIdView() {
-		return quotationIdView;
+	public boolean isQuotationNoView() {
+		return quotationNoView;
 	}
-	public void setQuotationIdView(boolean quotationIdView) {
-		this.quotationIdView = quotationIdView;
+	public void setQuotationNoView(boolean quotationNoView) {
+		this.quotationNoView = quotationNoView;
 	}
 	public boolean isPaymentIdView() {
 		return paymentIdView;

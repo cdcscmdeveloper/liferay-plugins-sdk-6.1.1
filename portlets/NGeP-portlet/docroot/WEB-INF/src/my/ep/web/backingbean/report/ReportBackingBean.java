@@ -6,19 +6,28 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+
+import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
+import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
+import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.report.ReportsGenerateBean;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.report.ReportMangedBean;
 import my.ep.web.util.pp.common.CommonMethod;
+
 import org.apache.log4j.Logger;
 /**
  * @Author Jangari Kondal Reddy
@@ -36,7 +45,14 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	ReportsGenerateBean rptGenBean = new ReportsGenerateBean();
 	private List<SelectItem> moduleList;
 	private List<SelectItem> regTypeList;
+	private ScQt scqt;
 	
+	public ScQt getScqt() {
+		return scqt;
+	}
+	public void setScqt(ScQt scqt) {
+		this.scqt = scqt;
+	}
 	public static Logger getLog() {
 		return log;
 	}	
@@ -948,169 +964,169 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	public void criteriaVariablesByReportBySC(){
 		switch (getManagedBean().getReportNameValue()) {
 		 	case ReportConst.SPPPP_PEMATUHAN_OC_RPT_VAL:
-		 		rptGenBean.setQuotationIdView(true);
+		 		rptGenBean.setQuotationNoView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);
 				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SPPPP_PEMATUHAN_OC_RPT_NAME));
 	            break; 
 	        case ReportConst.KPPP1_PEMATUHAN_OC_RPT_VAL:
-	        	//rptGenBean.setQuotationIdView(true);
+	        	//rptGenBean.setQuotationNoView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);
 				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.KPPP1_PEMATUHAN_OC_RPT_NAME));
 	            break;
 	        case ReportConst.PDDW_OC_RPT_VAL:
-	        	rptGenBean.setQuotationIdView(true);
+	        	rptGenBean.setQuotationNoView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);
 				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.PDDW_OC_RPT_NAME));
 	            break;
 	        case ReportConst.SPPSAP2_TEC_RPT_VAL:
-	        	rptGenBean.setQuotationIdView(true);
+	        	rptGenBean.setQuotationNoView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);
 				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SPPSAP2_TEC_RPT_NAME));
 	            break;
 	        case ReportConst.KPSAP2_PEMARKAHAN_TEC_RPT_VAL:
-	        	rptGenBean.setQuotationIdView(true);
+	        	rptGenBean.setQuotationNoView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);
 				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.KPSAP2_PEMARKAHAN_TEC_RPT_NAME));
 	            break;
 	        case ReportConst.AKPT_TEC_RPT_VAL:
-	        	rptGenBean.setQuotationIdView(true);
+	        	rptGenBean.setQuotationNoView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);
 				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.AKPT_TEC_RPT_NAME));	
 	            break;
 	        case ReportConst.TECSPEC_TEC_RPT_VAL:
-	        	rptGenBean.setQuotationIdView(true);
+	        	rptGenBean.setQuotationNoView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);
 				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.TECSPEC_TEC_RPT_NAME));
 	            break;
 	        case ReportConst.OVRL_TECRES_WITH_OUT_WEI_TEC_RPT_VAL:
-	        	rptGenBean.setQuotationIdView(true);
+	        	rptGenBean.setQuotationNoView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);
 				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.OVRL_TECRES_WITH_OUT_WEI_TEC_RPT_NAME));
 	            break;
 	        case ReportConst.OVRL_TECRES_WITH_WEI_TEC_RPT_VAL:
-	        	rptGenBean.setQuotationIdView(true);
+	        	rptGenBean.setQuotationNoView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);
 				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.OVRL_TECRES_WITH_WEI_TEC_RPT_NAME));
 	            break;
 	        case ReportConst.SPPSAP2_FEC_RPT_VAL:
-	        	rptGenBean.setQuotationIdView(true);
+	        	rptGenBean.setQuotationNoView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);
 				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SPPSAP2_FEC_RPT_NAME));
 	            break;
 	        case ReportConst.KPSAP2_PEMARKAHAN_FEC_RPT_VAL:
-	        	rptGenBean.setQuotationIdView(true);
+	        	rptGenBean.setQuotationNoView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);
 				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.KPSAP2_PEMARKAHAN_FEC_RPT_NAME));	
 	            break;
 	        case ReportConst.AKPT_FEC_RPT_VAL:
-	        	rptGenBean.setQuotationIdView(true);
+	        	rptGenBean.setQuotationNoView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);
 				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.AKPT_FEC_RPT_NAME));
 	            break;
 	        case ReportConst.HARGA_TAWARAN_FEC_RPT_VAL:
-	        	rptGenBean.setQuotationIdView(true);
+	        	rptGenBean.setQuotationNoView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);
 				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.HARGA_TAWARAN_FEC_RPT_NAME));
 	            break;
 	        case ReportConst.OVRL_FINRS_FEC_RPT_VAL:
-	        	rptGenBean.setQuotationIdView(true);
+	        	rptGenBean.setQuotationNoView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);
 				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.OVRL_FINRS_FEC_RPT_NAME));
 	            break;
 	        case ReportConst.SPPP1_PEMATUHAN_EC_RPT_VAL:
-	        	rptGenBean.setQuotationIdView(true);
+	        	rptGenBean.setQuotationNoView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);
 				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SPPP1_PEMATUHAN_EC_RPT_NAME));
 	            break;
 	        case ReportConst.KPP1_PEMATUHAN_EC_RPT_VAL:
-	        	//rptGenBean.setQuotationIdView(true);
+	        	//rptGenBean.setQuotationNoView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);
 				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.KPP1_PEMATUHAN_EC_RPT_NAME));		
 	            break;
 	        case ReportConst.SPPSAP2_EC_RPT_VAL:
-	        	rptGenBean.setQuotationIdView(true);
+	        	rptGenBean.setQuotationNoView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);
 				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SPPSAP2_EC_RPT_NAME));
 	            break;
 	        case ReportConst.KPSAP2_PEMARKAHAN_EC_RPT_VAL:
-	        	rptGenBean.setQuotationIdView(true);
+	        	rptGenBean.setQuotationNoView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);
 				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.KPSAP2_PEMARKAHAN_EC_RPT_NAME));
 	            break;
 	        case ReportConst.AKPTPH_EC_RPT_VAL:
-	        	rptGenBean.setQuotationIdView(true);
+	        	rptGenBean.setQuotationNoView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);
 				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.AKPTPH_EC_RPT_NAME));	
 	            break;
 	        case ReportConst.TECSPEC_EC_RPT_VAL:
-	        	rptGenBean.setQuotationIdView(true);
+	        	rptGenBean.setQuotationNoView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);
 				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.TECSPEC_EC_RPT_NAME));
 	            break;
 	        case ReportConst.OVRL_TECRS_WITH_WEI_EC_RPT_VAL:
-	        	rptGenBean.setQuotationIdView(true);
+	        	rptGenBean.setQuotationNoView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);
 				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.OVRL_TECRS_WITH_WEI_EC_RPT_NAME));
 	            break;
 	        case ReportConst.OVRL_TECRS_WITH_OUT_WEI_EC_RPT_VAL:
-	        	rptGenBean.setQuotationIdView(true);
+	        	rptGenBean.setQuotationNoView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);
 				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.OVRL_TECRS_WITH_OUT_WEI_EC_RPT_NAME));
 	            break;
 	        case ReportConst.OVRL_FINRS_EC_RPT_VAL:
-	        	rptGenBean.setQuotationIdView(true);
+	        	rptGenBean.setQuotationNoView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);
 				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.OVRL_FINRS_EC_RPT_NAME));			
 	            break;	        	 
 	        case ReportConst.COMP_EXP_GOVT_AGEN_NO_OF_CONTR_RPT_VAL:
-	        	rptGenBean.setQuotationIdView(true);
+	        	rptGenBean.setQuotationNoView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);
 				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.COMP_EXP_GOVT_AGEN_NO_OF_CONTR_RPT_NAME));
 	            break;
 	        case ReportConst.COMP_EXP_NON_GOVT_AGEN_NO_OF_CONTR_RPT_VAL:
-	        	rptGenBean.setQuotationIdView(true);
+	        	rptGenBean.setQuotationNoView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);
 				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.COMP_EXP_NON_GOVT_AGEN_NO_OF_CONTR_RPT_NAME));
 	            break;
 	        case ReportConst.COMP_EXP_GOVT_AGEN_CONTR_RPT_VAL:
-	        	rptGenBean.setQuotationIdView(true);
+	        	rptGenBean.setQuotationNoView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);
 				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.COMP_EXP_GOVT_AGEN_CONTR_RPT_NAME));
 	            break;
 	        case ReportConst.COMP_EXP_NON_GOVT_AGEN_CONTR_RPT_VAL:
-	        	rptGenBean.setQuotationIdView(true);
+	        	rptGenBean.setQuotationNoView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);
 				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.COMP_EXP_NON_GOVT_AGEN_CONTR_RPT_NAME));
 	            break;
 	        case ReportConst.FINANCE_POSITION_RPT_VAL:
-	        	rptGenBean.setQuotationIdView(true);
+	        	rptGenBean.setQuotationNoView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);
 				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.FINANCE_POSITION_RPT_NAME));
@@ -2193,11 +2209,10 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			throw new EpException(CommonMethod.getMessageCommon(ReportConst.PLZ_SEL_ONE_RPT_CRITERIA_SEARCH));
 		}
 	}
-	public void checkVariableValueExist(){
-		
+	public void checkVariableValueExist(){		
 		getManagedBean().setSelfView(true);
 		getManagedBean().setNotSelfView(false);
-		if(((getManagedBean().getQuotationId()!=null)&&(getManagedBean().getQuotationId()!=ReportConst.EMPTY_VAL))||((getManagedBean().getItemName()!=null)&&(getManagedBean().getItemName()!=ReportConst.EMPTY_VAL))||((getManagedBean().getItemType()!=null)&&(getManagedBean().getItemType()!=ReportConst.EMPTY_VAL))||((getManagedBean().getItemStatus()!=null)&&(getManagedBean().getItemStatus()!=ReportConst.EMPTY_VAL))||((getManagedBean().getUnspscCode()!=null)&&(getManagedBean().getUnspscCode()!=ReportConst.EMPTY_VAL))||((getManagedBean().getUnspscTitle()!=null)&&(getManagedBean().getUnspscTitle()!=ReportConst.EMPTY_VAL))||((getManagedBean().getExtentionType()!=null)&&(getManagedBean().getExtentionType()!=ReportConst.EMPTY_VAL))||((getManagedBean().getExtentionBrand()!=null)&&(getManagedBean().getExtentionBrand()!=ReportConst.EMPTY_VAL))||((getManagedBean().getExtentionMeasurment()!=null)&&(getManagedBean().getExtentionMeasurment()!=ReportConst.EMPTY_VAL))||((getManagedBean().getExtentionColour()!=null)&&(getManagedBean().getExtentionColour()!=ReportConst.EMPTY_VAL))||((getManagedBean().getCompanyName()!=null)&&(getManagedBean().getCompanyName()!=ReportConst.EMPTY_VAL))||((getManagedBean().getRegistrationType()!=null)&&(getManagedBean().getRegistrationType()!=ReportConst.EMPTY_VAL))||((getManagedBean().getItemCategory()!=null)&&(getManagedBean().getItemCategory()!=ReportConst.EMPTY_VAL))
+		if(((getManagedBean().getQuotationNo()!=null)&&(getManagedBean().getQuotationNo()!=ReportConst.EMPTY_VAL))||((getManagedBean().getItemName()!=null)&&(getManagedBean().getItemName()!=ReportConst.EMPTY_VAL))||((getManagedBean().getItemType()!=null)&&(getManagedBean().getItemType()!=ReportConst.EMPTY_VAL))||((getManagedBean().getItemStatus()!=null)&&(getManagedBean().getItemStatus()!=ReportConst.EMPTY_VAL))||((getManagedBean().getUnspscCode()!=null)&&(getManagedBean().getUnspscCode()!=ReportConst.EMPTY_VAL))||((getManagedBean().getUnspscTitle()!=null)&&(getManagedBean().getUnspscTitle()!=ReportConst.EMPTY_VAL))||((getManagedBean().getExtentionType()!=null)&&(getManagedBean().getExtentionType()!=ReportConst.EMPTY_VAL))||((getManagedBean().getExtentionBrand()!=null)&&(getManagedBean().getExtentionBrand()!=ReportConst.EMPTY_VAL))||((getManagedBean().getExtentionMeasurment()!=null)&&(getManagedBean().getExtentionMeasurment()!=ReportConst.EMPTY_VAL))||((getManagedBean().getExtentionColour()!=null)&&(getManagedBean().getExtentionColour()!=ReportConst.EMPTY_VAL))||((getManagedBean().getCompanyName()!=null)&&(getManagedBean().getCompanyName()!=ReportConst.EMPTY_VAL))||((getManagedBean().getRegistrationType()!=null)&&(getManagedBean().getRegistrationType()!=ReportConst.EMPTY_VAL))||((getManagedBean().getItemCategory()!=null)&&(getManagedBean().getItemCategory()!=ReportConst.EMPTY_VAL))
 				||((getManagedBean().getProofIdentity()!=null)&&(getManagedBean().getProofIdentity()!=ReportConst.EMPTY_VAL))||((getManagedBean().getEpNumber()!=null)&&(getManagedBean().getEpNumber()!=ReportConst.EMPTY_VAL))||((getManagedBean().getBusinessRegNo()!=null)&&(getManagedBean().getBusinessRegNo()!=ReportConst.EMPTY_VAL))||((getManagedBean().getIcNumber()!=null)&&(getManagedBean().getIcNumber()!=ReportConst.EMPTY_VAL))||((getManagedBean().getMofNumber()!=null)&&(getManagedBean().getMofNumber()!=ReportConst.EMPTY_VAL))||((getManagedBean().getPtj()!=null)&&(getManagedBean().getPtj()!=ReportConst.EMPTY_VAL))||((getManagedBean().getContractNo()!=null)&&(getManagedBean().getContractNo()!=ReportConst.EMPTY_VAL))||((getManagedBean().getSst()!=null)&&(getManagedBean().getSst()!=ReportConst.EMPTY_VAL))||((getManagedBean().getJabatan()!=null)&&(getManagedBean().getJabatan()!=ReportConst.EMPTY_VAL))||((getManagedBean().getMinistry()!=null)&&(getManagedBean().getMinistry()!=ReportConst.EMPTY_VAL))||((getManagedBean().getSupplier()!=null)&&(getManagedBean().getSupplier()!=ReportConst.EMPTY_VAL))||((getManagedBean().getStatus()!=null)&&(getManagedBean().getStatus()!=ReportConst.EMPTY_VAL))||((getManagedBean().getDuration()!=null)&&(getManagedBean().getDuration()!=ReportConst.EMPTY_VAL))||((getManagedBean().getRecievingOfficer()!=null)&&(getManagedBean().getRecievingOfficer()!=ReportConst.EMPTY_VAL))
 				||((getManagedBean().getDeliveryAddress()!=null)&&(getManagedBean().getDeliveryAddress()!=ReportConst.EMPTY_VAL))||((getManagedBean().getFlRecNoteNo()!=null)&&(getManagedBean().getFlRecNoteNo()!=ReportConst.EMPTY_VAL))||((getManagedBean().getContractType()!=null)&&(getManagedBean().getContractType()!=ReportConst.EMPTY_VAL))||((getManagedBean().getRequisitioner()!=null)&&(getManagedBean().getRequisitioner()!=ReportConst.EMPTY_VAL))||((getManagedBean().getMtoContract()!=null)&&(getManagedBean().getMtoContract()!=ReportConst.EMPTY_VAL))||((getManagedBean().getInvoiceNo()!=null)&&(getManagedBean().getInvoiceNo()!=ReportConst.EMPTY_VAL))||((getManagedBean().getDeductionType()!=null)&&(getManagedBean().getDeductionType()!=ReportConst.EMPTY_VAL))||((getManagedBean().getCrNo()!=null)&&(getManagedBean().getCrNo()!=ReportConst.EMPTY_VAL))||((getManagedBean().getApproverName()!=null)&&(getManagedBean().getApproverName()!=ReportConst.EMPTY_VAL))||((getManagedBean().getDocumentType()!=null)&&(getManagedBean().getDocumentType()!=ReportConst.EMPTY_VAL))||((getManagedBean().getCriteria()!=null)&&(getManagedBean().getCriteria()!=ReportConst.EMPTY_VAL))||((getManagedBean().getScoring()!=null)&&(getManagedBean().getScoring()!=ReportConst.EMPTY_VAL))||((getManagedBean().getPkpNo()!=null)&&(getManagedBean().getPkpNo()!=ReportConst.EMPTY_VAL))||((getManagedBean().getDeliveryOrderNo()!=null)&&(getManagedBean().getDeliveryOrderNo()!=ReportConst.EMPTY_VAL))
 				||((getManagedBean().getItemCode()!=null)&&(getManagedBean().getItemCode()!=ReportConst.EMPTY_VAL))||((getManagedBean().getPoAmount()!=null)&&(getManagedBean().getPoAmount()!=ReportConst.EMPTY_VAL))||((getManagedBean().getPrNo()!=null)&&(getManagedBean().getPrNo()!=ReportConst.EMPTY_VAL))||((getManagedBean().getPmo()!=null)&&(getManagedBean().getPmo()!=ReportConst.EMPTY_VAL))||((getManagedBean().getItemName()!=null)&&(getManagedBean().getItemName()!=ReportConst.EMPTY_VAL))||((getManagedBean().getItemType()!=null)&&(getManagedBean().getItemType()!=ReportConst.EMPTY_VAL))||((getManagedBean().getItemStatus()!=null)&&(getManagedBean().getItemStatus()!=ReportConst.EMPTY_VAL))||((getManagedBean().getUnspscCode()!=null)&&(getManagedBean().getUnspscCode()!=ReportConst.EMPTY_VAL))||((getManagedBean().getUnspscTitle()!=null)&&(getManagedBean().getUnspscTitle()!=ReportConst.EMPTY_VAL))||((getManagedBean().getExtentionCode()!=null)&&(getManagedBean().getExtentionCode()!=ReportConst.EMPTY_VAL))||((getManagedBean().getCompanyName()!=null)&&(getManagedBean().getCompanyName()!=ReportConst.EMPTY_VAL))||((getManagedBean().getRegistrationType()!=null)&&(getManagedBean().getRegistrationType()!=ReportConst.EMPTY_VAL))||((getManagedBean().getItemCategory()!=null)&&(getManagedBean().getItemCategory()!=ReportConst.EMPTY_VAL))||((getManagedBean().getProofIdentity()!=null)&&(getManagedBean().getProofIdentity()!=ReportConst.EMPTY_VAL))||((getManagedBean().getFromDate()!=null)&&(getManagedBean().getToDate()!=null))){
@@ -2212,6 +2227,36 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			getManagedBean().setNotSelfView(false);
 			getManagedBean().setSelfView(true);
 		}		
+	}
+	/*
+	 *validate quotNo 
+	 */
+	public void quotationNumberValidation() {
+		if((getManagedBean().getQuotationNo()!=null)&&(getManagedBean().getQuotationNo()!=ReportConst.EMPTY_VAL)){
+			getQuotationNumber();
+		}
+		checkVariableValueExist();
+	}
+	/*
+	 *retrieve qtid based on qtno 
+	 */
+	public void getQuotationNumber() {
+		QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
+		log.info("QtNo="+getManagedBean().getQuotationNo()); 
+		tenderReqDTO.setQtTndrNo(getManagedBean().getQuotationNo());
+		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						IQTDetailSO.class);
+		QuationTenderResDTO resDTO = detailSO
+				.retriveQtByQtNumber(tenderReqDTO);
+		ScQt scqt = resDTO.getQtDetail();	
+		log.info("QtId="+scqt.getQtId());
+		if(scqt.getQtId()==null){
+			getManagedBean().setQuotationNo(null);
+			throw new EpException(CommonMethod.getMessageCommon(ReportConst.NOT_VALID_QOTATION_NO));
+		}else if(scqt.getQtId()!=null){
+			getManagedBean().setQuotationId(scqt.getQtId().toString());
+		}
 	}
 	/*
 	 *Clear report criteria 
@@ -2255,6 +2300,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		getManagedBean().setFromDate(null);
 		getManagedBean().setToDate(null);
 		getManagedBean().setQuotationId(null);
+		getManagedBean().setQuotationNo(null);
 		getManagedBean().setPaymentId(null);
 		getManagedBean().setItemCategory(null);
 		getManagedBean().setItemName(null);

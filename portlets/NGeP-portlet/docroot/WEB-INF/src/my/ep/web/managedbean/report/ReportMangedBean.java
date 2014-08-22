@@ -75,6 +75,8 @@ public class ReportMangedBean extends BaseManagedBean{
 	private Date toDate;
 	/*SS start*/
 	private String quotationId;
+	private String quotationNo;
+	
 	private String paymentId;
 	/*SS end*/
 	/*CM start*/
@@ -127,6 +129,12 @@ public class ReportMangedBean extends BaseManagedBean{
 	private String pmo;
 /*FL end*/
 	
+	public String getQuotationNo() {
+		return quotationNo;
+	}
+	public void setQuotationNo(String quotationNo) {
+		this.quotationNo = quotationNo;
+	}
 	public String getMofNumber() {
 		return mofNumber;
 	}
