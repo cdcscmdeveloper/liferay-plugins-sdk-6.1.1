@@ -2277,7 +2277,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				}
 				requestNoteVOList.add(marketSummaryAndPIBean);
 			}
-		//sortMarketSummaryList(requestNoteVOList);
+		sortMarketSummaryList(requestNoteVOList);
 		context.put("requestNoteVOList", requestNoteVOList);		
     	DocumentGenerator.getInstance().generatePdfFromVelocity(
     			"/sc/directPurchase/pi-report.vm", 
