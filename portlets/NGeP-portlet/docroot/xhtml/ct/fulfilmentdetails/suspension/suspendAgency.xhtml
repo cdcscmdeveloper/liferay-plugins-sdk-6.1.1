@@ -54,7 +54,8 @@
 			  <p:selectOneMenu value="#{data.recordStatusFlg}" style="width:85px;">
 			    <f:selectItem itemValue="0" itemLabel="Inactive" />
 				<f:selectItem itemValue="1" itemLabel="Active" />
-				<p:ajax event="change" process="@form" update=":form:agencyDetailsId" />
+				<p:ajax event="change" process="@this" update=":form:agencyDetailsId"
+					listener="#{suspensionBackingBean.setSuspensionAgencyStatusValue(data)}" />
 			   </p:selectOneMenu>	
 	     </p:column> 			
 	   </p:dataTable>

@@ -10,8 +10,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
-import java.text.Format;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -19,7 +17,6 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.model.SelectItem;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -33,7 +30,6 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
 import my.ep.constant.pm.ParameterTypeConst;
-import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
 import my.ep.exception.EpException;
@@ -124,27 +120,7 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 			ctReqDTO.setDocType(ContractConst.DOC_TYPE_CONTRACT_SUSPEND_ACTIVE);
 			ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
 			this.getManagedBean().setContractVer(resDTO.getCtContractVer());
-			this.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
-			
-			if(this.getManagedBean().getContractVer().getCtContractItems().size() > 0){
-				 for(CtContractItem ctContractItem : this.getManagedBean().getContractVer().getCtContractItems()){
-					 if(ctContractItem.isRecordStatus()){
-						 ctContractItem.setRecordStatusFlg(1);
-					 } else{
-						 ctContractItem.setRecordStatusFlg(0);
-					 }
-				 }
-			}
-			
-			if(this.getManagedBean().getContractVer().getCtAgencies().size() > 0){
-				for(CtAgency ctAgency : this.getManagedBean().getContractVer().getCtAgencies()){
-					 if(ctAgency.isRecordStatus())
-						 ctAgency.setRecordStatusFlg(1);
-					 else
-						 ctAgency.setRecordStatusFlg(0);
-				   }
-			 }
-			
+			this.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());			
 			this.getManagedBean().setRemarkList(resDTO.getCtRemarks());
 			this.getManagedBean().setAttachmentList(resDTO.getCtAttachments());
 			getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, 
@@ -164,32 +140,24 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 			return CONTRACT_MAINT_PAGE;
 	 }
 	 
-	 public void setSuspensionStatusValue(CtContractItem item){
-		 
-		 for(CtContractItem ctitems :this.getManagedBean().getContractVer().getCtContractItems())
-		 if(ctitems.equals(item)){
-			 if(item.getRecordStatusFlg() == 0){
-			   ctitems.setRecordStatus(false);
-		    }else{
-		    	ctitems.setRecordStatus(true);
-		    	item.setRecordStatusFlg(1);
-		    	ctitems.setEffDate(this.getManagedBean().getContractVer().getCtContractValue().getEffDate());
-		    	ctitems.setExpDate(this.getManagedBean().getContractVer().getCtContractValue().getEffDate());
-		    }
+	 public void setSuspensionStatusValue(CtContractItem item) {		 
+		 for(CtContractItem ctItem :this.getManagedBean().getContractVer().getCtContractItems()) {
+			 if(ctItem.equals(item)) {				 
+				 ctItem.setEffDate(this.getManagedBean().getContractVer().getCtContractValue().getEffDate());
+				 ctItem.setExpDate(this.getManagedBean().getContractVer().getCtContractValue().getExpDate());
+			 }
 		 }
 	 }
 	 
-    public void setSuspensionAgencyStatusValue(CtContractItem agency){
-		 
-		 for(CtAgency ctagency :this.getManagedBean().getContractVer().getCtAgencies()){
-		 if(ctagency.equals(agency)){
-			 if(ctagency.getRecordStatusFlg() == 1){
-				 ctagency.setEffDate(this.getManagedBean().getContractVer().getCtContractValue().getEffDate());
-				 ctagency.setExpDate(this.getManagedBean().getContractVer().getCtContractValue().getEffDate());
-		    }
-		 }
-	   }  
-    }
+	 public void setSuspensionAgencyStatusValue(CtAgency agency){		 
+		 for(CtAgency ctAgency :this.getManagedBean().getContractVer().getCtAgencies()) {
+			 if(ctAgency.equals(agency)) {
+				 ctAgency.setEffDate(this.getManagedBean().getContractVer().getCtContractValue().getEffDate());
+				 ctAgency.setExpDate(this.getManagedBean().getContractVer().getCtContractValue().getExpDate());
+			 }
+		 }  
+	 }
+	 
 	 public String saveContractSuspension(String action){
 		  
 		 IContractSO contractSO = null;
@@ -255,7 +223,7 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 		 if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 			 CtRemark remark = getManagedBean().getRemarkList().get(0);
 			 if(remark.getRemark().equalsIgnoreCase(null) || remark.getRemark().equalsIgnoreCase("")){
-				 throw new EpException(MessageConst.INFO_100022, new String[]{"Remarks"});
+				 throw new EpException(MessageConst.ERROR_100022, new String[]{"Remarks"});
 			 }
 	      }
 	 }
@@ -310,29 +278,6 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 				 }
 		 }
 	}
-
-	 
-	 public String convertTime(Date time){ 
-	        String str ="";
-	    	Format format = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT); 
-	        if(time == null)
-	        	return str;
-	        return format.format(time); 
-	    } 
-	 
-	 public SelectItem[] getItemStatusDropdown() {
-			
-			SelectItem[] items = null;     
-			try{
-			    items = new SelectItem[2];
-			    items[0] = new SelectItem(0, "Inactive");
-			    items[1] = new SelectItem(1, "Active");  
-			 }catch (Exception e) {
-				e.printStackTrace();
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-			 }
-		    return items;
-		}
 		
 	private String getUserRole() {
 		if (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value()))
