@@ -47,7 +47,7 @@ public class UserProfileBackingBean extends BaseBackingBean<UserProfileManagedBe
 		logger.info("loadUserProfile");
 		try {
 			//load user
-			PmUser pmUser = PmCommonUtil.retrieveUserById(id);
+			PmUser pmUser = PmCommonUtil.retrieveUserById(id, false);
 			this.getManagedBean().setSelectedUser(pmUser);
 			if (pmUser!=null && pmUser.getPmAddressTypes() != null) {
 				populateUserAddress(pmUser);
