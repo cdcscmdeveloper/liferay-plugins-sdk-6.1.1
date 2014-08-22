@@ -118,6 +118,20 @@
 			<p:message id="answerComplianceMsg" for="answerCompliance" display="icon" rendered="#{isAnswerTypeDropdown and question.clAnswerRequired}" />
 		</h:panelGroup>
 	</p:column>
+	<p:column style="width:140px;" rendered="#{!isItemTypeService and isDeliveryTermReq}">
+		<f:facet name="header">
+			<h:outputText value="#{lbl['lbl.tpl.spec.content.delivery.term']}"/>
+		</f:facet>
+		<h:panelGroup rendered="#{!isRepeated}">
+			<h:outputText id="deliveryTerm" 
+				value="#{question.clDeliveryTerm}" 
+				rendered="#{isQuestionTypeItem}" />
+			&#160;
+			<h:outputText id="delTermType" 
+				value="#{templateSpecBackingBean.getParameterDesc(question.clDeliveryTermTypeCode)}"  
+				rendered="#{isQuestionTypeItem}" />
+		</h:panelGroup>
+	</p:column>
 	<p:column style="width:50px;text-align:right;" headerText="#{lbl['lbl.tpl.spec.content.ranking']}" rendered="#{isSpecTypeFinancial and isEstCostReq and !isScoringReq}">
 		<h:outputText value="#{tplSpecAnswer.tplSpecSuppAnswer.ranking}">
 			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
