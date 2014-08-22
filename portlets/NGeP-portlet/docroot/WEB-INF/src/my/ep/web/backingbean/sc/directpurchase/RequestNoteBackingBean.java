@@ -1979,7 +1979,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 		
 		if(getManagedBean().getSupplierRecList() != null && getManagedBean().getSupplierRecList().size() >0) {
-			for(ScRequestNoteDtl requestNoteDtl : getManagedBean().getSelectedRequestNoteDtls()) {
+			for(ScRequestNoteDtl requestNoteDtl : getManagedBean().getSupplierRecList()) {
                
 				if(selectedRequestNoteDtlIds.contains(requestNoteDtl.getRequestNoteDtlId())){
 
