@@ -308,6 +308,31 @@
 			</list>
 		</property>
 	</bean>
+	
+	<bean id="CT_CONTRACT" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="contractId" />
+
+		<property name="daoClass" value="my.ep.persistence.dao.ct.CtContractDAO" />
+		<!-- <property name="searchMethod" value="findColor" /> -->
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="contractNo" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.ct.search.cno" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="contractName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.ct.search.cname" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+			</list>
+		</property>
+	</bean>
 
 	<bean id="FL_DELIVERY_ADDR" class="my.ep.web.bean.LovBean">
 		<property name="pk" value="addressId" />
