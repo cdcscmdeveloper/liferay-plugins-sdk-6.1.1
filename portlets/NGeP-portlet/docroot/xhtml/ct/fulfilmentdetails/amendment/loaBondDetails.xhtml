@@ -22,7 +22,7 @@
 			</h:panelGrid>
 			<p:outputLabel value="Contract Period" />
 			<h:panelGrid columns="5">
-				<p:inputText style="width:170px;" disabled="true"
+				<p:inputText style="width:170px;" disabled="true"  styleClass="ppRightBtn"
 					value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.contractPeriod / 12}" />
 				<p:spacer width="1" />
 				<p:outputLabel value=" (Year)" />
@@ -30,18 +30,18 @@
 				<p:outputLabel value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.contractPeriod} Months" />
 			</h:panelGrid>
 			<p:outputLabel value="Contract Amount (RM)" />
-			<p:inputText disabled="true" style="width:170px;" 
+			<p:inputText disabled="true" style="width:170px;" styleClass="ppRightBtn"
 			    value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.contractAmount}"  >
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />			
 			</p:inputText>
 			<p:outputLabel value="Percentage Bond" />
-			<p:inputText style="width:170px;" disabled="true"
+			<p:inputText style="width:170px;" disabled="true" styleClass="ppRightBtn"
 				value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.bondPercentage}">
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
 				</p:inputText>
 			<p:outputLabel value="Bond Amount Per Year (RM)" />
 			<h:panelGrid columns="3">
-				<p:inputText style="width:170px;" disabled="true" 
+				<p:inputText style="width:170px;" disabled="true"  styleClass="ppRightBtn"
 				  value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.bondAmt}" >
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />				
 				</p:inputText>

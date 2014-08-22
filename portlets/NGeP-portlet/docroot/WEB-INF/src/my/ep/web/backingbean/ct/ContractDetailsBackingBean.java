@@ -1567,9 +1567,6 @@ public void ConstructSideTabMenu(){
 			amendBB.getManagedBean().setSelectedTabIndex(0);
 			amendBB.setAmendmentContractVer(resDTO);
 			amendBB.ConstructTabSideMenu();
-			amendBB.getManagedBean().setAttachmentList(resDTO.getCtAttachments());
-			amendBB.getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, 
-				amendBB.getManagedBean().getContractVer().getDocType(), amendBB.getManagedBean().getCtContract().getContractNo()));
 		}finally {
 			contractSO = null;
 			ctBB = null;

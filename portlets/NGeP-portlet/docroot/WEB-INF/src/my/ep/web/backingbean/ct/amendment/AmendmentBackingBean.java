@@ -195,11 +195,6 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	public AmendmentBackingBean(){
 		  if(this.getManagedBean().getAction() == null) 
 			   this.getManagedBean().setAction(new String[] { BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT });
-		
-		  if(ctBackingBean == null){
-		        ctBackingBean = new ContractBackingBean(this.getManagedBean().getFileDirectory());
-		        ctBackingBean.initializeRemarkAndAttachement(this.getManagedBean().getRemarkList(), this.getManagedBean().getAttachmentList());
-		  }
 	}
 	
 	private FacesScopes getFacesScopes(){
@@ -211,6 +206,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 
 		IContractSO contractSO = null;
 		IContractTemplateSO contractTemplateSO = null;
+		 ContractResDTO resDTO = null;
 	
 		try {
 			
@@ -241,13 +237,15 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			     ctReqDTO.setTaskName(res.getTaskName());
 			     String[] outcome = new String[res.getAction().length];
 			     int i = 0;
+			 
 			     if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.CREATE_FA_HT_NAME) || res.getTaskName().equalsIgnoreCase(CTProcessNameConst.SUBMIT_FA_HT_NAME) ||
 				       res.getTaskName().equalsIgnoreCase(CTProcessNameConst.REVISE_FA_HT_NAME) || res.getTaskName().equalsIgnoreCase(CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME) || 
 				       res.getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME)) {
-				       outcome = new String[res.getAction().length+1];
-				       outcome[i++] = BpmOutcomeConst.BPM_SAVE;
+				            outcome = new String[res.getAction().length+1];
+				            outcome[i++] = BpmOutcomeConst.BPM_SAVE;
 			     }
-		         for (String action : res.getAction()) {
+		       
+			     for (String action : res.getAction()) {
 				        outcome[i++] = action;
 			     }this.getManagedBean().setAction(outcome);
 			
@@ -255,102 +253,100 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			     ctReqDTO.setContractId(new Long(dataType.getContractId()));
 			     ctReqDTO.setContractVerId(new Long(dataType.getDocId()));
 			     contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
-			     ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
+			     resDTO = contractSO.retrieveContractVer(ctReqDTO);
 			     setAmendmentContractVer(resDTO);
 			     resetbooleanValue();
 			
 			     if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_FA_HT_NAME) && 
-					   this.getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)){
-				       this.getManagedBean().setBpkSaSkApprover(true);
+					this.getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)){
+				           this.getManagedBean().setBpkSaSkApprover(true);
 			     }
 			
-	            if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME) || 
-	                  res.getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME)) {
-			          this.getManagedBean().setPbConfirmMeeting(true);
-			          if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME)){
+	            if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME) || res.getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME)) {
+			           this.getManagedBean().setPbConfirmMeeting(true);
+			           if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME)){
 					          this.getManagedBean().setSignUpdateDecision(true);
 					  }
-			
-	            } else if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME) || 
-				           res.getTaskName().equalsIgnoreCase(CTProcessNameConst.VERIFY_FA_HT_NAME)) {
-				           this.getManagedBean().setLetterOfAcceptance(true);
-				           this.getManagedBean().setPrepareLOA(true);
-				           this.getManagedBean().setWitnessHeader(ContractConst.AGENCY_WITNES_HEADER);
-				           if(this.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().size() > 0 && 
-						         this.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers() != null){
+	            } else if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME) ||  res.getTaskName().equalsIgnoreCase(CTProcessNameConst.VERIFY_FA_HT_NAME)) {
+				             this.getManagedBean().setLetterOfAcceptance(true);
+				             this.getManagedBean().setPrepareLOA(true);
+				             this.getManagedBean().setWitnessHeader(ContractConst.AGENCY_WITNES_HEADER);
+				             if(this.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().size() > 0 && this.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers() != null){
 					             this.getManagedBean().setDecisionPbQcLOA(true);
-			    
-			   } if (this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa() == null) {
-					    ctReqDTO.setCtContractVer(this.getManagedBean().getContractVer());
-					    ContractResDTO resDTO1 = contractSO.setScLoa(ctReqDTO);
-					     getManagedBean().getContractVer().getCtAmendment().setAmendmentLoa(resDTO1.getAmendmentScLoa());
-					     if(getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getContractAdmin() == null) {
-						      getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().setContractAdmin(getFacesScopes().getUserSessionBean());
-					    }
-				   }
-			
-	          } else if (res.getTaskName().equalsIgnoreCase(CTProcessNameConst.VIEW_FA_DETAILS_HT_NAME)) {
-				    this.getManagedBean().setMemberSignOff(true);
-				    this.getManagedBean().setPbConfirmMeeting(true);
-				    this.getManagedBean().setSignUpdateDecision(false);
-		
-	          } else if (res.getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)) {
-				     this.getManagedBean().setAckFA(ContractConst.SUPPLIER_ACK_LOA);
-				     this.getManagedBean().setWitnessHeader(ContractConst.SUPPLIER_WITNES_HEADER);
+			                 } 
 				
-				     contractTemplateSO = (IContractTemplateSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractTemplateSO.class);
-				     ContractTemplateReqDTO templateReqDTO = new ContractTemplateReqDTO();
-				     templateReqDTO.setTemplateName(ContractConst.TEMPLATE_INTEGRITY_PACT);
-				     ContractTemplateResDTO templateResDTO = contractTemplateSO.retrieveTemplateByName(templateReqDTO);
-				     getManagedBean().setEditorValue("");
-				     if(templateResDTO.getCtTemplate()!=null) {
-				         	String content = new String(templateResDTO.getCtTemplate().getContent(), "UTF-8");
-					        Map<String, String> valuesMap = new HashMap<String, String>();
-					        valuesMap.put("PTJ_NAME", getManagedBean().getCtContract().getOwnerOrgProfile().getOrgName());
-					        valuesMap.put("LOA_TITLE", getManagedBean().getContractVer().getCtAmendment().getTitle());
-					        valuesMap.put("SUPPLIER_USER_NAME", getFacesScopes().getUserScreenName());
-					        valuesMap.put("SUPPER_USER_IC_NO", getFacesScopes().getUserSessionBean().getIdentificationNo());
-					        valuesMap.put("SUPPLIER_NAME", getManagedBean().getContractVer().getCtContractValue().getSupplierName());
-					        valuesMap.put("SUPPLIER_MOF_REG_NO", getManagedBean().getCtContract().getSmSupplier().getRegNo());
+				             if (this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa() == null) {
+					              ctReqDTO.setCtContractVer(this.getManagedBean().getContractVer());
+					              ContractResDTO resDTO1 = contractSO.setScLoa(ctReqDTO);
+					              getManagedBean().getContractVer().getCtAmendment().setAmendmentLoa(resDTO1.getAmendmentScLoa());
+					              if(getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getContractAdmin() == null) {
+						                 getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().setContractAdmin(getFacesScopes().getUserSessionBean());
+					              }
+				            }
+			
+	              } else if (res.getTaskName().equalsIgnoreCase(CTProcessNameConst.VIEW_FA_DETAILS_HT_NAME)) {
+				           this.getManagedBean().setMemberSignOff(true);
+				           this.getManagedBean().setPbConfirmMeeting(true);
+				           this.getManagedBean().setSignUpdateDecision(false);
+		
+	             } else if (res.getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)) {
+				   
+	            	      this.getManagedBean().setAckFA(ContractConst.SUPPLIER_ACK_LOA);
+				          this.getManagedBean().setWitnessHeader(ContractConst.SUPPLIER_WITNES_HEADER);
+				
+				          contractTemplateSO = (IContractTemplateSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractTemplateSO.class);
+				          ContractTemplateReqDTO templateReqDTO = new ContractTemplateReqDTO();
+				          templateReqDTO.setTemplateName(ContractConst.TEMPLATE_INTEGRITY_PACT);
+				          ContractTemplateResDTO templateResDTO = contractTemplateSO.retrieveTemplateByName(templateReqDTO);
+				          getManagedBean().setEditorValue("");
+				          if(templateResDTO.getCtTemplate()!=null) {
+				         	
+				        	  String content = new String(templateResDTO.getCtTemplate().getContent(), "UTF-8");
+					          Map<String, String> valuesMap = new HashMap<String, String>();
+					          valuesMap.put("PTJ_NAME", getManagedBean().getCtContract().getOwnerOrgProfile().getOrgName());
+					          valuesMap.put("LOA_TITLE", getManagedBean().getContractVer().getCtAmendment().getTitle());
+					          valuesMap.put("SUPPLIER_USER_NAME", getFacesScopes().getUserScreenName());
+					          valuesMap.put("SUPPER_USER_IC_NO", getFacesScopes().getUserSessionBean().getIdentificationNo());
+					          valuesMap.put("SUPPLIER_NAME", getManagedBean().getContractVer().getCtContractValue().getSupplierName());
+					          valuesMap.put("SUPPLIER_MOF_REG_NO", getManagedBean().getCtContract().getSmSupplier().getRegNo());
 					
-					        StrSubstitutor sub = new StrSubstitutor(valuesMap);
-					        getManagedBean().setEditorValue(sub.replace(content));
+					          StrSubstitutor sub = new StrSubstitutor(valuesMap);
+					          getManagedBean().setEditorValue(sub.replace(content));
 				     }
 		
-	        } else if (res.getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME)) {
-				    this.getManagedBean().setAction(res.getAction());
-				    this.getManagedBean().setSignOffDecision(true);
+	          } else if (res.getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME)) {
+				       this.getManagedBean().setAction(res.getAction());
+				       this.getManagedBean().setSignOffDecision(true);
 			
-	        } else if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_BREACHED_FA_HT_NAME)){
-				     this.getManagedBean().setBpkSaSkApprover(true);
-			
-	        } 
+	          } else if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_BREACHED_FA_HT_NAME)){
+				      this.getManagedBean().setBpkSaSkApprover(true);
+	          } 
 	        
 		    if(getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa()!=null) {
+		    	  
 		    	for(ScLoaWitness scLoaWitness : getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaWitnesses()) {
-		    		if((res.getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME) || 
+		    		   if((res.getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME) || 
 		    				res.getTaskName().equalsIgnoreCase(CTProcessNameConst.VERIFY_FA_HT_NAME)) && scLoaWitness.getPartyType().equalsIgnoreCase(ContractConst.WITNES_TYPE_AGENCY)) {
-		    			getManagedBean().setScLoaWitness(scLoaWitness);
-		    			break;
-		    		} 
-		    		if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME) && scLoaWitness.getPartyType().equalsIgnoreCase(ContractConst.WITNES_TYPE_SUPPLIER)) {
-		    			getManagedBean().setScLoaWitness(scLoaWitness);
-		    			break;
-		    		}		    		
-		    	}
+		    			       getManagedBean().setScLoaWitness(scLoaWitness);
+		    			       break;
+		    		    } if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME) && scLoaWitness.getPartyType().equalsIgnoreCase(ContractConst.WITNES_TYPE_SUPPLIER)) {
+		    		        	getManagedBean().setScLoaWitness(scLoaWitness);
+		    			        break;
+		    		     }		    		
+		    	  }
 		    }
 		    
 		    if(this.getManagedBean().isLetterOfAcceptance()){
 		    	   getLoaDocumentList();
-		     	  if(this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaAttachment() == null){
+		     	   if(this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaAttachment() == null){
 		    		     this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().setScLoaAttachment(new ScLoaAttachment());
 		    		     this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaAttachment().setScLoa(
 		    			 this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa());
 		    	   }
 		     }
 		    ConstructTabSideMenu();
-		    FacesContext fc = FacesContext.getCurrentInstance();
-			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, ContractConst.NAV_TO_CONTRACT_AMENDMENT);
+		/*    FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, ContractConst.NAV_TO_CONTRACT_AMENDMENT);*/
 		} finally {
 			contractSO = null;
 			contractTemplateSO = null;
@@ -363,11 +359,15 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	
 	public void setAmendmentContractVer(ContractResDTO resDTO) {
 		
-		IContractSO contractSO = null;
-		try {
+		 IContractSO contractSO = null;
+		 ContractReqDTO reqDTO = null;
+		 ContractResDTO extResDTO = null;
+		 
+		 try {
 			    getManagedBean().setContractVer(resDTO.getCtContractVer());
 		  	    getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
-			    if(getManagedBean().getContractVer().getCtAmendment()==null) {
+			   
+		  	    if(getManagedBean().getContractVer().getCtAmendment()==null) {
 				     getManagedBean().getContractVer().setCtAmendment(new CtAmendment());
 				     getManagedBean().getContractVer().getCtAmendment().setFileRefNo(getManagedBean().getCtContract().getContractNo()+"-");
 				     getManagedBean().getContractVer().getCtAmendment().setTitle(getManagedBean().getCtContract().getContractName());
@@ -375,38 +375,47 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				     getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(new Date());
 				     getManagedBean().getContractVer().getCtAmendment().setAdditionalAmount(new BigDecimal(0));
 			  
-			    }if(resDTO.getCtContractVer().getCtContractItems() != null && resDTO.getCtContractVer().getCtContractItems().size() > 0){
-			         this.getManagedBean().getCtItemList().clear();
-			         this.getManagedBean().getCtServiceItemList().clear();
-			         for(CtContractItem item : getManagedBean().getContractVer().getCtContractItems()) {
-				           if(item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)) {
-					            getManagedBean().setItemProductExist(true);
-					            getManagedBean().getCtItemList().add(item);
-				          } else if(item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) {
+			    } if (resDTO.getCtContractVer().getCtContractItems() != null && resDTO.getCtContractVer().getCtContractItems().size() > 0){
+			           this.getManagedBean().getCtItemList().clear();
+			           this.getManagedBean().getCtServiceItemList().clear();
+			           
+			           for(CtContractItem item : getManagedBean().getContractVer().getCtContractItems()) {
+				            
+			        	    if (item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)) {
+					                getManagedBean().setItemProductExist(true);
+					                getManagedBean().getCtItemList().add(item);
+				          
+				             } else if(item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) {
 					               getManagedBean().setItemServiceExist(true);
 					               this.getManagedBean().getCtServiceItemList().add(item);
-				          }
-			         }
-			   }
-		      retriveZonesByContractVer();
+				             }
+			            }
+			     }
+		 
+			  retriveZonesByContractVer();
 			  initializeRemarks();
-			  getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, 
-				  getManagedBean().getContractVer().getDocType(), getManagedBean().getCtContract().getContractNo()));
-			   getManagedBean().setRemarkList(resDTO.getCtRemarks());
-			  getManagedBean().setAttachmentList(resDTO.getCtAttachments());
-			  ctBackingBean = new ContractBackingBean(getManagedBean().getFileDirectory());			     
+			  getManagedBean().setFileDirectory(DocumentRepositoryUtils.
+			  getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, 
+		      getManagedBean().getContractVer().getDocType(), getManagedBean().getCtContract().getContractNo()));
+			  
+			  getManagedBean().setRemarkList(resDTO.getCtRemarks());
+			  getManagedBean().setAttachmentList(resDTO.getCtAttachments());	
+			  ctBackingBean = new ContractBackingBean(this.getManagedBean().getFileDirectory());
 			  ctBackingBean.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 			  
+			  reqDTO = new ContractReqDTO();
 			  contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
-	    	  ContractReqDTO reqDTO = new ContractReqDTO();
 	    	  reqDTO.setContractVerId(resDTO.getCtContractVer().getContractVerId());
 	    	  reqDTO.setContractId(resDTO.getCtContractVer().getCtContract().getContractId());
 			  reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
-			  ContractResDTO amendResDTO = contractSO.retrieveExtensionHistory(reqDTO);
-			  getManagedBean().setAmendHistoryList(amendResDTO.getExtensionHistoryList());
+			  extResDTO = contractSO.retrieveExtensionHistory(reqDTO);
+			  getManagedBean().setAmendHistoryList(extResDTO.getExtensionHistoryList());
 		    
 	   	    } finally {
 		     	contractSO = null;
+		     	reqDTO = null;
+		     	extResDTO =  null;
+		     	resDTO = null;			
 		    }
 	   }
 	
@@ -878,7 +887,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				         content = new String(resDTO.getCtTemplate().getContent(), "UTF-8");
 				         content = getContent(loaReport.getPmDocument().getDocName());
 				         convertHtmlToDocFile(content, filePath);
-			      }downloadFile(filePath, fileName);
+			      }downloadFile(DocumentRepositoryUtils.getDBFilePath(filePath), fileName);
 		    
 		    } else {
 		    	  if(loaReport.getScLoaReportAttachment().getFilePath() == null){
@@ -904,7 +913,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		String fileName = null;
 		String filePath = null;
 		String content = null;
-		String tempDirectory = getManagedBean().getFileDirectory() + "/temp";
+		String tempDirectory =  "/temp";
 		File file = new File(tempDirectory);
 		file.mkdirs();
 		
@@ -920,7 +929,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 					fileName = getTemplateFileName(scLoaReport.getTitle());
 					filePath = tempDirectory + "/" + attachmentFormat.format(fileName, null);
 					if(scLoaReport.getTitle().equalsIgnoreCase(ContractConst.TEMPLATE_JADUAL_HARGA)) {
-						formJadualHargaExcel(filePath);
+						formJadualHargaExcel(DocumentRepositoryUtils.getBaseDir()+filePath);
 						fileList.add(new File(filePath));
 					}
 					else if(scLoaReport.getTitle().equalsIgnoreCase(ContractConst.TEMPLATE_FORMAT_BON_PELAKSANAAN)) {
@@ -931,7 +940,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 						ContractTemplateResDTO templateResDTO = contractTemplateSO.retrieveTemplateByName(templateReqDTO);					
 						content = new String(templateResDTO.getCtTemplate().getContent(), "UTF-8");
 						content = getContent(scLoaReport.getTitle());					
-						convertHtmlToDocFile(content, filePath);
+						convertHtmlToDocFile(content, DocumentRepositoryUtils.getBaseDir()+filePath);
 						fileList.add(new File(filePath));
 					}
 				}
