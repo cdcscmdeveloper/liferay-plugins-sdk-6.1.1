@@ -25,12 +25,14 @@ import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.fl.FulfilmentConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.common.reason.ReasonReqDTO;
 import my.ep.dto.pm.common.reason.ReasonResDTO;
+import my.ep.exception.EpException;
 import my.ep.jaxb.fl.stopfullfillmentdata.FLStopFullfillmentDataType;
 import my.ep.persistence.entity.fl.order.FlStopInstr;
 import my.ep.persistence.entity.fl.order.FlStopInstrItem;
@@ -72,6 +74,11 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 	}
 	
 	public String saveStopInstruction(String action) {
+		if(FulfilmentConst.REASON_CODE.equalsIgnoreCase(getManagedBean().getStopInstr().getPmReason().getReasonCode())) {
+			if(null == getManagedBean().getStopInstr().getReasonDesc() || getManagedBean().getStopInstr().getReasonDesc().isEmpty()){
+				throw new EpException(MessageConst.ERROR_740026);
+			}
+		}	
 		String token = getFacesScopes().getBPMAuthenticationCtxToken();
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		FlStopInstr flStopInstr = getManagedBean().getStopInstr();
