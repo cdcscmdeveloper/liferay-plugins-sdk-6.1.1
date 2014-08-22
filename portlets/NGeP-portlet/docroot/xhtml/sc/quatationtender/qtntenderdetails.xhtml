@@ -62,7 +62,7 @@
 				<td colspan="3"><ac:lov id="contractLovId" lovId="CT_CONTRACT"
 						headerText="Contract Lov" update=":form:qtdetailsid"
 						saveObject="qTDetailBB.managedBean.ctContract"
-						value="#{qTDetailBB.managedBean.ctContract.contractNo}" size="30">
+						value="#{qTDetailBB.managedBean.ctContract.contractNo}" size="30" conditionField="recordStatus^1">
 					</ac:lov> <ac:lovPopup /></td>
 			</tr>
 			<tr>
