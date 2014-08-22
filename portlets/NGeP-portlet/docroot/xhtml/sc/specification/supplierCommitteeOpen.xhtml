@@ -135,8 +135,8 @@
 						value="#{lbl['lbl.so.allstate']}"
 						rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState =='false'}" />
 				</td>
-				<td><p:inputText
-						value="#{lbl[specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState ? 'lbl.btn.yes' : 'lbl.btn.no' ]}"
+				<td><p:inputText disabled="true" 
+						value="No"
 						rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState =='false'}" />
 				</td>
 
