@@ -1108,44 +1108,64 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			requestNote.setSourceMethod(ParameterConst.REQUEST_NOTE_SC);
 
 		} else {
+			IViewSupplierItemSO viewSupplierItemSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT, IViewSupplierItemSO.class);
+	    	CatalogueReqDTO catalogueReqDTO = new CatalogueReqDTO();
+	    	catalogueReqDTO.setViewSearchBean(new CatalogueBackingBean().getManagedBean().getSearchDataModel().getSearchBean());
+	    	catalogueReqDTO.setSupplierItemId(selectedSupplierItem.getSupplierItemId());
+	    	catalogueReqDTO.setExtensionCode(scRequestItem.getCmItem().getExtensionCode());
+	    	CatalogueResDTO catalogueResDTO = viewSupplierItemSO.getSuppliersItemPricingByExtensionCode(catalogueReqDTO);
+	    	
 			// purchase in default & add to cart
 		    requestNote.setSourceMethod(ParameterConst.REQUEST_NOTE_SC);
 		    List<ScRequestSupplierItem> supplierItems = new ArrayList<ScRequestSupplierItem>();
+		    
 		    if(cartFlag){
 		    	// adding suppliers from the compare screen 
+		    	List<Long> cmSupplieritemIds = new ArrayList<Long>();
 		    	if(getManagedBean().getCompareSupplierItems() != null){
-
-		    		for (CmSupplierItem supplierItem : getManagedBean().getCompareSupplierItems() ) {
+		    		for (CmSupplierItem supplierItem : getManagedBean().getCompareSupplierItems()) {
 		    			if(supplierItem.getCmItem().getItemId().equals(selectedSupplierItem.getCmItem().getItemId())){
-		    				ScRequestSupplierItem scRequestSupplierItem = createScRequestSupplierItem(
-		    						scRequestItem, supplierItem.getSmSupplier(), supplierItem.getCmPricings());
-		    				supplierItems.add(scRequestSupplierItem);	
+		    				cmSupplieritemIds.add(supplierItem.getSupplierItemId());	
 		    			}
 		    		}
 		    	}
+
+		    	if(catalogueResDTO.getViewSuppItemResultBean().getResultList() != null && catalogueResDTO.getViewSuppItemResultBean().getResultList().size()>0){
+
+		    		for (VCmSupplierItem vCmSupplierItem : catalogueResDTO.getViewSuppItemResultBean().getResultList()) {
+		    			if (vCmSupplierItem.getCmPricings() != null && vCmSupplierItem.getCmPricings().size() > 0) {
+		    				CmSupplierItem supplierItem = vCmSupplierItem.getCmPricings().get(0).getCmSupplierItem();
+
+		    				if(cmSupplieritemIds.contains(supplierItem.getSupplierItemId())){
+
+		    					if(supplierItem.getCmItem().getItemId().equals(selectedSupplierItem.getCmItem().getItemId())){
+
+		    						ScRequestSupplierItem scRequestSupplierItem = createScRequestSupplierItem(
+		    								scRequestItem, supplierItem.getSmSupplier(), vCmSupplierItem.getCmPricings());
+		    						supplierItems.add(scRequestSupplierItem);	
+		    					}
+		    				}
+		    			}
+		    		}
+		    		// Add selected supplier item from compare 
+		    		supplierItems.add(requestSupplierItem);
+		    	}
 		    } else{
 		    	// adding suppliers from search catalogue 
-		    	IViewSupplierItemSO viewSupplierItemSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT, IViewSupplierItemSO.class);
-		    	CatalogueReqDTO catalogueReqDTO = new CatalogueReqDTO();
-		    	catalogueReqDTO.setViewSearchBean(new CatalogueBackingBean().getManagedBean().getSearchDataModel().getSearchBean());
-		    	catalogueReqDTO.setSupplierItemId(selectedSupplierItem.getSupplierItemId());
-		    	catalogueReqDTO.setExtensionCode(scRequestItem.getCmItem().getExtensionCode());
-		    	CatalogueResDTO catalogueResDTO = viewSupplierItemSO.getSuppliersItemPricingByExtensionCode(catalogueReqDTO);
+		    	if(catalogueResDTO.getViewSuppItemResultBean().getResultList() != null && catalogueResDTO.getViewSuppItemResultBean().getResultList().size()>0){
+		    		for (VCmSupplierItem vCmSupplierItem : catalogueResDTO.getViewSuppItemResultBean().getResultList()) {
+		    			if (vCmSupplierItem.getCmPricings() != null && vCmSupplierItem.getCmPricings().size() > 0) {
+		    				CmSupplierItem supplierItem = vCmSupplierItem.getCmPricings().get(0).getCmSupplierItem();
+		    				ScRequestSupplierItem scRequestSupplierItem = createScRequestSupplierItem(
+		    						scRequestItem, supplierItem.getSmSupplier(), vCmSupplierItem.getCmPricings());
 
-		    	for (VCmSupplierItem vCmSupplierItem : catalogueResDTO.getViewSuppItemResultBean().getResultList()) {
-		    		if (vCmSupplierItem.getCmPricings() != null && vCmSupplierItem.getCmPricings().size() > 0) {
-		    			CmSupplierItem supplierItem = vCmSupplierItem.getCmPricings().get(0).getCmSupplierItem();
-		    			ScRequestSupplierItem scRequestSupplierItem = createScRequestSupplierItem(
-		    					scRequestItem, supplierItem.getSmSupplier(), vCmSupplierItem.getCmPricings());
-
-		    			supplierItems.add(scRequestSupplierItem);	
+		    				supplierItems.add(scRequestSupplierItem);	
+		    			}
 		    		}
+		    		// Add selected supplier item from search catalogue
+		    		supplierItems.add(requestSupplierItem);
 		    	}
-		    	 // Add selected supplier item.
-			    supplierItems.add(requestSupplierItem);
 		    }
-		   
-		  
 		    scRequestItem.setSupplierItems(supplierItems);
 		    scRequestItem.setRequestNote(requestNote);
 		}
