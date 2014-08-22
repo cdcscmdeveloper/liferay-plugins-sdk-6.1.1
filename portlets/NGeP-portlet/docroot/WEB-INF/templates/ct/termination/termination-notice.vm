@@ -98,8 +98,8 @@
       <div style="font-weight: normal; text-align: left;"><br/></div>
       <div style="font-weight: normal; text-align: left;"><br/></div>
       <div style="font-weight: normal; text-align: left;">------------------------------------------------------</div>
-      <div style="font-weight: normal; text-align: left;">$ApproverName</div>
-      <div style="font-weight: normal; text-align: left;">$ApproverDesignation</div>
+      <div style="font-weight: normal; text-align: left;">$approverName</div>
+      <div style="font-weight: normal; text-align: left;">$approverDesignation</div>
       <div style="font-weight: normal; text-align: left;">b.p. Ketua Setiausaha</div>
       <div style="font-weight: normal; text-align: left;">$ministryName</div>
    </body>
