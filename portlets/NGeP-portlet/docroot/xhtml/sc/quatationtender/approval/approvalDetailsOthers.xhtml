@@ -21,13 +21,19 @@
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.sc.qt.status']}" />
 				</f:facet>
-
 				<p:selectOneMenu id="decisiontypeid" required="true"
+					label="#{lbl['lbl.sc.qt.status']}"
 					value="#{otherrequestdetails.decessionType.parameterId}"
 					style="width: 178px;margin-bottom: 5px;">
-					<f:selectItems
-						value="#{approvalBackingBean.getDropdownValues(ParameterTypeConst.approvalDecisionType)}" />
+					<f:selectItem itemLabel="-Select One-" itemValue="#{null}" />
+					<f:selectItems var="app"
+						value="#{approvalBackingBean.getStatusDropdownValues()}"
+						itemLabel="#{app.codeName}"
+						itemValue="#{app.pmParameter.parameterId}" />
+					<p:ajax event="change" partialSubmit="true" />
 				</p:selectOneMenu>
+				<p:message id="decisiontypeidMsg" for="decisiontypeid"
+					display="icon" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.qt.document']}">
 				<h:outputText
@@ -35,19 +41,21 @@
 				<p:commandButton oncomplete="otherApprovalAttachDlg.show();"
 					value="#{lbl['lbl.txt.attach.files']}" icon="iconAttachment"
 					partialSubmit="true" process="@this" update="otherreqdtlsid">
-					<f:setPropertyActionListener value="#{otherrequestdetails.approvalRequestAttachement}"
+					<f:setPropertyActionListener
+						value="#{otherrequestdetails.approvalRequestAttachement}"
 						target="#{approvalBackingBean.managedBean.scQtApproval.scQtApprovalDtls}" />
 				</p:commandButton>
 			</p:column>
-			
+
 			<p:column>
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.sc.qt.remark']}" />
 				</f:facet>
-				<p:inputTextarea required="true"
+				<p:inputTextarea id="remarkid" required="true"
 					value="#{otherrequestdetails.appRequestRemark.remark}" cols="30"
-					rows="4" />
+					rows="3" />
+				<p:message id="remarkidMsg" for="remarkid" display="icon" />
 			</p:column>
 		</p:dataTable>
 	</p:panel>

@@ -16,9 +16,11 @@
 						var="remarkVar" rowIndexVar="remarkIndex" columns="1">
 						<table>
 							<tr>
-								<td rowspan="2" valign="top"><!-- <h:graphicImage
+								<td rowspan="2" valign="top">
+									<!-- <h:graphicImage
 										value="#{approvalBackingBean.userImagePath(remarkVar.createdUser.loginId)}"
-										height="30" width="30" /> --></td>
+										height="30" width="30" /> -->
+								</td>
 								<td width="5"></td>
 								<td><h:outputText value="#{remarkVar.createdUser.userName}" />,
 									<h:outputText id="remarkDates" value="#{remarkVar.changedDate}">
@@ -60,19 +62,22 @@
 													name="#{approvalBackingBean.determineIcon(attachFile)}"
 													height="30" width="30" />
 											</td>
-											<td><h:outputText value="#{attachFile.user.userName}" />,
-												<h:outputText value="#{attachFile.changedDate}">
+											<td><h:outputText
+													value="#{attachFile.createdUser.userName}" />, <h:outputText
+													value="#{attachFile.createdDate}">
 													<f:convertDateTime
-														pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+														pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
 												</h:outputText></td>
 										</tr>
 										<tr>
 											<td><h:commandLink value="#{attachFile.fileName}"
-													styleClass="blue_font" /> <p:commandLink
+													styleClass="blue_font" immediate="true"
+													action="#{approvalBackingBean.downloadFile(attachFile)}" />
+												<p:commandLink
 													action="#{approvalBackingBean.deleteUploadFile}"
-													immediate="true" update="attachedIds">
-													<h:graphicImage library="ep/images/design"
-														name="icon_trash.png" styleClass="tasklist_title1" />
+													immediate="true" update="@([id$=bpkremarksupDtls])">
+													<h:graphicImage library="ep/images/design" name="trash.png"
+														styleClass="tasklist_title1" />
 												</p:commandLink></td>
 										</tr>
 									</table>
@@ -84,10 +89,10 @@
 		</table>
 	</p:panel>
 
-	<p:dialog id="supportAttachDlgids" widgetVar="supportAttachDlg"
-		modal="true" dynamic="true" hideEffect="explode" resizable="false"
-		width="700px" height="200" styleClass="pop_up_top"
-		header="#{lbl['lbl.bpm.choose.file']}">
+	<p:dialog id="attach" widgetVar="attachDlg1" modal="true"
+		resizable="false" width="700px" height="200" styleClass="pop_up_top"
+		header="#{lbl['lbl.txt.choose.files']}">
+
 		<p:ajax event="close" />
 		<p:fileUpload style="display:inline;"
 			fileUploadListener="#{approvalBackingBean.handleFileUpload}"

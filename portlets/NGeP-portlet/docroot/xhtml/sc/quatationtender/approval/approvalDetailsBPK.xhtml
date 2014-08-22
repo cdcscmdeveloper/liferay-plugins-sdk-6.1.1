@@ -109,7 +109,7 @@
 													action="#{approvalBackingBean.downloadFile(attachFile)}" />
 												<p:commandLink
 													action="#{approvalBackingBean.deleteUploadFile}"
-													immediate="true" update="@([id$=attachId])">
+													immediate="true" update="@form">
 													<h:graphicImage library="ep/images/design" name="trash.png"
 														styleClass="tasklist_title1" />
 												</p:commandLink></td>

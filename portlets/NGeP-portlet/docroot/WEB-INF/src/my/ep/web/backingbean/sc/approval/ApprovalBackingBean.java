@@ -173,6 +173,7 @@ public class ApprovalBackingBean extends
 			scAttachment = attachment; 
 			uploadAttachment(event.getFile(), scAttachment);
 			getManagedBean().setScQtApproval(scQtApproval);
+			attachments.add(attachment);
 			getManagedBean().setAttachments(attachments);
 		}
 	}
@@ -537,5 +538,16 @@ public class ApprovalBackingBean extends
 				}
 			}
 		}
+	}
+	
+	public List<PmParameterDesc> getStatusDropdownValues() {
+		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+		List<String> recommendList = new ArrayList<String>();
+		recommendList.add(ParameterConst.APPROVAL_DECISION_TYPE_REVISED);
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("pmParameter.parameterCode",
+						SearchOperator.OPERATOR_NOT_IN.value(), recommendList));
+		return retrieveParametersBySearchBean(
+				ParameterTypeConst.APPROVAL_DECISION_TYPE, searchBean);
 	}
 }

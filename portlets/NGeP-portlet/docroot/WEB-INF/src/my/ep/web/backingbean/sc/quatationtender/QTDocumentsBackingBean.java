@@ -99,6 +99,7 @@ import org.primefaces.event.SelectEvent;
 public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailManagedBean> {
 
 	private static final Logger log = EpLogger.getLogger(QTDocumentsBackingBean.class);
+	private static final String DOCUMENT_PAGE = "/xhtml/sc/quatationtender/quatationtendercreation.xhtml?faces-redirect=true";
 
 	private void debugLogger(Object message) {
 		if (log.isDebugEnabled()) {
@@ -352,6 +353,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		try {
 			getManagedBean().setScQtDocReport(scQtDocReport);
 			TemplateDocBackingBean tplDocBB = new TemplateDocBackingBean();
+			tplDocBB.getManagedBean().setExternalPageUrl(DOCUMENT_PAGE);
 			
 			templateSO = (ITemplateDocSO) BusinessDelegate.getInstance().getServiceObject("cc", ITemplateDocSO.class);
 			TemplateDocReqDTO tmplateReqDTO = new TemplateDocReqDTO();
@@ -412,9 +414,9 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 				QTTemplateDocReqDTO qtTemplateReqDTO = new QTTemplateDocReqDTO();
 				qtTemplateReqDTO.setReports(reports);
 				QTTemplateDocResDTO qtTemplateResDTO = qtTemplateSO.saveQtReports(qtTemplateReqDTO);
-				if (qtTemplateResDTO.isSuccessful()) {
+				/*if (qtTemplateResDTO.isSuccessful()) {
 					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Record saved successfully.", "" ));
-				}
+				}*/
 				//getManagedBean().setScQtDocReportList(qtTemplateResDTO.getReports());
 				for (ScQtDocReport docReport : qtTemplateResDTO.getReports()) {
 					getManagedBean().setScQtDocReport(docReport);
