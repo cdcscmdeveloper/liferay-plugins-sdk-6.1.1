@@ -1639,8 +1639,8 @@ public class QTDetailBackingBean extends
 			MenuModel menuModel = new DefaultMenuModel();
 			if (requiredApproval != null) {
 				for (ScQtApproval qtApproval : requiredApproval) {
-					// qtApproval = checkIsApprovalExists(qtApproval,
-					// existingApprovalTabs);
+					 qtApproval = checkIsApprovalExists(qtApproval,
+					 existingApprovalTabs);
 					qtApproval.setApprovalType(ApprovalCategory
 							.getDisplayName(qtApproval.getApprovalCategory()
 									.getParameterId()));

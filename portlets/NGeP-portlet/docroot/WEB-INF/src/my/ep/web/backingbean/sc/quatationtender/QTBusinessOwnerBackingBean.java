@@ -106,11 +106,10 @@ public class QTBusinessOwnerBackingBean extends
 
 	public QTBusinessOwnerBackingBean() {
 
-		
 	}
-	
+
 	@PostConstruct
-	public void init(){
+	public void init() {
 		if (this.getManagedBean().getQt().getMinistrySpecSecrataryId() == null) {
 			this.getManagedBean().getQt()
 					.setMinistrySpecSecrataryId(new PmUser());
@@ -1075,6 +1074,9 @@ public class QTBusinessOwnerBackingBean extends
 						IQTDetailSO.class);
 		QuationTenderResDTO resDTO = detailSO.saveQTDtl(quationTenderReqDTO);
 		if (resDTO.isSuccessful()) {
+			renewSesionObject();
+			getMinistrySpecificationSecretaryList();
+
 			FacesContext
 					.getCurrentInstance()
 					.addMessage(
@@ -1095,7 +1097,9 @@ public class QTBusinessOwnerBackingBean extends
 													new FacesScopes()
 															.getUserLocale())));
 		}
-		return null;
+		QTDetailBackingBean detailBackingBean = new QTDetailBackingBean();
+
+		return detailBackingBean.editAction(resDTO.getQtDetail());
 	}
 
 	public void consolidateRowSelectRadio(SelectEvent event) {
