@@ -60,6 +60,10 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 	private String colorName;
 	private String measurementName;
 	private String brandName;
+	private boolean typeRedundancy;
+	private boolean barndRedundancy;
+	private boolean measurRedundancy;
+	private boolean colorRedundancy;
 	
 	private List<CmRequestCode> reviewExtCodeList;
 	
@@ -657,6 +661,38 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 
 	public void setMeasurementDisable(boolean measurementDisable) {
 		this.measurementDisable = measurementDisable;
+	}
+
+	public boolean isTypeRedundancy() {
+		return typeRedundancy;
+	}
+
+	public void setTypeRedundancy(boolean typeRedundancy) {
+		this.typeRedundancy = typeRedundancy;
+	}
+
+	public boolean isBarndRedundancy() {
+		return barndRedundancy;
+	}
+
+	public void setBarndRedundancy(boolean barndRedundancy) {
+		this.barndRedundancy = barndRedundancy;
+	}
+
+	public boolean isMeasurRedundancy() {
+		return measurRedundancy;
+	}
+
+	public void setMeasurRedundancy(boolean measurRedundancy) {
+		this.measurRedundancy = measurRedundancy;
+	}
+
+	public boolean isColorRedundancy() {
+		return colorRedundancy;
+	}
+
+	public void setColorRedundancy(boolean colorRedundancy) {
+		this.colorRedundancy = colorRedundancy;
 	}
 
 	

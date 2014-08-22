@@ -7,6 +7,7 @@
 	xmlns="http://www.w3.org/1999/xhtml">
 
 	<h:panelGroup id="requestExtPopUpId">
+		<p:messages id="messageId" showDetail="true" autoUpdate="true" closable="true" showSummary="false"></p:messages>
 		<table style="width: 100%;">
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.code']}" /></td>
@@ -37,7 +38,9 @@
 				<td><p:outputLabel value="#{lbl['lbl.cm.request.new']}"></p:outputLabel></td>
 				<td><p:inputText id="requestTypeId"
 						value="#{unspscCodeBackingBean.managedBean.requestExtCode.typeName}"
-						disabled="#{unspscCodeBackingBean.managedBean.typeDisable}"></p:inputText></td>
+						disabled="#{unspscCodeBackingBean.managedBean.typeDisable}">
+						<p:ajax event="blur" listener="#{unspscCodeBackingBean.checkingTypeRedundency}" update="messageId"></p:ajax>
+						</p:inputText></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.cm.brand']}" /><p:outputLabel value="*" styleClass="mandatory"/></td>
@@ -55,7 +58,9 @@
 				<td><p:outputLabel value="#{lbl['lbl.cm.request.new']}"></p:outputLabel></td>
 				<td><p:inputText id="requestBrandId"
 						value="#{unspscCodeBackingBean.managedBean.requestExtCode.brandName}"
-						disabled="#{unspscCodeBackingBean.managedBean.brandDisable}"></p:inputText></td>
+						disabled="#{unspscCodeBackingBean.managedBean.brandDisable}">
+							<p:ajax event="blur" listener="#{unspscCodeBackingBean.checkingBrandRedundency}" update="messageId"></p:ajax>
+						</p:inputText></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.cm.measurement']}" /><p:outputLabel value="*" styleClass="mandatory"/></td>
@@ -74,7 +79,9 @@
 				<td><p:outputLabel value="#{lbl['lbl.cm.request.new']}"></p:outputLabel></td>
 				<td><p:inputText id="requestMeasurementId"
 						value="#{unspscCodeBackingBean.managedBean.requestExtCode.measurementName}"
-						disabled="#{unspscCodeBackingBean.managedBean.measurementDisable}"></p:inputText></td>
+						disabled="#{unspscCodeBackingBean.managedBean.measurementDisable}">
+							<p:ajax event="blur" listener="#{unspscCodeBackingBean.checkingMeasurmentRedundency}" update="messageId"></p:ajax>
+						</p:inputText></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.cm.color']}" /><p:outputLabel value="*" styleClass="mandatory"/></td>
@@ -92,7 +99,9 @@
 				<td><p:outputLabel value="#{lbl['lbl.cm.request.new']}"></p:outputLabel></td>
 				<td><p:inputText id="requestColorId"
 						value="#{unspscCodeBackingBean.managedBean.requestExtCode.colorName}"
-						disabled="#{unspscCodeBackingBean.managedBean.colorDisable}"></p:inputText></td>
+						disabled="#{unspscCodeBackingBean.managedBean.colorDisable}">
+							<p:ajax event="blur" listener="#{unspscCodeBackingBean.checkingColorRedundency}" update="messageId"></p:ajax>
+						</p:inputText></td>
 			</tr>
 
 		</table>

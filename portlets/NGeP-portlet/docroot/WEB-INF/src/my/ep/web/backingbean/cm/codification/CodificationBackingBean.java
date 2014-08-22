@@ -1705,7 +1705,7 @@ public class CodificationBackingBean extends
 		System.out.println("**********returnToRecommendService************");
 		UnspscCodeBackingBean ubb = new UnspscCodeBackingBean();
 		CmRecommendCode recommend = new CmRecommendCode();
-		recommend.setUnspscCode(unspscObj.getUnspscCode());
+		recommend.setUnspscCode(unspscObj.getUnspscCode()+"0000000000");
 		recommend.setUnspscTitle(unspscObj.getUnspscTitle());
 		ubb.getManagedBean().getRequestCode().getCmRecommendCodes().add(recommend);
 		
