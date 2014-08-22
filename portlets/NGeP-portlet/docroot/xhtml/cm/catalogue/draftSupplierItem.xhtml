@@ -47,6 +47,13 @@
 		<p:ajax event="rowSelect" update=":form:downloadLink,:form:submitLink"></p:ajax>
 		<p:ajax event="toggleSelect" update=":form:downloadLink,:form:submitLink" />
 
+		<p:column width="5%">
+			<f:facet name="header">
+				#{lbl['lbl.cm.item.code']}
+			</f:facet>
+			<h:outputText value="#{selectedSuppCat.cmItem.extensionCode}" style="white-space: normal"/>
+		</p:column>
+
 		<p:column width="30%">
 			<f:facet name="header">
 				#{lbl['lbl.cm.item.name']}

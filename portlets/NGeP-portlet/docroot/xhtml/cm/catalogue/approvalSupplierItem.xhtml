@@ -16,6 +16,13 @@
 		
 		
 		<ac:paginator for="approvalSupplierItemID"></ac:paginator>
+		<p:column width="5%">
+			<f:facet name="header">
+				#{lbl['lbl.cm.item.code']}
+			</f:facet>
+			<h:outputText value="#{approval.cmItem.extensionCode}" style="white-space: normal"/>
+		</p:column>
+		
 		<p:column width="30%">
 			<f:facet name="header">
 				#{lbl['lbl.cm.item.name']}

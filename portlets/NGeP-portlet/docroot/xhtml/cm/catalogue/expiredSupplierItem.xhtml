@@ -15,6 +15,12 @@
 
 	
 		<ac:paginator for="expiredSupplierItemID"></ac:paginator>
+		<p:column width="5%">
+			<f:facet name="header">
+				#{lbl['lbl.cm.item.code']}
+			</f:facet>
+			<h:outputText value="#{expired.cmItem.extensionCode}" style="white-space: normal"/>
+		</p:column>
 		<p:column width="30%">
 			<f:facet name="header">
 				#{lbl['lbl.cm.item.name']}
