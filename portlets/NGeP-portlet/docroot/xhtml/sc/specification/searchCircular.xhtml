@@ -11,13 +11,13 @@
 	<ui:include
 		src="/xhtml/sc/presentationDemo/presentationDemoHeader.xhtml"></ui:include>
 	<p:panel>
-		<table style="width: 60%">
+		<table>
 			<tr>
 				<td  valign="top" style="width: 40%"><p:outputLabel
 						value="#{lbl['lbl.sc.spec.stage.title']}" /></td>
 				<td ><p:inputTextarea readonly="true" rows="2" cols="100" 
 						value="#{specificationBackingBean.managedBean.scQt.qtTitle}"
-						disabled="true"></p:inputTextarea></td>
+						disabled="true" style=" margin-bottom:5px; width: 100%; "></p:inputTextarea></td>
 			</tr>
 			<tr>
 				<td ><p:outputLabel value="#{lbl['lbl.sc.spec.panel']}" /> <p:outputLabel
