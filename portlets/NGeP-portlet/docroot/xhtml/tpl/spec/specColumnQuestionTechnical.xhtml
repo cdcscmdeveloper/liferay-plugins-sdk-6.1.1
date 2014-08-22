@@ -35,7 +35,7 @@
 			rendered="#{isQuestionTypeItem}"
 			label="#{lbl['lbl.tpl.spec.content.fulfilment.type']}">
 			<f:selectItems value="#{templateSpecBackingBean.getDropdownValues(ParameterTypeConst.fulfilmentType)}" />
-			<p:ajax event="change" listener="#{templateSpecBackingBean.fulfilmentTypeChange(question)}" update="@this" />
+			<p:ajax event="change" listener="#{templateSpecBackingBean.fulfilmentTypeChange(question)}" update="@this, freqUOMPG, dayUOMPG, monthUOMPG, durationPG" />
 		</h:selectOneMenu>
 		<p:message id="fulfilTypeMsg" for="fulfilType" display="icon" />
 	</p:column>
@@ -65,52 +65,60 @@
 				<h:outputText value="* " styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.tpl.spec.content.frequency.per.uom']}"/>
 			</f:facet>
-			<p:inputText id="freqUOM" style="min-width:0px !important;width:96%;" styleClass="ppNumericAlign" 
-				value="#{question.clUomFrequency}" 
-				rendered="#{isQuestionTypeItem and isShowService}" required="#{!question.selected}" maxlength="4"
-				label="#{lbl['lbl.tpl.spec.content.frequency.per.uom']}">
-				<ac:validateNumber  maxIntegerDigits="4" integerOnly="true" />
-			</p:inputText>
-			<p:message id="freqUOMMsg" for="freqUOM" display="icon" />
+			<h:panelGroup id="freqUOMPG">
+				<p:inputText id="freqUOM" style="min-width:0px !important;width:96%;" styleClass="ppNumericAlign" 
+					value="#{question.clUomFrequency}" 
+					rendered="#{isQuestionTypeItem and isShowService}" required="#{!question.selected}" maxlength="4"
+					label="#{lbl['lbl.tpl.spec.content.frequency.per.uom']}">
+					<ac:validateNumber  maxIntegerDigits="4" integerOnly="true" />
+				</p:inputText>
+				<p:message id="freqUOMMsg" for="freqUOM" display="icon" />
+			</h:panelGroup>
 		</p:column>
 		<p:column style="width:60px;white-space:normal;">
 			<f:facet name="header">
 				<h:outputText value="* " styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.tpl.spec.content.no.uom.per.day']}"/>
 			</f:facet>
-			<p:inputText id="dayUOM" style="min-width:0px !important;width:96%;" styleClass="ppNumericAlign"
-				value="#{question.clUomPerDay}" 
-				rendered="#{isQuestionTypeItem and isUOMHours and isShowService}" required="#{!question.selected}" maxlength="4"
-				label="#{lbl['lbl.tpl.spec.content.no.uom.per.day']}">
-				<ac:validateNumber  maxIntegerDigits="4" integerOnly="true" />
-			</p:inputText>
-			<p:message id="dayUOMMsg" for="dayUOM" display="icon" />
+			<h:panelGroup id="dayUOMPG">
+				<p:inputText id="dayUOM" style="min-width:0px !important;width:96%;" styleClass="ppNumericAlign"
+					value="#{question.clUomPerDay}" 
+					rendered="#{isQuestionTypeItem and isUOMHours and isShowService}" required="#{!question.selected}" maxlength="4"
+					label="#{lbl['lbl.tpl.spec.content.no.uom.per.day']}">
+					<ac:validateNumber  maxIntegerDigits="4" integerOnly="true" />
+				</p:inputText>
+				<p:message id="dayUOMMsg" for="dayUOM" display="icon" />
+			</h:panelGroup>
 		</p:column>
 		<p:column style="width:65px;white-space:normal;">
 			<f:facet name="header">
 				<h:outputText value="* " styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.tpl.spec.content.no.uom.per.month']}"/>
 			</f:facet>
-			<p:inputText id="monthUOM" style="min-width:0px !important;width:96%;" styleClass="ppNumericAlign"
-				value="#{question.clUomPerMonth}" 
-				rendered="#{isQuestionTypeItem and (isUOMHours or isUOMDays) and isShowService}" required="#{!question.selected}" maxlength="4"
-				label="#{lbl['lbl.tpl.spec.content.no.uom.per.month']}">
-				<ac:validateNumber maxIntegerDigits="4" integerOnly="true" />
-			</p:inputText>
-			<p:message id="monthUOMMsg" for="monthUOM" display="icon" />
+			<h:panelGroup id="monthUOMPG">
+				<p:inputText id="monthUOM" style="min-width:0px !important;width:96%;" styleClass="ppNumericAlign"
+					value="#{question.clUomPerMonth}" 
+					rendered="#{isQuestionTypeItem and (isUOMHours or isUOMDays) and isShowService}" required="#{!question.selected}" maxlength="4"
+					label="#{lbl['lbl.tpl.spec.content.no.uom.per.month']}">
+					<ac:validateNumber maxIntegerDigits="4" integerOnly="true" />
+				</p:inputText>
+				<p:message id="monthUOMMsg" for="monthUOM" display="icon" />
+			</h:panelGroup>
 		</p:column>
 		<p:column style="width:60px;white-space:normal;" rendered="#{isDurationByItem}">
 			<f:facet name="header">
 				<h:outputText value="* " styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.tpl.spec.content.duration.month']}"/>
 			</f:facet>
-			<p:inputText id="duration" style="min-width:0px !important;width:96%;" styleClass="ppNumericAlign"
-				value="#{question.clDurationMonth}" 
-				rendered="#{isQuestionTypeItem and isShowService}" required="#{!question.selected}" maxlength="4"
-				label="#{lbl['lbl.tpl.spec.content.duration.month']}">
-				<ac:validateNumber maxIntegerDigits="4" integerOnly="true" />
-			</p:inputText>
-			<p:message id="durationMsg" for="duration" display="icon" />
+			<h:panelGroup id="durationPG">
+				<p:inputText id="duration" style="min-width:0px !important;width:96%;" styleClass="ppNumericAlign"
+					value="#{question.clDurationMonth}" 
+					rendered="#{isQuestionTypeItem and isShowService}" required="#{!question.selected}" maxlength="4"
+					label="#{lbl['lbl.tpl.spec.content.duration.month']}">
+					<ac:validateNumber maxIntegerDigits="4" integerOnly="true" />
+				</p:inputText>
+				<p:message id="durationMsg" for="duration" display="icon" />
+			</h:panelGroup>
 		</p:column>
 	</c:if>
 	
