@@ -126,7 +126,7 @@ import my.ep.web.util.sc.helper.LocationSingleton;
 import my.ep.web.util.template.DocumentGenerator;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang3.builder.CompareToBuilder;
+import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.apache.velocity.VelocityContext;
@@ -1967,31 +1967,44 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	public void applyRecSupplierForSupplierRecList(Long supplierId){ 
 		log.info("applyRecSupplierForSupplierRecList");
 		List<ScRequestNoteDtl>	requestNoteDtls	= new ArrayList<ScRequestNoteDtl>();
+		List<Long> selectedRequestNoteDtlIds  = new ArrayList<Long>();
 		if(getManagedBean().getSelectedRequestNoteDtls() != null && getManagedBean().getSelectedRequestNoteDtls().size() >0) {
+			for (ScRequestNoteDtl selectedReqNoteDtl : getManagedBean().getSelectedRequestNoteDtls()) {
+				selectedRequestNoteDtlIds.add(selectedReqNoteDtl.getRequestNoteDtlId());
+			}
+			
+		} else {
+			throw new EpException("Please select At least one Item.");
+		}
+		
+		if(getManagedBean().getSupplierRecList() != null && getManagedBean().getSupplierRecList().size() >0) {
 			for(ScRequestNoteDtl requestNoteDtl : getManagedBean().getSelectedRequestNoteDtls()) {
+               
+				if(selectedRequestNoteDtlIds.contains(requestNoteDtl.getRequestNoteDtlId())){
 
-				if(requestNoteDtl.getRequestItem() != null && requestNoteDtl.getRequestItem().getSupplierItems() !=null 
-						&& requestNoteDtl.getRequestItem().getSupplierItems().size()>0){
-					List<ScRequestSupplierItem> supplierItems = requestNoteDtl.getRequestItem().getSupplierItems();
+					if(requestNoteDtl.getRequestItem() != null && requestNoteDtl.getRequestItem().getSupplierItems() !=null 
+							&& requestNoteDtl.getRequestItem().getSupplierItems().size()>0){
+						List<ScRequestSupplierItem> supplierItems = requestNoteDtl.getRequestItem().getSupplierItems();
 
-					for (ScRequestSupplierItem scRequestSupplierItem : supplierItems) {
-						
-						if(scRequestSupplierItem.getSmSupplier().getSupplierId().equals(supplierId)){
-							scRequestSupplierItem.setSupplierItemId(supplierId);
-							requestNoteDtl.setScRequestSupplierItem(scRequestSupplierItem);
-							
-							if(scRequestSupplierItem.getSupplierItemPrices()!= null && scRequestSupplierItem.getSupplierItemPrices().size()>0){
-								for (ScSupplierItemPrice scSupplierItemPrice : scRequestSupplierItem.getSupplierItemPrices()) {
+						for (ScRequestSupplierItem scRequestSupplierItem : supplierItems) {
 
-									// zonal item price  
-									if(requestNoteDtl.getTplSpecZoneDtl() !=null){
-										if(requestNoteDtl.getTplSpecZoneDtl().getSpecZoneId().equals(scSupplierItemPrice.getTplSpecZone().getSpecZoneId())){
-											scRequestSupplierItem.setSupplierItemPrice(scSupplierItemPrice);
-											break;
+							if(scRequestSupplierItem.getSmSupplier().getSupplierId().equals(supplierId)){
+								scRequestSupplierItem.setSupplierItemId(supplierId);
+								requestNoteDtl.setScRequestSupplierItem(scRequestSupplierItem);
+
+								if(scRequestSupplierItem.getSupplierItemPrices()!= null && scRequestSupplierItem.getSupplierItemPrices().size()>0){
+									for (ScSupplierItemPrice scSupplierItemPrice : scRequestSupplierItem.getSupplierItemPrices()) {
+
+										// zonal item price  
+										if(requestNoteDtl.getTplSpecZoneDtl() != null){
+											if(requestNoteDtl.getTplSpecZoneDtl().getSpecZoneId().equals(scSupplierItemPrice.getTplSpecZone().getSpecZoneId())){
+												scRequestSupplierItem.setSupplierItemPrice(scSupplierItemPrice);
+												break;
+											}
 										}
 									}
-								}
-							}	
+								}	
+							}
 						}
 					}
 				}
