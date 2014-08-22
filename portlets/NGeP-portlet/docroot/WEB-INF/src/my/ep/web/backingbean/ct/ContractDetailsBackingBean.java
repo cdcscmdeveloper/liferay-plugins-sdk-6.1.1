@@ -1626,12 +1626,12 @@ public void ConstructSideTabMenu(){
 			reqDTO.setContractVerId(contractVerId);
 			reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE);
 			reqDTO.setUpdateAction(true);
+			getManagedBean().setUpdateContract(true);
 			
 		    ContractResDTO resDTO = contractSO.retrieveContractVer(reqDTO);
 		    setValidateContractField(resDTO);
 		    
-		    getManagedBean().setAction(new String[] {BpmOutcomeConst.BPM_SUBMIT});
-		    getManagedBean().setUpdateContract(true);
+		    getManagedBean().setAction(new String[] {BpmOutcomeConst.BPM_SUBMIT});		    
 	        getManagedBean().setViewContract(false);
 	        this.getManagedBean().setSelectedTabIndex(0);
 	        log.info("BackingBean: Performance Testing  gotoUpdatePage Function: Time taken to End >>>>"+ Calendar.getInstance().getTime());
