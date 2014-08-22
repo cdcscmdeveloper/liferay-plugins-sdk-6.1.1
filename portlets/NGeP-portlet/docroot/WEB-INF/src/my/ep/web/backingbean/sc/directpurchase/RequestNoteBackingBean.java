@@ -2216,7 +2216,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				marketSummaryAndPIBean = new MarketSummaryAndPIBean();
 				supplierItemId = supplierItem.getSupplierItemId();
 				marketSummaryAndPIBean.setSupplierItemId(supplierItemId);
-				marketSummaryAndPIBean.setSupplierName(supplierItem.getSmSupplier().getCompanyName());
+				marketSummaryAndPIBean.setSupplierName(supplierItem.getSmSupplier().getCompanyName().replaceAll("&", "&#38;"));
 				marketSummaryAndPIBean.setMinQty(scRequestItem.getMinqty() != null ? scRequestItem.getMinqty().toString() :" ");
 				marketSummaryAndPIBean.setDeliveryTerm(supplierItemPrice.getPricing().getCmSupplierItem().getLeadTime() != null ? supplierItemPrice.getPricing().getCmSupplierItem().getLeadTime().toString() : " ");
 				marketSummaryAndPIBean.setAddItemDesc(supplierItemPrice.getPricing().getCmSupplierItem().getItemDesc() != null ? supplierItemPrice.getPricing().getCmSupplierItem().getItemDesc() : " ");
@@ -2261,7 +2261,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					context.put("uom", supplierItem.getRequestNoteItem().getUom() != null ? supplierItem.getRequestNoteItem().getUom().getUomName() : " ");
 				}	
 				marketSummaryAndPIBean.setSupplierItemId(supplierItemId);
-				marketSummaryAndPIBean.setSupplierName(supplierItem.getSmSupplier().getCompanyName());
+				marketSummaryAndPIBean.setSupplierName(supplierItem.getSmSupplier().getCompanyName().replaceAll("&", "&#38;"));
 				marketSummaryAndPIBean.setMinQty(supplierItem.getRequestNoteItem().getMinqty() != null ? supplierItem.getRequestNoteItem().getMinqty().toString() :" ");
 				marketSummaryAndPIBean.setDeliveryTerm(supplierItemPrice.getPricing().getCmSupplierItem().getLeadTime() != null ? supplierItemPrice.getPricing().getCmSupplierItem().getLeadTime().toString() : " ");
 				marketSummaryAndPIBean.setAddItemDesc(supplierItemPrice.getPricing().getCmSupplierItem().getItemDesc() != null ? supplierItemPrice.getPricing().getCmSupplierItem().getItemDesc() : " ");
