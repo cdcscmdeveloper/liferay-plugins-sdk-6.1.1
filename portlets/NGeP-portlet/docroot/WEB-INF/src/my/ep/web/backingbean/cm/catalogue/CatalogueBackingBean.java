@@ -1188,7 +1188,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 									cmStandardPricing.setEndDate(endDate);
 								}else if (row.getCell(9) != null && row.getCell(9).getCellType() == Cell.CELL_TYPE_STRING &&
 											!row.getCell(9).getStringCellValue().isEmpty()) {
-									startDate = new SimpleDateFormat("dd/mm/yyyy").parse(row.getCell(9).getStringCellValue());
+									endDate = new SimpleDateFormat("dd/mm/yyyy").parse(row.getCell(9).getStringCellValue());
 									cmStandardPricing.setEndDate(endDate);
 								}
 								
