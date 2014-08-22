@@ -75,7 +75,7 @@
 													action="#{approvalBackingBean.downloadFile(attachFile)}" />
 												<p:commandLink
 													action="#{approvalBackingBean.deleteUploadFile}"
-													immediate="true" update="@([id$=bpkremarksupDtls])">
+													immediate="true" update="attachedIds">
 													<h:graphicImage library="ep/images/design" name="trash.png"
 														styleClass="tasklist_title1" />
 												</p:commandLink></td>
@@ -89,7 +89,7 @@
 		</table>
 	</p:panel>
 
-	<p:dialog id="attach" widgetVar="attachDlg1" modal="true"
+	<p:dialog id="supportAttachDlgids" widgetVar="supportAttachDlg" modal="true"
 		resizable="false" width="700px" height="200" styleClass="pop_up_top"
 		header="#{lbl['lbl.txt.choose.files']}">
 

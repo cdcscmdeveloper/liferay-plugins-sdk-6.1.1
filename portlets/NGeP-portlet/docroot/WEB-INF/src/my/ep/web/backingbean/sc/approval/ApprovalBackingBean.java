@@ -203,7 +203,7 @@ public class ApprovalBackingBean extends
 	}
 
 	public void deleteUploadFile() {
-		getManagedBean().getAttachments().clear();
+		getManagedBean().getScQtApproval().setScQtApprovalAttachment(null);
 	}
 
 	/**
