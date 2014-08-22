@@ -1091,6 +1091,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 						null, null, null, locationLevel, TplSpecZoneLoc.class));
 		// zone required validation
 		getManagedBean().setRequired(Boolean.TRUE);
+		getManagedBean().setZoneName("");
 	}
 	
    /**
@@ -1124,41 +1125,46 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			}
 		}
 		
-		TplSpecZoneDtl tplSpecZoneDtl = new TplSpecZoneDtl();
-		ScQuoteZone quoteZone = getManagedBean().getScQuote().getQuoteZone();
-		quoteZone.setScQuote(getManagedBean().getScQuote());
-		tplSpecZoneDtl.setTplSpecZone(quoteZone);
-		tplSpecZoneDtl.setZoneName(getManagedBean().getZoneName());
-		getManagedBean().setZoneName(null);
+		if(locationDTOs != null && !locationDTOs.isEmpty()){
 
-		List<PmState> states = SourcingLocationHelper
-				.getStateFromLocationDTO(locationDTOs);
-		List<PmDivision> divisions = SourcingLocationHelper
-				.getDivisionFromLocationDTO(locationDTOs);
-		List<PmDistrict> districts = SourcingLocationHelper
-				.getDistrictFromLocationDTO(locationDTOs);
-		List<PmCity> cities = SourcingLocationHelper
-				.getCityFromLocationDTO(locationDTOs);
+			TplSpecZoneDtl tplSpecZoneDtl = new TplSpecZoneDtl();
+			ScQuoteZone quoteZone = getManagedBean().getScQuote().getQuoteZone();
+			quoteZone.setScQuote(getManagedBean().getScQuote());
+			tplSpecZoneDtl.setTplSpecZone(quoteZone);
+			tplSpecZoneDtl.setZoneName(getManagedBean().getZoneName());
+			getManagedBean().setZoneName(null);
+
+			List<PmState> states = SourcingLocationHelper
+					.getStateFromLocationDTO(locationDTOs);
+			List<PmDivision> divisions = SourcingLocationHelper
+					.getDivisionFromLocationDTO(locationDTOs);
+			List<PmDistrict> districts = SourcingLocationHelper
+					.getDistrictFromLocationDTO(locationDTOs);
+			List<PmCity> cities = SourcingLocationHelper
+					.getCityFromLocationDTO(locationDTOs);
 
 
-		if (getManagedBean().getZoneIndex() == -1) {
-			getManagedBean().getZoneTrees().add(
-					LocationSingleton.getInstance().buildLocationTree(tplSpecZoneDtl, states,
-							districts, divisions, cities,TplSpecZoneLoc.class));
+			if (getManagedBean().getZoneIndex() == -1) {
+				getManagedBean().getZoneTrees().add(
+						LocationSingleton.getInstance().buildLocationTree(tplSpecZoneDtl, states,
+								districts, divisions, cities,TplSpecZoneLoc.class));
 
-		} else if (getManagedBean().getZoneIndex() >= 0) {
+			} else if (getManagedBean().getZoneIndex() >= 0) {
 
-			getManagedBean().getZoneTrees().remove(getManagedBean().getZoneIndex());
-			getManagedBean().getZoneTrees().add(
-					getManagedBean().getZoneIndex(),
-					LocationSingleton.getInstance().buildLocationTree(tplSpecZoneDtl, states,
-							districts, divisions, cities ,TplSpecZoneLoc.class));
-		}
-		this.getManagedBean().setZoneIndex(-1);
-		
-		// zone details
-		if(!getManagedBean().getZoneTrees().isEmpty()){
-			getManagedBean().getScQuote().setQuoteZone(getQuoteZones(getManagedBean().getZoneTrees()));
+				getManagedBean().getZoneTrees().remove(getManagedBean().getZoneIndex());
+				getManagedBean().getZoneTrees().add(
+						getManagedBean().getZoneIndex(),
+						LocationSingleton.getInstance().buildLocationTree(tplSpecZoneDtl, states,
+								districts, divisions, cities ,TplSpecZoneLoc.class));
+			}
+			this.getManagedBean().setZoneIndex(-1);
+
+			// zone details
+			if(!getManagedBean().getZoneTrees().isEmpty()){
+				getManagedBean().getScQuote().setQuoteZone(getQuoteZones(getManagedBean().getZoneTrees()));
+			}
+		} else{
+			throw new EpException("Please select At least one Zone Location");
 		}
 		
 		// hide zone location popup
