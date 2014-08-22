@@ -238,7 +238,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				throw new EpException("Please login."); //TODO
 			}
 			//load user
-			PmUser pmUser = PmCommonUtil.retrieveUserById(id);
+			PmUser pmUser = PmCommonUtil.retrieveUserById(id, true);
 			pmUser.setPMP(pmUser.isPMP()?true:false);
 			pmUser.setIdentificationCode(pmUser.getIdentificationCode()==null ? new PmParameter() : pmUser.getIdentificationCode());
 			pmUser.setSalutationCode(pmUser.getSalutationCode()==null ? new PmSalutation() : pmUser.getSalutationCode());
@@ -527,6 +527,35 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		}
 	}
 
+	public void orgUnitStatusChange(int index){
+		logger.info("orgUnitStatusChange");
+		if(this.getManagedBean().getSelectedUser().getPmUserOrgs()!=null && !this.getManagedBean().getSelectedUser().getPmUserOrgs().isEmpty()){
+			this.getManagedBean().setSelectedUserOrg(this.getManagedBean().getSelectedUser().getPmUserOrgs().get(index));
+			int status = this.getManagedBean().getSelectedUserOrg().getRecordStatusFlg();
+			if(this.getManagedBean().getSelectedUserOrg()!=null && this.getManagedBean().getSelectedUserOrg().getPmUserRoles()!=null){
+				for(PmUserRole pmUserRoles:this.getManagedBean().getSelectedUserOrg().getPmUserRoles()){
+					pmUserRoles.setRecordStatusFlg(status);
+					userRoleStatusChange(pmUserRoles);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Reset PmUserOrg info
+	 * @param index
+	 */
+	public void changeResOrgType(int index){
+		logger.info("changeResOrgType");
+		if(this.getManagedBean().getSelectedUser().getPmUserOrgs()!=null && !this.getManagedBean().getSelectedUser().getPmUserOrgs().isEmpty()){
+			this.getManagedBean().setSelectedUserOrg(this.getManagedBean().getSelectedUser().getPmUserOrgs().get(index));
+			if(this.getManagedBean().getSelectedUserOrg()!=null){
+				this.getManagedBean().getSelectedUserOrg().getPmOrgProfile().setPmOrgValidity(new PmOrgValidity());
+				this.getManagedBean().getSelectedUserOrg().setPmUserRoles(new ArrayList<PmUserRole>());
+			}
+		}	
+	}
+	
 	/**
 	 * Get Role description by role code.
 	 * 
@@ -551,21 +580,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		return roleDesc;
 	}
 	
-	/**
-	 * Reset PmUserOrg info
-	 * @param index
-	 */
-	public void changeResOrgType(int index){
-		logger.info("changeResOrgType");
-		if(this.getManagedBean().getSelectedUser().getPmUserOrgs()!=null && !this.getManagedBean().getSelectedUser().getPmUserOrgs().isEmpty()){
-			PmUserOrg selectedPmUserOrg = this.getManagedBean().getSelectedUser().getPmUserOrgs().get(index);
-			if(selectedPmUserOrg!=null){
-				selectedPmUserOrg.getPmOrgProfile().setPmOrgValidity(new PmOrgValidity());
-				selectedPmUserOrg.setPmUserRoles(new ArrayList<PmUserRole>());
-			}
-		}	
-	}
-	
+
 	/**
 	 * Add new selected role to user role list
 	 */
@@ -1140,7 +1155,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 					if(pmUserRole.isBrandNew() || (pmUserRole.isModified() && pmUserRole.getRecordStatusFlg()==DbValueConst.RECORD_STATUS_ACTIVE)){
 						newRoleList.add(pmUserRole);
 						System.out.println("ADD NEW: " + pmUserRole.getPmRole().getRoleCode());
-					}else if(pmUserRole.getRecordStatusFlg()==DbValueConst.RECORD_STATUS_DELETED && pmUserRole.isModified()){
+					}else if(pmUserRole.getRecordStatusFlg()==DbValueConst.RECORD_STATUS_SUSPENDED && pmUserRole.isModified()){
 						deleteRoleList.add(pmUserRole);
 						System.out.println("DELETE OLD: " + pmUserRole.getPmRole().getRoleCode());
 					}

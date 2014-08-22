@@ -174,7 +174,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 				throw new EpException("Please login."); //TODO
 			}
 			//load user
-			PmUser pmUser = PmCommonUtil.retrieveUserById(id);
+			PmUser pmUser = PmCommonUtil.retrieveUserById(id, false);
 			pmUser.setPMP(pmUser.isPMP()?true:false);
 			pmUser.setIdentificationCode(pmUser.getIdentificationCode()==null ? new PmParameter() : pmUser.getIdentificationCode());
 			pmUser.setSalutationCode(pmUser.getSalutationCode()==null ? new PmSalutation() : pmUser.getSalutationCode());

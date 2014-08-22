@@ -364,23 +364,30 @@ public class PmCommonUtil {
 	 * @param id
 	 * @return PmUser
 	 */
-	public static PmUser retrieveUserById(Long id){
+	public static PmUser retrieveUserById(Long id, boolean ignoreStatus){
 		PmUser pmUser = new PmUser();
 		try {
 			UserReqDTO reqDTO = new UserReqDTO();
+			UserResDTO resDTO = null;
 			reqDTO.setUserId(id);
 			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-			UserResDTO resDTO = userSO.retrieveUserProfileByUserId(reqDTO);
+			if(ignoreStatus){
+				resDTO = userSO.retrieveUserByLoginIdOrUserIdIgnoreStatus(reqDTO);
+			}else{
+				resDTO = userSO.retrieveUserProfileByUserId(reqDTO);
+			}
+			
 			if(resDTO.isSuccessful()){
 				pmUser = resDTO.getPmUser();
 			}
 				
 		} catch (Exception e) {
-			throw new EpException(MessageConst.ERROR_770002, new String[]{e.getMessage()}); //TODO exception
+			throw new EpException("Unable to retrieve user:" + id , new String[]{e.getMessage()}); //TODO exception
 		}		
 		return pmUser;
 	}
 
+	
 	
 	
 }
