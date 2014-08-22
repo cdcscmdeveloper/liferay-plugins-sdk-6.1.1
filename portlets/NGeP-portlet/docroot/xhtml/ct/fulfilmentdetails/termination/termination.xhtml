@@ -8,7 +8,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<p:panel id="fd" header="#{lbl['lbl.ct.panel.name']}" toggleable="true" collapsed="false" toggleSpeed="500">
 		<h:panelGrid columns="2" style="width:100%;" styleClass="top-aligned-columns">
-		   <h:panelGrid columns="4" style="width:1000px;" columnClasses="columnWidth200,columnWidth250,columnWidth300,columnWidth250">
+		   <h:panelGrid columns="4" style="width:1000px;" columnClasses="columnWidth200,columnWidth250,columnWidth250,columnWidth250">
 		      <p:outputLabel id="cno" value="#{lbl['lbl.ct.cno']}" />
 			  <p:inputText for="cno" value="#{terminationBackingBean.managedBean.ctContract.contractNo}" 
 			     disabled="true" style="width:170px;" />
@@ -133,7 +133,7 @@
 	</h:panelGrid>
  </p:panel>
     <p:panel id="terminateContract" header="#{lbl['lbl.ct.tr.panel.header']}" toggleable="true"  toggleSpeed="500">
-       <h:panelGrid columns="4" style="width:1000px;" columnClasses="columnWidth200,columnWidth250,columnWidth300,columnWidth250">
+       <h:panelGrid columns="4" style="width:1000px;" columnClasses="columnWidth200,columnWidth250,columnWidth250,columnWidth250">
         <h:panelGrid columns="2" style="float:right;">
 			<p:outputLabel value="*" styleClass="mandatory" />
             <p:outputLabel value="#{lbl['lbl.ct.tr.recom']}" />
