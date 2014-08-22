@@ -28,7 +28,7 @@
 	            </p:selectOneMenu>		     
 	        </p:column>	 
 		    <p:column headerText="#{lbl['lbl.pm.profiles.resorg.table.code']}" >        
-	            <ac:lov id="lovResOrg" lovId="PM_ORG_PROFILE" styleClass="ppDisplayCalXS" 
+	            <ac:lov id="lovResOrg" lovId="PM_ORG_PROFILE" size="20"
 	            	update=":form:dtOrgUnit" readonly="true" disabled="#{!orgUnit.brandNew}"
 					headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
 					value="#{orgUnit.pmOrgProfile.pmOrgValidity.orgCode}" 
@@ -41,16 +41,18 @@
        			#{orgUnit.pmOrgProfile.pmOrgValidity.orgName}
 	        </p:column>
 	        <p:column headerText="#{lbl['lbl.pm.profiles.resorg.table.effdate']}" > 
-			  	<p:calendar id="effDateId" value="#{orgUnit.effDateDisplay}" styleClass="ppDisplayCalS" 
+			  	<p:calendar id="effDateId" value="#{orgUnit.effDateDisplay}" styleClass="ppDisplayCalXS" 
 					showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 	        </p:column>
 	        <p:column headerText="#{lbl['lbl.pm.profiles.resorg.table.expdate']}" > 
-			  	<p:calendar id="expDateId" value="#{orgUnit.expDateDisplay}" styleClass="ppDisplayCalS"
+			  	<p:calendar id="expDateId" value="#{orgUnit.expDateDisplay}" styleClass="ppDisplayCalXS"
 					showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 	        </p:column>
 	        <p:column headerText="#{lbl['lbl.pm.profiles.userdetails.status']}" width="5%"> 
 		       	<p:selectOneMenu value="#{orgUnit.recordStatusFlg}" styleClass="ppDropDownWidthXS">  
 	            	<f:selectItems value="#{profileManagementBackingBean.getStatusOptions()}" />
+	            	<p:ajax event="change" listener="#{profileManagementBackingBean.orgUnitStatusChange(index)}" 
+			     		update=":form:tvRoleReceivingAddr:dtRoles"/>
 	          	</p:selectOneMenu>         
 	        </p:column>        
 	        <p:column headerText="#{lbl['lbl.pm.action']}">  
