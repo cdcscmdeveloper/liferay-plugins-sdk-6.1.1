@@ -93,7 +93,9 @@
 					action="#{codificationBackingBean.unspscSearch}"
 					update="cmUNSPSCsearchID" />
 				<p:commandButton value="Back" icon="ui-icon-back"
-					action="#{codificationBackingBean.backToReviewUnspsc}" />
+					action="#{codificationBackingBean.backToReviewUnspsc}">
+					<f:param name="currentTaskName" value="#{unspscCodeBackingBean.managedBean.taskName}" />
+				</p:commandButton>
 
 			</div>
 

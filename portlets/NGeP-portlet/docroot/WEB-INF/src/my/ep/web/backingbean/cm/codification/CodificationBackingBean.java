@@ -1457,10 +1457,12 @@ public class CodificationBackingBean extends
 		FacesScopes fs = new FacesScopes();
 
 		log.info("CD_ADMIN" + fs.hasRoleUser("CM_ADMIN"));
-		log.info("Current Task Name: " + this.getManagedBean().getCurrentTaskName());
+		log.info("Current Task Name: " + fs.getParameter("currentTaskName"));
 
-		if(this.getManagedBean().getCurrentTaskName() != null &&
-				this.getManagedBean().getCurrentTaskName().equals(my.ep.constant.cm.CmConst.TASK_CREATE_TEMP_CODE)) {
+		String currentTaskName = fs.getParameter("currentTaskName");
+		
+		if(currentTaskName != null &&
+				currentTaskName.equals(my.ep.constant.cm.CmConst.TASK_CREATE_TEMP_CODE)) {
 			return "reviewBeforeCreateTempCode?faces-redirect=true";
 		} else {
 			return "reviewUnspscCode?faces-redirect=true";
