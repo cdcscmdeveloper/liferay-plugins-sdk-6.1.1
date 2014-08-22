@@ -64,6 +64,7 @@ import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.pm.helper.RoleHelper;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
@@ -782,17 +783,18 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		boolean isUnique = true;
 		if(this.getManagedBean().getSelectedDeliveringAddrTypes()!=null 
 				&& !this.getManagedBean().getSelectedDeliveringAddrTypes().isEmpty()){
+			if(this.getManagedBean().getSelectedReceivingAddrTypes()!=null && !this.getManagedBean().getSelectedReceivingAddrTypes().isEmpty()){
+				List <Long> deliveringAddr = new ArrayList<Long>();
+				
+				for(PmAddressType pmAddressType: this.getManagedBean().getSelectedDeliveringAddrTypes()){
+					deliveringAddr.add(pmAddressType.getPmAddress().getAddressId());
+				}	
 			
-			List <Long> deliveringAddr = new ArrayList<Long>();
-			
-			for(PmAddressType pmAddressType: this.getManagedBean().getSelectedDeliveringAddrTypes()){
-				deliveringAddr.add(pmAddressType.getPmAddress().getAddressId());
-			}
-			
-			for(PmAddressType pmAddressType: this.getManagedBean().getSelectedReceivingAddrTypes()){
-				if(deliveringAddr.contains(pmAddressType.getPmAddress().getAddressId())){
-					isUnique = false;
-					break;
+				for(PmAddressType pmAddressType: this.getManagedBean().getSelectedReceivingAddrTypes()){
+					if(deliveringAddr.contains(pmAddressType.getPmAddress().getAddressId())){
+						isUnique = false;
+						break;
+					}
 				}
 			}
 		}
@@ -1169,12 +1171,22 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		UserReqDTO reqDTO = null;
 		IUserSO userSO = null;
 		PmUser user =  null; 
-
+		boolean isChangePwd = false;
 		
 		try {
 			reqDTO = new UserReqDTO();
 			user = this.getManagedBean().getSelectedUser();
 			user.setLoginId(user.getIdentificationNo());
+			
+			if(!StringUtils.isBlank(user.getOldPassword()) && !StringUtils.isBlank(user.getConfirmPassword()) && !StringUtils.isBlank(user.getPassword())){
+				isChangePwd = true;
+			}
+			
+			if(isChangePwd){//TODO currently check via liferay
+				if(!checkOldPassword(user)){
+					throw new EpException("Old Password is invalid."); 
+				}
+			}
 			
 			loadUserAddress(user);
 			
@@ -1218,13 +1230,12 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	}
 	
 	
-	public void check() throws PortalException, SystemException{
-		checkOldPassword(this.getManagedBean().getSelectedUser());
-	}
-	public boolean checkOldPassword(PmUser pmUser) throws PortalException, SystemException{
-		logger.info("checkOldPassword - START");
+
+	
+	private boolean checkOldPassword(PmUser pmUser) throws PortalException, SystemException{
+		logger.info("checkOldPassword");
 		boolean result = false;
-		long status = 5;
+		long status = 0;
 		long companyId = Long.parseLong(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_COMPANY_ID));
 		String loginId = pmUser.getLoginId();
 		String pwd = pmUser.getOldPassword();
@@ -1232,12 +1243,9 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		System.out.println("pwd: " + pwd);
 		System.out.println("companyId: " + companyId);
 		status = UserLocalServiceUtil.authenticateForBasic(companyId, CompanyConstants.AUTH_TYPE_SN, loginId, pwd);
-		System.out.println("status: " + status);
-		FacesContext.getCurrentInstance().addMessage(
-				null,
-				new FacesMessage(FacesMessage.SEVERITY_INFO,
-						null, "Result" + status));
-		logger.info("checkOldPassword - END");
+		if(status>0){
+			result = true;
+		}
 		return result;
 	}
 	
