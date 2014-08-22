@@ -11,7 +11,7 @@
 
 	<h:panelGroup id="supplierItemViewID">
 
-		<p:messages id="catSrchMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false"  severity="error, info"/>
+		<p:messages id="catSrchMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="true"></p:messages>
 		
 		<p:blockUI block=":form" trigger="searchButtonId">
 				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
@@ -98,7 +98,7 @@
 						<div style="text-align: right;">
 							<p:commandButton value="Search" icon="ui-icon-search"
 								action="#{catalogueBackingBean.managedBean.searchCatalogue}"
-								update="searchViewId" id="searchButtonId"
+								update="searchViewId,catSrchMsg" id="searchButtonId"
 								oncomplete="updateCatButtons();">
 								<f:param name="unspscCode" value="#{unspscCode}" />
 							</p:commandButton>

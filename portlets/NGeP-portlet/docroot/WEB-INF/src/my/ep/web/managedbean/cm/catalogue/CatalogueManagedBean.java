@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
@@ -18,6 +19,7 @@ import my.ep.biz.service.cm.catalogue.IViewSupplierItemSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
+import my.ep.exception.EpException;
 import my.ep.persistence.entity.cm.catalog.CmFavoriteSupplier;
 import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
@@ -40,6 +42,9 @@ import my.ep.web.vo.AdvanceSearchVO;
 import my.ep.web.vo.PricingVO;
 import my.ep.util.EpPropertiesUtils;
 import org.apache.commons.lang.StringUtils;
+import my.ep.constant.MessageConst;
+import javax.faces.context.FacesContext;
+import my.ep.util.MessageUtils;
 
 @ManagedBean(name = "catalogueMB")
 @SessionScoped
@@ -322,6 +327,18 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 				CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 				reqDTO.setViewSearchBean(searchBean);
+				
+				if(searchBean.getDataFilterBeans().size()<=0){
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+									MessageUtils.getMessage(MessageConst.ERROR_716006,
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));
+					//throw new EpException(MessageConst.ERROR_715014);
+					return new SearchResultBean();
+				}
+				
 				FacesScopes facesScopes = new FacesScopes();
 				Long userId = facesScopes.getUserSessionBean().getUserId();
 				reqDTO.setUserId(userId);
@@ -331,7 +348,9 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				System.out.println("*********after***********");
 				
 				return resDTO.getViewSuppItemResultBean();
-
+			}catch(Exception e){
+				e.printStackTrace();
+				return new SearchResultBean();
 			} finally {
 				viewSO = null;
 			}
