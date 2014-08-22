@@ -2985,7 +2985,7 @@ public class SpecificationBackingBean extends
 						BriefingZoneBean bean = new BriefingZoneBean(
 								tplSpecZoneDtl, resDTO.getAddressResultBean());
 						this.getManagedBean().getDeliveryLocBean().add(bean);
-						
+
 					}
 				}
 			}
@@ -4146,6 +4146,8 @@ public class SpecificationBackingBean extends
 	}
 
 	public void fulfilmentChange(AjaxBehaviorEvent event) {
+		IQTSpecSO specso = getSpecSO();
+		SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
 		try {
 			Long type = (Long) event.getComponent().getAttributes()
 					.get("value");
@@ -4157,6 +4159,21 @@ public class SpecificationBackingBean extends
 					this.getManagedBean().setFulfilmentType(
 							paramDesc.getPmParameter().getParameterCode());
 				}
+			}
+
+			if (ParameterConst.FULFILMENT_TYPE_ONE_OFF.equalsIgnoreCase(this
+					.getManagedBean().getFulfilmentType())) {
+				this.getManagedBean().getScQt()
+						.setScheduleType(SourcingConstants.FREQUENCY_SCHEDULE);
+				specReqDTO.setScQt(this.getManagedBean().getScQt());
+				specReqDTO.setFullfilementType(this.getManagedBean()
+						.getFulfilmentType());
+				specso.removefulfillmentDtls(specReqDTO);
+			} else if (ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN
+					.equalsIgnoreCase(this.getManagedBean().getFulfilmentType())) {
+				this.getManagedBean().getScQt()
+						.setScheduleType(SourcingConstants.PROGRESSIVE_PAYMENT);
+
 			}
 
 		} finally {
@@ -4215,8 +4232,14 @@ public class SpecificationBackingBean extends
 	}
 
 	public void scheduleTypeChange(AjaxBehaviorEvent event) {
+		IQTSpecSO specso = getSpecSO();
+		SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
 		String scheduletype = (String) event.getComponent().getAttributes()
 				.get("value");
+		specReqDTO.setScQt(this.getManagedBean().getScQt());
+		specReqDTO.setFullfilementType(this.getManagedBean()
+				.getFulfilmentType());
+		specso.removefulfillmentDtls(specReqDTO);
 
 	}
 
@@ -5829,7 +5852,7 @@ public class SpecificationBackingBean extends
 	public void deleteDeliveryZone(String deliveryZoneName) {
 		List<BriefingZoneBean> deliveryBean = this.getManagedBean()
 				.getDeliveryLocBean();
-		
+
 		if (!this.getManagedBean().getScQt().isPanel()) {
 			for (BriefingZoneBean zonebean : deliveryBean) {
 				if (zonebean.getTplSpecZoneDtl().getZoneName()
@@ -9250,11 +9273,11 @@ public class SpecificationBackingBean extends
 		ScQt scQt = this.getManagedBean().getScQt();
 		if (this.getManagedBean().getFulfilmentType()
 				.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN)) {
-			scQt.setScheduleType("P");
+			scQt.setScheduleType(SourcingConstants.PROGRESSIVE_PAYMENT);
 		}
 		if (this.getManagedBean().getFulfilmentType()
 				.equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)) {
-			scQt.setScheduleType("O");
+			scQt.setScheduleType(SourcingConstants.FREQUENCY_SCHEDULE);
 		}
 
 		List<ScQtCheckList> localChecklist = new ArrayList<ScQtCheckList>();
@@ -9557,8 +9580,31 @@ public class SpecificationBackingBean extends
 
 				}
 				scQt.setScQtDeliveryLocs(localDeliveryList);
-			} else {
-				scQt.setScQtDeliveryLocs(null);
+			} else if (null == deliveryList || deliveryList.isEmpty()) {
+
+				deliveryList = new ArrayList<BriefingZoneBean>();
+				List<BriefingZoneBean> deliveryListLocal = this
+						.getManagedBean().getDeliveryLocBean();
+				if (null != deliveryListLocal && !deliveryListLocal.isEmpty()) {
+
+					for (BriefingZoneBean briefingZoneBean : deliveryListLocal) {
+						if (briefingZoneBean.getDeliveryLocList() != null
+								&& !briefingZoneBean.getDeliveryLocList()
+										.isEmpty()) {
+
+							localDeliveryList.addAll(briefingZoneBean
+									.getDeliveryLocList());
+
+						}
+
+					}
+					scQt.setScQtDeliveryLocs(localDeliveryList);
+
+				} else {
+
+					scQt.setScQtDeliveryLocs(null);
+				}
+
 			}
 		} else {
 			List<ScQtDeliveryLoc> nonZoneList = this.getManagedBean()
