@@ -6481,10 +6481,10 @@ public class SpecificationBackingBean extends
 
 	public void calculateTotalPackage(ScQtScoreSetting technical) {
 		try {
-			if (null==technical.getOverallTechnical()) {
+			if (null == technical.getOverallTechnical()) {
 				technical.setOverallTechnical(new BigDecimal(0));
 			}
-			if (null==technical.getOverallFin()) {
+			if (null == technical.getOverallFin()) {
 				technical.setOverallFin(new BigDecimal(0));
 			}
 			int local = technical.getOverallTechnical().intValue()
@@ -6499,10 +6499,10 @@ public class SpecificationBackingBean extends
 
 	public void calculateRecommendtechnicalScore(ScQtScoreSetting technical) {
 		try {
-			if (null==technical.getOverallTechnical()) {
+			if (null == technical.getOverallTechnical()) {
 				technical.setOverallTechnical(new BigDecimal(0));
 			}
-			if (null==technical.getOverallOtherTechnical()) {
+			if (null == technical.getOverallOtherTechnical()) {
 				technical.setOverallOtherTechnical(new BigDecimal(0));
 			}
 			int local = technical.getOverallTechnical().intValue()
@@ -6524,10 +6524,10 @@ public class SpecificationBackingBean extends
 
 	public void calculateRecommendFinancialScore(ScQtScoreSetting financial) {
 		try {
-			if (null==financial.getOverallFin()) {
+			if (null == financial.getOverallFin()) {
 				financial.setOverallFin(new BigDecimal(0));
 			}
-			if (null==financial.getOverallOtherFin()) {
+			if (null == financial.getOverallOtherFin()) {
 				financial.setOverallOtherFin(new BigDecimal(0));
 			}
 			int local = financial.getOverallFin().intValue()
@@ -6697,7 +6697,7 @@ public class SpecificationBackingBean extends
 					.getScQtCheckSt2techProposal()
 					.add(this.getManagedBean().getIndex(),
 							resDTO.getScQtCheckList());
-			this.getManagedBean().setScQtChecklist(resDTO.getScQtCheckList());
+			
 			FacesContext
 					.getCurrentInstance()
 					.addMessage(
@@ -6869,7 +6869,7 @@ public class SpecificationBackingBean extends
 					.getScQtCheckSt2techProposal()
 					.add(this.getManagedBean().getIndex(),
 							resDTO.getScQtCheckList());
-			this.getManagedBean().setScQtChecklist(resDTO.getScQtCheckList());
+			
 			FacesContext
 					.getCurrentInstance()
 					.addMessage(
@@ -6965,7 +6965,7 @@ public class SpecificationBackingBean extends
 				.getScQtCheckSt2financeProposalList()
 				.add(this.getManagedBean().getIndex(),
 						resDTO.getScQtCheckList());
-		this.getManagedBean().setScQtChecklist(resDTO.getScQtCheckList());
+	
 		FacesContext
 				.getCurrentInstance()
 				.addMessage(
@@ -7058,7 +7058,7 @@ public class SpecificationBackingBean extends
 				.getScQtCheckSt2financeProposalList()
 				.add(this.getManagedBean().getIndex(),
 						resDTO.getScQtCheckList());
-		this.getManagedBean().setScQtChecklist(resDTO.getScQtCheckList());
+		
 		FacesContext
 				.getCurrentInstance()
 				.addMessage(
@@ -7148,7 +7148,7 @@ public class SpecificationBackingBean extends
 				.getScQtCheckSt2techProposal()
 				.add(this.getManagedBean().getIndex(),
 						resDTO.getScQtCheckList());
-		this.getManagedBean().setScQtChecklist(resDTO.getScQtCheckList());
+		
 
 		FacesContext.getCurrentInstance().addMessage(
 				null,
@@ -7241,7 +7241,7 @@ public class SpecificationBackingBean extends
 				.getScQtCheckSt2techProposal()
 				.add(this.getManagedBean().getIndex(),
 						resDTO.getScQtCheckList());
-		this.getManagedBean().setScQtChecklist(resDTO.getScQtCheckList());
+		
 		FacesContext.getCurrentInstance().addMessage(
 				null,
 				new FacesMessage(FacesMessage.SEVERITY_INFO,
@@ -7331,7 +7331,7 @@ public class SpecificationBackingBean extends
 				.getScQtCheckSt2techProposal()
 				.add(this.getManagedBean().getIndex(),
 						resDTO.getScQtCheckList());
-		this.getManagedBean().setScQtChecklist(resDTO.getScQtCheckList());
+		
 		FacesContext.getCurrentInstance().addMessage(
 				null,
 				new FacesMessage(FacesMessage.SEVERITY_INFO,
@@ -7420,7 +7420,7 @@ public class SpecificationBackingBean extends
 				.getScQtCheckSt2financeProposalList()
 				.add(this.getManagedBean().getIndex(),
 						resDTO.getScQtCheckList());
-		this.getManagedBean().setScQtChecklist(resDTO.getScQtCheckList());
+	
 		FacesContext.getCurrentInstance().addMessage(
 				null,
 				new FacesMessage(FacesMessage.SEVERITY_INFO,
@@ -7509,7 +7509,7 @@ public class SpecificationBackingBean extends
 				.getScQtCheckSt2financeProposalList()
 				.add(this.getManagedBean().getIndex(),
 						resDTO.getScQtCheckList());
-		this.getManagedBean().setScQtChecklist(resDTO.getScQtCheckList());
+	
 		FacesContext.getCurrentInstance().addMessage(
 				null,
 				new FacesMessage(FacesMessage.SEVERITY_INFO,
@@ -7593,7 +7593,7 @@ public class SpecificationBackingBean extends
 				.getScQtCheckSt2financeProposalList()
 				.add(this.getManagedBean().getIndex(),
 						resDTO.getScQtCheckList());
-		this.getManagedBean().setScQtChecklist(resDTO.getScQtCheckList());
+		
 		FacesContext.getCurrentInstance().addMessage(
 				null,
 				new FacesMessage(FacesMessage.SEVERITY_INFO,
@@ -7774,7 +7774,7 @@ public class SpecificationBackingBean extends
 				.getScQtCheckSt2financeProposalList()
 				.add(this.getManagedBean().getIndex(),
 						resDTO.getScQtCheckList());
-		this.getManagedBean().setScQtChecklist(resDTO.getScQtCheckList());
+		
 		FacesContext.getCurrentInstance().addMessage(
 				null,
 				new FacesMessage(FacesMessage.SEVERITY_INFO,
@@ -7863,7 +7863,7 @@ public class SpecificationBackingBean extends
 				.getScQtCheckSt2financeProposalList()
 				.add(this.getManagedBean().getIndex(),
 						resDTO.getScQtCheckList());
-		this.getManagedBean().setScQtChecklist(resDTO.getScQtCheckList());
+		
 		FacesContext.getCurrentInstance().addMessage(
 				null,
 				new FacesMessage(FacesMessage.SEVERITY_INFO,
@@ -7950,7 +7950,7 @@ public class SpecificationBackingBean extends
 				.getScQtCheckSt2financeProposalList()
 				.add(this.getManagedBean().getIndex(),
 						resDTO.getScQtCheckList());
-		this.getManagedBean().setScQtChecklist(resDTO.getScQtCheckList());
+		
 		FacesContext.getCurrentInstance().addMessage(
 				null,
 				new FacesMessage(FacesMessage.SEVERITY_INFO,
@@ -8659,16 +8659,16 @@ public class SpecificationBackingBean extends
 				for (ScQtCheckListScore scoring : paidUpSelectList)
 					paidUpScoreList.remove(scoring);
 			}
-			
+
 			List<ScQtCheckListScore> supplierScore = getManagedBean()
 					.getSupplierScore();
-			if (null==supplierScore) {
+			if (null == supplierScore) {
 				supplierScore = new ArrayList<ScQtCheckListScore>();
 			}
 
 			List<ScQtCheckListScore> supplierSelectList = this.getManagedBean()
 					.getSupplierSelectScore();
-			if (null==supplierSelectList) {
+			if (null == supplierSelectList) {
 				supplierSelectList = new ArrayList<ScQtCheckListScore>();
 			}
 
@@ -8678,7 +8678,6 @@ public class SpecificationBackingBean extends
 				for (ScQtCheckListScore scoring : supplierSelectList)
 					supplierScore.remove(scoring);
 			}
-			
 
 		} finally {
 
@@ -8699,6 +8698,7 @@ public class SpecificationBackingBean extends
 							ICircularDetailSO.class);
 
 			reqDTO.setCircularVerId(circular.getCircularVerId());
+			reqDTO.setQuotationTender(true);
 			CircularDetailResDTO resDTO = circularDetailSO
 					.getPanelItemsByCircularVerId(reqDTO);
 			/*
