@@ -236,6 +236,7 @@ public class LocationSingleton {
 				// build state tree
 
 				if (ParameterConst.LOCATION_LEVEL_STATE
+						.equals(locationLevelCode) || ParameterConst.LOCATION_LEVEL_DISTRICT
 						.equals(locationLevelCode)) {
 				if (stateIds.contains(state.getStateId())) {
 					stateNode.setSelected(Boolean.TRUE);
