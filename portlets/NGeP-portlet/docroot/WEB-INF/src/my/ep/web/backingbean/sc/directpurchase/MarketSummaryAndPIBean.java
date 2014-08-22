@@ -2,24 +2,25 @@ package my.ep.web.backingbean.sc.directpurchase;
 
 import java.io.Serializable;
 
-public class MarketSummaryBean implements Serializable {
+public class MarketSummaryAndPIBean implements Serializable {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;	
 
+	private Long supplierItemId;
 	private String supplierName;
 	private String deliveryTerm;
 	private String minQty;
 	private String addItemDesc;
 	private String priceType;
 	private String zone;
-	private String frQty;
-	private String toQty;
+	private int frQty;
+	private int toQty;
 	private String unitPrice;
 	private String stockAvailability;
 	
-	public MarketSummaryBean(){}
+	public MarketSummaryAndPIBean(){}
 	
 	public String getSupplierName() {
 		return supplierName;
@@ -69,22 +70,6 @@ public class MarketSummaryBean implements Serializable {
 		this.zone = zone;
 	}
 
-	public String getFrQty() {
-		return frQty;
-	}
-
-	public void setFrQty(String frQty) {
-		this.frQty = frQty;
-	}
-
-	public String getToQty() {
-		return toQty;
-	}
-
-	public void setToQty(String toQty) {
-		this.toQty = toQty;
-	}
-
 	public String getUnitPrice() {
 		return unitPrice;
 	}
@@ -100,6 +85,32 @@ public class MarketSummaryBean implements Serializable {
 	public void setStockAvailability(String stockAvailability) {
 		this.stockAvailability = stockAvailability;
 	}
+
+	public Long getSupplierItemId() {
+		return supplierItemId;
+	}
+
+	public void setSupplierItemId(Long supplierItemId) {
+		this.supplierItemId = supplierItemId;
+	}
+
+	public int getFrQty() {
+		return frQty;
+	}
+
+	public void setFrQty(int frQty) {
+		this.frQty = frQty;
+	}
+
+	public int getToQty() {
+		return toQty;
+	}
+
+	public void setToQty(int toQty) {
+		this.toQty = toQty;
+	}
+
+
 		
 	
 	

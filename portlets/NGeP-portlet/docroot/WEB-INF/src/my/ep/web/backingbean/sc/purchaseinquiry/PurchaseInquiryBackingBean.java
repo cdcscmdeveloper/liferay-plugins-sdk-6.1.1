@@ -792,6 +792,7 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 			 getManagedBean().setScRequestSupplierItem(requestSupplierItem);
 			 //RequestNote Details - checking workflow status exits or not for PI to RN
 			 requestDTO.setRequestNoteId(requestNoteDtl.getScRequestNote().getRequestNoteId());
+			 requestNoteDtl.getRequestItem().setSupplierItems(prInquiry.getScRequestSupplierItems());
 			 RequestNoteResDTO	resDTO	=	directPurchaseSO.getRequestNote(requestDTO);
 			 ScRequestNote	requestNote	=	resDTO.getRequestNoteDetail();
 			 if(requestNote.getWorkFlowStatuses().size() > 0){

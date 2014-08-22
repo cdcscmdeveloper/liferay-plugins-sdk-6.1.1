@@ -110,10 +110,10 @@
 									</p:selectOneMenu></td>
 								<td>
 								<p:spacer width="2px"></p:spacer>
-								<p:commandLink partialSubmit="true" process="@this">
+								<h:commandLink immediate="true" action="#{requestNoteBackingBean.downloadMarketResearchSummary(purchaseInquiryBackingBean.managedBean.requestNoteDtl)}">
 								     <p:graphicImage library="ep/images/design" name="evaluate.png"
 							                style="vertical-align:middle" />
-									</p:commandLink></td>
+									</h:commandLink></td>
 								<td><p:message id="priceTypeMsg" for="priceType"
 										display="icon" /></td>
 							</tr>
