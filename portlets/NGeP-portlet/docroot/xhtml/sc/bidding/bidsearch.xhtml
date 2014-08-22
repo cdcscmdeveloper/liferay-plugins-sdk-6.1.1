@@ -15,19 +15,19 @@
 			<table style="width: 100%">
 
 				<tr>
-					<td style="width: 100px"><p:outputLabel
+					<td style="width: 15%"><p:outputLabel
 							value="#{lbl['lbl.sc.bidding.no']}" /></td>
-					<td><p:inputText id="biddingNo"
+					<td style="width: 15%"><p:inputText id="biddingNo"
 							value="#{biddingBB.managedBean.searchBiddingNo}" size="20">
 							<f:validateLength maximum="20" />
 
 						</p:inputText></td>
-					<td></td>
-					<td></td>
-					<td style="width: 100px"><p:outputLabel
+					<td style="width: 15%"></td>
+					<td style="width: 20%"></td>
+					<td style="width: 15%"><p:outputLabel
 							value="#{lbl['lbl.sc.status']}" /></td>
-					<td rowspan="3"><p:selectManyMenu id="pickedStatus"
-							style="height:108px;width: 200px;"
+					<td style="width: 20%" rowspan="3"><p:selectManyMenu id="pickedStatus"
+							style="height:155px;width: 200px;"
 							value="#{biddingBB.managedBean.selectedStatusDescList}">
 							<f:selectItems value="#{biddingBB.managedBean.statusDescs}"
 								var="status" itemLabel="#{status.statusName}"
@@ -36,24 +36,24 @@
 				</tr>
 
 				<tr>
-					<td style="width: 100px"><p:outputLabel
+					<td style="width: 15%"><p:outputLabel
 							value="#{lbl['lbl.sc.document.no']}" /></td>
-					<td><p:inputText id="docNo"
+					<td style="width: 15%"><p:inputText id="docNo"
 							value="#{biddingBB.managedBean.searchDocumentNo}" size="20">
 							<f:validateLength maximum="17" />
 						</p:inputText></td>
-					<td></td>
-					<td></td>
-					<td></td>
+					<td style="width: 15%"></td>
+					<td style="width: 20%"></td>
+					<td style="width: 15%"></td>
 
 				</tr>
 
 				<tr>
 
-					<td style="width: 100px"><p:outputLabel
+					<td style="width: 15%"><p:outputLabel
 							value="#{lbl['lbl.sc.title']}" /></td>
-					<td colspan="3"><p:inputText id="bidTitle"
-							value="#{biddingBB.managedBean.searchBidTitle}" size="100">
+					<td  colspan="3"><p:inputText id="bidTitle"
+							value="#{biddingBB.managedBean.searchBidTitle}" size="90">
 							<f:validateLength maximum="1000" />
 						</p:inputText></td>
 
@@ -61,24 +61,24 @@
 
 				<tr>
 
-					<td style="width: 130px"><p:outputLabel
+					<td style="width: 15%"><p:outputLabel
 							value="#{lbl['lbl.sc.bidding.date.from']}" /></td>
-					<td><p:calendar
+					<td style="width: 15%"><p:calendar size="20"
 							value="#{biddingBB.managedBean.searchBiddingDateFrom}"
-							pattern="dd/MM/yyyy" id="bidFromDate" showOn="button">
+							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" id="bidFromDate" showOn="button">
 
 							<p:ajax event="dateSelect"
 								listener="#{biddingBB.startDateSelectListener}"
 								update="bidToDate" />
 						</p:calendar></td>
-					<td style="width: 110px"><p:outputLabel
+					<td style="width: 15%"><p:outputLabel
 							value="#{lbl['lbl.sc.bidding.date.to']}" /></td>
-					<td><p:calendar widgetVar="searchBiddingDateTo"
+					<td style="width: 20%"><p:calendar widgetVar="searchBiddingDateTo" size="20"
 							mindate="#{biddingBB.managedBean.searchBiddingDateToMinDate}"
 							value="#{biddingBB.managedBean.searchBiddingDateTo}"
-							pattern="dd/MM/yyyy" id="bidToDate" showOn="button" /></td>
-					<td></td>
-					<td></td>
+							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" id="bidToDate" showOn="button" /></td>
+					<td style="width: 15%"></td>
+					<td style="width: 20%"></td>
 				</tr>
 			</table>
 
@@ -142,7 +142,7 @@
 				<p:outputLabel style="float : left"
 					value="#{biddingBB.getStatusDescById(bid.pmStatus.statusId)}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.action']}">
+			<p:column headerText="#{lbl['lbl.sc.action']}" style="width :10%">
 
 				<p:commandLink id="bidManagementNavigationBtn" size="5"
 					action="#{biddingBB.bidManagementAction(bid)}" process="@this">
