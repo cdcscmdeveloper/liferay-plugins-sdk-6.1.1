@@ -913,7 +913,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		String fileName = null;
 		String filePath = null;
 		String content = null;
-		String tempDirectory =  "/temp";
+		String tempDirectory = getManagedBean().getFileDirectory() + "/temp";
 		File file = new File(tempDirectory);
 		file.mkdirs();
 		
@@ -929,8 +929,8 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 					fileName = getTemplateFileName(scLoaReport.getTitle());
 					filePath = tempDirectory + "/" + attachmentFormat.format(fileName, null);
 					if(scLoaReport.getTitle().equalsIgnoreCase(ContractConst.TEMPLATE_JADUAL_HARGA)) {
-						formJadualHargaExcel(DocumentRepositoryUtils.getBaseDir()+filePath);
-						fileList.add(new File(filePath));
+						formJadualHargaExcel(filePath);
+						fileList.add(new File(DocumentRepositoryUtils.getDBFilePath(filePath)));
 					}
 					else if(scLoaReport.getTitle().equalsIgnoreCase(ContractConst.TEMPLATE_FORMAT_BON_PELAKSANAAN)) {
 						// TODO: get from SC
@@ -940,8 +940,8 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 						ContractTemplateResDTO templateResDTO = contractTemplateSO.retrieveTemplateByName(templateReqDTO);					
 						content = new String(templateResDTO.getCtTemplate().getContent(), "UTF-8");
 						content = getContent(scLoaReport.getTitle());					
-						convertHtmlToDocFile(content, DocumentRepositoryUtils.getBaseDir()+filePath);
-						fileList.add(new File(filePath));
+						convertHtmlToDocFile(content, filePath);
+						fileList.add(new File(DocumentRepositoryUtils.getDBFilePath(filePath)));
 					}
 				}
 				// User Upload Doc
