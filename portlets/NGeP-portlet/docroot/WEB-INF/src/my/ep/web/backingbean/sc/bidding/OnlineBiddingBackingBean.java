@@ -2,6 +2,7 @@ package my.ep.web.backingbean.sc.bidding;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -184,13 +185,21 @@ public class OnlineBiddingBackingBean extends
 				int index = getManagedBean().getBidPrices().indexOf(getManagedBean().getScBidPrice());
 				getManagedBean().getBidPrices().set(index,resDTO.getScBidPrice());
 				
+				List<ScBidPrice> bidPriceList =  getManagedBean().getBidPrices();
+				
+				for(ScBidPrice bidPrice : bidPriceList){
+					
+					bidPrice.setNewBidPrice(null);
+				}
+				getManagedBean().setBidPrices(bidPriceList);
+				
 				System.out.println("***** bidPrice submitted Sucessfuly *****");
 				
 			} else {
 
 				System.out.println("*****bidPrice submission failed*****");
 			}
-
+	
 		}
 
 		finally {

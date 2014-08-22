@@ -127,7 +127,7 @@
 						listener="#{onlineBiddingBB.decrementAmountValueChangeListener(bidPriceItem)}"></p:ajax>
 				</p:spinner>
 				<p:spacer width="5"></p:spacer>
-				<p:commandLink action="#{onlineBiddingBB.submitBidPrice}"
+				<p:commandLink action="#{onlineBiddingBB.submitBidPrice}" process="@this" partialSubmit="true" 
 					update="itemWiseBidList">
 					<p:graphicImage library="ep/images/design" name="submit.png"
 						value="/css/images/design/submit.png" />
