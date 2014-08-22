@@ -1467,10 +1467,10 @@ public void ConstructSideTabMenu(){
 			
 			reqDTO = new ContractReqDTO();
 			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
-			if(contractVerId == null) {
+//			if(contractVerId == null) {
 				reqDTO.setContractId(contractId);
 				contractVerId = contractSO.getLatestContractVer(reqDTO).getCtContractVer().getContractVerId();
-			}			
+//			}			
 			reqDTO.setContractVerId(contractVerId);
 			reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_TERMINATION);
 			reqDTO.setUpdateAction(true);
@@ -1516,32 +1516,14 @@ public void ConstructSideTabMenu(){
 			
 			reqDTO = new ContractReqDTO();
 			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
-			if(contractVerId == null) {
+//			if(contractVerId == null) {
 				reqDTO.setContractId(contractId);
 				contractVerId = contractSO.getLatestContractVer(reqDTO).getCtContractVer().getContractVerId();
-			}			
+//			}			
 			reqDTO.setContractVerId(contractVerId);
 			reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_SUSPEND_ACTIVE);
 			reqDTO.setUpdateAction(true);
 			resDTO = contractSO.retrieveContractVer(reqDTO);
-			if(resDTO.getCtContractVer().getCtContractItems().size() > 0){
-				 for(CtContractItem ctContractItem : resDTO.getCtContractVer().getCtContractItems()){
-					 if(ctContractItem.isRecordStatus())
-						 ctContractItem.setRecordStatusFlg(1);
-					 else
-						 ctContractItem.setRecordStatusFlg(0);
-					 
-				 }
-			}
-			
-			if(resDTO.getCtContractVer().getCtAgencies().size() > 0){
-				for(CtAgency ctAgency : resDTO.getCtContractVer().getCtAgencies()){
-					 if(ctAgency.isRecordStatus())
-						 ctAgency.setRecordStatusFlg(1);
-				    else
-				    	ctAgency.setRecordStatusFlg(0);;
-				 }
-			}
 			
 			suspBB = new SuspensionBackingBean();
 			suspBB.getManagedBean().setContractVer(resDTO.getCtContractVer());	
@@ -1572,10 +1554,10 @@ public void ConstructSideTabMenu(){
 			
 			ContractReqDTO reqDTO = new ContractReqDTO();
 			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
-			if(contractVerId == null) {
+//			if(contractVerId == null) {
 				reqDTO.setContractId(contractId);
 				contractVerId = contractSO.getLatestContractVer(reqDTO).getCtContractVer().getContractVerId();
-			}
+//			}
 			reqDTO.setContractVerId(contractVerId);
 			reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
 			if (action.equalsIgnoreCase("update"))
@@ -1619,10 +1601,10 @@ public void ConstructSideTabMenu(){
 			
 			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
 			ContractReqDTO reqDTO = new ContractReqDTO();
-			if(contractVerId == null) {
+//			if(contractVerId == null) {
 				reqDTO.setContractId(contractId);
 				contractVerId = contractSO.getLatestContractVer(reqDTO).getCtContractVer().getContractVerId();
-			}		
+//			}		
 			reqDTO.setContractVerId(contractVerId);
 			reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE);
 			reqDTO.setUpdateAction(true);
