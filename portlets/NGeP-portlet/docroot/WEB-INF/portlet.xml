@@ -1010,8 +1010,8 @@
 		</security-role-ref>
 	</portlet>
 	<portlet>
-		<portlet-name>scOnLineBidding</portlet-name>
-		<display-name>OnLine Bidding</display-name>
+		<portlet-name>scOnlineBidding</portlet-name>
+		<display-name>Online Bidding</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
@@ -1023,8 +1023,8 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>OnLine Bidding</title>
-			<short-title>OnLine Bidding</short-title>
+			<title>Online Bidding</title>
+			<short-title>Online Bidding</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
