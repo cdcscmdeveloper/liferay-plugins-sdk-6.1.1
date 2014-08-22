@@ -765,6 +765,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				requestNoteDtls.add(selectedReqDtl);
 				getManagedBean().getRequestNoteDtls().remove(selectedReqDtl);
 				getManagedBean().setRequestNoteDtls(requestNoteDtls);
+				getManagedBean().getSelectedRequestNoteDtls().clear();
 			  }
 			}
 		} else {
@@ -1941,10 +1942,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	}
 
  /**
-  * selected assgned user to apply supplier recomendation list.
+  * selected assgned user to apply supplier recomendation list for the simple quote zone
   */
-	public void applyForSupplierRecs(ScRequestNoteDtl selectedReqDtl  , Long assignedUserId){ 
-		log.info("applyForSupplierRecs");
+	public void applyPrepareByForSupplierRecs(ScRequestNoteDtl selectedReqDtl  , Long assignedUserId){ 
+		log.info("applyPrepareByForSupplierRecs");
 		List<ScRequestNoteDtl>	requestNoteDtls	= new ArrayList<ScRequestNoteDtl>();
 		if(getManagedBean().getSupplierRecList() != null && getManagedBean().getSupplierRecList().size() >0) {
 			for(ScRequestNoteDtl requestNoteDtl : getManagedBean().getSupplierRecList()) {
@@ -1955,6 +1956,47 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				requestNoteDtls.add(requestNoteDtl);
 			}
 			getManagedBean().setSupplierRecList(requestNoteDtls);
+		} 
+	}
+
+	/**
+	 * selected recommended to apply supplier recomendation list for the simple quote zone
+	 */
+	public void applyRecSupplierForSupplierRecList(Long supplierId){ 
+		log.info("applyRecSupplierForSupplierRecList");
+		List<ScRequestNoteDtl>	requestNoteDtls	= new ArrayList<ScRequestNoteDtl>();
+		if(getManagedBean().getSelectedRequestNoteDtls() != null && getManagedBean().getSelectedRequestNoteDtls().size() >0) {
+			for(ScRequestNoteDtl requestNoteDtl : getManagedBean().getSelectedRequestNoteDtls()) {
+
+				if(requestNoteDtl.getRequestItem() != null && requestNoteDtl.getRequestItem().getSupplierItems() !=null 
+						&& requestNoteDtl.getRequestItem().getSupplierItems().size()>0){
+					List<ScRequestSupplierItem> supplierItems = requestNoteDtl.getRequestItem().getSupplierItems();
+
+					for (ScRequestSupplierItem scRequestSupplierItem : supplierItems) {
+						
+						if(scRequestSupplierItem.getSmSupplier().getSupplierId().equals(supplierId)){
+							scRequestSupplierItem.setSupplierItemId(supplierId);
+							requestNoteDtl.setScRequestSupplierItem(scRequestSupplierItem);
+							
+							if(scRequestSupplierItem.getSupplierItemPrices()!= null && scRequestSupplierItem.getSupplierItemPrices().size()>0){
+								for (ScSupplierItemPrice scSupplierItemPrice : scRequestSupplierItem.getSupplierItemPrices()) {
+
+									// zonal item price  
+									if(requestNoteDtl.getTplSpecZoneDtl() !=null){
+										if(requestNoteDtl.getTplSpecZoneDtl().getSpecZoneId().equals(scSupplierItemPrice.getTplSpecZone().getSpecZoneId())){
+											scRequestSupplierItem.setSupplierItemPrice(scSupplierItemPrice);
+											break;
+										}
+									}
+								}
+							}	
+						}
+					}
+				}
+				requestNoteDtls.add(requestNoteDtl);
+			}
+			getManagedBean().setSupplierRecList(requestNoteDtls);
+			getManagedBean().getSelectedRequestNoteDtls().clear();
 		} 
 	}
 

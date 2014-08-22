@@ -126,7 +126,7 @@
 					<p:commandButton value="#{lbl['lbl.sc.action.apply.btn']}"
 						partialSubmit="true" icon="ui-icon-submit"
 						process="@this supplierRecId"
-						action="#{requestNoteBackingBean.applyForRequestNote}"
+						action="#{requestNoteBackingBean.applyRecSupplierForSupplierRecList(requestNoteBackingBean.managedBean.supplierId)}"
 						update="@([id$=supplierRecDataTable])" />
 				</p:column>
 

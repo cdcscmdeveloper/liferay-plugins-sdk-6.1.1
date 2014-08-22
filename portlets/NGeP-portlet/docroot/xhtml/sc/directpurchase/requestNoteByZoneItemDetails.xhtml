@@ -84,7 +84,7 @@
 							itemValue="#{user.userId}"></f:selectItems>
 								<p:ajax event="change" update="prepareBy" partialSubmit="true"
 									process="@this"
-									listener="#{requestNoteBackingBean.applyForSupplierRecs(requestNoteDtl, requestNoteDtl.assignedUser.userId)}" />
+									listener="#{requestNoteBackingBean.applyPrepareByForSupplierRecs(requestNoteDtl, requestNoteDtl.assignedUser.userId)}" />
 					</p:selectOneMenu>
 					   <p:message id="prepareByMsg" for="prepareBy" display="icon" />
 				</p:column>
