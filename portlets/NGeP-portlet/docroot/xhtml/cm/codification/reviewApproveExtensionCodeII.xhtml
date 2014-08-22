@@ -203,7 +203,7 @@
 								<td><h:panelGrid columns="2"
 										columnClasses="cmColumnWidth">
 										<p:inputText value="#{review.reviewedTypeNameII}"
-											disabled="#{!review.requestType or unspscCodeBackingBean.codeAdmin}">
+											disabled="#{!review.requestType or unspscCodeBackingBean.codeAdmin}" required="true" label="#{lbl['lbl.cm.type']}">
 											<p:ajax event="blur"
 												update=":form:dt:typeremark2 :form:dt:typeremarkmsg"></p:ajax>
 
@@ -214,7 +214,7 @@
 								<td><h:panelGrid columns="2"
 										columnClasses="cmColumnWidth">
 										<p:inputText value="#{review.reviewedBrandNameII}"
-											disabled="#{!review.requestBrand or unspscCodeBackingBean.codeAdmin}">
+											disabled="#{!review.requestBrand or unspscCodeBackingBean.codeAdmin}" required="true" label="#{lbl['lbl.cm.brand']}">
 											<p:ajax event="blur"
 												update=":form:dt:brandRemark2 :form:dt:brandremarkmsg"></p:ajax>
 										</p:inputText>
@@ -224,7 +224,7 @@
 								<td><h:panelGrid columns="2"
 										columnClasses="cmColumnWidth">
 										<p:inputText value="#{review.reviewedMeasurementNameII}"
-											disabled="#{!review.requestMeasurement or unspscCodeBackingBean.codeAdmin}">
+											disabled="#{!review.requestMeasurement or unspscCodeBackingBean.codeAdmin}" required="true" label="#{lbl['lbl.cm.measurement']}">
 											<p:ajax event="blur"
 												update=":form:dt:measurementRemark2 :form:dt:measurementremarkmsg"></p:ajax>
 										</p:inputText>
@@ -234,7 +234,7 @@
 								<td><h:panelGrid columns="2"
 										columnClasses="cmColumnWidth">
 										<p:inputText value="#{review.reviewedColorNameII}"
-											disabled="#{!review.requestColor or unspscCodeBackingBean.codeAdmin}">
+											disabled="#{!review.requestColor or unspscCodeBackingBean.codeAdmin}" required="true" label="#{lbl['lbl.cm.color']}">
 											<p:ajax event="blur"
 												update=":form:dt:colorRemark2 :form:dt:colorremarkmsg"></p:ajax>
 										</p:inputText>

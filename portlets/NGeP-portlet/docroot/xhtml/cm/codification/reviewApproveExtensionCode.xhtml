@@ -134,7 +134,7 @@
 								<td><h:panelGrid columns="2"
 										columnClasses="cmColumnWidth">
 										<p:inputText value="#{review.reviewedTypeName}"
-											disabled="#{!review.requestType}">
+											disabled="#{!review.requestType}" required="true" label="#{lbl['lbl.cm.type']}">
 											<p:ajax event="blur"
 												update=":form:dt:typeremark1 :form:dt:typeremarkmsg"></p:ajax>
 										</p:inputText>
@@ -144,7 +144,7 @@
 								<td><h:panelGrid columns="2"
 										columnClasses="cmColumnWidth">
 										<p:inputText value="#{review.reviewedBrandName}"
-											disabled="#{!review.requestBrand}">
+											disabled="#{!review.requestBrand}" required="true" label="#{lbl['lbl.cm.brand']}">
 											<p:ajax event="blur"
 												update=":form:dt:brandRemark1 :form:dt:brandremarkmsg"></p:ajax>
 										</p:inputText>
@@ -154,7 +154,7 @@
 								<td><h:panelGrid columns="2" border="0"
 										columnClasses="cmColumnWidth">
 										<p:inputText value="#{review.reviewedMeasurementName}"
-											disabled="#{!review.requestMeasurement}">
+											disabled="#{!review.requestMeasurement}"  required="true" label="#{lbl['lbl.cm.measurement']}">
 											<p:ajax event="blur"
 												update=":form:dt:measurementRemark1 :form:dt:measurementremarkmsg"></p:ajax>
 										</p:inputText>
@@ -164,7 +164,7 @@
 								<td><h:panelGrid columns="2"
 										columnClasses="cmColumnWidth">
 										<p:inputText value="#{review.reviewedColorName}"
-											disabled="#{!review.requestColor}">
+											disabled="#{!review.requestColor}" required="true" label="#{lbl['lbl.cm.color']}">
 											<p:ajax event="blur"
 												update=":form:dt:colorRemark1 :form:dt:colorremarkmsg"></p:ajax>
 										</p:inputText>
