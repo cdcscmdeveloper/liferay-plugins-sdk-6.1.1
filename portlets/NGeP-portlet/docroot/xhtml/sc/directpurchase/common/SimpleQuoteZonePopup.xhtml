@@ -15,7 +15,7 @@
 					 <p:outputLabel value="#{lbl['lbl.sc.sq.zone.name']}"></p:outputLabel>
 				    
 					</TD>
-					<TD width="80%"><p:inputText id="zoneNameId" size="65" label="#{lbl['lbl.sc.sq.zone.location']}"
+					<TD width="80%"><p:inputText id="zoneNameId" size="65" label="#{lbl['lbl.sc.sq.zone.name']}"
 							value="#{simpleQuoteBackingBean.managedBean.zoneName}"
 							required="#{simpleQuoteBackingBean.managedBean.required}">
 						</p:inputText> <p:message id="zoneNameMsg" for="zoneNameId" display="icon" /> </TD>
@@ -57,7 +57,7 @@
 						actionListener="#{simpleQuoteBackingBean.updateZone}" />
 
 					<p:commandButton
-						value="#{lbl['lbl.ss.simple.quote.purchase.btn.cancel']}"
+						value="#{lbl['lbl.ss.simple.quote.purchase.btn.cancel']}" partialSubmit="true" process="@this"
 						icon="ui-icon-cancel" action="#{simpleQuoteBackingBean.cancelZonePopUp}" />
 
 				</p:column>
