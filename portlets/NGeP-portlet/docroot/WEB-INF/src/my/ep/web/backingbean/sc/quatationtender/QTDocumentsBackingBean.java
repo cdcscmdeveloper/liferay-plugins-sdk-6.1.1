@@ -4,16 +4,15 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
-import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
@@ -54,7 +53,9 @@ import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.sc.quationtender.ScAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
@@ -484,7 +485,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 				} else if (SourcingConstants.DOC_DEF_KEY_RULES_REGULATION.equals(docDefinitionKey)) {
 					
 				} else if (SourcingConstants.DOC_DEF_KEY_CONTRACT_TERM.equals(docDefinitionKey)) {
-					
+					generateTermaKontrakPdfFromVelocity((ScAttachment)scQtDocReportAttachment, getManagedBean().getQt());
 				} else if (SourcingConstants.DOC_DEF_KEY_SPECIFICATION.equals(docDefinitionKey)) {
 					generateSpesifikasiPdfFromVelocity((ScAttachment)scQtDocReportAttachment, getManagedBean().getQt());
 				} else if (SourcingConstants.DOC_DEF_KEY_TECH_COMPLIANCE_CHECKLIST.equals(docDefinitionKey)) {
@@ -516,6 +517,20 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 			scQtDocReport.setScQtDocReportAttachment(scQtDocReportAttachment);
 		}
 		return scQtDocReportAttachment;
+	}
+
+	/**
+	 * @param scQtDocReportAttachment
+	 * @param qt
+	 */
+	private void generateTermaKontrakPdfFromVelocity(ScAttachment attachment, ScQt qt) throws Exception {
+		attachment.setFileName("Terma_Kontrak.pdf");
+		populateAttachmentDetails(attachment);
+		
+		VelocityContext context = new VelocityContext();
+		
+		DocumentGenerator.getInstance().generatePdfFromVelocity("/sc/qtDoc/qtDoc-terma-kontrak.vm", 
+    			context, new FileOutputStream(getActualFilePath(attachment)));
 	}
 
 	/**
@@ -711,6 +726,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		
 		VelocityContext context = new VelocityContext();
 		
+		List<TplSpecQuestion> newTplSpecQuestionsList = new ArrayList<TplSpecQuestion>();
 		List<TplSpecQuestion> tplSpecQuestionsList = new ArrayList<TplSpecQuestion>();
 		List<ScQtCheckList> techSpecList = new ArrayList<ScQtCheckList>();
 		IQTSpecSO specSO;
@@ -729,7 +745,6 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 			qtDoc = scQtCheckList.getScQtDoc();
 		}
 		TplSpecMaster master = qtDoc.getTplSpecMaster();
-		
 		context.put("title", master.getSpecName());
 		
 		StringBuilder itemTypes = new StringBuilder();
@@ -743,11 +758,44 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
     		localGoods.append(getParameterDesc(master.getItemOriginCode()));
     	}
 		context.put("localGoods", localGoods);
-		
 		if (tplSpecQuestionsList != null) {
 			tplSpecQuestionsList = master.getTplSpecQuestions();
+			for (TplSpecQuestion tplSpecQuestion : tplSpecQuestionsList) {
+				TplSpecQuestion question = null;
+				try {
+					question = (TplSpecQuestion) BeanUtils.cloneBean(tplSpecQuestion);
+				} catch (IllegalAccessException | InstantiationException
+						| InvocationTargetException | NoSuchMethodException e) {
+					e.printStackTrace();
+				}
+				if (question.getClItem() == null){
+					question.setClItem("");
+				}
+				if (question.getClSpecDetail() == null) {
+					question.setClSpecDetail("");
+				}
+				if(question.getClUom() != null) {
+					if (question.getClUom().getUomName() == null) {
+						question.getClUom().setUomName("");
+					}
+				}else{
+					question.setClUom(new PmUom());
+					question.getClUom().setUomName("");
+				}
+				if (question.getClQuantity() == null) {
+					question.setClQuantity(new BigDecimal(0));
+				}
+				
+				if (question.isClAnswerRequired()) {
+					question.setClAnswerRequired(true);
+				}
+				if (question.getClReviewRemark() == null) {
+					question.setClReviewRemark("");
+				}
+				newTplSpecQuestionsList.add(question); 
+			}
 		}
-		context.put("tplSpecQuestionsList", tplSpecQuestionsList);
+		context.put("newTplSpecQuestionsList", newTplSpecQuestionsList);
 		
 		DocumentGenerator.getInstance().generatePdfFromVelocity("/sc/qtDoc/qtDoc-spesifikasi.vm", 
     			context, new FileOutputStream(getActualFilePath(attachment)));

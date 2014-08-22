@@ -3,7 +3,18 @@
 	<style>
 		@page { size: A4 portrait;}
 		@page { @bottom-center { content: element(footer) }}
-				
+		
+		.table2 {
+    border-collapse: collapse;
+	width:100%;
+}
+		.table2 th, .table2 td {
+			border: 1px solid black;
+		}
+		 th{
+			background-color: #BCE18A;
+		 }
+		 
 		.footer {
 			display: block; text-align: center;
 			position: running(footer);
@@ -12,7 +23,12 @@
 	</style>
 </head>
 <body>
-	<table border="0" cellpadding="0" cellspacing="0" width="100%">
+	<table width="100%">
+	<tr>
+		<td align="left">
+			Spesifikasi $title<br/> <br/>
+		</td>
+	</tr>
 	<tr>
         <td align="left">
             Title Template : $title<br/>
@@ -31,7 +47,7 @@
     <tr align='left'>
         <td>
             <span style='font-weight:bold;font-size:10px;font-family: Times New Roman;'>
-				<table width='100%' border="1">
+				<table class="table2">
 					<tr>
 						<td>Item</td>
 						<td>Specification</td>
@@ -40,7 +56,7 @@
 						<td>Answer</td>
 						<td>Note</td>
 					</tr>
-					#foreach( $tplSpecQuestions in $tplSpecQuestionsList )
+					#foreach( $tplSpecQuestions in $newTplSpecQuestionsList )
 					<tr>
             			<td>$tplSpecQuestions.clItem</td>
             			<td>$tplSpecQuestions.clSpecDetail</td>
