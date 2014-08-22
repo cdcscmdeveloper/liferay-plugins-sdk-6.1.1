@@ -1,6 +1,5 @@
 package my.ep.web.backingbean.pm.profilemanagement;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,20 +7,16 @@ import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
-import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.service.pm.authorization.role.IRoleSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
-import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -31,8 +26,6 @@ import my.ep.dto.pm.authorization.role.RoleReqDTO;
 import my.ep.dto.pm.authorization.role.RoleResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
-import my.ep.dto.pm.common.address.AddressReqDTO;
-import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.constant.DbValueConst;
@@ -76,10 +69,10 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
-import com.liferay.portal.kernel.util.PrefsPropsUtil;
-import com.liferay.portal.kernel.util.PropsKeys;
-import com.liferay.portal.model.User;
-import com.liferay.portal.service.UserServiceUtil;
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.model.CompanyConstants;
+import com.liferay.portal.service.UserLocalServiceUtil;
 
 /**
  * Backing Bean for User Profiles (Management)
@@ -1224,6 +1217,31 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		}
 	}
 	
+	
+	public void check() throws PortalException, SystemException{
+		checkOldPassword(this.getManagedBean().getSelectedUser());
+	}
+	public boolean checkOldPassword(PmUser pmUser) throws PortalException, SystemException{
+		logger.info("checkOldPassword - START");
+		boolean result = false;
+		long status = 5;
+		long companyId = Long.parseLong(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_COMPANY_ID));
+		String loginId = pmUser.getLoginId();
+		String pwd = pmUser.getOldPassword();
+		System.out.println("loginId: " + loginId);
+		System.out.println("pwd: " + pwd);
+		System.out.println("companyId: " + companyId);
+		status = UserLocalServiceUtil.authenticateForBasic(companyId, CompanyConstants.AUTH_TYPE_SN, loginId, pwd);
+		System.out.println("status: " + status);
+		FacesContext.getCurrentInstance().addMessage(
+				null,
+				new FacesMessage(FacesMessage.SEVERITY_INFO,
+						null, "Result" + status));
+		logger.info("checkOldPassword - END");
+		return result;
+	}
+	
+	
 
 	/**
 	 * delete portrait
@@ -1263,34 +1281,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		logger.info("deletePortrait - END");
 	}
 	
-	/**
-	 * TODO: fix the remote updatePortrait
-	 * @param pmUser
-	 * @throws Exception
-	 */
-	private void uploadPortrait(PmUser pmUser) throws Exception{
-		logger.info("uploadPortrait - START");
-		long imageMaxSize = PrefsPropsUtil.getLong(PropsKeys.USERS_IMAGE_MAX_SIZE);
-		long companyId = Long.parseLong(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_COMPANY_ID));
-		byte[] bytes = pmUser.getPortrait();
-		long userId;
-		logger.info("imageMaxSize: " + imageMaxSize);
-		logger.info("companyId: " + companyId);
-		logger.info("bytes: " + bytes);
-		logger.info("pmUser.getLoginId(): " + pmUser.getLoginId());
-		if(bytes!=null){
-			User user = UserServiceUtil.getUserByScreenName(companyId, pmUser.getLoginId());
-			if(user!=null){
-				System.out.println("user id" + user.getUserId());
-			}else{
-				System.out.println("user null");
-			}
-			userId = user.getUserId();
-			logger.info("userId: " + userId);
-			UserServiceUtil.updatePortrait(user.getUserId(), bytes);
-		}
-		logger.info("uploadPortrait - END");
-	}
+
 	/**
 	 * Get user portrait 
 	 * @param event
@@ -1305,83 +1296,111 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		logger.info("handleFileUpload - END");
 	}
 	
-	
-	/**
-	 * Get user portrait 
-	 * @param event
-	 * @throws Exception
-	 */
-	public void handleFileUpload1() throws Exception{
-		try{
-			logger.info("handleFileUpload - START - UserServiceUtil");
-			byte[] bytes = this.getManagedBean().getSelectedUser().getPortrait();
-			long imageMaxSize = PrefsPropsUtil.getLong(PropsKeys.USERS_IMAGE_MAX_SIZE);
-			System.out.println("size = " + imageMaxSize);
-			System.out.println("bytes.length = " + bytes.length);   
-			System.out.println("screen name = " + this.getManagedBean().getSelectedUser().getLoginId());
-			System.out.println("identity no = " + this.getManagedBean().getSelectedUser().getIdentificationNo());
-			String screenName =  this.getManagedBean().getSelectedUser().getLoginId()==null
-						? this.getManagedBean().getSelectedUser().getIdentificationNo() 
-						: this.getManagedBean().getSelectedUser().getLoginId();
-			long companyId = Long.parseLong(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_COMPANY_ID));
-			User user = UserServiceUtil.getUserByScreenName(companyId , screenName);
-			if(user!=null){
-				System.out.println("user id" + user.getUserId());
-			}else{
-				System.out.println("user null");
-			}
-			long userId = user.getUserId();
-			UserServiceUtil.updatePortrait(userId, bytes); 
-		}catch(Exception e){
-			e.printStackTrace();
-			throw e;
-		}
-		logger.info("handleFileUpload - END");
-	}
-
-	/**
-	 * Get user portrait 
-	 * @param event
-	 * @throws Exception
-	 */
-	public void handleFileUpload2() throws Exception{
-		logger.info("handleFileUpload2 - START - Remote");
-		byte[] bytes = this.getManagedBean().getSelectedUser().getPortrait();
-		long imageMaxSize = PrefsPropsUtil.getLong(PropsKeys.USERS_IMAGE_MAX_SIZE);
-		System.out.println("size = " + imageMaxSize);
-		System.out.println("bytes.length = " + bytes.length);   
-		System.out.println("screen name = " + this.getManagedBean().getSelectedUser().getLoginId());
-		System.out.println("identity no = " + this.getManagedBean().getSelectedUser().getIdentificationNo());
-	
-		IUserSO userSO = null;
-		UserReqDTO reqDTO = new UserReqDTO();
-		try {
-			PmUser pmUser = this.getManagedBean().getSelectedUser();
-			reqDTO.setPmUser(pmUser);
-			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-			UserResDTO resDTO = userSO.updatePortrait(reqDTO); //saveuser2
-			if(resDTO!=null && resDTO.isSuccessful()){
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO,
-								null, "Delete Portrait Successfull for Login ID: "
-										+ resDTO.getPmUser().getLoginId()));
-				
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
-							e.getMessage()));
-		} finally {
-			userSO = null;
-		}
-		logger.info("handleFileUpload - END");
-	}
-	
+//	/**
+//	 * TODO: fix the remote updatePortrait
+//	 * @param pmUser
+//	 * @throws Exception
+//	 */
+//	private void uploadPortrait(PmUser pmUser) throws Exception{
+//		logger.info("uploadPortrait - START");
+//		long imageMaxSize = PrefsPropsUtil.getLong(PropsKeys.USERS_IMAGE_MAX_SIZE);
+//		long companyId = Long.parseLong(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_COMPANY_ID));
+//		byte[] bytes = pmUser.getPortrait();
+//		long userId;
+//		logger.info("imageMaxSize: " + imageMaxSize);
+//		logger.info("companyId: " + companyId);
+//		logger.info("bytes: " + bytes);
+//		logger.info("pmUser.getLoginId(): " + pmUser.getLoginId());
+//		if(bytes!=null){
+//			User user = UserServiceUtil.getUserByScreenName(companyId, pmUser.getLoginId());
+//			if(user!=null){
+//				System.out.println("user id" + user.getUserId());
+//			}else{
+//				System.out.println("user null");
+//			}
+//			userId = user.getUserId();
+//			logger.info("userId: " + userId);
+//			UserServiceUtil.updatePortrait(user.getUserId(), bytes);
+//		}
+//		logger.info("uploadPortrait - END");
+//	}
+//	
+//	/**
+//	 * Get user portrait 
+//	 * @param event
+//	 * @throws Exception
+//	 */
+//	public void handleFileUpload1() throws Exception{
+//		try{
+//			logger.info("handleFileUpload - START - UserServiceUtil");
+//			byte[] bytes = this.getManagedBean().getSelectedUser().getPortrait();
+//			long imageMaxSize = PrefsPropsUtil.getLong(PropsKeys.USERS_IMAGE_MAX_SIZE);
+//			System.out.println("size = " + imageMaxSize);
+//			System.out.println("bytes.length = " + bytes.length);   
+//			System.out.println("screen name = " + this.getManagedBean().getSelectedUser().getLoginId());
+//			System.out.println("identity no = " + this.getManagedBean().getSelectedUser().getIdentificationNo());
+//			String screenName =  this.getManagedBean().getSelectedUser().getLoginId()==null
+//						? this.getManagedBean().getSelectedUser().getIdentificationNo() 
+//						: this.getManagedBean().getSelectedUser().getLoginId();
+//			long companyId = Long.parseLong(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_COMPANY_ID));
+//			User user = UserServiceUtil.getUserByScreenName(companyId , screenName);
+//			if(user!=null){
+//				System.out.println("user id" + user.getUserId());
+//			}else{
+//				System.out.println("user null");
+//			}
+//			long userId = user.getUserId();
+//			UserServiceUtil.updatePortrait(userId, bytes); 
+//		}catch(Exception e){
+//			e.printStackTrace();
+//			throw e;
+//		}
+//		logger.info("handleFileUpload - END");
+//	}
+//
+//	/**
+//	 * Get user portrait 
+//	 * @param event
+//	 * @throws Exception
+//	 */
+//	public void handleFileUpload2() throws Exception{
+//		logger.info("handleFileUpload2 - START - Remote");
+//		byte[] bytes = this.getManagedBean().getSelectedUser().getPortrait();
+//		long imageMaxSize = PrefsPropsUtil.getLong(PropsKeys.USERS_IMAGE_MAX_SIZE);
+//		System.out.println("size = " + imageMaxSize);
+//		System.out.println("bytes.length = " + bytes.length);   
+//		System.out.println("screen name = " + this.getManagedBean().getSelectedUser().getLoginId());
+//		System.out.println("identity no = " + this.getManagedBean().getSelectedUser().getIdentificationNo());
+//	
+//		IUserSO userSO = null;
+//		UserReqDTO reqDTO = new UserReqDTO();
+//		try {
+//			PmUser pmUser = this.getManagedBean().getSelectedUser();
+//			reqDTO.setPmUser(pmUser);
+//			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
+//					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+//			UserResDTO resDTO = userSO.updatePortrait(reqDTO); //saveuser2
+//			if(resDTO!=null && resDTO.isSuccessful()){
+//				FacesContext.getCurrentInstance().addMessage(
+//						null,
+//						new FacesMessage(FacesMessage.SEVERITY_INFO,
+//								null, "Delete Portrait Successfull for Login ID: "
+//										+ resDTO.getPmUser().getLoginId()));
+//				
+//			}
+//
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			FacesContext.getCurrentInstance().addMessage(
+//					null,
+//					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+//							e.getMessage()));
+//		} finally {
+//			userSO = null;
+//		}
+//		logger.info("handleFileUpload - END");
+//	}
+//	
 	
 	
 	
