@@ -14,6 +14,11 @@
 <body>
 	<table border="0" cellpadding="0" cellspacing="0" width="100%">
 	<tr>
+		<td align="left">
+			Kementerian Kewangan Malaysia	<br/>
+		</td>
+	</tr>
+	<tr>
         <td align="right">
             LAMPIRAN F<br/>
              <br/>
@@ -43,23 +48,18 @@
     <tr>
 		<td>
 			Saya, ...Nama Wakil Syarikat... nombor K.P ...no. K.P...yang mewakili ...Nama Syarikat... nombor pendaftaran...MOF/PKK/CIDB/ROS/ROC/ROB...dengan ini mengistiharkan bahawa saya atau mana-mana individu dalam...Nama Kementerian/ Agensi...atau mana-mana individu lain, sebagai sogokan untuk dipilih dalam tender/sebut harga* seperti di atas. Bersama-sama ini dilampirkan Surat Perwakilan Kuasa bagi saya mewakili syarikat seperti tercatat di atas untuk membuat pengisytiharan ini <br />
-		</td>
+		</td><br/> <br/>
 	</tr>
 	<tr>
 		<td>
-			<ol>
-				<li style="padding-bottom:20px;">
-					Sekiranya saya atau mana-mana individu yang mewakili syarikat ini didapati bersalah menawar atau memberi rasuah kepada mana-mana individu dalam...Nama Kementerian/Agensi...atau mana-mana individu lain sebagai sogokan untuk dipilih dalam tender/sebut harga* seperti di atas, maka saya sebagai wakil syarikat bersetuju tindakan-tindakan berikut diambil.
-					<br /><br />
-					* 1.1 Penarikan balik tawaran kontrak bagi tender/sebut harga*di atas; atau.
-					<br /><br />
-					* 1.2 Penamatan kontrak bagi tender/sebut harga* di atas; dan.
-					<br /><br />
-					* 1.3 Lain-lain tindakan tatatertib mengikut peraturan perolehan Kerajaan yang berkuat kuasa.
-					<br />
-				</li>
-				<li style="padding-bottom:20px;">Sekiranya terdapat mana-mana individu cuba meminta rasuah daripada saya atau mana-mana individu yang berkaitan dengan syarikat ini sebagai sogokan untuk dipilih dalam tender/sebut harga* seperti di atas, maka saya berjanji akan dengan segera melaporkan perbuatan tersebut kepada pejabat Suruhanjaya Perkhidmatan Rasuah Malaysia (SPRM) atau balai polis berhampiran.</li>
-			</ol>
+			<p>Saya, ...Nama Wakil Syarikat... nombor K.P ...no. K.P...yang mewakili ...Nama Syarikat... nombor pendaftaran...MOF/PKK/CIDB/ROS/ROC/ROB...dengan ini mengistiharkan bahawa saya atau mana-mana individu dalam...Nama Kementerian/ Agensi...atau mana-mana individu lain, sebagai sogokan untuk dipilih dalam tender/sebut harga* seperti di atas. Bersama-sama ini dilampirkan Surat Perwakilan Kuasa bagi saya mewakili syarikat seperti tercatat di atas untuk membuat pengisytiharan ini </p>
+			<p>2. Sekiranya saya atau mana-mana individu yang mewakili syarikat ini didapati bersalah menawar atau memberi rasuah kepada mana-mana individu dalam...Nama Kementerian/Agensi...atau mana-mana individu lain sebagai sogokan untuk dipilih dalam tender/sebut harga* seperti di atas, maka saya sebagai wakil syarikat bersetuju tindakan-tindakan berikut diambil.</p>
+			<ol type="2">
+				2.1 Penarikan balik tawaran kontrak bagi tender/sebut harga*di atas; atau.</ol>
+			
+			<ol type="2">2.2 Penamatan kontrak bagi tender/sebut harga* di atas; dan.</ol>
+			<ol type="2"> 2.3 Lain-lain tindakan tatatertib mengikut peraturan perolehan Kerajaan yang berkuat kuasa.</ol>
+			<p>3. Sekiranya terdapat mana-mana individu cuba meminta rasuah daripada saya atau mana-mana individu yang berkaitan dengan syarikat ini sebagai sogokan untuk dipilih dalam tender/sebut harga* seperti di atas, maka saya berjanji akan dengan segera melaporkan perbuatan tersebut kepada pejabat Suruhanjaya Perkhidmatan Rasuah Malaysia (SPRM) atau balai polis berhampiran. </p>
 		</td>
 	</tr>
 	<tr>
@@ -82,10 +82,8 @@
 	</tr>
 	<tr>
 		<td>
-			Catatan: * <ol>
-							<li style="padding-bottom:20px;" type="i"> Potong mana yang tidak berkenaan </li>
-							<li style="padding-bottom:20px;" type="i"> <li style="padding-bottom:20px;" type="i"> Potong mana yang tidak berkenaan </li> </li>
-					   </ol>
+			Catatan: * <ol type="i"> i) Potong mana yang tidak berkenaan </ol>
+					   <ol type="i"> ii) Surat akuan ini hendaklah dikemukakan bersama Surat Perwakilan Kuasa </ol>
 		</td>
 	</tr>
 	</table>
