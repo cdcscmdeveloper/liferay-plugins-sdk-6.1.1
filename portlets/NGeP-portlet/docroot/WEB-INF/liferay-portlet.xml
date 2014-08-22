@@ -417,7 +417,7 @@
 		<instanceable>false</instanceable>
 		<ajaxable>false</ajaxable>
 		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
-		<css-class-wrapper>OnlineBidding-portlet</css-class-wrapper>
+		<css-class-wrapper>OnLineBidding-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
 		<portlet-name>scQuotationTender</portlet-name>
