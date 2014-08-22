@@ -157,6 +157,8 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private List<ScQtCheckListScore> bankSelectList = new ArrayList<ScQtCheckListScore>();
 	private List<ScQtCheckListScore> assetLiabilitySelectList = new ArrayList<ScQtCheckListScore>();
 	private List<ScQtCheckListScore> paidUpSelectList = new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> supplierScore = new ArrayList<ScQtCheckListScore>();
+	private List<ScQtCheckListScore> supplierSelectScore = new ArrayList<ScQtCheckListScore>();
 
 	private List<ScQtSchedule> scheduleList;
 	private List<ScQtProgressivePayment> progressivePaymentList;
@@ -4070,5 +4072,33 @@ public class SpecificationManagedBean extends BaseManagedBean {
 
 	public void setSelectedCheckList(int selectedCheckList) {
 		this.selectedCheckList = selectedCheckList;
+	}
+
+	/**
+	 * @return the supplierScore
+	 */
+	public List<ScQtCheckListScore> getSupplierScore() {
+		return supplierScore;
+	}
+
+	/**
+	 * @param supplierScore the supplierScore to set
+	 */
+	public void setSupplierScore(List<ScQtCheckListScore> supplierScore) {
+		this.supplierScore = supplierScore;
+	}
+
+	/**
+	 * @return the supplierSelectScore
+	 */
+	public List<ScQtCheckListScore> getSupplierSelectScore() {
+		return supplierSelectScore;
+	}
+
+	/**
+	 * @param supplierSelectScore the supplierSelectScore to set
+	 */
+	public void setSupplierSelectScore(List<ScQtCheckListScore> supplierSelectScore) {
+		this.supplierSelectScore = supplierSelectScore;
 	}
 }
