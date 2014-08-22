@@ -1165,9 +1165,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		    				supplierItems.add(scRequestSupplierItem);	
 		    			}
 		    		}
-		    		// Add selected supplier item from search catalogue
-		    		supplierItems.add(requestSupplierItem);
+		    		
 		    	}
+		    	// Add selected supplier item from search catalogue
+	    		supplierItems.add(requestSupplierItem);
 		    }
 		    scRequestItem.setSupplierItems(supplierItems);
 		    scRequestItem.setRequestNote(requestNote);
