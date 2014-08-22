@@ -898,6 +898,12 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
     		result.setTplSpecZone(createSpecZone(pricing.getCmSupplierZone()));
     	}
 		
+    	if(pricing.getFromQty() != null){
+    		result.setFromQty(pricing.getFromQty());
+    	}
+    	if(pricing.getToQty() != null){
+    		result.setToQty(pricing.getToQty());
+    	}
 		result.setScRequestSupplierItem(scRequestSupplierItem);
 		result.setPricing(pricing);
 		if(selectedSupplierPrice){
