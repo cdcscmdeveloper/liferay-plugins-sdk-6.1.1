@@ -94,6 +94,8 @@ public class PaymentMatchManagedBean extends BaseManagedBean{
 	private int selectedTabIndex;
 	
 	private String adjustmentDocNo;
+	private String adjustmentDanDocNo;
+	private String adjustmentCanDocNo;
 	private String stopInstrNo;
 	
 	/**
@@ -633,5 +635,33 @@ public class PaymentMatchManagedBean extends BaseManagedBean{
 	 */
 	public void setVotFundList(List<PmVotFund> votFundList) {
 		this.votFundList = votFundList;
+	}
+
+	/**
+	 * @return the adjustmentDanDocNo
+	 */
+	public String getAdjustmentDanDocNo() {
+		return adjustmentDanDocNo;
+	}
+
+	/**
+	 * @return the adjustmentCanDocNo
+	 */
+	public String getAdjustmentCanDocNo() {
+		return adjustmentCanDocNo;
+	}
+
+	/**
+	 * @param adjustmentDanDocNo the adjustmentDanDocNo to set
+	 */
+	public void setAdjustmentDanDocNo(String adjustmentDanDocNo) {
+		this.adjustmentDanDocNo = adjustmentDanDocNo;
+	}
+
+	/**
+	 * @param adjustmentCanDocNo the adjustmentCanDocNo to set
+	 */
+	public void setAdjustmentCanDocNo(String adjustmentCanDocNo) {
+		this.adjustmentCanDocNo = adjustmentCanDocNo;
 	}
 }

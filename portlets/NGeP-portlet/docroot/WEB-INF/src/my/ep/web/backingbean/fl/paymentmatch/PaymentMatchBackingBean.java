@@ -322,8 +322,8 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			flPaymentItem.setFlInvoiceItem(invoiceItem);
 			if(getManagedBean().getAdjustmentDocNo()!=null) {
 				for(FlAdjustment flAdjustment : paymentAdvice.getFlInvoice().getFlAdjustments()) {
-					if(flAdjustment.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE) && 
-						flAdjustment.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE) {
+					if((flAdjustment.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE) || flAdjustment.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE)) && 
+							(flAdjustment.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE)) {
 						for(FlAdjustmentItem flAdjustmentItem : flAdjustment.getFlAdjustmentItem()) {
 							if(flAdjustmentItem.getFlInvoiceItem()==invoiceItem) {
 								flPaymentItem.setFlAdjustmentItem(flAdjustmentItem);
@@ -347,6 +347,11 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		String adjustmentDocNo = "";
 		for(FlAdjustment flAdjustment : flInvoice.getFlAdjustments()) {
 			if(flAdjustment.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE) {
+				if(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE.equalsIgnoreCase(flAdjustment.getDocType())){
+					getManagedBean().setAdjustmentDanDocNo(flAdjustment.getDocNo());
+				}else if(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE.equalsIgnoreCase(flAdjustment.getDocType())){
+					getManagedBean().setAdjustmentCanDocNo(flAdjustment.getDocNo());
+				}
 				if(flInvoice.getFlAdjustments().get(0)==flAdjustment) {
 					adjustmentDocNo = flAdjustment.getDocNo();
 				} else {
