@@ -59,18 +59,18 @@
 				<table style="width: 60%">
 
 					<tr>
-						<td style="width: 100px"><p:outputLabel
+						<td style="width: 15%"><p:outputLabel
 								value="#{lbl['lbl.sc.bidding.start']}" /></td>
-						<td><p:inputText id="bidStart"
+						<td style="width: 15%"><p:inputText id="bidStart"
 								value="#{biddingBB.managedBean.scheduledBid.startDate}"
-								size="20" disabled="true">
+								size="15" disabled="true">
 								<f:convertDateTime
 									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
 							</p:inputText></td>
-						<td style="width: 100px"><p:outputLabel
+						<td style="width: 15%"><p:outputLabel
 								value="#{lbl['lbl.sc.bidding.end']}" /></td>
-						<td><p:inputText id="bidEnd"
-								value="#{biddingBB.managedBean.scheduledBid.endDate}" size="20"
+						<td style="width: 15%"><p:inputText id="bidEnd"
+								value="#{biddingBB.managedBean.scheduledBid.endDate}" size="15"
 								disabled="true">
 								<f:convertDateTime
 									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
@@ -78,19 +78,19 @@
 					</tr>
 
 					<tr>
-						<td style="width: 110px"><p:outputLabel
+						<td style="width: 15%"><p:outputLabel
 								value="#{lbl['lbl.sc.duration.hours']}" /></td>
-						<td><p:inputText id="duration" size="20" disabled="true"
+						<td style="width: 15%"><p:inputText id="duration" size="15" disabled="true"
 								value="#{biddingBB.managedBean.duration}" /></td>
-						<td></td>
-						<td></td>
+						<td style="width: 15%"></td>
+						<td style="width: 15%"></td>
 
 					</tr>
 					<c:if test="#{isZonal}">
 						<tr>
-							<td style="width: 100px"><p:outputLabel
+							<td style="width: 15%"><p:outputLabel
 									value="#{lbl['lbl.sc.zone.name']}" /></td>
-							<td><p:inputText id="zoneNameLabel" disabled="true"
+							<td style="width: 15%"><p:inputText id="zoneNameLabel" disabled="true" size="15"
 									value="#{biddingBB.managedBean.scheduledBid.tplSpecZoneDtl.zoneName}" />
 								<p:spacer width="5"></p:spacer> <p:commandLink id="zoneName"
 									oncomplete="zoneLocPopup.show();" partialSubmit="true"
@@ -101,25 +101,25 @@
 										target="#{zoneLocationBackingBean.tplSpecZoneDtl}"
 										value="#{biddingBB.managedBean.scheduledBid.tplSpecZoneDtl}" />
 								</p:commandLink></td>
-							<td></td>
-							<td></td>
+							<td style="width: 15%"></td>
+							<td style="width: 15%"></td>
 						</tr>
 					</c:if>
 
 
 					<tr>
-						<td style="width: 100px"><p:outputLabel
+						<td style="width: 15%"><p:outputLabel
 								value="#{lbl['lbl.sc.view.by']}" /></td>
-						<td><p:selectOneMenu id="viewBy"
-								value="#{biddingBB.managedBean.bidManagementViewBy}"
+						<td style="width: 15%"><p:selectOneMenu id="viewBy"
+								value="#{biddingBB.managedBean.bidManagementViewBy}" 
 								style="width : 138px">
-								<f:selectItem itemLabel="#{lbl['lbl.sc.package']}" itemValue="P"></f:selectItem>
-								<f:selectItem itemLabel="#{lbl['lbl.sc.item']}" itemValue="I"></f:selectItem>
+								<f:selectItem itemLabel="Package" itemValue="P"></f:selectItem>
+								<f:selectItem itemLabel="Item" itemValue="I"></f:selectItem>
 								<p:ajax process="@this" partialSubmit="true" event="change"
 									listener="#{biddingBB.viewByChangeListener}" update="bidManagementPanel"></p:ajax>
 							</p:selectOneMenu></td>
-						<td></td>
-						<td></td>
+						<td style="width: 15%"></td>
+						<td style="width: 15%"></td>
 					</tr>
 				</table>
 			</div>
