@@ -219,42 +219,6 @@ public class OnlineBiddingBackingBean extends
 		getManagedBean().setItemStartPriceTotal(nf.format(startPriceTotal));
 	}
 
-	public void itemLastBidPriceTotal() {
-
-		Double lastBidPriceTotal = 0D;
-		if (getManagedBean().getBidPrices() != null
-				&& getManagedBean().getBidPrices().size() != 0) {
-			for (ScBidPrice bidPrice : getManagedBean().getBidPrices()) {
-				lastBidPriceTotal += (bidPrice.getBidPrice().doubleValue() * bidPrice
-						.getScBidSupplierItem().getScBidItem().getQty());
-			}
-		}
-		getManagedBean().setItemStartPriceTotal(nf.format(lastBidPriceTotal));
-		
-	}
 	
-	private void itemNewBidPriceTotal() {
-
-		Double itemNewBidPriceTotal = 0D;
-		if (getManagedBean().getBidPrices() != null
-				&& getManagedBean().getBidPrices().size() != 0) {
-			for (ScBidPrice bidPrice : getManagedBean().getBidPrices()) {
-				Double newBidPrice;
-				if(bidPrice.getNewBidPrice().getBidPrice().doubleValue() == 0){
-					newBidPrice = bidPrice.getBidPrice().doubleValue();
-					
-				}else{
-					
-					newBidPrice = bidPrice.getNewBidPrice().getBidPrice().doubleValue();
-				}
-				
-				itemNewBidPriceTotal += (newBidPrice * bidPrice
-						.getScBidSupplierItem().getScBidItem().getQty());
-			}
-		}
-		getManagedBean().setItemStartPriceTotal(nf.format(itemNewBidPriceTotal));
-		
-	}
-
 	
 }

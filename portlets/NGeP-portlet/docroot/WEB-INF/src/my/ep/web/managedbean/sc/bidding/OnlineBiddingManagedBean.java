@@ -61,6 +61,30 @@ public class OnlineBiddingManagedBean extends BaseManagedBean {
 	 * @return the itemNewBidPriceTotal
 	 */
 	public String getItemNewBidPriceTotal() {
+		
+		System.out.println("******!!!$$$$ inside getItemNewBidPriceTotal method ***** ");
+		
+		Double newBidPriceTotal = 0D;
+		if (this.getBidPrices() != null && this.getBidPrices().size() != 0) {
+			for (ScBidPrice bidPrice : this.getBidPrices()) {
+				
+				if(bidPrice.getNewBidPrice() != null && bidPrice.getNewBidPrice().getBidPrice() != null){
+					
+					newBidPriceTotal += (bidPrice.getNewBidPrice().getBidPrice().doubleValue() * bidPrice
+							.getScBidSupplierItem().getScBidItem().getQty());
+				}else {
+					
+					newBidPriceTotal += (bidPrice.getBidPrice().doubleValue() * bidPrice
+							.getScBidSupplierItem().getScBidItem().getQty());
+				}
+				
+				
+			}
+		}
+		this.setItemNewBidPriceTotal(nf.format(newBidPriceTotal));
+		
+		
+		
 		return itemNewBidPriceTotal;
 	}
 
@@ -122,12 +146,14 @@ public class OnlineBiddingManagedBean extends BaseManagedBean {
 
 		Double lastBidPriceTotal = 0D;
 		if (this.getBidPrices() != null && this.getBidPrices().size() != 0) {
+			
+			
 			for (ScBidPrice bidPrice : this.getBidPrices()) {
 				lastBidPriceTotal += (bidPrice.getBidPrice().doubleValue() * bidPrice
 						.getScBidSupplierItem().getScBidItem().getQty());
 			}
 		}
-		this.setItemStartPriceTotal(nf.format(lastBidPriceTotal));
+		this.setItemLastBidPriceTotal(nf.format(lastBidPriceTotal));
 		return itemLastBidPriceTotal;
 	}
 
