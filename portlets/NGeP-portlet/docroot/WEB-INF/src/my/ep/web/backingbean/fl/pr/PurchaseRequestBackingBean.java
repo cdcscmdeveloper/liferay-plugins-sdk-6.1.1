@@ -787,9 +787,9 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	public void retrieveOrderAmount(FlFulfilmentItemAddr flItemAddr){
 		IPurchaseRequestSO purchaseRequestSO = (IPurchaseRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,	IPurchaseRequestSO.class);
 		PurchaseRequestReqDTO reqDTO = new PurchaseRequestReqDTO();
+		// Tier only
 		if(flItemAddr.getScSupplierItemPrice() != null 
-				&& !flItemAddr.getScSupplierItemPrice().getPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_ZONAL_STANDARD) 
-				&& !flItemAddr.getScSupplierItemPrice().getPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_ZONAL_TIER)){
+				&& getManagedBean().getPmPriceType() != null && getManagedBean().getPmPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_TIER)){
 			
 			reqDTO.setRequestSupplierItemId(flItemAddr.getScSupplierItemPrice().getScRequestSupplierItem().getRequestSupplierItemId());
 			reqDTO.setPriceType(flItemAddr.getScSupplierItemPrice().getPriceType());
@@ -844,8 +844,9 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			injectFulfilmentItemDataWithZonalTier(itemAddrList,flItemAddr);
 			// add  or remove items to Selected delivery address
 			itemsToSelectedAddress(flItemAddr);
-		}else{
+		}else{ // zonal & standard
 			flItemAddr.setFlDeliveryAddress(getManagedBean().getSelectedDelAddr());
+			flItemAddr.setOrderedAmt(flItemAddr.getOrderedQty().multiply(flItemAddr.getUnitPrice()));
 			injectFulfilmentItemData(flItemAddr);
 			// add  or remove items to Selected delivery address
 			itemsToSelectedAddress(flItemAddr);
