@@ -664,8 +664,11 @@ public class QTBusinessOwnerBackingBean extends
 				statusReqDTO);
 		PmStatus status = statusResDTO.getPmStatus();
 		// scQt.setQtStatus(status);
-		PmParameter parameter = new PmParameter();
-		parameter.setParameterId(585l);
+		ParameterReqDTO parameterReqDTO1 = new ParameterReqDTO();
+		parameterReqDTO1.setParameterType(ParameterTypeConst.COMMITTEE_ROLE);
+		parameterReqDTO1.setParameterCode(ParameterConst.COMMITTEE_ROLE_MEMBER);
+		ParameterResDTO parameterResDTO1 = getParameterSO()
+				.retrieveParameterByTypeAndCode(parameterReqDTO1);
 		List<ScCommitteeMember> memberList = getManagedBean()
 				.getScCommitteeMemberList();
 		if (null == memberList) {
@@ -682,7 +685,7 @@ public class QTBusinessOwnerBackingBean extends
 					.getDesignation());
 			member.setPNP(getManagedBean().getCommitteMember().isPNP());
 			member.setEmail(getManagedBean().getCommitteMember().getEmail());
-			member.setMemberRole(parameter);
+			member.setMemberRole(parameterResDTO1.getPmParameter());
 			// member.setMemberRole("M");
 			member.setAccessRight("E");
 			member.setPmOrgProfile(this.getManagedBean().getQt()
@@ -779,7 +782,7 @@ public class QTBusinessOwnerBackingBean extends
 				committeeMember.setPmUser(user);
 				committeeMember.setPmOrgProfile(this.getManagedBean().getQt()
 						.getPmOrgProfile());
-				committeeMember.setMemberRole(parameter);
+				committeeMember.setMemberRole(parameterResDTO1.getPmParameter());
 				committeeMember.setAccessRight("E");
 				if (this.getManagedBean().getScCommitteeMemberList().isEmpty()) {
 					this.getManagedBean().getScCommitteeMemberList()
