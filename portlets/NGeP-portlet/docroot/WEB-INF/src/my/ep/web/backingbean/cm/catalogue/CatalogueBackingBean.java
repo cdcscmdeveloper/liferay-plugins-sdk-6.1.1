@@ -3275,86 +3275,102 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	 * } }
 	 */
 
-	public void publishCatalogItem() {
+	public String publishCatalogItem() {
 		
 		if(this.getManagedBean().getSelectedApprovedItems().length < 1) {
 			throw new EpException(MessageConst.ERROR_715015);
 		}
 		
-		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
-				.getInstance().getServiceObject("cm", ICatalogueSO.class);
-
-		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
-
-		log.info("this.getManagedBean().getSelectedApprovedItems().length:"
-						+ this.getManagedBean().getSelectedApprovedItems().length);
-		for (int i = 0; i < this.getManagedBean().getSelectedApprovedItems().length; i++) {
-			CmSupplierItem catalog = this.getManagedBean()
-					.getSelectedApprovedItems()[i];
-
-			catalog.setItemStatus("U");
-			
-			//Past Start Date should change to current date
-			Date dateNow = new Date();
-			if(catalog.getCmStandardPricing().getStartDate().before(dateNow)){
-				catalog.getCmStandardPricing().setStartDate(dateNow);
-			}
-			
-			reqDTO.getSaveSupplierItems().add(catalog);
-		}
-
-		CatalogueResDTO resDTO = new CatalogueResDTO();
+		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
+		ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject("sm",ISupplierSearchSO.class);
+		
 		try {
+
+			CatalogueReqDTO reqDTO = new CatalogueReqDTO();
+	
+			log.info("this.getManagedBean().getSelectedApprovedItems().length:"
+							+ this.getManagedBean().getSelectedApprovedItems().length);
+			for (int i = 0; i < this.getManagedBean().getSelectedApprovedItems().length; i++) {
+				CmSupplierItem catalog = this.getManagedBean().getSelectedApprovedItems()[i];
+	
+				catalog.setItemStatus("U");
+				
+				//Past Start Date should change to current date
+				Date dateNow = new Date();
+				if(catalog.getCmStandardPricing().getStartDate().before(dateNow)){
+					catalog.getCmStandardPricing().setStartDate(dateNow);
+				}
+				
+				//same item with existed one cannot overlap the date
+				SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
+				supplierReqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
+				SupplierSearchResDTO smResDTO = supplierSearchSO.retriveSupplierProfiles(supplierReqDTO);
+				
+				reqDTO.setSupplierItemId(catalog.getSupplierItemId());
+				reqDTO.setUomId(catalog.getPmUom().getUomId());
+				reqDTO.setExtensionCode(catalog.getCmItem().getExtensionCode());
+				reqDTO.setStartDate1(catalog.getCmStandardPricing().getStartDate());
+				reqDTO.setEndDate1(catalog.getCmStandardPricing().getEndDate());
+				reqDTO.setSupplierId(smResDTO.getResultBean().getResultList().get(0).getSupplierId());
+				if(catalogueSO.checkExistedItem(reqDTO)){
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+									MessageUtils.getMessage(MessageConst.ERROR_715019,
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));
+					return "catalogMaintenanceFile";
+				}
+				
+				reqDTO.getSaveSupplierItems().add(catalog);
+			}
+		
+			CatalogueResDTO resDTO = new CatalogueResDTO();
+		
 			resDTO = catalogueSO.updateSupplierItem(reqDTO);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 
-		System.out.println("resDTO.isSuccessful():" + resDTO.isSuccessful());
-
-		if (resDTO.isSuccessful()) {
-
-			ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
-					.getInstance().getServiceObject("sm",
-							ISupplierSearchSO.class);
-			SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
-
-			PmUser pmUser = new FacesScopes().getUserSessionBean();
-			supplierReqDTO.setUserId(pmUser.getUserId());
-
-			SupplierSearchResDTO smResDTO = supplierSearchSO
-					.retriveSupplierProfiles(supplierReqDTO);
-
-			System.out.println("getSmSupplier"
-					+ smResDTO.getResultBean().getResultList().get(0));
-
-			reqDTO.setSupplierId(smResDTO.getResultBean().getResultList().get(0).getSupplierId());
+			System.out.println("resDTO.isSuccessful():" + resDTO.isSuccessful());
+	
+			if (resDTO.isSuccessful()) {
+	
+				
+				SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
+	
+				PmUser pmUser = new FacesScopes().getUserSessionBean();
+				supplierReqDTO.setUserId(pmUser.getUserId());
+	
+				SupplierSearchResDTO smResDTO = supplierSearchSO
+						.retriveSupplierProfiles(supplierReqDTO);
+	
+				System.out.println("getSmSupplier"
+						+ smResDTO.getResultBean().getResultList().get(0));
+	
+				reqDTO.setSupplierId(smResDTO.getResultBean().getResultList().get(0).getSupplierId());
+				
+				//System.out.println("getSupplierId = "+smResDTO.getResultBean().getResultList().get(0).getSupplierId());
+	
+				reqDTO.setItemStatus("A");
 			
-			//System.out.println("getSupplierId = "+smResDTO.getResultBean().getResultList().get(0).getSupplierId());
-
-			reqDTO.setItemStatus("A");
-			try {
 				resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
 				this.getManagedBean().setApprovedItemList(resDTO.getSupplierItemList());
+
+				FacesContext facesContext = FacesContext.getCurrentInstance();
+	
+				facesContext.addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								MessageUtils.getMessage(MessageConst.INFO_710002,
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+				}
+			
 			}catch(Exception e){
-				this.getManagedBean().setApprovedItemList(null);
+				//this.getManagedBean().setApprovedItemList(null);
 			}finally {
 				catalogueSO = null;
+				supplierSearchSO = null;
 			}
-
-			
-
-			FacesContext facesContext = FacesContext.getCurrentInstance();
-
-			facesContext.addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-							MessageUtils.getMessage(MessageConst.INFO_710002,
-									MessageUtils.BUNDLE_COMMON_MESSAGES,
-									new FacesScopes().getUserLocale())));
-
-		}
+		return "catalogMaintenanceFile";
 	}
 
 	public String compareSupplierItem() {
