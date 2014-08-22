@@ -126,9 +126,7 @@
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:inputText size="53" maxlength="25"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.description}">
-					</p:inputText></td>1#{paymentMatchBackingBean.managedBean.paymentAdvice.status.statusId ne FulfilmentStatusCont.poPendingPaymentmatch}"
-					2#{paymentMatchBackingBean.managedBean.paymentAdvice.status.statusId}"
-					3#{FulfilmentStatusCont.paPendingPaymentMatch}"
+					</p:inputText></td>
 				<h:panelGroup rendered="#{paymentMatchBackingBean.managedBean.paymentAdvice.status.statusId ne FulfilmentStatusCont.paPendingPaymentMatch}">	
 				<td><p:outputLabel value="#{lbl['lbl.fl.pm.payment.ref']}" /></td>
 				<td><p:inputText size="20" disabled="true"
