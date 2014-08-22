@@ -639,6 +639,8 @@ public class QTDetailBackingBean extends
 				&& scQt.getFinalizationSecratery().getUserId() == null) {
 			scQt.setFinalizationSecratery(null);
 		}
+		
+		scQt.setExistingContractNo(this.getManagedBean().getCtContract().getContractNo());
 
 		// No need to set the below fields automatically set by listener
 		PmUser users = new FacesScopes().getUserSessionBean();
@@ -2249,6 +2251,7 @@ public class QTDetailBackingBean extends
 				tenderResDTO = QtDetailsSO.retriveQTDetails(tenderReqDTO);
 				if (tenderResDTO.getQtDetail() != null) {
 					getManagedBean().setQt(tenderResDTO.getQtDetail());
+					getManagedBean().getCtContract().setContractNo(this.getManagedBean().getQt().getExistingContractNo());
 					if (this.getManagedBean().getZoneGeneralTrees().isEmpty()) {
 						if (tenderResDTO.getQtDetail().isZonal()) {
 							if (isNotNullOREmpty(tenderResDTO.getZoneDetails())) {
