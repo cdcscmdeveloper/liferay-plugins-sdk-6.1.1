@@ -1,0 +1,94 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+
+	<ui:define name="resourceSection">
+	</ui:define>
+
+
+	<ui:define name="contentSection">
+		
+		
+		
+		<p:panel>
+			<table>
+				<tr>
+					<td><h:outputLabel value="#{lbl['lbl.sc.spec.stage.title']}"></h:outputLabel></td>
+					<td><p:inputTextarea style="width: 100%;"
+							value="#{specificationBackingBean.managedBean.scQtChecklist.title}"
+							disabled="true" rows="2" cols="150"></p:inputTextarea></td>
+				</tr>
+			</table>
+		</p:panel>
+	
+
+		<p:panel header="#{lbl['lbl.sc.spec.total.score.suppliers']}">
+			<table>
+				<tr>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sc.spec.asset.score.type']}"></p:outputLabel></td>
+					<td><p:selectOneMenu
+							value="#{specificationBackingBean.managedBean.checklistScoreType}">
+							<f:selectItem itemLabel="Auto" itemValue="1"></f:selectItem>
+							<f:selectItem itemLabel="User" itemValue="2"></f:selectItem>
+							<p:ajax event="change" update="supplierScore"
+								listener="#{specificationBackingBean.scoreTypeChange}"></p:ajax>
+						</p:selectOneMenu></td>
+				</tr>
+			</table>
+		
+		<h:panelGroup id="supplierScore">
+			<p:panel
+				rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '1'}">
+				<ui:param name="scoringPnlGroupId" value="totalEmployeesId" />
+				<h:panelGroup id="totalSuppliersGroupId">
+					<ui:param name="scoringList"
+						value="#{specificationBackingBean.managedBean.supplierScore}" />
+					<ui:param name="selectionList"
+						value="#{specificationBackingBean.managedBean.supplierSelectScore}" />
+					<ui:param name="componentName" value="SuppliersInfo" />
+					<ui:param name="scoringPnlId" value="suppliersInfoId" />
+					<ui:param name="scoringPnlName"
+						value="#{lbl['lbl.sc.spec.total.score.suppliers']}"></ui:param>
+					<ui:include src="/xhtml/sc/specification/scoring.xhtml"></ui:include>
+					<div align="right">
+						<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
+							process="@this,#{scoringPnlId}" partialSubmit="true"
+							oncomplete="scoreWidget.paginator.endLink.click();"
+							update="#{scoringPnlId}" icon="ui-icon-add"
+							actionListener="#{specificationBackingBean.addSupplierInfoDtls}" />
+						<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
+							icon="ui-icon-delete"
+							action="#{specificationBackingBean.deleteScoring}"
+							update="#{scoringPnlId}" />
+					</div>
+				</h:panelGroup>
+			</p:panel>
+			<p:panel
+				rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '2'}">
+				<table>
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sc.spec.max.score']}"></p:outputLabel>
+							<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
+						</td>
+						<td><p:inputText id="totalSuppliersScore" required="true"
+								label="#{lbl['lbl.sc.spec.max.score']}"
+								value="#{specificationBackingBean.managedBean.scQtCheckListScore.score}"
+								maxlength="18">
+								<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
+							</p:inputText> <p:message id="financialSuppliers" for="totalSuppliersScore"
+								display="icon"></p:message></td>
+					</tr>
+				</table>
+			</p:panel>
+		</h:panelGroup>
+		</p:panel>
+
+	</ui:define>
+</ui:composition>

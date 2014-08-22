@@ -13,13 +13,17 @@
 
 
 	<ui:define name="contentSection">
+		<p:messages id="TotalSuppliers" showDetail="true" showSummary="false"
+			autoUpdate="true" closable="true"></p:messages>
 
 		<div>
-			<p:commandButton value="Back" style="float:left;"
+			<p:commandButton value="#{lbl['lbl.sc.spec.back']}"
+				style="float:left;" icon="ui-icon-back"
 				action="#{specificationBackingBean.committeeBackAction}" />
 
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
-				style="float:right;" icon="ui-icon-save" />
+				style="float:right;" icon="ui-icon-save"
+				action="#{specificationBackingBean.acceptSuppliersScore}" />
 
 
 
@@ -29,47 +33,7 @@
 
 		<p:panel>
 
-			<p:tabView id="supplietrtabView" dynamic="true">
-
-				<p:tab id="tab1" title="#{lbl['lbl.sc.spec.tabs.title']}"
-					styleClass="noBorders tr,noBorders td">
-					<ui:include src="/xhtml/sc/specification/supplierDetails.xhtml" />
-				</p:tab>
-
-
-
-				<p:tab id="tab2" title="Branch/Assocs"
-					styleClass="noBorders tr,noBorders td">
-					<ui:include src="/xhtml/sc/specification/branchInfo.xhtml" />
-				</p:tab>
-
-				<p:tab id="tab3" title="Capital Info"
-					styleClass="noBorders tr,noBorders td">
-					<ui:include src="/xhtml/sc/specification/capitalInfo.xhtml" />
-
-
-				</p:tab>
-
-				<p:tab id="tab4" title="Personnel"
-					styleClass="noBorders tr,noBorders td">
-					<ui:include src="/xhtml/sc/specification/personnelInfo.xhtml" />
-
-
-				</p:tab>
-
-				<p:tab id="tab5" title="Bank Info"
-					styleClass="noBorders tr,noBorders td">
-					<ui:include src="/xhtml/sc/specification/bankInfo.xhtml" />
-
-				</p:tab>
-
-				<p:tab id="tab6" title="Category Codes"
-					styleClass="noBorders tr,noBorders td">
-					<ui:include src="/xhtml/sc/specification/category.xhtml" />
-
-				</p:tab>
-
-			</p:tabView>
+			<ui:include src="/xhtml/sc/specification/supplierInfoscore.xhtml" />
 		</p:panel>
 	</ui:define>
 
