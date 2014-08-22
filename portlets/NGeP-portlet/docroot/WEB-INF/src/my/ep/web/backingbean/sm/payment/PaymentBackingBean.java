@@ -483,20 +483,23 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 					
 					if(paymentId.longValue() == ordId.longValue() && paymentAmount.compareTo(txAmount) == 0){
 						log.info("current status>>>>" + smPayment.getPmStatus().getStatusId());
-						if(smPayment.getPmStatus().getStatusId() == SupplierManagementConst.PM_STAT_PENDING_PAYMENT || 
-								smPayment.getPmStatus().getStatusId() == SupplierManagementConst.PM_STAT_FAILED_PAYMENT){
-							log.info("current payment>>>>" + smPayment.getPmStatus().getStatusId());
-							
-							if(!smPayment.getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STAT_SUCCESS_PAYMENT)){
-								statusCode = SupplierManagementConst.PM_STAT_SUCCESS_PAYMENT;
-								validPayment = true;
-							}else{
-								statusCode = smPayment.getPmStatus().getStatusId();
+						if(smPayment.getPmStatus() != null){
+							if(smPayment.getPmStatus().getStatusId() == SupplierManagementConst.PM_STAT_PENDING_PAYMENT || 
+									smPayment.getPmStatus().getStatusId() == SupplierManagementConst.PM_STAT_FAILED_PAYMENT){
+								log.info("current payment>>>>" + smPayment.getPmStatus().getStatusId());
+
+								if(!smPayment.getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STAT_SUCCESS_PAYMENT)){
+									statusCode = SupplierManagementConst.PM_STAT_SUCCESS_PAYMENT;
+									validPayment = true;
+								}else{
+									statusCode = smPayment.getPmStatus().getStatusId();
+								}
 							}
+						}else{
+							log.info("<<<existing status is NUll>>>>");
+							statusCode = SupplierManagementConst.PM_STAT_SUCCESS_PAYMENT;
+							validPayment = true;
 						}
-						//						log.info("Payment Success>>>>>" + orderId);
-						//						statusCode = SupplierManagementConst.PM_STAT_SUCCESS_PAYMENT;
-						//						validPayment = true;
 					}
 					else{
 						statusCode = SupplierManagementConst.PM_STAT_FAILED_PAYMENT;
