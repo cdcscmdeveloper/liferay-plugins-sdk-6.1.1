@@ -19,6 +19,7 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
@@ -31,7 +32,10 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.QTStatusConst;
+import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.SCProcessNameConst;
+import my.ep.dto.pm.common.parameter.ParameterReqDTO;
+import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
@@ -84,7 +88,7 @@ public class ApprovalBackingBean extends
 		SourcingBaseBackingBean<QTDetailManagedBean> {
 
 	private FacesContext facesContext = FacesContext.getCurrentInstance();
-	
+
 	public ApprovalBackingBean() {
 
 	}
@@ -96,7 +100,8 @@ public class ApprovalBackingBean extends
 		}
 
 		if (this.getManagedBean().getScQtApproval().getApprovalCategory() == null) {
-			this.getManagedBean().getScQtApproval().setApprovalCategory(new PmParameter());
+			this.getManagedBean().getScQtApproval()
+					.setApprovalCategory(new PmParameter());
 		}
 
 	}
@@ -106,11 +111,15 @@ public class ApprovalBackingBean extends
 	 */
 	private void initializeRemark(List<ScQtCommittee> scQtCommittees) {
 		FacesScopes facesScopes = new FacesScopes();
-		IStatusSO iStatusSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
+		IStatusSO iStatusSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IStatusSO.class);
 		if (null != scQtCommittees && !scQtCommittees.isEmpty()) {
 			for (ScQtCommittee committees : scQtCommittees) {
-				this.getManagedBean().setQtCommitteeRemarks(committees.getQtCommitteRemarks());
-				List<ScQtCommitteRemarks> scQtApprovalRemarks = this.getManagedBean().getQtCommitteeRemarks();
+				this.getManagedBean().setQtCommitteeRemarks(
+						committees.getQtCommitteRemarks());
+				List<ScQtCommitteRemarks> scQtApprovalRemarks = this
+						.getManagedBean().getQtCommitteeRemarks();
 				if (null == scQtApprovalRemarks) {
 					scQtApprovalRemarks = new ArrayList<ScQtCommitteRemarks>();
 				}
@@ -123,7 +132,8 @@ public class ApprovalBackingBean extends
 				StatusReqDTO statusReqDTO = new StatusReqDTO();
 				if (status != null) {
 					statusReqDTO.setStatusId(status.getStatusId());
-					StatusResDTO statusResDTO = iStatusSO.retrieveStatusByStatusId(statusReqDTO);
+					StatusResDTO statusResDTO = iStatusSO
+							.retrieveStatusByStatusId(statusReqDTO);
 					remark.setPmStatus(statusResDTO.getPmStatus());
 				}
 				this.getManagedBean().getQtCommitteeRemarks().add(remark);
@@ -138,7 +148,8 @@ public class ApprovalBackingBean extends
 		List<Long> appCatList = new ArrayList<Long>();
 		if (null != this.getManagedBean().getTabList()) {
 			for (TabBean tabBean : this.getManagedBean().getTabList()) {
-				appCatList.add(tabBean.getScQtApproval().getApprovalCategory().getParameterId());
+				appCatList.add(tabBean.getScQtApproval().getApprovalCategory()
+						.getParameterId());
 			}
 		}
 		return appCatList;
@@ -146,21 +157,32 @@ public class ApprovalBackingBean extends
 
 	public SelectItem[] getApprovalCategories() {
 		SelectItem[] selectItems = new SelectItem[5];
-		//selectItems[0] = new SelectItem(ApprovalCategory.BUDGET_APPROVAL.value(), "Budget Approval");
-		selectItems[0] = new SelectItem(ApprovalCategory.BPK_APPROVAL.value(), "BPK Approval");
-		selectItems[1] = new SelectItem(ApprovalCategory.COMMITTEE_APPROVAL.value(), "Committee Appointment Approval");
-		selectItems[2] = new SelectItem(ApprovalCategory.PTJ_APPROVAL.value(), "PTJ Approval");
-		selectItems[3] = new SelectItem(ApprovalCategory.FINALAIZATION_COMMITTEE_APPROVAL.value(), "Finalization Committee Approval");
-		selectItems[4] = new SelectItem(ApprovalCategory.OTHER_APPROVAL.value(), "Others Approval");
+		// selectItems[0] = new
+		// SelectItem(ApprovalCategory.BUDGET_APPROVAL.value(),
+		// "Budget Approval");
+		selectItems[0] = new SelectItem(ApprovalCategory.BPK_APPROVAL.value(),
+				"BPK Approval");
+		selectItems[1] = new SelectItem(
+				ApprovalCategory.COMMITTEE_APPROVAL.value(),
+				"Committee Appointment Approval");
+		selectItems[2] = new SelectItem(ApprovalCategory.PTJ_APPROVAL.value(),
+				"PTJ Approval");
+		selectItems[3] = new SelectItem(
+				ApprovalCategory.FINALAIZATION_COMMITTEE_APPROVAL.value(),
+				"Finalization Committee Approval");
+		selectItems[4] = new SelectItem(
+				ApprovalCategory.OTHER_APPROVAL.value(), "Others Approval");
 		return selectItems;
 	}
 
-	public void handleFileUpload(FileUploadEvent event) throws FileNotFoundException, IOException {
-		 List<ScQtApprovalAttachment> attachments = new ArrayList<ScQtApprovalAttachment>();
+	public void handleFileUpload(FileUploadEvent event)
+			throws FileNotFoundException, IOException {
+		List<ScQtApprovalAttachment> attachments = new ArrayList<ScQtApprovalAttachment>();
 		if (event.getFile() != null) {
 			ScAttachment scAttachment = null;
 			ScQtApproval scQtApproval = this.getManagedBean().getScQtApproval();
-			ScQtApprovalAttachment attachment = scQtApproval.getScQtApprovalAttachment();
+			ScQtApprovalAttachment attachment = scQtApproval
+					.getScQtApprovalAttachment();
 			if (null == attachment) {
 				attachment = new ScQtApprovalAttachment();
 				attachment.setScQtApproval(scQtApproval);
@@ -170,15 +192,16 @@ public class ApprovalBackingBean extends
 				scQtApproval.setScQtApprovalAttachment(attachment);
 			}
 			attachment.setDocNo(scQtApproval.getScQt().getQtNo());
-			scAttachment = attachment; 
+			scAttachment = attachment;
 			uploadAttachment(event.getFile(), scAttachment);
 			getManagedBean().setScQtApproval(scQtApproval);
 			attachments.add(attachment);
 			getManagedBean().setAttachments(attachments);
 		}
 	}
-	
-	public void handleOtherFileUpload(FileUploadEvent event) throws FileNotFoundException, IOException {
+
+	public void handleOtherFileUpload(FileUploadEvent event)
+			throws FileNotFoundException, IOException {
 		if (event.getFile() != null) {
 			ScAttachment scAttachment = null;
 			ScQtApprovalRequest scQtApprovalRequest = null;
@@ -298,9 +321,11 @@ public class ApprovalBackingBean extends
 			CommitteResDTO resDTO = committeSO.retriveQtCommitteDtls(committeReqDTO);
 			ISearchResultBean<ScQtCommittee> qtcomSearchBean = resDTO.getQtCommitteResultBean();
 			this.getManagedBean().setQtCommittes(qtcomSearchBean);
-			List<TabBean> tabBeans = constructCommitteTabBean(qtcomSearchBean.getResultList());
+			List<TabBean> tabBeans = constructCommitteTabBean(qtcomSearchBean
+					.getResultList());
 			initializeRemark(qtcomSearchBean.getResultList());
-			this.getManagedBean().getQt().setScQtCommittees(qtcomSearchBean.getResultList());
+			this.getManagedBean().getQt()
+					.setScQtCommittees(qtcomSearchBean.getResultList());
 			this.getManagedBean().setScCommitteeMemberTabList(tabBeans);
 			MenuModel menuModel = new DefaultMenuModel();
 			int zoneTabIndex = 0;
@@ -320,25 +345,32 @@ public class ApprovalBackingBean extends
 			if (tabBeans.size() > 0) {
 				getManagedBean().setSelectedTabBean(tabBeans.get(0));
 			}
-		}  else if (SCProcessNameConst.APPROVE_PUBLICATION.equalsIgnoreCase(taskName)) {
+		} else if (SCProcessNameConst.APPROVE_PUBLICATION
+				.equalsIgnoreCase(taskName)) {
 			this.getManagedBean().setApprovalType("Publication Approval");
-			scQtApproval = getApproval(qtId, ParameterConst.APPROVAL_CATEGORY_PTJ);
-			if(null != getManagedBean().getQt().getClosingDate()) {
+			scQtApproval = getApproval(qtId,
+					ParameterConst.APPROVAL_CATEGORY_PTJ);
+			if (null != getManagedBean().getQt().getClosingDate()) {
 				Calendar cal = Calendar.getInstance();
 				cal.setTime(getManagedBean().getQt().getClosingDate());
-				cal.add(Calendar.DATE, getManagedBean().getQt().getQtValidityPeriod());
+				cal.add(Calendar.DATE, getManagedBean().getQt()
+						.getQtValidityPeriod());
 				getManagedBean().setProposalValidityUntil(cal.getTime());
 			}
 		}
 		this.getManagedBean().setScQtApproval(scQtApproval);
 		FacesContext context = FacesContext.getCurrentInstance();
-		context.getApplication().getNavigationHandler().handleNavigation(context, null, "/xhtml/sc/quatationtender/Approver/approverMain.xhtml");
+		context.getApplication()
+				.getNavigationHandler()
+				.handleNavigation(context, null,
+						"/xhtml/sc/quatationtender/Approver/approverMain.xhtml");
 	}
 
 	public String updateBpmTask(String outcome) {
 		FacesScopes facesScopes = new FacesScopes();
 		String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
-		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+				.getServiceObject(IBpmSO.class);
 		BpmRequestDTO reqDTO = new BpmRequestDTO();
 		reqDTO.setCtxToken(ctxToken);
 		reqDTO.setTaskId(this.getManagedBean().getTaskId());
@@ -350,27 +382,44 @@ public class ApprovalBackingBean extends
 			qt.setScQtBriefings(null);
 			CommitteResDTO committeResDto = null;
 			QuationTenderResDTO qtResDTO = null;
-			if (SCProcessNameConst.APPROVE_COMMITTEE.equalsIgnoreCase(taskName) || SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)) {
-				ISearchResultBean<ScQtCommittee> qtCommittes = this.getManagedBean().getQtCommittes();
-				if (null != qtCommittes && null != qtCommittes.getResultList()) {
-					for (ScQtCommittee scQtCommittee : qtCommittes.getResultList()) {
+			if (SCProcessNameConst.APPROVE_COMMITTEE.equalsIgnoreCase(taskName)
+					|| SCProcessNameConst.REVISE_COMMITTEE
+							.equalsIgnoreCase(taskName)) {
+
+				List<TabBean> qtCommittes = this.getManagedBean()
+						.getScCommitteeMemberTabList();
+				List<ScQtCommittee> committees = null;
+				if (null != qtCommittes && !qtCommittes.isEmpty()) {
+					committees = new ArrayList<ScQtCommittee>();
+					for (int i = 0; i < qtCommittes.size(); i++) {
+						ScQtCommittee qtCommittee = qtCommittes.get(0)
+								.getScQtCommittee();
 						PmStatus committeStatus = new PmStatus();
-						if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)) {
-							committeStatus.setStatusId(QTStatusConst.CM_REVISION);
+						if (BpmOutcomeConst.BPM_REVISE
+								.equalsIgnoreCase(outcome)) {
+							committeStatus
+									.setStatusId(QTStatusConst.CM_REVISION);
 						} else {
-							committeStatus.setStatusId(QTStatusConst.CM_COMPLETE);
+							committeStatus
+									.setStatusId(QTStatusConst.CM_COMPLETE);
 						}
-						scQtCommittee.getScCommittee().setCommitteStatus(committeStatus);
-						scQtCommittee.setQtCommitteRemarks(this.getManagedBean().getQtCommitteeRemarks());
+						qtCommittee.getScCommittee().setCommitteStatus(
+								committeStatus);
+						qtCommittee.setQtCommitteRemarks(this.getManagedBean()
+								.getQtCommitteeRemarks());
+						committees.add(qtCommittee);
 					}
-					qt.setScQtCommittees(qtCommittes.getResultList());
+					qt.setScQtCommittees(committees);
 				}
-				ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
+				ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+								ICommitteSO.class);
 				CommitteReqDTO committeReqDTO = new CommitteReqDTO();
 				committeReqDTO.setToken(ctxToken);
 				committeReqDTO.setTaskId(this.getManagedBean().getTaskId());
-				committeReqDTO.setPayLoad(this.getManagedBean().getQuotationTenderDataType());
-				committeReqDTO.setOutcome(outcome);	
+				committeReqDTO.setPayLoad(this.getManagedBean()
+						.getQuotationTenderDataType());
+				committeReqDTO.setOutcome(outcome);
 				removeEmptyRemarks(qt);
 				committeReqDTO.setScQt(qt);
 				committeReqDTO.setUser(new FacesScopes().getUserSessionBean());
@@ -380,45 +429,85 @@ public class ApprovalBackingBean extends
 				qtReqDTO.setToken(ctxToken);
 				qtReqDTO.setTaskId(this.getManagedBean().getTaskId());
 				qtReqDTO.setDocType(QTConstants.DOCTYPE_QT);
-				qtReqDTO.setPayLoad(this.getManagedBean().getQuotationTenderDataType());
-				qtReqDTO.setOutcome(outcome);
-				IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+				
+
+				IQTDetailSO detailSO = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+								IQTDetailSO.class);
 				ScQtApproval approval = this.getManagedBean().getScQtApproval();
 				if (null != approval && null != approval.getQtApprovalId()) {
-					approval.setApproverAction("A");
-					approval.setApproverId(new FacesScopes().getUserSessionBean());	
+
+					approval.setApproverId(new FacesScopes()
+							.getUserSessionBean());
 					approval.setApproverActionDate(new Date());
+					
+					if (ParameterConst.APPROVAL_CATEGORY_BPK
+							.equalsIgnoreCase(approval.getApprovalCategory()
+									.getParameterCode())) {
+						List<ScQtApprovalRequest> approvalRequests = approval
+								.getScQtApprovalDtls();
+						String action = constuctOutCome(approvalRequests, qt);
+						if (BpmOutcomeConst.BPM_REVISE
+								.equalsIgnoreCase(action)) {
+							approval.setApproverAction(SourcingConstants.REVISE_ACTION);
+							((SCQuotationTenderDataType)this.getManagedBean()
+							.getQuotationTenderDataType()).setBpkRevise(true);
+						}
+					}
+					finalizeRemarks(approval.getScQtApprovalRemarks());
 					List<ScQtApproval> qtApproval = new ArrayList<ScQtApproval>();
 					qtApproval.add(approval);
 					qt.setScQtApprovals(qtApproval);
 				}
 				qt.setScQtCommittees(null);
+				qtReqDTO.setPayLoad(this.getManagedBean()
+						.getQuotationTenderDataType());
 				qtReqDTO.setDeskOfficer(new FacesScopes().getUserSessionBean());
 				qtReqDTO.setQtdetail(qt);
-				qtResDTO = (QuationTenderResDTO) detailSO.updateBPMAction(qtReqDTO);
+				qtReqDTO.setOutcome(outcome);
+				qtResDTO = (QuationTenderResDTO) detailSO
+						.updateBPMAction(qtReqDTO);
 			}
-			if ((null != committeResDto && committeResDto.isSuccessful()) || (null != qtResDTO && qtResDTO.isSuccessful())) {
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-										null, MessageUtils.getMessage(getMessgeConstant(outcome), new String[] {
-																getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION), qt.getQtNo() },
-														MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			if ((null != committeResDto && committeResDto.isSuccessful())
+					|| (null != qtResDTO && qtResDTO.isSuccessful())) {
+				FacesContext
+						.getCurrentInstance()
+						.addMessage(
+								null,
+								new FacesMessage(
+										FacesMessage.SEVERITY_INFO,
+										null,
+										MessageUtils
+												.getMessage(
+														getMessgeConstant(outcome),
+														new String[] {
+																getParameterDesc(
+																		ParameterTypeConst.DOCUMENT_TYPES,
+																		ParameterConst.DOCTYPE_QUOTATION),
+																qt.getQtNo() },
+														MessageUtils.BUNDLE_COMMON_MESSAGES,
+														new FacesScopes()
+																.getUserLocale())));
 				return CommonUIConst.ACKNOWLEDGE_PAGE;
 			}
 		} catch (Exception ex) {
 			FacesContext.getCurrentInstance().addMessage(
 					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.EP_MAJ_00001, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+							MessageUtils.getMessage(MessageConst.EP_MAJ_00001,
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
 			ex.printStackTrace();
 		}
 		return null;
 	}
 
-	
 	public List<TabBean> constructCommitteTabBean(
 			List<ScQtCommittee> qtCommittees) {
 		List<TabBean> committeTabs = new ArrayList<TabBean>();
 		for (ScQtCommittee scQtCommittee : qtCommittees) {
-			if (!"BO".equalsIgnoreCase(scQtCommittee.getScCommittee().getCommitteeType().getParameterCode())) {
+			if (!"BO".equalsIgnoreCase(scQtCommittee.getScCommittee()
+					.getCommitteeType().getParameterCode())) {
 				TabBean bean = new TabBean(
 						CommitteType.getValue(scQtCommittee.getScCommittee()
 								.getCommitteeType().getParameterCode()),
@@ -430,7 +519,7 @@ public class ApprovalBackingBean extends
 		}
 		return committeTabs;
 	}
-	
+
 	private ScQtCommittee getQtCommitteeTypeDtl(String type, Long id) {
 		CommitteReqDTO reqDTO = new CommitteReqDTO();
 		ScQtCommittee qtCommitte = null;
@@ -438,48 +527,45 @@ public class ApprovalBackingBean extends
 		reqDTO.setQtId(id);
 		CommitteResDTO resDTO = null;
 		try {
-			ICommitteSO committeSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
+			ICommitteSO committeSO = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							ICommitteSO.class);
 			resDTO = committeSO.retrieveCommitteByQtIdNCommType(reqDTO);
 			qtCommitte = resDTO.getScQtCommittee();
 		} catch (Exception ex) {
 			ex.printStackTrace();
-		}	
+		}
 		return qtCommitte;
 	}
 
-	/*private ScCommittee getCommitteeTypeDtl(String type, Long id) {
-		CommitteReqDTO reqDTO = new CommitteReqDTO();
-		ScCommittee committee = null;
-		reqDTO.setCommitteeType(type);
-		reqDTO.setQtId(id);
-		CommitteResDTO resDTO = null;
-
-		try {
-			ICommitteSO committeSO = BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-							ICommitteSO.class);
-			resDTO = committeSO
-					.retrieveCommitteMembersByQtIdAndCommType(reqDTO);
-			List<ScCommitteeMember> commMembers = resDTO
-					.getCommMemberResultBean().getResultList();
-
-			if (!commMembers.isEmpty()) {
-				committee = commMembers.get(0).getScCommittee();
-				committee.setScCommitteeMembers(commMembers);
-				getManagedBean().setScCommittee(committee);
-			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		return committee;
-	}*/
+	/*
+	 * private ScCommittee getCommitteeTypeDtl(String type, Long id) {
+	 * CommitteReqDTO reqDTO = new CommitteReqDTO(); ScCommittee committee =
+	 * null; reqDTO.setCommitteeType(type); reqDTO.setQtId(id); CommitteResDTO
+	 * resDTO = null;
+	 * 
+	 * try { ICommitteSO committeSO = BusinessDelegate.getInstance()
+	 * .getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
+	 * resDTO = committeSO .retrieveCommitteMembersByQtIdAndCommType(reqDTO);
+	 * List<ScCommitteeMember> commMembers = resDTO
+	 * .getCommMemberResultBean().getResultList();
+	 * 
+	 * if (!commMembers.isEmpty()) { committee =
+	 * commMembers.get(0).getScCommittee();
+	 * committee.setScCommitteeMembers(commMembers);
+	 * getManagedBean().setScCommittee(committee); } } catch (Exception ex) {
+	 * ex.printStackTrace(); } return committee; }
+	 */
 
 	private ScQtApproval getApproval(Long qtId, String approvalType) {
 		QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
 		tenderReqDTO.setApprovalType(approvalType);
 		tenderReqDTO.setQtId(qtId);
-		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-		QuationTenderResDTO resDTO = detailSO.retriveQTApprovalDetails(tenderReqDTO);
+		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						IQTDetailSO.class);
+		QuationTenderResDTO resDTO = detailSO
+				.retriveQTApprovalDetails(tenderReqDTO);
 		ScQtApproval approval = resDTO.getQtApproval();
 		return approval;
 	}
@@ -488,50 +574,52 @@ public class ApprovalBackingBean extends
 		return "/xhtml/sc/quatationtender/Approver/approverMain.xhtml?faces-redirect=true";
 	}
 
-	/*public void handleFileAttachment(FileUploadEvent event)
-			throws FileNotFoundException, IOException {
-		FacesScopes facesScopes = new FacesScopes();
-		if (event.getFile() != null) {
-			ScQtApproval scQtApproval = this.getManagedBean().getScQtApproval();
-			ScQtApprovalAttachment attachment = getManagedBean()
-					.getScQtApproval().getScQtApprovalAttachment();
-			if (null == attachment) {
-				attachment = new ScQtApprovalAttachment();
-				attachment.setScQtApproval(scQtApproval);
-				attachment.setDocNo(scQtApproval.getScQt().getQtNo());
-				attachment.setPrefixFileName(scQtApproval.getApprovalCategory()
-						.getParameterCode());
-			}
-			attachment.setUser(facesScopes.getUserSessionBean());
-			attachment
-					.setChangedDate(new Timestamp(System.currentTimeMillis()));
-			uploadAttachment(event.getFile(), attachment);
-			scQtApproval.setScQtApprovalAttachment(attachment);
-		}
-	}*/
-	
+	/*
+	 * public void handleFileAttachment(FileUploadEvent event) throws
+	 * FileNotFoundException, IOException { FacesScopes facesScopes = new
+	 * FacesScopes(); if (event.getFile() != null) { ScQtApproval scQtApproval =
+	 * this.getManagedBean().getScQtApproval(); ScQtApprovalAttachment
+	 * attachment = getManagedBean()
+	 * .getScQtApproval().getScQtApprovalAttachment(); if (null == attachment) {
+	 * attachment = new ScQtApprovalAttachment();
+	 * attachment.setScQtApproval(scQtApproval);
+	 * attachment.setDocNo(scQtApproval.getScQt().getQtNo());
+	 * attachment.setPrefixFileName(scQtApproval.getApprovalCategory()
+	 * .getParameterCode()); }
+	 * attachment.setUser(facesScopes.getUserSessionBean()); attachment
+	 * .setChangedDate(new Timestamp(System.currentTimeMillis()));
+	 * uploadAttachment(event.getFile(), attachment);
+	 * scQtApproval.setScQtApprovalAttachment(attachment); } }
+	 */
+
 	/**
 	 * @param qt
 	 */
 	private void removeEmptyRemarks(ScQt qt) {
-		List<ScQtCommittee> qtcommittees= qt.getScQtCommittees();
-		for(ScQtCommittee qtCommittee : qtcommittees){
-			List<ScQtCommitteRemarks> remarks =  qtCommittee.getQtCommitteRemarks();
-			for(int i=0;i<remarks.size();i++){
-				if(remarks.get(i).getRemark() == null || "".equals(remarks.get(i).getRemark())){
+		List<ScQtCommittee> qtcommittees = qt.getScQtCommittees();
+		for (ScQtCommittee qtCommittee : qtcommittees) {
+			List<ScQtCommitteRemarks> remarks = qtCommittee
+					.getQtCommitteRemarks();
+			for (int i = 0; i < remarks.size(); i++) {
+				if (remarks.get(i).getRemark() == null
+						|| "".equals(remarks.get(i).getRemark())) {
 					remarks.remove(i);
 				}
 			}
 		}
 	}
-	
+
 	public void roleChangeListner(ScCommitteeMember member) {
-		List<ScCommitteeMember> members = this.getManagedBean().getSelectedTabBean().getScQtCommittee().getScCommittee().getScCommitteeMembers();
-		for(ScCommitteeMember committeeMember :members){
-			if(	committeeMember.getIcPassport().equalsIgnoreCase(member.getIcPassport())){
+		List<ScCommitteeMember> members = this.getManagedBean()
+				.getSelectedTabBean().getScQtCommittee().getScCommittee()
+				.getScCommitteeMembers();
+		for (ScCommitteeMember committeeMember : members) {
+			if (committeeMember.getIcPassport().equalsIgnoreCase(
+					member.getIcPassport())) {
 				List<PmParameterDesc> roles = getManagedBean().getRoleTypes();
 				for (PmParameterDesc parameter : roles) {
-					if (parameter.getPmParameter().getParameterId().equals(member.getMemberRole().getParameterId())) {
+					if (parameter.getPmParameter().getParameterId()
+							.equals(member.getMemberRole().getParameterId())) {
 						member.setMemberRole(parameter.getPmParameter());
 						break;
 					}
@@ -539,15 +627,88 @@ public class ApprovalBackingBean extends
 			}
 		}
 	}
+
+	private String constuctOutCome(List<ScQtApprovalRequest> approvalRequests,
+			ScQt scQt) {
+		if (null != approvalRequests) {
+			boolean isRevise = false;
+			for (int i = 0; i < approvalRequests.size(); i++) {
+				ScQtApprovalRequest approvalRequest = approvalRequests.get(i);
+				String approvalType = approvalRequest.getApprovalType()
+						.getParameterCode();
+				if (ParameterConst.APPROVAL_REQUEST_RESTRICTED_TENDER
+						.equalsIgnoreCase(approvalType)) {
+					if (ParameterConst.RESTR_APPROVAL_DECISION_TYPE_PROCEED
+							.equalsIgnoreCase(approvalRequest
+									.getDecessionType().getParameterCode())) {
+						scQt.setQtType(SourcingConstants.QT_TYPE_OPEN);
+						scQt.setScQtSuppliers(null);
+					} else if (ParameterConst.RESTR_APPROVAL_DECISION_TYPE_REVISE
+							.equalsIgnoreCase(approvalRequest
+									.getDecessionType().getParameterCode())) {
+						isRevise = true;
+						break;
+					}
+
+				} else if (ParameterConst.APPROVAL_REQUEST_REDUCE_PROPOSAL_VALIDITY_PERIOD
+						.equalsIgnoreCase(approvalType)) {
+					if (ParameterConst.APPROVAL_DECISION_TYPE_REJECTED
+							.equalsIgnoreCase(approvalRequest
+									.getDecessionType().getParameterCode())) {
+						scQt.setQtValidityPeriod(Integer
+								.parseInt(approvalRequest.getOriginalValue()));
+					} else if (ParameterConst.APPROVAL_DECISION_TYPE_REVISED
+							.equalsIgnoreCase(approvalRequest
+									.getDecessionType().getParameterCode())) {
+						isRevise = true;
+						break;
+					}
+
+				} else if (ParameterConst.APPROVAL_REQUEST_REDUCE_PUBLISH_PERIOD
+						.equalsIgnoreCase(approvalType)) {
+					if (ParameterConst.APPROVAL_DECISION_TYPE_REJECTED
+							.equalsIgnoreCase(approvalRequest
+									.getDecessionType().getParameterCode())) {
+						scQt.setPublishPeriod(Integer.parseInt(approvalRequest
+								.getOriginalValue()));
+					} else if (ParameterConst.APPROVAL_DECISION_TYPE_REVISED
+							.equalsIgnoreCase(approvalRequest
+									.getDecessionType().getParameterCode())) {
+						isRevise = true;
+						break;
+					}
+
+				} else if (ParameterConst.APPROVAL_REQUEST_OPEN_FOR_BUMIPUTRA_ALL
+						.equalsIgnoreCase(approvalType)) {
+					if (ParameterConst.APPROVAL_DECISION_TYPE_REJECTED
+							.equalsIgnoreCase(approvalRequest
+									.getDecessionType().getParameterCode())) {
+						scQt.setOpenFor(approvalRequest.getOriginalValue());
+					} else if (ParameterConst.APPROVAL_DECISION_TYPE_REVISED
+							.equalsIgnoreCase(approvalRequest
+									.getDecessionType().getParameterCode())) {
+						isRevise = true;
+						break;
+					}
+
+				}
+
+			}
+			if (isRevise) {
+				return BpmOutcomeConst.BPM_REVISE;
+			}
+		}
+
+		return BpmOutcomeConst.BPM_APPROVE;
+	}
 	
-	public List<PmParameterDesc> getStatusDropdownValues() {
-		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
-		List<String> recommendList = new ArrayList<String>();
-		recommendList.add(ParameterConst.APPROVAL_DECISION_TYPE_REVISED);
-		searchBean.getDataFilterBeans().add(
-				new SearchFilterBean("pmParameter.parameterCode",
-						SearchOperator.OPERATOR_NOT_IN.value(), recommendList));
-		return retrieveParametersBySearchBean(
-				ParameterTypeConst.APPROVAL_DECISION_TYPE, searchBean);
+	public void updatePmParameter(ScQtApprovalRequest requestdetails){
+		if(null != requestdetails){
+			IParameterSO parameterSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+			ParameterReqDTO parameterReqDTO= new ParameterReqDTO();
+			parameterReqDTO.setLanguageCode("en");
+			parameterReqDTO.setParameterId(requestdetails.getDecessionType().getParameterId());
+			requestdetails.setDecessionType(((ParameterResDTO)parameterSO.retrieveParameterById(parameterReqDTO)).getPmParameter());
+		}
 	}
 }
