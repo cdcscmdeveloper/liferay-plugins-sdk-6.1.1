@@ -118,8 +118,8 @@
 				<ac:paginator for="itemDataTable" />
 
 				<p:column headerText=" Item Code">
-					<h:outputText rendered="#{flItem.scRequestItem.cmItem==null}" value="#{flItem.scRequestItem.tempUnspscCode}" title="Requested Quantity: #{flItem.scRequestItem.quantity}"/>
-					<h:outputText rendered="#{flItem.scRequestItem.cmItem!=null}" value="#{flItem.scRequestItem.cmItem.extensionCode}" title="Requested Quantity: #{flItem.scRequestItem.quantity}"/>
+					<h:outputText rendered="#{flItem.scRequestItem.cmItem==null}" value="#{flItem.scRequestItem.tempUnspscCode}" title="Requested Quantity: #{flItem.scRequestItem.quantity eq null ? 'N/A' : flItem.scRequestItem.quantity}"/>
+					<h:outputText rendered="#{flItem.scRequestItem.cmItem!=null}" value="#{flItem.scRequestItem.cmItem.extensionCode}" title="Requested Quantity: #{flItem.scRequestItem.quantity eq null ? 'N/A' : flItem.scRequestItem.quantity}"/>
 				</p:column>
 				<p:column headerText="Item Name" style="white-space:normal;">
 					<h:outputText value="#{flItem.scRequestItem.itemName}" />
