@@ -3,6 +3,7 @@
  */
 package my.ep.web.backingbean.sc.purchaseinquiry;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -192,9 +193,7 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 			  }
 			  if(priceTypes != null && priceTypes.size() > 0){
 				  for (CmPricing princing : cmSupplierItem.getCmPricings()) {
-					  if(ParameterConst.PRICE_TYPE_STANDARD.equalsIgnoreCase(princing.getPricingType())){
 						  cmPricings.add(princing);
-					  }
 				  }
 				  requestSupplierItem.setSupplierItemPrices(createScSupplierItemPrices(requestSupplierItem, cmPricings ,Boolean.FALSE));
 			  }
@@ -235,11 +234,10 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 				  }
 			  }
 		  // Add selected supplier item.
+		  supplierItems.add(requestSupplierItem);	
 		  requestSupplierItem.setScPrInquiy(scPrInquiry);
-		  supplierItems.add(requestSupplierItem);
 		  requestItem.setSupplierItems(supplierItems);
 		  scPrInquiry.setRequestItem(requestItem);
-		  scPrInquiry.setRequestSupplierItem(requestSupplierItem);
 		  getManagedBean().setScPrInquiry(scPrInquiry);
 		  
 		  requestSupplierItem.setRequestNoteItem(requestItem);
@@ -250,8 +248,10 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 		  getManagedBean().setRequestNoteDtl(requestNoteDtl);
 		  // pr inquiry status
 		  getCurrentStatus(DPStatusConstants.PRI_PENDING_SUBMISSION);
+		  
 		  //TODO default value to  price type drop down listing
 		  getManagedBean().setPriceType(ParameterConst.PRICE_TYPE_STANDARD);
+		  priceTypeChangeListener();
 		  
 			// to get ptj
 			PmUser user = new FacesScopes().getUserSessionBean();
@@ -339,28 +339,36 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 		return items;
 	}
 		
-   /**
+	/**
 	 *  priceTypeChangeListener for getting Item Pricing list in Purchase inquiry
-    */
+	 */
 	public void priceTypeChangeListener() {
 		debugLogger("priceTypeChangeListener");
-		List<CmPricing> pricings = new ArrayList<CmPricing>();
-		if (getManagedBean().getSupplierItem() != null) {
-			for (CmPricing cmPricing : getManagedBean().getSupplierItem()
-					.getCmPricings()) {
-				if (getManagedBean().getPriceType().equalsIgnoreCase(
-						cmPricing.getPricingType())) {
-					pricings.add(cmPricing);
+		if(getManagedBean().getScRequestSupplierItem() != null && 
+				getManagedBean().getScRequestSupplierItem().getSupplierItemPrices() != null && getManagedBean().getScRequestSupplierItem().getSupplierItemPrices().size() >0 ){
+			ScRequestSupplierItem scRequestSupplierItem = new ScRequestSupplierItem();
+			List<ScSupplierItemPrice>	scSupplierItemPrices= new ArrayList<ScSupplierItemPrice>();
+			List<ScSupplierItemPrice>	supplierItemPrices = getManagedBean().getScRequestSupplierItem().getSupplierItemPrices();
+			if(supplierItemPrices != null && supplierItemPrices.size() >0){
+				for (ScSupplierItemPrice scSupplierItemPrice : supplierItemPrices) {
+
+					if(scSupplierItemPrice.getPriceType() != null){
+
+						if(scSupplierItemPrice.getPriceType().getParameterCode().equals(getManagedBean().getPriceType())){
+                            
+							if(getManagedBean().getPriStatus().equalsIgnoreCase("Pending Supplier Response")){
+								scSupplierItemPrice.setItemPrice(null);	
+							}
+							scSupplierItemPrices.add(scSupplierItemPrice);
+						}
+					}
 				}
 			}
-		}
-		if(getManagedBean().getScPrInquiry().getRequestSupplierItem() != null){
-			ScRequestSupplierItem requestSupplierItem = getManagedBean().getScPrInquiry().getRequestSupplierItem();
-			getManagedBean().getScRequestSupplierItem().setSupplierItemPrices(createScSupplierItemPrices(requestSupplierItem, pricings , Boolean.FALSE));
-			
+			scRequestSupplierItem.setSupplierItemPrices(scSupplierItemPrices);
+			getManagedBean().getScPrInquiry().setRequestSupplierItem(scRequestSupplierItem);
 		}
 	}
-		
+
 	 /**
 	  *  submitPrEnquiryDtl  method to submit purchase inquiry details  in Purchase inquiry
 	  */	
@@ -774,7 +782,6 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 			 // get selected supplier 
 			 ScRequestSupplierItem requestSupplierItem = prInquiry.getScRequestSupplierItems().get(0);
 			 ScRequestNoteDtl requestNoteDtl = requestSupplierItem.getScRequestNoteDtl().get(0);
-			 prInquiry.setRequestSupplierItem(requestSupplierItem);
 			 
 			 // lead time 
 			  if(requestSupplierItem.getSupplierItemPrices() != null && requestSupplierItem.getSupplierItemPrices().size() >0){
@@ -799,6 +806,7 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 				 flag = Boolean.FALSE;
 			 }
 	    }
+		 
 		// no of response days
 		 prInquiry.setDayToResponse((int)DateUtils.getDaysDifference(prInquiry.getCreatedDate(), getCurrentDateWithoutTime(prInquiry.getDateToResponse())));
 		 
@@ -811,6 +819,10 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 		 getCurrentStatus(res.getDocStatus().longValue()); 
 		 // title checker
 		 getManagedBean().setTitleChecker(Boolean.FALSE);
+		 getManagedBean().setRnToPIFlag(Boolean.FALSE);
+		 
+		 // price change lister 
+		 priceTypeChangeListener();
 
 		 FacesContext fc = FacesContext.getCurrentInstance();
 		 if(flag){ // page nav.to purchase inquiry
@@ -905,14 +917,14 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
     	if(pricing.getToQty() != null){
     		result.setToQty(pricing.getToQty());
     	}
-		result.setScRequestSupplierItem(scRequestSupplierItem);
-		result.setPricing(pricing);
-		if(selectedSupplierPrice){
-			result.setItemPrice(pricing.getPrice());	
-		}
-		
-		result.setPriceType(resDTO.getPmParameter());
-		return result;
+    	result.setScRequestSupplierItem(scRequestSupplierItem);
+    	result.setPricing(pricing);
+    	if(result.getItemPrice() == null || result.getItemPrice().equals(new BigDecimal(0))){
+    		result.setItemPrice(pricing.getPrice());	
+    	}
+    	
+    	result.setPriceType(resDTO.getPmParameter());
+    	return result;
 	}
 	
 	 /**
@@ -931,8 +943,7 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 				
 			}
 		}
-	
-		
+
 		private TplSpecZoneDtl createSpecZone(CmSupplierZone supplierZone) {
 			TplSpecZoneDtl specZoneDtl = null;
 			if(supplierZone != null) {
@@ -949,9 +960,9 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 						specZoneLoc.setTplSpecZoneDtl(specZoneDtl);
 						zoneLocs.add(specZoneLoc);
 					}
-					 zone.setScPrInquiry(getManagedBean().getScPrInquiry());
-					 specZoneDtl.setTplSpecZone(zone);
-					 getManagedBean().getScPrInquiry().setScPIZone(zone);
+					zone.setScPrInquiry(getManagedBean().getScPrInquiry());
+					specZoneDtl.setTplSpecZone(zone);
+					getManagedBean().getScPrInquiry().setScPIZone(zone);
 					specZoneDtl.setTplSpecZoneLocs(zoneLocs);
 				}
 			}
@@ -995,5 +1006,16 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 				i++;
 			}
 			return items;
+		}
+		
+		public boolean isSupplierUser(){
+			FacesScopes fs = new FacesScopes();
+			return fs.hasRoleUser("SUPPLIER_USER");
+		}
+
+
+		public boolean isRequisitioner(){
+			FacesScopes fs = new FacesScopes();
+			return fs.hasRoleUser("REQUISITIONER");
 		}
 }

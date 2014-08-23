@@ -11,6 +11,10 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 			<ac:title value="#{lbl['lbl.sc.pr.inquiry']}" />
 	</c:if>
 
+  <p:blockUI block=":form"  widgetVar="blockWidget">
+				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+ </p:blockUI>
+	 
   <p:messages showDetail="true" autoUpdate="true" closable="true"  showSummary="false" severity="error, info" id="mainMsg"/>
   <p:panel id="mainPanel">
    <div align="right">
@@ -21,6 +25,7 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 
 					<p:commandButton value="#{lbl['lbl.sc.common.submit']}"
 					action="#{purchaseInquiryBackingBean.submitPrInquiryDtl}" style="float:right;"
+					onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 					icon="ui-icon-submit"  update="mainPanel"/>
 	    </c:if>
 
@@ -52,10 +57,12 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 													<p:commandButton
 														value="#{lbl['lbl.sc.common.proceed.btn']}"
 														icon="ui-icon-submit"
+														onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 														action="#{purchaseInquiryBackingBean.requisitionerAction('Processed')}" />
 
 													<p:commandButton value="#{lbl['lbl.sc.common.cancel']}"
 														icon="ui-icon-cancel" style="float:right;"
+														onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 														action="#{purchaseInquiryBackingBean.requisitionerAction(action)}" />
 
 												</c:if>
@@ -67,6 +74,7 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 													partialSubmit="true"
 													rendered="#{!unspscCodeBackingBean.requisitioner}"
 													styleClass="ui-button" icon="#{iconVar}" update="mainPanel"
+													onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 													actionListener="#{purchaseInquiryBackingBean.submitPrInquiryPrice(action)}" />
 											</c:if>
 

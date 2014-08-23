@@ -239,7 +239,7 @@
 		</table>
 		<p:spacer height="15px" />
 		<p:dataTable id="respDtl" var="supplierItemPrice"
-			value="#{purchaseInquiryBackingBean.managedBean.scRequestSupplierItem.supplierItemPrices}"
+			value="#{purchaseInquiryBackingBean.managedBean.scPrInquiry.requestSupplierItem.supplierItemPrices}"
 			rowKey="#{supplierItemPrice.pricing.pricingId}" rowIndexVar="index">
 			<p:column headerText="#{lbl['lbl.sc.price.inquiry.zone']}" style="width:25%">
 					#{supplierItemPrice.tplSpecZone.zoneName}
@@ -265,13 +265,14 @@
 				<h:outputText value="* " styleClass="mandatory"  rendered="#{purchaseInquiryBackingBean.managedBean.stockAvailabilityFlag and !purchaseInquiryBackingBean.managedBean.supplierFlag}"/>
 				<h:outputText value="#{lbl['lbl.sc.price.inquiry.price.offered']}" />
 			</f:facet>
-			
-				<p:inputText value="#{supplierItemPrice.itemPrice}" style="text-align:right;" label="#{lbl['lbl.sc.price.inquiry.price.offered']}" maxlength="23" size="30"  id="itemPrice"
+			<ui:fragment rendered="#{!supplierItemPrice.brandNew}">
+				  <p:inputText value="#{supplierItemPrice.itemPrice}" style="text-align:right;" label="#{lbl['lbl.sc.price.inquiry.price.offered']}" maxlength="23" size="30"  id="itemPrice"
 				  disabled="#{!purchaseInquiryBackingBean.managedBean.stockAvailabilityFlag or purchaseInquiryBackingBean.managedBean.supplierFlag}" required="#{purchaseInquiryBackingBean.managedBean.stockAvailabilityFlag}">
 				    <f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}"/>
 				  </p:inputText>
-				 <p:message id="itemPriceMsg" for="itemPrice" display="icon"/>
+			 <p:message id="itemPriceMsg" for="itemPrice" display="icon"/>
+			</ui:fragment>
 			</p:column>
 
 		</p:dataTable>
