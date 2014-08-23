@@ -55,7 +55,6 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.sc.quationtender.ScAttachment;
-import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
@@ -529,6 +528,15 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		
 		VelocityContext context = new VelocityContext();
 		
+		boolean isOneOff = false;
+    	if (qt.getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_ONE_OFF)) {
+    		isOneOff = true;
+    		context.put("fulfilmentType", isOneOff);
+    	} else if (qt.getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_SCHEDULED) || qt.getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN)) {
+    		isOneOff = true;
+    		context.put("fulfilmentType", isOneOff);
+    	}
+		
 		DocumentGenerator.getInstance().generatePdfFromVelocity("/sc/qtDoc/qtDoc-terma-kontrak.vm", 
     			context, new FileOutputStream(getActualFilePath(attachment)));
 	}
@@ -907,6 +915,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
     	}
     	context.put("qtType", openType);
 
+    	List<ScQtCategory> categoryResults1 = new ArrayList<ScQtCategory>();
     	List<ScQtCategory> categoryResults = new ArrayList<ScQtCategory>();
     	IQTDetailSO QtDetailsSO;
 		try {
@@ -919,7 +928,19 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		} finally {
 			QtDetailsSO = null;
 		}
-		context.put("categoryResults", categoryResults);
+		if (categoryResults != null) {
+			for (ScQtCategory scQtCategory : categoryResults) {
+				ScQtCategory qtCategory = null;
+				try {
+					qtCategory = (ScQtCategory) BeanUtils.cloneBean(scQtCategory);
+				} catch (IllegalAccessException | InstantiationException
+						| InvocationTargetException | NoSuchMethodException e) {
+					e.printStackTrace();
+				}
+				categoryResults1.add(qtCategory);
+			}
+		}
+		context.put("categoryResults1", categoryResults1);
 		
     	String publishDate = "";
     	if (qt.getPublishDate() != null) {

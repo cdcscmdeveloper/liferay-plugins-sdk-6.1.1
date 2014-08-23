@@ -1,183 +1,204 @@
 <html>
 <head>
-	<style>
-		@page { size: A4 portrait;}
-		@page { @bottom-center { content: element(footer) }}
-				
-		.footer {
-			display: block; text-align: center;
-			position: running(footer);
+<style>
+@page {
+	size: A4 portrait;
+}
+
+@page { @bottom-center { content:element(footer)
+	
+}
+
+}
+.table2 {
+    border-collapse: collapse;
+	width:100%;
+}
+		.table2 th, .table2 td {
+			border: 1px solid black;
 		}
-		
-	</style>
+		 th{
+			background-color: #BCE18A;
+		 }
+.footer {
+	display: block;
+	text-align: center;
+	position: running(footer);
+}
+</style>
 </head>
 <body>
 	<div style="border: 0px solid #a1a1a1;">
-	<table border="0" cellpadding="0" cellspacing="0" width="100%">
-	<tr align='center'>
-        <td>
-            <img src='http://localhost:8080/NGeP-portlet/resources/ep/images/Lambang_Malaysia_2010.jpg' width='124' height='100' />
-        </td>
-	</tr>
-	<tr align='center'>
-        <td>
-            <span style='font-weight:bold;font-size:16px;font-family: Albertus Medium;'>$ministry</span>
-        </td>
-    </tr>
-	<tr align='center'>
-        <td>
-        	<span style='font-weight:bold;font-size:16px;font-family: Albertus Medium;'>$agency</span>
-        	<br/> <br/>
-        </td>
-    </tr>
-	</table>
+		<table style="width: 100%;" border="0" cellspacing="0" cellpadding="0">
+			<tbody>
+				<tr align="center">
+					<td><img
+						src="http://localhost:8080/NGeP-portlet/resources/ep/images/Lambang_Malaysia_2010.jpg"
+						alt="" width="124" height="100" /></td>
+				</tr>
+				<tr align="center">
+					<td><span
+						style="font-weight: bold; font-size: 16px; font-family: Albertus Medium;">$ministry</span></td>
+				</tr>
+				<tr align="center">
+					<td><span
+						style="font-weight: bold; font-size: 16px; font-family: Albertus Medium;">$agency</span>
+						<br /></td>
+				</tr>
+			</tbody>
+		</table>
 	</div>
-	<table border="0" cellpadding="0" cellspacing="0" width="100%">
-    <tr>
-        <td>
-            <span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'><u>KENYATAAN TAWARAN</u></span>
-            <br/> <br/>
-        </td>
-    </tr>
-    <tr align='left'>
-        <td>
-            <span style='font-size:11px;font-family: Albertus Medium;'>Pembekal adalah dipelawa daripada Syarikat-syarikat yang berdaftar dengan KEMENTERIAN KEWANGAN MALAYSIA dalam kod bidang yang berkaitan and kriteria berkaitan seperti berikut:</span>
-        </td>
-    </tr>
-    <tr>
-        <td align="left">
-            KETERANGAN TAWARAN : $qtTitle<br/>
-        </td>
-    </tr>
-    <tr>
-        <td align="left">
-            JENIS TAWARAN : $qtType<br/>
-        </td>
-    </tr>
-    <tr>
-        <td align="left">
-            KOD BIDANG : <br/><br/>
-        </td>
-    </tr>
-    <tr align='left'>
-        <td>
-            <span style='font-weight:bold;font-size:10px;font-family: Times New Roman;'>
-            	<table width='100%' border="1">
-            		<tr>
-            			<td>Category Code</td>
-            			<td>Main-Category</td>
-            			<td>Sub-Category</td>
-            			<td>Sub-Category Division</td>
-            			<td>Mandatory</td>
-            		</tr>
-            		#foreach( $category in $categoryResults )
-            		<tr>
-            			<td>$category.pmCategoryL3.categoryL3Code</td>
-            			<td>$category.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryName</td>
-            			<td>$category.pmCategoryL3.pmCategoryL2.categoryName</td>
-            			<td>$category.pmCategoryL3.categoryName</td>
-            			<td>$category.mandatory</td>
-            		</tr>
-            		#end
-            	</table>
-            </span>
-        </td>
-    </tr>
-    <tr>
-    	<td /><br/>
-    </tr>
-    <tr>
-        <td align="left">
-            TARIKH MULA TAWARAN : $publishDate<br/>
-        </td>
-    </tr>
-    <tr>
-        <td align="left">
-            TARIKH TUTUP TAWARAN : $closingDate<br/>
-        </td>
-    </tr>
-    <tr>
-        <td align="left">
-            TEMPOH SAH LAKU : $validityPeriod<br/>
-        </td>
-    </tr>
-    <tr>
-        <td align="left">
-            LOKALITI : <br/><br/>
-        </td>
-    </tr>
-    <tr align='left'>
-        <td>
-            <span style='font-weight:bold;font-size:10px;font-family: Times New Roman;'>Pembekal yang berminat adalah diwajibkan hadir ke sesi lawatan tapak dan taklimat pada ketetapan berikut:</span>
-            <br/>
-        </td>
-    </tr>
-    <tr align='left'>
-        <td>
-            <span style='font-weight:bold;font-size:10px;font-family: Times New Roman;'>
-            	
-            		 #foreach( $zoneList in $zoneBeans )
-            		 	#if ( $isZone)
-							$zoneList.tplSpecZoneDtl.zoneName<br/>
-		            	#end
-            		 	Site Visit Same As Briefing : $zoneList.scQtBsv.sameBsv<br/>
-            		 	<table width='100%' border="1">
-		            		<tr>
-		            			<td>Description</td>
-		            			<td>Date/Time</td>
-		            			<td>Location</td>
-		            			<td>Coordinationg Officer</td>
-		            			<td>Max Attendance</td>
-		            		</tr>
-		            		#foreach( $briefingdtls in $zoneList.briefingList )
-		            		<tr>
-		            			<td>$briefingdtls.bsvDesc</td>
-		            			<td>$briefingdtls.bsvDate</td>
-		            			<td>$briefingdtls.location</td>
-		            			<td>$briefingdtls.coordinatingOfficer</td>
-		            			<td>$briefingdtls.maxNoOfAttendance</td>
-		            		</tr>
-		             		#end
-		            	</table>
-						Attendance for Briefing : $zoneList.scQtBsv.allBriefingReq<br/>
-						<br />
-						<table width='100%' border="1">
-		            		<tr>
-		            			<td>Description</td>
-		            			<td>Date/Time</td>
-		            			<td>Location</td>
-		            			<td>Coordinationg Officer</td>
-		            			<td>Max Attendance</td>
-		            		</tr>
-		            		#foreach( $sitevisitdtls in $zoneList.sitevisitList )
-		            		<tr>
-		            			<td>$sitevisitdtls.bsvDesc</td>
-		            			<td>$sitevisitdtls.bsvDate</td>
-		            			<td>$sitevisitdtls.location</td>
-		            			<td>$sitevisitdtls.coordinatingOfficer</td>
-		            			<td>$sitevisitdtls.maxNoOfAttendance</td>
-		            		</tr>
-		             		#end
-		            	</table>
-						Attendance for Site Visit : $zoneList.scQtBsv.allSiteVisitReq<br/>
+	<table width="100%">
+			<tr>
+				<td>
+            		<span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'><u>KENYATAAN TAWARAN</u></span>
+           			<br/>
+       			</td>
+			</tr>
+			<tr align="left">
+				<td>
+					<p>Pembekal adalah dipelawa daripada Syarikat-syarikat yang berdaftar dengan KEMENTERIAN KEWANGAN MALAYSIA dalam kod bidang yang berkaitan and kriteria berkaitan seperti berikut:</p>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<p></p>
+				</td>
+			</tr>
+			<tr>
+				<td align="left">KETERANGAN TAWARAN : $qtTitle</td>
+			</tr>
+			<tr>
+				<td align="left">JENIS TAWARAN : $qtType</td>
+			</tr>
+			<tr>
+				<td align="left">KOD BIDANG : <br />
+				<br /></td>
+			</tr>
+			<tr align='left'>
+				<td>
+					<span style='font-weight:bold;font-size:10px;font-family: Times New Roman;'>
+						<table class="table2" width='100%'>
+							<tr>
+								<td>Category Code</td>
+								<td>Main-Category</td>
+								<td>Sub-Category</td>
+								<td>Sub-Category Division</td>
+								<td>Mandatory</td>
+							</tr>
+							#foreach( $categoryResults in $categoryResults1 )
+							<tr>
+								<td>$categoryResults.pmCategoryL3.categoryL3Code</td>
+								<td>$categoryResults.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryName</td>
+            					<td>$categoryResults.pmCategoryL3.pmCategoryL2.categoryName</td>
+            					<td>$categoryResults.pmCategoryL3.categoryName</td>
+            					<td>$categoryResults.mandatory</td>
+							</tr>
+							#end
+						</table>
+					</span>
+				</td>
+			</tr>
+			<tr>
+				<td></td>
+			</tr>
+			<tr>
+				<td align="left">TARIKH MULA TAWARAN : $publishDate</td>
+			</tr>
+			<tr>
+				<td align="left">TARIKH TUTUP TAWARAN : $closingDate</td>
+			</tr>
+			<tr>
+				<td align="left">TEMPOH SAH LAKU : $validityPeriod</td>
+			</tr>
+			<tr>
+				<td align="left">LOKALITI : <br />
+				</td>
+			</tr>
+			<tr align="left">
+				<td><p>Pembekal yang berminat adalah diwajibkan hadir ke sesi lawatan tapak dan taklimat pada ketetapan berikut:</p> 
+				</td>
+			</tr>
+			<tr align='left'>
+		        <td>
+		            <span style='font-weight:bold;font-size:10px;font-family: Times New Roman;'>
+		            	
+		            		 #foreach( $zoneList in $zoneBeans )
+		            		 	#if ( $isZone)
+									$zoneList.tplSpecZoneDtl.zoneName<br/>
+				            	#end
+		            		 	Site Visit Same As Briefing : 
+								#if ($zoneList.scQtBsv.sameBsv)
+									yes
+								#else 
+									no 
+								#end<br/>
+		            		 	<table width='100%' class="table2">
+				            		<tr>
+				            			<td>Description</td>
+				            			<td>Date/Time</td>
+				            			<td>Location</td>
+				            			<td>Coordinationg Officer</td>
+				            			<td>Max Attendance</td>
+				            		</tr>
+				            		#foreach( $briefingdtls in $zoneList.briefingList )
+				            		<tr>
+				            			<td>$briefingdtls.bsvDesc</td>
+				            			<td>$briefingdtls.bsvDate</td>
+				            			<td>$briefingdtls.location</td>
+				            			<td>$briefingdtls.coordinatingOfficer</td>
+				            			<td>$briefingdtls.maxNoOfAttendance</td>
+				            		</tr>
+				             		#end
+				            	</table>
+								Attendance for Briefing : 
+								#if ($zoneList.scQtBsv.allBriefingReq)
+									yes
+								#else 
+									no 
+								#end<br/>
+								<br />
+								<table width='100%' class="table2">
+				            		<tr>
+				            			<td>Description</td>
+				            			<td>Date/Time</td>
+				            			<td>Location</td>
+				            			<td>Coordinationg Officer</td>
+				            			<td>Max Attendance</td>
+				            		</tr>
+				            		#foreach( $sitevisitdtls in $zoneList.sitevisitList )
+				            		<tr>
+				            			<td>$sitevisitdtls.bsvDesc</td>
+				            			<td>$sitevisitdtls.bsvDate</td>
+				            			<td>$sitevisitdtls.location</td>
+				            			<td>$sitevisitdtls.coordinatingOfficer</td>
+				            			<td>$sitevisitdtls.maxNoOfAttendance</td>
+				            		</tr>
+				             		#end
+				            	</table>
+								Attendance for Site Visit : 
+								#if ($zoneList.scQtBsv.allSiteVisitReq)
+									yes
+								#else 
+									no 
+								#end<br/>
+							#end
+		            	
+		            </span>
+		        </td>
+		    </tr>
+			<tr>
+				<td></td>
+			</tr>
+			<tr align="left">
+				<td>#if ( $fulfilmentType == "true")
+						<p>Syarikat/Firma/Koperasi/Pemilikan Tunggal hendaklah mengambil perhatian bahawa setiap transaksi melalui Sistem ePerolehan akan dikenakan fi perkhidmatan sebanyak 0.8% (kosong perpuluhan lapan peratus) mengikut setiap nilai invois yang dikemukakan kepada Kerajaan tertakluk kepada had maksimum RM 9,600.00 (Ringgit Malaysia: Sembilan Ribu dan Enam Ratus) bagi invois yang bernilai RM 1.2 juta (Ringgit Malaysia: Satu Juta Dua Ratus Ribu) atau lebih.</p>
+					#end 
+					#if ( $fulfilmentType == "false")
+						<p>Syarikat/Firma/Koperasi/Pemilikan Tunggal hendaklah mengambil perhatian bahawa setiap transaksi melalui Sistem ePerolehan akan dikenakan fi perkhidmatan sebanyak 0.4% (kosong perpuluhan empat peratus) mengikut setiap nilai invois yang dikemukakan kepada Kerajaan tertakluk kepada had maksimum RM 4,800.00 (Ringgit Malaysia : Empat Ribu dan Sembilan Ratus) bagi invois yang bernilai RM 1.2 juta (Ringgit Malaysia : Satu Juta Dua Ratus Ribu) atau lebih.</p>
 					#end
-            	
-            </span>
-        </td>
-    </tr>
-     <tr>
-    	<td /><br/>
-    </tr>
-    <tr align='left'>
-        <td>
-        	#if ( $fulfilmentType == "true")
-            	Syarikat/Firma/Koperasi/Pemilikan Tunggal hendaklah mengambil perhatian bahawa setiap transaksi melalui Sistem ePerolehan akan dikenakan fi perkhidmatan sebanyak 0.8% (kosong perpuluhan lapan peratus) mengikut setiap nilai invois yang dikemukakan kepada Kerajaan tertakluk kepada had maksimum RM 9,600.00 (Ringgit Malaysia: Sembilan Ribu dan Enam Ratus) bagi invois yang bernilai RM 1.2 juta (Ringgit Malaysia: Satu Juta Dua Ratus Ribu) atau lebih.
-            #end		
-            #if ( $fulfilmentType == "false")
-            	Syarikat/Firma/Koperasi/Pemilikan Tunggal hendaklah mengambil perhatian bahawa setiap transaksi melalui Sistem ePerolehan akan dikenakan fi perkhidmatan sebanyak 0.4% (kosong perpuluhan empat peratus) mengikut setiap nilai invois yang dikemukakan kepada Kerajaan tertakluk kepada had maksimum RM 4,800.00 (Ringgit Malaysia : Empat Ribu dan Sembilan Ratus) bagi invois yang bernilai RM 1.2 juta (Ringgit Malaysia : Satu Juta Dua Ratus Ribu) atau lebih.
-            #end
-        </td>
-    </tr>
-    </table>
+				</td>
+			</tr>
+	</table>
 </body>
 </html>
