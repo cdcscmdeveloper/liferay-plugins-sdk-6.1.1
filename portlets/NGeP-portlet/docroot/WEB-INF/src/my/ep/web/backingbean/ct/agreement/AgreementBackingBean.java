@@ -18,9 +18,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.zip.Deflater;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -82,8 +80,6 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmParameter;
-import my.ep.persistence.entity.sc.loaloi.ScLoa;
-import my.ep.persistence.entity.sc.quationtender.ScAttachment;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
@@ -107,7 +103,6 @@ import my.ep.web.util.NumberWordUtil;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.template.DocumentGenerator;
 
-import org.apache.commons.lang.text.StrSubstitutor;
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
 import org.docx4j.jaxb.Context;
@@ -124,7 +119,6 @@ import org.primefaces.model.DualListModel;
 import org.primefaces.model.UploadedFile;
 
 import com.liferay.portal.util.PortalUtil;
-import com.liferay.util.portlet.PortletRequestUtil;
 
 /**
  * Backing Bean For Agreement
@@ -764,7 +758,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			if (agreementContent.equals(getManagedBean()
 					.getSelectedAgreementContent())) {
 				agreementContent.setFileName(item.getFileName());
-				agreementContent.setFilePath(filePath);
+				agreementContent.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
 			}
 		}
 	}
@@ -836,6 +830,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		res.flushBuffer();
 		OutputStream out = res.getOutputStream();
 		if (filePath != null) {
+			filePath = DocumentRepositoryUtils.getBaseDir()+filePath;
 			InputStream input = null;
 			try {
 				URLConnection uc = new URL(filePath).openConnection();
@@ -876,7 +871,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 				content = getContent(agreementContent.getTitle());
 				if (content != null) {
 					convertHtmlToDocFile(content, filePath);
-					downloadFile(filePath, fileName);
+					downloadFile(DocumentRepositoryUtils.getDBFilePath(filePath), fileName);
 				}
 
 			} else {
@@ -884,7 +879,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 					throw new EpException(MessageConst.INFO_100052,
 							new String[] { agreementContent.getTitle() });
 				}
-				downloadFile(agreementContent.getFilePath(),
+				downloadFile(DocumentRepositoryUtils.getDBFilePath(agreementContent.getFilePath()),
 						agreementContent.getFileName());
 			}
 		} catch (UnsupportedEncodingException e) {
@@ -906,80 +901,49 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 
 		String content = null;
 		String filePath = null;
-		String tempDirectory = getManagedBean().getFileDirectory() + "/temp";
+		String tempDirectory = getManagedBean().getFileDirectory() + "temp";
 		File file = new File(tempDirectory);
 		file.mkdirs();
 
 		try {
-			contractTemplateSO = (IContractTemplateSO) BusinessDelegate
-					.getInstance().getServiceObject(
-							ModuleCodeConst.CONTRACT_MANAGEMENT,
-							IContractTemplateSO.class);
+			contractTemplateSO = (IContractTemplateSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractTemplateSO.class);
 			ContractTemplateReqDTO templateReqDTO = new ContractTemplateReqDTO();
 
-			for (CtAgreementContent agreementContent : getManagedBean()
-					.getCtAgreement().getAgreementContents()) {
+			for (CtAgreementContent agreementContent : getManagedBean().getCtAgreement().getAgreementContents()) {
 				// System Define Doc
-				if (agreementContent
-						.getContentType()
-						.getParameterId()
-						.equals((retrieveParameterByCodeType(
-								ParameterConst.DOCUMENT_DEFINITION_TYPE,
-								ParameterConst.AGREEMENT_SYSTEM_DEFINE_DOC)
-								.getParameterId()))) {
-
-					templateReqDTO.setTemplateName(agreementContent.getTitle()
-							.toUpperCase());
-					ContractTemplateResDTO templateResDTO = contractTemplateSO
-							.retrieveTemplateByName(templateReqDTO);
-					String fileName = getTemplateFileName(agreementContent
-							.getTitle());
-
-					if (templateResDTO.getCtTemplate() != null
-							&& fileName != null) {
-						content = new String(templateResDTO.getCtTemplate()
-								.getContent(), "UTF-8");
-						content = getContent(agreementContent.getTitle());
-						filePath = tempDirectory + "/"
-								+ attachmentFormat.format(fileName, null);
-
-						convertHtmlToDocFile(content, filePath);
-						fileList.add(new File(filePath));
-					} else {
-						// TODO: get from LOA, external link
-					}
-				}
+				if (agreementContent.getContentType().getParameterCode().equalsIgnoreCase(ParameterConst.AGREEMENT_SYSTEM_DEFINE_DOC)) {
+                        templateReqDTO.setTemplateName(agreementContent.getTitle().toUpperCase());
+					    ContractTemplateResDTO templateResDTO = contractTemplateSO.retrieveTemplateByName(templateReqDTO);
+					    String fileName = getTemplateFileName(agreementContent.getTitle());
+                        if(templateResDTO.getCtTemplate() != null && fileName != null) {
+						    content = new String(templateResDTO.getCtTemplate().getContent(), "UTF-8");
+						    content = getContent(agreementContent.getTitle());
+						    filePath = tempDirectory + "/"+ attachmentFormat.format(fileName, null);
+                            convertHtmlToDocFile(content, filePath);
+						    fileList.add(new File(filePath));
+					    } else {
+						    // TODO: get from LOA, external link
+					    }
+			    	}
 				// Template Doc
-				else if (agreementContent
-						.getContentType()
-						.getParameterId()
-						.equals((retrieveParameterByCodeType(
-								ParameterConst.DOCUMENT_DEFINITION_TYPE,
-								ParameterConst.AGREEMENT_TEMPLATE_DOC)
-								.getParameterId()))) {
+				else if (agreementContent.getContentType().getParameterId().equals((retrieveParameterByCodeType(
+						    ParameterConst.DOCUMENT_DEFINITION_TYPE,ParameterConst.AGREEMENT_TEMPLATE_DOC).getParameterId()))) {
 					// TODO: download template doc
 				}
 				// User Upload Doc
-				else if (agreementContent
-						.getContentType()
-						.getParameterId()
-						.equals((retrieveParameterByCodeType(
-								ParameterConst.DOCUMENT_DEFINITION_TYPE,
-								ParameterConst.AGREEMENT_USER_UPLOAD_DOC)
-								.getParameterId()))) {
-					if (agreementContent.getFilePath() != null)
-						fileList.add(new File(agreementContent.getFilePath()));
+				else if (agreementContent.getContentType().getParameterId().equals((retrieveParameterByCodeType(
+						    ParameterConst.DOCUMENT_DEFINITION_TYPE,ParameterConst.AGREEMENT_USER_UPLOAD_DOC).getParameterId()))) {
+				     	   if (agreementContent.getFilePath() != null)
+						     fileList.add(new File(agreementContent.getFilePath()));
 				}
 			}
 
 			String zipFileName = "agreement.zip";
-			File zipFile = new File(tempDirectory + "/"
-					+ attachmentFormat.format(zipFileName, null));
+			File zipFile = new File(tempDirectory + "/"+ attachmentFormat.format(zipFileName, null));
 			try {
 				zipFile.createNewFile();
 				byte[] buffer = new byte[1024];
-				ZipOutputStream out = new ZipOutputStream(new FileOutputStream(
-						zipFile));
+				ZipOutputStream out = new ZipOutputStream(new FileOutputStream(zipFile));
 				out.setLevel(Deflater.DEFAULT_COMPRESSION);
 				for (File agreementFile : fileList) {
 					FileInputStream in = new FileInputStream(agreementFile);
@@ -995,7 +959,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			downloadFile(zipFile.getPath(), zipFileName);
+			downloadFile(DocumentRepositoryUtils.getDBFilePath(zipFile.getPath().replace("\\", "/")), zipFileName);
 		} catch (Exception exp) {
 			exp.printStackTrace();
 		}

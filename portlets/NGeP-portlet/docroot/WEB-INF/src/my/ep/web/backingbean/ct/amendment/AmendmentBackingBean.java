@@ -834,8 +834,8 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		res.setContentType("application/octet-stream");
 		res.flushBuffer();
 		OutputStream out = res.getOutputStream();   
-	    filePath = DocumentRepositoryUtils.getBaseDir()+filePath;
 		if(filePath!=null) {
+			filePath = DocumentRepositoryUtils.getBaseDir()+filePath;
 			InputStream input = null;
 			try {
 				URLConnection uc = new URL(filePath).openConnection();
@@ -974,7 +974,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			downloadFile(zipFile.getPath(), zipFileName);
+			downloadFile(DocumentRepositoryUtils.getDBFilePath(zipFile.getPath().replace("\\", "/")), zipFileName);
 		}catch(Exception exp){
 			exp.printStackTrace();
 		}
