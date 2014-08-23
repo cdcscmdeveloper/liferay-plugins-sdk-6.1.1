@@ -11,21 +11,21 @@
 		    value="#{suspensionBackingBean.managedBean.contractVer.ctContractItems}"
 			widgetVar="ctItemsTable" filteredValue="#{suspensionBackingBean.managedBean.ctItemFilter}">
 			<ac:paginator for="itemTable" />
-			<p:column style="width:20%;" headerText="#{lbl['lbl.ct.susp.tbl.item.type']}">
+			<p:column style="width:20%;white-space:normal;" headerText="#{lbl['lbl.ct.susp.tbl.item.type']}">
 				<p:outputLabel style="float:left;" 
 				   value="#{suspensionBackingBean.getParameterDesc(itemData.itemType)}" />
 			</p:column>
-			<p:column id="modelColumn" filterBy="#{itemData.itemName}" style="width:40%;"
+			<p:column id="modelColumn" filterBy="#{itemData.itemName}" style="width:30%;white-space:normal;"
 			    headerText="#{lbl['lbl.ct.susp.tbl.item.name']}" filterMatchMode="contains"> 
 			    <p:outputLabel value="#{itemData.itemName}" style="float:left;width:55%;"/>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.ct.susp.tbl.item.efdate']}" style="width:15%;">
+			<p:column headerText="#{lbl['lbl.ct.susp.tbl.item.efdate']}" style="width:20%;">
 			   <h:panelGroup rendered="#{itemData.recordStatusFlg == 1}">
 			      <p:calendar id="effDateActive" value="#{itemData.effDate}" readonlyInput="true" 
 			        styleClass="calanderWidth" showOn="button" disabled="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
 			   </h:panelGroup>
 			   <h:panelGroup id="effDateItemId" rendered="#{itemData.recordStatusFlg == 0}">
-			      <p:calendar value="#{itemData.effDate}" styleClass="calanderWidth"  id="effDateInActive"
+			      <p:calendar value="#{itemData.effDate}" styleClass="calanderWidth"  id="effDateInActive" 
 			         showOn="button"  readonlyInput="true"  pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
 			        <p:ajax event="dateSelect" update=":form:itemTable" 
 			          process="@this" listener="#{suspensionBackingBean.validateItemDate(itemData)}"/> 
@@ -37,7 +37,7 @@
                   <p:tooltip for="curDateId" showEffect="fade" value="#{lbl['lbl.ct.sus.curdate.validation']}"/> 
 			    </h:panelGroup>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.ct.susp.tbl.item.expdate']}" style="width:15%;">
+			<p:column headerText="#{lbl['lbl.ct.susp.tbl.item.expdate']}" style="width:20%;">
 			   <h:panelGroup rendered="#{itemData.recordStatusFlg == 1}">
 			      <p:calendar id="expDateActive" value="#{itemData.expDate}"  styleClass="calanderWidth"
 			         showOn="button" disabled="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
