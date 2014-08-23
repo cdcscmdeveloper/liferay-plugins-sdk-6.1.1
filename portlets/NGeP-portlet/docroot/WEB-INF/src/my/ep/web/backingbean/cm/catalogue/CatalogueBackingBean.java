@@ -1161,14 +1161,15 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 									price = row.getCell(7).getNumericCellValue();
 									cmStandardPricing.setPrice(new BigDecimal(price));
 								}
-
+								
+								System.out.println("row.getCell(8).getCellType(): " + row.getCell(8).getCellType());
 								//start date
 								if (row.getCell(8) != null && row.getCell(8).getCellType() == Cell.CELL_TYPE_NUMERIC) {
 									startDate = row.getCell(8).getDateCellValue();
 									cmStandardPricing.setStartDate(startDate);
 								}else if (row.getCell(8) != null && row.getCell(8).getCellType() == Cell.CELL_TYPE_STRING &&
 											!row.getCell(8).getStringCellValue().isEmpty()) {
-									startDate = new SimpleDateFormat("dd/mm/yyyy").parse(row.getCell(8).getStringCellValue());
+									startDate = new SimpleDateFormat("dd/MM/yyyy").parse(row.getCell(8).getStringCellValue());
 									cmStandardPricing.setStartDate(startDate);
 								}
 								
@@ -1182,13 +1183,14 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 									cmStandardPricing.setStartDate(startDate);
 								}*/
 
+								System.out.println("row.getCell(9).getCellType(): " + row.getCell(9).getCellType());
 								//end date
 								if (row.getCell(9) != null && row.getCell(9).getCellType() == Cell.CELL_TYPE_NUMERIC) {
 									endDate = row.getCell(9).getDateCellValue();
 									cmStandardPricing.setEndDate(endDate);
 								}else if (row.getCell(9) != null && row.getCell(9).getCellType() == Cell.CELL_TYPE_STRING &&
 											!row.getCell(9).getStringCellValue().isEmpty()) {
-									endDate = new SimpleDateFormat("dd/mm/yyyy").parse(row.getCell(9).getStringCellValue());
+									endDate = new SimpleDateFormat("dd/MM/yyyy").parse(row.getCell(9).getStringCellValue());
 									cmStandardPricing.setEndDate(endDate);
 								}
 								
