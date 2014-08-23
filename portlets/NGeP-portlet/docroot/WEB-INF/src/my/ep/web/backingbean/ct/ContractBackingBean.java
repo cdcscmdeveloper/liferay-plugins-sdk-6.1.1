@@ -74,7 +74,6 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			remark.setChangedBy(remark.getCreatedBy());
 			remark.setChangedDate(remark.getCreatedDate());
 			remark.setCreatedUser(facesScopes.getUserSessionBean());
-			
 			getManagedBean().setRemarkList(remarkList);
 			getManagedBean().getRemarkList().add(0, remark);
 		} else {
@@ -118,9 +117,10 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		res.setHeader( "Content-Transfer-Encoding", "binary" );
 		res.setContentType("application/octet-stream");
 		res.flushBuffer();
+		String filePath = null;
 		OutputStream out = res.getOutputStream();  
-		String filePath = DocumentRepositoryUtils.getBaseDir()+attachment.getFilePath();
-		if(filePath!=null) {
+		if(attachment.getFilePath()!=null) {
+			filePath = DocumentRepositoryUtils.getBaseDir()+attachment.getFilePath();
 			InputStream input = null;
 			try {
 				URLConnection uc = new URL(filePath).openConnection();
@@ -148,6 +148,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	}
 	
 	public void fileUpload(FileUploadEvent event) throws Exception {
+		
 		FacesScopes facesScopes = new FacesScopes();
 		AttachmentFormat attachmentFormat = new AttachmentDateFormat();
 		
@@ -170,5 +171,4 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		this.getManagedBean().getAttachmentList().add(attachment);
 	}
-	
 }

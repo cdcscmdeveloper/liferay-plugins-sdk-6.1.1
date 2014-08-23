@@ -98,6 +98,7 @@ import my.ep.web.constant.CommonUIConst;
 import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.ct.circular.cc.CentralContractManagedBean;
+import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -602,7 +603,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	    fileOuputStream.write(item.getContents());
 	    fileOuputStream.close();
 		getManagedBean().getCircularVer().setCircularFileName(item.getFileName());
-		getManagedBean().getCircularVer().setCircularFilePath(filePath);
+		getManagedBean().getCircularVer().setCircularFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
 	}
 	
 	public void downloadFile(int type) throws IOException {
@@ -622,6 +623,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		res.flushBuffer();
 		OutputStream out = res.getOutputStream();   
 		if(filePath!=null) {
+			filePath = DocumentRepositoryUtils.getBaseDir() +filePath;
 			InputStream input = null;
 			try {
 				URLConnection uc = new URL(filePath).openConnection();

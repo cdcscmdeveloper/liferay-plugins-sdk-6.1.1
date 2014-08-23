@@ -105,6 +105,7 @@ import my.ep.web.constant.CommonUIConst;
 import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.ct.circular.panel.PanelManagedBean;
+import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
@@ -1114,7 +1115,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	    fileOuputStream.write(item.getContents());
 	    fileOuputStream.close();
 		getManagedBean().getCircularVer().setCircularFileName(item.getFileName());
-		getManagedBean().getCircularVer().setCircularFilePath(filePath);
+		getManagedBean().getCircularVer().setCircularFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
 	}
 	
 	public void downloadFile() throws IOException {
@@ -1130,6 +1131,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		res.flushBuffer();
 		OutputStream out = res.getOutputStream();   
 		if(filePath!=null) {
+			filePath = DocumentRepositoryUtils.getBaseDir() +filePath;
 			InputStream input = null;
 			try {
 				URLConnection uc = new URL(filePath).openConnection();
