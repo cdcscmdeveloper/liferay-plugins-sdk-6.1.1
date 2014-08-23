@@ -853,7 +853,7 @@
 
 	<portlet>
 		<portlet-name>scQuotationTender</portlet-name>
-		<display-name>Quotation / Tender</display-name>
+		<display-name>Quotation/Tender Maintenance (Search)</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
@@ -865,8 +865,8 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>Quotation / Tender</title>
-			<short-title>Quotation / Tender</short-title>
+			<title>Quotation/Tender Maintenance (Search)</title>
+			<short-title>Quotation/Tender Maintenance (Search)</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
@@ -3316,7 +3316,7 @@
 	 </portlet>
 	 <portlet>
 	 	<portlet-name>scQTMaintenance</portlet-name>
-	 	<display-name>scQTMaintenance</display-name>
+	 	<display-name>Prepare QT</display-name>
 	 	<portlet-class>
 	 		org.portletfaces.bridge.GenericFacesPortlet
 	 	</portlet-class>
@@ -3330,8 +3330,8 @@
 	 		<portlet-mode>view</portlet-mode>
 	 	</supports>
 	 	<portlet-info>
-	 		<title>scQTMaintenance</title>
-	 		<short-title>NewJSFPortlet</short-title>
+	 		<title>Prepare QT</title>
+	 		<short-title>Prepare QT</short-title>
 	 		<keywords></keywords>
 	 	</portlet-info>
 	 	<security-role-ref>
@@ -3349,7 +3349,7 @@
 	 </portlet>
 	  <portlet>
 	 	<portlet-name>scQTReview</portlet-name>
-	 	<display-name>QT Details</display-name>
+	 	<display-name>Prepare QT</display-name>
 	 	<portlet-class>
 	 		org.portletfaces.bridge.GenericFacesPortlet
 	 	</portlet-class>
@@ -3363,8 +3363,8 @@
 	 		<portlet-mode>view</portlet-mode>
 	 	</supports>
 	 	<portlet-info>
-	 		<title>scQTReview</title>
-	 		<short-title>NewJSFPortlet</short-title>
+	 		<title>Prepare QT</title>
+	 		<short-title>Prepare QT</short-title>
 	 		<keywords></keywords>
 	 	</portlet-info>
 	 	<security-role-ref>
@@ -4337,7 +4337,7 @@
 	</portlet>
 	<portlet>
 		<portlet-name>QTApproval</portlet-name>
-		<display-name>QTApproval</display-name>
+		<display-name>QT Approval</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
@@ -4349,9 +4349,8 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>QTApproval</title>
-			<short-title>QTApproval</short-title>
-
+			<title>QT Approval</title>
+			<short-title>QT Approval</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
