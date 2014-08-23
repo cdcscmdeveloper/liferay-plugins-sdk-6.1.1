@@ -5,6 +5,11 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<p:panel>
+	
+	  <p:blockUI block=":form"  widgetVar="blockWidget">
+				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+	 </p:blockUI>
+	
 		<div align="right">
 			<c:if test="#{simpleQuoteBackingBean.managedBean.taskId eq null}">
 				<p:commandButton immediate="true"
@@ -13,22 +18,25 @@
 					style="float:left;" rendered="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending Submission'}"
 					action="#{simpleQuoteBackingBean.backToPervious}" />
 				
-				<p:commandButton immediate="true"
+				<p:commandButton immediate="true"  
 						value="#{lbl['lbl.sc.common.back']}" icon="ui-icon-back"
 						partialSubmit="true" process="@this" style="float:left;"
 						rendered="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending RN Creation'}"
 						action="#{simpleQuoteBackingBean.backToPervious}" />
 
 				<p:commandButton value="#{lbl['lbl.sc.common.save']}"
-					icon="ui-icon-save"
+					icon="ui-icon-save" 
+					onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 					action="#{simpleQuoteBackingBean.saveSimpleQuote('')}"
 					process="@all" update="@form" rendered="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}"/>
 
 				<p:commandButton value="#{lbl['lbl.sc.common.submit']}"
+				    onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 					action="#{simpleQuoteBackingBean.submitSimpleQuote('')}"
 					icon="ui-icon-submit" process="@all" update="@form" rendered="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}"/>
 
 				<p:commandButton value="#{lbl['lbl.sc.common.cancel']}"
+				    onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 					action="#{simpleQuoteBackingBean.cancel}" style="float:right;"
 					icon="ui-icon-cancel" process="@this" partialSubmit="true"  rendered="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}"/>
            </c:if>
@@ -53,7 +61,8 @@
 						       <c:if test="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending Approval' 
 									  or simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending Submission'}">
 								<p:commandButton value="#{lbl['lbl.sc.common.save']}"
-									icon="ui-icon-save"
+									icon="ui-icon-save" 
+									onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 									action="#{simpleQuoteBackingBean.saveSimpleQuote('Save')}"
 									update="@form" process="@all" />
 
@@ -84,14 +93,16 @@
 									<ui:param name="iconVar" value="ui-icon-cancel" />
 								</c:if>
 
-								<p:commandButton value="#{action}" process="@all"
-									styleClass="ui-button" icon="#{iconVar}"
+								<p:commandButton value="#{action}" process="@all" 
+								    onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+									styleClass="ui-button" icon="#{iconVar}" 
 									rendered="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus ne 'Pending Submission'}"
 									actionListener="#{simpleQuoteBackingBean.approverAction(action)}" />
 
 								<p:commandButton value="#{action}" process="@all" update="@form"
 									rendered="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending Submission'}"
 									styleClass="ui-button" icon="#{iconVar}"
+									 onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 									actionListener="#{simpleQuoteBackingBean.submitSimpleQuote(action)}" />
 							</c:forEach></c:if></td>
 					</tr>

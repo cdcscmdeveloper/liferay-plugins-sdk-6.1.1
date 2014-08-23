@@ -6,6 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<p:dialog id="addToCartPopup" widgetVar="addToCartPopup"
 		header="Add to Request Note" width="580 " height="480" resizable="true"
+		closable="false"
 		 modal="true" dynamic="true">
 		<p:panel id="addToCartId">
 		<p:messages id="cartmessages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
@@ -118,6 +119,7 @@
 				<p:column width="60%" style="text-align:right">
 					<p:commandButton value="#{lbl['lbl.sc.ok']}" process="@this addToCartId ,addToCartPopup"
 						action="#{requestNoteBackingBean.addToRequestNote(requestNoteBackingBean.managedBean.addToCartFlag)}" 
+						 onstart="popupBlockWidget.show();" oncomplete="popupBlockWidget.hide();"
 						icon="ui-icon-submit" update="addToCartId ,@([id$=supplierItemViewID])"/>
 						
 					<p:commandButton value="#{lbl['lbl.sc.cancel']}" process="@this"
@@ -127,6 +129,9 @@
 			</p:row>
 		</p:panelGrid>
 		  <p:ajax event="close" listener="#{requestNoteBackingBean.closeListener}" update="addToCartId"/>
+	   <p:blockUI block="addToCartId" widgetVar="popupBlockWidget">
+		 <p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+	  </p:blockUI>
 	
 	</p:dialog>
 </ui:composition>

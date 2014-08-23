@@ -8,9 +8,13 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
     <ui:define name="contentSection">
     <p:messages showDetail="true" autoUpdate="true" closable="true" severity="error, info"  showSummary="false"/>
+      <p:blockUI block=":form"  widgetVar="blockWidget">
+				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+	 </p:blockUI>
 		<div align="right">
 			<c:if test="#{simpleQuoteBackingBean.managedBean.taskId eq null}">
 				<p:commandButton value="#{lbl['lbl.sc.common.submit']}"
+				    onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 					update="@form" icon="ui-icon-submit" rendered="#{simpleQuoteBackingBean.managedBean.supplierViewBtn}"
 					action="#{simpleQuoteBackingBean.supplierSubmit}" />
 			</c:if>
@@ -46,6 +50,7 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 								</c:if>
 								<p:commandButton value="#{action}" process="@all"
 									styleClass="ui-button" icon="#{iconVar}"
+								    onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 									rendered="#{simpleQuoteBackingBean.managedBean.supplierViewBtn}"
 									actionListener="#{simpleQuoteBackingBean.supplierSubmit}" />
 							</c:forEach>

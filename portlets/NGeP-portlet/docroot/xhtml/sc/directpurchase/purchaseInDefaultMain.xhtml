@@ -11,8 +11,13 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	<c:if test="#{purchaseInDefaultBackingBean.managedBean.titleChecker}">
 		 <ac:title value="#{lbl['lbl.sc.pid']}" />
 	</c:if>
-		
     <p:messages showDetail="true" autoUpdate="true" closable="true" severity="error, info"  showSummary="false"/>
+    
+      <p:blockUI block=":form"  widgetVar="blockWidget">
+				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+	 </p:blockUI>
+    
+    
    <p:panel id="mailPanel">
 	  <div align="right">
 	    <c:if test="#{purchaseInDefaultBackingBean.managedBean.taskId eq null}">
@@ -21,6 +26,7 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 			 style="float:left;" action="#{purchaseInDefaultBackingBean.backToPervious}" />
 					 
 		  <p:commandButton value="#{lbl['lbl.sc.common.submit']}" action="#{purchaseInDefaultBackingBean.submitPurchaseInDefault()}"
+		      onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 			 icon="ui-icon-submit" update="mailPanel" process="@all" rendered="#{purchaseInDefaultBackingBean.managedBean.pidBtnFlag}"/>
 	    </c:if>
 	    
@@ -53,6 +59,7 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 
 						</c:if>
 						<p:commandButton value="#{action}" process="@all"
+						        onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 								styleClass="ui-button" icon="#{iconVar}"
 								actionListener="#{purchaseInDefaultBackingBean.approverAction(action)}" />
 						</c:forEach>
