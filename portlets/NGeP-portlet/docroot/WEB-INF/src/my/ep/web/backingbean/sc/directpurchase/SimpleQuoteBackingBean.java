@@ -194,46 +194,48 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 					PanelSupplierReqDTO reqDTO = new PanelSupplierReqDTO();
 					reqDTO.setPanelItemId(docId);
 					PanelSupplierResDTO resDTO= panelSupplierSO.retrievePanelItem(reqDTO);
+					CtPanelItem  selectedPanelItem = resDTO.getCtPanelItem();
+
 					List<CtPanelItem> panelItems = getManagedBean().getPanelItems();
 					if(panelItems == null){
 						panelItems = new ArrayList<CtPanelItem>();
 					}
-					
-					 // for checking govt.seller 
-					 if(resDTO.getCtPanelItem() !=null && resDTO.getCtPanelItem().getCtPanelSuppliers() != null && 
-							 resDTO.getCtPanelItem().getCtPanelSuppliers().size()>0){
-						 scQuote = checkGovtSeller(resDTO.getCtPanelItem().getCtPanelSuppliers().get(0).getSupplier().getPmOrgProfile(), scQuote);
-					 }
+
+					// for checking govt.seller 
+					if(resDTO.getCtPanelItem() !=null && resDTO.getCtPanelItem().getCtPanelSuppliers() != null && 
+							resDTO.getCtPanelItem().getCtPanelSuppliers().size()>0){
+						scQuote = checkGovtSeller(resDTO.getCtPanelItem().getCtPanelSuppliers().get(0).getSupplier().getPmOrgProfile(), scQuote);
+					}
 
 					if(resDTO.getCtPanelItem() != null) {
-					   if(panelItems.isEmpty()){
-							panelItems.add(resDTO.getCtPanelItem());
+						if(panelItems.isEmpty()){
+							panelItems.add(selectedPanelItem);
 							getManagedBean().setPanelItems(panelItems);
-							prepareQuestions(resDTO.getCtPanelItem() , null);
+							prepareQuestions(selectedPanelItem , null);
 
-					 } else {
-						List<Long> itemIds = new ArrayList<Long>();
-						for (CtPanelItem ctPanelItem : panelItems) {
-							 itemIds.add(ctPanelItem.getPanelItemId());
-						}
-						
-					   if (itemIds.size() > 0) {
-						 if(itemIds.contains(resDTO.getCtPanelItem().getPanelItemId())){
-							 throw new EpException(MessageConst.INFO_700027, new String[]{resDTO.getCtPanelItem().getScRequestItem().getCmItem().getItemName(),""});
-							 
 						} else {
-							panelItems.add(resDTO.getCtPanelItem());
-							getManagedBean().setPanelItems(panelItems);
-							prepareQuestions(resDTO.getCtPanelItem() , null);
+							List<Long> itemIds = new ArrayList<Long>();
+							for (CtPanelItem ctPanelItem : panelItems) {
+								itemIds.add(ctPanelItem.getPanelItemId());
+							}
+
+							if (itemIds.size() > 0) {
+								if(itemIds.contains(selectedPanelItem.getPanelItemId())){
+									throw new EpException("Item already exists.");
+									
+								} else {
+									panelItems.add(resDTO.getCtPanelItem());
+									getManagedBean().setPanelItems(panelItems);
+									prepareQuestions(selectedPanelItem , null);
+								}
+							}
 						}
-					   }
-					 }
 					}
 				} else{
 					throw new EpException("Select non contract items only");
 				}
-
-			}  else { // non contract item
+				
+		 } else { // non contract item
 				
 			     if(getManagedBean().getPanelItems() == null || getManagedBean().getPanelItems().isEmpty()){ // check panel item list
 				    CatalogueReqDTO catalogueReqDTO = new CatalogueReqDTO();
@@ -369,11 +371,18 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 		IQuoteSO quoteSO = (IQuoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQuoteSO.class);
 		// TODO check flag for panel item or non contract item
 		if(ctPanelItem != null){
-			String extCode = ctPanelItem.getScRequestItem().getCmItem().getExtensionCode();
-			CharSequence charSeq = extCode.subSequence(0, 2);
-			itemCode = Integer.valueOf(charSeq.toString());
-			cmItem = ctPanelItem.getScRequestItem().getCmItem();
-			ItemName = ctPanelItem.getScRequestItem().getCmItem().getItemName();
+			
+			if(ctPanelItem.getScRequestItem().getCmItem() != null){
+				cmItem = ctPanelItem.getScRequestItem().getCmItem();
+				String extCode = cmItem.getExtensionCode();
+				CharSequence charSeq = extCode.subSequence(0, 2);
+				itemCode = Integer.valueOf(charSeq.toString());
+				ItemName = cmItem.getItemName();
+				
+			} else{
+				// panel item  - product by default when the cmItem is null
+				itemCode = 0;
+			}
 			uom =  ctPanelItem.getPmUom();
 			
 		} else if(cmSupplierItem !=null){
@@ -438,7 +447,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 					productQuestions = new ArrayList<TplSpecQuestion>();
 				}
                
-				if(itemCode>0){
+				if(itemCode >= 0){
 					if (itemCode < 70 || itemCode > 94) { // for product  < 70 and  > 94  
 					
 						templateSpecBackingBean.addQuestion(prodTpl ,productQuestions, productQuestions.size()-1, TemplateSpecConst.QUESTION_TYPE_ITEM);
