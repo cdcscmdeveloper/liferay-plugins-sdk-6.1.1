@@ -737,44 +737,67 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	   log.info("applyForRequestNote");
 	   IParameterSO parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 	   ParameterReqDTO reqDTO = new ParameterReqDTO();
-	   List<ScRequestNoteDtl>	requestNoteDtls	=	getManagedBean().getRequestNoteDtls();
-	   if(getManagedBean().getSelectedRequestNoteDtls() != null && getManagedBean().getSelectedRequestNoteDtls().size() >0) {
-		  for(ScRequestNoteDtl selectedReqDtl : getManagedBean().getSelectedRequestNoteDtls()) {
-			 if(getManagedBean().getRequestNoteDtls().contains(selectedReqDtl)){
-			    reqDTO.setParameterType(ParameterTypeConst.FULFILMENT_TYPE);
-			    reqDTO.setParameterCode(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
-				ParameterResDTO parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
-				selectedReqDtl.setFulfilmentType(parameterResDTO.getPmParameter());
-				
-				if(getManagedBean().getAssignedToUserId() != null && getManagedBean().getAssignedToUserId() > 0){
-					PmUser pmUser = new PmUser();
-					pmUser.setUserId(getManagedBean().getAssignedToUserId());
-				    selectedReqDtl.setAssignedUser(pmUser);
-				} else{
-					throw new EpException("Please select Prepare By.");
-				}
-				
-				if(getManagedBean().getPeriodType() != null && !getManagedBean().getPeriodType().isEmpty()){
-					reqDTO = new ParameterReqDTO();
-					reqDTO.setParameterType(ParameterTypeConst.DELIVERY_TERM);
-					reqDTO.setParameterCode(getManagedBean().getPeriodType());
-				} else{
-					throw new EpException("Please select Delivery Term.");
-				}
-			    parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
-			    selectedReqDtl.setDeliverTermType(parameterResDTO.getPmParameter());
-				selectedReqDtl.setDeliverTerm(getManagedBean().getPeriodValue());
-				requestNoteDtls.add(selectedReqDtl);
-				getManagedBean().getRequestNoteDtls().remove(selectedReqDtl);
-				getManagedBean().setRequestNoteDtls(requestNoteDtls);
-				getManagedBean().getSelectedRequestNoteDtls().clear();
-			  }
-			}
-		} else {
-			throw new EpException("Please select At least one Item.");
-		}
-	}
 
+	   List<ScRequestNoteDtl>	requestNoteDtls	= new ArrayList<ScRequestNoteDtl>();
+	   if(getManagedBean().getSelectedRequestNoteDtls() != null && getManagedBean().getSelectedRequestNoteDtls().size() >0) {
+		   List<ScRequestNoteDtl>	selectedRequestNoteDtls = getManagedBean().getSelectedRequestNoteDtls();
+		   
+		   if(getManagedBean().getRequestNoteDtls() != null && getManagedBean().getRequestNoteDtls().size() >0) {
+			   for(ScRequestNoteDtl selectedReqDtl : getManagedBean().getRequestNoteDtls()) {
+				   if(selectedRequestNoteDtls.contains(selectedReqDtl)){
+
+					   reqDTO.setParameterType(ParameterTypeConst.FULFILMENT_TYPE);
+					   reqDTO.setParameterCode(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
+					   ParameterResDTO parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
+					   selectedReqDtl.setFulfilmentType(parameterResDTO.getPmParameter());
+
+					   // rec supplier
+					   if(getManagedBean().getSupplierId() != null && getManagedBean().getSupplierId() > 0 ){
+
+						   if(selectedReqDtl.getRequestItem() != null && selectedReqDtl.getRequestItem().getSupplierItems() !=null 
+								   && selectedReqDtl.getRequestItem().getSupplierItems().size()>0){
+							   List<ScRequestSupplierItem> supplierItems = selectedReqDtl.getRequestItem().getSupplierItems();
+
+							   for (ScRequestSupplierItem scRequestSupplierItem : supplierItems) {
+
+								   if(scRequestSupplierItem.getSmSupplier().getSupplierId().equals(getManagedBean().getSupplierId())){
+									   scRequestSupplierItem.setSupplierItemId(getManagedBean().getSupplierId());
+									   selectedReqDtl.setScRequestSupplierItem(scRequestSupplierItem);
+								   }
+							   }
+						   }
+					   }
+					   // prepare by
+					   if(getManagedBean().getAssignedToUserId() != null && getManagedBean().getAssignedToUserId() > 0){
+						   PmUser pmUser = new PmUser();
+						   pmUser.setUserId(getManagedBean().getAssignedToUserId());
+						   selectedReqDtl.setAssignedUser(pmUser);
+					   } else{
+						   throw new EpException("Please select Prepare By.");
+					   }
+					   // delivery term
+					   if(getManagedBean().getPeriodType() != null && !getManagedBean().getPeriodType().isEmpty()){
+						   reqDTO = new ParameterReqDTO();
+						   reqDTO.setParameterType(ParameterTypeConst.DELIVERY_TERM);
+						   reqDTO.setParameterCode(getManagedBean().getPeriodType());
+						   parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
+						   selectedReqDtl.setDeliverTermType(parameterResDTO.getPmParameter());
+						   selectedReqDtl.setDeliverTerm(getManagedBean().getPeriodValue());
+					   } else{
+						   throw new EpException("Please select Delivery Term.");
+					   }
+
+					   requestNoteDtls.add(selectedReqDtl);
+					   getManagedBean().setRequestNoteDtls(requestNoteDtls);
+					   getManagedBean().getSelectedRequestNoteDtls().clear();
+				   }
+			   }
+			   } else {
+				   throw new EpException("Please select At least one Item.");
+			   }
+		   }
+	}
+	
 	/**
 	 * page navigation to  Request Note screen
 	 */
@@ -1729,6 +1752,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					 
 					purchaseInquiryBackingBean.getManagedBean().setStockAvailable(prInquiry.getIsStockAvailable());
 					purchaseInquiryBackingBean.getManagedBean().setScPrInquiry(prInquiry);
+					 // price change lister 
+					purchaseInquiryBackingBean.priceTypeChangeListener();
 					purchaseInquiryBackingBean.initializeRemarks(prInquiry);
 				}
 			}
