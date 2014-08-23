@@ -1730,6 +1730,20 @@ public class SpecificationBackingBean extends
 			tplSpecQuestion.setClQuantity(new BigDecimal(panelItem
 					.getMinimumOrderQty()));
 			tplSpecQuestion.setTplSpecEstimations(null);
+			ParameterReqDTO PriceTypereqDTO = new ParameterReqDTO();
+			PriceTypereqDTO.setParameterType(ParameterTypeConst.PRICE_TYPE);
+			if (specMaster.getTplSpecZone() != null) {
+				PriceTypereqDTO
+						.setParameterCode(ParameterConst.PRICE_TYPE_ZONAL_STANDARD);
+			} else {
+				PriceTypereqDTO
+						.setParameterCode(ParameterConst.PRICE_TYPE_STANDARD);
+			}
+
+			ParameterResDTO PriceTyperesDTO = parameterSo
+					.retrieveParameterByTypeAndCode(PriceTypereqDTO);
+			tplSpecQuestion
+					.setClPriceTypeCode(PriceTyperesDTO.getPmParameter());
 			setUserDetails(tplSpecQuestion);
 			// questionsList.add(tplSpecQuestion);
 			specMaster.setTplSpecQuestions(questionsList);
@@ -1737,6 +1751,7 @@ public class SpecificationBackingBean extends
 			this.getManagedBean().getScQt().setZoneLocationLevel(null);
 			this.getManagedBean().getScQt().getScQtSupplierCriteria()
 					.setLocationLevel(null);
+			this.getManagedBean().getScQt().setFulfilmentType(null);
 
 			QTTemplateDocReqDTO docReqDTO = new QTTemplateDocReqDTO();
 			List<ScQtDoc> qtDocs = new ArrayList<ScQtDoc>();
@@ -1923,6 +1938,7 @@ public class SpecificationBackingBean extends
 					List<ScQtCheckList> otherList = new ArrayList<ScQtCheckList>();
 					if (null != checkListList && !checkListList.isEmpty()) {
 						for (ScQtCheckList checklist : checkListList) {
+
 							if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
 									.equalsIgnoreCase(checklist
 											.getDefinationType()
@@ -6697,7 +6713,7 @@ public class SpecificationBackingBean extends
 					.getScQtCheckSt2techProposal()
 					.add(this.getManagedBean().getIndex(),
 							resDTO.getScQtCheckList());
-			
+
 			FacesContext
 					.getCurrentInstance()
 					.addMessage(
@@ -6869,7 +6885,7 @@ public class SpecificationBackingBean extends
 					.getScQtCheckSt2techProposal()
 					.add(this.getManagedBean().getIndex(),
 							resDTO.getScQtCheckList());
-			
+
 			FacesContext
 					.getCurrentInstance()
 					.addMessage(
@@ -6965,7 +6981,7 @@ public class SpecificationBackingBean extends
 				.getScQtCheckSt2financeProposalList()
 				.add(this.getManagedBean().getIndex(),
 						resDTO.getScQtCheckList());
-	
+
 		FacesContext
 				.getCurrentInstance()
 				.addMessage(
@@ -7058,7 +7074,7 @@ public class SpecificationBackingBean extends
 				.getScQtCheckSt2financeProposalList()
 				.add(this.getManagedBean().getIndex(),
 						resDTO.getScQtCheckList());
-		
+
 		FacesContext
 				.getCurrentInstance()
 				.addMessage(
@@ -7148,7 +7164,6 @@ public class SpecificationBackingBean extends
 				.getScQtCheckSt2techProposal()
 				.add(this.getManagedBean().getIndex(),
 						resDTO.getScQtCheckList());
-		
 
 		FacesContext.getCurrentInstance().addMessage(
 				null,
@@ -7241,7 +7256,7 @@ public class SpecificationBackingBean extends
 				.getScQtCheckSt2techProposal()
 				.add(this.getManagedBean().getIndex(),
 						resDTO.getScQtCheckList());
-		
+
 		FacesContext.getCurrentInstance().addMessage(
 				null,
 				new FacesMessage(FacesMessage.SEVERITY_INFO,
@@ -7331,7 +7346,7 @@ public class SpecificationBackingBean extends
 				.getScQtCheckSt2techProposal()
 				.add(this.getManagedBean().getIndex(),
 						resDTO.getScQtCheckList());
-		
+
 		FacesContext.getCurrentInstance().addMessage(
 				null,
 				new FacesMessage(FacesMessage.SEVERITY_INFO,
@@ -7420,7 +7435,7 @@ public class SpecificationBackingBean extends
 				.getScQtCheckSt2financeProposalList()
 				.add(this.getManagedBean().getIndex(),
 						resDTO.getScQtCheckList());
-	
+
 		FacesContext.getCurrentInstance().addMessage(
 				null,
 				new FacesMessage(FacesMessage.SEVERITY_INFO,
@@ -7509,7 +7524,7 @@ public class SpecificationBackingBean extends
 				.getScQtCheckSt2financeProposalList()
 				.add(this.getManagedBean().getIndex(),
 						resDTO.getScQtCheckList());
-	
+
 		FacesContext.getCurrentInstance().addMessage(
 				null,
 				new FacesMessage(FacesMessage.SEVERITY_INFO,
@@ -7593,7 +7608,7 @@ public class SpecificationBackingBean extends
 				.getScQtCheckSt2financeProposalList()
 				.add(this.getManagedBean().getIndex(),
 						resDTO.getScQtCheckList());
-		
+
 		FacesContext.getCurrentInstance().addMessage(
 				null,
 				new FacesMessage(FacesMessage.SEVERITY_INFO,
@@ -7774,7 +7789,7 @@ public class SpecificationBackingBean extends
 				.getScQtCheckSt2financeProposalList()
 				.add(this.getManagedBean().getIndex(),
 						resDTO.getScQtCheckList());
-		
+
 		FacesContext.getCurrentInstance().addMessage(
 				null,
 				new FacesMessage(FacesMessage.SEVERITY_INFO,
@@ -7863,7 +7878,7 @@ public class SpecificationBackingBean extends
 				.getScQtCheckSt2financeProposalList()
 				.add(this.getManagedBean().getIndex(),
 						resDTO.getScQtCheckList());
-		
+
 		FacesContext.getCurrentInstance().addMessage(
 				null,
 				new FacesMessage(FacesMessage.SEVERITY_INFO,
@@ -7950,7 +7965,7 @@ public class SpecificationBackingBean extends
 				.getScQtCheckSt2financeProposalList()
 				.add(this.getManagedBean().getIndex(),
 						resDTO.getScQtCheckList());
-		
+
 		FacesContext.getCurrentInstance().addMessage(
 				null,
 				new FacesMessage(FacesMessage.SEVERITY_INFO,
@@ -10611,6 +10626,7 @@ public class SpecificationBackingBean extends
 				}
 			}
 			this.getManagedBean().setZoneGeneralTrees(zoneTrees);
+			this.getManagedBean().setIndex(-1);
 		}
 	}
 
@@ -10620,6 +10636,7 @@ public class SpecificationBackingBean extends
 	public void deleteSupplierQualificationTreeNode() {
 
 		this.getManagedBean().setZoneTrees(new ArrayList<TreeNode>());
+		this.getManagedBean().setIndex(-1);
 	}
 
 	private void updateCategoryCodesToQt(List<ScQtCategory> categories,
@@ -11037,17 +11054,15 @@ public class SpecificationBackingBean extends
 			supplierCriteria.setScQtLocCriteria(null);
 			scQt.setZoneLocationLevel(new PmParameter());
 
-			this.getManagedBean().setZoneTrees(new ArrayList<TreeNode>());
+			this.getManagedBean().setZoneTrees(null);
 		} else {
-			this.getManagedBean()
-					.setZoneGeneralTrees(new ArrayList<TreeNode>());
+			this.getManagedBean().setZoneGeneralTrees(null);
 			supplierCriteria.setQtZoneCriterias(null);
 			if (null == supplierCriteria.getLocationLevel()) {
 				supplierCriteria.setLocationLevel(new PmParameter());
 			}
 
-			this.getManagedBean()
-					.setZoneGeneralTrees(new ArrayList<TreeNode>());
+			this.getManagedBean().setZoneGeneralTrees(null);
 
 		}
 		scQt.setScQtSupplierCriteria(supplierCriteria);
