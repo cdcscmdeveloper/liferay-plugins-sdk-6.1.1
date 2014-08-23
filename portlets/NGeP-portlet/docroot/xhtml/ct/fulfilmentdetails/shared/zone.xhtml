@@ -8,7 +8,7 @@
 	<p:panel header="Zone Details" toggleable="true">
 		<table style="width: 100%">
 		  <tr>
-			  <td style="width: 94px"><p:outputLabel value="Location Level" /></td>
+			  <td style="width: 105px"><p:outputLabel value="Location Level" /></td>
 				  <td>
 				  		<p:inputText id="locLevels2" disabled="true" 
 				  			value="#{contractDetailsBackingBean.getParameterDesc(contractDetailsBackingBean.managedBean.contractVer.ctContract.locationLevel)}" />
@@ -35,7 +35,7 @@
         </p:column>
  
         <p:column style="width:30%;">
-            <f:facet name="header"> * Delivery Term </f:facet>
+            <f:facet name="header"><h:outputText value="*" styleClass="mandatory" /> Delivery Term </f:facet>
              <p:treeNode type="zone">
                 <p:inputText value="#{zoneTree.deliveryTerm}"  rendered="#{zoneTree.zone != null}"  
                      style="width:40px;" styleClass="ppRightBtn" validator="#{webappBean.validateDPeriod}" />
