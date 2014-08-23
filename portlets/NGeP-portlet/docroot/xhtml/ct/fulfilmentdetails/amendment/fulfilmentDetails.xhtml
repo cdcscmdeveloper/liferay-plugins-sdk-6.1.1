@@ -39,15 +39,23 @@
 			       <f:selectItems value="#{amendmentBackingBean.getDropdownValues(ParameterTypeConst.deliveryTerm)}" />
 			   </p:selectOneMenu>
 			</h:panelGrid>	
-			 <p:outputLabel id="astatus" value="#{lbl['lbl.ct.ag.agstatus']}" rendered="#{amendmentBackingBean.managedBean.ctContract.agreement and 
-			 	!amendmentBackingBean.managedBean.ctContract.zonalPricing}" />
+			 <p:outputLabel id="astatus" value="#{lbl['lbl.ct.ag.agstatus']}"
+			 	rendered="#{amendmentBackingBean.managedBean.ctContract.agreement and
+			 				amendmentBackingBean.managedBean.ctContract.currentAgreement.status.statusId != CtStatusConst.acComplete and
+							amendmentBackingBean.managedBean.ctContract.currentAgreement.status.statusId != CtStatusConst.saComplete and
+			 				!amendmentBackingBean.managedBean.ctContract.zonalPricing}" />
 			 <p:inputText for="astatus" style="width:170px;" disabled="true" 
 			 	rendered="#{amendmentBackingBean.managedBean.ctContract.agreement and
 			 				amendmentBackingBean.managedBean.ctContract.currentAgreement.status.statusId != CtStatusConst.acComplete and
 							amendmentBackingBean.managedBean.ctContract.currentAgreement.status.statusId != CtStatusConst.saComplete and
 			 				!amendmentBackingBean.managedBean.ctContract.zonalPricing}" 
 			 	value="#{amendmentBackingBean.getStatusDescById(amendmentBackingBean.managedBean.ctContract.currentAgreement.status.statusId)}" />
-			 <h:commandLink value="#{amendmentBackingBean.managedBean.ctContract.currentAgreement.fileName}" styleClass="blue_font" 
+			 <p:outputLabel id="agreement" value="#{lbl['lbl.ct.agreement']}"
+			 	rendered="#{amendmentBackingBean.managedBean.ctContract.agreement and 
+							(amendmentBackingBean.managedBean.ctContract.currentAgreement.status.statusId eq CtStatusConst.acComplete or
+				 			amendmentBackingBean.managedBean.ctContract.currentAgreement.status.statusId eq CtStatusConst.saComplete) and
+				 			!amendmentBackingBean.managedBean.ctContract.zonalPricing}" />
+			 <h:commandLink for="agreement" value="#{amendmentBackingBean.managedBean.ctContract.currentAgreement.fileName}" styleClass="blue_font" 
 				rendered="#{amendmentBackingBean.managedBean.ctContract.agreement and 
 							(amendmentBackingBean.managedBean.ctContract.currentAgreement.status.statusId eq CtStatusConst.acComplete or
 				 			amendmentBackingBean.managedBean.ctContract.currentAgreement.status.statusId eq CtStatusConst.saComplete) and
@@ -65,15 +73,23 @@
 				required="false" rows="3" style="width:170px;margin-bottom: 5px;" disabled="true"
 				autoResize="false" />	
 			</h:panelGrid>	
-			<p:outputLabel id="astatus1" value="#{lbl['lbl.ct.ag.agstatus']}" rendered="#{amendmentBackingBean.managedBean.ctContract.agreement and 
-				amendmentBackingBean.managedBean.ctContract.zonalPricing}" />
+			<p:outputLabel id="astatus1" value="#{lbl['lbl.ct.ag.agstatus']}"
+				rendered="#{amendmentBackingBean.managedBean.ctContract.agreement and
+							amendmentBackingBean.managedBean.ctContract.currentAgreement.status.statusId != CtStatusConst.acComplete and
+							amendmentBackingBean.managedBean.ctContract.currentAgreement.status.statusId != CtStatusConst.saComplete and
+							amendmentBackingBean.managedBean.ctContract.zonalPricing}" />
 			<p:inputText for="astatus1" style="width:170px;" disabled="true" 
 				rendered="#{amendmentBackingBean.managedBean.ctContract.agreement and
 							amendmentBackingBean.managedBean.ctContract.currentAgreement.status.statusId != CtStatusConst.acComplete and
 							amendmentBackingBean.managedBean.ctContract.currentAgreement.status.statusId != CtStatusConst.saComplete and
 							amendmentBackingBean.managedBean.ctContract.zonalPricing}"
 				value="#{amendmentBackingBean.getStatusDescById(amendmentBackingBean.managedBean.ctContract.currentAgreement.status.statusId)}" />
-			<h:commandLink value="#{amendmentBackingBean.managedBean.ctContract.currentAgreement.fileName}" styleClass="blue_font" 
+			<p:outputLabel id="agreement1" value="#{lbl['lbl.ct.agreement']}"
+			 	rendered="#{amendmentBackingBean.managedBean.ctContract.agreement and 
+							(amendmentBackingBean.managedBean.ctContract.currentAgreement.status.statusId eq CtStatusConst.acComplete or
+				 			amendmentBackingBean.managedBean.ctContract.currentAgreement.status.statusId eq CtStatusConst.saComplete) and
+				 			amendmentBackingBean.managedBean.ctContract.zonalPricing}" />
+			<h:commandLink for="agreement1" value="#{amendmentBackingBean.managedBean.ctContract.currentAgreement.fileName}" styleClass="blue_font" 
 				rendered="#{amendmentBackingBean.managedBean.ctContract.agreement and 
 							(amendmentBackingBean.managedBean.ctContract.currentAgreement.status.statusId eq CtStatusConst.acComplete or
 				 			amendmentBackingBean.managedBean.ctContract.currentAgreement.status.statusId eq CtStatusConst.saComplete) and
