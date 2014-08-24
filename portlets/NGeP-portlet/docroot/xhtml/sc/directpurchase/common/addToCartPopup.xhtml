@@ -113,7 +113,7 @@
 				</tr>
 			</table>
 			
-	</p:panel>
+	
 		<p:panelGrid styleClass="noBorders tr,noBorders td">
 			<p:row>
 				<p:column width="60%" style="text-align:right">
@@ -128,6 +128,7 @@
 				</p:column>
 			</p:row>
 		</p:panelGrid>
+	</p:panel>
 		  <p:ajax event="close" listener="#{requestNoteBackingBean.closeListener}" update="addToCartId"/>
 	   <p:blockUI block="addToCartId" widgetVar="popupBlockWidget">
 		 <p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
