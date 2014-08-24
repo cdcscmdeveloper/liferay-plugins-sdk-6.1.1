@@ -4,6 +4,7 @@
 package my.ep.web.util.tpl.helper;
 
 import java.lang.reflect.InvocationTargetException;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -312,6 +313,43 @@ public class TemplateSpecHelper {
 		}
 		
 		return newSpecEstimations;
+	}
+	
+	public boolean isPriceTypeStandard(String priceType) {
+		return ParameterConst.PRICE_TYPE_STANDARD.equals(priceType)
+				|| ParameterConst.PRICE_TYPE_PROMOTION.equals(priceType);
+	}
+	
+	public boolean isPriceTypeZonalStandard(String priceType) {
+		return ParameterConst.PRICE_TYPE_ZONAL_STANDARD.equals(priceType)
+				|| ParameterConst.PRICE_TYPE_ZONAL_PROMOTION.equals(priceType);
+	}
+	
+	public boolean isPriceTypeTier(String priceType) {
+		return ParameterConst.PRICE_TYPE_TIER.equals(priceType)
+				|| ParameterConst.PRICE_TYPE_PROMOTION_TIER.equals(priceType)
+				|| ParameterConst.PRICE_TYPE_ZONAL_TIER.equals(priceType)
+				|| ParameterConst.PRICE_TYPE_ZONAL_PROMOTION_TIER.equals(priceType)
+				|| isPriceTypeTariff(priceType);
+	}
+	
+	public boolean isPriceTypeTariff(String priceType) {
+		return ParameterConst.PRICE_TYPE_TARIFF.equals(priceType)
+				|| ParameterConst.PRICE_TYPE_ZONAL_TARIFF.equals(priceType);
+	}
+	
+	public boolean isTierPriceMatched(TplSpecTierQty specTierQty, BigDecimal orderQuantity) {
+		
+		if (specTierQty.getFromQty() != null && specTierQty.getToQty() != null) {
+			if (specTierQty.getFromQty().compareTo(orderQuantity) <= 0
+					&& orderQuantity.compareTo(specTierQty.getToQty()) <= 0) {
+				return true;
+			}
+		} else {
+			log.warn("Invalid from and to qty.");
+		}
+
+		return false;
 	}
 	
 	private void setUserDetails(BaseEntity baseObject) {
