@@ -60,6 +60,7 @@ import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.tpl.spec.TemplateSpecManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
@@ -409,19 +410,26 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 	public SelectItem[] getPriceTypeDropdownList(TplSpecMaster specMaster) {
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		List<String> filteredList = new ArrayList<String>();
-		boolean allowTier = specMaster.isScoringReq() || !specMaster.isEstCostReq();
+		boolean scoringReq = specMaster.isScoringReq();
+		boolean estCostReq = specMaster.isEstCostReq();
 		
 		if (specMaster.getTplSpecZone() == null) {
 			filteredList.add(ParameterConst.PRICE_TYPE_STANDARD);
-			if (allowTier) {
+			
+			if (scoringReq) {
 				filteredList.add(ParameterConst.PRICE_TYPE_TIER);
-				filteredList.add(ParameterConst.PRICE_TYPE_TARIFF);	
+				filteredList.add(ParameterConst.PRICE_TYPE_TARIFF);
+			} else if (!estCostReq) {
+				filteredList.add(ParameterConst.PRICE_TYPE_TIER);
 			}
 		} else {
 			filteredList.add(ParameterConst.PRICE_TYPE_ZONAL_STANDARD);
-			if (allowTier) {
+			
+			if (scoringReq) {
 				filteredList.add(ParameterConst.PRICE_TYPE_ZONAL_TIER);
-				filteredList.add(ParameterConst.PRICE_TYPE_ZONAL_TARIFF);	
+				filteredList.add(ParameterConst.PRICE_TYPE_ZONAL_TARIFF);
+			} else if (!estCostReq) {
+				filteredList.add(ParameterConst.PRICE_TYPE_ZONAL_TIER);
 			}
 		}
 		
@@ -471,7 +479,10 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 	
 	public void resetPriceTypeDtl(TplSpecQuestion specQuestion) {
 		List<TplSpecEstimation> specEstimations = null;
-		if (specQuestion.getTplSpecMaster().isEstCostReq() && isPriceTypeStandard(specQuestion.getClPriceTypeCode().getParameterCode())) {
+		if (specQuestion.getTplSpecMaster().isEstCostReq() && 
+				TemplateSpecHelper.getInstance().isPriceTypeStandard(
+						specQuestion.getClPriceTypeCode().getParameterCode())) {
+			
 			specEstimations = new ArrayList<TplSpecEstimation>();
 			
 			TplSpecEstimation specEstimation = new TplSpecEstimation();
@@ -571,7 +582,8 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 		BigDecimal quantity = specQuestion.getClQuantity();
 		BigDecimal ratePerUom = specAnswer.getRatePerUom();
 		BigDecimal totalPrice = quantity;
-		boolean isPriceTypeTier = isPriceTypeTier(specQuestion.getClPriceTypeCode().getParameterCode());
+		boolean isPriceTypeTier = TemplateSpecHelper.getInstance().isPriceTypeTier(
+				specQuestion.getClPriceTypeCode().getParameterCode());
 		
 		if (!isPriceTypeTier) {
 			if (ratePerUom != null) {
@@ -607,9 +619,7 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 					totalPrice = totalPrice.multiply(itemDurationMonth);
 				}
 			}
-			specAnswer.setAnswerNumeric(totalPrice);
-			
-			calcGrandTotalAmount(templateSpecBean);	
+			specAnswer.setAnswerNumeric(totalPrice);	
 		}
 	}
 	
@@ -684,7 +694,9 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 			specEstimations = new ArrayList<TplSpecEstimation>();
 			
 			for (int zoneRow = 0; zoneRow < (specZoneDtls == null || specZoneDtls.size() == 0 ? 1 : specZoneDtls.size()); zoneRow++) {
-				if (isPriceTypeTier(tplSpecQuestion.getClPriceTypeCode().getParameterCode())) {
+				if (TemplateSpecHelper.getInstance().isPriceTypeTier(
+						tplSpecQuestion.getClPriceTypeCode().getParameterCode())) {
+					
 					if (tplSpecQuestion.getTplSpecTierQties() != null) {
 						for (TplSpecTierQty specTierQty : tplSpecQuestion.getTplSpecTierQties()) {
 							TplSpecEstimation specEstimation = new TplSpecEstimation();
@@ -785,15 +797,38 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 				templateSpecBean.getSpecComponentId() + "estimationPopup.hide()");
 	}
 	
-	private void calcGrandTotalAmount(TemplateSpecBean templateSpecBean) {
+	public BigDecimal calcGrandTotalAmount(TemplateSpecBean templateSpecBean) {
 		BigDecimal totalAmount = new BigDecimal(0);
 		BigDecimal totalAmountPerYear = new BigDecimal(0);
+		Long tierSpecQuestionId = null;
 		TplSpecMaster specMaster = templateSpecBean.getSpecMaster();
 		List<TplSpecAnswer> specAnswerList = templateSpecBean.getSpecAnswerList();
+		TemplateSpecHelper templateSpecHelper = TemplateSpecHelper.getInstance();
 		
 		for (TplSpecAnswer tplSpecAnswer : specAnswerList) {
-			if (tplSpecAnswer.getAnswerNumeric() != null) {
-				totalAmount = totalAmount.add(tplSpecAnswer.getAnswerNumeric());	
+			TplSpecQuestion specQuestion = tplSpecAnswer.getTplSpecQuestion();
+			String priceType = specQuestion.getClPriceTypeCode().getParameterCode();
+			BigDecimal quantity = specQuestion.getClQuantity();
+			
+			if (templateSpecHelper.isPriceTypeTariff(priceType)) {
+				// TODO - calculate tariff price.
+				
+			} else if (templateSpecHelper.isPriceTypeTier(priceType) && 
+					(tierSpecQuestionId == null || tierSpecQuestionId.compareTo(
+							specQuestion.getSpecQuestionId()) != 0)) {
+				// Always used the 1st tier quantity unit price to calculate total amount.
+				if (tplSpecAnswer.getRatePerUom() != null) {
+					totalAmount = totalAmount.add(quantity.multiply(tplSpecAnswer.getRatePerUom()));	
+				}
+				
+				tierSpecQuestionId = specQuestion.getSpecQuestionId();
+				
+			} else if (templateSpecHelper.isPriceTypeStandard(priceType) || 
+					templateSpecHelper.isPriceTypeZonalStandard(priceType)) {
+				
+				if (tplSpecAnswer.getAnswerNumeric() != null) {
+					totalAmount = totalAmount.add(tplSpecAnswer.getAnswerNumeric());	
+				}
 			}
 			
 			if (tplSpecAnswer.getAmountPerYear() != null) {
@@ -803,20 +838,8 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 		
 		specMaster.setTotalAmountPerYear(totalAmountPerYear);
 		specMaster.setTotalAmount(totalAmount);
-	}
-	
-	private boolean isPriceTypeStandard(String priceType) {
-		return ParameterConst.PRICE_TYPE_STANDARD.equals(priceType)
-				|| ParameterConst.PRICE_TYPE_PROMOTION.equals(priceType);
-	}
-	
-	private boolean isPriceTypeTier(String priceType) {
-		return ParameterConst.PRICE_TYPE_TIER.equals(priceType)
-				|| ParameterConst.PRICE_TYPE_PROMOTION_TIER.equals(priceType)
-				|| ParameterConst.PRICE_TYPE_ZONAL_TIER.equals(priceType)
-				|| ParameterConst.PRICE_TYPE_ZONAL_PROMOTION_TIER.equals(priceType)
-				|| ParameterConst.PRICE_TYPE_TARIFF.equals(priceType)
-				|| ParameterConst.PRICE_TYPE_ZONAL_TARIFF.equals(priceType);
+		
+		return totalAmount;
 	}
 	
 	/**
