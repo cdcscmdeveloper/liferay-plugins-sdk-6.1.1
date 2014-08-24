@@ -61,7 +61,7 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.so.action']}" style="width:6%">
 				<p:commandLink
-					action="#{qTBriefingSiteVisitBackingBean.editAction(briefingdtls,index)}"
+					action="#{qTBriefingSiteVisitBackingBean.editAction(briefingdtls,index,'B')}"
 					style="margin-right:20px;" partialSubmit="true" process="@this" update="@([id$=briefdlgId])">
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png" />
@@ -159,7 +159,7 @@
 
 					<p:column headerText="#{lbl['lbl.so.action']}" style="width:6%">
 						<p:commandLink
-							action="#{qTBriefingSiteVisitBackingBean.editAction(sitevisitdtls,rowIndex)}"
+							action="#{qTBriefingSiteVisitBackingBean.editAction(sitevisitdtls,rowIndex, 'S')}"
 							style="margin-right:20px;" partialSubmit="true" process="@this">
 							<p:graphicImage library="ep/images/design" name="edit.png"
 								value="/resources/ep/images/design/edit.png" />

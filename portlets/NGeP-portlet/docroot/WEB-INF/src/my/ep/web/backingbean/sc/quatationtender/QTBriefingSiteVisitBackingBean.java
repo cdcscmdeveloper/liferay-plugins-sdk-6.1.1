@@ -577,10 +577,11 @@ public class QTBriefingSiteVisitBackingBean extends
 
 	}
 
-	public void editAction(ScQtBsvDtl bsvDtl, int index) {
+	public void editAction(ScQtBsvDtl bsvDtl, int index, String bsvType) {
 		bsvDtl.setSelected(true);
 		this.getManagedBean().setBsvIndex(index);
 		this.getManagedBean().setQtBriefing(bsvDtl);
+		this.getManagedBean().setBsvType(bsvType);
 		RequestContext.getCurrentInstance().execute("addbsvdtls.show();");
 		retrievePmStateList();
 	}
