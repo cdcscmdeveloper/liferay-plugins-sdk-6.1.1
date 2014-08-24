@@ -350,6 +350,9 @@ public class ApprovalBackingBean extends
 			this.getManagedBean().setApprovalType("Publication Approval");
 			scQtApproval = getApproval(qtId,
 					ParameterConst.APPROVAL_CATEGORY_PTJ);
+			scQtApproval.setScQtApprovalRemarks(initializeRemarks(
+					scQtApproval, scQtApproval.getScQtApprovalRemarks(),
+					ScQtApprovalRemark.class));
 			if (null != getManagedBean().getQt().getClosingDate()) {
 				Calendar cal = Calendar.getInstance();
 				cal.setTime(getManagedBean().getQt().getClosingDate());
