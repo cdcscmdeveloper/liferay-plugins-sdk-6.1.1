@@ -853,7 +853,7 @@
 
 	<portlet>
 		<portlet-name>scQuotationTender</portlet-name>
-		<display-name>Quotation/Tender Maintenance (Search)</display-name>
+		<display-name>Quotation/Tender Search</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
@@ -865,8 +865,8 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>Quotation/Tender Maintenance (Search)</title>
-			<short-title>Quotation/Tender Maintenance (Search)</short-title>
+			<title>Quotation/Tender Search</title>
+			<short-title>Quotation/Tender Search</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
@@ -918,7 +918,7 @@
 	
 	<portlet>
 		<portlet-name>scCommittee</portlet-name>
-		<display-name>Committee</display-name>
+		<display-name>Committee Maintenance</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
@@ -930,8 +930,8 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>Committee</title>
-			<short-title>Committee</short-title>
+			<title>Committee Maintenance</title>
+			<short-title>Committee Maintenance</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
@@ -3316,7 +3316,7 @@
 	 </portlet>
 	 <portlet>
 	 	<portlet-name>scQTMaintenance</portlet-name>
-	 	<display-name>Prepare QT</display-name>
+	 	<display-name>Prepare Quotation/Tender Details</display-name>
 	 	<portlet-class>
 	 		org.portletfaces.bridge.GenericFacesPortlet
 	 	</portlet-class>
@@ -3330,8 +3330,8 @@
 	 		<portlet-mode>view</portlet-mode>
 	 	</supports>
 	 	<portlet-info>
-	 		<title>Prepare QT</title>
-	 		<short-title>Prepare QT</short-title>
+	 		<title>Prepare Quotation/Tender Details</title>
+	 		<short-title>Prepare Quotation/Tender Details</short-title>
 	 		<keywords></keywords>
 	 	</portlet-info>
 	 	<security-role-ref>
@@ -3349,7 +3349,7 @@
 	 </portlet>
 	  <portlet>
 	 	<portlet-name>scQTReview</portlet-name>
-	 	<display-name>Prepare QT</display-name>
+	 	<display-name>Prepare Quotation/Tender Details</display-name>
 	 	<portlet-class>
 	 		org.portletfaces.bridge.GenericFacesPortlet
 	 	</portlet-class>
@@ -3363,8 +3363,8 @@
 	 		<portlet-mode>view</portlet-mode>
 	 	</supports>
 	 	<portlet-info>
-	 		<title>Prepare QT</title>
-	 		<short-title>Prepare QT</short-title>
+	 		<title>Prepare Quotation/Tender Details</title>
+	 		<short-title>Prepare Quotation/Tender Details</short-title>
 	 		<keywords></keywords>
 	 	</portlet-info>
 	 	<security-role-ref>
@@ -4337,7 +4337,7 @@
 	</portlet>
 	<portlet>
 		<portlet-name>QTApproval</portlet-name>
-		<display-name>QT Approval</display-name>
+		<display-name>Quotation/Tender Approval</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
@@ -4349,8 +4349,8 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>QT Approval</title>
-			<short-title>QT Approval</short-title>
+			<title>Quotation/Tender Approval</title>
+			<short-title>Quotation/Tender Approval</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
