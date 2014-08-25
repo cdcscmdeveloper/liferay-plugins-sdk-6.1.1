@@ -652,7 +652,6 @@ public class ApprovalBackingBean extends
 						isRevise = true;
 						break;
 					}
-
 				} else if (ParameterConst.APPROVAL_REQUEST_REDUCE_PROPOSAL_VALIDITY_PERIOD
 						.equalsIgnoreCase(approvalType)) {
 					if (ParameterConst.APPROVAL_DECISION_TYPE_REJECTED
@@ -660,13 +659,13 @@ public class ApprovalBackingBean extends
 									.getDecessionType().getParameterCode())) {
 						scQt.setQtValidityPeriod(Integer
 								.parseInt(approvalRequest.getOriginalValue()));
+						approvalRequest.setChangedValue(approvalRequest.getOriginalValue());
 					} else if (ParameterConst.APPROVAL_DECISION_TYPE_REVISED
 							.equalsIgnoreCase(approvalRequest
 									.getDecessionType().getParameterCode())) {
 						isRevise = true;
 						break;
 					}
-
 				} else if (ParameterConst.APPROVAL_REQUEST_REDUCE_PUBLISH_PERIOD
 						.equalsIgnoreCase(approvalType)) {
 					if (ParameterConst.APPROVAL_DECISION_TYPE_REJECTED
@@ -680,7 +679,6 @@ public class ApprovalBackingBean extends
 						isRevise = true;
 						break;
 					}
-
 				} else if (ParameterConst.APPROVAL_REQUEST_OPEN_FOR_BUMIPUTRA_ALL
 						.equalsIgnoreCase(approvalType)) {
 					if (ParameterConst.APPROVAL_DECISION_TYPE_REJECTED
@@ -693,15 +691,12 @@ public class ApprovalBackingBean extends
 						isRevise = true;
 						break;
 					}
-
 				}
-
 			}
 			if (isRevise) {
 				return BpmOutcomeConst.BPM_REVISE;
 			}
 		}
-
 		return BpmOutcomeConst.BPM_APPROVE;
 	}
 	
