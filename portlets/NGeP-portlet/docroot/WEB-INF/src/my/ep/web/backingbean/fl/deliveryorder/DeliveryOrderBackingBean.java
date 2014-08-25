@@ -203,16 +203,36 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 				String messageId = MessageConst.INFO_700043;
 				if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
 					String docNo = null;
+					String messagePrefix = "";
 					if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 						messageId = MessageConst.INFO_700004;
 						docNo = getManagedBean().getFulfilmentOrder().getDocNo();
+					} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+						messageId = MessageConst.INFO_700007;
+						messagePrefix = "Cancellation for ";
+						docNo = getManagedBean().getFlDeliveryOrder().getDeliveryOrderNo();
+					} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
+						messageId = MessageConst.INFO_700008;
+						messagePrefix = "Cancellation for ";
+						docNo = getManagedBean().getFlDeliveryOrder().getDeliveryOrderNo();
+					} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
+						messageId = MessageConst.INFO_700011;
+						messagePrefix = "Update for ";						
+						docNo = getManagedBean().getFlDeliveryOrder().getDeliveryOrderNo();
+					} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE)){
+						messageId = MessageConst.INFO_700043;
+						messagePrefix = "Update for ";
+						docNo = getManagedBean().getFlDeliveryOrder().getDeliveryOrderNo();
 					} else {
+						if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
+							messagePrefix = "Cancellation for ";	
+						}
 						messageId = MessageConst.INFO_700005;
 						docNo = getManagedBean().getFlDeliveryOrder().getDeliveryOrderNo();
 					}
 					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,	null,
 							MessageUtils.getMessage(messageId, 
-									new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_DELIVERY_ORDER), docNo}, 
+									new String[]{messagePrefix+getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_DELIVERY_ORDER), docNo}, 
 									MessageUtils.BUNDLE_COMMON_MESSAGES, 
 									new FacesScopes().getUserLocale())));
 				} else {
