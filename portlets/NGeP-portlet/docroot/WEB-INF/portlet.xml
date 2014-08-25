@@ -2121,7 +2121,7 @@
 	
 	<portlet>
 		<portlet-name>scLoaReview</portlet-name>
-		<display-name>Review LOA</display-name>
+		<display-name>Review / Request LOA</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
@@ -2133,8 +2133,8 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>Review LOA</title>
-			<short-title>Review LOA</short-title>
+			<title>Review / Request LOA</title>
+			<short-title>Review / Request LOA</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
@@ -4753,7 +4753,7 @@
 		
 		<portlet>
 			<portlet-name>scRequestNoteSearch</portlet-name>
-			<display-name>Search Request Note</display-name>
+			<display-name>Request Note Search</display-name>
 			<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 			<init-param>
 				<name>javax.portlet.faces.defaultViewId.view</name>
@@ -4765,8 +4765,8 @@
 				<portlet-mode>view</portlet-mode>
 			</supports>
 			<portlet-info>
-				<title>Search Request Note</title>
-				<short-title>Search Request Note</short-title>
+				<title>Request Note Search</title>
+				<short-title>Request Note Search</short-title>
 				<keywords></keywords>
 			</portlet-info>
 			<security-role-ref>
