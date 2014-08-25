@@ -772,6 +772,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 						   PmUser pmUser = new PmUser();
 						   pmUser.setUserId(getManagedBean().getAssignedToUserId());
 						   selectedReqDtl.setAssignedUser(pmUser);
+						   applyPrepareByForSupplierRecs(selectedReqDtl, getManagedBean().getAssignedToUserId());
+						   
 					   } else{
 						   throw new EpException("Please select Prepare By.");
 					   }
@@ -782,9 +784,13 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 						   reqDTO.setParameterCode(getManagedBean().getPeriodType());
 						   parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
 						   selectedReqDtl.setDeliverTermType(parameterResDTO.getPmParameter());
-						   selectedReqDtl.setDeliverTerm(getManagedBean().getPeriodValue());
+						   
 					   } else{
 						   throw new EpException("Please select Delivery Term.");
+					   }
+					  
+					   if(getManagedBean().getPeriodValue() > 0){
+						   selectedReqDtl.setDeliverTerm(getManagedBean().getPeriodValue());  
 					   }
 
 					   requestNoteDtls.add(selectedReqDtl);
@@ -1866,6 +1872,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				if(scQuote.getScQuoteSuppliers() != null && scQuote.getScQuoteSuppliers().size() > 0){
 					simpleQuoteBackingBean.getManagedBean().setSupplierList(scQuote.getScQuoteSuppliers());
 				}
+				
+				// panel supplier
+				if(scQuote.getScQuoteSuppliers() != null && scQuote.getScQuoteSuppliers().size() > 0){
+					simpleQuoteBackingBean.getManagedBean().setPanelSuppliers(scQuote.getScQuoteSuppliers());
+				}
+				
 				
 				// remarks
 				scQuote.setRemarks(simpleQuoteBackingBean.initializeRemarks(scQuote));
