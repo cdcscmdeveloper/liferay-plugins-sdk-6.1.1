@@ -11,6 +11,10 @@
 	<ui:define name="contentSection">
 		<p:messages id="catCmpMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 
+       <p:blockUI block=":form" widgetVar="blockWidget">
+				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+			</p:blockUI>
+
 		<h:panelGroup id="compareCatalogueId">
 
 			<div style="text-align: right; float: left;">
@@ -56,13 +60,16 @@
 								<p:menuButton value="">
 									<p:menuitem value="#{lbl['lbl.sc.sq']}" icon="ui-icon-plus"
 										action="#{simpleQuoteBackingBean.simpleQuoteAction(supplierItem.supplierItemId ,false , catalogueBackingBean.managedBean.selectedSupplierItemList)}"
+										onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 										rendered="#{unspscCodeBackingBean.requisitioner}" />
 									<p:menuitem value="#{lbl['lbl.sc.purchae.inquiry']}"
 										icon="ui-icon-plus"
+										onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 										action="#{purchaseInquiryBackingBean.prInquiryAction(supplierItem, catalogueBackingBean.managedBean.selectedSupplierItemList)}"
 										rendered="#{unspscCodeBackingBean.requisitioner}" />
 									<p:menuitem value="#{lbl['lbl.cm.catalogue.cart']}"
 										icon="ui-icon-plus"
+										onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 										action="#{requestNoteBackingBean.addToCart(supplierItem.supplierItemId ,true ,catalogueBackingBean.managedBean.selectedSupplierItemList)}"
 										partialSubmit="true" process="@this"
 										update="@([id$=addToCartPopup])"
