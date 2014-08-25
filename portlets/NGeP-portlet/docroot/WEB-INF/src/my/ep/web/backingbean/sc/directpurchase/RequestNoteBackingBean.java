@@ -789,9 +789,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 					   requestNoteDtls.add(selectedReqDtl);
 					   getManagedBean().setRequestNoteDtls(requestNoteDtls);
-					   getManagedBean().getSelectedRequestNoteDtls().clear();
+					
 				   }
 			   }
+			   getManagedBean().getSelectedRequestNoteDtls().clear();
 			   } else {
 				   throw new EpException("Please select At least one Item.");
 			   }
