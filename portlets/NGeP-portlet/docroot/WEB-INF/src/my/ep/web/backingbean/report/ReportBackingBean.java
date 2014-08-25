@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -20,7 +22,6 @@ import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
-import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.report.ReportsGenerateBean;
@@ -1845,10 +1846,11 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	/*
 	 *Generate SC module report  
 	 */
-	public void generateSCReport(){		
-		if(((getManagedBean().getQuotationId()!=null)&&(getManagedBean().getQuotationId()!=ReportConst.EMPTY_VAL))||((getManagedBean().getFromDate()!=null)&&(getManagedBean().getFromDate().toString()!=ReportConst.EMPTY_VAL))||((getManagedBean().getToDate()!=null)&&(getManagedBean().getToDate().toString()!=ReportConst.EMPTY_VAL))){	
-
-			rptGenBean.setQuotationIdTotVar(ReportConst.AMP_QUOTE_ID_EQ+getManagedBean().getQuotationId());
+	public void generateSCReport(){		   
+		if(((getManagedBean().getQuotationNo()!=null)&&(getManagedBean().getQuotationNo()!=ReportConst.EMPTY_VAL))||((getManagedBean().getFromDate()!=null)&&(getManagedBean().getFromDate().toString()!=ReportConst.EMPTY_VAL))||((getManagedBean().getToDate()!=null)&&(getManagedBean().getToDate().toString()!=ReportConst.EMPTY_VAL))){	
+			if((getManagedBean().getQuotationNo()!=null)&&(getManagedBean().getQuotationNo()!=ReportConst.EMPTY_VAL)){				 
+				rptGenBean.setQuotationIdTotVar(ReportConst.AMP_QUOTE_ID_EQ+getManagedBean().getQuotationId());
+			}
 			SimpleDateFormat outputDateFormat = new SimpleDateFormat(ReportConst.URL_RPT_DATE_FORMAT);
 			if((getManagedBean().getFromDate()!=null)&&(getManagedBean().getFromDate().toString()!=ReportConst.EMPTY_VAL)){				 
 				rptGenBean.setFromDateVar(ReportConst.AMP_FROM_DATE_EQ+outputDateFormat.format(getManagedBean().getFromDate()));
@@ -2233,9 +2235,8 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	 */
 	public void quotationNumberValidation() {
 		if((getManagedBean().getQuotationNo()!=null)&&(getManagedBean().getQuotationNo()!=ReportConst.EMPTY_VAL)){
-			getQuotationNumber();
-		}
-		checkVariableValueExist();
+			specialCharValidation();			
+		}		
 	}
 	/*
 	 *retrieve qtid based on qtno 
@@ -2257,6 +2258,18 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		}else if(scqt.getQtId()!=null){
 			getManagedBean().setQuotationId(scqt.getQtId().toString());
 		}
+	}
+	public void specialCharValidation() {
+		String ptString = ReportConst.NUMERIC_CHAR_PATTERN_ONLY;
+		Pattern pattern = Pattern.compile(ptString);
+	    Matcher match = pattern.matcher(getManagedBean().getQuotationNo());
+	    if(match.matches()){
+	    	getQuotationNumber();
+	    }else{
+	    	getManagedBean().setQuotationNo(null);
+	    	throw new EpException(CommonMethod.getMessageCommon(ReportConst.NUMERIC_CHAR_VALID_ONLY));
+	    }
+	    checkVariableValueExist();
 	}
 	/*
 	 *Clear report criteria 

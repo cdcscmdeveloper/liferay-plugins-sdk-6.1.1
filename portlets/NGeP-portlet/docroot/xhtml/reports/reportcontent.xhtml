@@ -48,9 +48,9 @@
 							    
 							        <c:if test="#{reportBackingBean.managedBean.rptGenBean.quotationNoView}" >			
 									<p:outputLabel value="#{lbl['lbl.rpt.qtNo']}"   style="margin-top:5px;width:115px;"/>
-									<p:inputText value="#{reportBackingBean.managedBean.quotationNo}"  style="margin-top:5px;width:290px;">
+									<p:inputText id="rptQuotation" value="#{reportBackingBean.managedBean.quotationNo}" style="margin-top:5px;width:290px;">									
 									<p:ajax event="blur" listener="#{reportBackingBean.quotationNumberValidation()}"
-					 				partialSubmit="true" update="rptCriteria, rptbtnGroup"/>
+					 				partialSubmit="true" update="rptbtnGroup, rptQuotation"/>	
 									</p:inputText>
 									<p:outputLabel value=""  style="margin-top:5px;width:115px;"/>
 									<p:outputLabel value="" style="margin-top:5px;width:290px;"/>												
@@ -391,7 +391,7 @@
 								</TD>
 								<TD>
 									<p:calendar  showOn="button" value="#{reportBackingBean.managedBean.fromDate}" 
-										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"  partialSubmit="true" process="@this">
+										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" partialSubmit="true" process="@this">
 										<p:ajax event="dateSelect" partialSubmit="true" process="@this" update="rptbtnGroup" listener="#{reportBackingBean.checkVariableValueExist()}" />										
 									</p:calendar>
 								</TD>				
