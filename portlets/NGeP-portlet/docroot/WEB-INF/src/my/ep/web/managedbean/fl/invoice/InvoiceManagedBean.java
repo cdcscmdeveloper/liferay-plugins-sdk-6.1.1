@@ -98,7 +98,7 @@ public class InvoiceManagedBean extends BaseManagedBean {
 		List<FlInvoiceItem> flInvoiceItemList = null;
 		for (FlInvoiceItem flInvoiceItem : invoice.getFlInvoiceItem()) {
 			if (invoiceItemsMap.containsKey(flInvoiceItem.getFlFulfilmentItem().getCmItem().getExtensionCode())) {
-				flInvoiceItemList = invoiceItemsMap.get(flInvoiceItem.getFlFulfilmentItem().getCmItem().getItemId());
+				flInvoiceItemList = invoiceItemsMap.get(flInvoiceItem.getFlFulfilmentItem().getCmItem().getExtensionCode());
 			} else {
 				flInvoiceItemList = new ArrayList<FlInvoiceItem>();
 			}

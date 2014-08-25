@@ -3,6 +3,8 @@ package my.ep.web.backingbean.fl.po;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -68,6 +70,7 @@ import my.ep.web.managedbean.fl.po.FulfilmentOrderManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.log4j.Logger;
 
 import com.liferay.portal.util.PortalUtil;
@@ -547,6 +550,11 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			if(null==getManagedBean().getChargeLineItemRoot()){
 				 getManagedBean().populateChargeLineData();
 			}
+			if(getManagedBean().getFlRequest().getFlDeliveryAddresses()!=null) {
+				sortAddress(getManagedBean().getFlRequest().getFlDeliveryAddresses());
+				sortOrderSummaryList(getManagedBean().getFlRequest().getFlDeliveryAddresses());
+			}
+			
 		}
 	}
 
@@ -601,5 +609,49 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			return RoleCode.BASIC_SUPPLIER_ADMIN.value();			
 		else
 			return null;
-	}		
+	}
+	
+	public void sortAddress(List<FlDeliveryAddress> flDelAddressList) {
+		//Creating Comparator
+		if(null==flDelAddressList || flDelAddressList.isEmpty()){
+			return;
+		}
+		  Comparator<FlDeliveryAddress> comparator = new Comparator<FlDeliveryAddress>() {
+	            @Override
+	            public int compare(FlDeliveryAddress o1, FlDeliveryAddress o2) {
+	                return new CompareToBuilder()
+		                .append(o1.getPmAddress().getAddress1(), o2.getPmAddress().getAddress1())
+		                .append(o1.getPmAddress().getAddress2(), o2.getPmAddress().getAddress2())
+		                .append(o1.getPmAddress().getAddress3(), o2.getPmAddress().getAddress3())
+		                .toComparison();
+	            }
+	        };
+			Collections.sort(flDelAddressList, comparator);
+    }
+	
+	// sorting Item for OrderSummary Tab
+		public void sortOrderSummaryList(List<FlDeliveryAddress> deliveryAddressList) {
+			//Creating Comparator
+			if(null==deliveryAddressList || deliveryAddressList.isEmpty()){
+				return;
+			}
+			for(FlDeliveryAddress flDeliveryAddress : deliveryAddressList) {
+				sortItems(flDeliveryAddress.getFlFulfilmentItemAddr());
+			}
+	    }
+		public void sortItems(List<FlFulfilmentItemAddr> flItemAddressList) {
+			//Creating Comparator
+			if(null==flItemAddressList || flItemAddressList.isEmpty()){
+				return;
+			}
+			  Comparator<FlFulfilmentItemAddr> comparator = new Comparator<FlFulfilmentItemAddr>() {
+		            @Override
+		            public int compare(FlFulfilmentItemAddr o1, FlFulfilmentItemAddr o2) {
+		                return new CompareToBuilder()
+			                .append(o1.getScRequestItem().getCmItem().getExtensionCode(), o2.getScRequestItem().getCmItem().getExtensionCode())
+			                .toComparison();
+		            }
+		        };
+				Collections.sort(flItemAddressList, comparator);
+	    }
 }
