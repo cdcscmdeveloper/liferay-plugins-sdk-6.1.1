@@ -112,7 +112,7 @@
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, doItems.scRequestItem.uom.uomCode)}" />
 							</h:outputText>
 							<p:inputText value="#{doItems.deliveredQty}" size="5"
-								styleClass="colFloatRight" disabled="#{(doItems.orderedQty - doItems.sumDeliveredQty - doItems.deliveredQty + doItems.rejectedQty) == 0}"
+								styleClass="colFloatRight" disabled="#{doItems.delQtyDisabled}"
 								rendered="#{doItems.itemType.parameterCode eq ParameterConst.itemTypeService and createDOBackingBean.managedBean.docType eq 'PR' }">
 								<p:ajax event="blur"
 									update="delQtyTxt,delAmountTxt,remaingQtyTxt" process="@this"
@@ -121,7 +121,7 @@
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, doItems.scRequestItem.uom.uomCode)}" />
 							</p:inputText>
 							<p:inputText value="#{doItems.deliveredQty}" size="5"
-								styleClass="colFloatRight" disabled="#{(doItems.orderedQty - doItems.sumDeliveredQty - doItems.deliveredQty + doItems.rejectedQty) == 0}"
+								styleClass="colFloatRight" disabled="#{doItems.delQtyDisabled}"
 								rendered="#{createDOBackingBean.managedBean.docType eq 'CR'}">
 								<p:ajax event="blur" update="delQtyTxt,delAmountTxt"
 									process="@this"
