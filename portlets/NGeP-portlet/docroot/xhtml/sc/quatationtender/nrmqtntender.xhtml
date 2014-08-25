@@ -68,7 +68,7 @@
 		<ac:lovPopup />
 	</p:panel>
 
-	<p:panel header="#{lbl['lbl.sc.spec.location.list.paidup.capital']}"
+	<p:panel header="#{lbl['lbl.sc.spec.location.list.paidup.capital']}" toggleable="true"
 		rendered="#{((qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount le '500000' and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal =='false')  or (qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount gt '500000'  and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal) or (qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount gt '500000'  and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal =='false'))}">
 
 		<table style="width: 100%">
@@ -154,12 +154,15 @@
 				<h:panelGrid width="100%">
 					<p:dataTable id="zoneLocationDataTable"
 						value="#{qTSupplierQulCriteriaBackingBean.managedBean.zoneTrees}"
-						var="zoneTree" style="width:100%" rowIndexVar="index"
-						rowKey="#{zoneTree}"
-						selection="#{qTSupplierQulCriteriaBackingBean.managedBean.supplierSelectedTreeNode}"
-						selectionMode="single">
+						var="zoneTree" style="width:100%" rowIndexVar="index">
 						<p:column headerText="Location" style="width:90%">
-							<p:tree value="#{zoneTree}" var="location">
+							<p:tree value="#{zoneTree}" var="location"
+								selectionMode="checkbox">
+								<p:ajax event="select"
+									listener="#{qTSupplierQulCriteriaBackingBean.selectLocationTreeNode}" />
+								<p:ajax event="unselect"
+									listener="#{qTSupplierQulCriteriaBackingBean.unSelectLocationTreeNode}" />
+
 								<p:treeNode type="state">
 									<h:outputText value="#{location.pmState.stateName}" />
 								</p:treeNode>
@@ -192,7 +195,8 @@
 						actionListener="#{qTSupplierQulCriteriaBackingBean.showZoneLocationPopup}"
 						icon="ui-icon-add" />
 					<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
-						update="zoneLocationDataTable" icon="ui-icon-delete"
+						process="@this, zoneLocationDataTable" partialSubmit="true"
+						update="@([id$=zoneLocationDataTable])" icon="ui-icon-delete"
 						action="#{qTSupplierQulCriteriaBackingBean.deleteSupplierQualificationTreeNode}" />
 				</div>
 			</p:panel>
@@ -303,7 +307,8 @@
 		</h:panelGroup>
 	</p:panel>
 	<p:panel
-		header="#{lbl['lbl.sc.spec.supplier.criteria.qual.suppliers']}">
+		header="#{lbl['lbl.sc.spec.supplier.criteria.qual.suppliers']}"
+		toggleable="true">
 		<table>
 			<tr>
 				<td style="width: 125px"><p:outputLabel

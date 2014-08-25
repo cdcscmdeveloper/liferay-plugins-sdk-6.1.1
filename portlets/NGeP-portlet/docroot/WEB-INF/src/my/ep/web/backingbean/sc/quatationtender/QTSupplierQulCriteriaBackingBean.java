@@ -20,6 +20,7 @@ import my.ep.biz.service.ct.circular.ICircularSO;
 import my.ep.biz.service.ct.supplier.IPanelSupplierSO;
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
+import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -32,6 +33,8 @@ import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
+import my.ep.dto.pm.common.parameter.ParameterReqDTO;
+import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.factory.EpLogger;
@@ -69,6 +72,7 @@ import my.ep.web.util.sc.helper.SourcingLocationHelper;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.event.NodeSelectEvent;
+import org.primefaces.event.NodeUnselectEvent;
 import org.primefaces.model.TreeNode;
 
 /**
@@ -741,38 +745,39 @@ public class QTSupplierQulCriteriaBackingBean extends
 	 * @param index
 	 */
 	public void editZoneLocation(TreeNode rootZoneLocation, int index) {
-		List<ScQtLocCriteria> locationDTOs = getLocations(rootZoneLocation);
-		Long locationLevel = this.getManagedBean().getSupplierCriteria()
-				.getLocationLevel().getParameterId();
-		if (locationLevel == null) {
-			locationLevel = 121L;
-		}
-
-		List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.LOCATION_LEVEL);
-		String locationLevelCode = null;
-		for (PmParameterDesc paramDesc : localParamDesc) {
-
-			if (paramDesc.getPmParameter().getParameterId()
-					.equals(locationLevel)) {
-				locationLevelCode = paramDesc.getCodeName();
-				break;
+		IParameterSO parameterSo = null;
+		try {
+			parameterSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+			List<ScQtLocCriteria> locationDTOs = getLocations(rootZoneLocation);
+			Long locationLevel = this.getManagedBean().getQt().getScQtSupplierCriteria().getLocationLevel().getParameterId();
+			if (locationLevel == null) {
+				ParameterReqDTO districtReqDTO = new ParameterReqDTO();
+				districtReqDTO.setParameterType(ParameterTypeConst.LOCATION_LEVEL);
+				districtReqDTO.setParameterCode(ParameterConst.LOCATION_LEVEL_DISTRICT);
+				ParameterResDTO districtResDTO = parameterSo.retrieveParameterByTypeAndCode(districtReqDTO);
+				locationLevel = districtResDTO.getPmParameter().getParameterId();
 			}
+			List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.LOCATION_LEVEL);
+			String locationLevelCode = null;
+			for (PmParameterDesc paramDesc : localParamDesc) {
+				if (paramDesc.getPmParameter().getParameterId().equals(locationLevel)) {
+					locationLevelCode = paramDesc.getPmParameter().getParameterCode();
+					break;
+				}
+			}
+			// ScQuoteZone zone = getZone(rootZoneLocation);
+			List<PmState> states = SourcingLocationHelper.getStateFromLocationDTO(locationDTOs);
+			List<PmDivision> divisions = SourcingLocationHelper.getDivisionFromLocationDTO(locationDTOs);
+			List<PmDistrict> districts = SourcingLocationHelper.getDistrictFromLocationDTO(locationDTOs);
+			List<PmCity> cities = SourcingLocationHelper.getCityFromLocationDTO(locationDTOs);
+			getManagedBean().setRootLocationTree(
+					LocationSingleton.getInstance().buildLocationPopupTree(1L,
+							states, districts, divisions, cities, locationLevelCode, ScQtLocCriteria.class));
+			int i = index;
+			this.getManagedBean().setIndex(i);
+		} finally {
+			parameterSo = null;
 		}
-		// ScQuoteZone zone = getZone(rootZoneLocation);
-		List<PmState> states = SourcingLocationHelper
-				.getStateFromLocationDTO(locationDTOs);
-		List<PmDivision> divisions = SourcingLocationHelper
-				.getDivisionFromLocationDTO(locationDTOs);
-		List<PmDistrict> districts = SourcingLocationHelper
-				.getDistrictFromLocationDTO(locationDTOs);
-		List<PmCity> cities = SourcingLocationHelper
-				.getCityFromLocationDTO(locationDTOs);
-		getManagedBean().setRootLocationTree(
-				LocationSingleton.getInstance().buildLocationPopupTree(1L,
-						states, districts, divisions, cities,
-						locationLevelCode, ScQtLocCriteria.class));
-		int i = index;
-		this.getManagedBean().setIndex(i);
 	}
 
 	public List<PmParameterDesc> retrieveParameterDescByType(String type) {
@@ -937,8 +942,9 @@ public class QTSupplierQulCriteriaBackingBean extends
 	 * To delete the selected TreeNode from list..
 	 */
 	public void deleteSupplierQualificationTreeNode() {
-
-		this.getManagedBean().setZoneTrees(new ArrayList<TreeNode>());
+		debugLogger("deleteSupplierQualificationTreeNode");
+		List<TreeNode> rootTrees = getManagedBean().getZoneTrees();
+		LocationSingleton.getInstance().deleteTreeNodes(rootTrees);
 	}
 
 	public SelectItem[] getDropdownLocationValues(String locationLevel) {
@@ -999,5 +1005,17 @@ public class QTSupplierQulCriteriaBackingBean extends
 				break;
 			}
 		}
+	}
+	
+	public void selectLocationTreeNode(NodeSelectEvent event) {
+		TreeNode selectedTreeNode = event.getTreeNode();
+		
+		selectedTreeNode.setSelected(true);
+	}
+	
+	public void unSelectLocationTreeNode(NodeUnselectEvent event) {
+		TreeNode selectedTreeNode = event.getTreeNode();
+		
+		selectedTreeNode.setSelected(false);
 	}
 }
