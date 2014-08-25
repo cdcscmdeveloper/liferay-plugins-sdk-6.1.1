@@ -64,6 +64,7 @@ import org.apache.log4j.MDC;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
@@ -1401,7 +1402,13 @@ public class UnspscCodeBackingBean extends
 		 * ().getServiceObject("cm",ICodificationSO.class); CodificationReqDTO
 		 * reqDTO = new CodificationReqDTO(); CodificationResDTO resDTO = null;
 		 */
-		if (this.getManagedBean().isTypeRedundancy()) {
+		
+		checkingTypeRedundency();
+		checkingBrandRedundency();
+		checkingMeasurmentRedundency();
+		checkingColorRedundency();
+		
+		/*if (this.getManagedBean().isTypeRedundancy()) {
 			throw new EpException(MessageConst.ERROR_716009,
 					new String[] { ResourceBundleUtils.getMessage(
 							"lbl.cm.type",
@@ -1432,7 +1439,7 @@ public class UnspscCodeBackingBean extends
 							"lbl.cm.color",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							new FacesScopes().getUserLocale()) });
-		}
+		}*/
 		// type
 		if ((!this.getManagedBean().getRequestExtCode().isRequestType() && this
 				.getManagedBean().getSelectedType() == null)
@@ -1544,6 +1551,8 @@ public class UnspscCodeBackingBean extends
 		this.getManagedBean().getRequestExtCodeList()
 				.add(this.getManagedBean().getRequestExtCode());
 		clearForm();
+		
+		RequestContext.getCurrentInstance().execute("extensionPopUp.hide();");
 	}
 
 	public void clearForm() {

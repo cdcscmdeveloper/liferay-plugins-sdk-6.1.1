@@ -39,7 +39,6 @@
 				<td><p:inputText id="requestTypeId"
 						value="#{unspscCodeBackingBean.managedBean.requestExtCode.typeName}"
 						disabled="#{unspscCodeBackingBean.managedBean.typeDisable}">
-						<p:ajax event="blur" listener="#{unspscCodeBackingBean.checkingTypeRedundency}" update="messageId"></p:ajax>
 						</p:inputText></td>
 			</tr>
 			<tr>
@@ -59,7 +58,6 @@
 				<td><p:inputText id="requestBrandId"
 						value="#{unspscCodeBackingBean.managedBean.requestExtCode.brandName}"
 						disabled="#{unspscCodeBackingBean.managedBean.brandDisable}">
-							<p:ajax event="blur" listener="#{unspscCodeBackingBean.checkingBrandRedundency}" update="messageId"></p:ajax>
 						</p:inputText></td>
 			</tr>
 			<tr>
@@ -80,7 +78,6 @@
 				<td><p:inputText id="requestMeasurementId"
 						value="#{unspscCodeBackingBean.managedBean.requestExtCode.measurementName}"
 						disabled="#{unspscCodeBackingBean.managedBean.measurementDisable}">
-							<p:ajax event="blur" listener="#{unspscCodeBackingBean.checkingMeasurmentRedundency}" update="messageId"></p:ajax>
 						</p:inputText></td>
 			</tr>
 			<tr>
@@ -100,7 +97,6 @@
 				<td><p:inputText id="requestColorId"
 						value="#{unspscCodeBackingBean.managedBean.requestExtCode.colorName}"
 						disabled="#{unspscCodeBackingBean.managedBean.colorDisable}">
-							<p:ajax event="blur" listener="#{unspscCodeBackingBean.checkingColorRedundency}" update="messageId"></p:ajax>
 						</p:inputText></td>
 			</tr>
 
@@ -111,8 +107,7 @@
 
 			<p:commandButton value="#{lbl['lbl.cm.ok']}" icon="ui-icon-approve"
 				action="#{unspscCodeBackingBean.addNewRequest}"
-				update=":form:extCodeId :form:requestExtPopUpId"
-				oncomplete="extensionPopUp.hide()"></p:commandButton>
+				update=":form:extCodeId :form:requestExtPopUpId" />
 
 			<p:commandButton value="#{lbl['lbl.cm.cancel']}"
 				icon="ui-icon-cancel" immediate="true"
