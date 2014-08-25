@@ -369,7 +369,8 @@ public class PublicCatalogueBackingBean extends
 				.getInstance().getServiceObject("cm", ICatalogueSO.class);
 		CatalogueResDTO resDTO = null;
 		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
-		reqDTO.setSupplierItemId(vpsi.getCmSupplierItem().getSupplierItemId());
+//		reqDTO.setSupplierItemId(vpsi.getCmSupplierItem().getSupplierItemId());
+		reqDTO.setSupplierItemId(vpsi.getSupplierItemId());
 		resDTO = catalogueSO.getSupplierItem(reqDTO);
 		
 
@@ -386,8 +387,8 @@ public class PublicCatalogueBackingBean extends
 			// smResDTO.getResultBean().getResultList().get(0));
 
 //			reqDTO.setSupplierId(supplierItem.getSmSupplier().getSupplierId());
-			log.info("supplierItem.getSmSupplier().getSupplierId() = "
-					+ vpsi.getCmSupplierItem().getSmSupplier().getSupplierId());
+//			log.info("supplierItem.getSmSupplier().getSupplierId() = "
+//					+ vpsi.getCmSupplierItem().getSmSupplier().getSupplierId());
 
 //			resDTO = catalogueSO.retrieveSupplierZoneBySuppId(reqDTO);
 
