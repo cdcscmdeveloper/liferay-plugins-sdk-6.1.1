@@ -104,7 +104,7 @@
 				</h:outputText>
 				<p:inputText size="9" value="#{chargeLineNode.invAmt}" maxlength="15" id="chargeInvAmt" label = "InvoiceAmount" required="true" style="text-align:right;color: red;"  
 					rendered="#{chargeLineNode.parent == 'false'}">
-					<p:ajax event="blur"  process="@this" partialSubmit="true" update="chargeLineTbl,:form:grandTotalPnl"
+					<p:ajax event="blur"  process="@this" partialSubmit="true" update="chargeLineTbl"
 								listener="#{invoiceBackingBean.retrieveInvTotalAmount(chargeLineNode)}">
 					</p:ajax>
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
