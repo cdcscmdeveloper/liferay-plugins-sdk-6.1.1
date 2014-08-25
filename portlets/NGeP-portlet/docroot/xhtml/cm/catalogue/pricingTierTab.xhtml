@@ -40,7 +40,6 @@
 				</f:facet>
 				<p:inputText value="#{price.price}" size="10" disabled="#{price.standardDisabled}" style="text-align:right">
 				 <p:ajax event="keyup" listener="#{catalogueBackingBean.validateTierPrice(rowIndex)}" update="promoLink, cloneLink, deleteLink, errorLink" />
-				 <p:ajax event="change" listener="#{catalogueBackingBean.validateDateOverlap(rowIndex)}" update="promoLink, cloneLink, deleteLink, errorLink" />
 				 <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
                 </p:inputText>
 			</p:column>
@@ -126,9 +125,9 @@
 		<p:confirmDialog id="confirmDeleteTierId" message="Are you sure ?"
 			header="Confirmation Message" widgetVar="confirmation">
 
-			<p:commandButton id="conf" value="Yes"
-				actionListener="#{catalogueBackingBean.deleteTierPrice()}" update=":form:pricingTabID:headerTabId:tierId:pricingTierID, :form:pricingTabID:headerTabId:tierId:pricingPromotionTierID"
-				oncomplete="confirmation.hide()" />
+			<p:commandButton id="conf" value="Yes" actionListener="#{catalogueBackingBean.deleteTierPrice()}" 
+				update=":form:pricingTabID:headerTabId:tierId:pricingTierID, :form:pricingTabID:headerTabId:tierId:pricingPromotionTierID, :form:pricingTabID:headerTabId:tierId:addTierButton"
+				oncomplete="confirmation.hide();" />
 			<p:commandButton id="decline" value="No"
 				onclick="confirmation.hide()" />
 

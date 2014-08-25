@@ -858,15 +858,30 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		return "addCatalogView?faces-redirect=true";
 	}
 
+	public <T extends CmPricing> int countTierPricesByStandGroupId(List<T> cmPricings, int standGroupId){
+		int count = 0;
+		
+		for(CmPricing pricing : cmPricings){
+			if(pricing.getStand_group_id() == standGroupId)
+				count++;
+		}
+		
+		return count;
+	}
+	
 	public boolean disableAddTier(){
 		boolean disable = false;
-		int stand_id = 1;
-		for(CmTierPricing tier : this.getManagedBean().getSelectedMaintainItem().getCmTierPricings()){
-			if(tier.getStand_group_id() == stand_id){
-				disable = false;
-			} else {
-				stand_id++;
-				disable = true;
+		int lastStdGrpId = 0;
+		if(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings() != null && this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().size() > 0){
+			lastStdGrpId = this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().get(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().size() - 1).getStand_group_id();
+		}
+			
+		if(lastStdGrpId > 0){
+			for(int i = 1; i <= lastStdGrpId; i++){
+				if(countTierPricesByStandGroupId(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings(), i) < 2){
+					disable = true;
+					break;
+				}
 			}
 		}
 		return disable;
@@ -874,13 +889,17 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	
 	public boolean disableAddZonalTier(){
 		boolean disable = false;
-		int stand_id = 1;
-		for(CmZonalTierPricing tier : this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings()){
-			if(tier.getStand_group_id() == stand_id){
-				disable = false;
-			} else {
-				stand_id++;
-				disable = true;
+		int lastStdGrpId = 0;
+		if(this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings() != null && this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings().size() > 0){
+			lastStdGrpId = this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings().get(this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings().size() - 1).getStand_group_id();
+		}
+			
+		if(lastStdGrpId > 0){
+			for(int i = 1; i <= lastStdGrpId; i++){
+				if(countTierPricesByStandGroupId(this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings(), i) < 2){
+					disable = true;
+					break;
+				}
 			}
 		}
 		return disable;
@@ -4532,6 +4551,16 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	}
 
+	public <T extends CmPricing> int getLastIndexToClone(List<T> cmPricings, Integer standGroupId){
+		int addIndex = 0;
+		for(CmPricing pricing : cmPricings){
+			if(pricing.getStand_group_id() == standGroupId){
+				addIndex = cmPricings.indexOf(pricing);
+			}
+		}
+		return addIndex;
+	}
+	
 	public void cloneTierPrice(int index) {
 
 		CmTierPricing tier = new CmTierPricing();
@@ -4543,46 +4572,21 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		tier.setStand_group_id(this.getManagedBean().getSelectedMaintainItem()
 				.getCmTierPricings().get(index).getStand_group_id());
 
-		if (index < this.getManagedBean().getSelectedMaintainItem()
-				.getCmTierPricings().size() - 1) {
-			int tempIndex = index + 1;
-			int markIndex = index + 1;
-
-			while (this.getManagedBean().getSelectedMaintainItem()
-					.getCmTierPricings().get(tempIndex) != null) {
-				if (this.getManagedBean().getSelectedMaintainItem()
-						.getCmTierPricings().get(tempIndex).getStand_group_id() == this
-						.getManagedBean().getSelectedMaintainItem()
-						.getCmTierPricings().get(index).getStand_group_id()) {
-					markIndex = tempIndex;
-				}
-				if (tempIndex < this.getManagedBean().getSelectedMaintainItem()
-						.getCmTierPricings().size() - 1)
-					tempIndex++;
-				else {
-					break;
-				}
-			}
-
-			if(this.getManagedBean().getSelectedMaintainItem()
-					.getCmTierPricings().get(markIndex).getToQty() != null){
-				tier.setFromQty(this.getManagedBean().getSelectedMaintainItem()
-						.getCmTierPricings().get(markIndex).getToQty() + 1);
-				
-				tier.setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
-				this.getManagedBean().getSelectedMaintainItem().getCmTierPricings()
-						.add(markIndex + 1, tier);
-			} else {
-				throw new EpException(MessageConst.ERROR_715010);
-			}
-		} else {
+		int markIndex = getLastIndexToClone(this.getManagedBean().getSelectedMaintainItem()
+				.getCmTierPricings(), this.getManagedBean().getSelectedMaintainItem()
+			.getCmTierPricings().get(index).getStand_group_id());
+	
+		if(this.getManagedBean().getSelectedMaintainItem()
+				.getCmTierPricings().get(markIndex).getToQty() != null){
 			tier.setFromQty(this.getManagedBean().getSelectedMaintainItem()
-					.getCmTierPricings().get(index).getToQty() + 1);
+					.getCmTierPricings().get(markIndex).getToQty() + 1);
 			tier.setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
 			this.getManagedBean().getSelectedMaintainItem().getCmTierPricings()
-					.add(index + 1, tier);
+			.add(markIndex + 1, tier);
+		} else {
+			throw new EpException(MessageConst.ERROR_715010);
 		}
-
+		
 	}
 
 	public void cloneZonalTierPrice(int index) {
@@ -4598,45 +4602,19 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		tier.setStand_group_id(this.getManagedBean().getSelectedMaintainItem()
 				.getCmZonalTierPricings().get(index).getStand_group_id());
 
-		if (index < this.getManagedBean().getSelectedMaintainItem()
-				.getCmZonalTierPricings().size() - 1) {
-			int tempIndex = index + 1;
-			int markIndex = index + 1;
-
-			while (this.getManagedBean().getSelectedMaintainItem()
-					.getCmZonalTierPricings().get(tempIndex) != null) {
-				if (this.getManagedBean().getSelectedMaintainItem()
-						.getCmZonalTierPricings().get(tempIndex)
-						.getStand_group_id() == this.getManagedBean()
-						.getSelectedMaintainItem().getCmZonalTierPricings()
-						.get(index).getStand_group_id()) {
-
-					markIndex = tempIndex;
-				}
-				if (tempIndex < this.getManagedBean().getSelectedMaintainItem()
-						.getCmZonalTierPricings().size() - 1)
-					tempIndex++;
-				else {
-					break;
-				}
-			}
-			
-			if(this.getManagedBean().getSelectedMaintainItem()
-					.getCmZonalTierPricings().get(markIndex).getToQty() != null){
-				tier.setFromQty(this.getManagedBean().getSelectedMaintainItem()
-						.getCmZonalTierPricings().get(markIndex).getToQty() + 1);
-				tier.setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
-				this.getManagedBean().getSelectedMaintainItem()
-						.getCmZonalTierPricings().add(markIndex + 1, tier);
-			} else {
-				throw new EpException(MessageConst.ERROR_715010);
-			}
-		} else {
+		int markIndex = getLastIndexToClone(this.getManagedBean().getSelectedMaintainItem()
+				.getCmZonalTierPricings(), this.getManagedBean().getSelectedMaintainItem()
+			.getCmZonalTierPricings().get(index).getStand_group_id());
+	
+		if(this.getManagedBean().getSelectedMaintainItem()
+				.getCmZonalTierPricings().get(markIndex).getToQty() != null){
 			tier.setFromQty(this.getManagedBean().getSelectedMaintainItem()
-					.getCmZonalTierPricings().get(index).getToQty() + 1);
+					.getCmZonalTierPricings().get(markIndex).getToQty() + 1);
 			tier.setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
-			this.getManagedBean().getSelectedMaintainItem()
-					.getCmZonalTierPricings().add(index + 1, tier);
+			this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings()
+			.add(markIndex + 1, tier);
+		} else {
+			throw new EpException(MessageConst.ERROR_715010);
 		}
 
 	}
