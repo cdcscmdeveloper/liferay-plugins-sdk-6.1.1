@@ -6,8 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-
-	<p:panel header="Schedule" toggleable="true">
+	<p:panel header="#{lbl['lbl.so.schedule']}" toggleable="true">
 		<table style="width: 100%">
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.so.noticepublish']}" /> <p:outputLabel
@@ -37,7 +36,6 @@
 						value="#{qTScheduleDetailBackingBean.managedBean.qt.closingDate}"
 						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" readonly="true"
 						showOn="button">
-
 						<p:ajax event="dateSelect" process="@this"
 							listener="#{qTScheduleDetailBackingBean.handleClosingNProposalDate}"
 							update="proposalvalidityid" />
@@ -58,7 +56,7 @@
 			</c:if>
 
 			<tr>
-				<td style="width: 200px;"><p:outputLabel
+				<td style="width: 204px;"><p:outputLabel
 						value="#{lbl['lbl.so.expectloadate']}" /></td>
 				<td><p:calendar
 						value="#{qTScheduleDetailBackingBean.managedBean.qt.expectedLoaDate}"
@@ -82,13 +80,12 @@
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText></td>
 			</tr>
-
 		</table>
 	</p:panel>
 	<p:spacer height="3" />
 	<c:if
 		test="#{qTScheduleDetailBackingBean.managedBean.qt.sampleReq eq 'true'}">
-		<p:panel id="samplezoneid" header="Sample Submission"
+		<p:panel id="samplezoneid" header="#{lbl['lbl.so.sample.submission']}"
 			toggleable="true"
 			rendered="#{qTScheduleDetailBackingBean.managedBean.qt.zonal eq 'true'}">
 			<p:dataTable id="sampleid" var="samplesubmissiondtl"
@@ -116,15 +113,14 @@
 				</p:column>
 			</p:dataTable>
 			<div align="right" style="width: 100%;">
-				<p:commandButton value="Apply" process="@this,sampleid" 
+				<p:commandButton value="Apply" process="@this,sampleid"
 					action="#{qTScheduleDetailBackingBean.applyAddessToSelectedZonesAction}"
-					update="sampledlg" icon="ui-icon-add" oncomplete="sampledlg.show();"
-					 />
-
+					update="sampledlg" icon="ui-icon-add"
+					oncomplete="sampledlg.show();" />
 			</div>
-			
+
 		</p:panel>
-		<p:panel header="Sample Submission" toggleable="true"
+		<p:panel header="#{lbl['lbl.so.sample.submission']}" toggleable="true"
 			rendered="#{qTScheduleDetailBackingBean.managedBean.qt.zonal ne 'true'}">
 			<table>
 				<tr>
@@ -213,7 +209,7 @@
 		</p:panel>
 	</c:if>
 	<p:spacer height="3" />
-	<p:panel header="Contact Person Details" toggleable="true">
+	<p:panel header="#{lbl['lbl.so.contact.person']}" toggleable="true">
 		<p:dataTable var="contactpersondetails" id="cpersondetailsid"
 			value="#{qTScheduleDetailBackingBean.managedBean.scQtContactPersons}"
 			selection="#{qTScheduleDetailBackingBean.managedBean.selectedContactPersons}"
@@ -239,7 +235,6 @@
 			<p:column headerText="#{lbl['lbl.so.mail']}" style="width:15%">
 				<h:inputText value="#{contactpersondetails.email}" />
 			</p:column>
-
 		</p:dataTable>
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.so.addbtn']}"
@@ -254,7 +249,7 @@
 		</div>
 	</p:panel>
 	<p:spacer height="3" />
-	<p:panel header="Desk Officer Admin Assistant" toggleable="true">
+	<p:panel header="#{lbl['lbl.so.desk.officer.admin']}" toggleable="true">
 		<p:dataTable id="doaaid" var="deskofficeradmin"
 			value="#{qTScheduleDetailBackingBean.managedBean.pmuserContactpersonList}"
 			selection="#{qTScheduleDetailBackingBean.managedBean.selectedpmuserContactpersonList}"
@@ -285,7 +280,4 @@
 				action="#{qTScheduleDetailBackingBean.deleteDeskOfficerAdminAssistant}" />
 		</div>
 	</p:panel>
-
-
-
 </ui:composition>
