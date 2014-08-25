@@ -134,14 +134,26 @@
 
 		<div class="clear"></div>
 
-		<div align="right">
-			<p:commandButton value="#{lbl['lbl.cm.add']}" id="addZonalTierButton"  
-			rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'D' ||
-			(catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'U' and (unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.supplierAdmin or unspscCodeBackingBean.allSupplier))}"
-				disabled="#{catalogueBackingBean.disableAddZonalTier()}"
-				action="#{catalogueBackingBean.addNewZonalTierPricing()}" icon="ui-icon-add"
-				update="cmZonalTierPricingsId, :form:pricingTabID:headerTabId:zonalTierId:addZonalTierButton" process="@this cmZonalTierPricingsId"></p:commandButton>
-		</div>
+		<p:panel>
+			<table style="width: 100%">
+				<tr>
+					<td><p:commandButton value="#{lbl['lbl.cm.add']}" id="addZonalTierButton" style="float:right;"
+							rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'D' ||
+							(catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'U' and (unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.supplierAdmin or unspscCodeBackingBean.allSupplier))}"
+								disabled="#{catalogueBackingBean.disableAddZonalTier()}"
+								action="#{catalogueBackingBean.addNewZonalTierPricing()}" icon="ui-icon-add"
+								update="cmZonalTierPricingsId, :form:pricingTabID:headerTabId:zonalTierId:addZonalTierButton" process="@this cmZonalTierPricingsId"></p:commandButton>
+					</td>
+					<td style="width: 20px">
+						<p:graphicImage id="uidti"
+								value="/css/images/design/tooltips.png"  />
+						<p:tooltip id="uidtt" for="uidti">
+							<p:outputLabel escape="false"
+								value="#{lbl['lbl.cm.addnew.tooltip']}" />
+						</p:tooltip></td>
+				</tr>
+			</table>						
+		</p:panel>			
 		
 		<p:confirmDialog id="confirmDeleteZonalTierId" message="Are you sure ?"
 			header="Confirmation Message" widgetVar="confirmationZonal">
