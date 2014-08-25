@@ -20,7 +20,8 @@
 			<p:commandButton value="#{lbl['lbl.btn.save']}" icon="ui-icon-save"
 				action="#{supplierProposalDetailBackingBean.saveTechEmployeesDtlAction}" />
 			<p:commandButton value="#{lbl['lbl.btn.complete']}"
-				icon="ui-icon-check" />
+				icon="ui-icon-check"
+				action="#{supplierProposalDetailBackingBean.completeTechEmployeesDtlAction}" />
 		</div>
 		<p:panel>
 			<table>
@@ -43,18 +44,17 @@
 							<f:selectItem itemLabel="#{lbl['lbl.sc.sp.allemployees']}"
 								itemValue="true" />
 							<p:ajax event="change" process="@this,allEmployees"
-								partialSubmit="true" update=":form:totalNoOfEmployeesInvolved"></p:ajax>
+								partialSubmit="true"
+								update="@([id$=totalNoOfEmployeesInvolved])"></p:ajax>
 						</p:selectOneRadio></td>
 				</tr>
 			</table>
 
 			<h:panelGrid id="totalNoOfEmployeesInvolved" columns="2">
-				<h:outputLabel value="#{lbl['lbl.sc.sp.ttlemployees']}" />
-				<p:inputText style="text-align:right" size="30" disabled="true"
-					rendered="#{supplierProposalDetailBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee eq 'true'}"
-					value="#{supplierProposalDetailBackingBean.managedBean.qtProposalChecklist.scQtPRPEmployee.totalEmployees}">
-				</p:inputText>
-				<p:inputText style="text-align:right" size="30"
+				<h:outputLabel value="#{lbl['lbl.sc.sp.ttlemployees']}"
+					rendered="#{supplierProposalDetailBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee eq 'false'}" />
+
+				<p:inputText style="text-align:right" size="30" required="true"
 					rendered="#{supplierProposalDetailBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee eq 'false'}"
 					value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPEmployee.totalEmployees}">
 				</p:inputText>
