@@ -157,6 +157,7 @@ public class TemplateSpecHelper {
 								newSpecQuestion.setWeightage(null);
 								newSpecQuestion.setTplSpecScorings(null);
 								newSpecQuestion.setTplSpecEstimations(null);
+								newSpecQuestion.setTplSpecAnswers(null);
 								setUserDetails(newSpecQuestion);
 								newSpecQuestions.add(newSpecQuestion);
 								
