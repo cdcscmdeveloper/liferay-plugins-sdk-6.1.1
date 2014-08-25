@@ -3453,6 +3453,18 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					catalog.getCmStandardPricing().setStartDate(dateNow);
 				}
 				
+				//end date already passed
+				if(catalog.getCmStandardPricing().getEndDate().before(dateNow)){
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+									MessageUtils.getMessage(MessageConst.ERROR_715028,
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));
+					return "catalogMaintenanceFile";
+				}
+				
+				
 				//same item with existed one cannot overlap the date
 				SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
 				supplierReqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
@@ -3958,6 +3970,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		bb.getManagedBean().setCatDetTabActiveIndex(2);
 		boolean remark = false;
 		
+		String text = this.getManagedBean().getRejectReason();
+		log.info("text == "+text);
+		
 		for (int i = 0; i < this.getManagedBean().getRejectReasonIds().size(); i++) {
 			String id = String.valueOf(this.getManagedBean().getRejectReasonIds().get(i));
 			if (id.equals("10010")) {
@@ -4125,7 +4140,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	public boolean isRemarkRendered() {
 
-		if(!this.remarkRendered){
+		/*if(!this.remarkRendered){
 			for (int i = 0; i < this.getManagedBean().getRejectReasonIds().size(); i++) {
 				String id = String.valueOf(this.getManagedBean().getRejectReasonIds().get(i));
 				log.info("id isRemarkRendered = "+id);
@@ -4133,7 +4148,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					return true;
 				}
 			}
-		}
+		}*/
 
 		return this.remarkRendered;
 	}
