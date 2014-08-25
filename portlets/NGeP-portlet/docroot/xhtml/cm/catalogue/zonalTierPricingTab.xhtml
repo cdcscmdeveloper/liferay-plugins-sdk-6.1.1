@@ -30,7 +30,7 @@
 						value="#{catalogueBackingBean.managedBean.supplierZoneList}"
 						var="zone" itemLabel="#{zone.suppZoneName}"
 						itemValue="#{zone.suppZoneId}"></f:selectItems>
-				 <p:ajax event="change" listener="#{catalogueBackingBean.validateZonalTierDateOverlap(rowIndex)}" update="zTPromoLink, zTCloneLink, zTErrorLink, zTDeleteLink" />
+				 <p:ajax event="change" listener="#{catalogueBackingBean.validateZonalTierDateOverlap(rowIndex)}" update=":form:pricingTabID:headerTabId:zonalTierId:cmZonalTierPricingsId" />
 				</p:selectOneMenu>
 
 			</p:column>
@@ -51,7 +51,7 @@
 					#{lbl['lbl.cm.to.qty']}
 				</f:facet>
 				<p:inputText value="#{tier.toQty}" size="4" disabled="#{tier.standardDisabled}">
-				<p:ajax event="change" listener="#{catalogueBackingBean.updateZonalTierToQty(rowIndex)}" update="zTPromoLink, zTCloneLink, zTErrorLink, zTDeleteLink" />
+				<p:ajax event="change" listener="#{catalogueBackingBean.updateZonalTierToQty(rowIndex)}" update=":form:pricingTabID:headerTabId:zonalTierId:cmZonalTierPricingsId" />
 				</p:inputText>
 			</p:column>
 			<p:column>
@@ -60,7 +60,6 @@
 				</f:facet>
 				<p:inputText value="#{tier.price}" size="10" disabled="#{tier.standardDisabled}" style="text-align:right">
 					<p:ajax event="keyup" listener="#{catalogueBackingBean.validateZonalTierPrice(rowIndex)}" update="zTPromoLink, zTCloneLink, zTErrorLink, zTDeleteLink" />
-					<p:ajax event="change" listener="#{catalogueBackingBean.validateZonalTierDateOverlap(rowIndex)}" update="zTPromoLink, zTCloneLink, zTErrorLink, zTDeleteLink" />
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</p:inputText>
 			</p:column>
@@ -69,7 +68,7 @@
 				<f:facet name="header">
 					#{lbl['lbl.cm.start.date']}
 				</f:facet>
-				<p:calendar value="#{tier.startDate}" size="10" showOn="button" rendered="#{tier.showFlag}" disabled="#{tier.standardDisabled}" mindate="#{catalogueBackingBean.managedBean.currentDate}"
+				<p:calendar value="#{tier.startDate}" size="10" showOn="button" rendered="#{tier.showFlag}" mindate="#{catalogueBackingBean.managedBean.currentDate}"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
 					<p:ajax event="dateSelect" listener="#{catalogueBackingBean.validateZonalTierDateOverlap(rowIndex)}" update="zTPromoLink, zTCloneLink, zTErrorLink, zTDeleteLink" />
 					<p:ajax event="keyup" listener="#{catalogueBackingBean.validateZonalTierDateOverlap(rowIndex)}" update="zTPromoLink, zTCloneLink, zTErrorLink, zTDeleteLink" />
@@ -82,7 +81,7 @@
 				<f:facet name="header">
 					#{lbl['lbl.cm.end.date']}
 				</f:facet>
-				<p:calendar value="#{tier.endDate}" size="10" showOn="button" rendered="#{tier.showFlag}" disabled="#{tier.standardDisabled}" mindate="#{catalogueBackingBean.managedBean.currentDate}"
+				<p:calendar value="#{tier.endDate}" size="10" showOn="button" rendered="#{tier.showFlag}" mindate="#{catalogueBackingBean.managedBean.currentDate}"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
 					<p:ajax event="dateSelect" listener="#{catalogueBackingBean.validateZonalTierDateOverlap(rowIndex)}" update="zTPromoLink, zTCloneLink, zTErrorLink, zTDeleteLink" />
 					<p:ajax event="keyup" listener="#{catalogueBackingBean.validateZonalTierDateOverlap(rowIndex)}" update="zTPromoLink, zTCloneLink, zTErrorLink, zTDeleteLink" />
@@ -119,7 +118,7 @@
 							</p:commandLink>&#160;</td>
 						<td style="text-align: right;">
 							<p:commandLink id="zTErrorLink" title="Error" process="@this" actionListener="#{catalogueBackingBean.updateZonalTierErrorDialog(rowIndex)}" update=":form:pricingTabID:headerTabId:zonalTierId:cmZonalTierPricingsId, :form:errorDialog" 
-								disabled="#{!(tier.cmSupplierZone.suppZoneId eq 0 or tier.price eq null or tier.fromQty eq null or tier.toQty eq null or tier.fromQty >= tier.toQty or tier.startDate eq null or tier.endDate eq null or tier.startDate >= tier.endDate or !tier.displayAction)}"
+								disabled="#{!(tier.cmSupplierZone.suppZoneId eq 0 or tier.price eq null or tier.fromQty eq null or tier.toQty eq null or tier.fromQty >= tier.toQty or tier.startDate eq null or tier.endDate eq null or tier.startDate >= tier.endDate or !tier.displayAction or !tier.checkOk)}"
 								oncomplete="errorDialog.show();">
 								<f:param name="index" value="#{rowIndex}"></f:param>
 								<p:graphicImage value="/css/images/design/icon_error.png"></p:graphicImage>

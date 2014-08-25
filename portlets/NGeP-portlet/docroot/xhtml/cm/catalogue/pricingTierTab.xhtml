@@ -31,7 +31,7 @@
 					#{lbl['lbl.cm.to.qty']}
 				</f:facet>
 				<p:inputText value="#{price.toQty}" size="5" disabled="#{price.standardDisabled}">
-				<p:ajax event="change" listener="#{catalogueBackingBean.updateToQty(rowIndex)}" update="promoLink, cloneLink, deleteLink, errorLink" />
+				<p:ajax event="change" listener="#{catalogueBackingBean.updateToQty(rowIndex)}" update=":form:pricingTabID:headerTabId:tierId:pricingTierID" />
                 </p:inputText>
             </p:column>
 			<p:column>
@@ -48,7 +48,7 @@
 					#{lbl['lbl.cm.start.date']}
 				</f:facet>
 				<p:calendar value="#{price.startDate}" showOn="button" mindate="#{catalogueBackingBean.managedBean.currentDate}"
-					disabled="#{price.standardDisabled}" rendered="#{price.showFlag}"
+					rendered="#{price.showFlag}"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
 				 <p:ajax event="dateSelect" listener="#{catalogueBackingBean.validateDateOverlap(rowIndex)}" update="promoLink, cloneLink, deleteLink, errorLink" />
 				 <p:ajax event="keyup" listener="#{catalogueBackingBean.validateDateOverlap(rowIndex)}" update="promoLink, cloneLink, deleteLink, errorLink" />
@@ -62,7 +62,7 @@
 					#{lbl['lbl.cm.end.date']}
 				</f:facet>
 				<p:calendar value="#{price.endDate}" showOn="button" mindate="#{catalogueBackingBean.managedBean.currentDate}"
-					disabled="#{price.standardDisabled}" rendered="#{price.showFlag}"
+					rendered="#{price.showFlag}"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
 				 <p:ajax event="dateSelect" listener="#{catalogueBackingBean.validateDateOverlap(rowIndex)}" update="promoLink, cloneLink, deleteLink, errorLink" />
 				 <p:ajax event="keyup" listener="#{catalogueBackingBean.validateDateOverlap(rowIndex)}" update="promoLink, cloneLink, deleteLink, errorLink" />
@@ -99,7 +99,7 @@
 						<td style="text-align: right;">
 							<p:commandLink id="errorLink" title="Error" process="@this" actionListener="#{catalogueBackingBean.updateErrorDialog(rowIndex)}" update=":form" 
 								oncomplete="errorDialog.show();" 
-								disabled="#{!(price.price eq null or price.fromQty eq null or price.toQty eq null or price.fromQty >= price.toQty or price.startDate eq null or price.endDate eq null or price.startDate >= price.endDate or !price.displayAction)}" >
+								disabled="#{!(price.price eq null or price.fromQty eq null or price.toQty eq null or price.fromQty >= price.toQty or price.startDate eq null or price.endDate eq null or price.startDate >= price.endDate or !price.displayAction or !price.checkOk)}" >
 								<f:param name="index" value="#{rowIndex}"></f:param>
 								<p:graphicImage value="/css/images/design/icon_error.png"></p:graphicImage>
 							</p:commandLink></td>
