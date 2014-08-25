@@ -23,6 +23,8 @@
 					</table>
 
 					<div align="right" style="width: 99%" class="button-wrapper">
+						<ui:include
+							src="/xhtml/sm/shared/mofRegistration/deleteApplicationCommonPage.xhtml" />
 						<p:commandButton value="#{lbl['lbl.sm.saveAsDraft']}"
 							actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,backingBean.managedBean.tabActiveIndex)}"
 							action="#{backingBean.saveApplicationAsDraft(ParameterConst.newSmApplnForApplcatcodes,backingBean.managedBean.currentPageType)}"

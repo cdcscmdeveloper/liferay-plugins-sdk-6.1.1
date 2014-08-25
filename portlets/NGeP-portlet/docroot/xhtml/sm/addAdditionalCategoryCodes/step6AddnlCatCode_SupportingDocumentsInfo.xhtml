@@ -22,11 +22,13 @@
 						</tr>
 					</table>
 					<div align="right" style="width: 99%" class="button-wrapper">
+						<ui:include
+							src="/xhtml/sm/shared/mofRegistration/deleteApplicationCommonPage.xhtml" />
 						<p:commandButton value="#{lbl['lbl.sm.saveAsDraft']}"
 							actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,backingBean.managedBean.tabActiveIndex)}"
 							action="#{backingBean.saveApplicationAsDraft(ParameterConst.newSmApplnForApplcatcodes,backingBean.managedBean.currentPageType)}"
 							update=":form" icon="ui-icon-save" style="margin-bottom:5px;" />
-						<p:commandButton value="Submit Application"
+						<p:commandButton value="#{lbl['lbl.sm.submitAppl']}"
 							style="margin-bottom:5px;"
 							action="#{backingBean.submitSmApplToBpm(ParameterConst.newSmApplnForApplcatcodes)}" />
 					</div>

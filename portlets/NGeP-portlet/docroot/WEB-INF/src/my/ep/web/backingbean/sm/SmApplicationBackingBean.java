@@ -297,7 +297,8 @@ public class SmApplicationBackingBean extends
 					smAppl.setSupportingDocMode("O");
 					if (smAppl.getApplType().equalsIgnoreCase(
 							ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
-						smAppl.setSmSupplierBanks(new ArrayList<SmSupplierBank>());
+						// smAppl.setSmSupplierBanks(new
+						// ArrayList<SmSupplierBank>());
 						if (smAppl.getSmCompanyBasic() != null) {
 							smAppl.getSmCompanyBasic().setAnnualRevenue(0);
 						}
@@ -306,7 +307,9 @@ public class SmApplicationBackingBean extends
 							.println("****** After retrieve the appl is ********"
 									+ smAppl.getApplId()
 									+ " *** Num ***"
-									+ smAppl.getApplNo());
+									+ smAppl.getApplNo()
+									+ "*** Bank Size *** "
+									+ smAppl.getSmSupplierBanks().size());
 				}
 			} else {
 				System.out
@@ -791,8 +794,8 @@ public class SmApplicationBackingBean extends
 		return valid;
 	}
 
-	private boolean retriveLatestApplAfterUpdate(String currentPageType,
-			String outputPageType) {
+	private boolean retriveLatestApplAfterUpdate(String currentPageTypes,
+			String outputPageTypes) {
 
 		IMofRegistrationSO mofRegistrationSO = null;
 		mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate.getInstance()
@@ -834,11 +837,13 @@ public class SmApplicationBackingBean extends
 			// .getStatusId());
 			// }
 			return true;
-		} catch (Exception e) {
-			getManagedBean().setCurrentPageType(currentPageType);
-			e.printStackTrace();
-			throw new EpException(MessageConst.ERROR_722519);
-		} finally {
+		}
+		// catch (Exception e) {
+		// getManagedBean().setCurrentPageType(currentPageType);
+		// e.printStackTrace();
+		// throw new EpException(MessageConst.ERROR_722519);
+		// }
+		finally {
 			mofRegistrationSO = null;
 		}
 
@@ -3737,6 +3742,7 @@ public class SmApplicationBackingBean extends
 	public void deleteSelectedBanks() {
 		if (getManagedBean().getSelectedBanks().size() > 0) {
 			for (SmSupplierBank bank : getManagedBean().getSelectedBanks()) {
+				bank.getSmChequeSignatories().clear();
 				getManagedBean().getSmAppl().getSmSupplierBanks().remove(bank);
 			}
 			saveOrUpdateAppl();
@@ -3995,6 +4001,44 @@ public class SmApplicationBackingBean extends
 		}
 	}
 
+	public String deleteDraftApplication() {
+
+		boolean valid = false;
+		try {
+			valid = deleteDraftApplciationTask();
+			if (valid) {
+				FacesContext
+						.getCurrentInstance()
+						.addMessage(
+								null,
+								new FacesMessage(
+										FacesMessage.SEVERITY_INFO,
+										null,
+										MessageUtils
+												.getMessage(
+														MessageConst.INFO_721205,
+														new String[] {
+																getParameterDesc(
+																		ParameterTypeConst.SUPPLIER_APPLICATION_TYPES,
+																		getManagedBean()
+																				.getSmAppl()
+																				.getApplType()),
+																getManagedBean()
+																		.getSmAppl()
+																		.getApplNo() },
+														MessageUtils.BUNDLE_COMMON_MESSAGES,
+														new FacesScopes()
+																.getUserLocale())));
+				renewSesionObject();
+				return CommonUIConst.ACKNOWLEDGE_PAGE;
+			} else {
+				return null;
+			}
+		} finally {
+
+		}
+	}
+
 	public String saveApplicationAsDraft(String applType, String currentPageType) {
 		System.out.println("****** Save As Draft **********" + currentPageType
 				+ currentTab);
@@ -4084,14 +4128,59 @@ public class SmApplicationBackingBean extends
 				throw new EpException(MessageConst.ERROR_722519);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
 			retriveLatestApplAfterUpdate(currentPageType, "");
 			valid = false;
 			throw new EpException(MessageConst.ERROR_722519);
-		} finally {
+		}
+
+		finally {
 			regSo = null;
 			return valid;
 
+		}
+
+	}
+
+	@SuppressWarnings("finally")
+	private boolean deleteDraftApplciationTask() {
+		System.out
+				.println("*********  Delete draft applicaiton task ************* ");
+		IMofRegistrationSO regSo = null;
+		boolean valid = true;
+		try {
+			SmAppl bpmAppl = getManagedBean().getSmAppl();
+			String outcome = "CANCEL";
+			MofRegistrationReqDTO reqDTO = setMofRegistrationReqDTO(bpmAppl,
+					outcome);
+			List<String> useList = new ArrayList<String>();
+			PmUser loginUser = new FacesScopes().getUserSessionBean();
+			useList.add(loginUser.getLoginId());
+			reqDTO.setUserList(useList);
+			MofRegistrationResDTO resDTO = new MofRegistrationResDTO();
+			regSo = (IMofRegistrationSO) BusinessDelegate.getInstance()
+					.getServiceObject("sm", IMofRegistrationSO.class);
+			resDTO = regSo.initiateSmApplDeleteDraftTask(reqDTO);
+			if (resDTO != null) {
+				valid = resDTO.isBpmSuccess();
+				if (!valid) {
+					System.out.println("******* Process No Valid ******");
+					throw new EpException(MessageConst.ERROR_700020);
+				}
+			} else {
+				System.out.println("*** The Save as draft returned null **** ");
+				valid = false;
+				throw new EpException(MessageConst.ERROR_722519);
+			}
+			return valid;
+		} catch (Exception e) {
+			System.out.println("***Error in Delete Draft  **** ");
+			retriveLatestApplAfterUpdate(getManagedBean().getCurrentPageType(),
+					"");
+			throw new EpException(MessageConst.ERROR_722519);
+		}
+
+		finally {
+			regSo = null;
 		}
 
 	}
@@ -5711,10 +5800,16 @@ public class SmApplicationBackingBean extends
 				getManagedBean().getSelectedShareHolder().setShareAmt(
 						getManagedBean().getSelectedShareHolder().getShareAmt()
 								.setScale(2, RoundingMode.HALF_UP));
+			} else {
+				getManagedBean().getSelectedShareHolder().setShareAmt(
+						new BigDecimal(0));
 			}
 			getManagedBean().setEquiPerCapTotal(new BigDecimal(0));
 			for (SmPersonnel per : getManagedBean().getSmAppl()
 					.getSmPersonnels()) {
+				if ((per.getShareAmt() == null)) {
+					per.setShareAmt(new BigDecimal(0));
+				}
 				if (per.isEquityOwner()
 						&& !per.getPersonnelId().equals(
 								getManagedBean().getSelectedShareHolder()
@@ -6964,6 +7059,9 @@ public class SmApplicationBackingBean extends
 			getManagedBean()
 					.setBusinessTypeVal(
 							SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP_DEFAULT);
+		} else {
+			getManagedBean().setBusinessTypeVal(
+					SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_UNKNOWN);
 		}
 	}
 

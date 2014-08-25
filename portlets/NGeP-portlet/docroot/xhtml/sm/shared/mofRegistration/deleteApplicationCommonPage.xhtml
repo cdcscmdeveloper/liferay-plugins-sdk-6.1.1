@@ -1,0 +1,25 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:commandButton value="#{lbl['lbl.sm.deleteDraft']}" update=":form"
+		icon="ui-icon-delete" onclick="mofApplDelConfirm.show()" type="button"
+		style="margin-bottom:5px;" />
+
+	<p:confirmDialog id="mofApplDelConfirm" closable="false"
+		message="#{lbl['lbl.sm.deleteDraft.cnfmMsg']}"
+		header="#{lbl['lbl.sm.deleteDraft.cnfmHdr']}" severity="alert"
+		widgetVar="mofApplDelConfirm">
+
+		<p:commandButton id="confApplDel" value="Yes"
+			oncomplete="mofApplDelConfirm.hide()" partialSubmit="true"
+			process="@this" action="#{backingBean.deleteDraftApplication}" />
+		<p:commandButton id="declineApplnDelete" value="No"
+			onclick="mofApplDelConfirm.hide()" type="button" />
+
+	</p:confirmDialog>
+
+</ui:composition>

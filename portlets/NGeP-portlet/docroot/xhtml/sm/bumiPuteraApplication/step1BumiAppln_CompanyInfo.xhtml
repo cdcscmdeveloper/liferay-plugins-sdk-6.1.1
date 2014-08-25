@@ -8,7 +8,7 @@
 
 	<table style="width: 100%">
 		<tr>
-			<td style="width: 20%; vertical-align: baseline;" class="sidemenutd" ><ui:include
+			<td style="width: 20%; vertical-align: baseline;" class="sidemenutd"><ui:include
 					src="smBumiApplnSideMenuItem.xhtml" /></td>
 			<td><p:outputPanel id="bumiStep1OnlyPan"
 					rendered="#{backingBean.managedBean.supplierUser}">
@@ -23,6 +23,8 @@
 						</tr>
 					</table>
 					<div align="right" style="width: 99%" class="button-wrapper">
+						<ui:include
+							src="/xhtml/sm/shared/mofRegistration/deleteApplicationCommonPage.xhtml" />
 						<p:commandButton value="#{lbl['lbl.sm.saveAsDraft']}"
 							actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,backingBean.managedBean.tabActiveIndex)}"
 							action="#{backingBean.saveApplicationAsDraft(ParameterConst.newSmApplnForBumi,backingBean.managedBean.currentPageType)}"

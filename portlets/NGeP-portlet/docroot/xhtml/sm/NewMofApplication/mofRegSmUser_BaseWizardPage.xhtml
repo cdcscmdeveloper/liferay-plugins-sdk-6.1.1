@@ -192,13 +192,17 @@
 									<td></td>
 									<td>
 										<div align="right" style="width: 99%" class="button-wrapper">
+											<p:commandButton value="#{lbl['lbl.sm.deleteDraft']}"
+												update=":form" icon="ui-icon-delete"
+												onclick="mofApplDelConfirm.show()" type="button"
+												style="margin-bottom:5px;" />
 											<p:commandButton value="#{lbl['lbl.sm.saveAsDraft']}"
 												actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,backingBean.managedBean.tabActiveIndex)}"
 												action="#{backingBean.saveApplicationAsDraft(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType)}"
 												update=":form" icon="ui-icon-save"
 												style="margin-bottom:5px;" />
 											<c:if test="#{backingBean.managedBean.tabActiveIndex eq 8}">
-												<p:commandButton value="Submit For Payment"
+												<p:commandButton value="#{lbl['lbl.sm.submitForPay']}"
 													action="#{backingBean.submitSmApplToBpm(ParameterConst.newSmApplnForMof)}"
 													style="margin-bottom:5px;" />
 											</c:if>
@@ -218,13 +222,17 @@
 										<td></td>
 										<td>
 											<div align="right" style="width: 99%" class="button-wrapper">
+												<p:commandButton value="#{lbl['lbl.sm.deleteDraft']}"
+													update=":form" icon="ui-icon-delete"
+													onclick="mofApplDelConfirm.show()" type="button"
+													style="margin-bottom:5px;" />
 												<p:commandButton value="#{lbl['lbl.sm.saveAsDraft']}"
 													actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,backingBean.managedBean.tabActiveIndex)}"
 													action="#{backingBean.saveApplicationAsDraft(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType)}"
 													update=":form" icon="ui-icon-save"
 													style="margin-bottom:5px;" />
 												<c:if test="#{backingBean.managedBean.tabActiveIndex eq 6}">
-													<p:commandButton value="Submit For Payment"
+													<p:commandButton value="#{lbl['lbl.sm.submitPayment']}"
 														action="#{backingBean.submitSmApplToBpm(ParameterConst.newSmApplnForMof)}"
 														style="margin-bottom:5px;" />
 
@@ -238,6 +246,18 @@
 					</c:otherwise>
 				</c:choose>
 			</c:if>
+			<p:confirmDialog id="mofApplDelConfirm" closable="false"
+				message="#{lbl['lbl.sm.deleteDraft.cnfmMsg']}"
+				header="#{lbl['lbl.sm.deleteDraft.cnfmHdr']}" severity="alert"
+				widgetVar="mofApplDelConfirm">
+
+				<p:commandButton id="confApplDel" value="Yes"
+					oncomplete="mofApplDelConfirm.hide()" partialSubmit="true"
+					process="@this" action="#{backingBean.deleteDraftApplication}" />
+				<p:commandButton id="declineApplnDelete" value="No"
+					onclick="mofApplDelConfirm.hide()" type="button" />
+
+			</p:confirmDialog>
 			<p:messages id="messages" showDetail="true" showSummary="false"
 				autoUpdate="#{backingBean.managedBean.showParentMsg}"
 				closable="true" escape="false" />

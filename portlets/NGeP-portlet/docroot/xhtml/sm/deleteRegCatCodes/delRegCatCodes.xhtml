@@ -87,7 +87,7 @@
 			widgetVar="confirmation">
 
 			<p:commandButton id="confCatDel" value="Yes" update=":form:catDelPan"
-				oncomplete="confirmation.hide()"
+				oncomplete="confirmation.hide()" 
 				action="#{deleteCategoryCodeBB.deleteSelectedCatCodes}" />
 			<p:commandButton id="decline" value="No"
 				onclick="confirmation.hide()" type="button" />

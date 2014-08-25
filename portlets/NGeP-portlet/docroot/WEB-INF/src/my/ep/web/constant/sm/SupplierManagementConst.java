@@ -262,7 +262,8 @@ public class SupplierManagementConst {
 	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT = "ROB_P";
 	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT = "ROC";
 	public static final String SM_SUPPLIER_BUSINESS_TYPE_LLP_DEFAULT = "LLP";
-
+	public static final String SM_SUPPLIER_BUSINESS_TYPE_UNKNOWN = "UNKNOW";
+	
 	public static final String RESUBMIT_APPL_PATH = "/web/dashboard/resubmit-application?";
 
 	public static final String APPL_PM_STATUS_REJECT = "20109";
