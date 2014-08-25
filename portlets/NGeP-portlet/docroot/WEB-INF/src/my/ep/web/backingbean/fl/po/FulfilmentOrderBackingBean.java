@@ -141,8 +141,9 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 			reqDTO.setUserRole(getUserRole());
 			
+			String messagePrefix = "";
 			FulfilmentResDTO resDTO = null;
-			if(getManagedBean().getProcessName() == null && action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)){
+			if(getManagedBean().getProcessName() == null && (action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT))){
 				resDTO = fulfilmentOrderSO.acknowledgeFulfillmentOrder(reqDTO);
 			}else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_STOP_FULFILMENT)){
 				if(isFlFulfilmentApprover()) {
@@ -157,13 +158,18 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 					|| getManagedBean().getProcessName() != null 
 					&& getManagedBean().getProcessName().equalsIgnoreCase(FLProcessNameConst.FC_REMOVAL_REQUEST_PROCESS_NAME)){
 				resDTO = fulfilmentOrderSO.removeFactoringComp(reqDTO);
+				messagePrefix = "Removal Factoring Company for ";
 			}
 			
 			if(resDTO.isSuccessful()) {
-				String messageId = MessageConst.INFO_700011;
+				String messageId = MessageConst.INFO_700005;
 				String documentType = ParameterConst.DOCTYPE_PURCHASE_ORDER;
 				String docNo = getManagedBean().getFulfilmentOrder().getDocNo();
-				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
+				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
+					messageId = MessageConst.INFO_700011;
+				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+					messageId = MessageConst.INFO_700007;
+				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 					messageId = MessageConst.INFO_700008;
 				} else if(action.equalsIgnoreCase(FulfilmentConst.STOP_FULFILMENT)) {
 					documentType = ParameterConst.DOCTYPE_STOP_DELIVERY;
@@ -177,7 +183,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
 						FacesMessage.SEVERITY_INFO, null,
 						MessageUtils.getMessage(messageId, 
-								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, documentType), docNo}, 
+								new String[]{messagePrefix+getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, documentType), docNo}, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 			}
 			if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
