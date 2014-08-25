@@ -16,11 +16,11 @@
 				</p:column>
 
 				<p:column headerText="Type">
-						<p:outputPanel rendered="#{mofAcc.supplierType != SupplierManagementConst.STYPE_CONSULTANT}">
+						<p:outputPanel rendered="#{mofAcc.supplierType == SupplierManagementConst.STYPE_CONSULTANT}">
 						#{lbl['lbl.sm.consultant']}
 						</p:outputPanel>
 						
-						<p:outputPanel rendered="#{mofAcc.supplierType != SupplierManagementConst.STYPE_CONTRACTOR}}">
+						<p:outputPanel rendered="#{mofAcc.supplierType == SupplierManagementConst.STYPE_CONTRACTOR}}">
 						#{lbl['lbl.sm.contractor']}
 						</p:outputPanel>
 				</p:column>
