@@ -9,7 +9,7 @@
 		<p:spacer height="3px" />
 		<table style="width: 100%" border="0">
 			<tr>
-				<td style="width: 160px;"><p:outputLabel
+				<td style="width: 185px;"><p:outputLabel
 						value="#{lbl['lbl.so.briefsamevisit']}" /></td>
 				<td><p:selectOneRadio value="#{bsvdtlbean.scQtBsv.sameBsv}">
 						<f:selectItem itemLabel="Yes" itemValue="true" />
@@ -187,7 +187,7 @@
 				</p:panelGrid>
 				<table style="width: 100%" border="0">
 					<tr>
-						<td style="width: 160px;"><p:outputLabel
+						<td style="width: 165px;"><p:outputLabel
 								value="#{lbl['lbl.so.attendance.site']}" /></td>
 						<td style="width: 130px;"><p:selectOneRadio
 								value="#{bsvdtlbean.scQtBsv.allSiteVisitReq}">
@@ -207,7 +207,7 @@
 		</h:panelGroup>
 	</h:panelGroup>
 
-	<p:panel header="Remark" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.remark']}" toggleable="true">
 		<table style="width: 100%" id="remarkslists">
 			<tr>
 				<td class="TableFieldLeft" style="width: 60px;"><p:outputLabel
