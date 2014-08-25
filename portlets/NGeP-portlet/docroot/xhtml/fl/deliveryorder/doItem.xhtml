@@ -98,7 +98,6 @@
 						<h:panelGroup id="delQtyTxt">
 							<p:inputText value="#{doItems.deliveredQty}" size="5"
 								styleClass="colFloatRight" maxlength="14"
-								disabled="#{(doItems.orderedQty - doItems.sumDeliveredQty - doItems.deliveredQty + doItems.rejectedQty) == 0}"
 								rendered="#{doItems.itemType.parameterCode eq ParameterConst.itemTypeProduct and createDOBackingBean.managedBean.docType eq 'PR' }">
 								<p:ajax event="blur"
 									update="delQtyTxt,delAmountTxt,remaingQtyTxt" process="@this"
