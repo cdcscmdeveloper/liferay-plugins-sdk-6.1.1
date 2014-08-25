@@ -217,6 +217,7 @@ public class ReviewCatalogueBackingBean extends
 			}
 		
 			catalogueSO.updateSupplierItem(reqDTO);
+			bb.getManagedBean().setRejectReason(null);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
