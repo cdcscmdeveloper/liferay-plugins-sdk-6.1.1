@@ -906,7 +906,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	}
 	
 	public void downloadAll() {
-		IContractTemplateSO contractTemplateSO = null;
+		
 		List<File> fileList = new ArrayList<File>();
 		AttachmentFormat attachmentFormat = new AttachmentDateFormat();
 		
@@ -918,8 +918,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		file.mkdirs();
 		
 		try{
-			contractTemplateSO = (IContractTemplateSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractTemplateSO.class);
-			ContractTemplateReqDTO templateReqDTO = new ContractTemplateReqDTO();
+			
 			
 			for(ScLoaReport scLoaReport : getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaReports()) {
 				// System Define Doc
@@ -930,18 +929,15 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 					filePath = tempDirectory + "/" + attachmentFormat.format(fileName, null);
 					if(scLoaReport.getTitle().equalsIgnoreCase(ContractConst.TEMPLATE_JADUAL_HARGA)) {
 						formJadualHargaExcel(filePath);
-						fileList.add(new File(DocumentRepositoryUtils.getDBFilePath(filePath)));
+						fileList.add(new File(filePath));
 					}
 					else if(scLoaReport.getTitle().equalsIgnoreCase(ContractConst.TEMPLATE_FORMAT_BON_PELAKSANAAN)) {
 						// TODO: get from SC
 					}
 					else {
-						templateReqDTO.setTemplateName(scLoaReport.getTitle().toUpperCase());
-						ContractTemplateResDTO templateResDTO = contractTemplateSO.retrieveTemplateByName(templateReqDTO);					
-						content = new String(templateResDTO.getCtTemplate().getContent(), "UTF-8");
 						content = getContent(scLoaReport.getTitle());					
 						convertHtmlToDocFile(content, filePath);
-						fileList.add(new File(DocumentRepositoryUtils.getDBFilePath(filePath)));
+						fileList.add(new File(filePath));
 					}
 				}
 				// User Upload Doc

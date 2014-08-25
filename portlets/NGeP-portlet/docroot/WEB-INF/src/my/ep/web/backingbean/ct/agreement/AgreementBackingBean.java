@@ -895,7 +895,6 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	}
 
 	public void downloadAll() {
-		IContractTemplateSO contractTemplateSO = null;
 		List<File> fileList = new ArrayList<File>();
 		AttachmentFormat attachmentFormat = new AttachmentDateFormat();
 
@@ -904,19 +903,14 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		String tempDirectory = getManagedBean().getFileDirectory() + "temp";
 		File file = new File(tempDirectory);
 		file.mkdirs();
+		String fileName = null;
 
 		try {
-			contractTemplateSO = (IContractTemplateSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractTemplateSO.class);
-			ContractTemplateReqDTO templateReqDTO = new ContractTemplateReqDTO();
-
 			for (CtAgreementContent agreementContent : getManagedBean().getCtAgreement().getAgreementContents()) {
 				// System Define Doc
-				if (agreementContent.getContentType().getParameterCode().equalsIgnoreCase(ParameterConst.AGREEMENT_SYSTEM_DEFINE_DOC)) {
-                        templateReqDTO.setTemplateName(agreementContent.getTitle().toUpperCase());
-					    ContractTemplateResDTO templateResDTO = contractTemplateSO.retrieveTemplateByName(templateReqDTO);
-					    String fileName = getTemplateFileName(agreementContent.getTitle());
-                        if(templateResDTO.getCtTemplate() != null && fileName != null) {
-						    content = new String(templateResDTO.getCtTemplate().getContent(), "UTF-8");
+				if (agreementContent.getContentType().getParameterCode().equalsIgnoreCase(ParameterConst.AGREEMENT_SYSTEM_DEFINE_DOC)) {                        
+					    fileName = getTemplateFileName(agreementContent.getTitle());
+                        if(fileName != null) {
 						    content = getContent(agreementContent.getTitle());
 						    filePath = tempDirectory + "/"+ attachmentFormat.format(fileName, null);
                             convertHtmlToDocFile(content, filePath);
