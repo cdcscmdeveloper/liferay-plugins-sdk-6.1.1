@@ -7,54 +7,84 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<p:panel header="#{lbl['lbl.sc.loiloa.award.details']}"
 		toggleable="true">
-		<table>
-			<tr>
-				<td style="width: 250px;"><p:outputLabel
-						value="#{lbl['lbl.sc.loiloa.award.type']}" /></td>
-				<td><p:inputText disabled="true"
-						value="#{lOIDetailBackingBean.managedBean.scQtFinalization.recommendedType}" /></td>
-			</tr>
-			<tr>
-				<td style="width: 250px;"><p:outputLabel value="Recommended By" /></td>
-				<td><p:inputText disabled="true"
-						value="#{lOIDetailBackingBean.managedBean.recommend.recommendBy.parameterCode}" /></td>
-			</tr>
-		</table>
+			<table>
+				<tr>
+					<td style="width: 250px;"><p:outputLabel
+							value="#{lbl['lbl.sc.loiloa.award.type']}" /></td>
+					<td><p:inputText disabled="true"
+							value="#{lOIDetailBackingBean.getParameterDesc(ParameterTypeConst.recommendType,
+					lOIDetailBackingBean.managedBean.scQtFinalization.recommendedTypeId.parameterCode)}" /></td>
+				</tr>
+
+				<tr>
+					<td style="width: 250px;"><p:outputLabel
+							value="#{lbl['lbl.sc.loiloa.loi.rec.by']}" /></td>
+					<td><p:inputText disabled="true"
+							value="#{lOIDetailBackingBean.getParameterDesc(ParameterTypeConst.recommendType,
+					lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.recommendTypeCode.parameterCode)}" /></td>
+				</tr>
+			</table>
 	</p:panel>
 	
-	<p:panel header="#{lbl['lbl.sc.loiloa.item.list']}" toggleable="true">
-		<p:dataTable id="itemtbl" var="itemList"  
-			value="#{lOIDetailBackingBean.managedBean.scQtItemList}" rows="10"
+	<p:panel header="#{lbl['lbl.sc.loiloa.item.list']}" toggleable="false">
+		<p:dataTable id="itemtbl" var="loiLoaItem"  
+			value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoaItems}" rows="10"
 			rowIndexVar="rowIndex">
 			<ac:paginator for="itemtbl" />
-			<p:column headerText="#{lbl['lbl.sc.loiloa.item.name']}">
-				<h:outputText value="#{itemList.itemName}" />
+			<p:column headerText="#{lbl['lbl.sc.loiloa.item.name']}" style="width:25%">
+				<h:outputText value="#{loiLoaItem.scRequestItem.itemName}" />
 			</p:column>
 
-           	<p:column headerText="Qty">
-				<h:outputText value="#{itemList.minqty}" />
+			<p:column headerText="#{lbl['lbl.sc.loiloa.loi.qty']}"
+				style="width:10%">
+				<h:outputText value="#{loiloaItem.qty}">
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+				</h:outputText>
+					
 			</p:column>
 
-
-			<p:column headerText="#{lbl['lbl.sc.loiloa.item.uom']}">
-				<h:outputText value="#{itemList.pmUom.uomName}" />
+			<p:column headerText="#{lbl['lbl.sc.loiloa.loi.uom']}" style="width:10%">
+			  <h:outputText value="#{loiLoaItem.scRequestItem.uom.uomName}"
+					style="float:right" />
+			
 			</p:column>
 
-			<p:column headerText="Unit Price(RM)">
-				<h:outputText value="#{itemList.quantitye}" />
+			<p:column headerText="#{lbl['lbl.sc.loiloa.loi.unit.price']}"
+				style="width:10%">
+				<f:facet name="footer">
+					<h:outputText value="#{lbl['lbl.sc.loiloa.item.total']}" />
+				</f:facet>
+
+				<h:outputText value="#{loiloaItem.unitPrice}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
 			</p:column>
 
-            <p:column headerText="Sub Total(RM)">
-				<h:outputText value="#{itemList.quantitye}" />
+			<p:column headerText="#{lbl['lbl.sc.loiloa.loi.sub.total']}"
+				style="width:15%">
+				<f:facet name="footer">
+					<h:outputText
+						value="#{lOIDetailBackingBean.managedBean.scLoi.loiAmt}">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</h:outputText>
+				</f:facet>
+
+				<h:outputText value="#{loiloaItem.qty * loiloaItem.unitPrice}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
 			</p:column>
-  
+
 		</p:dataTable>
-    <p:spacer height="5px"></p:spacer>
+		
+      <p:spacer height="5px"></p:spacer>
 		<div class="ppRightBtn">
 			<table>
 				<tr>
-					<td style="width: 100%;"><p:outputLabel value="Total" /></td>
-					<td><p:inputText disabled="true" /></td>
+					<td style="width: 100%;"><p:outputLabel value="#{lbl['lbl.sc.loiloa.loi.total']}" /></td>
+					<td><p:inputText disabled="true"  value="#{Total}" style="text-align:right;"/></td>
 				</tr>
 			</table>
 		</div>

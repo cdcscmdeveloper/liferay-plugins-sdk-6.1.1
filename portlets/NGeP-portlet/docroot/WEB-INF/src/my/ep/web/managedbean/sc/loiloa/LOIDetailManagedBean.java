@@ -7,15 +7,9 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
-import org.primefaces.model.DualListModel;
-
-import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.sc.directpurchase.ScPrInquiry;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
-import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteRemark;
-import my.ep.persistence.entity.sc.directpurchase.ScRequestSupplierItem;
 import my.ep.persistence.entity.sc.loaloi.ScLoi;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoiNegoLocation;
@@ -28,7 +22,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQtProposalRanking;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommend;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommendDtl;
 import my.ep.persistence.entity.sm.SmMofAccount;
-import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -80,23 +73,21 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	private String branchName;
 	private List<SelectItem> selectItemList;
 	private List<PmUser>  approverNames; // Drop down Listing for Approver Names
+	private List<PmUser>  contractSigners; // Drop down Listing for Contract Signers
 	
 	private ScQtFinalization scQtFinalization;
 	private List<ScQtRecommend> scQtRecommends= new ArrayList<ScQtRecommend>();
 	private ScQtRecommend recommend = new ScQtRecommend();
 	private List<ScQtRecommendDtl> scQtRecommendDtls = new ArrayList<ScQtRecommendDtl>();
 	private List<ScLoiLoa> loiLoas = new ArrayList<ScLoiLoa>();
+	private List<ScLoiLoa> recSupplierList = new ArrayList<ScLoiLoa>();
 	private List<ScLoi> lois = new ArrayList<ScLoi>();
 	
 	private Long orgProfileId;
 	private PmOrgProfile pmOrgProfile = new PmOrgProfile();
 	private PmOrgProfile selectedPtj = new PmOrgProfile();
 	private List<PmOrgProfile> ptjList;
-	
-	// temp
-	private List<ScRequestNoteRemark>  remarks = new ArrayList<ScRequestNoteRemark>();
-	
-	
+
 	
 	/**
 	 * @return the scQtEvaluationResult
@@ -685,16 +676,32 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the remarks
+	 * @return the contractSigners
 	 */
-	public List<ScRequestNoteRemark> getRemarks() {
-		return remarks;
+	public List<PmUser> getContractSigners() {
+		return contractSigners;
 	}
 
 	/**
-	 * @param remarks the remarks to set
+	 * @param contractSigners the contractSigners to set
 	 */
-	public void setRemarks(List<ScRequestNoteRemark> remarks) {
-		this.remarks = remarks;
+	public void setContractSigners(List<PmUser> contractSigners) {
+		this.contractSigners = contractSigners;
 	}
+
+	/**
+	 * @return the recSupplierList
+	 */
+	public List<ScLoiLoa> getRecSupplierList() {
+		return recSupplierList;
+	}
+
+	/**
+	 * @param recSupplierList the recSupplierList to set
+	 */
+	public void setRecSupplierList(List<ScLoiLoa> recSupplierList) {
+		this.recSupplierList = recSupplierList;
+	}
+	
+	
 }

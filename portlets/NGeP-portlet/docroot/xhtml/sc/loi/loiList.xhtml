@@ -7,76 +7,58 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<ui:define name="contentSection">
-	 <p:messages id="loiMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
-	 <ui:include src="/xhtml/sc/loi/loiButtons.xhtml" />
-     <ui:include src="/xhtml/sc/loi/loiHeader.xhtml" />
-     
-	<p:panel header="#{lbl['lbl.sc.loiloa.recom.supp.list']}"
-			toggleable="false">
-	
-	   	<table>
-				<tr>
-				<td colspan="2"><p:outputPanel id="ptjId">
-					<table style="width:100%">
-					 <tr>
-	 				  <ui:fragment rendered="#{lOIDetailBackingBean.managedBean.selectedPtj.brandNew}">
-	 				        <td style="width: 250px;">
-							   <p:outputLabel value="PTJ Name" />
-							    <p:outputLabel value="*" styleClass="mandatory" /></td>
-							 <td> <p:selectOneMenu  label="#{lbl['lbl.sc.price.inquiry.ptj.name']}" id="ptjName" required="true"
-							     value="#{lOIDetailBackingBean.managedBean.orgProfileId}"
-							     styleClass="divisionclass" style="width: 250px;margin-bottom: 5px;">
-							  <f:selectItem itemLabel="- Select One -" itemValue="#{null}" />
-							  <f:selectItems 
-								   value="#{lOIDetailBackingBean.managedBean.ptjList}"
-								   var="pmOrgProfile"
-								   itemLabel="#{pmOrgProfile.orgCode} - #{pmOrgProfile.orgName}"
-								   itemValue="#{pmOrgProfile.orgProfileId}" />
-								 <p:ajax event="change"   partialSubmit="true" update="@([id$=loiHeader])"
-								     process="@this"  listener="#{lOIDetailBackingBean.ptjNameEvent}"/>
-						</p:selectOneMenu></td>
-						<td> <p:message id="ptjNameMsg" for="ptjName" display="icon" /> </td>
-				    	</ui:fragment>
-					</tr>
-					</table>
-				   </p:outputPanel></td>
-				</tr>
+		<p:messages id="loiMsg" showDetail="true" autoUpdate="true"
+			closable="true" showSummary="false" />
+		<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.so.submit']}"
+				icon="ui-icon-submit"
+				action="#{lOIDetailBackingBean.saveLOIDetailsAction}"
+				process="@form" update="@form" />
+		</div>
+
+		<ui:include src="/xhtml/sc/loi/loiListHeader.xhtml" />
+
+		<p:panel header="#{lbl['lbl.sc.loiloa.recom.supp.list']}"
+			toggleable="true">
+			<table>
 				<tr>
 					<td style="width: 250px;"><p:outputLabel
 							value="#{lbl['lbl.sc.loiloa.award.type']}" /></td>
 					<td><p:inputText disabled="true"
-							value="M" /></td>
+							value="#{lOIDetailBackingBean.getParameterDesc(ParameterTypeConst.recommendType,
+					lOIDetailBackingBean.managedBean.scQtFinalization.recommendedTypeId.parameterCode)}" /></td>
 				</tr>
+
 				<tr>
 					<td style="width: 250px;"><p:outputLabel
-							value="Recommended By" /></td>
+							value="#{lbl['lbl.sc.loiloa.loi.rec.by']}" /></td>
 					<td><p:inputText disabled="true"
-							value="#{lOIDetailBackingBean.managedBean.recommend.recommendBy.parameterCode}" /></td>
+							value="#{lOIDetailBackingBean.getParameterDesc(ParameterTypeConst.recommendType,
+					lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.recommendTypeCode.parameterCode)}" /></td>
 				</tr>
-	      </table>
-
+			</table>
 
 			<p:spacer height="20px"></p:spacer>
 
-			<p:dataTable id="recommendDtlId" var="recommendDtl"
-				value="#{lOIDetailBackingBean.managedBean.scQtRecommendDtls}"
+			<p:dataTable id="loiLoaDtl" var="loiLoa"
+				value="#{lOIDetailBackingBean.managedBean.recSupplierList}"
 				rows="10" rowIndexVar="rowIndex">
 
 				<p:column headerText="#{lbl['lbl.sc.loiloa.supp.name']}"
 					style="width:40%">
-					<h:outputText value="#{recommendDtl.supplier.companyName}" />
+					<h:outputText value="#{loiLoa.smSupplier.companyName}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.loiloa.action']}"
 					style="width:20%">
-					<p:commandButton icon="ui-icon-add" value="Create LOI" 
+					<p:commandButton icon="ui-icon-add" value="Create LOI"
 						action="#{lOIDetailBackingBean.createLOI}" />
 				</p:column>
 
 			</p:dataTable>
 		</p:panel>
 
-		<p:panel header="lOI/LOA LIST" toggleable="false">
+		<p:panel header="lOI/LOA LIST" toggleable="true">
 			<c:set var="LoaLoi"
 				value="#{lOIDetailBackingBean.managedBean.loiLoas.get(0)}"></c:set>
 			<p:dataTable id="loiId" var="loi" value="#{LoaLoi.scLois}" rows="10"
@@ -91,8 +73,9 @@
 				</p:column>
 
 				<p:column headerText="Item" style="width:40%">
-					<p:commandLink partialSubmit="true" process="@this" 
-						update=":form:ItemDetailsPopup" 
+					<p:commandLink partialSubmit="true" process="@this"
+						action="#{lOIDetailBackingBean.viewItemDetails(loi)}"
+						update=":form:ItemDetailsPopup"
 						oncomplete="ItemDetailsPopup.show();">
 
 						<p:graphicImage value="/resources/ep/images/design/document.png"
@@ -101,8 +84,9 @@
 				</p:column>
 
 				<p:column headerText="Status" style="width:40%">
-					<h:outputText value="#{loi.loiNo}" />
+					<h:outputText value="#{loi.loiId}" />
 				</p:column>
+
 
 				<p:column headerText="#{lbl['lbl.sc.loiloa.action']}"
 					style="width:20%">
@@ -113,7 +97,7 @@
 			</p:dataTable>
 
 		</p:panel>
-          <ui:include src="loiItemDetailPopup.xhtml" />
+		<ui:include src="loiItemDetailPopup.xhtml" />
 
 	</ui:define>
 </ui:composition>

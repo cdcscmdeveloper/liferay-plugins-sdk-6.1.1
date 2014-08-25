@@ -11,16 +11,16 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.loiloa.loi.appr.req']}" /></td>
 				<td colspan="3"><p:selectOneRadio
-						value="1">
-						<f:selectItem itemLabel="Yes" itemValue="true" />
-						<f:selectItem itemLabel="No" itemValue="false" />
-						<p:ajax event="change" update="@form" />
+						value="#{lOIDetailBackingBean.managedBean.scLoi.approvalReq}">
+						<f:selectItems
+							value="#{lOIDetailBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+						<p:ajax event="change" update="approversId" />
 					</p:selectOneRadio></td>
 			</tr>
 			<tr>
 				<td style="width: 154px;"><p:outputLabel
 						value="#{lbl['lbl.sc.loiloa.loi.approver']}" /></td>
-				<td><p:selectOneMenu id="app" value="#{lOIDetailBackingBean.managedBean.reqApprove}"
+				<td><p:selectOneMenu id="approversId" value="#{lOIDetailBackingBean.managedBean.reqApprove}"
 						style="width: 178px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 						<f:selectItems
@@ -37,7 +37,7 @@
 		<tr>
 			<td class="TableFieldLeft" width="12%"></td>
 			<td class="TableFieldRight">
-				<p:dataGrid id="catatan" value="#{lOIDetailBackingBean.managedBean.remarks}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
+				<p:dataGrid id="catatan" value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiRemarks}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
 					<table>
 						<tr>
 							<td rowspan="2" style="vertical-align: top;" align="left">

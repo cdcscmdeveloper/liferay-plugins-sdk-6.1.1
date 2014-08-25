@@ -1,0 +1,27 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<p:panel id="loiHeader">
+		<div align="left" class="header-info">
+			<table border="0" cellspacing="0" cellpadding="0" width="100%">
+				<tr>
+					<td width="10%"><h:outputLabel
+							value="#{lbl['lbl.sc.loiloa.loi.no']}" /></td>
+					<td class="header-info-text" width="15%">
+						#{lOIDetailBackingBean.managedBean.scLoi.loiNo}</td>
+					<td width="10%"><h:outputLabel value="#{lbl['lbl.sc.ptj']}" />
+					</td>
+					<td class="header-info-text" width="35%">
+						#{lOIDetailBackingBean.managedBean.pmOrgProfile.orgName}</td>
+					<td width="10%"><h:outputLabel value="#{lbl['lbl.sc.status']}" />
+					</td>
+					<td class="header-info-text" width="20%">
+						#{lOIDetailBackingBean.managedBean.status}</td>
+				</tr>
+			</table>
+		</div>
+		</p:panel>
+</ui:composition>

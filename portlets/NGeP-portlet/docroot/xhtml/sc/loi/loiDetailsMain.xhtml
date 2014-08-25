@@ -12,7 +12,7 @@
 		
 		<ui:include src="loiButtons.xhtml" />
 		
-		<ui:include src="loiHeader.xhtml" />
+		<ui:include src="loiDetailsHeader.xhtml" />
 		
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
@@ -21,12 +21,12 @@
 					activeIndex="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
 					style="display : table-caption;">
 
-						<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.details']}"
+						<p:menuitem value="#{lbl['lbl.sc.loiloa.loi.details']}"
 							update="@form"
 							action="#{lOIDetailBackingBean.tabMenuListener('0')}" />
 
 						<p:menuitem value="#{lbl['lbl.sc.loiloa.award.details']}"
-							update="@form"
+							update="@all" partialSubmit="true"
 							action="#{lOIDetailBackingBean.tabMenuListener('1')}" />
 
 						<p:menuitem value="#{lbl['lbl.sc.loiloa.nego.details']}"

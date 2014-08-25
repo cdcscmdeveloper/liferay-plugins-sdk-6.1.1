@@ -18,7 +18,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.loiloa.supp.name']}" /></td>
 				<td colspan="2"><p:inputText size="30"
-						value="#{lOIDetailBackingBean.managedBean.scLoi.supplierName}"
+						value="#{lOIDetailBackingBean.managedBean.scLoi.supplierContact}"
 						disabled="true" /></td>
 			</tr>
 			<tr>
@@ -26,7 +26,7 @@
 				<td colspan="2"><p:selectOneMenu
 						value="#{lOIDetailBackingBean.managedBean.branchName}"
 						style="width: 178px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="-- Select -- " itemValue="#{null}" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 						<f:selectItems
 							value="#{lOIDetailBackingBean.managedBean.branchsList}"
 							var="brList" itemLabel="#{brList.branchName}"
@@ -42,7 +42,7 @@
 						value="#{lbl['lbl.sc.loiloa.address']}" /></td>
 				<td><p:inputTextarea id="delAddrText" cols="30"
 						rows="5"
-						value="#{lOIDetailBackingBean.managedBean.scLoi.supplierAddress}"
+						value="test"
 						style=" margin-bottom:5px;" disabled="true" /></td>
 			
 			</tr>
@@ -70,14 +70,14 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.loiloa.mobile.no']}" /></td>
 				<td><p:inputText size="30"
-						value="#{lOIDetailBackingBean.managedBean.scLoi.supplierContactMobil}"
+						value="#{lOIDetailBackingBean.managedBean.scLoi.supplierMobNo}"
 						disabled="true" /></td>
 			</tr>
 
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.loiloa.email']}" /></td>
 				<td colspan="4"><p:inputText size="117"
-						value="#{lOIDetailBackingBean.managedBean.scLoi.supplierContactEmail}"
+						value="#{lOIDetailBackingBean.managedBean.scLoi.supplierEmail}"
 						disabled="true" /></td>
 			</tr>
 		</table>
@@ -91,34 +91,37 @@
 				<td><c:if
 						test="#{lOIDetailBackingBean.managedBean.scLoi.brandNew}">
 						<p:inputText
-							value="#{lOIDetailBackingBean.managedBean.scLoi.title}" size="69" />
-					</c:if> <c:if test="#{!lOIDetailBackingBean.managedBean.scLoi.brandNew}">
-						<p:inputText
-							value="#{lOIDetailBackingBean.managedBean.scLoi.title}" size="69"
-							readonly="true" disabled="true" />
+							value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.title}" size="69" />
+					</c:if> 
+					
+					<c:if test="#{!lOIDetailBackingBean.managedBean.scLoi.brandNew}">
+						<p:inputText size="69" readonly="true" disabled="true"  value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.title}"/>
 					</c:if></td>
 			</tr>
 			<tr>
 				<td style="width: 164px;"><p:outputLabel
 						value="#{lbl['lbl.sc.loiloa.file.no']}" /></td>
-				<td><p:inputText disabled="true" readonly="true"
+				<td><p:inputText disabled="true" 
 						value="#{lOIDetailBackingBean.managedBean.qt.fileNo}" size="30" /> 
 						<p:spacer width="2px"></p:spacer>
-					 <p:inputText disabled="true" size="4" /></td>
+					 <p:inputText disabled="true" size="4"  value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.fileNo}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.loiloa.loi.issue']}" /></td>
 				<td><p:inputText size="30"
 						value="#{lOIDetailBackingBean.managedBean.scLoi.issueDate}"
-						disabled="true" /></td>
+						disabled="true" >
+							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+						</p:inputText>
+						</td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.loiloa.loi.res.due.date']}" /></td>
 				<td><p:inputText
-						size="14" disabled="true" readonly="true" /> <p:spacer
+						size="14" disabled="true" value="#{lOIDetailBackingBean.managedBean.scLoi.issueDate}" /> <p:spacer
 						width="10px" /> <p:inputText
-						value="#{lOIDetailBackingBean.managedBean.scLoi.loiDuration} Days"
+						value="Days"
 						disabled="true" size="8" readonly="true" /></td>
 			</tr>
 		</table>
@@ -135,9 +138,9 @@
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 							itemValue="#{null}" />
 						<f:selectItems
-							value="#{lOIDetailBackingBean.managedBean.approverNames}"
-							var="appName" itemLabel="#{appName.userName}"
-							itemValue="#{appName.userId}" />
+							value="#{lOIDetailBackingBean.managedBean.contractSigners}"
+							var="contractSigner" itemLabel="#{contractSigner.userName}"
+							itemValue="#{contractSigner.userId}" />
 					</p:selectOneMenu></td>
 			</tr>
 		</table>

@@ -6,118 +6,84 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="#{lbl['lbl.sc.loiloa.nego.details']}"
+	<p:panel header="#{lbl['lbl.sc.loiloa.nego.loc']}" toggleable="true">
+		<p:dataTable id="negotiationloctbl" var="locList"
+			value="#{lOIDetailBackingBean.managedBean.negoLocationList}"
+			selection="#{lOIDetailBackingBean.managedBean.selectedNegoLocationList}"
+			rows="10" rowKey="#{locList}" rowIndexVar="rowIndex">
+
+			<ac:paginator for="locId" />
+
+			<p:column selectionMode="multiple" style="width:2%" />
+
+			<p:column headerText="#{lbl['lbl.sc.loiloa.location']}"
+				style="width:40%">
+				<p:inputText value="#{locList.negoLocation}" size="30" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.loiloa.nego.date']}"
+				style="width:10%">
+				<p:calendar id="date"
+					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button"
+					size="12" value="#{locList.negoDate}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.loiloa.nego.remarks']}"
+				style="width:40%">
+				<p:inputText value="2" size="30" />
+			</p:column>
+
+		</p:dataTable>
+		<p:spacer height="10px" />
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.sc.loiloa.add']}"
+				process="@this,negotiationloctbl" partialSubmit="true"
+				action="#{lOIDetailBackingBean.addNegotiationLocation}"
+				update="negotiationloctbl" icon="ui-icon-add" />
+
+			<p:commandButton value="#{lbl['lbl.sc.loiloa.delete']}"
+				process="@this" partialSubmit="true" icon="ui-icon-delete" />
+		</div>
+
+	</p:panel>
+
+	<p:panel id="negoTermId" header="#{lbl['lbl.sc.loiloa.nego.term']}"
 		toggleable="true">
-		<p:panel header="#{lbl['lbl.sc.loiloa.nego.loc']}" toggleable="false">
-			<p:dataTable id="negotiationloctbl" var="locList"
-				value="#{lOIDetailBackingBean.managedBean.negoLocationList}"
-				selection="#{lOIDetailBackingBean.managedBean.selectedNegoLocationList}"
-				rows="10" rowKey="#{locList}" rowIndexVar="rowIndex">
+		<p:dataTable id="negotiationtermstbl" var="negoTerms"
+			value="#{lOIDetailBackingBean.managedBean.negoTermsList}"
+			selection="#{lOIDetailBackingBean.managedBean.selectedNegoTermsList}"
+			rows="10" rowKey="#{negoTerms}" rowIndexVar="rowIndex">
 
-				<ac:paginator for="locId" />
-				
-				<p:column selectionMode="multiple" style="width:2%" />
+			<ac:paginator for="termId" />
 
-				<p:column headerText="#{lbl['lbl.sc.loiloa.location']}"
-					style="width:40%">
-					<p:inputText value="#{locList.negoLocation}" size="30"/>
-				</p:column>
+			<p:column selectionMode="multiple" style="width:2%" />
 
-				<p:column headerText="#{lbl['lbl.sc.loiloa.nego.date']}"
-					style="width:10%">
-					<p:calendar id="date"
-						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button"
-						size="12" value="#{locList.negoDate}" />
-				</p:column>
+			<p:column headerText="#{lbl['lbl.sc.loiloa.nego.terms']}"
+				style="width:80%">
+				<p:inputTextarea id="negoterms" cols="140" rows="2"
+					value="#{negoTerms.scTerm.scTermDescs[0].termDesc}"
+					autoResize="false" />
+			</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.loiloa.nego.remarks']}"
-					style="width:40%">
-					<p:inputText value="#{locList.remark}" size="30"/>
-				</p:column>
+			<p:column headerText="Negotiate">
+				<p:selectBooleanCheckbox value="true">
+				</p:selectBooleanCheckbox>
+			</p:column>
 
-				<!-- 				<p:column headerText="#{lbl['lbl.sc.loiloa.action']}"
-					style="width:30%">
-					<p:commandLink>
-						<p:graphicImage library="ep/images/design" name="edit.png"
-							value="/resources/ep/images/design/edit.png" />
-					</p:commandLink>
-				</p:column>
- -->
-			</p:dataTable>
-			<p:spacer height="20px" />
-			<div align="right">
-				<p:commandButton value="#{lbl['lbl.sc.loiloa.add']}"
-					process="@this,negotiationloctbl" partialSubmit="true"
-					action="#{lOIDetailBackingBean.addNegotiationLocation}"
-					update="negotiationloctbl" icon="ui-icon-add" />
 
-				<p:commandButton value="#{lbl['lbl.sc.loiloa.delete']}"
-					process="@this" partialSubmit="true" icon="ui-icon-delete" />
-			</div>
+		</p:dataTable>
+		<p:spacer height="10px" />
 
-		</p:panel>
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.sc.loiloa.add']}"
+				process="@this, negotiationtermstbl" partialSubmit="true"
+				action="#{lOIDetailBackingBean.addNegotiationTerm}"
+				update="negotiationtermstbl" icon="ui-icon-add" />
 
-		<p:panel id="negoTermId" header="#{lbl['lbl.sc.loiloa.nego.term']}"
-			toggleable="false">
-			<p:dataTable id="negotiationtermstbl" var="negoTerms"
-				value="#{lOIDetailBackingBean.managedBean.negoTermsList}" 
-				selection="#{lOIDetailBackingBean.managedBean.selectedNegoTermsList}"
- 				rows="10" rowKey="#{negoTerms}" rowIndexVar="rowIndex">
-				
-				<ac:paginator for="termId" />
+			<p:commandButton value="#{lbl['lbl.sc.loiloa.delete']}"
+				process="@this" partialSubmit="true" icon="ui-icon-delete" />
+		</div>
 
-				<p:column selectionMode="multiple" style="width:2%" />
-
-				<p:column headerText="#{lbl['lbl.sc.loiloa.nego.terms']}"
-					style="width:30%">
-					<p:inputTextarea id="negoterms" cols="30" rows="1"
-						value="#{negoTerms.scTerm.scTermDescs[0].termDesc}"
-						autoResize="false" />
-				</p:column>
-
-				<p:column headerText="#{lbl['lbl.sc.loiloa.nego.amount']}"
-					style="width:10%">
-					<p:inputText value="#{negoTerms.amount}" size="10" />
-				</p:column>
-
-				<p:column headerText="#{lbl['lbl.sc.loiloa.nego.feed.supp']}"
-					style="width:30%">
-					<p:inputTextarea id="feedback" cols="30" rows="1"
-						value="#{negoTerms.supplierFeedback}" autoResize="false" />
-				</p:column>
-
-				<p:column headerText="#{lbl['lbl.sc.loiloa.nego.remarks']}"
-					style="width:30%">
-					<p:inputTextarea id="appremarks" cols="30" rows="1"
-						value="#{negoTerms.officerRemark}" autoResize="false" />
-				</p:column>
-
-				<!-- <p:column headerText="#{lbl['lbl.sc.loiloa.action']}"
-					style="width:20%">
-					<p:commandLink>
-						<p:graphicImage library="ep/images/design" name="edit.png"
-							value="/resources/ep/images/design/edit.png" />
-					</p:commandLink>
-				</p:column> -->
-			</p:dataTable>
-			<p:spacer height="20px" />
-			<div align="right">
-				<p:commandButton value="#{lbl['lbl.sc.loiloa.pop.pre.defined']}"
-					process="@this"
-					action="#{lOIDetailBackingBean.populatePreDefinedDetails}"
-					partialSubmit="true"
-					oncomplete="predefinedTerms.show();return false;" />
-
-				<p:commandButton value="#{lbl['lbl.sc.loiloa.add']}"
-					process="@this, negotiationtermstbl" partialSubmit="true"
-					action="#{lOIDetailBackingBean.addNegotiationTerm}"
-					update="negotiationtermstbl" icon="ui-icon-add" />
-
-				<p:commandButton value="#{lbl['lbl.sc.loiloa.delete']}"
-					process="@this" partialSubmit="true" icon="ui-icon-delete" />
-			</div>
-
-		</p:panel>
 	</p:panel>
 
 	<p:dialog id="predefinedTerms" widgetVar="predefinedTerms" modal="true"
