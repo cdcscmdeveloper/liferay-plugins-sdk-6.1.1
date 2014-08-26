@@ -23,7 +23,10 @@
 			          	#{profileManagementBackingBean.getRoleDescByRoleCode(role.pmRole.roleCode)}
 			        </p:column>
 			        <p:column headerText="#{lbl['lbl.pm.profiles.authorisation.apprlimit']}" > 
-			          	<p:inputText styleClass="ppDisplayTextS" value="#{role.approvalLimit}" disabled="#{!role.pmRole.limitRequired}" />
+			          	<p:inputText id="itAppLimit" styleClass="ppDisplayTextS" value="#{role.approvalLimit}" 
+			          		required="#{role.pmRole.limitRequired}"
+			          		disabled="#{!role.pmRole.limitRequired}" />
+		          		<p:message id="itAppLimitMsg" for="itAppLimit" display="icon" />
 			        </p:column>
 			        <p:column headerText="#{lbl['lbl.pm.profiles.authorisation.Status']}"> 
 				  	 	<p:selectOneMenu value="#{role.recordStatusFlg}">  

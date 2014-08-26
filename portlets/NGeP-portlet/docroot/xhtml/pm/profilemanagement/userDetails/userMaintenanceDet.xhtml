@@ -11,22 +11,22 @@
 				<p:tabMenu styleClass="sidemenu" id="tUserDetails"
 					activeIndex="#{profileManagementBackingBean.managedBean.selectedTabIndex}">
 					<!-- User Profile -->
-                    <p:menuitem value="#{lbl['lbl.pm.profiles.tab.name.up']}" update="@form">
+                    <p:menuitem value="#{lbl['lbl.pm.profiles.tab.name.up']}" update="@form" immediate="true">
 						<f:setPropertyActionListener target="#{profileManagementBackingBean.managedBean.selectedTabIndex}" 
 							value="#{profileManagementBackingBean.tabUserProfile}" />
 					</p:menuitem>
 					<!-- Authorization -->
-					<p:menuitem value="#{lbl['lbl.pm.profiles.tab.name.au']}" update="@form">
+					<p:menuitem value="#{lbl['lbl.pm.profiles.tab.name.au']}" update="@form" immediate="true">
 						<f:setPropertyActionListener target="#{profileManagementBackingBean.managedBean.selectedTabIndex}" 
 							value="#{profileManagementBackingBean.tabAuthorization}" />
 					</p:menuitem>
 					<!-- Personalization -->	
-					<p:menuitem value="#{lbl['lbl.pm.profiles.tab.name.pl']}" update="@form">
+					<p:menuitem value="#{lbl['lbl.pm.profiles.tab.name.pl']}" update="@form" immediate="true">
 						<f:setPropertyActionListener target="#{profileManagementBackingBean.managedBean.selectedTabIndex}" 
 							value="#{profileManagementBackingBean.tabPersonalization}" />
 					</p:menuitem>
 					<!-- Change Password -->
-					<p:menuitem value="#{lbl['lbl.pm.profiles.tab.name.cp']}" update="@form" 
+					<p:menuitem value="#{lbl['lbl.pm.profiles.tab.name.cp']}" update="@form" immediate="true" 
 						rendered="#{!profileManagementBackingBean.managedBean.selectedUser.brandNew}">
 						<f:setPropertyActionListener target="#{profileManagementBackingBean.managedBean.selectedTabIndex}" 
 							value="#{profileManagementBackingBean.tabChangePassword}" />

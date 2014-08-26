@@ -18,17 +18,18 @@
 			
 		    <p:column headerText="#{lbl['lbl.pm.profiles.resorg.table.orgtype']}">
 				<p:selectOneMenu value="#{orgUnit.pmOrgProfile.orgTypeCode.parameterId}" styleClass="ppDropDownWidthM" 
-					disabled="#{!orgUnit.brandNew}">  
+					disabled="#{!orgUnit.brandNew}" required="true" id="somOrgType">  
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />      
 			     	<f:selectItems value="#{profileManagementBackingBean.getOrgTypeList()}" 
 			     		var="obj" itemValue="#{obj.pmParameter.parameterId}" itemLabel="#{obj.codeName}"/>  
 			     	<p:ajax event="change" listener="#{profileManagementBackingBean.changeResOrgType(index)}" 
 			     		update="lovResOrg:lovResOrg, :form:tvRoleReceivingAddr:lovAddrType:lovAddrType, dtOrgUnit, 
 			     			:form:tvRoleReceivingAddr:dtRoles, :form:tvRoleReceivingAddr:dtReceiveAddr"/> 
-	            </p:selectOneMenu>		     
+	            </p:selectOneMenu>		 
+	            <p:message id="somOrgTypeMsg" for="somOrgType" display="icon" />    
 	        </p:column>	 
 		    <p:column headerText="#{lbl['lbl.pm.profiles.resorg.table.code']}" >        
-	            <ac:lov id="lovResOrg" lovId="PM_ORG_PROFILE" size="20"
+	            <ac:lov id="lovResOrg" lovId="PM_ORG_PROFILE" size="20" required="true"
 	            	update=":form:dtOrgUnit" readonly="true" disabled="#{!orgUnit.brandNew}"
 					headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
 					value="#{orgUnit.pmOrgProfile.pmOrgValidity.orgCode}" 
@@ -36,13 +37,15 @@
 					conditionField="orgTypeCode.parameterId^#{orgUnit.pmOrgProfile.orgTypeCode.parameterId}|recordStatus^1" 
 					>
 				</ac:lov> 
+				<p:message id="lovResOrgMsg" for="lovResOrg" display="icon" />   
 	        </p:column>
 	        <p:column headerText="#{lbl['lbl.pm.profiles.resorg.table.name']}" > 
        			#{orgUnit.pmOrgProfile.pmOrgValidity.orgName}
 	        </p:column>
 	        <p:column headerText="#{lbl['lbl.pm.profiles.resorg.table.effdate']}" > 
-			  	<p:calendar id="effDateId" value="#{orgUnit.effDateDisplay}" styleClass="ppDisplayCalXS" 
+			  	<p:calendar id="effDateId" value="#{orgUnit.effDateDisplay}" styleClass="ppDisplayCalXS" required="true"
 					showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				<p:message id="effDateIdMsg" for="effDateId" display="icon" />
 	        </p:column>
 	        <p:column headerText="#{lbl['lbl.pm.profiles.resorg.table.expdate']}" > 
 			  	<p:calendar id="expDateId" value="#{orgUnit.expDateDisplay}" styleClass="ppDisplayCalXS"

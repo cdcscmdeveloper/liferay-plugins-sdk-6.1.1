@@ -12,9 +12,11 @@
 			<tr>
 				<th width="40%">
 					<p:outputLabel value="#{lbl['lbl.pm.profiles.preferences.language']}"/>
+					<p:outputLabel value="*" styleClass="mandatory" />
 				</th>
 				<td>	        
-          			<p:selectOneMenu styleClass="ppDropDownWidthM"  value="#{profileManagementBackingBean.managedBean.selectedUser.pmUserPreference.preferredLanguage}">
+          			<p:selectOneMenu styleClass="ppDropDownWidthM" required="true" id="somPreLanguage"
+          				value="#{profileManagementBackingBean.managedBean.selectedUser.pmUserPreference.preferredLanguage}">
           				<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />  
 	            		<f:selectItems value="#{profileManagementBackingBean.getLanguageList()}" 
 	            			var="language" itemLabel="#{language.languageName}" itemValue="#{language.languageCode}" />    
@@ -22,19 +24,23 @@
 	              	&#160;&#160;   
 	                <p:graphicImage id="giLang" library="ep/images/design" name="tooltips.png"
 		                   value="/resources/ep/images/design/tooltips.png" />
-					<p:tooltip for="giLang" value="#{lbl['lbl.pm.profiles.preferences.notification.tooltip']}" showEffect="fade" hideEffect="fade" />                                                        
+					<p:tooltip for="giLang" value="#{lbl['lbl.pm.profiles.preferences.notification.tooltip']}" showEffect="fade" hideEffect="fade" /> 
+					<p:message id="somPreLanguageMsg" for="somPreLanguage" display="icon" />                                                       
 				</td>
 			</tr>
 			<tr>
 				<th width="40%">
 					<p:outputLabel value="#{lbl['lbl.pm.profiles.preferences.notificationremoval']}"/>
+					<p:outputLabel value="*" styleClass="mandatory" />
 				</th>
 				<td>
-					<p:inputText value="#{profileManagementBackingBean.managedBean.selectedUser.pmUserPreference.notifyRemovalDay}" size="5" />&#160;
+					<p:inputText id="itPreNotifyDay" required="true"
+						value="#{profileManagementBackingBean.managedBean.selectedUser.pmUserPreference.notifyRemovalDay}" size="5" />&#160;
 					<p:outputLabel value="#{lbl['lbl.pm.profiles.preferences.notification.day']}" style="width:62px" />&#160;
                 	<p:graphicImage id="giDay" library="ep/images/design" name="tooltips.png"
 								value="/resources/ep/images/design/tooltips.png" />
 					<p:tooltip for="giDay" value="#{lbl['lbl.pm.profiles.preferences.notificationremoval.tooltip']}" showEffect="fade" hideEffect="fade" />
+					<p:message id="itPreNotifyDayMsg" for="itPreNotifyDay" display="icon" />
 				</td>
 			</tr>
 		</table>

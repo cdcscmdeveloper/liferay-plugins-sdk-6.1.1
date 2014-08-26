@@ -1,6 +1,8 @@
 package my.ep.web.backingbean.pm.profilemanagement;
 
+
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -270,7 +272,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				this.getManagedBean().setSelectedUserOrg(pmUser.getPmUserOrgs().get(0));
 				showReceivingAddress();
 			}
-		
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1146,21 +1147,102 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			List<PmUserRole> newRoleList = reqDTO.getNewRoleList();
 			List<PmUserRole> deleteRoleList = reqDTO.getRemoveRoleList();
 			for(PmUserOrg pmUserOrg:user.getPmUserOrgs()){
-				for(PmUserRole pmUserRole: pmUserOrg.getPmUserRoles()){
-					if(pmUserRole.isBrandNew() || (pmUserRole.isModified() && pmUserRole.getRecordStatusFlg()==DbValueConst.RECORD_STATUS_ACTIVE)){
-						newRoleList.add(pmUserRole);
-						System.out.println("ADD NEW: " + pmUserRole.getPmRole().getRoleCode());
-					}else if(pmUserRole.getRecordStatusFlg()==DbValueConst.RECORD_STATUS_SUSPENDED && pmUserRole.isModified()){
-						deleteRoleList.add(pmUserRole);
-						System.out.println("DELETE OLD: " + pmUserRole.getPmRole().getRoleCode());
+//				if(checkEffDate(pmUserOrg)){
+					for(PmUserRole pmUserRole: pmUserOrg.getPmUserRoles()){
+						if(pmUserRole.isBrandNew() || (pmUserRole.isModified() && pmUserRole.getRecordStatusFlg()==DbValueConst.RECORD_STATUS_ACTIVE)){
+							newRoleList.add(pmUserRole);
+							System.out.println("ADD NEW: " + pmUserRole.getPmRole().getRoleCode());
+						}else if(pmUserRole.getRecordStatusFlg()==DbValueConst.RECORD_STATUS_SUSPENDED && pmUserRole.isModified()){
+							deleteRoleList.add(pmUserRole);
+							System.out.println("DELETE OLD: " + pmUserRole.getPmRole().getRoleCode());
+						}
 					}
-				}
+//				}
 			}
 			reqDTO.setNewRoleList(newRoleList);
 			reqDTO.setRemoveRoleList(deleteRoleList);
 		}
 	}
+	
+	/**
+	 * update only active 
+	 * @param pmUserOrg
+	 * @return
+	 */
+	private boolean checkEffDate(PmUserOrg pmUserOrg){
+		Date currentDate = new Date();
+		boolean isActive = true;
+		if(!pmUserOrg.getEffDateDisplay().before(currentDate)){
+			isActive = false;
+		}else if(!(pmUserOrg.getExpDateDisplay()!=null && pmUserOrg.getExpDateDisplay().after(currentDate))){
+			isActive = false;
+		}
+		return isActive;
+	}
 
+	private void validateUser(PmUser user){
+
+		if(StringUtils.isBlank(user.getLoginId())){
+			throw new IllegalArgumentException("Old Password is mandatory.");
+		}
+		if(user.getSalutationCode().getSalutationId()==null){
+			throw new IllegalArgumentException("Salutation is mandatory.");
+		}
+		if(StringUtils.isBlank(user.getUserName())){
+			throw new IllegalArgumentException("User Name is mandatory.");
+		}
+		if(user.getIdentificationCode().getParameterId()==null){
+			throw new IllegalArgumentException("Identification Type is mandatory.");
+		}
+		if(StringUtils.isBlank(user.getIdentificationNo())){
+			throw new IllegalArgumentException("Identification No. is mandatory.");
+		}
+		if(user.getPmCountry().getCountryId()==null){
+			throw new IllegalArgumentException("Nationality is mandatory.");
+		}
+		if(StringUtils.isBlank(user.getEmail())){
+			throw new IllegalArgumentException("Email is mandatory.");
+		}
+		if(StringUtils.isBlank(user.getPmUserPreference().getPreferredLanguage())){
+			throw new IllegalArgumentException("Preferred Language is mandatory.");
+		}
+		if(user.getPmUserPreference().getNotifyRemovalDay()==null 
+				|| (user.getPmUserPreference().getNotifyRemovalDay()!=null 
+				&& user.getPmUserPreference().getNotifyRemovalDay()==0)){
+			throw new IllegalArgumentException("Delete Notification is mandatory.");
+			
+		}
+	}
+	
+	private void validateUserAddress(PmAddress pmAddress){
+
+		if(pmAddress.getPmCountry().getCountryId()==null){
+			throw new IllegalArgumentException("Country is mandatory.");
+		}
+
+		if(StringUtils.isBlank(pmAddress.getAddress1())){
+			throw new IllegalArgumentException("Address1 is mandatory.");
+		}
+		
+		if(StringUtils.isBlank(pmAddress.getPostcode())){
+			throw new IllegalArgumentException("Postal Code is mandatory.");
+		}
+		
+		if(pmAddress.getPmState().getStateId()==null){
+			throw new IllegalArgumentException("State is mandatory.");
+		}
+
+		if(pmAddress.getPmDistrict().getDistrictId()==null){
+			throw new IllegalArgumentException("District is mandatory.");
+		}
+		
+		if(this.getManagedBean().isDivisionFlagC()){
+			if(pmAddress.getPmDivision().getDivisionId()==null){
+				throw new IllegalArgumentException("Division is mandatory.");
+			}
+		}
+	
+	}
 	
 	/**
 	 * Method to update the user details
@@ -1173,11 +1255,21 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		PmUser user =  null; 
 		boolean isChangePwd = false;
 		
+	
+		
 		try {
-			reqDTO = new UserReqDTO();
+			
 			user = this.getManagedBean().getSelectedUser();
 			user.setLoginId(user.getIdentificationNo());
+//			validateUser(user);
+//			validateUserAddress(this.getManagedBean().getUserAddress());
+			reqDTO = new UserReqDTO();
 			
+			
+//			if(!StringUtils.isBlank(user.getConfirmPassword()) && !StringUtils.isBlank(user.getPassword()) && StringUtils.isBlank(user.getOldPassword())){
+//				throw new IllegalArgumentException("Old Password is mandatory.");
+//			}
+//			
 			if(!StringUtils.isBlank(user.getOldPassword()) && !StringUtils.isBlank(user.getConfirmPassword()) && !StringUtils.isBlank(user.getPassword())){
 				isChangePwd = true;
 			}
@@ -1248,8 +1340,36 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		}
 		return result;
 	}
+
+	public boolean checkOldPasswordTest() throws Exception{
+		logger.info("checkOldPassword");
+		UserReqDTO reqDTO = null;
+		IUserSO userSO = null;
+		boolean isOk = false;
+		reqDTO = new UserReqDTO();
+		PmUser pmUser = this.getManagedBean().getSelectedUser();
+		userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		reqDTO.setPmUser(pmUser);
+		
 	
-	
+		UserResDTO resDTO = userSO.updatePortrait(reqDTO); 
+
+		
+		if (resDTO.isSuccessful()) {
+			isOk = true;
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO,
+							null, "OKKKKK"));
+		}else{
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO,
+							null, "NOPPPP"));
+		}
+		return isOk;
+	}
 
 	/**
 	 * delete portrait

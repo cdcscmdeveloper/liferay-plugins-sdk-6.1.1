@@ -48,9 +48,11 @@
 							<p:outputLabel value="*" styleClass="mandatory" />
 						</th>
 						<td>
-							<p:selectOneMenu styleClass="ppDropDownWidthM" value="#{profileManagementBackingBean.managedBean.selectedUser.salutationCode.salutationId}">
+							<p:selectOneMenu styleClass="ppDropDownWidthM" id="somSalutation" required="true"
+								value="#{profileManagementBackingBean.managedBean.selectedUser.salutationCode.salutationId}">
 								<f:selectItems value="#{profileManagementBackingBean.salutationOptions()}" />
 							</p:selectOneMenu>
+							<p:message id="somSalutationMsg" for="somSalutation" display="icon" />
 						</td>
 						<th></th>
 						<td></td>
@@ -62,8 +64,9 @@
 							<p:outputLabel value="*" styleClass="mandatory" />
 						</th>
 						<td>
-							<p:inputText styleClass="ppDisplayTextM"
+							<p:inputText styleClass="ppDisplayTextM" id="itUserName" required="true"
 								value="#{profileManagementBackingBean.managedBean.selectedUser.userName}"/>
+							<p:message id="itUserNameMsg" for="itUserName" display="icon" />
 						</td>
 						<th></th>
 						<td></td>
@@ -75,11 +78,13 @@
 							<p:outputLabel value="*" styleClass="mandatory" />
 						</th>
 						<td>
-							<p:selectOneMenu styleClass="ppDropDownWidthM" disabled="#{!profileManagementBackingBean.managedBean.selectedUser.brandNew}"
+							<p:selectOneMenu styleClass="ppDropDownWidthM" id="somIdType" required="true"
+								disabled="#{!profileManagementBackingBean.managedBean.selectedUser.brandNew}"
 								value="#{profileManagementBackingBean.managedBean.selectedUser.identificationCode.parameterId}">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" /> 
 								<f:selectItems value="#{profileManagementBackingBean.getIdentityTypeList()}"/>
 							</p:selectOneMenu>
+							<p:message id="somIdTypeMsg" for="somIdType" display="icon" />
 						</td>
 						<th ></th>
 						<td></td>
@@ -91,10 +96,12 @@
 							<p:outputLabel value="*" styleClass="mandatory" />
 						</th>
 						<td>
-							<p:inputText id="itIdentityNo" styleClass="ppDisplayTextM" disabled="#{!profileManagementBackingBean.managedBean.selectedUser.brandNew}"
+							<p:inputText id="itIdentityNo" styleClass="ppDisplayTextM" required="true"
+								disabled="#{!profileManagementBackingBean.managedBean.selectedUser.brandNew}"
 								value="#{profileManagementBackingBean.managedBean.selectedUser.identificationNo}">
 								<p:ajax event="change" update="itLoginId" listener="#{profileManagementBackingBean.updateLoginId()}"/>
 							</p:inputText>
+							<p:message id="itIdentityNoMsg" for="itIdentityNo" display="icon" />
 						</td>
 						<th></th>
 						<td></td>
@@ -107,7 +114,7 @@
 							<p:outputLabel value="*" styleClass="mandatory" />
 						</th>
 						<td>
-							<p:selectOneMenu styleClass="ppDropDownWidthM"
+							<p:selectOneMenu styleClass="ppDropDownWidthM" id="somNationality" required="true"
 								value="#{profileManagementBackingBean.managedBean.selectedUser.pmCountry.countryId}">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" /> 
 								<f:selectItems
@@ -115,6 +122,7 @@
 									var="countrylist" itemLabel="#{countrylist.countryName}"
 									itemValue="#{countrylist.countryId}" />
 							</p:selectOneMenu>
+							<p:message id="somNationalityMsg" for="somNationality" display="icon" />
 						</td>
 						<th></th>
 						<td></td>
@@ -125,7 +133,8 @@
 							<p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.designation']}" />
 						</th>
 						<td>
-							<p:inputText styleClass="ppDisplayTextM" value="#{profileManagementBackingBean.managedBean.selectedUser.designation}" />
+							<p:inputText styleClass="ppDisplayTextM" 
+								value="#{profileManagementBackingBean.managedBean.selectedUser.designation}" />
 						</td>
 						<th></th>
 						<td></td>
@@ -184,12 +193,13 @@
 				</th>	  
 		        <td>
 		        	<p:selectOneMenu value="#{profileManagementBackingBean.managedBean.userAddress.pmCountry.countryId}" 
-		        		styleClass="ppDropDownWidthM">
+		        		styleClass="ppDropDownWidthM" id="somCountry" required="true">
 	            	     <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" /> 		             
 						 <f:selectItems value="#{profileManagementBackingBean.getCountryList()}"
 							var="country" itemLabel="#{country.countryName}" itemValue="#{country.countryId}" />  
 						<p:ajax event="change" update="somStateC" />
-                   </p:selectOneMenu>
+                    </p:selectOneMenu>
+                    <p:message id="somCountryMsg" for="somCountry" display="icon" />
                  </td>	  
                  <th></th>
                  <td></td>
@@ -199,13 +209,19 @@
   					<p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.addressone']}" />
   					<p:outputLabel value="*" styleClass="mandatory" />
 				</th>	  
-			    <td><p:inputText value="#{profileManagementBackingBean.managedBean.userAddress.address1}" styleClass="ppDisplayTextL" /></td>	
+			    <td>
+			    	<p:inputText id="itUserAdd1" required="true"
+			    		value="#{profileManagementBackingBean.managedBean.userAddress.address1}" styleClass="ppDisplayTextL" />
+		    		<p:message id="itUserAdd1Msg" for="itUserAdd1" display="icon" />
+		    	</td>	
 			    <th></th>
                 <td></td>                    
             </tr>
             <tr>       
   				<th width="20%"><p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.addresstwo']}" /></th>	  
-			    <td><p:inputText value="#{profileManagementBackingBean.managedBean.userAddress.address2}" styleClass="ppDisplayTextL" /></td>	   
+			    <td>
+			    	<p:inputText value="#{profileManagementBackingBean.managedBean.userAddress.address2}" styleClass="ppDisplayTextL" />
+		    	</td>	   
 			    <th></th>
                 <td></td>
 			 </tr>
@@ -226,7 +242,11 @@
 					<p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.postcode']}" /> 
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</th>	 
-		    	<td><p:inputText value="#{profileManagementBackingBean.managedBean.userAddress.postcode}" styleClass="ppDisplayTextM" /></td>	
+		    	<td>
+		    		<p:inputText id="itPostcode" required="true"
+		    			value="#{profileManagementBackingBean.managedBean.userAddress.postcode}" styleClass="ppDisplayTextM" />
+	    			<p:message id="itPostcodeMsg" for="itPostcode" display="icon" />
+	    		</td>	
 		    	<th></th>
                	<td></td>
 		    </tr>			
@@ -236,7 +256,7 @@
   					<p:outputLabel value="*" styleClass="mandatory" />
 				</th>  
 		        <td>
-		        	<p:selectOneMenu id="somStateC" styleClass="ppDropDownWidthM"
+		        	<p:selectOneMenu id="somStateC" styleClass="ppDropDownWidthM" required="true"
 		        		disabled="#{profileManagementBackingBean.managedBean.userAddress.pmCountry.countryId==null}"
 		        		value="#{profileManagementBackingBean.managedBean.userAddress.pmState.stateId}" >
 					   	<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" /> 
@@ -248,6 +268,7 @@
 					  		profileManagementBackingBean.managedBean.userAddress.pmState.stateId)}" 
 					  		update="somDistrictC, somDivisionC" />
 			       </p:selectOneMenu>
+			       <p:message id="somStateCMsg" for="somStateC" display="icon" />
 		       	</td>						
 				<th>
 					<p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.division']}" />
@@ -270,7 +291,8 @@
 	            	<p:outputLabel value="*" styleClass="mandatory" />
             	</th> 
 		        <td>
-		        	<p:selectOneMenu id="somDistrictC" disabled="#{profileManagementBackingBean.managedBean.userAddress.pmState.stateId==null}"
+		        	<p:selectOneMenu id="somDistrictC" required="true"
+		        		disabled="#{profileManagementBackingBean.managedBean.userAddress.pmState.stateId==null}"
 		        		value="#{profileManagementBackingBean.managedBean.userAddress.pmDistrict.districtId}"
 		              	styleClass="ppDropDownWidthM"> 
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}"/>
@@ -280,13 +302,15 @@
 							itemValue="#{district.districtId}"/>
 						<p:ajax event="change" update="somCityC"/>
 				   </p:selectOneMenu>
+				   <p:message id="somDistrictCMsg" for="somDistrictC" display="icon" />
 			    </td>	
 			    <td>
 			    	<p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.citytown']}" />
 			    	<p:outputLabel value="*" styleClass="mandatory" />
 		    	</td>
 		        <td>
-		        	<p:selectOneMenu id="somCityC" disabled="#{profileManagementBackingBean.managedBean.userAddress.pmDistrict.districtId==null}"
+		        	<p:selectOneMenu id="somCityC" required="true"
+		        		disabled="#{profileManagementBackingBean.managedBean.userAddress.pmDistrict.districtId==null}"
 		        		value="#{profileManagementBackingBean.managedBean.userAddress.pmCity.cityId}"
     					styleClass="ppDropDownWidthM"> 
 				        <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" /> 
@@ -294,7 +318,8 @@
 							value="#{profileManagementBackingBean.getCityList(profileManagementBackingBean.managedBean.userAddress.pmDistrict.districtId)}"
 							var="city" itemLabel="#{city.cityName}"
 							itemValue="#{city.cityId}"/>
-				   </p:selectOneMenu>
+				    </p:selectOneMenu>
+				    <p:message id="somCityCMsg" for="somCityC" display="icon" />
 			    </td>	
 			    <th></th>
       			<td></td>
@@ -305,11 +330,13 @@
   					<p:outputLabel value="*" styleClass="mandatory" />
 				</th>  
 			    <td>
-			    	<p:inputText value="#{profileManagementBackingBean.managedBean.selectedUser.email}" styleClass="ppDisplayTextM"  />
+			    	<p:inputText id="itEmail" required="true"
+			    		value="#{profileManagementBackingBean.managedBean.selectedUser.email}" styleClass="ppDisplayTextM"  />
 			    	&#160;&#160;   
 	                <p:graphicImage id="giEmail" library="ep/images/design" name="tooltips.png"
 		                   value="/css/images/design/tooltips.png" />
 					<p:tooltip for="giEmail" value="#{lbl['lbl.pm.profiles.userdetails.email.tooltip']}" showEffect="fade" hideEffect="fade" />
+					<p:message id="itEmailMsg" for="itEmail" display="icon" />
 			    </td>
 			    <th></th>
                	<td></td>
