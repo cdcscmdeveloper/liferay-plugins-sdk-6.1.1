@@ -79,6 +79,7 @@ public class TemplateSpecHelper {
 				newSpecMaster = (TplSpecMaster) BeanUtils.cloneBean(specMaster);
 				
 				if (newSpecMaster != null) {
+					newSpecMaster.setBrandNew(true);
 					newSpecMaster.setSpecMasterId(null);
 					newSpecMaster.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_DRAFT);
 					newSpecMaster.setAdminRemark(null);
@@ -157,7 +158,6 @@ public class TemplateSpecHelper {
 								newSpecQuestion.setWeightage(null);
 								newSpecQuestion.setTplSpecScorings(null);
 								newSpecQuestion.setTplSpecEstimations(null);
-								newSpecQuestion.setTplSpecAnswers(null);
 								setUserDetails(newSpecQuestion);
 								newSpecQuestions.add(newSpecQuestion);
 								
