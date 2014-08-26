@@ -152,6 +152,9 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	private String pageNavToRequestNote;
 	private SelectItem[] procurementTypes; // for procuremment type dropdown
 	private boolean rnToSQFlag = Boolean.TRUE;
+	private boolean panelItemFlag = Boolean.TRUE;
+	private boolean panelItemBtnFlag = Boolean.TRUE;
+	
 	private boolean supplierViewBtn = Boolean.TRUE;
 	private boolean required;
 	private List<TplSpecQuestion> prodQuestions = new ArrayList<TplSpecQuestion>();
@@ -1322,6 +1325,30 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	 */
 	public void setServiceQuestions(List<TplSpecQuestion> serviceQuestions) {
 		this.serviceQuestions = serviceQuestions;
+	}
+	/**
+	 * @return the panelItemFlag
+	 */
+	public boolean isPanelItemFlag() {
+		return panelItemFlag;
+	}
+	/**
+	 * @param panelItemFlag the panelItemFlag to set
+	 */
+	public void setPanelItemFlag(boolean panelItemFlag) {
+		this.panelItemFlag = panelItemFlag;
+	}
+	/**
+	 * @return the panelItemBtnFlag
+	 */
+	public boolean isPanelItemBtnFlag() {
+		return panelItemBtnFlag;
+	}
+	/**
+	 * @param panelItemBtnFlag the panelItemBtnFlag to set
+	 */
+	public void setPanelItemBtnFlag(boolean panelItemBtnFlag) {
+		this.panelItemBtnFlag = panelItemBtnFlag;
 	}
 	
 }

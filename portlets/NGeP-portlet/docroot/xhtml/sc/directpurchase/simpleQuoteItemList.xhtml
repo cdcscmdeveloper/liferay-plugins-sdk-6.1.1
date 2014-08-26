@@ -11,12 +11,12 @@
 	  <h:panelGroup style="width: 100%;">
 		<ac:templateSpec 
 			templateSpecBean="#{simpleQuoteBackingBean.managedBean.productTemplateSpecBean}"
-			editable ="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}"
+			editable ="#{simpleQuoteBackingBean.managedBean.rnToSQFlag and simpleQuoteBackingBean.managedBean.panelItemFlag}"
 			title="PRODUCT LIST" />
 		<p:commandButton value="Clone" style="float:right;"
 		   action="#{simpleQuoteBackingBean.cloneAction(ParameterConst.itemListProduct)}"
 			icon="ui-icon-clone" process="@this"
-			update="@([id$=cloneItemSpec])" rendered="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}"
+			update="@([id$=cloneItemSpec])" rendered="#{simpleQuoteBackingBean.managedBean.rnToSQFlag and simpleQuoteBackingBean.managedBean.panelItemFlag}"
 			oncomplete="cloneItemSpec.show();return false;" partialSubmit="true">
 		</p:commandButton>
     </h:panelGroup>
@@ -24,14 +24,14 @@
 	  <p:spacer height="35px" />
 	  <h:panelGroup style="width: 100%;">
 		 <ac:templateSpec
-		    editable ="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}"
+		    editable ="#{simpleQuoteBackingBean.managedBean.rnToSQFlag and simpleQuoteBackingBean.managedBean.panelItemFlag}"
 			templateSpecBean="#{simpleQuoteBackingBean.managedBean.serviceTemplateSpecBean}"
 			title="SERVICE LIST" />
 
 		 <p:commandButton value="Clone" style="float:right;"
 		     action="#{simpleQuoteBackingBean.cloneAction(ParameterConst.itemListService)}"
 			icon="ui-icon-clone" process="@this"
-			update="@([id$=cloneItemSpec])" rendered="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}"
+			update="@([id$=cloneItemSpec])" rendered="#{simpleQuoteBackingBean.managedBean.rnToSQFlag and simpleQuoteBackingBean.managedBean.panelItemFlag}"
 			oncomplete="cloneItemSpec.show();return false;" partialSubmit="true">
 		</p:commandButton>
       </h:panelGroup>

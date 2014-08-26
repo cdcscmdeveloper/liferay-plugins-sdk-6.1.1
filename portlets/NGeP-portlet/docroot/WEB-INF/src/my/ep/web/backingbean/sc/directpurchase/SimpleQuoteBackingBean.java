@@ -121,6 +121,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sc.helper.LocationSingleton;
 import my.ep.web.util.sc.helper.SourcingLocationHelper;
+import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
@@ -193,9 +194,38 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 
 					PanelSupplierReqDTO reqDTO = new PanelSupplierReqDTO();
 					reqDTO.setPanelItemId(docId);
-					PanelSupplierResDTO resDTO= panelSupplierSO.retrievePanelItem(reqDTO);
+					PanelSupplierResDTO resDTO= panelSupplierSO.retrieveSupplierByPanelItem(reqDTO);
 					CtPanelItem  selectedPanelItem = resDTO.getCtPanelItem();
+					
+					if(selectedPanelItem.getItemCategoryId() != null){
 
+						if(selectedPanelItem.getItemCategoryId().getParameterCode().equals(ParameterConst.SQ_PANEL_ITEM_GENERAL)){
+							 //  panel item general 
+							getManagedBean().setPanelItemFlag(Boolean.TRUE);
+							
+						} else if(selectedPanelItem.getItemCategoryId().getParameterCode().equals(ParameterConst.SQ_PANEL_ITEM_SPECIFIC)){
+                         //  panel item specific 
+							scQuote.setTitle(selectedPanelItem.getScRequestItem().getItemName());
+							getManagedBean().setPanelItemFlag(Boolean.FALSE);
+							
+						}
+					}
+					
+					TemplateSpecBean productTplSpecBean = getManagedBean().getProductTemplateSpecBean();
+					TemplateSpecBean serviceTplSpecBean = getManagedBean().getServiceTemplateSpecBean();
+
+					if(productTplSpecBean.getSpecMaster() !=null && productTplSpecBean.getSpecMaster().getTplSpecQuestions() != null){
+						if(productTplSpecBean.getSpecMaster().getTplSpecQuestions().size() == 1){
+							throw new EpException("Simple quote must have only one Panel Item.");
+						}
+					}
+
+					if(serviceTplSpecBean.getSpecMaster() !=null && serviceTplSpecBean.getSpecMaster().getTplSpecQuestions() != null){
+						if(serviceTplSpecBean.getSpecMaster().getTplSpecQuestions().size() == 1){
+							throw new EpException("Simple quote must have only one Panel Item.");
+						}
+					}
+					
 					List<CtPanelItem> panelItems = getManagedBean().getPanelItems();
 					if(panelItems == null){
 						panelItems = new ArrayList<CtPanelItem>();
@@ -220,23 +250,31 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 							}
 
 							if (itemIds.size() > 0) {
-								if(itemIds.contains(selectedPanelItem.getPanelItemId())){
-									throw new EpException("Item already exists.");
-									
-								} else {
+								if(!itemIds.contains(selectedPanelItem.getPanelItemId())){
 									panelItems.add(resDTO.getCtPanelItem());
 									getManagedBean().setPanelItems(panelItems);
 									prepareQuestions(selectedPanelItem , null);
+									
+								} else {
+									throw new EpException("Item already exists.");
 								}
 							}
 						}
 					}
+					
+					getManagedBean().setPanelItemBtnFlag(Boolean.FALSE);
+					// copy suppliers from compare screen to the panel item supplier list
+					if(selectedPanelItem.getCtPanelSuppliers() != null && selectedPanelItem.getCtPanelSuppliers().size()>0){
+						panelItemListener(selectedPanelItem.getCtPanelSuppliers(), scQuote);
+					}
+
 				} else{
 					throw new EpException("Select non contract items only");
 				}
 				
-		 } else { // non contract item
-				
+		 } else { // non contract item and non panel item
+				 
+			     
 			     if(getManagedBean().getPanelItems() == null || getManagedBean().getPanelItems().isEmpty()){ // check panel item list
 				    CatalogueReqDTO catalogueReqDTO = new CatalogueReqDTO();
 				    catalogueReqDTO.setDocId(docId);
@@ -381,9 +419,10 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 				
 			} else{
 				// panel item  - product by default when the cmItem is null
-				itemCode = 0;
+				itemCode = 2;
+				uom = ctPanelItem.getPmUom();
+				ItemName= ctPanelItem.getItemName();
 			}
-			uom =  ctPanelItem.getPmUom();
 			
 		} else if(cmSupplierItem !=null){
 			String extCode = cmSupplierItem.getCmItem().getExtensionCode();
@@ -447,7 +486,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 					productQuestions = new ArrayList<TplSpecQuestion>();
 				}
                
-				if(itemCode >= 0){
+				if(itemCode >0){
 					if (itemCode < 70 || itemCode > 94) { // for product  < 70 and  > 94  
 					
 						templateSpecBackingBean.addQuestion(prodTpl ,productQuestions, productQuestions.size()-1, TemplateSpecConst.QUESTION_TYPE_ITEM);
@@ -570,6 +609,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			if(getManagedBean().getSupplierList() != null){
 				suppliers.addAll(getManagedBean().getSupplierList());
 			}
+			
 			// panel item
 			if(getManagedBean().getPanelSuppliers() != null){
 				suppliers.addAll(getManagedBean().getPanelSuppliers());
@@ -1680,38 +1720,40 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			getManagedBean().setActiveIndex(3);
 		}
 		
-		// ptj locality address
-		if(getManagedBean().getLocationTrees() == null || getManagedBean().getLocationTrees().isEmpty()){
-			IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-							IAddressSO.class);
-			AddressReqDTO reqDTO = new AddressReqDTO();
-			if(getManagedBean().getRequestNote().getPmOrgProfile() != null){
-				reqDTO.setOrgProfileId(getManagedBean().getRequestNote().getPmOrgProfile().getOrgProfileId());
-				reqDTO.setAddressType(AddressType.BILLING_ADDRESS.value());
-				AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
-				List<PmAddressType> list = resDTO.getAddressTypeList();
-				if(list != null && list.size() >0){
-					PmAddressType addressType = list.get(0);
-					List<PmState> states = new ArrayList<PmState>();
-					List<PmDivision> divisions = new ArrayList<PmDivision>();
-					List<PmDistrict> districts = new ArrayList<PmDistrict>();
-					
-					if(addressType.getPmAddress().getPmDivision() != null){
-						divisions.add(addressType.getPmAddress().getPmDivision());
+		if(!getManagedBean().getScQuote().isPanel()){
+			// ptj locality address
+			if(getManagedBean().getLocationTrees() == null || getManagedBean().getLocationTrees().isEmpty()){
+				IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+								IAddressSO.class);
+				AddressReqDTO reqDTO = new AddressReqDTO();
+				if(getManagedBean().getRequestNote().getPmOrgProfile() != null){
+					reqDTO.setOrgProfileId(getManagedBean().getRequestNote().getPmOrgProfile().getOrgProfileId());
+					reqDTO.setAddressType(AddressType.BILLING_ADDRESS.value());
+					AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
+					List<PmAddressType> list = resDTO.getAddressTypeList();
+					if(list != null && list.size() >0){
+						PmAddressType addressType = list.get(0);
+						List<PmState> states = new ArrayList<PmState>();
+						List<PmDivision> divisions = new ArrayList<PmDivision>();
+						List<PmDistrict> districts = new ArrayList<PmDistrict>();
+
+						if(addressType.getPmAddress().getPmDivision() != null){
+							divisions.add(addressType.getPmAddress().getPmDivision());
+						}
+
+						if(addressType.getPmAddress().getPmDistrict() != null){
+							districts.add(addressType.getPmAddress().getPmDistrict());
+						}
+
+						if(addressType.getPmAddress().getPmState() != null && districts.isEmpty() && divisions.isEmpty()){
+							states.add(addressType.getPmAddress().getPmState());
+						}
+
+						getManagedBean().getLocationTrees().add(
+								LocationSingleton.getInstance().buildLocationTree(null, states,
+										districts, divisions, null,TplSpecZoneLoc.class));
 					}
-					
-					if(addressType.getPmAddress().getPmDistrict() != null){
-						districts.add(addressType.getPmAddress().getPmDistrict());
-					}
-					
-					if(addressType.getPmAddress().getPmState() != null && districts.isEmpty() && divisions.isEmpty()){
-						states.add(addressType.getPmAddress().getPmState());
-					}
-					
-					getManagedBean().getLocationTrees().add(
-							LocationSingleton.getInstance().buildLocationTree(null, states,
-									districts, divisions, null,TplSpecZoneLoc.class));
 				}
 			}
 		}
@@ -1735,6 +1777,13 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 		TemplateSpecReqDTO reqDTO = new TemplateSpecReqDTO();
 		TemplateSpecBean productTplSpecBean = getManagedBean().getProductTemplateSpecBean();
 		TemplateSpecBean serviceTplSpecBean = getManagedBean().getServiceTemplateSpecBean();
+		if(productTplSpecBean.getSpecMaster() !=null){
+			prodSpecMaster = productTplSpecBean.getSpecMaster();
+		}
+		if(serviceTplSpecBean.getSpecMaster() !=null){
+			serviceSpecMaster = serviceTplSpecBean.getSpecMaster();
+		}
+		
 		try {
 			if(getManagedBean().getSelectedQuote() != null && getManagedBean().getSelectedQuote().getQuoteDocs().size()>0) {
 				List<ScQuoteDoc>	quoteDocs = getManagedBean().getSelectedQuote().getQuoteDocs();
@@ -1756,21 +1805,14 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 					
 					// non clone spec master
 					if(productTplSpecBean.getSpecMaster() !=null && productTplSpecBean.getSpecMaster().getTplSpecQuestions() != null){
-						prodSpecMaster = productTplSpecBean.getSpecMaster();
 						getManagedBean().setProdQuestions(prodSpecMaster.getTplSpecQuestions());
-						
-					}else{ 
-						// clone tpl spec master
-						prodSpecMaster = (TplSpecMaster) BeanUtils.cloneBean(cloneSpecMaster);
-						prodSpecMaster.setSpecMasterId(null);
 					}
-
+					
 					if(getManagedBean().getProdQuestions() != null && getManagedBean().getProdQuestions().size()>0){
 						List<TplSpecQuestion> prodQuestions = getManagedBean().getProdQuestions();
 						questions.addAll(prodQuestions);
 					}
-
-					cloneQuestions  = cloneTplSpecQuetions(cloneSpecMaster ,prodSpecMaster);
+					cloneQuestions = TemplateSpecHelper.getInstance().cloneTplSpecQuestions(prodSpecMaster ,cloneSpecMaster.getTplSpecQuestions());
 					if(cloneQuestions.size() >0){
 						questions.addAll(cloneQuestions);
 					}
@@ -1787,21 +1829,14 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 
 					// non clone spec master - already selected list
 					if(serviceTplSpecBean.getSpecMaster() !=null && serviceTplSpecBean.getSpecMaster().getTplSpecQuestions() !=null){
-						serviceSpecMaster = serviceTplSpecBean.getSpecMaster();
 						getManagedBean().setServiceQuestions(serviceSpecMaster.getTplSpecQuestions());
-
-					}else{ 
-						// clone tpl spec master
-						serviceSpecMaster = (TplSpecMaster) BeanUtils.cloneBean(cloneSpecMaster);
-						serviceSpecMaster.setSpecMasterId(null);
 					}
-
+					
 					if(getManagedBean().getServiceQuestions() != null && getManagedBean().getServiceQuestions().size()>0){
 						List<TplSpecQuestion> serviceQuestions = getManagedBean().getServiceQuestions();
 						questions.addAll(serviceQuestions);
 					}
-
-					cloneQuestions  = cloneTplSpecQuetions(cloneSpecMaster ,serviceSpecMaster);
+					cloneQuestions = TemplateSpecHelper.getInstance().cloneTplSpecQuestions(serviceSpecMaster ,cloneSpecMaster.getTplSpecQuestions());
 					if(cloneQuestions.size() >0){
 						questions.addAll(cloneQuestions);
 					}
@@ -1865,7 +1900,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 		getManagedBean().searchCloneItemSpec();
 	}
 	
-	public void supplierListListener(List<SmSupplier> suppliers  , ScQuote quote){
+	public void supplierListListener(List<SmSupplier> suppliers, ScQuote quote){
 		debugLogger("supplierListListener");
 		List<ScQuoteSupplier> supplierList = quote.getScQuoteSuppliers();
 		if(supplierList == null){
@@ -1935,9 +1970,9 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 		}
 	}
 
-	public void panelItemListener(List<CtPanelSupplier>	ctPanelSuppliers){
+	public void panelItemListener(List<CtPanelSupplier>	ctPanelSuppliers , ScQuote quote){
 		debugLogger("panelItemListener");
-		List<ScQuoteSupplier> panelSuppliers = getManagedBean().getPanelSuppliers();
+		List<ScQuoteSupplier> panelSuppliers = quote.getScQuoteSuppliers();
 		if(panelSuppliers == null){
 			panelSuppliers = new ArrayList<ScQuoteSupplier>();
 		}
@@ -1945,10 +1980,28 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			for (CtPanelSupplier panelSupplier : ctPanelSuppliers) {
 				ScQuoteSupplier scQuoteSupplier = new ScQuoteSupplier();
 				scQuoteSupplier.setSmSupplier(panelSupplier.getSupplier());
-				scQuoteSupplier.setQuote(getManagedBean().getScQuote());
-				panelSuppliers.add(scQuoteSupplier);
+				scQuoteSupplier.setQuote(quote);
+
+				if(panelSuppliers.isEmpty()){
+					panelSuppliers.add(scQuoteSupplier);
+					getManagedBean().setPanelSuppliers(panelSuppliers);
+                   
+				} else {
+					List<Long> supplierIds = new ArrayList<Long>();
+					for (ScQuoteSupplier quoteSupplier :  getManagedBean().getPanelSuppliers()) {
+						supplierIds.add(quoteSupplier.getSmSupplier().getSupplierId());
+					}
+					if (supplierIds.size() > 0) {
+						if(!supplierIds.contains(scQuoteSupplier.getSmSupplier().getSupplierId())){
+							panelSuppliers.add(scQuoteSupplier);
+							getManagedBean().setPanelSuppliers(panelSuppliers);
+
+						} else{
+							//throw new EpException(MessageConst.INFO_700027, new String[]{"Supplier","in panel Supplier"});
+						}
+					}
+				}
 			}
-			getManagedBean().setPanelSuppliers(panelSuppliers);
 		}
 	}
 	
@@ -2084,15 +2137,31 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			}
 
 			// service and product
+			List<TplSpecQuestion> Questions = new ArrayList<TplSpecQuestion>();
+			TplSpecMaster prodServiceMaster =  new TplSpecMaster();
 			if(scQuote.getQuoteDocs() != null){
 				for (ScQuoteDoc scQuoteDoc : scQuote.getQuoteDocs()) {
 					TplSpecMaster specMaster = scQuoteDoc.getSpecMaster();
+					
+					// product
 					if(ParameterConst.SQ_ITEM_LIST_PRODUCT.equalsIgnoreCase(specMaster.getItemTypeCode().getParameterCode())){
 						productTplSpecBean.setSpecMaster(specMaster);
 						getManagedBean().setProductTemplateSpecBean(productTplSpecBean);
-						// service Tpl Spe
-					} else  if(ParameterConst.SQ_ITEM_LIST_SERVICE.equalsIgnoreCase(specMaster.getItemTypeCode().getParameterCode())){
+						
+					} else  {
+						prodServiceMaster.setTplSpecQuestions(Questions);
+						productTplSpecBean.setSpecMaster(prodServiceMaster);
+						getManagedBean().setProductTemplateSpecBean(productTplSpecBean);
+					}
+					
+					// service
+					if(ParameterConst.SQ_ITEM_LIST_SERVICE.equalsIgnoreCase(specMaster.getItemTypeCode().getParameterCode())){
 						serviceTplSpecBean.setSpecMaster(specMaster);
+						getManagedBean().setServiceTemplateSpecBean(serviceTplSpecBean);
+						
+					} else{
+						prodServiceMaster.setTplSpecQuestions(Questions);
+						serviceTplSpecBean.setSpecMaster(prodServiceMaster);
 						getManagedBean().setServiceTemplateSpecBean(serviceTplSpecBean);
 					}
 				}
@@ -2168,7 +2237,12 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			if(scQuote.getScQuoteSuppliers() != null && scQuote.getScQuoteSuppliers().size() > 0){
 				getManagedBean().setSupplierList(scQuote.getScQuoteSuppliers());
 			}
-
+			
+			// panel supplier
+			if(scQuote.getScQuoteSuppliers() != null && scQuote.getScQuoteSuppliers().size() > 0){
+				getManagedBean().setPanelSuppliers(scQuote.getScQuoteSuppliers());
+			}
+			
 			// remarks
 			scQuote.setRemarks(initializeRemarks(scQuote));
 			getManagedBean().setScQuote(scQuote);
