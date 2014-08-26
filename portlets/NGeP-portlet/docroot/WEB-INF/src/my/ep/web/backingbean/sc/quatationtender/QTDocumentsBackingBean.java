@@ -60,6 +60,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtDocReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtDocReportAttachment;
@@ -527,6 +528,36 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		populateAttachmentDetails(attachment);
 		
 		VelocityContext context = new VelocityContext();
+		
+		StringBuilder deductionTypes = new StringBuilder();
+    	List<ScQtDeduction> scQtDeductions = qt.getScQtDeductions();
+    	if (scQtDeductions != null) {
+    		for (ScQtDeduction scQtDeduction : scQtDeductions) {
+        		if (deductionTypes.length() > 0) {
+        			deductionTypes.append(",");
+        		}
+        		deductionTypes.append(getParameterDesc(scQtDeduction.getDeductionType()));
+        	}	
+    	}
+    	//context.put("deductionTypes", deductionTypes.toString());
+    	boolean deductionType = false;
+    	if (deductionTypes.toString().contains("Penalty")) {
+    		deductionType = true;
+    		context.put("penalty", deductionType);
+    	}
+    	if (deductionTypes.toString().contains("Royalty Fee")) {
+    		deductionType = true;
+    		context.put("royaltyFee", deductionType);
+    	}
+    	if (deductionTypes.toString().contains("Fixed Deduction")) {
+    		deductionType = true;
+    		context.put("fixedDeduction", deductionType);
+    	}
+    	if (deductionTypes.toString().contains("Non Fixed Deduction")) {
+    		deductionType = true;
+    		context.put("nonFixedDeduction", deductionType);
+    	}
+    	
 		
 		boolean isOneOff = false;
     	if (qt.getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_ONE_OFF)) {

@@ -1229,7 +1229,8 @@ public class QTDetailBackingBean extends
 							BriefingResDTO briefingResDTO = qTBriefingSO
 									.retrieveBriefingSiteVisitDtls(briefingReqDTO);
 							ScQtBsv scQtBsv = briefingResDTO.getScQtBsv();
-
+							scQtBsv.setBsvRemarks(initializeRemarks(scQtBsv, scQtBsv.getBsvRemarks(),
+									ScQtBSVRemark.class));
 							BriefingZoneBean briefingZoneBean = new BriefingZoneBean(
 									specZoneDtl,
 									briefingResDTO.getBriefingList(),
@@ -1238,14 +1239,12 @@ public class QTDetailBackingBean extends
 						}
 					}
 					this.getManagedBean().setBriefingZoneBean(zoneBeans);
-					initializeRemarks(zoneBeans.get(0).getScQtBsv(), zoneBeans
-							.get(0).getScQtBsv().getBsvRemarks(),
-							ScQtBSVRemark.class);
+					
 					this.getManagedBean().setBsvDtlBean(zoneBeans.get(0));
 				} else {
 					ScQtBsv qtBsv = resDTO.getScQtBsv();
-					initializeRemarks(qtBsv, qtBsv.getBsvRemarks(),
-							ScQtBSVRemark.class);
+					qtBsv.setBsvRemarks(initializeRemarks(qtBsv, qtBsv.getBsvRemarks(),
+							ScQtBSVRemark.class));
 					BriefingZoneBean briefingZoneBean = new BriefingZoneBean(
 							null, resDTO.getBriefingList(),
 							resDTO.getSiteVisitList(), qtBsv);
@@ -1785,6 +1784,11 @@ public class QTDetailBackingBean extends
 						scQt.getScQtSupplierCriteria());
 			}
 			if (!scQt.isPanel()) {
+				if (scQt.getEstimatedAmount().intValue() > SourcingConstants.ESTMT_FIVE_HUNDERED_THOUSAND
+						&& this.getManagedBean().getAllStateCode() == 3
+						&& !scQt.getScQtSupplierCriteria().isAllState()) {
+					scQt.getScQtSupplierCriteria().setAllState(true);
+				}
 				if ((!scQt.isZonal())
 						|| (scQt.getEstimatedAmount().intValue() > SourcingConstants.ESTMT_FIVE_HUNDERED_THOUSAND && !scQt
 								.getScQtSupplierCriteria().isAllState())) {

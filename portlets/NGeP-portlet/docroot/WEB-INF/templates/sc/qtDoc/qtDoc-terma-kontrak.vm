@@ -157,39 +157,41 @@
             <p>Sekiranya Pembekal gagal membuat pembayaran selepas tamat tempoh seperti yang dinyatakan di atas atau apa – apa tempoh lain yang telah diberikan oleh Kerajaan, maka Kerajaan boleh mengambil apa – apa tindakan undang – undang pada bila – bila masa tanpa memberi notis terlebih dahulu kepada Pembekal.</p>
     	</td>
     </tr>
-    <tr>
-    	<td>
-    		<span style='font-weight:bold;font-size:16px;font-family: Albertus Medium;'><u>Denda / Penalty</u></span>
-            <br/>
-            <p>Sekiranya Pembekal gagal menyediakan perkhidmatan dalam tempoh yang ditetapkan, denda akan dikenakan mengikut kadar yang termaktub di dalam kontrak.</p>
-            <span style='font-weight:bold;font-size:16px;font-family: Albertus Medium;'><u>Denda Kesempurnaan Bekalan / Perkhidmatan</u></span>
-            <br/>
-            <ol type="i">
-            	<li>Pembekal yang berjaya mestilah menyempurnakan kontrak tersebut dalam tempoh yang ditetapkan dalam kontrak</li>
-            	<li>Pembekal yang berjaya akan dikenakan denda sekiranya gagal menyempurnakan obligasi kontrak dalam tempoh yang telah ditetapkan.</li>
-            </ol>
-            <span style='font-weight:bold;font-size:16px;font-family: Albertus Medium;'><u>Denda Lewat Tuntut Pembayaran</u></span>
-            <br/>
-            <ol type="i">
-            	<li>Pembekal hendaklah membuat tuntutan pembayaran kepada Kerajaan tidak lewat daripada tempoh dua puluh satu ((21)) hari dari tarikh tamat tempoh pembekalan.</li>
-            	<li>Sekiranya tuntutan pembayaran lewat dan melebihi tempoh yang ditetapkan, Pembekal boleh dikenakan denda mengikut peratusan yang termaktub dalam kontrak daripada jumlah tuntutan bagi setiap bilangan hari yang Pembekal lewat tuntut.</li>
-            </ol>
-         </td>
-    </tr>
-    <tr>
-    	<td>
-    		<span style='font-weight:bold;font-size:16px;font-family: Albertus Medium;'><u>Bayaran Royalti</u></span>
-            <br/>
-             <ol type="i">
-            	<li>Pembekal yang berjaya hendaklah membayar royalti permerakuan item kepada Kerajaan bagi item tersebut yang terjual setiap tahun</li>
-            	<li>Kadar bayaran royalti pemerakuan item akan mengikut peratusan yang ditetapkan untuk kontrak atas harga item tersebut</li>
-            	<li>Bagi item-item tersebut yang dibeli oleh Kerajaan, bayaran royalti pemerakuan item akan dipotong terus oleh Kerajaan daripada bayaran-bayaran harga item tersebut mengikut kadar yang ditetapkan/</li>
-            </ol>
-            <p>Pembekal yang berjaya tidak dibenarkan untuk menarik balik tawaran royalti pemerakuan item bagi tersebut yang telah ditetapkan</p>
-        </td>
-    </tr>
+    <tr align="left">
+		<td>#if ( $penalty == "true")
+				<span style='font-weight:bold;font-size:16px;font-family: Albertus Medium;'><u>Denda / Penalty</u></span>
+	            <br/>
+	            <p>Sekiranya Pembekal gagal menyediakan perkhidmatan dalam tempoh yang ditetapkan, denda akan dikenakan mengikut kadar yang termaktub di dalam kontrak.</p>
+	            <span style='font-weight:bold;font-size:16px;font-family: Albertus Medium;'><u>Denda Kesempurnaan Bekalan / Perkhidmatan</u></span>
+	            <br/>
+	            <ol type="i">
+	            	<li>Pembekal yang berjaya mestilah menyempurnakan kontrak tersebut dalam tempoh yang ditetapkan dalam kontrak</li>
+	            	<li>Pembekal yang berjaya akan dikenakan denda sekiranya gagal menyempurnakan obligasi kontrak dalam tempoh yang telah ditetapkan.</li>
+	            </ol>
+	            <span style='font-weight:bold;font-size:16px;font-family: Albertus Medium;'><u>Denda Lewat Tuntut Pembayaran</u></span>
+	            <br/>
+	            <ol type="i">
+	            	<li>Pembekal hendaklah membuat tuntutan pembayaran kepada Kerajaan tidak lewat daripada tempoh dua puluh satu ((21)) hari dari tarikh tamat tempoh pembekalan.</li>
+	            	<li>Sekiranya tuntutan pembayaran lewat dan melebihi tempoh yang ditetapkan, Pembekal boleh dikenakan denda mengikut peratusan yang termaktub dalam kontrak daripada jumlah tuntutan bagi setiap bilangan hari yang Pembekal lewat tuntut.</li>
+	            </ol> 
+			#end 
+		</td><br/>
+	</tr>
+    <tr align="left">
+		<td>#if ( $royaltyFee == "true")
+				<span style='font-weight:bold;font-size:16px;font-family: Albertus Medium;'><u>Bayaran Royalti</u></span>
+				<br/>
+	             <ol type="i">
+	            	<li>Pembekal yang berjaya hendaklah membayar royalti permerakuan item kepada Kerajaan bagi item tersebut yang terjual setiap tahun</li>
+	            	<li>Kadar bayaran royalti pemerakuan item akan mengikut peratusan yang ditetapkan untuk kontrak atas harga item tersebut</li>
+	            	<li>Bagi item-item tersebut yang dibeli oleh Kerajaan, bayaran royalti pemerakuan item akan dipotong terus oleh Kerajaan daripada bayaran-bayaran harga item tersebut mengikut kadar yang ditetapkan/</li>
+	            </ol>
+	            <p>Pembekal yang berjaya tidak dibenarkan untuk menarik balik tawaran royalti pemerakuan item bagi tersebut yang telah ditetapkan</p>
+			#end 
+		</td><br/>
+	</tr>
      <tr>
-    	<td>
+    	<td>#if ( $fixedDeduction == "true")
     		<span style='font-weight:bold;font-size:16px;font-family: Albertus Medium;'><u>Potongan Tetap</u></span>
             <br/>
             <p>Kadar Sewa </p>
@@ -197,16 +199,18 @@
             <p>Kadar sewa peralatan adalah RM --- fixed deduction amount --- ---- tempoh --- (Ringgit Malaysia : ------ sahaja).</p>
             <p>Pembekal dikehendaki menjelaskan bayaran sewa bulanan untuk ruangan premis dan peralatan yang digunakan kepada Kerajaan.</p>
             <p>Semua bayaran akan ditolak dari amoun invois pembekal.</p>
+            #end
         </td>
     </tr>
     <tr>
-    	<td>
+    	<td>#if ( $nonFixedDeduction == "true")
     		<span style='font-weight:bold;font-size:16px;font-family: Albertus Medium;'><u>Potongan Tidak Tetap</u></span>
             <br/>
             <p>Utiliti</p>
             <p>Pembayaran ke atas penggunaan utiliti seperti bekalan air, elektrik dan gas perlu dijelaskan kepada Kerajaan.</p>
             <p>Meter berasingan disediakan untuk mengetahui kadar penggunaan bekalan air, elektrik dan gas.</p>
             <p>Semua bayaran akan ditolak dari amoun invois pembekal.</p>
+             #end
         </td>
     </tr>
     <tr>

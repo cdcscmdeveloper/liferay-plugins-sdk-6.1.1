@@ -51,12 +51,12 @@
 	<table width="100%">
 			<tr>
 				<td>
-            		<span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'><u>KENYATAAN TAWARAN</u></span>
-           			<br/>
-       			</td>
+					<br />
+				</td>
 			</tr>
-			<tr align="left">
+			<tr>
 				<td>
+            		<span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'><u>KENYATAAN TAWARAN</u></span>
 					<p>Pembekal adalah dipelawa daripada Syarikat-syarikat yang berdaftar dengan KEMENTERIAN KEWANGAN MALAYSIA dalam kod bidang yang berkaitan and kriteria berkaitan seperti berikut:</p>
 				</td>
 			</tr>
@@ -92,7 +92,12 @@
 								<td>$categoryResults.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryName</td>
             					<td>$categoryResults.pmCategoryL3.pmCategoryL2.categoryName</td>
             					<td>$categoryResults.pmCategoryL3.categoryName</td>
-            					<td>$categoryResults.mandatory</td>
+            					<td>#if ($categoryResults.mandatory)
+										Yes
+									#else 
+										No 
+									#end
+            					</td>
 							</tr>
 							#end
 						</table>
@@ -100,7 +105,9 @@
 				</td>
 			</tr>
 			<tr>
-				<td></td>
+				<td>
+					<br />
+				</td>
 			</tr>
 			<tr>
 				<td align="left">TARIKH MULA TAWARAN : $publishDate</td>
@@ -129,9 +136,9 @@
 				            	#end
 		            		 	Site Visit Same As Briefing : 
 								#if ($zoneList.scQtBsv.sameBsv)
-									yes
+									Yes
 								#else 
-									no 
+									No 
 								#end<br/>
 		            		 	<table width='100%' class="table2">
 				            		<tr>
@@ -153,9 +160,9 @@
 				            	</table>
 								Attendance for Briefing : 
 								#if ($zoneList.scQtBsv.allBriefingReq)
-									yes
+									Yes
 								#else 
-									no 
+									No 
 								#end<br/>
 								<br />
 								<table width='100%' class="table2">
@@ -178,9 +185,9 @@
 				            	</table>
 								Attendance for Site Visit : 
 								#if ($zoneList.scQtBsv.allSiteVisitReq)
-									yes
+									Yes
 								#else 
-									no 
+									No 
 								#end<br/>
 							#end
 		            	
