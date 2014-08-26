@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -1338,10 +1339,9 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	}
 	public void onTabChange(int selectedTabIndex){
 		if(selectedTabIndex==3){
-			getManagedBean().setSelectedNode(null);
-			getManagedBean().setVotFundCode(null);
-			getManagedBean().populateChargeLineData();	
+			populateChargeLineData(false);	
 			setClassName("@(.crChargeLinePnlClass)");
+			onNodeSelect();
 			getVotFundList(getManagedBean().getFlRequest().getIssuedOrgProfile().getOrgProfileId());
 		}
 		if(selectedTabIndex==1){
@@ -1350,6 +1350,77 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			}
 		}
 	}
+	private void populateChargeLineData(boolean retainPreviousSelection) {
+		getManagedBean().setChargeLineItemRoot(new DefaultTreeNode("root", null));
+		Map<Long, List<FlFulfilmentItemAddr>> chargeLineItemsMap = new HashMap<Long, List<FlFulfilmentItemAddr>>();
+		
+		for(FlDeliveryAddress  deliveryAddress : getManagedBean().getFlRequest().getFlDeliveryAddresses()){
+			for(FlFulfilmentItemAddr itemAddress : deliveryAddress.getFlFulfilmentItemAddr()){
+				itemAddress.setChargeOrderedAmt(itemAddress.getOrderedAmt());
+				itemAddress.setChargeOrderedQty(itemAddress.getOrderedQty());
+				itemAddress.setChargeUnitPrice(itemAddress.getUnitPrice());
+				if(chargeLineItemsMap.containsKey(itemAddress.getScRequestItem().getRequestNoteItemId())){
+					//code for calculating duplicate charge line order amount and quantity for same unit price  Condition for checking unit price same.
+					boolean notContained=true;
+					for(FlFulfilmentItemAddr containedItem : chargeLineItemsMap.get(itemAddress.getScRequestItem().getRequestNoteItemId())){
+						if(containedItem.getChargeUnitPrice().equals(itemAddress.getUnitPrice())){
+							containedItem.setChargeOrderedAmt( containedItem.getChargeOrderedAmt().add(itemAddress.getOrderedAmt()));
+							containedItem.setChargeOrderedQty(containedItem.getChargeOrderedQty().add(itemAddress.getOrderedQty()));
+							notContained=false;
+						}
+					}
+					if(notContained){
+						chargeLineItemsMap.get(itemAddress.getScRequestItem().getRequestNoteItemId()).add(itemAddress);
+					}
+				} else {
+					List<FlFulfilmentItemAddr> itemAddressList=new ArrayList<FlFulfilmentItemAddr>();
+					itemAddressList.add(itemAddress);
+					chargeLineItemsMap.put(itemAddress.getScRequestItem().getRequestNoteItemId(),itemAddressList);
+				}
+			}
+		}
+		
+		FlFulfilmentItemAddr flItemAddress = null;
+		TreeNode childItemNode = null;
+		BigDecimal totalOrderAmt = null;
+		BigDecimal grandTotalOrderAmt=new BigDecimal(0);
+		getManagedBean().setOrderedAmtGrandTotal(grandTotalOrderAmt);
+		int i=0;
+		for(Entry<Long, List<FlFulfilmentItemAddr>> itemEntry : chargeLineItemsMap.entrySet()){
+			flItemAddress = (FlFulfilmentItemAddr) itemEntry.getValue().get(0).cloneEntity();
+			flItemAddress.setParent(true);
+			if(null != flItemAddress.getPmVotFund() && null != flItemAddress.getPmVotFund().getVotFundId()){
+				flItemAddress.setCoaValue("Y");
+			}else{
+				flItemAddress.setCoaValue("N");
+			}
+			
+			//Do create New Item Address and copy the first element data manually.
+			childItemNode = new DefaultTreeNode(flItemAddress.getScRequestItem().getRequestNoteItemId().toString(), flItemAddress,getManagedBean().getChargeLineItemRoot());
+			totalOrderAmt = new BigDecimal(0);
+			
+			if(retainPreviousSelection){
+				if(childItemNode.getType().equals(getManagedBean().getSelectedNode().getType())){
+					retainPreviousSelection = false;
+					getManagedBean().setSelectedNode(childItemNode);
+					childItemNode.setSelected(true);
+					i++;
+				}
+			} else if(i==0) {
+				getManagedBean().setSelectedNode(childItemNode);
+				childItemNode.setSelected(true);
+				i++;
+			}
+			
+			for(FlFulfilmentItemAddr itemAddr : itemEntry.getValue()) {
+				new DefaultTreeNode(itemAddr.getScRequestItem().getRequestNoteItemId().toString(), itemAddr, childItemNode);
+				totalOrderAmt = totalOrderAmt.add(itemAddr.getChargeOrderedAmt());
+			}
+			flItemAddress.setChargeOrderedAmt(totalOrderAmt);
+			grandTotalOrderAmt = grandTotalOrderAmt.add(totalOrderAmt);
+		}
+		getManagedBean().setOrderedAmtGrandTotal(grandTotalOrderAmt);
+	}
 	public void onNodeSelect() {
 		TreeNode selectedNode=getManagedBean().getSelectedNode();
 		onNodeUnSelect();
@@ -1357,16 +1428,18 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			for(TreeNode children:selectedNode.getChildren()){
 				FlFulfilmentItemAddr childData=((FlFulfilmentItemAddr)children.getData());
 				if(null !=childData.getPmVotFund()){
-					String votFundCode = votFundCodeMap.get(childData.getPmVotFund().getVotFundId()).getVotFundCode();
-					getManagedBean().setVotFundCode(votFundCode);
+					getManagedBean().setVotFundCode(childData.getPmVotFund().getVotFundCode());
 				}
+				
 				if(childData.getAssetInd()!=null) {
 					getManagedBean().setAssetIndCode(childData.getAssetInd().getParameterCode());
 				}
+					
 				if(childData.getPmGlAccount()!=null) {
 					String glAccountCode = glAccountCodeMap.get(childData.getPmGlAccount().getGlAccountId()).getGlAccCode();
 					getManagedBean().setGlAccountCode(glAccountCode);
 				}
+				
 				if(childData.getPmPrgActivity()!=null) {
 					if(progmActivityCodeMap.size()==0) {
 						IProgramActivitySO programActivitySO = (IProgramActivitySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IProgramActivitySO.class);
@@ -1497,7 +1570,13 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			
 			updateAllItemsWithChargeDrops(getManagedBean().getSelectedNodes()); // set COA to Y
 			FlFulfilmentItemAddr childItemAddress = null;
+			boolean selected=false;
 			for(TreeNode selectedNode : getManagedBean().getSelectedNodes()){
+				//code for selecting the treenode from popupmenu
+				if(!selected){
+					getManagedBean().setSelectedNode(selectedNode);
+					selected=true;
+				}
 				for(TreeNode children:selectedNode.getChildren()){
 					childItemAddress = (FlFulfilmentItemAddr)children.getData();
 					childItemAddress.setPmVotFund(pmVotFund);
@@ -1532,7 +1611,8 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 					}
 				}
 			}
-			getManagedBean().populateChargeLineData();
+			populateChargeLineData(true);
+			onNodeSelect();
 			RequestContext.getCurrentInstance().execute("applyBulkCharge.hide()");
 		} finally {
 			parameterSO = null;
