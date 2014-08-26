@@ -161,7 +161,8 @@ public class QTBusinessOwnerBackingBean extends
 						searchBean);
 				userReqDTO.setUserSearchBean(searchBean);
 				UserResDTO resDto = userSO.searchUserProfile(userReqDTO);
-				if (resDto != null) {
+				
+				if (null != resDto.getUserResultBean().getResultList()) {
 					getManagedBean().setExternalUsers(
 							resDto.getUserResultBean().getResultList());
 					for (PmUser user : getManagedBean().getExternalUsers()) {
@@ -327,7 +328,7 @@ public class QTBusinessOwnerBackingBean extends
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IUserSO.class);
 		UserReqDTO userReqDto = new UserReqDTO();
-		userReqDto.setRoleCode(RoleCode.MSC_COMMITTEE.value());
+		userReqDto.setRoleCode(RoleCode.MSC_SECRETARY.value());
 		UserResDTO userResDTO = iUserSO.retrieveUserListByRole(userReqDto);
 		List<PmUser> ministrySpecification = userResDTO.getUserList();
 		getManagedBean().setComitteeUserName(ministrySpecification);
