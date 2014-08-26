@@ -4152,7 +4152,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	public boolean isRemarkRendered() {
 
-		/*if(!this.remarkRendered){
+		if(!this.remarkRendered){
 			for (int i = 0; i < this.getManagedBean().getRejectReasonIds().size(); i++) {
 				String id = String.valueOf(this.getManagedBean().getRejectReasonIds().get(i));
 				log.info("id isRemarkRendered = "+id);
@@ -4160,7 +4160,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					return true;
 				}
 			}
-		}*/
+		}
 
 		return this.remarkRendered;
 	}
