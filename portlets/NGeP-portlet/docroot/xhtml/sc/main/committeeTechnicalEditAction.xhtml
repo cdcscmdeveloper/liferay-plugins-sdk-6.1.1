@@ -24,17 +24,16 @@
 
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.cancel']}"
 				style="float:right;" icon="ui-icon-cancel"
-				action="#{specificationBackingBean.committeeBackAction}"></p:commandButton>
-				<ui:fragment
-				rendered="#{specificationBackingBean.managedBean.specStatusId ne '62702'}">
+				action="#{specificationBackingBean.cancelSpecAction('SC')}"></p:commandButton>
+				
 			<p:commandButton value="#{lbl['lbl.sc.spec.btn.complete']}"
 				style="float:right;" icon="ui-icon-check"
-				action="#{specificationBackingBean.completeTemplateSpec('sc')}"
+				action="#{specificationBackingBean.completeTemplateSpecDetails('SC',1)}"
 				update="@all" />
-				</ui:fragment>
+				
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
 				style="float:right;" update="@all"
-				action="#{specificationBackingBean.saveEditTemplateSpec('sc')}"
+				action="#{specificationBackingBean.saveTemplateSpecDetails('SC',1)}"
 				icon="ui-icon-save" />
 
 		</div>
@@ -49,16 +48,16 @@
 							value="#{lbl['lbl.sc.tpl.main.title']}"></h:outputLabel></td>
 					<td colspan="3"><p:inputTextarea rows="2" cols="95"
 							style="margin-bottom:5px;" maxlength="200"
-							value="#{specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.specName}" /></td>
+							value="#{specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.specName}" /></td>
 				</tr>
 
 				<tr>
 					<td><h:outputLabel value="#{lbl['lbl.sc.tpl.search.item']}" /></td>
 					<td><p:inputText disabled="true" size="30"
-							value="#{specificationBackingBean.getParameterDesc(specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.itemTypeCode)}" /></td>
+							value="#{specificationBackingBean.getParameterDesc(specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.itemTypeCode)}" /></td>
 					<td><h:outputLabel value="#{lbl['lbl.sc.tpl.search.spec']}" /></td>
 					<td><p:inputText disabled="true" size="30"
-							value="#{specificationBackingBean.getParameterDesc(specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.specTypeCode)}" /></td>
+							value="#{specificationBackingBean.getParameterDesc(specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.specTypeCode)}" /></td>
 
 				</tr>
 
@@ -66,7 +65,7 @@
 
 					<td><h:outputLabel value="#{lbl['lbl.sc.spec.local.goods']}" /></td>
 					<td><p:selectOneRadio
-							value="#{specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.itemOriginCode.parameterId}">
+							value="#{specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.itemOriginCode.parameterId}">
 							<f:selectItems
 								value="#{specificationBackingBean.getLocalGoodsRadioValues(ParameterTypeConst.itemOrigin)}" />
 						</p:selectOneRadio></td>
@@ -77,11 +76,11 @@
 					<td><h:outputLabel
 							value="#{lbl['lbl.sc.spec.template.status']}" /></td>
 					<td><p:inputText disabled="true"
-							value="#{specificationBackingBean.getStatusDescById(specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.status.statusId)}"></p:inputText></td>
+							value="#{specificationBackingBean.getStatusDescById(specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.status.statusId)}"></p:inputText></td>
 					<td><h:outputLabel
 							value="#{lbl['lbl.sc.spec.item.weightage']}" /></td>
 					<td><p:selectOneRadio
-							value="#{specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.weightageReq}">
+							value="#{specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.weightageReq}">
 							<f:selectItems
 								value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 						</p:selectOneRadio></td>

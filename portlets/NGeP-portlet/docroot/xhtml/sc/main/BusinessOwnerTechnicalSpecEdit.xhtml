@@ -25,13 +25,13 @@
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.cancel']}"
 				style="float:right;" icon="ui-icon-cancel"
 				disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
-				action="#{specificationBackingBean.cancelSpecAction()}"></p:commandButton>
+				action="#{specificationBackingBean.cancelSpecAction('BO')}"></p:commandButton>
 			<ui:fragment
 				rendered="#{specificationBackingBean.managedBean.specStatusId ne '62702'}">
 				<p:commandButton value="#{lbl['lbl.sc.spec.btn.complete']}"
 					style="float:right;" icon="ui-icon-check" update="@all"
 					disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
-					action="#{specificationBackingBean.completeTemplateSpecDetails(null,1)}" />
+					action="#{specificationBackingBean.completeTemplateSpecDetails('BO',1)}" />
 			</ui:fragment>
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
 				style="float:right;"

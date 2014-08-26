@@ -144,13 +144,13 @@
 						<ui:fragment
 							rendered="#{specificationBackingBean.managedBean.standardTemplate eq 'ST'}">
 							<p:commandButton value="Create"
-								action="#{specificationBackingBean.createCommitteeTemplateSpec(tplSpecMaster)}"
+								action="#{specificationBackingBean.createTemplateSpec(tplSpecMaster,'SC')}"
 								oncomplete="createCommitteeSpec.hide();" icon="ui-icon-add"></p:commandButton>
 						</ui:fragment>
 						<ui:fragment
 							rendered="#{specificationBackingBean.managedBean.standardTemplate eq 'SC'}">
 							<p:commandButton value="#{lbl['lbl.sc.tpl.search.btn.clone']}"
-								action="#{specificationBackingBean.createCommitteeTemplateSpec(tplSpecMaster)}"
+								action="#{specificationBackingBean.createTemplateSpec(tplSpecMaster,'SC')}"
 								oncomplete="createCommitteeSpec.hide();" icon="ui-icon-clone"></p:commandButton>
 						</ui:fragment>
 					</p:column>

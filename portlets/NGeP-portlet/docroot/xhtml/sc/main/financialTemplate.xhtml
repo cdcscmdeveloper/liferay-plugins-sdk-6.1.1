@@ -20,11 +20,11 @@
 				style="float:left;" icon="ui-icon-back"
 				action="#{specificationBackingBean.backAction}" />
 
-			
+
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
 				style="float:right;" update="@all"
 				disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
-				action="#{specificationBackingBean.saveTemplateSpecDetails(null,'2')}"
+				action="#{specificationBackingBean.saveTemplateSpecDetails('BO','2')}"
 				icon="ui-icon-save" />
 
 
