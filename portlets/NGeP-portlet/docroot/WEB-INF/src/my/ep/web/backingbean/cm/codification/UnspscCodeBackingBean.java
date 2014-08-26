@@ -94,7 +94,7 @@ public class UnspscCodeBackingBean extends
 
 	public boolean isCatalogueAdmin() {
 		FacesScopes fs = new FacesScopes();
-		return fs.hasRoleUser("CM_ADMIN");
+		return fs.hasRoleUser("CM_ADMIN");	
 	}
 
 	public boolean isSupplierUser() {
@@ -1397,57 +1397,55 @@ public class UnspscCodeBackingBean extends
 		 * ().getServiceObject("cm",ICodificationSO.class); CodificationReqDTO
 		 * reqDTO = new CodificationReqDTO(); CodificationResDTO resDTO = null;
 		 */
-		
-		checkingTypeRedundency();
-		checkingBrandRedundency();
-		checkingMeasurmentRedundency();
-		checkingColorRedundency();
-		
-		/*if (this.getManagedBean().isTypeRedundancy()) {
-			throw new EpException(MessageConst.ERROR_716009,
-					new String[] { ResourceBundleUtils.getMessage(
-							"lbl.cm.type",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							new FacesScopes().getUserLocale()) });
-		}
-		if (this.getManagedBean().isBarndRedundancy()) {
-			throw new EpException(MessageConst.ERROR_716009,
-					new String[] { ResourceBundleUtils.getMessage(
-							"lbl.cm.brand",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							new FacesScopes().getUserLocale()) });
-		}
-		if (this.getManagedBean().isMeasurRedundancy()) {
-			FacesContext facesContext = FacesContext.getCurrentInstance();
 
-			throw new EpException(MessageConst.ERROR_716009,
-					new String[] { ResourceBundleUtils.getMessage(
-							"lbl.cm.measurement",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							new FacesScopes().getUserLocale()) });
-		}
-		if (this.getManagedBean().isColorRedundancy()) {
-			FacesContext facesContext = FacesContext.getCurrentInstance();
+		checkingTypeRedundency(this.getManagedBean().getRequestExtCode()
+				.getTypeName());
+		checkingBrandRedundency(this.getManagedBean().getRequestExtCode()
+				.getBrandName());
+		checkingMeasurmentRedundency(this.getManagedBean().getRequestExtCode()
+				.getMeasurementName());
+		checkingColorRedundency(this.getManagedBean().getRequestExtCode()
+				.getColorName());
 
-			throw new EpException(MessageConst.ERROR_716009,
-					new String[] { ResourceBundleUtils.getMessage(
-							"lbl.cm.color",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							new FacesScopes().getUserLocale()) });
-		}*/
+		/*
+		 * if (this.getManagedBean().isTypeRedundancy()) { throw new
+		 * EpException(MessageConst.ERROR_716009, new String[] {
+		 * ResourceBundleUtils.getMessage( "lbl.cm.type",
+		 * ResourceBundleUtils.BUNDLE_COMMON_LABELS, new
+		 * FacesScopes().getUserLocale()) }); } if
+		 * (this.getManagedBean().isBarndRedundancy()) { throw new
+		 * EpException(MessageConst.ERROR_716009, new String[] {
+		 * ResourceBundleUtils.getMessage( "lbl.cm.brand",
+		 * ResourceBundleUtils.BUNDLE_COMMON_LABELS, new
+		 * FacesScopes().getUserLocale()) }); } if
+		 * (this.getManagedBean().isMeasurRedundancy()) { FacesContext
+		 * facesContext = FacesContext.getCurrentInstance();
+		 * 
+		 * throw new EpException(MessageConst.ERROR_716009, new String[] {
+		 * ResourceBundleUtils.getMessage( "lbl.cm.measurement",
+		 * ResourceBundleUtils.BUNDLE_COMMON_LABELS, new
+		 * FacesScopes().getUserLocale()) }); } if
+		 * (this.getManagedBean().isColorRedundancy()) { FacesContext
+		 * facesContext = FacesContext.getCurrentInstance();
+		 * 
+		 * throw new EpException(MessageConst.ERROR_716009, new String[] {
+		 * ResourceBundleUtils.getMessage( "lbl.cm.color",
+		 * ResourceBundleUtils.BUNDLE_COMMON_LABELS, new
+		 * FacesScopes().getUserLocale()) }); }
+		 */
 		// type
 		if ((!this.getManagedBean().getRequestExtCode().isRequestType() && this
 				.getManagedBean().getSelectedType() == null)
 				|| (this.getManagedBean().getRequestExtCode().isRequestType() && this
 						.getManagedBean().getRequestExtCode().getTypeName()
-						.isEmpty())){
+						.isEmpty())) {
 
 			throw new EpException(MessageConst.ERROR_100022,
 					new String[] { ResourceBundleUtils.getMessage(
 							"lbl.cm.type",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							new FacesScopes().getUserLocale()) });
-		}else {
+		} else {
 
 			if (!this.getManagedBean().getRequestExtCode().isRequestType()) {
 				this.getManagedBean()
@@ -1467,14 +1465,14 @@ public class UnspscCodeBackingBean extends
 				.getManagedBean().getSelectedBrand() == null)
 				|| (this.getManagedBean().getRequestExtCode().isRequestBrand() && this
 						.getManagedBean().getRequestExtCode().getBrandName()
-						.isEmpty())){
+						.isEmpty())) {
 
 			throw new EpException(MessageConst.ERROR_100022,
 					new String[] { ResourceBundleUtils.getMessage(
 							"lbl.cm.brand",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							new FacesScopes().getUserLocale()) });
-		}else {
+		} else {
 
 			if (!this.getManagedBean().getRequestExtCode().isRequestBrand()) {
 				this.getManagedBean()
@@ -1494,14 +1492,14 @@ public class UnspscCodeBackingBean extends
 				.getManagedBean().getSelectedColor() == null)
 				|| (this.getManagedBean().getRequestExtCode().isRequestColor() && this
 						.getManagedBean().getRequestExtCode().getColorName()
-						.isEmpty())){
+						.isEmpty())) {
 
 			throw new EpException(MessageConst.ERROR_100022,
 					new String[] { ResourceBundleUtils.getMessage(
 							"lbl.cm.color",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							new FacesScopes().getUserLocale()) });
-		}else {
+		} else {
 			if (!this.getManagedBean().getRequestExtCode().isRequestColor()) {
 				this.getManagedBean()
 						.getRequestExtCode()
@@ -1520,14 +1518,14 @@ public class UnspscCodeBackingBean extends
 				.getManagedBean().getSelectedMeasurement() == null)
 				|| (this.getManagedBean().getRequestExtCode()
 						.isRequestMeasurement() && this.getManagedBean()
-						.getRequestExtCode().getMeasurementName().isEmpty())){
+						.getRequestExtCode().getMeasurementName().isEmpty())) {
 
 			throw new EpException(MessageConst.ERROR_100022,
 					new String[] { ResourceBundleUtils.getMessage(
 							"lbl.cm.measurement",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							new FacesScopes().getUserLocale()) });
-		}else {
+		} else {
 			if (!this.getManagedBean().getRequestExtCode()
 					.isRequestMeasurement()) {
 				this.getManagedBean()
@@ -1546,7 +1544,7 @@ public class UnspscCodeBackingBean extends
 		this.getManagedBean().getRequestExtCodeList()
 				.add(this.getManagedBean().getRequestExtCode());
 		clearForm();
-		
+
 		RequestContext.getCurrentInstance().execute("extensionPopUp.hide();");
 	}
 
@@ -1568,7 +1566,7 @@ public class UnspscCodeBackingBean extends
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
 		CodificationResDTO resDTO = null;
 
-		try {
+//		try {
 
 			System.out.println("face.getUserScreenName()"
 					+ face.getUserScreenName());
@@ -1721,6 +1719,7 @@ public class UnspscCodeBackingBean extends
 
 				for (CmRequestCode code : this.getManagedBean()
 						.getReviewExtCodeList()) {
+
 					System.out.println("code.isRemarkRequired"
 							+ code.isRemarkRequired());
 					System.out.println("code.isRemarkRequiredII"
@@ -1729,7 +1728,35 @@ public class UnspscCodeBackingBean extends
 							+ code.getReviewedBrandNameII());
 					if (code.getReviewedBrandNameII() != null
 							&& code.getReviewedBrandNameII().trim().length() > 0) {
-
+						// //////checking for redundant values
+						if (!isCodeAdmin()) {
+							if (code.isRequestType()
+									&& (code.getTypeRemarkII() != null && code
+											.getTypeRemarkII().trim().length() > 0)) {
+								checkingTypeRedundency(code
+										.getReviewedTypeNameII());
+							}
+							if (code.isRequestBrand()
+									&& (code.getBrandRemarkII() != null && code
+											.getBrandRemarkII().trim().length() > 0)) {
+								checkingBrandRedundency(code
+										.getReviewedBrandNameII());
+							}
+							if (code.isRequestMeasurement()
+									&& (code.getMeasurementRemarkII() != null && code
+											.getMeasurementRemarkII().trim()
+											.length() > 0)) {
+								checkingMeasurmentRedundency(code
+										.getReviewedMeasurementNameII());
+							}
+							if (code.isRequestColor()
+									&& (code.getColorRemarkII() != null && code
+											.getColorRemarkII().trim().length() > 0)) {
+								checkingColorRedundency(code
+										.getReviewedColorNameII());
+							}
+						}
+						// //////////////////////////////////
 						if ((code.getTypeRemarkII() != null && code
 								.getTypeRemarkII().trim().length() > 0)
 								|| (code.getBrandRemarkII() != null && code
@@ -1755,7 +1782,29 @@ public class UnspscCodeBackingBean extends
 						}
 					} else {
 						System.out.println("******else********");
-
+						// //////checking for redundant values
+						if (code.isRequestType()
+								&& (code.getTypeRemark() != null && code
+										.getTypeRemark().trim().length() > 0)) {
+							checkingTypeRedundency(code.getReviewedTypeName());
+						}
+						if (code.isRequestBrand()
+								&& (code.getBrandRemark() != null && code
+										.getBrandRemark().trim().length() > 0)) {
+							checkingBrandRedundency(code.getReviewedBrandName());
+						}
+						if (code.isRequestMeasurement()
+								&& (code.getMeasurementRemark() != null && code
+										.getMeasurementRemark().trim().length() > 0)) {
+							checkingMeasurmentRedundency(code
+									.getReviewedMeasurementName());
+						}
+						if (code.isRequestColor()
+								&& (code.getColorRemark() != null && code
+										.getColorRemark().trim().length() > 0)) {
+							checkingColorRedundency(code.getReviewedColorName());
+						}
+						// //////////////////////////////////
 						if ((code.getTypeRemark() != null && code
 								.getTypeRemark().trim().length() > 0)
 								|| (code.getBrandRemark() != null && code
@@ -1799,9 +1848,9 @@ public class UnspscCodeBackingBean extends
 							MessageUtils.getMessage(MessageConst.INFO_710001,
 									MessageUtils.BUNDLE_COMMON_MESSAGES,
 									new FacesScopes().getUserLocale())));
-		} catch (Exception ex) {
-
-		}
+//		} catch (Exception ex) {
+//
+//		}
 
 		// return "taskListView";
 		return "BPMtesting";
@@ -2305,7 +2354,7 @@ public class UnspscCodeBackingBean extends
 
 	public String requestUnspscCode() {
 		renewSesionObject();
-		
+
 		if (this.getManagedBean().getRequestExtCodeList() != null) {
 			this.getManagedBean().getRequestExtCodeList().clear();
 		}
@@ -2399,6 +2448,7 @@ public class UnspscCodeBackingBean extends
 			this.getManagedBean().setColorDisable(false);
 		} else {
 			this.getManagedBean().setColorDisable(true);
+			this.getManagedBean().getRequestExtCode().setColorName("");
 		}
 	}
 
@@ -2406,8 +2456,10 @@ public class UnspscCodeBackingBean extends
 
 		if (this.getManagedBean().getRequestExtCode().isRequestType()) {
 			this.getManagedBean().setTypeDisable(false);
+			
 		} else {
 			this.getManagedBean().setTypeDisable(true);
+			this.getManagedBean().getRequestExtCode().setTypeName("");
 		}
 	}
 
@@ -2417,6 +2469,7 @@ public class UnspscCodeBackingBean extends
 			this.getManagedBean().setBrandDisable(false);
 		} else {
 			this.getManagedBean().setBrandDisable(true);
+			this.getManagedBean().getRequestExtCode().setBrandName("");
 		}
 	}
 
@@ -2426,6 +2479,7 @@ public class UnspscCodeBackingBean extends
 			this.getManagedBean().setMeasurementDisable(false);
 		} else {
 			this.getManagedBean().setMeasurementDisable(true);
+			this.getManagedBean().getRequestExtCode().setMeasurementName("");
 		}
 	}
 
@@ -2452,14 +2506,13 @@ public class UnspscCodeBackingBean extends
 		return -1;
 	}
 
-	public void checkingTypeRedundency() {
-
-		String input = this.getManagedBean().getRequestExtCode().getTypeName();
+	public void checkingTypeRedundency(String typeInput) {
+		log.info(".....checking redundancy for typeInput=" + typeInput);
 		this.getManagedBean().setTypeRedundancy(false);
-		if (input != null && !input.equals("")) {
+		if (typeInput != null && !typeInput.equals("")) {
 			for (CmType type : this.getManagedBean().getTypeList()) {
 				if (type.getTypeName().toLowerCase()
-						.equals(input.toLowerCase())) {
+						.equals(typeInput.toLowerCase())) {
 					this.getManagedBean().setTypeRedundancy(true);
 
 					throw new EpException(MessageConst.ERROR_716009,
@@ -2472,14 +2525,13 @@ public class UnspscCodeBackingBean extends
 		}
 	}
 
-	public void checkingBrandRedundency() {
-
-		String input = this.getManagedBean().getRequestExtCode().getBrandName();
+	public void checkingBrandRedundency(String brandInput) {
+		log.info(".....checking redundancy for brandInput=" + brandInput);
 		this.getManagedBean().setBarndRedundancy(false);
-		if (input != null && !input.equals("")) {
+		if (brandInput != null && !brandInput.equals("")) {
 			for (CmBrand brand : this.getManagedBean().getBrandList()) {
 				if (brand.getBrandName().toLowerCase()
-						.equals(input.toLowerCase())) {
+						.equals(brandInput.toLowerCase())) {
 
 					this.getManagedBean().setBarndRedundancy(true);
 
@@ -2493,16 +2545,15 @@ public class UnspscCodeBackingBean extends
 		}
 	}
 
-	public void checkingMeasurmentRedundency() {
-
-		String input = this.getManagedBean().getRequestExtCode()
-				.getMeasurementName();
+	public void checkingMeasurmentRedundency(String MeasurmentInput) {
+		log.info(".....checking redundancy for MeasurmentInput="
+				+ MeasurmentInput);
 		this.getManagedBean().setMeasurRedundancy(false);
-		if (input != null && !input.equals("")) {
+		if (MeasurmentInput != null && !MeasurmentInput.equals("")) {
 			for (CmMeasurement measur : this.getManagedBean()
 					.getMeasurementList()) {
 				if (measur.getMeasurementName().toLowerCase()
-						.equals(input.toLowerCase())) {
+						.equals(MeasurmentInput.toLowerCase())) {
 					this.getManagedBean().setMeasurRedundancy(true);
 
 					throw new EpException(MessageConst.ERROR_716009,
@@ -2515,23 +2566,25 @@ public class UnspscCodeBackingBean extends
 		}
 	}
 
-	public void checkingColorRedundency() {
-
-		String input = this.getManagedBean().getRequestExtCode().getColorName();
+	public void checkingColorRedundency(String colorInput){
+		log.info(".....checking redundancy for colorInput=" + colorInput);
+		log.info("colorList " + this.getManagedBean().getColorList());
 		this.getManagedBean().setColorRedundancy(false);
-		if (input != null && !input.equals("")) {
+		if (colorInput != null && !colorInput.equals("")) {
 			for (CmColor color : this.getManagedBean().getColorList()) {
 				if (color.getColorName().toLowerCase()
-						.equals(input.toLowerCase())) {
+						.equals(colorInput.toLowerCase())) {
 					this.getManagedBean().setColorRedundancy(true);
-
+                        log.info("this.getManagedBean().isColorRedundancy()="+this.getManagedBean().isColorRedundancy());
 					throw new EpException(MessageConst.ERROR_716009,
 							new String[] { ResourceBundleUtils.getMessage(
 									"lbl.cm.color",
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 									new FacesScopes().getUserLocale()) });
+					
 				}
 			}
+			log.info("end no exception");
 		}
 	}
 
