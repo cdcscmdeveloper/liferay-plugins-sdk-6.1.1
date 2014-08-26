@@ -10,7 +10,7 @@
 		<p:dataTable var="scQtDocReport" id="doctbl" widgetVar="documentWidget"
 			value="#{qTDocumentsBackingBean.managedBean.scQtDocReportList}"
 			selection="#{qTDocumentsBackingBean.managedBean.selectedScQtDocReports}"
-			rowKey="#{scQtDocReport}" rowIndexVar="rowIndex">
+			rowKey="#{scQtDocReport}" rowIndexVar="rowIndex" rows="10">
 
 			<ac:paginator for="doctbl" />
 

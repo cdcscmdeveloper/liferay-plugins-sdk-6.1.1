@@ -15,9 +15,10 @@
 				<tr>
 					<td><p:outputLabel
 							value="#{lbl['lbl.sc.committe.clone.title']}" /></td>
-					<td colspan="3"><p:inputText
+					<td colspan="3"><p:inputTextarea id="title1"
 							value="#{qTBusinessOwnerBackingBean.managedBean.cloneBusinessOwnerSearchBean.qtTitle}"
-							size="92" maxlength="100" /></td>
+							cols="110" rows="2" style=" margin-bottom:5px; width: 100%; "
+							maxlength="100" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel
@@ -83,7 +84,7 @@
 				value="#{qTBusinessOwnerBackingBean.managedBean.cloneBusinessOwnerDataModel}"
 				selection="#{qTBusinessOwnerBackingBean.managedBean.selectedCloneBusinessTender}"
 				rowKey="#{scQt}" selectionMode="single" var="scQt" lazy="true"
-				styleClass="cloneResults">
+				styleClass="cloneResults" rows="10">
 
 				<ac:paginator for="clonesearchboid" />
 
