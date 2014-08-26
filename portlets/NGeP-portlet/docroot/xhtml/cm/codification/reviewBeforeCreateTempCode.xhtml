@@ -45,11 +45,11 @@
 
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.cm.item.name']}"/><p:outputLabel value="*" styleClass="mandatory"/></td>
-						<td><p:inputText
+						<td><p:inputText disabled="true"
 								value="#{unspscCodeBackingBean.managedBean.requestCode.itemName}"
 								size="40"></p:inputText></td>
 						<td><p:outputLabel value="#{lbl['lbl.cm.item.details']}"/><p:outputLabel value="*" styleClass="mandatory"/></td>
-						<td><p:inputText
+						<td><p:inputText disabled="true"
 								value="#{unspscCodeBackingBean.managedBean.requestCode.itemDetail}"
 								size="40"></p:inputText></td>
 					</tr>
@@ -57,21 +57,21 @@
 						rendered="#{unspscCodeBackingBean.managedBean.requestCode.itemType != 'S'}">
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.cm.type']}"/><p:outputLabel value="*" styleClass="mandatory"/></td>
-							<td><p:inputText
+							<td><p:inputText disabled="true"
 									value="#{unspscCodeBackingBean.managedBean.requestCode.typeName}"
 									size="40"></p:inputText></td>
 							<td><p:outputLabel value="#{lbl['lbl.cm.brand']}"/><p:outputLabel value="*" styleClass="mandatory"/></td>
-							<td><p:inputText
+							<td><p:inputText disabled="true"
 									value="#{unspscCodeBackingBean.managedBean.requestCode.brandName}"
 									size="40"></p:inputText></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.cm.measurement']}"/><p:outputLabel value="*" styleClass="mandatory"/></td>
-							<td><p:inputText
+							<td><p:inputText disabled="true"
 									value="#{unspscCodeBackingBean.managedBean.requestCode.measurementName}"
 									size="40"></p:inputText></td>
 							<td><p:outputLabel value="#{lbl['lbl.cm.color']}"/><p:outputLabel value="*" styleClass="mandatory"/></td>
-							<td><p:inputText
+							<td><p:inputText disabled="true"
 									value="#{unspscCodeBackingBean.managedBean.requestCode.colorName}"
 									size="40"></p:inputText></td>
 						</tr>
