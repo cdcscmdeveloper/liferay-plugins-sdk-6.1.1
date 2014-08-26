@@ -2407,7 +2407,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					return "editCatalogItem";
 			}
 
-			Map<Date, List<CmTierPricing>> tierMap = groupingTier(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings());
+			Map<Integer, List<CmTierPricing>> tierMap = groupingTier(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings());
 			if (!tierMap.isEmpty() && tierMap.size() > 0) {
 				Iterator itMap = tierMap.entrySet().iterator();
 				while (itMap.hasNext()) {
@@ -2482,7 +2482,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				}
 			}
 			
-			Map<Date, List<CmPromotionTierPricing>> promotionTierMap = groupingTier(this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings());
+			Map<Integer, List<CmPromotionTierPricing>> promotionTierMap = groupingTier(this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings());
 			if (!promotionTierMap.isEmpty() && promotionTierMap.size() > 0) {
 				List<Object> sortedZonalList = groupingStartDate(promotionTierMap);
 				List<CmPromotionTierPricing> perviouslyList = new ArrayList<CmPromotionTierPricing>();
@@ -2553,7 +2553,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				previousZPromotionObj = standard;
 			}
 			
-			Map<Date, List<CmZonalTierPricing>> zTierMap = groupingTier(this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings());
+			Map<Integer, List<CmZonalTierPricing>> zTierMap = groupingTier(this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings());
 			if (!zTierMap.isEmpty() && zTierMap.size() > 0) {
 				Iterator itMap = zTierMap.entrySet().iterator();
 				while (itMap.hasNext()) {
@@ -2629,7 +2629,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				}
 			}
 
-			Map<Date, List<CmZonalPromotionTierPricing>> zPromotionTierMap = groupingTier(this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings());
+			Map<Integer, List<CmZonalPromotionTierPricing>> zPromotionTierMap = groupingTier(this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings());
 			if (!zPromotionTierMap.isEmpty() && zPromotionTierMap.size() > 0) {
 				List<Object> sortedZonalList = groupingStartDate(zPromotionTierMap);
 				List<CmZonalPromotionTierPricing> perviouslyList = new ArrayList<CmZonalPromotionTierPricing>();
@@ -5860,17 +5860,17 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	public <T extends CmPricing> Map groupingTier(List<T> commonList) {
 
-		Map<Date, List<T>> tierMap = new HashMap<Date, List<T>>();
+		Map<Integer, List<T>> tierMap = new HashMap<Integer, List<T>>();
 		List<T> tierList = new ArrayList<T>();
 		for (T tier : commonList) {
-			if (tierMap.containsKey(tier.getStartDate())) {
+			if (tierMap.containsKey(tier.getStand_group_id())) {
 				tierList.add(tier);
-				tierMap.put(tier.getStartDate(), tierList);
+				tierMap.put(tier.getStand_group_id(), tierList);
 			} else {
 
 				tierList = new ArrayList<T>();
 				tierList.add(tier);
-				tierMap.put(tier.getStartDate(), tierList);
+				tierMap.put(tier.getStand_group_id(), tierList);
 			}
 		}
 		if (!tierMap.isEmpty() && tierMap.size() > 0) {
@@ -5903,7 +5903,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 						System.out.println("sorted:" + sorted.getFromQty());
 				}
 
-				tierMap.put(dataList.get(0).getStartDate(), sortedList);
+				tierMap.put(dataList.get(0).getStand_group_id(), sortedList);
 			}
 
 		}
@@ -5932,9 +5932,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	}
 
 	public <T extends CmPricing> List groupingStartDate(
-			Map<Date, List<T>> tierMap) {
+			Map<Integer, List<T>> tierMap) {
 
-		SimpleDateFormat formot = new SimpleDateFormat("YYYYMMdd");
 		List<Object> sortedList = new ArrayList<Object>();
 		if (!tierMap.isEmpty() && tierMap.size() > 0) {
 			Set keyset = tierMap.keySet();
@@ -5944,20 +5943,19 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			System.out.println("keysetarray.length:" + keysetarray.length);
 			for (int i = 0; i < keysetarray.length; i++) {
 				System.out
-						.println("******key:" + formot.format(keysetarray[i]));
-				int count = 0;
-				for (int j = 0; j < keysetarray.length; j++) {
-					System.out.println("**************in****************");
-					if (formot.format(keysetarray[i]).compareToIgnoreCase(
-							formot.format(keysetarray[j])) > 0) {
-						count = count + 1;
-					}
-
-				}
-				System.out.println("count:" + count);
+						.println("******key:" + keysetarray[i]);
+//				int count = 0;
+//				for (int j = 0; j < keysetarray.length; j++) {
+//					System.out.println("**************in****************");
+//					if (!keysetarray[i].equals(keysetarray[j])) {
+//						count = count + 1;
+//					}
+//
+//				}
+//				System.out.println("count:" + count);
 				System.out.println("i:" + i);
 				List<T> dataList = (List) tierMap.get(keysetarray[i]);
-				obj[count] = dataList;
+				obj[i] = dataList;
 
 			}
 
