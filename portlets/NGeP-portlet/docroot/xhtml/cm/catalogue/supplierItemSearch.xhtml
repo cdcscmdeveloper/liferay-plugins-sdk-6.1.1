@@ -19,7 +19,7 @@
 		
 		<table style="width: 100%">
 			<tr>
-				<td><p:panel style="width: 100%;" header="SEARCH"
+				<td><p:panel style="width: 100%;" header="#{lbl['lbl.cm.define.search']}"
 						toggleable="true" id="searchTabId">
 
 						<table style="margin-top: 10px; width: 100%;">
@@ -36,10 +36,10 @@
 
 
 							<tr>
-								<td><p:outputLabel value="Supplier Name" /></td>
+								<td><p:outputLabel value="#{lbl['lbl.cm.supplier.name']}" /></td>
 								<td><p:inputText size="50"
 										value="#{catalogueBackingBean.managedBean.supplierNameFilterBean.searchValue}"></p:inputText></td>
-								<td><p:outputLabel value="Business Reg No" /></td>
+								<td><p:outputLabel value="#{lbl['lbl.cm.business.reg.no']}" /></td>
 								<td><p:inputText size="50"
 										value="#{catalogueBackingBean.managedBean.bizRegNoFilterBean.searchValue}"></p:inputText></td>
 							</tr>
@@ -47,20 +47,20 @@
 						<h:panelGroup rendered="#{unspscCodeBackingBean.requisitioner}">
 							<table style="width: 100%">
 								<tr>
-									<td width="15%"><p:outputLabel value="EP No" /></td>
+									<td width="15%"><p:outputLabel value="#{lbl['lbl.sm.epno']}" /></td>
 									<td width="35%"><p:inputText size="50"
 											value="#{catalogueBackingBean.managedBean.epNoFilterBean.searchValue}"></p:inputText></td>
-									<td width="15%"><p:outputLabel value="MOF No" /></td>
+									<td width="15%"><p:outputLabel value="#{lbl['lbl.sm.mofno']}" /></td>
 									<td width="35%"><p:inputText size="50"
 											value="#{catalogueBackingBean.managedBean.mofNoFilterBean.searchValue}"></p:inputText></td>
 								</tr>
 
 								<tr>
-									<td><p:outputLabel value="Contract No" /></td>
+									<td><p:outputLabel value="#{lbl['lbl.cm.contract.no']}" /></td>
 									<td><p:inputText size="50"
 											value="#{catalogueBackingBean.managedBean.contractNoFilterBean.searchValue}"></p:inputText></td>
 
-									<td><p:outputLabel value="Circular No" /></td>
+									<td><p:outputLabel value="#{lbl['lbl.ct.circular']}" /></td>
 									<td><p:inputText size="50"
 											value="#{catalogueBackingBean.managedBean.circularNoFilterBean.searchValue}"></p:inputText></td>
 								</tr>
@@ -68,7 +68,7 @@
 						</h:panelGroup>
 						<table style="width: 100%">
 							<tr>
-								<td width="15%"><p:outputLabel value="State" /></td>
+								<td width="15%"><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
 								<td width="35%"><p:selectManyMenu id="stateIdDD"
 										showCheckbox="true" style="height:100px;width: 200px;"
 										value="#{catalogueBackingBean.managedBean.stateId}">
@@ -79,7 +79,7 @@
 										<p:ajax listener="#{catalogueBackingBean.findDistrict}"
 											update="@(.ui-selectmanymenu[id$=districtDD])"></p:ajax>
 									</p:selectManyMenu></td>
-								<td width="15%"><p:outputLabel value="District" /></td>
+								<td width="15%"><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
 								<td width="35%"><p:selectManyMenu id="districtDD"
 										showCheckbox="true" style="height:100px;width: 200px;"
 										value="#{catalogueBackingBean.managedBean.districtId}">
@@ -96,7 +96,7 @@
 
 
 						<div style="text-align: right;">
-							<p:commandButton value="Search" icon="ui-icon-search"
+							<p:commandButton value="#{lbl['lbl.cm.search']}" icon="ui-icon-search"
 								action="#{catalogueBackingBean.managedBean.searchCatalogue}"
 								update="searchViewId,catSrchMsg" id="searchButtonId"
 								oncomplete="updateCatButtons();">
@@ -113,7 +113,7 @@
 			<table style="width: 100%;">
 				<tr>
 					<td width="70%" style="vertical-align: top;"><p:panel
-							style="width: 100%;" header="SEARCH RESULTS" toggleable="true">
+							style="width: 100%;" header="#{lbl['lbl.cm.search.result']}" toggleable="true">
 						 <p:remoteCommand name="updateCatButtons" partialSubmit="true" process="@this" update="btnId" />
 						 	
                          <h:panelGroup id="btnId">
@@ -133,7 +133,7 @@
 
 								<p:commandButton id="compareButton"
 									action="#{catalogueBackingBean.compareSupplierItem}"
-									value="#{lbl['lbl.cm.compare']} ( #{fn:length(catalogueBackingBean.managedBean.selectViewItems)} )"
+									value="#{lbl['lbl.cm.view.compare']} ( #{fn:length(catalogueBackingBean.managedBean.selectViewItems)} )"
 									disabled="#{2 > fn:length(catalogueBackingBean.managedBean.selectViewItems)}"
 									rendered="#{unspscCodeBackingBean.requisitioner}" />
 							</div>
@@ -209,7 +209,7 @@
 								<h:outputText value="#{supplierItem.companyName}" ></h:outputText>
 							</p:column>
 
-							<p:column width="5%" headerText="UOM" style="white-space: normal">
+							<p:column width="5%" headerText="#{lbl['lbl.cm.uom']}" style="white-space: normal">
 							#{supplierItem.uomName}
 							</p:column>
 							
