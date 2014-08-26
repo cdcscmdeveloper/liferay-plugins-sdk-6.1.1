@@ -242,12 +242,7 @@ public class UnspscCodeBackingBean extends
 									MessageUtils.BUNDLE_COMMON_MESSAGES,
 									new FacesScopes().getUserLocale())));
 		} catch (Exception ex) {
-			System.out.println("***************Exception*****************");
-			// FacesContext facesContext = FacesContext.getCurrentInstance();
-			// facesContext.addMessage(null, new
-			// FacesMessage(FacesMessage.SEVERITY_ERROR,ex.getMessage(),
-			// ex.getMessage()));
-			// ex.printStackTrace();
+			ex.printStackTrace();
 			throw new EpException(MessageConst.EP_MAJ_00001,
 					new String[] { ResourceBundleUtils.getMessage(null,
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
@@ -2309,6 +2304,8 @@ public class UnspscCodeBackingBean extends
 	}
 
 	public String requestUnspscCode() {
+		renewSesionObject();
+		
 		if (this.getManagedBean().getRequestExtCodeList() != null) {
 			this.getManagedBean().getRequestExtCodeList().clear();
 		}

@@ -11,9 +11,12 @@
 	<ui:define name="contentSection">
 
 		<script>
-			$('#portlet_codification_WAR_NGePportlet').find(
-					'.portlet-title-text').html('UNSPSC Request Form');
+			$('#portlet_codification_WAR_NGePportlet').find('.portlet-title-text').html('UNSPSC Request Form');
 		</script>
+		
+		<p:blockUI block="form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
 
 		<p:messages id="unspscFormId" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 
@@ -22,7 +25,7 @@
 			<div style="text-align: right; min-height: 40px;">
 				
 					<p:commandButton value="#{lbl['lbl.cm.submit']}"
-						icon="ui-icon-submit"
+						icon="ui-icon-submit" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 						action="#{unspscCodeBackingBean.submitForRequest('SUBMIT')}"
 						update="@form"></p:commandButton>
 				
