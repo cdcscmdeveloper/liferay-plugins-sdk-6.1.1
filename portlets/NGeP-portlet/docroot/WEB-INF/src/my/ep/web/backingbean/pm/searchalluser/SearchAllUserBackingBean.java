@@ -71,6 +71,7 @@ public class SearchAllUserBackingBean extends BaseBackingBean<SearchAllUserManag
 		this.getManagedBean().setOimRoleList(null);
 		this.getManagedBean().setPmRoleList(null);
 		this.getManagedBean().setLiferayRoleList(null);
+		this.getManagedBean().setResultLoginId(null);
 	}
 	
 	public void tempSearchUserProfile() throws Exception{
