@@ -1,6 +1,7 @@
 package my.ep.web.managedbean.sc.supplierproposal;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -54,6 +55,7 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	private long days;
 	private int activeIndex;
 	private int proposalIndex;
+	
 
 	// Tab Menu
 	private int prepareActiveIndex;
@@ -91,6 +93,8 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	private int totalContracts;
 	private int totalYears;
 	private BigDecimal totalContractAmount;
+	private Date nonFedMinDate;
+	
 
 	// Credit Facilities
 	private List<ScQtPRPCreditFacility> scQtPRPCreditFacilities;
@@ -131,6 +135,26 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	public SPDetailManagedBean() {
 		log.info("inside ");
 	}
+	
+	
+
+	/**
+	 * @return the nonFedMinDate
+	 */
+	public Date getNonFedMinDate() {
+		return nonFedMinDate;
+	}
+
+
+
+	/**
+	 * @param nonFedMinDate the nonFedMinDate to set
+	 */
+	public void setNonFedMinDate(Date nonFedMinDate) {
+		this.nonFedMinDate = nonFedMinDate;
+	}
+
+
 
 	public boolean isCheckStatus() {
 		return checkStatus;
