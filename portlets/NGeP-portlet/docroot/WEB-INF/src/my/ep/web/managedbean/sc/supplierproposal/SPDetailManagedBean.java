@@ -25,6 +25,7 @@ import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPExperience;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalScore;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtSampleItem;
 import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.web.bean.tpl.TemplateSpecBean;
@@ -55,7 +56,6 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	private long days;
 	private int activeIndex;
 	private int proposalIndex;
-	
 
 	// Tab Menu
 	private int prepareActiveIndex;
@@ -94,7 +94,6 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	private int totalYears;
 	private BigDecimal totalContractAmount;
 	private Date nonFedMinDate;
-	
 
 	// Credit Facilities
 	private List<ScQtPRPCreditFacility> scQtPRPCreditFacilities;
@@ -122,21 +121,23 @@ public class SPDetailManagedBean extends BaseManagedBean {
 
 	// No of Employees
 	private ScQtPRPEmployee scQtPRPEmployee;
+	
+	// Technical Staff List
+	private int totalNoOfYearsExperience;
 
 	// Sample Address
 	private ScQtSampleSubmission scQtSampleSubmission;
 	private List<ScQtSampleSubmission> scQtSampleSubmissionList;
 	private List<ScQtSampleItem> scQtSampleItemList;
-	
+
 	// Supplier Information
 	private SmSupplier smSupplier;
 	private SmAppl smAppl;
+	private List<SmPersonnel> smPersonnelList;
 
 	public SPDetailManagedBean() {
 		log.info("inside ");
 	}
-	
-	
 
 	/**
 	 * @return the nonFedMinDate
@@ -145,16 +146,13 @@ public class SPDetailManagedBean extends BaseManagedBean {
 		return nonFedMinDate;
 	}
 
-
-
 	/**
-	 * @param nonFedMinDate the nonFedMinDate to set
+	 * @param nonFedMinDate
+	 *            the nonFedMinDate to set
 	 */
 	public void setNonFedMinDate(Date nonFedMinDate) {
 		this.nonFedMinDate = nonFedMinDate;
 	}
-
-
 
 	public boolean isCheckStatus() {
 		return checkStatus;
@@ -602,4 +600,20 @@ public class SPDetailManagedBean extends BaseManagedBean {
 		this.smAppl = smAppl;
 	}
 
+	public List<SmPersonnel> getSmPersonnelList() {
+		return smPersonnelList;
+	}
+
+	public void setSmPersonnelList(List<SmPersonnel> smPersonnelList) {
+		this.smPersonnelList = smPersonnelList;
+	}
+
+	public int getTotalNoOfYearsExperience() {
+		return totalNoOfYearsExperience;
+	}
+
+	public void setTotalNoOfYearsExperience(int totalNoOfYearsExperience) {
+		this.totalNoOfYearsExperience = totalNoOfYearsExperience;
+	}
+	
 }

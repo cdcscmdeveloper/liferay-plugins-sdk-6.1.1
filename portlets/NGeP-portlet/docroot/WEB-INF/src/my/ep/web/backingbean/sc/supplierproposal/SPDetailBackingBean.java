@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.sql.Timestamp;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -25,7 +24,6 @@ import my.ep.biz.service.sc.quationtender.IQTProposalSO;
 import my.ep.biz.service.sm.registration.IRegistrationSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.tpl.TemplateSpecConst;
-import my.ep.constants.CommonConstants;
 import my.ep.dto.sc.quationtender.ProposalReqDTO;
 import my.ep.dto.sc.quationtender.ProposalResDTO;
 import my.ep.dto.sm.registration.RegistrationReqDTO;
@@ -53,6 +51,7 @@ import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPExperienceNCheckList;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalScore;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtSampleItem;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtSampleLable;
+import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
@@ -62,7 +61,6 @@ import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.sc.supplierproposal.SPDetailManagedBean;
-import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -1165,21 +1163,6 @@ public class SPDetailBackingBean extends
 
 				}
 				// to check proposalchecklist is technicalspecification -
-				// technical EMPL_LIST_PAGE
-				else if ("TL".equalsIgnoreCase(scQtProposalChecklist
-						.getScQtCheckList().getPmDocument()
-						.getDocDefinitionKey())) {
-					
-					this.getManagedBean().setQtProposalChecklist(
-							scQtProposalChecklist);
-					ScQtCheckList scQtCheckList = scQtProposalChecklist
-							.getScQtCheckList();
-					this.getManagedBean().setScQtCheckList(scQtCheckList);
-					return NAV_TO_TECHNICAL_EMPL_LIST_PAGE
-							+ "?faces-redirect=true";
-
-				}
-				// to check proposalchecklist is technicalspecification -
 				// technical NO_OF_EMPLOYEE__PAGE
 				else if ("NE".equalsIgnoreCase(scQtProposalChecklist
 						.getScQtCheckList().getPmDocument()
@@ -1316,6 +1299,36 @@ public class SPDetailBackingBean extends
 					}
 					this.getManagedBean().setContractSize(list.size());
 					return NAV_TO_FEDERAL_GOVT_PAGE + "?faces-redirect=true";
+				} // to check proposalchecklist is technicalspecification -
+				// technical EMPL_LIST_PAGE
+				else if ("TL".equalsIgnoreCase(scQtProposalChecklist
+						.getScQtCheckList().getPmDocument()
+						.getDocDefinitionKey())) {
+					List<SmPersonnel> smPersonnelsList = new ArrayList<SmPersonnel>();
+					long supplierId = scQtProposalChecklist.getScQtProposal().getScQtSupplier().getSmSupplier().getSupplierId();
+					this.getManagedBean().setQtProposalChecklist(scQtProposalChecklist);
+					ScQtCheckList scQtCheckList = scQtProposalChecklist.getScQtCheckList();
+					this.getManagedBean().setScQtCheckList(scQtCheckList);
+					ProposalReqDTO reqDTO2 = new ProposalReqDTO();
+					reqDTO2.setSupplierId(supplierId);
+					ProposalResDTO resDTO2 = proposalSO.retriveSupplierById(reqDTO2);
+					getManagedBean().setSmAppl(resDTO2.getSmAppl());
+					for (SmPersonnel smPersonnel : getManagedBean().getSmAppl().getSmPersonnels()) {
+						log.info("Name : " + smPersonnel.getName());
+						smPersonnelsList.add(smPersonnel);
+					}
+					getManagedBean().setSmPersonnelList(smPersonnelsList);
+					int totalYearsExp = 0;
+					for (int i = 0; i < getManagedBean().getSmPersonnelList().size(); i++) {
+						SmPersonnel personnel = getManagedBean().getSmPersonnelList().get(i);
+						if (personnel.getWorkExperienceYear() > 0) {
+							
+						}
+						totalYearsExp = totalYearsExp + personnel.getWorkExperienceYear();
+						this.getManagedBean().setTotalNoOfYearsExperience(totalYearsExp);
+						log.info("Total No of Years Experience : " + totalYearsExp);
+					}
+					return NAV_TO_TECHNICAL_EMPL_LIST_PAGE + "?faces-redirect=true";
 				}
 			}
 		} finally {

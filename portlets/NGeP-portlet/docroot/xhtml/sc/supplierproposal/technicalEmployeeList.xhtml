@@ -16,11 +16,6 @@
 			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
 				action="#{supplierProposalDetailBackingBean.supplierProposalBackAction}"
 				icon="ui-icon-back" />
-
-			<p:commandButton value="#{lbl['lbl.btn.save']}" icon="ui-icon-save"
-				action="#{supplierProposalDetailBackingBean.saveTechEmployessDtlAction}" />
-			<p:commandButton value="#{lbl['lbl.btn.complete']}"
-				icon="ui-icon-check" />
 		</div>
 		<p:panel>
 			<table>
@@ -37,19 +32,20 @@
 			toggleable="true">
 
 			<p:dataTable id="techEmployeeList" var="techEmployee"
+				value="#{supplierProposalDetailBackingBean.managedBean.smPersonnelList}"
 				rowIndexVar="index">
 				<ac:paginator for="techEmployeeList"></ac:paginator>
 
 				<p:column headerText="#{lbl['lbl.sc.sp.name']}">
-					<h:outputText></h:outputText>
+					<h:outputText value="#{techEmployee.name}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.sp.identificationno']}">
-					<h:outputText></h:outputText>
+					<h:outputText value="#{techEmployee.identificationNo}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.sp.designation']}">
-					<h:outputText></h:outputText>
+					<h:outputText value="#{techEmployee.designation}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.sp.qualification']}">
@@ -57,7 +53,7 @@
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.sp.noofyrsexp']}">
-					<h:outputText></h:outputText>
+					<h:outputText value="#{techEmployee.workExperienceYear}" />
 				</p:column>
 			</p:dataTable>
 
@@ -66,7 +62,7 @@
 				<tr>
 					<td style="width: 170px"><p:outputLabel
 							value="#{lbl['lbl.sc.sp.ttlnoofyrsexp']}" /></td>
-					<td colspan="3"><p:inputText style="text-align:right"
+					<td colspan="3"><p:inputText style="text-align:right" value="#{supplierProposalDetailBackingBean.managedBean.totalNoOfYearsExperience}"
 							readonly="true" disabled="true" size="30">
 						</p:inputText></td>
 				</tr>
