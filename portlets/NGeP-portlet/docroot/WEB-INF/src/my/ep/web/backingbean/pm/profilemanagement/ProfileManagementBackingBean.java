@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.pm.profilemanagement;
 
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -11,6 +12,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
@@ -497,6 +499,14 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		if(this.getManagedBean().getSelectedUser().getPmUserOrgs()==null){
 			this.getManagedBean().getSelectedUser().setPmUserOrgs(new ArrayList<PmUserOrg>());
 		}
+		if(!this.getManagedBean().getSelectedUser().getPmUserOrgs().isEmpty()){
+			int size = this.getManagedBean().getSelectedUser().getPmUserOrgs().size();
+			PmUserOrg pmUserOrg = this.getManagedBean().getSelectedUser().getPmUserOrgs().get(size-1);
+			if(pmUserOrg.getExpDate()==null){
+				throw new EpException("Expiry Date is mandatory."); //TODO exception
+			}
+		}
+		
 		//validation on eff date & exp date TODO
 		PmUserOrg pmUserOrg = new PmUserOrg();
 		PmOrgProfile pmOrgProfile = new PmOrgProfile();
@@ -506,6 +516,8 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		pmUserOrg.setPmOrgProfile(pmOrgProfile);
 		pmUserOrg.setPmUserRoles(new ArrayList<PmUserRole>());
 		this.getManagedBean().getSelectedUser().addPmUserOrg(pmUserOrg);
+		this.getManagedBean().setSelectedUserOrg(pmUserOrg);
+		showReceivingAddress();
 	}
 
 
@@ -521,7 +533,34 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			this.getManagedBean().getSelectedUser().getPmUserOrgs().remove(pmUserOrg);
 		}
 	}
-
+	
+	/**
+	 * validate unique responsible org unit
+	 * @param pmOrgProfile
+	 */
+	public void updateOrgCode(PmOrgProfile pmOrgProfile, int index){
+		logger.info("updateOrgCode");
+		boolean isValid = true;
+		if(pmOrgProfile!=null && pmOrgProfile.getOrgProfileId()!=null){
+			if(this.getManagedBean().getSelectedUser().getPmUserOrgs()!=null &&
+					!this.getManagedBean().getSelectedUser().getPmUserOrgs().isEmpty()){
+				List <Long> orgIds = new ArrayList<Long>();
+				for(PmUserOrg pmUserOrg: this.getManagedBean().getSelectedUser().getPmUserOrgs()){
+					if(pmUserOrg.getPmOrgProfile().getOrgProfileId().equals(pmOrgProfile.getOrgProfileId())){
+						isValid = false;
+						break;
+					}
+				}
+				if(!isValid){
+					this.getManagedBean().getSelectedUser().getPmUserOrgs().get(index).getPmOrgProfile().setOrgProfileId(null);
+					throw new EpException("Org Code is unique."); //TODO exception
+				}
+				
+			}
+		}
+	}
+	
+	/*
 	public void orgUnitStatusChange(int index){
 		logger.info("orgUnitStatusChange");
 		if(this.getManagedBean().getSelectedUser().getPmUserOrgs()!=null && !this.getManagedBean().getSelectedUser().getPmUserOrgs().isEmpty()){
@@ -535,6 +574,13 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			}
 		}
 	}
+	
+	public void changeResponsibleOrgDates(ValueChangeEvent changeEvent){
+		logger.info("changeResponsibleOrgDates");
+		System.out.println("NEW " + changeEvent.getNewValue());
+		System.out.println("OLD " + changeEvent.getOldValue());
+	}
+	*/
 	
 	/**
 	 * Reset PmUserOrg info
@@ -705,13 +751,10 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 					this.getManagedBean().setSelectedReceivingAddrTypes(new ArrayList<PmAddressType>());
 				}
 				this.getManagedBean().getSelectedReceivingAddrTypes().clear();
-				System.out.println("size add type " +this.getManagedBean().getSelectedUser().getPmAddressTypes().size());
 				for (PmAddressType addressTypeObj : this.getManagedBean().getSelectedUser().getPmAddressTypes()){
-					System.out.println("d>>>" + addressTypeObj.getPmAddress().getAddressId());
 					if (ProfileManagementConst.ADDRESS_RECEIVING.equalsIgnoreCase(addressTypeObj.getAddressType())
 							&& (addressTypeObj.getPmOrgProfile()!=null && this.getManagedBean().getSelectedUserOrg().getPmOrgProfile().getOrgProfileId() 
 							== addressTypeObj.getPmOrgProfile().getOrgProfileId())) {
-						System.out.println("show");
 						this.getManagedBean().getSelectedReceivingAddrTypes().add(addressTypeObj);
 					}
 				}
@@ -729,9 +772,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	public void updateReceivingAddr(List<PmAddressType>deliveringAddrs){
 		logger.info("updateReceivingAddr");
 		if(deliveringAddrs!=null){
-//			if(this.getManagedBean().getSelectedReceivingAddrTypes()==null){
-//				this.getManagedBean().setSelectedReceivingAddrTypes(new ArrayList<PmAddressType>());
-//			}
 			if(this.getManagedBean().getSelectedUser().getPmAddressTypes()==null){
 				this.getManagedBean().getSelectedUser().setPmAddressTypes(new ArrayList<PmAddressType>());
 			}
@@ -744,7 +784,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 					tempAddTypeObj.setPmUser(this.getManagedBean().getSelectedUser());
 					tempAddTypeObj.setPmOrgProfile(this.getManagedBean().getSelectedUserOrg().getPmOrgProfile());
 					this.getManagedBean().getSelectedUser().addPmAddressType(tempAddTypeObj);
-//					this.getManagedBean().getSelectedReceivingAddrTypes().add(tempAddTypeObj);
 				}
 				this.getManagedBean().getSelectedDeliveringAddrTypes().clear();
 				showReceivingAddress();
@@ -1146,21 +1185,42 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		if(user.getPmUserOrgs()!=null && !user.getPmUserOrgs().isEmpty()){
 			List<PmUserRole> newRoleList = reqDTO.getNewRoleList();
 			List<PmUserRole> deleteRoleList = reqDTO.getRemoveRoleList();
+			long activeUserOrgId = 0;
+			boolean isChanged = false;
 			for(PmUserOrg pmUserOrg:user.getPmUserOrgs()){
-//				if(checkEffDate(pmUserOrg)){
-					for(PmUserRole pmUserRole: pmUserOrg.getPmUserRoles()){
-						if(pmUserRole.isBrandNew() || (pmUserRole.isModified() && pmUserRole.getRecordStatusFlg()==DbValueConst.RECORD_STATUS_ACTIVE)){
-							newRoleList.add(pmUserRole);
-							System.out.println("ADD NEW: " + pmUserRole.getPmRole().getRoleCode());
-						}else if(pmUserRole.getRecordStatusFlg()==DbValueConst.RECORD_STATUS_SUSPENDED && pmUserRole.isModified()){
-							deleteRoleList.add(pmUserRole);
-							System.out.println("DELETE OLD: " + pmUserRole.getPmRole().getRoleCode());
+				if(pmUserOrg.isBrandNew()){
+					isChanged = true;
+				}
+				if(pmUserOrg.isBrandNew() || pmUserOrg.getRecordStatusFlg()==DbValueConst.RECORD_STATUS_ACTIVE){
+					if(checkEffDate(pmUserOrg)){
+						activeUserOrgId = pmUserOrg.getUserOrgId()!=null ? pmUserOrg.getUserOrgId() : 0;
+						for(PmUserRole pmUserRole: pmUserOrg.getPmUserRoles()){
+							if(pmUserRole.isBrandNew() || (pmUserRole.isModified() && pmUserRole.getRecordStatusFlg()==DbValueConst.RECORD_STATUS_ACTIVE)){
+								newRoleList.add(pmUserRole);
+								System.out.println("ADD NEW: " + pmUserRole.getPmRole().getRoleCode());
+							}else if(pmUserRole.getRecordStatusFlg()==DbValueConst.RECORD_STATUS_SUSPENDED && pmUserRole.isModified()){
+								deleteRoleList.add(pmUserRole);
+								System.out.println("DELETE OLD: " + pmUserRole.getPmRole().getRoleCode());
+							}
 						}
 					}
-//				}
+				}
 			}
-			reqDTO.setNewRoleList(newRoleList);
-			reqDTO.setRemoveRoleList(deleteRoleList);
+			if(activeUserOrgId>0 || isChanged){
+				// retrieve previous active org list
+				List <PmUserOrg> pmUserOrgs = PmCommonUtil.retrieveActiveOrg(user.getUserId());
+				System.out.println("size " + pmUserOrgs.size());
+				for(PmUserOrg pmUserOrg:pmUserOrgs){
+					if(pmUserOrg.getUserOrgId()!=activeUserOrgId){
+						for(PmUserRole pmUserRole: pmUserOrg.getPmUserRoles()){
+							deleteRoleList.add(pmUserRole);
+							System.out.println("2 DELETE OLD: " + pmUserRole.getPmRole().getRoleCode());
+						}
+					}
+				}
+				reqDTO.setNewRoleList(newRoleList);
+				reqDTO.setRemoveRoleList(deleteRoleList);
+			}
 		}
 	}
 	
@@ -1170,20 +1230,112 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	 * @return
 	 */
 	private boolean checkEffDate(PmUserOrg pmUserOrg){
+		logger.info("checkEffDate");
 		Date currentDate = new Date();
 		boolean isActive = true;
-		if(!pmUserOrg.getEffDateDisplay().before(currentDate)){
+		// effDate after currentDate
+		if(pmUserOrg.getEffDateDisplay().compareTo(currentDate)>0){
 			isActive = false;
-		}else if(!(pmUserOrg.getExpDateDisplay()!=null && pmUserOrg.getExpDateDisplay().after(currentDate))){
+		// expDate not null and expDate before currentDate
+		}else if(pmUserOrg.getExpDateDisplay()!=null && pmUserOrg.getExpDateDisplay().compareTo(currentDate)<0){
 			isActive = false;
 		}
+		logger.info("checkEffDate active:" + isActive);
+		
+		
 		return isActive;
 	}
 
-	private void validateUser(PmUser user){
 
+	/**
+	 * Validation for Responsible Org. Unit date range
+	 * @param user
+	 * @throws Exception
+	 */
+	public void validateResponsibleOrg(PmUser user) throws Exception {
+		logger.info("overlappingValidation");
+
+		if (user.getPmUserOrgs() != null && !user.getPmUserOrgs().isEmpty()) {
+			for (int index1 = 0; index1 < user.getPmUserOrgs().size(); index1++) {
+				if (user.getPmUserOrgs().get(index1).getRecordStatusFlg() 
+						== DbValueConst.RECORD_STATUS_ACTIVE) {
+					if (user.getPmUserOrgs().size() > 1) {
+						for (int index2 = index1 + 1; index2 < user.getPmUserOrgs().size(); index2++) {
+							if (user.getPmUserOrgs().get(index2).getRecordStatusFlg() 
+									== DbValueConst.RECORD_STATUS_ACTIVE) {
+								// Overlap exists if (StartA <= EndB) and (EndA
+								// >= StartB)
+								Date startA = user.getPmUserOrgs().get(index1).getEffDate();
+								Date endA = user.getPmUserOrgs().get(index1).getExpDate();
+								Date startB = user.getPmUserOrgs().get(index2).getEffDate();
+								Date endB = user.getPmUserOrgs().get(index2).getExpDate();
+
+								// not last item
+								if ((index2 + 1) == user.getPmUserOrgs().size()) {
+									SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+									Date endLess = sdf.parse("2099-12-31");
+									endB = endLess;
+								}
+								boolean isStartABeforeEndB = ((startA
+										.compareTo(endB)) < 0 || startA
+										.equals(endB));
+								boolean isEndAAfterStartB = ((endA
+										.compareTo(startB)) > 0 || endA
+										.equals(startB));
+
+								boolean isCurrentPairOverlap = false;
+
+								isCurrentPairOverlap = isStartABeforeEndB
+										&& isEndAAfterStartB;
+
+								if (isCurrentPairOverlap) {
+									throw new EpException(
+											"Responsible Org. Unit Effective Date and Expiry Date must not overlapping.");
+								}
+							}
+						}
+					} 
+//					else {
+//						// make sure it is currently active if only one item
+//						if (!checkEffDate(user.getPmUserOrgs().get(index1))) {
+//								throw new EpException("Active Responsible Org. Unit is required.");
+//						}
+//					}
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Check if only one active org unit.
+	 * @param user
+	 */
+	private void oneActiveResponsibleOrg(PmUser user){
+		int activeNumber = 0;
+		if(user.getPmUserOrgs()!=null){
+			for(PmUserOrg userOrg: user.getPmUserOrgs()){
+				if(userOrg.getRecordStatusFlg()== DbValueConst.RECORD_STATUS_ACTIVE){
+					if(checkEffDate(userOrg)){
+						activeNumber++;
+					}
+				}
+			}
+		}
+		if(activeNumber>1){
+			throw new EpException("Only one active Responsible Org. Unit is required.");
+		}else if(activeNumber==0){
+			throw new EpException("One active Responsible Org. Unit is required.");
+		}
+	}
+	
+	/**
+	 * Validation for PmUser's fields
+	 * @param user
+	 */
+	private void validateUser(PmUser user){
+		logger.info("validateUser");
 		if(StringUtils.isBlank(user.getLoginId())){
-			throw new IllegalArgumentException("Old Password is mandatory.");
+			throw new IllegalArgumentException("Login Id is mandatory.");
 		}
 		if(user.getSalutationCode().getSalutationId()==null){
 			throw new IllegalArgumentException("Salutation is mandatory.");
@@ -1210,12 +1362,18 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				|| (user.getPmUserPreference().getNotifyRemovalDay()!=null 
 				&& user.getPmUserPreference().getNotifyRemovalDay()==0)){
 			throw new IllegalArgumentException("Delete Notification is mandatory.");
-			
+		}
+		if(!StringUtils.isBlank(user.getConfirmPassword()) && !StringUtils.isBlank(user.getPassword()) && StringUtils.isBlank(user.getOldPassword())){
+			throw new IllegalArgumentException("Old Password is mandatory.");
 		}
 	}
 	
+	/**
+	 * Validation for PmAddress's fields
+	 * @param pmAddress
+	 */
 	private void validateUserAddress(PmAddress pmAddress){
-
+		logger.info("validateUserAddress");
 		if(pmAddress.getPmCountry().getCountryId()==null){
 			throw new IllegalArgumentException("Country is mandatory.");
 		}
@@ -1244,10 +1402,12 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	
 	}
 	
+	
+	
 	/**
 	 * Method to update the user details
 	 */
-	public void saveUserProfile() {
+	public void saveUserProfile() throws Exception{
 		logger.info("saveUserProfile");
 		
 		UserReqDTO reqDTO = null;
@@ -1261,20 +1421,21 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			
 			user = this.getManagedBean().getSelectedUser();
 			user.setLoginId(user.getIdentificationNo());
-//			validateUser(user);
-//			validateUserAddress(this.getManagedBean().getUserAddress());
+			
+			// Validation
+			validateUser(user);
+			validateUserAddress(this.getManagedBean().getUserAddress());
+			validateResponsibleOrg(user);
+			oneActiveResponsibleOrg(user);
+			
 			reqDTO = new UserReqDTO();
 			
-			
-//			if(!StringUtils.isBlank(user.getConfirmPassword()) && !StringUtils.isBlank(user.getPassword()) && StringUtils.isBlank(user.getOldPassword())){
-//				throw new IllegalArgumentException("Old Password is mandatory.");
-//			}
-//			
 			if(!StringUtils.isBlank(user.getOldPassword()) && !StringUtils.isBlank(user.getConfirmPassword()) && !StringUtils.isBlank(user.getPassword())){
 				isChangePwd = true;
 			}
 			
-			if(isChangePwd){//TODO currently check via liferay
+			//TODO currently check via liferay
+			if(isChangePwd){
 				if(!checkOldPassword(user)){
 					throw new EpException("Old Password is invalid."); 
 				}
@@ -1293,7 +1454,8 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			reqDTO.setPmUser(user);
-			UserResDTO resDTO = userSO.saveUser(reqDTO); 
+			UserResDTO resDTO = new UserResDTO();
+//					userSO.saveUser(reqDTO); 
 
 			if (resDTO.isSuccessful()) {
 				/*
@@ -1323,7 +1485,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	
 	
 
-	
+	//TODO: check old password locally 		
 	private boolean checkOldPassword(PmUser pmUser) throws PortalException, SystemException{
 		logger.info("checkOldPassword");
 		boolean result = false;
@@ -1341,35 +1503,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		return result;
 	}
 
-	public boolean checkOldPasswordTest() throws Exception{
-		logger.info("checkOldPassword");
-		UserReqDTO reqDTO = null;
-		IUserSO userSO = null;
-		boolean isOk = false;
-		reqDTO = new UserReqDTO();
-		PmUser pmUser = this.getManagedBean().getSelectedUser();
-		userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-		reqDTO.setPmUser(pmUser);
-		
 	
-		UserResDTO resDTO = userSO.updatePortrait(reqDTO); 
-
-		
-		if (resDTO.isSuccessful()) {
-			isOk = true;
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO,
-							null, "OKKKKK"));
-		}else{
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO,
-							null, "NOPPPP"));
-		}
-		return isOk;
-	}
 
 	/**
 	 * delete portrait
@@ -1379,33 +1513,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		logger.info("deletePortrait - START");
 		this.getManagedBean().getSelectedUser().setPortrait(null);
 		this.getManagedBean().getSelectedUser().setReplacePortrait(true);
-		/*
-		IUserSO userSO = null;
-		UserReqDTO reqDTO = new UserReqDTO();
-		try {
-			PmUser pmUser = this.getManagedBean().getSelectedUser();
-			reqDTO.setPmUser(pmUser);
-			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-			UserResDTO resDTO = userSO.deletePortrait(reqDTO); //saveuser2
-			if(resDTO!=null && resDTO.isSuccessful()){
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO,
-								null, "Delete Portrait Successfull for Login ID: "
-										+ resDTO.getPmUser().getLoginId()));
-				
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
-							e.getMessage()));
-		} finally {
-			userSO = null;
-		}*/
 		logger.info("deletePortrait - END");
 	}
 	

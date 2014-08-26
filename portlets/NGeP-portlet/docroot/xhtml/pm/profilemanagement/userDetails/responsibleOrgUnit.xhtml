@@ -14,9 +14,9 @@
 		     selection="#{profileManagementBackingBean.managedBean.selectedUserOrg}" 
 		     selectionMode="single"
 		     rowIndexVar="index" rowKey="#{orgUnit}">   
-			<p:ajax event="rowSelect" listener="#{profileManagementBackingBean.showReceivingAddress}" update="@this, :form:tvRoleReceivingAddr" />
+			<p:ajax event="rowSelect" listener="#{profileManagementBackingBean.showReceivingAddress}" update=":form:tvRoleReceivingAddr" />
 			
-		    <p:column headerText="#{lbl['lbl.pm.profiles.resorg.table.orgtype']}">
+		    <p:column headerText="* #{lbl['lbl.pm.profiles.resorg.table.orgtype']}">
 				<p:selectOneMenu value="#{orgUnit.pmOrgProfile.orgTypeCode.parameterId}" styleClass="ppDropDownWidthM" 
 					disabled="#{!orgUnit.brandNew}" required="true" id="somOrgType"
 					label="#{lbl['lbl.pm.profiles.resorg.table.orgtype']}">  
@@ -29,11 +29,13 @@
 	            </p:selectOneMenu>		 
 	            <p:message id="somOrgTypeMsg" for="somOrgType" display="icon" />    
 	        </p:column>	 
-		    <p:column headerText="#{lbl['lbl.pm.profiles.resorg.table.code']}" >        
+		    <p:column headerText="* #{lbl['lbl.pm.profiles.resorg.table.code']}" >        
 	            <ac:lov id="lovResOrg" lovId="PM_ORG_PROFILE" size="20" required="true"
 	            	update=":form:dtOrgUnit" readonly="true" disabled="#{!orgUnit.brandNew}"
 					headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
 					value="#{orgUnit.pmOrgProfile.pmOrgValidity.orgCode}" 
+					postUpdateListener="profileManagementBackingBean.updateOrgCode
+					(profileManagementBackingBean.managedBean.selectedUser.pmUserOrgs[#{index}].pmOrgProfile, index)"
 					saveObject="profileManagementBackingBean.managedBean.selectedUser.pmUserOrgs[#{index}].pmOrgProfile"
 					conditionField="orgTypeCode.parameterId^#{orgUnit.pmOrgProfile.orgTypeCode.parameterId}|recordStatus^1" 
 					>
@@ -43,26 +45,32 @@
 	        <p:column headerText="#{lbl['lbl.pm.profiles.resorg.table.name']}" > 
        			#{orgUnit.pmOrgProfile.pmOrgValidity.orgName}
 	        </p:column>
-	        <p:column headerText="#{lbl['lbl.pm.profiles.resorg.table.effdate']}" > 
+	        <p:column headerText="* #{lbl['lbl.pm.profiles.resorg.table.effdate']}" > 
 			  	<p:calendar id="effDateId" value="#{orgUnit.effDateDisplay}" styleClass="ppDisplayCalXS" required="true"
-			  		label="#{lbl['lbl.pm.profiles.resorg.table.effdate']}"
-					showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+			  		label="#{lbl['lbl.pm.profiles.resorg.table.effdate']}" 
+					showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+					<p:ajax event="dateSelect" process="@this" />
+				</p:calendar>
 				<p:message id="effDateIdMsg" for="effDateId" display="icon" />
 	        </p:column>
 	        <p:column headerText="#{lbl['lbl.pm.profiles.resorg.table.expdate']}" > 
 			  	<p:calendar id="expDateId" value="#{orgUnit.expDateDisplay}" styleClass="ppDisplayCalXS"
-					showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+					<p:ajax event="dateSelect" process="@this" />
+				</p:calendar>
 	        </p:column>
+	        <!-- 
 	        <p:column headerText="#{lbl['lbl.pm.profiles.userdetails.status']}" width="5%"> 
 		       	<p:selectOneMenu value="#{orgUnit.recordStatusFlg}" styleClass="ppDropDownWidthXS">  
 	            	<f:selectItems value="#{profileManagementBackingBean.getStatusOptions()}" />
 	            	<p:ajax event="change" listener="#{profileManagementBackingBean.orgUnitStatusChange(index)}" 
 			     		update=":form:tvRoleReceivingAddr:dtRoles"/>
 	          	</p:selectOneMenu>         
-	        </p:column>        
+	        </p:column>     
+	         -->   
 	        <p:column headerText="#{lbl['lbl.pm.action']}">  
       		    <p:commandLink action="#{profileManagementBackingBean.deleteOrgUnit(orgUnit)}" disabled="#{!orgUnit.brandNew}"
-      		    	update="dtOrgUnit">
+      		    	immediate="true" update="dtOrgUnit">
 					<p:graphicImage value="/resources/ep/images/design/delete.png"/>
 				</p:commandLink>
 	        </p:column>  
@@ -71,8 +79,7 @@
        	<br/>
 		<div class="ppRightBtn">
 		 	<p:commandButton value="#{lbl['lbl.btn.add']}" process="@this" partialSubmit="true" immediate="true" 
-		   	 	update="dtOrgUnit" action="#{profileManagementBackingBean.addOrgUnit()}" />
-		   	 	
+		   	 	update="dtOrgUnit, :form:tvRoleReceivingAddr" action="#{profileManagementBackingBean.addOrgUnit()}" />
 		</div>
     	<ac:lovPopup /> 		
 	</p:panel>

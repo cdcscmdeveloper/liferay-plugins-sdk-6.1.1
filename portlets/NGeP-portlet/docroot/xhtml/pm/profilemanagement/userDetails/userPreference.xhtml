@@ -16,6 +16,7 @@
 				</th>
 				<td>	        
           			<p:selectOneMenu styleClass="ppDropDownWidthM" required="true" id="somPreLanguage"
+          				label="#{lbl['lbl.pm.profiles.preferences.language']}"
           				value="#{profileManagementBackingBean.managedBean.selectedUser.pmUserPreference.preferredLanguage}">
           				<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />  
 	            		<f:selectItems value="#{profileManagementBackingBean.getLanguageList()}" 
@@ -34,7 +35,7 @@
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</th>
 				<td>
-					<p:inputText id="itPreNotifyDay" required="true"
+					<p:inputText id="itPreNotifyDay" required="true" label="#{lbl['lbl.pm.profiles.preferences.notificationremoval']}"
 						value="#{profileManagementBackingBean.managedBean.selectedUser.pmUserPreference.notifyRemovalDay}" size="5" />&#160;
 					<p:outputLabel value="#{lbl['lbl.pm.profiles.preferences.notification.day']}" style="width:62px" />&#160;
                 	<p:graphicImage id="giDay" library="ep/images/design" name="tooltips.png"

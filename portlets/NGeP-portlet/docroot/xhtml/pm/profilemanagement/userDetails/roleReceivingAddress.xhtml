@@ -25,7 +25,9 @@
 			        <p:column headerText="#{lbl['lbl.pm.profiles.authorisation.apprlimit']}" > 
 			          	<p:inputText id="itAppLimit" styleClass="ppDisplayTextS" value="#{role.approvalLimit}" 
 			          		required="#{role.pmRole.limitRequired}" label="#{lbl['lbl.pm.profiles.authorisation.apprlimit']}"
-			          		disabled="#{!role.pmRole.limitRequired}" />
+			          		disabled="#{!role.pmRole.limitRequired}">
+			          		<p:ajax event="change" process="@this" />
+		          		</p:inputText>
 		          		<p:message id="itAppLimitMsg" for="itAppLimit" display="icon" />
 			        </p:column>
 			        <p:column headerText="#{lbl['lbl.pm.profiles.authorisation.Status']}"> 
@@ -38,7 +40,7 @@
 	       		<br/>
 	       		<br/>
 				<div class="ppRightBtn">
-					<p:commandButton action="#{profileManagementBackingBean.getAvailbleUserRole}"
+					<p:commandButton action="#{profileManagementBackingBean.getAvailbleUserRole}" immediate="true"
 					  	value="#{lbl['lbl.btn.add']}" oncomplete="dlRoleOptions.show();" update=":form:opRoleOptions"/>&#160;
 			        <p:commandButton value="#{lbl['lbl.btn.delete']}" action="#{profileManagementBackingBean.deleteRole}" update=":form:tvRoleReceivingAddr:dtRoles" />
 			  
