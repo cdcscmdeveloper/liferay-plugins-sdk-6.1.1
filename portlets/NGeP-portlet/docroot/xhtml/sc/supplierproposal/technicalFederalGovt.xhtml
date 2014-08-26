@@ -67,7 +67,10 @@
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.sp.contractperiod']}">
-					<h:outputText value="#{techgovt.contractDuration}" />
+					<h:outputText value="#{techgovt.contractDuration/12}">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</h:outputText>
 				</p:column>
 
 			</p:dataTable>
@@ -83,8 +86,11 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.sp.ttlnoofyears']}" /></td>
 					<td colspan="3"><p:inputText
-							value="#{supplierProposalDetailBackingBean.managedBean.noOfYears}"
-							readonly="true" disabled="true" size="30" /></td>
+							value="#{supplierProposalDetailBackingBean.managedBean.noOfYears /12}"
+							readonly="true" disabled="true" size="30">
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</p:inputText></td>
 				</tr>
 			</table>
 		</p:panel>

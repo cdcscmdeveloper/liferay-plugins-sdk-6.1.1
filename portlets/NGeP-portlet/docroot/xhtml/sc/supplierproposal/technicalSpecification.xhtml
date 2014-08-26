@@ -20,7 +20,8 @@
 				action="#{supplierProposalDetailBackingBean.saveTechnicalSpecificationAction}"
 				process="@this" partialSubmit="true" />
 
-			<p:commandButton value="#{lbl['lbl.btn.complete']}"
+			<p:commandButton value="#{lbl['lbl.btn.complete']}" action="#{supplierProposalDetailBackingBean.completeTechnicalSpecificationAction}"
+				process="@this" partialSubmit="true"
 				icon="ui-icon-check" />
 		</div>
 		<p:panel>
