@@ -123,7 +123,7 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 				searchBean.getDataFilterBeans().add(new SearchFilterBean("smAppl.smSupplier.supplierId",SearchOperator.OPERATOR_EQUALS.value(),getUpdateSmPersonnel().getSmAppl().getSmSupplier().getSupplierId()));
 				
 				if(getSearchUsername() !=null) {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("name",SearchOperator.OPERATOR_LIKE.value(),getSearchUsername()));
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("name",SearchOperator.OPERATOR_LIKE.value(),getSearchUsername(),true));
 				}
 
 				if(getSearchEPRole() !=null) {
