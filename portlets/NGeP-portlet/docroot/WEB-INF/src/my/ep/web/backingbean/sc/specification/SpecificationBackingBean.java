@@ -675,8 +675,6 @@ public class SpecificationBackingBean extends
 
 	}
 
-	
-
 	private ISearchResultBean<ScQtCheckList> retriveChecklistByIdAndTitle(
 			String title) {
 		IQTSpecSO specSo = null;
@@ -2065,7 +2063,7 @@ public class SpecificationBackingBean extends
 					tmpCheckList.setDefinationType(definationType);
 					tmpCheckList.setQtScoreWeightage(specChecklist.get(0)
 							.getQtScoreWeightage());
-					this.getManagedBean().setScQtChecklist(tmpCheckList);
+					//this.getManagedBean().setScQtChecklist(tmpCheckList);
 					if (specChecklist.get(0).getQtScoreWeightage().getScore() != null) {
 						getManagedBean().setScoreVarience(
 								specChecklist.get(0).getQtScoreWeightage()
@@ -4711,7 +4709,7 @@ public class SpecificationBackingBean extends
 						.equalsIgnoreCase(checkList.getPmDocument()
 								.getDocDefinitionKey())) {
 
-					reqDTO.setCheckListId(checkList.getQtChecklistId());
+					reqDTO.setScQtCheckList(checkList);
 					resDTO = specSo.retrieveCheckListScoreNValue(reqDTO);
 					if (null == resDTO.getCheckListScores()) {
 
@@ -4795,8 +4793,6 @@ public class SpecificationBackingBean extends
 
 		}
 	}
-
-	
 
 	public String createCommitteeSpecification() {
 		this.getManagedBean().setScqtDoc(new ScQtDoc());
@@ -5699,7 +5695,7 @@ public class SpecificationBackingBean extends
 					+ financial.getOverallOtherFin().intValue();
 			this.getManagedBean().setRecommendfinancialScore(
 					new BigDecimal(local));
-			
+
 		} finally {
 
 		}
@@ -5735,20 +5731,27 @@ public class SpecificationBackingBean extends
 				noOfContractScore.addAll(checkListScore);
 			}
 			List<ScQtCheckListScore> noOfYearsScore = new ArrayList<ScQtCheckListScore>();
-			if (QTConstants.USER_SCORE.equalsIgnoreCase(totalNoOfYearsType)) {
-				ScQtCheckListScore scoreOfYears = this.getManagedBean()
-						.getScQtContractScore();
-				scoreOfYears.setScoreType(new BigDecimal(this.getManagedBean()
-						.getCompanyScoreType()));
-				scoreOfYears.setCriteriaType(new Integer(this.getManagedBean()
-						.getOtherCriteriaType()));
-				scoreOfYears.setCheckList(checkList);
-				setUserDetails(scoreOfYears);
-				noOfYearsScore.add(scoreOfYears);
-			} else {
-				List<ScQtCheckListScore> scoreYears = this.getManagedBean()
-						.getScoringForYears();
-				noOfYearsScore.addAll(scoreYears);
+			if ((null != checkList && null != checkList.getPmDocument())
+					&& (QTConstants.TECHNICAL_GOV_CODE
+							.equalsIgnoreCase(checkList.getPmDocument()
+									.getDocDefinitionKey()) || QTConstants.TECHNICAL_PRIVATE_CODE
+							.equalsIgnoreCase(checkList.getPmDocument()
+									.getDocDefinitionKey()))) {
+				if (QTConstants.USER_SCORE.equalsIgnoreCase(totalNoOfYearsType)) {
+					ScQtCheckListScore scoreOfYears = this.getManagedBean()
+							.getScQtContractScore();
+					scoreOfYears.setScoreType(new BigDecimal(this
+							.getManagedBean().getCompanyScoreType()));
+					scoreOfYears.setCriteriaType(new Integer(this
+							.getManagedBean().getOtherCriteriaType()));
+					scoreOfYears.setCheckList(checkList);
+					setUserDetails(scoreOfYears);
+					noOfYearsScore.add(scoreOfYears);
+				} else {
+					List<ScQtCheckListScore> scoreYears = this.getManagedBean()
+							.getScoringForYears();
+					noOfYearsScore.addAll(scoreYears);
+				}
 			}
 			reqDTO.setCheckListScores(noOfContractScore);
 			List<ScQtCheckListScore> removedList = this.getManagedBean()
@@ -6989,8 +6992,10 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().getScQt()
 						.setFulfilmentType(new PmParameter());
 			} else {
-				loadPrepareSpecCommitteeDetails(quotationTenderDataType
-						.getQtId().longValue(), getDocTypeByTaskName(taskName));
+				/*
+				 * loadPrepareSpecCommitteeDetails(quotationTenderDataType
+				 * .getQtId().longValue(), getDocTypeByTaskName(taskName));
+				 */
 			}
 			fc.getApplication()
 					.getNavigationHandler()
@@ -7001,9 +7006,6 @@ public class SpecificationBackingBean extends
 
 	}
 
-	
-
-	
 	private SpecificationReqDTO constructSpecCommitteDtls() {
 		SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 		ScQt scQt = this.getManagedBean().getScQt();
@@ -8519,6 +8521,7 @@ public class SpecificationBackingBean extends
 	public void setPmDigiSign(PmDigiSign pmDigiSign) {
 		this.pmDigiSign = pmDigiSign;
 	}
+
 	/**
 	 * will be called to remove specification..
 	 * 
@@ -8712,6 +8715,7 @@ public class SpecificationBackingBean extends
 		}
 		return null;
 	}
+
 	/**
 	 * will be called to create new template spec
 	 * 
@@ -8801,6 +8805,7 @@ public class SpecificationBackingBean extends
 
 		return checkList;
 	}
+
 	public String specEditAction(ScQtCheckList checklist, int index,
 			String specType) {
 		this.getManagedBean().setSpecStatusId(
@@ -8829,6 +8834,4 @@ public class SpecificationBackingBean extends
 
 	}
 
-
-	
 }
