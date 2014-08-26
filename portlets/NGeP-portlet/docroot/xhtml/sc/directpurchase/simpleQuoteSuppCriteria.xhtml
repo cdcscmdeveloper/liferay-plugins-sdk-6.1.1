@@ -198,7 +198,7 @@
 						   <table><tr> 
 							     <td class="TableFieldLeft">
 								     <ac:lov id="supplier" lovId="SM_SUPPLIER"
-									    postUpdateListener="simpleQuoteBackingBean.supplierListListener(simpleQuoteBackingBean.managedBean.smSuppliers ,simpleQuoteBackingBean.managedBean.scQuote)"
+									    postUpdateListener="simpleQuoteBackingBean.supplierListListener(simpleQuoteBackingBean.managedBean.smSuppliers, simpleQuoteBackingBean.managedBean.scQuote)"
 										headerText="Supplier List" buttonLabel="Add"
 										buttonIcon="ui-icon-add" selectionMode="multiple"
 										update="@form"
@@ -313,16 +313,19 @@
                     <div>
                     <c:if test="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}">	
 					<table style="width: 100%">
-					  <tr><td class="TableFieldLeft" width="80%"></td>
+					  <tr><td class="TableFieldLeft" width="100%"></td>
 						 <td>
 						   <table><tr> 
 							     <td class="TableFieldLeft">
-								   <ac:lov id="panelSupplierId" lovId="CT_PANEL_SUPPLIER"
-										postUpdateListener="simpleQuoteBackingBean.panelItemListener(simpleQuoteBackingBean.managedBean.ctPanelSuppliers)"
+							      <!-- panel item for simple quote have to hide add button -->
+							       <c:if test="#{simpleQuoteBackingBean.managedBean.panelItemBtnFlag}">	
+								     <ac:lov id="panelSupplierId" lovId="CT_PANEL_SUPPLIER"
+										postUpdateListener="simpleQuoteBackingBean.panelItemListener(simpleQuoteBackingBean.managedBean.ctPanelSuppliers, simpleQuoteBackingBean.managedBean.scQuote)"
 										headerText="Panel Supplier" buttonLabel="Add"
 										buttonIcon="ui-icon-add" selectionMode="multiple"
 										saveObject="simpleQuoteBackingBean.managedBean.ctPanelSuppliers"
 										conditionField="recordStatus^1" update="@form" />
+								    </c:if>
 								   </td>
 									<td>
 									 <p:commandButton

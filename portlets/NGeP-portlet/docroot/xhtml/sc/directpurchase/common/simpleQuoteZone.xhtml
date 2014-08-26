@@ -56,9 +56,10 @@
 		</h:panelGrid>
 		<div align="right" style="width: 100%">
 		 <c:if test="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}">	
-		 <p:commandButton value="#{lbl['lbl.ct.ded.btn.add']}" process="@this,locLevels" 
+		    <p:commandButton value="#{lbl['lbl.ct.ded.btn.add']}" process="@this,locLevels" 
 		     update="@([id$=zonePopupPanel])" partialSubmit="true" 
-			 oncomplete="ZoneLocation.show();"
+			 oncomplete="ZoneLocation.show();" 
+			 rendered="#{simpleQuoteBackingBean.managedBean.panelItemBtnFlag}"
 			 actionListener="#{simpleQuoteBackingBean.showZonePopup}" icon="ui-icon-add"/>
 			 
 		   <p:commandButton value="#{lbl['lbl.sc.sq.supp.criteria.delete.btn']}" 
