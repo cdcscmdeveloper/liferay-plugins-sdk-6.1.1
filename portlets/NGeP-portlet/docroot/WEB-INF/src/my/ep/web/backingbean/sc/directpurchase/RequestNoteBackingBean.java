@@ -797,12 +797,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 						   reqDTO.setParameterCode(getManagedBean().getPeriodType());
 						   parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
 						   selectedReqDtl.setDeliverTermType(parameterResDTO.getPmParameter());
-						   
-					   } else{
-						   throw new EpException("Please select Delivery Term.");
-					   }
-					  
-					   if(getManagedBean().getPeriodValue() > 0){
+					   } 
+					   
+					   if(getManagedBean().getPeriodValue() >0){
 						   selectedReqDtl.setDeliverTerm(getManagedBean().getPeriodValue());  
 					   }
 
@@ -1156,9 +1153,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		} else {
 			IViewSupplierItemSO viewSupplierItemSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT, IViewSupplierItemSO.class);
 	    	CatalogueReqDTO catalogueReqDTO = new CatalogueReqDTO();
-	    	catalogueReqDTO.setViewSearchBean(new CatalogueBackingBean().getManagedBean().getSearchDataModel().getSearchBean());
-	    	catalogueReqDTO.setSupplierItemId(selectedSupplierItem.getSupplierItemId());
-	    	catalogueReqDTO.setExtensionCode(scRequestItem.getCmItem().getExtensionCode());
+	    	ISearchBean<VCmSupplierItem>  searchBean  = new CatalogueBackingBean().getManagedBean().getSearchDataModel().getSearchBean();
+			searchBean.getDataFilterBeans().clear();
+			catalogueReqDTO.setViewSearchBean(searchBean);
+			catalogueReqDTO.setSupplierItemId(selectedSupplierItem.getSupplierItemId());
+			catalogueReqDTO.setExtensionCode(scRequestItem.getCmItem().getExtensionCode());
 	    	CatalogueResDTO catalogueResDTO = viewSupplierItemSO.getSuppliersItemPricingByExtensionCode(catalogueReqDTO);
 	    	
 			// purchase in default & add to cart
@@ -1198,6 +1197,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		    	}
 		    } else{
 		    	// adding suppliers from search catalogue 
+		    	catalogueReqDTO = new CatalogueReqDTO();
+		    	catalogueReqDTO.setViewSearchBean(new CatalogueBackingBean().getManagedBean().getSearchDataModel().getSearchBean());
+		    	catalogueReqDTO.setSupplierItemId(selectedSupplierItem.getSupplierItemId());
+		    	catalogueReqDTO.setExtensionCode(scRequestItem.getCmItem().getExtensionCode());
+			    catalogueResDTO = viewSupplierItemSO.getSuppliersItemPricingByExtensionCode(catalogueReqDTO);
 		    	if(catalogueResDTO.getViewSuppItemResultBean().getResultList() != null && catalogueResDTO.getViewSuppItemResultBean().getResultList().size()>0){
 		    		for (VCmSupplierItem vCmSupplierItem : catalogueResDTO.getViewSuppItemResultBean().getResultList()) {
 		    			if (vCmSupplierItem.getCmPricings() != null && vCmSupplierItem.getCmPricings().size() > 0) {

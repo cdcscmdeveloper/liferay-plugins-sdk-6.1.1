@@ -67,7 +67,6 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	private List<PmOrgProfile> userDivisionList;
 	private CmSupplierItem cmSupplierItem;
 	private List<CmSupplierItem> supplierItems;
-	private List<CtPanelItem> panelItems;
 	
 	private List<PmUser> userList = new ArrayList<PmUser>();
 	private ScRequestNoteDtl requestNoteDtl = new ScRequestNoteDtl();
@@ -1206,18 +1205,7 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	public void setSupplierItems(List<CmSupplierItem> supplierItems) {
 		this.supplierItems = supplierItems;
 	}
-	/**
-	 * @return the panelItems
-	 */
-	public List<CtPanelItem> getPanelItems() {
-		return panelItems;
-	}
-	/**
-	 * @param panelItems the panelItems to set
-	 */
-	public void setPanelItems(List<CtPanelItem> panelItems) {
-		this.panelItems = panelItems;
-	}
+	
 	/**
 	 * @return the defaultCountryId
 	 */

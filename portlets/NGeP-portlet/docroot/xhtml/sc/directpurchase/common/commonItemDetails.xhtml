@@ -239,7 +239,7 @@
 					</p:selectOneMenu>
 					
 					<p:spacer width="10px;"/>
-					<h:outputText value="#{lbl['lbl.sc.request.note.delivery.term']}"></h:outputText>
+					<h:outputText value="#{lbl['lbl.sc.request.note.delivery.term']}"  rendered="#{requestNoteBackingBean.managedBean.sourceMethod eq 'Search Catalogue'}"></h:outputText>
 					<p:spacer width="6px;"/>
 					<p:inputText id="periodId" style="width:20px;text-align:right;margin-top: 7px;" required="false"
 					    rendered="#{requestNoteBackingBean.managedBean.sourceMethod eq 'Search Catalogue'}"

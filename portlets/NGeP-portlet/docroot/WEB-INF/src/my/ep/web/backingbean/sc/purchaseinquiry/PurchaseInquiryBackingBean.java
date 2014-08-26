@@ -212,7 +212,9 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 			  // prepare  requestSupplierItems , request item and supplier item price 
 			  IViewSupplierItemSO viewSupplierItemSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT, IViewSupplierItemSO.class);
 			  CatalogueReqDTO catalogueReqDTO = new CatalogueReqDTO();
-			  catalogueReqDTO.setViewSearchBean(new CatalogueBackingBean().getManagedBean().getSearchDataModel().getSearchBean());
+			  ISearchBean<VCmSupplierItem>  searchBean  = new CatalogueBackingBean().getManagedBean().getSearchDataModel().getSearchBean();
+			  searchBean.getDataFilterBeans().clear();
+			  catalogueReqDTO.setViewSearchBean(searchBean);
 			  catalogueReqDTO.setSupplierItemId(cmSupplierItem.getSupplierItemId());
 			  catalogueReqDTO.setExtensionCode(cmSupplierItem.getCmItem().getExtensionCode());
 			  CatalogueResDTO catalogueResDTO = viewSupplierItemSO.getSuppliersItemPricingByExtensionCode(catalogueReqDTO);
