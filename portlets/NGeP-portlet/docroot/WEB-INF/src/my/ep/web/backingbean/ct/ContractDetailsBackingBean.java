@@ -313,20 +313,35 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	 	 }
 	}
 	
-	public void setValidateContractField(ContractResDTO resDTO){
+	public void setValidateContractField(ContractResDTO resDTO) {
 		
 		this.getManagedBean().setContractVer(resDTO.getCtContractVer());
 	    this.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
-		 
+	    
+	    if(this.getManagedBean().getContractVer().getCtAgencies() != null && this.getManagedBean().getContractVer().getCtAgencies().size() > 0 )
+		       Collections.sort(this.getManagedBean().getContractVer().getCtAgencies(), new agencyPtjComparator());
+	  
 	    if(this.getManagedBean().getContractVer().getCtContractItems().size() > 0){
-		     if(this.getManagedBean().getCtItemList().size() == 0 && this.getManagedBean().getCtItemServiceList().size() == 0){
-		        for(CtContractItem item : getManagedBean().getContractVer().getCtContractItems()) {
-				    if(item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) 
-					   this.getManagedBean().getCtItemServiceList().add(item);
-				    else if(item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT))
-		        	   this.getManagedBean().getCtItemList().add(item);
-			     }
+		    
+	    	if(this.getManagedBean().getCtItemList().size() == 0 && this.getManagedBean().getCtItemServiceList().size() == 0) {
+		    	  for(CtContractItem item : getManagedBean().getContractVer().getCtContractItems()) {
+				           if(item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) {
+				        	     Collections.sort(item.getCtItemPrices(), new ItemZonePriceComparator());
+					              this.getManagedBean().getCtItemServiceList().add(item);
+				          }  else if(item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)){
+				        	      Collections.sort(item.getCtItemPrices(), new ItemZonePriceComparator());
+				                  Collections.sort(item.getCtItemCeilingQties(), new ceilingComparator());
+		        	               this.getManagedBean().getCtItemList().add(item);
+				           }
+			       } 
 		     }
+		    
+	    	if(this.getManagedBean().getCtItemList() != null && this.getManagedBean().getCtItemList().size() > 0) {
+		          Collections.sort(this.getManagedBean().getCtItemList(), new itemComparator());
+		   
+	    	} if(this.getManagedBean().getCtItemServiceList() != null && this.getManagedBean().getCtItemServiceList().size() > 0) {
+		          Collections.sort(this.getManagedBean().getCtItemServiceList(), new itemComparator());
+		      }
 		 }
 		 
 		 if(this.getManagedBean().getContractVer().getCtDeductions().size() > 0){
@@ -1037,10 +1052,6 @@ public void ConstructSideTabMenu(){
 			   this.getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY)){
 		     refreshAgencyCeilingQuantityList();
 	   }
-	  
-	  if(this.getManagedBean().getSelectedItem().getCtItemPrices() != null && this.getManagedBean().getSelectedItem().getCtItemPrices().size() > 0 ){
-		     Collections.sort(this.getManagedBean().getSelectedItem().getCtItemPrices(), new ItemZonePriceComparator());
-	  }
     }
     
     public void changeItemTypes(){
@@ -1807,6 +1818,81 @@ public void ConstructSideTabMenu(){
 			return null;
 		}
 	}
+	
+	public class agencyPtjComparator implements Comparator<CtAgency>{
+
+		   @Override
+		   public int compare(CtAgency obj1, CtAgency obj2) {
+			   
+			   if(obj1 != null && obj1.getOrgProfile().getParentOrgProfile() != null) {
+				   
+			        String minstryName = ((CtAgency) obj1).getOrgProfile().getParentOrgProfile().getOrgName();
+                    String minstryName2 = ((CtAgency) obj2).getOrgProfile().getParentOrgProfile().getOrgName();
+                    int agency = minstryName.compareTo(minstryName2);
+                    if( agency != 0) {
+                 	     return agency;
+			         } else  {
+                          String ptjName = ((CtAgency) obj1).getOrgProfile().getOrgName();
+                          String ptjName2 = ((CtAgency) obj2).getOrgProfile().getOrgName();
+                          int ptj = ptjName.compareTo(ptjName2);
+                          if(ptj!=0){
+                        	  return ptj;
+                          } else{
+                        	  Date date1 = ((CtAgency) obj1).getEffDate();
+                        	  Date date2 = ((CtAgency) obj2).getEffDate();
+                              return date1.compareTo(date2);
+                          }
+			         }
+		       } 
+			   return 0;
+		  }
+	 }
+	
+	public class itemComparator implements Comparator<CtContractItem>{
+
+		   @Override
+		   public int compare(CtContractItem obj1, CtContractItem obj2) {
+			   
+			   if(obj1 != null) {
+				    String itemName = obj1.getItemName();
+                    String itemName2 = obj2.getItemName();
+                    int item = itemName.compareTo(itemName2);
+                    if( item != 0) {
+           	               return item;
+		            } 
+			   }
+			   return 0;
+		  }
+	 }
+	
+	public class ceilingComparator implements Comparator<CtItemCeilingQty>{
+
+		   @Override
+		   public int compare(CtItemCeilingQty obj1, CtItemCeilingQty obj2) {
+			   
+			   if(obj1 != null && obj1.getCtAgency().getOrgProfile().getParentOrgProfile() != null) {
+				   
+			     String minstryName = obj1.getCtAgency().getOrgProfile().getParentOrgProfile().getOrgName();
+                 String minstryName2 = obj2.getCtAgency().getOrgProfile().getParentOrgProfile().getOrgName();
+                 int agency = minstryName.compareTo(minstryName2);
+                 if( agency != 0) {
+              	     return agency;
+			         } else  {
+                       String ptjName =  obj1.getCtAgency().getOrgProfile().getOrgName();
+                       String ptjName2 = obj2.getCtAgency().getOrgProfile().getOrgName();
+                       int ptj = ptjName.compareTo(ptjName2);
+                       if(ptj!=0){
+                     	  return ptj;
+                       } else{
+                     	  Date date1 = ((CtItemCeilingQty) obj1).getEffDate();
+                     	  Date date2 = ((CtItemCeilingQty) obj2).getEffDate();
+                           return date1.compareTo(date2);
+                       }
+			         }
+		       } 
+			   return 0;
+		  }
+	 }
 	
 	public class ItemZonePriceComparator implements Comparator<CtItemPrice>{
 
