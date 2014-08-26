@@ -45,6 +45,7 @@
 					<p:commandLink
 						actionListener="#{simpleQuoteBackingBean.editZone(zoneTree,index)}"
 						rendered="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}"
+						disabled="#{!simpleQuoteBackingBean.managedBean.panelItemBtnFlag}"
 						process="@this" update="@([id$=zonePopupPanel])"
 						oncomplete="ZoneLocation.show();">
 						<p:graphicImage library="ep/images/design" name="edit.png"
