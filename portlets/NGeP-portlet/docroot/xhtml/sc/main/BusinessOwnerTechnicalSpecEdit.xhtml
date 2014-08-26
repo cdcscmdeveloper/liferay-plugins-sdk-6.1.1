@@ -36,7 +36,7 @@
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
 				style="float:right;"
 				disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
-				action="#{specificationBackingBean.saveTemplateSpecDetails(null,1)}"
+				action="#{specificationBackingBean.saveTemplateSpecDetails('BO',1)}"
 				icon="ui-icon-save" update="@all" />
 
 		</div>
@@ -52,32 +52,32 @@
 					<td colspan="3"><p:inputTextarea rows="2" cols="95"
 							disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
 							style="margin-bottom:5px;" maxlength="200"
-							value="#{specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.specName}" /></td>
+							value="#{specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.specName}" /></td>
 				</tr>
 
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.tpl.search.item']}" />
 						<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel></td>
 					<td><ui:fragment
-							rendered="#{specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.itemTypeCode.parameterCode eq '3'}">
+							rendered="#{specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.itemTypeCode.parameterCode eq '3'}">
 							<p:selectOneMenu id="itemTypeSelectId" required="true"
 								disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
 								label="#{lbl['lbl.sc.tpl.search.item']}"
-								value="#{specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.itemTypeCode.parameterId}">
+								value="#{specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.itemTypeCode.parameterId}">
 								<f:selectItems
 									value="#{specificationBackingBean.getRoleTypeDropdownValues(ParameterTypeConst.scItemType)}"></f:selectItems>
 							</p:selectOneMenu>
 							<p:message id="itemTypeMessagespec" for="itemTypeSelectId"
 								display="icon"></p:message>
 						</ui:fragment> <ui:fragment
-							rendered="#{specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.itemTypeCode.parameterCode ne '3'}">
+							rendered="#{specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.itemTypeCode.parameterCode ne '3'}">
 
 							<p:inputText disabled="true" size="30"
-								value="#{specificationBackingBean.getParameterDesc(specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.itemTypeCode)}" />
+								value="#{specificationBackingBean.getParameterDesc(specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.itemTypeCode)}" />
 						</ui:fragment></td>
 					<td><h:outputLabel value="#{lbl['lbl.sc.tpl.search.spec']}" /></td>
 					<td><p:inputText disabled="true" size="30"
-							value="#{specificationBackingBean.getParameterDesc(specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.specTypeCode)}" /></td>
+							value="#{specificationBackingBean.getParameterDesc(specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.specTypeCode)}" /></td>
 
 				</tr>
 
@@ -86,7 +86,7 @@
 					<td><h:outputLabel value="#{lbl['lbl.sc.spec.local.goods']}" /></td>
 					<td><p:selectOneRadio
 							disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
-							value="#{specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.itemOriginCode.parameterId}">
+							value="#{specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.itemOriginCode.parameterId}">
 							<f:selectItems
 								value="#{specificationBackingBean.getLocalGoodsRadioValues(ParameterTypeConst.itemOrigin)}" />
 						</p:selectOneRadio></td>
@@ -97,7 +97,7 @@
 					<td><h:outputLabel
 							value="#{lbl['lbl.sc.spec.template.status']}" /></td>
 					<td><p:inputText disabled="true"
-							value="#{specificationBackingBean.getStatusDescById(specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.status.statusId)}"></p:inputText></td>
+							value="#{specificationBackingBean.getStatusDescById(specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.status.statusId)}"></p:inputText></td>
 				</tr>
 
 			</table>

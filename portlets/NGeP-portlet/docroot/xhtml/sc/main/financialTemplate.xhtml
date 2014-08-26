@@ -42,23 +42,23 @@
 					<td colspan="3"><p:inputTextarea rows="2" cols="95"
 							disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
 							maxlength="200" style="margin-bottom:5px;"
-							value="#{specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.specName}" /></td>
+							value="#{specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.specName}" /></td>
 				</tr>
 				<tr>
 					<td><h:outputLabel value="#{lbl['lbl.sc.tpl.search.item']}" /></td>
 					<td><p:inputText
-							value="#{specificationBackingBean.getParameterDesc(specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.itemTypeCode)}"
+							value="#{specificationBackingBean.getParameterDesc(specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.itemTypeCode)}"
 							disabled="true" size="30" /></td>
 					<td><h:outputLabel value="#{lbl['lbl.sc.tpl.search.spec']}" /></td>
 					<td><p:inputText disabled="true" size="30"
-							value="#{specificationBackingBean.getParameterDesc(specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.specTypeCode)}" /></td>
+							value="#{specificationBackingBean.getParameterDesc(specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.specTypeCode)}" /></td>
 
 				</tr>
 				<tr>
 
 					<td><h:outputLabel value="#{lbl['lbl.sc.spec.local.goods']}" /></td>
 					<td><p:inputText disabled="true"
-							value="#{specificationBackingBean.getParameterDesc(specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.itemOriginCode)}"></p:inputText></td>
+							value="#{specificationBackingBean.getParameterDesc(specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.itemOriginCode)}"></p:inputText></td>
 				</tr>
 
 
@@ -67,7 +67,7 @@
 					<td><h:outputLabel
 							value="#{lbl['lbl.sc.spec.template.status']}" /></td>
 					<td><p:inputText disabled="true"
-							value="#{specificationBackingBean.getStatusDescById(specificationBackingBean.managedBean.scqtDoc.tplSpecMaster.status.statusId)}"></p:inputText></td>
+							value="#{specificationBackingBean.getStatusDescById(specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.status.statusId)}"></p:inputText></td>
 				</tr>
 			</table>
 
