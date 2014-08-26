@@ -544,9 +544,10 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		if(pmOrgProfile!=null && pmOrgProfile.getOrgProfileId()!=null){
 			if(this.getManagedBean().getSelectedUser().getPmUserOrgs()!=null &&
 					!this.getManagedBean().getSelectedUser().getPmUserOrgs().isEmpty()){
-				List <Long> orgIds = new ArrayList<Long>();
+				int i=0;
 				for(PmUserOrg pmUserOrg: this.getManagedBean().getSelectedUser().getPmUserOrgs()){
-					if(pmUserOrg.getPmOrgProfile().getOrgProfileId().equals(pmOrgProfile.getOrgProfileId())){
+					if(pmUserOrg.getPmOrgProfile().getOrgProfileId().equals(pmOrgProfile.getOrgProfileId())
+							&& i!=index){
 						isValid = false;
 						break;
 					}

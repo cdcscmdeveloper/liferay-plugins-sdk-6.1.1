@@ -35,7 +35,7 @@
 					headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
 					value="#{orgUnit.pmOrgProfile.pmOrgValidity.orgCode}" 
 					postUpdateListener="profileManagementBackingBean.updateOrgCode
-					(profileManagementBackingBean.managedBean.selectedUser.pmUserOrgs[#{index}].pmOrgProfile, index)"
+					(profileManagementBackingBean.managedBean.selectedUser.pmUserOrgs[#{index}].pmOrgProfile, #{index})"
 					saveObject="profileManagementBackingBean.managedBean.selectedUser.pmUserOrgs[#{index}].pmOrgProfile"
 					conditionField="orgTypeCode.parameterId^#{orgUnit.pmOrgProfile.orgTypeCode.parameterId}|recordStatus^1" 
 					>

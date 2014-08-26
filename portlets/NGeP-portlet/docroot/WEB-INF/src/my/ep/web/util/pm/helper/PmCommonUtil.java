@@ -21,7 +21,6 @@ import my.ep.biz.service.pm.common.language.ILanguageSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.salutation.ISalutationSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
-import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
@@ -47,6 +46,7 @@ import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserNotification;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.authorization.PmUserPreference;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmCity;
@@ -387,6 +387,28 @@ public class PmCommonUtil {
 		return pmUser;
 	}
 
+	/**
+	 * retrieve active PmUserOrgs
+	 * @param id
+	 * @return PmUser
+	 */
+	public static List<PmUserOrg> retrieveActiveOrg(Long id){
+		List <PmUserOrg> pmUserOrgs = new ArrayList<PmUserOrg>();
+		try {
+			UserReqDTO reqDTO = new UserReqDTO();
+			UserResDTO resDTO = null;
+			reqDTO.setUserId(id);
+			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
+			if(resDTO.isSuccessful()){
+				pmUserOrgs = resDTO.getUserOrgList();
+			}
+				
+		} catch (Exception e) {
+			throw new EpException("Unable to retrieve user:" + id , new String[]{e.getMessage()}); //TODO exception
+		}		
+		return pmUserOrgs;
+	}
 	
 	
 	
