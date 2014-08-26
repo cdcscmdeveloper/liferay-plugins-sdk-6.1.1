@@ -28,7 +28,7 @@
 		</p:panel>
 	
 
-		<p:panel header="#{lbl['lbl.sc.spec.total.score.suppliers']}">
+		<p:panel header="#{lbl['lbl.sc.spec.total.score.suppliers']}" toggleable="true">
 			<table>
 				<tr>
 					<td><p:outputLabel
@@ -49,9 +49,9 @@
 				<ui:param name="scoringPnlGroupId" value="totalEmployeesId" />
 				<h:panelGroup id="totalSuppliersGroupId">
 					<ui:param name="scoringList"
-						value="#{specificationBackingBean.managedBean.supplierScore}" />
-					<ui:param name="selectionList"
-						value="#{specificationBackingBean.managedBean.supplierSelectScore}" />
+							value="#{specificationBackingBean.managedBean.checkListScore}" />
+						<ui:param name="selectionList"
+							value="#{specificationBackingBean.managedBean.checkListSelectScore}" />
 					<ui:param name="componentName" value="SuppliersInfo" />
 					<ui:param name="scoringPnlId" value="suppliersInfoId" />
 					<ui:param name="scoringPnlName"
@@ -62,10 +62,10 @@
 							process="@this,#{scoringPnlId}" partialSubmit="true"
 							oncomplete="scoreWidget.paginator.endLink.click();"
 							update="#{scoringPnlId}" icon="ui-icon-add"
-							actionListener="#{specificationBackingBean.addSupplierInfoDtls}" />
+							actionListener="#{specificationBackingBean.addScoring(30)}" />
 						<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
-							icon="ui-icon-delete"
-							action="#{specificationBackingBean.deleteScoring}"
+							icon="ui-icon-delete" process="@this,#{scoringPnlId}" partialSubmit="true"
+							action="#{specificationBackingBean.deleteScoring(null)}"
 							update="#{scoringPnlId}" />
 					</div>
 				</h:panelGroup>

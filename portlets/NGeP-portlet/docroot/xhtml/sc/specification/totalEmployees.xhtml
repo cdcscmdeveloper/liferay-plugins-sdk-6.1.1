@@ -23,11 +23,16 @@
 
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
 				style="float:right;" icon="ui-icon-save"
-				actionListener="#{specificationBackingBean.acceptEmployeeScore}" />
+				action="#{specificationBackingBean.acceptCompanyScoring}">
+				<f:setPropertyActionListener
+					target="#{specificationBackingBean.managedBean.criteriaType}"
+					value="21" />
+			</p:commandButton>
 
 
 
 		</div>
+		<p:spacer height="50"></p:spacer>
 		<p:panel>
 			<table>
 				<tr>
@@ -56,7 +61,8 @@
 			</h:panelGrid>
 		</p:panel>
 
-		<p:panel header="#{lbl['lbl.sc.spec.score.tot.employees']}">
+		<p:panel header="#{lbl['lbl.sc.spec.score.tot.employees']}"
+			toggleable="true">
 			<table>
 				<tr>
 					<td><p:outputLabel
@@ -70,52 +76,52 @@
 						</p:selectOneMenu></td>
 				</tr>
 			</table>
-		
-		<h:panelGroup id="totalEmployees">
-			<p:panel
-				rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '1'}">
-				<ui:param name="scoringPnlGroupId" value="totalEmployeesId" />
-				<h:panelGroup id="totalEmployeesGroupId">
-					<ui:param name="scoringList"
-						value="#{specificationBackingBean.managedBean.totalEmployeeScore}" />
-					<ui:param name="selectionList"
-						value="#{specificationBackingBean.managedBean.totalEmployeeSelectList}" />
-					<ui:param name="componentName" value="Employees" />
-					<ui:param name="scoringPnlId" value="employessId" />
-					<ui:param name="scoringPnlName"
-						value="#{lbl['lbl.sc.spec.score.tot.employees']}"></ui:param>
-					<ui:include src="/xhtml/sc/specification/scoring.xhtml"></ui:include>
-					<div align="right">
-						<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
-							process="@this,#{scoringPnlId}" partialSubmit="true"
-							oncomplete="scoreWidget.paginator.endLink.click();"
-							update="#{scoringPnlId}" icon="ui-icon-add"
-							actionListener="#{specificationBackingBean.addTotalEmployeeScoring}" />
-						<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
-							icon="ui-icon-delete"
-							action="#{specificationBackingBean.deleteScoring}"
-							update="#{scoringPnlId}" />
-					</div>
-				</h:panelGroup>
-			</p:panel>
-			<p:panel
-				rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '2'}">
-				<table>
-					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sc.spec.max.score']}"></p:outputLabel>
-							<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
-						</td>
-						<td><p:inputText id="totalEmployeesScore" required="true"
-								label="#{lbl['lbl.sc.spec.max.score']}"
-								value="#{specificationBackingBean.managedBean.scQtCheckListScore.score}"
-								maxlength="18">
-								<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
-							</p:inputText> <p:message id="techTotalEmployee" for="totalEmployeesScore"
-								display="icon"></p:message></td>
-					</tr>
-				</table>
-			</p:panel>
-		</h:panelGroup>
+
+			<h:panelGroup id="totalEmployees">
+				<p:panel
+					rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '1'}">
+					<ui:param name="scoringPnlGroupId" value="totalEmployeesId" />
+					<h:panelGroup id="totalEmployeesGroupId">
+						<ui:param name="scoringList"
+							value="#{specificationBackingBean.managedBean.checkListScore}" />
+						<ui:param name="selectionList"
+							value="#{specificationBackingBean.managedBean.checkListSelectScore}" />
+						<ui:param name="componentName" value="Employees" />
+						<ui:param name="scoringPnlId" value="employessId" />
+						<ui:param name="scoringPnlName"
+							value="#{lbl['lbl.sc.spec.score.tot.employees']}"></ui:param>
+						<ui:include src="/xhtml/sc/specification/scoring.xhtml"></ui:include>
+						<div align="right">
+							<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
+								process="@this,#{scoringPnlId}" partialSubmit="true"
+								oncomplete="scoreWidget.paginator.endLink.click();"
+								update="#{scoringPnlId}" icon="ui-icon-add"
+								actionListener="#{specificationBackingBean.addScoring(21)}" />
+							<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
+								icon="ui-icon-delete" process="@this,#{scoringPnlId}" partialSubmit="true"
+								action="#{specificationBackingBean.deleteScoring(null)}"
+								update="#{scoringPnlId}" />
+						</div>
+					</h:panelGroup>
+				</p:panel>
+				<p:panel
+					rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '2'}">
+					<table>
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sc.spec.max.score']}"></p:outputLabel>
+								<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
+							</td>
+							<td><p:inputText id="totalEmployeesScore" required="true"
+									label="#{lbl['lbl.sc.spec.max.score']}"
+									value="#{specificationBackingBean.managedBean.scQtCheckListScore.score}"
+									maxlength="18">
+									<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
+								</p:inputText> <p:message id="techTotalEmployee" for="totalEmployeesScore"
+									display="icon"></p:message></td>
+						</tr>
+					</table>
+				</p:panel>
+			</h:panelGroup>
 		</p:panel>
 
 	</ui:define>

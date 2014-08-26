@@ -24,7 +24,12 @@
 
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
 				style="float:right;" icon="ui-icon-save"
-				actionListener="#{specificationBackingBean.acceptPaidUpScore}" />
+				action="#{specificationBackingBean.acceptCompanyScoring}" >
+					<f:setPropertyActionListener
+					target="#{specificationBackingBean.managedBean.criteriaType}"
+					value="70" />
+				
+				</p:commandButton>
 
 
 
@@ -48,7 +53,7 @@
 				<p:inputText disabled="true"></p:inputText>
 			</h:panelGrid>
 		</p:panel>
-		<p:panel header="Scoring For Paid Up Capital">
+		<p:panel header="Scoring For Paid Up Capital" toggleable="true">
 			<table>
 				<tr>
 					<td><p:outputLabel
@@ -70,9 +75,9 @@
 				<ui:param name="scoringPnlGroupId" value="paidupCapitalId" />
 				<h:panelGroup id="paidGroupId">
 					<ui:param name="scoringList"
-						value="#{specificationBackingBean.managedBean.paidUpCapitalScore}" />
-					<ui:param name="selectionList"
-						value="#{specificationBackingBean.managedBean.paidUpSelectList}" />
+							value="#{specificationBackingBean.managedBean.checkListScore}" />
+						<ui:param name="selectionList"
+							value="#{specificationBackingBean.managedBean.checkListSelectScore}" />
 					<ui:param name="componentName" value="Paid Up Capital" />
 					<ui:param name="scoringPnlId" value="paidUpId" />
 					<ui:param name="scoringPnlName" value="Scoring For Paid Up Capital"></ui:param>
@@ -81,10 +86,10 @@
 						<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
 							process="@this,#{scoringPnlId}" partialSubmit="true"
 							update="#{scoringPnlId}" icon="ui-icon-add"
-							actionListener="#{specificationBackingBean.addPaidUpCapitalScoring}" />
+							actionListener="#{specificationBackingBean.addScoring(70)}" />
 						<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
-							icon="ui-icon-delete"
-							action="#{specificationBackingBean.deleteScoring}"
+							icon="ui-icon-delete" process="@this,#{scoringPnlId}" partialSubmit="true"
+							action="#{specificationBackingBean.deleteScoring(null)}"
 							update="#{scoringPnlId}" />
 
 					</div>

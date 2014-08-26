@@ -22,11 +22,16 @@
 
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
 				style="float:right;" icon="ui-icon-save"
-				actionListener="#{specificationBackingBean.acceptFinanceGovCompanyScoring}" />
+				action="#{specificationBackingBean.acceptCompanyScoring}">
+				<f:setPropertyActionListener
+					target="#{specificationBackingBean.managedBean.criteriaType}"
+					value="12" />
+			</p:commandButton>
 
 
 
 		</div>
+		<p:spacer height="50"></p:spacer>
 		<p:panel>
 			<table>
 				<tr>
@@ -115,7 +120,8 @@
 
 
 
-		<p:panel header="#{lbl['lbl.sc.spec.score.total.contract.amount']}">
+		<p:panel header="#{lbl['lbl.sc.spec.score.total.contract.amount']}"
+			toggleable="true">
 			<table>
 				<tr>
 					<td><p:outputLabel
@@ -137,9 +143,10 @@
 					<ui:param name="scoringPnlGroupId" value="contractorGroupId" />
 					<h:panelGroup id="contractAmountGroupId">
 						<ui:param name="scoringList"
-							value="#{specificationBackingBean.managedBean.contractAmount}" />
+							value="#{specificationBackingBean.managedBean.checkListScore}" />
 						<ui:param name="selectionList"
-							value="#{specificationBackingBean.managedBean.finGovContractSelectList}" />
+							value="#{specificationBackingBean.managedBean.checkListSelectScore}" />
+
 						<ui:param name="componentName" value="ContractAmount" />
 						<ui:param name="scoringPnlId" value="contractAmountId" />
 						<ui:param name="scoringPnlName"
@@ -149,17 +156,17 @@
 							<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
 								process="@this,#{scoringPnlId}" partialSubmit="true"
 								oncomplete="scoreWidget.paginator.endLink.click();"
-								actionListener="#{specificationBackingBean.addContratAmount}"
+								actionListener="#{specificationBackingBean.addScoring(12)}"
 								update="#{scoringPnlId}" icon="ui-icon-add" />
 							<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
-								icon="ui-icon-delete"
-								action="#{specificationBackingBean.deleteScoring}"
+								icon="ui-icon-delete" process="@this,#{scoringPnlId}" partialSubmit="true"
+								action="#{specificationBackingBean.deleteScoring(null)}"
 								update="#{scoringPnlId}" />
 
 						</div>
 					</h:panelGroup>
 				</p:panel>
-				<p:panel 
+				<p:panel
 					rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '2'}">
 					<table>
 						<tr>

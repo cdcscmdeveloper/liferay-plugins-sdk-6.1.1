@@ -10,7 +10,7 @@
 		header="#{lbl['lbl.sc.spec.tech.check.list']}" toggleable="true">
 
 		<p:dataTable id="stageTwotechProposal" var="stageTwoTechnical"
-			widgetVar="technicalChecklist"
+			widgetVar="technicalChecklist" rows="10"
 			value="#{specificationBackingBean.managedBean.scQtCheckSt2techProposal}"
 			rowIndexVar="index"
 			selection="#{specificationBackingBean.managedBean.s2TechSelect}"

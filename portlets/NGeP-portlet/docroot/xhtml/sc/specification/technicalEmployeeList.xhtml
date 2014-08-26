@@ -22,12 +22,16 @@
 
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
 				style="float:right;" icon="ui-icon-save"
-				actionListener="#{specificationBackingBean.acceptTechnicalScore}" />
+				action="#{specificationBackingBean.acceptCompanyScoring}">
+				<f:setPropertyActionListener
+					target="#{specificationBackingBean.managedBean.criteriaType}"
+					value="20" />
+			</p:commandButton>
 
 
 
 		</div>
-
+		<p:spacer height="50"></p:spacer>
 		<p:panel>
 			<table>
 				<tr>
@@ -75,7 +79,8 @@
 			</tr>
 		</table>
 
-		<p:panel header="#{lbl['lbl.sc.spec.score.tot.tech.staff']}">
+		<p:panel header="#{lbl['lbl.sc.spec.score.tot.tech.staff']}"
+			toggleable="true">
 			<table>
 				<tr>
 					<td><p:outputLabel
@@ -97,9 +102,9 @@
 					<ui:param name="scoringPnlGroupId" value="totalStaffId" />
 					<h:panelGroup id="totalStaffGroupId">
 						<ui:param name="scoringList"
-							value="#{specificationBackingBean.managedBean.technicalStaffScore}" />
+							value="#{specificationBackingBean.managedBean.checkListScore}" />
 						<ui:param name="selectionList"
-							value="#{specificationBackingBean.managedBean.technicalStaffSelectList}" />
+							value="#{specificationBackingBean.managedBean.checkListSelectScore}" />
 						<ui:param name="componentName" value="Staff" />
 						<ui:param name="scoringPnlId" value="staffId" />
 						<ui:param name="scoringPnlName"
@@ -110,10 +115,10 @@
 								process="@this,#{scoringPnlId}" partialSubmit="true"
 								oncomplete="scoreWidget.paginator.endLink.click();"
 								update="#{scoringPnlId}" icon="ui-icon-add"
-								actionListener="#{specificationBackingBean.addTechnicalStaffScoring}" />
+								actionListener="#{specificationBackingBean.addScoring(20)}" />
 							<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
-								icon="ui-icon-delete"
-								action="#{specificationBackingBean.deleteScoring}"
+								icon="ui-icon-delete" process="@this,#{scoringPnlId}" partialSubmit="true"
+								action="#{specificationBackingBean.deleteScoring(null)}"
 								update="#{scoringPnlId}" />
 						</div>
 					</h:panelGroup>

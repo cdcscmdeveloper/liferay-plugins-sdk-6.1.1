@@ -23,11 +23,20 @@
 
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
 				style="float:right;" icon="ui-icon-save" update="@all"
-				actionListener="#{specificationBackingBean.acceptCompanyScoring}" />
+				action="#{specificationBackingBean.acceptCompanyScoring}">
+				<f:setPropertyActionListener
+					target="#{specificationBackingBean.managedBean.criteriaType}"
+					value="10" />
+				<f:setPropertyActionListener
+					target="#{specificationBackingBean.managedBean.otherCriteriaType}"
+					value="11" />
+
+			</p:commandButton>
 
 
 
 		</div>
+		<p:spacer height="50"></p:spacer>
 		<p:panel>
 			<table>
 				<tr>
@@ -108,7 +117,8 @@
 
 
 
-		<p:panel header="#{lbl['lbl.sc.spec.score.total.no.contracts']}">
+		<p:panel header="#{lbl['lbl.sc.spec.score.total.no.contracts']}"
+			toggleable="true">
 			<table>
 				<tr>
 					<td><p:outputLabel
@@ -141,11 +151,11 @@
 							<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
 								process="@this,#{scoringPnlId}" partialSubmit="true"
 								oncomplete="scoreWidget.paginator.endLink.click();"
-								actionListener="#{specificationBackingBean.addScoring}"
+								actionListener="#{specificationBackingBean.addScoring(10)}"
 								update="#{scoringPnlId}" icon="ui-icon-add" />
 							<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
 								icon="ui-icon-delete"
-								action="#{specificationBackingBean.deleteScoring}"
+								action="#{specificationBackingBean.deleteScoring(null)}"
 								update="#{scoringPnlId}" />
 
 						</div>
@@ -163,6 +173,7 @@
 									id="techGovCompanyContracts"
 									value="#{specificationBackingBean.managedBean.scQtCheckListScore.score}">
 									<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
+
 								</p:inputText> <p:message id="govContracts" for="techGovCompanyContracts"
 									display="icon"></p:message></td>
 						</tr>
@@ -173,7 +184,8 @@
 
 
 
-		<p:panel header="#{lbl['lbl.sc.spec.score.total.no.years']}">
+		<p:panel header="#{lbl['lbl.sc.spec.score.total.no.years']}"
+			toggleable="true">
 			<table>
 				<tr>
 					<td><p:outputLabel
@@ -196,7 +208,7 @@
 						<ui:param name="scoringList"
 							value="#{specificationBackingBean.managedBean.scoringForYears}" />
 						<ui:param name="selectionList"
-							value="#{specificationBackingBean.managedBean.scoringForSelectYears}" />
+							value="#{specificationBackingBean.managedBean.otherScoreSelected}" />
 						<ui:param name="componentName" value="ScoringYear" />
 						<ui:param name="scoringPnlId" value="scoringYearId" />
 						<ui:param name="scoringPnlName"
@@ -206,11 +218,11 @@
 							<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
 								process="@this,#{scoringPnlId}" partialSubmit="true"
 								oncomplete="scoreWidget.paginator.endLink.click();"
-								actionListener="#{specificationBackingBean.addScoringyears}"
+								actionListener="#{specificationBackingBean.addScoringyears(11)}"
 								update="#{scoringPnlId}" icon="ui-icon-add" />
 							<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
 								icon="ui-icon-delete"
-								action="#{specificationBackingBean.deleteScoring}"
+								action="#{specificationBackingBean.deleteScoring('NoOfYears')}"
 								update="#{scoringPnlId}" />
 
 						</div>
@@ -229,6 +241,7 @@
 									maxlength="18" required="true"
 									label="#{lbl['lbl.sc.spec.max.score']}" id="techGovYrs">
 									<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
+
 								</p:inputText> <p:message id="govyeras" for="techGovYrs" display="icon"></p:message>
 							</td>
 						</tr>

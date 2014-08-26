@@ -23,13 +23,17 @@
 
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
 				style="float:right;" icon="ui-icon-save"
-				action="#{specificationBackingBean.acceptSuppliersScore}" />
+				action="#{specificationBackingBean.acceptCompanyScoring}" >
+					<f:setPropertyActionListener
+					target="#{specificationBackingBean.managedBean.criteriaType}"
+					value="30" />
+				</p:commandButton>
 
 
 
 		</div>
 
-		<p:spacer height="45"></p:spacer>
+		<p:spacer height="50"></p:spacer>
 
 		<p:panel>
 

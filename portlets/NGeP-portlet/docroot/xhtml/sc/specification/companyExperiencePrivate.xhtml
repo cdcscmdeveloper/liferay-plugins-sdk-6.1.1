@@ -23,11 +23,20 @@
 
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
 				style="float:right;" icon="ui-icon-save"
-				actionListener="#{specificationBackingBean.acceptCompanyPrivateScoring}" />
+				action="#{specificationBackingBean.acceptCompanyScoring}" >
+				<f:setPropertyActionListener
+					target="#{specificationBackingBean.managedBean.criteriaType}"
+					value="15" />
+				<f:setPropertyActionListener
+					target="#{specificationBackingBean.managedBean.otherCriteriaType}"
+					value="16" />
+				
+				</p:commandButton>
 
 
 
 		</div>
+		<p:spacer height="50"></p:spacer>
 		<p:panel>
 			<table>
 				<tr>
@@ -111,7 +120,7 @@
 
 
 
-		<p:panel header="#{lbl['lbl.sc.spec.score.total.no.contracts']}">
+		<p:panel header="#{lbl['lbl.sc.spec.score.total.no.contracts']}" toggleable="true">
 			<table>
 				<tr>
 					<td><p:outputLabel
@@ -132,9 +141,10 @@
 					<ui:param name="scoringPnlGroupId" value="contractorGroupId" />
 					<h:panelGroup id="contractorGroupId">
 						<ui:param name="scoringList"
-							value="#{specificationBackingBean.managedBean.nonFederalScore}" />
+							value="#{specificationBackingBean.managedBean.checkListScore}" />
 						<ui:param name="selectionList"
-							value="#{specificationBackingBean.managedBean.nonFederalSelectScore}" />
+							value="#{specificationBackingBean.managedBean.checkListSelectScore}" />
+
 						<ui:param name="componentName" value="contractor" />
 						<ui:param name="scoringPnlId" value="contractorListId" />
 						<ui:param name="scoringPnlName"
@@ -144,11 +154,11 @@
 							<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
 								process="@this,#{scoringPnlId}" partialSubmit="true"
 								oncomplete="scoreWidget.paginator.endLink.click();"
-								actionListener="#{specificationBackingBean.addPrivateScoring}"
+								actionListener="#{specificationBackingBean.addScoring(15)}"
 								update="#{scoringPnlId}" icon="ui-icon-add" />
 							<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
 								icon="ui-icon-delete"
-								action="#{specificationBackingBean.deleteScoring}"
+								action="#{specificationBackingBean.deleteScoring(null)}"
 								update="#{scoringPnlId}" />
 
 						</div>
@@ -175,7 +185,7 @@
 
 
 
-		<p:panel header="#{lbl['lbl.sc.spec.score.total.no.years']}">
+		<p:panel header="#{lbl['lbl.sc.spec.score.total.no.years']}" toggleable="true">
 			<table>
 				<tr>
 					<td><p:outputLabel
@@ -196,9 +206,9 @@
 					<ui:param name="scoringPnlGroupId" value="contractorGroupId" />
 					<h:panelGroup id="scoringofYearsGroupId">
 						<ui:param name="scoringList"
-							value="#{specificationBackingBean.managedBean.nonFederalScoreyears}" />
+							value="#{specificationBackingBean.managedBean.scoringForYears}" />
 						<ui:param name="selectionList"
-							value="#{specificationBackingBean.managedBean.nonFederalSelectScoreyears}" />
+							value="#{specificationBackingBean.managedBean.otherScoreSelected}" />
 						<ui:param name="componentName" value="ScoringYear" />
 						<ui:param name="scoringPnlId" value="scoringYearId" />
 						<ui:param name="scoringPnlName"
@@ -208,11 +218,11 @@
 							<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
 								process="@this,#{scoringPnlId}" partialSubmit="true"
 								oncomplete="scoreWidget.paginator.endLink.click();"
-								actionListener="#{specificationBackingBean.addPrivateScoringyears}"
+								actionListener="#{specificationBackingBean.addScoringyears(16)}"
 								update="#{scoringPnlId}" icon="ui-icon-add" />
 							<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
 								icon="ui-icon-delete"
-								action="#{specificationBackingBean.deleteScoring}"
+								action="#{specificationBackingBean.deleteScoring('NoOfYears')}"
 								update="#{scoringPnlId}" />
 
 						</div>

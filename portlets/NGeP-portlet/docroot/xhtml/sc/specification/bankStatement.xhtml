@@ -24,11 +24,18 @@
 
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
 				style="float:right;" icon="ui-icon-save"
-				actionListener="#{specificationBackingBean.acceptBankScore}" />
+				action="#{specificationBackingBean.acceptBankScore}" >
+					<f:setPropertyActionListener
+					target="#{specificationBackingBean.managedBean.criteriaType}"
+					value="50" />
+				
+				</p:commandButton>
+				
 
 
 
 		</div>
+		<p:spacer height="50"></p:spacer>
 		<p:panel>
 			<table>
 				<tr>
@@ -106,7 +113,7 @@
 			</h:panelGrid>
 		</h:panelGroup>
 
-		<p:panel header="#{lbl['lbl.sc.spec.score.avg.bank.statement']}">
+		<p:panel header="#{lbl['lbl.sc.spec.score.avg.bank.statement']}" toggleable="true">
 			<table>
 				<tr>
 					<td><p:outputLabel
@@ -128,9 +135,9 @@
 					<ui:param name="scoringPnlGroupId" value="contractorGroupId" />
 					<h:panelGroup id="bankGroupId">
 						<ui:param name="scoringList"
-							value="#{specificationBackingBean.managedBean.bankStamentScore}" />
+							value="#{specificationBackingBean.managedBean.checkListScore}" />
 						<ui:param name="selectionList"
-							value="#{specificationBackingBean.managedBean.bankSelectList}" />
+							value="#{specificationBackingBean.managedBean.checkListSelectScore}" />
 						<ui:param name="componentName" value="bankStatememt" />
 						<ui:param name="scoringPnlId" value="bankStatememtId" />
 						<ui:param name="scoringPnlName"
@@ -140,11 +147,11 @@
 							<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
 								process="@this,#{scoringPnlId}" partialSubmit="true"
 								oncomplete="scoreWidget.paginator.endLink.click();"
-								actionListener="#{specificationBackingBean.addBankStatement}"
+								actionListener="#{specificationBackingBean.addScoring(50)}"
 								update="#{scoringPnlId}" icon="ui-icon-add" />
 							<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
-								icon="ui-icon-delete"
-								action="#{specificationBackingBean.deleteScoring}"
+								icon="ui-icon-delete" process="@this,#{scoringPnlId}" partialSubmit="true"
+								action="#{specificationBackingBean.deleteScoring(null)}"
 								update="#{scoringPnlId}" />
 
 						</div>

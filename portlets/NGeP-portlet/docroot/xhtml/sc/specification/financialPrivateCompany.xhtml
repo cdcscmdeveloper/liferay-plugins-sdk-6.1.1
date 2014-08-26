@@ -22,11 +22,17 @@
 
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
 				style="float:right;" icon="ui-icon-save"
-				actionListener="#{specificationBackingBean.acceptFinancePrivateCompanyPrivateScoring}" />
+				action="#{specificationBackingBean.acceptCompanyScoring}" >
+					<f:setPropertyActionListener
+					target="#{specificationBackingBean.managedBean.criteriaType}"
+					value="17" />
+				
+				</p:commandButton>
 
 
 
 		</div>
+		<p:spacer height="50"></p:spacer>
 		<p:panel>
 			<table>
 				<tr>
@@ -115,7 +121,7 @@
 
 
 
-		<p:panel header="#{lbl['lbl.sc.spec.score.total.contract.amount']}">
+		<p:panel header="#{lbl['lbl.sc.spec.score.total.contract.amount']}" toggleable="true">
 			<table>
 				<tr>
 					<td><p:outputLabel
@@ -138,9 +144,9 @@
 					<ui:param name="finContractGroupId" value="fincontractorGroupId" />
 					<h:panelGroup id="contractAmountGroupId">
 						<ui:param name="scoringList"
-							value="#{specificationBackingBean.managedBean.nonFederalContractScore}" />
+							value="#{specificationBackingBean.managedBean.checkListScore}" />
 						<ui:param name="selectionList"
-							value="#{specificationBackingBean.managedBean.finPrivateContractSelectList}" />
+							value="#{specificationBackingBean.managedBean.checkListSelectScore}" />
 						<ui:param name="componentName" value="finContractAmount" />
 						<ui:param name="scoringPnlId" value="fincontractAmountId" />
 						<ui:param name="scoringPnlName"
@@ -150,11 +156,11 @@
 							<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
 								process="@this,#{scoringPnlId}" partialSubmit="true"
 								oncomplete="scoreWidget.paginator.endLink.click();"
-								actionListener="#{specificationBackingBean.addPrivateContratAmount}"
+								actionListener="#{specificationBackingBean.addScoring(17)}"
 								update="#{scoringPnlId}" icon="ui-icon-add" />
 							<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
-								icon="ui-icon-delete"
-								action="#{specificationBackingBean.deleteScoring}"
+								icon="ui-icon-delete" process="@this,#{scoringPnlId}" partialSubmit="true"
+								action="#{specificationBackingBean.deleteScoring(null)}"
 								update="#{scoringPnlId}" />
 
 						</div>
