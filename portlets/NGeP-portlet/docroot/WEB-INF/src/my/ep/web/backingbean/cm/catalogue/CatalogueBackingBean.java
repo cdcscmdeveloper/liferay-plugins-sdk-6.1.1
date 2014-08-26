@@ -1267,8 +1267,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 														null,
 														new FacesMessage(
 																FacesMessage.SEVERITY_ERROR,
-																"Uom not valid",
-																""));
+																"",
+																"Uom not valid"));
 										break;
 									}
 								}
@@ -1371,13 +1371,13 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				System.out.println(invalidDataMsg);
 				FacesContext facesContext = FacesContext.getCurrentInstance();
 				facesContext.addMessage(null, new FacesMessage(
-						FacesMessage.SEVERITY_ERROR, invalidDataMsg, ""));
+						FacesMessage.SEVERITY_ERROR, "", invalidDataMsg));
 			} else {
 				System.out.println("Updated successfully.");
 				FacesContext facesContext = FacesContext.getCurrentInstance();
 				facesContext.addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO,
-								"Updated successfully.", ""));
+								"", "Updated successfully."));
 
 				ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
 						.getInstance().getServiceObject("sm",
@@ -2421,7 +2421,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 								FacesContext facesContext = FacesContext.getCurrentInstance();
 								facesContext.addMessage(null, new FacesMessage(
 										FacesMessage.SEVERITY_ERROR,
-										" Standard Tier Overlapping", ""));
+										"", "Standard Tier Overlapping"));
 								this.getManagedBean().setPricingTabIndex(1);
 								this.getManagedBean().setTierPricingIndex(0);
 								return "editCatalogItem";
@@ -2433,8 +2433,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 											null,
 											new FacesMessage(
 													FacesMessage.SEVERITY_ERROR,
-													" Standard Tier To Qty must be greater than Standard Tier From Qty",
-													""));
+													"",
+													"Standard Tier To Qty must be greater than Standard Tier From Qty"));
 							this.getManagedBean().setPricingTabIndex(1);
 							this.getManagedBean().setTierPricingIndex(0);
 							return "editCatalogItem";
@@ -2454,8 +2454,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 											null,
 											new FacesMessage(
 													FacesMessage.SEVERITY_ERROR,
-													" Standard Tier Start date Overlapping",
-													""));
+													"",
+													"Standard Tier Start date Overlapping"));
 							this.getManagedBean().setPricingTabIndex(1);
 							this.getManagedBean().setTierPricingIndex(0);
 							return "editCatalogItem";
@@ -2471,8 +2471,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 											null,
 											new FacesMessage(
 													FacesMessage.SEVERITY_ERROR,
-													" Standard Tier End date must be greater than Standard Tier start date",
-													""));
+													"",
+													"Standard Tier End date must be greater than Standard Tier start date"));
 							this.getManagedBean().setPricingTabIndex(1);
 							this.getManagedBean().setTierPricingIndex(0);
 							return "editCatalogItem";
@@ -2496,8 +2496,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 							facesContext.addMessage(null,
 								new FacesMessage(
 									FacesMessage.SEVERITY_ERROR,
-									"Promotion Tier Start date Overlapping",
-									""));
+									"",
+									"Promotion Tier Start date Overlapping"));
 							this.getManagedBean().setPricingTabIndex(1);
 							this.getManagedBean().setTierPricingIndex(1);
 							return "editCatalogItem";
@@ -2512,8 +2512,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 							facesContext.addMessage(null,
 								new FacesMessage(
 									FacesMessage.SEVERITY_ERROR,
-									"Promotion Tier price must be less than Standard Tier price.",
-									""));
+									"",
+									"Promotion Tier price must be less than Standard Tier price."));
 							this.getManagedBean().setPricingTabIndex(1);
 							this.getManagedBean().setTierPricingIndex(1);
 							return "editCatalogItem";
@@ -2532,7 +2532,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 						FacesContext facesContext = FacesContext.getCurrentInstance();
 						facesContext.addMessage(null, new FacesMessage(
 								FacesMessage.SEVERITY_ERROR,
-								"Zonal Promotion Start date Overlapping", ""));
+								"", "Zonal Promotion Start date Overlapping"));
 						this.getManagedBean().setPricingTabIndex(2);
 						this.getManagedBean().setZonalPricingIndex(1);
 						return "editCatalogItem";
@@ -2544,8 +2544,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 									null,
 									new FacesMessage(
 											FacesMessage.SEVERITY_ERROR,
-											"Zonal Promotion End Date must be greater than Zonal Promotion Start Date",
-											""));
+											"",
+											"Zonal Promotion End Date must be greater than Zonal Promotion Start Date"));
 					this.getManagedBean().setPricingTabIndex(2);
 					this.getManagedBean().setZonalPricingIndex(1);
 					return "editCatalogItem";
@@ -2569,8 +2569,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 												null,
 												new FacesMessage(
 														FacesMessage.SEVERITY_ERROR,
-														" Zonal Standard Tier Overlapping",
-														""));
+														"",
+														"Zonal Standard Tier Overlapping"));
 								this.getManagedBean().setPricingTabIndex(3);
 								this.getManagedBean().setZonalTierPricingIndex(0);
 								return "editCatalogItem";
@@ -2583,8 +2583,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 												null,
 												new FacesMessage(
 														FacesMessage.SEVERITY_ERROR,
-														" Zonal Standard Tier To Qty must be greater than Zonal Standard Tier From Qty",
-														""));
+														"",
+														"Zonal Standard Tier To Qty must be greater than Zonal Standard Tier From Qty"));
 								this.getManagedBean().setPricingTabIndex(3);
 								this.getManagedBean().setZonalTierPricingIndex(0);
 								return "editCatalogItem";
@@ -2605,8 +2605,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 											null,
 											new FacesMessage(
 													FacesMessage.SEVERITY_ERROR,
-													" Zonal Standard Tier Start date Overlapping",
-													""));
+													"",
+													"Zonal Standard Tier Start date Overlapping"));
 							this.getManagedBean().setPricingTabIndex(3);
 							return "editCatalogItem";
 						}
@@ -2619,8 +2619,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 											null,
 											new FacesMessage(
 													FacesMessage.SEVERITY_ERROR,
-													" Zonal Standard Tier End date must be greater than Zonal Standard Tier start date",
-													""));
+													"",
+													"Zonal Standard Tier End date must be greater than Zonal Standard Tier start date"));
 							this.getManagedBean().setPricingTabIndex(3);
 							return "editCatalogItem";
 						}
@@ -2641,8 +2641,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 							facesContext.addMessage(null,
 								new FacesMessage(
 									FacesMessage.SEVERITY_ERROR,
-									" Zonal Promotion Tier Start date Overlapping",
-									""));
+									"",
+									"Zonal Promotion Tier Start date Overlapping"));
 							this.getManagedBean().setPricingTabIndex(3);
 							this.getManagedBean().setZonalTierPricingIndex(0);
 							return "editCatalogItem";
@@ -2656,8 +2656,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 											null,
 											new FacesMessage(
 													FacesMessage.SEVERITY_ERROR,
-													" Zonal Promotion Tier End date must be greater than Zonal Promotion Tier start date",
-													""));
+													"",
+													"Zonal Promotion Tier End date must be greater than Zonal Promotion Tier start date"));
 							this.getManagedBean().setPricingTabIndex(3);
 							this.getManagedBean().setZonalTierPricingIndex(0);
 							return "editCatalogItem";
@@ -2860,8 +2860,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 							.getCurrentInstance();
 					facesContext.addMessage(null, new FacesMessage(
 							FacesMessage.SEVERITY_ERROR,
-							" Please complete all mandatory fields to proceed",
-							""));
+							"",
+							"Please complete all mandatory fields to proceed"));
 					// facesContext.getExternalContext().getFlash().setKeepMessages(true);
 
 					return "catalogMaintenanceFile";
@@ -3159,8 +3159,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 				FacesContext facesContext = FacesContext.getCurrentInstance();
 				facesContext.addMessage(null, new FacesMessage(
-						FacesMessage.SEVERITY_INFO, " Submitted Successfully",
-						""));
+						FacesMessage.SEVERITY_INFO, "",
+						"Submitted Successfully"));
 
 			}
 
@@ -5535,8 +5535,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 									null,
 									new FacesMessage(
 											FacesMessage.SEVERITY_ERROR,
-											" Promotion price cannot be added. Please check the From and To quantities.",
-											""));
+											"",
+											"Promotion price cannot be added. Please check the From and To quantities."));
 				}
 			}
 
@@ -5621,8 +5621,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 								null,
 								new FacesMessage(
 										FacesMessage.SEVERITY_ERROR,
-										" New Promotion price cannot be added. Please check the From and To quantities.",
-										""));
+										"",
+										"New Promotion price cannot be added. Please check the From and To quantities."));
 			}
 		}
 
@@ -5710,8 +5710,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 									null,
 									new FacesMessage(
 											FacesMessage.SEVERITY_ERROR,
-											" Promotion price cannot be added. Please check the From and To quantities.",
-											""));
+											"",
+											"Promotion price cannot be added. Please check the From and To quantities."));
 				}
 			}
 
@@ -5799,8 +5799,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 								null,
 								new FacesMessage(
 										FacesMessage.SEVERITY_ERROR,
-										" New Promotion price cannot be added. Please check the From and To quantities.",
-										""));
+										"",
+										"New Promotion price cannot be added. Please check the From and To quantities."));
 			}
 		}
 
