@@ -38,6 +38,7 @@ import my.ep.biz.service.ct.supplier.IPanelSupplierSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
+import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
@@ -59,6 +60,7 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.tpl.TemplateSpecConst;
+import my.ep.constants.CommonConstants;
 import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.ct.circular.CircularDetailReqDTO;
 import my.ep.dto.ct.circular.CircularDetailResDTO;
@@ -72,6 +74,8 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
+import my.ep.dto.pm.common.country.CountryReqDTO;
+import my.ep.dto.pm.common.country.CountryResDTO;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
 import my.ep.dto.pm.common.document.DocumentReqDTO;
@@ -2063,7 +2067,7 @@ public class SpecificationBackingBean extends
 					tmpCheckList.setDefinationType(definationType);
 					tmpCheckList.setQtScoreWeightage(specChecklist.get(0)
 							.getQtScoreWeightage());
-					//this.getManagedBean().setScQtChecklist(tmpCheckList);
+					// this.getManagedBean().setScQtChecklist(tmpCheckList);
 					if (specChecklist.get(0).getQtScoreWeightage().getScore() != null) {
 						getManagedBean().setScoreVarience(
 								specChecklist.get(0).getQtScoreWeightage()
@@ -2778,11 +2782,14 @@ public class SpecificationBackingBean extends
 	 */
 	public void editZoneLocation(TreeNode rootZoneLocation, int index) {
 		IParameterSO parameterSo = null;
+		ICountrySO countrySo = null;
 
 		try {
 
 			parameterSo = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+			countrySo = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, ICountrySO.class);
 
 			List<ScQtLocCriteria> locationDTOs = getLocations(rootZoneLocation);
 			Long locationLevel = this.getManagedBean().getScQt()
@@ -2824,9 +2831,13 @@ public class SpecificationBackingBean extends
 					.getDistrictFromLocationDTO(locationDTOs);
 			List<PmCity> cities = SourcingLocationHelper
 					.getCityFromLocationDTO(locationDTOs);
-
+			CountryReqDTO countryReqDTo = new CountryReqDTO();
+			countryReqDTo.setCountryCode(CommonConstants.DEFAULT_COUNTRY_CODE);
+			CountryResDTO countryResDTO = countrySo
+					.retrieveCountryByCode(countryReqDTo);
 			getManagedBean().setRootLocationTree(
-					LocationSingleton.getInstance().buildLocationPopupTree(1L,
+					LocationSingleton.getInstance().buildLocationPopupTree(
+							countryResDTO.getPmCountry().getCountryId(),
 							states, districts, divisions, cities,
 							locationLevelCode, ScQtLocCriteria.class));
 			int i = index;
@@ -2843,9 +2854,12 @@ public class SpecificationBackingBean extends
 	public void editBusinessOwnerZoneLocation(TreeNode rootZoneLocation,
 			int index) {
 		IParameterSO parameterSo = null;
+		ICountrySO countrySo = null;
 		try {
 			parameterSo = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+			countrySo = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, ICountrySO.class);
 			List<TplSpecZoneLoc> locationDTOs = getZoneLocations(rootZoneLocation);
 
 			TplSpecZoneDtl zone = getZone(rootZoneLocation);
@@ -2886,8 +2900,13 @@ public class SpecificationBackingBean extends
 					.getDistrictFromLocationDTO(locationDTOs);
 			List<PmCity> cities = SourcingLocationHelper
 					.getCityFromLocationDTO(locationDTOs);
+			CountryReqDTO countryReqDTo = new CountryReqDTO();
+			countryReqDTo.setCountryCode(CommonConstants.DEFAULT_COUNTRY_CODE);
+			CountryResDTO countryResDTO = countrySo
+					.retrieveCountryByCode(countryReqDTo);
 			getManagedBean().setRootZoanlTree(
-					LocationSingleton.getInstance().buildLocationPopupTree(1L,
+					LocationSingleton.getInstance().buildLocationPopupTree(
+							countryResDTO.getPmCountry().getCountryId(),
 							states, districts, divisions, cities,
 							locationLevelCode, TplSpecZoneLoc.class));
 			int i = index;
@@ -2946,9 +2965,12 @@ public class SpecificationBackingBean extends
 
 	public void showZoneLocationPopup() {
 		IParameterSO parameterSo = null;
+		ICountrySO countrySo = null;
 		try {
 			parameterSo = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+			countrySo = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, ICountrySO.class);
 
 			Long locationLevel = this.getManagedBean().getScQt()
 					.getScQtSupplierCriteria().getLocationLevel()
@@ -2973,11 +2995,16 @@ public class SpecificationBackingBean extends
 
 				if (paramDesc.getPmParameter().getParameterId()
 						.equals(locationLevel)) {
-
+					CountryReqDTO countryReqDTo = new CountryReqDTO();
+					countryReqDTo
+							.setCountryCode(CommonConstants.DEFAULT_COUNTRY_CODE);
+					CountryResDTO countryResDTO = countrySo
+							.retrieveCountryByCode(countryReqDTo);
 					getManagedBean().setRootLocationTree(
 							LocationSingleton.getInstance()
 									.buildLocationPopupTree(
-											1L,
+											countryResDTO.getPmCountry()
+													.getCountryId(),
 											null,
 											null,
 											null,
@@ -2995,11 +3022,14 @@ public class SpecificationBackingBean extends
 
 	public void showGeneralZoneLocationPopup() {
 		IParameterSO parameterSo = null;
+		ICountrySO countrySo = null;
 		try {
 			Long locationLevel = this.getManagedBean().getScQt()
 					.getZoneLocationLevel().getParameterId();
 			parameterSo = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+			countrySo = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, ICountrySO.class);
 			if (locationLevel == null) {
 				ParameterReqDTO districtReqDTO = new ParameterReqDTO();
 				districtReqDTO
@@ -3019,11 +3049,16 @@ public class SpecificationBackingBean extends
 
 				if (paramDesc.getPmParameter().getParameterId()
 						.equals(locationLevel)) {
-
+					CountryReqDTO countryReqDTo = new CountryReqDTO();
+					countryReqDTo
+							.setCountryCode(CommonConstants.DEFAULT_COUNTRY_CODE);
+					CountryResDTO countryResDTO = countrySo
+							.retrieveCountryByCode(countryReqDTo);
 					getManagedBean().setRootZoanlTree(
 							LocationSingleton.getInstance()
 									.buildLocationPopupTree(
-											1L,
+											countryResDTO.getPmCountry()
+													.getCountryId(),
 											null,
 											null,
 											null,
@@ -8619,6 +8654,15 @@ public class SpecificationBackingBean extends
 				return "/xhtml/sc/specification/specificationCreation.xhtml?faces-redirect=true";
 			} else if (SourcingConstants.FLOW_TYPE_SPEC_COMMITTE
 					.equalsIgnoreCase(flowType)) {
+				if (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(this
+						.getManagedBean().getScQt().getEvaluationType())) {
+					retriveTechnicalSpecification();
+				} else if (QTConstants.EVALUATION_TWO_TIER
+						.equalsIgnoreCase(this.getManagedBean().getScQt()
+								.getEvaluationType())) {
+					retriveTechnicalCheckList();
+				}
+				return "/xhtml/sc/specification/specificationCommitteeView.xhtml?faces-redirect=true";
 
 			}
 		}
@@ -8722,7 +8766,8 @@ public class SpecificationBackingBean extends
 	 * @param tplSpecMaster
 	 * @return
 	 */
-	public String createTemplateSpec(TplSpecMaster tplSpecMaster) {
+	public String createTemplateSpec(TplSpecMaster tplSpecMaster,
+			String flowtype) {
 		this.getManagedBean().setSpecSelectStats(false);
 		try {
 			ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate
@@ -8749,8 +8794,17 @@ public class SpecificationBackingBean extends
 		} finally {
 
 		}
-		return "/xhtml/sc/main/newTemplateMaintenance.xhtml?faces-redirect=true";
 
+		if (SourcingConstants.FLOW_TYPE_BO.equalsIgnoreCase(flowtype)) {
+
+			return "/xhtml/sc/main/newTemplateMaintenance.xhtml?faces-redirect=true";
+		} else if (SourcingConstants.FLOW_TYPE_SPEC_COMMITTE
+				.equalsIgnoreCase(flowtype)) {
+
+			return "/xhtml/sc/main/technicalCommitteeTemplate.xhtml?faces-redirect=true";
+		}
+
+		return null;
 	}
 
 	private ScQtCheckList constructQtDocByType(TplSpecMaster specMaster,
