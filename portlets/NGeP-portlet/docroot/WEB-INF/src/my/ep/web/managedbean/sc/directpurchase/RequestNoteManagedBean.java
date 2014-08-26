@@ -111,6 +111,8 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     private List<CmSupplierItem> compareSupplierItems = new ArrayList<CmSupplierItem>(); // copy supplier items from the compare screen
     private boolean piRNChecker = Boolean.TRUE;
     
+    private	List<ScRequestNoteDtl>	deleteRequestNoteDtls	=	new ArrayList<ScRequestNoteDtl>();
+    
     public RequestNoteManagedBean() {
     	PmParameter pmParameter = new PmParameter();
 		requestNoteDtl.setProcurementType(pmParameter);
@@ -830,6 +832,19 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	 */
 	public void setPiRNChecker(boolean piRNChecker) {
 		this.piRNChecker = piRNChecker;
+	}
+	/**
+	 * @return the deleteRequestNoteDtls
+	 */
+	public List<ScRequestNoteDtl> getDeleteRequestNoteDtls() {
+		return deleteRequestNoteDtls;
+	}
+	/**
+	 * @param deleteRequestNoteDtls the deleteRequestNoteDtls to set
+	 */
+	public void setDeleteRequestNoteDtls(
+			List<ScRequestNoteDtl> deleteRequestNoteDtls) {
+		this.deleteRequestNoteDtls = deleteRequestNoteDtls;
 	}
 	
 	

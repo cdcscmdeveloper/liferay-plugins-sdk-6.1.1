@@ -197,14 +197,21 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
 		ScRequestNote requestNote = getManagedBean().getRequestNote();
 		RequestNoteResDTO requestNoteResDTO = null;
+		List<ScRequestNoteDtl>	scRequestNoteDtls = null;
     try {
     	
     	if(getManagedBean().getSupplierRecList() != null && getManagedBean().getSupplierRecList().size()>0){
-    		requestNote.setRequestNoteDtls(getManagedBean().getSupplierRecList());
+    		scRequestNoteDtls = getManagedBean().getSupplierRecList();
     	} else{
-    		requestNote.setRequestNoteDtls(this.getManagedBean().getRequestNoteDtls());
+    		scRequestNoteDtls = this.getManagedBean().getRequestNoteDtls();
     	}
-
+    	
+    	// adding request note delete list
+    	if(getManagedBean().getDeleteRequestNoteDtls() != null && getManagedBean().getDeleteRequestNoteDtls().size()>0){
+    		scRequestNoteDtls.addAll(getManagedBean().getDeleteRequestNoteDtls());
+    	}
+    	requestNote.setRequestNoteDtls(scRequestNoteDtls);
+    	
 		// Target Approver
 		if (this.getManagedBean().getApprovalUsers().getTarget() != null && this.getManagedBean().getApprovalUsers().getTarget().size() > 0) {
 		    requestNote.setApprovalUsers(createTargetApprover(requestNote));
@@ -222,7 +229,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	    	} 
 	    }
 	    
-	    //Hoa: TODO WorkFlow Status should be set In the save, submit method
+	    // WorkFlow Status should be set In the save
 	    List<ScRNWorkFlowStatus> workFlowStatuses =  new  ArrayList<ScRNWorkFlowStatus>();
 	    ScRNWorkFlowStatus workFlowStatus = new ScRNWorkFlowStatus();
 	    requestNote.setWorkFlowStatuses(workFlowStatuses);
@@ -305,7 +312,13 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					scRequestNoteDtls.add(requestNoteDtl);
 				}	
 			}
+			// adding request note delete list
+			if(getManagedBean().getDeleteRequestNoteDtls() != null && getManagedBean().getDeleteRequestNoteDtls().size()>0){
+				scRequestNoteDtls.addAll(getManagedBean().getDeleteRequestNoteDtls());
+			}
+
 			requestNote.setRequestNoteDtls(scRequestNoteDtls);
+			
 			// Target Approver
 			if (this.getManagedBean().getApprovalUsers().getTarget() != null && this.getManagedBean().getApprovalUsers().getTarget().size() > 0) {
 				requestNote.setApprovalUsers(createTargetApprover(requestNote));
@@ -1505,15 +1518,21 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	
 	public void deleteRequestNoteDtl() {
 		log.info("deleteRequestNoteDtl");
+		List<ScRequestNoteDtl>	deleteRequestNoteDtls	=	new ArrayList<ScRequestNoteDtl>();
 		if (getManagedBean().getSelectedRequestNoteDtls() != null && !getManagedBean().getSelectedRequestNoteDtls().isEmpty()) {
 			for (ScRequestNoteDtl requestNoteDtl : getManagedBean()
 					.getSelectedRequestNoteDtls()) {
 				if (getManagedBean().getRequestNoteDtls().contains(
 						requestNoteDtl)) {
-					List<ScRequestNoteDtl> reqNoteDtl = getManagedBean()
+					List<ScRequestNoteDtl> reqNoteDtls = getManagedBean()
 							.getRequestNoteDtls();
-					reqNoteDtl.remove(requestNoteDtl);
-					getManagedBean().setRequestNoteDtls(reqNoteDtl);
+					reqNoteDtls.remove(requestNoteDtl);
+					getManagedBean().setRequestNoteDtls(reqNoteDtls);
+					
+					// delete request note list
+					requestNoteDtl.setDeleted(Boolean.TRUE);
+					deleteRequestNoteDtls.add(requestNoteDtl);
+					getManagedBean().setDeleteRequestNoteDtls(deleteRequestNoteDtls);
 				}
 			}
 			
