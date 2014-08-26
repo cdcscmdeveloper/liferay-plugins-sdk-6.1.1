@@ -2017,7 +2017,13 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 							new String[]{ResourceBundleUtils.getMessage("lbl.cm.tier",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())},
 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 					return "editCatalogItem";
-					}
+				} else if(!promotion.isCheckOk()) {
+					FacesContext.getCurrentInstance().addMessage(null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,MessageUtils.getMessage(MessageConst.ERROR_715030, 
+							new String[]{ResourceBundleUtils.getMessage("lbl.cm.tier",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())},
+							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+					return "editCatalogItem";
+				}
 			}
 			
 			boolean disable = false;
@@ -2088,7 +2094,13 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 							new String[]{ResourceBundleUtils.getMessage("lbl.cm.zonal.tier",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())},
 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 					return "editCatalogItem";
-					}
+				} else if(!promotion.isCheckOk()) {
+					FacesContext.getCurrentInstance().addMessage(null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,MessageUtils.getMessage(MessageConst.ERROR_715030, 
+							new String[]{ResourceBundleUtils.getMessage("lbl.cm.zonal.tier",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())},
+							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+					return "editCatalogItem";
+				}
 			}
 
 			disable = false;
@@ -4228,35 +4240,69 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	public void deletePromotionTierPrice(int index) {
 
-		Map<Date, List<CmPromotionTierPricing>> tierMap = groupingDate(this
-				.getManagedBean().getSelectedMaintainItem()
-				.getCmPromotionTierPricings());
-
-		if (!tierMap.isEmpty() && tierMap.size() > 0) {
-
-			List<CmPromotionTierPricing> dataList = (List) tierMap.get(this
-					.getManagedBean().getSelectedMaintainItem()
-					.getCmPromotionTierPricings().get(index).getStartDate());
-			Integer groupingId = 0;
-			for (CmPromotionTierPricing price : dataList) {
-				groupingId = price.getStand_group_id();
-				if (price.getParentPrice() != null) {
-					price.getParentPrice().setStandardDisabled(false);
-					price.setParentPrice(null);
+		List<CmPromotionTierPricing> promotionTierList = this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings();
+		List<CmPromotionTierPricing> dataList = new ArrayList<CmPromotionTierPricing>();
+		System.out.println("tierList:" + promotionTierList.size());
+		
+		for (CmPromotionTierPricing cmPricing : promotionTierList) {
+			if(cmPricing.getPromo_group_id()!=null)
+				if (cmPricing.getPromo_group_id().compareTo(promotionTierList.get(index).getPromo_group_id()) == 0) {
+					dataList.add(cmPricing);
 				}
-				this.getManagedBean().getSelectedMaintainItem()
-						.getCmPromotionTierPricings().remove(price);
-			}
-
-			for (CmPromotionTierPricing price : this.getManagedBean()
-					.getSelectedMaintainItem().getCmPromotionTierPricings()) {
-
-				if (price.getStand_group_id().equals(groupingId)) {
-					price.getParentPrice().setStandardDisabled(true);
-				}
-			}
-
 		}
+		
+		if(dataList.size()==0)
+			dataList.add(promotionTierList.get(index));
+
+		List<CmPricing> parentList = new ArrayList<CmPricing>();
+		
+		System.out.println("dataList:" + dataList.size());
+		for (CmPromotionTierPricing price : dataList) {
+//			price.getParentPrice().setStandardDisabled(false);
+			parentList.add(price.getParentPrice());
+			this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings()
+					.remove(price);
+		}
+
+		for(CmPricing pricing : this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings()){
+			if(parentList.contains(pricing.getParentPrice())){
+				parentList.remove(pricing.getParentPrice());
+			}
+		}
+		
+		for(CmPricing pricing : parentList){
+			pricing.setStandardDisabled(false);
+		}
+		
+//		Map<Date, List<CmPromotionTierPricing>> tierMap = groupingDate(this
+//				.getManagedBean().getSelectedMaintainItem()
+//				.getCmPromotionTierPricings());
+//
+//		if (!tierMap.isEmpty() && tierMap.size() > 0) {
+//
+//			List<CmPromotionTierPricing> dataList = (List) tierMap.get(this
+//					.getManagedBean().getSelectedMaintainItem()
+//					.getCmPromotionTierPricings().get(index).getStartDate());
+//			Integer groupingId = 0;
+//			for (CmPromotionTierPricing price : dataList) {
+//				groupingId = price.getStand_group_id();
+//				if (price.getParentPrice() != null) {
+//					price.getParentPrice().setStandardDisabled(false);
+//					price.setParentPrice(null);
+//				}
+//				this.getManagedBean().getSelectedMaintainItem()
+//						.getCmPromotionTierPricings().remove(price);
+//			}
+//
+//			for (CmPromotionTierPricing price : this.getManagedBean()
+//					.getSelectedMaintainItem().getCmPromotionTierPricings()) {
+//
+//				if (price.getStand_group_id().equals(groupingId)) {
+//					price.getParentPrice().setStandardDisabled(true);
+//				}
+//			}
+//
+//		}
 
 		FacesContext facesContext = FacesContext.getCurrentInstance();
 		facesContext.addMessage(
@@ -4269,40 +4315,74 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	public void deleteZonalPromotionTierPrice(int index) {
 
-		Map<Date, List<CmZonalPromotionTierPricing>> tierMap = groupingDate(this
-				.getManagedBean().getSelectedMaintainItem()
-				.getCmZonalPromotionTierPricings());
-
-		if (!tierMap.isEmpty() && tierMap.size() > 0) {
-
-			List<CmZonalPromotionTierPricing> dataList = (List) tierMap
-					.get(this.getManagedBean().getSelectedMaintainItem()
-							.getCmZonalPromotionTierPricings().get(index)
-							.getStartDate());
-			Integer groupingId = 0;
-			for (CmZonalPromotionTierPricing price : dataList) {
-
-				groupingId = price.getStand_group_id();
-				if (price.getParentPrice() != null) {
-					price.getParentPrice().setStandardDisabled(false);
-					price.setParentPrice(null);
+		List<CmZonalPromotionTierPricing> zonalPromotionTierPricings = this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings();
+		List<CmZonalPromotionTierPricing> dataList = new ArrayList<CmZonalPromotionTierPricing>();
+		System.out.println("tierList:" + zonalPromotionTierPricings.size());
+		
+		for (CmZonalPromotionTierPricing cmPricing : zonalPromotionTierPricings) {
+			if(cmPricing.getPromo_group_id()!=null)
+				if (cmPricing.getPromo_group_id().compareTo(zonalPromotionTierPricings.get(index).getPromo_group_id()) == 0) {
+					dataList.add(cmPricing);
 				}
-				this.getManagedBean().getSelectedMaintainItem()
-						.getCmZonalPromotionTierPricings().remove(price);
-			}
-
-			for (CmZonalPromotionTierPricing price : this.getManagedBean()
-					.getSelectedMaintainItem()
-					.getCmZonalPromotionTierPricings()) {
-				System.out.println("groupingId:" + groupingId);
-				System.out.println("price.getStand_group_id()"
-						+ price.getStand_group_id());
-				if (price.getStand_group_id().equals(groupingId)) {
-					price.getParentPrice().setStandardDisabled(true);
-				}
-			}
-
 		}
+		
+		if(dataList.size()==0)
+			dataList.add(zonalPromotionTierPricings.get(index));
+
+		System.out.println("dataList:" + dataList.size());
+		List<CmPricing> parentList = new ArrayList<CmPricing>();
+
+		for (CmZonalPromotionTierPricing price : dataList) {
+//			price.getParentPrice().setStandardDisabled(false);
+			parentList.add(price.getParentPrice());
+			this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings()
+					.remove(price);
+		}
+
+		for(CmPricing pricing : this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings()){
+			if(parentList.contains(pricing.getParentPrice())){
+				parentList.remove(pricing.getParentPrice());
+			}
+		}
+		
+		for(CmPricing pricing : parentList){
+			pricing.setStandardDisabled(false);
+		}
+		
+//		Map<Date, List<CmZonalPromotionTierPricing>> tierMap = groupingDate(this
+//				.getManagedBean().getSelectedMaintainItem()
+//				.getCmZonalPromotionTierPricings());
+//
+//		if (!tierMap.isEmpty() && tierMap.size() > 0) {
+//
+//			List<CmZonalPromotionTierPricing> dataList = (List) tierMap
+//					.get(this.getManagedBean().getSelectedMaintainItem()
+//							.getCmZonalPromotionTierPricings().get(index)
+//							.getStartDate());
+//			Integer groupingId = 0;
+//			for (CmZonalPromotionTierPricing price : dataList) {
+//
+//				groupingId = price.getStand_group_id();
+//				if (price.getParentPrice() != null) {
+//					price.getParentPrice().setStandardDisabled(false);
+//					price.setParentPrice(null);
+//				}
+//				this.getManagedBean().getSelectedMaintainItem()
+//						.getCmZonalPromotionTierPricings().remove(price);
+//			}
+//
+//			for (CmZonalPromotionTierPricing price : this.getManagedBean()
+//					.getSelectedMaintainItem()
+//					.getCmZonalPromotionTierPricings()) {
+//				System.out.println("groupingId:" + groupingId);
+//				System.out.println("price.getStand_group_id()"
+//						+ price.getStand_group_id());
+//				if (price.getStand_group_id().equals(groupingId)) {
+//					price.getParentPrice().setStandardDisabled(true);
+//				}
+//			}
+//
+//		}
 
 		FacesContext facesContext = FacesContext.getCurrentInstance();
 
