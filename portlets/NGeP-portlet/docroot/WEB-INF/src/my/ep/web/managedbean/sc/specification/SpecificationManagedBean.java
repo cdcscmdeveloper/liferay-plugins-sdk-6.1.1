@@ -21,14 +21,12 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDocument;
-import my.ep.persistence.entity.pm.common.PmReportSection;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListScore;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
-import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeliveryLoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
@@ -66,40 +64,22 @@ public class SpecificationManagedBean extends BaseManagedBean {
 
 	private ScQtCheckList scQtChecklist;
 
-	private List<ScQtCheckList> scQtCheckSt1techProposal;
-
-	private ScQtDeduction scQtDeduction;
-
-	private List<ScQtDeduction> scQtDeductionList;
-
-	private List<ScQtCheckList> scQtCheckSt1techAdditionalProposalList;
-	private List<ScQtCheckList> scQtCheckSt1financeProposalList;
-
-	private List<ScQtCheckList> scQtCheckSt1financeAdditionalProposalList;
-
 	private List<ScQtCheckList> scQtCheckSt2techProposal;
 
-	private List<ScQtCheckList> scQtCheckSt2techAdditionalProposalList;
 	private List<ScQtCheckList> scQtCheckSt2financeProposalList;
+	
 
-	private List<ScQtCheckList> scQtCheckSt2financeAdditionalProposalList;
-
-	private List<String> compilanceList = new ArrayList<String>();
-	// public List<SpecificationCompilanceBean> compilaenceList;
 	private ScRemark scRemark;
-	private List<SelectItem> comitteeUsers;
-	private List<SelectItem> currencyListDetails;
-	private List<SelectItem> procurementListDetails;
+
 	private List<ScQtCommitteeActivity> committeeActivities;
 
 	private Object specificationDataType;
 
 	public boolean isSampleReq = true;
-	public String approvalDate;
 
 	private boolean isSpecStatus;
 	private Long procurementId;
-	private List<SelectItem> approvalList;
+
 	private String evaluationType;
 	private ScQt scQt;
 
@@ -107,17 +87,11 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private List<PmDocument> stageTwoTechComplianceSelect;
 	private List<PmDocument> stageTwoFinComplianceList;
 	private List<PmDocument> stageTwoFinComplianceSelect;
-	private List<ScQtCheckList> s1TechSelect;
-	private List<ScQtCheckList> s1TechAddSelect;
-	private List<ScQtCheckList> s1FinSelect;
-	private List<ScQtCheckList> s1FinAddSelect;
+
 	private List<ScQtCheckList> s2TechSelect;
-	private List<ScQtCheckList> s2TechAddSelect;
+
 	private List<ScQtCheckList> s2FinSelect;
-	private List<ScQtCheckList> s2FinAddSelect;
-	private List<ScQtCheckListScore> scoringList;
-	private List<ScQtCheckListScore> selectscoring;
-	private List<ScQtCheckListScore> collectionScoring;
+
 	private String scheduleType;
 	private String fromMonth;
 	private String toMonth;
@@ -126,47 +100,15 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	// B,S
 	private String businessOwner = "B";
 	private List<BankingBean> bankList;
-	private List<ScQtCheckListScore> checkListScore = new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> scoringForYears = new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> contractAmount = new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> bankStamentScore = new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> creditFacility = new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> scoringCash = new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> assetScore = new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> warantyScore = new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> trainingScore = new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> totalEmployeeScore = new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> technicalStaffScore = new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> paidUpCapitalScore = new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> nonFederalScore = new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> nonFederalScoreyears = new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> nonFederalContractScore = new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> itemScore = new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> checkListSelectScore = new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> scoringForSelectYears = new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> nonFederalSelectScore = new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> nonFederalSelectScoreyears = new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> warantySelectScore = new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> trainingSelectList = new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> technicalStaffSelectList = new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> totalEmployeeSelectList = new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> finGovContractSelectList = new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> finPrivateContractSelectList = new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> creditfacilitySelectList = new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> cashSelectList = new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> bankSelectList = new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> assetLiabilitySelectList = new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> paidUpSelectList = new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> supplierScore = new ArrayList<ScQtCheckListScore>();
-	private List<ScQtCheckListScore> supplierSelectScore = new ArrayList<ScQtCheckListScore>();
-
+	private List<ScQtCheckListScore> checkListScore;
+	private List<ScQtCheckListScore> scoringForYears;
+	private List<ScQtCheckListScore> checkListSelectScore;
 	private List<ScQtSchedule> scheduleList;
 	private List<ScQtProgressivePayment> progressivePaymentList;
 
 	private int totalFrequency;
 	private int totalProgressivePayment;
-	private String technicalWeightage = "2";
-	private String financialWeightage = "2";
+
 	private String cirCularNo;
 	private String circularName;
 	private String itemName;
@@ -175,13 +117,11 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private int totalAmount;
 	private BigDecimal totalAmountAvg;
 
-	private List<CtPanelItem> panelItemList;
 	private List<CtPanelItem> selectpanelItem;
-	private List<CtPanelItem> panelItemDetailsList;
-	private List<CtPanelItem> selectItemDetailsList;
+	private List<CtPanelItem> panelItemList;
+
 	private boolean isPanel;
-	// private List<CtCircularZone> ctZoneList;
-	// private List<CtCircularZone> ctZoneSelectList;
+
 	private TreeNode ctZoneTrees;
 	private TreeNode[] ctZoneTreeSelectedNodes;
 	private List<TreeNode> ctZoneSuppliers = new ArrayList<TreeNode>();
@@ -189,10 +129,9 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private List<CtPanelSupplier> ctZoneSupplierList;
 
 	// supplier Qualification Criteria List and variables
-	private List<ScQtCategory> suppCriteriarestrictedList;
+
 	private List<ScQtCategory> suppCriteriaopenList;
 	private List<ScQtCategory> suppCriteriaopenSelectList;
-	private List<ScQtCategory> suppCriteriarestrictedBoSelectList;
 
 	private TreeNode rootLocationTree;
 	private TreeNode rootZoanlTree;
@@ -206,8 +145,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private List<TreeNode> zoneTreeAddrList = new ArrayList<TreeNode>();
 	private String zoneName1;
 	private String zoneAddrName;
-	private List<PmReportSection> pmReportSectionList;
-	private List<PmReportSection> selectedPmReportSectionList;
+
 	private TreeNode rootLocationTreeList;
 	private TreeNode rootAddressLocationTreeList;
 	private TreeNode[] selectedNodes;
@@ -223,7 +161,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private String specificationType;
 	private ScQtDoc scqtDoc;
 	private String ministryName;
-	public List<ScQtCheckList> supportDocList;
+
 	private Long searchItemTypeId;
 	private Long searchSpecTypeId;
 	private Long searchProcurementId;
@@ -235,21 +173,11 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private Long statusId;
 	private boolean isRecordStatus;
 	private int index = -1;
-	private List<ScQtCategory> qtCategoryOpenSelectList;
-	private List<ScQtCategory> suppCriteriarestrictedSelectList;
-
-	private BigDecimal estimatedPrice = new BigDecimal("50000");
-	private int fromJulat;
-	private int toJulat;
-	private BigDecimal fromPrice;
-	private BigDecimal toPrice;
-
-	private ScQtCategory qtCategory = new ScQtCategory();
 
 	// technical Scoring Financial Scoring lists
 	private List<ScQtCheckList> technicalScoring;
 	private List<ScQtCheckList> financialScoring;
-	private List<ScQtCheckListScore> packScoringList;
+
 	private int techPoints;
 	private int finPoints;
 	private List<ScQtCheckList> technicalSpecList;
@@ -329,7 +257,6 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private String subject;
 	private String message;
 	private String chairPersonPinNum;
-	
 
 	// Added By Sagar.. for Delete funcationality..
 	private TreeNode selectedTreeNode;
@@ -343,25 +270,28 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private String supplierContact;
 	private String supplierEmail;
 	private CtCircularVer ctCircularVer;
-	private List<ScQtCheckList>  finspecChecklist;
+	private List<ScQtCheckList> finspecChecklist;
 	private String buttonOutCome;
 	private int allStateCode;
 	private boolean isPanelChange;
 	private String newItemCategory;
-	private CtPanelItem existingpanelitem;
+
 	private String bankstmntTomonth;
 	private int tempIndex;
 	private boolean ctzones = Boolean.FALSE;
 	private boolean selectPanelItem = Boolean.FALSE;
 	private Long specStatusId;
-	private boolean specSelectStats= Boolean.FALSE;
-	private boolean recommendationStats= Boolean.FALSE;
-	
+	private boolean specSelectStats = Boolean.FALSE;
+
 	private int selectedCheckList;
 	private String specType;
+	private List<ScQtCheckListScore> toBeRemoveList;
+	private List<ScQtCheckListScore> otherScoreSelected;
+	private String criteriaType;
+	private String otherCriteriaType;
 
 	public SpecificationManagedBean() {
-		
+
 	}
 
 	/**
@@ -395,100 +325,6 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the scQtCheckSt1techProposal
-	 */
-	public List<ScQtCheckList> getScQtCheckSt1techProposal() {
-		return scQtCheckSt1techProposal;
-	}
-
-	/**
-	 * @param scQtCheckSt1techProposal
-	 *            the scQtCheckSt1techProposal to set
-	 */
-	public void setScQtCheckSt1techProposal(
-			List<ScQtCheckList> scQtCheckSt1techProposal) {
-		this.scQtCheckSt1techProposal = scQtCheckSt1techProposal;
-	}
-
-	/**
-	 * @return the scQtDeduction
-	 */
-	public ScQtDeduction getScQtDeduction() {
-		return scQtDeduction;
-	}
-
-	/**
-	 * @param scQtDeduction
-	 *            the scQtDeduction to set
-	 */
-	public void setScQtDeduction(ScQtDeduction scQtDeduction) {
-		this.scQtDeduction = scQtDeduction;
-	}
-
-	/**
-	 * @return the scQtDeductionList
-	 */
-	public List<ScQtDeduction> getScQtDeductionList() {
-		return scQtDeductionList;
-	}
-
-	/**
-	 * @param scQtDeductionList
-	 *            the scQtDeductionList to set
-	 */
-	public void setScQtDeductionList(List<ScQtDeduction> scQtDeductionList) {
-		this.scQtDeductionList = scQtDeductionList;
-	}
-
-	/**
-	 * @return the scQtCheckSt1techAdditionalProposalList
-	 */
-	public List<ScQtCheckList> getScQtCheckSt1techAdditionalProposalList() {
-		return scQtCheckSt1techAdditionalProposalList;
-	}
-
-	/**
-	 * @param scQtCheckSt1techAdditionalProposalList
-	 *            the scQtCheckSt1techAdditionalProposalList to set
-	 */
-	public void setScQtCheckSt1techAdditionalProposalList(
-			List<ScQtCheckList> scQtCheckSt1techAdditionalProposalList) {
-		this.scQtCheckSt1techAdditionalProposalList = scQtCheckSt1techAdditionalProposalList;
-	}
-
-	/**
-	 * @return the scQtCheckSt1financeProposalList
-	 */
-	public List<ScQtCheckList> getScQtCheckSt1financeProposalList() {
-		return scQtCheckSt1financeProposalList;
-	}
-
-	/**
-	 * @param scQtCheckSt1financeProposalList
-	 *            the scQtCheckSt1financeProposalList to set
-	 */
-	public void setScQtCheckSt1financeProposalList(
-			List<ScQtCheckList> scQtCheckSt1financeProposalList) {
-		this.scQtCheckSt1financeProposalList = scQtCheckSt1financeProposalList;
-	}
-
-	/**
-	 * @return the scQtCheckSt1financeAdditionalProposalList
-	 */
-	public List<ScQtCheckList> getScQtCheckSt1financeAdditionalProposalList() {
-		return scQtCheckSt1financeAdditionalProposalList;
-	}
-
-	/**
-	 * @param scQtCheckSt1financeAdditionalProposalList
-	 *            the scQtCheckSt1financeAdditionalProposalList to set
-	 */
-	public void setScQtCheckSt1financeAdditionalProposalList(
-			List<ScQtCheckList> scQtCheckSt1financeAdditionalProposalList) {
-		this.scQtCheckSt1financeAdditionalProposalList = scQtCheckSt1financeAdditionalProposalList;
-	}
-
-	/**
 	 * @return the scQtCheckSt2techProposal
 	 */
 	public List<ScQtCheckList> getScQtCheckSt2techProposal() {
@@ -505,22 +341,6 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the scQtCheckSt2techAdditionalProposalList
-	 */
-	public List<ScQtCheckList> getScQtCheckSt2techAdditionalProposalList() {
-		return scQtCheckSt2techAdditionalProposalList;
-	}
-
-	/**
-	 * @param scQtCheckSt2techAdditionalProposalList
-	 *            the scQtCheckSt2techAdditionalProposalList to set
-	 */
-	public void setScQtCheckSt2techAdditionalProposalList(
-			List<ScQtCheckList> scQtCheckSt2techAdditionalProposalList) {
-		this.scQtCheckSt2techAdditionalProposalList = scQtCheckSt2techAdditionalProposalList;
-	}
-
-	/**
 	 * @return the scQtCheckSt2financeProposalList
 	 */
 	public List<ScQtCheckList> getScQtCheckSt2financeProposalList() {
@@ -534,37 +354,6 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	public void setScQtCheckSt2financeProposalList(
 			List<ScQtCheckList> scQtCheckSt2financeProposalList) {
 		this.scQtCheckSt2financeProposalList = scQtCheckSt2financeProposalList;
-	}
-
-	/**
-	 * @return the scQtCheckSt2financeAdditionalProposalList
-	 */
-	public List<ScQtCheckList> getScQtCheckSt2financeAdditionalProposalList() {
-		return scQtCheckSt2financeAdditionalProposalList;
-	}
-
-	/**
-	 * @param scQtCheckSt2financeAdditionalProposalList
-	 *            the scQtCheckSt2financeAdditionalProposalList to set
-	 */
-	public void setScQtCheckSt2financeAdditionalProposalList(
-			List<ScQtCheckList> scQtCheckSt2financeAdditionalProposalList) {
-		this.scQtCheckSt2financeAdditionalProposalList = scQtCheckSt2financeAdditionalProposalList;
-	}
-
-	/**
-	 * @return the compilanceList
-	 */
-	public List<String> getCompilanceList() {
-		return compilanceList;
-	}
-
-	/**
-	 * @param compilanceList
-	 *            the compilanceList to set
-	 */
-	public void setCompilanceList(List<String> compilanceList) {
-		this.compilanceList = compilanceList;
 	}
 
 	/**
@@ -595,67 +384,6 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	 */
 	public void setSampleReq(boolean isSampleReq) {
 		this.isSampleReq = isSampleReq;
-	}
-
-	/**
-	 * @return the comitteeUsers
-	 */
-	public List<SelectItem> getComitteeUsers() {
-		return comitteeUsers;
-	}
-
-	/**
-	 * @param comitteeUsers
-	 *            the comitteeUsers to set
-	 */
-	public void setComitteeUsers(List<SelectItem> comitteeUsers) {
-		this.comitteeUsers = comitteeUsers;
-	}
-
-	/**
-	 * @return the approvalDate
-	 */
-	public String getApprovalDate() {
-		return approvalDate;
-	}
-
-	/**
-	 * @param approvalDate
-	 *            the approvalDate to set
-	 */
-	public void setApprovalDate(String approvalDate) {
-		this.approvalDate = approvalDate;
-	}
-
-	/**
-	 * @return the currencyListDetails
-	 */
-	public List<SelectItem> getCurrencyListDetails() {
-		return currencyListDetails;
-	}
-
-	/**
-	 * @param currencyListDetails
-	 *            the currencyListDetails to set
-	 */
-	public void setCurrencyListDetails(List<SelectItem> currencyListDetails) {
-		this.currencyListDetails = currencyListDetails;
-	}
-
-	/**
-	 * @return the procurementListDetails
-	 */
-	public List<SelectItem> getProcurementListDetails() {
-		return procurementListDetails;
-	}
-
-	/**
-	 * @param procurementListDetails
-	 *            the procurementListDetails to set
-	 */
-	public void setProcurementListDetails(
-			List<SelectItem> procurementListDetails) {
-		this.procurementListDetails = procurementListDetails;
 	}
 
 	public Object getSpecificationDataType() {
@@ -697,21 +425,6 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the approvalList
-	 */
-	public List<SelectItem> getApprovalList() {
-		return approvalList;
-	}
-
-	/**
-	 * @param approvalList
-	 *            the approvalList to set
-	 */
-	public void setApprovalList(List<SelectItem> approvalList) {
-		this.approvalList = approvalList;
-	}
-
-	/**
 	 * @return the evaluationType
 	 */
 	public String getEvaluationType() {
@@ -724,66 +437,6 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	 */
 	public void setEvaluationType(String evaluationType) {
 		this.evaluationType = evaluationType;
-	}
-
-	/**
-	 * @return the s1TechSelect
-	 */
-	public List<ScQtCheckList> getS1TechSelect() {
-		return s1TechSelect;
-	}
-
-	/**
-	 * @param s1TechSelect
-	 *            the s1TechSelect to set
-	 */
-	public void setS1TechSelect(List<ScQtCheckList> s1TechSelect) {
-		this.s1TechSelect = s1TechSelect;
-	}
-
-	/**
-	 * @return the s1TechAddSelect
-	 */
-	public List<ScQtCheckList> getS1TechAddSelect() {
-		return s1TechAddSelect;
-	}
-
-	/**
-	 * @param s1TechAddSelect
-	 *            the s1TechAddSelect to set
-	 */
-	public void setS1TechAddSelect(List<ScQtCheckList> s1TechAddSelect) {
-		this.s1TechAddSelect = s1TechAddSelect;
-	}
-
-	/**
-	 * @return the s1FinSelect
-	 */
-	public List<ScQtCheckList> getS1FinSelect() {
-		return s1FinSelect;
-	}
-
-	/**
-	 * @param s1FinSelect
-	 *            the s1FinSelect to set
-	 */
-	public void setS1FinSelect(List<ScQtCheckList> s1FinSelect) {
-		this.s1FinSelect = s1FinSelect;
-	}
-
-	/**
-	 * @return the s1FinAddSelect
-	 */
-	public List<ScQtCheckList> getS1FinAddSelect() {
-		return s1FinAddSelect;
-	}
-
-	/**
-	 * @param s1FinAddSelect
-	 *            the s1FinAddSelect to set
-	 */
-	public void setS1FinAddSelect(List<ScQtCheckList> s1FinAddSelect) {
-		this.s1FinAddSelect = s1FinAddSelect;
 	}
 
 	/**
@@ -802,21 +455,6 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the s2TechAddSelect
-	 */
-	public List<ScQtCheckList> getS2TechAddSelect() {
-		return s2TechAddSelect;
-	}
-
-	/**
-	 * @param s2TechAddSelect
-	 *            the s2TechAddSelect to set
-	 */
-	public void setS2TechAddSelect(List<ScQtCheckList> s2TechAddSelect) {
-		this.s2TechAddSelect = s2TechAddSelect;
-	}
-
-	/**
 	 * @return the s2FinSelect
 	 */
 	public List<ScQtCheckList> getS2FinSelect() {
@@ -829,66 +467,6 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	 */
 	public void setS2FinSelect(List<ScQtCheckList> s2FinSelect) {
 		this.s2FinSelect = s2FinSelect;
-	}
-
-	/**
-	 * @return the s2FinAddSelect
-	 */
-	public List<ScQtCheckList> getS2FinAddSelect() {
-		return s2FinAddSelect;
-	}
-
-	/**
-	 * @param s2FinAddSelect
-	 *            the s2FinAddSelect to set
-	 */
-	public void setS2FinAddSelect(List<ScQtCheckList> s2FinAddSelect) {
-		this.s2FinAddSelect = s2FinAddSelect;
-	}
-
-	/**
-	 * @return the scoringList
-	 */
-	public List<ScQtCheckListScore> getScoringList() {
-		return scoringList;
-	}
-
-	/**
-	 * @param scoringList
-	 *            the scoringList to set
-	 */
-	public void setScoringList(List<ScQtCheckListScore> scoringList) {
-		this.scoringList = scoringList;
-	}
-
-	/**
-	 * @return the selectscoring
-	 */
-	public List<ScQtCheckListScore> getSelectscoring() {
-		return selectscoring;
-	}
-
-	/**
-	 * @param selectscoring
-	 *            the selectscoring to set
-	 */
-	public void setSelectscoring(List<ScQtCheckListScore> selectscoring) {
-		this.selectscoring = selectscoring;
-	}
-
-	/**
-	 * @return the collectionScoring
-	 */
-	public List<ScQtCheckListScore> getCollectionScoring() {
-		return collectionScoring;
-	}
-
-	/**
-	 * @param collectionScoring
-	 *            the collectionScoring to set
-	 */
-	public void setCollectionScoring(List<ScQtCheckListScore> collectionScoring) {
-		this.collectionScoring = collectionScoring;
 	}
 
 	/**
@@ -997,36 +575,6 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the contractAmount
-	 */
-	public List<ScQtCheckListScore> getContractAmount() {
-		return contractAmount;
-	}
-
-	/**
-	 * @param contractAmount
-	 *            the contractAmount to set
-	 */
-	public void setContractAmount(List<ScQtCheckListScore> contractAmount) {
-		this.contractAmount = contractAmount;
-	}
-
-	/**
-	 * @return the bankStamentScore
-	 */
-	public List<ScQtCheckListScore> getBankStamentScore() {
-		return bankStamentScore;
-	}
-
-	/**
-	 * @param bankStamentScore
-	 *            the bankStamentScore to set
-	 */
-	public void setBankStamentScore(List<ScQtCheckListScore> bankStamentScore) {
-		this.bankStamentScore = bankStamentScore;
-	}
-
-	/**
 	 * @return the serialversionuid
 	 */
 	public static long getSerialversionuid() {
@@ -1038,51 +586,6 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	 */
 	public static Logger getLog() {
 		return log;
-	}
-
-	/**
-	 * @return the creditFacility
-	 */
-	public List<ScQtCheckListScore> getCreditFacility() {
-		return creditFacility;
-	}
-
-	/**
-	 * @param creditFacility
-	 *            the creditFacility to set
-	 */
-	public void setCreditFacility(List<ScQtCheckListScore> creditFacility) {
-		this.creditFacility = creditFacility;
-	}
-
-	/**
-	 * @return the scoringCash
-	 */
-	public List<ScQtCheckListScore> getScoringCash() {
-		return scoringCash;
-	}
-
-	/**
-	 * @param scoringCash
-	 *            the scoringCash to set
-	 */
-	public void setScoringCash(List<ScQtCheckListScore> scoringCash) {
-		this.scoringCash = scoringCash;
-	}
-
-	/**
-	 * @return the assetScore
-	 */
-	public List<ScQtCheckListScore> getAssetScore() {
-		return assetScore;
-	}
-
-	/**
-	 * @param assetScore
-	 *            the assetScore to set
-	 */
-	public void setAssetScore(List<ScQtCheckListScore> assetScore) {
-		this.assetScore = assetScore;
 	}
 
 	/**
@@ -1098,36 +601,6 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	 */
 	public void setTotalFrequency(int totalFrequency) {
 		this.totalFrequency = totalFrequency;
-	}
-
-	/**
-	 * @return the financialWeightage
-	 */
-	public String getFinancialWeightage() {
-		return financialWeightage;
-	}
-
-	/**
-	 * @param financialWeightage
-	 *            the financialWeightage to set
-	 */
-	public void setFinancialWeightage(String financialWeightage) {
-		this.financialWeightage = financialWeightage;
-	}
-
-	/**
-	 * @return the technicalWeightage
-	 */
-	public String getTechnicalWeightage() {
-		return technicalWeightage;
-	}
-
-	/**
-	 * @param technicalWeightage
-	 *            the technicalWeightage to set
-	 */
-	public void setTechnicalWeightage(String technicalWeightage) {
-		this.technicalWeightage = technicalWeightage;
 	}
 
 	/**
@@ -1161,21 +634,6 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the panelItemList
-	 */
-	public List<CtPanelItem> getPanelItemList() {
-		return panelItemList;
-	}
-
-	/**
-	 * @param panelItemList
-	 *            the panelItemList to set
-	 */
-	public void setPanelItemList(List<CtPanelItem> panelItemList) {
-		this.panelItemList = panelItemList;
-	}
-
-	/**
 	 * @return the selectpanelItem
 	 */
 	public List<CtPanelItem> getSelectpanelItem() {
@@ -1188,36 +646,6 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectpanelItem(List<CtPanelItem> selectpanelItem) {
 		this.selectpanelItem = selectpanelItem;
-	}
-
-	/**
-	 * @return the panelItemDetailsList
-	 */
-	public List<CtPanelItem> getPanelItemDetailsList() {
-		return panelItemDetailsList;
-	}
-
-	/**
-	 * @param panelItemDetailsList
-	 *            the panelItemDetailsList to set
-	 */
-	public void setPanelItemDetailsList(List<CtPanelItem> panelItemDetailsList) {
-		this.panelItemDetailsList = panelItemDetailsList;
-	}
-
-	/**
-	 * @return the selectItemDetailsList
-	 */
-	public List<CtPanelItem> getSelectItemDetailsList() {
-		return selectItemDetailsList;
-	}
-
-	/**
-	 * @param selectItemDetailsList
-	 *            the selectItemDetailsList to set
-	 */
-	public void setSelectItemDetailsList(List<CtPanelItem> selectItemDetailsList) {
-		this.selectItemDetailsList = selectItemDetailsList;
 	}
 
 	/**
@@ -1308,22 +736,6 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	 */
 	public void setItemName(String itemName) {
 		this.itemName = itemName;
-	}
-
-	/**
-	 * @return the suppCriteriarestrictedList
-	 */
-	public List<ScQtCategory> getSuppCriteriarestrictedList() {
-		return suppCriteriarestrictedList;
-	}
-
-	/**
-	 * @param suppCriteriarestrictedList
-	 *            the suppCriteriarestrictedList to set
-	 */
-	public void setSuppCriteriarestrictedList(
-			List<ScQtCategory> suppCriteriarestrictedList) {
-		this.suppCriteriarestrictedList = suppCriteriarestrictedList;
 	}
 
 	/**
@@ -1444,37 +856,6 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	 */
 	public void setZoneAddrName(String zoneAddrName) {
 		this.zoneAddrName = zoneAddrName;
-	}
-
-	/**
-	 * @return the pmReportSectionList
-	 */
-	public List<PmReportSection> getPmReportSectionList() {
-		return pmReportSectionList;
-	}
-
-	/**
-	 * @param pmReportSectionList
-	 *            the pmReportSectionList to set
-	 */
-	public void setPmReportSectionList(List<PmReportSection> pmReportSectionList) {
-		this.pmReportSectionList = pmReportSectionList;
-	}
-
-	/**
-	 * @return the selectedPmReportSectionList
-	 */
-	public List<PmReportSection> getSelectedPmReportSectionList() {
-		return selectedPmReportSectionList;
-	}
-
-	/**
-	 * @param selectedPmReportSectionList
-	 *            the selectedPmReportSectionList to set
-	 */
-	public void setSelectedPmReportSectionList(
-			List<PmReportSection> selectedPmReportSectionList) {
-		this.selectedPmReportSectionList = selectedPmReportSectionList;
 	}
 
 	/**
@@ -1626,21 +1007,6 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	 */
 	public void setMinistryName(String ministryName) {
 		this.ministryName = ministryName;
-	}
-
-	/**
-	 * @return the supportDocList
-	 */
-	public List<ScQtCheckList> getSupportDocList() {
-		return supportDocList;
-	}
-
-	/**
-	 * @param supportDocList
-	 *            the supportDocList to set
-	 */
-	public void setSupportDocList(List<ScQtCheckList> supportDocList) {
-		this.supportDocList = supportDocList;
 	}
 
 	/**
@@ -1839,38 +1205,6 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the qtCategoryOpenSelectList
-	 */
-	public List<ScQtCategory> getQtCategoryOpenSelectList() {
-		return qtCategoryOpenSelectList;
-	}
-
-	/**
-	 * @param qtCategoryOpenSelectList
-	 *            the qtCategoryOpenSelectList to set
-	 */
-	public void setQtCategoryOpenSelectList(
-			List<ScQtCategory> qtCategoryOpenSelectList) {
-		this.qtCategoryOpenSelectList = qtCategoryOpenSelectList;
-	}
-
-	/**
-	 * @return the suppCriteriarestrictedSelectList
-	 */
-	public List<ScQtCategory> getSuppCriteriarestrictedSelectList() {
-		return suppCriteriarestrictedSelectList;
-	}
-
-	/**
-	 * @param suppCriteriarestrictedSelectList
-	 *            the suppCriteriarestrictedSelectList to set
-	 */
-	public void setSuppCriteriarestrictedSelectList(
-			List<ScQtCategory> suppCriteriarestrictedSelectList) {
-		this.suppCriteriarestrictedSelectList = suppCriteriarestrictedSelectList;
-	}
-
-	/**
 	 * @return the totalProgressivePayment
 	 */
 	public int getTotalProgressivePayment() {
@@ -1883,96 +1217,6 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	 */
 	public void setTotalProgressivePayment(int totalProgressivePayment) {
 		this.totalProgressivePayment = totalProgressivePayment;
-	}
-
-	/**
-	 * @return the qtCategory
-	 */
-	public ScQtCategory getQtCategory() {
-		return qtCategory;
-	}
-
-	/**
-	 * @param qtCategory
-	 *            the qtCategory to set
-	 */
-	public void setQtCategory(ScQtCategory qtCategory) {
-		this.qtCategory = qtCategory;
-	}
-
-	/**
-	 * @return the estimatedPrice
-	 */
-	public BigDecimal getEstimatedPrice() {
-		return estimatedPrice;
-	}
-
-	/**
-	 * @param estimatedPrice
-	 *            the estimatedPrice to set
-	 */
-	public void setEstimatedPrice(BigDecimal estimatedPrice) {
-		this.estimatedPrice = estimatedPrice;
-	}
-
-	/**
-	 * @return the fromJulat
-	 */
-	public int getFromJulat() {
-		return fromJulat;
-	}
-
-	/**
-	 * @param fromJulat
-	 *            the fromJulat to set
-	 */
-	public void setFromJulat(int fromJulat) {
-		this.fromJulat = fromJulat;
-	}
-
-	/**
-	 * @return the toJulat
-	 */
-	public int getToJulat() {
-		return toJulat;
-	}
-
-	/**
-	 * @param toJulat
-	 *            the toJulat to set
-	 */
-	public void setToJulat(int toJulat) {
-		this.toJulat = toJulat;
-	}
-
-	/**
-	 * @return the fromPrice
-	 */
-	public BigDecimal getFromPrice() {
-		return fromPrice;
-	}
-
-	/**
-	 * @param fromPrice
-	 *            the fromPrice to set
-	 */
-	public void setFromPrice(BigDecimal fromPrice) {
-		this.fromPrice = fromPrice;
-	}
-
-	/**
-	 * @return the toPrice
-	 */
-	public BigDecimal getToPrice() {
-		return toPrice;
-	}
-
-	/**
-	 * @param toPrice
-	 *            the toPrice to set
-	 */
-	public void setToPrice(BigDecimal toPrice) {
-		this.toPrice = toPrice;
 	}
 
 	/**
@@ -2018,146 +1262,6 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	 */
 	public void setFinancialScoring(List<ScQtCheckList> financialScoring) {
 		this.financialScoring = financialScoring;
-	}
-
-	/**
-	 * @return the packScoringList
-	 */
-	public List<ScQtCheckListScore> getPackScoringList() {
-		return packScoringList;
-	}
-
-	/**
-	 * @param packScoringList
-	 *            the packScoringList to set
-	 */
-	public void setPackScoringList(List<ScQtCheckListScore> packScoringList) {
-		this.packScoringList = packScoringList;
-	}
-
-	/**
-	 * @return the warantyScore
-	 */
-	public List<ScQtCheckListScore> getWarantyScore() {
-		return warantyScore;
-	}
-
-	/**
-	 * @param warantyScore
-	 *            the warantyScore to set
-	 */
-	public void setWarantyScore(List<ScQtCheckListScore> warantyScore) {
-		this.warantyScore = warantyScore;
-	}
-
-	/**
-	 * @return the trainingScore
-	 */
-	public List<ScQtCheckListScore> getTrainingScore() {
-		return trainingScore;
-	}
-
-	/**
-	 * @param trainingScore
-	 *            the trainingScore to set
-	 */
-	public void setTrainingScore(List<ScQtCheckListScore> trainingScore) {
-		this.trainingScore = trainingScore;
-	}
-
-	/**
-	 * @return the totalEmployeeScore
-	 */
-	public List<ScQtCheckListScore> getTotalEmployeeScore() {
-		return totalEmployeeScore;
-	}
-
-	/**
-	 * @param totalEmployeeScore
-	 *            the totalEmployeeScore to set
-	 */
-	public void setTotalEmployeeScore(
-			List<ScQtCheckListScore> totalEmployeeScore) {
-		this.totalEmployeeScore = totalEmployeeScore;
-	}
-
-	/**
-	 * @return the technicalStaffScore
-	 */
-	public List<ScQtCheckListScore> getTechnicalStaffScore() {
-		return technicalStaffScore;
-	}
-
-	/**
-	 * @param technicalStaffScore
-	 *            the technicalStaffScore to set
-	 */
-	public void setTechnicalStaffScore(
-			List<ScQtCheckListScore> technicalStaffScore) {
-		this.technicalStaffScore = technicalStaffScore;
-	}
-
-	/**
-	 * @return the paidUpCapitalScore
-	 */
-	public List<ScQtCheckListScore> getPaidUpCapitalScore() {
-		return paidUpCapitalScore;
-	}
-
-	/**
-	 * @param paidUpCapitalScore
-	 *            the paidUpCapitalScore to set
-	 */
-	public void setPaidUpCapitalScore(
-			List<ScQtCheckListScore> paidUpCapitalScore) {
-		this.paidUpCapitalScore = paidUpCapitalScore;
-	}
-
-	/**
-	 * @return the nonFederalScore
-	 */
-	public List<ScQtCheckListScore> getNonFederalScore() {
-		return nonFederalScore;
-	}
-
-	/**
-	 * @param nonFederalScore
-	 *            the nonFederalScore to set
-	 */
-	public void setNonFederalScore(List<ScQtCheckListScore> nonFederalScore) {
-		this.nonFederalScore = nonFederalScore;
-	}
-
-	/**
-	 * @return the nonFederalScoreyears
-	 */
-	public List<ScQtCheckListScore> getNonFederalScoreyears() {
-		return nonFederalScoreyears;
-	}
-
-	/**
-	 * @param nonFederalScoreyears
-	 *            the nonFederalScoreyears to set
-	 */
-	public void setNonFederalScoreyears(
-			List<ScQtCheckListScore> nonFederalScoreyears) {
-		this.nonFederalScoreyears = nonFederalScoreyears;
-	}
-
-	/**
-	 * @return the nonFederalContractScore
-	 */
-	public List<ScQtCheckListScore> getNonFederalContractScore() {
-		return nonFederalContractScore;
-	}
-
-	/**
-	 * @param nonFederalContractScore
-	 *            the nonFederalContractScore to set
-	 */
-	public void setNonFederalContractScore(
-			List<ScQtCheckListScore> nonFederalContractScore) {
-		this.nonFederalContractScore = nonFederalContractScore;
 	}
 
 	/**
@@ -2293,21 +1397,6 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	 */
 	public void setTechnicalSpecList(List<ScQtCheckList> technicalSpecList) {
 		this.technicalSpecList = technicalSpecList;
-	}
-
-	/**
-	 * @return the itemScore
-	 */
-	public List<ScQtCheckListScore> getItemScore() {
-		return itemScore;
-	}
-
-	/**
-	 * @param itemScore
-	 *            the itemScore to set
-	 */
-	public void setItemScore(List<ScQtCheckListScore> itemScore) {
-		this.itemScore = itemScore;
 	}
 
 	/**
@@ -2746,227 +1835,6 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	public void setCheckListSelectScore(
 			List<ScQtCheckListScore> checkListSelectScore) {
 		this.checkListSelectScore = checkListSelectScore;
-	}
-
-	/**
-	 * @return the scoringForSelectYears
-	 */
-	public List<ScQtCheckListScore> getScoringForSelectYears() {
-		return scoringForSelectYears;
-	}
-
-	/**
-	 * @param scoringForSelectYears
-	 *            the scoringForSelectYears to set
-	 */
-	public void setScoringForSelectYears(
-			List<ScQtCheckListScore> scoringForSelectYears) {
-		this.scoringForSelectYears = scoringForSelectYears;
-	}
-
-	/**
-	 * @return the nonFederalSelectScore
-	 */
-	public List<ScQtCheckListScore> getNonFederalSelectScore() {
-		return nonFederalSelectScore;
-	}
-
-	/**
-	 * @param nonFederalSelectScore
-	 *            the nonFederalSelectScore to set
-	 */
-	public void setNonFederalSelectScore(
-			List<ScQtCheckListScore> nonFederalSelectScore) {
-		this.nonFederalSelectScore = nonFederalSelectScore;
-	}
-
-	/**
-	 * @return the nonFederalSelectScoreyears
-	 */
-	public List<ScQtCheckListScore> getNonFederalSelectScoreyears() {
-		return nonFederalSelectScoreyears;
-	}
-
-	/**
-	 * @param nonFederalSelectScoreyears
-	 *            the nonFederalSelectScoreyears to set
-	 */
-	public void setNonFederalSelectScoreyears(
-			List<ScQtCheckListScore> nonFederalSelectScoreyears) {
-		this.nonFederalSelectScoreyears = nonFederalSelectScoreyears;
-	}
-
-	/**
-	 * @return the warantySelectScore
-	 */
-	public List<ScQtCheckListScore> getWarantySelectScore() {
-		return warantySelectScore;
-	}
-
-	/**
-	 * @param warantySelectScore
-	 *            the warantySelectScore to set
-	 */
-	public void setWarantySelectScore(
-			List<ScQtCheckListScore> warantySelectScore) {
-		this.warantySelectScore = warantySelectScore;
-	}
-
-	/**
-	 * @return the trainingSelectList
-	 */
-	public List<ScQtCheckListScore> getTrainingSelectList() {
-		return trainingSelectList;
-	}
-
-	/**
-	 * @param trainingSelectList
-	 *            the trainingSelectList to set
-	 */
-	public void setTrainingSelectList(
-			List<ScQtCheckListScore> trainingSelectList) {
-		this.trainingSelectList = trainingSelectList;
-	}
-
-	/**
-	 * @return the technicalStaffSelectList
-	 */
-	public List<ScQtCheckListScore> getTechnicalStaffSelectList() {
-		return technicalStaffSelectList;
-	}
-
-	/**
-	 * @param technicalStaffSelectList
-	 *            the technicalStaffSelectList to set
-	 */
-	public void setTechnicalStaffSelectList(
-			List<ScQtCheckListScore> technicalStaffSelectList) {
-		this.technicalStaffSelectList = technicalStaffSelectList;
-	}
-
-	/**
-	 * @return the totalEmployeeSelectList
-	 */
-	public List<ScQtCheckListScore> getTotalEmployeeSelectList() {
-		return totalEmployeeSelectList;
-	}
-
-	/**
-	 * @param totalEmployeeSelectList
-	 *            the totalEmployeeSelectList to set
-	 */
-	public void setTotalEmployeeSelectList(
-			List<ScQtCheckListScore> totalEmployeeSelectList) {
-		this.totalEmployeeSelectList = totalEmployeeSelectList;
-	}
-
-	/**
-	 * @return the finGovContractSelectList
-	 */
-	public List<ScQtCheckListScore> getFinGovContractSelectList() {
-		return finGovContractSelectList;
-	}
-
-	/**
-	 * @param finGovContractSelectList
-	 *            the finGovContractSelectList to set
-	 */
-	public void setFinGovContractSelectList(
-			List<ScQtCheckListScore> finGovContractSelectList) {
-		this.finGovContractSelectList = finGovContractSelectList;
-	}
-
-	/**
-	 * @return the finPrivateContractSelectList
-	 */
-	public List<ScQtCheckListScore> getFinPrivateContractSelectList() {
-		return finPrivateContractSelectList;
-	}
-
-	/**
-	 * @param finPrivateContractSelectList
-	 *            the finPrivateContractSelectList to set
-	 */
-	public void setFinPrivateContractSelectList(
-			List<ScQtCheckListScore> finPrivateContractSelectList) {
-		this.finPrivateContractSelectList = finPrivateContractSelectList;
-	}
-
-	/**
-	 * @return the creditfacilitySelectList
-	 */
-	public List<ScQtCheckListScore> getCreditfacilitySelectList() {
-		return creditfacilitySelectList;
-	}
-
-	/**
-	 * @param creditfacilitySelectList
-	 *            the creditfacilitySelectList to set
-	 */
-	public void setCreditfacilitySelectList(
-			List<ScQtCheckListScore> creditfacilitySelectList) {
-		this.creditfacilitySelectList = creditfacilitySelectList;
-	}
-
-	/**
-	 * @return the cashSelectList
-	 */
-	public List<ScQtCheckListScore> getCashSelectList() {
-		return cashSelectList;
-	}
-
-	/**
-	 * @param cashSelectList
-	 *            the cashSelectList to set
-	 */
-	public void setCashSelectList(List<ScQtCheckListScore> cashSelectList) {
-		this.cashSelectList = cashSelectList;
-	}
-
-	/**
-	 * @return the bankSelectList
-	 */
-	public List<ScQtCheckListScore> getBankSelectList() {
-		return bankSelectList;
-	}
-
-	/**
-	 * @param bankSelectList
-	 *            the bankSelectList to set
-	 */
-	public void setBankSelectList(List<ScQtCheckListScore> bankSelectList) {
-		this.bankSelectList = bankSelectList;
-	}
-
-	/**
-	 * @return the assetLiabilitySelectList
-	 */
-	public List<ScQtCheckListScore> getAssetLiabilitySelectList() {
-		return assetLiabilitySelectList;
-	}
-
-	/**
-	 * @param assetLiabilitySelectList
-	 *            the assetLiabilitySelectList to set
-	 */
-	public void setAssetLiabilitySelectList(
-			List<ScQtCheckListScore> assetLiabilitySelectList) {
-		this.assetLiabilitySelectList = assetLiabilitySelectList;
-	}
-
-	/**
-	 * @return the paidUpSelectList
-	 */
-	public List<ScQtCheckListScore> getPaidUpSelectList() {
-		return paidUpSelectList;
-	}
-
-	/**
-	 * @param paidUpSelectList
-	 *            the paidUpSelectList to set
-	 */
-	public void setPaidUpSelectList(List<ScQtCheckListScore> paidUpSelectList) {
-		this.paidUpSelectList = paidUpSelectList;
 	}
 
 	/**
@@ -3533,22 +2401,6 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the suppCriteriarestrictedBoSelectList
-	 */
-	public List<ScQtCategory> getSuppCriteriarestrictedBoSelectList() {
-		return suppCriteriarestrictedBoSelectList;
-	}
-
-	/**
-	 * @param suppCriteriarestrictedBoSelectList
-	 *            the suppCriteriarestrictedBoSelectList to set
-	 */
-	public void setSuppCriteriarestrictedBoSelectList(
-			List<ScQtCategory> suppCriteriarestrictedBoSelectList) {
-		this.suppCriteriarestrictedBoSelectList = suppCriteriarestrictedBoSelectList;
-	}
-
-	/**
 	 * @return the required
 	 */
 	public boolean isRequired() {
@@ -3707,7 +2559,8 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param evaluationTypeItem the evaluationTypeItem to set
+	 * @param evaluationTypeItem
+	 *            the evaluationTypeItem to set
 	 */
 	public void setEvaluationTypeItem(List<SelectItem> evaluationTypeItem) {
 		this.evaluationTypeItem = evaluationTypeItem;
@@ -3721,7 +2574,8 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param supplierSelectedTreeNode the supplierSelectedTreeNode to set
+	 * @param supplierSelectedTreeNode
+	 *            the supplierSelectedTreeNode to set
 	 */
 	public void setSupplierSelectedTreeNode(TreeNode supplierSelectedTreeNode) {
 		this.supplierSelectedTreeNode = supplierSelectedTreeNode;
@@ -3735,7 +2589,8 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param subject the subject to set
+	 * @param subject
+	 *            the subject to set
 	 */
 	public void setSubject(String subject) {
 		this.subject = subject;
@@ -3749,7 +2604,8 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param message the message to set
+	 * @param message
+	 *            the message to set
 	 */
 	public void setMessage(String message) {
 		this.message = message;
@@ -3763,7 +2619,8 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param chairPersonPinNum the chairPersonPinNum to set
+	 * @param chairPersonPinNum
+	 *            the chairPersonPinNum to set
 	 */
 	public void setChairPersonPinNum(String chairPersonPinNum) {
 		this.chairPersonPinNum = chairPersonPinNum;
@@ -3777,7 +2634,8 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param personnel the personnel to set
+	 * @param personnel
+	 *            the personnel to set
 	 */
 	public void setPersonnel(SmPersonnel personnel) {
 		this.personnel = personnel;
@@ -3791,7 +2649,8 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param supplierBranch the supplierBranch to set
+	 * @param supplierBranch
+	 *            the supplierBranch to set
 	 */
 	public void setSupplierBranch(String supplierBranch) {
 		this.supplierBranch = supplierBranch;
@@ -3805,7 +2664,8 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param supplierAddress the supplierAddress to set
+	 * @param supplierAddress
+	 *            the supplierAddress to set
 	 */
 	public void setSupplierAddress(SmAddress supplierAddress) {
 		this.supplierAddress = supplierAddress;
@@ -3819,7 +2679,8 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param supplierContact the supplierContact to set
+	 * @param supplierContact
+	 *            the supplierContact to set
 	 */
 	public void setSupplierContact(String supplierContact) {
 		this.supplierContact = supplierContact;
@@ -3833,7 +2694,8 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param supplierEmail the supplierEmail to set
+	 * @param supplierEmail
+	 *            the supplierEmail to set
 	 */
 	public void setSupplierEmail(String supplierEmail) {
 		this.supplierEmail = supplierEmail;
@@ -3847,7 +2709,8 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param ctCircularVer the ctCircularVer to set
+	 * @param ctCircularVer
+	 *            the ctCircularVer to set
 	 */
 	public void setCtCircularVer(CtCircularVer ctCircularVer) {
 		this.ctCircularVer = ctCircularVer;
@@ -3861,7 +2724,8 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param finspecChecklist the finspecChecklist to set
+	 * @param finspecChecklist
+	 *            the finspecChecklist to set
 	 */
 	public void setFinspecChecklist(List<ScQtCheckList> finspecChecklist) {
 		this.finspecChecklist = finspecChecklist;
@@ -3875,7 +2739,8 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param buttonOutCome the buttonOutCome to set
+	 * @param buttonOutCome
+	 *            the buttonOutCome to set
 	 */
 	public void setButtonOutCome(String buttonOutCome) {
 		this.buttonOutCome = buttonOutCome;
@@ -3889,7 +2754,8 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param allStateCode the allStateCode to set
+	 * @param allStateCode
+	 *            the allStateCode to set
 	 */
 	public void setAllStateCode(int allStateCode) {
 		this.allStateCode = allStateCode;
@@ -3903,7 +2769,8 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param isPanelChange the isPanelChange to set
+	 * @param isPanelChange
+	 *            the isPanelChange to set
 	 */
 	public void setPanelChange(boolean isPanelChange) {
 		this.isPanelChange = isPanelChange;
@@ -3917,24 +2784,11 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param newItemCategory the newItemCategory to set
+	 * @param newItemCategory
+	 *            the newItemCategory to set
 	 */
 	public void setNewItemCategory(String newItemCategory) {
 		this.newItemCategory = newItemCategory;
-	}
-
-	/**
-	 * @return the existingpanelitem
-	 */
-	public CtPanelItem getExistingpanelitem() {
-		return existingpanelitem;
-	}
-
-	/**
-	 * @param existingpanelitem the existingpanelitem to set
-	 */
-	public void setExistingpanelitem(CtPanelItem existingpanelitem) {
-		this.existingpanelitem = existingpanelitem;
 	}
 
 	/**
@@ -3945,7 +2799,8 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param yearsDisplayList the yearsDisplayList to set
+	 * @param yearsDisplayList
+	 *            the yearsDisplayList to set
 	 */
 	public void setYearsDisplayList(List<SelectItem> yearsDisplayList) {
 		this.yearsDisplayList = yearsDisplayList;
@@ -3959,7 +2814,8 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param bankstmntTomonth the bankstmntTomonth to set
+	 * @param bankstmntTomonth
+	 *            the bankstmntTomonth to set
 	 */
 	public void setBankstmntTomonth(String bankstmntTomonth) {
 		this.bankstmntTomonth = bankstmntTomonth;
@@ -3973,7 +2829,8 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param tempIndex the tempIndex to set
+	 * @param tempIndex
+	 *            the tempIndex to set
 	 */
 	public void setTempIndex(int tempIndex) {
 		this.tempIndex = tempIndex;
@@ -3987,7 +2844,8 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param ctzones the ctzones to set
+	 * @param ctzones
+	 *            the ctzones to set
 	 */
 	public void setCtzones(boolean ctzones) {
 		this.ctzones = ctzones;
@@ -4001,7 +2859,8 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param selectPanelItem the selectPanelItem to set
+	 * @param selectPanelItem
+	 *            the selectPanelItem to set
 	 */
 	public void setSelectPanelItem(boolean selectPanelItem) {
 		this.selectPanelItem = selectPanelItem;
@@ -4024,7 +2883,8 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param specStatusId the specStatusId to set
+	 * @param specStatusId
+	 *            the specStatusId to set
 	 */
 	public void setSpecStatusId(Long specStatusId) {
 		this.specStatusId = specStatusId;
@@ -4038,24 +2898,11 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param specSelectStats the specSelectStats to set
+	 * @param specSelectStats
+	 *            the specSelectStats to set
 	 */
 	public void setSpecSelectStats(boolean specSelectStats) {
 		this.specSelectStats = specSelectStats;
-	}
-
-	/**
-	 * @return the recommendationStats
-	 */
-	public boolean isRecommendationStats() {
-		return recommendationStats;
-	}
-
-	/**
-	 * @param recommendationStats the recommendationStats to set
-	 */
-	public void setRecommendationStats(boolean recommendationStats) {
-		this.recommendationStats = recommendationStats;
 	}
 
 	public String getSpecType() {
@@ -4074,31 +2921,67 @@ public class SpecificationManagedBean extends BaseManagedBean {
 		this.selectedCheckList = selectedCheckList;
 	}
 
-	/**
-	 * @return the supplierScore
-	 */
-	public List<ScQtCheckListScore> getSupplierScore() {
-		return supplierScore;
+	public List<ScQtCheckListScore> getToBeRemoveList() {
+		return toBeRemoveList;
+	}
+
+	public void setToBeRemoveList(List<ScQtCheckListScore> toBeRemoveList) {
+		this.toBeRemoveList = toBeRemoveList;
+	}
+
+	public List<ScQtCheckListScore> getOtherScoreSelected() {
+		return otherScoreSelected;
+	}
+
+	public void setOtherScoreSelected(
+			List<ScQtCheckListScore> otherScoreSelected) {
+		this.otherScoreSelected = otherScoreSelected;
 	}
 
 	/**
-	 * @param supplierScore the supplierScore to set
+	 * @return the criteriaType
 	 */
-	public void setSupplierScore(List<ScQtCheckListScore> supplierScore) {
-		this.supplierScore = supplierScore;
+	public String getCriteriaType() {
+		return criteriaType;
 	}
 
 	/**
-	 * @return the supplierSelectScore
+	 * @param criteriaType
+	 *            the criteriaType to set
 	 */
-	public List<ScQtCheckListScore> getSupplierSelectScore() {
-		return supplierSelectScore;
+	public void setCriteriaType(String criteriaType) {
+		this.criteriaType = criteriaType;
 	}
 
 	/**
-	 * @param supplierSelectScore the supplierSelectScore to set
+	 * @return the otherCriteriaType
 	 */
-	public void setSupplierSelectScore(List<ScQtCheckListScore> supplierSelectScore) {
-		this.supplierSelectScore = supplierSelectScore;
+	public String getOtherCriteriaType() {
+		return otherCriteriaType;
 	}
+
+	/**
+	 * @param otherCriteriaType
+	 *            the otherCriteriaType to set
+	 */
+	public void setOtherCriteriaType(String otherCriteriaType) {
+		this.otherCriteriaType = otherCriteriaType;
+	}
+
+	/**
+	 * @return the panelItemList
+	 */
+	public List<CtPanelItem> getPanelItemList() {
+		return panelItemList;
+	}
+
+	/**
+	 * @param panelItemList
+	 *            the panelItemList to set
+	 */
+	public void setPanelItemList(List<CtPanelItem> panelItemList) {
+		this.panelItemList = panelItemList;
+	}
+
+	
 }
