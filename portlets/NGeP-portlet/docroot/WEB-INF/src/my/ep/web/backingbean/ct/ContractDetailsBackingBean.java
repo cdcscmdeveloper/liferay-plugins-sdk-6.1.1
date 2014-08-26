@@ -92,6 +92,7 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
@@ -116,6 +117,7 @@ import my.ep.web.util.AddressUtils;
 import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.ParameterHelper;
 
 import org.apache.log4j.Logger;
 import org.primefaces.component.menuitem.MenuItem;
@@ -386,8 +388,8 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		    if(this.getManagedBean().getContractVer().getCtContractValue().getDeliveryTermUom() == null){
 		    	this.getManagedBean().getContractVer().getCtContractValue().setDeliveryTermUom(new PmParameter());
 		    }
-		  //  this.getManagedBean().setContractType(resDTO.getCtContractVer().getCtContract().getContractType().getParameterCode());
-		    if(this.getManagedBean().getContractVer().getCtContractValue().getContractAmount().intValue() < 50000){
+		  
+		    if(this.getManagedBean().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.SC_PROCUREMENT_MODE_DIRECT_PURCHASE)) {
 		    	this.getManagedBean().setDirectPurchase(true);
 		    	this.getManagedBean().setFlgPaymentTracking(false);
 		    }
@@ -1015,6 +1017,29 @@ public void ConstructSideTabMenu(){
 		   yearList.add(String.valueOf(i));
 		}
       return yearList;
+	}
+	
+	public SelectItem[] getScheduleTypeDropDown() {
+		SelectItem[] items = null;
+		ISearchBean<PmParameterDesc> searchBean = null;
+		
+		try {
+			List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance()
+					.getParameterDescListBySearchBean(ParameterTypeConst.SCHEDULE_TYPE, searchBean);
+			
+		    items = new SelectItem[parameterDescs.size()];
+		    int i = 0;
+		    for(PmParameterDesc parameterDesc : parameterDescs) {
+		    	items[i++] = new SelectItem(
+		    			parameterDesc.getPmParameter().getParameterId(), 
+		    			parameterDesc.getCodeName());
+		    }
+		} catch(Exception e){
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		}
+		
+	    return items;
 	}
 	
 	private void flush() {
@@ -1711,8 +1736,9 @@ public void ConstructSideTabMenu(){
 	
 	public void resetAgencyDetails(){
 		getManagedBean().setMinistryProfileId(null);
-		getManagedBean().setPtjCodeName(null);
-		getManagedBean().setPtjCodeName(null);
+		getManagedBean().setPtjCodeName(null);		
+		getManagedBean().setPtjSearchtype("E");
+		getManagedBean().setPtjCodeNameSearchValues(null);
 		agencyDataModel.resetData();
 	}
 	
