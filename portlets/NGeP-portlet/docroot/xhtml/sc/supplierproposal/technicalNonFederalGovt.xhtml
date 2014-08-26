@@ -52,21 +52,21 @@
 				<p:column headerText="#{lbl['lbl.sc.sp.agencyname']}">
 					<h:outputText value="#{technongovt.clientName}"
 						rendered="#{technongovt.brandNew eq false}" />
-					<p:inputText value="#{technongovt.clientName}" size="20"
+					<p:inputText value="#{technongovt.clientName}" size="20" required="true"
 						rendered="#{technongovt.brandNew eq true}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.sp.contracttitle']}">
 					<h:outputText value="#{technongovt.contractTitle}"
 						rendered="#{technongovt.brandNew eq false}" />
-					<p:inputText value="#{technongovt.contractTitle}" size="20"
+					<p:inputText value="#{technongovt.contractTitle}" size="20" required="true"
 						rendered="#{technongovt.brandNew eq true}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.sp.contractno']}">
 					<h:outputText value="#{technongovt.contractNo}"
 						rendered="#{technongovt.brandNew eq false}" />
-					<p:inputText value="#{technongovt.contractNo}" size="20"
+					<p:inputText value="#{technongovt.contractNo}" size="20" required="true"
 						rendered="#{technongovt.brandNew eq true}" />
 				</p:column>
 
@@ -89,7 +89,7 @@
 				<p:column headerText="#{lbl['lbl.sc.sp.expirydt']}">
 
 					<h:panelGroup id="expDatePanelGroupID">
-					
+
 						<h:outputText value="#{technongovt.expiryDate}"
 							rendered="#{technongovt.brandNew eq false}">
 							<f:convertDateTime
@@ -109,15 +109,22 @@
 					</h:panelGroup>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.sp.contractperiod']}">
-					
+
 					<h:panelGroup id="contractPeriodPanelGropID">
-						<h:outputText style="text-align:right" value="#{technongovt.contractPeriod/12}"
-							rendered="#{technongovt.brandNew eq false}" />
-						<p:inputText value="#{technongovt.contractPeriod/12}" size="20" style="float : right"
-							disabled="true" 
-							rendered="#{technongovt.brandNew eq true}" ></p:inputText>
+						<h:outputText style="text-align:right"
+							value="#{technongovt.contractPeriod/12}"
+							rendered="#{technongovt.brandNew eq false}">
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</h:outputText>
+						<p:inputText value="#{technongovt.contractPeriod/12}" size="20"
+							style="float : right" disabled="true"
+							rendered="#{technongovt.brandNew eq true}">
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</p:inputText>
 					</h:panelGroup>
-					
+
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.sp.remarks']}">
@@ -155,7 +162,11 @@
 						<td><p:outputLabel value="#{lbl['lbl.sc.sp.ttlnoofyears']}" /></td>
 						<td colspan="3"><p:inputText style="text-align:right"
 								value="#{supplierProposalDetailBackingBean.managedBean.totalYears/12}"
-								readonly="true" disabled="true" size="30"></p:inputText></td>
+								readonly="true" disabled="true" size="30">
+								<f:convertNumber
+									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+
+							</p:inputText></td>
 					</tr>
 				</table>
 			</h:panelGroup>
