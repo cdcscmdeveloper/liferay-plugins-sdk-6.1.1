@@ -5,10 +5,6 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	 <p:panel>
-	   <p:blockUI block=":form"  widgetVar="blockWidget">
-				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
-	 </p:blockUI>
-	 
 	  <div align="right">
 	    <c:if test="#{requestNoteBackingBean.managedBean.taskId eq null}">
 	           <p:commandButton value="#{lbl['lbl.sc.action.back.to.search.catalogue']}" style="float:left;" icon="ui-icon-back" partialSubmit="true" process="@this"
