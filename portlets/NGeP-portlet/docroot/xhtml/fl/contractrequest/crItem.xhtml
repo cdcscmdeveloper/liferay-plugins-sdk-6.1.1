@@ -207,16 +207,7 @@
 			</p:commandButton>
 		</div>
 	</p:dialog>
-	<p:panel header="#{lbl['lbl.fl.remark.attachment']}" toggleable="true">
-		<table style="width: 100%">
-			<tr>
-				<td width="50%" valign="top"><ui:include
-						src="/xhtml/fl/shared/remark.xhtml" /></td>
-				<td width="50%" valign="top"><ui:include
-						src="/xhtml/fl/shared/attachment.xhtml" /></td>
-			</tr>
-		</table>
-	</p:panel>
+	
 	<p:dialog id="addManualDelAddrDialog" header="Delivery Address"
 		widgetVar="addManualDeliveryAddr" showEffect="fade" hideEffect="fade"
 		visible="#{facesContext.validationFailed}" modal="true" width="900px"
