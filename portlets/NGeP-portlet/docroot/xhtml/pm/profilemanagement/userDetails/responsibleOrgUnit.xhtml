@@ -18,7 +18,8 @@
 			
 		    <p:column headerText="#{lbl['lbl.pm.profiles.resorg.table.orgtype']}">
 				<p:selectOneMenu value="#{orgUnit.pmOrgProfile.orgTypeCode.parameterId}" styleClass="ppDropDownWidthM" 
-					disabled="#{!orgUnit.brandNew}" required="true" id="somOrgType">  
+					disabled="#{!orgUnit.brandNew}" required="true" id="somOrgType"
+					label="#{lbl['lbl.pm.profiles.resorg.table.orgtype']}">  
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />      
 			     	<f:selectItems value="#{profileManagementBackingBean.getOrgTypeList()}" 
 			     		var="obj" itemValue="#{obj.pmParameter.parameterId}" itemLabel="#{obj.codeName}"/>  
@@ -44,6 +45,7 @@
 	        </p:column>
 	        <p:column headerText="#{lbl['lbl.pm.profiles.resorg.table.effdate']}" > 
 			  	<p:calendar id="effDateId" value="#{orgUnit.effDateDisplay}" styleClass="ppDisplayCalXS" required="true"
+			  		label="#{lbl['lbl.pm.profiles.resorg.table.effdate']}"
 					showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				<p:message id="effDateIdMsg" for="effDateId" display="icon" />
 	        </p:column>

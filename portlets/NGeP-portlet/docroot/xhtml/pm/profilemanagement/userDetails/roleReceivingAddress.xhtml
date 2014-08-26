@@ -24,7 +24,7 @@
 			        </p:column>
 			        <p:column headerText="#{lbl['lbl.pm.profiles.authorisation.apprlimit']}" > 
 			          	<p:inputText id="itAppLimit" styleClass="ppDisplayTextS" value="#{role.approvalLimit}" 
-			          		required="#{role.pmRole.limitRequired}"
+			          		required="#{role.pmRole.limitRequired}" label="#{lbl['lbl.pm.profiles.authorisation.apprlimit']}"
 			          		disabled="#{!role.pmRole.limitRequired}" />
 		          		<p:message id="itAppLimitMsg" for="itAppLimit" display="icon" />
 			        </p:column>
