@@ -47,7 +47,7 @@
 
 				<p:dataTable id="newItems" var="newItems"
 					styleClass="show-column-names"
-					value="#{delAddressSummary.flFulfilmentItemAddr}" sortBy="#{newItems.scRequestItem.cmItem.extensionCode}" sortOrder="ASCENDING">
+					value="#{delAddressSummary.flFulfilmentItemAddr}" >
 					<p:column headerText="Item Code" >
 						<h:outputText value="#{newItems.scRequestItem.cmItem.extensionCode}"/> 
 					</p:column>

@@ -58,7 +58,7 @@
 						<p:menuitem value="Delivery Address and Item" update="@form" actionListener="#{purchaseRequestBackingBean.onTabChange(1)}">
 							<f:setPropertyActionListener target="#{purchaseRequestBackingBean.managedBean.selectedTabIndex}" value="1" />
 						</p:menuitem>	
-						<p:menuitem value="Order Summary" update="@form">
+						<p:menuitem value="Order Summary" update="@form" actionListener="#{purchaseRequestBackingBean.onTabChange(2)}">
 							<f:setPropertyActionListener target="#{purchaseRequestBackingBean.managedBean.selectedTabIndex}" value="2" />
 						</p:menuitem>	
 						<p:menuitem value="Charge Line Summary" update="@form" actionListener="#{purchaseRequestBackingBean.onTabChange(3)}">

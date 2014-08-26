@@ -79,7 +79,7 @@
 								target="#{createDOBackingBean.managedBean.selectedTabIndex}"
 								value="0" />
 						</p:menuitem>
-						<p:menuitem value="Delivery Items" update="@form">
+						<p:menuitem value="Delivery Items" update="@form" actionListener="#{createDOBackingBean.onTabChange(1)}">
 							<f:setPropertyActionListener
 								target="#{createDOBackingBean.managedBean.selectedTabIndex}"
 								value="1" />
