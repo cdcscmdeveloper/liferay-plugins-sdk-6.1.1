@@ -71,6 +71,7 @@ public class ReportMangedBean extends BaseManagedBean{
 	}
 	
 	private String userId;	
+	private String roleCode;	
 	private Date fromDate;
 	private Date toDate;
 	/*SS start*/
@@ -129,6 +130,12 @@ public class ReportMangedBean extends BaseManagedBean{
 	private String pmo;
 /*FL end*/
 	
+	public String getRoleCode() {
+		return roleCode;
+	}
+	public void setRoleCode(String roleCode) {
+		this.roleCode = roleCode;
+	}
 	public String getQuotationNo() {
 		return quotationNo;
 	}

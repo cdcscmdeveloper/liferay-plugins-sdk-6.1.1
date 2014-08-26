@@ -153,7 +153,7 @@ public class ReportConst {
 	public static final String CON_REQ_RPT_MIN_VAL = "ContractRequestReport-Min";
 	public static final String CON_ORD_RPT_MIN_NAME = "lbl.rpt.fl.CON_ORD_RPT_MIN_NAME";
 	public static final String CON_ORD_RPT_MIN_VAL = "ContractOrderReport-Min";
-	public static final String DEL_ORD_RPT_MIN_NAME = "lbl.rpt.fl.DEL_ORD_RPT_MIN_NAM";
+	public static final String DEL_ORD_RPT_MIN_NAME = "lbl.rpt.fl.DEL_ORD_RPT_MIN_NAME";
 	public static final String DEL_ORD_RPT_MIN_VAL = "DeliveryOrderReport-Min";
 	public static final String FL_REC_NOTE_RPT_MIN_NAME = "lbl.rpt.fl.FL_REC_NOTE_RPT_MIN_NAME";
 	public static final String FL_REC_NOTE_RPT_MIN_VAL = "FulfillmentReceivedNoteReport-Min";
@@ -330,6 +330,7 @@ public class ReportConst {
 	public static final String CATLOG_ADMIN = "Catalogue Administrator";
 	public static final String SUPPL = "Supplier";
 	public static final String CODIF_ADMIN = "Codification Administrator";
+	public static final String CODIF_WORK_GROUP = "Codification Working Group";
 	public static final String URL_RPT_DATE_FORMAT = "dd/MM/YYYY";
 	public static final String FORM_NEW_TAB = "_blank";
 	public static final String FORM_SELF = "_self";
