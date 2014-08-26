@@ -96,6 +96,7 @@ public class SearchAllUserBackingBean extends BaseBackingBean<SearchAllUserManag
 				this.getManagedBean().setOimRoleList(resDto.getOimRoleNames());
 				this.getManagedBean().setPmRoleList(resDto.getPmRoleNames());
 				this.getManagedBean().setLiferayRoleList(resDto.getLiferayRoleNames());
+				this.getManagedBean().setResultLoginId(loginId);
 			}
 				
 			

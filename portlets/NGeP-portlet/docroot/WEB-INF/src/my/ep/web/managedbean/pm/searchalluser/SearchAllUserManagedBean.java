@@ -52,7 +52,7 @@ public class SearchAllUserManagedBean extends BaseManagedBean {
 	
     // user profile	search	
 	private String loginId;
-	
+	private String resultLoginId;
 	private List<String> pmRoleList;
 	private List<String> liferayRoleList;
 	private List<String> oimRoleList;
@@ -118,6 +118,18 @@ public class SearchAllUserManagedBean extends BaseManagedBean {
 	 */
 	public void setOimRoleList(List<String> oimRoleList) {
 		this.oimRoleList = oimRoleList;
+	}
+	/**
+	 * @return the resultLoginId
+	 */
+	public String getResultLoginId() {
+		return resultLoginId;
+	}
+	/**
+	 * @param resultLoginId the resultLoginId to set
+	 */
+	public void setResultLoginId(String resultLoginId) {
+		this.resultLoginId = resultLoginId;
 	}
 
 	
