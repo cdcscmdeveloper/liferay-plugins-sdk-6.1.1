@@ -57,14 +57,15 @@
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.eva.comp.document']}"
 					style="width:10%">
-					<ui:fragment rendered="#{complianceTechnicalSupplier.submitted eq 'true'}">
-					<p:commandLink ajax="false"
-						actionListener="#{evaluationBackingBean.downloadDocuments(complianceTechnicalSupplier)}"
-						process="@this" partialSubmit="true">
-						<p:graphicImage library="ep/images/design"
-							value="/resources/ep/images/design/icon_txt.png" />
+					<ui:fragment
+						rendered="#{complianceTechnicalSupplier.submitted eq 'true'}">
+						<p:commandLink ajax="false"
+							actionListener="#{evaluationBackingBean.downloadDocuments(complianceTechnicalSupplier)}"
+							process="@this" partialSubmit="true">
+							<p:graphicImage library="ep/images/design"
+								value="/resources/ep/images/design/icon_txt.png" />
 
-					</p:commandLink>
+						</p:commandLink>
 					</ui:fragment>
 
 				</p:column>
@@ -77,19 +78,21 @@
 
 				<p:column headerText="#{lbl['lbl.sc.eva.comp.compliance.status']}"
 					style="width:15%">
-					<p:selectOneMenu>
+					<p:selectOneMenu value="#{complianceTechnicalSupplier.compliance}">
 
 						<f:selectItems
-							value="#{evaluationBackingBean.getDropdownValues(ParameterTypeConst.complianceStatus)}"></f:selectItems>
+							value="#{evaluationBackingBean.getDropdownCodeValues(ParameterTypeConst.complianceStatus)}"></f:selectItems>
+						
 					</p:selectOneMenu>
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.eva.comp.remark']}"
 					style="width:35%">
-					<ui:fragment rendered="#{complianceTechnicalSupplier.submitted eq 'true'}">
-					<p:inputTextarea rows="2" cols="40" maxlength="200"
-						value="#{complianceTechnicalSupplier.remark}"></p:inputTextarea>
-						</ui:fragment>
+					<ui:fragment
+						rendered="#{complianceTechnicalSupplier.submitted eq 'true'}">
+						<p:inputTextarea rows="2" cols="40" maxlength="200"
+							value="#{complianceTechnicalSupplier.remark}"></p:inputTextarea>
+					</ui:fragment>
 				</p:column>
 			</p:dataTable>
 		</p:panel>

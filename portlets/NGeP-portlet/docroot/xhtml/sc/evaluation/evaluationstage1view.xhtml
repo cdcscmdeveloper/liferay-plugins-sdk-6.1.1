@@ -5,17 +5,26 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:ac="http://ac.my/jsf/composite/cc">
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 
 
 	<ui:define name="contentSection">
-		
+
 		<p:commandButton value="#{lbl['lbl.sc.eva.btn.generate']}"
 			style="float:right;" icon="ui-icon-evaluate" update="@form"
 			rendered="#{evaluationBackingBean.managedBean.generateEvaluationButton eq 'false'}"
 			action="#{evaluationBackingBean.generateEvaluationStage}" />
-		<p:commandButton value="#{lbl['lbl.sc.eva.btn.submit']}"
-			style="float:right;" icon="ui-icon-submit" />
+		
+		<ui:repeat var="bpmAction"
+			value="#{evaluationBackingBean.managedBean.outComes}">
+			<ui:param name="buttonLabel"
+				value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+			<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
+				style="float:right;" process="@all" partialSubmit="true"
+				icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
+				action="#{evaluationBackingBean.submitPrepareEvaluationDetails(bpmAction)}" />
+		</ui:repeat>
 
 		<p:commandButton value="#{lbl['lbl.sc.eva.btn.save']}"
 			style="float:right;"

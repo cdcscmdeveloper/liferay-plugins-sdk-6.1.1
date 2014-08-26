@@ -74,10 +74,10 @@
 
 				<p:column headerText="#{lbl['lbl.sc.eva.comp.compliance.status']}"
 					style="width:15%">
-					<p:selectOneMenu>
+					<p:selectOneMenu value="#{complianceFinancialSupplier.compliance}">
 
 						<f:selectItems
-							value="#{evaluationBackingBean.getDropdownValues(ParameterTypeConst.complianceStatus)}"></f:selectItems>
+							value="#{evaluationBackingBean.getDropdownCodeValues(ParameterTypeConst.complianceStatus)}"></f:selectItems>
 					</p:selectOneMenu>
 				</p:column>
 

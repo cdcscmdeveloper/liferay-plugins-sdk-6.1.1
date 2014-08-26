@@ -18,19 +18,22 @@
 					<p:menuitem value="#{lbl['lbl.sc.eva.compliance.stg.tech']}"
 						action="#{evaluationBackingBean.retriveComplianceTechnical}"
 						update="@form" />
-					<p:menuitem value="#{lbl['lbl.sc.eva.compliance.stg.sample']}"
-						action="#{evaluationBackingBean.retriveComplianceSample}"
-						update="@form" />
+					<c:if
+						test="#{evaluationBackingBean.managedBean.scQt.sampleReq eq 'true'}">
+						<p:menuitem value="#{lbl['lbl.sc.eva.compliance.stg.sample']}"
+							action="#{evaluationBackingBean.retriveComplianceSample}"
+							update="@form" />
+					</c:if>
 					<p:menuitem value="#{lbl['lbl.sc.eva.compliance.stg.fin']}"
 						action="#{evaluationBackingBean.retriveComplianceFinancial}"
 						update="@form" />
 
 					<c:if
-						test="#{evaluationBackingBean.managedBean.complianceActiveIndex eq '2' or evaluationBackingBean.managedBean.complianceActiveIndex eq '3'}">
+						test="#{((evaluationBackingBean.managedBean.scQt.sampleReq eq 'true' and evaluationBackingBean.managedBean.complianceActiveIndex eq '2') or(evaluationBackingBean.managedBean.scQt.sampleReq eq 'true' and  evaluationBackingBean.managedBean.complianceActiveIndex eq '3') or (evaluationBackingBean.managedBean.scQt.sampleReq eq 'false' and evaluationBackingBean.managedBean.complianceActiveIndex eq '1')or (evaluationBackingBean.managedBean.scQt.sampleReq eq 'false' and evaluationBackingBean.managedBean.complianceActiveIndex eq '2'))}">
 						<p:menuitem value="#{lbl['lbl.sc.eva.compliance.stg.summary']}"
 							action="#{evaluationBackingBean.retriveComplianceSummary}"
 							update="@form">
-							
+
 						</p:menuitem>
 					</c:if>
 				</p:tabMenu>
@@ -40,19 +43,42 @@
 
 					<ui:include src="complianceTechnical.xhtml"></ui:include>
 
-				</c:if> <c:if
-					test="#{evaluationBackingBean.managedBean.complianceActiveIndex eq '1'}">
+				</c:if> <ui:fragment
+					rendered="#{evaluationBackingBean.managedBean.scQt.sampleReq eq 'true'}">
+					<c:if
+						test="#{evaluationBackingBean.managedBean.complianceActiveIndex eq '1'}">
 
-					<ui:include src="complianceSample.xhtml"></ui:include>
-				</c:if> <c:if
-					test="#{evaluationBackingBean.managedBean.complianceActiveIndex eq '2'}">
+						<ui:include src="complianceSample.xhtml"></ui:include>
 
-					<ui:include src="complianceFinancial.xhtml"></ui:include>
-				</c:if> <c:if
-					test="#{evaluationBackingBean.managedBean.complianceActiveIndex eq '3'}">
+					</c:if>
+					<c:if
+						test="#{evaluationBackingBean.managedBean.complianceActiveIndex eq '2'}">
 
-					<ui:include src="complianceSummary.xhtml"></ui:include>
-				</c:if></td>
+						<ui:include src="complianceFinancial.xhtml"></ui:include>
+					</c:if>
+					<c:if
+						test="#{evaluationBackingBean.managedBean.complianceActiveIndex eq '3'}">
+
+						<ui:include src="complianceSummary.xhtml"></ui:include>
+						</c:if>
+				</ui:fragment> 
+				
+				<ui:fragment
+					rendered="#{evaluationBackingBean.managedBean.scQt.sampleReq eq 'false'}">
+					
+					<c:if
+						test="#{evaluationBackingBean.managedBean.complianceActiveIndex eq '1'}">
+
+						<ui:include src="complianceFinancial.xhtml"></ui:include>
+					</c:if>
+					<c:if
+						test="#{evaluationBackingBean.managedBean.complianceActiveIndex eq '2'}">
+
+						<ui:include src="complianceSummary.xhtml"></ui:include>
+						</c:if>
+				</ui:fragment> 
+				
+				</td>
 		</tr>
 	</table>
 
