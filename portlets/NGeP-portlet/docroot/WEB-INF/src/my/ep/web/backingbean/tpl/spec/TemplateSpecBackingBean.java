@@ -140,10 +140,6 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 				templateSpecBean.setSpecMaster(specMaster);
 				templateSpecBean.setSpecAnswerList(resDTO.getSpecAnswerList());
 				templateSpecBean.setSelectedSpecQuestion(null);
-				
-				if (resDTO.getSpecAnswerList() != null) {
-					calcGrandTotalAmount(templateSpecBean);	
-				}
 			}
 		} finally {
 			templateSpecSO = null;

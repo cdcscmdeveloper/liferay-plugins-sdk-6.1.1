@@ -156,13 +156,15 @@
 				<tr>
 					<td colspan="4" class="ppRightBtn">
 						<p:commandButton value="Render Table" actionListener="#{templateSpecBackingBean.renderTable}" 
-							partialSubmit="true" process="smpg" update1="spg" />
+							partialSubmit="true" process="smpg" update="spg" />
 					</td>
 				</tr>
 			</table>
 		</p:panel>
 		
-		<ac:templateSpec templateSpecBean="#{templateSpecBackingBean.managedBean.templateSpecBean}" />
+		<h:panelGroup id="spg">
+			<ac:templateSpec templateSpecBean="#{templateSpecBackingBean.managedBean.templateSpecBean}" />
+		</h:panelGroup>
 	</ui:define>
 
 	<ui:define name="footerSection" />
