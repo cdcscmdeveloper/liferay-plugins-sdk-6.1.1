@@ -39,7 +39,20 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 		</p:outputPanel>
 		<p:outputPanel id="opSearchAllResult">			
 			<br/>
-			<p:outputLabel value="#{searchAllUserBackingBean.managedBean.resultLoginId}"/>
+			<!-- User Roles -->
+			<table class="ppTwoTable">
+				<tr>
+					<th width="30%">
+						<div class="screen-title">
+							Result Login ID: 
+						</div>
+					</th>
+					<td>
+						<p:outputLabel value="#{searchAllUserBackingBean.managedBean.resultLoginId}"/>
+					</td>
+				</tr>
+			</table>
+			
 			<!-- User Status Result -->
 			<p:dataTable id="dtUserStatusResult" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
 					value="#{searchAllUserBackingBean.managedBean.resultStatus}"
