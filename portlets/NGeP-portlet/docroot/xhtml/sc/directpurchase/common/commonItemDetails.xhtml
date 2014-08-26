@@ -190,10 +190,12 @@
 					<p:inputText style="width:25px;text-align:right;margin-top: 8px;margin-right: 1px;" 
 					   label="#{lbl['lbl.sc.request.note.delivery.term']}"
 					   size="6" maxlength="4"
+					   disabled="#{requestNoteDtl.requestItem.quote ne null}"
 					   id="deliveryTerm" value="#{requestNoteDtl.deliverTerm}" required="#{!requestNoteDtl.selected}">
 					   </p:inputText>
 					<p:selectOneMenu  style="width:75px;" required="#{!requestNoteDtl.selected}" id="deliveryType" 
 					    label="Delivery Term Type"
+					    disabled="#{requestNoteDtl.requestItem.quote ne null}"
 						value="#{requestNoteDtl.deliverTermType.parameterId}">
 						<f:selectItems value="#{requestNoteBackingBean.getDropdownValues(ParameterTypeConst.deliveryTerm)}"/>
 						
@@ -240,9 +242,11 @@
 					<h:outputText value="#{lbl['lbl.sc.request.note.delivery.term']}"></h:outputText>
 					<p:spacer width="6px;"/>
 					<p:inputText id="periodId" style="width:20px;text-align:right;margin-top: 7px;" required="false"
+					    rendered="#{requestNoteBackingBean.managedBean.sourceMethod eq 'Search Catalogue'}"
 						value="#{requestNoteBackingBean.managedBean.periodValue}" />
 					<p:spacer width="4px;"/>
 					<p:selectOneMenu id="periodMode" 
+					    rendered="#{requestNoteBackingBean.managedBean.sourceMethod eq 'Search Catalogue'}"
 						value="#{requestNoteBackingBean.managedBean.periodType}"
 						style="width:120px;">
 						<f:selectItems value="#{requestNoteBackingBean.getDropdownCodeValues(ParameterTypeConst.deliveryTerm)}"/>
