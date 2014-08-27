@@ -226,9 +226,15 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				  System.out.println(">>>>>>>>>>>>>>>>else>>>>>>>>>coudnt find cmItem");
 				  
 				  CmType typeObj = null;
-				  if(commodity.getCmType()!=null && commodity.getCmType().size()>0)
-					  typeObj = commodity.getCmType().get(0);
-				  else{
+				  if(commodity.getCmType()!=null && commodity.getCmType().size()>0){
+					  for(CmType a : commodity.getCmType()){
+						  if(a.getTypeCode().equals("00")){
+							  typeObj = a;
+							  break;
+						  }
+					  }
+					  
+				  }else{
 					  typeObj = new CmType();
 					  typeObj.setTypeCode("00");
 					  typeObj.setTypeName("NA");
