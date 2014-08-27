@@ -1458,8 +1458,9 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			reqDTO.setPmUser(user);
-			UserResDTO resDTO = new UserResDTO();
-//					userSO.saveUser(reqDTO); 
+			UserResDTO resDTO = userSO.saveUser(reqDTO); 
+//					new UserResDTO();
+			
 
 			if (resDTO.isSuccessful()) {
 				/*

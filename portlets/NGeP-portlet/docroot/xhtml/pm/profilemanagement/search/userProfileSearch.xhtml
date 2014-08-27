@@ -10,17 +10,8 @@
 	
 	<p:panel id="pProMngSearch" header="#{lbl['lbl.pm.search.user']}" toggleable="true">
 		<br/>
-		<p:tabView>
-			<p:tab id="definedSearch" title="#{lbl['lbl.pm.defined.search']}">
-			   <ui:include src="/xhtml/pm/profilemanagement/search/userDefinedSearch.xhtml" />
-	 		</p:tab>
-	 		<!--  Temp Remove Advance Search -->
-			<!--			
-				<p:tab id="advancedSearch" title="Advanced Search">
-				   <ui:include src="/xhtml/pm/profilemanagement/search/userAdvancedSearch.xhtml" />					
-				</p:tab> 
-			-->			
-		</p:tabView>
+		<!-- User Search -->
+	    <ui:include src="/xhtml/pm/profilemanagement/search/userDefinedSearch.xhtml" />
 		<br/>
 	</p:panel>
 	<!-- User Result -->

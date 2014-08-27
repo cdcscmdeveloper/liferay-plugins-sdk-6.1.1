@@ -24,7 +24,7 @@
 			        </p:column>
 			        <p:column headerText="#{lbl['lbl.pm.profiles.authorisation.apprlimit']}" > 
 			          	<p:inputText id="itAppLimit" styleClass="ppDisplayTextS" value="#{role.approvalLimit}" 
-			          		label="#{lbl['lbl.pm.profiles.authorisation.apprlimit']}"
+			          		required="#{role.pmRole.limitRequired}"  label="#{lbl['lbl.pm.profiles.authorisation.apprlimit']}"
 			          		disabled="#{!role.pmRole.limitRequired}">
 			          		<p:ajax event="change" process="@this" />
 		          		</p:inputText>

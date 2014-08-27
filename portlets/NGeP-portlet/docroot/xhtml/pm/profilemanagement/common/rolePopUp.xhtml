@@ -27,10 +27,10 @@
 			<br/>
 			<br/>    
 	 		<div class="ppRightBtn">
-			  <p:commandButton value="#{lbl['lbl.btn.ok']}" 
+			  <p:commandButton value="#{lbl['lbl.btn.ok']}" immediate="true"
 			  	action="#{profileManagementBackingBean.confirmRoles()}"
 			  	update="tvRoleReceivingAddr:dtRoles" />	
-			  <p:commandButton value="#{lbl['lbl.btn.cancel']}" oncomplete="dlRoleOptions.hide();" />		
+			  <p:commandButton value="#{lbl['lbl.btn.cancel']}" immediate="true" oncomplete="dlRoleOptions.hide();" />		
 		
 			</div>      
 		</p:outputPanel>
