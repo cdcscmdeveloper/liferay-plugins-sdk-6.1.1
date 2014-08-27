@@ -777,6 +777,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 					if(null != resDTO.getInvoice().getFlFulfilmentOrder()){
 						reqDTO.setFlOrderId(resDTO.getInvoice().getFlFulfilmentOrder().getFulfilmentOrderId());
 						fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
+						resDTO = fulfilmentOrderSO.retrieveFulfilmentOrder(reqDTO);
 							if(null != resDTO.getFlOrder()){
 								if(null != resDTO.getFlOrder().getStatus()){
 									if(null !=resDTO.getFlOrder().getStatus().getStatusId()){
