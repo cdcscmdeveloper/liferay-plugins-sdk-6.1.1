@@ -2235,6 +2235,16 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				return "editCatalogItem";
 			}
 			
+			//promotion price is more than standard price
+			if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getPrice()!=null){
+				if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getPrice().compareTo(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getPrice())>0)
+					FacesContext.getCurrentInstance().addMessage(null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,MessageUtils.getMessage(MessageConst.ERROR_715031, 
+							new String[]{ResourceBundleUtils.getMessage("lbl.cm.promotion",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())},
+							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+					return "editCatalogItem";
+			}
+			
 			//---------------------------------- start comparison each date with standard date range ----------------------------------------------------
 					
 			//Promotion
@@ -3099,6 +3109,16 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 									"Start date must be at least today."));
 					return "catalogMaintenanceFile";
+				}
+				
+				//promotion price is more than standard price
+				if(catalog.getCmPromotionPricing().getPrice()!=null){
+					if(catalog.getCmPromotionPricing().getPrice().compareTo(catalog.getCmStandardPricing().getPrice())>0)
+						FacesContext.getCurrentInstance().addMessage(null,
+								new FacesMessage(FacesMessage.SEVERITY_ERROR, null,MessageUtils.getMessage(MessageConst.ERROR_715031, 
+								new String[]{ResourceBundleUtils.getMessage("lbl.cm.promotion",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())},
+								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+						return "catalogMaintenanceFile";
 				}
 				
 				//1 year period between start and end date
