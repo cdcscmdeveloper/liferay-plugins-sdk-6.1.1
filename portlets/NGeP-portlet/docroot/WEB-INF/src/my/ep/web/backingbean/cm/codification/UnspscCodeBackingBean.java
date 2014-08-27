@@ -2187,6 +2187,12 @@ public class UnspscCodeBackingBean extends
 					.getNavigationHandler()
 					.handleNavigation(fc, null,
 							"reviewApproveExtensionCodeII.xhtml");
+		} else if (res.getTaskName().equalsIgnoreCase("Result Notification")) {
+				FacesContext fc = FacesContext.getCurrentInstance();
+				fc.getApplication()
+						.getNavigationHandler()
+						.handleNavigation(fc, null,
+								"unspscResultNotification.xhtml");
 		} else {
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
