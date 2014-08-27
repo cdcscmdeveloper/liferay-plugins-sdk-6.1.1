@@ -167,6 +167,8 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 
 			if(resDTO.isSuccessful()) {
 				this.renewSesionObject();
+				
+				templateSpecBean.setSpecMaster(resDTO.getSpecMaster());
 				retrieveTemplateSpecMaster(templateSpecBean);
 				
 				getManagedBean().setTemplateSpecBean(templateSpecBean);
