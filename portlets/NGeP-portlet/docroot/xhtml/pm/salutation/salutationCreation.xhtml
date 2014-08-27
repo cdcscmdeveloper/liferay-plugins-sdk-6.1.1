@@ -23,7 +23,7 @@
 		<td><p:inputText id="SalutationName" value="#{salutationBackingBean.managedBean.pmSalutation.salutationName}" size="30" /></td>
 	  </tr>
 	   <tr> 
-		<td><p:outputLabel value="Status :" /></td>
+		<td><p:outputLabel value="#{lbl['lbl.pm.search.status']}" /></td>
      	<td><p:selectOneMenu style="width:178px;margin-bottom:5px;" value="#{salutationBackingBean.managedBean.pmSalutation.recordStatusFlg}" > 
     	    	<f:selectItems value="#{salutationBackingBean.getStatusList()}"></f:selectItems>   	   
     	    </p:selectOneMenu></td>				
