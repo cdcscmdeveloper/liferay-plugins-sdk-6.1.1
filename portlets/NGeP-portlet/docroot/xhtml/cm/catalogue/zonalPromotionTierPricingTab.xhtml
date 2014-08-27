@@ -54,7 +54,7 @@
 					#{lbl['lbl.cm.price']}
 				</f:facet>
 				<p:inputText value="#{tier.price}" size="10" style="text-align:right">
-					<p:ajax event="change" listener="#{catalogueBackingBean.validateZonalPromotionTierDates(rowIndex)}" update=":form" />
+					<p:ajax event="keyup" listener="#{catalogueBackingBean.validateZonalPromotionTierPrice(rowIndex)}" update="zPromoTierPriceId" />
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</p:inputText>
 			</p:column>
@@ -66,8 +66,10 @@
 				<p:calendar value="#{tier.startDate}" showOn="button" size="10"
 					mindate="#{tier.minDate}" maxdate="#{tier.maxDate}" rendered="#{tier.showFlag}"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
-					<p:ajax event="keyup" listener="#{catalogueBackingBean.updateValidateZonalGroupingDates(rowIndex)}" update="zPromoTierPriceId" />
-					<p:ajax event="dateSelect" listener="#{catalogueBackingBean.updateValidateZonalGroupingDates(rowIndex)}" update=":form" />
+					<p:ajax event="keyup" listener="#{catalogueBackingBean.updateValidateZonalGroupingDates(rowIndex)}" update=":form:pricingTabID:headerTabId:zonalTierId:cmZonalPromotionTierPricingsId" />
+					<p:ajax event="dateSelect" listener="#{catalogueBackingBean.updateValidateZonalGroupingDates(rowIndex)}" update=":form:pricingTabID:headerTabId:zonalTierId:cmZonalPromotionTierPricingsId" />
+					<p:ajax event="keyup" listener="#{catalogueBackingBean.validateZonalPromotionTierPrice(rowIndex)}" update=":form:pricingTabID:headerTabId:zonalTierId:cmZonalPromotionTierPricingsId" />
+					<p:ajax event="dateSelect" listener="#{catalogueBackingBean.validateZonalPromotionTierPrice(rowIndex)}" update=":form:pricingTabID:headerTabId:zonalTierId:cmZonalPromotionTierPricingsId" />
 				</p:calendar>
 
 			</p:column>
@@ -78,8 +80,10 @@
 				<p:calendar value="#{tier.endDate}" showOn="button" size="10" mindate="#{tier.minDate}"
 					maxdate="#{tier.maxDate}" rendered="#{tier.showFlag}"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
-					<p:ajax event="keyup" listener="#{catalogueBackingBean.updateValidateZonalGroupingDates(rowIndex)}" update="zPromoTierPriceId" />
-					<p:ajax event="dateSelect" listener="#{catalogueBackingBean.updateValidateZonalGroupingDates(rowIndex)}" update=":form" />
+					<p:ajax event="keyup" listener="#{catalogueBackingBean.updateValidateZonalGroupingDates(rowIndex)}" update=":form:pricingTabID:headerTabId:zonalTierId:cmZonalPromotionTierPricingsId" />
+					<p:ajax event="dateSelect" listener="#{catalogueBackingBean.updateValidateZonalGroupingDates(rowIndex)}" update=":form:pricingTabID:headerTabId:zonalTierId:cmZonalPromotionTierPricingsId" />
+					<p:ajax event="keyup" listener="#{catalogueBackingBean.validateZonalPromotionTierPrice(rowIndex)}" update=":form:pricingTabID:headerTabId:zonalTierId:cmZonalPromotionTierPricingsId" />
+					<p:ajax event="dateSelect" listener="#{catalogueBackingBean.validateZonalPromotionTierPrice(rowIndex)}" update=":form:pricingTabID:headerTabId:zonalTierId:cmZonalPromotionTierPricingsId" />
 				</p:calendar>
 
 			</p:column>
@@ -102,7 +106,7 @@
 								id="zPromoTierPriceId" title="Error" process="@this"
 								actionListener="#{catalogueBackingBean.updateZonalPromotionTierErrorDialog(rowIndex)}"
 								update=":form" oncomplete="errorDialog.show();"
-								disabled="#{!(tier.price eq null || tier.startDate eq null or tier.endDate eq null or tier.startDate >= tier.endDate || !tier.displayAction)}">
+								disabled="#{!(tier.price eq null || tier.startDate eq null or tier.endDate eq null or tier.startDate >= tier.endDate || !tier.displayAction or !tier.checkOk)}">
 								<p:graphicImage
 									value="/css/images/design/icon_error.png"></p:graphicImage>
 							</p:commandLink></td>

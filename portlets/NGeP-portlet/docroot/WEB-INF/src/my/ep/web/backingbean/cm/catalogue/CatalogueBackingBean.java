@@ -2534,7 +2534,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			for (int i = 0; i < zPromotionPricing.size(); i++) {
 				CmZonalPromotionPricing standard = zPromotionPricing.get(i);
 				if (previousZPromotionObj != null && standard!=null) {
-					if ((previousZPromotionObj.getCmSupplierZone() != null && standard.getCmSupplierZone() != null) && (previousZPromotionObj.getCmSupplierZone().getSuppZoneId() == standard.getCmSupplierZone().getSuppZoneId()) && previousZPromotionObj.getEndDate().compareTo(standard.getStartDate()) > 0) {
+					if ((previousZPromotionObj.getCmSupplierZone() != null && standard.getCmSupplierZone() != null) && (previousZPromotionObj.getCmSupplierZone().getSuppZoneId() == standard.getCmSupplierZone().getSuppZoneId() || compareZonesForSameDistricts(previousZPromotionObj.getCmSupplierZone(), standard.getCmSupplierZone())) && previousZPromotionObj.getEndDate().compareTo(standard.getStartDate()) > 0) {
 						FacesContext facesContext = FacesContext.getCurrentInstance();
 						facesContext.addMessage(null, new FacesMessage(
 								FacesMessage.SEVERITY_ERROR,
@@ -2605,7 +2605,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				for (Object sorted : sortedZonalList) {
 					List<CmZonalTierPricing> sortedTier = (List<CmZonalTierPricing>) sorted;
 					if (perviouslyList != null && perviouslyList.size() > 0) {
-						if (perviouslyList.get(0).getEndDate().compareTo(sortedTier.get(0).getStartDate()) > 0) {
+						if ((perviouslyList.get(0).getCmSupplierZone().getSuppZoneId() == sortedTier.get(0).getCmSupplierZone().getSuppZoneId() || compareZonesForSameDistricts(perviouslyList.get(0).getCmSupplierZone(), sortedTier.get(0).getCmSupplierZone())) && perviouslyList.get(0).getEndDate().compareTo(sortedTier.get(0).getStartDate()) > 0) {
 							FacesContext facesContext = FacesContext.getCurrentInstance();
 							facesContext.addMessage(
 											null,
@@ -2642,7 +2642,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				for (Object sorted : sortedZonalList) {
 					List<CmZonalPromotionTierPricing> sortedTier = (List<CmZonalPromotionTierPricing>) sorted;
 					if (perviouslyList != null && perviouslyList.size() > 0) {
-						if (perviouslyList.get(0).getEndDate().compareTo(sortedTier.get(0).getStartDate()) > 0) {
+						if ((perviouslyList.get(0).getCmSupplierZone().getSuppZoneId() == sortedTier.get(0).getCmSupplierZone().getSuppZoneId() || compareZonesForSameDistricts(perviouslyList.get(0).getCmSupplierZone(), sortedTier.get(0).getCmSupplierZone())) && perviouslyList.get(0).getEndDate().compareTo(sortedTier.get(0).getStartDate()) > 0) {
 							FacesContext facesContext = FacesContext.getCurrentInstance();
 							facesContext.addMessage(null,
 								new FacesMessage(
@@ -5014,6 +5014,20 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}	
 	}
 	
+	public void validateZonalPromotionTierPrice(int index){
+		CmPricing tier = this.getManagedBean()
+				.getSelectedMaintainItem().getCmZonalPromotionTierPricings().get(index);
+		List<CmPricing> pricings = new ArrayList<CmPricing>();
+		
+		for(int i = 0; i < index; i++){
+			pricings.add(this.getManagedBean()
+				.getSelectedMaintainItem().getCmZonalPromotionTierPricings().get(i));
+		}
+		if(tier.getPrice() != null){
+			validatePriceValue(tier, pricings);
+			updateValidateZonalGroupingDates(index);
+		}	
+	}
 	public void validateTierPrice(int index){
 		CmPricing tier = this.getManagedBean()
 				.getSelectedMaintainItem().getCmTierPricings().get(index);
@@ -5027,6 +5041,21 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			validateDateOverlap(index);
 		}	
 		
+	}
+	
+	public void validateTierPromotionPrice(int index){
+		CmPricing tier = this.getManagedBean()
+				.getSelectedMaintainItem().getCmPromotionTierPricings().get(index);
+		List<CmPricing> pricings = new ArrayList<CmPricing>();
+		
+		for(int i = 0; i < index; i++){
+			pricings.add(this.getManagedBean()
+				.getSelectedMaintainItem().getCmPromotionTierPricings().get(i));
+		}
+		if(tier.getPrice() != null){
+			validatePriceValue(tier, pricings);
+			updateValidateGroupingDates(index);
+		}	
 	}
 	
 	public void validatePriceValue(CmPricing pricing, List<CmPricing> pricings){
