@@ -70,67 +70,9 @@ public class ReportMangedBean extends BaseManagedBean{
 		this.reportList = reportList;
 	}
 	
-	private String userId;	
-	private String roleCode;	
-	private Date fromDate;
-	private Date toDate;
-	/*SS start*/
-	private String quotationId;
-	private String quotationNo;
 	
-	private String paymentId;
-	/*SS end*/
-	/*CM start*/
-	private String itemType;
-	private String itemStatus;
-	private String unspscCode;
-	private String unspscTitle;	
-	private String companyName;
-	private String registrationType;	
-	private String itemCategory;
-	private String itemName;
-	private String proofIdentity;
-	private String epNumber;
-	private String businessRegNo;
-	private String icNumber;
-	private String mofNumber;	
-	private String extentionCode;
-	private String extentionType;	
-	private String extentionBrand;
-	private String extentionMeasurment;
-	private String extentionColour;
-	/*CM end*/	
-	/*FL start*/
-	private String ptj;
-	private String contractNo;
-	private String sst;
-	private String jabatan;
-	private String ministry;
-	private String supplier;
-	private String status;
-	private String duration;
-	private String recievingOfficer;
-	private String deliveryAddress;
-	private String flRecNoteNo;
-	private String contractType;
-	private String requisitioner;
-	private String mtoContract;
-	private String invoiceNo;
-	private String deductionType;
-	private String crNo;
-	private String approverName;
-	private String documentType;
-	private String criteria;
-	private String scoring;
-	private String pkpNo;
-	private String deliveryOrderNo;	
-	private String itemCode;
-	private String poAmount;
-	private String prNo;
-	private String pmo;
-/*FL end*/
 	
-	public String getRoleCode() {
+	/*public String getRoleCode() {
 		return roleCode;
 	}
 	public void setRoleCode(String roleCode) {
@@ -444,5 +386,5 @@ public class ReportMangedBean extends BaseManagedBean{
 	}
 	public void setToDate(Date toDate) {
 		this.toDate = toDate;
-	}	
+	}*/	
 }
