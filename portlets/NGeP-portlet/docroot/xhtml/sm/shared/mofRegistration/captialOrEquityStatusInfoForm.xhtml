@@ -203,98 +203,102 @@
 										</p:inputText>
 									</p:column>
 								</p:row>
-								<p:row>
-									<p:column>#{lbl['lbl.sm.equiStatus.utAgency']}</p:column>
+								<c:if
+									test="#{backingBean.managedBean.businessTypeVal eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT or 
+										backingBean.managedBean.businessTypeVal eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP_DEFAULT}">
+									<p:row>
+										<p:column>#{lbl['lbl.sm.equiStatus.utAgency']}</p:column>
 
-									<p:column>
-										<p:inputText
-											label="#{lbl['lbl.sm.equiStatus.utAgency']} #{lbl['lbl.sm.person.shrAmt']}"
-											value="#{backingBean.managedBean.smAppl.smCompanyBasic.govtUnitrustEquity}"
-											id="gvtUtAmt">
-											<p:ajax event="blur" update=":form:tt:capInfPan"
-												listener="#{backingBean.calculateCapital}" />
-											<f:convertNumber
-												pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-										</p:inputText>
-									</p:column>
-									<p:column>
-										<p:inputText disabled="true" readonly="true" size="10"
-											value="#{backingBean.managedBean.smAppl.smCompanyBasic.govtUTPercent}"
-											id="gvtUtPer">
-											<f:convertNumber
-												pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-										</p:inputText>
-									</p:column>
-								</p:row>
-								<p:row>
-									<p:column>#{lbl['lbl.sm.equiStatus.govtEquity']}</p:column>
+										<p:column>
+											<p:inputText
+												label="#{lbl['lbl.sm.equiStatus.utAgency']} #{lbl['lbl.sm.person.shrAmt']}"
+												value="#{backingBean.managedBean.smAppl.smCompanyBasic.govtUnitrustEquity}"
+												id="gvtUtAmt">
+												<p:ajax event="blur" update=":form:tt:capInfPan"
+													listener="#{backingBean.calculateCapital}" />
+												<f:convertNumber
+													pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+											</p:inputText>
+										</p:column>
+										<p:column>
+											<p:inputText disabled="true" readonly="true" size="10"
+												value="#{backingBean.managedBean.smAppl.smCompanyBasic.govtUTPercent}"
+												id="gvtUtPer">
+												<f:convertNumber
+													pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+											</p:inputText>
+										</p:column>
+									</p:row>
+									<p:row>
+										<p:column>#{lbl['lbl.sm.equiStatus.govtEquity']}</p:column>
 
-									<p:column>
-										<p:inputText
-											label="#{lbl['lbl.sm.equiStatus.govtEquity']} #{lbl['lbl.sm.person.shrAmt']}"
-											value="#{backingBean.managedBean.smAppl.smCompanyBasic.govtEquity}"
-											id="gvtEquAmt">
-											<f:convertNumber
-												pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-											<p:ajax event="blur" update=":form:tt:capInfPan"
-												listener="#{backingBean.calculateCapital}" />
-										</p:inputText>
-									</p:column>
-									<p:column>
-										<p:inputText disabled="true" readonly="true" size="10"
-											value="#{backingBean.managedBean.smAppl.smCompanyBasic.govtEquityPercent}"
-											id="gvtEquPer">
-											<f:convertNumber
-												pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-										</p:inputText>
-									</p:column>
-								</p:row>
-								<p:row>
-									<p:column>#{lbl['lbl.sm.equiStatus.frgComp']}</p:column>
+										<p:column>
+											<p:inputText
+												label="#{lbl['lbl.sm.equiStatus.govtEquity']} #{lbl['lbl.sm.person.shrAmt']}"
+												value="#{backingBean.managedBean.smAppl.smCompanyBasic.govtEquity}"
+												id="gvtEquAmt">
+												<f:convertNumber
+													pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+												<p:ajax event="blur" update=":form:tt:capInfPan"
+													listener="#{backingBean.calculateCapital}" />
+											</p:inputText>
+										</p:column>
+										<p:column>
+											<p:inputText disabled="true" readonly="true" size="10"
+												value="#{backingBean.managedBean.smAppl.smCompanyBasic.govtEquityPercent}"
+												id="gvtEquPer">
+												<f:convertNumber
+													pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+											</p:inputText>
+										</p:column>
+									</p:row>
+									<p:row>
+										<p:column>#{lbl['lbl.sm.equiStatus.frgComp']}</p:column>
 
-									<p:column>
-										<p:inputText
-											label="#{lbl['lbl.sm.equiStatus.frgComp']} #{lbl['lbl.sm.person.shrAmt']}"
-											value="#{backingBean.managedBean.smAppl.smCompanyBasic.foreignCompanyEquity}"
-											id="lclAmt">
-											<f:convertNumber
-												pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-											<p:ajax event="blur" update=":form:tt:capInfPan"
-												listener="#{backingBean.calculateCapital}" />
-										</p:inputText>
-									</p:column>
-									<p:column>
-										<p:inputText disabled="true" readonly="true" size="10"
-											value="#{backingBean.managedBean.smAppl.smCompanyBasic.foriegnCompPercent}"
-											id="lclAmtPer">
-											<f:convertNumber
-												pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-										</p:inputText>
-									</p:column>
-								</p:row>
-								<p:row>
-									<p:column>#{lbl['lbl.sm.equiStatus.lclComp']}</p:column>
+										<p:column>
+											<p:inputText
+												label="#{lbl['lbl.sm.equiStatus.frgComp']} #{lbl['lbl.sm.person.shrAmt']}"
+												value="#{backingBean.managedBean.smAppl.smCompanyBasic.foreignCompanyEquity}"
+												id="lclAmt">
+												<f:convertNumber
+													pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+												<p:ajax event="blur" update=":form:tt:capInfPan"
+													listener="#{backingBean.calculateCapital}" />
+											</p:inputText>
+										</p:column>
+										<p:column>
+											<p:inputText disabled="true" readonly="true" size="10"
+												value="#{backingBean.managedBean.smAppl.smCompanyBasic.foriegnCompPercent}"
+												id="lclAmtPer">
+												<f:convertNumber
+													pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+											</p:inputText>
+										</p:column>
+									</p:row>
+									<p:row>
+										<p:column>#{lbl['lbl.sm.equiStatus.lclComp']}</p:column>
 
-									<p:column>
-										<p:inputText
-											label="#{lbl['lbl.sm.equiStatus.lclComp']} #{lbl['lbl.sm.person.shrAmt']}"
-											value="#{backingBean.managedBean.smAppl.smCompanyBasic.localCompanyEquity}"
-											id="frgCmpAmt">
-											<f:convertNumber
-												pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-											<p:ajax event="blur" update=":form:tt:capInfPan"
-												listener="#{backingBean.calculateCapital}" />
-										</p:inputText>
-									</p:column>
-									<p:column>
-										<p:inputText disabled="true" readonly="true" size="10"
-											value="#{backingBean.managedBean.smAppl.smCompanyBasic.localCompPercent}"
-											id="frgCmpPer">
-											<f:convertNumber
-												pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-										</p:inputText>
-									</p:column>
-								</p:row>
+										<p:column>
+											<p:inputText
+												label="#{lbl['lbl.sm.equiStatus.lclComp']} #{lbl['lbl.sm.person.shrAmt']}"
+												value="#{backingBean.managedBean.smAppl.smCompanyBasic.localCompanyEquity}"
+												id="frgCmpAmt">
+												<f:convertNumber
+													pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+												<p:ajax event="blur" update=":form:tt:capInfPan"
+													listener="#{backingBean.calculateCapital}" />
+											</p:inputText>
+										</p:column>
+										<p:column>
+											<p:inputText disabled="true" readonly="true" size="10"
+												value="#{backingBean.managedBean.smAppl.smCompanyBasic.localCompPercent}"
+												id="frgCmpPer">
+												<f:convertNumber
+													pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+											</p:inputText>
+										</p:column>
+									</p:row>
+								</c:if>
 							</p:panelGrid>
 						</div>
 					</td>

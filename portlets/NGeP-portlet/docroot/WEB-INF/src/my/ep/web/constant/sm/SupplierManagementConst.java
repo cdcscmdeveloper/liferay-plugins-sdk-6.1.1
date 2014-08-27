@@ -125,6 +125,7 @@ public class SupplierManagementConst {
 	public static final String PROF_SERVICE_CODE = "IPS";
 	public static final String NEW_IC = "I";
 	public static final int PENDING_ACT_STATUS = 8;
+	public static final int APPROVED_RECORD_STATUS = 1;
 
 	public static final String SECTION_REV_ROLE_PO = "P";
 	public static final String SECTION_REV_ROLE_APP = "A";
@@ -263,7 +264,7 @@ public class SupplierManagementConst {
 	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT = "ROC";
 	public static final String SM_SUPPLIER_BUSINESS_TYPE_LLP_DEFAULT = "LLP";
 	public static final String SM_SUPPLIER_BUSINESS_TYPE_UNKNOWN = "UNKNOW";
-	
+
 	public static final String RESUBMIT_APPL_PATH = "/web/dashboard/resubmit-application?";
 
 	public static final String APPL_PM_STATUS_REJECT = "20109";
@@ -645,6 +646,14 @@ public class SupplierManagementConst {
 
 	public String getNEW_IC() {
 		return NEW_IC;
+	}
+
+	public int getPENDING_ACT_STATUS() {
+		return PENDING_ACT_STATUS;
+	}
+
+	public int getAPPROVED_RECORD_STATUS() {
+		return APPROVED_RECORD_STATUS;
 	}
 
 }

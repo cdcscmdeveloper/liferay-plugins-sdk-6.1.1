@@ -87,6 +87,7 @@ import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusReqDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusResDTO;
 import my.ep.exception.EpException;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
@@ -286,9 +287,12 @@ public class SmApplicationBackingBean extends
 					smApplSupplier = resDto.getSmSupplier();
 					System.out.println(" *** After clone Supplier Id ******* "
 							+ smApplSupplier.getSupplierId());
-					resDto = retriveLatestDraftApplication(smApplSupplier,
-							applicationType,
-							SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC);
+					System.out.println("**** After clone appl id *** "
+							+ resDto.getSmAppl().getApplId() + " -- "
+							+ resDto.getSmAppl().getApplNo());
+					// resDto = retriveLatestDraftApplication(smApplSupplier,
+					// applicationType,
+					// SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC);
 					if (resDto.isErrorCaued()) {
 						return setExceptionNavigationForAppl(applicationType);
 					}
@@ -794,8 +798,8 @@ public class SmApplicationBackingBean extends
 		return valid;
 	}
 
-	private boolean retriveLatestApplAfterUpdate(String currentPageTypes,
-			String outputPageTypes) {
+	private boolean retriveLatestApplAfterUpdate(String currentPageType,
+			String outputPageType) {
 
 		IMofRegistrationSO mofRegistrationSO = null;
 		mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate.getInstance()
@@ -1621,7 +1625,9 @@ public class SmApplicationBackingBean extends
 		if (getManagedBean().getSmAppl().getApplCategoryType().equals("N")) {
 			for (SmSupplierCategory cat : getManagedBean().getSmAppl()
 					.getSmSupplierCategories()) {
-				if (cat.isSpecialCategory() && !cat.isApprovedByPo()) {
+				if (cat.isSpecialCategory()
+						&& cat.getRecordStatusFlg().compareTo(
+								SupplierManagementConst.PENDING_ACT_STATUS) == 0) {
 					catList.add(cat);
 				}
 
@@ -1631,7 +1637,9 @@ public class SmApplicationBackingBean extends
 		} else {
 			for (SmSupplierCategory cat : getManagedBean().getSmAppl()
 					.getSmSupplierCategories()) {
-				if (!cat.isSpecialCategory() && !cat.isApprovedByPo()) {
+				if (!cat.isSpecialCategory()
+						&& cat.getRecordStatusFlg().compareTo(
+								SupplierManagementConst.PENDING_ACT_STATUS) == 0) {
 					catList.add(cat);
 				}
 
@@ -2262,6 +2270,9 @@ public class SmApplicationBackingBean extends
 		if (validCatCode) {
 			SmSupplierCategory categ = new SmSupplierCategory();
 			categ.setRevNo(1);
+			categ.setApprvrDecFlg(1);
+			categ.setPoDecFlg(1);
+			categ.setRecordStatusFlg(SupplierManagementConst.PENDING_ACT_STATUS);
 			if (getManagedBean().getSmAppl().getApplCategoryType()
 					.equalsIgnoreCase("S")) {
 				categ.setSpecialCategory(true);
@@ -4127,15 +4138,16 @@ public class SmApplicationBackingBean extends
 				valid = false;
 				throw new EpException(MessageConst.ERROR_722519);
 			}
-		} catch (Exception e) {
-			retriveLatestApplAfterUpdate(currentPageType, "");
-			valid = false;
-			throw new EpException(MessageConst.ERROR_722519);
+			return valid;
 		}
+		// catch (Exception e) {
+		//
+		// throw new EpException(MessageConst.ERROR_722519);
+		// }
 
 		finally {
 			regSo = null;
-			return valid;
+			retriveLatestApplAfterUpdate(currentPageType, "");
 
 		}
 
@@ -4385,6 +4397,20 @@ public class SmApplicationBackingBean extends
 						}
 					}
 					reqDTO.setPaymentReqd(setPaymentMode());
+				}
+				for (SmSupplierCategory cat : getManagedBean().getSmAppl()
+						.getSmSupplierCategories()) {
+					if (cat.getRecordStatusFlg().compareTo(
+							SupplierManagementConst.PENDING_ACT_STATUS) == 0) {
+						if ((getManagedBean().isPoUser() && cat.getPoDecFlg() == 1)
+								|| (getManagedBean().isApproverUser() && cat
+										.getApprvrDecFlg() == 1)) {
+							cat.setRecordStatusFlg(SupplierManagementConst.APPROVED_RECORD_STATUS);
+						} else {
+							cat.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
+						}
+
+					}
 				}
 
 			}
@@ -5871,6 +5897,9 @@ public class SmApplicationBackingBean extends
 			getManagedBean().setEquiCompCapTotal(new BigDecimal(0));
 			for (SmEquityCompany comp : getManagedBean().getSmAppl()
 					.getSmEquityCompanies()) {
+				if (comp.getShareAmt() == null) {
+					comp.setShareAmt(new BigDecimal(0));
+				}
 				if (!(comp.getEquityCompanyId() == null && comp
 						.equals(getManagedBean().getSelectedEquityCompany()))
 						&& !(comp.getEquityCompanyId() != null && comp
@@ -5927,6 +5956,7 @@ public class SmApplicationBackingBean extends
 
 	public void calculateCapital() {
 		try {
+			boolean llpOrRoc = false;
 			if (getManagedBean().getSmAppl().getSmCompanyBasic()
 					.getBumiEquity() != null) {
 				getManagedBean()
@@ -5954,47 +5984,6 @@ public class SmApplicationBackingBean extends
 						.setNonBumiEquity(new BigDecimal(0));
 			}
 			if (getManagedBean().getSmAppl().getSmCompanyBasic()
-					.getGovtEquity() != null) {
-				getManagedBean()
-						.getSmAppl()
-						.getSmCompanyBasic()
-						.setGovtEquity(
-								getManagedBean().getSmAppl()
-										.getSmCompanyBasic().getGovtEquity()
-										.setScale(2, RoundingMode.HALF_UP));
-			} else {
-				getManagedBean().getSmAppl().getSmCompanyBasic()
-						.setGovtEquity(new BigDecimal(0));
-			}
-			if (getManagedBean().getSmAppl().getSmCompanyBasic()
-					.getGovtUnitrustEquity() != null) {
-				getManagedBean()
-						.getSmAppl()
-						.getSmCompanyBasic()
-						.setGovtUnitrustEquity(
-								getManagedBean().getSmAppl()
-										.getSmCompanyBasic()
-										.getGovtUnitrustEquity()
-										.setScale(2, RoundingMode.HALF_UP));
-			} else {
-				getManagedBean().getSmAppl().getSmCompanyBasic()
-						.setGovtUnitrustEquity(new BigDecimal(0));
-			}
-			if (getManagedBean().getSmAppl().getSmCompanyBasic()
-					.getForeignCompanyEquity() != null) {
-				getManagedBean()
-						.getSmAppl()
-						.getSmCompanyBasic()
-						.setForeignCompanyEquity(
-								getManagedBean().getSmAppl()
-										.getSmCompanyBasic()
-										.getForeignCompanyEquity()
-										.setScale(2, RoundingMode.HALF_UP));
-			} else {
-				getManagedBean().getSmAppl().getSmCompanyBasic()
-						.setForeignCompanyEquity(new BigDecimal(0));
-			}
-			if (getManagedBean().getSmAppl().getSmCompanyBasic()
 					.getForeignerEquity() != null) {
 				getManagedBean()
 						.getSmAppl()
@@ -6008,8 +5997,64 @@ public class SmApplicationBackingBean extends
 				getManagedBean().getSmAppl().getSmCompanyBasic()
 						.setForeignerEquity(new BigDecimal(0));
 			}
+			if (getManagedBean()
+					.getBusinessTypeVal()
+					.equalsIgnoreCase(
+							SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT)
+					|| getManagedBean()
+							.getBusinessTypeVal()
+							.equalsIgnoreCase(
+									SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP_DEFAULT)) {
+				llpOrRoc = true;
+			}
 			if (getManagedBean().getSmAppl().getSmCompanyBasic()
-					.getLocalCompanyEquity() != null) {
+					.getGovtEquity() != null
+					&& llpOrRoc) {
+				getManagedBean()
+						.getSmAppl()
+						.getSmCompanyBasic()
+						.setGovtEquity(
+								getManagedBean().getSmAppl()
+										.getSmCompanyBasic().getGovtEquity()
+										.setScale(2, RoundingMode.HALF_UP));
+			} else {
+				getManagedBean().getSmAppl().getSmCompanyBasic()
+						.setGovtEquity(new BigDecimal(0));
+			}
+			if (getManagedBean().getSmAppl().getSmCompanyBasic()
+					.getGovtUnitrustEquity() != null
+					&& llpOrRoc) {
+				getManagedBean()
+						.getSmAppl()
+						.getSmCompanyBasic()
+						.setGovtUnitrustEquity(
+								getManagedBean().getSmAppl()
+										.getSmCompanyBasic()
+										.getGovtUnitrustEquity()
+										.setScale(2, RoundingMode.HALF_UP));
+			} else {
+				getManagedBean().getSmAppl().getSmCompanyBasic()
+						.setGovtUnitrustEquity(new BigDecimal(0));
+			}
+			if (getManagedBean().getSmAppl().getSmCompanyBasic()
+					.getForeignCompanyEquity() != null
+					&& llpOrRoc) {
+				getManagedBean()
+						.getSmAppl()
+						.getSmCompanyBasic()
+						.setForeignCompanyEquity(
+								getManagedBean().getSmAppl()
+										.getSmCompanyBasic()
+										.getForeignCompanyEquity()
+										.setScale(2, RoundingMode.HALF_UP));
+			} else {
+				getManagedBean().getSmAppl().getSmCompanyBasic()
+						.setForeignCompanyEquity(new BigDecimal(0));
+			}
+
+			if (getManagedBean().getSmAppl().getSmCompanyBasic()
+					.getLocalCompanyEquity() != null
+					&& llpOrRoc) {
 				getManagedBean()
 						.getSmAppl()
 						.getSmCompanyBasic()
@@ -7117,21 +7162,23 @@ public class SmApplicationBackingBean extends
 					+ pmUser.getLoginId());
 			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
 					.getServiceObject("pm", IUserSO.class);
-			// UserResDTO userResDTO = userSO.isUserExist(userReqDTO);
-
-			// if (!userResDTO.isExist()) {
-			// if(userResDTO.getAllResult() != null &&
-			// !userResDTO.getAllResult().isEmpty()) {
-			// System.out.println("******** Pm Profile" +
-			// userResDTO.getAllResult().get(0)[0]);
-			// System.out.println("******** Liferay Profile" +
-			// userResDTO.getAllResult().get(0)[1]);
-			// System.out.println("******** LDAP Profile" +
-			// userResDTO.getAllResult().get(0)[2]);
-			// }
-			// System.out.println("**** User doesn't exist in LDAP/PM/Liferay ******");
-			// throw new EpException(MessageConst.ERROR_721018);
-			// }
+			UserResDTO userResDTO = userSO.isUserExist(userReqDTO);
+			if (userResDTO != null && !userResDTO.isExist()) {
+				if (userResDTO.getAllResult() != null
+						&& !userResDTO.getAllResult().isEmpty()) {
+					if (userResDTO.getAllResult().get(0).length > 2) {
+						System.out.println("******** Pm Profile"
+								+ userResDTO.getAllResult().get(0)[0]);
+						System.out.println("******** Liferay Profile"
+								+ userResDTO.getAllResult().get(0)[1]);
+						System.out.println("******** LDAP Profile"
+								+ userResDTO.getAllResult().get(0)[2]);
+					}
+				}
+				System.out
+						.println("**** User doesn't exist in LDAP/PM/Liferay ******");
+				throw new EpException(MessageConst.ERROR_721018);
+			}
 
 			supplierSearchReqDTO.setUserId(pmUser.getUserId());
 
