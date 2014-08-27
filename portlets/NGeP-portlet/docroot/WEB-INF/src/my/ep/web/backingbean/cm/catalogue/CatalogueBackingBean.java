@@ -2668,6 +2668,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					}
 					for (int i = 0; i < sortedTier.size(); i++) {
 						CmZonalPromotionTierPricing tier = sortedTier.get(i);
+						CmPricing parentTier = tier.getParentPrice();
 						if (tier.getStartDate().compareTo(tier.getEndDate()) > 0) {
 							FacesContext facesContext = FacesContext.getCurrentInstance();
 							facesContext.addMessage(
@@ -2678,6 +2679,16 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 													"Zonal Promotion Tier End date must be greater than Zonal Promotion Tier start date"));
 							this.getManagedBean().setPricingTabIndex(3);
 							this.getManagedBean().setZonalTierPricingIndex(0);
+							return "editCatalogItem";
+						} else if (parentTier.getPrice().compareTo(tier.getPrice()) <= 0) {
+							FacesContext facesContext = FacesContext.getCurrentInstance();
+							facesContext.addMessage(null,
+								new FacesMessage(
+									FacesMessage.SEVERITY_ERROR,
+									"",
+									"Zonal Promotion Tier price must be less than Zonal Standard Tier price."));
+							this.getManagedBean().setPricingTabIndex(3);
+							this.getManagedBean().setTierPricingIndex(0);
 							return "editCatalogItem";
 						}
 					}
