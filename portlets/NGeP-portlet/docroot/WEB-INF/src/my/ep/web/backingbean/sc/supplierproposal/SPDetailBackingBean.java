@@ -12,7 +12,6 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -691,17 +690,20 @@ public class SPDetailBackingBean extends
 					.setExperienceNCheckLists(experienceNCheckList);
 			scQtProposalChecklist.setProposalScore(proposalScore);
 			reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
-			ProposalResDTO resDTO  = proposalSO.saveProposalDetails(reqDTO);
-			
-			if(resDTO.isSuccessful()){
-				
-				ScQtProposalChecklist proposalChecklist = resDTO.getProposalChecklist();
-				if(proposalChecklist.isSubmitted()){
+			ProposalResDTO resDTO = proposalSO.saveProposalDetails(reqDTO);
+
+			if (resDTO.isSuccessful()) {
+
+				ScQtProposalChecklist proposalChecklist = resDTO
+						.getProposalChecklist();
+				if (proposalChecklist.isSubmitted()) {
 					proposalChecklist.setSubmitted(false);
 				}
 				getManagedBean().setQtProposalChecklist(proposalChecklist);
-				int index = getManagedBean().getTecCheckDetailsList().indexOf(proposalChecklist);
-				getManagedBean().getTecCheckDetailsList().set(index, proposalChecklist);
+				int index = getManagedBean().getTecCheckDetailsList().indexOf(
+						proposalChecklist);
+				getManagedBean().getTecCheckDetailsList().set(index,
+						proposalChecklist);
 				//return "/xhtml/sc/supplierproposal/supplierProposalMain.xhtml?faces-redirect=true";
 			}
 
@@ -1364,14 +1366,9 @@ public class SPDetailBackingBean extends
 									+ financialChecklist.getScQtCheckList()
 											.getPmDocument()
 											.getDocDefinitionKey());
-					this.getManagedBean().setQtProposalChecklist(
-							financialChecklist);
-					ScQtCheckList scQtCheckList = financialChecklist
-							.getScQtCheckList();
-					this.getManagedBean().setScQtCheckList(scQtCheckList);
-					reqDTO.setQtProposalCheckListId(financialChecklist
-							.getQtProposalChecklistId());
-					reqDTO.setDocDefinationKey(scQtCheckList.getPmDocument()
+					
+					reqDTO.setScQtProposalChecklist(financialChecklist);
+					reqDTO.setDocDefinationKey(financialChecklist.getScQtCheckList().getPmDocument()
 							.getDocDefinitionKey());
 					resDTO = proposalSO.retrieveNonGovCompanyExpDtls(reqDTO);
 					this.getManagedBean().setScQtProposalScoreList(
@@ -1398,14 +1395,7 @@ public class SPDetailBackingBean extends
 											.getPmDocument()
 											.getDocDefinitionKey());
 
-					this.getManagedBean().setQtProposalChecklist(
-							financialChecklist);
-
-					this.getManagedBean().setScQtCheckList(
-							financialChecklist.getScQtCheckList());
-
-					reqDTO.setQtProposalCheckListId(financialChecklist
-							.getQtProposalChecklistId());
+					reqDTO.setScQtProposalChecklist(financialChecklist);
 					// to retrieve credit facility details
 					resDTO = proposalSO.retrieveCreditFacilitiesDtls(reqDTO);
 
@@ -1458,12 +1448,7 @@ public class SPDetailBackingBean extends
 									+ financialChecklist.getScQtCheckList()
 											.getPmDocument()
 											.getDocDefinitionKey());
-					this.getManagedBean().setQtProposalChecklist(
-							financialChecklist);
-					ScQtCheckList scQtCheckList = financialChecklist
-							.getScQtCheckList();
-					this.getManagedBean().setScQtCheckList(scQtCheckList);
-					reqDTO.setQtProposalCheckListId(financialChecklist
+			reqDTO.setQtProposalCheckListId(financialChecklist
 							.getQtProposalChecklistId());
 					resDTO = proposalSO.retrieveCashOnHandDtls(reqDTO);
 					this.getManagedBean().setScQtProposalScoreList(
@@ -1492,13 +1477,8 @@ public class SPDetailBackingBean extends
 									+ financialChecklist.getScQtCheckList()
 											.getPmDocument()
 											.getDocDefinitionKey());
-					this.getManagedBean().setQtProposalChecklist(
-							financialChecklist);
-					ScQtCheckList scQtCheckList = financialChecklist
-							.getScQtCheckList();
-					this.getManagedBean().setScQtCheckList(scQtCheckList);
-					reqDTO.setQtProposalCheckListId(financialChecklist
-							.getQtProposalChecklistId());
+					
+					reqDTO.setScQtProposalChecklist(financialChecklist);
 					resDTO = proposalSO.retrieveBankStmtDtls(reqDTO);
 					this.getManagedBean().setScQtProposalScoreList(
 							resDTO.getProposalScores());
@@ -1587,9 +1567,10 @@ public class SPDetailBackingBean extends
 					}
 					log.info("Size : " + bankStmtList.size());
 					this.getManagedBean().setScQtPRPBankStmts(bankStmtList);
-					
-					System.out.println("BS ***** NAV_TO_FINANCE_BANK_STATEMENT_PAGE *****");
-					
+
+					System.out
+							.println("BS ***** NAV_TO_FINANCE_BANK_STATEMENT_PAGE *****");
+
 					return NAV_TO_FINANCE_BANK_STATEMENT_PAGE
 							+ "?faces-redirect=true";
 
@@ -1601,37 +1582,39 @@ public class SPDetailBackingBean extends
 									+ financialChecklist.getScQtCheckList()
 											.getPmDocument()
 											.getDocDefinitionKey());
-					this.getManagedBean().setQtProposalChecklist(
-							financialChecklist);
-					ScQtCheckList scQtCheckList = financialChecklist
-							.getScQtCheckList();
-					this.getManagedBean().setScQtCheckList(scQtCheckList);
-					reqDTO.setQtProposalCheckListId(financialChecklist
-							.getQtProposalChecklistId());
+					
+					reqDTO.setScQtProposalChecklist(financialChecklist);
 					resDTO = proposalSO.retrieveAssetLiabilityDtls(reqDTO);
 
 					ScQtPRPAssetLiability assetLiability = resDTO
 							.getScQtPRPAssetLiability();
-					this.getManagedBean().setScQtProposalScoreList(
-							resDTO.getProposalScores());
-					BigDecimal asset = assetLiability.getCurrentAssets();
-					BigDecimal liabilities = assetLiability
-							.getCurrentLiabilities();
-					MathContext mc = new MathContext(4);
-					if (asset.intValue() > 0 && liabilities.intValue() > 0) {
-						BigDecimal ratio = asset.divide(liabilities, mc);
-						this.getManagedBean().setAcidRatio(ratio);
+					if (null != resDTO.getProposalScores()
+							&& !resDTO.getProposalScores().isEmpty()) {
+						this.getManagedBean().setScQtProposalScoreList(
+								resDTO.getProposalScores());
 					}
-					this.getManagedBean().setScQtPRPAssetLiability(
-							assetLiability);
-					
-					
-					System.out.println("AL ***** NAV_TO_ASSET_LIABILITY_PAGE *****");
+					if (null != assetLiability) {
+						BigDecimal asset = assetLiability.getCurrentAssets();
+						BigDecimal liabilities = assetLiability
+								.getCurrentLiabilities();
+						MathContext mc = new MathContext(4);
+						if (asset.intValue() > 0 && liabilities.intValue() > 0) {
+							BigDecimal ratio = asset.divide(liabilities, mc);
+							this.getManagedBean().setAcidRatio(ratio);
+						}
+						this.getManagedBean().setScQtPRPAssetLiability(
+								assetLiability);
+					}
+					System.out
+							.println("AL ***** NAV_TO_ASSET_LIABILITY_PAGE *****");
 					return NAV_TO_ASSET_LIABILITY_PAGE + "?faces-redirect=true";
 
+					
 				}
 			}
-		} finally {
+		}
+			
+		 finally {
 			proposalSO = null;
 		}
 		return null;
@@ -1648,7 +1631,7 @@ public class SPDetailBackingBean extends
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
 			String definitionKey = scQtProposalChecklist.getScQtCheckList()
 					.getPmDocument().getDocDefinitionKey();
-			
+
 			// what's happening here
 			if ("SP".equalsIgnoreCase(scQtProposalChecklist.getScQtCheckList()
 					.getDefinationType().getParameterCode())) {
@@ -1659,12 +1642,12 @@ public class SPDetailBackingBean extends
 				ScQtCheckList scQtCheckList = scQtProposalChecklist
 						.getScQtCheckList();
 				this.getManagedBean().setScQtCheckList(scQtCheckList);
-				
+
 				System.out.println("SP ***** null_SAME_PAGE *****");
 				return null;
-			} 
+			}
 			//
-			
+
 			else {
 				if ("FG".equalsIgnoreCase(scQtProposalChecklist
 						.getScQtCheckList().getPmDocument()
@@ -1695,8 +1678,9 @@ public class SPDetailBackingBean extends
 					}
 					this.getManagedBean().setTotalContractAmount(
 							new BigDecimal(totalAmount));
-					System.out.println("FG ***** NAV_TO_GOVT_COMPANY_EXPERIENCE_PAGE *****");
-					
+					System.out
+							.println("FG ***** NAV_TO_GOVT_COMPANY_EXPERIENCE_PAGE *****");
+
 					return NAV_TO_GOVT_COMPANY_EXPERIENCE_PAGE
 							+ "?faces-redirect=true";
 
@@ -1734,8 +1718,9 @@ public class SPDetailBackingBean extends
 					log.info("Account Number : "
 							+ getManagedBean().getSmAppl().getSmSupplierBanks()
 									.get(0).getAccountNo());
-					System.out.println("SD ***** NAV_TO_SUPPLIER_DETAILS_PAGE *****");
-					
+					System.out
+							.println("SD ***** NAV_TO_SUPPLIER_DETAILS_PAGE *****");
+
 					return NAV_TO_SUPPLIER_DETAILS_PAGE
 							+ "?faces-redirect=true";
 
