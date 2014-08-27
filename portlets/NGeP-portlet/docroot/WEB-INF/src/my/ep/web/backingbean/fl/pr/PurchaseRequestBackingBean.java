@@ -505,6 +505,19 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		deliveryAddr = new FlDeliveryAddress();
 		deliveryAddr.setFlFulfilmentRequest(getManagedBean().getFulfilmentRequest());
 		deliveryAddr.setPmAddress(manualAddr);
+		
+		ICitySO citySO = (ICitySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICitySO.class);
+		CityReqDTO cityReqDTO = new CityReqDTO();
+		cityReqDTO.setCityId(manualAddr.getPmCity().getCityId());
+		CityResDTO cityResDTO = citySO.retriveCityById(cityReqDTO);
+		manualAddr.setPmCity(cityResDTO.getPmCity());
+		
+		IStateSO reqSO = (IStateSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStateSO.class);
+		StateReqDTO reqDTO = new StateReqDTO();
+		reqDTO.setStateId(manualAddr.getPmState().getStateId());
+		StateResDTO resDTO = reqSO.retriveStateByID(reqDTO);
+		manualAddr.setPmState(resDTO.getPmState());
+		
 		deliveryAddr.setStartDate(getManagedBean().getFulfilmentRequest().getStartDate());
 		deliveryAddr.setEndDate(getManagedBean().getFulfilmentRequest().getEndDate());
 		deliveryAddr.setPmUom(getManagedBean().getFulfilmentRequest().getPmUom());
