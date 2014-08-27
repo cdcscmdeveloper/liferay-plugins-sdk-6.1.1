@@ -334,7 +334,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 
 		getManagedBean().setLocLevelDropdown(getLocationLevelDropdown());
 		// location level by default - district 
-		if(getManagedBean().getLocationLevel() == null && getManagedBean().getLocationLevel().isEmpty()){
+		if(getManagedBean().getLocationLevel() == null){
 			getManagedBean().setLocationLevel(ParameterConst.LOCATION_LEVEL_DISTRICT);	
 		}
 		  
