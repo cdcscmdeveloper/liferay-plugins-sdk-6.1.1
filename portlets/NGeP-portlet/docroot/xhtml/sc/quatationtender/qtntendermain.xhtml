@@ -116,7 +116,7 @@
 			<h:panelGroup id="table-wrapper" style="width:100%;">
 				<p:dataTable id="searchQTs"
 					value="#{qTDetailBB.managedBean.searchQTDataModel}" var="scQt"
-					rowIndexVar="index" lazy="true">
+					rowIndexVar="index" lazy="true" rows="10">
 
 					<ac:paginator for="searchQTs" />
 
@@ -125,7 +125,7 @@
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.so.title']}">
-						<h:outputText value="#{scQt.qtTitle}" />
+						<h:outputText value="#{scQt.qtTitle}" style="white-space: normal;"/>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.so.procmode']}"
 						style="width:100px;">
