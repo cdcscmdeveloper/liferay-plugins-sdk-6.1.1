@@ -17,17 +17,18 @@
 							value="#{catalogueBackingBean.managedBean.statusDescList}"
 							var="remark" itemLabel="#{remark.statusName}"
 							itemValue="#{remark.pmStatus.statusId}"></f:selectItems>
-						<p:ajax listener="#{catalogueBackingBean.enableRemark}" 
-							update="@([id$=remarkpg])" />
+						<p:ajax listener="#{catalogueBackingBean.enableRemark}" update="@([id$=remarkpg])" />
 					</p:selectManyCheckbox></td>
-				<td style="vertical-align: bottom;"><h:panelGroup id="remarkpg">
+				<td style="vertical-align: bottom;">
+				<h:panelGroup id="remarkpg">
 						<p:inputTextarea id="remarkInputId" 
 							readonly="#{unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.supplierAdmin}"
 							value="#{catalogueBackingBean.managedBean.rejectReason}"
 							rendered="#{catalogueBackingBean.remarkRendered}"
 							style="width: 78% !important;">
+							<p:ajax partialSubmit="true" event="change" />
 							</p:inputTextarea>
-					</h:panelGroup></td>
+				</h:panelGroup></td>
 			</tr>
 		</table>
 	</h:panelGroup>
