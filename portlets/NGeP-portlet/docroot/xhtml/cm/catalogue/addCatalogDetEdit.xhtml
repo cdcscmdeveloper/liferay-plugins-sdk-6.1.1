@@ -118,8 +118,8 @@
 						<td><p:outputLabel value="#{lbl['lbl.cm.item.status']}" /></td>
 						<td><p:selectOneRadio
 								value="#{catalogueBackingBean.managedBean.selectedMaintainItem.recordStatus}">
-								<f:selectItem itemLabel="Active" itemValue="true"></f:selectItem>
-								<f:selectItem itemLabel="Inactive" itemValue="false"></f:selectItem>
+								<f:selectItem itemLabel="#{lbl['lbl.cm.active']}" itemValue="true"></f:selectItem>
+								<f:selectItem itemLabel="#{lbl['lbl.cm.inactive']}" itemValue="false"></f:selectItem>
 							</p:selectOneRadio></td>
 					</tr>
 				</table>
@@ -130,7 +130,7 @@
 					<td rowspan="10">
 					
 						<h:panelGroup rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) == 0 }">
-							<div style="display: block; width: 120px; padding: 60px; text-align: center; vertical-align: middle; border: 1px solid rgb(204, 204, 204);">No Image Available</div>
+							<div style="display: block; width: 120px; padding: 60px; text-align: center; vertical-align: middle; border: 1px solid rgb(204, 204, 204);">#{lbl['lbl.cm.no.image.available']}</div>
 						</h:panelGroup>
 							
 						<h:panelGroup rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) > 0 }">
