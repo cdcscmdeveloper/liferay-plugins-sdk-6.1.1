@@ -377,11 +377,6 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 				getManagedBean().setLocationLevel(ParameterConst.LOCATION_LEVEL_DIVISION);	
 			}
 		}
-        
-		// for zonal 
-		scQuote.setZonal(Boolean.TRUE);
-		getManagedBean().setScQuote(scQuote);
-		zoneEvent();
 		
 		List<CtPanelSupplier> ctPanelSuppliers = new ArrayList<CtPanelSupplier>();
 		if(ctPanelItem.getCtPanelZones() != null && ctPanelItem.getCtPanelZones().size()>0){
@@ -394,8 +389,14 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 				TplSpecZoneDtl tplSpecZoneDtl = new TplSpecZoneDtl();
 				ScQuoteZone quoteZone = new ScQuoteZone();
 				quoteZone.setScQuote(scQuote);
+				scQuote.setQuoteZone(quoteZone);
 				tplSpecZoneDtl.setTplSpecZone(quoteZone);
 				tplSpecZoneDtl.setZoneName(ctPanelZone.getName());
+				
+				// for zonal 
+				scQuote.setZonal(Boolean.TRUE);
+				getManagedBean().setScQuote(scQuote);
+				zoneEvent();
 
 				List<PmState> states = SourcingLocationHelper
 						.getStateFromCtPanelZone(ctPanelZone.getPanelZoneDtls());
@@ -614,6 +615,15 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 				quote.setJustificationType(null);
 			}
 			
+
+			// panel item zone 
+			if(quote.isPanel()){
+				// zone details
+				if(!getManagedBean().getZoneTrees().isEmpty()){
+					getManagedBean().getScQuote().setQuoteZone(getQuoteZones(getManagedBean().getZoneTrees()));
+				}
+			}
+			
 			//by location
 			if(!getManagedBean().getLocationTrees().isEmpty()){
 				quote.setLocationStateCriterias(getLocationStateCriterias(getManagedBean().getLocationTrees(), quote));	
@@ -773,6 +783,15 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 				parameterReqDTO.setParameterCode(getManagedBean().getLocationLevel());
 				 resDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
 				quote.setZoneLocatonLevel(resDTO.getPmParameter());
+			}
+			
+			
+			// panel item zone 
+			if(quote.isPanel()){
+				// zone details
+				if(!getManagedBean().getZoneTrees().isEmpty()){
+					quote.setQuoteZone(getQuoteZones(getManagedBean().getZoneTrees()));
+				}
 			}
 			
 			// justification type
@@ -2159,35 +2178,20 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			}
 
 			// service and product
-			List<TplSpecQuestion> Questions = new ArrayList<TplSpecQuestion>();
-			TplSpecMaster prodServiceMaster =  new TplSpecMaster();
 			if(scQuote.getQuoteDocs() != null){
 				for (ScQuoteDoc scQuoteDoc : scQuote.getQuoteDocs()) {
 					TplSpecMaster specMaster = scQuoteDoc.getSpecMaster();
-					
-					// product
 					if(ParameterConst.SQ_ITEM_LIST_PRODUCT.equalsIgnoreCase(specMaster.getItemTypeCode().getParameterCode())){
 						productTplSpecBean.setSpecMaster(specMaster);
 						getManagedBean().setProductTemplateSpecBean(productTplSpecBean);
-						
-					} else  {
-						prodServiceMaster.setTplSpecQuestions(Questions);
-						productTplSpecBean.setSpecMaster(prodServiceMaster);
-						getManagedBean().setProductTemplateSpecBean(productTplSpecBean);
-					}
-					
-					// service
-					if(ParameterConst.SQ_ITEM_LIST_SERVICE.equalsIgnoreCase(specMaster.getItemTypeCode().getParameterCode())){
+						// service Tpl Spe
+					} else  if(ParameterConst.SQ_ITEM_LIST_SERVICE.equalsIgnoreCase(specMaster.getItemTypeCode().getParameterCode())){
 						serviceTplSpecBean.setSpecMaster(specMaster);
-						getManagedBean().setServiceTemplateSpecBean(serviceTplSpecBean);
-						
-					} else{
-						prodServiceMaster.setTplSpecQuestions(Questions);
-						serviceTplSpecBean.setSpecMaster(prodServiceMaster);
 						getManagedBean().setServiceTemplateSpecBean(serviceTplSpecBean);
 					}
 				}
 			}
+			
 			// zone details
 			if(scQuote.getQuoteZone() != null){
 				 List<TreeNode>	zoneTrees = new ArrayList<TreeNode>();
