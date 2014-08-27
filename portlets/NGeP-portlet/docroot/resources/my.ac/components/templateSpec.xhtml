@@ -9,6 +9,7 @@
 		<cc:attribute name="title" default="#{lbl['lbl.tpl.spec.maintenance.content']}" />
 		<cc:attribute name="templateSpecBean" />
 		<cc:attribute name="scrollWidth" default="1215" />
+		<cc:attribute name="newable" default="true" />
 		<cc:attribute name="editable" default="true" />
 	</cc:interface>
 
@@ -17,6 +18,7 @@
 		<ui:param name="title" value="#{cc.attrs.title}" />
 		<ui:param name="templateSpecBean" value="#{cc.attrs.templateSpecBean}" />
 		<ui:param name="scrollWidth" value="#{cc.attrs.scrollWidth}" />
+		<ui:param name="newable" value="#{cc.attrs.newable}" />
 		<ui:param name="editable" value="#{cc.attrs.editable}" />
 		
 		<ui:include src="/xhtml/tpl/spec/specContent.xhtml" />

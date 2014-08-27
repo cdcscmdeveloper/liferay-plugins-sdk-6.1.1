@@ -8,13 +8,18 @@
 	
 	<p:column>
 		<f:facet name="header">
-			<h:outputText value="* " styleClass="mandatory" />
+			<h:outputText value="* " styleClass="mandatory" rendered="#{newable}" />
 			<h:outputText value="#{lbl['lbl.tpl.spec.content.item']}"/>
-		</f:facet>	
-		<p:inputTextarea id="itemName" style="width:96%;" value="#{question.clItem}" 
-			rendered="#{isQuestionTypeItem}" required="#{!question.selected}" rows="1" maxlength="200"
-			label="#{lbl['lbl.tpl.spec.content.item']}" />
-		<p:message id="itemNameMsg" for="itemName" display="icon" />
+		</f:facet>
+		<c:if test="#{newable}">
+			<p:inputTextarea id="itemName" style="width:96%;" value="#{question.clItem}" 
+				rendered="#{isQuestionTypeItem}" required="#{!question.selected}" rows="1" maxlength="200"
+				label="#{lbl['lbl.tpl.spec.content.item']}" />
+			<p:message id="itemNameMsg" for="itemName" display="icon" />
+		</c:if>
+		<c:if test="#{!newable}">
+			<h:outputText value="#{question.clItem}" escape="false" rendered="#{isQuestionTypeItem}" />
+		</c:if>
 	</p:column>
 	<p:column rendered="#{isSpecTypeTechnical or (isSpecTypeFinancial and !isSpecificationReq)}">
 		<f:facet name="header">
@@ -45,17 +50,23 @@
 			<h:outputText value="#{lbl['lbl.tpl.spec.content.uom']}"/>
 		</f:facet>
 		
-		<ac:lov id="#{templateSpecId}uomLovId" lovId="PM_UOM" 
-			headerText="UOM Lov"
-			saveObject="templateSpecBackingBean.managedBean.tplSpecQuestions[#{row}].clUom"
-			value="#{question.clUom.uomName}"
-			conditionField="recordStatus^1"
-			rendered="#{isQuestionTypeItem}"
-			required="#{!question.selected}"
-			size="12"
-			readonly="true">
-			<f:setPropertyActionListener for="actionEvent" target="#{templateSpecBackingBean.managedBean.tplSpecQuestions}" value="#{templateSpecBean.specMaster.tplSpecQuestions}" />
-		</ac:lov>
+		<c:if test="#{newable}">
+			<ac:lov id="#{templateSpecId}uomLovId" lovId="PM_UOM" 
+				headerText="UOM Lov"
+				saveObject="templateSpecBackingBean.managedBean.tplSpecQuestions[#{row}].clUom"
+				value="#{question.clUom.uomName}"
+				conditionField="recordStatus^1"
+				rendered="#{isQuestionTypeItem}"
+				required="#{!question.selected}"
+				size="12"
+				readonly="true"
+				update1="#{p:component('freqUOM')}">
+				<f:setPropertyActionListener for="actionEvent" target="#{templateSpecBackingBean.managedBean.tplSpecQuestions}" value="#{templateSpecBean.specMaster.tplSpecQuestions}" />
+			</ac:lov>
+		</c:if>
+		<c:if test="#{!newable}">
+			<h:outputText value="#{question.clUom.uomName}" rendered="#{isQuestionTypeItem}" />
+		</c:if>
 	</p:column>
 	
 	<ui:param name="isFulfilmentTypeOneOff" value="#{question.clFulfilmentTypeCode.parameterCode == ParameterConst.fulfilmentTypeOneOff}" />
@@ -216,7 +227,7 @@
 			</p:commandButton>
 		</h:panelGroup>
 	</p:column>
-	<p:column style="width:40px;">
+	<p:column style="width:40px;" rendered="#{newable}">
 		<f:facet name="header">
 			<p:commandButton icon="ui-icon-add" style="background-color:transparent !important; border:0px none; width:10px !important; height:10px !important;"
 				action="#{templateSpecBackingBean.addQuestion(templateSpecBean.specMaster, templateSpecBean.specMaster.tplSpecQuestions,-1,TplSpecConst.questionTypeItem)}"  
