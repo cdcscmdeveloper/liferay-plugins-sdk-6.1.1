@@ -342,6 +342,12 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 			
 			newQuestion.setClAnswerRequired(true);
 			
+			if (questionList == null) {
+				questionList = new ArrayList<TplSpecQuestion>();
+				
+				tplSpecMaster.setTplSpecQuestions(questionList);
+			}
+			
 			questionList.add(row + 1, newQuestion);
 			for(int i = 0; i < questionList.size(); i++) {
 				TplSpecQuestion question = questionList.get(i);
