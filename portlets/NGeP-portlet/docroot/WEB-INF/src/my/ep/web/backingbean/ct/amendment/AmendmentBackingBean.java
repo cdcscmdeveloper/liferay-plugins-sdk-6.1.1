@@ -19,6 +19,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -383,16 +384,29 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				            
 			        	    if (item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)) {
 					                getManagedBean().setItemProductExist(true);
+					                Collections.sort(item.getCtItemPrices(), new CtItemPrice());
+					                if(item.getCtItemCeilingQties() != null && item.getCtItemCeilingQties().size() > 0 ) 
+					                	 Collections.sort(item.getCtItemCeilingQties(), new CtItemCeilingQty());
+					                Collections.sort(item.getCtItemPrices(), new CtItemPrice());
 					                getManagedBean().getCtItemList().add(item);
 				          
 				             } else if(item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) {
 					               getManagedBean().setItemServiceExist(true);
-					               this.getManagedBean().getCtServiceItemList().add(item);
+					               Collections.sort(item.getCtItemPrices(), new CtItemPrice());
+					               getManagedBean().getCtServiceItemList().add(item);
 				             }
-			            }
+			            } 
+			           if(getManagedBean().getCtServiceItemList() != null && getManagedBean().getCtServiceItemList().size() > 0)
+			                 Collections.sort(this.getManagedBean().getCtServiceItemList(), new CtContractItem());
+			          
+			           if(getManagedBean().getCtItemList() != null && getManagedBean().getCtItemList().size() > 0)
+			                 Collections.sort(getManagedBean().getCtItemList(), new CtContractItem());
 			     }
 		 
-			  retriveZonesByContractVer();
+			    if(getManagedBean().getContractVer().getCtContractZones() != null && getManagedBean().getContractVer().getCtContractZones().size() > 0) {
+		    	     Collections.sort(getManagedBean().getContractVer().getCtContractZones(), new CtContractZone());
+		    		 retriveZonesByContractVer();
+		         }
 			  initializeRemarks();
 			  getManagedBean().setFileDirectory(DocumentRepositoryUtils.
 			  getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, 

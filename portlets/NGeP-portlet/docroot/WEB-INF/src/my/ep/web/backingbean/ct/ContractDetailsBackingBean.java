@@ -22,7 +22,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -317,72 +316,65 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	
 	public void setValidateContractField(ContractResDTO resDTO) {
 		
-		this.getManagedBean().setContractVer(resDTO.getCtContractVer());
-	    this.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
+		     this.getManagedBean().setContractVer(resDTO.getCtContractVer());
+	         this.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
 	    
-	    if(this.getManagedBean().getContractVer().getCtAgencies() != null && this.getManagedBean().getContractVer().getCtAgencies().size() > 0 )
-		       Collections.sort(this.getManagedBean().getContractVer().getCtAgencies(), new agencyPtjComparator());
+	        if(this.getManagedBean().getContractVer().getCtAgencies() != null && this.getManagedBean().getContractVer().getCtAgencies().size() > 0 )
+		           Collections.sort(this.getManagedBean().getContractVer().getCtAgencies(), new CtAgency());
 	  
-	    if(this.getManagedBean().getContractVer().getCtContractItems().size() > 0){
-		    
-	    	if(this.getManagedBean().getCtItemList().size() == 0 && this.getManagedBean().getCtItemServiceList().size() == 0) {
-		    	  for(CtContractItem item : getManagedBean().getContractVer().getCtContractItems()) {
-				           if(item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) {
-				        	     Collections.sort(item.getCtItemPrices(), new ItemZonePriceComparator());
-					              this.getManagedBean().getCtItemServiceList().add(item);
-				          }  else if(item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)){
-				        	      Collections.sort(item.getCtItemPrices(), new ItemZonePriceComparator());
-				                  Collections.sort(item.getCtItemCeilingQties(), new ceilingComparator());
-		        	               this.getManagedBean().getCtItemList().add(item);
+	        if(this.getManagedBean().getContractVer().getCtContractItems().size() > 0){
+		         if(this.getManagedBean().getCtItemList().size() == 0 && this.getManagedBean().getCtItemServiceList().size() == 0) {
+		    	     for(CtContractItem item : getManagedBean().getContractVer().getCtContractItems()) {
+				            if(item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) {
+				        	          Collections.sort(item.getCtItemPrices(), new CtItemPrice());
+					                  this.getManagedBean().getCtItemServiceList().add(item);
+				           }  else if(item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)){
+				        	         Collections.sort(item.getCtItemPrices(), new CtItemPrice());
+				        	         if(item.getCtItemCeilingQties() != null && item.getCtItemCeilingQties().size() > 0)
+				        	        	  Collections.sort(item.getCtItemCeilingQties(), new CtItemCeilingQty());
+		        	                this.getManagedBean().getCtItemList().add(item);
 				           }
-			       } 
-		     }
-		    
-	    	if(this.getManagedBean().getCtItemList() != null && this.getManagedBean().getCtItemList().size() > 0) {
-		          Collections.sort(this.getManagedBean().getCtItemList(), new itemComparator());
-		   
-	    	} if(this.getManagedBean().getCtItemServiceList() != null && this.getManagedBean().getCtItemServiceList().size() > 0) {
-		          Collections.sort(this.getManagedBean().getCtItemServiceList(), new itemComparator());
-		      }
-		 }
-		 
-		 if(this.getManagedBean().getContractVer().getCtDeductions().size() > 0){
-		    for(CtDeduction deduct : this.getManagedBean().getContractVer().getCtDeductions()){
-		      if(deduct.getDeductionType().getParameterCode().equalsIgnoreCase(ContractConst.AP_DEDUCTION_TYPE)){
-		    	 this.getManagedBean().setFlgPaymentTracking(true);
-		    	 this.getManagedBean().setAdvancePaymentAmt(deduct.getAmount());
-		    	 calAdvancePaymentTracking(this.getManagedBean().getCtContract().getContractId());
-		      }
+			         } if(this.getManagedBean().getCtItemList() != null && this.getManagedBean().getCtItemList().size() > 0) 
+			               Collections.sort(this.getManagedBean().getCtItemList(), new CtContractItem());
+		    	 
+		    	      if(this.getManagedBean().getCtItemServiceList() != null && this.getManagedBean().getCtItemServiceList().size() > 0) 
+				           Collections.sort(this.getManagedBean().getCtItemServiceList(), new CtContractItem());
+	            } 
 		   }
-		 }
-		
-		 if(this.getManagedBean().getContractVer().getCtSchedules().size() > 0){
-		    this.getManagedBean().setChkSchedule(true);
-		    SimpleDateFormat dateFormatYear = new SimpleDateFormat("yyyy");
-			Calendar cal = Calendar.getInstance();
-		    for(CtSchedule ctschedule : this.getManagedBean().getContractVer().getCtSchedules()){
-		    	cal.setTime(ctschedule.getFromDate());
-		    	ctschedule.setFromTranDate(cal.get(Calendar.MONTH));
-		    	ctschedule.setFromTranYear(dateFormatYear.format(ctschedule.getFromDate()));
-		    	    
-		    	cal.setTime(ctschedule.getToDate());
-		    	ctschedule.setToTranDate(cal.get(Calendar.MONTH));
-		    	ctschedule.setToTranYears(dateFormatYear.format(ctschedule.getToDate()));
+		 
+		 if(this.getManagedBean().getContractVer().getCtDeductions().size() > 0) {
+		      for(CtDeduction deduct : this.getManagedBean().getContractVer().getCtDeductions()){
+		           if(deduct.getDeductionType().getParameterCode().equalsIgnoreCase(ContractConst.AP_DEDUCTION_TYPE)){
+		    	          this.getManagedBean().setFlgPaymentTracking(true);
+		    	          this.getManagedBean().setAdvancePaymentAmt(deduct.getAmount());
+		    	          calAdvancePaymentTracking(this.getManagedBean().getCtContract().getContractId());
+		           }
 		     }
-		  }
-		    
-		 if(this.getManagedBean().getContractVer().getCtProgressivePayments().size() > 0){
-			 SimpleDateFormat dateFormatYear = new SimpleDateFormat("yyyy");
-		     Calendar cal = Calendar.getInstance();
-			 for(CtProgressivePayment ctProgressivePayment : this.getManagedBean().getContractVer().getCtProgressivePayments()){
-			     cal.setTime(ctProgressivePayment.getFromDate());
-			     ctProgressivePayment.setFromProDate(cal.get(Calendar.MONTH));
-			     ctProgressivePayment.setFromProYear(dateFormatYear.format(ctProgressivePayment.getFromDate()));
-			    	    
-			     cal.setTime(ctProgressivePayment.getToDate());
-			     ctProgressivePayment.setToProDate(cal.get(Calendar.MONTH));
-			     ctProgressivePayment.setToProYears(dateFormatYear.format(ctProgressivePayment.getToDate()));
-			  }
+		
+		 } if (this.getManagedBean().getContractVer().getCtSchedules().size() > 0) {
+		        this.getManagedBean().setChkSchedule(true);
+		        SimpleDateFormat dateFormatYear = new SimpleDateFormat("yyyy");
+			    Calendar cal = Calendar.getInstance();
+			    for(CtSchedule ctschedule : this.getManagedBean().getContractVer().getCtSchedules()) {
+		    	      cal.setTime(ctschedule.getFromDate());
+		    	      ctschedule.setFromTranDate(cal.get(Calendar.MONTH));
+		    	      ctschedule.setFromTranYear(dateFormatYear.format(ctschedule.getFromDate()));
+		    	      cal.setTime(ctschedule.getToDate());
+		    	      ctschedule.setToTranDate(cal.get(Calendar.MONTH));
+		    	      ctschedule.setToTranYears(dateFormatYear.format(ctschedule.getToDate()));
+		       }
+		
+		 } if (this.getManagedBean().getContractVer().getCtProgressivePayments().size() > 0){
+			     SimpleDateFormat dateFormatYear = new SimpleDateFormat("yyyy");
+		         Calendar cal = Calendar.getInstance();
+			     for(CtProgressivePayment ctProgressivePayment : this.getManagedBean().getContractVer().getCtProgressivePayments()){
+			            cal.setTime(ctProgressivePayment.getFromDate());
+			            ctProgressivePayment.setFromProDate(cal.get(Calendar.MONTH));
+			            ctProgressivePayment.setFromProYear(dateFormatYear.format(ctProgressivePayment.getFromDate()));
+			    	    cal.setTime(ctProgressivePayment.getToDate());
+			            ctProgressivePayment.setToProDate(cal.get(Calendar.MONTH));
+			            ctProgressivePayment.setToProYears(dateFormatYear.format(ctProgressivePayment.getToDate()));
+			      }
 		   }
 		    
 		    if(this.getManagedBean().getContractVer().getCtContractValue().getDeliveryTermUom() == null){
@@ -394,7 +386,11 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		    	this.getManagedBean().setFlgPaymentTracking(false);
 		    }
 		    
-		    retriveZonesByContractVer();
+		    if(this.getManagedBean().getContractVer().getCtContractZones() != null && this.getManagedBean().getContractVer().getCtContractZones().size() > 0) {
+		    	     Collections.sort(getManagedBean().getContractVer().getCtContractZones(), new CtContractZone());
+		    		 retriveZonesByContractVer();
+		    }
+		  
 	    	getManagedBean().setSmAddress(getManagedBean().getContractVer().getCtContractValue().getSupplierAddress());
 	    	getManagedBean().setSupplierAddress(AddressUtils.getFullAddress(getManagedBean().getSmAddress()));
 		    renderUpdateCheckbox(this.getManagedBean().getContractVer());
@@ -787,8 +783,7 @@ public void ConstructSideTabMenu(){
 		
 		TreeNode rootLocationTree =  new DefaultTreeNode("Root", null);
 		TreeNode zoneNode =  null;
-		if(this.getManagedBean().getContractVer().getCtContractZones() != null) {
-		   for(CtContractZone zone : this.getManagedBean().getContractVer().getCtContractZones()) {
+	    for(CtContractZone zone : this.getManagedBean().getContractVer().getCtContractZones()) {
 			   if(zone.getDeliveryTermUom() == null){
 				   zone.setDeliveryTermUom(new PmParameter()); 
 				   zone.getDeliveryTermUom().setParameterId(0L);
@@ -810,7 +805,6 @@ public void ConstructSideTabMenu(){
 			  }
 			}
 		 this.getManagedBean().setCtZoneTrees(rootLocationTree);
-	  }
 	} 
 	
     public void getZoneObjDetails() {
@@ -1552,22 +1546,16 @@ public void ConstructSideTabMenu(){
 			
 			reqDTO = new ContractReqDTO();
 			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
-//			if(contractVerId == null) {
-				reqDTO.setContractId(contractId);
-				contractVerId = contractSO.getLatestContractVer(reqDTO).getCtContractVer().getContractVerId();
-//			}			
+		    reqDTO.setContractId(contractId);
+		    contractVerId = contractSO.getLatestContractVer(reqDTO).getCtContractVer().getContractVerId();
+		
 			reqDTO.setContractVerId(contractVerId);
 			reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_SUSPEND_ACTIVE);
 			reqDTO.setUpdateAction(true);
 			resDTO = contractSO.retrieveContractVer(reqDTO);
 			
 			suspBB = new SuspensionBackingBean();
-			suspBB.getManagedBean().setContractVer(resDTO.getCtContractVer());	
-			suspBB.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
-		    suspBB.getManagedBean().setRemarkList(resDTO.getCtRemarks());
-		    suspBB.getManagedBean().setAttachmentList(resDTO.getCtAttachments());
-		    suspBB.getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, 
-					suspBB.getManagedBean().getContractVer().getDocType(), suspBB.getManagedBean().getCtContract().getContractNo()));
+			suspBB.setSuspensionContractVer(resDTO);
 		} catch(Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -1843,113 +1831,6 @@ public void ConstructSideTabMenu(){
 			}
 			return null;
 		}
-	}
-	
-	public class agencyPtjComparator implements Comparator<CtAgency>{
-
-		   @Override
-		   public int compare(CtAgency obj1, CtAgency obj2) {
-			   
-			   if(obj1 != null && obj1.getOrgProfile().getParentOrgProfile() != null) {
-				   
-			        String minstryName = ((CtAgency) obj1).getOrgProfile().getParentOrgProfile().getOrgName();
-                    String minstryName2 = ((CtAgency) obj2).getOrgProfile().getParentOrgProfile().getOrgName();
-                    int agency = minstryName.compareTo(minstryName2);
-                    if( agency != 0) {
-                 	     return agency;
-			         } else  {
-                          String ptjName = ((CtAgency) obj1).getOrgProfile().getOrgName();
-                          String ptjName2 = ((CtAgency) obj2).getOrgProfile().getOrgName();
-                          int ptj = ptjName.compareTo(ptjName2);
-                          if(ptj!=0){
-                        	  return ptj;
-                          } else{
-                        	  Date date1 = ((CtAgency) obj1).getEffDate();
-                        	  Date date2 = ((CtAgency) obj2).getEffDate();
-                              return date1.compareTo(date2);
-                          }
-			         }
-		       } 
-			   return 0;
-		  }
-	 }
-	
-	public class itemComparator implements Comparator<CtContractItem>{
-
-		   @Override
-		   public int compare(CtContractItem obj1, CtContractItem obj2) {
-			   
-			   if(obj1 != null) {
-				    String itemName = obj1.getItemName();
-                    String itemName2 = obj2.getItemName();
-                    int item = itemName.compareTo(itemName2);
-                    if( item != 0) {
-           	               return item;
-		            } 
-			   }
-			   return 0;
-		  }
-	 }
-	
-	public class ceilingComparator implements Comparator<CtItemCeilingQty>{
-
-		   @Override
-		   public int compare(CtItemCeilingQty obj1, CtItemCeilingQty obj2) {
-			   
-			   if(obj1 != null && obj1.getCtAgency().getOrgProfile().getParentOrgProfile() != null) {
-				   
-			     String minstryName = obj1.getCtAgency().getOrgProfile().getParentOrgProfile().getOrgName();
-                 String minstryName2 = obj2.getCtAgency().getOrgProfile().getParentOrgProfile().getOrgName();
-                 int agency = minstryName.compareTo(minstryName2);
-                 if( agency != 0) {
-              	     return agency;
-			         } else  {
-                       String ptjName =  obj1.getCtAgency().getOrgProfile().getOrgName();
-                       String ptjName2 = obj2.getCtAgency().getOrgProfile().getOrgName();
-                       int ptj = ptjName.compareTo(ptjName2);
-                       if(ptj!=0){
-                     	  return ptj;
-                       } else{
-                     	  Date date1 = ((CtItemCeilingQty) obj1).getEffDate();
-                     	  Date date2 = ((CtItemCeilingQty) obj2).getEffDate();
-                           return date1.compareTo(date2);
-                       }
-			         }
-		       } 
-			   return 0;
-		  }
-	 }
-	
-	public class ItemZonePriceComparator implements Comparator<CtItemPrice>{
-
-		   @Override
-		   public int compare(CtItemPrice obj1, CtItemPrice obj2) {
-			   
-			   if(obj1.getCtContractZone() != null && obj1.getCtContractZone().getZoneName() != null) {
-			        String x1 = ((CtItemPrice) obj1).getCtContractZone().getZoneName();
-                    String x2 = ((CtItemPrice) obj2).getCtContractZone().getZoneName();
-                    int zone = x1.compareTo(x2);
-                    if( zone != 0){
-                    	return zone;
-			         } else if(obj1 != null && obj1.getFromQty() != null){
-                         Integer quantity = ((CtItemPrice) obj1).getFromQty().intValue();
-                         Integer quantity2 = ((CtItemPrice) obj2).getFromQty().intValue();
-                         return quantity.compareTo(quantity2);
-			      }
-		     } else if(obj1 != null && obj1.getFromQty() != null){
-                 Integer quantity = ((CtItemPrice) obj1).getFromQty().intValue();
-                 Integer quantity2 = ((CtItemPrice) obj2).getFromQty().intValue();
-                 return quantity.compareTo(quantity2);
-		     
-		     } else if(obj1 != null && obj1.getFromQty() != null){
-                 Integer quantity = ((CtItemPrice) obj1).getFromQty().intValue();
-                 Integer quantity2 = ((CtItemPrice) obj2).getFromQty().intValue();
-                 return quantity.compareTo(quantity2);
-		     }
-			   
-			   return 0;
-		}
-		
 	}
 	
 	public BigDecimal getPaidAdvancePercentage() {
