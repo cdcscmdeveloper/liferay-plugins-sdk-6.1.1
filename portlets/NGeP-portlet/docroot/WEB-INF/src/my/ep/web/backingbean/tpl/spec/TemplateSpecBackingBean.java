@@ -137,6 +137,10 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 			if(resDTO.isSuccessful()) {
 				specMaster = resDTO.getSpecMaster();
 				
+				if (specMaster.getOrgProfile() == null) {
+					specMaster.setOrgProfile(new PmOrgProfile());
+				}
+				
 				templateSpecBean.setSpecMaster(specMaster);
 				templateSpecBean.setSpecAnswerList(resDTO.getSpecAnswerList());
 				templateSpecBean.setSelectedSpecQuestion(null);
@@ -392,6 +396,17 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 	    return items;
 	}
 	
+	public SelectItem[] getSpecTypeDropdownList() {
+		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+		
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("pmParameter.parameterCode",
+						SearchOperator.OPERATOR_NOT_EQUALS.value(), 
+						ParameterConst.SPECIFICATION_TYPE_FINANCIAL));
+		
+		return super.getDropdownValuesBySearchBean(ParameterTypeConst.SPECIFICATION_TYPE, searchBean);
+	}
+	
 	public SelectItem[] getItemTypeDropdownList() {
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		
@@ -435,6 +450,57 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 						filteredList));
 		
 		return super.getDropdownValuesBySearchBean(ParameterTypeConst.PRICE_TYPE, searchBean);
+	}
+	
+	public void itemTypeChange() {
+		IParameterSO parameterSO = null;
+		try {
+			TplSpecMaster specMaster = getManagedBean().getTemplateSpecBean().getSpecMaster();
+			Long parameterId = specMaster.getItemTypeCode().getParameterId();
+			
+			parameterSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+			ParameterReqDTO reqDTO = new ParameterReqDTO();
+			reqDTO.setParameterId(parameterId);
+			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
+			specMaster.setItemTypeCode(resDTO.getPmParameter());
+		} finally {
+			parameterSO = null;
+		}
+	}
+	
+	public void specTypeChange() {
+		IParameterSO parameterSO = null;
+		try {
+			TplSpecMaster specMaster = getManagedBean().getTemplateSpecBean().getSpecMaster();
+			Long parameterId = specMaster.getSpecTypeCode().getParameterId();
+			
+			parameterSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+			ParameterReqDTO reqDTO = new ParameterReqDTO();
+			reqDTO.setParameterId(parameterId);
+			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
+			specMaster.setSpecTypeCode(resDTO.getPmParameter());
+		} finally {
+			parameterSO = null;
+		}
+	}
+	
+	public void templateTypeChange() {
+		IParameterSO parameterSO = null;
+		try {
+			TplSpecMaster specMaster = getManagedBean().getTemplateSpecBean().getSpecMaster();
+			Long parameterId = specMaster.getTemplateTypeCode().getParameterId();
+			
+			parameterSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+			ParameterReqDTO reqDTO = new ParameterReqDTO();
+			reqDTO.setParameterId(parameterId);
+			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
+			specMaster.setTemplateTypeCode(resDTO.getPmParameter());
+		} finally {
+			parameterSO = null;
+		}
 	}
 	
 	public void fulfilmentTypeChange(TplSpecQuestion specQuestion) {
