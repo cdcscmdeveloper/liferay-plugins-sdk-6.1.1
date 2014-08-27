@@ -5474,7 +5474,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 				List<CmTierPricing> dataList = (List) tierMap.get(this
 						.getManagedBean().getSelectedMaintainItem()
-						.getCmTierPricings().get(index).getStartDate());
+						.getCmTierPricings().get(index).getStand_group_id());
 
 				if (validateBeforeAddToPromotion(dataList)) {
 					int tempIndex = index;
@@ -5575,7 +5575,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 					List<CmTierPricing> dataList = (List) tierMap.get(this
 							.getManagedBean().getSelectedMaintainItem()
-							.getCmTierPricings().get(index).getStartDate());
+							.getCmTierPricings().get(index).getStand_group_id());
 
 					int tempIndex = index;
 
@@ -5651,7 +5651,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 				List<CmZonalTierPricing> dataList = (List) tierMap.get(this
 						.getManagedBean().getSelectedMaintainItem()
-						.getCmZonalTierPricings().get(index).getStartDate());
+						.getCmZonalTierPricings().get(index).getStand_group_id());
 
 				if (validateBeforeAddToZonalPromotion(dataList)) {
 					int tempIndex = index;
@@ -5752,7 +5752,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 							.get(this.getManagedBean()
 									.getSelectedMaintainItem()
 									.getCmZonalTierPricings().get(index)
-									.getStartDate());
+									.getStand_group_id());
 
 					int tempIndex = index;
 
