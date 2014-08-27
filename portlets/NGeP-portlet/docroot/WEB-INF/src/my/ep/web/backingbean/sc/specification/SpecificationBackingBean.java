@@ -5678,7 +5678,7 @@ public class SpecificationBackingBean extends
 		}
 	}
 
-	public String acceptCompanyScoring() {
+	public void acceptCompanyScoring() {
 		try {
 
 			IQTSpecSO specSo;
@@ -5757,12 +5757,16 @@ public class SpecificationBackingBean extends
 				this.getManagedBean()
 						.getScQtCheckSt2techProposal()
 						.add(this.getManagedBean().getIndex(), updatedCheckList);
+				technicalChecklistEditAction(this.getManagedBean().getIndex(),
+						updatedCheckList, QTConstants.TECHNICAL_SPEC_TYPE);
 			} else {
 				this.getManagedBean().getScQtCheckSt2financeProposalList()
 						.remove(this.getManagedBean().getIndex());
 				this.getManagedBean()
 						.getScQtCheckSt2financeProposalList()
 						.add(this.getManagedBean().getIndex(), updatedCheckList);
+				financialChecklistEditAction(this.getManagedBean().getIndex(),
+						updatedCheckList, QTConstants.FINANCIAL_SPEC_TYPE);
 			}
 			FacesContext.getCurrentInstance().addMessage(
 					null,
@@ -5773,7 +5777,7 @@ public class SpecificationBackingBean extends
 		} finally {
 
 		}
-		return "/xhtml/sc/specification/specificationCommitteeView.xhtml?faces-redirect=true";
+
 	}
 
 	public String acceptBankScore() {
@@ -5916,13 +5920,19 @@ public class SpecificationBackingBean extends
 			reqDTO.setOtherCheckListScores(noOfYearsScore);
 			reqDTO.setCheckListValue(checkList.getScQtCheckListValue());
 			SpecificationResDTO resDTO = specSo.saveCheckListScore(reqDTO);
-			resDTO.getScQtCheckList();
+			ScQtCheckList updatedCheckList = resDTO.getScQtCheckList();
+			this.getManagedBean().getScQtCheckSt2financeProposalList()
+					.remove(this.getManagedBean().getIndex());
+			this.getManagedBean().getScQtCheckSt2financeProposalList()
+					.add(this.getManagedBean().getIndex(), updatedCheckList);
+			financialChecklistEditAction(this.getManagedBean().getIndex(),
+					updatedCheckList, QTConstants.FINANCIAL_SPEC_TYPE);
 
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO,
-							"Bank Statements Successfully Saved. ",
-							"Bank Statements Successfully Saved."));
+							"Scores Successfully Saved. ",
+							"Scores Successfully Saved."));
 		} finally {
 
 		}
