@@ -94,7 +94,7 @@ public class UnspscCodeBackingBean extends
 
 	public boolean isCatalogueAdmin() {
 		FacesScopes fs = new FacesScopes();
-		return fs.hasRoleUser("CM_ADMIN");	
+		return fs.hasRoleUser("CM_ADMIN");
 	}
 
 	public boolean isSupplierUser() {
@@ -1397,15 +1397,44 @@ public class UnspscCodeBackingBean extends
 		 * ().getServiceObject("cm",ICodificationSO.class); CodificationReqDTO
 		 * reqDTO = new CodificationReqDTO(); CodificationResDTO resDTO = null;
 		 */
+		
+		// ///check that there be at least one new request
+		if (!this.getManagedBean().getRequestExtCode().isRequestType()
+				&& !this.getManagedBean().getRequestExtCode().isRequestBrand()
+				&& !this.getManagedBean().getRequestExtCode()
+						.isRequestMeasurement()
+				&& !this.getManagedBean().getRequestExtCode().isRequestColor()) {
+			throw new EpException(MessageConst.ERROR_716010);
+	
 
-		checkingTypeRedundency(this.getManagedBean().getRequestExtCode()
-				.getTypeName());
-		checkingBrandRedundency(this.getManagedBean().getRequestExtCode()
-				.getBrandName());
-		checkingMeasurmentRedundency(this.getManagedBean().getRequestExtCode()
-				.getMeasurementName());
-		checkingColorRedundency(this.getManagedBean().getRequestExtCode()
-				.getColorName());
+		}
+		// //////////checking for redundancy
+		if (this.getManagedBean().getRequestExtCode().isRequestType()
+				&& !this.getManagedBean().getRequestExtCode().getTypeName()
+						.isEmpty()) {
+			checkingTypeRedundency(this.getManagedBean().getRequestExtCode()
+					.getTypeName());
+		}
+		if (this.getManagedBean().getRequestExtCode().isRequestBrand()
+				&& !this.getManagedBean().getRequestExtCode().getBrandName()
+						.isEmpty()) {
+			checkingBrandRedundency(this.getManagedBean().getRequestExtCode()
+					.getBrandName());
+		}
+		if (this.getManagedBean().getRequestExtCode().isRequestMeasurement()
+				&& !this.getManagedBean().getRequestExtCode()
+						.getMeasurementName().isEmpty()) {
+			checkingMeasurmentRedundency(this.getManagedBean()
+					.getRequestExtCode().getMeasurementName());
+		}
+		if (this.getManagedBean().getRequestExtCode().isRequestColor()
+				&& this.getManagedBean().getRequestExtCode().getColorName()
+						.isEmpty()) {
+			checkingColorRedundency(this.getManagedBean().getRequestExtCode()
+					.getColorName());
+		}
+		
+		
 
 		/*
 		 * if (this.getManagedBean().isTypeRedundancy()) { throw new
@@ -1566,291 +1595,283 @@ public class UnspscCodeBackingBean extends
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
 		CodificationResDTO resDTO = null;
 
-//		try {
+		// try {
 
-			System.out.println("face.getUserScreenName()"
-					+ face.getUserScreenName());
+		System.out.println("face.getUserScreenName()"
+				+ face.getUserScreenName());
 
-			Map temp = new HashMap();
+		Map temp = new HashMap();
 
-			temp.put("user003", "user003");
-			temp.put("user051", "user051");
+		temp.put("user003", "user003");
+		temp.put("user051", "user051");
 
-			if (face.hasRoleUser("CM_ADMIN")) {
-				System.out.println("*******CM ADMIN*********");
-				reqDTO.setCodeCommittees("user003,user051");
-			} else if (face.hasRoleUser("CD_COMMITTEE")) {
-				System.out.println("*******CD_COMMITTEE*********:"
-						+ temp.size());
-				if (!temp.isEmpty() && temp.size() > 0) {
+		if (face.hasRoleUser("CM_ADMIN")) {
+			System.out.println("*******CM ADMIN*********");
+			reqDTO.setCodeCommittees("user003,user051");
+		} else if (face.hasRoleUser("CD_COMMITTEE")) {
+			System.out.println("*******CD_COMMITTEE*********:" + temp.size());
+			if (!temp.isEmpty() && temp.size() > 0) {
 
-					Iterator itMap = temp.entrySet().iterator();
+				Iterator itMap = temp.entrySet().iterator();
 
-					while (itMap.hasNext()) {
-						Map.Entry entry = (Map.Entry) itMap.next();
-						String key = (String) entry.getKey();
-						log.info("mapKey:" + key);
-						if (!key.equalsIgnoreCase(face.getUserScreenName())) {
-							reqDTO.setCodeCommittees((String) entry.getValue());
-						}
+				while (itMap.hasNext()) {
+					Map.Entry entry = (Map.Entry) itMap.next();
+					String key = (String) entry.getKey();
+					log.info("mapKey:" + key);
+					if (!key.equalsIgnoreCase(face.getUserScreenName())) {
+						reqDTO.setCodeCommittees((String) entry.getValue());
 					}
+				}
+
+			}
+		}
+
+		// /////////////////////////////////////
+
+		if (this.getManagedBean().getReviewExtCodeList() != null
+				&& this.getManagedBean().getReviewExtCodeList().size() > 0) {
+
+			for (CmRequestCode code : this.getManagedBean()
+					.getReviewExtCodeList()) {
+
+				if (code.getColorNameDD() != null) {
+					ISearchBean<CmColor> searchBeanColor = new SearchBean<CmColor>();
+					colorFilterBean.setSearchField("colorId");
+					colorFilterBean.setSearchValue(code.getColorNameDD());
+					searchBeanColor.getDataFilterBeans().add(colorFilterBean);
+
+					reqDTO.setColorSearchBean(searchBeanColor);
+
+					resDTO = unspscSO.searchColorObj(reqDTO);
+					code.setColorName(resDTO.getColorList().get(0)
+							.getColorName());
+					code.setColorId(code.getColorNameDD());
+					code.setRequestColor(false);
 
 				}
-			}
 
-			// /////////////////////////////////////
+				if (code.getBrandNameDD() != null) {
 
-			if (this.getManagedBean().getReviewExtCodeList() != null
-					&& this.getManagedBean().getReviewExtCodeList().size() > 0) {
+					ISearchBean<CmBrand> searchBeanColor = new SearchBean<CmBrand>();
+					brandFilterBean.setSearchField("brandId");
+					brandFilterBean.setSearchValue(code.getBrandNameDD());
+					searchBeanColor.getDataFilterBeans().add(brandFilterBean);
 
-				for (CmRequestCode code : this.getManagedBean()
-						.getReviewExtCodeList()) {
+					reqDTO.setBrandSearchBean(searchBeanColor);
 
-					if (code.getColorNameDD() != null) {
-						ISearchBean<CmColor> searchBeanColor = new SearchBean<CmColor>();
-						colorFilterBean.setSearchField("colorId");
-						colorFilterBean.setSearchValue(code.getColorNameDD());
-						searchBeanColor.getDataFilterBeans().add(
-								colorFilterBean);
+					resDTO = unspscSO.searchBrandObj(reqDTO);
 
-						reqDTO.setColorSearchBean(searchBeanColor);
-
-						resDTO = unspscSO.searchColorObj(reqDTO);
-						code.setColorName(resDTO.getColorList().get(0)
-								.getColorName());
-						code.setColorId(code.getColorNameDD());
-						code.setRequestColor(false);
-
-					}
-
-					if (code.getBrandNameDD() != null) {
-
-						ISearchBean<CmBrand> searchBeanColor = new SearchBean<CmBrand>();
-						brandFilterBean.setSearchField("brandId");
-						brandFilterBean.setSearchValue(code.getBrandNameDD());
-						searchBeanColor.getDataFilterBeans().add(
-								brandFilterBean);
-
-						reqDTO.setBrandSearchBean(searchBeanColor);
-
-						resDTO = unspscSO.searchBrandObj(reqDTO);
-
-						code.setBrandName(resDTO.getBrandList().get(0)
-								.getBrandName());
-						code.setBrandId(code.getBrandNameDD());
-						code.setRequestBrand(false);
-
-					}
-
-					if (code.getTypeNameDD() != null) {
-
-						ISearchBean<CmType> searchBeanColor = new SearchBean<CmType>();
-						typeFilterBean.setSearchField("typeId");
-						typeFilterBean.setSearchValue(code.getTypeNameDD());
-						searchBeanColor.getDataFilterBeans()
-								.add(typeFilterBean);
-
-						reqDTO.setTypeSearchBean(searchBeanColor);
-
-						resDTO = unspscSO.searchTypeObj(reqDTO);
-
-						code.setTypeName(resDTO.getTypeList().get(0)
-								.getTypeName());
-						code.setTypeId(code.getTypeNameDD());
-						code.setRequestType(false);
-					}
-
-					if (code.getMeasurementNameDD() != null) {
-
-						ISearchBean<CmMeasurement> searchBeanColor = new SearchBean<CmMeasurement>();
-						measurementFilterBean.setSearchField("measurementId");
-						measurementFilterBean.setSearchValue(code
-								.getMeasurementNameDD());
-						searchBeanColor.getDataFilterBeans().add(
-								measurementFilterBean);
-
-						reqDTO.setMeasurementSearchBean(searchBeanColor);
-
-						resDTO = unspscSO.searchMeasurementObj(reqDTO);
-
-						code.setMeasurementName(resDTO.getMeasurementList()
-								.get(0).getMeasurementName());
-						code.setMeasurementId(code.getMeasurementNameDD());
-						code.setRequestMeasurement(false);
-					}
-
-					reqDTO.getRequestExtList().add(code);
+					code.setBrandName(resDTO.getBrandList().get(0)
+							.getBrandName());
+					code.setBrandId(code.getBrandNameDD());
+					code.setRequestBrand(false);
 
 				}
+
+				if (code.getTypeNameDD() != null) {
+
+					ISearchBean<CmType> searchBeanColor = new SearchBean<CmType>();
+					typeFilterBean.setSearchField("typeId");
+					typeFilterBean.setSearchValue(code.getTypeNameDD());
+					searchBeanColor.getDataFilterBeans().add(typeFilterBean);
+
+					reqDTO.setTypeSearchBean(searchBeanColor);
+
+					resDTO = unspscSO.searchTypeObj(reqDTO);
+
+					code.setTypeName(resDTO.getTypeList().get(0).getTypeName());
+					code.setTypeId(code.getTypeNameDD());
+					code.setRequestType(false);
+				}
+
+				if (code.getMeasurementNameDD() != null) {
+
+					ISearchBean<CmMeasurement> searchBeanColor = new SearchBean<CmMeasurement>();
+					measurementFilterBean.setSearchField("measurementId");
+					measurementFilterBean.setSearchValue(code
+							.getMeasurementNameDD());
+					searchBeanColor.getDataFilterBeans().add(
+							measurementFilterBean);
+
+					reqDTO.setMeasurementSearchBean(searchBeanColor);
+
+					resDTO = unspscSO.searchMeasurementObj(reqDTO);
+
+					code.setMeasurementName(resDTO.getMeasurementList().get(0)
+							.getMeasurementName());
+					code.setMeasurementId(code.getMeasurementNameDD());
+					code.setRequestMeasurement(false);
+				}
+
+				reqDTO.getRequestExtList().add(code);
+
 			}
+		}
 
-			/*
-			 * for(CmRequestRemark remark:
-			 * this.getManagedBean().getReviewExtCodeList
-			 * ().get(0).getCmRequestRemarks()){
-			 * remark.setCmRequestCode(this.getManagedBean
-			 * ().getReviewExtCodeList().get(0)); }
-			 */
+		/*
+		 * for(CmRequestRemark remark:
+		 * this.getManagedBean().getReviewExtCodeList
+		 * ().get(0).getCmRequestRemarks()){
+		 * remark.setCmRequestCode(this.getManagedBean
+		 * ().getReviewExtCodeList().get(0)); }
+		 */
 
-			reqDTO.setTaskId(this.getManagedBean().getTaskId());
-			reqDTO.setOutCome(action);
-			reqDTO.setToken(token);
+		reqDTO.setTaskId(this.getManagedBean().getTaskId());
+		reqDTO.setOutCome(action);
+		reqDTO.setToken(token);
 
-			System.out
-					.println("getCodeCommittees" + reqDTO.getCodeCommittees());
-			System.out.println("consensus" + reqDTO.isConsensus());
+		System.out.println("getCodeCommittees" + reqDTO.getCodeCommittees());
+		System.out.println("consensus" + reqDTO.isConsensus());
 
-			System.out.println("action" + action);
+		System.out.println("action" + action);
 
-			if (action.equalsIgnoreCase("PUBLISH")) {
+		if (action.equalsIgnoreCase("PUBLISH")) {
 
-				reqDTO.setUnspscCode(this.getManagedBean()
-						.getReviewExtCodeList().get(0).getTempCode());
-				resDTO = unspscSO.searchCommodityObj(reqDTO);
+			reqDTO.setUnspscCode(this.getManagedBean().getReviewExtCodeList()
+					.get(0).getTempCode());
+			resDTO = unspscSO.searchCommodityObj(reqDTO);
 
-				reqDTO.setCmUnspsc(resDTO.getCommodityObj());
-				reqDTO.setUnspscId(resDTO.getCommodityObj().getUnspscId());
+			reqDTO.setCmUnspsc(resDTO.getCommodityObj());
+			reqDTO.setUnspscId(resDTO.getCommodityObj().getUnspscId());
 
-				resDTO = unspscSO.publishExtensionRequest(reqDTO);
+			resDTO = unspscSO.publishExtensionRequest(reqDTO);
 
-			}
+		}
 
-			if (!action.equalsIgnoreCase("PUBLISH")) {
+		if (!action.equalsIgnoreCase("PUBLISH")) {
 
-				for (CmRequestCode code : this.getManagedBean()
-						.getReviewExtCodeList()) {
+			for (CmRequestCode code : this.getManagedBean()
+					.getReviewExtCodeList()) {
 
-					System.out.println("code.isRemarkRequired"
-							+ code.isRemarkRequired());
-					System.out.println("code.isRemarkRequiredII"
-							+ code.isRemarkRequiredII());
-					System.out.println("******getReviewedBrandNameII********"
-							+ code.getReviewedBrandNameII());
-					if (code.getReviewedBrandNameII() != null
-							&& code.getReviewedBrandNameII().trim().length() > 0) {
-						// //////checking for redundant values
-						if (!isCodeAdmin()) {
-							if (code.isRequestType()
-									&& (code.getTypeRemarkII() != null && code
-											.getTypeRemarkII().trim().length() > 0)) {
-								checkingTypeRedundency(code
-										.getReviewedTypeNameII());
-							}
-							if (code.isRequestBrand()
-									&& (code.getBrandRemarkII() != null && code
-											.getBrandRemarkII().trim().length() > 0)) {
-								checkingBrandRedundency(code
-										.getReviewedBrandNameII());
-							}
-							if (code.isRequestMeasurement()
-									&& (code.getMeasurementRemarkII() != null && code
-											.getMeasurementRemarkII().trim()
-											.length() > 0)) {
-								checkingMeasurmentRedundency(code
-										.getReviewedMeasurementNameII());
-							}
-							if (code.isRequestColor()
-									&& (code.getColorRemarkII() != null && code
-											.getColorRemarkII().trim().length() > 0)) {
-								checkingColorRedundency(code
-										.getReviewedColorNameII());
-							}
-						}
-						// //////////////////////////////////
-						if ((code.getTypeRemarkII() != null && code
-								.getTypeRemarkII().trim().length() > 0)
-								|| (code.getBrandRemarkII() != null && code
-										.getBrandRemarkII().trim().length() > 0)
-								|| (code.getMeasurementRemarkII() != null && code
-										.getMeasurementRemarkII().trim()
-										.length() > 0)
-								|| (code.getColorRemarkII() != null && code
-										.getColorRemarkII().trim().length() > 0)) {
-							System.out.println("remark added!!");
-							code.setRemarkRequiredII(false);
-
-						}
-
-						if (code.isRemarkRequiredII()) {
-
-							FacesContext facesContext = FacesContext
-									.getCurrentInstance();
-							facesContext.addMessage(null, new FacesMessage(
-									FacesMessage.SEVERITY_ERROR,
-									"Remark Required2", ""));
-							return "reviewApproveExtensionCodeII";
-						}
-					} else {
-						System.out.println("******else********");
-						// //////checking for redundant values
+				System.out.println("code.isRemarkRequired"
+						+ code.isRemarkRequired());
+				System.out.println("code.isRemarkRequiredII"
+						+ code.isRemarkRequiredII());
+				System.out.println("******getReviewedBrandNameII********"
+						+ code.getReviewedBrandNameII());
+				if (code.getReviewedBrandNameII() != null
+						&& code.getReviewedBrandNameII().trim().length() > 0) {
+					// //////checking for redundant values
+					if (!isCodeAdmin()) {
 						if (code.isRequestType()
-								&& (code.getTypeRemark() != null && code
-										.getTypeRemark().trim().length() > 0)) {
-							checkingTypeRedundency(code.getReviewedTypeName());
+								&& (code.getTypeRemarkII() != null && code
+										.getTypeRemarkII().trim().length() > 0)) {
+							checkingTypeRedundency(code.getReviewedTypeNameII());
 						}
 						if (code.isRequestBrand()
-								&& (code.getBrandRemark() != null && code
-										.getBrandRemark().trim().length() > 0)) {
-							checkingBrandRedundency(code.getReviewedBrandName());
+								&& (code.getBrandRemarkII() != null && code
+										.getBrandRemarkII().trim().length() > 0)) {
+							checkingBrandRedundency(code
+									.getReviewedBrandNameII());
 						}
 						if (code.isRequestMeasurement()
-								&& (code.getMeasurementRemark() != null && code
-										.getMeasurementRemark().trim().length() > 0)) {
+								&& (code.getMeasurementRemarkII() != null && code
+										.getMeasurementRemarkII().trim()
+										.length() > 0)) {
 							checkingMeasurmentRedundency(code
-									.getReviewedMeasurementName());
+									.getReviewedMeasurementNameII());
 						}
 						if (code.isRequestColor()
-								&& (code.getColorRemark() != null && code
-										.getColorRemark().trim().length() > 0)) {
-							checkingColorRedundency(code.getReviewedColorName());
-						}
-						// //////////////////////////////////
-						if ((code.getTypeRemark() != null && code
-								.getTypeRemark().trim().length() > 0)
-								|| (code.getBrandRemark() != null && code
-										.getBrandRemark().trim().length() > 0)
-								|| (code.getMeasurementRemark() != null && code
-										.getMeasurementRemark().trim().length() > 0)
-								|| (code.getColorRemark() != null && code
-										.getColorRemark().trim().length() > 0)) {
-							System.out.println("remark added!!");
-							code.setRemarkRequired(false);
-
-						}
-
-						if (code.isRemarkRequired()) {
-							System.out
-									.println("................test...........code.isRemarkRequired()="
-											+ code.isRemarkRequired());
-							throw new EpException(
-									MessageConst.ERROR_716007,
-									new String[] { ResourceBundleUtils
-											.getMessage(
-													null,
-													ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-													new FacesScopes()
-															.getUserLocale()) });
-
-							// return "reviewApproveExtensionCode";
+								&& (code.getColorRemarkII() != null && code
+										.getColorRemarkII().trim().length() > 0)) {
+							checkingColorRedundency(code
+									.getReviewedColorNameII());
 						}
 					}
+					// //////////////////////////////////
+					if ((code.getTypeRemarkII() != null && code
+							.getTypeRemarkII().trim().length() > 0)
+							|| (code.getBrandRemarkII() != null && code
+									.getBrandRemarkII().trim().length() > 0)
+							|| (code.getMeasurementRemarkII() != null && code
+									.getMeasurementRemarkII().trim().length() > 0)
+							|| (code.getColorRemarkII() != null && code
+									.getColorRemarkII().trim().length() > 0)) {
+						System.out.println("remark added!!");
+						code.setRemarkRequiredII(false);
 
+					}
+
+					if (code.isRemarkRequiredII()) {
+
+						FacesContext facesContext = FacesContext
+								.getCurrentInstance();
+						facesContext.addMessage(null, new FacesMessage(
+								FacesMessage.SEVERITY_ERROR,
+								"Remark Required2", ""));
+						return "reviewApproveExtensionCodeII";
+					}
+				} else {
+					System.out.println("******else********");
+					// //////checking for redundant values
+					if (code.isRequestType()
+							&& (code.getTypeRemark() != null && code
+									.getTypeRemark().trim().length() > 0)) {
+						checkingTypeRedundency(code.getReviewedTypeName());
+					}
+					if (code.isRequestBrand()
+							&& (code.getBrandRemark() != null && code
+									.getBrandRemark().trim().length() > 0)) {
+						checkingBrandRedundency(code.getReviewedBrandName());
+					}
+					if (code.isRequestMeasurement()
+							&& (code.getMeasurementRemark() != null && code
+									.getMeasurementRemark().trim().length() > 0)) {
+						checkingMeasurmentRedundency(code
+								.getReviewedMeasurementName());
+					}
+					if (code.isRequestColor()
+							&& (code.getColorRemark() != null && code
+									.getColorRemark().trim().length() > 0)) {
+						checkingColorRedundency(code.getReviewedColorName());
+					}
+					// //////////////////////////////////
+					if ((code.getTypeRemark() != null && code.getTypeRemark()
+							.trim().length() > 0)
+							|| (code.getBrandRemark() != null && code
+									.getBrandRemark().trim().length() > 0)
+							|| (code.getMeasurementRemark() != null && code
+									.getMeasurementRemark().trim().length() > 0)
+							|| (code.getColorRemark() != null && code
+									.getColorRemark().trim().length() > 0)) {
+						System.out.println("remark added!!");
+						code.setRemarkRequired(false);
+
+					}
+
+					if (code.isRemarkRequired()) {
+						System.out
+								.println("................test...........code.isRemarkRequired()="
+										+ code.isRemarkRequired());
+						throw new EpException(
+								MessageConst.ERROR_716007,
+								new String[] { ResourceBundleUtils
+										.getMessage(
+												null,
+												ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+												new FacesScopes()
+														.getUserLocale()) });
+
+						// return "reviewApproveExtensionCode";
+					}
 				}
-
-				resDTO = unspscSO.updateExtensionRequest(reqDTO);
 
 			}
 
-			FacesContext facesContext = FacesContext.getCurrentInstance();
-			facesContext.addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-							MessageUtils.getMessage(MessageConst.INFO_710001,
-									MessageUtils.BUNDLE_COMMON_MESSAGES,
-									new FacesScopes().getUserLocale())));
-//		} catch (Exception ex) {
-//
-//		}
+			resDTO = unspscSO.updateExtensionRequest(reqDTO);
+
+		}
+
+		FacesContext facesContext = FacesContext.getCurrentInstance();
+		facesContext.addMessage(
+				null,
+				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
+						.getMessage(MessageConst.INFO_710001,
+								MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
+		// } catch (Exception ex) {
+		//
+		// }
 
 		// return "taskListView";
 		return "BPMtesting";
@@ -2462,7 +2483,7 @@ public class UnspscCodeBackingBean extends
 
 		if (this.getManagedBean().getRequestExtCode().isRequestType()) {
 			this.getManagedBean().setTypeDisable(false);
-			
+
 		} else {
 			this.getManagedBean().setTypeDisable(true);
 			this.getManagedBean().getRequestExtCode().setTypeName("");
@@ -2572,7 +2593,7 @@ public class UnspscCodeBackingBean extends
 		}
 	}
 
-	public void checkingColorRedundency(String colorInput){
+	public void checkingColorRedundency(String colorInput) {
 		log.info(".....checking redundancy for colorInput=" + colorInput);
 		log.info("colorList " + this.getManagedBean().getColorList());
 		this.getManagedBean().setColorRedundancy(false);
@@ -2581,13 +2602,14 @@ public class UnspscCodeBackingBean extends
 				if (color.getColorName().toLowerCase()
 						.equals(colorInput.toLowerCase())) {
 					this.getManagedBean().setColorRedundancy(true);
-                        log.info("this.getManagedBean().isColorRedundancy()="+this.getManagedBean().isColorRedundancy());
+					log.info("this.getManagedBean().isColorRedundancy()="
+							+ this.getManagedBean().isColorRedundancy());
 					throw new EpException(MessageConst.ERROR_716009,
 							new String[] { ResourceBundleUtils.getMessage(
 									"lbl.cm.color",
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 									new FacesScopes().getUserLocale()) });
-					
+
 				}
 			}
 			log.info("end no exception");

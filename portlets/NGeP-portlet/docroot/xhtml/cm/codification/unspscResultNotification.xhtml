@@ -18,8 +18,6 @@
 				<ui:repeat var="action"
 					value="#{unspscCodeBackingBean.managedBean.action}">
 					<p:commandButton value="#{action}"
-					    disabled="#{action == 'SUBMIT' and (unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes.size() >=1)}"
-						rendered="#{action != 'REQUEST EXTENSION'}"
 						action="#{unspscCodeBackingBean.bpmTesting(action)}"
 						update="@form"></p:commandButton>
 						</ui:repeat>
@@ -43,7 +41,17 @@
 							<td></td>
 							<td></td>
 					</tr>
-	          
+					<tr>
+	       				<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.code']}"></p:outputLabel></td>
+						<td><p:inputText
+								value="#{unspscCodeBackingBean.managedBean.requestCode.tempCode}"
+								size="40" disabled="true" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.title']}"></p:outputLabel></td>
+						<td><p:inputText
+								value="#{unspscCodeBackingBean.managedBean.requestCode.tempTitle}"
+								size="40" disabled="true" /></td>
+					</tr>
+				
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.cm.item.name']}"></p:outputLabel></td>
 						<td><p:inputText
@@ -81,50 +89,6 @@
 
 			</p:panel>
 
-			<p:panel header="Search and Recommend" toggleable="true">
-
-				<p:dataTable id="recomemendUnspscId" rowIndexVar="rowIndex"
-					value="#{unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes}"
-					var="unspscObj" width="100%">
-
-
-
-					<p:column>
-						<f:facet name="header">
-					Recommended Item Code
-				</f:facet>
-
-				
-						#{unspscObj.unspscCode}
-						
-
-
-				</p:column>
-					<p:column>
-						<f:facet name="header">
-					Recommended Item Name
-				</f:facet>
-				#{unspscObj.unspscTitle}
-			</p:column>
-
-					<p:column rendered="#{unspscCodeBackingBean.catalogueAdmin}">
-						<f:facet name="header">
-							#{lbl['lbl.cm.action']}
-						</f:facet>
-						<p:commandLink
-							action="#{unspscCodeBackingBean.removeRecommendCode(rowIndex)}"
-							update="@form">
-							<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
-						</p:commandLink>
-
-
-
-					</p:column>
-
-				</p:dataTable>
-
-
-			</p:panel>
 
 
 		</h:panelGroup>
