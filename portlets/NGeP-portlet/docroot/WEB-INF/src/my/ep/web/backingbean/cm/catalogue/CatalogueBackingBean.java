@@ -2066,7 +2066,13 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 							new String[]{ResourceBundleUtils.getMessage("lbl.cm.tier",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())},
 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 					return "editCatalogItem";
-					}
+				} else if(!promotion.isCheckOk()) {
+					FacesContext.getCurrentInstance().addMessage(null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,MessageUtils.getMessage(MessageConst.ERROR_715030, 
+							new String[]{ResourceBundleUtils.getMessage("lbl.cm.tier",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())},
+							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+					return "editCatalogItem";
+				}
 			}
 			//Zonal Pricing
 			for (CmZonalStandardPricing promotion : this.getManagedBean().getSelectedMaintainItem().getzStdPrices()) {
@@ -2143,7 +2149,13 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 							new String[]{ResourceBundleUtils.getMessage("lbl.cm.zonal.tier",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())},
 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 					return "editCatalogItem";
-					}
+				} else if(!promotion.isCheckOk()) {
+					FacesContext.getCurrentInstance().addMessage(null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,MessageUtils.getMessage(MessageConst.ERROR_715030, 
+							new String[]{ResourceBundleUtils.getMessage("lbl.cm.zonal.tier",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())},
+							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+					return "editCatalogItem";
+				}
 			}
 			
 			//----------mandatory checking end----------------------------------------------------------------------------------------//
