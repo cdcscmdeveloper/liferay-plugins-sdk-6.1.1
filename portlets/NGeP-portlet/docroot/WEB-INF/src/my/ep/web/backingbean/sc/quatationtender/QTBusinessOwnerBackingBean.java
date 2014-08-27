@@ -204,12 +204,14 @@ public class QTBusinessOwnerBackingBean extends
 			}
 			String idtype = userBusinessOwnerSearchBean.getIdentificationType();
 			if (!StringUtils.isBlank(idtype)) {
-				SearchFilterBean bean = new SearchFilterBean();
-				bean.setAndOr(SearchCondition.CONDITION_OR.value());
-				bean.setSearchField("identificationCode.parameterCode");
-				bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
-				bean.setSearchValue(idtype);
-				searchFilterBean.add(bean);
+				userSearchBean.getDataFilterBeans().add(new SearchFilterBean("identificationCode.parameterCode", SearchOperator.OPERATOR_EQUALS.value(), idtype));
+			}
+			if (null != this.getManagedBean().getQt().getPmOrgProfile()) {
+			    SearchFilterBean bean = new SearchFilterBean();
+			    bean.setSearchField("pmUserOrgs.pmOrgProfile.orgProfileId");
+			    bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+			    bean.setSearchValue(this.getManagedBean().getQt().getPmOrgProfile().getOrgProfileId());
+			    searchFilterBean.add(bean);
 			}
 			// Adding search filterbeans to searchbean.
 			userSearchBean.getDataFilterBeans().addAll(searchFilterBean);
