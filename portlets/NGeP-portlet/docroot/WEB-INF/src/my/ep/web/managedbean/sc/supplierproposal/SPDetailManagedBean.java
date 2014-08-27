@@ -93,7 +93,9 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	private int totalContracts;
 	private int totalYears;
 	private BigDecimal totalContractAmount;
+	// Business rule 
 	private Date nonFedMinDate;
+	private Date nonFedEffMaxDate;
 
 	// Credit Facilities
 	private List<ScQtPRPCreditFacility> scQtPRPCreditFacilities;
@@ -138,11 +140,35 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	public SPDetailManagedBean() {
 		log.info("inside ");
 	}
+	
+	
+
+	/**
+	 * @return the nonFedEffMaxDate
+	 */
+	public Date getNonFedEffMaxDate() {
+		return nonFedEffMaxDate;
+	}
+
+
+
+	/**
+	 * @param nonFedEffMaxDate the nonFedEffMaxDate to set
+	 */
+	public void setNonFedEffMaxDate(Date nonFedEffMaxDate) {
+		this.nonFedEffMaxDate = nonFedEffMaxDate;
+	}
+
+
 
 	/**
 	 * @return the nonFedMinDate
 	 */
 	public Date getNonFedMinDate() {
+		
+		if(nonFedMinDate == null){
+			nonFedMinDate = new Date(01/01/2008);
+		}
 		return nonFedMinDate;
 	}
 
