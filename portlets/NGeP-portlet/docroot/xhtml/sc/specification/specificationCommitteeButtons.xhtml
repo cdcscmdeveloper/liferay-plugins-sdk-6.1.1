@@ -26,7 +26,7 @@
 
 					<ui:repeat var="bpmAction"
 						value="#{specificationBackingBean.managedBean.outComes}">
-						<c:if test="${bpmAction != '~'}">
+						<ui:fragment rendered="#{bpmAction ne '~'}">
 							<ui:param name="buttonLabel"
 								value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 
@@ -34,7 +34,7 @@
 								styleClass="ui-button" style="float:right;"
 								icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
 								action="#{specificationBackingBean.specCommitteBpmTask(bpmAction)}" />
-						</c:if>
+						</ui:fragment>
 					</ui:repeat>
 
 				</p:column>
