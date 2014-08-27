@@ -3885,33 +3885,26 @@ public class SpecificationBackingBean extends
 
 			if (QTConstants.TEMPLETE_SPEC_CODE.equalsIgnoreCase(checkList
 					.getDefinationType().getParameterCode())) {
-				checkList.setScQtCheckListScores(null);
-				checkList.setQtScoreWeightage(null);
 				this.getManagedBean().setSpecStatusId(
 						checkList.getPmStatus().getStatusId());
-				this.getManagedBean().setSpecSelectStats(true);
 
-				this.getManagedBean().setSelectedCheckList(index);
-				this.getManagedBean().setScqtDoc(checkList.getScQtDoc());
-				ISearchResultBean<ScQtCheckList> finchecklist = retriveChecklistByIdAndTitle(checkList
-						.getTitle());
-
-				if (null != finchecklist.getResultList()
-						&& !finchecklist.getResultList().isEmpty()) {
-					this.getManagedBean().setFinspecChecklist(
-							finchecklist.getResultList());
-				}
-				TemplateSpecBackingBean specBB = new TemplateSpecBackingBean();
+				ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate
+						.getInstance().getServiceObject(
+								ModuleCodeConst.COMMON_COMPONENT,
+								ITemplateSpecSO.class);
+				TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
+				specReqDTO.setSpecMaster(checkList.getScQtDoc()
+						.getTplSpecMaster());
+				specReqDTO
+						.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);
+				TemplateSpecResDTO specResDTO = templateSpecSO
+						.getTemplateMaster(specReqDTO);
+				checkList.getScQtDoc().setTplSpecMaster(
+						specResDTO.getSpecMaster());
 				TemplateSpecBean templateSpecBean = getManagedBean()
 						.getTemplateSpecBean();
-
 				templateSpecBean.setSpecMaster(checkList.getScQtDoc()
 						.getTplSpecMaster());
-
-				templateSpecBean
-						.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);
-
-				specBB.retrieveTemplateSpecMaster(templateSpecBean);
 				return "/xhtml/sc/main/committeeTechnicalEditAction.xhtml?faces-redirect=true";
 			} else {
 				setUserDetails(checkList);
@@ -4277,24 +4270,25 @@ public class SpecificationBackingBean extends
 
 			if (QTConstants.TEMPLETE_SPEC_CODE.equalsIgnoreCase(checkList
 					.getDefinationType().getParameterCode())) {
-				checkList.setScQtCheckListScores(null);
-				checkList.setQtScoreWeightage(null);
 				this.getManagedBean().setSpecStatusId(
 						checkList.getPmStatus().getStatusId());
-				this.getManagedBean().setSpecType(specType);
-				this.getManagedBean().setSelectedCheckList(index);
-				this.getManagedBean().setScqtDoc(checkList.getScQtDoc());
-				TemplateSpecBackingBean specBB = new TemplateSpecBackingBean();
+				ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate
+						.getInstance().getServiceObject(
+								ModuleCodeConst.COMMON_COMPONENT,
+								ITemplateSpecSO.class);
+				TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
+				specReqDTO.setSpecMaster(checkList.getScQtDoc()
+						.getTplSpecMaster());
+				specReqDTO
+						.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);
+				TemplateSpecResDTO specResDTO = templateSpecSO
+						.getTemplateMaster(specReqDTO);
+				checkList.getScQtDoc().setTplSpecMaster(
+						specResDTO.getSpecMaster());
 				TemplateSpecBean templateSpecBean = getManagedBean()
 						.getTemplateSpecBean();
-
 				templateSpecBean.setSpecMaster(checkList.getScQtDoc()
 						.getTplSpecMaster());
-
-				templateSpecBean
-						.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);
-
-				specBB.retrieveTemplateSpecMaster(templateSpecBean);
 				return "/xhtml/sc/main/financialCommitteeTemplate.xhtml?faces-redirect=true";
 			} else {
 				setUserDetails(checkList);
@@ -8200,7 +8194,6 @@ public class SpecificationBackingBean extends
 
 				}
 			}
-
 		} else {
 			this.getManagedBean().getScQtCheckSt2techProposal();
 		}
@@ -8225,8 +8218,7 @@ public class SpecificationBackingBean extends
 			PmStatus status = new PmStatus();
 			status.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
 			scQtCheckList.setPmStatus(status);
-			scQtCheckList.getScQtDoc().getTplSpecMaster()
-					.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_FINAL);
+
 		}
 		List<ScQtCheckList> toBeRemoveList = null;
 		if (SourcingConstants.TECHNICAL_DOCTYPE.equalsIgnoreCase(specType)) {
@@ -8261,13 +8253,34 @@ public class SpecificationBackingBean extends
 				return "/xhtml/sc/specification/specificationCreation.xhtml?faces-redirect=true";
 			} else if (SourcingConstants.FLOW_TYPE_SPEC_COMMITTE
 					.equalsIgnoreCase(flowType)) {
+				List<ScQtCheckList> savedCheckLists = resDTO
+						.getSavedCheckLists();
 				if (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(this
 						.getManagedBean().getScQt().getEvaluationType())) {
 					retriveTechnicalSpecification();
 				} else if (QTConstants.EVALUATION_TWO_TIER
 						.equalsIgnoreCase(this.getManagedBean().getScQt()
 								.getEvaluationType())) {
-					retriveTechnicalCheckList();
+					for (ScQtCheckList checkList : savedCheckLists) {
+						if (SourcingConstants.TECHNICAL_DOCTYPE
+								.equalsIgnoreCase(checkList.getDocCategory())) {
+							this.getManagedBean().getScQtCheckSt2techProposal()
+									.remove(this.getManagedBean().getIndex());
+							this.getManagedBean()
+									.getScQtCheckSt2techProposal()
+									.add(this.getManagedBean().getIndex(),
+											checkList);
+						} else {
+							this.getManagedBean()
+									.getScQtCheckSt2financeProposalList()
+									.remove(this.getManagedBean().getIndex());
+							this.getManagedBean()
+									.getScQtCheckSt2financeProposalList()
+									.add(this.getManagedBean().getIndex(),
+											checkList);
+
+						}
+					}
 				}
 				return "/xhtml/sc/specification/specificationCommitteeView.xhtml?faces-redirect=true";
 
@@ -8367,13 +8380,34 @@ public class SpecificationBackingBean extends
 				return "/xhtml/sc/specification/specificationCreation.xhtml?faces-redirect=true";
 			} else if (SourcingConstants.FLOW_TYPE_SPEC_COMMITTE
 					.equalsIgnoreCase(flowType)) {
+				List<ScQtCheckList> savedCheckLists = resDTO
+						.getSavedCheckLists();
 				if (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(this
 						.getManagedBean().getScQt().getEvaluationType())) {
 					retriveTechnicalSpecification();
 				} else if (QTConstants.EVALUATION_TWO_TIER
 						.equalsIgnoreCase(this.getManagedBean().getScQt()
 								.getEvaluationType())) {
-					retriveTechnicalCheckList();
+					for (ScQtCheckList checkList : savedCheckLists) {
+						if (SourcingConstants.TECHNICAL_DOCTYPE
+								.equalsIgnoreCase(checkList.getDocCategory())) {
+							this.getManagedBean().getScQtCheckSt2techProposal()
+									.remove(this.getManagedBean().getIndex());
+							this.getManagedBean()
+									.getScQtCheckSt2techProposal()
+									.add(this.getManagedBean().getIndex(),
+											checkList);
+						} else {
+							this.getManagedBean()
+									.getScQtCheckSt2financeProposalList()
+									.remove(this.getManagedBean().getIndex());
+							this.getManagedBean()
+									.getScQtCheckSt2financeProposalList()
+									.add(this.getManagedBean().getIndex(),
+											checkList);
+
+						}
+					}
 				}
 				return "/xhtml/sc/specification/specificationCommitteeView.xhtml?faces-redirect=true";
 
@@ -8488,7 +8522,7 @@ public class SpecificationBackingBean extends
 			String specType) {
 		this.getManagedBean().setSpecStatusId(
 				checklist.getPmStatus().getStatusId());
-		this.getManagedBean().setSelectedCheckList(index);
+		this.getManagedBean().setIndex(index);
 		this.getManagedBean().setScQtChecklist(checklist);
 		ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
