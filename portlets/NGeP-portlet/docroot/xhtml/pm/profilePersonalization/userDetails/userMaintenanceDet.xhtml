@@ -12,17 +12,17 @@
 				<p:tabMenu styleClass="sidemenu" id="tUserDetails"
 					activeIndex="#{profilePersonalizationBackingBean.managedBean.selectedTabIndex}">
 					<!-- User Profile -->
-                    <p:menuitem value="#{lbl['lbl.pm.profiles.tab.name.up']}" update="@form" immediate="true">
+                    <p:menuitem value="#{lbl['lbl.pm.profiles.tab.name.up']}" update="@form">
 						<f:setPropertyActionListener target="#{profilePersonalizationBackingBean.managedBean.selectedTabIndex}" 
 							value="#{profilePersonalizationBackingBean.tabUserProfile}" />
 					</p:menuitem>
 					<!-- Personalization -->	
-					<p:menuitem value="#{lbl['lbl.pm.profiles.tab.name.pl']}" update="@form" immediate="true">
+					<p:menuitem value="#{lbl['lbl.pm.profiles.tab.name.pl']}" update="@form">
 						<f:setPropertyActionListener target="#{profilePersonalizationBackingBean.managedBean.selectedTabIndex}" 
 							value="#{profilePersonalizationBackingBean.tabPersonalization}" />
 					</p:menuitem>
 					<!-- Change Password -->
-					<p:menuitem value="#{lbl['lbl.pm.profiles.tab.name.cp']}" update="@form" immediate="true">
+					<p:menuitem value="#{lbl['lbl.pm.profiles.tab.name.cp']}" update="@form">
 						<f:setPropertyActionListener target="#{profilePersonalizationBackingBean.managedBean.selectedTabIndex}" 
 							value="#{profilePersonalizationBackingBean.tabChangePassword}" />
 					</p:menuitem>

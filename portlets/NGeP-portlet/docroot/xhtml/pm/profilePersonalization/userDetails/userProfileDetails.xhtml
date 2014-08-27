@@ -16,6 +16,7 @@
 						</th>
 						<td>
 							<p:inputText styleClass="ppDisplayTextM" id="itLoginId"
+								label="#{lbl['lbl.pm.profiles.userdetails.loginid']}"
 								value="#{profilePersonalizationBackingBean.managedBean.selectedUser.loginId}"
 								disabled="true"/>
 						</td>
@@ -23,12 +24,13 @@
 						<td colspan="2" rowspan="9">
 							<h:graphicImage
 								value="#{profilePersonalizationBackingBean.userImagePath(profilePersonalizationBackingBean.managedBean.selectedUser.loginId)}"
-								style="margin-left:25px;" width="140" height="160" />
+								style="margin-left:25px;" width="140" height="160" />	
 							<div align="left">
-								<p:commandButton icon="ui-icon-image" value="#{lbl['lbl.pm.profiles.userdetails.changepic']}" />
-								<p:commandButton icon="ui-icon-delete" value="#{lbl['lbl.pm.profiles.userdetails.deletepic']}" />
+								<p:commandButton icon="ui-icon-image" value="#{lbl['lbl.pm.profiles.userdetails.changepic']}" 
+									immediate="true" />
+								<p:commandButton icon="ui-icon-delete" value="#{lbl['lbl.pm.profiles.userdetails.deletepic']}" 
+									immediate="true" />
 							</div>
-						
 						</td>
 					</tr>
 					
@@ -314,4 +316,6 @@
             </tr>		    			                     
 		</table>
 	</p:panel>
+	<!-- Upload Image Popup -->
+	<ui:include src="/xhtml/pm/profilePersonalization/common/uploadPortrait.xhtml" />
 </ui:composition>
