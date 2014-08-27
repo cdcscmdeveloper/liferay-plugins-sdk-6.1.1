@@ -17,6 +17,7 @@ import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -203,9 +204,8 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			circularReqDTO.setCircularVerId(dataType.getDocId().longValue());
 			
 			CircularResDTO resDTO = circularSO.retrieveCircularVerById(circularReqDTO);
+			setContractCircularVar(resDTO);
 			getManagedBean().setSelectedTabIndex(0);
-			getManagedBean().setCircular(resDTO.getCircularVer().getCtCircular());
-			getManagedBean().setCircularVer(resDTO.getCircularVer());
 			
 			this.getManagedBean().getApproverModel().setSource(getAvailableApproverList());
 		    if(resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0){
@@ -226,6 +226,40 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		} finally {
 			circularSO = null;
 		}
+	}
+	
+	public void setContractCircularVar(CircularResDTO resDTO){
+		
+		    getManagedBean().setCircular(resDTO.getCircularVer().getCtCircular());
+		    getManagedBean().setCircularVer(resDTO.getCircularVer());
+		  
+		    if(this.getManagedBean().getCircularVer().getCtCircularContracts() != null && this.getManagedBean().getCircularVer().getCtCircularContracts().size() > 0) {
+		    	Collections.sort(this.getManagedBean().getCircularVer().getCtCircularContracts(), new CtCircularContract());
+		    
+		    	for(CtCircularContract ctCircularContract : getManagedBean().getCircularVer().getCtCircularContracts()) {
+		    		
+		    		  if(ctCircularContract.getCtCircularItems() != null && ctCircularContract.getCtCircularItems().size() > 0)
+		    			        Collections.sort(ctCircularContract.getCtCircularItems(), new CtCircularItem());
+		    		 
+		    		  for(CtCircularItem circularItem : ctCircularContract.getCtCircularItems()){
+		    		             if(circularItem.getCtContractItem() != null)
+		    		    	            Collections.sort(circularItem.getCtContractItem().getCtItemPrices(), new CtItemPrice());
+		    		     }
+		         }
+		    }
+		    
+			this.getManagedBean().getApproverModel().setSource(getAvailableApproverList());
+		    if(resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0){
+			   this.getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
+			   this.getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
+			}
+		    
+			getManagedBean().setRemarkList(resDTO.getRemarkList());
+			getManagedBean().setAttachmentList(resDTO.getAttachmentList());		
+			
+			initializeRemarks();
+			ContractBackingBean ctBB = new ContractBackingBean(fileDirectory);
+			ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());	
 	}
 	
 	private void initializeApproverList() {
@@ -659,8 +693,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			CircularResDTO resDTO = null;
 			if(action.equalsIgnoreCase("view") || action.equalsIgnoreCase("save")) {
 				resDTO = circularSO.retrieveCircularVerById(reqDTO);
-				getManagedBean().setCircular(resDTO.getCircularVer().getCtCircular());
-				getManagedBean().setCircularVer(resDTO.getCircularVer());
+				setContractCircularVar(resDTO);
 				getManagedBean().setUpdateAction(false);
 				if (action.equalsIgnoreCase("view"))
 					getManagedBean().setOutComes(new String[]{});
@@ -676,15 +709,6 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			} else if(action.equalsIgnoreCase("cancel")) {
 				
 			}
-			
-			getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
-			getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
-			getManagedBean().setRemarkList(resDTO.getRemarkList());
-			getManagedBean().setAttachmentList(resDTO.getAttachmentList());		
-			
-			initializeRemarks();
-			ContractBackingBean ctBB = new ContractBackingBean(fileDirectory);
-			ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 			
 			return "circularBase.xhtml?faces-redirect=true";
 		} catch (Exception e) {
