@@ -147,7 +147,7 @@ public class ReviewCatalogueBackingBean extends
 		FacesContext facesContext = FacesContext.getCurrentInstance();
 		facesContext.addMessage(null, new FacesMessage(
 				FacesMessage.SEVERITY_INFO,
-				" Item Successfully approved", ""));
+				"", "Item Successfully approved"));
 		return "/xhtml/cm/catalogue/catalogueTaskList.xhtml";
 
 	}
@@ -176,7 +176,7 @@ public class ReviewCatalogueBackingBean extends
 					if(bb.getManagedBean().getRejectReason()==null || bb.getManagedBean().getRejectReason().isEmpty()){
 						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
 							FacesMessage.SEVERITY_ERROR,
-							"Remark is required!", ""));
+							"", "Remark is required"));
 						return "addCatalogView";
 					}
 				}
@@ -211,7 +211,7 @@ public class ReviewCatalogueBackingBean extends
 				FacesContext facesContext = FacesContext.getCurrentInstance();
 				facesContext.addMessage(null, new FacesMessage(
 						FacesMessage.SEVERITY_ERROR,
-						" Item Reject Reason Required!", ""));
+						"", "Item Reject Reason Required"));
 	
 				return "addCatalogView";
 			}
@@ -229,7 +229,7 @@ public class ReviewCatalogueBackingBean extends
 		FacesContext facesContext = FacesContext.getCurrentInstance();
 		facesContext.addMessage(null, new FacesMessage(
 				FacesMessage.SEVERITY_INFO,
-				" Item Successfully rejected", ""));
+				"", "Item Successfully rejected"));
 		return "/xhtml/cm/catalogue/catalogueTaskList.xhtml";
 
 	}
