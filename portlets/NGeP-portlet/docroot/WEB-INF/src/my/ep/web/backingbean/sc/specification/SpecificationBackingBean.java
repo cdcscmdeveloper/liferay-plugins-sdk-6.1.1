@@ -3766,7 +3766,22 @@ public class SpecificationBackingBean extends
 	public void templateChange(AjaxBehaviorEvent event) {
 		String template = (String) event.getComponent().getAttributes()
 				.get("value");
+		if (template.equalsIgnoreCase(TemplateSpecConst.PROCESS_TYPE_SOURCING)) {
+			getManagedBean().setSpecName(null);
+			// getManagedBean().setStandardTemplate(null);
+			getManagedBean().setSearchProcurementId(null);
+			getManagedBean().setQtNum(null);
+			getManagedBean().setSearchItemTypeId(null);
 
+		} else {
+			getManagedBean().setSpecName(null);
+			// getManagedBean().setStandardTemplate(null);
+			getManagedBean().setSearchProcurementId(
+					getManagedBean().getScQt().getPmProcurementCategory()
+							.getParameterId());
+			getManagedBean().setQtNum(null);
+			getManagedBean().setSearchItemTypeId(null);
+		}
 		this.getManagedBean().setStandardTemplate(template);
 	}
 
@@ -6652,7 +6667,7 @@ public class SpecificationBackingBean extends
 
 	public void resetTemplate() {
 		getManagedBean().setSpecName(null);
-		getManagedBean().setStandardTemplate(null);
+		// getManagedBean().setStandardTemplate(null);
 		getManagedBean().setSearchProcurementId(null);
 		getManagedBean().setQtNum(null);
 		getManagedBean().setSearchItemTypeId(null);
@@ -6686,6 +6701,15 @@ public class SpecificationBackingBean extends
 						.retrieveParameterByTypeAndCode(techSpecType);
 				String specTypeCode = techspecTyperesDTO.getPmParameter()
 						.getParameterCode();
+				if (TemplateSpecConst.PROCESS_TYPE_STANDARD
+						.equalsIgnoreCase(getManagedBean()
+								.getStandardTemplate())) {
+					getManagedBean().setSearchProcurementId(
+							getManagedBean().getScQt()
+									.getPmProcurementCategory()
+									.getParameterId());
+
+				}
 				if (getManagedBean().getSpecName() != null
 						&& !"".equalsIgnoreCase(getManagedBean().getSpecName())) {
 
