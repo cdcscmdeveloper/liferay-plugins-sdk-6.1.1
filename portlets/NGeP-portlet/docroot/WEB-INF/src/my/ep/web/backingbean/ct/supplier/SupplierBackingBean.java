@@ -10,16 +10,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -34,7 +31,6 @@ import javax.servlet.http.HttpServletResponse;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.ct.supplier.IContractSupplierSO;
-import my.ep.biz.service.ct.tpl.IContractTemplateSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
@@ -56,8 +52,6 @@ import my.ep.dto.ct.maintain.ContractAmendmentReqDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
 import my.ep.dto.ct.supplier.ContractSupplierReqDTO;
 import my.ep.dto.ct.supplier.ContractSupplierResDTO;
-import my.ep.dto.ct.tpl.ContractTemplateReqDTO;
-import my.ep.dto.ct.tpl.ContractTemplateResDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
@@ -97,7 +91,6 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.template.DocumentGenerator;
 
-import org.apache.commons.lang.text.StrSubstitutor;
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
 import org.primefaces.event.FileUploadEvent;
@@ -210,7 +203,11 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 				getManagedBean().setAttachmentList(resDTO.getCtAttachments());
 				
 				if(getManagedBean().getContractVer().getCtContractValue().getBankAccountNo()!=null) {
-					getPopulateBankAccountList();
+					//getPopulateBankAccountList();
+					String account = getManagedBean().getContractVer().getCtContractValue().getBankAccountNo();
+					if (getManagedBean().getContractVer().getCtContractValue().getBankName() != null)
+						account = account + " / " + getManagedBean().getContractVer().getCtContractValue().getBankName();
+					getManagedBean().setAccountNoAndName(account);
 				}
 			} else if (res.getProcessName().equalsIgnoreCase(CTProcessNameConst.FACTORING_REQUEST_PROCESS_NAME)) {
 				CTFactoringDataType dataType = (CTFactoringDataType) obj;
@@ -329,6 +326,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		getManagedBean().getContractVer().getCtContractValue().setBankAddress(null);
 		
 		if(supplierBank!=null) {
+			getManagedBean().getContractVer().getCtContractValue().setBankAccountNo(getManagedBean().getContractVer().getCtContractValue().getBankAccountNo());
 			getManagedBean().getContractVer().getCtContractValue().setBankName(supplierBank.getPmFinancialOrg().getFinOrgName());
 			getManagedBean().getContractVer().getCtContractValue().setBankBranch(supplierBank.getBankBranch());
 			getManagedBean().getContractVer().getCtContractValue().setBankAddress(supplierBank.getSmAddress());
@@ -342,7 +340,10 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 					&& this.getManagedBean().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks().size() > 0) {
 				List<SmSupplierBank> supplierBank = this.getManagedBean().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks();
 				for (SmSupplierBank obj : supplierBank) {
-					populateBankAccountList.add(new SelectItem(obj.getAccountNo(), obj.getAccountNo()));
+					String account = obj.getAccountNo();
+					if (obj.getPmFinancialOrg() != null)
+						account = account + " / " + obj.getPmFinancialOrg().getFinOrgName();
+					populateBankAccountList.add(new SelectItem(obj.getAccountNo(), account));
 					if(!getManagedBean().getSupplierBankAccountMap().containsKey(obj.getAccountNo())) {
 						getManagedBean().getSupplierBankAccountMap().put(obj.getAccountNo(), obj);
 					}

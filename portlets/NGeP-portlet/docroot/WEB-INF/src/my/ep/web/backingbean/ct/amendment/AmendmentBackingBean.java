@@ -1970,7 +1970,10 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	    		   populateBankAccountList = new ArrayList<SelectItem>();
 			       List<SmSupplierBank> supplierBank = this.getManagedBean().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks();
 				   for(SmSupplierBank obj : supplierBank) {
-					   populateBankAccountList.add(new SelectItem(obj.getAccountNo(),obj.getAccountNo()));
+					   String account = obj.getAccountNo();
+						if (obj.getPmFinancialOrg() != null)
+							account = account + " / " + obj.getPmFinancialOrg().getFinOrgName();
+					   populateBankAccountList.add(new SelectItem(obj.getAccountNo(),account));
 				   }     
 	    	   }
 	     }return populateBankAccountList;

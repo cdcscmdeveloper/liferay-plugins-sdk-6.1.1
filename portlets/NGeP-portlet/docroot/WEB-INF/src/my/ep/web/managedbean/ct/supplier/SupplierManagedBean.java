@@ -71,6 +71,7 @@ public class SupplierManagedBean extends BaseManagedBean {
 	private List<CtContract> contractList = new ArrayList<CtContract>();
 	private SearchFilterBean searchFilterBean = new SearchFilterBean();
 	private String fileDirectory;
+	private String accountNoAndName;
 	
 	public SupplierManagedBean(){
 		
@@ -338,5 +339,13 @@ public class SupplierManagedBean extends BaseManagedBean {
 
 	public void setFileDirectory(String fileDirectory) {
 		this.fileDirectory = fileDirectory;
+	}
+
+	public String getAccountNoAndName() {
+		return accountNoAndName;
+	}
+
+	public void setAccountNoAndName(String accountNoAndName) {
+		this.accountNoAndName = accountNoAndName;
 	}
 }
