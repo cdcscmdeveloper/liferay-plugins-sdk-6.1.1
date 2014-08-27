@@ -92,7 +92,7 @@
 				<td>
 					<p:selectOneRadio id="zonal" required="true" 
 				         value="#{simpleQuoteBackingBean.managedBean.scQuote.zonal}" 
-				         label="#{lbl['lbl.sc.sq.gen.info.zonal']}" disabled="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending RN Creation'}">
+				         label="#{lbl['lbl.sc.sq.gen.info.zonal']}" disabled="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending RN Creation' or simpleQuoteBackingBean.managedBean.scQuote.panel eq 'true'}">
 						<f:selectItems
 							value="#{simpleQuoteBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 						<p:ajax event="change" update="@([id$=mainTabMenu])" process="@this" listener="#{simpleQuoteBackingBean.zoneEvent}" />

@@ -1153,13 +1153,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		} else {
 			IViewSupplierItemSO viewSupplierItemSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT, IViewSupplierItemSO.class);
 	    	CatalogueReqDTO catalogueReqDTO = new CatalogueReqDTO();
-	    	ISearchBean<VCmSupplierItem>  searchBean  = new CatalogueBackingBean().getManagedBean().getSearchDataModel().getSearchBean();
-			searchBean.getDataFilterBeans().clear();
-			catalogueReqDTO.setViewSearchBean(searchBean);
-			catalogueReqDTO.setSupplierItemId(selectedSupplierItem.getSupplierItemId());
-			catalogueReqDTO.setExtensionCode(scRequestItem.getCmItem().getExtensionCode());
-	    	CatalogueResDTO catalogueResDTO = viewSupplierItemSO.getSuppliersItemPricingByExtensionCode(catalogueReqDTO);
-	    	
 			// purchase in default & add to cart
 		    requestNote.setSourceMethod(ParameterConst.REQUEST_NOTE_SC);
 		    List<ScRequestSupplierItem> supplierItems = new ArrayList<ScRequestSupplierItem>();
@@ -1174,6 +1167,13 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		    			}
 		    		}
 		    	}
+		    	
+		    	ISearchBean<VCmSupplierItem>  searchBean  = new CatalogueBackingBean().getManagedBean().getSearchDataModel().getSearchBean();
+				searchBean.getDataFilterBeans().clear();
+				catalogueReqDTO.setViewSearchBean(searchBean);
+				catalogueReqDTO.setSupplierItemId(selectedSupplierItem.getSupplierItemId());
+				catalogueReqDTO.setExtensionCode(scRequestItem.getCmItem().getExtensionCode());
+		    	CatalogueResDTO catalogueResDTO = viewSupplierItemSO.getSuppliersItemPricingByExtensionCode(catalogueReqDTO);
 
 		    	if(catalogueResDTO.getViewSuppItemResultBean().getResultList() != null && catalogueResDTO.getViewSuppItemResultBean().getResultList().size()>0){
 
@@ -1201,7 +1201,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		    	catalogueReqDTO.setViewSearchBean(new CatalogueBackingBean().getManagedBean().getSearchDataModel().getSearchBean());
 		    	catalogueReqDTO.setSupplierItemId(selectedSupplierItem.getSupplierItemId());
 		    	catalogueReqDTO.setExtensionCode(scRequestItem.getCmItem().getExtensionCode());
-			    catalogueResDTO = viewSupplierItemSO.getSuppliersItemPricingByExtensionCode(catalogueReqDTO);
+		    	CatalogueResDTO  catalogueResDTO = viewSupplierItemSO.getSuppliersItemPricingByExtensionCode(catalogueReqDTO);
 		    	if(catalogueResDTO.getViewSuppItemResultBean().getResultList() != null && catalogueResDTO.getViewSuppItemResultBean().getResultList().size()>0){
 		    		for (VCmSupplierItem vCmSupplierItem : catalogueResDTO.getViewSuppItemResultBean().getResultList()) {
 		    			if (vCmSupplierItem.getCmPricings() != null && vCmSupplierItem.getCmPricings().size() > 0) {
