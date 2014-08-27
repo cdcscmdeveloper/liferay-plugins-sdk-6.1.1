@@ -271,14 +271,17 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		ContractSupplierReqDTO reqDTO = null;
 		List<SelectItem> populateContractList = new ArrayList<SelectItem>();
 		try {
-			reqDTO = new ContractSupplierReqDTO();
-			supplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSupplierSO.class);
-			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
-			ContractSupplierResDTO resDTO = supplierSO.retrieveSupplierContract(reqDTO);
-			if (resDTO.getContractList() != null && !resDTO.getContractList().isEmpty()) {
-				for (CtContract obj : resDTO.getContractList()) {
-					populateContractList.add(new SelectItem(obj.getLatestContractVer().getContractVerId(), obj.getContractNo()));
+			if (getManagedBean().getContractList().size() == 0) {
+				reqDTO = new ContractSupplierReqDTO();
+				supplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSupplierSO.class);
+				reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
+				ContractSupplierResDTO resDTO = supplierSO.retrieveSupplierContract(reqDTO);
+				if (resDTO.getContractList() != null && !resDTO.getContractList().isEmpty()) {
+					getManagedBean().getContractList().addAll(resDTO.getContractList());
 				}
+			}
+			for (CtContract obj : getManagedBean().getContractList()) {
+				populateContractList.add(new SelectItem(obj.getLatestContractVer().getContractVerId(), obj.getContractNo()));
 			}
 		} finally {
 			supplierSO = null;
