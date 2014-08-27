@@ -647,6 +647,7 @@ public class SpecificationBackingBean extends
 		category.setPmCategoryL3(new PmCategoryL3());
 		qtCategoryList.add(category);
 		this.getManagedBean().setSuppCriteriaopenList(qtCategoryList);
+
 	}
 
 	public void deleteCategoryCodes() {
@@ -7812,6 +7813,7 @@ public class SpecificationBackingBean extends
 				}
 			}
 			this.getManagedBean().setZoneGeneralTrees(zoneTrees);
+			this.getManagedBean().setIndex(-1);
 		}
 	}
 
@@ -7821,6 +7823,7 @@ public class SpecificationBackingBean extends
 	public void deleteSupplierQualificationTreeNode() {
 
 		this.getManagedBean().setZoneTrees(new ArrayList<TreeNode>());
+		this.getManagedBean().setIndex(-1);
 	}
 
 	private void updateCategoryCodesToQt(List<ScQtCategory> categories,
@@ -7973,17 +7976,15 @@ public class SpecificationBackingBean extends
 			supplierCriteria.setScQtLocCriteria(null);
 			scQt.setZoneLocationLevel(new PmParameter());
 
-			this.getManagedBean().setZoneTrees(new ArrayList<TreeNode>());
+			this.getManagedBean().setZoneTrees(null);
 		} else {
-			this.getManagedBean()
-					.setZoneGeneralTrees(new ArrayList<TreeNode>());
+			this.getManagedBean().setZoneGeneralTrees(null);
 			supplierCriteria.setQtZoneCriterias(null);
 			if (null == supplierCriteria.getLocationLevel()) {
 				supplierCriteria.setLocationLevel(new PmParameter());
 			}
 
-			this.getManagedBean()
-					.setZoneGeneralTrees(new ArrayList<TreeNode>());
+			this.getManagedBean().setZoneGeneralTrees(null);
 
 		}
 		scQt.setScQtSupplierCriteria(supplierCriteria);
