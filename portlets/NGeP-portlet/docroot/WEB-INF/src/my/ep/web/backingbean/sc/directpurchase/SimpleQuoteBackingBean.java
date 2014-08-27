@@ -97,6 +97,7 @@ import my.ep.persistence.entity.sc.directpurchase.ScQuoteZone;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.directpurchase.ScSQRemark;
+import my.ep.persistence.entity.sc.directpurchase.ScSQWorkFlowStatus;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecEstimation;
@@ -245,12 +246,14 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 						}
 						   //adding selected item to item List
 					       prepareQuestions(selectedPanelItem , null);
+					       zoneEvent();
+					       scQuote.setPanelItem(selectedPanelItem);    
 						getManagedBean().setPanelItemBtnFlag(Boolean.FALSE);
 					}
 				} else{
 					throw new EpException("Select non contract items only");
 				}
-		  }else { // non contract item and non panel item
+		  } else { // non contract item and non panel item
 				    CatalogueReqDTO catalogueReqDTO = new CatalogueReqDTO();
 				    catalogueReqDTO.setDocId(docId);
 					CatalogueResDTO catalogueResDTO = catalogueSO.searchSupplierItemByStatus(catalogueReqDTO);
@@ -326,7 +329,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 		if(scQuote.getQuoteNo() == null){
 			scQuote.setQuoteNo(quoteSO.generateQuoteNo());
 		}
-		scQuote.setWorkflowStatuses(null);
+		
 		getCurrentStatus(DPStatusConstants.SQ_PENDING_SUBMISSION);
 		// Initializing Remarks
 		scQuote.setRemarks(initializeRemarks(scQuote));
@@ -380,23 +383,22 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 		
 		List<CtPanelSupplier> ctPanelSuppliers = new ArrayList<CtPanelSupplier>();
 		if(ctPanelItem.getCtPanelZones() != null && ctPanelItem.getCtPanelZones().size()>0){
+			ScQuoteZone quoteZone = new ScQuoteZone();
+			
 			for (CtPanelZone ctPanelZone : ctPanelItem.getCtPanelZones()) {
 
 				if(ctPanelZone.getCtPanelSuppliers() != null && ctPanelZone.getCtPanelSuppliers().size()>0){
 					ctPanelSuppliers.addAll(ctPanelZone.getCtPanelSuppliers());
 				}
-
 				TplSpecZoneDtl tplSpecZoneDtl = new TplSpecZoneDtl();
-				ScQuoteZone quoteZone = new ScQuoteZone();
 				quoteZone.setScQuote(scQuote);
 				scQuote.setQuoteZone(quoteZone);
 				tplSpecZoneDtl.setTplSpecZone(quoteZone);
 				tplSpecZoneDtl.setZoneName(ctPanelZone.getName());
-				
+				tplSpecZoneDtl.setPanelZone(ctPanelZone);
 				// for zonal 
 				scQuote.setZonal(Boolean.TRUE);
 				getManagedBean().setScQuote(scQuote);
-				zoneEvent();
 
 				List<PmState> states = SourcingLocationHelper
 						.getStateFromCtPanelZone(ctPanelZone.getPanelZoneDtls());
@@ -556,6 +558,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 		ScRequestNote requestNote = null;
 		try {
 			IParameterSO parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+			IStatusSO iStatusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 			quoteSO = (IQuoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQuoteSO.class);
 			IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
 			QuoteReqDTO reqDTO = new QuoteReqDTO();
@@ -620,7 +623,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			if(quote.isPanel()){
 				// zone details
 				if(!getManagedBean().getZoneTrees().isEmpty()){
-					getManagedBean().getScQuote().setQuoteZone(getQuoteZones(getManagedBean().getZoneTrees()));
+					quote.setQuoteZone(getQuoteZones(getManagedBean().getZoneTrees()));
 				}
 			}
 			
@@ -664,7 +667,22 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 					}	
 				} 
 			}
-			quote.setWorkflowStatuses(null);
+			
+		    // WorkFlow Status should be set In the save
+		    List<ScSQWorkFlowStatus> workFlowStatuses =  new  ArrayList<ScSQWorkFlowStatus>();
+		    ScSQWorkFlowStatus workFlowStatus = new ScSQWorkFlowStatus();
+		    workFlowStatus.setQuote(quote);
+		    PmStatus status = new PmStatus();
+		    status.setStatusId(DPStatusConstants.SQ_PENDING_SUBMISSION);
+		    StatusReqDTO statusReqDTO = new StatusReqDTO();
+		    if (status != null) {
+		    	statusReqDTO.setStatusId(status.getStatusId());
+		    	StatusResDTO statusResDTO = iStatusSO.retrieveStatusByStatusId(statusReqDTO);
+		    	workFlowStatus.setPmStatus(statusResDTO.getPmStatus());
+		    	workFlowStatus.setCurrent(Boolean.TRUE);
+		    }
+		    workFlowStatuses.add(workFlowStatus);
+		    quote.setWorkflowStatuses(workFlowStatuses);
 			
 			// product and service
 			List<ScQuoteDoc> quoteDocs = new ArrayList<ScQuoteDoc>();
@@ -2178,14 +2196,22 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			}
 
 			// service and product
+			List<TplSpecQuestion> tplSpecQuestions = new ArrayList<TplSpecQuestion>();
 			if(scQuote.getQuoteDocs() != null){
 				for (ScQuoteDoc scQuoteDoc : scQuote.getQuoteDocs()) {
 					TplSpecMaster specMaster = scQuoteDoc.getSpecMaster();
 					if(ParameterConst.SQ_ITEM_LIST_PRODUCT.equalsIgnoreCase(specMaster.getItemTypeCode().getParameterCode())){
+						if(specMaster.getTplSpecQuestions() == null){
+							specMaster.setTplSpecQuestions(tplSpecQuestions);
+						}
 						productTplSpecBean.setSpecMaster(specMaster);
 						getManagedBean().setProductTemplateSpecBean(productTplSpecBean);
 						// service Tpl Spe
 					} else  if(ParameterConst.SQ_ITEM_LIST_SERVICE.equalsIgnoreCase(specMaster.getItemTypeCode().getParameterCode())){
+						
+						if(specMaster.getTplSpecQuestions() == null){
+							specMaster.setTplSpecQuestions(tplSpecQuestions);
+						}
 						serviceTplSpecBean.setSpecMaster(specMaster);
 						getManagedBean().setServiceTemplateSpecBean(serviceTplSpecBean);
 					}
@@ -2283,6 +2309,21 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			// location level
 			if(scQuote.getZoneLocatonLevel() != null){
 				getManagedBean().setLocationLevel(scQuote.getZoneLocatonLevel().getParameterCode());
+			}
+
+			// panel item 
+			if(scQuote.getPanelItem() != null){
+
+				if(scQuote.getPanelItem().getItemCategoryId().getParameterCode().equals(ParameterConst.SQ_PANEL_ITEM_GENERAL)){
+					// panel item general 
+					getManagedBean().setPanelItemFlag(Boolean.TRUE);
+
+				} else if(scQuote.getPanelItem().getItemCategoryId().getParameterCode().equals(ParameterConst.SQ_PANEL_ITEM_SPECIFIC)){
+					// panel item specific 
+					scQuote.setTitle(scQuote.getPanelItem().getScRequestItem().getItemName());
+					getManagedBean().setPanelItemFlag(Boolean.FALSE);
+				}
+				getManagedBean().setPanelItemBtnFlag(Boolean.FALSE);
 			}
 			
 			// duration calc
@@ -2574,9 +2615,14 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 	 * Event for Zone in SQ
 	 */
 	public void zoneEvent() {
+		ScQuoteZone quoteZone = null;
 		ScQuote quote = getManagedBean().getScQuote();
 		if (quote.isZonal()){
-			ScQuoteZone quoteZone = new  ScQuoteZone();
+			if(quote.getQuoteZone() == null){
+			     quoteZone = new  ScQuoteZone();
+			} else{
+				quoteZone = quote.getQuoteZone();
+			}
 			quoteZone.setScQuote(quote);
 			quote.setQuoteZone(quoteZone);
 			quote.setZonal(Boolean.TRUE);
