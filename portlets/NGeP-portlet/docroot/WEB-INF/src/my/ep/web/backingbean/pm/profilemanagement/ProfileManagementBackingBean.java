@@ -1215,8 +1215,10 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				for(PmUserOrg pmUserOrg:pmUserOrgs){
 					if(pmUserOrg.getUserOrgId()!=activeUserOrgId){
 						for(PmUserRole pmUserRole: pmUserOrg.getPmUserRoles()){
-							deleteRoleList.add(pmUserRole);
-							System.out.println("2 DELETE OLD: " + pmUserRole.getPmRole().getRoleCode());
+							if(pmUserRole.getRecordStatusFlg()==DbValueConst.RECORD_STATUS_ACTIVE){
+								deleteRoleList.add(pmUserRole);
+								System.out.println("2 DELETE OLD: " + pmUserRole.getPmRole().getRoleCode());
+							}
 						}
 					}
 				}
