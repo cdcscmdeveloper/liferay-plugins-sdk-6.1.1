@@ -30,6 +30,8 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 					<td colspan="4">
 						<div class="ppRightBtn">
 							<p:commandButton value="#{lbl['lbl.btn.search']}" 
+								widgetVar="cbSearchAll" id="cbSearchAll"
+				  				onclick="cbSearchAll.disable()"  oncomplete="cbSearchAll.enable()"
 								action="#{searchAllUserBackingBean.tempSearchUserProfile()}"
 								update="opSearchAllResult" />
 					  	</div>

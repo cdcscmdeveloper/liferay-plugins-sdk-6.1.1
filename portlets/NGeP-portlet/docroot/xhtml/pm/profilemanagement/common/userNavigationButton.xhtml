@@ -11,11 +11,15 @@
 			  <div class="rowBtnRight">
 				   <c:choose>
 				  		<c:when test="#{profileManagementBackingBean.managedBean.selectedUser.brandNew}">
-				  			<p:commandButton value="#{lbl['lbl.btn.save']}" update="@form"
+				  			<p:commandButton value="#{lbl['lbl.btn.save']}" update="@form" 
+				  				widgetVar="cbSaveProfile" id="cbSaveProfile"
+				  				onclick="cbSaveProfile.disable()"  oncomplete="cbSaveProfile.enable()"
 				  				action="#{profileManagementBackingBean.saveUserProfile()}"/>
 				  		</c:when>
 				  		<c:otherwise>
 				  			<p:commandButton value="#{lbl['lbl.btn.update']}" update="@form"
+				  				widgetVar="cbSaveProfile" id="cbSaveProfile"
+				  				onclick="cbSaveProfile.disable()"  oncomplete="cbSaveProfile.enable()"
 				  				action="#{profileManagementBackingBean.saveUserProfile()}"/>
 				  		</c:otherwise>
 					</c:choose>
