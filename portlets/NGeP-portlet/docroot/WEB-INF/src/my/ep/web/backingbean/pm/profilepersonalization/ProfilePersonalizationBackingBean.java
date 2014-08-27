@@ -154,7 +154,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		
 		//load password
 		pmUser.setPassword(null);
-		pmUser.setOldPassword(null);
+//		pmUser.setOldPassword(null);
 		pmUser.setConfirmPassword(null);
 		
 		this.getManagedBean().setSelectedUser(pmUser);
@@ -196,7 +196,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 			
 			//load password
 			pmUser.setPassword(null);
-			pmUser.setOldPassword(null);
+//			pmUser.setOldPassword(null);
 			pmUser.setConfirmPassword(null);
 			
 			this.getManagedBean().setSelectedUser(pmUser);

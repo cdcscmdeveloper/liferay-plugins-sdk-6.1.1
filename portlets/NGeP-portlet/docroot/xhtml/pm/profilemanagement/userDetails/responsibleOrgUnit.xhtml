@@ -18,7 +18,7 @@
 			
 		    <p:column headerText="* #{lbl['lbl.pm.profiles.resorg.table.orgtype']}">
 				<p:selectOneMenu value="#{orgUnit.pmOrgProfile.orgTypeCode.parameterId}" styleClass="ppDropDownWidthM" 
-					disabled="#{!orgUnit.brandNew}" required="true" id="somOrgType"
+					disabled="#{!orgUnit.brandNew}" id="somOrgType"
 					label="#{lbl['lbl.pm.profiles.resorg.table.orgtype']}">  
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />      
 			     	<f:selectItems value="#{profileManagementBackingBean.getOrgTypeList()}" 
@@ -30,7 +30,7 @@
 	            <p:message id="somOrgTypeMsg" for="somOrgType" display="icon" />    
 	        </p:column>	 
 		    <p:column headerText="* #{lbl['lbl.pm.profiles.resorg.table.code']}" >        
-	            <ac:lov id="lovResOrg" lovId="PM_ORG_PROFILE" size="20" required="true"
+	            <ac:lov id="lovResOrg" lovId="PM_ORG_PROFILE" size="20"
 	            	update=":form:dtOrgUnit" readonly="true" disabled="#{!orgUnit.brandNew}"
 					headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
 					value="#{orgUnit.pmOrgProfile.pmOrgValidity.orgCode}" 
@@ -46,7 +46,7 @@
        			#{orgUnit.pmOrgProfile.pmOrgValidity.orgName}
 	        </p:column>
 	        <p:column headerText="* #{lbl['lbl.pm.profiles.resorg.table.effdate']}" > 
-			  	<p:calendar id="effDateId" value="#{orgUnit.effDateDisplay}" styleClass="ppDisplayCalXS" required="true"
+			  	<p:calendar id="effDateId" value="#{orgUnit.effDateDisplay}" styleClass="ppDisplayCalXS" 
 			  		label="#{lbl['lbl.pm.profiles.resorg.table.effdate']}" 
 					showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 					<p:ajax event="dateSelect" process="@this" />

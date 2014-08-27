@@ -23,8 +23,11 @@
 							<p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.loginid']}" />
 						</th>
 						<td>
-							<p:inputText styleClass="ppDisplayTextM" disabled="true" id="itLoginId"
+							<p:inputText styleClass="ppDisplayTextM" id="itLoginId" 
+								label="#{lbl['lbl.pm.profiles.userdetails.loginid']}" required="true"
+								disabled="#{!profileManagementBackingBean.managedBean.selectedUser.brandNew}"
 								value="#{profileManagementBackingBean.managedBean.selectedUser.loginId}"/>
+							<p:message id="itLoginIdMsg" for="itLoginId" display="icon" />
 
 						</td>
 						<!-- Profile Photo -->
@@ -35,9 +38,9 @@
 										
 							<div align="left">
 								<p:commandButton icon="ui-icon-image" value="#{lbl['lbl.pm.profiles.userdetails.changepic']}" 
-									oncomplete="dlImageUpload.show();" />
+									oncomplete="dlImageUpload.show();" immediate="true" />
 								<p:commandButton icon="ui-icon-delete" value="#{lbl['lbl.pm.profiles.userdetails.deletepic']}"
-									action="#{profileManagementBackingBean.deletePortrait}"  />
+									action="#{profileManagementBackingBean.deletePortrait}" immediate="true" />
 							</div>
 						</td>
 					</tr>

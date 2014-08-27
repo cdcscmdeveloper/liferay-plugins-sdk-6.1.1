@@ -203,7 +203,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	 * @param pmUser
 	 * @return
 	 */
-	public String redirectToMaintainUser(Long id) {
+	public String redirectToMaintainUser(Long id) throws Exception{
 		logger.info("redirectToMaintainUser");
 		this.retrieveIdentityTypeMap();
 		this.getManagedBean().setSelectedTabIndex(TAB_USER_PROFILE);
@@ -258,7 +258,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			
 			//load password
 			pmUser.setPassword(null);
-			pmUser.setOldPassword(null);
+//			pmUser.setOldPassword(null);
 			pmUser.setConfirmPassword(null);
 			
 			this.getManagedBean().setSelectedUser(pmUser);
@@ -308,7 +308,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		
 		//load password
 		pmUser.setPassword(null);
-		pmUser.setOldPassword(null);
+//		pmUser.setOldPassword(null);
 		pmUser.setConfirmPassword(null);
 		
 		this.getManagedBean().setSelectedUser(pmUser);
@@ -551,9 +551,10 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 						isValid = false;
 						break;
 					}
+					i++;
 				}
 				if(!isValid){
-					this.getManagedBean().getSelectedUser().getPmUserOrgs().get(index).getPmOrgProfile().setOrgProfileId(null);
+					this.getManagedBean().getSelectedUser().getPmUserOrgs().get(index).getPmOrgProfile().setPmOrgValidity(new PmOrgValidity());
 					throw new EpException("Org Code is unique."); //TODO exception
 				}
 				
@@ -1364,9 +1365,9 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				&& user.getPmUserPreference().getNotifyRemovalDay()==0)){
 			throw new IllegalArgumentException("Delete Notification is mandatory.");
 		}
-		if(!StringUtils.isBlank(user.getConfirmPassword()) && !StringUtils.isBlank(user.getPassword()) && StringUtils.isBlank(user.getOldPassword())){
-			throw new IllegalArgumentException("Old Password is mandatory.");
-		}
+//		if(!StringUtils.isBlank(user.getConfirmPassword()) && !StringUtils.isBlank(user.getPassword()) && StringUtils.isBlank(user.getOldPassword())){
+//			throw new IllegalArgumentException("Old Password is mandatory.");
+//		}
 	}
 	
 	/**
@@ -1414,14 +1415,13 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		UserReqDTO reqDTO = null;
 		IUserSO userSO = null;
 		PmUser user =  null; 
-		boolean isChangePwd = false;
+//		boolean isChangePwd = false;
 		
 	
 		
 		try {
 			
 			user = this.getManagedBean().getSelectedUser();
-			user.setLoginId(user.getIdentificationNo());
 			
 			// Validation
 			validateUser(user);
@@ -1430,17 +1430,18 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			oneActiveResponsibleOrg(user);
 			
 			reqDTO = new UserReqDTO();
-			
-			if(!StringUtils.isBlank(user.getOldPassword()) && !StringUtils.isBlank(user.getConfirmPassword()) && !StringUtils.isBlank(user.getPassword())){
+
+			/* no need check as assumed user have logged in
+			if(!StringUtils.isBlank(user.getConfirmPassword()) && !StringUtils.isBlank(user.getPassword())){ //!StringUtils.isBlank(user.getOldPassword()) &&
 				isChangePwd = true;
 			}
 			
-			//TODO currently check via liferay
+	
 			if(isChangePwd){
 				if(!checkOldPassword(user)){
 					throw new EpException("Old Password is invalid."); 
 				}
-			}
+			}*/
 			
 			loadUserAddress(user);
 			
@@ -1486,7 +1487,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	
 	
 
-	//TODO: check old password locally 		
+	/*
 	private boolean checkOldPassword(PmUser pmUser) throws PortalException, SystemException{
 		logger.info("checkOldPassword");
 		boolean result = false;
@@ -1503,7 +1504,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		}
 		return result;
 	}
-
+*/
 	
 
 	/**
