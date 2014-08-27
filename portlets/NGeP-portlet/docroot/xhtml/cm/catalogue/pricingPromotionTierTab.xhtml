@@ -19,18 +19,6 @@
 			<ac:paginator for="pricingPromotionTierID"></ac:paginator>
 			<p:column>
 				<f:facet name="header">
-					#{lbl['lbl.cm.price']}
-				</f:facet>
-				<p:inputText value="#{price.price}" size="10" style="text-align:right">
-					<p:ajax event="keyup" update="pTErrorLink" />
-					<p:ajax event="change"
-						listener="#{catalogueBackingBean.validatePromotionTierDates(rowIndex)}"
-						update=":form:pricingTabID:headerTabId:tierId:pricingPromotionTierID" />
-					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-				</p:inputText>
-			</p:column>
-			<p:column>
-				<f:facet name="header">
 					#{lbl['lbl.cm.from.qty']}
 				</f:facet>
 				<p:inputText value="#{price.fromQty}" size="5" readonly="true"
@@ -43,6 +31,18 @@
 				</f:facet>
 				<p:inputText value="#{price.toQty}" size="5" readonly="true"
 					disabled="#{price.standardDisabled}"></p:inputText>
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					#{lbl['lbl.cm.price']}
+				</f:facet>
+				<p:inputText value="#{price.price}" size="10" style="text-align:right">
+					<p:ajax event="keyup" update="pTErrorLink" />
+					<p:ajax event="change"
+						listener="#{catalogueBackingBean.validatePromotionTierDates(rowIndex)}"
+						update=":form:pricingTabID:headerTabId:tierId:pricingPromotionTierID" />
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</p:inputText>
 			</p:column>
 			<p:column>
 				<f:facet name="header">
