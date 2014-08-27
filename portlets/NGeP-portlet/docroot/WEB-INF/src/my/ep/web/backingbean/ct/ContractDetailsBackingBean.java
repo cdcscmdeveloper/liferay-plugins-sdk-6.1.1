@@ -443,15 +443,15 @@ public void ConstructSideTabMenu(){
 			      }
 		 		  getManagedBean().getFinalListOfSideMenu().addAll(menu.menuItem);
 		          if (getManagedBean().isDirectPurchase()) {
-		        	    if(!getManagedBean().getCtContract(). getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)){
+		        	    if(getManagedBean().getCtContract(). getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)){
 				    	         getManagedBean().getFinalListOfSideMenu().addAll(menu.menuSchedule);
 		        	    }
 			      } else{
 			    	  	  if (getManagedBean().getContractVer().getCtDeductions().size() > 0) {
 			    	  		  getManagedBean().getFinalListOfSideMenu().addAll(menu.menuDeduction);
 			    	  	  }
-		            	  if (!getManagedBean().getCtContract().
-				        		getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)) {
+		            	  if (getManagedBean().getCtContract().
+				        		getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
 		            	        getManagedBean().getFinalListOfSideMenu().addAll(menu.menuSchedule);
 		            	  }
 			       }

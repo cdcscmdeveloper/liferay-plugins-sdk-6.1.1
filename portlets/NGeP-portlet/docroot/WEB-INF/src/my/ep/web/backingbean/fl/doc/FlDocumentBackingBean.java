@@ -169,66 +169,27 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		    }
 			List<String> flDocTypes = new ArrayList<String>();
 			if(getManagedBean().getSearchOrderType()!=null) {
-				// TODO Should filter by user role
-				getManagedBean().getFlRequisitioner();
-				isFlFulfilmentApprover();
-				isFlFulfilmentRecevingOfficer();
-				isFlFulfilmentApprover();
-				isFlFulfilmentSupplier();
-				if(getManagedBean().getSearchOrderType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER) && isFlFulfilmentRequisitioner()) {
-					if(isFlFulfilmentRecevingOfficer()){
-						flDocTypes.add(ParameterConst.DOCTYPE_CONTRACT_REQUEST);
-						flDocTypes.add(ParameterConst.DOCTYPE_SHIPPING_INSTRUCTION);
-						flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
-					}else{
-						flDocTypes.add(ParameterConst.DOCTYPE_CONTRACT_REQUEST);
-						flDocTypes.add(ParameterConst.DOCTYPE_SHIPPING_INSTRUCTION);
-					}	
-				} else if(getManagedBean().getSearchOrderType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER) && isFlFulfilmentRequisitioner()) {
-					
-					if(isFlFulfilmentRecevingOfficer()){
-						flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_REQUEST);
-						flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
-					}else{
-						flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_REQUEST);
-					}	
-				} else if(getManagedBean().getSearchOrderType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER) && isFlFulfilmentApprover()) {
-					if(isFlFulfilmentPaymentOfficer()){
-						flDocTypes.add(ParameterConst.DOCTYPE_CONTRACT_REQUEST);
-						flDocTypes.add(ParameterConst.DOCTYPE_CONTRACT_ORDER);
-						flDocTypes.add(ParameterConst.DOCTYPE_SHIPPING_INSTRUCTION);
-						//flDocTypes.add(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
-					}else{
-						flDocTypes.add(ParameterConst.DOCTYPE_CONTRACT_REQUEST);
-						flDocTypes.add(ParameterConst.DOCTYPE_CONTRACT_ORDER);
-						flDocTypes.add(ParameterConst.DOCTYPE_SHIPPING_INSTRUCTION);
-					}
-				}else if(getManagedBean().getSearchOrderType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER) && isFlFulfilmentApprover()) {
-					if(isFlFulfilmentPaymentOfficer()){
-						flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_REQUEST);
-						flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_ORDER);
-						//flDocTypes.add(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
-					}else{
-						flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_REQUEST);
-						flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_ORDER);
-					}
-				}else if(getManagedBean().getSearchOrderType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER) && isFlFulfilmentSupplier()) {
-					flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_ORDER);
-					flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
-					flDocTypes.add(ParameterConst.DOCTYPE_INVOICE);
-				}else if(getManagedBean().getSearchOrderType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER) && isFlFulfilmentSupplier()) {
+				if(getManagedBean().getSearchOrderType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER)) {
 					flDocTypes.add(ParameterConst.DOCTYPE_CONTRACT_ORDER);
+					if(isFlFulfilmentRequisitioner() || isFlFulfilmentApprover()) {
+						flDocTypes.add(ParameterConst.DOCTYPE_CONTRACT_REQUEST);
+						flDocTypes.add(ParameterConst.DOCTYPE_SHIPPING_INSTRUCTION);
+					}
+				} else if(getManagedBean().getSearchOrderType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)) {
+					flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_ORDER);
+					if(isFlFulfilmentRequisitioner() || isFlFulfilmentApprover()) {
+						flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_REQUEST);
+					}
+				}
+				if(isFlFulfilmentRecevingOfficer()) {
+					flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
+				}
+				if(isFlFulfilmentPaymentOfficer()){
+					flDocTypes.add(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
+				}	
+				if(isFlFulfilmentSupplier()) {
 					flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
 					flDocTypes.add(ParameterConst.DOCTYPE_INVOICE);
-				}else if(getManagedBean().getSearchOrderType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER) && isFlFulfilmentRecevingOfficer()) {
-					flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
-					
-				}else if(getManagedBean().getSearchOrderType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER) && isFlFulfilmentRecevingOfficer()) {
-					flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
-				}else if(getManagedBean().getSearchOrderType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER) && isFlFulfilmentApprover() && isFlFulfilmentRecevingOfficer()) {
-					flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_REQUEST);
-					flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_ORDER);
-					flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
 				}
 			}
 			List<String> selectedItemCode = new ArrayList<String>();
