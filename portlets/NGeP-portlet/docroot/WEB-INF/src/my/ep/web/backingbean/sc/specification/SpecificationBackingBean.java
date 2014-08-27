@@ -8167,7 +8167,7 @@ public class SpecificationBackingBean extends
 							.get(i);
 					financialCheckList.setDeleted(true);
 					toBeRemoveCheckLists.add(financialCheckList);
-
+					financialCheckLIsts.remove(financialCheckLIsts.get(i));
 				}
 			}
 
@@ -8232,6 +8232,7 @@ public class SpecificationBackingBean extends
 							scQtCheckList.getTitle())) {
 						qtCheckList.setDeleted(true);
 						toBeRemoveList.add(qtCheckList);
+						finanicalCheckList.remove(qtCheckList);
 					}
 				}
 			}

@@ -3273,6 +3273,14 @@ public class EvaluationBackingBean extends
 					.getNavigationHandler()
 					.handleNavigation(fc, null,
 							"/xhtml/sc/evaluation/evaluationstage1view.xhtml");
+		}else if (SCProcessNameConst.ENDORSE_EC_EVALUATION
+				.equalsIgnoreCase(taskName)
+				|| SCProcessNameConst.SIGNOFF_EC_EVALUATION
+						.equalsIgnoreCase(taskName)) {
+			fc.getApplication()
+					.getNavigationHandler()
+					.handleNavigation(fc, null,
+							"/xhtml/sc/evaluation/evaluationstage1view.xhtml");
 		}
 	}
 
