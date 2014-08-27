@@ -2707,12 +2707,17 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		QuationTenderResDTO resDTO = detailSO
 				.retriveQtByQtNumber(tenderReqDTO);
 		ScQt scqt = resDTO.getQtDetail();	
-		log.info("QtId="+scqt.getQtId());
-		if(scqt.getQtId()==null){
+		if(scqt!=null){
+			if(scqt.getQtId()!=null){
+				log.info("QtId="+scqt.getQtId());
+				this.setQuotationId(scqt.getQtId().toString());			
+			}else {
+				this.setQuotationNo(null);
+				throw new EpException(CommonMethod.getMessageCommon(ReportConst.NOT_VALID_QOTATION_NO));
+			}
+		}else{
 			this.setQuotationNo(null);
 			throw new EpException(CommonMethod.getMessageCommon(ReportConst.NOT_VALID_QOTATION_NO));
-		}else if(scqt.getQtId()!=null){
-			this.setQuotationId(scqt.getQtId().toString());
 		}
 	}
 	public void specialCharValidation() {
