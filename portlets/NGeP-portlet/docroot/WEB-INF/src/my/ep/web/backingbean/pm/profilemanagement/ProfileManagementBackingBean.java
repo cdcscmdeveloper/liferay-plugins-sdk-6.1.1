@@ -456,6 +456,17 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	}
 	
 	/**
+	 * set user identity type
+	 */
+	public void identityTypeChange(){
+		logger.info("identityTypeChange");
+		if(this.getManagedBean().getSelectedUser().getIdentificationCode().getParameterId()!=null){
+			PmParameter pmParameter = (PmParameter) identityTypeMapper.get(this.getManagedBean().getSelectedUser().getIdentificationCode().getParameterId());
+			this.getManagedBean().getSelectedUser().setIdentificationCode(pmParameter);
+		}
+	}
+	
+	/**
 	 * login id = identification no.
 	 */
 	public void updateLoginId(){

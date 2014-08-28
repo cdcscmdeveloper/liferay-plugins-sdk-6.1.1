@@ -87,8 +87,9 @@
 								label="#{lbl['lbl.pm.profiles.userdetails.idtype']}"
 								disabled="#{!profileManagementBackingBean.managedBean.selectedUser.brandNew}"
 								value="#{profileManagementBackingBean.managedBean.selectedUser.identificationCode.parameterId}">
-								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" /> 
 								<f:selectItems value="#{profileManagementBackingBean.getIdentityTypeList()}"/>
+								<p:ajax event="change" update="itIdentityNo"
+									listener="#{profileManagementBackingBean.identityTypeChange}" />
 							</p:selectOneMenu>
 							<p:message id="somIdTypeMsg" for="somIdType" display="icon" />
 						</td>
@@ -102,11 +103,27 @@
 							<p:outputLabel value="*" styleClass="mandatory" />
 						</th>
 						<td>
-							<p:inputText id="itIdentityNo" styleClass="ppDisplayTextM" required="true"
-								label="#{lbl['lbl.pm.profiles.userdetails.idno']}"
-								disabled="#{!profileManagementBackingBean.managedBean.selectedUser.brandNew}"
-								value="#{profileManagementBackingBean.managedBean.selectedUser.identificationNo}">  							
-							</p:inputText>
+							<c:choose>
+								<c:when test="#{profileManagementBackingBean.managedBean.selectedUser.identificationCode.parameterCode == ProfileManagementConst.newIc}">
+									<p:inputText id="itIdentityNo" styleClass="ppDisplayTextM" required="true"
+										label="#{lbl['lbl.pm.profiles.userdetails.idno']}"
+										disabled="#{!profileManagementBackingBean.managedBean.selectedUser.brandNew}"
+										value="#{profileManagementBackingBean.managedBean.selectedUser.identificationNo}"
+										size="30" maxlength="12" validatorMessage="#{lbl['lbl.sm.individual.newicno']} - #{lbl['lbl.sm.invalidIcNo']}">
+										<f:validateRegex pattern="[0-9]+" />
+										<f:validateLength minimum="12"/>  							
+									</p:inputText>
+								</c:when>
+								
+								<c:otherwise>
+									<p:inputText id="itIdentityNo" styleClass="ppDisplayTextM" required="true"
+										label="#{lbl['lbl.pm.profiles.userdetails.idno']}"
+										disabled="#{!profileManagementBackingBean.managedBean.selectedUser.brandNew}"
+										value="#{profileManagementBackingBean.managedBean.selectedUser.identificationNo}"
+										size="30" maxlength="12">							
+									</p:inputText>
+								</c:otherwise>
+							</c:choose>
 							<p:message id="itIdentityNoMsg" for="itIdentityNo" display="icon" />
 						</td>
 						<th></th>
@@ -256,7 +273,9 @@
 				</th>	 
 		    	<td>
 		    		<p:inputText id="itPostcode" required="true" label="#{lbl['lbl.pm.profiles.userdetails.postcode']}"
-		    			value="#{profileManagementBackingBean.managedBean.userAddress.postcode}" styleClass="ppDisplayTextM" />
+		    			value="#{profileManagementBackingBean.managedBean.userAddress.postcode}" styleClass="ppDisplayTextM">
+	    				<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
+	    			</p:inputText>
 	    			<p:message id="itPostcodeMsg" for="itPostcode" display="icon" />
 	    		</td>	
 		    	<th></th>
@@ -347,7 +366,12 @@
 				</th>  
 			    <td>
 			    	<p:inputText id="itEmail" required="true" label="#{lbl['lbl.pm.profiles.userdetails.email']}"
-			    		value="#{profileManagementBackingBean.managedBean.selectedUser.email}" styleClass="ppDisplayTextM"  />
+			    		value="#{profileManagementBackingBean.managedBean.selectedUser.email}" styleClass="ppDisplayTextM"  
+			    		validatorMessage="#{lbl['lbl.sm.invalidEmail']}">
+						<f:validateRegex
+							pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+					</p:inputText> 
+			    		
 			    	&#160;&#160;   
 	                <p:graphicImage id="giEmail" library="ep/images/design" name="tooltips.png"
 		                   value="/css/images/design/tooltips.png" />
@@ -359,19 +383,32 @@
 			</tr>    
 			<tr>   
   				<th width="20%"><p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.telno']}" /></th>  
-			    <td><p:inputText value="#{profileManagementBackingBean.managedBean.selectedUser.phoneNo}" styleClass="ppDisplayTextM" /></td> 	
+			    <td>
+			    	<p:inputText value="#{profileManagementBackingBean.managedBean.selectedUser.phoneNo}" styleClass="ppDisplayTextM">
+			    		<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
+		    		</p:inputText>
+			    </td> 	
 			    <th></th>
                	<td></td>
 			</tr>    		     			    		 			   
 			<tr>    
   				<th width="20%"><p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.faxno']}" /></th> 
-			    <td><p:inputText value="#{profileManagementBackingBean.managedBean.selectedUser.faxNo}" styleClass="ppDisplayTextM"  /></td>
+			    <td>
+			    	<p:inputText value="#{profileManagementBackingBean.managedBean.selectedUser.faxNo}" styleClass="ppDisplayTextM" >
+						<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
+		    		</p:inputText>
+	    		</td>
 			    <th></th>
                	<td></td>
 		    </tr>     
 			<tr>    			    
   				<th width="20%"><p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.mobileno']}" /></th>  
-			    <td><p:inputText value="#{profileManagementBackingBean.managedBean.selectedUser.mobileNo}" styleClass="ppDisplayTextM"  /></td>
+			    <td>
+			    	<p:inputText value="#{profileManagementBackingBean.managedBean.selectedUser.mobileNo}" 
+			    		styleClass="ppDisplayTextM"  validatorMessage="#{lbl['lbl.sm.mobilenumber']} - #{lbl['lbl.sm.invalidNo']}">
+			    		<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
+		    		</p:inputText>
+			    </td>
 			    <th></th>
                	<td></td>		    			    			    			    			    		    			    			                                          			                     		                                                 
             </tr>		    			                     
