@@ -381,15 +381,11 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			}
 		}
 		
-		List<CtPanelSupplier> ctPanelSuppliers = new ArrayList<CtPanelSupplier>();
 		if(ctPanelItem.getCtPanelZones() != null && ctPanelItem.getCtPanelZones().size()>0){
 			ScQuoteZone quoteZone = new ScQuoteZone();
 			
 			for (CtPanelZone ctPanelZone : ctPanelItem.getCtPanelZones()) {
 
-				if(ctPanelZone.getCtPanelSuppliers() != null && ctPanelZone.getCtPanelSuppliers().size()>0){
-					ctPanelSuppliers.addAll(ctPanelZone.getCtPanelSuppliers());
-				}
 				TplSpecZoneDtl tplSpecZoneDtl = new TplSpecZoneDtl();
 				quoteZone.setScQuote(scQuote);
 				scQuote.setQuoteZone(quoteZone);
@@ -408,13 +404,52 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 				getManagedBean().getZoneTrees().add(
 						LocationSingleton.getInstance().buildLocationTree(tplSpecZoneDtl, states,
 								districts, null, null,TplSpecZoneLoc.class));
-			}
+				
 
-			if(ctPanelSuppliers.size()>0){
-				panelItemListener(ctPanelSuppliers, scQuote);
+				if(ctPanelZone.getCtPanelSuppliers() != null && ctPanelZone.getCtPanelSuppliers().size()>0){
+					createPanelSuppliersWithZone(ctPanelZone.getCtPanelSuppliers(), scQuote, tplSpecZoneDtl);
+				}
+				
 			}
 		}
 	}
+	
+	private void createPanelSuppliersWithZone(List<CtPanelSupplier> ctPanelSuppliers , ScQuote quote, TplSpecZoneDtl tplSpecZoneDtl){
+		debugLogger("createPanelSuppliersWithZone");
+		List<ScQuoteSupplier> panelSuppliers = getManagedBean().getPanelSuppliers();
+		if(panelSuppliers == null){
+			panelSuppliers = new ArrayList<ScQuoteSupplier>();
+		}
+		if (ctPanelSuppliers != null){
+			for (CtPanelSupplier panelSupplier : ctPanelSuppliers) {
+				ScQuoteSupplier scQuoteSupplier = new ScQuoteSupplier();
+				scQuoteSupplier.setSmSupplier(panelSupplier.getSupplier());
+				scQuoteSupplier.setQuote(quote);
+				scQuoteSupplier.setTplSpecZoneDtl(tplSpecZoneDtl);
+
+				if(panelSuppliers.isEmpty()){
+					panelSuppliers.add(scQuoteSupplier);
+					getManagedBean().setPanelSuppliers(panelSuppliers);
+                   
+				} else {
+					List<Long> supplierIds = new ArrayList<Long>();
+					for (ScQuoteSupplier quoteSupplier :  getManagedBean().getPanelSuppliers()) {
+						supplierIds.add(quoteSupplier.getSmSupplier().getSupplierId());
+					}
+					if (supplierIds.size() > 0) {
+						if(!supplierIds.contains(scQuoteSupplier.getSmSupplier().getSupplierId())){
+							panelSuppliers.add(scQuoteSupplier);
+							getManagedBean().setPanelSuppliers(panelSuppliers);
+
+						} else{
+							//throw new EpException(MessageConst.INFO_700027, new String[]{"Supplier","in panel Supplier"});
+						}
+					}
+				}
+			}
+		}
+	}
+	
 	
 	private List<SmSupplier>  addSelectedSuppliers(List<CmSupplierItem> compareSupplierItems , CmSupplierItem selectedSupplierItem) {
 		List<SmSupplier> suppliers = getManagedBean().getCompareSuppliers();
@@ -946,6 +981,9 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 				reqDTO.setOutcome(outcome);
 				quoteResDTO = quoteSO.updateSimpleQuote(reqDTO);
 			} 
+			// submit prompt hiding
+			//RequestContext.getCurrentInstance().execute("promptWidget.hide()");
+			
 			if (quoteResDTO.isSuccessful()) {
 				ScQuote scQuote = quoteResDTO.getQuoteBidDtl();
 				if(BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome) || outcome.isEmpty()){
@@ -1600,6 +1638,41 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 	}
 
 	/**
+	 * To delete the selected TreeNode from the panel item zone
+	 */
+	public void deletePanelItemZoneTreeNode() {
+		List<TreeNode>	zones = new ArrayList<TreeNode>();
+		TreeNode selectedTreeNode = getManagedBean().getSelectedTreeNode();
+		if (selectedTreeNode.getChildren() != null) {
+			TplSpecZoneDtl zoneDtl = (TplSpecZoneDtl) selectedTreeNode.getChildren().get(0).getData();
+
+			for (TreeNode node : getManagedBean().getZoneTrees()) {
+
+				if (!zoneDtl.equals(((TplSpecZoneDtl) node.getChildren().get(0).getData()))) {
+					zones.add(node);
+				} else{
+
+					// delete suppliers by selected zone to be delete
+					if(zoneDtl.getPanelZone() !=null){
+						CtPanelZone panelZone = zoneDtl.getPanelZone();
+
+						if(getManagedBean().getPanelSuppliers() != null && getManagedBean().getPanelSuppliers().size()>0){
+							for (ScQuoteSupplier sqQuoteSupplier : getManagedBean().getPanelSuppliers()) {
+								if(sqQuoteSupplier.getTplSpecZoneDtl() != null && sqQuoteSupplier.getTplSpecZoneDtl().getPanelZone() != null){
+									if(sqQuoteSupplier.getTplSpecZoneDtl().getPanelZone().getPanelZoneId().equals(panelZone.getPanelZoneId())){
+										getManagedBean().getPanelSuppliers().remove(sqQuoteSupplier);
+									}
+								}
+							}
+						}	
+					}
+				}
+			}
+			this.getManagedBean().setZoneTrees(zones);
+		}
+	}
+
+	/**
 	 * To delete the selected TreeNode from the location
 	 */
 	public void deleteLocationTreeNode() {
@@ -1749,6 +1822,35 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 		 double time  = (double) Integer.valueOf(hours) + (double)(Integer.valueOf(mins))/60;
 		
 		 return time;
+	 }
+
+	 public void submitPromptAction() {
+		 ScQuote quote = getManagedBean().getScQuote();
+		 if (quote.getStartDate() != null &&  quote.getEndDate() != null){
+			 Date dateOne = quote.getEndDate();
+			 Date dateTwo = quote.getStartDate();
+			 StringBuilder sb  = new StringBuilder();
+			 if(quote.getEndDate().after(quote.getStartDate())){
+				 long timeDiff = Math.abs(dateOne.getTime() - dateTwo.getTime());
+				 String hours = String.format("%d", TimeUnit.MILLISECONDS.toHours(timeDiff));
+				 String mins = String.format("%d", (TimeUnit.MILLISECONDS.toMinutes(timeDiff) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(timeDiff))));
+				 sb.append("Total time Supplier responds for this Simple Quote is only")
+				 .append(" ")
+				 .append(hours)
+				 .append(" ")
+				 .append("Hour(s)")
+				 .append(" ")
+				 .append("and")
+				 .append(" ")
+				 .append(mins)
+				 .append(" ")
+				 .append("minute(s)")
+				 .append(" ")
+				 .append("Proceed?");
+				 getManagedBean().setPromptMessage(sb.toString());
+				 RequestContext.getCurrentInstance().execute("sqConformDlg.show()");
+			 }
+		 }
 	 }
 		
 	/*
