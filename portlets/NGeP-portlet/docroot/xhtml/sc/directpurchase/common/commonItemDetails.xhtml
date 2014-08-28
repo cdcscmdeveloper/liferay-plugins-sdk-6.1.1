@@ -190,7 +190,7 @@
 					<p:inputText style="width:25px;text-align:right;margin-top: 8px;margin-right: 1px;" 
 					   label="#{lbl['lbl.sc.request.note.delivery.term']}"
 					   size="6" maxlength="4"
-					   disabled="#{requestNoteDtl.requestItem.quote ne null}"
+					   disabled="#{requestNoteDtl.requestItem.quote ne null and requestNoteBackingBean.checkServiceOrProduct(requestNoteDtl)}"
 					   id="deliveryTerm" value="#{requestNoteDtl.deliverTerm}" required="#{!requestNoteDtl.selected}">
 					   </p:inputText>
 					<p:selectOneMenu  style="width:75px;" required="#{!requestNoteDtl.selected}" id="deliveryType" 
