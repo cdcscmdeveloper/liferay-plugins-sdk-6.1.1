@@ -20,16 +20,16 @@
 		<f:facet name="header">
 			<p:row>
 				<p:column>
-							Pricing Type
+				#{lbl['lbl.cm.pricing.type']}
 						</p:column>
 				<p:column>
-							Price (RM)
+							#{lbl['lbl.cm.price']}
 						</p:column>
 				<p:column>
-							Start Date
+							#{lbl['lbl.cm.start.date']}
 						</p:column>
 				<p:column>
-							End Date
+							#{lbl['lbl.cm.end.date']}
 						</p:column>
 				<p:column>
 							#{lbl['lbl.cm.action']}
@@ -41,7 +41,7 @@
 
 		<p:row>
 			<p:column>
-				<p:outputLabel value="Promotion" />
+				<p:outputLabel value="#{lbl['lbl.cm.promotion']}" />
 			</p:column>
 			<p:column>
 				<p:inputText readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue}"
@@ -74,8 +74,8 @@
 					actionListener="#{catalogueBackingBean.updatePromotionErrorDialog()}"
 					disabled="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.standardDisabled}">
 					
-				
-					
+
+
 					<p:graphicImage value="/css/images/design/icon_error.png"></p:graphicImage>
 				</p:commandLink>
 			</p:column>

@@ -134,13 +134,13 @@
 			</table>						
 		</p:panel>
 
-		<p:confirmDialog id="confirmDeleteTierId" message="Are you sure ?"
-			header="Confirmation Message" widgetVar="confirmation">
+		<p:confirmDialog id="confirmDeleteTierId" message="#{lbl['lbl.cm.dialog.cofirm.delete.msg']}"
+			header="#{lbl['lbl.cm.dialog.cofirm.header']}" widgetVar="confirmation">
 
-			<p:commandButton id="conf" value="Yes" actionListener="#{catalogueBackingBean.deleteTierPrice()}" 
+			<p:commandButton id="conf" value="#{lbl['lbl.cm.dialog.cofirm.yes']}" actionListener="#{catalogueBackingBean.deleteTierPrice()}" 
 				update=":form:pricingTabID:headerTabId:tierId:pricingTierID, :form:pricingTabID:headerTabId:tierId:pricingPromotionTierID, :form:pricingTabID:headerTabId:tierId:addTierButton"
 				oncomplete="confirmation.hide();" />
-			<p:commandButton id="decline" value="No"
+			<p:commandButton id="decline" value="#{lbl['lbl.cm.dialog.cofirm.no']}"
 				onclick="confirmation.hide()" />
 
 		</p:confirmDialog>

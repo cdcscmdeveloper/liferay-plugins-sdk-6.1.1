@@ -19,10 +19,10 @@
 
 			<p:column>
 				<f:facet name="header">
-					Zone Name
+					#{lbl['lbl.cm.zm.name']}
 				</f:facet>
 				<p:selectOneMenu value="#{zPromotion.cmSupplierZone.suppZoneId}" disabled="true" style="width: 128px;">
-					<f:selectItem itemLabel="Select One" itemValue="0" />
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
 					<f:selectItems
 						value="#{catalogueBackingBean.managedBean.supplierZoneList}"
 						var="zone" itemLabel="#{zone.suppZoneName}"

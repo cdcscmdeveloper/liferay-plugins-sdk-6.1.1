@@ -22,10 +22,10 @@
 
 			<p:column>
 				<f:facet name="header">
-					Zone Name
+					#{lbl['lbl.cm.zm.name']}
 				</f:facet>
 				<p:selectOneMenu value="#{tier.cmSupplierZone.suppZoneId}" style="width: 128px;" disabled="#{!tier.showFlag || tier.standardDisabled}">
-					<f:selectItem itemLabel="Select One" itemValue="0" />
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
 					<f:selectItems
 						value="#{catalogueBackingBean.managedBean.supplierZoneList}"
 						var="zone" itemLabel="#{zone.suppZoneName}"
@@ -154,13 +154,13 @@
 			</table>						
 		</p:panel>			
 		
-		<p:confirmDialog id="confirmDeleteZonalTierId" message="Are you sure ?"
-			header="Confirmation Message" widgetVar="confirmationZonal">
+		<p:confirmDialog id="confirmDeleteZonalTierId" message="#{lbl['lbl.cm.dialog.cofirm.delete.msg']}"
+			header="#{lbl['lbl.cm.dialog.cofirm.header']}" widgetVar="confirmationZonal">
 
-			<p:commandButton id="conf" value="Yes"
+			<p:commandButton id="conf" value="#{lbl['lbl.cm.dialog.cofirm.yes']}"
 				actionListener="#{catalogueBackingBean.deleteZonalTierPrice()}" update=":form"
 				oncomplete="confirmationZonal.hide()" />
-			<p:commandButton id="decline" value="No"
+			<p:commandButton id="decline" value="#{lbl['lbl.cm.dialog.cofirm.no']}"
 				onclick="confirmationZonal.hide()" />
 
 		</p:confirmDialog>
