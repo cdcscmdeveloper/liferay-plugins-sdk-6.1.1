@@ -14,7 +14,8 @@
 					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
 							value="#{backingBean.managedBean.poSecReview.basicVerified}"
 							id="poBasVer">
-							<p:ajax update=":form:tt:bsInfPan,:form:revPanHdr" event="change"
+							<p:ajax update=":form:tt:basHdPan,:form:revPanHdr" event="change"
+								process=":form:tt:basHdPan"
 								listener="#{backingBean.changeVerifySection(backingBean.managedBean.poSecReview.basicVerified)}" />
 						</p:selectBooleanCheckbox></td>
 					<td valign="top"><h:outputText
@@ -28,7 +29,8 @@
 					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
 							value="#{backingBean.managedBean.apprvrSecReview.basicVerified}"
 							id="apprBasVer">
-							<p:ajax update=":form:tt:bsInfPan,:form:revPanHdr" event="change"
+							<p:ajax update=":form:tt:basHdPan,:form:revPanHdr" event="change"
+								process=":form:tt:basHdPan"
 								listener="#{backingBean.changeVerifySection(backingBean.managedBean.apprvrSecReview.basicVerified)}" />
 						</p:selectBooleanCheckbox></td>
 					<td valign="top"><h:outputText
@@ -60,7 +62,7 @@
 					<td><p:selectOneMenu
 							value="#{backingBean.managedBean.smSupplier.businessType}"
 							disabled="true">
-							<f:selectItems value="#{backingBean.managedBean.businessTypeLs}"/>
+							<f:selectItems value="#{backingBean.managedBean.businessTypeLs}" />
 						</p:selectOneMenu> <!-- rendered="#{backingBean.managedBean.smSupplier.businessType == 1}" />
 					<p:inputText disabled="true" readonly="true" value="ROC - BERHAD"
 						rendered="#{backingBean.managedBean.smSupplier.businessType == 2}" />

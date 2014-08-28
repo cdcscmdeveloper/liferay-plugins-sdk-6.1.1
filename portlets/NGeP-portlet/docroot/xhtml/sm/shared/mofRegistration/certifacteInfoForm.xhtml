@@ -15,7 +15,7 @@
 							value="#{backingBean.managedBean.poSecReview.certVerified}"
 							id="poCertVer">
 							<p:ajax update=":form:tt:certInfPan,:form:revPanHdr"
-								event="change"
+								event="change" process="@this,:form:tt:certInfPan"
 								listener="#{backingBean.changeVerifySection(backingBean.managedBean.poSecReview.certVerified)}" />
 						</p:selectBooleanCheckbox></td>
 					<td valign="top"><h:outputText
@@ -30,7 +30,7 @@
 							value="#{backingBean.managedBean.apprvrSecReview.certVerified}"
 							id="apprCertVer">
 							<p:ajax update=":form:tt:certInfPan,:form:revPanHdr"
-								event="change"
+								event="change" process="@this,:form:tt:certInfPan"
 								listener="#{backingBean.changeVerifySection(backingBean.managedBean.apprvrSecReview.certVerified)}" />
 						</p:selectBooleanCheckbox></td>
 					<td valign="top"><h:outputText
@@ -169,8 +169,8 @@
 						showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.cert.strtDate']}" />
-					<p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.cert.strtDate']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
 				<td><p:calendar id="stDate" showOn="button" navigator="true"
 						display="inline" required="#{backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sm.cert.strtDate']}"

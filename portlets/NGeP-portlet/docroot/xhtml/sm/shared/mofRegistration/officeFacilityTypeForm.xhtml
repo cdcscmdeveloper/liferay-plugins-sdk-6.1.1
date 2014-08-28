@@ -14,7 +14,7 @@
 							value="#{backingBean.managedBean.poSecReview.officeFacilityVerfied}"
 							id="poOffVer">
 							<p:ajax update=":form:tt:offInfPan,:form:revPanHdr"
-								event="change"
+								event="change" process="@this,:form:tt:offInfPan"
 								listener="#{backingBean.changeVerifySection(backingBean.managedBean.poSecReview.officeFacilityVerfied)}" />
 						</p:selectBooleanCheckbox></td>
 					<td valign="top"><h:outputText
@@ -29,7 +29,7 @@
 							value="#{backingBean.managedBean.apprvrSecReview.officeFacilityVerfied}"
 							id="apprOffVer">
 							<p:ajax update=":form:tt:offInfPan,:form:revPanHdr"
-								event="change"
+								event="change" process="@this,:form:tt:offInfPan"
 								listener="#{backingBean.changeVerifySection(backingBean.managedBean.apprvrSecReview.officeFacilityVerfied)}" />
 						</p:selectBooleanCheckbox></td>
 					<td valign="top"><h:outputText
@@ -306,7 +306,8 @@
 
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
-						<td colspan="3"><p:inputTextarea autoResize="true" cols="41" /></td>
+						<td colspan="3"><p:inputTextarea autoResize="true" cols="41"
+								value="#{backingBean.managedBean.poSecReview.officeFacilityRemark}" /></td>
 					</tr>
 
 				</p:outputPanel>
@@ -315,9 +316,11 @@
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" readonly="true"
-								disabled="true" cols="41" /></td>
+								disabled="true" cols="41"
+								value="#{backingBean.managedBean.poSecReview.officeFacilityRemark}" /></td>
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
-						<td><p:inputTextarea autoResize="true" cols="41" /></td>
+						<td><p:inputTextarea autoResize="true" cols="41"
+								value="#{backingBean.managedBean.apprvrSecReview.officeFacilityRemark}" /></td>
 
 					</tr>
 

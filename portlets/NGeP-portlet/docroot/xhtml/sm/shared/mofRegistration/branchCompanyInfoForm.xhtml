@@ -15,7 +15,7 @@
 							value="#{backingBean.managedBean.poSecReview.branchVerified}"
 							id="poBrcVer">
 							<p:ajax update=":form:tt:brnInfPan,:form:revPanHdr"
-								event="change"
+								event="change" process="@this,:form:tt:brnInfPan"
 								listener="#{backingBean.changeVerifySection(backingBean.managedBean.poSecReview.branchVerified)}" />
 						</p:selectBooleanCheckbox></td>
 					<td valign="top"><h:outputText
@@ -30,7 +30,7 @@
 							value="#{backingBean.managedBean.apprvrSecReview.branchVerified}"
 							id="apprBrcVer">
 							<p:ajax update=":form:tt:brnInfPan,:form:revPanHdr"
-								event="change"
+								event="change" process="@this,:form:tt:brnInfPan"
 								listener="#{backingBean.changeVerifySection(backingBean.managedBean.apprvrSecReview.branchVerified)}" />
 						</p:selectBooleanCheckbox></td>
 					<td valign="top"><h:outputText
@@ -58,7 +58,7 @@
 					<h:outputText value="#{branchBean.branchName}" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sm.companyaddress']}">
+				<p:column headerText="#{lbl['lbl.sm.companyaddress']}"  style="width :350px;white-space : normal">
 					<h:outputText
 						value="#{branchBean.smAddress.address1},#{branchBean.smAddress.address2}" />
 				</p:column>

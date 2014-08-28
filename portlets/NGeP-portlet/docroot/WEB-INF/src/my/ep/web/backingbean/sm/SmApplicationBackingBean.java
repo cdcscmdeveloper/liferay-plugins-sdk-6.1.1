@@ -1450,8 +1450,8 @@ public class SmApplicationBackingBean extends
 
 		docu.setPmDocument(doc);
 		docu.setSmAppl(getManagedBean().getSmAppl());
-		docu.setVerified(false);
-		docu.setVerifiedFlg(0);
+		docu.setVerified(true);
+		docu.setVerifiedFlg(1);
 		docu.setReceived(false);
 
 		List<SmApplDocFile> files = new ArrayList<SmApplDocFile>();

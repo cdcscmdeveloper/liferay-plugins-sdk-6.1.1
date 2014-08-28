@@ -14,7 +14,7 @@
 							value="#{backingBean.managedBean.poSecReview.machineryVerified}"
 							id="poMachVer">
 							<p:ajax update=":form:tt:machInfPan,:form:revPanHdr"
-								event="change"
+								event="change" process="@this,:form:tt:machInfPan"
 								listener="#{backingBean.changeVerifySection(backingBean.managedBean.poSecReview.machineryVerified)}" />
 						</p:selectBooleanCheckbox></td>
 					<td valign="top"><h:outputText
@@ -29,7 +29,7 @@
 							value="#{backingBean.managedBean.apprvrSecReview.machineryVerified}"
 							id="apprMachVer">
 							<p:ajax update=":form:tt:machInfPan,:form:revPanHdr"
-								event="change"
+								event="change" process="@this,:form:tt:machInfPan"
 								listener="#{backingBean.changeVerifySection(backingBean.managedBean.apprvrSecReview.machineryVerified)}" />
 						</p:selectBooleanCheckbox></td>
 					<td valign="top"><h:outputText

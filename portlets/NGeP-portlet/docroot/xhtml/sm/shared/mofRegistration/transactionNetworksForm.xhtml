@@ -13,7 +13,7 @@
 							value="#{backingBean.managedBean.poSecReview.trnsNetworkVerified}"
 							id="poTrxVer">
 							<p:ajax update=":form:tt:trxInfPan,:form:revPanHdr"
-								event="change"
+								event="change" process="@this,:form:tt:trxInfPan"
 								listener="#{backingBean.changeVerifySection(backingBean.managedBean.poSecReview.trnsNetworkVerified)}" />
 						</p:selectBooleanCheckbox></td>
 					<td valign="top"><h:outputText
@@ -28,7 +28,7 @@
 							value="#{backingBean.managedBean.apprvrSecReview.trnsNetworkVerified}"
 							id="apprTrxVer">
 							<p:ajax update=":form:tt:trxInfPan,:form:revPanHdr"
-								event="change"
+								event="change" process="@this,:form:tt:trxInfPan"
 								listener="#{backingBean.changeVerifySection(backingBean.managedBean.apprvrSecReview.trnsNetworkVerified)}" />
 						</p:selectBooleanCheckbox></td>
 					<td valign="top"><h:outputText

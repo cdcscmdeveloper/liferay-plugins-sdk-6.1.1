@@ -14,7 +14,7 @@
 							value="#{backingBean.managedBean.poSecReview.equityCompVerifed}"
 							id="poEquiVer">
 							<p:ajax update=":form:tt:equiInfPan,:form:revPanHdr"
-								event="change"
+								event="change" process="@this,:form:tt:equiInfPan"
 								listener="#{backingBean.changeVerifySection(backingBean.managedBean.poSecReview.equityCompVerifed)}" />
 						</p:selectBooleanCheckbox></td>
 					<td valign="top"><h:outputText
@@ -29,7 +29,7 @@
 							value="#{backingBean.managedBean.apprvrSecReview.equityCompVerifed}"
 							id="apprEquiVer">
 							<p:ajax update=":form:tt:equiInfPan,:form:revPanHdr"
-								event="change"
+								event="change" process="@this,:form:tt:equiInfPan"
 								listener="#{backingBean.changeVerifySection(backingBean.managedBean.apprvrSecReview.equityCompVerifed)}" />
 						</p:selectBooleanCheckbox></td>
 					<td valign="top"><h:outputText

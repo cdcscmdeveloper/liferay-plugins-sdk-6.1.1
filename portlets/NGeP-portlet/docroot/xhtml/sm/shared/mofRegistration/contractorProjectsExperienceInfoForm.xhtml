@@ -14,7 +14,7 @@
 							value="#{backingBean.managedBean.poSecReview.experienceVerified}"
 							id="poContrVer">
 							<p:ajax update=":form:tt:contrInfPan,:form:revPanHdr"
-								event="change"
+								event="change" process="@this,:form:tt:contrInfPan"
 								listener="#{backingBean.changeVerifySection(backingBean.managedBean.poSecReview.experienceVerified)}" />
 						</p:selectBooleanCheckbox></td>
 					<td valign="top"><h:outputText
@@ -29,7 +29,7 @@
 							value="#{backingBean.managedBean.apprvrSecReview.experienceVerified}"
 							id="apprContrVer">
 							<p:ajax update=":form:tt:contrInfPan,:form:revPanHdr"
-								event="change"
+								event="change" process="@this,:form:tt:contrInfPan"
 								listener="#{backingBean.changeVerifySection(backingBean.managedBean.apprvrSecReview.experienceVerified)}" />
 						</p:selectBooleanCheckbox></td>
 					<td valign="top"><h:outputText

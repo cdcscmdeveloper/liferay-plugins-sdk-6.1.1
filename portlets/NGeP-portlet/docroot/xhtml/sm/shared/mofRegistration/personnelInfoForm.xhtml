@@ -362,7 +362,7 @@
 								value="#{backingBean.managedBean.poSecReview.personnelVerified}"
 								id="poPersVer">
 								<p:ajax update=":form:tt:persInfPan,:form:revPanHdr"
-									event="change"
+									event="change" process="@this,:form:tt:persInfPan"
 									listener="#{backingBean.changeVerifySection(backingBean.managedBean.poSecReview.personnelVerified)}" />
 							</p:selectBooleanCheckbox></td>
 						<td valign="top"><h:outputText
@@ -377,7 +377,7 @@
 								value="#{backingBean.managedBean.apprvrSecReview.personnelVerified}"
 								id="apprPersVer">
 								<p:ajax update=":form:tt:persInfPan,:form:revPanHdr"
-									event="change"
+									event="change" process="@this,:form:tt:persInfPan"
 									listener="#{backingBean.changeVerifySection(backingBean.managedBean.apprvrSecReview.personnelVerified)}" />
 							</p:selectBooleanCheckbox></td>
 						<td valign="top"><h:outputText

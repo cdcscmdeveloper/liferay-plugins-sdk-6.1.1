@@ -18,7 +18,7 @@
 										value="#{backingBean.managedBean.poSecReview.factoryVerify}"
 										id="poFacVer">
 										<p:ajax update=":form:tt:facInfPan,:form:revPanHdr"
-											event="change"
+											event="change" process="@this,:form:tt:facInfPan"
 											listener="#{backingBean.changeVerifySection(backingBean.managedBean.poSecReview.factoryVerify)}" />
 									</p:selectBooleanCheckbox></td>
 								<td valign="top"><h:outputText
@@ -33,7 +33,7 @@
 										value="#{backingBean.managedBean.apprvrSecReview.factoryVerify}"
 										id="apprFacVer">
 										<p:ajax update=":form:tt:facInfPan,:form:revPanHdr"
-											event="change"
+											event="change" process="@this,:form:tt:facInfPan"
 											listener="#{backingBean.changeVerifySection(backingBean.managedBean.apprvrSecReview.factoryVerify)}" />
 									</p:selectBooleanCheckbox></td>
 								<td valign="top"><h:outputText

@@ -47,7 +47,7 @@
 			<tr>
 				<td width="10px" style="padding: 0px 2px 0px 7px;"><p:selectBooleanCheckbox
 						value="#{backingBean.managedBean.poSecReview.verifiedAll}">
-						<p:ajax update=":form" event="change"
+						<p:ajax update=":form" event="change" process=":form"
 							listener="#{backingBean.changeVerifyAll(backingBean.managedBean.poSecReview.verifiedAll)}" />
 					</p:selectBooleanCheckbox></td>
 				<td valign="top"><h:outputText
@@ -61,7 +61,7 @@
 			<tr>
 				<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
 						value="#{backingBean.managedBean.apprvrSecReview.verifiedAll}">
-						<p:ajax update=":form" event="change"
+						<p:ajax update=":form" event="change" process=":form"
 							listener="#{backingBean.changeVerifyAll(backingBean.managedBean.apprvrSecReview.verifiedAll)}" />
 					</p:selectBooleanCheckbox></td>
 				<td valign="top"><h:outputText

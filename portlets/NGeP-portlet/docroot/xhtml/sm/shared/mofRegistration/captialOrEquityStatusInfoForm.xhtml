@@ -13,7 +13,7 @@
 							value="#{backingBean.managedBean.poSecReview.captialVerified}"
 							id="poCapVer">
 							<p:ajax update=":form:tt:capInfPan,:form:revPanHdr"
-								event="change"
+								event="change" process="@this,:form:tt:capInfPan"
 								listener="#{backingBean.changeVerifySection(backingBean.managedBean.poSecReview.captialVerified)}" />
 						</p:selectBooleanCheckbox></td>
 					<td valign="top"><h:outputText
@@ -28,7 +28,7 @@
 							value="#{backingBean.managedBean.apprvrSecReview.captialVerified}"
 							id="apprCapVer">
 							<p:ajax update=":form:tt:capInfPan,:form:revPanHdr"
-								event="change"
+								event="change" process="@this,:form:tt:capInfPan"
 								listener="#{backingBean.changeVerifySection(backingBean.managedBean.apprvrSecReview.captialVerified)}" />
 						</p:selectBooleanCheckbox></td>
 					<td valign="top"><h:outputText

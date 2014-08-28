@@ -14,7 +14,7 @@
 							value="#{backingBean.managedBean.poSecReview.categoryVerified}"
 							id="poCatCodeVer">
 							<p:ajax update=":form:tt:catCodeInfPan,:form:revPanHdr"
-								event="change"
+								event="change" process="@this,:form:tt:catCodeInfPan"
 								listener="#{backingBean.changeVerifySection(backingBean.managedBean.poSecReview.categoryVerified)}" />
 						</p:selectBooleanCheckbox></td>
 					<td valign="top"><h:outputText
@@ -29,7 +29,7 @@
 							value="#{backingBean.managedBean.apprvrSecReview.categoryVerified}"
 							id="apprCatCodeVer">
 							<p:ajax update=":form:tt:catCodeInfPan,:form:revPanHdr"
-								event="change"
+								event="change" process="@this,:form:tt:catCodeInfPan"
 								listener="#{backingBean.changeVerifySection(backingBean.managedBean.apprvrSecReview.categoryVerified)}" />
 						</p:selectBooleanCheckbox></td>
 					<td valign="top"><h:outputText
@@ -110,7 +110,7 @@
 							rendered="#{backingBean.managedBean.poUser or backingBean.managedBean.approverUser}" />
 					</p:row>
 				</p:columnGroup>
-				<p:column style="width :250px;white-space : normal">
+				<p:column style="width :350px;white-space : normal">
 					<h:outputText
 						value="#{catBean.pmCategoryL1.categoryL1Code} -  #{catBean.pmCategoryL1.categoryName}" />
 					<br />
@@ -205,7 +205,7 @@
 					</p:row>
 				</p:columnGroup>
 				<p:column selectionMode="multiple" style="width:2%" />
-				<p:column style="width :250px;white-space : normal">
+				<p:column style="width :350px;white-space : normal">
 					<h:outputText
 						value="#{catBeanR.pmCategoryL1.categoryL1Code} -  #{catBeanR.pmCategoryL1.categoryName}" />
 					<br />

@@ -16,7 +16,7 @@
 								value="#{backingBean.managedBean.poSecReview.shareholderVerifed}"
 								id="poShrVer">
 								<p:ajax update=":form:tt:shrInfPan,:form:revPanHdr"
-									event="change"
+									event="change" process="@this,:form:tt:shrInfPan"
 									listener="#{backingBean.changeVerifySection(backingBean.managedBean.poSecReview.shareholderVerifed)}" />
 							</p:selectBooleanCheckbox></td>
 						<td valign="top"><h:outputText
@@ -31,7 +31,7 @@
 								value="#{backingBean.managedBean.apprvrSecReview.shareholderVerifed}"
 								id="apprShrVer">
 								<p:ajax update=":form:tt:shrInfPan,:form:revPanHdr"
-									event="change"
+									event="change" process="@this,:form:tt:shrInfPan"
 									listener="#{backingBean.changeVerifySection(backingBean.managedBean.apprvrSecReview.shareholderVerifed)}" />
 							</p:selectBooleanCheckbox></td>
 						<td valign="top"><h:outputText

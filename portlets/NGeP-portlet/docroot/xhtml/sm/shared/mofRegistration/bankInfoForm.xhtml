@@ -15,7 +15,7 @@
 							value="#{backingBean.managedBean.poSecReview.bankVerified}"
 							id="poBankVer">
 							<p:ajax update=":form:tt:bankInfPan,:form:revPanHdr"
-								event="change"
+								event="change" process="@this,:form:tt:bankInfPan"
 								listener="#{backingBean.changeVerifySection(backingBean.managedBean.poSecReview.bankVerified)}" />
 						</p:selectBooleanCheckbox></td>
 					<td valign="top"><h:outputText
@@ -30,7 +30,7 @@
 							value="#{backingBean.managedBean.apprvrSecReview.bankVerified}"
 							id="apprBankVer">
 							<p:ajax update=":form:tt:bankInfPan,:form:revPanHdr"
-								event="change"
+								event="change" process="@this,:form:tt:bankInfPan"
 								listener="#{backingBean.changeVerifySection(backingBean.managedBean.apprvrSecReview.bankVerified)}" />
 						</p:selectBooleanCheckbox></td>
 					<td valign="top"><h:outputText
