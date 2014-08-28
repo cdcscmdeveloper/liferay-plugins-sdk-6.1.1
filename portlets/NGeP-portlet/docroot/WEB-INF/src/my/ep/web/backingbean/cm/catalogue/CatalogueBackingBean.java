@@ -611,7 +611,24 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					.setCompareDesc(
 							this.getManagedBean().getMaintainItemList().get(index)
 									.getItemDesc());
-	
+
+			//sort Tier
+			if(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings() != null && !this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().isEmpty()){
+				groupPricesByTier(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings(), "S");
+			}
+			//sort Tier	Promotion		
+			if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings() != null && !this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings().isEmpty()){
+				groupPricesByTier(this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings(), "P");
+			}
+			//sort Zonal Tier			
+			if(this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings() != null && !this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings().isEmpty()){
+				groupPricesByTier(this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings(), "S");
+			}
+			//sort Zonal Tier Promotion
+			if(this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings() != null && !this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings().isEmpty()){
+				groupPricesByTier(this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings(), "P");
+			}
+			
 			List<CmPromotionTierPricing> cmList = this.getManagedBean()
 					.getSelectedMaintainItem().getCmPromotionTierPricings();
 			if (cmList != null && cmList.size() > 0) {
@@ -641,6 +658,68 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	}
 
+	private <T extends CmPricing> void groupPricesByTier(List<T> cmPricings, String stand_id){
+		
+		if(stand_id.equalsIgnoreCase("S")){
+			//Order Tier or Zonal Tier
+			Collections.sort(cmPricings, new Comparator<CmPricing>() {
+				@Override
+				public int compare(CmPricing p1, CmPricing p2) {
+					
+					//Sorts by 'stand_group_id' property
+					if(p1.getStand_group_id()<p2.getStand_group_id())
+						return -1;
+					else if(p1.getStand_group_id()==p2.getStand_group_id())
+						return doSecodaryOrderSort(p1, p2);
+					else
+						return 1;
+//					return p1.getStand_group_id()<p2.getStand_group_id()?-1:p1.getStand_group_id()==p2.getStand_group_id()?doSecodaryOrderSort(p1,p2):1;
+				}
+
+				//If 'stand_group_id' property is equal sorts by 'fromQty' property
+				public int doSecodaryOrderSort(CmPricing p1,CmPricing p2) {
+				    return p1.getFromQty()<p2.getFromQty()?-1:0;
+				}
+			});
+		} else if(stand_id.equalsIgnoreCase("P")){
+			//Order Promotion Tier or Zonal Promotion Tier
+			Collections.sort(cmPricings, new Comparator<CmPricing>() {
+				@Override
+				public int compare(CmPricing p1, CmPricing p2) {
+					//Sorts by 'stand_group_id' property
+					if(p1.getStand_group_id()<p2.getStand_group_id())
+						return -1;
+					else if(p1.getStand_group_id()==p2.getStand_group_id())
+						return doSecodaryOrderSort(p1, p2);
+					else
+						return 1;
+//					return p1.getStand_group_id()<p2.getStand_group_id()?-1:doSecodaryOrderSort(p1,p2);
+				}
+
+				//If 'stand_group_id' property is equal sorts by 'promo_group_id' property
+				public int doSecodaryOrderSort(CmPricing p1,CmPricing p2) {
+					if(p1.getPromo_group_id()<p2.getPromo_group_id())
+						return -1;
+					else if(p1.getPromo_group_id()==p2.getPromo_group_id())
+						return doTernaryOrderSort(p1, p2);
+					else
+						return 1;
+					
+//				    return p1.getPromo_group_id()<p2.getPromo_group_id()?-1:doTernaryOrderSort(p1, p2);
+				}
+
+				//If 'promo_group_id' property is equal sorts by 'fromQty' property
+				public int doTernaryOrderSort(CmPricing p1,CmPricing p2) {
+				    return p1.getFromQty()<p2.getFromQty()?-1:0;
+				}
+			});
+
+		}
+		
+
+	}
+	
+	
 	public String navigateToPublishedItemDet(int index) {
 
 		this.getManagedBean().setSelectedMaintainItem(
