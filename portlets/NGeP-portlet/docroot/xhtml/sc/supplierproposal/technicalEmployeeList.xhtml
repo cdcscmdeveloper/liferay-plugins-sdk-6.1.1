@@ -49,11 +49,11 @@
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.sp.qualification']}">
-					<h:outputText></h:outputText>
+					<h:outputText  value="#{techEmployee.designation}"/>
 				</p:column>
-
+			<!-- value="#{supplierProposalDetailBackingBean.getParameterDesc('QL',techEmployee.getSmStaffAcademics().get(0).getQualificationLevelId)}" -->
 				<p:column headerText="#{lbl['lbl.sc.sp.noofyrsexp']}">
-					<h:outputText value="#{techEmployee.workExperienceYear}" />
+					<h:outputText style="float : right" value="#{techEmployee.workExperienceYear}" />
 				</p:column>
 			</p:dataTable>
 
