@@ -109,7 +109,7 @@
 										label="#{lbl['lbl.pm.profiles.userdetails.idno']}"
 										disabled="#{!profileManagementBackingBean.managedBean.selectedUser.brandNew}"
 										value="#{profileManagementBackingBean.managedBean.selectedUser.identificationNo}"
-										size="30" maxlength="12" validatorMessage="#{lbl['lbl.sm.individual.newicno']} - #{lbl['lbl.sm.invalidIcNo']}">
+										size="30" maxlength="12" validatorMessage="#{lbl['lbl.pm.profiles.userdetails.idno']} #{lbl['lbl.pm.profiles.newicno']} - #{lbl['lbl.pm.profiles.invalidIcNo']}">
 										<f:validateRegex pattern="[0-9]+" />
 										<f:validateLength minimum="12"/>  							
 									</p:inputText>
@@ -367,7 +367,7 @@
 			    <td>
 			    	<p:inputText id="itEmail" required="true" label="#{lbl['lbl.pm.profiles.userdetails.email']}"
 			    		value="#{profileManagementBackingBean.managedBean.selectedUser.email}" styleClass="ppDisplayTextM"  
-			    		validatorMessage="#{lbl['lbl.sm.invalidEmail']}">
+			    		validatorMessage="#{lbl['lbl.pm.profiles.invalidEmail']}">
 						<f:validateRegex
 							pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
 					</p:inputText> 
@@ -405,7 +405,7 @@
   				<th width="20%"><p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.mobileno']}" /></th>  
 			    <td>
 			    	<p:inputText value="#{profileManagementBackingBean.managedBean.selectedUser.mobileNo}" 
-			    		styleClass="ppDisplayTextM"  validatorMessage="#{lbl['lbl.sm.mobilenumber']} - #{lbl['lbl.sm.invalidNo']}">
+			    		styleClass="ppDisplayTextM"  validatorMessage="#{lbl['lbl.pm.profiles.userdetails.mobileno']} - #{lbl['lbl.pm.profiles.invalidNo']}">
 			    		<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
 		    		</p:inputText>
 			    </td>
