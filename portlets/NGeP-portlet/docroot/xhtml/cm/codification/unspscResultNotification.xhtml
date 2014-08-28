@@ -41,6 +41,7 @@
 							<td></td>
 							<td></td>
 					</tr>
+					<ui:remove>
 					<tr>
 	       				<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.code']}"></p:outputLabel></td>
 						<td><p:inputText
@@ -51,7 +52,7 @@
 								value="#{unspscCodeBackingBean.managedBean.requestCode.tempTitle}"
 								size="40" disabled="true" /></td>
 					</tr>
-				
+					</ui:remove>
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.cm.item.name']}"></p:outputLabel></td>
 						<td><p:inputText
