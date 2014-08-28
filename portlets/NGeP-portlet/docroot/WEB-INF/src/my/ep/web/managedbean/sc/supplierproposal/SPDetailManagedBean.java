@@ -96,6 +96,7 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	// Business rule 
 	private Date nonFedMinDate;
 	private Date nonFedEffMaxDate;
+	private List<ScQtPRPExperience> deletedPRPExperiences;
 
 	// Credit Facilities
 	private List<ScQtPRPCreditFacility> scQtPRPCreditFacilities;
@@ -103,11 +104,13 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	private BigDecimal totalAmountCredit;
 	private BigDecimal totalAmountPaid;
 	private BigDecimal totalPercentagePaid;
+	private List<ScQtPRPCreditFacility> toBeDeletedCreditFacilities;
 
 	// Cash On Hand
 	private List<ScQtPRPCashOnHand> scQtPRPCashOnHand;
 	private List<ScQtPRPCashOnHand> selectedPRPCashOnHand;
 	private BigDecimal totalcashHand;
+	private List<ScQtPRPCashOnHand> toBeDeletedCashOnHandList;
 
 	// Bank Statement
 	private List<ScQtPRPBankStmt> scQtPRPBankStmts;
@@ -142,6 +145,63 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	}
 	
 	
+
+	/**
+	 * @return the toBeDeletedCashOnHandList
+	 */
+	public List<ScQtPRPCashOnHand> getToBeDeletedCashOnHandList() {
+		return toBeDeletedCashOnHandList;
+	}
+
+
+
+	/**
+	 * @param toBeDeletedCashOnHandList the toBeDeletedCashOnHandList to set
+	 */
+	public void setToBeDeletedCashOnHandList(
+			List<ScQtPRPCashOnHand> toBeDeletedCashOnHandList) {
+		this.toBeDeletedCashOnHandList = toBeDeletedCashOnHandList;
+	}
+
+
+
+	/**
+	 * @return the toBeDeletedCreditFacilities
+	 */
+	public List<ScQtPRPCreditFacility> getToBeDeletedCreditFacilities() {
+		return toBeDeletedCreditFacilities;
+	}
+
+
+
+	/**
+	 * @param toBeDeletedCreditFacilities the toBeDeletedCreditFacilities to set
+	 */
+	public void setToBeDeletedCreditFacilities(
+			List<ScQtPRPCreditFacility> toBeDeletedCreditFacilities) {
+		this.toBeDeletedCreditFacilities = toBeDeletedCreditFacilities;
+	}
+
+
+
+	/**
+	 * @return the deletedPRPExperiences
+	 */
+	public List<ScQtPRPExperience> getDeletedPRPExperiences() {
+		return deletedPRPExperiences;
+	}
+
+
+
+	/**
+	 * @param deletedPRPExperiences the deletedPRPExperiences to set
+	 */
+	public void setDeletedPRPExperiences(
+			List<ScQtPRPExperience> deletedPRPExperiences) {
+		this.deletedPRPExperiences = deletedPRPExperiences;
+	}
+
+
 
 	/**
 	 * @return the nonFedEffMaxDate

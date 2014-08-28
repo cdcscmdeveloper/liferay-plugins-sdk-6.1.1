@@ -424,6 +424,7 @@ public class SPDetailBackingBean extends
 					.getManagedBean().getScQtPRPCreditFacilities());
 			scQtProposalChecklist.setProposalScore(proposalScore);
 			reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
+			reqDTO.setTobeCreditFacility(getManagedBean().getToBeDeletedCreditFacilities());
 			resDTO = proposalSO.saveProposalDetails(reqDTO);
 		} finally {
 			proposalSO = null;
@@ -468,6 +469,7 @@ public class SPDetailBackingBean extends
 					.getScQtPRPCashOnHand());
 			scQtProposalChecklist.setProposalScore(proposalScore);
 			reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
+			reqDTO.setTobecashOnHand(getManagedBean().getToBeDeletedCashOnHandList());
 			resDTO = proposalSO.saveProposalDetails(reqDTO);
 		} finally {
 			proposalSO = null;
@@ -683,6 +685,8 @@ public class SPDetailBackingBean extends
 					.setExperienceNCheckLists(experienceNCheckList);
 			scQtProposalChecklist.setProposalScore(proposalScore);
 			reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
+			// to delete the deleted experiences from db
+			reqDTO.setTobeRemovedExperience(getManagedBean().getDeletedPRPExperiences());
 			ProposalResDTO resDTO = proposalSO.saveProposalDetails(reqDTO);
 
 			if (resDTO.isSuccessful()) {
@@ -697,15 +701,14 @@ public class SPDetailBackingBean extends
 						proposalChecklist);
 				getManagedBean().getTecCheckDetailsList().set(index,
 						proposalChecklist);
-				// return
-				// "/xhtml/sc/supplierproposal/supplierProposalMain.xhtml?faces-redirect=true";
+				
 			}
 
 		} finally {
 			proposalSO = null;
 		}
 
-		// return null;
+		
 	}
 
 	public String completeProposalCkeckListAction() {
@@ -1028,15 +1031,23 @@ public class SPDetailBackingBean extends
 
 					List<ScQtPRPExperience> qtPRPExperiences = resDTO
 							.getPrpExperience();
-					log.info("Size : " + qtPRPExperiences.size());
+					
 					int totalYears = 0;
+					
+					if (null != qtPRPExperiences ){
+						
+						log.info("Size : " + qtPRPExperiences.size());
 
-					for (ScQtPRPExperience experience : qtPRPExperiences) {
-						totalYears += (experience.getContractPeriod());
+						for (ScQtPRPExperience experience : qtPRPExperiences) {
+							totalYears += (experience.getContractPeriod());
+						}
+						
+						this.getManagedBean().setTotalContracts(
+								qtPRPExperiences.size());
 					}
+					
 
-					this.getManagedBean().setTotalContracts(
-							qtPRPExperiences.size());
+					
 
 					this.getManagedBean().setTotalYears((totalYears));
 
@@ -1491,16 +1502,23 @@ public class SPDetailBackingBean extends
 							resDTO.getProposalScores());
 					List<ScQtPRPCashOnHand> cashOnHand = resDTO
 							.getCashOnHandResultBean();
+					
 					int totalCashOnHand = 0;
-					for (ScQtPRPCashOnHand scQtPRPCashOnHand : cashOnHand) {
-						totalCashOnHand = totalCashOnHand
-								+ scQtPRPCashOnHand.getCashAmount().intValue();
+					
+					if (cashOnHand != null){
+						
+						for (ScQtPRPCashOnHand scQtPRPCashOnHand : cashOnHand) {
+							totalCashOnHand = totalCashOnHand
+									+ scQtPRPCashOnHand.getCashAmount().intValue();
+						}
+						log.info("Size : " + cashOnHand.size());
+						this.getManagedBean().setScQtPRPCashOnHand(cashOnHand);
 					}
+					
+					
 					this.getManagedBean().setTotalcashHand(
 							new BigDecimal(totalCashOnHand));
-					log.info("Size : " + cashOnHand.size());
-					this.getManagedBean().setScQtPRPCashOnHand(cashOnHand);
-
+					
 					System.out
 							.println("CH ***** NAV_TO_CASH_ON_HAND_PAGES *****");
 
@@ -2028,13 +2046,16 @@ public class SPDetailBackingBean extends
 				.getSelectedPRPExperiences();
 		if (experienceList.size() == selectedExperienceList.size()) {
 
-			// getManagedBean().get
+			getManagedBean().setDeletedPRPExperiences(selectedExperienceList);
 			experienceList.clear();
-		} else {
+		} else if (selectedExperienceList != null) {
+			List<ScQtPRPExperience> tobeDeletedExperiences  = new ArrayList<ScQtPRPExperience>();
+			
 			for (ScQtPRPExperience scQtPRPExperience : selectedExperienceList) {
-
+				tobeDeletedExperiences.add(scQtPRPExperience);
 				experienceList.remove(scQtPRPExperience);
 			}
+			getManagedBean().setDeletedPRPExperiences(tobeDeletedExperiences);
 		}
 		getManagedBean().setScQtPRPExperiences(experienceList);
 		getManagedBean().setTotalContracts(
@@ -2074,11 +2095,15 @@ public class SPDetailBackingBean extends
 		List<ScQtPRPCreditFacility> selectedcreditFacilitiesList = this
 				.getManagedBean().getSelectedPRPCreditFacilities();
 		if (creditFacilitiesList.size() == selectedcreditFacilitiesList.size()) {
+			getManagedBean().setToBeDeletedCreditFacilities(selectedcreditFacilitiesList);
 			creditFacilitiesList.clear();
-		} else {
+		} else if (selectedcreditFacilitiesList != null)  {
+			List<ScQtPRPCreditFacility> toDeleteCreditFacilitiesList = new ArrayList<ScQtPRPCreditFacility>();
 			for (ScQtPRPCreditFacility facility : selectedcreditFacilitiesList) {
+				toDeleteCreditFacilitiesList.add(facility);
 				creditFacilitiesList.remove(facility);
 			}
+			getManagedBean().setToBeDeletedCreditFacilities(toDeleteCreditFacilitiesList);
 		}
 		totalCreditSum();
 	}
@@ -2112,11 +2137,16 @@ public class SPDetailBackingBean extends
 		List<ScQtPRPCashOnHand> selectedCashOnHandList = this.getManagedBean()
 				.getSelectedPRPCashOnHand();
 		if (cashOnHandList.size() == selectedCashOnHandList.size()) {
+			getManagedBean().setToBeDeletedCashOnHandList(selectedCashOnHandList);
 			cashOnHandList.clear();
-		} else {
+		} else if (selectedCashOnHandList != null){
+			
+			List<ScQtPRPCashOnHand> toDeleteCashOnHandList = new ArrayList<ScQtPRPCashOnHand>();
 			for (ScQtPRPCashOnHand onHand : selectedCashOnHandList) {
+				toDeleteCashOnHandList.add(onHand);
 				cashOnHandList.remove(onHand);
 			}
+			getManagedBean().setToBeDeletedCashOnHandList(toDeleteCashOnHandList);
 		}
 	}
 
