@@ -105,8 +105,7 @@
 							<p:inputText id="itIdentityNo" styleClass="ppDisplayTextM" required="true"
 								label="#{lbl['lbl.pm.profiles.userdetails.idno']}"
 								disabled="#{!profileManagementBackingBean.managedBean.selectedUser.brandNew}"
-								value="#{profileManagementBackingBean.managedBean.selectedUser.identificationNo}">
-								<p:ajax event="change" update="itLoginId" listener="#{profileManagementBackingBean.updateLoginId()}"/>
+								value="#{profileManagementBackingBean.managedBean.selectedUser.identificationNo}">  							
 							</p:inputText>
 							<p:message id="itIdentityNoMsg" for="itIdentityNo" display="icon" />
 						</td>
