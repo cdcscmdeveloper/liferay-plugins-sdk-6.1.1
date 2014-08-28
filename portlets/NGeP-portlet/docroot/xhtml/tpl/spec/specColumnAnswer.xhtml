@@ -78,7 +78,7 @@
 		</h:panelGroup>
 	</p:column>
 	<ui:param name="answerlbl" value="#{isSpecTypeFinancial ? 'lbl.tpl.spec.content.total.amount' : 'lbl.tpl.spec.content.answer'}" />
-	<p:column style="width:115px;#{isSpecTypeFinancial ? 'text-align:right;' : ''}" headerText="#{lbl[answerlbl]}">
+	<p:column style="width:115px;#{isSpecTypeFinancial ? 'text-align:right;' : ''}" headerText="#{lbl[answerlbl]}" rendered="#{!isZonal}">
 		<f:facet name="header">
 			<h:outputText value="* " styleClass="mandatory" rendered="#{!isSpecTypeFinancial}" />
 			<h:outputText value="#{lbl[answerlbl]}"/>
