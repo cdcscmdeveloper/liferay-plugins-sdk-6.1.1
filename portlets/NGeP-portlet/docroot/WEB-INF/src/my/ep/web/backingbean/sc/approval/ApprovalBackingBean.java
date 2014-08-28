@@ -144,12 +144,12 @@ public class ApprovalBackingBean extends
 	/**
 	 * @return the appCatList
 	 */
-	public List<Long> getAppCatList() {
-		List<Long> appCatList = new ArrayList<Long>();
+	public List<String> getAppCatList() {
+		List<String> appCatList = new ArrayList<String>();
 		if (null != this.getManagedBean().getTabList()) {
 			for (TabBean tabBean : this.getManagedBean().getTabList()) {
 				appCatList.add(tabBean.getScQtApproval().getApprovalCategory()
-						.getParameterId());
+						.getParameterCode());
 			}
 		}
 		return appCatList;
