@@ -200,12 +200,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		List<ScRequestNoteDtl>	scRequestNoteDtls = null;
     try {
     	
-    	if(getManagedBean().getSupplierRecList() != null && getManagedBean().getSupplierRecList().size()>0){
-    		scRequestNoteDtls = getManagedBean().getSupplierRecList();
-    	} else{
-    		scRequestNoteDtls = this.getManagedBean().getRequestNoteDtls();
-    	}
-    	
+    	scRequestNoteDtls = this.getManagedBean().getRequestNoteDtls();
     	// adding request note delete list
     	if(getManagedBean().getDeleteRequestNoteDtls() != null && getManagedBean().getDeleteRequestNoteDtls().size()>0){
     		scRequestNoteDtls.addAll(getManagedBean().getDeleteRequestNoteDtls());
@@ -289,13 +284,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		ScRequestNote requestNote = getManagedBean().getRequestNote();
 		List<ScRequestNoteDtl>	requestNoteDtls = null;
 		try {
-			
-			if(getManagedBean().getSupplierRecList() != null && getManagedBean().getSupplierRecList().size()>0){
-				requestNoteDtls = getManagedBean().getSupplierRecList();
-			} else{
-				requestNoteDtls = this.getManagedBean().getRequestNoteDtls();
-			}
-			
+			requestNoteDtls = this.getManagedBean().getRequestNoteDtls();
 			List<ScRequestNoteDtl>	scRequestNoteDtls = new ArrayList<ScRequestNoteDtl>();
 			if (requestNoteDtls != null && requestNoteDtls.size() > 0) {
 				for (ScRequestNoteDtl requestNoteDtl : requestNoteDtls) {
@@ -432,9 +421,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					ScQuote quote = quoteSO.getQuoteDtl(quoteReqDTO).getQuoteBidDtl();
 					if(quote != null){
 						getManagedBean().setScQuote(quote); // copy scQuote to sq view in request note
-						if(quote.isZonal()){
-							zoneFlag = Boolean.TRUE;
-						}
 					} 
 				}	
 				retrieveRequestNoteDetails(dpId, res.getDocStatus().longValue(), zoneFlag);
@@ -443,13 +429,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			getManagedBean().setTitleChecker(Boolean.FALSE);
 			FacesContext fc = FacesContext.getCurrentInstance();
 
-			if(zoneFlag){
-				// page nav. to requte note by zone 
-				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "requestNoteByZone");
-			} else {
-				// page nav. to common request note
-				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "commonRequestNote");
-			}
+			// page nav. to common request note
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "commonRequestNote");
 		}
 	}
 
@@ -469,7 +450,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			requestNote	=	resDTO.getRequestNoteDetail();
 			List<ScRequestNoteDtl>  requestNoteDtls = new ArrayList<ScRequestNoteDtl>();
 			
-			HashMap<String,Long> ZoneNames = new HashMap<String,Long>();
+			//HashMap<String,Long> ZoneNames = new HashMap<String,Long>();
 			if(requestNote.getRequestNoteDtls()  != null && requestNote.getRequestNoteDtls().size() >0){
 				for (ScRequestNoteDtl scRequestNoteDtl : requestNote.getRequestNoteDtls()) {
 					ScRequestSupplierItem scRequestSupplierItem = scRequestNoteDtl.getScRequestSupplierItem();
@@ -526,10 +507,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 						scRequestNoteDtl.setAssignedUser(new PmUser());	
 					}
 					
-					if(scRequestNoteDtl.getTplSpecZoneDtl() !=null){
-						ZoneNames.put(scRequestNoteDtl.getTplSpecZoneDtl().getZoneName(), scRequestNoteDtl.getTplSpecZoneDtl().getSpecZoneId());
-					}
-					
 					if(scRequestNoteDtl.getScRequestSupplierItem() == null){
 						ScRequestSupplierItem  requestSupplierItem = new ScRequestSupplierItem();
 						SmSupplier  smSupplier = new SmSupplier();
@@ -544,20 +521,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				fulfilmentTypeEvent(requestNote.getRequestNoteDtls().get(0));
 				getManagedBean().setRequestNoteDtl(requestNote.getRequestNoteDtls().get(0));
 			}
-			
-			if(zoneFlag){
-				// get grouped request note dtl objs for Item list
-				List<ScRequestNoteDtl> itemList = groupRequestNoteDtls(requestNote.getRequestNoteDtls());
-				getManagedBean().setRequestNoteDtls(itemList);
-				
-				// supplier rec list and sorting
-				Map<String, Long> sortZoneNames = new TreeMap<String, Long>(ZoneNames);
-				getManagedBean().setSupplierRecList(sortSupplierRecs(requestNoteDtls ,sortZoneNames));
-				
-			} else{
-				getManagedBean().setRequestNoteDtls(requestNoteDtls);
-			}
-			
+
+			getManagedBean().setRequestNoteDtls(requestNoteDtls);
+
 			// created by 
 			getManagedBean().setCreatedBy(getCreatedBy(requestNote.getCreatedBy()).getUserName());
 			// remarks
@@ -747,72 +713,74 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	}
 	
 	public void applyForRequestNote() {
-	   log.info("applyForRequestNote");
-	   IParameterSO parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-	   ParameterReqDTO reqDTO = new ParameterReqDTO();
+		log.info("applyForRequestNote");
+		IParameterSO parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+		ParameterReqDTO reqDTO = new ParameterReqDTO();
 
-	   List<ScRequestNoteDtl>	requestNoteDtls	= new ArrayList<ScRequestNoteDtl>();
-	   if(getManagedBean().getSelectedRequestNoteDtls() != null && getManagedBean().getSelectedRequestNoteDtls().size() >0) {
-		   List<ScRequestNoteDtl>	selectedRequestNoteDtls = getManagedBean().getSelectedRequestNoteDtls();
-		   
-		   if(getManagedBean().getRequestNoteDtls() != null && getManagedBean().getRequestNoteDtls().size() >0) {
-			   for(ScRequestNoteDtl selectedReqDtl : getManagedBean().getRequestNoteDtls()) {
-				   if(selectedRequestNoteDtls.contains(selectedReqDtl)){
+		List<ScRequestNoteDtl>	requestNoteDtls	= new ArrayList<ScRequestNoteDtl>();
+		if(getManagedBean().getSelectedRequestNoteDtls() != null && getManagedBean().getSelectedRequestNoteDtls().size() >0) {
+			List<ScRequestNoteDtl>	selectedRequestNoteDtls = getManagedBean().getSelectedRequestNoteDtls();
 
-					   reqDTO.setParameterType(ParameterTypeConst.FULFILMENT_TYPE);
-					   reqDTO.setParameterCode(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
-					   ParameterResDTO parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
-					   selectedReqDtl.setFulfilmentType(parameterResDTO.getPmParameter());
+			if(getManagedBean().getRequestNoteDtls() != null && getManagedBean().getRequestNoteDtls().size() >0) {
+				for(ScRequestNoteDtl selectedReqDtl : getManagedBean().getRequestNoteDtls()) {
+					if(selectedRequestNoteDtls.contains(selectedReqDtl)){
 
-					   // rec supplier
-					   if(getManagedBean().getSupplierId() != null && getManagedBean().getSupplierId() > 0 ){
+						reqDTO.setParameterType(ParameterTypeConst.FULFILMENT_TYPE);
+						reqDTO.setParameterCode(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
+						ParameterResDTO parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
+						selectedReqDtl.setFulfilmentType(parameterResDTO.getPmParameter());
 
-						   if(selectedReqDtl.getRequestItem() != null && selectedReqDtl.getRequestItem().getSupplierItems() !=null 
-								   && selectedReqDtl.getRequestItem().getSupplierItems().size()>0){
-							   List<ScRequestSupplierItem> supplierItems = selectedReqDtl.getRequestItem().getSupplierItems();
+						// rec supplier
+						if(getManagedBean().getSupplierId() != null && getManagedBean().getSupplierId() > 0 ){
 
-							   for (ScRequestSupplierItem scRequestSupplierItem : supplierItems) {
+							if(selectedReqDtl.getRequestItem() != null && selectedReqDtl.getRequestItem().getSupplierItems() !=null 
+									&& selectedReqDtl.getRequestItem().getSupplierItems().size()>0){
+								List<ScRequestSupplierItem> supplierItems = selectedReqDtl.getRequestItem().getSupplierItems();
 
-								   if(scRequestSupplierItem.getSmSupplier().getSupplierId().equals(getManagedBean().getSupplierId())){
-									   scRequestSupplierItem.setSupplierItemId(getManagedBean().getSupplierId());
-									   selectedReqDtl.setScRequestSupplierItem(scRequestSupplierItem);
-								   }
-							   }
-						   }
-					   }
-					   // prepare by
-					   if(getManagedBean().getAssignedToUserId() != null && getManagedBean().getAssignedToUserId() > 0){
-						   PmUser pmUser = new PmUser();
-						   pmUser.setUserId(getManagedBean().getAssignedToUserId());
-						   selectedReqDtl.setAssignedUser(pmUser);
-						   applyPrepareByForSupplierRecs(selectedReqDtl, getManagedBean().getAssignedToUserId());
-						   
-					   } else{
-						   throw new EpException("Please select Prepare By.");
-					   }
-					   // delivery term
-					   if(getManagedBean().getPeriodType() != null && !getManagedBean().getPeriodType().isEmpty()){
-						   reqDTO = new ParameterReqDTO();
-						   reqDTO.setParameterType(ParameterTypeConst.DELIVERY_TERM);
-						   reqDTO.setParameterCode(getManagedBean().getPeriodType());
-						   parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
-						   selectedReqDtl.setDeliverTermType(parameterResDTO.getPmParameter());
-					   } 
-					   
-					   if(getManagedBean().getPeriodValue() >0){
-						   selectedReqDtl.setDeliverTerm(getManagedBean().getPeriodValue());  
-					   }
+								for (ScRequestSupplierItem scRequestSupplierItem : supplierItems) {
 
-					   requestNoteDtls.add(selectedReqDtl);
-					   getManagedBean().setRequestNoteDtls(requestNoteDtls);
-					
-				   }
-			   }
-			   getManagedBean().getSelectedRequestNoteDtls().clear();
-			   } else {
-				   throw new EpException("Please select At least one Item.");
-			   }
-		   }
+									if(scRequestSupplierItem.getSmSupplier().getSupplierId().equals(getManagedBean().getSupplierId())){
+										scRequestSupplierItem.setSupplierItemId(getManagedBean().getSupplierId());
+										selectedReqDtl.setScRequestSupplierItem(scRequestSupplierItem);
+									}
+								}
+							}
+						}
+						// prepare by
+						if(getManagedBean().getAssignedToUserId() != null && getManagedBean().getAssignedToUserId() > 0){
+							PmUser pmUser = new PmUser();
+							pmUser.setUserId(getManagedBean().getAssignedToUserId());
+							selectedReqDtl.setAssignedUser(pmUser);
+							applyPrepareByForSupplierRecs(selectedReqDtl, getManagedBean().getAssignedToUserId());
+
+						} else{
+							throw new EpException("Please select Prepare By.");
+						}
+						// delivery term
+						if(getManagedBean().getPeriodType() != null && !getManagedBean().getPeriodType().isEmpty()){
+							reqDTO = new ParameterReqDTO();
+							reqDTO.setParameterType(ParameterTypeConst.DELIVERY_TERM);
+							reqDTO.setParameterCode(getManagedBean().getPeriodType());
+							parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
+							selectedReqDtl.setDeliverTermType(parameterResDTO.getPmParameter());
+						} 
+
+						if(getManagedBean().getPeriodValue() >0){
+							selectedReqDtl.setDeliverTerm(getManagedBean().getPeriodValue());  
+						}
+
+						requestNoteDtls.add(selectedReqDtl);
+					} else{
+						requestNoteDtls.add(selectedReqDtl);
+					}
+
+				}
+				getManagedBean().setRequestNoteDtls(requestNoteDtls);
+				getManagedBean().getSelectedRequestNoteDtls().clear();
+			} 
+		}else {
+			throw new EpException("Please select At least one Item.");
+		}
 	}
 	
 	/**
@@ -1449,6 +1417,34 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			getManagedBean().setRequestSupplierItem(scRequestSupplierItem);
 			getManagedBean().setRequestNoteDtl(scRequestNoteDtl);
 		}
+	}
+	
+	
+	
+	/**
+	 * show Item Details, Justification, Pricing details in Request Note
+	 */
+	public void editQuantity(){
+		log.info("editQuantity");
+		
+		if(getManagedBean().getRequestNoteDtl() != null){
+			List<ScRequestNoteDtl>	requestNoteDtls	= new ArrayList<ScRequestNoteDtl>();
+			BigDecimal quantity  = getManagedBean().getRequestSupplierItem().getRequestNoteItem().getQuantity();
+			ScRequestNoteDtl selectedRequestNoteDtl = getManagedBean().getRequestNoteDtl();
+			
+			if(getManagedBean().getRequestNoteDtls() != null && getManagedBean().getRequestNoteDtls().size() >0){
+				for (ScRequestNoteDtl requestNoteDtl : getManagedBean().getRequestNoteDtls()) {
+					if(requestNoteDtl.equals(selectedRequestNoteDtl)){
+						requestNoteDtl.getScRequestSupplierItem().getRequestNoteItem().setQuantity(quantity);
+						requestNoteDtls.add(requestNoteDtl);
+					} else{
+						requestNoteDtls.add(requestNoteDtl);
+					}
+				}
+				getManagedBean().setRequestNoteDtls(requestNoteDtls);
+			}
+		}
+		//RequestContext.getCurrentInstance().execute("itemDtlPopup.show()");
 	}
 
 	/**
