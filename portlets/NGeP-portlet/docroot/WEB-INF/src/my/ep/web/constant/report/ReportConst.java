@@ -79,14 +79,14 @@ public class ReportConst {
 	public static final String SC_OVRL_TECRES_WITH_OUT_WEI_TEC_RPT_JSP = "sc_tec_overall_tech_2e.jsp";
 	public static final String SC_SPPSAP2_FEC_RPT_JSP = "sc_fec_shlist_level2_3a.jsp";
 	public static final String SC_KPSAP2_PEMARKAHAN_FEC_RPT_JSP = "sc_fec_fin_asses_level2_3b.jsp";
-	public static final String SC_AKPT_FEC_RPT_JSP = "";
+	public static final String SC_AKPT_FEC_RPT_JSP = "sc_fec_price_eval_3c.jsp";
 	public static final String SC_HARGA_TAWARAN_FEC_RPT_JSP = "sc_fec_priceoffer_3d.jsp";
 	public static final String SC_OVRL_FINRS_FEC_RPT_JSP = "sc_fec_overall_fin_3e.jsp";
 	public static final String SC_SPPP1_PEMATUHAN_EC_RPT_JSP = "sc_ec_shortlist_asses_4a.jsp";
 	public static final String SC_KPP1_PEMATUHAN_EC_RPT_JSP = "sc_ec_method_of_asses_4b.jsp";
 	public static final String SC_SPPSAP2_EC_RPT_JSP = "sc_ec_gen_spec_4c.jsp";
 	public static final String SC_KPSAP2_PEMARKAHAN_EC_RPT_JSP = "sc_ec_gen_spec_4d.jsp";
-	public static final String SC_AKPTPH_EC_RPT_JSP = "";
+	public static final String SC_AKPTPH_EC_RPT_JSP = "sc_ec_price_eval_4e.jsp";
 	public static final String SC_TECSPEC_EC_RPT_JSP = "sc_ec_tech_spec_4f.jsp";
 	public static final String SC_OVRL_TECRS_WITH_OUT_WEI_EC_RPT_JSP = "sc_ec_overall_tech_4g.jsp";
 	public static final String SC_OVRL_TECRS_WITH_WEI_EC_RPT_JSP = "sc_ec_overalltech_with_wei_4h.jsp";
