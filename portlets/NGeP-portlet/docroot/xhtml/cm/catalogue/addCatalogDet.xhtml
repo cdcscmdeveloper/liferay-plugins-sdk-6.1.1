@@ -58,9 +58,9 @@ background: none;
 
 			<h:panelGroup rendered="#{unspscCodeBackingBean.catalogueAdmin and catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus!='U'}">
 
-				<p:commandButton value="Approve" icon="ui-icon-approve"
+				<p:commandButton value="#{lbl['lbl.btn.approve']}" icon="ui-icon-approve"
 					action="#{reviewCatBackingBean.approveCatalogueItem}"></p:commandButton>
-				<p:commandButton value="Reject" icon="ui-icon-reject"
+				<p:commandButton value="#{lbl['lbl.btn.reject']}" icon="ui-icon-reject"
 					update=":form:catalogDetMsgId :form:pricingTabID"
 					action="#{reviewCatBackingBean.rejectCatalogueItem}"></p:commandButton>
 
@@ -127,7 +127,7 @@ background: none;
 					<td colspan="1"><p:inputText size="26"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.leadTime}"
 							readonly="true" />
-						<p:inputText style="margin-left: 2px;" size="3" value="days"
+						<p:inputText style="margin-left: 2px;" size="3" value="#{lbl['lbl.cm.days']}"
 							readonly="true" /></td>
 				</tr>
 
@@ -243,11 +243,11 @@ background: none;
 			</p:tab>
 
 
-			<p:tab id="supplierInfoId" title="Supplier Info">
+			<p:tab id="supplierInfoId" title="#{lbl['lbl.cm.supplier.info']}">
 				<ui:include src="supplierInfoTab.xhtml"></ui:include>
 			</p:tab>
 
-			<p:tab id="remarkId" title="Reject Reason"
+			<p:tab id="remarkId" title="#{lbl['lbl.cm.reject.reason']}"
 				rendered="#{(unspscCodeBackingBean.catalogueAdmin or unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.supplierAdmin or unspscCodeBackingBean.allSupplier)
 				and (catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'R' or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' )}">
 

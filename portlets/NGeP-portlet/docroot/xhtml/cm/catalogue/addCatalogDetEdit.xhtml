@@ -91,7 +91,7 @@
 
 				<p:commandButton value="#{lbl['lbl.btn.approve']}" icon="ui-icon-approve"
 					action="#{reviewCatBackingBean.approveCatalogueItem}"></p:commandButton>
-				<p:commandButton value="Reject" icon="ui-icon-reject"
+				<p:commandButton value="#{lbl['lbl.btn.reject']}" icon="ui-icon-reject"
 					update=":form:catalogDetMsgId :form:pricingTabID"
 					action="#{reviewCatBackingBean.rejectCatalogueItem}"></p:commandButton>
 				
