@@ -43,17 +43,17 @@
 
 			<ac:paginator for="itemRejectReasonId"></ac:paginator>
 
-			<p:column headerText="Rejected By" width="5%">
+			<p:column headerText="#{lbl['lbl.txt.reject.by']}" width="5%">
 				#{reason.createdUser}
 		</p:column>
 
-			<p:column headerText="Rejected Date" width="5%">
+			<p:column headerText="#{lbl['lbl.txt.reject.date']}" width="5%">
 				<h:outputText value="#{reason.createdDate}">
 					<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
 				</h:outputText>
 			</p:column>
 
-			<p:column headerText="Rejected Reason" width="5%">
+			<p:column headerText="#{lbl['lbl.cm.reject.reason']}" width="5%">
 
 
 				<h:outputText
@@ -61,7 +61,7 @@
 
 			</p:column>
 
-			<p:column headerText="Remark">
+			<p:column headerText="#{lbl['lbl.txt.remarks']}">
 
 				<h:outputText value="#{reason.remark}"
 					rendered="#{reason.pmStatus.statusId == 10010}" />
