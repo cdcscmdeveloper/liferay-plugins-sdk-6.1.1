@@ -15,6 +15,8 @@
 					  </p:selectOneMenu></td>
 				</tr>
 	    </table>
+	    
+	    <h:panelGroup rendered="#{simpleQuoteBackingBean.managedBean.scQuote.panelItem eq null}">
 	    <h:panelGrid width="100%" style="margin-top:20px">
 			<p:dataTable id="zoneLocationDataTable" 
 			        value="#{simpleQuoteBackingBean.managedBean.zoneTrees}" var="zoneTree"
@@ -27,7 +29,7 @@
 					   <p:ajax event="select" listener="#{simpleQuoteBackingBean.selectZoneTreeNode}" />
 					   <p:ajax event="unselect" listener="#{simpleQuoteBackingBean.unSelectZoneTreeNode}" />
 					   
-						<p:treeNode type="zone" >
+						<p:treeNode type="zone">
 							<h:outputText value="#{location.zoneName}" />
 						</p:treeNode>
 						<p:treeNode type="state">
@@ -60,7 +62,6 @@
 		    <p:commandButton value="#{lbl['lbl.ct.ded.btn.add']}" process="@this,locLevels" 
 		     update="@([id$=zonePopupPanel])" partialSubmit="true" 
 			 oncomplete="ZoneLocation.show();" 
-			 rendered="#{simpleQuoteBackingBean.managedBean.panelItemBtnFlag}"
 			 actionListener="#{simpleQuoteBackingBean.showZonePopup}" icon="ui-icon-add"/>
 			 
 		   <p:commandButton value="#{lbl['lbl.sc.sq.supp.criteria.delete.btn']}" 
@@ -69,8 +70,48 @@
 		     update="@([id$=zoneLocationDataTable])" icon="ui-icon-delete"/> 	
 			 			 
 		 </c:if>
-      
 		</div>
+		</h:panelGroup>
+
+        <!-- panel item zone -->
+		<h:panelGroup rendered="#{simpleQuoteBackingBean.managedBean.scQuote.panelItem ne null}">
+			<h:panelGrid width="100%" style="margin-top:20px">
+				<p:dataTable id="panelzoneDataTable"
+					value="#{simpleQuoteBackingBean.managedBean.zoneTrees}"
+					var="zoneTree"
+					selection="#{simpleQuoteBackingBean.managedBean.selectedTreeNode}"
+					rowIndexVar="index" selectionMode="single" rowKey="#{zoneTree}">
+					<p:column headerText="Location">
+						<p:tree value="#{zoneTree}" var="location">
+							<p:treeNode type="zone">
+								<h:outputText value="#{location.zoneName}" />
+							</p:treeNode>
+							<p:treeNode type="state">
+								<h:outputText value="#{location.pmState.stateName}" />
+							</p:treeNode>
+							<p:treeNode type="division">
+								<h:outputText value="#{location.pmDivision.divisionName}" />
+							</p:treeNode>
+							<p:treeNode type="district">
+								<h:outputText value="#{location.pmDistrict.districtName}" />
+							</p:treeNode>
+						</p:tree>
+					</p:column>
+					<p:column headerText="Action">
+					</p:column>
+				</p:dataTable>
+			</h:panelGrid>
+			<div align="right" style="width: 100%">
+				<c:if test="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}">
+					<p:commandButton
+						value="#{lbl['lbl.sc.sq.supp.criteria.delete.btn']}"
+						process="@all,panelzoneDataTable" partialSubmit="true"
+						action="#{simpleQuoteBackingBean.deletePanelItemZoneTreeNode()}"
+						update="@([id$=panelzoneDataTable])" icon="ui-icon-delete" />
+
+				</c:if>
+			</div>
+		</h:panelGroup>
 	</p:panel>
 	 <ui:include src="/xhtml/sc/directpurchase/common/SimpleQuoteZonePopup.xhtml" />
 </ui:composition>
