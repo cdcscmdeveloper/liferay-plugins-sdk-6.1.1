@@ -74,7 +74,7 @@ background: none;
 				<tr style="height: 30px;">
 					<td rowspan="10">
 						<h:panelGroup rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) == 0 }">
-							<div style="display: block; max-width: 95%; padding: 60px; text-align: center; vertical-align: middle; border: 1px solid rgb(204, 204, 204);">No Image Available</div>
+							<div style="display: block; max-width: 95%; padding: 60px; text-align: center; vertical-align: middle; border: 1px solid rgb(204, 204, 204);">#{lbl['lbl.cm.no.image.available']}</div>
 						</h:panelGroup>
 							
 						<h:panelGroup rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) > 0 }">
