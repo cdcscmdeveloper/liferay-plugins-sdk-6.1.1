@@ -451,7 +451,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		
 		identityTypeMapper = new HashMap<Long,Object>();
 		for(PmParameterDesc pmDesc: parameterDescs){
-			System.out.println(pmDesc.getPmParameter().getParameterId() +"="+pmDesc.getPmParameter().getParameterCode());
 			identityTypeMapper.put(pmDesc.getPmParameter().getParameterId(), pmDesc.getPmParameter());
 		}
 	}
@@ -463,10 +462,8 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		logger.info("identityTypeChange");
 		
 		if(this.getManagedBean().getSelectedUser().getIdentificationCode().getParameterId()!=null){
-			System.out.println(this.getManagedBean().getSelectedUser().getIdentificationCode().getParameterId());
 			PmParameter pmParameter = (PmParameter) identityTypeMapper.get(this.getManagedBean().getSelectedUser().getIdentificationCode().getParameterId());
 			this.getManagedBean().getSelectedUser().getIdentificationCode().setParameterCode(pmParameter.getParameterCode());
-			System.out.println(pmParameter.getParameterId() +"="+pmParameter.getParameterCode());
 		}
 	}
 	
