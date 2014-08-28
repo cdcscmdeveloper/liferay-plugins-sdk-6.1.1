@@ -22,7 +22,7 @@
 			<p:column selectionMode="multiple" style="width:2%"></p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.category.code']}"
 				style="width:15%">
-				<ac:lov id="openPtj" lovId="PM_CATEGORY_L3"
+				<ac:lov id="openPtj" lovId="PM_CATEGORY_L3" 
 					disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
 					headerText="Category Lov"
 					saveObject="specificationBackingBean.managedBean.suppCriteriaopenList[#{index}].pmCategoryL3"
@@ -66,7 +66,7 @@
 		</p:dataTable>
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
-				process="@this" update="openPnlId" icon="ui-icon-add"
+				process="@this,openPnlId" partialSubmit="true" update="openPnlId" icon="ui-icon-add"
 				disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
 				actionListener="#{specificationBackingBean.addNewCategoryAction}" />
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
