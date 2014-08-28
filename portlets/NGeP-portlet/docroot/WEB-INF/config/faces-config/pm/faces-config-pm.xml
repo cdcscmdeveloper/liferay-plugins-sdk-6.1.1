@@ -35,4 +35,11 @@
 		  <managed-bean-class>my.ep.constant.pm.ParameterConst</managed-bean-class>
 		  <managed-bean-scope>application</managed-bean-scope>
  	</managed-bean>
+ 	
+ 	<managed-bean>
+		<description>Profile Management Constants</description>
+		<managed-bean-name>ProfileManagementConst</managed-bean-name>
+		<managed-bean-class>my.ep.constant.pm.ProfileManagementConst</managed-bean-class>
+		<managed-bean-scope>application</managed-bean-scope>
+	</managed-bean>
 </faces-config>
