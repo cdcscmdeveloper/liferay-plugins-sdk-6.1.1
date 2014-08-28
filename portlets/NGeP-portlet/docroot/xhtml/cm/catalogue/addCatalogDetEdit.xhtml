@@ -89,14 +89,14 @@
 
 			<h:panelGroup rendered="#{unspscCodeBackingBean.catalogueAdmin}">
 
-				<p:commandButton value="Approve" icon="ui-icon-approve"
+				<p:commandButton value="#{lbl['lbl.btn.approve']}" icon="ui-icon-approve"
 					action="#{reviewCatBackingBean.approveCatalogueItem}"></p:commandButton>
 				<p:commandButton value="Reject" icon="ui-icon-reject"
 					update=":form:catalogDetMsgId :form:pricingTabID"
 					action="#{reviewCatBackingBean.rejectCatalogueItem}"></p:commandButton>
 				
 				<ui:remove>
-					<p:commandButton value="#{lbl['lbl.cm.cancel']}"
+					<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 						icon="ui-icon-cancel"
 						action="#{reviewCatBackingBean.cancelToPendingApprovalItem()}"
 						immediate="true">
@@ -393,7 +393,7 @@
 			 
 			    <p:row>
 			        <p:column colspan="2">
-			            <p:commandButton value="#{lbl['lbl.cm.zm.btn.ok']}" style="float:right;" onclick="errorDialog.hide();" />
+			            <p:commandButton value="#{lbl['lbl.btn.ok']}" style="float:right;" onclick="errorDialog.hide();" />
 			        </p:column>
 			    </p:row>
 			</p:panelGrid>
