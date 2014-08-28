@@ -4,12 +4,39 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+    
 	<p:panel>
 	
 	  <p:blockUI block=":form"  widgetVar="blockWidget">
 				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 	 </p:blockUI>
-	
+
+		<p:confirmDialog message="#{simpleQuoteBackingBean.managedBean.promptMessage}" id="promptId"
+			width="450px"
+			widgetVar="sqConformDlg"  severity="alert" 
+			closable="true" appendToBody="true" header="Confirmation">
+
+			<p:panelGrid styleClass="noBorders tr,noBorders td">
+				<p:row>
+					<p:column width="60%" style="text-align:right">
+						<p:commandButton value="#{lbl['lbl.btn.yes']}" update="@form"
+						    onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+						    icon="ui-icon-submit" 
+						    onsuccess="sqConformDlg.hide()"
+							actionListener="#{simpleQuoteBackingBean.submitSimpleQuote('')}" />
+						<p:commandButton value="#{lbl['lbl.btn.no']}" partialSubmit="true" process="@this" 
+						icon="ui-icon-cancel"   onclick="sqConformDlg.hide();" type="button" />
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+			
+		     <p:blockUI block=":form" widgetVar="promptWidget" id="conformDlg">
+				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+			</p:blockUI>
+
+		</p:confirmDialog>
+
 		<div align="right">
 			<c:if test="#{simpleQuoteBackingBean.managedBean.taskId eq null}">
 				<p:commandButton immediate="true"
@@ -31,9 +58,9 @@
 					process="@all" update="@form" rendered="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}"/>
 
 				<p:commandButton value="#{lbl['lbl.sc.common.submit']}"
-				    onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-					action="#{simpleQuoteBackingBean.submitSimpleQuote('')}"
-					icon="ui-icon-submit" process="@all" update="@form" rendered="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}"/>
+					actionListener="#{simpleQuoteBackingBean.submitPromptAction}"
+				    update="promptId"
+					icon="ui-icon-submit" rendered="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}" />
 
 				<p:commandButton value="#{lbl['lbl.sc.common.cancel']}"
 				    onstart="blockWidget.show();" oncomplete="blockWidget.hide();"

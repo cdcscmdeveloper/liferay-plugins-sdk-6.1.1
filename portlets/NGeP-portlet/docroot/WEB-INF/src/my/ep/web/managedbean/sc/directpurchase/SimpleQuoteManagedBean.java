@@ -157,6 +157,8 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	private boolean required;
 	private List<TplSpecQuestion> prodQuestions = new ArrayList<TplSpecQuestion>();
 	private List<TplSpecQuestion> serviceQuestions = new ArrayList<TplSpecQuestion>();
+	
+	private String promptMessage;
 
 	public SimpleQuoteManagedBean() {
 		super();
@@ -1336,6 +1338,18 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	 */
 	public void setPanelItemBtnFlag(boolean panelItemBtnFlag) {
 		this.panelItemBtnFlag = panelItemBtnFlag;
+	}
+	/**
+	 * @return the promptMessage
+	 */
+	public String getPromptMessage() {
+		return promptMessage;
+	}
+	/**
+	 * @param promptMessage the promptMessage to set
+	 */
+	public void setPromptMessage(String promptMessage) {
+		this.promptMessage = promptMessage;
 	}
 	
 }
