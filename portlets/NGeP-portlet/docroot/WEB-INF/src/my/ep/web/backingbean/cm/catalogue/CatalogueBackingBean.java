@@ -2477,7 +2477,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				for (Object sorted : sortedZonalList) {
 					List<CmTierPricing> sortedTier = (List<CmTierPricing>) sorted;
 					if (perviouslyList != null && perviouslyList.size() > 0) {
-						if (perviouslyList.get(0).getEndDate().compareTo(sortedTier.get(0).getStartDate()) > 0) {
+						if (perviouslyList.get(0).getEndDate().compareTo(sortedTier.get(0).getStartDate()) >= 0) {
 							FacesContext facesContext = FacesContext.getCurrentInstance();
 							facesContext.addMessage(
 											null,
@@ -2520,7 +2520,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 					if (perviouslyList != null && perviouslyList.size() > 0) {
 
-						if (perviouslyList.get(0).getEndDate().compareTo(sortedTier.get(0).getStartDate()) > 0) {
+						if (perviouslyList.get(0).getEndDate().compareTo(sortedTier.get(0).getStartDate()) >= 0) {
 							FacesContext facesContext = FacesContext.getCurrentInstance();
 							facesContext.addMessage(null,
 								new FacesMessage(
@@ -2557,7 +2557,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			for (int i = 0; i < zPromotionPricing.size(); i++) {
 				CmZonalPromotionPricing standard = zPromotionPricing.get(i);
 				if (previousZPromotionObj != null && standard!=null) {
-					if ((previousZPromotionObj.getCmSupplierZone() != null && standard.getCmSupplierZone() != null) && (previousZPromotionObj.getCmSupplierZone().getSuppZoneId() == standard.getCmSupplierZone().getSuppZoneId() || compareZonesForSameDistricts(previousZPromotionObj.getCmSupplierZone(), standard.getCmSupplierZone())) && previousZPromotionObj.getEndDate().compareTo(standard.getStartDate()) > 0) {
+					if ((previousZPromotionObj.getCmSupplierZone() != null && standard.getCmSupplierZone() != null) && (previousZPromotionObj.getCmSupplierZone().getSuppZoneId() == standard.getCmSupplierZone().getSuppZoneId() || compareZonesForSameDistricts(previousZPromotionObj.getCmSupplierZone(), standard.getCmSupplierZone())) && previousZPromotionObj.getEndDate().compareTo(standard.getStartDate()) >= 0) {
 						FacesContext facesContext = FacesContext.getCurrentInstance();
 						facesContext.addMessage(null, new FacesMessage(
 								FacesMessage.SEVERITY_ERROR,
@@ -2628,7 +2628,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				for (Object sorted : sortedZonalList) {
 					List<CmZonalTierPricing> sortedTier = (List<CmZonalTierPricing>) sorted;
 					if (perviouslyList != null && perviouslyList.size() > 0) {
-						if ((perviouslyList.get(0).getCmSupplierZone().getSuppZoneId() == sortedTier.get(0).getCmSupplierZone().getSuppZoneId() || compareZonesForSameDistricts(perviouslyList.get(0).getCmSupplierZone(), sortedTier.get(0).getCmSupplierZone())) && perviouslyList.get(0).getEndDate().compareTo(sortedTier.get(0).getStartDate()) > 0) {
+						if ((perviouslyList.get(0).getCmSupplierZone().getSuppZoneId() == sortedTier.get(0).getCmSupplierZone().getSuppZoneId() || compareZonesForSameDistricts(perviouslyList.get(0).getCmSupplierZone(), sortedTier.get(0).getCmSupplierZone())) && perviouslyList.get(0).getEndDate().compareTo(sortedTier.get(0).getStartDate()) >= 0) {
 							FacesContext facesContext = FacesContext.getCurrentInstance();
 							facesContext.addMessage(
 											null,
@@ -2665,7 +2665,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				for (Object sorted : sortedZonalList) {
 					List<CmZonalPromotionTierPricing> sortedTier = (List<CmZonalPromotionTierPricing>) sorted;
 					if (perviouslyList != null && perviouslyList.size() > 0) {
-						if ((perviouslyList.get(0).getCmSupplierZone().getSuppZoneId() == sortedTier.get(0).getCmSupplierZone().getSuppZoneId() || compareZonesForSameDistricts(perviouslyList.get(0).getCmSupplierZone(), sortedTier.get(0).getCmSupplierZone())) && perviouslyList.get(0).getEndDate().compareTo(sortedTier.get(0).getStartDate()) > 0) {
+						if ((perviouslyList.get(0).getCmSupplierZone().getSuppZoneId() == sortedTier.get(0).getCmSupplierZone().getSuppZoneId() || compareZonesForSameDistricts(perviouslyList.get(0).getCmSupplierZone(), sortedTier.get(0).getCmSupplierZone())) && perviouslyList.get(0).getEndDate().compareTo(sortedTier.get(0).getStartDate()) >= 0) {
 							FacesContext facesContext = FacesContext.getCurrentInstance();
 							facesContext.addMessage(null,
 								new FacesMessage(
