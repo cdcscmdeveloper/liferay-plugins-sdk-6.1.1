@@ -118,25 +118,50 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 				resDTO = receivedNoteSO.saveReceivedNote(reqDTO);
 			}
 			
-			if(resDTO.isSuccessful()) {
+			if (resDTO.isSuccessful()) {
 				String messageId = MessageConst.INFO_700011;
-				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
-					messageId = MessageConst.INFO_700004;
+				if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+					String noteNo = null;
+					if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
+						messageId = MessageConst.INFO_700004;
+						noteNo = resDTO.getFulfilmentNoteNo();
+					} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE)) {
+						messageId = MessageConst.INFO_745002;
+						noteNo = fulfilmentNote.getFulfilmentNoteNo();
+					} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
+						messageId = MessageConst.INFO_745003;
+						noteNo = fulfilmentNote.getFulfilmentNoteNo();
+					}
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+							MessageUtils.getMessage(messageId, 
+									new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_FULFILMENT_NOTE), noteNo}, 
+									MessageUtils.BUNDLE_COMMON_MESSAGES, 
+									new FacesScopes().getUserLocale())));
+				} else {
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+							MessageUtils.getMessage(messageId, 
+									new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_FULFILMENT_NOTE), resDTO.getFulfilmentNoteNo()}, 
+									MessageUtils.BUNDLE_COMMON_MESSAGES, 
+									new FacesScopes().getUserLocale())));
 				}
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-						MessageUtils.getMessage(messageId, 
-								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_FULFILMENT_NOTE), resDTO.getFulfilmentNoteNo()}, 
-								MessageUtils.BUNDLE_COMMON_MESSAGES, 
-								new FacesScopes().getUserLocale())));
-				if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
+
+				if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 					renewSesionObject();
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
 				} else {
-					getManagedBean().setFulfilmentNote(resDTO.getFulfilmentNote());
-					getManagedBean().setSelectedItem(getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem().get(0));
-					reqDTO.setDeliveryOrderId(getManagedBean().getFulfilmentNote().getFlDeliveryOrder().getDeliveryOrderId());
-					getManagedBean().getFulfilmentNote().setStatus(receivedNoteSO.retrieveReceivedNoteStatus(reqDTO).getPmStatus());
-					flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
+					getManagedBean().setFulfilmentNote(
+							resDTO.getFulfilmentNote());
+					getManagedBean().setSelectedItem(
+							getManagedBean().getFulfilmentNote()
+									.getFlFulfilmentNoteItem().get(0));
+					reqDTO.setDeliveryOrderId(getManagedBean()
+							.getFulfilmentNote().getFlDeliveryOrder()
+							.getDeliveryOrderId());
+					getManagedBean().getFulfilmentNote().setStatus(
+							receivedNoteSO.retrieveReceivedNoteStatus(reqDTO)
+									.getPmStatus());
+					flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(),
+							resDTO.getAttachmentList());
 				}
 			}
 		} finally {
