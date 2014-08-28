@@ -41,9 +41,9 @@
                  <p:outputLabel value="#{lbl['lbl.ct.asearch.model.pdes']}" />
              </h:panelGrid>
             <h:panelGrid  columns="2">
-		   <p:inputText id="projectDesc" style="width:500px;" required="true" label="#{lbl['lbl.ct.asearch.model.pdes']}"
-		       value="#{associationBackingBean.managedBean.ctAssociation.description}" maxlength="200">
-		   </p:inputText>
+		    <p:inputTextarea id="projectDesc" style="width:500px;" required="true" label="#{lbl['lbl.ct.asearch.model.pdes']}"
+		       value="#{associationBackingBean.managedBean.ctAssociation.description}" maxlength="200" rows="2" autoResize="false">
+		   </p:inputTextarea>
 		    <p:message for="projectDesc" display="icon"/>
 		   </h:panelGrid>
          </h:panelGrid>
