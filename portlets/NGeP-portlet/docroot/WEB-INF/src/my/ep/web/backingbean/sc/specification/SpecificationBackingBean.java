@@ -1302,119 +1302,130 @@ public class SpecificationBackingBean extends
 
 		try {
 
-			QtDetailsSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-			QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
-			tenderReqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
-			tenderReqDTO.setQtdetail(this.getManagedBean().getScQt());
+			if (this.getManagedBean().getTempIndex() == 0) {
 
-			QuationTenderResDTO tenderResDTO = QtDetailsSO
-					.retriveQTSuppQulCriDetails(tenderReqDTO);
-			List<ScQtCategory> categoryResults = tenderResDTO
-					.getCategoryResultBean().getResultList();
-			if (isNotNullOREmpty(categoryResults)) {
-				this.getManagedBean().setSuppCriteriaopenList(categoryResults);
-			}
-			ScQt scQt = tenderResDTO.getQtDetail();
-			this.getManagedBean().setAllStateCode(tenderResDTO.getStateCode());
-			this.getManagedBean().setScQt(scQt);
-			if (!scQt.isPanel()) {
-				if (scQt.isZonal()
-						&& scQt.getEstimatedAmount().intValue() <= 500000
-						&& !scQt.getScQtSupplierCriteria().isAllState()
+				QtDetailsSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+				QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
+				tenderReqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+				tenderReqDTO.setQtdetail(this.getManagedBean().getScQt());
 
-						&& null != this.getManagedBean().getZoneGeneralTrees()
-						&& this.getManagedBean().getZoneGeneralTrees()
-								.isEmpty()) {
-					retriveNonpanelZoneDtls(this.getManagedBean().getScQt()
-							.getQtId(), "QT");
-
+				QuationTenderResDTO tenderResDTO = QtDetailsSO
+						.retriveQTSuppQulCriDetails(tenderReqDTO);
+				List<ScQtCategory> categoryResults = tenderResDTO
+						.getCategoryResultBean().getResultList();
+				if (isNotNullOREmpty(categoryResults)) {
+					this.getManagedBean().setSuppCriteriaopenList(
+							categoryResults);
 				}
+				ScQt scQt = tenderResDTO.getQtDetail();
+				this.getManagedBean().setAllStateCode(
+						tenderResDTO.getStateCode());
+				this.getManagedBean().setScQt(scQt);
+				if (!scQt.isPanel()) {
+					if (scQt.isZonal()
+							&& scQt.getEstimatedAmount().intValue() <= 500000
+							&& !scQt.getScQtSupplierCriteria().isAllState()
 
-				if (scQt.getEstimatedAmount().intValue() > 500000
-						&& this.getManagedBean().getAllStateCode() == 3
-						&& !scQt.getScQtSupplierCriteria().isAllState()) {
-					scQt.getScQtSupplierCriteria().setAllState(true);
-				}
-				if ((!scQt.isZonal())
-						|| (scQt.getEstimatedAmount().intValue() > 500000 && !scQt
-								.getScQtSupplierCriteria().isAllState())) {
-
-					List<ScQtLocCriteria> locCriteria = new ArrayList<ScQtLocCriteria>();
-
-					if (null != tenderResDTO.getLocationDetails()) {
-						for (TplSpecLoc localLoc : tenderResDTO
-								.getLocationDetails()) {
-							ScQtLocCriteria criteria = (ScQtLocCriteria) localLoc;
-							locCriteria.add(criteria);
-						}
-						if (null != getManagedBean().getZoneTrees()
-								&& getManagedBean().getZoneTrees().size() == 0) {
-							getManagedBean().getZoneTrees().add(
-									LocationSingleton.getInstance()
-											.constuctTreeNode(locCriteria));
-						}
-					}
-
-				}
-			} else {
-				this.getManagedBean().setCtPanelItem(
-						scQt.getScQtSupplierCriteria().getCtPanelItem());
-
-				this.getManagedBean().setCtCircularVer(
-						scQt.getScQtSupplierCriteria().getCtPanelItem()
-								.getCtCircularVer());
-				this.getManagedBean().setPanelItemCategory(
-						getParameterDesc(scQt.getScQtSupplierCriteria()
-								.getCtPanelItem().getItemCategoryId()));
-				List<CtPanelItem> panelList = this.getManagedBean()
-						.getSelectpanelItem();
-				panelList = new ArrayList<CtPanelItem>();
-
-				panelList.add(this.getManagedBean().getScQt()
-						.getScQtSupplierCriteria().getCtPanelItem());
-				this.getManagedBean().setSelectpanelItem(panelList);
-
-				if (null != this.getManagedBean().getCtCircularVer()) {
-					this.getManagedBean().setCircularExpDate(
-							this.getManagedBean().getCtCircularVer()
-									.getEndDate());
-					this.getManagedBean().setCirCularNo(
-							this.getManagedBean().getCtCircularVer()
-									.getCircularNo());
-					this.getManagedBean().setCircularName(
-							this.getManagedBean().getCtCircularVer().getName());
-					this.getManagedBean().setCircularType(
-							this.getManagedBean().getCtCircularVer()
-									.getDocType());
-				}
-
-				if (null != this.getManagedBean().getCtZoneSuppliers()
-						&& this.getManagedBean().getCtZoneSuppliers().isEmpty()
-						&& !scQt.isZonal()) {
-					retriveZonesByCircularNo();
-					if (null != this.getManagedBean().getCtPanelZones()
-							&& !this.getManagedBean().getCtPanelZones()
+							&& null != this.getManagedBean()
+									.getZoneGeneralTrees()
+							&& this.getManagedBean().getZoneGeneralTrees()
 									.isEmpty()) {
-						scQt.setZonal(true);
+						retriveNonpanelZoneDtls(this.getManagedBean().getScQt()
+								.getQtId(), "QT");
+
 					}
-				} else if (scQt.isZonal()
-						&& null != this.getManagedBean().getCtZoneSuppliers()
-						&& this.getManagedBean().getCtZoneSuppliers().isEmpty()) {
-					List<CtPanelZone> ctPanelZone = new ArrayList<CtPanelZone>();
-					if (isNotNullOREmpty(tenderResDTO.getZoneDetails())) {
-						for (TplSpecZoneDtl zoneDtl : tenderResDTO
-								.getZoneDetails()) {
-							ctPanelZone.add(zoneDtl.getPanelZone());
+
+					if (scQt.getEstimatedAmount().intValue() > 500000
+							&& this.getManagedBean().getAllStateCode() == 3
+							&& !scQt.getScQtSupplierCriteria().isAllState()) {
+						scQt.getScQtSupplierCriteria().setAllState(true);
+					}
+					if ((!scQt.isZonal())
+							|| (scQt.getEstimatedAmount().intValue() > 500000 && !scQt
+									.getScQtSupplierCriteria().isAllState())) {
+
+						List<ScQtLocCriteria> locCriteria = new ArrayList<ScQtLocCriteria>();
+
+						if (null != tenderResDTO.getLocationDetails()) {
+							for (TplSpecLoc localLoc : tenderResDTO
+									.getLocationDetails()) {
+								ScQtLocCriteria criteria = (ScQtLocCriteria) localLoc;
+								locCriteria.add(criteria);
+							}
+							if (null != getManagedBean().getZoneTrees()
+									&& getManagedBean().getZoneTrees().size() == 0) {
+								getManagedBean().getZoneTrees().add(
+										LocationSingleton.getInstance()
+												.constuctTreeNode(locCriteria));
+							}
 						}
-						getManagedBean().getCtZoneSuppliers().add(
-								LocationSingleton.getInstance()
-										.constuctPanelTreeNodes(ctPanelZone));
-						this.getManagedBean().setCtzones(true);
+
+					}
+				} else {
+					this.getManagedBean().setCtPanelItem(
+							scQt.getScQtSupplierCriteria().getCtPanelItem());
+
+					this.getManagedBean().setCtCircularVer(
+							scQt.getScQtSupplierCriteria().getCtPanelItem()
+									.getCtCircularVer());
+					this.getManagedBean().setPanelItemCategory(
+							getParameterDesc(scQt.getScQtSupplierCriteria()
+									.getCtPanelItem().getItemCategoryId()));
+					List<CtPanelItem> panelList = this.getManagedBean()
+							.getSelectpanelItem();
+					panelList = new ArrayList<CtPanelItem>();
+
+					panelList.add(this.getManagedBean().getScQt()
+							.getScQtSupplierCriteria().getCtPanelItem());
+					this.getManagedBean().setSelectpanelItem(panelList);
+
+					if (null != this.getManagedBean().getCtCircularVer()) {
+						this.getManagedBean().setCircularExpDate(
+								this.getManagedBean().getCtCircularVer()
+										.getEndDate());
+						this.getManagedBean().setCirCularNo(
+								this.getManagedBean().getCtCircularVer()
+										.getCircularNo());
+						this.getManagedBean().setCircularName(
+								this.getManagedBean().getCtCircularVer()
+										.getName());
+						this.getManagedBean().setCircularType(
+								this.getManagedBean().getCtCircularVer()
+										.getDocType());
+					}
+
+					if (null != this.getManagedBean().getCtZoneSuppliers()
+							&& this.getManagedBean().getCtZoneSuppliers()
+									.isEmpty() && !scQt.isZonal()) {
+						retriveZonesByCircularNo();
+						if (null != this.getManagedBean().getCtPanelZones()
+								&& !this.getManagedBean().getCtPanelZones()
+										.isEmpty()) {
+							scQt.setZonal(true);
+						}
+					} else if (scQt.isZonal()
+							&& null != this.getManagedBean()
+									.getCtZoneSuppliers()
+							&& this.getManagedBean().getCtZoneSuppliers()
+									.isEmpty()) {
+						List<CtPanelZone> ctPanelZone = new ArrayList<CtPanelZone>();
+						if (isNotNullOREmpty(tenderResDTO.getZoneDetails())) {
+							for (TplSpecZoneDtl zoneDtl : tenderResDTO
+									.getZoneDetails()) {
+								ctPanelZone.add(zoneDtl.getPanelZone());
+							}
+							getManagedBean()
+									.getCtZoneSuppliers()
+									.add(LocationSingleton
+											.getInstance()
+											.constuctPanelTreeNodes(ctPanelZone));
+							this.getManagedBean().setCtzones(true);
+						}
+
 					}
 
 				}
-
 			}
 		} finally {
 
@@ -7832,15 +7843,19 @@ public class SpecificationBackingBean extends
 		if (null != categories && !categories.isEmpty()) {
 
 			for (ScQtCategory category : categories) {
-
-				category.setPmCategoryL1(category.getPmCategoryL3()
-						.getPmCategoryL2().getPmCategoryL1());
-				category.setPmCategoryL2(category.getPmCategoryL3()
-						.getPmCategoryL2());
-				category.setScQt(scQt);
-				setUserDetails(category);
+				if (null != category.getPmCategoryL3()
+						&& null != category.getPmCategoryL3().getPmCategoryL2()
+						&& null != category.getPmCategoryL3().getPmCategoryL2()
+								.getPmCategoryL1()) {
+					category.setPmCategoryL1(category.getPmCategoryL3()
+							.getPmCategoryL2().getPmCategoryL1());
+					category.setPmCategoryL2(category.getPmCategoryL3()
+							.getPmCategoryL2());
+					category.setScQt(scQt);
+					setUserDetails(category);
+				}
+				scQt.setScQtCategorys(categories);
 			}
-			scQt.setScQtCategorys(categories);
 		}
 	}
 
@@ -8262,7 +8277,8 @@ public class SpecificationBackingBean extends
 					.getScQtCheckSt2financeProposalList();
 			toBeRemoveList = new ArrayList<ScQtCheckList>();
 			if (null != finanicalCheckList && !finanicalCheckList.isEmpty()) {
-				for (ScQtCheckList qtCheckList : finanicalCheckList) {
+				for (int i = 0; i < finanicalCheckList.size(); i++) {
+					ScQtCheckList qtCheckList = finanicalCheckList.get(i);
 					if (qtCheckList.getTitle().equalsIgnoreCase(
 							scQtCheckList.getTitle())) {
 						qtCheckList.setDeleted(true);
