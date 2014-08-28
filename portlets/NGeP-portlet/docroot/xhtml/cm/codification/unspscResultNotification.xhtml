@@ -88,6 +88,51 @@
 				</table>
 
 			</p:panel>
+			
+			<p:panel header="Recommendation" toggleable="true">
+
+				<p:dataTable id="recomemendUnspscId" rowIndexVar="rowIndex"
+					value="#{unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes}"
+					var="unspscObj" width="100%">
+
+
+
+					<p:column>
+						<f:facet name="header">
+					Recommended Item Code
+				</f:facet>
+
+				
+						#{unspscObj.unspscCode}
+						
+
+
+				</p:column>
+					<p:column>
+						<f:facet name="header">
+					Recommended Item Name
+				</f:facet>
+				#{unspscObj.unspscTitle}
+			</p:column>
+
+					<p:column rendered="#{unspscCodeBackingBean.catalogueAdmin}">
+						<f:facet name="header">
+							#{lbl['lbl.cm.action']}
+						</f:facet>
+						<p:commandLink
+							action="#{unspscCodeBackingBean.removeRecommendCode(rowIndex)}"
+							update="@form">
+							<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
+						</p:commandLink>
+
+
+
+					</p:column>
+
+				</p:dataTable>
+
+
+			</p:panel>
 
 
 
