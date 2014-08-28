@@ -43,7 +43,8 @@
 						<p:selectOneMenu style="width:100px;" required="true"
 							value="#{frequency.startMonth}">
 							<f:selectItems value="#{lOADetailBackingBean.yearDetails}"></f:selectItems>
-							<p:ajax process="@this" event="change" partialSubmit="true" />  
+							<p:ajax process="@this" event="change" partialSubmit="true" 
+							listener="#{lOADetailBackingBean.calculateScheduleMonths(frequency)}"/>  
 						</p:selectOneMenu>
 					</p:column>
 					<p:column
@@ -53,7 +54,8 @@
 							style="width:100px;" required="true">
 							<f:selectItems
 								value="#{lOADetailBackingBean.yearsDisplayDtls}"></f:selectItems>
-								<p:ajax process="@this" event="change" partialSubmit="true" />  
+								<p:ajax process="@this" event="change" partialSubmit="true" 
+								listener="#{lOADetailBackingBean.calculateScheduleMonths(frequency)}"/>  
 						</p:selectOneMenu>
 					</p:column>
 
@@ -64,7 +66,7 @@
 
 							<f:selectItems value="#{lOADetailBackingBean.yearDetails}"></f:selectItems>
 							<p:ajax event="change" update="scheduleDetails" partialSubmit="true"
-								listener="#{lOADetailBackingBean.calculateSchedulePercentage(frequency)}"></p:ajax>
+								listener="#{lOADetailBackingBean.calculateScheduleMonths(frequency)}"></p:ajax>
 						</p:selectOneMenu>
 
 					</p:column>
@@ -74,14 +76,14 @@
 							<f:selectItems
 								value="#{lOADetailBackingBean.yearsDisplayDtls}"></f:selectItems>
 								<p:ajax event="change" update="scheduleDetails" partialSubmit="true"
-								listener="#{lOADetailBackingBean.calculateSchedulePercentage(frequency)}"></p:ajax>
+								listener="#{lOADetailBackingBean.calculateScheduleMonths(frequency)}"></p:ajax>
 						</p:selectOneMenu>
 					</p:column>
 					<p:column
 						headerText="#{lbl['lbl.sc.spec.freq.schedule.total.months']}"
 						style="width:10%">
 						<h:panelGroup id="scheduleDetails">
-							<h:outputText value="#{frequency.totalMonths}"></h:outputText>
+							<h:outputText style="text-align:right" value="#{frequency.totalMonths}"></h:outputText>
 						</h:panelGroup>
 					</p:column>
 

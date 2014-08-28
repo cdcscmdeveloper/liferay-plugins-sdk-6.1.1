@@ -40,8 +40,8 @@
             			<td>$schedule.scheduleNo</td>
             			<td>$schedule.startMonth $schedule.startYear</td>
             			<td>$schedule.endMonth $schedule.endYear</td>
-            			<td>$schedule.totalMonths</td>
-            			<td>$schedule.scheduleType.parameterCode</td>
+            			<td style="text-align:right">$schedule.totalMonths</td>
+            			<td>$bean.getParameterDesc($schedule.scheduleType)</td>
             		</tr>
 					#end
 				</table>

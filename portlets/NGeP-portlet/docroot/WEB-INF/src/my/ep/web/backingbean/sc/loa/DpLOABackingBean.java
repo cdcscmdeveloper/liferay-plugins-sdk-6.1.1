@@ -50,6 +50,7 @@ public class DpLOABackingBean extends
 		debugLogger("preRenderView");
 		
 		try {
+			renewSesionObject();
 			SCAwardSupplierDataType dpDataType = getBpmTaskDetails(SCAwardSupplierDataType.class);
 			
 			Long sourceId = Long.valueOf(dpDataType.getSourceId());
@@ -57,6 +58,7 @@ public class DpLOABackingBean extends
 			retrieveLOAList(sourceId);
 			
 			new LOADetailBackingBean().getManagedBean().setSourceId(sourceId);
+			
 			
 			//retrieveLOAList(2122L);
 			

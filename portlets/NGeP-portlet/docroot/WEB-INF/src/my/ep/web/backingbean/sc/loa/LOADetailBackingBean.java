@@ -1923,31 +1923,25 @@ public class LOADetailBackingBean extends
 		return getManagedBean().getYearsDisplayList();
 	}
 
-	public void calculateSchedulePercentage(ScQtSchedule schedule) {
-		/*
-		 * String endMonth = (String) event.getComponent().getAttributes()
-		 * .get("value");
-		 */
-		// this.getManagedBean().setScQt(this.getManagedBean().getScQt());
+	public void calculateScheduleMonths(ScQtSchedule schedule) {
+	
 		List<ScQtSchedule> freqSchedule = this.getManagedBean()
 				.getScheduleList();
 		if (null == freqSchedule) {
 			freqSchedule = new ArrayList<ScQtSchedule>();
 
 		}
+		Integer startMonth = 0,endMonth = 0,startYear = 0,endYear = 0,diffYear = 0, count = 0;
+		startMonth = schedule.getStartMonth() != null ? Integer.parseInt(schedule.getStartMonth()) : null;
+		endMonth = schedule.getEndMonth() != null ? Integer.parseInt(schedule.getEndMonth()) : null;
+		startYear = schedule.getStartYear() != null ? Integer.parseInt(schedule.getStartYear()) : null;
+		endYear = schedule.getEndYear() != null ? Integer.parseInt(schedule.getEndYear()) : null;
 
-		int start = Integer.parseInt(schedule.getStartMonth());
-		int end = Integer.parseInt(schedule.getEndMonth());
-		int startYear = Integer.parseInt(schedule.getStartYear());
-		int endYear = Integer.parseInt(schedule.getEndYear());
-		int diffYear = 0;
-		int count = 0;
-
-		if (endYear >= startYear) {
+		if (startMonth != null && endMonth !=null && startYear !=null && endYear !=null && endYear >= startYear) {
 			if(endYear != startYear){
 			   diffYear = endYear - startYear;
 			}
-			for (int i = start + 1; i <= end + 1; i++) {
+			for (int i = startMonth + 1; i <= endMonth + 1; i++) {
 				count++;
 			}
 			count = count + (diffYear * 12);
@@ -2116,6 +2110,7 @@ public class LOADetailBackingBean extends
 		}
 		context.put("totalFrequency", totalFrequency);
 		context.put("scheduleList", scheduleReportList);
+		context.put("bean", this);
 
 		DocumentGenerator.getInstance().generatePdfFromVelocity(
 				SourcingConstants.LOA_FREQUENCY_SCHEDULE, context,
