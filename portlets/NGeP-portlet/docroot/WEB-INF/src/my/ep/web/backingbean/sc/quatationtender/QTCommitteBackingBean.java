@@ -534,7 +534,11 @@ public class QTCommitteBackingBean extends
 	public void addCommitteMember(ScQtCommittee committee, String titleName) {
 		debugLogger("addCommitteMember");
 		getManagedBean().getUserSearchCommitteeDataModel().reloadData();
-		getManagedBean().setExternalUsers(null);
+		getManagedBean().getUserCommitteeSearchBean().setName(null);
+		getManagedBean().getUserCommitteeSearchBean().setIdentificationType(
+				null);
+		getManagedBean().getUserCommitteeSearchBean().setIdentificationNo(
+				null);
 		getManagedBean().setSelectedPmUser(null);
 		this.getManagedBean().setCommitteMember(null);
 		ScCommitteeMember committeeMember = new ScCommitteeMember();

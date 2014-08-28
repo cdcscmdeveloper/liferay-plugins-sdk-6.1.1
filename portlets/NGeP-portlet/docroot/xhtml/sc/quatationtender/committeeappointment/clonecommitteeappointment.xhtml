@@ -10,183 +10,186 @@
 		width="950" height="600" position="top"
 		styleClass="cloneCommitteMember">
 		<p:panel id="pnlid">
-		<p:panel id="clonesearchpnlid" header="#{lbl['lbl.so.searchbtn']}"
-			toggleable="true">
-			<table>
-				<tr>
-					<td valign="top"><p:outputLabel
-							value="#{lbl['lbl.sc.committe.clone.title']}" /></td>
-					<td colspan="3"><p:inputText
-							value="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.qtTitle}"
-							size="92" maxlength="100" /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel
-							value="#{lbl['lbl.sc.committe.clone.qtntender']}" /></td>
-					<td><p:inputText
-							value="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.qtNo}"
-							size="30" maxlength="21" /></td>
-					<td />
-					<td />
-				</tr>
-				<tr>
-					<td><p:outputLabel
-							value="#{lbl['lbl.sc.committe.clone.procurementmode']}" /></td>
-					<td><p:selectOneMenu
-							value="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.procurementMode}"
-							style="width: 178px;margin-bottom: 5px;">
-							<f:selectItems
-								value="#{qTCommitteBackingBean.getDropdownCodeValues(ParameterTypeConst.scProcurementMode)}" />
-						</p:selectOneMenu></td>
-					<td />
-					<td />
-				</tr>
-				<tr>
-					<td><p:outputLabel
-							value="#{lbl['lbl.sc.committe.clone.datecreated']}" /></td>
-					<td><p:calendar id="datecreatedfrm" showOn="button"
-							value="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.fromCreatedDate}"
-							size="30" readonlyInput="true">
-							<p:ajax event="dateSelect" update="datecreatedto" />
-						</p:calendar></td>
-					<td />
-					<td />
-				</tr>
-				<tr>
-					<td><p:outputLabel
-							value="#{lbl['lbl.sc.committe.clone.datecreated.to']}" /></td>
-					<td><p:calendar id="datecreatedto" showOn="button"
-							value="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.toCreatedDate}"
-							mindate="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.fromCreatedDate}"
-							size="30" readonlyInput="true">
-							<f:attribute name="startDate"
-								value="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.fromCreatedDate}" />
-						</p:calendar></td>
-					<td />
-					<td />
-				</tr>
-				<tr>
-					<td><p:outputLabel
-							value="#{lbl['lbl.sc.committe.clone.comstatus']}" /></td>
-					<td><p:selectOneMenu style="width: 178px;margin-bottom: 5px;"
-							value="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.qtStatus}">
-							<f:selectItems
-								value="#{qTDetailBB.getStatusDropdownValues('SC', 'QT')}" />
-						</p:selectOneMenu></td>
-					<td />
-					<td />
-				</tr>
-			</table>
-			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.search']}"
-					icon="ui-icon-search"
-					action="#{qTCommitteBackingBean.cloneSearchQtAction}"
-					update="clonesearchCommitteid" process="@this, clonesearchpnlid" />
-				<p:commandButton value="#{lbl['lbl.so.reset']}"
-					action="#{qTCommitteBackingBean.resetClone}"
-					update="pnlid" icon="ui-icon-reset" resetValues="true"
-					partialSubmit="true" process="@this" />
-			</div>
-		</p:panel>
-		<p:panel header="#{lbl['lbl.so.qtlist']}" toggleable="true">
-			<p:dataTable id="clonesearchCommitteid"
-				value="#{qTCommitteBackingBean.managedBean.cloneSearchQTDataModel}"
-				selection="#{qTCommitteBackingBean.managedBean.selectedCloneTender}"
-				rowKey="#{scQt}" selectionMode="single" var="scQt" lazy="true"
-				styleClass="cloneResults">
+			<p:panel id="clonesearchpnlid" header="#{lbl['lbl.so.searchbtn']}"
+				toggleable="true">
+				<table>
+					<tr>
+						<td valign="top"><p:outputLabel
+								value="#{lbl['lbl.sc.committe.clone.title']}" /></td>
+						<td colspan="3"><p:inputText
+								value="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.qtTitle}"
+								size="92" maxlength="100" /></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel
+								value="#{lbl['lbl.sc.committe.clone.qtntender']}" /></td>
+						<td><p:inputText
+								value="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.qtNo}"
+								size="30" maxlength="21" /></td>
+						<td />
+						<td />
+					</tr>
+					<tr>
+						<td><p:outputLabel
+								value="#{lbl['lbl.sc.committe.clone.procurementmode']}" /></td>
+						<td><p:selectOneMenu
+								value="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.procurementMode}"
+								style="width: 178px;margin-bottom: 5px;">
+								<f:selectItems
+									value="#{qTCommitteBackingBean.getDropdownCodeValues(ParameterTypeConst.scProcurementMode)}" />
+							</p:selectOneMenu></td>
+						<td />
+						<td />
+					</tr>
+					<tr>
+						<td><p:outputLabel
+								value="#{lbl['lbl.sc.committe.clone.datecreated']}" /></td>
+						<td><p:calendar id="datecreatedfrm" showOn="button"
+								value="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.fromCreatedDate}"
+								size="30" readonlyInput="true">
+								<p:ajax event="dateSelect" update="datecreatedto" />
+							</p:calendar></td>
+						<td />
+						<td />
+					</tr>
+					<tr>
+						<td><p:outputLabel
+								value="#{lbl['lbl.sc.committe.clone.datecreated.to']}" /></td>
+						<td><p:calendar id="datecreatedto" showOn="button"
+								value="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.toCreatedDate}"
+								mindate="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.fromCreatedDate}"
+								size="30" readonlyInput="true">
+								<f:attribute name="startDate"
+									value="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.fromCreatedDate}" />
+							</p:calendar></td>
+						<td />
+						<td />
+					</tr>
+					<tr>
+						<td><p:outputLabel
+								value="#{lbl['lbl.sc.committe.clone.comstatus']}" /></td>
+						<td><p:selectOneMenu style="width: 178px;margin-bottom: 5px;"
+								value="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.qtStatus}">
+								<f:selectItems
+									value="#{qTDetailBB.getStatusDropdownValues('SC', 'QT')}" />
+							</p:selectOneMenu></td>
+						<td />
+						<td />
+					</tr>
+				</table>
+				<div class="ppRightBtn">
+					<p:commandButton value="#{lbl['lbl.btn.search']}"
+						icon="ui-icon-search"
+						action="#{qTCommitteBackingBean.cloneSearchQtAction}"
+						update="clonesearchCommitteid" process="@this, clonesearchpnlid" />
+					<p:commandButton value="#{lbl['lbl.so.reset']}"
+						action="#{qTCommitteBackingBean.resetClone}" update="pnlid"
+						icon="ui-icon-reset" resetValues="true" partialSubmit="true"
+						process="@this" />
+				</div>
+			</p:panel>
+			<p:panel header="#{lbl['lbl.so.qtlist']}" toggleable="true">
+				<p:dataTable id="clonesearchCommitteid"
+					value="#{qTCommitteBackingBean.managedBean.cloneSearchQTDataModel}"
+					selection="#{qTCommitteBackingBean.managedBean.selectedCloneTender}"
+					rowKey="#{scQt}" selectionMode="single" var="scQt" lazy="true"
+					styleClass="cloneResults" rows="10">
 
-				<ac:paginator for="clonesearchCommitteid" />
+					<ac:paginator for="clonesearchCommitteid" />
 
-				<p:ajax event="rowSelect" update=":form:committeeTbl"
-					listener="#{qTCommitteBackingBean.onRowCloneAction}" />
+					<p:ajax event="rowSelect" update=":form:committeeTbl"
+						listener="#{qTCommitteBackingBean.onRowCloneAction}" />
 
-				<p:column headerText="#{lbl['lbl.sc.committe.result.qtntender']}">
-					<h:outputText value="#{scQt.qtNo}" />
-				</p:column>
+					<p:column headerText="#{lbl['lbl.sc.committe.result.qtntender']}">
+						<h:outputText value="#{scQt.qtNo}" />
+					</p:column>
 
-				<p:column headerText="#{lbl['lbl.so.title']}">
-					<h:outputText value="#{scQt.qtTitle}" />
-				</p:column>
+					<p:column headerText="#{lbl['lbl.so.title']}">
+						<h:outputText value="#{scQt.qtTitle}" style="white-space: normal;" />
+					</p:column>
 
-				<p:column headerText="#{lbl['lbl.so.procmode']}">
-					<h:outputText
-						value="#{qTCommitteBackingBean.getParameterDesc(scQt.procurementMode)}" />
-				</p:column>
+					<p:column headerText="#{lbl['lbl.so.procmode']}">
+						<h:outputText
+							value="#{qTCommitteBackingBean.getParameterDesc(scQt.procurementMode)}" />
+					</p:column>
 
-				<p:column headerText="#{lbl['lbl.so.crtdt']}">
-					<h:outputText value="#{scQt.createdDate}">
-						<f:convertDateTime
-							pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
-					</h:outputText>
-				</p:column>
+					<p:column headerText="#{lbl['lbl.so.crtdt']}">
+						<h:outputText value="#{scQt.createdDate}">
+							<f:convertDateTime
+								pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+						</h:outputText>
+					</p:column>
 
-				<p:column headerText="#{lbl['lbl.so.bo.status']}">
-					<h:outputText
-						value="#{qTCommitteBackingBean.getStatusDescById(scQt.qtStatus.statusId)}" />
-				</p:column>
+					<p:column headerText="#{lbl['lbl.so.bo.status']}">
+						<h:outputText
+							value="#{qTCommitteBackingBean.getStatusDescById(scQt.qtStatus.statusId)}" />
+					</p:column>
 
-			</p:dataTable>
-		</p:panel>
-		<p:spacer height="2" />
-		<p:panel id="cloneCommitteMembersid" header="Committee List"
-			toggleable="true">
+				</p:dataTable>
+			</p:panel>
+			<p:spacer height="2" />
+			<p:panel id="cloneCommitteMembersid" header="Committee List"
+				toggleable="true">
 
-			<p:treeTable id="committeeTbl" var="committeeNode"
-				value="#{qTCommitteBackingBean.managedBean.searchcommitteeNode}"
-				selection="#{qTCommitteBackingBean.managedBean.selectSearchcommitteeNode}"
-				selectionMode="checkbox">
+				<p:treeTable id="committeeTbl" var="committeeNode"
+					value="#{qTCommitteBackingBean.managedBean.searchcommitteeNode}"
+					selection="#{qTCommitteBackingBean.managedBean.selectSearchcommitteeNode}"
+					selectionMode="checkbox">
 
-				<p:column headerText="#{lbl['lbl.so.bo.name']}">
-					<h:outputText
-						value="#{committeeNode.object.committeeType.parameterCode}"
-						rendered="#{committeeNode.type == 'committee'}" />
-					<h:outputText value="#{committeeNode.object.memberName}"
-						rendered="#{committeeNode.type == 'scCommitteeMember'}" />
-				</p:column>
+					<p:column headerText="#{lbl['lbl.so.bo.name']}">
+						<h:outputText
+							value="#{committeeNode.object.committeeType.parameterCode}"
+							rendered="#{committeeNode.type == 'committee'}" />
+						<h:outputText value="#{committeeNode.object.memberName}"
+							rendered="#{committeeNode.type == 'scCommitteeMember'}"
+							style="white-space: normal;" />
+					</p:column>
 
-				<p:column headerText="#{lbl['lbl.so.bo.identification.no']}">
-					<h:outputText value="#{committeeNode.object.icPassport}"
-						rendered="#{committeeNode.type == 'scCommitteeMember'}" />
-				</p:column>
+					<p:column headerText="#{lbl['lbl.so.bo.identification.no']}">
+						<h:outputText value="#{committeeNode.object.icPassport}"
+							rendered="#{committeeNode.type == 'scCommitteeMember'}" />
+					</p:column>
 
-				<p:column headerText="#{lbl['lbl.so.bo.designation']}">
-					<h:outputText value="#{committeeNode.object.designation}"
-						rendered="#{committeeNode.type == 'scCommitteeMember'}" />
-				</p:column>
+					<p:column headerText="#{lbl['lbl.so.bo.designation']}">
+						<h:outputText value="#{committeeNode.object.designation}"
+							rendered="#{committeeNode.type == 'scCommitteeMember'}"
+							style="white-space: normal;" />
+					</p:column>
 
-				<p:column headerText="Email">
-					<h:outputText value="#{committeeNode.object.email}"
-						rendered="#{committeeNode.type == 'scCommitteeMember'}" />
-				</p:column>
+					<p:column headerText="Email">
+						<h:outputText value="#{committeeNode.object.email}"
+							rendered="#{committeeNode.type == 'scCommitteeMember'}"
+							style="white-space: normal;" />
+					</p:column>
 
-				<p:column headerText="#{lbl['lbl.so.bo.grade']}">
-					<h:outputText value="#{committeeNode.object.grade}"
-						rendered="#{committeeNode.type == 'scCommitteeMember'}" />
-				</p:column>
+					<p:column headerText="#{lbl['lbl.so.bo.grade']}">
+						<h:outputText value="#{committeeNode.object.grade}"
+							rendered="#{committeeNode.type == 'scCommitteeMember'}" />
+					</p:column>
 
-				<p:column headerText="#{lbl['lbl.so.bo.pp']}">
-					<h:outputText value="#{committeeNode.object.PNP ? 'Yes' : 'No'}"
-						rendered="#{committeeNode.type == 'scCommitteeMember'}" />
-				</p:column>
+					<p:column headerText="#{lbl['lbl.so.bo.pp']}">
+						<h:outputText value="#{committeeNode.object.PNP ? 'Yes' : 'No'}"
+							rendered="#{committeeNode.type == 'scCommitteeMember'}" />
+					</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.committe.clonetable.role']}">
-					<h:outputText
-						value="#{qTCommitteBackingBean.getParameterDesc(ParameterTypeConst.committeeRole, committeeNode.object.memberRole)}"
-						rendered="#{committeeNode.type == 'scCommitteeMember'}" />
-				</p:column>
+					<p:column headerText="#{lbl['lbl.sc.committe.clonetable.role']}">
+						<h:outputText
+							value="#{qTCommitteBackingBean.getParameterDesc(ParameterTypeConst.committeeRole, committeeNode.object.memberRole)}"
+							rendered="#{committeeNode.type == 'scCommitteeMember'}" />
+					</p:column>
 
-			</p:treeTable>
-			<br />
-			<p:spacer height="3" />
-			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.so.okbtn']}"
-					actionListener="#{qTCommitteBackingBean.addCloneDtlToTabs}"
-					oncomplete="screen2.hide();" icon="ui-icon-check"
-					update="@(.scMemberDtl)" />
-				<p:commandButton value="#{lbl['lbl.so.cancelbtn']}"
-					icon="ui-icon-cancel" onclick="screen2.hide();" />
-			</div>
-		</p:panel>
+				</p:treeTable>
+				<br />
+				<p:spacer height="3" />
+				<div class="ppRightBtn">
+					<p:commandButton value="#{lbl['lbl.so.okbtn']}"
+						actionListener="#{qTCommitteBackingBean.addCloneDtlToTabs}"
+						oncomplete="screen2.hide();" icon="ui-icon-check"
+						update="@(.scMemberDtl)" />
+					<p:commandButton value="#{lbl['lbl.so.cancelbtn']}"
+						icon="ui-icon-cancel" onclick="screen2.hide();" />
+				</div>
+			</p:panel>
 		</p:panel>
 	</p:dialog>
 </ui:composition>

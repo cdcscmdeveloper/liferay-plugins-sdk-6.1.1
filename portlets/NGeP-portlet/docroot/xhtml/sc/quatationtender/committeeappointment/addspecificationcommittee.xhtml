@@ -9,7 +9,7 @@
 	<p:dialog id="newspecificationcommitteeid" position="top"
 		header="New #{qTCommitteBackingBean.managedBean.tabTitle}"
 		dynamic="true" widgetVar="newspecificationcommittee" modal="true"
-		styleClass="scAddMember">
+		styleClass="scAddMember" width="950" height="600">
 		<p:panel id="scPanel">
 			<p:messages id="scmessages" showDetail="true" autoUpdate="true"
 				closable="true" showSummary="false" />
@@ -38,7 +38,7 @@
 										size="64" /></td>
 							</tr>
 							<tr>
-								<td style="width: 110px;"><p:outputLabel
+								<td style="width: 126px;"><p:outputLabel
 										value="#{lbl['lbl.sc.addscreen.idtype']}" /></td>
 								<td colspan="3"><p:selectOneMenu
 										value="#{qTCommitteBackingBean.managedBean.userCommitteeSearchBean.identificationType}"
@@ -70,7 +70,7 @@
 							value="#{qTCommitteBackingBean.managedBean.userSearchCommitteeDataModel}"
 							selection="#{qTCommitteBackingBean.managedBean.selectedPmUser}"
 							rowKey="#{existcommitteeuser.userId}" var="existcommitteeuser"
-							lazy="true" style="width : 900px;"
+							lazy="true" style="width : 100%;" rows="10"
 							styleClass="existingCommitteeResults">
 
 							<ac:paginator for="existingcommitteesearchid" />
@@ -78,7 +78,8 @@
 							<p:column selectionMode="multiple" style="width:2%" />
 
 							<p:column headerText="#{lbl['lbl.so.bo.name']}">
-								<h:outputText value="#{existcommitteeuser.userName}" />
+								<h:outputText value="#{existcommitteeuser.userName}"
+									style="white-space: normal;" />
 							</p:column>
 
 							<p:column headerText="#{lbl['lbl.so.bo.identification.no']}">
@@ -86,12 +87,14 @@
 							</p:column>
 
 							<p:column headerText="#{lbl['lbl.so.bo.designation']}">
-								<h:outputText value="#{existcommitteeuser.designation}" />
+								<h:outputText value="#{existcommitteeuser.designation}"
+									style="white-space: normal;" />
 							</p:column>
 
 							<p:column headerText="#{lbl['lbl.so.bo.email']}">
 								<h:outputText
-									value="#{existcommitteeuser.pmAddressTypes[0].pmAddress.email}" />
+									value="#{existcommitteeuser.pmAddressTypes[0].pmAddress.email}"
+									style="white-space: normal;" />
 							</p:column>
 
 							<p:column headerText="#{lbl['lbl.so.bo.grade']}">
@@ -111,7 +114,7 @@
 									<p:selectOneMenu id="appaction"
 										value="#{existcommitteeuser.memberRole.parameterId}"
 										style="width: 110px;margin-bottom: 5px;">
-										<f:selectItem itemLabel="-Select One-" itemValue="#{null}"></f:selectItem>
+										<f:selectItem itemLabel="-Select One-" itemValue="#{null}" />
 
 										<f:selectItems var="role"
 											value="#{qTCommitteBackingBean.managedBean.roleTypes}"
@@ -141,7 +144,7 @@
 										for="name1" display="icon" /></td>
 							</tr>
 							<tr>
-								<td style="width: 125px;"><p:outputLabel
+								<td style="width: 142px;"><p:outputLabel
 										value="#{lbl['lbl.sc.committe.addscreen.idtype']}" /> <p:outputLabel
 										value="*" styleClass="mandatory" /></td>
 								<td colspan="3"><p:selectOneMenu id="idtype1"
@@ -228,8 +231,8 @@
 				<p:commandButton value="#{lbl['lbl.so.okbtn']}"
 					process="@this, newCommitteeProfile, scPanel"
 					action="#{qTCommitteBackingBean.okCommitteeAction}" ajax="true"
-					icon="ui-icon-check" update="@(.scMemberDtl, scPanel)" 
-					oncomplete="newspecificationcommittee.hide();"/>
+					icon="ui-icon-check" update="@(.scMemberDtl, scPanel)"
+					oncomplete="newspecificationcommittee.hide();" />
 
 				<p:commandButton value="#{lbl['lbl.so.cancelbtn']}"
 					styleClass="apply_button" process="@this"

@@ -1644,7 +1644,7 @@ public class QTDetailBackingBean extends
 					 existingApprovalTabs);
 					qtApproval.setApprovalType(ApprovalCategory
 							.getDisplayName(qtApproval.getApprovalCategory()
-									.getParameterId()));
+									.getParameterCode()));
 					qtApproval.setScQtApprovalRemarks(initializeRemarks(
 							qtApproval, qtApproval.getScQtApprovalRemarks(),
 							ScQtApprovalRemark.class));

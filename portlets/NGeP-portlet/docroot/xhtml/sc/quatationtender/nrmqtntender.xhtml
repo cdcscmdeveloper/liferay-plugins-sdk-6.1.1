@@ -49,7 +49,7 @@
 					value="#{qTSupplierQulCriteriaBackingBean.getParameterDesc(cateGory.pmCategoryL3.categoryTypeCode)}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.so.mandatory']}">
+			<p:column headerText="#{lbl['lbl.so.mandatory']}" style="text-align: center;">
 				<p:selectBooleanCheckbox value="#{cateGory.mandatory}"
 					disabled="#{!qTDetailBB.managedBean.editable}" />
 			</p:column>
