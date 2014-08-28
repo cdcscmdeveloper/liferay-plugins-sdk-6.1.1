@@ -1420,6 +1420,29 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	}
 	
 	
+	/**
+	 * check whether request note dtl is prod or service in Request Note
+	 */
+	public boolean checkServiceOrProduct(ScRequestNoteDtl scRequestNoteDtl){
+		log.info("checkServiceOrProduct");
+
+		Boolean prodOrService = Boolean.TRUE;
+		if(scRequestNoteDtl.getScRequestSupplierItem() != null){
+
+			String ItemCode = scRequestNoteDtl.getRequestItem().getCmItem().getExtensionCode();
+			CharSequence charSeq = ItemCode.subSequence(0, 2); 
+			Integer itemCode = Integer.valueOf(charSeq.toString()); 
+
+			// TODO checking first two digits in itemCode whether service or product 
+			if (itemCode >= 70 && itemCode <= 94) { // for service  between  70 and 94  
+
+				prodOrService = Boolean.TRUE;
+			} else if (itemCode < 70 || itemCode > 94) { // for product  < 70 and  > 94  
+				prodOrService = Boolean.FALSE;
+			}
+		}
+		return prodOrService;
+	}
 	
 	/**
 	 * show Item Details, Justification, Pricing details in Request Note
