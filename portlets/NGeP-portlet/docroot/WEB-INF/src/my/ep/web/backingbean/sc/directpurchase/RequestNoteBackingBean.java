@@ -2284,7 +2284,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			for(int i = 0; i<supplierItem.getSupplierItemPrices().size();i++){
 				supplierItemPrice = supplierItem.getSupplierItemPrices().get(i);
 				marketSummaryAndPIBean = new MarketSummaryAndPIBean();
-				marketSummaryAndPIBean.setSupplierItemId(supplierItem.getRequestSupplierItemId());
+				marketSummaryAndPIBean.setSupplierId(supplierItem.getSmSupplier().getSupplierId());
 				marketSummaryAndPIBean.setSupplierName(supplierItem.getSmSupplier().getCompanyName().replaceAll("&", "&#38;"));
 				marketSummaryAndPIBean.setMinQty(scRequestItem.getMinqty() != null ? scRequestItem.getMinqty().toString() :"");
 				marketSummaryAndPIBean.setDeliveryTerm(supplierItemPrice.getPricing() !=null && supplierItemPrice.getPricing().getCmSupplierItem().getLeadTime() != null ? supplierItemPrice.getPricing().getCmSupplierItem().getLeadTime().toString() : "");
@@ -2327,7 +2327,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					context.put("desc", supplierItem.getRequestNoteItem().getItemDesc() != null ? supplierItem.getRequestNoteItem().getItemDesc() : "" );
 					context.put("uom", supplierItem.getRequestNoteItem().getUom() != null ? supplierItem.getRequestNoteItem().getUom().getUomName() : "");
 				}	
-				marketSummaryAndPIBean.setSupplierItemId(supplierItem.getRequestSupplierItemId());
+				marketSummaryAndPIBean.setSupplierId(supplierItem.getSmSupplier().getSupplierId());
 				marketSummaryAndPIBean.setSupplierName(supplierItem.getSmSupplier().getCompanyName().replaceAll("&", "&#38;"));
 				marketSummaryAndPIBean.setMinQty(supplierItem.getRequestNoteItem().getMinqty() != null ? supplierItem.getRequestNoteItem().getMinqty().toString() :"");
 				marketSummaryAndPIBean.setDeliveryTerm(supplierItemPrice.getPricing().getCmSupplierItem().getLeadTime() != null ? supplierItemPrice.getPricing().getCmSupplierItem().getLeadTime().toString() : "");
@@ -2411,7 +2411,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
             @Override
             public int compare(MarketSummaryAndPIBean o1, MarketSummaryAndPIBean o2) {
                 return new CompareToBuilder()
-	                .append(o1.getSupplierItemId(), o2.getSupplierItemId())
+	                .append(o1.getSupplierId(), o2.getSupplierId())
 	                .append(o1.getPriceType(), o2.getPriceType())
 	                .append(o1.getZone(), o2.getZone())
 	                .append(o1.getFrQty(), o2.getFrQty())

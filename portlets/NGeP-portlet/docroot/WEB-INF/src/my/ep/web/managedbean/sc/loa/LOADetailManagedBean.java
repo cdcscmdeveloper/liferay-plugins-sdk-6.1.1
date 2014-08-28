@@ -20,6 +20,7 @@ import my.ep.persistence.entity.sc.loaloi.ScPerformanceBond;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalRanking;
+import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
@@ -78,6 +79,12 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	private double percentageBond;
 	private int bondAmount;
 	private String bondPercentage;
+	
+	private int totalFrequency;
+	private List<ScQtSchedule> scheduleList;
+	private List<SelectItem> yearList;
+	private List<SelectItem> yearsDisplayList;
+	
 	
 	public LOADetailManagedBean() {
 	}
@@ -641,6 +648,38 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	 */
 	public void setBondPercentage(String bondPercentage) {
 		this.bondPercentage = bondPercentage;
+	}
+
+	public int getTotalFrequency() {
+		return totalFrequency;
+	}
+
+	public void setTotalFrequency(int totalFrequency) {
+		this.totalFrequency = totalFrequency;
+	}
+
+	public List<ScQtSchedule> getScheduleList() {
+		return scheduleList;
+	}
+
+	public void setScheduleList(List<ScQtSchedule> scheduleList) {
+		this.scheduleList = scheduleList;
+	}
+
+	public List<SelectItem> getYearList() {
+		return yearList;
+	}
+
+	public void setYearList(List<SelectItem> yearList) {
+		this.yearList = yearList;
+	}
+
+	public List<SelectItem> getYearsDisplayList() {
+		return yearsDisplayList;
+	}
+
+	public void setYearsDisplayList(List<SelectItem> yearsDisplayList) {
+		this.yearsDisplayList = yearsDisplayList;
 	}
 
 }

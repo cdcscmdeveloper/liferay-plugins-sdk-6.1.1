@@ -98,10 +98,10 @@ Unit Price (RM)
 
 </tr>
       #set( $count = 0 )	
- 	  #set ($prevSupplierItemId = "")
-      #set ($supplierItemId = "")
+ 	  #set ($prevSupplierId = "")
+      #set ($supplierId = "")
       #foreach( $requestNoteVo in $requestNoteVOList ) 
-      #set ($supplierItemId = $requestNoteVo.supplierItemId)
+      #set ($supplierId = $requestNoteVo.supplierId)
       #if( $count == 0 )  
       	<tr>
 			<td>$requestNoteVo.supplierName</td>
@@ -125,7 +125,7 @@ Unit Price (RM)
 		</tr>
 		#else
 		<tr>
-		    #if( $supplierItemId != $prevSupplierItemId )  
+		    #if( $supplierId != $prevSupplierId )  
 			<td>$requestNoteVo.supplierName</td>
 		    <td style="text-align:right">$requestNoteVo.deliveryTerm</td>
 			<td style="text-align:right">$requestNoteVo.minQty</td>
@@ -154,7 +154,7 @@ Unit Price (RM)
 		</tr>
 		#end
 		
-		#set( $prevSupplierItemId = $requestNoteVo.supplierItemId )
+		#set( $prevSupplierId = $requestNoteVo.supplierId )
       	#set( $count = $count + 1 )
       #end
 

@@ -7,8 +7,8 @@ public class MarketSummaryAndPIBean implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;	
-
-	private Long supplierItemId;
+	
+	private Long supplierId;
 	private String supplierName;
 	private String deliveryTerm;
 	private String minQty;
@@ -86,14 +86,6 @@ public class MarketSummaryAndPIBean implements Serializable {
 		this.stockAvailability = stockAvailability;
 	}
 
-	public Long getSupplierItemId() {
-		return supplierItemId;
-	}
-
-	public void setSupplierItemId(Long supplierItemId) {
-		this.supplierItemId = supplierItemId;
-	}
-
 	public int getFrQty() {
 		return frQty;
 	}
@@ -110,8 +102,12 @@ public class MarketSummaryAndPIBean implements Serializable {
 		this.toQty = toQty;
 	}
 
+	public Long getSupplierId() {
+		return supplierId;
+	}
 
-		
-	
+	public void setSupplierId(Long supplierId) {
+		this.supplierId = supplierId;
+	}
 	
 }

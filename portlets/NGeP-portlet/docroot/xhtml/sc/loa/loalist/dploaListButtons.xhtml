@@ -1,0 +1,22 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+
+	<div class="ppRightBtn">
+		<ui:repeat var="bpmAction"
+			value="#{lOADetailBackingBean.managedBean.outComes}">
+			<ui:param name="buttonLabel"
+				value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+				
+			<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
+				icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
+				action="#{lOADetailBackingBean.updateBpmTaskAction(bpmAction)}"
+				partialSubmit="true" process="@form"
+				update="@form" />
+		</ui:repeat>
+	</div>
+</ui:composition>

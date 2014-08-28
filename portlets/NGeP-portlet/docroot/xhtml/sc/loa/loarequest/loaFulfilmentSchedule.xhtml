@@ -1,0 +1,109 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<h:panelGroup id="frequency">
+		<h:panelGroup id="schedule">
+		 	<p:panel header="#{lbl['lbl.sc.spec.freq.schedule']} "
+				toggleable="true">
+
+				<h:panelGrid columns="2" columnClasses="columnWidth50,columnWidth50">
+					<h:outputLabel value="#{lbl['lbl.sc.spec.total.frequency']}"></h:outputLabel>
+					<p:inputText
+						value="#{lOADetailBackingBean.managedBean.totalFrequency}">
+						<p:ajax event="blur" update="frequencySchedule"
+							partialSubmit="true" process="@this"
+						 	listener="#{lOADetailBackingBean.addScheduleDetails}" />
+					</p:inputText>
+				</h:panelGrid>
+				<p:dataTable id="frequencySchedule" var="frequency"
+					rowIndexVar="index"
+					value="#{lOADetailBackingBean.managedBean.scheduleList}">
+					<ac:paginator for="frequencySchedule" />
+
+					<p:column style="width:40%">
+
+						<f:facet name="header">
+							<h:outputText value="* " styleClass="mandatory" />
+							<h:outputText value="#{lbl['lbl.sc.spec.schedule.no']}" />
+						</f:facet>
+						<p:inputText value="#{frequency.scheduleNo}" required="true"
+							maxlength="3" label="#{lbl['lbl.sc.spec.schedule.no']}" size="5"
+							id="scheduleNum">
+							<ac:validateNumber integerOnly="true" maxIntegerDigits="3"></ac:validateNumber>
+						</p:inputText>
+						<p:message id="freqScheduledid" for="scheduleNum" display="icon"></p:message>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sc.spec.start.month']}"
+						style="width:10%">
+						<p:selectOneMenu style="width:100px;" required="true"
+							value="#{frequency.startMonth}">
+							<f:selectItems value="#{lOADetailBackingBean.yearDetails}"></f:selectItems>
+							<p:ajax process="@this" event="change" partialSubmit="true" />  
+						</p:selectOneMenu>
+					</p:column>
+					<p:column
+						headerText="#{lbl['lbl.sc.spec.freq.schedule.start.year']}"
+						style="width:15%">
+						<p:selectOneMenu value="#{frequency.startYear}"
+							style="width:100px;" required="true">
+							<f:selectItems
+								value="#{lOADetailBackingBean.yearsDisplayDtls}"></f:selectItems>
+								<p:ajax process="@this" event="change" partialSubmit="true" />  
+						</p:selectOneMenu>
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.spec.end.month']}"
+						style="width:25%">
+						<p:selectOneMenu style="width:100px;" required="true"
+							value="#{frequency.endMonth}">
+
+							<f:selectItems value="#{lOADetailBackingBean.yearDetails}"></f:selectItems>
+							<p:ajax event="change" update="scheduleDetails" partialSubmit="true"
+								listener="#{lOADetailBackingBean.calculateSchedulePercentage(frequency)}"></p:ajax>
+						</p:selectOneMenu>
+
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sc.spec.freq.schedule.end.year']}"
+						style="width:15%">
+						<p:selectOneMenu value="#{frequency.endYear}" style="width:100px;" required="true">
+							<f:selectItems
+								value="#{lOADetailBackingBean.yearsDisplayDtls}"></f:selectItems>
+								<p:ajax event="change" update="scheduleDetails" partialSubmit="true"
+								listener="#{lOADetailBackingBean.calculateSchedulePercentage(frequency)}"></p:ajax>
+						</p:selectOneMenu>
+					</p:column>
+					<p:column
+						headerText="#{lbl['lbl.sc.spec.freq.schedule.total.months']}"
+						style="width:10%">
+						<h:panelGroup id="scheduleDetails">
+							<h:outputText value="#{frequency.totalMonths}"></h:outputText>
+						</h:panelGroup>
+					</p:column>
+
+					<p:column style="width:15%">
+						<f:facet name="header">
+							<h:outputText value="* " styleClass="mandatory" />
+							<h:outputText value="#{lbl['lbl.ct.sched.stype']}" />
+						</f:facet>
+
+						<p:selectOneMenu style="width:120px;" required="true"
+							id="scheduledTypeId" label="#{lbl['lbl.ct.sched.stype']}"
+							value="#{frequency.scheduleType.parameterId}">
+
+							<f:selectItems
+								value="#{lOADetailBackingBean.getDropdownValues(ParameterTypeConst.scheduleType)}" />
+							<p:message id="freqScheduledTypeId" for="scheduledTypeId"
+								display="icon"></p:message>
+						</p:selectOneMenu>
+					</p:column>
+				</p:dataTable>
+				<p:spacer height="20"></p:spacer> 
+			</p:panel>
+		</h:panelGroup>
+	</h:panelGroup>
+</ui:composition>

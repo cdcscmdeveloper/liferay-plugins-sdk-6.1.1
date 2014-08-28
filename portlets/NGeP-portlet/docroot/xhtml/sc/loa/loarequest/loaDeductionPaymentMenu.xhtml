@@ -28,7 +28,7 @@
 				<c:if test="#{isEditableStatus}">
 					<p:selectOneMenu id="deductionType" value="#{scQtDeduction.deductionType.parameterId}"
 						required="true">
-						<f:selectItems value="#{lOADetailBackingBean.getDropdownValues(ParameterTypeConst.deductionType)}" />
+						<f:selectItems value="#{lOADetailBackingBean.getDeductionItemTypeDropdownList()}" />
 						<p:ajax event="change" partialSubmit="true" process="@this"
 							update=":form:clausePnl"
 							oncomplete="deductTblWidget.unselectAllRows(); deductTblWidget.selectRow(#{rowIndex}, true);"
