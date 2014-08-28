@@ -340,5 +340,7 @@ public class ReportConst {
 	public static final String NOT_VALID_QOTATION_NO = "lbl.rpt.search.criteria.NOT_VALID_QUOTATION_NO";
 	public static final String NUMERIC_CHAR_VALID_ONLY = "lbl.rpt.search.criteria.NUMERIC_CHAR_VALID_ONLY";
 	public static final String NUMERIC_CHAR_PATTERN_ONLY = "^[a-zA-Z0-9]+$";
+	public static final String SUPPLIER_USER = "SUPPLIER_USER";
+	public static final String SUPPLIER_ADMIN = "SUPPLIER_ADMIN";
 	
 }
