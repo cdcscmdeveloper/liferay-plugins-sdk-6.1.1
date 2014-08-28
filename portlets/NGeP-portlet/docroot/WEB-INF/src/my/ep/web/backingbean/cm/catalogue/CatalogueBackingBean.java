@@ -2237,7 +2237,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			
 			//promotion price is more than standard price
 			if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getPrice()!=null){
-				if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getPrice().compareTo(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getPrice())>0){
+				if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getPrice().doubleValue() > this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getPrice().doubleValue()){
 					FacesContext.getCurrentInstance().addMessage(null,
 							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,MessageUtils.getMessage(MessageConst.ERROR_715031, 
 							new String[]{ResourceBundleUtils.getMessage("lbl.cm.promotion",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())},
