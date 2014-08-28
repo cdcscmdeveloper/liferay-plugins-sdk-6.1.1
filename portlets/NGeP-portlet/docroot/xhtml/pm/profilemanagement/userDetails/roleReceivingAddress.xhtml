@@ -26,6 +26,7 @@
 			          	<p:inputText id="itAppLimit" styleClass="ppDisplayTextS" value="#{role.approvalLimit}" 
 			          		required="#{role.pmRole.limitRequired}"  label="#{lbl['lbl.pm.profiles.authorisation.apprlimit']}"
 			          		disabled="#{!role.pmRole.limitRequired}">
+			          		<f:validateDoubleRange minimum="1"  />
 			          		<p:ajax event="change" process="@this" />
 		          		</p:inputText>
 		          		<p:message id="itAppLimitMsg" for="itAppLimit" display="icon" />
