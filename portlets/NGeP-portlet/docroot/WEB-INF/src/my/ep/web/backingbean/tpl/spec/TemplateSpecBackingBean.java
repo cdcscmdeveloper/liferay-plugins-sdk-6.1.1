@@ -912,6 +912,47 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 		return totalAmount;
 	}
 	
+	public boolean isAllPriceTypesStandard(TemplateSpecBean templateSpecBean) {
+		boolean isAllPriceTypesStandard = true;
+		String contentType = templateSpecBean.getContentType();
+		List<TplSpecQuestion> specQuestions = null;
+		
+		if (TemplateSpecConst.CONTENT_TYPE_QUESTION.equals(contentType) ||
+				TemplateSpecConst.CONTENT_TYPE_REVIEW.equals(contentType)) {
+			specQuestions = templateSpecBean.getSpecMaster().getTplSpecQuestions();
+		} else {
+			List<TplSpecAnswer> specAnswers = templateSpecBean.getSpecAnswerList();
+			
+			if (specAnswers != null) {
+				specQuestions = new ArrayList<TplSpecQuestion>();
+				
+				for (TplSpecAnswer specAnswer : specAnswers) {
+					TplSpecQuestion specQuestion = specAnswer.getTplSpecQuestion();
+					
+					specQuestions.add(specQuestion);
+				}
+			}
+		}
+		
+		if (specQuestions != null) {
+			TemplateSpecHelper templateSpecHelper = TemplateSpecHelper.getInstance();
+			
+			for (TplSpecQuestion specQuestion : specQuestions) {
+				if (TemplateSpecConst.QUESTION_TYPE_ITEM.equals(specQuestion.getQuestionType())) {
+					String priceType = specQuestion.getClPriceTypeCode().getParameterCode();
+					
+					if (!templateSpecHelper.isPriceTypeStandard(priceType)) {
+						isAllPriceTypesStandard = false;
+						
+						break;
+					}
+				}
+			}
+		}
+		
+		return isAllPriceTypesStandard;
+	}
+	
 	/**
 	 * template spec list paging class
 	 * 
@@ -1020,4 +1061,3 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 		this.specMasterDataModel = specMasterDataModel;
 	}
 }
-

@@ -49,7 +49,7 @@
 			<h:outputText value="#{lbl['lbl.tpl.spec.content.unit.price']}"/>
 		</f:facet>
 		<f:facet name="footer">
-			<h:outputText value="#{lbl['lbl.tpl.spec.specification.total']}" />
+			<h:outputText value="#{lbl['lbl.tpl.spec.specification.total']}" rendered="#{isAllPriceTypesStandard}" />
 		</f:facet>
 		
 		<p:inputText id="ratePerUom" style="min-width:0px !important;width:96%;" styleClass="ppNumericAlign"
@@ -87,7 +87,7 @@
 			<h:outputText id="totalAmount" 
 				styleClass="calcAmount" 
 				value="#{templateSpecBackingBean.calcGrandTotalAmount(templateSpecBean)}"
-				rendered="#{isSpecTypeFinancial}">
+				rendered="#{isSpecTypeFinancial and isAllPriceTypesStandard}">
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			</h:outputText>
 		</f:facet>

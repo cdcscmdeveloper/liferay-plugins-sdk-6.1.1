@@ -44,6 +44,7 @@
 			<ui:param name="isScoringReq" value="#{templateSpecBean.specMaster.scoringReq}" />
 			<ui:param name="isDurationByItem" value="#{templateSpecBean.specMaster.durationByItem}" />
 			<ui:param name="isZonal" value="#{!empty templateSpecBean.specMaster.tplSpecZone}" />
+			<ui:param name="isAllPriceTypesStandard" value="#{templateSpecBackingBean.isAllPriceTypesStandard(templateSpecBean)}" />
 			<ui:param name="durationMonth" value="#{templateSpecBean.specMaster.durationMonth}" />
 			
 			<c:if test="#{isContentTypeQuestion or isContentTypeReview}">
