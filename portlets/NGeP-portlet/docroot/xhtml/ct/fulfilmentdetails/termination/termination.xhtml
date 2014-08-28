@@ -203,26 +203,33 @@
 		   </h:panelGrid>
 		   
 		   <h:panelGrid columns="2" style="float:right;" rendered="#{terminationBackingBean.managedBean.remedy}">
-			<p:outputLabel value="*" styleClass="mandatory" />
-		    <p:outputLabel value="#{lbl['lbl.ct.tr.remstartdt']}" />
+			   <p:outputLabel value="*" styleClass="mandatory" />
+		       <p:outputLabel value="#{lbl['lbl.ct.tr.remstartdt']}" />
 		  </h:panelGrid>
 		   <h:panelGrid columns="2"  rendered="#{terminationBackingBean.managedBean.remedy}">
-              <p:calendar value="#{terminationBackingBean.managedBean.contractVer.ctTermination.remedyStartDate}"
-          		readonlyInput="true"  required="true" label="Remedy Start Date" 
-                id="calItem3" size="24" showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"/>
-                 <p:message for="calItem3" display="icon"/>
-		     </h:panelGrid>
+                <p:calendar id="calItem3"  readonlyInput="true"  required="true" label="Remedy Start Date" 
+                    value="#{terminationBackingBean.managedBean.contractVer.ctTermination.remedyStartDate}" size="24"
+                     showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+                    <p:ajax event="dateSelect" update="calItem4" />
+                </p:calendar>
+                <p:message for="calItem3" display="icon"/>
+		  </h:panelGrid>
 		  
 		   <h:panelGrid columns="2" style="float:right;" rendered="#{terminationBackingBean.managedBean.remedy}">
-			<p:outputLabel value="*" styleClass="mandatory" />
-		    <p:outputLabel value="#{lbl['lbl.ct.tr.remenddt']}" />
+			    <p:outputLabel value="*" styleClass="mandatory" />
+		        <p:outputLabel value="#{lbl['lbl.ct.tr.remenddt']}" />
 		  </h:panelGrid>
           <h:panelGrid columns="2" rendered="#{terminationBackingBean.managedBean.remedy}">
-             <p:calendar value="#{terminationBackingBean.managedBean.contractVer.ctTermination.remedyEndDate}"
-          		 readonlyInput="true" required="true" label="Remedy End Date"
-                id="calItem4" size="24" showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"/>
+             <p:calendar id="calItem4"  readonlyInput="true" required="true" label="Remedy End Date"
+                 value="#{terminationBackingBean.managedBean.contractVer.ctTermination.remedyEndDate}"
+          		 mindate="#{terminationBackingBean.managedBean.contractVer.ctTermination.remedyStartDate}"  size="24" 
+                 showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+                 <f:attribute name="startDate" value="#{terminationBackingBean.managedBean.contractVer.ctTermination.remedyStartDate}" />
+                 <f:validator validatorId="primeDateRangeValidator" />
+             </p:calendar>
              <p:message for="calItem4" display="icon"/>
-            </h:panelGrid>
+          </h:panelGrid>
+	
 		  <p:spacer rendered="#{terminationBackingBean.managedBean.termination}" />
 		  <p:spacer rendered="#{terminationBackingBean.managedBean.termination}" />                
 		  
@@ -249,15 +256,17 @@
 		         <p:message for="calItem6" display="icon"/>
 		    </h:panelGrid>
 		
-		 <h:panelGrid columns="2" style="float:right;" rendered="#{terminationBackingBean.managedBean.termination}">
-			<p:outputLabel value="*" styleClass="mandatory" />
-		  <p:outputLabel value="#{lbl['lbl.ct.tr.lastremstartdt']}" />
-		</h:panelGrid>
-		  <h:panelGrid columns="2" rendered="#{terminationBackingBean.managedBean.termination}">
-             <p:calendar value="#{terminationBackingBean.managedBean.contractVer.ctTermination.remedyStartDate}"
-          		readonlyInput="true" required="true" label="Last Remedy Start Date"
-                id="calItem7" size="24" showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"/>
-		        <p:message for="calItem7" display="icon"/>
+		   <h:panelGrid columns="2" style="float:right;" rendered="#{terminationBackingBean.managedBean.termination}">
+			  <p:outputLabel value="*" styleClass="mandatory" />
+		      <p:outputLabel value="#{lbl['lbl.ct.tr.lastremstartdt']}" />
+		   </h:panelGrid>
+		   <h:panelGrid columns="2" rendered="#{terminationBackingBean.managedBean.termination}">
+              <p:calendar  id="calItem7" readonlyInput="true" required="true" label="Last Remedy Start Date" 
+          		  value="#{terminationBackingBean.managedBean.contractVer.ctTermination.remedyStartDate}"  size="24" 
+          		  showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+                  <p:ajax event="dateSelect" update="calItem4" />
+             </p:calendar>
+		     <p:message for="calItem8" display="icon"/>
 		 </h:panelGrid>
 		
 		 <h:panelGrid columns="2" style="float:right;" rendered="#{terminationBackingBean.managedBean.termination}">
@@ -265,9 +274,13 @@
 		  <p:outputLabel value="#{lbl['lbl.ct.tr.lastremenddt']}" />
 		 </h:panelGrid>
 		  <h:panelGrid columns="2" rendered="#{terminationBackingBean.managedBean.termination}">
-             <p:calendar value="#{terminationBackingBean.managedBean.contractVer.ctTermination.remedyEndDate}"
-          		readonlyInput="true"  required="true" label="Last Remedy End Date" id="calItem8" size="24" 
-          		showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"/> 
+             <p:calendar id="calItem8" readonlyInput="true"  required="true" label="Last Remedy End Date"
+                 value="#{terminationBackingBean.managedBean.contractVer.ctTermination.remedyEndDate}" 
+                 mindate="#{terminationBackingBean.managedBean.contractVer.ctTermination.remedyStartDate}" size="24" 
+          		showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+          		 <f:attribute name="startDate" value="#{terminationBackingBean.managedBean.contractVer.ctTermination.remedyStartDate}" />
+                 <f:validator validatorId="primeDateRangeValidator" />
+             </p:calendar> 
 		     <p:message for="calItem8" display="icon"/>
 		   </h:panelGrid>
 		 

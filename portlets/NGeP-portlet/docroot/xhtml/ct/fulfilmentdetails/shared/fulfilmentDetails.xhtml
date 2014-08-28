@@ -41,7 +41,8 @@
 		    	<p:inputText id="dperiod" styleClass="ppRightBtn" style="width:45px;" validator="#{webappBean.validateDPeriod}"
 		              maxlength="4" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.deliveryTerm}"/>
                 <p:spacer width="2" />
-                <p:selectOneMenu id="deliveryTerm" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.deliveryTermUom.parameterId}" 
+                <p:selectOneMenu id="deliveryTerm" 
+                   value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.deliveryTermUom.parameterId}" 
                    style="width:120px;" required="true" label="#{lbl['lbl.ct.dperiod']}" >
 			       <f:selectItems value="#{contractDetailsBackingBean.getDropdownValues(ParameterTypeConst.deliveryTerm)}" />
 			   </p:selectOneMenu>

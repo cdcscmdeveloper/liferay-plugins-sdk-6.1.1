@@ -57,15 +57,19 @@
 			
 			<p:column style="width:10%;">
 				<p:calendar value="#{varBond.effDate}" id="popupButtonCal4" styleClass="calendarDateField"
-					showOn="button" readonlyInput="true" size="12" 
-					disabled="#{varBond.performanceBondId != null}"
-					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					showOn="button" readonlyInput="true" size="12"  disabled="#{varBond.performanceBondId != null}"
+					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" >
+					 <p:ajax event="dateSelect" update="popupButtonCal5" />
+					</p:calendar>
 			</p:column>
 			
 			<p:column style="width:10%;">
-				<p:calendar value="#{varBond.expDate}" id="popupButtonCal5" styleClass="calendarDateField"
-					showOn="button" readonlyInput="true" disabled="#{varBond.performanceBondId != null}" size="12" 
-					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"/>
+				<p:calendar id="popupButtonCal5"  value="#{varBond.expDate}" styleClass="calendarDateField" showOn="button"
+				    readonlyInput="true" disabled="#{varBond.performanceBondId != null}" mindate="#{varBond.effDate}" 
+					size="12"  pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+				    <f:attribute name="startDate" value="#{varBond.effDate}" />
+                    <f:validator validatorId="primeDateRangeValidator" />
+			    </p:calendar>
 			</p:column>
 			
 			<p:column styleClass="column-align-center" style="width:20%;">
@@ -119,8 +123,7 @@
 					styleClass="ui-icon-complain"></p:graphicImage>
 				<p:spacer width="10" />
 				<p:inputTextarea
-					value="Are you sure you want to delete this record?" rows="2"
-					cols="48" styleClass="ui-inputtextarea"></p:inputTextarea>
+					value="Are you sure you want to delete this record?" rows="2" cols="48" styleClass="ui-inputtextarea"></p:inputTextarea>
 			</h:panelGrid>
 			<div class="ppRightBtn">
 				<p:commandButton value="Yes" icon="ui-icon-accept"

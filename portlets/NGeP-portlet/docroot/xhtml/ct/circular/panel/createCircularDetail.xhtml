@@ -60,7 +60,7 @@
 			   			pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
 			         	mindate="#{panelBackingBean.managedBean.circularVer.startDate}" size="22" 
 			         	showOn="button" required="true" readonlyInput="true" label="#{lbl['lbl.ct.cc.cedate']}">
-			         	 <f:attribute name="extendStartDate" value="#{panelBackingBean.managedBean.circularVer.startDate}" />
+			         	 <f:attribute name="startDate" value="#{panelBackingBean.managedBean.circularVer.startDate}" />
                          <f:validator validatorId="primeDateRangeValidator" />
 			         	</p:calendar>
 			    </td>

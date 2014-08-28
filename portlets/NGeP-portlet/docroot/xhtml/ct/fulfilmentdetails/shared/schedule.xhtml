@@ -96,7 +96,8 @@
                  <p:inputText value="#{ProgVar.phaseNo}" maxlength="4" style="width:25px;" styleClass="ppRightBtn" />
                </p:column>
 		       <p:column style="width:30%;" headerText="#{lbl['lbl.ct.sched.table1.desc']}">
-		          <p:inputText value="#{ProgVar.phaseDesc}" maxlength="50" style="width:200px;"/>
+		          <p:inputText value="#{ProgVar.phaseDesc}" maxlength="50" 
+		             style="width:200px;" required="true" label="#{lbl['lbl.ct.sched.table1.desc']}" />
 		       </p:column>
                <p:column style="width:25%;" headerText="#{lbl['lbl.ct.sched.speriod']}" >
 		          <p:selectOneMenu id="fromProMonth" value="#{ProgVar.fromProDate}" style="width:120px;">

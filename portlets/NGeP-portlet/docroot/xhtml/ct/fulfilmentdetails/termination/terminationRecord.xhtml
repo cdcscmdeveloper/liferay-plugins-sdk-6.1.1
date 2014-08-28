@@ -9,62 +9,74 @@
 	<p:panel id="terRecord" header="RECORD" toggleable="true" collapsed="false" toggleSpeed="500" 
 		rendered="#{terminationBackingBean.managedBean.contractVer.status.statusId==CtStatusConst.ftPendingLetterPrintAndUpdate}" >
 	   <h:panelGrid columns="4" style="width:1000px;" columnClasses="columnWidth200,columnWidth250,columnWidth300,columnWidth250">
-	   		<h:panelGrid columns="2" style="float:right;">
-				<p:outputLabel value="*" styleClass="mandatory" />
-		    	<p:outputLabel value="Notice Date" />
+	   		 
+	   		  <h:panelGrid columns="2" style="float:right;">
+				   <p:outputLabel value="*" styleClass="mandatory" />
+		    	   <p:outputLabel value="Notice Date" />
 		  	</h:panelGrid>
           	<h:panelGrid columns="2">
-             	<p:calendar value="#{terminationBackingBean.managedBean.contractVer.ctTermination.noticeDate}"
-          		readonlyInput="true" required="true" label="Notice Date"
-                id="nDate" size="24" showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"/>
+             	<p:calendar id="nDate"   readonlyInput="true" required="true" label="Notice Date"
+             	    value="#{terminationBackingBean.managedBean.contractVer.ctTermination.noticeDate}"  size="24" 
+          		    showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+          		</p:calendar>
              	<p:message for="nDate" display="icon"/>
             </h:panelGrid>
+            
             <h:panelGrid columns="2" style="float:right;">
 				<p:outputLabel value="*" styleClass="mandatory" />
 		    	<p:outputLabel value="Receiver Name" />
 		  	</h:panelGrid>
 		  	<h:panelGrid columns="2">
-           		<p:inputText id="receiverName" value="#{terminationBackingBean.managedBean.contractVer.ctTermination.receiverName}" 
-             	style="width:170px;" maxlength="50" required="true" label="Receiver Name">
-              	</p:inputText>
+           		<p:inputText id="receiverName" 	style="width:170px;" maxlength="50" required="true"  
+           		    value="#{terminationBackingBean.managedBean.contractVer.ctTermination.receiverName}" label="Receiver Name"/>
                 <p:message for="receiverName" display="icon"/>
 		  	</h:panelGrid>
+		  	
 		  	<h:panelGrid columns="2" style="float:right;">
 				<p:outputLabel value="*" styleClass="mandatory" />
 		    	<p:outputLabel value="Delivery Date" />
 		  	</h:panelGrid>
           	<h:panelGrid columns="2">
-             	<p:calendar value="#{terminationBackingBean.managedBean.contractVer.ctTermination.noticeDeliveryDate}"
-          		readonlyInput="true" required="true" label="Delivery Date"
-                id="dDate" size="24" showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"/>
+             	<p:calendar  id="dDate" readonlyInput="true" required="true" label="Delivery Date"
+             	    value="#{terminationBackingBean.managedBean.contractVer.ctTermination.noticeDeliveryDate}" size="24" 
+          		    showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+          		   <p:ajax event="dateSelect" update="rDate" />
+          		</p:calendar>
              	<p:message for="dDate" display="icon"/>
             </h:panelGrid>
+           
             <h:panelGrid columns="2" style="float:right;">
 				<p:outputLabel value="*" styleClass="mandatory" />
 		    	<p:outputLabel value="Receiver IC No." />
 		  	</h:panelGrid>
 		  	<h:panelGrid columns="2">
-           		<p:inputText id="icNo" value="#{terminationBackingBean.managedBean.contractVer.ctTermination.receiverIc}" 
-             	style="width:170px;" maxlength="15" required="true" label="Receiver IC No.">
-              	</p:inputText>
+           		<p:inputText id="icNo" style="width:170px;" maxlength="15" required="true" 
+           		   value="#{terminationBackingBean.managedBean.contractVer.ctTermination.receiverIc}" label="Receiver IC No."/>
                 <p:message for="icNo" display="icon"/>
 		  	</h:panelGrid>
+		  	
 		  	<h:panelGrid columns="2" style="float:right;">
 				<p:outputLabel value="*" styleClass="mandatory" />
 		    	<p:outputLabel value="Received Date" />
 		  	</h:panelGrid>
           	<h:panelGrid columns="2">
-             	<p:calendar value="#{terminationBackingBean.managedBean.contractVer.ctTermination.noticeReceivedDate}"
-          		readonlyInput="true" required="true" label="Received Date"
-                id="rDate" size="24" showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"/>
-             	<p:message for="rDate" display="icon"/>
+             	<p:calendar id="rDate"  readonlyInput="true" required="true" label="Received Date"
+             	    value="#{terminationBackingBean.managedBean.contractVer.ctTermination.noticeReceivedDate}"
+          		    mindate="#{terminationBackingBean.managedBean.contractVer.ctTermination.noticeDeliveryDate}"  size="24" 
+                    showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+                    <f:attribute name="startDate" value="#{terminationBackingBean.managedBean.contractVer.ctTermination.noticeDeliveryDate}" />
+                  <f:validator validatorId="primeDateRangeValidator" />
+               </p:calendar>
+              <p:message for="rDate" display="icon"/>
             </h:panelGrid>
+          
           <f:verbatim/><f:verbatim/>   
           <f:verbatim rendered="#{terminationBackingBean.managedBean.termination}" />
-		  <p:commandButton id="lodgeComplaintBtn" value="Lodge Complaint" onclick="confirmation.show()"
-		  	rendered="#{terminationBackingBean.managedBean.termination}"
+		  <p:commandButton id="lodgeComplaintBtn" value="Lodge Complaint"
+		      onclick="confirmation.show()" rendered="#{terminationBackingBean.managedBean.termination}"
 		  	disabled="#{terminationBackingBean.managedBean.contractVer.ctTermination.complaintLodged}" />
 		</h:panelGrid>
+	    
 	    <p:confirmDialog message="Are you sure to lodge a complaint to #{terminationBackingBean.managedBean.contractVer.ctContractValue.supplierName}?"
 	    	header="Lodge a Complaint" severity="alert" widgetVar="confirmation">
 	        <p:commandButton value="Yes" update="lodgeComplaintBtn" oncomplete="confirmation.hide()" 
