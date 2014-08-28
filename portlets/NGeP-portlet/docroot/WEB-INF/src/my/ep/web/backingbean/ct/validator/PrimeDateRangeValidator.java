@@ -17,7 +17,7 @@ public class PrimeDateRangeValidator implements Validator{
     public void validate(FacesContext context, UIComponent component, Object value) throws ValidatorException {
         
         //Leave the null handling of startDate to required="true"
-        Object startDateValue = component.getAttributes().get("extendStartDate");
+        Object startDateValue = component.getAttributes().get("startDate");
         if (startDateValue==null || startDateValue =="") {
             return;
         }
