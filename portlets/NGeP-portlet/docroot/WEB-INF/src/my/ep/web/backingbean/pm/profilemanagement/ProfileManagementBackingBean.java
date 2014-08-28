@@ -459,7 +459,9 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	 * login id = identification no.
 	 */
 	public void updateLoginId(){
-		this.getManagedBean().getSelectedUser().setLoginId(this.getManagedBean().getSelectedUser().getIdentificationNo());
+		if(StringUtils.isBlank(this.getManagedBean().getSelectedUser().getLoginId())){
+			this.getManagedBean().getSelectedUser().setLoginId(this.getManagedBean().getSelectedUser().getIdentificationNo());
+		}
 	}
 	
 	/**

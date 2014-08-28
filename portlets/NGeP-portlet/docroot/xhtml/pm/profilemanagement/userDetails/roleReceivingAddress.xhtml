@@ -42,14 +42,16 @@
 				<div class="ppRightBtn">
 					<p:commandButton action="#{profileManagementBackingBean.getAvailbleUserRole}" immediate="true"
 					  	value="#{lbl['lbl.btn.add']}" oncomplete="dlRoleOptions.show();" update=":form:opRoleOptions"/>&#160;
-			        <p:commandButton value="#{lbl['lbl.btn.delete']}" action="#{profileManagementBackingBean.deleteRole}" update=":form:tvRoleReceivingAddr:dtRoles" />
+			        <p:commandButton value="#{lbl['lbl.btn.delete']}" action="#{profileManagementBackingBean.deleteRole}" 
+			        	update=":form:tvRoleReceivingAddr" />
 			  
 		        </div>
 	      	</p:tab>  
 	      		
 			        
 	      	<!-- Receiving Address -->
-		  	<p:tab title="#{lbl['lbl.pm.profiles.authorisation.receiving.address']}">	
+		  	<p:tab title="#{lbl['lbl.pm.profiles.authorisation.receiving.address']}" id="tReceivingAddr"
+		  		disabled="#{!profileManagementBackingBean.managedBean.receivingAddressFlag}">	
 				<p:dataTable id="dtReceiveAddr" value="#{profileManagementBackingBean.managedBean.selectedReceivingAddrTypes}"
 						selection="#{profileManagementBackingBean.managedBean.deleteReceivingAddrTypes}"
 						emptyMessage="#{lbl['lbl.pp.no.record.found']}"  var="receivAddrType"
