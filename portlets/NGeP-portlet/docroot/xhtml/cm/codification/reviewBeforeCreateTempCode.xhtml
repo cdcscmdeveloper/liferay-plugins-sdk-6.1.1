@@ -195,7 +195,7 @@
 								update=":form:tablePanelId"
 								saveObject="unspscCodeBackingBean.managedBean.selectedLovUnspscfamily"
 								value="#{unspscCodeBackingBean.managedBean.selectedLovUnspscfamily.unspscCode}"
-								conditionField="recordStatus^1|unspscLevel^1|unspscParentCode^#{unspscCodeBackingBean.managedBean.selectedLovUnspscSegment.unspscCode}">
+								conditionField="recordStatus^1|unspscLevel^1|unspscCode^70000000^#{unspscCodeBackingBean.productOrServiceOperator()}|unspscParentCode^#{unspscCodeBackingBean.managedBean.selectedLovUnspscSegment.unspscCode}">
 							</ac:lov>
 
 						</p:column>
@@ -223,7 +223,7 @@
 								update=":form:tablePanelId"
 								saveObject="unspscCodeBackingBean.managedBean.selectedLovUnspscClass"
 								value="#{unspscCodeBackingBean.managedBean.selectedLovUnspscClass.unspscCode}"
-								conditionField="recordStatus^1|unspscLevel^2|unspscParentCode^#{unspscCodeBackingBean.managedBean.selectedLovUnspscfamily.unspscCode}">
+								conditionField="recordStatus^1|unspscLevel^2|unspscCode^70000000^#{unspscCodeBackingBean.productOrServiceOperator()}|unspscParentCode^#{unspscCodeBackingBean.managedBean.selectedLovUnspscfamily.unspscCode}">
 							</ac:lov>
 
 						</p:column>
@@ -252,7 +252,7 @@
 								headerText="Commodity" update=":form:tablePanelId"
 								saveObject="unspscCodeBackingBean.managedBean.selectedLovUnspsc"
 								value="#{unspscCodeBackingBean.managedBean.selectedLovUnspsc.unspscCode}"
-								conditionField="recordStatus^1|unspscLevel^3|unspscParentCode^#{unspscCodeBackingBean.managedBean.selectedLovUnspscClass.unspscCode}">
+								conditionField="recordStatus^1|unspscLevel^3|unspscCode^70000000^#{unspscCodeBackingBean.productOrServiceOperator()}|unspscParentCode^#{unspscCodeBackingBean.managedBean.selectedLovUnspscClass.unspscCode}">
 							</ac:lov>
 
 
