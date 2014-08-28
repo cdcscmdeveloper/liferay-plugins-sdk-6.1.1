@@ -159,6 +159,7 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	private List<TplSpecQuestion> serviceQuestions = new ArrayList<TplSpecQuestion>();
 	
 	private String promptMessage;
+	private String selectedAction;
 
 	public SimpleQuoteManagedBean() {
 		super();
@@ -1350,6 +1351,18 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	 */
 	public void setPromptMessage(String promptMessage) {
 		this.promptMessage = promptMessage;
+	}
+	/**
+	 * @return the selectedAction
+	 */
+	public String getSelectedAction() {
+		return selectedAction;
+	}
+	/**
+	 * @param selectedAction the selectedAction to set
+	 */
+	public void setSelectedAction(String selectedAction) {
+		this.selectedAction = selectedAction;
 	}
 	
 }

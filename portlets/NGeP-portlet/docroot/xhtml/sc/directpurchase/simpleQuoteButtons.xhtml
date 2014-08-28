@@ -4,8 +4,6 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-
-    
 	<p:panel>
 	
 	  <p:blockUI block=":form"  widgetVar="blockWidget">
@@ -13,28 +11,30 @@
 	 </p:blockUI>
 
 		<p:confirmDialog message="#{simpleQuoteBackingBean.managedBean.promptMessage}" id="promptId"
-			width="450px"
+			width="450px" height="80px"
 			widgetVar="sqConformDlg"  severity="alert" 
 			closable="true" appendToBody="true" header="Confirmation">
 
-			<p:panelGrid styleClass="noBorders tr,noBorders td">
-				<p:row>
-					<p:column width="60%" style="text-align:right">
-						<p:commandButton value="#{lbl['lbl.btn.yes']}" update="@form"
-						    onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-						    icon="ui-icon-submit" 
-						    onsuccess="sqConformDlg.hide()"
-							actionListener="#{simpleQuoteBackingBean.submitSimpleQuote('')}" />
-						<p:commandButton value="#{lbl['lbl.btn.no']}" partialSubmit="true" process="@this" 
-						icon="ui-icon-cancel"   onclick="sqConformDlg.hide();" type="button" />
-					</p:column>
-				</p:row>
-			</p:panelGrid>
-			
-		     <p:blockUI block=":form" widgetVar="promptWidget" id="conformDlg">
+			<p:blockUI block="conformDlgId" widgetVar="promptWidget" id="conformDlg">
 				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 			</p:blockUI>
 
+			<p:panel id="conformDlgId">
+				<p:panelGrid styleClass="noBorders tr,noBorders td">
+					<p:row>
+						<p:column width="60%" style="text-align:right">
+							<p:commandButton value="#{lbl['lbl.btn.yes']}" update="@form"
+								onstart="promptWidget.show()" oncomplete="promptWidget.hide();"
+								icon="ui-icon-submit" 	
+								onsuccess="sqConformDlg.hide()"	
+								actionListener="#{simpleQuoteBackingBean.submitSimpleQuote(simpleQuoteBackingBean.managedBean.selectedAction)}" />
+							<p:commandButton value="#{lbl['lbl.btn.no']}"
+								partialSubmit="true" process="@this" icon="ui-icon-cancel"
+								onclick="sqConformDlg.hide();" type="button" />
+						</p:column>
+					</p:row>
+				</p:panelGrid>
+			</p:panel>
 		</p:confirmDialog>
 
 		<div align="right">
@@ -60,7 +60,9 @@
 				<p:commandButton value="#{lbl['lbl.sc.common.submit']}"
 					actionListener="#{simpleQuoteBackingBean.submitPromptAction}"
 				    update="promptId"
-					icon="ui-icon-submit" rendered="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}" />
+					icon="ui-icon-submit" rendered="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}">
+					<f:setPropertyActionListener target="#{simpleQuoteBackingBean.managedBean.selectedAction}" value="#{true ? '' : ''}" />
+				</p:commandButton>
 
 				<p:commandButton value="#{lbl['lbl.sc.common.cancel']}"
 				    onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
@@ -99,38 +101,27 @@
 
 								<c:if test="${action == 'SUBMIT'}">
 									<ui:param name="iconVar" value="ui-icon-submit" />
+								
+									<p:commandButton value="#{action}"
+										rendered="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending Submission'}"
+										styleClass="ui-button" icon="#{iconVar}" 
+										actionListener="#{simpleQuoteBackingBean.submitPromptAction}"
+									    update="promptId">
+										<f:setPropertyActionListener target="#{simpleQuoteBackingBean.managedBean.selectedAction}" value="#{action}" />
+									</p:commandButton>
 								</c:if>
-
-								<c:if test="${action == 'REJECT'}">
-									<ui:param name="iconVar" value="ui-icon-reject" />
-
-								</c:if>
-								<c:if test="${action == 'REVISE'}">
-									<ui:param name="iconVar" value="ui-icon-revise" />
-
-								</c:if>
-								<c:if test="${action == 'APPROVE'}">
-									<ui:param name="iconVar" value="ui-icon-approve" />
-								</c:if>
-								<c:if test="${action == 'ACCEPT'}">
-									<ui:param name="iconVar" value="ui-icon-approve" />
-
-								</c:if>
+								
 								<c:if test="${action == 'CANCEL'}">
 									<ui:param name="iconVar" value="ui-icon-cancel" />
+									
+									<p:commandButton value="#{action}" process="@all" update="@form"
+										rendered="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending Submission'}"
+										styleClass="ui-button" icon="#{iconVar}" 
+										 onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+										actionListener="#{simpleQuoteBackingBean.submitSimpleQuote(action)}" />
 								</c:if>
 
-								<p:commandButton value="#{action}" process="@all" 
-								    onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-									styleClass="ui-button" icon="#{iconVar}" 
-									rendered="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus ne 'Pending Submission'}"
-									actionListener="#{simpleQuoteBackingBean.approverAction(action)}" />
-
-								<p:commandButton value="#{action}" process="@all" update="@form"
-									rendered="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending Submission'}"
-									styleClass="ui-button" icon="#{iconVar}"
-									 onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-									actionListener="#{simpleQuoteBackingBean.submitSimpleQuote(action)}" />
+								
 							</c:forEach></c:if></td>
 					</tr>
 				</table>
