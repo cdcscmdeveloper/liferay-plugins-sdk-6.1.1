@@ -139,11 +139,11 @@
 		</p:fileUpload>
 
 	</p:dialog>
-	<p:confirmDialog message="Are you sure ?" header="Confirmation Message" widgetVar="confirmation1">
-		<p:commandButton id="conf" value="Yes"
+	<p:confirmDialog message="#{lbl['lbl.cm.dialog.cofirm.delete.msg']}" header="#{lbl['lbl.cm.dialog.cofirm.header']}" widgetVar="confirmation1">
+		<p:commandButton id="conf" value="#{lbl['lbl.cm.dialog.cofirm.yes']}"
 			actionListener="#{catalogueBackingBean.deleteDraftItem(-1)}" update="draftSupplierItemID"
 			oncomplete="confirmation1.hide()" />
-		<p:commandButton id="decline" value="No"
+		<p:commandButton id="decline" value="#{lbl['lbl.cm.dialog.cofirm.no']}"
 			onclick="confirmation1.hide()" />
 			<h:inputHidden id="rowIndex"></h:inputHidden>
 	</p:confirmDialog>
