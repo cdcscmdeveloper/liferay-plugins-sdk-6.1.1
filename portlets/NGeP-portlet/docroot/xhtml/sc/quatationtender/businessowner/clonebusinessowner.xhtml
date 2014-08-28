@@ -39,9 +39,10 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.so.creatdtfrom']}" /></td>
-					<td><p:calendar id="crdateFrm" showOn="button"
+					<td><p:calendar
 							value="#{qTBusinessOwnerBackingBean.managedBean.cloneBusinessOwnerSearchBean.fromCreatedDate}"
-							size="30" readonlyInput="true">
+							id="crdateFrm" showOn="button" size="30" readonlyInput="true"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 							<p:ajax event="dateSelect" update="createdtTo" />
 						</p:calendar></td>
 				</tr>
@@ -50,6 +51,7 @@
 					<td><p:calendar id="createdtTo" showOn="button"
 							value="#{qTBusinessOwnerBackingBean.managedBean.cloneBusinessOwnerSearchBean.toCreatedDate}"
 							mindate="#{qTBusinessOwnerBackingBean.managedBean.cloneBusinessOwnerSearchBean.fromCreatedDate}"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 							size="30" readonlyInput="true">
 							<f:attribute name="startDate"
 								value="#{qTBusinessOwnerBackingBean.managedBean.cloneBusinessOwnerSearchBean.fromCreatedDate}" />
@@ -96,7 +98,7 @@
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.so.title']}">
-					<h:outputText value="#{scQt.qtTitle}" />
+					<h:outputText value="#{scQt.qtTitle}" style="white-space: normal;" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.so.procmode']}">
@@ -129,7 +131,7 @@
 				<p:column selectionMode="multiple" style="width:2%" />
 
 				<p:column headerText="#{lbl['lbl.so.bo.name']}">
-					<h:outputText value="#{member.memberName}" />
+					<h:outputText value="#{member.memberName}" style="white-space: normal;" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.so.bo.identification.no']}">
@@ -137,12 +139,12 @@
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.so.bo.designation']}">
-					<h:outputText value="#{member.designation}" />
+					<h:outputText value="#{member.designation}" style="white-space: normal;" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.so.bo.email']}">
 					<h:outputText
-						value="#{member.pmUser.pmAddressTypes[0].pmAddress.email}" />
+						value="#{member.pmUser.pmAddressTypes[0].pmAddress.email}" style="white-space: normal;" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.so.bo.grade']}">
@@ -150,11 +152,13 @@
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.so.bo.pp']}">
-					<h:outputText value="#{member.PNP ? 'Yes' : 'No'}" />
+					<h:outputText
+						value="#{lbl[member.PNP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.so.bo.consolidate']}">
-					<h:outputText value="#{member.consolidateValue ? 'Yes' : 'No'}" />
+					<h:outputText
+						value="#{lbl[member.consolidateValue ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
 				</p:column>
 
 			</p:dataTable>

@@ -7,7 +7,8 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:dialog id="newbusinessownerid" header="#{lbl['lbl.so.bo.new']}"
-		width="900" widgetVar="newbusinessowner" modal="true" position="top">
+		width="950" height="600" widgetVar="newbusinessowner" modal="true"
+		position="top">
 		<p:panel toggleable="true" styleClass="qtAddMember" id="bopanel">
 			<p:messages id="bomessages" showDetail="true" autoUpdate="true"
 				closable="true" showSummary="false" />
@@ -84,7 +85,7 @@
 
 							<p:column headerText="#{lbl['lbl.so.bo.name']}"
 								style="width : 20%">
-								<h:outputText value="#{existuser.userName}" />
+								<h:outputText value="#{existuser.userName}" style="white-space: normal;" />
 							</p:column>
 
 							<p:column headerText="#{lbl['lbl.so.bo.identification.no']}"
@@ -94,7 +95,7 @@
 
 							<p:column headerText="#{lbl['lbl.so.bo.designation']}"
 								style="width : 15%">
-								<h:outputText value="#{existuser.designation}" />
+								<h:outputText value="#{existuser.designation}" style="white-space: normal;" />
 							</p:column>
 
 							<p:column headerText="#{lbl['lbl.so.bo.grade']}"
@@ -110,7 +111,7 @@
 							<p:column headerText="#{lbl['lbl.so.bo.email']}"
 								style="width : 15%">
 								<h:outputText
-									value="#{existuser.pmAddressTypes[0].pmAddress.email}" />
+									value="#{existuser.pmAddressTypes[0].pmAddress.email}" style="white-space: normal;" />
 							</p:column>
 
 						</p:dataTable>
