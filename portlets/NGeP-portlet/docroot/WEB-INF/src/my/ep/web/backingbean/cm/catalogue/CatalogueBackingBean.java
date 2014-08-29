@@ -114,6 +114,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFDataFormat;
@@ -1523,6 +1524,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		// sheet.protectSheet("welcome1");
 
 		CellStyle catalogCellStyle = my_xlsx_workbook.createCellStyle();
+		CreationHelper createHelper = my_xlsx_workbook.getCreationHelper();
 
 		// add the 1st title row
 
@@ -1577,7 +1579,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			dataLs.add(catalog.getMaxOrder());
 			dataLs.add(catalog.getLeadTime());
 
-			addCellToRow(product, no++, dataLs, catalogCellStyle);
+			addCellToRow(product, no++, dataLs, catalogCellStyle, createHelper);
 
 		}
 
@@ -1594,7 +1596,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		for (PmUom obj : uomList) {
 			List dataLs = new Vector();
 			dataLs.add(obj.getUomName());
-			addCellToRow(uomPreload, uomNo++, dataLs, catalogCellStyle);
+			addCellToRow(uomPreload, uomNo++, dataLs, catalogCellStyle, createHelper);
 		}
 
 		uomPreload.enableLocking();
@@ -1610,15 +1612,17 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	}
 
 	public void addCellToRow(XSSFSheet sheet, int count, List colValList,
-			CellStyle catalogCellStyle) throws Exception {
+			CellStyle catalogCellStyle, CreationHelper createHelper) throws Exception {
 
 		Row row = sheet.createRow(count);
 		XSSFCellStyle cs = sheet.getWorkbook().createCellStyle();
 		XSSFDataFormat df = sheet.getWorkbook().createDataFormat();
-		XSSFCellStyle unlockedCellStyle = sheet.getWorkbook().createCellStyle();
-		unlockedCellStyle.setLocked(false);
+		XSSFCellStyle unlockedCellStyle;
 
 		for (int i = 0; i < colValList.size(); i++) {
+			unlockedCellStyle = sheet.getWorkbook().createCellStyle();
+			unlockedCellStyle.setLocked(false);
+			
 			Object colVal = (Object) colValList.get(i);
 
 			Cell cell = row.createCell(i);
@@ -1638,6 +1642,11 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			 */
 
 			if (!(i == 0 || i == 1 || i == 2 || i == 3 || i == 4 || i == 5 || i == 6)) {
+				cell.setCellStyle(unlockedCellStyle);
+			}
+			
+			if(i == 8 || i == 9){
+				unlockedCellStyle.setDataFormat(createHelper.createDataFormat().getFormat("dd/MM/yyyy"));
 				cell.setCellStyle(unlockedCellStyle);
 			}
 
