@@ -20,6 +20,7 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.service.pm.authorization.role.IRoleSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
@@ -225,7 +226,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		try {
 			initialUserProfile();
 			if(id==null){
-				throw new EpException("Please login."); //TODO
+				throw new EpException(MessageConst.ERROR_770015); //TODO
 			}
 			//load user
 			PmUser pmUser = PmCommonUtil.retrieveUserById(id, true);
@@ -269,7 +270,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new EpException("Unable to view User Profile.", new String[]{e.getMessage()}); //TODO exception
+			throw new EpException(MessageConst.ERROR_770016, new String[]{e.getMessage()}); //TODO exception
 		}	
 	}
 	
@@ -330,7 +331,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new EpException("Unable to retrieve/populate address.", new String[]{e.getMessage()}); //TODO exception
+			throw new EpException(MessageConst.ERROR_770017, new String[]{e.getMessage()}); //TODO exception
 		}
 	}
 
@@ -506,7 +507,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			int size = this.getManagedBean().getSelectedUser().getPmUserOrgs().size();
 			PmUserOrg pmUserOrg = this.getManagedBean().getSelectedUser().getPmUserOrgs().get(size-1);
 			if(pmUserOrg.getExpDate()==null){
-				throw new EpException("Expiry Date is mandatory."); //TODO exception
+				throw new EpException(MessageConst.ERROR_770018); //TODO exception
 			}
 		}
 		
@@ -558,7 +559,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				}
 				if(!isValid){
 					this.getManagedBean().getSelectedUser().getPmUserOrgs().get(index).getPmOrgProfile().setPmOrgValidity(new PmOrgValidity());
-					throw new EpException("Org Code is unique."); //TODO exception
+					throw new EpException(MessageConst.ERROR_770019); //TODO exception
 				}
 				
 			}
@@ -644,13 +645,13 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 					}
 					updateReceivingAddressFlag();
 				}else{
-					throw new EpException("Duplicate Roles are selected."); //TODO exception
+					throw new EpException(MessageConst.ERROR_770020); //TODO exception
 				}
 			}else{
-				throw new EpException("Please select a Reponsible Org. Unit."); //TODO exception
+				throw new EpException(MessageConst.ERROR_770021); //TODO exception
 			}
 		}else{
-			throw new EpException("At least one Role must be selected."); //TODO exception
+			throw new EpException(MessageConst.ERROR_770022); //TODO exception
 		}
 		RequestContext.getCurrentInstance().execute("dlRoleOptions.hide()");
 		
@@ -691,7 +692,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			this.getManagedBean().getDeleteUserRoles().clear();
 			updateReceivingAddressFlag();
 		}else{
-			throw new EpException("At least one Role must be selected."); //TODO
+			throw new EpException(MessageConst.ERROR_770022); //TODO
 		}
 	}
 	
@@ -787,7 +788,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new EpException("Unable to retrieve/populate Receiving Address.", new String[]{e.getMessage()}); //TODO exception
+			throw new EpException(MessageConst.ERROR_770023, new String[]{e.getMessage()}); //TODO exception
 		}
 	}
 	
@@ -814,7 +815,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				this.getManagedBean().getSelectedDeliveringAddrTypes().clear();
 				showReceivingAddress();
 			}else{
-				throw new EpException("Duplicate Addresses are selected."); //TODO exception
+				throw new EpException(MessageConst.ERROR_770024); //TODO exception
 			}
 		}
 	}
@@ -835,7 +836,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			this.getManagedBean().getDeleteReceivingAddrTypes().clear();
 			showReceivingAddress();
 		}else{
-			throw new EpException("At least one Receiving Address must be selected."); //TODO
+			throw new EpException(MessageConst.ERROR_770025); //TODO
 		}
 	
 	}
@@ -1207,7 +1208,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			int size = user.getPmUserOrgs().size();
 			user.setOrgTypeCode(user.getPmUserOrgs().get(size-1).getPmOrgProfile().getOrgTypeCode());
 		}else{
-			throw new EpException("At least one Responsible Org. is required."); //TODO
+			throw new EpException(MessageConst.ERROR_770026); //TODO
 		}
 	}
 	
@@ -1328,7 +1329,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 
 								if (isCurrentPairOverlap) {
 									throw new EpException(
-											"Responsible Org. Unit Effective Date and Expiry Date must not overlapping.");
+											MessageConst.ERROR_770027);
 								}
 							}
 						}
@@ -1360,9 +1361,9 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			}
 		}
 		if(activeNumber>1){
-			throw new EpException("Only one active Responsible Org. Unit is required.");
+			throw new EpException(MessageConst.ERROR_770028);
 		}else if(activeNumber==0){
-			throw new EpException("One active Responsible Org. Unit is required.");
+			throw new EpException(MessageConst.ERROR_770029);
 		}
 	}
 	
@@ -1373,33 +1374,33 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	private void validateUser(PmUser user){
 		logger.info("validateUser");
 		if(StringUtils.isBlank(user.getLoginId())){
-			throw new IllegalArgumentException("Login Id is mandatory.");
+			throw new IllegalArgumentException(MessageConst.ERROR_770030);
 		}
 		if(user.getSalutationCode().getSalutationId()==null){
-			throw new IllegalArgumentException("Salutation is mandatory.");
+			throw new IllegalArgumentException(MessageConst.ERROR_770031);
 		}
 		if(StringUtils.isBlank(user.getUserName())){
-			throw new IllegalArgumentException("User Name is mandatory.");
+			throw new IllegalArgumentException(MessageConst.ERROR_770032);
 		}
 		if(user.getIdentificationCode().getParameterId()==null){
-			throw new IllegalArgumentException("Identification Type is mandatory.");
+			throw new IllegalArgumentException(MessageConst.ERROR_770033);
 		}
 		if(StringUtils.isBlank(user.getIdentificationNo())){
-			throw new IllegalArgumentException("Identification No. is mandatory.");
+			throw new IllegalArgumentException(MessageConst.ERROR_770034);
 		}
 		if(user.getPmCountry().getCountryId()==null){
-			throw new IllegalArgumentException("Nationality is mandatory.");
+			throw new IllegalArgumentException(MessageConst.ERROR_770035);
 		}
 		if(StringUtils.isBlank(user.getEmail())){
-			throw new IllegalArgumentException("Email is mandatory.");
+			throw new IllegalArgumentException(MessageConst.ERROR_770036);
 		}
 		if(StringUtils.isBlank(user.getPmUserPreference().getPreferredLanguage())){
-			throw new IllegalArgumentException("Preferred Language is mandatory.");
+			throw new IllegalArgumentException(MessageConst.ERROR_770037);
 		}
 		if(user.getPmUserPreference().getNotifyRemovalDay()==null 
 				|| (user.getPmUserPreference().getNotifyRemovalDay()!=null 
 				&& user.getPmUserPreference().getNotifyRemovalDay()==0)){
-			throw new IllegalArgumentException("Delete Notification is mandatory.");
+			throw new IllegalArgumentException(MessageConst.ERROR_770038);
 		}
 //		if(!StringUtils.isBlank(user.getConfirmPassword()) && !StringUtils.isBlank(user.getPassword()) && StringUtils.isBlank(user.getOldPassword())){
 //			throw new IllegalArgumentException("Old Password is mandatory.");
@@ -1413,28 +1414,28 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	private void validateUserAddress(PmAddress pmAddress){
 		logger.info("validateUserAddress");
 		if(pmAddress.getPmCountry().getCountryId()==null){
-			throw new IllegalArgumentException("Country is mandatory.");
+			throw new IllegalArgumentException(MessageConst.ERROR_770039);
 		}
 
 		if(StringUtils.isBlank(pmAddress.getAddress1())){
-			throw new IllegalArgumentException("Address1 is mandatory.");
+			throw new IllegalArgumentException(MessageConst.ERROR_770040);
 		}
 		
 		if(StringUtils.isBlank(pmAddress.getPostcode())){
-			throw new IllegalArgumentException("Postal Code is mandatory.");
+			throw new IllegalArgumentException(MessageConst.ERROR_770041);
 		}
 		
 		if(pmAddress.getPmState().getStateId()==null){
-			throw new IllegalArgumentException("State is mandatory.");
+			throw new IllegalArgumentException(MessageConst.ERROR_770042);
 		}
 
 		if(pmAddress.getPmDistrict().getDistrictId()==null){
-			throw new IllegalArgumentException("District is mandatory.");
+			throw new IllegalArgumentException(MessageConst.ERROR_770043);
 		}
 		
 		if(this.getManagedBean().isDivisionFlagC()){
 			if(pmAddress.getPmDivision().getDivisionId()==null){
-				throw new IllegalArgumentException("Division is mandatory.");
+				throw new IllegalArgumentException(MessageConst.ERROR_770044);
 			}
 		}
 	
