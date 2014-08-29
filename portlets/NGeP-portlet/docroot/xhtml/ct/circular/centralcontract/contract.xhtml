@@ -8,8 +8,8 @@
 	<p:panel id="contractListPnl" header="#{lbl['lbl.ct.cc.ct']}"
 		toggleable="true" toggleSpeed="500">
 		<p:dataTable id="centralContractDt" var="circularContractsVar" rowIndexVar="index"
-			value="#{centralContractBackingBean.managedBean.circularVer.ctCircularContracts}"
-			selectionMode="single" selection="#{centralContractBackingBean.managedBean.selectedCircularContract}" rowKey="#{circularContractsVar}">
+			value="#{centralContractBackingBean.managedBean.circularVer.ctCircularContracts}" selectionMode="single" 
+			selection="#{centralContractBackingBean.managedBean.selectedCircularContract}" rowKey="#{circularContractsVar}">
 			<ac:paginator for="centralContractDt" />
 			<p:ajax event="rowSelect"
 				update=":form:contractListPnl"
