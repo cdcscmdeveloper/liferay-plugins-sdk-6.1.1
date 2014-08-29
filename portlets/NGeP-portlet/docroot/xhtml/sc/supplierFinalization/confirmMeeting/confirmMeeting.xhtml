@@ -5,6 +5,7 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
@@ -22,12 +23,18 @@
 								action="#{suppFinalMeetingBackingBean.saveAction}"
 								icon="ui-icon-save" 
 								update="@form"/>
+							
+							<ui:repeat var="bpmAction" value="#{suppFinalMeetingBackingBean.managedBean.outComes}">
+								<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 								
-							<p:commandButton value="#{lbl['lbl.btn.submit']}"
-								process="@this" 
-								partialSubmit="true"
-								action="#{suppFinalMeetingBackingBean.submitAction}"
-								icon="ui-icon-submit" />
+								<p:commandButton value="#{lbl[buttonLabel]}"  
+									styleClass="ui-button"
+									icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
+									action="#{suppFinalMeetingBackingBean.submitAction}"
+									partialSubmit="true"
+									process="@form"
+									update="@form" />
+							</ui:repeat>
 						</div>
 						<ui:include src="/xhtml/sc/supplierFinalization/confirmMeeting/suppFinalizationHeader.xhtml"></ui:include>
 
