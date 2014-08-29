@@ -488,27 +488,36 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		getManagedBean().setTempLoginId(id);
 	}
 	
+	private void resetSearchCriteria() {
+		getManagedBean().setSearchDocNo(null);
+		getManagedBean().setStatusDescId(null);
+		getManagedBean().setSearchSuppName(null);
+		getManagedBean().setSearchSuppDoRef(null);
+		getManagedBean().setSearchSuppInvRef(null);
+		getManagedBean().setSearchLoaNo(null);
+		getManagedBean().setSearchContractNo(null);
+		getManagedBean().setSearchContractFromDuration(null);
+		getManagedBean().setSearchContractToDuration(null);
+	}
+	
 	public void selectedDoctype(AjaxBehaviorEvent e) {
 		String id = (String) e.getComponent().getAttributes().get("value");
 		
 		// reset everything to false
-		this.getManagedBean().setCheckDocNo(false);
+		this.getManagedBean().setCheckDocNo(true);
 		this.getManagedBean().setCheckDocType(false);
 		this.getManagedBean().setCheckPoDocType(false);
 		this.getManagedBean().setCheckDoDocType(false);
 		this.getManagedBean().setCheckInDocType(false);
 		this.getManagedBean().setCheckDoInDocType(false);
+		resetSearchCriteria();
 		
 		if(id!=null) {
 			if(id.equals(ParameterConst.DOCTYPE_CONTRACT_ORDER)){
 				this.getManagedBean().setCheckDocType(true);
-				this.getManagedBean().setCheckDocNo(true);
 			}else if(id.equals(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
 				this.getManagedBean().setCheckPoDocType(true);
-				this.getManagedBean().setCheckDocNo(true);
 				getProcurementTypeList();
-			}else if(id.equals(ParameterConst.DOCTYPE_PAYMENT_ADVICE) || id.equals(ParameterConst.DOCTYPE_CONTRACT_REQUEST) || id.equals(ParameterConst.DOCTYPE_PURCHASE_REQUEST)){
-				this.getManagedBean().setCheckDocNo(true);
 			}else if(id.equals(ParameterConst.DOCTYPE_DELIVERY_ORDER)){
 				this.getManagedBean().setCheckDoDocType(true);
 			}else if(id.equals(ParameterConst.DOCTYPE_INVOICE)){
@@ -528,6 +537,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		this.getManagedBean().setCheckDoDocType(false);
 		this.getManagedBean().setCheckInDocType(false);
 		this.getManagedBean().setCheckDoInDocType(false);
+		resetSearchCriteria();
 	}
 	
 	public void searchReset(){
@@ -575,6 +585,10 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 				log.debug("pageChangeListener");
 			}
 			try {
+				if(null == getManagedBean().getSearchOrderType() || null ==getManagedBean().getSearchDocType()){
+					throw new EpException(MessageConst.ERROR_740023);
+				}
+				
 				searchBean.getDataFilterBeans().add(new SearchFilterBean("orderType",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getSearchOrderType()));
 				if(getManagedBean().getSearchDocType()!=null) {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getSearchDocType()));
@@ -598,16 +612,16 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("status.statusId",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getStatusDescId()));
 				}
 				if(getManagedBean().getSearchTitle()!=null && getManagedBean().getSearchTitle()!="") {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("title",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchTitle()));
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("title",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchTitle(), true));
 				}
 				if(getManagedBean().getSearchSuppName()!=null && getManagedBean().getSearchSuppName()!="") {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("smSupplier.companyName",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchSuppName()));
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("smSupplier.companyName",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchSuppName(), true));
 				}
 				if(getManagedBean().getSearchSuppDoRef()!=null && getManagedBean().getSearchSuppDoRef()!="") {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("supplierDoRef",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchSuppDoRef()));
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("supplierDoRef",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchSuppDoRef(), true));
 				}
 				if(getManagedBean().getSearchSuppInvRef()!=null && getManagedBean().getSearchSuppInvRef()!="") {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("supplierInvRef",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchSuppInvRef()));
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("supplierInvRef",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchSuppInvRef(), true));
 				}
 				IUserSO userSO = (IUserSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 				if(isFlFulfilmentRequisitioner()){
