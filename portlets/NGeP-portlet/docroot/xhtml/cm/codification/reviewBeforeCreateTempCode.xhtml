@@ -18,6 +18,7 @@
 			<div style="text-align: right;">
 				<ui:repeat var="action"	value="#{unspscCodeBackingBean.managedBean.action}">
 					<p:commandButton 
+					 disabled="#{(action == 'SUBMIT' and (unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes.size() >=1)) or (action == 'RECOMMEND TO SUPPLIER' and !(unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes.size() >=1))}"
 						value="#{action}"
 						action="#{unspscCodeBackingBean.savetempCode(action)}"
 						update="@form" />
@@ -118,7 +119,7 @@
 						</f:facet>
 						<p:commandLink
 							action="#{unspscCodeBackingBean.removeRecommendCode(rowIndex)}"
-							update=":form:recomemendUnspscId">
+							update="@form">
 							<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
 						</p:commandLink>
 

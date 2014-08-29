@@ -9,9 +9,10 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
-	
-		<p:messages id="searchToRecommendMsgId" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
-			
+
+		<p:messages id="searchToRecommendMsgId" showDetail="true"
+			autoUpdate="true" closable="true" showSummary="false" />
+
 		<h:panelGroup id="cmUNSPSCsearchID">
 
 			<ui:include src="DocumentHeader.xhtml" />
@@ -91,10 +92,14 @@
 			<div style="text-align: right;">
 				<p:commandButton icon="ui-icon-search" value="Search"
 					action="#{codificationBackingBean.unspscSearch}"
-					update="cmUNSPSCsearchID" />
+					update="cmUNSPSCsearchID">
+					<f:param name="itemType"
+						value="#{unspscCodeBackingBean.managedBean.requestCode.itemType}" />
+				</p:commandButton>
 				<p:commandButton value="Back" icon="ui-icon-back"
 					action="#{codificationBackingBean.backToReviewUnspsc}">
-					<f:param name="currentTaskName" value="#{unspscCodeBackingBean.managedBean.taskName}" />
+					<f:param name="currentTaskName"
+						value="#{unspscCodeBackingBean.managedBean.taskName}" />
 				</p:commandButton>
 
 			</div>
@@ -124,7 +129,8 @@
 							rendered="#{!(codificationBackingBean.productCode(unspscObj.unspscCode)) and (unspscObj.unspscLevel eq 3)}">
 						
 							#{unspscObj.unspscCode}
-							<f:param name="currentTaskName" value="#{unspscCodeBackingBean.managedBean.taskName}" />	
+							<f:param name="currentTaskName"
+								value="#{unspscCodeBackingBean.managedBean.taskName}" />
 						</p:commandLink>
 
 						<p:commandLink
@@ -132,7 +138,8 @@
 							rendered="#{codificationBackingBean.productCode(unspscObj.unspscCode) and (unspscObj.unspscLevel eq 3)}">
 						
 							#{unspscObj.unspscCode}
-							<f:param name="currentTaskName" value="#{unspscCodeBackingBean.managedBean.taskName}" />
+							<f:param name="currentTaskName"
+								value="#{unspscCodeBackingBean.managedBean.taskName}" />
 						</p:commandLink>
 
 						<p:commandLink
