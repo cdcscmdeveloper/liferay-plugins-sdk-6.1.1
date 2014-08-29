@@ -36,8 +36,9 @@
 				</th>
 				<td>
 					<p:inputText id="itPreNotifyDay" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.pm.profiles.preferences.notificationremoval']}"
-						value="#{profileManagementBackingBean.managedBean.selectedUser.pmUserPreference.notifyRemovalDay}" size="5" >
-						<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
+						value="#{profileManagementBackingBean.managedBean.selectedUser.pmUserPreference.notifyRemovalDay}" size="5" 
+						 validatorMessage="#{lbl['lbl.pm.profiles.invalidNo']}">
+		
 					</p:inputText>
 						
 						&#160;
