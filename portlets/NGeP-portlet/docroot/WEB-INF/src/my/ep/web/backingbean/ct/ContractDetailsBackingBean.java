@@ -538,9 +538,27 @@ public void ConstructSideTabMenu(){
 	}
 	
 	/*Implementation of search method for contract*/
-	public void searchContract() {
+	public void searchContract() throws Exception {
 		try { 
-			contractDataModel.reloadData();
+			if ((getManagedBean().getCtNumber() == null || getManagedBean().getCtNumber().length() == 0) && 
+				(getManagedBean().getCtName() == null || getManagedBean().getCtName().length() == 0) &&
+				(getManagedBean().getCtCircularNo() == null || getManagedBean().getCtCircularNo().length() == 0) &&
+				(getManagedBean().getCtCircularName() == null || getManagedBean().getCtCircularName().length() == 0) &&
+				(getManagedBean().getCtSupplierId() == null || getManagedBean().getCtSupplierId().length() == 0) &&
+				(getManagedBean().getCtSupplierName() == null || getManagedBean().getCtSupplierName().length() == 0) && 
+				getManagedBean().getCtDateStart() == null && 
+				getManagedBean().getCtDateEnd() == null && 
+				(getManagedBean().getCtPhysicalNo() == null || getManagedBean().getCtPhysicalNo().length() == 0) && 
+				(getManagedBean().getCtLOANo() == null || getManagedBean().getCtLOANo().length() == 0) && 
+				getManagedBean().getCtContractStatus() == 0 &&
+				getManagedBean().getTerminationTypeId() == null) {
+					FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_WARN, null, MessageUtils.getMessage(MessageConst.WARN_751000,
+							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			}
+			else {
+				contractDataModel.reloadData();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), "contract search failed."));
@@ -561,7 +579,9 @@ public void ConstructSideTabMenu(){
 		this.getManagedBean().setCtDateStart(null);	
 		this.getManagedBean().setCtDateEnd(null);	
 		this.getManagedBean().setCtPhysicalNo(null);	
-		this.getManagedBean().setCtLOANo(null);		
+		this.getManagedBean().setCtLOANo(null);
+		this.getManagedBean().setCtContractStatus(0);
+		this.getManagedBean().setTerminationTypeId(null);
 	}
 	
 	public IPagingDataModel<VCtContract> getContractDataModel() {
@@ -585,63 +605,83 @@ public void ConstructSideTabMenu(){
 			if (log.isDebugEnabled()) {
 				log.debug("pageChangeListener");
 			}
-			 Calendar cal = Calendar.getInstance();
+			Calendar cal = Calendar.getInstance();
 			log.info("BackingBean: Performance Testing  Search Function: Time taken to start >>>>"+ cal.getTime());
 			try {
 				if(getManagedBean().getCtNumber()!=null && getManagedBean().getCtNumber().length()>0) {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("contractNo",SearchOperator.OPERATOR_LIKE.value(),
-					getManagedBean().getCtNumber()));
-				
-				}if(getManagedBean().getCtName()!=null && getManagedBean().getCtName().length()>0) {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("contractName",SearchOperator.OPERATOR_LIKE.value(),
-					getManagedBean().getCtName()));	
-				
-				}if(getManagedBean().getCtCircularNo()!=null && getManagedBean().getCtCircularNo().length()>0) {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("circularNo",SearchOperator.OPERATOR_LIKE.value(),
-					getManagedBean().getCtCircularNo()));	
-				
-				}if(getManagedBean().getCtCircularName()!=null && getManagedBean().getCtCircularName().length()>0) {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("circularname",SearchOperator.OPERATOR_LIKE.value(),
-					getManagedBean().getCtCircularName()));	
-				
-				}if(getManagedBean().getCtSupplierId()!=null && getManagedBean().getCtSupplierId().length()>0) {
+					SearchFilterBean filterBean = new SearchFilterBean("contractNo",SearchOperator.OPERATOR_LIKE.value(),
+													getManagedBean().getCtNumber());
+					filterBean.setCaseInsensitive(true);
+					searchBean.getDataFilterBeans().add(filterBean);				
+				}
+				if(getManagedBean().getCtName()!=null && getManagedBean().getCtName().length()>0) {
+					SearchFilterBean filterBean = new SearchFilterBean("contractName",SearchOperator.OPERATOR_LIKE.value(),
+													getManagedBean().getCtName());
+					filterBean.setCaseInsensitive(true);
+					searchBean.getDataFilterBeans().add(filterBean);				
+				}
+				if(getManagedBean().getCtCircularNo()!=null && getManagedBean().getCtCircularNo().length()>0) {
+					SearchFilterBean filterBean = new SearchFilterBean("circularNo",SearchOperator.OPERATOR_LIKE.value(),
+													getManagedBean().getCtCircularNo());
+					filterBean.setCaseInsensitive(true);
+					searchBean.getDataFilterBeans().add(filterBean);				
+				}
+				if(getManagedBean().getCtCircularName()!=null && getManagedBean().getCtCircularName().length()>0) {
+					SearchFilterBean filterBean = new SearchFilterBean("circularname",SearchOperator.OPERATOR_LIKE.value(),
+													getManagedBean().getCtCircularName());
+					filterBean.setCaseInsensitive(true);
+					searchBean.getDataFilterBeans().add(filterBean);				
+				}
+				if(getManagedBean().getCtSupplierId()!=null && getManagedBean().getCtSupplierId().length()>0) {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("smSupplier.supplierId",SearchOperator.OPERATOR_EQUALS.value(),
-					getManagedBean().getCtSupplierId()));	
-				
-				}if(getManagedBean().getCtSupplierName()!=null && getManagedBean().getCtSupplierName().length()>0) {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("companyName",SearchOperator.OPERATOR_LIKE.value(),
-					getManagedBean().getCtSupplierName()));	
-				
-				}if(getManagedBean().getCtDateStart()!=null && getManagedBean().getCtDateEnd()!=null) {
+					getManagedBean().getCtSupplierId()));
+				}
+				if(getManagedBean().getCtSupplierName()!=null && getManagedBean().getCtSupplierName().length()>0) {
+					SearchFilterBean filterBean = new SearchFilterBean("companyName",SearchOperator.OPERATOR_LIKE.value(),
+													getManagedBean().getCtSupplierName());
+					filterBean.setCaseInsensitive(true);
+					searchBean.getDataFilterBeans().add(filterBean);				
+				}
+				if(getManagedBean().getCtDateStart()!=null && getManagedBean().getCtDateEnd()!=null) {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("effDate",SearchOperator.OPERATOR_GREATER_EQUAL.value(), getManagedBean().getCtDateStart()));	
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("expDate",SearchOperator.OPERATOR_LESS_EQUAL.value(), getManagedBean().getCtDateEnd()));		
 				
-				}if(getManagedBean().getCtDateStart()!=null && getManagedBean().getCtDateEnd()==null) {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("effDate",SearchOperator.OPERATOR_EQUALS.value(), getManagedBean().getCtDateStart()));	
-				
-				}if(getManagedBean().getCtDateStart()==null && getManagedBean().getCtDateEnd()!=null) {
-				   searchBean.getDataFilterBeans().add(new SearchFilterBean("expDate",SearchOperator.OPERATOR_EQUALS.value(), getManagedBean().getCtDateEnd()));	
-				
-			   }if(getManagedBean().getCtPhysicalNo()!=null && getManagedBean().getCtPhysicalNo().length()>0) {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("contractPhysicalNo",SearchOperator.OPERATOR_LIKE.value(),
-					getManagedBean().getCtPhysicalNo()));	
-				
-				}if(getManagedBean().getCtLOANo()!=null && getManagedBean().getCtLOANo().length()>0) {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("loaPhysicalNo",SearchOperator.OPERATOR_LIKE.value(),
-					getManagedBean().getCtLOANo()));	
-				}if(getManagedBean().getCtContractStatus()>0) {
+				}
+				if(getManagedBean().getCtDateStart()!=null && getManagedBean().getCtDateEnd()==null) {
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("effDate",SearchOperator.OPERATOR_EQUALS.value(), getManagedBean().getCtDateStart()));					
+				}
+				if(getManagedBean().getCtDateStart()==null && getManagedBean().getCtDateEnd()!=null) {
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("expDate",SearchOperator.OPERATOR_EQUALS.value(), getManagedBean().getCtDateEnd()));	
+				}
+				if(getManagedBean().getCtPhysicalNo()!=null && getManagedBean().getCtPhysicalNo().length()>0) {
+				   	SearchFilterBean filterBean = new SearchFilterBean("contractPhysicalNo",SearchOperator.OPERATOR_LIKE.value(),
+				   									getManagedBean().getCtPhysicalNo());
+					filterBean.setCaseInsensitive(true);
+					searchBean.getDataFilterBeans().add(filterBean);					
+				}
+				if(getManagedBean().getCtLOANo()!=null && getManagedBean().getCtLOANo().length()>0) {
+					SearchFilterBean filterBean = new SearchFilterBean("loaPhysicalNo",SearchOperator.OPERATOR_LIKE.value(),
+													getManagedBean().getCtLOANo());
+					filterBean.setCaseInsensitive(true);
+					searchBean.getDataFilterBeans().add(filterBean);					
+				}
+				if(getManagedBean().getCtContractStatus()>0) {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("status",SearchOperator.OPERATOR_EQUALS.value(),
-					getManagedBean().getCtContractStatus()));	
-				}if(getManagedBean().getTerminationTypeId() != null) {
+					getManagedBean().getCtContractStatus()));					
+				}
+				if(getManagedBean().getTerminationTypeId() != null) {
 					String parameterCode = retrieveParameterById(getManagedBean().getTerminationTypeId());
 					if(parameterCode.equalsIgnoreCase(ContractConst.TR_LETTER_TERMINATE)) {
 						searchBean.getDataFilterBeans().add(new SearchFilterBean("terminate",SearchOperator.OPERATOR_EQUALS.value(), 1));	
-					}else if(parameterCode.equalsIgnoreCase(ContractConst.TR_LETTER_MUTUAL)) {
+					}
+					else if(parameterCode.equalsIgnoreCase(ContractConst.TR_LETTER_MUTUAL)) {
 						searchBean.getDataFilterBeans().add(new SearchFilterBean("mutualTerminate",SearchOperator.OPERATOR_EQUALS.value(), 1));	
-					}else if(parameterCode.equalsIgnoreCase(ContractConst.TR_LETTER_REMEDY)) {
+					}
+					else if(parameterCode.equalsIgnoreCase(ContractConst.TR_LETTER_REMEDY)) {
 						searchBean.getDataFilterBeans().add(new SearchFilterBean("remedy",SearchOperator.OPERATOR_EQUALS.value(), 1));	
 					}
 				}
+				
 				contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 				ContractReqDTO reqDTO = new ContractReqDTO();
 				reqDTO.setvCtContractSearchBean(searchBean);
@@ -1803,20 +1843,28 @@ public void ConstructSideTabMenu(){
 						(getManagedBean().getPtjCodeNameSearchValues() != null || getManagedBean().getPtjCodeNameSearchValues().equalsIgnoreCase(""))){
 					   
 					if(getManagedBean().getPtjCodeName().equalsIgnoreCase("Code") && getManagedBean().getPtjSearchtype().equalsIgnoreCase("E")){
-					      searchBean.getDataFilterBeans().add(new SearchFilterBean(
-							  "pmOrgValidity.orgCode", SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getPtjCodeNameSearchValues().toUpperCase()));
+						SearchFilterBean filterBean = new SearchFilterBean("pmOrgValidity.orgCode",
+								  						SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getPtjCodeNameSearchValues());
+						filterBean.setCaseInsensitive(true);
+					    searchBean.getDataFilterBeans().add(filterBean);
 				
 					}else if(getManagedBean().getPtjCodeName().equalsIgnoreCase("Code") && getManagedBean().getPtjSearchtype().equalsIgnoreCase("L")){
-						 searchBean.getDataFilterBeans().add(new SearchFilterBean(
-								  "pmOrgValidity.orgCode", SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getPtjCodeNameSearchValues().toUpperCase()));
+						SearchFilterBean filterBean = new SearchFilterBean("pmOrgValidity.orgCode",
+								  						SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getPtjCodeNameSearchValues());
+						filterBean.setCaseInsensitive(true);
+					    searchBean.getDataFilterBeans().add(filterBean);
 					
 					}else if(getManagedBean().getPtjCodeName().equalsIgnoreCase("Name") && getManagedBean().getPtjSearchtype().equalsIgnoreCase("E")){
-						 searchBean.getDataFilterBeans().add(new SearchFilterBean(
-								  "pmOrgValidity.orgName", SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getPtjCodeNameSearchValues().toUpperCase()));
+						SearchFilterBean filterBean = new SearchFilterBean("pmOrgValidity.orgName",
+														SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getPtjCodeNameSearchValues());
+						filterBean.setCaseInsensitive(true);
+					    searchBean.getDataFilterBeans().add(filterBean);
 					
 					}else if(getManagedBean().getPtjCodeName().equalsIgnoreCase("Name") && getManagedBean().getPtjSearchtype().equalsIgnoreCase("L")){
-						 searchBean.getDataFilterBeans().add(new SearchFilterBean(
-								  "pmOrgValidity.orgName", SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getPtjCodeNameSearchValues().toUpperCase()));
+						SearchFilterBean filterBean = new SearchFilterBean("pmOrgValidity.orgName",
+														SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getPtjCodeNameSearchValues());
+						filterBean.setCaseInsensitive(true);
+					    searchBean.getDataFilterBeans().add(filterBean);
 					}
 				}
 				

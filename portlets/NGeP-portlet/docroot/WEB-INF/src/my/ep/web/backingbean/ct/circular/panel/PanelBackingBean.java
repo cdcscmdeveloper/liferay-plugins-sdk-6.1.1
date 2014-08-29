@@ -352,9 +352,23 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		this.getManagedBean().setSearchStatusId(null);
 	}
 	
-	public void searchCircularVer() {
-		try { 
-			circularVerPagingDataModel.reloadData();
+	public void searchCircularVer() throws Exception {
+		try {
+			if ((getManagedBean().getSearchCircularNo() == null || getManagedBean().getSearchCircularNo().length() == 0) && 
+				(getManagedBean().getSearchCircularName() == null || getManagedBean().getSearchCircularName().length() == 0) &&
+				(getManagedBean().getSearchSupplierName() == null || getManagedBean().getSearchSupplierName().length() == 0) &&
+				(getManagedBean().getSearchFileRefNo() == null || getManagedBean().getSearchFileRefNo().length() == 0) &&
+				(getManagedBean().getSearchItemName() == null || getManagedBean().getSearchItemName().length() == 0) &&
+				getManagedBean().getSearchStartDate() == null &&
+				getManagedBean().getSearchEndDate() == null &&
+				getManagedBean().getSearchStatusId() == null) {
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_WARN, null, MessageUtils.getMessage(MessageConst.WARN_751000,
+							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			}
+			else {
+				circularVerPagingDataModel.reloadData();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), "circular search failed."));
@@ -397,19 +411,34 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			try {				
 				searchBean.getDataFilterBeans().add(new SearchFilterBean("ctCircular.circularType",SearchOperator.OPERATOR_EQUALS.value(),ContractConst.CIRCULAR_DOC_TYPE_PANEL));
 				if(getManagedBean().getSearchCircularNo()!=null && getManagedBean().getSearchCircularNo().length()>0) {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("circularNo",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchCircularNo()));	
+					SearchFilterBean filterBean = new SearchFilterBean("circularNo",
+													SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchCircularNo());
+					filterBean.setCaseInsensitive(true);
+					searchBean.getDataFilterBeans().add(filterBean);	
 				}
 				if(getManagedBean().getSearchCircularName()!=null && getManagedBean().getSearchCircularName().length()>0) {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("name",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchCircularName()));	
+					SearchFilterBean filterBean = new SearchFilterBean("name",
+													SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchCircularName());
+					filterBean.setCaseInsensitive(true);
+					searchBean.getDataFilterBeans().add(filterBean);
 				}
 				if(getManagedBean().getSearchSupplierName()!=null && getManagedBean().getSearchSupplierName().length()>0) {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("ctPanelItems.ctPanelSuppliers.supplier.companyName",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchSupplierName()));
+					SearchFilterBean filterBean = new SearchFilterBean("ctPanelItems.ctPanelSuppliers.supplier.companyName",
+													SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchSupplierName());
+					filterBean.setCaseInsensitive(true);
+					searchBean.getDataFilterBeans().add(filterBean);
 				}			
 				if(getManagedBean().getSearchFileRefNo()!=null && getManagedBean().getSearchFileRefNo().length()>0) {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("circularFileRefNo",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchFileRefNo()));	
+					SearchFilterBean filterBean = new SearchFilterBean("circularFileRefNo",
+													SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchFileRefNo());
+					filterBean.setCaseInsensitive(true);
+					searchBean.getDataFilterBeans().add(filterBean);
 				}	
 				if(getManagedBean().getSearchItemName()!=null && getManagedBean().getSearchItemName().length()>0) {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("ctPanelItems.itemName",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchItemName()));	
+					SearchFilterBean filterBean = new SearchFilterBean("ctPanelItems.itemName",
+													SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchItemName());
+					filterBean.setCaseInsensitive(true);
+					searchBean.getDataFilterBeans().add(filterBean);
 				
 				}if(getManagedBean().getSearchStartDate()!=null && getManagedBean().getSearchEndDate()!=null) {
 				    searchBean.getDataFilterBeans().add(new SearchFilterBean("startDate",SearchOperator.OPERATOR_GREATER_EQUAL.value(), getManagedBean().getSearchStartDate()));	
