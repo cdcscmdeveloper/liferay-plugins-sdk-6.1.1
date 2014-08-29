@@ -14,10 +14,12 @@
 					<tr>
 						<th width="20%">
 							<p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.loginid']}" />
+							<p:outputLabel value="*" styleClass="mandatory" />
 						</th>
 						<td>
 							<p:inputText styleClass="ppDisplayTextM" id="itLoginId" 
-								label="#{lbl['lbl.pm.profiles.userdetails.loginid']}" required="true"
+								label="#{lbl['lbl.pm.profiles.userdetails.loginid']}" 
+								required="#{!empty param['disableValidation']}"
 								disabled="#{!profileManagementBackingBean.managedBean.selectedUser.brandNew}"
 								value="#{profileManagementBackingBean.managedBean.selectedUser.loginId}"/>
 							<p:message id="itLoginIdMsg" for="itLoginId" display="icon" />
@@ -44,7 +46,8 @@
 							<p:outputLabel value="*" styleClass="mandatory" />
 						</th>
 						<td>
-							<p:selectOneMenu styleClass="ppDropDownWidthM" id="somSalutation" required="true"
+							<p:selectOneMenu styleClass="ppDropDownWidthM" id="somSalutation" 
+								required="#{!empty param['disableValidation']}"
 								label="#{lbl['lbl.pm.profiles.userdetails.salutation']}"
 								value="#{profileManagementBackingBean.managedBean.selectedUser.salutationCode.salutationId}">
 								<f:selectItems value="#{profileManagementBackingBean.salutationOptions()}" />
@@ -61,7 +64,8 @@
 							<p:outputLabel value="*" styleClass="mandatory" />
 						</th>
 						<td>
-							<p:inputText styleClass="ppDisplayTextM" id="itUserName" required="true"
+							<p:inputText styleClass="ppDisplayTextM" id="itUserName" 
+								required="#{!empty param['disableValidation']}"
 								label="#{lbl['lbl.pm.profiles.userdetails.username']}"
 								value="#{profileManagementBackingBean.managedBean.selectedUser.userName}"/>
 							<p:message id="itUserNameMsg" for="itUserName" display="icon" />
@@ -76,7 +80,8 @@
 							<p:outputLabel value="*" styleClass="mandatory" />
 						</th>
 						<td>
-							<p:selectOneMenu styleClass="ppDropDownWidthM" id="somIdType" required="true"
+							<p:selectOneMenu styleClass="ppDropDownWidthM" id="somIdType" 
+								required="#{!empty param['disableValidation']}"
 								label="#{lbl['lbl.pm.profiles.userdetails.idtype']}"
 								disabled="#{!profileManagementBackingBean.managedBean.selectedUser.brandNew}"
 								value="#{profileManagementBackingBean.managedBean.selectedUser.identificationCode.parameterId}">
@@ -98,7 +103,8 @@
 						<td>
 							<c:choose>
 								<c:when test="#{profileManagementBackingBean.managedBean.selectedUser.identificationCode.parameterCode == ProfileManagementConst.newIc}">
-									<p:inputText id="itIdentityNo" styleClass="ppDisplayTextM" required="true"
+									<p:inputText id="itIdentityNo" styleClass="ppDisplayTextM" 
+										required="#{!empty param['disableValidation']}"
 										label="#{lbl['lbl.pm.profiles.userdetails.idno']}"
 										disabled="#{!profileManagementBackingBean.managedBean.selectedUser.brandNew}"
 										value="#{profileManagementBackingBean.managedBean.selectedUser.identificationNo}"
@@ -109,7 +115,8 @@
 								</c:when>
 								
 								<c:otherwise>
-									<p:inputText id="itIdentityNo" styleClass="ppDisplayTextM" required="true"
+									<p:inputText id="itIdentityNo" styleClass="ppDisplayTextM" 
+										required="#{!empty param['disableValidation']}"
 										label="#{lbl['lbl.pm.profiles.userdetails.idno']}"
 										disabled="#{!profileManagementBackingBean.managedBean.selectedUser.brandNew}"
 										value="#{profileManagementBackingBean.managedBean.selectedUser.identificationNo}"
@@ -130,7 +137,8 @@
 							<p:outputLabel value="*" styleClass="mandatory" />
 						</th>
 						<td>
-							<p:selectOneMenu styleClass="ppDropDownWidthM" id="somNationality" required="true"
+							<p:selectOneMenu styleClass="ppDropDownWidthM" id="somNationality" 
+								required="#{!empty param['disableValidation']}"
 								label="#{lbl['lbl.pm.profiles.userdetails.nationality']}"
 								value="#{profileManagementBackingBean.managedBean.selectedUser.pmCountry.countryId}">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" /> 
@@ -214,7 +222,7 @@
 				</th>	  
 		        <td>
 		        	<p:selectOneMenu value="#{profileManagementBackingBean.managedBean.userAddress.pmCountry.countryId}" 
-		        		styleClass="ppDropDownWidthM" id="somCountry" required="true"
+		        		styleClass="ppDropDownWidthM" id="somCountry" required="#{!empty param['disableValidation']}"
 		        		label="#{lbl['lbl.pm.profiles.userdetails.country']}">
 	            	     <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" /> 		             
 						 <f:selectItems value="#{profileManagementBackingBean.getCountryList()}"
@@ -232,7 +240,7 @@
   					<p:outputLabel value="*" styleClass="mandatory" />
 				</th>	  
 			    <td>
-			    	<p:inputText id="itUserAdd1" required="true" label="#{lbl['lbl.pm.profiles.userdetails.addressone']}"
+			    	<p:inputText id="itUserAdd1" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.pm.profiles.userdetails.addressone']}"
 			    		value="#{profileManagementBackingBean.managedBean.userAddress.address1}" styleClass="ppDisplayTextL" />
 		    		<p:message id="itUserAdd1Msg" for="itUserAdd1" display="icon" />
 		    	</td>	
@@ -265,7 +273,7 @@
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</th>	 
 		    	<td>
-		    		<p:inputText id="itPostcode" required="true" label="#{lbl['lbl.pm.profiles.userdetails.postcode']}"
+		    		<p:inputText id="itPostcode" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.pm.profiles.userdetails.postcode']}"
 		    			value="#{profileManagementBackingBean.managedBean.userAddress.postcode}" styleClass="ppDisplayTextM">
 	    				<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
 	    			</p:inputText>
@@ -280,7 +288,7 @@
   					<p:outputLabel value="*" styleClass="mandatory" />
 				</th>  
 		        <td>
-		        	<p:selectOneMenu id="somStateC" styleClass="ppDropDownWidthM" required="true"
+		        	<p:selectOneMenu id="somStateC" styleClass="ppDropDownWidthM" required="#{!empty param['disableValidation']}"
 		        		label="#{lbl['lbl.pm.profiles.userdetails.state']}"
 		        		disabled="#{profileManagementBackingBean.managedBean.userAddress.pmCountry.countryId==null}"
 		        		value="#{profileManagementBackingBean.managedBean.userAddress.pmState.stateId}" >
@@ -302,7 +310,7 @@
 		        <td>
 		        	<p:selectOneMenu id="somDivisionC" disabled="#{!profileManagementBackingBean.managedBean.divisionFlagC}"
 		        		value="#{profileManagementBackingBean.managedBean.userAddress.pmDivision.divisionId}"
-		        		required="#{profileManagementBackingBean.managedBean.divisionFlagC}" 
+		        		required="#{!empty param['disableValidation'] and profileManagementBackingBean.managedBean.divisionFlagC}" 
 		        		label="#{lbl['lbl.pm.profiles.userdetails.division']}"
 		        		styleClass="ppDropDownWidthM"> 
 					 	<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}"/>
@@ -319,7 +327,7 @@
 	            	<p:outputLabel value="*" styleClass="mandatory" />
             	</th> 
 		        <td>
-		        	<p:selectOneMenu id="somDistrictC" required="true" label="#{lbl['lbl.pm.profiles.userdetails.district']}"
+		        	<p:selectOneMenu id="somDistrictC" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.pm.profiles.userdetails.district']}"
 		        		disabled="#{profileManagementBackingBean.managedBean.userAddress.pmState.stateId==null}"
 		        		value="#{profileManagementBackingBean.managedBean.userAddress.pmDistrict.districtId}"
 		              	styleClass="ppDropDownWidthM"> 
@@ -337,7 +345,7 @@
 			    	<p:outputLabel value="*" styleClass="mandatory" />
 		    	</td>
 		        <td>
-		        	<p:selectOneMenu id="somCityC" required="true" label="#{lbl['lbl.pm.profiles.userdetails.citytown']}"
+		        	<p:selectOneMenu id="somCityC" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.pm.profiles.userdetails.citytown']}"
 		        		disabled="#{profileManagementBackingBean.managedBean.userAddress.pmDistrict.districtId==null}"
 		        		value="#{profileManagementBackingBean.managedBean.userAddress.pmCity.cityId}"
     					styleClass="ppDropDownWidthM"> 
@@ -358,10 +366,11 @@
   					<p:outputLabel value="*" styleClass="mandatory" />
 				</th>  
 			    <td>
-			    	<p:inputText id="itEmail" required="true" label="#{lbl['lbl.pm.profiles.userdetails.email']}"
+			    	<p:inputText id="itEmail" required="#{!empty param['disableValidation']}" 
+			    		label="#{lbl['lbl.pm.profiles.userdetails.email']}"
 			    		value="#{profileManagementBackingBean.managedBean.selectedUser.email}" styleClass="ppDisplayTextM"  
 			    		validatorMessage="#{lbl['lbl.pm.profiles.invalidEmail']}">
-						<f:validateRegex
+						<f:validateRegex disabled="#{empty param['disableValidation']}"
 							pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
 					</p:inputText> 
 			    		
