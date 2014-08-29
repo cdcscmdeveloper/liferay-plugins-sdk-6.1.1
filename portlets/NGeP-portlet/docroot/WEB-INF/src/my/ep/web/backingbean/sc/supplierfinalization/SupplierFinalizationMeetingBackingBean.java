@@ -46,6 +46,8 @@ import my.ep.dto.sc.quationtender.MeetingReqDTO;
 import my.ep.dto.sc.quationtender.MeetingResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
+import my.ep.factory.EpLogger;
+import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRole;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -71,6 +73,7 @@ import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+import my.ep.web.backingbean.sc.loa.LOADetailBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -84,6 +87,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pp.common.CommonMethod;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
 
@@ -96,19 +100,18 @@ import org.primefaces.event.SelectEvent;
 @RequestScoped
 public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingBean<SupplierFinalizationMeetingManagedBean> {
 	
-	//temporary
-	Long qtId = 146L;
+	public static Logger log = EpLogger.getLogger(LOADetailBackingBean.class);
+
+	private void debugLogger(Object message) {
+		if (log.isDebugEnabled()) {
+			log.debug(message);
+		}
+		log.info(message);
+	}
+	
 	String committeeType = ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A;
 	
-	public SupplierFinalizationMeetingBackingBean() {
-		if(getManagedBean().getScQt() == null){
-			retriveQTDetails();
-		}
-		
-		if(getManagedBean().getScQtMeetings() == null){
-			retriveMeetingDetails();
-		}
-		
+	public SupplierFinalizationMeetingBackingBean() {		
 		if (this.getManagedBean().getCloneQtnTenderSearchBean() == null) {
 			this.getManagedBean().setCloneQtnTenderSearchBean(new QtnTenderSearchBean());
 		}
@@ -116,9 +119,30 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 			this.getManagedBean().setCommitteMember(new ScCommitteeMember());
 		}
 	}
+	
+	public void preRenderView() {
+		debugLogger("preRenderView");
 
-//Start Header - QT Details
-	public void retriveQTDetails() {
+		try {
+			SCEvaluationDataType dataType = getBpmTaskDetails(SCEvaluationDataType.class);
+
+			Long qtId = Long.valueOf(dataType.getQtId());
+			
+			//Long qtId = 146L;
+
+			retriveQTDetails(qtId);
+			retriveMeetingDetails(qtId);
+
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler()
+					.handleNavigation(fc, null, QTConstants.FC_COORDINATE_MEETING_PAGE);
+		} catch (Exception e) {
+			handleException(e);
+		}
+	}
+
+	//Start Header - QT Details
+	public void retriveQTDetails(Long qtId) {
 		IQTDetailSO qtDetailSO;
 		try {
 			qtDetailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
@@ -135,11 +159,11 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 			qtDetailSO = null;
 		}
 	}
-//End Header - QT Details
+	//End Header - QT Details
 	
 	
-//Start Meeting Details
-	public void retriveMeetingDetails() {
+	//Start Meeting Details
+	public void retriveMeetingDetails(Long qtId) {
 		IQTMeetingSO qtMeetingSO;
 		try {
 			qtMeetingSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTMeetingSO.class);
@@ -594,6 +618,9 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 		IQTDetailSO qtDetailSO = null;
 		try {
 			qtDetailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			
+			Long qtId = getManagedBean().getScQt().getQtId();
+			
 			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 			reqDTO.setQtId(qtId);
 			QuationTenderResDTO resDTO = qtDetailSO.retriveQTDetails(reqDTO);
@@ -817,9 +844,9 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 			metReqDtO.setScQtCommitte(scQtCommittee);
 		
 			IQTMeetingSO qtMeetingSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQTMeetingSO.class);
-			qtMeetingSO.saveQTDtl(metReqDtO);
+			MeetingResDTO meetingResDTO = qtMeetingSO.saveQTDtl(metReqDtO);
 			
-			retriveMeetingDetails();
+			retriveMeetingDetails(meetingResDTO.getQtCommittee().getScQt().getQtId());
 			FacesContext.getCurrentInstance().addMessage( null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Supplier FInalization Meeting Saved Successfully", ""));
 		} finally {
 

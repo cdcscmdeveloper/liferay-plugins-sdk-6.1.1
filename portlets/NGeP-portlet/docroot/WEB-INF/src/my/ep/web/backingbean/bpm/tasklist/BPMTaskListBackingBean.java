@@ -284,6 +284,22 @@ public class BPMTaskListBackingBean extends
 		temp.put(SCProcessNameConst.EC_EVALUATION_PROCESS_NAME
 				+ SCProcessNameConst.SIGNOFF_EC_EVALUATION,
 				"proposal-evaluation");
+		
+		temp.put(SCProcessNameConst.SUPPLIER_FINALIZATION_PROCESS_NAME
+				+ SCProcessNameConst.COORDINATE_FC_MEETING,
+				SourcingConstants.FC_COORDINATE_MEETING_PAGE);
+		temp.put(SCProcessNameConst.SUPPLIER_FINALIZATION_PROCESS_NAME
+				+ SCProcessNameConst.UPDATE_FC_SELECTION,
+				SourcingConstants.FC_SUPPLIER_FINALIZATION_PAGE);
+		temp.put(SCProcessNameConst.SUPPLIER_FINALIZATION_PROCESS_NAME
+				+ SCProcessNameConst.FINALISE_FC_SELECTION,
+				SourcingConstants.FC_SUPPLIER_FINALIZATION_PAGE);
+		temp.put(SCProcessNameConst.SUPPLIER_FINALIZATION_PROCESS_NAME
+				+ SCProcessNameConst.ENDORSE_FC_SELECTION,
+				SourcingConstants.FC_SUPPLIER_FINALIZATION_PAGE);
+		temp.put(SCProcessNameConst.SUPPLIER_FINALIZATION_PROCESS_NAME
+				+ SCProcessNameConst.SIGNOFF_FC_SELECTION,
+				SourcingConstants.FC_SUPPLIER_FINALIZATION_PAGE);
 
 		this.getManagedBean().setBpmMap(temp);
 

@@ -49,6 +49,7 @@ import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
@@ -123,26 +124,34 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 	public static final int ONLINE_BIDDING_ACTIVE_INDEX_SUMMARY = 0;
 	public static final int ONLINE_BIDDING_ACTIVE_INDEX_ENDORSEMENT = 1;
 	
-	
-	//temporary
-	Long qtId = 146L;
 	String committeeType = ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A;
 	
 	public SupplierFinalizationBackingBean() {
-		if(getManagedBean().getScQt() == null){
-			retrieveQTDetails();
-		}
-		
-		if(getManagedBean().getScQtFinalization() == null){
-			retrieveSupplierFinalizationDtls();
-		}
-		
-		if(this.getManagedBean().getMeetingList() == null){
-			retrievePreparationDtls();
+	}
+	
+	public void preRenderView() {
+		debugLogger("preRenderView");
+
+		try {
+			SCEvaluationDataType dataType = getBpmTaskDetails(SCEvaluationDataType.class);
+
+			Long qtId = Long.valueOf(dataType.getQtId());
+			
+			//Long qtId = 146L;
+
+			retrieveQTDetails(qtId);
+			retrieveSupplierFinalizationDtls(qtId);
+			retrievePreparationDtls(qtId);
+
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler()
+					.handleNavigation(fc, null, QTConstants.FC_SUPPLIER_FINALIZATION_PAGE);
+		} catch (Exception e) {
+			handleException(e);
 		}
 	}
 	
-	public void retrieveQTDetails() {
+	public void retrieveQTDetails(Long qtId) {
 		IQTDetailSO qtDetailSO;
 		try {
 			qtDetailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
@@ -187,7 +196,10 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 	private void preparationRetrival(){
 		this.getManagedBean().setActiveIndex(ACTIVE_INDEX_PREPARATION);
 		this.getManagedBean().setPrepareActiveIndex(PREPARE_ACTIVE_INDEX_MEETING);
-		retrievePreparationDtls();
+		
+		Long qtId = getManagedBean().getScQt().getQtId();
+		
+		retrievePreparationDtls(qtId);
 	}
 	
 	private void biefingPaperRetrival(){
@@ -198,7 +210,9 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 	private void supplierFinalizationRetrival(){
 		this.getManagedBean().setActiveIndex(ACTIVE_INDEX_SUPP_FINALIZATION);
 		
-		retrieveSupplierFinalizationDtls();
+		Long qtId = getManagedBean().getScQt().getQtId();
+		
+		retrieveSupplierFinalizationDtls(qtId);
 		decisionEvent();
 		recommendTypeEvent();
 		fwdHigherAuthorityEvent();
@@ -235,7 +249,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		}
 	}*/
 	
-	public void retrievePreparationDtls() {
+	public void retrievePreparationDtls(Long qtId) {
 		debugLogger("..In retrievePreparationDtls()..");
 		IQTMeetingSO meetingSO = null;
 		try {
@@ -493,8 +507,11 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 	}
 	
 	private void renewSessionAndRetrieve(int activeIndex){
+		Long qtId = getManagedBean().getScQt().getQtId();
+		
 		renewSesionObject();
-		retrieveQTDetails();
+		
+		retrieveQTDetails(qtId);
 		
 		switch (activeIndex) {
 		case 0:
@@ -779,6 +796,8 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		IQTSuppFinalizationSO qtSuppFinalizationSO;
 		try {
 			qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
+			
+			Long qtId = getManagedBean().getScQt().getQtId();
 
 			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
 			ScQtFinalization scQtFinalization = this.getManagedBean().getScQtFinalization();
@@ -996,13 +1015,13 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		return scQtReport;
 	}*/
 	
-	private void retrieveSupplierFinalizationDtls() {
+	private void retrieveSupplierFinalizationDtls(Long qtId) {
 		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
 		try {
 			qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
 			
 			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
-			reqDTO.setQtId(qtId);//FIXME
+			reqDTO.setQtId(qtId);
 			
 			SuppFinalizationResDTO resDTO = qtSuppFinalizationSO.retrieveSupplierFinalizationDtls(reqDTO);
 			if(resDTO.getScQtFinalization() != null){
@@ -1170,8 +1189,10 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		try {
 			meetingSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTMeetingSO.class);
 
+			Long qtId = getManagedBean().getScQt().getQtId();
+			
 			MeetingReqDTO reqDTO = new MeetingReqDTO();
-			reqDTO.setQtId(qtId);//FIXME
+			reqDTO.setQtId(qtId);
 			reqDTO.setCommitteType(committeeType);
 			reqDTO.setIsAttended(null);
 			
@@ -1446,6 +1467,8 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		ICommitteSO committeSO = null;
 		try{
 			committeSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
+			
+			Long qtId = getManagedBean().getScQt().getQtId();
 			
 			CommitteReqDTO reqDTO = new CommitteReqDTO();
 			reqDTO.setQtId(qtId);

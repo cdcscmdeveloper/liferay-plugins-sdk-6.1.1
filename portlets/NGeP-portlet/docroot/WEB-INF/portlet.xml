@@ -1992,7 +1992,7 @@
 	</portlet>
 	<portlet>
 		<portlet-name>templateSpec</portlet-name>
-		<display-name>templateSpec</display-name>
+		<display-name>Template Specification Maintenance</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
@@ -2004,8 +2004,8 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>templateSpec</title>
-			<short-title>templateSpec</short-title>
+			<title>Template Specification Maintenance</title>
+			<short-title>Template Specification Maintenance</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
@@ -2020,41 +2020,7 @@
 		<security-role-ref>
 			<role-name>user</role-name>
 		</security-role-ref>
-	</portlet>
-
-
-	<portlet>
-		<portlet-name>scProposal</portlet-name>
-		<display-name>Supplier Proposal</display-name>
-		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
-		<init-param>
-			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/sc/supplierproposal/supplierProposalMain.xhtml</value>
-		</init-param>
-		<expiration-cache>0</expiration-cache>
-		<supports>
-			<mime-type>text/html</mime-type>
-			<portlet-mode>view</portlet-mode>
-		</supports>
-		<portlet-info>
-			<title>Supplier Proposal</title>
-			<short-title>Supplier Proposal</short-title>
-			<keywords></keywords>
-		</portlet-info>
-		<security-role-ref>
-			<role-name>administrator</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>guest</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>power-user</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>user</role-name>
-		</security-role-ref>
-	</portlet>
-	
+	</portlet>	
 	<portlet>
 		<portlet-name>scLoiList</portlet-name>
 		<display-name>LOI List</display-name>
@@ -3448,7 +3414,7 @@
 	 </portlet>
 	   <portlet>
 	 	<portlet-name>scSupplierProposal</portlet-name>
-	 	<display-name>scSupplierProposal</display-name>
+	 	<display-name>Prepare Proposal</display-name>
 	 	<portlet-class>
 	 		org.portletfaces.bridge.GenericFacesPortlet
 	 	</portlet-class>
@@ -3462,8 +3428,8 @@
 	 		<portlet-mode>view</portlet-mode>
 	 	</supports>
 	 	<portlet-info>
-	 		<title>scSupplierProposal</title>
-	 		<short-title>NewJSFPortlet</short-title>
+	 		<title>Prepare Proposal</title>
+	 		<short-title>Prepare Proposal</short-title>
 	 		<keywords></keywords>
 	 	</portlet-info>
 	 	<security-role-ref>
@@ -3614,14 +3580,14 @@
 	 </portlet>
 	<portlet>
 	 	<portlet-name>scSupplierFinalizationMeetingConfirmation</portlet-name>
-	 	<display-name>Supplier Finalization Meeting Confirmation</display-name>
+	 	<display-name>Supplier Finalization Meeting</display-name>
 	 	<portlet-class>
 	 		org.portletfaces.bridge.GenericFacesPortlet
 	 	</portlet-class>
 	 	<init-param>
 	 		<name>javax.portlet.faces.defaultViewId.view</name>
 	 		<value>
-	 			/xhtml/sc/supplierFinalization/confirmMeeting/confirmMeeting.xhtml
+	 			/xhtml/sc/supplierFinalization/confirmMeeting/preRenderView.xhtml
 	 		</value>
 	 	</init-param>
 	 	<expiration-cache>0</expiration-cache>
@@ -3630,8 +3596,8 @@
 	 		<portlet-mode>view</portlet-mode>
 	 	</supports>
 	 	<portlet-info>
-	 		<title>Supplier Finalization Meeting Confirmation</title>
-	 		<short-title>Supplier Finalization Meeting Confirmation</short-title>
+	 		<title>Supplier Finalization Meeting</title>
+	 		<short-title>Supplier Finalization Meeting</short-title>
 	 		<keywords></keywords>
 	 	</portlet-info>
 	 	<security-role-ref>
@@ -3657,7 +3623,7 @@
 	 	<init-param>
 	 		<name>javax.portlet.faces.defaultViewId.view</name>
 	 		<value>
-	 			/xhtml/sc/supplierFinalization/suppFinalizationMenu.xhtml
+	 			/xhtml/sc/supplierFinalization/preRenderView.xhtml
 	 		</value>
 	 	</init-param>
 	 	<expiration-cache>0</expiration-cache>
