@@ -14,13 +14,17 @@
 				  			<p:commandButton value="#{lbl['lbl.btn.save']}" update="@form"
 				  				widgetVar="cbSaveAcc" id="cbSaveAcc" disabled="true"
 				  				onclick="cbSaveAcc.disable()"  oncomplete="cbSaveAcc.enable()"
-				  				action="#{profilePersonalizationBackingBean.saveUserProfile()}"/>
+				  				action="#{profilePersonalizationBackingBean.saveUserProfile()}">
+			  					<f:param name="disableValidation" value="true" />     
+			  				</p:commandButton>
 				  		</c:when>
 				  		<c:otherwise>
 				  			<p:commandButton  value="#{lbl['lbl.btn.update']}" update="@form"
 				  				widgetVar="cbSaveAcc" id="cbSaveAcc" disabled="true"
 				  				onclick="cbSaveAcc.disable()"  oncomplete="cbSaveAcc.enable()"
-				  				action="#{profilePersonalizationBackingBean.saveUserProfile()}"/>
+				  				action="#{profilePersonalizationBackingBean.saveUserProfile()}">
+				  				<f:param name="disableValidation" value="true" />     
+			  				</p:commandButton>
 				  		</c:otherwise>
 					</c:choose>
 			  </div>			  			

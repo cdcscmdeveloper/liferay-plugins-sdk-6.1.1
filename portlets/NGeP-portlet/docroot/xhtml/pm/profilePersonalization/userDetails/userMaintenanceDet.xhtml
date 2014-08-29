@@ -13,16 +13,19 @@
 					activeIndex="#{profilePersonalizationBackingBean.managedBean.selectedTabIndex}">
 					<!-- User Profile -->
                     <p:menuitem value="#{lbl['lbl.pm.profiles.tab.name.up']}" update="@form">
+                    	<f:param name="disableValidation" value="" />
 						<f:setPropertyActionListener target="#{profilePersonalizationBackingBean.managedBean.selectedTabIndex}" 
 							value="#{profilePersonalizationBackingBean.tabUserProfile}" />
 					</p:menuitem>
 					<!-- Personalization -->	
 					<p:menuitem value="#{lbl['lbl.pm.profiles.tab.name.pl']}" update="@form">
+						<f:param name="disableValidation" value="" />
 						<f:setPropertyActionListener target="#{profilePersonalizationBackingBean.managedBean.selectedTabIndex}" 
 							value="#{profilePersonalizationBackingBean.tabPersonalization}" />
 					</p:menuitem>
 					<!-- Change Password -->
 					<p:menuitem value="#{lbl['lbl.pm.profiles.tab.name.cp']}" update="@form">
+						<f:param name="disableValidation" value="" />
 						<f:setPropertyActionListener target="#{profilePersonalizationBackingBean.managedBean.selectedTabIndex}" 
 							value="#{profilePersonalizationBackingBean.tabChangePassword}" />
 					</p:menuitem>
