@@ -71,7 +71,10 @@
 					<td style="width: 184px;"><p:outputLabel
 							value="#{lbl['lbl.fl.supp.ref.no']}" /></td>
 					<td><p:inputText size="25"
-							value="#{createDOBackingBean.managedBean.flDeliveryOrder.supplierDoRef}" readonly="#{createDOBackingBean.managedBean.buttonVal == 'View'}"/></td>
+							value="#{createDOBackingBean.managedBean.flDeliveryOrder.supplierDoRef}" 
+							readonly="#{createDOBackingBean.managedBean.buttonVal == 'View' or 
+										createDOBackingBean.managedBean.buttonVal == 'Cancel' or 
+										createDOBackingBean.managedBean.modificationCancel}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.name']}" /></td>
