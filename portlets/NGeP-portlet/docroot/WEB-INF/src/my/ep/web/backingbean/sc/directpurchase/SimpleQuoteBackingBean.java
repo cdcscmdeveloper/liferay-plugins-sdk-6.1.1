@@ -118,6 +118,7 @@ import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.sc.directpurchase.SimpleQuoteManagedBean;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
@@ -1826,15 +1827,15 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 
 	 public void submitPromptAction() {
 		 ScQuote quote = getManagedBean().getScQuote();
-		 if (quote.getStartDate() != null &&  quote.getEndDate() != null){
-			 Date dateOne = quote.getEndDate();
-			 Date dateTwo = quote.getStartDate();
-			 StringBuilder sb  = new StringBuilder();
+		 if (quote.getEndDate() != null){
+			 Date dateOne = new Date();
+			 Date dateTwo = quote.getEndDate();
+			 StringBuilder message  = new StringBuilder();
 			 if(quote.getEndDate().after(quote.getStartDate())){
 				 long timeDiff = Math.abs(dateOne.getTime() - dateTwo.getTime());
 				 String hours = String.format("%d", TimeUnit.MILLISECONDS.toHours(timeDiff));
 				 String mins = String.format("%d", (TimeUnit.MILLISECONDS.toMinutes(timeDiff) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(timeDiff))));
-				 sb.append("Total time Supplier responds for this Simple Quote is only")
+				 message.append("Total time Supplier responds for this Simple Quote is only")
 				 .append(" ")
 				 .append(hours)
 				 .append(" ")
@@ -1847,7 +1848,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 				 .append("minute(s)")
 				 .append(" ")
 				 .append("Proceed?");
-				 getManagedBean().setPromptMessage(sb.toString());
+				 getManagedBean().setPromptMessage(message.toString());
 				 RequestContext.getCurrentInstance().execute("sqConformDlg.show()");
 			 }
 		 }

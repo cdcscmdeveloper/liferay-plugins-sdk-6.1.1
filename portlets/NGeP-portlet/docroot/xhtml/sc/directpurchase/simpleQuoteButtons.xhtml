@@ -61,7 +61,9 @@
 					actionListener="#{simpleQuoteBackingBean.submitPromptAction}"
 				    update="promptId"
 					icon="ui-icon-submit" rendered="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}">
-					<f:setPropertyActionListener target="#{simpleQuoteBackingBean.managedBean.selectedAction}" value="#{true ? '' : ''}" />
+					
+					<ui:param name="action" value=""></ui:param>
+					<f:setPropertyActionListener target="#{simpleQuoteBackingBean.managedBean.selectedAction}" value="#{action}" />
 				</p:commandButton>
 
 				<p:commandButton value="#{lbl['lbl.sc.common.cancel']}"
@@ -83,7 +85,6 @@
 									style="float:left;" 
 									action="#{simpleQuoteBackingBean.backToPervious}" />
 							</c:if>
-							
 						
 							<!-- to view simple Quote from the request note header  Icon    -->
                             <c:if test="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}">	
@@ -120,8 +121,6 @@
 										 onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 										actionListener="#{simpleQuoteBackingBean.submitSimpleQuote(action)}" />
 								</c:if>
-
-								
 							</c:forEach></c:if></td>
 					</tr>
 				</table>
