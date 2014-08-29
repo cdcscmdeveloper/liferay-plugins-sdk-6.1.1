@@ -88,6 +88,7 @@
 						value="#{lbl['lbl.fl.frn.act.received.date']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td style="width: 170px;"><p:calendar mode="popup" showOn="button" id="receivedDate" label="#{lbl['lbl.fl.frn.act.received.date']}" required="true"
+						disabled="#{receivedNoteBackingBean.managedBean.buttonVal=='Cancel'}"
 						value="#{receivedNoteBackingBean.managedBean.fulfilmentNote.receivedDate}"
 						mindate="#{receivedNoteBackingBean.managedBean.fulfilmentNote.flDeliveryOrder.createdDate}"
 						maxdate="#{receivedNoteBackingBean.getCurrentDate()}"
