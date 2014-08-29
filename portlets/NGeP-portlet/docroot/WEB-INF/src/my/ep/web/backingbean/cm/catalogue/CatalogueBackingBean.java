@@ -306,7 +306,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			facesContext.addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils
-							.getMessage("unspsc not selected!", new String[] { ""
+							.getMessage(MessageConst.ERROR_715032, new String[] { ""
 									+ bb.getManagedBean().getExtensionVoList()
 											.size() },
 									MessageUtils.BUNDLE_COMMON_MESSAGES,
@@ -1213,7 +1213,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 			Row row = rowIterator.next();
 
-			String invalidDataMsg = "Please fill all mandatory fields in the following rows:\n";
+			String invalidDataMsg = MessageUtils.getMessage(MessageConst.ERROR_715034,MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())+":\n";
+			
 			int rowNum = 1;
 			int count = 0;
 			while (rowIterator.hasNext()) {
@@ -1346,15 +1347,13 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 									if (pmUom.getUomCode() != null)
 										supplierItem.setPmUom(pmUom);
 									else {
-										FacesContext facesContext = FacesContext
-												.getCurrentInstance();
-										facesContext
-												.addMessage(
-														null,
-														new FacesMessage(
-																FacesMessage.SEVERITY_ERROR,
-																"",
-																"Uom not valid"));
+										FacesContext facesContext = FacesContext.getCurrentInstance();
+										facesContext.addMessage(
+												null,
+												new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+														MessageUtils.getMessage(MessageConst.ERROR_715033,
+																MessageUtils.BUNDLE_COMMON_MESSAGES,
+																new FacesScopes().getUserLocale())));
 										break;
 									}
 								}
@@ -1463,7 +1462,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				FacesContext facesContext = FacesContext.getCurrentInstance();
 				facesContext.addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO,
-								"", "Updated successfully."));
+								"", MessageUtils.getMessage(MessageConst.INFO_711001,
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
 
 				ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
 						.getInstance().getServiceObject("sm",
@@ -2538,7 +2539,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 								FacesContext facesContext = FacesContext.getCurrentInstance();
 								facesContext.addMessage(null, new FacesMessage(
 										FacesMessage.SEVERITY_ERROR,
-										"", "Standard Tier Overlapping"));
+										"", MessageUtils.getMessage(MessageConst.ERROR_715035,
+												MessageUtils.BUNDLE_COMMON_MESSAGES,
+												new FacesScopes().getUserLocale())));
 								this.getManagedBean().setPricingTabIndex(1);
 								this.getManagedBean().setTierPricingIndex(0);
 								return "editCatalogItem";
@@ -2551,7 +2554,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 											new FacesMessage(
 													FacesMessage.SEVERITY_ERROR,
 													"",
-													"Standard Tier To Qty must be greater than Standard Tier From Qty"));
+													MessageUtils.getMessage(MessageConst.ERROR_715036,
+															MessageUtils.BUNDLE_COMMON_MESSAGES,
+															new FacesScopes().getUserLocale())));
 							this.getManagedBean().setPricingTabIndex(1);
 							this.getManagedBean().setTierPricingIndex(0);
 							return "editCatalogItem";
@@ -2572,7 +2577,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 											new FacesMessage(
 													FacesMessage.SEVERITY_ERROR,
 													"",
-													"Standard Tier Start date Overlapping"));
+													MessageUtils.getMessage(MessageConst.ERROR_715037,
+															MessageUtils.BUNDLE_COMMON_MESSAGES,
+															new FacesScopes().getUserLocale())));
 							this.getManagedBean().setPricingTabIndex(1);
 							this.getManagedBean().setTierPricingIndex(0);
 							return "editCatalogItem";
@@ -2589,7 +2596,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 											new FacesMessage(
 													FacesMessage.SEVERITY_ERROR,
 													"",
-													"Standard Tier End date must be greater than Standard Tier start date"));
+													MessageUtils.getMessage(MessageConst.ERROR_715038,
+															MessageUtils.BUNDLE_COMMON_MESSAGES,
+															new FacesScopes().getUserLocale())));
 							this.getManagedBean().setPricingTabIndex(1);
 							this.getManagedBean().setTierPricingIndex(0);
 							return "editCatalogItem";
@@ -2614,7 +2623,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 								new FacesMessage(
 									FacesMessage.SEVERITY_ERROR,
 									"",
-									"Promotion Tier Start date Overlapping"));
+									MessageUtils.getMessage(MessageConst.ERROR_715039,
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));
 							this.getManagedBean().setPricingTabIndex(1);
 							this.getManagedBean().setTierPricingIndex(1);
 							return "editCatalogItem";
@@ -2630,7 +2641,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 								new FacesMessage(
 									FacesMessage.SEVERITY_ERROR,
 									"",
-									"Promotion Tier price must be less than Standard Tier price."));
+									MessageUtils.getMessage(MessageConst.ERROR_715040,
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));
 							this.getManagedBean().setPricingTabIndex(1);
 							this.getManagedBean().setTierPricingIndex(1);
 							return "editCatalogItem";
@@ -2649,7 +2662,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 						FacesContext facesContext = FacesContext.getCurrentInstance();
 						facesContext.addMessage(null, new FacesMessage(
 								FacesMessage.SEVERITY_ERROR,
-								"", "Zonal Promotion Start date Overlapping"));
+								"", MessageUtils.getMessage(MessageConst.ERROR_715041,
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
 						this.getManagedBean().setPricingTabIndex(2);
 						this.getManagedBean().setZonalPricingIndex(1);
 						return "editCatalogItem";
@@ -2662,7 +2677,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 									new FacesMessage(
 											FacesMessage.SEVERITY_ERROR,
 											"",
-											"Zonal Promotion End Date must be greater than Zonal Promotion Start Date"));
+											MessageUtils.getMessage(MessageConst.ERROR_715042,
+													MessageUtils.BUNDLE_COMMON_MESSAGES,
+													new FacesScopes().getUserLocale())));
 					this.getManagedBean().setPricingTabIndex(2);
 					this.getManagedBean().setZonalPricingIndex(1);
 					return "editCatalogItem";
@@ -2687,7 +2704,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 												new FacesMessage(
 														FacesMessage.SEVERITY_ERROR,
 														"",
-														"Zonal Standard Tier Overlapping"));
+														MessageUtils.getMessage(MessageConst.ERROR_715043,
+																MessageUtils.BUNDLE_COMMON_MESSAGES,
+																new FacesScopes().getUserLocale())));
 								this.getManagedBean().setPricingTabIndex(3);
 								this.getManagedBean().setZonalTierPricingIndex(0);
 								return "editCatalogItem";
@@ -2701,7 +2720,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 												new FacesMessage(
 														FacesMessage.SEVERITY_ERROR,
 														"",
-														"Zonal Standard Tier To Qty must be greater than Zonal Standard Tier From Qty"));
+														MessageUtils.getMessage(MessageConst.ERROR_715044,
+																MessageUtils.BUNDLE_COMMON_MESSAGES,
+																new FacesScopes().getUserLocale())));
 								this.getManagedBean().setPricingTabIndex(3);
 								this.getManagedBean().setZonalTierPricingIndex(0);
 								return "editCatalogItem";
@@ -2723,7 +2744,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 											new FacesMessage(
 													FacesMessage.SEVERITY_ERROR,
 													"",
-													"Zonal Standard Tier Start date Overlapping"));
+													MessageUtils.getMessage(MessageConst.ERROR_715045,
+															MessageUtils.BUNDLE_COMMON_MESSAGES,
+															new FacesScopes().getUserLocale())));
 							this.getManagedBean().setPricingTabIndex(3);
 							return "editCatalogItem";
 						}
@@ -2737,7 +2760,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 											new FacesMessage(
 													FacesMessage.SEVERITY_ERROR,
 													"",
-													"Zonal Standard Tier End date must be greater than Zonal Standard Tier start date"));
+													MessageUtils.getMessage(MessageConst.ERROR_715046,
+															MessageUtils.BUNDLE_COMMON_MESSAGES,
+															new FacesScopes().getUserLocale())));
 							this.getManagedBean().setPricingTabIndex(3);
 							return "editCatalogItem";
 						}
@@ -2759,7 +2784,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 								new FacesMessage(
 									FacesMessage.SEVERITY_ERROR,
 									"",
-									"Zonal Promotion Tier Start date Overlapping"));
+									MessageUtils.getMessage(MessageConst.ERROR_715047,
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));
 							this.getManagedBean().setPricingTabIndex(3);
 							this.getManagedBean().setZonalTierPricingIndex(0);
 							return "editCatalogItem";
@@ -2775,7 +2802,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 											new FacesMessage(
 													FacesMessage.SEVERITY_ERROR,
 													"",
-													"Zonal Promotion Tier End date must be greater than Zonal Promotion Tier start date"));
+													MessageUtils.getMessage(MessageConst.ERROR_715048,
+															MessageUtils.BUNDLE_COMMON_MESSAGES,
+															new FacesScopes().getUserLocale())));
 							this.getManagedBean().setPricingTabIndex(3);
 							this.getManagedBean().setZonalTierPricingIndex(0);
 							return "editCatalogItem";
@@ -2785,7 +2814,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 								new FacesMessage(
 									FacesMessage.SEVERITY_ERROR,
 									"",
-									"Zonal Promotion Tier price must be less than Zonal Standard Tier price."));
+									MessageUtils.getMessage(MessageConst.ERROR_715049,
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));
 							this.getManagedBean().setPricingTabIndex(3);
 							this.getManagedBean().setTierPricingIndex(0);
 							return "editCatalogItem";
@@ -2989,7 +3020,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					facesContext.addMessage(null, new FacesMessage(
 							FacesMessage.SEVERITY_ERROR,
 							"",
-							"Please complete all mandatory fields to proceed"));
+							MessageUtils.getMessage(MessageConst.ERROR_715050,
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
 					// facesContext.getExternalContext().getFlash().setKeepMessages(true);
 
 					return "catalogMaintenanceFile";
@@ -3196,7 +3229,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					FacesContext.getCurrentInstance().addMessage(
 							null,
 							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-									"Start date must be at least today."));
+									MessageUtils.getMessage(MessageConst.ERROR_715051,
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));
 					return "catalogMaintenanceFile";
 				}
 				
@@ -3299,7 +3334,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				FacesContext facesContext = FacesContext.getCurrentInstance();
 				facesContext.addMessage(null, new FacesMessage(
 						FacesMessage.SEVERITY_INFO, "",
-						"Submitted Successfully"));
+						MessageUtils.getMessage(MessageConst.INFO_710001,
+								MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
 
 			}
 
@@ -5704,7 +5741,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 									new FacesMessage(
 											FacesMessage.SEVERITY_ERROR,
 											"",
-											"Promotion price cannot be added. Please check the From and To quantities."));
+											MessageUtils.getMessage(MessageConst.ERROR_715052,
+													MessageUtils.BUNDLE_COMMON_MESSAGES,
+													new FacesScopes().getUserLocale())));
 				}
 			}
 
@@ -5790,7 +5829,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 								new FacesMessage(
 										FacesMessage.SEVERITY_ERROR,
 										"",
-										"New Promotion price cannot be added. Please check the From and To quantities."));
+										MessageUtils.getMessage(MessageConst.ERROR_715053,
+												MessageUtils.BUNDLE_COMMON_MESSAGES,
+												new FacesScopes().getUserLocale())));
 			}
 		}
 
@@ -5879,7 +5920,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 									new FacesMessage(
 											FacesMessage.SEVERITY_ERROR,
 											"",
-											"Promotion price cannot be added. Please check the From and To quantities."));
+											MessageUtils.getMessage(MessageConst.ERROR_715052,
+													MessageUtils.BUNDLE_COMMON_MESSAGES,
+													new FacesScopes().getUserLocale())));
 				}
 			}
 
@@ -5968,7 +6011,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 								new FacesMessage(
 										FacesMessage.SEVERITY_ERROR,
 										"",
-										"New Promotion price cannot be added. Please check the From and To quantities."));
+										MessageUtils.getMessage(MessageConst.ERROR_715053,
+												MessageUtils.BUNDLE_COMMON_MESSAGES,
+												new FacesScopes().getUserLocale())));
 			}
 		}
 
@@ -6423,14 +6468,18 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			else{
 				 FacesContext.getCurrentInstance().addMessage(
 					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, "Item is already in the list."));
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_715054,
+							MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale())));
 			}
 		}else if(optionListValue.intValue()==3){
 			boolean found = false;
 			for(VCmSupplierItem vCmSupplierItem: this.getManagedBean().getSelectViewItems()){
 				if(vCmSupplierItem.getRowId()==supplierItem.getRowId()){
 					FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, "Item is already in the list."));
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_715054,
+							MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale())));
 					found = true;
 					break;
 				}
@@ -6447,7 +6496,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		for(VCmSupplierItem vCmSupplierItem: this.getManagedBean().getSelectViewItems()){
 			if(vCmSupplierItem.getRowId()==supplierItem.getRowId()){
 				FacesContext.getCurrentInstance().addMessage(null,
-				new FacesMessage(FacesMessage.SEVERITY_ERROR, null, "Item is already in the list."));
+				new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_715054,
+						MessageUtils.BUNDLE_COMMON_MESSAGES,
+						new FacesScopes().getUserLocale())));
 				found = true;
 				break;
 			}
