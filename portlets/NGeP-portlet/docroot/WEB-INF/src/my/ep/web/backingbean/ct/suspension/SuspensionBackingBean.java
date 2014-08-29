@@ -225,51 +225,6 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 			 }
 	      }
 	 }
-	 
-	 public void validateAgencyDate(CtAgency agency) {
-		 
-		 if(agency.getExpDate().before(agency.getEffDate()) || agency.getExpDate().before(new Date()) || agency.getEffDate().before(new Date())) {
-			   for (CtAgency dataList : this.getManagedBean().getContractVer().getCtAgencies()) {
-					
-				       if(agency.getEffDate().before(new Date())){
-					            dataList.setDateLessThanCurDate(true);
-					            dataList.setValidateScheduleDate(false); 
-				         } else if(dataList.toString().equalsIgnoreCase(agency.toString())){
-						        dataList.setValidateScheduleDate(true); 
-						        dataList.setDateLessThanCurDate(false); 
-					     }
-		         }
-		   } else {
-			    for(CtAgency dataList : this.getManagedBean().getContractVer().getCtAgencies()) {
-				     if(dataList.toString().equalsIgnoreCase(agency.toString())) {
-				           dataList.setValidateScheduleDate(false);
-				           dataList.setDateLessThanCurDate(false); 
-				      }
-				 }
-		  }
-	}
-	 
-   public void validateItemDate(CtContractItem ctItems) {
-		   
-	      if(ctItems.getExpDate().before(ctItems.getEffDate()) || ctItems.getEffDate().before(new Date()) || ctItems.getExpDate().before(new Date())) {
-			  for(CtContractItem dataList : this.getManagedBean().getContractVer().getCtContractItems()) {
-			         if(ctItems.getEffDate().before(new Date())) {
-					       dataList.setDateLessThanCurDate(true);
-					       dataList.setValidateScheduleDate(false); 
-				     } else if (dataList.toString().equalsIgnoreCase(ctItems.toString())) {
-						   dataList.setValidateScheduleDate(true); 
-					       dataList.setDateLessThanCurDate(false); 
-				     }
-		     }
-		  } else {
-			   for(CtContractItem dataList : this.getManagedBean().getContractVer().getCtContractItems()) {
-				      if(dataList.toString().equalsIgnoreCase(ctItems.toString())){
-				           dataList.setValidateScheduleDate(false);
-				           dataList.setDateLessThanCurDate(false); 
-				       }
-				 }
-		   }
-	  }
 		
 	private String getUserRole() {
 		if (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value()))
@@ -315,4 +270,8 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 		out.close(); 
 		FacesContext.getCurrentInstance().responseComplete();
 	}
+	
+	 public Date getCurrentDate() {
+	        return new Date();
+	    }
 }
