@@ -138,7 +138,7 @@
 			<tr>
 				<td style="width: 72px;"><p:outputLabel
 						value="#{lbl['lbl.fl.supp.inv.no']}" /></td>
-				<td><p:inputText size="45"
+				<td><p:inputText size="45" disabled="#{invoiceBackingBean.managedBean.buttonVal=='Cancel'}" 
 						value="#{invoiceBackingBean.managedBean.invoice.supplierInvoiceRef}" /></td>
 			</tr>
 		</table>
