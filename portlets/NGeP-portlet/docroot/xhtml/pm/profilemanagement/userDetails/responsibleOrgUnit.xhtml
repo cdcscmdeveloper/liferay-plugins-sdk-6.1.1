@@ -14,11 +14,15 @@
 		     selection="#{profileManagementBackingBean.managedBean.selectedUserOrg}" 
 		     selectionMode="single"
 		     rowIndexVar="index" rowKey="#{orgUnit}">   
-			<p:ajax event="rowSelect" listener="#{profileManagementBackingBean.showReceivingAddress}" 
-				update=":form:tvRoleReceivingAddr"/>
+			<p:ajax event="rowSelect" update=":form:tvRoleReceivingAddr" listener="#{profileManagementBackingBean.showReceivingAddress}"  />
 			
-		    <p:column headerText="* #{lbl['lbl.pm.profiles.resorg.table.orgtype']}">
-				<p:selectOneMenu value="#{orgUnit.pmOrgProfile.orgTypeCode.parameterId}" styleClass="ppDropDownWidthM" 
+		    <p:column>
+			    <f:facet name="header">
+			     	<h:outputText value="* " styleClass="mandatory" />
+			     	<h:outputText value="#{lbl['lbl.pm.profiles.resorg.table.orgtype']}" />
+			    </f:facet>
+		   
+				<h:selectOneMenu value="#{orgUnit.pmOrgProfile.orgTypeCode.parameterId}" styleClass="ppDropDownWidthM" 
 					disabled="#{!orgUnit.brandNew}" id="somOrgType"  required="true"
 					label="#{lbl['lbl.pm.profiles.resorg.table.orgtype']}">  
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />      
@@ -27,11 +31,15 @@
 			     	<p:ajax event="change" listener="#{profileManagementBackingBean.changeResOrgType(index)}" 
 			     		update="lovResOrg:lovResOrg, :form:tvRoleReceivingAddr:lovAddrType:lovAddrType, dtOrgUnit, 
 			     			:form:tvRoleReceivingAddr:dtRoles, :form:tvRoleReceivingAddr:dtReceiveAddr"/> 
-	            </p:selectOneMenu>		 
+	            </h:selectOneMenu>		 
 	            <p:message id="somOrgTypeMsg" for="somOrgType" display="icon" />    
 	        </p:column>	 
-		    <p:column headerText="* #{lbl['lbl.pm.profiles.resorg.table.code']}" >        
-	            <ac:lov id="lovResOrg" lovId="PM_ORG_PROFILE" size="20" required="true"
+	        <p:column>
+			    <f:facet name="header">
+			     	<h:outputText value="* " styleClass="mandatory" />
+			    	<h:outputText value="#{lbl['lbl.pm.profiles.resorg.table.code']}" />
+			    </f:facet>
+			    <ac:lov id="lovResOrg" lovId="PM_ORG_PROFILE" size="20" required="true"
 	            	update=":form:dtOrgUnit" readonly="true" disabled="#{!orgUnit.brandNew}"
 					headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
 					value="#{orgUnit.pmOrgProfile.pmOrgValidity.orgCode}" 
@@ -42,11 +50,15 @@
 					>
 				</ac:lov> 
 				<p:message id="lovResOrgMsg" for="lovResOrg" display="icon" />   
-	        </p:column>
+		    </p:column>
 	        <p:column headerText="#{lbl['lbl.pm.profiles.resorg.table.name']}" > 
        			#{orgUnit.pmOrgProfile.pmOrgValidity.orgName}
 	        </p:column>
-	        <p:column headerText="* #{lbl['lbl.pm.profiles.resorg.table.effdate']}" > 
+	        <p:column> 
+	        	<f:facet name="header">
+			     	<h:outputText value="* " styleClass="mandatory" />
+			    	<h:outputText value="#{lbl['lbl.pm.profiles.resorg.table.effdate']}" />
+			    </f:facet>
 			  	<p:calendar id="effDateId" value="#{orgUnit.effDateDisplay}" styleClass="ppDisplayCalXS" required="true"
 			  		label="#{lbl['lbl.pm.profiles.resorg.table.effdate']}" 
 					showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
