@@ -132,7 +132,8 @@
 		resizable="false" styleClass="pop_up_top">
 
 
-		<p:fileUpload fileUploadListener="#{catalogueBackingBean.uploadExcel}"
+		<p:fileUpload fileUploadListener="#{catalogueBackingBean.uploadExcel}" 
+			cancelLabel="#{lbl['lbl.btn.cancel']}" uploadLabel="#{lbl['lbl.btn.upload']}" label="#{lbl['lbl.btn.choose']}"
 			widgetVar="fileUploadWidget" mode="advanced" id="upload"
 			allowTypes="/(\.|\/)(xls|flv|xlsx)$/" update="@form"
 			invalidFileMessage="Only XLS files are accepted">
