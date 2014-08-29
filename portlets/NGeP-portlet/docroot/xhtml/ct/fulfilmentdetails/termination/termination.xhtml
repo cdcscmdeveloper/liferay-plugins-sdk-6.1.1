@@ -210,7 +210,7 @@
                 <p:calendar id="calItem3"  readonlyInput="true"  required="true" label="Remedy Start Date" 
                     value="#{terminationBackingBean.managedBean.contractVer.ctTermination.remedyStartDate}" size="24"
                      showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
-                    <p:ajax event="dateSelect" update="calItem4" />
+                    <p:ajax event="dateSelect" update=":form:calItem4" process="@this" />
                 </p:calendar>
                 <p:message for="calItem3" display="icon"/>
 		  </h:panelGrid>
@@ -264,7 +264,7 @@
               <p:calendar  id="calItem7" readonlyInput="true" required="true" label="Last Remedy Start Date" 
           		  value="#{terminationBackingBean.managedBean.contractVer.ctTermination.remedyStartDate}"  size="24" 
           		  showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
-                  <p:ajax event="dateSelect" update="calItem4" />
+                  <p:ajax event="dateSelect" update=":form:calItem8" process="@this" />
              </p:calendar>
 		     <p:message for="calItem8" display="icon"/>
 		 </h:panelGrid>
